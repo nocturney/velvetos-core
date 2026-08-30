@@ -1,0 +1,246 @@
+{
+  "name": "vfagents",
+  "source": "https://github.com/ashishpatel26/500-AI-Agents-Projects",
+  "reviewedAt": "2026-08-30",
+  "bcId": "bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027",
+  "writeup": "docs/500-AGENTS.md",
+  "notes": [
+    "Office playbooks only. Do not vendor CrewAI/LangGraph into this repo.",
+    "This HQ does not send Instagram or Gmail. Live send stays on Grok Bot.",
+    "Do not invent prices or Insights. Do not invent SKUs."
+  ],
+  "items": [
+    {
+      "id": "email-draft",
+      "status": "embed",
+      "source": ["agents/05-email-drafting-agent", "crewai/email_auto_responder_flow"],
+      "packs": ["vfsales", "vfconvert", "vfops"],
+      "playbook": "playbooks/email-draft.md"
+    },
+    {
+      "id": "inquiry-support",
+      "status": "embed",
+      "source": ["agents/13-customer-support-agent", "langgraph/customer-support"],
+      "packs": ["vfconvert", "vfcopy"],
+      "playbook": "playbooks/inquiry-support.md"
+    },
+    {
+      "id": "caption-draft",
+      "status": "embed",
+      "source": ["agents/14-social-media-agent", "crewai/instagram_post"],
+      "packs": ["vfigos", "vfcopy", "vfcovers"],
+      "playbook": "playbooks/caption-draft.md"
+    },
+    {
+      "id": "meeting-notes",
+      "status": "embed",
+      "source": ["agents/10-meeting-notes-agent", "crewai/meeting_assistant_flow", "crewai/prep-for-a-meeting"],
+      "packs": ["vfops", "vfbriefux"],
+      "playbook": "playbooks/meeting-notes.md"
+    },
+    {
+      "id": "lead-score",
+      "status": "embed",
+      "source": ["crewai/lead-score-flow"],
+      "packs": ["vfsales", "vfconvert"],
+      "playbook": "playbooks/lead-score.md"
+    },
+    {
+      "id": "pii-gate",
+      "status": "embed",
+      "source": ["agents/21-pii-sanitization-agent"],
+      "packs": ["vlicense", "vfops"],
+      "playbook": "playbooks/pii-gate.md"
+    },
+    {
+      "id": "floor-qc",
+      "status": "embed",
+      "source": ["industry/factory-process-monitoring"],
+      "packs": ["vfprod"],
+      "playbook": "playbooks/floor-qc.md"
+    },
+    {
+      "id": "sku-repeat",
+      "status": "embed",
+      "source": ["industry/product-recommendation", "agno/shopping_partner"],
+      "packs": ["vfsku", "vfsales"],
+      "playbook": "playbooks/sku-repeat.md"
+    },
+    {
+      "id": "competitor-scan",
+      "status": "embed",
+      "source": ["agents/19-competitive-analysis-agent"],
+      "packs": ["vfbiz", "vfresearch"],
+      "playbook": "playbooks/competitor-scan.md"
+    },
+    {
+      "id": "brief-pdf",
+      "status": "embed",
+      "source": ["agents/03-pdf-qa-agent", "agno/legal_consultant"],
+      "packs": ["vfresearch", "vlicense", "vfsales"],
+      "playbook": "playbooks/brief-pdf.md"
+    },
+    {
+      "id": "daily-research",
+      "status": "embed",
+      "source": ["agents/01-web-research-agent", "agno/research_agent"],
+      "packs": ["vfresearch"],
+      "playbook": "playbooks/daily-research.md"
+    },
+    {
+      "id": "copy-reflect",
+      "status": "embed",
+      "source": ["langgraph/reflection", "crewai/markdown_validator"],
+      "packs": ["vfcopy", "vfgrowth"],
+      "playbook": "playbooks/copy-reflect.md"
+    },
+    {
+      "id": "web-research-existing",
+      "status": "already",
+      "source": ["agents/01-web-research-agent"],
+      "packs": ["vfresearch"],
+      "note": "06:15 daily research already lands in the morning brief. Playbook daily-research only tightens the output shape."
+    },
+    {
+      "id": "instagram-office-existing",
+      "status": "already",
+      "source": ["crewai/instagram_post"],
+      "packs": ["vfigos", "vfcopy", "vfcovers"],
+      "note": "Review and schedule in HQ. Grok Bot sends."
+    },
+    {
+      "id": "factory-floor-existing",
+      "status": "already",
+      "source": ["industry/factory-process-monitoring"],
+      "packs": ["vfprod"],
+      "note": "Job tracking exists. Playbook floor-qc adds first-layer checklist only."
+    },
+    {
+      "id": "inquiry-path-existing",
+      "status": "already",
+      "source": ["langgraph/customer-support"],
+      "packs": ["vfconvert"],
+      "note": "Inquiry-to-order path exists. Playbook inquiry-support adds escalation, not a 24/7 bot."
+    },
+    {
+      "id": "quotes-existing",
+      "status": "already",
+      "source": ["crewai/lead-score-flow"],
+      "packs": ["vfsales", "vfcost"],
+      "note": "Quotes and cost packs exist. Playbook lead-score is readiness only — no invented ₪."
+    },
+    {
+      "id": "license-existing",
+      "status": "already",
+      "source": ["industry/legal-document-review"],
+      "packs": ["vlicense"],
+      "note": "License gate exists. Playbook brief-pdf is Q&A on a real file, not a new legal product."
+    },
+    {
+      "id": "healthcare",
+      "status": "skip",
+      "source": ["industry/hia", "industry/ai-health-assistant", "industry/lina", "industry/medisuite"],
+      "reason": "not a clinic"
+    },
+    {
+      "id": "trading-finance",
+      "status": "skip",
+      "source": ["industry/automated-trading", "agents/11-stock-research-agent", "agno/finance_agent"],
+      "reason": "not a trader; no invented ₪"
+    },
+    {
+      "id": "crypto-wallet",
+      "status": "skip",
+      "source": ["industry/agent-wallet-sdk"],
+      "reason": "not a wallet"
+    },
+    {
+      "id": "self-driving",
+      "status": "skip",
+      "source": ["industry/self-driving-delivery"],
+      "reason": "pickup Sderot only"
+    },
+    {
+      "id": "farm-energy",
+      "status": "skip",
+      "source": ["industry/smart-farming", "industry/energy-forecast"],
+      "reason": "not the print floor"
+    },
+    {
+      "id": "gaming-travel-food",
+      "status": "skip",
+      "source": ["agents/12-travel-planner-agent", "agents/17-recipe-agent", "industry/game-companion"],
+      "reason": "not travel, kitchen, or games"
+    },
+    {
+      "id": "recruiting",
+      "status": "skip",
+      "source": ["agents/09-resume-parser-agent", "agents/18-job-application-agent", "crewai/recruitment"],
+      "reason": "not hiring from this HQ"
+    },
+    {
+      "id": "chatbot-24-7",
+      "status": "skip",
+      "source": ["industry/24-7-chatbot"],
+      "reason": "human WhatsApp only; live bot forbidden"
+    },
+    {
+      "id": "auto-send-email",
+      "status": "skip",
+      "source": ["crewai/email_auto_responder_flow"],
+      "reason": "draft allowed; HQ must not send Gmail"
+    },
+    {
+      "id": "auto-publish-ig",
+      "status": "skip",
+      "source": ["crewai/instagram_post"],
+      "reason": "draft allowed; Grok Bot sends"
+    },
+    {
+      "id": "landing-page",
+      "status": "skip",
+      "source": ["crewai/landing_page_generator"],
+      "reason": "site only if chief opens vfbiz"
+    },
+    {
+      "id": "offensive-cyber",
+      "status": "skip",
+      "source": ["industry/vibe-hacking", "industry/threat-detection"],
+      "reason": "no red-team pack"
+    },
+    {
+      "id": "software-toy-agents",
+      "status": "skip",
+      "source": ["agents/02-code-review-agent", "agents/15-unit-test-generator", "agents/16-documentation-writer", "agents/20-multi-agent-debate"],
+      "reason": "HQ is a studio office, not a coding-agent product"
+    },
+    {
+      "id": "media-trend-later",
+      "status": "later",
+      "source": ["agno/media_trend_analysis_agent"],
+      "packs": ["vfgrowth", "vfinsights"],
+      "note": "Use Treg after login. Do not invent Insights."
+    },
+    {
+      "id": "whisper-later",
+      "status": "later",
+      "source": ["autogen/whisper"],
+      "packs": ["vfops", "vfsales"],
+      "note": "Only if the client agreed to a recording."
+    },
+    {
+      "id": "vision-proof-later",
+      "status": "later",
+      "source": ["autogen/multimodal-gpt4v", "industry/vision-monitor"],
+      "packs": ["vfprod"],
+      "note": "Photo of a real bed only. No live camera daemon."
+    },
+    {
+      "id": "sql-sheets-later",
+      "status": "later",
+      "source": ["agents/04-sql-query-agent", "langgraph/sql-agent"],
+      "packs": ["vfbooks", "vfsku", "vfprod"],
+      "note": "After a real Sheets MCP. Do not invent a ledger."
+    }
+  ]
+}

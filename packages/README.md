@@ -15,4 +15,6 @@ Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). Do not invent pr
 
 `vfcanva` is HQ-native (tree lives here). Instagram visuals go through Canva MCP; see `docs/CANVA.md`.
 
+HQ-native research packs (not Origin trees): `vfmcp` ([`docs/MCP-FIT.md`](../docs/MCP-FIT.md)), `vfe2b` (e2b-dev/awesome-ai-agents desk), and `vfagents` ([`docs/500-AGENTS.md`](../docs/500-AGENTS.md)).
+
 New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates.
