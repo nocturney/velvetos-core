@@ -114,6 +114,18 @@ def main() -> None:
     if counts["embed"] < 5:
         fail(f"expected at least 5 embed items, got {counts['embed']}")
 
+    covered: set[str] = set()
+    for item in items:
+        for src in item.get("source") or []:
+            name = Path(str(src)).name
+            if name.endswith(".yaml"):
+                covered.add(name.removesuffix(".yaml"))
+    if not REQUIRED_PIPELINES <= covered:
+        fail(
+            "pipeline yaml not mapped: "
+            + ", ".join(sorted(REQUIRED_PIPELINES - covered))
+        )
+
     missing_crews = REQUIRED_CREWS - crew_refs
     if missing_crews:
         fail(f"crews not referenced: {sorted(missing_crews)}")

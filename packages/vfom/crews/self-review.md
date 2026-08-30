@@ -23,7 +23,7 @@ Check these. Fail = return, do not hand to Grok.
 | Motion honesty | If we said «ריל תנועה» there is real bed motion, not Ken Burns on one still |
 | Hook | First 2–3 seconds have a reason to stay |
 | Safe zone | Hook/CTA clear of story chrome |
-| CTA | WhatsApp `050-2517000` / איסוף שדרות. Never «שלחו DM» |
+| CTA | In the **paste-ready** caption block only: WhatsApp `050-2517000` / איסוף שדרות. A ban note that mentions «שלחו DM» is not a fail. Fail only if that phrase is the call to action. |
 | Money | No ₪ on the frame. No sale figure unless the lead seat wrote it |
 | Insights | No fake reach/saves |
 | Slot | Do not move `#משובץ`. No boost |
