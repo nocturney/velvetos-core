@@ -17,7 +17,7 @@ Constitution and team of 5: [`../constitution/`](../constitution/). Hebrew repor
 
 `vfcanva` is HQ-native (tree lives here). Instagram visuals go through Canva MCP; see `docs/CANVA.md`.
 
-HQ-native research packs (not Origin trees): `vfmcp` ([`docs/MCP-FIT.md`](../docs/MCP-FIT.md)), `vfe2b` (e2b-dev/awesome-ai-agents desk), and `vfagents` ([`docs/500-AGENTS.md`](../docs/500-AGENTS.md)).
+HQ-native research packs (not Origin trees): `vfmcp` ([`docs/MCP-FIT.md`](../docs/MCP-FIT.md)), `vfe2b` (e2b-dev/awesome-ai-agents desk), `vfagents` ([`docs/500-AGENTS.md`](../docs/500-AGENTS.md)), and `vfharness` ([`docs/HARNESS.md`](../docs/HARNESS.md) — six-layer outer harness on existing packs).
 
 Share embed map: [`chatgpt-embed-map.json`](chatgpt-embed-map.json). Constitution: [`../constitution/`](../constitution/CONSTITUTION.md). Orchestra: [`../constitution/ORCHESTRA.md`](../constitution/ORCHESTRA.md).
 

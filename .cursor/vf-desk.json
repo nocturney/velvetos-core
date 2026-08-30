@@ -8,7 +8,8 @@
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
     "HQ does not send Instagram, Gmail, WhatsApp, or DMs. Live send stays on Grok Bot (5 seats).",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
-    "Do not commit secrets, medical files, or personal Drive folders."
+    "Do not commit secrets, medical files, or personal Drive folders.",
+    "Harness: AGENTS.md + packages/vfharness. Six layers on existing packs. No second runtime. After catalog edits run python3 scripts/check-all.py."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -70,7 +71,7 @@
     {
       "id": "lead",
       "he": "ראש צוות",
-      "packs": ["vfops", "vfbriefux"],
+      "packs": ["vfops", "vfbriefux", "vfharness"],
       "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect"],
       "tools": ["calendar", "gmail"],
       "decides": "₪ amount, what moves on the board, what is deferred"
@@ -111,7 +112,7 @@
   "desk": [
     {
       "slug": "studio-operations",
-      "packs": ["vfops"],
+      "packs": ["vfops", "vfharness"],
       "tools": ["calendar", "gmail"],
       "job": "Morning brief, queue bottlenecks, run-the-studio procedures"
     },
@@ -129,9 +130,9 @@
     },
     {
       "slug": "workflow-architect",
-      "packs": ["vfops"],
+      "packs": ["vfops", "vfharness"],
       "tools": ["calendar"],
-      "job": "Tighten the one pipeline: inquiry → talk → quote → print → pickup"
+      "job": "Tighten the one pipeline: inquiry → talk → quote → print → pickup; harness loop and checkpoints"
     },
     {
       "slug": "ux-architect",
@@ -282,6 +283,7 @@
   "skills": [
     ".cursor/skills/vf-morning-brief/SKILL.md",
     ".cursor/skills/vf-inquiry-chain/SKILL.md",
-    ".cursor/skills/vf-content-sprint/SKILL.md"
+    ".cursor/skills/vf-content-sprint/SKILL.md",
+    ".cursor/skills/vf-harness/SKILL.md"
   ]
 }

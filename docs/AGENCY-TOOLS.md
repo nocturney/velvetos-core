@@ -30,7 +30,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 
 | Seat | Packs | Desk specialists | Tools |
 |---|---|---|---|
-| ראש צוות | `vfops` `vfbriefux` | `@studio-operations` `@chief-of-staff` `@meeting-notes-specialist` `@workflow-architect` `@ux-architect` | Calendar, Gmail read, Mobbin |
+| ראש צוות | `vfops` `vfbriefux` `vfharness` | `@studio-operations` `@chief-of-staff` `@meeting-notes-specialist` `@workflow-architect` `@ux-architect` | Calendar, Gmail read, Mobbin, `check-all.py` |
 | סטודיו | `vfconvert` `vfsales` `vfcopy` | `@email-intelligence-engineer` `@discovery-coach` `@sales-engineer` `@proposal-strategist` `@content-creator` `@brand-guardian` | Gmail read, Drive by job |
 | צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Superdesign, Treg, Drive |
 | תפעול | `vfcost` `vfbooks` `vfbiz` | `@pricing-analyst` `@bookkeeper-controller` `@finance-tracker` `@business-strategist` | Gmail חשבונות, Drive |
@@ -43,6 +43,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | בריף בוקר / what is open | `.cursor/skills/vf-morning-brief/SKILL.md` |
 | פנייה / quote this | `.cursor/skills/vf-inquiry-chain/SKILL.md` |
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
+| רתמה / harness / checkpoint | `.cursor/skills/vf-harness/SKILL.md` |
 
 ## Example mentions
 

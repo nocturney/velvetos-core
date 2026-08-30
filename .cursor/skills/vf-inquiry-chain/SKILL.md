@@ -15,6 +15,8 @@ Use when there is a new פנייה, Instagram/WhatsApp/Gmail inquiry, or "quote 
 4. `vfsales` + `vfcopy` + `@sales-engineer` + `@content-creator` — quote **draft**. One CTA. Spoken Hebrew. No empty price promise.
 5. Stop. A human sends on WhatsApp + Invoice4U.
 
+After each pack step: verify missing fields stay marked חסר. Do not invent ₪ to close the chain. Same sensor-class failure twice → escalate (`packages/vfharness/templates/escalation.md`). Guide: `AGENTS.md`.
+
 ## Gmail
 
 - If the user points at a thread: `get_thread`.

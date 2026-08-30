@@ -14,7 +14,8 @@
     "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings → MCP Tools.",
     "2026-08-30: ChatGPT share https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19 embedded in place (packages/*/hq, constitution/, vfbriefux packet). No new pack per agent. Vendor preserves hq/ overlays. See packages/chatgpt-embed-map.json and docs/SHARE-EMBED-he.md.",
     "2026-08-30 share embed: Gemini hbuCq3MEy5po / 4f223bc1774c read and mapped onto existing packs + constitution/. Perplexity c950af30: morning Cloudflare wall; afternoon owner PDFs read and mapped in place (no new pack, no invented ₪, no live bot/site/widget). See docs/SHARES-2026-08-30.md.",
-    "Orchestra 2026-08-30 ~17:55 lock: Grok decides only. Cursor opens ChatGPT + Gemini + Perplexity at 06:15. Map onto existing packs. constitution/ORCHESTRA.md. Evening pass 30.8 waiting owner login — do not invent bodies."
+    "Orchestra 2026-08-30 ~17:55 lock: Grok decides only. Cursor opens ChatGPT + Gemini + Perplexity at 06:15. Map onto existing packs. constitution/ORCHESTRA.md. Evening pass 30.8 waiting owner login — do not invent bodies.",
+    "2026-08-30: vfharness is an HQ-native pack. Six-layer outer harness (guides/sensors/loop/memory/permissions/observability) mapped onto existing packs. Guide file is AGENTS.md. Sensors: scripts/check-all.py. No second runtime, no send, no invented ₪. See docs/HARNESS.md."
   ],
   "hqOverlay": {
     "constitution": "constitution/CONSTITUTION.md",
@@ -22,6 +23,9 @@
     "briefPacket": "packages/vfbriefux/hq/PACKET.md",
     "shareMap": "packages/chatgpt-embed-map.json",
     "orchestra": "constitution/ORCHESTRA.md",
+    "harness": "AGENTS.md",
+    "harnessPack": "packages/vfharness",
+    "harnessWriteup": "docs/HARNESS.md",
     "vendorPreserves": ["ORIGIN.md", "SKILL.md", "hq/", "playbooks next to ORIGIN.md", "packages/*/sources", "packages/vfcovers/g005"]
   },
   "packs": [
@@ -243,6 +247,20 @@
       "cloneUrl": null,
       "vendorStatus": "hq-native",
       "writeup": "docs/500-AGENTS.md"
+    },
+    {
+      "name": "vfharness",
+      "summary": "Outer harness — six layers on existing packs (guides, sensors, loop, memory, permissions, observability). No second runtime. HQ does not send.",
+      "bcId": "bc-c6e01d3b",
+      "bcIdFull": "bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
+      "agentUrl": "https://cursor.com/agents/bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "writeup": "docs/HARNESS.md",
+      "guide": "AGENTS.md",
+      "skill": ".cursor/skills/vf-harness/SKILL.md"
     }
   ]
 }
