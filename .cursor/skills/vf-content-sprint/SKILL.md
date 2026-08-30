@@ -21,7 +21,7 @@ Use when the user asks for חבילת תוכן, covers, reel draft, or a post af
 
 1. **Drive** — `search_files` for the job/SKU/timelapse the user names. Partial pack if proof is missing (mark חסר). Do not invent a floor scene.
 2. **Superdesign** — covers, posters, social graphics. Use the graphics path (skip repo init). Follow the Superdesign skill.
-3. **Treg** — only if the CLI/MCP is logged in and the user wants live trend/ad/search/music data. Read the endpoint price and say it before `call`. Never invent Insights or song titles.
+3. **Music sources (not Treg)** — HeyOrca weekly URL and/or owner IG Trending paste per `vfresearch/MUSIC.md`. Never invent Insights or song titles.
 4. **Mobbin** — only if the user is changing the brief/post layout, not for Instagram send.
 
 ## Draft output

@@ -3,23 +3,21 @@
   "status": "done",
   "pack": "vfresearch",
   "completed_steps": [
-    "Routed via vfmem → vfresearch @trend-researcher (music/sound) with handoff to vfigos",
-    "Wrote packages/vfresearch/MUSIC.md playbook",
-    "Added .cursor/skills/vf-ig-music/SKILL.md",
-    "Wired desk job, velvet-factory-desk route, vfmem catalog, vfigos REVIEW, vfom self-review, content/marketing skills, vfgraft MAP",
-    "First artifact sources/2026-08-30-ig-music.md marked חסר מקור (Treg not logged in)",
-    "Extended scripts/check-vfresearch.py for MUSIC.md + skill"
+    "Routed via vfmem → vfresearch @trend-researcher with handoff to vfigos",
+    "Dropped Treg for music; primary source HeyOrca weekly + IG native paste",
+    "Wrote SOURCES-MUSIC.json and registered HeyOrca + PostPlanify in LINKS.json",
+    "Refreshed 2026-08-30-ig-music.md with cited HeyOrca Instagram/TikTok-signal rows",
+    "Updated desk, vfmem catalog, skills, check-vfresearch sensor"
   ],
-  "next_step": "When Treg is logged in or owner pastes IG library names: re-run vf-ig-music and fill named tracks in a new YYYY-MM-DD-ig-music.md",
+  "next_step": "Owner/Grok paste 3–5 names from IG Trending / Professional dashboard for local Business-library check",
   "artifacts": [
     "packages/vfresearch/MUSIC.md",
+    "packages/vfresearch/SOURCES-MUSIC.json",
     "packages/vfresearch/sources/2026-08-30-ig-music.md",
-    ".cursor/skills/vf-ig-music/SKILL.md",
-    "scripts/check-vfresearch.py"
+    ".cursor/skills/vf-ig-music/SKILL.md"
   ],
   "unresolved": [
-    "Treg not logged in on this Cloud Agent — no live trending audio call",
-    "No owner/Grok screenshot of Instagram music library yet"
+    "No owner paste from @velvets_cloud IG Trending tab yet — Business library availability unverified for Calvin Harris track"
   ],
   "escalation": null,
   "last_updated": "2026-08-30"

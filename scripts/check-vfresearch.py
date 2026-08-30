@@ -11,6 +11,7 @@ LINKS = ROOT / "packages" / "vfresearch" / "LINKS.json"
 WEEKLY = ROOT / "packages" / "vfresearch" / "WEEKLY.md"
 DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
 MUSIC = ROOT / "packages" / "vfresearch" / "MUSIC.md"
+MUSIC_SOURCES = ROOT / "packages" / "vfresearch" / "SOURCES-MUSIC.json"
 MUSIC_SKILL = ROOT / ".cursor" / "skills" / "vf-ig-music" / "SKILL.md"
 ROUTINE = ROOT / "packages" / "vfops" / "ROUTINE.md"
 ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
@@ -34,7 +35,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LINKS, WEEKLY, DAILY, MUSIC, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK):
+    for path in (LINKS, WEEKLY, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -87,19 +88,35 @@ def main() -> None:
         fail("constitution/ORCHESTRA.md must mention weekly link review")
 
     music = MUSIC.read_text()
-    for needle in ("@trend-researcher", "vfigos", "חסר מקור", "Treg", "@velvets_cloud"):
+    for needle in ("@trend-researcher", "vfigos", "חסר מקור", "HeyOrca", "@velvets_cloud", "לא בשימוש"):
         if needle not in music:
             fail(f"MUSIC.md must mention {needle}")
     if "YYYY-MM-DD-ig-music.md" not in music:
         fail("MUSIC.md must name ig-music artifact pattern")
     if "לא «שלחו DM»" not in music and 'Not «שלחו DM»' not in music:
         fail("MUSIC.md must forbid Send DM CTA")
+    if "heyorca.com/blog/trending-audio" not in music.lower():
+        fail("MUSIC.md must point at HeyOrca weekly URL")
+    # Treg may appear only as an explicit skip for music
+    if "Treg" in music and "עזבו את Treg" not in music and "אין Treg" not in music and "לא בשימוש" not in music:
+        fail("MUSIC.md must explicitly skip Treg for music")
+
+    music_src = json.loads(MUSIC_SOURCES.read_text())
+    if music_src.get("name") != "vfresearch-ig-music-sources":
+        fail("SOURCES-MUSIC.json name mismatch")
+    if "treg" not in (music_src.get("skip") or []):
+        fail("SOURCES-MUSIC.json must skip treg")
+    primary = [s for s in (music_src.get("sources") or []) if s.get("role") == "primary"]
+    if not primary or "heyorca" not in primary[0].get("id", ""):
+        fail("SOURCES-MUSIC.json primary must be HeyOrca")
 
     skill = MUSIC_SKILL.read_text()
     if "trend-researcher" not in skill:
         fail("vf-ig-music skill must mention trend-researcher")
     if "MUSIC.md" not in skill:
         fail("vf-ig-music skill must point at MUSIC.md")
+    if "no Treg" not in skill and "No Treg" not in skill and "**no Treg**" not in skill:
+        fail("vf-ig-music skill must forbid Treg")
 
     desk = json.loads(DESK.read_text())
     skill_paths = desk.get("skills") or []
@@ -111,8 +128,10 @@ def main() -> None:
     job = trend.get("job") or ""
     if "music" not in job.lower() and "sound" not in job.lower() and "מוזיקה" not in job:
         fail("trend-researcher job must cover Instagram music/sound")
+    if "HeyOrca" not in job and "heyorca" not in job.lower():
+        fail("trend-researcher job must name HeyOrca (not Treg) for music")
 
-    print(f"OK vfresearch weekly-links links={len(links)} music=1")
+    print(f"OK vfresearch weekly-links links={len(links)} music=1 sources={len(music_src.get('sources') or [])}")
 
 
 if __name__ == "__main__":

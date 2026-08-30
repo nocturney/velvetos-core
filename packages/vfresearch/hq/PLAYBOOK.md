@@ -20,6 +20,6 @@ B2B לא מכאן — `#vfbiz` נעול (לוגו, QR, מפיות).
 
 ## מוזיקה / סאונד לאינסטגרם
 
-כשיש ריל או בקשה למוזיקה: `../MUSIC.md` · `@trend-researcher`.  
-ארטיפקט: `../sources/YYYY-MM-DD-ig-music.md`. מקור חי (Treg / מסך IG / URL) או «חסר מקור» — לא ממציאים שירים.  
+כשיש ריל או בקשה למוזיקה: `../MUSIC.md` + `../SOURCES-MUSIC.json` · `@trend-researcher`.  
+מקור ראשי: HeyOrca שבועי (בלי Treg). ארטיפקט: `../sources/YYYY-MM-DD-ig-music.md`.  
 מסירה ל־`vfigos` + `vfom`. HQ לא שולח.

@@ -202,11 +202,12 @@
         "reel music",
         "instagram music",
         "שיר לריל",
-        "מוזיקה לפוסט"
+        "מוזיקה לפוסט",
+        "heyorca"
       ],
       "pack": "vfresearch",
       "slug": "trend-researcher",
-      "tool": "treg"
+      "tool": "calendar"
     }
   ],
   "adrs": [

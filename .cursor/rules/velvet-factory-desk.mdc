@@ -35,7 +35,7 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 | IG board | `vfigos` | `@instagram-curator` | Review and schedule only |
 | Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or Treg. Never invent. |
 | Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + Treg if logged in; weekly inspiration links: `vfresearch/WEEKLY.md` + `LINKS.json` |
-| IG music / reel sound | `vfresearch` | `@trend-researcher` → `@instagram-curator` | `MUSIC.md` + Treg if logged in; hand off to `vfom` / `vfigos`; no invented track names |
+| IG music / reel sound | `vfresearch` | `@trend-researcher` → `@instagram-curator` | `MUSIC.md` + HeyOrca weekly / IG paste (no Treg); hand off to `vfom` / `vfigos`; no invented track names |
 | Decide / stuck / cash pulse / IG rotation / studio notes | `vfmakers` on existing packs | `@chief-of-staff` or `@vfmakers` | Gmail **read** bills for cash pulse only |
 | Run / משמרת | `vfe2b` overlay | `@chief-of-staff` then the seat crew | One job folder. End in `worker_done` / `escalation` / `decision_gate`. Do not install Orca |
 | Harness / repeating failure / checkpoint | `vfharness` | `@workflow-architect` | `python3 scripts/check-all.py` — no second runtime |
