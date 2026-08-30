@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - 2026-08-30 — **שולחן Agency + כלים**: 28 סוכנים רלוונטיים חוברו לחמישה מושבים, לפקים, ולג׳ימייל (קריאה בלבד) / לוח שנה / דרייב / Superdesign / Treg / Mobbin. Desk overlay wires 28 relevant Agency specialists to the five seats, VF packs, and live tools (Gmail read-only, Calendar, Drive-by-job, Superdesign, Treg, Mobbin). See `docs/AGENCY-TOOLS.md`, `.cursor/vf-desk.json`, `.cursor/rules/velvet-factory-desk.mdc`.
+- 2026-08-30 — **vfcanva**: Canva אומת ב-Desktop (עיצוב `DAGoYmCu4c4`). Cloud Agent עדיין בלי Canva. Desktop Canva verified; this cloud run still cannot call it.
+- 2026-08-30 — **vfcanva**: תוסף מקומי + HTTP MCP + סטודיו PNG; בדיקה רק ב-Agent מקומי. Local plugin + HTTP MCP + studio PNG; verify in a local Agent chat only.
+- 2026-08-30 — **vfcanva**: Canva ככלי תוכן לאינסטגרם `@velvets_cloud` (יצירה / שינוי גודל / סקירה; HQ לא שולח). Canva is the Instagram visual tool for `@velvets_cloud` (create / resize / review; HQ does not send). See `docs/CANVA.md`.
 - 2026-08-30 — **vfagents**: מפת [500-AI-Agents-Projects](https://github.com/ashishpatel26/500-AI-Agents-Projects) על החבילות הקיימות + 12 נהלי משרד. בלי CrewAI חי, בלי שליחה. Fit map and twelve office playbooks; no live agent runtime. See `docs/500-AGENTS.md`.
 - 2026-08-30 — **The Agency**: הותקנו 273 סוכני Cursor מ-[msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (`3c95888`) ככללי פרויקט ב-`.cursor/rules/`. Installed 273 Cursor specialists from The Agency as project rules; mention `@slug` to activate. Refresh: `scripts/install-agency-agents.sh`. Roster: `docs/AGENCY-AGENTS.md`.
 - 2026-08-30 — **vfe2b**: מפת [awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) (209) לחמישה צוותי משרד על הפאקים הקיימים; בלי ראנטיים שני, בלי שליחה, בלי ₪ מומצא. Awesome-AI-agents desk: five crews on existing packs; no second runtime, no send, no invented ₪. [bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057](https://cursor.com/agents/bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057).
@@ -44,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **vfseason** — Seasonal calendar: studio calendar and season marks. [bc-2a4a3260](https://cursor.com/agents/bc-2a4a3260). Origin slug not found in this dump.
 - **vfsku** — SKU cards and repeats: product cards and reprint runs. [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c). Origin slug not found in this dump.
 
-See **Unreleased** for **The Agency** (273 Cursor specialists), **vfmcp** (MCP fit research; HQ-native), **vfe2b** (awesome-ai-agents desk; HQ-native), and **vfagents** (500-list playbooks; HQ-native).
+See **Unreleased** for **vfcanva** (Canva Instagram desk; HQ-native), **The Agency** (273 Cursor specialists), **vfmcp** (MCP fit research; HQ-native), **vfe2b** (awesome-ai-agents desk; HQ-native), and **vfagents** (500-list playbooks; HQ-native).
 
 [Unreleased]: https://github.com/nocturney/velvet-factory-headquarters-os/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/nocturney/velvet-factory-headquarters-os/releases/tag/v0.1.0

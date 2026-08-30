@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VF Instagram desk — @velvets_cloud</title>
+  <style>
+    :root {
+      --bg: #11110f;
+      --paper: #f4efe6;
+      --ink: #1a1814;
+      --mute: #6b6458;
+      --line: #c9c1b3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--paper);
+    }
+    main { max-width: 1120px; margin: 0 auto; padding: 28px 20px 64px; }
+    h1 { font-size: 22px; font-weight: 600; margin: 0 0 8px; }
+    p.note { color: #b8b0a4; font-size: 13px; line-height: 1.5; margin: 0 0 24px; }
+    form {
+      display: grid;
+      gap: 12px;
+      background: #1b1a17;
+      border: 1px solid #2a2824;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 28px;
+    }
+    label { font-size: 12px; color: #b8b0a4; display: grid; gap: 6px; }
+    input, select, textarea {
+      font: inherit;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #3a3732;
+      background: #11110f;
+      color: var(--paper);
+    }
+    button {
+      justify-self: start;
+      background: var(--paper);
+      color: var(--ink);
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .stage { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
+    .frame-wrap { background: #000; border-radius: 8px; overflow: hidden; }
+    .frame {
+      width: 1080px;
+      height: 1080px;
+      background: var(--paper);
+      color: var(--ink);
+      position: relative;
+      transform-origin: top right;
+    }
+    .frame.story { height: 1920px; }
+    .inner {
+      position: absolute;
+      inset: 0;
+      padding: 88px 72px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .frame.story .inner { padding: 280px 72px 380px; }
+    .kicker { font-size: 22px; letter-spacing: 0.08em; color: var(--mute); }
+    .hook { font-size: 72px; line-height: 1.15; font-weight: 650; margin: 18px 0 0; }
+    .job { font-size: 32px; color: var(--mute); margin-top: 20px; }
+    .cta {
+      border-top: 1px solid var(--line);
+      padding-top: 28px;
+      font-size: 28px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .scaled { overflow: auto; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>שולחן אינסטגרם — @velvets_cloud</h1>
+    <p class="note">
+      עובד בלי תוסף Canva ובלי Git. צבעי ברירת מחדל של השולחן — לא ערכת מותג.
+      CTA קבוע: וואטסאפ 050-2517000 / איסוף שדרות. HQ לא שולח.
+      שמירה: כפתור «הכן קובץ» ואז <code>python3 packages/vfcanva/studio/render.py</code>.
+    </p>
+    <form id="desk">
+      <label>פורמט
+        <select id="format">
+          <option value="ig_feed_square">פוסט מרובע 1080×1080</option>
+          <option value="ig_story">סטורי / קאבר ריל 1080×1920</option>
+        </select>
+      </label>
+      <label>הוק
+        <input id="hook" value="הדפסה בתלת־ממד · שדרות" />
+      </label>
+      <label>שם עבודה (רק מה שנתת — או ריק)
+        <input id="job" value="" placeholder="חסר" />
+      </label>
+      <button type="button" id="apply">עדכן תצוגה</button>
+    </form>
+    <div class="stage">
+      <div class="scaled">
+        <div class="frame-wrap">
+          <article class="frame" id="card">
+            <div class="inner">
+              <div>
+                <div class="kicker">@velvets_cloud</div>
+                <h2 class="hook" id="hookOut">הדפסה בתלת־ממד · שדרות</h2>
+                <p class="job" id="jobOut"></p>
+              </div>
+              <div class="cta">
+                <span>050-2517000</span>
+                <span>איסוף שדרות</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    const card = document.getElementById("card");
+    const format = document.getElementById("format");
+    const hook = document.getElementById("hook");
+    const job = document.getElementById("job");
+    function paint() {
+      card.classList.toggle("story", format.value === "ig_story");
+      document.getElementById("hookOut").textContent = hook.value.trim() || "חסר הוק";
+      document.getElementById("jobOut").textContent = job.value.trim();
+      const scale = format.value === "ig_story" ? 0.28 : 0.42;
+      card.style.transform = "scale(" + scale + ")";
+      card.parentElement.style.width = (1080 * scale) + "px";
+      card.parentElement.style.height = ((format.value === "ig_story" ? 1920 : 1080) * scale) + "px";
+    }
+    document.getElementById("apply").onclick = paint;
+    paint();
+  </script>
+</body>
+</html>

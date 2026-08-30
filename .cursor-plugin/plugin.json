@@ -1,0 +1,12 @@
+{
+  "name": "vf-canva",
+  "version": "1.0.0",
+  "description": "Velvet Factory Canva desk for @velvets_cloud. HTTP MCP only — no git, no npx, no marketplace plugin.",
+  "author": {
+    "name": "Velvet Factory"
+  },
+  "keywords": ["canva", "instagram", "velvet-factory"],
+  "skills": "./.cursor/skills/",
+  "rules": "./.cursor/rules/",
+  "mcpServers": "./.cursor/mcp.json"
+}
