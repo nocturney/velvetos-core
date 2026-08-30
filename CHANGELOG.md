@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — פקודת קבע: גיטהאב הוא גיבוי רציף; כל פק חדש נרשם באותו יום במפה גם אם Origin לא משכפל. Standing order: GitHub is the constant backup; catalogue every new pack the same day even when Origin will not clone. See `docs/BACKUP.md`.
+
 ## [0.1.0] — 2026-08-30
 
 - Initial GitHub backup of Cursor office packs.

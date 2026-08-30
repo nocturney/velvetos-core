@@ -5,7 +5,7 @@ Private backup, versions, and changelog for Velvet Factory Cursor packs.
 Grok Bot (5 seats) still runs live Instagram, Gmail, and printers.
 Cursor packs in `packages/` are the office OS.
 
-See `CHANGELOG.md`.
+See `CHANGELOG.md`. Standing order (same-day map, no weekly wait): `docs/BACKUP.md`.
 
 ## What this repo is
 
@@ -63,3 +63,7 @@ Clone URL shape: `https://origin.cursor.com/{owner}/{repo}.git`.
 
 Codebase URLs: `https://cursor.com/codebase/<origin-slug>`.
 Cloud agent URLs: `https://cursor.com/agents/<bcId>`.
+
+## Standing order (2026-08-30)
+
+GitHub HQ is the constant backup. On every new pack follow-up, the same day: update `packages/<name>/ORIGIN.md` + `packages/manifest.json`, vendor if Origin clones, append `CHANGELOG.md` Unreleased (date + one Hebrew+English line), push to `main`. If Origin will not clone, still update the map. Grok Bot: see [`docs/BACKUP.md`](docs/BACKUP.md) — reply to this HQ agent with bcId, pack name, and Origin slug if known; quiet if nothing new.
