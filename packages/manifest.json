@@ -11,6 +11,7 @@
     "This repo does not send Instagram posts. Live Instagram, Gmail, and printers stay on Grok Bot (5 seats).",
     "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
     "2026-08-30 desk overlay: 28 Agency specialists + live tools in .cursor/vf-desk.json and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
+    "2026-08-30: vfmem is HQ-native. Structural queries over desk/manifest/Agency maps (DeusData/codebase-memory-mcp pattern). Do not install their binary from this repo. See docs/VFMEM.md.",
     "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings → MCP Tools.",
     "2026-08-30: ChatGPT share https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19 embedded in place (packages/*/hq, constitution/, vfbriefux packet). No new pack per agent. Vendor preserves hq/ overlays. See packages/chatgpt-embed-map.json and docs/SHARE-EMBED-he.md.",
     "2026-08-30 share embed: Gemini hbuCq3MEy5po / 4f223bc1774c read and mapped onto existing packs + constitution/. Perplexity c950af30: morning Cloudflare wall; afternoon owner PDFs read and mapped in place (no new pack, no invented ₪, no live bot/site/widget). See docs/SHARES-2026-08-30.md.",
@@ -243,6 +244,19 @@
       "cloneUrl": null,
       "vendorStatus": "hq-native",
       "writeup": "docs/500-AGENTS.md"
+    },
+    {
+      "name": "vfmem",
+      "summary": "HQ memory graph — CBM-style queries over existing VF maps. Pattern from DeusData/codebase-memory-mcp; no third-party binary.",
+      "bcId": "bc-8bd6ba75",
+      "bcIdFull": "bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
+      "agentUrl": "https://cursor.com/agents/bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "source": "https://github.com/DeusData/codebase-memory-mcp",
+      "writeup": "docs/VFMEM.md"
     }
   ]
 }

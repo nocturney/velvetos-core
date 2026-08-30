@@ -22,6 +22,7 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 
 | Job | Pack | Mention | Tool |
 |---|---|---|---|
+| Office map / who handles | `vfmem` | `@studio-operations` | `python3 scripts/vfmem.py who <job>` |
 | Morning brief / queue | `vfops` | `@studio-operations` | Calendar (Asia/Jerusalem), Gmail **read** inbox |
 | Brief layout | `vfbriefux` | `@ux-architect` | Mobbin if available; Superdesign for packet graphics |
 | New inquiry | `vfconvert` | `@email-intelligence-engineer` then `@discovery-coach` | Gmail **read** the named thread |
@@ -34,6 +35,14 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 | Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + Treg if logged in |
 
 Warehouse specialists (Godot, GIS, healthcare, China social, XR, …) stay off the desk unless the user asks for that slug.
+
+## HQ memory
+
+Before reading many packs or the 273-rule warehouse, query the office graph:
+
+`python3 scripts/vfmem.py who <job>`
+
+Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pattern from DeusData/codebase-memory-mcp — do not install their binary from this repo.
 
 ## Tool modes
 

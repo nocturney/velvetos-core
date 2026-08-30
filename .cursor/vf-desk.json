@@ -64,15 +64,22 @@
       "status": "skill-installed-needs-login",
       "useWhen": "vfgrowth / vfresearch / vfinsights live web, SEO, social, ads data",
       "rule": "Say the catalog price before spending. Never invent Insights."
+    },
+    "vfmem": {
+      "status": "hq-native",
+      "command": "python3 scripts/vfmem.py",
+      "useWhen": "Route a job to pack / specialist / tool without dumping the warehouse",
+      "source": "https://github.com/DeusData/codebase-memory-mcp",
+      "rule": "Query the office graph first. Do not install the CBM binary from this repo."
     }
   },
   "seats": [
     {
       "id": "lead",
       "he": "ראש צוות",
-      "packs": ["vfops", "vfbriefux"],
+      "packs": ["vfops", "vfbriefux", "vfmem"],
       "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect"],
-      "tools": ["calendar", "gmail"],
+      "tools": ["calendar", "gmail", "vfmem"],
       "decides": "₪ amount, what moves on the board, what is deferred"
     },
     {
@@ -111,14 +118,14 @@
   "desk": [
     {
       "slug": "studio-operations",
-      "packs": ["vfops"],
-      "tools": ["calendar", "gmail"],
+      "packs": ["vfops", "vfmem"],
+      "tools": ["calendar", "gmail", "vfmem"],
       "job": "Morning brief, queue bottlenecks, run-the-studio procedures"
     },
     {
       "slug": "chief-of-staff",
-      "packs": ["vfops", "vfbiz"],
-      "tools": ["calendar", "gmail"],
+      "packs": ["vfops", "vfbiz", "vfmem"],
+      "tools": ["calendar", "gmail", "vfmem"],
       "job": "Open decisions, seat handoffs, what waits for Christian"
     },
     {
@@ -282,6 +289,7 @@
   "skills": [
     ".cursor/skills/vf-morning-brief/SKILL.md",
     ".cursor/skills/vf-inquiry-chain/SKILL.md",
-    ".cursor/skills/vf-content-sprint/SKILL.md"
+    ".cursor/skills/vf-content-sprint/SKILL.md",
+    ".cursor/skills/vf-hq-memory/SKILL.md"
   ]
 }
