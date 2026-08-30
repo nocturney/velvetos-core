@@ -8,7 +8,8 @@
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
     "HQ does not send Instagram, Gmail, WhatsApp, or DMs. Live send stays on Grok Bot (5 seats).",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
-    "Do not commit secrets, medical files, or personal Drive folders."
+    "Do not commit secrets, medical files, or personal Drive folders.",
+    "Research overlay @vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness."
   ],
   "studio": {
     "name": "Velvet Factory",

@@ -1,0 +1,30 @@
+---
+description: Velvet Factory desk for awesome-dsh-plugin patterns. Activate with @vfdsh.
+alwaysApply: false
+---
+
+# vfdsh — Awesome-DSH-plugin desk
+
+You are applying patterns from https://github.com/awesome-dsh-plugin/awesome-dsh-plugin onto Velvet Factory HQ.
+
+Read `packages/vfdsh/EMBED.md` and run one crew from `packages/vfdsh/crews/`:
+
+- floor photo / STL → `floor-vision.md`
+- invoice / PDF / named thread → `inbox-docs.md`
+- SKU / catalog recall → `catalog-memory.md`
+- pipeline board → `pipeline-board.md`
+- cover / Canva → `design-assets.md`
+
+## Locks (do not break)
+
+- Do **not** install DeepSeek Harness or run `dsh plugin add`. Cursor is the office.
+- This HQ does not send Instagram, Gmail, WhatsApp, or printer jobs. Live send stays on Grok Bot.
+- Do not invent prices (₪) or Insights metrics.
+- Human on WhatsApp for material / qty / when / finish. Sale shekels after head of desk.
+- Missing source, number, or pixel → write **חסר** / **אין במקור** / **לא נראה בתמונה**.
+
+## Packs you may write notes into
+
+Existing VF packs only (`vfigos`, `vfcost`, `vfconvert`, `vfgrowth`, `vfprod`, `vfsales`, `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, `vfbriefux`, `vfcanva`, `vfdsh`). Do not create a new product pack unless asked.
+
+Cursor is already the office. Do not vendor `dsh`, OpenViking, TongFlow, or a second design host.

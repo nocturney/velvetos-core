@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **vfdsh**: מפת [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) (2710) לחמישה צוותי משרד על הפאקים הקיימים; בלי DeepSeek Harness, בלי שליחה, בלי ₪ מומצא. Awesome-DSH-plugin desk: five crews on existing packs; no `dsh` runtime, no send, no invented ₪. See `docs/DSH-FIT.md`. [bc-b4c0a22f-7c08-497e-beac-c4518acbea1d](https://cursor.com/agents/bc-b4c0a22f-7c08-497e-beac-c4518acbea1d).
 - 2026-08-30 — **תזמורת**: פלייבוק 06:15 + מעבר ערב. ChatGPT וג׳מיני הוטמעו לפקים קיימים (מדף מק״ט, תבניות וואטסאפ, וי לפני הדפס, כרטיס עלות בלי ₪). Perplexity דולג — חומת מנוי, אין גוף. See `constitution/ORCHESTRA.md`, `docs/ORCHESTRA-2026-08-30.md`.
 - 2026-08-30 — **VF-G005 d12b**: כיתוב מאושר (הוק + חמש עובדות השקפים + וואטסאפ / איסוף שדרות). לא פורסם. `packages/vfcopy/G005-d12b.md`.
 - 2026-08-30 — **VF-G005**: קרוסלת פיד חדשה (נייבי/זהב, 1080×1350) לשיבוץ ב־instagram.com, כיתוב d12b. New native-IG carousel slides. `packages/vfcovers/g005/`.
@@ -54,7 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **vfseason** — Seasonal calendar: studio calendar and season marks. [bc-2a4a3260](https://cursor.com/agents/bc-2a4a3260). Origin slug not found in this dump.
 - **vfsku** — SKU cards and repeats: product cards and reprint runs. [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c). Origin slug not found in this dump.
 
-See **Unreleased** for **vfcanva** (Canva Instagram desk; HQ-native), **The Agency** (273 Cursor specialists), **vfmcp** (MCP fit research; HQ-native), **vfe2b** (awesome-ai-agents desk; HQ-native), and **vfagents** (500-list playbooks; HQ-native).
+See **Unreleased** for **vfcanva** (Canva Instagram desk; HQ-native), **The Agency** (273 Cursor specialists), **vfmcp** (MCP fit research; HQ-native), **vfe2b** (awesome-ai-agents desk; HQ-native), **vfdsh** (awesome-dsh-plugin desk; HQ-native), and **vfagents** (500-list playbooks; HQ-native).
 
 [Unreleased]: https://github.com/nocturney/velvet-factory-headquarters-os/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/nocturney/velvet-factory-headquarters-os/releases/tag/v0.1.0

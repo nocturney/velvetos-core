@@ -35,6 +35,8 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 
 Warehouse specialists (Godot, GIS, healthcare, China social, XR, …) stay off the desk unless the user asks for that slug.
 
+Research overlays (mention only when asked): `@vfe2b` awesome-ai-agents crews; `@vfdsh` awesome-dsh-plugin crews (floor vision, inbox docs, catalog memory, pipeline board, design). Do not install DeepSeek Harness.
+
 ## Tool modes
 
 - **Gmail:** `search_threads` / `get_thread` / `list_labels`. Inbox is `nocturney@gmail.com`.

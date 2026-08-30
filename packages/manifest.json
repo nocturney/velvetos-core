@@ -11,6 +11,7 @@
     "This repo does not send Instagram posts. Live Instagram, Gmail, and printers stay on Grok Bot (5 seats).",
     "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
     "2026-08-30 desk overlay: 28 Agency specialists + live tools in .cursor/vf-desk.json and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
+    "2026-08-30: vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness. See docs/DSH-FIT.md.",
     "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings → MCP Tools.",
     "2026-08-30: ChatGPT share https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19 embedded in place (packages/*/hq, constitution/, vfbriefux packet). No new pack per agent. Vendor preserves hq/ overlays. See packages/chatgpt-embed-map.json and docs/SHARE-EMBED-he.md.",
     "2026-08-30 share embed: Gemini hbuCq3MEy5po / 4f223bc1774c read and mapped onto existing packs + constitution/. Perplexity c950af30: morning Cloudflare wall; afternoon owner PDFs read and mapped in place (no new pack, no invented ₪, no live bot/site/widget). See docs/SHARES-2026-08-30.md.",
@@ -231,6 +232,19 @@
       "cloneUrl": null,
       "vendorStatus": "hq-native",
       "source": "https://github.com/e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "vfdsh",
+      "summary": "Awesome-DSH-plugin desk — patterns from awesome-dsh-plugin mapped onto existing packs (no DeepSeek Harness, no send).",
+      "bcId": "bc-b4c0a22f",
+      "bcIdFull": "bc-b4c0a22f-7c08-497e-beac-c4518acbea1d",
+      "agentUrl": "https://cursor.com/agents/bc-b4c0a22f-7c08-497e-beac-c4518acbea1d",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "source": "https://github.com/awesome-dsh-plugin/awesome-dsh-plugin",
+      "writeup": "docs/DSH-FIT.md"
     },
     {
       "name": "vfagents",
