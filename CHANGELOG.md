@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **vfmskill**: 15/50 כישורים מ־[coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) (`e55de88`) על הפקים הקיימים. בלי CMO של SaaS, בלי שליחה, בלי ₪ מומצא. Curated marketing skills on existing packs; no send, no invented ₪. See `docs/MARKETING-SKILLS.md`.
 - 2026-08-30 — **תזמורת**: פלייבוק 06:15 + מעבר ערב. ChatGPT וג׳מיני הוטמעו לפקים קיימים (מדף מק״ט, תבניות וואטסאפ, וי לפני הדפס, כרטיס עלות בלי ₪). Perplexity דולג — חומת מנוי, אין גוף. See `constitution/ORCHESTRA.md`, `docs/ORCHESTRA-2026-08-30.md`.
 - 2026-08-30 — **VF-G005 d12b**: כיתוב מאושר (הוק + חמש עובדות השקפים + וואטסאפ / איסוף שדרות). לא פורסם. `packages/vfcopy/G005-d12b.md`.
 - 2026-08-30 — **VF-G005**: קרוסלת פיד חדשה (נייבי/זהב, 1080×1350) לשיבוץ ב־instagram.com, כיתוב d12b. New native-IG carousel slides. `packages/vfcovers/g005/`.

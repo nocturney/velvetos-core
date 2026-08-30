@@ -12,7 +12,7 @@ Use when there is a new פנייה, Instagram/WhatsApp/Gmail inquiry, or "quote 
 1. `vfconvert` + `@email-intelligence-engineer` + `@discovery-coach` — structured brief (size, use, pickup window, license).
 2. `vfprod` + `@studio-producer` — print feasibility. No national shipping.
 3. `vfcost` + `@pricing-analyst` — cost factors from slicer / snapshot / an amount Christian stated. Else `X ₪`.
-4. `vfsales` + `vfcopy` + `@sales-engineer` + `@content-creator` — quote **draft**. One CTA. Spoken Hebrew. No empty price promise.
+4. `vfsales` + `vfcopy` + `@sales-engineer` + `@content-creator` — quote **draft**. One CTA. Spoken Hebrew. No empty price promise. Optional frameworks: `vfmskill` `offers` / `sales-enablement` / `customer-research`. ₪ still only after the lead seat.
 5. Stop. A human sends on WhatsApp + Invoice4U.
 
 ## Gmail

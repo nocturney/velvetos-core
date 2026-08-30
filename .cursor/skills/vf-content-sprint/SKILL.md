@@ -13,6 +13,7 @@ Use when the user asks for חבילת תוכן, covers, reel draft, or a post af
 - `vfcovers` + `@visual-storyteller` + `@image-prompt-engineer` + `@brand-guardian`
 - `vfigos` + `@instagram-curator` — **review and schedule only**
 - After publish (when a real snapshot exists): `vfinsights` + `@analytics-reporter`
+- Frameworks (optional): `vfmskill` + `.cursor/skills/vf-marketing-skills` — `social` / `video` / `image`. Desk laws win.
 
 ## Tools
 
