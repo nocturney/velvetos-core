@@ -1,16 +1,29 @@
-# חיבור Canva — מה שצריך כדי שזה יעבוד
+# איך מחזירים את Canva לרשימה
 
-השרת `https://mcp.canva.com/mcp` חי. הכשל אצלך הוא **טעינת תוסף המרקטפלייס**, לא הרשת.
+מחקנו את **התוסף מהחנות**. זה נכון. עכשיו מוסיפים את Canva כשרת רחוק (רק קישור), לא מהחנות.
 
-## מה לעשות עכשיו (בסדר הזה)
+אל תחפש «Canva» במרקטפלייס. אל תלחץ Install Plugin.
 
-1. במסך Canva עם הבאנר הכתום: **Uninstall**.  
-   `spawn git ENOENT` = Cursor מחפש `git` כדי לעדכן את התוסף. בלי Git התוסף מת.
-2. לפתוח את הריפו הזה (הענף של PR #6). הוא טוען Canva **מהפרויקט**:
-   - [`.cursor-plugin/plugin.json`](../../.cursor-plugin/plugin.json)
-   - [`.cursor/mcp.json`](../../.cursor/mcp.json) — `type: http`, בלי `npx`, בלי `git`
-3. **Developer: Reload Window**.
-4. Customize → MCP → `canva` (מהפרויקט) → **Connect** בדפדפן.
+## הכי קל: לחץ על הקישור
+
+1. במחשב שבו מותקן Cursor, לחץ:
+   [הוסף Canva ל-Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=canva&config=eyJ1cmwiOiJodHRwczovL21jcC5jYW52YS5jb20vbWNwIiwidHlwZSI6Imh0dHAifQ==)
+2. Cursor ישאל אם להתקין שרת MCP בשם `canva`. אשר.
+3. ייפתח דפדפן — היכנס לחשבון Canva ולחץ Allow.
+4. חזור ל-Cursor. ברשימת MCP אמור להופיע `canva` (ירוק / Connect).
+
+אם הקישור לא נפתח, העתק לכתובת בדפדפן במחשב:
+
+`cursor://anysphere.cursor-deeplink/mcp/install?name=canva&config=eyJ1cmwiOiJodHRwczovL21jcC5jYW52YS5jb20vbWNwIiwidHlwZSI6Imh0dHAifQ==`
+
+זה עובד רק ב-Cursor Desktop על המחשב שלך. לא בתוך הצ'אט של הסוכן בענן.
+
+## בלי קישור: הוספה ידנית (Windows)
+
+1. ב-Cursor לחץ `Ctrl + Shift + P`.
+2. הקלד: `View: Open MCP Settings` ולחץ Enter.
+3. לחץ **Add Custom MCP** / **New MCP Server**.
+4. נפתח קובץ `mcp.json`. מחק הכל והדבק בדיוק:
 
 ```json
 {
@@ -23,22 +36,16 @@
 }
 ```
 
-אל תתקין שוב את תוסף המרקטפלייס. אל תתחבר מתוך ה־VM של Cloud Agent.
+5. שמור (`Ctrl + S`).
+6. ברשימת MCP יופיע `canva`. לחץ **Connect** / התחבר.
+7. בדפדפן אשר את Canva.
 
-## בינתיים — הסטודיו כבר מייצר פריימים
+## מה לא לעשות
 
-```bash
-python3 packages/vfcanva/studio/render.py --format ig_feed_square --hook "הדפסה בתלת־ממד · שדרות"
-python3 packages/vfcanva/studio/render.py --format ig_story --hook "הדפסה בתלת־ממד · שדרות" --name ig_story
-```
+- לא Install מחדש של תוסף Canva מהחנות (`spawn git ENOENT` יחזור).
+- לא לחפש Canva תחת Plugins.
+- לא לחכות שיופיע לבד אחרי Uninstall — צריך להוסיף אותו כ-MCP.
 
-שולחן: [`studio/index.html`](studio/index.html).  
-יציאה: `packages/vfcanva/studio/out/*.png` (1080×1080 / 1080×1920).
+## אחרי שהחיבור חי
 
-## אם Connect עדיין נכשל אחרי Uninstall
-
-- Canva AI Connector דורש Pro / Teams / Business / Nonprofit. חינם נכשל.
-- צוות: Admin → Third-party integrations → Canva AI Connector דלוק.
-- חלון קופץ חסום / חשבון Canva אחר.
-
-מדריך Canva: https://www.canva.com/help/mcp-agent-setup/
+כתוב בשיחה: «מחובר».

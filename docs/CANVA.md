@@ -18,7 +18,7 @@ HQ עדיין **לא** שולח אינסטגרם. גרוק שולח.
 
 בלי OAuth: `python3 packages/vfcanva/studio/render.py` או [`studio/index.html`](../packages/vfcanva/studio/index.html). לא להמציא URL.
 
-אם מופיע `spawn git ENOENT`: **Uninstall** לתוסף המרקטפלייס. הפרויקט טוען Canva מ־`.cursor-plugin` + `.cursor/mcp.json` (`type: http`).
+Canva נעלם מהרשימה אחרי Uninstall? זה צפוי. להחזיר אותו **לא מהחנות** — ראו [`CONNECT.md`](../packages/vfcanva/CONNECT.md) (קישור התקנה או Add Custom MCP).
 
 ## מה מבקשים
 
