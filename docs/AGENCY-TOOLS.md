@@ -46,6 +46,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | בריף בוקר / what is open | `.cursor/skills/vf-morning-brief/SKILL.md` |
 | פנייה / quote this | `.cursor/skills/vf-inquiry-chain/SKILL.md` |
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
+| מוזיקה / סאונד לריל | `.cursor/skills/vf-ig-music/SKILL.md` · `@trend-researcher` |
 | דפוסי DSH / צילום רצפה / PDF / לוח | `@vfdsh` — `packages/vfdsh/EMBED.md`, `docs/DSH-FIT.md` |
 | קופי / הצעה / מסגור שיווקי | `.cursor/skills/vf-marketing-skills/SKILL.md` |
 | החלטה / קיר / דופק כסף / רוטציה | `.cursor/skills/vf-makers/SKILL.md` |

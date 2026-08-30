@@ -17,3 +17,9 @@ B2B לא מכאן — `#vfbiz` נעול (לוגו, QR, מפיות).
 
 פעם בשבוע: `../WEEKLY.md` על הרישום `../LINKS.json`.  
 ארטיפקט ב־`../sources/YYYY-MM-DD-weekly-links.md`. הטמעה במקום — בלי פק חדש.
+
+## מוזיקה / סאונד לאינסטגרם
+
+כשיש ריל או בקשה למוזיקה: `../MUSIC.md` · `@trend-researcher`.  
+ארטיפקט: `../sources/YYYY-MM-DD-ig-music.md`. מקור חי (Treg / מסך IG / URL) או «חסר מקור» — לא ממציאים שירים.  
+מסירה ל־`vfigos` + `vfom`. HQ לא שולח.

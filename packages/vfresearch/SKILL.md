@@ -9,3 +9,9 @@
 - יומי 06:15 (צ'אטים חדשים): `DAILY.md`
 - **שבועי** — סקירת קישורי השראה/הטמעה שנשלחו: `WEEKLY.md` + `LINKS.json`
 - מיומנות: `.cursor/skills/vf-weekly-links/SKILL.md` · `@research-synthesist`
+
+## מוזיקה לאינסטגרם
+
+- פלייבוק: `MUSIC.md` · `@trend-researcher` (מסירה ל־`vfigos` / `vfom`)
+- מיומנות: `.cursor/skills/vf-ig-music/SKILL.md`
+- ארטיפקט: `sources/YYYY-MM-DD-ig-music.md` — בלי שמות שירים מומצאים, בלי Insights

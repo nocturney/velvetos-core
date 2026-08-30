@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **מוזיקה לאינסטגרם**: חוקר `@trend-researcher` על `vfresearch` (`MUSIC.md` + skill `vf-ig-music`) ממליץ סאונד מטרנדים/שוק; מסירה ל־`vfom`/`vfigos`. בלי פק חדש, בלי שמות שירים מומצאים, בלי שליחה. Instagram music researcher on existing vfresearch; live sources or «חסר מקור». See `packages/vfresearch/MUSIC.md`.
 - 2026-08-30 — **קישורי השראה שבועי**: רישום `vfresearch/LINKS.json` + פלייבוק `WEEKLY.md` — פעם בשבוע חוזרים על שיתופים/ריפואים שהוטמעו, מטמיעים עדכונים במקום, ושואלים מה חדש לחקור. סנסור `check-vfresearch.py`. Weekly inspiration-link review on existing vfresearch; no new pack. See `packages/vfresearch/WEEKLY.md`.
 - 2026-08-30 — **vfdsh**: מפת [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) (2710) לחמישה צוותי משרד על הפאקים הקיימים; בלי DeepSeek Harness, בלי שליחה, בלי ₪ מומצא. Awesome-DSH-plugin desk: five crews on existing packs; no `dsh` runtime, no send, no invented ₪. See `docs/DSH-FIT.md`. [bc-b4c0a22f-7c08-497e-beac-c4518acbea1d](https://cursor.com/agents/bc-b4c0a22f-7c08-497e-beac-c4518acbea1d).
 - 2026-08-30 — **vfmskill**: 15/50 כישורים מ־[coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) (`e55de88`) על הפקים הקיימים. בלי CMO של SaaS, בלי שליחה, בלי ₪ מומצא. Curated marketing skills on existing packs; no send, no invented ₪. See `docs/MARKETING-SKILLS.md`.

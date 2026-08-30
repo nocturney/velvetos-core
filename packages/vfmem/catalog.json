@@ -190,6 +190,23 @@
       "pack": "vfresearch",
       "slug": "research-synthesist",
       "tool": "treg"
+    },
+    {
+      "q": [
+        "music",
+        "מוזיקה",
+        "סאונד",
+        "sound",
+        "audio",
+        "trending audio",
+        "reel music",
+        "instagram music",
+        "שיר לריל",
+        "מוזיקה לפוסט"
+      ],
+      "pack": "vfresearch",
+      "slug": "trend-researcher",
+      "tool": "treg"
     }
   ],
   "adrs": [

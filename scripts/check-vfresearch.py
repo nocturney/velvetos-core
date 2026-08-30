@@ -10,9 +10,12 @@ ROOT = Path(__file__).resolve().parents[1]
 LINKS = ROOT / "packages" / "vfresearch" / "LINKS.json"
 WEEKLY = ROOT / "packages" / "vfresearch" / "WEEKLY.md"
 DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
+MUSIC = ROOT / "packages" / "vfresearch" / "MUSIC.md"
+MUSIC_SKILL = ROOT / ".cursor" / "skills" / "vf-ig-music" / "SKILL.md"
 ROUTINE = ROOT / "packages" / "vfops" / "ROUTINE.md"
 ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
 MANIFEST = ROOT / "packages" / "manifest.json"
+DESK = ROOT / ".cursor" / "vf-desk.json"
 REQUIRED_LOCKS = {
     "no-send-instagram",
     "no-send-gmail",
@@ -31,7 +34,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LINKS, WEEKLY, DAILY, ROUTINE, ORCHESTRA, MANIFEST):
+    for path in (LINKS, WEEKLY, DAILY, MUSIC, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -83,7 +86,33 @@ def main() -> None:
     if "WEEKLY.md" not in orchestra and "קישורי השראה" not in orchestra:
         fail("constitution/ORCHESTRA.md must mention weekly link review")
 
-    print(f"OK vfresearch weekly-links links={len(links)}")
+    music = MUSIC.read_text()
+    for needle in ("@trend-researcher", "vfigos", "חסר מקור", "Treg", "@velvets_cloud"):
+        if needle not in music:
+            fail(f"MUSIC.md must mention {needle}")
+    if "YYYY-MM-DD-ig-music.md" not in music:
+        fail("MUSIC.md must name ig-music artifact pattern")
+    if "לא «שלחו DM»" not in music and 'Not «שלחו DM»' not in music:
+        fail("MUSIC.md must forbid Send DM CTA")
+
+    skill = MUSIC_SKILL.read_text()
+    if "trend-researcher" not in skill:
+        fail("vf-ig-music skill must mention trend-researcher")
+    if "MUSIC.md" not in skill:
+        fail("vf-ig-music skill must point at MUSIC.md")
+
+    desk = json.loads(DESK.read_text())
+    skill_paths = desk.get("skills") or []
+    if ".cursor/skills/vf-ig-music/SKILL.md" not in skill_paths:
+        fail("vf-desk.json skills must include vf-ig-music")
+    trend = next((r for r in desk.get("desk", []) if r.get("slug") == "trend-researcher"), None)
+    if not trend:
+        fail("desk missing trend-researcher")
+    job = trend.get("job") or ""
+    if "music" not in job.lower() and "sound" not in job.lower() and "מוזיקה" not in job:
+        fail("trend-researcher job must cover Instagram music/sound")
+
+    print(f"OK vfresearch weekly-links links={len(links)} music=1")
 
 
 if __name__ == "__main__":
