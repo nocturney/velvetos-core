@@ -19,7 +19,9 @@ Constitution and team of 5: [`../constitution/`](../constitution/). Hebrew repor
 
 HQ-native research packs (not Origin trees): `vfmcp` ([`docs/MCP-FIT.md`](../docs/MCP-FIT.md)), `vfe2b` (e2b-dev/awesome-ai-agents desk), and `vfagents` ([`docs/500-AGENTS.md`](../docs/500-AGENTS.md)).
 
-Share embed map: [`chatgpt-embed-map.json`](chatgpt-embed-map.json). Constitution: [`../constitution/`](../constitution/CONSTITUTION.md).
+Share embed map: [`chatgpt-embed-map.json`](chatgpt-embed-map.json). Constitution: [`../constitution/`](../constitution/CONSTITUTION.md). Orchestra: [`../constitution/ORCHESTRA.md`](../constitution/ORCHESTRA.md).
+
+HQ overlays (orchestra, brief, gates) live next to `ORIGIN.md`. `scripts/vendor-origin-packs.sh` keeps them when Origin trees land.
 
 New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates. Do not add a pack that duplicates an existing tool.
 

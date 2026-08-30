@@ -60,12 +60,22 @@ vendor_one() {
   fi
 
   mkdir -p "$dest"
-  local overlay
+  # Keep HQ overlay (playbooks, orchestra, gates, ChatGPT hq/) when Origin trees land.
+  local overlay=""
   overlay="$(mktemp -d)"
   [[ -f "$dest/ORIGIN.md" ]] && cp "$dest/ORIGIN.md" "$overlay/ORIGIN.md"
-  [[ -f "$dest/SKILL.md" ]] && cp "$dest/SKILL.md" "$overlay/SKILL.md"
-  [[ -d "$dest/hq" ]] && cp -a "$dest/hq" "$overlay/hq"
-  find "$dest" -mindepth 1 -maxdepth 1 ! -name ORIGIN.md ! -name SKILL.md ! -name hq -exec rm -rf {} +
+  for keep in hq SKILL.md ROUTINE.md BRIEF.md BRIEF-2026-08-31.md DAILY.md GATE.md PATH.md DESK.md CALENDAR.md CHECKLIST.md FLOOR-CARD.md PICKUP.md SLICE.md QUOTE.md FLOOR.md MATERIAL.md CARDS.md LOCK.md CHAIN.md LEDGER.md PHONE.md REVIEW.md SKIP.md READ.md DRAFT.md CONNECT.md OPEN.md WORKFLOW.md FORMATS.json G005.md G005-d12b.md; do
+    if [[ -e "$dest/$keep" ]]; then
+      cp -a "$dest/$keep" "$overlay/$keep"
+    fi
+  done
+  if [[ -d "$dest/sources" ]]; then
+    cp -a "$dest/sources" "$overlay/sources"
+  fi
+  if [[ -d "$dest/g005" ]]; then
+    cp -a "$dest/g005" "$overlay/g005"
+  fi
+  find "$dest" -mindepth 1 -maxdepth 1 ! -name ORIGIN.md -exec rm -rf {} +
   shopt -s dotglob nullglob
   cp -a "$tmp"/* "$dest/" 2>/dev/null || true
   shopt -u dotglob nullglob
@@ -76,7 +86,12 @@ vendor_one() {
     rm -rf "$dest/hq"
     cp -a "$overlay/hq" "$dest/hq"
   fi
-  rm -rf "$overlay"
+  if [[ -d "${overlay:-}" ]]; then
+    shopt -s dotglob nullglob
+    cp -a "$overlay"/* "$dest/" 2>/dev/null || true
+    shopt -u dotglob nullglob
+    rm -rf "$overlay"
+  fi
   if [[ -n "$sha" ]]; then
     if ! grep -q "Vendored commit:" "$dest/ORIGIN.md" 2>/dev/null; then
       printf '\nVendored commit: `%s`\n' "$sha" >> "$dest/ORIGIN.md"

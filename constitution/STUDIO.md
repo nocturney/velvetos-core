@@ -10,6 +10,7 @@
 | אינסטגרם | [@velvets_cloud](https://instagram.com/velvets_cloud) |
 | שפה | עברית |
 | סגירה | אדם בוואטסאפ + Invoice4U |
+| צוות משרד | 5 מושבים — ראו [`TEAM.md`](TEAM.md) |
 | B2B נעול | לוגו, QR, מפיות — עד שראש הצוות פותח |
 
 אין כאן מחירי מכירה. אין כאן Insights מומצאים.

@@ -74,3 +74,10 @@
 למפות כלי Gemini ו־Perplexity על החבילות הקיימות. לא פק כפול. לא ManyChat/Bolta חי, לא צ׳אטבוט 24/7, לא ווידג׳ט מחיר, לא אתר מ־HQ.
 
 מקור נוסף: Gemini `hbuCq3MEy5po` + Perplexity `c950af30` (גוף מ־PDF אחרי Cloudflare) · `docs/SHARES-2026-08-30.md`
+
+
+## תזמורת (נעילה 30.8 ~17:55)
+
+Grok = החלטות בלבד. Cursor פותח כל בוקר 06:15 את ChatGPT **וגם** Gemini **וגם** Perplexity, מטמיע בפק קיים, כותב «מה נבנה / יועל» לבריף 07:00. ריק = «אין חדש במשרד». חומה / אין גוף — דולגים, לא ממציאים.
+
+פלייבוק: [`ORCHESTRA.md`](ORCHESTRA.md) · דוח: `docs/ORCHESTRA-2026-08-30.md`

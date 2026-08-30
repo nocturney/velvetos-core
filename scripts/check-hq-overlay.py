@@ -79,6 +79,11 @@ def main() -> None:
                     continue
                 if "050-2517000" in snippet:
                     continue
+                # Policy / list-item ₪ (e.g. "4. ₪ רק אחרי", "בלי ₪") is not a price.
+                if re.search(r"(בלי|אין|לא)\s*₪|₪\s*רק", snippet):
+                    continue
+                if re.fullmatch(r"\d+\.\s*₪", m.group(0).strip()):
+                    continue
                 fail(f"possible invented ILS in {path.relative_to(ROOT)}: {snippet!r}")
 
     print("OK hq overlay + share map")
