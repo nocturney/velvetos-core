@@ -10,6 +10,8 @@
 | [`tags.md`](tags.md) | תגיות משרד וצינור |
 | [`TAGS.md`](TAGS.md) | תגיות בריף + מיפוי Gemini/Perplexity |
 | [`ORCHESTRA.md`](ORCHESTRA.md) | תזמורת הכלים החיצוניים — ChatGPT · Gemini · Perplexity |
+| [`../AGENTS.md`](../AGENTS.md) | מדריך רתמה (Guides). מנצח את השיחה |
+| [`../docs/HARNESS.md`](../docs/HARNESS.md) | שתילת שש שכבות הרתמה על הפקים |
 
 נעול 30.8.2026 ~17:55 (Asia/Jerusalem): הצ'אט ב־Grok = החלטות בלבד.  
 סוסי העבודה: Cursor + ChatGPT + Gemini + Perplexity. משתמשים בהם, לא מציעים אותם.

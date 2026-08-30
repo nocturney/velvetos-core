@@ -29,3 +29,7 @@ Use when the user asks for בריף בוקר, morning brief, what is open today,
 One pipeline reminder: פנייה → שיחה → הצעה → הדפסה → איסוף. Pickup in Sderot only.
 
 If constitution overlays exist (`packages/vfops/hq/BRIEF-SLOTS.md` or `packages/vfops/BRIEF.md`), fill those slots. Do not invent a sixth seat.
+
+## Harness
+
+Read `AGENTS.md` if this is a new session. Do not invent queue hours to pass the brief. If Calendar/Gmail reads fail twice, escalate with `packages/vfharness/templates/escalation.md` — do not send mail. Long brief work: optional checkpoint in `packages/vfharness/state/`.
