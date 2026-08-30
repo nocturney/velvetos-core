@@ -32,6 +32,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 - 2026-08-30 — Invented sale ₪ or Insights to fill a gap. Sensor: `scripts/check-hq-overlay.py`.
 - 2026-08-30 — Instagram / Gmail send from HQ. Sensor: desk rule + `scripts/check-vf-desk.py`.
 - 2026-08-30 — New pack per ChatGPT/Gemini “agent”. Embed in place. Map: `packages/chatgpt-embed-map.json`.
+- 2026-08-30 — Inspiration/share links left stale. Weekly pass: `packages/vfresearch/WEEKLY.md` + `LINKS.json`. Sensor: `scripts/check-vfresearch.py`.
 - 2026-08-30 — Invented a Perplexity / Cloudflare-blocked body. Write «אין גוף» and skip.
 - 2026-08-30 — Second agent runtime (CrewAI, AutoGPT, BabyAGI). Cursor is the office. See `packages/vfe2b/LOCK.md`.
 - 2026-08-30 — National shipping or a sixth seat invented beside the five-seat desk.
@@ -48,6 +49,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 | `scripts/check-vfmakers.py` | Maker-skills desk |
 | `scripts/check-vfagents.py` | 500-list playbooks |
 | `scripts/check-vf-canva.py` | Canva Instagram desk |
+| `scripts/check-vfresearch.py` | Weekly inspiration-links registry (`LINKS.json` + `WEEKLY.md`) |
 
 Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
 

@@ -1,0 +1,26 @@
+{
+  "task_id": "weekly-inspiration-links-2026-08-30",
+  "status": "done",
+  "pack": "vfresearch",
+  "completed_steps": [
+    "Routed via vfmem → vfresearch @research-synthesist",
+    "Created LINKS.json registry of share + repo inspiration URLs",
+    "Wrote WEEKLY.md playbook and first weekly artifact",
+    "Wired ROUTINE.md, ORCHESTRA.md, desk, AGENTS sensors, vfmem catalog",
+    "Added scripts/check-vfresearch.py and skill vf-weekly-links"
+  ],
+  "next_step": "Next Sunday (or lead-named day): full live re-read of each LINKS.json URL; Calendar recurring event only if lead asks",
+  "artifacts": [
+    "packages/vfresearch/LINKS.json",
+    "packages/vfresearch/WEEKLY.md",
+    "packages/vfresearch/sources/2026-08-30-weekly-links.md",
+    "scripts/check-vfresearch.py",
+    ".cursor/skills/vf-weekly-links/SKILL.md"
+  ],
+  "unresolved": [
+    "Calendar recurring event not created (ASK before Calendar create)",
+    "Full live body re-fetch of all shares deferred to next weekly pass"
+  ],
+  "escalation": null,
+  "last_updated": "2026-08-30"
+}

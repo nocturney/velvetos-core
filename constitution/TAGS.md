@@ -26,6 +26,7 @@
 | `vision-monitor` | `vfprod` | רשימת רצפה. לא דמון חי כאן |
 | `timelapse-reel` | `vfgrowth`, `vfigos` | טיוטה ל־Grok |
 | `ideation` | `vfresearch`, `vfsales` | חיפוש דגם + אישור ויזואלי |
+| `weekly-links` | `vfresearch` | סקירת קישורי השראה פעם בשבוע (`WEEKLY.md`) |
 | `material-tracker` | `vfprod`, `vfsku` | יומן מלאי. בלי רכש מומצא |
 
 תגיות סוכן Perplexity — ממופות, לא פקים חדשים:

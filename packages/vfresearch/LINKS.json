@@ -1,0 +1,145 @@
+{
+  "name": "vfresearch-inspiration-links",
+  "title": "קישורי השראה והטמעה — רישום שבועי",
+  "rule": "Re-read registered links weekly. Embed updates into existing packs only. Do not invent bodies, ₪, or Insights. Do not create a new pack per idea.",
+  "cadence": "weekly",
+  "timezone": "Asia/Jerusalem",
+  "dayHint": "sunday-morning-or-lead-named",
+  "playbook": "packages/vfresearch/WEEKLY.md",
+  "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md",
+  "briefBlock": "05-משרד",
+  "mention": ["@research-synthesist", "@trend-researcher"],
+  "seat": "ייצור",
+  "alsoSeat": "ראש צוות קורא בבריף",
+  "locks": [
+    "no-send-instagram",
+    "no-send-gmail",
+    "no-invented-prices",
+    "no-invented-insights",
+    "no-new-pack-per-idea",
+    "no-invented-blocked-body",
+    "pickup-sderot-only"
+  ],
+  "links": [
+    {
+      "id": "chatgpt-building-agents",
+      "kind": "share",
+      "url": "https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19",
+      "title": "סוכני בנייה",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "map": "packages/chatgpt-embed-map.json",
+      "report": "docs/SHARE-EMBED-he.md",
+      "packs": ["vfops", "vfcost", "vfconvert", "vfprod", "vfsales", "vfgrowth", "vfresearch", "vfbiz", "vfbooks", "constitution"]
+    },
+    {
+      "id": "gemini-3dprint-agents",
+      "kind": "share",
+      "url": "https://share.gemini.google/hbuCq3MEy5po",
+      "openUrl": "https://gemini.google.com/share/4f223bc1774c",
+      "title": "סוכני בינה לעסק הדפסות תלת-ממד",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "sourceNote": "packages/vfresearch/sources/gemini-hbuCq3MEy5po.md",
+      "report": "docs/SHARES-2026-08-30.md",
+      "packs": ["vfops", "vfgrowth", "vfcopy", "vfcovers", "vfigos", "vfinsights", "vfsales", "vfcost", "vfprod", "vfresearch", "vfsku", "vlicense", "constitution"]
+    },
+    {
+      "id": "perplexity-c950af30",
+      "kind": "share",
+      "url": "https://www.perplexity.ai/search/c950af30-8c60-4667-b7d6-84db67f62218",
+      "title": "Perplexity — אתר AI / תמחור / שרשרת",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "sourceNote": "packages/vfresearch/sources/perplexity-c950af30.md",
+      "report": "docs/SHARES-2026-08-30.md",
+      "wallNote": "Live page may hit Cloudflare; use owner PDF / source note. Never invent body.",
+      "packs": ["vfigos", "vfcopy", "vfcovers", "vfbiz", "vfbooks", "vfsales", "vfcost", "vfprod", "vfconvert", "vfresearch", "vlicense", "vfsku"]
+    },
+    {
+      "id": "awesome-mcp-servers",
+      "kind": "repo",
+      "url": "https://github.com/punkpeye/awesome-mcp-servers",
+      "title": "awesome-mcp-servers",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "report": "docs/MCP-FIT.md",
+      "pack": "vfmcp",
+      "packs": ["vfmcp"]
+    },
+    {
+      "id": "codebase-memory-mcp",
+      "kind": "repo",
+      "url": "https://github.com/DeusData/codebase-memory-mcp",
+      "title": "codebase-memory-mcp",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "report": "docs/VFMEM.md",
+      "pack": "vfmem",
+      "packs": ["vfmem"],
+      "note": "Pattern only. Do not install their C binary from this repo."
+    },
+    {
+      "id": "trailhq-graft",
+      "kind": "repo",
+      "url": "https://github.com/trailhq/Graft",
+      "title": "Graft",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "report": "docs/GRAFT.md",
+      "pack": "vfgraft",
+      "packs": ["vfgraft"],
+      "note": "Committed markdown graph only. No npm CLI / Graft MCP."
+    },
+    {
+      "id": "free-claude-code",
+      "kind": "repo",
+      "url": "https://github.com/Alishahryar1/free-claude-code",
+      "title": "free-claude-code",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "report": "docs/FCC-FIT.md",
+      "pack": "vffcc",
+      "packs": ["vffcc"],
+      "note": "Local BYOK map only. No fcc-server on Cloud Agent."
+    },
+    {
+      "id": "500-ai-agents",
+      "kind": "repo",
+      "url": "https://github.com/ashishpatel26/500-AI-Agents-Projects",
+      "title": "500-AI-Agents-Projects",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "report": "docs/500-AGENTS.md",
+      "pack": "vfagents",
+      "packs": ["vfagents"]
+    },
+    {
+      "id": "agency-agents",
+      "kind": "repo",
+      "url": "https://github.com/msitarzewski/agency-agents",
+      "title": "agency-agents",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "report": "docs/AGENCY-AGENTS.md",
+      "packs": [".cursor/rules"],
+      "note": "Refresh via scripts/install-agency-agents.sh. Warehouse stays off desk unless user names a slug."
+    },
+    {
+      "id": "awesome-ai-agents",
+      "kind": "repo",
+      "url": "https://github.com/e2b-dev/awesome-ai-agents",
+      "title": "awesome-ai-agents",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "report": "docs/ORCHESTRA-2026-08-30.md",
+      "pack": "vfe2b",
+      "packs": ["vfe2b"],
+      "note": "Crew overlay only. No second runtime."
+    }
+  ],
+  "addLink": {
+    "how": "Append an object under links[] the same day the owner sends a URL. Set firstEmbedded and lastReviewed. Do not wait for the weekly pass.",
+    "sameDay": true
+  }
+}
