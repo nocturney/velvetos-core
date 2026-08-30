@@ -30,7 +30,7 @@ Default format: `ig_feed_square` (1080×1080). Story / reel cover = 1080×1920. 
 
 Inspect the `Canva` MCP namespace (tools + auth status).
 
-- **`needsAuth` or no tools:** do not fake a design. Point to `packages/vfcanva/CONNECT.md`. Usual causes: connecting from the cloud VM (`mcp-remote` / localhost callback), Canva **Free** (AI Connector needs Pro/Teams/Business/Nonprofit), or a team admin who disabled third-party integrations. Fallback: `packages/vfcanva/OPEN.md` browser create links — user pastes the edit URL.
+- **`needsAuth` or no tools:** do not fake a design. Point to `packages/vfcanva/CONNECT.md`. Usual causes: **`spawn git ENOENT`** (marketplace plugin — Uninstall it, keep project `url` MCP), connecting from the cloud VM, Canva **Free**, or a team admin who disabled third-party integrations. Fallback: `packages/vfcanva/OPEN.md`.
 - **Tools present:** continue. Use exact tool names from the live schema (discover before each call).
 
 Official Canva skills (read the matching file before mutating a design):

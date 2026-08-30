@@ -12,7 +12,7 @@ HQ עדיין **לא** שולח אינסטגרם. גרוק שולח.
 פירוט ותקלות: [`packages/vfcanva/CONNECT.md`](../packages/vfcanva/CONNECT.md).
 
 1. [`.cursor/mcp.json`](../.cursor/mcp.json) חייב להיות `{ "url": "https://mcp.canva.com/mcp" }` — **לא** `mcp-remote`.
-2. להתחבר מ־**Cursor Desktop** או cursor.com: Customize → MCP → canva → Connect.
+2. אם מופיע `spawn git ENOENT`: Uninstall לתוסף המרקטפלייס, להישאר עם ה־URL בפרויקט. או להתקין Git ולהפעיל מחדש את Cursor.
 3. צריך תוכנית Canva Pro / Teams / Business / Nonprofit. חינם נכשל.
 4. בדיקה: `python3 scripts/check-vf-canva.py` → `OK vfcanva formats=5 skill+rule+mcp`.
 
