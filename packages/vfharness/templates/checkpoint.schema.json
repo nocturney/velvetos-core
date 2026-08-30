@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vfharness-checkpoint",
+  "title": "VF harness task checkpoint",
+  "type": "object",
+  "required": ["task_id", "status", "pack", "completed_steps", "next_step", "artifacts", "unresolved", "last_updated"],
+  "additionalProperties": false,
+  "properties": {
+    "task_id": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["running", "blocked", "escalated", "done"] },
+    "pack": { "type": "string", "minLength": 1 },
+    "completed_steps": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "next_step": { "type": "string" },
+    "artifacts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "unresolved": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "escalation": { "type": ["string", "null"] },
+    "last_updated": { "type": "string", "minLength": 8 }
+  }
+}

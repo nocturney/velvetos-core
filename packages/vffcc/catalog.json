@@ -1,0 +1,160 @@
+{
+  "name": "vffcc",
+  "title": "Free Claude Code fit",
+  "source": {
+    "title": "Alishahryar1/free-claude-code",
+    "url": "https://github.com/Alishahryar1/free-claude-code",
+    "readAt": "2026-08-30",
+    "license": "MIT",
+    "claim": "50 ToS-friendly providers, BYOK, local proxy on :8082; not affiliated with Anthropic"
+  },
+  "hqFact": "FCC does not reduce Cursor Cloud Agent usage. This pack is a map + locks, not an install.",
+  "locks": [
+    "no-send-instagram",
+    "no-send-gmail",
+    "no-send-discord-telegram",
+    "no-invented-prices",
+    "no-invented-insights",
+    "no-invented-quotas",
+    "no-secrets-in-git",
+    "no-fcc-on-cloud-agent",
+    "no-vendor-fcc-tree",
+    "no-second-coding-office"
+  ],
+  "verdicts": ["local", "later", "skip"],
+  "clients": [
+    {
+      "name": "Claude Code",
+      "command": "fcc-claude",
+      "verdict": "local",
+      "note": "Owner Mac only. Points ANTHROPIC_BASE_URL at localhost. Does not feed Cursor Cloud."
+    },
+    {
+      "name": "OpenCode",
+      "command": "fcc-opencode",
+      "verdict": "local",
+      "note": "Second local client if lead seat prefers it over Claude Code. Pick one."
+    },
+    {
+      "name": "Codex",
+      "command": "fcc-codex",
+      "verdict": "later",
+      "note": "Needs ChatGPT connect or OpenAI path. Orchestra already opens ChatGPT in the browser."
+    },
+    {
+      "name": "Pi / Cline / Hermes / DeepSeek Harness / Grok Build / Muse / Aider",
+      "command": "fcc-*",
+      "verdict": "skip",
+      "note": "vfe2b second-office lock. Do not install the whole client list."
+    }
+  ],
+  "providers": [
+    {
+      "id": "nvidia_nim",
+      "name": "NVIDIA NIM",
+      "setting": "NVIDIA_NIM_API_KEY",
+      "verdict": "local",
+      "packs": ["vfbiz", "vfops"],
+      "playbook": "playbooks/local-offload.md",
+      "note": "FCC default. Free key at build.nvidia.com. Owner machine only."
+    },
+    {
+      "id": "groq",
+      "name": "Groq",
+      "setting": "GROQ_API_KEY",
+      "verdict": "local",
+      "packs": ["vfbiz", "vfops"],
+      "playbook": "playbooks/local-offload.md",
+      "note": "Published free tier. Fast drafts. Owner machine only."
+    },
+    {
+      "id": "gemini",
+      "name": "Google AI Studio (Gemini)",
+      "setting": "GEMINI_API_KEY",
+      "verdict": "local",
+      "packs": ["vfresearch", "vfops"],
+      "playbook": "playbooks/local-offload.md",
+      "note": "Already an orchestra desk in the browser. Separate key if used as FCC backend."
+    },
+    {
+      "id": "open_router",
+      "name": "OpenRouter free",
+      "setting": "OPENROUTER_API_KEY",
+      "verdict": "local",
+      "packs": ["vfbiz"],
+      "playbook": "playbooks/local-offload.md",
+      "note": "Example model open_router/openrouter/free. Quality varies. Owner machine only."
+    },
+    {
+      "id": "openai_chatgpt",
+      "name": "OpenAI / ChatGPT subscription",
+      "setting": "Providers → Connected accounts",
+      "verdict": "later",
+      "packs": ["vfresearch"],
+      "playbook": "playbooks/route.md",
+      "note": "Orchestra already opens ChatGPT. Do not duplicate as an HQ proxy."
+    },
+    {
+      "id": "ollama_local",
+      "name": "Ollama / LM Studio / llama.cpp",
+      "setting": "OLLAMA_BASE_URL / LM_STUDIO_BASE_URL / LLAMACPP_BASE_URL",
+      "verdict": "later",
+      "packs": ["vfbiz"],
+      "playbook": "playbooks/local-offload.md",
+      "note": "Truly local weights. Needs RAM/GPU on the owner Mac. Lead seat decides."
+    },
+    {
+      "id": "xai",
+      "name": "xAI (Grok API)",
+      "setting": "XAI_API_KEY",
+      "verdict": "skip",
+      "packs": ["vfbiz"],
+      "playbook": "playbooks/route.md",
+      "note": "Grok Bot is the live sender. Do not mix xAI keys into HQ or FCC."
+    },
+    {
+      "id": "azure_bedrock_vertex",
+      "name": "Azure OpenAI / Amazon Bedrock / Vertex AI",
+      "setting": "cloud enterprise",
+      "verdict": "skip",
+      "packs": ["vfbiz"],
+      "playbook": "playbooks/route.md",
+      "note": "Enterprise cloud. Not the Sderot office."
+    },
+    {
+      "id": "messaging",
+      "name": "Discord / Telegram / voice notes",
+      "setting": "MESSAGING_PLATFORM",
+      "verdict": "skip",
+      "packs": ["vfigos", "vfops"],
+      "playbook": "playbooks/route.md",
+      "note": "HQ does not send. Human WhatsApp 050-2517000."
+    },
+    {
+      "id": "other_byok",
+      "name": "DeepSeek / Mistral / Qwen / Together / Kimi / MiniMax / Z.ai / Hugging Face / …",
+      "setting": "various *_API_KEY",
+      "verdict": "later",
+      "packs": ["vfbiz"],
+      "playbook": "playbooks/local-offload.md",
+      "note": "More BYOK names in the FCC README. Do not add from HQ. Owner picks one free key first."
+    }
+  ],
+  "playbooks": [
+    {
+      "id": "route",
+      "path": "playbooks/route.md",
+      "packs": ["vfops", "vfbiz", "vfresearch"]
+    },
+    {
+      "id": "cursor-thrift",
+      "path": "playbooks/cursor-thrift.md",
+      "packs": ["vfops", "vfbiz"]
+    },
+    {
+      "id": "local-offload",
+      "path": "playbooks/local-offload.md",
+      "packs": ["vfbiz", "vfops"]
+    }
+  ]
+}

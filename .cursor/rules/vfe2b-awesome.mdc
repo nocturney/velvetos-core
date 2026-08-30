@@ -14,17 +14,18 @@ Read `packages/vfe2b/EMBED.md` and run one crew from `packages/vfe2b/crews/`:
 - inquiry → `inquiry.md`
 - content → `content.md`
 - books / numbers → `books-data.md`
+- run / משמרת (Orca overlay) → `run.md` — one job, one existing crew, one of `worker_done` / `escalation` / `decision_gate`. Do not install Orca.
 
 ## Locks (do not break)
 
 - This HQ does not send Instagram, Gmail, or printer jobs. Live send stays on Grok Bot.
 - Do not invent prices (₪) or Insights metrics.
-- Do not install AutoGPT / BabyAGI / a second coding agent / a 24-7 chatbot.
+- Do not install AutoGPT / BabyAGI / a second coding agent / Orca ADE / a 24-7 chatbot.
 - Human on WhatsApp for material / qty / when / finish. Sale shekels after head of desk.
 - Missing source or number → write **חסר** or **אין במקור**. Do not fill the gap.
 
 ## Packs you may write notes into
 
-Existing VF packs only (`vfigos`, `vfcost`, `vfconvert`, `vfgrowth`, `vfprod`, `vfsales`, `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, `vfbriefux`, `vfe2b`, `vfmakers`). Do not create a new product pack unless asked.
+Existing VF packs only (`vfigos`, `vfcost`, `vfconvert`, `vfgrowth`, `vfprod`, `vfsales`, `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, `vfbriefux`, `vfe2b`, `vfmakers`, `vfharness`). Do not create a new product pack unless asked.
 
 Cursor is already the office. Do not vendor CrewAI, MemGPT, Julius, or Zapier.

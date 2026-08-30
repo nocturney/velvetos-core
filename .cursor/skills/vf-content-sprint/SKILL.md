@@ -12,6 +12,7 @@ Use when the user asks for חבילת תוכן, covers, reel draft, or a post af
 - `vfgrowth` + `@content-creator` + `@growth-hacker`
 - `vfcovers` + `@visual-storyteller` + `@image-prompt-engineer` + `@brand-guardian`
 - `vfigos` + `@instagram-curator` — **review and schedule only**
+- `vfom` + `@visual-storyteller` — timelapse cut cards, hybrid beat list, scene gate (read `vf-openmontage`)
 - After publish (when a real snapshot exists): `vfinsights` + `@analytics-reporter`
 
 ## Tools
@@ -28,3 +29,7 @@ Use when the user asks for חבילת תוכן, covers, reel draft, or a post af
 **Story (review only):** guess-the-print (no private-client spoiler) · timelapse · result · WhatsApp CTA.
 
 Hashtags: at most 5, relevant. Do not move a booked `vfigos` slot. No boost. No "שלחו DM".
+
+## Harness
+
+`vfigos` is review/schedule only — a finished draft is not a send. Missing floor proof stays חסר; do not invent a scene to pass review. Stop after two failed proof searches and escalate rather than shipping a guessed cover.

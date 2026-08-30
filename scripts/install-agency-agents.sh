@@ -12,6 +12,11 @@ HQ_RULES=(
   velvet-factory-desk.mdc
   vfe2b-awesome.mdc
   vfmakers-desk.mdc
+  vf-canva-instagram.mdc
+  vf-harness.mdc
+  vffcc.mdc
+  vfgraft.mdc
+  vfom-openmontage.mdc
 )
 
 cleanup() { rm -rf "$WORKDIR"; }
