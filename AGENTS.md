@@ -45,6 +45,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 | `scripts/check-vf-desk.py` | Desk slugs / packs / no-send |
 | `scripts/check-vfharness.py` | Six layers present and wired |
 | `scripts/check-vfe2b.py` | Awesome-agents desk |
+| `scripts/check-vfmakers.py` | Maker-skills desk |
 | `scripts/check-vfagents.py` | 500-list playbooks |
 | `scripts/check-vf-canva.py` | Canva Instagram desk |
 

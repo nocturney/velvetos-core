@@ -230,9 +230,10 @@
       "id": "maps",
       "file": "graph/maps.md",
       "type": "system",
-      "summary": "Pattern packs: vfe2b, vfagents, vfmcp, vfgraft. Embed the pattern; do not vendor the runtime.",
+      "summary": "Pattern packs: vfe2b, vfmakers, vfagents, vfmcp, vfgraft. Embed the pattern; do not vendor the runtime.",
       "sources": [
         "packages/vfe2b/EMBED.md",
+        "docs/MAKERSKILLS-EMBED-he.md",
         "docs/500-AGENTS.md",
         "docs/MCP-FIT.md",
         "docs/GRAFT.md"

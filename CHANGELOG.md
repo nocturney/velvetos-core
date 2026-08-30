@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **vfmakers**: מפת [makerskills](https://github.com/coreyhaines31/makerskills) (20, MIT) לחמישה צוותי משרד — החלטה, קיר, דופק כסף, רוטציית אינסטגרם, מוח סטודיו — על הפאקים הקיימים. בלי פלאגין, בלי Typefully, בלי בנק חי, בלי שליחה. Maker-skills desk: five crews on existing packs; no plugin, no send, no invented ₪. [bc-888d3ff6-c3ad-43f7-bda3-814c82546324](https://cursor.com/agents/bc-888d3ff6-c3ad-43f7-bda3-814c82546324). See `docs/MAKERSKILLS-EMBED-he.md`.
 - 2026-08-30 — **vfom**: מפת [OpenMontage](https://github.com/calesthio/OpenMontage) (12 צינורות) לחמישה צוותי ריל על הפקים הקיימים; בלי Remotion, בלי שליחה, בלי סצנת מיטה מומצאת. OpenMontage desk: five reel crews on existing packs; no second renderer, no send, no invented floor scene. [bc-4be8813f-000e-43a0-b297-7537bda05d4e](https://cursor.com/agents/bc-4be8813f-000e-43a0-b297-7537bda05d4e). See `docs/OPENMONTAGE.md`.
 - 2026-08-30 — **vfe2b run**: דפוס Orca כשכבת משמרת על הצוותים הקיימים — תיק אחד, `worker_done` / `escalation` / `decision_gate`. בלי התקנת ADE, בלי fan-out של ₪ או שליחה. Orca ADE pattern as a run overlay on existing crews; no second office. `packages/vfe2b/crews/run.md`, `.cursor/skills/vf-run/SKILL.md`.
 - 2026-08-30 — **רתמה / harness**: הוטמעו שש שכבות (מדריך, סנסורים, לולאה, זיכרון, הרשאות, יומן) על הפקים הקיימים. `AGENTS.md` מנצח את השיחה. אין ראנטיים שני, אין שליחה, אין ₪ מומצא. Six-layer outer harness embedded on existing packs; guide file wins over chat. See `docs/HARNESS.md`, `packages/vfharness/`.
@@ -60,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **vfseason** — Seasonal calendar: studio calendar and season marks. [bc-2a4a3260](https://cursor.com/agents/bc-2a4a3260). Origin slug not found in this dump.
 - **vfsku** — SKU cards and repeats: product cards and reprint runs. [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c). Origin slug not found in this dump.
 
-See **Unreleased** for **vfom** (OpenMontage desk; HQ-native), **vfcanva** (Canva Instagram desk; HQ-native), **The Agency** (273 Cursor specialists), **vfmcp** (MCP fit research; HQ-native), **vfe2b** (awesome-ai-agents desk; HQ-native), **vfagents** (500-list playbooks; HQ-native), **vfharness** (six-layer outer harness; HQ-native), **vfgraft** (Graft office graph; HQ-native), **vfmem** (HQ memory graph; HQ-native), and **vffcc** (Free Claude Code fit; HQ-native).
+See **Unreleased** for **vfmakers** (makerskills desk; HQ-native), **vfom** (OpenMontage desk; HQ-native), **vfcanva** (Canva Instagram desk; HQ-native), **The Agency** (273 Cursor specialists), **vfmcp** (MCP fit research; HQ-native), **vfe2b** (awesome-ai-agents desk; HQ-native), **vfagents** (500-list playbooks; HQ-native), **vfharness** (six-layer outer harness; HQ-native), **vfgraft** (Graft office graph; HQ-native), **vfmem** (HQ memory graph; HQ-native), and **vffcc** (Free Claude Code fit; HQ-native).
 
 [Unreleased]: https://github.com/nocturney/velvet-factory-headquarters-os/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/nocturney/velvet-factory-headquarters-os/releases/tag/v0.1.0

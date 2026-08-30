@@ -16,7 +16,7 @@ morning-job     job          בריף בוקר
 inquiry-job     job          פנייה → טיוטת הצעה
 content-job     job          חבילת תוכן + כריכות
 blast           impact       what breaks if a law or tool mode moves
-maps            system       vfe2b · vfagents · vfmcp · vfgraft
+maps            system       vfe2b · vfmakers · vfagents · vfmcp · vfgraft
 ```
 
 ## Ask → nodes

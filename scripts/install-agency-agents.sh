@@ -7,7 +7,17 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SRC_REPO="${AGENCY_AGENTS_REPO:-https://github.com/msitarzewski/agency-agents.git}"
 WORKDIR="${TMPDIR:-/tmp}/vf-hq-agency-agents-$$"
 DEST="$ROOT/.cursor/rules"
-DESK_RULE="$DEST/velvet-factory-desk.mdc"
+# HQ-authored rules (not The Agency). Re-copy after install.sh replaces .cursor/rules.
+HQ_RULES=(
+  velvet-factory-desk.mdc
+  vfe2b-awesome.mdc
+  vfmakers-desk.mdc
+  vf-canva-instagram.mdc
+  vf-harness.mdc
+  vffcc.mdc
+  vfgraft.mdc
+  vfom-openmontage.mdc
+)
 
 cleanup() { rm -rf "$WORKDIR"; }
 trap cleanup EXIT
@@ -31,11 +41,12 @@ SRC_DATE="$(git -C "$WORKDIR/src" log -1 --format='%cs')"
 echo "=== convert --tool cursor @ $SHA_SHORT ==="
 "$WORKDIR/src/scripts/convert.sh" --tool cursor --parallel
 
-desk_preserve=""
-if [[ -f "$DESK_RULE" ]]; then
-  desk_preserve="$WORKDIR/velvet-factory-desk.mdc"
-  cp "$DESK_RULE" "$desk_preserve"
-fi
+mkdir -p "$WORKDIR/hq-rules"
+for rule in "${HQ_RULES[@]}"; do
+  if [[ -f "$DEST/$rule" ]]; then
+    cp "$DEST/$rule" "$WORKDIR/hq-rules/$rule"
+  fi
+done
 
 echo "=== install Cursor rules -> $DEST ==="
 (
@@ -43,10 +54,12 @@ echo "=== install Cursor rules -> $DEST ==="
   "$WORKDIR/src/scripts/install.sh" --tool cursor --no-interactive
 )
 
-if [[ -n "$desk_preserve" ]]; then
-  cp "$desk_preserve" "$DESK_RULE"
-  echo "Preserved VF desk rule: $DESK_RULE"
-fi
+for rule in "${HQ_RULES[@]}"; do
+  if [[ -f "$WORKDIR/hq-rules/$rule" ]]; then
+    cp "$WORKDIR/hq-rules/$rule" "$DEST/$rule"
+    echo "Preserved HQ rule: $DEST/$rule"
+  fi
+done
 
 python3 - "$ROOT" "$WORKDIR/src" "$SHA" "$SHA_SHORT" "$SRC_DATE" <<'PY'
 import json, re, sys

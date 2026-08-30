@@ -46,6 +46,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | בריף בוקר / what is open | `.cursor/skills/vf-morning-brief/SKILL.md` |
 | פנייה / quote this | `.cursor/skills/vf-inquiry-chain/SKILL.md` |
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
+| החלטה / קיר / דופק כסף / רוטציה | `.cursor/skills/vf-makers/SKILL.md` |
 | ריל / טיימלאפס / ייחוס | `.cursor/skills/vf-openmontage/SKILL.md` |
 | משמרת / `@vfe2b run` | `.cursor/skills/vf-run/SKILL.md` |
 | רתמה / harness / checkpoint | `.cursor/skills/vf-harness/SKILL.md` |
@@ -61,6 +62,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 @pricing-analyst גורמי עלות בלי מחיר מכירה
 @sales-engineer טיוטת הצעה אחרי הסכום שאמר כריסטיאן
 @instagram-curator סקירת לוח בלבד — בלי שליחה
+@vfmakers decide האם לפתוח את סט הלוגו
 @chief-of-staff משמרת על העבודה הזו — כרטיס worker_done / escalation / decision_gate
 @vfgraft map
 ```
