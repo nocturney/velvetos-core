@@ -182,6 +182,18 @@
       "codebaseUrl": null,
       "cloneUrl": null,
       "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vfagents",
+      "summary": "500 AI Agents fit — which ashishpatel26/500-AI-Agents-Projects patterns map onto VF packs. Office playbooks only; no CrewAI runtime, no send.",
+      "bcId": "bc-9765dc13",
+      "bcIdFull": "bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027",
+      "agentUrl": "https://cursor.com/agents/bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "writeup": "docs/500-AGENTS.md"
     }
   ]
 }
