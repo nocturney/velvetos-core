@@ -8,7 +8,8 @@
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
     "HQ does not send Instagram, Gmail, WhatsApp, or DMs. Live send stays on Grok Bot (5 seats).",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
-    "Do not commit secrets, medical files, or personal Drive folders."
+    "Do not commit secrets, medical files, or personal Drive folders.",
+    "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -64,6 +65,12 @@
       "status": "skill-installed-needs-login",
       "useWhen": "vfgrowth / vfresearch / vfinsights live web, SEO, social, ads data",
       "rule": "Say the catalog price before spending. Never invent Insights."
+    },
+    "fcc": {
+      "status": "not-on-this-cloud-agent",
+      "namespace": "owner-mac-only",
+      "useWhen": "vffcc local-offload after lead seat. Never install here.",
+      "rule": "Does not reduce Cursor Cloud usage. Keys stay in ~/.fcc/. No Discord/Telegram."
     }
   },
   "seats": [
@@ -282,6 +289,7 @@
   "skills": [
     ".cursor/skills/vf-morning-brief/SKILL.md",
     ".cursor/skills/vf-inquiry-chain/SKILL.md",
-    ".cursor/skills/vf-content-sprint/SKILL.md"
+    ".cursor/skills/vf-content-sprint/SKILL.md",
+    ".cursor/skills/vf-fcc-offload/SKILL.md"
   ]
 }

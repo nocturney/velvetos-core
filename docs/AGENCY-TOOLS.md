@@ -23,6 +23,7 @@ Checked 2026-08-30 on this HQ:
 | Mobbin | Plugin installed; MCP namespace not on this cloud agent | Brief UX only, when the server is actually available. |
 | Superdesign | Skill installed | Covers / brief graphics (skip repo init). Needs CLI login for generate. |
 | Treg | Skill installed; needs `treg login` | Live SEO/social/ads. Say the catalog price before spending. |
+| FCC (Free Claude Code) | Not on this Cloud Agent | Local BYOK proxy on the owner Mac only (`vffcc`). Does not cut Cursor usage. |
 
 Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or Christian.
 
@@ -43,6 +44,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | בריף בוקר / what is open | `.cursor/skills/vf-morning-brief/SKILL.md` |
 | פנייה / quote this | `.cursor/skills/vf-inquiry-chain/SKILL.md` |
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
+| FCC / חיסכון קלוד | `.cursor/skills/vf-fcc-offload/SKILL.md` |
 
 ## Example mentions
 

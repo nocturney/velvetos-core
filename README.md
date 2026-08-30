@@ -87,6 +87,7 @@ Five seats: ראש צוות · סטודיו · צמיחה · תפעול · יי�
 | `vfmcp` | MCP fit — which awesome-mcp-servers entries map onto VF packs. Write-up: [`docs/MCP-FIT.md`](docs/MCP-FIT.md). | [bc-1764e30f-b592-4805-9586-037da3351d65](https://cursor.com/agents/bc-1764e30f-b592-4805-9586-037da3351d65) | HQ-native (not Origin) |
 | `vfe2b` | Awesome-AI-agents desk — patterns from [e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) on existing packs (no second runtime; this HQ does not send). | [bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057](https://cursor.com/agents/bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057) | HQ-native |
 | `vfagents` | 500 AI Agents fit — office playbooks from the public list; no CrewAI runtime, no send. | [bc-9765dc13](https://cursor.com/agents/bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027) | HQ-native; [`docs/500-AGENTS.md`](docs/500-AGENTS.md) |
+| `vffcc` | Free Claude Code fit — [FCC](https://github.com/Alishahryar1/free-claude-code) as a local BYOK map. Does not cut Cursor Cloud usage; no `fcc-server` here. | [bc-5abae8de-a5da-455e-b71c-3db25e3d029c](https://cursor.com/agents/bc-5abae8de-a5da-455e-b71c-3db25e3d029c) | HQ-native; [`docs/FCC-FIT.md`](docs/FCC-FIT.md) |
 
 Constitution (not a pack dump): [`constitution/`](constitution/). Playbook: [`constitution/ORCHESTRA.md`](constitution/ORCHESTRA.md). Hebrew report: [`docs/ORCHESTRA-2026-08-30.md`](docs/ORCHESTRA-2026-08-30.md).
 

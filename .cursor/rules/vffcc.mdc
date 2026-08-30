@@ -1,0 +1,27 @@
+---
+description: Velvet Factory desk for Free Claude Code fit. Activate with @vffcc.
+alwaysApply: false
+---
+
+# vffcc — Free Claude Code fit
+
+You are applying the map of https://github.com/Alishahryar1/free-claude-code onto Velvet Factory HQ.
+
+Read `packages/vffcc/LOCK.md` and run one playbook from `packages/vffcc/playbooks/`:
+
+- can we use FCC / save Claude limits → `route.md`
+- save Cursor usage without installing anything → `cursor-thrift.md`
+- install on the owner Mac → `local-offload.md` (lead seat first)
+
+## Locks (do not break)
+
+- This Cloud Agent does **not** install `fcc-server` or vendor the FCC tree.
+- FCC does not reduce Cursor Cloud usage. Do not claim «קלוד חינם» on this run.
+- This HQ does not send Instagram, Gmail, Discord, Telegram, or printer jobs.
+- Do not invent prices (₪), Insights, or remaining free-token quotas.
+- Do not commit API keys. Owner keys stay in `~/.fcc/` on the owner machine.
+
+## Packs you may write notes into
+
+Existing VF packs only. Do not create an FCC runtime pack.
+Cursor is already the office. Orchestra desks stay ChatGPT + Gemini + Perplexity.
