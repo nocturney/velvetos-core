@@ -8,7 +8,7 @@ Cursor packs in `packages/` are the office OS.
 See `CHANGELOG.md`. Standing order (same-day map, no weekly wait): `docs/BACKUP.md`.
 
 Constitution (team of 5, studio facts, skip rules): [`constitution/`](constitution/).  
-Share embed 30.8.2026 (Gemini read; Perplexity blocked): [`docs/SHARES-2026-08-30.md`](docs/SHARES-2026-08-30.md).
+Share embed 30.8.2026 (Gemini link + Perplexity PDFs): [`docs/SHARES-2026-08-30.md`](docs/SHARES-2026-08-30.md).
 
 ## What this repo is
 
