@@ -21,6 +21,7 @@ Do **not** activate the full 50-skill upstream set. Ads, email send, SaaS CRO, a
 |---|---|---|---|
 | כיתוב / קופי / לינט | `copywriting` `copy-editing` `marketing-psychology` | `vfcopy` | Do not send |
 | ריל / סטורי / לוח תוכן | `social` `content-strategy` `video` | `vfgrowth` → `vfigos` | Grok sends |
+| מוזיקה / סאונד לריל | (frame) `social` Audio Strategy | `vfresearch` → `vfom` → `vfigos` | `@trend-researcher`; live source or חסר מקור |
 | כריכה / גרפיקה | `image` | `vfcovers` `vfcanva` | Canva first |
 | פנייה / VOC | `customer-research` | `vfconvert` | Gmail read only |
 | הצעה / התנגדות | `offers` `sales-enablement` | `vfsales` | After `vfcost`; human WhatsApp |

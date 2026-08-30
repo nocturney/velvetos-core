@@ -1,0 +1,26 @@
+{
+  "task_id": "ig-music-researcher-2026-08-30",
+  "status": "done",
+  "pack": "vfresearch",
+  "completed_steps": [
+    "Routed via vfmem → vfresearch @trend-researcher (music/sound) with handoff to vfigos",
+    "Wrote packages/vfresearch/MUSIC.md playbook",
+    "Added .cursor/skills/vf-ig-music/SKILL.md",
+    "Wired desk job, velvet-factory-desk route, vfmem catalog, vfigos REVIEW, vfom self-review, content/marketing skills, vfgraft MAP",
+    "First artifact sources/2026-08-30-ig-music.md marked חסר מקור (Treg not logged in)",
+    "Extended scripts/check-vfresearch.py for MUSIC.md + skill"
+  ],
+  "next_step": "When Treg is logged in or owner pastes IG library names: re-run vf-ig-music and fill named tracks in a new YYYY-MM-DD-ig-music.md",
+  "artifacts": [
+    "packages/vfresearch/MUSIC.md",
+    "packages/vfresearch/sources/2026-08-30-ig-music.md",
+    ".cursor/skills/vf-ig-music/SKILL.md",
+    "scripts/check-vfresearch.py"
+  ],
+  "unresolved": [
+    "Treg not logged in on this Cloud Agent — no live trending audio call",
+    "No owner/Grok screenshot of Instagram music library yet"
+  ],
+  "escalation": null,
+  "last_updated": "2026-08-30"
+}

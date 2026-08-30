@@ -292,7 +292,7 @@
       "slug": "trend-researcher",
       "packs": ["vfresearch", "vfseason"],
       "tools": ["treg", "calendar"],
-      "job": "Season and reprint signals from live sources when treg is logged in"
+      "job": "Season, reprint, and Instagram music/sound briefs from live sources (MUSIC.md). Treg price first; never invent track names or Insights"
     }
   ],
   "warehouse": "The other Agency specialists stay in .cursor/rules/ with alwaysApply false. Mention @slug only when the user asks for that specialty. Do not pull Godot, GIS, healthcare, China-social, or XR agents onto a Velvet Factory job unless asked.",
@@ -308,6 +308,7 @@
     ".cursor/skills/vf-hq-memory/SKILL.md",
     ".cursor/skills/vf-graft-map/SKILL.md",
     ".cursor/skills/vf-fcc-offload/SKILL.md",
-    ".cursor/skills/vf-weekly-links/SKILL.md"
+    ".cursor/skills/vf-weekly-links/SKILL.md",
+    ".cursor/skills/vf-ig-music/SKILL.md"
   ]
 }

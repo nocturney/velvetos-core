@@ -26,6 +26,7 @@ maps            system       vfe2b · vfmakers · vfagents · vfmcp · vfgraft
 | בריף בוקר / what is open | [[morning-job]] → [[tools]] → [[skills]] |
 | פנייה / quote this | [[inquiry-job]] → [[pipeline]] → [[packs]] |
 | חבילת תוכן / covers / Canva | [[content-job]] → [[grok-bot]] → [[tools]] |
+| מוזיקה / סאונד לריל | `vfresearch/MUSIC.md` → `@trend-researcher` → [[content-job]] → [[grok-bot]] |
 | how is HQ wired | this file → [[desk]] → [[packs]] |
 | what breaks if I change X | [[blast]] |
 | embed an outside repo | [[maps]] → [[laws]] |

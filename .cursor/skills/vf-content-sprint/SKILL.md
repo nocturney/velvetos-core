@@ -15,17 +15,18 @@ Use when the user asks for חבילת תוכן, covers, reel draft, or a post af
 - `vfom` + `@visual-storyteller` — timelapse cut cards, hybrid beat list, scene gate (read `vf-openmontage`)
 - After publish (when a real snapshot exists): `vfinsights` + `@analytics-reporter`
 - Frameworks (optional): `vfmskill` + `.cursor/skills/vf-marketing-skills` — `social` / `video` / `image`. Desk laws win.
+- Music / reel sound (optional): `vfresearch` + `@trend-researcher` via `.cursor/skills/vf-ig-music` — live source or «חסר מקור»; never invent track names.
 
 ## Tools
 
 1. **Drive** — `search_files` for the job/SKU/timelapse the user names. Partial pack if proof is missing (mark חסר). Do not invent a floor scene.
 2. **Superdesign** — covers, posters, social graphics. Use the graphics path (skip repo init). Follow the Superdesign skill.
-3. **Treg** — only if the CLI/MCP is logged in and the user wants live trend/ad/search data. Read the endpoint price and say it before `call`. Never invent Insights.
+3. **Treg** — only if the CLI/MCP is logged in and the user wants live trend/ad/search/music data. Read the endpoint price and say it before `call`. Never invent Insights or song titles.
 4. **Mobbin** — only if the user is changing the brief/post layout, not for Instagram send.
 
 ## Draft output
 
-**Reel:** Hook · on-film text · caption · CTA WhatsApp `050-2517000` / איסוף שדרות.
+**Reel:** Hook · on-film text · caption · CTA WhatsApp `050-2517000` / איסוף שדרות. Music line from `vfresearch/MUSIC.md` brief when present.
 
 **Story (review only):** guess-the-print (no private-client spoiler) · timelapse · result · WhatsApp CTA.
 
