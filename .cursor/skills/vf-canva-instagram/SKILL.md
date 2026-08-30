@@ -13,7 +13,7 @@ This HQ does **not** send, boost, or DM. After a design exists, hand the edit UR
 - Hebrew, spoken voice. CTA is WhatsApp `050-2517000` / איסוף שדרות. Never «שלחו DM».
 - Do not invent ₪, Insights, brand hex/fonts, or a floor scene. Write `חסר` / `Can't verify`.
 - Do not construct Canva URLs. Use the `edit_url` the MCP returns.
-- Superdesign is fallback only when the Canva namespace is unauthenticated.
+- Superdesign is fallback only when Canva MCP is down. Prefer `packages/vfcanva/studio/render.py` for a real PNG this HQ can produce without OAuth.
 
 ## Step 1 — Ticket
 

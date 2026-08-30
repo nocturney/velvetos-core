@@ -16,7 +16,9 @@ HQ עדיין **לא** שולח אינסטגרם. גרוק שולח.
 3. צריך תוכנית Canva Pro / Teams / Business / Nonprofit. חינם נכשל.
 4. בדיקה: `python3 scripts/check-vf-canva.py` → `OK vfcanva formats=5 skill+rule+mcp`.
 
-בלי OAuth: לפתוח עיצוב מ־[`OPEN.md`](../packages/vfcanva/OPEN.md) ולהדביק קישור. לא להמציא URL.
+בלי OAuth: `python3 packages/vfcanva/studio/render.py` או [`studio/index.html`](../packages/vfcanva/studio/index.html). לא להמציא URL.
+
+אם מופיע `spawn git ENOENT`: **Uninstall** לתוסף המרקטפלייס. הפרויקט טוען Canva מ־`.cursor-plugin` + `.cursor/mcp.json` (`type: http`).
 
 ## מה מבקשים
 

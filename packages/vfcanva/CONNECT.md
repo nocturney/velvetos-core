@@ -1,73 +1,44 @@
-# למה Canva לא מתחבר — ומה לעשות
+# חיבור Canva — מה שצריך כדי שזה יעבוד
 
-בודק בסוכן הזה (2026-08-30): השרת `https://mcp.canva.com/mcp` חי (401 בלי טוקן — תקין).
+השרת `https://mcp.canva.com/mcp` חי. הכשל אצלך הוא **טעינת תוסף המרקטפלייס**, לא הרשת.
 
-## 0. השגיאה במסך: `Error loading plugin` / `spawn git ENOENT`
+## מה לעשות עכשיו (בסדר הזה)
 
-זה **לא** כשל OAuth של Canva. Cursor מנסה להריץ `git` כדי לטעון את תוסף Canva מהמרקטפלייס, ו־Git לא נמצא ב־PATH של המחשב.
-
-הכלים (`canva-edit-design` וכו') מופיעים ברשימה, אבל התוסף לא נטען — לכן אין Connect אמיתי.
-
-**תיקון מועדף (בלי Git):**
-
-1. באותו מסך: **Uninstall** על תוסף Canva מהמרקטפלייס.
-2. ודא שבפרויקט יש [`.cursor/mcp.json`](../../.cursor/mcp.json) עם URL בלבד (בלי `npx` / `git`):
-
-```json
-{ "mcpServers": { "canva": { "url": "https://mcp.canva.com/mcp" } } }
-```
-
-3. Customize → MCP → רענון. אמור להופיע `canva` כשרת מרוחק.
-4. **Connect** בדפדפן, כניסה לחשבון Canva, אישור.
-
-**אם רוצים להשאיר את התוסף מהמרקטפלייס:**
-
-1. התקן [Git](https://git-scm.com/downloads) וסמן Add to PATH.
-2. סגור לגמרי את Cursor ופתח שוב.
-3. בטרמינל מחוץ ל־Cursor: `git --version` חייב להצליח.
-4. חזור למסך Canva — הבאנר הכתום אמור להיעלם, ואז Connect.
-
-## 1. אל תתחבר מתוך הסוכן בענן
-
-המכונה הזו אין לה דפדפן. `npx mcp-remote` (הגדרה ישנה) מנסה `localhost:8787` ונופל.
-
-חיבור נכון: **Cursor Desktop** או **cursor.com**, לא ה־VM.
-
-`.cursor/mcp.json` עכשיו הוא חיבור ישיר:
+1. במסך Canva עם הבאנר הכתום: **Uninstall**.  
+   `spawn git ENOENT` = Cursor מחפש `git` כדי לעדכן את התוסף. בלי Git התוסף מת.
+2. לפתוח את הריפו הזה (הענף של PR #6). הוא טוען Canva **מהפרויקט**:
+   - [`.cursor-plugin/plugin.json`](../../.cursor-plugin/plugin.json)
+   - [`.cursor/mcp.json`](../../.cursor/mcp.json) — `type: http`, בלי `npx`, בלי `git`
+3. **Developer: Reload Window**.
+4. Customize → MCP → `canva` (מהפרויקט) → **Connect** בדפדפן.
 
 ```json
-{ "mcpServers": { "canva": { "url": "https://mcp.canva.com/mcp" } } }
+{
+  "mcpServers": {
+    "canva": {
+      "type": "http",
+      "url": "https://mcp.canva.com/mcp"
+    }
+  }
+}
 ```
 
-Cursor משתמש ב־`https://www.cursor.com/agents/mcp/oauth/callback` (Web / Cloud Agent)
-או `http://localhost:8787/callback` (Desktop).
+אל תתקין שוב את תוסף המרקטפלייס. אל תתחבר מתוך ה־VM של Cloud Agent.
 
-## 2. צעדים (Desktop)
+## בינתיים — הסטודיו כבר מייצר פריימים
 
-1. משוך את הענף הזה / פתח את הפרויקט אחרי העדכון.
-2. **Customize → MCP** (או Settings → MCP Tools).
-3. כבה והדלק את **canva**, או לחץ **Connect**.
-4. בדפדפן: היכנס לחשבון Canva של הסטודיו ואשר.
-5. חזור לשיחה וכתוב «מחובר».
+```bash
+python3 packages/vfcanva/studio/render.py --format ig_feed_square --hook "הדפסה בתלת־ממד · שדרות"
+python3 packages/vfcanva/studio/render.py --format ig_story --hook "הדפסה בתלת־ממד · שדרות" --name ig_story
+```
 
-אל תאשר חלון קופץ חסום. אל תתחבר לחשבון Canva אחר.
+שולחן: [`studio/index.html`](studio/index.html).  
+יציאה: `packages/vfcanva/studio/out/*.png` (1080×1080 / 1080×1920).
 
-מדריך Canva: [AI Connector](https://www.canva.com/help/mcp-agent-setup/).
+## אם Connect עדיין נכשל אחרי Uninstall
 
-## 3. תוכנית Canva — חוסם נפוץ
+- Canva AI Connector דורש Pro / Teams / Business / Nonprofit. חינם נכשל.
+- צוות: Admin → Third-party integrations → Canva AI Connector דלוק.
+- חלון קופץ חסום / חשבון Canva אחר.
 
-Canva מתירה AI Connector רק ב:
-
-- Canva Pro
-- Canva Teams
-- Canva Business
-- Canva Nonprofit
-
-**חשבון חינם נכשל בחיבור.** זה לא באג ב־HQ.
-
-אם זה צוות: Admin → Controls and Permissions → Third-party integrations → Canva AI Connector חייב להיות דלוק.
-
-## 4. בלי MCP — עדיין עובדים
-
-פתח עיצוב בדפדפן (`packages/vfcanva/OPEN.md`) והדבק את קישור העריכה בשיחה.
-`vfigos` מקבל את הקישור. HQ לא שולח.
+מדריך Canva: https://www.canva.com/help/mcp-agent-setup/

@@ -18,14 +18,20 @@ procedure. HQ still does **not** send, boost, or DM. Grok Bot sends.
 vfcopy (caption) → vfcanva (design + edit URL) → vfigos (review / schedule) → Grok Bot (send)
 ```
 
-`vfcovers` and `vfgrowth` write the brief. Superdesign is a draft fallback only
-when Canva MCP is not connected.
+`vfcovers` and `vfgrowth` write the brief. If Canva MCP is down, render PNG
+from [`studio/`](studio/) — do not wait on the marketplace plugin.
 
 ## Connect Canva
 
 See [`CONNECT.md`](CONNECT.md). Short version: use Cursor Desktop, `url` not `mcp-remote`, and a Canva Pro/Teams/Business/Nonprofit account.
 
-Until OAuth works, open a design from [`OPEN.md`](OPEN.md) and paste the edit link. Do not invent Canva URLs. Say `Canva לא מחובר`.
+Until OAuth works, render locally:
+
+```bash
+python3 packages/vfcanva/studio/render.py --format ig_feed_square --hook "הדפסה בתלת־ממד · שדרות"
+```
+
+Or open [`studio/index.html`](studio/index.html) / [`OPEN.md`](OPEN.md). Do not invent Canva URLs.
 
 ## What this pack does
 

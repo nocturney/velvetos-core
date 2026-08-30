@@ -23,4 +23,4 @@ When the job is Instagram visual content (post, story, reel cover, carousel, cov
 - HQ does not send, boost, or DM Instagram.
 - Never invent Canva links, ₪, Insights, brand hex/fonts, or floor scenes.
 - CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
-- If Canva is disconnected: say `Canva לא מחובר` and point to `packages/vfcanva/CONNECT.md`. Fallback: `packages/vfcanva/OPEN.md`.
+- If Canva is disconnected: say `Canva לא מחובר`, point to `packages/vfcanva/CONNECT.md` (Uninstall marketplace plugin), and render with `packages/vfcanva/studio/render.py`.

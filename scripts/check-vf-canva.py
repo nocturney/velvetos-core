@@ -19,7 +19,19 @@ SKILL = ROOT / ".cursor" / "skills" / "vf-canva-instagram" / "SKILL.md"
 RULE = ROOT / ".cursor" / "rules" / "vf-canva-instagram.mdc"
 MAP = ROOT / ".cursor" / "vf-canva.json"
 MCP = ROOT / ".cursor" / "mcp.json"
+PLUGIN = ROOT / ".cursor-plugin" / "plugin.json"
+STUDIO = ROOT / "packages" / "vfcanva" / "studio" / "index.html"
+RENDER = ROOT / "packages" / "vfcanva" / "studio" / "render.py"
+FRAME = ROOT / "packages" / "vfcanva" / "studio" / "frame.html"
 DOCS = ROOT / "docs" / "CANVA.md"
+OFFICIAL_SKILLS = (
+    "canva-brand-check",
+    "canva-bulk-create",
+    "canva-edit-design",
+    "canva-get-design-feedback",
+    "canva-implement-feedback",
+    "canva-resize-for-social-media",
+)
 MANIFEST = ROOT / "packages" / "manifest.json"
 
 REQUIRED_FORMAT_IDS = {
@@ -57,6 +69,10 @@ def main() -> None:
         RULE,
         MAP,
         MCP,
+        PLUGIN,
+        STUDIO,
+        RENDER,
+        FRAME,
         DOCS,
         MANIFEST,
     ):
@@ -108,8 +124,19 @@ def main() -> None:
     args = " ".join(canva.get("args") or [])
     if "mcp-remote" in args or canva.get("command") == "npx":
         fail(".cursor/mcp.json must use url https://mcp.canva.com/mcp, not mcp-remote")
+    if canva.get("type") != "http":
+        fail(".cursor/mcp.json canva.type must be http")
     if "mcp.canva.com/mcp" not in url:
         fail(".cursor/mcp.json must register url https://mcp.canva.com/mcp")
+
+    plugin = json.loads(PLUGIN.read_text())
+    if plugin.get("name") != "vf-canva":
+        fail("workspace plugin name must be vf-canva")
+
+    for slug in OFFICIAL_SKILLS:
+        skill_md = ROOT / ".cursor" / "skills" / slug / "SKILL.md"
+        if not skill_md.is_file():
+            fail(f"missing vendored skill {slug}")
 
     rule = RULE.read_text()
     if "alwaysApply: true" not in rule:
