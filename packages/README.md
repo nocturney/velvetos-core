@@ -11,6 +11,8 @@ chmod +x scripts/vendor-origin-packs.sh
 ./scripts/vendor-origin-packs.sh
 ```
 
-Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). Do not invent prices. This repo does not send Instagram — live send stays on Grok Bot.
+Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). Playbooks from the 30.8.2026 Gemini share sit in the same folder. Do not invent prices. This repo does not send Instagram — live send stays on Grok Bot.
+
+Constitution and team of 5: [`../constitution/`](../constitution/). Hebrew report: [`../docs/SHARES-2026-08-30.md`](../docs/SHARES-2026-08-30.md).
 
 New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates.
