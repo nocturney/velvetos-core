@@ -9,13 +9,18 @@
     "namespace": "Canva",
     "server": "https://mcp.canva.com/mcp",
     "workspaceConfig": ".cursor/mcp.json",
-    "connect": "Cursor Desktop or cursor.com → Customize → MCP → canva → Connect. Needs Canva Pro/Teams/Business/Nonprofit. See packages/vfcanva/CONNECT.md."
+    "connect": "Cursor Desktop custom HTTP MCP (not marketplace). Cloud Agents do not inherit it.",
+    "verified": {
+      "at": "2026-08-30",
+      "where": "Cursor Desktop Agent (not Cloud)",
+      "probe": "search latest design → DAGoYmCu4c4 Card חגיגת האהבה שלכם"
+    }
   },
   "account": "@velvets_cloud",
   "notes": [
     "HQ does not send Instagram. Live send stays on Grok Bot.",
     "Do not invent ₪, Insights, brand hex/fonts, or Canva URLs.",
-    "Superdesign is fallback only when Canva MCP is unauthenticated."
+    "Desktop Canva MCP verified 2026-08-30. This Cloud Agent still cannot call Canva."
   ],
   "handoff": [
     "vfcopy",
@@ -27,7 +32,7 @@
   "defaultResize": ["ig_feed_square", "ig_story"],
   "tools": {
     "canva": {
-      "status": "plugin-installed-needs-auth",
+      "status": "desktop-ready-cloud-absent",
       "mode": "create-resize-review",
       "allowed": [
         "search-designs",
