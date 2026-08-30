@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **Perplexity follow-up:** Cursor פתח את השיתוף בדפדפן אמיתי; נקרא רק דף Cloudflare («יש לאמת שאינך רובוט»). גוף השיחה לא הוטמע ולא הומצא. Cursor opened the Perplexity URL in a real browser; only the Cloudflare wall was readable. Thread body not invented. `packages/vfresearch/sources/perplexity-c950af30.md`.
 - 2026-08-30 — **Gemini+Perplexity:** נקרא שיתוף ג׳מיני (סוכני בינה לעסק הדפסות) והוטמע במקום על vfops/vfgrowth/vfcopy/… + חוקה; פרפלקסיטי לא נפתח (Cloudflare) ולא הומצא. Gemini share read and embedded in place on existing packs + constitution; Perplexity blocked, not invented. See `docs/SHARES-2026-08-30.md`.
 - 2026-08-30 — פקודת קבע: גיטהאב הוא גיבוי רציף; כל פק חדש נרשם באותו יום במפה גם אם Origin לא משכפל. Standing order: GitHub is the constant backup; catalogue every new pack the same day even when Origin will not clone. See `docs/BACKUP.md`.
 - 2026-08-30 — **vfbriefux**: מחקר פורמט הבריף (bc-9e0be231). Brief format research; Origin slug unknown, tree not cloned.
