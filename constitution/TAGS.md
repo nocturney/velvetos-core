@@ -27,3 +27,20 @@
 | `timelapse-reel` | `vfgrowth`, `vfigos` | טיוטה ל־Grok |
 | `ideation` | `vfresearch`, `vfsales` | חיפוש דגם + אישור ויזואלי |
 | `material-tracker` | `vfprod`, `vfsku` | יומן מלאי. בלי רכש מומצא |
+
+תגיות סוכן Perplexity — ממופות, לא פקים חדשים:
+
+| תג Perplexity | חבילה | סטטוס |
+|---|---|---|
+| `ig-native-schedule` | `vfigos` | Grok משבץ במובנה. HQ לא שולח |
+| `buffer-later-bolta` | `vfigos`, `vfcopy`, `vfcovers` | טיוטה בלבד. מענה/פרסום אוטומטי **דולג** |
+| `predis-flick` | `vfcopy` | כתוביות והאשטגים בטיוטה |
+| `wix-hostinger-site` | `vfbiz` | אתר רק אם ראש צוות פותח |
+| `bookipi` | `vfbooks` | נשאר Invoice4U. לא אתר+חשבונית |
+| `spoolworth-autoquote` | `vfsales`, `vfcost` | סלייס. ווידג׳ט מחיר/תשלום **דולג** |
+| `stlforge` | `vfcost` | תיקון קובץ לפני סלייס אם פגום |
+| `printpal` | `vfcost` | שכבה/מילוי/תמיכות אחרי סלייס |
+| `maxel-farm` | `vfprod` | הקצאה ידנית. חווה אוטומטית **דולג** |
+| `inquiry-bot` | `vfconvert`, `vfcopy` | ארבעה שדות בוואטסאפ. צ׳אטבוט **דולג** |
+| `tripo-meshy` | `vfresearch`, `vlicense`, `vfsku` | קונספט אחרי אישור. לא קטלוג אוטומטי |
+| `agent-chain` | `vfbiz` | צינור משרד חלקי. לא אוטומציה חיה |
