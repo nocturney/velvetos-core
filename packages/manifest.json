@@ -9,8 +9,16 @@
     "Cloud-agent transcripts for pack bcIds were not readable from this HQ environment.",
     "Re-run scripts/vendor-origin-packs.sh after `origin auth login` or CURSOR_API_KEY to pull actual trees.",
     "This repo does not send Instagram posts. Live Instagram, Gmail, and printers stay on Grok Bot (5 seats).",
-    "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md."
+    "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
+    "2026-08-30: ChatGPT share https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19 embedded in place (packages/*/hq, constitution/, vfbriefux packet). No new pack per agent. Vendor preserves hq/ overlays. See packages/chatgpt-embed-map.json and docs/SHARE-EMBED-he.md."
   ],
+  "hqOverlay": {
+    "constitution": "constitution/CONSTITUTION.md",
+    "tags": "constitution/tags.md",
+    "briefPacket": "packages/vfbriefux/hq/PACKET.md",
+    "shareMap": "packages/chatgpt-embed-map.json",
+    "vendorPreserves": ["ORIGIN.md", "SKILL.md", "hq/"]
+  },
   "packs": [
     {
       "name": "vfigos",

@@ -11,6 +11,8 @@ chmod +x scripts/vendor-origin-packs.sh
 ./scripts/vendor-origin-packs.sh
 ```
 
-Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). Do not invent prices. This repo does not send Instagram — live send stays on Grok Bot.
+Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). HQ overlay (not Origin) lives in `SKILL.md` + `hq/` and survives `scripts/vendor-origin-packs.sh`. Do not invent prices. This repo does not send Instagram — live send stays on Grok Bot.
 
-New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates.
+Share embed map: [`chatgpt-embed-map.json`](chatgpt-embed-map.json). Constitution: [`../constitution/`](../constitution/CONSTITUTION.md).
+
+New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates. Do not add a pack that duplicates an existing tool.

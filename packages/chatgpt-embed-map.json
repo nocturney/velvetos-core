@@ -1,0 +1,92 @@
+{
+  "source": "https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19",
+  "title": "סוכני בנייה",
+  "embeddedAt": "2026-08-30",
+  "rule": "Embed into existing packs. Do not create a new pack per ChatGPT agent.",
+  "pipeline": ["פנייה", "שיחה", "הצעה", "הדפסה", "איסוף"],
+  "seats": ["ראש צוות", "סטודיו", "צמיחה", "תפעול", "ייצור"],
+  "whatsapp": "050-2517000",
+  "instagram": "@velvets_cloud",
+  "fulfillment": "pickup-sderot-only",
+  "agents": [
+    {
+      "share": "סוכן תמחור והצעות מחיר",
+      "pack": "vfcost",
+      "seat": "תפעול",
+      "also": ["vfsales"],
+      "note": "Worksheet and cost factors only. Sale price only if Christian states it."
+    },
+    {
+      "share": "סוכן קליטת לקוח",
+      "pack": "vfconvert",
+      "seat": "סטודיו",
+      "also": []
+    },
+    {
+      "share": "סוכן בדיקת כדאיות / מהנדס הדפסה",
+      "pack": "vfprod",
+      "seat": "ייצור",
+      "also": ["vlicense"]
+    },
+    {
+      "share": "סוכן מכירות WhatsApp/Instagram",
+      "pack": "vfsales",
+      "seat": "סטודיו",
+      "also": ["vfcopy"],
+      "note": "Drafts only. Human sends on WhatsApp. No auto-DM, no IG send."
+    },
+    {
+      "share": "סוכן תוכן ושיווק",
+      "pack": "vfgrowth",
+      "seat": "צמיחה",
+      "also": ["vfcopy", "vfcovers", "vfigos"]
+    },
+    {
+      "share": "סוכן ניהול הזמנות / מנהל ייצור",
+      "pack": "vfops",
+      "seat": "ראש צוות",
+      "also": ["vfprod", "vfbriefux"]
+    },
+    {
+      "share": "סוכן מוצרים חדשים",
+      "pack": "vfresearch",
+      "seat": "ייצור",
+      "also": ["vfsku"]
+    },
+    {
+      "share": "סוכן B2B",
+      "pack": "vfbiz",
+      "seat": "תפעול",
+      "also": []
+    },
+    {
+      "share": "סוכן שירות לאחר מכירה",
+      "pack": "vfsales",
+      "seat": "סטודיו",
+      "also": ["vfconvert"]
+    },
+    {
+      "share": "סוכן CFO קטן",
+      "pack": "vfbooks",
+      "seat": "תפעול",
+      "also": ["vfcost"]
+    },
+    {
+      "share": "Velvet Factory Manager",
+      "pack": "vfops",
+      "seat": "ראש צוות",
+      "also": ["vfbriefux", "constitution"]
+    }
+  ],
+  "skipped": [
+    "live Instagram send",
+    "Gmail send from HQ",
+    "auto-DM",
+    "follow-back",
+    "story-view hacks",
+    "boost",
+    "invented ILS prices",
+    "WhatsApp/Instagram API connect",
+    "new pack per agent"
+  ]
+}
