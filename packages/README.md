@@ -15,5 +15,7 @@ Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). Do not invent pr
 
 `vfmcp` is HQ-native research (not an Origin tree). The write-up is [`docs/MCP-FIT.md`](../docs/MCP-FIT.md).
 `vfe2b` is HQ-native (no Origin tree): patterns from e2b-dev/awesome-ai-agents mapped onto the other packs.
+`vfcanva` is HQ-native: Canva Instagram content desk. Catalog stub here; working tree on [PR #6](https://github.com/nocturney/velvet-factory-headquarters-os/pull/6) (`docs/CANVA.md`).
+`vfagents` is HQ-native: 500-AI-Agents-Projects mapped onto existing packs. Catalog stub here; working tree on [PR #10](https://github.com/nocturney/velvet-factory-headquarters-os/pull/10) (`docs/500-AGENTS.md`).
 
 New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates.

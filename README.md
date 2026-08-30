@@ -54,6 +54,8 @@ These specialists do **not** replace VF packs. They sit next to the office OS. S
 | `vfbriefux` | Brief format research — morning-brief layout and UX notes. | [bc-9e0be231](https://cursor.com/agents/bc-9e0be231) | slug not found in this dump |
 | `vfmcp` | MCP fit — which awesome-mcp-servers entries map onto VF packs. Write-up: [`docs/MCP-FIT.md`](docs/MCP-FIT.md). | [bc-1764e30f-b592-4805-9586-037da3351d65](https://cursor.com/agents/bc-1764e30f-b592-4805-9586-037da3351d65) | HQ-native (not Origin) |
 | `vfe2b` | Awesome-AI-agents desk — patterns from [e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) on existing packs (no second runtime; this HQ does not send). | [bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057](https://cursor.com/agents/bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057) | HQ-native |
+| `vfcanva` | Canva as Instagram content tool (create / resize / review; this HQ does not send). Working tree on [PR #6](https://github.com/nocturney/velvet-factory-headquarters-os/pull/6) (not merged). | [bc-2020e135-820c-40b6-a922-e2822b5e81bf](https://cursor.com/agents/bc-2020e135-820c-40b6-a922-e2822b5e81bf) | HQ-native |
+| `vfagents` | 500-AI-Agents-Projects mapped onto existing office. Working tree on [PR #10](https://github.com/nocturney/velvet-factory-headquarters-os/pull/10) (not merged). | [bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027](https://cursor.com/agents/bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027) | HQ-native |
 
 Machine-readable catalog: [`packages/manifest.json`](packages/manifest.json). Per-pack provenance: `packages/<name>/ORIGIN.md`.
 
