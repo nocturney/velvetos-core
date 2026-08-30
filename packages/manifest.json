@@ -10,6 +10,7 @@
     "Re-run scripts/vendor-origin-packs.sh after `origin auth login` or CURSOR_API_KEY to pull actual trees.",
     "This repo does not send Instagram posts. Live Instagram, Gmail, and printers stay on Grok Bot (5 seats).",
     "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
+    "2026-08-30 desk overlay: 28 Agency specialists + live tools in .cursor/vf-desk.json and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
     "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings → MCP Tools."
   ],
   "packs": [

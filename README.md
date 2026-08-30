@@ -15,22 +15,31 @@ GitHub copy of the studio office OS. Cursor agents built the packs on Origin (`c
 - **Office OS:** Cursor packs under `packages/<name>/`.
 - **Instagram visuals:** Canva (`packages/vfcanva/`, `docs/CANVA.md`). Connect the Canva MCP, then create / resize / review. Grok still sends.
 - **The Agency:** 273 specialist Cursor rules in `.cursor/rules/` (from [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents)). Mention `@slug` to activate. Roster: [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md).
+- **Desk:** 28 of those specialists are wired to VF packs and live tools (Gmail read, Calendar, Drive-by-job, Superdesign, Treg, Mobbin). Map: [`docs/AGENCY-TOOLS.md`](docs/AGENCY-TOOLS.md).
 - **This HQ does not send Instagram.** No pack dump here posts, boosts, or DMs.
 
 No secrets belong in git. No invented prices or invented Insights.
 
 ## The Agency (Cursor specialists)
 
-Installed from [The Agency](https://github.com/msitarzewski/agency-agents) as project-scoped Cursor `.mdc` rules. They are **not** always-on: type `@instagram-curator`, `@studio-operations`, `@brand-guardian`, `@frontend-developer`, and so on.
+Installed from [The Agency](https://github.com/msitarzewski/agency-agents) as project-scoped Cursor `.mdc` rules. Warehouse rules are **not** always-on: type `@instagram-curator`, `@studio-operations`, `@brand-guardian`.
+
+The **desk** is always-on (`.cursor/rules/velvet-factory-desk.mdc`). It routes a job to a pack, one `@slug`, and a live tool. Do not pull the other 245 warehouse specialists onto a Sderot print job unless asked.
 
 ```bash
-# first install or later refresh
+# first install or later refresh (keeps the VF desk rule)
 ./scripts/install-agency-agents.sh
+python3 scripts/check-vf-desk.py
 ```
 
-Catalog: [`.cursor/agency-agents.json`](.cursor/agency-agents.json). Full roster and slugs: [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md).
+| | |
+|---|---|
+| Warehouse catalog | [`.cursor/agency-agents.json`](.cursor/agency-agents.json) |
+| Full roster | [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md) |
+| Desk + tools | [`docs/AGENCY-TOOLS.md`](docs/AGENCY-TOOLS.md), [`.cursor/vf-desk.json`](.cursor/vf-desk.json) |
+| Daily skills | `.cursor/skills/vf-morning-brief`, `vf-inquiry-chain`, `vf-content-sprint` |
 
-These specialists do **not** replace VF packs. They sit next to the office OS. Still no Instagram send from this HQ.
+These specialists do **not** replace VF packs. They sit next to the office OS. Still no Instagram or Gmail send from this HQ.
 
 ## Packs (v0.1.0)
 

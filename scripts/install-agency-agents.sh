@@ -7,6 +7,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SRC_REPO="${AGENCY_AGENTS_REPO:-https://github.com/msitarzewski/agency-agents.git}"
 WORKDIR="${TMPDIR:-/tmp}/vf-hq-agency-agents-$$"
 DEST="$ROOT/.cursor/rules"
+DESK_RULE="$DEST/velvet-factory-desk.mdc"
 
 cleanup() { rm -rf "$WORKDIR"; }
 trap cleanup EXIT
@@ -30,11 +31,22 @@ SRC_DATE="$(git -C "$WORKDIR/src" log -1 --format='%cs')"
 echo "=== convert --tool cursor @ $SHA_SHORT ==="
 "$WORKDIR/src/scripts/convert.sh" --tool cursor --parallel
 
+desk_preserve=""
+if [[ -f "$DESK_RULE" ]]; then
+  desk_preserve="$WORKDIR/velvet-factory-desk.mdc"
+  cp "$DESK_RULE" "$desk_preserve"
+fi
+
 echo "=== install Cursor rules -> $DEST ==="
 (
   cd "$ROOT"
   "$WORKDIR/src/scripts/install.sh" --tool cursor --no-interactive
 )
+
+if [[ -n "$desk_preserve" ]]; then
+  cp "$desk_preserve" "$DESK_RULE"
+  echo "Preserved VF desk rule: $DESK_RULE"
+fi
 
 python3 - "$ROOT" "$WORKDIR/src" "$SHA" "$SHA_SHORT" "$SRC_DATE" <<'PY'
 import json, re, sys
@@ -118,7 +130,10 @@ lines = [
     f"Source: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) @ `{sha_short}`",
     "",
     f"**{len(agents)} agents** installed as project rules in `.cursor/rules/`.",
-    "Each rule has `alwaysApply: false` — mention it with `@slug` when you need that specialist.",
+    "Each Agency rule has `alwaysApply: false` — mention it with `@slug` when you need that specialist.",
+    "",
+    "Velvet Factory **desk** (packs + live tools): [`docs/AGENCY-TOOLS.md`](AGENCY-TOOLS.md), [`.cursor/vf-desk.json`](../.cursor/vf-desk.json).",
+    "Always-on router: `.cursor/rules/velvet-factory-desk.mdc`. Warehouse specialists stay off a print job unless asked.",
     "",
     "This HQ still does not send Instagram. Live send stays on Grok Bot.",
     "Do not invent prices or Insights.",

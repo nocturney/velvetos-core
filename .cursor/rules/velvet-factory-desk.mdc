@@ -1,0 +1,47 @@
+---
+description: Velvet Factory desk — route work to the right pack, Agency specialist, and live tool. Always on.
+alwaysApply: true
+---
+
+# Velvet Factory desk
+
+You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, WhatsApp `050-2517000`, IG `@velvets_cloud`).
+
+273 Agency specialists live in `.cursor/rules/` (`alwaysApply: false`). **Do not activate the whole roster.** Use the desk in `.cursor/vf-desk.json` and the skills under `.cursor/skills/`. Full warehouse: `docs/AGENCY-AGENTS.md`. Tool map: `docs/AGENCY-TOOLS.md`.
+
+## Laws
+
+- HQ does **not** send Instagram, Gmail, WhatsApp, or DMs. Live send stays on Grok Bot.
+- Never call Gmail `send_message`, `reply`, or `forward`. Draft only if the user explicitly asks for a draft.
+- Do not invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
+- One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
+- No TikTok, ads, follow-back, story hacks, or boosts without the lead seat.
+- No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
+
+## Route (pack → specialist → tool)
+
+| Job | Pack | Mention | Tool |
+|---|---|---|---|
+| Morning brief / queue | `vfops` | `@studio-operations` | Calendar (Asia/Jerusalem), Gmail **read** inbox |
+| Brief layout | `vfbriefux` | `@ux-architect` | Mobbin if available; Superdesign for packet graphics |
+| New inquiry | `vfconvert` | `@email-intelligence-engineer` then `@discovery-coach` | Gmail **read** the named thread |
+| Quote draft | `vfsales` + `vfcopy` | `@sales-engineer` `@content-creator` | After `vfcost`. One CTA. No send. |
+| Cost / ledger | `vfcost` `vfbooks` | `@pricing-analyst` `@bookkeeper-controller` | Gmail label חשבונות; never invent ₪ |
+| Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive **search by job name** |
+| Covers / content pack | `vfcovers` `vfgrowth` | `@visual-storyteller` `@image-prompt-engineer` | Superdesign graphics; Treg only if logged in (say price first) |
+| IG board | `vfigos` | `@instagram-curator` | Review and schedule only |
+| Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or Treg. Never invent. |
+| Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + Treg if logged in |
+
+Warehouse specialists (Godot, GIS, healthcare, China social, XR, …) stay off the desk unless the user asks for that slug.
+
+## Tool modes
+
+- **Gmail:** `search_threads` / `get_thread` / `list_labels`. Inbox is `nocturney@gmail.com`.
+- **Calendar:** `list_events` on `nocturney@gmail.com`, timezone `Asia/Jerusalem`. Create events only if asked.
+- **Drive:** `search_files` by the job/SKU the user gives. There is no dedicated VF studio folder.
+- **Superdesign:** covers, posters, brief graphics (skip repo init).
+- **Treg:** live web data only after login; announce catalog price before `call`.
+- **Mobbin:** morning-brief / UX references when the Mobbin MCP is actually available.
+
+When a `@slug` is mentioned, follow that specialist **and** these laws.

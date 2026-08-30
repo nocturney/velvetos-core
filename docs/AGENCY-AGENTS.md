@@ -3,7 +3,10 @@
 Source: [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) @ `3c95888`
 
 **273 agents** installed as project rules in `.cursor/rules/`.
-Each rule has `alwaysApply: false` — mention it with `@slug` when you need that specialist.
+Each Agency rule has `alwaysApply: false` — mention it with `@slug` when you need that specialist.
+
+Velvet Factory **desk** (which specialists + tools a job should use): [`docs/AGENCY-TOOLS.md`](AGENCY-TOOLS.md), [`.cursor/vf-desk.json`](../.cursor/vf-desk.json).
+Always-on router: `.cursor/rules/velvet-factory-desk.mdc`. Warehouse specialists stay off a print job unless asked.
 
 This HQ still does not send Instagram. Live send stays on Grok Bot.
 Do not invent prices or Insights.
