@@ -13,6 +13,7 @@ GitHub copy of the studio office OS. Cursor agents built the packs on Origin (`c
 
 - **Live:** Grok Bot (5 seats) — Instagram, Gmail, printers.
 - **Office OS:** Cursor packs under `packages/<name>/`.
+- **Instagram visuals:** Canva (`packages/vfcanva/`, `docs/CANVA.md`). Connect the Canva MCP, then create / resize / review. Grok still sends.
 - **This HQ does not send Instagram.** No pack dump here posts, boosts, or DMs.
 
 No secrets belong in git. No invented prices or invented Insights.
@@ -38,6 +39,7 @@ No secrets belong in git. No invented prices or invented Insights.
 | `vfseason` | Seasonal calendar — studio calendar and season marks. | [bc-2a4a3260](https://cursor.com/agents/bc-2a4a3260) | slug not found in this dump |
 | `vfsku` | SKU cards and repeats — product cards and reprint runs. | [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c) | slug not found in this dump |
 | `vfbriefux` | Brief format research — morning-brief layout and UX notes. | [bc-9e0be231](https://cursor.com/agents/bc-9e0be231) | slug not found in this dump |
+| `vfcanva` | Canva desk — Instagram visuals for `@velvets_cloud` (create / resize / review; this HQ does not send). | [bc-2020e135-820c-40b6-a922-e2822b5e81bf](https://cursor.com/agents/bc-2020e135-820c-40b6-a922-e2822b5e81bf) | HQ-native (this repo) |
 
 Machine-readable catalog: [`packages/manifest.json`](packages/manifest.json). Per-pack provenance: `packages/<name>/ORIGIN.md`.
 

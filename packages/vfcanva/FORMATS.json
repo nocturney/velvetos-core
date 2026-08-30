@@ -1,0 +1,62 @@
+{
+  "account": "@velvets_cloud",
+  "language": "he",
+  "cta": {
+    "whatsapp": "050-2517000",
+    "pickup": "איסוף שדרות",
+    "forbidden": ["שלחו DM", "Send DM", "link in bio as the only close"]
+  },
+  "brandKit": {
+    "canvaBrandKitId": null,
+    "note": "Fill after Canva MCP is connected and list-brand-kits returns a real kit. Do not invent hex or fonts."
+  },
+  "formats": [
+    {
+      "id": "ig_feed_square",
+      "he": "פוסט מרובע",
+      "use": "feed post, carousel page",
+      "width": 1080,
+      "height": 1080,
+      "design_type": { "type": "custom", "width": 1080, "height": 1080 }
+    },
+    {
+      "id": "ig_feed_portrait",
+      "he": "פוסט אנכי",
+      "use": "feed post when more body is needed",
+      "width": 1080,
+      "height": 1350,
+      "design_type": { "type": "custom", "width": 1080, "height": 1350 }
+    },
+    {
+      "id": "ig_story",
+      "he": "סטורי",
+      "use": "story frame; same pixel size as reel cover",
+      "width": 1080,
+      "height": 1920,
+      "design_type": { "type": "custom", "width": 1080, "height": 1920 },
+      "safeZone": {
+        "topPx": 250,
+        "bottomPx": 350,
+        "note": "Keep hook text and CTA out of Instagram chrome."
+      }
+    },
+    {
+      "id": "ig_reel_cover",
+      "he": "קאבר ריל",
+      "use": "reel cover / first frame still",
+      "width": 1080,
+      "height": 1920,
+      "design_type": { "type": "custom", "width": 1080, "height": 1920 },
+      "samePixelsAs": "ig_story"
+    },
+    {
+      "id": "ig_carousel_square",
+      "he": "קרוסלה",
+      "use": "2–10 square pages; page 1 is the hook",
+      "width": 1080,
+      "height": 1080,
+      "pages": { "min": 2, "max": 10 },
+      "design_type": { "type": "custom", "width": 1080, "height": 1080 }
+    }
+  ]
+}

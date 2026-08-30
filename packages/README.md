@@ -13,4 +13,6 @@ chmod +x scripts/vendor-origin-packs.sh
 
 Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). Do not invent prices. This repo does not send Instagram — live send stays on Grok Bot.
 
+`vfcanva` is HQ-native (tree lives here). Instagram visuals go through Canva MCP; see `docs/CANVA.md`.
+
 New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates.

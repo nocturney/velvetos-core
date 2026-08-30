@@ -1,0 +1,59 @@
+{
+  "name": "vfcanva",
+  "title": "Canva — Instagram visual desk for @velvets_cloud",
+  "updatedAt": "2026-08-30",
+  "pack": "vfcanva",
+  "alwaysOnRule": ".cursor/rules/vf-canva-instagram.mdc",
+  "skill": ".cursor/skills/vf-canva-instagram/SKILL.md",
+  "mcp": {
+    "namespace": "Canva",
+    "server": "https://mcp.canva.com/mcp",
+    "workspaceConfig": ".cursor/mcp.json",
+    "connect": "Cursor Settings → MCP Tools → canva → Connect"
+  },
+  "account": "@velvets_cloud",
+  "notes": [
+    "HQ does not send Instagram. Live send stays on Grok Bot.",
+    "Do not invent ₪, Insights, brand hex/fonts, or Canva URLs.",
+    "Superdesign is fallback only when Canva MCP is unauthenticated."
+  ],
+  "handoff": [
+    "vfcopy",
+    "vfcovers",
+    "vfgrowth",
+    "vfigos"
+  ],
+  "formatsFile": "packages/vfcanva/FORMATS.json",
+  "defaultResize": ["ig_feed_square", "ig_story"],
+  "tools": {
+    "canva": {
+      "status": "plugin-installed-needs-auth",
+      "mode": "create-resize-review",
+      "allowed": [
+        "search-designs",
+        "get-design",
+        "get-design-thumbnail",
+        "get-design-content",
+        "resize-design",
+        "list-brand-kits",
+        "search-brand-templates",
+        "autofill-design",
+        "start-editing-transaction",
+        "perform-editing-operations",
+        "commit-editing-transaction",
+        "cancel-editing-transaction"
+      ],
+      "forbidden": [
+        "publish-to-instagram",
+        "send-instagram",
+        "boost"
+      ],
+      "useWhen": "Instagram post, story, reel cover, carousel, or brand-check for @velvets_cloud"
+    }
+  },
+  "seat": {
+    "id": "growth",
+    "he": "צמיחה",
+    "packs": ["vfcanva", "vfigos", "vfcovers", "vfgrowth", "vfcopy"]
+  }
+}
