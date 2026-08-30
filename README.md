@@ -13,9 +13,23 @@ GitHub copy of the studio office OS. Cursor agents built the packs on Origin (`c
 
 - **Live:** Grok Bot (5 seats) — Instagram, Gmail, printers.
 - **Office OS:** Cursor packs under `packages/<name>/`.
+- **The Agency:** 273 specialist Cursor rules in `.cursor/rules/` (from [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents)). Mention `@slug` to activate. Roster: [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md).
 - **This HQ does not send Instagram.** No pack dump here posts, boosts, or DMs.
 
 No secrets belong in git. No invented prices or invented Insights.
+
+## The Agency (Cursor specialists)
+
+Installed from [The Agency](https://github.com/msitarzewski/agency-agents) as project-scoped Cursor `.mdc` rules. They are **not** always-on: type `@instagram-curator`, `@studio-operations`, `@brand-guardian`, `@frontend-developer`, and so on.
+
+```bash
+# first install or later refresh
+./scripts/install-agency-agents.sh
+```
+
+Catalog: [`.cursor/agency-agents.json`](.cursor/agency-agents.json). Full roster and slugs: [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md).
+
+These specialists do **not** replace VF packs. They sit next to the office OS. Still no Instagram send from this HQ.
 
 ## Packs (v0.1.0)
 
@@ -39,6 +53,7 @@ No secrets belong in git. No invented prices or invented Insights.
 | `vfsku` | SKU cards and repeats — product cards and reprint runs. | [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c) | slug not found in this dump |
 | `vfbriefux` | Brief format research — morning-brief layout and UX notes. | [bc-9e0be231](https://cursor.com/agents/bc-9e0be231) | slug not found in this dump |
 | `vfmcp` | MCP fit — which awesome-mcp-servers entries map onto VF packs. Write-up: [`docs/MCP-FIT.md`](docs/MCP-FIT.md). | [bc-1764e30f-b592-4805-9586-037da3351d65](https://cursor.com/agents/bc-1764e30f-b592-4805-9586-037da3351d65) | HQ-native (not Origin) |
+| `vfe2b` | Awesome-AI-agents desk — patterns from [e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) on existing packs (no second runtime; this HQ does not send). | [bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057](https://cursor.com/agents/bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057) | HQ-native |
 | `vfagents` | 500 AI Agents fit — office playbooks from the public list; no CrewAI runtime, no send. | [bc-9765dc13](https://cursor.com/agents/bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027) | HQ-native; [`docs/500-AGENTS.md`](docs/500-AGENTS.md) |
 
 Machine-readable catalog: [`packages/manifest.json`](packages/manifest.json). Per-pack provenance: `packages/<name>/ORIGIN.md`.

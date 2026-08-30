@@ -13,6 +13,6 @@ chmod +x scripts/vendor-origin-packs.sh
 
 Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). Do not invent prices. This repo does not send Instagram — live send stays on Grok Bot.
 
-HQ-native research packs (not Origin trees): `vfmcp` ([`docs/MCP-FIT.md`](../docs/MCP-FIT.md)) and `vfagents` ([`docs/500-AGENTS.md`](../docs/500-AGENTS.md)).
+HQ-native research packs (not Origin trees): `vfmcp` ([`docs/MCP-FIT.md`](../docs/MCP-FIT.md)), `vfe2b` (e2b-dev/awesome-ai-agents desk), and `vfagents` ([`docs/500-AGENTS.md`](../docs/500-AGENTS.md)).
 
 New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates.
