@@ -11,5 +11,10 @@ Operations pack — run-the-studio procedures.
 | Clone | `(none until slug is known)` |
 | v0.1.0 vendor | `origin-slug-unknown` |
 
+HQ overlay (kept on vendor): `ROUTINE.md`, `BRIEF.md`, `BRIEF-2026-08-31.md` — orchestra 06:15 + block 05.
+
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
+
+Embedded 30.8.2026 from Gemini share: `BRIEF.md`, `ROUTINE.md`.  
+Perplexity: n8n/Make stay an office row; no live chatbot.

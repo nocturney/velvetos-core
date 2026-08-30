@@ -13,3 +13,6 @@ Insights pack — performance reads; does not invent metrics.
 
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
+
+Embedded 30.8.2026 from Gemini share: `READ.md` (measured only).  
+Perplexity: Metricool confirmed as read-only; no invented competitor stats.

@@ -11,5 +11,10 @@ Studio cost pack — unit economics and spend, without invented prices.
 | Clone | `https://origin.cursor.com/christian-velvet/tmp-8a55585f5a73bd06.git` |
 | v0.1.0 vendor | `origin-unreachable` |
 
+HQ overlay: `FLOOR-CARD.md` — cost factors on the wall. Sale price stays `X ₪` until named.
+
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
+
+Embedded 30.8.2026 from Gemini share: `SLICE.md`.  
+Perplexity: STLforge repair + PrintPal checklist + electricity only if verified.

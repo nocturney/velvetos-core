@@ -11,5 +11,10 @@ Research pack — source gathering and notes.
 | Clone | `(none until slug is known)` |
 | v0.1.0 vendor | `origin-slug-unknown` |
 
+HQ overlay (kept on vendor): `DAILY.md`, `sources/` — three-desk orchestra. Cursor opens the tools; Grok does not browse.
+
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
+
+Embedded 30.8.2026 from Gemini share: `DAILY.md`, `sources/`.  
+Perplexity `c950af30`: thread body from owner PDFs — `sources/perplexity-c950af30.md`. Meshy/Tripo mapped; 24/7 bot skipped.

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Vendor Velvet Factory Cursor packs from Origin into packages/<name>/.
 # Requires `origin auth login` or CURSOR_API_KEY. Does not send Instagram.
+# Preserves HQ overlay: ORIGIN.md, SKILL.md, hq/.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -59,18 +60,37 @@ vendor_one() {
   fi
 
   mkdir -p "$dest"
-  local provenance=""
-  if [[ -f "$dest/ORIGIN.md" ]]; then
-    provenance="$(mktemp)"
-    cp "$dest/ORIGIN.md" "$provenance"
+  # Keep HQ overlay (playbooks, orchestra, gates, ChatGPT hq/) when Origin trees land.
+  local overlay=""
+  overlay="$(mktemp -d)"
+  [[ -f "$dest/ORIGIN.md" ]] && cp "$dest/ORIGIN.md" "$overlay/ORIGIN.md"
+  for keep in hq SKILL.md ROUTINE.md BRIEF.md BRIEF-2026-08-31.md DAILY.md GATE.md PATH.md DESK.md CALENDAR.md CHECKLIST.md FLOOR-CARD.md PICKUP.md SLICE.md QUOTE.md FLOOR.md MATERIAL.md CARDS.md LOCK.md CHAIN.md LEDGER.md PHONE.md REVIEW.md SKIP.md READ.md DRAFT.md CONNECT.md OPEN.md WORKFLOW.md FORMATS.json G005.md G005-d12b.md; do
+    if [[ -e "$dest/$keep" ]]; then
+      cp -a "$dest/$keep" "$overlay/$keep"
+    fi
+  done
+  if [[ -d "$dest/sources" ]]; then
+    cp -a "$dest/sources" "$overlay/sources"
+  fi
+  if [[ -d "$dest/g005" ]]; then
+    cp -a "$dest/g005" "$overlay/g005"
   fi
   find "$dest" -mindepth 1 -maxdepth 1 ! -name ORIGIN.md -exec rm -rf {} +
   shopt -s dotglob nullglob
   cp -a "$tmp"/* "$dest/" 2>/dev/null || true
   shopt -u dotglob nullglob
-  if [[ -n "$provenance" ]]; then
-    cp "$provenance" "$dest/ORIGIN.md"
-    rm -f "$provenance"
+  # HQ overlay wins: constitution playbooks stay when Origin trees land.
+  [[ -f "$overlay/ORIGIN.md" ]] && cp "$overlay/ORIGIN.md" "$dest/ORIGIN.md"
+  [[ -f "$overlay/SKILL.md" ]] && cp "$overlay/SKILL.md" "$dest/SKILL.md"
+  if [[ -d "$overlay/hq" ]]; then
+    rm -rf "$dest/hq"
+    cp -a "$overlay/hq" "$dest/hq"
+  fi
+  if [[ -d "${overlay:-}" ]]; then
+    shopt -s dotglob nullglob
+    cp -a "$overlay"/* "$dest/" 2>/dev/null || true
+    shopt -u dotglob nullglob
+    rm -rf "$overlay"
   fi
   if [[ -n "$sha" ]]; then
     if ! grep -q "Vendored commit:" "$dest/ORIGIN.md" 2>/dev/null; then
