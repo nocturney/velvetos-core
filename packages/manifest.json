@@ -1,0 +1,146 @@
+{
+  "name": "velvet-factory-headquarters-os",
+  "title": "VELVET FACTORY HEADQUARTERS & OS",
+  "dumpedAt": "2026-08-30",
+  "tag": "v0.1.0",
+  "notes": [
+    "Origin CLI was not authenticated in the v0.1.0 dump environment (no CURSOR_API_KEY, origin auth status: not logged in).",
+    "GitHub token is not accepted by origin.cursor.com.",
+    "Cloud-agent transcripts for pack bcIds were not readable from this HQ environment.",
+    "Re-run scripts/vendor-origin-packs.sh after `origin auth login` or CURSOR_API_KEY to pull actual trees.",
+    "This repo does not send Instagram posts. Live Instagram, Gmail, and printers stay on Grok Bot (5 seats)."
+  ],
+  "packs": [
+    {
+      "name": "vfigos",
+      "summary": "VF Instagram OS — Instagram office pack (review and schedule; this HQ does not send).",
+      "bcId": "bc-c4a53ee3",
+      "agentUrl": "https://cursor.com/agents/bc-c4a53ee3",
+      "originSlug": "christian-velvet/tmp-20e9908caebda9d0",
+      "codebaseUrl": "https://cursor.com/codebase/christian-velvet/tmp-20e9908caebda9d0",
+      "cloneUrl": "https://origin.cursor.com/christian-velvet/tmp-20e9908caebda9d0.git",
+      "vendorStatus": "origin-unreachable"
+    },
+    {
+      "name": "vfcost",
+      "summary": "Studio cost pack — unit economics and spend, without invented prices.",
+      "bcId": "bc-a4dc99c9",
+      "agentUrl": "https://cursor.com/agents/bc-a4dc99c9",
+      "originSlug": "christian-velvet/tmp-8a55585f5a73bd06",
+      "codebaseUrl": "https://cursor.com/codebase/christian-velvet/tmp-8a55585f5a73bd06",
+      "cloneUrl": "https://origin.cursor.com/christian-velvet/tmp-8a55585f5a73bd06.git",
+      "vendorStatus": "origin-unreachable"
+    },
+    {
+      "name": "vfconvert",
+      "summary": "Conversion pack — inquiry-to-order path.",
+      "bcId": "bc-9644a175",
+      "agentUrl": "https://cursor.com/agents/bc-9644a175",
+      "originSlug": "christian-velvet/tmp-4460086f23171633",
+      "codebaseUrl": "https://cursor.com/codebase/christian-velvet/tmp-4460086f23171633",
+      "cloneUrl": "https://origin.cursor.com/christian-velvet/tmp-4460086f23171633.git",
+      "vendorStatus": "origin-unreachable"
+    },
+    {
+      "name": "vfgrowth",
+      "summary": "Growth pack — content sprints and acquisition work.",
+      "bcId": "bc-e68393a0",
+      "agentUrl": "https://cursor.com/agents/bc-e68393a0",
+      "originSlug": "christian-velvet/tmp-0093db8b6deea44f",
+      "codebaseUrl": "https://cursor.com/codebase/christian-velvet/tmp-0093db8b6deea44f",
+      "cloneUrl": "https://origin.cursor.com/christian-velvet/tmp-0093db8b6deea44f.git",
+      "vendorStatus": "origin-unreachable"
+    },
+    {
+      "name": "vfprod",
+      "summary": "Production pack — print-floor and job tracking.",
+      "bcId": "bc-cd4a5cde",
+      "agentUrl": "https://cursor.com/agents/bc-cd4a5cde",
+      "originSlug": "christian-velvet/tmp-c9ca74be9225ac7d",
+      "codebaseUrl": "https://cursor.com/codebase/christian-velvet/tmp-c9ca74be9225ac7d",
+      "cloneUrl": "https://origin.cursor.com/christian-velvet/tmp-c9ca74be9225ac7d.git",
+      "vendorStatus": "origin-unreachable"
+    },
+    {
+      "name": "vfsales",
+      "summary": "Sales pack — quotes and follow-up.",
+      "bcId": "bc-28017566",
+      "agentUrl": "https://cursor.com/agents/bc-28017566",
+      "originSlug": "christian-velvet/tmp-b467d4882113eabd",
+      "codebaseUrl": "https://cursor.com/codebase/christian-velvet/tmp-b467d4882113eabd",
+      "cloneUrl": "https://origin.cursor.com/christian-velvet/tmp-b467d4882113eabd.git",
+      "vendorStatus": "origin-unreachable"
+    },
+    {
+      "name": "vfops",
+      "summary": "Operations pack — run-the-studio procedures.",
+      "bcId": "bc-93fbfca6",
+      "agentUrl": "https://cursor.com/agents/bc-93fbfca6",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vfcovers",
+      "summary": "Covers pack — brief and post cover art.",
+      "bcId": "bc-390e0de1",
+      "agentUrl": "https://cursor.com/agents/bc-390e0de1",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vfinsights",
+      "summary": "Insights pack — performance reads; does not invent metrics.",
+      "bcId": "bc-02df9e72",
+      "agentUrl": "https://cursor.com/agents/bc-02df9e72",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vfbooks",
+      "summary": "Books pack — receivables and studio ledger work.",
+      "bcId": "bc-280dd241",
+      "agentUrl": "https://cursor.com/agents/bc-280dd241",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vfresearch",
+      "summary": "Research pack — source gathering and notes.",
+      "bcId": "bc-01278e9b",
+      "agentUrl": "https://cursor.com/agents/bc-01278e9b",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vfbiz",
+      "summary": "Business pack — studio strategy and decisions.",
+      "bcId": "bc-3921041e",
+      "agentUrl": "https://cursor.com/agents/bc-3921041e",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vfcopy",
+      "summary": "Copy desk — homework, draft, and lint.",
+      "bcId": "bc-b6bc8b8c",
+      "bcIdFull": "bc-b6bc8b8c-136d-4d95-812e-177991534e42",
+      "agentUrl": "https://cursor.com/agents/bc-b6bc8b8c-136d-4d95-812e-177991534e42",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
+    }
+  ]
+}
