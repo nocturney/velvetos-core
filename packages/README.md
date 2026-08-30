@@ -14,3 +14,5 @@ chmod +x scripts/vendor-origin-packs.sh
 Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). Do not invent prices. This repo does not send Instagram — live send stays on Grok Bot.
 
 New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates.
+
+Agency specialists that sit on a pack are listed in [`docs/AGENCY-TOOLS.md`](../docs/AGENCY-TOOLS.md). They do not replace these folders.
