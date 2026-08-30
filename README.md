@@ -38,6 +38,7 @@ No secrets belong in git. No invented prices or invented Insights.
 | `vfseason` | Seasonal calendar — studio calendar and season marks. | [bc-2a4a3260](https://cursor.com/agents/bc-2a4a3260) | slug not found in this dump |
 | `vfsku` | SKU cards and repeats — product cards and reprint runs. | [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c) | slug not found in this dump |
 | `vfbriefux` | Brief format research — morning-brief layout and UX notes. | [bc-9e0be231](https://cursor.com/agents/bc-9e0be231) | slug not found in this dump |
+| `vfmcp` | MCP fit — which awesome-mcp-servers entries map onto VF packs. Write-up: [`docs/MCP-FIT.md`](docs/MCP-FIT.md). | [bc-1764e30f-b592-4805-9586-037da3351d65](https://cursor.com/agents/bc-1764e30f-b592-4805-9586-037da3351d65) | HQ-native (not Origin) |
 
 Machine-readable catalog: [`packages/manifest.json`](packages/manifest.json). Per-pack provenance: `packages/<name>/ORIGIN.md`.
 
