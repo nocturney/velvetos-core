@@ -12,6 +12,6 @@
 
 ## מוזיקה לאינסטגרם
 
-- פלייבוק: `MUSIC.md` · `@trend-researcher` (מסירה ל־`vfigos` / `vfom`)
+- פלייבוק: `MUSIC.md` · מקורות: `SOURCES-MUSIC.json` · `@trend-researcher` (מסירה ל־`vfigos` / `vfom`)
 - מיומנות: `.cursor/skills/vf-ig-music/SKILL.md`
-- ארטיפקט: `sources/YYYY-MM-DD-ig-music.md` — בלי שמות שירים מומצאים, בלי Insights
+- מקור ראשי: HeyOrca שבועי (בלי Treg). ארטיפקט: `sources/YYYY-MM-DD-ig-music.md`

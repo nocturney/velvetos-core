@@ -292,7 +292,7 @@
       "slug": "trend-researcher",
       "packs": ["vfresearch", "vfseason"],
       "tools": ["treg", "calendar"],
-      "job": "Season, reprint, and Instagram music/sound briefs from live sources (MUSIC.md). Treg price first; never invent track names or Insights"
+      "job": "Season, reprint, and Instagram music/sound briefs from HeyOrca + IG paste (MUSIC.md). No Treg for music; never invent track names or Insights"
     }
   ],
   "warehouse": "The other Agency specialists stay in .cursor/rules/ with alwaysApply false. Mention @slug only when the user asks for that specialty. Do not pull Godot, GIS, healthcare, China-social, or XR agents onto a Velvet Factory job unless asked.",
