@@ -93,7 +93,7 @@
     {
       "id": "studio",
       "he": "סטודיו",
-      "packs": ["vfconvert", "vfsales", "vfcopy"],
+      "packs": ["vfconvert", "vfsales", "vfcopy", "vfmskill"],
       "specialists": ["sales-engineer", "proposal-strategist", "discovery-coach", "content-creator", "brand-guardian", "email-intelligence-engineer"],
       "tools": ["gmail", "drive"],
       "decides": "inquiry brief, quote draft, copy. Does not send."
@@ -101,7 +101,7 @@
     {
       "id": "growth",
       "he": "צמיחה",
-      "packs": ["vfgrowth", "vfcovers", "vfigos", "vfinsights", "vfom"],
+      "packs": ["vfgrowth", "vfcovers", "vfigos", "vfinsights", "vfmskill", "vfom"],
       "specialists": ["instagram-curator", "visual-storyteller", "image-prompt-engineer", "growth-hacker", "analytics-reporter", "social-media-strategist"],
       "tools": ["superdesign", "treg", "drive"],
       "decides": "content pack and cover drafts. HQ reviews/schedules only. Grok sends."
@@ -174,7 +174,7 @@
     },
     {
       "slug": "sales-engineer",
-      "packs": ["vfsales", "vfconvert"],
+      "packs": ["vfsales", "vfconvert", "vfmskill"],
       "tools": ["gmail"],
       "job": "Quote draft after verified cost. One CTA. No invented ₪."
     },
@@ -192,7 +192,7 @@
     },
     {
       "slug": "content-creator",
-      "packs": ["vfcopy", "vfgrowth"],
+      "packs": ["vfcopy", "vfgrowth", "vfmskill"],
       "tools": [],
       "job": "Hebrew spoken-voice copy. WhatsApp CTA, not Send DM."
     },
@@ -222,7 +222,7 @@
     },
     {
       "slug": "growth-hacker",
-      "packs": ["vfgrowth"],
+      "packs": ["vfgrowth", "vfmskill"],
       "tools": ["treg"],
       "job": "Content sprint ideas. No TikTok or ads without lead-seat decision."
     },
@@ -298,6 +298,7 @@
     ".cursor/skills/vf-morning-brief/SKILL.md",
     ".cursor/skills/vf-inquiry-chain/SKILL.md",
     ".cursor/skills/vf-content-sprint/SKILL.md",
+    ".cursor/skills/vf-marketing-skills/SKILL.md",
     ".cursor/skills/vf-makers/SKILL.md",
     ".cursor/skills/vf-openmontage/SKILL.md",
     ".cursor/skills/vf-run/SKILL.md",

@@ -14,6 +14,7 @@ Use when the user asks for חבילת תוכן, covers, reel draft, or a post af
 - `vfigos` + `@instagram-curator` — **review and schedule only**
 - `vfom` + `@visual-storyteller` — timelapse cut cards, hybrid beat list, scene gate (read `vf-openmontage`)
 - After publish (when a real snapshot exists): `vfinsights` + `@analytics-reporter`
+- Frameworks (optional): `vfmskill` + `.cursor/skills/vf-marketing-skills` — `social` / `video` / `image`. Desk laws win.
 
 ## Tools
 

@@ -11,6 +11,7 @@
     "This repo does not send Instagram posts. Live Instagram, Gmail, and printers stay on Grok Bot (5 seats).",
     "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
     "2026-08-30 desk overlay: 28 Agency specialists + live tools in .cursor/vf-desk.json and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
+    "2026-08-30: vfmskill is an HQ-native pack. Curated 15/50 skills from coreyhaines31/marketingskills (MIT, e55de88) mapped onto existing packs. No SaaS CMO dump, no send, no invented ₪.",
     "2026-08-30: vfom is an HQ-native pack (not Origin). OpenMontage pipeline patterns (clip-factory, hybrid, reference plan, scene gate, self-review) map onto existing content packs. Do not vendor Remotion or send Instagram.",
     "2026-08-30: vfmem is HQ-native. Structural queries over desk/manifest/Agency maps (DeusData/codebase-memory-mcp pattern). Do not install their binary from this repo. See docs/VFMEM.md.",
     "2026-08-30: vfgraft is an HQ-native pack (not Origin). Graft pattern (committed markdown office graph) only — no npm CLI, no Graft MCP.",
@@ -266,6 +267,20 @@
       "cloneUrl": null,
       "vendorStatus": "hq-native",
       "writeup": "docs/500-AGENTS.md"
+    },
+    {
+      "name": "vfmskill",
+      "summary": "Marketing Skills desk — curated 15/50 skills from coreyhaines31/marketingskills on existing packs (copy, social, offer, research). No send, no invented ₪.",
+      "bcId": "bc-cbd42dd7",
+      "bcIdFull": "bc-cbd42dd7-d35f-4c48-88f3-1d993d3b1792",
+      "agentUrl": "https://cursor.com/agents/bc-cbd42dd7-d35f-4c48-88f3-1d993d3b1792",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "source": "https://github.com/coreyhaines31/marketingskills",
+      "writeup": "docs/MARKETING-SKILLS.md",
+      "skill": ".cursor/skills/vf-marketing-skills/SKILL.md"
     },
     {
       "name": "vfom",

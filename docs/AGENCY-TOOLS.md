@@ -5,7 +5,7 @@ The Agency dump installed **273** Cursor specialists (`docs/AGENCY-AGENTS.md`). 
 Machine map: [`.cursor/vf-desk.json`](../.cursor/vf-desk.json).  
 Always-on router: [`.cursor/rules/velvet-factory-desk.mdc`](../.cursor/rules/velvet-factory-desk.mdc).  
 Refresh Agency rules: `./scripts/install-agency-agents.sh` (preserves the desk rule).  
-Check: `python3 scripts/check-vf-desk.py`.  
+Check: `python3 scripts/check-vf-desk.py`. Marketing skills map: `python3 scripts/check-vfmskill.py`.
 Office graph (before dumping packs): `python3 scripts/vfmem.py who <job>` — [`docs/VFMEM.md`](VFMEM.md).
 
 HQ still does not send Instagram or Gmail. Live send stays on Grok Bot.
@@ -34,8 +34,8 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | Seat | Packs | Desk specialists | Tools |
 |---|---|---|---|
 | ראש צוות | `vfops` `vfbriefux` `vfharness` `vfmem` | `@studio-operations` `@chief-of-staff` `@meeting-notes-specialist` `@workflow-architect` `@ux-architect` | Calendar, Gmail read, Mobbin, `check-all.py`, vfmem |
-| סטודיו | `vfconvert` `vfsales` `vfcopy` | `@email-intelligence-engineer` `@discovery-coach` `@sales-engineer` `@proposal-strategist` `@content-creator` `@brand-guardian` | Gmail read, Drive by job |
-| צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` `vfom` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Superdesign, Treg, Drive |
+| סטודיו | `vfconvert` `vfsales` `vfcopy` `vfmskill` | `@email-intelligence-engineer` `@discovery-coach` `@sales-engineer` `@proposal-strategist` `@content-creator` `@brand-guardian` | Gmail read, Drive by job |
+| צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` `vfmskill` `vfom` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Superdesign, Treg, Drive |
 | תפעול | `vfcost` `vfbooks` `vfbiz` | `@pricing-analyst` `@bookkeeper-controller` `@finance-tracker` `@business-strategist` | Gmail חשבונות, Drive |
 | ייצור | `vfprod` `vfsku` `vlicense` `vfresearch` | `@studio-producer` `@operations-manager` `@legal-compliance-checker` `@research-synthesist` `@trend-researcher` | Drive, Calendar, Treg |
 
@@ -46,6 +46,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | בריף בוקר / what is open | `.cursor/skills/vf-morning-brief/SKILL.md` |
 | פנייה / quote this | `.cursor/skills/vf-inquiry-chain/SKILL.md` |
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
+| קופי / הצעה / מסגור שיווקי | `.cursor/skills/vf-marketing-skills/SKILL.md` |
 | החלטה / קיר / דופק כסף / רוטציה | `.cursor/skills/vf-makers/SKILL.md` |
 | ריל / טיימלאפס / ייחוס | `.cursor/skills/vf-openmontage/SKILL.md` |
 | משמרת / `@vfe2b run` | `.cursor/skills/vf-run/SKILL.md` |

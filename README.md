@@ -46,7 +46,7 @@ python3 scripts/vfmem.py who "בריף בוקר"
 | Warehouse catalog | [`.cursor/agency-agents.json`](.cursor/agency-agents.json) |
 | Full roster | [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md) |
 | Desk + tools | [`docs/AGENCY-TOOLS.md`](docs/AGENCY-TOOLS.md), [`.cursor/vf-desk.json`](.cursor/vf-desk.json) |
-| Daily skills | `.cursor/skills/vf-morning-brief`, `vf-inquiry-chain`, `vf-content-sprint`, `vf-makers`, `vf-harness`, `vf-hq-memory`, `vf-graft-map` |
+| Daily skills | `.cursor/skills/vf-morning-brief`, `vf-inquiry-chain`, `vf-content-sprint`, `vf-marketing-skills`, `vf-makers`, `vf-harness`, `vf-hq-memory`, `vf-graft-map` |
 | Guide file | [`AGENTS.md`](AGENTS.md) — wins over the conversation |
 
 These specialists do **not** replace VF packs. They sit next to the office OS. Still no Instagram or Gmail send from this HQ.
@@ -91,6 +91,7 @@ Five seats: ראש צוות · סטודיו · צמיחה · תפעול · יי�
 | `vfe2b` | Awesome-AI-agents desk — patterns from [e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) on existing packs (no second runtime; this HQ does not send). | [bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057](https://cursor.com/agents/bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057) | HQ-native |
 | `vfmakers` | Maker-skills desk — patterns from [coreyhaines31/makerskills](https://github.com/coreyhaines31/makerskills) (decide, unstuck, cash pulse, IG rotation, studio brain). No plugin; this HQ does not send. | [bc-888d3ff6-c3ad-43f7-bda3-814c82546324](https://cursor.com/agents/bc-888d3ff6-c3ad-43f7-bda3-814c82546324) | HQ-native; [`docs/MAKERSKILLS-EMBED-he.md`](docs/MAKERSKILLS-EMBED-he.md) |
 | `vfagents` | 500 AI Agents fit — office playbooks from the public list; no CrewAI runtime, no send. | [bc-9765dc13](https://cursor.com/agents/bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027) | HQ-native; [`docs/500-AGENTS.md`](docs/500-AGENTS.md) |
+| `vfmskill` | Marketing Skills desk — curated 15/50 skills from [coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills) on existing packs (copy, social, offer). | [bc-cbd42dd7-d35f-4c48-88f3-1d993d3b1792](https://cursor.com/agents/bc-cbd42dd7-d35f-4c48-88f3-1d993d3b1792) | HQ-native; [`docs/MARKETING-SKILLS.md`](docs/MARKETING-SKILLS.md) |
 | `vfom` | OpenMontage desk — clip-factory / hybrid / reference-plan crews on existing packs (no Remotion vendor; this HQ does not send). | [bc-4be8813f](https://cursor.com/agents/bc-4be8813f-000e-43a0-b297-7537bda05d4e) | HQ-native; [`docs/OPENMONTAGE.md`](docs/OPENMONTAGE.md) |
 | `vfharness` | Outer harness — six layers (guides, sensors, loop, memory, permissions, observability) on existing packs. No second runtime. | [bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb](https://cursor.com/agents/bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb) | HQ-native; [`docs/HARNESS.md`](docs/HARNESS.md) |
 | `vfgraft` | Graft office graph — committed markdown map so agents do not re-explore HQ from zero. No npm CLI. | [bc-e154ffc2-061a-4635-8d32-a6bcb145bc64](https://cursor.com/agents/bc-e154ffc2-061a-4635-8d32-a6bcb145bc64) | HQ-native; [`docs/GRAFT.md`](docs/GRAFT.md) |
