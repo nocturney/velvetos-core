@@ -1,0 +1,20 @@
+{
+  "task_id": "harness-embed-2026-08-30",
+  "status": "done",
+  "pack": "vfharness",
+  "completed_steps": [
+    "read-playbook",
+    "write-agents-md",
+    "wire-sensors",
+    "embed-desk-constitution"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "AGENTS.md",
+    "packages/vfharness/",
+    "docs/HARNESS.md"
+  ],
+  "unresolved": [],
+  "escalation": null,
+  "last_updated": "2026-08-30"
+}

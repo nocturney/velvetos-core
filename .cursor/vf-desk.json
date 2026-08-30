@@ -8,7 +8,9 @@
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
     "HQ does not send Instagram, Gmail, WhatsApp, or DMs. Live send stays on Grok Bot (5 seats).",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
-    "Do not commit secrets, medical files, or personal Drive folders."
+    "Do not commit secrets, medical files, or personal Drive folders.",
+    "Harness: AGENTS.md + packages/vfharness. Six layers on existing packs. No second runtime. After catalog edits run python3 scripts/check-all.py.",
+    "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -64,15 +66,28 @@
       "status": "skill-installed-needs-login",
       "useWhen": "vfgrowth / vfresearch / vfinsights live web, SEO, social, ads data",
       "rule": "Say the catalog price before spending. Never invent Insights."
+    },
+    "vfmem": {
+      "status": "hq-native",
+      "command": "python3 scripts/vfmem.py",
+      "useWhen": "Route a job to pack / specialist / tool without dumping the warehouse",
+      "source": "https://github.com/DeusData/codebase-memory-mcp",
+      "rule": "Query the office graph first. Do not install the CBM binary from this repo."
+    },
+    "fcc": {
+      "status": "not-on-this-cloud-agent",
+      "namespace": "owner-mac-only",
+      "useWhen": "vffcc local-offload after lead seat. Never install here.",
+      "rule": "Does not reduce Cursor Cloud usage. Keys stay in ~/.fcc/. No Discord/Telegram."
     }
   },
   "seats": [
     {
       "id": "lead",
       "he": "ראש צוות",
-      "packs": ["vfops", "vfbriefux"],
+      "packs": ["vfops", "vfbriefux", "vfharness", "vfmem"],
       "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect"],
-      "tools": ["calendar", "gmail"],
+      "tools": ["calendar", "gmail", "vfmem"],
       "decides": "₪ amount, what moves on the board, what is deferred"
     },
     {
@@ -111,14 +126,14 @@
   "desk": [
     {
       "slug": "studio-operations",
-      "packs": ["vfops"],
-      "tools": ["calendar", "gmail"],
+      "packs": ["vfops", "vfharness", "vfmem"],
+      "tools": ["calendar", "gmail", "vfmem"],
       "job": "Morning brief, queue bottlenecks, run-the-studio procedures"
     },
     {
       "slug": "chief-of-staff",
-      "packs": ["vfops", "vfbiz"],
-      "tools": ["calendar", "gmail"],
+      "packs": ["vfops", "vfbiz", "vfmem"],
+      "tools": ["calendar", "gmail", "vfmem"],
       "job": "Open decisions, seat handoffs, what waits for Christian"
     },
     {
@@ -129,9 +144,9 @@
     },
     {
       "slug": "workflow-architect",
-      "packs": ["vfops"],
+      "packs": ["vfops", "vfharness"],
       "tools": ["calendar"],
-      "job": "Tighten the one pipeline: inquiry → talk → quote → print → pickup"
+      "job": "Tighten the one pipeline: inquiry → talk → quote → print → pickup; harness loop and checkpoints"
     },
     {
       "slug": "ux-architect",
@@ -283,6 +298,11 @@
     ".cursor/skills/vf-morning-brief/SKILL.md",
     ".cursor/skills/vf-inquiry-chain/SKILL.md",
     ".cursor/skills/vf-content-sprint/SKILL.md",
-    ".cursor/skills/vf-openmontage/SKILL.md"
+    ".cursor/skills/vf-openmontage/SKILL.md",
+    ".cursor/skills/vf-run/SKILL.md",
+    ".cursor/skills/vf-harness/SKILL.md",
+    ".cursor/skills/vf-hq-memory/SKILL.md",
+    ".cursor/skills/vf-graft-map/SKILL.md",
+    ".cursor/skills/vf-fcc-offload/SKILL.md"
   ]
 }

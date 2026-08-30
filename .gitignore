@@ -10,4 +10,6 @@ node_modules/
 *.key
 *.p12
 tmp-clone/
+__pycache__/
+*.pyc
 packages/vfcanva/studio/out/*.png

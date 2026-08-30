@@ -5,7 +5,8 @@ The Agency dump installed **273** Cursor specialists (`docs/AGENCY-AGENTS.md`). 
 Machine map: [`.cursor/vf-desk.json`](../.cursor/vf-desk.json).  
 Always-on router: [`.cursor/rules/velvet-factory-desk.mdc`](../.cursor/rules/velvet-factory-desk.mdc).  
 Refresh Agency rules: `./scripts/install-agency-agents.sh` (preserves the desk rule).  
-Check: `python3 scripts/check-vf-desk.py`.
+Check: `python3 scripts/check-vf-desk.py`.  
+Office graph (before dumping packs): `python3 scripts/vfmem.py who <job>` — [`docs/VFMEM.md`](VFMEM.md).
 
 HQ still does not send Instagram or Gmail. Live send stays on Grok Bot.
 
@@ -23,6 +24,8 @@ Checked 2026-08-30 on this HQ:
 | Mobbin | Plugin installed; MCP namespace not on this cloud agent | Brief UX only, when the server is actually available. |
 | Superdesign | Skill installed | Covers / brief graphics (skip repo init). Needs CLI login for generate. |
 | Treg | Skill installed; needs `treg login` | Live SEO/social/ads. Say the catalog price before spending. |
+| vfmem | HQ-native (`scripts/vfmem.py`) | Office graph: pack / `@slug` / tool. Pattern from codebase-memory-mcp; no binary. |
+| FCC (Free Claude Code) | Not on this Cloud Agent | Local BYOK proxy on the owner Mac only (`vffcc`). Does not cut Cursor usage. |
 
 Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or Christian.
 
@@ -30,7 +33,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 
 | Seat | Packs | Desk specialists | Tools |
 |---|---|---|---|
-| ראש צוות | `vfops` `vfbriefux` | `@studio-operations` `@chief-of-staff` `@meeting-notes-specialist` `@workflow-architect` `@ux-architect` | Calendar, Gmail read, Mobbin |
+| ראש צוות | `vfops` `vfbriefux` `vfharness` `vfmem` | `@studio-operations` `@chief-of-staff` `@meeting-notes-specialist` `@workflow-architect` `@ux-architect` | Calendar, Gmail read, Mobbin, `check-all.py`, vfmem |
 | סטודיו | `vfconvert` `vfsales` `vfcopy` | `@email-intelligence-engineer` `@discovery-coach` `@sales-engineer` `@proposal-strategist` `@content-creator` `@brand-guardian` | Gmail read, Drive by job |
 | צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` `vfom` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Superdesign, Treg, Drive |
 | תפעול | `vfcost` `vfbooks` `vfbiz` | `@pricing-analyst` `@bookkeeper-controller` `@finance-tracker` `@business-strategist` | Gmail חשבונות, Drive |
@@ -44,6 +47,11 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | פנייה / quote this | `.cursor/skills/vf-inquiry-chain/SKILL.md` |
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
 | ריל / טיימלאפס / ייחוס | `.cursor/skills/vf-openmontage/SKILL.md` |
+| משמרת / `@vfe2b run` | `.cursor/skills/vf-run/SKILL.md` |
+| רתמה / harness / checkpoint | `.cursor/skills/vf-harness/SKILL.md` |
+| מי מטפל / which pack / office map | `.cursor/skills/vf-hq-memory/SKILL.md` |
+| איך HQ מחובר / blast | `.cursor/skills/vf-graft-map/SKILL.md` |
+| FCC / חיסכון קלוד | `.cursor/skills/vf-fcc-offload/SKILL.md` |
 
 ## Example mentions
 
@@ -53,6 +61,8 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 @pricing-analyst גורמי עלות בלי מחיר מכירה
 @sales-engineer טיוטת הצעה אחרי הסכום שאמר כריסטיאן
 @instagram-curator סקירת לוח בלבד — בלי שליחה
+@chief-of-staff משמרת על העבודה הזו — כרטיס worker_done / escalation / decision_gate
+@vfgraft map
 ```
 
 ## Warehouse

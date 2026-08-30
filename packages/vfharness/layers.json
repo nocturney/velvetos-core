@@ -1,0 +1,141 @@
+{
+  "name": "vfharness",
+  "formula": "Agent = Model + Harness",
+  "embeddedAt": "2026-08-30",
+  "rule": "Embed the six layers onto existing packs. Do not add a second agent runtime.",
+  "source": {
+    "title": "Production Agent Engineering Practice 2026 — Harness Engineering",
+    "uploadedAs": "harness_final_ea2c.pdf",
+    "readAt": "2026-08-30",
+    "note": "Independent compilation uploaded by the owner. Not affiliated with Google, OpenAI, Anthropic, or HashiCorp. Adapted for Velvet Factory HQ; not an official spec."
+  },
+  "locks": [
+    "no-send-instagram",
+    "no-send-gmail",
+    "no-invented-prices",
+    "no-invented-insights",
+    "no-second-runtime",
+    "no-llm-judge-as-gate"
+  ],
+  "loop": {
+    "maxRetries": 2,
+    "escalateAfter": 2,
+    "sameSensorFailTrip": 3,
+    "stoppingCondition": "best-artifact-plus-unresolved"
+  },
+  "layers": [
+    {
+      "id": 1,
+      "name": "guides",
+      "role": "feedforward",
+      "files": [
+        "AGENTS.md",
+        "constitution/CONSTITUTION.md",
+        ".cursor/rules/velvet-factory-desk.mdc",
+        "packages/vfharness/SKILL.md"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "sensors",
+      "role": "feedback",
+      "files": [
+        "scripts/check-all.py",
+        "scripts/check-hq-overlay.py",
+        "scripts/check-vf-desk.py",
+        "scripts/check-vfharness.py"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "loop",
+      "role": "bounded-execution",
+      "files": [
+        "packages/vfharness/LOOP.md",
+        "packages/vfharness/templates/escalation.md",
+        ".cursor/skills/vf-harness/SKILL.md"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "memory",
+      "role": "durable-state",
+      "files": [
+        "packages/vfharness/state/README.md",
+        "packages/vfharness/templates/checkpoint.schema.json"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "permissions",
+      "role": "safety-boundary",
+      "files": [
+        "packages/vfharness/PERMISSIONS.md",
+        ".cursor/vf-desk.json"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "observability",
+      "role": "debug-and-drift",
+      "files": [
+        "CHANGELOG.md",
+        "packages/vfharness/CHECKLIST.md",
+        "docs/HARNESS.md"
+      ]
+    }
+  ],
+  "sensors": [
+    {"id": "check-all", "script": "scripts/check-all.py", "type": "computational"},
+    {"id": "check-hq-overlay", "script": "scripts/check-hq-overlay.py", "type": "computational"},
+    {"id": "check-vf-desk", "script": "scripts/check-vf-desk.py", "type": "computational"},
+    {"id": "check-vfharness", "script": "scripts/check-vfharness.py", "type": "computational"},
+    {"id": "check-vfe2b", "script": "scripts/check-vfe2b.py", "type": "computational"},
+    {"id": "check-vfagents", "script": "scripts/check-vfagents.py", "type": "computational"},
+    {"id": "check-vf-canva", "script": "scripts/check-vf-canva.py", "type": "computational"},
+    {"id": "check-vfgraft", "script": "scripts/check-vfgraft.py", "type": "computational"},
+    {"id": "check-vfmem", "script": "scripts/check-vfmem.py", "type": "computational"},
+    {"id": "check-vffcc", "script": "scripts/check-vffcc.py", "type": "computational"}
+  ],
+  "permissions": {
+    "allowRead": ["packages/**", "constitution/**", "docs/**", ".cursor/**", "gmail:search_threads", "gmail:get_thread", "calendar:list_events", "drive:search_files"],
+    "allowWrite": ["packages/**", "constitution/**", "docs/**", "AGENTS.md", "CHANGELOG.md"],
+    "allowExecute": ["python3 scripts/check-*.py"],
+    "ask": ["git push", "calendar:create_event", "gmail:create_draft", "treg:call"],
+    "deny": ["gmail:send_message", "gmail:reply", "gmail:forward", "instagram:send", "instagram:boost", "auto-dm", "rm -rf", "invented-ils"]
+  },
+  "embed": [
+    {"pack": "vfops", "layer": "loop", "how": "Morning brief and manager chain verify then escalate; no invented queue hours."},
+    {"pack": "vfconvert", "layer": "guides", "how": "Inquiry brief; missing fields stay missing."},
+    {"pack": "vfsales", "layer": "permissions", "how": "Draft only. Human sends WhatsApp."},
+    {"pack": "vfcopy", "layer": "sensors", "how": "Voice lint; CTA is WhatsApp not DM."},
+    {"pack": "vfcost", "layer": "sensors", "how": "X ₪ when no verified amount."},
+    {"pack": "vfbooks", "layer": "permissions", "how": "Read labeled mail. No debt-chase send."},
+    {"pack": "vfprod", "layer": "guides", "how": "Pickup Sderot only. License gate before reprint."},
+    {"pack": "vfigos", "layer": "permissions", "how": "Review and schedule only."},
+    {"pack": "vfgrowth", "layer": "guides", "how": "No TikTok or ads without lead seat."},
+    {"pack": "vfinsights", "layer": "sensors", "how": "Verified snapshot only."},
+    {"pack": "vfresearch", "layer": "memory", "how": "Sources on disk. Blocked body is not invented."},
+    {"pack": "vfe2b", "layer": "guides", "how": "Patterns on existing packs. No second runtime."},
+    {"pack": "vfagents", "layer": "guides", "how": "Office playbooks only."},
+    {"pack": "vfcanva", "layer": "permissions", "how": "Create / resize / review. HQ does not send."},
+    {"pack": "constitution", "layer": "guides", "how": "Five seats, one pipeline, orchestra lock."},
+    {"pack": "vfgraft", "layer": "memory", "how": "Committed office map. Read MAP.md before grepping the warehouse."},
+    {"pack": "vfmem", "layer": "memory", "how": "Query the office graph. Not a task checkpoint."},
+    {"pack": "vffcc", "layer": "permissions", "how": "Local BYOK map only. No fcc-server on this HQ."}
+  ],
+  "checklist": [
+    "guide-file-build-test-lint",
+    "guide-rules-from-failures",
+    "computational-sensor-per-task",
+    "bounded-retry-escalation",
+    "state-checkpoint",
+    "permission-boundary",
+    "token-cost-announce",
+    "structured-logging",
+    "trip-wire-ils-and-send",
+    "trusted-untrusted-split",
+    "emergency-stop-no-send",
+    "sensor-suite-green"
+  ]
+}

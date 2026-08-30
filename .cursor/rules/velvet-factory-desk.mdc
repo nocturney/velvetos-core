@@ -7,7 +7,7 @@ alwaysApply: true
 
 You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, WhatsApp `050-2517000`, IG `@velvets_cloud`).
 
-273 Agency specialists live in `.cursor/rules/` (`alwaysApply: false`). **Do not activate the whole roster.** Use the desk in `.cursor/vf-desk.json` and the skills under `.cursor/skills/`. Full warehouse: `docs/AGENCY-AGENTS.md`. Tool map: `docs/AGENCY-TOOLS.md`.
+273 Agency specialists live in `.cursor/rules/` (`alwaysApply: false`). **Do not activate the whole roster.** Use the desk in `.cursor/vf-desk.json` and the skills under `.cursor/skills/`. Full warehouse: `docs/AGENCY-AGENTS.md`. Tool map: `docs/AGENCY-TOOLS.md`. Before grepping the warehouse, read `packages/vfgraft/MAP.md`.
 
 ## Laws
 
@@ -22,6 +22,7 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 
 | Job | Pack | Mention | Tool |
 |---|---|---|---|
+| Office map / who handles | `vfmem` | `@studio-operations` | `python3 scripts/vfmem.py who <job>` |
 | Morning brief / queue | `vfops` | `@studio-operations` | Calendar (Asia/Jerusalem), Gmail **read** inbox |
 | Brief layout | `vfbriefux` | `@ux-architect` | Mobbin if available; Superdesign for packet graphics |
 | New inquiry | `vfconvert` | `@email-intelligence-engineer` then `@discovery-coach` | Gmail **read** the named thread |
@@ -33,8 +34,21 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 | IG board | `vfigos` | `@instagram-curator` | Review and schedule only |
 | Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or Treg. Never invent. |
 | Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + Treg if logged in |
+| Run / משמרת | `vfe2b` overlay | `@chief-of-staff` then the seat crew | One job folder. End in `worker_done` / `escalation` / `decision_gate`. Do not install Orca |
+| Harness / repeating failure / checkpoint | `vfharness` | `@workflow-architect` | `python3 scripts/check-all.py` — no second runtime |
+| HQ map / blast radius | `vfgraft` | — | Read `MAP.md`, then 2–3 graph nodes |
+
+`AGENTS.md` is the guide file. When it conflicts with the conversation, the guide wins. After catalog or rule edits, run the sensor suite. Do not hide a failed sensor.
 
 Warehouse specialists (Godot, GIS, healthcare, China social, XR, …) stay off the desk unless the user asks for that slug.
+
+## HQ memory
+
+Before reading many packs or the 273-rule warehouse, query the office graph:
+
+`python3 scripts/vfmem.py who <job>`
+
+Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pattern from DeusData/codebase-memory-mcp — do not install their binary from this repo.
 
 ## Tool modes
 
@@ -44,5 +58,6 @@ Warehouse specialists (Godot, GIS, healthcare, China social, XR, …) stay off t
 - **Superdesign:** covers, posters, brief graphics (skip repo init).
 - **Treg:** live web data only after login; announce catalog price before `call`.
 - **Mobbin:** morning-brief / UX references when the Mobbin MCP is actually available.
+- **FCC (Free Claude Code):** not on this Cloud Agent. Map is `vffcc`. Does not cut Cursor usage. Local Mac only after the lead seat.
 
 When a `@slug` is mentioned, follow that specialist **and** these laws.

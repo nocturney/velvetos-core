@@ -12,10 +12,14 @@
     "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
     "2026-08-30 desk overlay: 28 Agency specialists + live tools in .cursor/vf-desk.json and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
     "2026-08-30: vfom is an HQ-native pack (not Origin). OpenMontage pipeline patterns (clip-factory, hybrid, reference plan, scene gate, self-review) map onto existing content packs. Do not vendor Remotion or send Instagram.",
+    "2026-08-30: vfmem is HQ-native. Structural queries over desk/manifest/Agency maps (DeusData/codebase-memory-mcp pattern). Do not install their binary from this repo. See docs/VFMEM.md.",
+    "2026-08-30: vfgraft is an HQ-native pack (not Origin). Graft pattern (committed markdown office graph) only — no npm CLI, no Graft MCP.",
     "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings → MCP Tools.",
     "2026-08-30: ChatGPT share https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19 embedded in place (packages/*/hq, constitution/, vfbriefux packet). No new pack per agent. Vendor preserves hq/ overlays. See packages/chatgpt-embed-map.json and docs/SHARE-EMBED-he.md.",
     "2026-08-30 share embed: Gemini hbuCq3MEy5po / 4f223bc1774c read and mapped onto existing packs + constitution/. Perplexity c950af30: morning Cloudflare wall; afternoon owner PDFs read and mapped in place (no new pack, no invented ₪, no live bot/site/widget). See docs/SHARES-2026-08-30.md.",
-    "Orchestra 2026-08-30 ~17:55 lock: Grok decides only. Cursor opens ChatGPT + Gemini + Perplexity at 06:15. Map onto existing packs. constitution/ORCHESTRA.md. Evening pass 30.8 waiting owner login — do not invent bodies."
+    "Orchestra 2026-08-30 ~17:55 lock: Grok decides only. Cursor opens ChatGPT + Gemini + Perplexity at 06:15. Map onto existing packs. constitution/ORCHESTRA.md. Evening pass 30.8 waiting owner login — do not invent bodies.",
+    "2026-08-30: vfharness is an HQ-native pack. Six-layer outer harness (guides/sensors/loop/memory/permissions/observability) mapped onto existing packs. Guide file is AGENTS.md. Sensors: scripts/check-all.py. No second runtime, no send, no invented ₪. See docs/HARNESS.md.",
+    "2026-08-30: vffcc maps Alishahryar1/free-claude-code. Local BYOK proxy only — does not cut Cursor Cloud usage. No fcc-server on this HQ. See docs/FCC-FIT.md."
   ],
   "hqOverlay": {
     "constitution": "constitution/CONSTITUTION.md",
@@ -23,6 +27,9 @@
     "briefPacket": "packages/vfbriefux/hq/PACKET.md",
     "shareMap": "packages/chatgpt-embed-map.json",
     "orchestra": "constitution/ORCHESTRA.md",
+    "harness": "AGENTS.md",
+    "harnessPack": "packages/vfharness",
+    "harnessWriteup": "docs/HARNESS.md",
     "vendorPreserves": ["ORIGIN.md", "SKILL.md", "hq/", "playbooks next to ORIGIN.md", "packages/*/sources", "packages/vfcovers/g005"]
   },
   "packs": [
@@ -257,6 +264,60 @@
       "vendorStatus": "hq-native",
       "source": "https://github.com/calesthio/OpenMontage",
       "writeup": "docs/OPENMONTAGE.md"
+    },
+    {
+      "name": "vfharness",
+      "summary": "Outer harness — six layers on existing packs (guides, sensors, loop, memory, permissions, observability). No second runtime. HQ does not send.",
+      "bcId": "bc-c6e01d3b",
+      "bcIdFull": "bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
+      "agentUrl": "https://cursor.com/agents/bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "writeup": "docs/HARNESS.md",
+      "guide": "AGENTS.md",
+      "skill": ".cursor/skills/vf-harness/SKILL.md"
+    },
+    {
+      "name": "vfgraft",
+      "summary": "Graft office graph — trailhq/Graft pattern as committed markdown nodes. No npm CLI, no Graft MCP. Agents read MAP.md before grepping the warehouse.",
+      "bcId": "bc-e154ffc2-061a-4635-8d32-a6bcb145bc64",
+      "bcIdFull": "bc-e154ffc2-061a-4635-8d32-a6bcb145bc64",
+      "agentUrl": "https://cursor.com/agents/bc-e154ffc2-061a-4635-8d32-a6bcb145bc64",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "source": "https://github.com/trailhq/Graft",
+      "writeup": "docs/GRAFT.md",
+      "skill": ".cursor/skills/vf-graft-map/SKILL.md"
+    },
+    {
+      "name": "vfmem",
+      "summary": "HQ memory graph — CBM-style queries over existing VF maps. Pattern from DeusData/codebase-memory-mcp; no third-party binary.",
+      "bcId": "bc-8bd6ba75",
+      "bcIdFull": "bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
+      "agentUrl": "https://cursor.com/agents/bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "source": "https://github.com/DeusData/codebase-memory-mcp",
+      "writeup": "docs/VFMEM.md"
+    },
+    {
+      "name": "vffcc",
+      "summary": "Free Claude Code fit — local BYOK proxy map. Does not cut Cursor Cloud usage; no fcc-server on this HQ.",
+      "bcId": "bc-5abae8de",
+      "bcIdFull": "bc-5abae8de-a5da-455e-b71c-3db25e3d029c",
+      "agentUrl": "https://cursor.com/agents/bc-5abae8de-a5da-455e-b71c-3db25e3d029c",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "source": "https://github.com/Alishahryar1/free-claude-code",
+      "writeup": "docs/FCC-FIT.md"
     }
   ]
 }
