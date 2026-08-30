@@ -1,0 +1,453 @@
+{
+  "name": "vfmskill",
+  "title": "Marketing Skills desk — Corey Haines, curated",
+  "source": {
+    "title": "coreyhaines31/marketingskills",
+    "url": "https://github.com/coreyhaines31/marketingskills",
+    "license": "MIT",
+    "readAt": "2026-08-30",
+    "listedCount": 50,
+    "commit": "e55de886fe7580ec75cdb7ded5092b33f7d4ed58",
+    "commitShort": "e55de88",
+    "sourceDate": "2026-08-28",
+    "vendoredAt": "2026-08-30",
+    "vendorPath": "packages/vfmskill/vendor"
+  },
+  "locks": [
+    "no-send-instagram",
+    "no-send-gmail",
+    "no-invented-prices",
+    "no-invented-insights",
+    "no-ads-without-lead",
+    "no-tiktok-without-lead",
+    "no-auto-dm",
+    "no-boost",
+    "no-site-from-hq",
+    "human-on-whatsapp",
+    "pickup-sderot-only"
+  ],
+  "verdicts": [
+    "embed",
+    "later",
+    "skip"
+  ],
+  "embedCount": 15,
+  "picks": [
+    {
+      "name": "product-marketing",
+      "verdict": "embed",
+      "packs": [
+        "vfcopy",
+        "vfgrowth",
+        "vfsales"
+      ],
+      "note": "Foundation context. HQ file is .agents/product-marketing.md — facts only, no invented ₪ or Insights."
+    },
+    {
+      "name": "copywriting",
+      "verdict": "embed",
+      "packs": [
+        "vfcopy",
+        "vfsales"
+      ],
+      "note": "Hebrew spoken-voice. One CTA. WhatsApp 050-2517000 / איסוף שדרות. No Send DM."
+    },
+    {
+      "name": "copy-editing",
+      "verdict": "embed",
+      "packs": [
+        "vfcopy"
+      ],
+      "note": "Lint against packages/vfcopy/hq/PLAYBOOK.md. No invented proof points."
+    },
+    {
+      "name": "social",
+      "verdict": "embed",
+      "packs": [
+        "vfgrowth",
+        "vfigos",
+        "vfcanva"
+      ],
+      "note": "Instagram draft only. Review/schedule in vfigos. Grok sends. No TikTok, boost, or auto-DM."
+    },
+    {
+      "name": "customer-research",
+      "verdict": "embed",
+      "packs": [
+        "vfconvert",
+        "vfresearch"
+      ],
+      "note": "Read named Gmail/WhatsApp threads. Missing field = חסר. Do not invent a client."
+    },
+    {
+      "name": "offers",
+      "verdict": "embed",
+      "packs": [
+        "vfsales",
+        "vfcopy"
+      ],
+      "note": "Value framing after vfcost. Sale ₪ only from lead seat. Else X ₪."
+    },
+    {
+      "name": "marketing-psychology",
+      "verdict": "embed",
+      "packs": [
+        "vfcopy"
+      ],
+      "note": "Spoken Hebrew persuasion. No fake scarcity or invented deadline."
+    },
+    {
+      "name": "sales-enablement",
+      "verdict": "embed",
+      "packs": [
+        "vfsales"
+      ],
+      "note": "Quote/objection drafts. Human sends on WhatsApp + Invoice4U."
+    },
+    {
+      "name": "content-strategy",
+      "verdict": "embed",
+      "packs": [
+        "vfgrowth",
+        "vfseason"
+      ],
+      "note": "Content from finished floor work. Do not move a booked vfigos slot."
+    },
+    {
+      "name": "image",
+      "verdict": "embed",
+      "packs": [
+        "vfcovers",
+        "vfcanva"
+      ],
+      "note": "Cover briefs. Canva first; Superdesign if Canva is disconnected. No invented floor scenes."
+    },
+    {
+      "name": "video",
+      "verdict": "embed",
+      "packs": [
+        "vfgrowth",
+        "vfcovers"
+      ],
+      "note": "Reel hook / on-film text / caption. Proof from Drive job/SKU. Grok sends."
+    },
+    {
+      "name": "competitor-profiling",
+      "verdict": "embed",
+      "packs": [
+        "vfresearch",
+        "vfbiz"
+      ],
+      "note": "Public sources only. Matches vfagents/playbooks/competitor-scan.md. No invented follower counts."
+    },
+    {
+      "name": "marketing-ideas",
+      "verdict": "embed",
+      "packs": [
+        "vfgrowth"
+      ],
+      "note": "Filter through desk laws. Ads / TikTok / boost need lead seat."
+    },
+    {
+      "name": "marketing-plan",
+      "verdict": "embed",
+      "packs": [
+        "vfbiz",
+        "vfgrowth"
+      ],
+      "note": "Studio plan on the one pipeline. B2B logos/QR/napkins stay locked."
+    },
+    {
+      "name": "launch",
+      "verdict": "embed",
+      "packs": [
+        "vfsku",
+        "vfseason",
+        "vfgrowth"
+      ],
+      "note": "SKU / season announcement drafts. License gate before reprint catalog."
+    },
+    {
+      "name": "cro",
+      "verdict": "later",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Page/form CRO. Site stays locked until lead seat opens it."
+    },
+    {
+      "name": "referrals",
+      "verdict": "later",
+      "packs": [
+        "vfsales",
+        "vfgrowth"
+      ],
+      "note": "Word-of-mouth after pickup. No invented incentive ₪."
+    },
+    {
+      "name": "events",
+      "verdict": "later",
+      "packs": [
+        "vfseason",
+        "vfbiz"
+      ],
+      "note": "Local Sderot / south if lead names an event."
+    },
+    {
+      "name": "public-relations",
+      "verdict": "later",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Earned media only if lead asks."
+    },
+    {
+      "name": "community-marketing",
+      "verdict": "later",
+      "packs": [
+        "vfgrowth"
+      ],
+      "note": "Local pickup community. No 24/7 chatbot."
+    },
+    {
+      "name": "seo-audit",
+      "verdict": "later",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Needs a site. vfbiz lock."
+    },
+    {
+      "name": "ai-seo",
+      "verdict": "later",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Needs a site. vfbiz lock."
+    },
+    {
+      "name": "schema",
+      "verdict": "later",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Needs a site. vfbiz lock."
+    },
+    {
+      "name": "site-architecture",
+      "verdict": "later",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Needs a site. vfbiz lock."
+    },
+    {
+      "name": "analytics",
+      "verdict": "later",
+      "packs": [
+        "vfinsights"
+      ],
+      "note": "Use vfinsights on a verified snapshot. Never invent Insights."
+    },
+    {
+      "name": "marketing-council",
+      "verdict": "later",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Simulated board. Desk specialists already cover this."
+    },
+    {
+      "name": "marketing-loops",
+      "verdict": "later",
+      "packs": [
+        "vfops"
+      ],
+      "note": "Recurring agent loops. Orchestra already owns 06:15."
+    },
+    {
+      "name": "influencer-marketing",
+      "verdict": "later",
+      "packs": [
+        "vfgrowth"
+      ],
+      "note": "Only if lead names a creator. No invented fees."
+    },
+    {
+      "name": "lead-magnets",
+      "verdict": "later",
+      "packs": [
+        "vfgrowth"
+      ],
+      "note": "No email-capture stack on this HQ."
+    },
+    {
+      "name": "ads",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Ads need lead-seat decision. HQ does not boost."
+    },
+    {
+      "name": "ad-creative",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Same lock as ads."
+    },
+    {
+      "name": "cold-email",
+      "verdict": "skip",
+      "packs": [
+        "vfsales"
+      ],
+      "note": "HQ does not send Gmail. Close is human WhatsApp."
+    },
+    {
+      "name": "emails",
+      "verdict": "skip",
+      "packs": [
+        "vfsales"
+      ],
+      "note": "No lifecycle email stack. Draft only if asked."
+    },
+    {
+      "name": "sms",
+      "verdict": "skip",
+      "packs": [
+        "vfsales"
+      ],
+      "note": "WhatsApp is the close. HQ does not send."
+    },
+    {
+      "name": "pricing",
+      "verdict": "skip",
+      "packs": [
+        "vfcost"
+      ],
+      "note": "vfcost owns ₪. Never invent a sale price."
+    },
+    {
+      "name": "prospecting",
+      "verdict": "skip",
+      "packs": [
+        "vfsales"
+      ],
+      "note": "Inbound inquiry chain. No cold list from HQ."
+    },
+    {
+      "name": "revops",
+      "verdict": "skip",
+      "packs": [
+        "vfops"
+      ],
+      "note": "One pipeline already exists. No second CRM."
+    },
+    {
+      "name": "aso",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Not an app store product."
+    },
+    {
+      "name": "paywalls",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "SaaS upgrade screens. Not this studio."
+    },
+    {
+      "name": "signup",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "SaaS registration. Not this studio."
+    },
+    {
+      "name": "onboarding",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "SaaS activation. Not this studio."
+    },
+    {
+      "name": "popups",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Site overlays. Site locked."
+    },
+    {
+      "name": "churn-prevention",
+      "verdict": "skip",
+      "packs": [
+        "vfsales"
+      ],
+      "note": "Subscription cancel flows. Not this studio."
+    },
+    {
+      "name": "programmatic-seo",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Scaled SEO pages. Site locked."
+    },
+    {
+      "name": "directory-submissions",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "SaaS directories. Not this studio."
+    },
+    {
+      "name": "attribution",
+      "verdict": "skip",
+      "packs": [
+        "vfinsights"
+      ],
+      "note": "Would invent a measurement stack. Use verified snapshots only."
+    },
+    {
+      "name": "free-tools",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Lead-gen calculators. No AutoQuote widget."
+    },
+    {
+      "name": "co-marketing",
+      "verdict": "skip",
+      "packs": [
+        "vfbiz"
+      ],
+      "note": "Partner campaigns only if lead names a partner."
+    },
+    {
+      "name": "ab-testing",
+      "verdict": "skip",
+      "packs": [
+        "vfinsights"
+      ],
+      "note": "No experiment stack. Do not invent Insights."
+    },
+    {
+      "name": "competitors",
+      "verdict": "skip",
+      "packs": [
+        "vfresearch"
+      ],
+      "note": "Comparison landing pages. Site locked. Use competitor-profiling instead."
+    }
+  ]
+}

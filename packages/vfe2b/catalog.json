@@ -16,7 +16,8 @@
     "no-24-7-chatbot",
     "no-autoquote",
     "no-printer-from-hq",
-    "human-on-whatsapp"
+    "human-on-whatsapp",
+    "no-second-ade"
   ],
   "verdicts": ["embed", "later", "skip"],
   "picks": [
@@ -345,6 +346,15 @@
       "note": "Already the HQ. Do not install a second coding agent."
     },
     {
+      "name": "Orca",
+      "url": "https://github.com/stablyai/orca",
+      "verdict": "embed",
+      "pattern": "isolate a job, handoff vs supervise, three terminal states",
+      "packs": ["vfops", "vfconvert", "vfsales", "vfcopy", "vfcovers", "vfigos", "vfcost", "vfprod"],
+      "crew": "crews/run.md",
+      "note": "Pattern only. Do not brew-install orca or stand up an ADE. Cursor is the office."
+    },
+    {
       "name": "Superagent",
       "url": "https://www.superagent.sh/",
       "verdict": "skip",
@@ -426,6 +436,11 @@
     {
       "family": "coding agents",
       "names": ["Aider", "Continue", "Devin", "OpenDevin", "Devika", "Devon", "SWE Agent", "GPT Engineer", "GPT Pilot", "Mentat", "MetaGPT", "ChatDev", "Factory", "Fine", "Codium AI", "GitHub Copilot X", "GitLab Duo", "Sweep", "Tusk"],
+      "reason": "cursor-is-the-desk"
+    },
+    {
+      "family": "ADE / second coding office",
+      "names": ["Orca ADE install", "orca-ide", "stablyai/orca desktop"],
       "reason": "cursor-is-the-desk"
     },
     {

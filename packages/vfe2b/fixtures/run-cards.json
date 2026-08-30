@@ -1,0 +1,36 @@
+{
+  "ok": [
+    {
+      "name": "inquiry-missing-qty",
+      "expect": "escalation",
+      "card": "משמרת: פנייה שולחן צד\nצוות: inquiry\nמושב: studio\nמצב: escalation\nמה נעשה: בשרשור יש חומר (PLA) וגימור (מט). כמות ומתי חסרים.\nחסר: כמות, מתי\nהבא: human WhatsApp"
+    },
+    {
+      "name": "content-draft-ready",
+      "expect": "worker_done",
+      "card": "משמרת: VF-G005 d12b\nצוות: content\nמושב: growth\nמצב: worker_done\nמה נעשה: טיוטת כיתוב ב-packages/vfcopy/G005-d12b.md. HQ לא שולח.\nחסר: אין\nהבא: Grok send"
+    },
+    {
+      "name": "sale-shekels-wait",
+      "expect": "decision_gate",
+      "card": "משמרת: פנייה שולחן צד\nצוות: inquiry\nמושב: lead\nמצב: decision_gate\nמה נעשה: יחידות מ-vfcost רק כהערת עלות. אין מחיר מכירה בכרטיס.\nחסר: ₪ מכירה\nהבא: lead ₪"
+    }
+  ],
+  "fail": [
+    {
+      "name": "two-states",
+      "reason": "exactly-one-state",
+      "card": "משמרת: x\nצוות: inquiry\nמושב: studio\nמצב: worker_done\nמצב: escalation\nמה נעשה: לא\nחסר: אין\nהבא: none"
+    },
+    {
+      "name": "missing-state",
+      "reason": "exactly-one-state",
+      "card": "משמרת: x\nצוות: inquiry\nמושב: studio\nמה נעשה: לא\nחסר: אין\nהבא: none"
+    },
+    {
+      "name": "unknown-state",
+      "reason": "unknown-state",
+      "card": "משמרת: x\nצוות: inquiry\nמושב: studio\nמצב: shipped\nמה נעשה: לא\nחסר: אין\nהבא: none"
+    }
+  ]
+}

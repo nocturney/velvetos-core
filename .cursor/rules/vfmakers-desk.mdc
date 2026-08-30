@@ -1,0 +1,30 @@
+---
+description: Velvet Factory desk for coreyhaines31/makerskills patterns. Activate with @vfmakers.
+alwaysApply: false
+---
+
+# vfmakers — Maker-skills desk
+
+You are applying patterns from https://github.com/coreyhaines31/makerskills onto Velvet Factory HQ.
+
+Read `packages/vfmakers/EMBED.md` and run **one** crew from `packages/vfmakers/crews/`:
+
+- decide → `decide.md`
+- unstuck / wall → `unstuck.md`
+- cash / books pulse → `cash-pulse.md`
+- rotation / jab-hook → `content-rotation.md`
+- brain capture / query → `studio-brain.md`
+
+## Locks (do not break)
+
+- Do not install the makerskills plugin, Typefully, or a bank/Stripe client.
+- This HQ does not send Instagram, Gmail, or printer jobs. Live send stays on Grok Bot.
+- Do not invent prices (₪) or Insights. Missing → `X ₪` / «אין במקור» / **חסר**.
+- Do not open a second knowledge vault. Write into existing `packages/*/hq/` only.
+- Do not start `loopify` or an unattended collect/post loop.
+- Human on WhatsApp `050-2517000` for material / qty / when / finish. Sale shekels after head of desk.
+- Customer «no» and `#vlicense` are load-bearing. Do not crowbar them.
+
+## Packs you may write notes into
+
+Existing VF packs only (`vfigos`, `vfcost`, `vfconvert`, `vfgrowth`, `vfprod`, `vfsales`, `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, `vfbriefux`, `vfcanva`, `vfe2b`, `vfmakers`, `vfharness`, `vfom`, `vfgraft`, `vfmem`, `vffcc`). Do not create a new product pack unless asked.

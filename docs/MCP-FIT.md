@@ -23,6 +23,8 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 
 Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility” servers unless Treg is missing a specific account.
 
+**Office graph (already in git, not a Cursor MCP add):** [`vfmem`](../packages/vfmem/) takes the *query shape* from [DeusData/codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp) (`architecture` / `who` / `impact` / `adr`) and runs it on `vf-desk.json` + `manifest.json`. Do not install their C binary from this repo. Write-up: [`docs/VFMEM.md`](VFMEM.md).
+
 ## Do this first (real studio gaps)
 
 Three holes the office OS still has. Each one is a Cursor MCP add — not a new pack dump.
@@ -120,6 +122,7 @@ Do not add these “because they exist on the list.” Add them when Christian c
 - **Second SEO / GEO / AI-visibility stacks** — Treg already is the data catalog. Connect GA / GSC / GBP there first.
 - **Second Canva or image-gen farms** — Canva + Superdesign are enough for brand work.
 - **Anything that posts, boosts, or DMs Instagram from this HQ.**
+- **DeusData/codebase-memory-mcp binary** — coding-agent indexer that writes client config. The office-graph pattern is already `scripts/vfmem.py`. Local AST install only if the lead seat asks, and never by rewriting this repo's `.cursor/mcp.json`.
 - **Crypto, x402 marketplaces, coding-agent swarms, aerospace, gaming, home IoT** — not the print floor.
 - **Cold-email infrastructure** — VF is inbound studio sales, not a spam shop.
 
