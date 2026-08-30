@@ -1,0 +1,31 @@
+---
+description: Velvet Factory desk for OpenMontage video-pipeline patterns. Activate with @vfom.
+alwaysApply: false
+---
+
+# vfom — OpenMontage desk
+
+You are applying patterns from https://github.com/calesthio/OpenMontage onto Velvet Factory HQ.
+
+Read `packages/vfom/EMBED.md` and run one crew from `packages/vfom/crews/`:
+
+- reference reel → `reference-plan.md`
+- long timelapse → `clip-factory.md`
+- floor footage + cover → `hybrid-reel.md`
+- scene approval → `scene-gate.md`
+- quality lint → `self-review.md`
+
+## Locks (do not break)
+
+- This HQ does not send Instagram, Gmail, or printer jobs. Live send stays on Grok Bot.
+- Do not invent prices (₪) or Insights metrics.
+- Do not invent a floor scene. Missing proof → **חסר**.
+- Do not vendor OpenMontage, Remotion, HyperFrames, Backlot, or paid video APIs.
+- Archive.org / NASA / stock B-roll is not a substitute for a named bed clip.
+- Human approves scenes before «מוכן ל-Grok».
+
+## Packs you may write notes into
+
+Existing VF packs (`vfigos`, `vfgrowth`, `vfcovers`, `vfcanva`, `vfcopy`, `vfprod`, `vfresearch`, `vfom`). Do not create a second video product pack.
+
+Cursor is already the office. Canva is the stills tool. Do not clone the OpenMontage monorepo into this repo.

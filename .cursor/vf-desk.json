@@ -86,7 +86,7 @@
     {
       "id": "growth",
       "he": "צמיחה",
-      "packs": ["vfgrowth", "vfcovers", "vfigos", "vfinsights"],
+      "packs": ["vfgrowth", "vfcovers", "vfigos", "vfinsights", "vfom"],
       "specialists": ["instagram-curator", "visual-storyteller", "image-prompt-engineer", "growth-hacker", "analytics-reporter", "social-media-strategist"],
       "tools": ["superdesign", "treg", "drive"],
       "decides": "content pack and cover drafts. HQ reviews/schedules only. Grok sends."
@@ -189,13 +189,13 @@
     },
     {
       "slug": "instagram-curator",
-      "packs": ["vfigos", "vfgrowth"],
+      "packs": ["vfigos", "vfgrowth", "vfom"],
       "tools": ["treg"],
       "job": "Review and schedule only. This HQ does not send, boost, or auto-DM."
     },
     {
       "slug": "visual-storyteller",
-      "packs": ["vfcovers", "vfgrowth"],
+      "packs": ["vfcovers", "vfgrowth", "vfom"],
       "tools": ["superdesign", "drive"],
       "job": "Cover and reel narrative from floor proof, not invented scenes"
     },
@@ -282,6 +282,7 @@
   "skills": [
     ".cursor/skills/vf-morning-brief/SKILL.md",
     ".cursor/skills/vf-inquiry-chain/SKILL.md",
-    ".cursor/skills/vf-content-sprint/SKILL.md"
+    ".cursor/skills/vf-content-sprint/SKILL.md",
+    ".cursor/skills/vf-openmontage/SKILL.md"
   ]
 }
