@@ -6,7 +6,7 @@
 
 ## מתי
 
-כשל שחוזר, משימה רב-שלבית, בדיקת מוכנות, או כשהמשתמש אומר רתמה / harness / AGENTS.md.
+כשל שחוזר, משימה רב-שלבית, בדיקת מוכנות, כשהמשתמש אומר רתמה / harness / AGENTS.md, או **מכסת Grok נגמרה** (failover + פרסום חי דחוף).
 
 ## שרשרת
 
@@ -15,11 +15,12 @@
 3. בצע. אחרי כל שינוי קטלוג/כלל — `python3 scripts/check-all.py`.
 4. כשל סנסור → תקן פעם אחת → אם נכשל שוב, הסלם עם `templates/escalation.md`.
 5. כתוב נקודת ביקורת ב-`state/<task-id>.json` לפני סגירת סשן ארוך.
+6. מכסת Grok ריקה + צריך IG חי → `playbooks/grok-failover.md` + `vfigos/LIVE-PACKET.md` לאדם.
 
 צינור יחיד נשאר: פנייה · שיחה · הצעה · הדפסה · איסוף.
 
 ## אסור
 
-לשלוח, להמציא ₪, להמציא Insights, לבנות CrewAI/AutoGPT, לפתוח פק כפול לרעיון, או להסתיר סנסור שנכשל מאחורי תשובה שוטפת.
+סוכן HQ לא לוחץ Publish / Send / Boost / DM. אדם כן יכול לפרסם חי בזמן failover עם LIVE-PACKET. אין להמציא ₪ / Insights, אין CrewAI/AutoGPT, אין פק כפול, אין להסתיר סנסור אדום.
 
 ראה `hq/PLAYBOOK.md` ו-`EMBED.md`.

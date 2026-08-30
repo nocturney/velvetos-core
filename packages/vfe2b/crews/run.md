@@ -70,6 +70,10 @@ Three misses in a row on the same needed fact (queue hours, ₪, license, measur
 `escalation` — a named field is **חסר**. One WhatsApp ask, drafted, not sent.
 `decision_gate` — sale ₪ waits for head of desk, or live send waits for Grok.
 
+## Grok quota failover
+
+If Grok Bot weekly quota is empty: continue the run to `worker_done` with artifacts on disk. Default `#מוכן-ל-Grok`. If lead/owner needs **live publish now** → `decision_gate` only for ₪; for IG use `#פרסום-חי-דחוף` + LIVE-PACKET for human post. Do not invent a sixth seat. HQ agent does not press Publish. See `packages/vfharness/playbooks/grok-failover.md`.
+
 ## Done when
 
 The card has exactly one `מצב`. No invented ₪ or Insights. No Orca binary. No send from HQ.

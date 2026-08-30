@@ -11,7 +11,7 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 |---|---|---|
 | 06:15 | תזמורת: ChatGPT **וגם** Gemini **וגם** Perplexity · failover מיד אם כלי נפל | `constitution/ORCHESTRA.md`, `vfresearch/DAILY.md` |
 | 07:00 | בריף בוקר בסדר הטלפון | `BRIEF.md` |
-| אחרי פרסום חי (Grok) | Insights ב־24 שעות. אם אין מספר — «אין» | `vfinsights` |
+| אחרי פרסום חי (Grok או אדם ב־LIVE-PACKET) | Insights ב־24 שעות. אם אין מספר — «אין» | `vfinsights` |
 
 ## שבוע
 

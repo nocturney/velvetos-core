@@ -1,0 +1,24 @@
+{
+  "task_id": "grok-quota-failover-2026-08-30",
+  "status": "done",
+  "pack": "vfharness",
+  "completed_steps": [
+    "Mapped Grok crew draft work onto existing packs",
+    "Wrote playbooks/grok-failover.md + docs/GROK-FAILOVER.md",
+    "Added vfigos/QUEUE.md (#מוכן-ל-Grok + #פרסום-חי-דחוף)",
+    "Added vfigos/LIVE-PACKET.md for human urgent live post",
+    "Wired AGENTS + desk + graph + sensors"
+  ],
+  "next_step": "On live Grok quota exhaustion: append QUEUE rows; for urgent IG complete LIVE-PACKET for human",
+  "artifacts": [
+    "packages/vfharness/playbooks/grok-failover.md",
+    "docs/GROK-FAILOVER.md",
+    "packages/vfigos/QUEUE.md",
+    "packages/vfigos/LIVE-PACKET.md",
+    "packages/vfresearch/sources/2026-08-30-grok-failover.md"
+  ],
+  "unresolved": [
+    "HQ agent still has no Instagram Publish MCP — live post during outage is human + LIVE-PACKET"
+  ],
+  "last_updated": "2026-08-30"
+}
