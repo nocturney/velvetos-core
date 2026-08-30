@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **תזמורת failover**: כלי נפל / אין גישה → מעבירים משימה לכלי גיבוי **באותו רגע**. אסור להישאר בלי תוצאה. אסור להמציא גוף/₪/Insights. מטריצה ב־`constitution/ORCHESTRA.md` + שדות `failover` ב־`vf-desk.json`. סנסור ב־`check-vfresearch.py`. Orchestra tool failover: hand off same turn; never invent blocked bodies.
+
 - 2026-08-30 — **מוזיקה לאינסטגרם (בלי Treg)**: מקור ראשי HeyOrca שבועי + הדבקת Trending מ־IG; רישום `SOURCES-MUSIC.json`. IG music briefs drop Treg; use HeyOrca weekly + owner IG paste. See `packages/vfresearch/MUSIC.md`.
 - 2026-08-30 — **מוזיקה לאינסטגרם**: חוקר `@trend-researcher` על `vfresearch` (`MUSIC.md` + skill `vf-ig-music`) ממליץ סאונד מטרנדים/שוק; מסירה ל־`vfom`/`vfigos`. בלי פק חדש, בלי שמות שירים מומצאים, בלי שליחה. Instagram music researcher on existing vfresearch; live sources or «חסר מקור». See `packages/vfresearch/MUSIC.md`.
 - 2026-08-30 — **קישורי השראה שבועי**: רישום `vfresearch/LINKS.json` + פלייבוק `WEEKLY.md` — פעם בשבוע חוזרים על שיתופים/ריפואים שהוטמעו, מטמיעים עדכונים במקום, ושואלים מה חדש לחקור. סנסור `check-vfresearch.py`. Weekly inspiration-link review on existing vfresearch; no new pack. See `packages/vfresearch/WEEKLY.md`.

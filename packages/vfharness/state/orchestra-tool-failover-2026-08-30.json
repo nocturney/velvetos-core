@@ -1,0 +1,21 @@
+{
+  "task_id": "orchestra-tool-failover-2026-08-30",
+  "status": "done",
+  "pack": "vfharness",
+  "completed_steps": [
+    "Read vfmem/who + ORCHESTRA + desk tools",
+    "Wrote Failover law into constitution/ORCHESTRA.md",
+    "Wired DAILY/WEEKLY/ROUTINE/CONSTITUTION/AGENTS/desk/tools/blast",
+    "Added failover fields to vf-desk.json tools",
+    "Extended check-vfresearch.py sensor"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "constitution/ORCHESTRA.md",
+    "packages/vfresearch/sources/2026-08-30-orchestra-failover.md",
+    "scripts/check-vfresearch.py"
+  ],
+  "unresolved": [],
+  "escalation": null,
+  "last_updated": "2026-08-30T20:40:00+03:00"
+}

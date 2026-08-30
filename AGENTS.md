@@ -21,6 +21,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
 - Do not create a new pack for an idea. Map onto an existing pack the same day.
+- Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
 - After every catalog, pack, or rule change, run `python3 scripts/check-all.py`.
 - Do not claim success if a computational sensor failed. Retry once, then escalate.
 - Close a multi-step task with a checkpoint under `packages/vfharness/state/` so the next session can resume.
@@ -35,6 +36,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 - 2026-08-30 — Inspiration/share links left stale. Weekly pass: `packages/vfresearch/WEEKLY.md` + `LINKS.json`. Sensor: `scripts/check-vfresearch.py`.
 - 2026-08-30 — Invented Instagram track names or “#1 trending audio” without Treg/owner source. Playbook: `packages/vfresearch/MUSIC.md`. Sensor: `scripts/check-vfresearch.py`.
 - 2026-08-30 — Invented a Perplexity / Cloudflare-blocked body. Write «אין גוף» and skip.
+- 2026-08-30 — Stayed idle when a tool was down (waited for owner / skipped all desks). Failover immediately per `constitution/ORCHESTRA.md`. Sensor: `scripts/check-vfresearch.py`.
 - 2026-08-30 — Second agent runtime (CrewAI, AutoGPT, BabyAGI). Cursor is the office. See `packages/vfe2b/LOCK.md`.
 - 2026-08-30 — National shipping or a sixth seat invented beside the five-seat desk.
 
@@ -50,7 +52,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 | `scripts/check-vfmakers.py` | Maker-skills desk |
 | `scripts/check-vfagents.py` | 500-list playbooks |
 | `scripts/check-vf-canva.py` | Canva Instagram desk |
-| `scripts/check-vfresearch.py` | Weekly inspiration-links registry (`LINKS.json` + `WEEKLY.md`) + IG music playbook (`MUSIC.md`) |
+| `scripts/check-vfresearch.py` | Weekly inspiration-links + IG music + orchestra failover law |
 
 Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
 

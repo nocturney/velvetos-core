@@ -86,6 +86,28 @@ def main() -> None:
     orchestra = ORCHESTRA.read_text()
     if "WEEKLY.md" not in orchestra and "קישורי השראה" not in orchestra:
         fail("constitution/ORCHESTRA.md must mention weekly link review")
+    for needle in ("Failover", "באותו רגע", "אסור להישאר בלי תוצאה", "studio/render.py"):
+        if needle not in orchestra:
+            fail(f"constitution/ORCHESTRA.md must mention failover needle: {needle}")
+    if "מחכים לבעלים" in orchestra and "לא «מחכים לבעלים»" not in orchestra:
+        fail("ORCHESTRA.md must not idle-wait on auth; use immediate failover")
+
+    daily = DAILY.read_text()
+    if "failover" not in daily.lower() and "Failover" not in daily:
+        fail("vfresearch/DAILY.md must mention failover")
+    if "מחכים לבעלים" in daily:
+        fail("DAILY.md must not say מחכים לבעלים without failover")
+
+    desk = json.loads(DESK.read_text())
+    tools = desk.get("tools") or {}
+    for key in ("gmail", "calendar", "drive", "canva", "superdesign", "treg", "mobbin", "fcc"):
+        if key not in tools:
+            fail(f"vf-desk.json tools missing {key}")
+        if not (tools[key].get("failover") or ""):
+            fail(f"vf-desk.json tools.{key} must declare failover")
+    notes = " ".join(desk.get("notes") or [])
+    if "failover" not in notes.lower():
+        fail("vf-desk.json notes must mention tool failover")
 
     music = MUSIC.read_text()
     for needle in ("@trend-researcher", "vfigos", "חסר מקור", "HeyOrca", "@velvets_cloud", "לא בשימוש"):
@@ -118,7 +140,6 @@ def main() -> None:
     if "no Treg" not in skill and "No Treg" not in skill and "**no Treg**" not in skill:
         fail("vf-ig-music skill must forbid Treg")
 
-    desk = json.loads(DESK.read_text())
     skill_paths = desk.get("skills") or []
     if ".cursor/skills/vf-ig-music/SKILL.md" not in skill_paths:
         fail("vf-desk.json skills must include vf-ig-music")
@@ -131,7 +152,7 @@ def main() -> None:
     if "HeyOrca" not in job and "heyorca" not in job.lower():
         fail("trend-researcher job must name HeyOrca (not Treg) for music")
 
-    print(f"OK vfresearch weekly-links links={len(links)} music=1 sources={len(music_src.get('sources') or [])}")
+    print(f"OK vfresearch weekly-links links={len(links)} music=1 sources={len(music_src.get('sources') or [])} failover=1")
 
 
 if __name__ == "__main__":

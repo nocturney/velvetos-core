@@ -26,6 +26,9 @@ Checked 2026-08-30 on this HQ:
 | Treg | Skill installed; needs `treg login` | Live SEO/social/ads. Say the catalog price before spending. |
 | vfmem | HQ-native (`scripts/vfmem.py`) | Office graph: pack / `@slug` / tool. Pattern from codebase-memory-mcp; no binary. |
 | FCC (Free Claude Code) | Not on this Cloud Agent | Local BYOK proxy on the owner Mac only (`vffcc`). Does not cut Cursor usage. |
+| Canva | MCP when connected | Instagram visuals. If `needsAuth`: `vfcanva/studio/render.py` → Superdesign. |
+
+**Failover law:** tool down / no access → hand the job to the backup **in the same turn**. Never end empty-handed. Never invent ₪, Insights, or a blocked body to fill the gap. Matrix: [`constitution/ORCHESTRA.md`](../constitution/ORCHESTRA.md).
 
 Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or Christian.
 

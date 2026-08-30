@@ -19,3 +19,5 @@ Gmail (`nocturney@gmail.com`) is read-only: search, get thread, labels. Calendar
 ## Notes
 
 Never `send_message`, `reply`, or `forward`. If Canva MCP is `needsAuth`, say `Canva לא מחובר` and use `packages/vfcanva/studio/render.py`.
+
+**Failover:** any tool down → backup tool **same turn** (`constitution/ORCHESTRA.md`). No empty finish. No invented ₪ / Insights / blocked body.

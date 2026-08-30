@@ -25,9 +25,11 @@ Blast radius for this office: which jobs and tools break when a law, tool mode, 
 | Desk laws / `velvet-factory-desk.mdc` | Every skill, every seat, every job node |
 | Gmail mode (read → send) | [[morning-job]], [[inquiry-job]], `vfbooks` |
 | Pipeline stages | `vfconvert`, `vfsales`, `vfprod`, `vfbooks` pickup |
-| Canva disconnect | [[content-job]], `vfcovers`, `vfigos` |
+| Canva disconnect | [[content-job]], `vfcovers`, `vfigos` — failover to `studio/render.py` then Superdesign |
 | Grok-bot boundary | `vfigos` send, `vfsales` close, printers |
 | Seat list / sixth seat | Constitution, brief slots, desk check |
-| Treg without login | `vfinsights`, `vfgrowth`, `vfresearch` live reads |
+| Treg without login | `vfinsights`, `vfgrowth`, `vfresearch` live reads — «אין ספירה»; music → HeyOrca |
+| Research desk wall (ChatGPT/Gemini/Perplexity) | 06:15 orchestra — failover to open desks same turn; never invent body |
 
 Do not "fix" a missing ₪ or Insights number to make the blast look closed.
+Do not sit idle when a tool is down — hand off per [[tools]] / `constitution/ORCHESTRA.md`.
