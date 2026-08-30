@@ -13,4 +13,6 @@ chmod +x scripts/vendor-origin-packs.sh
 
 Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). Do not invent prices. This repo does not send Instagram — live send stays on Grok Bot.
 
+`vfe2b` is HQ-native (no Origin tree): patterns from e2b-dev/awesome-ai-agents mapped onto the other packs.
+
 New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates.

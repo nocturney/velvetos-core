@@ -1,0 +1,442 @@
+{
+  "name": "vfe2b",
+  "title": "Awesome-AI-agents desk",
+  "source": {
+    "title": "e2b-dev/awesome-ai-agents",
+    "url": "https://github.com/e2b-dev/awesome-ai-agents",
+    "readAt": "2026-08-30",
+    "listedCount": 209
+  },
+  "locks": [
+    "no-send-instagram",
+    "no-send-gmail",
+    "no-invented-prices",
+    "no-invented-insights",
+    "no-unattended-autonomy",
+    "no-24-7-chatbot",
+    "no-autoquote",
+    "no-printer-from-hq",
+    "human-on-whatsapp"
+  ],
+  "verdicts": ["embed", "later", "skip"],
+  "picks": [
+    {
+      "name": "CrewAI",
+      "url": "https://github.com/joaomdmoura/crewai",
+      "verdict": "embed",
+      "pattern": "role-playing crew (role, goal, task)",
+      "packs": ["vfops", "vfbiz"],
+      "crew": "crews/morning-brief.md",
+      "note": "Pattern only. Do not add a CrewAI runtime."
+    },
+    {
+      "name": "AutoGen",
+      "url": "https://github.com/microsoft/autogen",
+      "verdict": "embed",
+      "pattern": "multi-agent talk + human in the loop",
+      "packs": ["vfops", "vfconvert"],
+      "crew": "crews/inquiry.md",
+      "note": "Human is a required speaker. No unattended loop."
+    },
+    {
+      "name": "GPT Researcher",
+      "url": "https://github.com/assafelovic/gpt-researcher",
+      "verdict": "embed",
+      "pattern": "planner questions + gatherer sources",
+      "packs": ["vfresearch"],
+      "crew": "crews/research.md",
+      "note": "Missing source = חסר. No invented report."
+    },
+    {
+      "name": "Aomni",
+      "url": "https://www.aomni.com/",
+      "verdict": "embed",
+      "pattern": "plan then extract from sources; do not generate content",
+      "packs": ["vfresearch", "vfsales"],
+      "crew": "crews/research.md",
+      "note": "Matches VF: extract, do not invent."
+    },
+    {
+      "name": "Lindy",
+      "url": "https://www.lindy.ai/",
+      "verdict": "embed",
+      "pattern": "inbox triage + daily brief",
+      "packs": ["vfbriefux", "vfops", "vfbooks"],
+      "crew": "crews/morning-brief.md",
+      "note": "Gmail read only. SaaS later if head of desk opens it."
+    },
+    {
+      "name": "Cal.ai",
+      "url": "https://cal.ai",
+      "verdict": "embed",
+      "pattern": "scheduling assistant",
+      "packs": ["vfseason"],
+      "crew": "crews/morning-brief.md",
+      "note": "Read Asia/Jerusalem. Create event only if asked."
+    },
+    {
+      "name": "Heymoon.ai",
+      "url": "https://heymoon.ai/",
+      "verdict": "later",
+      "pattern": "calendar and tasks",
+      "packs": ["vfseason"],
+      "crew": "crews/morning-brief.md",
+      "note": "Same job as Cal.ai. Do not buy from HQ."
+    },
+    {
+      "name": "Floode",
+      "url": "https://floodehq.com/",
+      "verdict": "embed",
+      "pattern": "communication busywork triage",
+      "packs": ["vfops", "vfcopy"],
+      "crew": "crews/morning-brief.md",
+      "note": "Draft only. No send."
+    },
+    {
+      "name": "Claygent",
+      "url": "https://www.clay.com/learn/claygent",
+      "verdict": "embed",
+      "pattern": "web facts for an inquiry",
+      "packs": ["vfsales", "vfconvert"],
+      "crew": "crews/inquiry.md",
+      "note": "Do not invent a customer. Clay SaaS is later."
+    },
+    {
+      "name": "Kadoa",
+      "url": "https://www.kadoa.com/",
+      "verdict": "later",
+      "pattern": "structured web scrape",
+      "packs": ["vfresearch", "vfsales"],
+      "crew": "crews/inquiry.md",
+      "note": "Same facts job as Claygent. No unattended scrape farm."
+    },
+    {
+      "name": "Docket AI",
+      "url": "https://docketai.net/",
+      "verdict": "embed",
+      "pattern": "complex B2B sales engineer",
+      "packs": ["vfsales", "vfcost"],
+      "crew": "crews/inquiry.md",
+      "note": "Questions and unit notes. Sale ₪ after head of desk."
+    },
+    {
+      "name": "AskToSell",
+      "url": "https://asktosell.com/",
+      "verdict": "skip",
+      "pattern": "autonomous closer",
+      "packs": ["vfsales"],
+      "crew": "crews/inquiry.md",
+      "note": "Closer is locked. Questions-only pattern already covered by Docket."
+    },
+    {
+      "name": "Wordware",
+      "url": "https://www.wordware.ai/",
+      "verdict": "embed",
+      "pattern": "LLM copy workflow",
+      "packs": ["vfcopy"],
+      "crew": "crews/content.md",
+      "note": "Homework → draft → lint. No publish."
+    },
+    {
+      "name": "GoCharlie",
+      "url": "https://gocharlie.ai/",
+      "verdict": "embed",
+      "pattern": "multimodal content draft",
+      "packs": ["vfcopy", "vfcovers", "vfgrowth"],
+      "crew": "crews/content.md",
+      "note": "Draft only."
+    },
+    {
+      "name": "Wispy",
+      "url": "https://wispy.technicalmagic.ai/",
+      "verdict": "embed",
+      "pattern": "summarize then compose",
+      "packs": ["vfcopy", "vfresearch"],
+      "crew": "crews/content.md",
+      "note": "Compose from cited brief, not from invented Insights."
+    },
+    {
+      "name": "Diagram",
+      "url": "https://diagram.com/",
+      "verdict": "embed",
+      "pattern": "design assist",
+      "packs": ["vfcovers", "vfbriefux"],
+      "crew": "crews/content.md",
+      "note": "Use Superdesign / Canva already on the desk. Not a new site."
+    },
+    {
+      "name": "v0 by Vercel",
+      "url": "https://v0.dev/",
+      "verdict": "later",
+      "pattern": "UI from a prompt",
+      "packs": ["vfbriefux"],
+      "crew": "crews/content.md",
+      "note": "Brief UX research only. No public app from HQ."
+    },
+    {
+      "name": "Julius",
+      "url": "https://julius.ai/",
+      "verdict": "embed",
+      "pattern": "ask existing data",
+      "packs": ["vfcost", "vfbooks", "vfinsights"],
+      "crew": "crews/books-data.md",
+      "note": "Cited numbers only."
+    },
+    {
+      "name": "Vanna.AI",
+      "url": "https://vanna.ai/",
+      "verdict": "embed",
+      "pattern": "SQL / schema Q&A",
+      "packs": ["vfbooks"],
+      "crew": "crews/books-data.md",
+      "note": "No studio SQL warehouse in this HQ dump. Use written ledger text."
+    },
+    {
+      "name": "Wren",
+      "url": "https://www.getwren.ai/",
+      "verdict": "later",
+      "pattern": "NL to database",
+      "packs": ["vfbooks"],
+      "crew": "crews/books-data.md",
+      "note": "Same lock as Vanna. No new DB from HQ."
+    },
+    {
+      "name": "Powerdrill AI",
+      "url": "https://powerdrill.ai/",
+      "verdict": "later",
+      "pattern": "data job agent",
+      "packs": ["vfinsights", "vfcost"],
+      "crew": "crews/books-data.md",
+      "note": "SaaS. Pattern already in Julius embed."
+    },
+    {
+      "name": "TalktoData",
+      "url": "https://talktodata.ai/",
+      "verdict": "later",
+      "pattern": "data discovery",
+      "packs": ["vfinsights"],
+      "crew": "crews/books-data.md",
+      "note": "SaaS. Same lock: no invented metrics."
+    },
+    {
+      "name": "MemGPT",
+      "url": "https://github.com/cpacker/MemGPT",
+      "verdict": "embed",
+      "pattern": "long memory from files",
+      "packs": ["vfresearch"],
+      "crew": "crews/research.md",
+      "note": "HQ catalog + CHANGELOG are the memory. Do not stand up MemGPT."
+    },
+    {
+      "name": "Private GPT",
+      "url": "https://www.privategpt.io/",
+      "verdict": "embed",
+      "pattern": "chat with private docs",
+      "packs": ["vfresearch"],
+      "crew": "crews/research.md",
+      "note": "This repo is the private set. No third-party upload of studio files."
+    },
+    {
+      "name": "Local GPT",
+      "url": "https://github.com/PromtEngineer/localGPT",
+      "verdict": "later",
+      "pattern": "local docs chat",
+      "packs": ["vfresearch"],
+      "crew": "crews/research.md",
+      "note": "Same job as Private GPT. No extra stack unless asked."
+    },
+    {
+      "name": "GPT Runner",
+      "url": "https://github.com/nicepkg/gpt-runner",
+      "verdict": "embed",
+      "pattern": "converse with files",
+      "packs": ["vfresearch"],
+      "crew": "crews/research.md",
+      "note": "Cursor already does this on the pack trees."
+    },
+    {
+      "name": "Zapier Central",
+      "url": "https://zapier.com/central",
+      "verdict": "later",
+      "pattern": "bots across apps",
+      "packs": ["vfops"],
+      "crew": "crews/morning-brief.md",
+      "note": "Do not connect live send. Pattern = node list in ops."
+    },
+    {
+      "name": "Bardeen",
+      "url": "https://www.bardeen.ai/",
+      "verdict": "later",
+      "pattern": "browser repetitive tasks",
+      "packs": ["vfops"],
+      "crew": "crews/morning-brief.md",
+      "note": "No unattended browser on Instagram or printers."
+    },
+    {
+      "name": "Gumloop",
+      "url": "https://www.gumloop.com/",
+      "verdict": "later",
+      "pattern": "no-code workflow nodes",
+      "packs": ["vfops"],
+      "crew": "crews/morning-brief.md",
+      "note": "Crews in this pack are the nodes."
+    },
+    {
+      "name": "Magic Loops",
+      "url": "https://magicloops.dev/",
+      "verdict": "later",
+      "pattern": "personal automations",
+      "packs": ["vfops"],
+      "crew": "crews/morning-brief.md",
+      "note": "Same as Gumloop."
+    },
+    {
+      "name": "Lutra AI",
+      "url": "https://lutra.ai/",
+      "verdict": "later",
+      "pattern": "workflow from conversation",
+      "packs": ["vfops", "vfcopy"],
+      "crew": "crews/morning-brief.md",
+      "note": "Label mail only if read-only. No send."
+    },
+    {
+      "name": "Manaflow",
+      "url": "https://manaflow.ai/",
+      "verdict": "later",
+      "pattern": "technical business workflows",
+      "packs": ["vfops", "vfprod"],
+      "crew": "crews/inquiry.md",
+      "note": "Print-floor stays manual bed assign."
+    },
+    {
+      "name": "Beam",
+      "url": "https://beam.ai/",
+      "verdict": "later",
+      "pattern": "hosted workflow agents",
+      "packs": ["vfops"],
+      "crew": "crews/morning-brief.md",
+      "note": "SaaS. Do not buy from HQ."
+    },
+    {
+      "name": "Relevance AI",
+      "url": "https://relevanceai.com/",
+      "verdict": "later",
+      "pattern": "AI workforce",
+      "packs": ["vfbiz"],
+      "crew": "crews/morning-brief.md",
+      "note": "Agency specialists PRs already cover a roster."
+    },
+    {
+      "name": "Taskade",
+      "url": "https://www.taskade.com/",
+      "verdict": "later",
+      "pattern": "custom agents + tasks",
+      "packs": ["vfops"],
+      "crew": "crews/morning-brief.md",
+      "note": "Desk already has packs. No second task app from HQ."
+    },
+    {
+      "name": "Cursor",
+      "url": "https://www.cursor.so/",
+      "verdict": "embed",
+      "pattern": "this office",
+      "packs": ["vfigos", "vfcost", "vfconvert", "vfgrowth", "vfprod", "vfsales", "vfops", "vfcovers", "vfinsights", "vfbooks", "vfresearch", "vfbiz", "vfcopy", "vlicense", "vfseason", "vfsku", "vfbriefux"],
+      "crew": "crews/morning-brief.md",
+      "note": "Already the HQ. Do not install a second coding agent."
+    },
+    {
+      "name": "Superagent",
+      "url": "https://www.superagent.sh/",
+      "verdict": "skip",
+      "pattern": "no-code agents + E2B sandbox",
+      "packs": ["vfbiz"],
+      "crew": "crews/research.md",
+      "note": "Cursor cloud already has a sandbox. No second runtime."
+    },
+    {
+      "name": "Open Interpreter",
+      "url": "https://openinterpreter.com/",
+      "verdict": "skip",
+      "pattern": "local code interpreter",
+      "packs": ["vfbiz"],
+      "crew": "crews/research.md",
+      "note": "Coding stack stays Cursor."
+    },
+    {
+      "name": "Flowise",
+      "url": "https://flowiseai.com/",
+      "verdict": "skip",
+      "pattern": "low-code agent builder",
+      "packs": ["vfbiz"],
+      "crew": "crews/research.md",
+      "note": "Would be a second office OS."
+    },
+    {
+      "name": "AutoGPT",
+      "url": "https://agpt.co/",
+      "verdict": "skip",
+      "pattern": "fully autonomous GPT-4",
+      "packs": ["vfbiz"],
+      "crew": "crews/morning-brief.md",
+      "note": "Unattended autonomy is locked."
+    },
+    {
+      "name": "ChatHelp",
+      "url": "https://chathelp.ai/",
+      "verdict": "skip",
+      "pattern": "24/7 business chatbot",
+      "packs": ["vfconvert"],
+      "crew": "crews/inquiry.md",
+      "note": "Human on WhatsApp. No site/IG bot."
+    },
+    {
+      "name": "Artisian AI",
+      "url": "https://github.com/Artisan-AI",
+      "verdict": "later",
+      "pattern": "sales / email / books agents",
+      "packs": ["vfsales", "vfbooks"],
+      "crew": "crews/inquiry.md",
+      "note": "Same seats as existing packs. No unattended mail."
+    },
+    {
+      "name": "Graphlit",
+      "url": "https://www.graphlit.com/",
+      "verdict": "later",
+      "pattern": "knowledge API",
+      "packs": ["vfresearch"],
+      "crew": "crews/research.md",
+      "note": "HQ files are enough until a knowledge API is asked for."
+    },
+    {
+      "name": "AgentScale",
+      "url": "https://agentscale.ai/",
+      "verdict": "later",
+      "pattern": "email writer + calendar",
+      "packs": ["vfcopy", "vfseason"],
+      "crew": "crews/morning-brief.md",
+      "note": "Draft only. No send."
+    }
+  ],
+  "skipFamilies": [
+    {
+      "family": "BabyAGI / AutoGPT mods",
+      "names": ["BabyBeeAGI", "BabyCatAGI", "BabyDeerAGI", "BabyElfAGI", "BabyCommandAGI", "BabyFoxAGI", "Loop GPT", "Mini AGI", "Teenage AGI", "Yourgoal", "Godmode", "Cognosys", "SuperAGI", "AgentGPT", "XAgent"],
+      "reason": "unattended-autonomy"
+    },
+    {
+      "family": "coding agents",
+      "names": ["Aider", "Continue", "Devin", "OpenDevin", "Devika", "Devon", "SWE Agent", "GPT Engineer", "GPT Pilot", "Mentat", "MetaGPT", "ChatDev", "Factory", "Fine", "Codium AI", "GitHub Copilot X", "GitLab Duo", "Sweep", "Tusk"],
+      "reason": "cursor-is-the-desk"
+    },
+    {
+      "family": "unattended UI / browser",
+      "names": ["Self-operating computer", "Taxy AI", "MultiOn", "UFO", "Sentius", "Cykel", "iMean.AI", "Otherside's AI Assistant - Hyperwrite"],
+      "reason": "no-printer-from-hq no-send-instagram"
+    },
+    {
+      "family": "out of studio",
+      "names": ["Voyager", "Web3 GPT", "ChemCrow", "Kwal", "ShopPal", "Claros AI Shopper", "Heights Platform", "ThinkChain AI", "Vortic", "Avanzai"],
+      "reason": "not-a-print-studio-job"
+    }
+  ]
+}
