@@ -282,6 +282,7 @@
   "skills": [
     ".cursor/skills/vf-morning-brief/SKILL.md",
     ".cursor/skills/vf-inquiry-chain/SKILL.md",
-    ".cursor/skills/vf-content-sprint/SKILL.md"
+    ".cursor/skills/vf-content-sprint/SKILL.md",
+    ".cursor/skills/vf-run/SKILL.md"
   ]
 }

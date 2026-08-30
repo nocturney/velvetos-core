@@ -26,6 +26,12 @@ Aider, Continue, Devin, OpenDevin, Devika, Devon, SWE Agent, GPT Engineer, GPT P
 
 למה: Cursor כבר המשרד. אין מתקין שני לסוכן-מהנדס.
 
+## ADE / משרד קידוד שני — דלג כהתקנה
+
+Orca ([stablyai/orca](https://github.com/stablyai/orca)), `orca-ide`, `brew install orca`.
+
+למה: Cursor כבר המשרד. דפוס המשמרת רץ ב-`crews/run.md` בלי בינארי. אין fan-out של ₪ או שליחה.
+
 ## מוצרים מחוץ לסטודיו — דלג
 
 Voyager (Minecraft), Web3 GPT, ChemCrow, Kwal (גיוס), ShopPal, Claros AI Shopper, Heights Platform, ThinkChain (פורטפוליו), Vortic (ביטוח), Avanzai.

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **vfe2b run**: דפוס Orca כשכבת משמרת על הצוותים הקיימים — תיק אחד, `worker_done` / `escalation` / `decision_gate`. בלי התקנת ADE, בלי fan-out של ₪ או שליחה. Orca ADE pattern as a run overlay on existing crews; no second office. `packages/vfe2b/crews/run.md`, `.cursor/skills/vf-run/SKILL.md`.
 - 2026-08-30 — **תזמורת**: פלייבוק 06:15 + מעבר ערב. ChatGPT וג׳מיני הוטמעו לפקים קיימים (מדף מק״ט, תבניות וואטסאפ, וי לפני הדפס, כרטיס עלות בלי ₪). Perplexity דולג — חומת מנוי, אין גוף. See `constitution/ORCHESTRA.md`, `docs/ORCHESTRA-2026-08-30.md`.
 - 2026-08-30 — **VF-G005 d12b**: כיתוב מאושר (הוק + חמש עובדות השקפים + וואטסאפ / איסוף שדרות). לא פורסם. `packages/vfcopy/G005-d12b.md`.
 - 2026-08-30 — **VF-G005**: קרוסלת פיד חדשה (נייבי/זהב, 1080×1350) לשיבוץ ב־instagram.com, כיתוב d12b. New native-IG carousel slides. `packages/vfcovers/g005/`.
