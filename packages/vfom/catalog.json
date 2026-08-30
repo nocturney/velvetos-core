@@ -1,0 +1,203 @@
+{
+  "name": "vfom",
+  "title": "OpenMontage desk",
+  "source": {
+    "title": "calesthio/OpenMontage",
+    "url": "https://github.com/calesthio/OpenMontage",
+    "readAt": "2026-08-30",
+    "pipelineCount": 12,
+    "pipelines": [
+      "animated-explainer",
+      "animation",
+      "avatar-spokesperson",
+      "character-animation",
+      "cinematic",
+      "clip-factory",
+      "documentary-montage",
+      "hybrid",
+      "localization-dub",
+      "podcast-repurpose",
+      "screen-demo",
+      "talking-head"
+    ]
+  },
+  "writeup": "docs/OPENMONTAGE.md",
+  "locks": [
+    "no-send-instagram",
+    "no-send-gmail",
+    "no-invented-prices",
+    "no-invented-insights",
+    "no-invented-floor-scene",
+    "no-vendor-openmontage",
+    "no-paid-video-api-from-hq",
+    "no-archive-as-floor-proof",
+    "human-approval-on-scenes"
+  ],
+  "notes": [
+    "Office crews only. Do not vendor OpenMontage, Remotion, HyperFrames, or Backlot into this repo.",
+    "This HQ does not send Instagram or Gmail. Live send stays on Grok Bot.",
+    "Do not invent prices, Insights, or a floor scene. Missing proof = חסר."
+  ],
+  "items": [
+    {
+      "id": "clip-factory",
+      "status": "embed",
+      "source": ["pipeline_defs/clip-factory.yaml"],
+      "packs": ["vfgrowth", "vfprod", "vfcopy", "vfigos"],
+      "crew": "crews/clip-factory.md",
+      "note": "Timelapse to ranked short cards. No live export."
+    },
+    {
+      "id": "hybrid",
+      "status": "embed",
+      "source": ["pipeline_defs/hybrid.yaml"],
+      "packs": ["vfprod", "vfcanva", "vfcovers", "vfcopy", "vfigos"],
+      "crew": "crews/hybrid-reel.md",
+      "note": "Floor footage stays primary. Canva is support only."
+    },
+    {
+      "id": "cinematic-reference",
+      "status": "embed",
+      "source": ["pipeline_defs/cinematic.yaml"],
+      "packs": ["vfgrowth", "vfresearch", "vfcopy", "vfcanva"],
+      "crew": "crews/reference-plan.md",
+      "note": "Keep/change plan from a named Reel. No Veo generation."
+    },
+    {
+      "id": "scene-gate",
+      "status": "embed",
+      "source": ["backlot/README.md", "pipeline_defs/hybrid.yaml"],
+      "packs": ["vfigos", "vfgrowth", "vfcovers"],
+      "crew": "crews/scene-gate.md",
+      "note": "Human approval on the contact sheet. No Backlot process."
+    },
+    {
+      "id": "self-review",
+      "status": "embed",
+      "source": ["README.md#production-governance"],
+      "packs": ["vfigos", "vfcopy", "vfcanva"],
+      "crew": "crews/self-review.md",
+      "note": "Slideshow-risk and CTA lint. No invented probe scores."
+    },
+    {
+      "id": "ig-reel-profile",
+      "status": "already",
+      "source": ["README.md#platform-output-profiles"],
+      "packs": ["vfcanva"],
+      "crew": "crews/hybrid-reel.md",
+      "note": "1080×1920 already in packages/vfcanva/FORMATS.json as ig_reel_cover and ig_story."
+    },
+    {
+      "id": "content-sprint-existing",
+      "status": "already",
+      "source": ["pipeline_defs/hybrid.yaml"],
+      "packs": ["vfgrowth", "vfcovers", "vfigos"],
+      "crew": "crews/hybrid-reel.md",
+      "note": "vf-content-sprint already drafts reels from floor proof. vfom adds cut cards and gates."
+    },
+    {
+      "id": "caption-existing",
+      "status": "already",
+      "source": ["pipeline_defs/clip-factory.yaml"],
+      "packs": ["vfcopy", "vfigos"],
+      "crew": "crews/clip-factory.md",
+      "note": "vfcopy homework → draft → lint already exists. Grok sends."
+    },
+    {
+      "id": "animated-explainer",
+      "status": "later",
+      "source": ["pipeline_defs/animated-explainer.yaml"],
+      "packs": ["vfgrowth", "vfcopy"],
+      "crew": "crews/reference-plan.md",
+      "note": "Only if a real how-we-print floor proof exists. No invented explainer."
+    },
+    {
+      "id": "animation-motion",
+      "status": "later",
+      "source": ["pipeline_defs/animation.yaml"],
+      "packs": ["vfcanva", "vfcovers"],
+      "crew": "crews/hybrid-reel.md",
+      "note": "Canva stills first. Motion stack only if the lead seat opens it."
+    },
+    {
+      "id": "remotion-hyperframes",
+      "status": "later",
+      "source": ["remotion-composer/", "skills/core/hyperframes.md"],
+      "packs": ["vfgrowth"],
+      "crew": "crews/self-review.md",
+      "note": "Do not vendor a second renderer. ffmpeg later if asked."
+    },
+    {
+      "id": "paid-video-apis",
+      "status": "later",
+      "source": ["docs/PROVIDERS.md"],
+      "packs": ["vfbiz", "vfcost"],
+      "crew": "crews/reference-plan.md",
+      "note": "Veo/Kling/fal/Suno only after the lead seat opens spend. Say cost first. No ₪ conversion from HQ."
+    },
+    {
+      "id": "avatar-spokesperson",
+      "status": "skip",
+      "source": ["pipeline_defs/avatar-spokesperson.yaml"],
+      "packs": ["vfgrowth"],
+      "crew": "crews/self-review.md",
+      "reason": "not a talking-head studio"
+    },
+    {
+      "id": "talking-head",
+      "status": "skip",
+      "source": ["pipeline_defs/talking-head.yaml"],
+      "packs": ["vfgrowth"],
+      "crew": "crews/self-review.md",
+      "reason": "not a vlog product"
+    },
+    {
+      "id": "character-animation",
+      "status": "skip",
+      "source": ["pipeline_defs/character-animation.yaml"],
+      "packs": ["vfcovers"],
+      "crew": "crews/hybrid-reel.md",
+      "reason": "no SVG character pipeline on this desk"
+    },
+    {
+      "id": "localization-dub",
+      "status": "skip",
+      "source": ["pipeline_defs/localization-dub.yaml"],
+      "packs": ["vfcopy"],
+      "crew": "crews/reference-plan.md",
+      "reason": "Hebrew-first studio; not a dub shop"
+    },
+    {
+      "id": "podcast-repurpose",
+      "status": "skip",
+      "source": ["pipeline_defs/podcast-repurpose.yaml"],
+      "packs": ["vfgrowth"],
+      "crew": "crews/clip-factory.md",
+      "reason": "no studio podcast"
+    },
+    {
+      "id": "screen-demo",
+      "status": "skip",
+      "source": ["pipeline_defs/screen-demo.yaml"],
+      "packs": ["vfgrowth"],
+      "crew": "crews/hybrid-reel.md",
+      "reason": "not a SaaS demo desk"
+    },
+    {
+      "id": "documentary-montage",
+      "status": "skip",
+      "source": ["pipeline_defs/documentary-montage.yaml"],
+      "packs": ["vfgrowth", "vfprod"],
+      "crew": "crews/hybrid-reel.md",
+      "reason": "archive stock is not floor proof"
+    },
+    {
+      "id": "publish-director",
+      "status": "skip",
+      "source": ["pipeline_defs/clip-factory.yaml"],
+      "packs": ["vfigos"],
+      "crew": "crews/scene-gate.md",
+      "reason": "Grok Bot sends; HQ reviews only"
+    }
+  ]
+}

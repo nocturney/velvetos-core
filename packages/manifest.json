@@ -11,6 +11,7 @@
     "This repo does not send Instagram posts. Live Instagram, Gmail, and printers stay on Grok Bot (5 seats).",
     "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
     "2026-08-30 desk overlay: 28 Agency specialists + live tools in .cursor/vf-desk.json and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
+    "2026-08-30: vfom is an HQ-native pack (not Origin). OpenMontage pipeline patterns (clip-factory, hybrid, reference plan, scene gate, self-review) map onto existing content packs. Do not vendor Remotion or send Instagram.",
     "2026-08-30: vfmem is HQ-native. Structural queries over desk/manifest/Agency maps (DeusData/codebase-memory-mcp pattern). Do not install their binary from this repo. See docs/VFMEM.md.",
     "2026-08-30: vfgraft is an HQ-native pack (not Origin). Graft pattern (committed markdown office graph) only — no npm CLI, no Graft MCP.",
     "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings → MCP Tools.",
@@ -250,6 +251,19 @@
       "cloneUrl": null,
       "vendorStatus": "hq-native",
       "writeup": "docs/500-AGENTS.md"
+    },
+    {
+      "name": "vfom",
+      "summary": "OpenMontage desk — video-pipeline patterns from calesthio/OpenMontage mapped onto existing content packs (no Remotion vendor, no send).",
+      "bcId": "bc-4be8813f",
+      "bcIdFull": "bc-4be8813f-000e-43a0-b297-7537bda05d4e",
+      "agentUrl": "https://cursor.com/agents/bc-4be8813f-000e-43a0-b297-7537bda05d4e",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "source": "https://github.com/calesthio/OpenMontage",
+      "writeup": "docs/OPENMONTAGE.md"
     },
     {
       "name": "vfharness",

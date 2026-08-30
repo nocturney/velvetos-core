@@ -12,6 +12,7 @@ Use when the user asks for חבילת תוכן, covers, reel draft, or a post af
 - `vfgrowth` + `@content-creator` + `@growth-hacker`
 - `vfcovers` + `@visual-storyteller` + `@image-prompt-engineer` + `@brand-guardian`
 - `vfigos` + `@instagram-curator` — **review and schedule only**
+- `vfom` + `@visual-storyteller` — timelapse cut cards, hybrid beat list, scene gate (read `vf-openmontage`)
 - After publish (when a real snapshot exists): `vfinsights` + `@analytics-reporter`
 
 ## Tools

@@ -35,7 +35,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 |---|---|---|---|
 | ראש צוות | `vfops` `vfbriefux` `vfharness` `vfmem` | `@studio-operations` `@chief-of-staff` `@meeting-notes-specialist` `@workflow-architect` `@ux-architect` | Calendar, Gmail read, Mobbin, `check-all.py`, vfmem |
 | סטודיו | `vfconvert` `vfsales` `vfcopy` | `@email-intelligence-engineer` `@discovery-coach` `@sales-engineer` `@proposal-strategist` `@content-creator` `@brand-guardian` | Gmail read, Drive by job |
-| צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Superdesign, Treg, Drive |
+| צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` `vfom` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Superdesign, Treg, Drive |
 | תפעול | `vfcost` `vfbooks` `vfbiz` | `@pricing-analyst` `@bookkeeper-controller` `@finance-tracker` `@business-strategist` | Gmail חשבונות, Drive |
 | ייצור | `vfprod` `vfsku` `vlicense` `vfresearch` | `@studio-producer` `@operations-manager` `@legal-compliance-checker` `@research-synthesist` `@trend-researcher` | Drive, Calendar, Treg |
 
@@ -46,6 +46,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | בריף בוקר / what is open | `.cursor/skills/vf-morning-brief/SKILL.md` |
 | פנייה / quote this | `.cursor/skills/vf-inquiry-chain/SKILL.md` |
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
+| ריל / טיימלאפס / ייחוס | `.cursor/skills/vf-openmontage/SKILL.md` |
 | משמרת / `@vfe2b run` | `.cursor/skills/vf-run/SKILL.md` |
 | רתמה / harness / checkpoint | `.cursor/skills/vf-harness/SKILL.md` |
 | מי מטפל / which pack / office map | `.cursor/skills/vf-hq-memory/SKILL.md` |

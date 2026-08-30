@@ -12,7 +12,7 @@
 
 ## פקים (קיימים בלבד)
 
-`#vfops` `#vfconvert` `#vfsales` `#vfcopy` `#vfcost` `#vfprod` `#vfgrowth` `#vfcovers` `#vfigos` `#vfinsights` `#vfresearch` `#vfsku` `#vfbiz` `#vfbooks` `#vfbriefux` `#vlicense` `#vfseason`
+`#vfops` `#vfconvert` `#vfsales` `#vfcopy` `#vfcost` `#vfprod` `#vfgrowth` `#vfcovers` `#vfigos` `#vfinsights` `#vfresearch` `#vfsku` `#vfbiz` `#vfbooks` `#vfbriefux` `#vlicense` `#vfseason` `#vfom`
 
 ## תוכן ולוח
 
@@ -35,4 +35,5 @@
 `#קליטה` `#מהנדס-הדפסה` `#תמחור` `#טיוטת-מכירה` `#תור-ייצור` `#חבילת-תוכן` `#מעקב-אחרי-איסוף`
 
 תגית `#תמחור` הולכת ל־`vfcost`, לא לפק חדש.  
-תגית `#חבילת-תוכן` הולכת ל־`vfgrowth` + `vfcovers`, לא לסוכן שיווק נפרד.
+תגית `#חבילת-תוכן` הולכת ל־`vfgrowth` + `vfcovers`, לא לסוכן שיווק נפרד.  
+תגית `#vfom` הולכת לצוותי ריל (ייחוס / קליפים / היברידי), לא למנוע Remotion.
