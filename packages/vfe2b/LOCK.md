@@ -22,9 +22,10 @@ Self-operating computer, Taxy AI, MultiOn, UFO, Sentius, Cykel, iMean.AI, Hyperw
 
 ## קידוד כמשרד שני — דלג
 
-Aider, Continue, Devin, OpenDevin, Devika, Devon, SWE Agent, GPT Engineer, GPT Pilot, Mentat, MetaGPT, ChatDev, Factory, Fine, Codium, Copilot X, GitLab Duo, Sweep, Tusk, וכל שאר סוכני הקוד.
+Aider, Continue, Devin, OpenDevin, Devika, Devon, SWE Agent, GPT Engineer, GPT Pilot, Mentat, MetaGPT, ChatDev, Factory, Fine, Codium, Copilot X, GitLab Duo, Sweep, Tusk, Claude Code / OpenCode דרך [free-claude-code](https://github.com/Alishahryar1/free-claude-code) **ב־HQ**, וכל שאר סוכני הקוד.
 
-למה: Cursor כבר המשרד. אין מתקין שני לסוכן-מהנדס.
+למה: Cursor כבר המשרד. אין מתקין שני לסוכן-מהנדס.  
+חריג מקומי (מק הבעלים, אחרי ראש צוות): `packages/vffcc/playbooks/local-offload.md`. Cloud Agent לא מריץ `fcc-server`.
 
 ## ADE / משרד קידוד שני — דלג כהתקנה
 
