@@ -13,24 +13,30 @@
 
 | שולחן | גוף |
 |---|---|
-| ChatGPT | **wait-login** — הבעלים ביקש להזדהות. יש מנוי. לא רצנו כאורח. לא הומצא גוף. |
-| Gemini | **wait-login** — כנ״ל. |
-| Perplexity | **wait-login** + חומת Cloudflare מ־curl (`cf-mitigated: challenge`, 403). בלי הזדהות אין גוף. לא הומצא. |
+| ChatGPT | כן. https://chatgpt.com/c/6a9445c1-188c-83ea-b88c-a464b9bcbd33 · `chatgpt-6a9445c1.md` |
+| Gemini | כן. https://gemini.google.com/app/92fe6256460a2fea · `gemini-92fe6256.md` |
+| Perplexity | **skip-body.** אחרי שליחת השאלה — חומת Google Sign-in («Sign in to continue to perplexity.ai»). אין גוף. לא הומצא. `perplexity-2026-08-30-wall.md` |
 
-## מה הוטמע לפני הגוף החי
+הבעלים ביקש להזדהות למנויים. ChatGPT וג׳מיני חזרו בלי סשן מנוי. Perplexity דורש מנוי. לא ממציאים גוף שני.
 
-הפלייבוק עצמו, על פקים קיימים — לא פק חדש:
+## מה הוטמע (מגוף אמיתי בלבד)
 
-- `constitution/ORCHESTRA.md` + עדכון סדר היום בחוקה
-- `vfops/ROUTINE.md`, `vfops/BRIEF.md` — 06:15 שלושה שולחנות; בלוק 05 = «מה נבנה / יועל»
-- `vfresearch/DAILY.md` — תבנית השאלה + חומות
-- `vfsku/GATE.md` — שער קל־להדפסה / קל־למכירה
-- `vfconvert/PATH.md`, `vfcopy/DESK.md`, `vfgrowth/CALENDAR.md` — מיפוי בלי שליחה
+| ממצא | פק | לא |
+|---|---|---|
+| מדף 5 כרטיסים + לוח מלאי פיזי | `vfsku/GATE.md` | שמות/₪/כמויות מהאוויר |
+| תבנית וואטסאפ פנימית + תבניות מענה | `vfcopy/DESK.md`, `vfconvert/PATH.md` | בוט, טופס מחיר |
+| ריל עם CTA אחד + תיקיית גלם | `vfgrowth/CALENDAR.md` | DM, בוסט, Meta Suite |
+| וי לפני הדפס + תור מהזמנה | `vfprod/CHECKLIST.md` | דמון מצלמה |
+| כרטיס עמדה לגורמי עלות | `vfcost/FLOOR-CARD.md` | טבלת ₪ מלאה |
+| אין מסירה בלי תשלום מאומת | `vfbooks/PICKUP.md` | סכום בטיוטה בלי ראש צוות |
+| פלייבוק 06:15 | `constitution/ORCHESTRA.md`, `vfops` | פק חדש |
 
 ## מה דולג
 
-- גוף שלושת הכלים עד שהבעלים נכנס למנויים.
-- שליחת אינסטגרם / ג׳ימייל / אוטו־DM.
-- מחיר ₪, Meta Suite, שכפול חנות, פק חדש.
-
-אחרי הזדהות: להשלים את שלושת הגופים בקובץ זה, להטמיע רק מה ששימושי, לעדכן את בלוק 05.
+| מה | למה |
+|---|---|
+| גוף Perplexity | חומת התחברות. `skip-body` |
+| 7 בלוקים חלופיים לבריף (ChatGPT) | לא משנים את סדר הטלפון 01–07 |
+| פנקס חתימות פיזי כמערכת חדשה (Gemini) | רעש. האחריות נשארת בחמשת המושבים |
+| «סטודיו טן» / 5–8 מק״ט מהאוויר | לא ממציאים מק״ט |
+| שליחת IG / Gmail / אוטו־DM / Meta Suite | נעול |

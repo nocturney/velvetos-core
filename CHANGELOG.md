@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-08-30 — **תזמורת**: פלייבוק 06:15 — Cursor פותח ChatGPT וגם Gemini וגם Perplexity, מטמיע בפקים קיימים, כותב «מה נבנה / יועל» לבריף 07:00 (ריק = «אין חדש במשרד»). Orchestra playbook in constitution / vfops / vfresearch. Evening pass bodies wait for owner login — not invented. See `constitution/ORCHESTRA.md`, `docs/ORCHESTRA-2026-08-30.md`.
+- 2026-08-30 — **תזמורת**: פלייבוק 06:15 + מעבר ערב. ChatGPT וג׳מיני הוטמעו לפקים קיימים (מדף מק״ט, תבניות וואטסאפ, וי לפני הדפס, כרטיס עלות בלי ₪). Perplexity דולג — חומת מנוי, אין גוף. See `constitution/ORCHESTRA.md`, `docs/ORCHESTRA-2026-08-30.md`.
 - 2026-08-30 — **vfmcp**: מחקר התאמת שרתי MCP לסטודיו מתוך awesome-mcp-servers (bc-1764e30f). שלושה פערים ראשונים: WhatsApp, Google Sheets, צינור הדפסה. MCP fit research from awesome-mcp-servers; first gaps: WhatsApp, Google Sheets, print pipeline. See `docs/MCP-FIT.md`.
 - 2026-08-30 — פקודת קבע: גיטהאב הוא גיבוי רציף; כל פק חדש נרשם באותו יום במפה גם אם Origin לא משכפל. Standing order: GitHub is the constant backup; catalogue every new pack the same day even when Origin will not clone. See `docs/BACKUP.md`.
 - 2026-08-30 — **vfbriefux**: מחקר פורמט הבריף (bc-9e0be231). Brief format research; Origin slug unknown, tree not cloned.
