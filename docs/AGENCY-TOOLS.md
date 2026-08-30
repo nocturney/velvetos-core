@@ -46,6 +46,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | פנייה / quote this | `.cursor/skills/vf-inquiry-chain/SKILL.md` |
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
 | מי מטפל / which pack / office map | `.cursor/skills/vf-hq-memory/SKILL.md` |
+| איך HQ מחובר / blast | `.cursor/skills/vf-graft-map/SKILL.md` |
 
 ## Example mentions
 
@@ -55,6 +56,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 @pricing-analyst גורמי עלות בלי מחיר מכירה
 @sales-engineer טיוטת הצעה אחרי הסכום שאמר כריסטיאן
 @instagram-curator סקירת לוח בלבד — בלי שליחה
+@vfgraft map
 ```
 
 ## Warehouse
