@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **vfe2b run**: דפוס Orca כשכבת משמרת על הצוותים הקיימים — תיק אחד, `worker_done` / `escalation` / `decision_gate`. בלי התקנת ADE, בלי fan-out של ₪ או שליחה. Orca ADE pattern as a run overlay on existing crews; no second office. `packages/vfe2b/crews/run.md`, `.cursor/skills/vf-run/SKILL.md`.
 - 2026-08-30 — **רתמה / harness**: הוטמעו שש שכבות (מדריך, סנסורים, לולאה, זיכרון, הרשאות, יומן) על הפקים הקיימים. `AGENTS.md` מנצח את השיחה. אין ראנטיים שני, אין שליחה, אין ₪ מומצא. Six-layer outer harness embedded on existing packs; guide file wins over chat. See `docs/HARNESS.md`, `packages/vfharness/`.
 - 2026-08-30 — **vffcc**: מפת [free-claude-code](https://github.com/Alishahryar1/free-claude-code) — פרוקסי מקומי BYOK, לא חוסך Cursor Cloud, בלי `fcc-server` ב־HQ. נהלי thrift / ניתוב / הורדה למק אחרי ראש צוות. FCC fit: local BYOK map only; does not cut this Cloud Agent bill. See `docs/FCC-FIT.md`.
 - 2026-08-30 — **vfmem**: הטמעת דפוס [codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp) כגרף משרד חי (`scripts/vfmem.py`) על המפות הקיימות. בלי הבינארי, בלי דמון, בלי UI. Embedded the CBM query pattern as a live office graph over existing maps; no third-party binary. See `docs/VFMEM.md`.
