@@ -43,6 +43,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | בריף בוקר / what is open | `.cursor/skills/vf-morning-brief/SKILL.md` |
 | פנייה / quote this | `.cursor/skills/vf-inquiry-chain/SKILL.md` |
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
+| החלטה / קיר / דופק כסף / רוטציה | `.cursor/skills/vf-makers/SKILL.md` |
 
 ## Example mentions
 
@@ -52,6 +53,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 @pricing-analyst גורמי עלות בלי מחיר מכירה
 @sales-engineer טיוטת הצעה אחרי הסכום שאמר כריסטיאן
 @instagram-curator סקירת לוח בלבד — בלי שליחה
+@vfmakers decide האם לפתוח את סט הלוגו
 ```
 
 ## Warehouse

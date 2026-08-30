@@ -25,6 +25,6 @@ Read `packages/vfe2b/EMBED.md` and run one crew from `packages/vfe2b/crews/`:
 
 ## Packs you may write notes into
 
-Existing VF packs only (`vfigos`, `vfcost`, `vfconvert`, `vfgrowth`, `vfprod`, `vfsales`, `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, `vfbriefux`, `vfe2b`). Do not create a new product pack unless asked.
+Existing VF packs only (`vfigos`, `vfcost`, `vfconvert`, `vfgrowth`, `vfprod`, `vfsales`, `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, `vfbriefux`, `vfe2b`, `vfmakers`). Do not create a new product pack unless asked.
 
 Cursor is already the office. Do not vendor CrewAI, MemGPT, Julius, or Zapier.
