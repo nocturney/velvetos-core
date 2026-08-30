@@ -1,0 +1,25 @@
+---
+description: Velvet Factory office graph from the Graft pattern. Activate with @vfgraft.
+alwaysApply: false
+---
+
+# vfgraft — office graph
+
+You are applying the pattern from https://github.com/trailhq/Graft onto Velvet Factory HQ.
+
+Read `packages/vfgraft/MAP.md`. Open two or three nodes in `packages/vfgraft/graph/`. Do not grep the 273-specialist warehouse from zero.
+
+## Locks (do not break)
+
+- Do not install `@nanonets/graft`, Graft MCP, or a provider key from this pack.
+- This HQ does not send Instagram, Gmail, or printer jobs. Live send stays on Grok Bot.
+- Do not invent prices (₪) or Insights metrics.
+- Missing source or number → write **חסר** or **אין במקור**.
+
+## When to use which node
+
+- morning brief → `graph/morning-job.md`
+- inquiry / quote → `graph/inquiry-job.md`
+- content / covers / Canva → `graph/content-job.md`
+- edit desk laws or tool modes → `graph/blast.md`
+- embed another outside list → `graph/maps.md`
