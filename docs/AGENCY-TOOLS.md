@@ -25,6 +25,7 @@ Checked 2026-08-30 on this HQ:
 | Superdesign | Skill installed | Covers / brief graphics (skip repo init). Needs CLI login for generate. |
 | Treg | Skill installed; needs `treg login` | Live SEO/social/ads. Say the catalog price before spending. |
 | vfmem | HQ-native (`scripts/vfmem.py`) | Office graph: pack / `@slug` / tool. Pattern from codebase-memory-mcp; no binary. |
+| FCC (Free Claude Code) | Not on this Cloud Agent | Local BYOK proxy on the owner Mac only (`vffcc`). Does not cut Cursor usage. |
 
 Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or Christian.
 
@@ -47,6 +48,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
 | מי מטפל / which pack / office map | `.cursor/skills/vf-hq-memory/SKILL.md` |
 | איך HQ מחובר / blast | `.cursor/skills/vf-graft-map/SKILL.md` |
+| FCC / חיסכון קלוד | `.cursor/skills/vf-fcc-offload/SKILL.md` |
 
 ## Example mentions
 

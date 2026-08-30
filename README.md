@@ -90,6 +90,7 @@ Five seats: ראש צוות · סטודיו · צמיחה · תפעול · יי�
 | `vfagents` | 500 AI Agents fit — office playbooks from the public list; no CrewAI runtime, no send. | [bc-9765dc13](https://cursor.com/agents/bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027) | HQ-native; [`docs/500-AGENTS.md`](docs/500-AGENTS.md) |
 | `vfgraft` | Graft office graph — committed markdown map so agents do not re-explore HQ from zero. No npm CLI. | [bc-e154ffc2-061a-4635-8d32-a6bcb145bc64](https://cursor.com/agents/bc-e154ffc2-061a-4635-8d32-a6bcb145bc64) | HQ-native; [`docs/GRAFT.md`](docs/GRAFT.md) |
 | `vfmem` | HQ memory graph — structural queries over desk/manifest/Agency maps (pattern from [codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp); no binary). | [bc-8bd6ba75-55a3-4b68-a30e-175d94b67823](https://cursor.com/agents/bc-8bd6ba75-55a3-4b68-a30e-175d94b67823) | HQ-native; [`docs/VFMEM.md`](docs/VFMEM.md) |
+| `vffcc` | Free Claude Code fit — [FCC](https://github.com/Alishahryar1/free-claude-code) as a local BYOK map. Does not cut Cursor Cloud usage; no `fcc-server` here. | [bc-5abae8de-a5da-455e-b71c-3db25e3d029c](https://cursor.com/agents/bc-5abae8de-a5da-455e-b71c-3db25e3d029c) | HQ-native; [`docs/FCC-FIT.md`](docs/FCC-FIT.md) |
 
 Constitution (not a pack dump): [`constitution/`](constitution/). Playbook: [`constitution/ORCHESTRA.md`](constitution/ORCHESTRA.md). Hebrew report: [`docs/ORCHESTRA-2026-08-30.md`](docs/ORCHESTRA-2026-08-30.md).
 
