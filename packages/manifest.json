@@ -141,6 +141,36 @@
       "codebaseUrl": null,
       "cloneUrl": null,
       "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vlicense",
+      "summary": "License gate — studio license / access check.",
+      "bcId": "bc-0a6460b1",
+      "agentUrl": "https://cursor.com/agents/bc-0a6460b1",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vfseason",
+      "summary": "Seasonal calendar — studio calendar and season marks.",
+      "bcId": "bc-2a4a3260",
+      "agentUrl": "https://cursor.com/agents/bc-2a4a3260",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vfsku",
+      "summary": "SKU cards and repeats — product cards and reprint runs.",
+      "bcId": "bc-68f7f06c",
+      "agentUrl": "https://cursor.com/agents/bc-68f7f06c",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
     }
   ]
 }

@@ -34,6 +34,9 @@ No secrets belong in git. No invented prices or invented Insights.
 | `vfresearch` | Research pack — source gathering and notes. | [bc-01278e9b](https://cursor.com/agents/bc-01278e9b) | slug not found in this dump |
 | `vfbiz` | Business pack — studio strategy and decisions. | [bc-3921041e](https://cursor.com/agents/bc-3921041e) | slug not found in this dump |
 | `vfcopy` | Copy desk — homework, draft, and lint. | [bc-b6bc8b8c-136d-4d95-812e-177991534e42](https://cursor.com/agents/bc-b6bc8b8c-136d-4d95-812e-177991534e42) | slug not found in this dump |
+| `vlicense` | License gate — studio license / access check. | [bc-0a6460b1](https://cursor.com/agents/bc-0a6460b1) | slug not found in this dump |
+| `vfseason` | Seasonal calendar — studio calendar and season marks. | [bc-2a4a3260](https://cursor.com/agents/bc-2a4a3260) | slug not found in this dump |
+| `vfsku` | SKU cards and repeats — product cards and reprint runs. | [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c) | slug not found in this dump |
 
 Machine-readable catalog: [`packages/manifest.json`](packages/manifest.json). Per-pack provenance: `packages/<name>/ORIGIN.md`.
 
@@ -44,7 +47,7 @@ This environment could not copy Origin trees:
 1. `origin` CLI: not logged in (needs `origin auth login` or `CURSOR_API_KEY`).
 2. `git clone https://origin.cursor.com/{owner}/{repo}.git` rejected the GitHub token.
 3. Pack cloud-agent ids were not readable from this HQ environment (different Origin repos / environments).
-4. Slugs for `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, and `vfcopy` were not in the known list and could not be discovered without Origin list access.
+4. Slugs for `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, and `vfsku` were not in the known list and could not be discovered without Origin list access.
 
 Folders exist so a later vendor run can drop the real trees in place.
 

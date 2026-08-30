@@ -32,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **vfresearch** — Research pack: source gathering and notes. [bc-01278e9b](https://cursor.com/agents/bc-01278e9b). Origin slug not found in this dump.
 - **vfbiz** — Business pack: studio strategy and decisions. [bc-3921041e](https://cursor.com/agents/bc-3921041e). Origin slug not found in this dump.
 - **vfcopy** — Copy desk: homework, draft, and lint. [bc-b6bc8b8c-136d-4d95-812e-177991534e42](https://cursor.com/agents/bc-b6bc8b8c-136d-4d95-812e-177991534e42). Origin slug not found in this dump.
+- **vlicense** — License gate: studio license / access check. [bc-0a6460b1](https://cursor.com/agents/bc-0a6460b1). Origin slug not found in this dump.
+- **vfseason** — Seasonal calendar: studio calendar and season marks. [bc-2a4a3260](https://cursor.com/agents/bc-2a4a3260). Origin slug not found in this dump.
+- **vfsku** — SKU cards and repeats: product cards and reprint runs. [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c). Origin slug not found in this dump.
 
 [Unreleased]: https://github.com/nocturney/velvet-factory-headquarters-os/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/nocturney/velvet-factory-headquarters-os/releases/tag/v0.1.0
