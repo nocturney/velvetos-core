@@ -172,6 +172,16 @@
       "codebaseUrl": null,
       "cloneUrl": null,
       "vendorStatus": "origin-slug-unknown"
+    },
+    {
+      "name": "vfbriefux",
+      "summary": "Brief format research — morning-brief layout and UX notes.",
+      "bcId": "bc-9e0be231",
+      "agentUrl": "https://cursor.com/agents/bc-9e0be231",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "origin-slug-unknown"
     }
   ]
 }
