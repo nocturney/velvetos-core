@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **The Agency**: הותקנו 273 סוכני Cursor מ-[msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (`3c95888`) ככללי פרויקט ב-`.cursor/rules/`. Installed 273 Cursor specialists from The Agency as project rules; mention `@slug` to activate. Refresh: `scripts/install-agency-agents.sh`. Roster: `docs/AGENCY-AGENTS.md`.
 - 2026-08-30 — **vfe2b**: מפת [awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) (209) לחמישה צוותי משרד על הפאקים הקיימים; בלי ראנטיים שני, בלי שליחה, בלי ₪ מומצא. Awesome-AI-agents desk: five crews on existing packs; no second runtime, no send, no invented ₪. [bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057](https://cursor.com/agents/bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057).
 - 2026-08-30 — **vfmcp**: מחקר התאמת שרתי MCP לסטודיו מתוך awesome-mcp-servers (bc-1764e30f). שלושה פערים ראשונים: WhatsApp, Google Sheets, צינור הדפסה. MCP fit research from awesome-mcp-servers; first gaps: WhatsApp, Google Sheets, print pipeline. See `docs/MCP-FIT.md`.
 - 2026-08-30 — פקודת קבע: גיטהאב הוא גיבוי רציף; כל פק חדש נרשם באותו יום במפה גם אם Origin לא משכפל. Standing order: GitHub is the constant backup; catalogue every new pack the same day even when Origin will not clone. See `docs/BACKUP.md`.
@@ -41,7 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **vfseason** — Seasonal calendar: studio calendar and season marks. [bc-2a4a3260](https://cursor.com/agents/bc-2a4a3260). Origin slug not found in this dump.
 - **vfsku** — SKU cards and repeats: product cards and reprint runs. [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c). Origin slug not found in this dump.
 
-See **Unreleased** for **vfmcp** (MCP fit research; HQ-native) and **vfe2b** (awesome-ai-agents desk; HQ-native).
+See **Unreleased** for **The Agency** (273 Cursor specialists), **vfmcp** (MCP fit research; HQ-native), and **vfe2b** (awesome-ai-agents desk; HQ-native).
 
 [Unreleased]: https://github.com/nocturney/velvet-factory-headquarters-os/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/nocturney/velvet-factory-headquarters-os/releases/tag/v0.1.0
