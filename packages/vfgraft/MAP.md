@@ -29,6 +29,7 @@ maps            system       vfe2b · vfmakers · vfagents · vfmcp · vfgraft
 | how is HQ wired | this file → [[desk]] → [[packs]] |
 | what breaks if I change X | [[blast]] |
 | embed an outside repo | [[maps]] → [[laws]] |
+| weekly inspiration links / share refresh | [[packs]] → `vfresearch/WEEKLY.md` + `LINKS.json` → [[laws]] |
 
 ## Hubs
 

@@ -186,7 +186,7 @@
       "tool": "treg"
     },
     {
-      "q": ["season", "research", "עונה", "מחקר"],
+      "q": ["season", "research", "עונה", "מחקר", "קישורים", "השראה", "weekly links", "share embed"],
       "pack": "vfresearch",
       "slug": "research-synthesist",
       "tool": "treg"

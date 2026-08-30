@@ -11,7 +11,8 @@
     "Do not commit secrets, medical files, or personal Drive folders.",
     "Research overlay @vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness.",
     "Harness: AGENTS.md + packages/vfharness. Six layers on existing packs. No second runtime. After catalog edits run python3 scripts/check-all.py.",
-    "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent."
+    "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
+    "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -285,7 +286,7 @@
       "slug": "research-synthesist",
       "packs": ["vfresearch"],
       "tools": ["treg", "drive"],
-      "job": "Source map. Do not invent citations."
+      "job": "Source map + weekly inspiration-link review (LINKS.json / WEEKLY.md). Do not invent citations or blocked bodies."
     },
     {
       "slug": "trend-researcher",
@@ -306,6 +307,7 @@
     ".cursor/skills/vf-harness/SKILL.md",
     ".cursor/skills/vf-hq-memory/SKILL.md",
     ".cursor/skills/vf-graft-map/SKILL.md",
-    ".cursor/skills/vf-fcc-offload/SKILL.md"
+    ".cursor/skills/vf-fcc-offload/SKILL.md",
+    ".cursor/skills/vf-weekly-links/SKILL.md"
   ]
 }

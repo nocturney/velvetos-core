@@ -11,7 +11,7 @@ Research pack — source gathering and notes.
 | Clone | `(none until slug is known)` |
 | v0.1.0 vendor | `origin-slug-unknown` |
 
-HQ overlay (kept on vendor): `DAILY.md`, `sources/` — three-desk orchestra. Cursor opens the tools; Grok does not browse.
+HQ overlay (kept on vendor): `DAILY.md`, `WEEKLY.md`, `LINKS.json`, `sources/` — three-desk orchestra + weekly inspiration-link review. Cursor opens the tools; Grok does not browse.
 
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
