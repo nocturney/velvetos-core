@@ -11,8 +11,16 @@
     "This repo does not send Instagram posts. Live Instagram, Gmail, and printers stay on Grok Bot (5 seats).",
     "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
     "2026-08-30 desk overlay: 28 Agency specialists + live tools in .cursor/vf-desk.json and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
-    "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings → MCP Tools."
+    "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings → MCP Tools.",
+    "2026-08-30: ChatGPT share https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19 embedded in place (packages/*/hq, constitution/, vfbriefux packet). No new pack per agent. Vendor preserves hq/ overlays. See packages/chatgpt-embed-map.json and docs/SHARE-EMBED-he.md."
   ],
+  "hqOverlay": {
+    "constitution": "constitution/CONSTITUTION.md",
+    "tags": "constitution/tags.md",
+    "briefPacket": "packages/vfbriefux/hq/PACKET.md",
+    "shareMap": "packages/chatgpt-embed-map.json",
+    "vendorPreserves": ["ORIGIN.md", "SKILL.md", "hq/"]
+  },
   "packs": [
     {
       "name": "vfigos",

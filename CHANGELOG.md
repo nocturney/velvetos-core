@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — שתילת שיתוף ChatGPT (סוכני בנייה) לתוך הפקים הקיימים, החוקה והבריף — בלי פק חדש, בלי שליחה חיה, בלי מחירי ₪ מומצאים. Embedded ChatGPT share “building agents” into existing packs, constitution, and daily brief packet — no new tools, no live send, no invented ILS. See `docs/SHARE-EMBED-he.md`.
 - 2026-08-30 — **שולחן Agency + כלים**: 28 סוכנים רלוונטיים חוברו לחמישה מושבים, לפקים, ולג׳ימייל (קריאה בלבד) / לוח שנה / דרייב / Superdesign / Treg / Mobbin. Desk overlay wires 28 relevant Agency specialists to the five seats, VF packs, and live tools (Gmail read-only, Calendar, Drive-by-job, Superdesign, Treg, Mobbin). See `docs/AGENCY-TOOLS.md`, `.cursor/vf-desk.json`, `.cursor/rules/velvet-factory-desk.mdc`.
 - 2026-08-30 — **vfcanva**: Canva אומת ב-Desktop (עיצוב `DAGoYmCu4c4`). Cloud Agent עדיין בלי Canva. Desktop Canva verified; this cloud run still cannot call it.
 - 2026-08-30 — **vfcanva**: תוסף מקומי + HTTP MCP + סטודיו PNG; בדיקה רק ב-Agent מקומי. Local plugin + HTTP MCP + studio PNG; verify in a local Agent chat only.

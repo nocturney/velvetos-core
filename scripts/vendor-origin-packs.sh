@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Vendor Velvet Factory Cursor packs from Origin into packages/<name>/.
 # Requires `origin auth login` or CURSOR_API_KEY. Does not send Instagram.
+# Preserves HQ overlay: ORIGIN.md, SKILL.md, hq/.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -59,19 +60,23 @@ vendor_one() {
   fi
 
   mkdir -p "$dest"
-  local provenance=""
-  if [[ -f "$dest/ORIGIN.md" ]]; then
-    provenance="$(mktemp)"
-    cp "$dest/ORIGIN.md" "$provenance"
-  fi
-  find "$dest" -mindepth 1 -maxdepth 1 ! -name ORIGIN.md -exec rm -rf {} +
+  local overlay
+  overlay="$(mktemp -d)"
+  [[ -f "$dest/ORIGIN.md" ]] && cp "$dest/ORIGIN.md" "$overlay/ORIGIN.md"
+  [[ -f "$dest/SKILL.md" ]] && cp "$dest/SKILL.md" "$overlay/SKILL.md"
+  [[ -d "$dest/hq" ]] && cp -a "$dest/hq" "$overlay/hq"
+  find "$dest" -mindepth 1 -maxdepth 1 ! -name ORIGIN.md ! -name SKILL.md ! -name hq -exec rm -rf {} +
   shopt -s dotglob nullglob
   cp -a "$tmp"/* "$dest/" 2>/dev/null || true
   shopt -u dotglob nullglob
-  if [[ -n "$provenance" ]]; then
-    cp "$provenance" "$dest/ORIGIN.md"
-    rm -f "$provenance"
+  # HQ overlay wins: constitution playbooks stay when Origin trees land.
+  [[ -f "$overlay/ORIGIN.md" ]] && cp "$overlay/ORIGIN.md" "$dest/ORIGIN.md"
+  [[ -f "$overlay/SKILL.md" ]] && cp "$overlay/SKILL.md" "$dest/SKILL.md"
+  if [[ -d "$overlay/hq" ]]; then
+    rm -rf "$dest/hq"
+    cp -a "$overlay/hq" "$dest/hq"
   fi
+  rm -rf "$overlay"
   if [[ -n "$sha" ]]; then
     if ! grep -q "Vendored commit:" "$dest/ORIGIN.md" 2>/dev/null; then
       printf '\nVendored commit: `%s`\n' "$sha" >> "$dest/ORIGIN.md"

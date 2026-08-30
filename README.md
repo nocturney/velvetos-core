@@ -41,6 +41,20 @@ python3 scripts/check-vf-desk.py
 
 These specialists do **not** replace VF packs. They sit next to the office OS. Still no Instagram or Gmail send from this HQ.
 
+## Office overlay (2026-08-30)
+
+The ChatGPT share [סוכני בנייה](https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19) was read and **embedded into existing packs** — no new pack per agent.
+
+| Layer | Where |
+|---|---|
+| Constitution + tags | [`constitution/`](constitution/CONSTITUTION.md) |
+| Daily brief packet | [`packages/vfbriefux/hq/PACKET.md`](packages/vfbriefux/hq/PACKET.md) · slots in `vfops` |
+| Per-pack playbooks | `packages/<name>/SKILL.md` + `packages/<name>/hq/` |
+| Agent → pack map | [`packages/chatgpt-embed-map.json`](packages/chatgpt-embed-map.json) |
+| Hebrew report | [`docs/SHARE-EMBED-he.md`](docs/SHARE-EMBED-he.md) |
+
+Five seats: ראש צוות · סטודיו · צמיחה · תפעול · ייצור. Pickup Sderot only. WhatsApp `050-2517000`. Vendor keeps `hq/` when Origin trees land.
+
 ## Packs (v0.1.0)
 
 | Pack | What it does | Agent | Origin |
