@@ -15,4 +15,6 @@ Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). Do not invent pr
 
 `vfmcp` is HQ-native research (not an Origin tree). The write-up is [`docs/MCP-FIT.md`](../docs/MCP-FIT.md).
 
+HQ overlays (orchestra, brief, gates) live next to `ORIGIN.md`. `scripts/vendor-origin-packs.sh` keeps them when Origin trees land. Constitution is [`../constitution/`](../constitution/) — not a new pack.
+
 New packs are catalogued the **same day** they finish (`docs/BACKUP.md`). If Origin will not clone, the map still updates.

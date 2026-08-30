@@ -9,7 +9,8 @@
     "Cloud-agent transcripts for pack bcIds were not readable from this HQ environment.",
     "Re-run scripts/vendor-origin-packs.sh after `origin auth login` or CURSOR_API_KEY to pull actual trees.",
     "This repo does not send Instagram posts. Live Instagram, Gmail, and printers stay on Grok Bot (5 seats).",
-    "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md."
+    "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
+    "Orchestra 2026-08-30 ~17:55 lock: Grok decides only. Cursor opens ChatGPT + Gemini + Perplexity at 06:15. Map onto existing packs. constitution/ORCHESTRA.md. Evening pass 30.8 waiting owner login — do not invent bodies."
   ],
   "packs": [
     {

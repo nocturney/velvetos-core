@@ -64,6 +64,17 @@ vendor_one() {
     provenance="$(mktemp)"
     cp "$dest/ORIGIN.md" "$provenance"
   fi
+  # Keep HQ overlay (playbooks, orchestra, gates) when Origin trees land.
+  local overlay=""
+  overlay="$(mktemp -d)"
+  for keep in hq SKILL.md ROUTINE.md BRIEF.md BRIEF-2026-08-31.md DAILY.md GATE.md PATH.md DESK.md CALENDAR.md; do
+    if [[ -e "$dest/$keep" ]]; then
+      cp -a "$dest/$keep" "$overlay/$keep"
+    fi
+  done
+  if [[ -d "$dest/sources" ]]; then
+    cp -a "$dest/sources" "$overlay/sources"
+  fi
   find "$dest" -mindepth 1 -maxdepth 1 ! -name ORIGIN.md -exec rm -rf {} +
   shopt -s dotglob nullglob
   cp -a "$tmp"/* "$dest/" 2>/dev/null || true
@@ -71,6 +82,12 @@ vendor_one() {
   if [[ -n "$provenance" ]]; then
     cp "$provenance" "$dest/ORIGIN.md"
     rm -f "$provenance"
+  fi
+  if [[ -d "${overlay:-}" ]]; then
+    shopt -s dotglob nullglob
+    cp -a "$overlay"/* "$dest/" 2>/dev/null || true
+    shopt -u dotglob nullglob
+    rm -rf "$overlay"
   fi
   if [[ -n "$sha" ]]; then
     if ! grep -q "Vendored commit:" "$dest/ORIGIN.md" 2>/dev/null; then

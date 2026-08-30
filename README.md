@@ -5,14 +5,16 @@ Private backup, versions, and changelog for Velvet Factory Cursor packs.
 Grok Bot (5 seats) still runs live Instagram, Gmail, and printers.
 Cursor packs in `packages/` are the office OS.
 
-See `CHANGELOG.md`. Standing order (same-day map, no weekly wait): `docs/BACKUP.md`.
+See `CHANGELOG.md`. Standing order (same-day map, no weekly wait): `docs/BACKUP.md`.  
+Orchestra (06:15 ChatGPT + Gemini + Perplexity): [`constitution/ORCHESTRA.md`](constitution/ORCHESTRA.md). Grok decides; Cursor opens the three desks.
 
 ## What this repo is
 
 GitHub copy of the studio office OS. Cursor agents built the packs on Origin (`christian-velvet/tmp-…`). This repository is the durable backup, version tag, and changelog — not the live sender.
 
-- **Live:** Grok Bot (5 seats) — Instagram, Gmail, printers.
-- **Office OS:** Cursor packs under `packages/<name>/`.
+- **Live:** Grok Bot (5 seats) — Instagram, Gmail, printers. Chat = decisions only.
+- **Office OS:** Cursor packs under `packages/<name>/` plus `constitution/`.
+- **Workhorses:** Cursor opens ChatGPT, Gemini, and Perplexity at 06:15. Does not invent a blocked body.
 - **This HQ does not send Instagram.** No pack dump here posts, boosts, or DMs.
 
 No secrets belong in git. No invented prices or invented Insights.
@@ -39,6 +41,8 @@ No secrets belong in git. No invented prices or invented Insights.
 | `vfsku` | SKU cards and repeats — product cards and reprint runs. | [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c) | slug not found in this dump |
 | `vfbriefux` | Brief format research — morning-brief layout and UX notes. | [bc-9e0be231](https://cursor.com/agents/bc-9e0be231) | slug not found in this dump |
 | `vfmcp` | MCP fit — which awesome-mcp-servers entries map onto VF packs. Write-up: [`docs/MCP-FIT.md`](docs/MCP-FIT.md). | [bc-1764e30f-b592-4805-9586-037da3351d65](https://cursor.com/agents/bc-1764e30f-b592-4805-9586-037da3351d65) | HQ-native (not Origin) |
+
+Constitution (not a pack dump): [`constitution/`](constitution/). Playbook: [`constitution/ORCHESTRA.md`](constitution/ORCHESTRA.md). Hebrew report: [`docs/ORCHESTRA-2026-08-30.md`](docs/ORCHESTRA-2026-08-30.md).
 
 Machine-readable catalog: [`packages/manifest.json`](packages/manifest.json). Per-pack provenance: `packages/<name>/ORIGIN.md`.
 
