@@ -46,6 +46,7 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 | בריף בוקר / what is open | `.cursor/skills/vf-morning-brief/SKILL.md` |
 | פנייה / quote this | `.cursor/skills/vf-inquiry-chain/SKILL.md` |
 | חבילת תוכן / covers | `.cursor/skills/vf-content-sprint/SKILL.md` |
+| דפוסי DSH / צילום רצפה / PDF / לוח | `@vfdsh` — `packages/vfdsh/EMBED.md`, `docs/DSH-FIT.md` |
 | קופי / הצעה / מסגור שיווקי | `.cursor/skills/vf-marketing-skills/SKILL.md` |
 | החלטה / קיר / דופק כסף / רוטציה | `.cursor/skills/vf-makers/SKILL.md` |
 | ריל / טיימלאפס / ייחוס | `.cursor/skills/vf-openmontage/SKILL.md` |
@@ -71,3 +72,5 @@ Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or
 ## Warehouse
 
 Mention a non-desk `@slug` only when the user asks for that specialty. Do not drag `@godot-gameplay-scripter`, `@gis-analyst`, or `@xiaohongshu-specialist` onto a Sderot print job.
+
+`@vfdsh` is a research overlay (awesome-dsh-plugin patterns), not a sixth seat. Do not install DeepSeek Harness.

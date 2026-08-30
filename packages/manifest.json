@@ -11,6 +11,7 @@
     "This repo does not send Instagram posts. Live Instagram, Gmail, and printers stay on Grok Bot (5 seats).",
     "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
     "2026-08-30 desk overlay: 28 Agency specialists + live tools in .cursor/vf-desk.json and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
+    "2026-08-30: vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness. See docs/DSH-FIT.md.",
     "2026-08-30: vfmskill is an HQ-native pack. Curated 15/50 skills from coreyhaines31/marketingskills (MIT, e55de88) mapped onto existing packs. No SaaS CMO dump, no send, no invented ₪.",
     "2026-08-30: vfom is an HQ-native pack (not Origin). OpenMontage pipeline patterns (clip-factory, hybrid, reference plan, scene gate, self-review) map onto existing content packs. Do not vendor Remotion or send Instagram.",
     "2026-08-30: vfmem is HQ-native. Structural queries over desk/manifest/Agency maps (DeusData/codebase-memory-mcp pattern). Do not install their binary from this repo. See docs/VFMEM.md.",
@@ -241,6 +242,19 @@
       "cloneUrl": null,
       "vendorStatus": "hq-native",
       "source": "https://github.com/e2b-dev/awesome-ai-agents"
+    },
+    {
+      "name": "vfdsh",
+      "summary": "Awesome-DSH-plugin desk — patterns from awesome-dsh-plugin mapped onto existing packs (no DeepSeek Harness, no send).",
+      "bcId": "bc-b4c0a22f",
+      "bcIdFull": "bc-b4c0a22f-7c08-497e-beac-c4518acbea1d",
+      "agentUrl": "https://cursor.com/agents/bc-b4c0a22f-7c08-497e-beac-c4518acbea1d",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "source": "https://github.com/awesome-dsh-plugin/awesome-dsh-plugin",
+      "writeup": "docs/DSH-FIT.md"
     },
     {
       "name": "vfmakers",
