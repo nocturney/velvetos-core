@@ -1,8 +1,7 @@
 {
   "mcpServers": {
     "canva": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote@latest", "https://mcp.canva.com/mcp"]
+      "url": "https://mcp.canva.com/mcp"
     }
   }
 }

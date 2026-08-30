@@ -23,9 +23,9 @@ when Canva MCP is not connected.
 
 ## Connect Canva
 
-In Cursor: **Settings → MCP Tools → canva → Connect**, then sign in.
+See [`CONNECT.md`](CONNECT.md). Short version: use Cursor Desktop, `url` not `mcp-remote`, and a Canva Pro/Teams/Business/Nonprofit account.
 
-Until that OAuth finishes, do not invent Canva links. Say `Canva לא מחובר`.
+Until OAuth works, open a design from [`OPEN.md`](OPEN.md) and paste the edit link. Do not invent Canva URLs. Say `Canva לא מחובר`.
 
 ## What this pack does
 

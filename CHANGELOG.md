@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **vfcanva**: תיקון חיבור Canva — URL ישיר במקום `mcp-remote`; מדריך OAuth + פתיחה בדפדפן. Canva connect fix: native `url` instead of `mcp-remote`; OAuth guide + browser fallback. See `packages/vfcanva/CONNECT.md`.
 - 2026-08-30 — **vfcanva**: Canva ככלי תוכן לאינסטגרם `@velvets_cloud` (יצירה / שינוי גודל / סקירה; HQ לא שולח). Canva is the Instagram visual tool for `@velvets_cloud` (create / resize / review; HQ does not send). See `docs/CANVA.md`.
 - 2026-08-30 — פקודת קבע: גיטהאב הוא גיבוי רציף; כל פק חדש נרשם באותו יום במפה גם אם Origin לא משכפל. Standing order: GitHub is the constant backup; catalogue every new pack the same day even when Origin will not clone. See `docs/BACKUP.md`.
 - 2026-08-30 — **vfbriefux**: מחקר פורמט הבריף (bc-9e0be231). Brief format research; Origin slug unknown, tree not cloned.

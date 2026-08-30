@@ -9,7 +9,7 @@
     "namespace": "Canva",
     "server": "https://mcp.canva.com/mcp",
     "workspaceConfig": ".cursor/mcp.json",
-    "connect": "Cursor Settings → MCP Tools → canva → Connect"
+    "connect": "Cursor Desktop or cursor.com → Customize → MCP → canva → Connect. Needs Canva Pro/Teams/Business/Nonprofit. See packages/vfcanva/CONNECT.md."
   },
   "account": "@velvets_cloud",
   "notes": [

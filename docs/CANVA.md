@@ -9,12 +9,14 @@ HQ עדיין **לא** שולח אינסטגרם. גרוק שולח.
 
 ## חיבור
 
-1. בקובץ הפרויקט רשום שרת MCP: [`.cursor/mcp.json`](../.cursor/mcp.json) → `https://mcp.canva.com/mcp`.
-2. ב־Cursor: **Settings → MCP Tools → canva → Connect**, ואז כניסה לחשבון Canva.
-3. בדיקה: `python3 scripts/check-vf-canva.py`  
-   מצופה: `OK vfcanva formats=5 skill+rule+mcp`.
+פירוט ותקלות: [`packages/vfcanva/CONNECT.md`](../packages/vfcanva/CONNECT.md).
 
-בלי OAuth אין יצירת עיצוב. לכתוב `Canva לא מחובר` — לא לקשר קישור מזויף.
+1. [`.cursor/mcp.json`](../.cursor/mcp.json) חייב להיות `{ "url": "https://mcp.canva.com/mcp" }` — **לא** `mcp-remote`.
+2. להתחבר מ־**Cursor Desktop** או cursor.com: Customize → MCP → canva → Connect.
+3. צריך תוכנית Canva Pro / Teams / Business / Nonprofit. חינם נכשל.
+4. בדיקה: `python3 scripts/check-vf-canva.py` → `OK vfcanva formats=5 skill+rule+mcp`.
+
+בלי OAuth: לפתוח עיצוב מ־[`OPEN.md`](../packages/vfcanva/OPEN.md) ולהדביק קישור. לא להמציא URL.
 
 ## מה מבקשים
 

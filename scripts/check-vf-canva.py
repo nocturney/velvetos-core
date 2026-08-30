@@ -13,6 +13,8 @@ ORIGIN = PACK / "ORIGIN.md"
 README = PACK / "README.md"
 WORKFLOW = PACK / "WORKFLOW.md"
 TEMPLATE = PACK / "jobs" / "TEMPLATE.md"
+CONNECT = PACK / "CONNECT.md"
+OPEN = PACK / "OPEN.md"
 SKILL = ROOT / ".cursor" / "skills" / "vf-canva-instagram" / "SKILL.md"
 RULE = ROOT / ".cursor" / "rules" / "vf-canva-instagram.mdc"
 MAP = ROOT / ".cursor" / "vf-canva.json"
@@ -49,6 +51,8 @@ def main() -> None:
         README,
         WORKFLOW,
         TEMPLATE,
+        CONNECT,
+        OPEN,
         SKILL,
         RULE,
         MAP,
@@ -100,8 +104,12 @@ def main() -> None:
 
     servers = mcp.get("mcpServers") or {}
     canva = servers.get("canva") or {}
-    if "mcp.canva.com" not in " ".join(canva.get("args") or []):
-        fail(".cursor/mcp.json must register https://mcp.canva.com/mcp")
+    url = str(canva.get("url") or "")
+    args = " ".join(canva.get("args") or [])
+    if "mcp-remote" in args or canva.get("command") == "npx":
+        fail(".cursor/mcp.json must use url https://mcp.canva.com/mcp, not mcp-remote")
+    if "mcp.canva.com/mcp" not in url:
+        fail(".cursor/mcp.json must register url https://mcp.canva.com/mcp")
 
     rule = RULE.read_text()
     if "alwaysApply: true" not in rule:
