@@ -46,6 +46,10 @@ Feedback. חישובי קודם; סמנטי רק אם אי אפשר כלל דט�
 | Artifact | טיוטה / בריף / כריכה | הפק הרלוונטי |
 | Decision | החלטת ראש צוות | `CHANGELOG.md`, `constitution/` |
 | Guide | מדיניות קבועה | `AGENTS.md` — לא בזיכרון שיחה |
+| Office map | איך המשרד מחובר | `vfgraft` (`MAP.md`) |
+| Office query | מי מטפל במשימה | `vfmem` (`scripts/vfmem.py`) |
+
+`vfgraft` / `vfmem` הם מפת משרד, לא checkpoint של משימה. לא מחליפים זה את זה.
 
 מבחן שחזור: סוגרים סשן באמצע. נפתח. קוראים את ה-checkpoint. ממשיכים בלי לחזור על עבודה גמורה.
 

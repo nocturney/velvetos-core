@@ -1,0 +1,247 @@
+{
+  "name": "vfgraft",
+  "title": "Velvet Factory office graph",
+  "source": {
+    "title": "Graft",
+    "url": "https://github.com/trailhq/Graft",
+    "npm": "@nanonets/graft",
+    "readAt": "2026-08-30"
+  },
+  "verdict": "embed-pattern-skip-runtime",
+  "entry": "MAP.md",
+  "writeup": "docs/GRAFT.md",
+  "locks": [
+    "no-npm-graft",
+    "no-graft-mcp",
+    "no-second-coding-agent",
+    "no-send-instagram",
+    "no-send-gmail",
+    "no-invented-prices",
+    "no-invented-insights"
+  ],
+  "verbs": [
+    "part_of",
+    "depends_on",
+    "uses",
+    "produces",
+    "validates",
+    "configures"
+  ],
+  "skipRuntime": {
+    "why": [
+      "Graft tree-sitter skips Markdown. This HQ is almost all Markdown.",
+      "graft build --deep needs a provider key. HQ does not add a second model bill.",
+      "vfe2b already locks a second coding-agent runtime.",
+      "The npm graph is gitignored. Teammates would not share it."
+    ]
+  },
+  "nodes": [
+    {
+      "id": "laws",
+      "file": "graph/laws.md",
+      "type": "constraint",
+      "summary": "HQ laws: no live send, no invented ₪ or Insights, one pipeline, pickup in Sderot.",
+      "sources": [
+        ".cursor/rules/velvet-factory-desk.mdc",
+        "constitution/CONSTITUTION.md",
+        ".cursor/vf-desk.json"
+      ],
+      "links": [
+        {"verb": "configures", "to": "grok-bot"},
+        {"verb": "configures", "to": "pipeline"},
+        {"verb": "validates", "to": "desk"},
+        {"verb": "validates", "to": "tools"}
+      ]
+    },
+    {
+      "id": "pipeline",
+      "file": "graph/pipeline.md",
+      "type": "flow",
+      "summary": "פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.",
+      "sources": [
+        "constitution/CONSTITUTION.md",
+        ".cursor/vf-desk.json",
+        "packages/vfconvert/PATH.md"
+      ],
+      "links": [
+        {"verb": "part_of", "to": "laws"},
+        {"verb": "uses", "to": "desk"},
+        {"verb": "produces", "to": "inquiry-job"}
+      ]
+    },
+    {
+      "id": "desk",
+      "file": "graph/desk.md",
+      "type": "system",
+      "summary": "Five seats and 28 Agency specialists. Warehouse of 273 stays off unless asked.",
+      "sources": [
+        ".cursor/vf-desk.json",
+        "docs/AGENCY-TOOLS.md",
+        ".cursor/rules/velvet-factory-desk.mdc"
+      ],
+      "links": [
+        {"verb": "part_of", "to": "laws"},
+        {"verb": "uses", "to": "packs"},
+        {"verb": "uses", "to": "tools"},
+        {"verb": "uses", "to": "skills"},
+        {"verb": "depends_on", "to": "grok-bot"}
+      ]
+    },
+    {
+      "id": "tools",
+      "file": "graph/tools.md",
+      "type": "system",
+      "summary": "Gmail read, Calendar Asia/Jerusalem, Drive by job, Canva, Superdesign, Treg after login. No send from HQ.",
+      "sources": [
+        ".cursor/vf-desk.json",
+        "docs/AGENCY-TOOLS.md",
+        "docs/CANVA.md"
+      ],
+      "links": [
+        {"verb": "part_of", "to": "desk"},
+        {"verb": "validates", "to": "laws"},
+        {"verb": "depends_on", "to": "grok-bot"}
+      ]
+    },
+    {
+      "id": "skills",
+      "file": "graph/skills.md",
+      "type": "system",
+      "summary": "Daily Cursor skills: morning brief, inquiry chain, content sprint, Canva Instagram.",
+      "sources": [
+        ".cursor/skills/vf-morning-brief/SKILL.md",
+        ".cursor/skills/vf-inquiry-chain/SKILL.md",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
+        ".cursor/skills/vf-canva-instagram/SKILL.md",
+        ".cursor/skills/vf-graft-map/SKILL.md"
+      ],
+      "links": [
+        {"verb": "part_of", "to": "desk"},
+        {"verb": "uses", "to": "tools"},
+        {"verb": "uses", "to": "packs"},
+        {"verb": "produces", "to": "morning-job"},
+        {"verb": "produces", "to": "inquiry-job"},
+        {"verb": "produces", "to": "content-job"}
+      ]
+    },
+    {
+      "id": "packs",
+      "file": "graph/packs.md",
+      "type": "system",
+      "summary": "Office OS folders under packages/. Existing packs only. No duplicate pack for the same job.",
+      "sources": [
+        "packages/manifest.json",
+        "packages/README.md"
+      ],
+      "links": [
+        {"verb": "part_of", "to": "desk"},
+        {"verb": "depends_on", "to": "laws"},
+        {"verb": "uses", "to": "tools"}
+      ]
+    },
+    {
+      "id": "grok-bot",
+      "file": "graph/grok-bot.md",
+      "type": "boundary",
+      "summary": "Live Instagram, Gmail send, and printers stay on Grok Bot. HQ drafts and reviews only.",
+      "sources": [
+        "docs/BACKUP.md",
+        "constitution/CONSTITUTION.md",
+        ".cursor/vf-desk.json"
+      ],
+      "links": [
+        {"verb": "part_of", "to": "laws"},
+        {"verb": "validates", "to": "tools"},
+        {"verb": "validates", "to": "content-job"}
+      ]
+    },
+    {
+      "id": "morning-job",
+      "file": "graph/morning-job.md",
+      "type": "job",
+      "summary": "בריף בוקר from Calendar + Gmail read. Queue hours only from slicer. Human picks the shift.",
+      "sources": [
+        ".cursor/skills/vf-morning-brief/SKILL.md",
+        "packages/vfops/BRIEF.md",
+        "packages/vfe2b/crews/morning-brief.md"
+      ],
+      "links": [
+        {"verb": "part_of", "to": "pipeline"},
+        {"verb": "uses", "to": "skills"},
+        {"verb": "uses", "to": "tools"},
+        {"verb": "depends_on", "to": "laws"}
+      ]
+    },
+    {
+      "id": "inquiry-job",
+      "file": "graph/inquiry-job.md",
+      "type": "job",
+      "summary": "פנייה through convert → prod → cost → sales draft. Human sends on WhatsApp.",
+      "sources": [
+        ".cursor/skills/vf-inquiry-chain/SKILL.md",
+        "packages/vfconvert/PATH.md",
+        "packages/vfe2b/crews/inquiry.md"
+      ],
+      "links": [
+        {"verb": "part_of", "to": "pipeline"},
+        {"verb": "uses", "to": "skills"},
+        {"verb": "uses", "to": "packs"},
+        {"verb": "uses", "to": "tools"},
+        {"verb": "depends_on", "to": "laws"}
+      ]
+    },
+    {
+      "id": "content-job",
+      "file": "graph/content-job.md",
+      "type": "job",
+      "summary": "Content pack and covers from floor proof. Canva for IG visuals. HQ reviews; Grok sends.",
+      "sources": [
+        ".cursor/skills/vf-content-sprint/SKILL.md",
+        ".cursor/skills/vf-canva-instagram/SKILL.md",
+        "packages/vfe2b/crews/content.md"
+      ],
+      "links": [
+        {"verb": "uses", "to": "skills"},
+        {"verb": "uses", "to": "packs"},
+        {"verb": "uses", "to": "tools"},
+        {"verb": "depends_on", "to": "laws"},
+        {"verb": "depends_on", "to": "grok-bot"}
+      ]
+    },
+    {
+      "id": "blast",
+      "file": "graph/blast.md",
+      "type": "impact",
+      "summary": "If this file moves, these jobs and tools break. Read before editing desk laws or tool modes.",
+      "sources": [
+        ".cursor/rules/velvet-factory-desk.mdc",
+        ".cursor/vf-desk.json",
+        "packages/vfgraft/MAP.md"
+      ],
+      "links": [
+        {"verb": "validates", "to": "laws"},
+        {"verb": "validates", "to": "desk"},
+        {"verb": "validates", "to": "tools"},
+        {"verb": "validates", "to": "skills"},
+        {"verb": "uses", "to": "maps"}
+      ]
+    },
+    {
+      "id": "maps",
+      "file": "graph/maps.md",
+      "type": "system",
+      "summary": "Pattern packs: vfe2b, vfagents, vfmcp, vfgraft. Embed the pattern; do not vendor the runtime.",
+      "sources": [
+        "packages/vfe2b/EMBED.md",
+        "docs/500-AGENTS.md",
+        "docs/MCP-FIT.md",
+        "docs/GRAFT.md"
+      ],
+      "links": [
+        {"verb": "part_of", "to": "packs"},
+        {"verb": "uses", "to": "desk"},
+        {"verb": "produces", "to": "blast"}
+      ]
+    }
+  ]
+}

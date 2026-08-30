@@ -38,6 +38,7 @@ The **desk** is always-on (`.cursor/rules/velvet-factory-desk.mdc`). It routes a
 # first install or later refresh (keeps the VF desk rule)
 ./scripts/install-agency-agents.sh
 python3 scripts/check-vf-desk.py
+python3 scripts/vfmem.py who "בריף בוקר"
 ```
 
 | | |
@@ -45,7 +46,7 @@ python3 scripts/check-vf-desk.py
 | Warehouse catalog | [`.cursor/agency-agents.json`](.cursor/agency-agents.json) |
 | Full roster | [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md) |
 | Desk + tools | [`docs/AGENCY-TOOLS.md`](docs/AGENCY-TOOLS.md), [`.cursor/vf-desk.json`](.cursor/vf-desk.json) |
-| Daily skills | `.cursor/skills/vf-morning-brief`, `vf-inquiry-chain`, `vf-content-sprint`, `vf-harness` |
+| Daily skills | `.cursor/skills/vf-morning-brief`, `vf-inquiry-chain`, `vf-content-sprint`, `vf-harness`, `vf-hq-memory`, `vf-graft-map` |
 | Guide file | [`AGENTS.md`](AGENTS.md) — wins over the conversation |
 
 These specialists do **not** replace VF packs. They sit next to the office OS. Still no Instagram or Gmail send from this HQ.
@@ -90,6 +91,9 @@ Five seats: ראש צוות · סטודיו · צמיחה · תפעול · יי�
 | `vfe2b` | Awesome-AI-agents desk — patterns from [e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) on existing packs (no second runtime; this HQ does not send). | [bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057](https://cursor.com/agents/bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057) | HQ-native |
 | `vfagents` | 500 AI Agents fit — office playbooks from the public list; no CrewAI runtime, no send. | [bc-9765dc13](https://cursor.com/agents/bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027) | HQ-native; [`docs/500-AGENTS.md`](docs/500-AGENTS.md) |
 | `vfharness` | Outer harness — six layers (guides, sensors, loop, memory, permissions, observability) on existing packs. No second runtime. | [bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb](https://cursor.com/agents/bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb) | HQ-native; [`docs/HARNESS.md`](docs/HARNESS.md) |
+| `vfgraft` | Graft office graph — committed markdown map so agents do not re-explore HQ from zero. No npm CLI. | [bc-e154ffc2-061a-4635-8d32-a6bcb145bc64](https://cursor.com/agents/bc-e154ffc2-061a-4635-8d32-a6bcb145bc64) | HQ-native; [`docs/GRAFT.md`](docs/GRAFT.md) |
+| `vfmem` | HQ memory graph — structural queries over desk/manifest/Agency maps (pattern from [codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp); no binary). | [bc-8bd6ba75-55a3-4b68-a30e-175d94b67823](https://cursor.com/agents/bc-8bd6ba75-55a3-4b68-a30e-175d94b67823) | HQ-native; [`docs/VFMEM.md`](docs/VFMEM.md) |
+| `vffcc` | Free Claude Code fit — [FCC](https://github.com/Alishahryar1/free-claude-code) as a local BYOK map. Does not cut Cursor Cloud usage; no `fcc-server` here. | [bc-5abae8de-a5da-455e-b71c-3db25e3d029c](https://cursor.com/agents/bc-5abae8de-a5da-455e-b71c-3db25e3d029c) | HQ-native; [`docs/FCC-FIT.md`](docs/FCC-FIT.md) |
 
 Constitution (not a pack dump): [`constitution/`](constitution/). Playbook: [`constitution/ORCHESTRA.md`](constitution/ORCHESTRA.md). Hebrew report: [`docs/ORCHESTRA-2026-08-30.md`](docs/ORCHESTRA-2026-08-30.md).
 

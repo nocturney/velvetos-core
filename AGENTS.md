@@ -69,6 +69,7 @@ DENY: Gmail `send_message` / `reply` / `forward`, Instagram send / boost / auto-
 
 - Guides (`AGENTS.md`, constitution, pack `SKILL.md`) = what should happen.
 - Checkpoints (`packages/vfharness/state/<task-id>.json`) = what happened in this task.
+- Office map (`vfgraft`) = how HQ is wired. Office query (`vfmem`) = who handles a job. Neither replaces a task checkpoint.
 - Do not rely on chat memory for a rule that must hold every run. Promote it here.
 
 ## HARNESS PACK

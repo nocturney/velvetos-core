@@ -92,7 +92,10 @@
     {"id": "check-vfharness", "script": "scripts/check-vfharness.py", "type": "computational"},
     {"id": "check-vfe2b", "script": "scripts/check-vfe2b.py", "type": "computational"},
     {"id": "check-vfagents", "script": "scripts/check-vfagents.py", "type": "computational"},
-    {"id": "check-vf-canva", "script": "scripts/check-vf-canva.py", "type": "computational"}
+    {"id": "check-vf-canva", "script": "scripts/check-vf-canva.py", "type": "computational"},
+    {"id": "check-vfgraft", "script": "scripts/check-vfgraft.py", "type": "computational"},
+    {"id": "check-vfmem", "script": "scripts/check-vfmem.py", "type": "computational"},
+    {"id": "check-vffcc", "script": "scripts/check-vffcc.py", "type": "computational"}
   ],
   "permissions": {
     "allowRead": ["packages/**", "constitution/**", "docs/**", ".cursor/**", "gmail:search_threads", "gmail:get_thread", "calendar:list_events", "drive:search_files"],
@@ -116,7 +119,10 @@
     {"pack": "vfe2b", "layer": "guides", "how": "Patterns on existing packs. No second runtime."},
     {"pack": "vfagents", "layer": "guides", "how": "Office playbooks only."},
     {"pack": "vfcanva", "layer": "permissions", "how": "Create / resize / review. HQ does not send."},
-    {"pack": "constitution", "layer": "guides", "how": "Five seats, one pipeline, orchestra lock."}
+    {"pack": "constitution", "layer": "guides", "how": "Five seats, one pipeline, orchestra lock."},
+    {"pack": "vfgraft", "layer": "memory", "how": "Committed office map. Read MAP.md before grepping the warehouse."},
+    {"pack": "vfmem", "layer": "memory", "how": "Query the office graph. Not a task checkpoint."},
+    {"pack": "vffcc", "layer": "permissions", "how": "Local BYOK map only. No fcc-server on this HQ."}
   ],
   "checklist": [
     "guide-file-build-test-lint",
