@@ -126,6 +126,29 @@
       "note": "Refresh via scripts/install-agency-agents.sh. Warehouse stays off desk unless user names a slug."
     },
     {
+      "id": "heyorca-weekly-trending-audio",
+      "kind": "weekly-blog",
+      "url": "https://www.heyorca.com/blog/trending-audio-for-reels-tiktok",
+      "title": "HeyOrca — trending TikTok and Instagram Reels audio (weekly)",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "sourceNote": "packages/vfresearch/SOURCES-MUSIC.json",
+      "report": "packages/vfresearch/sources/2026-08-30-ig-music.md",
+      "packs": ["vfresearch", "vfigos", "vfom", "vfgrowth"],
+      "note": "Primary free source for IG music briefs. No Treg. TikTok block = early signal only."
+    },
+    {
+      "id": "postplanify-ig-trending-audio",
+      "kind": "method-guide",
+      "url": "https://postplanify.com/blog/trending-audio-on-instagram",
+      "title": "PostPlanify — Find & Use Trending Audio on Instagram (2026)",
+      "firstEmbedded": "2026-08-30",
+      "lastReviewed": "2026-08-30",
+      "sourceNote": "packages/vfresearch/SOURCES-MUSIC.json",
+      "packs": ["vfresearch", "vfigos"],
+      "note": "Method + Business vs Creator library rules. Not a weekly track list."
+    },
+    {
       "id": "awesome-ai-agents",
       "kind": "repo",
       "url": "https://github.com/e2b-dev/awesome-ai-agents",

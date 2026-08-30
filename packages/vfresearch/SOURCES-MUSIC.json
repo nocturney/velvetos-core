@@ -1,0 +1,55 @@
+{
+  "name": "vfresearch-ig-music-sources",
+  "title": "מקורות מוזיקה / סאונד לאינסטגרם — בלי Treg",
+  "rule": "Prefer free public URLs and owner/Grok IG paste. Do not use Treg for music briefs. Do not invent track names, Insights, or blocked bodies. Embed into existing packs only.",
+  "playbook": "packages/vfresearch/MUSIC.md",
+  "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-ig-music.md",
+  "mention": ["@trend-researcher", "@research-synthesist"],
+  "skip": ["treg", "butter-paywall-as-required"],
+  "sources": [
+    {
+      "id": "heyorca-weekly-trending-audio",
+      "kind": "weekly-blog",
+      "role": "primary",
+      "url": "https://www.heyorca.com/blog/trending-audio-for-reels-tiktok",
+      "title": "HeyOrca — trending TikTok and Instagram Reels audio (updated weekly)",
+      "cadence": "friday",
+      "note": "Read Instagram block first. TikTok block = early signal only unless lead opens TikTok strategy."
+    },
+    {
+      "id": "ig-native-trending-tab",
+      "kind": "in-app",
+      "role": "primary-when-pasted",
+      "url": "https://help.instagram.com/",
+      "title": "Instagram Reels audio browser — Trending tab + Professional dashboard Trending audio",
+      "cadence": "on-demand",
+      "note": "Names only when owner/Grok pastes from the screen. HQ does not open IG send."
+    },
+    {
+      "id": "ig-creators-trend-report",
+      "kind": "in-app-account",
+      "role": "secondary",
+      "url": "https://www.instagram.com/creators/",
+      "title": "Instagram @creators — weekly trend / audio reports",
+      "cadence": "weekly",
+      "note": "Use when a named post or screenshot is provided."
+    },
+    {
+      "id": "postplanify-trending-audio-guide",
+      "kind": "method-guide",
+      "role": "how-to",
+      "url": "https://postplanify.com/blog/trending-audio-on-instagram",
+      "title": "PostPlanify — Find & Use Trending Audio on Instagram (2026)",
+      "cadence": "as-needed",
+      "note": "Method and account-type rules (Business vs Creator library). Not a weekly track list."
+    }
+  ],
+  "locks": [
+    "no-treg-for-music",
+    "no-send-instagram",
+    "no-invented-insights",
+    "no-invented-track-names",
+    "no-new-pack-per-idea",
+    "no-invented-blocked-body"
+  ]
+}
