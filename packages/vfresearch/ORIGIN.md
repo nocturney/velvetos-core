@@ -13,3 +13,6 @@ Research pack — source gathering and notes.
 
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
+
+Embedded 30.8.2026 from Gemini share: `DAILY.md`, `sources/`.  
+Perplexity `c950af30`: thread body from owner PDFs — `sources/perplexity-c950af30.md`. Meshy/Tripo mapped; 24/7 bot skipped.

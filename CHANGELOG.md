@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **Perplexity PDFs:** הבעלים המיר את השיחה שנחסמה ב־Cloudflare; הגוף הוטמע במקום על vfops/vfigos/vfsales/vfcost/vfprod/vfconvert/vfbiz/vfbooks/… בלי פק חדש, בלי ₪, בלי בוט/אתר/ווידג׳ט חי. Owner converted the blocked Perplexity thread to PDFs; body mapped onto existing packs in place. See `docs/SHARES-2026-08-30.md`.
+- 2026-08-30 — **Perplexity follow-up:** Cursor פתח את השיתוף בדפדפן אמיתי; נקרא רק דף Cloudflare («יש לאמת שאינך רובוט»). גוף השיחה לא הוטמע ולא הומצא. Cursor opened the Perplexity URL in a real browser; only the Cloudflare wall was readable. Thread body not invented. `packages/vfresearch/sources/perplexity-c950af30.md`.
+- 2026-08-30 — **Gemini+Perplexity:** נקרא שיתוף ג׳מיני (סוכני בינה לעסק הדפסות) והוטמע במקום על vfops/vfgrowth/vfcopy/… + חוקה; פרפלקסיטי לא נפתח (Cloudflare) ולא הומצא. Gemini share read and embedded in place on existing packs + constitution; Perplexity blocked, not invented. See `docs/SHARES-2026-08-30.md`.
 - 2026-08-30 — שתילת שיתוף ChatGPT (סוכני בנייה) לתוך הפקים הקיימים, החוקה והבריף — בלי פק חדש, בלי שליחה חיה, בלי מחירי ₪ מומצאים. Embedded ChatGPT share “building agents” into existing packs, constitution, and daily brief packet — no new tools, no live send, no invented ILS. See `docs/SHARE-EMBED-he.md`.
 - 2026-08-30 — **שולחן Agency + כלים**: 28 סוכנים רלוונטיים חוברו לחמישה מושבים, לפקים, ולג׳ימייל (קריאה בלבד) / לוח שנה / דרייב / Superdesign / Treg / Mobbin. Desk overlay wires 28 relevant Agency specialists to the five seats, VF packs, and live tools (Gmail read-only, Calendar, Drive-by-job, Superdesign, Treg, Mobbin). See `docs/AGENCY-TOOLS.md`, `.cursor/vf-desk.json`, `.cursor/rules/velvet-factory-desk.mdc`.
 - 2026-08-30 — **vfcanva**: Canva אומת ב-Desktop (עיצוב `DAGoYmCu4c4`). Cloud Agent עדיין בלי Canva. Desktop Canva verified; this cloud run still cannot call it.

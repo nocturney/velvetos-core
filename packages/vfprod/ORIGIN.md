@@ -13,3 +13,6 @@ Production pack — print-floor and job tracking.
 
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
+
+Embedded 30.8.2026 from Gemini share: `FLOOR.md`, `MATERIAL.md`.  
+Perplexity: Maxel farm → human bed assign; no auto farm from HQ.

@@ -13,3 +13,5 @@ Brief format research — morning-brief layout and UX notes.
 
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
+
+Embedded 30.8.2026: `PHONE.md` points at `vfops/BRIEF.md` — no duplicate brief.

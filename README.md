@@ -7,6 +7,9 @@ Cursor packs in `packages/` are the office OS.
 
 See `CHANGELOG.md`. Standing order (same-day map, no weekly wait): `docs/BACKUP.md`.
 
+Constitution (team of 5, studio facts, skip rules): [`constitution/`](constitution/).  
+Share embed 30.8.2026 (Gemini link + Perplexity PDFs): [`docs/SHARES-2026-08-30.md`](docs/SHARES-2026-08-30.md).
+
 ## What this repo is
 
 GitHub copy of the studio office OS. Cursor agents built the packs on Origin (`christian-velvet/tmp-…`). This repository is the durable backup, version tag, and changelog — not the live sender.
@@ -17,6 +20,8 @@ GitHub copy of the studio office OS. Cursor agents built the packs on Origin (`c
 - **The Agency:** 273 specialist Cursor rules in `.cursor/rules/` (from [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents)). Mention `@slug` to activate. Roster: [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md).
 - **Desk:** 28 of those specialists are wired to VF packs and live tools (Gmail read, Calendar, Drive-by-job, Superdesign, Treg, Mobbin). Map: [`docs/AGENCY-TOOLS.md`](docs/AGENCY-TOOLS.md).
 - **This HQ does not send Instagram.** No pack dump here posts, boosts, or DMs.
+- **Studio:** pickup-only Sderot · WhatsApp 050-2517000 · IG [@velvets_cloud](https://instagram.com/velvets_cloud) · Hebrew product.
+- **Five seats (office):** ראש צוות, סטודיו, צמיחה, תפעול, ייצור — mapped onto existing packs, not new ones. Grok «5 seats» is the live sender.
 
 No secrets belong in git. No invented prices or invented Insights.
 
@@ -81,7 +86,7 @@ Five seats: ראש צוות · סטודיו · צמיחה · תפעול · יי�
 | `vfe2b` | Awesome-AI-agents desk — patterns from [e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents) on existing packs (no second runtime; this HQ does not send). | [bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057](https://cursor.com/agents/bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057) | HQ-native |
 | `vfagents` | 500 AI Agents fit — office playbooks from the public list; no CrewAI runtime, no send. | [bc-9765dc13](https://cursor.com/agents/bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027) | HQ-native; [`docs/500-AGENTS.md`](docs/500-AGENTS.md) |
 
-Machine-readable catalog: [`packages/manifest.json`](packages/manifest.json). Per-pack provenance: `packages/<name>/ORIGIN.md`.
+Machine-readable catalog: [`packages/manifest.json`](packages/manifest.json). Per-pack provenance: `packages/<name>/ORIGIN.md`. Playbooks from the Gemini share sit next to `ORIGIN.md` in the same folder — upgrade in place, no duplicate pack.
 
 ## v0.1.0 dump status
 
