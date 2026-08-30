@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - 2026-08-30 — **vfagents**: מפת [500-AI-Agents-Projects](https://github.com/ashishpatel26/500-AI-Agents-Projects) על החבילות הקיימות + 12 נהלי משרד. בלי CrewAI חי, בלי שליחה. Fit map and twelve office playbooks; no live agent runtime. See `docs/500-AGENTS.md`.
+- 2026-08-30 — **vfmcp**: מחקר התאמת שרתי MCP לסטודיו מתוך awesome-mcp-servers (bc-1764e30f). שלושה פערים ראשונים: WhatsApp, Google Sheets, צינור הדפסה. MCP fit research from awesome-mcp-servers; first gaps: WhatsApp, Google Sheets, print pipeline. See `docs/MCP-FIT.md`.
 - 2026-08-30 — פקודת קבע: גיטהאב הוא גיבוי רציף; כל פק חדש נרשם באותו יום במפה גם אם Origin לא משכפל. Standing order: GitHub is the constant backup; catalogue every new pack the same day even when Origin will not clone. See `docs/BACKUP.md`.
 - 2026-08-30 — **vfbriefux**: מחקר פורמט הבריף (bc-9e0be231). Brief format research; Origin slug unknown, tree not cloned.
 
@@ -39,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **vlicense** — License gate: studio license / access check. [bc-0a6460b1](https://cursor.com/agents/bc-0a6460b1). Origin slug not found in this dump.
 - **vfseason** — Seasonal calendar: studio calendar and season marks. [bc-2a4a3260](https://cursor.com/agents/bc-2a4a3260). Origin slug not found in this dump.
 - **vfsku** — SKU cards and repeats: product cards and reprint runs. [bc-68f7f06c](https://cursor.com/agents/bc-68f7f06c). Origin slug not found in this dump.
+
+See **Unreleased** for **vfmcp** (MCP fit research; HQ-native) and **vfagents** (500-list playbooks; HQ-native).
 
 [Unreleased]: https://github.com/nocturney/velvet-factory-headquarters-os/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/nocturney/velvet-factory-headquarters-os/releases/tag/v0.1.0
