@@ -13,9 +13,23 @@ GitHub copy of the studio office OS. Cursor agents built the packs on Origin (`c
 
 - **Live:** Grok Bot (5 seats) — Instagram, Gmail, printers.
 - **Office OS:** Cursor packs under `packages/<name>/`.
+- **The Agency:** 273 specialist Cursor rules in `.cursor/rules/` (from [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents)). Mention `@slug` to activate. Roster: [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md).
 - **This HQ does not send Instagram.** No pack dump here posts, boosts, or DMs.
 
 No secrets belong in git. No invented prices or invented Insights.
+
+## The Agency (Cursor specialists)
+
+Installed from [The Agency](https://github.com/msitarzewski/agency-agents) as project-scoped Cursor `.mdc` rules. They are **not** always-on: type `@instagram-curator`, `@studio-operations`, `@brand-guardian`, `@frontend-developer`, and so on.
+
+```bash
+# first install or later refresh
+./scripts/install-agency-agents.sh
+```
+
+Catalog: [`.cursor/agency-agents.json`](.cursor/agency-agents.json). Full roster and slugs: [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md).
+
+These specialists do **not** replace VF packs. They sit next to the office OS. Still no Instagram send from this HQ.
 
 ## Packs (v0.1.0)
 

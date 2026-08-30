@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **The Agency**: הותקנו 273 סוכני Cursor מ-[msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents) (`3c95888`) ככללי פרויקט ב-`.cursor/rules/`. Installed 273 Cursor specialists from The Agency as project rules; mention `@slug` to activate. Refresh: `scripts/install-agency-agents.sh`. Roster: `docs/AGENCY-AGENTS.md`.
 - 2026-08-30 — פקודת קבע: גיטהאב הוא גיבוי רציף; כל פק חדש נרשם באותו יום במפה גם אם Origin לא משכפל. Standing order: GitHub is the constant backup; catalogue every new pack the same day even when Origin will not clone. See `docs/BACKUP.md`.
 - 2026-08-30 — **vfbriefux**: מחקר פורמט הבריף (bc-9e0be231). Brief format research; Origin slug unknown, tree not cloned.
 
