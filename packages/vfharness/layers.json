@@ -112,7 +112,7 @@
     {"pack": "vfcost", "layer": "sensors", "how": "X ₪ when no verified amount."},
     {"pack": "vfbooks", "layer": "permissions", "how": "Read labeled mail. No debt-chase send."},
     {"pack": "vfprod", "layer": "guides", "how": "Pickup Sderot only. License gate before reprint."},
-    {"pack": "vfigos", "layer": "permissions", "how": "Review and schedule only."},
+    {"pack": "vfigos", "layer": "permissions", "how": "Review and schedule only. Grok-quota failover: QUEUE + LIVE-PACKET for human live post."},
     {"pack": "vfgrowth", "layer": "guides", "how": "No TikTok or ads without lead seat."},
     {"pack": "vfinsights", "layer": "sensors", "how": "Verified snapshot only."},
     {"pack": "vfresearch", "layer": "memory", "how": "Sources on disk. Blocked body is not invented."},

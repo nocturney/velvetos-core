@@ -24,7 +24,8 @@
 | Observability | `CHANGELOG.md` + סנסורי trip-wire (₪, שליחה, פק לא מוכר) |
 
 מפה למכונה: [`packages/vfharness/layers.json`](../packages/vfharness/layers.json).  
-נוהל: [`packages/vfharness/EMBED.md`](../packages/vfharness/EMBED.md).
+נוהל: [`packages/vfharness/EMBED.md`](../packages/vfharness/EMBED.md).  
+פיילאובר מכסת Grok (+ פרסום חי דחוף בידי אדם): [`docs/GROK-FAILOVER.md`](GROK-FAILOVER.md).
 
 ## מה דולג מהפלייבוק
 

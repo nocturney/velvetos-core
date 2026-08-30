@@ -16,6 +16,7 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 - Do not invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - Tool failover: if a tool is down / `needsAuth` / blocked, hand the task to the backup tool **in the same turn**. Never finish with no artifact. Failover ≠ invent ₪ / Insights / blocked bodies. Matrix: `constitution/ORCHESTRA.md`.
+- Grok Bot quota down: keep producing. Queue `#מוכן-ל-Grok`, or urgent live `#פרסום-חי-דחוף` + `vfigos/LIVE-PACKET.md` for **human** post. HQ agent does not press Publish. `docs/GROK-FAILOVER.md`.
 - No TikTok, ads, follow-back, story hacks, or boosts without the lead seat.
 - No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
 
@@ -33,7 +34,7 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 | Covers / content pack | `vfcovers` `vfgrowth` | `@visual-storyteller` `@image-prompt-engineer` | Superdesign graphics; Treg only if logged in (say price first) |
 | Marketing frameworks | `vfmskill` | `@content-creator` `@growth-hacker` | Curated Corey Haines skills. Read `.agents/product-marketing.md` first. No send. |
 | Reel plan / timelapse cut | `vfom` | `@visual-storyteller` `@instagram-curator` | OpenMontage crews; Canva stills; no Remotion vendor |
-| IG board | `vfigos` | `@instagram-curator` | Review and schedule only |
+| IG board | `vfigos` | `@instagram-curator` | Review and schedule only; Grok-quota failover → QUEUE / LIVE-PACKET |
 | Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or Treg. Never invent. |
 | Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + Treg if logged in; weekly inspiration links: `vfresearch/WEEKLY.md` + `LINKS.json` |
 | IG music / reel sound | `vfresearch` | `@trend-researcher` → `@instagram-curator` | `MUSIC.md` + HeyOrca weekly / IG paste (no Treg); hand off to `vfom` / `vfigos`; no invented track names |

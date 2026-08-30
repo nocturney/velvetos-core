@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-30 — **פיילאובר מכסת Grok**: כשמכסת Grok Bot נגמרת — HQ ממשיך לייצר תוצרים; תור `#מוכן-ל-Grok`; **פרסום חי דחוף** בידי אדם עם `LIVE-PACKET` (סוכן HQ לא לוחץ Publish). תזמורת ChatGPT+Gemini+Perplexity לטיוטה/מחקר. Grok Bot quota failover: keep producing; queue or human live-post packet; agent never presses Publish. See `docs/GROK-FAILOVER.md`.
 - 2026-08-30 — **תזמורת failover**: כלי נפל / אין גישה → מעבירים משימה לכלי גיבוי **באותו רגע**. אסור להישאר בלי תוצאה. אסור להמציא גוף/₪/Insights. מטריצה ב־`constitution/ORCHESTRA.md` + שדות `failover` ב־`vf-desk.json`. סנסור ב־`check-vfresearch.py`. Orchestra tool failover: hand off same turn; never invent blocked bodies.
 
 - 2026-08-30 — **מוזיקה לאינסטגרם (בלי Treg)**: מקור ראשי HeyOrca שבועי + הדבקת Trending מ־IG; רישום `SOURCES-MUSIC.json`. IG music briefs drop Treg; use HeyOrca weekly + owner IG paste. See `packages/vfresearch/MUSIC.md`.

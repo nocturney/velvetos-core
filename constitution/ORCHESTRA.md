@@ -46,6 +46,18 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 | **Drive** MCP | קובץ/שם שהמשתמש נתן בצ׳אט | לא פותחים תיקיות אישיות |
 | **FCC** (לא על Cloud Agent) | תזמורת ChatGPT+Gemini+Perplexity + thrift ב־`vffcc` | לא מתקינים `fcc-server` כאן |
 
+### Grok Bot (מכסה שבועית / לא זמין)
+
+| מה נפל | מעבירים מיד ל־ | לא עושים |
+|---|---|---|
+| **Grok Bot** — טיוטות / מחקר / בריף | Cursor HQ + שולחנות ChatGPT+Gemini+Perplexity | לא סרק · לא המצאה |
+| **Grok Bot** — פרסום לא־דחוף | תור `#מוכן-ל-Grok` ב־`vfigos/QUEUE.md` | לא Publish מ־HQ |
+| **Grok Bot** — **פרסום חי דחוף** | חבילת `vfigos/LIVE-PACKET.md` → **אדם** מעלה ב־`@velvets_cloud` | סוכן HQ לא לוחץ Publish · לא בוסט · לא אוטו־DM |
+| דחוף ללקוח (שיחה) | אדם וואטסאפ `050-2517000` | לא Gmail send מ־HQ |
+
+נוהל מלא: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md`.  
+ארטיפקט מעבר: `packages/vfresearch/sources/YYYY-MM-DD-grok-failover.md`.
+
 כל מעבר failover: שורה בארטיפקט היומי (`sources/YYYY-MM-DD-orchestra.md`) — מה נפל · למה · לאיזה כלי עבר · מה הוטמע.
 
 ## 06:15 כל בוקר (Asia/Jerusalem)

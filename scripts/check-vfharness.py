@@ -147,6 +147,39 @@ def main() -> None:
     if "vfharness" not in pack_names:
         fail("vfharness missing from packages/manifest.json")
 
+    failover = ROOT / "packages/vfharness/playbooks/grok-failover.md"
+    if not failover.is_file():
+        fail("missing packages/vfharness/playbooks/grok-failover.md")
+    failover_text = failover.read_text()
+    for needle in (
+        "מוכן-ל-Grok",
+        "פרסום-חי-דחוף",
+        "LIVE-PACKET",
+        "לא לוחץ Publish",
+    ):
+        if needle not in failover_text:
+            fail(f"grok-failover.md missing {needle!r}")
+    if "Publish מ־HQ" in failover_text and "אדם" not in failover_text:
+        fail("grok-failover.md must keep human live-publish path")
+    queue = ROOT / "packages/vfigos/QUEUE.md"
+    live = ROOT / "packages/vfigos/LIVE-PACKET.md"
+    docs_fo = ROOT / "docs/GROK-FAILOVER.md"
+    for path in (queue, live, docs_fo):
+        if not path.is_file():
+            fail(f"missing {path.relative_to(ROOT)}")
+    queue_text = queue.read_text()
+    for needle in ("#מוכן-ל-Grok", "#פרסום-חי-דחוף", "אין `#נשלח-מ-HQ`"):
+        if needle not in queue_text:
+            fail(f"vfigos/QUEUE.md missing {needle!r}")
+    live_text = live.read_text()
+    for needle in ("אדם", "מעלה", "050-2517000", "אין Publish מ־HQ"):
+        if needle not in live_text:
+            fail(f"LIVE-PACKET.md missing {needle!r}")
+    if "פרסום חי" not in agents_text and "Grok Bot quota failover" not in agents_text:
+        fail("AGENTS.md must mention Grok Bot quota failover")
+    if "LIVE-PACKET" not in agents_text and "פרסום-חי-דחוף" not in agents_text:
+        fail("AGENTS.md must mention live-publish urgent path")
+
     allowed_embed = pack_names | {"constitution"}
     embeds = spec.get("embed") or []
     if len(embeds) < 8:

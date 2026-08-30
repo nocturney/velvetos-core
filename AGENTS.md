@@ -22,6 +22,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 - CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
 - Do not create a new pack for an idea. Map onto an existing pack the same day.
 - Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
+- Grok Bot quota failover: if Grok weekly quota is exhausted (or Grok is unavailable), HQ **keeps producing** drafts/covers/briefs/research on existing packs. Default: `#מוכן-ל-Grok` in `packages/vfigos/QUEUE.md`. Urgent live IG: `#פרסום-חי-דחוף` + `packages/vfigos/LIVE-PACKET.md` — HQ prepares export+caption; **a human** posts on `@velvets_cloud`. HQ agent still does **not** press Publish, Gmail send, WhatsApp, Print, or boost. Customer chat stays human WhatsApp `050-2517000`. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md`.
 - After every catalog, pack, or rule change, run `python3 scripts/check-all.py`.
 - Do not claim success if a computational sensor failed. Retry once, then escalate.
 - Close a multi-step task with a checkpoint under `packages/vfharness/state/` so the next session can resume.
@@ -37,6 +38,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 - 2026-08-30 — Invented Instagram track names or “#1 trending audio” without Treg/owner source. Playbook: `packages/vfresearch/MUSIC.md`. Sensor: `scripts/check-vfresearch.py`.
 - 2026-08-30 — Invented a Perplexity / Cloudflare-blocked body. Write «אין גוף» and skip.
 - 2026-08-30 — Stayed idle when a tool was down (waited for owner / skipped all desks). Failover immediately per `constitution/ORCHESTRA.md`. Sensor: `scripts/check-vfresearch.py`.
+- 2026-08-30 — Went idle or claimed «אין תוצרים» when Grok Bot weekly quota ran out, or claimed HQ auto-published. Produce + `#מוכן-ל-Grok` or `#פרסום-חי-דחוף`+LIVE-PACKET for human post; HQ agent never presses Publish. Sensor: `scripts/check-vfharness.py`. Playbook: `docs/GROK-FAILOVER.md`.
 - 2026-08-30 — Second agent runtime (CrewAI, AutoGPT, BabyAGI). Cursor is the office. See `packages/vfe2b/LOCK.md`.
 - 2026-08-30 — National shipping or a sixth seat invented beside the five-seat desk.
 
@@ -47,7 +49,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 | `scripts/check-all.py` | Full suite |
 | `scripts/check-hq-overlay.py` | Invented ₪, missing overlays |
 | `scripts/check-vf-desk.py` | Desk slugs / packs / no-send |
-| `scripts/check-vfharness.py` | Six layers present and wired |
+| `scripts/check-vfharness.py` | Six layers + Grok-quota failover playbook (no-send) |
 | `scripts/check-vfe2b.py` | Awesome-agents desk |
 | `scripts/check-vfmakers.py` | Maker-skills desk |
 | `scripts/check-vfagents.py` | 500-list playbooks |
