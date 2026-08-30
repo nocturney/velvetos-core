@@ -33,7 +33,10 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 | IG board | `vfigos` | `@instagram-curator` | Review and schedule only |
 | Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or Treg. Never invent. |
 | Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + Treg if logged in |
+| Harness / repeating failure / checkpoint | `vfharness` | `@workflow-architect` | `python3 scripts/check-all.py` — no second runtime |
 | HQ map / blast radius | `vfgraft` | — | Read `MAP.md`, then 2–3 graph nodes |
+
+`AGENTS.md` is the guide file. When it conflicts with the conversation, the guide wins. After catalog or rule edits, run the sensor suite. Do not hide a failed sensor.
 
 Warehouse specialists (Godot, GIS, healthcare, China social, XR, …) stay off the desk unless the user asks for that slug.
 
