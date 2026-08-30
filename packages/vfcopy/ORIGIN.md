@@ -11,7 +11,7 @@ Copy desk — homework, draft, and lint.
 | Clone | `(none until slug is known)` |
 | v0.1.0 vendor | `origin-slug-unknown` |
 
-HQ overlay: `DESK.md` — homework + four-field intake copy. No live send.
+HQ overlay: `DESK.md`, `BIO.md` — homework, linted bio, human WhatsApp open. No live send.
 
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.

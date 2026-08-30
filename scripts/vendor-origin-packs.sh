@@ -67,7 +67,7 @@ vendor_one() {
   # Keep HQ overlay (playbooks, orchestra, gates) when Origin trees land.
   local overlay=""
   overlay="$(mktemp -d)"
-  for keep in hq SKILL.md ROUTINE.md BRIEF.md BRIEF-2026-08-31.md DAILY.md GATE.md PATH.md DESK.md CALENDAR.md CHECKLIST.md FLOOR-CARD.md PICKUP.md; do
+  for keep in hq SKILL.md ROUTINE.md BRIEF.md BRIEF-2026-08-31.md DAILY.md GATE.md PATH.md DESK.md CALENDAR.md CHECKLIST.md FLOOR-CARD.md PICKUP.md LAB.md CARD.md BIO.md; do
     if [[ -e "$dest/$keep" ]]; then
       cp -a "$dest/$keep" "$overlay/$keep"
     fi
