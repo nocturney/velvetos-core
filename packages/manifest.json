@@ -184,6 +184,18 @@
       "vendorStatus": "origin-slug-unknown"
     },
     {
+      "name": "vfmcp",
+      "summary": "MCP fit research — which awesome-mcp-servers entries map onto VF packs. See docs/MCP-FIT.md.",
+      "bcId": "bc-1764e30f-b592-4805-9586-037da3351d65",
+      "bcIdFull": "bc-1764e30f-b592-4805-9586-037da3351d65",
+      "agentUrl": "https://cursor.com/agents/bc-1764e30f-b592-4805-9586-037da3351d65",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "writeup": "docs/MCP-FIT.md"
+    },
+    {
       "name": "vfe2b",
       "summary": "Awesome-AI-agents desk — patterns from e2b-dev/awesome-ai-agents mapped onto existing packs (no second runtime, no send).",
       "bcId": "bc-21cee8d9",
