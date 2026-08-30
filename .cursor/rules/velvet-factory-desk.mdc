@@ -15,6 +15,7 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 - Never call Gmail `send_message`, `reply`, or `forward`. Draft only if the user explicitly asks for a draft.
 - Do not invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
+- Tool failover: if a tool is down / `needsAuth` / blocked, hand the task to the backup tool **in the same turn**. Never finish with no artifact. Failover ≠ invent ₪ / Insights / blocked bodies. Matrix: `constitution/ORCHESTRA.md`.
 - No TikTok, ads, follow-back, story hacks, or boosts without the lead seat.
 - No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
 
@@ -57,12 +58,13 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 
 ## Tool modes
 
-- **Gmail:** `search_threads` / `get_thread` / `list_labels`. Inbox is `nocturney@gmail.com`.
-- **Calendar:** `list_events` on `nocturney@gmail.com`, timezone `Asia/Jerusalem`. Create events only if asked.
-- **Drive:** `search_files` by the job/SKU the user gives. There is no dedicated VF studio folder.
-- **Superdesign:** covers, posters, brief graphics (skip repo init).
-- **Treg:** live web data only after login; announce catalog price before `call`.
-- **Mobbin:** morning-brief / UX references when the Mobbin MCP is actually available.
-- **FCC (Free Claude Code):** not on this Cloud Agent. Map is `vffcc`. Does not cut Cursor usage. Local Mac only after the lead seat.
+- **Gmail:** `search_threads` / `get_thread` / `list_labels`. Inbox is `nocturney@gmail.com`. Down → paste from user / Drive-by-job; never invent an inquiry; never send.
+- **Calendar:** `list_events` on `nocturney@gmail.com`, timezone `Asia/Jerusalem`. Create events only if asked. Down → ask pickup window / «חסר לוח» and continue.
+- **Drive:** `search_files` by the job/SKU the user gives. There is no dedicated VF studio folder. Down → use files the user named in chat.
+- **Canva:** Instagram visuals. `needsAuth` → `packages/vfcanva/studio/render.py` then Superdesign. Say `Canva לא מחובר`.
+- **Superdesign:** covers, posters, brief graphics (skip repo init). Down → Canva or `studio/render.py`.
+- **Treg:** live web data only after login; announce catalog price before `call`. Down → verified snapshot / «אין ספירה»; IG music → HeyOrca (`vfresearch/MUSIC.md`), not invented Trends.
+- **Mobbin:** morning-brief / UX references when the Mobbin MCP is actually available. Down → `vfbriefux` templates / Superdesign.
+- **FCC (Free Claude Code):** not on this Cloud Agent. Map is `vffcc`. Does not cut Cursor usage. Local Mac only after the lead seat. Failover → research desks in `constitution/ORCHESTRA.md`.
 
 When a `@slug` is mentioned, follow that specialist **and** these laws.

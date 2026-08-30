@@ -12,7 +12,8 @@
     "Research overlay @vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness.",
     "Harness: AGENTS.md + packages/vfharness. Six layers on existing packs. No second runtime. After catalog edits run python3 scripts/check-all.py.",
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
-    "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies."
+    "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
+    "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -34,6 +35,7 @@
       "allowed": ["search_threads", "get_thread", "get_message", "list_labels", "list_drafts"],
       "forbidden": ["send_message", "reply", "forward"],
       "draftOnlyIfAsked": ["create_draft", "update_draft"],
+      "failover": "User-pasted thread text or Drive-by-job; never invent inquiry; never send",
       "queries": {
         "inboxToday": "in:inbox newer_than:1d",
         "bills": "label:חשבונות OR subject:(חשבונית OR Invoice4U OR קבלה)",
@@ -48,26 +50,36 @@
       "primaryId": "nocturney@gmail.com",
       "timezone": "Asia/Jerusalem",
       "mode": "read",
-      "createOnlyIfAsked": true
+      "createOnlyIfAsked": true,
+      "failover": "Ask pickup window or mark חסר לוח; continue brief from Gmail"
     },
     "drive": {
       "status": "ready",
       "mode": "search-by-job",
-      "note": "No dedicated Velvet Factory studio folder was found. Search by job name, SKU, or filename the user gives. Do not open personal, medical, or legal folders unless the user names them."
-    },
-    "mobbin": {
-      "status": "plugin-installed",
-      "namespace": "not-on-this-cloud-agent",
-      "useWhen": "vfbriefux / morning-brief layout / UX references"
+      "note": "No dedicated Velvet Factory studio folder was found. Search by job name, SKU, or filename the user gives. Do not open personal, medical, or legal folders unless the user names them.",
+      "failover": "Use files/names the user gave in chat"
     },
     "superdesign": {
       "status": "skill-installed",
-      "useWhen": "vfcovers, brief packet, posters, social graphics. Graphics path skips repo init."
+      "useWhen": "vfcovers, brief packet, posters, social graphics. Graphics path skips repo init.",
+      "failover": "Canva if connected, else packages/vfcanva/studio/render.py"
+    },
+    "canva": {
+      "status": "mcp-when-connected",
+      "useWhen": "Instagram post/story/reel cover/carousel for @velvets_cloud",
+      "failover": "needsAuth → packages/vfcanva/studio/render.py → Superdesign. Say Canva לא מחובר."
     },
     "treg": {
       "status": "skill-installed-needs-login",
       "useWhen": "vfgrowth / vfresearch / vfinsights live web, SEO, social, ads data",
-      "rule": "Say the catalog price before spending. Never invent Insights."
+      "rule": "Say the catalog price before spending. Never invent Insights.",
+      "failover": "Verified snapshot or אין ספירה; IG music → HeyOrca (MUSIC.md), not Treg"
+    },
+    "mobbin": {
+      "status": "plugin-installed",
+      "namespace": "not-on-this-cloud-agent",
+      "useWhen": "vfbriefux / morning-brief layout / UX references",
+      "failover": "vfbriefux templates / Superdesign"
     },
     "vfmem": {
       "status": "hq-native",
@@ -80,7 +92,8 @@
       "status": "not-on-this-cloud-agent",
       "namespace": "owner-mac-only",
       "useWhen": "vffcc local-offload after lead seat. Never install here.",
-      "rule": "Does not reduce Cursor Cloud usage. Keys stay in ~/.fcc/. No Discord/Telegram."
+      "rule": "Does not reduce Cursor Cloud usage. Keys stay in ~/.fcc/. No Discord/Telegram.",
+      "failover": "Research desks ChatGPT+Gemini+Perplexity per constitution/ORCHESTRA.md"
     }
   },
   "seats": [
