@@ -43,4 +43,4 @@ See [`packages/vfmem/LOCK.md`](../packages/vfmem/LOCK.md) and the skip rows in [
 
 ## Later (lead seat only)
 
-If the Mac needs AST over `scripts/*.py`, add codebase-memory-mcp **locally** with `--skip-config` or a manual MCP entry. Do not let the installer rewrite this repo's `.cursor/mcp.json` (Canva stays the only HTTP server committed here).
+If the Mac needs AST over `scripts/*.py`, add codebase-memory-mcp **locally** with `--skip-config` or a manual MCP entry. Do not let the installer rewrite this repo's `.cursor/mcp.json` (Canva + 3D AI Studio HTTP servers stay committed here).

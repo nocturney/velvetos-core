@@ -265,6 +265,38 @@
       "note": "Self-contained HTML brief template at vfbriefux/hq/brief-email.html. Complements MAIL.html (production). html-plan preserves 01–07 slots."
     },
     {
+      "id": "3daistudio-home",
+      "kind": "vendor-site",
+      "url": "https://www.3daistudio.com",
+      "title": "3D AI Studio — text/image to 3D (owner subscription)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfprod/3DAISTUDIO.md",
+      "report": "packages/vfresearch/sources/2026-08-31-3daistudio.md",
+      "packs": [
+        "vfprod",
+        "vlicense",
+        "vfsku",
+        "vfmcp"
+      ],
+      "note": "Owner subscription. Site failover. No invented ₪. Same Meshy/Tripo license gate."
+    },
+    {
+      "id": "3daistudio-mcp",
+      "kind": "vendor-docs",
+      "url": "https://www.3daistudio.com/MCP",
+      "title": "3D AI Studio MCP connector (OAuth, no API key)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfprod/CONNECT-3DAI.md",
+      "report": "packages/vfresearch/sources/2026-08-31-3daistudio.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "HTTP https://mcp.3daistudio.com/mcp as threedaistudio in .cursor/mcp.json. Desktop OAuth. No key in git."
+    },
+    {
       "id": "plannotator-write-better",
       "kind": "repo",
       "url": "https://github.com/plannotator/write-better",
