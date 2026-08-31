@@ -24,11 +24,47 @@
   ],
   "pipeline": {
     "stages": [
-      { "id": "lead", "label": "פנייה", "packHints": ["vfconvert"] },
-      { "id": "talk", "label": "שיחה", "packHints": ["vfconvert", "vfsales"] },
-      { "id": "offer", "label": "הצעה", "packHints": ["vfsales", "vfcopy", "vfcost"] },
-      { "id": "fulfill", "label": "הדפסה", "packHints": ["vfprod", "vfsku", "vlicense"] },
-      { "id": "close", "label": "איסוף", "packHints": ["vfsales", "vfgrowth"] }
+      {
+        "id": "lead",
+        "label": "פנייה",
+        "packHints": [
+          "vfconvert"
+        ]
+      },
+      {
+        "id": "talk",
+        "label": "שיחה",
+        "packHints": [
+          "vfconvert",
+          "vfsales"
+        ]
+      },
+      {
+        "id": "offer",
+        "label": "הצעה",
+        "packHints": [
+          "vfsales",
+          "vfcopy",
+          "vfcost"
+        ]
+      },
+      {
+        "id": "fulfill",
+        "label": "הדפסה",
+        "packHints": [
+          "vfprod",
+          "vfsku",
+          "vlicense"
+        ]
+      },
+      {
+        "id": "close",
+        "label": "איסוף",
+        "packHints": [
+          "vfsales",
+          "vfgrowth"
+        ]
+      }
     ]
   },
   "fulfillment": {
@@ -54,7 +90,11 @@
   "cta": {
     "primary": "WhatsApp 050-2517000 / איסוף שדרות",
     "whatsapp": "050-2517000",
-    "forbidden": ["שלחו DM", "send DM", "DM us"]
+    "forbidden": [
+      "שלחו DM",
+      "send DM",
+      "DM us"
+    ]
   },
   "close": "human WhatsApp + Invoice4U",
   "compliance": {
@@ -73,11 +113,31 @@
     ]
   },
   "seats": [
-    { "id": "lead", "he": "ראש צוות", "roleNote": "בריף, החלטות, ₪" },
-    { "id": "studio", "he": "סטודיו", "roleNote": "פנייה, הצעה, קופי" },
-    { "id": "growth", "he": "צמיחה", "roleNote": "תוכן, כריכות, לוח IG" },
-    { "id": "ops", "he": "תפעול", "roleNote": "עלות, ספרים, B2B נעול" },
-    { "id": "production", "he": "ייצור", "roleNote": "הדפסה, מק״ט, רישיון" }
+    {
+      "id": "lead",
+      "he": "ראש צוות",
+      "roleNote": "בריף, החלטות, ₪"
+    },
+    {
+      "id": "studio",
+      "he": "סטודיו",
+      "roleNote": "פנייה, הצעה, קופי"
+    },
+    {
+      "id": "growth",
+      "he": "צמיחה",
+      "roleNote": "תוכן, כריכות, לוח IG"
+    },
+    {
+      "id": "ops",
+      "he": "תפעול",
+      "roleNote": "עלות, ספרים, B2B נעול"
+    },
+    {
+      "id": "production",
+      "he": "ייצור",
+      "roleNote": "הדפסה, מק״ט, רישיון"
+    }
   ],
   "locks": [
     "human-close-whatsapp",
@@ -86,5 +146,6 @@
     "public-commercial-files-only"
   ],
   "packPrefix": "vf",
-  "notes": "Live office instance. Desk + STUDIO.md must stay in sync."
+  "notes": "Reference profile hosted in VelvetOS Core for sensors/compat. Live frontend office lives in instances/velvet-factory/ → publish to nocturney/velvetos-velvet-factory.",
+  "role": "sample"
 }

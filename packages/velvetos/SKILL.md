@@ -1,25 +1,21 @@
-# velvetos — ליבת VelvetOS + מופע VF
+# velvetos — VelvetOS Core
 
-תשתית (לא מושב שישי).  
-הריפו = **VelvetOS — Velvet Factory**. מודולים לכל האנכיים טעונים בליבה.
+תשתית (לא מושב שישי). הריפו = **VelvetOS Core** (backend).  
+פרונטים = `instances/*` → ריפואים נפרדים.
 
 ## מתי
 
-- VelvetOS, ליבה, מודולים, ריפו חדש לעסק, multi-IG, preset
+VelvetOS, Core, באקאנד/פרונט, publish instance, multi-IG preset
 
 ## עשה
 
-1. `INSTANCE.json` + `instance/velvet-factory.json`
-2. `modules/catalog.json` — הכל מאחורי הקלעים
-3. `presets/` — הרכב למופע עתידי, לא מתג כאן
-4. `REPOS.md` — ליבה מול מופעים
-5. `python3 scripts/check-velvetos.py`
+1. `CORE.json` + `modules/` + `presets/`
+2. `instances/velvet-factory/` לפרונט VF
+3. `REPOS.md` + `scripts/publish-instance.sh`
+4. `python3 scripts/check-velvetos.py`
 
 ## אל תעשה
 
-- לא tenant שני / active-example בריפו הזה
-- לא להמציא ₪ / Insights / handles
+- לא tenant פעיל/דוגמה בליבה
+- לא להמציא ₪ / Insights
 - לא אוטו־DM / בוסט
-- לא לשבור את מופע VF
-
-Mention: `@workflow-architect` / `@studio-operations`

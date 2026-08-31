@@ -3,15 +3,15 @@
 Token-budgeted first look. Open this, then **two or three** nodes. Do not grep the 273-specialist warehouse from zero.
 
 ```
-HQ — VelvetOS · active tenant Velvet Factory · 5 seats · 28 desk specialists · 1 pipeline · HQ sends via tools
+HQ — VelvetOS Core (backend) · reference bind Velvet Factory · 5 seats · HQ sends via tools
 
 laws            constraint   HQ-send-via-tools; no auto-DM/boost; no invented ₪; pickup Sderot; public site locked; internal console OK
 pipeline        flow         פנייה → שיחה → הצעה → הדפסה → איסוף (= lead→talk→offer→fulfill→close)
 desk            system       five seats; warehouse stays off
 tools           system       Gmail · Calendar · Drive · Canva · WebSearch · GenerateImage · 3DAI site
 skills          system       morning / inquiry / content / Canva / velvetos / this map
-packs           system       packages/<name>/ — no duplicate job
-velvetos        system       core modules always loaded; this repo = VF instance; presets → future repos
+packs           system       packages/<name>/ — shared backend capabilities
+velvetos        system       CORE backend; modules always loaded; instances/* = frontend scaffolds
 grok-bot        boundary     optional backup; printers on floor
 morning-job     job          בריף בוקר
 inquiry-job     job          פנייה → טיוטת הצעה

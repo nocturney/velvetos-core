@@ -1,0 +1,19 @@
+{
+  "task_id": "publish-instance-velvet-factory",
+  "status": "ready",
+  "pack": "velvetos",
+  "remote": "nocturney/velvetos-velvet-factory",
+  "scaffold": "instances/velvet-factory",
+  "last_updated": "2026-08-31",
+  "completed_steps": [
+    "scaffold built",
+    "publish script staged"
+  ],
+  "next_step": "Owner creates empty GitHub repo then PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory",
+  "artifacts": [
+    "instances/velvet-factory"
+  ],
+  "unresolved": [
+    "GitHub createRepository not allowed from this Cloud Agent token"
+  ]
+}

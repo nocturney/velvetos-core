@@ -1,34 +1,33 @@
 # VelvetOS
 
-**VelvetOS** = ניהול עסק + סושיאל אוטונומי על Cursor.
+**VelvetOS Core** (this repo) = באקאנד — חוקים, מודולים, פקים, סנסורים.  
+**VelvetOS — \<Business\>** = פרונט — משרד עסק אחד ששואב מהליבה.
 
 | | |
 |---|---|
-| הריפו הזה | **VelvetOS — Velvet Factory** |
-| ליבה | `packages/velvetos/` (מארחת מודולים; פיצול עתידי ל־`velvetos-core`) |
-| מודולים | תמיד בדיסק תחת `modules/` — לא יעדים פעילים/כבויים |
-| Presets | תבניות למופעי עתיד (יופי multi-IG, חוות דעת…) |
-| מופעים חדשים | ריפואים נפרדים `VelvetOS — <Business Name>` ששואבים מהליבה |
+| Core | `packages/velvetos/CORE.json` |
+| Modules | `packages/velvetos/modules/` (תמיד טעונים) |
+| Presets | תבניות לפרונט (יופי multi-IG, חוות דעת…) |
+| VF frontend scaffold | `instances/velvet-factory/` |
+| Publish | `scripts/publish-instance.sh` |
+| Repos | `packages/velvetos/REPOS.md` |
 
-## מבנה
+## למה באקאנד/פרונט
 
-| נתיב | תפקיד |
-|---|---|
-| `INSTANCE.json` | זהות המופע החי |
-| `instance/velvet-factory.json` | עובדות VF + `modulesEnabled` |
-| `modules/` | קטלוג יכולות מלא |
-| `presets/` | הרכבים מומלצים לריפואים עתידיים |
-| `REPOS.md` | ליבה מול מופעים |
+הליבה לא משרתת HTTP — היא ליבת Cursor-OS משותפת. כל עסק מקבל workspace משלו (פרונט) עם זהות, ערוצים, ו־`modulesEnabled`, ומצמיד את הליבה ב־`vendor/velvetos-core`.
 
-## תאימות VF
+## VF
 
-צינור פנייה→…→איסוף, `@velvets_cloud`, וואטסאפ `050-2517000`, איסוף שדרות — ללא שינוי.
+1. צור ריפו ריק `nocturney/velvetos-velvet-factory` ב־GitHub  
+2. `PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory`  
+3. במופע: `./scripts/attach-core.sh`  
+4. פתח את ריפו המופע ב־Cursor לניהול היומי  
 
 ## CLI
 
 ```bash
-python3 scripts/velvetos.py instance
+python3 scripts/velvetos.py core
 python3 scripts/velvetos.py modules
-python3 scripts/velvetos.py presets
+python3 scripts/velvetos.py instances
 python3 scripts/check-velvetos.py
 ```

@@ -1,11 +1,15 @@
 ---
-description: VelvetOS desk (active tenant Velvet Factory) — route work to the right pack, Agency specialist, and live tool. Always on.
+description: VelvetOS Core desk (backend kernel; reference bind Velvet Factory). Always on.
 alwaysApply: true
 ---
 
-# VelvetOS desk · instance Velvet Factory
+# VelvetOS Core desk · reference bind Velvet Factory
 
-You are in **VelvetOS — Velvet Factory** (3D-print studio, Sderot, pickup only, WhatsApp `050-2517000`, IG `@velvets_cloud`). Core modules for other verticals live under `packages/velvetos/modules/` (always loaded). Other businesses = separate instance repos (`packages/velvetos/REPOS.md`) — not second live profiles here.
+You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains Velvet Factory (Sderot, WhatsApp `050-2517000`, IG `@velvets_cloud`) so daily work does not break until the frontend repo is the Cursor workspace.
+
+- Frontend scaffold: `instances/velvet-factory/` → publish `nocturney/velvetos-velvet-factory`
+- Modules: `packages/velvetos/modules/` (always loaded)
+- Multi-repo: `packages/velvetos/REPOS.md` (Core=backend, instances=frontend)
 
 273 Agency specialists live in `.cursor/rules/` (`alwaysApply: false`). **Do not activate the whole roster.** Use the desk in `.cursor/vf-desk.json` and the skills under `.cursor/skills/`. Full warehouse: `docs/AGENCY-AGENTS.md`. Tool map: `docs/AGENCY-TOOLS.md`. Before grepping the warehouse, read `packages/vfgraft/MAP.md`.
 
@@ -16,7 +20,7 @@ You are in **VelvetOS — Velvet Factory** (3D-print studio, Sderot, pickup only
 - Do not invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף (canonical VelvetOS: lead → talk → offer → fulfill → close). No national shipping from HQ on this instance.
 - CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
-- New vertical → core modules + new instance repo (`REPOS.md`). Presets are blueprints only — not on/off tenants in this repo.
+- New vertical → frontend instance repo from `instances/` + Core modules (`REPOS.md`). Presets are blueprints only.
 - Tool failover: if a tool is down / `needsAuth` / blocked, hand the task to the backup tool **in the same turn**. Never finish with no artifact. Failover ≠ invent ₪ / Insights / blocked bodies. Matrix: `constitution/ORCHESTRA.md`.
 - Grok Bot quota down: keep producing **and sending** via HQ tools. `#נשלח-מ-HQ` / `#ממתין-ל-כלי-IG`. Do not idle on `#מוכן-ל-Grok`. `docs/GROK-FAILOVER.md`.
 - Treg is **not relevant**. WebSearch / orchestra only.
@@ -27,7 +31,7 @@ You are in **VelvetOS — Velvet Factory** (3D-print studio, Sderot, pickup only
 
 | Job | Pack | Mention | Tool |
 |---|---|---|---|
-| VelvetOS / modules / new instance repo | `velvetos` | `@studio-operations` | `python3 scripts/velvetos.py instance` · `modules` · `presets` |
+| VelvetOS / Core / publish instance | `velvetos` | `@studio-operations` | `python3 scripts/velvetos.py core` · `instances` · `scripts/publish-instance.sh` |
 | Office map / who handles | `vfmem` | `@studio-operations` | `python3 scripts/vfmem.py who <job>` |
 | Morning brief / queue | `vfops` | `@studio-operations` | Calendar (Asia/Jerusalem), Gmail **send** the 07:00 brief |
 | Brief layout | `vfbriefux` | `@ux-architect` | Mobbin if available; Superdesign for packet graphics |

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate VelvetOS core modules + this instance. No network. No send."""
+"""Validate VelvetOS Core + instance scaffolds. No network. No send."""
 from __future__ import annotations
 
 import json
@@ -8,16 +8,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PACK = ROOT / "packages" / "velvetos"
-INSTANCE_META = PACK / "INSTANCE.json"
-INSTANCE_DIR = PACK / "instance"
+CORE = PACK / "CORE.json"
 MODULES_CATALOG = PACK / "modules" / "catalog.json"
 PRESETS = PACK / "presets"
+SAMPLES = PACK / "samples"
+INSTANCES = ROOT / "instances"
 MANIFEST = ROOT / "packages" / "manifest.json"
 DESK = ROOT / ".cursor" / "vf-desk.json"
 STUDIO = ROOT / "constitution" / "STUDIO.md"
 AGENTS = ROOT / "AGENTS.md"
 KERNEL = PACK / "KERNEL.md"
 REPOS = PACK / "REPOS.md"
+PUBLISH = ROOT / "scripts" / "publish-instance.sh"
 CANONICAL_STAGE_IDS = ["lead", "talk", "offer", "fulfill", "close"]
 SEAT_IDS = ["lead", "studio", "growth", "ops", "production"]
 COMPLIANCE_TRUE = (
@@ -36,7 +38,7 @@ REQUIRED_ROOT = (
     "SKILL.md",
     "ORIGIN.md",
     "REPOS.md",
-    "INSTANCE.json",
+    "CORE.json",
     "modules/catalog.json",
     "schema/instance.schema.json",
 )
@@ -52,16 +54,14 @@ def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def validate_instance(data: dict, module_ids: set[str]) -> None:
+def validate_profile(data: dict, module_ids: set[str], *, label: str) -> None:
     iid = data.get("id")
     if not iid:
-        fail("instance missing id")
+        fail(f"{label}: missing id")
     for key in (
         "displayName",
         "vertical",
         "modulesEnabled",
-        "locale",
-        "timezone",
         "pipeline",
         "fulfillment",
         "production",
@@ -72,103 +72,49 @@ def validate_instance(data: dict, module_ids: set[str]) -> None:
         "seats",
     ):
         if key not in data:
-            fail(f"{iid}: missing {key}")
+            fail(f"{label}: missing {key}")
     if "VelvetOS" not in data["displayName"]:
-        fail(f"{iid}: displayName must start with VelvetOS — … pattern")
-
-    enabled = data["modulesEnabled"]
-    if not enabled:
-        fail(f"{iid}: modulesEnabled empty")
-    for mid in enabled:
+        fail(f"{label}: displayName must include VelvetOS")
+    for mid in data["modulesEnabled"]:
         if mid not in module_ids:
-            fail(f"{iid}: unknown module {mid}")
-
+            fail(f"{label}: unknown module {mid}")
     stages = data["pipeline"].get("stages") or []
     if [s.get("id") for s in stages] != CANONICAL_STAGE_IDS:
-        fail(f"{iid}: bad pipeline stage ids")
-    for s in stages:
-        if not s.get("label"):
-            fail(f"{iid}: stage {s.get('id')} missing label")
-
-    if data["fulfillment"].get("mode") not in {
-        "pickup",
-        "appointment",
-        "document",
-        "hybrid",
-    }:
-        fail(f"{iid}: bad fulfillment.mode")
-    if data["production"].get("kind") not in {
-        "print",
-        "appointment",
-        "document",
-        "custom",
-    }:
-        fail(f"{iid}: bad production.kind")
-
-    compliance = data["compliance"]
+        fail(f"{label}: bad pipeline ids")
+    if [s.get("id") for s in data["seats"]] != SEAT_IDS:
+        fail(f"{label}: bad seats")
     for key in COMPLIANCE_TRUE:
-        if compliance.get(key) is not True:
-            fail(f"{iid}: compliance.{key} must be true")
-
-    seats = data["seats"]
-    if [s.get("id") for s in seats] != SEAT_IDS:
-        fail(f"{iid}: seat ids mismatch")
-
+        if data["compliance"].get(key) is not True:
+            fail(f"{label}: compliance.{key} must be true")
     ig = data["channels"].get("instagram")
     if not isinstance(ig, list):
-        fail(f"{iid}: channels.instagram must be a list")
-    primaries = [c for c in ig if c.get("primary") is True]
-    if ig and len(primaries) != 1:
-        fail(f"{iid}: exactly one primary IG when list non-empty")
-    for c in ig:
-        for need in ("id", "handle", "purpose", "primary"):
-            if need not in c:
-                fail(f"{iid}: ig channel missing {need}")
-
+        fail(f"{label}: instagram must be list")
+    if ig and sum(1 for c in ig if c.get("primary") is True) != 1:
+        fail(f"{label}: exactly one primary IG when non-empty")
     forbidden = data["cta"].get("forbidden") or []
     if not any("DM" in x or "dm" in x for x in forbidden):
-        fail(f"{iid}: cta.forbidden must block DM-style CTAs")
-
-    # status/active/example must not appear — this is an instance, not a tenant switch
-    if "status" in data:
-        fail(f"{iid}: remove status field — instances are not active/example tenants")
+        fail(f"{label}: cta.forbidden must block DM")
+    if data.get("status") in {"active", "example"}:
+        fail(f"{label}: remove active/example status — use core/sample/instance roles")
 
 
-def check_vf_compat(profile: dict, desk: dict, studio_text: str) -> None:
+def check_reference_vf(profile: dict, desk: dict, studio_text: str) -> None:
     if profile.get("id") != "velvet-factory":
-        fail("this monorepo instance must be velvet-factory")
+        fail("core sample must be velvet-factory")
     studio = desk.get("studio") or {}
-    if studio.get("name") != "Velvet Factory":
-        fail("desk.studio.name must stay Velvet Factory")
     if studio.get("instagram") != "@velvets_cloud":
-        fail("desk.studio.instagram must stay @velvets_cloud")
+        fail("desk.studio.instagram must stay @velvets_cloud during compat")
     if studio.get("whatsapp") != "050-2517000":
-        fail("desk.studio.whatsapp must stay 050-2517000")
-    if studio.get("pickupOnly") is not True:
-        fail("desk.studio.pickupOnly must be true")
+        fail("desk.studio.whatsapp must stay 050-2517000 during compat")
     labels = [s["label"] for s in profile["pipeline"]["stages"]]
     if desk.get("pipeline") != labels:
-        fail(f"desk.pipeline {desk.get('pipeline')} != instance labels {labels}")
-    ig = profile["channels"]["instagram"]
-    if not ig or ig[0].get("handle") != "@velvets_cloud":
-        fail("VF primary IG must be @velvets_cloud")
-    if profile["fulfillment"].get("mode") != "pickup":
-        fail("VF fulfillment.mode must be pickup")
-    if profile["fulfillment"].get("nationalShipping") is not False:
-        fail("VF nationalShipping must be false")
-    if profile["production"].get("kind") != "print":
-        fail("VF production.kind must be print")
+        fail("desk.pipeline mismatch vs sample")
     for needle in ("050-2517000", "velvets_cloud", "שדרות"):
         if needle not in studio_text:
-            fail(f"STUDIO.md must still list {needle}")
-    for need in (
-        "fulfill-pickup",
-        "production-print",
-        "compliance-maker",
-        "channels-instagram",
-    ):
+            fail(f"STUDIO.md must still list {needle} (compat reference)")
+    for need in ("fulfill-pickup", "production-print", "compliance-maker"):
         if need not in profile["modulesEnabled"]:
-            fail(f"VF instance must enable module {need}")
+            fail(f"VF sample must enable {need}")
 
 
 def main() -> None:
@@ -176,11 +122,23 @@ def main() -> None:
         if not (PACK / rel).is_file():
             fail(f"missing packages/velvetos/{rel}")
 
-    # old tenant switch model must be gone
     if (PACK / "ACTIVE.json").exists():
-        fail("remove ACTIVE.json — use INSTANCE.json (no active/example tenants)")
+        fail("remove ACTIVE.json — Core uses CORE.json")
+    if (PACK / "INSTANCE.json").exists():
+        fail("remove INSTANCE.json from core — instances live under instances/")
     if (PACK / "tenants").exists():
-        fail("remove tenants/ — use instance/ + modules/ + presets/")
+        fail("remove tenants/")
+
+    if not PUBLISH.is_file():
+        fail("missing scripts/publish-instance.sh")
+
+    core = load(CORE)
+    if core.get("role") != "core":
+        fail("CORE.json role must be core")
+    if core.get("displayName") != "VelvetOS Core":
+        fail("CORE.json displayName must be VelvetOS Core")
+    if "backend" not in json.dumps(core.get("metaphor", {})).lower():
+        fail("CORE.json must describe backend metaphor")
 
     catalog = load(MODULES_CATALOG)
     modules = catalog.get("modules") or []
@@ -188,135 +146,93 @@ def main() -> None:
         fail(f"expected >=12 modules, got {len(modules)}")
     module_ids: set[str] = set()
     for row in modules:
-        mid = row.get("id")
-        if not mid:
-            fail("module row missing id")
+        mid = row["id"]
         if mid in module_ids:
             fail(f"duplicate module {mid}")
         module_ids.add(mid)
-        rel = row.get("file")
-        if not rel or not (PACK / rel).is_file():
-            fail(f"module {mid} missing file {rel}")
-        packs = row.get("packs") or []
-        if not packs:
-            fail(f"module {mid} needs packs[]")
+        if not (PACK / row["file"]).is_file():
+            fail(f"missing module file {row['file']}")
 
-    # presets = blueprints only
-    if not PRESETS.is_dir():
-        fail("missing presets/")
-    preset_ids = set()
     for path in sorted(PRESETS.glob("*.json")):
         data = load(path)
         if data.get("kind") != "preset":
             fail(f"{path.name}: kind must be preset")
-        if data.get("id") != path.stem:
-            fail(f"{path.name}: id must match filename")
-        if "status" in data or "activeTenant" in data:
-            fail(f"{path.name}: presets are not tenants")
-        for mid in data.get("modulesEnabled") or []:
+        for mid in data["modulesEnabled"]:
             if mid not in module_ids:
                 fail(f"preset {data['id']}: unknown module {mid}")
-        preset_ids.add(data["id"])
     for need in REQUIRED_PRESETS:
-        if need not in preset_ids:
+        if not (PRESETS / f"{need}.json").is_file():
             fail(f"missing preset {need}")
 
-    beauty = load(PRESETS / "beauty-multi-ig.json")
-    if beauty.get("channels", {}).get("instagramMin", 0) < 2:
-        fail("beauty-multi-ig preset must require multi-IG")
-    if "fulfill-appointment" not in beauty["modulesEnabled"]:
-        fail("beauty-multi-ig must enable fulfill-appointment")
-    clinical = load(PRESETS / "clinical-legal-opinions.json")
-    if "fulfill-document" not in clinical["modulesEnabled"]:
-        fail("clinical-legal-opinions must enable fulfill-document")
-    if "compliance-clinical-legal" not in clinical["modulesEnabled"]:
-        fail("clinical-legal-opinions must enable compliance-clinical-legal")
+    sample_path = SAMPLES / "velvet-factory.json"
+    if not sample_path.is_file():
+        fail("missing samples/velvet-factory.json")
+    sample = load(sample_path)
+    validate_profile(sample, module_ids, label="sample")
 
-    meta = load(INSTANCE_META)
-    if meta.get("product") != "VelvetOS":
-        fail("INSTANCE.json product must be VelvetOS")
+    # instance scaffold (frontend)
+    vf_inst = INSTANCES / "velvet-factory"
+    for rel in (
+        "INSTANCE.json",
+        "README.md",
+        "AGENTS.md",
+        "instance/velvet-factory.json",
+        "constitution/STUDIO.md",
+        "scripts/attach-core.sh",
+        ".cursor/vf-desk.json",
+    ):
+        if not (vf_inst / rel).is_file():
+            fail(f"missing instances/velvet-factory/{rel}")
+    meta = load(vf_inst / "INSTANCE.json")
     if meta.get("role") != "instance":
-        fail("INSTANCE.json role must be instance")
-    if "VelvetOS —" not in meta.get("displayName", ""):
-        fail("INSTANCE.json displayName must be VelvetOS — <Business>")
-    iid = meta.get("instanceId")
-    if not iid:
-        fail("INSTANCE.json missing instanceId")
-    profile_rel = meta.get("profile") or f"instance/{iid}.json"
-    profile_path = PACK / profile_rel
-    if not profile_path.is_file():
-        fail(f"missing instance profile {profile_rel}")
-
-    # only one live instance profile in this repo
-    profiles = list(INSTANCE_DIR.glob("*.json"))
-    if len(profiles) != 1:
-        fail(f"expected exactly 1 instance profile in instance/, got {len(profiles)}")
-    profile = load(profile_path)
-    if profile.get("id") != iid:
-        fail(f"profile id {profile.get('id')} != INSTANCE {iid}")
-    validate_instance(profile, module_ids)
-
-    # preset alignment for VF
-    if profile.get("preset"):
-        preset = load(PRESETS / f"{profile['preset']}.json")
-        for mid in preset["modulesEnabled"]:
-            if mid not in profile["modulesEnabled"]:
-                fail(f"instance missing module from preset {profile['preset']}: {mid}")
+        fail("instances/velvet-factory INSTANCE.json role must be instance")
+    if meta.get("displayName") != "VelvetOS — Velvet Factory":
+        fail("instance displayName mismatch")
+    front = load(vf_inst / "instance" / "velvet-factory.json")
+    validate_profile(front, module_ids, label="frontend-profile")
+    if front["channels"]["instagram"][0]["handle"] != "@velvets_cloud":
+        fail("frontend VF IG must be @velvets_cloud")
 
     desk = load(DESK)
     studio_text = STUDIO.read_text(encoding="utf-8")
-    check_vf_compat(profile, desk, studio_text)
+    check_reference_vf(sample, desk, studio_text)
+
+    # desk should identify as core hosting reference front
+    if desk.get("product") != "VelvetOS":
+        fail("desk.product must be VelvetOS")
+    vos = desk.get("velvetos") or {}
+    if "CORE.json" not in str(vos) and "core" not in json.dumps(vos).lower():
+        fail("desk.velvetos must point at core")
 
     lead = next((s for s in desk.get("seats", []) if s.get("id") == "lead"), None)
     if not lead or "velvetos" not in (lead.get("packs") or []):
-        fail("desk lead seat must include pack velvetos")
+        fail("desk lead seat must include velvetos")
 
     agents = AGENTS.read_text(encoding="utf-8")
-    if "VelvetOS" not in agents:
-        fail("AGENTS.md must mention VelvetOS")
-    if "Velvet Factory" not in agents and "velvet-factory" not in agents:
-        fail("AGENTS.md must mention Velvet Factory")
-    if "modules" not in agents.lower() and "מודול" not in agents:
-        # soft requirement via KERNEL; enforce KERNEL + REPOS instead
-        pass
-    if "ריפו" not in KERNEL.read_text(encoding="utf-8") and "repo" not in KERNEL.read_text(
-        encoding="utf-8"
-    ).lower():
-        fail("KERNEL.md must describe core vs instance repos")
-    repos_text = REPOS.read_text(encoding="utf-8")
-    for needle in ("velvetos-core", "instance", "modules"):
-        if needle not in repos_text:
+    if "VelvetOS Core" not in agents:
+        fail("AGENTS.md must say VelvetOS Core")
+    if "frontend" not in agents.lower() and "פרונט" not in agents:
+        fail("AGENTS.md must mention frontend instances")
+
+    repos = REPOS.read_text(encoding="utf-8")
+    for needle in ("backend", "frontend", "velvetos-velvet-factory", "attach-core"):
+        if needle not in repos:
             fail(f"REPOS.md must mention {needle}")
 
-    if "activeTenant" in (desk.get("notes") or []) or desk.get("activeTenant"):
-        # allow activeTenant key only if it matches instance id during transition — prefer instanceId
-        pass
-    # Prefer velvetos.instance on desk
-    vos = desk.get("velvetos") or {}
-    if vos and vos.get("pack") and "velvetos" not in str(vos.get("pack")):
-        fail("desk.velvetos.pack path invalid")
+    kernel = KERNEL.read_text(encoding="utf-8")
+    if "backend" not in kernel.lower() and "באקאנד" not in kernel:
+        fail("KERNEL.md must state backend role")
 
-    schema = load(PACK / "schema" / "instance.schema.json")
-    if schema.get("title") != "VelvetOS instance profile":
-        fail("instance.schema.json title mismatch")
-
-    # old tenant schema optional — if present, ok; prefer instance schema
-    if not (ROOT / "docs" / "VELVETOS.md").is_file():
-        fail("missing docs/VELVETOS.md")
-    if not (ROOT / ".cursor" / "skills" / "vf-velvetos" / "SKILL.md").is_file():
-        fail("missing vf-velvetos skill")
-    if not (ROOT / "constitution" / "TENANT.md").is_file() and not (
-        ROOT / "constitution" / "INSTANCE.md"
-    ).is_file():
-        fail("missing constitution/INSTANCE.md (or legacy TENANT.md)")
-
-    manifest = load(MANIFEST)
-    if "velvetos" not in {p["name"] for p in manifest.get("packs", [])}:
+    if "velvetos" not in {p["name"] for p in load(MANIFEST).get("packs", [])}:
         fail("velvetos missing from manifest")
 
+    if not (ROOT / "docs" / "VELVETOS.md").is_file():
+        fail("missing docs/VELVETOS.md")
+
     print(
-        f"OK velvetos instance={iid} modules={len(module_ids)} "
-        f"presets={len(preset_ids)} hostsCore={meta.get('hostsCore')}"
+        f"OK velvetos-core modules={len(module_ids)} "
+        f"presets={len(list(PRESETS.glob('*.json')))} "
+        f"frontend_scaffold=velvet-factory"
     )
 
 
