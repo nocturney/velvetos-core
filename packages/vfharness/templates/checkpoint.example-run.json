@@ -1,0 +1,35 @@
+{
+  "task_id": "inquiry-example-2026-08-31",
+  "status": "blocked",
+  "pack": "vfconvert",
+  "crew": "inquiry",
+  "planned_steps": [
+    "Read named Gmail thread",
+    "Extract material, quantity, finish, pickup window",
+    "Draft quote via vfsales + vfcopy (no invented ₪)",
+    "Verify fields or mark חסר",
+    "HQ reply when draft ready or gate on ₪"
+  ],
+  "completed_steps": [
+    "Read thread 19abc…",
+    "Extracted PLA + matte finish; quantity missing"
+  ],
+  "next_step": "Lead seat: confirm quantity before quote ₪",
+  "artifacts": [
+    "packages/vfconvert/drafts/inquiry-example-2026-08-31.md"
+  ],
+  "unresolved": [
+    "Quantity not in thread",
+    "Sale ₪ not approved"
+  ],
+  "outcome": null,
+  "pulse": "blocked",
+  "verification": "Gmail thread subject read; quantity field חסר",
+  "gate": {
+    "kind": "decision_gate",
+    "waiting_for": "lead seat ₪",
+    "reason": "Quote cannot ship without quantity and approved price"
+  },
+  "escalation": null,
+  "last_updated": "2026-08-31"
+}

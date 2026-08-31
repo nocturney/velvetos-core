@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **OMA patterns (embed only)**: דפוסי [open-multi-agent](https://github.com/open-multi-agent/open-multi-agent) על checkpoint קיים — `planned_steps`, `gate` עמיד, `run-receipt.md`, `playbooks/oma-patterns.md`. בלי `@open-multi-agent/core`, בלי DAG של סוכני קוד. Open Multi-Agent patterns on existing harness; no second runtime.
 - 2026-08-31 — **3D AI Studio**: מנוי בעלים על `vfprod` (לא פק חדש). MCP HTTP `threedaistudio` → `https://mcp.3daistudio.com/mcp` (OAuth בדסקטופ; Cursor מדלג על מפתח `3daistudio`). אתר כגיבוי. אותו שער Meshy/Tripo. אין מפתח בגיט, אין ₪ מקרדיטים, אין הדפסה מ־HQ. `3DAISTUDIO.md` + `CONNECT-3DAI.md`.
 - 2026-08-31 — **vf-canva plugin MCP path**: `.cursor-plugin/plugin.json` pointed at `./.cursor/mcp.json` (missing under `.cursor-plugin/`). Fixed to `../.cursor/mcp.json`; sensor now resolves plugin paths relative to the manifest.
 - 2026-08-31 — **3D AI Studio MCP visibility**: renamed server key `3daistudio` → `threedaistudio` (Cursor skips digit-prefixed keys). URL-only config + deeplink in `CONNECT-3DAI.md`.

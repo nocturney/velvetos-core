@@ -4,6 +4,7 @@
 
 ```
 plan = steps on an existing pack
+write planned_steps[] to checkpoint   # plan preview — OMA embed, no second runtime
 for step in plan:
     for attempt in 1..2:
         result = do(step)

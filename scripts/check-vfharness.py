@@ -144,6 +144,22 @@ def main() -> None:
     if example.get("status") not in {"running", "blocked", "escalated", "done"}:
         fail("checkpoint example has invalid status")
 
+    run_example_path = ROOT / "packages/vfharness/templates/checkpoint.example-run.json"
+    if not run_example_path.is_file():
+        fail("missing checkpoint example-run")
+    run_example = json.loads(run_example_path.read_text())
+    missing_run = CHECKPOINT_REQUIRED - set(run_example)
+    if missing_run:
+        fail(f"checkpoint example-run missing {sorted(missing_run)}")
+    if run_example.get("status") != "blocked" or not run_example.get("gate"):
+        fail("checkpoint example-run must demonstrate blocked + gate")
+    oma_playbook = ROOT / "packages/vfharness/playbooks/oma-patterns.md"
+    if not oma_playbook.is_file():
+        fail("missing packages/vfharness/playbooks/oma-patterns.md")
+    receipt = ROOT / "packages/vfharness/templates/run-receipt.md"
+    if not receipt.is_file():
+        fail("missing packages/vfharness/templates/run-receipt.md")
+
     checklist = spec.get("checklist") or []
     if len(checklist) != 12:
         fail(f"expected 12 checklist items, got {len(checklist)}")
