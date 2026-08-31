@@ -33,6 +33,12 @@ Orca ([stablyai/orca](https://github.com/stablyai/orca)), `orca-ide`, `brew inst
 
 למה: Cursor כבר המשרד. דפוס המשמרת רץ ב-`crews/run.md` בלי בינארי. אין fan-out של ₪ או שליחה.
 
+## LobeHub — דלג כהתקנה
+
+[lobehub/lobehub](https://github.com/lobehub/lobehub) — Chief Agent Operator (Next.js + MCP marketplace + cron + IM Gateway).
+
+למה: Cursor כבר המשרד. דפוסים (Connector priority, white-box checkpoint, schedule registry) הוטמעו ב־`vfmcp/GAP.md` + `vfe2b/ORCHESTRATORS.md`. אין Docker/Vercel שני, אין Telegram gateway, אין 10k plugins.
+
 ## תזמורת שנייה — דלג כהתקנה
 
 [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) (194):
