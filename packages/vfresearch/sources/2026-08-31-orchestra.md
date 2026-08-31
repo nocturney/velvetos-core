@@ -28,7 +28,7 @@
 | Gemini Connected Apps (עזרה רשמית) | Workspace + WhatsApp/Phone **שליחה** — **דולג** |
 | Perplexity | חיפוש+ציטוטים. חומת מנוי/Cloudflare ב־30.8. אין גוף שני |
 
-דפדפן חי לחשבונות עלול להיתקע בחומה. לא ממציאים רשימת מחברים מסשן שלא נקרא.
+דפדפן חי 31.8 (`bc-0d7c7cd6`): ChatGPT = Gmail קריאה בלבד; Gemini = Workspace+Search+YouTube ON, Canva OFF; Perplexity = Connectors ריק; Grok = חומת X — **אין גוף**. לא ממציאים מחברי Grok.
 
 ## מה הוטמע
 
@@ -45,11 +45,11 @@
 Treg בלי login → WebSearch + «אין ספירה».  
 Mobbin בלי namespace → `vfbriefux`.  
 אין גיליון VF → «חסר גיליון», בלי שורות מומצאות.  
-שליחת IG/Gmail/וואטסאפ אצלם → לא מותקן כאן.
+שליחת IG אצלם לא נראתה במסך. Gmail send — HQ שולח כאן (`SEND.md`). Treg לא רלוונטי.
 
 ## בלוק 05
 
 ```
 05 · משרד
-מה נבנה / יועל: פערי כלים — Canva ready + web/image על השולחן; שליחה נשארת אצל Grok (`vfmcp/GAP.md`)
+מה נבנה / יועל: פערי כלים — Canva ready + web/image; HQ שולח דרך כלים (`SEND.md`); סשן חי: GPT Gmail / Gemini Workspace / Perplexity ריק / Grok חומה (`vfmcp/GAP.md`)
 ```

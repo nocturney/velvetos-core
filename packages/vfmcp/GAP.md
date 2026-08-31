@@ -26,6 +26,19 @@
 מקורות: [Grok Connectors](https://x.ai/news/grok-connectors) (מאי 2026) · [ChatGPT Apps](https://help.openai.com/en/articles/11487775-connectors-in-chatgpt) · [Gemini Connected Apps](https://support.google.com/gemini/answer/13695044) · תזמורת `constitution/ORCHESTRA.md` · `constitution/SEND.md` (HQ שולח דרך כלים).  
 סשן חי בחשבון עלול להיות מאחורי חומת הזדהות — לא ממציאים גוף שנחסם.
 
+## סשן חי 31.8 (דפדפן, Christian Plus/Pro)
+
+אומת ב־`bc-0d7c7cd6`. לא קטלוג רשמי — רק מה שנראה במסך.
+
+| שולחן | מחברים חיים | דין HQ |
+|---|---|---|
+| ChatGPT Plus | Gmail מחובר (`nocturney@gmail.com`) — קריאה / low-risk. חיפוש + Create image מובנים | HQ כבר שולח Gmail. אין מחבר נוסף להתקין |
+| Gemini Plus | Workspace ON (Gmail/Calendar/Docs/Drive/Keep/Tasks) · Search ON · YouTube ON. **Canva OFF**. Ads / Business Profile / GitHub OFF | Canva כבר ready כאן. לא מדליקים Canva בגימיני בשביל הסטודיו |
+| Perplexity Pro | Connectors ריק (Discover/All/Connected/Available) | אין מחבר להתקין. חיפוש מובנה → `tools.web` |
+| Grok (`grok.com` / `x.com/i/grok`) | **חומת התחברות X** — אין גוף מחברים | לא ממציאים. failover: כלים כאן + תזמורת |
+
+אין מחבר חי אצלם שחסר כאן וחובה להתקין היום. Publish IG עדיין חסר אצל כולם במסך הזה.
+
 ### Grok / Grok Bot
 
 | כלי שם | כאן | דין |
