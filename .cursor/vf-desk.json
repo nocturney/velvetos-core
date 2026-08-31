@@ -92,7 +92,7 @@
       "status": "skill-installed-needs-login",
       "useWhen": "vfgrowth / vfresearch / vfinsights live web, SEO, social, ads data",
       "rule": "Say the catalog price before spending. Never invent Insights.",
-      "failover": "Verified snapshot or אין ספירה; IG music → HeyOrca (MUSIC.md), not Treg"
+      "failover": "WebSearch/WebFetch (tools.web) or verified snapshot / אין ספירה; IG music → HeyOrca (MUSIC.md), not Treg"
     },
     "mobbin": {
       "status": "plugin-installed",
