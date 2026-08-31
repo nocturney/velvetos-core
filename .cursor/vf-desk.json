@@ -14,7 +14,7 @@
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
     "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
-    "Grok Bot quota failover: keep producing; use wired tools in packages/vfharness/playbooks/grok-outage-tools.md (create_draft, calendar slot, Canva/render). #מוכן-ל-Grok or #פרסום-חי-דחוף + LIVE-PACKET. HQ never presses Publish or send_message. See docs/GROK-FAILOVER.md."
+    "Grok Bot quota failover: keep producing; office brief is תצוגה 3 HTML via send_message to nocturney@gmail.com. Instagram: #מוכן-ל-Grok or #פרסום-חי-דחוף + LIVE-PACKET. HQ never presses Publish. See docs/GROK-FAILOVER.md."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -37,7 +37,7 @@
       "forbidden": ["reply", "forward"],
       "sendOfficeBriefDuringGrokFailover": true,
       "sendOfficeBriefTo": "nocturney@gmail.com",
-      "failover": "send_message office brief to self (Grok-equivalent); MAIL-PACK if MCP down; never invent inquiry; never customer send",
+      "failover": "send_message office brief to self as תצוגה 3 htmlBody (Grok-equivalent); MAIL-PACK plaintext only if MCP down; never invent inquiry; never customer send",
       "queries": {
         "inboxToday": "in:inbox newer_than:1d",
         "bills": "label:חשבונות OR subject:(חשבונית OR Invoice4U OR קבלה)",

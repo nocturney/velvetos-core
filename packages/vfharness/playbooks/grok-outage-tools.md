@@ -27,7 +27,7 @@
 ## מה HQ מפעיל לבד (בלי לחכות לבעלים)
 
 1. קריאת תיבה / לוח / דרייב־לפי־שם.
-2. `create_draft` ואז `send_message` — בריף 07:00 אל `nocturney@gmail.com` בלבד (גוף מ־MAIL-PACK אחרי רענון בוקר). בלי לחיצת בעלים.
+2. `render_mail.py` ואז `send_message` — בריף 07:00 אל `nocturney@gmail.com` בלבד (`htmlBody` תצוגה 3 מ־`vfbriefux/MAIL.html` + כריכות `cid`). `create_draft` רק אם צריך לעצור לפני שליחה. MAIL-PACK הוא חלופת טקסט אם MCP נופל. בלי לחיצת בעלים.
 3. `create_event` — משבצת חיה שכבר קיימת ב־`vfgrowth` (למשל G005 חמישי 12:00).
 4. Canva + `render.py` + שקפים ב־`vfcovers`.
 5. תור `#מוכן-ל-Grok` / `#פרסום-חי-דחוף` + LIVE-PACKET.
