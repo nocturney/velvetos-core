@@ -20,7 +20,7 @@
 | Mobbin | plugin · אין MCP כאן | namespace לא על Cloud Agent |
 | FCC | לא כאן | נעול ב־`vffcc` |
 
-אין גיליון סטודיו בשם Velvet Factory ב־Drive. גיליונות אישיים דולגו. לא ממציאים workbook ID.
+נזרע 31.8: תיקייה `VF HQ · משרד` + ארבעה גיליונות כותרת בלבד (`office/ledger/bindings.json`). גיליונות אישיים דולגו. לא ממציאים workbook ID; בלי binding כותבים **חסר גיליון**.
 
 ## מה יש אצלם (קטלוג רשמי + מפת HQ)
 
@@ -101,12 +101,12 @@
 | פער | למה לא |
 |---|---|
 | Publish MCP לאינסטגרם | אין namespace. failover: Canva+Drive+Gmail (`SEND.md`). לא ממציאים שעלה לפיד |
-| וואטסאפ / מדפסות | אין MCP וואטסאפ. מדפסות ברצפה. אדם `050-2517000` |
+| וואטסאפ / מדפסות | אין MCP וואטסאפ. מדפסות ברצפה. אדם `050-2517000`. טיוטה: `vf_office.py convert draft` |
 | Treg | **לא רלוונטי** למשרד. לא login |
 | Mobbin MCP | פלאגין על הדיסק; namespace לא על Cloud Agent. failover: `vfbriefux` |
-| Google Sheets MCP | אין גיליון סטודיו שכריסטיאן נקב בשמו. Drive מייצא CSV כשייש נקוב |
-| WhatsApp MCP | חיפוש/טיוטה רק אחרי מספר מהבעלים. שליחה אסורה |
-| Studio MCP Hub / instapdown | מפה ב־`docs/MCP-FIT.md`. חיבור ב־Cursor Settings, לא סוד בגיט |
+| Google Sheets MCP | לא הותקן. יומן CSV + Drive (`vfbooks/SHEETS.md`, `vf_office.py jobs`) |
+| WhatsApp MCP | לא הותקן. טיוטה + `wa.me` בלבד (`vfconvert/WHATSAPP.md`). שליחה אסורה |
+| Studio MCP Hub / CMYK | לא רלוונטי — הסטודיו תלת־ממד. פריפלייט STL: `vfprod/PREFLIGHT.md` |
 | FCC / `fcc-server` | נעול. לא על Cloud Agent |
 | **Headroom** (`headroom-ai`) | **local optional** — proxy/MCP דורש תהליך מקומי; Cloud Agent sandbox. דפוס CCR/ContentRouter ב-`vfharness/playbooks/context-thrift.md` בלי dependency. Mac: `uv tool install "headroom-ai[all]"` + `headroom wrap cursor` אחרי lead seat |
 | 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט. המחבר הרשמי הוא HTTP OAuth |

@@ -29,49 +29,45 @@ Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility”
 
 **Office graph (already in git, not a Cursor MCP add):** [`vfmem`](../packages/vfmem/) takes the *query shape* from [DeusData/codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp) (`architecture` / `who` / `impact` / `adr`) and runs it on `vf-desk.json` + `manifest.json`. Do not install their C binary from this repo. Write-up: [`docs/VFMEM.md`](VFMEM.md).
 
-## Do this first (real studio gaps)
+## Bridged 2026-08-31 (`scripts/vf_office.py`) — not extra MCP
 
-Three holes the office OS still has. Each one is a Cursor MCP add — not a new pack dump.
+Constitution: WhatsApp stays human `050-2517000`. HQ does not print. No invented ₪. Drive may create office files.
 
-### 1. WhatsApp — inquiry-to-order
+### 1. WhatsApp — inquiry-to-order · **bridged (draft only)**
 
-Israeli print sales live here. Gmail alone does not close the loop for `vfconvert` / `vfsales`.
+Do **not** install WhatsApp / Infobip / ManyChat MCP. Send stays on the phone.
 
-| Server | Role | Notes |
-|---|---|---|
-| [lharries/whatsapp-mcp](https://github.com/lharries/whatsapp-mcp) | Personal WhatsApp: search chats, contacts, send | Best if the studio number is a normal phone, not Business API |
-| [nakulben/whatsapp-mcp](https://github.com/nakulben/whatsapp-mcp) | WhatsApp Business templates via Meta Cloud API | Use if the studio already has a Business number |
-| [Infobip/mcp](https://github.com/infobip/mcp) | Official SMS / WhatsApp / Viber | Heavier; only if you already pay Infobip |
+```
+python3 scripts/vf_office.py jobs add --channel WhatsApp --what "…" --phone 050…
+python3 scripts/vf_office.py convert draft VF-YYYYMMDD-001
+```
 
-**Rule:** drafts and search in Cursor. Do not auto-send quotes or proofs without a human click. Same discipline as Instagram: HQ reviews, a human or Grok Bot sends.
+JSON includes `send=false`, paste text, and `wa.me` for the human to tap. Quote drafts require a lead-seat amount.
 
-**Packs:** `vfconvert`, `vfsales`, `vfops`.
+Playbook: [`packages/vfconvert/WHATSAPP.md`](../packages/vfconvert/WHATSAPP.md).
 
-### 2. Google Sheets — the studio ledger
+### 2. Google Sheets — studio ledger · **bridged (CSV + Drive)**
 
-Drive can open a file. It cannot reliably read rows, write a job line, or update a SKU reprint. Books, jobs, quotes, and cost sheets almost certainly live in Sheets.
+No separate Sheets MCP. Local CSV is the book; Drive `create_file` (CSV → spreadsheet) is the human view. Cell-level edits still need a named workbook + `exportMimeType=text/csv`.
 
-| Server | Role |
-|---|---|
-| [freema/mcp-gsheets](https://github.com/freema/mcp-gsheets) | Read / write / format / manage tabs |
-| [xing5/mcp-google-sheets](https://github.com/xing5/mcp-google-sheets) | Same job, Python |
+```
+python3 scripts/vf_office.py jobs list
+python3 scripts/vf_office.py jobs csv
+```
 
-Pick **one**. Point it at the real workbook IDs Christian names — do not invent a new ledger.
+Playbook: [`packages/vfbooks/SHEETS.md`](../packages/vfbooks/SHEETS.md). Bindings: `office/ledger/bindings.json` (jobs `13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao`). Without an ID write **חסר גיליון**.
 
-**Packs:** `vfbooks`, `vfsku`, `vfprod`, `vfsales`, `vfcost`.
+### 3. Print file pipeline — **bridged (STL preflight, not CMYK)**
 
-### 3. Print file pipeline — CMYK / mockup / print PDF
+Velvet Factory is 3D print in Sderot, not paper CMYK. Studio MCP Hub / Photopea are the wrong stack.
 
-Canva is the art desk. The floor still needs print-ready files.
+```
+python3 scripts/vf_office.py print preflight model.stl
+```
 
-| Server | Role |
-|---|---|
-| [codex-curator/studiomcphub](https://github.com/codex-curator/studiomcphub) | Mockups, CMYK conversion, print-ready PDF, upscale, background removal |
-| [attalla1/photopea-mcp-server](https://github.com/attalla1/photopea-mcp-server) | Local Photoshop-class edits (layers, export) if the Mac already uses Photopea |
+Bounding box + triangle count. No ₪, no hours, no print from HQ. Mesh repair stays **3D AI Studio** (`vfprod/3DAISTUDIO.md`) when OAuth is on.
 
-Start with Studio MCP Hub for “make this print-safe.” Keep Canva as the brand canvas. Do not invent click charges or paper prices (`vfcost` rule).
-
-**Packs:** `vfprod`, `vfcovers`, `vfsku`.
+Playbook: [`packages/vfprod/PREFLIGHT.md`](../packages/vfprod/PREFLIGHT.md).
 
 ## Optional research (do not wire by default)
 
@@ -154,11 +150,9 @@ MCP lives in Cursor settings / Cloud Agent integrations. This repository stays a
 
 ## Suggested order
 
-1. Google Sheets (unlocks books / jobs / SKU without a new database).
-2. WhatsApp (closes inquiry → quote → order).
-3. Studio MCP Hub (print-safe files next to Canva).
-4. instapdown (Instagram research, no login).
-5. Inbox Zero if the mailbox is the bottleneck.
-6. Meta Ads read-only if boost reporting is the bottleneck.
+The first three gaps are bridged in-repo (`vf_office.py`). Next, only if a pack is blocked:
 
-Stop after the first three unless a pack is blocked on a specific live account.
+1. 3D AI Studio OAuth on Cloud (`CONNECT-3DAI.md`) if mesh-from-photo is the bottleneck.
+2. instapdown (Instagram research, no login).
+3. Inbox Zero if the mailbox is the bottleneck.
+4. Meta Ads read-only if boost reporting is the bottleneck.

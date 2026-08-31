@@ -4,6 +4,7 @@ MCP fit research — which [awesome-mcp-servers](https://github.com/punkpeye/awe
 
 Write-up: [`docs/MCP-FIT.md`](../../docs/MCP-FIT.md).  
 Gap vs Grok / ChatGPT / Gemini / Perplexity: [`GAP.md`](GAP.md) (31.8.2026).  
+Bridge (ledger / WhatsApp drafts / STL preflight): `scripts/vf_office.py` — not extra MCP.  
 Owner 3D AI Studio account: [`vfprod/3DAISTUDIO.md`](../vfprod/3DAISTUDIO.md) — site first; official MCP is OAuth from their Settings, not a secret in git.
 
 | | |

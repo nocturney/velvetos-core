@@ -13,3 +13,4 @@ tmp-clone/
 __pycache__/
 *.pyc
 packages/vfcanva/studio/out/*.png
+office/ledger/live/*.csv

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **גשר שלושת הפערים**: יומן CSV+Drive (`vfbooks/SHEETS.md`, תיקייה VF HQ · משרד + ארבעה גיליונות כותרת), טיוטות וואטסאפ לאדם 050-2517000 (`vfconvert/WHATSAPP.md`), פריפלייט STL בלי ₪ (`vfprod/PREFLIGHT.md`). CLI `scripts/vf_office.py`. אין MCP וואטסאפ/Sheets/CMYK. Bridged ledger, WhatsApp drafts, STL preflight without extra MCP.
 - 2026-08-31 — **בריף בלי תיבת דואר**: הבריף 07:00 לא קורא `in:inbox` — מקורות: לוח + vfops בלבד. `search_threads` נשאר לפקים אחרים. Brief skips inbox read; Gmail send unchanged. כל scaffold frontend חייב `.cursor/environment.json` עם `install: ./scripts/attach-core.sh` + `repositoryDependencies: velvetos-core`. תבנית `instances/_template/`, playbook `INSTANCE-ENV.md`, כלל `velvetos-instance-scaffold.mdc`, סנסור `check-velvetos.py`.
 - 2026-08-31 — **VelvetOS Core = backend**: הריפו הזה מזוהה כ־Core. פרונט VF מוכן ב־`instances/velvet-factory/` לפרסום ל־`nocturney/velvetos-velvet-factory` (`publish-instance.sh` + `attach-core.sh`). מטאפורה: Core באקאנד · עסק פרונט. This repo is Core; VF frontend scaffold ready to publish (GitHub createRepo not available to this agent).
 - 2026-08-31 — **VelvetOS modules + multi-repo**: ביטול מודל tenant פעיל/דוגמה. מודולים לכל האנכיים טעונים בליבה (`modules/`). הריפו = **VelvetOS — Velvet Factory**. Presets ליופי multi-IG ולחוות דעת הם תבניות לריפו מופע עתידי. תוכנית `REPOS.md` (velvetos-core + instance repos). Modules always loaded; VF is the only live instance here.
