@@ -7,10 +7,12 @@
     "Fetched 3daistudio.com / MCP / API getting-started / Flow",
     "Wrote vfprod/3DAISTUDIO.md on existing packs (no new pack)",
     "Wired vlicense/vfsku/vfresearch/vfmcp/desk/ORCHESTRA",
-    "Registered weekly links; sensor needles on check-vfmcp.py"
+    "Registered weekly links; sensor needles on check-vfmcp.py",
+    "Wrote CONNECT-3DAI.md — MCP tab is on 3daistudio.com Settings, not Cursor Marketplace"
   ],
-  "next_step": "Lead seat: Settings → AI Assistants (MCP) on 3daistudio.com for Cursor Desktop; then flip threedaistudio.status to ready on a run that sees the tools",
+  "next_step": "Lead seat: browser login on 3daistudio.com → gear Settings → AI Assistants (MCP) → Cursor. Not Cursor Marketplace. See vfprod/CONNECT-3DAI.md",
   "artifacts": [
+    "packages/vfprod/CONNECT-3DAI.md",
     "packages/vfprod/3DAISTUDIO.md",
     "packages/vfresearch/sources/2026-08-31-3daistudio.md",
     "packages/vfmcp/GAP.md",

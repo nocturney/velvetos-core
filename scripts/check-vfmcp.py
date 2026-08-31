@@ -68,9 +68,13 @@ def main() -> None:
     if "3D AI Studio" not in fit:
         fail("MCP-FIT.md must map the owner 3D AI Studio account")
     studio = STUDIO3D.read_text()
-    for needle in ("אין מפתח בגיט", "vlicense", "STL", "OAuth", "לא על Cloud Agent"):
+    for needle in ("אין מפתח בגיט", "vlicense", "STL", "OAuth", "לא על Cloud Agent", "CONNECT-3DAI.md"):
         if needle not in studio:
             fail(f"3DAISTUDIO.md must mention {needle}")
+    connect = (ROOT / "packages" / "vfprod" / "CONNECT-3DAI.md").read_text()
+    for needle in ("AI Assistants (MCP)", "Marketplace", "support@3daistudio.com"):
+        if needle not in connect:
+            fail(f"CONNECT-3DAI.md must mention {needle}")
     if "₪" in studio and "X ₪" not in studio:
         fail("3DAISTUDIO.md must not invent a sale ₪")
 

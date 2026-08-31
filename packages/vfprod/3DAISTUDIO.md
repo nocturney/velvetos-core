@@ -45,16 +45,18 @@ Failover: זה תמיד הגיבוי אם MCP/API נפלו.
 
 ### 2. MCP רשמי (Cursor / Claude / ChatGPT) — בלי מפתח
 
-מקור: [3daistudio.com/MCP](https://www.3daistudio.com/MCP) (אוגוסט 2026).
+מקור: [3daistudio.com/MCP](https://www.3daistudio.com/MCP) · Changelog v6.5 (4.8.2026).  
+**איפה הלשונית:** `CONNECT-3DAI.md` — לא ב־Cursor Marketplace.
 
 - OAuth מהחשבון. **אין API key בקובץ.**
-- בדשבורד: Settings → **AI Assistants (MCP)** → הוספת Cursor → אישור בדפדפן.
+- באתר אחרי Login: גלגל Settings → **AI Assistants (MCP)** → Cursor → Allow.
+- «Available on all paid plans.» בלי מנוי בתשלום הלשונית לא תופיע.
 - הדורות נוחתים באותו דשבורד. יצירת 3D גדולה מבקשת אישור קרדיטים לפני החיוב.
-- ב־Cursor: אין צופה תלת־ממד בתוך הצ׳אט — חוזרים קישורים. בודקים בדשבורד / Blender / סלייסר.
+- ב־Cursor: אין צופה תלת־ממד בתוך הצ׳אט — חוזרים קישורים. בודקים בדשבורד / סלייסר.
 - ניתוק מ־Settings מוחק את האישור מיד.
 
-**לא על Cloud Agent הזה היום.** חיבור = פעולת ראש צוות ב־Cursor Desktop (או בהגדרות סביבת הענן).  
-לא ממציאים URL של שרת. לא כותבים מפתח ב־`.cursor/mcp.json`. Canva נשאר ה־HTTP היחיד בגיט.
+**לא על Cloud Agent הזה היום.** חיבור = דפדפן + Cursor Desktop.  
+לא ממציאים URL של שרת. לא כותבים מפתח ב־`.cursor/mcp.json`.
 
 אחרי שהחיבור חי במחשב: אפשר לבקש בצ׳אט Agent מקומי «תמונה → 3D → STL 12 ס״מ» בתוך עבודת `vfprod`. עדיין `vlicense` + סלייס.
 

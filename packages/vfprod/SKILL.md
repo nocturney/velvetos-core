@@ -5,4 +5,5 @@
 לפני התחייבות ללקוח: `hq/PLAYBOOK.md`.  
 אחרי אישור: תור על הצינור `הדפסה`.  
 רישיון קובץ: `#vlicense`.  
-מנוי 3D AI Studio (טקסט/תמונה → STL): `3DAISTUDIO.md` — אתר קודם; MCP רק אחרי חיבור ראש צוות. לא קטלוג אוטומטי.
+מנוי 3D AI Studio (טקסט/תמונה → STL): `3DAISTUDIO.md`.  
+איפה ה־MCP: `CONNECT-3DAI.md` (אתר אחרי Login, לא Marketplace של Cursor).
