@@ -31,3 +31,19 @@ Treg חי רק אחרי login. אומרים את מחיר הקטלוג **לפנ�
 ## 7. FCC לא נכנס לרשימה הזו
 
 התקנת פרוקסי מקומי **לא** מקטינה את החשבון של Cloud Agent. מי שרוצה הורדה למק — `local-offload.md` אחרי ראש צוות.
+
+## 8. הקשר לפני grep — vfmem → MAP → 2 nodes
+
+לפני `grep` על המחסן או dump של כלי:
+
+1. `python3 scripts/vfmem.py who <job>`
+2. `packages/vfgraft/MAP.md` — פתח **שניים–שלושה** צמתים בלבד
+3. רק אז מקור בפק
+
+דחיסת artifact (Gmail thread, JSON, Drive): סיכום בשיחה, מקור מלא ב-checkpoint / Drive.  
+פלייבוק מלא: `packages/vfharness/playbooks/context-thrift.md` (דפוס Headroom, בלי runtime על Cloud Agent).
+
+## 9. Headroom — Mac בלבד, אופציונלי
+
+[Headroom](https://github.com/headroomlabs-ai/headroom) proxy/MCP **לא** על Cloud Agent.  
+Mac מקומי אחרי lead seat: `vffcc/playbooks/local-offload.md` + `vfmcp/GAP.md`.
