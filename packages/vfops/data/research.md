@@ -5,9 +5,8 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: Product Lab + כרטיס פנייה + ביו בלי מחיר (`vfsku`/`vfconvert`/`vfcopy`)
-flexi/fidget אחרי שער. פיילאובר Grok + effective-html (`vfbriefux/hq/brief-email.html`).
-Gemini: אין גוף חדש. Perplexity: ביו/«שלחו הודעה» דולג. נתיב: `vfops/data/research.md`.
+מה נבנה / יועל: Huginn (דפוסים) — scenarios ב-vfe2b, events ב-checkpoint, staleness sensor, dedup ב-vfconvert.
+Product Lab + כרטיס פנייה + effective-html. Gemini/Perplexity: אין גוף חדש. נתיב: vfops/data/research.md.
 ```
 
-מקור: `packages/vfresearch/sources/2026-08-31-orchestra.md`
+מקור: `packages/vfresearch/sources/2026-08-31-huginn-embed.md` · `2026-08-31-weekly-links.md`

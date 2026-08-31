@@ -16,6 +16,14 @@ DEER_FLOW = ROOT / "packages" / "vfe2b" / "DEER-FLOW-PATTERNS.md"
 ORCH_DOC = ROOT / "docs" / "ORCHESTRATORS.md"
 CREWS = ROOT / "packages" / "vfe2b" / "crews"
 RUN_CARDS = ROOT / "packages" / "vfe2b" / "fixtures" / "run-cards.json"
+SCENARIOS_JSON = ROOT / "packages" / "vfe2b" / "scenarios.json"
+SCENARIOS_DIR = ROOT / "packages" / "vfe2b" / "scenarios"
+REQUIRED_SCENARIO_IDS = {
+    "morning-digest",
+    "inquiry-chain",
+    "weekly-links",
+    "content-live",
+}
 RUN_SKILL = ROOT / ".cursor" / "skills" / "vf-run" / "SKILL.md"
 STATE_LINE = re.compile(r"^מצב:\s*(\S+)\s*$", re.MULTILINE)
 VERDICTS = {"embed", "later", "skip"}
@@ -44,6 +52,50 @@ def parse_run_card(card: str) -> str:
     if state not in RUN_OUTCOMES:
         raise ValueError("unknown-state")
     return state
+
+
+def check_scenarios() -> int:
+    if not SCENARIOS_JSON.is_file():
+        fail(f"missing {SCENARIOS_JSON}")
+    if not SCENARIOS_DIR.is_dir():
+        fail(f"missing {SCENARIOS_DIR}")
+    data = json.loads(SCENARIOS_JSON.read_text())
+    if data.get("name") != "vfe2b-scenarios":
+        fail("scenarios.json name must be vfe2b-scenarios")
+    if "Huginn" not in (data.get("source") or {}).get("pattern", "") and "huginn" not in (
+        (data.get("source") or {}).get("url") or ""
+    ):
+        fail("scenarios.json source must cite huginn/huginn")
+    locks = set(data.get("locks") or [])
+    if "no-second-orchestrator" not in locks:
+        fail("scenarios.json missing lock no-second-orchestrator")
+    items = data.get("scenarios") or []
+    seen: set[str] = set()
+    for row in items:
+        sid = row.get("id")
+        if not sid:
+            fail("scenario missing id")
+        if sid in seen:
+            fail(f"duplicate scenario id {sid}")
+        seen.add(sid)
+        rel = row.get("file") or ""
+        path = ROOT / rel
+        if not path.is_file():
+            fail(f"scenario file missing {rel}")
+        crew = row.get("crew") or ""
+        if not (ROOT / "packages" / "vfe2b" / crew).is_file():
+            fail(f"scenario {sid} crew missing {crew}")
+    if seen != REQUIRED_SCENARIO_IDS:
+        fail(f"scenario ids mismatch want={sorted(REQUIRED_SCENARIO_IDS)} got={sorted(seen)}")
+    readme = SCENARIOS_DIR / "README.md"
+    if not readme.is_file():
+        fail("missing scenarios/README.md")
+    if "huginn" not in readme.read_text().lower():
+        fail("scenarios/README.md must cite Huginn pattern")
+    dedup = ROOT / "packages" / "vfconvert" / "hq" / "DEDUP.md"
+    if not dedup.is_file():
+        fail("missing vfconvert/hq/DEDUP.md")
+    return len(items)
 
 
 def check_run_card_fixtures() -> int:
@@ -257,11 +309,19 @@ def main() -> None:
         fail("vf-run skill must refuse an Orca install")
 
     cards = check_run_card_fixtures()
+    scenario_count = check_scenarios()
     orch_picks, orch_embed = check_orchestrators(pack_names)
+
+    huginn = next((p for p in picks if p.get("name") == "Huginn"), None)
+    if not huginn:
+        fail("catalog missing Huginn pick")
+    if huginn.get("verdict") != "embed":
+        fail("Huginn pick must be embed (pattern), not an install")
 
     print(
         f"OK picks={len(picks)} embed={embed_count} "
-        f"crews={len(REQUIRED_CREWS)} packs={len(pack_names)} "
+        f"crews={len(REQUIRED_CREWS)} scenarios={scenario_count} "
+        f"packs={len(pack_names)} "
         f"listed={listed} run_cards={cards} "
         f"orch={orch_picks}/{orch_embed}"
     )

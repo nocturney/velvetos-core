@@ -54,6 +54,7 @@
       "files": [
         "packages/vfharness/LOOP.md",
         "packages/vfharness/templates/escalation.md",
+        "packages/vfharness/playbooks/oma-patterns.md",
         ".cursor/skills/vf-harness/SKILL.md"
       ]
     },
@@ -63,7 +64,8 @@
       "role": "durable-state",
       "files": [
         "packages/vfharness/state/README.md",
-        "packages/vfharness/templates/checkpoint.schema.json"
+        "packages/vfharness/templates/checkpoint.schema.json",
+        "packages/vfharness/templates/run-receipt.md"
       ]
     },
     {

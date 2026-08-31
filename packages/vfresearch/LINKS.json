@@ -317,6 +317,38 @@
       "sourceNote": "packages/vfresearch/sources/2026-08-31-lobehub.md",
       "packs": ["vfmcp", "vfe2b", "vfharness", "vfops"],
       "note": "Connector priority + schedule/report patterns on existing packs. No Docker install, no second runtime, no IM gateway."
+    },
+    {
+      "id": "huginn",
+      "kind": "repo",
+      "url": "https://github.com/huginn/huginn",
+      "title": "Huginn — event-driven agents (pattern only)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-huginn-embed.md",
+      "report": "packages/vfresearch/sources/2026-08-31-weekly-links.md",
+      "pack": "vfe2b",
+      "packs": [
+        "vfe2b",
+        "vfharness",
+        "vfconvert",
+        "vfops",
+        "vfresearch"
+      ],
+      "note": "Scenarios + events + staleness + dedup. No Rails install. Cursor is the office."
+    },
+    {
+      "id": "superset-sh-superset",
+      "kind": "repo",
+      "url": "https://github.com/superset-sh/superset",
+      "title": "Superset — parallel coding agent IDE (worktrees)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-superset-patterns.md",
+      "report": "packages/vfe2b/ORCHESTRATORS.md",
+      "pack": "vfe2b",
+      "packs": ["vfe2b", "vfharness", "vffcc"],
+      "note": "Patterns only (lifecycle scripts, bounded fan-out). Skip as second desk. Optional Mac offload after lead seat — see vffcc/local-offload.md."
     }
   ],
   "addLink": {
