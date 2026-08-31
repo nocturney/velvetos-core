@@ -34,9 +34,10 @@
     "Stack choice (Twenty vs NocoBase vs custom) deferred to lead",
     "Lead seat to confirm internal-console ADR"
   ],
+  "verification": "scripts/check-all.py PASS 17/17; Gmail send_message 1a056d814229bdf7",
   "outcome": "worker_done",
   "pulse": "working",
-  "verification": "scripts/check-all.py PASS 17/17; Gmail send_message 1a056d814229bdf7",
+  "verification": "scripts/check-all.py",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-08-31",
@@ -45,26 +46,13 @@
       "name": "research.sources_reviewed",
       "producedAt": "2026-08-31",
       "sourceAgent": "vfresearch",
-      "payload": {
-        "count": 18
-      }
+      "payload": { "count": 18 }
     },
     {
       "name": "constitution.internal_console_unlocked",
       "producedAt": "2026-08-31",
       "sourceAgent": "constitution",
-      "payload": {
-        "adr": "docs/OFFICE-OS-EMBED-he.md"
-      }
-    },
-    {
-      "name": "mail.sent",
-      "producedAt": "2026-08-31",
-      "sourceAgent": "vfops",
-      "payload": {
-        "messageId": "1a056d814229bdf7",
-        "tag": "#נשלח-מ-HQ"
-      }
+      "payload": { "adr": "docs/OFFICE-OS-EMBED-he.md" }
     }
   ]
 }
