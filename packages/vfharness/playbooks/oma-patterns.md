@@ -8,7 +8,7 @@ Source: [open-multi-agent/open-multi-agent](https://github.com/open-multi-agent/
 
 | OMA concept | VF HQ |
 |---|---|
-| Goal → planned steps | `planned_steps[]` on checkpoint before heavy work |
+| Goal → planned steps | `goal` (DeerFlow) + `planned_steps[]` on checkpoint before heavy work |
 | Coordinator assigns one crew | `crews/run.md` picks morning-brief / inquiry / content / research / books-data |
 | Durable approval / suspend | `status: blocked` + `gate` until lead ₪ or human WhatsApp |
 | Checkpoint + resume | `packages/vfharness/state/<task-id>.json` |

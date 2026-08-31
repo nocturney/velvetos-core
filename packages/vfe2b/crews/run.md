@@ -2,7 +2,8 @@
 
 Source pattern: [stablyai/orca](https://github.com/stablyai/orca) — isolate a job, name who owns it, end in one of three states.
 Orchestrator overlay (2026-08-31): [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) — pulse, independent verify, artifact on disk, bounded loop. See `packages/vfe2b/ORCHESTRATORS.md`.
-Do **not** install Orca, amux, OpenClaw, or a second orchestrator. Cursor is the office.
+DeerFlow overlay (2026-08-31): [bytedance/deer-flow](https://github.com/bytedance/deer-flow) — session goal, sub-agent bounds, skill gates, verification receipts. Patterns only. See `packages/vfe2b/DEER-FLOW-PATTERNS.md`.
+Do **not** install Orca, DeerFlow, amux, OpenClaw, or a second orchestrator. Cursor is the office.
 Packs: `vfops` plus whichever crew this משמרת wraps (`vfconvert`, `vfsales`, `vfcost`, `vfcopy`, `vfcovers`, `vfigos`, `vfprod`, `vfresearch`, `vfbooks`).
 
 ## Map
@@ -22,6 +23,9 @@ Packs: `vfops` plus whichever crew this משמרת wraps (`vfconvert`, `vfsales`
 | Taskuary inbox → run | בריף ממיין, ואז צוות אחד |
 | fractal / MartinLoop bounds | 2 ניסיונות · checkpoint = קבלה |
 | Claudexor quota rotate | מכסת Grok → כלי HQ באותו תור |
+| DeerFlow `/goal` | `מטרה` — תנאי סיום אחד; נמחק לפני `worker_done` |
+| DeerFlow sub-agents | Cursor Task — רק מקביל/התמחות; לא על ₪/שליחה/רישיון |
+| DeerFlow tool receipts | `אימות` מציין receipt (message_id, design URL, sensor) |
 
 ## Roles
 
@@ -40,6 +44,8 @@ One job = one folder. Search Drive / Gmail / slicer **by the job name the user g
 
 Allowed only on `vfcopy` / `vfcovers`: at most **three** variants, then a human picks. Never fan-out a sale ₪, a send, or a license call.
 
+Sub-agent delegation (DeerFlow pattern, Cursor Task): use only when parallel latency, a specialist read, or context isolation has clear net benefit. One interdependent chain stays in the lead session. Never delegate because the task is merely large or multi-step.
+
 ## Handoff vs supervise
 
 - **Supervise:** HQ stays on the card until one of the three outcomes. Example: inquiry chain until draft, missing field, or Gmail `reply`.
@@ -57,13 +63,24 @@ If Gmail / Calendar / Drive / slicer / snapshot was not actually read, write **�
 
 Three misses in a row on the same needed fact (queue hours, ₪, license, measurement) → stop. Outcome is `escalation` or `decision_gate`. Do not guess a fourth time. Fresh retry re-reads the source (ralphex). Do not fill the gap.
 
-## Verify before done (kodo)
+## Verify before done (kodo + DeerFlow receipts)
 
 `worker_done` is illegal without `אימות` that names:
 
 - a computational sensor that passed (`python3 scripts/check-….py`), or
 - a named field that was actually read (subject, file path, calendar block), or
+- a **tool receipt** for sends and external artifacts (`Gmail message_id=…`, `Canva design_id=…`, `#נשלח-מ-HQ` / `#ממתין-ל-כלי-IG`), or
 - **חסר** — then the state cannot be `worker_done`.
+
+## Session goal (DeerFlow `/goal`)
+
+At run start, write one line `מטרה:` — the completion condition for this job. Examples: «Gmail reply sent in thread X», «Canva+Drive+Gmail failover packet on disk». Sale ₪ is never a goal; use `decision_gate`.
+
+Rules:
+
+1. User or lead overrides the goal on new input — no hidden auto-continuation loops.
+2. Two attempts on the same blocker → `escalation` (same circuit breaker as missing facts).
+3. `worker_done` requires both `מטרה` satisfied **and** `אימות` with a named receipt or sensor.
 
 ## Run
 
@@ -82,9 +99,10 @@ Three misses in a row on the same needed fact (queue hours, ₪, license, measur
 משמרת: <job name>
 צוות: <morning-brief | research | inquiry | content | books-data>
 מושב: <lead | studio | growth | ops | production>
+מטרה: <one-line completion condition or «אין»>
 מצב: worker_done | escalation | decision_gate
 דופק: working | blocked | idle
-אימות: <sensor name or field check or חסר>
+אימות: <sensor | field check | tool receipt | חסר>
 ארטיפקט: <path or «אין»>
 מה נעשה: <one or two lines, cited>
 חסר: <field or «אין»>

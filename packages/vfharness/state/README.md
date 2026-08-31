@@ -13,6 +13,7 @@
 
 | שדה | מתי |
 |---|---|
+| `goal` | תנאי סיום אחד (DeerFlow `/goal`) — לא ₪ |
 | `planned_steps` | לפני ביצוע — תצוגה מקדימה של 3–8 צעדים (דפוס OMA, בלי runtime שני) |
 | `crew` | שם הצוות מ-`vfe2b/crews/` |
 | `outcome` | `worker_done` / `escalation` / `decision_gate` בסגירה |

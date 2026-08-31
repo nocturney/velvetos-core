@@ -2,6 +2,7 @@
   "task_id": "inquiry-example-2026-08-31",
   "status": "blocked",
   "pack": "vfconvert",
+  "goal": "Gmail reply sent in thread 19abc… with verified quantity and approved ₪",
   "crew": "inquiry",
   "planned_steps": [
     "Read named Gmail thread",

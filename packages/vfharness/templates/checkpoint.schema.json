@@ -9,6 +9,10 @@
     "task_id": { "type": "string", "minLength": 1 },
     "status": { "enum": ["running", "blocked", "escalated", "done"] },
     "pack": { "type": "string", "minLength": 1 },
+    "goal": {
+      "type": "string",
+      "description": "Optional session completion condition (DeerFlow /goal pattern). Sale ₪ is never a goal — use decision_gate."
+    },
     "crew": {
       "type": "string",
       "description": "Existing vfe2b crew when this checkpoint backs a משמרת (morning-brief, inquiry, content, research, books-data)."
@@ -44,7 +48,7 @@
     },
     "verification": {
       "type": "string",
-      "description": "Run card אימות — sensor name, named field read, or חסר."
+      "description": "Run card אימות — sensor name, named field read, tool receipt, or חסר."
     },
     "gate": {
       "type": ["object", "null"],

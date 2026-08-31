@@ -7,6 +7,7 @@ Replay קריא של כרטיס `crews/run.md` + checkpoint. לא runtime שני
 task_id: <checkpoint task_id>
 צוות: <crew>
 מושב: <lead | studio | growth | ops | production>
+מטרה: <goal or «אין»>
 מצב: worker_done | escalation | decision_gate
 דופק: working | blocked | idle
 אימות: <sensor or field or חסר>
