@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **Bindu (watch)**: [GetBindu/Bindu](https://github.com/GetBindu/Bindu) — identity/A2A/x402 agent layer. Verdict `watch` in `vfresearch/LINKS.json`; patterns only (verify layers, agent cards). No `bindufy`, no Gateway, no x402 from HQ. Lock in `vfe2b/LOCK.md`. See `packages/vfresearch/sources/2026-08-31-bindu.md`.
 - 2026-08-31 — **LobeHub (דפוסים בלבד)**: Connector priority לפי מושב ב־`vfmcp/GAP.md`; שורות ב־`vfe2b/ORCHESTRATORS.md` + `LOCK.md`; רישום `LINKS.json`. בלי Docker/runtime שני. LobeHub Operator patterns embedded on existing packs; no product install. See `packages/vfresearch/sources/2026-08-31-lobehub.md`.
 - 2026-08-31 — **Huginn (דפוסים)**: [huginn/huginn](https://github.com/huginn/huginn) הוטמע בלי Rails — ארבעה scenarios ב־`vfe2b/scenarios/`, `events[]` ב-checkpoint, `check-staleness.py` (`working?`), dedup ב־`vfconvert/hq/DEDUP.md`. רישום `LINKS.json`. Cursor הוא המשרד. Huginn patterns embedded: scenarios, checkpoint events, staleness sensor, inquiry dedup; no second runtime.
 - 2026-08-31 — **OMA patterns (embed only)**: דפוסי [open-multi-agent](https://github.com/open-multi-agent/open-multi-agent) על checkpoint קיים — `planned_steps`, `gate` עמיד, `run-receipt.md`, `playbooks/oma-patterns.md`. בלי `@open-multi-agent/core`, בלי DAG של סוכני קוד. Open Multi-Agent patterns on existing harness; no second runtime.

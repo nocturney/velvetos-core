@@ -52,6 +52,16 @@ Orca ([stablyai/orca](https://github.com/stablyai/orca)), `orca-ide`, `brew inst
 
 למה: דפוסי דופק / אימות / ארטיפקט / תקרת לולאה כבר ב־`crews/run.md` + `vfharness`. אין משרד שני.
 
+## agent internet / Bindu — דלג כהתקנה
+
+[GetBindu/Bindu](https://github.com/GetBindu/Bindu) — `bindufy()`, A2A JSON-RPC, Gateway fleet, x402 USDC, `expose: true` tunnel.
+
+- **דפוסים בלבד:** שלוש שכבות אימות → סנסור + `אימות` + `decision_gate`; agent cards → `vf-desk.json` / `vfmem who`.
+- **לא מ-HQ:** runtime שני, swarm אוטונומי, תשלום crypto, סוכן ציבורי על האינטרנט.
+- **later (B2B):** negotiation + scoped auth דרך `@agentic-identity-trust-architect` על `vfbiz` — עדיין בלי x402.
+
+מקור: `packages/vfresearch/sources/2026-08-31-bindu.md` · רישום: `vfresearch/LINKS.json` (`getbindu-bindu`, verdict `watch`).
+
 ## מוצרים מחוץ לסטודיו — דלג
 
 Voyager (Minecraft), Web3 GPT, ChemCrow, Kwal (גיוס), ShopPal, Claros AI Shopper, Heights Platform, ThinkChain (פורטפוליו), Vortic (ביטוח), Avanzai.
