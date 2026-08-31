@@ -2,6 +2,8 @@
 
 Shared **backend** OS kernel for Velvet business offices: laws, seats, packs, modules, sensors, presets.
 
+> **Velvet Factory — התחלה פשוטה (עברית):** [`docs/START-HERE-HE.md`](docs/START-HERE-HE.md) — ריפo אחד, לחיצה כפולה על `START-VF.bat`, בלי ריפo שני.
+
 - Identity: `packages/velvetos/CORE.json`
 - Modules: `packages/velvetos/modules/`
 - Frontend scaffolds: `instances/` (publish with `scripts/publish-instance.sh`)

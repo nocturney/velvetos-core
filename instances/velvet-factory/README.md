@@ -1,21 +1,21 @@
 # VelvetOS — Velvet Factory
 
-פרונט (office frontend) לעסק ההדפסות התלת־ממד.  
+פרונט (office frontend) לעסק ההדפסות התלת־ממד.
+
+## התחלה — הכי פשוט
+
+1. שכפל `nocturney/velvetos-core`
+2. לחיצה כפולה על **`START-VF.bat`** בתיקייה הזו
+3. Cursor → Open Folder → התיקייה הזו
+
+מדריך מלא: [`docs/START-HERE-HE.md`](../../docs/START-HERE-HE.md)
+
+---
+
+## ריפo נפרד (אופציונלי — לא חובה עכשיו)
+
 הבאקאנד / הליבה: **VelvetOS Core** (`nocturney/velvetos-core`).
 
-## מודל
-
-```
-VelvetOS Core (backend)          VelvetOS — Velvet Factory (frontend)
-laws · modules · packs     →     INSTANCE · STUDIO · desk · tool binds
-presets · sensors                modulesEnabled from maker-print
-```
-
-## הפעלה אחרי יצירת הריפו ב־GitHub
-
-**Windows / בלי `gh`:** [`docs/VELVETOS-VF-WINDOWS.md`](../../docs/VELVETOS-VF-WINDOWS.md) (גם ב-core repo)
-
-1. צור ריפו ריק פרטי: `nocturney/velvetos-velvet-factory`
 2. מתוך הריפו של הליבה:
 
 ```bash
