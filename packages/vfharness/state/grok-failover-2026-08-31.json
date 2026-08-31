@@ -1,0 +1,26 @@
+{
+  "task_id": "grok-failover-2026-08-31",
+  "status": "running",
+  "pack": "vfharness",
+  "completed_steps": [
+    "Owner required Grok-equivalent failover (no extra Send click)",
+    "Allowed office-brief send_message to nocturney@gmail.com during Grok-quota failover",
+    "Sent 31.8 morning brief message 1a0561627a9fdc18 (plaintext — wrong)",
+    "Locked תצוגה 3 HTML on vfbriefux (MAIL.html + render_mail.py)",
+    "No written owner comments after תצוגה 3 in Gmail or accessible transcripts",
+    "Sent corrected 31.8 HTML brief 1a056279d7554a8a (01–07; cid cover not attached)",
+    "Calendar hold kppd0t8mf1a07li78e4hssker8 for G005 already exists",
+    "Instagram Publish still has no MCP"
+  ],
+  "next_step": "Each remaining morning: refresh inbox/calendar then send_message office brief. G005 Thu 12:00 still needs human LIVE-PACKET (no IG publish MCP).",
+  "artifacts": [
+    "packages/vfharness/playbooks/grok-outage-tools.md",
+    "packages/vfops/human-send/MAIL-PACK.md"
+  ],
+  "unresolved": [
+    "No Instagram Publish MCP — G005 cannot be posted from HQ",
+    "Treg / Mobbin / orchestra desks have no MCP here"
+  ],
+  "escalation": null,
+  "last_updated": "2026-08-31"
+}

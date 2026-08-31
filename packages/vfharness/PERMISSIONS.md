@@ -27,6 +27,7 @@ DENY: invented ₪, invented Insights
 | הרצת סנסורים | Allow | בלי תופעת לוואי |
 | Push | Ask | נראה מבחוץ |
 | שליחת ג׳ימייל / IG דרך כלי | Allow | `SEND.md` — לא מחכים לאדם או לגרוק |
+| בריף 07:00 | Allow `htmlBody` תצוגה 3 אל עצמכם | `vfbriefux/MAIL.html` |
 | אוטו־DM / בוסט | Deny | נעול תמיד |
 | מחיקת נתונים | Human only | קשה להפוך |
 

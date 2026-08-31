@@ -14,7 +14,7 @@
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
     "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
-    "Grok Bot quota failover: keep producing AND sending via HQ tools. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
+    "Grok Bot quota failover: keep producing AND sending via HQ tools. Office brief is תצוגה 3 HTML via send_message to nocturney@gmail.com. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
     "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md."
   ],
   "studio": {
@@ -37,7 +37,8 @@
       "allowed": ["search_threads", "get_thread", "get_message", "list_labels", "list_drafts", "create_draft", "update_draft", "send_message", "reply", "forward"],
       "forbidden": [],
       "rule": "HQ sends via tools. No blast list. No invented ₪. No secrets.",
-      "failover": "Drive create_file the body + continue; never invent inquiry",
+      "sendOfficeBriefTo": "nocturney@gmail.com",
+      "failover": "send_message office brief as תצוגה 3 htmlBody; if MCP down Drive create_file + MAIL-PACK; never invent inquiry",
       "queries": {
         "inboxToday": "in:inbox newer_than:1d",
         "bills": "label:חשבונות OR subject:(חשבונית OR Invoice4U OR קבלה)",
@@ -70,6 +71,7 @@
       "status": "ready",
       "namespace": "Canva",
       "useWhen": "Instagram post/story/reel cover/carousel for @velvets_cloud",
+      "mcp": "https://mcp.canva.com/mcp",
       "verifiedAt": "2026-08-31",
       "note": "Cloud Agent search-designs returned DAGoYmCu4c4. Instagram send: vfigos/SEND.md (tool or Canva+Drive+Gmail failover).",
       "failover": "needsAuth → packages/vfcanva/studio/render.py → Superdesign. Say Canva לא מחובר."

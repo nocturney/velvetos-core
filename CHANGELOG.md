@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **בריף תצוגה 3**: מייל הפיילאובר יצא טקסט כי MAIL-PACK נשלח כ־`body`. חוזה HTML מנעול תצוגה 3 (`vfbriefux/MAIL.html` + `render_mail.py` + `cid` כריכות). לא מחליפים מבנה 01–07. תיקון חי: message `1a056279d7554a8a`. כריכת `cid` עדיין חסרה (MCP Base64). Office brief uses locked תצוגה 3 HTML, not plaintext.
+- 2026-08-31 — **בריף כמו Grok**: בפיילאובר מכסה HQ שולח את בריף 07:00 אל `nocturney@gmail.com` (`send_message` + `htmlBody` תצוגה 3). בלי לחיצת Send אצל הבעלים. Office-brief send is the Grok-equivalent during quota outage.
 - 2026-08-31 — **סשן מחברים חי**: ChatGPT Gmail-קריאה; Gemini Workspace+Search+YouTube; Perplexity Connectors ריק; Grok חומת X (אין גוף). הוטמע ב־`vfmcp/GAP.md`. אין מחבר חדש חובה היום.
 - 2026-08-31 — **חוקת שליחה אוטונומית**: Treg לא רלוונטי. Drive `create_file` למסמכי משרד. **HQ שולח ג׳ימייל ואינסטגרם דרך כלים** (`constitution/SEND.md`) — לא כריסטיאן ולא Grok כשער. פיילאובר: Canva+Drive+Gmail באותו תור אם אין Publish MCP. נעילות חדשות: `hq-send-via-tools` / `no-auto-dm` / `no-boost`. Send law: HQ tools send Gmail+IG; Treg unused; Drive creates office docs.
 - 2026-08-31 — **פערי כלים Grok/GPT/ג׳מיני/פרפלקסיטי**: Canva **ready** על Cloud Agent (`DAGoYmCu4c4`); `WebSearch`/`WebFetch` ו־`GenerateImage` על השולחן (`tools.web` / `tools.image`). גיליון דרך Drive כשייש שם (`vfbooks/SHEETS.md`). מפה: `packages/vfmcp/GAP.md`. Tool-gap: wired native web+image; Canva verified live.

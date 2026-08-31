@@ -60,7 +60,7 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 
 ## Tool modes
 
-- **Gmail:** Inbox `nocturney@gmail.com`. Read **and send** (`send_message` / `reply` / `forward`). Down → Drive doc + continue; never invent an inquiry.
+- **Gmail:** Inbox `nocturney@gmail.com`. Read **and send** (`send_message` / `reply` / `forward`). 07:00 brief is תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`). Down → Drive doc + continue; never invent an inquiry.
 - **Calendar:** `list_events` on `nocturney@gmail.com`, timezone `Asia/Jerusalem`. Create events only if asked. Down → ask pickup window / «חסר לוח» and continue.
 - **Drive:** `search_files` by job/SKU **and `create_file`** for office docs/sheets. No dedicated VF folder required. Do not open personal, medical, or legal folders unless the user names them.
 - **Canva:** Instagram visuals. Connected (`ready`). `needsAuth` → `packages/vfcanva/studio/render.py` then Superdesign. Say `Canva לא מחובר`.

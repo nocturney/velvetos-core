@@ -1,13 +1,29 @@
-# מעבר תזמורת · פערי כלים · 31.8.2026 (Asia/Jerusalem)
+# תזמורת · 2026-08-31 (Asia/Jerusalem)
 
-מעבר בריצת `bc-4dd7d6a7` («פערי כלי מערכת»).  
+שני מעברים באותו יום: 06:15 (פיילאובר Grok, אין MCP לשולחנות) ואחר כך פערי כלים (`bc-4dd7d6a7`).
+
+## 06:15 · שולחנות בלי MCP
+
+אותה שאלת `vfresearch/DAILY.md`.  
+שולחנות ChatGPT / Gemini / Perplexity **אין להם MCP** על Cloud Agent הזה.
+
+| נפל | למה | עבר ל־ | גוף |
+|---|---|---|---|
+| ChatGPT | אין כלי MCP בסשן | פקים שכבר על הדיסק | אין גוף חדש · לא הומצא |
+| Gemini | אין כלי MCP בסשן | פקים שכבר על הדיסק | אין גוף חדש · לא הומצא |
+| Perplexity | אין כלי MCP בסשן | פקים שכבר על הדיסק | אין גוף חדש · לא הומצא |
+
+שלושתם לא נפתחו. אין «מחכים לבעלים» בלי תוצאה: התוצר הוא **פיילאובר Grok החי** על פקים קיימים (`2026-08-31-grok-failover.md`).
+
+## מעבר פערי כלים · `bc-4dd7d6a7`
+
 מיועד לבריף **1.9.2026 07:00** בלוק `05`.
 
-## מה נשאל
+### מה נשאל
 
 איזה כלים מותקנים/מופעלים אצל Grok / ChatGPT / Gemini / Perplexity שלא קיימים או לא מופעלים כאן — למצוא פערים ולהתקין מה שחסר/נדרש.
 
-## מה נבדק כאן (גוף אמיתי)
+### מה נבדק כאן (גוף אמיתי)
 
 | כלי | גוף |
 |---|---|
@@ -19,7 +35,7 @@
 | Drive Sheets בשם VF | אין. גיליונות אישיים דולגו |
 | Gmail אחרון על כלים | Canva Sign-in with Google 30.8 |
 
-## מה נבדק אצלם
+### מה נבדק אצלם
 
 | שולחן | גוף |
 |---|---|
@@ -30,7 +46,7 @@
 
 דפדפן חי 31.8 (`bc-0d7c7cd6`): ChatGPT = Gmail קריאה בלבד; Gemini = Workspace+Search+YouTube ON, Canva OFF; Perplexity = Connectors ריק; Grok = חומת X — **אין גוף**. לא ממציאים מחברי Grok.
 
-## מה הוטמע
+### מה הוטמע
 
 | ממצא | פק | לא |
 |---|---|---|
@@ -40,7 +56,7 @@
 | גיליון דרך Drive כשייש שם | `vfbooks/SHEETS.md` | Sheets MCP בלי ID |
 | מפת פער | `vfmcp/GAP.md` | פק כלים חדש |
 
-## Failover שבוצע
+### Failover שבוצע
 
 Treg בלי login → WebSearch + «אין ספירה».  
 Mobbin בלי namespace → `vfbriefux`.  
@@ -51,5 +67,5 @@ Mobbin בלי namespace → `vfbriefux`.
 
 ```
 05 · משרד
-מה נבנה / יועל: פערי כלים — Canva ready + web/image; HQ שולח דרך כלים (`SEND.md`); סשן חי: GPT Gmail / Gemini Workspace / Perplexity ריק / Grok חומה (`vfmcp/GAP.md`)
+מה נבנה / יועל: פיילאובר Grok + פערי כלים — Canva ready + web/image; HQ שולח דרך כלים (`SEND.md`); בריף HTML תצוגה 3; סשן חי: GPT Gmail / Gemini Workspace / Perplexity ריק / Grok חומה (`vfmcp/GAP.md`)
 ```
