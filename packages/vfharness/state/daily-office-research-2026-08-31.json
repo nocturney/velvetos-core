@@ -1,0 +1,28 @@
+{
+  "task_id": "daily-office-research-2026-08-31",
+  "status": "done",
+  "pack": "vfresearch",
+  "completed_steps": [
+    "query-vfmem",
+    "reuse-orchestra-path",
+    "open-chatgpt-plus",
+    "open-gemini-plus",
+    "open-perplexity-pro",
+    "embed-existing-packs",
+    "write-vfops-research-block"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "packages/vfops/data/research.md",
+    "packages/vfresearch/sources/2026-08-31-orchestra.md",
+    "packages/vfsku/LAB.md",
+    "packages/vfconvert/CARD.md",
+    "packages/vfcopy/BIO.md"
+  ],
+  "unresolved": [
+    "Gemini Plus: DAILY question left in composer of old marketing thread; no new operational body",
+    "Perplexity Pro: branding/bio body; «שלחו הודעה» skipped"
+  ],
+  "escalation": null,
+  "last_updated": "2026-08-31T06:15:00+03:00"
+}

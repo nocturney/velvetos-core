@@ -16,7 +16,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 ## RULES
 
 - HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot to press Send/Publish. Grok Bot is optional backup.
-- Gmail: `send_message` / `reply` / `forward` are **allowed** for office mail and named inquiry threads. No blast list. No invented ₪.
+- Gmail: `send_message` / `reply` / `forward` are **allowed** for office mail and named inquiry threads. No blast list. No invented ₪. Office 07:00 brief is תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`).
 - Instagram `@velvets_cloud`: send via a connected publish tool; if none, failover **same turn** to Canva + Drive `create_file` + Gmail (`vfigos/SEND.md`). Do not idle. Do not claim the feed posted if it did not.
 - Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
@@ -26,6 +26,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 - Treg is **not relevant**. Do not login, `call`, or route failover through Treg. Live web = `WebSearch` / `WebFetch` / orchestra.
 - Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.
 - Grok Bot quota failover: HQ **keeps producing and sending** via HQ tools. Queue tags: `#נשלח-מ-HQ` when a tool sent; `#ממתין-ל-כלי-IG` if the feed itself is still waiting on a publish MCP; `#פרסום-חי-דחוף` + `LIVE-PACKET` for urgent feed work (HQ still sends via tools). Do not sit on `#מוכן-ל-Grok` as the only path. No boost, no auto-DM, no Print from HQ. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md` · `constitution/SEND.md`.
+- Do not invent Origin slugs. Keep `unknown` / `origin-slug-unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`.
 - After every catalog, pack, or rule change, run `python3 scripts/check-all.py`.
 - Do not claim success if a computational sensor failed. Retry once, then escalate.
 - Close a multi-step task with a checkpoint under `packages/vfharness/state/` so the next session can resume.
@@ -34,9 +35,11 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 
 ## ANTI-PATTERNS (dated; each traces to an observed failure)
 
+- 2026-08-31 — Invented Origin slug or idled because Origin list was HQ-only. Keep `unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`. Sensor: `scripts/check-origin-slugs.py`.
 - 2026-08-30 — Invented sale ₪ or Insights to fill a gap. Sensor: `scripts/check-hq-overlay.py`.
 - 2026-08-31 — Installed a second orchestrator (amux, Orca ADE, OpenClaw, Ralph unattended, swarm) instead of embedding onto `vfe2b/crews/run.md`. Sensor: `scripts/check-vfe2b.py`.
 - 2026-08-31 — Waited for Christian or Grok Bot to send Gmail/Instagram while tools were available. Sensor: `scripts/check-vf-desk.py` + `constitution/SEND.md`.
+- 2026-08-31 — Left office brief unsent during Grok outage (asked owner to click Send). Failover must send the self-brief like Grok (`htmlBody` תצוגה 3). Sensor: `check-vfharness.py` + `grok-outage-tools.md`.
 - 2026-08-30 — Instagram / Gmail send from HQ **without a tool / claiming Publish**. Superseded 31.8: HQ **does** send via tools. Still forbid auto-DM, boost, invented publish. Sensor: desk rule + `scripts/check-vf-desk.py`.
 - 2026-08-30 — New pack per ChatGPT/Gemini “agent”. Embed in place. Map: `packages/chatgpt-embed-map.json`.
 - 2026-08-30 — Inspiration/share links left stale. Weekly pass: `packages/vfresearch/WEEKLY.md` + `LINKS.json`. Sensor: `scripts/check-vfresearch.py`.
@@ -61,6 +64,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 | `scripts/check-vf-canva.py` | Canva Instagram desk |
 | `scripts/check-vfresearch.py` | Weekly inspiration-links + IG music + orchestra failover law |
 | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready |
+| `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
 
 Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
 
@@ -79,7 +83,7 @@ ALLOW execute: `python3 scripts/check-*.py`
 ASK before: `git push`, Calendar create
 ALLOW send: Gmail `send_message` / `reply` / `forward`; Instagram via connected tool or Canva+Drive+Gmail failover (`constitution/SEND.md`)
 ALLOW write: Drive `create_file` for office docs (no personal/medical/legal folders)
-DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights, claiming IG posted without a publish tool
+DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights / Origin slugs, claiming IG posted without a publish tool
 
 ## MEMORY
 

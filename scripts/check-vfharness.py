@@ -151,6 +151,13 @@ def main() -> None:
     if "vfharness" not in pack_names:
         fail("vfharness missing from packages/manifest.json")
 
+    tools_map = ROOT / "packages/vfharness/playbooks/grok-outage-tools.md"
+    if not tools_map.is_file():
+        fail("missing packages/vfharness/playbooks/grok-outage-tools.md")
+    tools_text = tools_map.read_text()
+    for needle in ("create_draft", "Canva", "render.py", "אין MCP", "send_message"):
+        if needle not in tools_text:
+            fail(f"grok-outage-tools.md missing {needle!r}")
     failover = ROOT / "packages/vfharness/playbooks/grok-failover.md"
     if not failover.is_file():
         fail("missing packages/vfharness/playbooks/grok-failover.md")

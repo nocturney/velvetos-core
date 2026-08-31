@@ -45,10 +45,43 @@ def main() -> None:
 
     if not (ROOT / "packages/vfbriefux/hq/PACKET.md").is_file():
         fail("missing daily brief packet")
+    mail_html = ROOT / "packages/vfbriefux/MAIL.html"
+    mail_md = ROOT / "packages/vfbriefux/MAIL.md"
+    render = ROOT / "packages/vfbriefux/render_mail.py"
+    for path in (mail_html, mail_md, render):
+        if not path.is_file():
+            fail(f"missing {path.relative_to(ROOT)}")
+    mail_text = mail_html.read_text()
+    for token in (
+        'bgcolor="#0b1224"',
+        'dir="rtl"',
+        "{{DATE_LINE}}",
+        "{{SLOTS}}",
+        "תצוגה 3",
+    ):
+        if token not in mail_text:
+            fail(f"MAIL.html missing {token}")
+    if "htmlBody" not in mail_md.read_text():
+        fail("MAIL.md must require htmlBody")
+    proc = __import__("subprocess").run(
+        [sys.executable, str(render), "--check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if proc.returncode != 0:
+        fail(f"render_mail.py --check: {proc.stderr or proc.stdout}")
     if not (ROOT / "constitution/CONSTITUTION.md").is_file():
         fail("missing constitution")
     if not (ROOT / "constitution/tags.md").is_file():
         fail("missing tags")
+
+    research = ROOT / "packages/vfops/data/research.md"
+    if not research.is_file():
+        fail("missing vfops/data/research.md (07:00 block 05 pickup)")
+    research_text = research.read_text()
+    if "מה נבנה / יועל" not in research_text and "אין חדש במשרד" not in research_text:
+        fail("vfops/data/research.md must carry «מה נבנה / יועל» or exact empty-state אין חדש במשרד")
 
     vendor = (ROOT / "scripts/vendor-origin-packs.sh").read_text()
     if "HQ overlay wins" not in vendor:

@@ -1,0 +1,27 @@
+{
+  "task_id": "origin-slugs-2026-08-31",
+  "status": "done",
+  "pack": "vfharness",
+  "completed_steps": [
+    "Confirmed origin repo list is HQ-only (christian-velvet/velvet-factory-headquarters-os)",
+    "Confirmed known tmp slug view is token-not-scoped",
+    "Confirmed 11 pack bcIds are not readable from this HQ environment",
+    "Wrote docs/ORIGIN-SLUGS.md playbook — keep unknown, do not invent",
+    "Added scripts/discover-origin-slugs.py (report only) and scripts/check-origin-slugs.py",
+    "Routed vfmem who origin slug to @workflow-architect / vfharness",
+    "Added ADR no-invented-origin-slug"
+  ],
+  "next_step": "Lead seat copies slugs from pack agent pages or issues a tmp-scoped Origin token, then update ORIGIN.md + manifest the same day",
+  "artifacts": [
+    "docs/ORIGIN-SLUGS.md",
+    "scripts/discover-origin-slugs.py",
+    "scripts/check-origin-slugs.py"
+  ],
+  "unresolved": [
+    "Eleven packs still have originSlug null — expected until a scoped list or agent-page copy",
+    "This Cloud Agent token cannot clone christian-velvet/tmp-* trees",
+    "Pack cloud-agent transcripts remain unreadable from this environment"
+  ],
+  "escalation": null,
+  "last_updated": "2026-08-31"
+}

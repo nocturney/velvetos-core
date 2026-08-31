@@ -6,7 +6,7 @@
 
 ## תזמורת + קישורים
 
-- יומי 06:15 (צ'אטים חדשים): `DAILY.md`
+- יומי 06:15 (צ'אטים חדשים): `DAILY.md` → בלוק `05` ב־`packages/vfops/data/research.md`
 - **שבועי** — סקירת קישורי השראה/הטמעה שנשלחו: `WEEKLY.md` + `LINKS.json`
 - מיומנות: `.cursor/skills/vf-weekly-links/SKILL.md` · `@research-synthesist`
 

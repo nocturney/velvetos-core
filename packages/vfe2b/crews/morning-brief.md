@@ -8,7 +8,7 @@ Packs: `vfbriefux`, `vfseason`, `vfops`, `vfbooks`, `vfigos`.
 
 | Role | Pack | Does | Does not |
 |---|---|---|---|
-| Inbox clerk | `vfops` | Read Gmail. Flag bills and job threads. Send the 07:00 brief via `send_message` when the page is ready. | Blast list. Invent ₪. Customer WhatsApp |
+| Inbox clerk | `vfops` | Read Gmail. Flag bills and job threads. Send the 07:00 brief via `send_message` + `htmlBody` תצוגה 3 (`vfbriefux/MAIL.html`) when the page is ready. | Blast list. Invent ₪. Customer WhatsApp. Plaintext-only brief |
 | Calendar clerk | `vfseason` | Read `Asia/Jerusalem`. Note clashes. | Create events unless asked |
 | Brief editor | `vfbriefux` | Shape the morning list. | Invent metrics |
 | Floor lead | `vfops` | Mark print-floor blockers from mail. | Assign printers from HQ |
@@ -20,8 +20,8 @@ Packs: `vfbriefux`, `vfseason`, `vfops`, `vfbooks`, `vfigos`.
 2. List today's calendar blocks.
 3. Cross-check `vfseason` marks (holidays, drops). If the pack tree is empty, say so.
 4. Output three buckets in Hebrew: **היום** / **אדם** / **אחר כך**. Name **one** job the human can hand to `@vfe2b run` (Taskuary). Do not drain the whole inbox unattended.
-5. Write the brief to `packages/vfops/BRIEF.md` (or the packet the brief UX names).
-6. HQ **sends** the 07:00 brief to `nocturney@gmail.com` via Gmail `send_message` (`constitution/SEND.md`). Failover: Drive `create_file` the same body + continue. Do not wait for Grok.
+5. Write the brief to `packages/vfops/BRIEF.md` (or the packet the brief UX names). Block `05` is `packages/vfops/data/research.md`.
+6. HQ **sends** the 07:00 brief to `nocturney@gmail.com` via Gmail `send_message` + `htmlBody` תצוגה 3 (`packages/vfbriefux/MAIL.html` + `render_mail.py`). Failover: Drive `create_file` the same body + continue. Do not wait for Grok. Do not send plaintext as the live brief.
 
 ## Done when
 

@@ -23,6 +23,7 @@ Grok הוא גיבוי אופציונלי. לא מחכים למכסה. לא מח
 
 | תאריך | מזהה | סוג | נתיב / הערה | סטטוס |
 |---|---|---|---|---|
+| 2026-08-31 | VF-G005 d12b | קרוסלה | LIVE-PACKET: `vfigos/live/G005-LIVE-PACKET.md` + `vfcovers/g005/slides/` · חמישי 3.9.2026 12:00 · `#פרסום-חי-דחוף` לפי `SEND.md` |
 | 2026-08-31 | חוקת-שליחה | משרד | Drive `1Xd_uUGKYl7FGr11URUtDHrkz16ikyOGZPZSKqdTOr-I` + Gmail `1a056327a22e6ff8` | `#נשלח-מ-HQ` |
 
 ## דוגמאות

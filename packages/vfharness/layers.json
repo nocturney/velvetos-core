@@ -133,6 +133,11 @@
       "type": "computational"
     },
     {
+      "id": "check-origin-slugs",
+      "script": "scripts/check-origin-slugs.py",
+      "type": "computational"
+    },
+    {
       "id": "check-vffcc",
       "script": "scripts/check-vffcc.py",
       "type": "computational"

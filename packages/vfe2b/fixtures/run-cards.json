@@ -18,7 +18,7 @@
     {
       "name": "brief-sent",
       "expect": "worker_done",
-      "card": "משמרת: בריף 07:00\nצוות: morning-brief\nמושב: ops\nמצב: worker_done\nדופק: idle\nאימות: Gmail subjects + Calendar Asia/Jerusalem\nארטיפקט: packages/vfops/BRIEF.md\nמה נעשה: בריף נכתב ונשלח ב-send_message.\nחסר: אין\nהבא: none"
+      "card": "משמרת: בריף 07:00\nצוות: morning-brief\nמושב: ops\nמצב: worker_done\nדופק: idle\nאימות: Gmail subjects + Calendar Asia/Jerusalem\nארטיפקט: packages/vfops/BRIEF.md\nמה נעשה: בריף נכתב ונשלח ב-send_message htmlBody תצוגה 3.\nחסר: אין\nהבא: none"
     }
   ],
   "fail": [

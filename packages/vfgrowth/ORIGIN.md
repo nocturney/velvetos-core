@@ -17,4 +17,5 @@ Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeed
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
 
 Embedded 30.8.2026 from Gemini share: `CALENDAR.md`.  
-Perplexity: start with native IG schedule; paid tools only if lead opens.
+Perplexity: start with native IG schedule; paid tools only if lead opens.  
+31.8.2026: floor-event → content table (ChatGPT Plus).

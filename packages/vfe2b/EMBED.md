@@ -14,7 +14,7 @@
 2. קרא יומן `Asia/Jerusalem`. צור אירוע רק אם ביקשו.
 3. צלב מול `vfseason` (סימני עונה) ו-`vfbriefux` (פורמט הבריף).
 4. הוצא רשימה: דחוף / מחכה לאדם / אפשר אחר כך. בלי ₪. נקוב **עבודה אחת** למשמרת.
-5. HQ **שולח** את בריף 07:00 ב־`send_message`. כלי נפל → Drive `create_file` + המשך.
+5. HQ **שולח** את בריף 07:00 ב־`send_message` + `htmlBody` תצוגה 3 (`vfbriefux/MAIL.html`). כלי נפל → Drive `create_file` + המשך.
 
 ## 2. מחקר — `crews/research.md`
 

@@ -11,10 +11,11 @@ Copy desk — homework, draft, and lint.
 | Clone | `(none until slug is known)` |
 | v0.1.0 vendor | `origin-slug-unknown` |
 
-HQ overlay: `DESK.md` — homework + four-field intake copy. No live send.
+HQ overlay: `DESK.md`, `BIO.md` — homework + four-field intake copy. No live send.
 
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
 
 Embedded 30.8.2026 from Gemini share: `DESK.md` (captions + FAQ knowledge; no live bot).  
-Perplexity: Predis/Flick captions in draft; inquiry four fields for WhatsApp.
+Perplexity: Predis/Flick captions in draft; inquiry four fields for WhatsApp.  
+31.8.2026: `BIO.md` linted (no promised quote, no «שלחו הודעה») + draft library.
