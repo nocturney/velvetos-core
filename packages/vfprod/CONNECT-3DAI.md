@@ -17,9 +17,25 @@
 
 ---
 
-## A) Desktop (כבר עובד אצלך)
+## A) Desktop
 
-[`/.cursor/mcp.json`](../../.cursor/mcp.json):
+### הכי קל: לחץ על הקישור
+
+1. במחשב שבו מותקן Cursor, לחץ:  
+   [הוסף 3D AI Studio ל-Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=threedaistudio&config=eyJ1cmwiOiJodHRwczovL21jcC4zZGFpc3R1ZGlvLmNvbS9tY3AifQ==)
+2. Cursor ישאל אם להתקין שרת MCP בשם `threedaistudio`. אשר.
+3. בדפדפן — Login ל-3D AI Studio → Allow.
+4. ברשימת MCP אמור להופיע `threedaistudio` (Connect / ירוק).
+
+אם הקישור לא נפתח, העתק לכתובת בדפדפן:
+
+`cursor://anysphere.cursor-deeplink/mcp/install?name=threedaistudio&config=eyJ1cmwiOiJodHRwczovL21jcC4zZGFpc3R1ZGlvLmNvbS9tY3AifQ==`
+
+**הערה:** ב-Cursor 3.15.6 deeplink עלול לא לעבוד — עדכן ל-3.15.12+ או הוסף ידנית למטה.
+
+### מהפרויקט (אחרי pull)
+
+הריפו מגדיר ב-[`.cursor/mcp.json`](../../.cursor/mcp.json):
 
 ```json
 "threedaistudio": {
@@ -27,12 +43,35 @@
 }
 ```
 
-קישור מהיר:  
-[cursor://anysphere.cursor-deeplink/mcp/install?name=threedaistudio&config=eyJ1cmwiOiJodHRwczovL21jcC4zZGFpc3R1ZGlvLmNvbS9tY3AifQ==](cursor://anysphere.cursor-deeplink/mcp/install?name=threedaistudio&config=eyJ1cmwiOiJodHRwczovL21jcC4zZGFpc3R1ZGlvLmNvbS9tY3AifQ==)
+1. פתח את **שורש הריפו** `velvet-factory-headquarters-os` ב-Cursor (לא תת-תיקייה).
+2. `Ctrl+Shift+P` → **Developer: Reload Window**.
+3. Customize → **MCPs** — אמור להופיע `threedaistudio`.
+4. Connect → Allow בדפדפן.
+
+### בלי קישור: הוספה ידנית
+
+1. `Ctrl+Shift+P` → `View: Open MCP Settings`.
+2. הוסף ל-`mcp.json` (או הדבק את כל הקובץ):
+
+```json
+{
+  "mcpServers": {
+    "canva": {
+      "type": "http",
+      "url": "https://mcp.canva.com/mcp"
+    },
+    "threedaistudio": {
+      "url": "https://mcp.3daistudio.com/mcp"
+    }
+  }
+}
+```
+
+3. שמור → Reload Window → Connect על `threedaistudio`.
 
 ---
 
-## B) Cloud Agent — שלבים
+## B) Cloud Agent
 
 ### 1. אדמין: Team MCP (פעם אחת לצוות)
 
@@ -59,7 +98,7 @@ Canva הוגדר כך — 3DAI באותו מסלול.
 
 הרץ Cloud Agent עם: «בדוק יתרת קרדיטים ב-3D AI Studio» או «ייצא מודל ל-STL» (אחרי אישור קונספט).
 
-אם OAuth נכשל — בדashboard events יופיע `mcp_auth_error`.
+אם OAuth נכשל — ב-dashboard events יופיע `mcp_auth_error`.
 
 ### 4. רשת (אם egress מוגבל)
 
@@ -74,21 +113,25 @@ Canva הוגדר כך — 3DAI באותו מסלול.
 2. Settings → **AI Assistants (MCP)** → Cursor → Allow
 3. חזור ל-Cursor (Desktop או Agents) → Connect
 
----
+מקור: [MCP](https://www.3daistudio.com/MCP) · v6.5 — «Available on all paid plans.»
 
-## מה לא לעשות
+## רואים רק Canva? / Cloud לא רואה 3DAI?
 
-| חיפוש | למה |
+| סיבה | תיקון |
 |---|---|
-| רק `.cursor/mcp.json` ל-Cloud | הקובץ לא מגיע ל-VM של Cloud Agent |
-| API key ב-git / ב-Team MCP | OAuth בלבד |
+| רק `.cursor/mcp.json` ל-Cloud | הוסף Team MCP ב-Dashboard (סעיף B) |
 | Desktop Connect = Cloud מוכן | OAuth נפרד לכל ממשק |
+| לא עשית pull / Reload | `git pull` + Reload Window |
+| שם ישן `3daistudio` | שנה ל-`threedaistudio` |
+| Canva מ-global, פרויקט לא נטען | פתח שורש הריפו או deeplink |
+| deeplink שבור (Cursor ישן) | עדכן Cursor או הוסף ידנית |
+| API key ב-git / ב-Team MCP | OAuth בלבד |
 | Flow → Bob | עוזר קנבס, לא MCP |
 | הדפסה / ₪ מ-HQ | רצפה + אדם |
 
 ## Failover
 
-MCP אפור → אתר + Drive. אין מפתח / ₪ מומצאים.
+MCP אפור / `needsAuth` → אתר + Drive. אין מפתח / ₪ מומצאים.
 
 ## אחרי Connect ירוק
 
