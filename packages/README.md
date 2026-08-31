@@ -4,7 +4,9 @@ Office OS lives here as `packages/<name>/`.
 
 v0.1.0 catalogues every known Velvet Factory Cursor pack. Actual Origin trees were **not** copied in that dump: this HQ environment had GitHub auth only. Origin CLI reported `Not logged in`, `CURSOR_API_KEY` was unset, and `https://origin.cursor.com/{owner}/{repo}.git` rejected the GitHub token.
 
-After `origin auth login` (or `CURSOR_API_KEY`), run:
+Unknown Origin slugs stay `unknown` — do not invent `tmp-…`. HQ overlay is the office. Playbook: [`docs/ORIGIN-SLUGS.md`](../docs/ORIGIN-SLUGS.md). Report: `python3 scripts/discover-origin-slugs.py`.
+
+Vendor needs a token scoped for `christian-velvet/tmp-*` (HQ-only list is not enough):
 
 ```bash
 chmod +x scripts/vendor-origin-packs.sh

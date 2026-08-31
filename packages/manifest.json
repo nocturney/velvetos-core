@@ -4,6 +4,7 @@
   "dumpedAt": "2026-08-30",
   "tag": "v0.1.0",
   "notes": [
+    "Origin slugs: never invent. Eleven packs stay origin-slug-unknown until a scoped tmp list or agent-page copy. Playbook: docs/ORIGIN-SLUGS.md. Report: scripts/discover-origin-slugs.py. Recheck 2026-08-31: this HQ token lists only velvet-factory-headquarters-os; known tmp-* view is token-not-scoped.",
     "Origin CLI was not authenticated in the v0.1.0 dump environment (no CURSOR_API_KEY, origin auth status: not logged in).",
     "GitHub token is not accepted by origin.cursor.com.",
     "Cloud-agent transcripts for pack bcIds were not readable from this HQ environment.",
