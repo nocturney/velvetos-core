@@ -62,6 +62,35 @@
       "required": ["kind", "waiting_for"]
     },
     "escalation": { "type": ["string", "null"] },
-    "last_updated": { "type": "string", "minLength": 8 }
+    "last_updated": { "type": "string", "minLength": 8 },
+    "events": {
+      "type": "array",
+      "description": "Huginn-style event log flowing between scenario steps (optional)",
+      "items": {
+        "type": "object",
+        "required": ["name", "producedAt"],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Event type e.g. inquiry.received, mail.sent"
+          },
+          "producedAt": {
+            "type": "string",
+            "minLength": 8,
+            "description": "ISO-8601 or YYYY-MM-DD"
+          },
+          "payload": {
+            "type": "object",
+            "description": "Step-specific data; no invented ₪ or Insights"
+          },
+          "sourceAgent": {
+            "type": "string",
+            "description": "Pack or scenario step that emitted the event"
+          }
+        }
+      }
+    }
   }
 }

@@ -18,6 +18,7 @@
 | Julius / Vanna / Wren | `vfcost`, `vfbooks`, `vfinsights` | שאלות רק על מספרים שכבר קיימים |
 | MemGPT / Private GPT | HQ + `vfresearch` | זיכרון מהקטלוג; בלי להמציא |
 | Zapier / Bardeen / Gumloop | `vfops` | נהלי צומת; אין Zap חי מ-HQ |
+| Huginn | `vfe2b` | Scenarios + events + staleness; אין Rails |
 | Cursor / Superagent+E2B | המשרד הזה | כבר רץ כאן; אין ארגז חול שני |
 | Diagram / v0 | `vfcovers`, `vfbriefux` | Superdesign / Canva; לא אתר חדש |
 
@@ -35,6 +36,8 @@
 | [`EMBED.md`](EMBED.md) | איך מריצים את חמשת הצוותים + משמרת + תזמורת |
 | [`LOCK.md`](LOCK.md) | מה דולג ולמה |
 | [`crews/`](crews/) | נהלי צוות להרצה ב-Cursor |
+| [`scenarios/`](scenarios/) | גרפי Huginn (4 תרחישים) — pattern בלבד |
+| [`scenarios.json`](scenarios.json) | רשימת תרחישים למכונה |
 | [`fixtures/run-cards.json`](fixtures/run-cards.json) | כרטיסי משמרת לדוגמה — מצב אחד בלבד |
 | [`scripts/check-vfe2b.py`](../../scripts/check-vfe2b.py) | בדיקת עקביות מול `packages/manifest.json` |
 

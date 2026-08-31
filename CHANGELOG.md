@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **Huginn (דפוסים)**: [huginn/huginn](https://github.com/huginn/huginn) הוטמע בלי Rails — ארבעה scenarios ב־`vfe2b/scenarios/`, `events[]` ב-checkpoint, `check-staleness.py` (`working?`), dedup ב־`vfconvert/hq/DEDUP.md`. רישום `LINKS.json`. Cursor הוא המשרד. Huginn patterns embedded: scenarios, checkpoint events, staleness sensor, inquiry dedup; no second runtime.
 - 2026-08-31 — **OMA patterns (embed only)**: דפוסי [open-multi-agent](https://github.com/open-multi-agent/open-multi-agent) על checkpoint קיים — `planned_steps`, `gate` עמיד, `run-receipt.md`, `playbooks/oma-patterns.md`. בלי `@open-multi-agent/core`, בלי DAG של סוכני קוד. Open Multi-Agent patterns on existing harness; no second runtime.
 - 2026-08-31 — **Headroom (pattern only)**: דפוס CCR + ContentRouter ב-`vfharness/playbooks/context-thrift.md` — סיכום בשיחה, מקור ב-checkpoint/Drive; vfmem → MAP → 2 nodes; Headroom runtime **local optional** (Mac) ב-`vfmcp/GAP.md`. לא proxy על Cloud Agent. Headroom embed: context thrift playbook; no Cloud Agent runtime.
 - 2026-08-31 — **DeerFlow patterns (לא runtime)**: מיפוי [bytedance/deer-flow](https://github.com/bytedance/deer-flow) על `vfe2b` — `מטרה`, sub-agent bounds, tool receipts, compaction ב-checkpoint. בלי Gateway, בלי sandbox, בלי IM. DeerFlow harness patterns embedded on existing crews; no second runtime. See `packages/vfe2b/DEER-FLOW-PATTERNS.md`.
