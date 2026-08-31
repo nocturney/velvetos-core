@@ -40,7 +40,9 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 | **Canva** (`needsAuth` / אין כלים) | `packages/vfcanva/studio/render.py` → אם גם זה נכשל: Superdesign | לא ממציאים קישור Canva |
 | **Superdesign** | Canva אם מחובר · אחרת `studio/render.py` | לא עוצרים את חבילת התוכן |
 | **Mobbin** (אין namespace) | תבניות `vfbriefux` / Superdesign לגרפיקת בריף | לא ממציאים מסכי אפליקציה |
-| **Treg** (אין login) | מקור מאומת אחר / Drive / «אין ספירה» · מוזיקה IG → HeyOrca (`MUSIC.md`) | לא ממציאים Insights / טרנד |
+| **Treg** (אין login) | **WebSearch / WebFetch** (`tools.web`) · מקור מאומת / Drive / «אין ספירה» · מוזיקה IG → HeyOrca (`MUSIC.md`) | לא ממציאים Insights / טרנד |
+| **WebSearch / WebFetch** (`tools.web`) | Treg אם יש login (מחיר קטלוג קודם) · תזמורת ChatGPT+Gemini | לא ממציאים גוף חסום |
+| **GenerateImage** (`tools.image`) | Canva `generate-design` → Superdesign → `studio/render.py` | לא ממציאים קישור Canva |
 | **Gmail** MCP | טקסט שהמשתמש הדביק / Drive לפי שם עבודה | לא ממציאים פנייה · לא שולחים |
 | **Calendar** MCP | שואלים חלון איסוף / «חסר לוח» וממשיכים בריף מג׳ימייל | לא ממציאים שעות תור |
 | **Drive** MCP | קובץ/שם שהמשתמש נתן בצ׳אט | לא פותחים תיקיות אישיות |

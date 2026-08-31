@@ -62,10 +62,14 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 - **Gmail:** `search_threads` / `get_thread` / `list_labels`. Inbox is `nocturney@gmail.com`. Down → paste from user / Drive-by-job; never invent an inquiry; never send.
 - **Calendar:** `list_events` on `nocturney@gmail.com`, timezone `Asia/Jerusalem`. Create events only if asked. Down → ask pickup window / «חסר לוח» and continue.
 - **Drive:** `search_files` by the job/SKU the user gives. There is no dedicated VF studio folder. Down → use files the user named in chat.
-- **Canva:** Instagram visuals. `needsAuth` → `packages/vfcanva/studio/render.py` then Superdesign. Say `Canva לא מחובר`.
+- **Canva:** Instagram visuals. Connected on this Cloud Agent (`ready`). `needsAuth` → `packages/vfcanva/studio/render.py` then Superdesign. Say `Canva לא מחובר`.
+- **Web:** Cursor `WebSearch` / `WebFetch` — ChatGPT/Gemini/Perplexity/Grok browse equivalent. Down → Treg if logged in, else orchestra. Never invent a blocked body.
+- **Image:** Cursor `GenerateImage` + Canva `generate-design`. Instagram still Canva-first. Down → Superdesign / `studio/render.py`. No invented Canva URL.
 - **Superdesign:** covers, posters, brief graphics (skip repo init). Down → Canva or `studio/render.py`.
-- **Treg:** live web data only after login; announce catalog price before `call`. Down → verified snapshot / «אין ספירה»; IG music → HeyOrca (`vfresearch/MUSIC.md`), not invented Trends.
+- **Treg:** live web data only after login; announce catalog price before `call`. Down → WebSearch / verified snapshot / «אין ספירה»; IG music → HeyOrca (`vfresearch/MUSIC.md`), not invented Trends.
 - **Mobbin:** morning-brief / UX references when the Mobbin MCP is actually available. Down → `vfbriefux` templates / Superdesign.
+- **Sheets:** no separate MCP until the lead seat names a workbook. Export via Drive (`vfbooks/SHEETS.md`). «חסר גיליון» if unnamed. Do not invent rows or ₪.
 - **FCC (Free Claude Code):** not on this Cloud Agent. Map is `vffcc`. Does not cut Cursor usage. Local Mac only after the lead seat. Failover → research desks in `constitution/ORCHESTRA.md`.
+- Grok/ChatGPT/Gemini send (IG, Gmail, WhatsApp, printers) stays **off** this HQ. Gap map: `packages/vfmcp/GAP.md`.
 
 When a `@slug` is mentioned, follow that specialist **and** these laws.

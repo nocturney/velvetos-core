@@ -91,11 +91,12 @@
       "id": "tools",
       "file": "graph/tools.md",
       "type": "system",
-      "summary": "Gmail read, Calendar Asia/Jerusalem, Drive by job, Canva, Superdesign, Treg after login. No send from HQ.",
+      "summary": "Gmail read, Calendar Asia/Jerusalem, Drive by job, Canva ready, WebSearch, GenerateImage, Superdesign, Treg after login. No send from HQ.",
       "sources": [
         ".cursor/vf-desk.json",
         "docs/AGENCY-TOOLS.md",
-        "docs/CANVA.md"
+        "docs/CANVA.md",
+        "packages/vfmcp/GAP.md"
       ],
       "links": [
         {"verb": "part_of", "to": "desk"},

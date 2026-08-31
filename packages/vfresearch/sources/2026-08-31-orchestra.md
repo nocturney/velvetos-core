@@ -1,0 +1,55 @@
+# מעבר תזמורת · פערי כלים · 31.8.2026 (Asia/Jerusalem)
+
+מעבר בריצת `bc-4dd7d6a7` («פערי כלי מערכת»).  
+מיועד לבריף **1.9.2026 07:00** בלוק `05`.
+
+## מה נשאל
+
+איזה כלים מותקנים/מופעלים אצל Grok / ChatGPT / Gemini / Perplexity שלא קיימים או לא מופעלים כאן — למצוא פערים ולהתקין מה שחסר/נדרש.
+
+## מה נבדק כאן (גוף אמיתי)
+
+| כלי | גוף |
+|---|---|
+| Gmail / Calendar / Drive MCP | ready |
+| Canva MCP | ready. `search-designs` → `DAGoYmCu4c4` |
+| WebSearch / WebFetch / GenerateImage | native Cursor, לא היו על השולחן |
+| Treg CLI | אין ב־PATH |
+| Mobbin | פלאגין; אין namespace |
+| Drive Sheets בשם VF | אין. גיליונות אישיים דולגו |
+| Gmail אחרון על כלים | Canva Sign-in with Google 30.8 |
+
+## מה נבדק אצלם
+
+| שולחן | גוף |
+|---|---|
+| Grok Connectors (רשמי, מאי 2026) | Workspace (כולל Sheets + **שליחת** מייל), Outlook, SharePoint, Notion, Linear, GitHub, BYO-MCP. Grok Bot HQ: IG send / Gmail send / מדפסות |
+| ChatGPT Apps (עזרה רשמית) | Gmail/Drive/Calendar/Canva + חיפוש + תמונה. Gmail send אחרי אישור — **דולג** |
+| Gemini Connected Apps (עזרה רשמית) | Workspace + WhatsApp/Phone **שליחה** — **דולג** |
+| Perplexity | חיפוש+ציטוטים. חומת מנוי/Cloudflare ב־30.8. אין גוף שני |
+
+דפדפן חי לחשבונות עלול להיתקע בחומה. לא ממציאים רשימת מחברים מסשן שלא נקרא.
+
+## מה הוטמע
+
+| ממצא | פק | לא |
+|---|---|---|
+| Canva ready על Cloud Agent | `vf-desk.json` `canva.status=ready` | שליחת IG |
+| WebSearch/WebFetch על השולחן | `tools.web` · `vfresearch` | גוף חסום מומצא |
+| GenerateImage + Canva generate | `tools.image` | כריכת IG בלי Canva-first |
+| גיליון דרך Drive כשייש שם | `vfbooks/SHEETS.md` | Sheets MCP בלי ID |
+| מפת פער | `vfmcp/GAP.md` | פק כלים חדש |
+
+## Failover שבוצע
+
+Treg בלי login → WebSearch + «אין ספירה».  
+Mobbin בלי namespace → `vfbriefux`.  
+אין גיליון VF → «חסר גיליון», בלי שורות מומצאות.  
+שליחת IG/Gmail/וואטסאפ אצלם → לא מותקן כאן.
+
+## בלוק 05
+
+```
+05 · משרד
+מה נבנה / יועל: פערי כלים — Canva ready + web/image על השולחן; שליחה נשארת אצל Grok (`vfmcp/GAP.md`)
+```

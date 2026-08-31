@@ -26,21 +26,25 @@ Checked 2026-08-30 on this HQ:
 | Treg | Skill installed; needs `treg login` | Live SEO/social/ads. Say the catalog price before spending. |
 | vfmem | HQ-native (`scripts/vfmem.py`) | Office graph: pack / `@slug` / tool. Pattern from codebase-memory-mcp; no binary. |
 | FCC (Free Claude Code) | Not on this Cloud Agent | Local BYOK proxy on the owner Mac only (`vffcc`). Does not cut Cursor usage. |
-| Canva | MCP when connected | Instagram visuals. If `needsAuth`: `vfcanva/studio/render.py` → Superdesign. |
+| Canva | **Ready** (verified 2026-08-31, design `DAGoYmCu4c4`) | Instagram visuals. If `needsAuth`: `vfcanva/studio/render.py` → Superdesign. |
+| WebSearch / WebFetch | Ready (native Cursor) | Live web when Treg is down. ChatGPT/Gemini/Perplexity/Grok browse equivalent. Never invent a blocked body. |
+| GenerateImage | Ready (native Cursor) | User-asked stills. Instagram still Canva-first. Failover: Canva `generate-design` → Superdesign → `studio/render.py`. |
 
 **Failover law:** tool down / no access → hand the job to the backup **in the same turn**. Never end empty-handed. Never invent ₪, Insights, or a blocked body to fill the gap. Matrix: [`constitution/ORCHESTRA.md`](../constitution/ORCHESTRA.md).
 
 Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or Christian.
 
+Tool-gap map (Grok / ChatGPT / Gemini / Perplexity vs this HQ): [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md). Sheets without a named workbook: [`packages/vfbooks/SHEETS.md`](../packages/vfbooks/SHEETS.md).
+
 ## Five seats
 
 | Seat | Packs | Desk specialists | Tools |
 |---|---|---|---|
-| ראש צוות | `vfops` `vfbriefux` `vfharness` `vfmem` | `@studio-operations` `@chief-of-staff` `@meeting-notes-specialist` `@workflow-architect` `@ux-architect` | Calendar, Gmail read, Mobbin, `check-all.py`, vfmem |
+| ראש צוות | `vfops` `vfbriefux` `vfharness` `vfmem` | `@studio-operations` `@chief-of-staff` `@meeting-notes-specialist` `@workflow-architect` `@ux-architect` | Calendar, Gmail read, Mobbin, WebSearch, `check-all.py`, vfmem |
 | סטודיו | `vfconvert` `vfsales` `vfcopy` `vfmskill` | `@email-intelligence-engineer` `@discovery-coach` `@sales-engineer` `@proposal-strategist` `@content-creator` `@brand-guardian` | Gmail read, Drive by job |
-| צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` `vfmskill` `vfom` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Superdesign, Treg, Drive |
-| תפעול | `vfcost` `vfbooks` `vfbiz` | `@pricing-analyst` `@bookkeeper-controller` `@finance-tracker` `@business-strategist` | Gmail חשבונות, Drive |
-| ייצור | `vfprod` `vfsku` `vlicense` `vfresearch` | `@studio-producer` `@operations-manager` `@legal-compliance-checker` `@research-synthesist` `@trend-researcher` | Drive, Calendar, Treg |
+| צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` `vfmskill` `vfom` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Superdesign, Treg, Drive, Canva, GenerateImage, WebSearch |
+| תפעול | `vfcost` `vfbooks` `vfbiz` | `@pricing-analyst` `@bookkeeper-controller` `@finance-tracker` `@business-strategist` | Gmail חשבונות, Drive, Sheets-via-Drive (`SHEETS.md`) |
+| ייצור | `vfprod` `vfsku` `vlicense` `vfresearch` | `@studio-producer` `@operations-manager` `@legal-compliance-checker` `@research-synthesist` `@trend-researcher` | Drive, Calendar, Treg, WebSearch |
 
 ## Daily skills
 

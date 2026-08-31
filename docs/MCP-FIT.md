@@ -1,6 +1,7 @@
 # MCP fit for Velvet Factory
 
 Source: [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) (reviewed 2026-08-30).  
+Grok / ChatGPT / Gemini / Perplexity gap vs this HQ: [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md) (reviewed 2026-08-31).  
 This HQ does **not** send Instagram. Live send, boosts, and printers stay on Grok Bot (5 seats).  
 Do not invent prices. Do not commit secrets.
 
@@ -13,9 +14,11 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | Already here | What it covers | Packs it already feeds |
 |---|---|---|
 | **Gmail** | Search, read, draft, labels | `vfsales`, `vfconvert`, `vfops` |
-| **Google Drive** | Files and folders | `vfprod`, `vfcovers`, `vfsku`, `vfresearch` |
+| **Google Drive** | Files and folders; Sheets **export** when the lead seat names a workbook (`vfbooks/SHEETS.md`) | `vfprod`, `vfcovers`, `vfsku`, `vfresearch`, `vfbooks` |
 | **Google Calendar** | Events | `vfseason`, `vfops`, `vfsales` |
-| **Canva** | Edit designs, brand-check, bulk-create, resize for social | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
+| **Canva** | Edit designs, brand-check, bulk-create, resize, `generate-design`. **Ready** on this Cloud Agent (2026-08-31, `DAGoYmCu4c4`) | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
+| **WebSearch / WebFetch** | Live web + URL fetch (ChatGPT/Gemini/Perplexity/Grok browse equivalent) | `vfresearch`, `vfgrowth` |
+| **GenerateImage** | User-asked stills. Instagram still Canva-first | `vfcovers`, `vfbriefux` |
 | **Treg** | SEO / SERP, social trends, ad libraries, enrichment; GA / Search Console / Business Profile *if the team connects those accounts* | `vfgrowth`, `vfinsights`, `vfresearch` |
 | **Mobbin** | Real-app UI patterns | `vfbriefux` |
 | **Superdesign** | Canvas / graphics | `vfcovers`, `vfbriefux` |

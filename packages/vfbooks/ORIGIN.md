@@ -16,4 +16,5 @@ HQ overlay: `PICKUP.md` — no Sderot handoff without verified payment. HQ does 
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
 
-Embedded 30.8.2026 from Perplexity share: `LEDGER.md` (Invoice4U stays; Bookipi site+invoice skipped).
+Embedded 30.8.2026 from Perplexity share: `LEDGER.md` (Invoice4U stays; Bookipi site+invoice skipped).  
+Embedded 31.8.2026: `SHEETS.md` — Drive CSV export when the lead seat names a workbook. No invented ledger.

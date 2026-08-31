@@ -55,6 +55,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 | `scripts/check-vfagents.py` | 500-list playbooks |
 | `scripts/check-vf-canva.py` | Canva Instagram desk |
 | `scripts/check-vfresearch.py` | Weekly inspiration-links + IG music + orchestra failover law |
+| `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready |
 
 Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
 
