@@ -27,7 +27,7 @@
 | כריכה / עיצוב IG | `vfcanva` · `vfcovers` | Canva → export → `studio/render.py` → Superdesign |
 | שיבוץ לוח / סקירה | `vfigos` | תור `QUEUE.md` |
 | חבילת פרסום חי ליד אדם | `vfigos` + `LIVE-PACKET.md` | export PNG/JPG/MP4 + כיתוב מוכן להדבקה |
-| בריף בוקר מבנה | `vfops` + `vfbriefux` | Cursor · Gemini; **לא** שולחים מייל מ־HQ |
+| בריף בוקר מבנה | `vfops` + `vfbriefux` | `create_draft` אל עצמכם · MAIL-PACK אם MCP down · **לא** `send_message` |
 | פנייה / הצעה | `vfconvert` → `vfcost` → `vfsales` | Gmail **קריאה** · טיוטה; שליחה = אדם/Grok |
 | מחקר / מק״ט / השראה | `vfresearch` + תזמורת | ChatGPT + Gemini + Perplexity (`ORCHESTRA.md`) |
 | ריל / טיימלאפס תכנון | `vfom` | כרטיסי סצנה + קבצי גלם מוכנים להעלאה ידנית |
@@ -70,6 +70,7 @@
 3. דחוף → `LIVE-PACKET` · לא דחוף → `#מוכן-ל-Grok`.
 4. מחקר: תזמורת ChatGPT + Gemini + Perplexity (`ORCHESTRA.md`).
 5. ארטיפקט מעבר: `packages/vfresearch/sources/YYYY-MM-DD-grok-failover.md`.
+6. כלים חיים: `playbooks/grok-outage-tools.md` (Gmail draft / Calendar slot / Canva / render.py). אין Instagram Publish MCP.
 
 ## יציאה (חידוש מכסה)
 

@@ -3,33 +3,21 @@
   "status": "running",
   "pack": "vfharness",
   "completed_steps": [
-    "Owner reported Grok Bot weekly quota at 100 percent",
-    "Owner said Grok returns in 5 days — cover processes, emails, live posts",
-    "Requeued VF-G005 as #פרסום-חי-דחוף (Thursday 12:00 before Grok return)",
-    "Completed vfigos/live/G005-LIVE-PACKET.md",
-    "Wrote vfops/OUTAGE-5D.md and human-send/MAIL-PACK.md (human Gmail paste)",
-    "G001 insights window: אין ספירה",
-    "חשבונות label last 7d empty — אין ספירה",
-    "HQ did not send mail or press Publish",
-    "Owner asked HQ/failover tools to send mail and publish IG; harness DENY — no send_message, no Publish"
+    "Mapped wired Grok-outage tools (create_draft, calendar slot, Canva/render)",
+    "Did not call send_message or Instagram Publish (no publish MCP)",
+    "Created Gmail draft r-6454661077961545246 for 31.8 brief",
+    "Created Calendar event kppd0t8mf1a07li78e4hssker8 for G005 Thu 12:00"
   ],
-  "next_step": "Keep producing on existing packs. Do not send. Human still pastes MAIL-PACK and posts G005 unless constitution Deny is changed by lead seat in AGENTS.md.",
+  "next_step": "Owner Send on the Gmail draft; owner posts G005 from LIVE-PACKET at the calendar hold. Connect Treg/Mobbin only if needed — not required for this outage.",
   "artifacts": [
-    "packages/vfops/OUTAGE-5D.md",
+    "packages/vfharness/playbooks/grok-outage-tools.md",
     "packages/vfops/human-send/MAIL-PACK.md",
-    "packages/vfigos/live/G005-LIVE-PACKET.md",
-    "packages/vfigos/QUEUE.md",
-    "packages/vfops/BRIEF-2026-08-31.md",
-    "packages/vfinsights/READ-2026-08-31.md",
-    "packages/vfresearch/sources/2026-08-31-grok-failover.md"
+    "packages/vfigos/live/G005-LIVE-PACKET.md"
   ],
   "unresolved": [
-    "Owner authorized HQ send; AGENTS.md Deny stands — escalation-send-deny-2026-08-31.md",
-    "HQ agent cannot Gmail send or Instagram Publish — no MCP publish; send_message not called",
-    "No verified Insights snapshot for G001",
-    "No print-queue hours",
-    "ChatGPT / Gemini / Perplexity not MCP here",
-    "No second feed post without floor proof"
+    "No Instagram Publish MCP exists on this Cloud Agent",
+    "send_message remains Deny",
+    "Treg / Mobbin / ChatGPT / Gemini / Perplexity have no MCP here"
   ],
   "escalation": "packages/vfharness/state/escalation-send-deny-2026-08-31.md",
   "last_updated": "2026-08-31"

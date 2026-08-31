@@ -52,6 +52,13 @@ G005 משובץ לחמישי 3.9 (לפני החידוש) → `#פרסום-חי-�
 
 מה נבנה / יועל: פיילאובר 5 ימים — LIVE-PACKET G005 + מיילי בריף להדבקת אדם (`vfops` / `vfigos`).
 
+## כלים שנפתחו באותו בוקר
+
+- Gmail `create_draft` בריף 31.8 → `r-6454661077961545246` (לא send).
+- Calendar `create_event` G005 חמישי 12:00 → `kppd0t8mf1a07li78e4hssker8`.
+- Canva MCP `ready`. מפה: `vfharness/playbooks/grok-outage-tools.md`.
+- Instagram Publish / `send_message` — נשארו נעולים (אין MCP העלאה).
+
 ## יציאה
 
 כשהבעלים אומר «מכסת Grok חזרה» — מוסרים ל־Grok רק `#מוכן-ל-Grok` שנותר. Checkpoint → `done`.

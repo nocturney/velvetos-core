@@ -101,7 +101,7 @@
     "allowRead": ["packages/**", "constitution/**", "docs/**", ".cursor/**", "gmail:search_threads", "gmail:get_thread", "calendar:list_events", "drive:search_files"],
     "allowWrite": ["packages/**", "constitution/**", "docs/**", "AGENTS.md", "CHANGELOG.md"],
     "allowExecute": ["python3 scripts/check-*.py"],
-    "ask": ["git push", "calendar:create_event", "gmail:create_draft", "treg:call"],
+    "ask": ["git push", "treg:call"],
     "deny": ["gmail:send_message", "gmail:reply", "gmail:forward", "instagram:send", "instagram:boost", "auto-dm", "rm -rf", "invented-ils"]
   },
   "embed": [

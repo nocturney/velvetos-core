@@ -12,7 +12,7 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 ## Laws
 
 - HQ does **not** send Instagram, Gmail, WhatsApp, or DMs. Live send stays on Grok Bot.
-- Never call Gmail `send_message`, `reply`, or `forward`. Draft only if the user explicitly asks for a draft.
+- Never call Gmail `send_message`, `reply`, or `forward`. Draft only if asked — except during Grok-quota failover: `create_draft` of the office brief to `nocturney@gmail.com` is allowed. Tool map: `packages/vfharness/playbooks/grok-outage-tools.md`.
 - Do not invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - Tool failover: if a tool is down / `needsAuth` / blocked, hand the task to the backup tool **in the same turn**. Never finish with no artifact. Failover ≠ invent ₪ / Insights / blocked bodies. Matrix: `constitution/ORCHESTRA.md`.
@@ -59,10 +59,10 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 
 ## Tool modes
 
-- **Gmail:** `search_threads` / `get_thread` / `list_labels`. Inbox is `nocturney@gmail.com`. Down → paste from user / Drive-by-job; never invent an inquiry; never send.
+- **Gmail:** `search_threads` / `get_thread` / `list_labels`. Inbox is `nocturney@gmail.com`. Grok-quota down → `create_draft` for the morning brief to self; never `send_message`. MCP down → MAIL-PACK paste; never invent an inquiry.
 - **Calendar:** `list_events` on `nocturney@gmail.com`, timezone `Asia/Jerusalem`. Create events only if asked. Down → ask pickup window / «חסר לוח» and continue.
 - **Drive:** `search_files` by the job/SKU the user gives. There is no dedicated VF studio folder. Down → use files the user named in chat.
-- **Canva:** Instagram visuals. `needsAuth` → `packages/vfcanva/studio/render.py` then Superdesign. Say `Canva לא מחובר`.
+- **Canva:** Instagram visuals. Connected HTTP MCP (`mcp.canva.com`). `needsAuth` → `packages/vfcanva/studio/render.py` then Superdesign. Say `Canva לא מחובר`. No Instagram Publish MCP — LIVE-PACKET stays human.
 - **Superdesign:** covers, posters, brief graphics (skip repo init). Down → Canva or `studio/render.py`.
 - **Treg:** live web data only after login; announce catalog price before `call`. Down → verified snapshot / «אין ספירה»; IG music → HeyOrca (`vfresearch/MUSIC.md`), not invented Trends.
 - **Mobbin:** morning-brief / UX references when the Mobbin MCP is actually available. Down → `vfbriefux` templates / Superdesign.

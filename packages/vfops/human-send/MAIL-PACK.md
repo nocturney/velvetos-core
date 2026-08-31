@@ -10,7 +10,10 @@ HQ **לא** קורא `send_message` / `reply` / `forward`.
 
 ---
 
-## שני 31.8.2026 — מוכן עכשיו
+## שני 31.8.2026 — טיוטה בג׳ימייל (לא נשלח)
+
+Gmail draft `r-6454661077961545246` · thread `1a0560facaa75580` · אל `nocturney@gmail.com`.  
+HQ קרא `create_draft` בלבד. פתחו טיוטות ולחצו Send.
 
 נושא:
 

@@ -50,7 +50,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 
 | מה נפל | מעבירים מיד ל־ | לא עושים |
 |---|---|---|
-| **Grok Bot** — טיוטות / מחקר / בריף | Cursor HQ + שולחנות ChatGPT+Gemini+Perplexity | לא סרק · לא המצאה |
+| **Grok Bot** — טיוטות / מחקר / בריף | Cursor HQ + כלים ב־`vfharness/playbooks/grok-outage-tools.md` + שולחנות אם יש MCP | לא סרק · לא המצאה |
 | **Grok Bot** — פרסום לא־דחוף | תור `#מוכן-ל-Grok` ב־`vfigos/QUEUE.md` | לא Publish מ־HQ |
 | **Grok Bot** — **פרסום חי דחוף** | חבילת `vfigos/LIVE-PACKET.md` → **אדם** מעלה ב־`@velvets_cloud` | סוכן HQ לא לוחץ Publish · לא בוסט · לא אוטו־DM |
 | דחוף ללקוח (שיחה) | אדם וואטסאפ `050-2517000` | לא Gmail send מ־HQ |

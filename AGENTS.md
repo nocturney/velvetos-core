@@ -70,7 +70,8 @@ Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack n
 ALLOW read: `packages/**`, `constitution/**`, `docs/**`, `.cursor/**`, Gmail search/get, Calendar list, Drive search-by-job
 ALLOW write: `packages/**`, `constitution/**`, `docs/**`, `AGENTS.md`, `CHANGELOG.md`
 ALLOW execute: `python3 scripts/check-*.py`
-ASK before: `git push`, Calendar create, Gmail `create_draft`, Treg `call` (say catalog price first)
+ASK before: `git push`, Treg `call` (say catalog price first)
+ALLOW during Grok-quota failover: Gmail `create_draft` (office brief to `nocturney@gmail.com` only); Calendar `create_event` for a slot already on `vfgrowth`. Tool map: `packages/vfharness/playbooks/grok-outage-tools.md`.
 DENY: Gmail `send_message` / `reply` / `forward`, Instagram send / boost / auto-DM, `rm -rf`, DROP TABLE, inventing ₪
 
 ## MEMORY
