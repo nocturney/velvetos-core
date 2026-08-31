@@ -11,8 +11,16 @@ GAP = ROOT / "packages" / "vfmcp" / "GAP.md"
 FIT = ROOT / "docs" / "MCP-FIT.md"
 SHEETS = ROOT / "packages" / "vfbooks" / "SHEETS.md"
 DESK = ROOT / ".cursor" / "vf-desk.json"
+MCP = ROOT / ".cursor" / "mcp.json"
 ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
 ORIGIN = ROOT / "packages" / "vfmcp" / "ORIGIN.md"
+CONNECT_3DAI = ROOT / "packages" / "vfprod" / "CONNECT-3DAI.md"
+PLAYBOOK_3DAI = ROOT / "packages" / "vfprod" / "3DAISTUDIO.md"
+
+REQUIRED_MCP = {
+    "canva": "https://mcp.canva.com/mcp",
+    "3daistudio": "https://mcp.3daistudio.com/mcp",
+}
 
 NEEDLES_GAP = (
     "WebSearch",
@@ -36,9 +44,20 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (GAP, FIT, SHEETS, DESK, ORCHESTRA, ORIGIN):
+    for path in (GAP, FIT, SHEETS, DESK, MCP, ORCHESTRA, ORIGIN, CONNECT_3DAI, PLAYBOOK_3DAI):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
+
+    mcp = json.loads(MCP.read_text())
+    servers = mcp.get("mcpServers") or {}
+    for name, expected_url in REQUIRED_MCP.items():
+        row = servers.get(name) or {}
+        url = str(row.get("url") or "")
+        if expected_url not in url:
+            fail(f".cursor/mcp.json must register {name} url {expected_url}")
+        args = " ".join(row.get("args") or [])
+        if "mcp-remote" in args or row.get("command") == "npx":
+            fail(f".cursor/mcp.json {name} must use HTTP url, not mcp-remote")
 
     gap = GAP.read_text()
     for needle in NEEDLES_GAP:
@@ -74,6 +93,12 @@ def main() -> None:
     if (tools.get("canva") or {}).get("status") != "ready":
         fail("vf-desk.json canva.status must be ready after Cloud Agent verify")
 
+    threed = tools.get("threedaistudio") or {}
+    if threed.get("mcp") != REQUIRED_MCP["3daistudio"]:
+        fail("vf-desk.json threedaistudio.mcp must match .cursor/mcp.json")
+    if not (threed.get("failover") or ""):
+        fail("vf-desk.json threedaistudio must declare failover")
+
     orchestra = ORCHESTRA.read_text()
     if "WebSearch" not in orchestra and "tools.web" not in orchestra:
         fail("ORCHESTRA.md must mention WebSearch / tools.web failover")
@@ -83,7 +108,7 @@ def main() -> None:
     if "GAP.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention GAP.md")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready")
+    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio-mcp")
 
 
 if __name__ == "__main__":
