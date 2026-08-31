@@ -196,11 +196,11 @@ def main() -> None:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
     queue_text = queue.read_text()
-    for needle in ("#מוכן-ל-Grok", "#פרסום-חי-דחוף", "#נשלח-מ-HQ", "#ממתין-ל-כלי-IG"):
+    for needle in ("#נשלח-בידי-Grok", "#מוכן-ל-Grok", "#פרסום-חי-דחוף", "#נשלח-מ-HQ", "#ממתין-ל-כלי-IG"):
         if needle not in queue_text:
             fail(f"vfigos/QUEUE.md missing {needle!r}")
     live_text = live.read_text()
-    for needle in ("אדם", "מעלה", "050-2517000", "אין Publish מ־HQ"):
+    for needle in ("Publish מ-HQ", "Publish MCP", "050-2517000"):
         if needle not in live_text:
             fail(f"LIVE-PACKET.md missing {needle!r}")
     if "פרסום חי" not in agents_text and "Grok Bot quota failover" not in agents_text:

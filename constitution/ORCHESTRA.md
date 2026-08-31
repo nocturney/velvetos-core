@@ -51,12 +51,14 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 
 ### Grok Bot (מכסה שבועית / לא זמין)
 
+Grok = **מנהל ראשי** ([`GROK.md`](GROK.md)). במכסה: **תחליף מלא**, לא גיבוי.
+
 | מה נפל | מעבירים מיד ל־ | לא עושים |
 |---|---|---|
-| **Grok Bot** — טיוטות / מחקר / בריף | Cursor HQ + תזמורת + **Gmail send** (בריף = `htmlBody` תצוגה 3) | לא סרק · לא המצאה |
-| **Grok Bot** — פרסום | `vfigos/SEND.md` · `#נשלח-מ-HQ` | לא מחכים לגרוק · לא בוסט · לא אוטו־DM |
-| **Grok Bot** — **פרסום חי** | `LIVE-PACKET` + כלים (Canva+Gmail+Drive) | אדם רק אם הכלים נפלו |
-| דחוף ללקוח (שיחה) | אדם וואטסאפ `050-2517000` | אין MCP וואטסאפ |
+| **Grok Bot** — עיבוד / מחקר / בריף | Cursor HQ + תזמורת + Gmail send (HTML תצוגה 3) | לא סרק · לא המצאה |
+| **Grok Bot** — פרסום IG | **HQ Publish ישיר** · `vfigos/SEND.md` · `#נשלח-מ-HQ` | לא מחכים לגרוק · לא בוסט |
+| **Grok Bot** — **פרסום חי** | HQ Publish MCP / Canva · `LIVE-PACKET` | אדם רק אם Publish+Gmail נפלו |
+| דחוף ללקוח | אדם `050-2517000` | אין MCP וואטסאפ |
 
 נוהל מלא: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md`.  
 ארטיפקט מעבר: `packages/vfresearch/sources/YYYY-MM-DD-grok-failover.md`.
@@ -65,7 +67,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 
 ## 06:15 כל בוקר (Asia/Jerusalem)
 
-Cursor, לא Grok:
+**Cursor** מריץ (מואצל מ-Grok לחיסכון במכסה):
 
 1. קורא את בריף אתמול + לוח `vfgrowth` + `vfsku` הפתוח.
 2. פותח **שלושה** צ'אטים חדשים — ChatGPT, Gemini, **וגם** Perplexity. אותה שאלה לשלושתם (תבנית ב־`vfresearch/DAILY.md`).

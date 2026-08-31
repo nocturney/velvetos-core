@@ -2,7 +2,7 @@
 
 Source: [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) (reviewed 2026-08-30).  
 Grok / ChatGPT / Gemini / Perplexity gap vs this HQ: [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md) (reviewed 2026-08-31).  
-HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Boosts and auto-DM stay forbidden. Printers stay on the floor. Treg is not relevant.  
+HQ **follows Grok Bot as primary manager** (`constitution/GROK.md`). Boosts and auto-DM stay forbidden. **Wire Instagram Publish MCP** for live/direct `@velvets_cloud` publish when HQ replaces Grok.  
 Do not invent prices. Do not commit secrets.
 
 The awesome list is a directory of thousands of servers. Most of it is coding, crypto, or other people's SaaS. Below is only what maps onto Velvet Factory packs.
@@ -23,7 +23,7 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Treg** | **Not relevant** — do not login or `call` | — |
 | **Mobbin** | Real-app UI patterns | `vfbriefux` |
 | **Superdesign** | Canvas / graphics | `vfcovers`, `vfbriefux` |
-| **Grok Bot** | Optional backup only. HQ sends via tools | `vfigos/SEND.md` |
+| **Grok Bot** | Primary manager. Normal send (Gmail, IG, floor). Quota empty: HQ fully replaces | `constitution/GROK.md` |
 
 Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility” servers unless Treg is missing a specific account.
 
@@ -85,15 +85,26 @@ Remote URL: `https://prompts.chat/api/mcp`. Local fallback: `npx -y prompts.chat
 
 **Packs:** `vfcopy`, `vfmskill`, `vfresearch`. Embedded office templates live in `packages/vfcopy/hq/templates/` — not in the MCP.
 
-## Do this next (read-only growth)
+### Instagram — publish (wire required)
 
-### Instagram research only — never send from HQ
+| Server / path | Role |
+|---|---|
+| Cursor Team MCP — Instagram Publish | Live/direct feed, carousel, reel, story to `@velvets_cloud` |
+| Canva MCP export + publish | Design + publish path when MCP wired |
+
+**Normal:** Grok Bot publishes (`#נשלח-בידי-Grok`).  
+**Quota failover:** HQ publishes directly (`#נשלח-מ-HQ`).  
+**Research only (no send):** instapdown-mcp — hashtags, engagement reads.
+
+Use for `vfigos` send, `vfgrowth` sprints. Schedule and copy stay in the pack.
+
+### Instagram research only — read, never send from orchestra desks
 
 | Server | Role |
 |---|---|
 | [farukkolip/instapdown-mcp](https://github.com/farukkolip/instapdown-mcp) | Public toolkit: Reels/Story download, hashtags, engagement health, best-time tables. **No auth.** |
 
-Use for `vfigos` review, `vfgrowth` sprints, `vfinsights` reads. Schedule and copy stay in the pack. **Grok Bot still posts.**
+Use for `vfigos` review, `vfgrowth` sprints, `vfinsights` reads. **Normal:** Grok posts. **Quota:** HQ publishes.
 
 ### Inbox triage on top of Gmail
 

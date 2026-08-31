@@ -8,7 +8,7 @@ Each Agency rule has `alwaysApply: false` — mention it with `@slug` when you n
 Velvet Factory **desk** (which specialists + tools a job should use): [`docs/AGENCY-TOOLS.md`](AGENCY-TOOLS.md), [`.cursor/vf-desk.json`](../.cursor/vf-desk.json).
 Always-on router: `.cursor/rules/velvet-factory-desk.mdc`. Warehouse specialists stay off a print job unless asked.
 
-HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). Grok is optional backup.
+Grok Bot is primary manager (`constitution/GROK.md`). Quota empty: HQ fully replaces via tools including live IG publish (`constitution/SEND.md`).
 Do not invent prices or Insights.
 
 Refresh:

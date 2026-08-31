@@ -5,7 +5,7 @@ Paper: [arXiv:2603.27277](https://arxiv.org/abs/2603.27277).
 Pack: [`packages/vfmem/`](../packages/vfmem/).  
 Check: `python3 scripts/check-vfmem.py`.
 
-HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Grok is optional backup.  
+Grok Bot is primary manager. Quota empty: HQ fully replaces (`constitution/GROK.md`).  
 Do not invent prices. Do not commit secrets. Do not `curl | bash` their installer from this repo.
 
 ## What the repo is

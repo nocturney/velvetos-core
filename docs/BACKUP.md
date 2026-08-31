@@ -23,7 +23,7 @@ Unknown slugs (`vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbi
 
 **Quiet if nothing new** — no ping when the finished agent is not a VF pack, or when HQ already has that bcId + name + slug.
 
-HQ sends Instagram via tools (`constitution/SEND.md`). Grok Bot is optional backup. Printers stay on the floor.
+Grok Bot is **primary manager** (`constitution/GROK.md`). Quota empty: HQ fully replaces send including live IG publish.
 
 ## What HQ does the same day
 

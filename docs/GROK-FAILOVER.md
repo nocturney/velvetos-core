@@ -1,16 +1,22 @@
-# Grok Bot — failover כשמכסה שבועית נגמרת
+# Grok Bot — תחליף מלא במכסה שבועית
 
-**Date:** 2026-08-31 (עודכן — HQ שולח דרך כלים)  
-**From:** Christian (בקשת בעלים: פיילאובר אוטונומי, לא אדם ולא Grok כשער)
+**Date:** 2026-08-31 (מודל: Grok = מנהל ראשי, לא גיבוי)  
+**From:** Christian · תיקון בעלים 31.8
 
-כשמכסת השימוש השבועית של **Grok Bot** נגמרת (או שהבוט לא זמין):
+## מודל
 
-1. **מייצרים תוצרים** על הפקים הקיימים.
-2. **שולחים מ־HQ דרך כלים** — ג׳ימייל `send_message` / `reply` · אינסטגרם לפי `vfigos/SEND.md`. בריף 07:00 = `htmlBody` תצוגה 3 (`vfbriefux/MAIL.html`).
-3. Drive `create_file` למסמך משרד כשצריך.
-4. תזמורת ChatGPT + Gemini + Perplexity. **Treg לא רלוונטי.**
-5. תגיות: `#נשלח-מ-HQ` · `#ממתין-ל-כלי-IG` · `#מוכן-ל-Grok` רק כגיבוי אופציונלי.
-6. אין בוסט. אין אוטו־DM. אין Print מ־HQ. שיחת לקוח → אדם `050-2517000`.
-7. לא ממציאים שעלה לפיד אם לא עלה.
+- **שוטף:** Grok Bot מנהל. שולח Gmail / IG / מדפסות. מפנה עיבוד ל-Cursor + ChatGPT + Gemini + Perplexity.
+- **מכסה 100%:** Cursor HQ + תזמורת **מחליפים אותו לגמרי** — לא «מחכים לגרוק».
 
-נוהל: [`packages/vfharness/playbooks/grok-failover.md`](../packages/vfharness/playbooks/grok-failover.md) · [`constitution/SEND.md`](../constitution/SEND.md).
+כשמכסת Grok נגמרת (או שהבוט לא זמין):
+
+1. **מייצרים** על הפקים הקיימים (Cursor + תזמורת).
+2. **שולחים מ-HQ** — Gmail `send_message` · **פרסום IG ישיר** לפי `vfigos/SEND.md` (Publish MCP / Canva).
+3. Drive `create_file` כשצריך.
+4. תגיות: `#נשלח-מ-HQ` · `#ממתין-ל-כלי-IG` (רק אם Publish לא ירה) · `#מוכן-ל-Grok` = תור **אחרי חידוש**, לא גיבוי.
+5. אין בוסט · אין אוטו־DM · אין Print מ-HQ · וואטסאפ → אדם `050-2517000`.
+6. לא ממציאים שעלה לפיד בלי receipt.
+
+**חובה:** הרשאות Publish חי ל-`@velvets_cloud` ל-Cursor HQ, Canva, MCP — `docs/MCP-FIT.md`.
+
+נוהל: [`packages/vfharness/playbooks/grok-failover.md`](../packages/vfharness/playbooks/grok-failover.md) · [`constitution/SEND.md`](../constitution/SEND.md) · [`constitution/GROK.md`](../constitution/GROK.md).

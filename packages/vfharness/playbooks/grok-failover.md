@@ -1,62 +1,64 @@
-# פיילאובר מכסת Grok Bot
+# פיילאובר מכסת Grok Bot — תחליף מלא
 
-מושב: ראש צוות (רתמה) + כל המושבים על פקים קיימים.  
-טריגר: «נגמרה מכסת Grok השבועית» / Grok לא זמין / הבעלים מבקש failover לגרוק.
+מושב: ראש צוות (רתמה) + כל המושבים.  
+מודל: [`constitution/GROK.md`](../../constitution/GROK.md) — Grok **מנהל ראשי**, לא גיבוי.
 
-לא פק חדש. לא מושב שישי.  
-**HQ שולח דרך כלים** (`constitution/SEND.md`) — ג׳ימייל `send_message` ואינסטגרם לפי `vfigos/SEND.md`.  
-לא מחכים לגרוק. לא מחכים לכריסטיאן. Grok הוא גיבוי אופציונלי.
+טריגר: מכסה שבועית 100% · Grok לא זמין · בעלים מבקש החלפה.
+
+לא פק חדש. לא מושב שישי.
 
 ## חוק אחד
 
-כש־Grok נגמר — **HQ ממשיך לייצר ושולח**. ידיים לא ריקות.
+כש־Grok במכסה — **Cursor HQ + תזמורת מחליפים אותו לגמרי**. ידיים לא ריקות.  
+**לא מחכים לגרוק.** לא מחכים לכריסטיאן.
 
-| מסלול | מתי | מי שולח |
+| מסלול | מתי | מי |
 |---|---|---|
-| `#נשלח-מ-HQ` | יש כלי (Gmail תמיד; IG Publish אם מחובר) | סוכן HQ |
-| `#ממתין-ל-כלי-IG` | אין MCP Publish לפיד — אחרי Gmail+Drive+Canva | סוכן HQ (failover) |
-| `#מוכן-ל-Grok` | רק אם ראש צוות מבקש גיבוי Grok | Grok אחרי חידוש |
-| `#פרסום-חי-דחוף` | דחוף לפיד עכשיו | HQ שולח לפי `SEND.md` / `LIVE-PACKET` |
+| `#נשלח-בידי-Grok` | שוטף, מכסה חיה | Grok Bot |
+| `#נשלח-מ-HQ` | מכסה ריקה — Gmail ו/או **Publish IG** | סוכן HQ |
+| `#ממתין-ל-כלי-IG` | Publish MCP לא ירה — אחרי Gmail+Drive+Canva | HQ (failover) |
+| `#מוכן-ל-Grok` | **אחרי חידוש מכסה** — מה שנשאר | Grok Bot |
+| `#פרסום-חי-דחוף` | עכשיו | Grok אם חי · אחרת HQ Publish מיד (`SEND.md` / `LIVE-PACKET`) |
 
-דחוף ללקוח (שיחה, לא פיד) → אדם בוואטסאפ `050-2517000`.
+דחוף ללקוח (שיחה) → אדם `050-2517000`.
 
-## מה HQ לוקח על עצמו
+## מה HQ לוקח במכסה (תחליף מלא)
 
 | עבודה | פק | כלי |
 |---|---|---|
 | כיתוב | `vfcopy` + `vfgrowth` | Cursor · תזמורת |
-| כריכה | `vfcanva` · `vfcovers` | Canva → `studio/render.py` → Superdesign |
-| שליחת IG | `vfigos/SEND.md` | Publish אם יש · אחרת Drive+Gmail |
-| בריף 07:00 | `vfops` + `vfbriefux` | **Gmail send_message** + `htmlBody` תצוגה 3 (`MAIL.html`) |
-| פנייה / הצעה | `vfconvert` → `vfsales` | Gmail **reply** / send (בלי ₪ מומצא) |
-| מחקר | `vfresearch` | WebSearch + תזמורת. **לא Treg** |
-| מסמך משרד | `vfbooks` / `vfops` | Drive `create_file` |
+| כריכה | `vfcanva` · `vfcovers` | Canva → `render.py` → Superdesign |
+| **פרסום IG ישיר** | `vfigos/SEND.md` | **Publish MCP** · Canva export |
+| בריף 07:00 | `vfops` + `vfbriefux` | Gmail `send_message` + `htmlBody` תצוגה 3 |
+| פנייה / הצעה | `vfconvert` → `vfsales` | Gmail reply/send |
+| מחקר | `vfresearch` | WebSearch + תזמורת |
+| מסמך | `vfbooks` / `vfops` | Drive `create_file` |
 
-## מה לא עוברים (גם במכסה ריקה)
+## הרשאות Publish IG
 
-| פעולה | מי | למה |
-|---|---|---|
-| בוסט / אוטו־DM | — | נעול תמיד |
-| וואטסאפ ללקוח | אדם `050-2517000` | אין MCP וואטסאפ |
-| הדפסה / עצירת מדפסת | רצפה | `vfprod/FLOOR.md` |
-| טענה שעלה לפיד בלי Publish | — | אסור להמציא |
+חובה לחבר: Cursor Team MCP / Canva Publish ל-`@velvets_cloud`.  
+מפת: `docs/MCP-FIT.md` · `packages/vfmcp/GAP.md`. סודות מחוץ לגיט.
 
-## הפעלה (אותו רגע)
+**אדם** מעלה ב-IG **רק** אם Publish + Gmail נפלו — לא ברירת מחדל.
+
+## מה לא עוברים
+
+בוסט / אוטו־DM · וואטסאפ MCP · Print מ-HQ · «עלה לפיד» בלי receipt.
+
+## הפעלה
 
 1. Checkpoint: `packages/vfharness/state/grok-failover-<YYYY-MM-DD>.json`
-2. כל טיוטה רצה על הפק כרגיל.
-3. שליחה מ־HQ דרך הכלים **עכשיו** — לא תור המתנה. בריף 07:00 = `htmlBody` תצוגה 3.
-4. מחקר: תזמורת ChatGPT + Gemini + Perplexity (`ORCHESTRA.md`). בלי Treg.
-5. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-grok-failover.md`.
+2. שליחה + **Publish IG** מ-HQ **עכשיו** — לא תור `#מוכן-ל-Grok`.
+3. מחקר: תזמורת (`ORCHESTRA.md`).
+4. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-grok-failover.md`.
 
 ## Failover ≠ המצאה
 
-אין ₪ מכירה בלי ראש צוות. אין Insights. אין גוף Perplexity חסום. אין קישור Canva מומצא. אין «שלחו DM». אין «עלה לפיד» בלי כלי Publish.
+אין ₪ · אין Insights · אין גוף חסום · אין «שלחו DM».
 
 ## קישורים
 
-- חוקת שליחה: `constitution/SEND.md`
-- תזמורת: `constitution/ORCHESTRA.md`
-- תור: `packages/vfigos/QUEUE.md`
-- חבילת פרסום: `packages/vfigos/LIVE-PACKET.md` · `vfigos/SEND.md`
-- מסמך קבע: `docs/GROK-FAILOVER.md`
+- [`constitution/SEND.md`](../../constitution/SEND.md)
+- [`constitution/ORCHESTRA.md`](../../constitution/ORCHESTRA.md)
+- [`packages/vfigos/QUEUE.md`](../vfigos/QUEUE.md)
+- [`docs/GROK-FAILOVER.md`](../../docs/GROK-FAILOVER.md)

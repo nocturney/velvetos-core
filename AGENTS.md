@@ -22,9 +22,9 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 
 ## RULES
 
-- HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot to press Send/Publish. Grok Bot is optional backup.
+- HQ **follows Grok Bot as primary manager** (`constitution/GROK.md`). **Quota empty:** Cursor HQ + orchestra **fully replace** Grok — Gmail, **live IG publish** (`constitution/SEND.md`, `vfigos/SEND.md`). Wire Instagram Publish MCP for HQ + Canva.
 - Gmail: `send_message` / `reply` / `forward` are **allowed** for office mail and named inquiry threads. No blast list. No invented ₪. Office 07:00 brief is תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`).
-- Instagram `@velvets_cloud`: send via a connected publish tool; if none, failover **same turn** to Canva + Drive `create_file` + Gmail (`vfigos/SEND.md`). Do not idle. Do not claim the feed posted if it did not.
+- Instagram `@velvets_cloud`: **normal** — Grok Bot publishes. **Quota failover** — HQ publishes directly via Publish MCP / Canva; failover same turn to Drive+Gmail if MCP down. Tag `#נשלח-בידי-Grok` vs `#נשלח-מ-HQ`. Wire publish permissions — `docs/MCP-FIT.md`.
 - Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM». Customer WhatsApp stays human (no WhatsApp MCP).
@@ -33,7 +33,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
 - Treg is **not relevant**. Do not login, `call`, or route failover through Treg. Live web = `WebSearch` / `WebFetch` / orchestra.
 - Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.
-- Grok Bot quota failover: HQ **keeps producing and sending** via HQ tools. Queue tags: `#נשלח-מ-HQ` when a tool sent; `#ממתין-ל-כלי-IG` if the feed itself is still waiting on a publish MCP; `#פרסום-חי-דחוף` + `LIVE-PACKET` for urgent feed work (HQ still sends via tools). Do not sit on `#מוכן-ל-Grok` as the only path. No boost, no auto-DM, no Print from HQ. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md` · `constitution/SEND.md`.
+- Grok Bot quota failover: Cursor HQ + orchestra **fully replace** Grok (not backup). HQ sends including **live IG publish**. Tags: `#נשלח-בידי-Grok` (normal) · `#נשלח-מ-HQ` (quota) · `#ממתין-ל-כלי-IG` · `#פרסום-חי-דחוף`. Playbook: `grok-failover.md` · `GROK.md`.
 - Do not invent Origin slugs. Keep `unknown` / `origin-slug-unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`.
 - Public marketing website / price widget from HQ stays locked. An **internal office command surface** (owner/lead view over packs + `vfops/hq/capabilities.json`) is allowed as a view — not a sixth seat, not a second runtime. ADR: `docs/OFFICE-OS-EMBED-he.md`.
 - After every catalog, pack, or rule change, run `python3 scripts/check-all.py`.

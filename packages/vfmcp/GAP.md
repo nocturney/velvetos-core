@@ -40,13 +40,14 @@
 
 אין מחבר חי אצלם שחסר כאן וחובה להתקין היום. Publish IG עדיין חסר אצל כולם במסך הזה.
 
-### Grok / Grok Bot
+### Grok / Grok Bot — מנהל ראשי
 
-| כלי שם | כאן | דין |
+| כלי שם | שוטף | מכסה 100% (תחליף מלא) |
 |---|---|---|
-| שליחת אינסטגרם | Canva + `vfigos/SEND.md` (אין Publish MCP) | **wired failover** — Drive + Gmail `send_message` אותו תור |
-| שליחת Gmail | `send_message` / `reply` / `forward` | **wired** — HQ שולח |
-| מדפסות | אין בכוונה | **skip** — רצפה לא מ־HQ |
+| ניהול + שליחת IG | **Grok Bot** | **HQ Publish MCP** + Canva — חובה לחבר |
+| שליחת Gmail | **Grok Bot** | HQ `send_message` / `reply` |
+| עיבוד כבד | מפנה ל-Cursor + תזמורת | Cursor HQ + תזמורת |
+| מדפסות | Grok / רצפה | רצפה — HQ לא Print |
 | Google Workspace (Gmail/Drive/Docs/Sheets/Calendar) **כתיבה+שליחה** | Gmail **שליחה**; Drive `create_file`; Calendar קריאה; Sheets דרך Drive | **wired** 31.8 — `SEND.md` |
 | Outlook / OneDrive / SharePoint | אין | **skip** — לא ערימת הסטודיו |
 | Notion / Linear / GitHub (Grok) | GitHub דרך `gh` לקריאה | **later** — לא MCP חדש |
@@ -100,7 +101,7 @@
 
 | פער | למה לא |
 |---|---|
-| Publish MCP לאינסטגרם | אין namespace. failover: Canva+Drive+Gmail (`SEND.md`). לא ממציאים שעלה לפיד |
+| Publish MCP לאינסטגרם | **wire-required** — HQ + Canva live publish `@velvets_cloud` | `docs/MCP-FIT.md` · סודות מחוץ לגיט |
 | וואטסאפ / מדפסות | אין MCP וואטסאפ. מדפסות ברצפה. אדם `050-2517000` |
 | Treg | **לא רלוונטי** למשרד. לא login |
 | Mobbin MCP | פלאגין על הדיסק; namespace לא על Cloud Agent. failover: `vfbriefux` |

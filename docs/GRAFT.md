@@ -4,7 +4,7 @@ Source: [trailhq/Graft](https://github.com/trailhq/Graft) (README read 2026-08-3
 Pack: [`packages/vfgraft/`](../packages/vfgraft/).  
 Check: `python3 scripts/check-vfgraft.py`.
 
-HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Grok is optional backup. Do not invent ₪. Do not commit secrets.
+HQ follows **Grok Bot as primary manager** (`constitution/GROK.md`). Quota empty: HQ fully replaces including live IG publish. Do not invent ₪.
 
 ## Verdict
 

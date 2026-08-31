@@ -1,34 +1,30 @@
-# תור שליחה · HQ דרך כלים
+# תור שליחה · Grok מנהל · HQ מחליף במכסה
 
-מושב: צמיחה · `vfigos`. HQ סוקר, משבץ, **ושולח דרך כלים** (`SEND.md`).
+מושב: צמיחה · `vfigos`. מודל: [`constitution/GROK.md`](../../constitution/GROK.md).
 
-Grok הוא גיבוי אופציונלי. לא מחכים למכסה. לא מחכים לכריסטיאן.
+**שוטף:** Grok Bot מנהל ושולח.  
+**מכסה ריקה:** HQ **מחליף לגמרי** — כולל Publish IG ישיר (`SEND.md`).
 
 | מסלול | משמעות |
 |---|---|
-| `#נשלח-מ-HQ` | כלי HQ ביצע שליחה (ג׳ימייל ו/או Publish) |
-| `#ממתין-ל-כלי-IG` | חבילה יצאה ב־Gmail+Drive+Canva; הפיד עצמו מחכה ל־Publish MCP |
-| `#מוכן-ל-Grok` | גיבוי אופציונלי בלבד |
-| `#נשלח-בידי-Grok` | Grok שלח כגיבוי, אחרי אישור שנשלח |
-| `#פרסום-חי-דחוף` | דחוף — HQ שולח עכשיו לפי `SEND.md` / `LIVE-PACKET.md` |
+| `#נשלח-בידי-Grok` | Grok שלח/פרסם (שוטף, מכסה חיה) |
+| `#נשלח-מ-HQ` | HQ שלח/פרסם (מכסה ריקה — **תחליף מלא**) |
+| `#ממתין-ל-כלי-IG` | Publish MCP לא ירה; חבילה ב-Gmail+Drive |
+| `#מוכן-ל-Grok` | תור **אחרי חידוש מכסה** — לא גיבוי |
+| `#פרסום-חי-דחוף` | עכשיו — Grok אם חי; אחרת HQ Publish מיד |
 
 ## חוקים
 
 - שורה אחת לכל ארטיפקט.
-- `#נשלח-מ-HQ` הוא ברירת המחדל אחרי failover.
-- אין בוסט. אין אוטו־DM. CTA: וואטסאפ `050-2517000` / איסוף שדרות.
-- אסור לכתוב שעלה לפיד אם לא עלה.
+- במכסה: `#נשלח-מ-HQ` אחרי Publish או failover.
+- חובה: הרשאות Publish חי ל-HQ + Canva (`docs/MCP-FIT.md`).
+- אין בוסט. אין אוטו־DM. CTA: `050-2517000` / איסוף שדרות.
 
 ## תור פתוח
 
 | תאריך | מזהה | סוג | נתיב / הערה | סטטוס |
 |---|---|---|---|---|
-| 2026-08-31 | VF-G005 d12b | קרוסלה | LIVE-PACKET: `vfigos/live/G005-LIVE-PACKET.md` + `vfcovers/g005/slides/` · חמישי 3.9.2026 12:00 · `#פרסום-חי-דחוף` לפי `SEND.md` |
-| 2026-08-31 | חוקת-שליחה | משרד | Drive `1Xd_uUGKYl7FGr11URUtDHrkz16ikyOGZPZSKqdTOr-I` + Gmail `1a056327a22e6ff8` | `#נשלח-מ-HQ` |
+| 2026-08-31 | VF-G005 d12b | קרוסלה | LIVE-PACKET + slides · חמישי 3.9 12:00 · `#פרסום-חי-דחוף` |
+| 2026-08-31 | חוקת-שליחה | משרד | `constitution/GROK.md` + `SEND.md` | `#נשלח-מ-HQ` |
 
-## דוגמאות
-
-| 2026-08-30 | VF-G005 d12b | קרוסלה | `vfcopy/G005-d12b.md` + `vfcovers/g005/` | היה `#מוכן-ל-Grok` — מעכשיו HQ שולח דרך כלים |
-| 2026-08-31 | send-law | משרד | `constitution/SEND.md` | `#נשלח-מ-HQ` |
-
-נוהל: `packages/vfigos/SEND.md` · `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md`.
+נוהל: `SEND.md` · `grok-failover.md` · `docs/GROK-FAILOVER.md`.

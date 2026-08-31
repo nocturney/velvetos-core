@@ -1,53 +1,57 @@
-# כלים כשמכסת Grok ריקה
+# כלים · Grok מנהל · תחליף מלא במכסה
 
-לא פק חדש. לא מושב שישי.  
-מטרה: המשרד **לא נעצר** כש־Grok במכסה 100%.  
-נמדד בסשן 31.8.2026 (Cloud Agent).
+מודל: [`constitution/GROK.md`](../../constitution/GROK.md).
+
+**שוטף:** Grok שולח. **מכסה 100%:** הטבלה למטה = **תחליף מלא** (לא גיבוי).
 
 פיילאובר = אותו תפקיד כמו Grok, בלי תחושת מעבר.  
-בריף 07:00: HQ קורא `send_message` אל `nocturney@gmail.com`. אין לחיצת Send אצל הבעלים.  
-אינסטגרם: אין MCP Publish — LIVE-PACKET נשאר (אין כלי, לא מדיניות בלבד).
+בריף 07:00 במכסה: HQ `send_message` אל `nocturney@gmail.com`.  
+**IG:** HQ **Publish ישיר** ל-`@velvets_cloud` — חובה לחבר MCP (לא LIVE-PACKET לאדם כברירת מחדל).
 
-## מצב חי (31.8.2026)
+## מצב חי (31.8.2026 → יעד)
 
-| כלי | סטטוס בסשן | תפקיד בפיילאובר | נעול? |
+| כלי | סטטוס | שוטף | במכסה (תחליף מלא) |
 |---|---|---|---|
-| Gmail MCP | `ready` | קריאה + **`send_message`** בריף משרד אל `nocturney@gmail.com` | reply / forward / שליחה ללקוח — נעול |
-| Calendar MCP | `ready` | קריאה + **`create_event`** למשבצת חיה שכבר בלוח התוכן | לא נעול לקריאה / אירוע משובץ |
-| Drive MCP | `ready` | חיפוש לפי שם עבודה | לא (בלי תיקיות אישיות) |
-| Canva MCP | `ready` | עיצוב / export · `.cursor/mcp.json` → `https://mcp.canva.com/mcp` | Publish ל־IG — אין כלי |
-| `vfcanva/studio/render.py` | על הדיסק | PNG אם Canva נופל | לא |
-| Superdesign | skill, אין namespace כאן | גרפיקה אם Canva נופל | failover ל־render.py |
-| Treg | אין namespace | חי web / Insights | דולג · אין ספירה / HeyOrca למוזיקה |
-| Mobbin | אין namespace | UX בריף | תבניות `vfbriefux` |
-| ChatGPT / Gemini / Perplexity | אין MCP | מחקר 06:15 | דיסק + «אין חדש במשרד» |
-| Instagram Publish | **אין MCP** | Grok היה כלי השליחה | נשאר LIVE-PACKET לאדם |
-| WhatsApp | **אין MCP** | שיחת לקוח | אדם `050-2517000` |
+| **Grok Bot** | מנהל ראשי | Gmail · IG · מדפסות | — (מכסה ריקה) |
+| Gmail MCP | `ready` | Grok | **`send_message`** בריף + שרשורים |
+| Calendar MCP | `ready` | Grok / HQ | קריאה + `create_event` משובץ |
+| Drive MCP | `ready` | Grok / HQ | חיפוש + `create_file` |
+| Canva MCP | `ready` | Grok / HQ | עיצוב · **export · Publish IG** |
+| **Instagram Publish** | **wire-required** | Grok | **HQ Publish ישיר** — חובה לחבר |
+| Cursor HQ | `ready` | עיבוד מואצל | **שליחה + Publish** |
+| ChatGPT / Gemini / Perplexity | תזמורת | עיבוד | עיבוד + failover מחקר |
+| `render.py` / Superdesign | על הדיסק | failover Canva | failover Canva |
+| WhatsApp | **אין MCP** | אדם `050-2517000` | אדם |
 
-## מה HQ מפעיל לבד (בלי לחכות לבעלים)
+## חובת חיבור — Publish IG
 
-1. קריאת תיבה / לוח / דרייב־לפי־שם.
-2. `render_mail.py` ואז `send_message` — בריף 07:00 אל `nocturney@gmail.com` בלבד (`htmlBody` תצוגה 3 מ־`vfbriefux/MAIL.html` + כריכות `cid`). `create_draft` רק אם צריך לעצור לפני שליחה. MAIL-PACK הוא חלופת טקסט אם MCP נופל. בלי לחיצת בעלים.
-3. `create_event` — משבצת חיה שכבר קיימת ב־`vfgrowth` (למשל G005 חמישי 12:00).
-4. Canva + `render.py` + שקפים ב־`vfcovers`.
-5. תור `#מוכן-ל-Grok` / `#פרסום-חי-דחוף` + LIVE-PACKET.
+1. Cursor Team MCP — Instagram Publish ל-`@velvets_cloud` (סודות ב-Dashboard, לא בגיט).
+2. Canva — export + publish path ל-IG (`vfigos/SEND.md`).
+3. עד ש-MCP מחובר: failover Gmail+Drive **באותו תור** — `#ממתין-ל-כלי-IG` (אין MCP Publish).
 
-## מה נשאר נעול (אין כלי, לא רק מדיניות)
+## מה HQ מפעיל במכסה
 
-- העלאה ל־`@velvets_cloud` — אין MCP Publish לאינסטגרם במחסן / ב־Cloud Agent הזה. Grok היה השולח. חבילה: `vfigos/live/`.
-- `send_message` ללקוח / `reply` / `forward` — Deny. בריף משרד אל עצמכם — **Allow** בפיילאובר.
+1. תיבה / לוח / Drive לפי שם עבודה.
+2. `render_mail.py` → `send_message` — בריף HTML תצוגה 3 + כריכות `cid`. `create_draft` רק לעצירה לפני שליחה.
+3. **Publish IG** — קרוסלה / ריל / פוסט / סטורי ישיר ל-`@velvets_cloud`.
+4. Canva + `render.py` + `vfcovers`.
+5. `#פרסום-חי-דחוף` + LIVE-PACKET — **HQ Publish**, לא «מחכים לגרוק».
+
+## מה נשאר נעול
+
+- `send_message` **ללקוח** / blast — Deny (בריף משרד אל עצמכם — Allow).
 - וואטסאפ / בוסט / אוטו־DM.
+- Print מ-HQ.
 
-חיבור MCP חדש לשליחת אינסטגרם דורש מוצר + סודות מחוץ לגיט. לא ממציאים שרת ולא שמים מפתחות בריפו.
+**אדם** מעלה ב-IG **רק** אם Publish MCP + Gmail נפלו.
 
-## Failover מיידי (אותו תור)
+## Failover מיידי
 
 | נפל | מעבירים ל־ |
 |---|---|
-| Grok מכסה | הכלים בטבלה למעלה |
-| Canva `needsAuth` | `packages/vfcanva/studio/render.py` → Superdesign |
-| Treg / Mobbin / תזמורת בלי MCP | פקים על הדיסק · «אין ספירה» / «אין חדש במשרד» |
-| Gmail MCP down | MAIL-PACK להדבקה ידנית · לא ממציאים פנייה |
+| Grok מכסה | כל הטבלה (תחליף מלא) |
+| Publish MCP | Canva export + Gmail+Drive · `#ממתין-ל-כלי-IG` |
+| Canva `needsAuth` | `render.py` → Superdesign |
+| Gmail MCP | MAIL-PACK · לא ממציאים פנייה |
 
-נוהל פרסום: `playbooks/grok-failover.md`.  
-מסמך קבע: `docs/GROK-FAILOVER.md`.
+נוהל: `grok-failover.md` · `docs/GROK-FAILOVER.md`.

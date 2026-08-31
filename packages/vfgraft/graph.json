@@ -219,11 +219,13 @@
       "id": "grok-bot",
       "file": "graph/grok-bot.md",
       "type": "boundary",
-      "summary": "Grok Bot is optional backup. HQ sends Gmail and Instagram via tools. Printers stay on the floor. No auto-DM or boost.",
+      "summary": "Grok Bot is primary manager. Delegates processing to Cursor + orchestra. Quota empty: HQ fully replaces including live IG publish. No auto-DM or boost.",
       "sources": [
-        "docs/BACKUP.md",
+        "constitution/GROK.md",
         "constitution/CONSTITUTION.md",
         "constitution/SEND.md",
+        "docs/GROK-FAILOVER.md",
+        "docs/BACKUP.md",
         ".cursor/vf-desk.json"
       ],
       "links": [

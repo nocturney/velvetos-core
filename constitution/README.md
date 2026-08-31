@@ -11,7 +11,9 @@
 | [`TEAM.md`](TEAM.md) | חמישה מושבים |
 | [`tags.md`](tags.md) | תגיות משרד וצינור |
 | [`TAGS.md`](TAGS.md) | תגיות בריף + מיפוי Gemini/Perplexity |
-| [`ORCHESTRA.md`](ORCHESTRA.md) | תזמורת הכלים החיצוניים — ChatGPT · Gemini · Perplexity |
+| [`GROK.md`](GROK.md) | Grok Bot — מנהל ראשי · תחליף מלא במכסה |
+| [`SEND.md`](SEND.md) | שליחה · Grok שוטף · HQ + Publish IG במכסה |
+| [`ORCHESTRA.md`](ORCHESTRA.md) | תזמורת — עיבוד מואצל · תחליף מלא במכסה |
 | [`../AGENTS.md`](../AGENTS.md) | מדריך רתמה (Guides). מנצח את השיחה |
 | [`../docs/HARNESS.md`](../docs/HARNESS.md) | שתילת שש שכבות הרתמה על הפקים |
 | [`../docs/VELVETOS.md`](../docs/VELVETOS.md) | ליבה + מודולים + מופעים |
@@ -21,4 +23,4 @@
 
 מוטמע 30.8.2026 משיתוף Gemini (`hbuCq3MEy5po` → `4f223bc1774c`)  
 ומשיתוף Perplexity (`c950af30`) — גוף השיחה מ־PDF שהבעלים המיר, אחרי Cloudflare.  
-לא ממציאים ₪. לא שולחים אינסטגרם מכאן. לא אוטו־DM. לא Meta Suite. לא שכפול חנות.
+לא ממציאים ₪. **שוטף:** Grok שולח IG. **מכסה:** HQ Publish ישיר. לא אוטו־DM.

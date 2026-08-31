@@ -2,15 +2,23 @@
 
 ## Summary
 
-Grok Bot is **optional backup**. HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). Printers stay on the floor. No boost, no auto-DM. Chat on Grok is decisions only.
+**Grok Bot is the primary manager** — not optional backup. The office started from Grok Bot.
 
-When Grok weekly quota is exhausted: HQ keeps producing **and sending** (`vfharness` playbook). Tags: `#נשלח-מ-HQ` when a tool sent; `#ממתין-ל-כלי-IG` if the feed itself is waiting on a publish MCP. Do not idle on `#מוכן-ל-Grok`.
+**Normal (quota available):** Grok manages and sends (Gmail, Instagram `@velvets_cloud`, printers on the floor). Delegates heavy processing to Cursor + ChatGPT + Gemini + Perplexity to save Grok quota.
+
+**Quota exhausted:** Cursor HQ + orchestra **fully replace** Grok — including Gmail send and **live/direct Instagram publish** via wired tools (`constitution/SEND.md`, `vfigos/SEND.md`).
+
+Lead-seat Grok **chat** = decisions only (₪, board, deferrals). Processing stays on Cursor + orchestra.
+
+No boost. No auto-DM. Customer WhatsApp stays human `050-2517000`.
 
 ## Sources
 
-- `docs/BACKUP.md`
+- `constitution/GROK.md`
 - `constitution/CONSTITUTION.md`
 - `constitution/SEND.md`
+- `docs/GROK-FAILOVER.md`
+- `docs/BACKUP.md`
 - `.cursor/vf-desk.json`
 
 ## Links
@@ -21,4 +29,4 @@ When Grok weekly quota is exhausted: HQ keeps producing **and sending** (`vfharn
 
 ## Notes
 
-`vfigos` reviews and sends via `SEND.md`. `vfsales` writes a quote; HQ sends Gmail via tool (no invented ₪). Customer WhatsApp stays human `050-2517000`. Also listed in playbook: `docs/GROK-FAILOVER.md`, `packages/vfharness/playbooks/grok-failover.md`, `packages/vfigos/QUEUE.md`, `packages/vfigos/LIVE-PACKET.md`.
+Queue tags: `#נשלח-בידי-Grok` (normal send) · `#נשלח-מ-HQ` (quota replacement) · `#מוכן-ל-Grok` (after quota renewal, not backup). Wire Instagram Publish MCP for HQ + Canva — `docs/MCP-FIT.md`.

@@ -81,7 +81,7 @@
       "tool": "vfigos/SEND.md",
       "packs": ["vfigos"],
       "gate": "none",
-      "notes": "Publish tool if connected; else Canva+Drive+Gmail same turn. Never claim feed posted without tool."
+      "notes": "Normal: Grok publishes (#נשלח-בידי-Grok). Quota: HQ live publish via Publish MCP/Canva (#נשלח-מ-HQ). Wire permissions — docs/MCP-FIT.md."
     },
     {
       "id": "web.research",
