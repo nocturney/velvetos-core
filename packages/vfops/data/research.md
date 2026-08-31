@@ -5,9 +5,8 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: Product Lab + כרטיס פנייה + ביו בלי מחיר (`vfsku`/`vfconvert`/`vfcopy`)
-flexi/fidget אחרי שער. פיילאובר Grok + effective-html (`vfbriefux/hq/brief-email.html`).
-Gemini: אין גוף חדש. Perplexity: ביו/«שלחו הודעה» דולג. נתיב: `vfops/data/research.md`.
+מה נבנה / יועל: DESIGN.md לבריף (`vfbriefux/hq/`) + תבניות planning-with-files (`vfharness`) + reflection-before-send (`vfagents`). ruflo/OMC — דולג/דפוס בלבד.
+נתיב: `docs/AGENT-REPOS-EMBED-he.md` · `packages/vfresearch/sources/2026-08-31-agent-repos-embed.md`.
 ```
 
-מקור: `packages/vfresearch/sources/2026-08-31-orchestra.md`
+מקור: `packages/vfresearch/sources/2026-08-31-agent-repos-embed.md`
