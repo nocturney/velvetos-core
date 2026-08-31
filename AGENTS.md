@@ -37,6 +37,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 
 - 2026-08-31 — Invented Origin slug or idled because Origin list was HQ-only. Keep `unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`. Sensor: `scripts/check-origin-slugs.py`.
 - 2026-08-30 — Invented sale ₪ or Insights to fill a gap. Sensor: `scripts/check-hq-overlay.py`.
+- 2026-08-31 — Installed a second orchestrator (amux, Orca ADE, OpenClaw, Ralph unattended, swarm) instead of embedding onto `vfe2b/crews/run.md`. Sensor: `scripts/check-vfe2b.py`.
 - 2026-08-31 — Waited for Christian or Grok Bot to send Gmail/Instagram while tools were available. Sensor: `scripts/check-vf-desk.py` + `constitution/SEND.md`.
 - 2026-08-31 — Left office brief unsent during Grok outage (asked owner to click Send). Failover must send the self-brief like Grok (`htmlBody` תצוגה 3). Sensor: `check-vfharness.py` + `grok-outage-tools.md`.
 - 2026-08-30 — Instagram / Gmail send from HQ **without a tool / claiming Publish**. Superseded 31.8: HQ **does** send via tools. Still forbid auto-DM, boost, invented publish. Sensor: desk rule + `scripts/check-vf-desk.py`.

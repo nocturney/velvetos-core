@@ -1,27 +1,36 @@
-# Crew: run (Orca desk)
+# Crew: run (Orca + orchestrator desk)
 
 Source pattern: [stablyai/orca](https://github.com/stablyai/orca) — isolate a job, name who owns it, end in one of three states.
-Do **not** install Orca. Cursor is the office. This crew is an overlay on the five existing crews.
+Orchestrator overlay (2026-08-31): [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) — pulse, independent verify, artifact on disk, bounded loop. See `packages/vfe2b/ORCHESTRATORS.md`.
+Do **not** install Orca, amux, OpenClaw, or a second orchestrator. Cursor is the office.
 Packs: `vfops` plus whichever crew this משמרת wraps (`vfconvert`, `vfsales`, `vfcost`, `vfcopy`, `vfcovers`, `vfigos`, `vfprod`, `vfresearch`, `vfbooks`).
 
 ## Map
 
-| Orca | אצלנו |
+| Outside | אצלנו |
 |---|---|
-| Run | משמרת |
-| Task | כרטיס עבודה (פנייה / בריף / כיסוי / מספר) |
-| Dispatch | מושב + צוות קיים |
-| `worker_done` | טיוטה או פתק מוכן לסקירה |
-| `escalation` | חסר מקור / מדידה / רישיון / ספירת תור |
-| `decision_gate` | ₪ לראש צוות, או שליחה ל-Grok |
+| Orca Run | משמרת |
+| Orca Task | כרטיס עבודה (פנייה / בריף / כיסוי / מספר) |
+| Orca `worker_done` | טיוטה או פתק מוכן — ואם השליחה היא עבודת HQ, כלי כבר ירה |
+| Orca `escalation` | חסר מקור / מדידה / רישיון / ספירת תור |
+| Orca `decision_gate` | ₪ לראש צוות בלבד |
+| herdr working / blocked / idle | `דופק` |
+| kodo independent verify | `אימות` לפני `worker_done` |
+| tutti / Crewplane artifact | `ארטיפקט` — נתיב על הדיסק |
+| Fusion plan-review-execute | לולאת `vfharness` על צוות קיים אחד |
+| NEEDLE state machine | מצב אחד. אין ערוץ צד |
+| Taskuary inbox → run | בריף ממיין, ואז צוות אחד |
+| fractal / MartinLoop bounds | 2 ניסיונות · checkpoint = קבלה |
+| Claudexor quota rotate | מכסת Grok → כלי HQ באותו תור |
 
 ## Roles
 
 | Role | Pack | Does | Does not |
 |---|---|---|---|
-| Coordinator | `vfops` | Names the job folder. Picks one existing crew. Emits one outcome. | Send. Invent ₪. Install an ADE |
+| Coordinator | `vfops` | Names the job folder. Picks one existing crew. Emits one outcome. | Invent ₪. Install an ADE |
 | Worker | existing crew | Does that crew's Run steps inside the named folder | Touch a second job |
-| Human | WhatsApp / lead / Grok | Answers escalation. Approves ₪. Sends | — |
+| Verifier | `vfharness` | Names the sensor or field check in `אימות` | LLM-as-judge for ₪ |
+| Human | WhatsApp / lead | Answers escalation. Approves ₪. Customer close | — |
 
 ## Isolation
 
@@ -33,10 +42,12 @@ Allowed only on `vfcopy` / `vfcovers`: at most **three** variants, then a human 
 
 ## Handoff vs supervise
 
-- **Supervise:** HQ stays on the card until one of the three outcomes. Example: inquiry chain until draft or missing field.
-- **Handoff:** ownership leaves HQ. Example: approved Instagram draft → Grok Bot. After handoff, do not keep «checking if it sent» as if HQ still owns it.
+- **Supervise:** HQ stays on the card until one of the three outcomes. Example: inquiry chain until draft, missing field, or Gmail `reply`.
+- **Handoff:** ownership leaves HQ. Example: customer WhatsApp (`050-2517000`), printer on the floor, or lead ₪. After handoff, do not keep «checking if it sent» as if HQ still owns a human channel.
 
-«תעביר ל-Grok» / «תשלח» = handoff. «תפקח» / «תחכה» / «תרכז» = supervise.
+Gmail and Instagram **send via tools** (`constitution/SEND.md`) stay **supervise** until the tool fires or the failover packet is written. That is not a Grok handoff.
+
+«תעביר לוואטסאפ» / «תדפיס» = handoff. «תפקח» / «תחכה» / «תרכז» / «תשלח מג׳ימייל» = supervise.
 
 ## Provenance
 
@@ -44,15 +55,23 @@ If Gmail / Calendar / Drive / slicer / snapshot was not actually read, write **�
 
 ## Circuit breaker
 
-Three misses in a row on the same needed fact (queue hours, ₪, license, measurement) → stop. Outcome is `escalation` or `decision_gate`. Do not guess a fourth time.
+Three misses in a row on the same needed fact (queue hours, ₪, license, measurement) → stop. Outcome is `escalation` or `decision_gate`. Do not guess a fourth time. Fresh retry re-reads the source (ralphex). Do not fill the gap.
+
+## Verify before done (kodo)
+
+`worker_done` is illegal without `אימות` that names:
+
+- a computational sensor that passed (`python3 scripts/check-….py`), or
+- a named field that was actually read (subject, file path, calendar block), or
+- **חסר** — then the state cannot be `worker_done`.
 
 ## Run
 
 1. Name the job in one Hebrew line. If the user did not name a job, stop and ask — do not open a personal Drive folder.
-2. Pick **one** existing crew: morning-brief / research / inquiry / content / books-data. Do not spawn a second coding agent.
-3. Keep every read and note inside that job name.
+2. Pick **one** existing crew: morning-brief / research / inquiry / content / books-data. Do not spawn a second coding agent or orchestrator.
+3. Keep every read and note inside that job name. Write the artifact to a path on disk.
 4. Run that crew's steps. Missing required source → do not fill the gap.
-5. Emit **exactly one** outcome card (below). Then stop.
+5. Verify. Then emit **exactly one** outcome card (below). Then stop.
 
 ## Outcome card
 
@@ -61,19 +80,22 @@ Three misses in a row on the same needed fact (queue hours, ₪, license, measur
 צוות: <morning-brief | research | inquiry | content | books-data>
 מושב: <lead | studio | growth | ops | production>
 מצב: worker_done | escalation | decision_gate
+דופק: working | blocked | idle
+אימות: <sensor name or field check or חסר>
+ארטיפקט: <path or «אין»>
 מה נעשה: <one or two lines, cited>
 חסר: <field or «אין»>
-הבא: <who — human WhatsApp | lead ₪ | Grok send | none>
+הבא: <who — HQ tool send | human WhatsApp | lead ₪ | none>
 ```
 
-`worker_done` — a reviewable draft or note exists. Send status is not sent from HQ.
-`escalation` — a named field is **חסר**. One WhatsApp ask, drafted, not sent.
-`decision_gate` — sale ₪ waits for head of desk, or live send waits for Grok.
+`worker_done` — a reviewable draft exists **and** `אימות` is not חסר. If this job was a Gmail/IG send, the tool already fired or the Canva+Drive+Gmail failover is on disk (`#נשלח-מ-HQ` / `#ממתין-ל-כלי-IG`).
+`escalation` — a named field is **חסר**. One WhatsApp ask, drafted, not sent (customer chat stays human).
+`decision_gate` — sale ₪ waits for head of desk. Not a «wait for Grok to send» gate.
 
 ## Grok quota failover
 
-If Grok Bot weekly quota is empty: continue the run to `worker_done` with artifacts on disk. Default `#מוכן-ל-Grok`. If lead/owner needs **live publish now** → `decision_gate` only for ₪; for IG use `#פרסום-חי-דחוף` + LIVE-PACKET for human post. Do not invent a sixth seat. HQ agent does not press Publish. See `packages/vfharness/playbooks/grok-failover.md`.
+If Grok Bot weekly quota is empty: keep producing **and sending** via HQ tools (`vfigos/SEND.md`, Gmail `send_message`). Tag `#נשלח-מ-HQ`. If the IG feed itself still needs a publish MCP → also `#ממתין-ל-כלי-IG`. `decision_gate` only for ₪. See `packages/vfharness/playbooks/grok-failover.md` + `constitution/SEND.md`.
 
 ## Done when
 
-The card has exactly one `מצב`. No invented ₪ or Insights. No Orca binary. No send from HQ.
+The card has exactly one `מצב`, plus `דופק` + `אימות` + `ארטיפקט`. No invented ₪ or Insights. No second orchestrator. No claim that the IG feed posted if no publish tool fired.
