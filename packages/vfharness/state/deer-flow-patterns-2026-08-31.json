@@ -1,0 +1,23 @@
+{
+  "task_id": "deer-flow-patterns-2026-08-31",
+  "status": "done",
+  "pack": "vfe2b",
+  "goal": "DEER-FLOW-PATTERNS.md on disk; run.md + checkpoint + sensors updated; check-all passes",
+  "completed_steps": [
+    "Read bytedance/deer-flow README and map to HQ locks",
+    "Write packages/vfe2b/DEER-FLOW-PATTERNS.md",
+    "Embed goal/receipts/sub-agent bounds in crews/run.md",
+    "Add optional goal to checkpoint.schema.json",
+    "Compaction note in vfharness/EMBED.md",
+    "Extend check-vfe2b.py for deer-flow doc"
+  ],
+  "next_step": "none",
+  "artifacts": [
+    "packages/vfe2b/DEER-FLOW-PATTERNS.md",
+    "packages/vfe2b/crews/run.md",
+    "packages/vfharness/templates/checkpoint.schema.json"
+  ],
+  "unresolved": [],
+  "escalation": null,
+  "last_updated": "2026-08-31"
+}
