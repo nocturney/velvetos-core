@@ -11,6 +11,7 @@ Grok וג׳ימיני יודעים לערוך Google Sheets כמחבר. כאן �
 - ייצוא: `python3 scripts/vf_office.py jobs csv`
 - Drive: `create_file` עם `contentMimeType=text/csv` (הופך לגיליון) או עדכון אחרי שנקב ID.
 - IDs חיים: `office/ledger/bindings.json` (לא סוד). בלי קובץ / בלי ID: כותבים **חסר גיליון** וממשיכים.
+- תאי גיליון (Desktop): `mcp-gsheets` ב־`~/.cursor/mcp.json` — `packages/vfmcp/CONNECT-SHEETS.md`. לא בפרויקט (מפתח שירות).
 
 ## מתי יש ID (נזרע 31.8.2026)
 

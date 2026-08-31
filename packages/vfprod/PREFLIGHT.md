@@ -15,4 +15,5 @@ python3 scripts/vf_office.py print preflight path/to/model.stl
 
 ארבע הווי ב־`CHECKLIST.md` נשארות חובה על הרצפה.  
 תיקון רשת / Image-to-3D: `3DAISTUDIO.md` (OAuth). אתר אם MCP `needsAuth`.  
+Studio MCP Hub בליבה (`vfmcp/CONNECT-STUDIOHUB.md`) — VF מדלג `print_ready`/CMYK.  
 רישיון: `vlicense`. אין ₪ מכאן.

@@ -76,9 +76,11 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 - **Superdesign:** covers, posters, brief graphics (skip repo init). Down → Canva or `studio/render.py`.
 - **Treg:** **not relevant.** Do not call. Web + orchestra only.
 - **Mobbin:** morning-brief / UX references when the MCP is actually available. Down → `vfbriefux` templates / Superdesign.
-- **Sheets:** Drive `create_file` spreadsheet or CSV export (`vfbooks/SHEETS.md`). Do not invent rows or ₪.
+- **Sheets:** Core catalogs `mcp-gsheets` (Desktop credentials, `vfmcp/CONNECT-SHEETS.md`). Cloud / no key → Drive `create_file` + CSV (`vfbooks/SHEETS.md`). Do not invent rows or ₪.
 - **Instagram send:** `vfigos/SEND.md`. Publish tool if connected; else Canva+Drive+Gmail same turn.
 - **FCC (Free Claude Code):** not on this Cloud Agent. Map is `vffcc`. Failover → research desks in `constitution/ORCHESTRA.md`.
 - **3D AI Studio:** owner subscription. Site first (`packages/vfprod/3DAISTUDIO.md`). Official MCP = OAuth from their Settings — not on this Cloud Agent. No API key in git. Down → site + Drive. Same `vlicense` gate as Meshy/Tripo. No print from HQ.
+- **Studio MCP Hub:** Core HTTP `studiomcphub` (`vfmcp/CONNECT-STUDIOHUB.md`). VF skips CMYK/`print_ready`. No wallet in git.
+- **WhatsApp MCP:** Core catalogs Desktop lharries (`CONNECT-WHATSAPP.md`). VF send stays human `050-2517000`. Draft failover: `vf_office.py convert draft`.
 
 When a `@slug` is mentioned, follow that specialist **and** these laws.

@@ -1,8 +1,10 @@
 # וואטסאפ · טיוטה לאדם
 
-מושב: **סטודיו**. לא MCP וואטסאפ. לא שליחה מ־HQ.
+מושב: **סטודיו**. שליחה לאדם. MCP בליבה = חיפוש/טיוטה בלבד.
 
 הלקוח מגיע ל־**050-2517000**. אדם שולח. HQ כותב טיוטה + קישור `wa.me` ללחיצה.
+
+Core מתקין WhatsApp MCP לחיפוש/טיוטה על Desktop: `packages/vfmcp/CONNECT-WHATSAPP.md`. VF `mcpBind.whatsapp.send=false`. בלי Connect / בענן:
 
 ```
 python3 scripts/vf_office.py jobs add --channel WhatsApp --what "מעמד" --qty 1 --material PLA --phone 0501234567
@@ -20,4 +22,4 @@ python3 scripts/vf_office.py convert draft VF-YYYYMMDD-001 --stage ממתין ל
 אין טיוטת **הצעה** בלי סכום מראש צוות. בלי סכום: `--stage ממתין לסכום`.  
 כרטיס השדות: `CARD.md`. נתיב: `PATH.md`. כיתוב דלפק: `vfcopy/DESK.md`.
 
-אסור: WhatsApp Business MCP, Infobip, ManyChat, אוטו־DM, ₪ מומצא.
+אסור: שליחה מ־HQ, Infobip/ManyChat על VF, אוטו־DM, ₪ מומצא.

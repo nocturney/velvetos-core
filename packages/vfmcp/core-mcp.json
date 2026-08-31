@@ -1,0 +1,56 @@
+{
+  "role": "core",
+  "updatedAt": "2026-08-31",
+  "rule": "VelvetOS Core registers office MCPs. An instance binds a subset via mcpBind. No secrets in git. HTTP servers live in .cursor/mcp.json. Desktop-only servers stay in ~/.cursor/mcp.json (see mcp.desktop.example.json).",
+  "projectMcpJson": ".cursor/mcp.json",
+  "connect": "packages/vfmcp/CORE-MCP.md",
+  "servers": [
+    {
+      "id": "studiomcphub",
+      "inProjectMcpJson": true,
+      "url": "https://studiomcphub.com/mcp",
+      "source": "https://github.com/codex-curator/studiomcphub",
+      "connect": "packages/vfmcp/CONNECT-STUDIOHUB.md",
+      "cloud": "Team MCP + optional OAuth; anonymous free tools work",
+      "locks": [
+        "no-wallet-in-git",
+        "no-x402-from-hq-without-lead",
+        "no-nft",
+        "no-invented-prices",
+        "hq-does-not-print"
+      ]
+    },
+    {
+      "id": "mcp-gsheets",
+      "inProjectMcpJson": false,
+      "whyNotProject": "Needs a Google service-account JSON. Project mcp.json would override a working global config. Put credentials in ~/.cursor/mcp.json.",
+      "package": "mcp-gsheets@latest",
+      "source": "https://github.com/freema/mcp-gsheets",
+      "connect": "packages/vfmcp/CONNECT-SHEETS.md",
+      "failover": "scripts/vf_office.py jobs + Drive exportMimeType=text/csv",
+      "locks": [
+        "no-secrets-in-git",
+        "no-invented-prices",
+        "חסר גיליון"
+      ]
+    },
+    {
+      "id": "whatsapp",
+      "inProjectMcpJson": false,
+      "whyNotProject": "Personal WhatsApp (lharries) is a local Go bridge + QR on the owner Mac. Infobip HTTP is only for instances that already pay Infobip.",
+      "source": "https://github.com/lharries/whatsapp-mcp",
+      "altHttp": {
+        "id": "infobip-whatsapp",
+        "url": "https://mcp.infobip.com/whatsapp",
+        "when": "instance already has Infobip — still send=false on VF"
+      },
+      "connect": "packages/vfmcp/CONNECT-WHATSAPP.md",
+      "failover": "scripts/vf_office.py convert draft + wa.me",
+      "locks": [
+        "vf-send-human",
+        "no-autodm",
+        "no-secrets-in-git"
+      ]
+    }
+  ]
+}

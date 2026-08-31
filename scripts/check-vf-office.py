@@ -154,14 +154,14 @@ def main() -> None:
         fail("bindings.json must not invent a ₪")
 
     sheets = SHEETS.read_text(encoding="utf-8")
-    for needle in ("vf_office.py", "exportMimeType", "חסר גיליון", "לא ממציאים", jobs_id):
+    for needle in ("vf_office.py", "exportMimeType", "חסר גיליון", "לא ממציאים", jobs_id, "CONNECT-SHEETS.md"):
         if needle not in sheets:
             fail(f"SHEETS.md must mention {needle}")
     if "X ₪" not in sheets:
         fail("SHEETS.md must keep X ₪ rule")
 
     wa = CONVERT.read_text(encoding="utf-8")
-    for needle in ("050-2517000", "wa.me", "send=false", "vf_office.py"):
+    for needle in ("050-2517000", "wa.me", "send=false", "vf_office.py", "CONNECT-WHATSAPP.md"):
         if needle not in wa:
             fail(f"WHATSAPP.md must mention {needle}")
 
