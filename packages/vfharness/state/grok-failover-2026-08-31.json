@@ -4,25 +4,30 @@
   "pack": "vfharness",
   "completed_steps": [
     "Owner reported Grok Bot weekly quota at 100 percent",
-    "Activated grok-failover playbook; default route #מוכן-ל-Grok",
-    "Read Calendar nocturney@gmail.com Asia/Jerusalem — no pickup window today",
-    "Read Gmail inbox newer_than:1d — no customer print inquiry",
-    "Queued VF-G005 d12b carousel for Grok return",
-    "Wrote morning brief draft in vfops; HQ did not send mail"
+    "Owner said Grok returns in 5 days — cover processes, emails, live posts",
+    "Requeued VF-G005 as #פרסום-חי-דחוף (Thursday 12:00 before Grok return)",
+    "Completed vfigos/live/G005-LIVE-PACKET.md",
+    "Wrote vfops/OUTAGE-5D.md and human-send/MAIL-PACK.md (human Gmail paste)",
+    "G001 insights window: אין ספירה",
+    "חשבונות label last 7d empty — אין ספירה",
+    "HQ did not send mail or press Publish"
   ],
-  "next_step": "On Grok quota return: hand remaining #מוכן-ל-Grok to Grok. If owner says live IG now: complete LIVE-PACKET for human. Do not Publish from HQ.",
+  "next_step": "Human sends daily brief emails from MAIL-PACK; human posts G005 Thu 12:00; on «עלה» mark #פורסם-בידי-אדם; on «מכסת Grok חזרה» hand leftover #מוכן-ל-Grok only.",
   "artifacts": [
+    "packages/vfops/OUTAGE-5D.md",
+    "packages/vfops/human-send/MAIL-PACK.md",
+    "packages/vfigos/live/G005-LIVE-PACKET.md",
     "packages/vfigos/QUEUE.md",
     "packages/vfops/BRIEF-2026-08-31.md",
-    "packages/vfresearch/sources/2026-08-31-grok-failover.md",
-    "packages/vfresearch/sources/2026-08-31-orchestra.md"
+    "packages/vfinsights/READ-2026-08-31.md",
+    "packages/vfresearch/sources/2026-08-31-grok-failover.md"
   ],
   "unresolved": [
-    "Grok Bot weekly quota exhausted — no send from HQ",
-    "ChatGPT / Gemini / Perplexity desks are not MCP on this Cloud Agent — no new orchestra body",
-    "Canva search for G005 returned empty — use vfcovers/g005/slides JPGs",
-    "No verified Insights snapshot for G001 — אין ספירה",
-    "Owner did not request #פרסום-חי-דחוף"
+    "HQ agent cannot Gmail send or Instagram Publish — human must paste/post",
+    "No verified Insights snapshot for G001",
+    "No print-queue hours",
+    "ChatGPT / Gemini / Perplexity not MCP here",
+    "No second feed post without floor proof"
   ],
   "escalation": null,
   "last_updated": "2026-08-31"
