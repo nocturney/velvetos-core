@@ -3,7 +3,8 @@
 מקור: https://github.com/plannotator/effective-html  
 תבנית חיה (מייל): `../MAIL.html` + `render_mail.py`  
 רפרנס/Wireframe: `hq/brief-email.html`  
-מבנה נעול: `packages/vfops/BRIEF.md` + `packages/vfops/hq/BRIEF-SLOTS.md`
+מבנה נעול: `packages/vfops/BRIEF.md` + `packages/vfops/hq/BRIEF-SLOTS.md`  
+טוקנים ויזואליים: `DESIGN.md` (awesome-design-md pattern)
 
 ## מתי
 

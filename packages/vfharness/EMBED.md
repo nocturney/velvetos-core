@@ -29,14 +29,19 @@ python3 scripts/check-all.py
 
 ## 4. Memory — לפני סגירת סשן ארוך
 
-כתוב `state/<task-id>.json` לפי `templates/checkpoint.schema.json`.  
+**משימה ארוכה (5+ tool calls):** פתח `state/<task-id>/` עם שלושת הקבצים מ-`PLANNING-FILES.md` (`task_plan.md`, `findings.md`, `progress.md`). קרא אותם בתחילת כל turn.
+
+כתוב `state/<task-id>.json` (או `state/<task-id>/checkpoint.json`) לפי `templates/checkpoint.schema.json`.  
 בפתיחה: קרא את הקובץ. אל תתחיל מחדש.
 
 שדה אופציונלי `goal`: תנאי סיום אחד (דפוס DeerFlow `/goal` — ראה `packages/vfe2b/DEER-FLOW-PATTERNS.md`).
 
+**משמרת / OMA:** `planned_steps` לפני עבודה כבדה; `gate` כשחסומים על ₪ או שדה אנושי — ראה `playbooks/oma-patterns.md`.
+
 **Compaction (דפוס DeerFlow `/compact`):** כשהשיחה ארוכה, אל תשחזר הכל — סכם ב־`completed_steps` + `unresolved`, והמשך מה-checkpoint. השיח המלא נשאר אצל המשתמש; המודל עובד מהקבלה.
 
-משימות חד-פעמיות (שאלה, סיעור מוחות) — בלי checkpoint.
+משימות חד-פעמיות (שאלה, סיעור מוחות) — בלי checkpoint ו בלי שלושת קבצי התכנון.
+
 
 ## 5. Permissions — לפני כלי חיצוני
 

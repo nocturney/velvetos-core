@@ -308,6 +308,67 @@
       "note": "Embedded write-better patterns only (not asd-ste100, not npx plugin). Hebrew lint: packages/vfcopy/hq/ai-tells-he.md"
     },
     {
+      "id": "awesome-design-md",
+      "kind": "repo",
+      "url": "https://github.com/VoltAgent/awesome-design-md",
+      "title": "awesome-design-md — DESIGN.md for coding agents",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
+      "report": "docs/AGENT-REPOS-EMBED-he.md",
+      "packs": ["vfbriefux"],
+      "note": "VF office tokens at vfbriefux/hq/DESIGN.md. Not community brand extracts. Canva stays authoritative for IG."
+    },
+    {
+      "id": "planning-with-files",
+      "kind": "repo",
+      "url": "https://github.com/OthmanAdi/planning-with-files",
+      "title": "planning-with-files — persistent markdown planning",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
+      "report": "docs/AGENT-REPOS-EMBED-he.md",
+      "packs": ["vfharness", "vfe2b"],
+      "note": "Templates + PLANNING-FILES.md under state/<task-id>/. No npm/hooks. Cursor reads files explicitly."
+    },
+    {
+      "id": "genai-agents-nirdiamant",
+      "kind": "repo",
+      "url": "https://github.com/NirDiamant/GenAI_Agents",
+      "title": "GenAI_Agents — agent technique tutorials",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
+      "report": "docs/AGENT-REPOS-EMBED-he.md",
+      "pack": "vfagents",
+      "packs": ["vfagents", "vfsales", "vfconvert", "vfigos"],
+      "note": "Playbooks only. reflection-before-send embedded. No LangGraph/CrewAI runtime."
+    },
+    {
+      "id": "oh-my-claudecode",
+      "kind": "repo",
+      "url": "https://github.com/Yeachan-Heo/oh-my-claudecode",
+      "title": "oh-my-claudecode — Claude Code team orchestration",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
+      "report": "docs/AGENT-REPOS-EMBED-he.md",
+      "packs": ["vfe2b", "vfharness"],
+      "note": "Pattern only (plan→exec→verify). Already in crews/run.md + orchestrators overlay. Do not install OMC."
+    },
+    {
+      "id": "ruflo",
+      "kind": "repo",
+      "url": "https://github.com/ruvnet/ruflo",
+      "title": "ruflo — agent meta-harness / swarms",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
+      "report": "docs/AGENT-REPOS-EMBED-he.md",
+      "packs": ["vfe2b"],
+      "note": "Skipped install — unattended swarms in orchestrators.json skip list. vfmem/vfgraft for memory pattern only."
+    },
+    {
       "id": "prompts-chat",
       "kind": "repo",
       "url": "https://github.com/f/prompts.chat",
@@ -386,6 +447,7 @@
       "note": "Patterns only (lifecycle scripts, bounded fan-out). Skip as second desk. Optional Mac offload after lead seat — see vffcc/local-offload.md."
     }
   ],
+
   "addLink": {
     "how": "Append an object under links[] the same day the owner sends a URL. Set firstEmbedded and lastReviewed. Do not wait for the weekly pass.",
     "sameDay": true

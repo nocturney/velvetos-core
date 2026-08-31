@@ -229,6 +229,13 @@
       "note": "Only if the client agreed to a recording."
     },
     {
+      "id": "reflection-before-send",
+      "status": "embed",
+      "source": ["NirDiamant/GenAI_Agents — reflection/self-critique patterns"],
+      "packs": ["vfagents", "vfsales", "vfconvert", "vfcopy", "vfigos"],
+      "playbook": "playbooks/reflection-before-send.md"
+    },
+    {
       "id": "vision-proof-later",
       "status": "later",
       "source": ["autogen/multimodal-gpt4v", "industry/vision-monitor"],

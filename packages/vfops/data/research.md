@@ -5,8 +5,8 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: Huginn (דפוסים) — scenarios ב-vfe2b, events ב-checkpoint, staleness sensor, dedup ב-vfconvert.
-Product Lab + כרטיס פנייה + effective-html. Gemini/Perplexity: אין גוף חדש. נתיב: vfops/data/research.md.
+מה נבנה / יועל: DESIGN.md + planning templates + reflection (`vfbriefux`/`vfharness`/`vfagents`); Huginn scenarios + staleness + dedup; taste-skill / OMA / prompts.chat על פקים קיימים.
+נתיב: `docs/AGENT-REPOS-EMBED-he.md` · `packages/vfresearch/sources/2026-08-31-agent-repos-embed.md` · `2026-08-31-huginn-embed.md`.
 ```
 
-מקור: `packages/vfresearch/sources/2026-08-31-huginn-embed.md` · `2026-08-31-weekly-links.md`
+מקור: `packages/vfresearch/sources/2026-08-31-agent-repos-embed.md` · `2026-08-31-huginn-embed.md` · `2026-08-31-weekly-links.md`
