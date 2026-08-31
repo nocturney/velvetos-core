@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **Office OS / CRM-ERP inspiration**: 18 מקורות (Twenty, ERPNext, Huly, Monica, NocoBase, Krayin, Akaunting, IDURAR, Dolibarr, Odoo, Zoho, Salesforce Pro, NetSuite, monday, XenForo/vBulletin/Invision/WoltLab) → דפוסים על פקים קיימים. `capabilities.json` + לוח צינור + portlets + ציר לקוח. ADR: קונסולה פנימית מותרת; אתר שיווקי ציבורי נשאר נעול. See `docs/OFFICE-OS-EMBED-he.md`.
+
 - 2026-08-31 — **Agent repos embed**: [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) → `vfbriefux/hq/DESIGN.md`; [planning-with-files](https://github.com/OthmanAdi/planning-with-files) → templates + `PLANNING-FILES.md`; [GenAI_Agents](https://github.com/NirDiamant/GenAI_Agents) → `reflection-before-send` playbook. [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) pattern-only (already in `vfe2b`); [ruflo](https://github.com/ruvnet/ruflo) skipped (swarm lock). See `docs/AGENT-REPOS-EMBED-he.md`.
 - 2026-08-31 — **prompts.chat**: הטמעה סלקטיבית על `vfcopy` — תבניות `hq/templates/` + אנטומיית פרומפט ב־`PLAYBOOK.md`. לא CSV, לא self-host, לא פק חדש. MCP אופציונלי ב־`docs/MCP-FIT.md`. רישום ב־`LINKS.json`.
 - 2026-08-31 — **Bindu (watch)**: [GetBindu/Bindu](https://github.com/GetBindu/Bindu) — identity/A2A/x402 agent layer. Verdict `watch` in `vfresearch/LINKS.json`; patterns only (verify layers, agent cards). No `bindufy`, no Gateway, no x402 from HQ. Lock in `vfe2b/LOCK.md`. See `packages/vfresearch/sources/2026-08-31-bindu.md`.

@@ -1,0 +1,66 @@
+{
+  "task_id": "office-os-crm-erp-2026-08-31",
+  "status": "done",
+  "pack": "vfresearch",
+  "goal": "Learn CRM/ERP/Work-OS/forum patterns; embed into existing packs; unlock internal console ADR without public site",
+  "crew": "research",
+  "planned_steps": [
+    "Orient via vfmem + graft",
+    "Research 18 sources",
+    "Synthesize + constitutional unlock",
+    "Embed packs + LINKS + sensors",
+    "Commit PR + brief block 05"
+  ],
+  "completed_steps": [
+    "Researched Twenty/ERPNext/Huly/Monica/NocoBase/Krayin/Akaunting/IDURAR/Dolibarr/Odoo/Zoho/SF/NetSuite/monday/forums",
+    "Wrote OFFICE-OS-EMBED-he + source note",
+    "Embedded COMMAND-SURFACE, capabilities.json, PIPELINE-BOARD, PORTLETS, CUSTOMER-TIMELINE",
+    "Unlocked internal console in constitution/AGENTS; public site stays locked",
+    "Registered 18 links in LINKS.json; updated brief 05"
+  ],
+  "next_step": "Lead seat reviews ADR; later product pick for console stack",
+  "artifacts": [
+    "docs/OFFICE-OS-EMBED-he.md",
+    "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+    "packages/vfops/hq/COMMAND-SURFACE.md",
+    "packages/vfops/hq/capabilities.json",
+    "packages/vfops/hq/PIPELINE-BOARD.md",
+    "packages/vfbriefux/hq/PORTLETS.md",
+    "packages/vfsales/hq/CUSTOMER-TIMELINE.md"
+  ],
+  "unresolved": [
+    "XenForo.com HTTP 500 at review — forum patterns only",
+    "No live console UI shipped — registry + ADR only",
+    "Stack choice (Twenty vs NocoBase vs custom) deferred to lead",
+    "Lead seat to confirm internal-console ADR"
+  ],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "scripts/check-all.py PASS 17/17; Gmail send_message 1a056d814229bdf7",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-08-31",
+  "events": [
+    {
+      "name": "research.sources_reviewed",
+      "producedAt": "2026-08-31",
+      "sourceAgent": "vfresearch",
+      "payload": { "count": 18 }
+    },
+    {
+      "name": "constitution.internal_console_unlocked",
+      "producedAt": "2026-08-31",
+      "sourceAgent": "constitution",
+      "payload": { "adr": "docs/OFFICE-OS-EMBED-he.md" }
+    },
+    {
+      "name": "mail.sent",
+      "producedAt": "2026-08-31",
+      "sourceAgent": "vfops",
+      "payload": {
+        "messageId": "1a056d814229bdf7",
+        "tag": "#נשלח-מ-HQ"
+      }
+    }
+  ]
+}

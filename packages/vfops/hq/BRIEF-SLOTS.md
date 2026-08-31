@@ -18,3 +18,5 @@
 HTML: `packages/vfbriefux/MAIL.html` (תצוגה 3). לא שולחים טקסט.  
 בפיילאובר Grok: HQ ממלא JSON → `render_mail.py` → `send_message` + `htmlBody` + כריכות `cid`.  
 כש־Grok חי: Grok שולח את אותו HTML. HQ לא לוחץ Publish לאינסטגרם.
+
+Portlets (שמות לדאשבורד עתידי על אותם חריצים): `packages/vfbriefux/hq/PORTLETS.md`.

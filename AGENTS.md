@@ -27,6 +27,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 - Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.
 - Grok Bot quota failover: HQ **keeps producing and sending** via HQ tools. Queue tags: `#נשלח-מ-HQ` when a tool sent; `#ממתין-ל-כלי-IG` if the feed itself is still waiting on a publish MCP; `#פרסום-חי-דחוף` + `LIVE-PACKET` for urgent feed work (HQ still sends via tools). Do not sit on `#מוכן-ל-Grok` as the only path. No boost, no auto-DM, no Print from HQ. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md` · `constitution/SEND.md`.
 - Do not invent Origin slugs. Keep `unknown` / `origin-slug-unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`.
+- Public marketing website / price widget from HQ stays locked. An **internal office command surface** (owner/lead view over packs + `vfops/hq/capabilities.json`) is allowed as a view — not a sixth seat, not a second runtime. ADR: `docs/OFFICE-OS-EMBED-he.md`.
 - After every catalog, pack, or rule change, run `python3 scripts/check-all.py`.
 - Do not claim success if a computational sensor failed. Retry once, then escalate.
 - Close a multi-step task with a checkpoint under `packages/vfharness/state/` so the next session can resume.
@@ -36,6 +37,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 ## ANTI-PATTERNS (dated; each traces to an observed failure)
 
 - 2026-08-31 — Invented Origin slug or idled because Origin list was HQ-only. Keep `unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`. Sensor: `scripts/check-origin-slugs.py`.
+- 2026-08-31 — Treated «לא אתר מ־HQ» as blocking an **internal** owner console. Public marketing site stays locked; internal command surface is allowed (`docs/OFFICE-OS-EMBED-he.md`). Sensor: `scripts/check-hq-overlay.py` + desk laws.
 - 2026-08-30 — Invented sale ₪ or Insights to fill a gap. Sensor: `scripts/check-hq-overlay.py`.
 - 2026-08-31 — Installed a second orchestrator (amux, Orca ADE, OpenClaw, Ralph unattended, swarm) instead of embedding onto `vfe2b/crews/run.md`. Sensor: `scripts/check-vfe2b.py`.
 - 2026-08-31 — Waited for Christian or Grok Bot to send Gmail/Instagram while tools were available. Sensor: `scripts/check-vf-desk.py` + `constitution/SEND.md`.

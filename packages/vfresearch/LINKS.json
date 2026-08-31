@@ -34,7 +34,14 @@
       "lastReviewed": "2026-08-31",
       "sourceNote": "packages/vfresearch/sources/chatgpt-6a94f50b.md",
       "report": "packages/vfresearch/sources/2026-08-31-orchestra.md",
-      "packs": ["vfsku", "vfconvert", "vfcopy", "vfprod", "vfgrowth", "vfops"]
+      "packs": [
+        "vfsku",
+        "vfconvert",
+        "vfcopy",
+        "vfprod",
+        "vfgrowth",
+        "vfops"
+      ]
     },
     {
       "id": "chatgpt-building-agents",
@@ -261,7 +268,10 @@
       "sourceNote": "packages/vfresearch/sources/2026-08-31-effective-html.md",
       "report": "packages/vfbriefux/hq/EFFECTIVE-HTML.md",
       "pack": "vfbriefux",
-      "packs": ["vfbriefux", "vfops"],
+      "packs": [
+        "vfbriefux",
+        "vfops"
+      ],
       "note": "Self-contained HTML brief template at vfbriefux/hq/brief-email.html. Complements MAIL.html (production). html-plan preserves 01–07 slots."
     },
     {
@@ -304,7 +314,10 @@
       "firstEmbedded": "2026-08-31",
       "lastReviewed": "2026-08-31",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-write-better-embed.md",
-      "packs": ["vfcopy", "vfmskill"],
+      "packs": [
+        "vfcopy",
+        "vfmskill"
+      ],
       "note": "Embedded write-better patterns only (not asd-ste100, not npx plugin). Hebrew lint: packages/vfcopy/hq/ai-tells-he.md"
     },
     {
@@ -316,7 +329,9 @@
       "lastReviewed": "2026-08-31",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
       "report": "docs/AGENT-REPOS-EMBED-he.md",
-      "packs": ["vfbriefux"],
+      "packs": [
+        "vfbriefux"
+      ],
       "note": "VF office tokens at vfbriefux/hq/DESIGN.md. Not community brand extracts. Canva stays authoritative for IG."
     },
     {
@@ -328,7 +343,10 @@
       "lastReviewed": "2026-08-31",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
       "report": "docs/AGENT-REPOS-EMBED-he.md",
-      "packs": ["vfharness", "vfe2b"],
+      "packs": [
+        "vfharness",
+        "vfe2b"
+      ],
       "note": "Templates + PLANNING-FILES.md under state/<task-id>/. No npm/hooks. Cursor reads files explicitly."
     },
     {
@@ -341,7 +359,12 @@
       "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
       "report": "docs/AGENT-REPOS-EMBED-he.md",
       "pack": "vfagents",
-      "packs": ["vfagents", "vfsales", "vfconvert", "vfigos"],
+      "packs": [
+        "vfagents",
+        "vfsales",
+        "vfconvert",
+        "vfigos"
+      ],
       "note": "Playbooks only. reflection-before-send embedded. No LangGraph/CrewAI runtime."
     },
     {
@@ -353,7 +376,10 @@
       "lastReviewed": "2026-08-31",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
       "report": "docs/AGENT-REPOS-EMBED-he.md",
-      "packs": ["vfe2b", "vfharness"],
+      "packs": [
+        "vfe2b",
+        "vfharness"
+      ],
       "note": "Pattern only (plan→exec→verify). Already in crews/run.md + orchestrators overlay. Do not install OMC."
     },
     {
@@ -365,7 +391,9 @@
       "lastReviewed": "2026-08-31",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-agent-repos-embed.md",
       "report": "docs/AGENT-REPOS-EMBED-he.md",
-      "packs": ["vfe2b"],
+      "packs": [
+        "vfe2b"
+      ],
       "note": "Skipped install — unattended swarms in orchestrators.json skip list. vfmem/vfgraft for memory pattern only."
     },
     {
@@ -376,7 +404,11 @@
       "firstEmbedded": "2026-08-31",
       "lastReviewed": "2026-08-31",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-prompts-chat-embed.md",
-      "packs": ["vfcopy", "vfresearch", "vfmcp"],
+      "packs": [
+        "vfcopy",
+        "vfresearch",
+        "vfmcp"
+      ],
       "note": "Methodology + hq/templates only. No CSV import, no self-host, no vfprompts pack. Optional MCP: https://prompts.chat/api/mcp"
     },
     {
@@ -388,7 +420,10 @@
       "lastReviewed": "2026-08-31",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-taste-skill.md",
       "report": "docs/TASTE-SKILL-EMBED-he.md",
-      "packs": ["vfharness", "vfcovers"],
+      "packs": [
+        "vfharness",
+        "vfcovers"
+      ],
       "note": "Partial embed only: full-output playbook, brief inference on ui-finish-gate-reviewer, vfcovers restraint. No npx install, no brandkit generator."
     },
     {
@@ -400,7 +435,11 @@
       "lastReviewed": "2026-08-31",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-bindu.md",
       "verdict": "watch",
-      "packs": ["vfe2b", "vfharness", "vfbiz"],
+      "packs": [
+        "vfe2b",
+        "vfharness",
+        "vfbiz"
+      ],
       "note": "Patterns only (3-layer verify, agent cards, human gate). No bindufy, no Gateway, no x402, no second runtime. POC off-repo only."
     },
     {
@@ -411,7 +450,12 @@
       "firstEmbedded": "2026-08-31",
       "lastReviewed": "2026-08-31",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-lobehub.md",
-      "packs": ["vfmcp", "vfe2b", "vfharness", "vfops"],
+      "packs": [
+        "vfmcp",
+        "vfe2b",
+        "vfharness",
+        "vfops"
+      ],
       "note": "Connector priority + schedule/report patterns on existing packs. No Docker install, no second runtime, no IM gateway."
     },
     {
@@ -443,11 +487,281 @@
       "sourceNote": "packages/vfresearch/sources/2026-08-31-superset-patterns.md",
       "report": "packages/vfe2b/ORCHESTRATORS.md",
       "pack": "vfe2b",
-      "packs": ["vfe2b", "vfharness", "vffcc"],
+      "packs": [
+        "vfe2b",
+        "vfharness",
+        "vffcc"
+      ],
       "note": "Patterns only (lifecycle scripts, bounded fan-out). Skip as second desk. Optional Mac offload after lead seat — see vffcc/local-offload.md."
+    },
+    {
+      "id": "twentyhq-twenty",
+      "kind": "repo",
+      "url": "https://github.com/twentyhq/twenty",
+      "title": "Twenty — open-source CRM (AI / objects / MCP)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "report": "docs/OFFICE-OS-EMBED-he.md",
+      "packs": [
+        "vfops",
+        "vfsales",
+        "vfbriefux",
+        "vfresearch",
+        "constitution"
+      ],
+      "note": "Patterns only: command palette, objects/views, pipeline. No Twenty install."
+    },
+    {
+      "id": "frappe-erpnext",
+      "kind": "repo",
+      "url": "https://github.com/frappe/erpnext",
+      "title": "ERPNext — open-source ERP",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "report": "docs/OFFICE-OS-EMBED-he.md",
+      "packs": [
+        "vfprod",
+        "vfbooks",
+        "vfops",
+        "vfsku"
+      ],
+      "note": "Manufacturing/job-card/stock patterns → print queue + SKU. No ERPNext install."
+    },
+    {
+      "id": "huly-platform",
+      "kind": "repo",
+      "url": "https://github.com/hcengineering/platform",
+      "title": "Huly — all-in-one work platform",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "report": "docs/OFFICE-OS-EMBED-he.md",
+      "packs": [
+        "vfops",
+        "vfmem",
+        "vfharness"
+      ],
+      "note": "Inbox+planner+docs unified metaphor. No Huly runtime."
+    },
+    {
+      "id": "monica-prm",
+      "kind": "repo",
+      "url": "https://github.com/monicahq/monica",
+      "title": "Monica — personal relationship management",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfsales",
+        "vfconvert"
+      ],
+      "note": "Customer timeline pattern → vfsales/hq/CUSTOMER-TIMELINE.md"
+    },
+    {
+      "id": "nocobase",
+      "kind": "repo",
+      "url": "https://github.com/nocobase/nocobase",
+      "title": "NocoBase — AI + no-code business systems",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "report": "docs/OFFICE-OS-EMBED-he.md",
+      "packs": [
+        "vfops",
+        "vfgraft",
+        "constitution"
+      ],
+      "note": "Data≠UI + plugins + AI permissions → future console architecture. No install."
+    },
+    {
+      "id": "krayin-laravel-crm",
+      "kind": "repo",
+      "url": "https://github.com/krayin/laravel-crm",
+      "title": "Krayin — Laravel CRM",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfops",
+        "vfsales"
+      ],
+      "note": "Lead/pipeline/activity → PIPELINE-BOARD.md"
+    },
+    {
+      "id": "akaunting",
+      "kind": "repo",
+      "url": "https://github.com/akaunting/akaunting",
+      "title": "Akaunting — online accounting",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfbooks"
+      ],
+      "note": "Invoice/expense views on verified numbers only. No Akaunting install."
+    },
+    {
+      "id": "idurar-erp-crm",
+      "kind": "repo",
+      "url": "https://github.com/idurar/idurar-erp-crm",
+      "title": "IDURAR — ERP/CRM invoice quote",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfsales",
+        "vfbooks"
+      ],
+      "note": "Simple quote/invoice UI patterns. Partial embed."
+    },
+    {
+      "id": "dolibarr",
+      "kind": "repo",
+      "url": "https://github.com/Dolibarr/dolibarr",
+      "title": "Dolibarr — modular ERP/CRM",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfops",
+        "vfbooks",
+        "vfprod"
+      ],
+      "note": "Enable-only modules metaphor → seats/packs."
+    },
+    {
+      "id": "odoo",
+      "kind": "vendor-site",
+      "url": "https://www.odoo.com/",
+      "title": "Odoo — open source ERP/CRM apps",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "report": "docs/OFFICE-OS-EMBED-he.md",
+      "packs": [
+        "vfops",
+        "vfgraft"
+      ],
+      "note": "App-per-process metaphor for packs. No Odoo install from HQ."
+    },
+    {
+      "id": "zoho-all-products",
+      "kind": "vendor-site",
+      "url": "https://www.zoho.com/all-products.html?src=zGlobalAllProductsbottom",
+      "title": "Zoho — business apps suite / Zoho One",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfops",
+        "constitution"
+      ],
+      "note": "Suite-as-OS: seats map to departments. No Zoho subscription assumed."
+    },
+    {
+      "id": "salesforce-pro-suite",
+      "kind": "vendor-site",
+      "url": "https://www.salesforce.com/eu/small-business/pro-suite/",
+      "title": "Salesforce Pro Suite — SMB CRM",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfops",
+        "vfbriefux",
+        "vfsales"
+      ],
+      "note": "Role dashboards, quoting, forecasting patterns → portlets + pipeline. No SF license."
+    },
+    {
+      "id": "netsuite-home",
+      "kind": "vendor-site",
+      "url": "https://www.netsuite.com/portal/home.shtml",
+      "title": "NetSuite — cloud ERP",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfbriefux",
+        "vfbooks",
+        "vfprod"
+      ],
+      "note": "Role KPI portlets → brief slots. No NetSuite install."
+    },
+    {
+      "id": "monday-com",
+      "kind": "vendor-site",
+      "url": "https://monday.com/",
+      "title": "monday.com — AI work platform",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfops",
+        "vfharness",
+        "vfe2b"
+      ],
+      "note": "Boards + agents + human-in-loop → pipeline board + harness gates. No monday runtime."
+    },
+    {
+      "id": "xenforo",
+      "kind": "vendor-site",
+      "url": "https://xenforo.com/",
+      "title": "XenForo — forum platform",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfconvert",
+        "vfops"
+      ],
+      "note": "Thread/mod-queue/group patterns. Live fetch 500 at review — general forum UX only.",
+      "wallNote": "xenforo.com returned HTTP 500 during review; embedded forum patterns without inventing product body."
+    },
+    {
+      "id": "vbulletin",
+      "kind": "vendor-site",
+      "url": "https://www.vbulletin.com/",
+      "title": "vBulletin — forum platform",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfconvert",
+        "vfops"
+      ],
+      "note": "Forum thread + usergroup patterns → inquiry + seats."
+    },
+    {
+      "id": "invisioncommunity",
+      "kind": "vendor-site",
+      "url": "https://invisioncommunity.com/",
+      "title": "Invision Community — forums/suite",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfops",
+        "vfconvert"
+      ],
+      "note": "Moderation queue + digest → decision gates + morning brief."
+    },
+    {
+      "id": "woltlab",
+      "kind": "vendor-site",
+      "url": "https://www.woltlab.com/en/",
+      "title": "WoltLab — forum/community software",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
+      "packs": [
+        "vfops"
+      ],
+      "note": "Permission groups + notifications → seats + brief."
     }
   ],
-
   "addLink": {
     "how": "Append an object under links[] the same day the owner sends a URL. Set firstEmbedded and lastReviewed. Do not wait for the weekly pass.",
     "sameDay": true
