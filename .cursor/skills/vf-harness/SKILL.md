@@ -13,6 +13,7 @@ Use when the user asks for רתמה, harness, AGENTS.md, checkpoint, escalate, h
 - Mention: `@workflow-architect` (desk) — `@multi-agent-systems-architect` only if the user asks for that warehouse slug
 - Guide file wins over the conversation: `AGENTS.md`
 - Grok quota outage: `packages/vfharness/playbooks/grok-failover.md` + `grok-outage-tools.md` + `packages/vfigos/QUEUE.md` + `LIVE-PACKET.md`
+- Truncated / skeleton output: `packages/vfharness/playbooks/full-output-enforcement.md` (from taste-skill `output-skill`)
 
 ## Loop
 
@@ -20,7 +21,7 @@ Use when the user asks for רתמה, harness, AGENTS.md, checkpoint, escalate, h
 2. Plan steps on an **existing** pack. Do not open a new product pack for an idea.
 3. Execute one step. After catalog/rule/pack edits: `python3 scripts/check-all.py`.
 4. Sensor or field-check fails → fix once → fail again → fill `packages/vfharness/templates/escalation.md` and stop.
-5. Long task: write `packages/vfharness/state/<task-id>.json` from the checkpoint schema before you close.
+5. Long task: write `packages/vfharness/state/<task-id>.json` from the checkpoint schema before you close. For a משמרת: `planned_steps` before heavy work; `gate` when blocked on ₪ or human field. See `playbooks/oma-patterns.md`.
 6. Grok down: **send** the office brief (`htmlBody` תצוגה 3) to `nocturney@gmail.com`. Live IG → `vfigos/SEND.md` (tool or Canva+Drive+Gmail). Do not claim the feed posted if no publish tool fired.
 
 ## Forbidden

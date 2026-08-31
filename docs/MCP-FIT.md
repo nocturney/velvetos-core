@@ -134,11 +134,12 @@ Do not add these “because they exist on the list.” Add them when Christian c
 ## Do not install
 
 - **Aggregator / “400 tools in one” servers** — they drown the agent and hide the studio tools.
+- **Headroom proxy on Cloud Agent** — local compression proxy needs a host process; Cloud VMs are sandboxed. Embed the **pattern** via `packages/vfharness/playbooks/context-thrift.md` (CCR + ContentRouter). Optional Mac-only: `headroom wrap cursor` after lead seat — see `packages/vfmcp/GAP.md`.
 - **Second SEO / GEO / AI-visibility stacks** — Treg already is the data catalog. Connect GA / GSC / GBP there first.
 - **Second Canva or image-gen farms** — Canva + Superdesign are enough for brand work.
 - **Anything that posts, boosts, or DMs Instagram from this HQ.**
 - **DeusData/codebase-memory-mcp binary** — coding-agent indexer that writes client config. The office-graph pattern is already `scripts/vfmem.py`. Local AST install only if the lead seat asks, and never by rewriting this repo's `.cursor/mcp.json`.
-- **Crypto, x402 marketplaces, coding-agent swarms, aerospace, gaming, home IoT** — not the print floor.
+- **Crypto, x402 marketplaces, coding-agent swarms, aerospace, gaming, home IoT** — not the print floor. Includes [Bindu](https://github.com/GetBindu/Bindu) (`bindufy`, A2A Gateway, USDC) — watch patterns only; see `packages/vfresearch/sources/2026-08-31-bindu.md`.
 - **Cold-email infrastructure** — VF is inbound studio sales, not a spam shop.
 
 ## How to add one (Cursor, not this git repo)

@@ -89,10 +89,23 @@
 
 Lindy, Clay, Zapier Central, Gumloop, Julius, Relevance AI, Bardeen, Beam, GitHub Action רשמי — רק אם ראש צוות פותח מנוי. עד אז הדפוס רץ כנוהל Cursor.
 
+## 8. תרחישים (Huginn) — `scenarios/`
+
+**מהרשימה:** [huginn/huginn](https://github.com/huginn/huginn) — Scenarios, Events, `working?`, DeDuplication.
+
+**אצלנו:**
+
+1. ארבעה תרחישים: `morning-digest`, `inquiry-chain`, `weekly-links`, `content-live`.
+2. כל צומת = event ב-checkpoint (`vfharness/templates/checkpoint.schema.json`).
+3. `working?` = `python3 scripts/check-staleness.py` (בריף היום + LINKS לא ישנים).
+4. Dedup פנייה: `vfconvert/hq/DEDUP.md`.
+5. **לא** מתקינים Huginn Rails.
+
 ## בדיקה
 
 ```bash
 python3 scripts/check-vfe2b.py
+python3 scripts/check-staleness.py
 ```
 
-אין UI חי. העקביות היא מול הנעילות, `catalog.json`, ו־`orchestrators.json`.
+אין UI חי. העקביות היא מול הנעילות, `catalog.json`, `scenarios.json`, ו־`orchestrators.json`.
