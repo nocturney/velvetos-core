@@ -306,6 +306,17 @@
       "sourceNote": "packages/vfresearch/sources/2026-08-31-write-better-embed.md",
       "packs": ["vfcopy", "vfmskill"],
       "note": "Embedded write-better patterns only (not asd-ste100, not npx plugin). Hebrew lint: packages/vfcopy/hq/ai-tells-he.md"
+    },
+    {
+      "id": "prompts-chat",
+      "kind": "repo",
+      "url": "https://github.com/f/prompts.chat",
+      "title": "prompts.chat — prompt library + book + MCP (f.k.a. Awesome ChatGPT Prompts)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-prompts-chat-embed.md",
+      "packs": ["vfcopy", "vfresearch", "vfmcp"],
+      "note": "Methodology + hq/templates only. No CSV import, no self-host, no vfprompts pack. Optional MCP: https://prompts.chat/api/mcp"
     }
   ],
   "addLink": {

@@ -1,0 +1,20 @@
+{
+  "taskId": "prompts-chat-embed-2026-08-31",
+  "status": "worker_done",
+  "source": "https://github.com/f/prompts.chat",
+  "embeddedAt": "2026-08-31",
+  "packs": ["vfcopy", "vfresearch", "vfmcp"],
+  "artifacts": [
+    "packages/vfcopy/hq/templates/README.md",
+    "packages/vfcopy/hq/templates/inquiry-reply.md",
+    "packages/vfcopy/hq/templates/quote-followup.md",
+    "packages/vfcopy/hq/templates/ig-caption.md",
+    "packages/vfresearch/sources/2026-08-31-prompts-chat-embed.md"
+  ],
+  "skipped": [
+    "prompts.csv bulk import",
+    "self-host app",
+    "new pack vfprompts"
+  ],
+  "briefBlock05": "שבועי קישורים — הוטמע prompts.chat ב-vfcopy (תבניות + PLAYBOOK)"
+}
