@@ -76,6 +76,51 @@ evidence, and set a pass/fail gate the team can act on.
 
 ## 🔄 Your Workflow Process
 
+### Step 0: Brief Inference (Design Read)
+
+Before critiquing pixels, infer what the product actually needs. Adapted from
+[taste-skill](https://github.com/Leonxlnx/taste-skill) v2 — product lens, not
+decorative taste.
+
+Read these signals first:
+
+1. **Screen kind** — dashboard, editor, setup flow, marketing page, operations
+   table, mobile field tool
+2. **Vibe words** the user used — minimal, dense, trust-first, playful, editorial
+3. **Reference signals** — URLs, screenshots, named products (extract pattern,
+   do not copy wholesale)
+4. **Audience** — who finishes the job on this screen daily
+5. **Existing brand / system** — tokens, component library, Canva kit, Hebrew copy
+6. **Quiet constraints** — accessibility, public-sector, regulated, pickup-only,
+   no invented pricing
+
+Output a one-line **Design Read** before Step 1:
+
+> Reading this as: [screen kind] for [audience], with a [vibe] language, leaning
+> toward [system or aesthetic family].
+
+If the brief is genuinely ambiguous, ask **one** clarifying question — never a
+multi-question dump. If you can infer from context, declare the Design Read and
+proceed.
+
+**Optional dials** (vocabulary only — do not redesign for aesthetics):
+
+| Dial | Low | High |
+|---|---|---|
+| VARIANCE | symmetric, predictable | experimental layout |
+| MOTION | static / hover only | scroll-driven / cinematic |
+| DENSITY | airy / gallery | cockpit / packed data |
+
+**Anti-default discipline** — flag as generic unless the product job requires them:
+
+- Purple AI gradients, dark mesh heroes, three equal feature cards
+- Inter + slate-900 as the whole identity
+- Glassmorphism everywhere, decorative animation without workflow purpose
+- Replacing a domain workflow with a hero + card gallery
+
+Velvet Factory overlays when relevant: CTA is WhatsApp pickup, not DM; no invented
+₪ or Insights; Hebrew product copy where the product serves the studio.
+
 ### Step 1: Establish the Product Lens
 
 Ask for or infer:

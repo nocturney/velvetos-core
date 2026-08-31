@@ -144,6 +144,22 @@ def main() -> None:
     if example.get("status") not in {"running", "blocked", "escalated", "done"}:
         fail("checkpoint example has invalid status")
 
+    run_example_path = ROOT / "packages/vfharness/templates/checkpoint.example-run.json"
+    if not run_example_path.is_file():
+        fail("missing checkpoint example-run")
+    run_example = json.loads(run_example_path.read_text())
+    missing_run = CHECKPOINT_REQUIRED - set(run_example)
+    if missing_run:
+        fail(f"checkpoint example-run missing {sorted(missing_run)}")
+    if run_example.get("status") != "blocked" or not run_example.get("gate"):
+        fail("checkpoint example-run must demonstrate blocked + gate")
+    oma_playbook = ROOT / "packages/vfharness/playbooks/oma-patterns.md"
+    if not oma_playbook.is_file():
+        fail("missing packages/vfharness/playbooks/oma-patterns.md")
+    receipt = ROOT / "packages/vfharness/templates/run-receipt.md"
+    if not receipt.is_file():
+        fail("missing packages/vfharness/templates/run-receipt.md")
+
     checklist = spec.get("checklist") or []
     if len(checklist) != 12:
         fail(f"expected 12 checklist items, got {len(checklist)}")
@@ -191,6 +207,14 @@ def main() -> None:
         fail("AGENTS.md must mention Grok Bot quota failover")
     if "LIVE-PACKET" not in agents_text and "פרסום-חי-דחוף" not in agents_text:
         fail("AGENTS.md must mention live-publish urgent path")
+
+    full_output = ROOT / "packages/vfharness/playbooks/full-output-enforcement.md"
+    if not full_output.is_file():
+        fail("missing packages/vfharness/playbooks/full-output-enforcement.md")
+    fo_text = full_output.read_text()
+    for needle in ("[PAUSED", "taste-skill", "Scope", "checkpoint"):
+        if needle not in fo_text:
+            fail(f"full-output-enforcement.md missing {needle!r}")
 
     allowed_embed = pack_names | {"constitution"}
     embeds = spec.get("embed") or []

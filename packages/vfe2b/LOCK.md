@@ -33,6 +33,12 @@ Orca ([stablyai/orca](https://github.com/stablyai/orca)), `orca-ide`, `brew inst
 
 למה: Cursor כבר המשרד. דפוס המשמרת רץ ב-`crews/run.md` בלי בינארי. אין fan-out של ₪ או שליחה.
 
+## LobeHub — דלג כהתקנה
+
+[lobehub/lobehub](https://github.com/lobehub/lobehub) — Chief Agent Operator (Next.js + MCP marketplace + cron + IM Gateway).
+
+למה: Cursor כבר המשרד. דפוסים (Connector priority, white-box checkpoint, schedule registry) הוטמעו ב־`vfmcp/GAP.md` + `vfe2b/ORCHESTRATORS.md`. אין Docker/Vercel שני, אין Telegram gateway, אין 10k plugins.
+
 ## תזמורת שנייה — דלג כהתקנה
 
 [andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) (194):
@@ -45,6 +51,16 @@ Orca ([stablyai/orca](https://github.com/stablyai/orca)), `orca-ide`, `brew inst
 - Resting / archived: `1code`, `babyagi3`, `gnap`, `vibe-kanban`.
 
 למה: דפוסי דופק / אימות / ארטיפקט / תקרת לולאה כבר ב־`crews/run.md` + `vfharness`. אין משרד שני.
+
+## agent internet / Bindu — דלג כהתקנה
+
+[GetBindu/Bindu](https://github.com/GetBindu/Bindu) — `bindufy()`, A2A JSON-RPC, Gateway fleet, x402 USDC, `expose: true` tunnel.
+
+- **דפוסים בלבד:** שלוש שכבות אימות → סנסור + `אימות` + `decision_gate`; agent cards → `vf-desk.json` / `vfmem who`.
+- **לא מ-HQ:** runtime שני, swarm אוטונומי, תשלום crypto, סוכן ציבורי על האינטרנט.
+- **later (B2B):** negotiation + scoped auth דרך `@agentic-identity-trust-architect` על `vfbiz` — עדיין בלי x402.
+
+מקור: `packages/vfresearch/sources/2026-08-31-bindu.md` · רישום: `vfresearch/LINKS.json` (`getbindu-bindu`, verdict `watch`).
 
 ## מוצרים מחוץ לסטודיו — דלג
 

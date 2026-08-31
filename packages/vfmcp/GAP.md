@@ -108,8 +108,25 @@
 | WhatsApp MCP | חיפוש/טיוטה רק אחרי מספר מהבעלים. שליחה אסורה |
 | Studio MCP Hub / instapdown | מפה ב־`docs/MCP-FIT.md`. חיבור ב־Cursor Settings, לא סוד בגיט |
 | FCC / `fcc-server` | נעול. לא על Cloud Agent |
+| **Headroom** (`headroom-ai`) | **local optional** — proxy/MCP דורש תהליך מקומי; Cloud Agent sandbox. דפוס CCR/ContentRouter ב-`vfharness/playbooks/context-thrift.md` בלי dependency. Mac: `uv tool install "headroom-ai[all]"` + `headroom wrap cursor` אחרי lead seat |
 | 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט. המחבר הרשמי הוא HTTP OAuth |
 | SharePoint / Outlook / Notion / Slack | לא ערימת שדרות |
+
+## עדיפות Connectors לפי מושב
+
+דפוס מ־[LobeHub ToolsEngine](https://github.com/lobehub/lobehub) (31.8.2026): סוכן רואה רק connectors של המושב שלו; agent-owned > desk > failover. לא marketplace של 10,000 כלים.
+
+| מושב | פקים | namespace ראשי | failover (אותו תור) | אסור |
+|---|---|---|---|---|
+| ראש צוות | `vfops` | Gmail · Calendar | Drive `create_file` · «חסר לוח» | המצאת ₪ · blast |
+| סטודיו | `vfconvert` · `vfsales` | Gmail | Drive · `#נשלח-מ-HQ` | וואטסאפ MCP · auto-DM |
+| צמיחה | `vfgrowth` · `vfigos` · `vfcovers` | Canva | `studio/render.py` → Superdesign → Drive+Gmail | Publish מזויף · boost |
+| תפעול | `vfcost` · `vfbooks` | Gmail · Drive | CSV דרך Drive · «X ₪» / «אין ספירה» | Sheets ID מומצא |
+| ייצור | `vfprod` · `vfresearch` | Drive · WebSearch | תזמורת ChatGPT+Gemini+Perplexity | Treg · גוף חסום |
+
+כלים native (כל מושב): `WebSearch` / `WebFetch` · `GenerateImage` — עם שרשרת Canva קודם ל־IG.
+
+דוח: `packages/vfresearch/sources/2026-08-31-lobehub.md`.
 
 ## Failover
 

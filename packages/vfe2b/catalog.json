@@ -348,6 +348,20 @@
       "note": "Do not connect live send. Pattern = node list in ops."
     },
     {
+      "name": "Huginn",
+      "url": "https://github.com/huginn/huginn",
+      "verdict": "embed",
+      "pattern": "event graph scenarios; working? staleness; dedup",
+      "packs": [
+        "vfe2b",
+        "vfharness",
+        "vfconvert",
+        "vfops"
+      ],
+      "crew": "scenarios/README.md",
+      "note": "Scenarios + checkpoint events + check-staleness.py. No Rails install."
+    },
+    {
       "name": "Bardeen",
       "url": "https://www.bardeen.ai/",
       "verdict": "later",

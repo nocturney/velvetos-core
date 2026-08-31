@@ -34,14 +34,14 @@ python3 scripts/check-all.py
 כתוב `state/<task-id>.json` (או `state/<task-id>/checkpoint.json`) לפי `templates/checkpoint.schema.json`.  
 בפתיחה: קרא את הקובץ. אל תתחיל מחדש.
 
-כתוב `state/<task-id>.json` (או `state/<task-id>/checkpoint.json`) לפי `templates/checkpoint.schema.json`.  
-בפתיחה: קרא את הקובץ. אל תתחיל מחדש.
-
 שדה אופציונלי `goal`: תנאי סיום אחד (דפוס DeerFlow `/goal` — ראה `packages/vfe2b/DEER-FLOW-PATTERNS.md`).
+
+**משמרת / OMA:** `planned_steps` לפני עבודה כבדה; `gate` כשחסומים על ₪ או שדה אנושי — ראה `playbooks/oma-patterns.md`.
 
 **Compaction (דפוס DeerFlow `/compact`):** כשהשיחה ארוכה, אל תשחזר הכל — סכם ב־`completed_steps` + `unresolved`, והמשך מה-checkpoint. השיח המלא נשאר אצל המשתמש; המודל עובד מהקבלה.
 
 משימות חד-פעמיות (שאלה, סיעור מוחות) — בלי checkpoint ו בלי שלושת קבצי התכנון.
+
 
 ## 5. Permissions — לפני כלי חיצוני
 

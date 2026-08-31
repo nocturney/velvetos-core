@@ -367,8 +367,87 @@
       "report": "docs/AGENT-REPOS-EMBED-he.md",
       "packs": ["vfe2b"],
       "note": "Skipped install — unattended swarms in orchestrators.json skip list. vfmem/vfgraft for memory pattern only."
+    },
+    {
+      "id": "prompts-chat",
+      "kind": "repo",
+      "url": "https://github.com/f/prompts.chat",
+      "title": "prompts.chat — prompt library + book + MCP (f.k.a. Awesome ChatGPT Prompts)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-prompts-chat-embed.md",
+      "packs": ["vfcopy", "vfresearch", "vfmcp"],
+      "note": "Methodology + hq/templates only. No CSV import, no self-host, no vfprompts pack. Optional MCP: https://prompts.chat/api/mcp"
+    },
+    {
+      "id": "taste-skill",
+      "kind": "repo",
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "title": "taste-skill — anti-slop frontend Agent Skills (MIT)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-taste-skill.md",
+      "report": "docs/TASTE-SKILL-EMBED-he.md",
+      "packs": ["vfharness", "vfcovers"],
+      "note": "Partial embed only: full-output playbook, brief inference on ui-finish-gate-reviewer, vfcovers restraint. No npx install, no brandkit generator."
+    },
+    {
+      "id": "getbindu-bindu",
+      "kind": "repo",
+      "url": "https://github.com/GetBindu/Bindu",
+      "title": "Bindu — identity, A2A, x402 for agent internet",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-bindu.md",
+      "verdict": "watch",
+      "packs": ["vfe2b", "vfharness", "vfbiz"],
+      "note": "Patterns only (3-layer verify, agent cards, human gate). No bindufy, no Gateway, no x402, no second runtime. POC off-repo only."
+    },
+    {
+      "id": "lobehub-operator",
+      "kind": "repo",
+      "url": "https://github.com/lobehub/lobehub",
+      "title": "LobeHub — Chief Agent Operator (patterns only)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-lobehub.md",
+      "packs": ["vfmcp", "vfe2b", "vfharness", "vfops"],
+      "note": "Connector priority + schedule/report patterns on existing packs. No Docker install, no second runtime, no IM gateway."
+    },
+    {
+      "id": "huginn",
+      "kind": "repo",
+      "url": "https://github.com/huginn/huginn",
+      "title": "Huginn — event-driven agents (pattern only)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-huginn-embed.md",
+      "report": "packages/vfresearch/sources/2026-08-31-weekly-links.md",
+      "pack": "vfe2b",
+      "packs": [
+        "vfe2b",
+        "vfharness",
+        "vfconvert",
+        "vfops",
+        "vfresearch"
+      ],
+      "note": "Scenarios + events + staleness + dedup. No Rails install. Cursor is the office."
+    },
+    {
+      "id": "superset-sh-superset",
+      "kind": "repo",
+      "url": "https://github.com/superset-sh/superset",
+      "title": "Superset — parallel coding agent IDE (worktrees)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-superset-patterns.md",
+      "report": "packages/vfe2b/ORCHESTRATORS.md",
+      "pack": "vfe2b",
+      "packs": ["vfe2b", "vfharness", "vffcc"],
+      "note": "Patterns only (lifecycle scripts, bounded fan-out). Skip as second desk. Optional Mac offload after lead seat — see vffcc/local-offload.md."
     }
   ],
+
   "addLink": {
     "how": "Append an object under links[] the same day the owner sends a URL. Set firstEmbedded and lastReviewed. Do not wait for the weekly pass.",
     "sameDay": true
