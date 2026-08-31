@@ -1,0 +1,19 @@
+{
+  "taskId": "headroom-pattern-embed-2026-08-31",
+  "status": "done",
+  "createdAt": "2026-08-31T07:04:00+03:00",
+  "summary": "Headroom pattern embedded as context-thrift playbook — CCR, ContentRouter, no Cloud Agent runtime",
+  "artifacts": {
+    "playbook": "packages/vfharness/playbooks/context-thrift.md",
+    "gap": "packages/vfmcp/GAP.md",
+    "cursorThrift": "packages/vffcc/playbooks/cursor-thrift.md",
+    "source": "https://github.com/headroomlabs-ai/headroom"
+  },
+  "checklist": [
+    "playbook written",
+    "GAP.md updated",
+    "cursor-thrift cross-linked",
+    "MCP-FIT note",
+    "check-all.py pending"
+  ]
+}

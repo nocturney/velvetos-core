@@ -122,6 +122,7 @@ Do not add these “because they exist on the list.” Add them when Christian c
 ## Do not install
 
 - **Aggregator / “400 tools in one” servers** — they drown the agent and hide the studio tools.
+- **Headroom proxy on Cloud Agent** — local compression proxy needs a host process; Cloud VMs are sandboxed. Embed the **pattern** via `packages/vfharness/playbooks/context-thrift.md` (CCR + ContentRouter). Optional Mac-only: `headroom wrap cursor` after lead seat — see `packages/vfmcp/GAP.md`.
 - **Second SEO / GEO / AI-visibility stacks** — Treg already is the data catalog. Connect GA / GSC / GBP there first.
 - **Second Canva or image-gen farms** — Canva + Superdesign are enough for brand work.
 - **Anything that posts, boosts, or DMs Instagram from this HQ.**
