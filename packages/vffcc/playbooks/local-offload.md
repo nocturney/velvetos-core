@@ -45,6 +45,12 @@ Fallback Models ב־Admin — לפי הסדר למעלה. ספק שנכשל על
 - לפתוח תיקיות רפואיות / משפטיות / אישיות
 - לכתוב מחיר ₪ או Insights
 
+## Superset (אופציונלי, מקבילי)
+
+אם צריך **יותר מסוכן קוד אחד במקביל** על Mac — [superset-sh/superset](https://github.com/superset-sh/superset) (worktrees + diff viewer).  
+אותם חוקים כמו FCC: אחרי ראש צוות, בלי Gmail/Canva/IG/₪, לא מחליף Cursor כמשרד HQ.  
+דפוסים כבר במשרד: `packages/vfresearch/sources/2026-08-31-superset-patterns.md`.
+
 ## אחרי הניסוי
 
 תוצר שימושי מיד → הטמעה בפק **קיים** (כמו תזמורת). אין פק «FCC runtime».  

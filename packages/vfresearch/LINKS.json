@@ -306,6 +306,19 @@
       "sourceNote": "packages/vfresearch/sources/2026-08-31-write-better-embed.md",
       "packs": ["vfcopy", "vfmskill"],
       "note": "Embedded write-better patterns only (not asd-ste100, not npx plugin). Hebrew lint: packages/vfcopy/hq/ai-tells-he.md"
+    },
+    {
+      "id": "superset-sh-superset",
+      "kind": "repo",
+      "url": "https://github.com/superset-sh/superset",
+      "title": "Superset — parallel coding agent IDE (worktrees)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-superset-patterns.md",
+      "report": "packages/vfe2b/ORCHESTRATORS.md",
+      "pack": "vfe2b",
+      "packs": ["vfe2b", "vfharness", "vffcc"],
+      "note": "Patterns only (lifecycle scripts, bounded fan-out). Skip as second desk. Optional Mac offload after lead seat — see vffcc/local-offload.md."
     }
   ],
   "addLink": {
