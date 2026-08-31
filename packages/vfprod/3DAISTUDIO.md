@@ -29,7 +29,7 @@
 
 | שכבה | מתי |
 |---|---|
-| MCP `3daistudio` | Cursor Desktop + OAuth |
+| MCP `threedaistudio` | Cursor Desktop + OAuth |
 | אתר | תמיד גיבוי אם MCP נפל |
 | API Dashboard | לא נדרש למחבר הרשמי |
 

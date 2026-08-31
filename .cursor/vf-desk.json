@@ -120,7 +120,7 @@
     },
     "threedaistudio": {
       "status": "needsAuth",
-      "namespace": "3daistudio",
+      "namespace": "threedaistudio",
       "mcp": "https://mcp.3daistudio.com/mcp",
       "account": "www.3daistudio.com — owner paid subscription",
       "useWhen": "vfprod concept mesh: text/image → STL/3MF after lead approval. Playbook: packages/vfprod/3DAISTUDIO.md",
