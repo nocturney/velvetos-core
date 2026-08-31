@@ -2,7 +2,7 @@
 
 ## Summary
 
-New פנייה walks convert → prod → cost → sales draft. Pull material, qty, when, finish from the named thread. Missing field → a human question on WhatsApp. Sale shekels only after the lead seat. HQ does not send the quote.
+New פנייה walks convert → prod → cost → sales draft. Pull material, qty, when, finish from the named thread. Missing field → a human question on WhatsApp. Sale shekels only after the lead seat. HQ sends the Gmail quote via tool (no invented ₪).
 
 ## Sources
 

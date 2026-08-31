@@ -11,7 +11,7 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 |---|---|---|
 | 06:15 | תזמורת: ChatGPT **וגם** Gemini **וגם** Perplexity · failover מיד אם כלי נפל | `constitution/ORCHESTRA.md`, `vfresearch/DAILY.md` |
 | 07:00 | בריף בוקר בסדר הטלפון | `BRIEF.md` |
-| אחרי פרסום חי (Grok או אדם ב־LIVE-PACKET) | Insights ב־24 שעות. אם אין מספר — «אין» | `vfinsights` |
+| אחרי פרסום חי (HQ דרך כלים / `#נשלח-מ-HQ`) | Insights ב־24 שעות. אם אין מספר — «אין» | `vfinsights` |
 
 ## שבוע
 
@@ -29,8 +29,9 @@ Cursor כותב שורה אחת:
 
 - יש הטמעה: «מה נבנה / יועל» + שם הפק.
 - אין: **«אין חדש במשרד»**.
+- 31.8 פערי כלים: `vfresearch/sources/2026-08-31-orchestra.md` · מפה `vfmcp/GAP.md`.
 
-Grok שולח את הבריף. HQ לא שולח ג׳ימייל.
+HQ שולח את הבריף ב־Gmail `send_message` אל `nocturney@gmail.com`. לא מחכים לגרוק.
 
 ## מה לא נכנס לשגרה
 

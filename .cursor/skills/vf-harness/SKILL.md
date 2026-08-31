@@ -1,6 +1,6 @@
 ---
 name: vf-harness
-description: Run the Velvet Factory outer harness — guides, sensors, bounded loop, checkpoint, escalate. No second runtime. HQ does not send.
+description: Run the Velvet Factory outer harness — guides, sensors, bounded loop, checkpoint, escalate. No second runtime. HQ sends via tools (constitution/SEND.md).
 ---
 
 # VF harness
@@ -21,11 +21,11 @@ Use when the user asks for רתמה, harness, AGENTS.md, checkpoint, escalate, h
 3. Execute one step. After catalog/rule/pack edits: `python3 scripts/check-all.py`.
 4. Sensor or field-check fails → fix once → fail again → fill `packages/vfharness/templates/escalation.md` and stop.
 5. Long task: write `packages/vfharness/state/<task-id>.json` from the checkpoint schema before you close.
-6. Grok down: **send** the office brief to `nocturney@gmail.com`. Live IG → LIVE-PACKET for **human** post (no Publish MCP); do not claim HQ published Instagram.
+6. Grok down: **send** the office brief (`htmlBody` תצוגה 3) to `nocturney@gmail.com`. Live IG → `vfigos/SEND.md` (tool or Canva+Drive+Gmail). Do not claim the feed posted if no publish tool fired.
 
 ## Forbidden
 
-Instagram Publish / customer Gmail / WhatsApp from the HQ **agent**, invented ₪ or Insights, CrewAI/AutoGPT, LLM-as-judge as a gate for ILS or send, inventing a blocked source body. Office-brief `send_message` to self during Grok failover is the Grok-equivalent. Human live IG post via LIVE-PACKET only.
+Auto-DM, boost, printer jobs from HQ, invented ₪ or Insights, CrewAI/AutoGPT, LLM-as-judge as a gate for ILS, inventing a blocked source body, claiming the IG feed posted without a publish tool. Gmail `send_message` and IG-via-tools are **allowed** (`constitution/SEND.md`).
 
 ## Output
 

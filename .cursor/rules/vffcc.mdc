@@ -17,7 +17,7 @@ Read `packages/vffcc/LOCK.md` and run one playbook from `packages/vffcc/playbook
 
 - This Cloud Agent does **not** install `fcc-server` or vendor the FCC tree.
 - FCC does not reduce Cursor Cloud usage. Do not claim «קלוד חינם» on this run.
-- This HQ does not send Instagram, Gmail, Discord, Telegram, or printer jobs.
+- HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). No Discord, Telegram, printers, auto-DM, or boost from this pack.
 - Do not invent prices (₪), Insights, or remaining free-token quotas.
 - Do not commit API keys. Owner keys stay in `~/.fcc/` on the owner machine.
 

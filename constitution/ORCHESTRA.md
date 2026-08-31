@@ -40,8 +40,10 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 | **Canva** (`needsAuth` / אין כלים) | `packages/vfcanva/studio/render.py` → אם גם זה נכשל: Superdesign | לא ממציאים קישור Canva |
 | **Superdesign** | Canva אם מחובר · אחרת `studio/render.py` | לא עוצרים את חבילת התוכן |
 | **Mobbin** (אין namespace) | תבניות `vfbriefux` / Superdesign לגרפיקת בריף | לא ממציאים מסכי אפליקציה |
-| **Treg** (אין login) | מקור מאומת אחר / Drive / «אין ספירה» · מוזיקה IG → HeyOrca (`MUSIC.md`) | לא ממציאים Insights / טרנד |
-| **Gmail** MCP | טקסט שהמשתמש הדביק / Drive לפי שם עבודה | לא ממציאים פנייה · לא שולחים |
+| **Treg** | **לא בשימוש.** WebSearch / תזמורת / «אין ספירה» | לא login · לא `call` |
+| **WebSearch / WebFetch** (`tools.web`) | תזמורת ChatGPT+Gemini+Perplexity | לא ממציאים גוף חסום |
+| **GenerateImage** (`tools.image`) | Canva `generate-design` → Superdesign → `studio/render.py` | לא ממציאים קישור Canva |
+| **Gmail** MCP | Drive `create_file` את הגוף · ממשיכים · **send_message מותר** | לא ממציאים פנייה · לא דיוור המוני |
 | **Calendar** MCP | שואלים חלון איסוף / «חסר לוח» וממשיכים בריף מג׳ימייל | לא ממציאים שעות תור |
 | **Drive** MCP | קובץ/שם שהמשתמש נתן בצ׳אט | לא פותחים תיקיות אישיות |
 | **FCC** (לא על Cloud Agent) | תזמורת ChatGPT+Gemini+Perplexity + thrift ב־`vffcc` | לא מתקינים `fcc-server` כאן |
@@ -50,10 +52,10 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 
 | מה נפל | מעבירים מיד ל־ | לא עושים |
 |---|---|---|
-| **Grok Bot** — טיוטות / מחקר / בריף | Cursor HQ + כלים ב־`vfharness/playbooks/grok-outage-tools.md` + שולחנות אם יש MCP | לא סרק · לא המצאה |
-| **Grok Bot** — פרסום לא־דחוף | תור `#מוכן-ל-Grok` ב־`vfigos/QUEUE.md` | לא Publish מ־HQ |
-| **Grok Bot** — **פרסום חי דחוף** | חבילת `vfigos/LIVE-PACKET.md` → **אדם** מעלה ב־`@velvets_cloud` | סוכן HQ לא לוחץ Publish · לא בוסט · לא אוטו־DM |
-| דחוף ללקוח (שיחה) | אדם וואטסאפ `050-2517000` | לא Gmail send מ־HQ |
+| **Grok Bot** — טיוטות / מחקר / בריף | Cursor HQ + תזמורת + **Gmail send** (בריף = `htmlBody` תצוגה 3) | לא סרק · לא המצאה |
+| **Grok Bot** — פרסום | `vfigos/SEND.md` · `#נשלח-מ-HQ` | לא מחכים לגרוק · לא בוסט · לא אוטו־DM |
+| **Grok Bot** — **פרסום חי** | `LIVE-PACKET` + כלים (Canva+Gmail+Drive) | אדם רק אם הכלים נפלו |
+| דחוף ללקוח (שיחה) | אדם וואטסאפ `050-2517000` | אין MCP וואטסאפ |
 
 נוהל מלא: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md`.  
 ארטיפקט מעבר: `packages/vfresearch/sources/YYYY-MM-DD-grok-failover.md`.

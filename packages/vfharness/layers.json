@@ -10,8 +10,9 @@
     "note": "Independent compilation uploaded by the owner. Not affiliated with Google, OpenAI, Anthropic, or HashiCorp. Adapted for Velvet Factory HQ; not an official spec."
   },
   "locks": [
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-second-runtime",
@@ -86,44 +87,186 @@
     }
   ],
   "sensors": [
-    {"id": "check-all", "script": "scripts/check-all.py", "type": "computational"},
-    {"id": "check-hq-overlay", "script": "scripts/check-hq-overlay.py", "type": "computational"},
-    {"id": "check-vf-desk", "script": "scripts/check-vf-desk.py", "type": "computational"},
-    {"id": "check-vfharness", "script": "scripts/check-vfharness.py", "type": "computational"},
-    {"id": "check-vfe2b", "script": "scripts/check-vfe2b.py", "type": "computational"},
-    {"id": "check-vfagents", "script": "scripts/check-vfagents.py", "type": "computational"},
-    {"id": "check-vf-canva", "script": "scripts/check-vf-canva.py", "type": "computational"},
-    {"id": "check-vfgraft", "script": "scripts/check-vfgraft.py", "type": "computational"},
-    {"id": "check-vfmem", "script": "scripts/check-vfmem.py", "type": "computational"},
-    {"id": "check-vffcc", "script": "scripts/check-vffcc.py", "type": "computational"}
+    {
+      "id": "check-all",
+      "script": "scripts/check-all.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-hq-overlay",
+      "script": "scripts/check-hq-overlay.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-vf-desk",
+      "script": "scripts/check-vf-desk.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-vfharness",
+      "script": "scripts/check-vfharness.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-vfe2b",
+      "script": "scripts/check-vfe2b.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-vfagents",
+      "script": "scripts/check-vfagents.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-vf-canva",
+      "script": "scripts/check-vf-canva.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-vfgraft",
+      "script": "scripts/check-vfgraft.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-vfmem",
+      "script": "scripts/check-vfmem.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-vffcc",
+      "script": "scripts/check-vffcc.py",
+      "type": "computational"
+    }
   ],
   "permissions": {
-    "allowRead": ["packages/**", "constitution/**", "docs/**", ".cursor/**", "gmail:search_threads", "gmail:get_thread", "calendar:list_events", "drive:search_files"],
-    "allowWrite": ["packages/**", "constitution/**", "docs/**", "AGENTS.md", "CHANGELOG.md"],
-    "allowExecute": ["python3 scripts/check-*.py"],
-    "ask": ["git push", "treg:call"],
-    "allowFailover": ["gmail:send_message:office-brief"],
-    "deny": ["gmail:send_message", "gmail:reply", "gmail:forward", "instagram:send", "instagram:boost", "auto-dm", "rm -rf", "invented-ils"]
+    "allowRead": [
+      "packages/**",
+      "constitution/**",
+      "docs/**",
+      ".cursor/**",
+      "gmail:search_threads",
+      "gmail:get_thread",
+      "gmail:send_message",
+      "gmail:reply",
+      "gmail:forward",
+      "calendar:list_events",
+      "drive:search_files",
+      "drive:create_file"
+    ],
+    "allowWrite": [
+      "packages/**",
+      "constitution/**",
+      "docs/**",
+      "AGENTS.md",
+      "CHANGELOG.md"
+    ],
+    "allowExecute": [
+      "python3 scripts/check-*.py"
+    ],
+    "ask": [
+      "git push",
+      "calendar:create_event"
+    ],
+    "deny": [
+      "instagram:boost",
+      "auto-dm",
+      "treg:call",
+      "fake-ig-post",
+      "rm -rf",
+      "invented-ils"
+    ]
   },
   "embed": [
-    {"pack": "vfops", "layer": "loop", "how": "Morning brief and manager chain verify then escalate; no invented queue hours."},
-    {"pack": "vfconvert", "layer": "guides", "how": "Inquiry brief; missing fields stay missing."},
-    {"pack": "vfsales", "layer": "permissions", "how": "Draft only. Human sends WhatsApp."},
-    {"pack": "vfcopy", "layer": "sensors", "how": "Voice lint; CTA is WhatsApp not DM."},
-    {"pack": "vfcost", "layer": "sensors", "how": "X ₪ when no verified amount."},
-    {"pack": "vfbooks", "layer": "permissions", "how": "Read labeled mail. No debt-chase send."},
-    {"pack": "vfprod", "layer": "guides", "how": "Pickup Sderot only. License gate before reprint."},
-    {"pack": "vfigos", "layer": "permissions", "how": "Review and schedule only. Grok-quota failover: QUEUE + LIVE-PACKET for human live post."},
-    {"pack": "vfgrowth", "layer": "guides", "how": "No TikTok or ads without lead seat."},
-    {"pack": "vfinsights", "layer": "sensors", "how": "Verified snapshot only."},
-    {"pack": "vfresearch", "layer": "memory", "how": "Sources on disk. Blocked body is not invented."},
-    {"pack": "vfe2b", "layer": "guides", "how": "Patterns on existing packs. No second runtime."},
-    {"pack": "vfagents", "layer": "guides", "how": "Office playbooks only."},
-    {"pack": "vfcanva", "layer": "permissions", "how": "Create / resize / review. HQ does not send."},
-    {"pack": "constitution", "layer": "guides", "how": "Five seats, one pipeline, orchestra lock."},
-    {"pack": "vfgraft", "layer": "memory", "how": "Committed office map. Read MAP.md before grepping the warehouse."},
-    {"pack": "vfmem", "layer": "memory", "how": "Query the office graph. Not a task checkpoint."},
-    {"pack": "vffcc", "layer": "permissions", "how": "Local BYOK map only. No fcc-server on this HQ."}
+    {
+      "pack": "vfops",
+      "layer": "loop",
+      "how": "Morning brief and manager chain verify then escalate; no invented queue hours."
+    },
+    {
+      "pack": "vfconvert",
+      "layer": "guides",
+      "how": "Inquiry brief; missing fields stay missing."
+    },
+    {
+      "pack": "vfsales",
+      "layer": "permissions",
+      "how": "HQ sends Gmail via tool when the quote is ready. No invented ₪. Human WhatsApp close."
+    },
+    {
+      "pack": "vfcopy",
+      "layer": "sensors",
+      "how": "Voice lint; CTA is WhatsApp not DM."
+    },
+    {
+      "pack": "vfcost",
+      "layer": "sensors",
+      "how": "X ₪ when no verified amount."
+    },
+    {
+      "pack": "vfbooks",
+      "layer": "permissions",
+      "how": "Read labeled mail. HQ may send office mail. No blast. No invented ₪."
+    },
+    {
+      "pack": "vfprod",
+      "layer": "guides",
+      "how": "Pickup Sderot only. License gate before reprint."
+    },
+    {
+      "pack": "vfigos",
+      "layer": "permissions",
+      "how": "Review, schedule, and send via tools (SEND.md). Failover Canva+Drive+Gmail same turn."
+    },
+    {
+      "pack": "vfgrowth",
+      "layer": "guides",
+      "how": "No TikTok or ads without lead seat."
+    },
+    {
+      "pack": "vfinsights",
+      "layer": "sensors",
+      "how": "Verified snapshot only."
+    },
+    {
+      "pack": "vfresearch",
+      "layer": "memory",
+      "how": "Sources on disk. Blocked body is not invented."
+    },
+    {
+      "pack": "vfe2b",
+      "layer": "guides",
+      "how": "Patterns on existing packs. No second runtime."
+    },
+    {
+      "pack": "vfagents",
+      "layer": "guides",
+      "how": "Office playbooks only."
+    },
+    {
+      "pack": "vfcanva",
+      "layer": "permissions",
+      "how": "Create / resize / review. Hand to vfigos/SEND.md — HQ sends via tools."
+    },
+    {
+      "pack": "constitution",
+      "layer": "guides",
+      "how": "Five seats, one pipeline, orchestra lock."
+    },
+    {
+      "pack": "vfgraft",
+      "layer": "memory",
+      "how": "Committed office map. Read MAP.md before grepping the warehouse."
+    },
+    {
+      "pack": "vfmem",
+      "layer": "memory",
+      "how": "Query the office graph. Not a task checkpoint."
+    },
+    {
+      "pack": "vffcc",
+      "layer": "permissions",
+      "how": "Local BYOK map only. No fcc-server on this HQ."
+    }
   ],
   "checklist": [
     "guide-file-build-test-lint",

@@ -17,7 +17,7 @@ Read `packages/vfom/EMBED.md` and run one crew from `packages/vfom/crews/`:
 
 ## Locks (do not break)
 
-- This HQ does not send Instagram, Gmail, or printer jobs. Live send stays on Grok Bot.
+- HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). Printers stay on the floor. No auto-DM. No boost.
 - Do not invent prices (₪) or Insights metrics.
 - Do not invent a floor scene. Missing proof → **חסר**.
 - Do not vendor OpenMontage, Remotion, HyperFrames, Backlot, or paid video APIs.

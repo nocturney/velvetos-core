@@ -4,8 +4,14 @@
   "rule": "Prefer free public URLs and owner/Grok IG paste. Do not use Treg for music briefs. Do not invent track names, Insights, or blocked bodies. Embed into existing packs only.",
   "playbook": "packages/vfresearch/MUSIC.md",
   "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-ig-music.md",
-  "mention": ["@trend-researcher", "@research-synthesist"],
-  "skip": ["treg", "butter-paywall-as-required"],
+  "mention": [
+    "@trend-researcher",
+    "@research-synthesist"
+  ],
+  "skip": [
+    "treg",
+    "butter-paywall-as-required"
+  ],
   "sources": [
     {
       "id": "heyorca-weekly-trending-audio",
@@ -46,7 +52,9 @@
   ],
   "locks": [
     "no-treg-for-music",
-    "no-send-instagram",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-insights",
     "no-invented-track-names",
     "no-new-pack-per-idea",

@@ -81,7 +81,6 @@ def main() -> None:
         fail("vendor script must preserve hq overlay")
 
     skip_need = [
-        "live Instagram send",
         "auto-DM",
         "boost",
         "invented ILS prices",

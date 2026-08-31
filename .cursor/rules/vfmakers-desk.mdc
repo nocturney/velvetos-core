@@ -18,7 +18,7 @@ Read `packages/vfmakers/EMBED.md` and run **one** crew from `packages/vfmakers/c
 ## Locks (do not break)
 
 - Do not install the makerskills plugin, Typefully, or a bank/Stripe client.
-- This HQ does not send Instagram, Gmail, or printer jobs. Live send stays on Grok Bot.
+- HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). Printers stay on the floor. No auto-DM. No boost.
 - Do not invent prices (₪) or Insights. Missing → `X ₪` / «אין במקור» / **חסר**.
 - Do not open a second knowledge vault. Write into existing `packages/*/hq/` only.
 - Do not start `loopify` or an unattended collect/post loop.

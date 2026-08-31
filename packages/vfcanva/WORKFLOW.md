@@ -4,7 +4,7 @@ Agent SOP. Follow `.cursor/skills/vf-canva-instagram/SKILL.md` for the live Canv
 
 ## 0. Laws
 
-- This HQ does not send Instagram.
+- HQ sends Instagram via tools (`constitution/SEND.md`). No auto-DM. No boost.
 - No invented ₪, Insights, brand hex, fonts, or floor scenes.
 - CTA is WhatsApp `050-2517000` / איסוף שדרות. Never «שלחו DM».
 - Hebrew, spoken voice. Caption comes from `vfcopy` when that pack has a draft.
