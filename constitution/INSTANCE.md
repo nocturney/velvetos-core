@@ -1,14 +1,13 @@
-# מופע VelvetOS
+# מופע מול ליבה
 
-הריפו הזה הוא **VelvetOS — Velvet Factory**.
+הריפו הזה הוא **VelvetOS Core** (backend).
 
 | | |
 |---|---|
-| מוצר | VelvetOS |
-| מופע | ראו `packages/velvetos/INSTANCE.json` |
-| פרופיל | `packages/velvetos/instance/velvet-factory.json` |
-| מודולים | `packages/velvetos/modules/` (תמיד בליבה) |
+| ליבה | `packages/velvetos/CORE.json` |
+| פרונט VF (scaffold) | `instances/velvet-factory/` |
+| פרסום | `scripts/publish-instance.sh` |
 | ריפואים | [`packages/velvetos/REPOS.md`](../packages/velvetos/REPOS.md) |
-| עובדות VF | [`STUDIO.md`](STUDIO.md) |
+| עובדות ייחוס VF | [`STUDIO.md`](STUDIO.md) — bind תאימות עד שהפרונט הוא ה־workspace |
 
-עסק נוסף = ריפו/סביבה חדשים על בסיס הליבה — לא tenant שני כאן.
+עסק נוסף = ריפו פרונט חדש על בסיס הליבה.

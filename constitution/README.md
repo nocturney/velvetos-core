@@ -1,6 +1,6 @@
-# חוקה · VelvetOS — Velvet Factory
+# חוקה · VelvetOS Core
 
-המשרד. לא השולח החי. מוצר: VelvetOS · מופע: Velvet Factory.
+המשרד. לא השולח החי. מוצר: VelvetOS · Core (backend) · פרונט VF ב-instances/.
 
 | קובץ | תפקיד |
 |---|---|

@@ -1,0 +1,40 @@
+{
+  "product": "VelvetOS",
+  "role": "core",
+  "displayName": "VelvetOS Core",
+  "updatedAt": "2026-08-31",
+  "metaphor": {
+    "core": "backend — shared OS kernel (laws, seats, packs, modules, sensors)",
+    "instance": "frontend — one business office that enables modules and binds live tools"
+  },
+  "repos": {
+    "core": "this repository (VelvetOS Core)",
+    "instances": [
+      {
+        "id": "velvet-factory",
+        "displayName": "VelvetOS — Velvet Factory",
+        "scaffold": "instances/velvet-factory/",
+        "github": "nocturney/velvetos-velvet-factory",
+        "status": "scaffold-ready",
+        "note": "Create the empty GitHub repo, then run scripts/publish-instance.sh velvet-factory"
+      },
+      {
+        "id": "beauty-multi-ig",
+        "displayName": "VelvetOS — <Beauty Business>",
+        "preset": "beauty-multi-ig",
+        "status": "preset-only"
+      },
+      {
+        "id": "clinical-legal-opinions",
+        "displayName": "VelvetOS — <Psychiatrist Business>",
+        "preset": "clinical-legal-opinions",
+        "status": "preset-only"
+      }
+    ]
+  },
+  "compat": {
+    "referenceProfile": "packages/velvetos/samples/velvet-factory.json",
+    "note": "Until the VF instance repo is the Cursor workspace, this core keeps a reference profile so existing desk/STUDIO sensors still pass. Live office front = instances/velvet-factory/."
+  },
+  "rule": "This repository is VelvetOS Core (backend). Business offices are separate instance repos (frontend) that pull modules from core."
+}

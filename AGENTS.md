@@ -1,22 +1,24 @@
-# AGENTS.md — VelvetOS harness · instance Velvet Factory
+# AGENTS.md — VelvetOS Core harness (backend kernel)
 
-PRODUCT: VelvetOS
-INSTANCE: VelvetOS — Velvet Factory
+PRODUCT: VelvetOS Core
+ROLE: core (backend)
 PROJECT: velvet-factory-headquarters-os
-INSTANCE_ID: velvet-factory
 LANGUAGE: Hebrew product copy; Hebrew+English office docs
-STUDIO: 3D-print · Sderot · pickup only · WhatsApp `050-2517000` · IG `@velvets_cloud`
+REFERENCE_STUDIO: 3D-print · Sderot · pickup only · WhatsApp `050-2517000` · IG `@velvets_cloud`
 FORMULA: Agent = Model + Harness
 
 This file is the **guide**. When it conflicts with a conversation, this file wins.
 
-VelvetOS is the universal business + autonomous social desk. **This repository is the Velvet Factory instance** (`packages/velvetos/INSTANCE.json`). Core modules for all verticals live under `packages/velvetos/modules/` (always present). Other businesses get separate instance repos that pull from core — not on/off tenants here. See `packages/velvetos/REPOS.md`.
+**VelvetOS Core** is the shared OS kernel (laws, seats, packs, modules, sensors) — the *backend*.  
+Each business is a separate **frontend** instance repo (`VelvetOS — <Business Name>`) that attaches this core and enables modules.  
+VF frontend scaffold: `instances/velvet-factory/` → publish to `nocturney/velvetos-velvet-factory` (`packages/velvetos/REPOS.md`).  
+Until that repo is the daily Cursor workspace, desk/STUDIO here stay as the reference bind so VF work does not break.
 
 BUILD: (no app binary — the catalog is the product)
 TEST: python3 scripts/check-all.py
 LINT: python3 scripts/check-hq-overlay.py && python3 scripts/check-vf-desk.py && python3 scripts/check-velvetos.py
 
-Read next: `packages/velvetos/KERNEL.md`, `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`.
+Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`.
 
 ## RULES
 
@@ -26,8 +28,8 @@ Read next: `packages/velvetos/KERNEL.md`, `constitution/CONSTITUTION.md`, `.curs
 - Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM». Customer WhatsApp stays human (no WhatsApp MCP).
-- Do not create a new pack for an idea. Map onto an existing pack the same day. New business vertical → separate VelvetOS instance repo + modules from core (`packages/velvetos/REPOS.md`), not a parallel pack tree inside this VF instance.
-- Do not add a second live business profile beside Velvet Factory in this repository. Presets under `packages/velvetos/presets/` are blueprints only.
+- Do not create a new pack for an idea. Map onto an existing pack the same day. New business = **frontend instance repo** that attaches Core modules (`packages/velvetos/REPOS.md` + `scripts/publish-instance.sh`), not a parallel pack tree inside Core.
+- Do not host a second live business frontend inside Core. Use `instances/<id>/` scaffolds + presets only.
 - Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
 - Treg is **not relevant**. Do not login, `call`, or route failover through Treg. Live web = `WebSearch` / `WebFetch` / orchestra.
 - Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.
@@ -42,8 +44,8 @@ Read next: `packages/velvetos/KERNEL.md`, `constitution/CONSTITUTION.md`, `.curs
 
 ## ANTI-PATTERNS (dated; each traces to an observed failure)
 
+- 2026-08-31 — Kept other businesses as on/off tenants inside one repo, or treated Core as the VF frontend. Core = backend; each business = frontend instance repo (`instances/` + `REPOS.md`). Sensor: `scripts/check-velvetos.py`.
 - 2026-08-31 — Treated other businesses as on/off tenants inside the VF repo. Use core modules + presets; spin **VelvetOS — \<Business\>** as separate instance repos that pull from core. Sensor: `scripts/check-velvetos.py`.
-- 2026-08-31 — New business vertical as a parallel pack tree or flipped ACTIVE to an `_examples/` tenant with placeholder handles. Superseded: modules+presets+instance repos. Sensor: `scripts/check-velvetos.py`.
 - 2026-08-31 — Invented Origin slug or idled because Origin list was HQ-only. Keep `unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`. Sensor: `scripts/check-origin-slugs.py`.
 - 2026-08-31 — Treated «לא אתר מ־HQ» as blocking an **internal** owner console. Public marketing site stays locked; internal command surface is allowed (`docs/OFFICE-OS-EMBED-he.md`). Sensor: `scripts/check-hq-overlay.py` + desk laws.
 - 2026-08-30 — Invented sale ₪ or Insights to fill a gap. Sensor: `scripts/check-hq-overlay.py`.
@@ -75,7 +77,7 @@ Read next: `packages/velvetos/KERNEL.md`, `constitution/CONSTITUTION.md`, `.curs
 | `scripts/check-vfresearch.py` | Weekly inspiration-links + IG music + orchestra failover law |
 | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
-| `scripts/check-velvetos.py` | VelvetOS core modules + VF instance; presets are blueprints; no second live business here |
+| `scripts/check-velvetos.py` | VelvetOS Core + modules; VF frontend scaffold under instances/; backend≠frontend |
 
 Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
 
@@ -106,4 +108,4 @@ DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inven
 ## HARNESS PACK
 
 Layer map and embed path: `packages/vfharness/`. Activate with `@vfharness`.  
-VelvetOS kernel + modules: `packages/velvetos/`. This instance: Velvet Factory. Multi-repo plan: `packages/velvetos/REPOS.md`. Docs: `docs/VELVETOS.md`.
+VelvetOS Core (backend): `packages/velvetos/`. Frontend scaffolds: `instances/`. Multi-repo: `packages/velvetos/REPOS.md`. Docs: `docs/VELVETOS.md`.

@@ -1,12 +1,13 @@
 {
   "name": "velvet-factory-headquarters-os",
-  "title": "VelvetOS — Velvet Factory (hosts core modules)",
+  "title": "VelvetOS Core (backend kernel)",
   "product": "VelvetOS",
-  "instanceId": "velvet-factory",
-  "displayName": "VelvetOS — Velvet Factory",
+  "role": "core",
+  "displayName": "VelvetOS Core",
   "dumpedAt": "2026-08-30",
   "tag": "v0.1.0",
   "notes": [
+    "2026-08-31: This repo is VelvetOS Core (backend). Frontend scaffold for Velvet Factory: instances/velvet-factory/ → publish nocturney/velvetos-velvet-factory. See packages/velvetos/REPOS.md.",
     "2026-08-31: VelvetOS core modules + presets (packages/velvetos). This repo is the Velvet Factory instance; modules for all verticals are always loaded. Future businesses = separate instance repos pulling from core (REPOS.md). No active/example tenants.",
     "2026-08-31: VelvetOS kernel (packages/velvetos) — universal business + social desk with tenant profiles. Active tenant remains velvet-factory. Examples under tenants/_examples/ are drafts only. See docs/VELVETOS.md.",
     "Origin slugs: never invent. Eleven packs stay origin-slug-unknown until a scoped tmp list or agent-page copy. Playbook: docs/ORIGIN-SLUGS.md. Report: scripts/discover-origin-slugs.py. Recheck 2026-08-31: this HQ token lists only velvet-factory-headquarters-os; known tmp-* view is token-not-scoped.",
@@ -375,7 +376,7 @@
     },
     {
       "name": "velvetos",
-      "summary": "VelvetOS core — modules always loaded; this repo is VelvetOS — Velvet Factory instance. Presets blueprint future instance repos.",
+      "summary": "VelvetOS Core — backend kernel; modules always loaded; frontend scaffolds under instances/.",
       "bcId": "bc-f7a22589",
       "bcIdFull": "bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
       "agentUrl": "https://cursor.com/agents/bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",

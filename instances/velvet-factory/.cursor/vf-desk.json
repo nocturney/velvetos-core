@@ -1,24 +1,23 @@
 {
-  "name": "velvet-factory-desk",
-  "title": "VelvetOS Core desk — reference bind Velvet Factory",
+  "name": "velvetos-velvet-factory-desk",
+  "title": "VelvetOS — Velvet Factory (frontend instance)",
   "updatedAt": "2026-08-31",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
   "product": "VelvetOS",
-  "role": "core",
-  "displayName": "VelvetOS Core",
-  "referenceInstance": "velvet-factory",
+  "instanceId": "velvet-factory",
+  "displayName": "VelvetOS — Velvet Factory",
   "velvetos": {
-    "pack": "packages/velvetos",
-    "core": "packages/velvetos/CORE.json",
-    "modules": "packages/velvetos/modules/catalog.json",
-    "repos": "packages/velvetos/REPOS.md",
-    "frontendScaffold": "instances/velvet-factory/",
-    "docs": "docs/VELVETOS.md"
+    "core": "vendor/velvetos-core",
+    "instance": "INSTANCE.json",
+    "profile": "instance/velvet-factory.json",
+    "docs": "README.md"
   },
   "notes": [
+    "This repo is the Velvet Factory FRONTEND office. Backend kernel = VelvetOS Core (vendor/velvetos-core).",
+    "Run ./scripts/attach-core.sh before relying on packs/modules.",
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
-    "This repository is VelvetOS Core (backend). Business frontends are separate repos. VF frontend scaffold: instances/velvet-factory/ → nocturney/velvetos-velvet-factory. Desk/STUDIO here remain the reference bind until that cutover.",
+    "Product is VelvetOS; this repo is the Velvet Factory instance. Core modules are always loaded under packages/velvetos/modules/. Other businesses = separate instance repos (REPOS.md).",
     "HQ sends Gmail and Instagram via tools (constitution/SEND.md). Do not wait for Christian or Grok Bot. Auto-DM and boost stay forbidden. Customer WhatsApp stays human 050-2517000.",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
     "Do not commit secrets, medical files, or personal Drive folders.",
@@ -26,12 +25,7 @@
     "Harness: AGENTS.md + packages/vfharness. Six layers on existing packs. No second runtime. After catalog edits run python3 scripts/check-all.py.",
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
-    "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
-    "Grok Bot quota failover: keep producing AND sending via HQ tools. Office brief is תצוגה 3 HTML via send_message to nocturney@gmail.com. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
-    "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
-    "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
-    "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
-    "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py."
+    "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -44,13 +38,30 @@
     "close": "human WhatsApp + Invoice4U",
     "timezone": "Asia/Jerusalem"
   },
-  "pipeline": ["פנייה", "שיחה", "הצעה", "הדפסה", "איסוף"],
+  "pipeline": [
+    "פנייה",
+    "שיחה",
+    "הצעה",
+    "הדפסה",
+    "איסוף"
+  ],
   "tools": {
     "gmail": {
       "status": "ready",
       "account": "nocturney@gmail.com",
       "mode": "read-and-send",
-      "allowed": ["search_threads", "get_thread", "get_message", "list_labels", "list_drafts", "create_draft", "update_draft", "send_message", "reply", "forward"],
+      "allowed": [
+        "search_threads",
+        "get_thread",
+        "get_message",
+        "list_labels",
+        "list_drafts",
+        "create_draft",
+        "update_draft",
+        "send_message",
+        "reply",
+        "forward"
+      ],
       "forbidden": [],
       "rule": "HQ sends via tools. No blast list. No invented ₪. No secrets.",
       "sendOfficeBriefTo": "nocturney@gmail.com",
@@ -95,7 +106,10 @@
     "web": {
       "status": "ready",
       "namespace": "native-cursor",
-      "allowed": ["WebSearch", "WebFetch"],
+      "allowed": [
+        "WebSearch",
+        "WebFetch"
+      ],
       "useWhen": "vfresearch / orchestra live web; ChatGPT browse + Perplexity citations + Grok/Gemini search equivalent",
       "rule": "Never invent a blocked body. Write אין גוף / דולג — חומה. Treg is not relevant.",
       "failover": "Orchestra ChatGPT+Gemini+Perplexity; never invent body"
@@ -146,211 +160,437 @@
     {
       "id": "lead",
       "he": "ראש צוות",
-      "packs": ["vfops", "vfbriefux", "vfharness", "vfmem", "velvetos"],
-      "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect"],
-      "tools": ["calendar", "gmail", "vfmem", "web"],
+      "packs": [
+        "vfops",
+        "vfbriefux",
+        "vfharness",
+        "vfmem",
+        "velvetos"
+      ],
+      "specialists": [
+        "studio-operations",
+        "chief-of-staff",
+        "meeting-notes-specialist",
+        "workflow-architect",
+        "ux-architect"
+      ],
+      "tools": [
+        "calendar",
+        "gmail",
+        "vfmem",
+        "web"
+      ],
       "decides": "₪ amount, what moves on the board, what is deferred"
     },
     {
       "id": "studio",
       "he": "סטודיו",
-      "packs": ["vfconvert", "vfsales", "vfcopy", "vfmskill"],
-      "specialists": ["sales-engineer", "proposal-strategist", "discovery-coach", "content-creator", "brand-guardian", "email-intelligence-engineer"],
-      "tools": ["gmail", "drive"],
+      "packs": [
+        "vfconvert",
+        "vfsales",
+        "vfcopy",
+        "vfmskill"
+      ],
+      "specialists": [
+        "sales-engineer",
+        "proposal-strategist",
+        "discovery-coach",
+        "content-creator",
+        "brand-guardian",
+        "email-intelligence-engineer"
+      ],
+      "tools": [
+        "gmail",
+        "drive"
+      ],
       "decides": "inquiry brief, quote draft, copy. Does not send."
     },
     {
       "id": "growth",
       "he": "צמיחה",
-      "packs": ["vfgrowth", "vfcovers", "vfigos", "vfinsights", "vfmskill", "vfom"],
-      "specialists": ["instagram-curator", "visual-storyteller", "image-prompt-engineer", "growth-hacker", "analytics-reporter", "social-media-strategist"],
-      "tools": ["superdesign", "drive", "canva", "image", "web"],
+      "packs": [
+        "vfgrowth",
+        "vfcovers",
+        "vfigos",
+        "vfinsights",
+        "vfmskill",
+        "vfom"
+      ],
+      "specialists": [
+        "instagram-curator",
+        "visual-storyteller",
+        "image-prompt-engineer",
+        "growth-hacker",
+        "analytics-reporter",
+        "social-media-strategist"
+      ],
+      "tools": [
+        "superdesign",
+        "drive",
+        "canva",
+        "image",
+        "web"
+      ],
       "decides": "content pack and cover drafts. HQ reviews/schedules only. Grok sends."
     },
     {
       "id": "ops",
       "he": "תפעול",
-      "packs": ["vfcost", "vfbooks", "vfbiz"],
-      "specialists": ["pricing-analyst", "bookkeeper-controller", "finance-tracker", "business-strategist"],
-      "tools": ["gmail", "drive"],
+      "packs": [
+        "vfcost",
+        "vfbooks",
+        "vfbiz"
+      ],
+      "specialists": [
+        "pricing-analyst",
+        "bookkeeper-controller",
+        "finance-tracker",
+        "business-strategist"
+      ],
+      "tools": [
+        "gmail",
+        "drive"
+      ],
       "decides": "cost factors, ledger reads, locked B2B. No invented prices."
     },
     {
       "id": "production",
       "he": "ייצור",
-      "packs": ["vfprod", "vfsku", "vlicense", "vfresearch"],
-      "specialists": ["studio-producer", "operations-manager", "legal-compliance-checker", "research-synthesist", "trend-researcher"],
-      "tools": ["drive", "calendar", "web", "threedaistudio"],
+      "packs": [
+        "vfprod",
+        "vfsku",
+        "vlicense",
+        "vfresearch"
+      ],
+      "specialists": [
+        "studio-producer",
+        "operations-manager",
+        "legal-compliance-checker",
+        "research-synthesist",
+        "trend-researcher"
+      ],
+      "tools": [
+        "drive",
+        "calendar",
+        "web",
+        "threedaistudio"
+      ],
       "decides": "print feasibility, queue, SKU, file license"
     }
   ],
   "desk": [
     {
       "slug": "studio-operations",
-      "packs": ["vfops", "vfharness", "vfmem", "velvetos"],
-      "tools": ["calendar", "gmail", "vfmem"],
+      "packs": [
+        "vfops",
+        "vfharness",
+        "vfmem",
+        "velvetos"
+      ],
+      "tools": [
+        "calendar",
+        "gmail",
+        "vfmem"
+      ],
       "job": "Morning brief, queue bottlenecks, run-the-studio procedures"
     },
     {
       "slug": "chief-of-staff",
-      "packs": ["vfops", "vfbiz", "vfmem"],
-      "tools": ["calendar", "gmail", "vfmem"],
+      "packs": [
+        "vfops",
+        "vfbiz",
+        "vfmem"
+      ],
+      "tools": [
+        "calendar",
+        "gmail",
+        "vfmem"
+      ],
       "job": "Open decisions, seat handoffs, what waits for Christian"
     },
     {
       "slug": "meeting-notes-specialist",
-      "packs": ["vfops"],
-      "tools": ["calendar"],
+      "packs": [
+        "vfops"
+      ],
+      "tools": [
+        "calendar"
+      ],
       "job": "Decisions / actions / open questions from a call or transcript"
     },
     {
       "slug": "workflow-architect",
-      "packs": ["vfops", "vfharness"],
-      "tools": ["calendar"],
+      "packs": [
+        "vfops",
+        "vfharness"
+      ],
+      "tools": [
+        "calendar"
+      ],
       "job": "Tighten the one pipeline: inquiry → talk → quote → print → pickup; harness loop and checkpoints"
     },
     {
       "slug": "ux-architect",
-      "packs": ["vfbriefux"],
-      "tools": ["mobbin", "superdesign"],
+      "packs": [
+        "vfbriefux"
+      ],
+      "tools": [
+        "mobbin",
+        "superdesign"
+      ],
       "job": "Morning-brief layout and UX structure"
     },
     {
       "slug": "ux-researcher",
-      "packs": ["vfbriefux"],
-      "tools": ["mobbin"],
+      "packs": [
+        "vfbriefux"
+      ],
+      "tools": [
+        "mobbin"
+      ],
       "job": "Brief-format research against real app patterns"
     },
     {
       "slug": "ui-designer",
-      "packs": ["vfbriefux"],
-      "tools": ["mobbin", "superdesign"],
+      "packs": [
+        "vfbriefux"
+      ],
+      "tools": [
+        "mobbin",
+        "superdesign"
+      ],
       "job": "Brief packet visual system"
     },
     {
       "slug": "email-intelligence-engineer",
-      "packs": ["vfconvert", "vfsales"],
-      "tools": ["gmail"],
+      "packs": [
+        "vfconvert",
+        "vfsales"
+      ],
+      "tools": [
+        "gmail"
+      ],
       "job": "Read inquiry threads into a structured brief. Never send."
     },
     {
       "slug": "sales-engineer",
-      "packs": ["vfsales", "vfconvert", "vfmskill"],
-      "tools": ["gmail"],
+      "packs": [
+        "vfsales",
+        "vfconvert",
+        "vfmskill"
+      ],
+      "tools": [
+        "gmail"
+      ],
       "job": "Quote draft after verified cost. One CTA. No invented ₪."
     },
     {
       "slug": "proposal-strategist",
-      "packs": ["vfsales"],
-      "tools": ["gmail", "drive"],
+      "packs": [
+        "vfsales"
+      ],
+      "tools": [
+        "gmail",
+        "drive"
+      ],
       "job": "Proposal shape for a named job"
     },
     {
       "slug": "discovery-coach",
-      "packs": ["vfconvert"],
-      "tools": ["gmail"],
+      "packs": [
+        "vfconvert"
+      ],
+      "tools": [
+        "gmail"
+      ],
       "job": "Missing measurements / use / pickup window"
     },
     {
       "slug": "content-creator",
-      "packs": ["vfcopy", "vfgrowth", "vfmskill"],
+      "packs": [
+        "vfcopy",
+        "vfgrowth",
+        "vfmskill"
+      ],
       "tools": [],
       "job": "Hebrew spoken-voice copy. WhatsApp CTA, not Send DM."
     },
     {
       "slug": "brand-guardian",
-      "packs": ["vfcopy", "vfcovers"],
-      "tools": ["superdesign"],
+      "packs": [
+        "vfcopy",
+        "vfcovers"
+      ],
+      "tools": [
+        "superdesign"
+      ],
       "job": "Lint caption and cover against studio voice"
     },
     {
       "slug": "instagram-curator",
-      "packs": ["vfigos", "vfgrowth", "vfom"],
-      "tools": ["canva", "web"],
+      "packs": [
+        "vfigos",
+        "vfgrowth",
+        "vfom"
+      ],
+      "tools": [
+        "canva",
+        "web"
+      ],
       "job": "Review, schedule, and send via tools (vfigos/SEND.md). No boost. No auto-DM."
     },
     {
       "slug": "visual-storyteller",
-      "packs": ["vfcovers", "vfgrowth", "vfom"],
-      "tools": ["superdesign", "drive", "canva", "image"],
+      "packs": [
+        "vfcovers",
+        "vfgrowth",
+        "vfom"
+      ],
+      "tools": [
+        "superdesign",
+        "drive",
+        "canva",
+        "image"
+      ],
       "job": "Cover and reel narrative from floor proof, not invented scenes"
     },
     {
       "slug": "image-prompt-engineer",
-      "packs": ["vfcovers"],
-      "tools": ["superdesign", "image", "canva"],
+      "packs": [
+        "vfcovers"
+      ],
+      "tools": [
+        "superdesign",
+        "image",
+        "canva"
+      ],
       "job": "Cover-art prompts. No Israeli brand-file copies."
     },
     {
       "slug": "growth-hacker",
-      "packs": ["vfgrowth", "vfmskill"],
-      "tools": ["web"],
+      "packs": [
+        "vfgrowth",
+        "vfmskill"
+      ],
+      "tools": [
+        "web"
+      ],
       "job": "Content sprint ideas. No TikTok or ads without lead-seat decision."
     },
     {
       "slug": "social-media-strategist",
-      "packs": ["vfgrowth", "vfseason"],
-      "tools": ["calendar", "web"],
+      "packs": [
+        "vfgrowth",
+        "vfseason"
+      ],
+      "tools": [
+        "calendar",
+        "web"
+      ],
       "job": "Season marks and board suggestions. Do not move a booked slot."
     },
     {
       "slug": "analytics-reporter",
-      "packs": ["vfinsights"],
-      "tools": ["web"],
+      "packs": [
+        "vfinsights"
+      ],
+      "tools": [
+        "web"
+      ],
       "job": "Read verified snapshots only. Never invent Insights. Treg not used."
     },
     {
       "slug": "pricing-analyst",
-      "packs": ["vfcost"],
+      "packs": [
+        "vfcost"
+      ],
       "tools": [],
       "job": "Cost factors from slicer / snapshot / Christian. X ₪ if missing."
     },
     {
       "slug": "bookkeeper-controller",
-      "packs": ["vfbooks"],
-      "tools": ["gmail", "drive"],
+      "packs": [
+        "vfbooks"
+      ],
+      "tools": [
+        "gmail",
+        "drive"
+      ],
       "job": "Receivables and bills from labeled mail. No debt-chasing email without lead seat."
     },
     {
       "slug": "finance-tracker",
-      "packs": ["vfbooks", "vfcost"],
-      "tools": ["gmail"],
+      "packs": [
+        "vfbooks",
+        "vfcost"
+      ],
+      "tools": [
+        "gmail"
+      ],
       "job": "Spend reads from verified invoices"
     },
     {
       "slug": "business-strategist",
-      "packs": ["vfbiz"],
+      "packs": [
+        "vfbiz"
+      ],
       "tools": [],
       "job": "Studio strategy. B2B logos/QR/napkins stay locked until lead seat opens them."
     },
     {
       "slug": "studio-producer",
-      "packs": ["vfprod"],
-      "tools": ["calendar", "drive", "threedaistudio"],
+      "packs": [
+        "vfprod"
+      ],
+      "tools": [
+        "calendar",
+        "drive",
+        "threedaistudio"
+      ],
       "job": "Print-floor job tracking and queue hours from slicer, not guesses. 3D AI Studio concept mesh after lead approval (3DAISTUDIO.md)"
     },
     {
       "slug": "operations-manager",
-      "packs": ["vfprod", "vfops"],
-      "tools": ["calendar"],
+      "packs": [
+        "vfprod",
+        "vfops"
+      ],
+      "tools": [
+        "calendar"
+      ],
       "job": "Pickup windows in Sderot. No national shipping from HQ."
     },
     {
       "slug": "legal-compliance-checker",
-      "packs": ["vlicense"],
-      "tools": ["drive"],
+      "packs": [
+        "vlicense"
+      ],
+      "tools": [
+        "drive"
+      ],
       "job": "File license / access gate before a reprint"
     },
     {
       "slug": "research-synthesist",
-      "packs": ["vfresearch"],
-      "tools": ["drive", "web"],
+      "packs": [
+        "vfresearch"
+      ],
+      "tools": [
+        "drive",
+        "web"
+      ],
       "job": "Source map + weekly inspiration-link review (LINKS.json / WEEKLY.md). Do not invent citations or blocked bodies."
     },
     {
       "slug": "trend-researcher",
-      "packs": ["vfresearch", "vfseason"],
-      "tools": ["calendar", "web"],
+      "packs": [
+        "vfresearch",
+        "vfseason"
+      ],
+      "tools": [
+        "calendar",
+        "web"
+      ],
       "job": "Season, reprint, and Instagram music/sound briefs from HeyOrca + IG paste (MUSIC.md). Treg not relevant; never invent track names or Insights"
     }
   ],
@@ -370,5 +610,6 @@
     ".cursor/skills/vf-weekly-links/SKILL.md",
     ".cursor/skills/vf-ig-music/SKILL.md",
     ".cursor/skills/vf-velvetos/SKILL.md"
-  ]
+  ],
+  "role": "instance"
 }

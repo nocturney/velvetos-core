@@ -1,38 +1,30 @@
-# VelvetOS — ליבה + מודולים
+# VelvetOS Core — ליבה (backend)
 
-**VelvetOS** = כלי ניהול עסק + עמודי סושיאל אוטונומיים.  
-הריפו הזה = **VelvetOS — Velvet Factory** (מופע / instance).  
-מודולים לכל האנכיים יושבים **תמיד** בליבה — לא «יעדים פעילים/לא פעילים».
+**VelvetOS Core** = באקאנד המערכת: חוקים, 5 מושבים, פקים, מודולים, סנסורים, presets.  
+כל עסק = **פרונט** נפרד (`VelvetOS — <Business Name>`) ששואב מהליבה את מה שרלוונטי.
 
 ## ארכיטקטורה
 
 ```
-velvetos-core (ליבה)          instance repos
-─────────────────────         ─────────────────────────────
-laws · seats · packs          VelvetOS — Velvet Factory  ← זה הריפו
-modules/* (הכל טעון)          VelvetOS — <Business Name> ← ריפו נפרד בעתיד
-presets (הרכב מומלץ)          שואב מהליבה רק מה שרלוונטי
+VelvetOS Core (this repo)              Instance repos (frontends)
+─────────────────────────              ─────────────────────────
+modules/*  (always loaded)      →      VelvetOS — Velvet Factory
+packs vf*                       →      VelvetOS — <Nails/Tattoos>
+laws · harness · sensors        →      VelvetOS — <Psychiatrist>
+presets (blueprints)
+instances/*/ (scaffold to publish)
 ```
 
-היום הליבה והמופע VF חיים באותו ריפו (`hostsCore: true`). פיצול לריפו ליבתי נפרד — ראו `REPOS.md`.
+## מטאפורה
 
-## שכבות
-
-| שכבה | איפה | תפקיד |
-|---|---|---|
-| Core laws | `KERNEL` + constitution | שליחה, 5 מושבים, בלי ₪/Insights מומצאים |
-| Modules | `modules/` | יכולות מוכנות מראש (print, appointment, document, multi-IG…) |
-| Presets | `presets/` | הרכב מומלץ למופע עתידי — **לא** מתג הפעלה כאן |
-| Instance | `INSTANCE.json` + `instance/` | הזהות של *המשרד הזה* |
-
-## מודולים (תמיד מאחורי הקלעים)
-
-ראו `modules/catalog.json`. כל מודול קיים בדיסק גם אם המופע הנוכחי לא צורך אותו.
+| Core | Instance |
+|---|---|
+| Backend / OS kernel | Frontend / business office |
+| Shared capabilities | Identity, channels, tool binds, enabled modules |
 
 ## כלל ברזל
 
-1. עובדים כאן כ־**VelvetOS — Velvet Factory** בלבד.
-2. עסק חדש = ריפו מופע חדש (או סביבה חדשה) על בסיס הליבה — לא tenant שני בתוך הריפו הזה.
-3. לא ממציאים ₪ / Insights / handles.
-4. לא אוטו־DM / בוסט.
-5. מודולים נטענים מראש; preset ≠ סביבה חיה.
+1. הריפו הזה הוא **Core** — לא משרד עסק יחיד.
+2. משרד VF החי עובר ל־`instances/velvet-factory/` → ריפו `velvetos-velvet-factory`.
+3. מודולים תמיד בליבה; preset ≠ סביבה חיה.
+4. לא ₪ / Insights מומצאים; לא אוטו־DM / בוסט.
