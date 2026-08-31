@@ -24,8 +24,11 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Mobbin** | Real-app UI patterns | `vfbriefux` |
 | **Superdesign** | Canvas / graphics | `vfcovers`, `vfbriefux` |
 | **Grok Bot** | Optional backup only. HQ sends via tools | `vfigos/SEND.md` |
+| **iCloud Drive** | **Mac Desktop only** — local MCP (`icloud-drive-mcp-server`). Cloud Agent uses **Google Drive mirror** | `vfmcp/CONNECT-ICLOUD.md`, `vfmcp/ICLOUD-DRIVE-SYNC.md` |
 
 Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility” servers unless Treg is missing a specific account.
+
+**iCloud:** no Apple HTTP OAuth for agents. Do not add iCloud to Cloud Team MCP. Mirror `Velvet Factory/` to Drive on the Mac instead.
 
 **Office graph (already in git, not a Cursor MCP add):** [`vfmem`](../packages/vfmem/) takes the *query shape* from [DeusData/codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp) (`architecture` / `who` / `impact` / `adr`) and runs it on `vf-desk.json` + `manifest.json`. Do not install their C binary from this repo. Write-up: [`docs/VFMEM.md`](VFMEM.md).
 

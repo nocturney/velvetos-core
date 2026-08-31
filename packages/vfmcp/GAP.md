@@ -19,6 +19,7 @@
 | Treg | **לא רלוונטי** | לא login, לא `call`, לא failover |
 | Mobbin | plugin · אין MCP כאן | namespace לא על Cloud Agent |
 | FCC | לא כאן | נעול ב־`vffcc` |
+| **iCloud Drive** | **owner Mac only** — MCP מקומי; Cloud = **Drive mirror** | `CONNECT-ICLOUD.md` · `ICLOUD-DRIVE-SYNC.md` |
 
 אין גיליון סטודיו בשם Velvet Factory ב־Drive. גיליונות אישיים דולגו. לא ממציאים workbook ID.
 
@@ -49,6 +50,7 @@
 | מדפסות | אין בכוונה | **skip** — רצפה לא מ־HQ |
 | Google Workspace (Gmail/Drive/Docs/Sheets/Calendar) **כתיבה+שליחה** | Gmail **שליחה**; Drive `create_file`; Calendar קריאה; Sheets דרך Drive | **wired** 31.8 — `SEND.md` |
 | Outlook / OneDrive / SharePoint | אין | **skip** — לא ערימת הסטודיו |
+| **iCloud Drive** (Apple) | Desktop: MCP מקומי · Cloud: **Drive** `Velvet Factory/iCloud mirror` | **wired** — לא HTTP OAuth · `sync-icloud-to-drive.sh` |
 | Notion / Linear / GitHub (Grok) | GitHub דרך `gh` לקריאה | **later** — לא MCP חדש |
 | חיפוש רשת / X / DeepSearch | WebSearch + תזמורת | **wired** 31.8 — `tools.web` |
 | יצירת תמונה | GenerateImage + Canva | **wired** 31.8 — `tools.image` |
@@ -111,6 +113,7 @@
 | **Headroom** (`headroom-ai`) | **local optional** — proxy/MCP דורש תהליך מקומי; Cloud Agent sandbox. דפוס CCR/ContentRouter ב-`vfharness/playbooks/context-thrift.md` בלי dependency. Mac: `uv tool install "headroom-ai[all]"` + `headroom wrap cursor` אחרי lead seat |
 | 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט. המחבר הרשמי הוא HTTP OAuth |
 | SharePoint / Outlook / Notion / Slack | לא ערימת שדרות |
+| iCloud MCP על Cloud Agent | אין Apple/Linux · mirror ל-Drive בלבד | `ICLOUD-DRIVE-SYNC.md` |
 
 ## עדיפות Connectors לפי מושב
 

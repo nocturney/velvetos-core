@@ -31,6 +31,7 @@
     "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
     "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
     "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
+    "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
     "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py."
   ],
   "studio": {
@@ -144,6 +145,13 @@
       "useWhen": "vfprod concept mesh: text/image → STL/3MF after lead approval. Playbook: packages/vfprod/3DAISTUDIO.md",
       "rule": "No API key in git. No invented ₪ from credits. No print from HQ. Same license gate as Meshy/Tripo.",
       "failover": "Site UI + Drive create_file / upload + continue. Open license search if vendor down. Never invent a key or mesh."
+    },
+    "icloud": {
+      "status": "owner-mac-only",
+      "namespace": "icloud-drive-mcp-server",
+      "useWhen": "Cursor Desktop on owner Mac: read/search Velvet Factory folder in iCloud Drive. Playbooks: packages/vfmcp/CONNECT-ICLOUD.md + ICLOUD-DRIVE-SYNC.md",
+      "rule": "Not on Cloud Agent. Full Disk Access on Mac. ICLOUD_MCP_WRITE false by default. No personal/medical/legal folders unless user names them.",
+      "failover": "sync-icloud-to-drive.sh → Drive iCloud mirror; or upload in chat. Cloud HQ uses Drive only."
     }
   },
   "seats": [
