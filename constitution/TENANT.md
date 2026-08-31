@@ -1,13 +1,7 @@
-# Tenant פעיל
+# Tenant → Instance
 
-VelvetOS טוען עובדות סטודיו מה־tenant ב־`packages/velvetos/ACTIVE.json`.
+המינוח הישן «tenant פעיל/דוגמה» הוחלף.
 
-| | |
-|---|---|
-| מוצר | VelvetOS |
-| Tenant פעיל | ראו `packages/velvetos/ACTIVE.json` |
-| ברירת מחדל | `velvet-factory` |
-| עובדות VF | [`STUDIO.md`](STUDIO.md) — בתוקף כל עוד ACTIVE=velvet-factory |
-| ליבה | [`packages/velvetos/KERNEL.md`](../packages/velvetos/KERNEL.md) |
+ראו [`INSTANCE.md`](INSTANCE.md) + [`packages/velvetos/REPOS.md`](../packages/velvetos/REPOS.md).
 
-שינוי tenant = החלטת ראש צוות בלבד. דוגמאות תחת `tenants/_examples/` לא רצות.
+הריפו = **VelvetOS — Velvet Factory**. מודולים בליבה. עסקים נוספים = ריפואים נפרדים.

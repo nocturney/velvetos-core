@@ -1,0 +1,26 @@
+{
+  "task_id": "velvetos-modules-multirepo-2026-08-31",
+  "status": "completed",
+  "pack": "velvetos",
+  "goal": "Replace active/example tenants with always-loaded modules + core/instance multi-repo plan; keep VelvetOS — Velvet Factory as the only live instance here",
+  "completed_steps": [
+    "INSTANCE.json + instance/velvet-factory.json",
+    "modules/catalog.json with 16 modules for print/appointment/document/multi-IG/compliance",
+    "presets as blueprints only (maker, beauty-multi-ig, clinical-legal)",
+    "REPOS.md core vs instance repos",
+    "Removed tenants/_examples and ACTIVE.json",
+    "Sensor + CLI rewritten"
+  ],
+  "next_step": "When ready: extract velvetos-core repo; spin VelvetOS — <Business> instance repos from presets with real facts only",
+  "artifacts": [
+    "packages/velvetos/modules/",
+    "packages/velvetos/presets/",
+    "packages/velvetos/REPOS.md",
+    "packages/velvetos/INSTANCE.json"
+  ],
+  "unresolved": [
+    "Core still hosts inside VF monorepo (hostsCore true) until extract",
+    "Second/third instance repos not created yet (by design)"
+  ],
+  "last_updated": "2026-08-31"
+}

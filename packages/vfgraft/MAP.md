@@ -11,7 +11,7 @@ desk            system       five seats; warehouse stays off
 tools           system       Gmail · Calendar · Drive · Canva · WebSearch · GenerateImage · 3DAI site
 skills          system       morning / inquiry / content / Canva / velvetos / this map
 packs           system       packages/<name>/ — no duplicate job
-velvetos        system       tenant profiles; ACTIVE=velvet-factory; examples stay drafts
+velvetos        system       core modules always loaded; this repo = VF instance; presets → future repos
 grok-bot        boundary     optional backup; printers on floor
 morning-job     job          בריף בוקר
 inquiry-job     job          פנייה → טיוטת הצעה
@@ -25,7 +25,7 @@ command-surface system       capabilities + pipeline board + portlets (future UI
 
 | Job | Open |
 |---|---|
-| VelvetOS / tenant חדש / multi-IG | `packages/velvetos/KERNEL.md` → [[packs]] → [[pipeline]] |
+| VelvetOS / modules / instance repo | `packages/velvetos/KERNEL.md` + `REPOS.md` → [[packs]] → [[pipeline]] |
 | בריף בוקר / what is open | [[morning-job]] → [[tools]] → [[skills]] |
 | פנייה / quote this | [[inquiry-job]] → [[pipeline]] → [[packs]] |
 | חבילת תוכן / covers / Canva | [[content-job]] → [[grok-bot]] → [[tools]] |

@@ -1,41 +1,30 @@
 # velvetos — איך מטמיעים
 
-לא פק מוצר לכל עסק. ליבה + tenant על הפקים הקיים.
+ליבה + מודולים מוכנים מראש. מופע = עסק אחד לריפו.
 
-## 1. זהות מוצר
+## 1. זהות
 
-- שם המוצר: **VelvetOS**
-- הריפו / המשרד החי: נשאר משרד VF כשה־tenant פעיל הוא `velvet-factory`
-- מדריך: `AGENTS.md` (מנצח שיחה) + `KERNEL.md`
+- מוצר: **VelvetOS**
+- הריפו הזה: **VelvetOS — Velvet Factory** (`INSTANCE.json`)
+- ליבה מארחת זמנית כאן (`hostsCore: true`) עד פיצול `velvetos-core` — ראו `REPOS.md`
 
-## 2. הפעלת tenant חדש (רק ראש צוות)
+## 2. מודולים
 
-1. העתק מ־`tenants/_examples/` → `tenants/<id>.json`
-2. מלא handles אמיתיים, CTA, where — בלי המצאה
-3. `status: ready` → אחרי אימות סנסור `status: active` רק דרך החלפת `ACTIVE.json`
-4. עדכן `constitution/STUDIO.md` **או** שמור STUDIO כ־VF ועבוד רק מפרופיל ה־tenant (מומלץ: קובץ STUDIO נשאר VF עד שיש משרד נפרד)
-5. `python3 scripts/check-velvetos.py`
+הכל תחת `modules/` + `catalog.json`. המופע בוחר תת־קבוצה ב־`modulesEnabled`.  
+Preset (`presets/`) = תבנית למופע חדש — לא יעד פעיל/כבוי בריפו הזה.
 
-## 3. מה לא נוגעים בו ביום הראשון
+## 3. מופע עסקי חדש
 
-- שמות פקים `vf*`
-- חמישה מושבים
-- `SEND.md` / איסור אוטו־DM
-- סנסורי VF שבודקים `@velvets_cloud` כל עוד ACTIVE=velvet-factory
+1. ריפו חדש בשם `VelvetOS — <Business Name>` (או `velvetos-<slug>`).
+2. Vendor / subtree של הליבה.
+3. העתק preset רלוונטי → `instance/<id>.json` עם עובדות אמיתיות בלבד.
+4. אל תפתח tenant שני ליד VF בריפו הזה.
 
-## 4. מיפוי אנכי → פקים
-
-| אנכי | fulfill | הערות |
-|---|---|---|
-| maker / print | `vfprod` הדפסה | VF היום |
-| beauty / appointment | `vfprod`+`vfops` כתור | multi-IG ב־CHANNELS |
-| clinical-legal / document | `vfprod` כמסמך | PHI מחוץ לגיט |
-
-## 5. אחרי שינוי
+## 4. אחרי שינוי
 
 ```
+python3 scripts/velvetos.py instance
+python3 scripts/velvetos.py modules
 python3 scripts/check-velvetos.py
 python3 scripts/check-all.py
 ```
-
-שורה ב־`CHANGELOG.md`. Checkpoint ב־`packages/vfharness/state/`.

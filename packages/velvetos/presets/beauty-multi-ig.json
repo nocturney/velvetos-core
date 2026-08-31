@@ -1,0 +1,29 @@
+{
+  "id": "beauty-multi-ig",
+  "title": "Beauty studio — nails + tattoos (multi-IG)",
+  "titleHe": "סטודיו יופי — ציפורניים וקעקועים (שני עמודי IG)",
+  "kind": "preset",
+  "note": "Composition blueprint for a future instance repo (VelvetOS — <Business Name>). Modules are already in core. Do not treat this file as an active/inactive tenant here.",
+  "modulesEnabled": [
+    "kernel-laws",
+    "pipeline-canonical",
+    "channels-instagram",
+    "fulfill-appointment",
+    "production-appointment",
+    "compliance-base",
+    "compliance-beauty",
+    "sales-inquiry",
+    "social-growth",
+    "ops-ledger"
+  ],
+  "pipelineLabelsHe": ["פנייה", "תיאום", "הצעה", "תור", "מעקב"],
+  "fulfillment": "appointment",
+  "production": "appointment",
+  "channels": {
+    "instagramMin": 2,
+    "instagramMax": 8,
+    "purposeHints": ["nails", "tattoos"]
+  },
+  "instanceRepoHint": "velvetos-<business-name>",
+  "displayNamePattern": "VelvetOS — <Business Name>"
+}

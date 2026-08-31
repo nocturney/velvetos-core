@@ -1,15 +1,16 @@
 # VelvetOS
 
-Universal business-management + autonomous social desk for Cursor.
+This folder is the **core module catalog** (temporarily hosted inside the Velvet Factory instance repo).
 
-- Kernel: this folder
-- Active tenant: see `ACTIVE.json` (default **velvet-factory**)
+- This office: **VelvetOS — Velvet Factory** → `INSTANCE.json`
+- Modules (always on disk): `modules/`
+- Presets (future instance blueprints): `presets/`
+- Multi-repo plan: `REPOS.md`
 - Docs: [`docs/VELVETOS.md`](../../docs/VELVETOS.md)
 
 ```bash
-python3 scripts/velvetos.py active
-python3 scripts/velvetos.py list
+python3 scripts/velvetos.py instance
+python3 scripts/velvetos.py modules
+python3 scripts/velvetos.py presets
 python3 scripts/check-velvetos.py
 ```
-
-Example tenants (not active): `tenants/_examples/nails-tattoos.json`, `psychiatrist-legal.json`.

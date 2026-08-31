@@ -1,6 +1,6 @@
 ---
 name: vf-velvetos
-description: Orient on VelvetOS — universal business + social desk with tenant profiles. Use when the user asks for VelvetOS, tenant חדש, multi-IG, אוניברסלי, or another business vertical without breaking Velvet Factory.
+description: Orient on VelvetOS — core modules always loaded; this repo is VelvetOS — Velvet Factory. Use for VelvetOS, modules, presets, multi-repo instance setup, or multi-IG blueprints.
 ---
 
 # VelvetOS
@@ -8,21 +8,19 @@ description: Orient on VelvetOS — universal business + social desk with tenant
 ## Pack
 
 - Pack: `velvetos`
-- Mention: `@workflow-architect` / `@studio-operations`
-- Write-up: `docs/VELVETOS.md`
+- Docs: `docs/VELVETOS.md` · `packages/velvetos/REPOS.md`
 
 ## Do this
 
-1. Read `packages/velvetos/ACTIVE.json` → load `tenants/<id>.json`.
-2. Follow `KERNEL.md` + `PIPELINE.md` + `CHANNELS.md`.
-3. If the job is a new vertical: copy from `tenants/_examples/`, fill real facts, keep `status: example` until lead activates.
-4. Do not change ACTIVE without lead seat.
+1. Read `INSTANCE.json` — this office is **VelvetOS — Velvet Factory**.
+2. List modules: `python3 scripts/velvetos.py modules` (all present; `*` = enabled here).
+3. Presets under `presets/` are blueprints for **future instance repos**, not on/off tenants.
+4. New business → separate repo that vendors core modules (`REPOS.md`).
 5. After edits: `python3 scripts/check-velvetos.py`.
 
 ## Do not
 
-- Break velvet-factory while it is active
-- Invent ₪, Insights, or IG handles
+- Add a second live business profile beside VF in this repo
+- Treat presets as active/inactive goals
+- Invent ₪, Insights, or handles
 - Auto-DM / boost
-- Create a new pack per business
-- Open medical/legal Drive folders unless the user names them

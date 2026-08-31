@@ -1,9 +1,8 @@
-# חוקת משרד — VelvetOS · Velvet Factory
+# חוקת משרד — VelvetOS — Velvet Factory
 
-מוצר: **VelvetOS** (ניהול עסק + סושיאל אוטונומי).  
-Tenant פעיל: **Velvet Factory** — סטודיו להדפסות תלת־ממד · שדרות · איסוף בלבד · וואטסאפ `050-2517000` · IG `@velvets_cloud`
+מוצר: **VelvetOS**. מופע: **Velvet Factory** — סטודיו להדפסות תלת־ממד · שדרות · איסוף בלבד · וואטסאפ `050-2517000` · IG `@velvets_cloud`
 
-פרופיל tenant: [`packages/velvetos/`](../packages/velvetos/) · [`TENANT.md`](TENANT.md)
+ליבה + מודולים: [`packages/velvetos/`](../packages/velvetos/) · מופע: [`INSTANCE.md`](INSTANCE.md) · ריפואים: [`REPOS.md`](../packages/velvetos/REPOS.md)
 
 המשרד חי ב־Cursor packs. **שליחת ג׳ימייל ואינסטגרם — מ־HQ דרך כלים** (`SEND.md`). לא דרך כריסטיאן ולא דרך Grok Bot. מדפסות נשארות ברצפה. וואטסאפ לקוח: אדם `050-2517000`.
 

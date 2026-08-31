@@ -1,0 +1,27 @@
+{
+  "id": "maker-print",
+  "title": "Maker / 3D-print studio",
+  "titleHe": "סטודיו ייצור / הדפסת תלת־ממד",
+  "kind": "preset",
+  "note": "Composition blueprint for an instance repo. Not a live environment in this repository.",
+  "modulesEnabled": [
+    "kernel-laws",
+    "pipeline-canonical",
+    "channels-instagram",
+    "fulfill-pickup",
+    "production-print",
+    "compliance-base",
+    "compliance-maker",
+    "sales-inquiry",
+    "social-growth",
+    "ops-ledger"
+  ],
+  "pipelineLabelsHe": ["פנייה", "שיחה", "הצעה", "הדפסה", "איסוף"],
+  "fulfillment": "pickup",
+  "production": "print",
+  "channels": {
+    "instagramMin": 1,
+    "instagramMax": 1
+  },
+  "usedByInstance": "velvet-factory"
+}
