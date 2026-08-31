@@ -4,7 +4,7 @@
 
 הרשימה מחליטה *על מה* סוכן עובד, *מתי*, *איפה*, ו*מה קורה לתוצר*. אצלנו זה כבר `crews/run.md` + `vfharness`. מטמיעים דפוסים. לא מתקינים את הכלים.
 
-מפה מכונה: [`orchestrators.json`](orchestrators.json) · דוח: [`docs/ORCHESTRATORS.md`](../../docs/ORCHESTRATORS.md).
+מפה מכונה: [`orchestrators.json`](orchestrators.json) · דוח: [`docs/ORCHESTRATORS.md`](../../docs/ORCHESTRATORS.md) · DeerFlow patterns: [`DEER-FLOW-PATTERNS.md`](DEER-FLOW-PATTERNS.md).
 
 ## מה לקחנו (ייעול משמרת)
 
@@ -26,6 +26,9 @@
 | White-box memory (לא צ'אט גלובלי) | LobeHub Personal Memory | `vfharness/state/` + checkpoint schema |
 | Agent Groups / Project משותף | LobeHub Pages | fan-out max 3 על `vfcopy`/`vfcovers` בלבד |
 | Schedule registry (לא cron אוטונומי) | LobeHub Operator | `vfops/ROUTINE.md` + בריף 07:00 + `decision_gate` |
+| Session goal | DeerFlow `/goal` | שדה `מטרה` בכרטיס · checkpoint `goal` |
+| Sub-agent bounds | DeerFlow task | fan-out ≤3 · לא על ₪/שליחה |
+| Tool receipts | DeerFlow verification | `אימות` + message_id / design URL |
 
 ## מה לא מתקינים
 

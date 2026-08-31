@@ -12,6 +12,7 @@
 | Calendar | ready · `Asia/Jerusalem` | namespace `Google-calendar` |
 | Drive | ready · חיפוש **ויצירה** (`create_file`) | namespace `Google-drive` |
 | **Canva** | **ready** | `search-designs` החזיר `DAGoYmCu4c4` («Card - חגיגת האהבה שלכם») |
+| **3D AI Studio** | **needsAuth** (Desktop + Cloud OAuth) | Team MCP `threedaistudio` + `.cursor/mcp.json`. `CONNECT-3DAI.md` |
 | WebSearch / WebFetch | ready · מקורי Cursor | כלי native בסוכן |
 | GenerateImage | ready · מקורי Cursor | כלי native; אינסטגרם עדיין Canva קודם |
 | Superdesign | skill · בלי CLI login | פלאגין על הדיסק |
@@ -93,6 +94,7 @@
 3. **`tools.image`** — GenerateImage + Canva `generate-design`. אינסטגרם עדיין Canva קודם.
 4. **גיליון דרך Drive** — `packages/vfbooks/SHEETS.md`. בלי workbook ID מומצא.
 5. **שליחה מ־HQ** — Gmail `send_message` מותר. IG: `vfigos/SEND.md` + `constitution/SEND.md`. Treg לא רלוונטי.
+6. **3D AI Studio** — HTTP `threedaistudio` → `https://mcp.3daistudio.com/mcp`. Desktop: `.cursor/mcp.json`. Cloud: Team MCP (Dashboard → Integrations & MCP) + OAuth ב־cursor.com/agents. עדיין `needsAuth` עד Connect. פלייבוק `vfprod/3DAISTUDIO.md` + `CONNECT-3DAI.md`.
 
 ## מה לא הותקן — ולמה
 
@@ -106,6 +108,7 @@
 | WhatsApp MCP | חיפוש/טיוטה רק אחרי מספר מהבעלים. שליחה אסורה |
 | Studio MCP Hub / instapdown | מפה ב־`docs/MCP-FIT.md`. חיבור ב־Cursor Settings, לא סוד בגיט |
 | FCC / `fcc-server` | נעול. לא על Cloud Agent |
+| 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט. המחבר הרשמי הוא HTTP OAuth |
 | SharePoint / Outlook / Notion / Slack | לא ערימת שדרות |
 
 ## עדיפות Connectors לפי מושב

@@ -31,7 +31,7 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 | New inquiry | `vfconvert` | `@email-intelligence-engineer` then `@discovery-coach` | Gmail **read** the named thread; **reply** when the draft is ready |
 | Quote draft | `vfsales` + `vfcopy` | `@sales-engineer` `@content-creator` | After `vfcost`. One CTA. HQ **sends** Gmail via tool (no invented ₪) |
 | Cost / ledger | `vfcost` `vfbooks` | `@pricing-analyst` `@bookkeeper-controller` | Gmail label חשבונות; never invent ₪ |
-| Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive search **or create** by job name |
+| Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive search **or create** by job name; 3D AI Studio mesh via `vfprod/3DAISTUDIO.md` |
 | Covers / content pack | `vfcovers` `vfgrowth` | `@visual-storyteller` `@image-prompt-engineer` | Canva first; Superdesign failover |
 | Marketing frameworks | `vfmskill` | `@content-creator` `@growth-hacker` | Curated Corey Haines skills. Read `.agents/product-marketing.md` first. No send. |
 | Reel plan / timelapse cut | `vfom` | `@visual-storyteller` `@instagram-curator` | OpenMontage crews; Canva stills; no Remotion vendor |
@@ -72,5 +72,6 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 - **Sheets:** Drive `create_file` spreadsheet or CSV export (`vfbooks/SHEETS.md`). Do not invent rows or ₪.
 - **Instagram send:** `vfigos/SEND.md`. Publish tool if connected; else Canva+Drive+Gmail same turn.
 - **FCC (Free Claude Code):** not on this Cloud Agent. Map is `vffcc`. Failover → research desks in `constitution/ORCHESTRA.md`.
+- **3D AI Studio:** owner subscription. Site first (`packages/vfprod/3DAISTUDIO.md`). Official MCP = OAuth from their Settings — not on this Cloud Agent. No API key in git. Down → site + Drive. Same `vlicense` gate as Meshy/Tripo. No print from HQ.
 
 When a `@slug` is mentioned, follow that specialist **and** these laws.
