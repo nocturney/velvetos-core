@@ -110,15 +110,17 @@ This environment could not copy Origin trees:
 1. `origin` CLI: not logged in (needs `origin auth login` or `CURSOR_API_KEY`).
 2. `git clone https://origin.cursor.com/{owner}/{repo}.git` rejected the GitHub token.
 3. Pack cloud-agent ids were not readable from this HQ environment (different Origin repos / environments).
-4. Slugs for `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, and `vfbriefux` were not in the known list and could not be discovered without Origin list access.
+4. Slugs for `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, and `vfbriefux` stay `unknown`. Do not invent them. HQ overlay (`SKILL.md` + `hq/`) is the office. Playbook: [`docs/ORIGIN-SLUGS.md`](docs/ORIGIN-SLUGS.md). Recheck 2026-08-31: this token’s `origin repo list` is HQ-only; known `tmp-*` slugs return `token is not scoped`; pack bcIds are not readable here.
 
-Folders exist so a later vendor run can drop the real trees in place.
+Folders exist so a later vendor run can drop the real trees in place. `scripts/vendor-origin-packs.sh` SKIPs empty slugs. Report: `python3 scripts/discover-origin-slugs.py`.
 
 ## Vendor actual source later
 
+Needs an Origin token **scoped for `christian-velvet/tmp-*`**, not only HQ. Login alone is not enough. Fill a slug only from the pack agent page or a scoped list — never invent. See [`docs/ORIGIN-SLUGS.md`](docs/ORIGIN-SLUGS.md).
+
 ```bash
-origin auth login
-# or: export CURSOR_API_KEY=…
+python3 scripts/discover-origin-slugs.py
+# only after a scoped token or a copied slug:
 ./scripts/vendor-origin-packs.sh
 ```
 

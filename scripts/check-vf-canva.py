@@ -133,6 +133,20 @@ def main() -> None:
     if plugin.get("name") != "vf-canva":
         fail("workspace plugin name must be vf-canva")
 
+    plugin_dir = PLUGIN.parent
+    for key in ("skills", "rules", "mcpServers"):
+        rel = plugin.get(key)
+        if not rel or not isinstance(rel, str):
+            fail(f".cursor-plugin/plugin.json must set {key} to a relative path")
+        target = (plugin_dir / rel).resolve()
+        if not target.exists():
+            fail(
+                f".cursor-plugin/plugin.json {key}={rel!r} resolves to missing "
+                f"{target.relative_to(ROOT)} — paths are relative to .cursor-plugin/"
+            )
+    if (plugin_dir / plugin["mcpServers"]).resolve() != MCP.resolve():
+        fail(".cursor-plugin/plugin.json mcpServers must point at .cursor/mcp.json")
+
     for slug in OFFICIAL_SKILLS:
         skill_md = ROOT / ".cursor" / "skills" / slug / "SKILL.md"
         if not skill_md.is_file():

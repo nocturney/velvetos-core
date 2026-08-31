@@ -17,6 +17,7 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Google Drive** | Files and folders; **`create_file`**; Sheets **export** when a workbook is named (`vfbooks/SHEETS.md`) | `vfprod`, `vfcovers`, `vfsku`, `vfresearch`, `vfbooks` |
 | **Google Calendar** | Events | `vfseason`, `vfops`, `vfsales` |
 | **Canva** | Edit designs, brand-check, bulk-create, resize, `generate-design`. **Ready** on this Cloud Agent (2026-08-31, `DAGoYmCu4c4`) | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
+| **3D AI Studio** | Text/image → 3D mesh, STL/3MF export. **HTTP** `https://mcp.3daistudio.com/mcp` — OAuth on Desktop only | `vfprod`, `vfsku`, `vlicense` |
 | **WebSearch / WebFetch** | Live web + URL fetch (ChatGPT/Gemini/Perplexity/Grok browse equivalent) | `vfresearch`, `vfgrowth` |
 | **GenerateImage** | User-asked stills. Instagram still Canva-first | `vfcovers`, `vfbriefux` |
 | **Treg** | **Not relevant** — do not login or `call` | — |
@@ -114,7 +115,6 @@ Do not add these “because they exist on the list.” Add them when Christian c
 | Xero or QuickBooks | [XeroAPI/xero-mcp-server](https://github.com/XeroAPI/xero-mcp-server) or Synder importer | `vfbooks` |
 | A Stripe checkout | official Stripe via a thin wrapper (APIFold lists one) | `vfbooks`, `vfsales` |
 | Google Business Profile not yet in Treg | [localseodata/mcp-server](https://github.com/localseodata/mcp-server) | `vfgrowth`, `vfinsights` |
-| **3D AI Studio** (owner subscription, confirmed 31.8.2026) | Official connector from their Settings → AI Assistants (MCP). OAuth, no API key. Playbook: [`vfprod/3DAISTUDIO.md`](../packages/vfprod/3DAISTUDIO.md). Do not invent the server URL; do not commit a Bearer key. Community `uvx mcp-server-3daistudio` is Mac-only later. | `vfprod`, `vlicense`, `vfsku` |
 | Reels cut from covers on the Mac | [video-creator/ffmpeg-mcp](https://github.com/video-creator/ffmpeg-mcp.git) or [06ketan/slideshot](https://github.com/06ketan/slideshot) | `vfigos`, `vfcovers` |
 | QR on SKU / proof cards | [qr-maker-io/mcp-server](https://github.com/qr-maker-io/mcp-server) | `vfsku` |
 | Floor “job done” pings | [teddyzxcv/ntfy-mcp](https://github.com/teddyzxcv/ntfy-mcp) | `vfprod` |

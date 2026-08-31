@@ -11,8 +11,16 @@ GAP = ROOT / "packages" / "vfmcp" / "GAP.md"
 FIT = ROOT / "docs" / "MCP-FIT.md"
 SHEETS = ROOT / "packages" / "vfbooks" / "SHEETS.md"
 DESK = ROOT / ".cursor" / "vf-desk.json"
+MCP = ROOT / ".cursor" / "mcp.json"
 ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
 ORIGIN = ROOT / "packages" / "vfmcp" / "ORIGIN.md"
+CONNECT_3DAI = ROOT / "packages" / "vfprod" / "CONNECT-3DAI.md"
+PLAYBOOK_3DAI = ROOT / "packages" / "vfprod" / "3DAISTUDIO.md"
+
+REQUIRED_MCP = {
+    "canva": "https://mcp.canva.com/mcp",
+    "threedaistudio": "https://mcp.3daistudio.com/mcp",
+}
 
 NEEDLES_GAP = (
     "WebSearch",
@@ -24,7 +32,6 @@ NEEDLES_GAP = (
     "Treg",
     "3D AI Studio",
 )
-STUDIO3D = ROOT / "packages" / "vfprod" / "3DAISTUDIO.md"
 NEEDLES_SHEETS = (
     "חסר גיליון",
     "exportMimeType",
@@ -38,9 +45,20 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (GAP, FIT, SHEETS, DESK, ORCHESTRA, ORIGIN, STUDIO3D):
+    for path in (GAP, FIT, SHEETS, DESK, MCP, ORCHESTRA, ORIGIN, CONNECT_3DAI, PLAYBOOK_3DAI):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
+
+    mcp = json.loads(MCP.read_text())
+    servers = mcp.get("mcpServers") or {}
+    for name, expected_url in REQUIRED_MCP.items():
+        row = servers.get(name) or {}
+        url = str(row.get("url") or "")
+        if expected_url not in url:
+            fail(f".cursor/mcp.json must register {name} url {expected_url}")
+        args = " ".join(row.get("args") or [])
+        if "mcp-remote" in args or row.get("command") == "npx":
+            fail(f".cursor/mcp.json {name} must use HTTP url, not mcp-remote")
 
     gap = GAP.read_text()
     for needle in NEEDLES_GAP:
@@ -67,16 +85,18 @@ def main() -> None:
         fail("MCP-FIT.md must list WebSearch as already wired")
     if "3D AI Studio" not in fit:
         fail("MCP-FIT.md must map the owner 3D AI Studio account")
-    studio = STUDIO3D.read_text()
-    for needle in ("אין מפתח בגיט", "vlicense", "STL", "OAuth", "לא על Cloud Agent", "CONNECT-3DAI.md"):
+
+    studio = PLAYBOOK_3DAI.read_text()
+    for needle in ("אין מפתח בגיט", "vlicense", "STL", "OAuth", "CONNECT-3DAI.md", "לא על Cloud Agent"):
         if needle not in studio:
             fail(f"3DAISTUDIO.md must mention {needle}")
-    connect = (ROOT / "packages" / "vfprod" / "CONNECT-3DAI.md").read_text()
-    for needle in ("AI Assistants (MCP)", "Marketplace", "support@3daistudio.com"):
-        if needle not in connect:
-            fail(f"CONNECT-3DAI.md must mention {needle}")
     if "₪" in studio and "X ₪" not in studio:
         fail("3DAISTUDIO.md must not invent a sale ₪")
+
+    connect = CONNECT_3DAI.read_text()
+    for needle in ("threedaistudio", "mcp.3daistudio.com", "AI Assistants (MCP)"):
+        if needle not in connect:
+            fail(f"CONNECT-3DAI.md must mention {needle}")
 
     desk = json.loads(DESK.read_text())
     tools = desk.get("tools") or {}
@@ -87,12 +107,15 @@ def main() -> None:
             fail(f"vf-desk.json tools.{key} must declare failover")
     if (tools.get("canva") or {}).get("status") != "ready":
         fail("vf-desk.json canva.status must be ready after Cloud Agent verify")
-    t3d = tools.get("threedaistudio") or {}
-    if not t3d:
+
+    threed = tools.get("threedaistudio") or {}
+    if not threed:
         fail("vf-desk.json tools missing threedaistudio")
-    if not (t3d.get("failover") or ""):
-        fail("vf-desk.json tools.threedaistudio must declare failover")
-    if "3DAISTUDIO.md" not in (t3d.get("useWhen") or "") and "3DAISTUDIO.md" not in (t3d.get("rule") or ""):
+    if threed.get("mcp") != REQUIRED_MCP["threedaistudio"]:
+        fail("vf-desk.json threedaistudio.mcp must match .cursor/mcp.json")
+    if not (threed.get("failover") or ""):
+        fail("vf-desk.json threedaistudio must declare failover")
+    if "3DAISTUDIO.md" not in (threed.get("useWhen") or "") and "3DAISTUDIO.md" not in (threed.get("rule") or ""):
         fail("vf-desk.json threedaistudio must point at 3DAISTUDIO.md")
 
     orchestra = ORCHESTRA.read_text()
@@ -106,7 +129,7 @@ def main() -> None:
     if "GAP.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention GAP.md")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio")
+    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio-mcp")
 
 
 if __name__ == "__main__":

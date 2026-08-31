@@ -6,7 +6,7 @@
     "name": "Velvet Factory"
   },
   "keywords": ["canva", "instagram", "velvet-factory"],
-  "skills": "./.cursor/skills/",
-  "rules": "./.cursor/rules/",
-  "mcpServers": "./.cursor/mcp.json"
+  "skills": "../.cursor/skills/",
+  "rules": "../.cursor/rules/",
+  "mcpServers": "../.cursor/mcp.json"
 }

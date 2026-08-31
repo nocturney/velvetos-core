@@ -39,7 +39,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 |---|---|---|
 | **Canva** (`needsAuth` / אין כלים) | `packages/vfcanva/studio/render.py` → אם גם זה נכשל: Superdesign | לא ממציאים קישור Canva |
 | **Superdesign** | Canva אם מחובר · אחרת `studio/render.py` | לא עוצרים את חבילת התוכן |
-| **Mobbin** (אין namespace) | תבניות `vfbriefux` / Superdesign לגרפיקת בריף | לא ממציאים מסכי אפליקציה |
+| **Mobbin** (אין namespace) | `vfbriefux/MAIL.html` · `hq/brief-email.html` (effective-html) · Superdesign | לא ממציאים מסכי אפליקציה |
 | **Treg** | **לא בשימוש.** WebSearch / תזמורת / «אין ספירה» | לא login · לא `call` |
 | **WebSearch / WebFetch** (`tools.web`) | תזמורת ChatGPT+Gemini+Perplexity | לא ממציאים גוף חסום |
 | **GenerateImage** (`tools.image`) | Canva `generate-design` → Superdesign → `studio/render.py` | לא ממציאים קישור Canva |
@@ -53,7 +53,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 
 | מה נפל | מעבירים מיד ל־ | לא עושים |
 |---|---|---|
-| **Grok Bot** — טיוטות / מחקר / בריף | Cursor HQ + תזמורת + **Gmail send** | לא סרק · לא המצאה |
+| **Grok Bot** — טיוטות / מחקר / בריף | Cursor HQ + תזמורת + **Gmail send** (בריף = `htmlBody` תצוגה 3) | לא סרק · לא המצאה |
 | **Grok Bot** — פרסום | `vfigos/SEND.md` · `#נשלח-מ-HQ` | לא מחכים לגרוק · לא בוסט · לא אוטו־DM |
 | **Grok Bot** — **פרסום חי** | `LIVE-PACKET` + כלים (Canva+Gmail+Drive) | אדם רק אם הכלים נפלו |
 | דחוף ללקוח (שיחה) | אדם וואטסאפ `050-2517000` | אין MCP וואטסאפ |
@@ -71,8 +71,8 @@ Cursor, לא Grok:
 2. פותח **שלושה** צ'אטים חדשים — ChatGPT, Gemini, **וגם** Perplexity. אותה שאלה לשלושתם (תבנית ב־`vfresearch/DAILY.md`).
 3. כלי נפל באמצע → **failover מיד** (טבלה למעלה). לא מחכים לסיום כל השלושה אם אחד כבר חסום.
 4. מטמיע רק מה ששימושי **מיד** בפק קיים. אין פק לרעיון.
-5. כותב שורת «מה נבנה / יועל» לבלוק `05-משרד` בבריף 07:00 (כולל «failover: X→Y» אם היה).
-6. ריק או אין הטמעה = **«אין חדש במשרד»**. לא ממלאים רעש.
+5. כותב שורת «מה נבנה / יועל» ל־`packages/vfops/data/research.md` (בלוק `05-משרד` בבריף 07:00; כולל «failover: X→Y» אם היה).
+6. ריק או אין הטמעה = **«אין חדש במשרד»** בדיוק. לא ממלאים רעש.
 
 מעבר ערב (כמו 30.8 אחרי הנעילה): אותה פרוצדורה, התוצר נופל לבריף **למחרת** 07:00.
 
@@ -82,6 +82,7 @@ Cursor, לא Grok:
 |---|---|---|
 | שגרה, בריף, שרשרת, תור | `vfops` | פק «מנהל» חדש |
 | רתמה / מדריך / סנסור / לולאה | `vfharness` + `AGENTS.md` | מסגרת סוכנים שנייה |
+| רשימת orchestrators / ADE / נחיל | `vfe2b` + `vfharness` (דפוס על `crews/run.md`) | פק תזמורת חדש, amux, OpenClaw |
 | מק״ט חוזר, קל להדפסה, כרטיס בלי ₪ | `vfsku` + `vlicense` | קטלוג מחירים |
 | פנייה → וואטסאפ → איסוף | `vfconvert` | ManyChat / בוט 24/7 |
 | כיתוב, FAQ, ארבעה שדות בירור | `vfcopy` | שליחה חיה |
@@ -122,7 +123,7 @@ packages/vfresearch/sources/YYYY-MM-DD-orchestra.md
 
 מה נשאל · מה חזר (או «דולג — חומה/הזדהות») · **failover שבוצע** · מה הוטמע · לאיזה פק · מה דולג.
 
-בלוק `05` לבריף — `vfops/BRIEF.md`.
+בלוק `05` לבריף — `vfops/data/research.md` (תבנית: `vfops/BRIEF.md`).
 
 ## פעם בשבוע — קישורי השראה (לא צ'אט חדש)
 

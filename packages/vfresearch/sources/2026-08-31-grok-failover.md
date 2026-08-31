@@ -1,0 +1,64 @@
+# מעבר Grok · failover מכסה חיה · 2026-08-31 (Asia/Jerusalem)
+
+## מה נשאל
+
+הבעלים: «ניצלנו 100% שימוש מגרוק בוט».
+
+זה **הפעלה חיה** של הנוהל, לא בניית הפלייבוק (הפלייבוק כבר ב־`docs/GROK-FAILOVER.md`).
+
+## מסלול שנבחר
+
+עדכון בעלים (אותו בוקר): Grok חוזר בעוד **5 ימים** — לדאוג לכל התהליכים, כולל מיילים ופרסומים חיים.
+
+G005 משובץ לחמישי 3.9 (לפני החידוש) → `#פרסום-חי-דחוף` + LIVE-PACKET לאדם.  
+מיילי בריף 31.8–5.9 → חבילת הדבקה לאדם. HQ **לא** שולח ולא לוחץ Publish.
+
+## מה הוטמע באותו רגע
+
+| ארטיפקט | פק | סטטוס |
+|---|---|---|
+| VF-G005 d12b קרוסלה | `vfcopy` + `vfcovers` + `vfigos` | `live/G005-LIVE-PACKET.md` · `#פרסום-חי-דחוף` · חמישי 3.9.2026 12:00 |
+| משמרת 5 ימים | `vfops` | `OUTAGE-5D.md` |
+| מיילי בריף להדבקה | `vfops` | `human-send/MAIL-PACK.md` · אדם שולח |
+| בריף 31.8 שבעה בלוקים | `vfops` | טיוטה ב־`BRIEF-2026-08-31.md` · HQ **לא** שולח ג׳ימייל |
+| Checkpoint | `vfharness` | `state/grok-failover-2026-08-31.json` · `running` |
+
+## Failover
+
+| נפל | עבר ל־ |
+|---|---|
+| Grok Bot — מכסה שבועית 100% — טיוטות / בריף | Cursor HQ על פקים קיימים |
+| Grok Bot — פרסום G005 (לפני חידוש) | LIVE-PACKET → **אדם** מעלה |
+| Grok Bot — שליחת בריף 07:00 | MAIL-PACK → **אדם** מדביק ב־Gmail · אין send מ־HQ |
+| תזמורת ChatGPT / Gemini / Perplexity (אין MCP כאן) | דולג גוף · «אין חדש במשרד» מתזמורת · `2026-08-31-orchestra.md` |
+| Canva — חיפוש G005 ריק | שקפי `vfcovers/g005/slides/` שכבר על הדיסק · אין קישור Canva מומצא |
+
+## מקורות שנקראו (לא הומצאו)
+
+- לוח `nocturney@gmail.com` 31.8.2026 Asia/Jerusalem: **אין אירוע / אין חלון איסוף**.
+- תיבה `in:inbox newer_than:1d`: אין פניית הדפסה מלקוח. מיילי ספק/אבטחה/בריפי אתמול בלבד.
+- G001 עלה 30.8 (`HANDOFF-he.md`) — Insights: **אין ספירה**.
+- Canva MCP `ready` · `search-designs` «G005» → `items: []`.
+- תווית `[Gmail]/חשבונות` `newer_than:7d`: ריק · **אין ספירה**.
+
+## מה דולג
+
+- Publish / Gmail send / וואטסאפ / בוסט / אוטו־DM מ־HQ.
+- פוסט פיד שני בלי הוכחת רצפה.
+- ₪ / Insights / קישור Canva / סצנת רצפה / גוף תזמורת.
+- אירוע אישי בלוח — לא משרד, לא בבריף בשם.
+
+## בלוק 05
+
+מה נבנה / יועל: פיילאובר 5 ימים — LIVE-PACKET G005 + מיילי בריף להדבקת אדם (`vfops` / `vfigos`).
+
+## כלים שנפתחו באותו בוקר
+
+- Gmail `create_draft` בריף 31.8 → `r-6454661077961545246` (לא send).
+- Calendar `create_event` G005 חמישי 12:00 → `kppd0t8mf1a07li78e4hssker8`.
+- Canva MCP `ready`. מפה: `vfharness/playbooks/grok-outage-tools.md`.
+- Instagram Publish / `send_message` — נשארו נעולים (אין MCP העלאה).
+
+## יציאה
+
+כשהבעלים אומר «מכסת Grok חזרה» — מוסרים ל־Grok רק `#מוכן-ל-Grok` שנותר. Checkpoint → `done`.

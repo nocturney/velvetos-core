@@ -10,6 +10,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages" / "manifest.json"
 CATALOG = ROOT / "packages" / "vfe2b" / "catalog.json"
+ORCH = ROOT / "packages" / "vfe2b" / "orchestrators.json"
+ORCH_MD = ROOT / "packages" / "vfe2b" / "ORCHESTRATORS.md"
+ORCH_DOC = ROOT / "docs" / "ORCHESTRATORS.md"
 CREWS = ROOT / "packages" / "vfe2b" / "crews"
 RUN_CARDS = ROOT / "packages" / "vfe2b" / "fixtures" / "run-cards.json"
 RUN_SKILL = ROOT / ".cursor" / "skills" / "vf-run" / "SKILL.md"
@@ -69,6 +72,83 @@ def check_run_card_fixtures() -> int:
             continue
         fail(f"fail card {name}: expected to reject")
     return len(ok_rows) + len(fail_rows)
+
+
+def check_orchestrators(pack_names: set[str]) -> tuple[int, int]:
+    if not ORCH.is_file():
+        fail(f"missing {ORCH}")
+    if not ORCH_MD.is_file():
+        fail(f"missing {ORCH_MD}")
+    if not ORCH_DOC.is_file():
+        fail(f"missing {ORCH_DOC}")
+    data = json.loads(ORCH.read_text())
+    if data.get("name") != "vfe2b-orchestrators":
+        fail("orchestrators.json name must be vfe2b-orchestrators")
+    if data.get("parent") != "vfe2b":
+        fail("orchestrators.json parent must be vfe2b")
+    src = data.get("source") or {}
+    if src.get("url") != "https://github.com/andyrewlee/awesome-agent-orchestrators":
+        fail("orchestrators source url mismatch")
+    if src.get("listedCount") != 194:
+        fail(f"orchestrators listedCount expected 194, got {src.get('listedCount')}")
+    if "existing" not in (data.get("rule") or "") and "existing" not in ORCH_MD.read_text():
+        fail("orchestrator overlay must say embed onto existing crews")
+    locks = set(data.get("locks") or [])
+    for need in (
+        "hq-send-via-tools",
+        "no-second-orchestrator",
+        "no-invented-prices",
+        "no-auto-dm",
+    ):
+        if need not in locks:
+            fail(f"orchestrators.json missing lock {need}")
+    picks = data.get("picks") or []
+    if len(picks) < 12:
+        fail(f"orchestrators expected at least 12 picks, got {len(picks)}")
+    embed_count = 0
+    crew_refs: set[str] = set()
+    for i, pick in enumerate(picks):
+        name = pick.get("name") or f"orch#{i}"
+        verdict = pick.get("verdict")
+        if verdict not in VERDICTS:
+            fail(f"{name}: verdict {verdict!r}")
+        if verdict == "embed":
+            embed_count += 1
+        packs = pick.get("packs") or []
+        if not packs:
+            fail(f"{name}: no packs")
+        for p in packs:
+            if p not in pack_names:
+                fail(f"{name}: unknown pack {p!r}")
+        crew = pick.get("crew")
+        if not crew:
+            fail(f"{name}: missing crew")
+        crew_refs.add(crew)
+        if not (ROOT / "packages" / "vfe2b" / crew).is_file():
+            fail(f"{name}: crew file missing {crew}")
+    if embed_count < 8:
+        fail(f"orchestrators expected at least 8 embed picks, got {embed_count}")
+    if "crews/run.md" not in crew_refs:
+        fail("orchestrators must reference crews/run.md")
+    if "crews/morning-brief.md" not in crew_refs:
+        fail("orchestrators must reference crews/morning-brief.md")
+    run_text = (CREWS / "run.md").read_text()
+    for token in (
+        "דופק",
+        "אימות",
+        "ארטיפקט",
+        "working",
+        "blocked",
+        "idle",
+        "awesome-agent-orchestrators",
+        "SEND.md",
+    ):
+        if token not in run_text:
+            fail(f"crews/run.md missing orchestrator token {token!r}")
+    lock_text = (ROOT / "packages" / "vfe2b" / "LOCK.md").read_text()
+    if "no-second-orchestrator" not in lock_text and "תזמורת שנייה" not in lock_text:
+        fail("LOCK.md must skip a second orchestrator runtime")
+    return len(picks), embed_count
 
 
 def main() -> None:
@@ -135,6 +215,7 @@ def main() -> None:
         "no-invented-prices",
         "no-invented-insights",
         "no-second-ade",
+        "no-second-orchestrator",
     ):
         if need not in locks:
             fail(f"missing lock {need}")
@@ -167,11 +248,13 @@ def main() -> None:
         fail("vf-run skill must refuse an Orca install")
 
     cards = check_run_card_fixtures()
+    orch_picks, orch_embed = check_orchestrators(pack_names)
 
     print(
         f"OK picks={len(picks)} embed={embed_count} "
         f"crews={len(REQUIRED_CREWS)} packs={len(pack_names)} "
-        f"listed={listed} run_cards={cards}"
+        f"listed={listed} run_cards={cards} "
+        f"orch={orch_picks}/{orch_embed}"
     )
 
 

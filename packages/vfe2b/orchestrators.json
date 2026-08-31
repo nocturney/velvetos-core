@@ -1,0 +1,413 @@
+{
+  "name": "vfe2b-orchestrators",
+  "parent": "vfe2b",
+  "title": "Awesome-agent-orchestrators overlay",
+  "rule": "Embed orchestrator patterns onto existing vfe2b crews and vfharness. Do not install a second orchestrator.",
+  "source": {
+    "title": "andyrewlee/awesome-agent-orchestrators",
+    "url": "https://github.com/andyrewlee/awesome-agent-orchestrators",
+    "readAt": "2026-08-31",
+    "listedCount": 194,
+    "sections": {
+      "parallel-terminal": 15,
+      "parallel-desktop-web": 56,
+      "multi-agent-swarms": 25,
+      "autonomous-loop-runners": 11,
+      "autonomous-task-runners": 19,
+      "agent-infrastructure": 19,
+      "personal-assistants": 32,
+      "resting": 17
+    }
+  },
+  "writeup": "packages/vfe2b/ORCHESTRATORS.md",
+  "report": "docs/ORCHESTRATORS.md",
+  "locks": [
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
+    "no-invented-prices",
+    "no-invented-insights",
+    "no-unattended-autonomy",
+    "no-second-ade",
+    "no-second-orchestrator",
+    "human-on-whatsapp",
+    "no-printer-from-hq"
+  ],
+  "verdicts": [
+    "embed",
+    "later",
+    "skip"
+  ],
+  "picks": [
+    {
+      "name": "Orca",
+      "url": "https://github.com/stablyai/orca",
+      "section": "parallel-desktop-web",
+      "verdict": "embed",
+      "pattern": "isolate a job, handoff vs supervise, three terminal states",
+      "packs": ["vfops", "vfconvert", "vfsales", "vfcopy", "vfcovers", "vfigos"],
+      "crew": "crews/run.md",
+      "note": "Already the משמרת overlay. Pattern only. Do not brew-install orca."
+    },
+    {
+      "name": "herdr",
+      "url": "https://github.com/herdrdev/herdr",
+      "section": "parallel-terminal",
+      "verdict": "embed",
+      "pattern": "pulse: working / blocked / idle on one job",
+      "packs": ["vfops"],
+      "crew": "crews/run.md",
+      "note": "Card field דופק only. Do not install a tmux multiplexer."
+    },
+    {
+      "name": "Fusion",
+      "url": "https://github.com/Runfusion/Fusion",
+      "section": "multi-agent-swarms",
+      "verdict": "embed",
+      "pattern": "plan → review → execute gates on one mission",
+      "packs": ["vfops", "vfharness"],
+      "crew": "crews/run.md",
+      "note": "Harness loop already is the gate. No hierarchical swarm runtime."
+    },
+    {
+      "name": "kodo",
+      "url": "https://github.com/ikamensh/kodo",
+      "section": "multi-agent-swarms",
+      "verdict": "embed",
+      "pattern": "a separate pass verifies the result before done",
+      "packs": ["vfops", "vfharness"],
+      "crew": "crews/run.md",
+      "note": "אימות = sensor or named field check. Not a second coding agent."
+    },
+    {
+      "name": "tutti",
+      "url": "https://github.com/nutthouse/tutti",
+      "section": "multi-agent-swarms",
+      "verdict": "embed",
+      "pattern": "typed artifact handoff on disk between steps",
+      "packs": ["vfops", "vfresearch", "vfcopy"],
+      "crew": "crews/run.md",
+      "note": "ארטיפקט path required. No inter-agent mailbox server."
+    },
+    {
+      "name": "gastown",
+      "url": "https://github.com/gastownhall/gastown",
+      "section": "multi-agent-swarms",
+      "verdict": "embed",
+      "pattern": "coordinator + health watchdog + no silent merge",
+      "packs": ["vfops", "vfharness"],
+      "crew": "crews/run.md",
+      "note": "Circuit breaker already: three misses → stop. No 20-agent fleet."
+    },
+    {
+      "name": "5dive",
+      "url": "https://github.com/5dive-ai/5dive",
+      "section": "multi-agent-swarms",
+      "verdict": "embed",
+      "pattern": "named roles escalate to a human over chat",
+      "packs": ["vfconvert", "vfsales"],
+      "crew": "crews/inquiry.md",
+      "note": "Human WhatsApp 050-2517000. No Telegram bot from HQ."
+    },
+    {
+      "name": "paperclip",
+      "url": "https://github.com/paperclipai/paperclip",
+      "section": "multi-agent-swarms",
+      "verdict": "embed",
+      "pattern": "approval gates and budgets before a worker claims a ticket",
+      "packs": ["vfsales", "vfcost"],
+      "crew": "crews/inquiry.md",
+      "note": "decision_gate for sale ₪. No unattended ticket claimer."
+    },
+    {
+      "name": "fractal",
+      "url": "https://github.com/plasma-ai/fractal",
+      "section": "autonomous-loop-runners",
+      "verdict": "embed",
+      "pattern": "bounded retry: depth, cost, time",
+      "packs": ["vfharness"],
+      "crew": "crews/run.md",
+      "note": "AGENTS.md loop: 2 retries then escalate. No recursive child-agent farm."
+    },
+    {
+      "name": "MartinLoop",
+      "url": "https://github.com/Keesan12/martin-loop",
+      "section": "autonomous-loop-runners",
+      "verdict": "embed",
+      "pattern": "cap spend, verify, roll back, leave a receipt",
+      "packs": ["vfharness"],
+      "crew": "crews/run.md",
+      "note": "Checkpoint under vfharness/state is the receipt. No unattended spend."
+    },
+    {
+      "name": "ralph-claude-code",
+      "url": "https://github.com/frankbria/ralph-claude-code",
+      "section": "autonomous-loop-runners",
+      "verdict": "embed",
+      "pattern": "exit detection — stop when the work is actually finished",
+      "packs": ["vfops"],
+      "crew": "crews/run.md",
+      "note": "worker_done only after אימות. No Ralph loop on ₪ or send."
+    },
+    {
+      "name": "ralphex",
+      "url": "https://github.com/umputun/ralphex",
+      "section": "autonomous-loop-runners",
+      "verdict": "embed",
+      "pattern": "fresh context per retry; do not keep guessing",
+      "packs": ["vfharness", "vfresearch"],
+      "crew": "crews/research.md",
+      "note": "Retry re-reads the source. Missing stays חסר."
+    },
+    {
+      "name": "Taskuary",
+      "url": "https://github.com/ldbumble/taskuary",
+      "section": "autonomous-task-runners",
+      "verdict": "embed",
+      "pattern": "triage inbox into one supervised run",
+      "packs": ["vfops", "vfbriefux"],
+      "crew": "crews/morning-brief.md",
+      "note": "Gmail read then one job. HQ may send the 07:00 brief. No unattended queue drain."
+    },
+    {
+      "name": "NEEDLE",
+      "url": "https://github.com/jedarden/NEEDLE",
+      "section": "autonomous-task-runners",
+      "verdict": "embed",
+      "pattern": "explicit state machine; no side channel",
+      "packs": ["vfops"],
+      "crew": "crews/run.md",
+      "note": "Exactly one מצב. Coordination is the card, not a second bus."
+    },
+    {
+      "name": "Crewplane",
+      "url": "https://github.com/crewplaneai/crewplane",
+      "section": "agent-infrastructure",
+      "verdict": "embed",
+      "pattern": "reviewable Markdown workflow + resume from completed nodes",
+      "packs": ["vfharness", "vfops"],
+      "crew": "crews/run.md",
+      "note": "Guides + checkpoint. Do not install their CLI."
+    },
+    {
+      "name": "LionClaw",
+      "url": "https://github.com/moshthepitt/lionclaw",
+      "section": "agent-infrastructure",
+      "verdict": "embed",
+      "pattern": "durable workers with explicit state, skills, checkpoints",
+      "packs": ["vfharness"],
+      "crew": "crews/run.md",
+      "note": "vfharness/state is the control plane. No extra daemon."
+    },
+    {
+      "name": "Open Multi-Agent",
+      "url": "https://github.com/open-multi-agent/open-multi-agent",
+      "section": "agent-infrastructure",
+      "verdict": "embed",
+      "pattern": "coordinator turns a goal into steps; approvals and resume",
+      "packs": ["vfharness", "vfops"],
+      "crew": "crews/run.md",
+      "note": "One existing crew, not a DAG of many coding agents."
+    },
+    {
+      "name": "Claudexor",
+      "url": "https://github.com/razzant/claudexor",
+      "section": "agent-infrastructure",
+      "verdict": "embed",
+      "pattern": "quota-aware rotation between desks",
+      "packs": ["vfharness", "vfigos"],
+      "crew": "crews/content.md",
+      "note": "Grok quota → HQ tools same turn (SEND.md). No subscription rotator binary."
+    },
+    {
+      "name": "humanlayer",
+      "url": "https://github.com/humanlayer/humanlayer",
+      "section": "parallel-desktop-web",
+      "verdict": "embed",
+      "pattern": "human-in-the-loop gate on hard problems",
+      "packs": ["vfsales", "vfcost"],
+      "crew": "crews/inquiry.md",
+      "note": "₪ and customer WhatsApp stay human. Repo itself is largely deprecated — keep the gate, skip the install."
+    },
+    {
+      "name": "ivy-tendril",
+      "url": "https://github.com/Ivy-Interactive/Ivy-Tendril",
+      "section": "parallel-desktop-web",
+      "verdict": "embed",
+      "pattern": "plan-based lifecycle with verification and human checkpoints",
+      "packs": ["vfops", "vfharness"],
+      "crew": "crews/run.md",
+      "note": "Same as Fusion + kodo on one crew. No extra ADE."
+    },
+    {
+      "name": "Dex",
+      "url": "https://github.com/francescoalemanno/dex",
+      "section": "autonomous-loop-runners",
+      "verdict": "embed",
+      "pattern": "human-gated plan, then a review loop that can stop at a dead end",
+      "packs": ["vfresearch"],
+      "crew": "crews/research.md",
+      "note": "Planner questions first. Dead end = חסר, not an invented body."
+    },
+    {
+      "name": "Julius / books verify",
+      "url": "https://julius.ai/",
+      "section": "agent-infrastructure",
+      "verdict": "embed",
+      "pattern": "ask existing numbers; verify the citation before answering",
+      "packs": ["vfbooks", "vfcost", "vfinsights"],
+      "crew": "crews/books-data.md",
+      "note": "Already in the e2b catalog. Orchestrator add: אימות on the cited file."
+    },
+    {
+      "name": "amux",
+      "url": "https://github.com/andyrewlee/amux",
+      "section": "parallel-terminal",
+      "verdict": "skip",
+      "pattern": "parallel coding agents in git worktrees",
+      "packs": ["vfbiz"],
+      "crew": "crews/run.md",
+      "note": "Second coding office. Cursor is the desk."
+    },
+    {
+      "name": "OpenClaw",
+      "url": "https://github.com/openclaw/openclaw",
+      "section": "personal-assistants",
+      "verdict": "skip",
+      "pattern": "always-on personal assistant across chat apps",
+      "packs": ["vfbiz"],
+      "crew": "crews/morning-brief.md",
+      "note": "24/7 assistant + WhatsApp/Telegram. Human close stays 050-2517000."
+    },
+    {
+      "name": "loki-mode",
+      "url": "https://github.com/asklokesh/loki-mode",
+      "section": "multi-agent-swarms",
+      "verdict": "skip",
+      "pattern": "41 agents in 8 swarms",
+      "packs": ["vfbiz"],
+      "crew": "crews/run.md",
+      "note": "Unattended swarm. Five seats already exist."
+    },
+    {
+      "name": "bernstein",
+      "url": "https://github.com/sipyourdrink-ltd/bernstein",
+      "section": "autonomous-loop-runners",
+      "verdict": "skip",
+      "pattern": "keep running until tests pass with no model in the coordinator",
+      "packs": ["vfbiz"],
+      "crew": "crews/run.md",
+      "note": "Unattended loop. Sensors stay computational and bounded."
+    },
+    {
+      "name": "takopi",
+      "url": "https://github.com/banteg/takopi",
+      "section": "parallel-desktop-web",
+      "verdict": "skip",
+      "pattern": "Telegram bridge to coding agents",
+      "packs": ["vfbiz"],
+      "crew": "crews/inquiry.md",
+      "note": "No customer-chat bot from HQ."
+    },
+    {
+      "name": "claude-code-action",
+      "url": "https://github.com/anthropics/claude-code-action",
+      "section": "autonomous-task-runners",
+      "verdict": "later",
+      "pattern": "GitHub Action implements or reviews from issue context",
+      "packs": ["vfops"],
+      "crew": "crews/run.md",
+      "note": "Lead seat would have to open Actions. Not a studio floor job."
+    },
+    {
+      "name": "denchclaw",
+      "url": "https://github.com/DenchHQ/DenchClaw",
+      "section": "personal-assistants",
+      "verdict": "skip",
+      "pattern": "CRM / sales automation / outreach",
+      "packs": ["vfsales"],
+      "crew": "crews/inquiry.md",
+      "note": "No auto-outreach. No auto-DM."
+    }
+  ],
+  "skipFamilies": [
+    {
+      "family": "parallel coding TUI / worktree multiplexers",
+      "names": [
+        "agent-console",
+        "agent-deck",
+        "agent-manager",
+        "amux",
+        "claude-squad",
+        "dmux",
+        "herdr install",
+        "cmux",
+        "repomon"
+      ],
+      "reason": "cursor-is-the-desk"
+    },
+    {
+      "family": "parallel coding desktop / ADE install",
+      "names": [
+        "Emdash",
+        "Garcon",
+        "intentic",
+        "omg.dev",
+        "Paseo",
+        "Orca ADE install",
+        "mux",
+        "bb"
+      ],
+      "reason": "cursor-is-the-desk"
+    },
+    {
+      "family": "unattended swarms",
+      "names": [
+        "loki-mode",
+        "ClawTeam",
+        "Agent Teams",
+        "corellis",
+        "ruflo"
+      ],
+      "reason": "unattended-autonomy"
+    },
+    {
+      "family": "unattended Ralph / loop-until-done",
+      "names": [
+        "bernstein",
+        "ralph-tui",
+        "ralph-orchestrator as unattended driver",
+        "ralphy (resting)",
+        "wreckit (resting)"
+      ],
+      "reason": "unattended-autonomy"
+    },
+    {
+      "family": "always-on personal assistants / OpenClaw forks",
+      "names": [
+        "openclaw",
+        "nanoclaw",
+        "picoclaw",
+        "zeroclaw",
+        "ironclaw",
+        "ghostclaw",
+        "Hivekeep",
+        "OpenInstinct",
+        "iva"
+      ],
+      "reason": "human-on-whatsapp no-24-7-chatbot"
+    },
+    {
+      "family": "resting / archived",
+      "names": [
+        "1code",
+        "babyagi3",
+        "cashclaw",
+        "gnap",
+        "vibe-kanban",
+        "swarm-protocol"
+      ],
+      "reason": "stale-or-second-office"
+    }
+  ]
+}

@@ -1,8 +1,9 @@
 # 3D AI Studio — מנוי הסטודיו
 
-מושב: **ייצור**. לא פק חדש.  
-חשבון: [www.3daistudio.com](https://www.3daistudio.com) — הבעלים אישר שיש מנוי.  
-מפה: `vfmcp` · שער: `vlicense/GATE.md` · כרטיס: `vfsku` · סלייס: `vfcost` + `hq/PLAYBOOK.md`.
+מושב: **ייצור** (`vfprod`). לא פק חדש.  
+חשבון: [www.3daistudio.com](https://www.3daistudio.com) — מנוי בעלים.  
+חיבור: [`CONNECT-3DAI.md`](CONNECT-3DAI.md) · MCP: `https://mcp.3daistudio.com/mcp` (`threedaistudio`)  
+שער: `vlicense/GATE.md` · כרטיס: `vfsku` · סלייס: `vfcost` + `hq/PLAYBOOK.md`.
 
 אין מפתח בגיט. אין ₪ מומצא. אין הדפסה מ־HQ. אין קטלוג אוטומטי.
 
@@ -20,59 +21,26 @@
 | איסוף | — | שדרות בלבד |
 | תוכן | רנדור קונספט | לא «הוכחת מיטה». Canva / רצפה |
 
-## איך נעזרים היום (בלי MCP)
+## זרימה (אחרי אישור קונספט)
 
-המנוי כבר עובד באתר. HQ מפעיל אותו כשלב ייצור, לא כקסם.
+1. MCP (Desktop, OAuth) או אתר: Text/Image → 3D → גודל בס״מ → STL/3MF.
+2. Drive לפי שם העבודה.
+3. `vlicense` + ארבע וי ב־`CHECKLIST.md` + סלייס.
+4. מחיר מכירה רק אחרי סכום מראש צוות. בלי סלייס — «X ₪».
 
-1. ראש צוות מאשר **קונספט** (לא באצ׳, לא מק״ט).
-2. באתר: Text to 3D / Image to 3D / רקע החוצה → 3D / Flow אם צריך שרשרת חוזרת.
-3. לבקש גודל פיזי (ס״מ) + ייצוא **STL** או **3MF**. Remesh אם הרשת שבורה.
-4. להוריד לדרייב לפי שם העבודה (`create_file` / העלאה ידנית).
-5. `vlicense` + ארבע וי ב־`CHECKLIST.md` + סלייס.
-6. מחיר מכירה רק אחרי סכום מראש צוות. בלי סלייס — «X ₪».
+שאלה מועילה (אחרי אישור): «המר ל־STL, סקלה ל־10 ס״מ להדפסה» — לא «תמחר» ולא «שלח למדפסת».
 
-שאלה מועילה באתר (אחרי אישור):  
-«המר ל־STL, סקלה ל־10 ס״מ להדפסה» — לא «תמחר» ולא «שלח למדפסת».
+## שכבות
 
-## איך מתממשקים — שלוש שכבות
+| שכבה | מתי |
+|---|---|
+| MCP `threedaistudio` | Cursor Desktop + OAuth — `CONNECT-3DAI.md` |
+| אתר | תמיד גיבוי אם MCP נפל |
+| API Dashboard | לא נדרש למחבר הרשמי. מפתח רק ב־env במק אם ראש צוות רוצה באצ׳ |
 
-### 1. אתר (ברירת מחדל, כבר יש)
+Cloud Agent: `threedaistudio.status` = `needsAuth` — לא על Cloud Agent עד OAuth בדסקטופ.
 
-[3daistudio.com](https://www.3daistudio.com) + דשבורד.  
-Flow: קנבס צמתים (תמונה → רקע → 3D → remesh → ייצוא) שחוזר על אותו סוג עבודה.
-
-Failover: זה תמיד הגיבוי אם MCP/API נפלו.
-
-### 2. MCP רשמי (Cursor / Claude / ChatGPT) — בלי מפתח
-
-מקור: [3daistudio.com/MCP](https://www.3daistudio.com/MCP) · Changelog v6.5 (4.8.2026).  
-**איפה הלשונית:** `CONNECT-3DAI.md` — לא ב־Cursor Marketplace.
-
-- OAuth מהחשבון. **אין API key בקובץ.**
-- באתר אחרי Login: גלגל Settings → **AI Assistants (MCP)** → Cursor → Allow.
-- «Available on all paid plans.» בלי מנוי בתשלום הלשונית לא תופיע.
-- הדורות נוחתים באותו דשבורד. יצירת 3D גדולה מבקשת אישור קרדיטים לפני החיוב.
-- ב־Cursor: אין צופה תלת־ממד בתוך הצ׳אט — חוזרים קישורים. בודקים בדשבורד / סלייסר.
-- ניתוק מ־Settings מוחק את האישור מיד.
-
-**לא על Cloud Agent הזה היום.** חיבור = דפדפן + Cursor Desktop.  
-לא ממציאים URL של שרת. לא כותבים מפתח ב־`.cursor/mcp.json`.
-
-אחרי שהחיבור חי במחשב: אפשר לבקש בצ׳אט Agent מקומי «תמונה → 3D → STL 12 ס״מ» בתוך עבודת `vfprod`. עדיין `vlicense` + סלייס.
-
-### 3. REST API — רק אם ראש צוות רוצה באצ׳ סקריפט
-
-מקור: [API getting started](https://www.3daistudio.com/Platform/API/Documentation/getting-started).
-
-- בסיס: `https://api.3daistudio.com`
-- מפתח Bearer מה־API Dashboard. **2FA על החשבון.**
-- המפתח פעם אחת במסך יצירה. שומרים ב־env על המק (`THREE_D_AI_STUDIO_API_KEY`) — **לא בגיט, לא בצ׳אט, לא ב־checkpoint.**
-- קרדיטי API = ארנק נפרד בדשבורד. לא מניחים שמנוי האתר = קרדיטי API. בודקים שם. אין ₪ כאן.
-- ברירת קצב: 3 בקשות לדקה. polling אסינכרוני.
-
-שרת קהילה (`uvx mcp-server-3daistudio` / whale-professor) דורש אותו מפתח. לא ברירת מחדל. לא מתקינים מ־HQ.
-
-## מה ליישם ולהטמיע (על פקים קיימים)
+## מה ליישם (על פקים קיימים)
 
 | עבודה | איך | נעילה |
 |---|---|---|
@@ -80,18 +48,12 @@ Failover: זה תמיד הגיבוי אם MCP/API נפלו.
 | «מעמד ל…» בלי STL ציבורי | Text to 3D אחרי חיפוש `vlicense` | מותג ישראלי = עצירה |
 | תיקון רשת לפני סלייס | remesh / mesh repair + STL | לא מחליף `stlforge` אם הקובץ כבר אצלנו |
 | גודל פיזי | המרה עם ס״מ | סלייסר מאמת. HQ לא ממציא שעות |
-| שרשרת חוזרת (אותו סוג מוצר) | Flow template באתר | לא באצ׳ מכירה |
+| שרשרת חוזרת | Flow template באתר | לא באצ׳ מכירה |
 | רנדור לאישור | render מתוך 3DAI | לא הוכחת רצפה ל־IG |
-| בדיקת קרדיטים | לשאול את המחבר / הדשבורד לפני יצירה | לא ממירים קרדיטים ל־₪ |
 
-לא מיישמים:
+לא מיישמים: מק״ט בלי אישור + סלייס · הדפסה מ־HQ · מחיר מקרדיטים · העתקת מותג ישראלי · אוטו־DM של STL · פק `vf3dai`.
 
-- מק״ט / באצ׳ ממודל שנוצר בלי אישור + סלייס (`vfsku`)
-- הדפסה או עצירת מיטה מ־HQ (`FLOOR.md`)
-- מחיר מכירה מקרדיטים
-- העתקת דמות / מותג ישראלי
-- אוטו־DM של STL
-- פק `vf3dai`
+מודל מ־3DAI = אותו שער כמו Meshy/Tripo: **לא «ציבורי מסחרי» אוטומטית**.
 
 ## צינור קצר — פנייה עם תמונה
 
@@ -99,13 +61,11 @@ Failover: זה תמיד הגיבוי אם MCP/API נפלו.
 פנייה + תמונה
   → @discovery-coach: מידות / שימוש / איסוף
   → ראש צוות: כן לקונספט?
-  → 3DAI (אתר או MCP) → STL בדרייב
+  → 3DAI (MCP או אתר) → STL בדרייב
   → vlicense + CHECKLIST + סלייס
   → vfsales רק אחרי סכום
   → אדם מדפיס → איסוף שדרות
 ```
-
-מודל מ־3DAI = אותו שער כמו Meshy/Tripo: **לא «ציבורי מסחרי» אוטומטית**, גם אם הספק כותב שהקובץ שלך.
 
 ## Failover
 
@@ -113,17 +73,7 @@ Failover: זה תמיד הגיבוי אם MCP/API נפלו.
 |---|---|
 | MCP לא מחובר / `needsAuth` | אתר 3DAI + דרייב + ממשיכים |
 | API / מפתח חסר | אתר. לא ממציאים מפתח |
-| האתר למטה | מאגר פתוח ב־`vlicense` או הדמיה דו־ממדית (`GenerateImage` / Canva) לאישור |
-| אין קרדיטים בדשבורד | «חסר קרדיט ספק» לראש צוות. לא ממציאים ₪. לא מדלגים על האישור |
+| האתר למטה | מאגר פתוח ב־`vlicense` או הדמיה דו־ממדית (`GenerateImage` / Canva) |
+| אין קרדיטים בדשבורד | «חסר קרדיט ספק» לראש צוות. לא ממציאים ₪ |
 
-ארטיפקט: שורה ב־`vfresearch/sources/YYYY-MM-DD-orchestra.md` אם היה failover.
-
-## חיבור — צ׳ק־ליסט לראש צוות
-
-1. להיכנס ל־[3daistudio.com](https://www.3daistudio.com) ולייצר שני מודלים ידנית (להכיר איכות).
-2. Settings → AI Assistants (MCP) → Cursor → OAuth.
-3. בבדיקה מקומית (לא Cloud Agent הזה): לבקש מודל קטן + ייצוא STL.
-4. אם רוצים API: 2FA → מפתח → env במק בלבד.
-5. להגיד ל־HQ «3DAI מחובר ב־Desktop» — אז מעדכנים `vf-desk.json` `threedaistudio.status` ל־`ready` בריצה שרואה את הכלים.
-
-עד אז הסטטוס: **owner-account · לא על Cloud Agent**.
+ארטיפקט failover: `vfresearch/sources/YYYY-MM-DD-orchestra.md`.

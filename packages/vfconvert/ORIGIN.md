@@ -11,10 +11,11 @@ Conversion pack — inquiry-to-order path.
 | Clone | `https://origin.cursor.com/christian-velvet/tmp-4460086f23171633.git` |
 | v0.1.0 vendor | `origin-unreachable` |
 
-HQ overlay: `PATH.md` — reel → profile → WhatsApp → Sderot pickup. No auto-DM.
+HQ overlay: `PATH.md`, `CARD.md` — reel → profile → WhatsApp → Sderot pickup. No auto-DM.
 
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
 
 Embedded 30.8.2026 from Gemini share: `PATH.md` (human WhatsApp path; no auto-DM).  
-Perplexity: four inquiry fields (material, qty, when, finish); 24/7 chatbot skipped.
+Perplexity: four inquiry fields (material, qty, when, finish); 24/7 chatbot skipped.  
+31.8.2026: `CARD.md` — unified intake card (ChatGPT Plus).

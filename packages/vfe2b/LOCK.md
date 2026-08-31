@@ -1,12 +1,12 @@
 # vfe2b locks
 
-נעילות מהרשימה. לא קונים מנוי מ-HQ. לא שולחים. לא ממציאים ₪.
+נעילות מהרשימה. לא קונים מנוי מ-HQ. לא ממציאים ₪. HQ שולח ג׳ימייל ואינסטגרם **דרך כלים** (`constitution/SEND.md`). אוטו־DM ובוסט נעולים. אין runtime שני.
 
 ## אוטונומיה מלאה — דלג
 
 AutoGPT, BabyAGI וכל המודים (BabyBee / BabyCat / BabyDeer / BabyElf / BabyFox / BabyCommand), Loop GPT, Mini AGI, Teenage AGI, Yourgoal, Godmode, Cognosys, SuperAGI, XAgent, evo.ninja (כמנוע אוטונומי), AgentGPT.
 
-למה: הם רצים בלי אדם בשרשרת. אצלנו אדם בוואטסאפ, ראש צוות על מחיר, Grok על שליחה.
+למה: הם רצים בלי אדם בשרשרת. אצלנו אדם בוואטסאפ, ראש צוות על מחיר, HQ שולח דרך כלים.
 
 ## מכירה / מענה אוטומטי — דלג
 
@@ -18,7 +18,7 @@ AskToSell ("close deals"), ChatHelp כצ'אטבוט אתר/אינסטגרם, Fin
 
 Self-operating computer, Taxy AI, MultiOn, UFO, Sentius, Cykel, iMean.AI, Hyperwrite כמפעיל UI.
 
-למה: מדפסות ו-Instagram חיים נשארים אצל Grok Bot. HQ יכול לקרוא ולתכנן, לא ללחוץ Send / Print.
+למה: מדפסות נשארות ברצפה. אינסטגרם יוצא רק דרך כלי Publish או failover Canva+Drive+Gmail — לא דפדפן אוטונומי.
 
 ## קידוד כמשרד שני — דלג
 
@@ -32,6 +32,19 @@ Aider, Continue, Devin, OpenDevin, Devika, Devon, SWE Agent, GPT Engineer, GPT P
 Orca ([stablyai/orca](https://github.com/stablyai/orca)), `orca-ide`, `brew install orca`.
 
 למה: Cursor כבר המשרד. דפוס המשמרת רץ ב-`crews/run.md` בלי בינארי. אין fan-out של ₪ או שליחה.
+
+## תזמורת שנייה — דלג כהתקנה
+
+[andyrewlee/awesome-agent-orchestrators](https://github.com/andyrewlee/awesome-agent-orchestrators) (194):
+
+- Multiplexers / worktrees: `amux`, `dmux`, `claude-squad`, `agent-manager`, `herdr` כבינארי.
+- ADE שולחני: `Emdash`, `Garcon`, `intentic`, `omg.dev`, `Paseo`, `mux`.
+- נחילים: `loki-mode`, `ClawTeam`, `Agent Teams`, `ruflo`.
+- לולאת Ralph בלי אדם על ₪ או שליחה: `bernstein`, `ralph-tui`, `ralph-orchestrator` כנהג אוטונומי.
+- עוזר אישי / OpenClaw / טלגרם / CRM: `openclaw`, `takopi`, `denchclaw`, `iva`, `Hivekeep`.
+- Resting / archived: `1code`, `babyagi3`, `gnap`, `vibe-kanban`.
+
+למה: דפוסי דופק / אימות / ארטיפקט / תקרת לולאה כבר ב־`crews/run.md` + `vfharness`. אין משרד שני.
 
 ## מוצרים מחוץ לסטודיו — דלג
 
@@ -47,4 +60,5 @@ Julius / Vanna / Wren / Powerdrill / TalktoData / AskYourDatabase / Dot / Hex Ma
 
 ## שליחה — נעילה קבועה
 
-Lindy / Floode / AgentScale / Zapier Central / Bardeen / Lutra — תיוג וסיכום בלבד. אין send / reply / forward מ-HQ. אין פוסט Instagram מ-HQ.
+HQ שולח ג׳ימייל (`send_message` / `reply` / `forward`) ואינסטגרם דרך כלים.  
+Lindy / Floode / AgentScale / Zapier Central / Bardeen / Lutra — אין חיבור SaaS מ-HQ. אין דיוור המוני. אין אוטו־DM. אין בוסט. אין פוסט מזויף. וואטסאפ לקוח נשאר אדם `050-2517000`.

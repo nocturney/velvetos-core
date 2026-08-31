@@ -11,6 +11,7 @@ Awesome-AI-agents desk — patterns from [e2b-dev/awesome-ai-agents](https://git
 | Clone | `(none — HQ-native pack)` |
 | Vendor | `hq-native` |
 | Source list | https://github.com/e2b-dev/awesome-ai-agents (209 entries, read 2026-08-30) |
+| Orchestrators overlay | https://github.com/andyrewlee/awesome-agent-orchestrators (194 entries, read 2026-08-31) |
 
-Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
-Live Instagram, Gmail send, and printers stay on Grok Bot (5 seats).
+Do not commit secrets. Do not invent prices.
+HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). Printers stay on the floor. Grok Bot is optional backup.

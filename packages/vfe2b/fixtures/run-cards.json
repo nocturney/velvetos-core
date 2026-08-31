@@ -3,17 +3,22 @@
     {
       "name": "inquiry-missing-qty",
       "expect": "escalation",
-      "card": "משמרת: פנייה שולחן צד\nצוות: inquiry\nמושב: studio\nמצב: escalation\nמה נעשה: בשרשור יש חומר (PLA) וגימור (מט). כמות ומתי חסרים.\nחסר: כמות, מתי\nהבא: human WhatsApp"
+      "card": "משמרת: פנייה שולחן צד\nצוות: inquiry\nמושב: studio\nמצב: escalation\nדופק: blocked\nאימות: חסר\nארטיפקט: אין\nמה נעשה: בשרשור יש חומר (PLA) וגימור (מט). כמות ומתי חסרים.\nחסר: כמות, מתי\nהבא: human WhatsApp"
     },
     {
       "name": "content-draft-ready",
       "expect": "worker_done",
-      "card": "משמרת: VF-G005 d12b\nצוות: content\nמושב: growth\nמצב: worker_done\nמה נעשה: טיוטת כיתוב ב-packages/vfcopy/G005-d12b.md. HQ לא שולח.\nחסר: אין\nהבא: Grok send"
+      "card": "משמרת: VF-G005 d12b\nצוות: content\nמושב: growth\nמצב: worker_done\nדופק: idle\nאימות: packages/vfcopy/G005-d12b.md opened\nארטיפקט: packages/vfcopy/G005-d12b.md\nמה נעשה: טיוטת כיתוב מוכנה. failover Canva+Drive+Gmail. #נשלח-מ-HQ #ממתין-ל-כלי-IG.\nחסר: אין\nהבא: HQ tool send"
     },
     {
       "name": "sale-shekels-wait",
       "expect": "decision_gate",
-      "card": "משמרת: פנייה שולחן צד\nצוות: inquiry\nמושב: lead\nמצב: decision_gate\nמה נעשה: יחידות מ-vfcost רק כהערת עלות. אין מחיר מכירה בכרטיס.\nחסר: ₪ מכירה\nהבא: lead ₪"
+      "card": "משמרת: פנייה שולחן צד\nצוות: inquiry\nמושב: lead\nמצב: decision_gate\nדופק: blocked\nאימות: vfcost unit notes only\nארטיפקט: packages/vfcost\nמה נעשה: יחידות מ-vfcost רק כהערת עלות. אין מחיר מכירה בכרטיס.\nחסר: ₪ מכירה\nהבא: lead ₪"
+    },
+    {
+      "name": "brief-sent",
+      "expect": "worker_done",
+      "card": "משמרת: בריף 07:00\nצוות: morning-brief\nמושב: ops\nמצב: worker_done\nדופק: idle\nאימות: Gmail subjects + Calendar Asia/Jerusalem\nארטיפקט: packages/vfops/BRIEF.md\nמה נעשה: בריף נכתב ונשלח ב-send_message htmlBody תצוגה 3.\nחסר: אין\nהבא: none"
     }
   ],
   "fail": [

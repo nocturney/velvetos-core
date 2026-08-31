@@ -12,13 +12,13 @@
 | Calendar | ready · `Asia/Jerusalem` | namespace `Google-calendar` |
 | Drive | ready · חיפוש **ויצירה** (`create_file`) | namespace `Google-drive` |
 | **Canva** | **ready** | `search-designs` החזיר `DAGoYmCu4c4` («Card - חגיגת האהבה שלכם») |
+| **3D AI Studio** | **needsAuth** (Desktop OAuth) | `.cursor/mcp.json` → `https://mcp.3daistudio.com/mcp`. Cloud Agent עד Connect בדסקטופ |
 | WebSearch / WebFetch | ready · מקורי Cursor | כלי native בסוכן |
 | GenerateImage | ready · מקורי Cursor | כלי native; אינסטגרם עדיין Canva קודם |
 | Superdesign | skill · בלי CLI login | פלאגין על הדיסק |
 | Treg | **לא רלוונטי** | לא login, לא `call`, לא failover |
 | Mobbin | plugin · אין MCP כאן | namespace לא על Cloud Agent |
 | FCC | לא כאן | נעול ב־`vffcc` |
-| **3D AI Studio** | מנוי בעלים · **לא על Cloud Agent** | אתר + `vfprod/3DAISTUDIO.md`. MCP רשמי = OAuth מ־Settings, בלי מפתח בגיט |
 
 אין גיליון סטודיו בשם Velvet Factory ב־Drive. גיליונות אישיים דולגו. לא ממציאים workbook ID.
 
@@ -94,7 +94,7 @@
 3. **`tools.image`** — GenerateImage + Canva `generate-design`. אינסטגרם עדיין Canva קודם.
 4. **גיליון דרך Drive** — `packages/vfbooks/SHEETS.md`. בלי workbook ID מומצא.
 5. **שליחה מ־HQ** — Gmail `send_message` מותר. IG: `vfigos/SEND.md` + `constitution/SEND.md`. Treg לא רלוונטי.
-6. **3D AI Studio** — פלייבוק על `vfprod/3DAISTUDIO.md` (מנוי מאושר). לא MCP חדש בגיט. לא מפתח.
+6. **3D AI Studio** — HTTP `threedaistudio` ב־`.cursor/mcp.json` (`https://mcp.3daistudio.com/mcp`). OAuth בדסקטופ. Cloud Agent = `needsAuth`. פלייבוק `vfprod/3DAISTUDIO.md`.
 
 ## מה לא הותקן — ולמה
 
@@ -108,8 +108,7 @@
 | WhatsApp MCP | חיפוש/טיוטה רק אחרי מספר מהבעלים. שליחה אסורה |
 | Studio MCP Hub / instapdown | מפה ב־`docs/MCP-FIT.md`. חיבור ב־Cursor Settings, לא סוד בגיט |
 | FCC / `fcc-server` | נעול. לא על Cloud Agent |
-| **3D AI Studio MCP** | מנוי יש. חיבור OAuth מ־Settings שלהם (Cursor Desktop / סביבת ענן). לא URL מומצא ב־`mcp.json`. Failover: אתר + Drive |
-| 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט |
+| 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט. המחבר הרשמי הוא HTTP OAuth |
 | SharePoint / Outlook / Notion / Slack | לא ערימת שדרות |
 
 ## Failover
