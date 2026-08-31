@@ -6,8 +6,8 @@
 ```
 05 · משרד
 מה נבנה / יועל: Product Lab + כרטיס פנייה + ביו בלי מחיר (`vfsku`/`vfconvert`/`vfcopy`)
-flexi/fidget רק אחרי שער רישיון. בלוק 05: `vfops/data/research.md`.
-Gemini: שאלה נשארה בקומפוזר (אין גוף חדש). Perplexity: ביו/«שלחו הודעה» דולג.
+flexi/fidget אחרי שער רישיון. פיילאובר Grok + פערי כלים (`vfmcp/GAP.md`).
+Gemini: אין גוף חדש. Perplexity: ביו/«שלחו הודעה» דולג. נתיב: `vfops/data/research.md`.
 ```
 
 מקור: `packages/vfresearch/sources/2026-08-31-orchestra.md`

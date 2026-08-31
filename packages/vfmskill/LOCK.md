@@ -1,6 +1,6 @@
 # vfmskill locks
 
-נעילות מ-[marketingskills](https://github.com/coreyhaines31/marketingskills). לא מטמיעים CMO של SaaS. לא שולחים. לא ממציאים ₪.
+נעילות מ-[marketingskills](https://github.com/coreyhaines31/marketingskills). לא מטמיעים CMO של SaaS. HQ שולח דרך כלים (`SEND.md`). לא ממציאים ₪.
 
 ## מודעות / בוסט / טיקטוק — דלג בלי ראש צוות
 
@@ -8,11 +8,11 @@
 
 למה: החוקה. לוח משובץ לא זז ולא מקודם מכאן.
 
-## שליחה — נעילה קבועה
+## שליחה — דרך כלים, בלי אוטו־DM
 
-`cold-email`, `emails`, `sms`. גם `social` שמציע scheduling חי או auto-DM.
+`cold-email` דיוור המוני, `sms`, auto-DM — דלג. `social` שמציע scheduling חי בלי `SEND.md` — דלג.
 
-למה: HQ לא שולח אינסטגרם / ג׳ימייל / וואטסאפ. Grok שולח. אדם סוגר בוואטסאפ `050-2517000`.
+למה: HQ שולח ג׳ימייל ואינסטגרם דרך כלים (`constitution/SEND.md`). אדם סוגר בוואטסאפ `050-2517000`. אין אוטו־DM. אין בוסט.
 
 ## מחיר — נעילה קבועה
 

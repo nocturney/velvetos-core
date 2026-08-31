@@ -12,7 +12,7 @@
 
 **אצלנו:**
 
-1. קרא `packages/vfcopy/hq/PLAYBOOK.md` ו־`DESK.md`.
+1. קרא `packages/vfcopy/hq/PLAYBOOK.md`, `hq/ai-tells-he.md`, ו־`DESK.md`.
 2. עברית מדוברת. CTA אחד. וואטסאפ `050-2517000` / איסוף שדרות.
 3. בלי «שלחו DM». בלי ₪ בלי מקור. בלי הבטחת דדליין לפני `vfprod`.
 4. טיוטה ל־`vfcopy`. לא שולחים.

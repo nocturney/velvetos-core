@@ -1,6 +1,6 @@
 # vfharness
 
-Harness engineering desk — six-layer outer harness (guides, sensors, loop, memory, permissions, observability) mapped onto existing Velvet Factory packs. No second agent runtime. This HQ does not send.
+Harness engineering desk — six-layer outer harness (guides, sensors, loop, memory, permissions, observability) mapped onto existing Velvet Factory packs. No second agent runtime. HQ sends via tools (`constitution/SEND.md`).
 
 Write-up: [`docs/HARNESS.md`](../../docs/HARNESS.md).
 

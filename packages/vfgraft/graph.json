@@ -14,8 +14,9 @@
     "no-npm-graft",
     "no-graft-mcp",
     "no-second-coding-agent",
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights"
   ],
@@ -40,17 +41,30 @@
       "id": "laws",
       "file": "graph/laws.md",
       "type": "constraint",
-      "summary": "HQ laws: no live send, no invented ₪ or Insights, one pipeline, pickup in Sderot.",
+      "summary": "HQ laws: send Gmail and Instagram via tools, no auto-DM or boost, no invented ₪ or Insights, one pipeline, pickup in Sderot.",
       "sources": [
         ".cursor/rules/velvet-factory-desk.mdc",
         "constitution/CONSTITUTION.md",
+        "constitution/SEND.md",
         ".cursor/vf-desk.json"
       ],
       "links": [
-        {"verb": "configures", "to": "grok-bot"},
-        {"verb": "configures", "to": "pipeline"},
-        {"verb": "validates", "to": "desk"},
-        {"verb": "validates", "to": "tools"}
+        {
+          "verb": "configures",
+          "to": "grok-bot"
+        },
+        {
+          "verb": "configures",
+          "to": "pipeline"
+        },
+        {
+          "verb": "validates",
+          "to": "desk"
+        },
+        {
+          "verb": "validates",
+          "to": "tools"
+        }
       ]
     },
     {
@@ -64,9 +78,18 @@
         "packages/vfconvert/PATH.md"
       ],
       "links": [
-        {"verb": "part_of", "to": "laws"},
-        {"verb": "uses", "to": "desk"},
-        {"verb": "produces", "to": "inquiry-job"}
+        {
+          "verb": "part_of",
+          "to": "laws"
+        },
+        {
+          "verb": "uses",
+          "to": "desk"
+        },
+        {
+          "verb": "produces",
+          "to": "inquiry-job"
+        }
       ]
     },
     {
@@ -80,27 +103,53 @@
         ".cursor/rules/velvet-factory-desk.mdc"
       ],
       "links": [
-        {"verb": "part_of", "to": "laws"},
-        {"verb": "uses", "to": "packs"},
-        {"verb": "uses", "to": "tools"},
-        {"verb": "uses", "to": "skills"},
-        {"verb": "depends_on", "to": "grok-bot"}
+        {
+          "verb": "part_of",
+          "to": "laws"
+        },
+        {
+          "verb": "uses",
+          "to": "packs"
+        },
+        {
+          "verb": "uses",
+          "to": "tools"
+        },
+        {
+          "verb": "uses",
+          "to": "skills"
+        },
+        {
+          "verb": "depends_on",
+          "to": "grok-bot"
+        }
       ]
     },
     {
       "id": "tools",
       "file": "graph/tools.md",
       "type": "system",
-      "summary": "Gmail read, Calendar Asia/Jerusalem, Drive by job, Canva, Superdesign, Treg after login. No send from HQ.",
+      "summary": "Gmail read-and-send, Calendar Asia/Jerusalem, Drive search-and-create, Canva ready, WebSearch, GenerateImage, Superdesign. Treg not relevant. HQ sends via tools.",
       "sources": [
         ".cursor/vf-desk.json",
         "docs/AGENCY-TOOLS.md",
-        "docs/CANVA.md"
+        "docs/CANVA.md",
+        "packages/vfmcp/GAP.md",
+        "constitution/SEND.md"
       ],
       "links": [
-        {"verb": "part_of", "to": "desk"},
-        {"verb": "validates", "to": "laws"},
-        {"verb": "depends_on", "to": "grok-bot"}
+        {
+          "verb": "part_of",
+          "to": "desk"
+        },
+        {
+          "verb": "validates",
+          "to": "laws"
+        },
+        {
+          "verb": "depends_on",
+          "to": "grok-bot"
+        }
       ]
     },
     {
@@ -116,12 +165,30 @@
         ".cursor/skills/vf-graft-map/SKILL.md"
       ],
       "links": [
-        {"verb": "part_of", "to": "desk"},
-        {"verb": "uses", "to": "tools"},
-        {"verb": "uses", "to": "packs"},
-        {"verb": "produces", "to": "morning-job"},
-        {"verb": "produces", "to": "inquiry-job"},
-        {"verb": "produces", "to": "content-job"}
+        {
+          "verb": "part_of",
+          "to": "desk"
+        },
+        {
+          "verb": "uses",
+          "to": "tools"
+        },
+        {
+          "verb": "uses",
+          "to": "packs"
+        },
+        {
+          "verb": "produces",
+          "to": "morning-job"
+        },
+        {
+          "verb": "produces",
+          "to": "inquiry-job"
+        },
+        {
+          "verb": "produces",
+          "to": "content-job"
+        }
       ]
     },
     {
@@ -134,25 +201,44 @@
         "packages/README.md"
       ],
       "links": [
-        {"verb": "part_of", "to": "desk"},
-        {"verb": "depends_on", "to": "laws"},
-        {"verb": "uses", "to": "tools"}
+        {
+          "verb": "part_of",
+          "to": "desk"
+        },
+        {
+          "verb": "depends_on",
+          "to": "laws"
+        },
+        {
+          "verb": "uses",
+          "to": "tools"
+        }
       ]
     },
     {
       "id": "grok-bot",
       "file": "graph/grok-bot.md",
       "type": "boundary",
-      "summary": "Live Instagram, Gmail send, and printers stay on Grok Bot. HQ drafts and reviews only.",
+      "summary": "Grok Bot is optional backup. HQ sends Gmail and Instagram via tools. Printers stay on the floor. No auto-DM or boost.",
       "sources": [
         "docs/BACKUP.md",
         "constitution/CONSTITUTION.md",
+        "constitution/SEND.md",
         ".cursor/vf-desk.json"
       ],
       "links": [
-        {"verb": "part_of", "to": "laws"},
-        {"verb": "validates", "to": "tools"},
-        {"verb": "validates", "to": "content-job"}
+        {
+          "verb": "part_of",
+          "to": "laws"
+        },
+        {
+          "verb": "validates",
+          "to": "tools"
+        },
+        {
+          "verb": "validates",
+          "to": "content-job"
+        }
       ]
     },
     {
@@ -166,10 +252,22 @@
         "packages/vfe2b/crews/morning-brief.md"
       ],
       "links": [
-        {"verb": "part_of", "to": "pipeline"},
-        {"verb": "uses", "to": "skills"},
-        {"verb": "uses", "to": "tools"},
-        {"verb": "depends_on", "to": "laws"}
+        {
+          "verb": "part_of",
+          "to": "pipeline"
+        },
+        {
+          "verb": "uses",
+          "to": "skills"
+        },
+        {
+          "verb": "uses",
+          "to": "tools"
+        },
+        {
+          "verb": "depends_on",
+          "to": "laws"
+        }
       ]
     },
     {
@@ -183,11 +281,26 @@
         "packages/vfe2b/crews/inquiry.md"
       ],
       "links": [
-        {"verb": "part_of", "to": "pipeline"},
-        {"verb": "uses", "to": "skills"},
-        {"verb": "uses", "to": "packs"},
-        {"verb": "uses", "to": "tools"},
-        {"verb": "depends_on", "to": "laws"}
+        {
+          "verb": "part_of",
+          "to": "pipeline"
+        },
+        {
+          "verb": "uses",
+          "to": "skills"
+        },
+        {
+          "verb": "uses",
+          "to": "packs"
+        },
+        {
+          "verb": "uses",
+          "to": "tools"
+        },
+        {
+          "verb": "depends_on",
+          "to": "laws"
+        }
       ]
     },
     {
@@ -201,11 +314,26 @@
         "packages/vfe2b/crews/content.md"
       ],
       "links": [
-        {"verb": "uses", "to": "skills"},
-        {"verb": "uses", "to": "packs"},
-        {"verb": "uses", "to": "tools"},
-        {"verb": "depends_on", "to": "laws"},
-        {"verb": "depends_on", "to": "grok-bot"}
+        {
+          "verb": "uses",
+          "to": "skills"
+        },
+        {
+          "verb": "uses",
+          "to": "packs"
+        },
+        {
+          "verb": "uses",
+          "to": "tools"
+        },
+        {
+          "verb": "depends_on",
+          "to": "laws"
+        },
+        {
+          "verb": "depends_on",
+          "to": "grok-bot"
+        }
       ]
     },
     {
@@ -219,11 +347,26 @@
         "packages/vfgraft/MAP.md"
       ],
       "links": [
-        {"verb": "validates", "to": "laws"},
-        {"verb": "validates", "to": "desk"},
-        {"verb": "validates", "to": "tools"},
-        {"verb": "validates", "to": "skills"},
-        {"verb": "uses", "to": "maps"}
+        {
+          "verb": "validates",
+          "to": "laws"
+        },
+        {
+          "verb": "validates",
+          "to": "desk"
+        },
+        {
+          "verb": "validates",
+          "to": "tools"
+        },
+        {
+          "verb": "validates",
+          "to": "skills"
+        },
+        {
+          "verb": "uses",
+          "to": "maps"
+        }
       ]
     },
     {
@@ -239,9 +382,18 @@
         "docs/GRAFT.md"
       ],
       "links": [
-        {"verb": "part_of", "to": "packs"},
-        {"verb": "uses", "to": "desk"},
-        {"verb": "produces", "to": "blast"}
+        {
+          "verb": "part_of",
+          "to": "packs"
+        },
+        {
+          "verb": "uses",
+          "to": "desk"
+        },
+        {
+          "verb": "produces",
+          "to": "blast"
+        }
       ]
     }
   ]

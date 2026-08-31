@@ -15,8 +15,9 @@
   "script": "scripts/vfmem.py",
   "skill": ".cursor/skills/vf-hq-memory/SKILL.md",
   "locks": [
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-cbm-binary-from-hq",
@@ -132,61 +133,113 @@
   ],
   "routes": [
     {
-      "q": ["morning brief", "בריף בוקר", "queue", "מה פתוח"],
+      "q": [
+        "morning brief",
+        "בריף בוקר",
+        "queue",
+        "מה פתוח"
+      ],
       "pack": "vfops",
       "slug": "studio-operations",
       "tool": "calendar"
     },
     {
-      "q": ["brief layout", "פורמט בריף"],
+      "q": [
+        "brief layout",
+        "פורמט בריף"
+      ],
       "pack": "vfbriefux",
       "slug": "ux-architect",
       "tool": "mobbin"
     },
     {
-      "q": ["inquiry", "פנייה", "quote this", "פניה"],
+      "q": [
+        "inquiry",
+        "פנייה",
+        "quote this",
+        "פניה"
+      ],
       "pack": "vfconvert",
       "slug": "email-intelligence-engineer",
       "tool": "gmail"
     },
     {
-      "q": ["quote draft", "הצעה", "טיוטת הצעה"],
+      "q": [
+        "quote draft",
+        "הצעה",
+        "טיוטת הצעה"
+      ],
       "pack": "vfsales",
       "slug": "sales-engineer",
       "tool": "gmail"
     },
     {
-      "q": ["cost", "ledger", "תמחור", "ספרים", "חשבונית"],
+      "q": [
+        "cost",
+        "ledger",
+        "תמחור",
+        "ספרים",
+        "חשבונית"
+      ],
       "pack": "vfcost",
       "slug": "pricing-analyst",
       "tool": "gmail"
     },
     {
-      "q": ["print", "הדפסה", "sku", "מק״ט", "license", "רישיון"],
+      "q": [
+        "print",
+        "הדפסה",
+        "sku",
+        "מק״ט",
+        "license",
+        "רישיון"
+      ],
       "pack": "vfprod",
       "slug": "studio-producer",
       "tool": "drive"
     },
     {
-      "q": ["covers", "content pack", "כריכה", "חבילת תוכן"],
+      "q": [
+        "covers",
+        "content pack",
+        "כריכה",
+        "חבילת תוכן"
+      ],
       "pack": "vfcovers",
       "slug": "visual-storyteller",
       "tool": "superdesign"
     },
     {
-      "q": ["ig board", "instagram", "לוח", "שיבוץ"],
+      "q": [
+        "ig board",
+        "instagram",
+        "לוח",
+        "שיבוץ"
+      ],
       "pack": "vfigos",
       "slug": "instagram-curator",
       "tool": "treg"
     },
     {
-      "q": ["insights", "מדדים"],
+      "q": [
+        "insights",
+        "מדדים"
+      ],
       "pack": "vfinsights",
       "slug": "analytics-reporter",
       "tool": "treg"
     },
     {
-      "q": ["season", "research", "עונה", "מחקר", "קישורים", "השראה", "weekly links", "share embed"],
+      "q": [
+        "season",
+        "research",
+        "עונה",
+        "מחקר",
+        "קישורים",
+        "השראה",
+        "weekly links",
+        "share embed"
+      ],
       "pack": "vfresearch",
       "slug": "research-synthesist",
       "tool": "treg"
@@ -212,14 +265,19 @@
   ],
   "adrs": [
     {
-      "id": "no-send-instagram",
-      "text": "HQ does not send, boost, or DM Instagram. Live send stays on Grok Bot.",
-      "source": ".cursor/rules/velvet-factory-desk.mdc"
+      "id": "hq-send-via-tools",
+      "text": "HQ sends Gmail and Instagram via tools. Do not wait for Christian or Grok Bot.",
+      "source": "constitution/SEND.md"
     },
     {
-      "id": "no-send-gmail",
-      "text": "Never call Gmail send_message, reply, or forward. Draft only if asked.",
-      "source": ".cursor/rules/velvet-factory-desk.mdc"
+      "id": "no-auto-dm",
+      "text": "Auto-DM stays forbidden. CTA is WhatsApp 050-2517000.",
+      "source": "constitution/SEND.md"
+    },
+    {
+      "id": "no-boost",
+      "text": "Boost without lead seat stays forbidden.",
+      "source": "constitution/SEND.md"
     },
     {
       "id": "no-invented-prices",

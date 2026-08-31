@@ -1,6 +1,6 @@
 ---
 name: vf-harness
-description: Run the Velvet Factory outer harness — guides, sensors, bounded loop, checkpoint, escalate. No second runtime. HQ does not send.
+description: Run the Velvet Factory outer harness — guides, sensors, bounded loop, checkpoint, escalate. No second runtime. HQ sends via tools (constitution/SEND.md).
 ---
 
 # VF harness
@@ -12,7 +12,7 @@ Use when the user asks for רתמה, harness, AGENTS.md, checkpoint, escalate, h
 - Pack: `vfharness` (infrastructure, not a sixth seat)
 - Mention: `@workflow-architect` (desk) — `@multi-agent-systems-architect` only if the user asks for that warehouse slug
 - Guide file wins over the conversation: `AGENTS.md`
-- Grok quota outage: `packages/vfharness/playbooks/grok-failover.md` + `packages/vfigos/QUEUE.md` + `LIVE-PACKET.md`
+- Grok quota outage: `packages/vfharness/playbooks/grok-failover.md` + `grok-outage-tools.md` + `packages/vfigos/QUEUE.md` + `LIVE-PACKET.md`
 
 ## Loop
 
@@ -21,11 +21,11 @@ Use when the user asks for רתמה, harness, AGENTS.md, checkpoint, escalate, h
 3. Execute one step. After catalog/rule/pack edits: `python3 scripts/check-all.py`.
 4. Sensor or field-check fails → fix once → fail again → fill `packages/vfharness/templates/escalation.md` and stop.
 5. Long task: write `packages/vfharness/state/<task-id>.json` from the checkpoint schema before you close.
-6. Grok down + needs live IG now → complete LIVE-PACKET for **human** post; do not claim HQ published.
+6. Grok down: **send** the office brief (`htmlBody` תצוגה 3) to `nocturney@gmail.com`. Live IG → `vfigos/SEND.md` (tool or Canva+Drive+Gmail). Do not claim the feed posted if no publish tool fired.
 
 ## Forbidden
 
-Instagram/Gmail/WhatsApp send from the HQ **agent**, invented ₪ or Insights, CrewAI/AutoGPT, LLM-as-judge as a gate for ILS or send, inventing a blocked source body. Human live post during Grok failover is allowed via LIVE-PACKET only.
+Auto-DM, boost, printer jobs from HQ, invented ₪ or Insights, CrewAI/AutoGPT, LLM-as-judge as a gate for ILS, inventing a blocked source body, claiming the IG feed posted without a publish tool. Gmail `send_message` and IG-via-tools are **allowed** (`constitution/SEND.md`).
 
 ## Output
 

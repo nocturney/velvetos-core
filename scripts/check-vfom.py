@@ -19,8 +19,9 @@ REQUIRED_CREWS = {
     "crews/self-review.md",
 }
 REQUIRED_LOCKS = {
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-invented-floor-scene",

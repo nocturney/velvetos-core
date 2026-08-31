@@ -557,7 +557,7 @@ def cmd_route(graph: Graph, catalog: dict[str, Any], query: str) -> dict[str, An
         f"  prev={prev_s or '—'}",
         f"  next={next_s or '—'}",
         "  full: " + " → ".join(names),
-        "  pickup Sderot only. HQ does not send.",
+        "  pickup Sderot only. HQ sends via tools (no auto-DM).",
     ]
     return {
         "stage": picked.name,

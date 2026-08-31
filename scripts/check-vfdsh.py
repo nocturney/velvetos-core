@@ -83,8 +83,9 @@ def main() -> None:
 
     locks = set(catalog.get("locks") or [])
     for need in (
-        "no-send-instagram",
-        "no-send-gmail",
+        "hq-send-via-tools",
+        "no-auto-dm",
+        "no-boost",
         "no-invented-prices",
         "no-invented-insights",
         "no-dsh-runtime",

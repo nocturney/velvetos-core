@@ -5,7 +5,7 @@ Paper: [arXiv:2603.27277](https://arxiv.org/abs/2603.27277).
 Pack: [`packages/vfmem/`](../packages/vfmem/).  
 Check: `python3 scripts/check-vfmem.py`.
 
-This HQ does **not** send Instagram. Live send stays on Grok Bot.  
+HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Grok is optional backup.  
 Do not invent prices. Do not commit secrets. Do not `curl | bash` their installer from this repo.
 
 ## What the repo is

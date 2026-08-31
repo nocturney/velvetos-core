@@ -1,6 +1,6 @@
 ---
 name: vf-marketing-skills
-description: Route a Velvet Factory marketing task through curated Corey Haines skills (copy, social, offer, research) onto existing packs. HQ does not send; no invented ₪ or Insights.
+description: Route a Velvet Factory marketing task through curated Corey Haines skills (copy, social, offer, research) onto existing packs. HQ sends via tools (constitution/SEND.md); no invented ₪ or Insights.
 ---
 
 # Marketing skills (curated)
@@ -19,11 +19,11 @@ Do **not** activate the full 50-skill upstream set. Ads, email send, SaaS CRO, a
 
 | Ask | Vendor skill | Pack | Stop |
 |---|---|---|---|
-| כיתוב / קופי / לינט | `copywriting` `copy-editing` `marketing-psychology` | `vfcopy` | Do not send |
-| ריל / סטורי / לוח תוכן | `social` `content-strategy` `video` | `vfgrowth` → `vfigos` | Grok sends |
+| כיתוב / קופי / לינט | `copywriting` `copy-editing` `marketing-psychology` | `vfcopy` | HQ sends via tools |
+| ריל / סטורי / לוח תוכן | `social` `content-strategy` `video` | `vfgrowth` → `vfigos` | `SEND.md` |
 | מוזיקה / סאונד לריל | (frame) `social` Audio Strategy | `vfresearch` → `vfom` → `vfigos` | `@trend-researcher`; HeyOrca / IG paste (no Treg) |
 | כריכה / גרפיקה | `image` | `vfcovers` `vfcanva` | Canva first |
-| פנייה / VOC | `customer-research` | `vfconvert` | Gmail read only |
+| פנייה / VOC | `customer-research` | `vfconvert` | Gmail read then reply via tool |
 | הצעה / התנגדות | `offers` `sales-enablement` | `vfsales` | After `vfcost`; human WhatsApp |
 | מתחרה / רעיון / תוכנית / השקה | `competitor-profiling` `marketing-ideas` `marketing-plan` `launch` | `vfresearch` `vfbiz` `vfsku` | Sources or «חסר» |
 
@@ -31,7 +31,7 @@ Specialists on the desk: `@content-creator` `@brand-guardian` `@instagram-curato
 
 ## Laws (win over upstream)
 
-- HQ does not send Instagram, Gmail, WhatsApp, or DMs.
+- HQ **sends Instagram and Gmail via tools** (`constitution/SEND.md`). Customer WhatsApp stays human. No auto-DM.
 - CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
 - No TikTok, ads, boost, or follow-back without the lead seat.
 - No invented ₪ (`X ₪`) or Insights («אין ספירה»).

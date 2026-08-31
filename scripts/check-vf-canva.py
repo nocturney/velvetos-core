@@ -141,12 +141,12 @@ def main() -> None:
     rule = RULE.read_text()
     if "alwaysApply: true" not in rule:
         fail("vf-canva-instagram.mdc must be alwaysApply: true")
-    for needle in ("does not send", "050-2517000", "Canva לא מחובר"):
+    for needle in ("SEND.md", "050-2517000", "Canva לא מחובר"):
         if needle not in rule:
             fail(f"rule missing {needle!r}")
 
     skill = SKILL.read_text()
-    for needle in ("does **not** send", "FORMATS.json", "needsAuth"):
+    for needle in ("SEND.md", "FORMATS.json", "needsAuth"):
         if needle not in skill:
             fail(f"skill missing {needle!r}")
 
