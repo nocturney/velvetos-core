@@ -16,6 +16,7 @@ User asks to coordinate / משמרת / run several seats / «תזמור» / name
 4. Verify before `worker_done` (sensor or named field). Missing → `escalation`.
 5. Sale ₪ → `decision_gate` for the lead seat. HQ sends Gmail/IG via tools (`constitution/SEND.md`).
 6. Two retries then `packages/vfharness/templates/escalation.md`. Checkpoint under `state/`.
+7. Open Multi-Agent patterns (embed only): `playbooks/oma-patterns.md` — `planned_steps`, durable `gate`, `run-receipt.md`.
 
 ## Do not
 

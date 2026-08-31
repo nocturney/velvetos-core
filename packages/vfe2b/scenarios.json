@@ -1,0 +1,49 @@
+{
+  "name": "vfe2b-scenarios",
+  "title": "Huginn-style scenario graphs (pattern only)",
+  "source": {
+    "title": "huginn/huginn",
+    "url": "https://github.com/huginn/huginn",
+    "readAt": "2026-08-31",
+    "pattern": "Scenarios = saved agent graphs; Events flow between steps"
+  },
+  "rule": "Run as one vfe2b משמרת. No Huginn Rails install. Cursor is the office.",
+  "playbook": "packages/vfe2b/scenarios/README.md",
+  "locks": [
+    "no-second-orchestrator",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-invented-prices",
+    "no-invented-insights"
+  ],
+  "scenarios": [
+    {
+      "id": "morning-digest",
+      "file": "packages/vfe2b/scenarios/morning-digest.md",
+      "crew": "crews/morning-brief.md",
+      "schedule": "07:00 Asia/Jerusalem",
+      "packs": ["vfops", "vfbriefux", "vfseason"]
+    },
+    {
+      "id": "inquiry-chain",
+      "file": "packages/vfe2b/scenarios/inquiry-chain.md",
+      "crew": "crews/inquiry.md",
+      "schedule": "on-demand",
+      "packs": ["vfconvert", "vfsales", "vfcost", "vfcopy"]
+    },
+    {
+      "id": "weekly-links",
+      "file": "packages/vfe2b/scenarios/weekly-links.md",
+      "crew": "crews/research.md",
+      "schedule": "weekly Asia/Jerusalem",
+      "packs": ["vfresearch", "vfops"]
+    },
+    {
+      "id": "content-live",
+      "file": "packages/vfe2b/scenarios/content-live.md",
+      "crew": "crews/content.md",
+      "schedule": "on-demand",
+      "packs": ["vfcopy", "vfcovers", "vfigos", "vfgrowth"]
+    }
+  ]
+}

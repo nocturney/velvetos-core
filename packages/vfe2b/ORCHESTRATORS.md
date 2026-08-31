@@ -16,12 +16,18 @@
 | אימות נפרד לפני «בוצע» | kodo | שדה `אימות` — סנסור או בדיקת שדה. בלי זה אין `worker_done` |
 | ארטיפקט על הדיסק | tutti, Crewplane | שדה `ארטיפקט` — נתיב או «אין» |
 | תקרה ללולאה + קבלה | fractal, MartinLoop | 2 ניסיונות ואז הסלמה. checkpoint = קבלה |
+| תכנון מקדים + שער עמיד | Open Multi-Agent | `planned_steps` + `gate` ב-checkpoint; `oma-patterns.md` |
 | יציאה כשבאמת נגמר | ralph-claude-code | `worker_done` רק אחרי אימות |
 | הקשר טרי בניסיון חוזר | ralphex | קוראים שוב את המקור. לא מנחשים |
 | תיבה → משמרת אחת | Taskuary | בריף בוקר ממיין, ואז צוות אחד |
 | מכונת מצבים בלי ערוץ צד | NEEDLE | הכרטיס הוא התיאום |
 | סיבוב מכסה | Claudexor | מכסת Grok → כלי HQ באותו תור (`SEND.md`) |
 | שער אדם | 5dive, humanlayer, paperclip | וואטסאפ אדם · ₪ לראש צוות |
+| Connector priority + seat scope | LobeHub ToolsEngine | `vfmcp/GAP.md` — מושב → namespace → failover |
+| White-box memory (לא צ'אט גלובלי) | LobeHub Personal Memory | `vfharness/state/` + checkpoint schema |
+| Agent Groups / Project משותף | LobeHub Pages | fan-out max 3 על `vfcopy`/`vfcovers` בלבד |
+| Schedule registry (לא cron אוטונומי) | LobeHub Operator | `vfops/ROUTINE.md` + בריף 07:00 + `decision_gate` |
+| setup / teardown / run ל-workspace | [Superset](https://github.com/superset-sh/superset) lifecycle scripts | Cloud Agent `environment.json` — לא IDE שני |
 | Session goal | DeerFlow `/goal` | שדה `מטרה` בכרטיס · checkpoint `goal` |
 | Sub-agent bounds | DeerFlow task | fan-out ≤3 · לא על ₪/שליחה |
 | Tool receipts | DeerFlow verification | `אימות` + message_id / design URL |
@@ -29,7 +35,8 @@
 ## מה לא מתקינים
 
 TUI/tmux/worktree multiplexers (`amux`, `dmux`, `claude-squad`…).  
-ADE שולחני (`Emdash`, `Garcon`, `Orca` כהתקנה).  
+ADE שולחני (`Emdash`, `Garcon`, `Orca`, `Superset` כהתקנה).  
+**LobeHub** (Docker / Vercel / IM Gateway / marketplace 10k MCP) — דפוסים בלבד.  
 נחילי 20–41 סוכנים (`loki-mode`, `ClawTeam`).  
 לולאת Ralph בלי אדם על ₪ או שליחה.  
 עוזר אישי תמידי / OpenClaw / גשר טלגרם / אוטו־CRM.

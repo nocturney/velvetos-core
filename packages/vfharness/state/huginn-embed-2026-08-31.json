@@ -1,0 +1,55 @@
+{
+  "task_id": "huginn-embed-2026-08-31",
+  "status": "done",
+  "pack": "vfe2b",
+  "completed_steps": [
+    "links-register",
+    "weekly-report",
+    "scenarios-four",
+    "checkpoint-events",
+    "staleness-sensor",
+    "dedup-playbook",
+    "sensors-pass"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "packages/vfresearch/LINKS.json",
+    "packages/vfresearch/sources/2026-08-31-huginn-embed.md",
+    "packages/vfresearch/sources/2026-08-31-weekly-links.md",
+    "packages/vfe2b/scenarios/",
+    "packages/vfe2b/scenarios.json",
+    "packages/vfharness/templates/checkpoint.schema.json",
+    "scripts/check-staleness.py",
+    "packages/vfconvert/hq/DEDUP.md"
+  ],
+  "unresolved": [],
+  "escalation": null,
+  "last_updated": "2026-08-31",
+  "events": [
+    {
+      "name": "links.listed",
+      "producedAt": "2026-08-31",
+      "sourceAgent": "vfresearch",
+      "payload": { "id": "huginn", "url": "https://github.com/huginn/huginn" }
+    },
+    {
+      "name": "embed.done",
+      "producedAt": "2026-08-31",
+      "sourceAgent": "vfe2b",
+      "payload": {
+        "scenarios": [
+          "morning-digest",
+          "inquiry-chain",
+          "weekly-links",
+          "content-live"
+        ]
+      }
+    },
+    {
+      "name": "brief.block05",
+      "producedAt": "2026-08-31",
+      "sourceAgent": "vfops",
+      "payload": { "path": "packages/vfops/data/research.md" }
+    }
+  ]
+}
