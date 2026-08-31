@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-08-31 — **בריף תצוגה 3**: מייל הפיילאובר יצא טקסט כי MAIL-PACK נשלח כ־`body`. חוזה HTML מנעול תצוגה 3 (`vfbriefux/MAIL.html` + `render_mail.py` + `cid` כריכות). לא מחליפים מבנה 01–07. Office brief uses locked תצוגה 3 HTML, not plaintext.
+- 2026-08-31 — **בריף תצוגה 3**: מייל הפיילאובר יצא טקסט כי MAIL-PACK נשלח כ־`body`. חוזה HTML מנעול תצוגה 3 (`vfbriefux/MAIL.html` + `render_mail.py` + `cid` כריכות). לא מחליפים מבנה 01–07. תיקון חי: message `1a056279d7554a8a`. כריכת `cid` עדיין חסרה (MCP Base64). Office brief uses locked תצוגה 3 HTML, not plaintext.
 - 2026-08-31 — **בריף כמו Grok**: בפיילאובר מכסה HQ שולח את בריף 07:00 אל `nocturney@gmail.com` (`send_message`). בלי לחיצת Send אצל הבעלים. IG Publish עדיין אין MCP. Office-brief send is the Grok-equivalent during quota outage.
 - 2026-08-31 — **כלים בפיילאובר Grok**: מפת `grok-outage-tools.md` — Gmail `create_draft` + אירוע לוח + Canva/`render.py` חיים; `send_message` / IG Publish נשארים נעולים (אין MCP העלאה). Wired Grok-outage tools; no HQ send. See `packages/vfharness/playbooks/grok-outage-tools.md`.
 - 2026-08-31 — **Deny שליחה נשאר**: בעלים ביקש ש־HQ ישלח מייל ויעלה לפיד בפיילאובר; `AGENTS.md` מנצח — אין `send_message` / Publish. הסלמה ב־`vfharness/state/escalation-send-deny-2026-08-31.md`. Owner asked HQ to send; guide wins, no send. 

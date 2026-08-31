@@ -15,12 +15,13 @@
 ## שני 31.8.2026 — נשלח מ־HQ (כמו Grok)
 
 שליחה ראשונה (טקסט בלבד, שגוי): message `1a0561627a9fdc18` · thread `1a056161533e42db`.  
-תיקון תצוגה 3: JSON `vfops/hq/brief-2026-08-31.json` → `render_mail.py` → `htmlBody` + כריכת G005 ב־`cid`. message id אחרי השליחה המתוקנת.
+תיקון HTML תצוגה 3: message `1a056279d7554a8a` · thread `1a056279d7554a8a` (`htmlBody` 01–07, כהה/זהב).  
+כריכת `cid` לא נכנסה לגוף בשליחה הזו — Gmail הוריד `img` בלי מצורף inline. הקובץ על הדיסק: `vfcovers/g005`.
 
-נושא:
+נושא (תיקון HTML):
 
 ```
-בריף בוקר — Velvet Factory 31.8.2026 · פיילאובר Grok
+בריף בוקר — Velvet Factory 31.8.2026 · תצוגה 3
 ```
 
 גוף:
