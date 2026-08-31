@@ -5,8 +5,8 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: DESIGN.md + planning templates + reflection (`vfbriefux`/`vfharness`/`vfagents`); Huginn scenarios + staleness + dedup; taste-skill / OMA / prompts.chat על פקים קיימים.
-נתיב: `docs/AGENT-REPOS-EMBED-he.md` · `packages/vfresearch/sources/2026-08-31-agent-repos-embed.md` · `2026-08-31-huginn-embed.md`.
+מה נבנה / יועל: Office OS מ־18 CRM/ERP/Work-OS/פורומים — capabilities + לוח צינור + portlets + ציר לקוח; ADR קונסולה פנימית (אתר שיווקי נשאר נעול).
+נתיב: `docs/OFFICE-OS-EMBED-he.md` · `vfops/hq/COMMAND-SURFACE.md` · `packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md`.
 ```
 
-מקור: `packages/vfresearch/sources/2026-08-31-agent-repos-embed.md` · `2026-08-31-huginn-embed.md` · `2026-08-31-weekly-links.md`
+מקור: `packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md`

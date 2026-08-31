@@ -3,20 +3,21 @@
 Token-budgeted first look. Open this, then **two or three** nodes. Do not grep the 273-specialist warehouse from zero.
 
 ```
-HQ — 5 seats · 28 desk specialists · 1 pipeline · Grok sends
+HQ — 5 seats · 28 desk specialists · 1 pipeline · HQ sends via tools
 
-laws            constraint   no send, no invented ₪, pickup Sderot
+laws            constraint   HQ-send-via-tools; no auto-DM/boost; no invented ₪; pickup Sderot; public site locked; internal console OK
 pipeline        flow         פנייה → שיחה → הצעה → הדפסה → איסוף
 desk            system       five seats; warehouse stays off
-tools           system       Gmail read · Calendar · Drive-by-job · Canva · WebSearch · GenerateImage · 3DAI site
+tools           system       Gmail · Calendar · Drive · Canva · WebSearch · GenerateImage · 3DAI site
 skills          system       morning / inquiry / content / Canva / this map
 packs           system       packages/<name>/ — no duplicate job
-grok-bot        boundary     live Instagram, Gmail send, printers
+grok-bot        boundary     optional backup; printers on floor
 morning-job     job          בריף בוקר
 inquiry-job     job          פנייה → טיוטת הצעה
 content-job     job          חבילת תוכן + כריכות
 blast           impact       what breaks if a law or tool mode moves
 maps            system       vfe2b (+ orchestrators) · vfmakers · vfagents · vfmcp · vfgraft
+command-surface system       capabilities + pipeline board + portlets (future UI view)
 ```
 
 ## Ask → nodes
@@ -32,6 +33,7 @@ maps            system       vfe2b (+ orchestrators) · vfmakers · vfagents · 
 | embed an outside repo | [[maps]] → [[laws]] |
 | orchestrator / משמרת | [[maps]] → `vfe2b/ORCHESTRATORS.md` → [[laws]] |
 | weekly inspiration links / share refresh | [[packs]] → `vfresearch/WEEKLY.md` + `LINKS.json` → [[laws]] |
+| office console / CRM-ERP inspiration / command surface | [[blast]] → `vfops/hq/COMMAND-SURFACE.md` → `docs/OFFICE-OS-EMBED-he.md` → [[laws]] |
 
 ## Hubs
 

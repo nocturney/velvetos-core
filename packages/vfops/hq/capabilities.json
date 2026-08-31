@@ -1,0 +1,188 @@
+{
+  "name": "vf-office-capabilities",
+  "title": "Velvet Factory — capability registry for command surface",
+  "version": "2026-08-31",
+  "rule": "UI and agents may only expose actions listed here. Missing ₪ or Insights stay X ₪ / אין ספירה. No new pack per capability.",
+  "adr": "docs/OFFICE-OS-EMBED-he.md",
+  "locks": [
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
+    "no-invented-prices",
+    "no-invented-insights",
+    "pickup-sderot-only",
+    "no-public-marketing-site-from-hq",
+    "internal-console-allowed"
+  ],
+  "capabilities": [
+    {
+      "id": "gmail.send",
+      "label": "שליחת ג׳ימייל",
+      "tool": "Gmail.send_message",
+      "packs": ["vfops", "vfsales", "vfconvert"],
+      "gate": "none",
+      "notes": "Office mail and named inquiry threads. No blast list. No invented ₪."
+    },
+    {
+      "id": "gmail.reply",
+      "label": "תשובה בשרשור",
+      "tool": "Gmail.reply",
+      "packs": ["vfconvert", "vfsales"],
+      "gate": "none"
+    },
+    {
+      "id": "gmail.read",
+      "label": "קריאת תיבה / שרשור",
+      "tool": "Gmail.search_threads",
+      "packs": ["vfops", "vfconvert", "vfbooks"],
+      "gate": "none"
+    },
+    {
+      "id": "calendar.list",
+      "label": "רשימת אירועים",
+      "tool": "Google-calendar.list_events",
+      "packs": ["vfops"],
+      "gate": "none",
+      "timezone": "Asia/Jerusalem"
+    },
+    {
+      "id": "calendar.create",
+      "label": "יצירת אירוע",
+      "tool": "Google-calendar.create_event",
+      "packs": ["vfops"],
+      "gate": "lead",
+      "notes": "Only when lead seat asks."
+    },
+    {
+      "id": "drive.create",
+      "label": "יצירת מסמך משרד",
+      "tool": "Google-drive.create_file",
+      "packs": ["vfops", "vfbooks", "vfprod"],
+      "gate": "none",
+      "notes": "No personal/medical/legal folders unless named."
+    },
+    {
+      "id": "drive.search",
+      "label": "חיפוש לפי עבודה/מק״ט",
+      "tool": "Google-drive.search_files",
+      "packs": ["vfprod", "vfsku"],
+      "gate": "none"
+    },
+    {
+      "id": "canva.design",
+      "label": "עיצוב אינסטגרם ב־Canva",
+      "tool": "Canva.generate-design",
+      "packs": ["vfcovers", "vfcanva", "vfigos"],
+      "gate": "none"
+    },
+    {
+      "id": "ig.send",
+      "label": "פרסום / failover אינסטגרם",
+      "tool": "vfigos/SEND.md",
+      "packs": ["vfigos"],
+      "gate": "none",
+      "notes": "Publish tool if connected; else Canva+Drive+Gmail same turn. Never claim feed posted without tool."
+    },
+    {
+      "id": "web.research",
+      "label": "מחקר ווב",
+      "tool": "WebSearch",
+      "packs": ["vfresearch"],
+      "gate": "none",
+      "notes": "Never invent blocked body. Not Treg."
+    },
+    {
+      "id": "pipeline.advance",
+      "label": "התקדמות בשלב צינור",
+      "tool": "vfops/hq/PIPELINE-BOARD.md",
+      "packs": ["vfops", "vfconvert", "vfsales", "vfprod"],
+      "gate": "none",
+      "notes": "Stages fixed: פנייה→שיחה→הצעה→הדפסה→איסוף. Sale ₪ needs lead."
+    },
+    {
+      "id": "quote.draft",
+      "label": "טיוטת הצעה",
+      "tool": "vfsales + vfcopy",
+      "packs": ["vfsales", "vfcopy", "vfcost"],
+      "gate": "none",
+      "notes": "Price stays X ₪ until verified."
+    },
+    {
+      "id": "price.set",
+      "label": "קביעת מחיר מכירה",
+      "tool": "vfcost + lead",
+      "packs": ["vfcost", "vfsales"],
+      "gate": "lead",
+      "notes": "Never invent ₪."
+    },
+    {
+      "id": "books.pulse",
+      "label": "דופק כסף / חשבונות",
+      "tool": "vfbooks",
+      "packs": ["vfbooks"],
+      "gate": "none",
+      "notes": "Verified numbers only."
+    },
+    {
+      "id": "content.pack",
+      "label": "חבילת תוכן + כריכות",
+      "tool": "vfgrowth + vfcovers",
+      "packs": ["vfgrowth", "vfcovers", "vfigos"],
+      "gate": "none"
+    },
+    {
+      "id": "boost.request",
+      "label": "בקשת בוסט",
+      "tool": "vfigos",
+      "packs": ["vfigos"],
+      "gate": "lead",
+      "notes": "Forbidden without lead seat."
+    },
+    {
+      "id": "auto.dm",
+      "label": "אוטו־DM",
+      "tool": null,
+      "packs": [],
+      "gate": "deny",
+      "notes": "Always forbidden."
+    },
+    {
+      "id": "print.job",
+      "label": "הדפסה ממשרד",
+      "tool": null,
+      "packs": ["vfprod"],
+      "gate": "deny",
+      "notes": "Printers stay on the floor."
+    },
+    {
+      "id": "public.site",
+      "label": "אתר שיווקי ציבורי",
+      "tool": null,
+      "packs": [],
+      "gate": "deny",
+      "notes": "Public marketing site / price widget still locked. Internal console is separate (allowed)."
+    },
+    {
+      "id": "console.internal",
+      "label": "קונסולת משרד פנימית",
+      "tool": "vfops/hq/COMMAND-SURFACE.md",
+      "packs": ["vfops", "vfbriefux"],
+      "gate": "lead",
+      "notes": "Owner/lead view over packs + capabilities. Not a sixth seat."
+    },
+    {
+      "id": "mem.who",
+      "label": "מי מטפל בעבודה",
+      "tool": "scripts/vfmem.py who",
+      "packs": ["vfmem"],
+      "gate": "none"
+    },
+    {
+      "id": "harness.checkpoint",
+      "label": "כתיבת checkpoint",
+      "tool": "vfharness/state",
+      "packs": ["vfharness"],
+      "gate": "none"
+    }
+  ]
+}
