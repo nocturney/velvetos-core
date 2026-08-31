@@ -28,8 +28,9 @@ REQUIRED_PLAYBOOKS = {
     "queries/adr.md",
 }
 NEED_LOCKS = {
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-cbm-binary-from-hq",

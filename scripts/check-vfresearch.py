@@ -18,8 +18,9 @@ ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
 MANIFEST = ROOT / "packages" / "manifest.json"
 DESK = ROOT / ".cursor" / "vf-desk.json"
 REQUIRED_LOCKS = {
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-new-pack-per-idea",

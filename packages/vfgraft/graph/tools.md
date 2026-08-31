@@ -2,7 +2,7 @@
 
 ## Summary
 
-Gmail (`nocturney@gmail.com`) is read-only: search, get thread, labels. Calendar is `Asia/Jerusalem`; create only if asked. Drive is search-by-job — no dedicated studio folder. Canva is **ready** on this Cloud Agent (Instagram visuals). Native `WebSearch` / `WebFetch` and `GenerateImage` sit on the desk. Superdesign for packet graphics. Treg after login; say the catalog price before `call`. Mobbin only when the MCP is actually on the agent. Grok/ChatGPT/Gemini send stays off HQ (`packages/vfmcp/GAP.md`).
+Gmail (`nocturney@gmail.com`) is read-and-send: search, get thread, labels, `send_message` / `reply` / `forward`. Calendar is `Asia/Jerusalem`; create only if asked. Drive is search-by-job **and** `create_file` for office docs. Canva is **ready** on this Cloud Agent (Instagram visuals). Native `WebSearch` / `WebFetch` and `GenerateImage` sit on the desk. Superdesign for packet graphics. Treg is not relevant. Mobbin only when the MCP is actually on the agent. HQ sends via tools (`constitution/SEND.md`). Map: `packages/vfmcp/GAP.md`.
 
 ## Sources
 
@@ -10,6 +10,7 @@ Gmail (`nocturney@gmail.com`) is read-only: search, get thread, labels. Calendar
 - `docs/AGENCY-TOOLS.md`
 - `docs/CANVA.md`
 - `packages/vfmcp/GAP.md`
+- `constitution/SEND.md`
 
 ## Links
 
@@ -19,6 +20,6 @@ Gmail (`nocturney@gmail.com`) is read-only: search, get thread, labels. Calendar
 
 ## Notes
 
-Never `send_message`, `reply`, or `forward`. If Canva MCP is `needsAuth`, say `Canva לא מחובר` and use `packages/vfcanva/studio/render.py`.
+If Canva MCP is `needsAuth`, say `Canva לא מחובר` and use `packages/vfcanva/studio/render.py`. Instagram publish tool if connected; else Canva + Drive + Gmail same turn (`vfigos/SEND.md`).
 
-**Failover:** any tool down → backup tool **same turn** (`constitution/ORCHESTRA.md`). No empty finish. No invented ₪ / Insights / blocked body.
+**Failover:** any tool down → backup tool **same turn** (`constitution/ORCHESTRA.md`). No empty finish. No invented ₪ / Insights / blocked body. Do not wait for Christian or Grok.

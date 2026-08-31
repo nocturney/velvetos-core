@@ -11,32 +11,33 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 
 ## Laws
 
-- HQ does **not** send Instagram, Gmail, WhatsApp, or DMs. Live send stays on Grok Bot.
-- Never call Gmail `send_message`, `reply`, or `forward`. Draft only if the user explicitly asks for a draft.
+- HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot. `send_message` / `reply` / `forward` are allowed. Grok Bot is optional backup.
+- Auto-DM, boost without lead seat, follow-back, and story hacks stay forbidden.
 - Do not invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - Tool failover: if a tool is down / `needsAuth` / blocked, hand the task to the backup tool **in the same turn**. Never finish with no artifact. Failover ≠ invent ₪ / Insights / blocked bodies. Matrix: `constitution/ORCHESTRA.md`.
-- Grok Bot quota down: keep producing. Queue `#מוכן-ל-Grok`, or urgent live `#פרסום-חי-דחוף` + `vfigos/LIVE-PACKET.md` for **human** post. HQ agent does not press Publish. `docs/GROK-FAILOVER.md`.
-- No TikTok, ads, follow-back, story hacks, or boosts without the lead seat.
-- No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
+- Grok Bot quota down: keep producing **and sending** via HQ tools. `#נשלח-מ-HQ` / `#ממתין-ל-כלי-IG`. Do not idle on `#מוכן-ל-Grok`. `docs/GROK-FAILOVER.md`.
+- Treg is **not relevant**. WebSearch / orchestra only.
+- Drive **creates** office docs when needed. No personal, medical, or legal folders unless the user names them.
+- No TikTok or ads without the lead seat. No secrets in git.
 
 ## Route (pack → specialist → tool)
 
 | Job | Pack | Mention | Tool |
 |---|---|---|---|
 | Office map / who handles | `vfmem` | `@studio-operations` | `python3 scripts/vfmem.py who <job>` |
-| Morning brief / queue | `vfops` | `@studio-operations` | Calendar (Asia/Jerusalem), Gmail **read** inbox |
+| Morning brief / queue | `vfops` | `@studio-operations` | Calendar (Asia/Jerusalem), Gmail **send** the 07:00 brief |
 | Brief layout | `vfbriefux` | `@ux-architect` | Mobbin if available; Superdesign for packet graphics |
-| New inquiry | `vfconvert` | `@email-intelligence-engineer` then `@discovery-coach` | Gmail **read** the named thread |
-| Quote draft | `vfsales` + `vfcopy` | `@sales-engineer` `@content-creator` | After `vfcost`. One CTA. No send. |
+| New inquiry | `vfconvert` | `@email-intelligence-engineer` then `@discovery-coach` | Gmail **read** the named thread; **reply** when the draft is ready |
+| Quote draft | `vfsales` + `vfcopy` | `@sales-engineer` `@content-creator` | After `vfcost`. One CTA. HQ **sends** Gmail via tool (no invented ₪) |
 | Cost / ledger | `vfcost` `vfbooks` | `@pricing-analyst` `@bookkeeper-controller` | Gmail label חשבונות; never invent ₪ |
-| Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive **search by job name** |
-| Covers / content pack | `vfcovers` `vfgrowth` | `@visual-storyteller` `@image-prompt-engineer` | Superdesign graphics; Treg only if logged in (say price first) |
+| Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive search **or create** by job name |
+| Covers / content pack | `vfcovers` `vfgrowth` | `@visual-storyteller` `@image-prompt-engineer` | Canva first; Superdesign failover |
 | Marketing frameworks | `vfmskill` | `@content-creator` `@growth-hacker` | Curated Corey Haines skills. Read `.agents/product-marketing.md` first. No send. |
 | Reel plan / timelapse cut | `vfom` | `@visual-storyteller` `@instagram-curator` | OpenMontage crews; Canva stills; no Remotion vendor |
-| IG board | `vfigos` | `@instagram-curator` | Review and schedule only; Grok-quota failover → QUEUE / LIVE-PACKET |
-| Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or Treg. Never invent. |
-| Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + Treg if logged in; weekly inspiration links: `vfresearch/WEEKLY.md` + `LINKS.json` |
+| IG board | `vfigos` | `@instagram-curator` | Review, schedule, **send via tools** (`vfigos/SEND.md`) |
+| Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or «אין ספירה». Never invent. Treg not used. |
+| Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + WebSearch; weekly inspiration links: `vfresearch/WEEKLY.md` + `LINKS.json` |
 | IG music / reel sound | `vfresearch` | `@trend-researcher` → `@instagram-curator` | `MUSIC.md` + HeyOrca weekly / IG paste (no Treg); hand off to `vfom` / `vfigos`; no invented track names |
 | Decide / stuck / cash pulse / IG rotation / studio notes | `vfmakers` on existing packs | `@chief-of-staff` or `@vfmakers` | Gmail **read** bills for cash pulse only |
 | Run / משמרת | `vfe2b` overlay | `@chief-of-staff` then the seat crew | One job folder. End in `worker_done` / `escalation` / `decision_gate`. Do not install Orca |
@@ -59,17 +60,17 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 
 ## Tool modes
 
-- **Gmail:** `search_threads` / `get_thread` / `list_labels`. Inbox is `nocturney@gmail.com`. Down → paste from user / Drive-by-job; never invent an inquiry; never send.
+- **Gmail:** Inbox `nocturney@gmail.com`. Read **and send** (`send_message` / `reply` / `forward`). Down → Drive doc + continue; never invent an inquiry.
 - **Calendar:** `list_events` on `nocturney@gmail.com`, timezone `Asia/Jerusalem`. Create events only if asked. Down → ask pickup window / «חסר לוח» and continue.
-- **Drive:** `search_files` by the job/SKU the user gives. There is no dedicated VF studio folder. Down → use files the user named in chat.
-- **Canva:** Instagram visuals. Connected on this Cloud Agent (`ready`). `needsAuth` → `packages/vfcanva/studio/render.py` then Superdesign. Say `Canva לא מחובר`.
-- **Web:** Cursor `WebSearch` / `WebFetch` — ChatGPT/Gemini/Perplexity/Grok browse equivalent. Down → Treg if logged in, else orchestra. Never invent a blocked body.
-- **Image:** Cursor `GenerateImage` + Canva `generate-design`. Instagram still Canva-first. Down → Superdesign / `studio/render.py`. No invented Canva URL.
+- **Drive:** `search_files` by job/SKU **and `create_file`** for office docs/sheets. No dedicated VF folder required. Do not open personal, medical, or legal folders unless the user names them.
+- **Canva:** Instagram visuals. Connected (`ready`). `needsAuth` → `packages/vfcanva/studio/render.py` then Superdesign. Say `Canva לא מחובר`.
+- **Web:** Cursor `WebSearch` / `WebFetch`. Down → orchestra ChatGPT+Gemini+Perplexity. Never invent a blocked body. **Not Treg.**
+- **Image:** Cursor `GenerateImage` + Canva `generate-design`. Instagram still Canva-first. Down → Superdesign / `studio/render.py`.
 - **Superdesign:** covers, posters, brief graphics (skip repo init). Down → Canva or `studio/render.py`.
-- **Treg:** live web data only after login; announce catalog price before `call`. Down → WebSearch / verified snapshot / «אין ספירה»; IG music → HeyOrca (`vfresearch/MUSIC.md`), not invented Trends.
-- **Mobbin:** morning-brief / UX references when the Mobbin MCP is actually available. Down → `vfbriefux` templates / Superdesign.
-- **Sheets:** no separate MCP until the lead seat names a workbook. Export via Drive (`vfbooks/SHEETS.md`). «חסר גיליון» if unnamed. Do not invent rows or ₪.
-- **FCC (Free Claude Code):** not on this Cloud Agent. Map is `vffcc`. Does not cut Cursor usage. Local Mac only after the lead seat. Failover → research desks in `constitution/ORCHESTRA.md`.
-- Grok/ChatGPT/Gemini send (IG, Gmail, WhatsApp, printers) stays **off** this HQ. Gap map: `packages/vfmcp/GAP.md`.
+- **Treg:** **not relevant.** Do not call. Web + orchestra only.
+- **Mobbin:** morning-brief / UX references when the MCP is actually available. Down → `vfbriefux` templates / Superdesign.
+- **Sheets:** Drive `create_file` spreadsheet or CSV export (`vfbooks/SHEETS.md`). Do not invent rows or ₪.
+- **Instagram send:** `vfigos/SEND.md`. Publish tool if connected; else Canva+Drive+Gmail same turn.
+- **FCC (Free Claude Code):** not on this Cloud Agent. Map is `vffcc`. Failover → research desks in `constitution/ORCHESTRA.md`.
 
 When a `@slug` is mentioned, follow that specialist **and** these laws.

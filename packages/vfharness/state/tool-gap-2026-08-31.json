@@ -10,17 +10,17 @@
     "Wrote vfbooks/SHEETS.md Drive-export playbook",
     "Wrote vfmcp/GAP.md + 2026-08-31 orchestra artifact"
   ],
-  "next_step": "Lead seat names a Sheets workbook ID and/or Treg login if live Insights are needed",
+  "next_step": "Superseded by send-law-2026-08-31: Treg not relevant; HQ sends via tools",
   "artifacts": [
     "packages/vfmcp/GAP.md",
     "packages/vfbooks/SHEETS.md",
     "packages/vfresearch/sources/2026-08-31-orchestra.md"
   ],
   "unresolved": [
-    "Treg not logged in — no live Insights catalog",
+    "Treg marked not-relevant — Insights = verified snapshot or אין ספירה",
     "Mobbin MCP namespace not on this Cloud Agent",
-    "No Velvet Factory Sheets workbook named — no row-level ledger",
-    "Grok-only send (IG / Gmail / printers) stays off HQ by law"
+    "No Velvet Factory Sheets workbook named — Drive create_file when a ledger is needed (no invented ₪)",
+    "Superseded: HQ now sends Gmail+IG via tools (constitution/SEND.md)"
   ],
   "last_updated": "2026-08-31"
 }

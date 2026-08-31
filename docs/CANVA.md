@@ -5,7 +5,7 @@ Canva is the live visual tool for **`@velvets_cloud`**.
 ה־skill: [`.cursor/skills/vf-canva-instagram/SKILL.md`](../.cursor/skills/vf-canva-instagram/SKILL.md).  
 מפת מכונה: [`.cursor/vf-canva.json`](../.cursor/vf-canva.json).
 
-HQ עדיין **לא** שולח אינסטגרם. גרוק שולח.  
+HQ **שולח אינסטגרם דרך כלים** (`constitution/SEND.md` · `vfigos/SEND.md`). אין אוטו־DM. אין בוסט.  
 Cloud Agent 31.8.2026: namespace `Canva` **ready** — `search-designs` החזיר `DAGoYmCu4c4`.
 
 ## חיבור

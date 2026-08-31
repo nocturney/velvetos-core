@@ -1,8 +1,10 @@
-# vfigos — סקירה ושיבוץ, בלי שליחה
+# vfigos — סקירה, שיבוץ, ושליחה דרך כלים
 
-מושב: צמיחה. Instagram office. HQ לא שולח.
+מושב: צמיחה. Instagram office. **HQ שולח דרך כלים** (`SEND.md`).
 
 מקבל חבילה מ־`#vfgrowth`+`#vfcovers`. בודק `#משובץ` `#לא-זז` `#לא-בוסט`.  
-אין אוטו־DM, אין follow-back, אין צפיית סטורי כטריק. Grok שולח. Deny שליחה הוא הרתמה, לא בקשה בנימוס.
+אין אוטו־DM, אין follow-back, אין צפיית סטורי כטריק. אין בוסט בלי ראש צוות.
 
-כשמכסת Grok נגמרת: `#מוכן-ל-Grok` או `#פרסום-חי-דחוף`+`LIVE-PACKET.md` (אדם מעלה). סוכן HQ לא לוחץ Publish. נוהל: `packages/vfharness/playbooks/grok-failover.md`.
+סדר שליחה: `packages/vfigos/SEND.md` + `constitution/SEND.md`.  
+אם אין Publish MCP — Drive `create_file` + Gmail `send_message` באותו תור.  
+תגיות: `#נשלח-מ-HQ` · `#ממתין-ל-כלי-IG`. Grok הוא גיבוי אופציונלי בלבד.

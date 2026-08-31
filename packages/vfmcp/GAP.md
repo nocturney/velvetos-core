@@ -2,20 +2,20 @@
 
 לא פק חדש. הטמעה על `vfmcp` + השולחן הקיים.  
 נבדק 31.8.2026 על Cloud Agent `bc-4dd7d6a7` (`nocturney@gmail.com`).  
-שליחה חיה נשארת אצל Grok Bot. HQ לא שולח.
+**HQ שולח ג׳ימייל ואינסטגרם דרך כלים** (`constitution/SEND.md`). Treg **לא רלוונטי**. Drive יוצר מסמכים (`create_file`).
 
 ## מה יש כאן עכשיו (אומת בריצה)
 
 | כלי | סטטוס | איך אומת |
 |---|---|---|
-| Gmail | ready · קריאה | namespace `Gmail` |
+| Gmail | ready · קריאה **ושליחה** (`send_message` / `reply` / `forward`) | namespace `Gmail` |
 | Calendar | ready · `Asia/Jerusalem` | namespace `Google-calendar` |
-| Drive | ready · חיפוש לפי עבודה | namespace `Google-drive` |
+| Drive | ready · חיפוש **ויצירה** (`create_file`) | namespace `Google-drive` |
 | **Canva** | **ready** | `search-designs` החזיר `DAGoYmCu4c4` («Card - חגיגת האהבה שלכם») |
 | WebSearch / WebFetch | ready · מקורי Cursor | כלי native בסוכן |
 | GenerateImage | ready · מקורי Cursor | כלי native; אינסטגרם עדיין Canva קודם |
 | Superdesign | skill · בלי CLI login | פלאגין על הדיסק |
-| Treg | skill · בלי login | אין `treg` ב־PATH; אין namespace |
+| Treg | **לא רלוונטי** | לא login, לא `call`, לא failover |
 | Mobbin | plugin · אין MCP כאן | namespace לא על Cloud Agent |
 | FCC | לא כאן | נעול ב־`vffcc` |
 
@@ -23,17 +23,17 @@
 
 ## מה יש אצלם (קטלוג רשמי + מפת HQ)
 
-מקורות: [Grok Connectors](https://x.ai/news/grok-connectors) (מאי 2026) · [ChatGPT Apps](https://help.openai.com/en/articles/11487775-connectors-in-chatgpt) · [Gemini Connected Apps](https://support.google.com/gemini/answer/13695044) · תזמורת `constitution/ORCHESTRA.md` · `docs/BACKUP.md` (Grok Bot: IG / Gmail send / מדפסות).  
+מקורות: [Grok Connectors](https://x.ai/news/grok-connectors) (מאי 2026) · [ChatGPT Apps](https://help.openai.com/en/articles/11487775-connectors-in-chatgpt) · [Gemini Connected Apps](https://support.google.com/gemini/answer/13695044) · תזמורת `constitution/ORCHESTRA.md` · `constitution/SEND.md` (HQ שולח דרך כלים).  
 סשן חי בחשבון עלול להיות מאחורי חומת הזדהות — לא ממציאים גוף שנחסם.
 
 ### Grok / Grok Bot
 
 | כלי שם | כאן | דין |
 |---|---|---|
-| שליחת אינסטגרם | אין בכוונה | **skip** — Grok / אדם + LIVE-PACKET |
-| שליחת Gmail | אין בכוונה | **skip** — Deny קבוע |
+| שליחת אינסטגרם | Canva + `vfigos/SEND.md` (אין Publish MCP) | **wired failover** — Drive + Gmail `send_message` אותו תור |
+| שליחת Gmail | `send_message` / `reply` / `forward` | **wired** — HQ שולח |
 | מדפסות | אין בכוונה | **skip** — רצפה לא מ־HQ |
-| Google Workspace (Gmail/Drive/Docs/Sheets/Calendar) **כתיבה+שליחה** | Gmail/Drive/Calendar **קריאה**; Docs דרך Drive; Sheets בלי MCP שורות | קריאה כבר כאן. כתיבה/שליחה לא |
+| Google Workspace (Gmail/Drive/Docs/Sheets/Calendar) **כתיבה+שליחה** | Gmail **שליחה**; Drive `create_file`; Calendar קריאה; Sheets דרך Drive | **wired** 31.8 — `SEND.md` |
 | Outlook / OneDrive / SharePoint | אין | **skip** — לא ערימת הסטודיו |
 | Notion / Linear / GitHub (Grok) | GitHub דרך `gh` לקריאה | **later** — לא MCP חדש |
 | חיפוש רשת / X / DeepSearch | WebSearch + תזמורת | **wired** 31.8 — `tools.web` |
@@ -44,7 +44,7 @@
 
 | כלי שם | כאן | דין |
 |---|---|---|
-| Gmail / Drive / Calendar / Canva | אותם ארבעה חיים כאן | כבר מחובר. ChatGPT Gmail **send** — **skip** |
+| Gmail / Drive / Calendar / Canva | אותם ארבעה חיים כאן | כבר מחובר. HQ Gmail **send_message** מותר |
 | חיפוש רשת / Deep Research | WebSearch + `vfresearch` | **wired** |
 | DALL·E / יצירת תמונה | GenerateImage + Canva `generate-design` | **wired** |
 | Code interpreter | Shell | כבר כאן |
@@ -58,7 +58,7 @@
 |---|---|---|
 | Gmail / Drive / Calendar | אותם MCP | כבר מחובר |
 | חיפוש Google / Deep Research | WebSearch + תזמורת | **wired** |
-| YouTube / Maps / Photos | אין | Treg אחרי login, או **skip** |
+| YouTube / Maps / Photos | אין | WebSearch / תזמורת. Treg **לא רלוונטי** |
 | WhatsApp / Messages / Phone **שליחה** | אין בכוונה | **skip** — אדם `050-2517000` |
 | Imagen / וידאו | Canva + GenerateImage | **wired** לסטילס. לא Veo |
 
@@ -79,13 +79,15 @@
 2. **`tools.web`** — WebSearch + WebFetch על השולחן. זה מקביל החיפוש של ChatGPT / Gemini / Perplexity / Grok.
 3. **`tools.image`** — GenerateImage + Canva `generate-design`. אינסטגרם עדיין Canva קודם.
 4. **גיליון דרך Drive** — `packages/vfbooks/SHEETS.md`. בלי workbook ID מומצא.
+5. **שליחה מ־HQ** — Gmail `send_message` מותר. IG: `vfigos/SEND.md` + `constitution/SEND.md`. Treg לא רלוונטי.
 
 ## מה לא הותקן — ולמה
 
 | פער | למה לא |
 |---|---|
-| שליחת IG / Gmail / וואטסאפ / מדפסות | חוקת HQ. נשאר Grok / אדם |
-| Treg login | דורש דפדפן/קוד לבעלים. אין סרק. failover: WebSearch + «אין ספירה» |
+| Publish MCP לאינסטגרם | אין namespace. failover: Canva+Drive+Gmail (`SEND.md`). לא ממציאים שעלה לפיד |
+| וואטסאפ / מדפסות | אין MCP וואטסאפ. מדפסות ברצפה. אדם `050-2517000` |
+| Treg | **לא רלוונטי** למשרד. לא login |
 | Mobbin MCP | פלאגין על הדיסק; namespace לא על Cloud Agent. failover: `vfbriefux` |
 | Google Sheets MCP | אין גיליון סטודיו שכריסטיאן נקב בשמו. Drive מייצא CSV כשייש נקוב |
 | WhatsApp MCP | חיפוש/טיוטה רק אחרי מספר מהבעלים. שליחה אסורה |

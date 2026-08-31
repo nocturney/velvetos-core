@@ -8,7 +8,7 @@ Refresh Agency rules: `./scripts/install-agency-agents.sh` (preserves the desk r
 Check: `python3 scripts/check-vf-desk.py`. Marketing skills map: `python3 scripts/check-vfmskill.py`.
 Office graph (before dumping packs): `python3 scripts/vfmem.py who <job>` — [`docs/VFMEM.md`](VFMEM.md).
 
-HQ still does not send Instagram or Gmail. Live send stays on Grok Bot.
+HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot. Auto-DM and boost stay forbidden. Customer WhatsApp stays human `050-2517000`.
 
 ## Why a desk
 
@@ -18,21 +18,21 @@ Checked 2026-08-30 on this HQ:
 
 | Tool | Status on this agent | Mode |
 |---|---|---|
-| Gmail | Ready (`nocturney@gmail.com`) | **Read** inbox / bills. No send, reply, or forward. |
+| Gmail | Ready (`nocturney@gmail.com`) | **Read and send** (`send_message` / `reply` / `forward`). No blast. No invented ₪. |
 | Google Calendar | Ready (`nocturney@gmail.com`, `Asia/Jerusalem`) | **Read** today / pickup windows. Create only if asked. |
-| Google Drive | Ready | **Search by job/SKU**. No dedicated VF studio folder was found. |
+| Google Drive | Ready | **Search by job/SKU and `create_file`** for office docs. No personal/medical/legal folders. |
 | Mobbin | Plugin installed; MCP namespace not on this cloud agent | Brief UX only, when the server is actually available. |
 | Superdesign | Skill installed | Covers / brief graphics (skip repo init). Needs CLI login for generate. |
-| Treg | Skill installed; needs `treg login` | Live SEO/social/ads. Say the catalog price before spending. |
+| Treg | **Not relevant** | Do not login or `call`. Live web = WebSearch / orchestra. Insights = verified snapshot or «אין ספירה». |
 | vfmem | HQ-native (`scripts/vfmem.py`) | Office graph: pack / `@slug` / tool. Pattern from codebase-memory-mcp; no binary. |
 | FCC (Free Claude Code) | Not on this Cloud Agent | Local BYOK proxy on the owner Mac only (`vffcc`). Does not cut Cursor usage. |
 | Canva | **Ready** (verified 2026-08-31, design `DAGoYmCu4c4`) | Instagram visuals. If `needsAuth`: `vfcanva/studio/render.py` → Superdesign. |
-| WebSearch / WebFetch | Ready (native Cursor) | Live web when Treg is down. ChatGPT/Gemini/Perplexity/Grok browse equivalent. Never invent a blocked body. |
+| WebSearch / WebFetch | Ready (native Cursor) | Live web (Treg not used). ChatGPT/Gemini/Perplexity/Grok browse equivalent. Never invent a blocked body. |
 | GenerateImage | Ready (native Cursor) | User-asked stills. Instagram still Canva-first. Failover: Canva `generate-design` → Superdesign → `studio/render.py`. |
 
 **Failover law:** tool down / no access → hand the job to the backup **in the same turn**. Never end empty-handed. Never invent ₪, Insights, or a blocked body to fill the gap. Matrix: [`constitution/ORCHESTRA.md`](../constitution/ORCHESTRA.md).
 
-Do not invent Insights to replace Treg. Do not invent ₪ to replace a slicer or Christian.
+Do not invent Insights. Do not invent ₪ to replace a slicer or a stated amount. Treg is not used.
 
 Tool-gap map (Grok / ChatGPT / Gemini / Perplexity vs this HQ): [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md). Sheets without a named workbook: [`packages/vfbooks/SHEETS.md`](../packages/vfbooks/SHEETS.md).
 

@@ -44,8 +44,12 @@ def main() -> None:
     for needle in NEEDLES_GAP:
         if needle not in gap:
             fail(f"GAP.md must mention {needle}")
-    if "send_message" in gap and "skip" not in gap.lower():
-        fail("GAP.md must not enable Gmail send")
+    if "send_message" not in gap:
+        fail("GAP.md must enable Gmail send_message")
+    if "SEND.md" not in gap:
+        fail("GAP.md must point at constitution/SEND.md")
+    if "לא רלוונטי" not in gap and "not relevant" not in gap.lower():
+        fail("GAP.md must mark Treg as not relevant")
 
     sheets = SHEETS.read_text()
     for needle in NEEDLES_SHEETS:

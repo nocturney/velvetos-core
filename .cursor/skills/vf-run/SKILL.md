@@ -1,6 +1,6 @@
 ---
 name: vf-run
-description: Coordinate one Velvet Factory job as an Orca-style run — isolate the folder, pick one existing crew, end in worker_done / escalation / decision_gate. Do not install Orca. HQ does not send.
+description: Coordinate one Velvet Factory job as an Orca-style run — isolate the folder, pick one existing crew, end in worker_done / escalation / decision_gate. Do not install Orca. HQ sends via tools.
 ---
 
 # Run (Orca desk)
@@ -24,7 +24,7 @@ Read `packages/vfe2b/crews/run.md` and follow it. This is not a sixth product pa
 ## Laws
 
 - Do not install Orca or a second coding agent. Cursor is the office.
-- HQ does not send Instagram, Gmail, WhatsApp, or printer jobs. Live send is a **handoff** to Grok Bot.
+- HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). Customer WhatsApp stays human. Printers stay on the floor.
 - Do not invent ₪ or Insights. Missing → **חסר** / **אין במקור**.
 - Fan-out (max 3) only for `vfcopy` / `vfcovers`. Never for price or send.
 - Three misses on the same fact → circuit break. Do not guess.

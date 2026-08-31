@@ -6,7 +6,7 @@ description: Create, resize, brand-check, or hand off Velvet Factory Instagram v
 # Canva → Instagram (`@velvets_cloud`)
 
 Live visual tool for the Instagram page. Pack: `packages/vfcanva/`.
-This HQ does **not** send, boost, or DM. After a design exists, hand the edit URL to `vfigos` for review / schedule. Grok Bot sends.
+After a design exists, hand the edit URL to `vfigos` for review / schedule / **send via tools** (`packages/vfigos/SEND.md`, `constitution/SEND.md`). No auto-DM. No boost.
 
 ## Laws
 

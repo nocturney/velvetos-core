@@ -2,7 +2,7 @@
 
 Source: [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) (reviewed 2026-08-30).  
 Grok / ChatGPT / Gemini / Perplexity gap vs this HQ: [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md) (reviewed 2026-08-31).  
-This HQ does **not** send Instagram. Live send, boosts, and printers stay on Grok Bot (5 seats).  
+HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Boosts and auto-DM stay forbidden. Printers stay on the floor. Treg is not relevant.  
 Do not invent prices. Do not commit secrets.
 
 The awesome list is a directory of thousands of servers. Most of it is coding, crypto, or other people's SaaS. Below is only what maps onto Velvet Factory packs.
@@ -13,16 +13,16 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 
 | Already here | What it covers | Packs it already feeds |
 |---|---|---|
-| **Gmail** | Search, read, draft, labels | `vfsales`, `vfconvert`, `vfops` |
-| **Google Drive** | Files and folders; Sheets **export** when the lead seat names a workbook (`vfbooks/SHEETS.md`) | `vfprod`, `vfcovers`, `vfsku`, `vfresearch`, `vfbooks` |
+| **Gmail** | Search, read, draft, labels, **send / reply / forward** | `vfsales`, `vfconvert`, `vfops` |
+| **Google Drive** | Files and folders; **`create_file`**; Sheets **export** when a workbook is named (`vfbooks/SHEETS.md`) | `vfprod`, `vfcovers`, `vfsku`, `vfresearch`, `vfbooks` |
 | **Google Calendar** | Events | `vfseason`, `vfops`, `vfsales` |
 | **Canva** | Edit designs, brand-check, bulk-create, resize, `generate-design`. **Ready** on this Cloud Agent (2026-08-31, `DAGoYmCu4c4`) | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
 | **WebSearch / WebFetch** | Live web + URL fetch (ChatGPT/Gemini/Perplexity/Grok browse equivalent) | `vfresearch`, `vfgrowth` |
 | **GenerateImage** | User-asked stills. Instagram still Canva-first | `vfcovers`, `vfbriefux` |
-| **Treg** | SEO / SERP, social trends, ad libraries, enrichment; GA / Search Console / Business Profile *if the team connects those accounts* | `vfgrowth`, `vfinsights`, `vfresearch` |
+| **Treg** | **Not relevant** — do not login or `call` | — |
 | **Mobbin** | Real-app UI patterns | `vfbriefux` |
 | **Superdesign** | Canvas / graphics | `vfcovers`, `vfbriefux` |
-| **Grok Bot** | Live Instagram, Gmail, printers | not HQ |
+| **Grok Bot** | Optional backup only. HQ sends via tools | `vfigos/SEND.md` |
 
 Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility” servers unless Treg is missing a specific account.
 

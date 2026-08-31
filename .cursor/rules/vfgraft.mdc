@@ -12,7 +12,7 @@ Read `packages/vfgraft/MAP.md`. Open two or three nodes in `packages/vfgraft/gra
 ## Locks (do not break)
 
 - Do not install `@nanonets/graft`, Graft MCP, or a provider key from this pack.
-- This HQ does not send Instagram, Gmail, or printer jobs. Live send stays on Grok Bot.
+- HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). Printers stay on the floor. No auto-DM. No boost.
 - Do not invent prices (₪) or Insights metrics.
 - Missing source or number → write **חסר** or **אין במקור**.
 

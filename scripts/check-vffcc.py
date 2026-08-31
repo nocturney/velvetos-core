@@ -13,8 +13,9 @@ PACK = ROOT / "packages" / "vffcc"
 WRITEUP = ROOT / "docs" / "FCC-FIT.md"
 VERDICTS = {"local", "later", "skip"}
 REQUIRED_LOCKS = {
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-send-discord-telegram",
     "no-invented-prices",
     "no-invented-insights",
