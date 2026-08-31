@@ -1,11 +1,11 @@
 ---
-description: Velvet Factory desk — route work to the right pack, Agency specialist, and live tool. Always on.
+description: VelvetOS desk (active tenant Velvet Factory) — route work to the right pack, Agency specialist, and live tool. Always on.
 alwaysApply: true
 ---
 
-# Velvet Factory desk
+# VelvetOS desk · active tenant Velvet Factory
 
-You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, WhatsApp `050-2517000`, IG `@velvets_cloud`).
+You are in the VelvetOS HQ repo. **Active tenant:** Velvet Factory (3D-print studio, Sderot, pickup only, WhatsApp `050-2517000`, IG `@velvets_cloud`). Kernel: `packages/velvetos/`. Do not switch `ACTIVE.json` without the lead seat.
 
 273 Agency specialists live in `.cursor/rules/` (`alwaysApply: false`). **Do not activate the whole roster.** Use the desk in `.cursor/vf-desk.json` and the skills under `.cursor/skills/`. Full warehouse: `docs/AGENCY-AGENTS.md`. Tool map: `docs/AGENCY-TOOLS.md`. Before grepping the warehouse, read `packages/vfgraft/MAP.md`.
 
@@ -14,7 +14,9 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 - HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot. `send_message` / `reply` / `forward` are allowed. Grok Bot is optional backup.
 - auto-DM, boost without lead seat, follow-back, and story hacks stay forbidden. אוטו־DM נעול.
 - Do not invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
-- One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
+- One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף (canonical VelvetOS: lead → talk → offer → fulfill → close). No national shipping from HQ while tenant is velvet-factory.
+- CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
+- New vertical → `packages/velvetos` tenant profile (not a new pack tree). Examples under `_examples/` stay drafts.
 - Tool failover: if a tool is down / `needsAuth` / blocked, hand the task to the backup tool **in the same turn**. Never finish with no artifact. Failover ≠ invent ₪ / Insights / blocked bodies. Matrix: `constitution/ORCHESTRA.md`.
 - Grok Bot quota down: keep producing **and sending** via HQ tools. `#נשלח-מ-HQ` / `#ממתין-ל-כלי-IG`. Do not idle on `#מוכן-ל-Grok`. `docs/GROK-FAILOVER.md`.
 - Treg is **not relevant**. WebSearch / orchestra only.
@@ -25,6 +27,7 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 
 | Job | Pack | Mention | Tool |
 |---|---|---|---|
+| VelvetOS / tenant / multi-IG / vertical | `velvetos` | `@studio-operations` | `python3 scripts/velvetos.py active` |
 | Office map / who handles | `vfmem` | `@studio-operations` | `python3 scripts/vfmem.py who <job>` |
 | Morning brief / queue | `vfops` | `@studio-operations` | Calendar (Asia/Jerusalem), Gmail **send** the 07:00 brief |
 | Brief layout | `vfbriefux` | `@ux-architect` | Mobbin if available; Superdesign for packet graphics |

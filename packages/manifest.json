@@ -1,9 +1,12 @@
 {
   "name": "velvet-factory-headquarters-os",
-  "title": "VELVET FACTORY HEADQUARTERS & OS",
+  "title": "VelvetOS — active tenant Velvet Factory",
+  "product": "VelvetOS",
+  "activeTenant": "velvet-factory",
   "dumpedAt": "2026-08-30",
   "tag": "v0.1.0",
   "notes": [
+    "2026-08-31: VelvetOS kernel (packages/velvetos) — universal business + social desk with tenant profiles. Active tenant remains velvet-factory. Examples under tenants/_examples/ are drafts only. See docs/VELVETOS.md.",
     "Origin slugs: never invent. Eleven packs stay origin-slug-unknown until a scoped tmp list or agent-page copy. Playbook: docs/ORIGIN-SLUGS.md. Report: scripts/discover-origin-slugs.py. Recheck 2026-08-31: this HQ token lists only velvet-factory-headquarters-os; known tmp-* view is token-not-scoped.",
     "Origin CLI was not authenticated in the v0.1.0 dump environment (no CURSOR_API_KEY, origin auth status: not logged in).",
     "GitHub token is not accepted by origin.cursor.com.",
@@ -28,6 +31,8 @@
   ],
   "hqOverlay": {
     "constitution": "constitution/CONSTITUTION.md",
+    "tenant": "constitution/TENANT.md",
+    "velvetos": "packages/velvetos",
     "tags": "constitution/tags.md",
     "briefPacket": "packages/vfbriefux/hq/PACKET.md",
     "shareMap": "packages/chatgpt-embed-map.json",
@@ -365,6 +370,19 @@
       "vendorStatus": "hq-native",
       "source": "https://github.com/Alishahryar1/free-claude-code",
       "writeup": "docs/FCC-FIT.md"
+    },
+    {
+      "name": "velvetos",
+      "summary": "VelvetOS kernel — universal business + autonomous social desk with tenant profiles. Active default velvet-factory; example verticals stay drafts.",
+      "bcId": "bc-f7a22589",
+      "bcIdFull": "bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
+      "agentUrl": "https://cursor.com/agents/bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "writeup": "docs/VELVETOS.md",
+      "skill": ".cursor/skills/vf-velvetos/SKILL.md"
     }
   ]
 }

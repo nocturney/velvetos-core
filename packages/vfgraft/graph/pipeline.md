@@ -2,7 +2,9 @@
 
 ## Summary
 
-The only studio path: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ. Share-language aliases (NEW / QUOTED / PRINT QUEUE) map onto these five stages — they are not a second pipeline.
+The only studio path while tenant is velvet-factory: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ. Share-language aliases (NEW / QUOTED / PRINT QUEUE) map onto these five stages — they are not a second pipeline.
+
+VelvetOS canonical ids (all tenants): `lead → talk → offer → fulfill → close`. Labels come from `packages/velvetos/tenants/<id>.json`. See `packages/velvetos/PIPELINE.md`.
 
 ## Sources
 
