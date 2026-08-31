@@ -114,7 +114,7 @@ Do not add these “because they exist on the list.” Add them when Christian c
 | Xero or QuickBooks | [XeroAPI/xero-mcp-server](https://github.com/XeroAPI/xero-mcp-server) or Synder importer | `vfbooks` |
 | A Stripe checkout | official Stripe via a thin wrapper (APIFold lists one) | `vfbooks`, `vfsales` |
 | Google Business Profile not yet in Treg | [localseodata/mcp-server](https://github.com/localseodata/mcp-server) | `vfgrowth`, `vfinsights` |
-| Regular parcel quotes | [iafanasov/packzoo-mcp](https://github.com/IAfanasov/packzoo-mcp) | `vfops` |
+| **3D AI Studio** (owner subscription, confirmed 31.8.2026) | Official connector from their Settings → AI Assistants (MCP). OAuth, no API key. Playbook: [`vfprod/3DAISTUDIO.md`](../packages/vfprod/3DAISTUDIO.md). Do not invent the server URL; do not commit a Bearer key. Community `uvx mcp-server-3daistudio` is Mac-only later. | `vfprod`, `vlicense`, `vfsku` |
 | Reels cut from covers on the Mac | [video-creator/ffmpeg-mcp](https://github.com/video-creator/ffmpeg-mcp.git) or [06ketan/slideshot](https://github.com/06ketan/slideshot) | `vfigos`, `vfcovers` |
 | QR on SKU / proof cards | [qr-maker-io/mcp-server](https://github.com/qr-maker-io/mcp-server) | `vfsku` |
 | Floor “job done” pings | [teddyzxcv/ntfy-mcp](https://github.com/teddyzxcv/ntfy-mcp) | `vfprod` |

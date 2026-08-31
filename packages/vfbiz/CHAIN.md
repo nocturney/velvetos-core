@@ -3,10 +3,11 @@
 מושב: **ראש צוות**. מקור Perplexity: «צוות סוכנים» — שרשרת, לא כלי בודד.
 
 שם הציעו: Tripo/Meshy → STLforge → PrintPal/Maxel → Spoolworth/AutoQuote3D → Bolta/Buffer.  
+מנוי 3D AI Studio (31.8) יושב על אותה חוליה ראשונה — `vfprod/3DAISTUDIO.md`.  
 כאן זה צינור על הפקים הקיימים. חלקי. בלי מנוי חדש ובלי שליחה.
 
 ```
-רעיון / תמונה     vfresearch + vlicense
+רעיון / תמונה     vfresearch + vlicense + vfprod/3DAISTUDIO.md
   → תיקון קובץ     vfcost/SLICE.md
   → סלייס + בדיקה  vfcost + vfprod
   → הצעה           vfsales   (₪ רק אחרי ראש צוות)

@@ -225,6 +225,38 @@
       "note": "Crew overlay only. No second runtime."
     },
     {
+      "id": "3daistudio-home",
+      "kind": "vendor-site",
+      "url": "https://www.3daistudio.com",
+      "title": "3D AI Studio — text/image to 3D (owner subscription)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfprod/3DAISTUDIO.md",
+      "report": "packages/vfresearch/sources/2026-08-31-3daistudio.md",
+      "packs": [
+        "vfprod",
+        "vlicense",
+        "vfsku",
+        "vfmcp"
+      ],
+      "note": "Owner has a subscription. Site first. No invented ₪. Same Meshy/Tripo license gate."
+    },
+    {
+      "id": "3daistudio-mcp",
+      "kind": "vendor-docs",
+      "url": "https://www.3daistudio.com/MCP",
+      "title": "3D AI Studio MCP connector (OAuth, no API key)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfprod/3DAISTUDIO.md",
+      "report": "packages/vfresearch/sources/2026-08-31-3daistudio.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Connect from their Settings → AI Assistants. Not on this Cloud Agent. Do not invent the server URL or commit a key."
+    },
+    {
       "id": "plannotator-write-better",
       "kind": "repo",
       "url": "https://github.com/plannotator/write-better",

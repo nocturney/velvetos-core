@@ -47,6 +47,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 | **Calendar** MCP | שואלים חלון איסוף / «חסר לוח» וממשיכים בריף מג׳ימייל | לא ממציאים שעות תור |
 | **Drive** MCP | קובץ/שם שהמשתמש נתן בצ׳אט | לא פותחים תיקיות אישיות |
 | **FCC** (לא על Cloud Agent) | תזמורת ChatGPT+Gemini+Perplexity + thrift ב־`vffcc` | לא מתקינים `fcc-server` כאן |
+| **3D AI Studio** (MCP לא מחובר / אין קרדיט) | אתר [3daistudio.com](https://www.3daistudio.com) + Drive + `vfprod/3DAISTUDIO.md` | לא ממציאים מפתח / URL / ₪ · לא מדפיסים מ־HQ |
 
 ### Grok Bot (מכסה שבועית / לא זמין)
 
@@ -86,6 +87,7 @@ Cursor, לא Grok:
 | כיתוב, FAQ, ארבעה שדות בירור | `vfcopy` | שליחה חיה |
 | לוח תוכן מהעבודה (טיימלאפס / לפני־אחרי / הדרכה) | `vfgrowth` + `vfcovers` | בוסט, הזזת לוח משובץ |
 | סלייס, תמיכות, סיכון כשל | `vfcost` + `vfprod` | ווידג׳ט תשלום |
+| מודל AI (3D AI Studio / Meshy / Tripo) | `vfprod/3DAISTUDIO.md` + `vlicense` | קטלוג / באצ׳ / מחיר מקרדיטים |
 | B2B / אתר / מנוי חדש | `vfbiz` נעול עד בלוק `01` | קנייה מ־HQ |
 | מספר עמוד אחרי פרסום | `vfinsights` | Insights מהאוויר |
 | מקור גולמי של השאלה | `vfresearch/sources/` | שכפול כ־PR נפרד לכל כלי |

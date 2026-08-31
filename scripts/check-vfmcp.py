@@ -22,7 +22,9 @@ NEEDLES_GAP = (
     "אין בכוונה",
     "SHEETS.md",
     "Treg",
+    "3D AI Studio",
 )
+STUDIO3D = ROOT / "packages" / "vfprod" / "3DAISTUDIO.md"
 NEEDLES_SHEETS = (
     "חסר גיליון",
     "exportMimeType",
@@ -36,7 +38,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (GAP, FIT, SHEETS, DESK, ORCHESTRA, ORIGIN):
+    for path in (GAP, FIT, SHEETS, DESK, ORCHESTRA, ORIGIN, STUDIO3D):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -63,6 +65,14 @@ def main() -> None:
         fail("MCP-FIT.md must point at vfmcp/GAP.md")
     if "WebSearch" not in fit:
         fail("MCP-FIT.md must list WebSearch as already wired")
+    if "3D AI Studio" not in fit:
+        fail("MCP-FIT.md must map the owner 3D AI Studio account")
+    studio = STUDIO3D.read_text()
+    for needle in ("אין מפתח בגיט", "vlicense", "STL", "OAuth", "לא על Cloud Agent"):
+        if needle not in studio:
+            fail(f"3DAISTUDIO.md must mention {needle}")
+    if "₪" in studio and "X ₪" not in studio:
+        fail("3DAISTUDIO.md must not invent a sale ₪")
 
     desk = json.loads(DESK.read_text())
     tools = desk.get("tools") or {}
@@ -73,17 +83,26 @@ def main() -> None:
             fail(f"vf-desk.json tools.{key} must declare failover")
     if (tools.get("canva") or {}).get("status") != "ready":
         fail("vf-desk.json canva.status must be ready after Cloud Agent verify")
+    t3d = tools.get("threedaistudio") or {}
+    if not t3d:
+        fail("vf-desk.json tools missing threedaistudio")
+    if not (t3d.get("failover") or ""):
+        fail("vf-desk.json tools.threedaistudio must declare failover")
+    if "3DAISTUDIO.md" not in (t3d.get("useWhen") or "") and "3DAISTUDIO.md" not in (t3d.get("rule") or ""):
+        fail("vf-desk.json threedaistudio must point at 3DAISTUDIO.md")
 
     orchestra = ORCHESTRA.read_text()
     if "WebSearch" not in orchestra and "tools.web" not in orchestra:
         fail("ORCHESTRA.md must mention WebSearch / tools.web failover")
     if "GenerateImage" not in orchestra and "tools.image" not in orchestra:
         fail("ORCHESTRA.md must mention GenerateImage / tools.image failover")
+    if "3D AI Studio" not in orchestra:
+        fail("ORCHESTRA.md must failover 3D AI Studio to the site")
 
     if "GAP.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention GAP.md")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready")
+    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio")
 
 
 if __name__ == "__main__":

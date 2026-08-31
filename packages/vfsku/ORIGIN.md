@@ -17,4 +17,5 @@ Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeed
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
 
 Embedded 30.8.2026 from Gemini share: `CARDS.md`.  
-Perplexity: no auto catalog from Tripo/Meshy.
+Perplexity: no auto catalog from Tripo/Meshy.  
+2026-08-31: 3D AI Studio generated meshes stay behind the same SKU gate (`vfprod/3DAISTUDIO.md`).

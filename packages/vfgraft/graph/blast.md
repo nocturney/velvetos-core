@@ -31,6 +31,7 @@ Blast radius for this office: which jobs and tools break when a law, tool mode, 
 | Treg without login | `vfinsights`, `vfgrowth`, `vfresearch` live reads — WebSearch / «אין ספירה»; music → HeyOrca |
 | Research desk wall (ChatGPT/Gemini/Perplexity) | 06:15 orchestra — failover to open desks same turn; never invent body |
 | Web / image native tools | `vfresearch`, `vfcovers` — failover in `constitution/ORCHESTRA.md`; Instagram still Canva-first |
+| 3D AI Studio MCP / credits | `vfprod` concept mesh — site UI + Drive (`3DAISTUDIO.md`); still `vlicense` + slice; no print from HQ |
 
 Do not "fix" a missing ₪ or Insights number to make the blast look closed.
 Do not sit idle when a tool is down — hand off per [[tools]] / `constitution/ORCHESTRA.md`.

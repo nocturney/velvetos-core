@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **3D AI Studio**: מנוי הבעלים הוטמע על `vfprod` (לא פק חדש). אתר קודם; MCP רשמי = OAuth מ־Settings; API רק עם מפתח ב־env במק. אותו שער Meshy/Tripo (`vlicense` / `vfsku`). אין מפתח בגיט, אין ₪ מקרדיטים, אין הדפסה מ־HQ. פלייבוק: `packages/vfprod/3DAISTUDIO.md`. Owner 3D AI Studio subscription mapped onto existing production packs; site-first; no secret in git.
 - 2026-08-31 — **סשן מחברים חי**: ChatGPT Gmail-קריאה; Gemini Workspace+Search+YouTube; Perplexity Connectors ריק; Grok חומת X (אין גוף). הוטמע ב־`vfmcp/GAP.md`. אין מחבר חדש חובה היום.
 - 2026-08-31 — **חוקת שליחה אוטונומית**: Treg לא רלוונטי. Drive `create_file` למסמכי משרד. **HQ שולח ג׳ימייל ואינסטגרם דרך כלים** (`constitution/SEND.md`) — לא כריסטיאן ולא Grok כשער. פיילאובר: Canva+Drive+Gmail באותו תור אם אין Publish MCP. נעילות חדשות: `hq-send-via-tools` / `no-auto-dm` / `no-boost`. Send law: HQ tools send Gmail+IG; Treg unused; Drive creates office docs.
 - 2026-08-31 — **פערי כלים Grok/GPT/ג׳מיני/פרפלקסיטי**: Canva **ready** על Cloud Agent (`DAGoYmCu4c4`); `WebSearch`/`WebFetch` ו־`GenerateImage` על השולחן (`tools.web` / `tools.image`). גיליון דרך Drive כשייש שם (`vfbooks/SHEETS.md`). מפה: `packages/vfmcp/GAP.md`. Tool-gap: wired native web+image; Canva verified live.

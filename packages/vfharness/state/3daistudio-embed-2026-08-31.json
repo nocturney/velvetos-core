@@ -1,0 +1,26 @@
+{
+  "task_id": "3daistudio-embed-2026-08-31",
+  "status": "done",
+  "pack": "vfprod",
+  "completed_steps": [
+    "Read office graph (vfmem who + vfgraft tools)",
+    "Fetched 3daistudio.com / MCP / API getting-started / Flow",
+    "Wrote vfprod/3DAISTUDIO.md on existing packs (no new pack)",
+    "Wired vlicense/vfsku/vfresearch/vfmcp/desk/ORCHESTRA",
+    "Registered weekly links; sensor needles on check-vfmcp.py"
+  ],
+  "next_step": "Lead seat: Settings → AI Assistants (MCP) on 3daistudio.com for Cursor Desktop; then flip threedaistudio.status to ready on a run that sees the tools",
+  "artifacts": [
+    "packages/vfprod/3DAISTUDIO.md",
+    "packages/vfresearch/sources/2026-08-31-3daistudio.md",
+    "packages/vfmcp/GAP.md",
+    "docs/MCP-FIT.md"
+  ],
+  "unresolved": [
+    "Official MCP not connected on this Cloud Agent — OAuth is a lead-seat click",
+    "API key must stay on the Mac env if they want REST later",
+    "No live mesh generated this run — no customer photo or lead concept approval"
+  ],
+  "escalation": null,
+  "last_updated": "2026-08-31"
+}

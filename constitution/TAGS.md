@@ -43,5 +43,5 @@
 | `printpal` | `vfcost` | שכבה/מילוי/תמיכות אחרי סלייס |
 | `maxel-farm` | `vfprod` | הקצאה ידנית. חווה אוטומטית **דולג** |
 | `inquiry-bot` | `vfconvert`, `vfcopy` | ארבעה שדות בוואטסאפ. צ׳אטבוט **דולג** |
-| `tripo-meshy` | `vfresearch`, `vlicense`, `vfsku` | קונספט אחרי אישור. לא קטלוג אוטומטי |
+| `tripo-meshy` | `vfresearch`, `vlicense`, `vfsku`, `vfprod` | 3D AI Studio / Meshy / Tripo — קונספט אחרי אישור. לא קטלוג אוטומטי. `vfprod/3DAISTUDIO.md` |
 | `agent-chain` | `vfbiz` | צינור משרד חלקי. לא אוטומציה חיה |
