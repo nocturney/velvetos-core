@@ -146,11 +146,14 @@
     {
       "q": [
         "brief layout",
-        "פורמט בריף"
+        "פורמט בריף",
+        "brief email",
+        "מייל בריף"
       ],
       "pack": "vfbriefux",
       "slug": "ux-architect",
-      "tool": "mobbin"
+      "tool": "mobbin",
+      "note": "Mobbin down → vfbriefux/hq/brief-email.html (effective-html)"
     },
     {
       "q": [

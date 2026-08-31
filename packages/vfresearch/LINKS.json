@@ -225,6 +225,19 @@
       "note": "Crew overlay only. No second runtime."
     },
     {
+      "id": "effective-html",
+      "kind": "repo",
+      "url": "https://github.com/plannotator/effective-html",
+      "title": "effective-html",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-effective-html.md",
+      "report": "packages/vfbriefux/hq/EFFECTIVE-HTML.md",
+      "pack": "vfbriefux",
+      "packs": ["vfbriefux", "vfops"],
+      "note": "Self-contained HTML brief template at vfbriefux/hq/brief-email.html. Complements MAIL.html (production). html-plan preserves 01–07 slots."
+    },
+    {
       "id": "plannotator-write-better",
       "kind": "repo",
       "url": "https://github.com/plannotator/write-better",

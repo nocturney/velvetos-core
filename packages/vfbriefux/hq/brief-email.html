@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>בריף הבוקר · Velvet Factory</title>
+  <style>
+    :root {
+      --bg: #11110f;
+      --surface: #1b1a17;
+      --surface-2: #24221e;
+      --paper: #f4efe6;
+      --gold: #c9a227;
+      --gold-dim: #8a7420;
+      --ink: #1a1814;
+      --mute: #9a9286;
+      --line: #3a3732;
+      --red: #e85d5d;
+      --amber: #e8b84d;
+      --green: #6bc98a;
+      --measure: 42rem;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--paper);
+      line-height: 1.55;
+    }
+    a { color: var(--gold); }
+    .skip {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+    }
+    .skip:focus {
+      left: 1rem;
+      top: 1rem;
+      background: var(--paper);
+      color: var(--ink);
+      padding: 0.5rem 1rem;
+      z-index: 100;
+    }
+    header, main, footer {
+      max-width: var(--measure);
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+    header {
+      padding-top: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .kicker {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0 0 0.35rem;
+    }
+    h1 {
+      font-size: 1.35rem;
+      font-weight: 650;
+      margin: 0 0 0.25rem;
+      line-height: 1.3;
+    }
+    .meta {
+      font-size: 0.9rem;
+      color: var(--mute);
+      margin: 0;
+    }
+    .tagline {
+      margin: 0.75rem 0 0;
+      font-size: 0.95rem;
+      color: var(--paper);
+      border-right: 3px solid var(--gold);
+      padding-right: 0.75rem;
+    }
+    .pulse {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+      gap: 0.65rem;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .pulse li {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.65rem 0.75rem;
+      font-size: 0.82rem;
+    }
+    .pulse strong {
+      display: block;
+      font-size: 1.1rem;
+      margin-top: 0.15rem;
+    }
+    .pulse .late strong { color: var(--red); }
+    .pulse .wait strong { color: var(--amber); }
+    .pulse .ready strong { color: var(--green); }
+    .pulse .queue strong { color: var(--gold); }
+    main { padding: 1.25rem 1.25rem 2.5rem; }
+    section {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 0.85rem;
+    }
+    section h2 {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 0 0 0.65rem;
+      font-weight: 600;
+    }
+    section p, section ul {
+      margin: 0;
+      font-size: 0.95rem;
+    }
+    section ul { padding-right: 1.1rem; }
+    section li + li { margin-top: 0.35rem; }
+    .placeholder {
+      color: var(--mute);
+      font-style: italic;
+    }
+    .decision {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.2rem 0.65rem;
+      font-size: 0.8rem;
+      color: var(--mute);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-top: 0.35rem;
+    }
+    th, td {
+      text-align: right;
+      padding: 0.45rem 0.35rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    th { color: var(--mute); font-weight: 500; }
+    .covers {
+      display: grid;
+      gap: 0.5rem;
+    }
+    .cover-card {
+      background: var(--surface-2);
+      border-radius: 8px;
+      padding: 0.65rem 0.75rem;
+      font-size: 0.88rem;
+    }
+    footer {
+      padding: 1.25rem 1.25rem 2.5rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.82rem;
+      color: var(--mute);
+    }
+    footer p { margin: 0 0 0.35rem; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+    @media print {
+      body { background: #fff; color: #000; }
+      header, main, footer { max-width: none; }
+      section, .pulse li {
+        break-inside: avoid;
+        border-color: #ccc;
+        background: #fff;
+      }
+      .kicker, section h2 { color: #666; }
+      a { color: #000; text-decoration: none; }
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 1.15rem; }
+      .pulse { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">דלג לתוכן הבריף</a>
+
+  <header>
+    <p class="kicker">Velvet Factory · שדרות</p>
+    <h1>ולווט פקטורי · סטודיו להדפסות תלת־ממד · שדרות</h1>
+    <p class="meta">בריף הבוקר · <time datetime="2026-08-31">31.8.2026</time> · Asia/Jerusalem</p>
+    <p class="tagline">פנייה → שיחה → הצעה → הדפסה → איסוף · איסוף משדרות בלבד</p>
+
+    <ul class="pulse" aria-label="סיכום מנהל">
+      <li class="late"><span>איחור</span><strong>אין ספירה</strong></li>
+      <li class="wait"><span>ממתין לאישור</span><strong>אין ספירה</strong></li>
+      <li class="ready"><span>מוכן להדפסה</span><strong>אין ספירה</strong></li>
+      <li class="queue"><span>שעות תור</span><strong>אין ספירה</strong></li>
+    </ul>
+  </header>
+
+  <main id="main">
+    <section id="block-01" aria-labelledby="h-01">
+      <h2 id="h-01">01 · קודם החלטה</h2>
+      <p class="placeholder">מחיר חסר / אישור תוכן / היילייטס — למלא ממקור</p>
+      <div class="decision" role="list">
+        <span class="chip" role="listitem">כן</span>
+        <span class="chip" role="listitem">לא</span>
+        <span class="chip" role="listitem">דחה</span>
+      </div>
+    </section>
+
+    <section id="block-02" aria-labelledby="h-02">
+      <h2 id="h-02">02 · כסף בעבודה</h2>
+      <table>
+        <thead>
+          <tr><th scope="col">מה</th><th scope="col">סטטוס</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>הזמנות פתוחות</td><td class="placeholder">אין ספירה</td></tr>
+          <tr><td>חוב / שולם</td><td class="placeholder">אין ספירה</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="block-03" aria-labelledby="h-03">
+      <h2 id="h-03">03 · מה להדפיס ולפרסם</h2>
+      <ul>
+        <li>באצ׳ אחרי סלייס — <span class="placeholder">למלא</span></li>
+        <li>רילס בלי מק״ט — <span class="placeholder">למלא</span></li>
+        <li>הצעות <code>#vfresearch</code> — <span class="placeholder">למלא</span></li>
+      </ul>
+    </section>
+
+    <section id="block-04" aria-labelledby="h-04">
+      <h2 id="h-04">04 · איך הסטודיו מרוויח</h2>
+      <ul>
+        <li>וואטסאפ <a href="tel:0502517000">050-2517000</a></li>
+        <li>איסוף שדרות — ללא משלוח ארצי</li>
+        <li>B2B נעול עד בלוק <code>01</code></li>
+      </ul>
+    </section>
+
+    <section id="block-05" aria-labelledby="h-05">
+      <h2 id="h-05">05 · משרד</h2>
+      <p><strong>מה נבנה / יועל:</strong> effective-html → תבנית HTML לבריף מייל ב־<code>vfbriefux/hq/brief-email.html</code></p>
+    </section>
+
+    <section id="block-06" aria-labelledby="h-06">
+      <h2 id="h-06">06 · מה קורה בעמוד</h2>
+      <p class="placeholder">מספרים שנמדדו בלבד · <code>#vfinsights</code> אחרי פרסום+24ש</p>
+    </section>
+
+    <section id="block-07" aria-labelledby="h-07">
+      <h2 id="h-07">07 · מה עולה בפיד</h2>
+      <div class="covers">
+        <div class="cover-card"><strong>G001</strong> · <span class="placeholder">כריכה — vfcovers</span> · <code>#משובץ</code></div>
+        <div class="cover-card"><strong>G002</strong> · <span class="placeholder">כריכה — vfcovers</span> · <code>#לא-זז</code></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Velvet Factory · איסוף משדרות · WhatsApp 050-2517000 · IG @velvets_cloud</p>
+    <p>טיוטת HQ — Grok שולח ב־07:00. בלי סיסמאות, קודי אימות או שמות לקוחות מיותרים.</p>
+    <p>תבנית: <code>packages/vfbriefux/hq/brief-email.html</code> · מקור: <a href="https://github.com/plannotator/effective-html">effective-html</a></p>
+  </footer>
+</body>
+</html>
