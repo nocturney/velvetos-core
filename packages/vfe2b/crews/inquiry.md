@@ -18,6 +18,7 @@ Packs: `vfconvert`, `vfsales`, `vfcost`, `vfcopy`, `vfprod`.
 
 ## Run
 
+0. **Dedup** (Huginn pattern): before reply or a new block-02 row, run `vfconvert/hq/DEDUP.md`. Duplicate → `worker_done` «כפילות — לא נשלח שוב».
 1. Quote the four fields. Any blank → one WhatsApp question, drafted, not sent (customer chat stays human `050-2517000`).
 2. Do not scrape a person into existence. If the only source is the thread, say so.
 3. If a slice / STL / reprint is mentioned, hand to `vfprod` / `vfsku` as a note, not a price.

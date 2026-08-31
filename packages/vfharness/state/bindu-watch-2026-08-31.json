@@ -1,0 +1,20 @@
+{
+  "taskId": "bindu-watch-2026-08-31",
+  "status": "worker_done",
+  "verdict": "watch",
+  "source": "https://github.com/GetBindu/Bindu",
+  "artifact": "packages/vfresearch/sources/2026-08-31-bindu.md",
+  "embedded": [
+    "packages/vfresearch/LINKS.json",
+    "packages/vfe2b/LOCK.md",
+    "docs/MCP-FIT.md"
+  ],
+  "skipped": [
+    "bindufy install",
+    "x402 USDC",
+    "A2A Gateway runtime",
+    "expose tunnel"
+  ],
+  "later": "vfbiz B2B — scoped auth via agentic-identity-trust-architect, still no crypto",
+  "completedAt": "2026-08-31T07:05:00Z"
+}
