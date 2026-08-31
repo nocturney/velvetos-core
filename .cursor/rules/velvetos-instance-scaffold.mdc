@@ -1,0 +1,19 @@
+---
+description: When creating or publishing a new VelvetOS frontend instance repo from Core — always include Cloud environment.json with attach-core on install.
+alwaysApply: false
+---
+
+# VelvetOS instance scaffold law
+
+When adding a **new frontend repo** (`VelvetOS — <Business>`) from VelvetOS Core:
+
+1. **Must** include `.cursor/environment.json` with:
+   - `"install": "./scripts/attach-core.sh"`
+   - `"repositoryDependencies": ["github.com/nocturney/velvetos-core"]`
+   - `"name": "VelvetOS — <Business>"`
+2. **Must** include `scripts/attach-core.sh` and `.gitignore` entry `vendor/velvetos-core/`
+3. Copy from `instances/_template/` or `instances/velvet-factory/` — do not invent a different attach path
+4. Run `python3 scripts/check-velvetos.py` after scaffold edits
+5. Playbook: `packages/velvetos/INSTANCE-ENV.md` · `packages/velvetos/REPOS.md`
+
+Cloud Agents on instance repos **must not** rely on the human typing «הרץ attach-core» — `install` handles it.

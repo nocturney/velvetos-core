@@ -16,6 +16,10 @@ if [[ ! -d "$SRC" ]]; then
   echo "FAIL missing scaffold $SRC" >&2
   exit 1
 fi
+if [[ ! -f "$SRC/.cursor/environment.json" ]]; then
+  echo "FAIL missing $SRC/.cursor/environment.json (Cloud attach-core on boot)" >&2
+  exit 1
+fi
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 if command -v rsync >/dev/null 2>&1; then
