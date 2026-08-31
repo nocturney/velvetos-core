@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **תזמורת 06:15**: ChatGPT Plus הוטמע (Product Lab, כרטיס פנייה, ביו בלי מחיר, flexi/fidget אחרי שער). בלוק `05` קבוע ב־`vfops/data/research.md`. Gemini — אין גוף חדש (שאלה בקומפוזר). Perplexity — ביו/«שלחו הודעה» דולג. Daily orchestra: embed Plus office bits; brief block 05 at `vfops/data/research.md`. See `packages/vfresearch/sources/2026-08-31-orchestra.md`.
 - 2026-08-30 — **פיילאובר מכסת Grok**: כשמכסת Grok Bot נגמרת — HQ ממשיך לייצר תוצרים; תור `#מוכן-ל-Grok`; **פרסום חי דחוף** בידי אדם עם `LIVE-PACKET` (סוכן HQ לא לוחץ Publish). תזמורת ChatGPT+Gemini+Perplexity לטיוטה/מחקר. Grok Bot quota failover: keep producing; queue or human live-post packet; agent never presses Publish. See `docs/GROK-FAILOVER.md`.
 - 2026-08-30 — **תזמורת failover**: כלי נפל / אין גישה → מעבירים משימה לכלי גיבוי **באותו רגע**. אסור להישאר בלי תוצאה. אסור להמציא גוף/₪/Insights. מטריצה ב־`constitution/ORCHESTRA.md` + שדות `failover` ב־`vf-desk.json`. סנסור ב־`check-vfresearch.py`. Orchestra tool failover: hand off same turn; never invent blocked bodies.
 

@@ -15,6 +15,7 @@ MUSIC_SOURCES = ROOT / "packages" / "vfresearch" / "SOURCES-MUSIC.json"
 MUSIC_SKILL = ROOT / ".cursor" / "skills" / "vf-ig-music" / "SKILL.md"
 ROUTINE = ROOT / "packages" / "vfops" / "ROUTINE.md"
 ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
+RESEARCH_BLOCK = ROOT / "packages" / "vfops" / "data" / "research.md"
 MANIFEST = ROOT / "packages" / "manifest.json"
 DESK = ROOT / ".cursor" / "vf-desk.json"
 REQUIRED_LOCKS = {
@@ -35,7 +36,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LINKS, WEEKLY, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK):
+    for path in (LINKS, WEEKLY, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -82,6 +83,8 @@ def main() -> None:
         fail("vfops/ROUTINE.md must mention weekly inspiration links")
     if NEEDLE_WEEKLY not in routine:
         fail("vfops/ROUTINE.md must mention weekly cadence")
+    if "data/research.md" not in routine:
+        fail("vfops/ROUTINE.md must point brief block 05 at data/research.md")
 
     orchestra = ORCHESTRA.read_text()
     if "WEEKLY.md" not in orchestra and "קישורי השראה" not in orchestra:
@@ -97,6 +100,12 @@ def main() -> None:
         fail("vfresearch/DAILY.md must mention failover")
     if "מחכים לבעלים" in daily:
         fail("DAILY.md must not say מחכים לבעלים without failover")
+    if "data/research.md" not in daily:
+        fail("vfresearch/DAILY.md must write block 05 to vfops/data/research.md")
+
+    block = RESEARCH_BLOCK.read_text()
+    if "מה נבנה / יועל" not in block and "אין חדש במשרד" not in block:
+        fail("vfops/data/research.md must carry «מה נבנה / יועל» or exact empty-state אין חדש במשרד")
 
     desk = json.loads(DESK.read_text())
     tools = desk.get("tools") or {}

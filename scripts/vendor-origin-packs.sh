@@ -64,11 +64,17 @@ vendor_one() {
   local overlay=""
   overlay="$(mktemp -d)"
   [[ -f "$dest/ORIGIN.md" ]] && cp "$dest/ORIGIN.md" "$overlay/ORIGIN.md"
-  for keep in hq SKILL.md ROUTINE.md BRIEF.md BRIEF-2026-08-31.md DAILY.md GATE.md PATH.md DESK.md CALENDAR.md CHECKLIST.md FLOOR-CARD.md PICKUP.md SLICE.md QUOTE.md FLOOR.md MATERIAL.md CARDS.md LOCK.md CHAIN.md LEDGER.md PHONE.md REVIEW.md SKIP.md READ.md DRAFT.md CONNECT.md OPEN.md WORKFLOW.md FORMATS.json G005.md G005-d12b.md; do
+  for keep in hq SKILL.md ROUTINE.md BRIEF.md DAILY.md GATE.md PATH.md DESK.md CALENDAR.md CHECKLIST.md FLOOR-CARD.md PICKUP.md SLICE.md QUOTE.md FLOOR.md MATERIAL.md CARDS.md LOCK.md CHAIN.md LEDGER.md PHONE.md REVIEW.md SKIP.md READ.md DRAFT.md CONNECT.md OPEN.md WORKFLOW.md FORMATS.json G005.md G005-d12b.md LAB.md CARD.md BIO.md data; do
     if [[ -e "$dest/$keep" ]]; then
       cp -a "$dest/$keep" "$overlay/$keep"
     fi
   done
+  # Dated brief blocks (BRIEF-YYYY-MM-DD.md)
+  shopt -s nullglob
+  for dated in "$dest"/BRIEF-20*.md; do
+    cp -a "$dated" "$overlay/$(basename "$dated")"
+  done
+  shopt -u nullglob
   if [[ -d "$dest/sources" ]]; then
     cp -a "$dest/sources" "$overlay/sources"
   fi
