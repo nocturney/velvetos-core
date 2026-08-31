@@ -12,6 +12,7 @@ MANIFEST = ROOT / "packages" / "manifest.json"
 CATALOG = ROOT / "packages" / "vfe2b" / "catalog.json"
 ORCH = ROOT / "packages" / "vfe2b" / "orchestrators.json"
 ORCH_MD = ROOT / "packages" / "vfe2b" / "ORCHESTRATORS.md"
+DEER_FLOW = ROOT / "packages" / "vfe2b" / "DEER-FLOW-PATTERNS.md"
 ORCH_DOC = ROOT / "docs" / "ORCHESTRATORS.md"
 CREWS = ROOT / "packages" / "vfe2b" / "crews"
 RUN_CARDS = ROOT / "packages" / "vfe2b" / "fixtures" / "run-cards.json"
@@ -189,14 +190,22 @@ def check_orchestrators(pack_names: set[str]) -> tuple[int, int]:
         "דופק",
         "אימות",
         "ארטיפקט",
+        "מטרה",
         "working",
         "blocked",
         "idle",
         "awesome-agent-orchestrators",
+        "bytedance/deer-flow",
         "SEND.md",
     ):
         if token not in run_text:
             fail(f"crews/run.md missing orchestrator token {token!r}")
+    if not DEER_FLOW.is_file():
+        fail(f"missing {DEER_FLOW}")
+    deer_text = DEER_FLOW.read_text()
+    for token in ("bytedance/deer-flow", "no-second-orchestrator", "מטרה", "receipt"):
+        if token not in deer_text:
+            fail(f"DEER-FLOW-PATTERNS.md missing token {token!r}")
     lock_text = (ROOT / "packages" / "vfe2b" / "LOCK.md").read_text()
     if "no-second-orchestrator" not in lock_text and "תזמורת שנייה" not in lock_text:
         fail("LOCK.md must skip a second orchestrator runtime")

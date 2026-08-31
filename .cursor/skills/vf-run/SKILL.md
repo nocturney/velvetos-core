@@ -18,10 +18,10 @@ Read `packages/vfe2b/crews/run.md` and follow it. This is not a sixth product pa
    - content / covers → `packages/vfe2b/crews/content.md` (or `.cursor/skills/vf-content-sprint/SKILL.md`)
    - research → `packages/vfe2b/crews/research.md`
    - books / numbers → `packages/vfe2b/crews/books-data.md`
-3. Emit the outcome card from `run.md`. Exactly one of: `worker_done`, `escalation`, `decision_gate`. Include `דופק` + `אימות` + `ארטיפקט`.
+3. Emit the outcome card from `run.md`. Exactly one of: `worker_done`, `escalation`, `decision_gate`. Include `מטרה` + `דופק` + `אימות` + `ארטיפקט`.
 4. Stop.
 
-Orchestrator overlay (pattern only): `packages/vfe2b/ORCHESTRATORS.md`. Do not install a second orchestrator.
+Orchestrator overlay (pattern only): `packages/vfe2b/ORCHESTRATORS.md`. DeerFlow patterns: `packages/vfe2b/DEER-FLOW-PATTERNS.md`. Do not install a second orchestrator or DeerFlow Gateway.
 
 ## Laws
 
