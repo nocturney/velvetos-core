@@ -2,7 +2,7 @@
 
 Private backup, versions, and changelog for Velvet Factory Cursor packs.
 
-Grok Bot (5 seats) still runs live Instagram, Gmail, and printers.
+HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Grok Bot is optional backup. Printers stay on the floor.
 Cursor packs in `packages/` are the office OS.
 
 See `CHANGELOG.md`. Standing order (same-day map, no weekly wait): `docs/BACKUP.md`.  
@@ -16,15 +16,15 @@ Share embed 30.8.2026 (Gemini link + Perplexity PDFs): [`docs/SHARES-2026-08-30.
 
 GitHub copy of the studio office OS. Cursor agents built the packs on Origin (`christian-velvet/tmp-…`). This repository is the durable backup, version tag, and changelog — not the live sender.
 
-- **Live:** Grok Bot (5 seats) — Instagram, Gmail, printers. Chat = decisions only.
+- **Live send:** HQ tools — Gmail `send_message` / Instagram via `vfigos/SEND.md`. Grok Bot is optional backup. Printers stay on the floor.
 - **Office OS:** Cursor packs under `packages/<name>/` plus `constitution/`.
 - **Workhorses:** Cursor opens ChatGPT, Gemini, and Perplexity at 06:15. Does not invent a blocked body. See [`constitution/ORCHESTRA.md`](constitution/ORCHESTRA.md).
-- **Instagram visuals:** Canva (`packages/vfcanva/`, `docs/CANVA.md`). Connect the Canva MCP, then create / resize / review. Grok still sends.
+- **Instagram visuals:** Canva (`packages/vfcanva/`, `docs/CANVA.md`). Create / resize / review, then send via `vfigos/SEND.md`.
 - **The Agency:** 273 specialist Cursor rules in `.cursor/rules/` (from [msitarzewski/agency-agents](https://github.com/msitarzewski/agency-agents)). Mention `@slug` to activate. Roster: [`docs/AGENCY-AGENTS.md`](docs/AGENCY-AGENTS.md).
-- **Desk:** 28 of those specialists are wired to VF packs and live tools (Gmail read, Calendar, Drive-by-job, Superdesign, Treg, Mobbin). Map: [`docs/AGENCY-TOOLS.md`](docs/AGENCY-TOOLS.md).
-- **This HQ does not send Instagram.** No pack dump here posts, boosts, or DMs.
+- **Desk:** 28 of those specialists are wired to VF packs and live tools (Gmail read-and-send, Calendar, Drive search-and-create, Canva, WebSearch, Superdesign). Treg is not relevant. Map: [`docs/AGENCY-TOOLS.md`](docs/AGENCY-TOOLS.md).
+- **HQ sends Instagram via tools (`constitution/SEND.md`). No auto-DM. No boost.** No pack dump here posts, boosts, or DMs.
 - **Studio:** pickup-only Sderot · WhatsApp 050-2517000 · IG [@velvets_cloud](https://instagram.com/velvets_cloud) · Hebrew product.
-- **Five seats (office):** ראש צוות, סטודיו, צמיחה, תפעול, ייצור — mapped onto existing packs, not new ones. Grok «5 seats» is the live sender.
+- **Five seats (office):** ראש צוות, סטודיו, צמיחה, תפעול, ייצור — mapped onto existing packs, not new ones.
 
 No secrets belong in git. No invented prices or invented Insights.
 

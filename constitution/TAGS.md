@@ -20,11 +20,11 @@
 | `voiceflow-faq` | `vfcopy` | ידע FAQ, בלי בוט חי |
 | `custom-gpt` | `vfgrowth`, `vfcopy` | לוח שבועי + כיתוב |
 | `capcut-canva` | `vfcovers` | טיוטת כריכה/ריל |
-| `metricool` | `vfigos`, `vfinsights` | סקירה + קריאה. לא שליחה |
-| `make-zapier` | `vfops`, `vfconvert` | שורת משרד. בלי מייל ללקוח |
+| `metricool` | `vfigos`, `vfinsights` | סקירה + שליחה דרך `SEND.md` |
+| `make-zapier` | `vfops`, `vfconvert` | שורת משרד. HQ שולח ג׳ימייל דרך כלי (בלי דיוור המוני) |
 | `stl-quote` | `vfsales`, `vfcost` | סלייס ובדיקה. ₪ רק אחרי סכום |
 | `vision-monitor` | `vfprod` | רשימת רצפה. לא דמון חי כאן |
-| `timelapse-reel` | `vfgrowth`, `vfigos` | טיוטה ל־Grok |
+| `timelapse-reel` | `vfgrowth`, `vfigos` | טיוטה + שליחה מ־HQ דרך `SEND.md` |
 | `ideation` | `vfresearch`, `vfsales` | חיפוש דגם + אישור ויזואלי |
 | `weekly-links` | `vfresearch` | סקירת קישורי השראה פעם בשבוע (`WEEKLY.md`) |
 | `material-tracker` | `vfprod`, `vfsku` | יומן מלאי. בלי רכש מומצא |
@@ -33,7 +33,7 @@
 
 | תג Perplexity | חבילה | סטטוס |
 |---|---|---|
-| `ig-native-schedule` | `vfigos` | Grok משבץ במובנה. HQ לא שולח |
+| `ig-native-schedule` | `vfigos` | HQ משבץ ושולח דרך `SEND.md` |
 | `buffer-later-bolta` | `vfigos`, `vfcopy`, `vfcovers` | טיוטה בלבד. מענה/פרסום אוטומטי **דולג** |
 | `predis-flick` | `vfcopy` | כתוביות והאשטגים בטיוטה |
 | `wix-hostinger-site` | `vfbiz` | אתר רק אם ראש צוות פותח |

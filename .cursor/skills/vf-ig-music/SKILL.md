@@ -26,7 +26,7 @@ Use when the user asks for מוזיקה / סאונד לריל או לפוסט, t
    - Optional method URL from the registry. Blocked page → «אין גוף».
 4. Match energy to content type (timelapse / hook / BTS / story) per the playbook table. Flag Business-library risk.
 5. Write `packages/vfresearch/sources/YYYY-MM-DD-ig-music.md`.
-6. Hand the brief to the content crew; `vfigos` reviews only. **HQ does not send.**
+6. Hand the brief to the content crew; `vfigos` reviews only. **HQ sends via tools** (`constitution/SEND.md`).
 
 ## If no live source
 

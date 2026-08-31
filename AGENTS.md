@@ -15,14 +15,17 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 
 ## RULES
 
-- Never send Instagram, Gmail, WhatsApp, or DMs from this HQ. Live send stays on Grok Bot.
-- Never call Gmail `send_message`, `reply`, or `forward`. Draft only if the user explicitly asks.
+- HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot to press Send/Publish. Grok Bot is optional backup.
+- Gmail: `send_message` / `reply` / `forward` are **allowed** for office mail and named inquiry threads. No blast list. No invented ₪.
+- Instagram `@velvets_cloud`: send via a connected publish tool; if none, failover **same turn** to Canva + Drive `create_file` + Gmail (`vfigos/SEND.md`). Do not idle. Do not claim the feed posted if it did not.
 - Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
-- CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
+- CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM». Customer WhatsApp stays human (no WhatsApp MCP).
 - Do not create a new pack for an idea. Map onto an existing pack the same day.
 - Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
-- Grok Bot quota failover: if Grok weekly quota is exhausted (or Grok is unavailable), HQ **keeps producing** drafts/covers/briefs/research on existing packs. Default: `#מוכן-ל-Grok` in `packages/vfigos/QUEUE.md`. Urgent live IG: `#פרסום-חי-דחוף` + `packages/vfigos/LIVE-PACKET.md` — HQ prepares export+caption; **a human** posts on `@velvets_cloud`. HQ agent still does **not** press Publish, Gmail send, WhatsApp, Print, or boost. Customer chat stays human WhatsApp `050-2517000`. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md`.
+- Treg is **not relevant**. Do not login, `call`, or route failover through Treg. Live web = `WebSearch` / `WebFetch` / orchestra.
+- Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.
+- Grok Bot quota failover: HQ **keeps producing and sending** via HQ tools. Queue tags: `#נשלח-מ-HQ` when a tool sent; `#ממתין-ל-כלי-IG` if the feed itself is still waiting on a publish MCP; `#פרסום-חי-דחוף` + `LIVE-PACKET` for urgent feed work (HQ still sends via tools). Do not sit on `#מוכן-ל-Grok` as the only path. No boost, no auto-DM, no Print from HQ. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md` · `constitution/SEND.md`.
 - After every catalog, pack, or rule change, run `python3 scripts/check-all.py`.
 - Do not claim success if a computational sensor failed. Retry once, then escalate.
 - Close a multi-step task with a checkpoint under `packages/vfharness/state/` so the next session can resume.
@@ -32,13 +35,14 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 ## ANTI-PATTERNS (dated; each traces to an observed failure)
 
 - 2026-08-30 — Invented sale ₪ or Insights to fill a gap. Sensor: `scripts/check-hq-overlay.py`.
-- 2026-08-30 — Instagram / Gmail send from HQ. Sensor: desk rule + `scripts/check-vf-desk.py`.
+- 2026-08-31 — Waited for Christian or Grok Bot to send Gmail/Instagram while tools were available. Sensor: `scripts/check-vf-desk.py` + `constitution/SEND.md`.
+- 2026-08-30 — Instagram / Gmail send from HQ **without a tool / claiming Publish**. Superseded 31.8: HQ **does** send via tools. Still forbid auto-DM, boost, invented publish. Sensor: desk rule + `scripts/check-vf-desk.py`.
 - 2026-08-30 — New pack per ChatGPT/Gemini “agent”. Embed in place. Map: `packages/chatgpt-embed-map.json`.
 - 2026-08-30 — Inspiration/share links left stale. Weekly pass: `packages/vfresearch/WEEKLY.md` + `LINKS.json`. Sensor: `scripts/check-vfresearch.py`.
 - 2026-08-30 — Invented Instagram track names or “#1 trending audio” without Treg/owner source. Playbook: `packages/vfresearch/MUSIC.md`. Sensor: `scripts/check-vfresearch.py`.
 - 2026-08-30 — Invented a Perplexity / Cloudflare-blocked body. Write «אין גוף» and skip.
 - 2026-08-30 — Stayed idle when a tool was down (waited for owner / skipped all desks). Failover immediately per `constitution/ORCHESTRA.md`. Sensor: `scripts/check-vfresearch.py`.
-- 2026-08-30 — Went idle or claimed «אין תוצרים» when Grok Bot weekly quota ran out, or claimed HQ auto-published. Produce + `#מוכן-ל-Grok` or `#פרסום-חי-דחוף`+LIVE-PACKET for human post; HQ agent never presses Publish. Sensor: `scripts/check-vfharness.py`. Playbook: `docs/GROK-FAILOVER.md`.
+- 2026-08-30 — Went idle or claimed «אין תוצרים» when Grok Bot weekly quota ran out. Produce **and send via HQ tools**. Do not claim the IG feed posted if no publish tool fired. Sensor: `scripts/check-vfharness.py`. Playbook: `docs/GROK-FAILOVER.md` + `constitution/SEND.md`.
 - 2026-08-30 — Second agent runtime (CrewAI, AutoGPT, BabyAGI). Cursor is the office. See `packages/vfe2b/LOCK.md`.
 - 2026-08-30 — National shipping or a sixth seat invented beside the five-seat desk.
 
@@ -48,13 +52,14 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 |---|---|
 | `scripts/check-all.py` | Full suite |
 | `scripts/check-hq-overlay.py` | Invented ₪, missing overlays |
-| `scripts/check-vf-desk.py` | Desk slugs / packs / no-send |
-| `scripts/check-vfharness.py` | Six layers + Grok-quota failover playbook (no-send) |
+| `scripts/check-vf-desk.py` | Desk slugs / packs / HQ-send-via-tools |
+| `scripts/check-vfharness.py` | Six layers + Grok-quota failover (HQ sends via tools) |
 | `scripts/check-vfe2b.py` | Awesome-agents desk |
 | `scripts/check-vfmakers.py` | Maker-skills desk |
 | `scripts/check-vfagents.py` | 500-list playbooks |
 | `scripts/check-vf-canva.py` | Canva Instagram desk |
 | `scripts/check-vfresearch.py` | Weekly inspiration-links + IG music + orchestra failover law |
+| `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready |
 
 Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
 
@@ -70,8 +75,10 @@ Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack n
 ALLOW read: `packages/**`, `constitution/**`, `docs/**`, `.cursor/**`, Gmail search/get, Calendar list, Drive search-by-job
 ALLOW write: `packages/**`, `constitution/**`, `docs/**`, `AGENTS.md`, `CHANGELOG.md`
 ALLOW execute: `python3 scripts/check-*.py`
-ASK before: `git push`, Calendar create, Gmail `create_draft`, Treg `call` (say catalog price first)
-DENY: Gmail `send_message` / `reply` / `forward`, Instagram send / boost / auto-DM, `rm -rf`, DROP TABLE, inventing ₪
+ASK before: `git push`, Calendar create
+ALLOW send: Gmail `send_message` / `reply` / `forward`; Instagram via connected tool or Canva+Drive+Gmail failover (`constitution/SEND.md`)
+ALLOW write: Drive `create_file` for office docs (no personal/medical/legal folders)
+DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights, claiming IG posted without a publish tool
 
 ## MEMORY
 

@@ -18,7 +18,7 @@ Read `packages/vfdsh/EMBED.md` and run one crew from `packages/vfdsh/crews/`:
 ## Locks (do not break)
 
 - Do **not** install DeepSeek Harness or run `dsh plugin add`. Cursor is the office.
-- This HQ does not send Instagram, Gmail, WhatsApp, or printer jobs. Live send stays on Grok Bot.
+- HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). Printers stay on the floor. Customer WhatsApp stays human. No auto-DM. No boost.
 - Do not invent prices (₪) or Insights metrics.
 - Human on WhatsApp for material / qty / when / finish. Sale shekels after head of desk.
 - Missing source, number, or pixel → write **חסר** / **אין במקור** / **לא נראה בתמונה**.

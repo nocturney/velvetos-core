@@ -4,88 +4,59 @@
 טריגר: «נגמרה מכסת Grok השבועית» / Grok לא זמין / הבעלים מבקש failover לגרוק.
 
 לא פק חדש. לא מושב שישי.  
-**HQ לא לוחץ Publish / Send / Boost / DM** (אין כלי שליחה ב־HQ; החוקה אוסרת).  
-**פרסום חי במידת הצורך — כן:** דרך מסלול אדם (בעלים) עם חבילה מוכנה ליד אחת.
+**HQ שולח דרך כלים** (`constitution/SEND.md`) — ג׳ימייל `send_message` ואינסטגרם לפי `vfigos/SEND.md`.  
+לא מחכים לגרוק. לא מחכים לכריסטיאן. Grok הוא גיבוי אופציונלי.
 
 ## חוק אחד
 
-כש־Grok נגמר — **HQ ממשיך לייצר תוצרים** ולא משאיר ידיים ריקות.  
-שני מסלולי פרסום:
+כש־Grok נגמר — **HQ ממשיך לייצר ושולח**. ידיים לא ריקות.
 
-| מסלול | מתי | מי לוחץ Publish |
+| מסלול | מתי | מי שולח |
 |---|---|---|
-| `#מוכן-ל-Grok` | לא דחוף · אפשר לחכות לחידוש מכסה | Grok אחרי חידוש |
-| `#פרסום-חי-דחוף` | צריך לעלות **עכשיו** (מבצע / איסוף / הוכחת רצפה חמה) | **אדם** באפליקציית Instagram / מחשב, עם חבילת `LIVE-PACKET` |
+| `#נשלח-מ-HQ` | יש כלי (Gmail תמיד; IG Publish אם מחובר) | סוכן HQ |
+| `#ממתין-ל-כלי-IG` | אין MCP Publish לפיד — אחרי Gmail+Drive+Canva | סוכן HQ (failover) |
+| `#מוכן-ל-Grok` | רק אם ראש צוות מבקש גיבוי Grok | Grok אחרי חידוש |
+| `#פרסום-חי-דחוף` | דחוף לפיד עכשיו | HQ שולח לפי `SEND.md` / `LIVE-PACKET` |
 
 דחוף ללקוח (שיחה, לא פיד) → אדם בוואטסאפ `050-2517000`.
 
-## מה HQ לוקח על עצמו (צוות הסוכנים של Grok → פקים)
+## מה HQ לוקח על עצמו
 
-| עבודת Grok (טיוטה / הכנה) | פק ב־HQ | כלי גיבוי |
+| עבודה | פק | כלי |
 |---|---|---|
-| כיתוב / קרוסלה / סטורי טקסט | `vfcopy` + `vfgrowth` | Cursor · ChatGPT (ניסוח) |
-| כריכה / עיצוב IG | `vfcanva` · `vfcovers` | Canva → export → `studio/render.py` → Superdesign |
-| שיבוץ לוח / סקירה | `vfigos` | תור `QUEUE.md` |
-| חבילת פרסום חי ליד אדם | `vfigos` + `LIVE-PACKET.md` | export PNG/JPG/MP4 + כיתוב מוכן להדבקה |
-| בריף בוקר מבנה | `vfops` + `vfbriefux` | Cursor · Gemini; **לא** שולחים מייל מ־HQ |
-| פנייה / הצעה | `vfconvert` → `vfcost` → `vfsales` | Gmail **קריאה** · טיוטה; שליחה = אדם/Grok |
-| מחקר / מק״ט / השראה | `vfresearch` + תזמורת | ChatGPT + Gemini + Perplexity (`ORCHESTRA.md`) |
-| ריל / טיימלאפס תכנון | `vfom` | כרטיסי סצנה + קבצי גלם מוכנים להעלאה ידנית |
-| עלות / ספרים | `vfcost` · `vfbooks` | `X ₪` / «אין ספירה» — בלי המצאה |
+| כיתוב | `vfcopy` + `vfgrowth` | Cursor · תזמורת |
+| כריכה | `vfcanva` · `vfcovers` | Canva → `studio/render.py` → Superdesign |
+| שליחת IG | `vfigos/SEND.md` | Publish אם יש · אחרת Drive+Gmail |
+| בריף 07:00 | `vfops` | **Gmail send_message** |
+| פנייה / הצעה | `vfconvert` → `vfsales` | Gmail **reply** / send (בלי ₪ מומצא) |
+| מחקר | `vfresearch` | WebSearch + תזמורת. **לא Treg** |
+| מסמך משרד | `vfbooks` / `vfops` | Drive `create_file` |
 
-## מה לא עוברים לסוכן HQ (גם במכסה ריקה)
+## מה לא עוברים (גם במכסה ריקה)
 
-| פעולה | מי בזמן failover | למה |
+| פעולה | מי | למה |
 |---|---|---|
-| לחיצת Publish באינסטגרם | **אדם** (מסלול דחוף) או Grok אחרי חידוש | Deny קבוע על סוכן HQ · אין MCP publish |
-| Gmail `send_message` / `reply` / `forward` | אדם או Grok | Deny קבוע על סוכן HQ |
-| וואטסאפ ללקוח | אדם `050-2517000` | אין בוט וואטסאפ מ־HQ |
-| הדפסה / עצירת מדפסת | Grok / רצפה | `vfprod/FLOOR.md` |
 | בוסט / אוטו־DM | — | נעול תמיד |
-
-## מסלול `#פרסום-חי-דחוף` (במידת הצורך)
-
-1. ראש צוות / בעלים אומר: «צריך פרסום חי עכשיו» (או מסמן דחיפות בבקשה).
-2. HQ מריץ את צ׳ק־ליסט `packages/vfigos/LIVE-PACKET.md`:
-   - כיתוב סופי בעברית + CTA וואטסאפ / איסוף שדרות
-   - קבצי מדיה מיוצאים (PNG/JPG/MP4) או קישור Canva + export
-   - סוג: פיד / סטורי / ריל / קרוסלה
-   - שורת הדבקה אחת לכיתוב (מוכנה ל־paste)
-3. שורה ב־`QUEUE.md` עם `#פרסום-חי-דחוף`.
-4. מוסרים לבעלים חבילה ליד אחת. **האדם** מעלה ב־`@velvets_cloud`.
-5. אחרי שהבעלים מאשר «עלה» → מעדכנים ל־`#פורסם-בידי-אדם` + תזכורת `#insights-24ש` ל־`vfinsights`.
-6. HQ **לא** מנחש שנשלח ולא לוחץ Publish בעצמו.
-
-## מסלול `#מוכן-ל-Grok` (ברירת מחדל לא־דחוף)
-
-1. ארטיפקט מאושר → שורה ב־`QUEUE.md`.
-2. מחכים לחידוש מכסה → handoff ל־Grok.
-3. אחרי אישור שנשלח → `#נשלח-בידי-Grok`.
+| וואטסאפ ללקוח | אדם `050-2517000` | אין MCP וואטסאפ |
+| הדפסה / עצירת מדפסת | רצפה | `vfprod/FLOOR.md` |
+| טענה שעלה לפיד בלי Publish | — | אסור להמציא |
 
 ## הפעלה (אותו רגע)
 
-1. Checkpoint: `packages/vfharness/state/grok-failover-<YYYY-MM-DD>.json`  
-   `status: blocked` או `running` · רשימת תור + מסלולים.
+1. Checkpoint: `packages/vfharness/state/grok-failover-<YYYY-MM-DD>.json`
 2. כל טיוטה רצה על הפק כרגיל.
-3. דחוף → `LIVE-PACKET` · לא דחוף → `#מוכן-ל-Grok`.
-4. מחקר: תזמורת ChatGPT + Gemini + Perplexity (`ORCHESTRA.md`).
-5. ארטיפקט מעבר: `packages/vfresearch/sources/YYYY-MM-DD-grok-failover.md`.
-
-## יציאה (חידוש מכסה)
-
-1. «מכסת Grok חזרה».
-2. מוסרים ל־Grok את `#מוכן-ל-Grok` שנותר.
-3. `#פרסום-חי-דחוף` שכבר פורסם בידי אדם — לא שולחים שוב.
-4. Checkpoint → `done`. בלי לולאת «האם נשלח».
+3. שליחה מ־HQ דרך הכלים **עכשיו** — לא תור המתנה.
+4. מחקר: תזמורת ChatGPT + Gemini + Perplexity (`ORCHESTRA.md`). בלי Treg.
+5. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-grok-failover.md`.
 
 ## Failover ≠ המצאה
 
-אין ₪ מכירה בלי ראש צוות. אין Insights. אין גוף Perplexity חסום. אין קישור Canva מומצא. אין «שלחו DM». אין טענה ש־HQ פרסם לבד.
+אין ₪ מכירה בלי ראש צוות. אין Insights. אין גוף Perplexity חסום. אין קישור Canva מומצא. אין «שלחו DM». אין «עלה לפיד» בלי כלי Publish.
 
 ## קישורים
 
-- תזמורת כלים: `constitution/ORCHESTRA.md`
+- חוקת שליחה: `constitution/SEND.md`
+- תזמורת: `constitution/ORCHESTRA.md`
 - תור: `packages/vfigos/QUEUE.md`
-- חבילת פרסום חי: `packages/vfigos/LIVE-PACKET.md`
-- צוות תוכן: `packages/vfe2b/crews/content.md`
+- חבילת פרסום: `packages/vfigos/LIVE-PACKET.md` · `vfigos/SEND.md`
 - מסמך קבע: `docs/GROK-FAILOVER.md`

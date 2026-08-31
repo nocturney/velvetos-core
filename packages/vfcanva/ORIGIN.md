@@ -13,4 +13,4 @@ Canva desk — Instagram visual content for `@velvets_cloud` (create / resize / 
 
 This pack is authored on GitHub HQ, not cloned from Origin.
 Do not commit secrets. Do not invent prices. Do not invent brand hex/fonts.
-Do not send Instagram from this pack. Live send stays on Grok Bot.
+Hand the design to `vfigos/SEND.md`. HQ sends via tools. No auto-DM. No boost.

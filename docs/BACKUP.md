@@ -21,7 +21,7 @@ Include the Origin slug only when you actually have it. Do not invent slugs, pri
 
 **Quiet if nothing new** — no ping when the finished agent is not a VF pack, or when HQ already has that bcId + name + slug.
 
-Do not send Instagram from HQ. Live send stays on Grok Bot (5 seats).
+HQ sends Instagram via tools (`constitution/SEND.md`). Grok Bot is optional backup. Printers stay on the floor.
 
 ## What HQ does the same day
 

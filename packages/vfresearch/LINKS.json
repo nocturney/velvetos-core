@@ -8,12 +8,16 @@
   "playbook": "packages/vfresearch/WEEKLY.md",
   "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md",
   "briefBlock": "05-משרד",
-  "mention": ["@research-synthesist", "@trend-researcher"],
+  "mention": [
+    "@research-synthesist",
+    "@trend-researcher"
+  ],
   "seat": "ייצור",
   "alsoSeat": "ראש צוות קורא בבריף",
   "locks": [
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-new-pack-per-idea",
@@ -30,7 +34,18 @@
       "lastReviewed": "2026-08-30",
       "map": "packages/chatgpt-embed-map.json",
       "report": "docs/SHARE-EMBED-he.md",
-      "packs": ["vfops", "vfcost", "vfconvert", "vfprod", "vfsales", "vfgrowth", "vfresearch", "vfbiz", "vfbooks", "constitution"]
+      "packs": [
+        "vfops",
+        "vfcost",
+        "vfconvert",
+        "vfprod",
+        "vfsales",
+        "vfgrowth",
+        "vfresearch",
+        "vfbiz",
+        "vfbooks",
+        "constitution"
+      ]
     },
     {
       "id": "gemini-3dprint-agents",
@@ -42,7 +57,21 @@
       "lastReviewed": "2026-08-30",
       "sourceNote": "packages/vfresearch/sources/gemini-hbuCq3MEy5po.md",
       "report": "docs/SHARES-2026-08-30.md",
-      "packs": ["vfops", "vfgrowth", "vfcopy", "vfcovers", "vfigos", "vfinsights", "vfsales", "vfcost", "vfprod", "vfresearch", "vfsku", "vlicense", "constitution"]
+      "packs": [
+        "vfops",
+        "vfgrowth",
+        "vfcopy",
+        "vfcovers",
+        "vfigos",
+        "vfinsights",
+        "vfsales",
+        "vfcost",
+        "vfprod",
+        "vfresearch",
+        "vfsku",
+        "vlicense",
+        "constitution"
+      ]
     },
     {
       "id": "perplexity-c950af30",
@@ -54,7 +83,20 @@
       "sourceNote": "packages/vfresearch/sources/perplexity-c950af30.md",
       "report": "docs/SHARES-2026-08-30.md",
       "wallNote": "Live page may hit Cloudflare; use owner PDF / source note. Never invent body.",
-      "packs": ["vfigos", "vfcopy", "vfcovers", "vfbiz", "vfbooks", "vfsales", "vfcost", "vfprod", "vfconvert", "vfresearch", "vlicense", "vfsku"]
+      "packs": [
+        "vfigos",
+        "vfcopy",
+        "vfcovers",
+        "vfbiz",
+        "vfbooks",
+        "vfsales",
+        "vfcost",
+        "vfprod",
+        "vfconvert",
+        "vfresearch",
+        "vlicense",
+        "vfsku"
+      ]
     },
     {
       "id": "awesome-mcp-servers",
@@ -65,7 +107,9 @@
       "lastReviewed": "2026-08-30",
       "report": "docs/MCP-FIT.md",
       "pack": "vfmcp",
-      "packs": ["vfmcp"]
+      "packs": [
+        "vfmcp"
+      ]
     },
     {
       "id": "codebase-memory-mcp",
@@ -76,7 +120,9 @@
       "lastReviewed": "2026-08-30",
       "report": "docs/VFMEM.md",
       "pack": "vfmem",
-      "packs": ["vfmem"],
+      "packs": [
+        "vfmem"
+      ],
       "note": "Pattern only. Do not install their C binary from this repo."
     },
     {
@@ -88,7 +134,9 @@
       "lastReviewed": "2026-08-30",
       "report": "docs/GRAFT.md",
       "pack": "vfgraft",
-      "packs": ["vfgraft"],
+      "packs": [
+        "vfgraft"
+      ],
       "note": "Committed markdown graph only. No npm CLI / Graft MCP."
     },
     {
@@ -100,7 +148,9 @@
       "lastReviewed": "2026-08-30",
       "report": "docs/FCC-FIT.md",
       "pack": "vffcc",
-      "packs": ["vffcc"],
+      "packs": [
+        "vffcc"
+      ],
       "note": "Local BYOK map only. No fcc-server on Cloud Agent."
     },
     {
@@ -112,7 +162,9 @@
       "lastReviewed": "2026-08-30",
       "report": "docs/500-AGENTS.md",
       "pack": "vfagents",
-      "packs": ["vfagents"]
+      "packs": [
+        "vfagents"
+      ]
     },
     {
       "id": "agency-agents",
@@ -122,7 +174,9 @@
       "firstEmbedded": "2026-08-30",
       "lastReviewed": "2026-08-30",
       "report": "docs/AGENCY-AGENTS.md",
-      "packs": [".cursor/rules"],
+      "packs": [
+        ".cursor/rules"
+      ],
       "note": "Refresh via scripts/install-agency-agents.sh. Warehouse stays off desk unless user names a slug."
     },
     {
@@ -134,7 +188,12 @@
       "lastReviewed": "2026-08-30",
       "sourceNote": "packages/vfresearch/SOURCES-MUSIC.json",
       "report": "packages/vfresearch/sources/2026-08-30-ig-music.md",
-      "packs": ["vfresearch", "vfigos", "vfom", "vfgrowth"],
+      "packs": [
+        "vfresearch",
+        "vfigos",
+        "vfom",
+        "vfgrowth"
+      ],
       "note": "Primary free source for IG music briefs. No Treg. TikTok block = early signal only."
     },
     {
@@ -145,7 +204,10 @@
       "firstEmbedded": "2026-08-30",
       "lastReviewed": "2026-08-30",
       "sourceNote": "packages/vfresearch/SOURCES-MUSIC.json",
-      "packs": ["vfresearch", "vfigos"],
+      "packs": [
+        "vfresearch",
+        "vfigos"
+      ],
       "note": "Method + Business vs Creator library rules. Not a weekly track list."
     },
     {
@@ -157,7 +219,9 @@
       "lastReviewed": "2026-08-30",
       "report": "docs/ORCHESTRA-2026-08-30.md",
       "pack": "vfe2b",
-      "packs": ["vfe2b"],
+      "packs": [
+        "vfe2b"
+      ],
       "note": "Crew overlay only. No second runtime."
     }
   ],

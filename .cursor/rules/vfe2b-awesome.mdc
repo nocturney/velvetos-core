@@ -18,7 +18,7 @@ Read `packages/vfe2b/EMBED.md` and run one crew from `packages/vfe2b/crews/`:
 
 ## Locks (do not break)
 
-- This HQ does not send Instagram, Gmail, or printer jobs. Live send stays on Grok Bot.
+- HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). Printers stay on the floor. No auto-DM. No boost.
 - Do not invent prices (₪) or Insights metrics.
 - Do not install AutoGPT / BabyAGI / a second coding agent / Orca ADE / a 24-7 chatbot.
 - Human on WhatsApp for material / qty / when / finish. Sale shekels after head of desk.

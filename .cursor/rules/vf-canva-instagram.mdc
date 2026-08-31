@@ -14,13 +14,13 @@ When the job is Instagram visual content (post, story, reel cover, carousel, cov
 
 ## Route
 
-`vfcopy` (caption) → **Canva** (design + edit URL) → `vfigos` (review / schedule) → Grok Bot (send).
+`vfcopy` (caption) → **Canva** (design + edit URL) → `vfigos` (review / schedule / **send via tools** — `vfigos/SEND.md`).
 
 `vfcovers` / `vfgrowth` write the brief. Superdesign only if Canva MCP is `needsAuth`.
 
 ## Laws
 
-- HQ does not send, boost, or DM Instagram.
+- HQ **sends Instagram via tools** (`constitution/SEND.md`). No auto-DM. No boost without the lead seat.
 - Never invent Canva links, ₪, Insights, brand hex/fonts, or floor scenes.
 - CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
 - If Canva is disconnected: say `Canva לא מחובר`, point to `packages/vfcanva/CONNECT.md` (Uninstall marketplace plugin), and render with `packages/vfcanva/studio/render.py`.

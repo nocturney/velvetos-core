@@ -1,12 +1,12 @@
 {
   "name": "velvet-factory-desk",
   "title": "Velvet Factory desk — Agency specialists + live tools",
-  "updatedAt": "2026-08-30",
+  "updatedAt": "2026-08-31",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
   "notes": [
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
-    "HQ does not send Instagram, Gmail, WhatsApp, or DMs. Live send stays on Grok Bot (5 seats).",
+    "HQ sends Gmail and Instagram via tools (constitution/SEND.md). Do not wait for Christian or Grok Bot. Auto-DM and boost stay forbidden. Customer WhatsApp stays human 050-2517000.",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
     "Do not commit secrets, medical files, or personal Drive folders.",
     "Research overlay @vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness.",
@@ -14,7 +14,8 @@
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
     "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
-    "Grok Bot quota failover: keep producing on existing packs. #מוכן-ל-Grok queue, or #פרסום-חי-דחוף + LIVE-PACKET for human live post. HQ agent never presses Publish. See docs/GROK-FAILOVER.md."
+    "Grok Bot quota failover: keep producing AND sending via HQ tools. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
+    "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -32,11 +33,11 @@
     "gmail": {
       "status": "ready",
       "account": "nocturney@gmail.com",
-      "mode": "read",
-      "allowed": ["search_threads", "get_thread", "get_message", "list_labels", "list_drafts"],
-      "forbidden": ["send_message", "reply", "forward"],
-      "draftOnlyIfAsked": ["create_draft", "update_draft"],
-      "failover": "User-pasted thread text or Drive-by-job; never invent inquiry; never send",
+      "mode": "read-and-send",
+      "allowed": ["search_threads", "get_thread", "get_message", "list_labels", "list_drafts", "create_draft", "update_draft", "send_message", "reply", "forward"],
+      "forbidden": [],
+      "rule": "HQ sends via tools. No blast list. No invented ₪. No secrets.",
+      "failover": "Drive create_file the body + continue; never invent inquiry",
       "queries": {
         "inboxToday": "in:inbox newer_than:1d",
         "bills": "label:חשבונות OR subject:(חשבונית OR Invoice4U OR קבלה)",
@@ -56,9 +57,9 @@
     },
     "drive": {
       "status": "ready",
-      "mode": "search-by-job",
-      "note": "No dedicated Velvet Factory studio folder was found. Search by job name, SKU, or filename the user gives. Do not open personal, medical, or legal folders unless the user names them.",
-      "failover": "Use files/names the user gave in chat"
+      "mode": "search-and-create",
+      "note": "Search by job/SKU. Create office docs/sheets with create_file when needed. Do not open personal, medical, or legal folders unless the user names them.",
+      "failover": "Use files/names the user gave in chat; still create a new office doc if the job needs one"
     },
     "superdesign": {
       "status": "skill-installed",
@@ -66,15 +67,32 @@
       "failover": "Canva if connected, else packages/vfcanva/studio/render.py"
     },
     "canva": {
-      "status": "mcp-when-connected",
+      "status": "ready",
+      "namespace": "Canva",
       "useWhen": "Instagram post/story/reel cover/carousel for @velvets_cloud",
+      "verifiedAt": "2026-08-31",
+      "note": "Cloud Agent search-designs returned DAGoYmCu4c4. Instagram send: vfigos/SEND.md (tool or Canva+Drive+Gmail failover).",
       "failover": "needsAuth → packages/vfcanva/studio/render.py → Superdesign. Say Canva לא מחובר."
     },
+    "web": {
+      "status": "ready",
+      "namespace": "native-cursor",
+      "allowed": ["WebSearch", "WebFetch"],
+      "useWhen": "vfresearch / orchestra live web; ChatGPT browse + Perplexity citations + Grok/Gemini search equivalent",
+      "rule": "Never invent a blocked body. Write אין גוף / דולג — חומה. Treg is not relevant.",
+      "failover": "Orchestra ChatGPT+Gemini+Perplexity; never invent body"
+    },
+    "image": {
+      "status": "ready",
+      "namespace": "cursor GenerateImage + Canva generate-design",
+      "useWhen": "User-asked image / brief graphic. Instagram still prefers Canva first.",
+      "failover": "Canva generate-design → Superdesign → packages/vfcanva/studio/render.py. No invented Canva URL."
+    },
     "treg": {
-      "status": "skill-installed-needs-login",
-      "useWhen": "vfgrowth / vfresearch / vfinsights live web, SEO, social, ads data",
-      "rule": "Say the catalog price before spending. Never invent Insights.",
-      "failover": "Verified snapshot or אין ספירה; IG music → HeyOrca (MUSIC.md), not Treg"
+      "status": "not-relevant",
+      "useWhen": "Do not use. Owner: Treg is not relevant to this office.",
+      "rule": "No login. No call. No failover through Treg.",
+      "failover": "WebSearch/WebFetch (tools.web) · orchestra · אין ספירה · IG music → HeyOrca (MUSIC.md)"
     },
     "mobbin": {
       "status": "plugin-installed",
@@ -103,7 +121,7 @@
       "he": "ראש צוות",
       "packs": ["vfops", "vfbriefux", "vfharness", "vfmem"],
       "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect"],
-      "tools": ["calendar", "gmail", "vfmem"],
+      "tools": ["calendar", "gmail", "vfmem", "web"],
       "decides": "₪ amount, what moves on the board, what is deferred"
     },
     {
@@ -119,7 +137,7 @@
       "he": "צמיחה",
       "packs": ["vfgrowth", "vfcovers", "vfigos", "vfinsights", "vfmskill", "vfom"],
       "specialists": ["instagram-curator", "visual-storyteller", "image-prompt-engineer", "growth-hacker", "analytics-reporter", "social-media-strategist"],
-      "tools": ["superdesign", "treg", "drive"],
+      "tools": ["superdesign", "drive", "canva", "image", "web"],
       "decides": "content pack and cover drafts. HQ reviews/schedules only. Grok sends."
     },
     {
@@ -135,7 +153,7 @@
       "he": "ייצור",
       "packs": ["vfprod", "vfsku", "vlicense", "vfresearch"],
       "specialists": ["studio-producer", "operations-manager", "legal-compliance-checker", "research-synthesist", "trend-researcher"],
-      "tools": ["drive", "treg", "calendar"],
+      "tools": ["drive", "calendar", "web"],
       "decides": "print feasibility, queue, SKU, file license"
     }
   ],
@@ -221,38 +239,38 @@
     {
       "slug": "instagram-curator",
       "packs": ["vfigos", "vfgrowth", "vfom"],
-      "tools": ["treg"],
-      "job": "Review and schedule only. This HQ does not send, boost, or auto-DM."
+      "tools": ["canva", "web"],
+      "job": "Review, schedule, and send via tools (vfigos/SEND.md). No boost. No auto-DM."
     },
     {
       "slug": "visual-storyteller",
       "packs": ["vfcovers", "vfgrowth", "vfom"],
-      "tools": ["superdesign", "drive"],
+      "tools": ["superdesign", "drive", "canva", "image"],
       "job": "Cover and reel narrative from floor proof, not invented scenes"
     },
     {
       "slug": "image-prompt-engineer",
       "packs": ["vfcovers"],
-      "tools": ["superdesign"],
+      "tools": ["superdesign", "image", "canva"],
       "job": "Cover-art prompts. No Israeli brand-file copies."
     },
     {
       "slug": "growth-hacker",
       "packs": ["vfgrowth", "vfmskill"],
-      "tools": ["treg"],
+      "tools": ["web"],
       "job": "Content sprint ideas. No TikTok or ads without lead-seat decision."
     },
     {
       "slug": "social-media-strategist",
       "packs": ["vfgrowth", "vfseason"],
-      "tools": ["calendar", "treg"],
+      "tools": ["calendar", "web"],
       "job": "Season marks and board suggestions. Do not move a booked slot."
     },
     {
       "slug": "analytics-reporter",
       "packs": ["vfinsights"],
-      "tools": ["treg"],
-      "job": "Read verified snapshots only. Never invent Insights."
+      "tools": ["web"],
+      "job": "Read verified snapshots only. Never invent Insights. Treg not used."
     },
     {
       "slug": "pricing-analyst",
@@ -299,14 +317,14 @@
     {
       "slug": "research-synthesist",
       "packs": ["vfresearch"],
-      "tools": ["treg", "drive"],
+      "tools": ["drive", "web"],
       "job": "Source map + weekly inspiration-link review (LINKS.json / WEEKLY.md). Do not invent citations or blocked bodies."
     },
     {
       "slug": "trend-researcher",
       "packs": ["vfresearch", "vfseason"],
-      "tools": ["treg", "calendar"],
-      "job": "Season, reprint, and Instagram music/sound briefs from HeyOrca + IG paste (MUSIC.md). No Treg for music; never invent track names or Insights"
+      "tools": ["calendar", "web"],
+      "job": "Season, reprint, and Instagram music/sound briefs from HeyOrca + IG paste (MUSIC.md). Treg not relevant; never invent track names or Insights"
     }
   ],
   "warehouse": "The other Agency specialists stay in .cursor/rules/ with alwaysApply false. Mention @slug only when the user asks for that specialty. Do not pull Godot, GIS, healthcare, China-social, or XR agents onto a Velvet Factory job unless asked.",
