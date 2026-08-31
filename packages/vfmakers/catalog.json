@@ -9,8 +9,9 @@
     "listedCount": 20
   },
   "locks": [
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-makerskills-plugin",
@@ -20,14 +21,21 @@
     "no-unattended-loop",
     "human-on-whatsapp"
   ],
-  "verdicts": ["embed", "later", "skip"],
+  "verdicts": [
+    "embed",
+    "later",
+    "skip"
+  ],
   "picks": [
     {
       "name": "decide",
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/decide/SKILL.md",
       "verdict": "embed",
       "pattern": "6–8 37signals questions + archive + revisit",
-      "packs": ["vfbiz", "vfops"],
+      "packs": [
+        "vfbiz",
+        "vfops"
+      ],
       "crew": "crews/decide.md",
       "note": "Lead seat on ₪ / B2B / ads. Archive in vfbiz/hq/decisions/."
     },
@@ -36,7 +44,11 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/unstuck/SKILL.md",
       "verdict": "embed",
       "pattern": "wall type + 10 angles before judging",
-      "packs": ["vfops", "vfprod", "vlicense"],
+      "packs": [
+        "vfops",
+        "vfprod",
+        "vlicense"
+      ],
       "crew": "crews/unstuck.md",
       "note": "Do not crowbar license or a customer no."
     },
@@ -45,7 +57,10 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/company-cfo/SKILL.md",
       "verdict": "embed",
       "pattern": "weekly cash pulse / monthly snapshot from cited books",
-      "packs": ["vfbooks", "vfcost"],
+      "packs": [
+        "vfbooks",
+        "vfcost"
+      ],
       "crew": "crews/cash-pulse.md",
       "note": "Gmail חשבונות + Invoice4U + written ledger. No Stripe/Plaid."
     },
@@ -54,7 +69,12 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/jab-hook/SKILL.md",
       "verdict": "embed",
       "pattern": "jab value then hook ask on a rotation",
-      "packs": ["vfgrowth", "vfcopy", "vfigos", "vfcovers"],
+      "packs": [
+        "vfgrowth",
+        "vfcopy",
+        "vfigos",
+        "vfcovers"
+      ],
       "crew": "crews/content-rotation.md",
       "note": "Instagram only. WhatsApp CTA. HQ does not send. No Typefully."
     },
@@ -63,7 +83,13 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/company-brain/SKILL.md",
       "verdict": "embed",
       "pattern": "capture / query / review with trust tags",
-      "packs": ["vfcopy", "vfsales", "vfconvert", "vfbiz", "vfresearch"],
+      "packs": [
+        "vfcopy",
+        "vfsales",
+        "vfconvert",
+        "vfbiz",
+        "vfresearch"
+      ],
       "crew": "crews/studio-brain.md",
       "note": "HQ hq/ files are the vault. No Obsidian/Fathom sync."
     },
@@ -72,7 +98,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/paste/SKILL.md",
       "verdict": "embed",
       "pattern": "secret-scan before copy leaves the office",
-      "packs": ["vfcopy"],
+      "packs": [
+        "vfcopy"
+      ],
       "crew": "crews/content-rotation.md",
       "note": "Lint step only. No Slack/X cleaners as a product."
     },
@@ -81,7 +109,10 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/social-fetch/SKILL.md",
       "verdict": "embed",
       "pattern": "public post URL → structured facts",
-      "packs": ["vfresearch", "vfgrowth"],
+      "packs": [
+        "vfresearch",
+        "vfgrowth"
+      ],
       "crew": "crews/content-rotation.md",
       "note": "Read only. No post, boost, or DM. Treg price first if used."
     },
@@ -90,7 +121,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/deep-research/SKILL.md",
       "verdict": "later",
       "pattern": "multi-source research + citations",
-      "packs": ["vfresearch"],
+      "packs": [
+        "vfresearch"
+      ],
       "crew": "crews/studio-brain.md",
       "note": "Already covered by vfe2b crews/research.md. Missing source = חסר."
     },
@@ -99,7 +132,10 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/pm/SKILL.md",
       "verdict": "later",
       "pattern": "kanban + Eisenhower",
-      "packs": ["vfops", "vfprod"],
+      "packs": [
+        "vfops",
+        "vfprod"
+      ],
       "crew": "crews/decide.md",
       "note": "Pipeline already exists: פנייה → שיחה → הצעה → הדפסה → איסוף."
     },
@@ -108,7 +144,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/skillify/SKILL.md",
       "verdict": "later",
       "pattern": "author or adapt a skill",
-      "packs": ["vfops"],
+      "packs": [
+        "vfops"
+      ],
       "crew": "crews/studio-brain.md",
       "note": "Use when lead seat asks for a new VF skill. Not a skill factory."
     },
@@ -117,7 +155,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/watch-video/SKILL.md",
       "verdict": "later",
       "pattern": "transcript / notes from a named video",
-      "packs": ["vfresearch"],
+      "packs": [
+        "vfresearch"
+      ],
       "crew": "crews/studio-brain.md",
       "note": "Useful for a named print tutorial. Do not invent a watch."
     },
@@ -126,7 +166,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/read-book/SKILL.md",
       "verdict": "later",
       "pattern": "chapter notes from a named file",
-      "packs": ["vfresearch"],
+      "packs": [
+        "vfresearch"
+      ],
       "crew": "crews/studio-brain.md",
       "note": "Only if the user names the file."
     },
@@ -135,7 +177,10 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/business-brainstorm/SKILL.md",
       "verdict": "later",
       "pattern": "pressure-test a new line on 9 dimensions",
-      "packs": ["vfbiz", "vfsku"],
+      "packs": [
+        "vfbiz",
+        "vfsku"
+      ],
       "crew": "crews/decide.md",
       "note": "B2B logos/QR/napkins stay locked until lead seat opens them."
     },
@@ -144,7 +189,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/toolify/SKILL.md",
       "verdict": "later",
       "pattern": "wire an API / MCP",
-      "packs": ["vfmcp"],
+      "packs": [
+        "vfmcp"
+      ],
       "crew": "crews/studio-brain.md",
       "note": "Desk tools are already listed. No new MCP from HQ unless asked."
     },
@@ -153,7 +200,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/second-brain/SKILL.md",
       "verdict": "skip",
       "pattern": "personal markdown wiki",
-      "packs": ["vfresearch"],
+      "packs": [
+        "vfresearch"
+      ],
       "crew": "crews/studio-brain.md",
       "note": "Personal vault. Studio memory stays in this repo."
     },
@@ -162,7 +211,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/personal-cfo/SKILL.md",
       "verdict": "skip",
       "pattern": "household finance scenarios",
-      "packs": ["vfbooks"],
+      "packs": [
+        "vfbooks"
+      ],
       "crew": "crews/cash-pulse.md",
       "note": "Household scope. Not the studio ledger."
     },
@@ -171,7 +222,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/domain/SKILL.md",
       "verdict": "skip",
       "pattern": ".com hunt + trademark screen",
-      "packs": ["vfbiz"],
+      "packs": [
+        "vfbiz"
+      ],
       "crew": "crews/decide.md",
       "note": "Not a print-studio job. Site build is locked in vfbiz."
     },
@@ -180,7 +233,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/slide-deck/SKILL.md",
       "verdict": "skip",
       "pattern": "branded Next.js decks",
-      "packs": ["vfbriefux"],
+      "packs": [
+        "vfbriefux"
+      ],
       "crew": "crews/content-rotation.md",
       "note": "Brief packet already lives in vfbriefux. No new site from HQ."
     },
@@ -189,7 +244,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/loopify/SKILL.md",
       "verdict": "skip",
       "pattern": "cron / agent wakeup loop",
-      "packs": ["vfops"],
+      "packs": [
+        "vfops"
+      ],
       "crew": "crews/decide.md",
       "note": "Orchestra is Grok. No unattended send/collect/post loop."
     },
@@ -198,7 +255,9 @@
       "url": "https://github.com/coreyhaines31/makerskills/blob/main/skills/maker-council/SKILL.md",
       "verdict": "skip",
       "pattern": "simulated celebrity board",
-      "packs": ["vfbiz"],
+      "packs": [
+        "vfbiz"
+      ],
       "crew": "crews/decide.md",
       "note": "Would invent strategy in famous names. Use decide + cited HQ instead."
     }

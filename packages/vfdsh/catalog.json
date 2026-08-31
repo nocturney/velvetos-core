@@ -9,8 +9,9 @@
     "countUrl": "https://awesome-dsh-plugin.com/count.json"
   },
   "locks": [
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-dsh-runtime",
@@ -19,14 +20,21 @@
     "no-printer-from-hq",
     "human-on-whatsapp"
   ],
-  "verdicts": ["embed", "later", "skip"],
+  "verdicts": [
+    "embed",
+    "later",
+    "skip"
+  ],
   "picks": [
     {
       "name": "Modlens",
       "url": "https://github.com/liustack/modlens",
       "verdict": "embed",
       "pattern": "structured OCR / layout / semantic evidence from a photo",
-      "packs": ["vfprod", "vfcovers"],
+      "packs": [
+        "vfprod",
+        "vfcovers"
+      ],
       "crew": "crews/floor-vision.md",
       "note": "Pattern only. Read a named image. Missing detail = לא נראה בתמונה."
     },
@@ -35,7 +43,9 @@
       "url": "https://github.com/Anionex/dsh-vision-toolkit",
       "verdict": "embed",
       "pattern": "image Q&A, OCR, pixel compare",
-      "packs": ["vfprod"],
+      "packs": [
+        "vfprod"
+      ],
       "crew": "crews/floor-vision.md",
       "note": "Do not call the author-hosted free vision API from HQ. Cursor reads the file locally."
     },
@@ -44,7 +54,10 @@
       "url": "https://github.com/jing-hy/picturereader",
       "verdict": "embed",
       "pattern": "local image-to-text grid, no invented scene",
-      "packs": ["vfprod", "vfcovers"],
+      "packs": [
+        "vfprod",
+        "vfcovers"
+      ],
       "crew": "crews/floor-vision.md",
       "note": "Matches VF: extract, do not stage a floor."
     },
@@ -53,7 +66,10 @@
       "url": "https://github.com/dhb861832993-star/pbr-render",
       "verdict": "embed",
       "pattern": "GLB/GLTF preview notes before print",
-      "packs": ["vfprod", "vlicense"],
+      "packs": [
+        "vfprod",
+        "vlicense"
+      ],
       "crew": "crews/floor-vision.md",
       "note": "Comment the named model. Do not invent a bed."
     },
@@ -62,7 +78,9 @@
       "url": "https://github.com/yxqfg/phone-lens",
       "verdict": "later",
       "pattern": "phone camera as session input",
-      "packs": ["vfprod"],
+      "packs": [
+        "vfprod"
+      ],
       "crew": "crews/floor-vision.md",
       "note": "WhatsApp photo the human already sent is enough. No live viewfinder from HQ."
     },
@@ -71,7 +89,10 @@
       "url": "https://github.com/HuanLinOTO/dsh-plugin-mineru",
       "verdict": "embed",
       "pattern": "PDF / Office / image → structured Markdown",
-      "packs": ["vfbooks", "vfconvert"],
+      "packs": [
+        "vfbooks",
+        "vfconvert"
+      ],
       "crew": "crews/inbox-docs.md",
       "note": "Extract from a named file. Cursor already reads PDFs. No MinerU daemon."
     },
@@ -80,7 +101,10 @@
       "url": "https://github.com/linkingoscar/dsh-attachment-formats",
       "verdict": "embed",
       "pattern": "PDF text layer + scanned OCR + Office to Markdown",
-      "packs": ["vfbooks", "vfsales"],
+      "packs": [
+        "vfbooks",
+        "vfsales"
+      ],
       "crew": "crews/inbox-docs.md",
       "note": "Same job as MinerU. Use the named attachment only."
     },
@@ -89,7 +113,10 @@
       "url": "https://github.com/zhtx2024/dsh-pdf",
       "verdict": "embed",
       "pattern": "pdf_info / extract_text / render_page",
-      "packs": ["vfbooks", "vfresearch"],
+      "packs": [
+        "vfbooks",
+        "vfresearch"
+      ],
       "crew": "crews/inbox-docs.md",
       "note": "Read. Do not edit a supplier PDF in place."
     },
@@ -98,7 +125,10 @@
       "url": "https://github.com/didclawapp-ai/DSH-Office",
       "verdict": "later",
       "pattern": "create/read PPTX DOCX XLSX PDF",
-      "packs": ["vfsales", "vfbooks"],
+      "packs": [
+        "vfsales",
+        "vfbooks"
+      ],
       "crew": "crews/inbox-docs.md",
       "note": "Read path is already covered. No new office runtime from HQ."
     },
@@ -107,7 +137,10 @@
       "url": "https://github.com/tinqiao-oss/engramory",
       "verdict": "embed",
       "pattern": "one fact per Markdown file, hard index cap",
-      "packs": ["vfresearch", "vfsku"],
+      "packs": [
+        "vfresearch",
+        "vfsku"
+      ],
       "crew": "crews/catalog-memory.md",
       "note": "HQ packs are the store. Do not vendor the plugin."
     },
@@ -116,7 +149,10 @@
       "url": "https://github.com/zilliztech/memsearch",
       "verdict": "embed",
       "pattern": "shared Markdown notes + cited recall",
-      "packs": ["vfresearch", "vfops"],
+      "packs": [
+        "vfresearch",
+        "vfops"
+      ],
       "crew": "crews/catalog-memory.md",
       "note": "CHANGELOG + pack trees. No auto skill minting."
     },
@@ -125,7 +161,9 @@
       "url": "https://github.com/00080000/dsh-project-memory",
       "verdict": "embed",
       "pattern": "on-demand file recall with source citations",
-      "packs": ["vfresearch"],
+      "packs": [
+        "vfresearch"
+      ],
       "crew": "crews/catalog-memory.md",
       "note": "Cursor search on this repo. Missing hit = חסר."
     },
@@ -134,7 +172,10 @@
       "url": "https://github.com/Co-Engram/Co-Engram",
       "verdict": "embed",
       "pattern": "team memory as plain Markdown in git",
-      "packs": ["vfops", "vfresearch"],
+      "packs": [
+        "vfops",
+        "vfresearch"
+      ],
       "crew": "crews/catalog-memory.md",
       "note": "Git is already the backup. Do not add 38 memory tools."
     },
@@ -143,7 +184,9 @@
       "url": "https://github.com/Tencent/WeKnora",
       "verdict": "later",
       "pattern": "RAG over a user-managed knowledge base",
-      "packs": ["vfresearch"],
+      "packs": [
+        "vfresearch"
+      ],
       "crew": "crews/catalog-memory.md",
       "note": "Same job as pack trees. No Tencent KB server from HQ."
     },
@@ -152,7 +195,9 @@
       "url": "https://github.com/volcengine/OpenViking",
       "verdict": "later",
       "pattern": "auto-recall + viking:// URIs",
-      "packs": ["vfresearch"],
+      "packs": [
+        "vfresearch"
+      ],
       "crew": "crews/catalog-memory.md",
       "note": "Second memory server is locked."
     },
@@ -161,7 +206,10 @@
       "url": "https://github.com/icetomoyo/dsh_workflow",
       "verdict": "embed",
       "pattern": "generate / save / govern / observe / resume a workflow",
-      "packs": ["vfops", "vfprod"],
+      "packs": [
+        "vfops",
+        "vfprod"
+      ],
       "crew": "crews/pipeline-board.md",
       "note": "The five-column pipeline is the saved workflow. No UltraCode runtime."
     },
@@ -170,7 +218,9 @@
       "url": "https://github.com/shengsheng90/DSH-taskboard",
       "verdict": "embed",
       "pattern": "agent may submit only to in_review",
-      "packs": ["vfops"],
+      "packs": [
+        "vfops"
+      ],
       "crew": "crews/pipeline-board.md",
       "note": "Matches VF: HQ reviews, human or Grok marks done."
     },
@@ -179,7 +229,10 @@
       "url": "https://github.com/alpacachen/dsh-kanban",
       "verdict": "embed",
       "pattern": "shared board for people and agents",
-      "packs": ["vfops", "vfprod"],
+      "packs": [
+        "vfops",
+        "vfprod"
+      ],
       "crew": "crews/pipeline-board.md",
       "note": "Columns stay פנייה → שיחה → הצעה → הדפסה → איסוף."
     },
@@ -188,7 +241,10 @@
       "url": "https://github.com/bpc-oss/dsh-verification",
       "verdict": "embed",
       "pattern": "acceptance needs stamped evidence",
-      "packs": ["vfops", "vfprod"],
+      "packs": [
+        "vfops",
+        "vfprod"
+      ],
       "crew": "crews/pipeline-board.md",
       "note": "Mail subject, filename, or calendar id. No invented hours."
     },
@@ -197,7 +253,9 @@
       "url": "https://github.com/240xu/tech-lead-skill",
       "verdict": "embed",
       "pattern": "read-only lifecycle gates; mutation preview denies execute",
-      "packs": ["vfops"],
+      "packs": [
+        "vfops"
+      ],
       "crew": "crews/pipeline-board.md",
       "note": "Plan and audit. Do not execute print or send."
     },
@@ -206,7 +264,9 @@
       "url": "https://github.com/changlianxiya-139/dsh-ambiguity-handling",
       "verdict": "embed",
       "pattern": "ask clarifying options before guessing",
-      "packs": ["vfconvert"],
+      "packs": [
+        "vfconvert"
+      ],
       "crew": "crews/pipeline-board.md",
       "note": "Material / qty / when / finish stay human on WhatsApp."
     },
@@ -215,7 +275,10 @@
       "url": "https://github.com/akslcw/dsh-negative-ledger",
       "verdict": "embed",
       "pattern": "persist disproven paths with evidence",
-      "packs": ["vfprod", "vfops"],
+      "packs": [
+        "vfprod",
+        "vfops"
+      ],
       "crew": "crews/pipeline-board.md",
       "note": "Failed bed / missing STL stays written. Do not retry blindly."
     },
@@ -224,7 +287,10 @@
       "url": "https://github.com/superdesigndev/superdesign-skill",
       "verdict": "embed",
       "pattern": "design drafts on the Superdesign canvas",
-      "packs": ["vfcovers", "vfbriefux"],
+      "packs": [
+        "vfcovers",
+        "vfbriefux"
+      ],
       "crew": "crews/design-assets.md",
       "note": "Already on the desk. Skip repo init. Not a live post."
     },
@@ -233,7 +299,11 @@
       "url": "https://github.com/superdesigndev/treg",
       "verdict": "embed",
       "pattern": "live web / SEO / social tools via Treg",
-      "packs": ["vfresearch", "vfinsights", "vfgrowth"],
+      "packs": [
+        "vfresearch",
+        "vfinsights",
+        "vfgrowth"
+      ],
       "crew": "crews/design-assets.md",
       "note": "Skill already installed. Say catalog price before call. Never invent Insights."
     },
@@ -242,7 +312,10 @@
       "url": "https://github.com/tong-io/tongflow",
       "verdict": "later",
       "pattern": "saved image / audio / video / 3D workflows",
-      "packs": ["vfcovers", "vfcanva"],
+      "packs": [
+        "vfcovers",
+        "vfcanva"
+      ],
       "crew": "crews/design-assets.md",
       "note": "Canva + Superdesign cover the visual job. No TongFlow studio from HQ."
     },
@@ -251,7 +324,10 @@
       "url": "https://github.com/Devin-AXIS/deepseek-design",
       "verdict": "later",
       "pattern": "visual design studio inside the harness",
-      "packs": ["vfcovers", "vfcanva"],
+      "packs": [
+        "vfcovers",
+        "vfcanva"
+      ],
       "crew": "crews/design-assets.md",
       "note": "Same job as Canva. Do not install a second design host."
     },
@@ -260,7 +336,9 @@
       "url": "https://github.com/WaveSpeedAI/wavespeed-dsh-skill",
       "verdict": "later",
       "pattern": "priced image / video / 3D generation",
-      "packs": ["vfcovers"],
+      "packs": [
+        "vfcovers"
+      ],
       "crew": "crews/design-assets.md",
       "note": "SaaS. Price-check-before-run is the only keepable rule."
     },
@@ -269,7 +347,9 @@
       "url": "https://github.com/xmanrui/dsh-im",
       "verdict": "skip",
       "pattern": "WhatsApp / Feishu / Discord bots",
-      "packs": ["vfconvert"],
+      "packs": [
+        "vfconvert"
+      ],
       "crew": "crews/pipeline-board.md",
       "note": "Human on WhatsApp 050-2517000. HQ does not send."
     },
@@ -278,7 +358,9 @@
       "url": "https://github.com/Awu12277/dsh-sleep-send",
       "verdict": "skip",
       "pattern": "scheduled send from the composer",
-      "packs": ["vfigos"],
+      "packs": [
+        "vfigos"
+      ],
       "crew": "crews/design-assets.md",
       "note": "Review/schedule only. Grok sends."
     },
@@ -287,7 +369,9 @@
       "url": "https://github.com/awesome-dsh-plugin/dsh-find-plugin",
       "verdict": "skip",
       "pattern": "search and install DSH plugins from chat",
-      "packs": ["vfbiz"],
+      "packs": [
+        "vfbiz"
+      ],
       "crew": "crews/catalog-memory.md",
       "note": "We do not run dsh. This catalog is the map."
     },
@@ -296,7 +380,9 @@
       "url": "https://github.com/dsh-market/dsh-market",
       "verdict": "skip",
       "pattern": "one-click plugin market inside DSH",
-      "packs": ["vfbiz"],
+      "packs": [
+        "vfbiz"
+      ],
       "crew": "crews/catalog-memory.md",
       "note": "Second office OS."
     },
@@ -305,7 +391,10 @@
       "url": "https://github.com/omdsh-dev/dsh-data-agent",
       "verdict": "later",
       "pattern": "SQL / masked forms / data preset",
-      "packs": ["vfbooks", "vfcost"],
+      "packs": [
+        "vfbooks",
+        "vfcost"
+      ],
       "crew": "crews/inbox-docs.md",
       "note": "Cited ledger text only. No new warehouse DB."
     },
@@ -314,7 +403,9 @@
       "url": "https://github.com/Han-1413141/dsh-cost-meter",
       "verdict": "skip",
       "pattern": "token / model session cost",
-      "packs": ["vfcost"],
+      "packs": [
+        "vfcost"
+      ],
       "crew": "crews/inbox-docs.md",
       "note": "DeepSeek billing is not studio ₪."
     },
@@ -323,7 +414,9 @@
       "url": "https://github.com/MichengAI/dsh-agency-agents",
       "verdict": "skip",
       "pattern": "Agency roster as DSH subagents",
-      "packs": ["vfops"],
+      "packs": [
+        "vfops"
+      ],
       "crew": "crews/pipeline-board.md",
       "note": "273 Agency specialists already live in .cursor/rules/."
     },
@@ -332,7 +425,10 @@
       "url": "https://github.com/Q00/ouroboros",
       "verdict": "later",
       "pattern": "spec-first interview then execute",
-      "packs": ["vfops", "vfconvert"],
+      "packs": [
+        "vfops",
+        "vfconvert"
+      ],
       "crew": "crews/pipeline-board.md",
       "note": "Discovery questions already sit on vfconvert. No extra MCP."
     },
@@ -341,7 +437,9 @@
       "url": "https://github.com/BillyChen123/qdd",
       "verdict": "later",
       "pattern": "question-driven discovery research",
-      "packs": ["vfresearch"],
+      "packs": [
+        "vfresearch"
+      ],
       "crew": "crews/catalog-memory.md",
       "note": "vfe2b research crew already plans questions then cites."
     }
@@ -349,27 +447,63 @@
   "skipFamilies": [
     {
       "family": "DSH runtime and markets",
-      "names": ["DeepSeek Harness", "dsh-desktop", "dsh-market", "dsh-find-plugin", "dsh-plugin-hub", "ZAT DSH Engine"],
+      "names": [
+        "DeepSeek Harness",
+        "dsh-desktop",
+        "dsh-market",
+        "dsh-find-plugin",
+        "dsh-plugin-hub",
+        "ZAT DSH Engine"
+      ],
       "reason": "no-dsh-runtime"
     },
     {
       "family": "themes / pets / chrome",
-      "names": ["Deep Whale", "dsh-pet", "Whale Girl", "dsh-ads", "dsh-status-rotator", "gal-view", "desk-pet"],
+      "names": [
+        "Deep Whale",
+        "dsh-pet",
+        "Whale Girl",
+        "dsh-ads",
+        "dsh-status-rotator",
+        "gal-view",
+        "desk-pet"
+      ],
       "reason": "not-a-print-studio-job"
     },
     {
       "family": "unattended cron / IM send",
-      "names": ["chicheng-cron", "dsh-automation", "dsh-routines", "DSH IM", "dsh-lark", "dsh-qqbot", "dsh-article-publish", "call_me"],
-      "reason": "no-send-gmail no-unattended-cron"
+      "names": [
+        "chicheng-cron",
+        "dsh-automation",
+        "dsh-routines",
+        "DSH IM",
+        "dsh-lark",
+        "dsh-qqbot",
+        "dsh-article-publish",
+        "call_me"
+      ],
+      "reason": "no-auto-dm no-unattended-cron"
     },
     {
       "family": "unattended browser / phone operate",
-      "names": ["DSH Browser", "Tabbit", "phone-eye", "dsh-hos-scrcpy"],
-      "reason": "no-printer-from-hq no-send-instagram"
+      "names": [
+        "DSH Browser",
+        "Tabbit",
+        "phone-eye",
+        "dsh-hos-scrcpy"
+      ],
+      "reason": "no-printer-from-hq no-auto-dm"
     },
     {
       "family": "out of studio",
-      "names": ["dsh-pentest", "dsh-crypto-portfolio", "dsh-stock-watch", "fortune skills", "dsh-toy", "novel-writer"],
+      "names": [
+        "dsh-pentest",
+        "dsh-crypto-portfolio",
+        "dsh-stock-watch",
+        "fortune skills",
+        "dsh-toy",
+        "novel-writer"
+      ],
       "reason": "not-a-print-studio-job"
     }
   ]

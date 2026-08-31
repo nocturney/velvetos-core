@@ -17,8 +17,9 @@ REQUIRED_LOCKS = {
     "no-npm-graft",
     "no-graft-mcp",
     "no-second-coding-agent",
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
 }
 REQUIRED_FILES = (

@@ -18,8 +18,9 @@ ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
 MANIFEST = ROOT / "packages" / "manifest.json"
 DESK = ROOT / ".cursor" / "vf-desk.json"
 REQUIRED_LOCKS = {
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-new-pack-per-idea",
@@ -100,7 +101,7 @@ def main() -> None:
 
     desk = json.loads(DESK.read_text())
     tools = desk.get("tools") or {}
-    for key in ("gmail", "calendar", "drive", "canva", "superdesign", "treg", "mobbin", "fcc"):
+    for key in ("gmail", "calendar", "drive", "canva", "superdesign", "treg", "mobbin", "fcc", "web", "image"):
         if key not in tools:
             fail(f"vf-desk.json tools missing {key}")
         if not (tools[key].get("failover") or ""):

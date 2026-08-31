@@ -19,7 +19,7 @@ Packs: `vfcopy`, `vfcovers`, `vfigos`, `vfgrowth`.
 1. Homework first: what is true, what is not claimed.
 2. Draft Hebrew (and English if the brief says so). Lint against studio voice.
 3. Cover brief: size, text on image, no fake metrics on the graphic.
-4. Hand the approved draft to Grok Bot. This HQ does not send Instagram.
+4. Hand the approved draft to Grok Bot. HQ sends Instagram via tools (`constitution/SEND.md`). No auto-DM. No boost.
 5. If Grok weekly quota is exhausted:
    - Not urgent → `#מוכן-ל-Grok` in `packages/vfigos/QUEUE.md`.
    - **Needs live post now** → `#פרסום-חי-דחוף` + complete `packages/vfigos/LIVE-PACKET.md`; a **human** posts. HQ agent does not press Publish.

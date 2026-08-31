@@ -41,7 +41,7 @@ Rules:
 1. Homework first (`vfcopy`): what is true, what is not claimed.
 2. Floor proof or mark **חסר**. No invented bed scene.
 3. Canva if the visual is Instagram (`packages/vfcanva/`). Superdesign only if Canva MCP is `needsAuth`.
-4. Hand the approved draft to `vfigos`. This HQ does not send.
+4. Hand the approved draft to `vfigos`. HQ sends via tools (`constitution/SEND.md`).
 5. Write `packages/vfgrowth/hq/rotation/YYYY-MM-DD-week.md` + `INDEX.md`.
 
 ## Lint (from `vfcopy`)

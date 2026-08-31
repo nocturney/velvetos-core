@@ -10,8 +10,9 @@
   },
   "hqFact": "FCC does not reduce Cursor Cloud Agent usage. This pack is a map + locks, not an install.",
   "locks": [
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-send-discord-telegram",
     "no-invented-prices",
     "no-invented-insights",
@@ -21,7 +22,11 @@
     "no-vendor-fcc-tree",
     "no-second-coding-office"
   ],
-  "verdicts": ["local", "later", "skip"],
+  "verdicts": [
+    "local",
+    "later",
+    "skip"
+  ],
   "clients": [
     {
       "name": "Claude Code",
@@ -54,7 +59,10 @@
       "name": "NVIDIA NIM",
       "setting": "NVIDIA_NIM_API_KEY",
       "verdict": "local",
-      "packs": ["vfbiz", "vfops"],
+      "packs": [
+        "vfbiz",
+        "vfops"
+      ],
       "playbook": "playbooks/local-offload.md",
       "note": "FCC default. Free key at build.nvidia.com. Owner machine only."
     },
@@ -63,7 +71,10 @@
       "name": "Groq",
       "setting": "GROQ_API_KEY",
       "verdict": "local",
-      "packs": ["vfbiz", "vfops"],
+      "packs": [
+        "vfbiz",
+        "vfops"
+      ],
       "playbook": "playbooks/local-offload.md",
       "note": "Published free tier. Fast drafts. Owner machine only."
     },
@@ -72,7 +83,10 @@
       "name": "Google AI Studio (Gemini)",
       "setting": "GEMINI_API_KEY",
       "verdict": "local",
-      "packs": ["vfresearch", "vfops"],
+      "packs": [
+        "vfresearch",
+        "vfops"
+      ],
       "playbook": "playbooks/local-offload.md",
       "note": "Already an orchestra desk in the browser. Separate key if used as FCC backend."
     },
@@ -81,7 +95,9 @@
       "name": "OpenRouter free",
       "setting": "OPENROUTER_API_KEY",
       "verdict": "local",
-      "packs": ["vfbiz"],
+      "packs": [
+        "vfbiz"
+      ],
       "playbook": "playbooks/local-offload.md",
       "note": "Example model open_router/openrouter/free. Quality varies. Owner machine only."
     },
@@ -90,7 +106,9 @@
       "name": "OpenAI / ChatGPT subscription",
       "setting": "Providers → Connected accounts",
       "verdict": "later",
-      "packs": ["vfresearch"],
+      "packs": [
+        "vfresearch"
+      ],
       "playbook": "playbooks/route.md",
       "note": "Orchestra already opens ChatGPT. Do not duplicate as an HQ proxy."
     },
@@ -99,7 +117,9 @@
       "name": "Ollama / LM Studio / llama.cpp",
       "setting": "OLLAMA_BASE_URL / LM_STUDIO_BASE_URL / LLAMACPP_BASE_URL",
       "verdict": "later",
-      "packs": ["vfbiz"],
+      "packs": [
+        "vfbiz"
+      ],
       "playbook": "playbooks/local-offload.md",
       "note": "Truly local weights. Needs RAM/GPU on the owner Mac. Lead seat decides."
     },
@@ -108,7 +128,9 @@
       "name": "xAI (Grok API)",
       "setting": "XAI_API_KEY",
       "verdict": "skip",
-      "packs": ["vfbiz"],
+      "packs": [
+        "vfbiz"
+      ],
       "playbook": "playbooks/route.md",
       "note": "Grok Bot is the live sender. Do not mix xAI keys into HQ or FCC."
     },
@@ -117,7 +139,9 @@
       "name": "Azure OpenAI / Amazon Bedrock / Vertex AI",
       "setting": "cloud enterprise",
       "verdict": "skip",
-      "packs": ["vfbiz"],
+      "packs": [
+        "vfbiz"
+      ],
       "playbook": "playbooks/route.md",
       "note": "Enterprise cloud. Not the Sderot office."
     },
@@ -126,7 +150,10 @@
       "name": "Discord / Telegram / voice notes",
       "setting": "MESSAGING_PLATFORM",
       "verdict": "skip",
-      "packs": ["vfigos", "vfops"],
+      "packs": [
+        "vfigos",
+        "vfops"
+      ],
       "playbook": "playbooks/route.md",
       "note": "HQ does not send. Human WhatsApp 050-2517000."
     },
@@ -135,7 +162,9 @@
       "name": "DeepSeek / Mistral / Qwen / Together / Kimi / MiniMax / Z.ai / Hugging Face / …",
       "setting": "various *_API_KEY",
       "verdict": "later",
-      "packs": ["vfbiz"],
+      "packs": [
+        "vfbiz"
+      ],
       "playbook": "playbooks/local-offload.md",
       "note": "More BYOK names in the FCC README. Do not add from HQ. Owner picks one free key first."
     }
@@ -144,17 +173,27 @@
     {
       "id": "route",
       "path": "playbooks/route.md",
-      "packs": ["vfops", "vfbiz", "vfresearch"]
+      "packs": [
+        "vfops",
+        "vfbiz",
+        "vfresearch"
+      ]
     },
     {
       "id": "cursor-thrift",
       "path": "playbooks/cursor-thrift.md",
-      "packs": ["vfops", "vfbiz"]
+      "packs": [
+        "vfops",
+        "vfbiz"
+      ]
     },
     {
       "id": "local-offload",
       "path": "playbooks/local-offload.md",
-      "packs": ["vfbiz", "vfops"]
+      "packs": [
+        "vfbiz",
+        "vfops"
+      ]
     }
   ]
 }

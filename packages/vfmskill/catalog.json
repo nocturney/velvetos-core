@@ -14,14 +14,13 @@
     "vendorPath": "packages/vfmskill/vendor"
   },
   "locks": [
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-ads-without-lead",
     "no-tiktok-without-lead",
-    "no-auto-dm",
-    "no-boost",
     "no-site-from-hq",
     "human-on-whatsapp",
     "pickup-sderot-only"

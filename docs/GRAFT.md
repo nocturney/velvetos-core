@@ -4,7 +4,7 @@ Source: [trailhq/Graft](https://github.com/trailhq/Graft) (README read 2026-08-3
 Pack: [`packages/vfgraft/`](../packages/vfgraft/).  
 Check: `python3 scripts/check-vfgraft.py`.
 
-This HQ does **not** send Instagram. Live send stays on Grok Bot. Do not invent ₪. Do not commit secrets.
+HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Grok is optional backup. Do not invent ₪. Do not commit secrets.
 
 ## Verdict
 

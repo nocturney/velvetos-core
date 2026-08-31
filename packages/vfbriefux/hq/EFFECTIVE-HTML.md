@@ -1,14 +1,15 @@
 # effective-html — מפת בריף מייל
 
 מקור: https://github.com/plannotator/effective-html  
-תבנית חיה: `hq/brief-email.html`  
+תבנית חיה (מייל): `../MAIL.html` + `render_mail.py`  
+רפרנס/Wireframe: `hq/brief-email.html`  
 מבנה נעול: `packages/vfops/BRIEF.md` + `packages/vfops/hq/BRIEF-SLOTS.md`
 
 ## מתי
 
-- HQ ממלא טיוטת בריף אחרי Calendar + Gmail read.
-- Grok מקבל HTML או מעתיק ממנו לגוף המייל ב־07:00.
-- Mobbin / Superdesign לא זמינים → עובדים ישירות על `brief-email.html`.
+- HQ ממלא בריף אחרי Calendar + Gmail read.
+- **שליחה:** `render_mail.py` → `send_message` `htmlBody` (תצוגה 3) לפי `MAIL.md` / `constitution/SEND.md`.
+- **Wireframe:** `brief-email.html` לניסוי פורמט / Mobbin חסום / effective-html reference.
 
 ## skill → חריץ
 

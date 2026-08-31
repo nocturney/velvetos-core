@@ -37,7 +37,14 @@ def main() -> None:
     if "alwaysApply: true" not in text:
         fail("velvet-factory-desk.mdc must be alwaysApply: true")
     if "send_message" not in text:
-        fail("desk rule must forbid Gmail send_message")
+        fail("desk rule must mention Gmail send_message")
+    if "SEND.md" not in text:
+        fail("desk rule must point at constitution/SEND.md")
+    if "auto-DM" not in text and "אוטו־DM" not in text:
+        fail("desk rule must still forbid auto-DM")
+    send_law = ROOT / "constitution" / "SEND.md"
+    if not send_law.is_file():
+        fail("missing constitution/SEND.md")
 
     desk_slugs: list[str] = []
     for row in desk.get("desk", []):

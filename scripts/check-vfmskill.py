@@ -14,8 +14,9 @@ CONTEXT = ROOT / ".agents" / "product-marketing.md"
 SKILL = ROOT / ".cursor" / "skills" / "vf-marketing-skills" / "SKILL.md"
 VERDICTS = {"embed", "later", "skip"}
 REQUIRED_LOCKS = {
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-ads-without-lead",
@@ -124,8 +125,8 @@ def main() -> None:
             fail(f"product-marketing.md missing {needle!r}")
 
     skill = SKILL.read_text()
-    if "send_message" in skill and "Never" not in skill and "does not send" not in skill:
-        fail("Cursor skill must not invite Gmail send")
+    if "SEND.md" not in skill and "via tools" not in skill:
+        fail("Cursor skill must route send via constitution/SEND.md")
     if "שלחו DM" not in skill:
         fail("Cursor skill must ban שלחו DM")
     if "050-2517000" not in skill:

@@ -16,7 +16,7 @@ Use when the user asks for בריף בוקר, morning brief, what is open today,
 ## Tools
 
 1. **Google Calendar** — `list_calendars` then `list_events` on `nocturney@gmail.com` for **today** in `Asia/Jerusalem`. Pickup windows and named holds only.
-2. **Gmail** — `search_threads` with `in:inbox newer_than:1d` (and a tighter query if the user names a client). **Read only.** Do not send, reply, or forward.
+2. **Gmail** — `search_threads` with `in:inbox newer_than:1d` (and a tighter query if the user names a client). Read inbox. Do not `reply` / `forward` / send to a customer. During Grok-quota failover: render `vfbriefux/MAIL.html` and `send_message` the office brief (`htmlBody` תצוגה 3) to `nocturney@gmail.com`.
 3. **Drive** — skip unless the user names a job file or SKU.
 
 ## Output (Hebrew)
@@ -28,12 +28,12 @@ Use when the user asks for בריף בוקר, morning brief, what is open today,
 
 One pipeline reminder: פנייה → שיחה → הצעה → הדפסה → איסוף. Pickup in Sderot only.
 
-If constitution overlays exist (`packages/vfops/hq/BRIEF-SLOTS.md` or `packages/vfops/BRIEF.md`), fill those slots. Do not invent a sixth seat.
+If constitution overlays exist (`packages/vfops/hq/BRIEF-SLOTS.md` or `packages/vfops/BRIEF.md`), fill those slots. Do not invent a sixth seat. Live mail uses `packages/vfbriefux/MAIL.md` — not plaintext.
 
 ## HTML draft (optional)
 
-After filling slots, you may render the brief as a self-contained HTML file from `packages/vfbriefux/hq/brief-email.html` (effective-html pattern). HQ does not send the email — hand the filled HTML or pasted blocks to Grok for 07:00.
+Production mail: `render_mail.py` + `MAIL.html` (תצוגה 3). Reference/wireframe: `packages/vfbriefux/hq/brief-email.html` (effective-html). During Grok failover, HQ sends `htmlBody` to `nocturney@gmail.com` per `MAIL.md`.
 
 ## Harness
 
-Read `AGENTS.md` if this is a new session. Do not invent queue hours to pass the brief. If Calendar/Gmail reads fail twice, escalate with `packages/vfharness/templates/escalation.md` — do not send mail. Long brief work: optional checkpoint in `packages/vfharness/state/`.
+Read `AGENTS.md` if this is a new session. Do not invent queue hours to pass the brief. If Calendar/Gmail reads fail twice, escalate with `packages/vfharness/templates/escalation.md` — use Drive failover for brief body if Gmail MCP is down. Long brief work: optional checkpoint in `packages/vfharness/state/`.

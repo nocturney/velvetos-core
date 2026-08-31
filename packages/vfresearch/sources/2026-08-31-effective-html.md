@@ -22,15 +22,16 @@
 
 | פק | קובץ | מה |
 |---|---|---|
-| `vfbriefux` | `hq/brief-email.html` | תבנית HTML עצמאית לבריף 07:00 — Grok מדביק / HQ ממלא טיוטה |
+| `vfbriefux` | `hq/brief-email.html` | טיוטה/Wireframe RTL — מ complement ל־`MAIL.html` (תצוגה 3 חיה) |
 | `vfbriefux` | `hq/EFFECTIVE-HTML.md` | מפת skill → חריץ בריף |
-| `.cursor/skills/vf-morning-brief` | `SKILL.md` | נתיב HTML אחרי מילוי נתונים |
+| `.cursor/skills/vf-morning-brief` | `SKILL.md` | `MAIL.html` לשליחה · `brief-email.html` לרפרנס |
 | `.cursor/vf-desk.json` | `tools.mobbin.failover` | Mobbin חסום → `brief-email.html` |
 
 ## חוקים (לא משתנים)
 
 - שבעה בלוקים קיימים (`vfops/BRIEF.md`) — לא מחליפים מבנה.
-- HQ לא שולח את המייל. Grok שולח.
+- מייל חי = `MAIL.html` + `render_mail.py` · HQ שולח `htmlBody` בפיילאובר (`constitution/SEND.md`).
+- `brief-email.html` = effective-html reference — לא מחליף תצוגה 3.
 - שדות מנהל: «אין ספירה» עד סנאפשוט מאומת.
 - בלי ₪ מומצא, בלי Insights מומצאים, בלי שמות לקוחות מיותרים.
 

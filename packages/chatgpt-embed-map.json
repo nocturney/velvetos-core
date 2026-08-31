@@ -79,14 +79,13 @@
     }
   ],
   "skipped": [
-    "live Instagram send",
-    "Gmail send from HQ",
     "auto-DM",
     "follow-back",
     "story-view hacks",
     "boost",
     "invented ILS prices",
     "WhatsApp/Instagram API connect",
+    "Gmail blast list",
     "new pack per agent"
   ]
 }

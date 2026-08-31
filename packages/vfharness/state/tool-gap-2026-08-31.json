@@ -1,0 +1,26 @@
+{
+  "task_id": "tool-gap-2026-08-31",
+  "status": "done",
+  "pack": "vfmcp",
+  "also": ["vfbooks", "vfresearch", "vf-desk"],
+  "completed_steps": [
+    "Compared Grok/ChatGPT/Gemini/Perplexity catalogs to this Cloud Agent",
+    "Verified Canva MCP live (DAGoYmCu4c4)",
+    "Wired tools.web and tools.image onto the desk",
+    "Wrote vfbooks/SHEETS.md Drive-export playbook",
+    "Wrote vfmcp/GAP.md + 2026-08-31 orchestra artifact"
+  ],
+  "next_step": "Superseded by send-law-2026-08-31: Treg not relevant; HQ sends via tools",
+  "artifacts": [
+    "packages/vfmcp/GAP.md",
+    "packages/vfbooks/SHEETS.md",
+    "packages/vfresearch/sources/2026-08-31-orchestra.md"
+  ],
+  "unresolved": [
+    "Treg marked not-relevant — Insights = verified snapshot or אין ספירה",
+    "Mobbin MCP namespace not on this Cloud Agent",
+    "No Velvet Factory Sheets workbook named — Drive create_file when a ledger is needed (no invented ₪)",
+    "Superseded: HQ now sends Gmail+IG via tools (constitution/SEND.md)"
+  ],
+  "last_updated": "2026-08-31"
+}

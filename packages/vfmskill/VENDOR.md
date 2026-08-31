@@ -17,5 +17,5 @@ python3 scripts/check-vfmskill.py
 
 Do not dump the full 50-skill SaaS CMO set into `.cursor/skills/`.
 HQ overlay and desk laws win over upstream playbooks.
-This HQ does not send Instagram. Do not invent ₪ or Insights.
+HQ sends Instagram via tools (`constitution/SEND.md`). No auto-DM. No boost. Do not invent ₪ or Insights.
 

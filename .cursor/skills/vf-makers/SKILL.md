@@ -1,6 +1,6 @@
 ---
 name: vf-makers
-description: Run a Velvet Factory maker-skills crew — decide, unstuck, cash pulse, Instagram content rotation, or studio-brain capture. Patterns from coreyhaines31/makerskills on existing packs. HQ does not send.
+description: Run a Velvet Factory maker-skills crew — decide, unstuck, cash pulse, Instagram content rotation, or studio-brain capture. Patterns from coreyhaines31/makerskills on existing packs. HQ sends via tools.
 ---
 
 # Maker-skills crews
@@ -20,6 +20,6 @@ Read `packages/vfmakers/EMBED.md`. Run **one** crew:
 ## Locks
 
 - No makerskills plugin, Typefully, or live bank.
-- No Instagram / Gmail send. Grok sends.
+- HQ sends Gmail and Instagram via tools (`constitution/SEND.md`). No auto-DM. No boost.
 - No invented ₪ or Insights.
 - WhatsApp CTA `050-2517000` / איסוף שדרות. Not «שלחו DM».

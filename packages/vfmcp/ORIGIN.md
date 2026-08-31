@@ -2,7 +2,8 @@
 
 MCP fit research — which [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) entries map onto Velvet Factory packs. Recommendation only; this HQ does not install MCP secrets.
 
-Write-up: [`docs/MCP-FIT.md`](../../docs/MCP-FIT.md).
+Write-up: [`docs/MCP-FIT.md`](../../docs/MCP-FIT.md).  
+Gap vs Grok / ChatGPT / Gemini / Perplexity: [`GAP.md`](GAP.md) (31.8.2026).
 
 | | |
 |---|---|

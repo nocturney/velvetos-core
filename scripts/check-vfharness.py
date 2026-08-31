@@ -20,8 +20,9 @@ ALLOWED_LAYER_NAMES = {
     "observability",
 }
 REQUIRED_LOCKS = {
-    "no-send-instagram",
-    "no-send-gmail",
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
     "no-invented-prices",
     "no-invented-insights",
     "no-second-runtime",
@@ -102,9 +103,12 @@ def main() -> None:
             fail(f"AGENTS.md missing {needle!r}")
 
     deny = spec.get("permissions", {}).get("deny") or []
-    for need in ("gmail:send_message", "instagram:send", "invented-ils"):
+    for need in ("instagram:boost", "auto-dm", "invented-ils"):
         if need not in deny:
             fail(f"permissions.deny missing {need}")
+    for banned in ("gmail:send_message", "gmail:reply", "gmail:forward", "instagram:send"):
+        if banned in deny:
+            fail(f"permissions.deny must not block HQ send tool {banned}")
 
     sensors = spec.get("sensors") or []
     if len(sensors) < 5:
@@ -147,6 +151,13 @@ def main() -> None:
     if "vfharness" not in pack_names:
         fail("vfharness missing from packages/manifest.json")
 
+    tools_map = ROOT / "packages/vfharness/playbooks/grok-outage-tools.md"
+    if not tools_map.is_file():
+        fail("missing packages/vfharness/playbooks/grok-outage-tools.md")
+    tools_text = tools_map.read_text()
+    for needle in ("create_draft", "Canva", "render.py", "אין MCP", "send_message"):
+        if needle not in tools_text:
+            fail(f"grok-outage-tools.md missing {needle!r}")
     failover = ROOT / "packages/vfharness/playbooks/grok-failover.md"
     if not failover.is_file():
         fail("missing packages/vfharness/playbooks/grok-failover.md")
@@ -155,7 +166,8 @@ def main() -> None:
         "מוכן-ל-Grok",
         "פרסום-חי-דחוף",
         "LIVE-PACKET",
-        "לא לוחץ Publish",
+        "לא מחכים לגרוק",
+        "SEND.md",
     ):
         if needle not in failover_text:
             fail(f"grok-failover.md missing {needle!r}")
@@ -168,7 +180,7 @@ def main() -> None:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
     queue_text = queue.read_text()
-    for needle in ("#מוכן-ל-Grok", "#פרסום-חי-דחוף", "אין `#נשלח-מ-HQ`"):
+    for needle in ("#מוכן-ל-Grok", "#פרסום-חי-דחוף", "#נשלח-מ-HQ", "#ממתין-ל-כלי-IG"):
         if needle not in queue_text:
             fail(f"vfigos/QUEUE.md missing {needle!r}")
     live_text = live.read_text()
