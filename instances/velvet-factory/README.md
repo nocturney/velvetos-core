@@ -1,7 +1,7 @@
 # VelvetOS — Velvet Factory
 
 פרונט (office frontend) לעסק ההדפסות התלת־ממד.  
-הבאקאנד / הליבה: **VelvetOS Core** (`nocturney/velvet-factory-headquarters-os`).
+הבאקאנד / הליבה: **VelvetOS Core** (`nocturney/velvetos-core`).
 
 ## מודל
 
@@ -12,6 +12,8 @@ presets · sensors                modulesEnabled from maker-print
 ```
 
 ## הפעלה אחרי יצירת הריפו ב־GitHub
+
+**Windows / בלי `gh`:** [`docs/VELVETOS-VF-WINDOWS.md`](../../docs/VELVETOS-VF-WINDOWS.md) (גם ב-core repo)
 
 1. צור ריפו ריק פרטי: `nocturney/velvetos-velvet-factory`
 2. מתוך הריפו של הליבה:
