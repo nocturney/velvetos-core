@@ -12,7 +12,7 @@ You are in the Velvet Factory HQ repo (3D-print studio, Sderot, pickup only, Wha
 ## Laws
 
 - HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot. `send_message` / `reply` / `forward` are allowed. Grok Bot is optional backup.
-- Auto-DM, boost without lead seat, follow-back, and story hacks stay forbidden.
+- auto-DM, boost without lead seat, follow-back, and story hacks stay forbidden. אוטו־DM נעול.
 - Do not invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - Tool failover: if a tool is down / `needsAuth` / blocked, hand the task to the backup tool **in the same turn**. Never finish with no artifact. Failover ≠ invent ₪ / Insights / blocked bodies. Matrix: `constitution/ORCHESTRA.md`.
