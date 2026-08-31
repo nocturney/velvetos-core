@@ -30,6 +30,10 @@ One pipeline reminder: פנייה → שיחה → הצעה → הדפסה → �
 
 If constitution overlays exist (`packages/vfops/hq/BRIEF-SLOTS.md` or `packages/vfops/BRIEF.md`), fill those slots. Do not invent a sixth seat.
 
+## HTML draft (optional)
+
+After filling slots, you may render the brief as a self-contained HTML file from `packages/vfbriefux/hq/brief-email.html` (effective-html pattern). HQ does not send the email — hand the filled HTML or pasted blocks to Grok for 07:00.
+
 ## Harness
 
 Read `AGENTS.md` if this is a new session. Do not invent queue hours to pass the brief. If Calendar/Gmail reads fail twice, escalate with `packages/vfharness/templates/escalation.md` — do not send mail. Long brief work: optional checkpoint in `packages/vfharness/state/`.

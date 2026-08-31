@@ -39,7 +39,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 |---|---|---|
 | **Canva** (`needsAuth` / אין כלים) | `packages/vfcanva/studio/render.py` → אם גם זה נכשל: Superdesign | לא ממציאים קישור Canva |
 | **Superdesign** | Canva אם מחובר · אחרת `studio/render.py` | לא עוצרים את חבילת התוכן |
-| **Mobbin** (אין namespace) | תבניות `vfbriefux` / Superdesign לגרפיקת בריף | לא ממציאים מסכי אפליקציה |
+| **Mobbin** (אין namespace) | `vfbriefux/hq/brief-email.html` (effective-html) · תבניות `PACKET.md` · Superdesign לגרפיקה | לא ממציאים מסכי אפליקציה |
 | **Treg** (אין login) | מקור מאומת אחר / Drive / «אין ספירה» · מוזיקה IG → HeyOrca (`MUSIC.md`) | לא ממציאים Insights / טרנד |
 | **Gmail** MCP | טקסט שהמשתמש הדביק / Drive לפי שם עבודה | לא ממציאים פנייה · לא שולחים |
 | **Calendar** MCP | שואלים חלון איסוף / «חסר לוח» וממשיכים בריף מג׳ימייל | לא ממציאים שעות תור |

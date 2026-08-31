@@ -80,7 +80,7 @@
       "status": "plugin-installed",
       "namespace": "not-on-this-cloud-agent",
       "useWhen": "vfbriefux / morning-brief layout / UX references",
-      "failover": "vfbriefux templates / Superdesign"
+      "failover": "packages/vfbriefux/hq/brief-email.html (effective-html) / Superdesign"
     },
     "vfmem": {
       "status": "hq-native",

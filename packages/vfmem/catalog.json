@@ -138,10 +138,11 @@
       "tool": "calendar"
     },
     {
-      "q": ["brief layout", "פורמט בריף"],
+      "q": ["brief layout", "פורמט בריף", "brief email", "מייל בריף"],
       "pack": "vfbriefux",
       "slug": "ux-architect",
-      "tool": "mobbin"
+      "tool": "mobbin",
+      "note": "Mobbin down → vfbriefux/hq/brief-email.html (effective-html)"
     },
     {
       "q": ["inquiry", "פנייה", "quote this", "פניה"],

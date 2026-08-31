@@ -10,6 +10,8 @@
 4. כריכות פיד בסוף / בגוף — `#vfcovers`  
 5. פוטר איסוף שדרות  
 
+**HTML (effective-html):** `hq/brief-email.html` — קובץ עצמאי RTL לטיוטת מייל. HQ ממלא; Grok שולח. מפת skill: `hq/EFFECTIVE-HTML.md`.
+
 ## שדות מנהל (ריקים עד סנאפשוט)
 
 ```
