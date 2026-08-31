@@ -16,7 +16,8 @@
     "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
     "Grok Bot quota failover: keep producing AND sending via HQ tools. Office brief is תצוגה 3 HTML via send_message to nocturney@gmail.com. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
     "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
-    "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md."
+    "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
+    "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -116,6 +117,15 @@
       "useWhen": "vffcc local-offload after lead seat. Never install here.",
       "rule": "Does not reduce Cursor Cloud usage. Keys stay in ~/.fcc/. No Discord/Telegram.",
       "failover": "Research desks ChatGPT+Gemini+Perplexity per constitution/ORCHESTRA.md"
+    },
+    "threedaistudio": {
+      "status": "needsAuth",
+      "namespace": "threedaistudio",
+      "mcp": "https://mcp.3daistudio.com/mcp",
+      "account": "www.3daistudio.com — owner paid subscription",
+      "useWhen": "vfprod concept mesh: text/image → STL/3MF after lead approval. Playbook: packages/vfprod/3DAISTUDIO.md",
+      "rule": "No API key in git. No invented ₪ from credits. No print from HQ. Same license gate as Meshy/Tripo.",
+      "failover": "Site UI + Drive create_file / upload + continue. Open license search if vendor down. Never invent a key or mesh."
     }
   },
   "seats": [
@@ -156,7 +166,7 @@
       "he": "ייצור",
       "packs": ["vfprod", "vfsku", "vlicense", "vfresearch"],
       "specialists": ["studio-producer", "operations-manager", "legal-compliance-checker", "research-synthesist", "trend-researcher"],
-      "tools": ["drive", "calendar", "web"],
+      "tools": ["drive", "calendar", "web", "threedaistudio"],
       "decides": "print feasibility, queue, SKU, file license"
     }
   ],
@@ -302,8 +312,8 @@
     {
       "slug": "studio-producer",
       "packs": ["vfprod"],
-      "tools": ["calendar", "drive"],
-      "job": "Print-floor job tracking and queue hours from slicer, not guesses"
+      "tools": ["calendar", "drive", "threedaistudio"],
+      "job": "Print-floor job tracking and queue hours from slicer, not guesses. 3D AI Studio concept mesh after lead approval (3DAISTUDIO.md)"
     },
     {
       "slug": "operations-manager",
