@@ -5,7 +5,11 @@ All notable changes to Velvet Factory Headquarters & OS.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-- 2026-08-31 — **prompts.chat**: הטמעה סלקטיבית על `vfcopy` — תבניות `hq/templates/` + אנטומיית פרומפט ב־`PLAYBOOK.md`. לא CSV, לא self-host, לא פק חדש. MCP אופציונלי ב־`docs/MCP-FIT.md`. רישום ב־`LINKS.json`. מנוי בעלים על `vfprod` (לא פק חדש). MCP HTTP `threedaistudio` → `https://mcp.3daistudio.com/mcp` (OAuth בדסקטופ; Cursor מדלג על מפתח `3daistudio`). אתר כגיבוי. אותו שער Meshy/Tripo. אין מפתח בגיט, אין ₪ מקרדיטים, אין הדפסה מ־HQ. `3DAISTUDIO.md` + `CONNECT-3DAI.md`.
+## [Unreleased]
+
+- 2026-08-31 — **prompts.chat**: הטמעה סלקטיבית על `vfcopy` — תבניות `hq/templates/` + אנטומיית פרומפט ב־`PLAYBOOK.md`. לא CSV, לא self-host, לא פק חדש. MCP אופציונלי ב־`docs/MCP-FIT.md`. רישום ב־`LINKS.json`.
+- 2026-08-31 — **DeerFlow patterns (לא runtime)**: מיפוי [bytedance/deer-flow](https://github.com/bytedance/deer-flow) על `vfe2b` — `מטרה`, sub-agent bounds, tool receipts, compaction ב-checkpoint. בלי Gateway, בלי sandbox, בלי IM. DeerFlow harness patterns embedded on existing crews; no second runtime. See `packages/vfe2b/DEER-FLOW-PATTERNS.md`.
+- 2026-08-31 — **3D AI Studio**: מנוי בעלים על `vfprod` (לא פק חדש). MCP HTTP `threedaistudio` → `https://mcp.3daistudio.com/mcp` (OAuth בדסקטופ; Cursor מדלג על מפתח `3daistudio`). אתר כגיבוי. אותו שער Meshy/Tripo. אין מפתח בגיט, אין ₪ מקרדיטים, אין הדפסה מ־HQ. `3DAISTUDIO.md` + `CONNECT-3DAI.md`.
 - 2026-08-31 — **vf-canva plugin MCP path**: `.cursor-plugin/plugin.json` pointed at `./.cursor/mcp.json` (missing under `.cursor-plugin/`). Fixed to `../.cursor/mcp.json`; sensor now resolves plugin paths relative to the manifest.
 - 2026-08-31 — **3D AI Studio MCP visibility**: renamed server key `3daistudio` → `threedaistudio` (Cursor skips digit-prefixed keys). URL-only config + deeplink in `CONNECT-3DAI.md`.
 - 2026-08-31 — **3D AI Studio Cloud Agent MCP**: two-surface model (Desktop vs Cloud) in `vfprod/CONNECT-3DAI.md`, `docs/MCP-FIT.md`, `vfmcp/GAP.md`. Cloud requires Team MCP at Dashboard → Integrations & MCP plus per-user OAuth at cursor.com/agents — `.cursor/mcp.json` alone does not reach Cloud VMs.
