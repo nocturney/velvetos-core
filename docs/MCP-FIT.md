@@ -73,6 +73,18 @@ Start with Studio MCP Hub for “make this print-safe.” Keep Canva as the bran
 
 **Packs:** `vfprod`, `vfcovers`, `vfsku`.
 
+## Optional research (do not wire by default)
+
+### prompts.chat — external prompt / skill lookup
+
+| Server | Role | Notes |
+|---|---|---|
+| [f/prompts.chat MCP](https://prompts.chat/api/mcp) | `search_prompts`, `get_prompt`, `improve_prompt`, `search_skills` | **Research only.** Filter through `constitution/` before any customer or IG copy. Do not bulk-import `prompts.csv`. |
+
+Remote URL: `https://prompts.chat/api/mcp`. Local fallback: `npx -y prompts.chat mcp` (not required on Cloud Agent).
+
+**Packs:** `vfcopy`, `vfmskill`, `vfresearch`. Embedded office templates live in `packages/vfcopy/hq/templates/` — not in the MCP.
+
 ## Do this next (read-only growth)
 
 ### Instagram research only — never send from HQ
