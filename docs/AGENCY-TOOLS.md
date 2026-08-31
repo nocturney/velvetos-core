@@ -30,6 +30,7 @@ Checked 2026-08-30 on this HQ:
 | WebSearch / WebFetch | Ready (native Cursor) | Live web (Treg not used). ChatGPT/Gemini/Perplexity/Grok browse equivalent. Never invent a blocked body. |
 | GenerateImage | Ready (native Cursor) | User-asked stills. Instagram still Canva-first. Failover: Canva `generate-design` → Superdesign → `studio/render.py`. |
 | 3D AI Studio | Owner subscription; **not on this Cloud Agent** | Text/image → mesh → STL. Playbook `vfprod/3DAISTUDIO.md`. Official MCP is OAuth from their Settings. Failover: site UI + Drive. No key in git. |
+| iCloud Drive | **Owner Mac only** (local MCP). Cloud: **Drive mirror** | Desktop: `vfmcp/CONNECT-ICLOUD.md`. Sync: `ICLOUD-DRIVE-SYNC.md` + `scripts/sync-icloud-to-drive.sh`. HQ searches Drive, not iCloud directly. |
 
 **Failover law:** tool down / no access → hand the job to the backup **in the same turn**. Never end empty-handed. Never invent ₪, Insights, or a blocked body to fill the gap. Matrix: [`constitution/ORCHESTRA.md`](../constitution/ORCHESTRA.md).
 

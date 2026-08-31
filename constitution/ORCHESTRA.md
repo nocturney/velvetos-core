@@ -48,6 +48,8 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 | **Drive** MCP | קובץ/שם שהמשתמש נתן בצ׳אט | לא פותחים תיקיות אישיות |
 | **FCC** (לא על Cloud Agent) | תזמורת ChatGPT+Gemini+Perplexity + thrift ב־`vffcc` | לא מתקינים `fcc-server` כאן |
 | **3D AI Studio** (MCP לא מחובר / אין קרדיט) | אתר [3daistudio.com](https://www.3daistudio.com) + Drive + `vfprod/3DAISTUDIO.md` | לא ממציאים מפתח / URL / ₪ · לא מדפיסים מ־HQ |
+| **iCloud** (Cloud Agent / Mac כבוי) | Drive `Velvet Factory/iCloud mirror` · «הרץ sync על Mac» · קובץ בצ׳אט | לא טוענים גישה ישירה ל-iCloud מהענן |
+| **iCloud MCP** (Desktop, אין הרשאה) | העתקה ל-Drive · `sync-icloud-to-drive.sh` | לא פותחים תיקיות אישיות |
 
 ### Grok Bot (מכסה שבועית / לא זמין)
 
