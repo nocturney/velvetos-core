@@ -207,7 +207,7 @@
       "pattern": "coordinator turns a goal into steps; approvals and resume",
       "packs": ["vfharness", "vfops"],
       "crew": "crews/run.md",
-      "note": "One existing crew, not a DAG of many coding agents."
+      "note": "One existing crew, not a DAG of many coding agents. Embed: planned_steps + gate on checkpoint; playbooks/oma-patterns.md."
     },
     {
       "name": "Claudexor",
