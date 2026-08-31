@@ -13,6 +13,7 @@ Use when the user asks for רתמה, harness, AGENTS.md, checkpoint, escalate, h
 - Mention: `@workflow-architect` (desk) — `@multi-agent-systems-architect` only if the user asks for that warehouse slug
 - Guide file wins over the conversation: `AGENTS.md`
 - Grok quota outage: `packages/vfharness/playbooks/grok-failover.md` + `grok-outage-tools.md` + `packages/vfigos/QUEUE.md` + `LIVE-PACKET.md`
+- Truncated / skeleton output: `packages/vfharness/playbooks/full-output-enforcement.md` (from taste-skill `output-skill`)
 
 ## Loop
 

@@ -1,0 +1,22 @@
+{
+  "task_id": "taste-skill-embed-2026-08-31",
+  "status": "done",
+  "pack": "vfharness",
+  "completed_steps": [
+    "Read Leonxlnx/taste-skill upstream",
+    "Write docs/TASTE-SKILL-EMBED-he.md",
+    "Add packages/vfharness/playbooks/full-output-enforcement.md",
+    "Brief Inference on ui-finish-gate-reviewer.mdc",
+    "Restraint section on vfcovers/hq/PLAYBOOK.md",
+    "Register in vfresearch/LINKS.json",
+    "Run python3 scripts/check-all.py"
+  ],
+  "next_step": null,
+  "artifacts": [
+    "docs/TASTE-SKILL-EMBED-he.md",
+    "packages/vfharness/playbooks/full-output-enforcement.md",
+    "packages/vfresearch/sources/2026-08-31-taste-skill.md"
+  ],
+  "unresolved": [],
+  "last_updated": "2026-08-31"
+}
