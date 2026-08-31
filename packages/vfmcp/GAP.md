@@ -12,7 +12,7 @@
 | Calendar | ready · `Asia/Jerusalem` | namespace `Google-calendar` |
 | Drive | ready · חיפוש **ויצירה** (`create_file`) | namespace `Google-drive` |
 | **Canva** | **ready** | `search-designs` החזיר `DAGoYmCu4c4` («Card - חגיגת האהבה שלכם») |
-| **3D AI Studio** | **needsAuth** (Desktop OAuth) | `.cursor/mcp.json` → `https://mcp.3daistudio.com/mcp`. Cloud Agent עד Connect בדסקטופ |
+| **3D AI Studio** | **needsAuth** (Desktop + Cloud OAuth) | Team MCP `threedaistudio` + `.cursor/mcp.json`. `CONNECT-3DAI.md` |
 | WebSearch / WebFetch | ready · מקורי Cursor | כלי native בסוכן |
 | GenerateImage | ready · מקורי Cursor | כלי native; אינסטגרם עדיין Canva קודם |
 | Superdesign | skill · בלי CLI login | פלאגין על הדיסק |

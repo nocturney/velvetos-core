@@ -19,7 +19,7 @@ PLAYBOOK_3DAI = ROOT / "packages" / "vfprod" / "3DAISTUDIO.md"
 
 REQUIRED_MCP = {
     "canva": "https://mcp.canva.com/mcp",
-    "3daistudio": "https://mcp.3daistudio.com/mcp",
+    "threedaistudio": "https://mcp.3daistudio.com/mcp",
 }
 
 NEEDLES_GAP = (
@@ -94,7 +94,7 @@ def main() -> None:
         fail("vf-desk.json canva.status must be ready after Cloud Agent verify")
 
     threed = tools.get("threedaistudio") or {}
-    if threed.get("mcp") != REQUIRED_MCP["3daistudio"]:
+    if threed.get("mcp") != REQUIRED_MCP["threedaistudio"]:
         fail("vf-desk.json threedaistudio.mcp must match .cursor/mcp.json")
     if not (threed.get("failover") or ""):
         fail("vf-desk.json threedaistudio must declare failover")
