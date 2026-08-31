@@ -19,6 +19,8 @@ origin: <owner/repo or unknown>
 
 Include the Origin slug only when you actually have it. Do not invent slugs, prices, or secrets.
 
+Unknown slugs (`vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, `vfbriefux`) stay `unknown` until a real copy arrives. Do not guess `tmp-…` from the pack name. HQ overlay is the office. Playbook: [`ORIGIN-SLUGS.md`](ORIGIN-SLUGS.md). Report: `python3 scripts/discover-origin-slugs.py`.
+
 **Quiet if nothing new** — no ping when the finished agent is not a VF pack, or when HQ already has that bcId + name + slug.
 
 HQ sends Instagram via tools (`constitution/SEND.md`). Grok Bot is optional backup. Printers stay on the floor.
