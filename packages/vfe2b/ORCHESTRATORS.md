@@ -16,6 +16,7 @@
 | אימות נפרד לפני «בוצע» | kodo | שדה `אימות` — סנסור או בדיקת שדה. בלי זה אין `worker_done` |
 | ארטיפקט על הדיסק | tutti, Crewplane | שדה `ארטיפקט` — נתיב או «אין» |
 | תקרה ללולאה + קבלה | fractal, MartinLoop | 2 ניסיונות ואז הסלמה. checkpoint = קבלה |
+| תכנון מקדים + שער עמיד | Open Multi-Agent | `planned_steps` + `gate` ב-checkpoint; `oma-patterns.md` |
 | יציאה כשבאמת נגמר | ralph-claude-code | `worker_done` רק אחרי אימות |
 | הקשר טרי בניסיון חוזר | ralphex | קוראים שוב את המקור. לא מנחשים |
 | תיבה → משמרת אחת | Taskuary | בריף בוקר ממיין, ואז צוות אחד |

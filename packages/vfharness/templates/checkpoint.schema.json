@@ -9,7 +9,20 @@
     "task_id": { "type": "string", "minLength": 1 },
     "status": { "enum": ["running", "blocked", "escalated", "done"] },
     "pack": { "type": "string", "minLength": 1 },
-    "goal": { "type": "string", "description": "Optional session completion condition (DeerFlow /goal pattern)" },
+    "goal": {
+      "type": "string",
+      "description": "Optional session completion condition (DeerFlow /goal pattern). Sale ₪ is never a goal — use decision_gate."
+    },
+    "crew": {
+      "type": "string",
+      "description": "Existing vfe2b crew when this checkpoint backs a משמרת (morning-brief, inquiry, content, research, books-data)."
+    },
+    "planned_steps": {
+      "type": "array",
+      "description": "Plan preview before execution — coordinator pattern from Open Multi-Agent, without a second runtime.",
+      "items": { "type": "string" },
+      "maxItems": 8
+    },
     "completed_steps": {
       "type": "array",
       "items": { "type": "string" }
@@ -22,6 +35,31 @@
     "unresolved": {
       "type": "array",
       "items": { "type": "string" }
+    },
+    "outcome": {
+      "type": ["string", "null"],
+      "enum": ["worker_done", "escalation", "decision_gate", null],
+      "description": "Run card מצב when the משמרת closes or pauses on a durable gate."
+    },
+    "pulse": {
+      "type": "string",
+      "enum": ["working", "blocked", "idle"],
+      "description": "Run card דופק — herdr pattern on the same card."
+    },
+    "verification": {
+      "type": "string",
+      "description": "Run card אימות — sensor name, named field read, tool receipt, or חסר."
+    },
+    "gate": {
+      "type": ["object", "null"],
+      "description": "Durable pause until a human or lead seat clears the gate. Checkpoint stays blocked; do not emit worker_done.",
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["decision_gate", "escalation", "approval"] },
+        "waiting_for": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string" }
+      },
+      "required": ["kind", "waiting_for"]
     },
     "escalation": { "type": ["string", "null"] },
     "last_updated": { "type": "string", "minLength": 8 }

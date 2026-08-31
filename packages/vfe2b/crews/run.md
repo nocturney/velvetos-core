@@ -86,9 +86,12 @@ Rules:
 
 1. Name the job in one Hebrew line. If the user did not name a job, stop and ask — do not open a personal Drive folder.
 2. Pick **one** existing crew: morning-brief / research / inquiry / content / books-data. Do not spawn a second coding agent or orchestrator.
-3. Keep every read and note inside that job name. Write the artifact to a path on disk.
-4. Run that crew's steps. Missing required source → do not fill the gap.
-5. Verify. Then emit **exactly one** outcome card (below). Then stop.
+3. **Plan preview (OMA embed):** before heavy work, write `planned_steps` (3–8 lines) to `packages/vfharness/state/<task-id>.json` — goal, not a dynamic DAG. See `packages/vfharness/playbooks/oma-patterns.md`.
+4. Keep every read and note inside that job name. Write the artifact to a path on disk.
+5. Run that crew's steps. Missing required source → do not fill the gap.
+6. Verify. Then emit **exactly one** outcome card (below). Mirror `outcome`, `pulse`, and `verification` into the checkpoint. Optional audit copy: `packages/vfharness/templates/run-receipt.md`.
+7. **Durable gate:** sale ₪ or missing human field → checkpoint `status: blocked` + `gate` — not `worker_done`. Resume next session from the same file.
+8. Then stop.
 
 ## Outcome card
 
