@@ -8,9 +8,11 @@
     "Wrote vfprod/3DAISTUDIO.md on existing packs (no new pack)",
     "Wired vlicense/vfsku/vfresearch/vfmcp/desk/ORCHESTRA",
     "Registered weekly links; sensor needles on check-vfmcp.py",
-    "Wrote CONNECT-3DAI.md — MCP tab is on 3daistudio.com Settings, not Cursor Marketplace"
+    "Wrote CONNECT-3DAI.md — MCP tab is on 3daistudio.com Settings, not Cursor Marketplace",
+    "Fetched origin/main 6be7614 and merged; all 7 conflicts classified simple overlapping text",
+    "Kept main HTTP MCP (https://mcp.3daistudio.com/mcp, key threedaistudio) plus this branch playbook"
   ],
-  "next_step": "Lead seat: browser login on 3daistudio.com → gear Settings → AI Assistants (MCP) → Cursor. Not Cursor Marketplace. See vfprod/CONNECT-3DAI.md",
+  "next_step": "Lead seat: Cursor Desktop Connect on threedaistudio (deeplink in vfprod/CONNECT-3DAI.md) or site Settings → AI Assistants (MCP). Cloud Agent stays needsAuth until then.",
   "artifacts": [
     "packages/vfprod/CONNECT-3DAI.md",
     "packages/vfprod/3DAISTUDIO.md",
@@ -19,10 +21,16 @@
     "docs/MCP-FIT.md"
   ],
   "unresolved": [
-    "Official MCP not connected on this Cloud Agent — OAuth is a lead-seat click",
+    "Official MCP not connected on this Cloud Agent — OAuth is a lead-seat click on Desktop",
     "API key must stay on the Mac env if they want REST later",
     "No live mesh generated this run — no customer photo or lead concept approval"
   ],
   "escalation": null,
+  "merge_conflicts": {
+    "fetched": "origin/main@6be7614",
+    "merge_commit": "99d5562",
+    "class": "all_simple",
+    "complicated": []
+  },
   "last_updated": "2026-08-31"
 }
