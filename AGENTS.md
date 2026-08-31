@@ -1,17 +1,21 @@
-# AGENTS.md — Velvet Factory HQ harness
+# AGENTS.md — VelvetOS harness (active tenant: Velvet Factory)
 
+PRODUCT: VelvetOS
 PROJECT: velvet-factory-headquarters-os
+ACTIVE_TENANT: velvet-factory
 LANGUAGE: Hebrew product copy; Hebrew+English office docs
 STUDIO: 3D-print · Sderot · pickup only · WhatsApp `050-2517000` · IG `@velvets_cloud`
 FORMULA: Agent = Model + Harness
 
 This file is the **guide**. When it conflicts with a conversation, this file wins.
 
+VelvetOS is the universal business + autonomous social desk. **Velvet Factory** is the active tenant (`packages/velvetos/ACTIVE.json`). Tenant facts live in `packages/velvetos/tenants/<id>.json`. Do not switch ACTIVE without the lead seat. Example tenants under `_examples/` stay drafts.
+
 BUILD: (no app binary — the catalog is the product)
 TEST: python3 scripts/check-all.py
-LINT: python3 scripts/check-hq-overlay.py && python3 scripts/check-vf-desk.py
+LINT: python3 scripts/check-hq-overlay.py && python3 scripts/check-vf-desk.py && python3 scripts/check-velvetos.py
 
-Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`.
+Read next: `packages/velvetos/KERNEL.md`, `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`.
 
 ## RULES
 
@@ -21,7 +25,8 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 - Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM». Customer WhatsApp stays human (no WhatsApp MCP).
-- Do not create a new pack for an idea. Map onto an existing pack the same day.
+- Do not create a new pack for an idea. Map onto an existing pack the same day. New business vertical → tenant profile on `velvetos`, not a parallel pack tree.
+- Do not activate `tenants/_examples/` without the lead seat. Placeholders (`@EXAMPLE_…`, `חסר`) are not live facts.
 - Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
 - Treg is **not relevant**. Do not login, `call`, or route failover through Treg. Live web = `WebSearch` / `WebFetch` / orchestra.
 - Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.
@@ -36,6 +41,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 
 ## ANTI-PATTERNS (dated; each traces to an observed failure)
 
+- 2026-08-31 — New business vertical as a parallel pack tree or flipped ACTIVE to an `_examples/` tenant with placeholder handles. Use `packages/velvetos` tenant profiles; keep `velvet-factory` active until lead seat fills real facts. Sensor: `scripts/check-velvetos.py`.
 - 2026-08-31 — Invented Origin slug or idled because Origin list was HQ-only. Keep `unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`. Sensor: `scripts/check-origin-slugs.py`.
 - 2026-08-31 — Treated «לא אתר מ־HQ» as blocking an **internal** owner console. Public marketing site stays locked; internal command surface is allowed (`docs/OFFICE-OS-EMBED-he.md`). Sensor: `scripts/check-hq-overlay.py` + desk laws.
 - 2026-08-30 — Invented sale ₪ or Insights to fill a gap. Sensor: `scripts/check-hq-overlay.py`.
@@ -67,6 +73,7 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 | `scripts/check-vfresearch.py` | Weekly inspiration-links + IG music + orchestra failover law |
 | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
+| `scripts/check-velvetos.py` | VelvetOS kernel + tenants; VF active-tenant compat; examples stay drafts |
 
 Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
 
@@ -96,4 +103,5 @@ DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inven
 
 ## HARNESS PACK
 
-Layer map and embed path: `packages/vfharness/`. Activate with `@vfharness`.
+Layer map and embed path: `packages/vfharness/`. Activate with `@vfharness`.  
+VelvetOS kernel + tenants: `packages/velvetos/`. Docs: `docs/VELVETOS.md`.

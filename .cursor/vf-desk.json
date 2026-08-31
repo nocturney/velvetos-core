@@ -1,11 +1,19 @@
 {
   "name": "velvet-factory-desk",
-  "title": "Velvet Factory desk — Agency specialists + live tools",
+  "title": "VelvetOS desk — active tenant Velvet Factory",
   "updatedAt": "2026-08-31",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
+  "product": "VelvetOS",
+  "activeTenant": "velvet-factory",
+  "velvetos": {
+    "pack": "packages/velvetos",
+    "active": "packages/velvetos/ACTIVE.json",
+    "docs": "docs/VELVETOS.md"
+  },
   "notes": [
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
+    "Product is VelvetOS; active tenant is velvet-factory until lead seat changes packages/velvetos/ACTIVE.json.",
     "HQ sends Gmail and Instagram via tools (constitution/SEND.md). Do not wait for Christian or Grok Bot. Auto-DM and boost stay forbidden. Customer WhatsApp stays human 050-2517000.",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
     "Do not commit secrets, medical files, or personal Drive folders.",
@@ -17,7 +25,8 @@
     "Grok Bot quota failover: keep producing AND sending via HQ tools. Office brief is תצוגה 3 HTML via send_message to nocturney@gmail.com. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
     "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
     "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
-    "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git."
+    "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
+    "2026-08-31: VelvetOS kernel + tenant profiles (packages/velvetos). Example verticals stay under tenants/_examples/. Sensor: scripts/check-velvetos.py."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -132,7 +141,7 @@
     {
       "id": "lead",
       "he": "ראש צוות",
-      "packs": ["vfops", "vfbriefux", "vfharness", "vfmem"],
+      "packs": ["vfops", "vfbriefux", "vfharness", "vfmem", "velvetos"],
       "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect"],
       "tools": ["calendar", "gmail", "vfmem", "web"],
       "decides": "₪ amount, what moves on the board, what is deferred"
@@ -173,7 +182,7 @@
   "desk": [
     {
       "slug": "studio-operations",
-      "packs": ["vfops", "vfharness", "vfmem"],
+      "packs": ["vfops", "vfharness", "vfmem", "velvetos"],
       "tools": ["calendar", "gmail", "vfmem"],
       "job": "Morning brief, queue bottlenecks, run-the-studio procedures"
     },
@@ -354,6 +363,7 @@
     ".cursor/skills/vf-graft-map/SKILL.md",
     ".cursor/skills/vf-fcc-offload/SKILL.md",
     ".cursor/skills/vf-weekly-links/SKILL.md",
-    ".cursor/skills/vf-ig-music/SKILL.md"
+    ".cursor/skills/vf-ig-music/SKILL.md",
+    ".cursor/skills/vf-velvetos/SKILL.md"
   ]
 }

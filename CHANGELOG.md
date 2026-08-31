@@ -1,12 +1,13 @@
 # Changelog
 
-All notable changes to Velvet Factory Headquarters & OS.
+All notable changes to VelvetOS (active tenant: Velvet Factory Headquarters & OS).
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+- 2026-08-31 — **VelvetOS**: ליבת מוצר אוניברסלית (`packages/velvetos`) — ניהול עסק + סושיאל אוטונומי עם פרופילי tenant. ACTIVE נשאר `velvet-factory` (שימוש נוכחי לא נשבר). דוגמאות טיוטה: יופי multi-IG, פסיכיאטר/חוות דעת. סנסור `check-velvetos.py`. VelvetOS kernel + tenants; VF stays active. See `docs/VELVETOS.md`.
 - 2026-08-31 — **Office OS / CRM-ERP inspiration**: 18 מקורות (Twenty, ERPNext, Huly, Monica, NocoBase, Krayin, Akaunting, IDURAR, Dolibarr, Odoo, Zoho, Salesforce Pro, NetSuite, monday, XenForo/vBulletin/Invision/WoltLab) → דפוסים על פקים קיימים. `capabilities.json` + לוח צינור + portlets + ציר לקוח. ADR: קונסולה פנימית מותרת; אתר שיווקי ציבורי נשאר נעול. See `docs/OFFICE-OS-EMBED-he.md`.
 
 - 2026-08-31 — **Agent repos embed**: [awesome-design-md](https://github.com/VoltAgent/awesome-design-md) → `vfbriefux/hq/DESIGN.md`; [planning-with-files](https://github.com/OthmanAdi/planning-with-files) → templates + `PLANNING-FILES.md`; [GenAI_Agents](https://github.com/NirDiamant/GenAI_Agents) → `reflection-before-send` playbook. [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) pattern-only (already in `vfe2b`); [ruflo](https://github.com/ruvnet/ruflo) skipped (swarm lock). See `docs/AGENT-REPOS-EMBED-he.md`.

@@ -1,0 +1,31 @@
+{
+  "task_id": "velvetos-kernel-2026-08-31",
+  "status": "completed",
+  "pack": "velvetos",
+  "goal": "VelvetOS kernel + tenant profiles; VF remains active; examples for nails/tattoos and psychiatrist stay drafts",
+  "completed_steps": [
+    "Created packages/velvetos kernel (KERNEL, PIPELINE, CHANNELS, schema, ACTIVE)",
+    "Added velvet-factory active tenant + nails-tattoos + psychiatrist-legal examples",
+    "Wired AGENTS.md, constitution, desk, manifest, sensors",
+    "VF compat gate in check-velvetos.py"
+  ],
+  "next_step": "Lead seat may fill real handles for example tenants when ready; do not flip ACTIVE without lead",
+  "artifacts": [
+    "packages/velvetos/",
+    "docs/VELVETOS.md",
+    "scripts/check-velvetos.py",
+    "scripts/velvetos.py"
+  ],
+  "unresolved": [
+    "Example tenant WhatsApp/handles still placeholders",
+    "Packs remain VF-flavored copy until a second tenant is activated"
+  ],
+  "last_updated": "2026-08-31",
+  "planned_steps": [
+    "kernel",
+    "tenants",
+    "wire",
+    "sensor",
+    "verify"
+  ]
+}

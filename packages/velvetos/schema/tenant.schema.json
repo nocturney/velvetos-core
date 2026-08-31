@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos/tenant.schema.json",
+  "title": "VelvetOS tenant profile",
+  "type": "object",
+  "required": [
+    "id",
+    "status",
+    "displayName",
+    "vertical",
+    "locale",
+    "timezone",
+    "pipeline",
+    "fulfillment",
+    "production",
+    "channels",
+    "cta",
+    "close",
+    "compliance",
+    "seats"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "id": { "type": "string", "minLength": 2, "pattern": "^[a-z0-9-]+$" },
+    "status": {
+      "type": "string",
+      "enum": ["active", "ready", "example", "archived"]
+    },
+    "displayName": { "type": "string", "minLength": 1 },
+    "displayNameHe": { "type": "string" },
+    "vertical": {
+      "type": "string",
+      "description": "maker | beauty | clinical-legal | service | custom"
+    },
+    "locale": { "type": "string" },
+    "language": { "type": "string" },
+    "timezone": { "type": "string" },
+    "what": { "type": "string" },
+    "where": { "type": "string" },
+    "pipeline": {
+      "type": "object",
+      "required": ["stages"],
+      "properties": {
+        "stages": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["id", "label"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "enum": ["lead", "talk", "offer", "fulfill", "close"]
+              },
+              "label": { "type": "string" },
+              "packHints": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "fulfillment": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["pickup", "appointment", "document", "hybrid"]
+        },
+        "notes": { "type": "string" },
+        "nationalShipping": { "type": "boolean" }
+      }
+    },
+    "production": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["print", "appointment", "document", "custom"]
+        },
+        "notes": { "type": "string" }
+      }
+    },
+    "channels": {
+      "type": "object",
+      "required": ["instagram"],
+      "properties": {
+        "instagram": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "required": ["id", "handle", "purpose", "primary"],
+            "properties": {
+              "id": { "type": "string" },
+              "handle": { "type": "string" },
+              "purpose": { "type": "string" },
+              "primary": { "type": "boolean" },
+              "language": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "cta": {
+      "type": "object",
+      "required": ["primary"],
+      "properties": {
+        "primary": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "forbidden": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "close": { "type": "string" },
+    "compliance": {
+      "type": "object",
+      "required": [
+        "noInventedPrices",
+        "noInventedInsights",
+        "noAutoDm",
+        "noBoostWithoutLead",
+        "hqSendViaTools"
+      ],
+      "properties": {
+        "noInventedPrices": { "type": "boolean", "const": true },
+        "noInventedInsights": { "type": "boolean", "const": true },
+        "noAutoDm": { "type": "boolean", "const": true },
+        "noBoostWithoutLead": { "type": "boolean", "const": true },
+        "hqSendViaTools": { "type": "boolean", "const": true },
+        "denyPersonalMedicalLegalFoldersUnlessNamed": { "type": "boolean" },
+        "contentAllowed": { "type": "string" },
+        "extraLocks": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "seats": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["id", "he"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": ["lead", "studio", "growth", "ops", "production"]
+          },
+          "he": { "type": "string" },
+          "roleNote": { "type": "string" }
+        }
+      }
+    },
+    "locks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "packPrefix": { "type": "string" },
+    "notes": { "type": "string" }
+  }
+}
