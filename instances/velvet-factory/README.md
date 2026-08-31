@@ -4,9 +4,10 @@
 
 ## התחלה — הכי פשוט
 
-1. שכפל `nocturney/velvetos-core`
-2. לחיצה כפולה על **`START-VF.bat`** בתיקייה הזו
-3. Cursor → Open Folder → התיקייה הזו
+1. שכפל `nocturney/velvetos-core` **או** `nocturney/velvetos-velvet-factory`
+2. **Cloud Agent:** `.cursor/environment.json` מריץ `attach-core` אוטומטית — לא צריך ידנית
+3. **מקומי:** לחיצה כפולה על **`START-VF.bat`** (Windows) או `./scripts/attach-core.sh`
+4. Cursor → Open Folder → התיקייה הזו
 
 מדריך מלא: [`docs/START-HERE-HE.md`](../../docs/START-HERE-HE.md)
 

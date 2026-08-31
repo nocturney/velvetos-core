@@ -180,6 +180,7 @@ def main() -> None:
         "constitution/STUDIO.md",
         "scripts/attach-core.sh",
         ".cursor/vf-desk.json",
+        ".cursor/environment.json",
     ):
         if not (vf_inst / rel).is_file():
             fail(f"missing instances/velvet-factory/{rel}")
@@ -215,9 +216,20 @@ def main() -> None:
         fail("AGENTS.md must mention frontend instances")
 
     repos = REPOS.read_text(encoding="utf-8")
-    for needle in ("backend", "frontend", "velvetos-velvet-factory", "attach-core"):
+    for needle in ("backend", "frontend", "velvetos-velvet-factory", "attach-core", "environment.json"):
         if needle not in repos:
             fail(f"REPOS.md must mention {needle}")
+
+    env_path = vf_inst / ".cursor" / "environment.json"
+    env = load(env_path)
+    if env.get("install") != "./scripts/attach-core.sh":
+        fail("instances/velvet-factory environment.json install must run attach-core")
+    deps = env.get("repositoryDependencies") or []
+    if not any("velvetos-core" in d for d in deps):
+        fail("instances/velvet-factory environment.json must list velvetos-core dependency")
+
+    if not (PACK / "INSTANCE-ENV.md").is_file():
+        fail("missing packages/velvetos/INSTANCE-ENV.md")
 
     kernel = KERNEL.read_text(encoding="utf-8")
     if "backend" not in kernel.lower() and "באקאנד" not in kernel:

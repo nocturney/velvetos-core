@@ -23,6 +23,8 @@ This file is the **guide for this business office**. Core laws still win for sen
 ./scripts/attach-core.sh
 ```
 
+**Cloud Agent:** `.cursor/environment.json` runs `install` → attach-core on every boot. No manual step.
+
 ## MODULES
 
 Enabled set is in `instance/velvet-factory.json` → `modulesEnabled` (preset `maker-print`).

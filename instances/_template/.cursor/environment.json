@@ -1,0 +1,7 @@
+{
+  "name": "VelvetOS — {{DISPLAY_NAME}}",
+  "install": "./scripts/attach-core.sh",
+  "repositoryDependencies": [
+    "github.com/nocturney/velvetos-core"
+  ]
+}

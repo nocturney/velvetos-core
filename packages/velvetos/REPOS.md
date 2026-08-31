@@ -13,7 +13,7 @@
 
 | ריפו | תפקיד |
 |---|---|
-| `nocturney/velvet-factory-headquarters-os` | **VelvetOS Core** (backend) |
+| `nocturney/velvetos-core` | **VelvetOS Core** (backend) |
 | `nocturney/velvetos-velvet-factory` | **VelvetOS — Velvet Factory** (frontend) — scaffold ב־`instances/velvet-factory/` |
 | `velvetos-<business>` | מופעים עתידיים מ־`presets/` (יופי multi-IG, פסיכיאטר…) |
 
@@ -26,6 +26,20 @@
 ```
 
 המופע מפעיל תת־קבוצה של `modules/catalog.json` דרך `modulesEnabled`.
+
+## Cloud Agent — כל מופע חדש
+
+כל ריפo frontend **חייב** `.cursor/environment.json`:
+
+```json
+{
+  "name": "VelvetOS — <Business>",
+  "install": "./scripts/attach-core.sh",
+  "repositoryDependencies": ["github.com/nocturney/velvetos-core"]
+}
+```
+
+Playbook: `INSTANCE-ENV.md` · תבנית: `instances/_template/` · כלל: `.cursor/rules/velvetos-instance-scaffold.mdc`
 
 ## פרסום מופע VF
 
