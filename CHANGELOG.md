@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **3D AI Studio**: מנוי בעלים על `vfprod` (לא פק חדש). MCP HTTP `threedaistudio` → `https://mcp.3daistudio.com/mcp` (OAuth בדסקטופ; Cursor מדלג על מפתח `3daistudio`). אתר כגיבוי. אותו שער Meshy/Tripo. אין מפתח בגיט, אין ₪ מקרדיטים, אין הדפסה מ־HQ. `3DAISTUDIO.md` + `CONNECT-3DAI.md`.
 - 2026-08-31 — **vf-canva plugin MCP path**: `.cursor-plugin/plugin.json` pointed at `./.cursor/mcp.json` (missing under `.cursor-plugin/`). Fixed to `../.cursor/mcp.json`; sensor now resolves plugin paths relative to the manifest.
 - 2026-08-31 — **3D AI Studio MCP visibility**: renamed server key `3daistudio` → `threedaistudio` (Cursor skips digit-prefixed keys). URL-only config + deeplink in `CONNECT-3DAI.md`.
 - 2026-08-31 — **3D AI Studio Cloud Agent MCP**: two-surface model (Desktop vs Cloud) in `vfprod/CONNECT-3DAI.md`, `docs/MCP-FIT.md`, `vfmcp/GAP.md`. Cloud requires Team MCP at Dashboard → Integrations & MCP plus per-user OAuth at cursor.com/agents — `.cursor/mcp.json` alone does not reach Cloud VMs.

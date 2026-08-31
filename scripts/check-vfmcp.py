@@ -30,6 +30,7 @@ NEEDLES_GAP = (
     "אין בכוונה",
     "SHEETS.md",
     "Treg",
+    "3D AI Studio",
 )
 NEEDLES_SHEETS = (
     "חסר גיליון",
@@ -82,6 +83,20 @@ def main() -> None:
         fail("MCP-FIT.md must point at vfmcp/GAP.md")
     if "WebSearch" not in fit:
         fail("MCP-FIT.md must list WebSearch as already wired")
+    if "3D AI Studio" not in fit:
+        fail("MCP-FIT.md must map the owner 3D AI Studio account")
+
+    studio = PLAYBOOK_3DAI.read_text()
+    for needle in ("אין מפתח בגיט", "vlicense", "STL", "OAuth", "CONNECT-3DAI.md", "לא על Cloud Agent"):
+        if needle not in studio:
+            fail(f"3DAISTUDIO.md must mention {needle}")
+    if "₪" in studio and "X ₪" not in studio:
+        fail("3DAISTUDIO.md must not invent a sale ₪")
+
+    connect = CONNECT_3DAI.read_text()
+    for needle in ("threedaistudio", "mcp.3daistudio.com", "AI Assistants (MCP)"):
+        if needle not in connect:
+            fail(f"CONNECT-3DAI.md must mention {needle}")
 
     desk = json.loads(DESK.read_text())
     tools = desk.get("tools") or {}
@@ -94,16 +109,22 @@ def main() -> None:
         fail("vf-desk.json canva.status must be ready after Cloud Agent verify")
 
     threed = tools.get("threedaistudio") or {}
+    if not threed:
+        fail("vf-desk.json tools missing threedaistudio")
     if threed.get("mcp") != REQUIRED_MCP["threedaistudio"]:
         fail("vf-desk.json threedaistudio.mcp must match .cursor/mcp.json")
     if not (threed.get("failover") or ""):
         fail("vf-desk.json threedaistudio must declare failover")
+    if "3DAISTUDIO.md" not in (threed.get("useWhen") or "") and "3DAISTUDIO.md" not in (threed.get("rule") or ""):
+        fail("vf-desk.json threedaistudio must point at 3DAISTUDIO.md")
 
     orchestra = ORCHESTRA.read_text()
     if "WebSearch" not in orchestra and "tools.web" not in orchestra:
         fail("ORCHESTRA.md must mention WebSearch / tools.web failover")
     if "GenerateImage" not in orchestra and "tools.image" not in orchestra:
         fail("ORCHESTRA.md must mention GenerateImage / tools.image failover")
+    if "3D AI Studio" not in orchestra:
+        fail("ORCHESTRA.md must failover 3D AI Studio to the site")
 
     if "GAP.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention GAP.md")

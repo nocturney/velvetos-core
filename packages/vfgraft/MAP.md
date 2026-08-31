@@ -8,7 +8,7 @@ HQ — 5 seats · 28 desk specialists · 1 pipeline · Grok sends
 laws            constraint   no send, no invented ₪, pickup Sderot
 pipeline        flow         פנייה → שיחה → הצעה → הדפסה → איסוף
 desk            system       five seats; warehouse stays off
-tools           system       Gmail read · Calendar · Drive-by-job · Canva · WebSearch · GenerateImage
+tools           system       Gmail read · Calendar · Drive-by-job · Canva · WebSearch · GenerateImage · 3DAI site
 skills          system       morning / inquiry / content / Canva / this map
 packs           system       packages/<name>/ — no duplicate job
 grok-bot        boundary     live Instagram, Gmail send, printers

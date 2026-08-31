@@ -17,4 +17,5 @@ Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeed
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
 
 Embedded 30.8.2026 from Gemini share: `FLOOR.md`, `MATERIAL.md`.  
-Perplexity: Maxel farm → human bed assign; no auto farm from HQ.
+Perplexity: Maxel farm → human bed assign; no auto farm from HQ.  
+2026-08-31: owner 3D AI Studio subscription mapped in `3DAISTUDIO.md` (site first; official MCP OAuth; no API key in git).

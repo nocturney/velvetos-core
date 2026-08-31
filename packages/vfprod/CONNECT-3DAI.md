@@ -4,6 +4,8 @@
 פלייבוק: [`3DAISTUDIO.md`](3DAISTUDIO.md).  
 אין מפתח API בגיט. OAuth בלבד.
 
+המתג **לא** ב-Marketplace / Plugins. שם השרת בכל מקום: **`threedaistudio`** (לא `3daistudio` — Cursor מדלג על מפתח שמתחיל בספרה).
+
 ## שני ממשקים — Desktop ≠ Cloud
 
 | ממשק | מאיפה MCP נטען | OAuth |
@@ -13,15 +15,13 @@
 
 **חיבור Desktop לא מעביר אוטומטית ל-Cloud.** Canva עובד בענן כי נרשם ב-Team MCP — 3DAI צריך אותו תהליך.
 
-שם השרת בכל מקום: **`threedaistudio`** (לא `3daistudio` — Cursor לא מציג מפתחות שמתחילים בספרה).
-
 ---
 
 ## A) Desktop
 
 ### הכי קל: לחץ על הקישור
 
-1. במחשב שבו מותקן Cursor, לחץ:  
+1. במחשב שבו מותקן Cursor, לחץ:
    [הוסף 3D AI Studio ל-Cursor](cursor://anysphere.cursor-deeplink/mcp/install?name=threedaistudio&config=eyJ1cmwiOiJodHRwczovL21jcC4zZGFpc3R1ZGlvLmNvbS9tY3AifQ==)
 2. Cursor ישאל אם להתקין שרת MCP בשם `threedaistudio`. אשר.
 3. בדפדפן — Login ל-3D AI Studio → Allow.
@@ -75,7 +75,7 @@
 
 ### 1. אדמין: Team MCP (פעם אחת לצוות)
 
-1. [cursor.com/dashboard](https://cursor.com/dashboard) → **Cloud Agents** → **Integrations & MCP**  
+1. [cursor.com/dashboard](https://cursor.com/dashboard) → **Cloud Agents** → **Integrations & MCP**
    (או Team Settings → MCP Configuration)
 2. **Add MCP server** → **HTTP**
 3. מלא:
@@ -91,7 +91,7 @@ Canva הוגדר כך — 3DAI באותו מסלול.
 1. פתח [cursor.com/agents](https://cursor.com/agents)
 2. לפני / בזמן ריצה: תפריט **MCP** (dropdown)
 3. הפעל **`threedaistudio`**
-4. **Connect** → Login ל-3D AI Studio → Allow  
+4. **Connect** → Login ל-3D AI Studio → Allow
    (redirect: `https://www.cursor.com/agents/mcp/oauth/callback`)
 
 ### 3. אימות
@@ -102,7 +102,7 @@ Canva הוגדר כך — 3DAI באותו מסלול.
 
 ### 4. רשת (אם egress מוגבל)
 
-ודא ש-`mcp.3daistudio.com` ברשימת ה-allowlist של הסביבה.  
+ודא ש-`mcp.3daistudio.com` ברשימת ה-allowlist של הסביבה.
 סביבת HQ הנוכחית: egress פתוח.
 
 ---
@@ -115,6 +115,8 @@ Canva הוגדר כך — 3DAI באותו מסלול.
 
 מקור: [MCP](https://www.3daistudio.com/MCP) · v6.5 — «Available on all paid plans.»
 
+אם הלשונית באתר חסרה אחרי Login + מנוי בתשלום: `support@3daistudio.com`.
+
 ## רואים רק Canva? / Cloud לא רואה 3DAI?
 
 | סיבה | תיקון |
@@ -125,8 +127,9 @@ Canva הוגדר כך — 3DAI באותו מסלול.
 | שם ישן `3daistudio` | שנה ל-`threedaistudio` |
 | Canva מ-global, פרויקט לא נטען | פתח שורש הריפו או deeplink |
 | deeplink שבור (Cursor ישן) | עדכן Cursor או הוסף ידנית |
+| Marketplace / Plugins | אין תוסף חנות. זה HTTP ב-`mcp.json` (Desktop) או Team MCP (Cloud) |
 | API key ב-git / ב-Team MCP | OAuth בלבד |
-| Flow → Bob | עוזר קנבס, לא MCP |
+| Flow → **Bob** | עוזר פנימי לקנבס, לא MCP ל-Cursor |
 | הדפסה / ₪ מ-HQ | רצפה + אדם |
 
 ## Failover
