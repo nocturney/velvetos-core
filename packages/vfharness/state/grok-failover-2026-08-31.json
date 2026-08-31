@@ -1,0 +1,29 @@
+{
+  "task_id": "grok-failover-2026-08-31",
+  "status": "running",
+  "pack": "vfharness",
+  "completed_steps": [
+    "Owner reported Grok Bot weekly quota at 100 percent",
+    "Activated grok-failover playbook; default route #מוכן-ל-Grok",
+    "Read Calendar nocturney@gmail.com Asia/Jerusalem — no pickup window today",
+    "Read Gmail inbox newer_than:1d — no customer print inquiry",
+    "Queued VF-G005 d12b carousel for Grok return",
+    "Wrote morning brief draft in vfops; HQ did not send mail"
+  ],
+  "next_step": "On Grok quota return: hand remaining #מוכן-ל-Grok to Grok. If owner says live IG now: complete LIVE-PACKET for human. Do not Publish from HQ.",
+  "artifacts": [
+    "packages/vfigos/QUEUE.md",
+    "packages/vfops/BRIEF-2026-08-31.md",
+    "packages/vfresearch/sources/2026-08-31-grok-failover.md",
+    "packages/vfresearch/sources/2026-08-31-orchestra.md"
+  ],
+  "unresolved": [
+    "Grok Bot weekly quota exhausted — no send from HQ",
+    "ChatGPT / Gemini / Perplexity desks are not MCP on this Cloud Agent — no new orchestra body",
+    "Canva search for G005 returned empty — use vfcovers/g005/slides JPGs",
+    "No verified Insights snapshot for G001 — אין ספירה",
+    "Owner did not request #פרסום-חי-דחוף"
+  ],
+  "escalation": null,
+  "last_updated": "2026-08-31"
+}
