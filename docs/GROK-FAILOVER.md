@@ -11,7 +11,7 @@
 3. **שני מסלולי פרסום:**
    - לא דחוף → תור `#מוכן-ל-Grok` עד חידוש המכסה.
    - **פרסום חי במידת הצורך** → `#פרסום-חי-דחוף` + חבילת [`LIVE-PACKET.md`](../packages/vfigos/LIVE-PACKET.md): HQ מכין מדיה+כיתוב; **האדם** מעלה ב־`@velvets_cloud`.
-4. סוכן HQ **לא** לוחץ Publish / Gmail `send_message` / Boost / DM. כלי מחוברים בפיילאובר: `packages/vfharness/playbooks/grok-outage-tools.md` (`create_draft`, לוח, Canva). אין Instagram Publish MCP.
+4. בריף 07:00: HQ שולח אל `nocturney@gmail.com` (`send_message` — אותו תפקיד כמו Grok). Instagram Publish / Boost / DM / וואטסאפ — אין כלי או Deny. LIVE-PACKET לאדם. מפה: `packages/vfharness/playbooks/grok-outage-tools.md`.
 5. דחוף ללקוח (שיחה) → אדם בוואטסאפ `050-2517000`.
 
 נוהל מלא: [`packages/vfharness/playbooks/grok-failover.md`](../packages/vfharness/playbooks/grok-failover.md).

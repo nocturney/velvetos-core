@@ -105,6 +105,9 @@ def main() -> None:
     for need in ("gmail:send_message", "instagram:send", "invented-ils"):
         if need not in deny:
             fail(f"permissions.deny missing {need}")
+    allow_fo = spec.get("permissions", {}).get("allowFailover") or []
+    if "gmail:send_message:office-brief" not in allow_fo:
+        fail("permissions.allowFailover must include gmail:send_message:office-brief")
 
     sensors = spec.get("sensors") or []
     if len(sensors) < 5:

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **בריף כמו Grok**: בפיילאובר מכסה HQ שולח את בריף 07:00 אל `nocturney@gmail.com` (`send_message`). בלי לחיצת Send אצל הבעלים. IG Publish עדיין אין MCP. Office-brief send is the Grok-equivalent during quota outage.
 - 2026-08-31 — **כלים בפיילאובר Grok**: מפת `grok-outage-tools.md` — Gmail `create_draft` + אירוע לוח + Canva/`render.py` חיים; `send_message` / IG Publish נשארים נעולים (אין MCP העלאה). Wired Grok-outage tools; no HQ send. See `packages/vfharness/playbooks/grok-outage-tools.md`.
 - 2026-08-31 — **Deny שליחה נשאר**: בעלים ביקש ש־HQ ישלח מייל ויעלה לפיד בפיילאובר; `AGENTS.md` מנצח — אין `send_message` / Publish. הסלמה ב־`vfharness/state/escalation-send-deny-2026-08-31.md`. Owner asked HQ to send; guide wins, no send. 
 - 2026-08-31 — **פיילאובר Grok 5 ימים**: מכסה עד ~5.9. G005 → `#פרסום-חי-דחוף` + LIVE-PACKET (חמישי 12:00, אדם מעלה). מיילי בריף 31.8–5.9 להדבקה ב־`vfops/human-send/MAIL-PACK.md`. HQ לא שולח ולא לוחץ Publish. Five-day Grok outage: human live G005 + paste-ready brief emails; no HQ send. See `packages/vfops/OUTAGE-5D.md`.

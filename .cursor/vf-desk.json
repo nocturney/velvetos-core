@@ -6,7 +6,7 @@
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
   "notes": [
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
-    "HQ does not send Instagram, Gmail, WhatsApp, or DMs. Live send stays on Grok Bot (5 seats).",
+    "HQ does not send Instagram, customer Gmail, WhatsApp, or DMs. During Grok-quota failover HQ sends the office brief to nocturney@gmail.com (Grok-equivalent). Instagram still Grok or LIVE-PACKET.",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
     "Do not commit secrets, medical files, or personal Drive folders.",
     "Research overlay @vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness.",
@@ -32,12 +32,12 @@
     "gmail": {
       "status": "ready",
       "account": "nocturney@gmail.com",
-      "mode": "read",
-      "allowed": ["search_threads", "get_thread", "get_message", "list_labels", "list_drafts", "create_draft", "update_draft"],
-      "forbidden": ["send_message", "reply", "forward"],
-      "draftOnlyIfAsked": ["create_draft", "update_draft"],
-      "draftDuringGrokFailover": true,
-      "failover": "create_draft for office brief to self; MAIL-PACK if MCP down; never invent inquiry; never send",
+      "mode": "read+office-brief-send-on-grok-failover",
+      "allowed": ["search_threads", "get_thread", "get_message", "list_labels", "list_drafts", "create_draft", "update_draft", "send_message"],
+      "forbidden": ["reply", "forward"],
+      "sendOfficeBriefDuringGrokFailover": true,
+      "sendOfficeBriefTo": "nocturney@gmail.com",
+      "failover": "send_message office brief to self (Grok-equivalent); MAIL-PACK if MCP down; never invent inquiry; never customer send",
       "queries": {
         "inboxToday": "in:inbox newer_than:1d",
         "bills": "label:חשבונות OR subject:(חשבונית OR Invoice4U OR קבלה)",

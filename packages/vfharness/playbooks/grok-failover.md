@@ -27,7 +27,7 @@
 | כריכה / עיצוב IG | `vfcanva` · `vfcovers` | Canva → export → `studio/render.py` → Superdesign |
 | שיבוץ לוח / סקירה | `vfigos` | תור `QUEUE.md` |
 | חבילת פרסום חי ליד אדם | `vfigos` + `LIVE-PACKET.md` | export PNG/JPG/MP4 + כיתוב מוכן להדבקה |
-| בריף בוקר מבנה | `vfops` + `vfbriefux` | `create_draft` אל עצמכם · MAIL-PACK אם MCP down · **לא** `send_message` |
+| בריף בוקר מבנה | `vfops` + `vfbriefux` | `send_message` אל `nocturney@gmail.com` (כמו Grok) · MAIL-PACK אם MCP down |
 | פנייה / הצעה | `vfconvert` → `vfcost` → `vfsales` | Gmail **קריאה** · טיוטה; שליחה = אדם/Grok |
 | מחקר / מק״ט / השראה | `vfresearch` + תזמורת | ChatGPT + Gemini + Perplexity (`ORCHESTRA.md`) |
 | ריל / טיימלאפס תכנון | `vfom` | כרטיסי סצנה + קבצי גלם מוכנים להעלאה ידנית |

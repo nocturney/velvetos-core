@@ -4,13 +4,15 @@
 מטרה: המשרד **לא נעצר** כש־Grok במכסה 100%.  
 נמדד בסשן 31.8.2026 (Cloud Agent).
 
-`AGENTS.md` עדיין אוסר `send_message` / Instagram Publish. הפתיחה כאן היא **כלים שכבר מחוברים**.
+פיילאובר = אותו תפקיד כמו Grok, בלי תחושת מעבר.  
+בריף 07:00: HQ קורא `send_message` אל `nocturney@gmail.com`. אין לחיצת Send אצל הבעלים.  
+אינסטגרם: אין MCP Publish — LIVE-PACKET נשאר (אין כלי, לא מדיניות בלבד).
 
 ## מצב חי (31.8.2026)
 
 | כלי | סטטוס בסשן | תפקיד בפיילאובר | נעול? |
 |---|---|---|---|
-| Gmail MCP | `ready` | קריאה + **`create_draft`** לבריף משרד אל `nocturney@gmail.com` | Send / reply / forward — כן נעול (Deny) |
+| Gmail MCP | `ready` | קריאה + **`send_message`** בריף משרד אל `nocturney@gmail.com` | reply / forward / שליחה ללקוח — נעול |
 | Calendar MCP | `ready` | קריאה + **`create_event`** למשבצת חיה שכבר בלוח התוכן | לא נעול לקריאה / אירוע משובץ |
 | Drive MCP | `ready` | חיפוש לפי שם עבודה | לא (בלי תיקיות אישיות) |
 | Canva MCP | `ready` | עיצוב / export · `.cursor/mcp.json` → `https://mcp.canva.com/mcp` | Publish ל־IG — אין כלי |
@@ -25,7 +27,7 @@
 ## מה HQ מפעיל לבד (בלי לחכות לבעלים)
 
 1. קריאת תיבה / לוח / דרייב־לפי־שם.
-2. `create_draft` — בריף 07:00 אל עצמכם בלבד, מגוף `vfops/human-send/MAIL-PACK.md` (יום מלא, לא יום עם «חסר עד קריאת בוקר» בלי רענון).
+2. `create_draft` ואז `send_message` — בריף 07:00 אל `nocturney@gmail.com` בלבד (גוף מ־MAIL-PACK אחרי רענון בוקר). בלי לחיצת בעלים.
 3. `create_event` — משבצת חיה שכבר קיימת ב־`vfgrowth` (למשל G005 חמישי 12:00).
 4. Canva + `render.py` + שקפים ב־`vfcovers`.
 5. תור `#מוכן-ל-Grok` / `#פרסום-חי-דחוף` + LIVE-PACKET.
@@ -33,7 +35,7 @@
 ## מה נשאר נעול (אין כלי, לא רק מדיניות)
 
 - העלאה ל־`@velvets_cloud` — אין MCP Publish לאינסטגרם במחסן / ב־Cloud Agent הזה. Grok היה השולח. חבילה: `vfigos/live/`.
-- `send_message` — Deny קבוע + ANTI-PATTERN 2026-08-30. טיוטה ≠ שליחה.
+- `send_message` ללקוח / `reply` / `forward` — Deny. בריף משרד אל עצמכם — **Allow** בפיילאובר.
 - וואטסאפ / בוסט / אוטו־DM.
 
 חיבור MCP חדש לשליחת אינסטגרם דורש מוצר + סודות מחוץ לגיט. לא ממציאים שרת ולא שמים מפתחות בריפו.

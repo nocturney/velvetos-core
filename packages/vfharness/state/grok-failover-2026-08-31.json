@@ -3,22 +3,21 @@
   "status": "running",
   "pack": "vfharness",
   "completed_steps": [
-    "Mapped wired Grok-outage tools (create_draft, calendar slot, Canva/render)",
-    "Did not call send_message or Instagram Publish (no publish MCP)",
-    "Created Gmail draft r-6454661077961545246 for 31.8 brief",
-    "Created Calendar event kppd0t8mf1a07li78e4hssker8 for G005 Thu 12:00"
+    "Owner required Grok-equivalent failover (no extra Send click)",
+    "Allowed office-brief send_message to nocturney@gmail.com during Grok-quota failover",
+    "Sent 31.8 morning brief message 1a0561627a9fdc18",
+    "Calendar hold kppd0t8mf1a07li78e4hssker8 for G005 already exists",
+    "Instagram Publish still has no MCP"
   ],
-  "next_step": "Owner Send on the Gmail draft; owner posts G005 from LIVE-PACKET at the calendar hold. Connect Treg/Mobbin only if needed — not required for this outage.",
+  "next_step": "Each remaining morning: refresh inbox/calendar then send_message office brief. G005 Thu 12:00 still needs human LIVE-PACKET (no IG publish MCP).",
   "artifacts": [
     "packages/vfharness/playbooks/grok-outage-tools.md",
-    "packages/vfops/human-send/MAIL-PACK.md",
-    "packages/vfigos/live/G005-LIVE-PACKET.md"
+    "packages/vfops/human-send/MAIL-PACK.md"
   ],
   "unresolved": [
-    "No Instagram Publish MCP exists on this Cloud Agent",
-    "send_message remains Deny",
-    "Treg / Mobbin / ChatGPT / Gemini / Perplexity have no MCP here"
+    "No Instagram Publish MCP — G005 cannot be posted from HQ",
+    "Treg / Mobbin / orchestra desks have no MCP here"
   ],
-  "escalation": "packages/vfharness/state/escalation-send-deny-2026-08-31.md",
+  "escalation": null,
   "last_updated": "2026-08-31"
 }

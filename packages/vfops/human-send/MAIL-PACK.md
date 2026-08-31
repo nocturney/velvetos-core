@@ -1,7 +1,7 @@
-# מיילי בריף · אדם שולח · 31.8–5.9.2026
+# מיילי בריף · HQ שולח בפיילאובר · 31.8–5.9.2026
 
-HQ **לא** קורא `send_message` / `reply` / `forward`.  
-מכסת Grok ריקה — אתם מדביקים ב־Gmail (`nocturney@gmail.com` → עצמכם, כמו בריפי 30.8) ולוחצים Send.
+בפיילאובר Grok HQ קורא `send_message` אל `nocturney@gmail.com` (בריף משרד בלבד).  
+אין `reply` / `forward` / שליחה ללקוח. ימים עם «חסר עד קריאת בוקר» — לרענן ואז לשלוח, לא לשלוח גוף חסר.
 
 אל: `nocturney@gmail.com`  
 בלי סיסמאות, בלי שמות לקוח מיותרים, בלי ₪ מומצא.
@@ -10,10 +10,9 @@ HQ **לא** קורא `send_message` / `reply` / `forward`.
 
 ---
 
-## שני 31.8.2026 — טיוטה בג׳ימייל (לא נשלח)
+## שני 31.8.2026 — נשלח מ־HQ (כמו Grok)
 
-Gmail draft `r-6454661077961545246` · thread `1a0560facaa75580` · אל `nocturney@gmail.com`.  
-HQ קרא `create_draft` בלבד. פתחו טיוטות ולחצו Send.
+Gmail `send_message` · message `1a0561627a9fdc18` · thread `1a056161533e42db` · אל `nocturney@gmail.com`.
 
 נושא:
 

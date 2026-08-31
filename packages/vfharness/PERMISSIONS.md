@@ -10,8 +10,8 @@ ALLOW read:  drive search_files by job/SKU the user names
 ALLOW write: packages/**, constitution/**, docs/**, AGENTS.md, CHANGELOG.md
 ALLOW execute: python3 scripts/check-*.py
 ASK before: git push, treg call
-ALLOW during grok-failover: gmail create_draft (self brief), calendar create_event (named vfgrowth slot)
-DENY: gmail send_message / reply / forward
+ALLOW during grok-failover: gmail send_message (office brief to self only), calendar create_event (named vfgrowth slot)
+DENY: gmail send_message to customers / reply / forward
 DENY: instagram send / boost / auto-DM
 DENY: rm -rf, DROP TABLE, secrets in git
 DENY: invented ₪, invented Insights
@@ -25,9 +25,9 @@ DENY: invented ₪, invented Insights
 | כתיבה בפק | Allow + git | שחזור מ-git |
 | הרצת סנסורים | Allow | בלי תופעת לוואי |
 | Push | Ask | נראה מבחוץ |
-| טיוטת ג׳ימייל (failover Grok) | Allow — בריף אל עצמכם | הכלי מחובר; Send נשאר Deny |
+| בריף משרד (failover Grok) | Allow `send_message` אל עצמכם | אותו תפקיד של Grok ב־07:00 |
 | טיוטת ג׳ימייל (יום רגיל) | Ask | רק אם ביקשו |
-| שליחה חיצונית | Deny | מוניטין + אין IG Publish MCP |
+| שליחה ללקוח / IG Publish | Deny | אין MCP העלאה · reply/forward נעולים |
 | מחיקת נתונים | Human only | קשה להפוך |
 
 ## הזרקת פקודה

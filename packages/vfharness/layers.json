@@ -102,6 +102,7 @@
     "allowWrite": ["packages/**", "constitution/**", "docs/**", "AGENTS.md", "CHANGELOG.md"],
     "allowExecute": ["python3 scripts/check-*.py"],
     "ask": ["git push", "treg:call"],
+    "allowFailover": ["gmail:send_message:office-brief"],
     "deny": ["gmail:send_message", "gmail:reply", "gmail:forward", "instagram:send", "instagram:boost", "auto-dm", "rm -rf", "invented-ils"]
   },
   "embed": [

@@ -15,14 +15,15 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 
 ## RULES
 
-- Never send Instagram, Gmail, WhatsApp, or DMs from this HQ. Live send stays on Grok Bot.
-- Never call Gmail `send_message`, `reply`, or `forward`. Draft only if the user explicitly asks.
+- Never send Instagram, WhatsApp, customer Gmail, or DMs from this HQ. Instagram live send stays on Grok Bot or a human LIVE-PACKET (no Publish MCP here).
+- Never call Gmail `reply` or `forward`. Never `send_message` to a customer.
+- Grok-quota failover **office brief only**: HQ calls `send_message` to `nocturney@gmail.com` (same job Grok did at 07:00). No extra click. Playbook: `packages/vfharness/playbooks/grok-outage-tools.md`.
 - Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
 - Do not create a new pack for an idea. Map onto an existing pack the same day.
 - Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
-- Grok Bot quota failover: if Grok weekly quota is exhausted (or Grok is unavailable), HQ **keeps producing** drafts/covers/briefs/research on existing packs. Default: `#מוכן-ל-Grok` in `packages/vfigos/QUEUE.md`. Urgent live IG: `#פרסום-חי-דחוף` + `packages/vfigos/LIVE-PACKET.md` — HQ prepares export+caption; **a human** posts on `@velvets_cloud`. HQ agent still does **not** press Publish, Gmail send, WhatsApp, Print, or boost. Customer chat stays human WhatsApp `050-2517000`. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md`.
+- Grok Bot quota failover: HQ **keeps producing** and **sends the office morning brief** to `nocturney@gmail.com` (`send_message`, Grok-equivalent). Default IG: `#מוכן-ל-Grok`. Urgent live IG: `#פרסום-חי-דחוף` + LIVE-PACKET — **a human** posts (no Instagram Publish MCP). No WhatsApp, Print, or boost from HQ. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md`.
 - After every catalog, pack, or rule change, run `python3 scripts/check-all.py`.
 - Do not claim success if a computational sensor failed. Retry once, then escalate.
 - Close a multi-step task with a checkpoint under `packages/vfharness/state/` so the next session can resume.
@@ -32,7 +33,8 @@ Read next: `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfh
 ## ANTI-PATTERNS (dated; each traces to an observed failure)
 
 - 2026-08-30 — Invented sale ₪ or Insights to fill a gap. Sensor: `scripts/check-hq-overlay.py`.
-- 2026-08-30 — Instagram / Gmail send from HQ. Sensor: desk rule + `scripts/check-vf-desk.py`.
+- 2026-08-30 — Instagram / **customer** Gmail send from HQ. Sensor: desk rule + `scripts/check-vf-desk.py`.
+- 2026-08-31 — Left office brief unsent during Grok outage (asked owner to click Send). Failover must send the self-brief like Grok. Sensor: `check-vfharness.py` + `grok-outage-tools.md`.
 - 2026-08-30 — New pack per ChatGPT/Gemini “agent”. Embed in place. Map: `packages/chatgpt-embed-map.json`.
 - 2026-08-30 — Inspiration/share links left stale. Weekly pass: `packages/vfresearch/WEEKLY.md` + `LINKS.json`. Sensor: `scripts/check-vfresearch.py`.
 - 2026-08-30 — Invented Instagram track names or “#1 trending audio” without Treg/owner source. Playbook: `packages/vfresearch/MUSIC.md`. Sensor: `scripts/check-vfresearch.py`.
@@ -71,8 +73,8 @@ ALLOW read: `packages/**`, `constitution/**`, `docs/**`, `.cursor/**`, Gmail sea
 ALLOW write: `packages/**`, `constitution/**`, `docs/**`, `AGENTS.md`, `CHANGELOG.md`
 ALLOW execute: `python3 scripts/check-*.py`
 ASK before: `git push`, Treg `call` (say catalog price first)
-ALLOW during Grok-quota failover: Gmail `create_draft` (office brief to `nocturney@gmail.com` only); Calendar `create_event` for a slot already on `vfgrowth`. Tool map: `packages/vfharness/playbooks/grok-outage-tools.md`.
-DENY: Gmail `send_message` / `reply` / `forward`, Instagram send / boost / auto-DM, `rm -rf`, DROP TABLE, inventing ₪
+ALLOW during Grok-quota failover: Gmail `send_message` of the office brief to `nocturney@gmail.com` only; Calendar `create_event` for a slot already on `vfgrowth`. Tool map: `packages/vfharness/playbooks/grok-outage-tools.md`.
+DENY: Gmail `send_message` to anyone else, `reply`, `forward`, Instagram send / boost / auto-DM, `rm -rf`, DROP TABLE, inventing ₪
 
 ## MEMORY
 
