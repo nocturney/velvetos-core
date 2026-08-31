@@ -6,7 +6,7 @@
 ```
 05 · משרד
 מה נבנה / יועל: Product Lab + כרטיס פנייה + ביו בלי מחיר (`vfsku`/`vfconvert`/`vfcopy`)
-flexi/fidget אחרי שער רישיון. פיילאובר Grok + פערי כלים (`vfmcp/GAP.md`).
+flexi/fidget אחרי שער. פיילאובר Grok + effective-html (`vfbriefux/hq/brief-email.html`).
 Gemini: אין גוף חדש. Perplexity: ביו/«שלחו הודעה» דולג. נתיב: `vfops/data/research.md`.
 ```
 

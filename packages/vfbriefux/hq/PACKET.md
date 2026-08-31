@@ -12,6 +12,8 @@
 4. כריכות פיד בסוף / בגוף — `#vfcovers` (`cid:` ב־`htmlBody`)
 5. פוטר איסוף שדרות  
 
+**HTML (effective-html):** `hq/brief-email.html` — טיוטה/רפרנס RTL (Wireframe). מייל חי = `MAIL.html` + `render_mail.py`. מפת skill: `hq/EFFECTIVE-HTML.md`.
+
 ## שדות מנהל (ריקים עד סנאפשוט)
 
 ```
