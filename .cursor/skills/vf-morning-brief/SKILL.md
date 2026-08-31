@@ -1,6 +1,6 @@
 ---
 name: vf-morning-brief
-description: Build the Velvet Factory morning brief from Calendar, Gmail reads, and vfops — never invent queue hours or send mail.
+description: Build the Velvet Factory morning brief from Calendar and vfops — not from Gmail inbox reads. Send the 07:00 brief via Gmail when ready. Never invent queue hours.
 ---
 
 # Morning brief
@@ -16,8 +16,9 @@ Use when the user asks for בריף בוקר, morning brief, what is open today,
 ## Tools
 
 1. **Google Calendar** — `list_calendars` then `list_events` on `nocturney@gmail.com` for **today** in `Asia/Jerusalem`. Pickup windows and named holds only.
-2. **Gmail** — `search_threads` with `in:inbox newer_than:1d` (and a tighter query if the user names a client). Read inbox. Do not `reply` / `forward` / send to a customer. During Grok-quota failover: render `vfbriefux/MAIL.html` and `send_message` the office brief (`htmlBody` תצוגה 3) to `nocturney@gmail.com`.
-3. **Drive** — skip unless the user names a job file or SKU.
+2. **Gmail — send only for the brief** — render `vfbriefux/MAIL.html` and `send_message` the office brief (`htmlBody` תצוגה 3) to `nocturney@gmail.com`. Do not `reply` / `forward` / send to a customer.
+3. **Gmail — inbox read: skip for the brief** — `search_threads` / `in:inbox newer_than:1d` stay available on the desk for `vfconvert`, `vfbooks`, and named threads. **Do not call them to populate the 07:00 brief** — incoming mail is not a work source right now. If the user names a thread, read that thread only.
+4. **Drive** — skip unless the user names a job file or SKU.
 
 ## Output (Hebrew)
 
@@ -36,4 +37,4 @@ Production mail: `render_mail.py` + `MAIL.html` (תצוגה 3). Reference/wirefr
 
 ## Harness
 
-Read `AGENTS.md` if this is a new session. Do not invent queue hours to pass the brief. If Calendar/Gmail reads fail twice, escalate with `packages/vfharness/templates/escalation.md` — use Drive failover for brief body if Gmail MCP is down. Long brief work: optional checkpoint in `packages/vfharness/state/`.
+Read `AGENTS.md` if this is a new session. Do not invent queue hours to pass the brief. If Calendar read fails twice, escalate with `packages/vfharness/templates/escalation.md`. If Gmail **send** fails twice, use Drive failover for the brief body. Long brief work: optional checkpoint in `packages/vfharness/state/`.
