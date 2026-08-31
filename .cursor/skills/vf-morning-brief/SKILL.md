@@ -28,7 +28,7 @@ Use when the user asks for בריף בוקר, morning brief, what is open today,
 
 One pipeline reminder: פנייה → שיחה → הצעה → הדפסה → איסוף. Pickup in Sderot only.
 
-If constitution overlays exist (`packages/vfops/hq/BRIEF-SLOTS.md` or `packages/vfops/BRIEF.md`), fill those slots. Do not invent a sixth seat. Live mail uses `packages/vfbriefux/MAIL.md` — not plaintext.
+If constitution overlays exist (`packages/vfops/hq/BRIEF-SLOTS.md` or `packages/vfops/BRIEF.md`), fill those slots. Block `05` is always `packages/vfops/data/research.md` (empty state is exactly `אין חדש במשרד`). Do not invent a sixth seat. Live mail uses `packages/vfbriefux/MAIL.md` — not plaintext.
 
 ## HTML draft (optional)
 

@@ -8,8 +8,8 @@
 
 1. כותרת סטודיו + תאריך + «בריף הבוקר» (או «תצוגה — לא 07:00»)  
 2. שורה תחתונה — משפט אחד  
-3. 01–07 לפי `packages/vfops/hq/BRIEF-SLOTS.md`  
-4. כריכות פיד בסוף / בגוף — `#vfcovers` (`cid:` ב־`htmlBody`)  
+3. 01–07 לפי `packages/vfops/hq/BRIEF-SLOTS.md` — בלוק `05` מ־`packages/vfops/data/research.md`  
+4. כריכות פיד בסוף / בגוף — `#vfcovers` (`cid:` ב־`htmlBody`)
 5. פוטר איסוף שדרות  
 
 **HTML (effective-html):** `hq/brief-email.html` — טיוטה/רפרנס RTL (Wireframe). מייל חי = `MAIL.html` + `render_mail.py`. מפת skill: `hq/EFFECTIVE-HTML.md`.

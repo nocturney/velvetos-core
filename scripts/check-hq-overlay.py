@@ -76,6 +76,13 @@ def main() -> None:
     if not (ROOT / "constitution/tags.md").is_file():
         fail("missing tags")
 
+    research = ROOT / "packages/vfops/data/research.md"
+    if not research.is_file():
+        fail("missing vfops/data/research.md (07:00 block 05 pickup)")
+    research_text = research.read_text()
+    if "מה נבנה / יועל" not in research_text and "אין חדש במשרד" not in research_text:
+        fail("vfops/data/research.md must carry «מה נבנה / יועל» or exact empty-state אין חדש במשרד")
+
     vendor = (ROOT / "scripts/vendor-origin-packs.sh").read_text()
     if "HQ overlay wins" not in vendor:
         fail("vendor script must preserve hq overlay")

@@ -25,10 +25,10 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 
 ## בלוק 05 מהתזמורת
 
-Cursor כותב שורה אחת:
+Cursor כותב ל־`packages/vfops/data/research.md` (הנתיב שהבריף 07:00 קורא) ועותק יום `BRIEF-YYYY-MM-DD.md`:
 
 - יש הטמעה: «מה נבנה / יועל» + שם הפק.
-- אין: **«אין חדש במשרד»**.
+- אין: **«אין חדש במשרד»** — בדיוק המילים האלה, בלי תוספת.
 - 31.8 פערי כלים: `vfresearch/sources/2026-08-31-orchestra.md` · מפה `vfmcp/GAP.md`.
 
 HQ שולח את הבריף ב־Gmail `send_message` אל `nocturney@gmail.com`. לא מחכים לגרוק.

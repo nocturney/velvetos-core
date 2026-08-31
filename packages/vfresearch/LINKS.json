@@ -26,6 +26,17 @@
   ],
   "links": [
     {
+      "id": "chatgpt-office-2026-08-31",
+      "kind": "share",
+      "url": "https://chatgpt.com/c/6a94f50b-f964-83eb-a89f-91b7c5e439fa",
+      "title": "בניית משרד הדפסה יעיל — 31.8",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/chatgpt-6a94f50b.md",
+      "report": "packages/vfresearch/sources/2026-08-31-orchestra.md",
+      "packs": ["vfsku", "vfconvert", "vfcopy", "vfprod", "vfgrowth", "vfops"]
+    },
+    {
       "id": "chatgpt-building-agents",
       "kind": "share",
       "url": "https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19",

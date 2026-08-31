@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **תזמורת 06:15**: ChatGPT Plus הוטמע (Product Lab, כרטיס פנייה, ביו בלי מחיר, flexi/fidget אחרי שער). בלוק `05` קבוע ב־`vfops/data/research.md`. Gemini — אין גוף חדש (שאלה בקומפוזר). Perplexity — ביו/«שלחו הודעה» דולג. Daily orchestra: embed Plus office bits; brief block 05 at `vfops/data/research.md`. See `packages/vfresearch/sources/2026-08-31-orchestra.md`.
 - 2026-08-31 — **Origin slugs חסרים**: לא ממציאים `tmp-…`. אחת-עשרה חבילות נשארות `unknown`; HQ overlay הוא המשרד. דיווח `discover-origin-slugs.py`; סנסור `check-origin-slugs.py`. טוקן HQ רואה רק את הריפו הזה (לא scoped ל-tmp). Unknown Origin slugs stay unknown; do not invent; overlay is the office. See `docs/ORIGIN-SLUGS.md`.
 - 2026-08-31 — **בריף תצוגה 3**: מייל הפיילאובר יצא טקסט כי MAIL-PACK נשלח כ־`body`. חוזה HTML מנעול תצוגה 3 (`vfbriefux/MAIL.html` + `render_mail.py` + `cid` כריכות). לא מחליפים מבנה 01–07. תיקון חי: message `1a056279d7554a8a`. כריכת `cid` עדיין חסרה (MCP Base64). Office brief uses locked תצוגה 3 HTML, not plaintext.
 - 2026-08-31 — **בריף כמו Grok**: בפיילאובר מכסה HQ שולח את בריף 07:00 אל `nocturney@gmail.com` (`send_message` + `htmlBody` תצוגה 3). בלי לחיצת Send אצל הבעלים. Office-brief send is the Grok-equivalent during quota outage.
