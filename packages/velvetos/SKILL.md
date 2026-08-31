@@ -1,27 +1,25 @@
-# velvetos — ליבת VelvetOS
+# velvetos — ליבת VelvetOS + מופע VF
 
-תשתית (לא מושב שישי). מערכת ניהול עסק + סושיאל אוטונומי.  
-ה־tenant הפעיל היום: **velvet-factory** (שימוש נוכחי לא נשבר).
+תשתית (לא מושב שישי).  
+הריפו = **VelvetOS — Velvet Factory**. מודולים לכל האנכיים טעונים בליבה.
 
 ## מתי
 
-- «VelvetOS», אוניברסלי, tenant חדש, multi-IG, עסק אחר
-- לפני שממציאים פק חדש לעסק חדש
+- VelvetOS, ליבה, מודולים, ריפו חדש לעסק, multi-IG, preset
 
 ## עשה
 
-1. קרא `KERNEL.md` + `ACTIVE.json`.
-2. טען `tenants/<activeTenant>.json` — אלה עובדות הסטודיו לסיבוב.
-3. צינור: `PIPELINE.md`. ערוצים: `CHANNELS.md`.
-4. דוגמאות בלבד: `tenants/_examples/` — לא להפעיל בלי ראש צוות.
-5. אחרי שינוי: `python3 scripts/check-velvetos.py` ו־`python3 scripts/check-all.py`.
+1. `INSTANCE.json` + `instance/velvet-factory.json`
+2. `modules/catalog.json` — הכל מאחורי הקלעים
+3. `presets/` — הרכב למופע עתידי, לא מתג כאן
+4. `REPOS.md` — ליבה מול מופעים
+5. `python3 scripts/check-velvetos.py`
 
 ## אל תעשה
 
-- לא לשנות `ACTIVE.json` בלי ראש צוות
-- לא פק חדש לכל עסק
+- לא tenant שני / active-example בריפו הזה
 - לא להמציא ₪ / Insights / handles
 - לא אוטו־DM / בוסט
-- לא להחליף את Velvet Factory כשה־ACTIVE הוא `velvet-factory`
+- לא לשבור את מופע VF
 
-Mention: `@workflow-architect` / `@studio-operations` · skill: `.cursor/skills/vf-velvetos/SKILL.md`
+Mention: `@workflow-architect` / `@studio-operations`

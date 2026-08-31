@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos/instance.schema.json",
+  "title": "VelvetOS instance profile",
+  "type": "object",
+  "required": [
+    "id",
+    "displayName",
+    "vertical",
+    "modulesEnabled",
+    "locale",
+    "timezone",
+    "pipeline",
+    "fulfillment",
+    "production",
+    "channels",
+    "cta",
+    "close",
+    "compliance",
+    "seats"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "displayName": { "type": "string" },
+    "displayNameHe": { "type": "string" },
+    "businessName": { "type": "string" },
+    "vertical": { "type": "string" },
+    "preset": { "type": "string" },
+    "modulesEnabled": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "locale": { "type": "string" },
+    "language": { "type": "string" },
+    "timezone": { "type": "string" },
+    "pipeline": {
+      "type": "object",
+      "required": ["stages"],
+      "properties": {
+        "stages": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["id", "label"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "enum": ["lead", "talk", "offer", "fulfill", "close"]
+              },
+              "label": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "fulfillment": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["pickup", "appointment", "document", "hybrid"]
+        }
+      }
+    },
+    "production": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["print", "appointment", "document", "custom"]
+        }
+      }
+    },
+    "channels": {
+      "type": "object",
+      "required": ["instagram"],
+      "properties": {
+        "instagram": { "type": "array" }
+      }
+    },
+    "cta": { "type": "object" },
+    "close": { "type": "string" },
+    "compliance": { "type": "object" },
+    "seats": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5
+    }
+  }
+}

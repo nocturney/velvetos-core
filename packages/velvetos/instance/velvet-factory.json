@@ -1,14 +1,27 @@
 {
   "id": "velvet-factory",
-  "status": "active",
-  "displayName": "Velvet Factory",
-  "displayNameHe": "ולווט פקטורי",
+  "displayName": "VelvetOS — Velvet Factory",
+  "displayNameHe": "VelvetOS — ולווט פקטורי",
+  "businessName": "Velvet Factory",
   "vertical": "maker",
+  "preset": "maker-print",
   "what": "3D-print studio",
   "where": "Sderot",
   "locale": "he-IL",
   "language": "he",
   "timezone": "Asia/Jerusalem",
+  "modulesEnabled": [
+    "kernel-laws",
+    "pipeline-canonical",
+    "channels-instagram",
+    "fulfill-pickup",
+    "production-print",
+    "compliance-base",
+    "compliance-maker",
+    "sales-inquiry",
+    "social-growth",
+    "ops-ledger"
+  ],
   "pipeline": {
     "stages": [
       { "id": "lead", "label": "פנייה", "packHints": ["vfconvert"] },
@@ -73,5 +86,5 @@
     "public-commercial-files-only"
   ],
   "packPrefix": "vf",
-  "notes": "Default VelvetOS tenant. Desk + STUDIO.md must stay in sync while this is ACTIVE."
+  "notes": "Live office instance. Desk + STUDIO.md must stay in sync."
 }

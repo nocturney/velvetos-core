@@ -1,0 +1,119 @@
+{
+  "name": "velvetos-modules",
+  "updatedAt": "2026-08-31",
+  "rule": "All modules are always present in core. An instance selects a subset via modulesEnabled. Modules are not active/inactive goals.",
+  "modules": [
+    {
+      "id": "kernel-laws",
+      "group": "kernel",
+      "summary": "Five seats, HQ send via tools, no invented ₪/Insights, no auto-DM/boost",
+      "file": "modules/kernel-laws.md",
+      "packs": ["vfharness", "vfops"]
+    },
+    {
+      "id": "pipeline-canonical",
+      "group": "kernel",
+      "summary": "lead → talk → offer → fulfill → close with instance Hebrew labels",
+      "file": "modules/pipeline-canonical.md",
+      "packs": ["vfconvert", "vfsales", "vfprod"]
+    },
+    {
+      "id": "channels-instagram",
+      "group": "channels",
+      "summary": "One or more Instagram accounts; primary required; dual-brand isolation",
+      "file": "modules/channels-instagram.md",
+      "packs": ["vfigos", "vfcanva", "vfcovers"]
+    },
+    {
+      "id": "fulfill-pickup",
+      "group": "fulfillment",
+      "summary": "Customer pickup at a place; no national shipping from HQ by default",
+      "file": "modules/fulfill-pickup.md",
+      "packs": ["vfprod", "vfsales"]
+    },
+    {
+      "id": "fulfill-appointment",
+      "group": "fulfillment",
+      "summary": "Calendar-backed appointment / in-place service",
+      "file": "modules/fulfill-appointment.md",
+      "packs": ["vfops", "vfprod", "vfsales"]
+    },
+    {
+      "id": "fulfill-document",
+      "group": "fulfillment",
+      "summary": "Secure document delivery (opinions, reports)",
+      "file": "modules/fulfill-document.md",
+      "packs": ["vfprod", "vfsales", "vfbooks"]
+    },
+    {
+      "id": "production-print",
+      "group": "production",
+      "summary": "3D-print floor, slicer, SKU, file license — no print from HQ",
+      "file": "modules/production-print.md",
+      "packs": ["vfprod", "vfsku", "vlicense"]
+    },
+    {
+      "id": "production-appointment",
+      "group": "production",
+      "summary": "Fulfillment is a booked slot / chair / station",
+      "file": "modules/production-appointment.md",
+      "packs": ["vfprod", "vfops"]
+    },
+    {
+      "id": "production-document",
+      "group": "production",
+      "summary": "Draft → review → deliver opinion/report versions",
+      "file": "modules/production-document.md",
+      "packs": ["vfprod", "vlicense", "vfsales"]
+    },
+    {
+      "id": "compliance-base",
+      "group": "compliance",
+      "summary": "Hard locks shared by every instance",
+      "file": "modules/compliance-base.md",
+      "packs": ["vfharness"]
+    },
+    {
+      "id": "compliance-maker",
+      "group": "compliance",
+      "summary": "Pickup-only, B2B locks, public commercial files",
+      "file": "modules/compliance-maker.md",
+      "packs": ["vfbiz", "vlicense"]
+    },
+    {
+      "id": "compliance-beauty",
+      "group": "compliance",
+      "summary": "Photo consent, dual-IG isolation, no medical claims",
+      "file": "modules/compliance-beauty.md",
+      "packs": ["vfigos", "vfcovers", "vlicense"]
+    },
+    {
+      "id": "compliance-clinical-legal",
+      "group": "compliance",
+      "summary": "No PHI in git; no clinical advice from HQ; quiet/no IG",
+      "file": "modules/compliance-clinical-legal.md",
+      "packs": ["vlicense", "vfbooks"]
+    },
+    {
+      "id": "sales-inquiry",
+      "group": "office",
+      "summary": "Inquiry → talk → quote on existing convert/sales/copy/cost packs",
+      "file": "modules/sales-inquiry.md",
+      "packs": ["vfconvert", "vfsales", "vfcopy", "vfcost"]
+    },
+    {
+      "id": "social-growth",
+      "group": "office",
+      "summary": "Content pack, covers, Canva, IG board via tools",
+      "file": "modules/social-growth.md",
+      "packs": ["vfgrowth", "vfcovers", "vfcanva", "vfigos", "vfom"]
+    },
+    {
+      "id": "ops-ledger",
+      "group": "office",
+      "summary": "Cost factors and ledger reads without invented ₪",
+      "file": "modules/ops-ledger.md",
+      "packs": ["vfcost", "vfbooks", "vfbiz"]
+    }
+  ]
+}

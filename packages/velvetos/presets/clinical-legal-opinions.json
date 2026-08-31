@@ -1,0 +1,29 @@
+{
+  "id": "clinical-legal-opinions",
+  "title": "Clinical-legal — opinions / Bituach Leumi",
+  "titleHe": "קליני-משפטי — חוות דעת / ביטוח לאומי",
+  "kind": "preset",
+  "note": "Composition blueprint for a future instance repo (VelvetOS — <Business Name>). Modules are already in core. Empty Instagram is valid. Not an active/inactive tenant in this repo.",
+  "modulesEnabled": [
+    "kernel-laws",
+    "pipeline-canonical",
+    "channels-instagram",
+    "fulfill-document",
+    "production-document",
+    "compliance-base",
+    "compliance-clinical-legal",
+    "sales-inquiry",
+    "ops-ledger"
+  ],
+  "pipelineLabelsHe": ["פנייה", "איסוף חומר", "היקף", "כתיבה", "מסירה"],
+  "fulfillment": "document",
+  "production": "document",
+  "channels": {
+    "instagramMin": 0,
+    "instagramMax": 1,
+    "allowEmpty": true
+  },
+  "optionalModules": ["social-growth"],
+  "instanceRepoHint": "velvetos-<business-name>",
+  "displayNamePattern": "VelvetOS — <Business Name>"
+}

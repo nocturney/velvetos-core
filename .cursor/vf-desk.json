@@ -1,19 +1,22 @@
 {
   "name": "velvet-factory-desk",
-  "title": "VelvetOS desk — active tenant Velvet Factory",
+  "title": "VelvetOS desk — instance Velvet Factory",
   "updatedAt": "2026-08-31",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
   "product": "VelvetOS",
-  "activeTenant": "velvet-factory",
+  "instanceId": "velvet-factory",
+  "displayName": "VelvetOS — Velvet Factory",
   "velvetos": {
     "pack": "packages/velvetos",
-    "active": "packages/velvetos/ACTIVE.json",
+    "instance": "packages/velvetos/INSTANCE.json",
+    "modules": "packages/velvetos/modules/catalog.json",
+    "repos": "packages/velvetos/REPOS.md",
     "docs": "docs/VELVETOS.md"
   },
   "notes": [
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
-    "Product is VelvetOS; active tenant is velvet-factory until lead seat changes packages/velvetos/ACTIVE.json.",
+    "Product is VelvetOS; this repo is the Velvet Factory instance. Core modules are always loaded under packages/velvetos/modules/. Other businesses = separate instance repos (REPOS.md).",
     "HQ sends Gmail and Instagram via tools (constitution/SEND.md). Do not wait for Christian or Grok Bot. Auto-DM and boost stay forbidden. Customer WhatsApp stays human 050-2517000.",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
     "Do not commit secrets, medical files, or personal Drive folders.",
@@ -26,7 +29,7 @@
     "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
     "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
     "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
-    "2026-08-31: VelvetOS kernel + tenant profiles (packages/velvetos). Example verticals stay under tenants/_examples/. Sensor: scripts/check-velvetos.py."
+    "2026-08-31: VelvetOS core modules + presets (not active/example tenants). Sensor: scripts/check-velvetos.py."
   ],
   "studio": {
     "name": "Velvet Factory",
