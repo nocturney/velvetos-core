@@ -34,11 +34,11 @@
 
 | שכבה | מתי |
 |---|---|
-| MCP `threedaistudio` | Cursor Desktop + OAuth — `CONNECT-3DAI.md` |
+| MCP `threedaistudio` | Desktop `.cursor/mcp.json` או Cloud Team MCP — `CONNECT-3DAI.md` |
 | אתר | תמיד גיבוי אם MCP נפל |
 | API Dashboard | לא נדרש למחבר הרשמי. מפתח רק ב־env במק אם ראש צוות רוצה באצ׳ |
 
-Cloud Agent: `threedaistudio.status` = `needsAuth` — לא על Cloud Agent עד OAuth בדסקטופ.
+Cloud Agent: `threedaistudio.status` = `needsAuth` — לא על Cloud Agent עד Team MCP + OAuth ב-cursor.com/agents (`CONNECT-3DAI.md`). Desktop Connect לבדו לא מספיק.
 
 ## מה ליישם (על פקים קיימים)
 

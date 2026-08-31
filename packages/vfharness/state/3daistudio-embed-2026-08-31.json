@@ -10,9 +10,10 @@
     "Registered weekly links; sensor needles on check-vfmcp.py",
     "Wrote CONNECT-3DAI.md — MCP tab is on 3daistudio.com Settings, not Cursor Marketplace",
     "Fetched origin/main 6be7614 and merged; all 7 conflicts classified simple overlapping text",
-    "Kept main HTTP MCP (https://mcp.3daistudio.com/mcp, key threedaistudio) plus this branch playbook"
+    "Kept main HTTP MCP (https://mcp.3daistudio.com/mcp, key threedaistudio) plus this branch playbook",
+    "Fetched origin/main d792ff2 (#39) and merged; one simple CONNECT-3DAI.md overlap — kept Team MCP Cloud path plus Marketplace/support rows"
   ],
-  "next_step": "Lead seat: Cursor Desktop Connect on threedaistudio (deeplink in vfprod/CONNECT-3DAI.md) or site Settings → AI Assistants (MCP). Cloud Agent stays needsAuth until then.",
+  "next_step": "Lead seat: Desktop Connect (deeplink) AND Cloud Team MCP + OAuth at cursor.com/agents. See vfprod/CONNECT-3DAI.md. Cloud Agent stays needsAuth until then.",
   "artifacts": [
     "packages/vfprod/CONNECT-3DAI.md",
     "packages/vfprod/3DAISTUDIO.md",
@@ -27,10 +28,10 @@
   ],
   "escalation": null,
   "merge_conflicts": {
-    "fetched": "origin/main@6be7614",
-    "merge_commit": "99d5562",
+    "fetched": "origin/main@d792ff2",
     "class": "all_simple",
-    "complicated": []
+    "complicated": [],
+    "files": ["packages/vfprod/CONNECT-3DAI.md"]
   },
   "last_updated": "2026-08-31"
 }
