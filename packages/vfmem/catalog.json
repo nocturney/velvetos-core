@@ -22,7 +22,8 @@
     "no-invented-insights",
     "no-cbm-binary-from-hq",
     "no-secrets-in-git",
-    "pickup-sderot-only"
+    "pickup-sderot-only",
+    "no-invented-origin-slug"
   ],
   "sourcesOfTruth": [
     "packages/manifest.json",
@@ -264,6 +265,19 @@
       "pack": "vfresearch",
       "slug": "trend-researcher",
       "tool": "calendar"
+    },
+    {
+      "q": [
+        "origin slug",
+        "origin list",
+        "vendor origin",
+        "slug unknown",
+        "origin-slug-unknown",
+        "slug not found"
+      ],
+      "pack": "vfharness",
+      "slug": "workflow-architect",
+      "tool": "origin"
     }
   ],
   "adrs": [
@@ -306,6 +320,11 @@
       "id": "no-cbm-binary-from-hq",
       "text": "Do not curl|bash DeusData/codebase-memory-mcp from this repo. Pattern only.",
       "source": "packages/vfmem/LOCK.md"
+    },
+    {
+      "id": "no-invented-origin-slug",
+      "text": "Do not invent Origin slugs. Keep unknown. HQ overlay is the office until a scoped tmp list or agent-page copy.",
+      "source": "docs/ORIGIN-SLUGS.md"
     }
   ]
 }

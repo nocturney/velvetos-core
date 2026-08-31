@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **Origin slugs חסרים**: לא ממציאים `tmp-…`. אחת-עשרה חבילות נשארות `unknown`; HQ overlay הוא המשרד. דיווח `discover-origin-slugs.py`; סנסור `check-origin-slugs.py`. טוקן HQ רואה רק את הריפו הזה (לא scoped ל-tmp). Unknown Origin slugs stay unknown; do not invent; overlay is the office. See `docs/ORIGIN-SLUGS.md`.
 - 2026-08-31 — **בריף תצוגה 3**: מייל הפיילאובר יצא טקסט כי MAIL-PACK נשלח כ־`body`. חוזה HTML מנעול תצוגה 3 (`vfbriefux/MAIL.html` + `render_mail.py` + `cid` כריכות). לא מחליפים מבנה 01–07. תיקון חי: message `1a056279d7554a8a`. כריכת `cid` עדיין חסרה (MCP Base64). Office brief uses locked תצוגה 3 HTML, not plaintext.
 - 2026-08-31 — **בריף כמו Grok**: בפיילאובר מכסה HQ שולח את בריף 07:00 אל `nocturney@gmail.com` (`send_message` + `htmlBody` תצוגה 3). בלי לחיצת Send אצל הבעלים. Office-brief send is the Grok-equivalent during quota outage.
 - 2026-08-31 — **סשן מחברים חי**: ChatGPT Gmail-קריאה; Gemini Workspace+Search+YouTube; Perplexity Connectors ריק; Grok חומת X (אין גוף). הוטמע ב־`vfmcp/GAP.md`. אין מחבר חדש חובה היום.

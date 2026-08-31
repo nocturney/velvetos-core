@@ -17,4 +17,4 @@ Office OS lives in `packages/<name>/`. Origin trees plus HQ-native overlays (`SK
 
 ## Notes
 
-Same-day catalog on every finished pack (`docs/BACKUP.md`). If Origin will not clone, still update the map.
+Same-day catalog on every finished pack (`docs/BACKUP.md`). If Origin will not clone, still update the map. Eleven packs may stay `origin-slug-unknown` — do not invent `tmp-…`. Playbook: `docs/ORIGIN-SLUGS.md`.
