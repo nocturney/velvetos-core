@@ -306,6 +306,18 @@
       "sourceNote": "packages/vfresearch/sources/2026-08-31-write-better-embed.md",
       "packs": ["vfcopy", "vfmskill"],
       "note": "Embedded write-better patterns only (not asd-ste100, not npx plugin). Hebrew lint: packages/vfcopy/hq/ai-tells-he.md"
+    },
+    {
+      "id": "taste-skill",
+      "kind": "repo",
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "title": "taste-skill — anti-slop frontend Agent Skills (MIT)",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-taste-skill.md",
+      "report": "docs/TASTE-SKILL-EMBED-he.md",
+      "packs": ["vfharness", "vfcovers"],
+      "note": "Partial embed only: full-output playbook, brief inference on ui-finish-gate-reviewer, vfcovers restraint. No npx install, no brandkit generator."
     }
   ],
   "addLink": {

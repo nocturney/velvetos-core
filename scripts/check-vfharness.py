@@ -192,6 +192,14 @@ def main() -> None:
     if "LIVE-PACKET" not in agents_text and "פרסום-חי-דחוף" not in agents_text:
         fail("AGENTS.md must mention live-publish urgent path")
 
+    full_output = ROOT / "packages/vfharness/playbooks/full-output-enforcement.md"
+    if not full_output.is_file():
+        fail("missing packages/vfharness/playbooks/full-output-enforcement.md")
+    fo_text = full_output.read_text()
+    for needle in ("[PAUSED", "taste-skill", "Scope", "checkpoint"):
+        if needle not in fo_text:
+            fail(f"full-output-enforcement.md missing {needle!r}")
+
     allowed_embed = pack_names | {"constitution"}
     embeds = spec.get("embed") or []
     if len(embeds) < 8:
