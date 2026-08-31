@@ -22,11 +22,16 @@
 | מכונת מצבים בלי ערוץ צד | NEEDLE | הכרטיס הוא התיאום |
 | סיבוב מכסה | Claudexor | מכסת Grok → כלי HQ באותו תור (`SEND.md`) |
 | שער אדם | 5dive, humanlayer, paperclip | וואטסאפ אדם · ₪ לראש צוות |
+| Connector priority + seat scope | LobeHub ToolsEngine | `vfmcp/GAP.md` — מושב → namespace → failover |
+| White-box memory (לא צ'אט גלובלי) | LobeHub Personal Memory | `vfharness/state/` + checkpoint schema |
+| Agent Groups / Project משותף | LobeHub Pages | fan-out max 3 על `vfcopy`/`vfcovers` בלבד |
+| Schedule registry (לא cron אוטונומי) | LobeHub Operator | `vfops/ROUTINE.md` + בריף 07:00 + `decision_gate` |
 
 ## מה לא מתקינים
 
 TUI/tmux/worktree multiplexers (`amux`, `dmux`, `claude-squad`…).  
 ADE שולחני (`Emdash`, `Garcon`, `Orca` כהתקנה).  
+**LobeHub** (Docker / Vercel / IM Gateway / marketplace 10k MCP) — דפוסים בלבד.  
 נחילי 20–41 סוכנים (`loki-mode`, `ClawTeam`).  
 לולאת Ralph בלי אדם על ₪ או שליחה.  
 עוזר אישי תמידי / OpenClaw / גשר טלגרם / אוטו־CRM.
