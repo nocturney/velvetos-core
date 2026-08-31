@@ -15,7 +15,8 @@
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
     "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
     "Grok Bot quota failover: keep producing AND sending via HQ tools. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
-    "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md."
+    "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
+    "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md."
   ],
   "studio": {
     "name": "Velvet Factory",

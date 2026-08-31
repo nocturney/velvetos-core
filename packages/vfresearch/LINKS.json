@@ -225,6 +225,22 @@
       "note": "Crew overlay only. No second runtime."
     },
     {
+      "id": "awesome-agent-orchestrators",
+      "kind": "repo",
+      "url": "https://github.com/andyrewlee/awesome-agent-orchestrators",
+      "title": "awesome-agent-orchestrators",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-awesome-orchestrators.md",
+      "report": "docs/ORCHESTRATORS.md",
+      "pack": "vfe2b",
+      "packs": [
+        "vfe2b",
+        "vfharness"
+      ],
+      "note": "Overlay on existing vfe2b crews. Pulse/verify/artifact. No second orchestrator runtime."
+    },
+    {
       "id": "plannotator-write-better",
       "kind": "repo",
       "url": "https://github.com/plannotator/write-better",

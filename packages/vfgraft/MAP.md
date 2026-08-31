@@ -16,7 +16,7 @@ morning-job     job          בריף בוקר
 inquiry-job     job          פנייה → טיוטת הצעה
 content-job     job          חבילת תוכן + כריכות
 blast           impact       what breaks if a law or tool mode moves
-maps            system       vfe2b · vfmakers · vfagents · vfmcp · vfgraft
+maps            system       vfe2b (+ orchestrators) · vfmakers · vfagents · vfmcp · vfgraft
 ```
 
 ## Ask → nodes
@@ -30,6 +30,7 @@ maps            system       vfe2b · vfmakers · vfagents · vfmcp · vfgraft
 | how is HQ wired | this file → [[desk]] → [[packs]] |
 | what breaks if I change X | [[blast]] |
 | embed an outside repo | [[maps]] → [[laws]] |
+| orchestrator / משמרת | [[maps]] → `vfe2b/ORCHESTRATORS.md` → [[laws]] |
 | weekly inspiration links / share refresh | [[packs]] → `vfresearch/WEEKLY.md` + `LINKS.json` → [[laws]] |
 
 ## Hubs

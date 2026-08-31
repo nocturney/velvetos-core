@@ -1,0 +1,21 @@
+{
+  "task_id": "orchestrators-embed-2026-08-31",
+  "status": "running",
+  "pack": "vfe2b",
+  "completed_steps": [
+    "read-source-readme-194",
+    "map-onto-vfe2b-not-new-pack",
+    "write-orchestrators-json-and-playbook",
+    "optimize-run-and-crew-send-law"
+  ],
+  "next_step": "run-sensors-then-commit",
+  "artifacts": [
+    "packages/vfe2b/orchestrators.json",
+    "packages/vfe2b/ORCHESTRATORS.md",
+    "docs/ORCHESTRATORS.md",
+    "packages/vfe2b/crews/run.md"
+  ],
+  "unresolved": [],
+  "escalation": null,
+  "last_updated": "2026-08-31"
+}

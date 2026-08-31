@@ -81,6 +81,7 @@ Cursor, לא Grok:
 |---|---|---|
 | שגרה, בריף, שרשרת, תור | `vfops` | פק «מנהל» חדש |
 | רתמה / מדריך / סנסור / לולאה | `vfharness` + `AGENTS.md` | מסגרת סוכנים שנייה |
+| רשימת orchestrators / ADE / נחיל | `vfe2b` + `vfharness` (דפוס על `crews/run.md`) | פק תזמורת חדש, amux, OpenClaw |
 | מק״ט חוזר, קל להדפסה, כרטיס בלי ₪ | `vfsku` + `vlicense` | קטלוג מחירים |
 | פנייה → וואטסאפ → איסוף | `vfconvert` | ManyChat / בוט 24/7 |
 | כיתוב, FAQ, ארבעה שדות בירור | `vfcopy` | שליחה חיה |

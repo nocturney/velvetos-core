@@ -6,7 +6,7 @@ HQ-native pattern packs. Each one reads an outside list and writes a procedure o
 
 | Pack | Outside list | What we kept |
 |---|---|---|
-| `vfe2b` | e2b-dev/awesome-ai-agents | Five crews |
+| `vfe2b` | e2b-dev/awesome-ai-agents + andyrewlee/awesome-agent-orchestrators | Five crews + run overlay (pulse / verify / artifact). No second orchestrator |
 | `vfmakers` | coreyhaines31/makerskills | Five operator crews (decide / unstuck / cash / rotation / brain) |
 | `vfagents` | 500-AI-Agents-Projects | Twelve office playbooks |
 | `vfmcp` | awesome-mcp-servers | Fit notes; no extra MCP secrets |
@@ -19,6 +19,7 @@ HQ-native pattern packs. Each one reads an outside list and writes a procedure o
 - `docs/500-AGENTS.md`
 - `docs/MCP-FIT.md`
 - `docs/GRAFT.md`
+- `docs/ORCHESTRATORS.md`
 
 ## Links
 

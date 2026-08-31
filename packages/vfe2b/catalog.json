@@ -18,8 +18,16 @@
     "no-autoquote",
     "no-printer-from-hq",
     "human-on-whatsapp",
-    "no-second-ade"
+    "no-second-ade",
+    "no-second-orchestrator"
   ],
+  "orchestratorOverlay": {
+    "source": "https://github.com/andyrewlee/awesome-agent-orchestrators",
+    "file": "packages/vfe2b/orchestrators.json",
+    "playbook": "packages/vfe2b/ORCHESTRATORS.md",
+    "listedCount": 194,
+    "readAt": "2026-08-31"
+  },
   "verdicts": [
     "embed",
     "later",

@@ -235,7 +235,7 @@
     {
       "pack": "vfe2b",
       "layer": "guides",
-      "how": "Patterns on existing packs. No second runtime."
+      "how": "Patterns on existing packs plus orchestrator overlay (pulse/verify/artifact). No second runtime."
     },
     {
       "pack": "vfagents",
