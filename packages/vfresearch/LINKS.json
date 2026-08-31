@@ -306,6 +306,18 @@
       "sourceNote": "packages/vfresearch/sources/2026-08-31-write-better-embed.md",
       "packs": ["vfcopy", "vfmskill"],
       "note": "Embedded write-better patterns only (not asd-ste100, not npx plugin). Hebrew lint: packages/vfcopy/hq/ai-tells-he.md"
+    },
+    {
+      "id": "getbindu-bindu",
+      "kind": "repo",
+      "url": "https://github.com/GetBindu/Bindu",
+      "title": "Bindu — identity, A2A, x402 for agent internet",
+      "firstEmbedded": "2026-08-31",
+      "lastReviewed": "2026-08-31",
+      "sourceNote": "packages/vfresearch/sources/2026-08-31-bindu.md",
+      "verdict": "watch",
+      "packs": ["vfe2b", "vfharness", "vfbiz"],
+      "note": "Patterns only (3-layer verify, agent cards, human gate). No bindufy, no Gateway, no x402, no second runtime. POC off-repo only."
     }
   ],
   "addLink": {

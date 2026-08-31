@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **Bindu (watch)**: [GetBindu/Bindu](https://github.com/GetBindu/Bindu) — identity/A2A/x402 agent layer. Verdict `watch` in `vfresearch/LINKS.json`; patterns only (verify layers, agent cards). No `bindufy`, no Gateway, no x402 from HQ. Lock in `vfe2b/LOCK.md`. See `packages/vfresearch/sources/2026-08-31-bindu.md`.
 - 2026-08-31 — **DeerFlow patterns (לא runtime)**: מיפוי [bytedance/deer-flow](https://github.com/bytedance/deer-flow) על `vfe2b` — `מטרה`, sub-agent bounds, tool receipts, compaction ב-checkpoint. בלי Gateway, בלי sandbox, בלי IM. DeerFlow harness patterns embedded on existing crews; no second runtime. See `packages/vfe2b/DEER-FLOW-PATTERNS.md`.
 - 2026-08-31 — **3D AI Studio**: מנוי בעלים על `vfprod` (לא פק חדש). MCP HTTP `threedaistudio` → `https://mcp.3daistudio.com/mcp` (OAuth בדסקטופ; Cursor מדלג על מפתח `3daistudio`). אתר כגיבוי. אותו שער Meshy/Tripo. אין מפתח בגיט, אין ₪ מקרדיטים, אין הדפסה מ־HQ. `3DAISTUDIO.md` + `CONNECT-3DAI.md`.
 - 2026-08-31 — **vf-canva plugin MCP path**: `.cursor-plugin/plugin.json` pointed at `./.cursor/mcp.json` (missing under `.cursor-plugin/`). Fixed to `../.cursor/mcp.json`; sensor now resolves plugin paths relative to the manifest.
