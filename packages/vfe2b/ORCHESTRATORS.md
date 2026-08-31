@@ -22,6 +22,7 @@
 | מכונת מצבים בלי ערוץ צד | NEEDLE | הכרטיס הוא התיאום |
 | סיבוב מכסה | Claudexor | מכסת Grok → כלי HQ באותו תור (`SEND.md`) |
 | שער אדם | 5dive, humanlayer, paperclip | וואטסאפ אדם · ₪ לראש צוות |
+| setup / teardown / run ל-workspace | [Superset](https://github.com/superset-sh/superset) lifecycle scripts | Cloud Agent `environment.json` — לא IDE שני |
 | Session goal | DeerFlow `/goal` | שדה `מטרה` בכרטיס · checkpoint `goal` |
 | Sub-agent bounds | DeerFlow task | fan-out ≤3 · לא על ₪/שליחה |
 | Tool receipts | DeerFlow verification | `אימות` + message_id / design URL |
@@ -29,7 +30,7 @@
 ## מה לא מתקינים
 
 TUI/tmux/worktree multiplexers (`amux`, `dmux`, `claude-squad`…).  
-ADE שולחני (`Emdash`, `Garcon`, `Orca` כהתקנה).  
+ADE שולחני (`Emdash`, `Garcon`, `Orca`, `Superset` כהתקנה).  
 נחילי 20–41 סוכנים (`loki-mode`, `ClawTeam`).  
 לולאת Ralph בלי אדם על ₪ או שליחה.  
 עוזר אישי תמידי / OpenClaw / גשר טלגרם / אוטו־CRM.
