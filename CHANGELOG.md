@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-08-31 — **Deny שליחה נשאר**: בעלים ביקש ש־HQ ישלח מייל ויעלה לפיד בפיילאובר; `AGENTS.md` מנצח — אין `send_message` / Publish. הסלמה ב־`vfharness/state/escalation-send-deny-2026-08-31.md`. Owner asked HQ to send; guide wins, no send. 
 - 2026-08-31 — **פיילאובר Grok 5 ימים**: מכסה עד ~5.9. G005 → `#פרסום-חי-דחוף` + LIVE-PACKET (חמישי 12:00, אדם מעלה). מיילי בריף 31.8–5.9 להדבקה ב־`vfops/human-send/MAIL-PACK.md`. HQ לא שולח ולא לוחץ Publish. Five-day Grok outage: human live G005 + paste-ready brief emails; no HQ send. See `packages/vfops/OUTAGE-5D.md`.
 - 2026-08-30 — **פיילאובר מכסת Grok**: כשמכסת Grok Bot נגמרת — HQ ממשיך לייצר תוצרים; תור `#מוכן-ל-Grok`; **פרסום חי דחוף** בידי אדם עם `LIVE-PACKET` (סוכן HQ לא לוחץ Publish). תזמורת ChatGPT+Gemini+Perplexity לטיוטה/מחקר. Grok Bot quota failover: keep producing; queue or human live-post packet; agent never presses Publish. See `docs/GROK-FAILOVER.md`.
 - 2026-08-30 — **תזמורת failover**: כלי נפל / אין גישה → מעבירים משימה לכלי גיבוי **באותו רגע**. אסור להישאר בלי תוצאה. אסור להמציא גוף/₪/Insights. מטריצה ב־`constitution/ORCHESTRA.md` + שדות `failover` ב־`vf-desk.json`. סנסור ב־`check-vfresearch.py`. Orchestra tool failover: hand off same turn; never invent blocked bodies.

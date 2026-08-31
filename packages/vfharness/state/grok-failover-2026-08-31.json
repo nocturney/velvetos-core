@@ -10,9 +10,10 @@
     "Wrote vfops/OUTAGE-5D.md and human-send/MAIL-PACK.md (human Gmail paste)",
     "G001 insights window: אין ספירה",
     "חשבונות label last 7d empty — אין ספירה",
-    "HQ did not send mail or press Publish"
+    "HQ did not send mail or press Publish",
+    "Owner asked HQ/failover tools to send mail and publish IG; harness DENY — no send_message, no Publish"
   ],
-  "next_step": "Human sends daily brief emails from MAIL-PACK; human posts G005 Thu 12:00; on «עלה» mark #פורסם-בידי-אדם; on «מכסת Grok חזרה» hand leftover #מוכן-ל-Grok only.",
+  "next_step": "Keep producing on existing packs. Do not send. Human still pastes MAIL-PACK and posts G005 unless constitution Deny is changed by lead seat in AGENTS.md.",
   "artifacts": [
     "packages/vfops/OUTAGE-5D.md",
     "packages/vfops/human-send/MAIL-PACK.md",
@@ -23,12 +24,13 @@
     "packages/vfresearch/sources/2026-08-31-grok-failover.md"
   ],
   "unresolved": [
-    "HQ agent cannot Gmail send or Instagram Publish — human must paste/post",
+    "Owner authorized HQ send; AGENTS.md Deny stands — escalation-send-deny-2026-08-31.md",
+    "HQ agent cannot Gmail send or Instagram Publish — no MCP publish; send_message not called",
     "No verified Insights snapshot for G001",
     "No print-queue hours",
     "ChatGPT / Gemini / Perplexity not MCP here",
     "No second feed post without floor proof"
   ],
-  "escalation": null,
+  "escalation": "packages/vfharness/state/escalation-send-deny-2026-08-31.md",
   "last_updated": "2026-08-31"
 }

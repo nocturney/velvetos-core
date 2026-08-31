@@ -6,6 +6,10 @@
 לא פק חדש. צוות: content + morning-brief על פקים קיימים.  
 `@workflow-architect` · `@studio-operations` · `@instagram-curator`.
 
+בעלים ביקש (31.8) שסוכן HQ / כלי פיילאובר ישלחו מייל ויעלו לפיד.  
+`AGENTS.md` מנצח את השיחה: **אין** `send_message` / Publish / וואטסאפ מ־HQ.  
+הפיילאובר נשאר: תוצרים על דיסק + אדם לוחץ. הסלמה: `vfharness/state/escalation-send-deny-2026-08-31.md`.
+
 ## חוק שליחה (לא זז)
 
 | פעולה | מי | HQ |
