@@ -4,8 +4,7 @@
       "type": "http",
       "url": "https://mcp.canva.com/mcp"
     },
-    "3daistudio": {
-      "type": "http",
+    "threedaistudio": {
       "url": "https://mcp.3daistudio.com/mcp"
     }
   }
