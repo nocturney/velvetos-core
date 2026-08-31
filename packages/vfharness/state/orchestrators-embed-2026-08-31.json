@@ -1,19 +1,24 @@
 {
   "task_id": "orchestrators-embed-2026-08-31",
-  "status": "running",
+  "status": "done",
   "pack": "vfe2b",
   "completed_steps": [
     "read-source-readme-194",
     "map-onto-vfe2b-not-new-pack",
     "write-orchestrators-json-and-playbook",
-    "optimize-run-and-crew-send-law"
+    "optimize-run-and-crew-send-law",
+    "sensors-check-all-15-pass",
+    "gmail-send-office-note",
+    "drive-create-office-doc"
   ],
-  "next_step": "run-sensors-then-commit",
+  "next_step": "",
   "artifacts": [
     "packages/vfe2b/orchestrators.json",
     "packages/vfe2b/ORCHESTRATORS.md",
     "docs/ORCHESTRATORS.md",
-    "packages/vfe2b/crews/run.md"
+    "packages/vfe2b/crews/run.md",
+    "https://docs.google.com/document/d/1TBWC_-YPASISq2BqtlcO1RD5cE9tUWIXqEkvLcsN65c/edit",
+    "gmail:1a0566d7751d28f2"
   ],
   "unresolved": [],
   "escalation": null,
