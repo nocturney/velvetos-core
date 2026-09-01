@@ -36,6 +36,26 @@ Cloud Agents דוחפים ענפים (`git push`) אבל **פתיחת PR** דו�
 - https://cursor.com/dashboard → הגדרות צוות / GitHub connection
 - שה-repo לא חסום ב-org policy
 
+## אימות (2026-09-01)
+
+הרץ מ-Cloud Agent או מקומית:
+
+```bash
+# push — אמור לעבור כשהאינטגרציה מוגדרת
+git push origin HEAD
+
+# PR — velvetos-velvet-factory: אמור לעבוד; velvetos-core: דורש ריפו מסומן באפליקציה
+gh pr create --repo nocturney/velvetos-core --base main --head <branch> --draft
+```
+
+| בדיקה | velvetos-velvet-factory | velvetos-core |
+|---|---|---|
+| `git push` | ✅ | ✅ (אחרי הגדרה) |
+| `gh pr create` | ✅ PR #6 נוצר | ❌ אם `Resource not accessible by integration` — הוסף ריפו ב-Configure |
+
+אם core נכשל — פתח PR ידנית:  
+`https://github.com/nocturney/velvetos-core/compare/main...<branch>?expand=1`
+
 ## מה עדיין לא יעבוד
 
 | פעולה | מי עושה |
