@@ -20,12 +20,15 @@ origin auth login
 
 ## 2. Push ל-`velvetos-velvet-factory`
 
-**סטטוס:** קריאה OK (`ls-remote`). GitHub App מראה **שני הריפוז** + **Read and write** לקוד — אבל **הריצה הנוכחית** עדיין `403` (`Resource not accessible by integration`). זה בדרך כלל **טוקן ישן** מלפני Save.
+**סטטוס:** קריאה OK (ריפוזים פומביים). אחרי **Uninstall + חיבור מחדש** ל-Cursor ב-GitHub — **Agent שכבר רץ** עדיין מחזיק טוקן **מבוטל** (`gh`: invalid token; `git push`: Authentication failed). **חובה Agent חדש** כדי לקבל טוקן טרי.
 
-**אחרי Save בהגדרות Cursor ב-GitHub:**
+**אחרי חיבור מחדש:**
 
-1. **פתח Cloud Agent חדש** (או הרץ מחדש את הסביבה) — כדי לקבל טוקן עם write  
-2. או דחוף **מקומית** (מיד, בלי לחכות):
+1. **פתח Cloud Agent חדש** על `velvetos-core` (לא להמשיך ריצה ישנה)  
+2. אימות: `gh api repos/nocturney/velvetos-velvet-factory --jq .permissions.push` → `true`  
+3. `PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory`  
+
+**או מקומית** (מיד, בלי Agent חדש):
 
 ```bash
 PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory
