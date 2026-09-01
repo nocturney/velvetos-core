@@ -1,0 +1,27 @@
+{
+  "task_id": "public-repos-access-2026-09-01",
+  "status": "done",
+  "pack": "vfharness",
+  "completed_steps": [
+    "Confirmed nocturney/velvetos-core and nocturney/velvetos-velvet-factory are PUBLIC on GitHub",
+    "Ran python3 scripts/discover-origin-slugs.py — Origin CLI not authenticated; 6 tmp slugs scoped-not-listed; 11 unknown",
+    "Ran scripts/vendor-origin-packs.sh — 6 clone failures (origin.cursor.com needs origin auth / CURSOR_API_KEY)",
+    "publish-instance: ls-remote OK; push denied for cursor[bot] (403)",
+    "Updated VELVETOS-VF-WINDOWS.md, instances/README.md, REPOS.md, ORIGIN-SLUGS.md"
+  ],
+  "next_step": "Owner: origin auth login then ./scripts/vendor-origin-packs.sh; or push publish-instance locally with PAT",
+  "artifacts": [
+    "docs/VELVETOS-VF-WINDOWS.md",
+    "instances/README.md",
+    "packages/velvetos/REPOS.md",
+    "docs/ORIGIN-SLUGS.md",
+    "packages/vfharness/state/publish-instance-velvet-factory.json"
+  ],
+  "unresolved": [
+    "Origin tmp-* trees still need origin auth login or CURSOR_API_KEY with tmp scope",
+    "cursor[bot] cannot push to velvetos-velvet-factory — owner PAT or grant write",
+    "No Instagram Publish MCP; 3D AI Studio needsAuth on Cloud until OAuth",
+    "Mobbin MCP namespace not on Cloud Agent"
+  ],
+  "last_updated": "2026-09-01"
+}

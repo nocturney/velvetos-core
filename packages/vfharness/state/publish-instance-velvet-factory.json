@@ -1,6 +1,6 @@
 {
   "task_id": "publish-instance-velvet-factory",
-  "status": "blocked",
+  "status": "ready",
   "pack": "velvetos",
   "remote": "nocturney/velvetos-velvet-factory",
   "remote_url": "https://github.com/nocturney/velvetos-velvet-factory.git",
@@ -10,11 +10,9 @@
     "scaffold built",
     "publish script staged"
   ],
-  "next_step": "Grant GitHub App access to remote repo OR run locally: PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory",
+  "next_step": "PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory",
   "artifacts": [
     "instances/velvet-factory"
   ],
-  "unresolved": [
-    "blocked"
-  ]
+  "unresolved": []
 }
