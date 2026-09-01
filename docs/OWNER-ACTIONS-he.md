@@ -20,34 +20,18 @@ origin auth login
 
 ## 2. Push ל-`velvetos-velvet-factory`
 
-**סטטוס:** קריאה OK (ריפוזים פומביים). אחרי **Uninstall + חיבור מחדש** ל-Cursor ב-GitHub — **Agent שכבר רץ** עדיין מחזיק טוקן **מבוטל** (`gh`: invalid token; `git push`: Authentication failed). **חובה Agent חדש** כדי לקבל טוקן טרי.
+**סטטוס:** auth מקומי עובד. **`fetch first` / `rejected`** = הריפו כבר לא ריק — הסקריפט המעודכן עושה **clone + overlay** (שומר `docs/`, `.cursor/mcp.json`).
 
-**אחרי חיבור מחדש:**
-
-1. **פתח Cloud Agent חדש** על `velvetos-core` (לא להמשיך ריצה ישנה)  
-2. אימות: `gh api repos/nocturney/velvetos-velvet-factory --jq .permissions.push` → `true`  
-3. `PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory`  
-
-**או מקומית** (מיד, בלי Agent חדש):
+**מקומית:**
 
 ```bash
+git pull origin cursor/public-access-cleanup-9549
 PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory
 ```
 
-**אימות מהיר אחרי Agent חדש:**
+**Cloud Agent:** אחרי reconnect — Agent **חדש** (טוקן ישן בוטל). אימות: `gh api repos/nocturney/velvetos-velvet-factory --jq .permissions.push` → `true`.
 
-```bash
-gh api repos/nocturney/velvetos-velvet-factory --jq .permissions.push
-# צריך: true
-```
-
-**מקומית (תמיד עובד עם PAT שלך):**
-
-```bash
-PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory
-```
-
-**לפני push — מה השתנה:**
+**diff לפני push:**
 
 ```bash
 ./scripts/sync-instance-scaffold.sh

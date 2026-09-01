@@ -16,6 +16,6 @@ PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-fa
 
 Both `nocturney/velvetos-core` and `nocturney/velvetos-velvet-factory` are **public** — Cloud Agents can **read** and `attach-core`. This agent cannot `createRepository`; push needs owner PAT or `cursor[bot]` write on the target repo.
 
-`velvet-factory` is already published on GitHub. Re-run `publish-instance.sh` only when the scaffold changed; merge locally if the remote has diverged.
+`velvet-factory` is already published on GitHub. Re-run `publish-instance.sh` when the scaffold changed — the script **clones remote main, overlays the scaffold, commits, and pushes** (remote-only files like `docs/` are kept).
 
 Later: copy a scaffold from `velvet-factory/` or build from `packages/velvetos/presets/`.

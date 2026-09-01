@@ -1,6 +1,6 @@
 {
   "task_id": "publish-instance-velvet-factory",
-  "status": "push_denied",
+  "status": "ready",
   "pack": "velvetos",
   "remote": "nocturney/velvetos-velvet-factory",
   "remote_url": "https://github.com/nocturney/velvetos-velvet-factory.git",
@@ -10,11 +10,9 @@
     "scaffold built",
     "publish script staged"
   ],
-  "next_step": "Start NEW Cloud Agent after GitHub reconnect (this run has revoked token), then PUSH=1; or push locally with PAT",
+  "next_step": "PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory",
   "artifacts": [
     "instances/velvet-factory"
   ],
-  "unresolved": [
-    "Post-reconnect: gh token invalid + git push auth failed on bc-52d27a81 \u2014 new agent run required"
-  ]
+  "unresolved": []
 }
