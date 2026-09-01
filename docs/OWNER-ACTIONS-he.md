@@ -20,16 +20,16 @@ origin auth login
 
 ## 2. Push ל-`velvetos-velvet-factory`
 
-**סטטוס:** ✅ **פורסם** — commit [`2770188`](https://github.com/nocturney/velvetos-velvet-factory/commit/2770188) על `main` (5 קבצים). לעדכון עתידי: `git pull` + `PUSH=1 ./scripts/publish-instance.sh …` (אחרי merge PR #67).
+**סטטוס:** ✅ **פורסם** — commit [`2770188`](https://github.com/nocturney/velvetos-velvet-factory/commit/2770188) על `main` (5 קבצים).
 
-**מקומית:**
+**לעדכון עתידי** (אחרי merge PR #67):
 
 ```bash
-git pull origin cursor/public-access-cleanup-9549
+git pull origin main
 PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory
 ```
 
-**Cloud Agent:** אחרי reconnect — Agent **חדש** (טוקן ישן בוטל). אימות: `gh api repos/nocturney/velvetos-velvet-factory --jq .permissions.push` → `true`.
+**Cloud Agent:** Agent **חדש** אחרי reconnect ל-GitHub (טוקן ישן בוטל).
 
 **diff לפני push:**
 
