@@ -54,9 +54,13 @@ if [[ "${PUSH:-0}" == "1" ]]; then
     echo "FAIL push skipped — remote not reachable" >&2
     exit 2
   fi
-  git push -u origin main
-  echo "OK published $REMOTE_SLUG"
-  STATUS="published"
+  if git push -u origin main; then
+    STATUS="published"
+    echo "OK published $REMOTE_SLUG"
+  else
+    STATUS="push_denied"
+    echo "FAIL push denied — grant cursor[bot] write on $REMOTE_SLUG or push locally with PAT" >&2
+  fi
 fi
 # also write a stamp in core for humans
 mkdir -p "$ROOT/packages/vfharness/state"
@@ -64,18 +68,30 @@ python3 - <<PY
 import json
 from datetime import date
 from pathlib import Path
+status = "$STATUS"
+next_step = {
+    "blocked": f"Grant GitHub App access to remote repo OR run locally: PUSH=1 ./scripts/publish-instance.sh $ID $REMOTE_SLUG",
+    "ready": f"PUSH=1 ./scripts/publish-instance.sh $ID $REMOTE_SLUG",
+    "published": "Instance published — open remote repo in Cursor; run ./scripts/attach-core.sh",
+    "push_denied": f"Remote readable but push denied for cursor[bot]. Push locally: PUSH=1 ./scripts/publish-instance.sh $ID $REMOTE_SLUG",
+}.get(status, "Check publish-instance.sh output")
+unresolved = []
+if status == "blocked":
+    unresolved = ["remote not reachable from this token"]
+elif status == "push_denied":
+    unresolved = ["cursor[bot] lacks write on remote — owner PAT push or grant repo access"]
 Path("$ROOT/packages/vfharness/state/publish-instance-$ID.json").write_text(json.dumps({
   "task_id": f"publish-instance-$ID",
-  "status": "$STATUS",
+  "status": status,
   "pack": "velvetos",
   "remote": "$REMOTE_SLUG",
   "remote_url": "$REMOTE_URL",
   "scaffold": "instances/$ID",
   "last_updated": str(date.today()),
   "completed_steps": ["scaffold built", "publish script staged"],
-  "next_step": "Grant GitHub App access to remote repo OR run locally: PUSH=1 ./scripts/publish-instance.sh $ID $REMOTE_SLUG",
+  "next_step": next_step,
   "artifacts": ["instances/$ID"],
-  "unresolved": ["blocked"] if "$STATUS" == "blocked" else []
+  "unresolved": unresolved,
 }, indent=2) + "\n")
 print("stamp written")
 PY

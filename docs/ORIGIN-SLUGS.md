@@ -38,6 +38,8 @@ python3 scripts/discover-origin-slugs.py
 
 כלומר: login ל-Origin **לא** פותח את רשימת עצי ה-tmp. צריך טוקן עם scope ל-`christian-velvet/tmp-*`, או העתקה מדף הסוכן.
 
+**2026-09-01:** ריפוז GitHub פומביים (`velvetos-core`, `velvetos-velvet-factory`) **לא** פותחים את זה — `origin.cursor.com` עדיין דורש `origin auth login` / `CURSOR_API_KEY`; vendor נכשל בלי auth.
+
 ## איך ממלאים slug (ראש צוות / Grok / אדם עם דף הסוכן)
 
 רק כשיש slug אמיתי ביד. לא מנחשים.

@@ -10,7 +10,7 @@
     "publish-instance.sh preflight for remote access"
   ],
   "unresolved": [
-    "Cloud Agent token cannot ls-remote nocturney/velvetos-velvet-factory — grant repo access or PUSH=1 locally",
+    "cursor[bot] push denied on velvetos-velvet-factory — use owner PAT locally or grant write",
     "IG numeric metrics still אין ספירה until owner pastes snapshot-ingest"
   ],
   "next_step": "Owner: grant GitHub access OR run PUSH=1 publish-instance.sh; paste IG metrics after G005"
