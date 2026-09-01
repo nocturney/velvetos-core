@@ -1,7 +1,7 @@
 {
   "name": "velvet-factory-desk",
   "title": "VelvetOS Core desk — reference bind Velvet Factory",
-  "updatedAt": "2026-08-31",
+  "updatedAt": "2026-09-01",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
   "product": "VelvetOS",
@@ -31,7 +31,8 @@
     "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
     "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
     "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
-    "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py."
+    "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py.",
+    "2026-09-01: Expert modules (social-booster, 3d-model, trend-explorer, media-director) + office-learning daily retro. Living specialists — not static prompts. See packages/velvetos/modules/expert-*.md and vfops/hq/DAILY-RETRO.md."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -153,7 +154,7 @@
       "packs": ["vfops", "vfbriefux", "vfharness", "vfmem", "velvetos"],
       "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect"],
       "tools": ["calendar", "gmail", "vfmem", "web"],
-      "decides": "₪ amount, what moves on the board, what is deferred"
+      "decides": "₪ amount, what moves on the board, what is deferred; end-of-day retro (DAILY-RETRO.md)"
     },
     {
       "id": "studio",
@@ -167,7 +168,7 @@
       "id": "growth",
       "he": "צמיחה",
       "packs": ["vfgrowth", "vfcovers", "vfigos", "vfinsights", "vfmskill", "vfom"],
-      "specialists": ["instagram-curator", "visual-storyteller", "image-prompt-engineer", "growth-hacker", "analytics-reporter", "social-media-strategist"],
+      "specialists": ["instagram-curator", "visual-storyteller", "image-prompt-engineer", "growth-hacker", "analytics-reporter", "social-media-strategist", "carousel-growth-engine", "short-video-editing-coach"],
       "tools": ["superdesign", "drive", "canva", "image", "web"],
       "decides": "content pack and cover drafts. HQ reviews/schedules only. Grok sends."
     },
@@ -183,7 +184,7 @@
       "id": "production",
       "he": "ייצור",
       "packs": ["vfprod", "vfsku", "vlicense", "vfresearch"],
-      "specialists": ["studio-producer", "operations-manager", "legal-compliance-checker", "research-synthesist", "trend-researcher"],
+      "specialists": ["studio-producer", "operations-manager", "legal-compliance-checker", "research-synthesist", "trend-researcher", "technical-artist"],
       "tools": ["drive", "calendar", "web", "threedaistudio"],
       "decides": "print feasibility, queue, SKU, file license"
     }
@@ -193,13 +194,13 @@
       "slug": "studio-operations",
       "packs": ["vfops", "vfharness", "vfmem", "velvetos"],
       "tools": ["calendar", "gmail", "vfmem"],
-      "job": "Morning brief, queue bottlenecks, run-the-studio procedures"
+      "job": "Morning brief, queue bottlenecks, run-the-studio procedures; asks all seats for end-of-day retro (DAILY-RETRO.md)"
     },
     {
       "slug": "chief-of-staff",
       "packs": ["vfops", "vfbiz", "vfmem"],
       "tools": ["calendar", "gmail", "vfmem"],
-      "job": "Open decisions, seat handoffs, what waits for Christian"
+      "job": "Open decisions, seat handoffs, what waits for Christian; owns daily learning ritual (owner-memory.md)"
     },
     {
       "slug": "meeting-notes-specialist",
@@ -211,7 +212,7 @@
       "slug": "workflow-architect",
       "packs": ["vfops", "vfharness"],
       "tools": ["calendar"],
-      "job": "Tighten the one pipeline: inquiry → talk → quote → print → pickup; harness loop and checkpoints"
+      "job": "Tighten the one pipeline: inquiry → talk → quote → print → pickup; harness loop, checkpoints, daily-learning playbook"
     },
     {
       "slug": "ux-architect",
@@ -277,7 +278,7 @@
       "slug": "visual-storyteller",
       "packs": ["vfcovers", "vfgrowth", "vfom"],
       "tools": ["superdesign", "drive", "canva", "image"],
-      "job": "Cover and reel narrative from floor proof, not invented scenes"
+      "job": "Cover and reel narrative from floor proof, not invented scenes; media-director expert (vfom/experts/MEDIA-DIRECTOR.md)"
     },
     {
       "slug": "image-prompt-engineer",
@@ -289,7 +290,7 @@
       "slug": "growth-hacker",
       "packs": ["vfgrowth", "vfmskill"],
       "tools": ["web"],
-      "job": "Content sprint ideas. No TikTok or ads without lead-seat decision."
+      "job": "Content sprint ideas and organic boost loops (expert-social-booster). No TikTok or ads without lead-seat decision."
     },
     {
       "slug": "social-media-strategist",
@@ -331,7 +332,7 @@
       "slug": "studio-producer",
       "packs": ["vfprod"],
       "tools": ["calendar", "drive", "threedaistudio"],
-      "job": "Print-floor job tracking and queue hours from slicer, not guesses. 3D AI Studio concept mesh after lead approval (3DAISTUDIO.md)"
+      "job": "Print-floor job tracking and queue hours from slicer, not guesses. 3D model expert: analyze/make/build (experts/3D-MODEL.md). 3D AI Studio after lead approval."
     },
     {
       "slug": "operations-manager",
@@ -355,7 +356,25 @@
       "slug": "trend-researcher",
       "packs": ["vfresearch", "vfseason"],
       "tools": ["calendar", "web"],
-      "job": "Season, reprint, and Instagram music/sound briefs from HeyOrca + IG paste (MUSIC.md). Treg not relevant; never invent track names or Insights"
+      "job": "Season, reprint, trend signals, and IG music/sound briefs (expert-trend-explorer). HeyOrca + IG paste (MUSIC.md). Treg not relevant; never invent track names or Insights"
+    },
+    {
+      "slug": "carousel-growth-engine",
+      "packs": ["vfgrowth", "vfmskill", "vfigos"],
+      "tools": ["canva", "web", "image"],
+      "job": "Social Booster expert — carousel structure, hook loops, organic reach. expert-social-booster. No boost. No auto-DM. CTA WhatsApp 050-2517000."
+    },
+    {
+      "slug": "short-video-editing-coach",
+      "packs": ["vfom", "vfgrowth", "vfcovers"],
+      "tools": ["canva", "drive", "image"],
+      "job": "Media director expert — reel edit plan, storyboard, export notes. vfom/experts/MEDIA-DIRECTOR.md. Floor proof only. HQ does not render Veo/Kling."
+    },
+    {
+      "slug": "technical-artist",
+      "packs": ["vfprod", "vfsku", "vlicense"],
+      "tools": ["drive", "threedaistudio"],
+      "job": "3D model expert — mesh analyze, export hygiene, printability hints. experts/3D-MODEL.md. No print from HQ. License gate before reprint."
     }
   ],
   "warehouse": "The other Agency specialists stay in .cursor/rules/ with alwaysApply false. Mention @slug only when the user asks for that specialty. Do not pull Godot, GIS, healthcare, China-social, or XR agents onto a Velvet Factory job unless asked.",
@@ -373,6 +392,7 @@
     ".cursor/skills/vf-fcc-offload/SKILL.md",
     ".cursor/skills/vf-weekly-links/SKILL.md",
     ".cursor/skills/vf-ig-music/SKILL.md",
-    ".cursor/skills/vf-velvetos/SKILL.md"
+    ".cursor/skills/vf-velvetos/SKILL.md",
+    ".cursor/skills/vf-daily-learning/SKILL.md"
   ]
 }

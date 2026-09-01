@@ -14,7 +14,12 @@
     "compliance-maker",
     "sales-inquiry",
     "social-growth",
-    "ops-ledger"
+    "ops-ledger",
+    "expert-social-booster",
+    "expert-3d-model",
+    "expert-trend-explorer",
+    "expert-media-director",
+    "office-learning"
   ],
   "pipelineLabelsHe": ["פנייה", "שיחה", "הצעה", "הדפסה", "איסוף"],
   "fulfillment": "pickup",

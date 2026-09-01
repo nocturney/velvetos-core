@@ -6,3 +6,7 @@
 אין Remotion בריפו. אין Veo/Kling מ-HQ. אין שליחה.
 
 הפעלה: `@vfom` ואז שם צוות — `reference-plan` / `clip-factory` / `hybrid-reel` / `scene-gate` / `self-review`.
+
+## מומחה — AI images / video director & producer
+
+מודול: `expert-media-director` · `experts/MEDIA-DIRECTOR.md` · `@visual-storyteller` · `@short-video-editing-coach`

@@ -278,6 +278,74 @@
       "pack": "vfharness",
       "slug": "workflow-architect",
       "tool": "origin"
+    },
+    {
+      "q": [
+        "social booster",
+        "carousel",
+        "organic reach",
+        "חיזוק סושיאל",
+        "בוסטר",
+        "קרוסלה"
+      ],
+      "pack": "vfgrowth",
+      "slug": "carousel-growth-engine",
+      "tool": "canva"
+    },
+    {
+      "q": [
+        "3d model",
+        "stl",
+        "mesh",
+        "printability",
+        "מודל תלת",
+        "תלת ממד",
+        "slicer"
+      ],
+      "pack": "vfprod",
+      "slug": "technical-artist",
+      "tool": "threedaistudio"
+    },
+    {
+      "q": [
+        "trend",
+        "מגמה",
+        "explorer",
+        "טרנד",
+        "פורמט חדש"
+      ],
+      "pack": "vfresearch",
+      "slug": "trend-researcher",
+      "tool": "web"
+    },
+    {
+      "q": [
+        "media director",
+        "video director",
+        "reel plan",
+        "storyboard",
+        "במאי",
+        "מפיק וידאו",
+        "מפיק תמונה"
+      ],
+      "pack": "vfom",
+      "slug": "short-video-editing-coach",
+      "tool": "canva"
+    },
+    {
+      "q": [
+        "daily retro",
+        "end of day",
+        "owner memory",
+        "סוף יום",
+        "רטרו",
+        "זיכרון משותף",
+        "למידה יומית"
+      ],
+      "pack": "vfops",
+      "slug": "chief-of-staff",
+      "tool": "vfmem",
+      "note": "DAILY-RETRO.md + owner-memory.md + vf-daily-learning skill"
     }
   ],
   "adrs": [
