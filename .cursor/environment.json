@@ -1,0 +1,8 @@
+{
+  "name": "VelvetOS Core",
+  "install": "python3 scripts/check-all.py",
+  "repositoryDependencies": [
+    "github.com/nocturney/velvetos-core",
+    "github.com/nocturney/velvetos-velvet-factory"
+  ]
+}

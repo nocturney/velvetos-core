@@ -23,4 +23,5 @@ python3 scripts/check-all.py
 ```
 
 See `CHANGELOG.md`. Harness: [`docs/HARNESS.md`](docs/HARNESS.md). Constitution: [`constitution/`](constitution/).  
-Origin slugs: never invent — [`docs/ORIGIN-SLUGS.md`](docs/ORIGIN-SLUGS.md). Do not invent Origin slugs; keep `unknown`.
+Origin slugs: never invent — [`docs/ORIGIN-SLUGS.md`](docs/ORIGIN-SLUGS.md). Do not invent Origin slugs; keep `unknown`.  
+Owner-only access steps: [`docs/OWNER-ACTIONS-he.md`](docs/OWNER-ACTIONS-he.md).
