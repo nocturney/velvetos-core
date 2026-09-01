@@ -21,7 +21,7 @@ Path: `.cursor/environment.json`
 | Field | Effect |
 |---|---|
 | `install` | After checkout, runs `./scripts/attach-core.sh` → `vendor/velvetos-core/` |
-| `repositoryDependencies` | GitHub token for the Cloud VM can read **core** (needed if core is private) |
+| `repositoryDependencies` | Lets the Cloud VM clone **core** on boot. Required for private core; **optional but harmless** when core is public (`nocturney/velvetos-core` is public as of 2026-09-01). |
 
 `vendor/velvetos-core/` stays **gitignored** — not duplicated in the instance repo.
 

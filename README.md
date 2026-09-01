@@ -8,6 +8,7 @@ Shared **backend** OS kernel for Velvet business offices: laws, seats, packs, mo
 - Modules: `packages/velvetos/modules/`
 - Frontend scaffolds: `instances/` (publish with `scripts/publish-instance.sh`)
 - Plan: `packages/velvetos/REPOS.md` · Docs: `docs/VELVETOS.md`
+- **Public repos (2026-09-01):** access-gap checklist → [`docs/ACCESS-GAPS.md`](docs/ACCESS-GAPS.md)
 
 **Metaphor:** Core = backend · `VelvetOS — <Business>` = frontend.
 

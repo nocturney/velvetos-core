@@ -27,6 +27,7 @@
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
     "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
+    "Access gaps (public repos 2026-09-01): docs/ACCESS-GAPS.md — IG Publish, 3DAI OAuth, Origin vendor, GitHub Integration for PRs.",
     "Grok Bot quota failover: keep producing AND sending via HQ tools. Office brief is תצוגה 3 HTML via send_message to nocturney@gmail.com. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
     "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
     "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
@@ -145,6 +146,15 @@
       "useWhen": "vfprod concept mesh: text/image → STL/3MF after lead approval. Playbook: packages/vfprod/3DAISTUDIO.md",
       "rule": "No API key in git. No invented ₪ from credits. No print from HQ. Same license gate as Meshy/Tripo.",
       "failover": "Site UI + Drive create_file / upload + continue. Open license search if vendor down. Never invent a key or mesh."
+    },
+    "instagramPublish": {
+      "status": "not-available",
+      "namespace": "none-on-cloud-agent",
+      "account": "@velvets_cloud",
+      "useWhen": "Live feed post after vfcopy + Canva. Check Dashboard for Meta/IG MCP.",
+      "playbook": "packages/vfigos/CONNECT-IG.md",
+      "rule": "No Publish MCP yet. Failover same turn: Canva + Drive + Gmail per vfigos/SEND.md. Tag #ממתין-ל-כלי-IG. Never claim posted if it did not.",
+      "failover": "Drive create_file + Gmail send_message to nocturney@gmail.com + #ממתין-ל-כלי-IG"
     }
   },
   "seats": [

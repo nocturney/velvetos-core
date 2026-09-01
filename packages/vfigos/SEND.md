@@ -2,7 +2,7 @@
 
 מושב: **צמיחה**. לא מחכים לגרוק. לא מחכים לכריסטיאן.
 
-פרוטוקול מלא: `constitution/SEND.md`.
+פרוטוקול מלא: `constitution/SEND.md`. חיבור Publish: [`CONNECT-IG.md`](CONNECT-IG.md).
 
 ## סדר
 

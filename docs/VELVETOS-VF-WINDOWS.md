@@ -6,7 +6,7 @@
 
 | מי | מה קורה |
 |---|---|
-| Cloud Agent (Cursor) | **קורא** `nocturney/velvetos-core` ו־`nocturney/velvetos-velvet-factory` (שניהם **פומביים**). **דחיפה** דורשת הרשאת כתיבה ל־`cursor[bot]` או push מקומי עם PAT. |
+| Cloud Agent (Cursor) | **קורא** `nocturney/velvetos-core` ו־`nocturney/velvetos-velvet-factory` (פומביים). `attach-core` אוטומטי. **דחיפה / PR** דורשות הרשאת כתיבה ל־Cursor GitHub App — `docs/GITHUB-INTEGRATION.md`. |
 | המחשב שלך | צריך להתחבר ל-GitHub כ-**nocturney** עם PAT או Git Credential Manager ל־**push**. |
 | `gh` | לא חובה. אפשר בלי. |
 
@@ -22,7 +22,7 @@
 ### שלב ב — PAT (פעם אחת)
 
 1. https://github.com/settings/tokens → **Generate new token (classic)**
-2. סימון: **`repo`** (Full control of private repositories)
+2. סימון: **`repo`** (גישה לריפוז — נדרש גם לפומביים אם דוחפים ממחשב אישי)
 3. העתק את הטוקן — לא תראה שוב
 
 ### שלב ג — דחיפה לריפו המופע
@@ -112,7 +112,11 @@ git remote -v
 | `Repository not found` | PAT עם `repo`, או שם ריפו/owner שגוי, או לא מחובר כ-nocturney |
 | `gh: command not found` | התעלם — לא צריך `gh` |
 | `./scripts/...` ב-PowerShell | השתמש ב-**Git Bash** או בדרך 2 |
+<<<<<<< HEAD
 | Cloud Agent לא דוחף (`403` / `cursor[bot]`) | נורמלי — דחוף **אתה** מהמחשב, או תן ל־GitHub App הרשאת write לריפו |
+=======
+| Cloud Agent לא פותח PR | הגדר GitHub App — `docs/GITHUB-INTEGRATION.md` |
+>>>>>>> 05d33b3 (Close access gaps after public repos: docs, desk, and playbooks)
 
 ---
 

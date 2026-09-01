@@ -25,6 +25,19 @@ python3 scripts/discover-origin-slugs.py
 
 5. אם `origin repo list` מחזיר רק את HQ — רושמים «רשימה מצומצמת» וממשיכים. Failover ≠ המצאת slug.
 
+## אחרי ריפוז פומביים (2026-09-01)
+
+GitHub public **לא** פותח את `origin.cursor.com/christian-velvet/tmp-*`. עדיין צריך:
+
+```bash
+origin auth login   # חשבון עם גישה ל-tmp trees
+./scripts/vendor-origin-packs.sh
+```
+
+6 slugs ידועים ב-manifest (`vfigos` … `vfsales`) — vendor נכשל עד Origin scoped. 11 נשארות `unknown` עד slug מדף סוכן.
+
+צ'קליסט מלא: [`ACCESS-GAPS.md`](ACCESS-GAPS.md).
+
 ## למה הגילוי נכשל גם אחרי login
 
 בדיקה 2026-08-31 על Cloud Agent עם Origin CLI מחובר:

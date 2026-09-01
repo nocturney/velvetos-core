@@ -22,6 +22,16 @@
 
 אין גיליון סטודיו בשם Velvet Factory ב־Drive. גיליונות אישיים דולגו. לא ממציאים workbook ID.
 
+## Instagram Publish
+
+| שכבה | סטטוס | הערה |
+|---|---|---|
+| Canva | ready | עיצוב + export |
+| **Publish ל־@velvets_cloud** | **אין MCP** | `packages/vfigos/CONNECT-IG.md` |
+| Failover | wired | Canva + Drive + Gmail (`vfigos/SEND.md`) |
+
+בדוק Dashboard → Integrations & MCP ל-Meta/IG חדש. עד אז `#ממתין-ל-כלי-IG`.
+
 ## מה יש אצלם (קטלוג רשמי + מפת HQ)
 
 מקורות: [Grok Connectors](https://x.ai/news/grok-connectors) (מאי 2026) · [ChatGPT Apps](https://help.openai.com/en/articles/11487775-connectors-in-chatgpt) · [Gemini Connected Apps](https://support.google.com/gemini/answer/13695044) · תזמורת `constitution/ORCHESTRA.md` · `constitution/SEND.md` (HQ שולח דרך כלים).  

@@ -10,7 +10,7 @@
     "2026-08-31: This repo is VelvetOS Core (backend). Frontend scaffold for Velvet Factory: instances/velvet-factory/ → publish nocturney/velvetos-velvet-factory. See packages/velvetos/REPOS.md.",
     "2026-08-31: VelvetOS core modules + presets (packages/velvetos). This repo is the Velvet Factory instance; modules for all verticals are always loaded. Future businesses = separate instance repos pulling from core (REPOS.md). No active/example tenants.",
     "2026-08-31: VelvetOS kernel (packages/velvetos) — universal business + social desk with tenant profiles. Active tenant remains velvet-factory. Examples under tenants/_examples/ are drafts only. See docs/VELVETOS.md.",
-    "Origin slugs: never invent. Eleven packs stay origin-slug-unknown until a scoped tmp list or agent-page copy. Playbook: docs/ORIGIN-SLUGS.md. Report: scripts/discover-origin-slugs.py. Recheck 2026-08-31: this HQ token lists only velvet-factory-headquarters-os; known tmp-* view is token-not-scoped.",
+    "2026-09-01: Both nocturney/velvetos-core and nocturney/velvetos-velvet-factory are public. repositoryDependencies optional for Cloud attach. Remaining gaps: docs/ACCESS-GAPS.md (IG Publish MCP, Origin tmp vendor, 3DAI OAuth, GitHub App for PRs). Origin slugs: docs/ORIGIN-SLUGS.md; report: scripts/discover-origin-slugs.py.",
     "Origin CLI was not authenticated in the v0.1.0 dump environment (no CURSOR_API_KEY, origin auth status: not logged in).",
     "GitHub token is not accepted by origin.cursor.com.",
     "Cloud-agent transcripts for pack bcIds were not readable from this HQ environment.",
