@@ -12,3 +12,5 @@
 לא ממציאים Insights. לא ממציאים מחיר.  
 כריכות בגוף המייל (`cid:` בחריץ 07).  
 בפיילאובר Grok HQ שולח `htmlBody` תצוגה 3 אל `nocturney@gmail.com`. כש־Grok חי — הוא שולח. אין שליחה ללקוח.
+
+**שפה:** `packages/vfops/hq/PLAIN-LANGUAGE.md` — כיוון Grokbot, עברית פשוטה.

@@ -16,6 +16,8 @@
 כותרת קבועה: ולווט פקטורי · סטודיו להדפסות תלת־ממד · שדרות · בריף הבוקר.  
 סגירה: איסוף משדרות · בלי סיסמאות, קודי אימות או שמות לקוחות מיותרים.
 
+**שפה:** כיוון Grokbot — פשוטה, לכל קורא. לא «בריפינג מנכ״ל», לא «תקציר מנהלים», לא Trial Reels / Insights / KPI בלי תרגום. מילון: `PLAIN-LANGUAGE.md`. דוגמה: `brief-example-grokbot.json`.
+
 HTML: `packages/vfbriefux/MAIL.html` (תצוגה 3). לא שולחים טקסט.  
 בפיילאובר Grok: HQ ממלא JSON → `render_mail.py` → `send_message` + `htmlBody` + כריכות `cid`.  
 כש־Grok חי: Grok שולח את אותו HTML. HQ לא לוחץ Publish לאינסטגרם.

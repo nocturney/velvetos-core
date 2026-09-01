@@ -29,6 +29,17 @@ Use when the user asks for בריף בוקר, morning brief, what is open today,
 
 One pipeline reminder: פנייה → שיחה → הצעה → הדפסה → איסוף. Pickup in Sderot only.
 
+## Plain language (Grokbot direction)
+
+The brief is for **everyone who reads it** — not only the owner. Follow `packages/vfops/hq/PLAIN-LANGUAGE.md`:
+
+- Title: **בריף הבוקר** — never «בריפינג מנכ״ל» / «תקציר מנהלים»
+- Open with **בוקר טוב** + one sentence on what matters today
+- Top box: **השורה התחתונה** — not executive summary jargon
+- Translate platform terms: Planner (not Meta Planner), חשיפות (not Reach), נתונים מאינסטגרם (not bare «Insights»)
+- Status tags: **משובץ · לא זז · לא בוסט** — not «מועמד» / «Candidate»
+- Example JSON: `packages/vfops/hq/brief-example-grokbot.json` (30.8 Grokbot brief)
+
 If constitution overlays exist (`packages/vfops/hq/BRIEF-SLOTS.md` or `packages/vfops/BRIEF.md`), fill those slots. Block `05` is always `packages/vfops/data/research.md` (empty state is exactly `אין חדש במשרד`). **Block `05a`:** read the latest block from `packages/vfops/data/owner-memory.md` (retro / owner prefs) — one short paragraph in the brief, not the full file. Do not invent a sixth seat. Live mail uses `packages/vfbriefux/MAIL.md` — not plaintext.
 
 ## HTML draft (optional)

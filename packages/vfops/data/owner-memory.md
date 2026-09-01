@@ -15,6 +15,7 @@
 - **רטרו:** כל סוף יום על שיחות; עכשיו גם catch-up על כל מה שלפני.
 - **ארבעה תחומי מומחה:** Social Booster · 3D model · Trend explorer · Media director (תמונות/וידאו).
 - **שפה:** עברית לקופי מוצר; מסמכי משרד עברית+אנגלית.
+- **בריף:** כיוון Grokbot (תצוגה 3) — שפה פשוטה; כל מי שקורא את המייל מבין. לא «בריפינג מנכ״ל», לא ז׳רגון פלטפורמה בלי תרגום. מילון: `hq/PLAIN-LANGUAGE.md`.
 - **CTA:** וואטסאפ `050-2517000` / איסוף שדרות — לא «שלחו DM».
 
 ### ראש צוות (lead)
@@ -22,6 +23,7 @@
 - **למדנו:** Core = backend; VF frontend = `instances/velvet-factory` → `velvetos-velvet-factory` עם `attach-core.sh`.
 - **למדנו:** HQ **שולח** Gmail ו-IG דרך כלים (`SEND.md`) — לא מחכים ל-Grok/כריסטיאן; Grok גיבוי אופציונלי.
 - **למדנו:** בריף 07:00 **לא** קורא תיבת דואר — לוח + vfops בלבד; שליחה ב-`htmlBody` תצוגה 3.
+- **למדנו (2026-09-01):** בריף בכיוון Grokbot — עברית פשוטה, `PLAIN-LANGUAGE.md`, דוגמה `brief-example-grokbot.json`. לא סגנון «תקציר מנהלים» / Trial Reels / KPI.
 - **למדנו:** Treg לא רלוונטי; כלי נפל → failover מיד (`ORCHESTRA.md`).
 - **פתוח:** `grok-failover` checkpoint עדיין `running` — בריף יומי + LIVE-PACKET לפרסום חי דחוף.
 - **פתוח:** פרסום ריפו `velvetos-velvet-factory` — מחכה לריפו ריק ב-GitHub + `publish-instance.sh`.

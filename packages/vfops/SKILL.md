@@ -35,6 +35,8 @@
 ראה `hq/PLAYBOOK.md` ו־`hq/BRIEF-SLOTS.md`.  
 בלוק `05` מהתזמורת: `data/research.md`.
 
+**שפה בבריף:** `hq/PLAIN-LANGUAGE.md` — כיוון Grokbot, עברית פשוטה לכל קורא.
+
 לוח צינור: `hq/PIPELINE-BOARD.md`. משטח פקודות עתידי: `hq/COMMAND-SURFACE.md` + `hq/capabilities.json`.
 
 רתמה: אחרי שרשרת — מה אומת / מה פתוח. סנסור אדום או «אין ספירה» לא הופכים לירוק. הסלמה: `packages/vfharness/templates/escalation.md`. מדריך: `AGENTS.md`.
