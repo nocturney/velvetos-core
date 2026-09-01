@@ -43,6 +43,17 @@ python3 scripts/check-all.py
 משימות חד-פעמיות (שאלה, סיעור מוחות) — בלי checkpoint ו בלי שלושת קבצי התכנון.
 
 
+## 4b. Daily learning — סוף יום
+
+ראש צוות (`vfops/hq/DAILY-RETRO.md`):
+
+1. כל מושב עובר על שיחות היום.
+2. שורה אחת לפחות ל־`vfops/data/owner-memory.md` (פורמט: `vfmem/MEMORY-UPDATE.md`).
+3. מומחי `expert-*` מוסיפים לקח ספציפי לתחום.
+4. בוקר למחרת — בריף קורא את הבלוק (לא תיבת דואר).
+
+מיומנות: `.cursor/skills/vf-daily-learning/SKILL.md` · playbook: `playbooks/daily-learning.md`.
+
 ## 5. Permissions — לפני כלי חיצוני
 
 | פעולה | החלטה |
