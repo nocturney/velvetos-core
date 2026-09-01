@@ -1,6 +1,6 @@
 {
   "task_id": "publish-instance-velvet-factory",
-  "status": "ready",
+  "status": "published",
   "pack": "velvetos",
   "remote": "nocturney/velvetos-velvet-factory",
   "remote_url": "https://github.com/nocturney/velvetos-velvet-factory.git",
@@ -8,11 +8,13 @@
   "last_updated": "2026-09-01",
   "completed_steps": [
     "scaffold built",
-    "publish script staged"
+    "publish script staged",
+    "owner manual sync 2770188 (5 files: AGENTS, README, vf-desk, desk rule, instance.json)"
   ],
-  "next_step": "PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory",
+  "next_step": "Open nocturney/velvetos-velvet-factory in Cursor; run ./scripts/attach-core.sh",
   "artifacts": [
-    "instances/velvet-factory"
+    "instances/velvet-factory",
+    "https://github.com/nocturney/velvetos-velvet-factory/commit/2770188"
   ],
   "unresolved": []
 }

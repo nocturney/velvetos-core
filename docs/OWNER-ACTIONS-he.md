@@ -20,7 +20,7 @@ origin auth login
 
 ## 2. Push ל-`velvetos-velvet-factory`
 
-**סטטוס:** auth מקומי עובד. **`fetch first` / `rejected`** = הריפו כבר לא ריק — הסקריפט המעודכן עושה **clone + overlay** (שומר `docs/`, `.cursor/mcp.json`).
+**סטטוס:** ✅ **פורסם** — commit [`2770188`](https://github.com/nocturney/velvetos-velvet-factory/commit/2770188) על `main` (5 קבצים). לעדכון עתידי: `git pull` + `PUSH=1 ./scripts/publish-instance.sh …` (אחרי merge PR #67).
 
 **מקומית:**
 

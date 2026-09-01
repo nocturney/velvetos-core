@@ -7,9 +7,10 @@
     "Reclassified 11 packs to hq-native in manifest + ORIGIN.md",
     "Added docs/OWNER-ACTIONS-he.md, sync-instance-scaffold.sh, core .cursor/environment.json",
     "vendor-origin-packs.sh skips cleanly when Origin not authed",
-    "Desk: instagram no-publish-mcp + threedaistudio ready"
+    "Desk: instagram no-publish-mcp + threedaistudio ready",
+    "Instance repo synced: 2770188 on nocturney/velvetos-velvet-factory (owner manual push)"
   ],
-  "next_step": "Owner: origin auth login + vendor; new Cloud Agent run (or local PUSH=1) for instance sync; enable Mobbin on Cloud env",
+  "next_step": "Owner: origin auth login + vendor; enable Mobbin on Cloud env; open instance repo + attach-core",
   "artifacts": [
     "docs/OWNER-ACTIONS-he.md",
     "scripts/sync-instance-scaffold.sh",
@@ -18,7 +19,6 @@
   ],
   "unresolved": [
     "Origin vendor: needs origin auth login or CURSOR_API_KEY",
-    "Instance push: GitHub App OK on screenshot; this run token still 403 — new agent run or local PUSH=1",
     "Mobbin MCP namespace not on this Cloud environment",
     "Instagram Publish MCP does not exist — SEND.md failover only"
   ],
