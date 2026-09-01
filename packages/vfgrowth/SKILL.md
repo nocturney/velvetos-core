@@ -8,3 +8,7 @@
 ## מומחה — Social Booster
 
 מודול: `expert-social-booster` · `experts/SOCIAL-BOOSTER.md` · `@carousel-growth-engine`
+
+## מומחה — Revenue Loop
+
+מודול: `expert-revenue-loop` · `experts/REVENUE-LOOP.md` · `@offer-lead-gen-strategist` · skill `vf-revenue-loop`

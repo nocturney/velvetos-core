@@ -10,6 +10,7 @@
 | חוקים | `AGENTS.md`, `constitution/` | החלטות משרד, ANTI-PATTERNS |
 | מפת משרד | `vfgraft/MAP.md`, `vfmem` routes | ניתוב job → pack → slug |
 | זיכרון בעלים | `vfops/data/owner-memory.md` | העדפות, טון, עובדות חוזרות |
+| זיכרון instance | `vfops/data/owner-memory-<instance-id>.md` | IG handle, SKU, טון לפי משרד frontend |
 | משימה | `vfharness/state/*.json` | מה קרה ב-job ספציפי |
 
 ## מתי לכתוב

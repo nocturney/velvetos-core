@@ -19,7 +19,10 @@
     "expert-3d-model",
     "expert-trend-explorer",
     "expert-media-director",
-    "office-learning"
+    "office-learning",
+    "expert-revenue-loop",
+    "expert-insights-ingest",
+    "expert-instance-onboard"
   ],
   "pipelineLabelsHe": ["פנייה", "שיחה", "הצעה", "הדפסה", "איסוף"],
   "fulfillment": "pickup",

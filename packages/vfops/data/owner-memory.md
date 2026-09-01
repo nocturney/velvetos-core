@@ -67,7 +67,11 @@
 
 ---
 
-### 2026-09-01 (יומי)
+### 2026-09-01 (revenue loop)
+- **מושב:** lead + growth
+- **למדנו:** IG כפרנסה = לולאה סגורה (Offer → פנייה → הצעה → איסוף → retention → snapshot).
+- **מחר:** כל פוסט מסחרי עם כרטיס Offer; שבועי `WEEKLY-REVENUE-PULSE.md`.
+- **מקור:** expert-revenue-loop embed.
 - **מושב:** lead
 - **למדנו:** המשרד הוא צוות חי — כל מומחה (`expert-*`) עושה רטרו יומי ומעדכן זיכרון משותף; לא פרומפט סטטי.
 - **למדנו:** רטרו ראשוני הושלם מ-CHANGELOG + checkpoints — מחרתיים רק DAILY-RETRO.

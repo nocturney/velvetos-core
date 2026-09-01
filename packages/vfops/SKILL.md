@@ -13,6 +13,10 @@
 ראש צוות מבקש מכל המושבים לעבור על שיחות היום.  
 `hq/DAILY-RETRO.md` · `data/owner-memory.md` · מיומנות `vf-daily-learning` · מודול `office-learning`.
 
+## דופק הכנסה
+
+שבועי: `playbooks/WEEKLY-REVENUE-PULSE.md` (מודול `expert-revenue-loop`).
+
 ## שרשרת
 
 `vfconvert` → `vfprod` → `vfcost` → `vfsales`+`vfcopy` → (אישור אדם) → `vfprod` תור → `vfgrowth`+`vfcovers` → `vfsales` מעקב

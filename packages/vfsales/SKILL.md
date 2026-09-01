@@ -9,6 +9,8 @@
 קופי: `#vfcopy`. מחיר: רק מ־`#vfcost` + `#מחיר-מכריסטיאן`.  
 מסגרות אופציונליות: `vfmskill` (`offers` / `sales-enablement`). אין ₪ בלי ראש צוות.
 
-ציר לקוח: `hq/CUSTOMER-TIMELINE.md` (דפוס Monica/Twenty — אירועים אמיתיים בלבד).
+ציר לקוח: `hq/CUSTOMER-TIMELINE.md` (דפוס Monica/Twenty — אירועים אמיתיים בלבד).  
+מילוי אוטומטי: `hq/TIMELINE-AUTO.md` (מודול `expert-revenue-loop`).  
+סגירת עסקאות: `@deal-strategist` · retention: `@customer-success-manager` · nurture: `@email-marketing-strategist`.
 
 רתמה: טיוטה ≠ שליחה עד שיש כלי/הוראה. חסר מחיר נשאר `X ₪`. אחרי שני כשלי שדה — הסלמה, לא ניחוש.

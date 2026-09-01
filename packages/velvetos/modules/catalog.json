@@ -149,6 +149,27 @@
       "summary": "Daily retro + shared memory — living specialists, not static prompts",
       "file": "modules/office-learning.md",
       "packs": ["vfops", "vfmem", "vfharness", "vfgraft"]
+    },
+    {
+      "id": "expert-revenue-loop",
+      "group": "experts",
+      "summary": "IG → offer → inquiry → quote → pickup → retention; weekly pulse",
+      "file": "modules/expert-revenue-loop.md",
+      "packs": ["vfgrowth", "vfconvert", "vfsales", "vfinsights", "vfops", "vfsku"]
+    },
+    {
+      "id": "expert-insights-ingest",
+      "group": "experts",
+      "summary": "Verified IG snapshot ingest — no invented metrics",
+      "file": "modules/expert-insights-ingest.md",
+      "packs": ["vfinsights", "vfgrowth", "vfops"]
+    },
+    {
+      "id": "expert-instance-onboard",
+      "group": "experts",
+      "summary": "New frontend instance repo — preset, memory, attach-core",
+      "file": "modules/expert-instance-onboard.md",
+      "packs": ["velvetos", "vfops", "vfmem", "vfharness"]
     }
   ]
 }

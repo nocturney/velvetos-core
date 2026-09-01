@@ -50,6 +50,9 @@
 
 | מומחה | תוצר טיפוסי | נתיב |
 |---|---|---|
+| Revenue loop | Offer card, pipeline `ig_post_ref`, weekly pulse | `vfgrowth/experts/REVENUE-LOOP.md`, `PIPELINE-BOARD.md`, `WEEKLY-REVENUE-PULSE.md` |
+| Insights ingest | snapshot מאומת | `vfinsights/sources/*-ig-snapshot.md`, `templates/snapshot-ingest.md` |
+| Instance onboard | פרונט + זיכרון נפרד | `velvetos/experts/INSTANCE-ONBOARD.md`, `owner-memory-<id>.md` |
 | Social Booster | חבילת קרוסלה / הוקים | `vfgrowth/`, Canva, `vfigos` queue |
 | 3D model | כרטיס כדאיות, mesh | `vfprod/`, Drive, checkpoint |
 | Trend explorer | מפת מקורות, מוזיקה | `vfresearch/sources/`, `LINKS.json` |
