@@ -12,6 +12,7 @@
 | Calendar | ready · `Asia/Jerusalem` | namespace `Google-calendar` |
 | Drive | ready · חיפוש **ויצירה** (`create_file`) | namespace `Google-drive` |
 | **Canva** | **ready** | `search-designs` החזיר `DAGoYmCu4c4` («Card - חגיגת האהבה שלכם») |
+| **Instagram (ig-mcp)** | **needsAuth** · Desktop + Cloud secrets | [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) · `packages/vfigos/CONNECT-IG.md` |
 | **3D AI Studio** | **needsAuth** (Desktop + Cloud OAuth) | Team MCP `threedaistudio` + `.cursor/mcp.json`. `CONNECT-3DAI.md` |
 | WebSearch / WebFetch | ready · מקורי Cursor | כלי native בסוכן |
 | GenerateImage | ready · מקורי Cursor | כלי native; אינסטגרם עדיין Canva קודם |
@@ -44,7 +45,7 @@
 
 | כלי שם | כאן | דין |
 |---|---|---|
-| שליחת אינסטגרם | Canva + `vfigos/SEND.md` (אין Publish MCP) | **wired failover** — Drive + Gmail `send_message` אותו תור |
+| שליחת אינסטגרם | ig-mcp `publish_media` · Canva export · `vfigos/SEND.md` | **wired** — Publish כש־MCP מחובר; failover Drive + Gmail אותו תור |
 | שליחת Gmail | `send_message` / `reply` / `forward` | **wired** — HQ שולח |
 | מדפסות | אין בכוונה | **skip** — רצפה לא מ־HQ |
 | Google Workspace (Gmail/Drive/Docs/Sheets/Calendar) **כתיבה+שליחה** | Gmail **שליחה**; Drive `create_file`; Calendar קריאה; Sheets דרך Drive | **wired** 31.8 — `SEND.md` |
@@ -100,7 +101,7 @@
 
 | פער | למה לא |
 |---|---|
-| Publish MCP לאינסטגרם | אין namespace. failover: Canva+Drive+Gmail (`SEND.md`). לא ממציאים שעלה לפיד |
+| Publish MCP לאינסטגרם | **ממופה** → ig-mcp (`CONNECT-IG.md`). עדיין `needsAuth` עד Meta App + token בדשבורד. failover: Canva+Drive+Gmail (`SEND.md`) |
 | וואטסאפ / מדפסות | אין MCP וואטסאפ. מדפסות ברצפה. אדם `050-2517000` |
 | Treg | **לא רלוונטי** למשרד. לא login |
 | Mobbin MCP | פלאגין על הדיסק; namespace לא על Cloud Agent. failover: `vfbriefux` |

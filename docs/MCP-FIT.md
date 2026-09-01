@@ -17,13 +17,14 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Google Drive** | Files and folders; **`create_file`**; Sheets **export** when a workbook is named (`vfbooks/SHEETS.md`) | `vfprod`, `vfcovers`, `vfsku`, `vfresearch`, `vfbooks` |
 | **Google Calendar** | Events | `vfseason`, `vfops`, `vfsales` |
 | **Canva** | Edit designs, brand-check, bulk-create, resize, `generate-design`. **Ready** on this Cloud Agent (2026-08-31, `DAGoYmCu4c4`) | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
+| **Instagram (ig-mcp)** | Publish, Insights, feed read via Graph API. **needsAuth** — Meta App + long-lived token (`packages/vfigos/CONNECT-IG.md`) | `vfigos`, `vfinsights`, `vfgrowth` |
 | **3D AI Studio** | Text/image → 3D mesh, STL/3MF export. **HTTP** `https://mcp.3daistudio.com/mcp` — OAuth **Desktop** (`.cursor/mcp.json`) **+ Cloud** (Dashboard → Integrations & MCP). See `packages/vfprod/CONNECT-3DAI.md` | `vfprod`, `vfsku`, `vlicense` |
 | **WebSearch / WebFetch** | Live web + URL fetch (ChatGPT/Gemini/Perplexity/Grok browse equivalent) | `vfresearch`, `vfgrowth` |
 | **GenerateImage** | User-asked stills. Instagram still Canva-first | `vfcovers`, `vfbriefux` |
 | **Treg** | **Not relevant** — do not login or `call` | — |
 | **Mobbin** | Real-app UI patterns | `vfbriefux` |
 | **Superdesign** | Canvas / graphics | `vfcovers`, `vfbriefux` |
-| **Grok Bot** | Optional backup only. HQ sends via tools | `vfigos/SEND.md` |
+| **Grok Bot** | Optional backup only. HQ sends via tools when ig-mcp or failover fired | `vfigos/SEND.md` |
 
 Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility” servers unless Treg is missing a specific account.
 
@@ -31,7 +32,23 @@ Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility”
 
 ## Do this first (real studio gaps)
 
-Three holes the office OS still has. Each one is a Cursor MCP add — not a new pack dump.
+Four holes the office OS still has. Each one is a Cursor MCP add — not a new pack dump.
+
+### 0. Instagram Publish + Insights — ig-mcp
+
+The main gap since 31.8: HQ could failover via Gmail+Drive but could not post to `@velvets_cloud` or read verified Insights.
+
+| Server | Role | Notes |
+|---|---|---|
+| [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) | `publish_media`, `get_media_insights`, `get_media_posts`, profile | Business account + Facebook Page + Meta Developer App. stdio Python — not HTTP like Canva |
+
+**Connect:** `packages/vfigos/CONNECT-IG.md`. Secrets in Dashboard / local `mcp.json` only — never git.
+
+**Flow:** Canva export URL → `publish_media` → `#נשלח-מ-HQ`. Failover unchanged if `needsAuth`.
+
+**Still forbidden:** auto-DM, boost, invented Insights. DM tools in ig-mcp stay off.
+
+**Packs:** `vfigos`, `vfinsights`, `vfgrowth`.
 
 ### 1. WhatsApp — inquiry-to-order
 
@@ -43,7 +60,7 @@ Israeli print sales live here. Gmail alone does not close the loop for `vfconver
 | [nakulben/whatsapp-mcp](https://github.com/nakulben/whatsapp-mcp) | WhatsApp Business templates via Meta Cloud API | Use if the studio already has a Business number |
 | [Infobip/mcp](https://github.com/infobip/mcp) | Official SMS / WhatsApp / Viber | Heavier; only if you already pay Infobip |
 
-**Rule:** drafts and search in Cursor. Do not auto-send quotes or proofs without a human click. Same discipline as Instagram: HQ reviews, a human or Grok Bot sends.
+**Rule:** drafts and search in Cursor. Do not auto-send quotes or proofs without a human click. Same discipline as Instagram: HQ reviews; ig-mcp publishes after review when connected.
 
 **Packs:** `vfconvert`, `vfsales`, `vfops`.
 
@@ -93,7 +110,7 @@ Remote URL: `https://prompts.chat/api/mcp`. Local fallback: `npx -y prompts.chat
 |---|---|
 | [farukkolip/instapdown-mcp](https://github.com/farukkolip/instapdown-mcp) | Public toolkit: Reels/Story download, hashtags, engagement health, best-time tables. **No auth.** |
 
-Use for `vfigos` review, `vfgrowth` sprints, `vfinsights` reads. Schedule and copy stay in the pack. **Grok Bot still posts.**
+Use for `vfigos` review, `vfgrowth` sprints, `vfinsights` reads when ig-mcp is not connected. When ig-mcp is live, prefer `get_media_insights` for verified numbers. Schedule and copy stay in the pack.
 
 ### Inbox triage on top of Gmail
 
@@ -137,7 +154,7 @@ Do not add these “because they exist on the list.” Add them when Christian c
 - **Headroom proxy on Cloud Agent** — local compression proxy needs a host process; Cloud VMs are sandboxed. Embed the **pattern** via `packages/vfharness/playbooks/context-thrift.md` (CCR + ContentRouter). Optional Mac-only: `headroom wrap cursor` after lead seat — see `packages/vfmcp/GAP.md`.
 - **Second SEO / GEO / AI-visibility stacks** — Treg already is the data catalog. Connect GA / GSC / GBP there first.
 - **Second Canva or image-gen farms** — Canva + Superdesign are enough for brand work.
-- **Anything that posts, boosts, or DMs Instagram from this HQ.**
+- **Auto-DM, boost, or invented Instagram publish** — ig-mcp `send_dm` stays off; boost stays lead-gated.
 - **DeusData/codebase-memory-mcp binary** — coding-agent indexer that writes client config. The office-graph pattern is already `scripts/vfmem.py`. Local AST install only if the lead seat asks, and never by rewriting this repo's `.cursor/mcp.json`.
 - **Crypto, x402 marketplaces, coding-agent swarms, aerospace, gaming, home IoT** — not the print floor. Includes [Bindu](https://github.com/GetBindu/Bindu) (`bindufy`, A2A Gateway, USDC) — watch patterns only; see `packages/vfresearch/sources/2026-08-31-bindu.md`.
 - **Cold-email infrastructure** — VF is inbound studio sales, not a spam shop.
@@ -150,15 +167,16 @@ MCP lives in Cursor settings / Cloud Agent integrations. This repository stays a
 2. Add **one** server from the tables above.
 3. Keep secrets out of git.
 4. Same-day: one line in `CHANGELOG.md` Unreleased + a note here if the choice changes.
-5. Pack agents may *use* the new tools. They still do not invent prices or send Instagram.
+5. Pack agents may *use* the new tools. They still do not invent prices. Instagram publish only via connected ig-mcp or documented failover.
 
 ## Suggested order
 
-1. Google Sheets (unlocks books / jobs / SKU without a new database).
-2. WhatsApp (closes inquiry → quote → order).
-3. Studio MCP Hub (print-safe files next to Canva).
-4. instapdown (Instagram research, no login).
-5. Inbox Zero if the mailbox is the bottleneck.
-6. Meta Ads read-only if boost reporting is the bottleneck.
+1. **Instagram ig-mcp** (closes Publish + verified Insights for `@velvets_cloud`).
+2. Google Sheets (unlocks books / jobs / SKU without a new database).
+3. WhatsApp (closes inquiry → quote → order).
+4. Studio MCP Hub (print-safe files next to Canva).
+5. instapdown (Instagram research fallback, no login).
+6. Inbox Zero if the mailbox is the bottleneck.
+7. Meta Ads read-only if boost reporting is the bottleneck.
 
-Stop after the first three unless a pack is blocked on a specific live account.
+Stop after the first four unless a pack is blocked on a specific live account.
