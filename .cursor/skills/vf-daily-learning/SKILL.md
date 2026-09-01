@@ -11,11 +11,12 @@ Living office culture: specialists learn, improve, and feed shared memory — no
 
 - End of workday (after 18:00 Asia/Jerusalem)
 - User asks: סוף יום, רטרו, למידה, זיכרון משותף, daily retro
+- **One-time catch-up** before daily routine existed: `packages/vfops/hq/INITIAL-RETRO.md`
 - Before closing a long multi-seat session
 
 ## Do this
 
-1. Read `packages/vfops/hq/DAILY-RETRO.md` — lead seat checklist.
+1. Read `packages/vfops/hq/DAILY-RETRO.md` — lead seat checklist. (First time only: `INITIAL-RETRO.md`.)
 2. Skim today's conversations per seat (studio, growth, ops, production).
 3. Write **one line minimum** to `packages/vfops/data/owner-memory.md` (format in `packages/vfmem/MEMORY-UPDATE.md`).
 4. Open checkpoints for unfinished jobs: `packages/vfharness/state/`.

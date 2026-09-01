@@ -334,6 +334,32 @@
     },
     {
       "q": [
+        "artifact",
+        "תוצרים",
+        "אינדקס",
+        "aggregate",
+        "שאיבה",
+        "velvet factory memory"
+      ],
+      "pack": "vfops",
+      "slug": "studio-operations",
+      "tool": "vfmem",
+      "note": "ARTIFACT-INDEX.md + owner-memory.md"
+    },
+    {
+      "q": [
+        "initial retro",
+        "catch-up",
+        "רטרו ראשוני",
+        "לפני הרוטינה"
+      ],
+      "pack": "vfops",
+      "slug": "chief-of-staff",
+      "tool": "vfmem",
+      "note": "INITIAL-RETRO.md one-time backfill"
+    },
+    {
+      "q": [
         "daily retro",
         "end of day",
         "owner memory",

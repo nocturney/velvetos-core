@@ -3,6 +3,8 @@
 מודול: `office-learning`.  
 **ראש הצוות** (`@studio-operations` / `@chief-of-staff`) מבקש מכל המושבים לעבור על השיחות של היום — לא כדי לשפוט, אלא כדי שהמשרד יהיה חי ומשתפר.
 
+**פעם ראשונה / לפני שהרוטינה הייתה קיימת:** הרץ `INITIAL-RETRO.md` (catch-up מ-CHANGELOG + checkpoints).
+
 ## מתי
 
 כל ערב, אחרי 18:00 Asia/Jerusalem (או לפני סגירת משמרת).  
