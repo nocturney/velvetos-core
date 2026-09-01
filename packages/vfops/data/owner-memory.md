@@ -24,7 +24,7 @@
 - **למדנו:** בריף 07:00 **לא** קורא תיבת דואר — לוח + vfops בלבד; שליחה ב-`htmlBody` תצוגה 3.
 - **למדנו:** Treg לא רלוונטי; כלי נפל → failover מיד (`ORCHESTRA.md`).
 - **פתוח:** `grok-failover` checkpoint עדיין `running` — בריף יומי + LIVE-PACKET לפרסום חי דחוף.
-- **פתוח:** פרסום ריפו `velvetos-velvet-factory` — מחכה לריפו ריק ב-GitHub + `publish-instance.sh`.
+- **פתוח:** פרסום ריפו `velvetos-velvet-factory` — הריפו קיים אצל הבעלים; טוקן Cloud Agent חסום → `PUSH=1` מקומי או הרשאה לאינטגרציה.
 - **מקור:** checkpoints 2026-08-30..31, CHANGELOG, AGENTS.md.
 
 ### סטודיו (inquiry / quote)
@@ -77,3 +77,11 @@
 - **למדנו:** רטרו ראשוני הושלם מ-CHANGELOG + checkpoints — מחרתיים רק DAILY-RETRO.
 - **מחר:** רטרו קצר בסוף כל יום עבודה; בריף קורא בלוק זיכרון (חריץ 05a).
 - **מקור:** בקשת בעלים + INITIAL-RETRO 2026-09-01.
+
+### 2026-09-01 (ops — publish + snapshot + pulse)
+- **מושב:** lead + ops
+- **למדנו:** snapshot ראשון ב־`vfinsights/sources/2026-09-01-ig-snapshot.md` — רק refs מאומתים; מטריקות עדיין «אין ספירה».
+- **למדנו:** דופק W35 ב־`vfops/hq/revenue-pulse-2026-W35.md` — צינור 0, G005 מתוכנן 3.9.
+- **פתוח:** push ל־`velvetos-velvet-factory` — טוקן Cloud Agent לא רואה הריפו; להריץ מקומית `PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory` או לתת גישה לאינטגרציה.
+- **מחר:** אחרי G005 — הדבקת מטריקות ל־`snapshot-ingest.md`.
+- **מקור:** ops run 2026-09-01.

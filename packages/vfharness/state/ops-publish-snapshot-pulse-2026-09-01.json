@@ -1,0 +1,17 @@
+{
+  "task_id": "ops-publish-snapshot-pulse-2026-09-01",
+  "status": "done",
+  "outcome": "worker_done",
+  "goal": "Publish VF instance, first IG snapshot, weekly revenue pulse",
+  "completed_steps": [
+    "Baseline IG snapshot 2026-09-01 (verified refs only, no invented metrics)",
+    "Weekly revenue pulse 2026-W35",
+    "Instance modulesEnabled synced with expert + revenue modules",
+    "publish-instance.sh preflight for remote access"
+  ],
+  "unresolved": [
+    "Cloud Agent token cannot ls-remote nocturney/velvetos-velvet-factory — grant repo access or PUSH=1 locally",
+    "IG numeric metrics still אין ספירה until owner pastes snapshot-ingest"
+  ],
+  "next_step": "Owner: grant GitHub access OR run PUSH=1 publish-instance.sh; paste IG metrics after G005"
+}
