@@ -17,6 +17,7 @@
 5. כתוב נקודת ביקורת ב-`state/<task-id>.json` לפני סגירת סשן ארוך.
 6. מכסת Grok ריקה + צריך IG חי → `playbooks/grok-failover.md` + `vfigos/LIVE-PACKET.md` לאדם.
 7. הקשר כבד (thread, JSON, Drive dump) → `playbooks/context-thrift.md` — סיכום בשיחה, מקור ב-checkpoint.
+8. **סוף יום** — `playbooks/daily-learning.md` + `vfops/hq/DAILY-RETRO.md` (מודול `office-learning`).
 
 צינור יחיד נשאר: פנייה · שיחה · הצעה · הדפסה · איסוף.
 

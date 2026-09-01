@@ -30,6 +30,8 @@ command-surface system       capabilities + pipeline board + portlets (future UI
 | פנייה / quote this | [[inquiry-job]] → [[pipeline]] → [[packs]] |
 | חבילת תוכן / covers / Canva | [[content-job]] → [[grok-bot]] → [[tools]] |
 | מוזיקה / סאונד לריל | `vfresearch/MUSIC.md` → `@trend-researcher` → [[content-job]] → [[grok-bot]] |
+| Social Booster / 3D model / trends / media director | `packages/velvetos/modules/expert-*.md` → [[desk]] → [[packs]] |
+| סוף יום / זיכרון משותף / למידה | [[morning-job]] → `vfops/hq/DAILY-RETRO.md` → `vfops/data/owner-memory.md` → [[skills]] |
 | how is HQ wired | this file → [[desk]] → [[packs]] |
 | what breaks if I change X | [[blast]] |
 | embed an outside repo | [[maps]] → [[laws]] |

@@ -39,6 +39,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - After every catalog, pack, or rule change, run `python3 scripts/check-all.py`.
 - Do not claim success if a computational sensor failed. Retry once, then escalate.
 - Close a multi-step task with a checkpoint under `packages/vfharness/state/` so the next session can resume.
+- **Living office:** lead seat asks every seat to run end-of-day retro (`vfops/hq/DAILY-RETRO.md`). Promote durable facts to `vfops/data/owner-memory.md` per `vfmem/MEMORY-UPDATE.md`. Module `office-learning`; skill `.cursor/skills/vf-daily-learning/SKILL.md`. Specialists learn and improve — not static generic agents.
 - No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
 - Warehouse specialists stay off the desk unless the user asks for that `@slug`.
 

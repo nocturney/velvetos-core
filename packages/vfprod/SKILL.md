@@ -8,3 +8,7 @@
 רישיון קובץ: `#vlicense`.  
 מנוי 3D AI Studio (טקסט/תמונה → STL): `3DAISTUDIO.md`.  
 איפה ה־MCP: `CONNECT-3DAI.md` (אתר אחרי Login, לא Marketplace של Cursor).
+
+## מומחה — 3D model analyze / make / build
+
+מודול: `expert-3d-model` · `experts/3D-MODEL.md` · `@technical-artist` + `@studio-producer`

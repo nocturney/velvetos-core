@@ -1,6 +1,6 @@
 {
   "name": "velvetos-modules",
-  "updatedAt": "2026-08-31",
+  "updatedAt": "2026-09-01",
   "rule": "All modules are always present in core. An instance selects a subset via modulesEnabled. Modules are not active/inactive goals.",
   "modules": [
     {
@@ -114,6 +114,41 @@
       "summary": "Cost factors and ledger reads without invented ₪",
       "file": "modules/ops-ledger.md",
       "packs": ["vfcost", "vfbooks", "vfbiz"]
+    },
+    {
+      "id": "expert-social-booster",
+      "group": "experts",
+      "summary": "Organic IG reach — carousels, hooks, rotation; no boost/auto-DM",
+      "file": "modules/expert-social-booster.md",
+      "packs": ["vfgrowth", "vfmskill", "vfigos", "vfcovers"]
+    },
+    {
+      "id": "expert-3d-model",
+      "group": "experts",
+      "summary": "Mesh analyze/make/build — print floor + 3D AI Studio after lead approval",
+      "file": "modules/expert-3d-model.md",
+      "packs": ["vfprod", "vfsku", "vlicense"]
+    },
+    {
+      "id": "expert-trend-explorer",
+      "group": "experts",
+      "summary": "Trend/signal discovery — seasons, IG music, weekly links; no invented trends",
+      "file": "modules/expert-trend-explorer.md",
+      "packs": ["vfresearch", "vfseason", "vfgrowth"]
+    },
+    {
+      "id": "expert-media-director",
+      "group": "experts",
+      "summary": "AI image/video direction — Canva, OpenMontage, review packet; no HQ video gen",
+      "file": "modules/expert-media-director.md",
+      "packs": ["vfom", "vfcovers", "vfcanva", "vfcopy", "vfgrowth"]
+    },
+    {
+      "id": "office-learning",
+      "group": "kernel",
+      "summary": "Daily retro + shared memory — living specialists, not static prompts",
+      "file": "modules/office-learning.md",
+      "packs": ["vfops", "vfmem", "vfharness", "vfgraft"]
     }
   ]
 }
