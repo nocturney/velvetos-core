@@ -372,6 +372,106 @@
       "slug": "chief-of-staff",
       "tool": "vfmem",
       "note": "DAILY-RETRO.md + owner-memory.md + vf-daily-learning skill"
+    },
+    {
+      "q": [
+        "revenue loop",
+        "פרנסה",
+        "monetize",
+        "הכנסה מ-IG",
+        "offer post"
+      ],
+      "pack": "vfgrowth",
+      "slug": "offer-lead-gen-strategist",
+      "tool": "canva",
+      "note": "REVENUE-LOOP.md + vf-revenue-loop skill"
+    },
+    {
+      "q": [
+        "pipeline analyst",
+        "פניות מפוסט",
+        "IG attribution"
+      ],
+      "pack": "vfops",
+      "slug": "pipeline-analyst",
+      "tool": "gmail"
+    },
+    {
+      "q": [
+        "close deal",
+        "הצעה פתוחה",
+        "stalled quote"
+      ],
+      "pack": "vfsales",
+      "slug": "deal-strategist",
+      "tool": "gmail"
+    },
+    {
+      "q": [
+        "retention",
+        "חזרה ללקוח",
+        "after pickup",
+        "customer success"
+      ],
+      "pack": "vfsales",
+      "slug": "customer-success-manager",
+      "tool": "gmail"
+    },
+    {
+      "q": [
+        "email nurture",
+        "follow up inquiry",
+        "מעקב מייל"
+      ],
+      "pack": "vfsales",
+      "slug": "email-marketing-strategist",
+      "tool": "gmail"
+    },
+    {
+      "q": [
+        "insights snapshot",
+        "IG metrics",
+        "מדידה",
+        "tracking"
+      ],
+      "pack": "vfinsights",
+      "slug": "tracking-measurement-specialist",
+      "tool": "drive"
+    },
+    {
+      "q": [
+        "paid boost",
+        "בוסט",
+        "paid social",
+        "מודעות IG"
+      ],
+      "pack": "vfgrowth",
+      "slug": "paid-social-strategist",
+      "tool": "web",
+      "note": "gate: lead only"
+    },
+    {
+      "q": [
+        "weekly revenue",
+        "דופק הכנסה",
+        "revenue pulse"
+      ],
+      "pack": "vfops",
+      "slug": "pipeline-analyst",
+      "tool": "vfmem",
+      "note": "WEEKLY-REVENUE-PULSE.md"
+    },
+    {
+      "q": [
+        "onboard instance",
+        "פרונט חדש",
+        "new business",
+        "velvetos instance"
+      ],
+      "pack": "velvetos",
+      "slug": "studio-operations",
+      "tool": "vfmem",
+      "note": "INSTANCE-ONBOARD.md + publish-instance.sh"
     }
   ],
   "adrs": [

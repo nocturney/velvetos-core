@@ -201,6 +201,52 @@
       "tool": "vfharness/state",
       "packs": ["vfharness"],
       "gate": "none"
+    },
+    {
+      "id": "revenue.loop",
+      "label": "לולאת הכנסה IG",
+      "tool": "vfgrowth/experts/REVENUE-LOOP.md",
+      "packs": ["vfgrowth", "vfsales", "vfconvert", "vfinsights"],
+      "gate": "none",
+      "notes": "Offer card per post; pipeline ig_post_ref; TIMELINE-AUTO."
+    },
+    {
+      "id": "insights.snapshot",
+      "label": "הדבקת Insights מאומת",
+      "tool": "vfinsights/templates/snapshot-ingest.md",
+      "packs": ["vfinsights"],
+      "gate": "none",
+      "notes": "Owner paste only. No invented metrics."
+    },
+    {
+      "id": "revenue.weekly",
+      "label": "דופק הכנסה שבועי",
+      "tool": "vfops/playbooks/WEEKLY-REVENUE-PULSE.md",
+      "packs": ["vfops", "vfinsights", "vfgrowth"],
+      "gate": "none"
+    },
+    {
+      "id": "timeline.append",
+      "label": "אירוע בציר לקוח",
+      "tool": "vfsales/hq/TIMELINE-AUTO.md",
+      "packs": ["vfsales", "vfconvert"],
+      "gate": "none"
+    },
+    {
+      "id": "instance.onboard",
+      "label": "הקמת פרונט חדש",
+      "tool": "velvetos/experts/INSTANCE-ONBOARD.md",
+      "packs": ["velvetos"],
+      "gate": "lead",
+      "notes": "publish-instance.sh; per-instance owner-memory."
+    },
+    {
+      "id": "paid.boost.plan",
+      "label": "תכנית בוסט בתשלום",
+      "tool": "vfigos",
+      "packs": ["vfgrowth", "vfigos"],
+      "gate": "lead",
+      "notes": "Only after proven organic offer. No auto-DM."
     }
   ]
 }

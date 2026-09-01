@@ -32,7 +32,7 @@
     "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
     "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
     "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py.",
-    "2026-09-01: Expert modules (social-booster, 3d-model, trend-explorer, media-director) + office-learning daily retro. Living specialists — not static prompts. See packages/velvetos/modules/expert-*.md and vfops/hq/DAILY-RETRO.md."
+    "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -152,7 +152,7 @@
       "id": "lead",
       "he": "ראש צוות",
       "packs": ["vfops", "vfbriefux", "vfharness", "vfmem", "velvetos"],
-      "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect"],
+      "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect", "pipeline-analyst"],
       "tools": ["calendar", "gmail", "vfmem", "web"],
       "decides": "₪ amount, what moves on the board, what is deferred; end-of-day retro (DAILY-RETRO.md)"
     },
@@ -160,7 +160,7 @@
       "id": "studio",
       "he": "סטודיו",
       "packs": ["vfconvert", "vfsales", "vfcopy", "vfmskill"],
-      "specialists": ["sales-engineer", "proposal-strategist", "discovery-coach", "content-creator", "brand-guardian", "email-intelligence-engineer"],
+      "specialists": ["sales-engineer", "proposal-strategist", "discovery-coach", "content-creator", "brand-guardian", "email-intelligence-engineer", "offer-lead-gen-strategist", "deal-strategist", "customer-success-manager", "email-marketing-strategist"],
       "tools": ["gmail", "drive"],
       "decides": "inquiry brief, quote draft, copy. Does not send."
     },
@@ -168,7 +168,7 @@
       "id": "growth",
       "he": "צמיחה",
       "packs": ["vfgrowth", "vfcovers", "vfigos", "vfinsights", "vfmskill", "vfom"],
-      "specialists": ["instagram-curator", "visual-storyteller", "image-prompt-engineer", "growth-hacker", "analytics-reporter", "social-media-strategist", "carousel-growth-engine", "short-video-editing-coach"],
+      "specialists": ["instagram-curator", "visual-storyteller", "image-prompt-engineer", "growth-hacker", "analytics-reporter", "social-media-strategist", "carousel-growth-engine", "short-video-editing-coach", "offer-lead-gen-strategist", "tracking-measurement-specialist", "paid-social-strategist", "customer-success-manager"],
       "tools": ["superdesign", "drive", "canva", "image", "web"],
       "decides": "content pack and cover drafts. HQ reviews/schedules only. Grok sends."
     },
@@ -375,6 +375,48 @@
       "packs": ["vfprod", "vfsku", "vlicense"],
       "tools": ["drive", "threedaistudio"],
       "job": "3D model expert — mesh analyze, export hygiene, printability hints. experts/3D-MODEL.md. No print from HQ. License gate before reprint."
+    },
+    {
+      "slug": "offer-lead-gen-strategist",
+      "packs": ["vfgrowth", "vfmskill", "vfsales", "vfsku"],
+      "tools": ["canva", "web"],
+      "job": "Revenue loop — monetized offer on every IG post (SKU, X ₪, CTA). expert-revenue-loop. No DM CTA."
+    },
+    {
+      "slug": "pipeline-analyst",
+      "packs": ["vfops", "vfinsights", "vfconvert", "vfsales"],
+      "tools": ["gmail", "drive", "vfmem"],
+      "job": "Map IG posts to pipeline inquiries — verified only. WEEKLY-REVENUE-PULSE input. Never invent Insights."
+    },
+    {
+      "slug": "deal-strategist",
+      "packs": ["vfsales", "vfconvert", "vfcost"],
+      "tools": ["gmail", "drive"],
+      "job": "Close open quotes; MEDDPICC-style risk on stalled deals. X ₪ until verified. HQ sends Gmail when draft ready."
+    },
+    {
+      "slug": "customer-success-manager",
+      "packs": ["vfsales", "vfgrowth", "vfconvert"],
+      "tools": ["gmail", "drive"],
+      "job": "Post-pickup retention, repeat order prompts, floor-proof follow-up. TIMELINE-AUTO after picked_up."
+    },
+    {
+      "slug": "email-marketing-strategist",
+      "packs": ["vfsales", "vfconvert", "vfmskill"],
+      "tools": ["gmail"],
+      "job": "Nurture sequences for open inquiries — Gmail send via tools. No blast list. No invented ₪."
+    },
+    {
+      "slug": "tracking-measurement-specialist",
+      "packs": ["vfinsights", "vfgrowth", "vfops"],
+      "tools": ["drive", "web"],
+      "job": "Ingest verified IG snapshots (expert-insights-ingest). Owner paste only. No invented metrics. Not Treg."
+    },
+    {
+      "slug": "paid-social-strategist",
+      "packs": ["vfgrowth", "vfigos", "vfmskill"],
+      "tools": ["web"],
+      "job": "Paid boost plan only after lead seat + proven organic offer. gate: lead. No auto-DM."
     }
   ],
   "warehouse": "The other Agency specialists stay in .cursor/rules/ with alwaysApply false. Mention @slug only when the user asks for that specialty. Do not pull Godot, GIS, healthcare, China-social, or XR agents onto a Velvet Factory job unless asked.",
@@ -393,6 +435,7 @@
     ".cursor/skills/vf-weekly-links/SKILL.md",
     ".cursor/skills/vf-ig-music/SKILL.md",
     ".cursor/skills/vf-velvetos/SKILL.md",
-    ".cursor/skills/vf-daily-learning/SKILL.md"
+    ".cursor/skills/vf-daily-learning/SKILL.md",
+    ".cursor/skills/vf-revenue-loop/SKILL.md"
   ]
 }

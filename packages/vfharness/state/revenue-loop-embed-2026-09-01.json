@@ -1,0 +1,18 @@
+{
+  "task_id": "revenue-loop-embed-2026-09-01",
+  "status": "done",
+  "outcome": "worker_done",
+  "goal": "Embed IG-to-revenue loop: modules, desk specialists, playbooks, weekly pulse",
+  "completed_steps": [
+    "expert-revenue-loop, expert-insights-ingest, expert-instance-onboard modules",
+    "7 desk specialists: offer-lead-gen, pipeline-analyst, deal-strategist, customer-success, email-marketing, tracking-measurement, paid-social",
+    "Playbooks REVENUE-LOOP, INSIGHTS-SNAPSHOT, INSTANCE-ONBOARD, TIMELINE-AUTO, WEEKLY-REVENUE-PULSE",
+    "vf-revenue-loop skill, capabilities, vfmem routes, pipeline ig_post_ref"
+  ],
+  "unresolved": [
+    "velvetos-velvet-factory repo publish still waiting on empty GitHub repo",
+    "IG Publish MCP stability for full autonomous posting",
+    "Owner must paste Insights snapshots until API ingest exists"
+  ],
+  "next_step": "Run first WEEKLY-REVENUE-PULSE after next IG snapshot paste"
+}

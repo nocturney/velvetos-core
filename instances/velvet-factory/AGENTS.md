@@ -27,6 +27,8 @@ Shared owner memory lives in Core, not duplicated in the frontend repo:
 
 Morning brief reads block `05a` from owner-memory after `attach-core.sh`.
 
+Revenue loop: `vendor/velvetos-core/.cursor/skills/vf-revenue-loop/SKILL.md` · weekly `WEEKLY-REVENUE-PULSE.md`.
+
 ## ATTACH CORE
 
 ```bash
