@@ -21,6 +21,13 @@ if command -v origin >/dev/null 2>&1; then
   if [[ -z "${CURSOR_API_KEY:-}" ]]; then
     echo "Hint: origin auth login  OR  export CURSOR_API_KEY=..." >&2
   fi
+  if ! origin auth status 2>&1 | grep -q "Logged in"; then
+  if [[ -z "${CURSOR_API_KEY:-}" ]]; then
+    echo "SKIP vendor: Origin not authenticated (origin auth login or CURSOR_API_KEY)." >&2
+    echo "See docs/OWNER-ACTIONS-he.md" >&2
+    exit 0
+  fi
+  fi
   echo "=== origin repo list (discovery) ==="
   origin repo list --namespace christian-velvet 2>/dev/null || origin repo list 2>/dev/null || true
 fi

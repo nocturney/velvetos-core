@@ -87,7 +87,7 @@ def main() -> None:
         fail("MCP-FIT.md must map the owner 3D AI Studio account")
 
     studio = PLAYBOOK_3DAI.read_text()
-    for needle in ("אין מפתח בגיט", "vlicense", "STL", "OAuth", "CONNECT-3DAI.md", "לא על Cloud Agent"):
+    for needle in ("אין מפתח בגיט", "vlicense", "STL", "OAuth", "CONNECT-3DAI.md", "3DAIStudio"):
         if needle not in studio:
             fail(f"3DAISTUDIO.md must mention {needle}")
     if "₪" in studio and "X ₪" not in studio:

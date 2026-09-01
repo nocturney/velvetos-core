@@ -151,10 +151,11 @@
       "failover": "Research desks ChatGPT+Gemini+Perplexity per constitution/ORCHESTRA.md"
     },
     "threedaistudio": {
-      "status": "needsAuth",
-      "namespace": "threedaistudio",
+      "status": "ready",
+      "namespace": "3DAIStudio",
       "mcp": "https://mcp.3daistudio.com/mcp",
       "account": "www.3daistudio.com — owner paid subscription",
+      "verifiedAt": "2026-09-01",
       "useWhen": "vfprod concept mesh: text/image → STL/3MF after lead approval. Playbook: packages/vfprod/3DAISTUDIO.md",
       "rule": "No API key in git. No invented ₪ from credits. No print from HQ. Same license gate as Meshy/Tripo.",
       "failover": "Site UI + Drive create_file / upload + continue. Open license search if vendor down. Never invent a key or mesh."

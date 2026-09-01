@@ -38,7 +38,7 @@
 | אתר | תמיד גיבוי אם MCP נפל |
 | API Dashboard | לא נדרש למחבר הרשמי. מפתח רק ב־env במק אם ראש צוות רוצה באצ׳ |
 
-Cloud Agent: `threedaistudio.status` = `needsAuth` — לא על Cloud Agent עד Team MCP + OAuth ב-cursor.com/agents (`CONNECT-3DAI.md`). Desktop Connect לבדו לא מספיק.
+Cloud Agent: namespace `3DAIStudio` **ready** (אומת 2026-09-01 — `get_credit_balance`). Desktop: `.cursor/mcp.json`. Cloud: Team MCP + OAuth ב-cursor.com/agents (`CONNECT-3DAI.md`).
 
 ## מה ליישם (על פקים קיימים)
 
