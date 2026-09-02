@@ -32,7 +32,7 @@
   ],
   "outcome": "worker_done",
   "pulse": "working",
-  "verification": "scripts/check-all.py pending first push",
+  "verification": "scripts/check-all.py passed=19 including check-vfsku.py; vfsku.py brief=0/5; negative test rejected invented name without sourceUrl",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-02"
