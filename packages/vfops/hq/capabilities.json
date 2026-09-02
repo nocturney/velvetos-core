@@ -1,7 +1,7 @@
 {
   "name": "vf-office-capabilities",
   "title": "Velvet Factory — capability registry for command surface",
-  "version": "2026-08-31",
+  "version": "2026-09-02",
   "rule": "UI and agents may only expose actions listed here. Missing ₪ or Insights stay X ₪ / אין ספירה. No new pack per capability.",
   "adr": "docs/OFFICE-OS-EMBED-he.md",
   "locks": [
@@ -85,6 +85,15 @@
       "tool": "Google-drive.search_files",
       "packs": ["vfprod", "vfsku"],
       "gate": "none"
+    },
+    {
+      "id": "sku.shelf",
+      "label": "מדף מק״ט חוזר",
+      "tool": "scripts/vfsku.py shelf",
+      "packs": ["vfsku", "vfops"],
+      "gate": "none",
+      "path": "packages/vfsku/SHELF.json",
+      "notes": "Five slots. Empty until GATE + vlicense + slice. No invented names or ₪. Brief 03: vfsku.py brief."
     },
     {
       "id": "canva.design",

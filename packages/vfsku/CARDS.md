@@ -4,7 +4,8 @@
 מקור Gemini: קטלוג נקי (Canva) + Material Tracker.  
 מקור Perplexity: הרחבת קטלוג מ־Tripo/Meshy — **לא אוטומטית.**
 
-כרטיס רק אחרי סלייס + שער רישיון:
+כרטיס רק אחרי סלייס + שער רישיון.  
+משבצת חיה: `SHELF.json`. שעה למשבצת: `FIRST-PRINT.md`.
 
 1. שם הדגם + מקור (MakerWorld / Printables / …) + מזהה אם יש.
 2. רישיון (`vlicense`) — ציבורי מסחרי.
