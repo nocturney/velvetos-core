@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-02 — **גיבוי ערב קטלוג**: רענון `packages/manifest.json` ב-GitHub (`nocturney/velvetos-core`) אחרי תזמורת 2.9; מדף מק״ט מ-#69 נכלל, בלי לשכפל. Origin לא שוכפל (אין login). Evening catalog refresh; Origin not vendored. Left open: #68, #66, #59, #58.
 - 2026-09-02 — **מדף מק״ט חי**: `vfsku/SHELF.json` (5 משבצות ריקות) + `FIRST-PRINT.md` (שעה למשבצת) + `scripts/vfsku.py` לבריף 03 + סנסור `check-vfsku.py`. הורדה ≠ רישיון; מנוי MakerWorld נבדק לפי דגם. בלי שמות/₪ מהאוויר. Daily orchestra: shelf file + first-print gate; ChatGPT/Gemini/Perplexity walled → WebSearch.
 - 2026-09-01 — **לולאת הכנסה (Revenue Loop)**: מודולים `expert-revenue-loop`, `expert-insights-ingest`, `expert-instance-onboard`. שבעה מומחים על השולחן: offer-lead-gen, pipeline-analyst, deal-strategist, customer-success, email-marketing, tracking-measurement, paid-social (lead gate). Playbooks: REVENUE-LOOP, INSIGHTS-SNAPSHOT, INSTANCE-ONBOARD, TIMELINE-AUTO, WEEKLY-REVENUE-PULSE. Pipeline board: `ig_post_ref`. Skill `vf-revenue-loop`. Per-instance `owner-memory-<id>.md` template. Revenue loop wave on existing packs.
 - 2026-09-01 — **חסמי גישה**: 3DAI **ready** על Cloud; 11 פקים → `hq-native`; `OWNER-ACTIONS-he.md` + `sync-instance-scaffold.sh`; vendor מדלג בלי Origin auth. נשאר אצל הבעלים: `origin auth login`, הרשאת write ל-instance repo, Mobbin MCP. Access blockers triaged; owner steps for Origin + push + Mobbin.

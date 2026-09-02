@@ -5,8 +5,10 @@
   "role": "core",
   "displayName": "VelvetOS Core",
   "dumpedAt": "2026-08-30",
+  "catalogRefreshedAt": "2026-09-02",
   "tag": "v0.1.0",
   "notes": [
+    "2026-09-02 evening catalog: GitHub nocturney/velvetos-core (renamed from velvet-factory-headquarters-os). Folded PR #69 vfsku SHELF.json + FIRST-PRINT.md. Origin not vendored (CLI not logged in). Left open: #68 ig-mcp, #66 access gaps, #59 MCP bridge, #58 iCloud.",
     "2026-09-01: Eleven packs (vfops\u2026vfbriefux) reclassified hq-native \u2014 tree lives in Core; bcId is lineage only. Origin vendor for six tmp-* packs still needs origin auth login. See docs/OWNER-ACTIONS-he.md.",
     "2026-08-31: This repo is VelvetOS Core (backend). Frontend scaffold for Velvet Factory: instances/velvet-factory/ \u2192 publish nocturney/velvetos-velvet-factory. See packages/velvetos/REPOS.md.",
     "2026-08-31: VelvetOS core modules + presets (packages/velvetos). This repo is the Velvet Factory instance; modules for all verticals are always loaded. Future businesses = separate instance repos pulling from core (REPOS.md). No active/example tenants.",
@@ -211,7 +213,7 @@
     },
     {
       "name": "vfsku",
-      "summary": "SKU cards and repeats \u2014 product cards and reprint runs.",
+      "summary": "SKU cards, empty shelf (SHELF.json), and reprint runs \u2014 no invented names or \u20aa.",
       "bcId": "bc-68f7f06c",
       "agentUrl": "https://cursor.com/agents/bc-68f7f06c",
       "originSlug": null,
