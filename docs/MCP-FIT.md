@@ -1,6 +1,7 @@
 # MCP fit for Velvet Factory
 
 Source: [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) (reviewed 2026-08-30).  
+Discovery index (Claude Code marketplace — **patterns only**, do not `/plugin install` on Cloud Agent): [buildwithclaude.com](https://buildwithclaude.com/) · [davepoon/buildwithclaude](https://github.com/davepoon/buildwithclaude) `mcp-servers.json` (reviewed 2026-09-03). Embed: [`packages/vfresearch/sources/2026-09-03-buildwithclaude.md`](../packages/vfresearch/sources/2026-09-03-buildwithclaude.md).  
 Grok / ChatGPT / Gemini / Perplexity gap vs this HQ: [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md) (reviewed 2026-08-31).  
 HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Boosts and auto-DM stay forbidden. Printers stay on the floor. Treg is not relevant.  
 Do not invent prices. Do not commit secrets.
@@ -135,10 +136,13 @@ Do not add these “because they exist on the list.” Add them when Christian c
 
 - **Aggregator / “400 tools in one” servers** — they drown the agent and hide the studio tools.
 - **Headroom proxy on Cloud Agent** — local compression proxy needs a host process; Cloud VMs are sandboxed. Embed the **pattern** via `packages/vfharness/playbooks/context-thrift.md` (CCR + ContentRouter). Optional Mac-only: `headroom wrap cursor` after lead seat — see `packages/vfmcp/GAP.md`.
-- **Second SEO / GEO / AI-visibility stacks** — Treg already is the data catalog. Connect GA / GSC / GBP there first.
+- **Second SEO / GEO / AI-visibility stacks** — Treg is not relevant. Public marketing site from HQ stays locked; AEO skills (e.g. buildwithclaude `ai-search-visibility-audit`) stay **watch** until a public site exists under `vfbiz`. Warehouse `@aeo-foundations-architect` stays off-desk unless named.
 - **Second Canva or image-gen farms** — Canva + Superdesign are enough for brand work.
 - **Anything that posts, boosts, or DMs Instagram from this HQ.**
 - **DeusData/codebase-memory-mcp binary** — coding-agent indexer that writes client config. The office-graph pattern is already `scripts/vfmem.py`. Local AST install only if the lead seat asks, and never by rewriting this repo's `.cursor/mcp.json`.
+- **Hosted agent-memory plugins** (context-memory / Slova, memstack install, `basic-memory` Docker) — use `vfmem` + `owner-memory.md` + checkpoints. See `packages/vfmem/MEMORY-UPDATE.md`.
+- **`mcp/3d-printer` (Orca/Bambu/OctoPrint…)** — printers stay on the floor. No Print from HQ.
+- **Claude Code marketplace bulk install** (`/plugin marketplace add davepoon/buildwithclaude`, `all-agents@buildwithclaude`) — Cursor is the office; embed patterns only.
 - **Crypto, x402 marketplaces, coding-agent swarms, aerospace, gaming, home IoT** — not the print floor. Includes [Bindu](https://github.com/GetBindu/Bindu) (`bindufy`, A2A Gateway, USDC) — watch patterns only; see `packages/vfresearch/sources/2026-08-31-bindu.md`.
 - **Cold-email infrastructure** — VF is inbound studio sales, not a spam shop.
 
