@@ -69,6 +69,11 @@ Gemini אורח → **לא** failover-גוף; דילוג + פקים.
 Perplexity Cloudflare → דילוג גוף + WebSearch.  
 Treg — לא בשימוש.
 
+## סנסורים
+
+`python3 scripts/check-all.py` — 19/19.  
+סגירת hygiene: `access-blockers-2026-09-01.json` (JSON שבור מ־merge) + `grok-failover-2026-08-31.json` (`running` → `done`). לא שינוי מדיניות שליחה.
+
 ## בלוק 05
 
 ```
