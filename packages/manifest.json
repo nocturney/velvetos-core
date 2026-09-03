@@ -5,9 +5,10 @@
   "role": "core",
   "displayName": "VelvetOS Core",
   "dumpedAt": "2026-08-30",
-  "catalogRefreshedAt": "2026-09-02",
+  "catalogRefreshedAt": "2026-09-03",
   "tag": "v0.1.0",
   "notes": [
+    "2026-09-03 evening catalog: GitHub nocturney/velvetos-core. Included merged #71 buildwithclaude, #59 office MCPs in Core, #72 best-skills. Origin not vendored (CLI not logged in). Open branches still on GitHub: #70 cursor/daily-research-2026-09-03-b067, #68 cursor/integrate-ig-mcp-abe1, #66 cursor/close-access-gaps-5b1b, #58 cursor/icloud-drive-dual-path-c95c.",
     "2026-09-03: Standing forever bi-daily LinklyAI/best-skills pulse \u2014 BEST-SKILLS.md + TIMER.md + standingForever. Renew subscribe_timer every pass. Sensor: scripts/check-vfresearch.py.",
     "2026-09-03: Bi-daily LinklyAI/best-skills ranking scan on vfresearch \u2014 BEST-SKILLS.md + BEST-SKILLS.json + skill vf-best-skills. Embed patterns in place; no npx on Cloud. Sensor: scripts/check-vfresearch.py.",
     "2026-09-02 evening catalog: GitHub nocturney/velvetos-core (renamed from velvet-factory-headquarters-os). Folded PR #69 vfsku SHELF.json + FIRST-PRINT.md. Origin not vendored (CLI not logged in). Left open: #68 ig-mcp, #66 access gaps, #59 MCP bridge, #58 iCloud.",
@@ -87,7 +88,7 @@
     },
     {
       "name": "vfconvert",
-      "summary": "Conversion pack \u2014 inquiry-to-order path.",
+      "summary": "Conversion pack \u2014 inquiry-to-order path; grill (hq/GRILL.md) + WhatsApp drafts (WHATSAPP.md, send=false).",
       "bcId": "bc-9644a175",
       "agentUrl": "https://cursor.com/agents/bc-9644a175",
       "originSlug": "christian-velvet/tmp-4460086f23171633",
@@ -167,7 +168,7 @@
     },
     {
       "name": "vfresearch",
-      "summary": "Research pack \u2014 source gathering and notes.",
+      "summary": "Research pack \u2014 source gathering, weekly links, and bi-daily best-skills (BEST-SKILLS.md / TIMER.md / skill vf-best-skills).",
       "bcId": "bc-01278e9b",
       "agentUrl": "https://cursor.com/agents/bc-01278e9b",
       "originSlug": null,
@@ -250,7 +251,7 @@
     },
     {
       "name": "vfmcp",
-      "summary": "MCP fit research \u2014 which awesome-mcp-servers entries map onto VF packs. See docs/MCP-FIT.md.",
+      "summary": "MCP fit + Core office MCP catalog (Sheets / WhatsApp / Studio Hub). See docs/MCP-FIT.md and packages/vfmcp/CORE-MCP.md.",
       "bcId": "bc-1764e30f-b592-4805-9586-037da3351d65",
       "bcIdFull": "bc-1764e30f-b592-4805-9586-037da3351d65",
       "agentUrl": "https://cursor.com/agents/bc-1764e30f-b592-4805-9586-037da3351d65",
@@ -340,7 +341,7 @@
     },
     {
       "name": "vfharness",
-      "summary": "Outer harness \u2014 six layers on existing packs (guides, sensors, loop, memory, permissions, observability). No second runtime. HQ does not send.",
+      "summary": "Outer harness \u2014 six layers on existing packs (guides, sensors, loop, memory, permissions, observability). Includes verification-before-claim, skill-authoring, handoff, architecture-audit. No second runtime. HQ does not send.",
       "bcId": "bc-c6e01d3b",
       "bcIdFull": "bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
       "agentUrl": "https://cursor.com/agents/bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
@@ -368,7 +369,7 @@
     },
     {
       "name": "vfmem",
-      "summary": "HQ memory graph \u2014 CBM-style queries over existing VF maps. Pattern from DeusData/codebase-memory-mcp; no third-party binary.",
+      "summary": "HQ memory graph \u2014 CBM-style queries over existing VF maps + MEMORY-UPDATE.md (buildwithclaude agent-memory-discipline). Pattern from DeusData/codebase-memory-mcp; no third-party binary.",
       "bcId": "bc-8bd6ba75",
       "bcIdFull": "bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
       "agentUrl": "https://cursor.com/agents/bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
