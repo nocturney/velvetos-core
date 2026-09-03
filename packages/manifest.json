@@ -8,6 +8,7 @@
   "catalogRefreshedAt": "2026-09-02",
   "tag": "v0.1.0",
   "notes": [
+    "2026-09-03: Bi-daily LinklyAI/best-skills ranking scan on vfresearch \u2014 BEST-SKILLS.md + BEST-SKILLS.json + skill vf-best-skills. Embed patterns in place; no npx on Cloud. Sensor: scripts/check-vfresearch.py.",
     "2026-09-02 evening catalog: GitHub nocturney/velvetos-core (renamed from velvet-factory-headquarters-os). Folded PR #69 vfsku SHELF.json + FIRST-PRINT.md. Origin not vendored (CLI not logged in). Left open: #68 ig-mcp, #66 access gaps, #59 MCP bridge, #58 iCloud.",
     "2026-09-01: Eleven packs (vfops\u2026vfbriefux) reclassified hq-native \u2014 tree lives in Core; bcId is lineage only. Origin vendor for six tmp-* packs still needs origin auth login. See docs/OWNER-ACTIONS-he.md.",
     "2026-08-31: This repo is VelvetOS Core (backend). Frontend scaffold for Velvet Factory: instances/velvet-factory/ \u2192 publish nocturney/velvetos-velvet-factory. See packages/velvetos/REPOS.md.",
@@ -43,6 +44,7 @@
     "briefPacket": "packages/vfbriefux/hq/PACKET.md",
     "shareMap": "packages/chatgpt-embed-map.json",
     "inspirationLinks": "packages/vfresearch/LINKS.json",
+    "bestSkills": "packages/vfresearch/BEST-SKILLS.json",
     "orchestra": "constitution/ORCHESTRA.md",
     "harness": "AGENTS.md",
     "harnessPack": "packages/vfharness",
@@ -56,6 +58,8 @@
       "packages/vfcovers/g005",
       "packages/vfresearch/LINKS.json",
       "packages/vfresearch/WEEKLY.md",
+      "packages/vfresearch/BEST-SKILLS.md",
+      "packages/vfresearch/BEST-SKILLS.json",
       "packages/vfresearch/DAILY.md"
     ]
   },

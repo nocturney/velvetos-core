@@ -1,0 +1,130 @@
+{
+  "name": "vfresearch-best-skills",
+  "title": "LinklyAI/best-skills — דירוג סקילים כל יומיים",
+  "source": "https://github.com/LinklyAI/best-skills",
+  "homepage": "https://linkly.ai/skills",
+  "playbook": "packages/vfresearch/BEST-SKILLS.md",
+  "skill": ".cursor/skills/vf-best-skills/SKILL.md",
+  "cadence": "every-2-days",
+  "timezone": "Asia/Jerusalem",
+  "intervalHintHours": 48,
+  "timerName": "vf-best-skills-bi-daily",
+  "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-best-skills.md",
+  "briefBlock": "05-משרד",
+  "mention": ["@research-synthesist", "@trend-researcher"],
+  "seat": "ייצור",
+  "rule": "Re-read LinklyAI/best-skills rankings every ~48h. Embed useful patterns into existing packs only. Do not invent rankings, ₪, or Insights. Do not npx-install skills on Cloud Agent.",
+  "locks": [
+    "hq-send-via-tools",
+    "no-auto-dm",
+    "no-boost",
+    "no-invented-prices",
+    "no-invented-insights",
+    "no-new-pack-per-idea",
+    "no-invented-blocked-body",
+    "no-npx-skills-on-cloud",
+    "no-second-runtime",
+    "pickup-sderot-only"
+  ],
+  "opened": [
+    "constitution-may-update-when-durable-pattern-found",
+    "bi-daily-public-skill-leaderboard-scan",
+    "grill-before-plan-on-inquiry",
+    "verification-iron-law-before-success-claims"
+  ],
+  "lastPass": "2026-09-03",
+  "dataDate": "2026-09-03",
+  "embedded": [
+    {
+      "id": "grill-me",
+      "pack": "vfconvert",
+      "path": "packages/vfconvert/hq/GRILL.md",
+      "firstEmbedded": "2026-09-03"
+    },
+    {
+      "id": "verification-before-completion",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/verification-before-claim.md",
+      "firstEmbedded": "2026-09-03"
+    },
+    {
+      "id": "skill-authoring",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/skill-authoring.md",
+      "firstEmbedded": "2026-09-03"
+    },
+    {
+      "id": "handoff",
+      "pack": "vfharness",
+      "path": "packages/vfharness/templates/handoff.md",
+      "firstEmbedded": "2026-09-03"
+    },
+    {
+      "id": "last30days-pattern",
+      "pack": "vfresearch",
+      "path": "packages/vfresearch/hq/LAST30.md",
+      "firstEmbedded": "2026-09-03"
+    },
+    {
+      "id": "self-improving-triggers",
+      "pack": "vfops",
+      "path": "packages/vfops/hq/DAILY-RETRO.md",
+      "firstEmbedded": "2026-09-03"
+    },
+    {
+      "id": "find-skills-via-leaderboard",
+      "pack": "vfresearch",
+      "path": "packages/vfresearch/BEST-SKILLS.md",
+      "firstEmbedded": "2026-09-03"
+    }
+  ],
+  "watchlist": [
+    {
+      "id": "obra-superpowers",
+      "url": "https://github.com/obra/superpowers",
+      "note": "Partial embed (verification + skill-first). Full SDLC suite — re-scan bi-daily for new skills worth mapping to vfe2b/vfharness."
+    },
+    {
+      "id": "mattpocock-skills",
+      "url": "https://github.com/mattpocock/skills",
+      "note": "grill + handoff embedded. Watch codebase-design / improve-architecture for Core pack deepening."
+    },
+    {
+      "id": "anthropics-skills",
+      "url": "https://github.com/anthropics/skills",
+      "note": "skill-creator patterns embedded. frontend-design → vfbriefux internal only; public site still locked."
+    },
+    {
+      "id": "anti-ui-slop",
+      "url": "https://www.skills.sh/uizze.com/anti-ui-slop",
+      "note": "Trending. Cross-check with taste-skill embed before second pass."
+    },
+    {
+      "id": "addyosmani-agent-skills",
+      "url": "https://github.com/addyosmani/agent-skills",
+      "note": "Production engineering skills — watch for harness-relevant patterns."
+    },
+    {
+      "id": "ai-video-image-gen-trending",
+      "note": "skills-101 / genmedia trending. Map only via expert-media-director + Canva-first; no Veo/Kling from HQ."
+    }
+  ],
+  "skipped": [
+    {
+      "id": "npx-skills-cli",
+      "why": "Cloud Agent does not install skills via npx; embed patterns into git packs"
+    },
+    {
+      "id": "azure-prisma-vendor-block",
+      "why": "Not VF office domain"
+    },
+    {
+      "id": "twitter-reddit-automation",
+      "why": "Auto-post / growth hacks outside VF CTA + no auto-DM"
+    },
+    {
+      "id": "openclaw-self-improving-runtime",
+      "why": "Second runtime locked; office-learning already covers reflection→memory"
+    }
+  ]
+}

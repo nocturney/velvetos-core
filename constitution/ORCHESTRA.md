@@ -135,3 +135,26 @@ packages/vfresearch/sources/YYYY-MM-DD-orchestra.md
 4. מטמיעים עדכונים **במקום** על פק קיים. שואלים «מה חדש לחקור ולנצל». בלי פק חדש, בלי גוף מומצא, בלי ₪.
 
 שורת בלוק `05`: «שבועי קישורים — …» או «שבועי קישורים — אין חדש במשרד».
+
+## כל יומיים — דירוג Best Skills (לא צ'אט חדש)
+
+מקור חי: [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) (Top 100 מתעדכן יומית).  
+מעבר שבועי לא מספיק — הדירוגים זזים. **כל ~48 שעות** רצים את הסקירה.
+
+1. פלייבוק: `packages/vfresearch/BEST-SKILLS.md`
+2. מצב: `packages/vfresearch/BEST-SKILLS.json`
+3. מיומנות: `.cursor/skills/vf-best-skills/SKILL.md`
+4. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-best-skills.md`
+5. מטמיעים **דפוסים** על פקים קיימים. אין `npx skills` על Cloud Agent. אין runtime שני.
+
+שורת בלוק `05`: «best-skills — …» או «best-skills — אין חדש במשרד».
+
+### פתיחת מגבלות (אושר בעלים 2026-09-03)
+
+מותר לעדכן חוקה / מדריכים כשהדירוג חושף דפוס עמיד שמשפר את המשרד, כל עוד נשארים:
+
+- HQ שולח דרך כלים · אין אוטו־DM · אין בוסט בלי ראש צוות · אין Print מ־HQ
+- אין ₪ / Insights / גוף חסום מומצאים
+- CTA = וואטסאפ `050-2517000` / איסוף שדרות
+- אתר שיווקי ציבורי נעול · קונסולה פנימית מותרת
+- גילוי סקילים ציבורי = סריקה + הטמעת דפוס בגיט (לא התקנת vendor על Cloud)

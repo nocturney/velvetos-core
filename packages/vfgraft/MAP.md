@@ -39,6 +39,7 @@ command-surface system       capabilities + pipeline board + portlets (future UI
 | embed an outside repo | [[maps]] → [[laws]] |
 | orchestrator / משמרת | [[maps]] → `vfe2b/ORCHESTRATORS.md` → [[laws]] |
 | weekly inspiration links / share refresh | [[packs]] → `vfresearch/WEEKLY.md` + `LINKS.json` → [[laws]] |
+| best-skills / skills.sh leaderboard (every 2 days) | [[packs]] → `vfresearch/BEST-SKILLS.md` + `BEST-SKILLS.json` → [[laws]] |
 | office console / CRM-ERP inspiration / command surface | [[blast]] → `vfops/hq/COMMAND-SURFACE.md` → `docs/OFFICE-OS-EMBED-he.md` → [[laws]] |
 
 ## Hubs

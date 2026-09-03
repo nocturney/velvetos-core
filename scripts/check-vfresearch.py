@@ -9,6 +9,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 LINKS = ROOT / "packages" / "vfresearch" / "LINKS.json"
 WEEKLY = ROOT / "packages" / "vfresearch" / "WEEKLY.md"
+BEST_SKILLS = ROOT / "packages" / "vfresearch" / "BEST-SKILLS.md"
+BEST_SKILLS_JSON = ROOT / "packages" / "vfresearch" / "BEST-SKILLS.json"
+BEST_SKILLS_SKILL = ROOT / ".cursor" / "skills" / "vf-best-skills" / "SKILL.md"
 DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
 MUSIC = ROOT / "packages" / "vfresearch" / "MUSIC.md"
 MUSIC_SOURCES = ROOT / "packages" / "vfresearch" / "SOURCES-MUSIC.json"
@@ -37,7 +40,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LINKS, WEEKLY, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK):
+    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_SKILL, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -79,22 +82,63 @@ def main() -> None:
     if "לא ממציאים" not in weekly and "לא ממציאים גוף" not in weekly:
         fail("WEEKLY.md must forbid inventing blocked bodies")
 
+    orchestra = ORCHESTRA.read_text()
+    if "WEEKLY.md" not in orchestra and "קישורי השראה" not in orchestra:
+        fail("constitution/ORCHESTRA.md must mention weekly link review")
+    if "BEST-SKILLS.md" not in orchestra and "best-skills" not in orchestra.lower():
+        fail("constitution/ORCHESTRA.md must mention bi-daily best-skills review")
+    for needle in ("Failover", "באותו רגע", "אסור להישאר בלי תוצאה", "studio/render.py"):
+        if needle not in orchestra:
+            fail(f"constitution/ORCHESTRA.md must mention failover needle: {needle}")
+    if "מחכים לבעלים" in orchestra and "לא «מחכים לבעלים»" not in orchestra:
+        fail("ORCHESTRA.md must not idle-wait on auth; use immediate failover")
+
+    best = BEST_SKILLS.read_text()
+    if "LinklyAI/best-skills" not in best and "linklyai/best-skills" not in best.lower():
+        fail("BEST-SKILLS.md must name LinklyAI/best-skills")
+    if "YYYY-MM-DD-best-skills.md" not in best:
+        fail("BEST-SKILLS.md must name bi-daily artifact pattern")
+    if "npx skills" not in best.lower() and "npx skills" not in best:
+        # must forbid install
+        fail("BEST-SKILLS.md must mention npx skills (forbid on Cloud)")
+    if "כל יומיים" not in best and "48" not in best:
+        fail("BEST-SKILLS.md must state every-2-days cadence")
+
+    best_json = json.loads(BEST_SKILLS_JSON.read_text())
+    if best_json.get("name") != "vfresearch-best-skills":
+        fail("BEST-SKILLS.json name must be vfresearch-best-skills")
+    if best_json.get("cadence") != "every-2-days":
+        fail("BEST-SKILLS.json cadence must be every-2-days")
+    if "existing packs" not in (best_json.get("rule") or ""):
+        fail("BEST-SKILLS.json rule must say embed into existing packs")
+    best_locks = set(best_json.get("locks") or [])
+    for need in ("no-npx-skills-on-cloud", "no-second-runtime", "no-invented-blocked-body"):
+        if need not in best_locks:
+            fail(f"BEST-SKILLS.json missing lock {need}")
+    if not best_json.get("lastPass"):
+        fail("BEST-SKILLS.json must set lastPass")
+
+    best_skill = BEST_SKILLS_SKILL.read_text()
+    if "BEST-SKILLS.md" not in best_skill:
+        fail("vf-best-skills skill must point at BEST-SKILLS.md")
+    if "research-synthesist" not in best_skill:
+        fail("vf-best-skills skill must mention research-synthesist")
+    if "npx" not in best_skill.lower():
+        fail("vf-best-skills skill must forbid npx install")
+
+    link_ids = {item["id"] for item in links}
+    if "linklyai-best-skills" not in link_ids:
+        fail("LINKS.json must register linklyai-best-skills")
+
     routine = ROUTINE.read_text()
+    if "BEST-SKILLS" not in routine and "best-skills" not in routine.lower():
+        fail("vfops/ROUTINE.md must mention bi-daily best-skills")
     if "WEEKLY.md" not in routine and "קישורי השראה" not in routine:
         fail("vfops/ROUTINE.md must mention weekly inspiration links")
     if NEEDLE_WEEKLY not in routine:
         fail("vfops/ROUTINE.md must mention weekly cadence")
     if "data/research.md" not in routine:
         fail("vfops/ROUTINE.md must point brief block 05 at data/research.md")
-
-    orchestra = ORCHESTRA.read_text()
-    if "WEEKLY.md" not in orchestra and "קישורי השראה" not in orchestra:
-        fail("constitution/ORCHESTRA.md must mention weekly link review")
-    for needle in ("Failover", "באותו רגע", "אסור להישאר בלי תוצאה", "studio/render.py"):
-        if needle not in orchestra:
-            fail(f"constitution/ORCHESTRA.md must mention failover needle: {needle}")
-    if "מחכים לבעלים" in orchestra and "לא «מחכים לבעלים»" not in orchestra:
-        fail("ORCHESTRA.md must not idle-wait on auth; use immediate failover")
 
     daily = DAILY.read_text()
     if "failover" not in daily.lower() and "Failover" not in daily:
@@ -118,6 +162,8 @@ def main() -> None:
     notes = " ".join(desk.get("notes") or [])
     if "failover" not in notes.lower():
         fail("vf-desk.json notes must mention tool failover")
+    if "best-skills" not in notes.lower() and "BEST-SKILLS" not in notes:
+        fail("vf-desk.json notes must mention bi-daily best-skills")
 
     music = MUSIC.read_text()
     for needle in ("@trend-researcher", "vfigos", "חסר מקור", "HeyOrca", "@velvets_cloud", "לא בשימוש"):
@@ -153,6 +199,8 @@ def main() -> None:
     skill_paths = desk.get("skills") or []
     if ".cursor/skills/vf-ig-music/SKILL.md" not in skill_paths:
         fail("vf-desk.json skills must include vf-ig-music")
+    if ".cursor/skills/vf-best-skills/SKILL.md" not in skill_paths:
+        fail("vf-desk.json skills must include vf-best-skills")
     trend = next((r for r in desk.get("desk", []) if r.get("slug") == "trend-researcher"), None)
     if not trend:
         fail("desk missing trend-researcher")
@@ -162,7 +210,10 @@ def main() -> None:
     if "HeyOrca" not in job and "heyorca" not in job.lower():
         fail("trend-researcher job must name HeyOrca (not Treg) for music")
 
-    print(f"OK vfresearch weekly-links links={len(links)} music=1 sources={len(music_src.get('sources') or [])} failover=1")
+    print(
+        f"OK vfresearch weekly-links links={len(links)} "
+        f"best-skills=1 music=1 sources={len(music_src.get('sources') or [])} failover=1"
+    )
 
 
 if __name__ == "__main__":

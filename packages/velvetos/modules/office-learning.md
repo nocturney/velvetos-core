@@ -28,5 +28,6 @@ Playbooks:
 - Shared memory (`vfmem` routes, `vfgraft` graph, `vfops/data/owner-memory.md`) = what everyone inherits
 - No secrets, PHI, or personal folders in promoted memory
 - Learning ≠ inventing ₪, Insights, or blocked bodies
+- Corrections / failures / better approaches trigger same-day promote (self-improving pattern — no second runtime). See `DAILY-RETRO.md` triggers + bi-daily `vfresearch/BEST-SKILLS.md`
 
 Always present in core. An instance enables it via `modulesEnabled`.

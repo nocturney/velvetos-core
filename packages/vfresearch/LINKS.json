@@ -778,6 +778,27 @@
         "vffcc"
       ],
       "note": "Patterns only (memory discipline + 12-layer harness audit + MCP discovery index). No Claude Code marketplace install on Cloud Agent. Repo: https://github.com/davepoon/buildwithclaude"
+    },
+    {
+      "id": "linklyai-best-skills",
+      "kind": "repo",
+      "url": "https://github.com/LinklyAI/best-skills",
+      "title": "LinklyAI/best-skills — daily Top 100 agent skills rankings",
+      "firstEmbedded": "2026-09-03",
+      "lastReviewed": "2026-09-03",
+      "sourceNote": "packages/vfresearch/BEST-SKILLS.json",
+      "report": "packages/vfresearch/sources/2026-09-03-best-skills.md",
+      "cadenceOverride": "every-2-days",
+      "playbook": "packages/vfresearch/BEST-SKILLS.md",
+      "packs": [
+        "vfresearch",
+        "vfharness",
+        "vfconvert",
+        "vfops",
+        "vfbriefux",
+        "constitution"
+      ],
+      "note": "Bi-daily ranking scan. Patterns only — no npx skills on Cloud. State in BEST-SKILLS.json. Skill vf-best-skills. Constitution may open when durable."
     }
   ],
   "addLink": {
