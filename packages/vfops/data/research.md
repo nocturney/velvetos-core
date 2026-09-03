@@ -5,9 +5,9 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: שבועי קישורים — הוטמע buildwithclaude (memory + harness audit) ב־vfmem/vfharness
+מה נבנה / יועל: best-skills — הוטמע grill + verification + skill-authoring + מחזור כל-יומיים (LinklyAI) ב־vfresearch/vfharness/vfconvert
 ```
 
 05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md` (העדפות בעלים + פתוח מ-checkpoints).
 
-מקור: `packages/vfresearch/sources/2026-09-03-buildwithclaude.md` · `2026-09-03-weekly-links.md`
+מקור: `packages/vfresearch/sources/2026-09-03-best-skills.md` · `BEST-SKILLS.md`

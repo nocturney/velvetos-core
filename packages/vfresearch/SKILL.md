@@ -9,6 +9,8 @@
 - יומי 06:15 (צ'אטים חדשים): `DAILY.md` → בלוק `05` ב־`packages/vfops/data/research.md`
 - **שבועי** — סקירת קישורי השראה/הטמעה שנשלחו: `WEEKLY.md` + `LINKS.json`
 - מיומנות: `.cursor/skills/vf-weekly-links/SKILL.md` · `@research-synthesist`
+- **כל יומיים · לנצח עד עצירת בעלים** — דירוג [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills): `BEST-SKILLS.md` + `BEST-SKILLS.json` + `TIMER.md`
+- מיומנות: `.cursor/skills/vf-best-skills/SKILL.md` · מחקר רשת (דפוס): `hq/LAST30.md`
 
 ## מוזיקה לאינסטגרם
 
