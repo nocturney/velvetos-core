@@ -147,6 +147,24 @@
       "roleNote": "הדפסה, מק״ט, רישיון"
     }
   ],
+  "mcpBind": {
+    "studiomcphub": {
+      "enabled": true,
+      "use": ["search_tools", "remove_background", "resize_image"],
+      "skip": ["print_ready", "convert_color_profile", "x402", "nft"]
+    },
+    "mcp-gsheets": {
+      "enabled": true,
+      "when": "desktop-credentials",
+      "bindings": "office/ledger/bindings.json"
+    },
+    "whatsapp": {
+      "enabled": true,
+      "when": "desktop-lharries",
+      "mode": "search-and-draft",
+      "send": false
+    }
+  },
   "locks": [
     "human-close-whatsapp",
     "pickup-only",

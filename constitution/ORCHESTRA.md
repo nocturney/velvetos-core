@@ -56,7 +56,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 | **Grok Bot** — טיוטות / מחקר / בריף | Cursor HQ + תזמורת + **Gmail send** (בריף = `htmlBody` תצוגה 3) | לא סרק · לא המצאה |
 | **Grok Bot** — פרסום | `vfigos/SEND.md` · `#נשלח-מ-HQ` | לא מחכים לגרוק · לא בוסט · לא אוטו־DM |
 | **Grok Bot** — **פרסום חי** | `LIVE-PACKET` + כלים (Canva+Gmail+Drive) | אדם רק אם הכלים נפלו |
-| דחוף ללקוח (שיחה) | אדם וואטסאפ `050-2517000` | אין MCP וואטסאפ |
+| דחוף ללקוח (שיחה) | אדם וואטסאפ `050-2517000` (טיוטה: MCP חיפוש או `vf_office.py`) | אין שליחה מ־HQ |
 
 נוהל מלא: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md`.  
 ארטיפקט מעבר: `packages/vfresearch/sources/YYYY-MM-DD-grok-failover.md`.

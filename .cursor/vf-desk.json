@@ -19,7 +19,7 @@
   "notes": [
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
     "This repository is VelvetOS Core (backend). Business frontends are separate repos. VF frontend scaffold: instances/velvet-factory/ → nocturney/velvetos-velvet-factory. Desk/STUDIO here remain the reference bind until that cutover.",
-    "HQ sends Gmail and Instagram via tools (constitution/SEND.md). Do not wait for Christian or Grok Bot. Auto-DM and boost stay forbidden. Customer WhatsApp stays human 050-2517000.",
+    "HQ sends Gmail and Instagram via tools (constitution/SEND.md). Do not wait for Christian or Grok Bot. Auto-DM and boost stay forbidden. Customer WhatsApp **send** stays human 050-2517000 (MCP draft/search only).",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
     "Do not commit secrets, medical files, or personal Drive folders.",
     "Research overlay @vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness.",
@@ -31,6 +31,7 @@
     "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
     "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
     "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
+    "2026-08-31: Core office MCP — studiomcphub in .cursor/mcp.json; Sheets + WhatsApp Desktop CONNECT (VF send=false, skip CMYK). packages/vfmcp/CORE-MCP.md.",
     "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py.",
     "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill."
   ],
@@ -153,6 +154,28 @@
       "useWhen": "vfprod concept mesh: text/image → STL/3MF after lead approval. Playbook: packages/vfprod/3DAISTUDIO.md",
       "rule": "No API key in git. No invented ₪ from credits. No print from HQ. Same license gate as Meshy/Tripo.",
       "failover": "Site UI + Drive create_file / upload + continue. Open license search if vendor down. Never invent a key or mesh."
+    },
+    "studiomcphub": {
+      "status": "needsAuth",
+      "namespace": "studiomcphub",
+      "mcp": "https://studiomcphub.com/mcp",
+      "useWhen": "Core print-file tools. VF: remove_background / resize only. Playbook: packages/vfmcp/CONNECT-STUDIOHUB.md",
+      "rule": "Free tools unless lead seat. No wallet/x402 in git. No NFT. VF skips print_ready/CMYK. HQ does not print. No invented ₪.",
+      "failover": "Canva / packages/vfcanva/studio/render.py / 3DAI + vfprod/PREFLIGHT.md"
+    },
+    "mcp-gsheets": {
+      "status": "desktop-credentials",
+      "namespace": "mcp-gsheets",
+      "useWhen": "Cell-level ledger after packages/vfmcp/CONNECT-SHEETS.md. VF IDs in office/ledger/bindings.json",
+      "rule": "No service-account JSON in git. No invented ₪. Without Connect write חסר גיליון.",
+      "failover": "python3 scripts/vf_office.py jobs + Drive exportMimeType=text/csv"
+    },
+    "whatsapp": {
+      "status": "desktop-optional",
+      "namespace": "whatsapp",
+      "useWhen": "Search/draft on the studio phone after packages/vfmcp/CONNECT-WHATSAPP.md",
+      "rule": "VF send stays human 050-2517000. send=false. No Infobip/ManyChat auto-send.",
+      "failover": "python3 scripts/vf_office.py convert draft + wa.me"
     }
   },
   "seats": [
@@ -169,8 +192,8 @@
       "he": "סטודיו",
       "packs": ["vfconvert", "vfsales", "vfcopy", "vfmskill"],
       "specialists": ["sales-engineer", "proposal-strategist", "discovery-coach", "content-creator", "brand-guardian", "email-intelligence-engineer", "offer-lead-gen-strategist", "deal-strategist", "customer-success-manager", "email-marketing-strategist"],
-      "tools": ["gmail", "drive"],
-      "decides": "inquiry brief, quote draft, copy. Does not send."
+      "tools": ["gmail", "drive", "whatsapp"],
+      "decides": "inquiry brief, quote draft, copy. Does not send WhatsApp."
     },
     {
       "id": "growth",
@@ -185,7 +208,7 @@
       "he": "תפעול",
       "packs": ["vfcost", "vfbooks", "vfbiz"],
       "specialists": ["pricing-analyst", "bookkeeper-controller", "finance-tracker", "business-strategist"],
-      "tools": ["gmail", "drive"],
+      "tools": ["gmail", "drive", "mcp-gsheets"],
       "decides": "cost factors, ledger reads, locked B2B. No invented prices."
     },
     {
@@ -193,7 +216,7 @@
       "he": "ייצור",
       "packs": ["vfprod", "vfsku", "vlicense", "vfresearch"],
       "specialists": ["studio-producer", "operations-manager", "legal-compliance-checker", "research-synthesist", "trend-researcher", "technical-artist"],
-      "tools": ["drive", "calendar", "web", "threedaistudio"],
+      "tools": ["drive", "calendar", "web", "threedaistudio", "studiomcphub"],
       "decides": "print feasibility, queue, SKU, file license"
     }
   ],

@@ -20,36 +20,22 @@ origin auth login
 
 ## 2. Push ל-`velvetos-velvet-factory`
 
-<<<<<<< HEAD
-**סטטוס:** קריאה OK (`ls-remote`). GitHub App מראה **שני הריפוז** + **Read and write** לקוד — אבל **הריצה הנוכחית** עדיין `403` (`Resource not accessible by integration`). זה בדרך כלל **טוקן ישן** מלפני Save.
+**סטטוס:** קריאה OK (`ls-remote`). GitHub App יכול להראות **Read and write**, אבל הריצה עלולה עדיין `403` (`Resource not accessible by integration` / `cursor[bot]`). לרוב טוקן ישן מלפני Save.
 
-**אחרי Save בהגדרות Cursor ב-GitHub:**
+**אצלך:**
 
-1. **פתח Cloud Agent חדש** (או הרץ מחדש את הסביבה) — כדי לקבל טוקן עם write  
-2. או דחוף **מקומית** (מיד, בלי לחכות):
+1. GitHub → Settings → Applications → Cursor / GitHub App של Cloud Agents  
+2. הוסף **`nocturney/velvetos-velvet-factory`** עם **Contents: Read and write** ושמור  
+3. **פתח Cloud Agent חדש** (כדי לקבל טוקן עם write)
 
-```bash
-PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory
-```
-
-**אימות מהיר אחרי Agent חדש:**
+**אימות אחרי Agent חדש:**
 
 ```bash
 gh api repos/nocturney/velvetos-velvet-factory --jq .permissions.push
 # צריך: true
 ```
 
-**מקומית (תמיד עובד עם PAT שלך):**
-=======
-**סטטוס:** קריאה OK (`ls-remote`). `cursor[bot]` — `403` על push ועל GitHub Contents API.
-
-**אצלך:**
-
-1. GitHub → Settings → Applications → Cursor / GitHub App של Cloud Agents  
-2. הוסף **`nocturney/velvetos-velvet-factory`** עם **Contents: Read and write**
-
-**או מקומית:**
->>>>>>> origin/main
+**או מקומית (PAT שלך):**
 
 ```bash
 PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory

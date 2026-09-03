@@ -1,0 +1,33 @@
+{
+  "seeded_at": "2026-08-31T12:51:16Z",
+  "agent": "bc-1764e30f-b592-4805-9586-037da3351d65",
+  "parent_folder_id": "0APYIZLrmyOz4Uk9PVA",
+  "office_folder": {
+    "id": "1dFvQBlwzoefZ7OZKHDbMAFjuJ_9kXw8e",
+    "title": "VF HQ · משרד",
+    "viewUrl": "https://drive.google.com/drive/folders/1dFvQBlwzoefZ7OZKHDbMAFjuJ_9kXw8e"
+  },
+  "note": "IDs are not secrets. Local CSV is the book; these Sheets are the human view. Drive MCP cannot patch a cell — re-export from vf_office.py. Headers only; no invented ₪.",
+  "workbooks": {
+    "jobs": {
+      "spreadsheetId": "13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao",
+      "title": "VF HQ · jobs",
+      "viewUrl": "https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit"
+    },
+    "sku": {
+      "spreadsheetId": "1eHfokYC0T4JZT2hvxnVy_CWThIEMrBwrhVUMuQqYnGE",
+      "title": "VF HQ · sku",
+      "viewUrl": "https://docs.google.com/spreadsheets/d/1eHfokYC0T4JZT2hvxnVy_CWThIEMrBwrhVUMuQqYnGE/edit"
+    },
+    "quotes": {
+      "spreadsheetId": "13-kaFD8OpQ0ozMB0UuBNnpfYsvQZ1NVBWg05WrmIn1w",
+      "title": "VF HQ · quotes",
+      "viewUrl": "https://docs.google.com/spreadsheets/d/13-kaFD8OpQ0ozMB0UuBNnpfYsvQZ1NVBWg05WrmIn1w/edit"
+    },
+    "books": {
+      "spreadsheetId": "11eRkRT78Nzacef8PmPCk0xqtPXy0uw9ivu747bw0FIs",
+      "title": "VF HQ · books",
+      "viewUrl": "https://docs.google.com/spreadsheets/d/11eRkRT78Nzacef8PmPCk0xqtPXy0uw9ivu747bw0FIs/edit"
+    }
+  }
+}

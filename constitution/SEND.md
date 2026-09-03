@@ -13,7 +13,7 @@ Treg לא רלוונטי. Drive יוצר מסמכים לפי צורך.
 |---|---|---|---|
 | ג׳ימייל | **סוכן HQ** | `send_message` / `reply` / `forward` על `nocturney@gmail.com` | לא מחכים לגרוק. לא מחכים לאדם ללחוץ Send |
 | אינסטגרם `@velvets_cloud` | **סוכן HQ** דרך כלי מחובר (Canva export + פרוטוקול `vfigos/SEND.md`) | כשאין MCP Publish — Gmail + Drive + Canva **באותו תור** | לא LIVE-PACKET לאדם כברירת מחדל. לא «מחכים למכסת Grok» |
-| וואטסאפ לקוח | אדם `050-2517000` | אין MCP וואטסאפ | HQ לא ממציא בוט |
+| וואטסאפ לקוח | אדם `050-2517000` | Core: MCP חיפוש/טיוטה (`vfmcp/CONNECT-WHATSAPP.md`). VF `send=false` | HQ לא ממציא בוט · לא Infobip/ManyChat |
 | מדפסות | רצפה | `vfprod` | HQ לא לוחץ Print |
 | בוסט / אוטו־DM | — | נעול | נעול תמיד |
 
