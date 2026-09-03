@@ -13,6 +13,8 @@ GATE = ROOT / "packages" / "vfsku" / "GATE.md"
 LAB = ROOT / "packages" / "vfsku" / "LAB.md"
 FIRST = ROOT / "packages" / "vfsku" / "FIRST-PRINT.md"
 CARDS = ROOT / "packages" / "vfsku" / "CARDS.md"
+SHOP_CLOSE = ROOT / "packages" / "vfprod" / "SHOP-CLOSE.md"
+CONVERT_PATH = ROOT / "packages" / "vfconvert" / "PATH.md"
 CLI = ROOT / "scripts" / "vfsku.py"
 BRIEF = ROOT / "packages" / "vfops" / "BRIEF.md"
 SLOTS = ROOT / "packages" / "vfops" / "hq" / "BRIEF-SLOTS.md"
@@ -55,7 +57,7 @@ def assert_no_ils(path: Path) -> None:
 
 
 def main() -> None:
-    for path in (SHELF, GATE, LAB, FIRST, CARDS, CLI, BRIEF, SLOTS, LICENSE):
+    for path in (SHELF, GATE, LAB, FIRST, CARDS, SHOP_CLOSE, CONVERT_PATH, CLI, BRIEF, SLOTS, LICENSE):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -109,9 +111,23 @@ def main() -> None:
             fail(f"GATE.md must mention {needle}")
 
     first = FIRST.read_text()
-    for needle in ("SHELF.json", "vlicense", "בלי חומרה", "python3 scripts/vfsku.py"):
+    for needle in ("SHELF.json", "vlicense", "בלי חומרה", "python3 scripts/vfsku.py", "SHOP-CLOSE.md"):
         if needle not in first:
             fail(f"FIRST-PRINT.md must mention {needle}")
+
+    shop_close = SHOP_CLOSE.read_text()
+    for needle in ("SHELF.json", "vfsku.py shop", "אין ספירה", "PATH.md"):
+        if needle not in shop_close:
+            fail(f"SHOP-CLOSE.md must mention {needle}")
+
+    convert_path = CONVERT_PATH.read_text()
+    for needle in ("SHELF.json", "מדף", "מינימום התאמה", "vfsku.py shop"):
+        if needle not in convert_path:
+            fail(f"vfconvert/PATH.md must mention shelf-first needle: {needle}")
+
+    cli_src = CLI.read_text()
+    if 'add_parser("shop"' not in cli_src and "add_parser('shop'" not in cli_src:
+        fail("vfsku.py must expose a shop subcommand")
 
     lab = LAB.read_text()
     if "print-in-place" not in lab.lower() and "קופסה" not in lab:
@@ -131,10 +147,10 @@ def main() -> None:
     if "vfsku.py" not in SLOTS.read_text():
         fail("BRIEF-SLOTS.md must hook slot 03 to vfsku.py")
 
-    for path in (SHELF, GATE, LAB, FIRST, CARDS):
+    for path in (SHELF, GATE, LAB, FIRST, CARDS, SHOP_CLOSE):
         assert_no_ils(path)
 
-    print("OK vfsku shelf=5 first-print=1 brief-hook=03")
+    print("OK vfsku shelf=5 first-print=1 brief-hook=03 shop-close=1")
 
 
 if __name__ == "__main__":

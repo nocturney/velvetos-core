@@ -61,7 +61,25 @@ def cmd_brief(_args: argparse.Namespace) -> int:
         extras.append(f"{blocked} חסום")
     if extras:
         line = f"{line} · {' · '.join(extras)}"
+    if ready == 0:
+        line = f"{line} · אין שם להציע"
     print(line)
+    return 0
+
+
+def cmd_shop(_args: argparse.Namespace) -> int:
+    data = load_shelf()
+    slots = data.get("slots") or []
+    ready_slots = [s for s in slots if s.get("status") == READY]
+    print("חנות מחר")
+    print(f"מדף: {len(ready_slots)}/{len(slots)} ready")
+    if not ready_slots:
+        print("אין כרטיס להציע — לא ממציאים שם")
+    else:
+        for slot in ready_slots:
+            count = (slot.get("shelfCount") or "").strip() or "אין ספירה"
+            print(f"{slot.get('id')} {slot_name(slot)} מלאי={count}")
+    print("סגירה: packages/vfprod/SHOP-CLOSE.md")
     return 0
 
 
@@ -70,6 +88,7 @@ def main() -> int:
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("shelf", help="print the 5-slot table").set_defaults(func=cmd_shelf)
     sub.add_parser("brief", help="one Hebrew line for morning brief slot 03").set_defaults(func=cmd_brief)
+    sub.add_parser("shop", help="tomorrow-shop line: ready slots only, no invented names").set_defaults(func=cmd_shop)
     args = parser.parse_args()
     return args.func(args)
 
