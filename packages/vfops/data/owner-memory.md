@@ -96,5 +96,6 @@
 - **מושב:** ייצור + lead
 - **למדנו:** בעלים רוצה סריקת [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) **כל יומיים** + ראש פתוח לעדכון חוקה כשדפוס עמיד מנצח.
 - **למדנו:** grill לפני הצעה מורכבת; אין טענת הצלחה בלי סנסור/ראיה; אין `npx skills` על Cloud.
-- **מחר:** טיימר bi-daily רץ; watchlist (superpowers, anti-ui-slop, media-gen).
-- **מקור:** בקשת בעלים + `sources/2026-09-03-best-skills.md`.
+- **למדנו:** דופק **קבוע לנצח** עד הודעה מפורשת לעצור — `standingForever: true` + חידוש טיימר בכל מעבר (`TIMER.md`).
+- **מחר:** טיימר bi-daily רץ ומתחדש; watchlist (superpowers, anti-ui-slop, media-gen).
+- **מקור:** בקשת בעלים + `sources/2026-09-03-best-skills.md` + `TIMER.md`.

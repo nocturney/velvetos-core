@@ -23,7 +23,7 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 
 | מתי | מה | קובץ |
 |---|---|---|
-| כל ~48 שעות (טיימר / בקשת בעלים) | סקירת דירוג **LinklyAI/best-skills** — הטמעת דפוסים חדשים | `vfresearch/BEST-SKILLS.md`, `BEST-SKILLS.json`, skill `vf-best-skills` |
+| כל ~48 שעות (טיימר · דופק לנצח עד שהבעלים עוצר) | סקירת דירוג **LinklyAI/best-skills** — הטמעת דפוסים + חידוש טיימר | `vfresearch/BEST-SKILLS.md`, `TIMER.md`, `BEST-SKILLS.json`, skill `vf-best-skills` |
 
 לא מחליף את 06:15 (שם צ'אטים חדשים). כאן חוזרים על הרישום. קישור חדש באמצע השבוע → נרשם ב־`LINKS.json` **באותו יום**. אירוע Calendar רק אם ראש צוות מבקש.
 

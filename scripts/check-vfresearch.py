@@ -11,6 +11,7 @@ LINKS = ROOT / "packages" / "vfresearch" / "LINKS.json"
 WEEKLY = ROOT / "packages" / "vfresearch" / "WEEKLY.md"
 BEST_SKILLS = ROOT / "packages" / "vfresearch" / "BEST-SKILLS.md"
 BEST_SKILLS_JSON = ROOT / "packages" / "vfresearch" / "BEST-SKILLS.json"
+BEST_SKILLS_TIMER = ROOT / "packages" / "vfresearch" / "TIMER.md"
 BEST_SKILLS_SKILL = ROOT / ".cursor" / "skills" / "vf-best-skills" / "SKILL.md"
 DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
 MUSIC = ROOT / "packages" / "vfresearch" / "MUSIC.md"
@@ -40,7 +41,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_SKILL, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK):
+    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -111,6 +112,12 @@ def main() -> None:
         fail("BEST-SKILLS.json cadence must be every-2-days")
     if "existing packs" not in (best_json.get("rule") or ""):
         fail("BEST-SKILLS.json rule must say embed into existing packs")
+    if best_json.get("standingForever") is not True:
+        fail("BEST-SKILLS.json standingForever must be true until owner stops")
+    if best_json.get("timerName") != "vf-best-skills-bi-daily":
+        fail("BEST-SKILLS.json timerName must be vf-best-skills-bi-daily")
+    if "TIMER.md" not in (best_json.get("timerPlaybook") or ""):
+        fail("BEST-SKILLS.json must point timerPlaybook at TIMER.md")
     best_locks = set(best_json.get("locks") or [])
     for need in ("no-npx-skills-on-cloud", "no-second-runtime", "no-invented-blocked-body"):
         if need not in best_locks:
@@ -118,13 +125,29 @@ def main() -> None:
     if not best_json.get("lastPass"):
         fail("BEST-SKILLS.json must set lastPass")
 
+    timer = BEST_SKILLS_TIMER.read_text()
+    if "vf-best-skills-bi-daily" not in timer:
+        fail("TIMER.md must name vf-best-skills-bi-daily")
+    if "172800" not in timer:
+        fail("TIMER.md must set delaySeconds 172800")
+    if "לנצח" not in timer and "forever" not in timer.lower():
+        fail("TIMER.md must state forever-until-owner-stops standing order")
+    if "subscribe_timer" not in timer:
+        fail("TIMER.md must instruct subscribe_timer renew")
+
     best_skill = BEST_SKILLS_SKILL.read_text()
     if "BEST-SKILLS.md" not in best_skill:
         fail("vf-best-skills skill must point at BEST-SKILLS.md")
+    if "TIMER.md" not in best_skill:
+        fail("vf-best-skills skill must point at TIMER.md")
     if "research-synthesist" not in best_skill:
         fail("vf-best-skills skill must mention research-synthesist")
     if "npx" not in best_skill.lower():
         fail("vf-best-skills skill must forbid npx install")
+    if "standing" not in best_skill.lower() and "לנצח" not in best_skill:
+        fail("vf-best-skills skill must mention standing forever order")
+    if "renew" not in best_skill.lower() and "חדש" not in best_skill:
+        fail("vf-best-skills skill must require timer renew")
 
     link_ids = {item["id"] for item in links}
     if "linklyai-best-skills" not in link_ids:

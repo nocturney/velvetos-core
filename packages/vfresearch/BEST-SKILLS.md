@@ -11,7 +11,9 @@
 ## למה כל יומיים
 
 הדירוגים זזים כל יום (WIS, trending, social buzz, top repos). מעבר שבועי בלבד מפספס קפיצות.  
-**כל ~48 שעות** (Asia/Jerusalem) — או כשהטיימר / הבעלים מפעילים.
+**כל ~48 שעות** (Asia/Jerusalem) — **דופק קבוע לנצח** עד שהבעלים מעדכן אחרת (standing order 2026-09-03).
+
+טיימר: `packages/vfresearch/TIMER.md` · שם `vf-best-skills-bi-daily` · חידוש חובה בסוף כל מעבר.
 
 אירוע Calendar: רק אם ראש צוות מבקש יצירה.
 
@@ -29,7 +31,7 @@
 7. לעדכן `BEST-SKILLS.json` (`lastPass`, `dataDate`, movers).
 8. שורת בלוק `05-משרד`: «best-skills — הוטמע X» או «best-skills — אין חדש במשרד».
 9. אחרי שינוי קטלוג/כלל/פק: `python3 scripts/check-all.py`
-
+10. **חובה:** לחדש/לאמת את הטיימר לפי `TIMER.md` (דופק לנצח). לרשום `timer: renewed|ok` בארטיפקט.
 ## מיפוי — לא פק כפול
 
 | סוג סקיל / ריפו | נופל ל־ | לא |

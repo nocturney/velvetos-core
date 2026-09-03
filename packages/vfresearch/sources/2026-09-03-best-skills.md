@@ -49,6 +49,10 @@
 - עדכון חוקה/מדריכים כשדפוס עמיד משפר משרד — מותר (נעילות ליבה נשארות)
 - grill לפני הצעה מורכבת — חובה כשיש פערים
 
+## טיימר
+
+standingForever=true · `TIMER.md` · `timer: renewed` (דופק לנצח עד שהבעלים עוצר)
+
 ## בלוק 05
 
 best-skills — הוטמע grill + verification + skill-authoring + מחזור כל-יומיים ב־vfresearch/vfharness/vfconvert

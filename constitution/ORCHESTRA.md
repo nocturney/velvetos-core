@@ -141,11 +141,15 @@ packages/vfresearch/sources/YYYY-MM-DD-orchestra.md
 מקור חי: [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) (Top 100 מתעדכן יומית).  
 מעבר שבועי לא מספיק — הדירוגים זזים. **כל ~48 שעות** רצים את הסקירה.
 
+**Standing order (בעלים 2026-09-03):** דופק **קבוע לנצח** עד הודעה מפורשת לעצור / לשנות קצב.  
+חידוש טיימר חובה בסוף כל מעבר: `packages/vfresearch/TIMER.md` (`vf-best-skills-bi-daily`).
+
 1. פלייבוק: `packages/vfresearch/BEST-SKILLS.md`
-2. מצב: `packages/vfresearch/BEST-SKILLS.json`
+2. מצב: `packages/vfresearch/BEST-SKILLS.json` (`standingForever: true`)
 3. מיומנות: `.cursor/skills/vf-best-skills/SKILL.md`
 4. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-best-skills.md`
 5. מטמיעים **דפוסים** על פקים קיימים. אין `npx skills` על Cloud Agent. אין runtime שני.
+6. מחדשים את הטיימר — בלי זה הדופק נשבר אחרי ~7 ימים.
 
 שורת בלוק `05`: «best-skills — …» או «best-skills — אין חדש במשרד».
 
