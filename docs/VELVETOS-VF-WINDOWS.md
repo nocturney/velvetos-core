@@ -6,8 +6,8 @@
 
 | מי | מה קורה |
 |---|---|
-| Cloud Agent (Cursor) | רואה רק `nocturney/velvetos-core`. **לא** רואה ריפו פרטי `velvetos-velvet-factory`. |
-| המחשב שלך | צריך להתחבר ל-GitHub כ-**nocturney** עם PAT או Git Credential Manager. |
+| Cloud Agent (Cursor) | **קורא** `nocturney/velvetos-core` ו־`nocturney/velvetos-velvet-factory` (שניהם **פומביים**). **דחיפה** דורשת הרשאת כתיבה ל־`cursor[bot]` או push מקומי עם PAT. |
+| המחשב שלך | צריך להתחבר ל-GitHub כ-**nocturney** עם PAT או Git Credential Manager ל־**push**. |
 | `gh` | לא חובה. אפשר בלי. |
 
 ---
@@ -25,12 +25,12 @@
 2. סימון: **`repo`** (Full control of private repositories)
 3. העתק את הטוקן — לא תראה שוב
 
-### שלב ג — דחיפה לריפו הפרטי
+### שלב ג — דחיפה לריפו המופע
 
 פתח **Git Bash** (לא PowerShell רגיל):
 
 ```bash
-# 1. שכפל את הריפו הפרטי (יצור תיקייה ריקה אם עדיין אין קבצים)
+# 1. שכפל את ריפו המופע (אם עדיין ריק — העתק scaffold; אם כבר יש תוכן — pull ואז merge)
 git clone https://github.com/nocturney/velvetos-velvet-factory.git
 cd velvetos-velvet-factory
 
@@ -112,7 +112,7 @@ git remote -v
 | `Repository not found` | PAT עם `repo`, או שם ריפו/owner שגוי, או לא מחובר כ-nocturney |
 | `gh: command not found` | התעלם — לא צריך `gh` |
 | `./scripts/...` ב-PowerShell | השתמש ב-**Git Bash** או בדרך 2 |
-| Cloud Agent לא דוחף | נורמלי לריפו פרטי — דחוף **אתה** מהמחשב |
+| Cloud Agent לא דוחף (`403` / `cursor[bot]`) | נורמלי — דחוף **אתה** מהמחשב, או תן ל־GitHub App הרשאת write לריפו |
 
 ---
 

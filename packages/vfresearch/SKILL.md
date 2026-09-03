@@ -15,3 +15,7 @@
 - פלייבוק: `MUSIC.md` · מקורות: `SOURCES-MUSIC.json` · `@trend-researcher` (מסירה ל־`vfigos` / `vfom`)
 - מיומנות: `.cursor/skills/vf-ig-music/SKILL.md`
 - מקור ראשי: HeyOrca שבועי (בלי Treg). ארטיפקט: `sources/YYYY-MM-DD-ig-music.md`
+
+## מומחה — Trend explorer
+
+מודול: `expert-trend-explorer` · `experts/TREND-EXPLORER.md` · `@trend-researcher`

@@ -13,7 +13,7 @@ chmod +x scripts/vendor-origin-packs.sh
 ./scripts/vendor-origin-packs.sh
 ```
 
-Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). HQ overlay (not Origin) lives in `SKILL.md` + `hq/` and survives `scripts/vendor-origin-packs.sh`. Playbooks from the 30.8.2026 Gemini share and Perplexity PDFs sit in the same folder. Do not invent prices. This repo does not send Instagram — live send stays on Grok Bot.
+Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). HQ overlay (not Origin) lives in `SKILL.md` + `hq/` and survives `scripts/vendor-origin-packs.sh`. Playbooks from the 30.8.2026 Gemini share and Perplexity PDFs sit in the same folder. `vfsku` also has `SHELF.json` + `FIRST-PRINT.md` (2026-09-02; empty slots, no invented names). Do not invent prices. This repo does not send Instagram — live send stays on Grok Bot.
 
 Constitution and team of 5: [`../constitution/`](../constitution/). Hebrew reports: [`../docs/SHARE-EMBED-he.md`](../docs/SHARE-EMBED-he.md), [`../docs/SHARES-2026-08-30.md`](../docs/SHARES-2026-08-30.md).
 

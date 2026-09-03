@@ -12,7 +12,7 @@
 | Calendar | ready · `Asia/Jerusalem` | namespace `Google-calendar` |
 | Drive | ready · חיפוש **ויצירה** (`create_file`) | namespace `Google-drive` |
 | **Canva** | **ready** | `search-designs` החזיר `DAGoYmCu4c4` («Card - חגיגת האהבה שלכם») |
-| **3D AI Studio** | **needsAuth** (Desktop + Cloud OAuth) | Team MCP `threedaistudio` + `.cursor/mcp.json`. `CONNECT-3DAI.md` |
+| **3D AI Studio** | **ready** | namespace `3DAIStudio` · `get_credit_balance` אומת 2026-09-01 |
 | WebSearch / WebFetch | ready · מקורי Cursor | כלי native בסוכן |
 | GenerateImage | ready · מקורי Cursor | כלי native; אינסטגרם עדיין Canva קודם |
 | Superdesign | skill · בלי CLI login | פלאגין על הדיסק |
@@ -94,7 +94,7 @@
 3. **`tools.image`** — GenerateImage + Canva `generate-design`. אינסטגרם עדיין Canva קודם.
 4. **גיליון דרך Drive** — `packages/vfbooks/SHEETS.md`. בלי workbook ID מומצא.
 5. **שליחה מ־HQ** — Gmail `send_message` מותר. IG: `vfigos/SEND.md` + `constitution/SEND.md`. Treg לא רלוונטי.
-6. **3D AI Studio** — HTTP `threedaistudio` → `https://mcp.3daistudio.com/mcp`. Desktop: `.cursor/mcp.json`. Cloud: Team MCP (Dashboard → Integrations & MCP) + OAuth ב־cursor.com/agents. עדיין `needsAuth` עד Connect. פלייבוק `vfprod/3DAISTUDIO.md` + `CONNECT-3DAI.md`.
+6. **3D AI Studio** — HTTP `threedaistudio` → `https://mcp.3daistudio.com/mcp`. Desktop: `.cursor/mcp.json`. Cloud: namespace `3DAIStudio` **ready** (אומת 2026-09-01). פלייבוק `vfprod/3DAISTUDIO.md` + `CONNECT-3DAI.md`.
 7. **Studio MCP Hub** — HTTP `studiomcphub` → `https://studiomcphub.com/mcp` ב־`.cursor/mcp.json`. VF מדלג CMYK/`print_ready`. `CONNECT-STUDIOHUB.md`.
 8. **Sheets + WhatsApp בליבה** — רשומים ב־`core-mcp.json`. Desktop Connect (`CONNECT-SHEETS.md` / `CONNECT-WHATSAPP.md`). VF: יומן לפי bindings; וואטסאפ `send=false`. בלי Connect: `vf_office.py`.
 

@@ -12,7 +12,8 @@ VelvetOS, Core, באקאנד/פרונט, publish instance, multi-IG preset
 1. `CORE.json` + `modules/` + `presets/`
 2. `instances/velvet-factory/` לפרונט VF
 3. `REPOS.md` + `scripts/publish-instance.sh`
-4. `python3 scripts/check-velvetos.py`
+4. `experts/INSTANCE-ONBOARD.md` — פרונט חדש + `owner-memory-<id>.md`
+5. `python3 scripts/check-velvetos.py`
 
 ## אל תעשה
 

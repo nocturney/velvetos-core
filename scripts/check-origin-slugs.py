@@ -18,7 +18,8 @@ VENDOR = ROOT / "scripts" / "vendor-origin-packs.sh"
 DISCOVER = ROOT / "scripts" / "discover-origin-slugs.py"
 CATALOG = ROOT / "packages" / "vfmem" / "catalog.json"
 
-MAY_BE_UNKNOWN = {
+MAY_BE_UNKNOWN: set[str] = set()
+HQ_NATIVE_EMBED = {
     "vfops",
     "vfcovers",
     "vfinsights",
@@ -116,7 +117,7 @@ def main() -> None:
 
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
     packs = {p["name"]: p for p in data.get("packs") or []}
-    for name in MAY_BE_UNKNOWN | set(KNOWN_SLUGS):
+    for name in HQ_NATIVE_EMBED | set(KNOWN_SLUGS):
         if name not in packs:
             fail(f"manifest missing pack {name}")
 
@@ -135,6 +136,15 @@ def main() -> None:
 
         if status not in VENDOR_STATUSES:
             fail(f"{name}: bad vendorStatus {status!r}")
+
+        if name in HQ_NATIVE_EMBED:
+            if status != "hq-native":
+                fail(f"{name}: HQ embed must be vendorStatus hq-native, got {status!r}")
+            if slug is not None:
+                fail(f"{name}: hq-native embed must have originSlug null")
+            if FAKE_TMP.search(text):
+                fail(f"{name}: hq-native ORIGIN.md must not invent a tmp slug")
+            continue
 
         if status == "hq-native":
             if slug is not None:
@@ -174,16 +184,13 @@ def main() -> None:
 
         fail(f"{name}: empty originSlug with vendorStatus {status!r} — set hq-native or origin-slug-unknown")
 
-    if unknown_still < 1:
-        # Allowed to fill all 11 later; still require the playbook to name the original set.
-        pass
-    for name in MAY_BE_UNKNOWN:
+    for name in HQ_NATIVE_EMBED:
         if name not in playbook:
             fail(f"ORIGIN-SLUGS.md must name {name}")
 
     print(
         f"OK origin-slugs playbook packs={len(packs)} "
-        f"unknown-allowed={len(MAY_BE_UNKNOWN)} still-unknown={unknown_still}"
+        f"hq-native-embed={len(HQ_NATIVE_EMBED)} still-unknown={unknown_still}"
     )
 
 

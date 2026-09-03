@@ -14,6 +14,8 @@ Every instance **must** ship `.cursor/environment.json` (Cloud boot → `attach-
 PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory
 ```
 
-This Cloud Agent token cannot `createRepository` — the owner creates the empty private repo first.
+Both `nocturney/velvetos-core` and `nocturney/velvetos-velvet-factory` are **public** — Cloud Agents can **read** and `attach-core`. This agent cannot `createRepository`; push needs owner PAT or `cursor[bot]` write on the target repo.
+
+`velvet-factory` is already published on GitHub. Re-run `publish-instance.sh` only when the scaffold changed; merge locally if the remote has diverged.
 
 Later: copy a scaffold from `velvet-factory/` or build from `packages/velvetos/presets/`.

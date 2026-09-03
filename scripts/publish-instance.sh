@@ -35,13 +35,32 @@ git add -A
 git -c user.email="$(git -C "$ROOT" config user.email)" -c user.name="$(git -C "$ROOT" config user.name)" commit -m "VelvetOS instance scaffold: $ID
 
 Frontend office for one business. Attach VelvetOS Core with ./scripts/attach-core.sh."
-git remote add origin "https://github.com/${REMOTE_SLUG}.git"
+REMOTE_URL="${REMOTE_URL:-https://github.com/${REMOTE_SLUG}.git}"
+git remote add origin "$REMOTE_URL"
+echo "Remote: $REMOTE_URL"
+if ! git ls-remote --exit-code origin HEAD >/dev/null 2>&1; then
+  echo "FAIL cannot reach $REMOTE_URL (not found or token lacks access)" >&2
+  echo "If the repo exists: grant this GitHub App/integration access to the repo, or run locally:" >&2
+  echo "  PUSH=1 ./scripts/publish-instance.sh $ID $REMOTE_SLUG" >&2
+  STATUS="blocked"
+else
+  STATUS="ready"
+fi
 echo "Ready to push from: $TMP"
 echo "  git push -u origin main"
 echo "(Script will push now if PUSH=1)"
 if [[ "${PUSH:-0}" == "1" ]]; then
-  git push -u origin main
-  echo "OK published $REMOTE_SLUG"
+  if [[ "$STATUS" != "ready" ]]; then
+    echo "FAIL push skipped — remote not reachable" >&2
+    exit 2
+  fi
+  if git push -u origin main; then
+    STATUS="published"
+    echo "OK published $REMOTE_SLUG"
+  else
+    STATUS="push_denied"
+    echo "FAIL push denied — grant cursor[bot] write on $REMOTE_SLUG or push locally with PAT" >&2
+  fi
 fi
 # also write a stamp in core for humans
 mkdir -p "$ROOT/packages/vfharness/state"
@@ -49,17 +68,30 @@ python3 - <<PY
 import json
 from datetime import date
 from pathlib import Path
+status = "$STATUS"
+next_step = {
+    "blocked": f"Grant GitHub App access to remote repo OR run locally: PUSH=1 ./scripts/publish-instance.sh $ID $REMOTE_SLUG",
+    "ready": f"PUSH=1 ./scripts/publish-instance.sh $ID $REMOTE_SLUG",
+    "published": "Instance published — open remote repo in Cursor; run ./scripts/attach-core.sh",
+    "push_denied": f"Remote readable but push denied for cursor[bot]. Push locally: PUSH=1 ./scripts/publish-instance.sh $ID $REMOTE_SLUG",
+}.get(status, "Check publish-instance.sh output")
+unresolved = []
+if status == "blocked":
+    unresolved = ["remote not reachable from this token"]
+elif status == "push_denied":
+    unresolved = ["cursor[bot] lacks write on remote — owner PAT push or grant repo access"]
 Path("$ROOT/packages/vfharness/state/publish-instance-$ID.json").write_text(json.dumps({
   "task_id": f"publish-instance-$ID",
-  "status": "ready",
+  "status": status,
   "pack": "velvetos",
   "remote": "$REMOTE_SLUG",
+  "remote_url": "$REMOTE_URL",
   "scaffold": "instances/$ID",
   "last_updated": str(date.today()),
   "completed_steps": ["scaffold built", "publish script staged"],
-  "next_step": "Owner creates empty GitHub repo then PUSH=1 ./scripts/publish-instance.sh $ID $REMOTE_SLUG",
+  "next_step": next_step,
   "artifacts": ["instances/$ID"],
-  "unresolved": ["GitHub createRepository not allowed from this Cloud Agent token"]
+  "unresolved": unresolved,
 }, indent=2) + "\n")
 print("stamp written")
 PY

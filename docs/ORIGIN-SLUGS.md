@@ -6,11 +6,11 @@
 
 ## מה השורה ב-README אומרת
 
-אחת-עשרה חבילות יש להן `bcId` ודף סוכן, אבל בלי `christian-velvet/tmp-…`:
+אחת-עשרה חבילות היו עם `bcId` בלי `christian-velvet/tmp-…`. **מ-2026-09-01** הן מסווגות **`hq-native`** — העץ חי ב-Core; ה-bcId הוא שורש היסטורי בלבד, לא מחכים ל-vendor.
 
 `vfops` · `vfcovers` · `vfinsights` · `vfbooks` · `vfresearch` · `vfbiz` · `vfcopy` · `vlicense` · `vfseason` · `vfsku` · `vfbriefux`
 
-ב-v0.1.0 לא היה Origin list. בלי הרשימה אי אפשר לגלות את ה-slug — ואין לנחש אותו משם התיקייה.
+שישה פקים עם slug ידוע (`vfigos`, `vfcost`, `vfconvert`, `vfgrowth`, `vfprod`, `vfsales`) — vendor דורש `origin auth login` (ראה `docs/OWNER-ACTIONS-he.md`).
 
 ## מה עושים עכשיו (סוכן HQ)
 
@@ -37,6 +37,8 @@ python3 scripts/discover-origin-slugs.py
 | רשימת סוכני Cloud בסביבה | 69 ריצות על HQ; אין את סוכני ה-tmp |
 
 כלומר: login ל-Origin **לא** פותח את רשימת עצי ה-tmp. צריך טוקן עם scope ל-`christian-velvet/tmp-*`, או העתקה מדף הסוכן.
+
+**2026-09-01:** ריפוז GitHub פומביים (`velvetos-core`, `velvetos-velvet-factory`) **לא** פותחים את זה — `origin.cursor.com` עדיין דורש `origin auth login` / `CURSOR_API_KEY`; vendor נכשל בלי auth. ראה `docs/OWNER-ACTIONS-he.md`.
 
 ## איך ממלאים slug (ראש צוות / Grok / אדם עם דף הסוכן)
 

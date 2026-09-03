@@ -1,0 +1,27 @@
+{
+  "task_id": "access-blockers-2026-09-01",
+  "status": "done",
+  "pack": "vfharness",
+  "completed_steps": [
+    "3DAIStudio MCP verified ready on Cloud Agent (get_credit_balance)",
+    "Reclassified 11 packs to hq-native in manifest + ORIGIN.md",
+    "Added docs/OWNER-ACTIONS-he.md, sync-instance-scaffold.sh, core .cursor/environment.json",
+    "vendor-origin-packs.sh skips cleanly when Origin not authed",
+    "Desk: instagram no-publish-mcp + threedaistudio ready"
+  ],
+  "next_step": "Owner: origin auth login + vendor; grant write for instance sync (new Cloud Agent run or local PUSH=1 / PAT); enable Mobbin on Cloud env",
+  "artifacts": [
+    "docs/OWNER-ACTIONS-he.md",
+    "scripts/sync-instance-scaffold.sh",
+    ".cursor/environment.json",
+    "packages/vfharness/state/public-repos-access-2026-09-01.json"
+  ],
+  "unresolved": [
+    "Origin vendor: needs origin auth login or CURSOR_API_KEY",
+    "Instance push: may still 403 without write grant — new agent run or local PUSH=1 / PAT",
+    "Mobbin MCP namespace not on this Cloud environment",
+    "Instagram Publish MCP does not exist — SEND.md failover only"
+  ],
+  "last_updated": "2026-09-03",
+  "note": "Resolved leftover git conflict markers during buildwithclaude embed (2026-09-03)."
+}

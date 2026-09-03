@@ -1,0 +1,59 @@
+{
+  "date_line": "יום שני, 1 בספטמבר 2026 · תצוגה 3",
+  "bottom_line": "ריפוז GitHub פומביים — Cloud Agent קורא core + instance. Origin vendor עדיין דורש auth. אין פניית הדפסה חדשה. G005 מתוכנן לחמישי 4.9.",
+  "footer": "Velvet Factory · איסוף משדרות · ריפוז פומביים",
+  "slots": [
+    {
+      "kicker": "01 · קודם החלטה",
+      "title": "החלטות",
+      "prose": "סריקת גישה אחרי פומבי — אין החלטת מחיר חדשה.",
+      "headers": ["החלטה", "כן/לא/דחה", "מועד"],
+      "rows": [
+        ["סנכרון scaffold ל-instance repo", "כן", "push מקומי — cursor[bot] בלי write"],
+        ["vendor Origin tmp-*", "דחה", "אחרי origin auth login"],
+        ["מחיר מכירה", "דחה", "כשתגיד סכום"]
+      ]
+    },
+    {
+      "kicker": "02 · כסף בעבודה",
+      "title": "הזמנות ומעקב",
+      "prose": "פניית הדפסה חדשה: אין. חשבונות: אין ספירה.",
+      "headers": ["קוד", "שלב", "חסם"],
+      "rows": [
+        ["פנייה חדשה", "אין", "אין ספירה"],
+        ["חשבונות 7 ימים", "לא נסרק", "אין ספירה"]
+      ]
+    },
+    {
+      "kicker": "03 · מה להדפיס ולפרסם",
+      "title": "הצעות הדפסה ופרסום",
+      "prose": "G005 קרוסלה d12b — מתוכנן לפרסום חי.",
+      "headers": ["פריט", "מצב", "מתי"],
+      "rows": [
+        ["G005", "מוכן על הדיסק", "חמישי 4.9"],
+        ["G001", "חי מ-30.8", "לא מחליפים"]
+      ]
+    },
+    {
+      "kicker": "04",
+      "title": "איך הסטודיו מרוויח",
+      "prose": "וואטסאפ 050-2517000 · איסוף שדרות. B2B נעול."
+    },
+    {
+      "kicker": "05 · משרד",
+      "title": "מה נבנה / יועל",
+      "prose": "תיעוד גישה אחרי ריפוז פומביים; checkpoint public-repos-access-2026-09-01.",
+      "headers": ["פריט", "סוג", "מצב"],
+      "rows": [
+        ["velvetos-core + velvet-factory", "GitHub", "PUBLIC · read OK"],
+        ["Origin vendor", "כלי", "needs auth"],
+        ["publish-instance", "סקריפט", "push_denied ל-bot"]
+      ]
+    },
+    {
+      "kicker": "06",
+      "title": "מה קורה בעמוד",
+      "prose": "Insights: אין ספירה — ראה vfinsights/sources/2026-09-01-ig-snapshot.md"
+    }
+  ]
+}

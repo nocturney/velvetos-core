@@ -1,7 +1,7 @@
 {
   "name": "vf-office-capabilities",
   "title": "Velvet Factory — capability registry for command surface",
-  "version": "2026-08-31",
+  "version": "2026-09-02",
   "rule": "UI and agents may only expose actions listed here. Missing ₪ or Insights stay X ₪ / אין ספירה. No new pack per capability.",
   "adr": "docs/OFFICE-OS-EMBED-he.md",
   "locks": [
@@ -15,6 +15,24 @@
     "internal-console-allowed"
   ],
   "capabilities": [
+    {
+      "id": "memory.owner",
+      "label": "זיכרון בעלים משותף",
+      "tool": "read-file",
+      "packs": ["vfops", "vfmem", "vfharness"],
+      "gate": "none",
+      "path": "packages/vfops/data/owner-memory.md",
+      "notes": "Morning brief 05a + all seats. Updated by daily retro."
+    },
+    {
+      "id": "memory.artifacts",
+      "label": "אינדקס תוצרים",
+      "tool": "read-file",
+      "packs": ["vfops", "vfmem"],
+      "gate": "none",
+      "path": "packages/vfops/data/ARTIFACT-INDEX.md",
+      "notes": "How VF aggregates outputs from all expert modules."
+    },
     {
       "id": "gmail.send",
       "label": "שליחת ג׳ימייל",
@@ -67,6 +85,15 @@
       "tool": "Google-drive.search_files",
       "packs": ["vfprod", "vfsku"],
       "gate": "none"
+    },
+    {
+      "id": "sku.shelf",
+      "label": "מדף מק״ט חוזר",
+      "tool": "scripts/vfsku.py shelf",
+      "packs": ["vfsku", "vfops"],
+      "gate": "none",
+      "path": "packages/vfsku/SHELF.json",
+      "notes": "Five slots. Empty until GATE + vlicense + slice. No invented names or ₪. Brief 03: vfsku.py brief."
     },
     {
       "id": "canva.design",
@@ -183,6 +210,52 @@
       "tool": "vfharness/state",
       "packs": ["vfharness"],
       "gate": "none"
+    },
+    {
+      "id": "revenue.loop",
+      "label": "לולאת הכנסה IG",
+      "tool": "vfgrowth/experts/REVENUE-LOOP.md",
+      "packs": ["vfgrowth", "vfsales", "vfconvert", "vfinsights"],
+      "gate": "none",
+      "notes": "Offer card per post; pipeline ig_post_ref; TIMELINE-AUTO."
+    },
+    {
+      "id": "insights.snapshot",
+      "label": "הדבקת Insights מאומת",
+      "tool": "vfinsights/templates/snapshot-ingest.md",
+      "packs": ["vfinsights"],
+      "gate": "none",
+      "notes": "Owner paste only. No invented metrics."
+    },
+    {
+      "id": "revenue.weekly",
+      "label": "דופק הכנסה שבועי",
+      "tool": "vfops/playbooks/WEEKLY-REVENUE-PULSE.md",
+      "packs": ["vfops", "vfinsights", "vfgrowth"],
+      "gate": "none"
+    },
+    {
+      "id": "timeline.append",
+      "label": "אירוע בציר לקוח",
+      "tool": "vfsales/hq/TIMELINE-AUTO.md",
+      "packs": ["vfsales", "vfconvert"],
+      "gate": "none"
+    },
+    {
+      "id": "instance.onboard",
+      "label": "הקמת פרונט חדש",
+      "tool": "velvetos/experts/INSTANCE-ONBOARD.md",
+      "packs": ["velvetos"],
+      "gate": "lead",
+      "notes": "publish-instance.sh; per-instance owner-memory."
+    },
+    {
+      "id": "paid.boost.plan",
+      "label": "תכנית בוסט בתשלום",
+      "tool": "vfigos",
+      "packs": ["vfgrowth", "vfigos"],
+      "gate": "lead",
+      "notes": "Only after proven organic offer. No auto-DM."
     }
   ]
 }

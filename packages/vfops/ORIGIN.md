@@ -6,14 +6,14 @@ Operations pack — run-the-studio procedures.
 |---|---|
 | Agent | https://cursor.com/agents/bc-93fbfca6 |
 | bcId | `bc-93fbfca6` |
-| Origin slug | `unknown` |
-| Codebase | (discover from agent page) |
-| Clone | `(none until slug is known)` |
-| v0.1.0 vendor | `origin-slug-unknown` |
+| Origin slug | `(hq-native embed)` |
+| Codebase | this Core repo (`packages/vfops/`) |
+| Clone | `(hq-native — no Origin tree)` |
+| v0.1.0 vendor | `hq-native` |
 
 HQ overlay (kept on vendor): `ROUTINE.md`, `BRIEF.md`, `data/research.md` — orchestra 06:15 + block 05.
 
-Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
+HQ-native embed: full tree lives in this Core repo (SKILL.md + hq/). No separate Origin clone required.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
 
 Embedded 30.8.2026 from Gemini share: `BRIEF.md`, `ROUTINE.md`.  

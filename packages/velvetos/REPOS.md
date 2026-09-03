@@ -43,7 +43,7 @@ Playbook: `INSTANCE-ENV.md` · תבנית: `instances/_template/` · כלל: `.c
 
 ## פרסום מופע VF
 
-1. צור ב־GitHub ריפו ריק פרטי `nocturney/velvetos-velvet-factory` (הסוכן בענן לא יכול `createRepository`).
+1. ריפו המופע `nocturney/velvetos-velvet-factory` **פומבי** וכבר קיים. אם מופע חדש — צור ריפו ריק ב־GitHub (הסוכן בענן לא יכול `createRepository`).
 2. מהליבה:
 
 ```bash

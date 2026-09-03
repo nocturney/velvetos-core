@@ -17,6 +17,18 @@ This file is the **guide for this business office**. Core laws still win for sen
 - Pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף.
 - After catalog edits in core: run core `python3 scripts/check-all.py` from the core checkout / vendor.
 
+## MEMORY (from Core)
+
+Shared owner memory lives in Core, not duplicated in the frontend repo:
+
+- `vendor/velvetos-core/packages/vfops/data/owner-memory.md`
+- `vendor/velvetos-core/packages/vfops/data/ARTIFACT-INDEX.md` — how outputs aggregate
+- Checkpoints: `vendor/velvetos-core/packages/vfharness/state/`
+
+Morning brief reads block `05a` from owner-memory after `attach-core.sh`.
+
+Revenue loop: `vendor/velvetos-core/.cursor/skills/vf-revenue-loop/SKILL.md` · weekly `WEEKLY-REVENUE-PULSE.md`.
+
 ## ATTACH CORE
 
 ```bash

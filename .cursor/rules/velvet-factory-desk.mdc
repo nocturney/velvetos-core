@@ -26,6 +26,8 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 - Treg is **not relevant**. WebSearch / orchestra only.
 - Drive **creates** office docs when needed. No personal, medical, or legal folders unless the user names them.
 - No TikTok or ads without the lead seat. No secrets in git.
+- **Living office:** lead seat runs end-of-day retro (`vfops/hq/DAILY-RETRO.md`). Every specialist reviews today's conversations, promotes one durable line to `vfops/data/owner-memory.md`, and improves tomorrow — not static generic prompts. Module: `office-learning`.
+- **Revenue loop:** every monetized IG post needs an Offer card (SKU, `X ₪` or verified price, CTA). Module: `expert-revenue-loop`; weekly `WEEKLY-REVENUE-PULSE.md`; Insights via owner snapshot only (`expert-insights-ingest`).
 
 ## Route (pack → specialist → tool)
 
@@ -45,6 +47,17 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 | IG board | `vfigos` | `@instagram-curator` | Review, schedule, **send via tools** (`vfigos/SEND.md`) |
 | Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or «אין ספירה». Never invent. Treg not used. |
 | Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + WebSearch; weekly inspiration links: `vfresearch/WEEKLY.md` + `LINKS.json` |
+| Social Booster / carousel reach | `vfgrowth` `vfmskill` | `@carousel-growth-engine` `@growth-hacker` | `expert-social-booster`; no boost/auto-DM |
+| 3D model analyze / make / build | `vfprod` `vfsku` `vlicense` | `@technical-artist` `@studio-producer` | `expert-3d-model`; 3D AI Studio after lead approval |
+| Trend explorer | `vfresearch` `vfseason` | `@trend-researcher` | `expert-trend-explorer`; WebSearch; no invented trends |
+| AI image / video director | `vfom` `vfcovers` `vfcanva` | `@visual-storyteller` `@short-video-editing-coach` | `expert-media-director`; Canva first; no Veo/Kling from HQ |
+| Daily learning / end-of-day retro | `vfops` `vfmem` `vfharness` | `@chief-of-staff` `@studio-operations` | `DAILY-RETRO.md` + `owner-memory.md`; skill `vf-daily-learning` |
+| Revenue loop / IG → פרנסה | `vfgrowth` `vfsales` `vfinsights` | `@offer-lead-gen-strategist` `@pipeline-analyst` | `expert-revenue-loop`; skill `vf-revenue-loop`; `WEEKLY-REVENUE-PULSE.md` |
+| Close quote / deal | `vfsales` `vfconvert` | `@deal-strategist` `@sales-engineer` | Gmail send when ready; X ₪ until verified |
+| Retention after pickup | `vfsales` `vfgrowth` | `@customer-success-manager` | `TIMELINE-AUTO.md` |
+| IG Insights snapshot | `vfinsights` | `@tracking-measurement-specialist` | Owner paste only; `expert-insights-ingest` |
+| Paid boost / ads | `vfgrowth` `vfigos` | `@paid-social-strategist` | **Lead gate only** — after proven organic offer |
+| New frontend instance | `velvetos` | `@studio-operations` `@business-strategist` | `INSTANCE-ONBOARD.md` + `publish-instance.sh` |
 | IG music / reel sound | `vfresearch` | `@trend-researcher` → `@instagram-curator` | `MUSIC.md` + HeyOrca weekly / IG paste (no Treg); hand off to `vfom` / `vfigos`; no invented track names |
 | Decide / stuck / cash pulse / IG rotation / studio notes | `vfmakers` on existing packs | `@chief-of-staff` or `@vfmakers` | Gmail **read** bills for cash pulse only |
 | Run / משמרת | `vfe2b` overlay | `@chief-of-staff` then the seat crew | One job folder. End in `worker_done` / `escalation` / `decision_gate`. Card: דופק / אימות / ארטיפקט. Do not install Orca or a second orchestrator |

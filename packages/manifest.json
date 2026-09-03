@@ -5,11 +5,14 @@
   "role": "core",
   "displayName": "VelvetOS Core",
   "dumpedAt": "2026-08-30",
+  "catalogRefreshedAt": "2026-09-02",
   "tag": "v0.1.0",
   "notes": [
-    "2026-08-31: This repo is VelvetOS Core (backend). Frontend scaffold for Velvet Factory: instances/velvet-factory/ → publish nocturney/velvetos-velvet-factory. See packages/velvetos/REPOS.md.",
+    "2026-09-02 evening catalog: GitHub nocturney/velvetos-core (renamed from velvet-factory-headquarters-os). Folded PR #69 vfsku SHELF.json + FIRST-PRINT.md. Origin not vendored (CLI not logged in). Left open: #68 ig-mcp, #66 access gaps, #59 MCP bridge, #58 iCloud.",
+    "2026-09-01: Eleven packs (vfops\u2026vfbriefux) reclassified hq-native \u2014 tree lives in Core; bcId is lineage only. Origin vendor for six tmp-* packs still needs origin auth login. See docs/OWNER-ACTIONS-he.md.",
+    "2026-08-31: This repo is VelvetOS Core (backend). Frontend scaffold for Velvet Factory: instances/velvet-factory/ \u2192 publish nocturney/velvetos-velvet-factory. See packages/velvetos/REPOS.md.",
     "2026-08-31: VelvetOS core modules + presets (packages/velvetos). This repo is the Velvet Factory instance; modules for all verticals are always loaded. Future businesses = separate instance repos pulling from core (REPOS.md). No active/example tenants.",
-    "2026-08-31: VelvetOS kernel (packages/velvetos) — universal business + social desk with tenant profiles. Active tenant remains velvet-factory. Examples under tenants/_examples/ are drafts only. See docs/VELVETOS.md.",
+    "2026-08-31: VelvetOS kernel (packages/velvetos) \u2014 universal business + social desk with tenant profiles. Active tenant remains velvet-factory. Examples under tenants/_examples/ are drafts only. See docs/VELVETOS.md.",
     "Origin slugs: never invent. Eleven packs stay origin-slug-unknown until a scoped tmp list or agent-page copy. Playbook: docs/ORIGIN-SLUGS.md. Report: scripts/discover-origin-slugs.py. Recheck 2026-08-31: this HQ token lists only velvet-factory-headquarters-os; known tmp-* view is token-not-scoped.",
     "Origin CLI was not authenticated in the v0.1.0 dump environment (no CURSOR_API_KEY, origin auth status: not logged in).",
     "GitHub token is not accepted by origin.cursor.com.",
@@ -19,18 +22,18 @@
     "Standing order 2026-08-30: GitHub is the constant backup. Same-day catalog+CHANGELOG even when Origin will not clone. Grok Bot: docs/BACKUP.md.",
     "2026-08-30 desk overlay: 28 Agency specialists + live tools in .cursor/vf-desk.json and docs/AGENCY-TOOLS.md. HQ Gmail is read-only.",
     "2026-08-30: vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness. See docs/DSH-FIT.md.",
-    "2026-08-30: vfmskill is an HQ-native pack. Curated 15/50 skills from coreyhaines31/marketingskills (MIT, e55de88) mapped onto existing packs. No SaaS CMO dump, no send, no invented ₪.",
+    "2026-08-30: vfmskill is an HQ-native pack. Curated 15/50 skills from coreyhaines31/marketingskills (MIT, e55de88) mapped onto existing packs. No SaaS CMO dump, no send, no invented \u20aa.",
     "2026-08-30: vfom is an HQ-native pack (not Origin). OpenMontage pipeline patterns (clip-factory, hybrid, reference plan, scene gate, self-review) map onto existing content packs. Do not vendor Remotion or send Instagram.",
     "2026-08-30: vfmem is HQ-native. Structural queries over desk/manifest/Agency maps (DeusData/codebase-memory-mcp pattern). Do not install their binary from this repo. See docs/VFMEM.md.",
-    "2026-08-30: vfgraft is an HQ-native pack (not Origin). Graft pattern (committed markdown office graph) only — no npm CLI, no Graft MCP.",
-    "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings → MCP Tools.",
-    "2026-08-30: vfmakers maps coreyhaines31/makerskills (20, MIT) onto existing packs — decide / unstuck / cash pulse / IG rotation / studio brain. No plugin, no Typefully, no live bank, no send. See docs/MAKERSKILLS-EMBED-he.md.",
+    "2026-08-30: vfgraft is an HQ-native pack (not Origin). Graft pattern (committed markdown office graph) only \u2014 no npm CLI, no Graft MCP.",
+    "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings \u2192 MCP Tools.",
+    "2026-08-30: vfmakers maps coreyhaines31/makerskills (20, MIT) onto existing packs \u2014 decide / unstuck / cash pulse / IG rotation / studio brain. No plugin, no Typefully, no live bank, no send. See docs/MAKERSKILLS-EMBED-he.md.",
     "2026-08-30: ChatGPT share https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19 embedded in place (packages/*/hq, constitution/, vfbriefux packet). No new pack per agent. Vendor preserves hq/ overlays. See packages/chatgpt-embed-map.json and docs/SHARE-EMBED-he.md.",
-    "2026-08-30 share embed: Gemini hbuCq3MEy5po / 4f223bc1774c read and mapped onto existing packs + constitution/. Perplexity c950af30: morning Cloudflare wall; afternoon owner PDFs read and mapped in place (no new pack, no invented ₪, no live bot/site/widget). See docs/SHARES-2026-08-30.md.",
-    "Orchestra 2026-08-30 ~17:55 lock: Grok decides only. Cursor opens ChatGPT + Gemini + Perplexity at 06:15. Map onto existing packs. constitution/ORCHESTRA.md. Evening pass 30.8 waiting owner login — do not invent bodies.",
-    "2026-08-30: vfharness is an HQ-native pack. Six-layer outer harness (guides/sensors/loop/memory/permissions/observability) mapped onto existing packs. Guide file is AGENTS.md. Sensors: scripts/check-all.py. No second runtime, no send, no invented ₪. See docs/HARNESS.md.",
-    "2026-08-30: vffcc maps Alishahryar1/free-claude-code. Local BYOK proxy only — does not cut Cursor Cloud usage. No fcc-server on this HQ. See docs/FCC-FIT.md.",
-    "2026-08-30: Weekly inspiration-link review on vfresearch — LINKS.json registry + WEEKLY.md playbook. Re-read shares/repos once a week; embed updates in place; ask what is new to research. Sensor: scripts/check-vfresearch.py. See packages/vfresearch/WEEKLY.md."
+    "2026-08-30 share embed: Gemini hbuCq3MEy5po / 4f223bc1774c read and mapped onto existing packs + constitution/. Perplexity c950af30: morning Cloudflare wall; afternoon owner PDFs read and mapped in place (no new pack, no invented \u20aa, no live bot/site/widget). See docs/SHARES-2026-08-30.md.",
+    "Orchestra 2026-08-30 ~17:55 lock: Grok decides only. Cursor opens ChatGPT + Gemini + Perplexity at 06:15. Map onto existing packs. constitution/ORCHESTRA.md. Evening pass 30.8 waiting owner login \u2014 do not invent bodies.",
+    "2026-08-30: vfharness is an HQ-native pack. Six-layer outer harness (guides/sensors/loop/memory/permissions/observability) mapped onto existing packs. Guide file is AGENTS.md. Sensors: scripts/check-all.py. No second runtime, no send, no invented \u20aa. See docs/HARNESS.md.",
+    "2026-08-30: vffcc maps Alishahryar1/free-claude-code. Local BYOK proxy only \u2014 does not cut Cursor Cloud usage. No fcc-server on this HQ. See docs/FCC-FIT.md.",
+    "2026-08-30: Weekly inspiration-link review on vfresearch \u2014 LINKS.json registry + WEEKLY.md playbook. Re-read shares/repos once a week; embed updates in place; ask what is new to research. Sensor: scripts/check-vfresearch.py. See packages/vfresearch/WEEKLY.md."
   ],
   "hqOverlay": {
     "constitution": "constitution/CONSTITUTION.md",
@@ -44,12 +47,22 @@
     "harness": "AGENTS.md",
     "harnessPack": "packages/vfharness",
     "harnessWriteup": "docs/HARNESS.md",
-    "vendorPreserves": ["ORIGIN.md", "SKILL.md", "hq/", "playbooks next to ORIGIN.md", "packages/*/sources", "packages/vfcovers/g005", "packages/vfresearch/LINKS.json", "packages/vfresearch/WEEKLY.md", "packages/vfresearch/DAILY.md"]
+    "vendorPreserves": [
+      "ORIGIN.md",
+      "SKILL.md",
+      "hq/",
+      "playbooks next to ORIGIN.md",
+      "packages/*/sources",
+      "packages/vfcovers/g005",
+      "packages/vfresearch/LINKS.json",
+      "packages/vfresearch/WEEKLY.md",
+      "packages/vfresearch/DAILY.md"
+    ]
   },
   "packs": [
     {
       "name": "vfigos",
-      "summary": "VF Instagram OS — Instagram office pack (review and schedule; this HQ does not send).",
+      "summary": "VF Instagram OS \u2014 Instagram office pack (review and schedule; this HQ does not send).",
       "bcId": "bc-c4a53ee3",
       "agentUrl": "https://cursor.com/agents/bc-c4a53ee3",
       "originSlug": "christian-velvet/tmp-20e9908caebda9d0",
@@ -59,7 +72,7 @@
     },
     {
       "name": "vfcost",
-      "summary": "Studio cost pack — unit economics and spend, without invented prices.",
+      "summary": "Studio cost pack \u2014 unit economics and spend, without invented prices.",
       "bcId": "bc-a4dc99c9",
       "agentUrl": "https://cursor.com/agents/bc-a4dc99c9",
       "originSlug": "christian-velvet/tmp-8a55585f5a73bd06",
@@ -69,7 +82,7 @@
     },
     {
       "name": "vfconvert",
-      "summary": "Conversion pack — inquiry-to-order path.",
+      "summary": "Conversion pack \u2014 inquiry-to-order path.",
       "bcId": "bc-9644a175",
       "agentUrl": "https://cursor.com/agents/bc-9644a175",
       "originSlug": "christian-velvet/tmp-4460086f23171633",
@@ -79,7 +92,7 @@
     },
     {
       "name": "vfgrowth",
-      "summary": "Growth pack — content sprints and acquisition work.",
+      "summary": "Growth pack \u2014 content sprints and acquisition work.",
       "bcId": "bc-e68393a0",
       "agentUrl": "https://cursor.com/agents/bc-e68393a0",
       "originSlug": "christian-velvet/tmp-0093db8b6deea44f",
@@ -89,7 +102,7 @@
     },
     {
       "name": "vfprod",
-      "summary": "Production pack — print-floor and job tracking.",
+      "summary": "Production pack \u2014 print-floor and job tracking.",
       "bcId": "bc-cd4a5cde",
       "agentUrl": "https://cursor.com/agents/bc-cd4a5cde",
       "originSlug": "christian-velvet/tmp-c9ca74be9225ac7d",
@@ -99,7 +112,7 @@
     },
     {
       "name": "vfsales",
-      "summary": "Sales pack — quotes and follow-up.",
+      "summary": "Sales pack \u2014 quotes and follow-up.",
       "bcId": "bc-28017566",
       "agentUrl": "https://cursor.com/agents/bc-28017566",
       "originSlug": "christian-velvet/tmp-b467d4882113eabd",
@@ -109,118 +122,118 @@
     },
     {
       "name": "vfops",
-      "summary": "Operations pack — run-the-studio procedures.",
+      "summary": "Operations pack \u2014 run-the-studio procedures.",
       "bcId": "bc-93fbfca6",
       "agentUrl": "https://cursor.com/agents/bc-93fbfca6",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vfcovers",
-      "summary": "Covers pack — brief and post cover art.",
+      "summary": "Covers pack \u2014 brief and post cover art.",
       "bcId": "bc-390e0de1",
       "agentUrl": "https://cursor.com/agents/bc-390e0de1",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vfinsights",
-      "summary": "Insights pack — performance reads; does not invent metrics.",
+      "summary": "Insights pack \u2014 performance reads; does not invent metrics.",
       "bcId": "bc-02df9e72",
       "agentUrl": "https://cursor.com/agents/bc-02df9e72",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vfbooks",
-      "summary": "Books pack — receivables and studio ledger work.",
+      "summary": "Books pack \u2014 receivables and studio ledger work.",
       "bcId": "bc-280dd241",
       "agentUrl": "https://cursor.com/agents/bc-280dd241",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vfresearch",
-      "summary": "Research pack — source gathering and notes.",
+      "summary": "Research pack \u2014 source gathering and notes.",
       "bcId": "bc-01278e9b",
       "agentUrl": "https://cursor.com/agents/bc-01278e9b",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vfbiz",
-      "summary": "Business pack — studio strategy and decisions.",
+      "summary": "Business pack \u2014 studio strategy and decisions.",
       "bcId": "bc-3921041e",
       "agentUrl": "https://cursor.com/agents/bc-3921041e",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vfcopy",
-      "summary": "Copy desk — homework, draft, and lint.",
+      "summary": "Copy desk \u2014 homework, draft, and lint.",
       "bcId": "bc-b6bc8b8c",
       "bcIdFull": "bc-b6bc8b8c-136d-4d95-812e-177991534e42",
       "agentUrl": "https://cursor.com/agents/bc-b6bc8b8c-136d-4d95-812e-177991534e42",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vlicense",
-      "summary": "License gate — studio license / access check.",
+      "summary": "License gate \u2014 studio license / access check.",
       "bcId": "bc-0a6460b1",
       "agentUrl": "https://cursor.com/agents/bc-0a6460b1",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vfseason",
-      "summary": "Seasonal calendar — studio calendar and season marks.",
+      "summary": "Seasonal calendar \u2014 studio calendar and season marks.",
       "bcId": "bc-2a4a3260",
       "agentUrl": "https://cursor.com/agents/bc-2a4a3260",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vfsku",
-      "summary": "SKU cards and repeats — product cards and reprint runs.",
+      "summary": "SKU cards, empty shelf (SHELF.json), and reprint runs \u2014 no invented names or \u20aa.",
       "bcId": "bc-68f7f06c",
       "agentUrl": "https://cursor.com/agents/bc-68f7f06c",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vfbriefux",
-      "summary": "Brief format research — morning-brief layout and UX notes.",
+      "summary": "Brief format research \u2014 morning-brief layout and UX notes.",
       "bcId": "bc-9e0be231",
       "agentUrl": "https://cursor.com/agents/bc-9e0be231",
       "originSlug": null,
       "codebaseUrl": null,
       "cloneUrl": null,
-      "vendorStatus": "origin-slug-unknown"
+      "vendorStatus": "hq-native"
     },
     {
       "name": "vfcanva",
-      "summary": "Canva desk — Instagram visual content for @velvets_cloud (create / resize / review; this HQ does not send).",
+      "summary": "Canva desk \u2014 Instagram visual content for @velvets_cloud (create / resize / review; this HQ does not send).",
       "bcId": "bc-2020e135-820c-40b6-a922-e2822b5e81bf",
       "agentUrl": "https://cursor.com/agents/bc-2020e135-820c-40b6-a922-e2822b5e81bf",
       "originSlug": null,
@@ -232,7 +245,7 @@
     },
     {
       "name": "vfmcp",
-      "summary": "MCP fit research — which awesome-mcp-servers entries map onto VF packs. See docs/MCP-FIT.md.",
+      "summary": "MCP fit research \u2014 which awesome-mcp-servers entries map onto VF packs. See docs/MCP-FIT.md.",
       "bcId": "bc-1764e30f-b592-4805-9586-037da3351d65",
       "bcIdFull": "bc-1764e30f-b592-4805-9586-037da3351d65",
       "agentUrl": "https://cursor.com/agents/bc-1764e30f-b592-4805-9586-037da3351d65",
@@ -244,7 +257,7 @@
     },
     {
       "name": "vfe2b",
-      "summary": "Awesome-AI-agents desk — patterns from e2b-dev/awesome-ai-agents mapped onto existing packs (no second runtime, no send).",
+      "summary": "Awesome-AI-agents desk \u2014 patterns from e2b-dev/awesome-ai-agents mapped onto existing packs (no second runtime, no send).",
       "bcId": "bc-21cee8d9",
       "bcIdFull": "bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057",
       "agentUrl": "https://cursor.com/agents/bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057",
@@ -256,7 +269,7 @@
     },
     {
       "name": "vfdsh",
-      "summary": "Awesome-DSH-plugin desk — patterns from awesome-dsh-plugin mapped onto existing packs (no DeepSeek Harness, no send).",
+      "summary": "Awesome-DSH-plugin desk \u2014 patterns from awesome-dsh-plugin mapped onto existing packs (no DeepSeek Harness, no send).",
       "bcId": "bc-b4c0a22f",
       "bcIdFull": "bc-b4c0a22f-7c08-497e-beac-c4518acbea1d",
       "agentUrl": "https://cursor.com/agents/bc-b4c0a22f-7c08-497e-beac-c4518acbea1d",
@@ -269,7 +282,7 @@
     },
     {
       "name": "vfmakers",
-      "summary": "Maker-skills desk — patterns from coreyhaines31/makerskills mapped onto existing packs (decide, unstuck, cash pulse, IG rotation, studio brain). No plugin, no send.",
+      "summary": "Maker-skills desk \u2014 patterns from coreyhaines31/makerskills mapped onto existing packs (decide, unstuck, cash pulse, IG rotation, studio brain). No plugin, no send.",
       "bcId": "bc-888d3ff6",
       "bcIdFull": "bc-888d3ff6-c3ad-43f7-bda3-814c82546324",
       "agentUrl": "https://cursor.com/agents/bc-888d3ff6-c3ad-43f7-bda3-814c82546324",
@@ -283,7 +296,7 @@
     },
     {
       "name": "vfagents",
-      "summary": "500 AI Agents fit — which ashishpatel26/500-AI-Agents-Projects patterns map onto VF packs. Office playbooks only; no CrewAI runtime, no send.",
+      "summary": "500 AI Agents fit \u2014 which ashishpatel26/500-AI-Agents-Projects patterns map onto VF packs. Office playbooks only; no CrewAI runtime, no send.",
       "bcId": "bc-9765dc13",
       "bcIdFull": "bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027",
       "agentUrl": "https://cursor.com/agents/bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027",
@@ -295,7 +308,7 @@
     },
     {
       "name": "vfmskill",
-      "summary": "Marketing Skills desk — curated 15/50 skills from coreyhaines31/marketingskills on existing packs (copy, social, offer, research). No send, no invented ₪.",
+      "summary": "Marketing Skills desk \u2014 curated 15/50 skills from coreyhaines31/marketingskills on existing packs (copy, social, offer, research). No send, no invented \u20aa.",
       "bcId": "bc-cbd42dd7",
       "bcIdFull": "bc-cbd42dd7-d35f-4c48-88f3-1d993d3b1792",
       "agentUrl": "https://cursor.com/agents/bc-cbd42dd7-d35f-4c48-88f3-1d993d3b1792",
@@ -309,7 +322,7 @@
     },
     {
       "name": "vfom",
-      "summary": "OpenMontage desk — video-pipeline patterns from calesthio/OpenMontage mapped onto existing content packs (no Remotion vendor, no send).",
+      "summary": "OpenMontage desk \u2014 video-pipeline patterns from calesthio/OpenMontage mapped onto existing content packs (no Remotion vendor, no send).",
       "bcId": "bc-4be8813f",
       "bcIdFull": "bc-4be8813f-000e-43a0-b297-7537bda05d4e",
       "agentUrl": "https://cursor.com/agents/bc-4be8813f-000e-43a0-b297-7537bda05d4e",
@@ -322,7 +335,7 @@
     },
     {
       "name": "vfharness",
-      "summary": "Outer harness — six layers on existing packs (guides, sensors, loop, memory, permissions, observability). No second runtime. HQ does not send.",
+      "summary": "Outer harness \u2014 six layers on existing packs (guides, sensors, loop, memory, permissions, observability). No second runtime. HQ does not send.",
       "bcId": "bc-c6e01d3b",
       "bcIdFull": "bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
       "agentUrl": "https://cursor.com/agents/bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
@@ -336,7 +349,7 @@
     },
     {
       "name": "vfgraft",
-      "summary": "Graft office graph — trailhq/Graft pattern as committed markdown nodes. No npm CLI, no Graft MCP. Agents read MAP.md before grepping the warehouse.",
+      "summary": "Graft office graph \u2014 trailhq/Graft pattern as committed markdown nodes. No npm CLI, no Graft MCP. Agents read MAP.md before grepping the warehouse.",
       "bcId": "bc-e154ffc2-061a-4635-8d32-a6bcb145bc64",
       "bcIdFull": "bc-e154ffc2-061a-4635-8d32-a6bcb145bc64",
       "agentUrl": "https://cursor.com/agents/bc-e154ffc2-061a-4635-8d32-a6bcb145bc64",
@@ -350,7 +363,7 @@
     },
     {
       "name": "vfmem",
-      "summary": "HQ memory graph — CBM-style queries over existing VF maps. Pattern from DeusData/codebase-memory-mcp; no third-party binary.",
+      "summary": "HQ memory graph \u2014 CBM-style queries over existing VF maps. Pattern from DeusData/codebase-memory-mcp; no third-party binary.",
       "bcId": "bc-8bd6ba75",
       "bcIdFull": "bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
       "agentUrl": "https://cursor.com/agents/bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
@@ -363,7 +376,7 @@
     },
     {
       "name": "vffcc",
-      "summary": "Free Claude Code fit — local BYOK proxy map. Does not cut Cursor Cloud usage; no fcc-server on this HQ.",
+      "summary": "Free Claude Code fit \u2014 local BYOK proxy map. Does not cut Cursor Cloud usage; no fcc-server on this HQ.",
       "bcId": "bc-5abae8de",
       "bcIdFull": "bc-5abae8de-a5da-455e-b71c-3db25e3d029c",
       "agentUrl": "https://cursor.com/agents/bc-5abae8de-a5da-455e-b71c-3db25e3d029c",
@@ -376,7 +389,7 @@
     },
     {
       "name": "velvetos",
-      "summary": "VelvetOS Core — backend kernel; modules always loaded; frontend scaffolds under instances/.",
+      "summary": "VelvetOS Core \u2014 backend kernel; modules always loaded; frontend scaffolds under instances/.",
       "bcId": "bc-f7a22589",
       "bcIdFull": "bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
       "agentUrl": "https://cursor.com/agents/bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
