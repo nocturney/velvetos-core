@@ -93,7 +93,16 @@
       "packs": ["vfsku", "vfops"],
       "gate": "none",
       "path": "packages/vfsku/SHELF.json",
-      "notes": "Five slots. Empty until GATE + vlicense + slice. No invented names or ₪. Brief 03: vfsku.py brief."
+      "notes": "Five slots. Empty until GATE + vlicense + slice. No invented names or ₪. Brief 03: vfsku.py brief. Tomorrow shop: vfsku.py shop + vfprod/SHOP-CLOSE.md."
+    },
+    {
+      "id": "sku.shop",
+      "label": "חנות מחר — מדף ready בלבד",
+      "tool": "scripts/vfsku.py shop",
+      "packs": ["vfsku", "vfprod", "vfconvert", "vfops"],
+      "gate": "none",
+      "path": "packages/vfprod/SHOP-CLOSE.md",
+      "notes": "Ready slots only. Empty shelf = אין שם להציע. No invented names or ₪. Bag+label before pickup."
     },
     {
       "id": "canva.design",

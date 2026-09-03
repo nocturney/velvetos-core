@@ -1,6 +1,6 @@
 {
   "task_id": "grok-failover-2026-08-31",
-  "status": "running",
+  "status": "done",
   "pack": "vfharness",
   "completed_steps": [
     "Owner required Grok-equivalent failover (no extra Send click)",
@@ -12,7 +12,7 @@
     "Calendar hold kppd0t8mf1a07li78e4hssker8 for G005 already exists",
     "Instagram Publish still has no MCP"
   ],
-  "next_step": "Each remaining morning: refresh inbox/calendar then send_message office brief. G005 Thu 12:00 still needs human LIVE-PACKET (no IG publish MCP).",
+  "next_step": "Standing: Grok sends 07:00 mail when quota is live. HQ failover remains SEND.md. G005 still needs LIVE-PACKET (no IG publish MCP).",
   "artifacts": [
     "packages/vfharness/playbooks/grok-outage-tools.md",
     "packages/vfops/human-send/MAIL-PACK.md"
@@ -22,5 +22,5 @@
     "Treg / Mobbin / orchestra desks have no MCP here"
   ],
   "escalation": null,
-  "last_updated": "2026-08-31"
+  "last_updated": "2026-09-03"
 }
