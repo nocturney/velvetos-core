@@ -31,7 +31,7 @@
   ],
   "outcome": "worker_done",
   "pulse": "working",
-  "verification": "scripts/check-all.py after embed; vfsku.py shop on empty shelf prints אין כרטיס להציע",
+  "verification": "scripts/check-all.py passed=19 including check-vfsku + check-staleness; vfsku.py shop on empty shelf prints אין כרטיס להציע",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-03"

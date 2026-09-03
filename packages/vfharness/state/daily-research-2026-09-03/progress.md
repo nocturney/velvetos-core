@@ -2,4 +2,4 @@
 
 - Browser desks attempted; walls documented.
 - Implemented PATH shelf-first, SHOP-CLOSE, vfsku.py shop, copy templates, pickup bag+label.
-- Sensors next.
+- Sensors: check-all passed=19 after closing stale access-blockers JSON + grok-failover running card.
