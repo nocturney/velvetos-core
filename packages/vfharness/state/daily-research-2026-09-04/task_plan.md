@@ -16,8 +16,8 @@
 - [x] **1. תכנון** — `AGENTS.md` + `ORCHESTRA.md` + `DAILY.md` + `vfmem who`. אין פק חדש.
 - [x] **2. מקור** — דפדפן שלושה שולחנות; Gmail send על הלחיצה; WebSearch FAQ.
 - [x] **3. ביצוע** — הטמעה `vlicense` / `vfsku` / `vfcopy` / `ORCHESTRA` / `DAILY`.
-- [ ] **4. אימות** — `python3 scripts/check-all.py`
-- [ ] **5. סגירה** — `checkpoint.json` + `worker_done` עם חומות פתוחות.
+- [x] **4. אימות** — `python3 scripts/check-all.py` · passed=20
+- [x] **5. סגירה** — `checkpoint.json` + `worker_done` עם חומות פתוחות.
 
 ## החלטות
 

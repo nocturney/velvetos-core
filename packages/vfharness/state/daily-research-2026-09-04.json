@@ -1,6 +1,6 @@
 {
   "task_id": "daily-research-2026-09-04",
-  "status": "running",
+  "status": "done",
   "pack": "vfresearch",
   "goal": "Reconnect ChatGPT/Gemini/Perplexity on this Cloud Agent if possible; run 4.9 orchestra; embed on existing packs; Hebrew brief 05",
   "crew": "research",
@@ -15,26 +15,27 @@
     "Browser opened all three desks",
     "Google new-device 48h wall documented; Gmail sent",
     "WebSearch MakerWorld FAQ (real body)",
-    "Embeds on vlicense/vfsku/vfcopy/ORCHESTRA/DAILY"
+    "Embeds on vlicense/vfsku/vfcopy/ORCHESTRA/DAILY",
+    "python3 scripts/check-all.py passed=20"
   ],
-  "next_step": "Run check-all.py then close checkpoint",
+  "next_step": "Owner clicks Google 48h «help you sign in here» on nocturney@gmail.com; names one licensed model URL for shelf slot 1",
   "artifacts": [
     "packages/vfresearch/sources/2026-09-04-orchestra.md",
     "packages/vfops/data/research.md",
-    "packages/vfops/BRIEF-2026-09-04.md"
+    "packages/vfops/BRIEF-2026-09-04.md",
+    "packages/vlicense/GATE.md",
+    "packages/vfsku/FIRST-PRINT.md",
+    "packages/vfcopy/DESK.md",
+    "constitution/ORCHESTRA.md"
   ],
   "unresolved": [
     "ChatGPT Plus / Gemini Plus / Perplexity Pro still walled — Google 48h email link on nocturney@gmail.com",
     "Shelf still 0/5 until owner-named licensed model URL"
   ],
-  "outcome": null,
+  "outcome": "worker_done",
   "pulse": "working",
-  "verification": "pending check-all.py",
-  "gate": {
-    "kind": "escalation",
-    "waiting_for": "Google 48h «help you sign in here» email on nocturney@gmail.com for this Cloud Agent browser",
-    "reason": "accounts.google.com speedbump endsession — already signed in on another device"
-  },
+  "verification": "scripts/check-all.py passed=20 including check-vfsku.py and check-vfresearch.py; vfsku.py brief=0/5",
+  "gate": null,
   "escalation": "packages/vfharness/state/daily-research-2026-09-04/escalation.md",
   "last_updated": "2026-09-04"
 }

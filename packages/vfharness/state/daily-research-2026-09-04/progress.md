@@ -17,7 +17,7 @@
 
 | script | סטטוס | הערה |
 |---|---|---|
-| `python3 scripts/check-all.py` | pending | אחרי הקומיט |
+| `python3 scripts/check-all.py` | OK | passed=20 |
 
 ## שליחות (אם רלוונטי)
 
