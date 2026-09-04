@@ -15,6 +15,7 @@ Use when the user asks for רתמה, harness, AGENTS.md, checkpoint, escalate, h
 - Grok quota outage: `packages/vfharness/playbooks/grok-failover.md` + `grok-outage-tools.md` + `packages/vfigos/QUEUE.md` + `LIVE-PACKET.md`
 - Truncated / skeleton output: `packages/vfharness/playbooks/full-output-enforcement.md` (from taste-skill `output-skill`)
 - Success claims: `packages/vfharness/playbooks/verification-before-claim.md` (from obra/superpowers)
+- Skill-first: `packages/vfharness/playbooks/skill-first.md` (from obra `using-superpowers`)
 - New/edited HQ skills: `packages/vfharness/playbooks/skill-authoring.md`
 
 ## Loop
