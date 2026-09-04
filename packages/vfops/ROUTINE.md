@@ -9,7 +9,7 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 
 | שעה (Asia/Jerusalem) | מה | קובץ |
 |---|---|---|
-| 06:15 | תזמורת: ChatGPT **וגם** Gemini **וגם** Perplexity · failover מיד אם כלי נפל | `constitution/ORCHESTRA.md`, `vfresearch/DAILY.md` |
+| 06:15 | תזמורת: ChatGPT **וגם** Gemini **וגם** Perplexity · failover מיד אם כלי נפל (Cloud Agent + גוגל מכשיר חדש → WebSearch; קישור 48ש׳ ב־Gmail) | `constitution/ORCHESTRA.md`, `vfresearch/DAILY.md` |
 | 07:00 | בריף בוקר בסדר הטלפון | `BRIEF.md` |
 | אחרי פרסום חי (HQ דרך כלים / `#נשלח-מ-HQ`) | Insights ב־24 שעות. אם אין מספר — «אין» | `vfinsights` |
 

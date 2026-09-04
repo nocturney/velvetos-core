@@ -124,6 +124,10 @@ def main() -> None:
         fail("vlicense/GATE.md must mention MakerWorld commercial membership")
     if "הורדה" not in license_gate:
         fail("vlicense/GATE.md must say download is not a license")
+    if "שינוי תנאי" not in license_gate and "התראת מערכת" not in license_gate:
+        fail("vlicense/GATE.md must re-check after MakerWorld term-change notification")
+    if "מחזור החיוב" not in license_gate:
+        fail("vlicense/GATE.md must mention billing-cycle end on cancel")
 
     brief = BRIEF.read_text()
     if "vfsku.py" not in brief:

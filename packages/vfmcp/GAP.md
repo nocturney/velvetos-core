@@ -27,6 +27,18 @@
 מקורות: [Grok Connectors](https://x.ai/news/grok-connectors) (מאי 2026) · [ChatGPT Apps](https://help.openai.com/en/articles/11487775-connectors-in-chatgpt) · [Gemini Connected Apps](https://support.google.com/gemini/answer/13695044) · תזמורת `constitution/ORCHESTRA.md` · `constitution/SEND.md` (HQ שולח דרך כלים).  
 סשן חי בחשבון עלול להיות מאחורי חומת הזדהות — לא ממציאים גוף שנחסם.
 
+## סשן חי 4.9 (דפדפן Cloud Agent `bc-6d489ef4`)
+
+ניסיון חיבור מחדש: ChatGPT Plus / Gemini Plus / Perplexity Pro. אין MCP לשולחנות האלה.
+
+| שולחן | גוף |
+|---|---|
+| ChatGPT Plus | **דולג — חומת גוגל.** Log in → Continue with Google → `nocturney@gmail.com` → Try another way → פרומפט טלפון → speedbump «You're already signed in on another device or browser». אחרי 48 שעות קישור ב־Gmail. אין גוף. לא הומצא. |
+| Gemini Plus | **דולג — אותה חומה** (אורח Flash-Lite קודם; לא אורח). אותו חשבון גוגל. אין גוף. |
+| Perplexity Pro | Cloudflare Ray `a35b2b88946d314f` עבר (צ׳קבוקס) → Continue with Google → אותה חומת 48ש׳. אין גוף. |
+
+Failover: WebSearch + פקים על הדיסק (`ORCHESTRA.md`). Gmail `#נשלח-מ-HQ` עם הלחיצה המדויקת.
+
 ## סשן חי 31.8 (דפדפן, Christian Plus/Pro)
 
 אומת ב־`bc-0d7c7cd6`. לא קטלוג רשמי — רק מה שנראה במסך.

@@ -34,7 +34,8 @@
 2. `license` — הטקסט הקצר מהדף (למשל Standard Digital File / CC / Commercial membership).
 3. `licenseProof` — איפה ההוכחה (צילום Drive / שורת FAQ / מנוי יוצר פעיל).
 4. `licenseChecked` — תאריך בדיקה (`YYYY-MM-DD`).
-5. מנוי MakerWorld Commercial License: בודקים שהמנוי **עדיין פעיל** ושהדגם נכלל. ביטול מנוי → חוזרים ל־`waiting-license`.
+5. מנוי MakerWorld Commercial License: בודקים שהמנוי **עדיין פעיל** ושהדגם נכלל («Get Commercial License» בדף). ביטול → גישה עד סוף מחזור החיוב (FAQ), ואז `waiting-license`.
+6. התראת שינוי תנאים מ־MakerWorld → `licenseChecked` מחדש **לפני** באצ׳ הבא. אין באצ׳ על תנאים ישנים.
 
 ## אחרי ready
 
