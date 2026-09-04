@@ -38,7 +38,7 @@
 
 ## טיימר
 
-standingForever=true · `TIMER.md` · `timer: renewed`
+standingForever=true · `TIMER.md` · `timer: renewed` (subscribe_timer dedupe ok after fire)
 
 ## בלוק 05
 
