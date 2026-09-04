@@ -32,6 +32,7 @@ Blast radius for this office: which jobs and tools break when a law, tool mode, 
 | Internal command surface | `vfops/hq/capabilities.json` + `COMMAND-SURFACE.md` — view only; breaks if capabilities drift from SEND.md / desk laws |
 | Treg without login | `vfinsights`, `vfgrowth`, `vfresearch` live reads — WebSearch / «אין ספירה»; music → HeyOrca |
 | Research desk wall (ChatGPT/Gemini/Perplexity) | 06:15 orchestra — failover to open desks same turn; never invent body |
+| Cloud Agent Google new-device («already signed in on another device») | 48h email link on `nocturney@gmail.com` to authorize **this** browser; same-turn WebSearch; no guest/Flash-Lite; no password in chat |
 | Web / image native tools | `vfresearch`, `vfcovers` — failover in `constitution/ORCHESTRA.md`; Instagram still Canva-first |
 | 3D AI Studio MCP / credits | `vfprod` concept mesh — site UI + Drive (`3DAISTUDIO.md`); still `vlicense` + slice; no print from HQ |
 

@@ -23,3 +23,5 @@ Gmail (`nocturney@gmail.com`) is read-and-send: search, get thread, labels, `sen
 If Canva MCP is `needsAuth`, say `Canva לא מחובר` and use `packages/vfcanva/studio/render.py`. Instagram publish tool if connected; else Canva + Drive + Gmail same turn (`vfigos/SEND.md`). 3D AI Studio MCP down → site UI + Drive (`vfprod/3DAISTUDIO.md`); never invent a key.
 
 **Failover:** any tool down → backup tool **same turn** (`constitution/ORCHESTRA.md`). No empty finish. No invented ₪ / Insights / blocked body. Do not wait for Christian or Grok.
+
+Cloud Agent Chrome for ChatGPT / Gemini / Perplexity is a **new Google device**. 4.9 wall: «already signed in on another device» → 48h link in `nocturney@gmail.com`. Failover WebSearch same turn (`vfresearch/DAILY.md`).
