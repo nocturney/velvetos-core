@@ -281,6 +281,21 @@
     },
     {
       "q": [
+        "instagram publish calendar",
+        "לוח פרסום",
+        "standing calendar",
+        "לוח תוכן",
+        "content calendar",
+        "מה לפרסם",
+        "שיבוץ אינסטגרם"
+      ],
+      "pack": "vfgrowth",
+      "slug": "instagram-curator",
+      "tool": "calendar",
+      "note": "CALENDAR.md + LEDGER.md + HANDOFF-he.md — schedule on instagram.com"
+    },
+    {
+      "q": [
         "social booster",
         "carousel",
         "organic reach",

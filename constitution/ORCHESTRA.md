@@ -86,7 +86,7 @@ Cursor, לא Grok:
 | מק״ט חוזר, קל להדפסה, כרטיס בלי ₪ | `vfsku` + `vlicense` | קטלוג מחירים |
 | פנייה → וואטסאפ → איסוף | `vfconvert` | ManyChat / בוט 24/7 |
 | כיתוב, FAQ, ארבעה שדות בירור | `vfcopy` | שליחה חיה |
-| לוח תוכן מהעבודה (טיימלאפס / לפני־אחרי / הדרכה) | `vfgrowth` + `vfcovers` | בוסט, הזזת לוח משובץ |
+| לוח תוכן מהעבודה (טיימלאפס / לפני־אחרי / הדרכה) | `vfgrowth` + `vfcovers` (`CALENDAR.md` + `LEDGER.md`) | בוסט, הזזת לוח משובץ, Meta Suite |
 | סלייס, תמיכות, סיכון כשל | `vfcost` + `vfprod` | ווידג׳ט תשלום |
 | מודל AI (3D AI Studio / Meshy / Tripo) | `vfprod/3DAISTUDIO.md` + `vlicense` | קטלוג / באצ׳ / מחיר מקרדיטים |
 | B2B / אתר / מנוי חדש | `vfbiz` נעול עד בלוק `01` | קנייה מ־HQ |

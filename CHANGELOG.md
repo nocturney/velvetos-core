@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+<<<<<<< HEAD
 - 2026-09-05 — **last30days → חוקרי המשרד**: הטמעה מעמיקה של [mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill) על `vfresearch` — פלייבוק `hq/LAST30.md` (topic/comparison/discovery, confidence floor, nothing-solid), skill `vf-last30`, חיבור `@research-synthesist` / `@trend-researcher` בשולחן, `TREND-EXPLORER`, `LINKS.json`, `ORCHESTRA`/`ROUTINE`/`MAP`, סנסור `check-vfresearch.py`. דפוסים בלבד — בלי CLI / `npx skills` / מפתחות X. See `packages/vfresearch/sources/2026-09-05-last30days-embed.md`.
+=======
+- 2026-09-05 — **לוח פרסום קבוע**: `vfgrowth/CALENDAR.md` (W37–W39 מ־7.9 + תבנית שבועית) + `LEDGER.md` (G001/G002/G005 חיים; G003 SoccerBall חסום מדיה) + `HANDOFF-he.md` לשיבוץ instagram.com. כיתוב טיוטה `vfcopy/G003.md` + תבנית סטוריז 20:30. סנסור `scripts/check-vfgrowth.py`. בלי Publish/בוסט/סוויט מ־Cursor. Standing IG calendar on existing packs.
+>>>>>>> origin/main
 - 2026-09-05 — **VoiceStudio**: תחקור [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio) (local ElevenLabs alt · MCP `:3900`). דפוסים על `vfom` LOCK/EMBED + `docs/MCP-FIT.md` + `vfmcp/GAP.md`. **skip install** על Cloud; רילים נשארים הוכחת רצפה. Desktop VO רק אחרי ראש צוות + `vlicense`. רישום `LINKS.json`. See `packages/vfresearch/sources/2026-09-05-voicestudio.md`.
 - 2026-09-05 — **Owner links ×4**: DeepTutor + ExamFul.ai + lieflat-charts + academic-research-skills. הטמעה בפקים קיימים — `ACADEMIC-PIPELINE.md` (`vfresearch`), `CHARTS.md` (`vfbriefux`), `MASTERY-MEMORY.md` (`vfops`/`office-learning`); ExamFul = watch בלבד (אנכי בחינות). בלי Docker/plugin/`npx` / פק חדש. See `packages/vfresearch/sources/2026-09-05-weekly-links-owner-four.md`.
 - 2026-09-05 — **footrue ToolBox**: רישום [footrue.com](https://footrue.com/) ב־`LINKS.json` (בעלים שלח). כלי דפדפן מקומיים להכנת הוכחת רצפה — HEIC→JPG, הסרת רקע, דחיסה — לפני Canva. הטמעה ב־`vfcovers/hq/PLAYBOOK.md` + `vfcanva/WORKFLOW.md`. בלי MCP / בלי החלפת מותג / בלי Insights מצד ג׳. See `packages/vfresearch/sources/2026-09-05-footrue.md`.
