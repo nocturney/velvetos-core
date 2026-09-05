@@ -17,31 +17,51 @@ Cloud Agent ו־Grok Bot **לא** מתחברים ל־`chatgpt.com` / `gemini.goo
 
 Gemini CLI ו־Codex **לא** מחליפים את Gems/GPTs/Canvas של האתר. «מלא» לאפליקציה = כרום. «קבוע» לסוכן מקומי = OAuth על המק, לא העתקת טוקן לענן.
 
-## פעם אחת על המק (אתה)
+## אחרי שהתקנת Chrome במק
 
-1. Chrome: פרופיל ייעודי (למשל `VF-research`). התחבר פעם אחת ל־ChatGPT Plus, Gemini, Perplexity Pro. אל תתנתק. אל תפתח את אותם חשבונות מדפדפן Cloud/Grok.
-2. Cursor **Desktop** על אותו מק — זה משרד התזמורת 06:15 כשצריך את המנויים.
-3. Gemini בלי מפתח API:
+Cloud Agent על VM של Cursor **לא** מקבל גישה לכרום שלך. אין שיתוף מרחוק, אין remote-debugging, אין העתקת עוגיות.  
+כדי שסוכן עתידי ייכנס לאתרים **מזוהה במנוי, מ־IP ביתי**: הכלים רצים **על המק** (`agent worker --computer-use`).
+
+### א. כרום — שלושה לוגין, פרופיל אחד
+
+1. פתח Chrome. אופציונלי: פרופיל בשם `VF-research` (תמונה → Add).
+2. הישאר מחובר באתרים (לא מספיק «התקנתי כרום»):
+   - https://chatgpt.com — חשבון Plus
+   - https://gemini.google.com — אותו Google של המנוי
+   - https://www.perplexity.ai — Pro
+3. בדוק תג Plus/Pro בכל טאב. סגור בלי Log out.
+4. אל תפתח את שלושת האתרים מדפדפן Cloud / Grok Bot.
+
+### ב. CLI רשמי (בלי מפתח API) — אותו מק
 
 ```bash
-# על המק בלבד — Login with Google, החשבון של המנוי
-gemini
+gemini          # Login with Google
+codex login     # ChatGPT Plus
 ```
 
-4. ChatGPT Plus בלי מפתח API:
+### ג. Worker — כדי שסוכן Cloud יריץ כלים אצלך
+
+המק דולק, התהליך רץ. אין פורט נכנס, אין ngrok.
 
 ```bash
-# על המק בלבד
-codex login
+curl https://cursor.com/install -fsS | bash
+agent login
+cd /path/to/velvetos-core   # הקלונים המקומי
+agent worker --computer-use --name "sderot-mac" start
 ```
 
-5. Perplexity: אותה שאלת `DAILY.md` בטאב כרום (או Codex/Gemini ואז ציטוטים מ־WebSearch ב־Cloud). לא מתקינים `perplexity-user-mcp` עד שאישור ראש צוות + סיכון ToS.
-6. שמור תוצר ל־`packages/vfresearch/sources/YYYY-MM-DD-orchestra.md` ו־push / Drive. Cloud קורא את הקובץ — לא את האתר.
+בפעם הראשונה ב־macOS: System Settings → Privacy & Security → Accessibility **ו־** Screen Recording ל־**Cursor Computer Use**.
 
-אל תעתיקו `~/.gemini`, `~/.codex`, עוגיות, או `ANTIGRAVITY_TOKEN` ל־Cloud Agent.
+ב־cursor.com/agents: בחר את המכונה `sderot-mac` (לא VM הענן).  
+אין worker מחובר עכשיו — עד שזה רץ, השיחה הזו נשארת על VM בלי הכרום שלך.
+
+### ד. מה לא לעשות
+
+- Chrome remote debugging / שיתוף מסך / מנהרה לכרום
+- להעתיק עוגיות או `~/.codex` / `~/.gemini` ל־Cloud
+- `npx perplexity-user-mcp` בענן
 
 ## כל בוקר 06:15
-
 | מי רץ | מה עושים |
 |---|---|
 | **Cursor Desktop במק** | שלושת השולחנות במנוי (כרום ו/או Codex + Gemini CLI). תבנית `vfresearch/DAILY.md`. מטמיעים בפק קיים. |
@@ -49,9 +69,9 @@ codex login
 
 `constitution/ORCHESTRA.md`.
 
-## אופציונלי אחר כך
+## אופציונלי — worker בלי computer-use
 
-`cursor worker start` על המק — סוכן שרץ **בשדרות** (IP ביתי). אין worker מחובר עכשיו. לא מנהרה / ngrok לסשן הדפדפן.
+`agent worker start` בלי `--computer-use`: טרמינל + קבצים במק, בלי לחיצות בכרום. עדיין Codex / Gemini CLI בטרמינל המקומי.
 
 ## אסור
 

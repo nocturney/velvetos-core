@@ -1,0 +1,29 @@
+{
+  "task_id": "chrome-then-worker-2026-09-05",
+  "status": "done",
+  "pack": "vfmcp",
+  "goal": "Tell the owner what to do after installing Chrome so agents can use Plus sites from the home IP without this Cloud VM driving that browser.",
+  "planned_steps": [
+    "Clarify this VM cannot see owner Chrome",
+    "Document site logins + Codex/Gemini CLI + agent worker --computer-use",
+    "Forbid remote-debug and cookie copy"
+  ],
+  "completed_steps": [
+    "HOST.md checklist: Chrome logins, CLIs, worker with computer-use",
+    "Confirmed zero self-hosted workers visible to this run"
+  ],
+  "next_step": "Owner logs into chatgpt.com, gemini.google.com, perplexity.ai in Chrome, then agent worker --computer-use --name sderot-mac start, then start a new Cloud Agent on that machine.",
+  "artifacts": [
+    "packages/vfmcp/HOST.md"
+  ],
+  "unresolved": [
+    "This Cloud Agent session still runs on a Cursor-hosted VM — it cannot use the owner Chrome until a worker is online and a new run targets it"
+  ],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "latest_observation": "list-self-hosted-workers returned zero workers."
+}

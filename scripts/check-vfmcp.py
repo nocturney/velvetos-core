@@ -181,7 +181,7 @@ def main() -> None:
         (CONNECT_GEMINI, ("חסר מפתח Gemini", "vf_gemini.py", "aliargun", "gemini.google.com", "לא ממציאים", "RLabs")),
         (CONNECT_CHATGPT, ("חסר מפתח ChatGPT", "vf_chatgpt.py", "chatgpt.com", "OPENAI_API_KEY", "לא ממציאים")),
         (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py", "perplexity-user-mcp", "patchright", "HOST.md")),
-        (HOST, ("המק בשדרות", "codex login", "Gemini CLI", "perplexity.ai", "Cloud Agent", "לא ממציאים")),
+        (HOST, ("המק בשדרות", "codex login", "Gemini CLI", "perplexity.ai", "Cloud Agent", "לא ממציאים", "agent worker", "computer-use")),
         (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "Gemini API", "ChatGPT API")),
     ):
         text = path.read_text(encoding="utf-8")
