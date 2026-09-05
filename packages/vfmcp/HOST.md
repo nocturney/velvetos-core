@@ -7,7 +7,35 @@ Cloud Agent **על VM מנוהל** ו־Grok Bot **לא** מתחברים ל־`cha
 
 בלי חיוב API נפרד (בעלים 5.9.2026). Hub: [`SUBSCRIPTIONS.md`](SUBSCRIPTIONS.md).
 
-## מק ייעודי — לא ה-PC ווינדוס
+## התחלה נקייה — מק ייעודי בלבד
+
+מכונה: `Mac-Office` · תיקייה: `~/velvetos-core` · שם worker: `sderot-mac`  
+**בלי** `--computer-use` · **בלי** `--share-desktop` · **בלי** סוגריים `[ ]` · **בלי** `/path/to/`
+
+1. טרמינל אחד ב־macOS. סגור חלונות `agent worker` ישנים.
+2. Chrome במק (לא ווינדוס): chatgpt.com + gemini.google.com + perplexity.ai מחוברים. בלי Log out.
+3. בטרמינל:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+agent status
+```
+
+צפוי: `Logged in as nocturney@gmail.com`. אם `command not found` — `echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc`.
+
+4. אם status לא מחובר: `agent login` (חלון = חשבון Cursor), אז שוב `agent status`.
+5. הפעל worker והשאר את החלון פתוח:
+
+```bash
+cd ~/velvetos-core
+agent worker --name "sderot-mac" start
+```
+
+צפוי: `Worker is now running`. הפרומפט לא חוזר ל־`%`.
+6. שיחה **חדשה**: https://cursor.com/agents — בחר `sderot-mac`, לא VM הענן.
+
+לחיצות בכרום / `--computer-use` = אחר כך, לא בסיבוב הזה (SEA נופל על CLI 2026.09.02).
+
 
 בעלים 5.9.2026: יש מחשב ווינדוס ליום-יום, ו**מק ייעודי** למנויים + worker. המארח הוא המק בשדרות — לא הווינדוס.
 
