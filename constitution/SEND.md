@@ -12,7 +12,7 @@ Treg לא רלוונטי. Drive יוצר מסמכים לפי צורך.
 | ערוץ | מי | כלי | לא |
 |---|---|---|---|
 | ג׳ימייל | **סוכן HQ** | `send_message` / `reply` / `forward` על `nocturney@gmail.com` | לא מחכים לגרוק. לא מחכים לאדם ללחוץ Send |
-| אינסטגרם `@velvets_cloud` | **סוכן HQ** דרך כלי מחובר (Canva export + פרוטוקול `vfigos/SEND.md`) | כשאין MCP Publish — Gmail + Drive + Canva **באותו תור** | לא LIVE-PACKET לאדם כברירת מחדל. לא «מחכים למכסת Grok» |
+| אינסטגרם `@velvets_cloud` | **סוכן HQ** דרך כלי מחובר | **ig-mcp** `publish_media` אחרי Canva export (`vfigos/CONNECT-IG.md`). כשאין MCP — Gmail + Drive + Canva **באותו תור** | לא LIVE-PACKET לאדם כברירת מחדל. לא «מחכים למכסת Grok». לא אוטו־DM |
 | וואטסאפ לקוח | אדם `050-2517000` | Core: MCP חיפוש/טיוטה (`vfmcp/CONNECT-WHATSAPP.md`). VF `send=false` | HQ לא ממציא בוט · לא Infobip/ManyChat |
 | מדפסות | רצפה | `vfprod` | HQ לא לוחץ Print |
 | בוסט / אוטו־DM | — | נעול | נעול תמיד |
@@ -32,9 +32,9 @@ Grok Bot הוא **גיבוי אופציונלי**, לא השולח היחיד ו
 
 1. Canva (או `studio/render.py`) מפיק מדיה.
 2. `vfcopy` נותן כיתוב + CTA וואטסאפ / איסוף שדרות.
-3. אם יש כלי Publish מחובר — HQ מפרסם ומסמן `#נשלח-מ-HQ`.
-4. אם אין Publish MCP — **failover מיד:** יוצרים מסמך Drive + שולחים ג׳ימייל עם המדיה/הכיתוב/קישור העריכה. מסמנים `#נשלח-מ-HQ` (מסלול כלים) + `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה.
-5. לא סרק. לא «תעלה ידנית». לא ממציאים שנשלח לפיד אם לא עלה.
+3. אם **ig-mcp** מחובר (`packages/vfigos/CONNECT-IG.md`) — HQ מפרסם ב־`publish_media` ומסמן `#נשלח-מ-HQ`.
+4. אם אין Publish MCP / `needsAuth` — **failover מיד:** יוצרים מסמך Drive + שולחים ג׳ימייל עם המדיה/הכיתוב/קישור העריכה. מסמנים `#נשלח-מ-HQ` (מסלול כלים) + `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה.
+5. לא סרק. לא «תעלה ידנית». לא ממציאים שנשלח לפיד אם לא עלה. לא `send_dm`.
 
 ## Drive — יוצרים לפי צורך
 

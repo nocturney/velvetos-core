@@ -1,0 +1,21 @@
+{
+  "task_id": "ig-mcp-embed-2026-09-05",
+  "guide": ["AGENTS.md", "packages/vfigos/CONNECT-IG.md", "packages/vfmcp/CORE-MCP.md", "constitution/SEND.md"],
+  "status": "mapped_needsAuth",
+  "updatedAt": "2026-09-05",
+  "summary": "Mapped jlbadano/ig-mcp onto vfigos/vfmcp/vfinsights. Core catalog + desk + mcpBind. Secrets not in git. Publish live after owner Meta token.",
+  "execution_state": {
+    "source": "https://github.com/jlbadano/ig-mcp",
+    "connect": "packages/vfigos/CONNECT-IG.md",
+    "desk_status": "needsAuth",
+    "mcpBind": "instagram.publish=true dm=false",
+    "failover": "Canva+Drive+Gmail"
+  },
+  "latest_observation": "Cloud Agent has no Instagram MCP namespace yet; Meta Developer Tools MCP is separate (app admin). Owner must add long-lived token via Desktop ~/.cursor or Team MCP secrets.",
+  "next_step": "Owner: Meta Business App + long-lived Page token → CONNECT-IG.md → reload until desk instagram.status=ready",
+  "artifacts": [
+    "packages/vfigos/CONNECT-IG.md",
+    "packages/vfmcp/core-mcp.json",
+    "packages/vfmcp/mcp.desktop.example.json"
+  ]
+}

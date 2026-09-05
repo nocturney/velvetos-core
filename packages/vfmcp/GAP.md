@@ -44,7 +44,7 @@
 
 | כלי שם | כאן | דין |
 |---|---|---|
-| שליחת אינסטגרם | Canva + `vfigos/SEND.md` (אין Publish MCP) | **wired failover** — Drive + Gmail `send_message` אותו תור |
+| שליחת אינסטגרם | Canva + ig-mcp (`CONNECT-IG.md`) או failover `vfigos/SEND.md` | **mapped** — Publish `needsAuth` עד Meta token; failover Drive + Gmail `send_message` אותו תור |
 | שליחת Gmail | `send_message` / `reply` / `forward` | **wired** — HQ שולח |
 | מדפסות | אין בכוונה | **skip** — רצפה לא מ־HQ |
 | Google Workspace (Gmail/Drive/Docs/Sheets/Calendar) **כתיבה+שליחה** | Gmail **שליחה**; Drive `create_file`; Calendar קריאה; Sheets דרך Drive | **wired** 31.8 — `SEND.md` |
@@ -97,12 +97,13 @@
 6. **3D AI Studio** — HTTP `threedaistudio` → `https://mcp.3daistudio.com/mcp`. Desktop: `.cursor/mcp.json`. Cloud: namespace `3DAIStudio` **ready** (אומת 2026-09-01). פלייבוק `vfprod/3DAISTUDIO.md` + `CONNECT-3DAI.md`.
 7. **Studio MCP Hub** — HTTP `studiomcphub` → `https://studiomcphub.com/mcp` ב־`.cursor/mcp.json`. VF מדלג CMYK/`print_ready`. `CONNECT-STUDIOHUB.md`.
 8. **Sheets + WhatsApp בליבה** — רשומים ב־`core-mcp.json`. Desktop Connect (`CONNECT-SHEETS.md` / `CONNECT-WHATSAPP.md`). VF: יומן לפי bindings; וואטסאפ `send=false`. בלי Connect: `vf_office.py`.
+9. **Instagram ig-mcp** — רשום ב־`core-mcp.json` (Desktop / Team MCP secrets). פלייבוק `vfigos/CONNECT-IG.md`. סטטוס שולחן `needsAuth` עד טוקן. DM כבוי. failover: Canva+Drive+Gmail.
 
 ## מה לא הותקן — ולמה
 
 | פער | למה לא |
 |---|---|
-| Publish MCP לאינסטגרם | אין namespace. failover: Canva+Drive+Gmail (`SEND.md`). לא ממציאים שעלה לפיד |
+| Publish MCP לאינסטגרם **חי** | **ממופה** → [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) (`CONNECT-IG.md`). עדיין `needsAuth` עד Meta App + token בדשבורד / `~/.cursor`. failover: Canva+Drive+Gmail (`SEND.md`) |
 | וואטסאפ **שליחה** / מדפסות | MCP מותר לחיפוש/טיוטה. שליחת לקוח VF = אדם `050-2517000`. מדפסות ברצפה. `vf_office.py convert draft` |
 | Treg | **לא רלוונטי** למשרד. לא login |
 | Mobbin MCP | פלאגין על הדיסק; namespace לא על Cloud Agent. failover: `vfbriefux` |
@@ -122,7 +123,7 @@
 |---|---|---|---|---|
 | ראש צוות | `vfops` | Gmail · Calendar | Drive `create_file` · «חסר לוח» | המצאת ₪ · blast |
 | סטודיו | `vfconvert` · `vfsales` | Gmail | Drive · `#נשלח-מ-HQ` · טיוטת וואטסאפ | שליחת וואטסאפ ללקוח · auto-DM |
-| צמיחה | `vfgrowth` · `vfigos` · `vfcovers` | Canva | `studio/render.py` → Superdesign → Drive+Gmail | Publish מזויף · boost |
+| צמיחה | `vfgrowth` · `vfigos` · `vfcovers` | Canva · ig-mcp (אחרי Connect) | `studio/render.py` → Superdesign → Drive+Gmail · `#ממתין-ל-כלי-IG` | Publish מזויף · boost · auto-DM |
 | תפעול | `vfcost` · `vfbooks` | Gmail · Drive | CSV דרך Drive · `mcp-gsheets` אחרי Connect · «X ₪» / «אין ספירה» | Sheets ID מומצא |
 | ייצור | `vfprod` · `vfresearch` | Drive · WebSearch · 3DAI | studiomcphub רקע/גודל · STL preflight | Treg · גוף חסום · CMYK כצינור VF |
 

@@ -2,7 +2,8 @@
 
 מושב: צמיחה. לא ממציאים מדד.
 
-רק מספר מ־IG Professional / סנאפשוט. חלון רגיל: 24 שעות אחרי עלייה.
+רק מספר מ־IG Professional / סנאפשוט בעלים / **ig-mcp** `get_media_insights` אחרי Connect (`vfigos/CONNECT-IG.md`).  
+חלון רגיל: 24 שעות אחרי עלייה. בלי מקור מאומת — «אין ספירה».
 
 ## מומחה — Insights ingest
 

@@ -104,8 +104,31 @@
       "useWhen": "Instagram post/story/reel cover/carousel for @velvets_cloud",
       "mcp": "https://mcp.canva.com/mcp",
       "verifiedAt": "2026-08-31",
-      "note": "Cloud Agent search-designs returned DAGoYmCu4c4. Instagram send: vfigos/SEND.md (tool or Canva+Drive+Gmail failover).",
+      "note": "Cloud Agent search-designs returned DAGoYmCu4c4. Instagram send: vfigos/SEND.md + CONNECT-IG.md (tool or Canva+Drive+Gmail failover).",
       "failover": "needsAuth → packages/vfcanva/studio/render.py → Superdesign. Say Canva לא מחובר."
+    },
+    "instagram": {
+      "status": "needsAuth",
+      "namespace": "instagram",
+      "account": "@velvets_cloud",
+      "mcp": "stdio · jlbadano/ig-mcp",
+      "useWhen": "vfigos publish, vfinsights verified metrics, feed review",
+      "connect": "packages/vfigos/CONNECT-IG.md",
+      "allowed": [
+        "get_profile_info",
+        "get_media_posts",
+        "get_media_insights",
+        "publish_media",
+        "get_account_pages"
+      ],
+      "forbidden": [
+        "send_dm",
+        "get_conversations",
+        "auto-dm",
+        "boost"
+      ],
+      "rule": "Canva export URL → publish_media. No invented Insights. No auto-DM. No boost.",
+      "failover": "needsAuth or down → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)"
     },
     "web": {
       "status": "ready",
@@ -256,10 +279,11 @@
         "superdesign",
         "drive",
         "canva",
+        "instagram",
         "image",
         "web"
       ],
-      "decides": "content pack and cover drafts. HQ reviews/schedules only. Grok sends."
+      "decides": "content pack and cover drafts. HQ reviews/schedules and publishes via tools (ig-mcp or Canva+Drive+Gmail failover). Grok is optional backup."
     },
     {
       "id": "ops",

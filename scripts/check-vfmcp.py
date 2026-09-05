@@ -27,6 +27,7 @@ CORE_MCP = ROOT / "packages" / "vfmcp" / "core-mcp.json"
 CONNECT_SHEETS = ROOT / "packages" / "vfmcp" / "CONNECT-SHEETS.md"
 CONNECT_WA = ROOT / "packages" / "vfmcp" / "CONNECT-WHATSAPP.md"
 CONNECT_HUB = ROOT / "packages" / "vfmcp" / "CONNECT-STUDIOHUB.md"
+CONNECT_IG = ROOT / "packages" / "vfigos" / "CONNECT-IG.md"
 CORE_MCP_MD = ROOT / "packages" / "vfmcp" / "CORE-MCP.md"
 
 NEEDLES_GAP = (
@@ -66,6 +67,7 @@ def main() -> None:
         CONNECT_SHEETS,
         CONNECT_WA,
         CONNECT_HUB,
+        CONNECT_IG,
         CORE_MCP_MD,
     ):
         if not path.is_file():
@@ -145,16 +147,23 @@ def main() -> None:
         fail("vf-desk.json studiomcphub.mcp must match .cursor/mcp.json")
     if not (hub.get("failover") or ""):
         fail("vf-desk.json studiomcphub must declare failover")
-    for key in ("mcp-gsheets", "whatsapp"):
+    for key in ("mcp-gsheets", "whatsapp", "instagram"):
         row = tools.get(key) or {}
         if not row:
             fail(f"vf-desk.json tools missing {key}")
         if not (row.get("failover") or ""):
             fail(f"vf-desk.json tools.{key} must declare failover")
+    ig = tools.get("instagram") or {}
+    if ig.get("status") not in ("needsAuth", "ready"):
+        fail("vf-desk.json instagram.status must be needsAuth or ready after ig-mcp map")
+    if "CONNECT-IG.md" not in (ig.get("connect") or "") and "CONNECT-IG.md" not in (ig.get("useWhen") or ""):
+        fail("vf-desk.json instagram must point at CONNECT-IG.md")
+    if "send_dm" not in " ".join(ig.get("forbidden") or []) and "auto-dm" not in " ".join(ig.get("forbidden") or []).lower():
+        fail("vf-desk.json instagram must forbid send_dm / auto-dm")
 
     core_mcp = json.loads(CORE_MCP.read_text())
     ids = {s.get("id") for s in (core_mcp.get("servers") or [])}
-    for need in ("studiomcphub", "mcp-gsheets", "whatsapp"):
+    for need in ("studiomcphub", "mcp-gsheets", "whatsapp", "instagram"):
         if need not in ids:
             fail(f"core-mcp.json must list {need}")
     if CORE_MCP.read_text().count("sk-") or "BEGIN PRIVATE" in CORE_MCP.read_text():
@@ -164,12 +173,17 @@ def main() -> None:
         (CONNECT_HUB, ("studiomcphub.com/mcp", "Team MCP", "print_ready", "x402")),
         (CONNECT_SHEETS, ("mcp-gsheets", "~/.cursor/mcp.json", "חסר גיליון", "לא ממציאים")),
         (CONNECT_WA, ("lharries/whatsapp-mcp", "050-2517000", "send=false", "Infobip")),
-        (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp")),
+        (CONNECT_IG, ("jlbadano/ig-mcp", "publish_media", "needsAuth", "אוטו־DM", "SEND.md")),
+        (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "ig-mcp")),
     ):
         text = path.read_text(encoding="utf-8")
         for needle in needles:
             if needle not in text:
                 fail(f"{path.name} must mention {needle}")
+
+    desktop = (ROOT / "packages" / "vfmcp" / "mcp.desktop.example.json").read_text(encoding="utf-8")
+    if "instagram" not in desktop or "ig-mcp" not in desktop:
+        fail("mcp.desktop.example.json must include ig-mcp instagram server")
 
     orchestra = ORCHESTRA.read_text()
     if "WebSearch" not in orchestra and "tools.web" not in orchestra:
@@ -183,8 +197,10 @@ def main() -> None:
         fail("vfmcp/ORIGIN.md must mention GAP.md")
     if "CORE-MCP.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention CORE-MCP.md")
+    if "CONNECT-IG.md" not in ORIGIN.read_text() and "ig-mcp" not in ORIGIN.read_text():
+        fail("vfmcp/ORIGIN.md must mention ig-mcp / CONNECT-IG.md")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp")
+    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+ig-mcp")
 
 
 if __name__ == "__main__":
