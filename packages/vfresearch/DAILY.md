@@ -3,7 +3,7 @@
 מושב: **צמיחה** + ראש צוות קורא בבריף.  
 מקור Gemini: Custom GPT + Ideation.  
 מקור Perplexity: Meshy / Tripo (טקסט או תמונה → מודל להדפסה).  
-מנויים = המק בשדרות ([`HOST.md`](../vfmcp/HOST.md)). Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. Grok אותו דין. לא שולחים מפה. [`SUBSCRIPTIONS.md`](../vfmcp/SUBSCRIPTIONS.md).
+מנויים = מק ייעודי בשדרות ([`HOST.md`](../vfmcp/HOST.md)) — לא PC ווינדוס. Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. Grok אותו דין. לא שולחים מפה. [`SUBSCRIPTIONS.md`](../vfmcp/SUBSCRIPTIONS.md).
 
 ## 06:15 — שלושה שולחנות
 

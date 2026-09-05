@@ -70,7 +70,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 Cursor, לא Grok:
 
 1. קורא את בריף אתמול + לוח `vfgrowth` + `vfsku` הפתוח.
-2. **מק בשדרות** = מארח המנויים ([`vfmcp/HOST.md`](../packages/vfmcp/HOST.md)): כרום ו/או Codex `login` + Gemini CLI Login with Google + Perplexity בטאב. **Cloud** לא פותח אתרי מנוי (התראות אבטחה) — קורא `vfresearch/sources/` או `WebSearch`. בלי מפתח API: לא `vf_chatgpt.py` / `vf_gemini.py` חיים. תבנית: `vfresearch/DAILY.md`. [`vfmcp/SUBSCRIPTIONS.md`](../packages/vfmcp/SUBSCRIPTIONS.md).
+2. **מק בשדרות** = מארח המנויים, **מק ייעודי** לא PC ווינדוס ([`vfmcp/HOST.md`](../packages/vfmcp/HOST.md)): כרום ו/או Codex `login` + Gemini CLI Login with Google + Perplexity בטאב. **Cloud** לא פותח אתרי מנוי (התראות אבטחה) — קורא `vfresearch/sources/` או `WebSearch`. בלי מפתח API: לא `vf_chatgpt.py` / `vf_gemini.py` חיים. תבנית: `vfresearch/DAILY.md`. [`vfmcp/SUBSCRIPTIONS.md`](../packages/vfmcp/SUBSCRIPTIONS.md).
 3. כלי נפל באמצע → **failover מיד** (טבלה למעלה). לא מחכים לסיום כל השלושה אם אחד כבר חסום.
 4. מטמיע רק מה ששימושי **מיד** בפק קיים. אין פק לרעיון.
 5. כותב שורת «מה נבנה / יועל» ל־`packages/vfops/data/research.md` (בלוק `05-משרד` בבריף 07:00; כולל «failover: X→Y» אם היה).
