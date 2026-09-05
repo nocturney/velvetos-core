@@ -4,7 +4,8 @@
 תבנית חיה (מייל): `../MAIL.html` + `render_mail.py`  
 רפרנס/Wireframe: `hq/brief-email.html`  
 מבנה נעול: `packages/vfops/BRIEF.md` + `packages/vfops/hq/BRIEF-SLOTS.md`  
-טוקנים ויזואליים: `DESIGN.md` (awesome-design-md pattern)
+טוקנים ויזואליים: `DESIGN.md` (awesome-design-md pattern)  
+דיאגרמות לווין: `DIAGRAM-MAKER.md` (openclaw diagram-maker → `render_mail.py --diagram`)
 
 ## מתי
 

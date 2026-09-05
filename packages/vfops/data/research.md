@@ -4,9 +4,9 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: שבועי קישורים — הוטמע YouMind prompts (דפוסי סגנון) ב־vfcovers — Canva קודם; בלי ייבוא ספרייה
+מה נבנה / יועל: שבועי קישורים — הוטמע YouMind prompts ב־vfcovers + diagram-maker לווין ב־vfbriefux
 ```
 
 05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md`.
 
-מקור: `packages/vfresearch/sources/2026-09-05-youmind-prompts.md`
+מקור: `packages/vfresearch/sources/2026-09-05-youmind-prompts.md` · `packages/vfresearch/sources/2026-09-05-diagram-maker.md`
