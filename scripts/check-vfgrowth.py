@@ -12,6 +12,7 @@ LEDGER = ROOT / "packages" / "vfgrowth" / "LEDGER.md"
 HANDOFF = ROOT / "packages" / "vfgrowth" / "HANDOFF-he.md"
 G003 = ROOT / "packages" / "vfgrowth" / "G003.md"
 COPY = ROOT / "packages" / "vfcopy" / "G003.md"
+COPY_ALT = ROOT / "packages" / "vfcopy" / "G003-alt.md"
 STORIES = ROOT / "packages" / "vfcopy" / "hq" / "templates" / "ig-stories.md"
 AGENTS = ROOT / "AGENTS.md"
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
@@ -34,7 +35,7 @@ def assert_no_ils(path: Path) -> None:
 
 
 def main() -> None:
-    for path in (CAL, LEDGER, HANDOFF, G003, COPY, STORIES):
+    for path in (CAL, LEDGER, HANDOFF, G003, COPY, COPY_ALT, STORIES):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
         assert_no_ils(path)
@@ -48,7 +49,10 @@ def main() -> None:
         "36",
         "instagram.com",
         "G003",
+        "G003-alt",
         "7.9.2026",
+        "מוכן לשיבוץ",
+        "vf-user-2026-08-30.mp4",
     ):
         if needle not in cal:
             fail(f"CALENDAR.md missing {needle!r}")
@@ -68,13 +72,26 @@ def main() -> None:
         "G003",
         "SoccerBall",
         "SoccerBall final_PLA_9h55m_20260715143622.mp4",
+        "vf-user-2026-08-30.mp4",
+        "vf-user-2026-08-30-9x16.mp4",
+        "G003-alt",
         "חסום",
     ):
         if needle not in ledger:
             fail(f"LEDGER.md missing {needle!r}")
 
     handoff = HANDOFF.read_text()
-    for needle in ("instagram.com", "חסום", "16:00", "12:00", "20:30", "לא סוויט"):
+    for needle in (
+        "instagram.com",
+        "חסום",
+        "16:00",
+        "12:00",
+        "20:30",
+        "לא סוויט",
+        "מוכן לשיבוץ",
+        "vf-user-2026-08-30.mp4",
+        "G003-alt",
+    ):
         if needle not in handoff:
             fail(f"HANDOFF-he.md missing {needle!r}")
     if "050-2517000" not in handoff:
@@ -83,23 +100,45 @@ def main() -> None:
         fail("HANDOFF-he.md must forbid שלחו DM")
 
     g003 = G003.read_text()
-    if "חסום מדיה" not in g003:
-        fail("G003.md must stay media-blocked until a floor path exists")
+    if "מוכן לשיבוץ" not in g003:
+        fail("G003.md must unlock Studio schedule when an mp4 exists")
+    if "G003-alt" not in g003:
+        fail("G003.md must name G003-alt printer-reel track")
     if "SoccerBall" not in g003:
         fail("G003.md must name SoccerBall candidate")
     if "SoccerBall final_PLA_9h55m_20260715143622.mp4" not in g003:
         fail("G003.md must name the ledger SoccerBall filename")
+    if "vf-user-2026-08-30.mp4" not in g003:
+        fail("G003.md must name Grok machine process video")
+    if "vf-user-2026-08-30-9x16.mp4" not in g003:
+        fail("G003.md must name the 9x16 process video")
     stop = ROOT / "packages" / "vfcovers" / "g003" / "HANDOFF-he.md"
     if not stop.is_file():
         fail("missing vfcovers/g003/HANDOFF-he.md")
-    if "SoccerBall final_PLA_9h55m_20260715143622.mp4" not in stop.read_text():
-        fail("g003 HANDOFF must name the missing SoccerBall file")
+    stop_text = stop.read_text()
+    for needle in (
+        "SoccerBall final_PLA_9h55m_20260715143622.mp4",
+        "vf-user-2026-08-30.mp4",
+        "vf-user-2026-08-30-9x16.mp4",
+        "מוכן לשיבוץ",
+        "G003-alt",
+    ):
+        if needle not in stop_text:
+            fail(f"g003 HANDOFF must include {needle!r}")
 
     copy = COPY.read_text()
     if "050-2517000" not in copy:
         fail("vfcopy/G003.md must include WhatsApp CTA")
     if "שלחו DM" in copy and "לא «שלחו DM»" not in copy and "בלי «שלחו DM»" not in copy:
         fail("vfcopy/G003.md must not instruct שלחו DM")
+    alt_text = COPY_ALT.read_text()
+    if "050-2517000" not in alt_text:
+        fail("vfcopy/G003-alt.md must include WhatsApp CTA")
+    paste = alt_text.split("## להדבקה", 1)[-1] if "## להדבקה" in alt_text else ""
+    if "כדור" in paste:
+        fail("vfcopy/G003-alt.md paste block must not claim a soccer ball")
+    if "שלחו DM" in alt_text and "לא «שלחו DM»" not in alt_text and "בלי «שלחו DM»" not in alt_text:
+        fail("vfcopy/G003-alt.md must not instruct שלחו DM")
 
     stories = STORIES.read_text()
     if "20:30" not in stories or "050-2517000" not in stories:

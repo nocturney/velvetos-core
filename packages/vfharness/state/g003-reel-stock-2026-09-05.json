@@ -1,53 +1,55 @@
 {
   "task_id": "g003-reel-stock-2026-09-05",
-  "status": "blocked",
+  "status": "ready-for-studio",
   "pack": "vfgrowth",
-  "goal": "VF-G003 process/reveal Reel #3 from existing SoccerBall floor clip, ready for Studio to schedule Sun 7.9 16:00",
+  "goal": "Finalize G003 / G003-alt caption + calendar unlock + Studio handoff so Studio can schedule Sun 7.9 16:00 once they have an mp4",
   "crew": "content",
   "planned_steps": [
     "Route via vfmem/vfgraft",
-    "Locate SoccerBall or unused timelapse",
-    "Cut 9:16 + cover + Hebrew handoff",
-    "Update standing calendar path",
+    "Confirm SoccerBall is not in GitHub HQ tree",
+    "Lock G003-alt sources from Grok machine INSTA/media",
+    "Finalize captions A/B + unlock calendar",
     "Sensor check-all"
   ],
   "completed_steps": [
-    "Routed to vfom/vfcovers/vfcopy",
-    "Named path from Christian: media/SoccerBall final_PLA_9h55m_20260715143622.mp4",
-    "Drive/Canva/3DAI/iCloud-mirror search: file unreachable",
-    "Confirmed G001 king + G002 RoboLotl must not be reused",
-    "Wrote stop handoff + marked ledger/calendar"
+    "Named SoccerBall path remains iCloud-only (not in git)",
+    "Named unused Grok process videos vf-user-2026-08-30.mp4 + 9x16",
+    "Wrote vfcopy/G003.md + G003-alt.md",
+    "Unlocked CALENDAR/LEDGER/HANDOFF for schedule-when-mp4",
+    "Studio handoff rewritten from stop to schedule packet"
   ],
-  "next_step": "Studio on Mac: find media/SoccerBall final_PLA_9h55m_20260715143622.mp4 then cut and schedule",
+  "next_step": "Studio assembles 9:16 mp4 from SoccerBall (if found) or vf-user-2026-08-30 sources, pastes matching caption, schedules instagram.com Sun 7.9 16:00",
   "artifacts": [
     "packages/vfcovers/g003/HANDOFF-he.md",
     "packages/vfcopy/G003.md",
+    "packages/vfcopy/G003-alt.md",
     "packages/vfgrowth/G003.md",
     "packages/vfgrowth/LEDGER.md",
     "packages/vfgrowth/CALENDAR.md"
   ],
   "unresolved": [
-    "media/SoccerBall final_PLA_9h55m_20260715143622.mp4 unreachable from Cloud HQ",
-    "No unused reachable process/timelapse to swap",
-    "No 9:16 mp4 or cover still produced (would be invented)",
+    "No 9:16 mp4 in GitHub HQ (do not invent)",
+    "SoccerBall still not in git; iCloud search is Studio",
+    "Duration חסר עד חיתוך",
     "Insights still אין ספירה"
   ],
-  "outcome": "escalation",
-  "pulse": "blocked",
-  "verification": "scripts/check-all.py passed=21; Drive/Canva/3DAI empty for SoccerBall; Gmail 28.8 named G001/G002 sources only",
+  "outcome": "worker_done",
+  "pulse": "unlocked",
+  "verification": "scripts/check-all.py after unlock; no invented footage",
   "gate": {
-    "kind": "escalation",
-    "waiting_for": "Studio Mac or Drive upload of media/SoccerBall final_PLA_9h55m_20260715143622.mp4",
-    "reason": "Named floor clip is not reachable from this Cloud Agent; inventing a reel is forbidden"
+    "kind": "studio_assemble",
+    "waiting_for": "Studio-cut mp4 from track A SoccerBall or track B vf-user-2026-08-30",
+    "reason": "HQ docs unlocked; binary is not in the GitHub tree"
   },
-  "escalation": "packages/vfharness/state/g003-reel-stock-2026-09-05/escalation.md",
   "last_updated": "2026-09-05",
   "execution_state": {
     "g003_slot": "Sun 7.9 16:00 fallback Tue 9.9 16:00",
-    "g003_status": "media-blocked",
-    "named_path": "media/SoccerBall final_PLA_9h55m_20260715143622.mp4",
+    "g003_status": "ready-for-schedule-when-mp4",
+    "named_path_a": "media/SoccerBall final_PLA_9h55m_20260715143622.mp4",
+    "named_path_b": "/workspace/INSTA/media/vf-user-2026-08-30.mp4 + vf-user-2026-08-30-9x16.mp4",
     "candidate_swapped": false,
+    "alt_track": true,
     "schedule_surface": "instagram.com"
   },
-  "latest_observation": "SoccerBall filename locked from Christian; file not on office Drive, Canva, 3DAI, or iCloud Drive mirror. No unused reachable timelapse."
+  "latest_observation": "SoccerBall not in GitHub HQ. Grok machine process videos named. Captions A/B finalized. Calendar unlocked for Studio once mp4 exists."
 }

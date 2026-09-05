@@ -71,7 +71,7 @@ vendor_one() {
   local overlay=""
   overlay="$(mktemp -d)"
   [[ -f "$dest/ORIGIN.md" ]] && cp "$dest/ORIGIN.md" "$overlay/ORIGIN.md"
-  for keep in hq SKILL.md ROUTINE.md BRIEF.md DAILY.md GATE.md PATH.md DESK.md CALENDAR.md CHECKLIST.md FLOOR-CARD.md PICKUP.md SLICE.md QUOTE.md FLOOR.md MATERIAL.md CARDS.md LOCK.md CHAIN.md LEDGER.md PHONE.md REVIEW.md SKIP.md READ.md DRAFT.md CONNECT.md OPEN.md WORKFLOW.md FORMATS.json G003.md G005.md G005-d12b.md HANDOFF-he.md LAB.md CARD.md BIO.md data; do
+  for keep in hq SKILL.md ROUTINE.md BRIEF.md DAILY.md GATE.md PATH.md DESK.md CALENDAR.md CHECKLIST.md FLOOR-CARD.md PICKUP.md SLICE.md QUOTE.md FLOOR.md MATERIAL.md CARDS.md LOCK.md CHAIN.md LEDGER.md PHONE.md REVIEW.md SKIP.md READ.md DRAFT.md CONNECT.md OPEN.md WORKFLOW.md FORMATS.json G003.md G003-alt.md G005.md G005-d12b.md HANDOFF-he.md LAB.md CARD.md BIO.md data; do
     if [[ -e "$dest/$keep" ]]; then
       cp -a "$dest/$keep" "$overlay/$keep"
     fi

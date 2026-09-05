@@ -1,15 +1,15 @@
-# הסלמה
+# הסלמה — נסגרה למסלול סטודיו
 
-לא כישלון. אדם מחליט. HQ לא שולח בינתיים.
+HQ סיים כיתוב + לוח. הסטודיו מרכיב את ה־mp4. אין פרסום מ־Cursor.
 
 ```
 task_id: g003-reel-stock-2026-09-05
 pack: vfgrowth
-decision_needed: להעלות ל־Drive או למסור נתיב מקומי לקובץ SoccerBall, או לאשר מועמד תהליך אחר שאינו G001/G002
-recommended: סטודיו על המק מחפש media/SoccerBall final_PLA_9h55m_20260715143622.mp4 ואז חותך ריל 9:16 למשבצת א׳ 7.9 16:00 / נפילה ג׳ 9.9 16:00
-already_tried: Drive search SoccerBall/PLA/mp4/INSTA; Canva search; 3DAI list_generations; iCloud Drive folder (wallpaper only); Gmail briefs 28.8
-sensor_or_guide: AGENTS.md floor-proof · vfom hybrid-reel · user stop-if-nothing
+decision_needed: אחרי חיתוך — לאשר מסלול A (SoccerBall) או B (G003-alt) לפי הקובץ שבאמת נחתך
+recommended: אם iCloud מצא SoccerBall → G003.md; אחרת להרכיב מ-vf-user-2026-08-30.mp4 / vf-user-2026-08-30-9x16.mp4 ולשבץ א׳ 7.9 16:00
+already_tried: Drive/Canva/3DAI/iCloud-mirror 5.9; SoccerBall confirmed not in GitHub HQ tree
+sensor_or_guide: AGENTS.md floor-proof · no invented footage · calendar unlock when Studio has mp4
 artifact: packages/vfcovers/g003/HANDOFF-he.md
-safest_default: לא לשלוח / לא להמציא ₪ / לחכות לאדם
-cost_of_waiting: ריל #3 לשיחת פורמט מחליק לשלישי 9.9 16:00 אם הקובץ לא מגיע עד שבת בערב
+safest_default: לא לשלוח / לא להמציא ₪ / לא לטעון כדור על ריל מדפסת
+cost_of_waiting: אם אין mp4 עד שבת בערב — נפילה לשלישי 9.9 16:00
 ```

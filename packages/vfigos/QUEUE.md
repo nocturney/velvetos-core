@@ -23,8 +23,8 @@ Grok הוא גיבוי אופציונלי. לא מחכים למכסה. לא מח
 
 | תאריך | מזהה | סוג | נתיב / הערה | סטטוס |
 |---|---|---|---|---|
-| 2026-09-05 | VF-G003 SoccerBall | ריל #3 | נתיב נקוב `media/SoccerBall final_PLA_9h55m_20260715143622.mp4` לא נגיש מ־Cloud · עצירה `vfcovers/g003/HANDOFF-he.md` · Drive `1DjUPxqCINRO1b0plryYIQZPBzwAVfDoHD1EjW7lIOZ4` · לא לשבץ | `#ממתין-למדיה` |
-| 2026-09-05 | לוח קבוע W37–W39 | פיד + סטוריז | `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md` · שיבוץ instagram.com · G003 SoccerBall חסום מדיה | `#ממתין-למדיה` |
+| 2026-09-05 | VF-G003 / G003-alt | ריל #3 | כיתוב A `vfcopy/G003.md` · כיתוב B `vfcopy/G003-alt.md` · מסירה `vfcovers/g003/HANDOFF-he.md` · Drive `1wdUVYJfapXwpGx4396ifp2Jigrxgkv7FmARRCLJzSdk` · SoccerBall לא בגיט HQ · גלם Grok: `vf-user-2026-08-30.mp4` + `vf-user-2026-08-30-9x16.mp4` · שיבוץ א׳ 7.9 16:00 כשיש mp4 · לא עלה לפיד | `#מוכן-לשיבוץ` |
+| 2026-09-05 | לוח קבוע W37–W39 | פיד + סטוריז | `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md` · שיבוץ instagram.com · G003 משוחרר כשיש mp4 | `#מוכן-לשיבוץ` |
 | 2026-08-31 | חוקת-שליחה | משרד | Drive `1Xd_uUGKYl7FGr11URUtDHrkz16ikyOGZPZSKqdTOr-I` + Gmail `1a056327a22e6ff8` | `#נשלח-מ-HQ` |
 
 ## דוגמאות
