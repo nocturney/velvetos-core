@@ -2,7 +2,8 @@
 
 לא פק חדש. פק `vfmcp`.  
 חוק: **מנוי Plus/Pro חי רק על מכונה אחת עם IP ביתי קבוע.**  
-Cloud Agent ו־Grok Bot **לא** מתחברים ל־`chatgpt.com` / `gemini.google.com` / `perplexity.ai`.
+Cloud Agent **על VM מנוהל** ו־Grok Bot **לא** מתחברים ל־`chatgpt.com` / `gemini.google.com` / `perplexity.ai`.  
+סוכן שכליו רצים על המק (`agent worker --computer-use`) נכנס בכרום המקומי — זה ה־IP הביתי, לא חווה.
 
 בלי חיוב API נפרד (בעלים 5.9.2026). Hub: [`SUBSCRIPTIONS.md`](SUBSCRIPTIONS.md).
 
@@ -61,7 +62,7 @@ agent worker --computer-use --name "sderot-mac" start
 - להעתיק עוגיות או `~/.codex` / `~/.gemini` ל־Cloud
 - `npx perplexity-user-mcp` בענן
 
-## כל בוקר 06:15
+## 06:15 — מק בשדרות
 | מי רץ | מה עושים |
 |---|---|
 | **Cursor Desktop במק** | שלושת השולחנות במנוי (כרום ו/או Codex + Gemini CLI). תבנית `vfresearch/DAILY.md`. מטמיעים בפק קיים. |
