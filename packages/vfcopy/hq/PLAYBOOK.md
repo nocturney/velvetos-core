@@ -33,6 +33,6 @@ Pass אחרון: `hq/ai-tells-he.md` (סימני AI בעברית — מקור: p
 - כיתוב ריל: hook + משפט על הסרטון + כיתוב; האשטאגים רק אם רלוונטיים, בלי רשימת ספאם  
 - pass אחרון: `ai-tells-he.md` (בלי ultimate/game-changer/unlock בעברית או באנגלית)  
 
-G005 וקופי מתוזמן: לא מיישמים על חשבון חי מכאן. `#vfigos` לסקירה; HQ שולח דרך כלים כשמוכן (`constitution/SEND.md`).
+G005 חי (3.9). G003 טיוטה ב־`G003.md` — חסום מדיה. לוח קבוע: `vfgrowth/CALENDAR.md`. לא מיישמים על חשבון חי מכאן. `#vfigos` לסקירה; שיבוץ ב־instagram.com.
 
 שפת לקוח משיחה: `@vfmakers brain capture` → `hq/customer-language.md`. `trust: unreviewed` עד שאדם מאשר.
