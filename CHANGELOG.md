@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-05 — **G003 שדרוג SoccerBall**: כריסטיאן אישר. גלם ראשי `/workspace/INSTA/media/SoccerBall final_PLA_9h55m_20260715143622.mp4`. כיתוב נשאר alt-1 «מה יוצא מהמדפסת?». מדפסת = נפילה. סטודיו חותך ומחליף מדיה משובצת. בלי בינארי בגיט. G003 upgraded to SoccerBall source; caption unchanged.
 - 2026-09-05 — **ספריית תהליך**: סנכרון iCloud ל־Grok — SoccerBall + king×2 + RoboLotl + RoboOctopus + SeaTurtle **זמינים מקומית** (נתיבים בלבד, לא בגיט). G003 נשאר #משובץ עם נתיב מדפסת + «מה יוצא מהמדפסת?». SoccerBall rebuild רק אחרי כריסטיאן. Process library synced; no binary upload.
 - 2026-09-05 — **G003-alt כיתוב**: נפסל «מהמיטה יוצא משהו». מומלץ: פתיחת סדרה + שכבות + וואטסאפ. 5 חלופות ב־`vfcopy/G003-alt.md`. הווידאו לא משתנה. לא Publish. G003-alt caption rewrite after lead rejected floor-jargon opener.
 - 2026-09-05 — **G003-alt #משובץ**: חבילת סטודיו על מחשב Grok `/workspace/INSTA/content/2026-09-07/VF-G003-reel.mp4` + cover + caption (1080×1920 · ~9.6ש · כיתוב G003-alt לא כדור). משבצת א׳ 7.9 16:00 instagram.com. SoccerBall שדרוג אופציונלי (לא על פרוסת הדיסק). HQ לא ממציא מדיה / לא Publish. G003-alt scheduled from Studio-cut pack paths.

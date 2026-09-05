@@ -1,22 +1,21 @@
-# G003-alt · כיתוב — ריל מדפסת · #משובץ
+# G003-alt · כיתוב · #משובץ (שדרוג SoccerBall)
 
 ריל תהליך/גילוי · `@velvets_cloud`  
 סדרה: «מה יוצא מהמדפסת?» · ריל #3.  
 מועד: ראשון **7.9.2026 16:00** Asia/Jerusalem · instagram.com.
 
-חבילת סטודיו (מחשב Grok, לא בגיט HQ) — **הווידאו לא משתנה**:
+כריסטיאן אישר: **גלם ראשי SoccerBall**. הכיתוב נשאר חלופה 1 (לא בלוק «כדור» מ־`G003.md`).  
+סטודיו חותך ומחליף מדיה משובצת. HQ לא ממציא קובץ.
 
 ```
-/workspace/INSTA/content/2026-09-07/VF-G003-reel.mp4
-/workspace/INSTA/content/2026-09-07/VF-G003-cover.jpg
-/workspace/INSTA/content/2026-09-07/VF-G003-caption.txt
+/workspace/INSTA/media/SoccerBall final_PLA_9h55m_20260715143622.mp4
 ```
 
-גלם: `/workspace/INSTA/media/vf-user-2026-08-30.mp4` + `vf-user-2026-08-30-9x16.mp4`.  
-ריל: 1080×1920 · ~9.6ש · קליפ מדפסת 30.8.
+פלט אחרי חיתוך (סטודיו מחליף): `VF-G003-reel.mp4` + `VF-G003-cover.jpg` + `VF-G003-caption.txt` תחת `/workspace/INSTA/content/2026-09-07/`.
 
-**לא** טוענים שזה כדור. **לא** ממלאים שעות / חומר / ₪.  
-SoccerBall עכשיו **זמין מקומית** — לא מחליפים את הריל הזה בלי כריסטיאן.  
+**נפילה בלבד:** `/workspace/INSTA/media/vf-user-2026-08-30.mp4` + `vf-user-2026-08-30-9x16.mp4`.
+
+**לא** מדביקים «מהמיטה יוצא כדור». **לא** ממלאים שעות / חומר / ₪ מהשם.  
 לא G001 king. לא G002 RoboLotl. Cursor לא מפרסם. לא מעלים mp4 לגיט.
 
 reader-first: הגולל רואה שכבות נבנות. בא קודם מה שעל המסך, לא סלנג רצפה («מיטה») ולא מילה ריקה («משהו»).  
