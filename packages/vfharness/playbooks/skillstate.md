@@ -57,11 +57,11 @@ Core keys (`completed_steps`, `next_step`, `artifacts`, `unresolved`, `gate`, �
 | Playbook | Job |
 |---|---|
 | `skillstate.md` | Execution substrate = structured state, not chat |
-| `context-thrift.md` | Compress large tool outputs (CCR) before they enter the turn |
+| `context-thrift.md` | Compress large tool outputs (CCR) + **phase-boundary** table (when to compact) |
 | `oma-patterns.md` | Plan preview + durable gate + run receipt |
 | `PLANNING-FILES.md` | Three markdown files under `state/<task-id>/` for long jobs |
 
-Use together: thrift the dump → patch Σ → next turn opens (P, Σ, O).
+Use together: thrift the dump → patch Σ at phase boundaries → next turn opens (P, Σ, O). Never compact mid-implementation.
 
 ## When
 

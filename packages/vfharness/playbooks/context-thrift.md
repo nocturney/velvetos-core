@@ -49,6 +49,28 @@
 2. `packages/vfgraft/MAP.md` → 2–3 צמתים
 3. רק אז מקור בפק
 
+## גבול שלב — מתי לדחוס (phase-boundary)
+
+מקור רעיון: [strategic-compact](https://mcpmarket.com/tools/skills/strategic-context-compaction-1787987503518) (Claude Code) — **דפוס בלבד**. לא מתקינים את הסקיל, לא `npx skills`, לא hook של Edit/Write, לא פקודת `/compact`. אצלנו הדחיסה = עדכון checkpoint והמשך מ-(P, Σ, O).
+
+| מעבר שלב | לדחוס? | למה |
+|---|---|---|
+| מחקר → תכנון | כן | מחקר מנופח; התוכנית היא התמצית |
+| תכנון → ביצוע | כן | התוכנית ב-checkpoint / קובץ; לפנות מקום לביצוע |
+| ביצוע → בדיקה | אולי | לשמור אם הבדיקה נוגעת בקוד/שדות האחרונים; לדחוס בהחלפת פוקוס |
+| דיבוג → משימה הבאה | כן | עקבות שגיאה מזהמים הקשר למשימה אחרת |
+| **באמצע ביצוע** | **לא** | איבוד נתיבים, שדות חסרים ומצב חלקי עולה ביוקר |
+| אחרי גישה שנכשלה | כן | לנקות dead-end לפני ניסיון חדש (בתוך תקרת 2 ניסיונות) |
+
+### איך דוחסים אצלנו (בלי `/compact`)
+
+1. כתוב/עדכן `vfharness/state/<task-id>.json` — `completed_steps` + `unresolved` (+ `execution_state` אם יש).
+2. שמור ארטיפקטים כבדים ב-Drive / thread (CCR למעלה) לפני שמסכמים.
+3. ב-turn הבא: קרא מדריך + checkpoint + תצפית אחרונה בלבד — לא replay של השיחה.
+4. משפט פוקוס אופציונלי ב-`summary` / `next_step` (למשל: «ממשיכים הצעת מחיר — חסר חומר»).
+
+משלים: `EMBED.md` § Compaction · `skillstate.md` · דפוס DeerFlow ב-`packages/vfe2b/DEER-FLOW-PATTERNS.md`.
+
 ## CacheAligner — בריף בוקר
 
 `vfbriefux/MAIL.html` — template יציב; שדות volatile (תאריך, תור, שעות) **בסוף** או בבלוק נפרד.  

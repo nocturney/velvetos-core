@@ -179,6 +179,23 @@ def main() -> None:
             fail(f"checkpoint.schema.json missing SKILLSTATE field {needle!r}")
     if "skillstate.md" not in (ROOT / "packages/vfharness/EMBED.md").read_text():
         fail("EMBED.md must reference skillstate.md")
+
+    thrift = ROOT / "packages/vfharness/playbooks/context-thrift.md"
+    if not thrift.is_file():
+        fail("missing packages/vfharness/playbooks/context-thrift.md")
+    thrift_text = thrift.read_text()
+    for needle in (
+        "phase-boundary",
+        "באמצע ביצוע",
+        "strategic-compact",
+        "לא מתקינים",
+        "/compact",
+    ):
+        if needle not in thrift_text:
+            fail(f"context-thrift.md missing phase-boundary needle {needle!r}")
+    embed_text = (ROOT / "packages/vfharness/EMBED.md").read_text()
+    if "phase-boundary" not in embed_text:
+        fail("EMBED.md must reference phase-boundary compaction")
     if "skillstate.md" not in (ROOT / "packages/vfharness/LOOP.md").read_text():
         fail("LOOP.md must reference skillstate.md")
     if "SKILLSTATE" not in agents_text and "skillstate" not in agents_text:
