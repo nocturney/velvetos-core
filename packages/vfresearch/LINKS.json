@@ -767,17 +767,19 @@
       "url": "https://buildwithclaude.com/",
       "title": "Build with Claude — plugin/skill/MCP discovery (davepoon)",
       "firstEmbedded": "2026-09-03",
-      "lastReviewed": "2026-09-03",
-      "sourceNote": "packages/vfresearch/sources/2026-09-03-buildwithclaude.md",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-buildwithclaude.md",
       "report": "packages/vfresearch/sources/2026-09-03-weekly-links.md",
       "packs": [
         "vfresearch",
         "vfmem",
         "vfharness",
         "vfmcp",
-        "vffcc"
+        "vffcc",
+        "vfsales",
+        "vfconvert"
       ],
-      "note": "Patterns only (memory discipline + 12-layer harness audit + MCP discovery index). No Claude Code marketplace install on Cloud Agent. Repo: https://github.com/davepoon/buildwithclaude"
+      "note": "Patterns only. 2026-09-03: memory + architecture-audit + MCP index. 2026-09-05: proposal-drafter no-fabricate → vfsales. No Claude Code marketplace install on Cloud Agent. Repo: https://github.com/davepoon/buildwithclaude"
     },
     {
       "id": "linklyai-best-skills",

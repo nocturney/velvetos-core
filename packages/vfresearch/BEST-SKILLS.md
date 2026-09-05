@@ -48,6 +48,7 @@
 | data viz / HTML charts | `vfbriefux` · `hq/CHARTS.md` | npx lieflat · Insights מומצאים · החלפת MAIL.html |
 | tutor / mastery / lifelong memory | `office-learning` · `vfops/hq/MASTERY-MEMORY.md` | DeepTutor install · EduHub |
 | frontend-design / anti-slop | `vfbriefux` · `vfcovers` · קונסולה פנימית | אתר שיווקי ציבורי מ־HQ |
+| proposal-drafter / no-fabricate quote | `vfsales` · `vfconvert` · inquiry chain | ₪ מומצא · cold email |
 | agent-browser / browser-use | computerUse / בדיקות ידניות | בוט לקוח |
 | Remotion / video gen vendor | `vfom` · `expert-media-director` | Veo/Kling מ־HQ · Remotion vendor |
 | orchestrator / swarm / OpenClaw | `vfe2b` LOCK | runtime שני |
