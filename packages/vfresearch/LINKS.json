@@ -799,6 +799,23 @@
         "constitution"
       ],
       "note": "Bi-daily ranking scan. Patterns only — no npx skills on Cloud. State in BEST-SKILLS.json. Skill vf-best-skills. Constitution may open when durable."
+    },
+    {
+      "id": "arxiv-skillstate",
+      "kind": "paper",
+      "url": "https://arxiv.org/abs/2608.26263",
+      "openUrl": "https://arxiv.org/html/2608.26263",
+      "title": "SKILLSTATE — scalable long-horizon agent skills (explicit execution state)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-skillstate.md",
+      "playbook": "packages/vfharness/playbooks/skillstate.md",
+      "packs": [
+        "vfharness",
+        "vfresearch",
+        "vfe2b"
+      ],
+      "note": "Embed only: A_t=(P,Σ,O); discard reasoning after validated state patch. No LangGraph / SkillExecBench runtime. Complements context-thrift + OMA checkpoint."
     }
   ],
   "addLink": {

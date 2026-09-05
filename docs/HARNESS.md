@@ -25,7 +25,8 @@
 
 מפה למכונה: [`packages/vfharness/layers.json`](../packages/vfharness/layers.json).  
 נוהל: [`packages/vfharness/EMBED.md`](../packages/vfharness/EMBED.md).  
-פיילאובר מכסת Grok (+ פרסום חי דחוף בידי אדם): [`docs/GROK-FAILOVER.md`](GROK-FAILOVER.md).
+פיילאובר מכסת Grok (+ פרסום חי דחוף בידי אדם): [`docs/GROK-FAILOVER.md`](GROK-FAILOVER.md).  
+מצע ביצוע ארוך (SKILLSTATE, arXiv 2608.26263): [`packages/vfharness/playbooks/skillstate.md`](../packages/vfharness/playbooks/skillstate.md) — \(A_t=(P,\Sigma,O)\); בלי runtime שני.
 
 ## מה דולג מהפלייבוק
 
