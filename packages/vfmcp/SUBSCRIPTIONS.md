@@ -12,7 +12,7 @@ Google ו־OpenAI רואים לוגין חדש ממכונה זרה → התרא�
 שמירת עוגיות / פרופיל כרום / «להישאר מחוברים» **אסורה** — זה נראה כמו גניבת סשן, לא פותר את ה־IP, ומפר «אין סוד בגיט».
 
 **דין HQ:** Cloud Agent **לא** פותח את אתרי המנוי.  
-**גישה מלאה וקבועה בלי חיוב API** = המק בשדרות כמארח. פלייבוק: [`HOST.md`](HOST.md).
+**גישה מלאה וקבועה בלי חיוב API** = מק ייעודי בשדרות כמארח (לא PC ווינדוס יומי). פלייבוק: [`HOST.md`](HOST.md).
 
 ## מה כן — API, לא מנוי דפדפן
 
@@ -28,9 +28,9 @@ Google ו־OpenAI רואים לוגין חדש ממכונה זרה → התרא�
 
 ## מה הבעלים עושה
 
-בלי חיוב API: מארח אחד — המק בשדרות. [`HOST.md`](HOST.md):
+בלי חיוב API: מארח אחד — מק ייעודי בשדרות (לא הווינדוס). [`HOST.md`](HOST.md):
 
-1. Chrome פרופיל קבוע + לוגין לשלושת האתרים. אחר כך `agent worker --computer-use --name "sderot-mac" start` ([`HOST.md`](HOST.md)).
+1. **על המק:** Chrome פרופיל קבוע + לוגין לשלושת האתרים (לוגין בווינדוס לא עובר). אחר כך `agent worker --computer-use --name "sderot-mac" start`.
 2. על המק: Gemini CLI = Login with Google · Codex = `codex login` (ChatGPT Plus). לא מפתח API.
 3. Cloud משתמש ב־`WebSearch` / `WebFetch` וקורא `vfresearch/sources/` אחרי שהמק שמר תוצר.
 **לא** להתחבר ל־`gemini.google.com` / `chatgpt.com` / `perplexity.ai` מדפדפן Cloud Agent או Grok Bot.

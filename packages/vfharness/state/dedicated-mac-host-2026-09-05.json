@@ -1,0 +1,29 @@
+{
+  "task_id": "dedicated-mac-host-2026-09-05",
+  "status": "done",
+  "pack": "vfmcp",
+  "goal": "Correct the host: dedicated Mac for Plus/Pro + worker, not the Windows daily PC.",
+  "planned_steps": [
+    "Record owner correction: dedicated Mac exists",
+    "Update HOST.md so Windows Chrome logins are not treated as the host",
+    "Keep computer-use on that Mac only"
+  ],
+  "completed_steps": [
+    "HOST.md: dedicated Mac vs Windows daily PC",
+    "owner-memory + SUBSCRIPTIONS + GAP + CHANGELOG"
+  ],
+  "next_step": "Owner logs into the three Plus sites in Chrome on the dedicated Mac, then agent worker --computer-use --name sderot-mac start, then a new Cloud Agent targeting that machine.",
+  "artifacts": [
+    "packages/vfmcp/HOST.md"
+  ],
+  "unresolved": [
+    "No self-hosted worker online yet; this Cloud VM still cannot drive any owner browser"
+  ],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "latest_observation": "Owner chose a dedicated Mac as the subscription host after starting Chrome login on Windows."
+}

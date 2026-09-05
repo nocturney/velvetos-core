@@ -16,8 +16,8 @@
 - **ארבעה תחומי מומחה:** Social Booster · 3D model · Trend explorer · Media director (תמונות/וידאו).
 - **שפה:** עברית לקופי מוצר; מסמכי משרד עברית+אנגלית.
 - **CTA:** וואטסאפ `050-2517000` / איסוף שדרות — לא «שלחו DM».
-- **אין חיוב API נפרד:** מנויי Gemini / ChatGPT / Perplexity בדפדפן לא כוללים מפתח מפתחים, והבעלים לא רוצה אחד (5.9.2026). מארח = המק בשדרות (`vfmcp/HOST.md`). Cloud בלי מפתח = WebSearch. לא דוחקים מפתח.
-- **אין סשן דפדפן ב־Cloud:** לא עוגיות, לא patchright, לא `perplexity-user-mcp` בענן. כרום במק + `agent worker --computer-use` (`HOST.md`) — לא remote-debug.
+- **אין חיוב API נפרד:** מנויי Gemini / ChatGPT / Perplexity בדפדפן לא כוללים מפתח מפתחים, והבעלים לא רוצה אחד (5.9.2026). מארח = **מק ייעודי** בשדרות (`vfmcp/HOST.md`) — לא PC ווינדוס יומי. Cloud בלי מפתח = WebSearch. לא דוחקים מפתח.
+- **אין סשן דפדפן ב־Cloud:** לא עוגיות, לא patchright, לא `perplexity-user-mcp` בענן. כרום **על המק הייעודי** + `agent worker --computer-use` (`HOST.md`) — לא remote-debug, לא העתקה מווינדוס.
 
 ### ראש צוות (lead)
 
@@ -101,3 +101,9 @@
 - **למדנו:** דופק **קבוע לנצח** עד הודעה מפורשת לעצור — `standingForever: true` + חידוש טיימר בכל מעבר (`TIMER.md`).
 - **מחר:** טיימר bi-daily רץ ומתחדש; watchlist (superpowers, anti-ui-slop, media-gen).
 - **מקור:** בקשת בעלים + `sources/2026-09-03-best-skills.md` + `TIMER.md`.
+
+### 2026-09-05 (מארח מנויים)
+- **מושב:** lead
+- **למדנו:** מארח Plus/Pro = **מק ייעודי** בשדרות — לא PC ווינדוס יומי. לוגין כרום בווינדוס לא עובר למק; אין העתקת עוגיות.
+- **מחר:** כרום + `agent worker --computer-use --name "sderot-mac"` על המק הייעודי; שיחה חדשה בוחרת את המכונה.
+- **מקור:** שיחת בעלים 5.9.2026.

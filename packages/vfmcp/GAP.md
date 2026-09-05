@@ -104,7 +104,7 @@
 7. **Studio MCP Hub** — HTTP `studiomcphub` → `https://studiomcphub.com/mcp` ב־`.cursor/mcp.json`. VF מדלג CMYK/`print_ready`. `CONNECT-STUDIOHUB.md`.
 8. **Sheets + WhatsApp בליבה** — רשומים ב־`core-mcp.json`. Desktop Connect (`CONNECT-SHEETS.md` / `CONNECT-WHATSAPP.md`). VF: יומן לפי bindings; וואטסאפ `send=false`. בלי Connect: `vf_office.py`.
 9. **Gemini API + ChatGPT API (לא מנויי דפדפן)** — `vf_gemini.py` / `vf_chatgpt.py` + `SUBSCRIPTIONS.md`. Cloud לא פותח `gemini.google.com` / `chatgpt.com`. בלי מפתח: **חסר מפתח Gemini** / **חסר מפתח ChatGPT**.
-10. **מארח מנויים = המק בשדרות** — `HOST.md`. Gems/GPTs/Canvas/Deep Research/Perplexity Pro בכרום מקומי. Codex + Gemini CLI על המק בלי מפתח API. Cloud = `WebSearch` + קריאת `sources/`.
+10. **מארח מנויים = המק בשדרות** — מק ייעודי, לא PC ווינדוס. `HOST.md`. Gems/GPTs/Canvas/Deep Research/Perplexity Pro בכרום **על המק**. Codex + Gemini CLI שם בלי מפתח API. Cloud = `WebSearch` + קריאת `sources/`.
 
 ## מה לא הותקן — ולמה
 

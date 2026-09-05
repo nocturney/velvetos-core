@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-05 — **מארח = מק ייעודי, לא ווינדוס:** בעלים אישר מק ייעודי למנויים + worker. לוגין כרום ב-PC ווינדוס לא נספר. `--computer-use` רשמי: macOS/Linux בלבד. `HOST.md`. Dedicated Mac is the Plus host; Windows daily PC is not.
+
 - 2026-09-05 — **כרום במק ≠ גישה ל־Cloud VM**: אחרי התקנת Chrome — לוגין לשלושת האתרים, Codex/Gemini CLI, ואז `agent worker --computer-use` כדי שכלי סוכן (כולל דפדפן) ירוצו ב־IP ביתי. אין remote-debug, אין עוגיות לענן. `HOST.md`. Chrome on the owner Mac plus a self-hosted worker with computer-use; this Cloud VM still cannot drive that browser.
 
 - 2026-09-05 — **מארח מנויים = המק בשדרות**: אין גישה מלאה וקבועה ל־Plus/Pro מ־Cloud בלי מפתח API או לוגין זר. פלייבוק `vfmcp/HOST.md` — Chrome פרופיל קבוע (Gems/GPTs/Canvas/Deep Research/Perplexity Pro) + Gemini CLI Login with Google + Codex `codex login` על המק. Cloud לא פותח אתרים. Subscription host is the Sderot Mac; Cloud never logs into Plus sites.
