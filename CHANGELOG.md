@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-05 — **footrue ToolBox**: רישום [footrue.com](https://footrue.com/) ב־`LINKS.json` (בעלים שלח). כלי דפדפן מקומיים להכנת הוכחת רצפה — HEIC→JPG, הסרת רקע, דחיסה — לפני Canva. הטמעה ב־`vfcovers/hq/PLAYBOOK.md` + `vfcanva/WORKFLOW.md`. בלי MCP / בלי החלפת מותג / בלי Insights מצד ג׳. See `packages/vfresearch/sources/2026-09-05-footrue.md`.
 - 2026-09-05 — **Market Research Intelligence (MCP Market)**: הטמעת שערי איכות מחקר על `vfresearch` — ייחוס מקור, גיל נתון, ראיות נגדיות, מבנה החלטה, גודל שוק בשתי שיטות או «אין». פלייבוק `hq/MARKET-INTEL.md`; רישום `LINKS.json`; חיזוק Trend Explorer. גוף SKILL.md מלא מהאתר = «אין גוף» (Cloudflare). בלי `npx skills` / תיקיית משקיע כברירת מחדל / ₪ מומצא. See `packages/vfresearch/sources/2026-09-05-market-research-intelligence.md`.
 - 2026-09-05 — **YouMind prompts**: ספריית פרומפטים (תמונה/וידאו/אתר). דפוסים ב־`vfcovers/hq/PLAYBOOK.md` — browse-by-media/model + התאמת נושא לרצפה; Image→Prompt רק על צילום שנמסר; Canva קודם. בלי ייבוא ספרייה. See `packages/vfresearch/sources/2026-09-05-youmind-prompts.md`.
 - 2026-09-05 — **MCP Market CAD ×9**: Excalidraw / Blender-open/ai/vxai / SVGMaker / multiCAD / OpenSCAD / SketchUp / FreeCAD. דפי השוק 429/Cloudflare → GitHub. קטלוג `vfprod/CAD-MCP.md` (Cloud skip; Desktop optional ל־OpenSCAD/FreeCAD/Blender-siblings; multiCAD/SketchUp/SVGMaker skip/later). בלי התקנה על Cloud. See `packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md`.

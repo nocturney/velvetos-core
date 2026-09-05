@@ -1085,6 +1085,23 @@
         "vfsku"
       ],
       "note": "Patterns only (source age, contrarian evidence, decision structure, dual-method sizing). Full SKILL.md body blocked (אין גוף). No npx install / investor-dossier default."
+    },
+    {
+      "id": "footrue-toolbox",
+      "kind": "vendor-site",
+      "url": "https://footrue.com/",
+      "title": "footrue ToolBox — 200+ free browser-local tools",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-footrue.md",
+      "report": "packages/vfresearch/sources/2026-09-05-weekly-links-footrue.md",
+      "playbook": "packages/vfcovers/hq/PLAYBOOK.md",
+      "packs": [
+        "vfcovers",
+        "vfcanva",
+        "vfresearch"
+      ],
+      "note": "Human opens in browser for floor-proof prep (HEIC→JPG, background remove, compress) before Canva. No MCP install. Not a Canva/brand replacement. No invented ₪ or Insights from third-party traffic claims."
     }
   ],
   "addLink": {
