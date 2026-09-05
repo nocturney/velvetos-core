@@ -1,0 +1,34 @@
+{
+  "task_id": "voicestudio-embed-2026-09-05",
+  "status": "done",
+  "pack": "vfresearch",
+  "mention": "@research-synthesist",
+  "completed_steps": [
+    "Routed via vfmem → vfresearch @research-synthesist",
+    "Fetched debpalash/VoiceStudio README + docs/mcp.md",
+    "Appended LINKS.json id debpalash-voicestudio",
+    "Embedded skip/later into vfom LOCK+EMBED, MCP-FIT, vfmcp GAP",
+    "Wrote source + mid-week artifact; updated BRIEF 05"
+  ],
+  "next_step": "Lead seat only: decide if Desktop VO is wanted; else leave skip",
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-05-voicestudio.md",
+    "packages/vfresearch/sources/2026-09-05-voicestudio-weekly.md",
+    "packages/vfresearch/LINKS.json",
+    "packages/vfom/LOCK.md",
+    "packages/vfom/EMBED.md",
+    "docs/MCP-FIT.md",
+    "packages/vfmcp/GAP.md"
+  ],
+  "unresolved": [
+    "No VoiceStudio install (intentional)",
+    "Desktop MCP not wired (lead gate)"
+  ],
+  "escalation": null,
+  "execution_state": {
+    "verdict": "skip-install",
+    "url": "https://github.com/debpalash/VoiceStudio"
+  },
+  "latest_observation": "OSS local TTS/ASR/dub with MCP; VF floor reels stay camera-first; AGPL+NC weights need vlicense before any commercial Desktop use.",
+  "last_updated": "2026-09-05"
+}

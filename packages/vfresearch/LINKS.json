@@ -1100,6 +1100,24 @@
         "vfresearch"
       ],
       "note": "Embed COPYWRITING MODE into vfcopy/hq/reader-first-he.md; strengthen ai-tells-he.md. No npx skills add. Skip LinkedIn/strategic-blog (public site locked). Complements plannotator-write-better."
+    },
+    {
+      "id": "debpalash-voicestudio",
+      "kind": "repo",
+      "url": "https://github.com/debpalash/VoiceStudio",
+      "title": "VoiceStudio — local ElevenLabs alternative (TTS/ASR/dub/MCP)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-voicestudio.md",
+      "report": "packages/vfresearch/sources/2026-09-05-voicestudio-weekly.md",
+      "verdict": "skip-install",
+      "packs": [
+        "vfom",
+        "vfmcp",
+        "vfresearch",
+        "vlicense"
+      ],
+      "note": "Patterns only. No DMG/Docker/MCP on Cloud. Floor proof > AI voice for reels. Desktop VO optional after lead + model license gate. AGPL app; upstream weights may be NC."
     }
   ],
   "addLink": {

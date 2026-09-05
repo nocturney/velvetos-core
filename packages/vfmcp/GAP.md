@@ -112,6 +112,7 @@
 | FCC / `fcc-server` | נעול. לא על Cloud Agent |
 | **Headroom** (`headroom-ai`) | **local optional** — proxy/MCP דורש תהליך מקומי; Cloud Agent sandbox. דפוס CCR/ContentRouter ב-`vfharness/playbooks/context-thrift.md` בלי dependency. Mac: `uv tool install "headroom-ai[all]"` + `headroom wrap cursor` אחרי lead seat |
 | **Blender MCP** (`ahujasid/blender-mcp`) | **local optional** — דורש Blender + addon במק. Cloud Agent sandbox. קונספט/STL מ־HQ = 3DAI. פלייבוק: `vfprod/BLENDER-MCP.md` |
+| **VoiceStudio MCP** (`debpalash/VoiceStudio`) | **skip על Cloud** — backend מקומי `:3900`. רילים = גלם רצפה (`vfom`). Desktop VO רק אחרי ראש צוות + `vlicense`. ראו `docs/MCP-FIT.md` · `sources/2026-09-05-voicestudio.md` |
 | **CAD family** (Excalidraw / blender-open / blender-ai / blender-vxai / OpenSCAD / FreeCAD / SketchUp / multiCAD / SVGMaker) | רובם **skip על Cloud**. OpenSCAD/FreeCAD/Blender-siblings = Desktop optional אחרי ראש צוות. multiCAD/SketchUp = skip אלא אם האפליקציה במק. SVGMaker = later+API key. Excalidraw remote = later לדיאגרמות פנימיות. קטלוג: `vfprod/CAD-MCP.md` |
 | **Archon** (`coleam00/Archon`) | **skip install** — תזמורת/harness שנייה. דפוסים ב־`vfe2b/ORCHESTRATORS.md` בלבד |
 | **Fullstack Dev Skills** (`Jeffallan/claude-skills`) | **patterns only** — אין `/plugin install` / `npx skills` על Cloud. Common Ground → `vfmem/MEMORY-UPDATE.md` |
