@@ -109,5 +109,5 @@
 - **למדנו:** Worker `sderot-mac` **רץ** (5.9.2026) — id `4a3ca6d2-f2c3-4cba-8c96-8bb63d6160b2`, dir `/Users/chris/velvetos-core`. Computer Use עדיין לא מותקן. `--share-desktop` לא במק.
 - **למדנו:** `agent worker --computer-use` על CLI 2026.09.02 בוחר `cursor-agent-worker-sea` ונופל (createRequire). בלי הדגל = `index.js` ועובד. אחרי עצירה ל־computer-use ה־worker כבוי עד שחוזרים ל־start בלי הדגל.
 - **למדנו:** אין קישור לטאבי כרום. סוכן על `sderot-mac` בלי `--computer-use` = קבצים/טרמינל. אתרי Plus נשארים אצל האדם עד computer-use יציב (SEA שובר `agent worker --computer-use`).
-- **מחר:** בשיחה על `sderot-mac` — Codex/Gemini CLI אם מותקנים; כרום ידני. לא עוגיות.
+- **למדנו:** Gemini CLI ליחידים נחסם («migrate to Antigravity»). על המק: `agy` מ־`curl https://antigravity.google/cli/install.sh`. לא מפתח API. לא טוקן לענן.
 - **מקור:** שיחת בעלים 5.9.2026.

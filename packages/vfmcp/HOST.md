@@ -93,14 +93,16 @@ Cloud Agent על VM של Cursor **לא** מקבל גישה לכרום שלך. א
 which brew node gemini codex
 ```
 
-Gemini — Login with Google:
+Gemini CLI ליחידים **לא נתמך** (יוני 2026 → Antigravity). אל תבחר API Key.
 
 ```bash
-brew install gemini-cli
-gemini
+# צא מ-gemini אם הוא עדיין רץ: Ctrl+C
+curl -fsSL https://antigravity.google/cli/install.sh | bash
+export PATH="$HOME/.local/bin:$PATH"
+agy
 ```
 
-(אם אין brew: `npm install -g @google/gemini-cli`)
+לוגין Google בדפדפן. טוקן נשאר במק (Keychain). **לא** מעתיקים `ANTIGRAVITY_TOKEN` ל־Cloud.
 
 Codex — Sign in with ChatGPT (Plus):
 
