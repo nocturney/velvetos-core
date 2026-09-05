@@ -1,0 +1,22 @@
+{
+  "task_id": "embed-ai-copywriter-2026-09-05",
+  "guide": "packages/vfresearch/WEEKLY.md + packages/vfcopy/hq/PLAYBOOK.md",
+  "status": "done",
+  "source": "https://github.com/mikiarlo3/ai-copywriter",
+  "embedded": [
+    "packages/vfcopy/hq/reader-first-he.md",
+    "packages/vfcopy/hq/ai-tells-he.md",
+    "packages/vfcopy/hq/PLAYBOOK.md",
+    "packages/vfcopy/SKILL.md",
+    "packages/vfmskill/EMBED.md",
+    "packages/vfresearch/LINKS.json",
+    "packages/vfresearch/sources/2026-09-05-ai-copywriter-embed.md"
+  ],
+  "skipped": [
+    "npx skills add",
+    "linkedin-virality",
+    "strategic-blog-template",
+    "full 33-pattern translation"
+  ],
+  "latest_observation": "Reader-first intake embedded on vfcopy; sensors pending."
+}
