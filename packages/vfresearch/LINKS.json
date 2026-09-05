@@ -1016,6 +1016,23 @@
         "vfmcp"
       ],
       "note": "Cloud skip. Desktop optional if FreeCAD on Mac. Does not replace 3DAI for fast concept."
+    },
+    {
+      "id": "youmind-prompts",
+      "kind": "inspiration",
+      "url": "https://youmind.com/ru-RU/prompts",
+      "openUrl": "https://youmind.com/prompts",
+      "title": "YouMind — free AI prompt library (image/video/web)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-youmind-prompts.md",
+      "playbook": "packages/vfcovers/hq/PLAYBOOK.md",
+      "packs": [
+        "vfcovers",
+        "vfcopy",
+        "vfresearch"
+      ],
+      "note": "Pattern only: browse-by-media/model + adapt subject to floor proof; Image→Prompt on delivered photos only. No library import. Canva first for IG. Skip action/fantasy stock scenes."
     }
   ],
   "addLink": {

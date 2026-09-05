@@ -4,9 +4,9 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: שבועי קישורים — הוטמע CAD-MCP family (9) ב־vfprod — Cloud skip; OpenSCAD/FreeCAD/Blender-siblings Desktop optional
+מה נבנה / יועל: שבועי קישורים — הוטמע YouMind prompts (דפוסי סגנון) ב־vfcovers — Canva קודם; בלי ייבוא ספרייה
 ```
 
 05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md`.
 
-מקור: `packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md`
+מקור: `packages/vfresearch/sources/2026-09-05-youmind-prompts.md`
