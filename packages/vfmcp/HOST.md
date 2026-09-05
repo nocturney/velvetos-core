@@ -102,7 +102,7 @@ export PATH="$HOME/.local/bin:$PATH"
 agy
 ```
 
-לוגין Google בדפדפן. טוקן נשאר במק (Keychain). **לא** מעתיקים `ANTIGRAVITY_TOKEN` ל־Cloud.
+אומת 5.9.2026: `agy` 1.1.27 על המק = `nocturney@gmail.com (Google AI Plus)` · Gemini 3.8 Flash. Gemini CLI ליחידים מת.
 
 Codex — Sign in with ChatGPT (Plus):
 
