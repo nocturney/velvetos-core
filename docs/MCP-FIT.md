@@ -138,12 +138,16 @@ Do not add these “because they exist on the list.” Add them when Christian c
 | QR on SKU / proof cards | [qr-maker-io/mcp-server](https://github.com/qr-maker-io/mcp-server) | `vfsku` |
 | Floor “job done” pings | [teddyzxcv/ntfy-mcp](https://github.com/teddyzxcv/ntfy-mcp) | `vfprod` |
 | Blender on the owner Mac (scene edit) | [ahujasid/blender-mcp](https://github.com/ahujasid/blender-mcp) — **Desktop only**; Cloud uses 3DAI | `vfprod` — [`BLENDER-MCP.md`](../packages/vfprod/BLENDER-MCP.md) |
+| OpenSCAD / FreeCAD on Mac (parametric STL) | OpenSCAD CLI MCP / FreeCAD MCP — Desktop optional after lead | `vfprod` — [`CAD-MCP.md`](../packages/vfprod/CAD-MCP.md) |
+| Internal process diagrams | [excalidraw/excalidraw-mcp](https://github.com/excalidraw/excalidraw-mcp) remote — later; not IG | `vfops` / `vfprod` |
 
 ## Do not install
 
 - **Aggregator / “400 tools in one” servers** — they drown the agent and hide the studio tools.
 - **Headroom proxy on Cloud Agent** — local compression proxy needs a host process; Cloud VMs are sandboxed. Embed the **pattern** via `packages/vfharness/playbooks/context-thrift.md` (CCR + ContentRouter). Optional Mac-only: `headroom wrap cursor` after lead seat — see `packages/vfmcp/GAP.md`.
-- **Blender MCP on Cloud Agent** — needs local Blender + addon. Optional Desktop only (`vfprod/BLENDER-MCP.md`). Concept/STL from HQ stays 3DAI.
+- **Blender MCP on Cloud Agent** — needs local Blender + addon. Optional Desktop only (`vfprod/BLENDER-MCP.md`). Concept/STL from HQ stays 3DAI. Sibling market listings (`blender-open`, `blender-ai`, `blender-vxai`) stay one-family — do not stack parallel installs without lead seat.
+- **multiCAD / SketchUp MCP** — Windows COM / SketchUp app; not VF print floor unless the Mac already runs that DCC.
+- **SVGMaker MCP** — vendor API key; Canva first for brand. No key in git.
 - **Archon** ([coleam00/Archon](https://github.com/coleam00/Archon)) — second harness/orchestrator. Embed workflow-gate patterns on `vfe2b` only; do not `curl | bash` / Docker Archon here.
 - **Jeffallan fullstack-dev-skills plugin** — Claude Code marketplace skills. Common Ground tiers → `vfmem/MEMORY-UPDATE.md`. No `/plugin install` / `npx skills` on Cloud Agent.
 - **Second SEO / GEO / AI-visibility stacks** — Treg is not relevant. Public marketing site from HQ stays locked; AEO skills (e.g. buildwithclaude `ai-search-visibility-audit`) stay **watch** until a public site exists under `vfbiz`. Warehouse `@aeo-foundations-architect` stays off-desk unless named.

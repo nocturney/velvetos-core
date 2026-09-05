@@ -36,6 +36,10 @@ Blender MCP הוא עריכת סצנה מקומית (מודלים, חומרים,
 
 לא: באצ׳ מכירה מ־Blender · מחיר מקרדיטים · Print מ־HQ · addon ב־Cloud Agent · פק `vfblender`.
 
+## אחים בשוק (2026-09-05)
+
+וריאנטים נוספים מ־mcpmarket (`blender-open`, `blender-ai`, `blender-vxai`) — כולם **אותו דין**: Cloud skip; Desktop לא מתקינים במקביל ל־ahujasid בלי ראש צוות. פירוט משפחה: [`CAD-MCP.md`](CAD-MCP.md).
+
 ## Failover
 
 | מה נפל | מעבירים מיד ל־ |

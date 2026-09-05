@@ -868,6 +868,154 @@
         "vfharness"
       ],
       "note": "Patterns only (Common Ground tiers). No /plugin install or npx skills on Cloud. Language specialists stay warehouse off-desk."
+    },
+    {
+      "id": "mcpmarket-excalidraw-4",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/excalidraw-4",
+      "openUrl": "https://github.com/excalidraw/excalidraw-mcp",
+      "title": "Excalidraw MCP — interactive diagrams",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfops",
+        "vfmcp"
+      ],
+      "note": "mcpmarket Cloudflare/429 — body from GitHub. Later for internal diagrams; not IG/Canva."
+    },
+    {
+      "id": "mcpmarket-blender-open",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/blender-open",
+      "openUrl": "https://github.com/dhakalnirajan/blender-open-mcp",
+      "title": "Blender Open MCP (Ollama)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/BLENDER-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Sibling of ahujasid Blender MCP + local Ollama. Cloud skip; do not stack Desktop install without lead."
+    },
+    {
+      "id": "mcpmarket-blender-ai",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/blender-ai",
+      "openUrl": "https://github.com/ahujasid/blender-mcp",
+      "title": "Blender AI MCP (market listing)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Listing body blocked. Treated as Blender-MCP family sibling — Cloud skip; Desktop → BLENDER-MCP canonical."
+    },
+    {
+      "id": "mcpmarket-svgmaker",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/svgmaker",
+      "openUrl": "https://github.com/GenWaveLLC/svgmaker-mcp",
+      "title": "SVGMaker MCP — AI SVG generate/edit",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfcovers",
+        "vfmcp",
+        "vfprod"
+      ],
+      "note": "Needs SVGMAKER_API_KEY. Skip until lead; Canva first. No key in git."
+    },
+    {
+      "id": "mcpmarket-multicad",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/multicad",
+      "openUrl": "https://github.com/AnCode666/multiCAD-mcp",
+      "title": "multiCAD MCP — AutoCAD/ZWCAD/GstarCAD/BricsCAD",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Windows COM CAD — skip for VF print floor unless that DCC exists on Mac."
+    },
+    {
+      "id": "mcpmarket-openscad-2",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/openscad-2",
+      "openUrl": "https://github.com/petrijr/openscad-mcp",
+      "title": "OpenSCAD MCP family — parametric validate/render/STL",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vlicense",
+        "vfsku",
+        "vfmcp"
+      ],
+      "note": "Listing body blocked; open family via GitHub CLI MCPs. Cloud skip; Desktop optional after lead + local OpenSCAD. Still vlicense + slice."
+    },
+    {
+      "id": "mcpmarket-blender-vxai",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/blender-vxai",
+      "title": "Blender VXAI MCP (market listing)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Category blurb only — GitHub not verified. Skip install until repo identified. Same Cloud skip as Blender family."
+    },
+    {
+      "id": "mcpmarket-sketchup-1",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/sketchup-1",
+      "openUrl": "https://github.com/russell-qca/sketchup-mcp",
+      "title": "SketchUp MCP",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Requires SketchUp + Ruby plugin. Skip unless Mac already runs SketchUp."
+    },
+    {
+      "id": "mcpmarket-freecad-1",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/freecad-1",
+      "openUrl": "https://github.com/neka-nat/freecad-mcp",
+      "title": "FreeCAD MCP",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vlicense",
+        "vfmcp"
+      ],
+      "note": "Cloud skip. Desktop optional if FreeCAD on Mac. Does not replace 3DAI for fast concept."
     }
   ],
   "addLink": {
