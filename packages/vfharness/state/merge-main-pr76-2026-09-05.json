@@ -1,6 +1,6 @@
 {
   "task_id": "merge-main-pr76-2026-09-05",
-  "status": "in_progress",
+  "status": "done",
   "pack": "vfmcp",
   "goal": "Merge origin/main into PR 76 and keep both Mac-host and main catalog entries.",
   "planned_steps": [
@@ -14,7 +14,7 @@
     "Kept gemini/perplexity skip rows plus Blender/VoiceStudio/CAD/Archon in GAP.md",
     "Chronological owner-memory: 09-04 pulse, 09-05 owner links, 09-05 Mac host"
   ],
-  "next_step": "Run sensors, commit merge, push, update PR",
+  "next_step": "PR branch includes origin/main; sensors 20/20 PASS.",
   "artifacts": [
     "CHANGELOG.md",
     "packages/vfmcp/GAP.md",
