@@ -105,6 +105,6 @@
 ### 2026-09-05 (מארח מנויים)
 - **מושב:** lead
 - **למדנו:** מארח Plus/Pro = **מק ייעודי** בשדרות — לא PC ווינדוס יומי. לוגין כרום בווינדוס לא עובר למק; אין העתקת עוגיות.
-- **למדנו:** CLI על `chris@Mac-Office` (darwin arm64): `agent status` = Logged in as `nocturney@gmail.com`, Pro+. Worker עדיין לא רץ עד `agent worker --computer-use`.
-- **מחר:** כרום על המק + `agent worker --computer-use --name "sderot-mac"`; שיחה חדשה בוחרת את המכונה.
+- **למדנו:** CLI על `chris@Mac-Office` (darwin arm64): `agent status` = Logged in as `nocturney@gmail.com`, Pro+. Worker נכשל: `Filesystem createRequire is disabled in the self-contained worker SEA` (CLI 2026.09.02). קלון קיים ב־`~/velvetos-core`. `/path/to/` היה דוגמה.
+- **מחר:** `cd ~/velvetos-core` → `agent update` → `agent worker --name "sderot-mac" start` בלי computer-use; אחרי שרץ — להוסיף `--computer-use`.
 - **מקור:** שיחת בעלים 5.9.2026.

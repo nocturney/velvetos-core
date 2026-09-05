@@ -75,11 +75,26 @@ agent about
 זה רק CLI מחובר. worker עדיין לא רץ עד:
 
 ```bash
-cd /path/to/velvetos-core   # הקלונים המקומי
+cd ~/velvetos-core
 agent worker --computer-use --name "sderot-mac" start
 ```
 
-הטרמינל **נשאר פתוח**. מחובר = השורה לא נסגרת חזרה ל־`$`, ויש שם `sderot-mac` / connected. בדיקת מוקדמת: `agent worker debug`.
+`/path/to/velvetos-core` היה דוגמה — הנתיב האמיתי אצל כריס: `~/velvetos-core`. בלי סוגריים `[ ]`.
+
+הטרמינל **נשאר פתוח**. מחובר = השורה לא נסגרת חזרה ל־`$`, ויש שם `sderot-mac` / connected.
+
+**שגיאה `Filesystem createRequire is disabled in the self-contained worker SEA`** (CLI 2026.09.02 על מק, אחרי `cursor-agent-worker-sea`): באג באריזת ה־worker החתום, לא בלוגין. לפי הסדר:
+
+```bash
+cd ~/velvetos-core
+agent update
+agent worker debug
+# בלי computer-use קודם (טרמינל+קבצים במק; כרום אחר כך):
+agent worker --name "sderot-mac" start
+```
+
+אם אותו SEA חוזר: `curl https://cursor.com/install -fsS | bash` ואז שוב `agent worker --name "sderot-mac" start`.  
+`--computer-use` רק אחרי שה־worker בלי הדגל נשאר רץ. `agent worker debug` לפני start.
 
 אם עדיין `command not found: agent`:
 
