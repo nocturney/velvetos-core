@@ -95,6 +95,8 @@ ls -l ~/.local/bin/agent
 ב־cursor.com/agents: בחר את המכונה `sderot-mac` (לא VM הענן).  
 אין worker מחובר עכשיו — עד שזה רץ, השיחה הזו נשארת על VM בלי הכרום שלך.
 
+אומת 5.9.2026 על המק הייעודי: `chris@Mac-Office` · `agent status` = Logged in as `nocturney@gmail.com` (Pro+). CLI תקין; חסר worker.
+
 ### ד. מה לא לעשות
 
 - להעתיק עוגיות מווינדוס למק, או `~/.codex` / `~/.gemini` ל־Cloud
