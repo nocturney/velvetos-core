@@ -30,11 +30,11 @@
 
 יישם רק תיקונים מה-checklist. אם ₪ חסר → `decision_gate`, לא שליחה.
 
-## שלב 4 — שליחה
+## שלב 4 — שליחה (apply) + אימות (verify)
 
-- Gmail: `send_message` / `reply` עם גוף מאומת
-- IG: publish MCP או failover Canva+Drive+Gmail
-- תג: `#נשלח-מ-HQ`
+- Gmail: `send_message` / `reply` עם גוף מאומת → קרא id / תוצאת כלי לפני «נשלח»
+- IG: publish MCP או failover Canva+Drive+Gmail → `vfigos/SEND.md` validate→apply→verify
+- תג: `#נשלח-מ-HQ` רק אחרי verify; פיד חי בלי confirmed → גם `#ממתין-ל-כלי-IG`
 
 ## מה לא
 

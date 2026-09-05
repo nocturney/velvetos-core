@@ -23,7 +23,7 @@
 |---|---|
 | סנסורים ירוקים | `python3 scripts/check-all.py` (או הסנסור הספציפי) — exit 0 |
 | בריף נשלח | תוצאת Gmail `send_message` / id הודעה |
-| IG פורסם | כלי publish ירה · אחרת `#ממתין-ל-כלי-IG` — **לא** «פורסם» |
+| IG פורסם | validate → apply → verify (`vfigos/SEND.md`): כלי publish החזיר confirmed · אחרת `#ממתין-ל-כלי-IG` — **לא** «פורסם» מ־accepted בלבד |
 | הטמעה | קובץ בגיט + שורת ארטיפקט `sources/` |
 | ₪ / Insights | מקור מאומת · אחרת `X ₪` / «אין ספירה» |
 
