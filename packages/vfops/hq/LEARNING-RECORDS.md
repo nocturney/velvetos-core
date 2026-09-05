@@ -34,6 +34,10 @@
 מקור: (צ'אט / ארטיפקט / best-skills)
 ```
 
+## קשר ל־mastery
+
+כישלון מדורג פעמיים = מועמד ל־question bank (`MASTERY-MEMORY.md`) לפני שורה ב־ANTI-PATTERN.
+
 ## לא
 
 - סודות / PHI / מפתחות

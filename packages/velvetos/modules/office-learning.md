@@ -10,6 +10,7 @@ Playbooks:
 
 - Lead ritual: `packages/vfops/hq/DAILY-RETRO.md`
 - Memory writes: `packages/vfmem/MEMORY-UPDATE.md`
+- Mastery + layers: `packages/vfops/hq/MASTERY-MEMORY.md` (DeepTutor pattern — no second runtime)
 - Harness loop: `packages/vfharness/playbooks/daily-learning.md`
 - Skill: `.cursor/skills/vf-daily-learning/SKILL.md`
 
