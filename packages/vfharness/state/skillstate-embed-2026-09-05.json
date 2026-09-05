@@ -1,8 +1,11 @@
 {
   "task_id": "skillstate-embed-2026-09-05",
-  "status": "running",
+  "status": "done",
   "pack": "vfharness",
   "goal": "Embed SKILLSTATE paper patterns onto vfharness; sensors green; PR open",
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "python3 scripts/check-all.py — OK suite passed=20",
   "planned_steps": [
     "read-arxiv-html",
     "write-playbook",
@@ -15,13 +18,17 @@
     "read-arxiv-html",
     "write-playbook",
     "wire-embed-loop-schema",
-    "register-links"
+    "register-links",
+    "sensor-suite",
+    "brief-day-copy"
   ],
-  "next_step": "sensor-suite",
+  "next_step": "commit-pr",
   "artifacts": [
     "packages/vfharness/playbooks/skillstate.md",
     "packages/vfresearch/sources/2026-09-05-skillstate.md",
-    "packages/vfharness/templates/checkpoint.schema.json"
+    "packages/vfharness/templates/checkpoint.schema.json",
+    "packages/vfops/BRIEF-2026-09-05.md",
+    "/opt/cursor/artifacts/skillstate-check-all.log"
   ],
   "unresolved": [],
   "escalation": null,
@@ -30,9 +37,10 @@
     "paper_id": "2608.26263",
     "verdict": "embed",
     "runtime_install": false,
-    "packs_touched": ["vfharness", "vfresearch"]
+    "sensors_passed": 20,
+    "packs_touched": ["vfharness", "vfresearch", "vfops"]
   },
-  "latest_observation": "Files written; about to run check-all.py",
+  "latest_observation": "check-all.py OK suite passed=20",
   "events": [
     {
       "name": "paper.reviewed",
@@ -45,6 +53,12 @@
       "producedAt": "2026-09-05",
       "sourceAgent": "vfharness",
       "payload": { "playbook": "playbooks/skillstate.md" }
+    },
+    {
+      "name": "sensors.green",
+      "producedAt": "2026-09-05",
+      "sourceAgent": "vfharness",
+      "payload": { "passed": 20 }
     }
   ]
 }
