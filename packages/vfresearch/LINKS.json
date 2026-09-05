@@ -816,6 +816,22 @@
         "vfe2b"
       ],
       "note": "Embed only: A_t=(P,Σ,O); discard reasoning after validated state patch. No LangGraph / SkillExecBench runtime. Complements context-thrift + OMA checkpoint."
+    },
+    {
+      "id": "ig-mcp-jlbadano",
+      "kind": "github",
+      "url": "https://github.com/jlbadano/ig-mcp",
+      "title": "ig-mcp — Instagram Graph API MCP (Publish + Insights)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "connect": "packages/vfigos/CONNECT-IG.md",
+      "packs": [
+        "vfigos",
+        "vfinsights",
+        "vfgrowth",
+        "vfmcp"
+      ],
+      "note": "stdio Python; needsAuth until Meta token. Closes Publish gap + verified Insights. DM tools stay off. Failover Canva+Drive+Gmail."
     }
   ],
   "addLink": {

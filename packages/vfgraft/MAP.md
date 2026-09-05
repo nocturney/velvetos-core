@@ -8,7 +8,7 @@ HQ — VelvetOS Core (backend) · reference bind Velvet Factory · 5 seats · HQ
 laws            constraint   HQ-send-via-tools; no auto-DM/boost; no invented ₪; pickup Sderot; public site locked; internal console OK
 pipeline        flow         פנייה → שיחה → הצעה → הדפסה → איסוף (= lead→talk→offer→fulfill→close)
 desk            system       five seats; warehouse stays off
-tools           system       Gmail · Calendar · Drive · Canva · WebSearch · GenerateImage · 3DAI site
+tools           system       Gmail · Calendar · Drive · Canva · WebSearch · GenerateImage · 3DAI site · ig-mcp (Publish needsAuth)
 skills          system       morning / inquiry / content / Canva / velvetos / this map
 packs           system       packages/<name>/ — shared backend capabilities
 velvetos        system       CORE backend; modules always loaded; instances/* = frontend scaffolds

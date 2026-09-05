@@ -17,6 +17,16 @@
         "run",
         "main.py"
       ]
+    },
+    "instagram": {
+      "command": "/ABS/PATH/ig-mcp/.venv/bin/python",
+      "args": ["/ABS/PATH/ig-mcp/src/instagram_mcp_server.py"],
+      "env": {
+        "INSTAGRAM_ACCESS_TOKEN": "${env:INSTAGRAM_ACCESS_TOKEN}",
+        "INSTAGRAM_BUSINESS_ACCOUNT_ID": "${env:INSTAGRAM_BUSINESS_ACCOUNT_ID}",
+        "FACEBOOK_APP_ID": "${env:FACEBOOK_APP_ID}",
+        "FACEBOOK_APP_SECRET": "${env:FACEBOOK_APP_SECRET}"
+      }
     }
   }
 }

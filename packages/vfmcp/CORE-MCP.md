@@ -2,16 +2,17 @@
 
 מושב: **ליבה**. לא פק חדש. לא סוד בגיט.
 
-VelvetOS Core **מתקין** את שלושת כלי המשרד. מופע (הפקטורי / יופי / אחר) **כורך** `mcpBind` — משתמש במה שצריך, מדלג על השאר.
+VelvetOS Core **מתקין** את כלי המשרד. מופע (הפקטורי / יופי / אחר) **כורך** `mcpBind` — משתמש במה שצריך, מדלג על השאר.
 
 | שרת | איפה | VF (maker-print) |
 |---|---|---|
 | **Studio MCP Hub** | `.cursor/mcp.json` → `https://studiomcphub.com/mcp` | רק כלים חינמיים שימושיים (רקע / גודל). **לא** CMYK / `print_ready` — הסטודיו תלת־ממד. [`CONNECT-STUDIOHUB.md`](CONNECT-STUDIOHUB.md) |
 | **Google Sheets** | Desktop `~/.cursor/mcp.json` (`mcp-gsheets`) | יומן `office/ledger/bindings.json`. בלי מפתח: CSV + Drive. [`CONNECT-SHEETS.md`](CONNECT-SHEETS.md) |
 | **WhatsApp** | Desktop `lharries/whatsapp-mcp` (טלפון אישי) | חיפוש + טיוטה. **שליחה אסורה** — אדם `050-2517000`. [`CONNECT-WHATSAPP.md`](CONNECT-WHATSAPP.md) |
+| **Instagram (ig-mcp)** | Desktop `~/.cursor` או Cloud Team MCP | Publish + Insights מאומתים ל־`@velvets_cloud`. **DM כבוי**. עד טוקן: `needsAuth` → Canva+Drive+Gmail. [`vfigos/CONNECT-IG.md`](../vfigos/CONNECT-IG.md) |
 
 רשימת מכונה: [`core-mcp.json`](core-mcp.json). דוגמת Desktop: [`mcp.desktop.example.json`](mcp.desktop.example.json).
 
-Cloud Agent רואה HTTP מ־Team MCP (כמו Canva / 3DAI). `npx` / `uv` מקומי לא רצים בענן — לכן Sheets וואטסאפ האישי נשארים ב־`~/.cursor`, לא בקובץ הפרויקט.
+Cloud Agent רואה HTTP מ־Team MCP (כמו Canva / 3DAI). `npx` / `uv` מקומי לא רצים בענן — לכן Sheets וואטסאפ האישי נשארים ב־`~/.cursor`, לא בקובץ הפרויקט. ig-mcp (stdio + טוקן) אותו כלל: Desktop או Team MCP secrets — לא בגיט.
 
-אין ארנק / x402 בגיט. אין ₪ מומצא. HQ לא מדפיס.
+אין ארנק / x402 בגיט. אין ₪ מומצא. HQ לא מדפיס. אין אוטו־DM.

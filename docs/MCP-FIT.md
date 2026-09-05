@@ -4,7 +4,7 @@ Source: [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-s
 Discovery index (Claude Code marketplace — **patterns only**, do not `/plugin install` on Cloud Agent): [buildwithclaude.com](https://buildwithclaude.com/) · [davepoon/buildwithclaude](https://github.com/davepoon/buildwithclaude) `mcp-servers.json` (reviewed 2026-09-03). Embed: [`packages/vfresearch/sources/2026-09-03-buildwithclaude.md`](../packages/vfresearch/sources/2026-09-03-buildwithclaude.md).  
 Grok / ChatGPT / Gemini / Perplexity gap vs this HQ: [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md) (reviewed 2026-08-31).  
 HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Boosts and auto-DM stay forbidden. Printers stay on the floor. Treg is not relevant.  
-Core **registers** WhatsApp / Sheets / Studio Hub (`packages/vfmcp/CORE-MCP.md`). The factory instance binds via `mcpBind`. Do not invent prices. Do not commit secrets.
+Core **registers** WhatsApp / Sheets / Studio Hub / Instagram ig-mcp (`packages/vfmcp/CORE-MCP.md`). The factory instance binds via `mcpBind`. Do not invent prices. Do not commit secrets.
 
 The awesome list is a directory of thousands of servers. Most of it is coding, crypto, or other people's SaaS. Below is only what maps onto Velvet Factory packs.
 
@@ -18,6 +18,7 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Google Drive** | Files and folders; **`create_file`**; Sheets **export** when a workbook is named (`vfbooks/SHEETS.md`) | `vfprod`, `vfcovers`, `vfsku`, `vfresearch`, `vfbooks` |
 | **Google Calendar** | Events | `vfseason`, `vfops`, `vfsales` |
 | **Canva** | Edit designs, brand-check, bulk-create, resize, `generate-design`. **Ready** on this Cloud Agent (2026-08-31, `DAGoYmCu4c4`) | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
+| **Instagram (ig-mcp)** | Publish, Insights, feed read via Graph API. **needsAuth** — Meta App + long-lived token (`packages/vfigos/CONNECT-IG.md`). Not in project `mcp.json` (secrets) | `vfigos`, `vfinsights`, `vfgrowth` |
 | **3D AI Studio** | Text/image → 3D mesh, STL/3MF export. **HTTP** `https://mcp.3daistudio.com/mcp` — OAuth **Desktop** (`.cursor/mcp.json`) **+ Cloud** (Dashboard → Integrations & MCP). See `packages/vfprod/CONNECT-3DAI.md` | `vfprod`, `vfsku`, `vlicense` |
 | **Studio MCP Hub** | HTTP `https://studiomcphub.com/mcp`. Free mockup/bg/resize; CMYK/`print_ready` for paper instances. VF skips CMYK. `packages/vfmcp/CONNECT-STUDIOHUB.md` | `vfprod`, `vfcovers`, `vfsku` |
 | **WebSearch / WebFetch** | Live web + URL fetch (ChatGPT/Gemini/Perplexity/Grok browse equivalent) | `vfresearch`, `vfgrowth` |
@@ -31,11 +32,27 @@ Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility”
 
 **Office graph (already in git, not a Cursor MCP add):** [`vfmem`](../packages/vfmem/) takes the *query shape* from [DeusData/codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp) (`architecture` / `who` / `impact` / `adr`) and runs it on `vf-desk.json` + `manifest.json`. Do not install their C binary from this repo. Write-up: [`docs/VFMEM.md`](VFMEM.md).
 
-## Installed in Core 2026-08-31 — instance binds what it needs
+## Installed in Core — instance binds what it needs
 
-Constitution: VF WhatsApp **send** stays human `050-2517000`. HQ does not print. No invented ₪. No secrets in git.
+Constitution: VF WhatsApp **send** stays human `050-2517000`. Instagram **publish** allowed via ig-mcp after Connect; **DM stays off**. HQ does not print. No invented ₪. No secrets in git.
 
 Catalog: [`packages/vfmcp/CORE-MCP.md`](../packages/vfmcp/CORE-MCP.md) · [`core-mcp.json`](../packages/vfmcp/core-mcp.json). VF bind: `mcpBind` on `packages/velvetos/samples/velvet-factory.json`.
+
+### 0. Instagram Publish + Insights — ig-mcp · **in Core (needsAuth until token)**
+
+The main growth gap: HQ could failover via Gmail+Drive but could not post to `@velvets_cloud` or read verified Insights until Meta credentials exist.
+
+| Server | Role | Notes |
+|---|---|---|
+| [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) | `publish_media`, `get_media_insights`, `get_media_posts`, profile | Business account + Facebook Page + Meta Developer App. stdio Python — not HTTP like Canva |
+
+**Connect:** [`packages/vfigos/CONNECT-IG.md`](../packages/vfigos/CONNECT-IG.md). Secrets in Dashboard / local `~/.cursor/mcp.json` only — never git. Example: [`mcp.desktop.example.json`](../packages/vfmcp/mcp.desktop.example.json).
+
+**Flow:** Canva export URL → `publish_media` → `#נשלח-מ-HQ`. Failover unchanged if `needsAuth`.
+
+**Still forbidden:** auto-DM, boost, invented Insights. DM tools in ig-mcp stay off (`mcpBind.instagram.dm=false`).
+
+**Packs:** `vfigos`, `vfinsights`, `vfgrowth`.
 
 ### 1. WhatsApp — inquiry-to-order · **in Core (draft/search)**
 
@@ -91,15 +108,15 @@ Remote URL: `https://prompts.chat/api/mcp`. Local fallback: `npx -y prompts.chat
 
 **Packs:** `vfcopy`, `vfmskill`, `vfresearch`. Embedded office templates live in `packages/vfcopy/hq/templates/` — not in the MCP.
 
-## Do this next (read-only growth)
+## Do this next (read-only growth extras)
 
-### Instagram research only — never send from HQ
+### Instagram research toolkit (no auth) — complements ig-mcp
 
 | Server | Role |
 |---|---|
 | [farukkolip/instapdown-mcp](https://github.com/farukkolip/instapdown-mcp) | Public toolkit: Reels/Story download, hashtags, engagement health, best-time tables. **No auth.** |
 
-Use for `vfigos` review, `vfgrowth` sprints, `vfinsights` reads. Schedule and copy stay in the pack. **Grok Bot still posts.**
+Use for competitor / public research beside ig-mcp Graph reads. Schedule and copy stay in the pack. **HQ publishes via ig-mcp** (or Canva+Drive+Gmail failover) — not via instapdown.
 
 ### Inbox triage on top of Gmail
 
@@ -111,14 +128,14 @@ Complements Gmail; does not replace it. Maps to `vfsales` and `vfconvert`.
 
 ### Meta Ads — read first
 
-Grok Bot already boosts. If Christian wants Cursor to *read* spend and creative, not launch:
+Grok Bot may boost as optional backup. If Christian wants Cursor to *read* spend and creative, not launch:
 
 | Server | Role |
 |---|---|
 | [pipeboard-co/meta-ads-mcp](https://github.com/pipeboard-co/meta-ads-mcp) | Analyze performance, creatives, spend |
 | [mikusnuz/meta-ads-mcp](https://github.com/mikusnuz/meta-ads-mcp) | Full Marketing API surface (too many write tools — keep writes off) |
 
-**Read-only in Cursor.** Writes / boosts stay on Grok Bot until a later standing order says otherwise.
+**Read-only in Cursor.** Writes / boosts stay lead-gated (`@paid-social-strategist`).
 
 **Packs:** `vfigos`, `vfinsights`. Do not invent Insights numbers.
 
@@ -143,7 +160,7 @@ Do not add these “because they exist on the list.” Add them when Christian c
 - **Headroom proxy on Cloud Agent** — local compression proxy needs a host process; Cloud VMs are sandboxed. Embed the **pattern** via `packages/vfharness/playbooks/context-thrift.md` (CCR + ContentRouter). Optional Mac-only: `headroom wrap cursor` after lead seat — see `packages/vfmcp/GAP.md`.
 - **Second SEO / GEO / AI-visibility stacks** — Treg is not relevant. Public marketing site from HQ stays locked; AEO skills (e.g. buildwithclaude `ai-search-visibility-audit`) stay **watch** until a public site exists under `vfbiz`. Warehouse `@aeo-foundations-architect` stays off-desk unless named.
 - **Second Canva or image-gen farms** — Canva + Superdesign are enough for brand work.
-- **Anything that posts, boosts, or DMs Instagram from this HQ.**
+- **Anything that boosts or DMs Instagram from this HQ** without the lead seat. Publish via **ig-mcp** is allowed after Connect (`CONNECT-IG.md`). Auto-DM stays locked.
 - **DeusData/codebase-memory-mcp binary** — coding-agent indexer that writes client config. The office-graph pattern is already `scripts/vfmem.py`. Local AST install only if the lead seat asks, and never by rewriting this repo's `.cursor/mcp.json`.
 - **Hosted agent-memory plugins** (context-memory / Slova, memstack install, `basic-memory` Docker) — use `vfmem` + `owner-memory.md` + checkpoints. See `packages/vfmem/MEMORY-UPDATE.md`.
 - **`mcp/3d-printer` (Orca/Bambu/OctoPrint…)** — printers stay on the floor. No Print from HQ.
@@ -159,15 +176,16 @@ HTTP no-secret servers go in Core `.cursor/mcp.json` (and Team MCP for Cloud). S
 2. Add **one** server to the Core catalog (`core-mcp.json`) + CONNECT playbook.
 3. Keep secrets out of git.
 4. Same-day: one line in `CHANGELOG.md` Unreleased + a note here if the choice changes.
-5. Pack agents may *use* the new tools. They still do not invent prices or send Instagram. VF WhatsApp send stays human.
+5. Pack agents may *use* the new tools. They still do not invent prices. Instagram publish is via ig-mcp after Connect; VF WhatsApp send stays human. Auto-DM stays locked.
 
 ## Suggested order
 
-The first three office gaps are in Core (`CORE-MCP.md`). VF bind is `mcpBind`. Next, only if a pack is blocked:
+The first office gaps are in Core (`CORE-MCP.md`). VF bind is `mcpBind`. Next, only if a pack is blocked:
 
-1. Desktop Connect: Sheets credentials + WhatsApp QR (`CONNECT-SHEETS.md`, `CONNECT-WHATSAPP.md`).
-2. Cloud Team MCP for `studiomcphub` (same path as 3DAI).
-3. 3D AI Studio OAuth on Cloud (`CONNECT-3DAI.md`) if mesh-from-photo is the bottleneck.
-4. instapdown (Instagram research, no login).
-5. Inbox Zero if the mailbox is the bottleneck.
-6. Meta Ads read-only if boost reporting is the bottleneck.
+1. **Instagram:** Meta App + long-lived token → Desktop / Team MCP (`CONNECT-IG.md`) so Publish leaves `#ממתין-ל-כלי-IG`.
+2. Desktop Connect: Sheets credentials + WhatsApp QR (`CONNECT-SHEETS.md`, `CONNECT-WHATSAPP.md`).
+3. Cloud Team MCP for `studiomcphub` (same path as 3DAI).
+4. 3D AI Studio OAuth on Cloud (`CONNECT-3DAI.md`) if mesh-from-photo is the bottleneck.
+5. instapdown (Instagram public research, no login).
+6. Inbox Zero if the mailbox is the bottleneck.
+7. Meta Ads read-only if boost reporting is the bottleneck.

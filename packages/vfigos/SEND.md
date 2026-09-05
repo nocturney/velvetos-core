@@ -2,14 +2,15 @@
 
 מושב: **צמיחה**. לא מחכים לגרוק. לא מחכים לכריסטיאן.
 
-פרוטוקול מלא: `constitution/SEND.md`.
+פרוטוקול מלא: `constitution/SEND.md`.  
+חיבור Publish: [`CONNECT-IG.md`](CONNECT-IG.md) · [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp).
 
 ## סדר
 
 1. כיתוב סופי ב־`vfcopy` — CTA וואטסאפ `050-2517000` / איסוף שדרות. לא «שלחו DM». לא ₪ מומצא.
 2. מדיה: Canva (מחובר) או `studio/render.py` / Superdesign.
-3. **כלי Publish מחובר** → HQ מפרסם ל־`@velvets_cloud` → `#נשלח-מ-HQ` ב־`QUEUE.md`.
-4. **אין Publish MCP** → failover באותו תור:
+3. **כלי Publish מחובר** (ig-mcp · namespace `instagram`) → Canva `export-design` → `publish_media` → `#נשלח-מ-HQ` ב־`QUEUE.md`.
+4. **אין Publish MCP / needsAuth** → failover באותו תור:
    - `Drive create_file` — מסמך חבילה (כיתוב + קישורי Canva/export)
    - `Gmail send_message` אל `nocturney@gmail.com` עם אותה חבילה
    - שורה `#נשלח-מ-HQ` + `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה
@@ -29,3 +30,4 @@
 - סרק / «תעלה ידנית» כברירת מחדל
 - להמציא Insights אחרי «שליחה»
 - Treg
+- `send_dm` / שיחות DM מ־ig-mcp

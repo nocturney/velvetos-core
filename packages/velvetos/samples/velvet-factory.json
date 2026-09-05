@@ -163,6 +163,14 @@
       "when": "desktop-lharries",
       "mode": "search-and-draft",
       "send": false
+    },
+    "instagram": {
+      "enabled": true,
+      "when": "desktop-or-team-mcp",
+      "source": "jlbadano/ig-mcp",
+      "connect": "packages/vfigos/CONNECT-IG.md",
+      "publish": true,
+      "dm": false
     }
   },
   "locks": [

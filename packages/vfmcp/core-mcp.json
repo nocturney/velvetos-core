@@ -1,6 +1,6 @@
 {
   "role": "core",
-  "updatedAt": "2026-08-31",
+  "updatedAt": "2026-09-05",
   "rule": "VelvetOS Core registers office MCPs. An instance binds a subset via mcpBind. No secrets in git. HTTP servers live in .cursor/mcp.json. Desktop-only servers stay in ~/.cursor/mcp.json (see mcp.desktop.example.json).",
   "projectMcpJson": ".cursor/mcp.json",
   "connect": "packages/vfmcp/CORE-MCP.md",
@@ -50,6 +50,29 @@
         "vf-send-human",
         "no-autodm",
         "no-secrets-in-git"
+      ]
+    },
+    {
+      "id": "instagram",
+      "inProjectMcpJson": false,
+      "whyNotProject": "jlbadano/ig-mcp is stdio Python + Meta long-lived token. Project mcp.json must not hold secrets. Desktop ~/.cursor/mcp.json or Cloud Team MCP secrets.",
+      "source": "https://github.com/jlbadano/ig-mcp",
+      "connect": "packages/vfigos/CONNECT-IG.md",
+      "cloud": "Team MCP stdio + dashboard secrets; needsAuth until token",
+      "failover": "Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)",
+      "allowed": [
+        "get_profile_info",
+        "get_media_posts",
+        "get_media_insights",
+        "publish_media",
+        "get_account_pages"
+      ],
+      "locks": [
+        "no-secrets-in-git",
+        "no-autodm",
+        "no-boost",
+        "no-invented-insights",
+        "dm-tools-off"
       ]
     }
   ]
