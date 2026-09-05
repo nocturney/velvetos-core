@@ -108,5 +108,6 @@
 - **למדנו:** CLI על `chris@Mac-Office` (darwin arm64): `agent status` = Logged in as `nocturney@gmail.com`, Pro+. Worker נכשל: `Filesystem createRequire is disabled in the self-contained worker SEA` (CLI 2026.09.02). קלון קיים ב־`~/velvetos-core`. `/path/to/` היה דוגמה.
 - **למדנו:** Worker `sderot-mac` **רץ** (5.9.2026) — id `4a3ca6d2-f2c3-4cba-8c96-8bb63d6160b2`, dir `/Users/chris/velvetos-core`. Computer Use עדיין לא מותקן. `--share-desktop` לא במק.
 - **למדנו:** `agent worker --computer-use` על CLI 2026.09.02 בוחר `cursor-agent-worker-sea` ונופל (createRequire). בלי הדגל = `index.js` ועובד. אחרי עצירה ל־computer-use ה־worker כבוי עד שחוזרים ל־start בלי הדגל.
-- **מחר:** התחלה נקייה ב־`HOST.md` — `agent worker --name "sderot-mac" start` בלי `--computer-use`; שיחה חדשה על המכונה.
+- **למדנו:** אין קישור לטאבי כרום. סוכן על `sderot-mac` בלי `--computer-use` = קבצים/טרמינל. אתרי Plus נשארים אצל האדם עד computer-use יציב (SEA שובר `agent worker --computer-use`).
+- **מחר:** בשיחה על `sderot-mac` — Codex/Gemini CLI אם מותקנים; כרום ידני. לא עוגיות.
 - **מקור:** שיחת בעלים 5.9.2026.

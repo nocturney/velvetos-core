@@ -36,6 +36,23 @@ agent worker --name "sderot-mac" start
 
 לחיצות בכרום / `--computer-use` = אחר כך, לא בסיבוב הזה (SEA נופל על CLI 2026.09.02).
 
+## איך סוכן משתמש ב־Gemini / ChatGPT / Perplexity
+
+אין «קישור סשן». אין העתקת עוגיות. אין חיבור לטאב פתוח.
+
+| מה רוצים | איך | עכשיו במק |
+|---|---|---|
+| Gems / GPTs / Canvas / Deep Research / Perplexity Pro | אותו Chrome, הסוכן לוחץ (`--computer-use`) | **חסום** ב־CLI 2026.09.02 (`agent worker --computer-use` → SEA) |
+| תשובת מודל בלי אתר | Gemini CLI + Codex `login` בטרמינל המק | אפשר מהסוכן על `sderot-mac` |
+| Cloud VM | לא פותח אתרי מנוי | `WebSearch` |
+
+כרום פתוח ומחובר = בשביל **אדם** ולבסיס computer-use בעתיד. ה־worker החי היום (בלי הדגל) = קבצים + טרמינל במק בלבד.
+
+לחיצות בכרום — רק אחרי שמחליפים worker (Ctrl+C בטרמינל הישן) ומריצים דרך `index.js`, לא דרך `agent worker --computer-use`. ראו סעיף ג למטה. אחרי הורדת Cursor Computer Use: Accessibility + Screen Recording **לאפליקציה הזו**, לא ל־Terminal.
+
+הסוכן שצריך את הכרום = שיחה על `sderot-mac`. לא השיחה על VM הענן.
+
+## מק ייעודי — לא ה-PC ווינדוס
 
 בעלים 5.9.2026: יש מחשב ווינדוס ליום-יום, ו**מק ייעודי** למנויים + worker. המארח הוא המק בשדרות — לא הווינדוס.
 
