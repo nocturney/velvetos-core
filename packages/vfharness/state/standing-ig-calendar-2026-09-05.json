@@ -1,0 +1,48 @@
+{
+  "task_id": "standing-ig-calendar-2026-09-05",
+  "status": "running",
+  "pack": "vfgrowth",
+  "goal": "Standing IG calendar + ledger + Hebrew Studio handoff on existing packs; no Cursor publish",
+  "crew": "content",
+  "planned_steps": [
+    "Route via vfmem/vfgraft",
+    "Read growth/copy/ops/constitution",
+    "Write CALENDAR + LEDGER + HANDOFF",
+    "Sensor check-all",
+    "PR + Hebrew report"
+  ],
+  "completed_steps": [
+    "Routed to vfgrowth @instagram-curator / @growth-hacker",
+    "Confirmed live G001/G002/G005 from Christian",
+    "Drive search: SoccerBall floor media missing",
+    "Wrote standing calendar W37-W39 + weekly template"
+  ],
+  "next_step": "Run check-all.py and open PR",
+  "artifacts": [
+    "packages/vfgrowth/CALENDAR.md",
+    "packages/vfgrowth/LEDGER.md",
+    "packages/vfgrowth/HANDOFF-he.md",
+    "packages/vfgrowth/G003.md",
+    "packages/vfcopy/G003.md",
+    "scripts/check-vfgrowth.py"
+  ],
+  "unresolved": [
+    "G003 SoccerBall media path missing",
+    "G004/G006+ candidates unnamed",
+    "Daily story clips missing",
+    "Insights still אין ספירה"
+  ],
+  "outcome": null,
+  "pulse": "working",
+  "verification": "pending check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "execution_state": {
+    "window_start": "2026-09-07",
+    "g003_slot": "Sun 7.9 16:00 fallback Tue 9.9 16:00",
+    "g003_status": "media-blocked",
+    "schedule_surface": "instagram.com"
+  },
+  "latest_observation": "No SoccerBall floor clip in office Drive; G005 marked live per Christian shortcode Dc0cKegEbxd."
+}
