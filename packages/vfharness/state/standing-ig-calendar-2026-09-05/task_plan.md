@@ -16,8 +16,8 @@
 - [x] **1. תכנון** — vfmem + vfgraft content-job + packs קיימים
 - [x] **2. מקור** — כריסטיאן 5.9 · חיים G001/G002/G005 · Drive SoccerBall חסר
 - [x] **3. ביצוע** — CALENDAR + LEDGER + HANDOFF + G003 + סנסור
-- [ ] **4. אימות** — `python3 scripts/check-all.py`
-- [ ] **5. סגירה** — checkpoint + PR
+- [x] **4. אימות** — `python3 scripts/check-all.py` passed=21
+- [x] **5. סגירה** — checkpoint + PR #90
 
 ## החלטות
 

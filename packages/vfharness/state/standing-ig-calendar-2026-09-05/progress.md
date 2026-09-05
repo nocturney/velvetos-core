@@ -14,7 +14,7 @@
 
 | script | סטטוס | הערה |
 |---|---|---|
-| `python3 scripts/check-all.py` | pending | אחרי commit ראשון |
+| `python3 scripts/check-all.py` | OK | passed=21 כולל check-vfgrowth.py |
 
 ## שליחות (אם רלוונטי)
 

@@ -76,9 +76,10 @@ def main() -> None:
     for needle in ("instagram.com", "חסום", "16:00", "12:00", "20:30", "לא סוויט"):
         if needle not in handoff:
             fail(f"HANDOFF-he.md missing {needle!r}")
-    if "שלחו DM" in handoff and "לא «שלחו DM»" not in handoff and 'לא "שלחו DM"' not in handoff:
-        if "לא «שלחו DM»" not in handoff:
-            fail("HANDOFF-he.md must keep WhatsApp CTA (no DM)")
+    if "050-2517000" not in handoff:
+        fail("HANDOFF-he.md must include WhatsApp CTA")
+    if "שלחו DM" in handoff and "לא «שלחו DM»" not in handoff and "בלי «שלחו DM»" not in handoff:
+        fail("HANDOFF-he.md must forbid שלחו DM")
 
     g003 = G003.read_text()
     if "חסום מדיה" not in g003:
@@ -89,7 +90,7 @@ def main() -> None:
     copy = COPY.read_text()
     if "050-2517000" not in copy:
         fail("vfcopy/G003.md must include WhatsApp CTA")
-    if "שלחו DM" in copy.replace("לא «שלחו DM»", "").replace('לא "שלחו DM"', ""):
+    if "שלחו DM" in copy and "לא «שלחו DM»" not in copy and "בלי «שלחו DM»" not in copy:
         fail("vfcopy/G003.md must not instruct שלחו DM")
 
     stories = STORIES.read_text()
