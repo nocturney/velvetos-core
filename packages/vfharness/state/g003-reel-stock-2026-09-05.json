@@ -26,7 +26,7 @@
   ],
   "outcome": "worker_done",
   "pulse": "scheduled",
-  "verification": "pending check-all after this pass",
+  "verification": "scripts/check-all.py passed=21; INSTA pack not on Cloud HQ disk",
   "gate": {
     "kind": "studio_schedule",
     "waiting_for": "instagram.com schedule of VF-G003-reel.mp4 at Sun 7.9 16:00",
