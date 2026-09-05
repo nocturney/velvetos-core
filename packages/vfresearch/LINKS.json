@@ -1102,6 +1102,21 @@
         "vfresearch"
       ],
       "note": "Human opens in browser for floor-proof prep (HEIC→JPG, background remove, compress) before Canva. No MCP install. Not a Canva/brand replacement. No invented ₪ or Insights from third-party traffic claims."
+    },
+    {
+      "id": "mikiarlo3-ai-copywriter",
+      "kind": "repo",
+      "url": "https://github.com/mikiarlo3/ai-copywriter",
+      "title": "ai-copywriter — reader-first copy + Humanizer (33 AI tells)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-ai-copywriter-embed.md",
+      "packs": [
+        "vfcopy",
+        "vfmskill",
+        "vfresearch"
+      ],
+      "note": "Embed COPYWRITING MODE into vfcopy/hq/reader-first-he.md; strengthen ai-tells-he.md. No npx skills add. Skip LinkedIn/strategic-blog (public site locked). Complements plannotator-write-better."
     }
   ],
   "addLink": {

@@ -7,8 +7,8 @@
 
 1. בחר תבנית לפי סוג מסר.
 2. מלא משתנים `{…}` רק ממקור מאומת (שרשור, Drive, רצפה).
-3. Pass אחרון: `../PLAYBOOK.md` + `../ai-tells-he.md`.
-4. טיוטה בלבד — `#vfsales` / `#vfgrowth` / Grok שולחים.
+3. לפני טיוטה: `../reader-first-he.md`. Pass אחרון: `../PLAYBOOK.md` + `../ai-tells-he.md`.
+4. טיוטה מוכנה → HQ שולח דרך כלים (`constitution/SEND.md`); וואטסאפ לקוח נשאר אדם.
 
 ## תבניות
 
