@@ -5,6 +5,8 @@
 מקור Perplexity: תזמון מובנה באינסטגרם (ממרץ 2026) + Buffer / Later / Bolta.  
 החבילה הזו **לא שולחת**. השליחה אצל Grok.
 
+לוח עומד: `vfgrowth/CALENDAR.md` · `HANDOFF-STANDING-he.md` (instagram.com, לא Meta Suite).
+
 ## סקירה
 
 1. מה משובץ בפלנר — לא זז, לא בוסט.

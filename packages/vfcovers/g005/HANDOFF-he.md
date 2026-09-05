@@ -1,7 +1,7 @@
 # VF-G005 — מסירה לסטודיו (אינסטגרם מקומי, לא סוויט)
 
-**לא לפרסם / לא בוסט / לא למחוק / לא לפתוח Instagram או Gmail מהסוכן.**  
-בחלון failover (Grok עד ~5.9) הסטודיו מעלה פוסט **חדש** ב־instagram.com לפי `vfigos/live/G005-LIVE-PACKET.md`. אחרי חידוש — Grok רק אם עדיין לא עלה.
+**עלה** חמישי 3.9.2026 12:00 · `instagram.com/p/Dc0cKegEbxd/` · לא בוסט · לא למחוק · לא מחליפים.  
+לוח הבא: `vfgrowth/CALENDAR.md` · מסירה: `vfigos/HANDOFF-STANDING-he.md`.
 
 | | |
 |---|---|
@@ -13,6 +13,7 @@
 | כיתוב | **d12b** — ראו למטה |
 | חשבון | @velvets_cloud |
 | G001 | ריל חי 30.8 · https://www.instagram.com/p/DcqkjOLlYVX/ · **לא מחליפים** |
+| G005 חי | https://www.instagram.com/p/Dc0cKegEbxd/ · **לא מחליפים** |
 
 ## סדר העלאה
 
