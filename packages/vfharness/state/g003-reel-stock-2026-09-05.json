@@ -35,7 +35,7 @@
   ],
   "outcome": "worker_done",
   "pulse": "unlocked",
-  "verification": "scripts/check-all.py after unlock; no invented footage",
+  "verification": "scripts/check-all.py passed=21 after unlock; no invented footage",
   "gate": {
     "kind": "studio_assemble",
     "waiting_for": "Studio-cut mp4 from track A SoccerBall or track B vf-user-2026-08-30",
