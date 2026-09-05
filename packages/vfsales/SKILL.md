@@ -14,3 +14,11 @@
 סגירת עסקאות: `@deal-strategist` · retention: `@customer-success-manager` · nurture: `@email-marketing-strategist`.
 
 רתמה: טיוטה ≠ שליחה עד שיש כלי/הוראה. חסר מחיר נשאר `X ₪`. אחרי שני כשלי שדה — הסלמה, לא ניחוש.
+
+## חוק «אין בקלט — אין בפלט» (proposal-drafter)
+
+דפוס מ־[proposal-drafter](https://buildwithclaude.com/skill/proposal-drafter) דרך [buildwithclaude](https://buildwithclaude.com/) (נסקר 2026-09-05).  
+לא מורידים את הסקיל ל־Cloud Agent — רק את הכלל:
+
+**אם הקלט לא נתן עובדה (₪ / חומר / כמות / מועד / רישיון / תוצאת סלייס) — הפלט לא טוען אותה.**  
+טיוטה בטוחה עם חסרים > הצעה בטוחה על ניחושים. חסרים → שואלים או כותבים `X ₪` / «חסר», לא ממלאים.
