@@ -111,6 +111,10 @@
 | Studio Hub NFT / x402 | בלי ארנק בגיט. כלים חינמיים בלבד עד ראש צוות |
 | FCC / `fcc-server` | נעול. לא על Cloud Agent |
 | **Headroom** (`headroom-ai`) | **local optional** — proxy/MCP דורש תהליך מקומי; Cloud Agent sandbox. דפוס CCR/ContentRouter ב-`vfharness/playbooks/context-thrift.md` בלי dependency. Mac: `uv tool install "headroom-ai[all]"` + `headroom wrap cursor` אחרי lead seat |
+| **Blender MCP** (`ahujasid/blender-mcp`) | **local optional** — דורש Blender + addon במק. Cloud Agent sandbox. קונספט/STL מ־HQ = 3DAI. פלייבוק: `vfprod/BLENDER-MCP.md` |
+| **CAD family** (Excalidraw / blender-open / blender-ai / blender-vxai / OpenSCAD / FreeCAD / SketchUp / multiCAD / SVGMaker) | רובם **skip על Cloud**. OpenSCAD/FreeCAD/Blender-siblings = Desktop optional אחרי ראש צוות. multiCAD/SketchUp = skip אלא אם האפליקציה במק. SVGMaker = later+API key. Excalidraw remote = later לדיאגרמות פנימיות. קטלוג: `vfprod/CAD-MCP.md` |
+| **Archon** (`coleam00/Archon`) | **skip install** — תזמורת/harness שנייה. דפוסים ב־`vfe2b/ORCHESTRATORS.md` בלבד |
+| **Fullstack Dev Skills** (`Jeffallan/claude-skills`) | **patterns only** — אין `/plugin install` / `npx skills` על Cloud. Common Ground → `vfmem/MEMORY-UPDATE.md` |
 | 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט. המחבר הרשמי הוא HTTP OAuth |
 | SharePoint / Outlook / Notion / Slack | לא ערימת שדרות |
 
@@ -124,7 +128,7 @@
 | סטודיו | `vfconvert` · `vfsales` | Gmail | Drive · `#נשלח-מ-HQ` · טיוטת וואטסאפ | שליחת וואטסאפ ללקוח · auto-DM |
 | צמיחה | `vfgrowth` · `vfigos` · `vfcovers` | Canva | `studio/render.py` → Superdesign → Drive+Gmail | Publish מזויף · boost |
 | תפעול | `vfcost` · `vfbooks` | Gmail · Drive | CSV דרך Drive · `mcp-gsheets` אחרי Connect · «X ₪» / «אין ספירה» | Sheets ID מומצא |
-| ייצור | `vfprod` · `vfresearch` | Drive · WebSearch · 3DAI | studiomcphub רקע/גודל · STL preflight | Treg · גוף חסום · CMYK כצינור VF |
+| ייצור | `vfprod` · `vfresearch` | Drive · WebSearch · 3DAI | studiomcphub רקע/גודל · STL preflight · Blender MCP רק במק | Treg · גוף חסום · CMYK כצינור VF · Blender על Cloud |
 
 כלים native (כל מושב): `WebSearch` / `WebFetch` · `GenerateImage` — עם שרשרת Canva קודם ל־IG.
 

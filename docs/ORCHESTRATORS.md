@@ -25,6 +25,7 @@
 | מכונת מצבים | NEEDLE | מצב אחד בכרטיס |
 | סיבוב מכסה | Claudexor | `SEND.md` + grok-failover |
 | שער אדם / תקציב | 5dive, humanlayer, paperclip | וואטסאפ אדם · ₪ לראש צוות |
+| שערי YAML + אישור אדם | Archon (patterns) | `vfharness` · `אימות` · `decision_gate` — **לא** install |
 
 הפעלה: `@vfe2b run <עבודה>` או skill `vf-run`.
 
@@ -39,8 +40,9 @@
 ## מה דולג בכוונה
 
 - Multiplexers / ADE: `amux`, `dmux`, `claude-squad`, `Emdash`, `Garcon`, התקנת Orca.
+- **Archon** (coleam00) — harness/CLI/Docker שני; דפוסי שערי אימות בלבד (2026-09-05).
 - נחילים: `loki-mode` (41), `ClawTeam`, `Agent Teams`.
-- לולאה בלי אדם: `bernstein`, Ralph unattended על ₪ או שליחה.
+- לולאה בלי אדם: `bernstein`, Ralph unattended על ₪ או שליחה (`archon-ralph-dag`).
 - עוזר אישי / OpenClaw / טלגרם / CRM אוטומטי (`takopi`, `denchclaw`).
 - Resting / archived (נבדק במקור 28.7.2026).
 
