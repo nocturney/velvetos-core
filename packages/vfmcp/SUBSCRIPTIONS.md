@@ -11,7 +11,8 @@ Cloud Agent ו־Grok Bot נכנסים ל־`gemini.google.com` / `chatgpt.com` מ
 Google ו־OpenAI רואים לוגין חדש ממכונה זרה → התראות אבטחה, 2FA, ניתוק סשן.  
 שמירת עוגיות / פרופיל כרום / «להישאר מחוברים» **אסורה** — זה נראה כמו גניבת סשן, לא פותר את ה־IP, ומפר «אין סוד בגיט».
 
-**דין HQ:** Cloud Agent **לא** פותח את אתרי המנוי. Gems / GPTs / Canvas / Deep Research של הדפדפן נשארים על המק/הטלפון של הבעלים בלבד.
+**דין HQ:** Cloud Agent **לא** פותח את אתרי המנוי.  
+**גישה מלאה וקבועה בלי חיוב API** = המק בשדרות כמארח. פלייבוק: [`HOST.md`](HOST.md).
 
 ## מה כן — API, לא מנוי דפדפן
 
@@ -27,7 +28,11 @@ Google ו־OpenAI רואים לוגין חדש ממכונה זרה → התרא�
 
 ## מה הבעלים עושה
 
-בלי חיוב API: Gems / GPTs / Canvas / Deep Research / Perplexity Pro נשארים על המק/הטלפון. Cloud משתמש ב־`WebSearch` / `WebFetch`.  
+בלי חיוב API: מארח אחד — המק בשדרות. [`HOST.md`](HOST.md):
+
+1. Chrome פרופיל קבוע לשלושת האתרים (Gems / GPTs / Canvas / Deep Research / Perplexity Pro).
+2. על המק: Gemini CLI = Login with Google · Codex = `codex login` (ChatGPT Plus). לא מפתח API.
+3. Cloud משתמש ב־`WebSearch` / `WebFetch` וקורא `vfresearch/sources/` אחרי שהמק שמר תוצר.
 **לא** להתחבר ל־`gemini.google.com` / `chatgpt.com` / `perplexity.ai` מדפדפן Cloud Agent או Grok Bot.
 
 אם יום אחד יופיע מפתח ב־env (בלי שנבקש): `vf_gemini.py` / `vf_chatgpt.py` עובדים. בלי מפתח: **חסר מפתח Gemini** / **חסר מפתח ChatGPT**. Failover מיידי ל־WebSearch. אין גוף מומצא.
@@ -58,9 +63,9 @@ Google ו־OpenAI רואים לוגין חדש ממכונה זרה → התרא�
 
 שולחן Perplexity ב־HQ: `WebSearch` / «דולג — חומה». לא ממציאים גוף.
 
-## תזמורת 06:15 (Cloud)
+## תזמורת 06:15
 
-בלי מפתחות API: `WebSearch` / `WebFetch` בלבד.  
-אם יש מפתח ב־env: `python3 scripts/vf_chatgpt.py orchestra` · `python3 scripts/vf_gemini.py orchestra`.
+- **מק (Cursor Desktop):** שלושת המנויים לפי [`HOST.md`](HOST.md).
+- **Cloud:** בלי מפתחות API — `WebSearch` / `WebFetch` בלבד. אם יש מפתח ב־env: `python3 scripts/vf_chatgpt.py orchestra` · `python3 scripts/vf_gemini.py orchestra`.
 
 `constitution/ORCHESTRA.md`.

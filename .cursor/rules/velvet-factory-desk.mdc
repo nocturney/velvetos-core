@@ -63,7 +63,7 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 | Run / משמרת | `vfe2b` overlay | `@chief-of-staff` then the seat crew | One job folder. End in `worker_done` / `escalation` / `decision_gate`. Card: דופק / אימות / ארטיפקט. Do not install Orca or a second orchestrator |
 | Harness / repeating failure / checkpoint | `vfharness` | `@workflow-architect` | `python3 scripts/check-all.py` — no second runtime |
 | HQ map / blast radius | `vfgraft` | — | Read `MAP.md`, then 2–3 graph nodes |
-| Orchestra / Gemini / ChatGPT subscription | `vfmcp` | `@studio-operations` | `SUBSCRIPTIONS.md` + `vf_gemini.py` / `vf_chatgpt.py`. Plus ≠ API. Do not open `gemini.google.com` / `chatgpt.com` from Cloud. No aliargun / RLabs MCP |
+| Orchestra / Gemini / ChatGPT / Perplexity subscription | `vfmcp` | `@studio-operations` | `HOST.md` — Mac in Sderot hosts Plus/Pro (Chrome + Codex + Gemini CLI). Cloud never opens those sites. `SUBSCRIPTIONS.md`. No aliargun / RLabs / perplexity-user-mcp on Cloud |
 
 `AGENTS.md` is the guide file. When it conflicts with the conversation, the guide wins. After catalog or rule edits, run the sensor suite. Do not hide a failed sensor.
 

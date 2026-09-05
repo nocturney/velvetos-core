@@ -3,12 +3,12 @@
 מושב: **צמיחה** + ראש צוות קורא בבריף.  
 מקור Gemini: Custom GPT + Ideation.  
 מקור Perplexity: Meshy / Tripo (טקסט או תמונה → מודל להדפסה).  
-Cursor פותח API (`vf_chatgpt.py` / `vf_gemini.py`), לא אתרי מנוי. Grok לא גולש ל־chatgpt.com / gemini.google.com. לא שולחים מפה. [`SUBSCRIPTIONS.md`](../vfmcp/SUBSCRIPTIONS.md).
+מנויים = המק בשדרות ([`HOST.md`](../vfmcp/HOST.md)). Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. Grok אותו דין. לא שולחים מפה. [`SUBSCRIPTIONS.md`](../vfmcp/SUBSCRIPTIONS.md).
 
 ## 06:15 — שלושה שולחנות
 
 1. לקרוא את הבריף אתמול, לוח `vfgrowth`, וכרטיסי `vfsku` בלי מחיר (`python3 scripts/vfsku.py brief`).
-2. אותה שאלה ל־**ChatGPT API** (`python3 scripts/vf_chatgpt.py orchestra`) ו־**Gemini API** (`python3 scripts/vf_gemini.py orchestra`). Perplexity דרך WebSearch. **לא** דפדפן Cloud על `chatgpt.com` / `gemini.google.com`.
+2. **במק:** אותה שאלה ל־ChatGPT Plus / Gemini / Perplexity (כרום או Codex + Gemini CLI). **ב־Cloud:** לא דפדפן מנוי — `WebSearch`, או קריאת `sources/` אחרי שהמק שמר. `vf_chatgpt.py` / `vf_gemini.py` רק אם יש מפתח ב־env.
 3. להטמיע מה ששימושי בפק קיים (`constitution/ORCHESTRA.md` — טבלת מיפוי).
 4. לכתוב «מה נבנה / יועל» ל־`packages/vfops/data/research.md` (בריף 07:00 קורא מכאן). ריק = **«אין חדש במשרד»** בדיוק.
 5. לשמור את הגולמי ב־`sources/YYYY-MM-DD-orchestra.md`. עותק יום: `vfops/BRIEF-YYYY-MM-DD.md`.

@@ -30,6 +30,7 @@ CONNECT_HUB = ROOT / "packages" / "vfmcp" / "CONNECT-STUDIOHUB.md"
 CONNECT_GEMINI = ROOT / "packages" / "vfmcp" / "CONNECT-GEMINI.md"
 CONNECT_CHATGPT = ROOT / "packages" / "vfmcp" / "CONNECT-CHATGPT.md"
 SUBSCRIPTIONS = ROOT / "packages" / "vfmcp" / "SUBSCRIPTIONS.md"
+HOST = ROOT / "packages" / "vfmcp" / "HOST.md"
 CORE_MCP_MD = ROOT / "packages" / "vfmcp" / "CORE-MCP.md"
 VF_GEMINI = ROOT / "scripts" / "vf_gemini.py"
 VF_CHATGPT = ROOT / "scripts" / "vf_chatgpt.py"
@@ -76,6 +77,7 @@ def main() -> None:
         CONNECT_GEMINI,
         CONNECT_CHATGPT,
         SUBSCRIPTIONS,
+        HOST,
         CORE_MCP_MD,
         VF_GEMINI,
         VF_CHATGPT,
@@ -178,7 +180,8 @@ def main() -> None:
         (CONNECT_WA, ("lharries/whatsapp-mcp", "050-2517000", "send=false", "Infobip")),
         (CONNECT_GEMINI, ("חסר מפתח Gemini", "vf_gemini.py", "aliargun", "gemini.google.com", "לא ממציאים", "RLabs")),
         (CONNECT_CHATGPT, ("חסר מפתח ChatGPT", "vf_chatgpt.py", "chatgpt.com", "OPENAI_API_KEY", "לא ממציאים")),
-        (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py", "perplexity-user-mcp", "patchright")),
+        (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py", "perplexity-user-mcp", "patchright", "HOST.md")),
+        (HOST, ("המק בשדרות", "codex login", "Gemini CLI", "perplexity.ai", "Cloud Agent", "לא ממציאים")),
         (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "Gemini API", "ChatGPT API")),
     ):
         text = path.read_text(encoding="utf-8")
@@ -223,8 +226,8 @@ def main() -> None:
         fail("ORCHESTRA.md must mention חסר מפתח ChatGPT")
     if "SUBSCRIPTIONS.md" not in orchestra and "לא פותחים" not in orchestra:
         fail("ORCHESTRA.md must forbid Cloud browser login to subscription sites")
-    if "perplexity-user-mcp" not in orchestra and "vscode-perplexity" not in orchestra:
-        fail("ORCHESTRA.md must skip vscode-perplexity-mcp / perplexity-user-mcp on Cloud")
+    if "HOST.md" not in orchestra:
+        fail("ORCHESTRA.md must point 06:15 subscription desks at HOST.md")
 
     if "GAP.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention GAP.md")
@@ -236,6 +239,8 @@ def main() -> None:
         fail("vfmcp/ORIGIN.md must mention the ChatGPT API bridge")
     if "SUBSCRIPTIONS.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention SUBSCRIPTIONS.md")
+    if "HOST.md" not in ORIGIN.read_text():
+        fail("vfmcp/ORIGIN.md must mention HOST.md")
 
     sys.path.insert(0, str(ROOT / "scripts"))
     import vf_gemini  # noqa: E402

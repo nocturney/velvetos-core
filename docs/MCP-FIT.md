@@ -93,7 +93,7 @@ Remote URL: `https://prompts.chat/api/mcp`. Local fallback: `npx -y prompts.chat
 
 ### Gemini / ChatGPT API — orchestra desks, not consumer subscriptions
 
-Cloud Agent **must not** open `gemini.google.com` or `chatgpt.com` (Google/OpenAI security alerts). Hub: [`packages/vfmcp/SUBSCRIPTIONS.md`](../packages/vfmcp/SUBSCRIPTIONS.md).
+Cloud Agent **must not** open `gemini.google.com` or `chatgpt.com` (Google/OpenAI security alerts). Hub: [`packages/vfmcp/SUBSCRIPTIONS.md`](../packages/vfmcp/SUBSCRIPTIONS.md). Full Plus/Pro without extra API billing: owner Mac — [`HOST.md`](../packages/vfmcp/HOST.md).
 
 | Path | Role | Notes |
 |---|---|---|

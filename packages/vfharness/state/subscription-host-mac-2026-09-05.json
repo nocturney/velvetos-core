@@ -1,0 +1,35 @@
+{
+  "task_id": "subscription-host-mac-2026-09-05",
+  "status": "done",
+  "pack": "vfmcp",
+  "goal": "Name the durable path for full Plus/Pro access without extra API billing: owner Mac as host, Cloud never logs in.",
+  "planned_steps": [
+    "State Cloud cannot hold consumer sessions",
+    "Write HOST.md: Chrome + Gemini CLI OAuth + Codex login on Mac",
+    "Wire orchestra 06:15 Desktop vs Cloud"
+  ],
+  "completed_steps": [
+    "HOST.md: Sderot Mac is the subscription host",
+    "Official local CLIs: Gemini Login with Google, Codex login — not API keys",
+    "Perplexity stays Chrome on Mac; no Cloud perplexity-user-mcp",
+    "No self-hosted Cursor worker connected yet"
+  ],
+  "next_step": "Owner logs into Chrome profile + gemini CLI + codex login on the Mac once; optional cursor worker start later.",
+  "artifacts": [
+    "packages/vfmcp/HOST.md",
+    "packages/vfmcp/SUBSCRIPTIONS.md",
+    "constitution/ORCHESTRA.md"
+  ],
+  "unresolved": [
+    "Gems/GPTs/Canvas/Deep Research still require the web apps in Chrome — CLIs are not the full product",
+    "No Cursor self-hosted worker is registered from this Cloud run",
+    "perplexity-user-mcp still lead-gated even on the Mac"
+  ],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "latest_observation": "Zero self-hosted workers visible to this Cloud Agent; Plus sessions must stay on the owner Mac."
+}
