@@ -45,6 +45,10 @@ def main() -> None:
 
     if not (ROOT / "packages/vfbriefux/hq/PACKET.md").is_file():
         fail("missing daily brief packet")
+    if not (ROOT / "packages/vfbriefux/hq/DIAGRAM-MAKER.md").is_file():
+        fail("missing vfbriefux diagram-maker embed map")
+    if not (ROOT / "packages/vfbriefux/hq/diagram-svg-template.html").is_file():
+        fail("missing vfbriefux diagram SVG template")
     mail_html = ROOT / "packages/vfbriefux/MAIL.html"
     mail_md = ROOT / "packages/vfbriefux/MAIL.md"
     render = ROOT / "packages/vfbriefux/render_mail.py"

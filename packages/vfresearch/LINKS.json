@@ -816,6 +816,24 @@
         "vfe2b"
       ],
       "note": "Embed only: A_t=(P,Σ,O); discard reasoning after validated state patch. No LangGraph / SkillExecBench runtime. Complements context-thrift + OMA checkpoint."
+    },
+    {
+      "id": "diagram-maker-visualizer",
+      "kind": "skill",
+      "url": "https://mcpmarket.com/tools/skills/diagram-maker-visualizer",
+      "openUrl": "https://agentskill.sh/@openclaw/diagram-maker",
+      "title": "Diagram Maker Visualizer (openclaw/diagram-maker)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "wallNote": "mcpmarket.com returned Vercel security checkpoint; body taken from agentskill.sh + github.com/openclaw/openclaw/skills/diagram-maker — no invented mcpmarket body.",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-diagram-maker.md",
+      "report": "packages/vfbriefux/hq/DIAGRAM-MAKER.md",
+      "pack": "vfbriefux",
+      "packs": [
+        "vfbriefux",
+        "vfops"
+      ],
+      "note": "Patterns only into vfbriefux. Companion SVG via render_mail.py --diagram. No npx/OpenClaw install. Live mail stays MAIL.html tables."
     }
   ],
   "addLink": {
