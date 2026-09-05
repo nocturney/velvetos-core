@@ -1,0 +1,24 @@
+{
+  "task_id": "research-links-embed-2026-09-05",
+  "status": "worker_done",
+  "started": "2026-09-05",
+  "packs": ["vfresearch", "vfbriefux", "vfops", "vfmem", "velvetos"],
+  "mention": ["@research-synthesist"],
+  "links": [
+    "hkuds-deeptutor",
+    "examful-ai",
+    "lieflat-charts",
+    "academic-research-skills"
+  ],
+  "embedded": [
+    "packages/vfresearch/hq/ACADEMIC-PIPELINE.md",
+    "packages/vfbriefux/hq/CHARTS.md",
+    "packages/vfops/hq/MASTERY-MEMORY.md"
+  ],
+  "watch": ["examful-ai"],
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
+    "packages/vfresearch/sources/2026-09-05-weekly-links-owner-four.md"
+  ],
+  "latest_observation": "Four owner URLs registered same-day; three embeds + ExamFul watch; sensors pending."
+}

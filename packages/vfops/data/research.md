@@ -4,9 +4,9 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: market-intel — שערי איכות מחקר ב־vfresearch/hq/MARKET-INTEL.md · גם YouMind prompts / diagram-maker
+מה נבנה / יועל: שבועי קישורים — הוטמע academic-pipeline + charts + mastery-memory · ExamFul ב־watch
 ```
 
 05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md`.
 
-מקור: `packages/vfresearch/sources/2026-09-05-market-research-intelligence.md` · `hq/MARKET-INTEL.md` · `packages/vfresearch/sources/2026-09-05-youmind-prompts.md` · `packages/vfresearch/sources/2026-09-05-diagram-maker.md`
+מקור: `packages/vfresearch/sources/2026-09-05-weekly-links-owner-four.md` · `hq/ACADEMIC-PIPELINE.md` · `vfbriefux/hq/CHARTS.md` · `vfops/hq/MASTERY-MEMORY.md`

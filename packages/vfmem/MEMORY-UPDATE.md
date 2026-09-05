@@ -11,7 +11,19 @@
 | מפת משרד | `vfgraft/MAP.md`, `vfmem` routes | ניתוב job → pack → slug |
 | זיכרון בעלים | `vfops/data/owner-memory.md` | העדפות, טון, עובדות חוזרות |
 | זיכרון instance | `vfops/data/owner-memory-<instance-id>.md` | IG handle, SKU, טון לפי משרד frontend |
-| משימה | `vfharness/state/*.json` | מה קרה ב-job ספציפי |
+| משימה | `vfharness/state/*.json` | מה קרה ב-job ספציפי (L1 traces) |
+
+## L1 / L2 / L3 (דפוס DeepTutor)
+
+מקור השראה: [HKUDS/DeepTutor](https://github.com/HKUDS/DeepTutor) — זיכרון בשלוש שכבות. פירוט: `vfops/hq/MASTERY-MEMORY.md`.
+
+| שכבה | אצלנו | כלל |
+|---|---|---|
+| L1 | checkpoint / תצפית אחרונה | עקבות משימה — לא שיחה שלמה |
+| L2 | `owner-memory.md` | סיכום עמיד למחר — שורה אחת = עובדה אחת |
+| L3 | `AGENTS.md` / פלייבוק / ADR | סינתזה לחוק — רק אחרי חזרתיות או אישור אדם |
+
+Mastery gate לפני «למדנו / סיימנו»: אימות טרי (`verification-before-claim.md`), לא תחושה.
 
 ## מתי לכתוב
 

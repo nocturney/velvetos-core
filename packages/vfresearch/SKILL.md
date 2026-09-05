@@ -11,6 +11,7 @@
 - מיומנות: `.cursor/skills/vf-weekly-links/SKILL.md` · `@research-synthesist`
 - **כל יומיים · לנצח עד עצירת בעלים** — דירוג [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills): `BEST-SKILLS.md` + `BEST-SKILLS.json` + `TIMER.md`
 - מיומנות: `.cursor/skills/vf-best-skills/SKILL.md` · מחקר רשת (דפוס): `hq/LAST30.md`
+- צינור מחקר אקדמי (דפוס): `hq/ACADEMIC-PIPELINE.md` · שערי איכות: `hq/MARKET-INTEL.md`
 - איכות מחקר / market intel (דפוס): `hq/MARKET-INTEL.md` — ייחוס, גיל נתון, נגדי, מבנה החלטה
 
 ## מוזיקה לאינסטגרם
