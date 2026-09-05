@@ -87,12 +87,29 @@ Cloud Agent על VM של Cursor **לא** מקבל גישה לכרום שלך. א
 2. בדוק תג Plus/Pro בכל טאב. סגור בלי Log out.
 3. אל תפתח את שלושת האתרים מדפדפן Cloud / Grok Bot.
 
-### ב. CLI רשמי (בלי מפתח API) — אותו מק
+### ב. CLI רשמי (בלי מפתח API) — טרמינל שני, אל תסגור את ה־worker
 
 ```bash
-gemini          # Login with Google
-codex login     # ChatGPT Plus
+which brew node gemini codex
 ```
+
+Gemini — Login with Google:
+
+```bash
+brew install gemini-cli
+gemini
+```
+
+(אם אין brew: `npm install -g @google/gemini-cli`)
+
+Codex — Sign in with ChatGPT (Plus):
+
+```bash
+curl -fsSL https://chatgpt.com/codex/install.sh | sh
+codex login
+```
+
+Perplexity: אין CLI רשמי למנוי. נשאר בכרום.
 
 ### ג. Worker — כדי שסוכן Cloud יריץ כלים אצלך
 
