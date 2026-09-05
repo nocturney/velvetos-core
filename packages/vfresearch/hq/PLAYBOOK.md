@@ -18,6 +18,11 @@ B2B לא מכאן — `#vfbiz` נעול (לוגו, QR, מפיות).
 פעם בשבוע: `../WEEKLY.md` על הרישום `../LINKS.json`.  
 ארטיפקט ב־`../sources/YYYY-MM-DD-weekly-links.md`. הטמעה במקום — בלי פק חדש.
 
+## צינור מחקר (דפוס)
+
+`ACADEMIC-PIPELINE.md` — research → write → review → revise → finalize עם שערי יושרה.  
+`MARKET-INTEL.md` — מחקר מכוון החלטה. בלי plugin אקדמי על Cloud Agent.
+
 ## מוזיקה / סאונד לאינסטגרם
 
 כשיש ריל או בקשה למוזיקה: `../MUSIC.md` + `../SOURCES-MUSIC.json` · `@trend-researcher`.  

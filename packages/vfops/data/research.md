@@ -1,13 +1,12 @@
-# 05 · משרד · 3.9.2026
+# 05 · משרד · 5.9.2026
 
-בריף 07:00 מדביק את הבלוק למטה.  
-אם אין הטמעה באותו יום — מחליפים את הבלוק בשורה המדויקת `אין חדש במשרד` (תבנית ב־`BRIEF.md`).
+בריף 07:00 מדביק את הבלוק למטה.
 
 ```
 05 · משרד
-מה נבנה / יועל: best-skills — הוטמע grill + verification + skill-authoring + מחזור כל-יומיים (LinklyAI) ב־vfresearch/vfharness/vfconvert
+מה נבנה / יועל: שבועי קישורים — הוטמע VoiceStudio (skip install) ב־vfom/vfmcp · academic-pipeline + charts + mastery-memory · ExamFul ב־watch · footrue ToolBox (הכנת מדיה בדפדפן) ב־vfcovers/vfcanva · buildwithclaude proposal-drafter ב־vfsales · ai-copywriter reader-first ב־vfcopy · גם market-intel / YouMind / diagram-maker
 ```
 
-05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md` (העדפות בעלים + פתוח מ-checkpoints).
+05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md`.
 
-מקור: `packages/vfresearch/sources/2026-09-03-best-skills.md` · `BEST-SKILLS.md`
+מקור: `packages/vfresearch/sources/2026-09-05-voicestudio.md` · `packages/vfresearch/sources/2026-09-05-voicestudio-weekly.md` · `packages/vfresearch/sources/2026-09-05-weekly-links-owner-four.md` · `hq/ACADEMIC-PIPELINE.md` · `vfbriefux/hq/CHARTS.md` · `vfops/hq/MASTERY-MEMORY.md` · `packages/vfresearch/sources/2026-09-05-footrue.md` · `packages/vfresearch/sources/2026-09-05-weekly-links-footrue.md` · `packages/vfresearch/sources/2026-09-05-buildwithclaude.md` · `packages/vfresearch/sources/2026-09-05-ai-copywriter-embed.md` · `hq/MARKET-INTEL.md` · `packages/vfresearch/sources/2026-09-05-youmind-prompts.md` · `packages/vfresearch/sources/2026-09-05-diagram-maker.md`

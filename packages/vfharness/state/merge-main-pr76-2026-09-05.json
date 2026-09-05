@@ -1,0 +1,31 @@
+{
+  "task_id": "merge-main-pr76-2026-09-05",
+  "status": "in_progress",
+  "pack": "vfmcp",
+  "goal": "Merge origin/main into PR 76 and keep both Mac-host and main catalog entries.",
+  "planned_steps": [
+    "Fetch origin/main and merge into cursor/gemini-api-bridge-eb48",
+    "Resolve CHANGELOG, GAP.md, owner-memory conflicts by keeping both sides",
+    "Run check-all.py and push"
+  ],
+  "completed_steps": [
+    "Merged origin/main; three content conflicts",
+    "Kept Mac host + VoiceStudio/owner-links changelog rows",
+    "Kept gemini/perplexity skip rows plus Blender/VoiceStudio/CAD/Archon in GAP.md",
+    "Chronological owner-memory: 09-04 pulse, 09-05 owner links, 09-05 Mac host"
+  ],
+  "next_step": "Run sensors, commit merge, push, update PR",
+  "artifacts": [
+    "CHANGELOG.md",
+    "packages/vfmcp/GAP.md",
+    "packages/vfops/data/owner-memory.md"
+  ],
+  "unresolved": [],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "latest_observation": "Conflicts were additive catalog entries from later main PRs overlapping Unreleased changelog and skip tables."
+}

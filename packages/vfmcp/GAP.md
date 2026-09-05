@@ -121,6 +121,11 @@
 | **Headroom** (`headroom-ai`) | **local optional** — proxy/MCP דורש תהליך מקומי; Cloud Agent sandbox. דפוס CCR/ContentRouter ב-`vfharness/playbooks/context-thrift.md` בלי dependency. Mac: `uv tool install "headroom-ai[all]"` + `headroom wrap cursor` אחרי lead seat |
 | `aliargun/mcp-server-gemini` / `RLabs-Inc/gemini-mcp` ב־mcp.json | מפתח בגיט / npx על Cloud / Veo. מנוי הדפדפן לא מתחבר. `SUBSCRIPTIONS.md` + `vf_gemini.py` |
 | `perplexity-user-mcp` / [vscode-perplexity-mcp](https://github.com/automations-project/vscode-perplexity-mcp) | patchright + עוגיות Cloudflare. צורך Pro בלי API — **רק מק**, לא Cloud. Experimental + ToS. auto-config דורס `.cursor`. `SUBSCRIPTIONS.md` |
+| **Blender MCP** (`ahujasid/blender-mcp`) | **local optional** — דורש Blender + addon במק. Cloud Agent sandbox. קונספט/STL מ־HQ = 3DAI. פלייבוק: `vfprod/BLENDER-MCP.md` |
+| **VoiceStudio MCP** (`debpalash/VoiceStudio`) | **skip על Cloud** — backend מקומי `:3900`. רילים = גלם רצפה (`vfom`). Desktop VO רק אחרי ראש צוות + `vlicense`. ראו `docs/MCP-FIT.md` · `sources/2026-09-05-voicestudio.md` |
+| **CAD family** (Excalidraw / blender-open / blender-ai / blender-vxai / OpenSCAD / FreeCAD / SketchUp / multiCAD / SVGMaker) | רובם **skip על Cloud**. OpenSCAD/FreeCAD/Blender-siblings = Desktop optional אחרי ראש צוות. multiCAD/SketchUp = skip אלא אם האפליקציה במק. SVGMaker = later+API key. Excalidraw remote = later לדיאגרמות פנימיות. קטלוג: `vfprod/CAD-MCP.md` |
+| **Archon** (`coleam00/Archon`) | **skip install** — תזמורת/harness שנייה. דפוסים ב־`vfe2b/ORCHESTRATORS.md` בלבד |
+| **Fullstack Dev Skills** (`Jeffallan/claude-skills`) | **patterns only** — אין `/plugin install` / `npx skills` על Cloud. Common Ground → `vfmem/MEMORY-UPDATE.md` |
 | 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט. המחבר הרשמי הוא HTTP OAuth |
 | SharePoint / Outlook / Notion / Slack | לא ערימת שדרות |
 
@@ -134,7 +139,7 @@
 | סטודיו | `vfconvert` · `vfsales` | Gmail | Drive · `#נשלח-מ-HQ` · טיוטת וואטסאפ | שליחת וואטסאפ ללקוח · auto-DM |
 | צמיחה | `vfgrowth` · `vfigos` · `vfcovers` | Canva | `studio/render.py` → Superdesign → Drive+Gmail | Publish מזויף · boost |
 | תפעול | `vfcost` · `vfbooks` | Gmail · Drive | CSV דרך Drive · `mcp-gsheets` אחרי Connect · «X ₪» / «אין ספירה» | Sheets ID מומצא |
-| ייצור | `vfprod` · `vfresearch` | Drive · WebSearch · 3DAI | studiomcphub רקע/גודל · STL preflight | Treg · גוף חסום · CMYK כצינור VF |
+| ייצור | `vfprod` · `vfresearch` | Drive · WebSearch · 3DAI | studiomcphub רקע/גודל · STL preflight · Blender MCP רק במק | Treg · גוף חסום · CMYK כצינור VF · Blender על Cloud |
 
 כלים native (כל מושב): `WebSearch` / `WebFetch` · `GenerateImage` — עם שרשרת Canva קודם ל־IG.
 

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Velvet Factory · דיאגרמת בריף</title>
+<!--
+  VF embed of openclaw/diagram-maker svg-template.
+  Tokens from packages/vfbriefux/hq/DESIGN.md — not the upstream slate/indigo defaults.
+  Companion artifact only — live mail stays MAIL.html tables.
+  Replace or extend the <svg> block; keep connectors drawn before nodes.
+-->
+<style>
+  :root {
+    --bg: #0b1224;
+    --fg: #f4ead3;
+    --muted: #c9d0df;
+    --line: #caa96b;
+    --neutral: #101a35;
+    --input: #1b2a4a;
+    --process: #243356;
+    --storage: #2a3f2e;
+    --external: #3a3420;
+    --risk: #3a2228;
+    --cream: #f7f3eb;
+    --on-cream: #101a35;
+  }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 14px/1.45 Arial, sans-serif;
+  }
+  main {
+    max-width: 720px;
+    margin: 28px auto;
+    padding: 0 16px 40px;
+  }
+  h1 {
+    font: 22px/1.3 Georgia, serif;
+    color: var(--fg);
+    margin: 0 0 6px;
+    border-right: 6px solid var(--line);
+    padding-right: 12px;
+  }
+  .sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0 0 20px;
+  }
+  .frame {
+    background: var(--cream);
+    color: var(--on-cream);
+    padding: 20px 12px;
+  }
+  svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .title {
+    font-size: 16px;
+    font-weight: 700;
+    fill: var(--on-cream);
+  }
+  .label {
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--on-cream);
+  }
+  .small {
+    font-size: 11px;
+    fill: #5a6478;
+  }
+  .node {
+    stroke: #caa96b;
+    stroke-width: 1.5;
+  }
+  .neutral {
+    fill: #e8eef8;
+  }
+  .input {
+    fill: #d8e4f8;
+  }
+  .process {
+    fill: #e8e0c8;
+  }
+  .storage {
+    fill: #d8ead8;
+  }
+  .external {
+    fill: #f0e4c0;
+  }
+  .risk {
+    fill: #f0d8d8;
+  }
+  .edge {
+    stroke: #64748b;
+    stroke-width: 1.6;
+    fill: none;
+  }
+  .zone {
+    fill: none;
+    stroke: #caa96b;
+    stroke-width: 1;
+    stroke-dasharray: 6 5;
+    opacity: 0.75;
+  }
+</style>
+<main>
+  <h1>דיאגרמת בריף</h1>
+  <p class="sub">לוויין ל־vfbriefux · לא תצוגה 3 במייל</p>
+  <div class="frame">
+    <!-- SVG -->
+  </div>
+</main>
+</html>

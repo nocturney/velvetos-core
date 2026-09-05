@@ -4,7 +4,8 @@
 תבנית חיה (מייל): `../MAIL.html` + `render_mail.py`  
 רפרנס/Wireframe: `hq/brief-email.html`  
 מבנה נעול: `packages/vfops/BRIEF.md` + `packages/vfops/hq/BRIEF-SLOTS.md`  
-טוקנים ויזואליים: `DESIGN.md` (awesome-design-md pattern)
+טוקנים ויזואליים: `DESIGN.md` (awesome-design-md pattern)  
+דיאגרמות לווין: `DIAGRAM-MAKER.md` (openclaw diagram-maker → `render_mail.py --diagram`)
 
 ## מתי
 
@@ -22,7 +23,7 @@
 | 03 הדפסה + תור | `html-plan` sequence | שעות תור מאומתות בלבד |
 | 04 מונטיזציה | documents | וואטסאפ + איסוף שדרות |
 | 05 משרד | `html-plan` | שורה אחת מהתזמורת |
-| 06 עמוד | charts-and-data | רק מספרים שנמדדו |
+| 06 עמוד | charts-and-data | רק מספרים שנמדדו · דפוס Glance: `hq/CHARTS.md` |
 | 07 פיד | documents | כריכות `#vfcovers` |
 
 ## התקנה אופציונלית (מק מקומי)

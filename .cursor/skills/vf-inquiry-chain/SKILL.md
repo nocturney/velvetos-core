@@ -12,7 +12,7 @@ Use when there is a new פנייה, Instagram/WhatsApp/Gmail inquiry, or "quote 
 1. `vfconvert` + `@email-intelligence-engineer` + `@discovery-coach` — structured brief (size, use, pickup window, license).
 2. `vfprod` + `@studio-producer` — print feasibility. No national shipping.
 3. `vfcost` + `@pricing-analyst` — cost factors from slicer / snapshot / an amount Christian stated. Else `X ₪`.
-4. `vfsales` + `vfcopy` + `@sales-engineer` + `@content-creator` — quote **draft**. One CTA. Spoken Hebrew. No empty price promise. Optional frameworks: `vfmskill` `offers` / `sales-enablement` / `customer-research`. ₪ still only after the lead seat.
+4. `vfsales` + `vfcopy` + `@sales-engineer` + `@content-creator` — quote **draft**. One CTA. Spoken Hebrew. No empty price promise. **No-fabricate** (proposal-drafter): if a fact is missing from the card/slicer/lead seat, the draft does not invent it — ask or write `X ₪` / חסר. Optional frameworks: `vfmskill` `offers` / `sales-enablement` / `customer-research`. ₪ still only after the lead seat.
 5. HQ **sends the Gmail quote via tool** (no invented ₪). Customer WhatsApp close stays human `050-2517000` + Invoice4U.
 
 After each pack step: verify missing fields stay marked חסר. Do not invent ₪ to close the chain. Same sensor-class failure twice → escalate (`packages/vfharness/templates/escalation.md`). Guide: `AGENTS.md`.

@@ -767,17 +767,19 @@
       "url": "https://buildwithclaude.com/",
       "title": "Build with Claude — plugin/skill/MCP discovery (davepoon)",
       "firstEmbedded": "2026-09-03",
-      "lastReviewed": "2026-09-03",
-      "sourceNote": "packages/vfresearch/sources/2026-09-03-buildwithclaude.md",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-buildwithclaude.md",
       "report": "packages/vfresearch/sources/2026-09-03-weekly-links.md",
       "packs": [
         "vfresearch",
         "vfmem",
         "vfharness",
         "vfmcp",
-        "vffcc"
+        "vffcc",
+        "vfsales",
+        "vfconvert"
       ],
-      "note": "Patterns only (memory discipline + 12-layer harness audit + MCP discovery index). No Claude Code marketplace install on Cloud Agent. Repo: https://github.com/davepoon/buildwithclaude"
+      "note": "Patterns only. 2026-09-03: memory + architecture-audit + MCP index. 2026-09-05: proposal-drafter no-fabricate → vfsales. No Claude Code marketplace install on Cloud Agent. Repo: https://github.com/davepoon/buildwithclaude"
     },
     {
       "id": "linklyai-best-skills",
@@ -816,6 +818,390 @@
         "vfe2b"
       ],
       "note": "Embed only: A_t=(P,Σ,O); discard reasoning after validated state patch. No LangGraph / SkillExecBench runtime. Complements context-thrift + OMA checkpoint."
+    },
+    {
+      "id": "strategic-compact",
+      "kind": "skill",
+      "url": "https://mcpmarket.com/tools/skills/strategic-context-compaction-1787987503518",
+      "title": "Strategic Context Compaction — phase-boundary /compact (Claude Code)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-strategic-compact.md",
+      "playbook": "packages/vfharness/playbooks/context-thrift.md",
+      "packs": [
+        "vfharness",
+        "vfresearch",
+        "vfe2b"
+      ],
+      "note": "Embed only: phase-boundary table (compact at stage edges, never mid-implementation). No npx skills / Claude hooks / /compact command. Maps onto checkpoint + SKILLSTATE + DeerFlow compaction."
+    },
+    {
+      "id": "diagram-maker-visualizer",
+      "kind": "skill",
+      "url": "https://mcpmarket.com/tools/skills/diagram-maker-visualizer",
+      "openUrl": "https://agentskill.sh/@openclaw/diagram-maker",
+      "title": "Diagram Maker Visualizer (openclaw/diagram-maker)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "wallNote": "mcpmarket.com returned Vercel security checkpoint; body taken from agentskill.sh + github.com/openclaw/openclaw/skills/diagram-maker — no invented mcpmarket body.",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-diagram-maker.md",
+      "report": "packages/vfbriefux/hq/DIAGRAM-MAKER.md",
+      "pack": "vfbriefux",
+      "packs": [
+        "vfbriefux",
+        "vfops"
+      ],
+      "note": "Patterns only into vfbriefux. Companion SVG via render_mail.py --diagram. No npx/OpenClaw install. Live mail stays MAIL.html tables."
+    },
+    {
+      "id": "mcpmarket-blender-mcp",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/blender-model-context-protocol",
+      "openUrl": "https://github.com/ahujasid/blender-mcp",
+      "title": "Blender MCP (ahujasid) — local Blender control",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
+      "playbook": "packages/vfprod/BLENDER-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp",
+        "vlicense",
+        "vfsku"
+      ],
+      "note": "mcpmarket Cloudflare — body from GitHub. Cloud Agent skip. Desktop optional after lead. Concept/STL stays 3DAI."
+    },
+    {
+      "id": "mcpmarket-archon",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/archon",
+      "openUrl": "https://github.com/coleam00/Archon",
+      "title": "Archon — AI coding harness / workflow builder",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
+      "playbook": "packages/vfe2b/ORCHESTRATORS.md",
+      "packs": [
+        "vfe2b",
+        "vfharness",
+        "vfops"
+      ],
+      "note": "mcpmarket page may describe old v1 agenteer; GitHub is harness builder. Patterns only — no second orchestrator install."
+    },
+    {
+      "id": "mcpmarket-fullstack-skills",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/fullstack-dev-skills-plugin",
+      "openUrl": "https://github.com/Jeffallan/claude-skills",
+      "title": "Jeffallan fullstack-dev-skills — Claude Code plugin (~67 skills)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
+      "packs": [
+        "vfmem",
+        "vfresearch",
+        "vfmcp",
+        "vfharness"
+      ],
+      "note": "Patterns only (Common Ground tiers). No /plugin install or npx skills on Cloud. Language specialists stay warehouse off-desk."
+    },
+    {
+      "id": "mcpmarket-excalidraw-4",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/excalidraw-4",
+      "openUrl": "https://github.com/excalidraw/excalidraw-mcp",
+      "title": "Excalidraw MCP — interactive diagrams",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfops",
+        "vfmcp"
+      ],
+      "note": "mcpmarket Cloudflare/429 — body from GitHub. Later for internal diagrams; not IG/Canva."
+    },
+    {
+      "id": "mcpmarket-blender-open",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/blender-open",
+      "openUrl": "https://github.com/dhakalnirajan/blender-open-mcp",
+      "title": "Blender Open MCP (Ollama)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/BLENDER-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Sibling of ahujasid Blender MCP + local Ollama. Cloud skip; do not stack Desktop install without lead."
+    },
+    {
+      "id": "mcpmarket-blender-ai",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/blender-ai",
+      "openUrl": "https://github.com/ahujasid/blender-mcp",
+      "title": "Blender AI MCP (market listing)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Listing body blocked. Treated as Blender-MCP family sibling — Cloud skip; Desktop → BLENDER-MCP canonical."
+    },
+    {
+      "id": "mcpmarket-svgmaker",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/svgmaker",
+      "openUrl": "https://github.com/GenWaveLLC/svgmaker-mcp",
+      "title": "SVGMaker MCP — AI SVG generate/edit",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfcovers",
+        "vfmcp",
+        "vfprod"
+      ],
+      "note": "Needs SVGMAKER_API_KEY. Skip until lead; Canva first. No key in git."
+    },
+    {
+      "id": "mcpmarket-multicad",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/multicad",
+      "openUrl": "https://github.com/AnCode666/multiCAD-mcp",
+      "title": "multiCAD MCP — AutoCAD/ZWCAD/GstarCAD/BricsCAD",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Windows COM CAD — skip for VF print floor unless that DCC exists on Mac."
+    },
+    {
+      "id": "mcpmarket-openscad-2",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/openscad-2",
+      "openUrl": "https://github.com/petrijr/openscad-mcp",
+      "title": "OpenSCAD MCP family — parametric validate/render/STL",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vlicense",
+        "vfsku",
+        "vfmcp"
+      ],
+      "note": "Listing body blocked; open family via GitHub CLI MCPs. Cloud skip; Desktop optional after lead + local OpenSCAD. Still vlicense + slice."
+    },
+    {
+      "id": "mcpmarket-blender-vxai",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/blender-vxai",
+      "title": "Blender VXAI MCP (market listing)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Category blurb only — GitHub not verified. Skip install until repo identified. Same Cloud skip as Blender family."
+    },
+    {
+      "id": "mcpmarket-sketchup-1",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/sketchup-1",
+      "openUrl": "https://github.com/russell-qca/sketchup-mcp",
+      "title": "SketchUp MCP",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp"
+      ],
+      "note": "Requires SketchUp + Ruby plugin. Skip unless Mac already runs SketchUp."
+    },
+    {
+      "id": "mcpmarket-freecad-1",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/freecad-1",
+      "openUrl": "https://github.com/neka-nat/freecad-mcp",
+      "title": "FreeCAD MCP",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+      "playbook": "packages/vfprod/CAD-MCP.md",
+      "packs": [
+        "vfprod",
+        "vlicense",
+        "vfmcp"
+      ],
+      "note": "Cloud skip. Desktop optional if FreeCAD on Mac. Does not replace 3DAI for fast concept."
+    },
+    {
+      "id": "youmind-prompts",
+      "kind": "inspiration",
+      "url": "https://youmind.com/ru-RU/prompts",
+      "openUrl": "https://youmind.com/prompts",
+      "title": "YouMind — free AI prompt library (image/video/web)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-youmind-prompts.md",
+      "playbook": "packages/vfcovers/hq/PLAYBOOK.md",
+      "packs": [
+        "vfcovers",
+        "vfcopy",
+        "vfresearch"
+      ],
+      "note": "Pattern only: browse-by-media/model + adapt subject to floor proof; Image→Prompt on delivered photos only. No library import. Canva first for IG. Skip action/fantasy stock scenes."
+    },
+    {
+      "id": "mcpmarket-market-research-intelligence",
+      "kind": "skill-index",
+      "url": "https://mcpmarket.com/tools/skills/market-research-intelligence-1787987613965",
+      "openUrl": "https://mcpmarket.com/tools/skills/market-research-intelligence",
+      "title": "Market Research Intelligence — decision-oriented research gates (MCP Market)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-market-research-intelligence.md",
+      "playbook": "packages/vfresearch/hq/MARKET-INTEL.md",
+      "packs": [
+        "vfresearch",
+        "vfseason",
+        "vfgrowth",
+        "vfsku"
+      ],
+      "note": "Patterns only (source age, contrarian evidence, decision structure, dual-method sizing). Full SKILL.md body blocked (אין גוף). No npx install / investor-dossier default."
+    },
+    {
+      "id": "footrue-toolbox",
+      "kind": "vendor-site",
+      "url": "https://footrue.com/",
+      "title": "footrue ToolBox — 200+ free browser-local tools",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-footrue.md",
+      "report": "packages/vfresearch/sources/2026-09-05-weekly-links-footrue.md",
+      "playbook": "packages/vfcovers/hq/PLAYBOOK.md",
+      "packs": [
+        "vfcovers",
+        "vfcanva",
+        "vfresearch"
+      ],
+      "note": "Human opens in browser for floor-proof prep (HEIC→JPG, background remove, compress) before Canva. No MCP install. Not a Canva/brand replacement. No invented ₪ or Insights from third-party traffic claims."
+    },
+    {
+      "id": "mikiarlo3-ai-copywriter",
+      "kind": "repo",
+      "url": "https://github.com/mikiarlo3/ai-copywriter",
+      "title": "ai-copywriter — reader-first copy + Humanizer (33 AI tells)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-ai-copywriter-embed.md",
+      "packs": [
+        "vfcopy",
+        "vfmskill",
+        "vfresearch"
+      ],
+      "note": "Embed COPYWRITING MODE into vfcopy/hq/reader-first-he.md; strengthen ai-tells-he.md. No npx skills add. Skip LinkedIn/strategic-blog (public site locked). Complements plannotator-write-better."
+    },
+    {
+      "id": "debpalash-voicestudio",
+      "kind": "repo",
+      "url": "https://github.com/debpalash/VoiceStudio",
+      "title": "VoiceStudio — local ElevenLabs alternative (TTS/ASR/dub/MCP)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-voicestudio.md",
+      "report": "packages/vfresearch/sources/2026-09-05-voicestudio-weekly.md",
+      "verdict": "skip-install",
+      "packs": [
+        "vfom",
+        "vfmcp",
+        "vfresearch",
+        "vlicense"
+      ],
+      "note": "Patterns only. No DMG/Docker/MCP on Cloud. Floor proof > AI voice for reels. Desktop VO optional after lead + model license gate. AGPL app; upstream weights may be NC."
+    },
+    {
+      "id": "hkuds-deeptutor",
+      "kind": "repo",
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "openUrl": "https://deeptutor.info/",
+      "title": "DeepTutor — lifelong personalized tutoring (agent-native learning)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
+      "playbook": "packages/vfops/hq/MASTERY-MEMORY.md",
+      "packs": [
+        "vfops",
+        "vfmem",
+        "vfharness",
+        "velvetos"
+      ],
+      "note": "Patterns only: mastery gate, L1/L2/L3 memory, question-bank from failures, recoverable sessions. No DeepTutor Docker / EduHub install / second runtime."
+    },
+    {
+      "id": "examful-ai",
+      "kind": "vendor-site",
+      "url": "https://examful.ai/",
+      "title": "ExamFul.ai — AP / IB / A-level past papers + AI tutoring",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "verdict": "watch",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
+      "packs": [
+        "velvetos",
+        "vfresearch"
+      ],
+      "note": "Education exam vertical — not VF 3D-print desk. Watch only for future education frontend instance (expert-instance-onboard). No exam pipeline embed into HQ."
+    },
+    {
+      "id": "lieflat-charts",
+      "kind": "repo",
+      "url": "https://github.com/larashero3-dotcom/lieflat-charts",
+      "title": "lieflat-charts — agent skill for polished HTML data charts",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
+      "report": "packages/vfbriefux/hq/CHARTS.md",
+      "packs": [
+        "vfbriefux",
+        "vfinsights",
+        "vfops"
+      ],
+      "note": "Patterns only: Glance default for brief slot 06, one chart = one conclusion, verified numbers only. Complements DIAGRAM-MAKER (flows). No npx skills / gallery import / MAIL.html replace."
+    },
+    {
+      "id": "academic-research-skills",
+      "kind": "repo",
+      "url": "https://github.com/Imbad0202/academic-research-skills",
+      "title": "academic-research-skills — research → write → review → revise → finalize",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
+      "playbook": "packages/vfresearch/hq/ACADEMIC-PIPELINE.md",
+      "packs": [
+        "vfresearch",
+        "vfharness",
+        "vfconvert"
+      ],
+      "note": "CC BY-NC patterns only (human-in-the-loop, fact-check gates, integrity before claim). No Claude plugin / AI Scientist runtime / new vfacademic pack."
     }
   ],
   "addLink": {
