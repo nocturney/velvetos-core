@@ -108,9 +108,7 @@ ls -l ~/.local/bin/agent
 בפעם הראשונה ב־macOS: System Settings → Privacy & Security → Accessibility **ו־** Screen Recording ל־**Cursor Computer Use**.
 
 ב־cursor.com/agents: בחר את המכונה `sderot-mac` (לא VM הענן).  
-אין worker מחובר עכשיו — עד שזה רץ, השיחה הזו נשארת על VM בלי הכרום שלך.
-
-אומת 5.9.2026 על המק הייעודי: `chris@Mac-Office` · `agent status` = Logged in as `nocturney@gmail.com` (Pro+). CLI תקין; חסר worker.
+אומת 5.9.2026: worker `sderot-mac` רץ על `chris@Mac-Office` (`~/velvetos-core`, id `4a3ca6d2-f2c3-4cba-8c96-8bb63d6160b2`). הטרמינל נשאר פתוח. `--share-desktop` לא במק (Linux בלבד). Computer Use עדיין לא מותקן — לחיצות בכרום דורשות restart עם `--computer-use` ואז Accessibility + Screen Recording ל־**Cursor Computer Use**.
 
 ### ד. מה לא לעשות
 

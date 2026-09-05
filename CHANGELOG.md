@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-05 — **worker sderot-mac חי:** `chris@Mac-Office` · id `4a3ca6d2-…`. Computer Use עדיין לא מותקן. `--share-desktop` לא במק. `HOST.md`. Self-hosted worker online; Chrome clicks wait on --computer-use permissions.
+
 - 2026-09-05 — **worker SEA על מק:** `agent worker --computer-use` נכשל ב־`Mac-Office` עם `Filesystem createRequire is disabled in the self-contained worker SEA` (CLI 2026.09.02). קלון = `~/velvetos-core`. נסיון: `agent update` ואז worker **בלי** `--computer-use`. `HOST.md`. Signed worker-sea binary rejects filesystem createRequire.
 
 - 2026-09-05 — **zsh: `agent` לא ב-PATH:** אחרי `curl https://cursor.com/install` במק — `export PATH="$HOME/.local/bin:$PATH"` ב-`~/.zshrc`. `HOST.md`. Cursor CLI lives in ~/.local/bin; zsh needs that PATH.
