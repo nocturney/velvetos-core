@@ -31,7 +31,7 @@ Google ו־OpenAI רואים לוגין חדש ממכונה זרה → התרא�
 בלי חיוב API: מארח אחד — מק ייעודי בשדרות (לא הווינדוס). [`HOST.md`](HOST.md):
 
 1. **על המק:** Chrome פרופיל קבוע + לוגין לשלושת האתרים (לוגין בווינדוס לא עובר). אחר כך `agent worker --computer-use --name "sderot-mac" start`.
-2. על המק: Gemini CLI = Login with Google · Codex = `codex login` (ChatGPT Plus). לא מפתח API.
+2. על המק: Gemini = Antigravity `agy` (אומת 5.9: Google AI Plus, Gemini 3.8 Flash High). Codex = `codex login` (ChatGPT Plus). לא מפתח API. לא מעתיקים `ANTIGRAVITY_TOKEN`.
 3. Cloud משתמש ב־`WebSearch` / `WebFetch` וקורא `vfresearch/sources/` אחרי שהמק שמר תוצר.
 **לא** להתחבר ל־`gemini.google.com` / `chatgpt.com` / `perplexity.ai` מדפדפן Cloud Agent או Grok Bot.
 

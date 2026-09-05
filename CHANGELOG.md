@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-05 — **`agy` חי על Mac-Office:** 1.1.27 · `nocturney@gmail.com (Google AI Plus)` · Gemini 3.8 Flash High. הפרומפט `>` מוכן. `ERROR: logging before google.Init` בהתקנה = רעש. הבא: `/quit` ואז `codex login`. `HOST.md`.
+
 - 2026-09-05 — **אל תריץ `agent worker --computer-use` על CLI 2026.09.02:** זה SEA/createRequire. המסלול החי: `agent worker --name "sderot-mac" start`. כרום: `node`+`index.js` מתיקיית הגרסה, לא ה-wrapper. `HOST.md`.
 
 - 2026-09-05 — **worker sderot-mac חי:** `chris@Mac-Office` · id `4a3ca6d2-…`. Computer Use עדיין לא מותקן. `--share-desktop` לא במק. `HOST.md`. Self-hosted worker online; Chrome clicks wait on --computer-use permissions.

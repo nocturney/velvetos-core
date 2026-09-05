@@ -43,7 +43,7 @@ agent worker --name "sderot-mac" start
 | מה רוצים | איך | עכשיו במק |
 |---|---|---|
 | Gems / GPTs / Canvas / Deep Research / Perplexity Pro | אותו Chrome, הסוכן לוחץ (`--computer-use`) | **חסום** ב־CLI 2026.09.02 (`agent worker --computer-use` → SEA) |
-| תשובת מודל בלי אתר | Gemini CLI + Codex `login` בטרמינל המק | אפשר מהסוכן על `sderot-mac` |
+| תשובת מודל בלי אתר | Antigravity `agy` (Gemini CLI) + Codex `login` בטרמינל המק | `agy` חי. Codex עדיין לא |
 | Cloud VM | לא פותח אתרי מנוי | `WebSearch` |
 
 כרום פתוח ומחובר = בשביל **אדם** ולבסיס computer-use בעתיד. ה־worker החי היום (בלי הדגל) = קבצים + טרמינל במק בלבד.
@@ -102,11 +102,12 @@ export PATH="$HOME/.local/bin:$PATH"
 agy
 ```
 
-אומת 5.9.2026: `agy` 1.1.27 על המק = `nocturney@gmail.com (Google AI Plus)` · Gemini 3.8 Flash. Gemini CLI ליחידים מת.
+אומת 5.9.2026 (צילום): `agy` 1.1.27 ב־`/Users/chris/.local/bin/agy` = `nocturney@gmail.com (Google AI Plus)` · `Gemini 3.8 Flash (High)`. הפרומפט `>` מוכן. `ERROR: logging before google.Init` בהתקנה = רעש, לא כשל. Gemini CLI ליחידים מת. אל תעתיקו `ANTIGRAVITY_TOKEN`.
 
-Codex — Sign in with ChatGPT (Plus):
+אם `agy` עדיין פתוח — `/quit` ואז Codex (טרמינל שני, worker נשאר למעלה). Sign in with ChatGPT (Plus), לא מפתח API:
 
 ```bash
+export PATH="$HOME/.local/bin:$PATH"
 curl -fsSL https://chatgpt.com/codex/install.sh | sh
 codex login
 ```
@@ -176,7 +177,7 @@ ls -l ~/.local/bin/agent
 
 ### ד. מה לא לעשות
 
-- להעתיק עוגיות מווינדוס למק, או `~/.codex` / `~/.gemini` ל־Cloud
+- להעתיק עוגיות מווינדוס למק, או `~/.codex` / `~/.gemini` / `ANTIGRAVITY_TOKEN` ל־Cloud
 - Chrome remote debugging / שיתוף מסך / מנהרה לכרום
 - `npx perplexity-user-mcp` בענן
 

@@ -1,0 +1,33 @@
+{
+  "task_id": "agy-live-2026-09-05",
+  "status": "done",
+  "pack": "vfmcp",
+  "goal": "Confirm Antigravity CLI is logged in on Mac-Office; point owner to Codex next.",
+  "planned_steps": [
+    "Read owner screenshot of agy 1.1.27 Google AI Plus",
+    "Record High model + installer ERROR noise in HOST.md",
+    "Give Codex next commands; do not copy tokens to Cloud"
+  ],
+  "completed_steps": [
+    "HOST.md: verified agy header, /quit then Codex",
+    "SUBSCRIPTIONS.md: agy live, no ANTIGRAVITY_TOKEN copy",
+    "CHANGELOG + this checkpoint"
+  ],
+  "next_step": "Owner /quit agy if still open, then curl Codex install + codex login with ChatGPT Plus. Worker terminal stays up.",
+  "artifacts": [
+    "packages/vfmcp/HOST.md",
+    "packages/vfmcp/SUBSCRIPTIONS.md"
+  ],
+  "unresolved": [
+    "Codex CLI not installed or logged in yet",
+    "--computer-use still blocked by SEA on CLI 2026.09.02",
+    "Perplexity remains Chrome-only"
+  ],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "latest_observation": "Screenshot: agy 1.1.27 at /Users/chris/.local/bin/agy; nocturney@gmail.com (Google AI Plus); Gemini 3.8 Flash (High); prompt > ready."
+}
