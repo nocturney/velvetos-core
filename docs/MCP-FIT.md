@@ -1,7 +1,8 @@
 # MCP fit for Velvet Factory
 
 Source: [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) (reviewed 2026-08-30).  
-Discovery index (Claude Code marketplace — **patterns only**, do not `/plugin install` on Cloud Agent): [buildwithclaude.com](https://buildwithclaude.com/) · [davepoon/buildwithclaude](https://github.com/davepoon/buildwithclaude) `mcp-servers.json` (reviewed 2026-09-03). Embed: [`packages/vfresearch/sources/2026-09-03-buildwithclaude.md`](../packages/vfresearch/sources/2026-09-03-buildwithclaude.md).  
+Discovery index (Claude Code marketplace — **patterns only**, do not `/plugin install` on Cloud Agent): [buildwithclaude.com](https://buildwithclaude.com/) · [davepoon/buildwithclaude](https://github.com/davepoon/buildwithclaude) `mcp-servers.json` (reviewed 2026-09-05). Embeds: [`2026-09-03`](../packages/vfresearch/sources/2026-09-03-buildwithclaude.md) · [`2026-09-05` proposal-drafter](../packages/vfresearch/sources/2026-09-05-buildwithclaude.md).  
+MCP Market mid-week (2026-09-05; Cloudflare on listing pages → GitHub bodies): Blender MCP · Archon · Jeffallan fullstack skills — [`packages/vfresearch/sources/2026-09-05-mcpmarket-three.md`](../packages/vfresearch/sources/2026-09-05-mcpmarket-three.md).  
 Grok / ChatGPT / Gemini / Perplexity gap vs this HQ: [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md) (reviewed 2026-08-31).  
 HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Boosts and auto-DM stay forbidden. Printers stay on the floor. Treg is not relevant.  
 Core **registers** WhatsApp / Sheets / Studio Hub (`packages/vfmcp/CORE-MCP.md`). The factory instance binds via `mcpBind`. Do not invent prices. Do not commit secrets.
@@ -136,11 +137,21 @@ Do not add these “because they exist on the list.” Add them when Christian c
 | Reels cut from covers on the Mac | [video-creator/ffmpeg-mcp](https://github.com/video-creator/ffmpeg-mcp.git) or [06ketan/slideshot](https://github.com/06ketan/slideshot) | `vfigos`, `vfcovers` |
 | QR on SKU / proof cards | [qr-maker-io/mcp-server](https://github.com/qr-maker-io/mcp-server) | `vfsku` |
 | Floor “job done” pings | [teddyzxcv/ntfy-mcp](https://github.com/teddyzxcv/ntfy-mcp) | `vfprod` |
+| Blender on the owner Mac (scene edit) | [ahujasid/blender-mcp](https://github.com/ahujasid/blender-mcp) — **Desktop only**; Cloud uses 3DAI | `vfprod` — [`BLENDER-MCP.md`](../packages/vfprod/BLENDER-MCP.md) |
+| OpenSCAD / FreeCAD on Mac (parametric STL) | OpenSCAD CLI MCP / FreeCAD MCP — Desktop optional after lead | `vfprod` — [`CAD-MCP.md`](../packages/vfprod/CAD-MCP.md) |
+| Internal process diagrams | [excalidraw/excalidraw-mcp](https://github.com/excalidraw/excalidraw-mcp) remote — later; not IG | `vfops` / `vfprod` |
+| Local TTS/ASR on the owner Mac (lead-gated VO) | [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio) MCP at `http://localhost:3900/mcp` — **Desktop only after lead**; prefer `OMNIVOICE_MCP_OUTPUT_MODE=files` + base path; check model licenses (`vlicense`) | `vfom` — skip for floor reels; see [`2026-09-05-voicestudio.md`](../packages/vfresearch/sources/2026-09-05-voicestudio.md) |
 
 ## Do not install
 
 - **Aggregator / “400 tools in one” servers** — they drown the agent and hide the studio tools.
 - **Headroom proxy on Cloud Agent** — local compression proxy needs a host process; Cloud VMs are sandboxed. Embed the **pattern** via `packages/vfharness/playbooks/context-thrift.md` (CCR + ContentRouter). Optional Mac-only: `headroom wrap cursor` after lead seat — see `packages/vfmcp/GAP.md`.
+- **Blender MCP on Cloud Agent** — needs local Blender + addon. Optional Desktop only (`vfprod/BLENDER-MCP.md`). Concept/STL from HQ stays 3DAI. Sibling market listings (`blender-open`, `blender-ai`, `blender-vxai`) stay one-family — do not stack parallel installs without lead seat.
+- **VoiceStudio / OmniVoice MCP on Cloud Agent** — needs local GPU/CPU backend on `localhost:3900`. AGPL app + upstream model terms (some NC). Floor reels stay camera proof (`vfom` LOCK). Do not clone owner voice into IG without lead + consent. Optional Mac only after lead seat.
+- **multiCAD / SketchUp MCP** — Windows COM / SketchUp app; not VF print floor unless the Mac already runs that DCC.
+- **SVGMaker MCP** — vendor API key; Canva first for brand. No key in git.
+- **Archon** ([coleam00/Archon](https://github.com/coleam00/Archon)) — second harness/orchestrator. Embed workflow-gate patterns on `vfe2b` only; do not `curl | bash` / Docker Archon here.
+- **Jeffallan fullstack-dev-skills plugin** — Claude Code marketplace skills. Common Ground tiers → `vfmem/MEMORY-UPDATE.md`. No `/plugin install` / `npx skills` on Cloud Agent.
 - **Second SEO / GEO / AI-visibility stacks** — Treg is not relevant. Public marketing site from HQ stays locked; AEO skills (e.g. buildwithclaude `ai-search-visibility-audit`) stay **watch** until a public site exists under `vfbiz`. Warehouse `@aeo-foundations-architect` stays off-desk unless named.
 - **Second Canva or image-gen farms** — Canva + Superdesign are enough for brand work.
 - **Anything that posts, boosts, or DMs Instagram from this HQ.**

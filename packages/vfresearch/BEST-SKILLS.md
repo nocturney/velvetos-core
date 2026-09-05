@@ -43,7 +43,12 @@
 | skill-creator / writing-skills | `vfharness` · skills ב־`.cursor/skills/` | פק סקילים חדש |
 | self-improving / learning | `office-learning` · `vfops` retro · `owner-memory` | `~/self-improving/` runtime |
 | last30days / מחקר רשת | `vfresearch` · `hq/LAST30.md` · skill `vf-last30` · WebSearch / `gh` / תזמורת | TikTok/X keys · auto-DM · `npx skills` / CLI על Cloud |
+| market-research / intel gates | `vfresearch` · `hq/MARKET-INTEL.md` | npx install · תיקיית משקיע כברירת מחדל · ₪ מומצא |
+| academic research / lit-review / fact-check | `vfresearch` · `hq/ACADEMIC-PIPELINE.md` | Claude plugin · AI Scientist runtime · פק אקדמי חדש |
+| data viz / HTML charts | `vfbriefux` · `hq/CHARTS.md` | npx lieflat · Insights מומצאים · החלפת MAIL.html |
+| tutor / mastery / lifelong memory | `office-learning` · `vfops/hq/MASTERY-MEMORY.md` | DeepTutor install · EduHub |
 | frontend-design / anti-slop | `vfbriefux` · `vfcovers` · קונסולה פנימית | אתר שיווקי ציבורי מ־HQ |
+| proposal-drafter / no-fabricate quote | `vfsales` · `vfconvert` · inquiry chain | ₪ מומצא · cold email |
 | agent-browser / browser-use | computerUse / בדיקות ידניות | בוט לקוח |
 | Remotion / video gen vendor | `vfom` · `expert-media-director` | Veo/Kling מ־HQ · Remotion vendor |
 | orchestrator / swarm / OpenClaw | `vfe2b` LOCK | runtime שני |

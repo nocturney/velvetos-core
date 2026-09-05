@@ -12,7 +12,8 @@
 4. כריכות פיד בסוף / בגוף — `#vfcovers` (`cid:` ב־`htmlBody`)
 5. פוטר איסוף שדרות  
 
-**HTML (effective-html):** `hq/brief-email.html` — טיוטה/רפרנס RTL (Wireframe). מייל חי = `MAIL.html` + `render_mail.py`. מפת skill: `hq/EFFECTIVE-HTML.md`.
+**HTML (effective-html):** `hq/brief-email.html` — טיוטה/רפרנס RTL (Wireframe). מייל חי = `MAIL.html` + `render_mail.py`. מפת skill: `hq/EFFECTIVE-HTML.md`.  
+**דיאגרמה (diagram-maker):** לוויין SVG — `hq/DIAGRAM-MAKER.md` · `render_mail.py --diagram pipeline|slots`. לא בגוף Gmail.
 
 ## שדות מנהל (ריקים עד סנאפשוט)
 

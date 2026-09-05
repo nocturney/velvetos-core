@@ -40,7 +40,7 @@ python3 scripts/check-all.py
 
 **משמרת / OMA:** `planned_steps` לפני עבודה כבדה; `gate` כשחסומים על ₪ או שדה אנושי — ראה `playbooks/oma-patterns.md`.
 
-**Compaction (דפוס DeerFlow `/compact` + SKILLSTATE):** כשהשיחה ארוכה, אל תשחזר הכל — סכם ב־`completed_steps` + `unresolved` (+ `execution_state` אם יש), והמשך מ-(P, Σ, O). השיח המלא נשאר אצל המשתמש; המודל עובד מהקבלה על הדיסק.
+**Compaction (דפוס DeerFlow `/compact` + SKILLSTATE + phase-boundary):** כשהשיחה ארוכה, אל תשחזר הכל — סכם ב־`completed_steps` + `unresolved` (+ `execution_state` אם יש), והמשך מ-(P, Σ, O). השיח המלא נשאר אצל המשתמש; המודל עובד מהקבלה על הדיסק. **מתי:** בגבול שלב (מחקר→תכנון→ביצוע), אחרי דיבוג, אחרי גישה שנכשלה — **לא** באמצע ביצוע. טבלה: `playbooks/context-thrift.md` § גבול שלב. לא מתקינים strategic-compact / Claude `/compact`.
 
 משימות חד-פעמיות (שאלה, סיעור מוחות) — בלי checkpoint ו בלי שלושת קבצי התכנון.
 

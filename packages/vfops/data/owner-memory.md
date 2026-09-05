@@ -99,3 +99,15 @@
 - **למדנו:** דופק **קבוע לנצח** עד הודעה מפורשת לעצור — `standingForever: true` + חידוש טיימר בכל מעבר (`TIMER.md`).
 - **מחר:** טיימר bi-daily רץ ומתחדש; watchlist (superpowers, anti-ui-slop, media-gen).
 - **מקור:** בקשת בעלים + `sources/2026-09-03-best-skills.md` + `TIMER.md`.
+
+### 2026-09-04 (best-skills pulse)
+- **מושב:** ייצור
+- **למדנו:** skill-first לפני פעולה; שיעורים עמוקים → `LEARNING-RECORDS.md`. Upstream יכול להישאר על dataDate אתמול — עדיין רצים ומחדשים טיימר.
+- **מחר:** לעקוב archify / OpenSpec; לא להעתיק impeccable palette.
+- **מקור:** `sources/2026-09-04-best-skills.md`.
+
+### 2026-09-05 (קישורי בעלים ×4)
+- **מושב:** ייצור
+- **למדנו:** DeepTutor/lieflat/academic → דפוסים על packs קיימים; ExamFul = watch לאנכי חינוך עתידי, לא צינור VF.
+- **מחר:** להשתמש ב־`ACADEMIC-PIPELINE` / `CHARTS` / `MASTERY-MEMORY` במחקר ובריף; בלי להתקין vendor.
+- **מקור:** `sources/2026-09-05-weekly-links-owner-four.md`.

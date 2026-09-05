@@ -39,7 +39,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 |---|---|---|
 | **Canva** (`needsAuth` / אין כלים) | `packages/vfcanva/studio/render.py` → אם גם זה נכשל: Superdesign | לא ממציאים קישור Canva |
 | **Superdesign** | Canva אם מחובר · אחרת `studio/render.py` | לא עוצרים את חבילת התוכן |
-| **Mobbin** (אין namespace) | `vfbriefux/MAIL.html` · `hq/brief-email.html` (effective-html) · Superdesign | לא ממציאים מסכי אפליקציה |
+| **Mobbin** (אין namespace) | `vfbriefux/MAIL.html` · `hq/brief-email.html` (effective-html) · `render_mail.py --diagram` (diagram-maker) · Superdesign | לא ממציאים מסכי אפליקציה |
 | **Treg** | **לא בשימוש.** WebSearch / תזמורת / «אין ספירה» | לא login · לא `call` |
 | **WebSearch / WebFetch** (`tools.web`) | תזמורת ChatGPT+Gemini+Perplexity | לא ממציאים גוף חסום |
 | **GenerateImage** (`tools.image`) | Canva `generate-design` → Superdesign → `studio/render.py` | לא ממציאים קישור Canva |
