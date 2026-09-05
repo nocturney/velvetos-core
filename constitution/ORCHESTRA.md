@@ -153,6 +153,16 @@ packages/vfresearch/sources/YYYY-MM-DD-orchestra.md
 
 שורת בלוק `05`: «best-skills — …» או «best-skills — אין חדש במשרד».
 
+## לפי דרישה — מחקר 30 יום / קהילה (לא צ'אט חדש)
+
+דפוס מ־[mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill) על כלי המשרד בלבד.
+
+1. פלייבוק: `packages/vfresearch/hq/LAST30.md`
+2. מיומנות: `.cursor/skills/vf-last30/SKILL.md`
+3. מושב: `@research-synthesist` + `@trend-researcher`
+4. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-<topic>-last30.md`
+5. אין התקנת CLI / `npx skills` על Cloud. אין מפתחות X/TikTok. **nothing-solid** מותר.
+
 ### פתיחת מגבלות (אושר בעלים 2026-09-03)
 
 מותר לעדכן חוקה / מדריכים כשהדירוג חושף דפוס עמיד שמשפר את המשרד, כל עוד נשארים:

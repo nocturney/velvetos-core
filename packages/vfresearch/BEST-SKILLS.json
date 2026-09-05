@@ -68,7 +68,10 @@
       "id": "last30days-pattern",
       "pack": "vfresearch",
       "path": "packages/vfresearch/hq/LAST30.md",
-      "firstEmbedded": "2026-09-03"
+      "firstEmbedded": "2026-09-03",
+      "deepened": "2026-09-05",
+      "skill": ".cursor/skills/vf-last30/SKILL.md",
+      "note": "Full VF playbook + Cursor skill for research desk (topic/comparison/discovery, confidence floor, nothing-solid). No vendor CLI."
     },
     {
       "id": "self-improving-triggers",

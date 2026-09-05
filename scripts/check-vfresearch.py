@@ -13,6 +13,8 @@ BEST_SKILLS = ROOT / "packages" / "vfresearch" / "BEST-SKILLS.md"
 BEST_SKILLS_JSON = ROOT / "packages" / "vfresearch" / "BEST-SKILLS.json"
 BEST_SKILLS_TIMER = ROOT / "packages" / "vfresearch" / "TIMER.md"
 BEST_SKILLS_SKILL = ROOT / ".cursor" / "skills" / "vf-best-skills" / "SKILL.md"
+LAST30 = ROOT / "packages" / "vfresearch" / "hq" / "LAST30.md"
+LAST30_SKILL = ROOT / ".cursor" / "skills" / "vf-last30" / "SKILL.md"
 DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
 MUSIC = ROOT / "packages" / "vfresearch" / "MUSIC.md"
 MUSIC_SOURCES = ROOT / "packages" / "vfresearch" / "SOURCES-MUSIC.json"
@@ -41,7 +43,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK):
+    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, LAST30, LAST30_SKILL, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -152,6 +154,25 @@ def main() -> None:
     link_ids = {item["id"] for item in links}
     if "linklyai-best-skills" not in link_ids:
         fail("LINKS.json must register linklyai-best-skills")
+    if "mvanhorn-last30days-skill" not in link_ids:
+        fail("LINKS.json must register mvanhorn-last30days-skill")
+
+    last30 = LAST30.read_text()
+    for needle in ("mvanhorn/last30days-skill", "nothing-solid", "WebSearch", "vf-last30", "npx skills"):
+        if needle not in last30 and needle.lower() not in last30.lower():
+            fail(f"LAST30.md must mention {needle}")
+    if "YYYY-MM-DD-<topic" not in last30 and "YYYY-MM-DD-<topic-slug>-last30.md" not in last30:
+        fail("LAST30.md must name last30 artifact pattern")
+
+    last30_skill = LAST30_SKILL.read_text()
+    if "LAST30.md" not in last30_skill:
+        fail("vf-last30 skill must point at LAST30.md")
+    if "research-synthesist" not in last30_skill:
+        fail("vf-last30 skill must mention research-synthesist")
+    if "trend-researcher" not in last30_skill:
+        fail("vf-last30 skill must mention trend-researcher")
+    if "npx" not in last30_skill.lower():
+        fail("vf-last30 skill must forbid npx install")
 
     routine = ROUTINE.read_text()
     if "BEST-SKILLS" not in routine and "best-skills" not in routine.lower():
@@ -224,6 +245,8 @@ def main() -> None:
         fail("vf-desk.json skills must include vf-ig-music")
     if ".cursor/skills/vf-best-skills/SKILL.md" not in skill_paths:
         fail("vf-desk.json skills must include vf-best-skills")
+    if ".cursor/skills/vf-last30/SKILL.md" not in skill_paths:
+        fail("vf-desk.json skills must include vf-last30")
     trend = next((r for r in desk.get("desk", []) if r.get("slug") == "trend-researcher"), None)
     if not trend:
         fail("desk missing trend-researcher")
@@ -232,10 +255,18 @@ def main() -> None:
         fail("trend-researcher job must cover Instagram music/sound")
     if "HeyOrca" not in job and "heyorca" not in job.lower():
         fail("trend-researcher job must name HeyOrca (not Treg) for music")
+    if "LAST30" not in job and "last30" not in job.lower() and "last-30" not in job.lower():
+        fail("trend-researcher job must cover last-30 / LAST30 research")
+    synthesist = next((r for r in desk.get("desk", []) if r.get("slug") == "research-synthesist"), None)
+    if not synthesist:
+        fail("desk missing research-synthesist")
+    syn_job = synthesist.get("job") or ""
+    if "LAST30" not in syn_job and "last30" not in syn_job.lower() and "last-30" not in syn_job.lower():
+        fail("research-synthesist job must cover last-30 / LAST30 research")
 
     print(
         f"OK vfresearch weekly-links links={len(links)} "
-        f"best-skills=1 music=1 sources={len(music_src.get('sources') or [])} failover=1"
+        f"best-skills=1 last30=1 music=1 sources={len(music_src.get('sources') or [])} failover=1"
     )
 
 
