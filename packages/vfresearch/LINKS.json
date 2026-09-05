@@ -816,6 +816,58 @@
         "vfe2b"
       ],
       "note": "Embed only: A_t=(P,Σ,O); discard reasoning after validated state patch. No LangGraph / SkillExecBench runtime. Complements context-thrift + OMA checkpoint."
+    },
+    {
+      "id": "mcpmarket-blender-mcp",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/blender-model-context-protocol",
+      "openUrl": "https://github.com/ahujasid/blender-mcp",
+      "title": "Blender MCP (ahujasid) — local Blender control",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
+      "playbook": "packages/vfprod/BLENDER-MCP.md",
+      "packs": [
+        "vfprod",
+        "vfmcp",
+        "vlicense",
+        "vfsku"
+      ],
+      "note": "mcpmarket Cloudflare — body from GitHub. Cloud Agent skip. Desktop optional after lead. Concept/STL stays 3DAI."
+    },
+    {
+      "id": "mcpmarket-archon",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/archon",
+      "openUrl": "https://github.com/coleam00/Archon",
+      "title": "Archon — AI coding harness / workflow builder",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
+      "playbook": "packages/vfe2b/ORCHESTRATORS.md",
+      "packs": [
+        "vfe2b",
+        "vfharness",
+        "vfops"
+      ],
+      "note": "mcpmarket page may describe old v1 agenteer; GitHub is harness builder. Patterns only — no second orchestrator install."
+    },
+    {
+      "id": "mcpmarket-fullstack-skills",
+      "kind": "mcp-listing",
+      "url": "https://mcpmarket.com/server/fullstack-dev-skills-plugin",
+      "openUrl": "https://github.com/Jeffallan/claude-skills",
+      "title": "Jeffallan fullstack-dev-skills — Claude Code plugin (~67 skills)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
+      "packs": [
+        "vfmem",
+        "vfresearch",
+        "vfmcp",
+        "vfharness"
+      ],
+      "note": "Patterns only (Common Ground tiers). No /plugin install or npx skills on Cloud. Language specialists stay warehouse off-desk."
     }
   ],
   "addLink": {

@@ -42,6 +42,8 @@
 
 Cloud Agent: namespace `3DAIStudio` **ready** (אומת 2026-09-01 — `get_credit_balance`). Desktop: `.cursor/mcp.json`. Cloud: Team MCP + OAuth ב-cursor.com/agents (`CONNECT-3DAI.md`).
 
+עריכת Blender מקומית (Desktop בלבד, אחרי ראש צוות): [`BLENDER-MCP.md`](BLENDER-MCP.md) — לא על Cloud Agent; לא מחליף את השכבה הזו לקונספט/STL.
+
 ## מה ליישם (על פקים קיימים)
 
 | עבודה | איך | נעילה |

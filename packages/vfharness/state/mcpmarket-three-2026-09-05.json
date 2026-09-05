@@ -1,0 +1,30 @@
+{
+  "task_id": "mcpmarket-three-2026-09-05",
+  "status": "done",
+  "goal": "Embed three mcpmarket URLs (Blender MCP, Archon, Jeffallan skills) into existing packs",
+  "guide": [
+    "packages/vfresearch/WEEKLY.md",
+    "AGENTS.md",
+    "constitution/ORCHESTRA.md"
+  ],
+  "done": [
+    "Cloudflare on mcpmarket → GitHub bodies (no invented listing body)",
+    "vfprod/BLENDER-MCP.md + 3DAI cross-link",
+    "Archon patterns on vfe2b (skip install)",
+    "Common Ground tiers on vfmem",
+    "LINKS.json + weekly artifact + brief 05",
+    "sensors: check-all.py"
+  ],
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
+    "packages/vfprod/BLENDER-MCP.md",
+    "packages/vfharness/state/mcpmarket-three-2026-09-05.json"
+  ],
+  "next_step": "Lead seat: optional Desktop Blender MCP only if Mac has Blender; never Archon/claude-skills install on Cloud",
+  "locks": [
+    "no-second-orchestrator",
+    "no-npx-skills-on-cloud",
+    "no-invented-blocked-body",
+    "hq-send-via-tools"
+  ]
+}
