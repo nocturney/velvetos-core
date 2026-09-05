@@ -294,6 +294,21 @@
     },
     {
       "q": [
+        "standing calendar",
+        "publish calendar",
+        "לוח פרסום",
+        "קצב שבועי",
+        "instagram schedule",
+        "שיבוץ אינסטגרם",
+        "MEDIA-NEEDED-FROM-CHRISTIAN"
+      ],
+      "pack": "vfgrowth",
+      "slug": "instagram-curator",
+      "tool": "canva",
+      "note": "CALENDAR.md + RHYTHM.md + vfigos/HANDOFF-STANDING-he.md"
+    },
+    {
+      "q": [
         "3d model",
         "stl",
         "mesh",

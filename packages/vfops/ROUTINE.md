@@ -18,6 +18,7 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 | מתי | מה | קובץ |
 |---|---|---|
 | פעם בשבוע (רמז: ראשון בבוקר) | סקירת **קישורי השראה והטמעה** שנשלחו — עדכונים + «מה חדש לחקור» | `vfresearch/WEEKLY.md`, `vfresearch/LINKS.json` |
+| פעם בשבוע (רמז: ראשון אחרי בריף) | לוח פרסום קבוע — 2–3 שבועות קדימה, משבצות ריקות בלי המצאת מדיה | `vfgrowth/CALENDAR.md`, `vfgrowth/RHYTHM.md`, `vfigos/HANDOFF-STANDING-he.md` |
 
 ## כל יומיים
 

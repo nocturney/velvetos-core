@@ -34,6 +34,7 @@
 | מסמכי עבודה | Drive `create_file` | כל מושב | חיפוש לפי job/SKU |
 | מייל שנשלח | Gmail (thread id) | HQ send | vfconvert / מעקב |
 | עיצוב IG | Canva (design id / URL אמיתי) | vfcanva | vfigos |
+| לוח פרסום קבוע | `vfgrowth/CALENDAR.md` + `RHYTHM.md` + `vfigos/HANDOFF-STANDING-he.md` | צמיחה | בריף 07, שיבוץ instagram.com |
 | mesh / 3D | Drive + 3D AI Studio dashboard | vfprod | ייצור |
 
 ## VelvetOS — Velvet Factory (frontend)

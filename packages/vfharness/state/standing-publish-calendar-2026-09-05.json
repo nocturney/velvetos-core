@@ -1,0 +1,60 @@
+{
+  "task_id": "standing-publish-calendar-2026-09-05",
+  "status": "done",
+  "pack": "vfgrowth",
+  "goal": "Standing IG publish calendar + Studio instagram.com handoff on existing packs; no invented media; no IG/Gmail send",
+  "crew": "content",
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "python3 scripts/check-all.py — OK suite passed=21",
+  "planned_steps": [
+    "route-office-graph",
+    "read-existing-packs",
+    "write-calendar-rhythm-handoff",
+    "flag-media-needed",
+    "sensor-suite",
+    "commit-pr"
+  ],
+  "completed_steps": [
+    "route-office-graph",
+    "read-existing-packs",
+    "write-calendar-rhythm-handoff",
+    "flag-media-needed",
+    "sensor-suite"
+  ],
+  "next_step": "christian-g003-media-then-instagram-com-schedule",
+  "artifacts": [
+    "packages/vfgrowth/CALENDAR.md",
+    "packages/vfgrowth/RHYTHM.md",
+    "packages/vfgrowth/G003.md",
+    "packages/vfigos/HANDOFF-STANDING-he.md",
+    "scripts/check-vfgrowth.py"
+  ],
+  "unresolved": [
+    "VF-G003 SoccerBall file not on disk — MEDIA-NEEDED-FROM-CHRISTIAN before Tue 8.9.2026 12:00 Asia/Jerusalem"
+  ],
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "execution_state": {
+    "first_sunday": "2026-09-06",
+    "g003_committed": "2026-09-08T16:00+03:00",
+    "g006_carousel": "2026-09-10T12:00+03:00",
+    "send": false,
+    "sensors_passed": 21
+  },
+  "latest_observation": "check-all.py OK suite passed=21 including check-vfgrowth.py",
+  "events": [
+    {
+      "name": "calendar.written",
+      "producedAt": "2026-09-05",
+      "sourceAgent": "vfgrowth",
+      "payload": { "path": "packages/vfgrowth/CALENDAR.md" }
+    },
+    {
+      "name": "sensors.green",
+      "producedAt": "2026-09-05",
+      "sourceAgent": "vfharness",
+      "payload": { "passed": 21 }
+    }
+  ]
+}

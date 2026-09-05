@@ -4,7 +4,7 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: שבועי קישורים — הוטמע VoiceStudio (skip install) ב־vfom/vfmcp · academic-pipeline + charts + mastery-memory · ExamFul ב־watch · footrue ToolBox (הכנת מדיה בדפדפן) ב־vfcovers/vfcanva · buildwithclaude proposal-drafter ב־vfsales · ai-copywriter reader-first ב־vfcopy · גם market-intel / YouMind / diagram-maker
+מה נבנה / יועל: לוח פרסום קבוע — הוטמע ב־vfgrowth/CALENDAR.md + RHYTHM.md + vfigos/HANDOFF-STANDING-he.md · גם שבועי קישורים (VoiceStudio skip-install, footrue, buildwithclaude, ai-copywriter)
 ```
 
 05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md`.
