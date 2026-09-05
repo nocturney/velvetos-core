@@ -1067,6 +1067,24 @@
         "vfresearch"
       ],
       "note": "Pattern only: browse-by-media/model + adapt subject to floor proof; Image→Prompt on delivered photos only. No library import. Canva first for IG. Skip action/fantasy stock scenes."
+    },
+    {
+      "id": "mcpmarket-market-research-intelligence",
+      "kind": "skill-index",
+      "url": "https://mcpmarket.com/tools/skills/market-research-intelligence-1787987613965",
+      "openUrl": "https://mcpmarket.com/tools/skills/market-research-intelligence",
+      "title": "Market Research Intelligence — decision-oriented research gates (MCP Market)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-market-research-intelligence.md",
+      "playbook": "packages/vfresearch/hq/MARKET-INTEL.md",
+      "packs": [
+        "vfresearch",
+        "vfseason",
+        "vfgrowth",
+        "vfsku"
+      ],
+      "note": "Patterns only (source age, contrarian evidence, decision structure, dual-method sizing). Full SKILL.md body blocked (אין גוף). No npx install / investor-dossier default."
     }
   ],
   "addLink": {

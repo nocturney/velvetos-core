@@ -93,6 +93,13 @@
       "pack": "vfops",
       "path": "packages/vfops/hq/LEARNING-RECORDS.md",
       "firstEmbedded": "2026-09-04"
+    },
+    {
+      "id": "market-research-intelligence-gates",
+      "pack": "vfresearch",
+      "path": "packages/vfresearch/hq/MARKET-INTEL.md",
+      "firstEmbedded": "2026-09-05",
+      "source": "https://mcpmarket.com/tools/skills/market-research-intelligence-1787987613965"
     }
   ],
   "watchlist": [

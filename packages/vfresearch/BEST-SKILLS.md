@@ -43,6 +43,7 @@
 | skill-creator / writing-skills | `vfharness` · skills ב־`.cursor/skills/` | פק סקילים חדש |
 | self-improving / learning | `office-learning` · `vfops` retro · `owner-memory` | `~/self-improving/` runtime |
 | last30days / מחקר רשת | `vfresearch` · WebSearch / תזמורת | TikTok/X keys · auto-DM |
+| market-research / intel gates | `vfresearch` · `hq/MARKET-INTEL.md` | npx install · תיקיית משקיע כברירת מחדל · ₪ מומצא |
 | frontend-design / anti-slop | `vfbriefux` · `vfcovers` · קונסולה פנימית | אתר שיווקי ציבורי מ־HQ |
 | agent-browser / browser-use | computerUse / בדיקות ידניות | בוט לקוח |
 | Remotion / video gen vendor | `vfom` · `expert-media-director` | Veo/Kling מ־HQ · Remotion vendor |
