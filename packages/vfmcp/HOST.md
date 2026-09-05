@@ -76,25 +76,25 @@ agent about
 
 ```bash
 cd ~/velvetos-core
-agent worker --computer-use --name "sderot-mac" start
-```
-
-`/path/to/velvetos-core` היה דוגמה — הנתיב האמיתי אצל כריס: `~/velvetos-core`. בלי סוגריים `[ ]`.
-
-הטרמינל **נשאר פתוח**. מחובר = השורה לא נסגרת חזרה ל־`$`, ויש שם `sderot-mac` / connected.
-
-**שגיאה `Filesystem createRequire is disabled in the self-contained worker SEA`** (CLI 2026.09.02 על מק, אחרי `cursor-agent-worker-sea`): באג באריזת ה־worker החתום, לא בלוגין. לפי הסדר:
-
-```bash
-cd ~/velvetos-core
-agent update
-agent worker debug
-# בלי computer-use קודם (טרמינל+קבצים במק; כרום אחר כך):
 agent worker --name "sderot-mac" start
 ```
 
-אם אותו SEA חוזר: `curl https://cursor.com/install -fsS | bash` ואז שוב `agent worker --name "sderot-mac" start`.  
-`--computer-use` רק אחרי שה־worker בלי הדגל נשאר רץ. `agent worker debug` לפני start.
+בלי סוגריים `[ ]`. `/path/to/` היה דוגמה. הנתיב: `~/velvetos-core`.
+
+הטרמינל **נשאר פתוח**. מחובר = `Worker is now running` והפרומפט לא חוזר.
+
+**`--computer-use` על CLI 2026.09.02** בוחר `cursor-agent-worker-sea` ונופל: `Filesystem createRequire is disabled`. המסלול שעבד: `index.js` (בלי SEA). אל תריץ `agent worker --computer-use` עד שזה מתוקן אצל Cursor.
+
+לחיצות בכרום — נסיון לעקוף SEA (רק אחרי ש־`ls` מראה `node` ו־`index.js`):
+
+```bash
+cd ~/velvetos-core
+VER="$HOME/.local/share/cursor-agent/versions/2026.09.02-c22c1a3"
+ls "$VER/node" "$VER/index.js"
+"$VER/node" "$VER/index.js" worker --computer-use --name "sderot-mac" start
+```
+
+אם זה שוב SEA / createRequire: חזור מיד ל־`agent worker --name "sderot-mac" start` (בלי הדגל) כדי שהמק יישאר מחובר. `--share-desktop` לא במק.
 
 אם עדיין `command not found: agent`:
 
@@ -108,7 +108,7 @@ ls -l ~/.local/bin/agent
 בפעם הראשונה ב־macOS: System Settings → Privacy & Security → Accessibility **ו־** Screen Recording ל־**Cursor Computer Use**.
 
 ב־cursor.com/agents: בחר את המכונה `sderot-mac` (לא VM הענן).  
-אומת 5.9.2026: worker `sderot-mac` רץ על `chris@Mac-Office` (`~/velvetos-core`, id `4a3ca6d2-f2c3-4cba-8c96-8bb63d6160b2`). הטרמינל נשאר פתוח. `--share-desktop` לא במק (Linux בלבד). Computer Use עדיין לא מותקן — לחיצות בכרום דורשות restart עם `--computer-use` ואז Accessibility + Screen Recording ל־**Cursor Computer Use**.
+אומת 5.9.2026: `agent worker --name "sderot-mac" start` עובד (`index.js`). `agent worker --computer-use` נופל על SEA. אחרי עצירה — להרים שוב **בלי** `--computer-use`. `--share-desktop` לא במק.
 
 ### ד. מה לא לעשות
 

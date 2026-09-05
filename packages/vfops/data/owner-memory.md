@@ -107,5 +107,6 @@
 - **למדנו:** מארח Plus/Pro = **מק ייעודי** בשדרות — לא PC ווינדוס יומי. לוגין כרום בווינדוס לא עובר למק; אין העתקת עוגיות.
 - **למדנו:** CLI על `chris@Mac-Office` (darwin arm64): `agent status` = Logged in as `nocturney@gmail.com`, Pro+. Worker נכשל: `Filesystem createRequire is disabled in the self-contained worker SEA` (CLI 2026.09.02). קלון קיים ב־`~/velvetos-core`. `/path/to/` היה דוגמה.
 - **למדנו:** Worker `sderot-mac` **רץ** (5.9.2026) — id `4a3ca6d2-f2c3-4cba-8c96-8bb63d6160b2`, dir `/Users/chris/velvetos-core`. Computer Use עדיין לא מותקן. `--share-desktop` לא במק.
-- **מחר:** להשאיר את טרמינל ה־worker פתוח; שיחה חדשה ב־cursor.com/agents על `sderot-mac`. לכרום: restart עם `--computer-use` + הרשאות ל־Cursor Computer Use.
+- **למדנו:** `agent worker --computer-use` על CLI 2026.09.02 בוחר `cursor-agent-worker-sea` ונופל (createRequire). בלי הדגל = `index.js` ועובד. אחרי עצירה ל־computer-use ה־worker כבוי עד שחוזרים ל־start בלי הדגל.
+- **מחר:** `cd ~/velvetos-core && agent worker --name "sderot-mac" start` ולהשאיר פתוח. כרום: נסיון `"$VER/node" "$VER/index.js" worker --computer-use …` — לא `agent worker --computer-use`.
 - **מקור:** שיחת בעלים 5.9.2026.
