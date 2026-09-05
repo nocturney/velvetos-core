@@ -5,4 +5,4 @@
 
 **משובץ:** `/workspace/INSTA/content/2026-09-07/VF-G003-reel.mp4` + `VF-G003-cover.jpg` + `VF-G003-caption.txt` · א׳ 7.9 16:00.  
 **גלם:** `vf-user-2026-08-30.mp4` + `vf-user-2026-08-30-9x16.mp4`.  
-**SoccerBall:** שדרוג אופציונלי אם הקובץ מופיע. לא על פרוסת הדיסק. לא בגיט HQ. לא עלה לפיד.
+**SoccerBall:** זמין מקומית `/workspace/INSTA/media/SoccerBall final_PLA_9h55m_20260715143622.mp4` (לא בגיט). G003 נשאר משובץ עם נתיב המדפסת + «מה יוצא מהמדפסת?» עד החלטת כריסטיאן. לא עלה לפיד.

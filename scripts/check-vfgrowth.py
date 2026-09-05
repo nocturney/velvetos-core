@@ -81,6 +81,7 @@ def main() -> None:
         "VF-G003-cover.jpg",
         "VF-G003-caption.txt",
         "משובץ",
+        "זמין מקומית",
         "חסום",
     ):
         if needle not in ledger:
@@ -114,6 +115,8 @@ def main() -> None:
         fail("G003.md must name Studio-cut reel path")
     if "מוכן לשיבוץ" not in g003:
         fail("G003.md must keep SoccerBall as optional unlock")
+    if "זמין מקומית" not in g003:
+        fail("G003.md must mark SoccerBall as locally available")
     if "G003-alt" not in g003:
         fail("G003.md must name G003-alt printer-reel track")
     if "SoccerBall" not in g003:
