@@ -67,6 +67,7 @@ def main() -> None:
         "G005",
         "G003",
         "SoccerBall",
+        "SoccerBall final_PLA_9h55m_20260715143622.mp4",
         "חסום",
     ):
         if needle not in ledger:
@@ -86,6 +87,13 @@ def main() -> None:
         fail("G003.md must stay media-blocked until a floor path exists")
     if "SoccerBall" not in g003:
         fail("G003.md must name SoccerBall candidate")
+    if "SoccerBall final_PLA_9h55m_20260715143622.mp4" not in g003:
+        fail("G003.md must name the ledger SoccerBall filename")
+    stop = ROOT / "packages" / "vfcovers" / "g003" / "HANDOFF-he.md"
+    if not stop.is_file():
+        fail("missing vfcovers/g003/HANDOFF-he.md")
+    if "SoccerBall final_PLA_9h55m_20260715143622.mp4" not in stop.read_text():
+        fail("g003 HANDOFF must name the missing SoccerBall file")
 
     copy = COPY.read_text()
     if "050-2517000" not in copy:

@@ -1,0 +1,53 @@
+{
+  "task_id": "g003-reel-stock-2026-09-05",
+  "status": "blocked",
+  "pack": "vfgrowth",
+  "goal": "VF-G003 process/reveal Reel #3 from existing SoccerBall floor clip, ready for Studio to schedule Sun 7.9 16:00",
+  "crew": "content",
+  "planned_steps": [
+    "Route via vfmem/vfgraft",
+    "Locate SoccerBall or unused timelapse",
+    "Cut 9:16 + cover + Hebrew handoff",
+    "Update standing calendar path",
+    "Sensor check-all"
+  ],
+  "completed_steps": [
+    "Routed to vfom/vfcovers/vfcopy",
+    "Named path from Christian: media/SoccerBall final_PLA_9h55m_20260715143622.mp4",
+    "Drive/Canva/3DAI/iCloud-mirror search: file unreachable",
+    "Confirmed G001 king + G002 RoboLotl must not be reused",
+    "Wrote stop handoff + marked ledger/calendar"
+  ],
+  "next_step": "Studio on Mac: find media/SoccerBall final_PLA_9h55m_20260715143622.mp4 then cut and schedule",
+  "artifacts": [
+    "packages/vfcovers/g003/HANDOFF-he.md",
+    "packages/vfcopy/G003.md",
+    "packages/vfgrowth/G003.md",
+    "packages/vfgrowth/LEDGER.md",
+    "packages/vfgrowth/CALENDAR.md"
+  ],
+  "unresolved": [
+    "media/SoccerBall final_PLA_9h55m_20260715143622.mp4 unreachable from Cloud HQ",
+    "No unused reachable process/timelapse to swap",
+    "No 9:16 mp4 or cover still produced (would be invented)",
+    "Insights still אין ספירה"
+  ],
+  "outcome": "escalation",
+  "pulse": "blocked",
+  "verification": "Drive/Canva/3DAI empty for SoccerBall; Gmail 28.8 named G001/G002 sources only",
+  "gate": {
+    "kind": "escalation",
+    "waiting_for": "Studio Mac or Drive upload of media/SoccerBall final_PLA_9h55m_20260715143622.mp4",
+    "reason": "Named floor clip is not reachable from this Cloud Agent; inventing a reel is forbidden"
+  },
+  "escalation": "packages/vfharness/state/g003-reel-stock-2026-09-05/escalation.md",
+  "last_updated": "2026-09-05",
+  "execution_state": {
+    "g003_slot": "Sun 7.9 16:00 fallback Tue 9.9 16:00",
+    "g003_status": "media-blocked",
+    "named_path": "media/SoccerBall final_PLA_9h55m_20260715143622.mp4",
+    "candidate_swapped": false,
+    "schedule_surface": "instagram.com"
+  },
+  "latest_observation": "SoccerBall filename locked from Christian; file not on office Drive, Canva, 3DAI, or iCloud Drive mirror. No unused reachable timelapse."
+}
