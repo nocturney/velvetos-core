@@ -43,7 +43,7 @@ agent worker --name "sderot-mac" start
 | מה רוצים | איך | עכשיו במק |
 |---|---|---|
 | Gems / GPTs / Canvas / Deep Research / Perplexity Pro | אותו Chrome, הסוכן לוחץ (`--computer-use`) | **חסום** ב־CLI 2026.09.02 (`agent worker --computer-use` → SEA) |
-| תשובת מודל בלי אתר | Antigravity `agy` (Gemini CLI) + Codex `login` בטרמינל המק | `agy` חי. Codex עדיין לא |
+| תשובת מודל בלי אתר | Antigravity `agy` (Gemini CLI) + Codex `login` בטרמינל המק | **שניהם חיים** על `Mac-Office` |
 | Cloud VM | לא פותח אתרי מנוי | `WebSearch` |
 
 כרום פתוח ומחובר = בשביל **אדם** ולבסיס computer-use בעתיד. ה־worker החי היום (בלי הדגל) = קבצים + טרמינל במק בלבד.
@@ -65,7 +65,7 @@ agent worker --name "sderot-mac" start
 | שכבה | מה מקבלים | איפה |
 |---|---|---|
 | אפליקציות הדפדפן | Gems, GPTs, Canvas, Deep Research, Perplexity Pro / Collections | Chrome במק — פרופיל אחד שנשאר מחובר |
-| CLI רשמי בלי מפתח API | Gemini CLI = Login with Google (מנוי Google AI). Codex CLI = `codex login` (ChatGPT Plus) | טרמינל במק בלבד |
+| CLI רשמי בלי מפתח API | `agy` = Google AI Plus. Codex = `codex login` (ChatGPT Plus). שניהם אומתו 5.9.2026 | טרמינל במק בלבד |
 | Perplexity לסוכן | אין CLI רשמי למנוי. כרום, או `perplexity-user-mcp` **רק במק** אחרי ראש צוות | לא Cloud |
 | Cloud Agent | Gmail / Drive / Canva / git / `WebSearch` | לא אתרי מנוי |
 
@@ -104,13 +104,15 @@ agy
 
 אומת 5.9.2026 (צילום): `agy` 1.1.27 ב־`/Users/chris/.local/bin/agy` = `nocturney@gmail.com (Google AI Plus)` · `Gemini 3.8 Flash (High)`. הפרומפט `>` מוכן. `ERROR: logging before google.Init` בהתקנה = רעש, לא כשל. Gemini CLI ליחידים מת. אל תעתיקו `ANTIGRAVITY_TOKEN`.
 
-אם `agy` עדיין פתוח — `/quit` ואז Codex (טרמינל שני, worker נשאר למעלה). Sign in with ChatGPT (Plus), לא מפתח API:
+Codex — Sign in with ChatGPT (Plus), לא מפתח API. טרמינל שני; worker נשאר למעלה. אם `agy` פתוח: `/quit`.
 
 ```bash
 export PATH="$HOME/.local/bin:$PATH"
 curl -fsSL https://chatgpt.com/codex/install.sh | sh
 codex login
 ```
+
+אומת 5.9.2026 (צילום): Codex CLI `0.153.4` על `chris@Mac-Office` (Apple Silicon) · `Codex CLI 0.153.4 installed successfully` · `Successfully logged in` · חזרה ל־`%`. אל תעתיקו `~/.codex` לענן. להפעלה: `codex`.
 
 Perplexity: אין CLI רשמי למנוי. נשאר בכרום.
 

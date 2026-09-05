@@ -110,5 +110,6 @@
 - **למדנו:** `agent worker --computer-use` על CLI 2026.09.02 בוחר `cursor-agent-worker-sea` ונופל (createRequire). בלי הדגל = `index.js` ועובד. אחרי עצירה ל־computer-use ה־worker כבוי עד שחוזרים ל־start בלי הדגל.
 - **למדנו:** אין קישור לטאבי כרום. סוכן על `sderot-mac` בלי `--computer-use` = קבצים/טרמינל. אתרי Plus נשארים אצל האדם עד computer-use יציב (SEA שובר `agent worker --computer-use`).
 - **למדנו:** `agy` 1.1.27 על `Mac-Office` = `nocturney@gmail.com (Google AI Plus)` · Gemini 3.8 Flash (High). `ERROR: logging before google.Init` בהתקנה = רעש. Gemini CLI ליחידים מת. לא טוקן לענן.
-- **מחר:** אם `agy` פתוח — `/quit`. אז Codex `curl -fsSL https://chatgpt.com/codex/install.sh | sh` ואז `codex login` (Plus, לא מפתח API). Worker לא נסגר.
+- **למדנו:** Codex CLI `0.153.4` על `chris@Mac-Office` = `Successfully logged in` (ChatGPT Plus, לא מפתח API). לא מעתיקים `~/.codex` לענן. Perplexity נשאר בכרום.
+- **מחר:** סוכן על `sderot-mac` יכול להריץ `agy` / `codex` בטרמינל המק. Worker לא נסגר. `--computer-use` עדיין לא.
 - **מקור:** שיחת בעלים 5.9.2026.
