@@ -51,6 +51,21 @@
         "no-autodm",
         "no-secrets-in-git"
       ]
+    },
+    {
+      "id": "gemini-api",
+      "inProjectMcpJson": false,
+      "whyNotProject": "Needs GEMINI_API_KEY. This is Google AI Studio / Gemini API — not the gemini.google.com Plus/Advanced subscription. Do not install aliargun/mcp-server-gemini (last push 2025-07-14; hardcoded 2.5). Do not put the key in project mcp.json.",
+      "source": "https://ai.google.dev/gemini-api/docs",
+      "connect": "packages/vfmcp/CONNECT-GEMINI.md",
+      "failover": "python3 scripts/vf_gemini.py (live model list) → ChatGPT + Perplexity + WebSearch. Without a key write חסר מפתח Gemini. Never invent a body.",
+      "locks": [
+        "no-secrets-in-git",
+        "subscription-is-not-api",
+        "חסר מפתח Gemini",
+        "no-veo-from-hq",
+        "no-aliargun-mcp"
+      ]
     }
   ]
 }

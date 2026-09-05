@@ -27,7 +27,9 @@ CORE_MCP = ROOT / "packages" / "vfmcp" / "core-mcp.json"
 CONNECT_SHEETS = ROOT / "packages" / "vfmcp" / "CONNECT-SHEETS.md"
 CONNECT_WA = ROOT / "packages" / "vfmcp" / "CONNECT-WHATSAPP.md"
 CONNECT_HUB = ROOT / "packages" / "vfmcp" / "CONNECT-STUDIOHUB.md"
+CONNECT_GEMINI = ROOT / "packages" / "vfmcp" / "CONNECT-GEMINI.md"
 CORE_MCP_MD = ROOT / "packages" / "vfmcp" / "CORE-MCP.md"
+VF_GEMINI = ROOT / "scripts" / "vf_gemini.py"
 
 NEEDLES_GAP = (
     "WebSearch",
@@ -38,6 +40,7 @@ NEEDLES_GAP = (
     "SHEETS.md",
     "Treg",
     "3D AI Studio",
+    "חסר מפתח Gemini",
 )
 NEEDLES_SHEETS = (
     "חסר גיליון",
@@ -66,7 +69,9 @@ def main() -> None:
         CONNECT_SHEETS,
         CONNECT_WA,
         CONNECT_HUB,
+        CONNECT_GEMINI,
         CORE_MCP_MD,
+        VF_GEMINI,
     ):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
@@ -154,7 +159,7 @@ def main() -> None:
 
     core_mcp = json.loads(CORE_MCP.read_text())
     ids = {s.get("id") for s in (core_mcp.get("servers") or [])}
-    for need in ("studiomcphub", "mcp-gsheets", "whatsapp"):
+    for need in ("studiomcphub", "mcp-gsheets", "whatsapp", "gemini-api"):
         if need not in ids:
             fail(f"core-mcp.json must list {need}")
     if CORE_MCP.read_text().count("sk-") or "BEGIN PRIVATE" in CORE_MCP.read_text():
@@ -164,12 +169,23 @@ def main() -> None:
         (CONNECT_HUB, ("studiomcphub.com/mcp", "Team MCP", "print_ready", "x402")),
         (CONNECT_SHEETS, ("mcp-gsheets", "~/.cursor/mcp.json", "חסר גיליון", "לא ממציאים")),
         (CONNECT_WA, ("lharries/whatsapp-mcp", "050-2517000", "send=false", "Infobip")),
-        (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp")),
+        (CONNECT_GEMINI, ("חסר מפתח Gemini", "vf_gemini.py", "aliargun", "gemini.google.com", "לא ממציאים")),
+        (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "Gemini API")),
     ):
         text = path.read_text(encoding="utf-8")
         for needle in needles:
             if needle not in text:
                 fail(f"{path.name} must mention {needle}")
+
+    gemini = tools.get("gemini") or {}
+    if not gemini:
+        fail("vf-desk.json tools missing gemini")
+    if "vf_gemini.py" not in (gemini.get("command") or "") and "vf_gemini.py" not in (gemini.get("failover") or ""):
+        fail("vf-desk.json gemini must call vf_gemini.py")
+    if not (gemini.get("failover") or ""):
+        fail("vf-desk.json gemini must declare failover")
+    if "חסר מפתח Gemini" not in (gemini.get("rule") or ""):
+        fail("vf-desk.json gemini.rule must mention חסר מפתח Gemini")
 
     orchestra = ORCHESTRA.read_text()
     if "WebSearch" not in orchestra and "tools.web" not in orchestra:
@@ -178,13 +194,61 @@ def main() -> None:
         fail("ORCHESTRA.md must mention GenerateImage / tools.image failover")
     if "3D AI Studio" not in orchestra:
         fail("ORCHESTRA.md must failover 3D AI Studio to the site")
+    if "vf_gemini.py" not in orchestra:
+        fail("ORCHESTRA.md must failover Gemini browser wall to vf_gemini.py")
+    if "חסר מפתח Gemini" not in orchestra:
+        fail("ORCHESTRA.md must mention חסר מפתח Gemini")
 
     if "GAP.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention GAP.md")
     if "CORE-MCP.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention CORE-MCP.md")
+    if "CONNECT-GEMINI.md" not in ORIGIN.read_text() and "vf_gemini.py" not in ORIGIN.read_text():
+        fail("vfmcp/ORIGIN.md must mention the Gemini API bridge")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp")
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import vf_gemini  # noqa: E402
+
+    if vf_gemini.MISSING_KEY != "חסר מפתח Gemini":
+        fail("vf_gemini.MISSING_KEY must be חסר מפתח Gemini")
+    mock = [
+        {"name": "models/gemini-2.5-pro", "supportedGenerationMethods": ["generateContent"]},
+        {"name": "models/gemini-3.5-flash", "supportedGenerationMethods": ["generateContent"]},
+        {"name": "models/gemini-3.1-pro-preview", "supportedGenerationMethods": ["generateContent"]},
+        {"name": "models/gemini-embedding-001", "supportedGenerationMethods": ["embedContent"]},
+        {"name": "models/veo-3.0-generate", "supportedGenerationMethods": ["predict"]},
+        {"name": "models/gemini-2.5-flash-image", "supportedGenerationMethods": ["generateContent"]},
+    ]
+    flash = vf_gemini.pick_generate_model(mock)
+    if flash != "gemini-3.5-flash":
+        fail(f"live picker should prefer 3.5 flash, got {flash}")
+    pro = vf_gemini.pick_generate_model(mock, prefer_pro=True)
+    if pro != "gemini-3.1-pro-preview":
+        fail(f"live picker --pro should prefer 3.1 pro, got {pro}")
+    forced = vf_gemini.pick_generate_model(mock, requested="gemini-2.5-pro")
+    if forced != "gemini-2.5-pro":
+        fail("requested model must win when on the live list")
+
+    import os
+    import subprocess
+
+    env = {k: v for k, v in os.environ.items() if k not in {"GEMINI_API_KEY", "GOOGLE_API_KEY"}}
+    proc = subprocess.run(
+        [sys.executable, str(VF_GEMINI), "status"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        env=env,
+    )
+    if proc.returncode != 2:
+        fail(f"vf_gemini.py status without key must exit 2, got {proc.returncode}")
+    out = (proc.stdout or "") + (proc.stderr or "")
+    if "חסר מפתח Gemini" not in out:
+        fail("vf_gemini.py status without key must print חסר מפתח Gemini")
+    if "AIza" in out or "sk-" in out:
+        fail("vf_gemini.py must not print secrets")
+
+    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api")
 
 
 if __name__ == "__main__":

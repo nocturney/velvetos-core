@@ -88,7 +88,7 @@
         "vfops"
       ],
       "playbook": "playbooks/local-offload.md",
-      "note": "Already an orchestra desk in the browser. Separate key if used as FCC backend."
+      "note": "Orchestra browser desk is gemini.google.com (subscription). Gemini API is a separate key — packages/vfmcp/CONNECT-GEMINI.md + vf_gemini.py. Do not install aliargun/mcp-server-gemini."
     },
     {
       "id": "open_router",

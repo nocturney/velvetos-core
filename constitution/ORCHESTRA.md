@@ -27,7 +27,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 |---|---|---|
 | **Perplexity** (Cloudflare / רובוט / סשן פרטי) | ChatGPT + Gemini — אותה שאלה עכשיו | «דולג — חומה» ב־`vfresearch/sources/` · אין גוף מומצא |
 | **ChatGPT** (הזדהות / שגיאה) | Gemini + Perplexity עכשיו | חומת הזדהות לראש צוות · לא אורח · לא ממציאים |
-| **Gemini** (הזדהות / שגיאה) | ChatGPT + Perplexity עכשיו | כמו לעיל |
+| **Gemini** (הזדהות / שגיאה בדפדפן) | `python3 scripts/vf_gemini.py orchestra` אם יש `GEMINI_API_KEY` · אחרת ChatGPT + Perplexity + WebSearch | מנוי `gemini.google.com` ≠ API. בלי מפתח: «חסר מפתח Gemini». אין גוף מומצא |
 | שני שולחנות נפלו | השולחן הפתוח נושא את כל העומס עכשיו | מטמיעים רק מגוף אמיתי |
 | שלושתם נפלו | פקים שכבר על הדיסק + בלוק `05` = «אין חדש במשרד» | הסלמה לראש צוות על חומות · בלי גוף מומצא |
 
@@ -42,6 +42,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 | **Mobbin** (אין namespace) | `vfbriefux/MAIL.html` · `hq/brief-email.html` (effective-html) · Superdesign | לא ממציאים מסכי אפליקציה |
 | **Treg** | **לא בשימוש.** WebSearch / תזמורת / «אין ספירה» | לא login · לא `call` |
 | **WebSearch / WebFetch** (`tools.web`) | תזמורת ChatGPT+Gemini+Perplexity | לא ממציאים גוף חסום |
+| **Gemini API** (`vf_gemini.py`) | ChatGPT + Perplexity + WebSearch | לא ממציאים גוף. בלי מפתח: «חסר מפתח Gemini». מנוי דפדפן ≠ API |
 | **GenerateImage** (`tools.image`) | Canva `generate-design` → Superdesign → `studio/render.py` | לא ממציאים קישור Canva |
 | **Gmail** MCP | Drive `create_file` את הגוף · ממשיכים · **send_message מותר** | לא ממציאים פנייה · לא דיוור המוני |
 | **Calendar** MCP | שואלים חלון איסוף / «חסר לוח» וממשיכים בריף מג׳ימייל | לא ממציאים שעות תור |

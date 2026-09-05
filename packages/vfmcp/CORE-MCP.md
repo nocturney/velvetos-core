@@ -9,6 +9,7 @@ VelvetOS Core **מתקין** את שלושת כלי המשרד. מופע (הפק
 | **Studio MCP Hub** | `.cursor/mcp.json` → `https://studiomcphub.com/mcp` | רק כלים חינמיים שימושיים (רקע / גודל). **לא** CMYK / `print_ready` — הסטודיו תלת־ממד. [`CONNECT-STUDIOHUB.md`](CONNECT-STUDIOHUB.md) |
 | **Google Sheets** | Desktop `~/.cursor/mcp.json` (`mcp-gsheets`) | יומן `office/ledger/bindings.json`. בלי מפתח: CSV + Drive. [`CONNECT-SHEETS.md`](CONNECT-SHEETS.md) |
 | **WhatsApp** | Desktop `lharries/whatsapp-mcp` (טלפון אישי) | חיפוש + טיוטה. **שליחה אסורה** — אדם `050-2517000`. [`CONNECT-WHATSAPP.md`](CONNECT-WHATSAPP.md) |
+| **Gemini API** | env `GEMINI_API_KEY` + `scripts/vf_gemini.py` | **לא** מנוי `gemini.google.com`. לא aliargun MCP. בלי מפתח: **חסר מפתח Gemini**. [`CONNECT-GEMINI.md`](CONNECT-GEMINI.md) |
 
 רשימת מכונה: [`core-mcp.json`](core-mcp.json). דוגמת Desktop: [`mcp.desktop.example.json`](mcp.desktop.example.json).
 

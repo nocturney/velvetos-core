@@ -34,7 +34,8 @@
     "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
     "2026-08-31: Core office MCP — studiomcphub in .cursor/mcp.json; Sheets + WhatsApp Desktop CONNECT (VF send=false, skip CMYK). packages/vfmcp/CORE-MCP.md.",
     "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py.",
-    "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill."
+    "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill.",
+    "2026-09-05: Gemini API bridge on vfmcp — vf_gemini.py live model list. Not gemini.google.com subscription. Do not install aliargun/mcp-server-gemini. CONNECT-GEMINI.md. Without a key: חסר מפתח Gemini."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -177,6 +178,14 @@
       "useWhen": "Search/draft on the studio phone after packages/vfmcp/CONNECT-WHATSAPP.md",
       "rule": "VF send stays human 050-2517000. send=false. No Infobip/ManyChat auto-send.",
       "failover": "python3 scripts/vf_office.py convert draft + wa.me"
+    },
+    "gemini": {
+      "status": "needs-key",
+      "command": "python3 scripts/vf_gemini.py",
+      "namespace": null,
+      "useWhen": "Orchestra Gemini desk when gemini.google.com is walled; live generateContent via GEMINI_API_KEY. Playbook: packages/vfmcp/CONNECT-GEMINI.md",
+      "rule": "Subscription gemini.google.com ≠ Gemini API. Do not install aliargun/mcp-server-gemini. No key in git. No Veo from HQ. Without a key write חסר מפתח Gemini. Never invent a body.",
+      "failover": "python3 scripts/vf_gemini.py orchestra if GEMINI_API_KEY else ChatGPT + Perplexity + WebSearch"
     }
   },
   "seats": [
@@ -185,7 +194,7 @@
       "he": "ראש צוות",
       "packs": ["vfops", "vfbriefux", "vfharness", "vfmem", "velvetos"],
       "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect", "pipeline-analyst"],
-      "tools": ["calendar", "gmail", "vfmem", "web"],
+      "tools": ["calendar", "gmail", "vfmem", "web", "gemini"],
       "decides": "₪ amount, what moves on the board, what is deferred; end-of-day retro (DAILY-RETRO.md)"
     },
     {
@@ -217,7 +226,7 @@
       "he": "ייצור",
       "packs": ["vfprod", "vfsku", "vlicense", "vfresearch"],
       "specialists": ["studio-producer", "operations-manager", "legal-compliance-checker", "research-synthesist", "trend-researcher", "technical-artist"],
-      "tools": ["drive", "calendar", "web", "threedaistudio", "studiomcphub"],
+      "tools": ["drive", "calendar", "web", "threedaistudio", "studiomcphub", "gemini"],
       "decides": "print feasibility, queue, SKU, file license"
     }
   ],
