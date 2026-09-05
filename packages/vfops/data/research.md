@@ -4,9 +4,9 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: שבועי קישורים — הוטמע academic-pipeline + charts + mastery-memory · ExamFul ב־watch · footrue ToolBox (הכנת מדיה בדפדפן) ב־vfcovers/vfcanva · buildwithclaude proposal-drafter ב־vfsales · ai-copywriter reader-first ב־vfcopy · גם market-intel / YouMind / diagram-maker
+מה נבנה / יועל: שבועי קישורים — הוטמע VoiceStudio (skip install) ב־vfom/vfmcp · academic-pipeline + charts + mastery-memory · ExamFul ב־watch · footrue ToolBox (הכנת מדיה בדפדפן) ב־vfcovers/vfcanva · buildwithclaude proposal-drafter ב־vfsales · ai-copywriter reader-first ב־vfcopy · גם market-intel / YouMind / diagram-maker
 ```
 
 05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md`.
 
-מקור: `packages/vfresearch/sources/2026-09-05-weekly-links-owner-four.md` · `hq/ACADEMIC-PIPELINE.md` · `vfbriefux/hq/CHARTS.md` · `vfops/hq/MASTERY-MEMORY.md` · `packages/vfresearch/sources/2026-09-05-footrue.md` · `packages/vfresearch/sources/2026-09-05-weekly-links-footrue.md` · `packages/vfresearch/sources/2026-09-05-buildwithclaude.md` · `packages/vfresearch/sources/2026-09-05-ai-copywriter-embed.md` · `hq/MARKET-INTEL.md` · `packages/vfresearch/sources/2026-09-05-youmind-prompts.md` · `packages/vfresearch/sources/2026-09-05-diagram-maker.md`
+מקור: `packages/vfresearch/sources/2026-09-05-voicestudio.md` · `packages/vfresearch/sources/2026-09-05-voicestudio-weekly.md` · `packages/vfresearch/sources/2026-09-05-weekly-links-owner-four.md` · `hq/ACADEMIC-PIPELINE.md` · `vfbriefux/hq/CHARTS.md` · `vfops/hq/MASTERY-MEMORY.md` · `packages/vfresearch/sources/2026-09-05-footrue.md` · `packages/vfresearch/sources/2026-09-05-weekly-links-footrue.md` · `packages/vfresearch/sources/2026-09-05-buildwithclaude.md` · `packages/vfresearch/sources/2026-09-05-ai-copywriter-embed.md` · `hq/MARKET-INTEL.md` · `packages/vfresearch/sources/2026-09-05-youmind-prompts.md` · `packages/vfresearch/sources/2026-09-05-diagram-maker.md`

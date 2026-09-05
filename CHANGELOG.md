@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-05 — **VoiceStudio**: תחקור [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio) (local ElevenLabs alt · MCP `:3900`). דפוסים על `vfom` LOCK/EMBED + `docs/MCP-FIT.md` + `vfmcp/GAP.md`. **skip install** על Cloud; רילים נשארים הוכחת רצפה. Desktop VO רק אחרי ראש צוות + `vlicense`. רישום `LINKS.json`. See `packages/vfresearch/sources/2026-09-05-voicestudio.md`.
 - 2026-09-05 — **Owner links ×4**: DeepTutor + ExamFul.ai + lieflat-charts + academic-research-skills. הטמעה בפקים קיימים — `ACADEMIC-PIPELINE.md` (`vfresearch`), `CHARTS.md` (`vfbriefux`), `MASTERY-MEMORY.md` (`vfops`/`office-learning`); ExamFul = watch בלבד (אנכי בחינות). בלי Docker/plugin/`npx` / פק חדש. See `packages/vfresearch/sources/2026-09-05-weekly-links-owner-four.md`.
 - 2026-09-05 — **footrue ToolBox**: רישום [footrue.com](https://footrue.com/) ב־`LINKS.json` (בעלים שלח). כלי דפדפן מקומיים להכנת הוכחת רצפה — HEIC→JPG, הסרת רקע, דחיסה — לפני Canva. הטמעה ב־`vfcovers/hq/PLAYBOOK.md` + `vfcanva/WORKFLOW.md`. בלי MCP / בלי החלפת מותג / בלי Insights מצד ג׳. See `packages/vfresearch/sources/2026-09-05-footrue.md`.
 - 2026-09-05 — **buildwithclaude re-read**: קישור בעלים חוזר ל־[buildwithclaude.com](https://buildwithclaude.com/). Diff מול 3.9 — הוטמע `proposal-drafter` (אין בקלט → אין בפלט) על `vfsales` + inquiry chain; דולג marketplace install / postwire·upload-post / agenttrace binary / OpenClaw. See `packages/vfresearch/sources/2026-09-05-buildwithclaude.md`.
