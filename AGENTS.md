@@ -77,7 +77,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfmakers.py` | Maker-skills desk |
 | `scripts/check-vfagents.py` | 500-list playbooks |
 | `scripts/check-vf-canva.py` | Canva Instagram desk |
-| `scripts/check-vfresearch.py` | Weekly inspiration-links + bi-daily best-skills + IG music + orchestra failover law |
+| `scripts/check-vfresearch.py` | Weekly inspiration-links + bi-daily best-skills + last30 community research + IG music + orchestra failover law |
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
 | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
