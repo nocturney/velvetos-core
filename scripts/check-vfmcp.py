@@ -28,8 +28,11 @@ CONNECT_SHEETS = ROOT / "packages" / "vfmcp" / "CONNECT-SHEETS.md"
 CONNECT_WA = ROOT / "packages" / "vfmcp" / "CONNECT-WHATSAPP.md"
 CONNECT_HUB = ROOT / "packages" / "vfmcp" / "CONNECT-STUDIOHUB.md"
 CONNECT_GEMINI = ROOT / "packages" / "vfmcp" / "CONNECT-GEMINI.md"
+CONNECT_CHATGPT = ROOT / "packages" / "vfmcp" / "CONNECT-CHATGPT.md"
+SUBSCRIPTIONS = ROOT / "packages" / "vfmcp" / "SUBSCRIPTIONS.md"
 CORE_MCP_MD = ROOT / "packages" / "vfmcp" / "CORE-MCP.md"
 VF_GEMINI = ROOT / "scripts" / "vf_gemini.py"
+VF_CHATGPT = ROOT / "scripts" / "vf_chatgpt.py"
 
 NEEDLES_GAP = (
     "WebSearch",
@@ -41,6 +44,7 @@ NEEDLES_GAP = (
     "Treg",
     "3D AI Studio",
     "חסר מפתח Gemini",
+    "חסר מפתח ChatGPT",
 )
 NEEDLES_SHEETS = (
     "חסר גיליון",
@@ -70,8 +74,11 @@ def main() -> None:
         CONNECT_WA,
         CONNECT_HUB,
         CONNECT_GEMINI,
+        CONNECT_CHATGPT,
+        SUBSCRIPTIONS,
         CORE_MCP_MD,
         VF_GEMINI,
+        VF_CHATGPT,
     ):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
@@ -159,7 +166,7 @@ def main() -> None:
 
     core_mcp = json.loads(CORE_MCP.read_text())
     ids = {s.get("id") for s in (core_mcp.get("servers") or [])}
-    for need in ("studiomcphub", "mcp-gsheets", "whatsapp", "gemini-api"):
+    for need in ("studiomcphub", "mcp-gsheets", "whatsapp", "gemini-api", "chatgpt-api"):
         if need not in ids:
             fail(f"core-mcp.json must list {need}")
     if CORE_MCP.read_text().count("sk-") or "BEGIN PRIVATE" in CORE_MCP.read_text():
@@ -169,8 +176,10 @@ def main() -> None:
         (CONNECT_HUB, ("studiomcphub.com/mcp", "Team MCP", "print_ready", "x402")),
         (CONNECT_SHEETS, ("mcp-gsheets", "~/.cursor/mcp.json", "חסר גיליון", "לא ממציאים")),
         (CONNECT_WA, ("lharries/whatsapp-mcp", "050-2517000", "send=false", "Infobip")),
-        (CONNECT_GEMINI, ("חסר מפתח Gemini", "vf_gemini.py", "aliargun", "gemini.google.com", "לא ממציאים")),
-        (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "Gemini API")),
+        (CONNECT_GEMINI, ("חסר מפתח Gemini", "vf_gemini.py", "aliargun", "gemini.google.com", "לא ממציאים", "RLabs")),
+        (CONNECT_CHATGPT, ("חסר מפתח ChatGPT", "vf_chatgpt.py", "chatgpt.com", "OPENAI_API_KEY", "לא ממציאים")),
+        (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py")),
+        (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "Gemini API", "ChatGPT API")),
     ):
         text = path.read_text(encoding="utf-8")
         for needle in needles:
@@ -187,6 +196,16 @@ def main() -> None:
     if "חסר מפתח Gemini" not in (gemini.get("rule") or ""):
         fail("vf-desk.json gemini.rule must mention חסר מפתח Gemini")
 
+    chatgpt = tools.get("chatgpt") or {}
+    if not chatgpt:
+        fail("vf-desk.json tools missing chatgpt")
+    if "vf_chatgpt.py" not in (chatgpt.get("command") or "") and "vf_chatgpt.py" not in (chatgpt.get("failover") or ""):
+        fail("vf-desk.json chatgpt must call vf_chatgpt.py")
+    if not (chatgpt.get("failover") or ""):
+        fail("vf-desk.json chatgpt must declare failover")
+    if "חסר מפתח ChatGPT" not in (chatgpt.get("rule") or ""):
+        fail("vf-desk.json chatgpt.rule must mention חסר מפתח ChatGPT")
+
     orchestra = ORCHESTRA.read_text()
     if "WebSearch" not in orchestra and "tools.web" not in orchestra:
         fail("ORCHESTRA.md must mention WebSearch / tools.web failover")
@@ -198,6 +217,12 @@ def main() -> None:
         fail("ORCHESTRA.md must failover Gemini browser wall to vf_gemini.py")
     if "חסר מפתח Gemini" not in orchestra:
         fail("ORCHESTRA.md must mention חסר מפתח Gemini")
+    if "vf_chatgpt.py" not in orchestra:
+        fail("ORCHESTRA.md must failover ChatGPT to vf_chatgpt.py")
+    if "חסר מפתח ChatGPT" not in orchestra:
+        fail("ORCHESTRA.md must mention חסר מפתח ChatGPT")
+    if "SUBSCRIPTIONS.md" not in orchestra and "לא פותחים" not in orchestra:
+        fail("ORCHESTRA.md must forbid Cloud browser login to subscription sites")
 
     if "GAP.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention GAP.md")
@@ -205,6 +230,10 @@ def main() -> None:
         fail("vfmcp/ORIGIN.md must mention CORE-MCP.md")
     if "CONNECT-GEMINI.md" not in ORIGIN.read_text() and "vf_gemini.py" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention the Gemini API bridge")
+    if "CONNECT-CHATGPT.md" not in ORIGIN.read_text() and "vf_chatgpt.py" not in ORIGIN.read_text():
+        fail("vfmcp/ORIGIN.md must mention the ChatGPT API bridge")
+    if "SUBSCRIPTIONS.md" not in ORIGIN.read_text():
+        fail("vfmcp/ORIGIN.md must mention SUBSCRIPTIONS.md")
 
     sys.path.insert(0, str(ROOT / "scripts"))
     import vf_gemini  # noqa: E402
@@ -232,7 +261,7 @@ def main() -> None:
     import os
     import subprocess
 
-    env = {k: v for k, v in os.environ.items() if k not in {"GEMINI_API_KEY", "GOOGLE_API_KEY"}}
+    env = {k: v for k, v in os.environ.items() if k not in {"GEMINI_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY", "CHATGPT_API_KEY"}}
     proc = subprocess.run(
         [sys.executable, str(VF_GEMINI), "status"],
         cwd=ROOT,
@@ -248,7 +277,36 @@ def main() -> None:
     if "AIza" in out or "sk-" in out:
         fail("vf_gemini.py must not print secrets")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api")
+    import vf_chatgpt  # noqa: E402
+
+    if vf_chatgpt.MISSING_KEY != "חסר מפתח ChatGPT":
+        fail("vf_chatgpt.MISSING_KEY must be חסר מפתח ChatGPT")
+    gpt_mock = [
+        {"id": "gpt-4o-mini"},
+        {"id": "gpt-4.1"},
+        {"id": "text-embedding-3-large"},
+        {"id": "dall-e-3"},
+        {"id": "gpt-5"},
+    ]
+    gpt_pick = vf_chatgpt.pick_chat_model(gpt_mock)
+    if gpt_pick != "gpt-5":
+        fail(f"chatgpt picker should prefer gpt-5, got {gpt_pick}")
+    proc2 = subprocess.run(
+        [sys.executable, str(VF_CHATGPT), "status"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        env=env,
+    )
+    if proc2.returncode != 2:
+        fail(f"vf_chatgpt.py status without key must exit 2, got {proc2.returncode}")
+    out2 = (proc2.stdout or "") + (proc2.stderr or "")
+    if "חסר מפתח ChatGPT" not in out2:
+        fail("vf_chatgpt.py status without key must print חסר מפתח ChatGPT")
+    if "sk-" in out2:
+        fail("vf_chatgpt.py must not print secrets")
+
+    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api+chatgpt-api")
 
 
 if __name__ == "__main__":

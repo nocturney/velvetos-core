@@ -32,7 +32,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - Do not host a second live business frontend inside Core. Use `instances/<id>/` scaffolds + presets only.
 - Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
 - Treg is **not relevant**. Do not login, `call`, or route failover through Treg. Live web = `WebSearch` / `WebFetch` / orchestra.
-- Gemini **API** (`GEMINI_API_KEY` + `scripts/vf_gemini.py`) is not the gemini.google.com Plus/Advanced subscription. Do not install `aliargun/mcp-server-gemini`. Without a key write «חסר מפתח Gemini» and fail over. Never invent a blocked Gemini body. Playbook: `packages/vfmcp/CONNECT-GEMINI.md`.
+- Gemini **API** (`GEMINI_API_KEY` + `scripts/vf_gemini.py`) and ChatGPT **API** (`OPENAI_API_KEY` + `scripts/vf_chatgpt.py`) are not the `gemini.google.com` / `chatgpt.com` subscriptions. Cloud Agent and Grok Bot **must not** open those sites (Google/OpenAI security alerts). Do not persist cookies. Do not install `aliargun/mcp-server-gemini` or `RLabs-Inc/gemini-mcp`. Without a key write «חסר מפתח Gemini» / «חסר מפתח ChatGPT» and fail over. Playbook: `packages/vfmcp/SUBSCRIPTIONS.md`.
 - Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.
 - Grok Bot quota failover: HQ **keeps producing and sending** via HQ tools. Queue tags: `#נשלח-מ-HQ` when a tool sent; `#ממתין-ל-כלי-IG` if the feed itself is still waiting on a publish MCP; `#פרסום-חי-דחוף` + `LIVE-PACKET` for urgent feed work (HQ still sends via tools). Do not sit on `#מוכן-ל-Grok` as the only path. No boost, no auto-DM, no Print from HQ. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md` · `constitution/SEND.md`.
 - Do not invent Origin slugs. Keep `unknown` / `origin-slug-unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`.
@@ -65,6 +65,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - 2026-08-30 — Went idle or claimed «אין תוצרים» when Grok Bot weekly quota ran out. Produce **and send via HQ tools**. Do not claim the IG feed posted if no publish tool fired. Sensor: `scripts/check-vfharness.py`. Playbook: `docs/GROK-FAILOVER.md` + `constitution/SEND.md`.
 - 2026-08-30 — Second agent runtime (CrewAI, AutoGPT, BabyAGI). Cursor is the office. See `packages/vfe2b/LOCK.md`.
 - 2026-08-30 — National shipping or a sixth seat invented beside the five-seat desk.
+- 2026-09-05 — Opened `gemini.google.com` / `chatgpt.com` from Cloud Agent or Grok Bot, triggering Google/OpenAI “unauthorized access” alerts. Use API keys (`vf_gemini.py` / `vf_chatgpt.py`). Plus ≠ API. Do not copy cookies or Antigravity tokens to Cloud. Sensor: `scripts/check-vfmcp.py`. Playbook: `packages/vfmcp/SUBSCRIPTIONS.md`.
 
 ## SENSORS (run after changes)
 
@@ -80,7 +81,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vf-canva.py` | Canva Instagram desk |
 | `scripts/check-vfresearch.py` | Weekly inspiration-links + bi-daily best-skills + IG music + orchestra failover law |
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
-| `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready + Gemini API bridge (`vf_gemini.py`, not aliargun) |
+| `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready + Gemini/ChatGPT API desks (`vf_gemini.py` / `vf_chatgpt.py`; not aliargun / RLabs; no Cloud browser login) |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
 | `scripts/check-velvetos.py` | VelvetOS Core + modules; VF frontend scaffold under instances/; backend≠frontend |
 
@@ -101,7 +102,7 @@ ALLOW execute: `python3 scripts/check-*.py`
 ASK before: `git push`, Calendar create
 ALLOW send: Gmail `send_message` / `reply` / `forward`; Instagram via connected tool or Canva+Drive+Gmail failover (`constitution/SEND.md`)
 ALLOW write: Drive `create_file` for office docs (no personal/medical/legal folders)
-DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights / Origin slugs, claiming IG posted without a publish tool
+DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights / Origin slugs, claiming IG posted without a publish tool, Cloud/Grok login to `gemini.google.com` / `chatgpt.com`, persisting browser cookies, installing aliargun or RLabs gemini-mcp
 
 ## MEMORY
 

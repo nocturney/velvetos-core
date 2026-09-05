@@ -63,7 +63,7 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 | Run / משמרת | `vfe2b` overlay | `@chief-of-staff` then the seat crew | One job folder. End in `worker_done` / `escalation` / `decision_gate`. Card: דופק / אימות / ארטיפקט. Do not install Orca or a second orchestrator |
 | Harness / repeating failure / checkpoint | `vfharness` | `@workflow-architect` | `python3 scripts/check-all.py` — no second runtime |
 | HQ map / blast radius | `vfgraft` | — | Read `MAP.md`, then 2–3 graph nodes |
-| Gemini API / מנוי ג'מיני בדפדפן | `vfmcp` | `@studio-operations` | `CONNECT-GEMINI.md` + `python3 scripts/vf_gemini.py`. מנוי ≠ API. לא aliargun MCP |
+| Orchestra / Gemini / ChatGPT subscription | `vfmcp` | `@studio-operations` | `SUBSCRIPTIONS.md` + `vf_gemini.py` / `vf_chatgpt.py`. Plus ≠ API. Do not open `gemini.google.com` / `chatgpt.com` from Cloud. No aliargun / RLabs MCP |
 
 `AGENTS.md` is the guide file. When it conflicts with the conversation, the guide wins. After catalog or rule edits, run the sensor suite. Do not hide a failed sensor.
 
@@ -96,6 +96,7 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 - **3D AI Studio:** owner subscription. Site first (`packages/vfprod/3DAISTUDIO.md`). Official MCP = OAuth from their Settings — not on this Cloud Agent. No API key in git. Down → site + Drive. Same `vlicense` gate as Meshy/Tripo. No print from HQ.
 - **Studio MCP Hub:** Core HTTP `studiomcphub` (`vfmcp/CONNECT-STUDIOHUB.md`). VF skips CMYK/`print_ready`. No wallet in git.
 - **WhatsApp MCP:** Core catalogs Desktop lharries (`CONNECT-WHATSAPP.md`). VF send stays human `050-2517000`. Draft failover: `vf_office.py convert draft`.
-- **Gemini API:** `GEMINI_API_KEY` + `scripts/vf_gemini.py` (`vfmcp/CONNECT-GEMINI.md`). **Not** the gemini.google.com subscription. Do not install aliargun/mcp-server-gemini. Down / no key → «חסר מפתח Gemini» then ChatGPT+Perplexity+WebSearch. No invented body. No Veo from HQ.
+- **Gemini API:** `GEMINI_API_KEY` + `scripts/vf_gemini.py` (`vfmcp/CONNECT-GEMINI.md`). **Not** the gemini.google.com subscription. Do not install aliargun or RLabs-Inc/gemini-mcp. Cloud **must not** open `gemini.google.com` (security alerts). Down / no key → «חסר מפתח Gemini» then ChatGPT API + Perplexity + WebSearch. No invented body. No Veo from HQ. Hub: `vfmcp/SUBSCRIPTIONS.md`.
+- **ChatGPT API:** `OPENAI_API_KEY` + `scripts/vf_chatgpt.py` (`vfmcp/CONNECT-CHATGPT.md`). **Not** the chatgpt.com Plus/Pro subscription. Cloud **must not** open `chatgpt.com`. Down / no key → «חסר מפתח ChatGPT» then Gemini API + Perplexity + WebSearch. No invented body. No cookies.
 
 When a `@slug` is mentioned, follow that specialist **and** these laws.

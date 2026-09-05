@@ -31,7 +31,7 @@ Blast radius for this office: which jobs and tools break when a law, tool mode, 
 | Public marketing site from HQ | Still locked — price widget / public storefront |
 | Internal command surface | `vfops/hq/capabilities.json` + `COMMAND-SURFACE.md` — view only; breaks if capabilities drift from SEND.md / desk laws |
 | Treg without login | `vfinsights`, `vfgrowth`, `vfresearch` live reads — WebSearch / «אין ספירה»; music → HeyOrca |
-| Research desk wall (ChatGPT/Gemini/Perplexity) | 06:15 orchestra — Gemini **browser** wall → `vf_gemini.py` if API key else open desks; never invent body. Subscription ≠ API (`CONNECT-GEMINI.md`) |
+| Research desk wall (ChatGPT/Gemini/Perplexity) | 06:15 orchestra — **API** (`vf_chatgpt.py` / `vf_gemini.py`), not Cloud browser login to chatgpt.com / gemini.google.com (security alerts). Plus ≠ API. Hub: `SUBSCRIPTIONS.md`. Never invent body. |
 | Web / image native tools | `vfresearch`, `vfcovers` — failover in `constitution/ORCHESTRA.md`; Instagram still Canva-first |
 | 3D AI Studio MCP / credits | `vfprod` concept mesh — site UI + Drive (`3DAISTUDIO.md`); still `vlicense` + slice; no print from HQ |
 

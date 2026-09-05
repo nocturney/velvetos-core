@@ -251,7 +251,7 @@
     },
     {
       "name": "vfmcp",
-      "summary": "MCP fit + Core office MCP catalog (Sheets / WhatsApp / Studio Hub) + Gemini API bridge (not gemini.google.com subscription). See docs/MCP-FIT.md and packages/vfmcp/CORE-MCP.md.",
+      "summary": "MCP fit + Core office MCP catalog (Sheets / WhatsApp / Studio Hub) + Gemini/ChatGPT API desks (not gemini.google.com / chatgpt.com subscriptions). See docs/MCP-FIT.md, packages/vfmcp/SUBSCRIPTIONS.md, CORE-MCP.md.",
       "bcId": "bc-1764e30f-b592-4805-9586-037da3351d65",
       "bcIdFull": "bc-1764e30f-b592-4805-9586-037da3351d65",
       "agentUrl": "https://cursor.com/agents/bc-1764e30f-b592-4805-9586-037da3351d65",

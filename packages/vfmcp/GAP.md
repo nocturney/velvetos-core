@@ -20,6 +20,7 @@
 | Mobbin | plugin · אין MCP כאן | namespace לא על Cloud Agent |
 | FCC | לא כאן | נעול ב־`vffcc` |
 | Gemini **API** | Desktop/Cloud env · `vf_gemini.py` | **לא** מנוי הדפדפן. בלי מפתח: **חסר מפתח Gemini**. `CONNECT-GEMINI.md` |
+| ChatGPT **API** | Desktop/Cloud env · `vf_chatgpt.py` | **לא** מנוי `chatgpt.com`. בלי מפתח: **חסר מפתח ChatGPT**. `CONNECT-CHATGPT.md` · `SUBSCRIPTIONS.md` |
 
 נזרע 31.8: תיקייה `VF HQ · משרד` + ארבעה גיליונות כותרת בלבד (`office/ledger/bindings.json`). גיליונות אישיים דולגו. לא ממציאים workbook ID; בלי binding כותבים **חסר גיליון**.
 
@@ -66,6 +67,7 @@
 | Canvas | Superdesign / Canva | failover קיים |
 | Notion / Slack / HubSpot / Zapier | אין | **skip** — לא הסטודיו |
 | Custom GPT | פקים + skills | לא מתקינים GPT כפול |
+| צ'אט מנוי (`chatgpt.com`) | **לא** מדפדפן Cloud | `vf_chatgpt.py` אם יש `OPENAI_API_KEY`. Plus ≠ API. [`SUBSCRIPTIONS.md`](SUBSCRIPTIONS.md) |
 
 ### Gemini
 
@@ -76,8 +78,9 @@
 | YouTube / Maps / Photos | אין | WebSearch / תזמורת. Treg **לא רלוונטי** |
 | WhatsApp / Messages / Phone **שליחה** | אין בכוונה | **skip** — אדם `050-2517000` |
 | Imagen / וידאו | Canva + GenerateImage | **wired** לסטילס. לא Veo |
-| צ'אט מנוי (`gemini.google.com`) | דפדפן תזמורת | חומת הזדהות → `vf_gemini.py` אם יש מפתח API · אחרת ChatGPT+Perplexity+WebSearch. **מנוי ≠ API** |
-| MCP `aliargun/mcp-server-gemini` | לא מותקן | freeze יולי 2025 · מודלים 2.5 קשיחים · מפתח ב־npx. גשר: רשימה חיה ב־`vf_gemini.py` |
+| צ'אט מנוי (`gemini.google.com`) | **לא** מדפדפן Cloud | `vf_gemini.py` אם יש מפתח. מנוי ≠ API. בלי אזעקות Google — [`SUBSCRIPTIONS.md`](SUBSCRIPTIONS.md) |
+| MCP `aliargun/mcp-server-gemini` | לא מותקן | freeze יולי 2025 · מודלים 2.5 קשיחים |
+| MCP `RLabs-Inc/gemini-mcp` | לא מותקן | מעודכן (3.x, יולי 2026) אבל עדיין API + Veo. לא פותר מנוי |
 
 ### Perplexity
 
@@ -100,7 +103,7 @@
 6. **3D AI Studio** — HTTP `threedaistudio` → `https://mcp.3daistudio.com/mcp`. Desktop: `.cursor/mcp.json`. Cloud: namespace `3DAIStudio` **ready** (אומת 2026-09-01). פלייבוק `vfprod/3DAISTUDIO.md` + `CONNECT-3DAI.md`.
 7. **Studio MCP Hub** — HTTP `studiomcphub` → `https://studiomcphub.com/mcp` ב־`.cursor/mcp.json`. VF מדלג CMYK/`print_ready`. `CONNECT-STUDIOHUB.md`.
 8. **Sheets + WhatsApp בליבה** — רשומים ב־`core-mcp.json`. Desktop Connect (`CONNECT-SHEETS.md` / `CONNECT-WHATSAPP.md`). VF: יומן לפי bindings; וואטסאפ `send=false`. בלי Connect: `vf_office.py`.
-9. **Gemini API (לא מנוי דפדפן)** — `scripts/vf_gemini.py` + `CONNECT-GEMINI.md`. רשימת מודלים חיה. לא aliargun. בלי מפתח: **חסר מפתח Gemini**.
+9. **Gemini API + ChatGPT API (לא מנויי דפדפן)** — `vf_gemini.py` / `vf_chatgpt.py` + `SUBSCRIPTIONS.md`. Cloud לא פותח `gemini.google.com` / `chatgpt.com`. בלי מפתח: **חסר מפתח Gemini** / **חסר מפתח ChatGPT**.
 
 ## מה לא הותקן — ולמה
 
@@ -115,7 +118,7 @@
 | Studio Hub NFT / x402 | בלי ארנק בגיט. כלים חינמיים בלבד עד ראש צוות |
 | FCC / `fcc-server` | נעול. לא על Cloud Agent |
 | **Headroom** (`headroom-ai`) | **local optional** — proxy/MCP דורש תהליך מקומי; Cloud Agent sandbox. דפוס CCR/ContentRouter ב-`vfharness/playbooks/context-thrift.md` בלי dependency. Mac: `uv tool install "headroom-ai[all]"` + `headroom wrap cursor` אחרי lead seat |
-| `aliargun/mcp-server-gemini` ב־mcp.json | מפתח בגיט / npx על Cloud. מודלים קשיחים 2.5. מנוי הדפדפן לא מתחבר. `CONNECT-GEMINI.md` + `vf_gemini.py` |
+| `aliargun/mcp-server-gemini` / `RLabs-Inc/gemini-mcp` ב־mcp.json | מפתח בגיט / npx על Cloud / Veo. מנוי הדפדפן לא מתחבר. `SUBSCRIPTIONS.md` + `vf_gemini.py` |
 | 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט. המחבר הרשמי הוא HTTP OAuth |
 | SharePoint / Outlook / Notion / Slack | לא ערימת שדרות |
 

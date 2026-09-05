@@ -177,7 +177,7 @@ def main() -> None:
 
     desk = json.loads(DESK.read_text())
     tools = desk.get("tools") or {}
-    for key in ("gmail", "calendar", "drive", "canva", "superdesign", "treg", "mobbin", "fcc", "web", "image", "gemini"):
+    for key in ("gmail", "calendar", "drive", "canva", "superdesign", "treg", "mobbin", "fcc", "web", "image", "gemini", "chatgpt"):
         if key not in tools:
             fail(f"vf-desk.json tools missing {key}")
         if not (tools[key].get("failover") or ""):

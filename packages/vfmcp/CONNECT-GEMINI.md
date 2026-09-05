@@ -24,6 +24,10 @@
 
 אל תתקינו `npx github:aliargun/mcp-server-gemini` על Cloud Agent ולא ב־`.cursor/mcp.json`.
 
+## למה לא [RLabs-Inc/gemini-mcp](https://github.com/rlabs-inc/gemini-mcp)
+
+נבדק 5.9.2026 (last push `2026-07-08`). **עדיף מ־aliargun** כעטיפת API (Gemini 3, 37 כלים, Deep Research). **לא** מחבר מנוי דפדפן — עדיין `GEMINI_API_KEY`. כולל **Veo** (נעול ב־HQ), image-gen שכפול Canva, ו־npx שלא רץ בענן. לא מתקינים. ראו [`SUBSCRIPTIONS.md`](SUBSCRIPTIONS.md).
+
 MCP רשמי של Google Cloud (`aiplatform.googleapis.com/mcp/…`) הוא **Gemini Enterprise / GCP** — לא מנוי הצרכן, לא על השולחן הזה.
 
 ## Desktop / Cloud — מפתח
@@ -54,7 +58,7 @@ python3 scripts/vf_gemini.py orchestra
 
 ## Failover
 
-דפדפן `gemini.google.com` נחסם / הזדהות → `vf_gemini.py orchestra` אם יש מפתח → אחרת ChatGPT + Perplexity + `WebSearch`.  
+Cloud Agent **לא** פותח `gemini.google.com` (התראות אבטחה). `vf_gemini.py orchestra` אם יש מפתח → אחרת `vf_chatgpt.py` + Perplexity + `WebSearch`.  
 אין גוף → **אין גוף** / דולג. לא ממציאים.  
 `constitution/ORCHESTRA.md`.
 

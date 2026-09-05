@@ -91,14 +91,18 @@ Remote URL: `https://prompts.chat/api/mcp`. Local fallback: `npx -y prompts.chat
 
 **Packs:** `vfcopy`, `vfmskill`, `vfresearch`. Embedded office templates live in `packages/vfcopy/hq/templates/` — not in the MCP.
 
-### Gemini API — orchestra desk, not the consumer subscription
+### Gemini / ChatGPT API — orchestra desks, not consumer subscriptions
+
+Cloud Agent **must not** open `gemini.google.com` or `chatgpt.com` (Google/OpenAI security alerts). Hub: [`packages/vfmcp/SUBSCRIPTIONS.md`](../packages/vfmcp/SUBSCRIPTIONS.md).
 
 | Path | Role | Notes |
 |---|---|---|
-| `scripts/vf_gemini.py` | Live `generateContent` + model list when `GEMINI_API_KEY` is in env | **Not** gemini.google.com Plus/Advanced. Playbook: [`packages/vfmcp/CONNECT-GEMINI.md`](../packages/vfmcp/CONNECT-GEMINI.md). Without a key write **חסר מפתח Gemini**. |
-| [aliargun/mcp-server-gemini](https://github.com/aliargun/mcp-server-gemini) | Stale community MCP (last push 2025-07-14, hardcoded Gemini 2.5) | **Do not install.** Does not log into the browser subscription. |
+| `scripts/vf_gemini.py` | Live `generateContent` + model list when `GEMINI_API_KEY` is in env | **Not** gemini.google.com Plus/Advanced. Playbook: [`CONNECT-GEMINI.md`](../packages/vfmcp/CONNECT-GEMINI.md). Without a key write **חסר מפתח Gemini**. |
+| `scripts/vf_chatgpt.py` | Live `chat.completions` + model list when `OPENAI_API_KEY` is in env | **Not** chatgpt.com Plus/Pro. Playbook: [`CONNECT-CHATGPT.md`](../packages/vfmcp/CONNECT-CHATGPT.md). Without a key write **חסר מפתח ChatGPT**. |
+| [aliargun/mcp-server-gemini](https://github.com/aliargun/mcp-server-gemini) | Stale community MCP (last push 2025-07-14, hardcoded Gemini 2.5) | **Do not install.** API key only. |
+| [RLabs-Inc/gemini-mcp](https://github.com/rlabs-inc/gemini-mcp) | Newer API MCP (Gemini 3, July 2026, 37 tools incl. Veo) | **Do not install.** Still `GEMINI_API_KEY`. Does not attach Plus. |
 
-**Packs:** `vfresearch`, `vfops`. No Veo from HQ. Instagram still Canva-first.
+**Packs:** `vfresearch`, `vfops`, `vfmcp`. No Veo from HQ. Instagram still Canva-first. Plus ≠ API.
 
 ## Do this next (read-only growth)
 
@@ -149,6 +153,7 @@ Do not add these “because they exist on the list.” Add them when Christian c
 ## Do not install
 
 - **aliargun/mcp-server-gemini** — API-key MCP frozen at Gemini 2.5 (July 2025). Does not connect the gemini.google.com subscription. Use `vf_gemini.py` + `CONNECT-GEMINI.md`.
+- **RLabs-Inc/gemini-mcp** — Newer Gemini API MCP (37 tools, Veo, Gemini 3). Still `GEMINI_API_KEY`, not Plus. Do not install on Cloud. Use `vf_gemini.py` + `SUBSCRIPTIONS.md`.
 - **Aggregator / “400 tools in one” servers** — they drown the agent and hide the studio tools.
 - **Headroom proxy on Cloud Agent** — local compression proxy needs a host process; Cloud VMs are sandboxed. Embed the **pattern** via `packages/vfharness/playbooks/context-thrift.md` (CCR + ContentRouter). Optional Mac-only: `headroom wrap cursor` after lead seat — see `packages/vfmcp/GAP.md`.
 - **Second SEO / GEO / AI-visibility stacks** — Treg is not relevant. Public marketing site from HQ stays locked; AEO skills (e.g. buildwithclaude `ai-search-visibility-audit`) stay **watch** until a public site exists under `vfbiz`. Warehouse `@aeo-foundations-architect` stays off-desk unless named.

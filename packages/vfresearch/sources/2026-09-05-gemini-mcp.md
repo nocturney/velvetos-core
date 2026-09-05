@@ -39,6 +39,8 @@ README + `ENHANCED_FEATURES.md` + GitHub API (`pushed_at` 2025-07-14, last commi
 
 לא הותקן aliargun. לא Veo. לא Canva שני.
 
+המשך 5.9: השוואת RLabs + גשר ChatGPT + איסור דפדפן Cloud — [`2026-09-05-orchestra-subscriptions.md`](2026-09-05-orchestra-subscriptions.md).
+
 ## Failover שבוצע במחקר
 
 GitHub README נקרא. דוקו מודלים מ־`ai.google.dev` (3.x + 2.5). לא הומצא גוף דפדפן. מפתח API **חסר** בסביבה הזו — `vf_gemini.py status` חייב להחזיר «חסר מפתח Gemini».

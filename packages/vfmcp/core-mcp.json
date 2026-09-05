@@ -1,6 +1,6 @@
 {
   "role": "core",
-  "updatedAt": "2026-08-31",
+  "updatedAt": "2026-09-05",
   "rule": "VelvetOS Core registers office MCPs. An instance binds a subset via mcpBind. No secrets in git. HTTP servers live in .cursor/mcp.json. Desktop-only servers stay in ~/.cursor/mcp.json (see mcp.desktop.example.json).",
   "projectMcpJson": ".cursor/mcp.json",
   "connect": "packages/vfmcp/CORE-MCP.md",
@@ -55,7 +55,7 @@
     {
       "id": "gemini-api",
       "inProjectMcpJson": false,
-      "whyNotProject": "Needs GEMINI_API_KEY. This is Google AI Studio / Gemini API — not the gemini.google.com Plus/Advanced subscription. Do not install aliargun/mcp-server-gemini (last push 2025-07-14; hardcoded 2.5). Do not put the key in project mcp.json.",
+      "whyNotProject": "Needs GEMINI_API_KEY. This is Google AI Studio / Gemini API — not the gemini.google.com Plus/Advanced subscription. Do not install aliargun/mcp-server-gemini or RLabs-Inc/gemini-mcp. Do not put the key in project mcp.json. Cloud Agent must not open gemini.google.com (security alerts).",
       "source": "https://ai.google.dev/gemini-api/docs",
       "connect": "packages/vfmcp/CONNECT-GEMINI.md",
       "failover": "python3 scripts/vf_gemini.py (live model list) → ChatGPT + Perplexity + WebSearch. Without a key write חסר מפתח Gemini. Never invent a body.",
@@ -64,7 +64,22 @@
         "subscription-is-not-api",
         "חסר מפתח Gemini",
         "no-veo-from-hq",
-        "no-aliargun-mcp"
+        "no-aliargun-mcp",
+        "no-rlabs-gemini-mcp"
+      ]
+    },
+    {
+      "id": "chatgpt-api",
+      "inProjectMcpJson": false,
+      "whyNotProject": "Needs OPENAI_API_KEY. This is the OpenAI API — not the chatgpt.com Plus/Pro subscription (help.openai.com: Plus does not include API). Do not put the key in project mcp.json. Cloud Agent must not open chatgpt.com (security alerts).",
+      "source": "https://platform.openai.com/docs",
+      "connect": "packages/vfmcp/CONNECT-CHATGPT.md",
+      "failover": "python3 scripts/vf_chatgpt.py (live model list) → Gemini API + Perplexity + WebSearch. Without a key write חסר מפתח ChatGPT. Never invent a body.",
+      "locks": [
+        "no-secrets-in-git",
+        "subscription-is-not-api",
+        "חסר מפתח ChatGPT",
+        "no-browser-session"
       ]
     }
   ]
