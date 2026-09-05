@@ -36,3 +36,18 @@
 **לא:** ייבוא ספריית 30k פרומפטים לריפו · התקנת YouMind ככלי HQ · פרומפט שממציא מוצר/₪/Insights · החלפת Canva brand kit.
 
 דוח שתילה: `docs/TASTE-SKILL-EMBED-he.md`.
+
+## הכנת הוכחת רצפה בדפדפן (footrue ToolBox)
+
+מקור: [footrue.com](https://footrue.com/) — כלי חינמיים **בדפדפן** (לפי האתר: בלי הרשמה / בלי העלאה לשרת).  
+דוח: `packages/vfresearch/sources/2026-09-05-footrue.md`.  
+גם: `vfcanva/WORKFLOW.md` שלב prep.
+
+| צורך | כלי | מתי |
+|---|---|---|
+| iPhone HEIC → JPG/PNG | [HEIC to JPG](https://footrue.com/tools/heic-to-jpg) | לפני העלאה ל־Canva |
+| רקע מפריע על דגם שנמסר | [Background Remover](https://footrue.com/tools/background-remover) | רק על קובץ רצפה אמיתי — לא להמציא מוצר |
+| קובץ כבד / גדול מדי | [image-compress](https://footrue.com/tools/image-compress) / [image-resize](https://footrue.com/tools/image-resize) | לפני Canva |
+| PDF הצעה / מסמך | [pdf-merge](https://footrue.com/tools/pdf-merge) וכו׳ | אדם במשרד; לא שליחה אוטומטית |
+
+**לא:** MCP / התקנה מ־HQ · תחליף ל־Canva brand kit · collage/watermark כזהות מותג · מספרי תנועה/MRR מהאתר («אין ספירה»).
