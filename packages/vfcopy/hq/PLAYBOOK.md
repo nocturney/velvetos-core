@@ -17,6 +17,8 @@ Pass אחרון: `hq/ai-tells-he.md` (סימני AI בעברית — מקור: p
 
 תבניות מוכנות: `hq/templates/README.md`. מקור מתודולוגיה: `packages/vfresearch/sources/2026-08-31-prompts-chat-embed.md`.
 
+פרומפטי **תמונה/וידאו** חיצוניים (YouMind וכו׳): לא מחליפים את האנטומיה הזו — ראו `vfcovers/hq/PLAYBOOK.md` (Canva קודם; התאמת נושא לרצפה בלבד).
+
 ## בודקים
 
 - עברית טבעית, בלי «נשמח לעמוד לשירותך»  

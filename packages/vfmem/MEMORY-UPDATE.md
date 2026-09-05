@@ -55,6 +55,20 @@
 
 תצפית אחת (evidence) לא הופכת לחוק שולחן (policy) בלי אישור אדם / ADR / חזרתיות מוכחת. אל תקדם observation ל־`AGENTS.md` לבד.
 
+## Common Ground — שכבות ביטחון להנחות
+
+דפוס מ־[Jeffallan/claude-skills Common Ground](https://github.com/Jeffallan/claude-skills/blob/main/docs/COMMON_GROUND.md) (mcpmarket fullstack-dev-skills-plugin, 2026-09-05). בלי `/common-ground` slash ו־בלי plugin Claude Code — הקבצים למעלה הם ה־backend.
+
+כשסוכן מניח משהו על הסטודיו / הפרויקט, לסווג לפני שממשיכים:
+
+| שכבה | דין | דוגמה אצלנו |
+|---|---|---|
+| **ESTABLISHED** | הנחה מאושרת — לא לערער בלי סתירה מפורשת | איסוף שדרות · וואטסאפ `050-2517000` · אין Print מ־HQ |
+| **WORKING** | ברירת מחדל — לציין כשמסתמכים | Canva קודם ל־IG · 3DAI לקונספט לפני Blender מקומי |
+| **OPEN** | לשאול לפני שממשיכים | ₪ חסר · Insights חסר · מודל בלי `vlicense` |
+
+מפה לשכבות הזיכרון: ESTABLISHED → חוקים/`owner-memory` · WORKING → checkpoint / brief · OPEN → `decision_gate` או שאלה לראש צוות. לא קובץ `~/.claude/common-ground/` נפרד.
+
 ## פורמט שורה ב־owner-memory.md
 
 ```markdown

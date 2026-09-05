@@ -37,7 +37,7 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-03",
+  "lastPass": "2026-09-04",
   "dataDate": "2026-09-03",
   "embedded": [
     {
@@ -83,6 +83,18 @@
       "firstEmbedded": "2026-09-03"
     },
     {
+      "id": "skill-first",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/skill-first.md",
+      "firstEmbedded": "2026-09-04"
+    },
+    {
+      "id": "teach-learning-records",
+      "pack": "vfops",
+      "path": "packages/vfops/hq/LEARNING-RECORDS.md",
+      "firstEmbedded": "2026-09-04"
+    },
+    {
       "id": "market-research-intelligence-gates",
       "pack": "vfresearch",
       "path": "packages/vfresearch/hq/MARKET-INTEL.md",
@@ -94,12 +106,12 @@
     {
       "id": "obra-superpowers",
       "url": "https://github.com/obra/superpowers",
-      "note": "Partial embed (verification + skill-first). Full SDLC suite — re-scan bi-daily for new skills worth mapping to vfe2b/vfharness."
+      "note": "Partial: verification + skill-first. Still watch brainstorming / writing-plans / systematic-debugging for makers+harness."
     },
     {
       "id": "mattpocock-skills",
       "url": "https://github.com/mattpocock/skills",
-      "note": "grill + handoff embedded. Watch codebase-design / improve-architecture for Core pack deepening."
+      "note": "grill + handoff + teach(records) embedded. Watch improve-codebase-architecture / codebase-design."
     },
     {
       "id": "anthropics-skills",
@@ -119,6 +131,21 @@
     {
       "id": "ai-video-image-gen-trending",
       "note": "skills-101 / genmedia trending. Map only via expert-media-director + Canva-first; no Veo/Kling from HQ."
+    },
+    {
+      "id": "archify",
+      "url": "https://github.com/tt-a1i/archify",
+      "note": "Trending hard. Verifiable architecture HTML diagrams — candidate for vfgraft/blast visuals. Patterns only."
+    },
+    {
+      "id": "openspec",
+      "url": "https://github.com/Fission-AI/OpenSpec",
+      "note": "Spec-driven development. Overlaps planning-with-files — watch before second SDD layer."
+    },
+    {
+      "id": "impeccable",
+      "url": "https://github.com/pbakaus/impeccable",
+      "note": "Design-language skill for harnesses. Brand-specific kinpaku tokens — do not copy palette into VF; watch methodology only."
     }
   ],
   "skipped": [
