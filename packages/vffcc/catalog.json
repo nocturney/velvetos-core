@@ -44,7 +44,7 @@
       "name": "Codex",
       "command": "fcc-codex",
       "verdict": "later",
-      "note": "Needs ChatGPT connect or OpenAI path. Orchestra already opens ChatGPT in the browser."
+      "note": "Needs ChatGPT connect or OpenAI path on the owner Mac. HQ orchestra uses vf_chatgpt.py + OPENAI_API_KEY, not chatgpt.com in the Cloud browser."
     },
     {
       "name": "Pi / Cline / Hermes / DeepSeek Harness / Grok Build / Muse / Aider",
@@ -88,7 +88,7 @@
         "vfops"
       ],
       "playbook": "playbooks/local-offload.md",
-      "note": "Already an orchestra desk in the browser. Separate key if used as FCC backend."
+      "note": "HQ orchestra desk is vf_gemini.py (GEMINI_API_KEY), not gemini.google.com. Do not install aliargun or RLabs-Inc/gemini-mcp. Playbook: packages/vfmcp/SUBSCRIPTIONS.md."
     },
     {
       "id": "open_router",
@@ -110,7 +110,7 @@
         "vfresearch"
       ],
       "playbook": "playbooks/route.md",
-      "note": "Orchestra already opens ChatGPT. Do not duplicate as an HQ proxy."
+      "note": "ChatGPT Plus is not the OpenAI API. HQ orchestra uses vf_chatgpt.py + OPENAI_API_KEY. Do not open chatgpt.com from Cloud. FCC ChatGPT-connect stays owner Mac only."
     },
     {
       "id": "ollama_local",

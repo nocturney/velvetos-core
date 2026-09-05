@@ -25,13 +25,13 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 
 | כלי שנפל | מעבירים מיד ל־ | מה רושמים |
 |---|---|---|
-| **Perplexity** (Cloudflare / רובוט / סשן פרטי) | ChatGPT + Gemini — אותה שאלה עכשיו | «דולג — חומה» ב־`vfresearch/sources/` · אין גוף מומצא |
-| **ChatGPT** (הזדהות / שגיאה) | Gemini + Perplexity עכשיו | חומת הזדהות לראש צוות · לא אורח · לא ממציאים |
-| **Gemini** (הזדהות / שגיאה) | ChatGPT + Perplexity עכשיו | כמו לעיל |
+| **Perplexity** (Cloudflare / רובוט / סשן פרטי) | WebSearch / WebFetch. **לא** `perplexity-user-mcp` / vscode-perplexity-mcp מ־Cloud | «דולג — חומה» ב־`vfresearch/sources/` · אין גוף מומצא · לא עוגיות |
+| **ChatGPT** (אין מפתח / שגיאת API) | `python3 scripts/vf_chatgpt.py orchestra` אם יש `OPENAI_API_KEY` · אחרת Gemini API + Perplexity + WebSearch | Plus ≠ API. **לא** פותחים `chatgpt.com` מ־Cloud. בלי מפתח: «חסר מפתח ChatGPT» |
+| **Gemini** (אין מפתח / שגיאת API) | `python3 scripts/vf_gemini.py orchestra` אם יש `GEMINI_API_KEY` · אחרת ChatGPT API + Perplexity + WebSearch | מנוי ≠ API. **לא** פותחים `gemini.google.com` מ־Cloud. בלי מפתח: «חסר מפתח Gemini» |
 | שני שולחנות נפלו | השולחן הפתוח נושא את כל העומס עכשיו | מטמיעים רק מגוף אמיתי |
 | שלושתם נפלו | פקים שכבר על הדיסק + בלוק `05` = «אין חדש במשרד» | הסלמה לראש צוות על חומות · בלי גוף מומצא |
 
-הזדהות למנוי: **רושמים לראש צוות וממשיכים מיד בשולחנות הפתוחים.** לא «מחכים לבעלים» בלי תוצאה.
+הזדהות למנוי בדפדפן: **לא מ־Cloud Agent.** רושמים לראש צוות וממשיכים ב־API / WebSearch. לא «מחכים לבעלים» בלי תוצאה. לא שומרים עוגיות.
 
 ### כלי HQ חיים (MCP / סטודיו)
 
@@ -42,6 +42,8 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 | **Mobbin** (אין namespace) | `vfbriefux/MAIL.html` · `hq/brief-email.html` (effective-html) · `render_mail.py --diagram` (diagram-maker) · Superdesign | לא ממציאים מסכי אפליקציה |
 | **Treg** | **לא בשימוש.** WebSearch / תזמורת / «אין ספירה» | לא login · לא `call` |
 | **WebSearch / WebFetch** (`tools.web`) | תזמורת ChatGPT+Gemini+Perplexity | לא ממציאים גוף חסום |
+| **Gemini API** (`vf_gemini.py`) | ChatGPT API + Perplexity + WebSearch | לא ממציאים גוף. בלי מפתח: «חסר מפתח Gemini». **לא** דפדפן `gemini.google.com` |
+| **ChatGPT API** (`vf_chatgpt.py`) | Gemini API + Perplexity + WebSearch | לא ממציאים גוף. בלי מפתח: «חסר מפתח ChatGPT». **לא** דפדפן `chatgpt.com` |
 | **GenerateImage** (`tools.image`) | Canva `generate-design` → Superdesign → `studio/render.py` | לא ממציאים קישור Canva |
 | **Gmail** MCP | Drive `create_file` את הגוף · ממשיכים · **send_message מותר** | לא ממציאים פנייה · לא דיוור המוני |
 | **Calendar** MCP | שואלים חלון איסוף / «חסר לוח» וממשיכים בריף מג׳ימייל | לא ממציאים שעות תור |
@@ -68,7 +70,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 Cursor, לא Grok:
 
 1. קורא את בריף אתמול + לוח `vfgrowth` + `vfsku` הפתוח.
-2. פותח **שלושה** צ'אטים חדשים — ChatGPT, Gemini, **וגם** Perplexity. אותה שאלה לשלושתם (תבנית ב־`vfresearch/DAILY.md`).
+2. **מק בשדרות** = מארח המנויים, **מק ייעודי** לא PC ווינדוס ([`vfmcp/HOST.md`](../packages/vfmcp/HOST.md)): כרום ו/או Codex `login` + Gemini CLI Login with Google + Perplexity בטאב. **Cloud** לא פותח אתרי מנוי (התראות אבטחה) — קורא `vfresearch/sources/` או `WebSearch`. בלי מפתח API: לא `vf_chatgpt.py` / `vf_gemini.py` חיים. תבנית: `vfresearch/DAILY.md`. [`vfmcp/SUBSCRIPTIONS.md`](../packages/vfmcp/SUBSCRIPTIONS.md).
 3. כלי נפל באמצע → **failover מיד** (טבלה למעלה). לא מחכים לסיום כל השלושה אם אחד כבר חסום.
 4. מטמיע רק מה ששימושי **מיד** בפק קיים. אין פק לרעיון.
 5. כותב שורת «מה נבנה / יועל» ל־`packages/vfops/data/research.md` (בלוק `05-משרד` בבריף 07:00; כולל «failover: X→Y» אם היה).

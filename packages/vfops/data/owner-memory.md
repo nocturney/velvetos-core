@@ -16,6 +16,8 @@
 - **ארבעה תחומי מומחה:** Social Booster · 3D model · Trend explorer · Media director (תמונות/וידאו).
 - **שפה:** עברית לקופי מוצר; מסמכי משרד עברית+אנגלית.
 - **CTA:** וואטסאפ `050-2517000` / איסוף שדרות — לא «שלחו DM».
+- **אין חיוב API נפרד:** מנויי Gemini / ChatGPT / Perplexity בדפדפן לא כוללים מפתח מפתחים, והבעלים לא רוצה אחד (5.9.2026). מארח = **מק ייעודי** בשדרות (`vfmcp/HOST.md`) — לא PC ווינדוס יומי. Cloud בלי מפתח = WebSearch. לא דוחקים מפתח.
+- **אין סשן דפדפן ב־Cloud:** לא עוגיות, לא patchright, לא `perplexity-user-mcp` בענן. כרום **על המק הייעודי** + `agent worker --computer-use` (`HOST.md`) — לא remote-debug, לא העתקה מווינדוס.
 
 ### ראש צוות (lead)
 
@@ -117,3 +119,15 @@
 - **למדנו:** DeepTutor/lieflat/academic → דפוסים על packs קיימים; ExamFul = watch לאנכי חינוך עתידי, לא צינור VF.
 - **מחר:** להשתמש ב־`ACADEMIC-PIPELINE` / `CHARTS` / `MASTERY-MEMORY` במחקר ובריף; בלי להתקין vendor.
 - **מקור:** `sources/2026-09-05-weekly-links-owner-four.md`.
+
+### 2026-09-05 (מארח מנויים)
+- **מושב:** lead
+- **למדנו:** מארח Plus/Pro = **מק ייעודי** בשדרות — לא PC ווינדוס יומי. לוגין כרום בווינדוס לא עובר למק; אין העתקת עוגיות.
+- **למדנו:** CLI על `chris@Mac-Office` (darwin arm64): `agent status` = Logged in as `nocturney@gmail.com`, Pro+. Worker נכשל: `Filesystem createRequire is disabled in the self-contained worker SEA` (CLI 2026.09.02). קלון קיים ב־`~/velvetos-core`. `/path/to/` היה דוגמה.
+- **למדנו:** Worker `sderot-mac` **רץ** (5.9.2026) — id `4a3ca6d2-f2c3-4cba-8c96-8bb63d6160b2`, dir `/Users/chris/velvetos-core`. Computer Use עדיין לא מותקן. `--share-desktop` לא במק.
+- **למדנו:** `agent worker --computer-use` על CLI 2026.09.02 בוחר `cursor-agent-worker-sea` ונופל (createRequire). בלי הדגל = `index.js` ועובד. אחרי עצירה ל־computer-use ה־worker כבוי עד שחוזרים ל־start בלי הדגל.
+- **למדנו:** אין קישור לטאבי כרום. סוכן על `sderot-mac` בלי `--computer-use` = קבצים/טרמינל. אתרי Plus נשארים אצל האדם עד computer-use יציב (SEA שובר `agent worker --computer-use`).
+- **למדנו:** `agy` 1.1.27 על `Mac-Office` = `nocturney@gmail.com (Google AI Plus)` · Gemini 3.8 Flash (High). `ERROR: logging before google.Init` בהתקנה = רעש. Gemini CLI ליחידים מת. לא טוקן לענן.
+- **למדנו:** Codex CLI `0.153.4` על `chris@Mac-Office` = `Successfully logged in` (ChatGPT Plus, לא מפתח API). לא מעתיקים `~/.codex` לענן. Perplexity נשאר בכרום.
+- **מחר:** סוכן על `sderot-mac` יכול להריץ `agy` / `codex` בטרמינל המק. Worker לא נסגר. `--computer-use` עדיין לא.
+- **מקור:** שיחת בעלים 5.9.2026.

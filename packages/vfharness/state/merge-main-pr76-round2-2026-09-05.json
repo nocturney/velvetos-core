@@ -1,0 +1,31 @@
+{
+  "task_id": "merge-main-pr76-round2-2026-09-05",
+  "status": "done",
+  "pack": "vfmcp",
+  "goal": "Merge latest origin/main; classify and fix conflicts.",
+  "planned_steps": [
+    "Fetch origin/main",
+    "Classify conflicts simple vs complicated",
+    "Fix simple additive conflicts",
+    "Run check-all.py"
+  ],
+  "completed_steps": [
+    "Fetched origin/main (last30days #77 + IG calendar #90)",
+    "Both conflicts simple/additive: AGENTS.md sensor table, CHANGELOG Unreleased",
+    "Kept vfgrowth row + expanded vfmcp row; kept both changelog sets",
+    "Sensors 21/21 PASS"
+  ],
+  "next_step": "No complicated conflicts to report.",
+  "artifacts": [
+    "AGENTS.md",
+    "CHANGELOG.md"
+  ],
+  "unresolved": [],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "latest_observation": "Two simple conflicts; none complicated. Combined both sides."
+}

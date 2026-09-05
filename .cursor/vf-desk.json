@@ -1,7 +1,7 @@
 {
   "name": "velvet-factory-desk",
   "title": "VelvetOS Core desk — reference bind Velvet Factory",
-  "updatedAt": "2026-09-01",
+  "updatedAt": "2026-09-05",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
   "product": "VelvetOS",
@@ -35,7 +35,8 @@
     "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
     "2026-08-31: Core office MCP — studiomcphub in .cursor/mcp.json; Sheets + WhatsApp Desktop CONNECT (VF send=false, skip CMYK). packages/vfmcp/CORE-MCP.md.",
     "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py.",
-    "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill."
+    "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill.",
+    "2026-09-05: Orchestra desks are API keys (vf_gemini.py / vf_chatgpt.py), not gemini.google.com or chatgpt.com in the Cloud browser — that trip Google/OpenAI security alerts. SUBSCRIPTIONS.md. Do not persist cookies. Plus ≠ API."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -178,6 +179,22 @@
       "useWhen": "Search/draft on the studio phone after packages/vfmcp/CONNECT-WHATSAPP.md",
       "rule": "VF send stays human 050-2517000. send=false. No Infobip/ManyChat auto-send.",
       "failover": "python3 scripts/vf_office.py convert draft + wa.me"
+    },
+    "gemini": {
+      "status": "needs-key",
+      "command": "python3 scripts/vf_gemini.py",
+      "namespace": null,
+      "useWhen": "Orchestra Gemini desk via GEMINI_API_KEY. Do not open gemini.google.com from Cloud. Playbook: packages/vfmcp/SUBSCRIPTIONS.md + CONNECT-GEMINI.md",
+      "rule": "Subscription gemini.google.com ≠ Gemini API. Do not install aliargun or RLabs gemini-mcp. No key in git. No Veo from HQ. No browser cookies. Without a key write חסר מפתח Gemini. Never invent a body.",
+      "failover": "python3 scripts/vf_gemini.py orchestra if GEMINI_API_KEY else ChatGPT API + Perplexity + WebSearch"
+    },
+    "chatgpt": {
+      "status": "needs-key",
+      "command": "python3 scripts/vf_chatgpt.py",
+      "namespace": null,
+      "useWhen": "Orchestra ChatGPT desk via OPENAI_API_KEY. Do not open chatgpt.com from Cloud. Playbook: packages/vfmcp/SUBSCRIPTIONS.md + CONNECT-CHATGPT.md",
+      "rule": "ChatGPT Plus ≠ OpenAI API. No key in git. No browser cookies. Without a key write חסר מפתח ChatGPT. Never invent a body.",
+      "failover": "python3 scripts/vf_chatgpt.py orchestra if OPENAI_API_KEY else Gemini API + Perplexity + WebSearch"
     }
   },
   "seats": [
@@ -186,7 +203,7 @@
       "he": "ראש צוות",
       "packs": ["vfops", "vfbriefux", "vfharness", "vfmem", "velvetos"],
       "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect", "pipeline-analyst"],
-      "tools": ["calendar", "gmail", "vfmem", "web"],
+      "tools": ["calendar", "gmail", "vfmem", "web", "gemini", "chatgpt"],
       "decides": "₪ amount, what moves on the board, what is deferred; end-of-day retro (DAILY-RETRO.md)"
     },
     {
@@ -218,7 +235,7 @@
       "he": "ייצור",
       "packs": ["vfprod", "vfsku", "vlicense", "vfresearch"],
       "specialists": ["studio-producer", "operations-manager", "legal-compliance-checker", "research-synthesist", "trend-researcher", "technical-artist"],
-      "tools": ["drive", "calendar", "web", "threedaistudio", "studiomcphub"],
+      "tools": ["drive", "calendar", "web", "threedaistudio", "studiomcphub", "gemini", "chatgpt"],
       "decides": "print feasibility, queue, SKU, file license"
     }
   ],

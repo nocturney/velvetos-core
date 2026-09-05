@@ -92,6 +92,19 @@ Remote URL: `https://prompts.chat/api/mcp`. Local fallback: `npx -y prompts.chat
 
 **Packs:** `vfcopy`, `vfmskill`, `vfresearch`. Embedded office templates live in `packages/vfcopy/hq/templates/` — not in the MCP.
 
+### Gemini / ChatGPT API — orchestra desks, not consumer subscriptions
+
+Cloud Agent **must not** open `gemini.google.com` or `chatgpt.com` (Google/OpenAI security alerts). Hub: [`packages/vfmcp/SUBSCRIPTIONS.md`](../packages/vfmcp/SUBSCRIPTIONS.md). Full Plus/Pro without extra API billing: owner Mac — [`HOST.md`](../packages/vfmcp/HOST.md).
+
+| Path | Role | Notes |
+|---|---|---|
+| `scripts/vf_gemini.py` | Live `generateContent` + model list when `GEMINI_API_KEY` is in env | **Not** gemini.google.com Plus/Advanced. Playbook: [`CONNECT-GEMINI.md`](../packages/vfmcp/CONNECT-GEMINI.md). Without a key write **חסר מפתח Gemini**. |
+| `scripts/vf_chatgpt.py` | Live `chat.completions` + model list when `OPENAI_API_KEY` is in env | **Not** chatgpt.com Plus/Pro. Playbook: [`CONNECT-CHATGPT.md`](../packages/vfmcp/CONNECT-CHATGPT.md). Without a key write **חסר מפתח ChatGPT**. |
+| [aliargun/mcp-server-gemini](https://github.com/aliargun/mcp-server-gemini) | Stale community MCP (last push 2025-07-14, hardcoded Gemini 2.5) | **Do not install.** API key only. |
+| [RLabs-Inc/gemini-mcp](https://github.com/rlabs-inc/gemini-mcp) | Newer API MCP (Gemini 3, July 2026, 37 tools incl. Veo) | **Do not install.** Still `GEMINI_API_KEY`. Does not attach Plus. |
+
+**Packs:** `vfresearch`, `vfops`, `vfmcp`. No Veo from HQ. Instagram still Canva-first. Plus ≠ API.
+
 ## Do this next (read-only growth)
 
 ### Instagram research only — never send from HQ
@@ -144,6 +157,9 @@ Do not add these “because they exist on the list.” Add them when Christian c
 
 ## Do not install
 
+- **aliargun/mcp-server-gemini** — API-key MCP frozen at Gemini 2.5 (July 2025). Does not connect the gemini.google.com subscription. Use `vf_gemini.py` + `CONNECT-GEMINI.md`.
+- **RLabs-Inc/gemini-mcp** — Newer Gemini API MCP (37 tools, Veo, Gemini 3). Still `GEMINI_API_KEY`, not Plus. Do not install on Cloud. Use `vf_gemini.py` + `SUBSCRIPTIONS.md`.
+- **Automations-Project/VSCode-Perplexity-MCP** (`perplexity-user-mcp`) — Browser-session MCP (patchright + Cloudflare cookies) that bills the Pro plan instead of Sonar API. Experimental; ToS risk; auto-config writes `.cursor/mcp.json`. **Do not install on Cloud.** Do not copy `~/.perplexity-mcp`. Owner Mac only after lead seat. Hub: `SUBSCRIPTIONS.md`. Official `@perplexity-ai/mcp-server` is still a separate API key — owner declined extra API billing.
 - **Aggregator / “400 tools in one” servers** — they drown the agent and hide the studio tools.
 - **Headroom proxy on Cloud Agent** — local compression proxy needs a host process; Cloud VMs are sandboxed. Embed the **pattern** via `packages/vfharness/playbooks/context-thrift.md` (CCR + ContentRouter). Optional Mac-only: `headroom wrap cursor` after lead seat — see `packages/vfmcp/GAP.md`.
 - **Blender MCP on Cloud Agent** — needs local Blender + addon. Optional Desktop only (`vfprod/BLENDER-MCP.md`). Concept/STL from HQ stays 3DAI. Sibling market listings (`blender-open`, `blender-ai`, `blender-vxai`) stay one-family — do not stack parallel installs without lead seat.

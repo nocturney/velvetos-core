@@ -1,0 +1,40 @@
+{
+  "task_id": "gemini-api-bridge-2026-09-05",
+  "status": "done",
+  "pack": "vfmcp",
+  "goal": "Answer whether aliargun/mcp-server-gemini connects the Gemini subscription; bridge API gaps on vfmcp without a new pack or secrets.",
+  "planned_steps": [
+    "Route via vfmem + vfmcp GAP",
+    "Read aliargun README/commits vs live Gemini API",
+    "Document subscription ≠ API",
+    "Ship vf_gemini.py live model list + CONNECT-GEMINI.md",
+    "Wire orchestra/desk/sensors"
+  ],
+  "completed_steps": [
+    "Evaluated aliargun (API key, last push 2025-07-14, hardcoded 2.5)",
+    "Wrote CONNECT-GEMINI.md — subscription is not API",
+    "Wrote scripts/vf_gemini.py with live GET /v1beta/models picker",
+    "Orchestra failover: browser wall → vf_gemini.py if key else ChatGPT+Perplexity+WebSearch",
+    "Sensors: check-vfmcp.py + check-vfresearch.py"
+  ],
+  "next_step": "Owner sets GEMINI_API_KEY outside git if they want the API desk; browser Plus subscription stays a separate login",
+  "artifacts": [
+    "packages/vfmcp/CONNECT-GEMINI.md",
+    "scripts/vf_gemini.py",
+    "packages/vfresearch/sources/2026-09-05-gemini-mcp.md",
+    "packages/vfmcp/GAP.md",
+    "constitution/ORCHESTRA.md"
+  ],
+  "unresolved": [
+    "Cloud Agent has no GEMINI_API_KEY — status must stay חסר מפתח Gemini until the lead seat adds a secret",
+    "gemini.google.com Gems/Canvas/Deep Research/Workspace apps are not available via API",
+    "aliargun MCP not installed (stale + secret)"
+  ],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "latest_observation": "aliargun is Gemini API not the consumer subscription; live 3.x models exist on ai.google.dev; this VM has no API key."
+}

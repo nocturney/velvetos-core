@@ -9,6 +9,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 2026-09-05 — **last30days → חוקרי המשרד**: הטמעה מעמיקה של [mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill) על `vfresearch` — פלייבוק `hq/LAST30.md` (topic/comparison/discovery, confidence floor, nothing-solid), skill `vf-last30`, חיבור `@research-synthesist` / `@trend-researcher` בשולחן, `TREND-EXPLORER`, `LINKS.json`, `ORCHESTRA`/`ROUTINE`/`MAP`, סנסור `check-vfresearch.py`. דפוסים בלבד — בלי CLI / `npx skills` / מפתחות X. See `packages/vfresearch/sources/2026-09-05-last30days-embed.md`.
 - 2026-09-05 — **לוח פרסום קבוע**: `vfgrowth/CALENDAR.md` (W37–W39 מ־7.9 + תבנית שבועית) + `LEDGER.md` (G001/G002/G005 חיים; G003 SoccerBall חסום מדיה) + `HANDOFF-he.md` לשיבוץ instagram.com. כיתוב טיוטה `vfcopy/G003.md` + תבנית סטוריז 20:30. סנסור `scripts/check-vfgrowth.py`. בלי Publish/בוסט/סוויט מ־Cursor. Standing IG calendar on existing packs.
+
+- 2026-09-05 — **Codex חי על Mac-Office:** CLI `0.153.4` · `Successfully logged in` (ChatGPT Plus, לא מפתח API). `agy` + Codex שניהם על המק. אל תעתיקו `~/.codex`. Perplexity נשאר בכרום. `HOST.md`.
+
+- 2026-09-05 — **`agy` חי על Mac-Office:** 1.1.27 · `nocturney@gmail.com (Google AI Plus)` · Gemini 3.8 Flash High. הפרומפט `>` מוכן. `ERROR: logging before google.Init` בהתקנה = רעש. הבא: `/quit` ואז `codex login`. `HOST.md`.
+
+- 2026-09-05 — **אל תריץ `agent worker --computer-use` על CLI 2026.09.02:** זה SEA/createRequire. המסלול החי: `agent worker --name "sderot-mac" start`. כרום: `node`+`index.js` מתיקיית הגרסה, לא ה-wrapper. `HOST.md`.
+
+- 2026-09-05 — **worker sderot-mac חי:** `chris@Mac-Office` · id `4a3ca6d2-…`. Computer Use עדיין לא מותקן. `--share-desktop` לא במק. `HOST.md`. Self-hosted worker online; Chrome clicks wait on --computer-use permissions.
+
+- 2026-09-05 — **worker SEA על מק:** `agent worker --computer-use` נכשל ב־`Mac-Office` עם `Filesystem createRequire is disabled in the self-contained worker SEA` (CLI 2026.09.02). קלון = `~/velvetos-core`. נסיון: `agent update` ואז worker **בלי** `--computer-use`. `HOST.md`. Signed worker-sea binary rejects filesystem createRequire.
+
+- 2026-09-05 — **zsh: `agent` לא ב-PATH:** אחרי `curl https://cursor.com/install` במק — `export PATH="$HOME/.local/bin:$PATH"` ב-`~/.zshrc`. `HOST.md`. Cursor CLI lives in ~/.local/bin; zsh needs that PATH.
+
+- 2026-09-05 — **מארח = מק ייעודי, לא ווינדוס:** בעלים אישר מק ייעודי למנויים + worker. לוגין כרום ב-PC ווינדוס לא נספר. `--computer-use` רשמי: macOS/Linux בלבד. `HOST.md`. Dedicated Mac is the Plus host; Windows daily PC is not.
+
+- 2026-09-05 — **כרום במק ≠ גישה ל־Cloud VM**: אחרי התקנת Chrome — לוגין לשלושת האתרים, Codex/Gemini CLI, ואז `agent worker --computer-use` כדי שכלי סוכן (כולל דפדפן) ירוצו ב־IP ביתי. אין remote-debug, אין עוגיות לענן. `HOST.md`. Chrome on the owner Mac plus a self-hosted worker with computer-use; this Cloud VM still cannot drive that browser.
+
+- 2026-09-05 — **מארח מנויים = המק בשדרות**: אין גישה מלאה וקבועה ל־Plus/Pro מ־Cloud בלי מפתח API או לוגין זר. פלייבוק `vfmcp/HOST.md` — Chrome פרופיל קבוע (Gems/GPTs/Canvas/Deep Research/Perplexity Pro) + Gemini CLI Login with Google + Codex `codex login` על המק. Cloud לא פותח אתרים. Subscription host is the Sderot Mac; Cloud never logs into Plus sites.
+
+- 2026-09-05 — **Perplexity browser MCP**: [vscode-perplexity-mcp](https://github.com/automations-project/vscode-perplexity-mcp) (`perplexity-user-mcp`) צורך מנוי Pro בלי מפתח API — patchright + עוגיות Cloudflare. הקונספט מתאים ל«אין חיוב API נפרד»; **לא** מותקן ב־Cloud (ToS, vault, auto-config, IP זר). MCP רשמי של Perplexity עדיין Sonar API. בעלים דחה מפתחות API. HQ: WebSearch. `SUBSCRIPTIONS.md`. Skip perplexity-user-mcp on Cloud; owner declined extra API billing.
+
+- 2026-09-05 — **מנויים בלי דפדפן**: [RLabs-Inc/gemini-mcp](https://github.com/rlabs-inc/gemini-mcp) עדיף מ־aliargun כעטיפת API (Gemini 3, יולי 2026) אבל **עדיין** `GEMINI_API_KEY` — לא מחבר Plus. לא מותקן (Veo + 37 כלים). גשר ChatGPT: `scripts/vf_chatgpt.py` + `CONNECT-CHATGPT.md`. Hub: `SUBSCRIPTIONS.md`. Cloud **לא** פותח `gemini.google.com` / `chatgpt.com` (התראות אבטחה). Plus ≠ API. בלי מפתח: «חסר מפתח Gemini» / «חסר מפתח ChatGPT». Orchestra API desks instead of Cloud browser login; do not install RLabs.
+
+- 2026-09-05 — **גשר Gemini API**: [aliargun/mcp-server-gemini](https://github.com/aliargun/mcp-server-gemini) הוא מפתח AI Studio, **לא** מנוי `gemini.google.com`. Freeze יולי 2025 (מודלים 2.5 קשיחים). לא מותקן. גשר על `vfmcp`: `scripts/vf_gemini.py` (רשימת מודלים חיה) + `CONNECT-GEMINI.md`. בלי מפתח: «חסר מפתח Gemini». Failover תזמורת: API אם יש מפתח, אחרת ChatGPT+Perplexity+WebSearch. בלי Veo, בלי סוד בגיט. Gemini API bridge on existing vfmcp; subscription ≠ API; do not install aliargun.
+
 - 2026-09-05 — **VoiceStudio**: תחקור [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio) (local ElevenLabs alt · MCP `:3900`). דפוסים על `vfom` LOCK/EMBED + `docs/MCP-FIT.md` + `vfmcp/GAP.md`. **skip install** על Cloud; רילים נשארים הוכחת רצפה. Desktop VO רק אחרי ראש צוות + `vlicense`. רישום `LINKS.json`. See `packages/vfresearch/sources/2026-09-05-voicestudio.md`.
 - 2026-09-05 — **Owner links ×4**: DeepTutor + ExamFul.ai + lieflat-charts + academic-research-skills. הטמעה בפקים קיימים — `ACADEMIC-PIPELINE.md` (`vfresearch`), `CHARTS.md` (`vfbriefux`), `MASTERY-MEMORY.md` (`vfops`/`office-learning`); ExamFul = watch בלבד (אנכי בחינות). בלי Docker/plugin/`npx` / פק חדש. See `packages/vfresearch/sources/2026-09-05-weekly-links-owner-four.md`.
 - 2026-09-05 — **footrue ToolBox**: רישום [footrue.com](https://footrue.com/) ב־`LINKS.json` (בעלים שלח). כלי דפדפן מקומיים להכנת הוכחת רצפה — HEIC→JPG, הסרת רקע, דחיסה — לפני Canva. הטמעה ב־`vfcovers/hq/PLAYBOOK.md` + `vfcanva/WORKFLOW.md`. בלי MCP / בלי החלפת מותג / בלי Insights מצד ג׳. See `packages/vfresearch/sources/2026-09-05-footrue.md`.
