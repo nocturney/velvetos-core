@@ -23,8 +23,8 @@ Grok הוא גיבוי אופציונלי. לא מחכים למכסה. לא מח
 
 | תאריך | מזהה | סוג | נתיב / הערה | סטטוס |
 |---|---|---|---|---|
-| 2026-09-05 | VF-G003 / G003-alt | ריל #3 | כיתוב A `vfcopy/G003.md` · כיתוב B `vfcopy/G003-alt.md` · מסירה `vfcovers/g003/HANDOFF-he.md` · Drive `1wdUVYJfapXwpGx4396ifp2Jigrxgkv7FmARRCLJzSdk` · SoccerBall לא בגיט HQ · גלם Grok: `vf-user-2026-08-30.mp4` + `vf-user-2026-08-30-9x16.mp4` · שיבוץ א׳ 7.9 16:00 כשיש mp4 · לא עלה לפיד | `#מוכן-לשיבוץ` |
-| 2026-09-05 | לוח קבוע W37–W39 | פיד + סטוריז | `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md` · שיבוץ instagram.com · G003 משוחרר כשיש mp4 | `#מוכן-לשיבוץ` |
+| 2026-09-05 | VF-G003-alt | ריל #3 | חבילת סטודיו `/workspace/INSTA/content/2026-09-07/VF-G003-reel.mp4` + cover + caption · כיתוב `vfcopy/G003-alt.md` · א׳ 7.9 16:00 instagram.com · SoccerBall שדרוג אופציונלי · לא עלה לפיד | `#משובץ` |
+| 2026-09-05 | לוח קבוע W37–W39 | פיד + סטוריז | `vfgrowth/CALENDAR.md` + `LEDGER.md` · G003-alt #משובץ א׳ 16:00 · שאר המשבצות לפי חסימות | `#משובץ` |
 | 2026-08-31 | חוקת-שליחה | משרד | Drive `1Xd_uUGKYl7FGr11URUtDHrkz16ikyOGZPZSKqdTOr-I` + Gmail `1a056327a22e6ff8` | `#נשלח-מ-HQ` |
 
 ## דוגמאות

@@ -52,6 +52,8 @@ def main() -> None:
         "G003-alt",
         "7.9.2026",
         "מוכן לשיבוץ",
+        "משובץ",
+        "VF-G003-reel.mp4",
         "vf-user-2026-08-30.mp4",
     ):
         if needle not in cal:
@@ -75,6 +77,10 @@ def main() -> None:
         "vf-user-2026-08-30.mp4",
         "vf-user-2026-08-30-9x16.mp4",
         "G003-alt",
+        "VF-G003-reel.mp4",
+        "VF-G003-cover.jpg",
+        "VF-G003-caption.txt",
+        "משובץ",
         "חסום",
     ):
         if needle not in ledger:
@@ -89,6 +95,8 @@ def main() -> None:
         "20:30",
         "לא סוויט",
         "מוכן לשיבוץ",
+        "משובץ",
+        "VF-G003-reel.mp4",
         "vf-user-2026-08-30.mp4",
         "G003-alt",
     ):
@@ -100,8 +108,12 @@ def main() -> None:
         fail("HANDOFF-he.md must forbid שלחו DM")
 
     g003 = G003.read_text()
+    if "משובץ" not in g003:
+        fail("G003.md must mark G003-alt as scheduled")
+    if "VF-G003-reel.mp4" not in g003:
+        fail("G003.md must name Studio-cut reel path")
     if "מוכן לשיבוץ" not in g003:
-        fail("G003.md must unlock Studio schedule when an mp4 exists")
+        fail("G003.md must keep SoccerBall as optional unlock")
     if "G003-alt" not in g003:
         fail("G003.md must name G003-alt printer-reel track")
     if "SoccerBall" not in g003:
@@ -121,6 +133,10 @@ def main() -> None:
         "vf-user-2026-08-30.mp4",
         "vf-user-2026-08-30-9x16.mp4",
         "מוכן לשיבוץ",
+        "משובץ",
+        "VF-G003-reel.mp4",
+        "VF-G003-cover.jpg",
+        "VF-G003-caption.txt",
         "G003-alt",
     ):
         if needle not in stop_text:

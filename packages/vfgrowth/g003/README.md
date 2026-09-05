@@ -1,10 +1,8 @@
-# VF-G003 · ריל #3 — שיבוץ כשיש mp4
+# VF-G003 · ריל #3 — #משובץ G003-alt
 
 חבילת תהליך/גילוי לסדרה «מה יוצא מהמדפסת?».  
-כרטיס: `../G003.md` · כיתוב A: `../../vfcopy/G003.md` · כיתוב B: `../../vfcopy/G003-alt.md` · מסירה: `../../vfcovers/g003/HANDOFF-he.md`.
+כרטיס: `../G003.md` · כיתוב חי: `../../vfcopy/G003-alt.md` · שדרוג: `../../vfcopy/G003.md` · מסירה: `../../vfcovers/g003/HANDOFF-he.md`.
 
-**מסלול A:** SoccerBall — `media/SoccerBall final_PLA_9h55m_20260715143622.mp4` (חיפוש iCloud).  
-**מסלול B:** G003-alt — `/workspace/INSTA/media/vf-user-2026-08-30.mp4` + `vf-user-2026-08-30-9x16.mp4` (+ stills) על מחשב Grok.
-
-שני הנתיבים **לא** בעץ GitHub HQ. HQ לא חותך ולא ממציא מדיה.  
-אחרי שיש mp4 מוכן להעלאה: לשבץ ראשון 7.9 16:00 (נפילה שלישי 9.9 16:00).
+**משובץ:** `/workspace/INSTA/content/2026-09-07/VF-G003-reel.mp4` + `VF-G003-cover.jpg` + `VF-G003-caption.txt` · א׳ 7.9 16:00.  
+**גלם:** `vf-user-2026-08-30.mp4` + `vf-user-2026-08-30-9x16.mp4`.  
+**SoccerBall:** שדרוג אופציונלי אם הקובץ מופיע. לא על פרוסת הדיסק. לא בגיט HQ. לא עלה לפיד.

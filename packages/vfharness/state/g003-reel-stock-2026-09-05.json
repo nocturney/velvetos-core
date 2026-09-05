@@ -1,55 +1,44 @@
 {
   "task_id": "g003-reel-stock-2026-09-05",
-  "status": "ready-for-studio",
+  "status": "scheduled",
   "pack": "vfgrowth",
-  "goal": "Finalize G003 / G003-alt caption + calendar unlock + Studio handoff so Studio can schedule Sun 7.9 16:00 once they have an mp4",
+  "goal": "Mark Studio-cut G003-alt as scheduled Sun 7.9 16:00; SoccerBall optional upgrade only",
   "crew": "content",
-  "planned_steps": [
-    "Route via vfmem/vfgraft",
-    "Confirm SoccerBall is not in GitHub HQ tree",
-    "Lock G003-alt sources from Grok machine INSTA/media",
-    "Finalize captions A/B + unlock calendar",
-    "Sensor check-all"
-  ],
   "completed_steps": [
-    "Named SoccerBall path remains iCloud-only (not in git)",
-    "Named unused Grok process videos vf-user-2026-08-30.mp4 + 9x16",
-    "Wrote vfcopy/G003.md + G003-alt.md",
-    "Unlocked CALENDAR/LEDGER/HANDOFF for schedule-when-mp4",
-    "Studio handoff rewritten from stop to schedule packet"
+    "Confirmed INSTA pack not on Cloud HQ disk",
+    "Locked Studio paths VF-G003-reel/cover/caption",
+    "Marked calendar/ledger/queue #משובץ",
+    "Kept SoccerBall as optional upgrade"
   ],
-  "next_step": "Studio assembles 9:16 mp4 from SoccerBall (if found) or vf-user-2026-08-30 sources, pastes matching caption, schedules instagram.com Sun 7.9 16:00",
+  "next_step": "Studio schedules on instagram.com from the named pack; do not claim feed posted",
   "artifacts": [
     "packages/vfcovers/g003/HANDOFF-he.md",
-    "packages/vfcopy/G003.md",
     "packages/vfcopy/G003-alt.md",
     "packages/vfgrowth/G003.md",
-    "packages/vfgrowth/LEDGER.md",
-    "packages/vfgrowth/CALENDAR.md"
+    "packages/vfgrowth/CALENDAR.md",
+    "packages/vfgrowth/LEDGER.md"
   ],
   "unresolved": [
-    "No 9:16 mp4 in GitHub HQ (do not invent)",
-    "SoccerBall still not in git; iCloud search is Studio",
-    "Duration חסר עד חיתוך",
-    "Insights still אין ספירה"
+    "Binaries not in GitHub HQ / this Cloud workspace",
+    "SoccerBall still missing on disk slice",
+    "Insights אין ספירה",
+    "Feed not posted"
   ],
   "outcome": "worker_done",
-  "pulse": "unlocked",
-  "verification": "scripts/check-all.py passed=21 after unlock; no invented footage",
+  "pulse": "scheduled",
+  "verification": "pending check-all after this pass",
   "gate": {
-    "kind": "studio_assemble",
-    "waiting_for": "Studio-cut mp4 from track A SoccerBall or track B vf-user-2026-08-30",
-    "reason": "HQ docs unlocked; binary is not in the GitHub tree"
+    "kind": "studio_schedule",
+    "waiting_for": "instagram.com schedule of VF-G003-reel.mp4 at Sun 7.9 16:00",
+    "reason": "HQ docs mark #משובץ; Cursor does not publish"
   },
   "last_updated": "2026-09-05",
   "execution_state": {
-    "g003_slot": "Sun 7.9 16:00 fallback Tue 9.9 16:00",
-    "g003_status": "ready-for-schedule-when-mp4",
-    "named_path_a": "media/SoccerBall final_PLA_9h55m_20260715143622.mp4",
-    "named_path_b": "/workspace/INSTA/media/vf-user-2026-08-30.mp4 + vf-user-2026-08-30-9x16.mp4",
-    "candidate_swapped": false,
-    "alt_track": true,
+    "g003_slot": "Sun 7.9 16:00",
+    "g003_status": "scheduled-g003-alt",
+    "named_pack": "/workspace/INSTA/content/2026-09-07/VF-G003-reel.mp4",
+    "soccerball_upgrade": true,
     "schedule_surface": "instagram.com"
   },
-  "latest_observation": "SoccerBall not in GitHub HQ. Grok machine process videos named. Captions A/B finalized. Calendar unlocked for Studio once mp4 exists."
+  "latest_observation": "Studio already cut G003-alt pack on Grok machine. HQ unlocked as #משובץ. No invented footage. Not posted."
 }
