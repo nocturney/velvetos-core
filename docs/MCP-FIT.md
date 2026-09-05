@@ -1,7 +1,7 @@
 # MCP fit for Velvet Factory
 
 Source: [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) (reviewed 2026-08-30).  
-Discovery index (Claude Code marketplace — **patterns only**, do not `/plugin install` on Cloud Agent): [buildwithclaude.com](https://buildwithclaude.com/) · [davepoon/buildwithclaude](https://github.com/davepoon/buildwithclaude) `mcp-servers.json` (reviewed 2026-09-03). Embed: [`packages/vfresearch/sources/2026-09-03-buildwithclaude.md`](../packages/vfresearch/sources/2026-09-03-buildwithclaude.md).  
+Discovery index (Claude Code marketplace — **patterns only**, do not `/plugin install` on Cloud Agent): [buildwithclaude.com](https://buildwithclaude.com/) · [davepoon/buildwithclaude](https://github.com/davepoon/buildwithclaude) `mcp-servers.json` (reviewed 2026-09-05). Embeds: [`2026-09-03`](../packages/vfresearch/sources/2026-09-03-buildwithclaude.md) · [`2026-09-05` proposal-drafter](../packages/vfresearch/sources/2026-09-05-buildwithclaude.md).  
 MCP Market mid-week (2026-09-05; Cloudflare on listing pages → GitHub bodies): Blender MCP · Archon · Jeffallan fullstack skills — [`packages/vfresearch/sources/2026-09-05-mcpmarket-three.md`](../packages/vfresearch/sources/2026-09-05-mcpmarket-three.md).  
 Grok / ChatGPT / Gemini / Perplexity gap vs this HQ: [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md) (reviewed 2026-08-31).  
 HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Boosts and auto-DM stay forbidden. Printers stay on the floor. Treg is not relevant.  
