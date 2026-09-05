@@ -63,9 +63,23 @@ source ~/.zshrc
 which agent          # אמור להדפיס .../.local/bin/agent
 agent --version
 agent login
+```
+
+חלון דפדפן = לוגין ל־**חשבון Cursor** (לא ChatGPT/Gemini). אחרי הצלחה בחלון, חזור לטרמינל.
+
+```bash
+agent status          # Logged in + האימייל של Cursor
+agent about
+```
+
+זה רק CLI מחובר. worker עדיין לא רץ עד:
+
+```bash
 cd /path/to/velvetos-core   # הקלונים המקומי
 agent worker --computer-use --name "sderot-mac" start
 ```
+
+הטרמינל **נשאר פתוח**. מחובר = השורה לא נסגרת חזרה ל־`$`, ויש שם `sderot-mac` / connected. בדיקת מוקדמת: `agent worker debug`.
 
 אם עדיין `command not found: agent`:
 
