@@ -14,8 +14,8 @@
 - [x] **1. תכנון** — vfmem / vfgraft / vf-openmontage / vf-content-sprint
 - [x] **2. מקור** — Drive + Gmail brief 28.8 + Canva + 3DAI + iCloud mirror
 - [x] **3. ביצוע** — נתיב נקוב לא נגיש; אין החלפת מועמד; חבילת עצירה על הדיסק
-- [ ] **4. אימות** — `python3 scripts/check-all.py`
-- [ ] **5. סגירה** — checkpoint `blocked` / `escalation`
+- [x] **4. אימות** — `python3 scripts/check-all.py` passed=21
+- [x] **5. סגירה** — checkpoint `blocked` / `escalation`
 
 ## החלטות
 

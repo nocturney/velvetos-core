@@ -10,3 +10,5 @@
 | 2026-09-05 | Gmail 28.8 briefs | שמות G001/G002 אומתו |
 | 2026-09-05 | Canva + 3DAI | ריק ל־SoccerBall |
 | 2026-09-05 | כתיבת עצירה | `vfcovers/g003/HANDOFF-he.md` + עדכון לוח |
+| 2026-09-05 | Drive create_file | `1DjUPxqCINRO1b0plryYIQZPBzwAVfDoHD1EjW7lIOZ4` |
+| 2026-09-05 | check-all.py | passed=21 |

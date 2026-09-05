@@ -34,7 +34,7 @@
   ],
   "outcome": "escalation",
   "pulse": "blocked",
-  "verification": "Drive/Canva/3DAI empty for SoccerBall; Gmail 28.8 named G001/G002 sources only",
+  "verification": "scripts/check-all.py passed=21; Drive/Canva/3DAI empty for SoccerBall; Gmail 28.8 named G001/G002 sources only",
   "gate": {
     "kind": "escalation",
     "waiting_for": "Studio Mac or Drive upload of media/SoccerBall final_PLA_9h55m_20260715143622.mp4",
