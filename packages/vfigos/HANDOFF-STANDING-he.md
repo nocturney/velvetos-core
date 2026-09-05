@@ -43,6 +43,19 @@
 מדיה: Canva טיפוגרפיה + CTA `050-2517000` / איסוף שדרות.  
 אחרי ריל חי: פריים מהריל לסטורי של אותו ערב — לא קובץ חדש מכריסטיאן.
 
+## אירועי Google Calendar (נוצרו 5.9)
+
+`nocturney@gmail.com` · תזכורת לעין, לא תחליף לשיבוץ instagram.com.
+
+| מזהה | event id |
+|---|---|
+| VF-G003 | `qq8ckuklkd1c8rtm0kh205f7mk` |
+| VF-G006 | `p41n2dsa9f37kcemiuftjchhl0` |
+| VF-G004 | `ba8a2kheci6v84dphkmrifkcm0` |
+| VF-G007 | `rnattnscok4kvu5bvq7euiomko` |
+| VF-G008 | `ghnqkro0nd273d7k57e87cgd78` |
+| VF-G010 | `4e24u4fj4bsk3j1nehfdaprqhs` |
+
 ## כבר חי — לא נוגעים
 
 | מזהה | מועד שעבר | קישור |

@@ -123,6 +123,19 @@ flexi/fidget — שיעורי בית אחרי `vfsku/LAB.md`, לא פוסט חי
 5. קרוסלת G006 וסטורי Canva **לא** דורשים צילום ממך.
 6. בלי הקובץ — אין ריל. HQ לא גוזר מ־G001/G002 ולא ממציא סצנה.
 
+## אירועי לוח Google (nocturney@gmail.com)
+
+נוצרו 5.9.2026 · Asia/Jerusalem · שקיפות חופשית. לא מחליפים שיבוץ instagram.com.
+
+| מזהה | אירוע |
+|---|---|
+| VF-G003 | `qq8ckuklkd1c8rtm0kh205f7mk` |
+| VF-G006 | `p41n2dsa9f37kcemiuftjchhl0` |
+| VF-G004 | `ba8a2kheci6v84dphkmrifkcm0` |
+| VF-G007 | `rnattnscok4kvu5bvq7euiomko` |
+| VF-G008 | `ghnqkro0nd273d7k57e87cgd78` |
+| VF-G010 | `4e24u4fj4bsk3j1nehfdaprqhs` |
+
 ## מה לא בלוח
 
 - פיד שישי–שבת
