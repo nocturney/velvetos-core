@@ -1,0 +1,64 @@
+{
+  "task_id": "skillstate-embed-2026-09-05",
+  "status": "done",
+  "pack": "vfharness",
+  "goal": "Embed SKILLSTATE paper patterns onto vfharness; sensors green; PR open",
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "python3 scripts/check-all.py — OK suite passed=20",
+  "planned_steps": [
+    "read-arxiv-html",
+    "write-playbook",
+    "wire-embed-loop-schema",
+    "register-links",
+    "sensor-suite",
+    "commit-pr"
+  ],
+  "completed_steps": [
+    "read-arxiv-html",
+    "write-playbook",
+    "wire-embed-loop-schema",
+    "register-links",
+    "sensor-suite",
+    "brief-day-copy"
+  ],
+  "next_step": "commit-pr",
+  "artifacts": [
+    "packages/vfharness/playbooks/skillstate.md",
+    "packages/vfresearch/sources/2026-09-05-skillstate.md",
+    "packages/vfharness/templates/checkpoint.schema.json",
+    "packages/vfops/BRIEF-2026-09-05.md",
+    "/opt/cursor/artifacts/skillstate-check-all.log"
+  ],
+  "unresolved": [],
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "execution_state": {
+    "paper_id": "2608.26263",
+    "verdict": "embed",
+    "runtime_install": false,
+    "sensors_passed": 20,
+    "packs_touched": ["vfharness", "vfresearch", "vfops"]
+  },
+  "latest_observation": "check-all.py OK suite passed=20",
+  "events": [
+    {
+      "name": "paper.reviewed",
+      "producedAt": "2026-09-05",
+      "sourceAgent": "vfresearch",
+      "payload": { "id": "arxiv-skillstate", "url": "https://arxiv.org/abs/2608.26263" }
+    },
+    {
+      "name": "embed.wired",
+      "producedAt": "2026-09-05",
+      "sourceAgent": "vfharness",
+      "payload": { "playbook": "playbooks/skillstate.md" }
+    },
+    {
+      "name": "sensors.green",
+      "producedAt": "2026-09-05",
+      "sourceAgent": "vfharness",
+      "payload": { "passed": 20 }
+    }
+  ]
+}

@@ -160,6 +160,30 @@ def main() -> None:
     if not receipt.is_file():
         fail("missing packages/vfharness/templates/run-receipt.md")
 
+    skillstate = ROOT / "packages/vfharness/playbooks/skillstate.md"
+    if not skillstate.is_file():
+        fail("missing packages/vfharness/playbooks/skillstate.md")
+    skillstate_text = skillstate.read_text()
+    for needle in (
+        "2608.26263",
+        "execution_state",
+        "latest_observation",
+        "second agent runtime",
+        "context-thrift",
+    ):
+        if needle not in skillstate_text:
+            fail(f"skillstate.md missing {needle!r}")
+    schema_text = schema_path.read_text()
+    for needle in ("execution_state", "latest_observation", "SKILLSTATE"):
+        if needle not in schema_text:
+            fail(f"checkpoint.schema.json missing SKILLSTATE field {needle!r}")
+    if "skillstate.md" not in (ROOT / "packages/vfharness/EMBED.md").read_text():
+        fail("EMBED.md must reference skillstate.md")
+    if "skillstate.md" not in (ROOT / "packages/vfharness/LOOP.md").read_text():
+        fail("LOOP.md must reference skillstate.md")
+    if "SKILLSTATE" not in agents_text and "skillstate" not in agents_text:
+        fail("AGENTS.md MEMORY must mention SKILLSTATE / skillstate")
+
     checklist = spec.get("checklist") or []
     if len(checklist) != 12:
         fail(f"expected 12 checklist items, got {len(checklist)}")

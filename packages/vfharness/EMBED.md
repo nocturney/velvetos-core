@@ -29,16 +29,18 @@ python3 scripts/check-all.py
 
 ## 4. Memory — לפני סגירת סשן ארוך
 
+**SKILLSTATE (arXiv 2608.26263):** בכל צעד של משימה ארוכה המודל רואה רק \(A_t=(P,\Sigma_t,O_t)\) — מדריך קבוע, checkpoint מובנה, ותצפית אחרונה. אחרי עדכון מצב מאומת זורקים את ה-reasoning מהפרומפט הבא. פלייבוק: `playbooks/skillstate.md`. לא מחליף את Headroom (`context-thrift.md`) — משלים אותו.
+
 **משימה ארוכה (5+ tool calls):** פתח `state/<task-id>/` עם שלושת הקבצים מ-`PLANNING-FILES.md` (`task_plan.md`, `findings.md`, `progress.md`). קרא אותם בתחילת כל turn.
 
 כתוב `state/<task-id>.json` (או `state/<task-id>/checkpoint.json`) לפי `templates/checkpoint.schema.json`.  
-בפתיחה: קרא את הקובץ. אל תתחיל מחדש.
+בפתיחה: קרא את הקובץ. אל תתחיל מחדש. אופציונלי: `execution_state` + `latest_observation` כשצריך משבצות דומיין מעבר לשדות הקבועים.
 
 שדה אופציונלי `goal`: תנאי סיום אחד (דפוס DeerFlow `/goal` — ראה `packages/vfe2b/DEER-FLOW-PATTERNS.md`).
 
 **משמרת / OMA:** `planned_steps` לפני עבודה כבדה; `gate` כשחסומים על ₪ או שדה אנושי — ראה `playbooks/oma-patterns.md`.
 
-**Compaction (דפוס DeerFlow `/compact`):** כשהשיחה ארוכה, אל תשחזר הכל — סכם ב־`completed_steps` + `unresolved`, והמשך מה-checkpoint. השיח המלא נשאר אצל המשתמש; המודל עובד מהקבלה.
+**Compaction (דפוס DeerFlow `/compact` + SKILLSTATE):** כשהשיחה ארוכה, אל תשחזר הכל — סכם ב־`completed_steps` + `unresolved` (+ `execution_state` אם יש), והמשך מ-(P, Σ, O). השיח המלא נשאר אצל המשתמש; המודל עובד מהקבלה על הדיסק.
 
 משימות חד-פעמיות (שאלה, סיעור מוחות) — בלי checkpoint ו בלי שלושת קבצי התכנון.
 

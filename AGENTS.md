@@ -104,8 +104,9 @@ DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inven
 
 ## MEMORY
 
-- Guides (`AGENTS.md`, constitution, pack `SKILL.md`) = what should happen.
-- Checkpoints (`packages/vfharness/state/<task-id>.json`) = what happened in this task.
+- Guides (`AGENTS.md`, constitution, pack `SKILL.md`) = what should happen (\(P\)).
+- Checkpoints (`packages/vfharness/state/<task-id>.json`) = what happened in this task (\(\Sigma\)). Optional `execution_state` / `latest_observation` for domain slots (SKILLSTATE — `vfharness/playbooks/skillstate.md`).
+- Long-task next turn: prompt = guide + checkpoint + latest observation only — not full chat replay.
 - Office map (`vfgraft`) = how HQ is wired. Office query (`vfmem`) = who handles a job. Neither replaces a task checkpoint.
 - Do not rely on chat memory for a rule that must hold every run. Promote it here.
 
