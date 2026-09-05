@@ -88,7 +88,7 @@ Cursor, לא Grok:
 | מק״ט חוזר, קל להדפסה, כרטיס בלי ₪ | `vfsku` + `vlicense` | קטלוג מחירים |
 | פנייה → וואטסאפ → איסוף | `vfconvert` | ManyChat / בוט 24/7 |
 | כיתוב, FAQ, ארבעה שדות בירור | `vfcopy` | שליחה חיה |
-| לוח תוכן מהעבודה (טיימלאפס / לפני־אחרי / הדרכה) | `vfgrowth` + `vfcovers` | בוסט, הזזת לוח משובץ |
+| לוח תוכן מהעבודה (טיימלאפס / לפני־אחרי / הדרכה) | `vfgrowth` + `vfcovers` (`CALENDAR.md` + `LEDGER.md`) | בוסט, הזזת לוח משובץ, Meta Suite |
 | סלייס, תמיכות, סיכון כשל | `vfcost` + `vfprod` | ווידג׳ט תשלום |
 | מודל AI (3D AI Studio / Meshy / Tripo) | `vfprod/3DAISTUDIO.md` + `vlicense` | קטלוג / באצ׳ / מחיר מקרדיטים |
 | B2B / אתר / מנוי חדש | `vfbiz` נעול עד בלוק `01` | קנייה מ־HQ |
@@ -154,6 +154,16 @@ packages/vfresearch/sources/YYYY-MM-DD-orchestra.md
 6. מחדשים את הטיימר — בלי זה הדופק נשבר אחרי ~7 ימים.
 
 שורת בלוק `05`: «best-skills — …» או «best-skills — אין חדש במשרד».
+
+## לפי דרישה — מחקר 30 יום / קהילה (לא צ'אט חדש)
+
+דפוס מ־[mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill) על כלי המשרד בלבד.
+
+1. פלייבוק: `packages/vfresearch/hq/LAST30.md`
+2. מיומנות: `.cursor/skills/vf-last30/SKILL.md`
+3. מושב: `@research-synthesist` + `@trend-researcher`
+4. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-<topic>-last30.md`
+5. אין התקנת CLI / `npx skills` על Cloud. אין מפתחות X/TikTok. **nothing-solid** מותר.
 
 ### פתיחת מגבלות (אושר בעלים 2026-09-03)
 

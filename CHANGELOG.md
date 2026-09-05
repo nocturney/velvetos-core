@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-05 — **last30days → חוקרי המשרד**: הטמעה מעמיקה של [mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill) על `vfresearch` — פלייבוק `hq/LAST30.md` (topic/comparison/discovery, confidence floor, nothing-solid), skill `vf-last30`, חיבור `@research-synthesist` / `@trend-researcher` בשולחן, `TREND-EXPLORER`, `LINKS.json`, `ORCHESTRA`/`ROUTINE`/`MAP`, סנסור `check-vfresearch.py`. דפוסים בלבד — בלי CLI / `npx skills` / מפתחות X. See `packages/vfresearch/sources/2026-09-05-last30days-embed.md`.
+- 2026-09-05 — **לוח פרסום קבוע**: `vfgrowth/CALENDAR.md` (W37–W39 מ־7.9 + תבנית שבועית) + `LEDGER.md` (G001/G002/G005 חיים; G003 SoccerBall חסום מדיה) + `HANDOFF-he.md` לשיבוץ instagram.com. כיתוב טיוטה `vfcopy/G003.md` + תבנית סטוריז 20:30. סנסור `scripts/check-vfgrowth.py`. בלי Publish/בוסט/סוויט מ־Cursor. Standing IG calendar on existing packs.
+
 - 2026-09-05 — **Codex חי על Mac-Office:** CLI `0.153.4` · `Successfully logged in` (ChatGPT Plus, לא מפתח API). `agy` + Codex שניהם על המק. אל תעתיקו `~/.codex`. Perplexity נשאר בכרום. `HOST.md`.
 
 - 2026-09-05 — **`agy` חי על Mac-Office:** 1.1.27 · `nocturney@gmail.com (Google AI Plus)` · Gemini 3.8 Flash High. הפרומפט `>` מוכן. `ERROR: logging before google.Init` בהתקנה = רעש. הבא: `/quit` ואז `codex login`. `HOST.md`.

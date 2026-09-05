@@ -1,0 +1,30 @@
+{
+  "task_id": "embed-last30days-2026-09-05",
+  "guide": "packages/vfresearch/hq/LAST30.md",
+  "status": "worker_done",
+  "updated_at": "2026-09-05T07:00:00+00:00",
+  "execution_state": {
+    "mode": "embed",
+    "source": "https://github.com/mvanhorn/last30days-skill",
+    "pack": "vfresearch",
+    "skill": ".cursor/skills/vf-last30/SKILL.md",
+    "installed_vendor_cli": false
+  },
+  "latest_observation": {
+    "artifact": "packages/vfresearch/sources/2026-09-05-last30days-embed.md",
+    "desk_wired": ["research-synthesist", "trend-researcher"],
+    "sensor": "check-vfresearch.py"
+  },
+  "planned_steps": [
+    "deepen LAST30.md",
+    "add vf-last30 skill",
+    "wire desk + sensors + LINKS",
+    "run check-all"
+  ],
+  "done": [
+    "LAST30 playbook",
+    "vf-last30 skill",
+    "desk / TREND-EXPLORER / ORCHESTRA / ROUTINE / MAP / LINKS",
+    "sensor checks"
+  ]
+}

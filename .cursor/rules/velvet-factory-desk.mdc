@@ -46,10 +46,10 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 | Reel plan / timelapse cut | `vfom` | `@visual-storyteller` `@instagram-curator` | OpenMontage crews; Canva stills; no Remotion vendor |
 | IG board | `vfigos` | `@instagram-curator` | Review, schedule, **send via tools** (`vfigos/SEND.md`) |
 | Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or «אין ספירה». Never invent. Treg not used. |
-| Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + WebSearch; weekly inspiration links: `vfresearch/WEEKLY.md` + `LINKS.json`; every ~2 days: `BEST-SKILLS.md` (LinklyAI) |
+| Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + WebSearch; weekly inspiration links: `vfresearch/WEEKLY.md` + `LINKS.json`; every ~2 days: `BEST-SKILLS.md` (LinklyAI); last-30 community: `LAST30.md` + skill `vf-last30` |
 | Social Booster / carousel reach | `vfgrowth` `vfmskill` | `@carousel-growth-engine` `@growth-hacker` | `expert-social-booster`; no boost/auto-DM |
 | 3D model analyze / make / build | `vfprod` `vfsku` `vlicense` | `@technical-artist` `@studio-producer` | `expert-3d-model`; 3D AI Studio after lead approval |
-| Trend explorer | `vfresearch` `vfseason` | `@trend-researcher` | `expert-trend-explorer`; WebSearch; no invented trends |
+| Trend explorer | `vfresearch` `vfseason` | `@trend-researcher` | `expert-trend-explorer`; WebSearch; last30 discovery via `vf-last30`; no invented trends |
 | AI image / video director | `vfom` `vfcovers` `vfcanva` | `@visual-storyteller` `@short-video-editing-coach` | `expert-media-director`; Canva first; no Veo/Kling from HQ |
 | Daily learning / end-of-day retro | `vfops` `vfmem` `vfharness` | `@chief-of-staff` `@studio-operations` | `DAILY-RETRO.md` + `owner-memory.md`; skill `vf-daily-learning` |
 | Revenue loop / IG → פרנסה | `vfgrowth` `vfsales` `vfinsights` | `@offer-lead-gen-strategist` `@pipeline-analyst` | `expert-revenue-loop`; skill `vf-revenue-loop`; `WEEKLY-REVENUE-PULSE.md` |

@@ -126,6 +126,11 @@
       "type": "computational"
     },
     {
+      "id": "check-vfgrowth",
+      "script": "scripts/check-vfgrowth.py",
+      "type": "computational"
+    },
+    {
       "id": "check-vfgraft",
       "script": "scripts/check-vfgraft.py",
       "type": "computational"

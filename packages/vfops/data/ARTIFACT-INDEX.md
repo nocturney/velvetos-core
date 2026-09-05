@@ -55,6 +55,7 @@
 | Insights ingest | snapshot מאומת | `vfinsights/sources/*-ig-snapshot.md`, `templates/snapshot-ingest.md` |
 | Instance onboard | פרונט + זיכרון נפרד | `velvetos/experts/INSTANCE-ONBOARD.md`, `owner-memory-<id>.md` |
 | Social Booster | חבילת קרוסלה / הוקים | `vfgrowth/`, Canva, `vfigos` queue |
+| לוח פרסום קבוע | משבצות + לדג׳ר + מסירה | `vfgrowth/CALENDAR.md`, `LEDGER.md`, `HANDOFF-he.md` |
 | 3D model | כרטיס כדאיות, mesh | `vfprod/`, Drive, checkpoint |
 | Trend explorer | מפת מקורות, מוזיקה | `vfresearch/sources/`, `LINKS.json` |
 | Media director | storyboard, ריל packet | `vfom/`, `vfcovers/`, Canva |

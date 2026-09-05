@@ -1202,6 +1202,22 @@
         "vfconvert"
       ],
       "note": "CC BY-NC patterns only (human-in-the-loop, fact-check gates, integrity before claim). No Claude plugin / AI Scientist runtime / new vfacademic pack."
+    },
+    {
+      "id": "mvanhorn-last30days-skill",
+      "kind": "repo",
+      "url": "https://github.com/mvanhorn/last30days-skill",
+      "title": "last30days-skill — people-scored multi-source research (last ~30 days)",
+      "firstEmbedded": "2026-09-03",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-last30days-embed.md",
+      "playbook": "packages/vfresearch/hq/LAST30.md",
+      "skill": ".cursor/skills/vf-last30/SKILL.md",
+      "packs": [
+        "vfresearch",
+        "vfseason"
+      ],
+      "note": "Deep embed 2026-09-05: playbook + Cursor skill for @research-synthesist / @trend-researcher. Patterns only — no npx/CLI, no X/TikTok keys on Cloud."
     }
   ],
   "addLink": {

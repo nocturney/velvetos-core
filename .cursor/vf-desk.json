@@ -27,6 +27,7 @@
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
     "Every ~2 days forever (until owner stops): LinklyAI/best-skills via BEST-SKILLS.md + TIMER.md + skill vf-best-skills. Renew subscribe_timer every pass. Embed patterns only; no npx skills on Cloud.",
+    "Last-30-days community research: vfresearch/hq/LAST30.md + skill vf-last30 (mvanhorn/last30days-skill patterns). WebSearch/gh/orchestra only — no vendor CLI, no X/TikTok keys.",
     "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
     "Grok Bot quota failover: keep producing AND sending via HQ tools. Office brief is תצוגה 3 HTML via send_message to nocturney@gmail.com. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
     "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
@@ -399,13 +400,13 @@
       "slug": "research-synthesist",
       "packs": ["vfresearch"],
       "tools": ["drive", "web"],
-      "job": "Source map + weekly inspiration-link review (LINKS.json / WEEKLY.md). Do not invent citations or blocked bodies."
+      "job": "Source map + weekly inspiration-link review (LINKS.json / WEEKLY.md) + last-30-days community synthesis (LAST30.md / vf-last30). Do not invent citations or blocked bodies."
     },
     {
       "slug": "trend-researcher",
       "packs": ["vfresearch", "vfseason"],
       "tools": ["calendar", "web"],
-      "job": "Season, reprint, trend signals, and IG music/sound briefs (expert-trend-explorer). HeyOrca + IG paste (MUSIC.md). Treg not relevant; never invent track names or Insights"
+      "job": "Season, reprint, trend signals, last-30-days discovery (LAST30.md / vf-last30), and IG music/sound briefs (expert-trend-explorer). HeyOrca + IG paste (MUSIC.md). Treg not relevant; never invent track names or Insights"
     },
     {
       "slug": "carousel-growth-engine",
@@ -483,6 +484,7 @@
     ".cursor/skills/vf-fcc-offload/SKILL.md",
     ".cursor/skills/vf-weekly-links/SKILL.md",
     ".cursor/skills/vf-best-skills/SKILL.md",
+    ".cursor/skills/vf-last30/SKILL.md",
     ".cursor/skills/vf-ig-music/SKILL.md",
     ".cursor/skills/vf-velvetos/SKILL.md",
     ".cursor/skills/vf-daily-learning/SKILL.md",

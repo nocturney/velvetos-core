@@ -158,6 +158,15 @@
       "gate": "none"
     },
     {
+      "id": "content.calendar",
+      "label": "לוח פרסום קבוע IG",
+      "tool": "read-file",
+      "packs": ["vfgrowth", "vfcopy", "vfigos"],
+      "gate": "none",
+      "path": "packages/vfgrowth/CALENDAR.md",
+      "notes": "Standing Sun/Tue 16:00 reels, Thu 12:00 carousel, Stories 20:30. Schedule on instagram.com. No Meta Suite. No publish from Cursor."
+    },
+    {
       "id": "boost.request",
       "label": "בקשת בוסט",
       "tool": "vfigos",
