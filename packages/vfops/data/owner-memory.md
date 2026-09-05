@@ -16,6 +16,8 @@
 - **ארבעה תחומי מומחה:** Social Booster · 3D model · Trend explorer · Media director (תמונות/וידאו).
 - **שפה:** עברית לקופי מוצר; מסמכי משרד עברית+אנגלית.
 - **CTA:** וואטסאפ `050-2517000` / איסוף שדרות — לא «שלחו DM».
+- **אין חיוב API נפרד:** מנויי Gemini / ChatGPT / Perplexity בדפדפן לא כוללים מפתח מפתחים, והבעלים לא רוצה אחד (5.9.2026). HQ בלי מפתח = WebSearch. לא דוחקים מפתח.
+- **אין סשן דפדפן ב־Cloud:** לא עוגיות, לא patchright, לא `perplexity-user-mcp` / vscode-perplexity-mcp בענן.
 
 ### ראש צוות (lead)
 

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-05 — **Perplexity browser MCP**: [vscode-perplexity-mcp](https://github.com/automations-project/vscode-perplexity-mcp) (`perplexity-user-mcp`) צורך מנוי Pro בלי מפתח API — patchright + עוגיות Cloudflare. הקונספט מתאים ל«אין חיוב API נפרד»; **לא** מותקן ב־Cloud (ToS, vault, auto-config, IP זר). MCP רשמי של Perplexity עדיין Sonar API. בעלים דחה מפתחות API. HQ: WebSearch. `SUBSCRIPTIONS.md`. Skip perplexity-user-mcp on Cloud; owner declined extra API billing.
+
 - 2026-09-05 — **מנויים בלי דפדפן**: [RLabs-Inc/gemini-mcp](https://github.com/rlabs-inc/gemini-mcp) עדיף מ־aliargun כעטיפת API (Gemini 3, יולי 2026) אבל **עדיין** `GEMINI_API_KEY` — לא מחבר Plus. לא מותקן (Veo + 37 כלים). גשר ChatGPT: `scripts/vf_chatgpt.py` + `CONNECT-CHATGPT.md`. Hub: `SUBSCRIPTIONS.md`. Cloud **לא** פותח `gemini.google.com` / `chatgpt.com` (התראות אבטחה). Plus ≠ API. בלי מפתח: «חסר מפתח Gemini» / «חסר מפתח ChatGPT». Orchestra API desks instead of Cloud browser login; do not install RLabs.
 
 - 2026-09-05 — **גשר Gemini API**: [aliargun/mcp-server-gemini](https://github.com/aliargun/mcp-server-gemini) הוא מפתח AI Studio, **לא** מנוי `gemini.google.com`. Freeze יולי 2025 (מודלים 2.5 קשיחים). לא מותקן. גשר על `vfmcp`: `scripts/vf_gemini.py` (רשימת מודלים חיה) + `CONNECT-GEMINI.md`. בלי מפתח: «חסר מפתח Gemini». Failover תזמורת: API אם יש מפתח, אחרת ChatGPT+Perplexity+WebSearch. בלי Veo, בלי סוד בגיט. Gemini API bridge on existing vfmcp; subscription ≠ API; do not install aliargun.

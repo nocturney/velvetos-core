@@ -89,7 +89,7 @@
 | חיפוש חי + ציטוטים | WebSearch / WebFetch | **wired** |
 | Collections / העלאת קובץ | `vfresearch/sources/` + Drive | כבר כאן |
 | Deep Research | תזמורת 06:15 | כבר כאן |
-| סשן מנוי / Cloudflare | חומה 30.8 | failover מיד ל־ChatGPT+Gemini. אין גוף מומצא |
+| סשן מנוי / Cloudflare | חומה 30.8 | failover מיד ל־WebSearch. אין גוף מומצא. לא `perplexity-user-mcp` ב־Cloud |
 
 ## מה הותקן / הופעל בריצה הזו
 
@@ -119,6 +119,7 @@
 | FCC / `fcc-server` | נעול. לא על Cloud Agent |
 | **Headroom** (`headroom-ai`) | **local optional** — proxy/MCP דורש תהליך מקומי; Cloud Agent sandbox. דפוס CCR/ContentRouter ב-`vfharness/playbooks/context-thrift.md` בלי dependency. Mac: `uv tool install "headroom-ai[all]"` + `headroom wrap cursor` אחרי lead seat |
 | `aliargun/mcp-server-gemini` / `RLabs-Inc/gemini-mcp` ב־mcp.json | מפתח בגיט / npx על Cloud / Veo. מנוי הדפדפן לא מתחבר. `SUBSCRIPTIONS.md` + `vf_gemini.py` |
+| `perplexity-user-mcp` / [vscode-perplexity-mcp](https://github.com/automations-project/vscode-perplexity-mcp) | patchright + עוגיות Cloudflare. צורך Pro בלי API — **רק מק**, לא Cloud. Experimental + ToS. auto-config דורס `.cursor`. `SUBSCRIPTIONS.md` |
 | 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט. המחבר הרשמי הוא HTTP OAuth |
 | SharePoint / Outlook / Notion / Slack | לא ערימת שדרות |
 

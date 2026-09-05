@@ -178,7 +178,7 @@ def main() -> None:
         (CONNECT_WA, ("lharries/whatsapp-mcp", "050-2517000", "send=false", "Infobip")),
         (CONNECT_GEMINI, ("חסר מפתח Gemini", "vf_gemini.py", "aliargun", "gemini.google.com", "לא ממציאים", "RLabs")),
         (CONNECT_CHATGPT, ("חסר מפתח ChatGPT", "vf_chatgpt.py", "chatgpt.com", "OPENAI_API_KEY", "לא ממציאים")),
-        (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py")),
+        (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py", "perplexity-user-mcp", "patchright")),
         (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "Gemini API", "ChatGPT API")),
     ):
         text = path.read_text(encoding="utf-8")
@@ -223,6 +223,8 @@ def main() -> None:
         fail("ORCHESTRA.md must mention חסר מפתח ChatGPT")
     if "SUBSCRIPTIONS.md" not in orchestra and "לא פותחים" not in orchestra:
         fail("ORCHESTRA.md must forbid Cloud browser login to subscription sites")
+    if "perplexity-user-mcp" not in orchestra and "vscode-perplexity" not in orchestra:
+        fail("ORCHESTRA.md must skip vscode-perplexity-mcp / perplexity-user-mcp on Cloud")
 
     if "GAP.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention GAP.md")

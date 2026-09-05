@@ -1,7 +1,9 @@
 # מנויי מחקר · בלי דפדפן פנימי
 
 לא פק חדש. פק `vfmcp`.  
-המטרה: שולחנות Gemini ו־ChatGPT **קבועים** בלי התראות «גישה לא מורשית» לחשבון Google / OpenAI.
+המטרה: שולחנות מחקר קבועים בלי התראות «גישה לא מורשית» לחשבון Google / OpenAI / Perplexity.
+
+**בעלים 5.9.2026:** אין חיוב API נפרד. מנויי Plus/Pro בדפדפן **לא** כוללים מפתח מפתחים, והבעלים לא רוצה אחד. בלי מפתח HQ כותב «חסר מפתח …» ועובר ל־WebSearch. לא דוחקים מפתח. לא ממציאים גוף.
 
 ## למה הדפדפן הפנימי מפיל אזעקות
 
@@ -23,14 +25,12 @@ Google ו־OpenAI רואים לוגין חדש ממכונה זרה → התרא�
 
 פלייבוקים: [`CONNECT-GEMINI.md`](CONNECT-GEMINI.md) · [`CONNECT-CHATGPT.md`](CONNECT-CHATGPT.md).
 
-## מה הבעלים עושה פעם אחת
+## מה הבעלים עושה
 
-1. [Google AI Studio → API key](https://aistudio.google.com/apikey) → `GEMINI_API_KEY` בסוד Cloud / `~/.cursor` — לא בגיט.
-2. [OpenAI platform → API key](https://platform.openai.com/api-keys) + בילינג API נפרד → `OPENAI_API_KEY` אותו מקום.
-3. Cursor Desktop (המק בשדרות): Settings → Models → Google / OpenAI אם רוצים מודל מקומי. זה ערוץ נפרד מהתזמורת 06:15.
-4. **לא** להתחבר ל־`gemini.google.com` / `chatgpt.com` מדפדפן של Cloud Agent או Grok Bot.
+בלי חיוב API: Gems / GPTs / Canvas / Deep Research / Perplexity Pro נשארים על המק/הטלפון. Cloud משתמש ב־`WebSearch` / `WebFetch`.  
+**לא** להתחבר ל־`gemini.google.com` / `chatgpt.com` / `perplexity.ai` מדפדפן Cloud Agent או Grok Bot.
 
-בלי מפתח: **חסר מפתח Gemini** / **חסר מפתח ChatGPT**. Failover מיידי ל־WebSearch + השולחן הפתוח. אין גוף מומצא.
+אם יום אחד יופיע מפתח ב־env (בלי שנבקש): `vf_gemini.py` / `vf_chatgpt.py` עובדים. בלי מפתח: **חסר מפתח Gemini** / **חסר מפתח ChatGPT**. Failover מיידי ל־WebSearch. אין גוף מומצא.
 
 ## מה לא מתקינים
 
@@ -40,13 +40,27 @@ Google ו־OpenAI רואים לוגין חדש ממכונה זרה → התרא�
 | [RLabs-Inc/gemini-mcp](https://github.com/rlabs-inc/gemini-mcp) | מעודכן יותר (Gemini 3, יולי 2026) אבל **עדיין** `GEMINI_API_KEY`. 37 כלים + **Veo** (נעול ב־HQ). לא פותר מנוי דפדפן. לא npx ב־Cloud |
 | Antigravity CLI `agy auth login` | OAuth למנוי Google **על המק בלבד**. טוקן בענן = שוב IP זר + אזעקות. לא מעתיקים `ANTIGRAVITY_TOKEN` ל־Cloud Agent |
 | שמירת cookies / Playwright login | אסור |
+| [Automations-Project/VSCode-Perplexity-MCP](https://github.com/automations-project/vscode-perplexity-mcp) (`perplexity-user-mcp`) | **כן** צורך מנוי Pro בלי מפתח API — דרך patchright + עוגיות Cloudflare ב־`~/.perplexity-mcp`. Experimental. ToS של Perplexity. auto-config כותב ל־`.cursor/mcp.json`. **אסור ב־Cloud** (IP זר + vault). לא מעתיקים עוגיות. מק אופציונלי רק אחרי ראש צוות |
+
+## קונספט «מנוי בלי API» (Perplexity browser MCP)
+
+[vscode-perplexity-mcp](https://github.com/automations-project/vscode-perplexity-mcp) (last push `2026-07-17`) הוא **ההפך** מ־aliargun / RLabs / `@perplexity-ai/mcp-server`:
+
+| | MCP רשמי / Sonar API | vscode-perplexity-mcp |
+|---|---|---|
+| חיוב | מפתח API נפרד מהמנוי | צורך Free/Pro/Max שכבר שולם |
+| איך | `Authorization: Bearer` | Chromium + patchright מול `perplexity.ai/rest/sse/…` |
+| Cloudflare | אין | Turnstile + `cf_clearance` ב־vault |
+| יציבות | חוזה API | נקודת REST פרטית שעלולה להישבר |
+| Cloud Agent | מפתח ב־env (הבעלים דחה) | אסור — אותן אזעקות / גניבת סשן |
+
+הקונספט נכון לבעיה («אני משלם Plus, לא רוצה API»). המימוש **לא** שייך ל־Cloud Agent ולא ל־Grok Bot. אותו דפוס ל־Gemini/ChatGPT (סשן כרום בענן) כבר הפיל התראות Google/OpenAI.
+
+שולחן Perplexity ב־HQ: `WebSearch` / «דולג — חומה». לא ממציאים גוף.
 
 ## תזמורת 06:15 (Cloud)
 
-```
-python3 scripts/vf_chatgpt.py orchestra
-python3 scripts/vf_gemini.py orchestra
-```
+בלי מפתחות API: `WebSearch` / `WebFetch` בלבד.  
+אם יש מפתח ב־env: `python3 scripts/vf_chatgpt.py orchestra` · `python3 scripts/vf_gemini.py orchestra`.
 
-Perplexity נשאר WebSearch / חומה.  
 `constitution/ORCHESTRA.md`.

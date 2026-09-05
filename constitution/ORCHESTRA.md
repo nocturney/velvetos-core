@@ -25,7 +25,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 
 | כלי שנפל | מעבירים מיד ל־ | מה רושמים |
 |---|---|---|
-| **Perplexity** (Cloudflare / רובוט / סשן פרטי) | ChatGPT API + Gemini API + WebSearch | «דולג — חומה» ב־`vfresearch/sources/` · אין גוף מומצא |
+| **Perplexity** (Cloudflare / רובוט / סשן פרטי) | WebSearch / WebFetch. **לא** `perplexity-user-mcp` / vscode-perplexity-mcp מ־Cloud | «דולג — חומה» ב־`vfresearch/sources/` · אין גוף מומצא · לא עוגיות |
 | **ChatGPT** (אין מפתח / שגיאת API) | `python3 scripts/vf_chatgpt.py orchestra` אם יש `OPENAI_API_KEY` · אחרת Gemini API + Perplexity + WebSearch | Plus ≠ API. **לא** פותחים `chatgpt.com` מ־Cloud. בלי מפתח: «חסר מפתח ChatGPT» |
 | **Gemini** (אין מפתח / שגיאת API) | `python3 scripts/vf_gemini.py orchestra` אם יש `GEMINI_API_KEY` · אחרת ChatGPT API + Perplexity + WebSearch | מנוי ≠ API. **לא** פותחים `gemini.google.com` מ־Cloud. בלי מפתח: «חסר מפתח Gemini» |
 | שני שולחנות נפלו | השולחן הפתוח נושא את כל העומס עכשיו | מטמיעים רק מגוף אמיתי |
