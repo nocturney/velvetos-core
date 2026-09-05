@@ -55,10 +55,26 @@ codex login     # ChatGPT Plus
 
 ```bash
 curl https://cursor.com/install -fsS | bash
+
+# zsh במק לא רואה ~/.local/bin עד שמוסיפים ל-PATH:
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+
+which agent          # אמור להדפיס .../.local/bin/agent
+agent --version
 agent login
 cd /path/to/velvetos-core   # הקלונים המקומי
 agent worker --computer-use --name "sderot-mac" start
 ```
+
+אם עדיין `command not found: agent`:
+
+```bash
+ls -l ~/.local/bin/agent
+```
+
+- הקובץ **חסר** → ההתקנה לא רצה; חזור על `curl https://cursor.com/install -fsS | bash` באותו טרמינל.
+- הקובץ **קיים** → הרץ `export PATH="$HOME/.local/bin:$PATH"` ואז `agent --version`. אפשר גם `~/.local/bin/agent login` בלי PATH.
 
 בפעם הראשונה ב־macOS: System Settings → Privacy & Security → Accessibility **ו־** Screen Recording ל־**Cursor Computer Use**.
 
