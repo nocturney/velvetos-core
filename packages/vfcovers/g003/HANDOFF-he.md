@@ -15,6 +15,7 @@
 | כיתוב HQ | `packages/vfcopy/G003-alt.md` (אותו בלוק; לא כדור) |
 | גלם | `/workspace/INSTA/media/vf-user-2026-08-30.mp4` + `vf-user-2026-08-30-9x16.mp4` |
 | Drive שיבוץ | https://docs.google.com/document/d/1wdUVYJfapXwpGx4396ifp2Jigrxgkv7FmARRCLJzSdk/edit |
+| Drive #משובץ | https://docs.google.com/document/d/1sMcgnqMk9WPA9QTeDNLlW5fQ8xZBQTcc0e9Dlmuoj68/edit |
 
 ## שדרוג אופציונלי · SoccerBall
 
@@ -31,14 +32,16 @@ media/SoccerBall final_PLA_9h55m_20260715143622.mp4
 - כיתוב כדור על הריל החתוך.
 - המצאת mp4 / כריכה מ־HQ.
 
-## כיתוב משובץ — G003-alt
+## כיתוב משובץ — G003-alt (מומלץ 5.9)
+
+מקור: `packages/vfcopy/G003-alt.md`. להחליף גם `VF-G003-caption.txt` על מחשב Grok. הווידאו לא משתנה.
 
 ```
-מהמיטה יוצא משהו
+מה יוצא מהמדפסת?
 
-רואים שכבה נבנית, ואז את הרגע שהצורה מתחילה לדבר.
+שכבה על שכבה, עד שיש צורה שאפשר להחזיק.
 
-אם בא לכם אחד כזה אצלכם — וואטסאפ 050-2517000. נשמח לארח באיסוף בשדרות.
+להזמנה וואטסאפ 050-2517000. איסוף בשדרות.
 ```
 
 האשטגים (רשות): `#הדפסתתלתממד #שדרות #תלתממד`

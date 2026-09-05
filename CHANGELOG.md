@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-05 — **G003-alt כיתוב**: נפסל «מהמיטה יוצא משהו». מומלץ: פתיחת סדרה + שכבות + וואטסאפ. 5 חלופות ב־`vfcopy/G003-alt.md`. הווידאו לא משתנה. לא Publish. G003-alt caption rewrite after lead rejected floor-jargon opener.
 - 2026-09-05 — **G003-alt #משובץ**: חבילת סטודיו על מחשב Grok `/workspace/INSTA/content/2026-09-07/VF-G003-reel.mp4` + cover + caption (1080×1920 · ~9.6ש · כיתוב G003-alt לא כדור). משבצת א׳ 7.9 16:00 instagram.com. SoccerBall שדרוג אופציונלי (לא על פרוסת הדיסק). HQ לא ממציא מדיה / לא Publish. G003-alt scheduled from Studio-cut pack paths.
 - 2026-09-05 — **G003 שיבוץ**: SoccerBall **לא** בעץ GitHub HQ. מסלול B מאושר — גלם מחשב Grok `/workspace/INSTA/media/vf-user-2026-08-30.mp4` + `vf-user-2026-08-30-9x16.mp4` (+ stills). כיתוב A `vfcopy/G003.md` · כיתוב B `vfcopy/G003-alt.md` (בלי «כדור»). לוח א׳ 7.9 16:00 **מוכן לשיבוץ כשיש mp4**. מסירה `vfcovers/g003/HANDOFF-he.md`. HQ לא חותך / לא ממציא מדיה / לא Publish. G003 calendar unlocked for Studio assemble-then-schedule.
 - 2026-09-05 — **G003 עצירה**: מועמד SoccerBall נשאר ריל #3; נתיב נקוב `media/SoccerBall final_PLA_9h55m_20260715143622.mp4` לא נגיש מ־Cloud (Drive/Canva/3DAI/מראת iCloud). אין החלפה ל־G001 king / G002 RoboLotl. כיתוב מורחב ב־`vfcopy/G003.md` (הוק מלדג׳ר). מסירת עצירה `vfcovers/g003/HANDOFF-he.md`. לוח/לדג׳ר מסומנים חסום מדיה. בלי mp4 מומצא / בלי Publish. G003 reel blocked on named unreachable floor file.
