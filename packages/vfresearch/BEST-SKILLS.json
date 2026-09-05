@@ -81,6 +81,13 @@
       "pack": "vfresearch",
       "path": "packages/vfresearch/BEST-SKILLS.md",
       "firstEmbedded": "2026-09-03"
+    },
+    {
+      "id": "market-research-intelligence-gates",
+      "pack": "vfresearch",
+      "path": "packages/vfresearch/hq/MARKET-INTEL.md",
+      "firstEmbedded": "2026-09-05",
+      "source": "https://mcpmarket.com/tools/skills/market-research-intelligence-1787987613965"
     }
   ],
   "watchlist": [
