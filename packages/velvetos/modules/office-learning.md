@@ -29,5 +29,6 @@ Playbooks:
 - No secrets, PHI, or personal folders in promoted memory
 - Learning ≠ inventing ₪, Insights, or blocked bodies
 - Corrections / failures / better approaches trigger same-day promote (self-improving pattern — no second runtime). See `DAILY-RETRO.md` triggers + bi-daily `vfresearch/BEST-SKILLS.md`
+- Deeper durable lessons (optional numbered records): `vfops/hq/LEARNING-RECORDS.md` (teach pattern from mattpocock — no second teaching runtime)
 
 Always present in core. An instance enables it via `modulesEnabled`.
