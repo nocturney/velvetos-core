@@ -112,12 +112,21 @@
     {
       "id": "ai-video-image-gen-trending",
       "note": "skills-101 / genmedia trending. Map only via expert-media-director + Canva-first; no Veo/Kling from HQ."
+    },
+    {
+      "id": "social-media-publisher-socialclaw",
+      "url": "https://mcpmarket.com/tools/skills/social-media-publisher-2",
+      "note": "Pattern validate→apply→verify embedded 2026-09-05 into vfigos/SEND. Keep watching for a real IG Publish MCP (not Meta DevTools). No SocialClaw npm/API key on Cloud."
     }
   ],
   "skipped": [
     {
       "id": "npx-skills-cli",
       "why": "Cloud Agent does not install skills via npx; embed patterns into git packs"
+    },
+    {
+      "id": "socialclaw-vendor-install",
+      "why": "Vendor lock + API key; multi-platform blast outside VF mandate. Pattern only — see 2026-09-05-social-media-publisher.md"
     },
     {
       "id": "azure-prisma-vendor-block",

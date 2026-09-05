@@ -47,6 +47,7 @@
 | agent-browser / browser-use | computerUse / בדיקות ידניות | בוט לקוח |
 | Remotion / video gen vendor | `vfom` · `expert-media-director` | Veo/Kling מ־HQ · Remotion vendor |
 | orchestrator / swarm / OpenClaw | `vfe2b` LOCK | runtime שני |
+| social-media-publisher / SocialClaw | `vfigos` SEND + `vfmcp` GAP (דפוס validate→verify) | `npx socialclaw` · blast רב-פלטפורמי · API key בגיט |
 
 ## מה מותר לפתוח (חוקה)
 

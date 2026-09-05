@@ -102,7 +102,7 @@
 
 | פער | למה לא |
 |---|---|
-| Publish MCP לאינסטגרם | אין namespace. failover: Canva+Drive+Gmail (`SEND.md`). לא ממציאים שעלה לפיד |
+| Publish MCP לאינסטגרם | אין namespace. failover: Canva+Drive+Gmail (`SEND.md`). לא ממציאים שעלה לפיד. דפוס validate→apply→verify מ־social-media-publisher הוטמע ב־`vfigos/SEND.md` — **בלי** SocialClaw/`npx` על Cloud. Meta DevTools ≠ Publish |
 | וואטסאפ **שליחה** / מדפסות | MCP מותר לחיפוש/טיוטה. שליחת לקוח VF = אדם `050-2517000`. מדפסות ברצפה. `vf_office.py convert draft` |
 | Treg | **לא רלוונטי** למשרד. לא login |
 | Mobbin MCP | פלאגין על הדיסק; namespace לא על Cloud Agent. failover: `vfbriefux` |

@@ -1,0 +1,14 @@
+{
+  "task_id": "social-media-publisher-embed-2026-09-05",
+  "status": "done",
+  "guide": "packages/vfresearch/WEEKLY.md + BEST-SKILLS.md",
+  "source_url": "https://mcpmarket.com/tools/skills/social-media-publisher-2",
+  "source_body": "cloudflare-blocked",
+  "failover_body": "https://github.com/ndesv21/socialclaw/blob/main/skill/SKILL.md",
+  "embedded_pattern": "validate-apply-verify",
+  "packs": ["vfigos", "vfmcp", "vfharness", "vfagents", "vfresearch", "constitution"],
+  "skipped": ["socialclaw-npm", "multi-platform-blast", "api-key-in-git"],
+  "sensors": "check-all.py exit 0",
+  "artifact": "packages/vfresearch/sources/2026-09-05-social-media-publisher.md",
+  "latest_observation": "mcpmarket Cloudflare wall; pattern embedded from SocialClaw SKILL.md failover"
+}
