@@ -1119,6 +1119,71 @@
         "vfresearch"
       ],
       "note": "Embed COPYWRITING MODE into vfcopy/hq/reader-first-he.md; strengthen ai-tells-he.md. No npx skills add. Skip LinkedIn/strategic-blog (public site locked). Complements plannotator-write-better."
+    },
+    {
+      "id": "hkuds-deeptutor",
+      "kind": "repo",
+      "url": "https://github.com/HKUDS/DeepTutor",
+      "openUrl": "https://deeptutor.info/",
+      "title": "DeepTutor — lifelong personalized tutoring (agent-native learning)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
+      "playbook": "packages/vfops/hq/MASTERY-MEMORY.md",
+      "packs": [
+        "vfops",
+        "vfmem",
+        "vfharness",
+        "velvetos"
+      ],
+      "note": "Patterns only: mastery gate, L1/L2/L3 memory, question-bank from failures, recoverable sessions. No DeepTutor Docker / EduHub install / second runtime."
+    },
+    {
+      "id": "examful-ai",
+      "kind": "vendor-site",
+      "url": "https://examful.ai/",
+      "title": "ExamFul.ai — AP / IB / A-level past papers + AI tutoring",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "verdict": "watch",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
+      "packs": [
+        "velvetos",
+        "vfresearch"
+      ],
+      "note": "Education exam vertical — not VF 3D-print desk. Watch only for future education frontend instance (expert-instance-onboard). No exam pipeline embed into HQ."
+    },
+    {
+      "id": "lieflat-charts",
+      "kind": "repo",
+      "url": "https://github.com/larashero3-dotcom/lieflat-charts",
+      "title": "lieflat-charts — agent skill for polished HTML data charts",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
+      "report": "packages/vfbriefux/hq/CHARTS.md",
+      "packs": [
+        "vfbriefux",
+        "vfinsights",
+        "vfops"
+      ],
+      "note": "Patterns only: Glance default for brief slot 06, one chart = one conclusion, verified numbers only. Complements DIAGRAM-MAKER (flows). No npx skills / gallery import / MAIL.html replace."
+    },
+    {
+      "id": "academic-research-skills",
+      "kind": "repo",
+      "url": "https://github.com/Imbad0202/academic-research-skills",
+      "title": "academic-research-skills — research → write → review → revise → finalize",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
+      "playbook": "packages/vfresearch/hq/ACADEMIC-PIPELINE.md",
+      "packs": [
+        "vfresearch",
+        "vfharness",
+        "vfconvert"
+      ],
+      "note": "CC BY-NC patterns only (human-in-the-loop, fact-check gates, integrity before claim). No Claude plugin / AI Scientist runtime / new vfacademic pack."
     }
   ],
   "addLink": {
