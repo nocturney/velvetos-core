@@ -818,6 +818,22 @@
       "note": "Embed only: A_t=(P,Σ,O); discard reasoning after validated state patch. No LangGraph / SkillExecBench runtime. Complements context-thrift + OMA checkpoint."
     },
     {
+      "id": "strategic-compact",
+      "kind": "skill",
+      "url": "https://mcpmarket.com/tools/skills/strategic-context-compaction-1787987503518",
+      "title": "Strategic Context Compaction — phase-boundary /compact (Claude Code)",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-strategic-compact.md",
+      "playbook": "packages/vfharness/playbooks/context-thrift.md",
+      "packs": [
+        "vfharness",
+        "vfresearch",
+        "vfe2b"
+      ],
+      "note": "Embed only: phase-boundary table (compact at stage edges, never mid-implementation). No npx skills / Claude hooks / /compact command. Maps onto checkpoint + SKILLSTATE + DeerFlow compaction."
+    },
+    {
       "id": "mcpmarket-blender-mcp",
       "kind": "mcp-listing",
       "url": "https://mcpmarket.com/server/blender-model-context-protocol",
