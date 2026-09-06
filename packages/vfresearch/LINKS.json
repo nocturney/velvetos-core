@@ -1218,6 +1218,24 @@
         "vfseason"
       ],
       "note": "Deep embed 2026-09-05: playbook + Cursor skill for @research-synthesist / @trend-researcher. Patterns only — no npx/CLI, no X/TikTok keys on Cloud."
+    },
+    {
+      "id": "mcpmarket-social-media-publisher-2",
+      "kind": "skill-catalog",
+      "url": "https://mcpmarket.com/tools/skills/social-media-publisher-2",
+      "openUrl": "https://github.com/ndesv21/socialclaw/blob/main/skill/SKILL.md",
+      "title": "Social Media Publisher (SocialClaw-style) — validate→apply→verify publish skill",
+      "firstEmbedded": "2026-09-05",
+      "lastReviewed": "2026-09-05",
+      "sourceNote": "packages/vfresearch/sources/2026-09-05-social-media-publisher.md",
+      "packs": [
+        "vfigos",
+        "vfmcp",
+        "vfharness",
+        "vfresearch",
+        "vfagents"
+      ],
+      "note": "mcpmarket body Cloudflare-blocked («אין גוף»). Pattern from SocialClaw skill SKILL.md: validate→apply→verify/reconcile. Embed into vfigos/SEND only. No npm socialclaw, no multi-platform blast, no API key in git."
     }
   ],
   "addLink": {

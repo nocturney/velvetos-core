@@ -16,7 +16,10 @@
   "stoppedAt": null,
   "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-best-skills.md",
   "briefBlock": "05-משרד",
-  "mention": ["@research-synthesist", "@trend-researcher"],
+  "mention": [
+    "@research-synthesist",
+    "@trend-researcher"
+  ],
   "seat": "ייצור",
   "rule": "Re-read LinklyAI/best-skills rankings every ~48h. Embed useful patterns into existing packs only. Do not invent rankings, ₪, or Insights. Do not npx-install skills on Cloud Agent.",
   "locks": [
@@ -109,7 +112,7 @@
     {
       "id": "obra-superpowers",
       "url": "https://github.com/obra/superpowers",
-      "note": "Partial: verification + skill-first. Still watch brainstorming / writing-plans / systematic-debugging for makers+harness."
+      "note": "Partial embed (verification + skill-first). Full SDLC suite — re-scan bi-daily for new skills worth mapping to vfe2b/vfharness."
     },
     {
       "id": "mattpocock-skills",
@@ -149,6 +152,11 @@
       "id": "impeccable",
       "url": "https://github.com/pbakaus/impeccable",
       "note": "Design-language skill for harnesses. Brand-specific kinpaku tokens — do not copy palette into VF; watch methodology only."
+    },
+    {
+      "id": "social-media-publisher-socialclaw",
+      "url": "https://mcpmarket.com/tools/skills/social-media-publisher-2",
+      "note": "Pattern validate→apply→verify embedded 2026-09-05 into vfigos/SEND. Keep watching for a real IG Publish MCP (not Meta DevTools). No SocialClaw npm/API key on Cloud."
     }
   ],
   "skipped": [
@@ -167,6 +175,10 @@
     {
       "id": "openclaw-self-improving-runtime",
       "why": "Second runtime locked; office-learning already covers reflection→memory"
+    },
+    {
+      "id": "socialclaw-vendor-install",
+      "why": "Vendor lock + API key; multi-platform blast outside VF mandate. Pattern only — see 2026-09-05-social-media-publisher.md"
     }
   ]
 }
