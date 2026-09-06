@@ -55,7 +55,7 @@ def main() -> None:
             fail(f"ORCHESTRA.md must mention {needle}")
     for path, needles in (
         (INSTANCE, ("רף סוכנות", "חצי-פק", "עברית")),
-        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים")),
+        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md")),
         (EDIT, ("JPEG גולמי", "Canva", "vfcovers")),
         (CAL_OPS, ("לא שואלים", "Google Calendar", "050-2517000")),
     ):

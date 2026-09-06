@@ -14,6 +14,8 @@ G003 = ROOT / "packages" / "vfgrowth" / "G003.md"
 G004 = ROOT / "packages" / "vfgrowth" / "G004.md"
 COPY = ROOT / "packages" / "vfcopy" / "G003.md"
 COPY_G004 = ROOT / "packages" / "vfcopy" / "G004.md"
+VOICE = ROOT / "packages" / "vfcopy" / "VOICE.md"
+VOICE_RESEARCH = ROOT / "packages" / "vfcopy" / "VOICE-RESEARCH.md"
 STORIES = ROOT / "packages" / "vfcopy" / "hq" / "templates" / "ig-stories.md"
 FOLLOWER = ROOT / "packages" / "vfgrowth" / "hq" / "FOLLOWER-GROWTH.md"
 TAGS = ROOT / "constitution" / "tags.md"
@@ -38,7 +40,7 @@ def assert_no_ils(path: Path) -> None:
 
 
 def main() -> None:
-    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, COPY_G004, STORIES, FOLLOWER):
+    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, COPY_G004, VOICE, VOICE_RESEARCH, STORIES, FOLLOWER):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
         assert_no_ils(path)
@@ -114,11 +116,41 @@ def main() -> None:
             fail(f"G004.md missing {needle!r}")
 
     copy4 = COPY_G004.read_text()
-    for needle in ("050-2517000", "מחזיק", "לא משקולת", "kettlebells-pink", "היילייטס"):
+    for needle in ("050-2517000", "מחזיק", "לא משקולת", "kettlebells-pink", "היילייטס", "הכירו", "מתאים", "VOICE.md"):
         if needle not in copy4:
             fail(f"vfcopy/G004.md missing {needle!r}")
     if "שלחו DM" in copy4 and "לא «שלחו DM»" not in copy4 and "בלי «שלחו DM»" not in copy4:
         fail("vfcopy/G004.md must forbid שלחו DM")
+    if "חמש ורודות מהמיטה" in copy4:
+        fail("vfcopy/G004.md must not keep early thin copy")
+
+    voice = VOICE.read_text()
+    for needle in (
+        "תהליך-קצר",
+        "סיפור-מוצר",
+        "22 שעות הדפסה בכמה שניות",
+        "תנועה, צבע והמון אופי",
+        "עקבו כדי לראות מה יוצא מהמדפסת בשבוע הבא",
+        "050-2517000",
+        "מוכנים",
+        "בלי משלוח",
+    ):
+        if needle not in voice:
+            fail(f"vfcopy/VOICE.md missing {needle!r}")
+    if "X ₪" not in voice:
+        fail("vfcopy/VOICE.md must keep X ₪ when sale amount is missing")
+
+    research = VOICE_RESEARCH.read_text()
+    for needle in ("https://", "אין ספירת עוקבים", "לאמץ", "לדחות", "nisha.co", "studioarmadillo.com"):
+        if needle not in research:
+            fail(f"vfcopy/VOICE-RESEARCH.md missing {needle!r}")
+
+    studio = (ROOT / "constitution" / "STUDIO.md").read_text()
+    if "VOICE.md" not in studio:
+        fail("constitution/STUDIO.md must point at VOICE.md")
+    inst_studio = (ROOT / "instances" / "velvet-factory" / "constitution" / "STUDIO.md").read_text()
+    if "VOICE.md" not in inst_studio:
+        fail("instances/velvet-factory/constitution/STUDIO.md must point at VOICE.md")
 
     copy = COPY.read_text()
     if "מה יוצא מהמדפסת" not in copy:
@@ -147,7 +179,7 @@ def main() -> None:
     if "check-vfgrowth.py" not in AGENTS.read_text():
         fail("AGENTS.md sensor table must list check-vfgrowth.py")
 
-    print("OK standing calendar + G003 lock + G004 + follower-growth")
+    print("OK standing calendar + G003 lock + G004 + VOICE + follower-growth")
 
 
 if __name__ == "__main__":
