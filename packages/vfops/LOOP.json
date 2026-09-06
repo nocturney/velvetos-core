@@ -1,0 +1,458 @@
+{
+  "name": "vfops-loop",
+  "title": "לולאת משרד — כל פק נצרך",
+  "updatedAt": "2026-09-06",
+  "rule": "Every packages/ folder has a consume step. Catalog without consume is a fail. No invented ₪ or Insights. No live IG publish from this loop.",
+  "cli": "python3 scripts/vfops_loop.py",
+  "briefCli": "python3 scripts/vfops_loop.py brief",
+  "handoffCli": "python3 scripts/vfops_loop.py handoff",
+  "playbook": "packages/vfops/hq/LOOP.md",
+  "locks": [
+    "no-invented-prices",
+    "no-invented-insights",
+    "no-live-ig-publish",
+    "no-auto-dm",
+    "stories-via-instagram-com",
+    "vfcost-cli-integrate-not-duplicate"
+  ],
+  "packs": [
+    {
+      "id": "velvetos",
+      "kind": "working-cli",
+      "cadence": "on-instance",
+      "consume": "python3 scripts/velvetos.py modules",
+      "briefSlot": "05",
+      "handoff": "packages/velvetos/REPOS.md",
+      "blocked": null
+    },
+    {
+      "id": "vfagents",
+      "kind": "docs-playbook",
+      "cadence": "on-job",
+      "consume": "packages/vfagents/playbooks/reflection-before-send.md",
+      "briefSlot": "01",
+      "handoff": "packages/vfagents/playbooks/caption-draft.md",
+      "blocked": null
+    },
+    {
+      "id": "vfbiz",
+      "kind": "locked",
+      "cadence": "daily-07:00",
+      "consume": "packages/vfbiz/LOCK.md",
+      "briefSlot": "04",
+      "handoff": "packages/vfbiz/LOCK.md",
+      "blocked": "B2B נעול עד בלוק 01"
+    },
+    {
+      "id": "vfbooks",
+      "kind": "docs-playbook",
+      "cadence": "weekly",
+      "consume": "packages/vfbooks/LEDGER.md",
+      "briefSlot": "02",
+      "handoff": "packages/vfbooks/SHEETS.md",
+      "blocked": "אין ספירה בלי מקור מאומת"
+    },
+    {
+      "id": "vfbriefux",
+      "kind": "working-cli",
+      "cadence": "daily-07:00",
+      "consume": "python3 packages/vfbriefux/render_mail.py --check",
+      "briefSlot": "all",
+      "handoff": "packages/vfbriefux/hq/PACKET.md",
+      "blocked": null
+    },
+    {
+      "id": "vfcanva",
+      "kind": "mcp-ready",
+      "cadence": "on-content",
+      "consume": "packages/vfcanva/studio/render.py",
+      "briefSlot": "07",
+      "handoff": "packages/vfcanva/WORKFLOW.md",
+      "blocked": null
+    },
+    {
+      "id": "vfconvert",
+      "kind": "docs-playbook",
+      "cadence": "on-inquiry",
+      "consume": "packages/vfconvert/hq/GRILL.md",
+      "briefSlot": "02",
+      "handoff": "packages/vfconvert/CARD.md",
+      "blocked": "אין פנייה חדשה = אין ספירה"
+    },
+    {
+      "id": "vfcopy",
+      "kind": "docs-playbook",
+      "cadence": "daily-07:00",
+      "consume": "packages/vfcopy/G004.md",
+      "briefSlot": "07",
+      "handoff": "packages/vfcopy/G004.md",
+      "blocked": null
+    },
+    {
+      "id": "vfcost",
+      "kind": "working-cli",
+      "cadence": "daily-07:00",
+      "consume": "python3 scripts/vfcost.py brief",
+      "briefSlot": "02",
+      "handoff": "packages/vfcost/CLI.md",
+      "blocked": null
+    },
+    {
+      "id": "vfcovers",
+      "kind": "working-cli",
+      "cadence": "on-content",
+      "consume": "packages/vfcovers/g005/compose_slides.py",
+      "briefSlot": "07",
+      "handoff": "packages/vfcovers/g005/HANDOFF-he.md",
+      "blocked": null
+    },
+    {
+      "id": "vfdsh",
+      "kind": "overlay",
+      "cadence": "on-demand",
+      "consume": "packages/vfdsh/crews/pipeline-board.md",
+      "briefSlot": "05",
+      "handoff": "packages/vfdsh/EMBED.md",
+      "blocked": "אין runtime שני"
+    },
+    {
+      "id": "vfe2b",
+      "kind": "overlay",
+      "cadence": "on-job",
+      "consume": "packages/vfe2b/crews/run.md",
+      "briefSlot": "01",
+      "handoff": "packages/vfe2b/crews/morning-brief.md",
+      "blocked": "אין אורקסטרטור שני"
+    },
+    {
+      "id": "vffcc",
+      "kind": "locked",
+      "cadence": "on-demand",
+      "consume": "packages/vffcc/playbooks/cursor-thrift.md",
+      "briefSlot": "05",
+      "handoff": "packages/vffcc/LOCK.md",
+      "blocked": "לא על Cloud Agent"
+    },
+    {
+      "id": "vfgraft",
+      "kind": "docs-playbook",
+      "cadence": "session-start",
+      "consume": "packages/vfgraft/MAP.md",
+      "briefSlot": "05",
+      "handoff": "packages/vfgraft/graph/morning-job.md",
+      "blocked": null
+    },
+    {
+      "id": "vfgrowth",
+      "kind": "docs-playbook",
+      "cadence": "daily-07:00",
+      "consume": "packages/vfgrowth/hq/FOLLOWER-GROWTH.md",
+      "briefSlot": "04",
+      "handoff": "packages/vfgrowth/HANDOFF-he.md",
+      "blocked": null,
+      "gates": [
+        "packages/vfgrowth/EDIT-GATE.md",
+        "packages/vfgrowth/CALENDAR-OPS.md"
+      ]
+    },
+    {
+      "id": "vfharness",
+      "kind": "working-cli",
+      "cadence": "after-edit",
+      "consume": "python3 scripts/check-all.py",
+      "briefSlot": "05",
+      "handoff": "packages/vfharness/EMBED.md",
+      "blocked": null
+    },
+    {
+      "id": "vfigos",
+      "kind": "needsAuth",
+      "cadence": "daily-growth",
+      "consume": "packages/vfigos/CONNECT-IG.md",
+      "briefSlot": "06",
+      "handoff": "packages/vfigos/HANDOFF-STANDING-he.md",
+      "blocked": "needsAuth · טוקן Meta · סטוריז ב-instagram.com"
+    },
+    {
+      "id": "vfinsights",
+      "kind": "needsAuth",
+      "cadence": "daily-07:00",
+      "consume": "packages/vfinsights/READ.md",
+      "briefSlot": "06",
+      "handoff": "packages/vfinsights/templates/snapshot-ingest.md",
+      "blocked": "אין ספירה עד סנאפשוט / טוקן"
+    },
+    {
+      "id": "vfmakers",
+      "kind": "overlay",
+      "cadence": "weekly",
+      "consume": "packages/vfmakers/crews/content-rotation.md",
+      "briefSlot": "07",
+      "handoff": "packages/vfmakers/crews/cash-pulse.md",
+      "blocked": null
+    },
+    {
+      "id": "vfmcp",
+      "kind": "needsAuth",
+      "cadence": "session-start",
+      "consume": "packages/vfmcp/GAP.md",
+      "briefSlot": "05",
+      "handoff": "packages/vfigos/CONNECT-IG.md",
+      "blocked": "ig-mcp / Sheets / WhatsApp send לפי CONNECT"
+    },
+    {
+      "id": "vfmem",
+      "kind": "working-cli",
+      "cadence": "session-start",
+      "consume": "python3 scripts/vfmem.py who morning-brief",
+      "briefSlot": "05",
+      "handoff": "packages/vfmem/SKILL.md",
+      "blocked": null
+    },
+    {
+      "id": "vfmskill",
+      "kind": "docs-playbook",
+      "cadence": "on-content",
+      "consume": "packages/vfmskill/SKILL.md",
+      "briefSlot": "07",
+      "handoff": "packages/vfmskill/hq/PLAYBOOK.md",
+      "blocked": null
+    },
+    {
+      "id": "vfom",
+      "kind": "docs-playbook",
+      "cadence": "on-floor-clip",
+      "consume": "packages/vfom/crews/reference-plan.md",
+      "briefSlot": "07",
+      "handoff": "packages/vfom/SKILL.md",
+      "blocked": "אין גלם = אין ריל"
+    },
+    {
+      "id": "vfops",
+      "kind": "working-cli",
+      "cadence": "daily-07:00",
+      "consume": "python3 scripts/vfops_loop.py brief",
+      "briefSlot": "all",
+      "handoff": "packages/vfops/ROUTINE.md",
+      "blocked": null
+    },
+    {
+      "id": "vfprod",
+      "kind": "docs-playbook",
+      "cadence": "daily-03",
+      "consume": "packages/vfprod/SHOP-CLOSE.md",
+      "briefSlot": "03",
+      "handoff": "packages/vfprod/FLOOR.md",
+      "blocked": "אין Print מ-HQ"
+    },
+    {
+      "id": "vfresearch",
+      "kind": "docs-playbook",
+      "cadence": "daily-06:15",
+      "consume": "packages/vfresearch/DAILY.md",
+      "briefSlot": "05",
+      "handoff": "packages/vfresearch/WEEKLY.md",
+      "blocked": null
+    },
+    {
+      "id": "vfsales",
+      "kind": "docs-playbook",
+      "cadence": "on-inquiry",
+      "consume": "packages/vfsales/QUOTE.md",
+      "briefSlot": "02",
+      "handoff": "packages/vfsales/hq/TIMELINE-AUTO.md",
+      "blocked": "X ₪ עד סכום מאומת"
+    },
+    {
+      "id": "vfseason",
+      "kind": "docs-playbook",
+      "cadence": "daily-07:00",
+      "consume": "packages/vfseason/hq/PLAYBOOK.md",
+      "briefSlot": "07",
+      "handoff": "packages/vfgrowth/CALENDAR.md",
+      "blocked": "אין חלון עונה בלי תאריך סטודיו"
+    },
+    {
+      "id": "vfsku",
+      "kind": "working-cli",
+      "cadence": "daily-07:00",
+      "consume": "python3 scripts/vfsku.py brief",
+      "briefSlot": "03",
+      "handoff": "packages/vfsku/week.md",
+      "blocked": null
+    },
+    {
+      "id": "vlicense",
+      "kind": "docs-playbook",
+      "cadence": "on-shelf",
+      "consume": "packages/vlicense/GATE.md",
+      "briefSlot": "03",
+      "handoff": "packages/vfsku/GATE.md",
+      "blocked": "הורדה ≠ רישיון"
+    }
+  ],
+  "guides": [
+    {
+      "id": "constitution",
+      "path": "constitution/CONSTITUTION.md",
+      "cadence": "always",
+      "consume": "constitution/ORCHESTRA.md"
+    },
+    {
+      "id": "instance-bar",
+      "path": "constitution/INSTANCE.md",
+      "cadence": "always",
+      "consume": "constitution/INSTANCE.md"
+    },
+    {
+      "id": "studio",
+      "path": "constitution/STUDIO.md",
+      "cadence": "always",
+      "consume": "constitution/STUDIO.md"
+    },
+    {
+      "id": "send",
+      "path": "constitution/SEND.md",
+      "cadence": "on-send",
+      "consume": "constitution/SEND.md"
+    },
+    {
+      "id": "tags",
+      "path": "constitution/tags.md",
+      "cadence": "on-job",
+      "consume": "constitution/tags.md"
+    },
+    {
+      "id": "instance-studio",
+      "path": "instances/velvet-factory/constitution/STUDIO.md",
+      "cadence": "always",
+      "consume": "instances/velvet-factory/constitution/STUDIO.md"
+    },
+    {
+      "id": "skill-morning-brief",
+      "path": ".cursor/skills/vf-morning-brief/SKILL.md",
+      "cadence": "daily-07:00",
+      "consume": "python3 scripts/vfops_loop.py brief --write"
+    },
+    {
+      "id": "skill-inquiry",
+      "path": ".cursor/skills/vf-inquiry-chain/SKILL.md",
+      "cadence": "on-inquiry",
+      "consume": ".cursor/skills/vf-inquiry-chain/SKILL.md"
+    },
+    {
+      "id": "skill-content",
+      "path": ".cursor/skills/vf-content-sprint/SKILL.md",
+      "cadence": "on-content",
+      "consume": ".cursor/skills/vf-content-sprint/SKILL.md"
+    },
+    {
+      "id": "skill-best-skills",
+      "path": ".cursor/skills/vf-best-skills/SKILL.md",
+      "cadence": "bi-daily",
+      "consume": ".cursor/skills/vf-best-skills/SKILL.md"
+    },
+    {
+      "id": "skill-canva-ig",
+      "path": ".cursor/skills/vf-canva-instagram/SKILL.md",
+      "cadence": "on-content",
+      "consume": "packages/vfgrowth/EDIT-GATE.md"
+    },
+    {
+      "id": "skill-daily-learning",
+      "path": ".cursor/skills/vf-daily-learning/SKILL.md",
+      "cadence": "daily-eod",
+      "consume": ".cursor/skills/vf-daily-learning/SKILL.md"
+    },
+    {
+      "id": "skill-fcc",
+      "path": ".cursor/skills/vf-fcc-offload/SKILL.md",
+      "cadence": "on-demand",
+      "consume": ".cursor/skills/vf-fcc-offload/SKILL.md"
+    },
+    {
+      "id": "skill-graft",
+      "path": ".cursor/skills/vf-graft-map/SKILL.md",
+      "cadence": "session-start",
+      "consume": ".cursor/skills/vf-graft-map/SKILL.md"
+    },
+    {
+      "id": "skill-harness",
+      "path": ".cursor/skills/vf-harness/SKILL.md",
+      "cadence": "after-edit",
+      "consume": ".cursor/skills/vf-harness/SKILL.md"
+    },
+    {
+      "id": "skill-hq-memory",
+      "path": ".cursor/skills/vf-hq-memory/SKILL.md",
+      "cadence": "session-start",
+      "consume": ".cursor/skills/vf-hq-memory/SKILL.md"
+    },
+    {
+      "id": "skill-ig-music",
+      "path": ".cursor/skills/vf-ig-music/SKILL.md",
+      "cadence": "on-content",
+      "consume": ".cursor/skills/vf-ig-music/SKILL.md"
+    },
+    {
+      "id": "skill-last30",
+      "path": ".cursor/skills/vf-last30/SKILL.md",
+      "cadence": "on-demand",
+      "consume": ".cursor/skills/vf-last30/SKILL.md"
+    },
+    {
+      "id": "skill-makers",
+      "path": ".cursor/skills/vf-makers/SKILL.md",
+      "cadence": "weekly",
+      "consume": ".cursor/skills/vf-makers/SKILL.md"
+    },
+    {
+      "id": "skill-mskill",
+      "path": ".cursor/skills/vf-marketing-skills/SKILL.md",
+      "cadence": "on-content",
+      "consume": ".cursor/skills/vf-marketing-skills/SKILL.md"
+    },
+    {
+      "id": "skill-openmontage",
+      "path": ".cursor/skills/vf-openmontage/SKILL.md",
+      "cadence": "on-floor-clip",
+      "consume": ".cursor/skills/vf-openmontage/SKILL.md"
+    },
+    {
+      "id": "skill-revenue",
+      "path": ".cursor/skills/vf-revenue-loop/SKILL.md",
+      "cadence": "weekly",
+      "consume": ".cursor/skills/vf-revenue-loop/SKILL.md"
+    },
+    {
+      "id": "skill-run",
+      "path": ".cursor/skills/vf-run/SKILL.md",
+      "cadence": "on-job",
+      "consume": ".cursor/skills/vf-run/SKILL.md"
+    },
+    {
+      "id": "skill-velvetos",
+      "path": ".cursor/skills/vf-velvetos/SKILL.md",
+      "cadence": "on-instance",
+      "consume": ".cursor/skills/vf-velvetos/SKILL.md"
+    },
+    {
+      "id": "skill-weekly-links",
+      "path": ".cursor/skills/vf-weekly-links/SKILL.md",
+      "cadence": "weekly",
+      "consume": ".cursor/skills/vf-weekly-links/SKILL.md"
+    },
+    {
+      "id": "edit-gate",
+      "path": "packages/vfgrowth/EDIT-GATE.md",
+      "cadence": "before-schedule",
+      "consume": "packages/vfgrowth/EDIT-GATE.md"
+    },
+    {
+      "id": "calendar-ops",
+      "path": "packages/vfgrowth/CALENDAR-OPS.md",
+      "cadence": "on-planned-post",
+      "consume": "packages/vfgrowth/CALENDAR-OPS.md"
+    }
+  ]
+}

@@ -2,6 +2,11 @@
 
 פלייבוק משרד. לא פק חדש. לא סוכן חדש.
 
+## רף סוכנות (כוכב צפון)
+
+התזמורת משרתת משרד שמרגיש **סוכנות יקרה**: כל כלי נצרך עד תוצר, לא עד הצעה.  
+Failover מיידי. בלי חצי-עבודה. בלי גוף/₪/Insights מומצאים. בריף 07:00 בטון סוכנות — הבעלים קורא ויושב רגוע.
+
 נעול 30.8.2026 ~17:55 (Asia/Jerusalem):  
 הצ'אט ב־Grok = **החלטות בלבד**. ראש צוות לא חוקר, לא כותב, לא גולש.  
 סוסי העבודה: **Cursor + ChatGPT + Gemini + Perplexity**. משתמשים בהם עכשיו — לא כהצעה.
@@ -80,6 +85,30 @@ Cursor, לא Grok:
 6. ריק או אין הטמעה = **«אין חדש במשרד»** בדיוק. לא ממלאים רעש.
 
 מעבר ערב (כמו 30.8 אחרי הנעילה): אותה פרוצדורה, התוצר נופל לבריף **למחרת** 07:00.
+
+## 07:00 — לולאת משרד (כל פק נצרך)
+
+לא קוראים קטלוג. **מושכים** שורות מהפקים החיים:
+
+```
+python3 scripts/vfops_loop.py brief --write
+python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.json \
+  -o packages/vfops/out/BRIEF-YYYY-MM-DD.html
+```
+
+מלאי: `python3 scripts/vfops_loop.py inventory`  
+מסירה לסטודיו: `python3 scripts/vfops_loop.py handoff` → `vfgrowth/HANDOFF-he.md`
+
+חריץ 02 = `vfcost.py brief` (עלות חומר חיה, בלי ₪ מכירה).  
+חריץ 03 = `vfsku` + `week.md`.  
+חריץ 04 = `FOLLOWER-GROWTH` + היילייטס + וואטסאפ.  
+חריץ 05 = `data/research.md`.  
+חריץ 06 = `vfinsights` — «אין ספירה» עד טוקן / סנאפשוט.  
+חריץ 07 = כיתובי `vfcopy` מוכנים + שער עריכה לפני שיבוץ.
+
+שליחת המייל לפי [`SEND.md`](SEND.md). המעבר הזה לא מפרסם IG.  
+לפני שיבוץ: [`STUDIO.md`](STUDIO.md) שער עריכה (Canva / vfcovers / vfcanva — לא JPEG גולמי).  
+משבצות: לא שואלים — `vfgrowth/CALENDAR-OPS.md` שם כל פוסט מתוכנן על Google Calendar.
 
 ## מיפוי — לא פק כפול
 

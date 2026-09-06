@@ -5,9 +5,9 @@
 | חריץ קיים | מה נכנס מהשיתוף |
 |---|---|
 | 01 קודם החלטה | מחיר חסר, אישור תוכן, היילייטס — כן/לא/דחה |
-| 02 כסף בעבודה | הזמנות, חוב, שולם. איחורים / ממתינים לאישור אם יש ספירה + שורת עלות חומר `python3 scripts/vfcost.py brief` (בלי ₪ מכירה) |
-| 03 מה להדפיס ולפרסם | מוכנים להדפסה + שעות תור מאומתות + הצעות `#vfresearch` + מדף `python3 scripts/vfsku.py brief` + חנות מחר `python3 scripts/vfsku.py shop` |
-| 04 איך הסטודיו מרוויח | `#vfbiz` נעול, בלי ₪ מומצא |
+| 02 כסף בעבודה | הזמנות, חוב, שולם. איחורים / ממתינים לאישור אם יש ספירה + שורת עלות חומר `python3 scripts/vfcost.py brief` דרך `vfops_loop.py` (בלי ₪ מכירה) |
+| 03 מה להדפיס ולפרסם | מוכנים להדפסה + שעות תור מאומתות + הצעות `#vfresearch` + מדף `python3 scripts/vfsku.py brief` + `vfsku/week.md` דרך `python3 scripts/vfops_loop.py brief` + חנות מחר `python3 scripts/vfsku.py shop` |
+| 04 איך הסטודיו מרוויח | `#vfbiz` נעול + `FOLLOWER-GROWTH` היילייטס/וואטסאפ, בלי ₪ מומצא |
 | 05 משרד | `packages/vfops/data/research.md` — מה שודרג בפקים, לא כלי חדש. ריק = אין חדש במשרד |
 | 05a זיכרון | `packages/vfops/data/owner-memory.md` — תמצית רטרו (יומי או catch-up). קרא לפני מילוי 05 |
 | 06 מה קורה בעמוד | `#vfinsights` אחרי פרסום+24ש. לא ממציאים |

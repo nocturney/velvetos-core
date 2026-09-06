@@ -194,7 +194,7 @@ def main() -> None:
         (CONNECT_WA, ("lharries/whatsapp-mcp", "050-2517000", "send=false", "Infobip")),
         (CONNECT_GEMINI, ("חסר מפתח Gemini", "vf_gemini.py", "aliargun", "gemini.google.com", "לא ממציאים", "RLabs")),
         (CONNECT_CHATGPT, ("חסר מפתח ChatGPT", "vf_chatgpt.py", "chatgpt.com", "OPENAI_API_KEY", "לא ממציאים")),
-        (CONNECT_IG, ("jlbadano/ig-mcp", "publish_media", "needsAuth", "אוטו־DM", "SEND.md")),
+        (CONNECT_IG, ("jlbadano/ig-mcp", "publish_media", "needsAuth", "אוטו־DM", "SEND.md", "צעד אדם", "אין ספירה")),
         (CONNECT_ICLOUD, ("iCloud", "Cloud Agent", "ICLOUD-DRIVE-SYNC.md", "Drive")),
         (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py", "perplexity-user-mcp", "patchright", "HOST.md")),
         (HOST, ("המק בשדרות", "codex login", "Gemini CLI", "perplexity.ai", "Cloud Agent", "לא ממציאים", "agent worker", "computer-use")),

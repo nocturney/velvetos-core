@@ -87,6 +87,20 @@ def main() -> None:
     follower = ROOT / "packages/vfgrowth/hq/FOLLOWER-GROWTH.md"
     if not follower.is_file():
         fail("missing vfgrowth/hq/FOLLOWER-GROWTH.md (ChatGPT content-agent embed)")
+    loop_json = ROOT / "packages/vfops/LOOP.json"
+    loop_cli = ROOT / "scripts/vfops_loop.py"
+    if not loop_json.is_file():
+        fail("missing packages/vfops/LOOP.json (office activation loop)")
+    if not loop_cli.is_file():
+        fail("missing scripts/vfops_loop.py")
+    loop_proc = __import__("subprocess").run(
+        [sys.executable, str(loop_cli), "check"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if loop_proc.returncode != 0:
+        fail(f"vfops_loop.py check: {loop_proc.stderr or loop_proc.stdout}")
 
     research = ROOT / "packages/vfops/data/research.md"
     if not research.is_file():

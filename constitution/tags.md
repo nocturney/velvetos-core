@@ -12,11 +12,11 @@
 
 ## פקים (קיימים בלבד)
 
-`#vfops` `#vfconvert` `#vfsales` `#vfcopy` `#vfcost` `#vfprod` `#vfgrowth` `#vfcovers` `#vfigos` `#vfinsights` `#vfresearch` `#vfsku` `#vfbiz` `#vfbooks` `#vfbriefux` `#vlicense` `#vfseason` `#vfom`
+`#vfops` `#vfconvert` `#vfsales` `#vfcopy` `#vfcost` `#vfprod` `#vfgrowth` `#vfcovers` `#vfigos` `#vfinsights` `#vfresearch` `#vfsku` `#vfbiz` `#vfbooks` `#vfbriefux` `#vlicense` `#vfseason` `#vfom` `#לולאת-משרד`
 
 ## תוכן ולוח
 
-`#טיוטה` `#לסקירה` `#משובץ` `#לא-זז` `#לא-בוסט` `#אחרי-פרסום` `#insights-24ש` `#לוח-קבוע` `#MEDIA-NEEDED-FROM-CHRISTIAN`
+`#טיוטה` `#לסקירה` `#משובץ` `#לא-זז` `#לא-בוסט` `#אחרי-פרסום` `#insights-24ש` `#לוח-קבוע` `#MEDIA-NEEDED-FROM-CHRISTIAN` `#שער-עריכה` `#שיבוץ-אוטונומי`
 
 ## כסף
 

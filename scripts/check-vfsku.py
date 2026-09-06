@@ -12,6 +12,7 @@ SHELF = ROOT / "packages" / "vfsku" / "SHELF.json"
 GATE = ROOT / "packages" / "vfsku" / "GATE.md"
 LAB = ROOT / "packages" / "vfsku" / "LAB.md"
 FIRST = ROOT / "packages" / "vfsku" / "FIRST-PRINT.md"
+WEEK = ROOT / "packages" / "vfsku" / "week.md"
 CARDS = ROOT / "packages" / "vfsku" / "CARDS.md"
 SHOP_CLOSE = ROOT / "packages" / "vfprod" / "SHOP-CLOSE.md"
 CONVERT_PATH = ROOT / "packages" / "vfconvert" / "PATH.md"
@@ -57,7 +58,7 @@ def assert_no_ils(path: Path) -> None:
 
 
 def main() -> None:
-    for path in (SHELF, GATE, LAB, FIRST, CARDS, SHOP_CLOSE, CONVERT_PATH, CLI, BRIEF, SLOTS, LICENSE):
+    for path in (SHELF, GATE, LAB, FIRST, CARDS, WEEK, SHOP_CLOSE, CONVERT_PATH, CLI, BRIEF, SLOTS, LICENSE):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -151,7 +152,12 @@ def main() -> None:
     if "vfsku.py" not in SLOTS.read_text():
         fail("BRIEF-SLOTS.md must hook slot 03 to vfsku.py")
 
-    for path in (SHELF, GATE, LAB, FIRST, CARDS, SHOP_CLOSE):
+    week = WEEK.read_text()
+    for needle in ("MakerWorld", "אין שם להציע", "הורדה", "G004"):
+        if needle not in week:
+            fail(f"vfsku/week.md missing {needle!r}")
+
+    for path in (SHELF, GATE, LAB, FIRST, CARDS, WEEK, SHOP_CLOSE):
         assert_no_ils(path)
 
     print("OK vfsku shelf=5 first-print=1 brief-hook=03 shop-close=1")

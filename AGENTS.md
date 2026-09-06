@@ -83,6 +83,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfcost.py` | Material-only cost CLI (grams × ILS/kg); missing grams refuse; no invented sale ₪ |
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
 | `scripts/check-vfgrowth.py` | Standing IG calendar + ledger + Studio handoff (instagram.com, no Suite) |
+| `scripts/check-vfops-loop.py` | Office activation loop — every pack consumed into 07:00 brief + HANDOFF |
 | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready + Gemini/ChatGPT API desks (`vf_gemini.py` / `vf_chatgpt.py`; not aliargun / RLabs; no Cloud browser login) |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
 | `scripts/check-velvetos.py` | VelvetOS Core + modules; VF frontend scaffold under instances/; backend≠frontend |
@@ -101,7 +102,8 @@ Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack n
 ALLOW read: `packages/**`, `constitution/**`, `docs/**`, `.cursor/**`, Gmail search/get, Calendar list, Drive search-by-job
 ALLOW write: `packages/**`, `constitution/**`, `docs/**`, `AGENTS.md`, `CHANGELOG.md`
 ALLOW execute: `python3 scripts/check-*.py`
-ASK before: `git push`, Calendar create
+ASK before: `git push`; Calendar create **מחוץ** לרשת IG הקבועה
+ALLOW calendar: `create_event` לכל פוסט מתוכנן על `vfgrowth/CALENDAR.md` (`CALENDAR-OPS.md`) — לא שואלים משבצת
 ALLOW send: Gmail `send_message` / `reply` / `forward`; Instagram via connected tool or Canva+Drive+Gmail failover (`constitution/SEND.md`)
 ALLOW write: Drive `create_file` for office docs (no personal/medical/legal folders)
 DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights / Origin slugs, claiming IG posted without a publish tool, Cloud/Grok login to `gemini.google.com` / `chatgpt.com`, persisting browser cookies, installing aliargun or RLabs gemini-mcp

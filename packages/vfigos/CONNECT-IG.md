@@ -1,3 +1,22 @@
+# CONNECT-IG · צעד אדם (עמוד אחד)
+
+סטטוס השולחן: **needsAuth**. בלי טוקן — אין Publish, אין Insights חיים. כותבים **«אין ספירה»**.  
+סטוריז נשארות ב־**instagram.com** (ig-mcp ≠ Story API).
+
+## הצעד הבא (כריסטיאן) — רק זה
+
+1. פתח את האפליקציה **אינסטה מנג׳ר** `1748471159829574`  
+   https://developers.facebook.com/apps/1748471159829574/
+2. אמת את מייל הקשר `nocturney@gmail.com` (כרגע **לא מאומת**). האפליקציה ב־**dev_mode**.
+3. צור **Long-lived Page Access Token** לעמוד המקושר ל־`@velvets_cloud`  
+   ([AUTHENTICATION_GUIDE](https://github.com/jlbadano/ig-mcp/blob/main/AUTHENTICATION_GUIDE.md)).
+4. הדבק סודות ב־Cursor Dashboard → Integrations & MCP **וגם** ב־`~/.cursor/mcp.json` — **לא בגיט**.
+5. Reload. כש־`instagram` ירוק — אפשר לסמן `ready` בשולחן.
+
+עד אז: failover [`SEND.md`](SEND.md) (Canva+Drive+Gmail). לא ממציאים Insights. לא `send_dm`.
+
+---
+
 # איך מחברים את Instagram MCP (ig-mcp) ל-Cursor
 
 מקור: [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) — MCP על Instagram Graph API.  

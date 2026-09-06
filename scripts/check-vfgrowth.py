@@ -13,6 +13,7 @@ HANDOFF = ROOT / "packages" / "vfgrowth" / "HANDOFF-he.md"
 G003 = ROOT / "packages" / "vfgrowth" / "G003.md"
 G004 = ROOT / "packages" / "vfgrowth" / "G004.md"
 COPY = ROOT / "packages" / "vfcopy" / "G003.md"
+COPY_G004 = ROOT / "packages" / "vfcopy" / "G004.md"
 STORIES = ROOT / "packages" / "vfcopy" / "hq" / "templates" / "ig-stories.md"
 FOLLOWER = ROOT / "packages" / "vfgrowth" / "hq" / "FOLLOWER-GROWTH.md"
 TAGS = ROOT / "constitution" / "tags.md"
@@ -37,7 +38,7 @@ def assert_no_ils(path: Path) -> None:
 
 
 def main() -> None:
-    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, STORIES, FOLLOWER):
+    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, COPY_G004, STORIES, FOLLOWER):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
         assert_no_ils(path)
@@ -81,7 +82,18 @@ def main() -> None:
             fail(f"LEDGER.md missing {needle!r}")
 
     handoff = HANDOFF.read_text()
-    for needle in ("instagram.com", "חסום", "16:00", "12:00", "20:30", "לא סוויט"):
+    for needle in (
+        "instagram.com",
+        "חסום",
+        "16:00",
+        "12:00",
+        "20:30",
+        "לא סוויט",
+        "שער עריכה",
+        "JPEG גולמי",
+        "לא שואלים משבצת",
+        "Google Calendar",
+    ):
         if needle not in handoff:
             fail(f"HANDOFF-he.md missing {needle!r}")
     if "050-2517000" not in handoff:
@@ -97,9 +109,16 @@ def main() -> None:
         fail("G003.md must not stay media-blocked after the 6.9 lock")
 
     g004 = G004.read_text()
-    for needle in ("קטלבל", "מחזיק", "לא משקולת", "סטוריז", "קרוסלה", "kettlebells-pink"):
+    for needle in ("קטלבל", "מחזיק", "לא משקולת", "סטוריז", "קרוסלה", "kettlebells-pink", "vfcopy/G004.md"):
         if needle not in g004:
             fail(f"G004.md missing {needle!r}")
+
+    copy4 = COPY_G004.read_text()
+    for needle in ("050-2517000", "מחזיק", "לא משקולת", "kettlebells-pink", "היילייטס"):
+        if needle not in copy4:
+            fail(f"vfcopy/G004.md missing {needle!r}")
+    if "שלחו DM" in copy4 and "לא «שלחו DM»" not in copy4 and "בלי «שלחו DM»" not in copy4:
+        fail("vfcopy/G004.md must forbid שלחו DM")
 
     copy = COPY.read_text()
     if "מה יוצא מהמדפסת" not in copy:
