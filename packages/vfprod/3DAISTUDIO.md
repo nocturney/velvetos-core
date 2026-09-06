@@ -42,6 +42,9 @@
 
 Cloud Agent: namespace `3DAIStudio` **ready** (אומת 2026-09-01 — `get_credit_balance`). Desktop: `.cursor/mcp.json`. Cloud: Team MCP + OAuth ב-cursor.com/agents (`CONNECT-3DAI.md`).
 
+עריכת Blender מקומית (Desktop בלבד, אחרי ראש צוות): [`BLENDER-MCP.md`](BLENDER-MCP.md) — לא על Cloud Agent; לא מחליף את השכבה הזו לקונספט/STL.  
+משפחת CAD/DCC נוספת (OpenSCAD / FreeCAD / SketchUp / multiCAD / …): [`CAD-MCP.md`](CAD-MCP.md) — רובם skip על Cloud.
+
 ## מה ליישם (על פקים קיימים)
 
 | עבודה | איך | נעילה |

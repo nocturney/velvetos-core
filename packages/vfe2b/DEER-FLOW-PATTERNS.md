@@ -40,7 +40,7 @@ DeerFlow ≠ BabyDeer (מוד AutoGPT ב־`LOCK.md`). DeerFlow הוא harness נ
 | Progressive skills | קרא `SKILL.md` רק כשהמשימה דורשת; אל תטען את כל המחסן | `.cursor/skills/` · desk rule |
 | allowed-tools (רעיון) | skill מציין כלים מותרים; שליחה/₪/Publish נשארים בחוקה | skill frontmatter (הנחיה) |
 | Tool receipts | `אימות` מציין receipt: `message_id`, Canva URL, sensor name | `crews/run.md` |
-| Context compaction | checkpoint מסכם `completed_steps`; לא לשחזר שיח שלם | `vfharness/EMBED.md` |
+| Context compaction | checkpoint מסכם `completed_steps`; לא לשחזר שיח שלם; גבול שלב (לא באמצע ביצוע) | `vfharness/EMBED.md` · `context-thrift.md` § phase-boundary |
 | Doctor / support bundle | `python3 scripts/check-all.py` לפני `worker_done` על שינוי קטלוג | sensors |
 
 ### מטרה (goal) — דוגמאות משרד

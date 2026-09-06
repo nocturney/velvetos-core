@@ -20,6 +20,18 @@ Copy [`jobs/TEMPLATE.md`](jobs/TEMPLATE.md). Required before a Canva call:
 
 If proof is missing, still design — mark the visual as **טיוטה בלי הוכחת רצפה**.
 
+## 1b. Floor-proof prep (browser-local, optional)
+
+When the owner has a real floor/product file that needs light prep **before** Canva:
+
+| Need | Open in browser |
+|---|---|
+| HEIC → JPG | https://footrue.com/tools/heic-to-jpg |
+| Remove background | https://footrue.com/tools/background-remover |
+| Compress / resize | https://footrue.com/tools/image-compress · `/tools/image-resize` |
+
+Source: [footrue.com](https://footrue.com/) (registered in `vfresearch/LINKS.json`). Human runs these locally; HQ does not upload customer files to cloud utilities from this agent. Not a Canva or brand-kit substitute. See `vfcovers/hq/PLAYBOOK.md` and `packages/vfresearch/sources/2026-09-05-footrue.md`.
+
 ## 2. Canva gate
 
 1. Discover the `Canva` MCP namespace.

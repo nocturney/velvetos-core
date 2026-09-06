@@ -1,0 +1,31 @@
+{
+  "task_id": "codex-live-2026-09-05",
+  "status": "done",
+  "pack": "vfmcp",
+  "goal": "Confirm Codex CLI logged in on Mac-Office with ChatGPT Plus.",
+  "planned_steps": [
+    "Read owner screenshot of Codex 0.153.4 Successfully logged in",
+    "Record live state in HOST.md; do not copy ~/.codex",
+    "Mark both Mac CLIs live; Perplexity stays Chrome"
+  ],
+  "completed_steps": [
+    "HOST.md + SUBSCRIPTIONS.md: Codex 0.153.4 logged in",
+    "owner-memory + CHANGELOG + this checkpoint"
+  ],
+  "next_step": "sderot-mac agent may run agy/codex in Mac terminal. Worker stays up. Perplexity = Chrome. Do not run agent worker --computer-use.",
+  "artifacts": [
+    "packages/vfmcp/HOST.md",
+    "packages/vfmcp/SUBSCRIPTIONS.md"
+  ],
+  "unresolved": [
+    "--computer-use still blocked by SEA on CLI 2026.09.02",
+    "Perplexity remains Chrome-only"
+  ],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "latest_observation": "Screenshot: Codex CLI 0.153.4 installed on chris@Mac-Office; Successfully logged in; returned to zsh prompt."
+}

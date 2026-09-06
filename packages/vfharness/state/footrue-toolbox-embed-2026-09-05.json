@@ -1,0 +1,24 @@
+{
+  "task_id": "footrue-toolbox-embed-2026-09-05",
+  "status": "done",
+  "guide": "packages/vfresearch/WEEKLY.md",
+  "pack": "vfresearch",
+  "mention": "@research-synthesist",
+  "source_url": "https://footrue.com/",
+  "artifacts": [
+    "packages/vfresearch/LINKS.json",
+    "packages/vfresearch/sources/2026-09-05-footrue.md",
+    "packages/vfresearch/sources/2026-09-05-weekly-links-footrue.md",
+    "packages/vfcovers/hq/PLAYBOOK.md",
+    "packages/vfcanva/WORKFLOW.md",
+    "packages/vfops/BRIEF-2026-09-05.md",
+    "packages/vfops/data/research.md"
+  ],
+  "execution_state": {
+    "registered": true,
+    "embedded_packs": ["vfcovers", "vfcanva"],
+    "mcp_install_skipped": true,
+    "no_invented_insights": true
+  },
+  "latest_observation": "Owner mid-week URL registered; browser-local prep path documented before Canva"
+}
