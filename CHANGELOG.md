@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-06 — **best-skills bi-daily**: dataDate 2026-09-05 — הטמעת `brainstorm-gate` + `systematic-debugging` (obra/superpowers) ב־`vfharness`; Anti-slop קצר ב־`vfbriefux` DESIGN-EMBED (בריף HQ בלבד). ארטיפקט `sources/2026-09-06-best-skills.md`. בלי npx / runtime שני.
+
 - 2026-09-05 — **last30days → חוקרי המשרד**: הטמעה מעמיקה של [mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill) על `vfresearch` — פלייבוק `hq/LAST30.md` (topic/comparison/discovery, confidence floor, nothing-solid), skill `vf-last30`, חיבור `@research-synthesist` / `@trend-researcher` בשולחן, `TREND-EXPLORER`, `LINKS.json`, `ORCHESTRA`/`ROUTINE`/`MAP`, סנסור `check-vfresearch.py`. דפוסים בלבד — בלי CLI / `npx skills` / מפתחות X. See `packages/vfresearch/sources/2026-09-05-last30days-embed.md`.
 - 2026-09-05 — **לוח פרסום קבוע**: `vfgrowth/CALENDAR.md` (W37–W39 מ־7.9 + תבנית שבועית) + `LEDGER.md` (G001/G002/G005 חיים; G003 SoccerBall חסום מדיה) + `HANDOFF-he.md` לשיבוץ instagram.com. כיתוב טיוטה `vfcopy/G003.md` + תבנית סטוריז 20:30. סנסור `scripts/check-vfgrowth.py`. בלי Publish/בוסט/סוויט מ־Cursor. Standing IG calendar on existing packs.
 

@@ -3,6 +3,10 @@
 Source pattern: [makerskills `decide`](https://github.com/coreyhaines31/makerskills/blob/main/skills/decide/SKILL.md) — 37signals questions, triaged to 6–8, archive + revisit.
 Packs: `vfbiz`, `vfops`. Seat: ראש צוות.
 
+## Before framing
+
+If the «decision» is actually a build request (new pack, pipeline change, skill install): stop and run `vfharness/playbooks/brainstorm-gate.md` first. This crew decides business forks — it does not replace the build-approval gate.
+
 ## Roles
 
 | Role | Pack | Does | Does not |

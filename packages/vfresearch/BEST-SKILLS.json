@@ -40,8 +40,8 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-04",
-  "dataDate": "2026-09-03",
+  "lastPass": "2026-09-06",
+  "dataDate": "2026-09-05",
   "embedded": [
     {
       "id": "grill-me",
@@ -106,18 +106,40 @@
       "path": "packages/vfresearch/hq/MARKET-INTEL.md",
       "firstEmbedded": "2026-09-05",
       "source": "https://mcpmarket.com/tools/skills/market-research-intelligence-1787987613965"
+    },
+    {
+      "id": "brainstorm-gate",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/brainstorm-gate.md",
+      "firstEmbedded": "2026-09-06",
+      "source": "https://github.com/obra/superpowers/tree/main/skills/brainstorming"
+    },
+    {
+      "id": "systematic-debugging",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/systematic-debugging.md",
+      "firstEmbedded": "2026-09-06",
+      "source": "https://github.com/obra/superpowers/tree/main/skills/systematic-debugging"
+    },
+    {
+      "id": "anti-ui-slop-brief",
+      "pack": "vfbriefux",
+      "path": "packages/vfbriefux/hq/DESIGN-EMBED.md",
+      "firstEmbedded": "2026-09-06",
+      "note": "Anti-slop checklist for HQ brief HTML only; no public site; no foreign brand tokens",
+      "source": "https://www.skills.sh/uizze.com/anti-ui-slop"
     }
   ],
   "watchlist": [
     {
       "id": "obra-superpowers",
       "url": "https://github.com/obra/superpowers",
-      "note": "Partial embed (verification + skill-first). Full SDLC suite — re-scan bi-daily for new skills worth mapping to vfe2b/vfharness."
+      "note": "Partial+: verification + skill-first + brainstorm-gate + systematic-debugging embedded 2026-09-06. Still watch writing-plans / TDD / git-worktrees."
     },
     {
       "id": "mattpocock-skills",
       "url": "https://github.com/mattpocock/skills",
-      "note": "grill + handoff + teach(records) embedded. Watch improve-codebase-architecture / codebase-design."
+      "note": "grill + handoff + teach(records) embedded. Watch improve-codebase-architecture / domain-modeling / codebase-design (overlaps agent-architecture-audit)."
     },
     {
       "id": "anthropics-skills",
@@ -127,7 +149,7 @@
     {
       "id": "anti-ui-slop",
       "url": "https://www.skills.sh/uizze.com/anti-ui-slop",
-      "note": "Trending. Cross-check with taste-skill embed before second pass."
+      "note": "Partial: Anti-slop section in vfbriefux DESIGN-EMBED (HQ brief only). Still watch taste-skill before second design pass; no foreign tokens."
     },
     {
       "id": "addyosmani-agent-skills",
@@ -141,7 +163,7 @@
     {
       "id": "archify",
       "url": "https://github.com/tt-a1i/archify",
-      "note": "Trending hard. Verifiable architecture HTML diagrams — candidate for vfgraft/blast visuals. Patterns only."
+      "note": "Still watch. DIAGRAM-MAKER already in vfbriefux; archify = verifiable HTML diagrams candidate for graft/blast — patterns only."
     },
     {
       "id": "openspec",

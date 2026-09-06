@@ -39,6 +39,8 @@
 
 ## קשר
 
+- `playbooks/brainstorm-gate.md` — לפני בנייה (סיווג + אישור)
+- `playbooks/systematic-debugging.md` — לפני תיקון באג
 - `playbooks/verification-before-claim.md` — אחרי העבודה
 - `playbooks/skill-authoring.md` — כשכותבים סקיל חדש
 - `vfresearch/BEST-SKILLS.md` — גילוי סקילים חדשים מהדירוג
