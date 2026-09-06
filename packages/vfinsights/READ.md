@@ -3,7 +3,7 @@
 מושב: **צמיחה**.  
 מקור Gemini + Perplexity: Metricool (תהודה / חשיפה). לא ממציאים מתחרים ולא ניחוש שעות.
 
-כותבים רק מספר שנמדד בסוויט / IG Professional.
+כותבים רק מספר שנמדד בסוויט / IG Professional / `get_media_insights` אחרי חיבור ig-mcp (`vfigos/CONNECT-IG.md`). בלי חיבור: הדבקת בעלים או «אין ספירה».
 
 | מותר | אסור |
 |---|---|

@@ -5,7 +5,7 @@ Discovery index (Claude Code marketplace — **patterns only**, do not `/plugin 
 MCP Market mid-week (2026-09-05; Cloudflare on listing pages → GitHub bodies): Blender MCP · Archon · Jeffallan fullstack skills — [`packages/vfresearch/sources/2026-09-05-mcpmarket-three.md`](../packages/vfresearch/sources/2026-09-05-mcpmarket-three.md).  
 Grok / ChatGPT / Gemini / Perplexity gap vs this HQ: [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md) (reviewed 2026-08-31).  
 HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Boosts and auto-DM stay forbidden. Printers stay on the floor. Treg is not relevant.  
-Core **registers** WhatsApp / Sheets / Studio Hub (`packages/vfmcp/CORE-MCP.md`). The factory instance binds via `mcpBind`. Do not invent prices. Do not commit secrets.
+Core **registers** WhatsApp / Sheets / Studio Hub / Instagram ig-mcp (`packages/vfmcp/CORE-MCP.md`). The factory instance binds via `mcpBind`. Do not invent prices. Do not commit secrets.
 
 The awesome list is a directory of thousands of servers. Most of it is coding, crypto, or other people's SaaS. Below is only what maps onto Velvet Factory packs.
 
@@ -19,6 +19,7 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Google Drive** | Files and folders; **`create_file`**; Sheets **export** when a workbook is named (`vfbooks/SHEETS.md`) | `vfprod`, `vfcovers`, `vfsku`, `vfresearch`, `vfbooks` |
 | **Google Calendar** | Events | `vfseason`, `vfops`, `vfsales` |
 | **Canva** | Edit designs, brand-check, bulk-create, resize, `generate-design`. **Ready** on this Cloud Agent (2026-08-31, `DAGoYmCu4c4`) | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
+| **Instagram (ig-mcp)** | Publish, Insights, feed read via Graph API. **needsAuth** — Meta App + long-lived token (`packages/vfigos/CONNECT-IG.md`). Not in project `mcp.json` (secrets) | `vfigos`, `vfinsights`, `vfgrowth` |
 | **3D AI Studio** | Text/image → 3D mesh, STL/3MF export. **HTTP** `https://mcp.3daistudio.com/mcp` — OAuth **Desktop** (`.cursor/mcp.json`) **+ Cloud** (Dashboard → Integrations & MCP). See `packages/vfprod/CONNECT-3DAI.md` | `vfprod`, `vfsku`, `vlicense` |
 | **Studio MCP Hub** | HTTP `https://studiomcphub.com/mcp`. Free mockup/bg/resize; CMYK/`print_ready` for paper instances. VF skips CMYK. `packages/vfmcp/CONNECT-STUDIOHUB.md` | `vfprod`, `vfcovers`, `vfsku` |
 | **WebSearch / WebFetch** | Live web + URL fetch (ChatGPT/Gemini/Perplexity/Grok browse equivalent) | `vfresearch`, `vfgrowth` |
@@ -27,16 +28,25 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Mobbin** | Real-app UI patterns | `vfbriefux` |
 | **Superdesign** | Canvas / graphics | `vfcovers`, `vfbriefux` |
 | **Grok Bot** | Optional backup only. HQ sends via tools | `vfigos/SEND.md` |
+| **iCloud Drive** | **Mac Desktop only** — local MCP (`icloud-drive-mcp-server`). Cloud Agent uses **Google Drive mirror** | `vfmcp/CONNECT-ICLOUD.md`, `vfmcp/ICLOUD-DRIVE-SYNC.md` |
 
 Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility” servers unless Treg is missing a specific account.
+
+**iCloud:** no Apple HTTP OAuth for agents. Do not add iCloud to Cloud Team MCP. Mirror `Velvet Factory/` to Drive on the Mac instead.
 
 **Office graph (already in git, not a Cursor MCP add):** [`vfmem`](../packages/vfmem/) takes the *query shape* from [DeusData/codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp) (`architecture` / `who` / `impact` / `adr`) and runs it on `vf-desk.json` + `manifest.json`. Do not install their C binary from this repo. Write-up: [`docs/VFMEM.md`](VFMEM.md).
 
 ## Installed in Core 2026-08-31 — instance binds what it needs
 
-Constitution: VF WhatsApp **send** stays human `050-2517000`. HQ does not print. No invented ₪. No secrets in git.
+Constitution: VF WhatsApp **send** stays human `050-2517000`. Instagram **publish** allowed via ig-mcp after Connect; **DM stays off**. HQ does not print. No invented ₪. No secrets in git.
 
 Catalog: [`packages/vfmcp/CORE-MCP.md`](../packages/vfmcp/CORE-MCP.md) · [`core-mcp.json`](../packages/vfmcp/core-mcp.json). VF bind: `mcpBind` on `packages/velvetos/samples/velvet-factory.json`.
+
+### 0. Instagram Publish + Insights — ig-mcp · **in Core (needsAuth until token)**
+
+[jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) via [`vfigos/CONNECT-IG.md`](../packages/vfigos/CONNECT-IG.md). Not in project `mcp.json` (secrets). Desktop `~/.cursor` or Cloud Team MCP secrets.
+
+Failover until token: Canva export → Drive `create_file` → Gmail `send_message` same turn.
 
 ### 1. WhatsApp — inquiry-to-order · **in Core (draft/search)**
 
@@ -107,13 +117,13 @@ Cloud Agent **must not** open `gemini.google.com` or `chatgpt.com` (Google/OpenA
 
 ## Do this next (read-only growth)
 
-### Instagram research only — never send from HQ
+### Instagram research (optional) — send stays on ig-mcp / SEND.md
 
 | Server | Role |
 |---|---|
 | [farukkolip/instapdown-mcp](https://github.com/farukkolip/instapdown-mcp) | Public toolkit: Reels/Story download, hashtags, engagement health, best-time tables. **No auth.** |
 
-Use for `vfigos` review, `vfgrowth` sprints, `vfinsights` reads. Schedule and copy stay in the pack. **Grok Bot still posts.**
+Use for `vfigos` review, `vfgrowth` sprints, `vfinsights` reads. Schedule and copy stay in the pack. **HQ sends via ig-mcp or Canva+Drive+Gmail** (`CONNECT-IG.md`). Grok is optional backup.
 
 ### Inbox triage on top of Gmail
 
@@ -125,14 +135,14 @@ Complements Gmail; does not replace it. Maps to `vfsales` and `vfconvert`.
 
 ### Meta Ads — read first
 
-Grok Bot already boosts. If Christian wants Cursor to *read* spend and creative, not launch:
+Boost stays lead-gated. If Christian wants Cursor to *read* spend and creative, not launch:
 
 | Server | Role |
 |---|---|
 | [pipeboard-co/meta-ads-mcp](https://github.com/pipeboard-co/meta-ads-mcp) | Analyze performance, creatives, spend |
 | [mikusnuz/meta-ads-mcp](https://github.com/mikusnuz/meta-ads-mcp) | Full Marketing API surface (too many write tools — keep writes off) |
 
-**Read-only in Cursor.** Writes / boosts stay on Grok Bot until a later standing order says otherwise.
+**Read-only in Cursor.** Writes / boosts stay locked until the lead seat.
 
 **Packs:** `vfigos`, `vfinsights`. Do not invent Insights numbers.
 
