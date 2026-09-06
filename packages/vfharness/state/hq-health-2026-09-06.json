@@ -1,6 +1,6 @@
 {
   "task_id": "hq-health-2026-09-06",
-  "status": "running",
+  "status": "done",
   "pack": "vfharness",
   "goal": "HQ green after #93 + lean open-PR list + Hebrew status. No new repos.",
   "crew": "research",
@@ -14,28 +14,30 @@
   "completed_steps": [
     "check-all.py on origin/main c933cba: 21/21 PASS",
     "Confirmed G003 scheduled lock, G004 jewelry-holder, FOLLOWER-GROWTH CTA, X ₪",
-    "Rebased unique #78+#58+#74 license onto cursor/ops-ig-icloud-e72b"
+    "Opened #94 with unique #78+#58+#74 license on current main",
+    "Closed dirty #78 #68 #74 #66 #58"
   ],
-  "next_step": "Commit + PR + close dirty drafts",
+  "next_step": "Christian merges #94; Meta token for ig-mcp; Mac iCloud sync",
   "artifacts": [
     "packages/vfigos/CONNECT-IG.md",
     "packages/vfmcp/CONNECT-ICLOUD.md",
-    "packages/vfmcp/ICLOUD-DRIVE-SYNC.md"
+    "https://github.com/nocturney/velvetos-core/pull/94"
   ],
   "unresolved": [
     "ig-mcp stays needsAuth until Christian Meta token / Team MCP secrets",
     "iCloud mirror runs on owner Mac only",
-    "Cannot merge via tools (gh write locked) — PR ready for merge"
+    "Cannot merge via tools — #94 ready",
+    "velvetos-velvet-factory #3 still draft (wrong repo for this agent); obsolete Grok-primary"
   ],
-  "outcome": null,
-  "pulse": "working",
-  "verification": "python3 scripts/check-all.py 21/21 PASS on branch",
+  "outcome": "worker_done",
+  "pulse": "blocked",
+  "verification": "python3 scripts/check-all.py 21/21 PASS; open core PRs = #94 only",
   "gate": {
     "kind": "approval",
-    "waiting_for": "Christian Meta token for ig-mcp + merge of ops PR",
-    "reason": "Login/2FA/token only. Sensors green."
+    "waiting_for": "Christian: merge #94 + Meta token + Mac iCloud folder/sync",
+    "reason": "Login/2FA/token and GitHub merge button only."
   },
   "escalation": null,
   "last_updated": "2026-09-06",
-  "latest_observation": "Main after #93 is green. Five core PRs were DIRTY. Unique ops content replayed onto current main."
+  "latest_observation": "Core open list is #94 only. VF frontend #3 still draft; cannot close from this repo."
 }
