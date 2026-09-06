@@ -28,6 +28,10 @@
 לא זזים ממשובץ. לא בוסט. שיבוץ ב־instagram.com — לא סוויט.  
 Proof מהרצפה רק אם העבודה על המיטה עכשיו — לא ממציאים סצנה.
 
+לוח עומד (2–3 שבועות + קצב): `CALENDAR.md` · `LEDGER.md` · `RHYTHM.md`.  
+מסירה ל־instagram.com: `HANDOFF-he.md` (מקור האמת). מצביע + מזהי יומן: `vfigos/HANDOFF-STANDING-he.md`.  
+`MEDIA-NEEDED-FROM-CHRISTIAN` כשחסר צילום — שואלים, לא ממציאים.
+
 `#vfseason` לפתיחת שנה / חלון איסוף ידוע. בלי מק״ט על רילס שמסומנים «ריל בלבד».
 
 שבוע ג׳אב/הוק: `@vfmakers rotation` → `hq/rotation/`. הוק = וואטסאפ `050-2517000` / איסוף שדרות. HQ לא שולח.
