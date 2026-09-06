@@ -122,6 +122,13 @@ def check_reference_vf(profile: dict, desk: dict, studio_text: str) -> None:
     hub = bind.get("studiomcphub") or {}
     if "print_ready" not in (hub.get("skip") or []):
         fail("VF mcpBind.studiomcphub must skip print_ready")
+    ig = bind.get("instagram") or {}
+    if not ig.get("enabled"):
+        fail("VF mcpBind.instagram must be enabled (ig-mcp mapped)")
+    if ig.get("dm") is not False:
+        fail("VF mcpBind.instagram.dm must be false")
+    if "CONNECT-IG.md" not in (ig.get("connect") or ""):
+        fail("VF mcpBind.instagram.connect must point at CONNECT-IG.md")
 
 
 def main() -> None:

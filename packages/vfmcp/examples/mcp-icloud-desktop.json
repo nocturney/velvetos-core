@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "canva": {
+      "type": "http",
+      "url": "https://mcp.canva.com/mcp"
+    },
+    "threedaistudio": {
+      "url": "https://mcp.3daistudio.com/mcp"
+    },
+    "icloud": {
+      "command": "icloud-drive-mcp-server",
+      "env": {
+        "ICLOUD_MCP_ROOT": "/Users/YOU/Library/Mobile Documents/com~apple~CloudDocs/Velvet Factory",
+        "ICLOUD_MCP_WRITE": "false"
+      }
+    }
+  }
+}

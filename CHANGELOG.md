@@ -9,10 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 2026-09-06 — **vfcost CLI חומר בלבד:** `scripts/vfcost.py` — גרם × ILS/kg ÷ 1000 = ILS/unit (נתיב דוגמה 20.29g × 250 → 5.07). גלילים Ella/Rachel/Gefen בלי ILS/kg שמור. חסר גרמים = סירוב. בלי ₪ מכירה. בריף 02: `vfcost.py brief`. סנסור `check-vfcost.py`. Material-only cost desk on existing vfcost overlay.
 
+- 2026-09-06 — **בריאות + PR פתוחים:** סנסורים 21/21 על main אחרי #93. הטמעת ig-mcp (`CONNECT-IG.md`, `needsAuth`) + מראה iCloud→Drive (`CONNECT-ICLOUD.md`) + שער רישיון MakerWorld (מחזור חיוב / שינוי תנאים) על main נקי. סוגרים טיוטות מתנגשות #78/#68/#66/#58 ואת #74 (תזמורת 4.9 מיושנת מול `HOST.md`). בלי ₪ מומצא. בלי Publish. Ops rebase: IG Insights path + iCloud mirror + license gate.
+
+- 2026-09-06 — **סריקת HQ**: G003 SoccerBall **נעול·משובץ** instagram.com 7.9.2026 16:00 כיתוב «מה יוצא מהמדפסת?» (מדפסת = גיבוי). G004 קטלבל ורוד = מחזיק תכשיטים/טבעות לאימון (לא משקולת) — מועמד סטוריז/קרוסלה. דופק צמיחה: 80 עוקבים · 0 DM · לחזק CTA→היילייטס/וואטסאפ (`FOLLOWER-GROWTH.md` + תגיות `social-growth` ב־`constitution/tags.md`). ארכיון בריף 6.9 ב־`vfops/out/BRIEF-2026-09-06.html` (לא לשלוח). בלי Publish / ₪ מומצא. HQ sweep: lock G003, tag G004, follower playbook, brief archive.
+
 - 2026-09-06 — **best-skills bi-daily**: dataDate 2026-09-05 — הטמעת `brainstorm-gate` + `systematic-debugging` (obra/superpowers) ב־`vfharness`; Anti-slop קצר ב־`vfbriefux` DESIGN-EMBED (בריף HQ בלבד). ארטיפקט `sources/2026-09-06-best-skills.md`. בלי npx / runtime שני.
 
 - 2026-09-05 — **last30days → חוקרי המשרד**: הטמעה מעמיקה של [mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill) על `vfresearch` — פלייבוק `hq/LAST30.md` (topic/comparison/discovery, confidence floor, nothing-solid), skill `vf-last30`, חיבור `@research-synthesist` / `@trend-researcher` בשולחן, `TREND-EXPLORER`, `LINKS.json`, `ORCHESTRA`/`ROUTINE`/`MAP`, סנסור `check-vfresearch.py`. דפוסים בלבד — בלי CLI / `npx skills` / מפתחות X. See `packages/vfresearch/sources/2026-09-05-last30days-embed.md`.
-- 2026-09-05 — **לוח פרסום קבוע**: `vfgrowth/CALENDAR.md` (W37–W39 מ־7.9 + תבנית שבועית) + `LEDGER.md` (G001/G002/G005 חיים; G003 SoccerBall חסום מדיה) + `HANDOFF-he.md` לשיבוץ instagram.com. כיתוב טיוטה `vfcopy/G003.md` + תבנית סטוריז 20:30. סנסור `scripts/check-vfgrowth.py`. בלי Publish/בוסט/סוויט מ־Cursor. Standing IG calendar on existing packs.
+- 2026-09-05 — **לוח פרסום קבוע**: `vfgrowth/CALENDAR.md` (W37–W39 מ־7.9 + תבנית שבועית) + `LEDGER.md` (G001/G002/G005 חיים; G003 SoccerBall חסום מדיה) + `HANDOFF-he.md` לשיבוץ instagram.com. כיתוב טיוטה `vfcopy/G003.md` + תבנית סטוריז 20:30. סנסור `scripts/check-vfgrowth.py`. בלי Publish/בוסט/סוויט מ־Cursor. Standing IG calendar on existing packs. אירועי Google Calendar על `nocturney@gmail.com` (G003/G006/G004/G007/G008/G010) — תזכורת לעין; רשת התאריכים נשארת של #90.
 
 - 2026-09-05 — **Codex חי על Mac-Office:** CLI `0.153.4` · `Successfully logged in` (ChatGPT Plus, לא מפתח API). `agy` + Codex שניהם על המק. אל תעתיקו `~/.codex`. Perplexity נשאר בכרום. `HOST.md`.
 

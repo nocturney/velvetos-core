@@ -77,8 +77,16 @@ def main() -> None:
         fail(f"render_mail.py --check: {proc.stderr or proc.stdout}")
     if not (ROOT / "constitution/CONSTITUTION.md").is_file():
         fail("missing constitution")
-    if not (ROOT / "constitution/tags.md").is_file():
+    tags_path = ROOT / "constitution/tags.md"
+    if not tags_path.is_file():
         fail("missing tags")
+    tags_text = tags_path.read_text()
+    for needle in ("#צמיחה-חברתית", "#ריל-תהליך", "#היילייטס", "social-growth"):
+        if needle not in tags_text:
+            fail(f"constitution/tags.md missing social-growth needle {needle!r}")
+    follower = ROOT / "packages/vfgrowth/hq/FOLLOWER-GROWTH.md"
+    if not follower.is_file():
+        fail("missing vfgrowth/hq/FOLLOWER-GROWTH.md (ChatGPT content-agent embed)")
 
     research = ROOT / "packages/vfops/data/research.md"
     if not research.is_file():

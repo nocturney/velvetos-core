@@ -24,7 +24,8 @@
 ## בלוק 05 — תבנית
 
 הנתיב הקבוע שהבריף מדביק: `packages/vfops/data/research.md`.  
-עותק מיום: `BRIEF-YYYY-MM-DD.md`.
+עותק מיום: `BRIEF-YYYY-MM-DD.md`.  
+htmlBody שנשלח: `packages/vfops/out/BRIEF-YYYY-MM-DD.html` (ארכיון בלבד — Grok/Origin לא קוראים `/opt/cursor/artifacts`).
 
 ```
 05 · משרד

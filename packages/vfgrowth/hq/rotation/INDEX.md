@@ -5,4 +5,5 @@
 ג׳אב = ערך. הוק = וואטסאפ `050-2517000` / איסוף שדרות. HQ לא שולח.
 
 לוח קבוע (לא ארכיון סיבוב): `packages/vfgrowth/CALENDAR.md` + `LEDGER.md`.  
+מסירה: `HANDOFF-he.md` (וגם `vfigos/HANDOFF-STANDING-he.md`).  
 עדיין אין תוכנית jab-hook נפרדת בארכיון הזה.

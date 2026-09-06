@@ -29,6 +29,8 @@ CONNECT_WA = ROOT / "packages" / "vfmcp" / "CONNECT-WHATSAPP.md"
 CONNECT_HUB = ROOT / "packages" / "vfmcp" / "CONNECT-STUDIOHUB.md"
 CONNECT_GEMINI = ROOT / "packages" / "vfmcp" / "CONNECT-GEMINI.md"
 CONNECT_CHATGPT = ROOT / "packages" / "vfmcp" / "CONNECT-CHATGPT.md"
+CONNECT_IG = ROOT / "packages" / "vfigos" / "CONNECT-IG.md"
+CONNECT_ICLOUD = ROOT / "packages" / "vfmcp" / "CONNECT-ICLOUD.md"
 SUBSCRIPTIONS = ROOT / "packages" / "vfmcp" / "SUBSCRIPTIONS.md"
 HOST = ROOT / "packages" / "vfmcp" / "HOST.md"
 CORE_MCP_MD = ROOT / "packages" / "vfmcp" / "CORE-MCP.md"
@@ -76,6 +78,8 @@ def main() -> None:
         CONNECT_HUB,
         CONNECT_GEMINI,
         CONNECT_CHATGPT,
+        CONNECT_IG,
+        CONNECT_ICLOUD,
         SUBSCRIPTIONS,
         HOST,
         CORE_MCP_MD,
@@ -159,16 +163,26 @@ def main() -> None:
         fail("vf-desk.json studiomcphub.mcp must match .cursor/mcp.json")
     if not (hub.get("failover") or ""):
         fail("vf-desk.json studiomcphub must declare failover")
-    for key in ("mcp-gsheets", "whatsapp"):
+    for key in ("mcp-gsheets", "whatsapp", "instagram", "icloud"):
         row = tools.get(key) or {}
         if not row:
             fail(f"vf-desk.json tools missing {key}")
         if not (row.get("failover") or ""):
             fail(f"vf-desk.json tools.{key} must declare failover")
+    ig = tools.get("instagram") or {}
+    if ig.get("status") not in ("needsAuth", "ready"):
+        fail("vf-desk.json instagram.status must be needsAuth or ready after ig-mcp map")
+    if "CONNECT-IG.md" not in (ig.get("connect") or "") and "CONNECT-IG.md" not in (ig.get("useWhen") or ""):
+        fail("vf-desk.json instagram must point at CONNECT-IG.md")
+    if "send_dm" not in " ".join(ig.get("forbidden") or []) and "auto-dm" not in " ".join(ig.get("forbidden") or []).lower():
+        fail("vf-desk.json instagram must forbid send_dm / auto-dm")
+    icloud = tools.get("icloud") or {}
+    if "CONNECT-ICLOUD.md" not in (icloud.get("useWhen") or "") and "CONNECT-ICLOUD.md" not in (icloud.get("rule") or ""):
+        fail("vf-desk.json icloud must point at CONNECT-ICLOUD.md")
 
     core_mcp = json.loads(CORE_MCP.read_text())
     ids = {s.get("id") for s in (core_mcp.get("servers") or [])}
-    for need in ("studiomcphub", "mcp-gsheets", "whatsapp", "gemini-api", "chatgpt-api"):
+    for need in ("studiomcphub", "mcp-gsheets", "whatsapp", "gemini-api", "chatgpt-api", "instagram"):
         if need not in ids:
             fail(f"core-mcp.json must list {need}")
     if CORE_MCP.read_text().count("sk-") or "BEGIN PRIVATE" in CORE_MCP.read_text():
@@ -180,9 +194,11 @@ def main() -> None:
         (CONNECT_WA, ("lharries/whatsapp-mcp", "050-2517000", "send=false", "Infobip")),
         (CONNECT_GEMINI, ("חסר מפתח Gemini", "vf_gemini.py", "aliargun", "gemini.google.com", "לא ממציאים", "RLabs")),
         (CONNECT_CHATGPT, ("חסר מפתח ChatGPT", "vf_chatgpt.py", "chatgpt.com", "OPENAI_API_KEY", "לא ממציאים")),
+        (CONNECT_IG, ("jlbadano/ig-mcp", "publish_media", "needsAuth", "אוטו־DM", "SEND.md")),
+        (CONNECT_ICLOUD, ("iCloud", "Cloud Agent", "ICLOUD-DRIVE-SYNC.md", "Drive")),
         (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py", "perplexity-user-mcp", "patchright", "HOST.md")),
         (HOST, ("המק בשדרות", "codex login", "Gemini CLI", "perplexity.ai", "Cloud Agent", "לא ממציאים", "agent worker", "computer-use")),
-        (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "Gemini API", "ChatGPT API")),
+        (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "Gemini API", "ChatGPT API", "ig-mcp")),
     ):
         text = path.read_text(encoding="utf-8")
         for needle in needles:
@@ -241,6 +257,14 @@ def main() -> None:
         fail("vfmcp/ORIGIN.md must mention SUBSCRIPTIONS.md")
     if "HOST.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention HOST.md")
+    if "CONNECT-IG.md" not in ORIGIN.read_text() and "ig-mcp" not in ORIGIN.read_text():
+        fail("vfmcp/ORIGIN.md must mention ig-mcp / CONNECT-IG.md")
+
+    desktop = (ROOT / "packages" / "vfmcp" / "mcp.desktop.example.json").read_text(encoding="utf-8")
+    if "instagram" not in desktop or "ig-mcp" not in desktop:
+        fail("mcp.desktop.example.json must include ig-mcp instagram server")
+    if "icloud" not in desktop:
+        fail("mcp.desktop.example.json must include icloud desktop server")
 
     sys.path.insert(0, str(ROOT / "scripts"))
     import vf_gemini  # noqa: E402
@@ -313,7 +337,7 @@ def main() -> None:
     if "sk-" in out2:
         fail("vf_chatgpt.py must not print secrets")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api+chatgpt-api")
+    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api+chatgpt-api+ig-mcp+icloud")
 
 
 if __name__ == "__main__":
