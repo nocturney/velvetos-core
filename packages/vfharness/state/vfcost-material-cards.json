@@ -37,5 +37,5 @@
     "brief_slot": "02",
     "sale_price": "never"
   },
-  "latest_observation": "check-all.py OK suite passed=22. Example 20.29g × 250 ILS/kg → 5.07. Missing grams exit=2. PR #95."
+  "latest_observation": "Merged origin/main (72172df). Conflicts: CHANGELOG only (kept both). Auto-merge kept vfcost CLI + brief 02. check-all 22/22. PR #95 mergeable for lead seat."
 }
