@@ -23,6 +23,19 @@
 - `DESIGN.md` בשורש הריפו — יושב תחת `vfbriefux/hq/` כי אין אפליקציית web אחת
 - Figma / JSON schema נפרד — markdown+YAML מספיק
 
+## Anti-slop (בריף פנימי בלבד)
+
+דפוס מ־trending `anti-ui-slop` / `design-taste-frontend` — **רק** ל־HTML בריף HQ (`MAIL.html` / `brief-email.html`). לא אתר ציבורי, לא העתקת טוקני מותג זר.
+
+| כן | לא |
+|---|---|
+| טוקנים מ־`DESIGN.md` (canvas / gold / cream) | סגול־על־לבן / אינדיגו ברירת־מחדל AI |
+| היררכיה אחת + CTA אחד לבריף | רצועות סטטים, כרטיסים מקוננים, תגיות צפות |
+| RTL + מרווח מ־tokens | Inter/Roboto כ־display; glow סגול |
+| תרשים רק כש־`DIAGRAM-MAKER` נדרש | הדבקת SVG דקורטיבי בלי נתון |
+
+צלב־בדיקה עם Canva לפיד: `vfcanva` — לא מחליפים brand kit.
+
 ## סנסור
 
 אין סנסור ייעודי. שינוי ב-`DESIGN.md` או `MAIL.html` → `python3 scripts/check-all.py` אם נגעו בקטלוג.
