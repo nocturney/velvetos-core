@@ -34,7 +34,7 @@
   ],
   "outcome": "worker_done",
   "pulse": "working",
-  "verification": "PNG dimensions verified on disk; check-all after catalog notes",
+  "verification": "PNG dimensions verified on disk; check-all.py OK suite passed=23",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-06",
