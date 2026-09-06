@@ -8,6 +8,8 @@
 **לוח עומד:** `CALENDAR.md` + `RHYTHM.md` — לא שואלים כל יום «מה לפרסם?».  
 חסר גלם מכריסטיאן → `MEDIA-NEEDED-FROM-CHRISTIAN`. לא ממציאים מדיה.
 
+לוח **קבוע**: `CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. שיבוץ ב־instagram.com (לא סוויט). סנסור `scripts/check-vfgrowth.py`.
+
 ## מומחה — Social Booster
 
 מודול: `expert-social-booster` · `experts/SOCIAL-BOOSTER.md` · `@carousel-growth-engine`

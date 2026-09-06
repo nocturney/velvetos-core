@@ -1,0 +1,15 @@
+{
+  "id": "best-skills-pass-2026-09-06",
+  "date": "2026-09-06",
+  "dataDate": "2026-09-05",
+  "trigger": "vf-best-skills-bi-daily",
+  "standingForever": true,
+  "embedded": [
+    "brainstorm-gate",
+    "systematic-debugging",
+    "anti-ui-slop-brief"
+  ],
+  "artifact": "packages/vfresearch/sources/2026-09-06-best-skills.md",
+  "timer": "renewed",
+  "subscriptionId": "sub_0b546098-aebe-4240-bae4-dfae9b81e418"
+}

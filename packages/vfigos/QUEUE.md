@@ -21,23 +21,16 @@ Grok הוא גיבוי אופציונלי. לא מחכים למכסה. לא מח
 
 ## תור פתוח
 
-לוח עומד: `vfgrowth/CALENDAR.md` · קצב: `vfgrowth/RHYTHM.md` · מסירה: `HANDOFF-STANDING-he.md`.  
-משימת לוח 5.9: **אין שליחת IG/Gmail מכאן.** שיבוץ ב־instagram.com.
+לוח קבוע: `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. שיבוץ ב־instagram.com.
 
 | תאריך | מזהה | סוג | נתיב / הערה | סטטוס |
 |---|---|---|---|---|
-| 2026-09-08 16:00 | VF-G003 SoccerBall | ריל | `vfgrowth/G003.md` · `vfcopy/G003.md` · **MEDIA-NEEDED-FROM-CHRISTIAN** · אין קובץ על הדיסק | `#לסקירה` · טרם `#משובץ` |
-| 2026-09-10 12:00 | VF-G006 | קרוסלה | `vfgrowth/G006.md` · `vfcopy/G006.md` · Canva טרם הורכב | `#טיוטה` |
-| 2026-09-13 16:00 | VF-G004 | ריל | אחרי שיחת פורמט · **MEDIA-NEEDED-FROM-CHRISTIAN** | משבצת קצב |
-| 2026-09-17 12:00 | VF-G007 | קרוסלה | נושא אחרי G006 · אין על הדיסק | משבצת קצב |
-| 2026-09-20 16:00 | VF-G008 | ריל | **MEDIA-NEEDED-FROM-CHRISTIAN** | משבצת קצב |
-| 2026-09-24 12:00 | VF-G010 | קרוסלה | אין על הדיסק | משבצת קצב |
-| א׳–ה׳ 20:30 | VF-S-* | סטורי | Canva + CTA · ראו HANDOFF | קצב קבוע |
+| 2026-09-05 | לוח קבוע W37–W39 | פיד + סטוריז | `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md` · שיבוץ instagram.com · G003 SoccerBall חסום מדיה | `#ממתין-למדיה` |
 | 2026-08-31 | חוקת-שליחה | משרד | Drive `1Xd_uUGKYl7FGr11URUtDHrkz16ikyOGZPZSKqdTOr-I` + Gmail `1a056327a22e6ff8` | `#נשלח-מ-HQ` |
 
 ## דוגמאות
 
-| 2026-09-03 12:00 | VF-G005 d12b | קרוסלה | `instagram.com/p/Dc0cKegEbxd/` · היה LIVE-PACKET | חי · לא נוגעים |
+| 2026-09-03 12:00 | VF-G005 d12b | קרוסלה | `instagram.com/p/Dc0cKegEbxd/` · חי · לא נוגעים | עלה |
 | 2026-08-30 | VF-G005 d12b | קרוסלה | `vfcopy/G005-d12b.md` + `vfcovers/g005/` | היה `#מוכן-ל-Grok` — מעכשיו HQ שולח דרך כלים |
 | 2026-08-31 | send-law | משרד | `constitution/SEND.md` | `#נשלח-מ-HQ` |
 

@@ -1,0 +1,34 @@
+{
+  "task_id": "perplexity-user-mcp-2026-09-05",
+  "status": "done",
+  "pack": "vfmcp",
+  "goal": "Evaluate vscode-perplexity-mcp as a Plus-without-API path; owner declined extra API billing.",
+  "planned_steps": [
+    "Read repo README vs official Perplexity MCP",
+    "Map cookie/patchright model onto SUBSCRIPTIONS.md",
+    "Skip install on Cloud; keep WebSearch failover"
+  ],
+  "completed_steps": [
+    "Confirmed perplexity-user-mcp bills Pro via browser session, not Sonar API",
+    "Owner declined extra API keys — recorded in SUBSCRIPTIONS.md + owner-memory",
+    "Skip documented in GAP.md, MCP-FIT.md, ORCHESTRA.md"
+  ],
+  "next_step": "Do not install on Cloud. Owner Mac only after lead seat if they accept Perplexity ToS risk.",
+  "artifacts": [
+    "packages/vfmcp/SUBSCRIPTIONS.md",
+    "packages/vfresearch/sources/2026-09-05-perplexity-user-mcp.md",
+    "packages/vfmcp/GAP.md",
+    "docs/MCP-FIT.md"
+  ],
+  "unresolved": [
+    "HQ Gemini/ChatGPT/Perplexity Plus features stay on owner Mac/phone without API keys",
+    "Cloud live web is WebSearch only until a key appears in env"
+  ],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "latest_observation": "vscode-perplexity-mcp is the correct concept for Pro-without-API and the wrong runtime for Cloud Agent."
+}

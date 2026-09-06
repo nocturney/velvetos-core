@@ -16,6 +16,8 @@
 - **ארבעה תחומי מומחה:** Social Booster · 3D model · Trend explorer · Media director (תמונות/וידאו).
 - **שפה:** עברית לקופי מוצר; מסמכי משרד עברית+אנגלית.
 - **CTA:** וואטסאפ `050-2517000` / איסוף שדרות — לא «שלחו DM».
+- **אין חיוב API נפרד:** מנויי Gemini / ChatGPT / Perplexity בדפדפן לא כוללים מפתח מפתחים, והבעלים לא רוצה אחד (5.9.2026). מארח = **מק ייעודי** בשדרות (`vfmcp/HOST.md`) — לא PC ווינדוס יומי. Cloud בלי מפתח = WebSearch. לא דוחקים מפתח.
+- **אין סשן דפדפן ב־Cloud:** לא עוגיות, לא patchright, לא `perplexity-user-mcp` בענן. כרום **על המק הייעודי** + `agent worker --computer-use` (`HOST.md`) — לא remote-debug, לא העתקה מווינדוס.
 
 ### ראש צוות (lead)
 
@@ -93,6 +95,12 @@
 - **מחר:** בעלים נותן קישור לדגם אחד → שעה למשבצת 1. בלי שם מהאוויר.
 - **מקור:** תזמורת 2026-09-02.
 
+### 2026-09-03 (מחקר יומי — מדף-קודם + חנות מחר)
+- **מושב:** סטודיו + ייצור
+- **למדנו:** פנייה חדשה = מדף `ready` קודם (`vfconvert/PATH.md`). אין `ready` = אין שם להציע. סגירת יום: שקית+תווית+ספירה (`vfprod/SHOP-CLOSE.md`).
+- **מחר:** קישור לדגם אחד למשבצת 1 נשאר פתוח. Plus/Pro — מארח מק בשדרות (`HOST.md`), לא לוגין Cloud (נעול 5.9).
+- **מקור:** תזמורת 2026-09-03 (failover — אין גוף מנוי).
+
 ### 2026-09-03 (best-skills bi-daily)
 - **מושב:** ייצור + lead
 - **למדנו:** בעלים רוצה סריקת [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) **כל יומיים** + ראש פתוח לעדכון חוקה כשדפוס עמיד מנצח.
@@ -107,15 +115,26 @@
 - **מחר:** לעקוב archify / OpenSpec; לא להעתיק impeccable palette.
 - **מקור:** `sources/2026-09-04-best-skills.md`.
 
+### 2026-09-05 (לוח פרסום קבוע)
+- **מושב:** צמיחה
+- **למדנו:** קצב נעול — ריל א׳/ג׳ 16:00, קרוסלה ה׳ 12:00, סטוריז א׳–ה׳ 20:30, אין פיד ו׳–ש׳, ≥36ש בין פיד. שיבוץ ב־instagram.com לא סוויט. G001+G002+G005 חיים. G003 = SoccerBall ריל #3 (חסום מדיה).
+- **מחר:** לא לשאול «מה לפרסם?» — למלא לדג׳ר ואז לשבץ לפי `vfgrowth/CALENDAR.md`.
+- **מקור:** כריסטיאן 5.9 ~11:10 + `LEDGER.md`.
+
 ### 2026-09-05 (קישורי בעלים ×4)
 - **מושב:** ייצור
 - **למדנו:** DeepTutor/lieflat/academic → דפוסים על packs קיימים; ExamFul = watch לאנכי חינוך עתידי, לא צינור VF.
 - **מחר:** להשתמש ב־`ACADEMIC-PIPELINE` / `CHARTS` / `MASTERY-MEMORY` במחקר ובריף; בלי להתקין vendor.
 - **מקור:** `sources/2026-09-05-weekly-links-owner-four.md`.
 
-### 2026-09-05 (לוח פרסום קבוע)
-- **מושב:** growth
-- **למדנו:** כריסטיאן ביקש לוח עומד + שיבוץ; חסר גלם ממנו → לשאול במפורש (`MEDIA-NEEDED-FROM-CHRISTIAN`), לא להמציא.
-- **למדנו:** G001+G002+G005 חיים; G003 SoccerBall הוא ריל תהליך #3 לפני שיחת פורמט.
-- **מחר:** לשבץ ב־instagram.com לפי `HANDOFF-STANDING-he.md`; G003 ממתין לגלם עד 8.9 12:00.
-- **מקור:** בקשת כריסטיאן 5.9 ~11:10–11:11 Asia/Jerusalem.
+### 2026-09-05 (מארח מנויים)
+- **מושב:** lead
+- **למדנו:** מארח Plus/Pro = **מק ייעודי** בשדרות — לא PC ווינדוס יומי. לוגין כרום בווינדוס לא עובר למק; אין העתקת עוגיות.
+- **למדנו:** CLI על `chris@Mac-Office` (darwin arm64): `agent status` = Logged in as `nocturney@gmail.com`, Pro+. Worker נכשל: `Filesystem createRequire is disabled in the self-contained worker SEA` (CLI 2026.09.02). קלון קיים ב־`~/velvetos-core`. `/path/to/` היה דוגמה.
+- **למדנו:** Worker `sderot-mac` **רץ** (5.9.2026) — id `4a3ca6d2-f2c3-4cba-8c96-8bb63d6160b2`, dir `/Users/chris/velvetos-core`. Computer Use עדיין לא מותקן. `--share-desktop` לא במק.
+- **למדנו:** `agent worker --computer-use` על CLI 2026.09.02 בוחר `cursor-agent-worker-sea` ונופל (createRequire). בלי הדגל = `index.js` ועובד. אחרי עצירה ל־computer-use ה־worker כבוי עד שחוזרים ל־start בלי הדגל.
+- **למדנו:** אין קישור לטאבי כרום. סוכן על `sderot-mac` בלי `--computer-use` = קבצים/טרמינל. אתרי Plus נשארים אצל האדם עד computer-use יציב (SEA שובר `agent worker --computer-use`).
+- **למדנו:** `agy` 1.1.27 על `Mac-Office` = `nocturney@gmail.com (Google AI Plus)` · Gemini 3.8 Flash (High). `ERROR: logging before google.Init` בהתקנה = רעש. Gemini CLI ליחידים מת. לא טוקן לענן.
+- **למדנו:** Codex CLI `0.153.4` על `chris@Mac-Office` = `Successfully logged in` (ChatGPT Plus, לא מפתח API). לא מעתיקים `~/.codex` לענן. Perplexity נשאר בכרום.
+- **מחר:** סוכן על `sderot-mac` יכול להריץ `agy` / `codex` בטרמינל המק. Worker לא נסגר. `--computer-use` עדיין לא.
+- **מקור:** שיחת בעלים 5.9.2026.

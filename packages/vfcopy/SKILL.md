@@ -9,5 +9,5 @@
 מסגרות אופציונליות: `vfmskill` (`copywriting` / `copy-editing`). החוקה מנצחת.  
 מגישים ל־`#vfsales` ו־`#vfgrowth`. HQ שולח דרך כלים כשהטיוטה מוכנה (`constitution/SEND.md`). רואים `hq/PLAYBOOK.md`.
 
-לוח עומד: כיתוב לפי מזהה ב־`vfgrowth/CALENDAR.md` (`G003.md`, `G006.md`).  
-חסר מה רואים → טיוטה חלקית. לא ממציאים תיאור רצפה. משימת לוח 5.9: אין שליחה.
+לוח קבוע: `vfgrowth/CALENDAR.md` · טיוטת G003 + תבנית סטוריז `hq/templates/ig-stories.md`.  
+חסר מה רואים → טיוטה חלקית. לא ממציאים תיאור רצפה. שיבוץ ב־instagram.com.

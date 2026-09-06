@@ -31,6 +31,7 @@
 | יכולות UI | `vfops/hq/capabilities.json` | ראש צוות | command surface עתידי |
 | לוח צינור | `vfops/hq/PIPELINE-BOARD.md` | סטודיו / ייצור | ראש צוות |
 | מדף מק״ט | `vfsku/SHELF.json` | ייצור אחרי שער+סלייס | בריף 03 (`vfsku.py brief`) |
+| חנות מחר | `vfprod/SHOP-CLOSE.md` | ייצור בסוף יום | `vfsku.py shop` + בריף 03 |
 | מסמכי עבודה | Drive `create_file` | כל מושב | חיפוש לפי job/SKU |
 | מייל שנשלח | Gmail (thread id) | HQ send | vfconvert / מעקב |
 | עיצוב IG | Canva (design id / URL אמיתי) | vfcanva | vfigos |
@@ -56,6 +57,7 @@
 | Insights ingest | snapshot מאומת | `vfinsights/sources/*-ig-snapshot.md`, `templates/snapshot-ingest.md` |
 | Instance onboard | פרונט + זיכרון נפרד | `velvetos/experts/INSTANCE-ONBOARD.md`, `owner-memory-<id>.md` |
 | Social Booster | חבילת קרוסלה / הוקים | `vfgrowth/`, Canva, `vfigos` queue |
+| לוח פרסום קבוע | משבצות + לדג׳ר + מסירה | `vfgrowth/CALENDAR.md`, `LEDGER.md`, `HANDOFF-he.md` |
 | 3D model | כרטיס כדאיות, mesh | `vfprod/`, Drive, checkpoint |
 | Trend explorer | מפת מקורות, מוזיקה | `vfresearch/sources/`, `LINKS.json` |
 | Media director | storyboard, ריל packet | `vfom/`, `vfcovers/`, Canva |

@@ -14,10 +14,21 @@ Treg **לא רלוונטי**. WebSearch / orchestra בלבד.
 
 ```
 שאלה / עונה / פורמט
-  → WebSearch / WebFetch (או orchestra אם חסום)
+  → (אופציונלי) last30 fan-out — hq/LAST30.md · skill vf-last30
+  → WebSearch / WebFetch / gh (או orchestra אם חסום)
+  → רצפת ביטחון · nothing-solid מותר
   → מפת מקורות (משקל: ראשי / משני / חלש)
   → handoff: vfgrowth (תוכן) · vfom (ריל) · vfigos (לוח)
 ```
+
+## מחקר 30 יום (קהילה)
+
+כשצריך «מה אנשים אומרים עכשיו» / השוואת כלים / discovery בלי נושא סגור:
+
+1. `.cursor/skills/vf-last30/SKILL.md` + `hq/LAST30.md`
+2. `@trend-researcher` או `@research-synthesist`
+3. ארטיפקט: `sources/YYYY-MM-DD-<topic>-last30.md`
+4. בלי `npx skills` / last30days CLI · בלי מפתחות X/TikTok
 
 ## כרטיס מגמה
 

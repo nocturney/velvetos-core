@@ -42,6 +42,8 @@
 - ריל מדף: רק אחרי `ready` (`vfgrowth/CALENDAR.md`).
 - מלאי על מדף האיסוף: רק ספירה פיזית בשדרות. חסר = «אין ספירה».
 - בריף 03: `python3 scripts/vfsku.py brief`.
+- חנות מחר: `python3 scripts/vfsku.py shop` + סגירת יום `vfprod/SHOP-CLOSE.md`.
+- פנייה: מדף `ready` קודם (`vfconvert/PATH.md`) — לא הצעת מותאם אם המשבצת עונה.
 
 ## לא כאן
 

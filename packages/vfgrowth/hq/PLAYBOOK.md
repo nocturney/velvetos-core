@@ -23,11 +23,12 @@
 
 ## לוח
 
-לא זזים ממשובץ. לא בוסט.  
+קצב קבוע ב־`../CALENDAR.md`. מועמדים ב־`../LEDGER.md`. מסירה ב־`../HANDOFF-he.md`.  
+לא זזים ממשובץ. לא בוסט. שיבוץ ב־instagram.com — לא סוויט.  
 Proof מהרצפה רק אם העבודה על המיטה עכשיו — לא ממציאים סצנה.
 
-לוח עומד (2–3 שבועות + קצב): `CALENDAR.md` · `RHYTHM.md`.  
-מסירה ל־instagram.com: `vfigos/HANDOFF-STANDING-he.md`.  
+לוח עומד (2–3 שבועות + קצב): `CALENDAR.md` · `LEDGER.md` · `RHYTHM.md`.  
+מסירה ל־instagram.com: `HANDOFF-he.md` (מקור האמת). מצביע + מזהי יומן: `vfigos/HANDOFF-STANDING-he.md`.  
 `MEDIA-NEEDED-FROM-CHRISTIAN` כשחסר צילום — שואלים, לא ממציאים.
 
 `#vfseason` לפתיחת שנה / חלון איסוף ידוע. בלי מק״ט על רילס שמסומנים «ריל בלבד».

@@ -38,6 +38,8 @@
 
 לוח מחיק במשרד (Gemini): אותם חמישה, כמות ממדף שדרות בלבד. אין מק״ט 6–8 בלי החלטת `01`. אין ₪ על הלוח.
 
+פנייה חדשה: מדף `ready` קודם (`vfconvert/PATH.md`). אין `ready` = אין שם להציע. חנות מחר: `python3 scripts/vfsku.py shop` + `vfprod/SHOP-CLOSE.md`.
+
 ## flexi / fidget (ChatGPT 31.8)
 
 כיוון מדף מותר — לא כרטיס אוטומטי. עובר `LAB.md` ואז את השער למעלה.  
