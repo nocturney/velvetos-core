@@ -1,0 +1,41 @@
+{
+  "task_id": "hq-sweep-2026-09-06",
+  "status": "running",
+  "pack": "vfgrowth",
+  "goal": "HQ sweep: lock G003, tag G004, embed follower playbook, archive 6.9 brief. No publish, no client mail, no invented ₪.",
+  "crew": "content",
+  "planned_steps": [
+    "Map open PRs and ledgers",
+    "Lock G003 calendar/ledger/copy",
+    "Tag G004 kettlebell holders",
+    "Embed follower-growth + constitution tags",
+    "Archive 6.9 brief HTML under vfops/out",
+    "Run sensors and open PR"
+  ],
+  "completed_steps": [
+    "Mapped #89/#90 merged; #91 stale draft",
+    "Wrote G003 lock + G004 card + FOLLOWER-GROWTH",
+    "Archived Gmail htmlBody to vfops/out"
+  ],
+  "next_step": "Run check-all.py then push PR",
+  "artifacts": [
+    "packages/vfgrowth/G003.md",
+    "packages/vfgrowth/G004.md",
+    "packages/vfgrowth/hq/FOLLOWER-GROWTH.md",
+    "packages/vfops/out/BRIEF-2026-09-06.html",
+    "constitution/tags.md"
+  ],
+  "unresolved": [
+    "Studio Mac must keep the instagram.com schedule; HQ did not publish",
+    "G004 stills live on Grok box, not this Cloud disk",
+    "PR #91 stale — close after this PR lands",
+    "Open drafts #78/#68 ig-mcp and conflicting #74 stay lead-gated"
+  ],
+  "outcome": null,
+  "pulse": "working",
+  "verification": "pending check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-06",
+  "latest_observation": "G003 lock written; brief HTML archived from Gmail thread 1a074ed8b8427e69."
+}
