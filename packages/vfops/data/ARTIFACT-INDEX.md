@@ -31,6 +31,7 @@
 | יכולות UI | `vfops/hq/capabilities.json` | ראש צוות | command surface עתידי |
 | לוח צינור | `vfops/hq/PIPELINE-BOARD.md` | סטודיו / ייצור | ראש צוות |
 | מדף מק״ט | `vfsku/SHELF.json` | ייצור אחרי שער+סלייס | בריף 03 (`vfsku.py brief`) |
+| חנות מחר | `vfprod/SHOP-CLOSE.md` | ייצור בסוף יום | `vfsku.py shop` + בריף 03 |
 | מסמכי עבודה | Drive `create_file` | כל מושב | חיפוש לפי job/SKU |
 | מייל שנשלח | Gmail (thread id) | HQ send | vfconvert / מעקב |
 | עיצוב IG | Canva (design id / URL אמיתי) | vfcanva | vfigos |

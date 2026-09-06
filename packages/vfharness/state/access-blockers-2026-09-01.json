@@ -9,7 +9,7 @@
     "vendor-origin-packs.sh skips cleanly when Origin not authed",
     "Desk: instagram no-publish-mcp + threedaistudio ready"
   ],
-  "next_step": "Owner: origin auth login + vendor; grant write for instance sync (new Cloud Agent run or local PUSH=1 / PAT); enable Mobbin on Cloud env",
+  "next_step": "Owner: origin auth login + vendor; grant write for instance sync (cursor[bot] / new Cloud Agent run / local PUSH=1 / PAT); enable Mobbin on Cloud env",
   "artifacts": [
     "docs/OWNER-ACTIONS-he.md",
     "scripts/sync-instance-scaffold.sh",
@@ -18,7 +18,7 @@
   ],
   "unresolved": [
     "Origin vendor: needs origin auth login or CURSOR_API_KEY",
-    "Instance push: may still 403 without write grant — new agent run or local PUSH=1 / PAT",
+    "Instance push: cursor[bot] 403 — owner PAT, GitHub App write, new agent run, or local PUSH=1",
     "Mobbin MCP namespace not on this Cloud environment",
     "Instagram Publish MCP does not exist — SEND.md failover only"
   ],
