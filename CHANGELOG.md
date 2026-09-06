@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-06 — **גיבוי ערב קטלוג**: רענון `packages/manifest.json` (`catalogRefreshedAt` 2026-09-06). נכללו מוזגים #97 vfcanva/G004, #96 לולאת משרד, #95 vfcost CLI, #94 ig-mcp+iCloud, #93 סריקת HQ, #92/#73 best-skills, #89/#90 לוח IG, #77 last30days. Origin לא שוכפל (אין login). אין PR פתוחים בשעת הרענון. Evening catalog refresh; Origin not vendored.
 - 2026-09-06 — **VF-G004 Canva:** שדרוג קרוסלה `DAHUaelaug0` (5×1080×1350) + סטוריז `DAHUaUo3bAk` (3 פריימי צילום) + CTA נייבי-זהב `DAHUacDGv9U`. עברית מ־`vfcopy/G004.md`, זהב `#C9A86C`, בלי ₪ בפריים. PNG יוצאו. פלייבוק `vfcanva/jobs/G004.md`. `#vfigos` סקירה בלבד — לא פורסם.
 
 - 2026-09-06 — **לולאת משרד + רף סוכנות**: `LOOP.json` + `vfops_loop.py` צורכים כל פק. כוכב צפון ב־INSTANCE/ORCHESTRA/STUDIO — סוכנות יקרה, בלי חצי-פק. שער עריכה לפני שיבוץ (לא JPEG גולמי). שיבוץ אוטונומי + Google Calendar בלי לשאול משבצת. כיתוב G004. CONNECT-IG צעד אדם. בלי Publish / ₪ מומצא. vfcost CLI חי בחריץ 02.

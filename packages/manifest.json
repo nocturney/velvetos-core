@@ -5,9 +5,10 @@
   "role": "core",
   "displayName": "VelvetOS Core",
   "dumpedAt": "2026-08-30",
-  "catalogRefreshedAt": "2026-09-03",
+  "catalogRefreshedAt": "2026-09-06",
   "tag": "v0.1.0",
   "notes": [
+    "2026-09-06 evening catalog: GitHub nocturney/velvetos-core. Folded merged #97 vfcanva/G004, #96 vfops loop + agency floor, #95 vfcost material CLI, #94 ig-mcp+iCloud, #93 HQ sweep, #92/#73 best-skills, #89/#90 vfgrowth calendar, #77 vfresearch last30days. Origin not vendored (CLI not logged in). No open PRs at refresh.",
     "2026-09-03 evening catalog: GitHub nocturney/velvetos-core. Included merged #71 buildwithclaude, #59 office MCPs in Core, #72 best-skills. Origin not vendored (CLI not logged in). Open branches still on GitHub: #70 cursor/daily-research-2026-09-03-b067, #68 cursor/integrate-ig-mcp-abe1, #66 cursor/close-access-gaps-5b1b, #58 cursor/icloud-drive-dual-path-c95c.",
     "2026-09-03: Standing forever bi-daily LinklyAI/best-skills pulse \u2014 BEST-SKILLS.md + TIMER.md + standingForever. Renew subscribe_timer every pass. Sensor: scripts/check-vfresearch.py.",
     "2026-09-03: Bi-daily LinklyAI/best-skills ranking scan on vfresearch \u2014 BEST-SKILLS.md + BEST-SKILLS.json + skill vf-best-skills. Embed patterns in place; no npx on Cloud. Sensor: scripts/check-vfresearch.py.",
@@ -62,13 +63,14 @@
       "packages/vfresearch/WEEKLY.md",
       "packages/vfresearch/BEST-SKILLS.md",
       "packages/vfresearch/BEST-SKILLS.json",
+      "packages/vfresearch/hq/LAST30.md",
       "packages/vfresearch/DAILY.md"
     ]
   },
   "packs": [
     {
       "name": "vfigos",
-      "summary": "VF Instagram OS \u2014 Instagram office pack (review and schedule; this HQ does not send).",
+      "summary": "VF Instagram OS \u2014 review / schedule / SEND.md via connected publish or Canva+Drive+Gmail failover (CONNECT-IG.md). No auto-DM, no invented publish.",
       "bcId": "bc-c4a53ee3",
       "agentUrl": "https://cursor.com/agents/bc-c4a53ee3",
       "originSlug": "christian-velvet/tmp-20e9908caebda9d0",
@@ -78,7 +80,7 @@
     },
     {
       "name": "vfcost",
-      "summary": "Studio cost pack \u2014 unit economics and spend, without invented prices.",
+      "summary": "Studio cost pack \u2014 material-only CLI (scripts/vfcost.py: grams \u00d7 ILS/kg; FILAMENTS.json / CARDS.json). Missing grams refuse. No invented sale \u20aa.",
       "bcId": "bc-a4dc99c9",
       "agentUrl": "https://cursor.com/agents/bc-a4dc99c9",
       "originSlug": "christian-velvet/tmp-8a55585f5a73bd06",
@@ -98,7 +100,7 @@
     },
     {
       "name": "vfgrowth",
-      "summary": "Growth pack \u2014 content sprints and acquisition work.",
+      "summary": "Growth pack \u2014 standing IG calendar (CALENDAR.md / LEDGER.md / HANDOFF-he.md). Studio books on instagram.com; no Suite / boost / invented \u20aa.",
       "bcId": "bc-e68393a0",
       "agentUrl": "https://cursor.com/agents/bc-e68393a0",
       "originSlug": "christian-velvet/tmp-0093db8b6deea44f",
@@ -128,7 +130,7 @@
     },
     {
       "name": "vfops",
-      "summary": "Operations pack \u2014 run-the-studio procedures.",
+      "summary": "Operations pack \u2014 run-the-studio procedures + office loop (LOOP.json / vfops_loop.py consume every pack into 07:00 brief + HANDOFF).",
       "bcId": "bc-93fbfca6",
       "agentUrl": "https://cursor.com/agents/bc-93fbfca6",
       "originSlug": null,
@@ -168,7 +170,7 @@
     },
     {
       "name": "vfresearch",
-      "summary": "Research pack \u2014 source gathering, weekly links, and bi-daily best-skills (BEST-SKILLS.md / TIMER.md / skill vf-best-skills).",
+      "summary": "Research pack \u2014 weekly links, bi-daily best-skills (BEST-SKILLS.md / TIMER.md / skill vf-best-skills), and last30 community research (hq/LAST30.md / skill vf-last30).",
       "bcId": "bc-01278e9b",
       "agentUrl": "https://cursor.com/agents/bc-01278e9b",
       "originSlug": null,
@@ -188,7 +190,7 @@
     },
     {
       "name": "vfcopy",
-      "summary": "Copy desk \u2014 homework, draft, and lint.",
+      "summary": "Copy desk \u2014 homework, draft, and lint; G003/G004 captions on the existing overlay (no \u00ab\u05e9\u05dc\u05d7\u05d5 DM\u00bb).",
       "bcId": "bc-b6bc8b8c",
       "bcIdFull": "bc-b6bc8b8c-136d-4d95-812e-177991534e42",
       "agentUrl": "https://cursor.com/agents/bc-b6bc8b8c-136d-4d95-812e-177991534e42",
@@ -229,7 +231,7 @@
     },
     {
       "name": "vfbriefux",
-      "summary": "Brief format research \u2014 morning-brief layout and UX notes.",
+      "summary": "Brief format research \u2014 morning-brief layout and UX notes; DESIGN-EMBED anti-slop for HQ brief only.",
       "bcId": "bc-9e0be231",
       "agentUrl": "https://cursor.com/agents/bc-9e0be231",
       "originSlug": null,
@@ -239,7 +241,7 @@
     },
     {
       "name": "vfcanva",
-      "summary": "Canva desk \u2014 Instagram visual content for @velvets_cloud (create / resize / review; this HQ does not send).",
+      "summary": "Canva desk \u2014 Instagram visuals for @velvets_cloud (create / resize / review). Includes jobs/G004.md (VF-G004 kettlebell-holder pack). Send stays on vfigos.",
       "bcId": "bc-2020e135-820c-40b6-a922-e2822b5e81bf",
       "agentUrl": "https://cursor.com/agents/bc-2020e135-820c-40b6-a922-e2822b5e81bf",
       "originSlug": null,
@@ -341,7 +343,7 @@
     },
     {
       "name": "vfharness",
-      "summary": "Outer harness \u2014 six layers on existing packs (guides, sensors, loop, memory, permissions, observability). Includes verification-before-claim, skill-authoring, handoff, architecture-audit. No second runtime. HQ does not send.",
+      "summary": "Outer harness \u2014 six layers on existing packs (guides, sensors, loop, memory, permissions, observability). Includes verification-before-claim, skill-authoring, handoff, architecture-audit, brainstorm-gate, systematic-debugging. No second runtime.",
       "bcId": "bc-c6e01d3b",
       "bcIdFull": "bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
       "agentUrl": "https://cursor.com/agents/bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
