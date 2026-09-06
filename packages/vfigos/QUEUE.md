@@ -25,7 +25,9 @@ Grok הוא גיבוי אופציונלי. לא מחכים למכסה. לא מח
 
 | תאריך | מזהה | סוג | נתיב / הערה | סטטוס |
 |---|---|---|---|---|
-| 2026-09-05 | לוח קבוע W37–W39 | פיד + סטוריז | `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md` · שיבוץ instagram.com · G003 SoccerBall חסום מדיה | `#ממתין-למדיה` |
+| 2026-09-06 | VF-G003 SoccerBall | ריל | משובץ instagram.com 7.9.2026 16:00 Asia/Jerusalem · כיתוב «מה יוצא מהמדפסת?» · מדפסת גיבוי בלבד · HQ לא פרסם | `#משובץ` |
+| 2026-09-06 | VF-G004 קטלבל-מחזיק | סטוריז / קרוסלה | תיבת Grok `INSTA/media/kettlebells-pink-…` · לא משקולת · חסר כיתוב | `#מועמד` |
+| 2026-09-05 | לוח קבוע W37–W39 | פיד + סטוריז | `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md` · שיבוץ instagram.com | `#משובץ` G003 · שאר החלון חסום/מועמד |
 | 2026-08-31 | חוקת-שליחה | משרד | Drive `1Xd_uUGKYl7FGr11URUtDHrkz16ikyOGZPZSKqdTOr-I` + Gmail `1a056327a22e6ff8` | `#נשלח-מ-HQ` |
 
 ## דוגמאות

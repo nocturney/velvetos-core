@@ -4,9 +4,9 @@
 
 ```
 05 · משרד
-מה נבנה / יועל: best-skills — brainstorm-gate + systematic-debugging ב־vfharness · Anti-slop בריף ב־vfbriefux/DESIGN-EMBED · dataDate 2026-09-05
+מה נבנה / יועל: G003 נעול·משובץ 7.9 16:00 · G004 קטלבל-מחזיק · FOLLOWER-GROWTH + תגיות social-growth · ארכיון בריף ב-vfops/out
 ```
 
 05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md`.
 
-מקור: `packages/vfresearch/sources/2026-09-06-best-skills.md` · `vfharness/playbooks/brainstorm-gate.md` · `vfharness/playbooks/systematic-debugging.md` · `vfbriefux/hq/DESIGN-EMBED.md`
+מקור: `vfgrowth/CALENDAR.md` · `vfgrowth/hq/FOLLOWER-GROWTH.md` · `constitution/tags.md` · `vfops/out/BRIEF-2026-09-06.html`

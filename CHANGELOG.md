@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-06 — **סריקת HQ**: G003 SoccerBall **נעול·משובץ** instagram.com 7.9.2026 16:00 כיתוב «מה יוצא מהמדפסת?» (מדפסת = גיבוי). G004 קטלבל ורוד = מחזיק תכשיטים/טבעות לאימון (לא משקולת) — מועמד סטוריז/קרוסלה. דופק צמיחה: 80 עוקבים · 0 DM · לחזק CTA→היילייטס/וואטסאפ (`FOLLOWER-GROWTH.md` + תגיות `social-growth` ב־`constitution/tags.md`). ארכיון בריף 6.9 ב־`vfops/out/BRIEF-2026-09-06.html` (לא לשלוח). בלי Publish / ₪ מומצא. HQ sweep: lock G003, tag G004, follower playbook, brief archive.
+
 - 2026-09-06 — **best-skills bi-daily**: dataDate 2026-09-05 — הטמעת `brainstorm-gate` + `systematic-debugging` (obra/superpowers) ב־`vfharness`; Anti-slop קצר ב־`vfbriefux` DESIGN-EMBED (בריף HQ בלבד). ארטיפקט `sources/2026-09-06-best-skills.md`. בלי npx / runtime שני.
 
 - 2026-09-05 — **last30days → חוקרי המשרד**: הטמעה מעמיקה של [mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill) על `vfresearch` — פלייבוק `hq/LAST30.md` (topic/comparison/discovery, confidence floor, nothing-solid), skill `vf-last30`, חיבור `@research-synthesist` / `@trend-researcher` בשולחן, `TREND-EXPLORER`, `LINKS.json`, `ORCHESTRA`/`ROUTINE`/`MAP`, סנסור `check-vfresearch.py`. דפוסים בלבד — בלי CLI / `npx skills` / מפתחות X. See `packages/vfresearch/sources/2026-09-05-last30days-embed.md`.

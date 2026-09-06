@@ -39,7 +39,8 @@
       "share": "סוכן תוכן ושיווק",
       "pack": "vfgrowth",
       "seat": "צמיחה",
-      "also": ["vfcopy", "vfcovers", "vfigos"]
+      "also": ["vfcopy", "vfcovers", "vfigos"],
+      "note": "FOLLOWER-GROWTH.md — do not chase follower count; close profile leak via Highlights + WhatsApp. No outbound."
     },
     {
       "share": "סוכן ניהול הזמנות / מנהל ייצור",
