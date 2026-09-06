@@ -4,7 +4,9 @@ MCP fit research — which [awesome-mcp-servers](https://github.com/punkpeye/awe
 
 Write-up: [`docs/MCP-FIT.md`](../../docs/MCP-FIT.md).  
 Gap vs Grok / ChatGPT / Gemini / Perplexity: [`GAP.md`](GAP.md) (31.8.2026).  
-Core office MCP (Sheets / WhatsApp / Studio Hub): [`CORE-MCP.md`](CORE-MCP.md).  
+Core office MCP (Sheets / WhatsApp / Studio Hub / Instagram ig-mcp): [`CORE-MCP.md`](CORE-MCP.md).  
+Instagram Publish playbook: [`vfigos/CONNECT-IG.md`](../vfigos/CONNECT-IG.md).  
+iCloud (Mac MCP + Drive mirror for Cloud): [`CONNECT-ICLOUD.md`](CONNECT-ICLOUD.md) · [`ICLOUD-DRIVE-SYNC.md`](ICLOUD-DRIVE-SYNC.md).  
 Gemini API (not the gemini.google.com subscription): [`CONNECT-GEMINI.md`](CONNECT-GEMINI.md) + `scripts/vf_gemini.py`. Do not install aliargun or RLabs gemini-mcp.  
 ChatGPT API (not chatgpt.com Plus): [`CONNECT-CHATGPT.md`](CONNECT-CHATGPT.md) + `scripts/vf_chatgpt.py`.  
 Why Cloud must not open those sites: [`SUBSCRIPTIONS.md`](SUBSCRIPTIONS.md).  
@@ -22,4 +24,4 @@ Owner 3D AI Studio account: [`vfprod/3DAISTUDIO.md`](../vfprod/3DAISTUDIO.md) �
 | Clone | `(none)` |
 | v0.1.0 vendor | `hq-native` |
 
-Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
+Do not commit secrets. Do not invent prices. Instagram publish is `vfigos` + ig-mcp — not from this pack alone. No auto-DM.

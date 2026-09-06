@@ -20,6 +20,6 @@ Gmail (`nocturney@gmail.com`) is read-and-send: search, get thread, labels, `sen
 
 ## Notes
 
-If Canva MCP is `needsAuth`, say `Canva לא מחובר` and use `packages/vfcanva/studio/render.py`. Instagram publish tool if connected; else Canva + Drive + Gmail same turn (`vfigos/SEND.md`). 3D AI Studio MCP down → site UI + Drive (`vfprod/3DAISTUDIO.md`); never invent a key.
+If Canva MCP is `needsAuth`, say `Canva לא מחובר` and use `packages/vfcanva/studio/render.py`. Instagram: ig-mcp after Connect (`vfigos/CONNECT-IG.md`); else Canva + Drive + Gmail same turn (`vfigos/SEND.md`). iCloud is Mac-only; Cloud reads Drive `Velvet Factory/iCloud mirror`. 3D AI Studio MCP down → site UI + Drive (`vfprod/3DAISTUDIO.md`); never invent a key.
 
 **Failover:** any tool down → backup tool **same turn** (`constitution/ORCHESTRA.md`). No empty finish. No invented ₪ / Insights / blocked body. Do not wait for Christian or Grok.

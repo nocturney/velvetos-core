@@ -19,6 +19,7 @@
 | Treg | **לא רלוונטי** | לא login, לא `call`, לא failover |
 | Mobbin | plugin · אין MCP כאן | namespace לא על Cloud Agent |
 | FCC | לא כאן | נעול ב־`vffcc` |
+| **iCloud Drive** | **owner Mac only** — MCP מקומי; Cloud = **Drive mirror** | `CONNECT-ICLOUD.md` · `ICLOUD-DRIVE-SYNC.md` |
 | Gemini **API** | Desktop/Cloud env · `vf_gemini.py` | **לא** מנוי הדפדפן. בלי מפתח: **חסר מפתח Gemini**. `CONNECT-GEMINI.md` |
 | ChatGPT **API** | Desktop/Cloud env · `vf_chatgpt.py` | **לא** מנוי `chatgpt.com`. בלי מפתח: **חסר מפתח ChatGPT**. `CONNECT-CHATGPT.md` · `SUBSCRIPTIONS.md` |
 
@@ -46,11 +47,12 @@
 
 | כלי שם | כאן | דין |
 |---|---|---|
-| שליחת אינסטגרם | Canva + `vfigos/SEND.md` (אין Publish MCP) | **wired failover** — Drive + Gmail `send_message` אותו תור |
+| שליחת אינסטגרם | Canva + ig-mcp (`CONNECT-IG.md`) או failover `vfigos/SEND.md` | **mapped** — Publish `needsAuth` עד Meta token; failover Drive + Gmail `send_message` אותו תור |
 | שליחת Gmail | `send_message` / `reply` / `forward` | **wired** — HQ שולח |
 | מדפסות | אין בכוונה | **skip** — רצפה לא מ־HQ |
 | Google Workspace (Gmail/Drive/Docs/Sheets/Calendar) **כתיבה+שליחה** | Gmail **שליחה**; Drive `create_file`; Calendar קריאה; Sheets דרך Drive | **wired** 31.8 — `SEND.md` |
 | Outlook / OneDrive / SharePoint | אין | **skip** — לא ערימת הסטודיו |
+| **iCloud Drive** (Apple) | Desktop: MCP מקומי · Cloud: **Drive** `Velvet Factory/iCloud mirror` | **wired** — לא HTTP OAuth · `sync-icloud-to-drive.sh` |
 | Notion / Linear / GitHub (Grok) | GitHub דרך `gh` לקריאה | **later** — לא MCP חדש |
 | חיפוש רשת / X / DeepSearch | WebSearch + תזמורת | **wired** 31.8 — `tools.web` |
 | יצירת תמונה | GenerateImage + Canva | **wired** 31.8 — `tools.image` |
@@ -105,12 +107,14 @@
 8. **Sheets + WhatsApp בליבה** — רשומים ב־`core-mcp.json`. Desktop Connect (`CONNECT-SHEETS.md` / `CONNECT-WHATSAPP.md`). VF: יומן לפי bindings; וואטסאפ `send=false`. בלי Connect: `vf_office.py`.
 9. **Gemini API + ChatGPT API (לא מנויי דפדפן)** — `vf_gemini.py` / `vf_chatgpt.py` + `SUBSCRIPTIONS.md`. Cloud לא פותח `gemini.google.com` / `chatgpt.com`. בלי מפתח: **חסר מפתח Gemini** / **חסר מפתח ChatGPT**.
 10. **מארח מנויים = המק בשדרות** — מק ייעודי, לא PC ווינדוס. `HOST.md`. Gems/GPTs/Canvas/Deep Research/Perplexity Pro בכרום **על המק**. Codex + Gemini CLI שם בלי מפתח API. Cloud = `WebSearch` + קריאת `sources/`.
+11. **Instagram ig-mcp** — רשום ב־`core-mcp.json` (Desktop / Team MCP secrets). פלייבוק `vfigos/CONNECT-IG.md`. סטטוס שולחן `needsAuth` עד טוקן. DM כבוי. failover: Canva+Drive+Gmail.
+12. **iCloud** — Desktop MCP מקומי + מראה Drive ל־Cloud (`CONNECT-ICLOUD.md`). לא Team MCP.
 
 ## מה לא הותקן — ולמה
 
 | פער | למה לא |
 |---|---|
-| Publish MCP לאינסטגרם | אין namespace. failover: Canva+Drive+Gmail (`SEND.md`). לא ממציאים שעלה לפיד. דפוס validate→apply→verify מ־social-media-publisher הוטמע ב־`vfigos/SEND.md` — **בלי** SocialClaw/`npx` על Cloud. Meta DevTools ≠ Publish |
+| Publish MCP לאינסטגרם **חי** | **ממופה** → [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) (`CONNECT-IG.md`). עדיין `needsAuth` עד Meta App + token בדשבורד / `~/.cursor`. failover: Canva+Drive+Gmail (`SEND.md`). דפוס validate→apply→verify ב־`vfigos/SEND.md`. Meta DevTools ≠ Publish |
 | וואטסאפ **שליחה** / מדפסות | MCP מותר לחיפוש/טיוטה. שליחת לקוח VF = אדם `050-2517000`. מדפסות ברצפה. `vf_office.py convert draft` |
 | Treg | **לא רלוונטי** למשרד. לא login |
 | Mobbin MCP | פלאגין על הדיסק; namespace לא על Cloud Agent. failover: `vfbriefux` |
@@ -128,6 +132,7 @@
 | **Fullstack Dev Skills** (`Jeffallan/claude-skills`) | **patterns only** — אין `/plugin install` / `npx skills` על Cloud. Common Ground → `vfmem/MEMORY-UPDATE.md` |
 | 3D AI Studio REST / `uvx mcp-server-3daistudio` | מפתח + 2FA על המק בלבד. לא בגיט. המחבר הרשמי הוא HTTP OAuth |
 | SharePoint / Outlook / Notion / Slack | לא ערימת שדרות |
+| iCloud MCP על Cloud Agent | אין Apple/Linux · mirror ל-Drive בלבד | `ICLOUD-DRIVE-SYNC.md` |
 
 ## עדיפות Connectors לפי מושב
 
@@ -137,7 +142,7 @@
 |---|---|---|---|---|
 | ראש צוות | `vfops` | Gmail · Calendar | Drive `create_file` · «חסר לוח» | המצאת ₪ · blast |
 | סטודיו | `vfconvert` · `vfsales` | Gmail | Drive · `#נשלח-מ-HQ` · טיוטת וואטסאפ | שליחת וואטסאפ ללקוח · auto-DM |
-| צמיחה | `vfgrowth` · `vfigos` · `vfcovers` | Canva | `studio/render.py` → Superdesign → Drive+Gmail | Publish מזויף · boost |
+| צמיחה | `vfgrowth` · `vfigos` · `vfcovers` | Canva · ig-mcp (אחרי Connect) | `studio/render.py` → Superdesign → Drive+Gmail · `#ממתין-ל-כלי-IG` | Publish מזויף · boost · auto-DM |
 | תפעול | `vfcost` · `vfbooks` | Gmail · Drive | CSV דרך Drive · `mcp-gsheets` אחרי Connect · «X ₪» / «אין ספירה» | Sheets ID מומצא |
 | ייצור | `vfprod` · `vfresearch` | Drive · WebSearch · 3DAI | studiomcphub רקע/גודל · STL preflight · Blender MCP רק במק | Treg · גוף חסום · CMYK כצינור VF · Blender על Cloud |
 
