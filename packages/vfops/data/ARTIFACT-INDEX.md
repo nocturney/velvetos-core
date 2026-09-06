@@ -34,6 +34,7 @@
 | חנות מחר | `vfprod/SHOP-CLOSE.md` | ייצור בסוף יום | `vfsku.py shop` + בריף 03 |
 | מסמכי עבודה | Drive `create_file` | כל מושב | חיפוש לפי job/SKU |
 | מייל שנשלח | Gmail (thread id) | HQ send | vfconvert / מעקב |
+| בריף htmlBody | `vfops/out/BRIEF-YYYY-MM-DD.html` | אחרי `send_message` | Grok / Cloud / GitHub — לא `/opt/cursor/artifacts` |
 | עיצוב IG | Canva (design id / URL אמיתי) | vfcanva | vfigos |
 | mesh / 3D | Drive + 3D AI Studio dashboard | vfprod | ייצור |
 
