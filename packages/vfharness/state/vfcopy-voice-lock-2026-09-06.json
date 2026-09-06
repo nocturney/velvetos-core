@@ -1,6 +1,6 @@
 {
   "task_id": "vfcopy-voice-lock-2026-09-06",
-  "status": "running",
+  "status": "done",
   "pack": "vfcopy",
   "goal": "Lock Christian VOICE from first two @velvets_cloud captions into vfcopy + STUDIO; research public neighbor pages; align G004 to product-story. No IG publish. No invented ₪.",
   "crew": "content",
@@ -17,7 +17,7 @@
     "Public web research cited in VOICE-RESEARCH.md",
     "VOICE.md + STUDIO pointers + G004 rewrite + sensors"
   ],
-  "next_step": "python3 scripts/check-all.py then open PR",
+  "next_step": "Lead review PR #99; no IG publish",
   "artifacts": [
     "packages/vfcopy/VOICE.md",
     "packages/vfcopy/VOICE-RESEARCH.md",
@@ -29,11 +29,11 @@
     "Instagram live feeds often login-walled — neighbor caption bodies marked אין גוף where fetch failed",
     "No IG publish this turn"
   ],
-  "outcome": null,
-  "pulse": "working",
-  "verification": "pending check-all.py",
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "check-all.py 23/23 PASS",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-06",
-  "latest_observation": "Voice law drafted from locked captions A/B; G004 moved to product-story; sensors extended."
+  "latest_observation": "check-all.py 23/23 PASS after removing thin-copy quote from G004.md. PR #99."
 }

@@ -8,5 +8,5 @@
 - [x] STUDIO.md Core + instance
 - [x] G004 סיפור-מוצר
 - [x] תבניות + סנסורים
-- [ ] check-all.py
-- [ ] PR
+- [x] check-all.py (23/23)
+- [x] PR #99
