@@ -1,5 +1,11 @@
 # עובדות סטודיו
 
+## רף סוכנות (כוכב צפון)
+
+המשרד רץ כמו **סוכנות פרסום+תפעול יקרה**. כריסטיאן יושב רגוע: העבודה נעשית עד הסוף — ומעבר.  
+רף יומי: אין חצי-פק · עריכת תמונה אמיתית לפני שיבוץ · כיתוב עברית חזקה · שיבוץ+לוח אוטונומיים · בריף בטון סוכנות.  
+לא קטלוג. לא JPEG גולמי. לא «מתי לפרסם?».
+
 | | |
 |---|---|
 | שם | Velvet Factory · ולווט פקטורי |
@@ -14,3 +20,17 @@
 | B2B נעול | לוגו, QR, מפיות — עד שראש הצוות פותח |
 
 אין כאן מחירי מכירה. אין כאן Insights מומצאים.
+
+לולאת בוקר: `python3 scripts/vfops_loop.py brief` · מסירה: `vfgrowth/HANDOFF-he.md`.
+
+## שער עריכה — לפני שיבוץ (קשיח)
+
+**אסור** לשבץ / לפרסם JPEG גולמי עם טקסט עליו בלבד.  
+חובה כלי עריכה אמיתי: **Canva MCP** · **vfcovers / vfcanva** (`compose_slides.py` / `studio/render.py`) · **Gemini browser** רק על מק בשדרות (`vfmcp/HOST.md` — Cloud לא פותח `gemini.google.com`).  
+Failover: Superdesign → `render.py`. בלי `edit_url` / PNG מורכב = **לא משבצים**.  
+פלייבוק: [`packages/vfgrowth/EDIT-GATE.md`](../packages/vfgrowth/EDIT-GATE.md).
+
+## שיבוץ אוטונומי — בלי לשאול משבצת
+
+לא שואלים את כריסטיאן מתי לפרסם. הרשת קבועה ב־`vfgrowth/CALENDAR.md`.  
+כל פוסט מתוכנן עולה ל־Google Calendar של `nocturney@gmail.com` (תפעול, `CALENDAR-OPS.md`). שיבוץ הרשת: instagram.com.

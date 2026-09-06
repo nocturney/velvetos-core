@@ -33,7 +33,8 @@
 אם אין סנאפשוט — כותבים «אין ספירה». לא ממציאים.
 
 ראה `hq/PLAYBOOK.md` ו־`hq/BRIEF-SLOTS.md`.  
-בלוק `05` מהתזמורת: `data/research.md`.
+בלוק `05` מהתזמורת: `data/research.md`.  
+לולאה: `LOOP.json` + `python3 scripts/vfops_loop.py brief` (כל פק נצרך).
 
 לוח צינור: `hq/PIPELINE-BOARD.md`. משטח פקודות עתידי: `hq/COMMAND-SURFACE.md` + `hq/capabilities.json`.
 

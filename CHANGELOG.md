@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-06 — **לולאת משרד + רף סוכנות**: `LOOP.json` + `vfops_loop.py` צורכים כל פק. כוכב צפון ב־INSTANCE/ORCHESTRA/STUDIO — סוכנות יקרה, בלי חצי-פק. שער עריכה לפני שיבוץ (לא JPEG גולמי). שיבוץ אוטונומי + Google Calendar בלי לשאול משבצת. כיתוב G004. CONNECT-IG צעד אדם. בלי Publish / ₪ מומצא. vfcost CLI חי בחריץ 02.
+
 - 2026-09-06 — **vfcost CLI חומר בלבד:** `scripts/vfcost.py` — גרם × ILS/kg ÷ 1000 = ILS/unit (נתיב דוגמה 20.29g × 250 → 5.07). גלילים Ella/Rachel/Gefen בלי ILS/kg שמור. חסר גרמים = סירוב. בלי ₪ מכירה. בריף 02: `vfcost.py brief`. סנסור `check-vfcost.py`. Material-only cost desk on existing vfcost overlay.
 
 - 2026-09-06 — **בריאות + PR פתוחים:** סנסורים 21/21 על main אחרי #93. הטמעת ig-mcp (`CONNECT-IG.md`, `needsAuth`) + מראה iCloud→Drive (`CONNECT-ICLOUD.md`) + שער רישיון MakerWorld (מחזור חיוב / שינוי תנאים) על main נקי. סוגרים טיוטות מתנגשות #78/#68/#66/#58 ואת #74 (תזמורת 4.9 מיושנת מול `HOST.md`). בלי ₪ מומצא. בלי Publish. Ops rebase: IG Insights path + iCloud mirror + license gate.

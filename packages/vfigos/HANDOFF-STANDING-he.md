@@ -3,6 +3,9 @@
 **לא Meta Suite. לא Buffer. לא Later. לא Bolta.**  
 שיבוץ ב־[instagram.com](https://www.instagram.com/) על `@velvets_cloud` · Asia/Jerusalem.
 
+**שער עריכה** לפני שיבוץ (`vfgrowth/EDIT-GATE.md`) — לא JPEG גולמי.  
+**שיבוץ אוטונומי** — לא שואלים משבצת; תפעול שם כל פוסט מתוכנן על Google Calendar (`vfgrowth/CALENDAR-OPS.md`).
+
 **מקור האמת לתאריכים ולמשבצות:** `packages/vfgrowth/HANDOFF-he.md` + `CALENDAR.md` + `LEDGER.md` (לוח #90).  
 קובץ זה נשמר כדי לא לאבד מזהי Google Calendar שנוצרו ב־5.9 על **רשת תאריכים אחרת**. לא לשבץ לפי 8.9 / 10.9 / 13.9 מהברנץ׳ הזה.
 
@@ -18,21 +21,19 @@
 ## מה לשבץ
 
 G003 SoccerBall **נעול · משובץ** instagram.com ראשון 7.9.2026 16:00 · כיתוב «מה יוצא מהמדפסת?» (`vfgrowth/HANDOFF-he.md`).  
-G004 קטלבל-מחזיק = מועמד סטוריז/קרוסלה (לא משקולת). G006 **חסום כיתוב** עד `vfcopy`. סטוריז רק עם גלם אותו יום (`vfcopy/hq/templates/ig-stories.md`).
+G004 קטלבל-מחזיק = מועמד סטוריז/קרוסלה (לא משקולת) · כיתוב `vfcopy/G004.md`. G006 יכול לקחת את אותה חבילה בחמישי. סטוריז רק עם גלם אותו יום (`vfcopy/hq/templates/ig-stories.md`).
 
-## אירועי Google Calendar (נוצרו 5.9 — לא תואמים ל־#90)
+## אירועי Google Calendar — רשת #90 (תפעול 6.9, בלי לשאול משבצת)
 
-`nocturney@gmail.com` · תזכורת לעין, לא תחליף לשיבוץ instagram.com.  
-ראש צוות: להזיז או למחוק אם רשת #90 נשארת.
+`nocturney@gmail.com` · תזכורת לעין, לא תחליף לשיבוץ instagram.com.
 
-| מזהה | event id | נוצר ל־ (ברנץ׳ זה) | לוח #90 |
-|---|---|---|---|
-| VF-G003 | `qq8ckuklkd1c8rtm0kh205f7mk` | ג׳ 8.9 16:00 | א׳ 7.9 16:00 / נפילה ג׳ 9.9 |
-| VF-G006 | `p41n2dsa9f37kcemiuftjchhl0` | ה׳ 10.9 12:00 | ה׳ 11.9 12:00 · חסום |
-| VF-G004 | `ba8a2kheci6v84dphkmrifkcm0` | א׳ 13.9 16:00 | א׳ 14.9 (G007) / ג׳ 9.9 אם G003 כבר עלה |
-| VF-G007 | `rnattnscok4kvu5bvq7euiomko` | ה׳ 17.9 12:00 | ה׳ 18.9 (G009) |
-| VF-G008 | `ghnqkro0nd273d7k57e87cgd78` | א׳ 20.9 16:00 | א׳ 21.9 (G010) |
-| VF-G010 | `4e24u4fj4bsk3j1nehfdaprqhs` | ה׳ 24.9 12:00 | ה׳ 25.9 (G012) |
+| מזהה | event id | מתי (Asia/Jerusalem) |
+|---|---|---|
+| VF-G003 | `42c1st7oj0ksfrulajm5h5n8ms` | א׳ 7.9 16:00 ריל · משובץ |
+| VF-G004 | `ggv7dl8ho0hekr45blroksrt6k` | סטוריז 7–11.9 20:30 · יומי ×5 · חסום שער עריכה |
+| VF-G006 | `m68f495b040kv05lekduu7q8ho` | ה׳ 11.9 12:00 קרוסלה · מועמד G004 |
+
+אירועי 5.9 על רשת 8.9/10.9/13.9 — מיושנים. לא לשבץ לפיהם.
 
 ## כבר חי — לא נוגעים
 
@@ -58,5 +59,5 @@ G004 קטלבל-מחזיק = מועמד סטוריז/קרוסלה (לא משקו
 ## G003 / G004 (אחרי נעילת 6.9)
 
 G003 כבר `#משובץ` — לא מבקשים גלם חדש לשיבוץ. נתיב מדפסת = גיבוי בלבד.  
-G004: מדיה בתיבת Grok (`INSTA/media/kettlebells-pink-…`) · חסר כיתוב `vfcopy`.  
+G004: מדיה בתיבת Grok (`INSTA/media/kettlebells-pink-…`) · כיתוב **`vfcopy/G004.md`**.  
 CTA: וואטסאפ `050-2517000` / היילייטס · לא «שלחו DM».

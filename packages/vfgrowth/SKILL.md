@@ -8,9 +8,11 @@
 **לוח עומד:** `CALENDAR.md` + `RHYTHM.md` — לא שואלים כל יום «מה לפרסם?».  
 חסר גלם מכריסטיאן → `MEDIA-NEEDED-FROM-CHRISTIAN`. לא ממציאים מדיה.
 
-לוח **קבוע**: `CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. שיבוץ ב־instagram.com (לא סוויט). סנסור `scripts/check-vfgrowth.py`.
+לוח **קבוע**: `CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. שיבוץ ב־instagram.com (לא סוויט).  
+שער עריכה: `EDIT-GATE.md`. לוח אוטונומי: `CALENDAR-OPS.md`. סנסור `scripts/check-vfgrowth.py`.
 
-צמיחת עוקבים → פנייה (לא מרדף מספר): `hq/FOLLOWER-GROWTH.md`.
+צמיחת עוקבים → פנייה (לא מרדף מספר): `hq/FOLLOWER-GROWTH.md`.  
+לולאת בוקר: `python3 scripts/vfops_loop.py brief` · מסירה: `HANDOFF-he.md` (G004).
 
 ## מומחה — Social Booster
 

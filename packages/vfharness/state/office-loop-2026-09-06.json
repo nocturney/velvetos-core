@@ -1,0 +1,39 @@
+{
+  "task_id": "office-loop-2026-09-06",
+  "title": "Activate every Core pack into the daily/weekly office loop",
+  "status": "done",
+  "date": "2026-09-06",
+  "branch": "cursor/daily-loop-g004-edc2",
+  "cli": "python3 scripts/vfops_loop.py",
+  "registry": "packages/vfops/LOOP.json",
+  "locks": [
+    "no new_repo",
+    "no invented ILS",
+    "no live IG publish from HQ",
+    "stories via instagram.com only",
+    "ig-mcp CONNECT-IG is human Meta token step",
+    "vfcost CLI owned by bc-6e53bd77 — consumeOptional"
+  ],
+  "hebrew_status": {
+    "auto_now": [
+      "vfops_loop.py brief --write",
+      "vfsku.py brief + week.md",
+      "FOLLOWER-GROWTH Highlights+WhatsApp",
+      "vfcopy G003/G004/G005 captions",
+      "HANDOFF-he.md G004 daily open",
+      "Canva ready",
+      "Gmail Calendar Drive ready"
+    ],
+    "blocked_human": [
+      "ig-mcp needsAuth until Meta long-lived Page token",
+      "Insights remain אין ספירה",
+      "Stories stay instagram.com",
+      "vfcost CLI not in tree yet → X ₪",
+      "MakerWorld shelf 0/5 until GATE+license+slice",
+      "G004 media on Grok box (not in Cloud git)",
+      "B2B locked",
+      "WhatsApp customer send is human 050-2517000"
+    ]
+  },
+  "next": "Run check-all.py; open one PR to main"
+}

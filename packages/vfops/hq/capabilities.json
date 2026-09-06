@@ -87,6 +87,33 @@
       "gate": "none"
     },
     {
+      "id": "office.loop",
+      "label": "לולאת משרד — משיכת פקים לבריף",
+      "tool": "scripts/vfops_loop.py brief",
+      "packs": ["vfops", "vfgrowth", "vfcopy", "vfsku", "vfcost", "vfigos"],
+      "gate": "none",
+      "path": "packages/vfops/LOOP.json",
+      "notes": "07:00 assemble. Agency-grade brief. No invented ₪/Insights. No live IG publish. vfcost.py brief is live in slot 02."
+    },
+    {
+      "id": "studio.edit-gate",
+      "label": "שער עריכה לפני שיבוץ",
+      "tool": "Canva / vfcovers / vfcanva",
+      "packs": ["vfcanva", "vfcovers", "vfgrowth"],
+      "gate": "none",
+      "path": "packages/vfgrowth/EDIT-GATE.md",
+      "notes": "No text-on-raw-JPEG. Gemini browser only on Mac HOST.md."
+    },
+    {
+      "id": "calendar.ig-ops",
+      "label": "לוח IG אוטונומי",
+      "tool": "Google-calendar.create_event",
+      "packs": ["vfgrowth", "vfops"],
+      "gate": "none",
+      "path": "packages/vfgrowth/CALENDAR-OPS.md",
+      "notes": "Do not ask Christian for slots. Standing grid only."
+    },
+    {
       "id": "sku.shelf",
       "label": "מדף מק״ט חוזר",
       "tool": "scripts/vfsku.py shelf",

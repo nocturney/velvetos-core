@@ -28,9 +28,14 @@ Grok Bot הוא **גיבוי אופציונלי**, לא השולח היחיד ו
 
 אסור: דיוור המוני, חוב בלי ראש צוות, סודות, «שלחו DM».
 
+## בריף 07:00 — לולאה לפני שליחה
+
+`python3 scripts/vfops_loop.py brief --write` מרכיב את החריצים מפקים חיים.  
+אחר כך `render_mail.py` + `send_message` (`htmlBody` תצוגה 3). המעבר הזה לא מפרסם IG.
+
 ## אינסטגרם — מותר דרך כלי
 
-1. Canva (או `studio/render.py`) מפיק מדיה.
+1. **שער עריכה** — Canva MCP / `vfcovers` / `vfcanva` (`studio/render.py`). **לא** טקסט על JPEG גולמי (`STUDIO.md`, `vfgrowth/EDIT-GATE.md`). Gemini browser רק על המק.
 2. `vfcopy` נותן כיתוב + CTA וואטסאפ / איסוף שדרות.
 3. אם **ig-mcp** מחובר (`packages/vfigos/CONNECT-IG.md`) — HQ מפרסם ב־`publish_media`, **מאמת תוצאת כלי** (validate→apply→verify ב־`vfigos/SEND.md`), ורק אז מסמן `#נשלח-מ-HQ`.
 4. אם אין Publish MCP / `needsAuth` — **failover מיד:** יוצרים מסמך Drive + שולחים ג׳ימייל עם המדיה/הכיתוב/קישור העריכה. מסמנים `#נשלח-מ-HQ` (מסלול כלים) + `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה.
