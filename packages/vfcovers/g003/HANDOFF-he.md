@@ -1,17 +1,17 @@
 # VF-G003 — מסירה · שדרוג SoccerBall · #משובץ א׳ 7.9 16:00
 
 **לא לפרסם מכאן. לא בוסט. לא סוויט. לא למחוק פוסט חי.**  
-כריסטיאן אישר שדרוג. סטודיו חותך ומחליף מדיה משובצת. **לא** בגיט HQ. Cursor לא מעלה לפיד.
+**#משובץ נעול** ב־instagram.com לא׳ 7.9 16:00. גלם SoccerBall. כיתוב «מה יוצא מהמדפסת?». מדפסת נפילה. **לא** בגיט HQ. Cursor לא מעלה לפיד.
 
 | | |
 |---|---|
 | מזהה | VF-G003 · ריל #3 · «מה יוצא מהמדפסת?» |
 | מותג | Velvet Factory · `@velvets_cloud` · עברית · נייבי/זהב |
 | משבצת | ראשון **7.9.2026 16:00** Asia/Jerusalem · instagram.com |
-| סטטוס | **#משובץ** · שדרוג מאושר · מוכן לשיבוץ אחרי החיתוך · לא עלה לפיד |
+| סטטוס | **#משובץ נעול** instagram.com · מוכן לשיבוץ כבר על הלוח · לא עלה לפיד |
 | גלם ראשי | `/workspace/INSTA/media/SoccerBall final_PLA_9h55m_20260715143622.mp4` · זמין מקומית |
 | נפילה | `/workspace/INSTA/media/vf-user-2026-08-30.mp4` + `vf-user-2026-08-30-9x16.mp4` |
-| פלט סטודיו | מחליפים `VF-G003-reel.mp4` + `VF-G003-cover.jpg` תחת `/workspace/INSTA/content/2026-09-07/` |
+| פלט סטודיו | `VF-G003-reel.mp4` + `VF-G003-cover.jpg` תחת `/workspace/INSTA/content/2026-09-07/` · משובץ נעול |
 | כיתוב | `packages/vfcopy/G003-alt.md` חלופה 1 · גם `VF-G003-caption.txt` · **לא** `vfcopy/G003.md` |
 | Drive שיבוץ | https://docs.google.com/document/d/1wdUVYJfapXwpGx4396ifp2Jigrxgkv7FmARRCLJzSdk/edit |
 | Drive #משובץ | https://docs.google.com/document/d/1sMcgnqMk9WPA9QTeDNLlW5fQ8xZBQTcc0e9Dlmuoj68/edit |
