@@ -153,9 +153,12 @@ def main() -> None:
         fail("brief must not invent a numbered ₪")
 
     cli_src = CLI.read_text()
-    for needle in ('add_parser("material"', 'add_parser("brief"', "חסר גרמים"):
-        if needle not in cli_src:
-            fail(f"vfcost.py must contain {needle}")
+    if "חסר גרמים" not in cli_src:
+        fail("vfcost.py must contain חסר גרמים")
+    if 'add_parser("material"' not in cli_src and 'add_parser(\n        "material"' not in cli_src:
+        fail("vfcost.py must expose a material subcommand")
+    if 'add_parser("brief"' not in cli_src:
+        fail("vfcost.py must expose a brief subcommand")
 
     skill = SKILL.read_text()
     for needle in ("vfcost.py", "עלות חומר", "לא מחיר מכירה", "חסר גרמים"):

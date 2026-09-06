@@ -1,6 +1,6 @@
 {
   "task_id": "vfcost-material-cards",
-  "status": "running",
+  "status": "done",
   "pack": "vfcost",
   "goal": "Material-only vfcost CLI on velvetos-core; PR to main; no invented sale ILS.",
   "crew": "books-data",
@@ -17,18 +17,19 @@
     "brief-slot-02-hooks",
     "sensor-check-vfcost"
   ],
-  "next_step": "commit-push-pr-then-sensors",
+  "next_step": "",
   "artifacts": [
     "scripts/vfcost.py",
     "scripts/check-vfcost.py",
     "packages/vfcost/FILAMENTS.json",
     "packages/vfcost/CARDS.json",
-    "packages/vfcost/CLI.md"
+    "packages/vfcost/CLI.md",
+    "/opt/cursor/artifacts/vfcost-cli.log"
   ],
   "unresolved": [],
-  "outcome": null,
-  "pulse": "working",
-  "verification": "pending check-all.py after push",
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "check-all.py passed=22 including check-vfcost.py",
   "escalation": null,
   "last_updated": "2026-09-06",
   "execution_state": {
@@ -36,5 +37,5 @@
     "brief_slot": "02",
     "sale_price": "never"
   },
-  "latest_observation": "Overlay-only vfcost on main; CLI + sensor written on cursor/vfcost-material-cards-3e05."
+  "latest_observation": "check-all.py OK suite passed=22. Example 20.29g × 250 ILS/kg → 5.07. Missing grams exit=2. PR #95."
 }
