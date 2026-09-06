@@ -11,8 +11,11 @@ CAL = ROOT / "packages" / "vfgrowth" / "CALENDAR.md"
 LEDGER = ROOT / "packages" / "vfgrowth" / "LEDGER.md"
 HANDOFF = ROOT / "packages" / "vfgrowth" / "HANDOFF-he.md"
 G003 = ROOT / "packages" / "vfgrowth" / "G003.md"
+G004 = ROOT / "packages" / "vfgrowth" / "G004.md"
 COPY = ROOT / "packages" / "vfcopy" / "G003.md"
 STORIES = ROOT / "packages" / "vfcopy" / "hq" / "templates" / "ig-stories.md"
+FOLLOWER = ROOT / "packages" / "vfgrowth" / "hq" / "FOLLOWER-GROWTH.md"
+TAGS = ROOT / "constitution" / "tags.md"
 AGENTS = ROOT / "AGENTS.md"
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
 
@@ -34,7 +37,7 @@ def assert_no_ils(path: Path) -> None:
 
 
 def main() -> None:
-    for path in (CAL, LEDGER, HANDOFF, G003, COPY, STORIES):
+    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, STORIES, FOLLOWER):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
         assert_no_ils(path)
@@ -49,6 +52,8 @@ def main() -> None:
         "instagram.com",
         "G003",
         "7.9.2026",
+        "משובץ",
+        "G004",
     ):
         if needle not in cal:
             fail(f"CALENDAR.md missing {needle!r}")
@@ -68,6 +73,9 @@ def main() -> None:
         "G003",
         "SoccerBall",
         "חסום",
+        "G004",
+        "משובץ",
+        "מחזיק",
     ):
         if needle not in ledger:
             fail(f"LEDGER.md missing {needle!r}")
@@ -82,12 +90,20 @@ def main() -> None:
         fail("HANDOFF-he.md must forbid שלחו DM")
 
     g003 = G003.read_text()
-    if "חסום מדיה" not in g003:
-        fail("G003.md must stay media-blocked until a floor path exists")
-    if "SoccerBall" not in g003:
-        fail("G003.md must name SoccerBall candidate")
+    for needle in ("SoccerBall", "נעול", "משובץ", "7.9.2026", "16:00", "גיבוי"):
+        if needle not in g003:
+            fail(f"G003.md missing lock needle {needle!r}")
+    if "חסום מדיה" in g003:
+        fail("G003.md must not stay media-blocked after the 6.9 lock")
+
+    g004 = G004.read_text()
+    for needle in ("קטלבל", "מחזיק", "לא משקולת", "סטוריז", "קרוסלה", "kettlebells-pink"):
+        if needle not in g004:
+            fail(f"G004.md missing {needle!r}")
 
     copy = COPY.read_text()
+    if "מה יוצא מהמדפסת" not in copy:
+        fail("vfcopy/G003.md must lock caption מה יוצא מהמדפסת")
     if "050-2517000" not in copy:
         fail("vfcopy/G003.md must include WhatsApp CTA")
     if "שלחו DM" in copy and "לא «שלחו DM»" not in copy and "בלי «שלחו DM»" not in copy:
@@ -96,11 +112,23 @@ def main() -> None:
     stories = STORIES.read_text()
     if "20:30" not in stories or "050-2517000" not in stories:
         fail("ig-stories.md must lock 20:30 + WhatsApp CTA")
+    if "היילייטס" not in stories:
+        fail("ig-stories.md must point CTA to Highlights")
+
+    follower = FOLLOWER.read_text()
+    for needle in ("80", "0", "היילייטס", "050-2517000", "ריל תהליך", "אאוטבאונד"):
+        if needle not in follower:
+            fail(f"FOLLOWER-GROWTH.md missing {needle!r}")
+
+    tags = TAGS.read_text()
+    for needle in ("#צמיחה-חברתית", "#ריל-תהליך", "#היילייטס", "#המרת-פרופיל", "social-growth"):
+        if needle not in tags:
+            fail(f"constitution/tags.md missing social-growth tag {needle!r}")
 
     if "check-vfgrowth.py" not in AGENTS.read_text():
         fail("AGENTS.md sensor table must list check-vfgrowth.py")
 
-    print("OK standing calendar + ledger + handoff")
+    print("OK standing calendar + G003 lock + G004 + follower-growth")
 
 
 if __name__ == "__main__":

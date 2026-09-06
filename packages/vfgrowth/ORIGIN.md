@@ -11,7 +11,7 @@ Growth pack — content sprints and acquisition work.
 | Clone | `https://origin.cursor.com/christian-velvet/tmp-0093db8b6deea44f.git` |
 | v0.1.0 vendor | `origin-unreachable` |
 
-HQ overlay: `CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md` — standing publish calendar. Do not move a booked board. Schedule on instagram.com, not Meta Suite.
+HQ overlay: `CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md` + `G003.md` + `G004.md` + `hq/FOLLOWER-GROWTH.md`. Do not move a booked board. Schedule on instagram.com, not Meta Suite.
 
 Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.

@@ -7,6 +7,8 @@
 
 לוח **קבוע**: `CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. שיבוץ ב־instagram.com (לא סוויט). סנסור `scripts/check-vfgrowth.py`.
 
+צמיחת עוקבים → פנייה (לא מרדף מספר): `hq/FOLLOWER-GROWTH.md`.
+
 ## מומחה — Social Booster
 
 מודול: `expert-social-booster` · `experts/SOCIAL-BOOSTER.md` · `@carousel-growth-engine`
