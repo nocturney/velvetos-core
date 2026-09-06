@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-06 — **VF-G004 Canva:** שדרוג קרוסלה `DAHUaelaug0` (5×1080×1350) + סטוריז `DAHUaUo3bAk` (3 פריימי צילום) + CTA נייבי-זהב `DAHUacDGv9U`. עברית מ־`vfcopy/G004.md`, זהב `#C9A86C`, בלי ₪ בפריים. PNG יוצאו. פלייבוק `vfcanva/jobs/G004.md`. `#vfigos` סקירה בלבד — לא פורסם.
+
 - 2026-09-06 — **לולאת משרד + רף סוכנות**: `LOOP.json` + `vfops_loop.py` צורכים כל פק. כוכב צפון ב־INSTANCE/ORCHESTRA/STUDIO — סוכנות יקרה, בלי חצי-פק. שער עריכה לפני שיבוץ (לא JPEG גולמי). שיבוץ אוטונומי + Google Calendar בלי לשאול משבצת. כיתוב G004. CONNECT-IG צעד אדם. בלי Publish / ₪ מומצא. vfcost CLI חי בחריץ 02.
 
 - 2026-09-06 — **vfcost CLI חומר בלבד:** `scripts/vfcost.py` — גרם × ILS/kg ÷ 1000 = ILS/unit (נתיב דוגמה 20.29g × 250 → 5.07). גלילים Ella/Rachel/Gefen בלי ILS/kg שמור. חסר גרמים = סירוב. בלי ₪ מכירה. בריף 02: `vfcost.py brief`. סנסור `check-vfcost.py`. Material-only cost desk on existing vfcost overlay.

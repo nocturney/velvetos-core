@@ -1,0 +1,42 @@
+{
+  "task_id": "g004-canva-pack-2026-09-06",
+  "status": "done",
+  "pack": "vfcanva",
+  "goal": "Finish VF-G004 premium pack in Canva: 4 stories 1080x1920 + 5 carousel 1080x1350, export PNG, no invented ₪, no IG publish.",
+  "crew": "content",
+  "planned_steps": [
+    "Read vfcopy/G004 and search existing Canva designs",
+    "Upgrade garbled Hebrew on existing 5+4 designs",
+    "Generate navy/gold CTA story for empty page 4",
+    "Export PNG and verify pixels",
+    "Document IDs in vfcanva/vfcopy"
+  ],
+  "completed_steps": [
+    "Found Studio uploads already in Canva (batch + tops-print-end)",
+    "Committed Hebrew+gold upgrades on DAHUaelaug0 and DAHUaUo3bAk",
+    "Created and committed CTA DAHUacDGv9U",
+    "Exported 9 PNGs; verified 1080x1350 and 1080x1920"
+  ],
+  "next_step": "vfigos review/schedule only. Do not publish from HQ.",
+  "artifacts": [
+    "packages/vfcanva/jobs/G004.md",
+    "packages/vfcopy/G004.md",
+    "DAHUaelaug0",
+    "DAHUaUo3bAk",
+    "DAHUacDGv9U",
+    "/opt/cursor/artifacts/g004/"
+  ],
+  "unresolved": [
+    "Story design DAHUaUo3bAk page 4 stays empty (MCP cannot add text boxes)",
+    "Canva brand kit empty — hex from owner brief only",
+    "Signed export URLs expire; re-export via MCP or Canva Download",
+    "Price remains X ₪ until lead seat"
+  ],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "PNG dimensions verified on disk; check-all after catalog notes",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-06",
+  "latest_observation": "G004 Canva pack upgraded from Studio photos already in the account. No IG send."
+}
