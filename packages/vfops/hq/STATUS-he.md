@@ -5,6 +5,7 @@
 ## רץ אוטומטית עכשיו
 
 - `vfops_loop.py brief` — בריף סוכנות מפקים חיים
+- `vfcost.py brief` — עלות חומר חיה בחריץ 02 (בלי ₪ מכירה)
 - מדף `vfsku.py brief` + `week.md`
 - FOLLOWER-GROWTH · היילייטס + וואטסאפ
 - כיתובי vfcopy (G003/G004/G005)
@@ -16,7 +17,6 @@
 - ig-mcp **needsAuth** עד טוקן Meta (`CONNECT-IG.md` צעד אדם)
 - Insights = אין ספירה
 - סטוריז = instagram.com (ig-mcp ≠ stories)
-- vfcost CLI טרם במלאי → X ₪
 - מדף MakerWorld 0/5 עד GATE+רישיון+סלייס
 - מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה
 - B2B נעול · וואטסאפ לקוח = אדם 050-2517000
@@ -33,7 +33,7 @@
 | `vfcanva` | mcp-ready | on-content | — |
 | `vfconvert` | docs-playbook | on-inquiry | אין פנייה חדשה = אין ספירה |
 | `vfcopy` | docs-playbook | daily-07:00 | — |
-| `vfcost` | docs-playbook | daily-07:00 | CLI מגיע מסוכן אחר · בינתיים X ₪ |
+| `vfcost` | working-cli | daily-07:00 | — |
 | `vfcovers` | working-cli | on-content | — |
 | `vfdsh` | overlay | on-demand | אין runtime שני |
 | `vfe2b` | overlay | on-job | אין אורקסטרטור שני |
