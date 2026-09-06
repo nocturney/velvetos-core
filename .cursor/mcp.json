@@ -6,6 +6,10 @@
     },
     "threedaistudio": {
       "url": "https://mcp.3daistudio.com/mcp"
+    },
+    "studiomcphub": {
+      "type": "http",
+      "url": "https://studiomcphub.com/mcp"
     }
   }
 }

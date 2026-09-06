@@ -61,6 +61,8 @@
 
 `make setup` של OpenMontage, Remotion, מפתחות fal/Veo/Kling, Backlot חי — רק אם ראש צוות פותח. עד אז הדפוס רץ כנוהל Cursor.
 
+**VoiceStudio** (TTS/ASR מקומי + MCP): לא חלק מצינור הריל. עוגן נשאר גלם מיטה + Canva. VO מקומי = later במק בלבד אחרי ראש צוות + `vlicense` — ראו `LOCK.md` ו־`packages/vfresearch/sources/2026-09-05-voicestudio.md`.
+
 ## בדיקה
 
 ```bash

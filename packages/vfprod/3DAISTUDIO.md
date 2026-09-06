@@ -30,6 +30,8 @@
 
 שאלה מועילה (אחרי אישור): «המר ל־STL, סקלה ל־10 ס״מ להדפסה» — לא «תמחר» ולא «שלח למדפסת».
 
+אחרי ייצוא STL: `python3 scripts/vf_office.py print preflight model.stl` (`PREFLIGHT.md`) — תיבת גבול בלבד. אין ₪ ואין שעות.
+
 ## שכבות
 
 | שכבה | מתי |
@@ -39,6 +41,9 @@
 | API Dashboard | לא נדרש למחבר הרשמי. מפתח רק ב־env במק אם ראש צוות רוצה באצ׳ |
 
 Cloud Agent: namespace `3DAIStudio` **ready** (אומת 2026-09-01 — `get_credit_balance`). Desktop: `.cursor/mcp.json`. Cloud: Team MCP + OAuth ב-cursor.com/agents (`CONNECT-3DAI.md`).
+
+עריכת Blender מקומית (Desktop בלבד, אחרי ראש צוות): [`BLENDER-MCP.md`](BLENDER-MCP.md) — לא על Cloud Agent; לא מחליף את השכבה הזו לקונספט/STL.  
+משפחת CAD/DCC נוספת (OpenSCAD / FreeCAD / SketchUp / multiCAD / …): [`CAD-MCP.md`](CAD-MCP.md) — רובם skip על Cloud.
 
 ## מה ליישם (על פקים קיימים)
 

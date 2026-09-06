@@ -2,14 +2,20 @@
 
 לא קריאת מודל אחת. מחזור חסום: תכנן → בצע → אמת → תקן → התקדם או הסלם.
 
+מצע הביצוע במשימה ארוכה הוא **מצב מובנה** (checkpoint), לא היסטוריית השיחה — דפוס SKILLSTATE (`playbooks/skillstate.md`): בכל צעד \(A_t=(P,\Sigma_t,O_t)\); אחרי עדכון מאומת זורקים reasoning.
+
 ```
 plan = steps on an existing pack
 write planned_steps[] to checkpoint   # plan preview — OMA embed, no second runtime
+Σ = load checkpoint                   # SKILLSTATE execution state
 for step in plan:
+    O = latest observation only       # not full chat / tool dump
     for attempt in 1..2:
-        result = do(step)
+        result = do(step)             # prompt = (P, Σ, O)
         verdict = sensor_or_field_check(result)
-        if verdict.passed: break
+        if verdict.passed:
+            Σ = Σ ⊕ state_patch       # write checkpoint; discard R_t
+            break
         if not verdict.retryable: escalate
     else:
         escalate("retry budget exhausted")
@@ -25,6 +31,7 @@ return best artifact + unresolved
 | שליחה חיצונית | HQ דרך כלים (`SEND.md`) | לא מחכים לגרוק / לאדם |
 | ₪ בלי מקור | אסור | כותבים `X ₪` |
 | Treg | לא בשימוש | WebSearch / תזמורת |
+| Replay שיחה מלאה | אסור במשימה ארוכה | רק \(P,\Sigma,O\) — `skillstate.md` |
 
 כשנגמר התקציב: מחזירים את הארטיפקט הטוב ביותר, מה שנגמר, מה שפתוח, וסיבת העצירה. לא מסתירים כשל מאחורי עברית שוטפת.
 

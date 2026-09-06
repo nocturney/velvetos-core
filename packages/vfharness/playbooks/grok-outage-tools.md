@@ -22,7 +22,7 @@
 | Mobbin | אין namespace | UX בריף | תבניות `vfbriefux` |
 | ChatGPT / Gemini / Perplexity | אין MCP | מחקר 06:15 | דיסק + «אין חדש במשרד» |
 | Instagram Publish | **אין MCP** | Grok היה כלי השליחה | נשאר LIVE-PACKET לאדם |
-| WhatsApp | **אין MCP** | שיחת לקוח | אדם `050-2517000` |
+| WhatsApp | Desktop / טיוטת `vf_office` | שיחת לקוח | אדם שולח `050-2517000` (`send=false`) |
 
 ## מה HQ מפעיל לבד (בלי לחכות לבעלים)
 

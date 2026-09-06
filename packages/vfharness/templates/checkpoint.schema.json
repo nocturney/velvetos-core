@@ -63,6 +63,15 @@
     },
     "escalation": { "type": ["string", "null"] },
     "last_updated": { "type": "string", "minLength": 8 },
+    "execution_state": {
+      "type": "object",
+      "description": "SKILLSTATE Σ domain slots — sufficient statistic for the next step without chat replay. Prefer core checkpoint keys first; use this for domain-specific fields. No invented ₪ or Insights.",
+      "additionalProperties": true
+    },
+    "latest_observation": {
+      "type": "string",
+      "description": "SKILLSTATE O_t — short summary of the last environment/tool/sensor observation only (not full history)."
+    },
     "events": {
       "type": "array",
       "description": "Huginn-style event log flowing between scenario steps (optional)",

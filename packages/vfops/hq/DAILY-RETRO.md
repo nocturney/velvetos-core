@@ -26,11 +26,25 @@
 | תפעול | חשבונות חדשים? ₪ רק ממקור — לא המצאה |
 | ייצור | mesh שנכשל? תור? רישיון חסר? |
 
+## טריגרי self-improving (באותו ערב)
+
+דפוס מ־ClawHub `self-improving` (דירוג best-skills) — **בלי** runtime `~/self-improving/`. על המשרד הקיים:
+
+| מתי | מה לעשות |
+|---|---|
+| משתמש תיקן / דחה תוצר | שורה ב־`owner-memory.md` + אם חוזר → ANTI-PATTERN |
+| כלי / פקודה נכשלו | לרשום failover אמיתי; לא «אמור לעבוד» |
+| גילינו גישה טובה יותר | לעדכן פלייבוק/סקיל בפק הקיים **אותו יום** אם זה חוזר |
+| דירוג best-skills חשף דפוס | `BEST-SKILLS.md` · הטמעה במקום |
+| טענת הצלחה בלי אימות | Mastery gate — `verification-before-claim.md` · `MASTERY-MEMORY.md` |
+| אותה טעות פעמיים | Question-bank → ANTI-PATTERN או `LEARNING-RECORDS.md` |
+
 ## פלט חובה
 
 1. **שורת יום** ב־`packages/vfops/data/owner-memory.md` (תאריך + תובנה אחת)
 2. **Checkpoint** אם job רב־שלבי פתוח — `vfharness/state/<task-id>.json`
 3. **תיקון מדריך** — אם אותה טעות פעמיים → שורת ANTI-PATTERN ב־`AGENTS.md` (מחר, לא הלילה)
+4. **אימות** לפני «סיימנו את הרטרו» — `playbooks/verification-before-claim.md`
 
 ## מה לא לשמור
 
@@ -44,6 +58,7 @@
 - `packages/vfmem/MEMORY-UPDATE.md` — איך כותבים לזיכרון המשותף
 - `packages/vfharness/playbooks/daily-learning.md` — לולאת למידה לסוכן
 - `.cursor/skills/vf-daily-learning/SKILL.md` — הפעלה ב־Cursor
+- `packages/vfops/hq/MASTERY-MEMORY.md` — DeepTutor: mastery gate + L1/L2/L3 (דפוס בלבד)
 
 ## בוקר למחרת
 

@@ -1,0 +1,39 @@
+{
+  "task_id": "orchestra-subscriptions-2026-09-05",
+  "status": "done",
+  "pack": "vfmcp",
+  "goal": "Compare RLabs gemini-mcp vs aliargun vs HQ; give a durable Gemini/ChatGPT desk that does not open consumer sites from Cloud (security alerts).",
+  "planned_steps": [
+    "Compare RLabs-Inc/gemini-mcp to aliargun and vf_gemini.py",
+    "Document why Cloud browser login trips Google/OpenAI alerts",
+    "Ship vf_chatgpt.py + SUBSCRIPTIONS.md + CONNECT-CHATGPT.md",
+    "Wire orchestra/desk/sensors; forbid cookies and RLabs install"
+  ],
+  "completed_steps": [
+    "RLabs is GEMINI_API_KEY only (Gemini 3, 37 tools, Veo) — better API catalog than aliargun, not a Plus login",
+    "Wrote SUBSCRIPTIONS.md — Cloud must not open gemini.google.com / chatgpt.com",
+    "Wrote scripts/vf_chatgpt.py + CONNECT-CHATGPT.md",
+    "Orchestra 06:15 is API CLIs; sensors require both desks"
+  ],
+  "next_step": "Owner creates GEMINI_API_KEY and OPENAI_API_KEY as Cloud secrets (separate API billing from Plus). Gems/GPTs stay on the owner Mac.",
+  "artifacts": [
+    "packages/vfmcp/SUBSCRIPTIONS.md",
+    "packages/vfmcp/CONNECT-CHATGPT.md",
+    "scripts/vf_chatgpt.py",
+    "packages/vfresearch/sources/2026-09-05-orchestra-subscriptions.md",
+    "constitution/ORCHESTRA.md"
+  ],
+  "unresolved": [
+    "This Cloud VM has no GEMINI_API_KEY or OPENAI_API_KEY — status stays חסר מפתח until lead seat adds secrets",
+    "Gems, GPTs, Canvas, Deep Research of the web apps cannot be driven from HQ without a browser",
+    "Antigravity OAuth stays owner-Mac only — do not copy ANTIGRAVITY_TOKEN to Cloud",
+    "RLabs and aliargun MCPs not installed"
+  ],
+  "outcome": "worker_done",
+  "pulse": "working",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "latest_observation": "RLabs last README still requires GEMINI_API_KEY from AI Studio; ChatGPT Plus does not include API; Cloud browser login is the alert source."
+}

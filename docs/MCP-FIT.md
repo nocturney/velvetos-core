@@ -1,9 +1,11 @@
 # MCP fit for Velvet Factory
 
 Source: [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) (reviewed 2026-08-30).  
+Discovery index (Claude Code marketplace — **patterns only**, do not `/plugin install` on Cloud Agent): [buildwithclaude.com](https://buildwithclaude.com/) · [davepoon/buildwithclaude](https://github.com/davepoon/buildwithclaude) `mcp-servers.json` (reviewed 2026-09-05). Embeds: [`2026-09-03`](../packages/vfresearch/sources/2026-09-03-buildwithclaude.md) · [`2026-09-05` proposal-drafter](../packages/vfresearch/sources/2026-09-05-buildwithclaude.md).  
+MCP Market mid-week (2026-09-05; Cloudflare on listing pages → GitHub bodies): Blender MCP · Archon · Jeffallan fullstack skills — [`packages/vfresearch/sources/2026-09-05-mcpmarket-three.md`](../packages/vfresearch/sources/2026-09-05-mcpmarket-three.md).  
 Grok / ChatGPT / Gemini / Perplexity gap vs this HQ: [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md) (reviewed 2026-08-31).  
 HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Boosts and auto-DM stay forbidden. Printers stay on the floor. Treg is not relevant.  
-Do not invent prices. Do not commit secrets.
+Core **registers** WhatsApp / Sheets / Studio Hub (`packages/vfmcp/CORE-MCP.md`). The factory instance binds via `mcpBind`. Do not invent prices. Do not commit secrets.
 
 The awesome list is a directory of thousands of servers. Most of it is coding, crypto, or other people's SaaS. Below is only what maps onto Velvet Factory packs.
 
@@ -18,6 +20,7 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Google Calendar** | Events | `vfseason`, `vfops`, `vfsales` |
 | **Canva** | Edit designs, brand-check, bulk-create, resize, `generate-design`. **Ready** on this Cloud Agent (2026-08-31, `DAGoYmCu4c4`) | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
 | **3D AI Studio** | Text/image → 3D mesh, STL/3MF export. **HTTP** `https://mcp.3daistudio.com/mcp` — OAuth **Desktop** (`.cursor/mcp.json`) **+ Cloud** (Dashboard → Integrations & MCP). See `packages/vfprod/CONNECT-3DAI.md` | `vfprod`, `vfsku`, `vlicense` |
+| **Studio MCP Hub** | HTTP `https://studiomcphub.com/mcp`. Free mockup/bg/resize; CMYK/`print_ready` for paper instances. VF skips CMYK. `packages/vfmcp/CONNECT-STUDIOHUB.md` | `vfprod`, `vfcovers`, `vfsku` |
 | **WebSearch / WebFetch** | Live web + URL fetch (ChatGPT/Gemini/Perplexity/Grok browse equivalent) | `vfresearch`, `vfgrowth` |
 | **GenerateImage** | User-asked stills. Instagram still Canva-first | `vfcovers`, `vfbriefux` |
 | **Treg** | **Not relevant** — do not login or `call` | — |
@@ -29,49 +32,53 @@ Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility”
 
 **Office graph (already in git, not a Cursor MCP add):** [`vfmem`](../packages/vfmem/) takes the *query shape* from [DeusData/codebase-memory-mcp](https://github.com/DeusData/codebase-memory-mcp) (`architecture` / `who` / `impact` / `adr`) and runs it on `vf-desk.json` + `manifest.json`. Do not install their C binary from this repo. Write-up: [`docs/VFMEM.md`](VFMEM.md).
 
-## Do this first (real studio gaps)
+## Installed in Core 2026-08-31 — instance binds what it needs
 
-Three holes the office OS still has. Each one is a Cursor MCP add — not a new pack dump.
+Constitution: VF WhatsApp **send** stays human `050-2517000`. HQ does not print. No invented ₪. No secrets in git.
 
-### 1. WhatsApp — inquiry-to-order
+Catalog: [`packages/vfmcp/CORE-MCP.md`](../packages/vfmcp/CORE-MCP.md) · [`core-mcp.json`](../packages/vfmcp/core-mcp.json). VF bind: `mcpBind` on `packages/velvetos/samples/velvet-factory.json`.
 
-Israeli print sales live here. Gmail alone does not close the loop for `vfconvert` / `vfsales`.
+### 1. WhatsApp — inquiry-to-order · **in Core (draft/search)**
 
-| Server | Role | Notes |
-|---|---|---|
-| [lharries/whatsapp-mcp](https://github.com/lharries/whatsapp-mcp) | Personal WhatsApp: search chats, contacts, send | Best if the studio number is a normal phone, not Business API |
-| [nakulben/whatsapp-mcp](https://github.com/nakulben/whatsapp-mcp) | WhatsApp Business templates via Meta Cloud API | Use if the studio already has a Business number |
-| [Infobip/mcp](https://github.com/infobip/mcp) | Official SMS / WhatsApp / Viber | Heavier; only if you already pay Infobip |
+Desktop: [lharries/whatsapp-mcp](https://github.com/lharries/whatsapp-mcp) via [`CONNECT-WHATSAPP.md`](../packages/vfmcp/CONNECT-WHATSAPP.md) (`~/.cursor/mcp.json`). Not in project `mcp.json` (local Go + QR).
 
-**Rule:** drafts and search in Cursor. Do not auto-send quotes or proofs without a human click. Same discipline as Instagram: HQ reviews, a human or Grok Bot sends.
+VF: `mcpBind.whatsapp.send=false`. Infobip / ManyChat stay off this instance.
 
-**Packs:** `vfconvert`, `vfsales`, `vfops`.
+Failover (Cloud / no QR):
 
-### 2. Google Sheets — the studio ledger
+```
+python3 scripts/vf_office.py jobs add --channel WhatsApp --what "…" --phone 050…
+python3 scripts/vf_office.py convert draft VF-YYYYMMDD-001
+```
 
-Drive can open a file. It cannot reliably read rows, write a job line, or update a SKU reprint. Books, jobs, quotes, and cost sheets almost certainly live in Sheets.
+Playbook: [`packages/vfconvert/WHATSAPP.md`](../packages/vfconvert/WHATSAPP.md).
 
-| Server | Role |
-|---|---|
-| [freema/mcp-gsheets](https://github.com/freema/mcp-gsheets) | Read / write / format / manage tabs |
-| [xing5/mcp-google-sheets](https://github.com/xing5/mcp-google-sheets) | Same job, Python |
+### 2. Google Sheets — studio ledger · **in Core (Desktop credentials)**
 
-Pick **one**. Point it at the real workbook IDs Christian names — do not invent a new ledger.
+[freema/mcp-gsheets](https://github.com/freema/mcp-gsheets) on the owner Mac after a service account — [`CONNECT-SHEETS.md`](../packages/vfmcp/CONNECT-SHEETS.md). Not in project `mcp.json` (would override global env).
 
-**Packs:** `vfbooks`, `vfsku`, `vfprod`, `vfsales`, `vfcost`.
+VF workbooks: `office/ledger/bindings.json`. Without Connect: local CSV + Drive `create_file`. Without an ID write **חסר גיליון**.
 
-### 3. Print file pipeline — CMYK / mockup / print PDF
+```
+python3 scripts/vf_office.py jobs list
+python3 scripts/vf_office.py jobs csv
+```
 
-Canva is the art desk. The floor still needs print-ready files.
+Playbook: [`packages/vfbooks/SHEETS.md`](../packages/vfbooks/SHEETS.md).
 
-| Server | Role |
-|---|---|
-| [codex-curator/studiomcphub](https://github.com/codex-curator/studiomcphub) | Mockups, CMYK conversion, print-ready PDF, upscale, background removal |
-| [attalla1/photopea-mcp-server](https://github.com/attalla1/photopea-mcp-server) | Local Photoshop-class edits (layers, export) if the Mac already uses Photopea |
+### 3. Print file pipeline · **Studio MCP Hub in `.cursor/mcp.json`**
 
-Start with Studio MCP Hub for “make this print-safe.” Keep Canva as the brand canvas. Do not invent click charges or paper prices (`vfcost` rule).
+HTTP `https://studiomcphub.com/mcp` (`studiomcphub`). Cloud: Team MCP like 3DAI — [`CONNECT-STUDIOHUB.md`](../packages/vfmcp/CONNECT-STUDIOHUB.md).
 
-**Packs:** `vfprod`, `vfcovers`, `vfsku`.
+VF skips `print_ready` / CMYK (3D studio). Uses free `remove_background` / `resize_image` if needed. Other print instances can enable CMYK in `mcpBind`. STL preflight stays:
+
+```
+python3 scripts/vf_office.py print preflight model.stl
+```
+
+Mesh repair: **3D AI Studio**. No wallet / x402 in git. No ₪ from GCX.
+
+Playbook: [`packages/vfprod/PREFLIGHT.md`](../packages/vfprod/PREFLIGHT.md).
 
 ## Optional research (do not wire by default)
 
@@ -84,6 +91,19 @@ Start with Studio MCP Hub for “make this print-safe.” Keep Canva as the bran
 Remote URL: `https://prompts.chat/api/mcp`. Local fallback: `npx -y prompts.chat mcp` (not required on Cloud Agent).
 
 **Packs:** `vfcopy`, `vfmskill`, `vfresearch`. Embedded office templates live in `packages/vfcopy/hq/templates/` — not in the MCP.
+
+### Gemini / ChatGPT API — orchestra desks, not consumer subscriptions
+
+Cloud Agent **must not** open `gemini.google.com` or `chatgpt.com` (Google/OpenAI security alerts). Hub: [`packages/vfmcp/SUBSCRIPTIONS.md`](../packages/vfmcp/SUBSCRIPTIONS.md). Full Plus/Pro without extra API billing: owner Mac — [`HOST.md`](../packages/vfmcp/HOST.md).
+
+| Path | Role | Notes |
+|---|---|---|
+| `scripts/vf_gemini.py` | Live `generateContent` + model list when `GEMINI_API_KEY` is in env | **Not** gemini.google.com Plus/Advanced. Playbook: [`CONNECT-GEMINI.md`](../packages/vfmcp/CONNECT-GEMINI.md). Without a key write **חסר מפתח Gemini**. |
+| `scripts/vf_chatgpt.py` | Live `chat.completions` + model list when `OPENAI_API_KEY` is in env | **Not** chatgpt.com Plus/Pro. Playbook: [`CONNECT-CHATGPT.md`](../packages/vfmcp/CONNECT-CHATGPT.md). Without a key write **חסר מפתח ChatGPT**. |
+| [aliargun/mcp-server-gemini](https://github.com/aliargun/mcp-server-gemini) | Stale community MCP (last push 2025-07-14, hardcoded Gemini 2.5) | **Do not install.** API key only. |
+| [RLabs-Inc/gemini-mcp](https://github.com/rlabs-inc/gemini-mcp) | Newer API MCP (Gemini 3, July 2026, 37 tools incl. Veo) | **Do not install.** Still `GEMINI_API_KEY`. Does not attach Plus. |
+
+**Packs:** `vfresearch`, `vfops`, `vfmcp`. No Veo from HQ. Instagram still Canva-first. Plus ≠ API.
 
 ## Do this next (read-only growth)
 
@@ -130,35 +150,51 @@ Do not add these “because they exist on the list.” Add them when Christian c
 | Reels cut from covers on the Mac | [video-creator/ffmpeg-mcp](https://github.com/video-creator/ffmpeg-mcp.git) or [06ketan/slideshot](https://github.com/06ketan/slideshot) | `vfigos`, `vfcovers` |
 | QR on SKU / proof cards | [qr-maker-io/mcp-server](https://github.com/qr-maker-io/mcp-server) | `vfsku` |
 | Floor “job done” pings | [teddyzxcv/ntfy-mcp](https://github.com/teddyzxcv/ntfy-mcp) | `vfprod` |
+| Blender on the owner Mac (scene edit) | [ahujasid/blender-mcp](https://github.com/ahujasid/blender-mcp) — **Desktop only**; Cloud uses 3DAI | `vfprod` — [`BLENDER-MCP.md`](../packages/vfprod/BLENDER-MCP.md) |
+| OpenSCAD / FreeCAD on Mac (parametric STL) | OpenSCAD CLI MCP / FreeCAD MCP — Desktop optional after lead | `vfprod` — [`CAD-MCP.md`](../packages/vfprod/CAD-MCP.md) |
+| Internal process diagrams | [excalidraw/excalidraw-mcp](https://github.com/excalidraw/excalidraw-mcp) remote — later; not IG | `vfops` / `vfprod` |
+| Local TTS/ASR on the owner Mac (lead-gated VO) | [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio) MCP at `http://localhost:3900/mcp` — **Desktop only after lead**; prefer `OMNIVOICE_MCP_OUTPUT_MODE=files` + base path; check model licenses (`vlicense`) | `vfom` — skip for floor reels; see [`2026-09-05-voicestudio.md`](../packages/vfresearch/sources/2026-09-05-voicestudio.md) |
 
 ## Do not install
 
+- **aliargun/mcp-server-gemini** — API-key MCP frozen at Gemini 2.5 (July 2025). Does not connect the gemini.google.com subscription. Use `vf_gemini.py` + `CONNECT-GEMINI.md`.
+- **RLabs-Inc/gemini-mcp** — Newer Gemini API MCP (37 tools, Veo, Gemini 3). Still `GEMINI_API_KEY`, not Plus. Do not install on Cloud. Use `vf_gemini.py` + `SUBSCRIPTIONS.md`.
+- **Automations-Project/VSCode-Perplexity-MCP** (`perplexity-user-mcp`) — Browser-session MCP (patchright + Cloudflare cookies) that bills the Pro plan instead of Sonar API. Experimental; ToS risk; auto-config writes `.cursor/mcp.json`. **Do not install on Cloud.** Do not copy `~/.perplexity-mcp`. Owner Mac only after lead seat. Hub: `SUBSCRIPTIONS.md`. Official `@perplexity-ai/mcp-server` is still a separate API key — owner declined extra API billing.
 - **Aggregator / “400 tools in one” servers** — they drown the agent and hide the studio tools.
 - **Headroom proxy on Cloud Agent** — local compression proxy needs a host process; Cloud VMs are sandboxed. Embed the **pattern** via `packages/vfharness/playbooks/context-thrift.md` (CCR + ContentRouter). Optional Mac-only: `headroom wrap cursor` after lead seat — see `packages/vfmcp/GAP.md`.
-- **Second SEO / GEO / AI-visibility stacks** — Treg already is the data catalog. Connect GA / GSC / GBP there first.
+- **Blender MCP on Cloud Agent** — needs local Blender + addon. Optional Desktop only (`vfprod/BLENDER-MCP.md`). Concept/STL from HQ stays 3DAI. Sibling market listings (`blender-open`, `blender-ai`, `blender-vxai`) stay one-family — do not stack parallel installs without lead seat.
+- **VoiceStudio / OmniVoice MCP on Cloud Agent** — needs local GPU/CPU backend on `localhost:3900`. AGPL app + upstream model terms (some NC). Floor reels stay camera proof (`vfom` LOCK). Do not clone owner voice into IG without lead + consent. Optional Mac only after lead seat.
+- **multiCAD / SketchUp MCP** — Windows COM / SketchUp app; not VF print floor unless the Mac already runs that DCC.
+- **SVGMaker MCP** — vendor API key; Canva first for brand. No key in git.
+- **Archon** ([coleam00/Archon](https://github.com/coleam00/Archon)) — second harness/orchestrator. Embed workflow-gate patterns on `vfe2b` only; do not `curl | bash` / Docker Archon here.
+- **Jeffallan fullstack-dev-skills plugin** — Claude Code marketplace skills. Common Ground tiers → `vfmem/MEMORY-UPDATE.md`. No `/plugin install` / `npx skills` on Cloud Agent.
+- **Second SEO / GEO / AI-visibility stacks** — Treg is not relevant. Public marketing site from HQ stays locked; AEO skills (e.g. buildwithclaude `ai-search-visibility-audit`) stay **watch** until a public site exists under `vfbiz`. Warehouse `@aeo-foundations-architect` stays off-desk unless named.
 - **Second Canva or image-gen farms** — Canva + Superdesign are enough for brand work.
 - **Anything that posts, boosts, or DMs Instagram from this HQ.**
 - **DeusData/codebase-memory-mcp binary** — coding-agent indexer that writes client config. The office-graph pattern is already `scripts/vfmem.py`. Local AST install only if the lead seat asks, and never by rewriting this repo's `.cursor/mcp.json`.
-- **Crypto, x402 marketplaces, coding-agent swarms, aerospace, gaming, home IoT** — not the print floor. Includes [Bindu](https://github.com/GetBindu/Bindu) (`bindufy`, A2A Gateway, USDC) — watch patterns only; see `packages/vfresearch/sources/2026-08-31-bindu.md`.
+- **Hosted agent-memory plugins** (context-memory / Slova, memstack install, `basic-memory` Docker) — use `vfmem` + `owner-memory.md` + checkpoints. See `packages/vfmem/MEMORY-UPDATE.md`.
+- **`mcp/3d-printer` (Orca/Bambu/OctoPrint…)** — printers stay on the floor. No Print from HQ.
+- **Claude Code marketplace bulk install** (`/plugin marketplace add davepoon/buildwithclaude`, `all-agents@buildwithclaude`) — Cursor is the office; embed patterns only.
+- **Crypto, x402 marketplaces, coding-agent swarms, aerospace, gaming, home IoT** — not the print floor. Includes [Bindu](https://github.com/GetBindu/Bindu) (`bindufy`, A2A Gateway, USDC) — watch patterns only; see `packages/vfresearch/sources/2026-08-31-bindu.md`. Studio MCP Hub **paid** x402 only after lead seat; free tools are registered in Core.
 - **Cold-email infrastructure** — VF is inbound studio sales, not a spam shop.
 
-## How to add one (Cursor, not this git repo)
+## How to add one
 
-MCP lives in Cursor settings / Cloud Agent integrations. This repository stays a map.
+HTTP no-secret servers go in Core `.cursor/mcp.json` (and Team MCP for Cloud). Servers that need a Mac process or a JSON key go in **`~/.cursor/mcp.json`** — see `packages/vfmcp/mcp.desktop.example.json`. Instances enable a subset with `mcpBind`.
 
-1. Christian names the account (WhatsApp number, Sheet ID, Ads account).
-2. Add **one** server from the tables above.
+1. Christian names the account (WhatsApp number, Sheet ID, Ads account) if the server needs one.
+2. Add **one** server to the Core catalog (`core-mcp.json`) + CONNECT playbook.
 3. Keep secrets out of git.
 4. Same-day: one line in `CHANGELOG.md` Unreleased + a note here if the choice changes.
-5. Pack agents may *use* the new tools. They still do not invent prices or send Instagram.
+5. Pack agents may *use* the new tools. They still do not invent prices or send Instagram. VF WhatsApp send stays human.
 
 ## Suggested order
 
-1. Google Sheets (unlocks books / jobs / SKU without a new database).
-2. WhatsApp (closes inquiry → quote → order).
-3. Studio MCP Hub (print-safe files next to Canva).
+The first three office gaps are in Core (`CORE-MCP.md`). VF bind is `mcpBind`. Next, only if a pack is blocked:
+
+1. Desktop Connect: Sheets credentials + WhatsApp QR (`CONNECT-SHEETS.md`, `CONNECT-WHATSAPP.md`).
+2. Cloud Team MCP for `studiomcphub` (same path as 3DAI).
+3. 3D AI Studio OAuth on Cloud (`CONNECT-3DAI.md`) if mesh-from-photo is the bottleneck.
 4. instapdown (Instagram research, no login).
 5. Inbox Zero if the mailbox is the bottleneck.
 6. Meta Ads read-only if boost reporting is the bottleneck.
-
-Stop after the first three unless a pack is blocked on a specific live account.

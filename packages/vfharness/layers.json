@@ -65,7 +65,8 @@
       "files": [
         "packages/vfharness/state/README.md",
         "packages/vfharness/templates/checkpoint.schema.json",
-        "packages/vfharness/templates/run-receipt.md"
+        "packages/vfharness/templates/run-receipt.md",
+        "packages/vfharness/playbooks/skillstate.md"
       ]
     },
     {
@@ -122,6 +123,11 @@
     {
       "id": "check-vf-canva",
       "script": "scripts/check-vf-canva.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-vfgrowth",
+      "script": "scripts/check-vfgrowth.py",
       "type": "computational"
     },
     {

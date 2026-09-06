@@ -1,0 +1,16 @@
+{
+  "task_id": "best-skills-pass-2026-09-04",
+  "status": "done",
+  "updatedAt": "2026-09-04T03:10:00+03:00",
+  "goal": "Bi-daily best-skills standing pulse — embed movers if any, renew timer",
+  "done": [
+    "Fetched latest rankings (dataDate still 2026-09-03)",
+    "Embedded skill-first + LEARNING-RECORDS",
+    "Updated watchlist archify/OpenSpec/impeccable",
+    "Artifact + brief 05 + BEST-SKILLS.json lastPass",
+    "Timer renew mandatory"
+  ],
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-04-best-skills.md"
+  ]
+}

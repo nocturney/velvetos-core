@@ -1,7 +1,7 @@
 {
   "name": "velvet-factory-desk",
   "title": "VelvetOS Core desk — reference bind Velvet Factory",
-  "updatedAt": "2026-09-01",
+  "updatedAt": "2026-09-05",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
   "product": "VelvetOS",
@@ -19,20 +19,24 @@
   "notes": [
     "Desk is a curated overlay on The Agency roster. 273 specialists stay installed; only these sit on the studio desk.",
     "This repository is VelvetOS Core (backend). Business frontends are separate repos. VF frontend scaffold: instances/velvet-factory/ → nocturney/velvetos-velvet-factory. Desk/STUDIO here remain the reference bind until that cutover.",
-    "HQ sends Gmail and Instagram via tools (constitution/SEND.md). Do not wait for Christian or Grok Bot. Auto-DM and boost stay forbidden. Customer WhatsApp stays human 050-2517000.",
+    "HQ sends Gmail and Instagram via tools (constitution/SEND.md). Do not wait for Christian or Grok Bot. Auto-DM and boost stay forbidden. Customer WhatsApp **send** stays human 050-2517000 (MCP draft/search only).",
     "Do not invent ₪ prices or Insights. Write X ₪ when no verified amount exists.",
     "Do not commit secrets, medical files, or personal Drive folders.",
     "Research overlay @vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness.",
     "Harness: AGENTS.md + packages/vfharness. Six layers on existing packs. No second runtime. After catalog edits run python3 scripts/check-all.py.",
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
+    "Every ~2 days forever (until owner stops): LinklyAI/best-skills via BEST-SKILLS.md + TIMER.md + skill vf-best-skills. Renew subscribe_timer every pass. Embed patterns only; no npx skills on Cloud.",
+    "Last-30-days community research: vfresearch/hq/LAST30.md + skill vf-last30 (mvanhorn/last30days-skill patterns). WebSearch/gh/orchestra only — no vendor CLI, no X/TikTok keys.",
     "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
     "Grok Bot quota failover: keep producing AND sending via HQ tools. Office brief is תצוגה 3 HTML via send_message to nocturney@gmail.com. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
     "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
     "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
     "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
+    "2026-08-31: Core office MCP — studiomcphub in .cursor/mcp.json; Sheets + WhatsApp Desktop CONNECT (VF send=false, skip CMYK). packages/vfmcp/CORE-MCP.md.",
     "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py.",
-    "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill."
+    "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill.",
+    "2026-09-05: Orchestra desks are API keys (vf_gemini.py / vf_chatgpt.py), not gemini.google.com or chatgpt.com in the Cloud browser — that trip Google/OpenAI security alerts. SUBSCRIPTIONS.md. Do not persist cookies. Plus ≠ API."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -153,6 +157,44 @@
       "useWhen": "vfprod concept mesh: text/image → STL/3MF after lead approval. Playbook: packages/vfprod/3DAISTUDIO.md",
       "rule": "No API key in git. No invented ₪ from credits. No print from HQ. Same license gate as Meshy/Tripo.",
       "failover": "Site UI + Drive create_file / upload + continue. Open license search if vendor down. Never invent a key or mesh."
+    },
+    "studiomcphub": {
+      "status": "needsAuth",
+      "namespace": "studiomcphub",
+      "mcp": "https://studiomcphub.com/mcp",
+      "useWhen": "Core print-file tools. VF: remove_background / resize only. Playbook: packages/vfmcp/CONNECT-STUDIOHUB.md",
+      "rule": "Free tools unless lead seat. No wallet/x402 in git. No NFT. VF skips print_ready/CMYK. HQ does not print. No invented ₪.",
+      "failover": "Canva / packages/vfcanva/studio/render.py / 3DAI + vfprod/PREFLIGHT.md"
+    },
+    "mcp-gsheets": {
+      "status": "desktop-credentials",
+      "namespace": "mcp-gsheets",
+      "useWhen": "Cell-level ledger after packages/vfmcp/CONNECT-SHEETS.md. VF IDs in office/ledger/bindings.json",
+      "rule": "No service-account JSON in git. No invented ₪. Without Connect write חסר גיליון.",
+      "failover": "python3 scripts/vf_office.py jobs + Drive exportMimeType=text/csv"
+    },
+    "whatsapp": {
+      "status": "desktop-optional",
+      "namespace": "whatsapp",
+      "useWhen": "Search/draft on the studio phone after packages/vfmcp/CONNECT-WHATSAPP.md",
+      "rule": "VF send stays human 050-2517000. send=false. No Infobip/ManyChat auto-send.",
+      "failover": "python3 scripts/vf_office.py convert draft + wa.me"
+    },
+    "gemini": {
+      "status": "needs-key",
+      "command": "python3 scripts/vf_gemini.py",
+      "namespace": null,
+      "useWhen": "Orchestra Gemini desk via GEMINI_API_KEY. Do not open gemini.google.com from Cloud. Playbook: packages/vfmcp/SUBSCRIPTIONS.md + CONNECT-GEMINI.md",
+      "rule": "Subscription gemini.google.com ≠ Gemini API. Do not install aliargun or RLabs gemini-mcp. No key in git. No Veo from HQ. No browser cookies. Without a key write חסר מפתח Gemini. Never invent a body.",
+      "failover": "python3 scripts/vf_gemini.py orchestra if GEMINI_API_KEY else ChatGPT API + Perplexity + WebSearch"
+    },
+    "chatgpt": {
+      "status": "needs-key",
+      "command": "python3 scripts/vf_chatgpt.py",
+      "namespace": null,
+      "useWhen": "Orchestra ChatGPT desk via OPENAI_API_KEY. Do not open chatgpt.com from Cloud. Playbook: packages/vfmcp/SUBSCRIPTIONS.md + CONNECT-CHATGPT.md",
+      "rule": "ChatGPT Plus ≠ OpenAI API. No key in git. No browser cookies. Without a key write חסר מפתח ChatGPT. Never invent a body.",
+      "failover": "python3 scripts/vf_chatgpt.py orchestra if OPENAI_API_KEY else Gemini API + Perplexity + WebSearch"
     }
   },
   "seats": [
@@ -161,7 +203,7 @@
       "he": "ראש צוות",
       "packs": ["vfops", "vfbriefux", "vfharness", "vfmem", "velvetos"],
       "specialists": ["studio-operations", "chief-of-staff", "meeting-notes-specialist", "workflow-architect", "ux-architect", "pipeline-analyst"],
-      "tools": ["calendar", "gmail", "vfmem", "web"],
+      "tools": ["calendar", "gmail", "vfmem", "web", "gemini", "chatgpt"],
       "decides": "₪ amount, what moves on the board, what is deferred; end-of-day retro (DAILY-RETRO.md)"
     },
     {
@@ -169,8 +211,8 @@
       "he": "סטודיו",
       "packs": ["vfconvert", "vfsales", "vfcopy", "vfmskill"],
       "specialists": ["sales-engineer", "proposal-strategist", "discovery-coach", "content-creator", "brand-guardian", "email-intelligence-engineer", "offer-lead-gen-strategist", "deal-strategist", "customer-success-manager", "email-marketing-strategist"],
-      "tools": ["gmail", "drive"],
-      "decides": "inquiry brief, quote draft, copy. Does not send."
+      "tools": ["gmail", "drive", "whatsapp"],
+      "decides": "inquiry brief, quote draft, copy. Does not send WhatsApp."
     },
     {
       "id": "growth",
@@ -185,7 +227,7 @@
       "he": "תפעול",
       "packs": ["vfcost", "vfbooks", "vfbiz"],
       "specialists": ["pricing-analyst", "bookkeeper-controller", "finance-tracker", "business-strategist"],
-      "tools": ["gmail", "drive"],
+      "tools": ["gmail", "drive", "mcp-gsheets"],
       "decides": "cost factors, ledger reads, locked B2B. No invented prices."
     },
     {
@@ -193,7 +235,7 @@
       "he": "ייצור",
       "packs": ["vfprod", "vfsku", "vlicense", "vfresearch"],
       "specialists": ["studio-producer", "operations-manager", "legal-compliance-checker", "research-synthesist", "trend-researcher", "technical-artist"],
-      "tools": ["drive", "calendar", "web", "threedaistudio"],
+      "tools": ["drive", "calendar", "web", "threedaistudio", "studiomcphub", "gemini", "chatgpt"],
       "decides": "print feasibility, queue, SKU, file license"
     }
   ],
@@ -358,13 +400,13 @@
       "slug": "research-synthesist",
       "packs": ["vfresearch"],
       "tools": ["drive", "web"],
-      "job": "Source map + weekly inspiration-link review (LINKS.json / WEEKLY.md). Do not invent citations or blocked bodies."
+      "job": "Source map + weekly inspiration-link review (LINKS.json / WEEKLY.md) + last-30-days community synthesis (LAST30.md / vf-last30). Do not invent citations or blocked bodies."
     },
     {
       "slug": "trend-researcher",
       "packs": ["vfresearch", "vfseason"],
       "tools": ["calendar", "web"],
-      "job": "Season, reprint, trend signals, and IG music/sound briefs (expert-trend-explorer). HeyOrca + IG paste (MUSIC.md). Treg not relevant; never invent track names or Insights"
+      "job": "Season, reprint, trend signals, last-30-days discovery (LAST30.md / vf-last30), and IG music/sound briefs (expert-trend-explorer). HeyOrca + IG paste (MUSIC.md). Treg not relevant; never invent track names or Insights"
     },
     {
       "slug": "carousel-growth-engine",
@@ -441,6 +483,8 @@
     ".cursor/skills/vf-graft-map/SKILL.md",
     ".cursor/skills/vf-fcc-offload/SKILL.md",
     ".cursor/skills/vf-weekly-links/SKILL.md",
+    ".cursor/skills/vf-best-skills/SKILL.md",
+    ".cursor/skills/vf-last30/SKILL.md",
     ".cursor/skills/vf-ig-music/SKILL.md",
     ".cursor/skills/vf-velvetos/SKILL.md",
     ".cursor/skills/vf-daily-learning/SKILL.md",

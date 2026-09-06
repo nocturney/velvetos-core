@@ -8,6 +8,15 @@ Remotion, HyperFrames, `tools/`, `make setup`, `python -m backlot`, Piper TTS, �
 
 למה: Cursor כבר המשרד. Canva כבר הכלי הוויזואלי. אין מונורפו AGPL שני ואין מפתחות API בגיט.
 
+## VoiceStudio / TTS מקומי — דלג על Cloud · later במק בלבד
+
+[debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio) (לשעבר OmniVoice-Studio) — שיבוט קול, דיבוב, תמלול, MCP על `localhost:3900`.  
+**לא מתקינים** DMG/MSI/Docker/`bun run desktop` מ־HQ Cloud. **לא מחברים** את ה־MCP על Cloud Agent.
+
+למה: ריל Velvet Factory נשען על הוכחת רצפה, לא על קול AI. AGPL + משקלי מודל (לעיתים NC) דורשים שערי `vlicense` לפני שימוש מסחרי. אם ראש צוות פותח VO מקומי — רק Desktop אחרי אישור מותג; ראו `docs/MCP-FIT.md`.
+
+מקור הטמעה: `packages/vfresearch/sources/2026-09-05-voicestudio.md`.
+
 ## צינורות מחוץ לסטודיו — דלג
 
 Avatar Spokesperson, Talking Head, Character Animation, Localization & Dub, Podcast Repurpose, Screen Demo, `framework-smoke`.

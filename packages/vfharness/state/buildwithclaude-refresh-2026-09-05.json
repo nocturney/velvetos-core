@@ -1,0 +1,32 @@
+{
+  "task_id": "buildwithclaude-refresh-2026-09-05",
+  "title": "buildwithclaude mid-week re-read + proposal-drafter embed",
+  "status": "done",
+  "started": "2026-09-05",
+  "updated": "2026-09-05",
+  "source_url": "https://buildwithclaude.com/",
+  "guide": [
+    "AGENTS.md",
+    "packages/vfresearch/WEEKLY.md",
+    ".cursor/skills/vf-weekly-links/SKILL.md"
+  ],
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-05-buildwithclaude.md",
+    "packages/vfsales/SKILL.md",
+    "packages/vfsales/QUOTE.md",
+    "packages/vfsales/hq/PLAYBOOK.md"
+  ],
+  "execution_state": {
+    "stage": "worker_done",
+    "last_embed": "proposal-drafter → vfsales",
+    "skipped": [
+      "claude-code-marketplace-install",
+      "postwire-upload-post-bulkpublish",
+      "agenttrace-binary",
+      "openclaw"
+    ]
+  },
+  "latest_observation": "Owner re-sent buildwithclaude URL; re-read vs 2026-09-03; embedded proposal-drafter no-fabricate into vfsales quote path.",
+  "mention": "@research-synthesist",
+  "seat": "ייצור"
+}

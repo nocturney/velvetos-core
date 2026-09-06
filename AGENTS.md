@@ -27,11 +27,12 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - Instagram `@velvets_cloud`: send via a connected publish tool; if none, failover **same turn** to Canva + Drive `create_file` + Gmail (`vfigos/SEND.md`). Do not idle. Do not claim the feed posted if it did not.
 - Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
-- CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM». Customer WhatsApp stays human (no WhatsApp MCP).
+- CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM». Customer WhatsApp **send** stays human. Core may have WhatsApp MCP for search/draft (`packages/vfmcp/CONNECT-WHATSAPP.md`); VF `mcpBind.whatsapp.send=false`.
 - Do not create a new pack for an idea. Map onto an existing pack the same day. New business = **frontend instance repo** that attaches Core modules (`packages/velvetos/REPOS.md` + `scripts/publish-instance.sh`), not a parallel pack tree inside Core.
 - Do not host a second live business frontend inside Core. Use `instances/<id>/` scaffolds + presets only.
 - Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
 - Treg is **not relevant**. Do not login, `call`, or route failover through Treg. Live web = `WebSearch` / `WebFetch` / orchestra.
+- Gemini **API** (`GEMINI_API_KEY` + `scripts/vf_gemini.py`) and ChatGPT **API** (`OPENAI_API_KEY` + `scripts/vf_chatgpt.py`) are not the `gemini.google.com` / `chatgpt.com` subscriptions. Cloud Agent and Grok Bot **must not** open those sites (Google/OpenAI security alerts). Do not persist cookies. Do not install `aliargun/mcp-server-gemini` or `RLabs-Inc/gemini-mcp`. Without a key write «חסר מפתח Gemini» / «חסר מפתח ChatGPT» and fail over. Full Plus/Pro without extra API billing lives on the owner Mac (`packages/vfmcp/HOST.md`). Playbook: `packages/vfmcp/SUBSCRIPTIONS.md`.
 - Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.
 - Grok Bot quota failover: HQ **keeps producing and sending** via HQ tools. Queue tags: `#נשלח-מ-HQ` when a tool sent; `#ממתין-ל-כלי-IG` if the feed itself is still waiting on a publish MCP; `#פרסום-חי-דחוף` + `LIVE-PACKET` for urgent feed work (HQ still sends via tools). Do not sit on `#מוכן-ל-Grok` as the only path. No boost, no auto-DM, no Print from HQ. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md` · `constitution/SEND.md`.
 - Do not invent Origin slugs. Keep `unknown` / `origin-slug-unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`.
@@ -39,7 +40,8 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - After every catalog, pack, or rule change, run `python3 scripts/check-all.py`.
 - Do not claim success if a computational sensor failed. Retry once, then escalate.
 - Close a multi-step task with a checkpoint under `packages/vfharness/state/` so the next session can resume.
-- **Living office:** lead seat asks every seat to run end-of-day retro (`vfops/hq/DAILY-RETRO.md`). Promote durable facts to `vfops/data/owner-memory.md` per `vfmem/MEMORY-UPDATE.md`. Module `office-learning`; skill `.cursor/skills/vf-daily-learning/SKILL.md`. Specialists learn and improve — not static generic agents.
+- **Living office:** lead seat asks every seat to run end-of-day retro (`vfops/hq/DAILY-RETRO.md`). Promote durable facts to `vfops/data/owner-memory.md` per `vfmem/MEMORY-UPDATE.md`. Module `office-learning`; skill `.cursor/skills/vf-daily-learning/SKILL.md`. Specialists learn and improve — not static generic agents. Corrections/failures trigger same-day promote (self-improving pattern, no second runtime).
+- **Best skills pulse:** every ~2 days re-read [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) via `vfresearch/BEST-SKILLS.md` + `TIMER.md` + skill `vf-best-skills`. **Standing forever** until the owner explicitly stops (`standingForever` in `BEST-SKILLS.json`). Renew `subscribe_timer` every pass. Embed patterns into existing packs; constitution may update when a durable pattern wins. No `npx skills` on Cloud Agent.
 - **Revenue loop:** IG as income source — `expert-revenue-loop` + `expert-insights-ingest` + `expert-instance-onboard` for multi-frontend. Skill `.cursor/skills/vf-revenue-loop/SKILL.md`. Paid boost and ₪ changes stay lead-gated.
 - No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
 - Warehouse specialists stay off the desk unless the user asks for that `@slug`.
@@ -63,6 +65,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - 2026-08-30 — Went idle or claimed «אין תוצרים» when Grok Bot weekly quota ran out. Produce **and send via HQ tools**. Do not claim the IG feed posted if no publish tool fired. Sensor: `scripts/check-vfharness.py`. Playbook: `docs/GROK-FAILOVER.md` + `constitution/SEND.md`.
 - 2026-08-30 — Second agent runtime (CrewAI, AutoGPT, BabyAGI). Cursor is the office. See `packages/vfe2b/LOCK.md`.
 - 2026-08-30 — National shipping or a sixth seat invented beside the five-seat desk.
+- 2026-09-05 — Opened `gemini.google.com` / `chatgpt.com` from Cloud Agent or Grok Bot, triggering Google/OpenAI “unauthorized access” alerts. Use API keys (`vf_gemini.py` / `vf_chatgpt.py`). Plus ≠ API. Do not copy cookies or Antigravity tokens to Cloud. Sensor: `scripts/check-vfmcp.py`. Playbook: `packages/vfmcp/SUBSCRIPTIONS.md`.
 
 ## SENSORS (run after changes)
 
@@ -76,9 +79,10 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfmakers.py` | Maker-skills desk |
 | `scripts/check-vfagents.py` | 500-list playbooks |
 | `scripts/check-vf-canva.py` | Canva Instagram desk |
-| `scripts/check-vfresearch.py` | Weekly inspiration-links + IG music + orchestra failover law |
+| `scripts/check-vfresearch.py` | Weekly inspiration-links + bi-daily best-skills + last30 community research + IG music + orchestra failover law |
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
-| `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready |
+| `scripts/check-vfgrowth.py` | Standing IG calendar + ledger + Studio handoff (instagram.com, no Suite) |
+| `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready + Gemini/ChatGPT API desks (`vf_gemini.py` / `vf_chatgpt.py`; not aliargun / RLabs; no Cloud browser login) |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
 | `scripts/check-velvetos.py` | VelvetOS Core + modules; VF frontend scaffold under instances/; backend≠frontend |
 
@@ -99,12 +103,13 @@ ALLOW execute: `python3 scripts/check-*.py`
 ASK before: `git push`, Calendar create
 ALLOW send: Gmail `send_message` / `reply` / `forward`; Instagram via connected tool or Canva+Drive+Gmail failover (`constitution/SEND.md`)
 ALLOW write: Drive `create_file` for office docs (no personal/medical/legal folders)
-DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights / Origin slugs, claiming IG posted without a publish tool
+DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights / Origin slugs, claiming IG posted without a publish tool, Cloud/Grok login to `gemini.google.com` / `chatgpt.com`, persisting browser cookies, installing aliargun or RLabs gemini-mcp
 
 ## MEMORY
 
-- Guides (`AGENTS.md`, constitution, pack `SKILL.md`) = what should happen.
-- Checkpoints (`packages/vfharness/state/<task-id>.json`) = what happened in this task.
+- Guides (`AGENTS.md`, constitution, pack `SKILL.md`) = what should happen (\(P\)).
+- Checkpoints (`packages/vfharness/state/<task-id>.json`) = what happened in this task (\(\Sigma\)). Optional `execution_state` / `latest_observation` for domain slots (SKILLSTATE — `vfharness/playbooks/skillstate.md`).
+- Long-task next turn: prompt = guide + checkpoint + latest observation only — not full chat replay.
 - Office map (`vfgraft`) = how HQ is wired. Office query (`vfmem`) = who handles a job. Neither replaces a task checkpoint.
 - Do not rely on chat memory for a rule that must hold every run. Promote it here.
 

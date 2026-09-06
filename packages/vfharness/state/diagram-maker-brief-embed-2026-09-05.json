@@ -1,0 +1,20 @@
+{
+  "task_id": "diagram-maker-brief-embed-2026-09-05",
+  "status": "done",
+  "guide": "packages/vfbriefux/hq/DIAGRAM-MAKER.md",
+  "pack": "vfbriefux",
+  "source_url": "https://mcpmarket.com/tools/skills/diagram-maker-visualizer",
+  "failover": "agentskill.sh/@openclaw/diagram-maker + openclaw GitHub (mcpmarket walled)",
+  "artifacts": [
+    "packages/vfbriefux/hq/DIAGRAM-MAKER.md",
+    "packages/vfbriefux/hq/diagram-svg-template.html",
+    "packages/vfbriefux/render_mail.py --diagram",
+    "packages/vfresearch/sources/2026-09-05-diagram-maker.md"
+  ],
+  "execution_state": {
+    "embedded": true,
+    "mail_path_unchanged": true,
+    "npx_skipped": true
+  },
+  "latest_observation": "render_mail.py --check OK; pipeline/slots satellites generated"
+}

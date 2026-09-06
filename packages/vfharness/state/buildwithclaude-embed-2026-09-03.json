@@ -1,0 +1,42 @@
+{
+  "task_id": "buildwithclaude-embed-2026-09-03",
+  "title": "buildwithclaude research embed",
+  "status": "done",
+  "started": "2026-09-03",
+  "updated": "2026-09-03",
+  "packs": ["vfresearch", "vfmem", "vfharness", "vfmcp"],
+  "mention": ["@research-synthesist"],
+  "source_url": "https://buildwithclaude.com/",
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-03-buildwithclaude.md",
+    "packages/vfresearch/sources/2026-09-03-weekly-links.md",
+    "packages/vfmem/MEMORY-UPDATE.md",
+    "packages/vfharness/playbooks/agent-architecture-audit.md",
+    "docs/MCP-FIT.md"
+  ],
+  "embedded": [
+    "agent-memory-discipline → MEMORY-UPDATE recall/save/close",
+    "agent-architecture-audit → vfharness 12-layer HQ map",
+    "buildwithclaude as MCP discovery index (no marketplace install)"
+  ],
+  "skipped": [
+    "Claude Code /plugin marketplace add",
+    "npx skills add",
+    "context-memory hosted",
+    "3d-printer MCP",
+    "WhatsApp send",
+    "AEO audit on locked public site",
+    "OpenClaw / swarm"
+  ],
+  "next": [
+    "Sheets MCP still top live gap (MCP-FIT)",
+    "AEO watch until public site under vfbiz"
+  ],
+  "events": [
+    {
+      "at": "2026-09-03",
+      "type": "research_embed",
+      "note": "Owner sent buildwithclaude URL; mid-week LINKS append + pattern embed"
+    }
+  ]
+}

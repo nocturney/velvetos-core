@@ -14,10 +14,11 @@
 2. תכנן צעדים קצרים על **פק קיים**.
 3. בצע. אחרי כל שינוי קטלוג/כלל — `python3 scripts/check-all.py`.
 4. כשל סנסור → תקן פעם אחת → אם נכשל שוב, הסלם עם `templates/escalation.md`.
-5. כתוב נקודת ביקורת ב-`state/<task-id>.json` לפני סגירת סשן ארוך.
+5. כתוב נקודת ביקורת ב-`state/<task-id>.json` לפני סגירת סשן ארוך. משימה ארוכה: כל צעד = \(P,\Sigma,O\) — `playbooks/skillstate.md` (לא replay שיחה).
 6. מכסת Grok ריקה + צריך IG חי → `playbooks/grok-failover.md` + `vfigos/LIVE-PACKET.md` לאדם.
 7. הקשר כבד (thread, JSON, Drive dump) → `playbooks/context-thrift.md` — סיכום בשיחה, מקור ב-checkpoint.
 8. **סוף יום** — `playbooks/daily-learning.md` + `vfops/hq/DAILY-RETRO.md` (מודול `office-learning`).
+9. סוכן «נהיה גרוע» / כלי נדלג / זיכרון דולף → `playbooks/agent-architecture-audit.md` (דפוס buildwithclaude; בלי ECC install).
 
 צינור יחיד נשאר: פנייה · שיחה · הצעה · הדפסה · איסוף.
 

@@ -1,0 +1,66 @@
+{
+  "task_id": "market-research-intelligence-embed-2026-09-05",
+  "status": "done",
+  "pack": "vfresearch",
+  "goal": "Embed MCP Market market-research-intelligence patterns onto vfresearch; sensors green; PR open",
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "python3 scripts/check-all.py — OK suite passed=20",
+  "planned_steps": [
+    "fetch-url",
+    "failover-websearch",
+    "write-playbook",
+    "register-links",
+    "sensor-suite",
+    "commit-pr"
+  ],
+  "completed_steps": [
+    "fetch-url",
+    "failover-websearch",
+    "write-playbook",
+    "register-links",
+    "sensor-suite",
+    "brief-day-copy"
+  ],
+  "next_step": "commit-pr",
+  "artifacts": [
+    "packages/vfresearch/hq/MARKET-INTEL.md",
+    "packages/vfresearch/sources/2026-09-05-market-research-intelligence.md",
+    "packages/vfops/data/research.md",
+    "/opt/cursor/artifacts/market-intel-check-all.log"
+  ],
+  "unresolved": [
+    "Full SKILL.md body from mcpmarket still blocked (אין גוף) — re-open if checkpoint lifts"
+  ],
+  "escalation": null,
+  "last_updated": "2026-09-05",
+  "execution_state": {
+    "url": "https://mcpmarket.com/tools/skills/market-research-intelligence-1787987613965",
+    "verdict": "embed",
+    "body_status": "אין גוף",
+    "runtime_install": false,
+    "sensors_passed": 20,
+    "packs_touched": ["vfresearch", "vfops"]
+  },
+  "latest_observation": "check-all.py OK suite passed=20; patterns embedded from public product description only",
+  "events": [
+    {
+      "name": "url.walled",
+      "producedAt": "2026-09-05",
+      "sourceAgent": "vfresearch",
+      "payload": { "status": "אין גוף", "failover": "WebSearch" }
+    },
+    {
+      "name": "embed.wired",
+      "producedAt": "2026-09-05",
+      "sourceAgent": "vfresearch",
+      "payload": { "playbook": "hq/MARKET-INTEL.md" }
+    },
+    {
+      "name": "sensors.green",
+      "producedAt": "2026-09-05",
+      "sourceAgent": "vfharness",
+      "payload": { "passed": 20 }
+    }
+  ]
+}

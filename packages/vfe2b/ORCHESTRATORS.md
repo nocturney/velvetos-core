@@ -31,14 +31,16 @@
 | Session goal | DeerFlow `/goal` | שדה `מטרה` בכרטיס · checkpoint `goal` |
 | Sub-agent bounds | DeerFlow task | fan-out ≤3 · לא על ₪/שליחה |
 | Tool receipts | DeerFlow verification | `אימות` + message_id / design URL |
+| YAML phases + validation + human approve | [Archon](https://github.com/coleam00/Archon) (2026-09) | `vfharness` loop · `אימות` · `decision_gate` · תיק משמרת אחד — **לא** install Archon |
 
 ## מה לא מתקינים
 
 TUI/tmux/worktree multiplexers (`amux`, `dmux`, `claude-squad`…).  
 ADE שולחני (`Emdash`, `Garcon`, `Orca`, `Superset` כהתקנה).  
+**Archon** (CLI/Docker/Web harness builder) — דפוסי שערי אימות בלבד; לא runtime שני.  
 **LobeHub** (Docker / Vercel / IM Gateway / marketplace 10k MCP) — דפוסים בלבד.  
 נחילי 20–41 סוכנים (`loki-mode`, `ClawTeam`).  
-לולאת Ralph בלי אדם על ₪ או שליחה.  
+לולאת Ralph בלי אדם על ₪ או שליחה (`archon-ralph-dag` ודומיהם).  
 עוזר אישי תמידי / OpenClaw / גשר טלגרם / אוטו־CRM.
 
 Cursor הוא המשרד. `LOCK.md` + `skipFamilies` ב־`orchestrators.json`.

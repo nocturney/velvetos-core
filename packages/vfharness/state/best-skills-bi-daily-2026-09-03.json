@@ -1,0 +1,29 @@
+{
+  "task_id": "best-skills-bi-daily-2026-09-03",
+  "status": "done",
+  "updatedAt": "2026-09-03T08:30:00+03:00",
+  "goal": "Explore LinklyAI/best-skills, embed useful patterns, open constitution carefully, schedule every-2-days cadence",
+  "planned_steps": [
+    "Fetch rankings CSVs for 2026-09-03",
+    "Map VF-relevant skills onto existing packs",
+    "Add BEST-SKILLS playbook + skill + sensor",
+    "Embed grill / verification / skill-authoring / handoff / last30 / self-improving",
+    "Update ORCHESTRA + ROUTINE + AGENTS",
+    "Subscribe bi-daily timer",
+    "Run check-all.py"
+  ],
+  "done": [
+    "packages/vfresearch/BEST-SKILLS.md",
+    "packages/vfresearch/BEST-SKILLS.json",
+    ".cursor/skills/vf-best-skills/SKILL.md",
+    "packages/vfresearch/sources/2026-09-03-best-skills.md",
+    "embeds on vfconvert/vfharness/vfops/office-learning"
+  ],
+  "gate": null,
+  "learned": [
+    "Owner wants bi-daily best-skills pulse and constitution may open for durable patterns"
+  ],
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-03-best-skills.md"
+  ]
+}

@@ -328,6 +328,16 @@
       "packs": ["vfsales"],
       "crew": "crews/inquiry.md",
       "note": "No auto-outreach. No auto-DM."
+    },
+    {
+      "name": "Archon",
+      "url": "https://github.com/coleam00/Archon",
+      "section": "agent-infrastructure",
+      "verdict": "embed",
+      "pattern": "YAML workflow phases with validation gates and human approval loops",
+      "packs": ["vfharness", "vfops", "vfe2b"],
+      "crew": "crews/run.md",
+      "note": "Patterns only (gates → אימות/decision_gate; one job folder). Do not curl|bash, Docker, or install Archon CLI. mcpmarket listing may describe old v1 agenteer — GitHub is current harness builder. Reviewed 2026-09-05."
     }
   ],
   "skipFamilies": [
@@ -379,9 +389,17 @@
         "ralph-tui",
         "ralph-orchestrator as unattended driver",
         "ralphy (resting)",
-        "wreckit (resting)"
+        "wreckit (resting)",
+        "archon-ralph-dag"
       ],
       "reason": "unattended-autonomy"
+    },
+    {
+      "family": "second harness / workflow engine install",
+      "names": [
+        "Archon (coleam00/Archon) CLI/Docker/Web"
+      ],
+      "reason": "no-second-orchestrator"
     },
     {
       "family": "always-on personal assistants / OpenClaw forks",

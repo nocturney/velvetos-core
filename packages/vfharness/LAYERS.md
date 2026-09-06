@@ -43,6 +43,8 @@ Feedback. חישובי קודם; סמנטי רק אם אי אפשר כלל דט�
 | שכבה | מה נשמר | איפה |
 |---|---|---|
 | Scratchpad | המשימה הנוכחית | `state/<id>.json` |
+| Execution Σ | מספיק לצעד הבא בלי replay שיחה | checkpoint + `execution_state` (SKILLSTATE) |
+| Latest \(O_t\) | תצפית אחרונה בלבד | `latest_observation` או שורת progress |
 | Artifact | טיוטה / בריף / כריכה | הפק הרלוונטי |
 | Decision | החלטת ראש צוות | `CHANGELOG.md`, `constitution/` |
 | Guide | מדיניות קבועה | `AGENTS.md` — לא בזיכרון שיחה |
@@ -51,7 +53,7 @@ Feedback. חישובי קודם; סמנטי רק אם אי אפשר כלל דט�
 
 `vfgraft` / `vfmem` הם מפת משרד, לא checkpoint של משימה. לא מחליפים זה את זה.
 
-מבחן שחזור: סוגרים סשן באמצע. נפתח. קוראים את ה-checkpoint. ממשיכים בלי לחזור על עבודה גמורה.
+מבחן שחזור: סוגרים סשן באמצע. נפתח. קוראים את ה-checkpoint (\(P,\Sigma,O\)). ממשיכים בלי לחזור על עבודה גמורה ובלי להדביק את כל ה-CoT הישן. פלייבוק: `playbooks/skillstate.md`.
 
 ## 5. Permissions — הרתמה היא גבול האבטחה
 

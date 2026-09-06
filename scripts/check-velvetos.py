@@ -115,6 +115,13 @@ def check_reference_vf(profile: dict, desk: dict, studio_text: str) -> None:
     for need in ("fulfill-pickup", "production-print", "compliance-maker"):
         if need not in profile["modulesEnabled"]:
             fail(f"VF sample must enable {need}")
+    bind = profile.get("mcpBind") or {}
+    wa = bind.get("whatsapp") or {}
+    if wa.get("send") is not False:
+        fail("VF mcpBind.whatsapp.send must be false")
+    hub = bind.get("studiomcphub") or {}
+    if "print_ready" not in (hub.get("skip") or []):
+        fail("VF mcpBind.studiomcphub must skip print_ready")
 
 
 def main() -> None:
@@ -197,6 +204,7 @@ def main() -> None:
     desk = load(DESK)
     studio_text = STUDIO.read_text(encoding="utf-8")
     check_reference_vf(sample, desk, studio_text)
+    check_reference_vf(front, desk, studio_text)
 
     # desk should identify as core hosting reference front
     if desk.get("product") != "VelvetOS":

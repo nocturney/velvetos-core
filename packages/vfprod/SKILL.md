@@ -3,6 +3,7 @@
 מושב: ייצור. מכיל גם כדאיות (מהשיתוף) וגם תור ההדפסה. לא פק שני.
 
 לפני התחייבות ללקוח: `hq/PLAYBOOK.md`.  
+פריפלייט STL: `PREFLIGHT.md` · `python3 scripts/vf_office.py print preflight`.  
 3D AI Studio (מנוי): `3DAISTUDIO.md` · חיבור MCP: `CONNECT-3DAI.md`.  
 אחרי אישור: תור על הצינור `הדפסה`.  
 רישיון קובץ: `#vlicense`.  

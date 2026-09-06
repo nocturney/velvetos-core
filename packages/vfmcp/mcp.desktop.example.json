@@ -1,0 +1,22 @@
+{
+  "_comment": "Copy the servers you need into ~/.cursor/mcp.json (user global). Do NOT paste secrets into this repo's .cursor/mcp.json. Do NOT commit filled copies.",
+  "mcpServers": {
+    "mcp-gsheets": {
+      "command": "npx",
+      "args": ["-y", "mcp-gsheets@latest"],
+      "env": {
+        "GOOGLE_PROJECT_ID": "${env:GOOGLE_PROJECT_ID}",
+        "GOOGLE_APPLICATION_CREDENTIALS": "${env:GOOGLE_APPLICATION_CREDENTIALS}"
+      }
+    },
+    "whatsapp": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/ABS/PATH/whatsapp-mcp/whatsapp-mcp-server",
+        "run",
+        "main.py"
+      ]
+    }
+  }
+}

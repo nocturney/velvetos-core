@@ -33,7 +33,7 @@ If constitution overlays exist (`packages/vfops/hq/BRIEF-SLOTS.md` or `packages/
 
 ## HTML draft (optional)
 
-Production mail: `render_mail.py` + `MAIL.html` (תצוגה 3). Reference/wireframe: `packages/vfbriefux/hq/brief-email.html` (effective-html). During Grok failover, HQ sends `htmlBody` to `nocturney@gmail.com` per `MAIL.md`.
+Production mail: `render_mail.py` + `MAIL.html` (תצוגה 3). Reference/wireframe: `packages/vfbriefux/hq/brief-email.html` (effective-html). Pipeline/slot companion diagrams: `render_mail.py --diagram pipeline|slots` + `vfbriefux/hq/DIAGRAM-MAKER.md` (not inside Gmail body). During Grok failover, HQ sends `htmlBody` to `nocturney@gmail.com` per `MAIL.md`.
 
 ## Harness
 
