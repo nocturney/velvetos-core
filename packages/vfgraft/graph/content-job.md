@@ -2,7 +2,7 @@
 
 ## Summary
 
-Content pack and covers come from floor proof, not invented scenes. Hebrew spoken-voice copy. CTA is WhatsApp `050-2517000` / איסוף שדרות — not «שלחו DM». Canva for `@velvets_cloud` visuals. `vfigos` reviews and schedules. Grok sends.
+Content pack and covers come from floor proof, not invented scenes. Hebrew voice law: `vfcopy/VOICE.md` (process-short vs product-story). CTA is WhatsApp `050-2517000` / איסוף שדרות — not bare «שלחו DM». Canva for `@velvets_cloud` visuals. `vfigos` reviews and schedules. HQ sends via tools.
 
 ## Sources
 

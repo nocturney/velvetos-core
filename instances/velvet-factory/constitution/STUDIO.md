@@ -21,6 +21,12 @@
 
 אין כאן מחירי מכירה. אין כאן Insights מומצאים.
 
+## קול כיתוב (חוק)
+
+כיתוב `@velvets_cloud` = חוק Core: `vendor/velvetos-core/packages/vfcopy/VOICE.md` (בתוך Core עצמו: `packages/vfcopy/VOICE.md`).  
+שני מצבים: **תהליך-קצר** או **סיפור-מוצר**. נעול משני הפוסטים הראשונים בפיד.  
+מחקר: `packages/vfcopy/VOICE-RESEARCH.md`. בלי ₪ בכיתוב. בלי פתיחה במגבלה. בלי קופי דק כמו G004 המוקדם.
+
 לולאת בוקר (Core): `python3 scripts/vfops_loop.py brief` · מסירה: `vfgrowth/HANDOFF-he.md`.
 
 ## שער עריכה — לפני שיבוץ (קשיח)
