@@ -149,6 +149,11 @@
       "id": "check-vffcc",
       "script": "scripts/check-vffcc.py",
       "type": "computational"
+    },
+    {
+      "id": "check-vfcost",
+      "script": "scripts/check-vfcost.py",
+      "type": "computational"
     }
   ],
   "permissions": {
@@ -213,7 +218,7 @@
     {
       "pack": "vfcost",
       "layer": "sensors",
-      "how": "X ₪ when no verified amount."
+      "how": "Material CLI grams×ILS/kg; missing grams refuse; X ₪ when no verified sale amount."
     },
     {
       "pack": "vfbooks",

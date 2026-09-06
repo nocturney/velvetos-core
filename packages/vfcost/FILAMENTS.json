@@ -1,0 +1,40 @@
+{
+  "name": "vfcost-filaments",
+  "title": "גלילי רצפה — שמות בלבד",
+  "updatedAt": "2026-09-06",
+  "rule": "Named floor spools. ilsPerKg empty until verified inventory or invoice. No sale ILS. Material cost only.",
+  "briefSlot": "02",
+  "cli": "python3 scripts/vfcost.py filaments",
+  "briefCli": "python3 scripts/vfcost.py brief",
+  "formula": "grams × ILS/kg ÷ 1000 = ILS/unit",
+  "examplePath": "20.29g × 250 ILS/kg → 5.07 ILS/unit",
+  "locks": [
+    "no-invented-sale-prices",
+    "material-only",
+    "missing-grams-refuse",
+    "missing-ils-per-kg-refuse"
+  ],
+  "filaments": [
+    {
+      "id": "ella",
+      "name": "Ella",
+      "nameHe": "אלה",
+      "ilsPerKg": "",
+      "source": ""
+    },
+    {
+      "id": "rachel",
+      "name": "Rachel",
+      "nameHe": "רחל",
+      "ilsPerKg": "",
+      "source": ""
+    },
+    {
+      "id": "gefen",
+      "name": "Gefen",
+      "nameHe": "גפן",
+      "ilsPerKg": "",
+      "source": ""
+    }
+  ]
+}

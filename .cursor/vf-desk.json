@@ -358,7 +358,7 @@
       "slug": "pricing-analyst",
       "packs": ["vfcost"],
       "tools": [],
-      "job": "Cost factors from slicer / snapshot / Christian. X ₪ if missing."
+      "job": "Material line: python3 scripts/vfcost.py material (grams × ILS/kg). Other cost factors from slicer / snapshot / Christian. X ₪ if missing. Never invent a sale price."
     },
     {
       "slug": "bookkeeper-controller",

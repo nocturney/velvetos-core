@@ -1,0 +1,40 @@
+{
+  "task_id": "vfcost-material-cards",
+  "status": "running",
+  "pack": "vfcost",
+  "goal": "Material-only vfcost CLI on velvetos-core; PR to main; no invented sale ILS.",
+  "crew": "books-data",
+  "planned_steps": [
+    "read overlay + vfsku CLI pattern",
+    "implement vfcost.py + FILAMENTS/CARDS",
+    "wire brief 02 + check-vfcost + check-all",
+    "open PR to main",
+    "run sensors and CLI cases"
+  ],
+  "completed_steps": [
+    "office-graph-who-vfcost",
+    "cli-filaments-cards-docs",
+    "brief-slot-02-hooks",
+    "sensor-check-vfcost"
+  ],
+  "next_step": "commit-push-pr-then-sensors",
+  "artifacts": [
+    "scripts/vfcost.py",
+    "scripts/check-vfcost.py",
+    "packages/vfcost/FILAMENTS.json",
+    "packages/vfcost/CARDS.json",
+    "packages/vfcost/CLI.md"
+  ],
+  "unresolved": [],
+  "outcome": null,
+  "pulse": "working",
+  "verification": "pending check-all.py after push",
+  "escalation": null,
+  "last_updated": "2026-09-06",
+  "execution_state": {
+    "example_path": "20.29g × 250 ILS/kg → 5.07 ILS/unit",
+    "brief_slot": "02",
+    "sale_price": "never"
+  },
+  "latest_observation": "Overlay-only vfcost on main; CLI + sensor written on cursor/vfcost-material-cards-3e05."
+}

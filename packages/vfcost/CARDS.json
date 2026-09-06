@@ -1,0 +1,15 @@
+{
+  "name": "vfcost-material-cards",
+  "title": "כרטיסי עלות חומר",
+  "updatedAt": "2026-09-06",
+  "rule": "One card per sliced job. grams required. ilsPerKg only from verified inventory. No sale ILS.",
+  "briefSlot": "02",
+  "cli": "python3 scripts/vfcost.py cards",
+  "briefCli": "python3 scripts/vfcost.py brief",
+  "locks": [
+    "no-invented-sale-prices",
+    "material-only",
+    "missing-grams-refuse"
+  ],
+  "cards": []
+}
