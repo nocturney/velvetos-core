@@ -15,7 +15,8 @@
     "Found Studio uploads already in Canva (batch + tops-print-end)",
     "Committed Hebrew+gold upgrades on DAHUaelaug0 and DAHUaUo3bAk",
     "Created and committed CTA DAHUacDGv9U",
-    "Exported 9 PNGs; verified 1080x1350 and 1080x1920"
+    "Exported 9 PNGs; verified 1080x1350 and 1080x1920",
+    "Coordinated Grok stubs DAHUaczk9Wg + DAHUacAsoNU (Hebrew, Studio photos, no fake site)"
   ],
   "next_step": "vfigos review/schedule only. Do not publish from HQ.",
   "artifacts": [
@@ -24,6 +25,8 @@
     "DAHUaelaug0",
     "DAHUaUo3bAk",
     "DAHUacDGv9U",
+    "DAHUaczk9Wg",
+    "DAHUacAsoNU",
     "/opt/cursor/artifacts/g004/"
   ],
   "unresolved": [
@@ -38,5 +41,5 @@
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-06",
-  "latest_observation": "G004 Canva pack upgraded from Studio photos already in the account. No IG send."
+  "latest_observation": "Primary pack is the 5-page carousel + photo stories + navy CTA. Grok stubs coordinated in place. No IG send."
 }
