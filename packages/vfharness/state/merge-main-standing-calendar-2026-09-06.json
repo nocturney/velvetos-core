@@ -1,0 +1,30 @@
+{
+  "task_id": "merge-main-standing-calendar-2026-09-06",
+  "status": "done",
+  "guide": "AGENTS.md + constitution/SEND.md",
+  "latest_observation": "Merged origin/main into cursor/standing-publish-calendar-de10. Simple conflicts unioned. Date grid + sensor taken from #90. vfcopy/G003 kept partial (no invented floor). Extras retargeted to HANDOFF-he.md.",
+  "execution_state": {
+    "office_of_record": "packages/vfgrowth/CALENDAR.md + LEDGER.md + HANDOFF-he.md (#90)",
+    "simple_resolved": [
+      "CHANGELOG.md",
+      "packages/vfcopy/SKILL.md",
+      "packages/vfcopy/hq/PLAYBOOK.md",
+      "packages/vfgrowth/G005.md",
+      "packages/vfgrowth/ORIGIN.md",
+      "packages/vfgrowth/hq/rotation/INDEX.md",
+      "packages/vfops/BRIEF.md",
+      "packages/vfops/ROUTINE.md",
+      "packages/vfops/data/research.md",
+      "packages/vfops/data/owner-memory.md",
+      "packages/vfigos/QUEUE.md",
+      "scripts/vendor-origin-packs.sh"
+    ],
+    "complicated_reported": [
+      "Sunday 7.9.2026 is Monday civil date — #90 grid kept, not auto-corrected",
+      "Google Calendar events on 8.9/10.9/13.9 mismatch #90 — IDs in HANDOFF-STANDING-he.md",
+      "Stories: #90 requires same-day floor clip; this branch allowed Canva-without-floor — #90 wins",
+      "G006: this branch drafted educational copy; #90 leaves topic/media/copy blocked — draft kept, not scheduled",
+      "vfcopy/G003: #90 invented floor caption; this branch kept partial CTA only — no-invent-floor law wins"
+    ]
+  }
+}

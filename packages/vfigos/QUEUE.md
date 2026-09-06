@@ -21,6 +21,8 @@ Grok הוא גיבוי אופציונלי. לא מחכים למכסה. לא מח
 
 ## תור פתוח
 
+לוח קבוע: `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. שיבוץ ב־instagram.com.
+
 | תאריך | מזהה | סוג | נתיב / הערה | סטטוס |
 |---|---|---|---|---|
 | 2026-09-05 | לוח קבוע W37–W39 | פיד + סטוריז | `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md` · שיבוץ instagram.com · G003 SoccerBall חסום מדיה | `#ממתין-למדיה` |
@@ -28,7 +30,7 @@ Grok הוא גיבוי אופציונלי. לא מחכים למכסה. לא מח
 
 ## דוגמאות
 
-| 2026-09-03 | VF-G005 d12b | קרוסלה | חי 12:00 · `Dc0cKegEbxd` · לא מחליפים | עלה |
+| 2026-09-03 12:00 | VF-G005 d12b | קרוסלה | `instagram.com/p/Dc0cKegEbxd/` · חי · לא נוגעים | עלה |
 | 2026-08-30 | VF-G005 d12b | קרוסלה | `vfcopy/G005-d12b.md` + `vfcovers/g005/` | היה `#מוכן-ל-Grok` — מעכשיו HQ שולח דרך כלים |
 | 2026-08-31 | send-law | משרד | `constitution/SEND.md` | `#נשלח-מ-HQ` |
 
