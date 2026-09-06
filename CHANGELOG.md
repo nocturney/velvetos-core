@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-06 — **vfcost CLI חומר בלבד:** `scripts/vfcost.py` — גרם × ILS/kg ÷ 1000 = ILS/unit (נתיב דוגמה 20.29g × 250 → 5.07). גלילים Ella/Rachel/Gefen בלי ILS/kg שמור. חסר גרמים = סירוב. בלי ₪ מכירה. בריף 02: `vfcost.py brief`. סנסור `check-vfcost.py`. Material-only cost desk on existing vfcost overlay.
+
 - 2026-09-06 — **בריאות + PR פתוחים:** סנסורים 21/21 על main אחרי #93. הטמעת ig-mcp (`CONNECT-IG.md`, `needsAuth`) + מראה iCloud→Drive (`CONNECT-ICLOUD.md`) + שער רישיון MakerWorld (מחזור חיוב / שינוי תנאים) על main נקי. סוגרים טיוטות מתנגשות #78/#68/#66/#58 ואת #74 (תזמורת 4.9 מיושנת מול `HOST.md`). בלי ₪ מומצא. בלי Publish. Ops rebase: IG Insights path + iCloud mirror + license gate.
 
 - 2026-09-06 — **סריקת HQ**: G003 SoccerBall **נעול·משובץ** instagram.com 7.9.2026 16:00 כיתוב «מה יוצא מהמדפסת?» (מדפסת = גיבוי). G004 קטלבל ורוד = מחזיק תכשיטים/טבעות לאימון (לא משקולת) — מועמד סטוריז/קרוסלה. דופק צמיחה: 80 עוקבים · 0 DM · לחזק CTA→היילייטס/וואטסאפ (`FOLLOWER-GROWTH.md` + תגיות `social-growth` ב־`constitution/tags.md`). ארכיון בריף 6.9 ב־`vfops/out/BRIEF-2026-09-06.html` (לא לשלוח). בלי Publish / ₪ מומצא. HQ sweep: lock G003, tag G004, follower playbook, brief archive.

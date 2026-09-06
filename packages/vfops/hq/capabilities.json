@@ -144,12 +144,21 @@
       "notes": "Price stays X ₪ until verified."
     },
     {
+      "id": "cost.material",
+      "label": "עלות חומר (גרם × ILS/kg)",
+      "tool": "scripts/vfcost.py material",
+      "packs": ["vfcost", "vfops"],
+      "gate": "none",
+      "path": "packages/vfcost/FILAMENTS.json",
+      "notes": "Material only. Missing grams = refuse. No sale ILS. Brief 02: vfcost.py brief."
+    },
+    {
       "id": "price.set",
       "label": "קביעת מחיר מכירה",
       "tool": "vfcost + lead",
       "packs": ["vfcost", "vfsales"],
       "gate": "lead",
-      "notes": "Never invent ₪."
+      "notes": "Never invent ₪. Material line is cost.material — not a sale price."
     },
     {
       "id": "books.pulse",

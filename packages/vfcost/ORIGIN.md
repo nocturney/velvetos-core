@@ -13,7 +13,8 @@ Studio cost pack — unit economics and spend, without invented prices.
 
 HQ overlay: `FLOOR-CARD.md` — cost factors on the wall. Sale price stays `X ₪` until named.
 
-Source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
+HQ-native material CLI (this repo): `scripts/vfcost.py` + `FILAMENTS.json` + `CARDS.json` + `CLI.md`.  
+Origin source tree is not in this folder until `scripts/vendor-origin-packs.sh` succeeds.
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
 
 Embedded 30.8.2026 from Gemini share: `SLICE.md`.  

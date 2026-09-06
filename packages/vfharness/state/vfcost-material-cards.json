@@ -1,0 +1,41 @@
+{
+  "task_id": "vfcost-material-cards",
+  "status": "done",
+  "pack": "vfcost",
+  "goal": "Material-only vfcost CLI on velvetos-core; PR to main; no invented sale ILS.",
+  "crew": "books-data",
+  "planned_steps": [
+    "read overlay + vfsku CLI pattern",
+    "implement vfcost.py + FILAMENTS/CARDS",
+    "wire brief 02 + check-vfcost + check-all",
+    "open PR to main",
+    "run sensors and CLI cases"
+  ],
+  "completed_steps": [
+    "office-graph-who-vfcost",
+    "cli-filaments-cards-docs",
+    "brief-slot-02-hooks",
+    "sensor-check-vfcost"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "scripts/vfcost.py",
+    "scripts/check-vfcost.py",
+    "packages/vfcost/FILAMENTS.json",
+    "packages/vfcost/CARDS.json",
+    "packages/vfcost/CLI.md",
+    "/opt/cursor/artifacts/vfcost-cli.log"
+  ],
+  "unresolved": [],
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "check-all.py passed=22 including check-vfcost.py",
+  "escalation": null,
+  "last_updated": "2026-09-06",
+  "execution_state": {
+    "example_path": "20.29g × 250 ILS/kg → 5.07 ILS/unit",
+    "brief_slot": "02",
+    "sale_price": "never"
+  },
+  "latest_observation": "Merged origin/main (72172df). Conflicts: CHANGELOG only (kept both). Auto-merge kept vfcost CLI + brief 02. check-all 22/22. PR #95 mergeable for lead seat."
+}
