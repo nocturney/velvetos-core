@@ -21,10 +21,20 @@
 ### א. אינדקס זיכרון
 
 ```bash
-python3 packages/vfmem/scripts/vf_semantic_search.py --build
+python3 scripts/vfresearch_cadence.py build-index
+# equivalent: python3 packages/vfmem/scripts/vf_semantic_search.py --build
 ```
 
-רק אם השתנו markdown רלוונטיים (או אחרי pull גדול). אינדקס מקומי — לא בגיט (`semantic_index.pkl`). חסר `sklearn` → `pip install scikit-learn` או שורת פער בארטיפקט.
+**Fail closed** — אל תסתירו כשל ב־`|| echo`. אינדקס מקומי (`semantic_index.pkl`, לא בגיט). CI מעלה artifact לצרכן. חסר `sklearn` → `pip install scikit-learn` או שורת פער בארטיפקט.
+
+מפת מפעילים / DST / בעלות סביבה:
+
+```bash
+python3 scripts/vfresearch_cadence.py map
+python3 scripts/vfresearch_cadence.py status   # evidence vs not-run-here — לא מסמנים «פעיל» בלי ארטיפקט
+```
+
+GrokBot `weekday-ops` 07:00 = בריף/תפעול — **לא** יוצרים cron מחקר כפול אצלו.
 
 ### ב. מחקר יומי (תזמורת)
 

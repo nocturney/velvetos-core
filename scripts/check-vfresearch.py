@@ -278,6 +278,22 @@ def main() -> None:
     if "LAST30" not in syn_job and "last30" not in syn_job.lower() and "last-30" not in syn_job.lower():
         fail("research-synthesist job must cover last-30 / LAST30 research")
 
+    cadence = ROOT / "scripts" / "vfresearch_cadence.py"
+    if not cadence.is_file():
+        fail("scripts/vfresearch_cadence.py missing — research activator map")
+    wf = ROOT / ".github" / "workflows" / "velvetos-research.yml"
+    if not wf.is_file():
+        fail("velvetos-research.yml missing")
+    wf_text = wf.read_text(encoding="utf-8")
+    if "|| echo" in wf_text:
+        fail("velvetos-research.yml must not hide index failures with || echo")
+    if "vfresearch_cadence.py build-index" not in wf_text:
+        fail("velvetos-research.yml must build index via vfresearch_cadence.py (fail closed)")
+    if "Asia/Jerusalem" not in wf_text and "IDT" not in wf_text:
+        fail("velvetos-research.yml must document Asia/Jerusalem / DST timing")
+    if "vfresearch_cadence.py" not in HQ_ROUTINE.read_text(encoding="utf-8"):
+        fail("HQ-ROUTINE.md must point at vfresearch_cadence.py")
+
     print(
         f"OK vfresearch weekly-links links={len(links)} "
         f"best-skills=1 last30=1 music=1 sources={len(music_src.get('sources') or [])} failover=1"
