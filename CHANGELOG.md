@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **VF-G004 סטוריז יוקרה:** ארבעה פריימי 1080×1920 ב־Canva MCP (`DAHUfU77wh4` / `DAHUfWrh3KM` / `DAHUfWdu4aM` / `DAHUfVplwd8`) + מעבר vfcovers/studio. פריים 1 = צילום פתוח `MAHUaToGa3s` בלי טבעות מומצאות + «מחזיק טבעות לזמן אימון». פריים 4 = «וואטסאפ 050-2517000» בלבד. טיוטות Studio `DAHUfTBiDMg`/`DAHUfRQMH60` לא ננגעו. כיתוב מאושר נשאר `vfcopy/G004-STORIES-FIX.md`. לא פורסם. פלייבוק `vfcanva/jobs/G004.md`. G004 stories luxury rebuild; no invented rings; no IG send.
+
 - 2026-09-07 — **רף סוכנות + פער כלים:** תלונת כריסטיאן (~08:27) — כלים בקטלוג לא נצרכים בפלט החי; סטוריז G004 מתחת לרף. `vfops/hq/TOOL-USE-GAP-2026-09-07.md`. שער קשיח: אין סטוריז/פיד בלי Canva MCP או vfcovers/vfcanva (`STUDIO` / `ORCHESTRA` / `EDIT-GATE` / `STORIES.md`). חריץ 05 = CLI מ-24ש או «אין חדש במשרד» + שורות פער (`vfops_loop.py`). תיקון סטוריז: `vfcopy/G004-STORIES-FIX.md` (סיפור-מוצר, נייבי-זהב, וואטסאפ `050-2517000`, בלי ₪, בלי Publish). Agency-quality gate: unused packs surface; G004 stories rewrite; no invented ₪ / no IG send.
 
 - 2026-09-07 — **בריף HTML ל־Grok:** `vfops_loop.py brief --write --date 2026-09-07` + `render_mail.py` → `packages/vfops/out/BRIEF-2026-09-07.html` ועותק זהה `packages/vfops/out/2026-09-07/brief-2026-09-07.html` (10891 בתים). שורת תאריך: יום שני 7 בספטמבר 2026. חריץ 04 מ־`vfbiz/out/week.md`. בלי שליחת מייל. בלי ₪ מכירה. Morning brief HTML archived for Grok pull; not emailed.
