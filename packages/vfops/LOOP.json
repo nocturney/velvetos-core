@@ -155,7 +155,8 @@
         "packages/vfgrowth/PREFLIGHT.md",
         "packages/vfgrowth/CALENDAR-OPS.md",
         "packages/vfgrowth/STORIES.md",
-        "packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md"
+        "packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md",
+        "packages/vfgrowth/ORGANIC-GROWTH.md"
       ]
     },
     {
@@ -318,6 +319,12 @@
       "path": "constitution/SEND.md",
       "cadence": "on-send",
       "consume": "constitution/SEND.md"
+    },
+    {
+      "id": "organic-growth",
+      "path": "constitution/ORGANIC_GROWTH.md",
+      "cadence": "daily-07:00",
+      "consume": "python3 scripts/vf_organic_growth.py brief --write"
     },
     {
       "id": "tags",
@@ -516,6 +523,18 @@
       "path": "packages/vfprod/PRINT-DONE.md",
       "cadence": "on-floor",
       "consume": "python3 scripts/vfprod.py print-done"
+    },
+    {
+      "id": "skill-organic-growth",
+      "path": ".cursor/skills/vf-organic-growth/SKILL.md",
+      "cadence": "daily-07:00",
+      "consume": "python3 scripts/vf_organic_growth.py brief --write"
+    },
+    {
+      "id": "organic-growth-pack",
+      "path": "packages/vfgrowth/ORGANIC-GROWTH.md",
+      "cadence": "daily-07:00",
+      "consume": "packages/vfgrowth/GATE.md"
     }
   ]
 }

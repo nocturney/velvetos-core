@@ -161,6 +161,8 @@ def main() -> None:
         ("packages/vfbooks/INTEGRITY.md", ("Invoice4U", "vfbooks.py brief", "decision_gate")),
         ("scripts/vfbooks.py", ("brief", "אין ספירה", "Invoice4U")),
         ("scripts/vfprod.py", ("print-done", "PREFLIGHT")),
+        ("scripts/vf_organic_growth.py", ("approved_for_manual_posting", "אין ספירה", "050-2517000")),
+        ("constitution/ORGANIC_GROWTH.md", ("print.done", "posted_manually", "pending_ops")),
     ):
         path = ROOT / rel
         if not path.is_file():
@@ -186,6 +188,8 @@ def main() -> None:
     slots = brief_slots.read_text(encoding="utf-8")
     if "retro-signals.json" not in slots:
         fail("BRIEF-SLOTS.md must consume retro-signals.json")
+    if "vf_organic_growth.py" not in slots:
+        fail("BRIEF-SLOTS.md must consume vf_organic_growth.py Decision Pack")
 
     proc_sig = subprocess.run(
         [sys.executable, str(signals_cli), "--write"],

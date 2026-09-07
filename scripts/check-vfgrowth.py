@@ -50,6 +50,15 @@ def main() -> None:
             fail(f"missing {path.relative_to(ROOT)}")
         assert_no_ils(path)
 
+    organic = ROOT / "packages" / "vfgrowth" / "ORGANIC-GROWTH.md"
+    if not organic.is_file():
+        fail("missing vfgrowth/ORGANIC-GROWTH.md")
+    og = organic.read_text()
+    for needle in ("print.done", "אין ריל כל יום", "approved_for_manual_posting", "050-2517000"):
+        if needle not in og:
+            fail(f"ORGANIC-GROWTH.md missing {needle!r}")
+    assert_no_ils(organic)
+
     cal = CAL.read_text()
     for needle in (
         "16:00",

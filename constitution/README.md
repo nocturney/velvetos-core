@@ -12,6 +12,7 @@
 | [`tags.md`](tags.md) | תגיות משרד וצינור |
 | [`TAGS.md`](TAGS.md) | תגיות בריף + מיפוי Gemini/Perplexity |
 | [`ORCHESTRA.md`](ORCHESTRA.md) | תזמורת הכלים החיצוניים — ChatGPT · Gemini · Perplexity |
+| [`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) | מפעל תוכן אורגני — טיוטות + בריף 07:00; לא פרסום אוטומטי |
 | [`../AGENTS.md`](../AGENTS.md) | מדריך רתמה (Guides). מנצח את השיחה |
 | [`../docs/HARNESS.md`](../docs/HARNESS.md) | שתילת שש שכבות הרתמה על הפקים |
 | [`../docs/VELVETOS.md`](../docs/VELVETOS.md) | ליבה + מודולים + מופעים |

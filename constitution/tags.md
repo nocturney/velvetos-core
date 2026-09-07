@@ -44,6 +44,16 @@
 תגית `#המרת-פרופיל` = סגירת דליפת צפייה→פרופיל→עצירה (`vfgrowth/hq/FOLLOWER-GROWTH.md`).  
 תגית `#כרטיס-offer` = מק״ט + `X ₪` או סכום מאומת + CTA — `experts/REVENUE-LOOP.md`.
 
+## צמיחה אורגנית (Control Plane)
+
+`#מפעל-תוכן` `#תור-אישור-07` `#approved-for-manual-posting` `#סקר-קהילה` `#ייחוס-הסתברותי`
+
+תגית `#מפעל-תוכן` הולכת ל־`vfgrowth/ORGANIC-GROWTH.md` — טיוטות, לא Publish.  
+תגית `#תור-אישור-07` = בריף עם [אישור][עריכה][דחייה]. אישור ≠ פרסום.  
+תגית `#approved-for-manual-posting` = אדם מעלה ב־instagram.com. Core לא מסמן `posted_manually`.  
+תגית `#סקר-קהילה` = Work Order `pending_ops` — אין סקר→Print מ־HQ.  
+תגית `#ייחוס-הסתברותי` = `vfsales/ORDERS.md` + `vfinsights/ATTRIBUTION.md`. וואטסאפ ≠ המרה ודאית.
+
 תגית `#תמחור` הולכת ל־`vfcost`, לא לפק חדש.  
 תגית `#חבילת-תוכן` הולכת ל־`vfgrowth` + `vfcovers`, לא לסוכן שיווק נפרד.  
 תגית `#vfom` הולכת לצוותי ריל (ייחוס / קליפים / היברידי), לא למנוע Remotion.

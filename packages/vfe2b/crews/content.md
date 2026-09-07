@@ -18,7 +18,7 @@ Packs: `vfcopy`, `vfcovers`, `vfigos`, `vfgrowth`.
 ## Run
 
 1. Homework first: what is true, what is not claimed. Floor proof only — invent no studio scene.
-2. If production handed a `print.done` card (`vfprod/PRINT-DONE.md` + `python3 scripts/vfprod.py print-done`): require media path. Missing → **חסר**. Then `vfom/crews/hybrid-reel.md`. HQ does not watch Bambu/Snapmaker/Elegoo.
+2. If production handed a `print.done` card (`vfprod/PRINT-DONE.md` + `python3 scripts/vfprod.py print-done`): require media path. Missing → **חסר**. Then `vfom/crews/hybrid-reel.md` **and** Organic Growth queue (`constitution/ORGANIC_GROWTH.md`). HQ does not watch Bambu/Snapmaker/Elegoo. Control plane does not publish.
 3. Draft Hebrew per `vfcopy/VOICE.md`. Funnel CTA from `vfgrowth/hq/PROFILE-TO-WHATSAPP.md` (process-short = follow; product-story = WhatsApp `050-2517000`). Lint against studio voice.
 4. Cover brief: size, text on image, no fake metrics on the graphic. Canva first; failover `studio/render.py` then Superdesign. **EDIT-GATE** — no raw JPEG.
 5. Written `PREFLIGHT.md` artifact before schedule. Fail-closed = do not book. Morning brief **does not** publish Instagram.

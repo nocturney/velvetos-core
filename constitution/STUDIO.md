@@ -59,3 +59,8 @@ G004 סטוריז: [`packages/vfcopy/G004-STORIES-FIX.md`](../packages/vfcopy/G0
 
 נכשל-סגור → חסום שיבוץ. מתקנים במשרד. **אל תפנה לכריסטיאן על מדדים חלשים.**  
 פלייבוק: [`packages/vfgrowth/PREFLIGHT.md`](../packages/vfgrowth/PREFLIGHT.md).
+
+## מפעל צמיחה אורגני
+
+[`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) + `python3 scripts/vf_organic_growth.py brief`.  
+טיוטות + תור אישור בבריף. לא Publish אוטומטי. אין ריל כל יום חול.

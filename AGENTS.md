@@ -18,7 +18,7 @@ BUILD: (no app binary — the catalog is the product)
 TEST: python3 scripts/check-all.py
 LINT: python3 scripts/check-hq-overlay.py && python3 scripts/check-vf-desk.py && python3 scripts/check-velvetos.py
 
-Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`, `docs/AUTONOMY-TOOLS.md`.
+Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `constitution/ORGANIC_GROWTH.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`, `docs/AUTONOMY-TOOLS.md`.
 
 ## RULES
 
@@ -44,6 +44,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - **Living office:** lead seat asks every seat to run end-of-day retro (`vfops/hq/DAILY-RETRO.md`). Promote durable facts to `vfops/data/owner-memory.md` per `vfmem/MEMORY-UPDATE.md`. Module `office-learning`; skill `.cursor/skills/vf-daily-learning/SKILL.md`. Specialists learn and improve — not static generic agents. Corrections/failures trigger same-day promote (self-improving pattern, no second runtime).
 - **Best skills pulse:** every ~2 days re-read [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) via `vfresearch/BEST-SKILLS.md` + `TIMER.md` + skill `vf-best-skills`. **Standing forever** until the owner explicitly stops (`standingForever` in `BEST-SKILLS.json`). Renew `subscribe_timer` every pass. Embed patterns into existing packs; constitution may update when a durable pattern wins. No `npx skills` on Cloud Agent.
 - **Revenue loop:** IG as income source — `expert-revenue-loop` + `expert-insights-ingest` + `expert-instance-onboard` for multi-frontend. Skill `.cursor/skills/vf-revenue-loop/SKILL.md`. Paid boost and ₪ changes stay lead-gated.
+- **Organic Growth Control Plane:** drafts + 07:00 Decision Pack on existing packs (`constitution/ORGANIC_GROWTH.md`). The plane never auto-posts, never auto-DMs, never marks `posted_manually`. Approve → `approved_for_manual_posting` only. No poll→Print from HQ. WhatsApp ping is not certain conversion. Skill `.cursor/skills/vf-organic-growth/SKILL.md`. CLI `scripts/vf_organic_growth.py`.
 - No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
 - Warehouse specialists stay off the desk unless the user asks for that `@slug`.
 
@@ -70,6 +71,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - 2026-09-07 — Surfaced weak Insights / «רמה נמוכה» / post-publish quality autopsy to Christian. Quality is a **preflight** (`vfgrowth/PREFLIGHT.md` + EDIT-GATE + VOICE + 2–3 comps). Fail-closed = block schedule; fix in office. Sensor: `scripts/check-vfgrowth.py` + `scripts/check-vfops-loop.py`.
 - 2026-09-07 — Renamed `velvetos-core` into a nervous-system / event-bus runtime, or promised zero-touch inquiry→close on ₪ / WhatsApp. Core stays **Kernel** (catalog + contracts); Edge is optional host; Office/HQ owns decisions; human gates stay. Embed: `packages/velvetos/ADR-THREE-LAYERS.md` + `LAYERS.md` + `schema/events.catalog.json` + `component_state` + Degraded Mode + `vf_retro_signals.py`. Sensor: `scripts/check-velvetos.py` + `scripts/check-vfharness.py` + `scripts/check-vfops-loop.py`.
 - 2026-09-07 — Treated logo/QR/napkins as a closed B2B catalog of three products. Those were **examples**. B2B as a line stays locked until the lead seat opens it; HQ must not invent a three-SKU B2B shelf. Sensor: `scripts/check-velvetos.py`.
+- 2026-09-07 — Built an Instagram bot (auto-post / auto-DM / poll→Print / treating WhatsApp as certain conversion). Core is a **content factory + experiments + measurement + 07:00 approval pack**. Human posts; conversion closes on WhatsApp by a human. Embed: `constitution/ORGANIC_GROWTH.md`. Sensor: `scripts/check-organic-growth.py`.
 
 ## SENSORS (run after changes)
 
@@ -87,6 +89,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfcost.py` | Material-only cost CLI (grams × ILS/kg); missing grams refuse; no invented sale ₪ |
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
 | `scripts/check-vfgrowth.py` | Standing IG calendar + ledger + Studio handoff (instagram.com, no Suite) |
+| `scripts/check-organic-growth.py` | Organic Growth Control Plane — no autopost/auto-DM, gate states, `orders.json` null ILS, 07:00 Decision Pack |
 | `scripts/check-vfops-loop.py` | Office activation loop — every pack consumed into 07:00 brief + HANDOFF |
 | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready + Gemini/ChatGPT API desks (`vf_gemini.py` / `vf_chatgpt.py`; not aliargun / RLabs; no Cloud browser login) |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |

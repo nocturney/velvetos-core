@@ -1,0 +1,58 @@
+{
+  "date": "2026-09-07",
+  "generatedAt": "2026-09-07T20:09:27+03:00",
+  "component_state": "Blocked",
+  "goal": "פניות B2B בדרום עבור אב-טיפוס / חלקים מותאמים.",
+  "locks": [
+    "no-autopost",
+    "no-auto-dm",
+    "no-boost",
+    "no-invented-insights",
+    "no-invented-ils"
+  ],
+  "reel": {
+    "slot": "אין משבצת ריל היום (לוח: א׳/ג׳ 16:00 בלבד)",
+    "gate": "blocked_no_media",
+    "topic": "חסר — אין print.done עם מדיה",
+    "asset": "חסר",
+    "hook": "חסר",
+    "cta": "לפנייה אנושית בוואטסאפ: 050-2517000",
+    "geotag": "חסר",
+    "hashtag_set_id": "local_b2b_v1",
+    "actions": [
+      "אישור",
+      "עריכה",
+      "דחייה"
+    ],
+    "no_media_line": "אין Reel איכותי אוטומטי להיום. נדרשים 15 שניות צילום ידני: קלוז־אפ של המוצר ביד + בדיקת התאמה."
+  },
+  "story": {
+    "slot": "היום 20:30 · סטוריז א׳–ה׳",
+    "gate": "pending_human_approval",
+    "poll_id": "petg_vs_nylon",
+    "question": "מה לבדוק מחר במעבדה?",
+    "options": [
+      "PETG מול Nylon",
+      "חוזק מול עמידות חום"
+    ],
+    "cta": "050-2517000",
+    "actions": [
+      "אישור",
+      "עריכה",
+      "דחייה"
+    ]
+  },
+  "yesterday": {
+    "insights": "אין ספירה",
+    "whatsapp_leads": "אין ספירה",
+    "leading_format": "אין ספירה",
+    "recommendation": "אין ספירה עד סנאפשוט + שורת orders.json"
+  },
+  "studio_tasks": [
+    "למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.",
+    "לאשר או לדחות את סקר הערב בבריף (לא מפרסם).",
+    "לא להציג חום/חוזק בלי vfprod/CLAIMS.md."
+  ],
+  "print_events": 1,
+  "queue_count": 1
+}

@@ -338,10 +338,23 @@ def main() -> None:
         "content.draft_ready",
         "shelf.scan_pass",
         "books.integrity_flag",
+        "content.policy_checked",
+        "content.approved_for_manual_posting",
+        "content.posted_manually",
+        "community.work_order",
+        "lead.attributed",
     ):
         if need not in event_ids:
             fail(f"events.catalog.json missing event {need}")
-    for gate in ("sale-ils", "customer-whatsapp-send", "boost", "print-from-hq"):
+    for gate in (
+        "sale-ils",
+        "customer-whatsapp-send",
+        "boost",
+        "print-from-hq",
+        "ig-autopost",
+        "auto-dm",
+        "user-tag-without-optin",
+    ):
         if gate not in (events_cat.get("humanGates") or []):
             fail(f"events.catalog.json humanGates missing {gate}")
 

@@ -342,6 +342,24 @@
     },
     {
       "q": [
+        "organic growth",
+        "control plane",
+        "מפעל תוכן",
+        "decision pack",
+        "צמיחה אורגנית",
+        "תור אישור",
+        "community poll",
+        "סקר קהילה",
+        "hashtag set",
+        "ייחוס"
+      ],
+      "pack": "vfgrowth",
+      "slug": "instagram-curator",
+      "tool": "calendar",
+      "note": "constitution/ORGANIC_GROWTH.md + ORGANIC-GROWTH.md + vf_organic_growth.py — no autopost"
+    },
+    {
+      "q": [
         "social booster",
         "carousel",
         "organic reach",

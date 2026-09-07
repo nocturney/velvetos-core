@@ -14,6 +14,7 @@ Use when the user asks for חבילת תוכן, covers, reel draft, or a post af
 - `vfigos` + `@instagram-curator` — **review and schedule only**
 - `vfom` + `@visual-storyteller` — timelapse cut cards, hybrid beat list, scene gate (read `vf-openmontage`)
 - After a successful print: start from `packages/vfprod/PRINT-DONE.md` card (`print.done`) before drafting
+- Organic Growth plane: `constitution/ORGANIC_GROWTH.md` + `python3 scripts/vf_organic_growth.py brief` — queue for 07:00 human approval. Do not auto-post. Do not invent a Reel when media is missing.
 - After publish (when a real snapshot exists): `vfinsights` + `@analytics-reporter`
 - Frameworks (optional): `vfmskill` + `.cursor/skills/vf-marketing-skills` — `social` / `video` / `image`. Desk laws win.
 - Music / reel sound (optional): `vfresearch` + `@trend-researcher` via `.cursor/skills/vf-ig-music` — live source or «חסר מקור»; never invent track names.
