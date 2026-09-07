@@ -22,9 +22,12 @@
     "ingest-grokbot-registration",
     "confirm-grokbot-ownership-rows",
     "ack-codex-swc-001-phase-a",
-    "fix-pr105-codex-review-notes"
+    "fix-pr105-codex-review-notes",
+    "SWC-CODEX-001 phase A merged as #108",
+    "Cursor follow-up PRs #109–#114 opened from base 556c998",
+    "GrokBot G003/G004/ROUTINES + VF#3 preserved"
   ],
-  "next_step": "peer review of PR #105 before merge; Codex may start phase A on codex/swc-001-task-state from 618ff1a",
+  "next_step": "peer review / merge #109–#114; keep #105 as coordination board; GrokBot live rows untouched",
   "artifacts": [
     "docs/SHARED-WORK-COORDINATION.md",
     "https://github.com/nocturney/velvetos-core/pull/105",
@@ -32,10 +35,9 @@
     "/opt/cursor/artifacts/shared-work-coordination-survey.log"
   ],
   "unresolved": [
-    "GitHub Issue not created — velvetos-core has_issues=false",
-    "Codex local checkout SHA not yet reported (no clone yet)",
-    "PR #105 not merged (await peer review; Codex file review only — no merge approval yet)",
-    "SWC-CODEX-001 phase B (brief / vfops_loop) not approved"
+    "PR #105 coordination board still draft pending peer review",
+    "gh merge read-only on this agent — owner/Cursor merge path for #109–#114",
+    "GrokBot live publish of G003/G004 remains GrokBot-owned"
   ],
   "outcome": "decision_gate",
   "pulse": "blocked",

@@ -5,9 +5,9 @@
 | שדה | ערך |
 |---|---|
 | נוצר | 2026-09-07 |
-| מעודכן | 2026-09-07T06:55Z |
+| מעודכן | 2026-09-07T16:15+03:00 |
 | מנהל מיזוגים | Cursor (בלעדי במסגרת העבודה המשותפת) |
-| סטטוס רשומה | פעילה · GrokBot אושר · **Codex `SWC-CODEX-001` שלב א׳ אושר** |
+| סטטוס רשומה | פעילה · GrokBot אושר · **Codex `SWC-CODEX-001` שלב א׳ ממוזג ב־#108** · המשך Cursor ב־#109–#114 |
 | Issue ב־GitHub | **לא נוצר** — `nocturney/velvetos-core` עם `has_issues=false`. גוף מוכן להעתקה בסעיף [Issue body](#issue-body-copy-when-enabled) |
 | מקור רישום GrokBot | [הערה ב־#105](https://github.com/nocturney/velvetos-core/pull/105#issuecomment-5566167914) · 2026-09-07 ~09:40 Asia/Jerusalem |
 | מקור ACK Codex | סקירת head `6610a70` + תיחום `SWC-CODEX-001` שלב א׳ · 2026-09-07 (ChatGPT Work / Linux) |
@@ -44,7 +44,7 @@
 
 | ריפו | `main` SHA | תאריך commit | גרסה שבשימוש בפועל |
 |---|---|---|---|
-| [nocturney/velvetos-core](https://github.com/nocturney/velvetos-core) | `618ff1aa6a61ad48940c473fbc46ed2d4aab1cc2` | 2026-09-07 09:09 +0300 · «נעילת כריסטיאן… (#104)» | Cloud תיאום (#105): על ענף התיאום מעל `618ff1a`. **GrokBot box:** checkout `/workspace/velvetos-core` על `main` @ `0292d0e` — **מאחור ב־5 commits** מול `origin/main` (אומת: `0292d0e..618ff1a` = #101 HTML + #102 + #103 + #104). **Codex:** ChatGPT Work · Linux נפרד · **אין checkout מקומי עדיין** — סקר תשתית דרך GitHub על בסיס `618ff1a`; לפני מימוש ידווח SHA checkout בפועל. |
+| [nocturney/velvetos-core](https://github.com/nocturney/velvetos-core) | `556c998d905d2a483c66499cf16dbab88ee204e0` | 2026-09-07 09:09 +0300 · «נעילת כריסטיאן… (#104)» | Cloud תיאום (#105): על ענף התיאום מעל `618ff1a`. **GrokBot box:** checkout `/workspace/velvetos-core` על `main` @ `0292d0e` — **מאחור ב־5 commits** מול `origin/main` (אומת: `0292d0e..618ff1a` = #101 HTML + #102 + #103 + #104). **Codex:** ChatGPT Work · Linux נפרד · **אין checkout מקומי עדיין** — סקר תשתית דרך GitHub על בסיס `618ff1a`; לפני מימוש ידווח SHA checkout בפועל. |
 | [nocturney/velvetos-velvet-factory](https://github.com/nocturney/velvetos-velvet-factory) | `27701889bb12c70dd62c4a22286be4828e86fee7` | 2026-09-01 · «Sync scaffold from Core…» | GrokBot: **לא בשימוש יומי** כ־checkout פעיל. Codex: **לא בשימוש** לשלב א׳ (מחוץ לתיחום). הפרונט **מאחורי** Core. |
 
 הפרדה חשובה: `main` ≠ «מה שרץ על המכונה».
@@ -116,7 +116,13 @@ Checkpoints תחת `packages/vfharness/state/*2026-09-07*.json` — רובם `do
 | `SWC-GROK-G004-FIX` | GrokBot (Studio מסייע) | Stories B navy/gold ~20:30 | runtime | — | `/workspace/INSTA/content/2026-09-07/VF-G004-stories-fix/canva/story-1..4.png` + PREFLIGHT | PREFLIGHT PASS · routine `g004-stories-fix-live-20-30` 20:25 | פורסם + צילום מסך | **owned / scheduled** · טרם פורסם | — |
 | `SWC-GROK-G004-CAR` | GrokBot (Studio מסייע) | קרוסלת G004 לפיד | runtime | — | חבילת G004 | לוח | פורסם במועד | **owned / scheduled** ה׳ 10.9 12:00 · **לא נוגעים** עד אז | — |
 | `SWC-GROK-ROUTINES` | GrokBot | cron משרד (ops) | runtime | — | `velvet-factory-weekday-ops` 07:00 · MakerWorld א׳+ד׳ 06:00 · vf-profit ב׳ 06:00 · HQ backup א׳–ה׳ 18:00 · GPT/Gemini daily **paused** | הרשאות קיימות | שגרה חיה | **owned** (תפעול; לא ענף קוד) | — |
-| `SWC-CODEX-001` | Codex | שלב א׳: קריאה+ולידציה של מצב משימות + פלט מובנה | core | `codex/swc-001-task-state` | ראו [לוח בעלות](#ownership-swc-codex-001) | בסיס `618ff1a`; אין שינוי בריף חי | 8 תנאי השלמה למטה | **owned** · שלב א׳ מאושר · טרם מימוש | — |
+| `SWC-CODEX-001` | Codex → Cursor merge | שלב א׳: קריאה+ולידציה של מצב משימות + פלט מובנה | core | `cursor/swc-codex-001-phase-a-6de7` | ראו [לוח בעלות](#ownership-swc-codex-001) | ממוזג ל־main | 8 תנאי השלמה | **done · merged #108** (`06f9854`) | [#108](https://github.com/nocturney/velvetos-core/pull/108) |
+| `SWC-CURSOR-VFCOPY` | Cursor | תיקון מודל check-vfcopy + בדיקות התנהגות | core | `cursor/fix-vfcopy-content-lint-c62b` | `scripts/check-vfcopy.py` | base `556c998` | lint ירוק + 6–7 behavioral | **running / PR** | [#109](https://github.com/nocturney/velvetos-core/pull/109) |
+| `SWC-CURSOR-RETRO` | Cursor | שחזור DAILY-RETRO + עומס + לוג | core | `cursor/restore-daily-retro-c62b` | `packages/vfops/hq/DAILY-RETRO.md` | — | מדריך+לוג משוחזרים | **running / PR** | [#110](https://github.com/nocturney/velvetos-core/pull/110) |
+| `SWC-CURSOR-VFOPS-RUN` | Cursor | הפרדת run/brief/check לצרכנים יומיים | core | `cursor/vfops-daily-consumers-c62b` | `scripts/vfops_loop.py` | תלוי #109 | בלי רקורסיית check-all | **running / PR** (stacked) | [#111](https://github.com/nocturney/velvetos-core/pull/111) |
+| `SWC-CURSOR-RESEARCH` | Cursor | מפת מפעילי מחקר + index fail-closed | core | `cursor/research-routines-activation-c62b` | `scripts/vfresearch_cadence.py` + workflow | לא כפול ל-GrokBot | status evidence בלבד | **running / PR** | [#112](https://github.com/nocturney/velvetos-core/pull/112) |
+| `SWC-CURSOR-QUALITY` | Cursor | חיבור CONTENT-RUBRIC לשער שיבוץ | core | `cursor/content-quality-gates-c62b` | PREFLIGHT + check-vfcopy | תלוי #109 | Rubric≥20 + digest | **running / PR** (stacked) | [#113](https://github.com/nocturney/velvetos-core/pull/113) |
+| `SWC-CURSOR-TEMPLATES` | Cursor | חיבור תבניות Intake/SLA/דוח | core | `cursor/office-templates-wiring-c62b` | office/clients + vf_office_report | בלי PII בגיט | fixtures מסומנים | **running / PR** | [#114](https://github.com/nocturney/velvetos-core/pull/114) |
 | `SWC-VF-003` | לא ידוע (סוכן ישן) | סנכרון desk instance ל־Grok-primary | velvet-factory | `cursor/align-grok-constitution-f6b2` | `.cursor/vf-desk.json`, `AGENTS.md` | תלוי ביישור constitution ב־core (היסטורי) | סקירה + החלטה lead / Cursor | **open-draft — שמור** | [VF#3](https://github.com/nocturney/velvetos-velvet-factory/pull/3) |
 | `SWC-IDLE-*` | Cursor (היסטורי) | משימות 7.9 שמוזגו | core | ענפי `cursor/*` אחרי מיזוג | ראו #100–#104 | — | ממוזג ל־main | **merged — לא לגעת בענפים** | #100–#104 |
 
