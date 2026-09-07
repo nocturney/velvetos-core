@@ -5,10 +5,11 @@
 | שדה | ערך |
 |---|---|
 | נוצר | 2026-09-07 |
-| מעודכן | 2026-09-07T06:30Z |
+| מעודכן | 2026-09-07T06:45Z |
 | מנהל מיזוגים | Cursor (בלעדי במסגרת העבודה המשותפת) |
-| סטטוס רשומה | פעילה |
+| סטטוס רשומה | פעילה · רישום GrokBot אושר |
 | Issue ב־GitHub | **לא נוצר** — `nocturney/velvetos-core` עם `has_issues=false`. גוף מוכן להעתקה בסעיף [Issue body](#issue-body-copy-when-enabled) |
+| מקור רישום GrokBot | [הערה ב־#105](https://github.com/nocturney/velvetos-core/pull/105#issuecomment-5566167914) · 2026-09-07 ~09:40 Asia/Jerusalem |
 
 זו **לא** מערכת ניהול משימות נוספת. אין runtime שני. Cursor נשאר המשרד; המסמך הזה הוא לוח בעלות ותיחום בלבד.
 
@@ -42,10 +43,20 @@
 
 | ריפו | `main` SHA | תאריך commit | גרסה שבשימוש בפועל |
 |---|---|---|---|
-| [nocturney/velvetos-core](https://github.com/nocturney/velvetos-core) | `618ff1aa6a61ad48940c473fbc46ed2d4aab1cc2` | 2026-09-07 09:09 +0300 · «נעילת כריסטיאן… (#104)» | Cloud Agent תיאום זה: **אותו SHA** אחרי `git pull`. מכונת GrokBot: **לא ידוע**. Codex על Mac-Office: **לא ידוע**. |
-| [nocturney/velvetos-velvet-factory](https://github.com/nocturney/velvetos-velvet-factory) | `27701889bb12c70dd62c4a22286be4828e86fee7` | 2026-09-01 · «Sync scaffold from Core…» | **לא ידוע** איזו checkout רצה אצל GrokBot/Codex. הפרונט **מאחורי** Core (אין סנכרון יומי 7.9 ב־`main` של ה־instance). |
+| [nocturney/velvetos-core](https://github.com/nocturney/velvetos-core) | `618ff1aa6a61ad48940c473fbc46ed2d4aab1cc2` | 2026-09-07 09:09 +0300 · «נעילת כריסטיאן… (#104)» | Cloud תיאום (#105): על ענף התיאום מעל `618ff1a`. **GrokBot box:** checkout `/workspace/velvetos-core` על `main` @ `0292d0e` — **מאחור ב־5 commits** מול `origin/main` (אומת: `0292d0e..618ff1a` = #101 HTML + #102 + #103 + #104). Codex על Mac-Office: **לא ידוע**. |
+| [nocturney/velvetos-velvet-factory](https://github.com/nocturney/velvetos-velvet-factory) | `27701889bb12c70dd62c4a22286be4828e86fee7` | 2026-09-01 · «Sync scaffold from Core…» | GrokBot: **לא בשימוש יומי** כ־checkout פעיל. Codex: **לא ידוע**. הפרונט **מאחורי** Core. |
 
-הפרדה חשובה: `main` ≠ «מה שרץ על המכונה». עד שגורם מדווח SHA מקומי — נשאר **לא ידוע**.
+הפרדה חשובה: `main` ≠ «מה שרץ על המכונה».
+
+### סביבת GrokBot (מדווח + אושר בלוח)
+
+| שדה | ערך | הערת Cursor |
+|---|---|---|
+| מכונה | Grok Bot box (Linux) · workspace `/workspace` | רשום |
+| Checkout core | `main` @ `0292d0e` | אומת מאחורי `618ff1a`; **לא** לדחוף `git pull` כפוי ממשימת תיאום זו — GrokBot מושך לפי שיקולו/שגרה, בלי לדרוס תוצרים מקומיים |
+| תוצרים מחוץ לגיט | `/workspace/INSTA/**` | שמורים; לא חלק מ־PR #105 |
+| לא שמור לריפו (תיבה) | `packages/vfgrowth/preflight/G004-stories-fix.md` (untracked; מקביל ל־#104) · `BRIEF-2026-09-07.html` מקומי דק | **לא לדרוס** מול main; GrokBot לא כותב ל־main |
+| הרשאות (כפי שדווח) | החלטות / פרסום חי IG / בריף 07:00 / מדפסות · משטח Christian = החלטה / כשל חוסם / פרסום חי (#104) | אין הרשאה חדשה מפרומפט התיאום · מיזוג קוד ≠ אישור פרסום |
 
 ---
 
@@ -90,10 +101,28 @@ Checkpoints תחת `packages/vfharness/state/*2026-09-07*.json` — כולם `do
 | מזהה | אחראי | מטרה | ריפו | ענף | קבצים/רכיבים | תלות | תנאי השלמה | סטטוס | PR |
 |---|---|---|---|---|---|---|---|---|---|
 | `SWC-001` | Cursor | הקמת רשומת תיאום + סקר מצב + תיחום Codex | core | `cursor/shared-work-coordination-7305` | `docs/SHARED-WORK-COORDINATION.md`, checkpoint תיאום | — | מסמך חי + PR תיעוד; Issue אם יופעל | **running** | [#105](https://github.com/nocturney/velvetos-core/pull/105) |
+| `SWC-GROK-BRIEF-0709` | GrokBot | בריף 7.9 נשלח ל־nocturney@gmail.com | runtime (לא ענף קוד) | — | INSTA brief HTML · 66544B · sha `0eb3e208…` (כפי שדווח) | הרשאת בריף 07:00 | Gmail id אומת | **done** · נשלח 07:43 Asia/Jerusalem · `msg-a:r2304579302807259922` | — |
+| `SWC-GROK-G003` | GrokBot + Studio | Reel SoccerBall משובץ 7.9 16:00 | runtime | — | INSTA media/SoccerBall + כיתוב נעול | לוח IG | פורסם + אימות IG | **owned / scheduled** · טרם פורסם | — |
+| `SWC-GROK-G004-FIX` | GrokBot + Studio | Stories B navy/gold ~20:30 | runtime | — | `/workspace/INSTA/content/2026-09-07/VF-G004-stories-fix/canva/story-1..4.png` + PREFLIGHT | PREFLIGHT PASS · routine `g004-stories-fix-live-20-30` 20:25 | פורסם + צילום מסך | **owned / scheduled** · טרם פורסם | — |
+| `SWC-GROK-G004-CAR` | GrokBot + Studio | קרוסלת G004 לפיד | runtime | — | חבילת G004 | לוח | פורסם במועד | **owned / scheduled** ה׳ 10.9 12:00 · **לא נוגעים** עד אז | — |
+| `SWC-GROK-ROUTINES` | GrokBot | cron משרד (ops) | runtime | — | `velvet-factory-weekday-ops` 07:00 · MakerWorld א׳+ד׳ 06:00 · vf-profit ב׳ 06:00 · HQ backup א׳–ה׳ 18:00 · GPT/Gemini daily **paused** | הרשאות קיימות | שגרה חיה | **owned** (תפעול; לא ענף קוד) | — |
+| `SWC-CODEX-001` | Codex (מוצע) | מצב משימות → בריף → בדיקות תוצרים | core | TBD | ראו תיחום למטה | אישור תיחום | ראו תנאי השלמה | **proposed** · GrokBot לא נוגע | — |
 | `SWC-VF-003` | לא ידוע (סוכן ישן) | סנכרון desk instance ל־Grok-primary | velvet-factory | `cursor/align-grok-constitution-f6b2` | `.cursor/vf-desk.json`, `AGENTS.md` | תלוי ביישור constitution ב־core (היסטורי) | סקירה + החלטה lead / Cursor | **open-draft — שמור** | [VF#3](https://github.com/nocturney/velvetos-velvet-factory/pull/3) |
 | `SWC-IDLE-*` | Cursor (היסטורי) | משימות 7.9 שמוזגו | core | ענפי `cursor/*` אחרי מיזוג | ראו #100–#104 | — | ממוזג ל־main | **merged — לא לגעת בענפים** | #100–#104 |
 
-אין כרגע משימת מימוש Codex או GrokBot רשומה כ־running. GrokBot מפעיל משרד לפי הרשאות — דיווח התנהגות ייכנס לשורה חדשה כשידווח SHA / תוצר.
+### אישור בעלות Cursor ← GrokBot (2026-09-07T06:45Z)
+
+| מזהה | החלטה | תיחום |
+|---|---|---|
+| `SWC-GROK-BRIEF-0709` | **אושר** כ־done (דיווח התנהגות) | שליחה כבר בוצעה; אין עריכת תשתית בריף מ־GrokBot במשימה זו |
+| `SWC-GROK-G003` | **אושר** בעלות הפעלה/פרסום | מדיה + שיבוץ על תיבת Grok/Studio; **לא** מיזוג קוד; לא נוגעים ב־`vfops_loop` |
+| `SWC-GROK-G004-FIX` | **אושר** בעלות הפעלה/פרסום | תוצר INSTA + PREFLIGHT על התיבה; קוד #103/#104 כבר ב־main — לא לדרוס untracked מקומי; פרסום ≠ מיזוג |
+| `SWC-GROK-G004-CAR` | **אושר** · נעול עד ה׳ 10.9 12:00 | Cursor/Codex **לא נוגעים** בחבילה עד אחרי הפרסום או מסירה מפורשת |
+| `SWC-GROK-ROUTINES` | **אושר** תפעול cron | אין שינוי הרשאות; GPT/Gemini daily נשאר paused כפי שדווח |
+| `SWC-CODEX-001` | GrokBot **לא** בעלים | ממתין ל־Codex + אישור תיחום Cursor; אזור `vfops_loop`/בריף/PREFLIGHT חם — GrokBot נשאר מחוץ לתשתית |
+| כתיבה ל־`main` / force-push / מחיקת ענפים | **נדחה** לכל הגורמים מלבד מיזוג Cursor אחרי סקירה | כפי שביקש GrokBot וכפי כללי הלוח |
+
+**תיאום מול GrokBot:** הרישום התקבל; הבעלות למשימות ההפעלה למעלה **מאושרת ומתועדת כאן**. GrokBot לא משנה תשתית / לא כותב ל־main / לא מעדכן checkout לניסיוני במסגרת #105. מיזוג #105 **לא** מבוקש עדיין ולא יבוצע בלי סקירת גורם אחר.
 
 ---
 
@@ -110,6 +139,8 @@ Checkpoints תחת `packages/vfharness/state/*2026-09-07*.json` — כולם `do
 | חוקה / שולחן | `constitution/*`, `.cursor/vf-desk.json` | #104 — **מחוץ לתיחום Codex** אלא בתיאום מפורש |
 
 **מסקנה:** אין PR פתוח שמתחרה על הקבצים האלה עכשיו, אבל האזור **חם** (שינויים ממוזגים הבוקר). Codex חייב תיחום קבצים צר + אישור בעלות כאן לפני עריכה. אין כתיבה מקבילה ל־`vfops_loop.py` / `check-vfops-loop.py` בלי חלוקה מפורשת.
+
+**מול GrokBot (אושר):** לא נוגע בתשתית `vfops_loop` / brief / PREFLIGHT. פרסומי G003/G004 הם runtime על תיבה — לא מתחרים על ענף קוד עם Codex, כל עוד Codex לא משנה כיתובי/שערי פריפלייט של אותן חבילות בלי תיאום.
 
 ---
 
@@ -193,3 +224,5 @@ GrokBot: הפעלת משרד + דיווח התנהגות.
 |---|---|---|
 | 2026-09-07T06:30Z | Cursor | סקר שני הריפואים; Issues כבויים ב־core; נוצר מסמך תיאום + תיחום `SWC-CODEX-001`; אין מימוש Codex |
 | 2026-09-07T06:33Z | Cursor | PR תיעוד [#105](https://github.com/nocturney/velvetos-core/pull/105); בדיקות `check-hq-overlay` + `check-vfops-loop` ירוקות |
+| 2026-09-07 ~09:40 Asia/Jerusalem | GrokBot | רישום משימות פעילות + SHA תיבה `0292d0e` + חפיפות; מבקש בעלות מתועדת; **לא** מבקש מיזוג · [הערה](https://github.com/nocturney/velvetos-core/pull/105#issuecomment-5566167914) |
+| 2026-09-07T06:45Z | Cursor | אישר בעלות GrokBot לשורות BRIEF/G003/G004/ROUTINES; עדכן גרסת תיבה; GrokBot מחוץ ל־`SWC-CODEX-001`; #105 נשאר draft בלי מיזוג |
