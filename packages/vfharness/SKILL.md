@@ -33,3 +33,7 @@
 ## סולם הסלמה הדרגתי (2026-09-07)
 
 `scripts/vf_graceful_escalation.py` — 4 שלבים לפני הסלמה לאדם, במקום עצירה בינארית. פירוט מלא: [`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md).
+
+## שימוש בלולאת הסלמה (2026-09-07)
+
+משימות ארוכות ב-`vfcopy` / `vfconvert` / `vfsales` עוברות דרך `run_ladder` מ-`scripts/vf_graceful_escalation.py` (retry → fallback → downgrade → escalate) במקום עצירת ניסיון שני.
