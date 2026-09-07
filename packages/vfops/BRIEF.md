@@ -29,6 +29,8 @@
 עותק מיום: `BRIEF-YYYY-MM-DD.md`.  
 htmlBody שנשלח: `packages/vfops/out/BRIEF-YYYY-MM-DD.html` (ארכיון בלבד — Grok/Origin לא קוראים `/opt/cursor/artifacts`).
 
+מושב מחקר/אורקסטרציה (`vfresearch`, `vfe2b`, `vfdsh`, `vfgraft`, `vfagents`) מסכם קישורי השראה והטמעה מ־`packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` ומכניס אותם לפקים קיימים; לא פק חדש לכל רעיון.
+
 ```
 05 · משרד
 מה נבנה / יועל: <שורה אחת + שם פק>
