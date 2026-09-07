@@ -14,6 +14,8 @@ G003 = ROOT / "packages" / "vfgrowth" / "G003.md"
 G004 = ROOT / "packages" / "vfgrowth" / "G004.md"
 COPY = ROOT / "packages" / "vfcopy" / "G003.md"
 COPY_G004 = ROOT / "packages" / "vfcopy" / "G004.md"
+STORIES_FIX = ROOT / "packages" / "vfcopy" / "G004-STORIES-FIX.md"
+STORIES_PLAY = ROOT / "packages" / "vfgrowth" / "STORIES.md"
 VOICE = ROOT / "packages" / "vfcopy" / "VOICE.md"
 VOICE_RESEARCH = ROOT / "packages" / "vfcopy" / "VOICE-RESEARCH.md"
 STORIES = ROOT / "packages" / "vfcopy" / "hq" / "templates" / "ig-stories.md"
@@ -40,7 +42,7 @@ def assert_no_ils(path: Path) -> None:
 
 
 def main() -> None:
-    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, COPY_G004, VOICE, VOICE_RESEARCH, STORIES, FOLLOWER):
+    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, COPY_G004, STORIES_FIX, STORIES_PLAY, VOICE, VOICE_RESEARCH, STORIES, FOLLOWER):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
         assert_no_ils(path)
@@ -95,6 +97,7 @@ def main() -> None:
         "JPEG גולמי",
         "לא שואלים משבצת",
         "Google Calendar",
+        "G004-STORIES-FIX",
     ):
         if needle not in handoff:
             fail(f"HANDOFF-he.md missing {needle!r}")
@@ -165,6 +168,23 @@ def main() -> None:
         fail("ig-stories.md must lock 20:30 + WhatsApp CTA")
     if "היילייטס" not in stories:
         fail("ig-stories.md must point CTA to Highlights")
+    for needle in ("סיפור-מוצר", "נייבי", "Canva MCP", "G004-STORIES-FIX"):
+        if needle not in stories:
+            fail(f"ig-stories.md must mention {needle!r}")
+
+    fix = STORIES_FIX.read_text()
+    for needle in ("סיפור-מוצר", "050-2517000", "DAHUaUo3bAk", "X ₪", "הכירו"):
+        if needle not in fix:
+            fail(f"G004-STORIES-FIX.md missing {needle!r}")
+    if "שלחו DM" in fix and "לא «שלחו DM»" not in fix and "בלי «שלחו DM»" not in fix:
+        fail("G004-STORIES-FIX.md must forbid שלחו DM")
+    if "חמש ורודות" in fix or "איפה הטבעת" in fix:
+        fail("G004-STORIES-FIX.md must not keep thin catalog hooks")
+
+    play = STORIES_PLAY.read_text()
+    for needle in ("סיפור-מוצר", "תהליך-קצר", "050-2517000", "Canva MCP"):
+        if needle not in play:
+            fail(f"STORIES.md missing {needle!r}")
 
     follower = FOLLOWER.read_text()
     for needle in ("80", "0", "היילייטס", "050-2517000", "ריל תהליך", "אאוטבאונד"):

@@ -18,6 +18,9 @@ ROUTINE = ROOT / "packages" / "vfops" / "ROUTINE.md"
 HANDOFF = ROOT / "packages" / "vfgrowth" / "HANDOFF-he.md"
 EDIT = ROOT / "packages" / "vfgrowth" / "EDIT-GATE.md"
 CAL_OPS = ROOT / "packages" / "vfgrowth" / "CALENDAR-OPS.md"
+STORIES = ROOT / "packages" / "vfgrowth" / "STORIES.md"
+STORIES_FIX = ROOT / "packages" / "vfcopy" / "G004-STORIES-FIX.md"
+GAP = ROOT / "packages" / "vfops" / "hq" / "TOOL-USE-GAP-2026-09-07.md"
 AGENTS = ROOT / "AGENTS.md"
 
 
@@ -27,7 +30,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LOOP, CLI, PLAY, ORCHESTRA, INSTANCE, STUDIO, ROUTINE, HANDOFF, EDIT, CAL_OPS):
+    for path in (LOOP, CLI, PLAY, ORCHESTRA, INSTANCE, STUDIO, ROUTINE, HANDOFF, EDIT, CAL_OPS, STORIES, STORIES_FIX, GAP):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -50,14 +53,19 @@ def main() -> None:
         fail("scripts/vfcost.py missing after rebase onto main")
 
     orch = ORCHESTRA.read_text()
-    for needle in ("vfops_loop.py", "07:00", "FOLLOWER-GROWTH", "רף סוכנות"):
+    for needle in ("vfops_loop.py", "07:00", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער"):
         if needle not in orch:
             fail(f"ORCHESTRA.md must mention {needle}")
+    if "אין סטוריז" not in orch and "אין סטוריז ואין פיד" not in orch:
+        fail("ORCHESTRA.md must hard-gate Stories without Canva/vfcovers")
     for path, needles in (
         (INSTANCE, ("רף סוכנות", "חצי-פק", "עברית")),
-        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md")),
-        (EDIT, ("JPEG גולמי", "Canva", "vfcovers")),
+        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "Canva MCP", "G004-STORIES-FIX")),
+        (EDIT, ("JPEG גולמי", "Canva", "vfcovers", "G004-STORIES-FIX")),
         (CAL_OPS, ("לא שואלים", "Google Calendar", "050-2517000")),
+        (STORIES, ("נייבי", "סיפור-מוצר", "050-2517000", "Canva MCP")),
+        (STORIES_FIX, ("סיפור-מוצר", "050-2517000", "DAHUaUo3bAk", "X ₪")),
+        (GAP, ("vfcopy", "vfcanva", "vfcovers", "פער", "7.9")),
     ):
         text = path.read_text()
         for needle in needles:
@@ -68,8 +76,13 @@ def main() -> None:
         fail("ROUTINE.md must run vfops_loop.py at 07:00")
     if "vfops_loop.py" not in HANDOFF.read_text():
         fail("HANDOFF-he.md must point at vfops_loop.py")
-    if "G004" not in HANDOFF.read_text() or "vfcopy/G004.md" not in HANDOFF.read_text():
+    handoff = HANDOFF.read_text()
+    if "G004" not in handoff or "vfcopy/G004.md" not in handoff:
         fail("HANDOFF-he.md must open G004 pack")
+    if "G004-STORIES-FIX.md" not in handoff:
+        fail("HANDOFF-he.md must point Stories at G004-STORIES-FIX.md")
+    if "אין סטוריז בלי מעבר" not in handoff:
+        fail("HANDOFF-he.md must hard-gate Stories without Canva/vfcovers")
 
     if "check-vfops-loop.py" not in AGENTS.read_text():
         fail("AGENTS.md sensor table must list check-vfops-loop.py")

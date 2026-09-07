@@ -31,8 +31,11 @@
 
 ## שער עריכה — לפני שיבוץ (קשיח)
 
-**אסור** JPEG גולמי + טקסט בלבד. חובה Canva MCP / vfcovers / vfcanva / Gemini browser על המק (`HOST.md`).  
-Cloud לא פותח `gemini.google.com`. בלי עריכה אמיתית = לא משבצים. Core: `packages/vfgrowth/EDIT-GATE.md`.
+**אסור** JPEG גולמי + טקסט בלבד.  
+**אסור** סטוריז או פיד בלי Canva MCP (`edit_url`) או vfcovers / vfcanva (`compose_slides.py` / `studio/render.py`).  
+Gemini browser רק על המק (`HOST.md`). Cloud לא פותח `gemini.google.com`. בלי עריכה אמיתית = לא משבצים.  
+סטוריז מוצר = סיפור-מוצר + נייבי-זהב. תהליך-קצר רק לריל חשיפה.  
+Core: `packages/vfgrowth/EDIT-GATE.md` · `packages/vfgrowth/STORIES.md` · `packages/vfcopy/G004-STORIES-FIX.md`.
 
 ## שיבוץ אוטונומי
 

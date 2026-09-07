@@ -1,0 +1,42 @@
+{
+  "task_id": "agency-quality-gap-2026-09-07",
+  "status": "running",
+  "pack": "vfops",
+  "goal": "Gap doc + Stories fix + constitution/loop gates on main. No email. No IG publish. No invented ₪.",
+  "crew": "content",
+  "planned_steps": [
+    "Audit daily loop vs unused packs",
+    "Write TOOL-USE-GAP + G004-STORIES-FIX",
+    "Harden STUDIO/ORCHESTRA/loop",
+    "Sensors + PR to main"
+  ],
+  "completed_steps": [
+    "Office graph + loop audit",
+    "Canva MCP read of G004 stories frames",
+    "Gap doc + Stories fix + gates + loop CLI/gap lines"
+  ],
+  "next_step": "Commit, push, PR, then check-all.py",
+  "artifacts": [
+    "packages/vfops/hq/TOOL-USE-GAP-2026-09-07.md",
+    "packages/vfcopy/G004-STORIES-FIX.md",
+    "packages/vfgrowth/STORIES.md",
+    "scripts/vfops_loop.py"
+  ],
+  "unresolved": [
+    "Canva on-frame text still catalog until Studio edits DAHUaUo3bAk / DAHUacDGv9U",
+    "No new PNG export in git — handoff only",
+    "ig-mcp needsAuth — no Stories publish from HQ"
+  ],
+  "outcome": null,
+  "pulse": "working",
+  "verification": "check-vfops-loop.py + check-vfgrowth.py + check-hq-overlay.py + vfops_loop.py brief",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-07",
+  "execution_state": {
+    "complaint": "2026-09-07 ~08:27 Asia/Jerusalem",
+    "stories_designs": ["DAHUaUo3bAk", "DAHUacDGv9U"],
+    "slot05": "אין חדש במשרד + פער lines"
+  },
+  "latest_observation": "assemble() slot 05 prints אין חדש + unused-pack gaps; Stories hook is product-story."
+}

@@ -33,9 +33,12 @@
 ## שער עריכה — לפני שיבוץ (קשיח)
 
 **אסור** לשבץ / לפרסם JPEG גולמי עם טקסט עליו בלבד.  
-חובה כלי עריכה אמיתי: **Canva MCP** · **vfcovers / vfcanva** (`compose_slides.py` / `studio/render.py`) · **Gemini browser** רק על מק בשדרות (`vfmcp/HOST.md` — Cloud לא פותח `gemini.google.com`).  
+**אסור** סטוריז או פיד בלי מעבר **Canva MCP** (`edit_url` אמיתי) **או** **vfcovers / vfcanva** (`compose_slides.py` / `studio/render.py`).  
+Gemini browser רק על מק בשדרות (`vfmcp/HOST.md` — Cloud לא פותח `gemini.google.com`).  
 Failover: Superdesign → `render.py`. בלי `edit_url` / PNG מורכב = **לא משבצים**.  
-פלייבוק: [`packages/vfgrowth/EDIT-GATE.md`](../packages/vfgrowth/EDIT-GATE.md).
+סטוריז מוצר = סיפור-מוצר (`VOICE.md`) + נייבי-זהב (`vfgrowth/STORIES.md`). תהליך-קצר רק לריל חשיפה.  
+פלייבוק: [`packages/vfgrowth/EDIT-GATE.md`](../packages/vfgrowth/EDIT-GATE.md).  
+G004 סטוריז: [`packages/vfcopy/G004-STORIES-FIX.md`](../packages/vfcopy/G004-STORIES-FIX.md).
 
 ## שיבוץ אוטונומי — בלי לשאול משבצת
 

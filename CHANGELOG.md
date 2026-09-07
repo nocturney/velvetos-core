@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **רף סוכנות + פער כלים:** תלונת כריסטיאן (~08:27) — כלים בקטלוג לא נצרכים בפלט החי; סטוריז G004 מתחת לרף. `vfops/hq/TOOL-USE-GAP-2026-09-07.md`. שער קשיח: אין סטוריז/פיד בלי Canva MCP או vfcovers/vfcanva (`STUDIO` / `ORCHESTRA` / `EDIT-GATE` / `STORIES.md`). חריץ 05 = CLI מ-24ש או «אין חדש במשרד» + שורות פער (`vfops_loop.py`). תיקון סטוריז: `vfcopy/G004-STORIES-FIX.md` (סיפור-מוצר, נייבי-זהב, וואטסאפ `050-2517000`, בלי ₪, בלי Publish). Agency-quality gate: unused packs surface; G004 stories rewrite; no invented ₪ / no IG send.
+
 - 2026-09-07 — **בריף HTML ל־Grok:** `vfops_loop.py brief --write --date 2026-09-07` + `render_mail.py` → `packages/vfops/out/BRIEF-2026-09-07.html` ועותק זהה `packages/vfops/out/2026-09-07/brief-2026-09-07.html` (10891 בתים). שורת תאריך: יום שני 7 בספטמבר 2026. חריץ 04 מ־`vfbiz/out/week.md`. בלי שליחת מייל. בלי ₪ מכירה. Morning brief HTML archived for Grok pull; not emailed.
 
 - 2026-09-07 — **דופק רווח vfbiz:** `packages/vfbiz/out/week.md` (7.9 Asia/Jerusalem) — `NO_DECISION` אין באצ׳ לפני איסוף חמישי 10.9; אין סלייס מתועד; B2B נעול; 3dwhy RH = הקטלוג שלהם (לא מעתיקים); Flexi Man NC לא למכירה; מחיר VF `X ₪`. חריץ 04 מושך את בלוק הבריף. בלי נגיעה ב־LOCK/CHAIN. VF profit week note on existing vfbiz; no invented sale ₪.

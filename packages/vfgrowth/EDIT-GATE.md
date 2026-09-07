@@ -22,7 +22,10 @@
 - קישור Canva מומצא
 - סצנת רצפה שלא נמסרה
 - ₪ בפריים · «שלחו DM»
+- **סטוריז או פיד** בלי `edit_url` מ-Canva MCP או PNG מ-`vfcovers` / `vfcanva`
+- סטוריז מוצר במצב תהליך-קצר / הוק מגבלה («לא משקולת», «בלי משלוח»)
 
-גלם בתיבת Grok (G004) = חומר גלם. אחרי שער העריכה — ורק אז — שיבוץ instagram.com / Calendar.
+גלם בתיבת Grok (G004) = חומר גלם. אחרי שער העריכה — ורק אז — שיבוץ instagram.com / Calendar.  
+סטוריז G004: `packages/vfcopy/G004-STORIES-FIX.md` + `STORIES.md`.
 
 סטוריז עדיין ב־instagram.com (ig-mcp ≠ stories).

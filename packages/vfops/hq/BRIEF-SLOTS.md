@@ -8,7 +8,7 @@
 | 02 כסף בעבודה | הזמנות, חוב, שולם. איחורים / ממתינים לאישור אם יש ספירה + שורת עלות חומר `python3 scripts/vfcost.py brief` דרך `vfops_loop.py` (בלי ₪ מכירה) |
 | 03 מה להדפיס ולפרסם | מוכנים להדפסה + שעות תור מאומתות + הצעות `#vfresearch` + מדף `python3 scripts/vfsku.py brief` + `vfsku/week.md` דרך `python3 scripts/vfops_loop.py brief` + חנות מחר `python3 scripts/vfsku.py shop` |
 | 04 איך הסטודיו מרוויח | `#vfbiz` נעול + `vfbiz/out/week.md` + `FOLLOWER-GROWTH` היילייטס/וואטסאפ, בלי ₪ מומצא |
-| 05 משרד | `packages/vfops/data/research.md` — מה שודרג בפקים, לא כלי חדש. ריק = אין חדש במשרד |
+| 05 משרד | CLI אמיתי מ-24ש (`vfops_loop` → `data/cli-runs.jsonl`) או **אין חדש במשרד**. פק יומי/`on-content` שלא הורץ = שורת פער. `research.md` = תזמורת 06:15 בלבד, לא פעילות מזויפת |
 | 05a זיכרון | `packages/vfops/data/owner-memory.md` — תמצית רטרו (יומי או catch-up). קרא לפני מילוי 05 |
 | 06 מה קורה בעמוד | `#vfinsights` אחרי פרסום+24ש. לא ממציאים |
 | 07 פיד בסוף | כריכות `#vfcovers`, `#משובץ` `#לא-זז` `#לא-בוסט` |

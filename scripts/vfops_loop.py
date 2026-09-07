@@ -33,12 +33,29 @@ BIZ_LOCK = ROOT / "packages" / "vfbiz" / "LOCK.md"
 BIZ_WEEK = ROOT / "packages" / "vfbiz" / "out" / "week.md"
 FLOOR = ROOT / "packages" / "vfcost" / "FLOOR-CARD.md"
 COPY_DIR = ROOT / "packages" / "vfcopy"
+STORIES_FIX = COPY_DIR / "G004-STORIES-FIX.md"
 VFSKU = ROOT / "scripts" / "vfsku.py"
 VFCOST = ROOT / "scripts" / "vfcost.py"
+CLI_LOG = ROOT / "packages" / "vfops" / "data" / "cli-runs.jsonl"
 TZ = ZoneInfo("Asia/Jerusalem")
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
+DAILY_CADENCE = {"daily-07:00", "daily-06:15", "daily-03", "daily-growth"}
+AUDIT_PACKS = {
+    "vfcopy",
+    "vfcovers",
+    "vfcanva",
+    "vfgrowth",
+    "vfcost",
+    "vfops",
+    "vfbiz",
+    "vfsales",
+    "vfinsights",
+    "vfresearch",
+    "vfsku",
+}
 
 CAPTION_FILES = (
+    STORIES_FIX if STORIES_FIX.is_file() else COPY_DIR / "G004.md",
     COPY_DIR / "G004.md",
     COPY_DIR / "G003.md",
     COPY_DIR / "G005-d12b.md",
@@ -78,7 +95,19 @@ def fence_after_heading(path: Path, needles: tuple[str, ...]) -> str:
     return first_fence(text)
 
 
-def run_cmd(args: list[str]) -> str:
+def append_cli_run(name: str, argv: list[str], ok: bool) -> None:
+    CLI_LOG.parent.mkdir(parents=True, exist_ok=True)
+    rec = {
+        "ts": datetime.now(TZ).isoformat(timespec="seconds"),
+        "name": name,
+        "cmd": " ".join(argv),
+        "ok": ok,
+    }
+    with CLI_LOG.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+
+
+def run_cmd(args: list[str], *, name: str | None = None) -> str:
     proc = subprocess.run(
         args,
         cwd=ROOT,
@@ -86,14 +115,67 @@ def run_cmd(args: list[str]) -> str:
         capture_output=True,
     )
     out = (proc.stdout or "").strip()
-    if proc.returncode != 0:
+    ok = proc.returncode == 0
+    label = name or (Path(args[1]).name if len(args) > 1 else args[0])
+    append_cli_run(label, [str(a) for a in args], ok)
+    if not ok:
         err = (proc.stderr or "").strip()
         return f"חסר פלט · {(err or out)[:160]}"
     return out
 
 
+def cli_runs_last_24h() -> list[str]:
+    if not CLI_LOG.is_file():
+        return []
+    cutoff = datetime.now(TZ).timestamp() - 24 * 3600
+    lines: list[str] = []
+    seen: set[str] = set()
+    for raw in CLI_LOG.read_text(encoding="utf-8").splitlines():
+        raw = raw.strip()
+        if not raw:
+            continue
+        try:
+            rec = json.loads(raw)
+        except json.JSONDecodeError:
+            continue
+        ts = rec.get("ts") or ""
+        try:
+            when = datetime.fromisoformat(ts)
+            if when.tzinfo is None:
+                when = when.replace(tzinfo=TZ)
+            if when.timestamp() < cutoff:
+                continue
+        except ValueError:
+            continue
+        cmd = rec.get("cmd") or rec.get("name") or ""
+        if not cmd or cmd in seen:
+            continue
+        seen.add(cmd)
+        stamp = when.strftime("%H:%M")
+        flag = "" if rec.get("ok", True) else " · נכשל"
+        lines.append(f"{stamp} · {cmd}{flag}")
+    return lines
+
+
+def gap_lines(invoked: set[str]) -> str:
+    data = load_loop()
+    rows: list[str] = []
+    for row in data.get("packs") or []:
+        pid = row.get("id") or ""
+        cadence = row.get("cadence") or ""
+        watch = pid in AUDIT_PACKS or cadence in DAILY_CADENCE
+        if not watch or pid in invoked:
+            continue
+        blocked = row.get("blocked")
+        extra = f" · {blocked}" if blocked else ""
+        rows.append(f"פער: {pid} לא הורץ · {row.get('consume')}{extra}")
+    if not rows:
+        return ""
+    return "פערים (לא הורץ הבוקר)\n" + "\n".join(rows)
+
+
 def sku_line() -> str:
-    line = run_cmd([sys.executable, str(VFSKU), "brief"])
+    line = run_cmd([sys.executable, str(VFSKU), "brief"], name="vfsku.py brief")
     week = fence_after_heading(WEEK, ("בלוק לבריף",))
     if week:
         return f"{line}\n{week}"
@@ -103,7 +185,7 @@ def sku_line() -> str:
 def cost_line() -> str:
     if not VFCOST.is_file():
         fail("vfcost CLI missing — expected scripts/vfcost.py from main")
-    return run_cmd([sys.executable, str(VFCOST), "brief"])
+    return run_cmd([sys.executable, str(VFCOST), "brief"], name="vfcost.py brief")
 
 
 def growth_line() -> str:
@@ -125,31 +207,45 @@ def biz_week_line() -> str:
 
 def captions_rows() -> list[list[str]]:
     rows: list[list[str]] = []
+    seen: set[str] = set()
     for path in CAPTION_FILES:
         if not path.is_file():
             continue
+        stem = path.stem.split(".")[0]
+        if stem in seen:
+            continue
+        seen.add(stem)
         text = path.read_text()
-        hook = fence_after_heading(path, ("להדבקה",))
+        hook = fence_after_heading(path, ("להדבקה", "ארבעה פריימים"))
         first = hook.splitlines()[0] if hook else path.stem
         status = "מוכן להדבקה"
         if "משובץ" in text:
             status = "נעול · משובץ"
         if "לא מאושר" in text:
             status = "טיוטה"
-        rows.append([path.stem.split(".")[0], first[:48], status])
+        rows.append([stem, first[:48], status])
     if not rows:
         rows.append(["אין", "אין כיתוב מוכן", "חסר"])
     return rows
 
 
-def office_line() -> str:
-    block = fence_after_heading(RESEARCH, ("05", "מה נבנה"))
-    if block:
-        return block
-    text = RESEARCH.read_text() if RESEARCH.is_file() else ""
-    if "אין חדש במשרד" in text:
-        return "05 · משרד\nאין חדש במשרד"
-    return "05 · משרד\nאין חדש במשרד"
+ROUTINE_BRIEF_CLI = ("vfcost.py brief", "vfsku.py brief")
+
+
+def office_line(invoked: set[str]) -> str:
+    runs = [
+        r
+        for r in cli_runs_last_24h()
+        if not any(tag in r for tag in ROUTINE_BRIEF_CLI)
+    ]
+    if runs:
+        built = "05 · משרד\nמה נבנה / יועל:\n" + "\n".join(f"CLI {r}" for r in runs)
+    else:
+        built = "05 · משרד\nאין חדש במשרד"
+    gaps = gap_lines(invoked)
+    if gaps:
+        return f"{built}\n{gaps}"
+    return built
 
 
 def insights_line() -> str:
@@ -159,13 +255,20 @@ def insights_line() -> str:
 
 
 def assemble(today: str) -> dict:
+    invoked: set[str] = {"vfops"}
     sku = sku_line()
+    invoked.add("vfsku")
     cost = cost_line()
+    invoked.add("vfcost")
     growth = growth_line()
+    invoked.add("vfgrowth")
     biz = biz_week_line()
-    office = office_line()
+    invoked.add("vfbiz")
     insights = insights_line()
+    invoked.add("vfinsights")
     captions = captions_rows()
+    invoked.add("vfcopy")
+    office = office_line(invoked)
     return {
         "date_line": f"{today} · בריף סוכנות · תצוגה 3",
         "bottom_line": "המשרד רץ. כריסטיאן יכול לשבת רגוע — בלי ₪ מומצא, בלי Insights מומצאים, בלי חצי-עבודה.",
@@ -174,11 +277,11 @@ def assemble(today: str) -> dict:
             {
                 "kicker": "01 · קודם החלטה",
                 "title": "החלטות",
-                "prose": "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 מוכן. שיבוץ בלי לשאול משבצת — אחרי שער עריכה.",
+                "prose": "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 סטוריז = G004-STORIES-FIX.md. שיבוץ בלי לשאול משבצת — אחרי שער עריכה (Canva/vfcovers).",
                 "headers": ["החלטה", "כן/לא/דחה", "מועד"],
                 "rows": [
                     ["מחיר מכירה", "דחה", "X ₪"],
-                    ["כיתוב G004 לסטודיו", "כן", "vfcopy/G004.md"],
+                    ["כיתוב G004 סטוריז", "כן", "vfcopy/G004-STORIES-FIX.md"],
                     ["ig-mcp Publish", "דחה", "needsAuth"],
                 ],
             },
@@ -216,7 +319,7 @@ def assemble(today: str) -> dict:
             {
                 "kicker": "07 · פיד בסוף",
                 "title": "מה עולה בפיד",
-                "prose": "מסירה: vfgrowth/HANDOFF-he.md · שער עריכה (Canva/vfcovers) לפני שיבוץ — לא JPEG גולמי · סטוריז ב-instagram.com · לוח אוטונומי.",
+                "prose": "מסירה: vfgrowth/HANDOFF-he.md · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · שער עריכה קשיח: Canva MCP או vfcovers/vfcanva לפני שיבוץ — לא JPEG גולמי · סטוריז ב-instagram.com · לוח אוטונומי.",
                 "headers": ["מזהה", "פתיחה", "מצב"],
                 "rows": captions,
             },
@@ -276,8 +379,9 @@ def write_status(today: str) -> None:
         "- `vfcost.py brief` — עלות חומר חיה בחריץ 02 (בלי ₪ מכירה)",
         "- מדף `vfsku.py brief` + `week.md`",
         "- FOLLOWER-GROWTH · היילייטס + וואטסאפ",
-        "- כיתובי vfcopy (G003/G004/G005)",
-        "- מסירת סטודיו + שער עריכה + לוח אוטונומי",
+        "- כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)",
+        "- חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ",
+        "- מסירת סטודיו + שער עריכה קשיח (אין סטוריז בלי Canva/vfcovers) + לוח אוטונומי",
         "- Canva MCP ready · Gmail/Calendar/Drive ready",
         "",
         "## חסום על אדם / לוגין",
@@ -325,8 +429,8 @@ def cmd_handoff(_args: argparse.Namespace) -> int:
     print("=== מסירה לסטודיו · פתח כל בוקר ===")
     print("רף: סוכנות יקרה · לא חצי-עבודה")
     print("קובץ: packages/vfgrowth/HANDOFF-he.md")
-    print("חבילה: G004 קטלבל-מחזיק · vfcopy/G004.md")
-    print("שער עריכה: Canva / vfcovers / vfcanva — לא JPEG גולמי")
+    print("חבילה: G004 קטלבל-מחזיק · vfcopy/G004-STORIES-FIX.md")
+    print("שער עריכה: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · אין סטוריז בלי מעבר")
     print("לוח: אוטונומי · לא שואלים משבצת · Calendar-OPS")
     print("CTA: וואטסאפ 050-2517000 · היילייטס · איסוף שדרות · לא DM")
     print("סטוריז: instagram.com · ig-mcp ≠ stories")
@@ -369,9 +473,24 @@ def cmd_check(_args: argparse.Namespace) -> int:
     blob = json.dumps(brief, ensure_ascii=False)
     if not VFCOST.is_file():
         fail("scripts/vfcost.py must exist for live consume")
-    for needle in ("050-2517000", "אין ספירה", "X ₪", "G004", "needsAuth", "סוכנות", "שער עריכה", "עלות חומר"):
+    for needle in (
+        "050-2517000",
+        "אין ספירה",
+        "X ₪",
+        "G004",
+        "needsAuth",
+        "סוכנות",
+        "שער עריכה",
+        "עלות חומר",
+        "פער",
+        "G004-STORIES-FIX",
+    ):
         if needle not in blob:
             fail(f"assembled brief missing {needle!r}")
+    if "אין חדש במשרד" not in blob and "CLI " not in blob:
+        fail("slot 05 must list real CLI runs or אין חדש במשרד")
+    if "מה נבנה / יועל: קול פיד" in blob:
+        fail("slot 05 must not paste catalog activity as a build")
     for m in ILS_NUMBER.finditer(blob):
         snippet = blob[max(0, m.start() - 12) : m.end() + 8]
         if "X ₪" in snippet or "בלי ₪" in snippet:
