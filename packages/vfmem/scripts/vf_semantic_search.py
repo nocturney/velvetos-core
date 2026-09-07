@@ -21,9 +21,6 @@ import re
 import tempfile
 from pathlib import Path
 
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-
 ROOT = Path(__file__).resolve().parents[3]
 SCAN_DIRS = ["packages", "constitution", "docs"]
 INDEX_PATH = ROOT / "packages" / "vfmem" / "semantic_index.pkl"
@@ -73,6 +70,8 @@ def atomic_pickle_dump(payload: dict, dest: Path) -> None:
 
 
 def build_index():
+    from sklearn.feature_extraction.text import TfidfVectorizer
+
     chunks = collect_chunks()
     corpus = [c["text"] for c in chunks]
     vec = TfidfVectorizer(max_features=20000, ngram_range=(1, 2))
@@ -85,6 +84,8 @@ def build_index():
 
 
 def query(text, top_k=5):
+    from sklearn.metrics.pairwise import cosine_similarity
+
     if not INDEX_PATH.exists():
         print("no index found — run with --build first")
         return []
