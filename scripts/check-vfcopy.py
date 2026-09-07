@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
-"""Content quality sensor for vfcopy.
+"""Content quality sensor for vfcopy publishable captions.
 
-- Ensures IG captions/stories marked as ready do not contain weak patterns
-  (forbidden phrases, DM-only CTA, apology/opening with negation).
-- Ensures required STORIES-FIX and PREFLIGHT exist for any G00X in HANDOFF.
+Model (not whole-file scan):
+- Publishable body = fenced code blocks after caption headings (להדבקה / ארבעה פריימים).
+- Instructions, negative examples, and history outside those fences are not captions.
+- Hook = first non-empty line of each publishable body (even if a document title precedes).
+- HANDOFF gates: STORIES-FIX + PREFLIGHT only for schedule-ready stories that are not yet
+  locked/scheduled; reels do not need STORIES-FIX; blocked/future candidates may stay
+  incomplete without failing the repo; historical live posts do not invent new artifact
+  demands; ready-but-unlocked items must pass required gates.
 
-This is a static lint: no network, no send.
+Static lint only: no network, no send, no invented approvals.
 """
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 from pathlib import Path
 import re
 import sys
+import tempfile
+import unittest
 
-ROOT = Path(__file__).resolve().parents[1]
-VFCOPY = ROOT / "packages" / "vfcopy"
-VFGROWTH = ROOT / "packages" / "vfgrowth"
+HERE = Path(__file__).resolve().parents[1]
 
 FORBIDDEN_PHRASES = [
     "בעידן הדיגיטלי",
@@ -27,72 +33,475 @@ FORBIDDEN_PHRASES = [
     "unlock",
 ]
 
-FORBIDDEN_OPENING_NEG = re.compile(r"^\s*(לא|בלי|אין)\b")
 DM_ONLY = re.compile(r"שלחו(?:\s+)?DM", re.IGNORECASE)
+FORBIDDEN_OPENING_NEG = re.compile(r"^\s*(לא|בלי|אין)\b")
+CAPTION_HEADING = re.compile(
+    r"^#{1,3}\s+.*(להדבקה|ארבעה פריימים)",
+    re.IGNORECASE,
+)
+GID_RE = re.compile(r"\bG0\d{2,3}\b")
+TABLE_ROW = re.compile(r"^\|\s*\d+\s*\|")
 
 
-def bad_caption_text(text: str, path: Path) -> list[str]:
+@dataclass
+class CaptionBlock:
+    path: Path
+    heading: str
+    body: str
+    start_line: int
+
+
+@dataclass
+class HandoffItem:
+    gid: str
+    format: str  # reel | stories | carousel | unknown
+    status: str  # ready | locked | blocked | historical | mention
+    raw: str = ""
+    needs_stories_fix: bool = False
+    needs_preflight: bool = False
+
+
+@dataclass
+class LintResult:
+    problems: list[str] = field(default_factory=list)
+
+    def extend(self, items: list[str]) -> None:
+        self.problems.extend(items)
+
+    @property
+    def ok(self) -> bool:
+        return not self.problems
+
+
+@dataclass(frozen=True)
+class Paths:
+    root: Path
+
+    @property
+    def vfcopy(self) -> Path:
+        return self.root / "packages" / "vfcopy"
+
+    @property
+    def vfgrowth(self) -> Path:
+        return self.root / "packages" / "vfgrowth"
+
+    @property
+    def handoff(self) -> Path:
+        return self.vfgrowth / "HANDOFF-he.md"
+
+    @property
+    def preflight_dir(self) -> Path:
+        return self.vfgrowth / "preflight"
+
+
+def first_fences_in(section: str) -> list[tuple[int, str]]:
+    lines = section.splitlines()
+    out: list[tuple[int, str]] = []
+    i = 0
+    while i < len(lines):
+        if lines[i].strip().startswith("```"):
+            body_lines: list[str] = []
+            j = i + 1
+            while j < len(lines) and not lines[j].strip().startswith("```"):
+                body_lines.append(lines[j])
+                j += 1
+            out.append((i, "\n".join(body_lines).strip()))
+            i = j + 1
+            continue
+        i += 1
+    return out
+
+
+def extract_publishable_captions(path: Path, text: str | None = None) -> list[CaptionBlock]:
+    """Extract only caption fences under paste/stories headings."""
+    raw = text if text is not None else path.read_text(encoding="utf-8")
+    lines = raw.splitlines()
+    blocks: list[CaptionBlock] = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        if CAPTION_HEADING.search(line):
+            heading = line.strip()
+            section_lines = [line]
+            j = i + 1
+            while j < len(lines):
+                nxt = lines[j]
+                if CAPTION_HEADING.search(nxt):
+                    break
+                if nxt.startswith("## ") and not any(
+                    k in nxt for k in ("להדבקה", "ארבעה פריימים", "על הפריים")
+                ):
+                    if any(l.strip().startswith("```") for l in section_lines):
+                        break
+                section_lines.append(nxt)
+                j += 1
+            section = "\n".join(section_lines)
+            for fence_line, body in first_fences_in(section):
+                if not body.strip():
+                    continue
+                blocks.append(
+                    CaptionBlock(
+                        path=path,
+                        heading=heading,
+                        body=body.strip(),
+                        start_line=i + fence_line + 1,
+                    )
+                )
+            i = j
+            continue
+        i += 1
+    return blocks
+
+
+def hook_line(body: str) -> str:
+    for line in body.splitlines():
+        if line.strip():
+            return line.strip()
+    return ""
+
+
+def lint_caption_body(body: str, *, label: str) -> list[str]:
+    """Lint a single publishable caption body (not instructions)."""
     problems: list[str] = []
-    lines = [l for l in text.splitlines() if l.strip()]
-    if not lines:
-        return [f"ריק: {path}"]
-    first = lines[0]
-    # Opening should not start with negation
-    if FORBIDDEN_OPENING_NEG.search(first):
-        problems.append(f"פתיחה מתנצלת/מקטינה ב-{path.name}: {first!r}")
-    # Only one emoji in hook (heuristic: too many)
-    emojis = re.findall(r"[\U0001F300-\U0001FAFF]", first)
+    if not body.strip():
+        return [f"ריק: {label}"]
+    hook = hook_line(body)
+    if FORBIDDEN_OPENING_NEG.search(hook):
+        problems.append(f"פתיחה מתנצלת/מקטינה ב-{label}: {hook!r}")
+    emojis = re.findall(r"[\U0001F300-\U0001FAFF]", hook)
     if len(emojis) > 1:
-        problems.append(f"יותר מדי אמוג׳ים בהוק ב-{path.name}: {first!r}")
-    lower = text.lower()
+        problems.append(f"יותר מדי אמוג׳ים בהוק ב-{label}: {hook!r}")
+    lower = body.lower()
     for phrase in FORBIDDEN_PHRASES:
         if phrase.lower() in lower:
-            problems.append(f"ביטוי AI/שיווק ריק ב-{path.name}: {phrase!r}")
-    if DM_ONLY.search(text):
-        problems.append(f"CTA 'שלחו DM' אסור ב-{path.name}")
+            problems.append(f"ביטוי AI/שיווק ריק ב-{label}: {phrase!r}")
+    if DM_ONLY.search(body):
+        problems.append(f"CTA 'שלחו DM' אסור ב-{label}")
     return problems
 
 
-def check_vfcopy() -> int:
-    if not VFCOPY.is_dir():
-        print("OK vfcopy missing (no captions)")
-        return 0
+def classify_format(cell: str) -> str:
+    c = cell.strip()
+    if "סטוריז" in c or "stories" in c.lower():
+        return "stories"
+    if "ריל" in c or "reel" in c.lower():
+        return "reel"
+    if "קרוסלה" in c or "carousel" in c.lower():
+        return "carousel"
+    return "unknown"
 
-    bad: list[str] = []
-    # Check main caption files G00X*.md (not VOICE, BIO, DESK)
-    for path in sorted(VFCOPY.glob("G0*.md")):
-        if path.name.endswith("-STORIES-FIX.md"):
+
+def _locked(status_cell: str) -> bool:
+    return "משובץ" in status_cell or "נעול" in status_cell
+
+
+def parse_handoff(text: str) -> list[HandoffItem]:
+    """Parse HANDOFF into items with format + pipeline stage."""
+    items: list[HandoffItem] = []
+    ranked: dict[str, HandoffItem] = {}
+
+    def put(item: HandoffItem) -> None:
+        rank = {"historical": 1, "mention": 2, "blocked": 3, "locked": 4, "ready": 5}
+        prev = ranked.get(item.gid)
+        if prev is None or rank.get(item.status, 0) >= rank.get(prev.status, 0):
+            ranked[item.gid] = item
+
+    for m in re.finditer(r"חי כבר:[^\n]+", text):
+        line = m.group(0)
+        for gid in GID_RE.findall(line):
+            put(
+                HandoffItem(
+                    gid=gid,
+                    format="unknown",
+                    status="historical",
+                    raw=line,
+                    needs_stories_fix=False,
+                    needs_preflight=False,
+                )
+            )
+
+    section = "none"
+    for line in text.splitlines():
+        if "### מוכן" in line or line.strip().startswith("## מוכן"):
+            section = "ready"
             continue
-        text = path.read_text(encoding="utf-8")
-        bad.extend(bad_caption_text(text, path))
+        if "### חסום" in line or "מועמד — לא לשבץ" in line or "### מועמד" in line:
+            section = "blocked"
+            continue
+        if line.startswith("## ") and section != "none":
+            if any(k in line for k in ("G003 נעול", "אחרי עליית", "קופי", "מה דולג", "חבילת")):
+                section = "none"
+            continue
+        if not TABLE_ROW.search(line):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) < 4:
+            continue
+        fmt = classify_format(cells[2] if len(cells) > 2 else "")
+        candidate = cells[3] if len(cells) > 3 else ""
+        status_cell = " ".join(cells[4:]) if len(cells) > 4 else ""
+        gids = GID_RE.findall(candidate)
+        if not gids:
+            gids = GID_RE.findall(line)
+        # Expand G007–G012 ranges into individual IDs only when explicit en-dash range
+        expanded: list[str] = []
+        range_m = re.search(r"(G0\d{2,3})\s*[–\-]\s*(G0\d{2,3})", candidate)
+        if range_m:
+            a = int(range_m.group(1)[1:])
+            b = int(range_m.group(2)[1:])
+            for n in range(min(a, b), max(a, b) + 1):
+                expanded.append(f"G{n:03d}")
+            gids = expanded
+        for gid in gids:
+            if section == "ready":
+                if _locked(status_cell):
+                    status = "locked"
+                    needs_pf = False
+                    needs_sf = False
+                else:
+                    status = "ready"
+                    needs_pf = True
+                    needs_sf = fmt == "stories"
+            elif section == "blocked":
+                # Incomplete candidates do not fail the repo by mere mention.
+                claims_ready = (
+                    "מוכן לשיבוץ" in status_cell
+                    or ("מוכן להדבקה" in status_cell and "חסום" not in status_cell)
+                )
+                if claims_ready and "נכשל" not in status_cell and "חסום" not in status_cell:
+                    status = "ready"
+                    needs_pf = True
+                    needs_sf = fmt == "stories"
+                else:
+                    status = "blocked"
+                    needs_pf = False
+                    needs_sf = False
+            else:
+                status = "mention"
+                needs_pf = False
+                needs_sf = False
+            put(
+                HandoffItem(
+                    gid=gid,
+                    format=fmt,
+                    status=status,
+                    raw=line,
+                    needs_stories_fix=needs_sf,
+                    needs_preflight=needs_pf,
+                )
+            )
+    return list(ranked.values())
 
-    # Check STORIES-FIX files as well
-    for path in sorted(VFCOPY.glob("G0*-STORIES-FIX.md")):
-        text = path.read_text(encoding="utf-8")
-        bad.extend(bad_caption_text(text, path))
 
-    # Enforce that any G0XX mentioned in HANDOFF has STORIES-FIX + PREFLIGHT
-    handoff = VFGROWTH / "HANDOFF-he.md"
-    if handoff.is_file():
-        text = handoff.read_text(encoding="utf-8")
-        mentioned = sorted(set(re.findall(r"G0\d+", text)))
-        preflight_dir = VFGROWTH / "preflight"
-        for gid in mentioned:
-            stories_fix = VFCOPY / f"{gid}-STORIES-FIX.md"
-            preflight = preflight_dir / f"{gid}.md"
-            if not stories_fix.is_file():
-                bad.append(f"חסר {stories_fix} בעוד {gid} מופיע ב-HANDOFF")
+def is_schedule_ready_doc(text: str) -> bool:
+    if "לא משבצים" in text or "לא מאושר" in text:
+        return False
+    if "משובץ" in text:
+        return True
+    if "מוכן להדבקה" in text and "חסום" not in text[:500]:
+        return True
+    return False
+
+
+def lint_path_captions(path: Path) -> list[str]:
+    text = path.read_text(encoding="utf-8")
+    blocks = extract_publishable_captions(path, text)
+    problems: list[str] = []
+    if not blocks:
+        if is_schedule_ready_doc(text) and path.name.startswith("G0"):
+            problems.append(f"חסר בלוק להדבקה ב-{path.name} (מסומן מוכן)")
+        return problems
+    for block in blocks:
+        label = f"{path.name}:{block.start_line}"
+        problems.extend(lint_caption_body(block.body, label=label))
+    return problems
+
+
+def gate_handoff_requirements(paths: Paths, items: list[HandoffItem] | None = None) -> list[str]:
+    if items is None:
+        if not paths.handoff.is_file():
+            return []
+        items = parse_handoff(paths.handoff.read_text(encoding="utf-8"))
+    problems: list[str] = []
+    for item in items:
+        if item.status in {"historical", "blocked", "mention", "locked"}:
+            # locked/historical: no new artifact demand
+            continue
+        if item.needs_stories_fix:
+            stories = paths.vfcopy / f"{item.gid}-STORIES-FIX.md"
+            if not stories.is_file():
+                problems.append(
+                    f"חסר {stories.relative_to(paths.root)} לסטוריז {item.gid} המסומן מוכן לשיבוץ"
+                )
+        if item.needs_preflight:
+            preflight = paths.preflight_dir / f"{item.gid}.md"
             if not preflight.is_file():
-                bad.append(f"חסר {preflight} בעוד {gid} מופיע ב-HANDOFF")
+                problems.append(
+                    f"חסר {preflight.relative_to(paths.root)} ל-{item.gid} המסומן מוכן לשיבוץ"
+                )
+            else:
+                pf = preflight.read_text(encoding="utf-8")
+                if "נכשל-סגור" in pf or "**נכשל" in pf:
+                    problems.append(
+                        f"{item.gid} מסומן מוכן לשיבוץ אך preflight נכשל-סגור"
+                    )
+    return problems
 
-    if bad:
+
+def check_vfcopy(root: Path | None = None) -> LintResult:
+    paths = Paths(root or HERE)
+    result = LintResult()
+    if not paths.vfcopy.is_dir():
+        return result
+
+    for path in sorted(paths.vfcopy.glob("G0*.md")):
+        result.extend(lint_path_captions(path))
+
+    if paths.handoff.is_file():
+        result.extend(gate_handoff_requirements(paths))
+
+    return result
+
+
+def main() -> int:
+    # Behavioral fixtures first — prove the model, then lint the live tree.
+    test_rc = run_tests(quiet=True)
+    if test_rc != 0:
+        print("FAIL vfcopy behavioral tests")
+        return test_rc
+    result = check_vfcopy()
+    if not result.ok:
         print("FAIL vfcopy content lint:")
-        for line in bad:
+        for line in result.problems:
             print("-", line)
         return 1
-    print("OK vfcopy captions+stories linted")
+    print("OK vfcopy captions+stories linted (behavioral=6)")
     return 0
 
 
+class VfcopyLintTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+        self.vfcopy = self.root / "packages" / "vfcopy"
+        self.vfgrowth = self.root / "packages" / "vfgrowth"
+        self.preflight = self.vfgrowth / "preflight"
+        self.vfcopy.mkdir(parents=True)
+        self.preflight.mkdir(parents=True)
+        (self.vfcopy / "VOICE.md").write_text("# VOICE\n", encoding="utf-8")
+        (self.vfcopy / "VOICE-CHART.md").write_text("# chart\n", encoding="utf-8")
+
+    def tearDown(self) -> None:
+        self.temp.cleanup()
+
+    def write_handoff(self, body: str) -> None:
+        (self.vfgrowth / "HANDOFF-he.md").write_text(body, encoding="utf-8")
+
+    def test_a_internal_instruction_is_not_caption(self) -> None:
+        """א. הוראה פנימית אינה מזוהה ככיתוב."""
+        path = self.vfcopy / "G090.md"
+        path.write_text(
+            "# G090\n\nבלי «שלחו DM». CTA: וואטסאפ.\n\n## להדבקה\n\n```\n"
+            "ורוד על השידה\n\nוואטסאפ 050-2517000\n```\n",
+            encoding="utf-8",
+        )
+        self.write_handoff(
+            "# מסירה\n\n### חסום / מועמד — לא לשבץ עד שחרור\n\n"
+            "| # | מתי | מה | מועמד | למה |\n|---|---|---|---|---|\n"
+            "| 1 | מחר | קרוסלה | G090 | חסר גלם |\n"
+        )
+        problems = lint_path_captions(path)
+        self.assertEqual(problems, [], problems)
+        full = check_vfcopy(self.root)
+        self.assertTrue(full.ok, full.problems)
+
+    def test_b_real_bad_caption_is_blocked(self) -> None:
+        """ב. כיתוב פסול אמיתי נחסם."""
+        path = self.vfcopy / "G091.md"
+        path.write_text(
+            "# G091\n\n## להדבקה\n\n```\n"
+            "שלחו DM עכשיו לחוויה ייחודית\n```\n",
+            encoding="utf-8",
+        )
+        problems = lint_path_captions(path)
+        self.assertTrue(any("שלחו DM" in p for p in problems), problems)
+        self.assertTrue(any("חוויה ייחודית" in p for p in problems), problems)
+
+    def test_c_hook_checked_despite_document_title(self) -> None:
+        """ג. ההוק נבדק גם כשיש כותרת מסמך לפניו."""
+        path = self.vfcopy / "G092.md"
+        path.write_text(
+            "# G092 · כותרת מסמך ארוכה שלא הוק\n\nהקדמה.\n\n## להדבקה\n\n```\n"
+            "לא משקולת זה מחזיק\n\nגוף\n```\n",
+            encoding="utf-8",
+        )
+        problems = lint_path_captions(path)
+        self.assertTrue(any("פתיחה" in p for p in problems), problems)
+
+    def test_d_reel_does_not_require_stories_fix(self) -> None:
+        """ד. ריל אינו נדרש לתיקון סטוריז."""
+        (self.vfcopy / "G093.md").write_text(
+            "# G093\nמשובץ\n\n## להדבקה\n\n```\nמה יוצא מהמדפסת?\n\nוואטסאפ 050-2517000\n```\n",
+            encoding="utf-8",
+        )
+        self.write_handoff(
+            "# מסירה\n\n### מוכן / משובץ\n\n"
+            "| # | מתי | מה | מועמד | מצב |\n|---|---|---|---|---|\n"
+            "| 1 | היום 16:00 | ריל | **G093** כדור | **נעול · משובץ** |\n"
+        )
+        result = check_vfcopy(self.root)
+        self.assertTrue(result.ok, result.problems)
+        self.assertFalse((self.vfcopy / "G093-STORIES-FIX.md").is_file())
+
+    def test_e_ready_story_missing_approvals_blocked(self) -> None:
+        """ה. סטורי שמסומן מוכן וחסרים לו אישורים נחסם."""
+        (self.vfcopy / "G094.md").write_text(
+            "# G094\n\n## להדבקה\n\n```\nורוד על השידה\n\nוואטסאפ 050-2517000\n```\n",
+            encoding="utf-8",
+        )
+        self.write_handoff(
+            "# מסירה\n\n### מוכן / משובץ\n\n"
+            "| # | מתי | מה | מועמד | מצב |\n|---|---|---|---|---|\n"
+            "| 1 | היום 20:30 | סטוריז | **G094** מוצר | מוכן לשיבוץ |\n"
+        )
+        result = check_vfcopy(self.root)
+        self.assertFalse(result.ok, "expected failures")
+        blob = "\n".join(result.problems)
+        self.assertIn("STORIES-FIX", blob)
+        self.assertIn("preflight", blob)
+
+    def test_f_historical_publish_no_new_demand(self) -> None:
+        """ו. פרסום היסטורי אינו יוצר דרישה חדשה ללא הצדקה."""
+        self.write_handoff(
+            "# מסירה\n\nחי כבר: G001 `DcqkjOLlYVX` · G002 `DcvuJLxCJgU` — **לא מחליפים**.\n\n"
+            "### חסום / מועמד — לא לשבץ עד שחרור\n\n"
+            "| # | מתי | מה | מועמד | למה חסום |\n|---|---|---|---|---|\n"
+            "| 6 | W38 | ריל / סטוריז | G007–G012 | חסר מועמד/מדיה/כיתוב |\n"
+        )
+        result = check_vfcopy(self.root)
+        blob = "\n".join(result.problems)
+        self.assertNotIn("G001-STORIES-FIX", blob)
+        self.assertNotIn("G002-STORIES-FIX", blob)
+        self.assertNotIn("preflight/G001", blob)
+        for n in range(7, 13):
+            self.assertNotIn(f"G{n:03d}-STORIES-FIX", blob)
+            self.assertNotIn(f"preflight/G{n:03d}", blob)
+        self.assertTrue(result.ok, result.problems)
+
+
+def run_tests(*, quiet: bool = False) -> int:
+    import io
+
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(VfcopyLintTests)
+    stream: object = io.StringIO() if quiet else sys.stderr
+    verbosity = 0 if quiet else 2
+    result = unittest.TextTestRunner(stream=stream, verbosity=verbosity).run(suite)
+    if quiet and not result.wasSuccessful():
+        sys.stderr.write(getattr(stream, "getvalue", lambda: "")())
+    return 0 if result.wasSuccessful() else 1
+
+
 if __name__ == "__main__":
-    sys.exit(check_vfcopy())
+    if len(sys.argv) > 1 and sys.argv[1] in {"test", "--test"}:
+        raise SystemExit(run_tests())
+    raise SystemExit(main())
