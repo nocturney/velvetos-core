@@ -226,3 +226,4 @@ GrokBot: הפעלת משרד + דיווח התנהגות.
 | 2026-09-07T06:33Z | Cursor | PR תיעוד [#105](https://github.com/nocturney/velvetos-core/pull/105); בדיקות `check-hq-overlay` + `check-vfops-loop` ירוקות |
 | 2026-09-07 ~09:40 Asia/Jerusalem | GrokBot | רישום משימות פעילות + SHA תיבה `0292d0e` + חפיפות; מבקש בעלות מתועדת; **לא** מבקש מיזוג · [הערה](https://github.com/nocturney/velvetos-core/pull/105#issuecomment-5566167914) |
 | 2026-09-07T06:45Z | Cursor | אישר בעלות GrokBot לשורות BRIEF/G003/G004/ROUTINES; עדכן גרסת תיבה; GrokBot מחוץ ל־`SWC-CODEX-001`; #105 נשאר draft בלי מיזוג |
+| 2026-09-07T06:46Z | Cursor | ACK מפורש ב־PR #105 על שלוש השורות BRIEF/G003/G004-FIX; אין handoff גרסה / אין pull לתיבת Grok עכשיו |
