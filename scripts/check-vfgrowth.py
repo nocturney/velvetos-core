@@ -169,15 +169,24 @@ def main() -> None:
     for needle in (
         "VOICE.md",
         "VOICE-RESEARCH",
+        "VOICE-CHART",
         "ציון עצמי",
         "2–3",
         "נכשל-סגור",
         "רמה נמוכה",
         "אל תפנה לכריסטיאן על מדדים חלשים",
         "Canva",
+        "CONTENT-RUBRIC",
+        "artifact_digest",
     ):
         if needle not in preflight:
             fail(f"PREFLIGHT.md missing {needle!r}")
+    if not (ROOT / "packages" / "vfgrowth" / "CONTENT-RUBRIC.md").is_file():
+        fail("CONTENT-RUBRIC.md missing")
+    if not (ROOT / "packages" / "vfcopy" / "VOICE-CHART.md").is_file():
+        fail("VOICE-CHART.md missing")
+    if "Rubric" not in (ROOT / "packages" / "vfgrowth" / "preflight" / "TEMPLATE.md").read_text():
+        fail("preflight/TEMPLATE.md must include Rubric table")
     g004p = PREFLIGHT_G004.read_text()
     if "נכשל-סגור" not in g004p:
         fail("preflight/G004.md must stay fail-closed until the written gate passes")

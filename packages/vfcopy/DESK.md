@@ -3,7 +3,9 @@
 מושב: **סטודיו**.  
 מקור Gemini: Custom GPT (captions + האשטגים) + שכבת התיאור בטיימלאפס.  
 מקור Perplexity: Predis.ai / Canva AI / Flick — כתוביות, קרוסלות, האשטגים. טיוטה בלבד.  
-התזמורת יכולה להציע ניסוח — הטיוטה נשארת כאן. קול פיד: `VOICE.md`. Grok שולח.
+קול פיד: `VOICE.md` + `VOICE-CHART.md`. Grok שולח.  
+רובריקה לפני שיבוץ: `vfgrowth/CONTENT-RUBRIC.md` בתוך `preflight/<id>.md`.  
+UGC: `vfgrowth/UGC.md` · תגובות: `hq/community-replies.md`.
 
 ## שיעורי בית
 

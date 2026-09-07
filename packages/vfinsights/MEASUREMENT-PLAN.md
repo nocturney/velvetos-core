@@ -30,3 +30,16 @@
 ## כלל למידה
 
 לא משנים קול/פורמט בגלל פוסט אחד. שינוי מתבצע אחרי דפוס חוזר או החלטת סטודיו מתועדת ב-`DAILY-RETRO.md` / `LAST30.md`.
+
+## חיבור לולאה
+
+| שלב | נתיב |
+|---|---|
+| מדידה | `data/posts.csv` ← הדבקת בעלים / Professional Dashboard |
+| לולאה | `python3 packages/vfinsights/scripts/vf_insights_loop.py --data packages/vfinsights/data/posts.csv` |
+| למידה | `LEARNINGS.md` (רק מספרים מה-CSV) |
+| החלטת תוכן | בריף חריץ 06 + מועמד הבא ב־`HANDOFF` / `CALENDAR` לפי hypothesis מתוכנית זו |
+| רטרו | `vfops/hq/DAILY-RETRO.md` — בלי המצאת מדדים |
+
+אין Insights מומצאים. חסר = «אין ספירה».
+
