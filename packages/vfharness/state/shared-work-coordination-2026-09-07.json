@@ -1,0 +1,49 @@
+{
+  "task_id": "shared-work-coordination-2026-09-07",
+  "status": "running",
+  "pack": "vfharness",
+  "goal": "Establish multi-party coordination record for Cursor + Codex + GrokBot without changing business locks",
+  "crew": null,
+  "planned_steps": [
+    "survey both repos branches PRs local state",
+    "find or create coordination record",
+    "register active work and base SHAs",
+    "propose Codex SWC-CODEX-001 scope with vfops_loop overlap",
+    "commit docs PR only — no Codex implementation"
+  ],
+  "completed_steps": [
+    "survey-core-and-vf",
+    "confirm-issues-disabled-on-core",
+    "document-base-shas",
+    "write-SHARED-WORK-COORDINATION.md",
+    "propose-codex-scope"
+  ],
+  "next_step": "push-docs-PR-and-hand-off-messages",
+  "artifacts": [
+    "docs/SHARED-WORK-COORDINATION.md"
+  ],
+  "unresolved": [
+    "GitHub Issue not created — velvetos-core has_issues=false",
+    "GrokBot local SHA unknown",
+    "Codex Mac local SHA unknown",
+    "SWC-CODEX-001 ownership not yet confirmed by Codex reply"
+  ],
+  "outcome": null,
+  "pulse": "working",
+  "verification": "repo survey via gh + git; issues create rejected; open PRs listed",
+  "gate": {
+    "kind": "decision_gate",
+    "waiting_for": "Codex + GrokBot acknowledge scope; owner may enable Issues on core",
+    "reason": "Coordination setup complete as docs; Issue blocked by repo setting; implementation waits on explicit ownership"
+  },
+  "escalation": null,
+  "last_updated": "2026-09-07",
+  "execution_state": {
+    "core_main": "618ff1aa6a61ad48940c473fbc46ed2d4aab1cc2",
+    "vf_main": "27701889bb12c70dd62c4a22286be4828e86fee7",
+    "coordination_path": "docs/SHARED-WORK-COORDINATION.md",
+    "codex_task": "SWC-CODEX-001",
+    "issue_created": false
+  },
+  "latest_observation": "Core issues disabled; no open core PRs; VF draft PR#3 preserved; vfops_loop hot from merged #104"
+}

@@ -1,0 +1,194 @@
+# VelvetOS — Shared Work Coordination
+
+**רשומת תיאום מרכזית** לעבודה משותפת: Cursor · ChatGPT/Codex · GrokBot.
+
+| שדה | ערך |
+|---|---|
+| נוצר | 2026-09-07 |
+| מעודכן | 2026-09-07T06:30Z |
+| מנהל מיזוגים | Cursor (בלעדי במסגרת העבודה המשותפת) |
+| סטטוס רשומה | פעילה |
+| Issue ב־GitHub | **לא נוצר** — `nocturney/velvetos-core` עם `has_issues=false`. גוף מוכן להעתקה בסעיף [Issue body](#issue-body-copy-when-enabled) |
+
+זו **לא** מערכת ניהול משימות נוספת. אין runtime שני. Cursor נשאר המשרד; המסמך הזה הוא לוח בעלות ותיחום בלבד.
+
+---
+
+## חוקי עבודה משותפת (תמצית)
+
+1. לפני עריכה: הגורם המבצע מציע תיחום → Cursor מאשר בעלות **כאן**. קריאה/בדיקה לא דורשות שריון.
+2. שתי משימות על אותו קובץ / ממשק / סכמה / כלל עסקי → ברצף, או חלוקה מחדש מפורשת.
+3. לכל משימה ענף נפרד; על אותה מכונה — worktree נפרד. אין כתיבה ישירה ל־`main`, אין force-push, אין מחיקת ענפים של אחרים.
+4. היעדר עדכון ≠ נטישה. בעלות משתחררת במסירה מפורשת בלבד.
+5. לפני מיזוג (Cursor): diff, בדיקות נדרשות, תאימות ל־`main` העדכני, השפעה על משימות אחרות. שינוי אחרי בדיקה → בדיקה חוזרת לפי ההשפעה.
+6. PR של Cursor דורש סקירה של גורם אחר. אישור בעלים רק כשההרשאות/סוג השינוי מחייבים.
+7. שינוי בסכמה משותפת / הרשאות / התנהגות עסקית → תיאום מפורש + דרך חזרה מתועדת.
+8. מיזוג קוד ≠ אישור לפרסום / שליחה / שינוי סביבת הפעלה.
+9. נעול בהקמת תיאום: לא משנים לוגיקה עסקית, חמשת התפקידים, מגבלות סטודיו, או הרשאות לשירותים חיצוניים.
+
+### חלוקת תחומים (לא בעלות משימה אוטומטית)
+
+| גורם | תחום |
+|---|---|
+| **Cursor** | מרכז תיאום, אינטגרציה, **מיזוגים בלבד** במסגרת העבודה המשותפת |
+| **ChatGPT/Codex** | תשתית משימות, מצב ביצוע, בריף, בדיקות התנהגות/איכות |
+| **GrokBot** | הפעלת משרד, תוצרים, דיווח התנהגות בפועל — לפי הרשאות קיימות |
+
+כל משימת מימוש דורשת **בעלות מפורשת + תיחום קבצים** לפני תחילה.
+
+---
+
+## גרסאות בסיס ידועות
+
+| ריפו | `main` SHA | תאריך commit | גרסה שבשימוש בפועל |
+|---|---|---|---|
+| [nocturney/velvetos-core](https://github.com/nocturney/velvetos-core) | `618ff1aa6a61ad48940c473fbc46ed2d4aab1cc2` | 2026-09-07 09:09 +0300 · «נעילת כריסטיאן… (#104)» | Cloud Agent תיאום זה: **אותו SHA** אחרי `git pull`. מכונת GrokBot: **לא ידוע**. Codex על Mac-Office: **לא ידוע**. |
+| [nocturney/velvetos-velvet-factory](https://github.com/nocturney/velvetos-velvet-factory) | `27701889bb12c70dd62c4a22286be4828e86fee7` | 2026-09-01 · «Sync scaffold from Core…» | **לא ידוע** איזו checkout רצה אצל GrokBot/Codex. הפרונט **מאחורי** Core (אין סנכרון יומי 7.9 ב־`main` של ה־instance). |
+
+הפרדה חשובה: `main` ≠ «מה שרץ על המכונה». עד שגורם מדווח SHA מקומי — נשאר **לא ידוע**.
+
+---
+
+## סקר מצב (2026-09-07)
+
+### velvetos-core
+
+| פריט | ממצא |
+|---|---|
+| Issues | כבויים (`has_issues=false`) — לא ניתן ליצור Issue |
+| Discussions | כבויים |
+| PRs פתוחים | **אין** |
+| Working tree מקומי (Cloud תיאום) | נקי על `main`/`618ff1a` לפני ענף התיאום |
+| ענפים ישנים ב־remote | רבים (`cursor/…`) בלי PR פתוח — **לא נמחקים**, לא מניחים נטישה |
+| מיזוגים אחרונים היום | #100 vfbiz · #101 brief HTML · #102 agency gap · #103 G004 stories · #104 Christian preflight — כולם **MERGED** |
+
+### velvetos-velvet-factory
+
+| פריט | ממצא |
+|---|---|
+| Issues | מופעלים; רשימה פתוחה ריקה בזמן הסקר |
+| PR פתוח | [#3](https://github.com/nocturney/velvetos-velvet-factory/pull/3) DRAFT · `cursor/align-grok-constitution-f6b2` · עודכן 2026-08-31 — **לא נסגר / לא נדרס** |
+| `main` | סנכרון scaffold מ־1.9 בלבד |
+
+### סוכני Cloud (נגישים לבעלים, סטטוס בזמן הסקר)
+
+| שם | סטטוס | ענף | הערה |
+|---|---|---|---|
+| תיאום עבודה משותפת | RUNNING | (זה) | הקמת התיאום |
+| Lock: no low-quality reports to Christian | IDLE | `cursor/christian-preflight-lock-b943` | PR #104 כבר ממוזג |
+| G004 Stories luxury rebuild | IDLE | `cursor/g004-stories-luxury-c7cb` | PR #103 ממוזג |
+| VF agency gap + stories quality gate | IDLE | `cursor/agency-quality-gap-13f7` | PR #102 ממוזג |
+| VF push brief HTML 7.9 | IDLE | `cursor/brief-2026-09-07-html-3d70` | PR #101 ממוזג |
+| אחרים (VOICE / Canva / mid-day) | IDLE | ללא / ישן | אין PR פתוח ב־core |
+
+Checkpoints תחת `packages/vfharness/state/*2026-09-07*.json` — כולם `done`. אין checkpoint ב־`running` שממתין למימוש Codex.
+
+---
+
+## עבודה פעילה / שמורה (לא לאפס)
+
+| מזהה | אחראי | מטרה | ריפו | ענף | קבצים/רכיבים | תלות | תנאי השלמה | סטטוס | PR |
+|---|---|---|---|---|---|---|---|---|---|
+| `SWC-001` | Cursor | הקמת רשומת תיאום + סקר מצב + תיחום Codex | core | `cursor/shared-work-coordination-7305` | `docs/SHARED-WORK-COORDINATION.md`, checkpoint תיאום | — | מסמך חי + PR תיעוד; Issue אם יופעל | **running** | (PR תיעוד — יעודכן) |
+| `SWC-VF-003` | לא ידוע (סוכן ישן) | סנכרון desk instance ל־Grok-primary | velvet-factory | `cursor/align-grok-constitution-f6b2` | `.cursor/vf-desk.json`, `AGENTS.md` | תלוי ביישור constitution ב־core (היסטורי) | סקירה + החלטה lead / Cursor | **open-draft — שמור** | [VF#3](https://github.com/nocturney/velvetos-velvet-factory/pull/3) |
+| `SWC-IDLE-*` | Cursor (היסטורי) | משימות 7.9 שמוזגו | core | ענפי `cursor/*` אחרי מיזוג | ראו #100–#104 | — | ממוזג ל־main | **merged — לא לגעת בענפים** | #100–#104 |
+
+אין כרגע משימת מימוש Codex או GrokBot רשומה כ־running. GrokBot מפעיל משרד לפי הרשאות — דיווח התנהגות ייכנס לשורה חדשה כשידווח SHA / תוצר.
+
+---
+
+## חפיפות רלוונטיות ל־Codex (חשוב)
+
+משימת Codex המוצעת («מצב משימות אמין → בריף נגזר → בדיקות לתוצרים») נוגעת באותו אזור שעודכן היום ב־**#104** וב־**#101**:
+
+| אזור | קבצים חמים | מי נגע לאחרונה |
+|---|---|---|
+| לולאת משרד | `scripts/vfops_loop.py`, `scripts/check-vfops-loop.py`, `packages/vfops/LOOP.json`, `packages/vfops/hq/LOOP.md` | #104 (Christian preflight) — **merged** |
+| בריף | `packages/vfops/BRIEF.md`, `hq/BRIEF-SLOTS.md`, `out/BRIEF-*.html`, `vfbriefux/render_mail.py` | #101 HTML brief — **merged**; #104 נגע ב־BRIEF.md / slots |
+| מצב ביצוע | `packages/vfharness/state/*.json`, `templates/checkpoint.schema.json`, `playbooks/skillstate.md` | קיים; לא נעול לבעלות Codex עדיין |
+| אינדקס תוצרים | `packages/vfops/data/ARTIFACT-INDEX.md` | תיעוד קיים |
+| חוקה / שולחן | `constitution/*`, `.cursor/vf-desk.json` | #104 — **מחוץ לתיחום Codex** אלא בתיאום מפורש |
+
+**מסקנה:** אין PR פתוח שמתחרה על הקבצים האלה עכשיו, אבל האזור **חם** (שינויים ממוזגים הבוקר). Codex חייב תיחום קבצים צר + אישור בעלות כאן לפני עריכה. אין כתיבה מקבילה ל־`vfops_loop.py` / `check-vfops-loop.py` בלי חלוקה מפורשת.
+
+---
+
+## תיחום מוצע — משימה ראשונה של Codex (`SWC-CODEX-001`)
+
+| שדה | ערך |
+|---|---|
+| מזהה | `SWC-CODEX-001` |
+| אחראי מוצע | ChatGPT/Codex (**ממתין לאישור בעלות מ־Cursor אחרי ש־Codex מאשר/מדייק את התיחום**) |
+| מטרה | מצב משימות אמין (Σ) → בריף שנמשך ממנו → בדיקות שמחוברות לתוצרים האמיתיים |
+| ריפו | `nocturney/velvetos-core` (לא instance, אלא אם יתגלה צורך סנכרון scaffold — אז משימה נפרדת) |
+| ענף מוצע | `codex/task-state-brief-artifacts-<suffix>` (ענף נפרד; worktree אם על אותה מכונה עם Cursor) |
+| סטטוס | **proposed — לא התחיל מימוש** |
+| PR | אין |
+| תלות | אחרי אישור תיחום; בסיס = `main` @ `618ff1a` (או SHA חדש יותר אם Cursor מעדכן כאן) |
+
+### בתוך התיחום (מוצע)
+
+1. **מצב משימות אמין** — חיזוק שימוש ב־`packages/vfharness/state/<task-id>.json` + `checkpoint.schema.json` / `skillstate.md` כך ש־Σ יהיה מקור אמת לריצה (לא צ'אט). אפשרות: ולידטור/סנסור שבודק checkpoints פעילים מול הסכמה. **לא** להתקין runtime שני.
+2. **בריף נגזר ממצב** — חיבור מבוקר כך שחריצי בריף / `STATUS-he` / שורות מחקר יימשכו ממצב/תוצרים קיימים (דרך `vfops_loop.py brief` או שכבת עזר **שאינה משכפלת** את הלולאה). שמירה על שבעת הבלוקים ב־`BRIEF.md` — לא מחליפים סדר טלפון.
+3. **בדיקות ↔ תוצרים** — הרחבת `check-vfops-loop.py` ו/או סנסור harness כך שכישלון = חוסר ארטיפקט צפוי / checkpoint לא תקין / בריף שלא נמשך ממקור חי — בלי LLM-as-judge, בלי ₪/Insights מומצאים.
+
+### קבצים — שריון מוצע (טיוטה לאישור)
+
+| מצב | נתיב |
+|---|---|
+| בעלות Codex (מוצע) | `packages/vfharness/templates/checkpoint.schema.json`, `packages/vfharness/playbooks/skillstate.md`, `packages/vfharness/EMBED.md` (אם נדרש), סנסור חדש תחת `scripts/check-*.py` **רק אם** לא דורס לוגיקת צריכה קיימת |
+| שיתוף / רצף עם Cursor | `scripts/vfops_loop.py`, `scripts/check-vfops-loop.py`, `packages/vfops/LOOP.json`, `packages/vfops/hq/LOOP.md`, `packages/vfops/BRIEF.md`, `packages/vfops/hq/BRIEF-SLOTS.md`, `packages/vfops/data/ARTIFACT-INDEX.md` |
+| מחוץ לתיחום | `constitution/**` (חוקים/מושבים/שליחה), `.cursor/vf-desk.json`, מודולי מחיר/Insights, Canva/IG publish, `instances/**` אלא במשימה נפרדת |
+
+אם Codex צריך לערוך את שורת «שיתוף / רצף» — Cursor מאשר חלון זמן או מפצל PR קטן לאינטגרציה אחרי PR של Codex על שכבת המצב בלבד.
+
+### תנאי השלמה (מוצע)
+
+- [ ] סכמת checkpoint / ולידציה עוברת על דוגמאות state קיימות
+- [ ] בריף (או שורת סטטוס) מוכיח משיכה ממצב/תוצר — לא טקסט חופשי בלבד
+- [ ] סנסור מחובר ל־`check-all.py` או מתועד כצעד חובה במשימה
+- [ ] אין שינוי בחמשת התפקידים / מגבלות סטודיו / הרשאות כלים חיצוניים
+- [ ] `python3 scripts/check-vfops-loop.py` ירוק אחרי השינוי
+- [ ] דרך חזרה: revert של הענף / PR בלי לשבור `#104` preflight
+
+### מה Cursor **לא** עושה במשימה הזו
+
+לא מממש את `SWC-CODEX-001`. רק מתעד, מאשר בעלות אחרי תשובת Codex, ואחר כך ממזג אחרי סקירה.
+
+---
+
+## תבנית שורת משימה (להעתקה)
+
+```md
+| `SWC-xxx` | <גורם יחיד> | <מטרה> | core / velvet-factory | <ענף> | <קבצים> | <תלויות> | <השלמה> | proposed\|owned\|running\|blocked\|done | <קישור PR או אין> |
+```
+
+---
+
+## Issue body (copy when enabled)
+
+כש־Issues יופעלו ב־`nocturney/velvetos-core`, ליצור Issue בשם **VelvetOS — Shared Work Coordination** עם גוף:
+
+```markdown
+רשומת תיאום חיה בגיט (עד שה־Issue קיים):  
+https://github.com/nocturney/velvetos-core/blob/main/docs/SHARED-WORK-COORDINATION.md
+
+מנהל מיזוגים: Cursor.  
+Codex: תשתית משימות / מצב / בריף / בדיקות.  
+GrokBot: הפעלת משרד + דיווח התנהגות.
+
+גרסת main core בעת ההקמה: `618ff1aa6a61ad48940c473fbc46ed2d4aab1cc2`  
+גרסת main velvet-factory: `27701889bb12c70dd62c4a22286be4828e86fee7`
+
+משימה ראשונה מוצעת ל־Codex: `SWC-CODEX-001` (ראו המסמך) — ממתין לאישור תיחום. לא התחיל מימוש.
+```
+
+עדכון ה־Issue אחרי יצירה: להחליף את השורה «Issue ב־GitHub» בראש המסמך בקישור המספר.
+
+---
+
+## יומן
+
+| מתי (UTC) | מי | מה |
+|---|---|---|
+| 2026-09-07T06:30Z | Cursor | סקר שני הריפואים; Issues כבויים ב־core; נוצר מסמך תיאום + תיחום `SWC-CODEX-001`; אין מימוש Codex |
