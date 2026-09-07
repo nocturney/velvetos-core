@@ -8,8 +8,9 @@
 - `vfcost.py brief` — עלות חומר חיה בחריץ 02 (בלי ₪ מכירה)
 - מדף `vfsku.py brief` + `week.md`
 - FOLLOWER-GROWTH · היילייטס + וואטסאפ
-- כיתובי vfcopy (G003/G004/G005)
-- מסירת סטודיו + שער עריכה + לוח אוטונומי
+- כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)
+- חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ
+- מסירת סטודיו + שער עריכה קשיח (אין סטוריז בלי Canva/vfcovers) + לוח אוטונומי
 - Canva MCP ready · Gmail/Calendar/Drive ready
 
 ## חסום על אדם / לוגין

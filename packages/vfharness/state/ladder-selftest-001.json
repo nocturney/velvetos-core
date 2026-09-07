@@ -1,0 +1,24 @@
+[
+  {
+    "rung": "retry_as_is",
+    "attempt": 1,
+    "ok": false,
+    "ts": "2026-09-07T11:00:24.738194+00:00"
+  },
+  {
+    "rung": "retry_as_is",
+    "attempt": 2,
+    "ok": false,
+    "ts": "2026-09-07T11:00:24.738354+00:00"
+  },
+  {
+    "rung": "retry_with_fallback",
+    "ok": false,
+    "ts": "2026-09-07T11:00:24.738472+00:00"
+  },
+  {
+    "rung": "downgrade_scope",
+    "ok": true,
+    "ts": "2026-09-07T11:00:24.738918+00:00"
+  }
+]

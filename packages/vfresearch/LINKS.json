@@ -31,7 +31,7 @@
       "url": "https://chatgpt.com/c/6a94f50b-f964-83eb-a89f-91b7c5e439fa",
       "title": "בניית משרד הדפסה יעיל — 31.8",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-08-31",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/chatgpt-6a94f50b.md",
       "report": "packages/vfresearch/sources/2026-08-31-orchestra.md",
       "packs": [
@@ -49,7 +49,7 @@
       "url": "https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19",
       "title": "סוכני בנייה",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-08-30",
+      "lastReviewed": "2026-09-07",
       "map": "packages/chatgpt-embed-map.json",
       "report": "docs/SHARE-EMBED-he.md",
       "packs": [
@@ -72,7 +72,7 @@
       "openUrl": "https://gemini.google.com/share/4f223bc1774c",
       "title": "סוכני בינה לעסק הדפסות תלת-ממד",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-08-30",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/gemini-hbuCq3MEy5po.md",
       "report": "docs/SHARES-2026-08-30.md",
       "packs": [
@@ -97,7 +97,7 @@
       "url": "https://www.perplexity.ai/search/c950af30-8c60-4667-b7d6-84db67f62218",
       "title": "Perplexity — אתר AI / תמחור / שרשרת",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-08-30",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/perplexity-c950af30.md",
       "report": "docs/SHARES-2026-08-30.md",
       "wallNote": "Live page may hit Cloudflare; use owner PDF / source note. Never invent body.",
@@ -637,7 +637,7 @@
       "url": "https://www.odoo.com/",
       "title": "Odoo — open source ERP/CRM apps",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-08-31",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "report": "docs/OFFICE-OS-EMBED-he.md",
       "packs": [
@@ -652,7 +652,7 @@
       "url": "https://www.zoho.com/all-products.html?src=zGlobalAllProductsbottom",
       "title": "Zoho — business apps suite / Zoho One",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-08-31",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops",
@@ -666,7 +666,7 @@
       "url": "https://www.salesforce.com/eu/small-business/pro-suite/",
       "title": "Salesforce Pro Suite — SMB CRM",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-08-31",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops",
@@ -681,7 +681,7 @@
       "url": "https://www.netsuite.com/portal/home.shtml",
       "title": "NetSuite — cloud ERP",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-08-31",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfbriefux",
@@ -696,7 +696,7 @@
       "url": "https://monday.com/",
       "title": "monday.com — AI work platform",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-08-31",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops",
@@ -711,7 +711,7 @@
       "url": "https://xenforo.com/",
       "title": "XenForo — forum platform",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-08-31",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfconvert",
@@ -726,7 +726,7 @@
       "url": "https://www.vbulletin.com/",
       "title": "vBulletin — forum platform",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-08-31",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfconvert",
@@ -740,7 +740,7 @@
       "url": "https://invisioncommunity.com/",
       "title": "Invision Community — forums/suite",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-08-31",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops",
@@ -754,7 +754,7 @@
       "url": "https://www.woltlab.com/en/",
       "title": "WoltLab — forum/community software",
       "firstEmbedded": "2026-08-31",
-      "lastReviewed": "2026-08-31",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-08-31-office-os-crm-erp.md",
       "packs": [
         "vfops"
@@ -767,7 +767,7 @@
       "url": "https://buildwithclaude.com/",
       "title": "Build with Claude — plugin/skill/MCP discovery (davepoon)",
       "firstEmbedded": "2026-09-03",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-buildwithclaude.md",
       "report": "packages/vfresearch/sources/2026-09-03-weekly-links.md",
       "packs": [
@@ -809,7 +809,7 @@
       "openUrl": "https://arxiv.org/html/2608.26263",
       "title": "SKILLSTATE — scalable long-horizon agent skills (explicit execution state)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-skillstate.md",
       "playbook": "packages/vfharness/playbooks/skillstate.md",
       "packs": [
@@ -825,7 +825,7 @@
       "url": "https://mcpmarket.com/tools/skills/strategic-context-compaction-1787987503518",
       "title": "Strategic Context Compaction — phase-boundary /compact (Claude Code)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-strategic-compact.md",
       "playbook": "packages/vfharness/playbooks/context-thrift.md",
       "packs": [
@@ -842,7 +842,7 @@
       "openUrl": "https://agentskill.sh/@openclaw/diagram-maker",
       "title": "Diagram Maker Visualizer (openclaw/diagram-maker)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "wallNote": "mcpmarket.com returned Vercel security checkpoint; body taken from agentskill.sh + github.com/openclaw/openclaw/skills/diagram-maker — no invented mcpmarket body.",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-diagram-maker.md",
       "report": "packages/vfbriefux/hq/DIAGRAM-MAKER.md",
@@ -860,7 +860,7 @@
       "openUrl": "https://github.com/ahujasid/blender-mcp",
       "title": "Blender MCP (ahujasid) — local Blender control",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
       "playbook": "packages/vfprod/BLENDER-MCP.md",
       "packs": [
@@ -878,7 +878,7 @@
       "openUrl": "https://github.com/coleam00/Archon",
       "title": "Archon — AI coding harness / workflow builder",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
       "playbook": "packages/vfe2b/ORCHESTRATORS.md",
       "packs": [
@@ -895,7 +895,7 @@
       "openUrl": "https://github.com/Jeffallan/claude-skills",
       "title": "Jeffallan fullstack-dev-skills — Claude Code plugin (~67 skills)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-three.md",
       "packs": [
         "vfmem",
@@ -912,7 +912,7 @@
       "openUrl": "https://github.com/excalidraw/excalidraw-mcp",
       "title": "Excalidraw MCP — interactive diagrams",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -929,7 +929,7 @@
       "openUrl": "https://github.com/dhakalnirajan/blender-open-mcp",
       "title": "Blender Open MCP (Ollama)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/BLENDER-MCP.md",
       "packs": [
@@ -945,7 +945,7 @@
       "openUrl": "https://github.com/ahujasid/blender-mcp",
       "title": "Blender AI MCP (market listing)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -961,7 +961,7 @@
       "openUrl": "https://github.com/GenWaveLLC/svgmaker-mcp",
       "title": "SVGMaker MCP — AI SVG generate/edit",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -978,7 +978,7 @@
       "openUrl": "https://github.com/AnCode666/multiCAD-mcp",
       "title": "multiCAD MCP — AutoCAD/ZWCAD/GstarCAD/BricsCAD",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -994,7 +994,7 @@
       "openUrl": "https://github.com/petrijr/openscad-mcp",
       "title": "OpenSCAD MCP family — parametric validate/render/STL",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -1011,7 +1011,7 @@
       "url": "https://mcpmarket.com/server/blender-vxai",
       "title": "Blender VXAI MCP (market listing)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -1027,7 +1027,7 @@
       "openUrl": "https://github.com/russell-qca/sketchup-mcp",
       "title": "SketchUp MCP",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -1043,7 +1043,7 @@
       "openUrl": "https://github.com/neka-nat/freecad-mcp",
       "title": "FreeCAD MCP",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
       "playbook": "packages/vfprod/CAD-MCP.md",
       "packs": [
@@ -1060,7 +1060,7 @@
       "openUrl": "https://youmind.com/prompts",
       "title": "YouMind — free AI prompt library (image/video/web)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-youmind-prompts.md",
       "playbook": "packages/vfcovers/hq/PLAYBOOK.md",
       "packs": [
@@ -1077,7 +1077,7 @@
       "openUrl": "https://mcpmarket.com/tools/skills/market-research-intelligence",
       "title": "Market Research Intelligence — decision-oriented research gates (MCP Market)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-market-research-intelligence.md",
       "playbook": "packages/vfresearch/hq/MARKET-INTEL.md",
       "packs": [
@@ -1094,7 +1094,7 @@
       "url": "https://footrue.com/",
       "title": "footrue ToolBox — 200+ free browser-local tools",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-footrue.md",
       "report": "packages/vfresearch/sources/2026-09-05-weekly-links-footrue.md",
       "playbook": "packages/vfcovers/hq/PLAYBOOK.md",
@@ -1111,7 +1111,7 @@
       "url": "https://github.com/mikiarlo3/ai-copywriter",
       "title": "ai-copywriter — reader-first copy + Humanizer (33 AI tells)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-ai-copywriter-embed.md",
       "packs": [
         "vfcopy",
@@ -1126,7 +1126,7 @@
       "url": "https://github.com/debpalash/VoiceStudio",
       "title": "VoiceStudio — local ElevenLabs alternative (TTS/ASR/dub/MCP)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-voicestudio.md",
       "report": "packages/vfresearch/sources/2026-09-05-voicestudio-weekly.md",
       "verdict": "skip-install",
@@ -1145,7 +1145,7 @@
       "openUrl": "https://deeptutor.info/",
       "title": "DeepTutor — lifelong personalized tutoring (agent-native learning)",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
       "playbook": "packages/vfops/hq/MASTERY-MEMORY.md",
       "packs": [
@@ -1162,7 +1162,7 @@
       "url": "https://examful.ai/",
       "title": "ExamFul.ai — AP / IB / A-level past papers + AI tutoring",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "verdict": "watch",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
       "packs": [
@@ -1177,7 +1177,7 @@
       "url": "https://github.com/larashero3-dotcom/lieflat-charts",
       "title": "lieflat-charts — agent skill for polished HTML data charts",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
       "report": "packages/vfbriefux/hq/CHARTS.md",
       "packs": [
@@ -1193,7 +1193,7 @@
       "url": "https://github.com/Imbad0202/academic-research-skills",
       "title": "academic-research-skills — research → write → review → revise → finalize",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-deeptutor-examful-charts-academic.md",
       "playbook": "packages/vfresearch/hq/ACADEMIC-PIPELINE.md",
       "packs": [
@@ -1226,7 +1226,7 @@
       "openUrl": "https://github.com/ndesv21/socialclaw/blob/main/skill/SKILL.md",
       "title": "Social Media Publisher (SocialClaw-style) — validate→apply→verify publish skill",
       "firstEmbedded": "2026-09-05",
-      "lastReviewed": "2026-09-05",
+      "lastReviewed": "2026-09-07",
       "sourceNote": "packages/vfresearch/sources/2026-09-05-social-media-publisher.md",
       "packs": [
         "vfigos",

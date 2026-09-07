@@ -1,12 +1,12 @@
 {
-  "date_line": "יום שני 7 בספטמבר 2026 · בריף סוכנות · תצוגה 3",
+  "date_line": "2026-09-07 · בריף סוכנות · תצוגה 3",
   "bottom_line": "המשרד רץ. כריסטיאן יכול לשבת רגוע — בלי ₪ מומצא, בלי Insights מומצאים, בלי חצי-עבודה.",
   "footer": "Velvet Factory · סוכנות פנימית · איסוף משדרות",
   "slots": [
     {
       "kicker": "01 · קודם החלטה",
       "title": "החלטות",
-      "prose": "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 מוכן. שיבוץ בלי לשאול משבצת — אחרי שער עריכה.",
+      "prose": "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 סטוריז = G004-STORIES-FIX.md. שיבוץ בלי לשאול משבצת — אחרי שער עריכה (Canva/vfcovers).",
       "headers": [
         "החלטה",
         "כן/לא/דחה",
@@ -19,9 +19,9 @@
           "X ₪"
         ],
         [
-          "כיתוב G004 לסטודיו",
+          "כיתוב G004 סטוריז",
           "כן",
-          "vfcopy/G004.md"
+          "vfcopy/G004-STORIES-FIX.md"
         ],
         [
           "ig-mcp Publish",
@@ -70,17 +70,17 @@
     {
       "kicker": "05 · משרד",
       "title": "מה נבנה / יועל",
-      "prose": "05 · משרד\nמה נבנה / יועל: קול פיד נעול vfcopy/VOICE.md (תהליך-קצר / סיפור-מוצר) · STUDIO מצביע לחוק · G004 סיפור-מוצר · מחקר שכנים ב-VOICE-RESEARCH.md"
+      "prose": "05 · משרד\nמה נבנה / יועל:\nCLI 14:06 · python3 packages/vfmem/scripts/vf_semantic_search.py --build\nCLI 14:06 · python3 packages/vfinsights/scripts/vf_insights_loop.py --data packages/vfinsights/data/posts.csv\nCLI 14:06 · python3 packages/vfharness/scripts/vf_graceful_escalation.py --self-test\nCLI 14:06 · python3 packages/vfsales/scripts/vf_quote_ladder.py --task-id sensor-check --known material=PETG\nCLI 14:06 · python3 scripts/check-vfresearch.py\nפערים (לא הורץ הבוקר)\nפער: vfbriefux לא הורץ · python3 packages/vfbriefux/render_mail.py --check\nפער: vfcanva לא הורץ · packages/vfcanva/studio/render.py\nפער: vfcovers לא הורץ · packages/vfcovers/g005/compose_slides.py\nפער: vfigos לא הורץ · packages/vfigos/CONNECT-IG.md · needsAuth · טוקן Meta · סטוריז ב-instagram.com\nפער: vfprod לא הורץ · packages/vfprod/SHOP-CLOSE.md · אין Print מ-HQ\nפער: vfresearch לא הורץ · packages/vfresearch/DAILY.md\nפער: vfsales לא הורץ · packages/vfsales/QUOTE.md · X ₪ עד סכום מאומת\nפער: vfseason לא הורץ · packages/vfseason/hq/PLAYBOOK.md · אין חלון עונה בלי תאריך סטודיו"
     },
     {
       "kicker": "06",
       "title": "מה קורה בעמוד",
-      "prose": "Insights: אין ספירה · ig-mcp needsAuth עד CONNECT-IG.md (צעד אדם)"
+      "prose": "Insights: Learnings — closed measurement loop · מקור packages/vfinsights/LEARNINGS.md · בלי חדשות רעות מומצאות לבעלים · מדדים חלשים נשארים פער פנימי."
     },
     {
       "kicker": "07 · פיד בסוף",
       "title": "מה עולה בפיד",
-      "prose": "מסירה: vfgrowth/HANDOFF-he.md · שער עריכה (Canva/vfcovers) לפני שיבוץ — לא JPEG גולמי · סטוריז ב-instagram.com · לוח אוטונומי.",
+      "prose": "מסירה: vfgrowth/HANDOFF-he.md · PREFLIGHT.md חובה לפני שיבוץ (VOICE + Canva/vfcovers + ציון עצמי + קומפס) · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · שער עריכה קשיח: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · נכשל-סגור = חסום · פער סוכנות = שורת פער למשרד, לא אשמת בעלים · סטוריז ב-instagram.com · לוח אוטונומי.",
       "headers": [
         "מזהה",
         "פתיחה",
@@ -88,8 +88,13 @@
       ],
       "rows": [
         [
+          "G004-STORIES-FIX",
+          "ורוד על השידה — והטבעות כבר במקום 💍",
+          "מוכן להדבקה"
+        ],
+        [
           "G004",
-          "ורוד, מקום לטבעות והמון אופי 💍",
+          "ורוד על השידה — והטבעות כבר במקום 💍",
           "מוכן להדבקה"
         ],
         [

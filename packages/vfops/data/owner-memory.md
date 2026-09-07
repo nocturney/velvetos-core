@@ -168,3 +168,11 @@
 - **למדנו:** Codex CLI `0.153.4` על `chris@Mac-Office` = `Successfully logged in` (ChatGPT Plus, לא מפתח API). לא מעתיקים `~/.codex` לענן. Perplexity נשאר בכרום.
 - **מחר:** סוכן על `sderot-mac` יכול להריץ `agy` / `codex` בטרמינל המק. Worker לא נסגר. `--computer-use` עדיין לא.
 - **מקור:** שיחת בעלים 5.9.2026.
+
+### 2026-09-07 (מושב מחקר — הרצת כל החוקרים)
+
+- **מושב:** מחקר/אורקסטרציה
+- **למדנו:** `posts.csv` עדיין בלי reach אמיתי — LEARNINGS כותב «אין מדידה»; בלוק 06 = «אין ספירה» עד הדבקה מ־Instagram Professional Dashboard (לא לנחש).
+- **למדנו:** triage לפני grill (`vfconvert/hq/TRIAGE.md`) + quote-ladder לטיוטה חלקית עם `חסר:` / `X ₪`.
+- **מחר:** למלא reach ל־`DcqkjOLlYVX` מהדשבורד; להמשיך דופק best-skills (טיימר חודש).
+- **מקור:** `sources/2026-09-07-orchestra.md` · weekly-links · best-skills · last30.
