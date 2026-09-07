@@ -115,7 +115,7 @@
     "contentAllowed": "floor proof + Hebrew product copy",
     "extraLocks": [
       "pickup-sderot-only",
-      "b2b-logo-qr-napkins-locked",
+      "b2b-line-locked",
       "no-tiktok-without-lead",
       "no-ads-without-lead"
     ]

@@ -69,6 +69,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - 2026-09-05 — Opened `gemini.google.com` / `chatgpt.com` from Cloud Agent or Grok Bot, triggering Google/OpenAI “unauthorized access” alerts. Use API keys (`vf_gemini.py` / `vf_chatgpt.py`). Plus ≠ API. Do not copy cookies or Antigravity tokens to Cloud. Sensor: `scripts/check-vfmcp.py`. Playbook: `packages/vfmcp/SUBSCRIPTIONS.md`.
 - 2026-09-07 — Surfaced weak Insights / «רמה נמוכה» / post-publish quality autopsy to Christian. Quality is a **preflight** (`vfgrowth/PREFLIGHT.md` + EDIT-GATE + VOICE + 2–3 comps). Fail-closed = block schedule; fix in office. Sensor: `scripts/check-vfgrowth.py` + `scripts/check-vfops-loop.py`.
 - 2026-09-07 — Renamed `velvetos-core` into a nervous-system / event-bus runtime, or promised zero-touch inquiry→close on ₪ / WhatsApp. Core stays **Kernel** (catalog + contracts); Edge is optional host; Office/HQ owns decisions; human gates stay. Embed: `packages/velvetos/ADR-THREE-LAYERS.md` + `LAYERS.md` + `schema/events.catalog.json` + `component_state` + Degraded Mode + `vf_retro_signals.py`. Sensor: `scripts/check-velvetos.py` + `scripts/check-vfharness.py` + `scripts/check-vfops-loop.py`.
+- 2026-09-07 — Treated logo/QR/napkins as a closed B2B catalog of three products. Those were **examples**. B2B as a line stays locked until the lead seat opens it; HQ must not invent a three-SKU B2B shelf. Sensor: `scripts/check-velvetos.py`.
 
 ## SENSORS (run after changes)
 
@@ -89,7 +90,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfops-loop.py` | Office activation loop — every pack consumed into 07:00 brief + HANDOFF |
 | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready + Gemini/ChatGPT API desks (`vf_gemini.py` / `vf_chatgpt.py`; not aliargun / RLabs; no Cloud browser login) |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
-| `scripts/check-velvetos.py` | VelvetOS Core + modules; VF frontend scaffold under instances/; backend≠frontend |
+| `scripts/check-velvetos.py` | VelvetOS Core + modules; VF frontend scaffold under instances/; backend≠frontend; B2B examples ≠ closed three-SKU catalog |
 
 Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
 

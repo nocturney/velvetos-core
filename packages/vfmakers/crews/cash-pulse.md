@@ -51,7 +51,7 @@ No ranking of «most profitable jobs» unless both `vfcost` cost **and** a verif
 
 ## Scenario
 
-«What if we hire / buy / open B2B» — copy existing numbers only. Missing input stays `X ₪`. B2B logos/QR/napkins stay locked unless the lead seat already opened them in `vfbiz`.
+«What if we hire / buy / open B2B» — copy existing numbers only. Missing input stays `X ₪`. B2B as a line stays locked unless the lead seat already opened it in `vfbiz`. Logo/QR/napkins were examples, not a closed catalog.
 
 ## Done when
 

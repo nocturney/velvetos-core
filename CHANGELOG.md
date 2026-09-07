@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **B2B = דוגמאות, לא שלושה מק״ט:** תיקון בעלים. לוגו / QR / מפיות היו דוגמאות לקו B2B — לא קטלוג סגור. הנעילה נשארת על **הקו** עד ראש צוות (`vfbiz/LOCK.md` · `STUDIO.md`). extraLock `b2b-line-locked`. סנסור `check-velvetos.py`. בלי פתיחת B2B / בלי ₪. Owner correction: B2B examples ≠ closed three-SKU catalog; line stays locked.
+
 - 2026-09-07 — **Watchtower = Edge farm dashboard:** פלייבוק `vfprod/WATCHTOWER.md` — דשבורד חווה מקומי (כוונת רכישה) יושב על LAN שדרות, לא כדמון בליבה ולא Print מ־HQ. כרטיס `print.done` אחרי הצלחה; אנליטיקת vendor ≠ ₪ מכירה. סנסור `check-vfops-loop`. בלי התקנה / בלי מחיר מומצא. Watchtower maps to Edge; Core stays catalog; no HQ print.
 
 - 2026-09-07 — **גיבוי ערב קטלוג**: רענון `packages/manifest.json` (`catalogRefreshedAt` 2026-09-07). נכללו מוזגים #118 print-demand/print.done/revenue retro, #117 SoC שלוש שכבות, #116 יציבות ליבה, #115/#105 תיאום SWC, #109–#114 איכות+לולאה+תבניות, #107/#106 מושב מחקר, #104/#103/#102 שער+סטוריז G004, #101 בריף, #100 vfbiz. Origin לא שוכפל (אין login). אין PR פתוחים. Evening catalog refresh; Origin not vendored.
