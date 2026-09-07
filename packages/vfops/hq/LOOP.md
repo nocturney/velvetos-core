@@ -21,7 +21,7 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 |---|---|
 | 02 | `vfcost.py brief` — עלות חומר חיה (בלי ₪ מכירה) |
 | 03 | `vfsku.py brief` + `vfsku/week.md` |
-| 04 | `vfgrowth/hq/FOLLOWER-GROWTH.md` + `vfbiz` נעול + וואטסאפ |
+| 04 | `vfgrowth/hq/FOLLOWER-GROWTH.md` + `vfbiz/out/week.md` + B2B נעול + וואטסאפ |
 | 05 | `data/research.md` «מה נבנה / יועל» |
 | 06 | `vfinsights` — «אין ספירה» עד סנאפשוט / טוקן |
 | 07 | כיתובי `vfcopy` מוכנים + `vfgrowth/HANDOFF-he.md` |

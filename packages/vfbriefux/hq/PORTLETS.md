@@ -11,7 +11,7 @@
 | Decisions due | 01 קודם החלטה | ראש צוות / walls | אין החלטה פתוחה |
 | AR / cash in work | 02 כסף בעבודה | `vfbooks` מאומת | אין ספירה |
 | Print queue + publish queue | 03 מה להדפיס ולפרסם | סלייסר / `vfigos` | אין ספירה |
-| Locked B2B / margin story | 04 איך הסטודיו מרוויח | `vfbiz` | נעול / בלי ₪ מומצא |
+| Locked B2B / margin story | 04 איך הסטודיו מרוויח | `vfbiz` + `vfbiz/out/week.md` | נעול / בלי ₪ מומצא |
 | Office upgrades | 05 משרד | `vfops/data/research.md` | אין חדש במשרד |
 | Feed health | 06 מה קורה בעמוד | `vfinsights` אחרי פרסום+24ש | אין ספירה |
 | Content tray | 07 פיד בסוף | `vfcovers` / `vfigos` | `#לא-זז` |

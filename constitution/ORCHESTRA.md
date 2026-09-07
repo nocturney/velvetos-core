@@ -101,7 +101,7 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 
 חריץ 02 = `vfcost.py brief` (עלות חומר חיה, בלי ₪ מכירה).  
 חריץ 03 = `vfsku` + `week.md`.  
-חריץ 04 = `FOLLOWER-GROWTH` + היילייטס + וואטסאפ.  
+חריץ 04 = `FOLLOWER-GROWTH` + `vfbiz/out/week.md` + היילייטס + וואטסאפ.  
 חריץ 05 = `data/research.md`.  
 חריץ 06 = `vfinsights` — «אין ספירה» עד טוקן / סנאפשוט.  
 חריץ 07 = כיתובי `vfcopy` מוכנים + שער עריכה לפני שיבוץ.
