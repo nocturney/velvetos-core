@@ -16,3 +16,4 @@ packages/vfcanva/studio/out/*.png
 packages/vfops/data/cli-runs.jsonl
 office/ledger/live/*.csv
 packages/vfmem/semantic_index.pkl
+packages/vfops/data/consumer-runs.jsonl

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — `vfops_loop.py run`: צרכנים יומיים עם תנאי/דילוג/ללא רקורסיית check-all; brief רק מרכיב; אין רנדור G005 אוטומטי.
 - 2026-09-07 — `check-vfcopy`: מודל כיתוב לפרסום (גדרות להדבקה) + שערי HANDOFF לפי פורמט/שלב + 6 בדיקות התנהגות; לא סריקת הוראות פנימיות.
 - 2026-09-07 — **מושב מחקר — הרצת כל החוקרים:** semantic index (`vfmem` TF-IDF build) · Insights loop → `LEARNINGS.md` (0 measured, לא נוחש) · weekly-links 76 · best-skills dataDate 2026-09-07 (הוטמע `vfconvert/hq/TRIAGE.md` + `vfsales/scripts/vf_quote_ladder.py`) · LAST30 maker-IG · daily retro/memory · טיימר best-skills חודש · `check-staleness` סובל ladder JSON arrays. סנסורים 23/23. בלי פק חדש / npx / ₪ מומצא.
 

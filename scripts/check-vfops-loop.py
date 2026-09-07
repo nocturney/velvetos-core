@@ -106,7 +106,67 @@ def main() -> None:
     if proc.returncode != 0:
         fail(f"vfops_loop.py check: {proc.stderr or proc.stdout}")
 
-    print("OK vfops-loop wired into orchestra+brief+handoff")
+
+    # --- behavioral consumers: run ≠ brief ≠ check ---
+    import vfops_loop as loop
+
+    specs = {s.id: s for s in loop.consumer_registry()}
+    if "sensor-suite" not in specs:
+        fail("consumer registry must list sensor-suite as explicit skip")
+    if specs["sensor-suite"].auto_daily or specs["sensor-suite"].kind != "skip":
+        fail("check-all must never be an auto-daily consumer (recursion)")
+    if specs["vfcovers-compose"].auto_daily or specs["vfcanva-render"].auto_daily:
+        fail("vfcanva/vfcovers must not auto-run standing packs")
+    if specs["vfsales-quote"].auto_daily:
+        fail("vfsales quote is on-inquiry only")
+
+    # Fixture isolation: do not pollute live consumer-runs during sensor
+    import tempfile
+    from pathlib import Path as P
+    tmp = tempfile.TemporaryDirectory()
+    fake_state = P(tmp.name) / "consumer-runs.jsonl"
+    old_state = loop.CONSUMER_STATE
+    loop.CONSUMER_STATE = fake_state
+    try:
+        day = "2099-01-01"
+        first = loop.run_daily_consumers(today=day, force=False)
+        by_id = {r["id"]: r for r in first}
+        if by_id.get("velvetos-modules", {}).get("status") != "ok":
+            fail(f"velvetos-modules should run once: {by_id.get('velvetos-modules')}")
+        if by_id.get("vfcovers-compose", {}).get("status") != "skipped":
+            fail("vfcovers-compose must skip without content job")
+        if by_id.get("sensor-suite", {}).get("status") != "skipped":
+            fail("sensor-suite must skip inside run")
+        second = loop.run_daily_consumers(today=day, force=False)
+        if second and {r["id"]: r for r in second}.get("velvetos-modules", {}).get("status") != "skipped":
+            fail("second run must skip already-ok consumer (no overwrite thrash)")
+        brief = loop.assemble(day)
+        blob = json.dumps(brief, ensure_ascii=False)
+        if "velvetos-modules" not in blob and "צרכנים" not in blob:
+            fail("assemble brief must surface consumer results")
+        # check path must not call run_daily_consumers — ensure state line count stable across check
+        before = fake_state.read_text(encoding="utf-8") if fake_state.is_file() else ""
+        proc2 = subprocess.run(
+            [sys.executable, str(CLI), "check"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+        )
+        if proc2.returncode != 0:
+            fail(f"vfops_loop.py check after run: {proc2.stderr or proc2.stdout}")
+        after = fake_state.read_text(encoding="utf-8") if fake_state.is_file() else ""
+        # check uses live CONSUMER_STATE path inside subprocess — cannot see fake_state.
+        # Prove in-process: assemble alone does not append runs
+        n_before = len(before.splitlines())
+        loop.assemble(day)
+        n_after = len(fake_state.read_text(encoding="utf-8").splitlines()) if fake_state.is_file() else 0
+        if n_after != n_before:
+            fail("assemble must not append consumer-runs (side effect)")
+    finally:
+        loop.CONSUMER_STATE = old_state
+        tmp.cleanup()
+
+    print("OK vfops-loop wired into orchestra+brief+handoff + consumers")
 
 
 if __name__ == "__main__":

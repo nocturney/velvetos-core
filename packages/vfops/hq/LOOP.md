@@ -4,9 +4,13 @@
 המכונה: `LOOP.json` + `python3 scripts/vfops_loop.py`.  
 הקטלוג לבד = כישלון. הבריף והמסירה חייבים **למשוך** שורות מהפקים.
 
-## כל בוקר 07:00 (Asia/Jerusalem)
+## כל בוקר 06:15–07:00 (Asia/Jerusalem)
+
+הפרדה קשיחה: **run** (משימות) → **brief** (הרכבה) → **check**/CI (תקינות).  
+`run` לא מפעיל `check-all` (רקורסיה עם `check-vfops-loop`). לא מרנדר G005/Canva אוטומטית.
 
 ```
+python3 scripts/vfops_loop.py run
 python3 scripts/vfops_loop.py brief --write
 python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.json \
   -o packages/vfops/out/BRIEF-YYYY-MM-DD.html
@@ -22,8 +26,8 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 | 02 | `vfcost.py brief` — עלות חומר חיה (בלי ₪ מכירה) |
 | 03 | `vfsku.py brief` + `vfsku/week.md` |
 | 04 | `vfgrowth/hq/FOLLOWER-GROWTH.md` + `vfbiz/out/week.md` + B2B נעול + וואטסאפ |
-| 05 | CLI אמיתי מ-24ש (`cli-runs.jsonl`) או «אין חדש במשרד» + שורות **פער** לפק שלא הורץ. לא קטלוג מ-`research.md` |
-| 06 | `vfinsights` — «אין ספירה» עד סנאפשוט / טוקן. מדדים חלשים = לוג פנימי, לא אשמת בעלים |
+| 05 | CLI אמיתי מ-24ש (`cli-runs.jsonl`) + סיכום `consumer-runs` מ־`run`, או «אין חדש במשרד» + שורות **פער** לפק יומי שלא הורץ. `on-content`/`on-inquiry` לא נחשבים פער בוקר. לא קטלוג מ-`research.md` |
+| 06 | `vfinsights` loop → `LEARNINGS.md` כשיש CSV; אחרת «אין ספירה». מדדים חלשים = לוג פנימי, לא אשמת בעלים |
 | 07 | כיתובי `vfcopy` + `G004-STORIES-FIX.md` + `vfgrowth/HANDOFF-he.md` + נתיב `PREFLIGHT.md`. פער סוכנות = שורת פער למשרד |
 
 ## מסירה לסטודיו

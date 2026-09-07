@@ -10,6 +10,7 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 | שעה (Asia/Jerusalem) | מה | קובץ |
 |---|---|---|
 | 06:15 | תזמורת: ChatGPT **וגם** Gemini **וגם** Perplexity · failover מיד אם כלי נפל | `constitution/ORCHESTRA.md`, `vfresearch/DAILY.md` |
+| 06:15–07:00 | צרכנים יומיים (בלי check-all / בלי G005 אוטומטי) | `python3 scripts/vfops_loop.py run` · אח״כ בריף |
 | 07:00 | בריף בוקר — **לולאה מושכת פקים** | `python3 scripts/vfops_loop.py brief --write` · `BRIEF.md` · `hq/LOOP.md` |
 | אחרי בריף | פוסט מתוכנן → Google Calendar (בלי לשאול משבצת) | `vfgrowth/CALENDAR-OPS.md` |
 | לפני שיבוץ | שער עריכה + פריפלייט כתוב — לא JPEG גולמי. נכשל-סגור = לא משבצים | `vfgrowth/EDIT-GATE.md` · `vfgrowth/PREFLIGHT.md` · `constitution/STUDIO.md` |
