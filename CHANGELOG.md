@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **תיאום עבודה משותפת (Cursor · Codex · GrokBot):** לוח בעלות ב־`docs/SHARED-WORK-COORDINATION.md`. Issues כבויים ב־`velvetos-core` — גוף Issue מוכן במסמך. תיחום מוצע `SWC-CODEX-001` (מצב משימות → בריף → בדיקות תוצרים) בלי מימוש. בלי שינוי חוקה/מושבים/הרשאות. Shared-work coordination board; no second task system.
+
 - 2026-09-07 — **נעילת כריסטיאן + פריפלייט פיד:** משטח ראש צוות = החלטה / חסם קשיח / פרסום חי שדורש אותו בלבד. אסור: מדדים חלשים, «רמה נמוכה», נתיחת איכות אחרי פרסום, דוח בושה על כלים. שער כתוב `vfgrowth/PREFLIGHT.md` (VOICE + Canva/vfcovers + ציון עצמי + 2–3 קומפס מ־`VOICE-RESEARCH`) — נכשל-סגור חוסם שיבוץ. HANDOFF דורש `preflight/<id>.md`. בריף 06/07 בלי חדשות רעות מומצאות לבעלים. חוקה: ORCHESTRA/STUDIO/SEND + עותקי VF. בלי Publish / ₪ מומצא. Christian lock: quality gate before schedule, never upward shame.
 
 - 2026-09-07 — **VF-G004 סטוריז יוקרה:** ארבעה פריימי 1080×1920 ב־Canva MCP (`DAHUfU77wh4` / `DAHUfWrh3KM` / `DAHUfWdu4aM` / `DAHUfVplwd8`) + מעבר vfcovers/studio. פריים 1 = צילום פתוח `MAHUaToGa3s` בלי טבעות מומצאות + «מחזיק טבעות לזמן אימון». פריים 4 = «וואטסאפ 050-2517000» בלבד. טיוטות Studio `DAHUfTBiDMg`/`DAHUfRQMH60` לא ננגעו. כיתוב מאושר נשאר `vfcopy/G004-STORIES-FIX.md`. לא פורסם. פלייבוק `vfcanva/jobs/G004.md`. G004 stories luxury rebuild; no invented rings; no IG send.
