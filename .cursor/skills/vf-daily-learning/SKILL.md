@@ -16,11 +16,14 @@ Living office culture: specialists learn, improve, and feed shared memory — no
 
 ## Do this
 
-1. Read `packages/vfops/hq/DAILY-RETRO.md` — lead seat checklist. (First time only: `INITIAL-RETRO.md`.)
+1. Read `packages/vfops/hq/DAILY-RETRO.md` — lead seat checklist + load block + history log. (First time only: `INITIAL-RETRO.md`.)
 2. Skim today's conversations per seat (studio, growth, ops, production).
-3. Write **one line minimum** to `packages/vfops/data/owner-memory.md` (format in `packages/vfmem/MEMORY-UPDATE.md`).
-4. Open checkpoints for unfinished jobs: `packages/vfharness/state/`.
-5. If same mistake twice → note for `AGENTS.md` ANTI-PATTERN (next catalog edit).
+3. Fill the load section only with measured hours; missing stays `~__` / «אין ספירה» — never invent hours.
+4. Append a **log line** under the history section in `DAILY-RETRO.md` (keep prior days).
+5. Write **one line minimum** to `packages/vfops/data/owner-memory.md` (format in `packages/vfmem/MEMORY-UPDATE.md`).
+6. Open checkpoints for unfinished jobs: `packages/vfharness/state/`.
+7. If same mistake twice → note for `AGENTS.md` ANTI-PATTERN (next catalog edit).
+8. Weekly load pulse (subjective): `packages/vfops/hq/WEEKLY-LOAD.md` — does not replace the daily memory line.
 
 ## Per expert module
 
