@@ -33,9 +33,17 @@ Grok Bot הוא **גיבוי אופציונלי**, לא השולח היחיד ו
 `python3 scripts/vfops_loop.py brief --write` מרכיב את החריצים מפקים חיים.  
 אחר כך `render_mail.py` + `send_message` (`htmlBody` תצוגה 3). המעבר הזה לא מפרסם IG.
 
+## נעילת כריסטיאן — לפני שיבוץ / חי
+
+משטח: **החלטה** · **חסם קשיח** · **פרסום חי שדורש אותו בלבד**.  
+אסור: מדדים חלשים · «רמה נמוכה» · נתיחת איכות אחרי פרסום · דוח בושה על כלי שלא נצרך.
+
+לפני שיבוץ או Publish: ארטיפקט `vfgrowth/preflight/<id>.md` לפי [`PREFLIGHT.md`](../packages/vfgrowth/PREFLIGHT.md) — VOICE + Canva/vfcovers + ציון עצמי + 2–3 קומפס.  
+נכשל-סגור → **לא משבצים**. מתקנים במשרד. אל תפנה לכריסטיאן על מדדים חלשים.
+
 ## אינסטגרם — מותר דרך כלי
 
-1. **שער עריכה** — Canva MCP / `vfcovers` / `vfcanva` (`studio/render.py`). **לא** טקסט על JPEG גולמי (`STUDIO.md`, `vfgrowth/EDIT-GATE.md`). Gemini browser רק על המק.
+1. **פריפלייט + שער עריכה** — ארטיפקט כתוב (`PREFLIGHT.md`) ואז Canva MCP / `vfcovers` / `vfcanva` (`studio/render.py`). **לא** טקסט על JPEG גולמי (`STUDIO.md`, `vfgrowth/EDIT-GATE.md`). Gemini browser רק על המק. בלי שער עבור = נכשל-סגור.
 2. `vfcopy` נותן כיתוב + CTA וואטסאפ / איסוף שדרות.
 3. אם **ig-mcp** מחובר (`packages/vfigos/CONNECT-IG.md`) — HQ מפרסם ב־`publish_media`, **מאמת תוצאת כלי** (validate→apply→verify ב־`vfigos/SEND.md`), ורק אז מסמן `#נשלח-מ-HQ`.
 4. אם אין Publish MCP / `needsAuth` — **failover מיד:** יוצרים מסמך Drive + שולחים ג׳ימייל עם המדיה/הכיתוב/קישור העריכה. מסמנים `#נשלח-מ-HQ` (מסלול כלים) + `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה.

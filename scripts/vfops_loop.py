@@ -22,6 +22,7 @@ FOLLOWER = ROOT / "packages" / "vfgrowth" / "hq" / "FOLLOWER-GROWTH.md"
 WEEK = ROOT / "packages" / "vfsku" / "week.md"
 HANDOFF = ROOT / "packages" / "vfgrowth" / "HANDOFF-he.md"
 EDIT_GATE = ROOT / "packages" / "vfgrowth" / "EDIT-GATE.md"
+PREFLIGHT = ROOT / "packages" / "vfgrowth" / "PREFLIGHT.md"
 CAL_OPS = ROOT / "packages" / "vfgrowth" / "CALENDAR-OPS.md"
 STATUS = ROOT / "packages" / "vfops" / "hq" / "STATUS-he.md"
 STUDIO = ROOT / "constitution" / "STUDIO.md"
@@ -314,12 +315,12 @@ def assemble(today: str) -> dict:
             {
                 "kicker": "06",
                 "title": "מה קורה בעמוד",
-                "prose": insights,
+                "prose": f"{insights} · בלי חדשות רעות מומצאות לבעלים · מדדים חלשים נשארים פער פנימי.",
             },
             {
                 "kicker": "07 · פיד בסוף",
                 "title": "מה עולה בפיד",
-                "prose": "מסירה: vfgrowth/HANDOFF-he.md · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · שער עריכה קשיח: Canva MCP או vfcovers/vfcanva לפני שיבוץ — לא JPEG גולמי · סטוריז ב-instagram.com · לוח אוטונומי.",
+                "prose": "מסירה: vfgrowth/HANDOFF-he.md · PREFLIGHT.md חובה לפני שיבוץ (VOICE + Canva/vfcovers + ציון עצמי + קומפס) · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · שער עריכה קשיח: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · נכשל-סגור = חסום · פער סוכנות = שורת פער למשרד, לא אשמת בעלים · סטוריז ב-instagram.com · לוח אוטונומי.",
                 "headers": ["מזהה", "פתיחה", "מצב"],
                 "rows": captions,
             },
@@ -431,6 +432,9 @@ def cmd_handoff(_args: argparse.Namespace) -> int:
     print("קובץ: packages/vfgrowth/HANDOFF-he.md")
     print("חבילה: G004 קטלבל-מחזיק · vfcopy/G004-STORIES-FIX.md")
     print("שער עריכה: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · אין סטוריז בלי מעבר")
+    print("פריפלייט חובה: packages/vfgrowth/PREFLIGHT.md + preflight/<id>.md")
+    print("בלי ארטיפקט עבור = נכשל-סגור · לא משבצים")
+    print("אל תפנה לכריסטיאן על מדדים חלשים")
     print("לוח: אוטונומי · לא שואלים משבצת · Calendar-OPS")
     print("CTA: וואטסאפ 050-2517000 · היילייטס · איסוף שדרות · לא DM")
     print("סטוריז: instagram.com · ig-mcp ≠ stories")
@@ -484,9 +488,12 @@ def cmd_check(_args: argparse.Namespace) -> int:
         "עלות חומר",
         "פער",
         "G004-STORIES-FIX",
+        "PREFLIGHT.md",
     ):
         if needle not in blob:
             fail(f"assembled brief missing {needle!r}")
+    if "רמה נמוכה" in blob:
+        fail("assembled brief must not surface רמה נמוכה to the owner")
     if "אין חדש במשרד" not in blob and "CLI " not in blob:
         fail("slot 05 must list real CLI runs or אין חדש במשרד")
     if "מה נבנה / יועל: קול פיד" in blob:
@@ -498,7 +505,9 @@ def cmd_check(_args: argparse.Namespace) -> int:
         fail(f"possible invented ILS in brief: {snippet!r}")
     if "שלחו DM" in blob and "לא DM" not in blob:
         fail("brief must not instruct שלחו DM")
-    for path in (EDIT_GATE, CAL_OPS, STUDIO, INSTANCE, HANDOFF):
+    for path in (EDIT_GATE, PREFLIGHT, CAL_OPS, STUDIO, INSTANCE, HANDOFF):
+        if not path.is_file():
+            fail(f"missing {path.relative_to(ROOT)}")
         text = path.read_text()
         if "רף סוכנות" not in text and path in (STUDIO, INSTANCE):
             fail(f"{path.relative_to(ROOT)} missing רף סוכנות")
@@ -506,6 +515,12 @@ def cmd_check(_args: argparse.Namespace) -> int:
             fail("EDIT-GATE.md must forbid JPEG גולמי")
         if path == CAL_OPS and "לא שואלים" not in text:
             fail("CALENDAR-OPS.md must lock autonomous slots")
+    preflight = PREFLIGHT.read_text()
+    for needle in ("VOICE.md", "VOICE-RESEARCH", "נכשל-סגור", "רמה נמוכה", "ציון עצמי", "2–3"):
+        if needle not in preflight:
+            fail(f"PREFLIGHT.md must mention {needle}")
+    if "אל תפנה לכריסטיאן על מדדים חלשים" not in HANDOFF.read_text():
+        fail("HANDOFF-he.md must lock אל תפנה לכריסטיאן על מדדים חלשים")
     guide_paths = {g["path"] for g in data.get("guides") or []}
     if SKILLS.is_dir():
         for skill in sorted(SKILLS.iterdir()):

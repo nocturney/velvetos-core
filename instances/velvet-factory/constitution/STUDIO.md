@@ -40,3 +40,12 @@ Core: `packages/vfgrowth/EDIT-GATE.md` · `packages/vfgrowth/STORIES.md` · `pac
 ## שיבוץ אוטונומי
 
 לא שואלים משבצת. כל פוסט מתוכנן → Google Calendar (`nocturney@gmail.com`). רשת: `vfgrowth/CALENDAR.md`.
+
+## נעילת כריסטיאן — משטח + פריפלייט (7.9.2026)
+
+משטח: **החלטה** · **חסם קשיח** · **פרסום חי שדורש אותו בלבד**.  
+אסור: מדדים חלשים · «רמה נמוכה» · תלונת איכות אחרי פרסום · דוח בושה על כלים.
+
+לפני שיבוץ: ארטיפקט Core `packages/vfgrowth/preflight/<id>.md` — VOICE.md · Canva/vfcovers · ציון עצמי מול רף סוכנות · 2–3 קומפס מ־`VOICE-RESEARCH.md`.  
+נכשל-סגור → חסום שיבוץ. אל תפנה לכריסטיאן על מדדים חלשים.  
+עותקי מופע: [`ORCHESTRA.md`](ORCHESTRA.md) · [`SEND.md`](SEND.md). Core: `vfgrowth/PREFLIGHT.md`.

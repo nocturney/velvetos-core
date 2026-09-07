@@ -152,6 +152,7 @@
       "blocked": null,
       "gates": [
         "packages/vfgrowth/EDIT-GATE.md",
+        "packages/vfgrowth/PREFLIGHT.md",
         "packages/vfgrowth/CALENDAR-OPS.md",
         "packages/vfgrowth/STORIES.md"
       ]
@@ -448,6 +449,24 @@
       "path": "packages/vfgrowth/EDIT-GATE.md",
       "cadence": "before-schedule",
       "consume": "packages/vfgrowth/EDIT-GATE.md"
+    },
+    {
+      "id": "preflight",
+      "path": "packages/vfgrowth/PREFLIGHT.md",
+      "cadence": "before-schedule",
+      "consume": "packages/vfgrowth/PREFLIGHT.md"
+    },
+    {
+      "id": "instance-orchestra",
+      "path": "instances/velvet-factory/constitution/ORCHESTRA.md",
+      "cadence": "always",
+      "consume": "instances/velvet-factory/constitution/ORCHESTRA.md"
+    },
+    {
+      "id": "instance-send",
+      "path": "instances/velvet-factory/constitution/SEND.md",
+      "cadence": "on-send",
+      "consume": "instances/velvet-factory/constitution/SEND.md"
     },
     {
       "id": "stories-playbook",

@@ -13,6 +13,7 @@ This file is the **guide for this business office**. Core laws still win for sen
 - Pull packs and modules from **VelvetOS Core** (`vendor/velvetos-core`). Do not duplicate the pack tree.
 - Studio facts: `constitution/STUDIO.md` + `instance/velvet-factory.json`.
 - HQ sends Gmail and Instagram via tools (`vendor/velvetos-core/constitution/SEND.md`).
+- Christian surface: decisions / hard blockers / live publish needing him only. Preflight (`vfgrowth/PREFLIGHT.md`) fail-closes schedule. Never «רמה נמוכה» upward.
 - Never invent ₪ or Insights. CTA: WhatsApp `050-2517000` / איסוף שדרות — not «שלחו DM».
 - Pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף.
 - After catalog edits in core: run core `python3 scripts/check-all.py` from the core checkout / vendor.

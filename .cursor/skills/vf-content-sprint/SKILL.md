@@ -34,4 +34,4 @@ Hashtags: at most 5, relevant. Do not move a booked `vfigos` slot. No boost. No 
 
 ## Harness
 
-`vfigos` is review/schedule only — a finished draft is not a send. Missing floor proof stays חסר; do not invent a scene to pass review. Stop after two failed proof searches and escalate rather than shipping a guessed cover.
+`vfigos` is review/schedule only — a finished draft is not a send. Before schedule: written `packages/vfgrowth/preflight/<id>.md` (`PREFLIGHT.md`) must pass — VOICE + Canva/vfcovers + agency self-score + 2–3 IL comps. Fail-closed = do not schedule. Never escalate «רמה נמוכה» to Christian. Missing floor proof stays חסר; do not invent a scene to pass review. Stop after two failed proof searches and escalate rather than shipping a guessed cover.

@@ -66,6 +66,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - 2026-08-30 — Second agent runtime (CrewAI, AutoGPT, BabyAGI). Cursor is the office. See `packages/vfe2b/LOCK.md`.
 - 2026-08-30 — National shipping or a sixth seat invented beside the five-seat desk.
 - 2026-09-05 — Opened `gemini.google.com` / `chatgpt.com` from Cloud Agent or Grok Bot, triggering Google/OpenAI “unauthorized access” alerts. Use API keys (`vf_gemini.py` / `vf_chatgpt.py`). Plus ≠ API. Do not copy cookies or Antigravity tokens to Cloud. Sensor: `scripts/check-vfmcp.py`. Playbook: `packages/vfmcp/SUBSCRIPTIONS.md`.
+- 2026-09-07 — Surfaced weak Insights / «רמה נמוכה» / post-publish quality autopsy to Christian. Quality is a **preflight** (`vfgrowth/PREFLIGHT.md` + EDIT-GATE + VOICE + 2–3 comps). Fail-closed = block schedule; fix in office. Sensor: `scripts/check-vfgrowth.py` + `scripts/check-vfops-loop.py`.
 
 ## SENSORS (run after changes)
 

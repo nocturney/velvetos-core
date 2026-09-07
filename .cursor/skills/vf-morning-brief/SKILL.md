@@ -28,7 +28,7 @@ Use when the user asks for בריף בוקר, morning brief, what is open today,
 - 🖨️ queue hours — only from slicer / snapshot. If missing: «אין ספירה»
 
 One pipeline reminder: פנייה → שיחה → הצעה → הדפסה → איסוף. Pickup in Sderot only.  
-Tone: agency-grade (`constitution/STUDIO.md` רף סוכנות). Christian reads and sits calmly — no half-finished slots, no «מתי לפרסם?».
+Tone: agency-grade (`constitution/STUDIO.md` רף סוכנות). Christian reads and sits calmly — no half-finished slots, no «מתי לפרסם?». Slots 06/07 never invent bad news or «רמה נמוכה»; agency gaps stay internal **פער** lines.
 
 Before filling slots, run `python3 scripts/vfops_loop.py brief --write` so תפעול gets growth/copy/sku/office blocks without pasting from random docs.
 

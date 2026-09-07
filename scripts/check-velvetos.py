@@ -192,6 +192,8 @@ def main() -> None:
         "AGENTS.md",
         "instance/velvet-factory.json",
         "constitution/STUDIO.md",
+        "constitution/ORCHESTRA.md",
+        "constitution/SEND.md",
         "scripts/attach-core.sh",
         ".cursor/vf-desk.json",
         ".cursor/environment.json",

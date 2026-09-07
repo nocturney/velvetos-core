@@ -3,7 +3,8 @@
 מושב: **סטודיו + צמיחה**. לא פק חדש.  
 חוקה: `constitution/STUDIO.md`. קול: `vfcopy/VOICE.md`. תבנית: `vfcopy/hq/templates/ig-stories.md`.
 
-**שער:** בלי Canva MCP (`edit_url`) או מעבר `vfcovers` / `vfcanva` (`compose_slides.py` / `studio/render.py`) = **לא משבצים**. JPEG גולמי מהמיטה / מתיבת Grok = חומר גלם בלבד.
+**שער:** בלי Canva MCP (`edit_url`) או מעבר `vfcovers` / `vfcanva` (`compose_slides.py` / `studio/render.py`) = **לא משבצים**. JPEG גולמי מהמיטה / מתיבת Grok = חומר גלם בלבד.  
+**פריפלייט:** ארטיפקט `preflight/<id>.md` (`PREFLIGHT.md`) — VOICE + ציון עצמי + 2–3 קומפס. נכשל-סגור = חסום שיבוץ. אל תפנה לכריסטיאן על מדדים חלשים.
 
 ## שני מצבים — לא מערבבים
 
