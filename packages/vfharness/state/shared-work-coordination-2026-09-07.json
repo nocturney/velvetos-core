@@ -1,16 +1,16 @@
 {
   "task_id": "shared-work-coordination-2026-09-07",
-  "status": "running",
+  "status": "blocked",
   "pack": "vfharness",
   "goal": "Establish multi-party coordination record for Cursor + Codex + GrokBot without changing business locks",
-  "crew": null,
   "planned_steps": [
     "survey both repos branches PRs local state",
     "find or create coordination record",
     "register active work and base SHAs",
     "propose Codex SWC-CODEX-001 scope with vfops_loop overlap",
     "commit docs PR only — no Codex implementation",
-    "ingest GrokBot registration and confirm ownership"
+    "ingest GrokBot registration and confirm ownership",
+    "ack Codex SWC-CODEX-001 phase A ownership"
   ],
   "completed_steps": [
     "survey-core-and-vf",
@@ -20,9 +20,11 @@
     "propose-codex-scope",
     "open-pr-105",
     "ingest-grokbot-registration",
-    "confirm-grokbot-ownership-rows"
+    "confirm-grokbot-ownership-rows",
+    "ack-codex-swc-001-phase-a",
+    "fix-pr105-codex-review-notes"
   ],
-  "next_step": "await Codex ack of SWC-CODEX-001 scope; peer review of PR #105 before merge",
+  "next_step": "peer review of PR #105 before merge; Codex may start phase A on codex/swc-001-task-state from 618ff1a",
   "artifacts": [
     "docs/SHARED-WORK-COORDINATION.md",
     "https://github.com/nocturney/velvetos-core/pull/105",
@@ -31,17 +33,17 @@
   ],
   "unresolved": [
     "GitHub Issue not created — velvetos-core has_issues=false",
-    "Codex Mac local SHA unknown",
-    "SWC-CODEX-001 ownership not yet confirmed by Codex reply",
-    "PR #105 not merged (await peer review; GrokBot did not request merge)"
+    "Codex local checkout SHA not yet reported (no clone yet)",
+    "PR #105 not merged (await peer review; Codex file review only — no merge approval yet)",
+    "SWC-CODEX-001 phase B (brief / vfops_loop) not approved"
   ],
   "outcome": "decision_gate",
   "pulse": "blocked",
-  "verification": "GrokBot SHA 0292d0e verified 5 commits behind 618ff1a; ownership rows written; no merge",
+  "verification": "Codex ACK recorded; ownership board for 4 phase-A paths; checkpoint schema-valid (no crew:null); GrokBot sole owner + Studio assist; no merge",
   "gate": {
     "kind": "decision_gate",
-    "waiting_for": "Codex acknowledge SWC-CODEX-001 scope; peer review of PR #105",
-    "reason": "GrokBot operational ownership confirmed; Codex infra task still proposed-only"
+    "waiting_for": "peer review of PR #105 (merge decision); Codex reports checkout SHA when implementation starts",
+    "reason": "GrokBot + Codex phase-A ownership confirmed; merge of coordination doc still needs peer review"
   },
   "escalation": null,
   "last_updated": "2026-09-07",
@@ -50,11 +52,18 @@
     "vf_main": "27701889bb12c70dd62c4a22286be4828e86fee7",
     "grokbot_core_checkout": "0292d0e",
     "grokbot_behind_commits": 5,
+    "codex_env": "ChatGPT Work Linux (not Mac-Office)",
+    "codex_checkout_sha": null,
+    "codex_impl_base_approved": "618ff1aa6a61ad48940c473fbc46ed2d4aab1cc2",
     "coordination_path": "docs/SHARED-WORK-COORDINATION.md",
     "codex_task": "SWC-CODEX-001",
+    "codex_phase": "A",
+    "codex_branch": "codex/swc-001-task-state",
+    "codex_ownership_confirmed": true,
     "issue_created": false,
     "coordination_pr": 105,
-    "grokbot_ownership_confirmed": true
+    "grokbot_ownership_confirmed": true,
+    "merge_approved": false
   },
-  "latest_observation": "GrokBot registered via PR comment; Cursor confirmed BRIEF/G003/G004/ROUTINES ownership; box on 0292d0e behind main; no merge requested"
+  "latest_observation": "Codex accepted role split; phase A scope owned on 4 paths; fixed Mac→Linux env; status blocked aligned with pulse; no merge approval for #105"
 }

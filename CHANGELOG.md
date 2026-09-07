@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-09-07 — **תיאום עבודה משותפת (Cursor · Codex · GrokBot):** לוח בעלות ב־`docs/SHARED-WORK-COORDINATION.md`. Issues כבויים ב־`velvetos-core` — גוף Issue מוכן במסמך. תיחום מוצע `SWC-CODEX-001` (מצב משימות → בריף → בדיקות תוצרים) בלי מימוש. בלי שינוי חוקה/מושבים/הרשאות. Shared-work coordination board; no second task system.
+- 2026-09-07 — **תיאום עבודה משותפת (Cursor · Codex · GrokBot):** לוח בעלות ב־`docs/SHARED-WORK-COORDINATION.md`. Issues כבויים ב־`velvetos-core` — גוף Issue מוכן במסמך. `SWC-CODEX-001` שלב א׳ **owned** (ענף `codex/swc-001-task-state`, בסיס `618ff1a`) — קריאת מצב/ולידציה בלבד; שלב ב׳ בריף/`vfops_loop` לא אושר. בלי מימוש Codex ב־#105. בלי שינוי חוקה/מושבים/הרשאות. Shared-work coordination board; Codex phase-A ownership ACK; no second task system.
 
 - 2026-09-07 — **נעילת כריסטיאן + פריפלייט פיד:** משטח ראש צוות = החלטה / חסם קשיח / פרסום חי שדורש אותו בלבד. אסור: מדדים חלשים, «רמה נמוכה», נתיחת איכות אחרי פרסום, דוח בושה על כלים. שער כתוב `vfgrowth/PREFLIGHT.md` (VOICE + Canva/vfcovers + ציון עצמי + 2–3 קומפס מ־`VOICE-RESEARCH`) — נכשל-סגור חוסם שיבוץ. HANDOFF דורש `preflight/<id>.md`. בריף 06/07 בלי חדשות רעות מומצאות לבעלים. חוקה: ORCHESTRA/STUDIO/SEND + עותקי VF. בלי Publish / ₪ מומצא. Christian lock: quality gate before schedule, never upward shame.
 
