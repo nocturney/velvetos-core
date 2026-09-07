@@ -1,0 +1,18 @@
+{
+  "task_id": "swc-cursor-embed-fix-2026-09-07",
+  "status": "running",
+  "pack": "vfharness",
+  "completed_steps": [
+    "base main 556c998",
+    "rewrote check-vfcopy publishable-content model",
+    "6 behavioral tests green; check-all 25/25"
+  ],
+  "next_step": "PR1 push; then DAILY-RETRO restore + vfops_loop consumers",
+  "artifacts": ["scripts/check-vfcopy.py"],
+  "unresolved": [
+    "SHARED-WORK-COORDINATION.md only on PR #105 — update ownership there",
+    "gh merge read-only — open PRs for Cursor merge path"
+  ],
+  "last_updated": "2026-09-07",
+  "verification": "python3 scripts/check-vfcopy.py + check-all.py exit 0"
+}
