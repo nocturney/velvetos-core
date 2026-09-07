@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **חמישה מנועי רצפה/בריף על פקים קיימים:** ניתוב חומר→מיטה `vfprod/FLEET.json` + `ROUTING.md` + `vfprod.py` (ארבע מיטות, אין Print מ-HQ) · יתרת גליל מול סלייס · תחזוקה מסנאפשוט Edge `MAINTENANCE.md` · בריף 07:00 מושך `orders.json`/Invoice4U מהדיסק + שערי כן/לא ב־`GATES.json` (לחיצת אדם, לא סגירת וואטסאפ) · דפוס B2B מקומי `vfbiz/LOCAL-B2B.md` (לוגו/QR/מפיות נשארות דוגמאות, הקו נעול) · סריקת קטלוג `vfsku.py scan` + תווית VF `TAG.md`. סנסור `check-vfprod.py`. בלי פק חדש / בלי daemon / בלי ₪ מומצא. Five studio engines embedded on existing packs; human gates stay.
+
 - 2026-09-07 — **ארבעה צוותי משרד על פקים קיימים:** סריקת MakerWorld א׳+ד׳ (`vfresearch/hq/MAKERWORLD-SCAN.md` + `vfsku.py scan`) · print.done→טיוטת פיד (`vfprod.py print-done` + צוות content) · משפך פרופיל→וואטסאפ (`PROFILE-TO-WHATSAPP.md`) · בקרת ספר/חשבונית (`vfbooks.py brief`). בלי פק חדש · בלי runtime שני · בלי סלייסר/מדפסת מ-HQ · בלי Publish מבריף. סנסורים: check-vfe2b / vfsku / vfresearch / vfgrowth / vfops-loop / velvetos. Four constitution-safe office crews embedded on existing packs.
 - 2026-09-07 — **B2B = דוגמאות, לא שלושה מק״ט:** תיקון בעלים. לוגו / QR / מפיות היו דוגמאות לקו B2B — לא קטלוג סגור. הנעילה נשארת על **הקו** עד ראש צוות (`vfbiz/LOCK.md` · `STUDIO.md`). extraLock `b2b-line-locked`. סנסור `check-velvetos.py`. בלי פתיחת B2B / בלי ₪. Owner correction: B2B examples ≠ closed three-SKU catalog; line stays locked.
 

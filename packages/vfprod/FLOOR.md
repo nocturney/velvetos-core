@@ -4,10 +4,12 @@
 מקור Gemini: Vision AI Monitor + Timelapse-to-Reel.  
 מקור Perplexity: Maxel AI (חוות הדפסה אוטומטית).
 
-## הקצאה (2–3 מיטות, ידני)
+## הקצאה (עד 4 מיטות, ידני)
 
 Perplexity הציע סוכן שמקבל STL, חותך, ומקצה מדפסת לפי חומר / גודל / תאריך יעד.  
-כאן: אדם על הרצפה בוחר מיטה פנויה. HQ לא מריץ חווה ולא דוחף עבודה למדפסת.
+כאן: אדם על הרצפה בוחר מיטה פנויה. HQ ממליץ בלבד (`ROUTING.md` · `python3 scripts/vfprod.py route`) ולא דוחף G-code.
+
+ארבע מיטות בקטלוג: `FLEET.json` (Bambu A/B · Snapmaker U1 · Elegoo Centauri). דגם/סדרה ריקים עד ספירת רצפה.
 
 דשבורד חווה עתידי על ה־LAN (Watchtower) = **Edge בלבד** — פלייבוק: [`WATCHTOWER.md`](WATCHTOWER.md). כלי רצפה, לא פקודת Print מ־HQ.
 
@@ -30,3 +32,5 @@ Perplexity הציע סוכן שמקבל STL, חותך, ומקצה מדפסת ל�
 5. Proof מהרצפה (מה שעל המיטה) — רק אם באמת על המיטה.
 
 HQ לא מתחבר למצלמת מדפסת ולא דוחף Print מרחוק (Edge/רצפה בלבד). Watchtower על הקיר בשדרות לא משנה את הנעילה הזו.
+
+אחרי הדפסה: וי תחזוקה ב־[`MAINTENANCE.md`](MAINTENANCE.md) לפני עבודה מורכבת הבאה. בריף 03: `python3 scripts/vfprod.py brief`.

@@ -7,7 +7,7 @@
 1. כדאיות / סיכון — `vfprod` + test print אם צריך.  
 2. תמיכות / כיוון — לפי סלייסר, לא מהראש.  
 3. הקובץ תקין — לא פרוץ; `vlicense` עבר. מותג ישראלי = עצירה. מודל מ־3D AI Studio / Meshy / Tripo — אישור ראש צוות + סלייס (`3DAISTUDIO.md`). פריפלייט STL (תיבה + משולשים, בלי ₪): `python3 scripts/vf_office.py print preflight file.stl` · `PREFLIGHT.md`.  
-4. חומר בגליל — מספיק לגרמים מהסלייס. בלי רכש מומצא.
+4. חומר בגליל — מספיק לגרמים מהסלייס. `python3 scripts/vfprod.py remaining --grams <n> --filament Ella`. בלי רכש מומצא. חסר משקל גליל = לא מדפיסים לילה.
 
 שער «כדאי להדפיס?» (ChatGPT 31.8) — ארבע הווי **לפני** תמחור / `vfsales`.  
 מק״ט מדף חדש: קודם `vfsku/FIRST-PRINT.md` (שעה למשבצת) — לא באצ׳ מניסיון ראשון.

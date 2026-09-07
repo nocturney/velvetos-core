@@ -1,0 +1,29 @@
+{
+  "name": "vfbiz-hyper-local",
+  "title": "דפוס B2B מקומי — איסוף שדרות",
+  "updatedAt": "2026-09-07",
+  "locked": true,
+  "leadOpen": false,
+  "briefSlot": "04",
+  "rule": "B2B as a line stays locked. Logo/QR/napkins are examples, not a closed catalog. Pickup Sderot. Human WhatsApp close.",
+  "locks": [
+    "b2b-line-locked",
+    "pickup-sderot-only",
+    "human-whatsapp-close",
+    "no-auto-dm",
+    "no-national-shipping",
+    "no-invented-prices",
+    "examples-not-catalog"
+  ],
+  "pattern": {
+    "geo": "עסקים באזור שדרות",
+    "fulfill": "איסוף עצמי משדרות",
+    "cta": "050-2517000",
+    "close": "human WhatsApp + Invoice4U"
+  },
+  "examples": [
+    "מעמד לוגו",
+    "מעמד QR",
+    "מחזיק מפיות"
+  ]
+}

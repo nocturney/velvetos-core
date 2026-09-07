@@ -93,12 +93,31 @@ def cmd_scan(args: argparse.Namespace) -> int:
             f"{shelf}\n"
             "NC ≠ מכירה · מותג ישראלי = עצור · HQ לא שולח STL לסלייסר"
         )
-        return 0
-    print(
-        f"סריקת MakerWorld: יום סריקה · בלי שם מהאוויר · {today.isoformat()}\n"
-        f"{shelf} עד GATE+רישיון+סלייס\n"
-        "NC ≠ מכירה · הורדה ≠ רישיון · סלייס ברצפה בלבד · בלי ₪ מכירה"
-    )
+    else:
+        print(
+            f"סריקת MakerWorld: יום סריקה · בלי שם מהאוויר · {today.isoformat()}\n"
+            f"{shelf} עד GATE+רישיון+סלייס\n"
+            "NC ≠ מכירה · הורדה ≠ רישיון · סלייס ברצפה בלבד · בלי ₪ מכירה"
+        )
+    blocked: list[str] = []
+    for slot in slots:
+        sid = slot.get("id")
+        status = slot.get("status") or "empty"
+        name = slot_name(slot)
+        if slot.get("israeliBrandStop") is True and status not in {"blocked", "empty"}:
+            blocked.append(f"{sid} מותג ישראלי חייב blocked")
+        if status == "ready":
+            for field in ("sliceGrams", "sliceMinutes", "slicePath", "costChecked", "license", "licenseChecked"):
+                if not (slot.get(field) or "").strip():
+                    blocked.append(f"{sid} {name} ready בלי {field}")
+        if name != "—" and status not in {"empty", "blocked"}:
+            if not (slot.get("license") or "").strip() or not (slot.get("licenseChecked") or "").strip():
+                blocked.append(f"{sid} {name} בלי רישיון מאומת")
+    if blocked:
+        print("קטלוג חסום: " + " · ".join(blocked))
+        print("אין הצעה/תוכן על מק״ט בלי סלייס מאומת + vfcost גרמים + vlicense")
+    else:
+        print(f"קטלוג: {ready}/{len(slots)} ready אחרי סלייס+עלות+רישיון · מותג ישראלי=עצירה · תווית VF ב-TAG.md")
     return 0
 
 
@@ -123,7 +142,7 @@ def main() -> int:
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("shelf", help="print the 5-slot table").set_defaults(func=cmd_shelf)
     sub.add_parser("brief", help="one Hebrew line for morning brief slot 03").set_defaults(func=cmd_brief)
-    scan_p = sub.add_parser("scan", help="Sun/Wed MakerWorld scan line for brief slot 03")
+    scan_p = sub.add_parser("scan", help="Sun/Wed MakerWorld cadence + refuse ready SKUs without slice + cost + license")
     scan_p.add_argument("--date", help="YYYY-MM-DD (Asia/Jerusalem weekday). Default: today")
     scan_p.set_defaults(func=cmd_scan)
     sub.add_parser("shop", help="tomorrow-shop line: ready slots only, no invented names").set_defaults(func=cmd_shop)

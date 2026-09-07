@@ -1,0 +1,18 @@
+{
+  "name": "vfops-gates",
+  "title": "שערי כן/לא/דחה לבריף 01",
+  "updatedAt": "2026-09-07",
+  "briefSlot": "01",
+  "cli": "python3 scripts/vfops_loop.py gate",
+  "rule": "Human click in the 07:00 HTML brief. Does not send customer WhatsApp. Does not invent ₪. Does not print from HQ. Not zero-touch close.",
+  "officeMail": "nocturney@gmail.com",
+  "locks": [
+    "no-zero-touch-close",
+    "no-invented-prices",
+    "no-print-from-hq",
+    "human-whatsapp-send"
+  ],
+  "statusValues": ["open", "yes", "no", "defer"],
+  "kinds": ["quote", "content", "b2b-line"],
+  "items": []
+}

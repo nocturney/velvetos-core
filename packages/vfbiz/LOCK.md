@@ -11,3 +11,4 @@
 7. אתר שיווקי ציבורי (Wix / Hostinger / Squarespace / Lovable / Bookipi) — רק אם פותחים כאן. HQ לא בונה חנות/דף מחיר ציבורי ולא קונה מנוי.
    קונסולת משרד **פנימית** (owner) מותרת כתצוגה על פקים — `docs/OFFICE-OS-EMBED-he.md` · `vfops/hq/COMMAND-SURFACE.md`.
 8. שרשרת כלים — `CHAIN.md`. חוליה חדשה רק מהבריף `01`.
+9. דפוס B2B מקומי (איסוף שדרות, לא מדף שלושה מק״ט) — `LOCAL-B2B.md`.
