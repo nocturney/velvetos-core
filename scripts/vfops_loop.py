@@ -5,6 +5,7 @@ No network. No send. No invented ₪ or Insights.
 """
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 import argparse
 import json
 import re
@@ -162,9 +163,13 @@ def cli_runs_last_24h() -> list[str]:
 def gap_lines(invoked: set[str]) -> str:
     data = load_loop()
     rows: list[str] = []
+    # on-content / on-inquiry are intentional non-morning cadences — not “failed to run”.
+    skip_gap_cadence = {"on-content", "on-inquiry", "weekly", "bi-daily", "daily-eod"}
     for row in data.get("packs") or []:
         pid = row.get("id") or ""
         cadence = row.get("cadence") or ""
+        if cadence in skip_gap_cadence:
+            continue
         watch = pid in AUDIT_PACKS or cadence in DAILY_CADENCE
         if not watch or pid in invoked:
             continue
@@ -244,6 +249,8 @@ def office_line(invoked: set[str]) -> str:
         built = "05 · משרד\nמה נבנה / יועל:\n" + "\n".join(f"CLI {r}" for r in runs)
     else:
         built = "05 · משרד\nאין חדש במשרד"
+    consumers = consumer_brief_lines()
+    built = f"{built}\n{consumers}"
     gaps = gap_lines(invoked)
     if gaps:
         return f"{built}\n{gaps}"
@@ -264,30 +271,247 @@ def insights_line() -> str:
 
 
 
-CONSUMERS = [
-    ("velvetos modules", ["python3", "scripts/velvetos.py", "modules"]),
-    ("vfcanva render", ["python3", "packages/vfcanva/studio/render.py"]),
-    ("vfcovers compose", ["python3", "packages/vfcovers/g005/compose_slides.py"]),
-    ("vfresearch daily", ["python3", "scripts/vfresearch.py", "daily"]),
-    ("vfsales quote", ["python3", "scripts/vfsales.py", "quote"]),
-    ("vfinsights read", ["python3", "scripts/vfinsights.py", "read"]),
-    ("check-all", ["python3", "scripts/check-all.py"]),
-]
+# --- Daily consumers (run ≠ brief ≠ check) ---------------------------------
+# run: execute eligible tasks once (no check-all; no auto G005 render)
+# brief/assemble: read artifacts + prior CLI runs into the packet
+# check: integrity only (may assemble in-memory; must not recurse into run)
+
+INSIGHTS_LOOP = ROOT / "packages" / "vfinsights" / "scripts" / "vf_insights_loop.py"
+INSIGHTS_CSV = ROOT / "packages" / "vfinsights" / "data" / "posts.csv"
+RESEARCH_DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
+RESEARCH_MD = ROOT / "packages" / "vfops" / "data" / "research.md"
+QUOTE_LADDER = ROOT / "packages" / "vfsales" / "scripts" / "vf_quote_ladder.py"
+QUOTE_MD = ROOT / "packages" / "vfsales" / "QUOTE.md"
+VELVETOS_CLI = ROOT / "scripts" / "velvetos.py"
+CONSUMER_STATE = ROOT / "packages" / "vfops" / "data" / "consumer-runs.jsonl"
 
 
-def run_daily_consumers() -> list[str]:
-    gaps: list[str] = []
-    for name, cmd in CONSUMERS:
-        try:
-            result = subprocess.run(cmd, capture_output=True, text=True)
-        except FileNotFoundError:
-            gaps.append(f"פער: {name} · script missing")
+@dataclass
+class ConsumerSpec:
+    id: str
+    title: str
+    cadence: str
+    kind: str  # exec | verify | skip
+    argv: list[str] = field(default_factory=list)
+    timeout_s: int = 90
+    requires: tuple[Path, ...] = ()
+    artifact: Path | None = None
+    pack: str = ""
+    auto_daily: bool = False
+    skip_reason: str = ""
+
+
+def consumer_registry() -> list[ConsumerSpec]:
+    """Map LOOP packs onto real entrypoints. Playbooks are not Python commands."""
+    return [
+        ConsumerSpec(
+            id="velvetos-modules",
+            title="velvetos modules",
+            cadence="on-instance",
+            kind="exec",
+            argv=[sys.executable, str(VELVETOS_CLI), "modules"],
+            timeout_s=60,
+            requires=(VELVETOS_CLI,),
+            pack="velvetos",
+            auto_daily=True,
+        ),
+        ConsumerSpec(
+            id="vfinsights-loop",
+            title="vfinsights measurement loop",
+            cadence="daily-07:00",
+            kind="exec",
+            argv=[sys.executable, str(INSIGHTS_LOOP), "--data", str(INSIGHTS_CSV)],
+            timeout_s=60,
+            requires=(INSIGHTS_LOOP, INSIGHTS_CSV),
+            artifact=LEARNINGS,
+            pack="vfinsights",
+            auto_daily=True,
+        ),
+        ConsumerSpec(
+            id="vfresearch-daily",
+            title="vfresearch daily playbook status",
+            cadence="daily-06:15",
+            kind="verify",
+            requires=(RESEARCH_DAILY, RESEARCH_MD),
+            artifact=RESEARCH_MD,
+            pack="vfresearch",
+            auto_daily=True,
+            skip_reason="",  # verify only — DAILY.md is a playbook, not scripts/vfresearch.py
+        ),
+        ConsumerSpec(
+            id="vfsales-quote",
+            title="vfsales quote ladder",
+            cadence="on-inquiry",
+            kind="skip",
+            argv=[sys.executable, str(QUOTE_LADDER), "--task-id", "vfops-loop-skip"],
+            requires=(QUOTE_LADDER, QUOTE_MD),
+            pack="vfsales",
+            auto_daily=False,
+            skip_reason="on-inquiry only — no automatic quote without known fields / lead ILS",
+        ),
+        ConsumerSpec(
+            id="vfcanva-render",
+            title="vfcanva studio render",
+            cadence="on-content",
+            kind="skip",
+            requires=(ROOT / "packages" / "vfcanva" / "studio" / "render.py",),
+            pack="vfcanva",
+            auto_daily=False,
+            skip_reason="on-content only — do not auto-render a standing pack (e.g. G005)",
+        ),
+        ConsumerSpec(
+            id="vfcovers-compose",
+            title="vfcovers compose",
+            cadence="on-content",
+            kind="skip",
+            requires=(ROOT / "packages" / "vfcovers" / "g005" / "compose_slides.py",),
+            pack="vfcovers",
+            auto_daily=False,
+            skip_reason="on-content only — composing G005 requires an explicit content job",
+        ),
+        ConsumerSpec(
+            id="sensor-suite",
+            title="check-all sensor suite",
+            cadence="ci/check",
+            kind="skip",
+            pack="vfharness",
+            auto_daily=False,
+            skip_reason="integrity belongs to `vfops_loop.py check` / CI — never from run/assemble (recursion)",
+        ),
+    ]
+
+
+def _today_key(today: str, consumer_id: str) -> str:
+    return f"{today}:{consumer_id}"
+
+
+def consumer_already_ran(today: str, consumer_id: str) -> bool:
+    if not CONSUMER_STATE.is_file():
+        return False
+    key = _today_key(today, consumer_id)
+    for raw in CONSUMER_STATE.read_text(encoding="utf-8").splitlines():
+        raw = raw.strip()
+        if not raw:
             continue
-        if result.returncode != 0:
-            msg = (result.stderr or result.stdout or "").strip().splitlines()
-            detail = msg[0] if msg else "unknown error"
-            gaps.append(f"פער: {name} · {detail}")
-    return gaps
+        try:
+            rec = json.loads(raw)
+        except json.JSONDecodeError:
+            continue
+        if rec.get("key") == key and rec.get("ok") is True:
+            return True
+    return False
+
+
+def append_consumer_run(today: str, spec: ConsumerSpec, *, ok: bool, detail: str) -> None:
+    CONSUMER_STATE.parent.mkdir(parents=True, exist_ok=True)
+    rec = {
+        "ts": datetime.now(TZ).isoformat(timespec="seconds"),
+        "key": _today_key(today, spec.id),
+        "id": spec.id,
+        "pack": spec.pack,
+        "ok": ok,
+        "detail": detail[:240],
+    }
+    with CONSUMER_STATE.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    append_cli_run(spec.id, spec.argv or [spec.kind, spec.id], ok)
+
+
+def run_consumer(spec: ConsumerSpec, *, today: str, force: bool = False) -> dict:
+    """Run one consumer. Returns a structured result — never claims done on skip/fail."""
+    if spec.kind == "skip" or not spec.auto_daily:
+        return {
+            "id": spec.id,
+            "status": "skipped",
+            "reason": spec.skip_reason or f"cadence {spec.cadence} not auto-daily",
+        }
+    if not force and consumer_already_ran(today, spec.id):
+        return {"id": spec.id, "status": "skipped", "reason": "already ran successfully today"}
+    missing = [str(p.relative_to(ROOT)) for p in spec.requires if not p.is_file()]
+    if missing:
+        detail = "חסר קלט: " + ", ".join(missing)
+        append_consumer_run(today, spec, ok=False, detail=detail)
+        return {"id": spec.id, "status": "failed", "reason": detail}
+
+    if spec.kind == "verify":
+        # Playbook present + research.md readable — not "we tried to run a missing .py"
+        detail = f"verified {' · '.join(str(p.relative_to(ROOT)) for p in spec.requires)}"
+        append_consumer_run(today, spec, ok=True, detail=detail)
+        return {"id": spec.id, "status": "ok", "detail": detail, "pack": spec.pack}
+
+    if spec.kind != "exec":
+        detail = f"unknown kind {spec.kind}"
+        append_consumer_run(today, spec, ok=False, detail=detail)
+        return {"id": spec.id, "status": "failed", "reason": detail}
+
+    try:
+        proc = subprocess.run(
+            spec.argv,
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            timeout=spec.timeout_s,
+        )
+    except subprocess.TimeoutExpired:
+        detail = f"timeout after {spec.timeout_s}s"
+        append_consumer_run(today, spec, ok=False, detail=detail)
+        return {"id": spec.id, "status": "failed", "reason": detail}
+    except FileNotFoundError as exc:
+        detail = f"executable missing: {exc}"
+        append_consumer_run(today, spec, ok=False, detail=detail)
+        return {"id": spec.id, "status": "failed", "reason": detail}
+
+    out = ((proc.stdout or "") + "\n" + (proc.stderr or "")).strip()
+    if proc.returncode != 0:
+        detail = (out.splitlines() or ["nonzero exit"])[0][:200]
+        append_consumer_run(today, spec, ok=False, detail=detail)
+        return {"id": spec.id, "status": "failed", "reason": detail}
+    if spec.artifact is not None and not spec.artifact.is_file():
+        detail = f"expected artifact missing: {spec.artifact.relative_to(ROOT)}"
+        append_consumer_run(today, spec, ok=False, detail=detail)
+        return {"id": spec.id, "status": "failed", "reason": detail}
+    detail = (out.splitlines() or ["ok"])[0][:200]
+    append_consumer_run(today, spec, ok=True, detail=detail)
+    return {"id": spec.id, "status": "ok", "detail": detail, "pack": spec.pack}
+
+
+def run_daily_consumers(*, today: str | None = None, force: bool = False) -> list[dict]:
+    """Execute eligible daily tasks once. Does not assemble brief. Does not run check-all."""
+    day = today or datetime.now(TZ).date().isoformat()
+    results: list[dict] = []
+    for spec in consumer_registry():
+        results.append(run_consumer(spec, today=day, force=force))
+    return results
+
+
+def consumer_brief_lines(results: list[dict] | None = None) -> str:
+    if results is None:
+        # Summarize today's consumer-runs file for brief assembly
+        today = datetime.now(TZ).date().isoformat()
+        if not CONSUMER_STATE.is_file():
+            return "צרכנים: אין הרצה היום"
+        rows = []
+        for raw in CONSUMER_STATE.read_text(encoding="utf-8").splitlines():
+            try:
+                rec = json.loads(raw)
+            except json.JSONDecodeError:
+                continue
+            if not str(rec.get("key", "")).startswith(today + ":"):
+                continue
+            flag = "ok" if rec.get("ok") else "נכשל"
+            rows.append(f"{rec.get('id')} · {flag} · {rec.get('detail', '')}")
+        if not rows:
+            return "צרכנים: אין הרצה היום"
+        return "צרכנים היום:\n" + "\n".join(rows[-12:])
+    lines = []
+    for r in results:
+        if r["status"] == "ok":
+            lines.append(f"{r['id']} · בוצע · {r.get('detail', '')}")
+        elif r["status"] == "skipped":
+            lines.append(f"{r['id']} · דולג · {r.get('reason', '')}")
+        else:
+            lines.append(f"{r['id']} · נכשל · {r.get('reason', '')}")
+    return "צרכנים:\n" + "\n".join(lines)
 
 
 def assemble(today: str) -> dict:
@@ -304,6 +528,15 @@ def assemble(today: str) -> dict:
     invoked.add("vfinsights")
     captions = captions_rows()
     invoked.add("vfcopy")
+    # Packs already consumed by today's successful consumer runs
+    if CONSUMER_STATE.is_file():
+        for raw in CONSUMER_STATE.read_text(encoding="utf-8").splitlines():
+            try:
+                rec = json.loads(raw)
+            except json.JSONDecodeError:
+                continue
+            if str(rec.get("key", "")).startswith(today + ":") and rec.get("ok") and rec.get("pack"):
+                invoked.add(str(rec["pack"]))
     office = office_line(invoked)
     return {
         "date_line": f"{today} · בריף סוכנות · תצוגה 3",
@@ -379,6 +612,20 @@ def cmd_inventory(_args: argparse.Namespace) -> int:
         fail(f"LOOP.json missing dirs: {missing}")
     if extra:
         fail(f"LOOP.json extra ids: {extra}")
+    return 0
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    """Run eligible daily consumers once. Never runs check-all. Never auto-renders G005."""
+    today = args.date or datetime.now(TZ).date().isoformat()
+    results = run_daily_consumers(today=today, force=bool(args.force))
+    print(consumer_brief_lines(results))
+    # Surface failures without claiming the whole office failed on intentional skips
+    failed = [r for r in results if r["status"] == "failed"]
+    if failed:
+        print(f"FAIL consumers failed={len(failed)}", file=sys.stderr)
+        return 1
+    print("OK daily consumers")
     return 0
 
 
@@ -572,6 +819,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Velvet Factory office activation loop")
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("inventory", help="list every pack kind/cadence").set_defaults(func=cmd_inventory)
+    run_p = sub.add_parser("run", help="run eligible daily consumers once (no check-all, no auto G005)")
+    run_p.add_argument("--date")
+    run_p.add_argument("--force", action="store_true", help="re-run even if already ok today")
+    run_p.set_defaults(func=cmd_run)
     brief = sub.add_parser("brief", help="assemble 07:00 packet from live packs")
     brief.add_argument("--write", action="store_true")
     brief.add_argument("--date")
