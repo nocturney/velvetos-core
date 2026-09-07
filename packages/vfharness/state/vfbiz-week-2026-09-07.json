@@ -19,7 +19,7 @@
     "write-week-md",
     "wire-brief-slot-04"
   ],
-  "next_step": "check-all + PR to nocturney/velvetos-core",
+  "next_step": "",
   "artifacts": [
     "packages/vfbiz/out/week.md",
     "CHANGELOG.md"
@@ -32,7 +32,7 @@
   ],
   "outcome": "decision_gate",
   "pulse": "idle",
-  "verification": "check-all.py pending this write",
+  "verification": "python3 scripts/check-all.py — 23/23 OK including check-staleness brief=2026-09-07",
   "gate": {
     "kind": "decision_gate",
     "waiting_for": "lead seat after Thu 10.9 pickup + documented slice",
