@@ -1,8 +1,11 @@
 name: VelvetOS Research Cadence
 
+# Asia/Jerusalem timing:
+# cron '0 3 * * *' is 06:00 IDT (UTC+3, summer) and 05:00 IST (UTC+2, winter).
+# Office research window is 06:15 Asia/Jerusalem — winter runs ~1h early; do NOT add a
+# second GrokBot cron (SWC-GROK-ROUTINES owns 07:00 weekday-ops). workflow_dispatch OK.
 on:
   schedule:
-    # Daily at 03:00 UTC (~06:00 Asia/Jerusalem)
     - cron: '0 3 * * *'
   workflow_dispatch:
 
@@ -21,8 +24,25 @@ jobs:
       - name: Install semantic-search deps
         run: pip install scikit-learn
 
-      - name: Build semantic index
-        run: python3 packages/vfmem/scripts/vf_semantic_search.py --build || echo "semantic index build failed"
+      - name: Cadence map + DST note
+        run: python3 scripts/vfresearch_cadence.py map
+
+      - name: Build semantic index (fail closed)
+        run: python3 scripts/vfresearch_cadence.py build-index
+
+      - name: Upload semantic index for consumers
+        uses: actions/upload-artifact@v4
+        with:
+          name: vfmem-semantic-index
+          path: packages/vfmem/semantic_index.pkl
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Verify research artifact structure
+        run: python3 scripts/vfresearch_cadence.py verify
+
+      - name: Status (honest activation flags)
+        run: python3 scripts/vfresearch_cadence.py status
 
       - name: Run office sensor suite
         run: python3 scripts/check-all.py
