@@ -1,0 +1,10 @@
+{
+  "name": "vfbooks-invoice4u",
+  "title": "סנאפשוט Invoice4U — הדבקת בעלים / שרשור נקוב",
+  "updatedAt": "",
+  "briefSlot": "02",
+  "rule": "Owner paste or a named Gmail thread with label חשבונות. The 07:00 brief does not scrape the inbox. Missing = אין ספירה.",
+  "source": "Invoice4U via human paste — not Bookipi, not a public site",
+  "rows": [],
+  "note": "אין ספירה"
+}

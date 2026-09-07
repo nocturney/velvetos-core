@@ -32,6 +32,12 @@ Tone: agency-grade (`constitution/STUDIO.md` רף סוכנות). Christian reads
 
 Before filling slots, run `python3 scripts/vfops_loop.py brief --write` so תפעול gets growth/copy/sku/office blocks without pasting from random docs.
 
+Slot **01** may include one-click yes/no/defer from `packages/vfops/hq/GATES.json` (`vfops_loop.py gate`). A click is a human gate — not WhatsApp send, not Print, not a sale ₪.
+
+Slot **02** pulls `packages/vfbooks/data/orders.json` + Invoice4U snapshot from **disk**. Do not scrape `in:inbox` to fill the 07:00 brief. Empty files = «אין ספירה».
+
+Slot **03** also pastes `python3 scripts/vfprod.py brief` (fleet + maintenance) and `python3 scripts/vfsku.py scan`.
+
 If constitution overlays exist (`packages/vfops/hq/BRIEF-SLOTS.md` or `packages/vfops/BRIEF.md`), fill those slots. Block `02` may paste `python3 scripts/vfcost.py brief` (material cost only — no invented sale ₪). Block `05` is **real CLI runs from last 24h** (`vfops_loop.py` → `packages/vfops/data/cli-runs.jsonl`) or exactly `אין חדש במשרד` — no catalog paste from `research.md`. Unused daily/`on-content` packs become a **פער** line. `research.md` stays the 06:15 orchestra note only. **Block `05a`:** read the latest block from `packages/vfops/data/owner-memory.md` (retro / owner prefs) — one short paragraph in the brief, not the full file. Do not invent a sixth seat. Live mail uses `packages/vfbriefux/MAIL.md` — not plaintext.
 
 Organic Growth Decision Pack: `python3 scripts/vf_organic_growth.py brief --write` lands in slot 01/04/07 (`vfbriefux/hq/GROWTH-BRIEF.md`). Approve ≠ publish.

@@ -4,9 +4,9 @@
 
 | חריץ קיים | מה נכנס מהשיתוף |
 |---|---|
-| 01 קודם החלטה | מחיר חסר, אישור תוכן, היילייטס — כן/לא/דחה · **אותות רטרו** מ־`vfops/data/retro-signals.json` (`kind` ל־slot 01; `RETRO-SIGNALS.md`) · **Organic Growth** [אישור/עריכה/דחייה] מ־`vf_organic_growth.py` (`vfbriefux/hq/GROWTH-BRIEF.md`) — אישור ≠ פרסום |
-| 02 כסף בעבודה | הזמנות, חוב, שולם. איחורים / ממתינים לאישור אם יש ספירה + שורת עלות חומר `python3 scripts/vfcost.py brief` + ספר `python3 scripts/vfbooks.py brief` דרך `vfops_loop.py` (בלי ₪ מכירה, בלי מייל גבייה) |
-| 03 מה להדפיס ולפרסם | מוכנים להדפסה + שעות תור מאומתות + הצעות `#vfresearch` + מדף `python3 scripts/vfsku.py brief` + `python3 scripts/vfsku.py scan` + `vfsku/week.md` + `python3 scripts/vfprod.py print-done` דרך `python3 scripts/vfops_loop.py brief` + חנות מחר `python3 scripts/vfsku.py shop` |
+| 01 קודם החלטה | מחיר חסר, אישור תוכן, היילייטס — כן/לא/דחה · **שערי לחיצה** `GATES.json` · **אותות רטרו** מ־`vfops/data/retro-signals.json` (`kind` ל־slot 01; `RETRO-SIGNALS.md`) · **Organic Growth** [אישור/עריכה/דחייה] מ־`vf_organic_growth.py` (`vfbriefux/hq/GROWTH-BRIEF.md`) — אישור ≠ פרסום |
+| 02 כסף בעבודה | הזמנות, חוב, שולם מ־`vfbooks/data/orders.json` + Invoice4U snapshot (אין ספירה אם ריק; לא inbox) + שורת עלות חומר `python3 scripts/vfcost.py brief` + ספר `python3 scripts/vfbooks.py brief` דרך `vfops_loop.py` (בלי ₪ מכירה, בלי מייל גבייה) |
+| 03 מה להדפיס ולפרסם | מוכנים להדפסה + שעות תור מאומתות + הצעות `#vfresearch` + מדף `python3 scripts/vfsku.py brief` + `python3 scripts/vfsku.py scan` + `vfsku/week.md` + צי `python3 scripts/vfprod.py brief` + `python3 scripts/vfprod.py print-done` דרך `python3 scripts/vfops_loop.py brief` + חנות מחר `python3 scripts/vfsku.py shop` |
 | 04 איך הסטודיו מרוויח | `#vfbiz` נעול + `vfbiz/out/week.md` + `FOLLOWER-GROWTH` + `PROFILE-TO-WHATSAPP` היילייטס/וואטסאפ, בלי ₪ מומצא |
 | 05 משרד | CLI אמיתי מ-24ש (`vfops_loop` → `data/cli-runs.jsonl`) או **אין חדש במשרד**. פק יומי/`on-content` שלא הורץ = שורת פער. `research.md` = תזמורת 06:15 בלבד, לא פעילות מזויפת · **אותות רטרו** slot 05 מ־`retro-signals.json` |
 | 05a זיכרון | `packages/vfops/data/owner-memory.md` — תמצית רטרו (יומי או catch-up). קרא לפני מילוי 05 |

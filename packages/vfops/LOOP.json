@@ -38,7 +38,7 @@
       "id": "vfbiz",
       "kind": "locked",
       "cadence": "daily-07:00",
-      "consume": "packages/vfbiz/LOCK.md",
+      "consume": "packages/vfbiz/LOCAL-B2B.md",
       "briefSlot": "04",
       "handoff": "packages/vfbiz/LOCK.md",
       "blocked": "B2B נעול עד בלוק 01"
@@ -242,9 +242,9 @@
     },
     {
       "id": "vfprod",
-      "kind": "docs-playbook",
+      "kind": "working-cli",
       "cadence": "daily-03",
-      "consume": "packages/vfprod/PRINT-DONE.md",
+      "consume": "python3 scripts/vfprod.py brief",
       "briefSlot": "03",
       "handoff": "packages/vfprod/FLOOR.md",
       "blocked": "אין Print מ-HQ"
@@ -280,7 +280,7 @@
       "id": "vfsku",
       "kind": "working-cli",
       "cadence": "daily-07:00",
-      "consume": "python3 scripts/vfsku.py brief",
+      "consume": "python3 scripts/vfsku.py scan",
       "briefSlot": "03",
       "handoff": "packages/vfresearch/hq/MAKERWORLD-SCAN.md",
       "blocked": null
@@ -291,7 +291,7 @@
       "cadence": "on-shelf",
       "consume": "packages/vlicense/GATE.md",
       "briefSlot": "03",
-      "handoff": "packages/vfsku/GATE.md",
+      "handoff": "packages/vfsku/TAG.md",
       "blocked": "הורדה ≠ רישיון"
     }
   ],

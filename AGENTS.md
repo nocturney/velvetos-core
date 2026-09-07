@@ -87,6 +87,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vf-canva.py` | Canva Instagram desk |
 | `scripts/check-vfresearch.py` | Weekly inspiration-links + bi-daily best-skills + last30 community research + IG music + orchestra failover law |
 | `scripts/check-vfcost.py` | Material-only cost CLI (grams × ILS/kg); missing grams refuse; no invented sale ₪ |
+| `scripts/check-vfprod.py` | Floor fleet routing (4 beds, no Print from HQ); filament remainder; maintenance snapshot empty=אין ספירה |
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
 | `scripts/check-vfgrowth.py` | Standing IG calendar + ledger + Studio handoff (instagram.com, no Suite) |
 | `scripts/check-organic-growth.py` | Organic Growth Control Plane — no autopost/auto-DM, gate states, `orders.json` null ILS, 07:00 Decision Pack |

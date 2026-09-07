@@ -20,21 +20,27 @@
       "name": "Ella",
       "nameHe": "אלה",
       "ilsPerKg": "",
-      "source": ""
+      "source": "",
+      "remainingGrams": "",
+      "remainingChecked": ""
     },
     {
       "id": "rachel",
       "name": "Rachel",
       "nameHe": "רחל",
       "ilsPerKg": "",
-      "source": ""
+      "source": "",
+      "remainingGrams": "",
+      "remainingChecked": ""
     },
     {
       "id": "gefen",
       "name": "Gefen",
       "nameHe": "גפן",
       "ilsPerKg": "",
-      "source": ""
+      "source": "",
+      "remainingGrams": "",
+      "remainingChecked": ""
     }
   ]
 }

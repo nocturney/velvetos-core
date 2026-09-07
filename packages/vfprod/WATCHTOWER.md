@@ -70,6 +70,7 @@ Watchtower = **שכבת Edge / עצבים** (`LAYERS.md`) — מחליף את ה
 - אין להפוך את Watchtower ל־orchestrator שני (Orca ADE / CrewAI / event bus).
 - מנהרה מרוחקת = Mac/Pi בשדרות בלבד (`vfmcp/HOST.md`). Cloud לא פותח אתר מדפסת.
 - Elegoo / Snapmaker: **לא ברשימת הפרוטוקולים** בדף Watchtower (7.9) — לפני רכישה לאמת מיטה-מיטה. פער = נשארים על היצרן + אדם.
+- ניתוב מיטה לפי חומר: `packages/vfprod/ROUTING.md` + `python3 scripts/vfprod.py route` (המלצה; Print על הרצפה / Watchtower Edge).
 
 ## שלבי אימוץ (כשיגיע רישיון)
 

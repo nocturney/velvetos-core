@@ -156,6 +156,11 @@
       "id": "check-vfcost",
       "script": "scripts/check-vfcost.py",
       "type": "computational"
+    },
+    {
+      "id": "check-vfprod",
+      "script": "scripts/check-vfprod.py",
+      "type": "computational"
     }
   ],
   "permissions": {

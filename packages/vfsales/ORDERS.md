@@ -1,7 +1,7 @@
 # הזמנות / פניות — orders.json
 
 מושב: סטודיו (`vfsales`). לא CRM מלא. לא ₪ מומצא.  
-קובץ: `data/orders.json`. ייחוס: `vfinsights/ATTRIBUTION.md`.
+קובץ: `packages/vfsales/data/orders.json` (פניות IG→וואטסאפ). לא אותו קובץ כמו `packages/vfbooks/data/orders.json` (ספר/Invoice4U לחריץ 02). ייחוס: `vfinsights/ATTRIBUTION.md`.
 
 ## מינימום שדות
 

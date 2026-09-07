@@ -1,0 +1,8 @@
+{
+  "name": "vfprod-maintenance-snapshot",
+  "updatedAt": "",
+  "source": "floor snapshot or Watchtower export — not a Core daemon",
+  "rule": "Empty until the floor pastes a reading. Missing fields stay חסר. No invented temperature / vibration / hours.",
+  "catalogEvent": "print.maintenance_due",
+  "printers": []
+}

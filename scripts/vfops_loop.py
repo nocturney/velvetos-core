@@ -43,6 +43,9 @@ VFBOOKS = ROOT / "scripts" / "vfbooks.py"
 VFPROD = ROOT / "scripts" / "vfprod.py"
 ORGANIC_CLI = ROOT / "scripts" / "vf_organic_growth.py"
 GROWTH_BRIEF = ROOT / "packages" / "vfgrowth" / "data" / "growth-brief.json"
+GATES = ROOT / "packages" / "vfops" / "hq" / "GATES.json"
+ORDERS = ROOT / "packages" / "vfbooks" / "data" / "orders.json"
+INVOICE4U = ROOT / "packages" / "vfbooks" / "data" / "invoice4u-snapshot.json"
 FUNNEL = ROOT / "packages" / "vfgrowth" / "hq" / "PROFILE-TO-WHATSAPP.md"
 CLI_LOG = ROOT / "packages" / "vfops" / "data" / "cli-runs.jsonl"
 TZ = ZoneInfo("Asia/Jerusalem")
@@ -206,10 +209,68 @@ def cost_line() -> str:
     return run_cmd([sys.executable, str(VFCOST), "brief"], name="vfcost.py brief")
 
 
+def prod_line() -> str:
+    if not VFPROD.is_file():
+        return "צי: חסר vfprod.py"
+    return run_cmd([sys.executable, str(VFPROD), "brief"], name="vfprod.py brief")
+
+
 def books_line() -> str:
-    if not VFBOOKS.is_file():
-        return "חוב פתוח: אין ספירה · Invoice4U נשאר · בלי מייל גבייה מ-HQ"
-    return run_cmd([sys.executable, str(VFBOOKS), "brief"], name="vfbooks.py brief")
+    if VFBOOKS.is_file():
+        books = run_cmd([sys.executable, str(VFBOOKS), "brief"], name="vfbooks.py brief")
+    else:
+        books = "חוב פתוח: אין ספירה · Invoice4U נשאר · בלי מייל גבייה מ-HQ"
+    n_orders = 0
+    n_inv = 0
+    if ORDERS.is_file():
+        n_orders = len((json.loads(ORDERS.read_text(encoding="utf-8")).get("orders")) or [])
+    if INVOICE4U.is_file():
+        n_inv = len((json.loads(INVOICE4U.read_text(encoding="utf-8")).get("rows")) or [])
+    if n_orders == 0 and n_inv == 0:
+        disk = "ספר דיסק: אין ספירה · orders.json + Invoice4U ריקים עד הדבקה (לא inbox ל-07:00)"
+    else:
+        disk = f"ספר דיסק: הזמנות={n_orders} · Invoice4U={n_inv} · בלי ₪ מומצא"
+    return f"{books}\n{disk}"
+
+
+def gates_packet() -> tuple[str, list[list[str]], list[dict]]:
+    rows = [
+        ["מחיר מכירה", "דחה", "X ₪"],
+        ["כיתוב G004 סטוריז", "כן", "vfcopy/G004-STORIES-FIX.md"],
+        ["ig-mcp Publish", "דחה", "needsAuth"],
+    ]
+    default_prose = (
+        "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 סטוריז = G004-STORIES-FIX.md. "
+        "שיבוץ בלי לשאול משבצת — אחרי שער עריכה (Canva/vfcovers). "
+        "לחיצת כן/דחה לא שולחת וואטסאפ ולא מדפיסה מ-HQ."
+    )
+    if not GATES.is_file():
+        return default_prose, rows, []
+    data = json.loads(GATES.read_text(encoding="utf-8"))
+    open_items = [i for i in (data.get("items") or []) if (i.get("status") or "open") == "open"]
+    mail = data.get("officeMail") or "nocturney@gmail.com"
+    if not open_items:
+        return default_prose, rows, []
+    extra: list[list[str]] = []
+    actions: list[dict] = []
+    for item in open_items:
+        gid = item.get("id") or "?"
+        label = item.get("label") or gid
+        extra.append([label, "כן/לא/דחה", gid])
+        actions.append(
+            {
+                "id": gid,
+                "label": label,
+                "yes": f"mailto:{mail}?subject=%5BVF-GATE%5D%20{gid}%20yes",
+                "no": f"mailto:{mail}?subject=%5BVF-GATE%5D%20{gid}%20no",
+                "defer": f"mailto:{mail}?subject=%5BVF-GATE%5D%20{gid}%20defer",
+            }
+        )
+    prose = (
+        "שער אדם בלחיצה (mailto או vfops_loop.py gate). לא וואטסאפ לקוח. לא Print. "
+        "לא ₪ מומצא. שיבוץ בלי לשאול משבצת — אחרי שער עריכה (Canva/vfcovers). G004-STORIES-FIX.md."
+    )
+    return prose, extra + rows, actions
 
 
 def growth_line() -> str:
@@ -271,6 +332,7 @@ ROUTINE_BRIEF_CLI = (
     "vfsku.py brief",
     "vfsku.py scan",
     "vfbooks.py brief",
+    "vfprod.py brief",
     "vfprod.py print-done",
     "vf_organic_growth.py brief",
 )
@@ -631,6 +693,9 @@ def assemble(today: str) -> dict:
     invoked.add("vfcost")
     books = books_line()
     invoked.add("vfbooks")
+    prod = prod_line()
+    invoked.add("vfprod")
+    gate_prose, gate_rows, gate_actions = gates_packet()
     growth = growth_line()
     invoked.add("vfgrowth")
     biz = biz_week_line()
@@ -654,20 +719,21 @@ def assemble(today: str) -> dict:
             {
                 "kicker": "01 · קודם החלטה",
                 "title": "החלטות",
-                "prose": "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 סטוריז = G004-STORIES-FIX.md. שיבוץ בלי לשאול משבצת — אחרי שער עריכה (Canva/vfcovers). Organic Growth: אישור = approved_for_manual_posting — לא Publish.",
+                "prose": (
+                    f"{gate_prose} Organic Growth: אישור = approved_for_manual_posting — לא Publish."
+                ),
                 "headers": ["החלטה", "כן/לא/דחה", "מועד"],
-                "rows": [
-                    ["מחיר מכירה", "דחה", "X ₪"],
-                    ["כיתוב G004 סטוריז", "כן", "vfcopy/G004-STORIES-FIX.md"],
-                    ["ig-mcp Publish", "דחה", "needsAuth"],
+                "rows": gate_rows
+                + [
                     ["ריל 16:00 (לוח א׳/ג׳)", "דחה עד גלם", "vf_organic_growth.py"],
                     ["סטורי סקר 20:30", "ממתין לאישור", "לא מפרסם"],
                 ],
+                "actions": gate_actions,
             },
             {
                 "kicker": "02 · כסף בעבודה",
                 "title": "הזמנות ומעקב",
-                "prose": f"{books}\n{cost}",
+                "prose": f"{books}\nפנייה חדשה: אין ספירה.\n{cost}",
                 "headers": ["קוד", "שלב", "חסם"],
                 "rows": [
                     ["פנייה", "אין", "אין ספירה"],
@@ -678,7 +744,7 @@ def assemble(today: str) -> dict:
             {
                 "kicker": "03 · מה להדפיס ולפרסם",
                 "title": "מדף",
-                "prose": sku,
+                "prose": f"{sku}\n{prod}",
             },
             {
                 "kicker": "04",
@@ -781,8 +847,13 @@ def write_status(today: str) -> None:
         "",
         "- `vfops_loop.py brief` — בריף סוכנות מפקים חיים",
         "- `vfcost.py brief` — עלות חומר חיה בחריץ 02 (בלי ₪ מכירה)",
+        "- `vfprod.py brief` — צי + תחזוקה בחריץ 03 (אין Print מ-HQ)",
+        "- `vfprod.py print-done` — כרטיסי רצפה בחריץ 03 (אין Publish מהבריף)",
+        "- מדף `vfsku.py brief` + `vfsku.py scan` + `week.md`",
+        "- שערי 01 מ־`GATES.json` (לחיצת אדם, לא וואטסאפ)",
+        "- Organic Growth Decision Pack `vf_organic_growth.py` — אישור ≠ פרסום",
         "- `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)",
-        "- מדף `vfsku.py brief` + `vfsku.py scan` + `week.md` + `vfprod.py print-done`",
+        "- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)",
         "- FOLLOWER-GROWTH · היילייטס + וואטסאפ",
         "- כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)",
         "- חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ",
@@ -848,6 +919,44 @@ def cmd_handoff(_args: argparse.Namespace) -> int:
     print()
     if HANDOFF.is_file():
         print(HANDOFF.read_text().split("## קופי")[0].strip()[:1400])
+    return 0
+
+
+def cmd_gate(args: argparse.Namespace) -> int:
+    if not GATES.is_file():
+        fail("missing packages/vfops/hq/GATES.json")
+    decision = (args.decision or "").strip()
+    if decision not in {"yes", "no", "defer"}:
+        fail("decision must be yes|no|defer")
+    data = json.loads(GATES.read_text(encoding="utf-8"))
+    found = None
+    for item in data.get("items") or []:
+        if item.get("id") == args.id:
+            found = item
+            break
+    if not found:
+        fail(f"unknown gate {args.id} — לא ממציאים שער")
+    found["status"] = decision
+    found["decidedAt"] = datetime.now(TZ).date().isoformat()
+    GATES.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
+    kind = found.get("kind") or ""
+    nxt = "נרשם. לא נשלח וואטסאפ. לא Print מ-HQ. לא ₪ מומצא."
+    if decision == "yes" and kind == "quote":
+        nxt = "yes לquote: תור רצפה רק אם יש סכום מראש צוות — אחרת ממתין לסכום. לא וואטסאפ."
+    elif decision == "yes" and kind == "content":
+        nxt = "yes לcontent: PREFLIGHT.md ואז vfigos. לא Publish מכאן."
+    elif decision == "yes" and kind == "b2b-line":
+        nxt = "yes לb2b-line: לרשום ב-vfbiz/hq/decisions. LOCK.md נשאר עד פתיחה מפורשת. לוגו/QR/מפיות=דוגמאות."
+    payload = {
+        "id": args.id,
+        "decision": decision,
+        "kind": kind,
+        "next": nxt,
+        "event": "brief.gate_applied",
+        "sendWhatsapp": False,
+        "hqPrints": False,
+    }
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
     return 0
 
 
@@ -949,6 +1058,10 @@ def main() -> int:
     brief.add_argument("--write", action="store_true")
     brief.add_argument("--date")
     brief.set_defaults(func=cmd_brief)
+    gate = sub.add_parser("gate", help="apply a human yes/no/defer from slot 01 (no WhatsApp send)")
+    gate.add_argument("--id", required=True)
+    gate.add_argument("--decision", required=True, help="yes|no|defer")
+    gate.set_defaults(func=cmd_gate)
     sub.add_parser("handoff", help="Studio daily open path").set_defaults(func=cmd_handoff)
     sub.add_parser("status", help="Hebrew auto-vs-blocked board").set_defaults(func=cmd_status)
     sub.add_parser("weekly", help="weekly consume steps").set_defaults(func=cmd_weekly)

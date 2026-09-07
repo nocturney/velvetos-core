@@ -24,7 +24,8 @@
   "unresolved": [
     "No live floor timelapse this session — reel stays blocked_no_media until a real print.done with media",
     "ig-mcp still needsAuth; plane never marks posted_manually",
-    "orders.json empty until human logs WhatsApp leads"
+    "orders.json empty until human logs WhatsApp leads",
+    "Two orders.json files remain separate: vfsales/data (leads) vs vfbooks/data (ledger/Invoice4U) — do not merge without a product decision"
   ],
   "escalation": null,
   "last_updated": "2026-09-07",
@@ -41,5 +42,5 @@
       }
     }
   ],
-  "latest_observation": "Control plane embedded on existing packs. Brief tells the truth: no auto reel without media. Approve ≠ publish."
+  "latest_observation": "Merged origin/main (#123 five studio engines). Slot 01 unions GATES.json click-gates with Organic Growth rows. Approve ≠ publish. Two orders.json files stay in separate packs."
 }

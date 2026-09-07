@@ -71,6 +71,41 @@
       "note": "Successful print card for content handoff; HQ does not drive printers. Edge emitter may be a floor farm dashboard (Watchtower) — vfprod/WATCHTOWER.md. Missing media = חסר"
     },
     {
+      "id": "print.route_suggested",
+      "direction": "office→edge",
+      "emits": "office",
+      "payloadKeys": ["material", "printerId", "reason"],
+      "note": "Bed recommendation only. Floor assigns. Never Print from HQ."
+    },
+    {
+      "id": "print.filament_short",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["filamentId", "sliceGrams", "remainingGrams"],
+      "note": "Night-print block when slice grams exceed verified spool remainder. Missing remainder = אין ספירה"
+    },
+    {
+      "id": "print.maintenance_due",
+      "direction": "edge→office",
+      "emits": "edge",
+      "payloadKeys": ["printerId", "kind", "evidence"],
+      "note": "Nozzle/lube/filter after print.done — brief slot 03. No invented telemetry."
+    },
+    {
+      "id": "brief.gate_applied",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["gateId", "decision", "kind"],
+      "note": "Human yes/no/defer from 07:00 brief. Not WhatsApp send. Not sale ₪."
+    },
+    {
+      "id": "catalog.scan_blocked",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["slotId", "reason"],
+      "note": "SKU offered without verified slice/cost/license — fail-closed"
+    },
+    {
       "id": "content.draft_ready",
       "direction": "office→office",
       "emits": "office",

@@ -93,7 +93,7 @@
       "packs": ["vfops", "vfgrowth", "vfcopy", "vfsku", "vfcost", "vfigos"],
       "gate": "none",
       "path": "packages/vfops/LOOP.json",
-      "notes": "07:00 assemble. Agency-grade brief. No invented ₪/Insights. No live IG publish. vfcost.py brief is live in slot 02."
+      "notes": "07:00 assemble. Agency-grade brief. No invented ₪/Insights. No live IG publish. vfcost.py brief is live in slot 02. Slot 01 gates are human click (GATES.json). Slot 03 includes vfprod.py brief."
     },
     {
       "id": "studio.edit-gate",

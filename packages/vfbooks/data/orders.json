@@ -1,0 +1,18 @@
+{
+  "name": "vfbooks-orders",
+  "title": "הזמנות לדיסק — בלי ₪ מומצא",
+  "updatedAt": "",
+  "briefSlot": "02",
+  "rule": "Disk mirror of verified jobs. Empty until ledger/Invoice4U snapshot. No invented ₪. No customer names in git.",
+  "source": "office/ledger/live/jobs.csv and/or packages/vfbooks/data/invoice4u-snapshot.json",
+  "locks": [
+    "no-invented-prices",
+    "no-inbox-scrape-for-0700-brief"
+  ],
+  "orders": [],
+  "totals": {
+    "openDebt": "",
+    "paidPeriod": "",
+    "note": "אין ספירה"
+  }
+}
