@@ -78,6 +78,8 @@ Envelope מינימלי (checkpoint / קובץ אירוע):
 
 אחרי טיוטה מוכנה לסקירה — אירוע `content.draft_ready` (payload: `jobId`, `format`, `preflightPath`).
 
+CLI לבריף 03/07: `python3 scripts/vfprod.py print-done` (כרטיסים ב־`hq/cards/`).
+
 ## נעול
 
 - אין חיבור HQ→מצלמת Bambu/Snapmaker/Elegoo כדמון בריפו Core (Edge עתידי / Grok־רצפה).

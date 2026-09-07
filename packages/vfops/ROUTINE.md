@@ -22,6 +22,7 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 | מתי | מה | קובץ |
 |---|---|---|
 | פעם בשבוע (רמז: ראשון בבוקר) | סקירת **קישורי השראה והטמעה** שנשלחו — עדכונים + «מה חדש לחקור» + דופק **Print·Demand·Sound** | `vfresearch/WEEKLY.md`, `vfresearch/LINKS.json`, `vfresearch/hq/PRINT-DEMAND.md` |
+| ראשון + רביעי (אחרי 06:15) | סריקת MakerWorld/Printables מאחורי שער רישיון — בלי שם מהאוויר, בלי סלייסר מ־HQ | `vfresearch/hq/MAKERWORLD-SCAN.md` · `python3 scripts/vfsku.py scan` |
 | פעם בשבוע (רמז: ראשון אחרי בריף) | מילוי משבצות הלוח הקבוע — ריל א׳/ג׳ 16:00, קרוסלה ה׳ 12:00, סטוריז 20:30. חסום = דילוג | `vfgrowth/CALENDAR.md`, `LEDGER.md`, `HANDOFF-he.md` |
 | פעם בשבוע (רמז: לפני מילוי לוח) | סקירת פניות עם קונספט בלבד או קובץ בעייתי → שימוש ב-3D AI Studio לפי `vfprod/3DAISTUDIO.md` לפני סלייסר | `vfprod/3DAISTUDIO.md`, `vfprod/CONNECT-3DAI.md` |
 

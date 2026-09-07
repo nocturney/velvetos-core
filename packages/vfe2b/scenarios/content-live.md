@@ -7,16 +7,20 @@ Crew: [`../crews/content.md`](../crews/content.md)
 
 ```mermaid
 flowchart LR
-  A[brief.ready] --> B[vfcopy.draft]
+  P[print.done] --> A[brief.ready]
+  A --> B[vfcopy.draft]
   B --> C[vfcovers.brief]
   C --> D[canva.done]
-  D --> E{publish.mcp?}
+  D --> PF[preflight.written]
+  PF --> E{publish.mcp?}
   E -->|yes| F[ig.sent]
   E -->|no| G[ig.failover]
   G --> H[drive.file]
   H --> I[gmail.packet]
   I --> F
 ```
+
+Floor print-done is optional. Missing card/media = **חסר** — do not invent a bed scene. HQ does not poll printers. Brief 07:00 does not publish.
 
 ## Events (checkpoint)
 
@@ -30,8 +34,9 @@ flowchart LR
 
 ## Send law
 
-- CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
+- CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM». Process-short reels use follow-CTA (`PROFILE-TO-WHATSAPP.md`).
 - `#נשלח-מ-HQ` when a tool sent.
+- Written `PREFLIGHT.md` before schedule. Fail-closed = no slot.
 - `#ממתין-ל-כלי-IG` if feed did not publish via MCP.
 - Never claim posted without publish tool or honest failover packet (`vfigos/SEND.md`).
 

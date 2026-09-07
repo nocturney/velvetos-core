@@ -39,6 +39,9 @@ COPY_DIR = ROOT / "packages" / "vfcopy"
 STORIES_FIX = COPY_DIR / "G004-STORIES-FIX.md"
 VFSKU = ROOT / "scripts" / "vfsku.py"
 VFCOST = ROOT / "scripts" / "vfcost.py"
+VFBOOKS = ROOT / "scripts" / "vfbooks.py"
+VFPROD = ROOT / "scripts" / "vfprod.py"
+FUNNEL = ROOT / "packages" / "vfgrowth" / "hq" / "PROFILE-TO-WHATSAPP.md"
 CLI_LOG = ROOT / "packages" / "vfops" / "data" / "cli-runs.jsonl"
 TZ = ZoneInfo("Asia/Jerusalem")
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
@@ -55,6 +58,8 @@ AUDIT_PACKS = {
     "vfinsights",
     "vfresearch",
     "vfsku",
+    "vfbooks",
+    "vfprod",
 }
 
 CAPTION_FILES = (
@@ -183,10 +188,14 @@ def gap_lines(invoked: set[str]) -> str:
 
 def sku_line() -> str:
     line = run_cmd([sys.executable, str(VFSKU), "brief"], name="vfsku.py brief")
+    scan = run_cmd([sys.executable, str(VFSKU), "scan"], name="vfsku.py scan")
     week = fence_after_heading(WEEK, ("בלוק לבריף",))
+    parts = [line, scan]
     if week:
-        return f"{line}\n{week}"
-    return line
+        parts.append(week)
+    if VFPROD.is_file():
+        parts.append(run_cmd([sys.executable, str(VFPROD), "print-done"], name="vfprod.py print-done"))
+    return "\n".join(parts)
 
 
 def cost_line() -> str:
@@ -195,14 +204,26 @@ def cost_line() -> str:
     return run_cmd([sys.executable, str(VFCOST), "brief"], name="vfcost.py brief")
 
 
+def books_line() -> str:
+    if not VFBOOKS.is_file():
+        return "חוב פתוח: אין ספירה · Invoice4U נשאר · בלי מייל גבייה מ-HQ"
+    return run_cmd([sys.executable, str(VFBOOKS), "brief"], name="vfbooks.py brief")
+
+
 def growth_line() -> str:
     block = fence_after_heading(FOLLOWER, ("בלוק לבריף",))
+    funnel = fence_after_heading(FUNNEL, ("בלוק לבריף",)) if FUNNEL.is_file() else ""
+    parts: list[str] = []
     if block:
-        return block
-    return (
-        "היילייטס + וואטסאפ 050-2517000 — לא DM\n"
-        "B2B נעול · איסוף שדרות"
-    )
+        parts.append(block)
+    else:
+        parts.append(
+            "היילייטס + וואטסאפ 050-2517000 — לא DM\n"
+            "B2B נעול · איסוף שדרות"
+        )
+    if funnel:
+        parts.append(funnel)
+    return "\n".join(parts)
 
 
 def biz_week_line() -> str:
@@ -236,7 +257,13 @@ def captions_rows() -> list[list[str]]:
     return rows
 
 
-ROUTINE_BRIEF_CLI = ("vfcost.py brief", "vfsku.py brief")
+ROUTINE_BRIEF_CLI = (
+    "vfcost.py brief",
+    "vfsku.py brief",
+    "vfsku.py scan",
+    "vfbooks.py brief",
+    "vfprod.py print-done",
+)
 
 
 def office_line(invoked: set[str]) -> str:
@@ -378,6 +405,39 @@ def consumer_registry() -> list[ConsumerSpec]:
             auto_daily=False,
             skip_reason="integrity belongs to `vfops_loop.py check` / CI — never from run/assemble (recursion)",
         ),
+        ConsumerSpec(
+            id="vfbooks-brief",
+            title="vfbooks integrity line",
+            cadence="daily-07:00",
+            kind="exec",
+            argv=[sys.executable, str(VFBOOKS), "brief"],
+            timeout_s=30,
+            requires=(VFBOOKS,),
+            pack="vfbooks",
+            auto_daily=True,
+        ),
+        ConsumerSpec(
+            id="vfsku-scan",
+            title="MakerWorld scan line (Sun/Wed or not-scan-day)",
+            cadence="daily-07:00",
+            kind="exec",
+            argv=[sys.executable, str(VFSKU), "scan"],
+            timeout_s=30,
+            requires=(VFSKU,),
+            pack="vfsku",
+            auto_daily=True,
+        ),
+        ConsumerSpec(
+            id="vfprod-print-done",
+            title="print.done cards for brief",
+            cadence="daily-03",
+            kind="exec",
+            argv=[sys.executable, str(VFPROD), "print-done"],
+            timeout_s=30,
+            requires=(VFPROD,),
+            pack="vfprod",
+            auto_daily=True,
+        ),
     ]
 
 
@@ -518,8 +578,11 @@ def assemble(today: str) -> dict:
     invoked: set[str] = {"vfops"}
     sku = sku_line()
     invoked.add("vfsku")
+    invoked.add("vfprod")
     cost = cost_line()
     invoked.add("vfcost")
+    books = books_line()
+    invoked.add("vfbooks")
     growth = growth_line()
     invoked.add("vfgrowth")
     biz = biz_week_line()
@@ -557,11 +620,11 @@ def assemble(today: str) -> dict:
             {
                 "kicker": "02 · כסף בעבודה",
                 "title": "הזמנות ומעקב",
-                "prose": f"פנייה חדשה: אין ספירה. חוב/שולם: אין ספירה.\n{cost}",
+                "prose": f"{books}\n{cost}",
                 "headers": ["קוד", "שלב", "חסם"],
                 "rows": [
                     ["פנייה", "אין", "אין ספירה"],
-                    ["ספר", "אין ספירה", "vfbooks"],
+                    ["ספר", "vfbooks.py brief", "בלי מייל גבייה"],
                     ["חומר", "vfcost.py brief", "בלי ₪ מכירה"],
                 ],
             },
@@ -660,7 +723,8 @@ def write_status(today: str) -> None:
         "",
         "- `vfops_loop.py brief` — בריף סוכנות מפקים חיים",
         "- `vfcost.py brief` — עלות חומר חיה בחריץ 02 (בלי ₪ מכירה)",
-        "- מדף `vfsku.py brief` + `week.md`",
+        "- `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)",
+        "- מדף `vfsku.py brief` + `vfsku.py scan` + `week.md` + `vfprod.py print-done`",
         "- FOLLOWER-GROWTH · היילייטס + וואטסאפ",
         "- כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)",
         "- חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ",

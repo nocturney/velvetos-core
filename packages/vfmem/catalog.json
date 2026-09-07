@@ -191,6 +191,52 @@
     },
     {
       "q": [
+        "MakerWorld",
+        "Printables",
+        "סריקת דגמים",
+        "סריקת makerworld",
+        "shelf scan"
+      ],
+      "pack": "vfresearch",
+      "slug": "research-synthesist",
+      "tool": "web"
+    },
+    {
+      "q": [
+        "print.done",
+        "print-done",
+        "אחרי הדפסה",
+        "טיימלאפס",
+        "מה יוצא מהמדפסת"
+      ],
+      "pack": "vfprod",
+      "slug": "studio-producer",
+      "tool": "drive"
+    },
+    {
+      "q": [
+        "משפך וואטסאפ",
+        "profile to whatsapp",
+        "CTA וואטסאפ",
+        "המרת פרופיל"
+      ],
+      "pack": "vfgrowth",
+      "slug": "offer-lead-gen-strategist",
+      "tool": "canva"
+    },
+    {
+      "q": [
+        "חשבונית חסרה",
+        "integrity",
+        "בקרת נתונים",
+        "Invoice4U"
+      ],
+      "pack": "vfbooks",
+      "slug": "bookkeeper-controller",
+      "tool": "gmail"
+    },
+    {
+      "q": [
         "print",
         "הדפסה",
         "sku",

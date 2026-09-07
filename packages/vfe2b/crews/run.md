@@ -86,6 +86,10 @@ Rules:
 
 1. Name the job in one Hebrew line. If the user did not name a job, stop and ask — do not open a personal Drive folder.
 2. Pick **one** existing crew: morning-brief / research / inquiry / content / books-data. Do not spawn a second coding agent or orchestrator.
+   - MakerWorld scan (Sun/Wed) → `research`
+   - print.done → reel/story draft → `content`
+   - profile→WhatsApp CTA / verified funnel → `content`
+   - invoice / open debt integrity → `books-data`
 3. **Plan preview (OMA embed):** before heavy work, write `planned_steps` (3–8 lines) to `packages/vfharness/state/<task-id>.json` — goal, not a dynamic DAG. See `packages/vfharness/playbooks/oma-patterns.md`.
 4. Keep every read and note inside that job name. Write the artifact to a path on disk.
 5. Run that crew's steps. Missing required source → do not fill the gap.

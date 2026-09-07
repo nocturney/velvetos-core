@@ -7,7 +7,7 @@
 
 ## 06:15 — שלושה שולחנות
 
-1. לקרוא את הבריף אתמול, לוח `vfgrowth`, וכרטיסי `vfsku` בלי מחיר (`python3 scripts/vfsku.py brief`).
+1. לקרוא את הבריף אתמול, לוח `vfgrowth`, וכרטיסי `vfsku` בלי מחיר (`python3 scripts/vfsku.py brief`). אם היום ראשון או רביעי — גם `python3 scripts/vfsku.py scan` לפי `hq/MAKERWORLD-SCAN.md`.
 2. **במק:** אותה שאלה ל־ChatGPT Plus / Gemini / Perplexity (כרום או Codex + Gemini CLI). **ב־Cloud:** לא דפדפן מנוי — `WebSearch`, או קריאת `sources/` אחרי שהמק שמר. `vf_chatgpt.py` / `vf_gemini.py` רק אם יש מפתח ב־env.
 3. להטמיע מה ששימושי בפק קיים (`constitution/ORCHESTRA.md` — טבלת מיפוי).
 4. לכתוב «מה נבנה / יועל» ל־`packages/vfops/data/research.md` (בריף 07:00 קורא מכאן). ריק = **«אין חדש במשרד»** בדיוק.

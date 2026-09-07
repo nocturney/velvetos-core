@@ -23,8 +23,8 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 
 | חריץ | מקור |
 |---|---|
-| 02 | `vfcost.py brief` — עלות חומר חיה (בלי ₪ מכירה) |
-| 03 | `vfsku.py brief` + `vfsku/week.md` |
+| 02 | `vfcost.py brief` + `vfbooks.py brief` — עלות חומר + חוב/חשבונית חסרה פנימי (בלי ₪ מכירה, בלי מייל גבייה) |
+| 03 | `vfsku.py brief` + `vfsku.py scan` + `vfsku/week.md` + `vfprod.py print-done` |
 | 04 | `vfgrowth/hq/FOLLOWER-GROWTH.md` + `vfbiz/out/week.md` + B2B נעול + וואטסאפ |
 | 05 | CLI אמיתי מ-24ש (`cli-runs.jsonl`) + סיכום `consumer-runs` מ־`run`, או «אין חדש במשרד» + שורות **פער** לפק יומי שלא הורץ. `on-content`/`on-inquiry` לא נחשבים פער בוקר. לא קטלוג מ-`research.md` |
 | 06 | `vfinsights` loop → `LEARNINGS.md` כשיש CSV; אחרת «אין ספירה». מדדים חלשים = לוג פנימי, לא אשמת בעלים |

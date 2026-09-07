@@ -43,4 +43,5 @@ Insights מעבר לזה: אין ספירה
 
 `#צמיחה-חברתית` `#ריל-תהליך` `#היילייטס` `#המרת-פרופיל` — `constitution/tags.md`.
 
-כרטיס Offer על כל פיד: `experts/REVENUE-LOOP.md`.
+כרטיס Offer על כל פיד: `experts/REVENUE-LOOP.md`.  
+משפך פרופיל→וואטסאפ (CTA לפי VOICE, בלי Insights מומצאים): `hq/PROFILE-TO-WHATSAPP.md`.

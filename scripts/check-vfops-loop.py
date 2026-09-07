@@ -43,6 +43,13 @@ def main() -> None:
         fail("LOOP.json duplicate pack ids")
     if "vfcost" not in ids or "vfsku" not in ids or "vfgrowth" not in ids:
         fail("LOOP.json must include vfcost, vfsku, vfgrowth")
+    if "vfbooks" not in ids:
+        fail("LOOP.json must include vfbooks")
+    books = next(p for p in data["packs"] if p["id"] == "vfbooks")
+    if "vfbooks.py brief" not in (books.get("consume") or ""):
+        fail("vfbooks consume must be vfbooks.py brief")
+    if books.get("briefSlot") != "02":
+        fail("vfbooks briefSlot must be 02")
     cost = next(p for p in data["packs"] if p["id"] == "vfcost")
     if cost.get("consumeOptional"):
         fail("vfcost CLI is on main — consume must be live, not optional")
@@ -130,9 +137,24 @@ def main() -> None:
     if not print_done.is_file():
         fail("missing packages/vfprod/PRINT-DONE.md")
     pd_txt = print_done.read_text(encoding="utf-8")
-    for needle in ("print.done", "PREFLIGHT", "אוטו־DM", "hybrid-reel"):
+    for needle in ("print.done", "PREFLIGHT", "אוטו־DM", "hybrid-reel", "vfprod.py print-done"):
         if needle not in pd_txt:
             fail(f"PRINT-DONE.md must mention {needle}")
+
+    for rel, needles in (
+        ("packages/vfresearch/hq/MAKERWORLD-SCAN.md", ("ראשון", "רביעי", "vfsku.py scan", "NC")),
+        ("packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md", ("050-2517000", "VOICE.md", "אין ספירה")),
+        ("packages/vfbooks/INTEGRITY.md", ("Invoice4U", "vfbooks.py brief", "decision_gate")),
+        ("scripts/vfbooks.py", ("brief", "אין ספירה", "Invoice4U")),
+        ("scripts/vfprod.py", ("print-done", "PREFLIGHT")),
+    ):
+        path = ROOT / rel
+        if not path.is_file():
+            fail(f"missing {rel}")
+        text = path.read_text(encoding="utf-8")
+        for needle in needles:
+            if needle not in text:
+                fail(f"{rel} must mention {needle!r}")
     for needle in ("RETRO-SIGNALS.md", "vf_retro_signals.py", "retro-signals.json"):
         if needle not in retro_txt:
             fail(f"DAILY-RETRO.md must wire retro→signal needle {needle!r}")

@@ -287,6 +287,19 @@ def main() -> None:
             fail(f"crews/run.md missing outcome {token}")
     if "stablyai/orca" not in run_text and "github.com/stablyai/orca" not in run_text:
         fail("crews/run.md must cite stablyai/orca")
+    if "MakerWorld" not in run_text or "print.done" not in run_text:
+        fail("crews/run.md must map MakerWorld scan and print.done onto existing crews")
+
+    research_crew = (CREWS / "research.md").read_text()
+    if "MAKERWORLD-SCAN.md" not in research_crew:
+        fail("crews/research.md must embed MAKERWORLD-SCAN.md")
+    content_crew = (CREWS / "content.md").read_text()
+    for needle in ("PRINT-DONE.md", "PREFLIGHT", "PROFILE-TO-WHATSAPP.md"):
+        if needle not in content_crew:
+            fail(f"crews/content.md must mention {needle}")
+    books_crew = (CREWS / "books-data.md").read_text()
+    if "INTEGRITY.md" not in books_crew or "vfbooks.py brief" not in books_crew:
+        fail("crews/books-data.md must embed INTEGRITY.md + vfbooks.py brief")
 
     orca = next((p for p in picks if p.get("name") == "Orca"), None)
     if not orca:
