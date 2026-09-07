@@ -1,0 +1,21 @@
+{
+  "task_id": "core-stability-four-axes-2026-09-07",
+  "status": "running",
+  "pack": "vfharness",
+  "goal": "Ship four bounded stability axes without second runtime",
+  "completed_steps": [
+    "atomic semantic index write",
+    "vf_send_preflight.py + SEND wiring",
+    "owner-memory day-block contract + sensor",
+    "attach-core offline/stale path"
+  ],
+  "next_step": "run check-all + behavioral tests + PR",
+  "artifacts": [
+    "packages/vfharness/playbooks/core-stability-four-axes.md",
+    "scripts/vf_send_preflight.py",
+    "packages/vfmem/scripts/vf_semantic_search.py",
+    "instances/velvet-factory/scripts/attach-core.sh"
+  ],
+  "unresolved": [],
+  "last_updated": "2026-09-07T14:20:00Z"
+}

@@ -19,6 +19,20 @@ Treg לא רלוונטי. Drive יוצר מסמכים לפי צורך.
 
 Grok Bot הוא **גיבוי אופציונלי**, לא השולח היחיד ולא שער חובה.
 
+## פריפלייט קל לפני שליחה
+
+לפני `send_message` / Publish / קריאת API תזמורת — הרץ:
+
+```bash
+python3 scripts/vf_send_preflight.py
+python3 scripts/vf_send_preflight.py --gate gmail        # 0=ready
+python3 scripts/vf_send_preflight.py --gate instagram    # 2=failover Canva+Drive+Gmail
+```
+
+בודק סטטוס שולחן + נוכחות מפתח (מקומי בלבד, בלי רשת).  
+יציאה `2` = **failover באותו תור** — לא סרק, לא המצאה.  
+לא מחליף את `vfgrowth/PREFLIGHT.md` (שער איכות תוכן לפני שיבוץ).
+
 ## ג׳ימייל — מותר עכשיו
 
 - בריף 07:00 ל־`nocturney@gmail.com`

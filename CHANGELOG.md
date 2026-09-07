@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **יציבות ליבה · ארבעה צירים:** (1) כתיבה אטומית ל־`semantic_index.pkl` (`os.replace`) · (2) `vf_send_preflight.py` לפני שליחה (desk+מפתח, בלי רשת; `--gate` יציאה 2=failover) · (3) חוזה יום Markdown ל־`owner-memory` (מושב/למדנו/מקור) + סנסור ב־`check-vfops-loop` · (4) `attach-core.sh` אופליין/stale-OK + `VELVETOS_CORE_PATH` + stamp. ADR: `vfharness/playbooks/core-stability-four-axes.md`. בלי Jinja / repository_dispatch / Pydantic. Core stability four axes on existing harness.
+
 - 2026-09-07 — שכבת איכות: PREFLIGHT+TEMPLATE דורשים CONTENT-RUBRIC≥20/25 + ראיית ויזואל + digest; VOICE-CHART/UGC/community/MEASUREMENT-PLAN מחוברים לסקילים; check-vfcopy חוסם מוכן עם Rubric פסול.
 - 2026-09-07 — `vfops_loop.py run`: צרכנים יומיים עם תנאי/דילוג/ללא רקורסיית check-all; brief רק מרכיב; אין רנדור G005 אוטומטי.
 - 2026-09-07 — מחקר: `vfresearch_cadence.py` (map/status/verify/build-index fail-closed) + תיקון workflow בלי `|| echo` + DST Asia/Jerusalem; בלי cron כפול ל-GrokBot.

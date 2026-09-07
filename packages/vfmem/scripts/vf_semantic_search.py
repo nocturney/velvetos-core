@@ -5,18 +5,29 @@ No network calls, no paid API, no MCP server. Builds an index over every
 .md file in packages/ + constitution/ + docs/, and answers free-text
 Hebrew/English queries by cosine similarity.
 
+Index writes are atomic (staging file + os.replace) so a crashed build never
+exposes a partial semantic_index.pkl to readers.
+
 Usage:
     python3 vf_semantic_search.py --build
     python3 vf_semantic_search.py "who sends instagram posts"
 """
-import argparse, pickle, re
+from __future__ import annotations
+
+import argparse
+import os
+import pickle
+import re
+import tempfile
 from pathlib import Path
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 ROOT = Path(__file__).resolve().parents[3]
 SCAN_DIRS = ["packages", "constitution", "docs"]
 INDEX_PATH = ROOT / "packages" / "vfmem" / "semantic_index.pkl"
+
 
 def collect_chunks():
     chunks = []
@@ -27,7 +38,7 @@ def collect_chunks():
         for path in base.rglob("*.md"):
             try:
                 text = path.read_text(encoding="utf-8", errors="ignore")
-            except Exception:
+            except OSError:
                 continue
             sections = re.split(r"\n(?=#{1,3}\s)", text)
             for sec in sections:
@@ -37,14 +48,41 @@ def collect_chunks():
                 chunks.append({"path": str(path.relative_to(ROOT)), "text": sec[:800]})
     return chunks
 
+
+def atomic_pickle_dump(payload: dict, dest: Path) -> None:
+    """Write pickle via same-dir temp file + os.replace (atomic on POSIX)."""
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(
+        prefix=".semantic_index.",
+        suffix=".pkl.tmp",
+        dir=str(dest.parent),
+    )
+    tmp_path = Path(tmp_name)
+    try:
+        with os.fdopen(fd, "wb") as f:
+            pickle.dump(payload, f)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp_path, dest)
+    except Exception:
+        try:
+            tmp_path.unlink(missing_ok=True)
+        except OSError:
+            pass
+        raise
+
+
 def build_index():
     chunks = collect_chunks()
     corpus = [c["text"] for c in chunks]
     vec = TfidfVectorizer(max_features=20000, ngram_range=(1, 2))
     matrix = vec.fit_transform(corpus)
-    with open(INDEX_PATH, "wb") as f:
-        pickle.dump({"vectorizer": vec, "matrix": matrix, "chunks": chunks}, f)
+    atomic_pickle_dump(
+        {"vectorizer": vec, "matrix": matrix, "chunks": chunks},
+        INDEX_PATH,
+    )
     print(f"indexed {len(chunks)} chunks -> {INDEX_PATH}")
+
 
 def query(text, top_k=5):
     if not INDEX_PATH.exists():
@@ -60,9 +98,15 @@ def query(text, top_k=5):
     for i in ranked:
         if sims[i] <= 0:
             continue
-        results.append({"score": round(float(sims[i]), 4), "path": chunks[i]["path"],
-                         "snippet": chunks[i]["text"][:220].replace("\n", " ")})
+        results.append(
+            {
+                "score": round(float(sims[i]), 4),
+                "path": chunks[i]["path"],
+                "snippet": chunks[i]["text"][:220].replace("\n", " "),
+            }
+        )
     return results
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -81,6 +125,7 @@ def main():
         for r in results:
             print(f"[{r['score']}] {r['path']}")
             print(f"    {r['snippet']}")
+
 
 if __name__ == "__main__":
     main()

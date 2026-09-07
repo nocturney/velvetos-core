@@ -97,6 +97,34 @@ def main() -> None:
     if "check-vfops-loop.py" not in AGENTS.read_text():
         fail("AGENTS.md sensor table must list check-vfops-loop.py")
 
+    # --- owner-memory day-block contract (Markdown, no Pydantic) ---
+    import re
+
+    memory_path = ROOT / "packages" / "vfops" / "data" / "owner-memory.md"
+    memory_update = ROOT / "packages" / "vfmem" / "MEMORY-UPDATE.md"
+    daily_retro = ROOT / "packages" / "vfops" / "hq" / "DAILY-RETRO.md"
+    for path in (memory_path, memory_update, daily_retro):
+        if not path.is_file():
+            fail(f"missing {path.relative_to(ROOT)}")
+    mem_upd = memory_update.read_text(encoding="utf-8")
+    for needle in ("**מושב:**", "**למדנו:**", "**מקור:**", "fail-closed", "check-vfops-loop.py"):
+        if needle not in mem_upd:
+            fail(f"MEMORY-UPDATE.md must lock day-block contract needle {needle}")
+    retro_txt = daily_retro.read_text(encoding="utf-8")
+    if "חוזה יום" not in retro_txt or "MEMORY-UPDATE.md" not in retro_txt:
+        fail("DAILY-RETRO.md must point at owner-memory day-block contract")
+
+    memory = memory_path.read_text(encoding="utf-8")
+    # Split on dated day headers; skip catch-up prose that uses other headings.
+    day_pat = re.compile(r"(?m)^### (\d{4}-\d{2}-\d{2})\b[^\n]*\n(.*?)(?=^### \d{4}-\d{2}-\d{2}\b|\Z)", re.S)
+    blocks = day_pat.findall(memory)
+    if len(blocks) < 3:
+        fail(f"owner-memory.md expected >=3 dated day blocks, got {len(blocks)}")
+    for date, body in blocks:
+        for field in ("**מושב:**", "**למדנו:**", "**מקור:**"):
+            if field not in body:
+                fail(f"owner-memory day {date} missing required field {field}")
+
     proc = subprocess.run(
         [sys.executable, str(CLI), "check"],
         cwd=ROOT,

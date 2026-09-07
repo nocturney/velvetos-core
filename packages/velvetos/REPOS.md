@@ -27,6 +27,9 @@
 
 המופע מפעיל תת־קבוצה של `modules/catalog.json` דרך `modulesEnabled`.
 
+אם הרשת נפלה ויש כבר `vendor/velvetos-core/` שמיש — `attach-core.sh` **שומר** עליו (stale OK) וכותב `vendor/.attach-stamp`.  
+אופליין מלא: `VELVETOS_CORE_OFFLINE=1` + `VELVETOS_CORE_PATH` לנתיב ליבה מקומי. לא `repository_dispatch`.
+
 ## Cloud Agent — כל מופע חדש
 
 כל ריפo frontend **חייב** `.cursor/environment.json`:
