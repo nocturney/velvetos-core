@@ -10,6 +10,7 @@
 - **מנדט מושב:** `HQ-ROUTINE.md` (יומי / כל־יומיים / שבועי / חודשי / סוף־יום)
 - יומי 06:15 (צ'אטים חדשים): `DAILY.md` → בלוק `05` ב־`packages/vfops/data/research.md`
 - **שבועי** — סקירת קישורי השראה/הטמעה שנשלחו: `WEEKLY.md` + `LINKS.json`
+- **שבועי · Print-Demand-Sound** — טרנדים ויזואליים 3D + ביקוש IL + סאונד: `hq/PRINT-DEMAND.md` · ארטיפקט `sources/YYYY-MM-DD-print-demand.md` (בלי אוטו־DM)
 - מיומנות: `.cursor/skills/vf-weekly-links/SKILL.md` · `@research-synthesist`
 - **כל יומיים · לנצח עד עצירת בעלים** — דירוג [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills): `BEST-SKILLS.md` + `BEST-SKILLS.json` + `TIMER.md`
 - מיומנות: `.cursor/skills/vf-best-skills/SKILL.md`

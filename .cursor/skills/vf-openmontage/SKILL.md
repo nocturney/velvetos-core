@@ -21,7 +21,8 @@ Use when the user pastes a Reel they like, asks to cut a timelapse, or wants a r
 | ריל שאוהבים / «כמו הסרטון הזה» | `packages/vfom/crews/reference-plan.md` |
 | טיימלאפס ארוך → כמה רילס | `packages/vfom/crews/clip-factory.md` |
 | גלם + כיתוב + כריכה | `packages/vfom/crews/hybrid-reel.md` |
-| אשר סצנות לפני Grok | `packages/vfom/crews/scene-gate.md` |
+| אחרי הדפסה תקינה / print.done | `packages/vfprod/PRINT-DONE.md` → then `hybrid-reel.md` / `clip-factory.md` |
+| אשר סצנות לפני שיבוץ | `packages/vfom/crews/scene-gate.md` |
 | בדוק לפני מסירה | `packages/vfom/crews/self-review.md` |
 
 Read the crew. Fill its template. Do not run `make setup` from OpenMontage.
@@ -32,4 +33,4 @@ Read the crew. Fill its template. Do not run `make setup` from OpenMontage.
 - CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
 - No invented ₪, Insights, or bed footage.
 - No Veo/Kling/Remotion from HQ unless the lead seat opened that spend.
-- Hand the approved draft to `vfigos`. Grok sends.
+- Hand the approved draft to `vfigos`. HQ sends via tools (`constitution/SEND.md`); Grok is optional backup.

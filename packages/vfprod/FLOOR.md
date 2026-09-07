@@ -19,6 +19,12 @@ Perplexity הציע סוכן שמקבל STL, חותך, ומקצה מדפסת ל�
 
 ## אחרי הדפסה תקינה
 
-1. לשמור Timelapse אם יש.
-2. למסור לצמיחה (`vfgrowth/CALENDAR.md`) כטיוטה — לא כפוסט חי.
-3. Proof מהרצפה (מה שעל המיטה) — רק אם באמת על המיטה.
+פלייבוק מלא: [`PRINT-DONE.md`](PRINT-DONE.md) · תבנית: [`hq/PRINT-CARD-TEMPLATE.md`](hq/PRINT-CARD-TEMPLATE.md).
+
+1. לשמור Timelapse / סטיל אם יש (נתיב Drive או קובץ מקומי). חסר גלם = **חסר** — לא ממציאים סצנה.
+2. למלא **כרטיס Print-Done** (SKU, חומר מ־`MATERIAL.md`, גרמים/דקות אם נמדדו, רישיון). אירוע: `print.done`.
+3. למסור לצמיחה (`vfom` clip-factory / hybrid-reel → `vfcopy` → Canva) כטיוטה — לא כפוסט חי.
+4. שיבוץ רק אחרי `vfgrowth/PREFLIGHT.md` עבור. שליחה דרך כלים (`vfigos/SEND.md`).
+5. Proof מהרצפה (מה שעל המיטה) — רק אם באמת על המיטה.
+
+HQ לא מתחבר למצלמת מדפסת ולא דוחף Print מרחוק (Edge/רצפה בלבד).

@@ -61,14 +61,15 @@ GrokBot `weekday-ops` 07:00 = בריף/תפעול — **לא** יוצרים cron
 6. **חובה:** `list_subscriptions` + חידוש `subscribe_timer` אם חסר/פג. לרשום `timer: renewed|ok`.
 7. אין `npx skills add` על Cloud.
 
-## 3 · פעם בשבוע (vf-weekly-links)
+## 3 · פעם בשבוע (vf-weekly-links + print-demand)
 
 1. `WEEKLY.md` + `LINKS.json` מלמעלה למטה.
 2. לכל קישור: מקור / PDF / `sourceNote` · השוואה ל־`sources/`/`docs` · הטמעה או «ללא שינוי» / «דולג — חומה».
 3. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md`.
-4. שורת בלוק 05 בבריף הבא.
-5. קישור חדש באמצע השבוע → `LINKS.json` **באותו יום**.
-6. אם `standingForever: true` והטיימר חסר → לחדש לפי `TIMER.md` באותו מעבר.
+4. **Print · Demand · Sound:** `hq/PRINT-DEMAND.md` → `sources/YYYY-MM-DD-print-demand.md` (ויזואל 3D + ביקוש IL + סאונד). אין אוטו־DM · אין Insights מומצאים · חומרים רק מהמדף.
+5. שורת בלוק 05 בבריף הבא (קישורים + print-demand).
+6. קישור חדש באמצע השבוע → `LINKS.json` **באותו יום**.
+7. אם `standingForever: true` והטיימר חסר → לחדש לפי `TIMER.md` באותו מעבר.
 
 ## 4 · פעם בחודש (vf-last30)
 
@@ -95,7 +96,7 @@ GrokBot `weekday-ops` 07:00 = בריף/תפעול — **לא** יוצרים cron
 |---|---|---|
 | יומי תזמורת | `vf-morning-brief` + `DAILY.md` | `vfresearch` → `vfops/data/research.md` |
 | כל יומיים | `vf-best-skills` | `vfresearch` |
-| שבועי | `vf-weekly-links` | `vfresearch` |
+| שבועי | `vf-weekly-links` + `PRINT-DEMAND.md` | `vfresearch` |
 | חודשי | `vf-last30` | `vfresearch` |
 | רבעוני | `OWNER-QUESTIONS-QUARTERLY.md` | `vfops` + `vfinsights` LEARNINGS — בלי המצאת מדדים |
 | סוף יום | `vf-daily-learning` | `vfops` |

@@ -17,10 +17,11 @@ Use when the user asks for סקירת קישורים שבועית, refresh of Ch
 
 1. Read `packages/vfresearch/WEEKLY.md` and `packages/vfresearch/LINKS.json`.
 2. For each link: open URL (or source note / PDF if walled). Compare to last embed. Embed useful updates **in place**. Never invent a blocked body, ₪, or Insights.
-3. Write `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md`.
-4. Set brief `05` line: embed summary or «שבועי קישורים — אין חדש במשרד».
-5. After catalog/pack edits: `python3 scripts/check-all.py` (includes `check-vfresearch.py`).
-6. New URL mid-week: append to `LINKS.json` the same day.
+3. Same weekly pass: run `packages/vfresearch/hq/PRINT-DEMAND.md` — visual 3D trends + IL demand signals + sound via `MUSIC.md`. Write `packages/vfresearch/sources/YYYY-MM-DD-print-demand.md`. No auto-DM. No invented hot hours.
+4. Write `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md`.
+5. Set brief `05` line: embed summary or «שבועי קישורים — אין חדש במשרד» · print-demand line.
+6. After catalog/pack edits: `python3 scripts/check-all.py` (includes `check-vfresearch.py`).
+7. New URL mid-week: append to `LINKS.json` the same day.
 
 ## Forbidden
 

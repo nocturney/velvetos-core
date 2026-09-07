@@ -308,6 +308,8 @@ def main() -> None:
         "tool.failover",
         "retro.anomaly",
         "mail.sent",
+        "print.done",
+        "content.draft_ready",
     ):
         if need not in event_ids:
             fail(f"events.catalog.json missing event {need}")

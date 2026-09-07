@@ -16,6 +16,7 @@ BEST_SKILLS_TIMER = ROOT / "packages" / "vfresearch" / "TIMER.md"
 BEST_SKILLS_SKILL = ROOT / ".cursor" / "skills" / "vf-best-skills" / "SKILL.md"
 LAST30 = ROOT / "packages" / "vfresearch" / "hq" / "LAST30.md"
 LAST30_SKILL = ROOT / ".cursor" / "skills" / "vf-last30" / "SKILL.md"
+PRINT_DEMAND = ROOT / "packages" / "vfresearch" / "hq" / "PRINT-DEMAND.md"
 DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
 MUSIC = ROOT / "packages" / "vfresearch" / "MUSIC.md"
 MUSIC_SOURCES = ROOT / "packages" / "vfresearch" / "SOURCES-MUSIC.json"
@@ -44,7 +45,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, LAST30, LAST30_SKILL, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK, HQ_ROUTINE):
+    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, LAST30, LAST30_SKILL, PRINT_DEMAND, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK, HQ_ROUTINE):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -98,6 +99,19 @@ def main() -> None:
         fail("WEEKLY.md must name weekly artifact pattern")
     if "לא ממציאים" not in weekly and "לא ממציאים גוף" not in weekly:
         fail("WEEKLY.md must forbid inventing blocked bodies")
+    if "PRINT-DEMAND.md" not in weekly:
+        fail("WEEKLY.md must run Print·Demand·Sound via PRINT-DEMAND.md")
+    if "YYYY-MM-DD-print-demand.md" not in weekly:
+        fail("WEEKLY.md must name print-demand artifact pattern")
+
+    print_demand = PRINT_DEMAND.read_text()
+    for needle in ("אוטו־DM", "MUSIC.md", "YYYY-MM-DD-print-demand.md", "MATERIAL.md", "nothing-solid"):
+        if needle not in print_demand:
+            fail(f"PRINT-DEMAND.md must mention {needle}")
+
+    hq_routine_txt = HQ_ROUTINE.read_text()
+    if "PRINT-DEMAND.md" not in hq_routine_txt:
+        fail("HQ-ROUTINE.md must mention PRINT-DEMAND.md in weekly cadence")
 
     orchestra = ORCHESTRA.read_text()
     if "WEEKLY.md" not in orchestra and "קישורי השראה" not in orchestra:
@@ -296,7 +310,8 @@ def main() -> None:
 
     print(
         f"OK vfresearch weekly-links links={len(links)} "
-        f"best-skills=1 last30=1 music=1 sources={len(music_src.get('sources') or [])} failover=1"
+        f"best-skills=1 last30=1 print-demand=1 music=1 "
+        f"sources={len(music_src.get('sources') or [])} failover=1"
     )
 
 

@@ -29,6 +29,8 @@ python3 scripts/vf_retro_signals.py --write
 |---|---|---|
 | `sensor_repeat_fail` | 01 | אותו סנסור/כלי נכשל ≥2 פעמים בחלון |
 | `inquiry_lag` | 01 | פניות פתוחות / «לא נסגר» חוזר |
+| `model_demand` | 01 | דגם/מק״ט חוזר בפניות או בלולאת פרנסה ברטרו |
+| `material_signal` | 05 | חומר חוזר בבקשות / במדף / בכרטיסי print.done |
 | `ingest_bottleneck` | 05 | רישום נתונים / Insights / memory חסר מקור |
 | `failover_streak` | 05 | failover חוזר — מצב Degraded מתמשך |
 | `none` | — | אין חריגה — קובץ עם `signals: []` |

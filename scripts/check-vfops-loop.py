@@ -113,6 +113,26 @@ def main() -> None:
     retro_txt = daily_retro.read_text(encoding="utf-8")
     if "חוזה יום" not in retro_txt or "MEMORY-UPDATE.md" not in retro_txt:
         fail("DAILY-RETRO.md must point at owner-memory day-block contract")
+    if "לולאת פרנסה" not in retro_txt:
+        fail("DAILY-RETRO.md must include לולאת פרנסה (inquiries↔models↔materials)")
+    if "print.done" not in retro_txt:
+        fail("DAILY-RETRO.md must mention print.done handoff in seat checklist/loop")
+
+    retro_signals = ROOT / "packages" / "vfops" / "hq" / "RETRO-SIGNALS.md"
+    if not retro_signals.is_file():
+        fail("missing RETRO-SIGNALS.md")
+    rs_txt = retro_signals.read_text(encoding="utf-8")
+    for needle in ("model_demand", "material_signal"):
+        if needle not in rs_txt:
+            fail(f"RETRO-SIGNALS.md must list kind {needle}")
+
+    print_done = ROOT / "packages" / "vfprod" / "PRINT-DONE.md"
+    if not print_done.is_file():
+        fail("missing packages/vfprod/PRINT-DONE.md")
+    pd_txt = print_done.read_text(encoding="utf-8")
+    for needle in ("print.done", "PREFLIGHT", "אוטו־DM", "hybrid-reel"):
+        if needle not in pd_txt:
+            fail(f"PRINT-DONE.md must mention {needle}")
     for needle in ("RETRO-SIGNALS.md", "vf_retro_signals.py", "retro-signals.json"):
         if needle not in retro_txt:
             fail(f"DAILY-RETRO.md must wire retro→signal needle {needle!r}")
