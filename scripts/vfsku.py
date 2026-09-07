@@ -9,11 +9,16 @@ import argparse
 import json
 import sys
 from collections import Counter
+from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 SHELF = ROOT / "packages" / "vfsku" / "SHELF.json"
 READY = "ready"
+TZ = ZoneInfo("Asia/Jerusalem")
+# Python weekday(): Monday=0 … Sunday=6. Scan = Sunday + Wednesday.
+SCAN_WEEKDAYS = {6, 2}
 
 
 def load_shelf() -> dict:
@@ -67,6 +72,36 @@ def cmd_brief(_args: argparse.Namespace) -> int:
     return 0
 
 
+def _parse_day(value: str | None) -> date:
+    if not value:
+        return datetime.now(TZ).date()
+    return date.fromisoformat(value)
+
+
+def cmd_scan(args: argparse.Namespace) -> int:
+    today = _parse_day(getattr(args, "date", None))
+    data = load_shelf()
+    slots = data.get("slots") or []
+    ready = sum(1 for s in slots if s.get("status") == READY)
+    total = len(slots)
+    shelf = f"מדף: {ready}/{total}"
+    if ready == 0:
+        shelf = f"{shelf} · אין שם להציע"
+    if today.weekday() not in SCAN_WEEKDAYS:
+        print(
+            f"סריקת MakerWorld: לא יום סריקה (ראשון/רביעי בלבד) · {today.isoformat()}\n"
+            f"{shelf}\n"
+            "NC ≠ מכירה · מותג ישראלי = עצור · HQ לא שולח STL לסלייסר"
+        )
+        return 0
+    print(
+        f"סריקת MakerWorld: יום סריקה · בלי שם מהאוויר · {today.isoformat()}\n"
+        f"{shelf} עד GATE+רישיון+סלייס\n"
+        "NC ≠ מכירה · הורדה ≠ רישיון · סלייס ברצפה בלבד · בלי ₪ מכירה"
+    )
+    return 0
+
+
 def cmd_shop(_args: argparse.Namespace) -> int:
     data = load_shelf()
     slots = data.get("slots") or []
@@ -88,6 +123,9 @@ def main() -> int:
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("shelf", help="print the 5-slot table").set_defaults(func=cmd_shelf)
     sub.add_parser("brief", help="one Hebrew line for morning brief slot 03").set_defaults(func=cmd_brief)
+    scan_p = sub.add_parser("scan", help="Sun/Wed MakerWorld scan line for brief slot 03")
+    scan_p.add_argument("--date", help="YYYY-MM-DD (Asia/Jerusalem weekday). Default: today")
+    scan_p.set_defaults(func=cmd_scan)
     sub.add_parser("shop", help="tomorrow-shop line: ready slots only, no invented names").set_defaults(func=cmd_shop)
     args = parser.parse_args()
     return args.func(args)

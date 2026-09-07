@@ -17,14 +17,16 @@ Packs: `vfcopy`, `vfcovers`, `vfigos`, `vfgrowth`.
 
 ## Run
 
-1. Homework first: what is true, what is not claimed.
-2. Draft Hebrew (and English if the brief says so). Lint against studio voice.
-3. Cover brief: size, text on image, no fake metrics on the graphic. Canva first; failover `studio/render.py` then Superdesign.
-4. HQ **sends Instagram via tools** (`constitution/SEND.md` + `vfigos/SEND.md`):
+1. Homework first: what is true, what is not claimed. Floor proof only — invent no studio scene.
+2. If production handed a `print.done` card (`vfprod/PRINT-DONE.md` + `python3 scripts/vfprod.py print-done`): require media path. Missing → **חסר**. Then `vfom/crews/hybrid-reel.md`. HQ does not watch Bambu/Snapmaker/Elegoo.
+3. Draft Hebrew per `vfcopy/VOICE.md`. Funnel CTA from `vfgrowth/hq/PROFILE-TO-WHATSAPP.md` (process-short = follow; product-story = WhatsApp `050-2517000`). Lint against studio voice.
+4. Cover brief: size, text on image, no fake metrics on the graphic. Canva first; failover `studio/render.py` then Superdesign. **EDIT-GATE** — no raw JPEG.
+5. Written `PREFLIGHT.md` artifact before schedule. Fail-closed = do not book. Morning brief **does not** publish Instagram.
+6. HQ **sends Instagram via tools** (`constitution/SEND.md` + `vfigos/SEND.md`):
    - Publish MCP connected → publish and tag `#נשלח-מ-HQ`.
    - No publish MCP → **same turn** Canva + Drive `create_file` + Gmail `send_message`. Tag `#נשלח-מ-HQ` and `#ממתין-ל-כלי-IG` if the feed itself did not go up.
-5. Do not idle on `#מוכן-ל-Grok`. Grok Bot is optional backup. Playbook: `packages/vfharness/playbooks/grok-failover.md`.
-6. Never claim the feed posted if no publish tool fired.
+7. Do not idle on `#מוכן-ל-Grok`. Grok Bot is optional backup. Playbook: `packages/vfharness/playbooks/grok-failover.md`.
+8. Never claim the feed posted if no publish tool fired. Calendar: Sun/Tue 16:00 reels, Thu 12:00 carousel — not a reel every weekday.
 
 ## Done when
 

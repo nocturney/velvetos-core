@@ -45,11 +45,11 @@
     },
     {
       "id": "vfbooks",
-      "kind": "docs-playbook",
-      "cadence": "weekly",
-      "consume": "packages/vfbooks/LEDGER.md",
+      "kind": "working-cli",
+      "cadence": "daily-07:00",
+      "consume": "python3 scripts/vfbooks.py brief",
       "briefSlot": "02",
-      "handoff": "packages/vfbooks/SHEETS.md",
+      "handoff": "packages/vfbooks/INTEGRITY.md",
       "blocked": "אין ספירה בלי מקור מאומת"
     },
     {
@@ -154,7 +154,8 @@
         "packages/vfgrowth/EDIT-GATE.md",
         "packages/vfgrowth/PREFLIGHT.md",
         "packages/vfgrowth/CALENDAR-OPS.md",
-        "packages/vfgrowth/STORIES.md"
+        "packages/vfgrowth/STORIES.md",
+        "packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md"
       ]
     },
     {
@@ -242,7 +243,7 @@
       "id": "vfprod",
       "kind": "docs-playbook",
       "cadence": "daily-03",
-      "consume": "packages/vfprod/SHOP-CLOSE.md",
+      "consume": "packages/vfprod/PRINT-DONE.md",
       "briefSlot": "03",
       "handoff": "packages/vfprod/FLOOR.md",
       "blocked": "אין Print מ-HQ"
@@ -280,7 +281,7 @@
       "cadence": "daily-07:00",
       "consume": "python3 scripts/vfsku.py brief",
       "briefSlot": "03",
-      "handoff": "packages/vfsku/week.md",
+      "handoff": "packages/vfresearch/hq/MAKERWORLD-SCAN.md",
       "blocked": null
     },
     {
@@ -491,6 +492,30 @@
       "path": "packages/vfgrowth/CALENDAR-OPS.md",
       "cadence": "on-planned-post",
       "consume": "packages/vfgrowth/CALENDAR-OPS.md"
+    },
+    {
+      "id": "makerworld-scan",
+      "path": "packages/vfresearch/hq/MAKERWORLD-SCAN.md",
+      "cadence": "sun-wed",
+      "consume": "python3 scripts/vfsku.py scan"
+    },
+    {
+      "id": "profile-to-whatsapp",
+      "path": "packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md",
+      "cadence": "on-content",
+      "consume": "packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md"
+    },
+    {
+      "id": "books-integrity",
+      "path": "packages/vfbooks/INTEGRITY.md",
+      "cadence": "daily-07:00",
+      "consume": "python3 scripts/vfbooks.py brief"
+    },
+    {
+      "id": "print-done-cards",
+      "path": "packages/vfprod/PRINT-DONE.md",
+      "cadence": "on-floor",
+      "consume": "python3 scripts/vfprod.py print-done"
     }
   ]
 }

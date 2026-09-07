@@ -29,6 +29,7 @@ flowchart LR
 ## Digest rule (Huginn)
 
 Block `05`: if all upstream = «ללא שינוי» → prose is exactly **«אין חדש במשרד»**.
+Block `02`: `vfbooks.py brief` — missing invoice is internal only. No collection mail from HQ. `decision_gate` for sale ₪.
 
 ## Verify (`working?`)
 

@@ -13,6 +13,7 @@
 אל תפנה לכריסטיאן על מדדים חלשים. לוח אוטונומי: `CALENDAR-OPS.md`. סנסור `scripts/check-vfgrowth.py`.
 
 צמיחת עוקבים → פנייה (לא מרדף מספר): `hq/FOLLOWER-GROWTH.md`.  
+משפך פרופיל→וואטסאפ: `hq/PROFILE-TO-WHATSAPP.md` (תהליך-קצר = עקבו; סיפור-מוצר = `050-2517000`).  
 לולאת בוקר: `python3 scripts/vfops_loop.py brief` · מסירה: `HANDOFF-he.md` (G004).
 
 ## מומחה — Social Booster

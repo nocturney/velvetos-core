@@ -67,9 +67,10 @@ GrokBot `weekday-ops` 07:00 = בריף/תפעול — **לא** יוצרים cron
 2. לכל קישור: מקור / PDF / `sourceNote` · השוואה ל־`sources/`/`docs` · הטמעה או «ללא שינוי» / «דולג — חומה».
 3. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md`.
 4. **Print · Demand · Sound:** `hq/PRINT-DEMAND.md` → `sources/YYYY-MM-DD-print-demand.md` (ויזואל 3D + ביקוש IL + סאונד). אין אוטו־DM · אין Insights מומצאים · חומרים רק מהמדף.
-5. שורת בלוק 05 בבריף הבא (קישורים + print-demand).
-6. קישור חדש באמצע השבוע → `LINKS.json` **באותו יום**.
-7. אם `standingForever: true` והטיימר חסר → לחדש לפי `TIMER.md` באותו מעבר.
+5. **סריקת MakerWorld א׳+ד׳** (אם היום ראשון או רביעי): `hq/MAKERWORLD-SCAN.md` + `python3 scripts/vfsku.py scan`. NC ≠ מכירה. אין שם מהאוויר.
+6. שורת בלוק 05 בבריף הבא (קישורים + print-demand).
+7. קישור חדש באמצע השבוע → `LINKS.json` **באותו יום**.
+8. אם `standingForever: true` והטיימר חסר → לחדש לפי `TIMER.md` באותו מעבר.
 
 ## 4 · פעם בחודש (vf-last30)
 

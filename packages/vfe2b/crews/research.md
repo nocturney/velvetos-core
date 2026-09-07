@@ -22,7 +22,8 @@ Packs: `vfresearch`, `vlicense`, `vfsku`, `vfbiz`.
 3. Gatherer: for each question, `{question, source, excerpt-or-חסר}`.
 4. Verifier: if a live page is a wall, write «דולג — חומה» / «אין גוף». Do not invent. Retry re-reads the source; it does not guess.
 5. If the topic is a new printable / SKU / weight, stop for `vlicense` before `vfsku`.
-6. Write the note under `vfresearch/sources/` (or say the tree is not vendored yet and keep the note in the chat).
+6. **MakerWorld / Printables (Sunday + Wednesday only):** follow `packages/vfresearch/hq/MAKERWORLD-SCAN.md`. Run `python3 scripts/vfsku.py scan`. Do not invent a model name. NC is not for sale. HQ does not send STL to a slicer. Brief slot **03**, never 02.
+7. Write the note under `vfresearch/sources/` (or say the tree is not vendored yet and keep the note in the chat).
 
 ## Done when
 

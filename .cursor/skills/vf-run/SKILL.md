@@ -15,9 +15,9 @@ Read `packages/vfe2b/crews/run.md` and follow it. This is not a sixth product pa
 2. Pick **one** existing crew and run that crew's file:
    - morning brief → `packages/vfe2b/crews/morning-brief.md` (or `.cursor/skills/vf-morning-brief/SKILL.md`)
    - inquiry / quote → `packages/vfe2b/crews/inquiry.md` (or `.cursor/skills/vf-inquiry-chain/SKILL.md`)
-   - content / covers → `packages/vfe2b/crews/content.md` (or `.cursor/skills/vf-content-sprint/SKILL.md`)
-   - research → `packages/vfe2b/crews/research.md`
-   - books / numbers → `packages/vfe2b/crews/books-data.md`
+   - content / covers / print.done / WhatsApp funnel → `packages/vfe2b/crews/content.md` (or `.cursor/skills/vf-content-sprint/SKILL.md`)
+   - research / MakerWorld scan Sun+Wed → `packages/vfe2b/crews/research.md`
+   - books / invoice integrity → `packages/vfe2b/crews/books-data.md`
 3. Emit the outcome card from `run.md`. Exactly one of: `worker_done`, `escalation`, `decision_gate`. Include `מטרה` + `דופק` + `אימות` + `ארטיפקט`.
 4. Stop.
 

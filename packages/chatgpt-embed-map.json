@@ -67,10 +67,32 @@
       "also": ["vfconvert"]
     },
     {
-      "share": "סוכן CFO קטן",
+      "share": "סוכן סורק MakerWorld / סלייס-אינספקטור",
+      "pack": "vfresearch",
+      "seat": "מחקר/אורקסטרציה",
+      "also": ["vfsku", "vlicense", "vfcost"],
+      "note": "Sun+Wed only. No invented names. NC not for sale. Floor slices. Brief slot 03."
+    },
+    {
+      "share": "סוכן תוכן print.done → פיד",
+      "pack": "vfprod",
+      "seat": "ייצור",
+      "also": ["vfom", "vfcopy", "vfgrowth", "vfigos"],
+      "note": "Card from floor. No printer poll from HQ. PREFLIGHT before schedule. Brief does not publish."
+    },
+    {
+      "share": "סוכן משפך פרופיל-לוואטסאפ",
+      "pack": "vfgrowth",
+      "seat": "צמיחה",
+      "also": ["vfcopy", "vfinsights"],
+      "note": "CTA by VOICE.md. Verified Insights only. No auto-DM."
+    },
+    {
+      "share": "סוכן בקרת נתונים / decision gate",
       "pack": "vfbooks",
       "seat": "תפעול",
-      "also": ["vfcost"]
+      "also": ["vfcost"],
+      "note": "Internal missing-invoice flag. Invoice4U stays. No collection mail from HQ."
     },
     {
       "share": "Velvet Factory Manager",

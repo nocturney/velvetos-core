@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **ארבעה צוותי משרד על פקים קיימים:** סריקת MakerWorld א׳+ד׳ (`vfresearch/hq/MAKERWORLD-SCAN.md` + `vfsku.py scan`) · print.done→טיוטת פיד (`vfprod.py print-done` + צוות content) · משפך פרופיל→וואטסאפ (`PROFILE-TO-WHATSAPP.md`) · בקרת ספר/חשבונית (`vfbooks.py brief`). בלי פק חדש · בלי runtime שני · בלי סלייסר/מדפסת מ-HQ · בלי Publish מבריף. סנסורים: check-vfe2b / vfsku / vfresearch / vfgrowth / vfops-loop / velvetos. Four constitution-safe office crews embedded on existing packs.
 - 2026-09-07 — **B2B = דוגמאות, לא שלושה מק״ט:** תיקון בעלים. לוגו / QR / מפיות היו דוגמאות לקו B2B — לא קטלוג סגור. הנעילה נשארת על **הקו** עד ראש צוות (`vfbiz/LOCK.md` · `STUDIO.md`). extraLock `b2b-line-locked`. סנסור `check-velvetos.py`. בלי פתיחת B2B / בלי ₪. Owner correction: B2B examples ≠ closed three-SKU catalog; line stays locked.
 
 - 2026-09-07 — **Watchtower = Edge farm dashboard:** פלייבוק `vfprod/WATCHTOWER.md` — דשבורד חווה מקומי (כוונת רכישה) יושב על LAN שדרות, לא כדמון בליבה ולא Print מ־HQ. כרטיס `print.done` אחרי הצלחה; אנליטיקת vendor ≠ ₪ מכירה. סנסור `check-vfops-loop`. בלי התקנה / בלי מחיר מומצא. Watchtower maps to Edge; Core stays catalog; no HQ print.
