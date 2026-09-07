@@ -65,7 +65,7 @@
       "direction": "edge→kernel→office",
       "emits": "edge",
       "payloadKeys": ["sku", "material", "grams", "minutes", "mediaPath", "license"],
-      "note": "Successful print card for content handoff; HQ does not drive printers. Missing media = חסר"
+      "note": "Successful print card for content handoff; HQ does not drive printers. Edge emitter may be a floor farm dashboard (Watchtower) — vfprod/WATCHTOWER.md. Missing media = חסר"
     },
     {
       "id": "content.draft_ready",
