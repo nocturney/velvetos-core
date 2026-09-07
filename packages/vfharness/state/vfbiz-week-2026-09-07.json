@@ -1,0 +1,52 @@
+{
+  "task_id": "vfbiz-week-2026-09-07",
+  "status": "done",
+  "pack": "vfbiz",
+  "goal": "Land 7.9 VF profit research into vfbiz/out/week.md and push Core PR; no invented sale ₪; no B2B unlock",
+  "crew": "research",
+  "planned_steps": [
+    "route-vfbiz",
+    "verify-shelf-drive-calendar",
+    "source-3dwhy-flexi-man",
+    "write-week-md",
+    "wire-brief-slot-04",
+    "check-all"
+  ],
+  "completed_steps": [
+    "route-vfbiz",
+    "verify-shelf-drive-calendar",
+    "source-3dwhy-flexi-man",
+    "write-week-md",
+    "wire-brief-slot-04"
+  ],
+  "next_step": "check-all + PR to nocturney/velvetos-core",
+  "artifacts": [
+    "packages/vfbiz/out/week.md",
+    "CHANGELOG.md"
+  ],
+  "unresolved": [
+    "no documented slice — needs slice",
+    "VF sale price remains X ₪",
+    "B2B stays locked",
+    "calendar has no named pickup event on 2026-09-10"
+  ],
+  "outcome": "decision_gate",
+  "pulse": "idle",
+  "verification": "check-all.py pending this write",
+  "gate": {
+    "kind": "decision_gate",
+    "waiting_for": "lead seat after Thu 10.9 pickup + documented slice",
+    "reason": "NO_DECISION — no new batch before pickup; no slice; B2B locked"
+  },
+  "escalation": null,
+  "last_updated": "2026-09-07",
+  "execution_state": {
+    "decision": "NO_DECISION",
+    "sale_price": "X ₪",
+    "slice": "UNKNOWN",
+    "b2b": "locked",
+    "flexi_man": "NC not for sale",
+    "threedwhy_rh": "their catalog — do not copy"
+  },
+  "latest_observation": "Drive empty for slice; SHELF 0/5; 3dwhy.co.il is Israeli catalog; Flexi Man Printables CC-BY-NC."
+}

@@ -30,6 +30,7 @@ SKILLS = ROOT / ".cursor" / "skills"
 CONNECT_IG = ROOT / "packages" / "vfigos" / "CONNECT-IG.md"
 INSIGHTS = ROOT / "packages" / "vfinsights" / "READ.md"
 BIZ_LOCK = ROOT / "packages" / "vfbiz" / "LOCK.md"
+BIZ_WEEK = ROOT / "packages" / "vfbiz" / "out" / "week.md"
 FLOOR = ROOT / "packages" / "vfcost" / "FLOOR-CARD.md"
 COPY_DIR = ROOT / "packages" / "vfcopy"
 VFSKU = ROOT / "scripts" / "vfsku.py"
@@ -115,6 +116,13 @@ def growth_line() -> str:
     )
 
 
+def biz_week_line() -> str:
+    block = fence_after_heading(BIZ_WEEK, ("בלוק לבריף",))
+    if block:
+        return block
+    return "B2B נעול (`vfbiz`). סגירה: וואטסאפ 050-2517000 · איסוף שדרות."
+
+
 def captions_rows() -> list[list[str]]:
     rows: list[list[str]] = []
     for path in CAPTION_FILES:
@@ -154,6 +162,7 @@ def assemble(today: str) -> dict:
     sku = sku_line()
     cost = cost_line()
     growth = growth_line()
+    biz = biz_week_line()
     office = office_line()
     insights = insights_line()
     captions = captions_rows()
@@ -192,7 +201,7 @@ def assemble(today: str) -> dict:
             {
                 "kicker": "04",
                 "title": "איך הסטודיו מרוויח",
-                "prose": f"{growth}\nB2B נעול (`vfbiz`). סגירה: וואטסאפ 050-2517000 · איסוף שדרות.",
+                "prose": f"{growth}\n{biz}",
             },
             {
                 "kicker": "05 · משרד",
