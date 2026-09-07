@@ -25,17 +25,19 @@ Bento/Slides הוא בדיוק ההפך: קובץ `.bento.html` עצמאי עם 
 
 זה ממש הפורמט ש-agents.md ממליץ עליו: מספרים→chart, השוואה/פירוט→table, לא קיר טקסט.
 
-## איך זה מיושם
+## איך זה מיושם — אוטומטי מלא
 
-- סקריפט: `scripts/vf_weekly_deck.py` — קורא קבצים אמיתיים מהריפו (אם קיימים) ובונה **JSON בפורמט `bento/slides`** לתוך `packages/vfbriefux/hq/weekly-deck.bento-doc.json`.
+- **`scripts/vf_weekly_deck.py`** — קורא קבצים אמיתיים מהריפו (`LEARNINGS.md`, `LAST30.md`, `DAILY-RETRO.md`, `WEEKLY-LOAD.md`) ובונה:
+  1. JSON בפורמט `bento/slides` → `packages/vfbriefux/hq/weekly-deck.bento-doc.json`.
+  2. דק **HTML מוכן לפתיחה** — מוריד את מעטפת האפליקציה מ-bento.page ומזריק את ה-JSON לתוך בלוק `#bento-doc`, כותב ל-`docs/weekly-deck/<תאריך>.html` וגם ל-`docs/weekly-deck/index.html` (הכי עדכני).
+  3. אם אין רשת / המעטפת השתנתה — כותב אזהרה וממשיך; ה-JSON עדיין נכתב לנתיב הדבקה ידני (ראו למעלה).
+- **`.github/workflows/velvetos-weekly-deck.yml`** — רץ אוטומטית כל יום שישי 09:00 IDT (`cron: '0 6 * * 5'`), מריץ את הסקריפט, ומדביק (`git commit` + `push`) את `docs/weekly-deck/` לענף `main`.
+- **GitHub Pages** — צריך הפעלה חד-פעמית של אדם: Settings → Pages → Source = `main` / `/docs`. אחרי זה הכתובת הקבועה היא `https://nocturney.github.io/velvetos-core/weekly-deck/` ומתעדכנת לבד כל שבוע.
+- **הבריף** (`scripts/vfops_loop.py`) מוסיף אוטומטית שקע **"08 · סופש"** בימי שישי–שבת–ראשון עם הקישור לדק העדכני — אבל **רק** אם `docs/weekly-deck/index.html` כבר קיים (אין קישור מת). ביום חול השקע לא מופיע כלל.
 - **אין מספרים מומצאים.** אם `LEARNINGS.md`/`LAST30.md` לא קיימים או ריקים — השקף המתאים כותב "אין ספירה" בטקסט רגיל, לא בצ'אר.
-- קובץ ה-JSON הזה **אינו** קובץ `.bento.html` מוכן לפתיחה — כדי לקבל דק שניגן בפועל צריך שלב אדם חד-פעמי:
-  1. להוריד את `Bento_Slides.bento.html` מ-bento.page (קובץ האפליקציה עצמו).
-  2. לפתוח אותו, ללחוץ Save → Copy document JSON (או לערוך את בלוק `#bento-doc` ישירות) ולהדביק את תוכן `weekly-deck.bento-doc.json` במקומו.
-- זה לא רץ אוטומטית בכל בוקר — זה כלי שבועי/חודשי אופציונלי לכריסטיאן, לא חלק מהצינור היומי. מריצים אותו ביד: `python3 scripts/vf_weekly_deck.py`.
 
 ## לא עושים
 
-- לא שולחים `.bento.html` באימייל.
-- לא מחליפים את `MAIL.html` / `render_mail.py`.
+- לא שולחים `.bento.html` כקובץ מצורף/גוף באימייל (חסימת `<script>`).
+- לא מחליפים את `MAIL.html` / `render_mail.py` — הקישור בלבד נכנס לשקע 08 בבריף הקיים.
 - לא בונים דיאגרמות/צ'ארטים ב-Bento ממספרים שלא נמדדו בפועל.

@@ -1,0 +1,37 @@
+name: VelvetOS Weekly Deck
+
+# Builds a bento/slides recap deck from real repo data (LEARNINGS/LAST30/retro)
+# and publishes it to GitHub Pages under /weekly-deck. Runs on weekends so a
+# link is ready before the Friday/Sunday brief goes out. Never fabricates
+# numbers — see packages/vfbriefux/hq/BENTO.md.
+#
+# Asia/Jerusalem timing: cron '0 6 * * 5' = Friday 09:00 IDT / 08:00 IST.
+on:
+  schedule:
+    - cron: '0 6 * * 5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build weekly deck (JSON + HTML)
+        run: python3 scripts/vf_weekly_deck.py
+
+      - name: Commit deck to docs/weekly-deck
+        run: |
+          git config user.name "velvetos-bot"
+          git config user.email "actions@github.com"
+          git add docs/weekly-deck packages/vfbriefux/hq/weekly-deck.bento-doc.json
+          git diff --cached --quiet || git commit -m "Weekly deck $(date -u +%F)"
+          git push

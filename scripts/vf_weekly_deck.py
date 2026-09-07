@@ -131,11 +131,63 @@ def build() -> dict:
     return doc
 
 
+DOCS_DIR = ROOT / "docs" / "weekly-deck"
+
+
 def main() -> None:
     doc = build()
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(doc, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"OK weekly bento deck written: {OUT}")
+
+    today = date.today().isoformat()
+    dated_html = DOCS_DIR / f"{today}.html"
+    latest_html = DOCS_DIR / "index.html"
+    built = build_html(doc, dated_html)
+    if built:
+        latest_html.write_text(dated_html.read_text(encoding="utf-8"), encoding="utf-8")
+        print(f"OK latest pointer written: {latest_html}")
+    else:
+        print("WARN HTML build skipped (no network or shell mismatch) — JSON still written for manual paste")
+
+
+def build_html(doc: dict, out_html: Path) -> bool:
+    """Fetch the Bento Slides app shell and inject our doc into #bento-doc.
+
+    Returns True on success. Network failure is non-fatal: caller should
+    fall back to shipping the JSON only (see hq/BENTO.md manual path).
+    """
+    import urllib.request
+
+    shell_url = "https://bento.page/releases/slides/Bento_Slides.bento.html"
+    try:
+        with urllib.request.urlopen(shell_url, timeout=30) as resp:
+            shell = resp.read().decode("utf-8")
+    except Exception as exc:  # noqa: BLE001
+        print(f"WARN could not fetch Bento shell: {exc}")
+        return False
+
+    payload = json.dumps(doc, ensure_ascii=False)
+    # Escape closing script tags so the JSON can't break out of the block.
+    payload_safe = payload.replace("</script", "<\\/script")
+
+    import re
+
+    pattern = re.compile(
+        r'(<script type="application/bento\+json" id="bento-doc">)(.*?)(</script>)',
+        re.DOTALL,
+    )
+    new_shell, count = pattern.subn(
+        lambda m: m.group(1) + payload_safe + m.group(3), shell, count=1
+    )
+    if count != 1:
+        print("WARN could not locate #bento-doc block in shell; skipping HTML build")
+        return False
+
+    out_html.parent.mkdir(parents=True, exist_ok=True)
+    out_html.write_text(new_shell, encoding="utf-8")
+    print(f"OK weekly bento HTML written: {out_html}")
+    return True
 
 
 if __name__ == "__main__":
