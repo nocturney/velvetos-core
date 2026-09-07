@@ -9,11 +9,15 @@
 צפייה בריל
   → כניסה לפרופיל  (@velvets_cloud)
   → וואטסאפ 050-2517000   ← לא DM אוטומטי, לא Meta Suite, לא בוט באתר
-  → בירור: חומר · כמות · מתי · גימור
+  → תגובה ראשונה לפי `vfsales/SLA.md` (בלי ₪)
+  → בירור: חומר · כמות · מתי · גימור  (+ Intake אם לקוח חדש: `office/clients/INTAKE-TEMPLATE.md`)
   → STL אם יש
   → vfsales/QUOTE.md + vfcost (סלייס)
   → איסוף משדרות + Invoice4U
 ```
+
+לקוח חדש / B2B: אחרי Intake פותחים Client Record לפי התבנית — **במקור הפרטי**, לא בריפו הציבורי (`office/clients/README.md`).
+תרחישי חניכה: `office/learning/SCENARIOS.md`.
 
 ## מדף קודם (זהב 30.8 + תזמורת 3.9)
 
