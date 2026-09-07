@@ -22,9 +22,9 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 | 02 | `vfcost.py brief` — עלות חומר חיה (בלי ₪ מכירה) |
 | 03 | `vfsku.py brief` + `vfsku/week.md` |
 | 04 | `vfgrowth/hq/FOLLOWER-GROWTH.md` + `vfbiz/out/week.md` + B2B נעול + וואטסאפ |
-| 05 | `data/research.md` «מה נבנה / יועל» |
+| 05 | CLI אמיתי מ-24ש (`cli-runs.jsonl`) או «אין חדש במשרד» + שורות **פער** לפק שלא הורץ. לא קטלוג מ-`research.md` |
 | 06 | `vfinsights` — «אין ספירה» עד סנאפשוט / טוקן |
-| 07 | כיתובי `vfcopy` מוכנים + `vfgrowth/HANDOFF-he.md` |
+| 07 | כיתובי `vfcopy` + `G004-STORIES-FIX.md` + `vfgrowth/HANDOFF-he.md` |
 
 ## מסירה לסטודיו
 

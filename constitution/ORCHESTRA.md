@@ -102,12 +102,14 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 חריץ 02 = `vfcost.py brief` (עלות חומר חיה, בלי ₪ מכירה).  
 חריץ 03 = `vfsku` + `week.md`.  
 חריץ 04 = `FOLLOWER-GROWTH` + `vfbiz/out/week.md` + היילייטס + וואטסאפ.  
-חריץ 05 = `data/research.md`.  
+חריץ 05 = CLI אמיתי מ-24ש או «אין חדש במשרד» + שורות פער לפק שלא הורץ. לא מדביקים קטלוג מ-`research.md` כאילו רץ כלי.  
 חריץ 06 = `vfinsights` — «אין ספירה» עד טוקן / סנאפשוט.  
 חריץ 07 = כיתובי `vfcopy` מוכנים + שער עריכה לפני שיבוץ.
 
 שליחת המייל לפי [`SEND.md`](SEND.md). המעבר הזה לא מפרסם IG.  
-לפני שיבוץ: [`STUDIO.md`](STUDIO.md) שער עריכה (Canva / vfcovers / vfcanva — לא JPEG גולמי).  
+לפני שיבוץ: [`STUDIO.md`](STUDIO.md) שער עריכה **קשיח** — **אין סטוריז ואין פיד** בלי Canva MCP (`edit_url`) או מעבר vfcovers / vfcanva. JPEG גולמי = אסור.  
+סטוריז מוצר: `vfgrowth/STORIES.md` + `vfcopy/VOICE.md` סיפור-מוצר. תהליך-קצר רק לריל חשיפה.  
+חריץ 05: CLI אמיתי מ-24ש (`vfops_loop` רושם) או **«אין חדש במשרד»**. בלי פעילות קטלוג מזויפת. פק שלא הורץ = שורת **פער**, לא שקט.  
 משבצות: לא שואלים — `vfgrowth/CALENDAR-OPS.md` שם כל פוסט מתוכנן על Google Calendar.
 
 ## מיפוי — לא פק כפול

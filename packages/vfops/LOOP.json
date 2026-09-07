@@ -1,7 +1,7 @@
 {
   "name": "vfops-loop",
   "title": "לולאת משרד — כל פק נצרך",
-  "updatedAt": "2026-09-06",
+  "updatedAt": "2026-09-07",
   "rule": "Every packages/ folder has a consume step. Catalog without consume is a fail. No invented ₪ or Insights. No live IG publish from this loop.",
   "cli": "python3 scripts/vfops_loop.py",
   "briefCli": "python3 scripts/vfops_loop.py brief",
@@ -83,9 +83,9 @@
       "id": "vfcopy",
       "kind": "docs-playbook",
       "cadence": "daily-07:00",
-      "consume": "packages/vfcopy/G004.md",
+      "consume": "packages/vfcopy/G004-STORIES-FIX.md",
       "briefSlot": "07",
-      "handoff": "packages/vfcopy/G004.md",
+      "handoff": "packages/vfcopy/G004-STORIES-FIX.md",
       "blocked": null
     },
     {
@@ -152,7 +152,8 @@
       "blocked": null,
       "gates": [
         "packages/vfgrowth/EDIT-GATE.md",
-        "packages/vfgrowth/CALENDAR-OPS.md"
+        "packages/vfgrowth/CALENDAR-OPS.md",
+        "packages/vfgrowth/STORIES.md"
       ]
     },
     {
@@ -447,6 +448,24 @@
       "path": "packages/vfgrowth/EDIT-GATE.md",
       "cadence": "before-schedule",
       "consume": "packages/vfgrowth/EDIT-GATE.md"
+    },
+    {
+      "id": "stories-playbook",
+      "path": "packages/vfgrowth/STORIES.md",
+      "cadence": "before-schedule",
+      "consume": "packages/vfgrowth/STORIES.md"
+    },
+    {
+      "id": "g004-stories-fix",
+      "path": "packages/vfcopy/G004-STORIES-FIX.md",
+      "cadence": "on-content",
+      "consume": "packages/vfcopy/G004-STORIES-FIX.md"
+    },
+    {
+      "id": "tool-use-gap",
+      "path": "packages/vfops/hq/TOOL-USE-GAP-2026-09-07.md",
+      "cadence": "on-job",
+      "consume": "packages/vfops/hq/TOOL-USE-GAP-2026-09-07.md"
     },
     {
       "id": "calendar-ops",
