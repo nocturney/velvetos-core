@@ -1,0 +1,40 @@
+{
+  "task_id": "b2b-examples-not-catalog-2026-09-07",
+  "status": "running",
+  "component_state": "Processing",
+  "pack": "vfbiz",
+  "goal": "Owner correction: B2B lock is the line, not a closed three-SKU catalog; logo/QR/napkins stay examples",
+  "crew": "decide",
+  "planned_steps": [
+    "Find where logo/QR/napkins were treated as the closed B2B catalog",
+    "Rewrite constitution + vfbiz lock as examples, line still locked",
+    "Update living desk/product-marketing/makers references",
+    "Add check-velvetos sensor + owner-memory + ANTI-PATTERN",
+    "Run check-all.py"
+  ],
+  "completed_steps": [
+    "Rewrote STUDIO.md, vfbiz LOCK/SKILL/PLAYBOOK, extraLock b2b-line-locked",
+    "Updated desk, product-marketing, vfmakers, vfmskill, inquiry skill, GATE",
+    "Added ANTI-PATTERN, owner-memory, sensor in check-velvetos.py"
+  ],
+  "next_step": "python3 scripts/check-all.py then push PR",
+  "artifacts": [
+    "constitution/STUDIO.md",
+    "packages/vfbiz/LOCK.md",
+    "scripts/check-velvetos.py",
+    "packages/vfops/data/owner-memory.md"
+  ],
+  "unresolved": [],
+  "outcome": null,
+  "pulse": "working",
+  "verification": "pending check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-07",
+  "execution_state": {
+    "owner_correction": "logo/QR/napkins were examples not the catalog",
+    "lock_stays": "B2B line locked until lead opens vfbiz",
+    "no_open_b2b": true
+  },
+  "latest_observation": "Living sources treated three SKUs as the closed B2B set; lock text rewritten to examples."
+}

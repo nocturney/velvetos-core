@@ -30,4 +30,4 @@ Search by the job or filename the user gives. **`create_file`** an office doc wh
 
 ## Forbidden
 
-Invented ₪, auto-DM, boost, copying an Israeli brand file, opening B2B logos/QR/napkins without the lead seat. Instagram send goes through `vfigos/SEND.md`.
+Invented ₪, auto-DM, boost, copying an Israeli brand file, opening a B2B line without the lead seat (logo/QR/napkins were examples, not the catalog). Instagram send goes through `vfigos/SEND.md`.

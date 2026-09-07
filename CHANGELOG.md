@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **B2B = דוגמאות, לא שלושה מק״ט:** תיקון בעלים. לוגו / QR / מפיות היו דוגמאות לקו B2B — לא קטלוג סגור. הנעילה נשארת על **הקו** עד ראש צוות (`vfbiz/LOCK.md` · `STUDIO.md`). extraLock `b2b-line-locked`. סנסור `check-velvetos.py`. בלי פתיחת B2B / בלי ₪. Owner correction: B2B examples ≠ closed three-SKU catalog; line stays locked.
+
 - 2026-09-07 — **גיבוי ערב קטלוג**: רענון `packages/manifest.json` (`catalogRefreshedAt` 2026-09-07). נכללו מוזגים #118 print-demand/print.done/revenue retro, #117 SoC שלוש שכבות, #116 יציבות ליבה, #115/#105 תיאום SWC, #109–#114 איכות+לולאה+תבניות, #107/#106 מושב מחקר, #104/#103/#102 שער+סטוריז G004, #101 בריף, #100 vfbiz. Origin לא שוכפל (אין login). אין PR פתוחים. Evening catalog refresh; Origin not vendored.
 - 2026-09-07 — **Print·Demand·Sound + Print-Done + לולאת פרנסה ברטרו:** דופק מחקר שבועי `vfresearch/hq/PRINT-DEMAND.md` (ויזואל 3D + ביקוש IL + סאונד; בלי אוטו־DM) · כרטיס רצפה `vfprod/PRINT-DONE.md` + אירועי `print.done` / `content.draft_ready` · רטרו עם פניות↔דגמים↔חומרים + kinds ב־`vf_retro_signals` · סנסורים check-vfresearch/velvetos/vfops-loop. בלי פק חדש / בלי DM engine / בלי poll→print. Office loop embed: research pulse + floor card → draft reel + revenue retro.
 

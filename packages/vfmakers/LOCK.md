@@ -30,7 +30,7 @@ X / LinkedIn / Typefully publish מ־`jab-hook`. דומיין `.com` מ־`domain
 
 `maker-council` (Fried / Musk / …). `business-brainstorm` כפתיחת קו B2B.
 
-למה: B2B נעול ב־`vfbiz` (לוגו, QR, מפיות) עד ראש צוות. אין המצאת אסטרטגיה בשם סלבס.
+למה: B2B נעול ב־`vfbiz` כקו עד ראש צוות. לוגו, QR, מפיות היו דוגמאות — לא קטלוג סגור. אין המצאת אסטרטגיה בשם סלבס.
 
 ## מוח שני מחוץ ל־HQ — דלג
 
