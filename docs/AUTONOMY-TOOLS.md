@@ -8,7 +8,8 @@
 | CI סנסורים | [`.github/workflows/check-all.yml`](../.github/workflows/check-all.yml) | בדיקה אוטומטית בכל push/PR — לא רק ידנית | רץ אוטומטית ב-GitHub |
 | סינון agent rules | [`scripts/vf_relevant_agents.py`](../scripts/vf_relevant_agents.py) | 283 `.mdc` → 50 רלוונטיים ל-VF; לא מוחק, רק מסנן | `python3 scripts/vf_relevant_agents.py` |
 | לופ מדידה→למידה | [`packages/vfinsights/scripts/vf_insights_loop.py`](../packages/vfinsights/scripts/vf_insights_loop.py) | vfinsights בלי מדידה בפועל («אין ספירה» תמיד) | `python3 packages/vfinsights/scripts/vf_insights_loop.py --init` ואז למלא CSV אמיתי |
-| חיפוש סמנטי מקומי | [`packages/vfmem/scripts/vf_semantic_search.py`](../packages/vfmem/scripts/vf_semantic_search.py) | vfmem היה מפת טקסט בלבד; זה TF-IDF אמיתי, offline | `python3 packages/vfmem/scripts/vf_semantic_search.py --build` |
+| חיפוש סמנטי מקומי | [`packages/vfmem/scripts/vf_semantic_search.py`](../packages/vfmem/scripts/vf_semantic_search.py) | vfmem היה מפת טקסט בלבד; זה TF-IDF אמיתי, offline; כתיבה אטומית ל־pkl | `python3 packages/vfmem/scripts/vf_semantic_search.py --build` |
+| פריפלייט שליחה | [`scripts/vf_send_preflight.py`](../scripts/vf_send_preflight.py) | desk+מפתח לפני Gmail/IG/API; יציאה 2=failover | `python3 scripts/vf_send_preflight.py --gate instagram` |
 | סולם הסלמה | [`packages/vfharness/scripts/vf_graceful_escalation.py`](../packages/vfharness/scripts/vf_graceful_escalation.py) | לולאה בינארית (2 ניסיונות → עצור) → 4 שלבים לפני הסלמה לאדם | `python3 packages/vfharness/scripts/vf_graceful_escalation.py --self-test` |
 
 ## כללים

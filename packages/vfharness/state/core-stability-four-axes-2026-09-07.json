@@ -1,0 +1,24 @@
+{
+  "task_id": "core-stability-four-axes-2026-09-07",
+  "status": "done",
+  "pack": "vfharness",
+  "goal": "Ship four bounded stability axes without second runtime",
+  "completed_steps": [
+    "atomic semantic index write (lazy sklearn import)",
+    "vf_send_preflight.py + SEND wiring",
+    "owner-memory day-block contract + sensor",
+    "attach-core offline/stale path",
+    "check-all.py 25/25"
+  ],
+  "next_step": "none",
+  "artifacts": [
+    "packages/vfharness/playbooks/core-stability-four-axes.md",
+    "scripts/vf_send_preflight.py",
+    "packages/vfmem/scripts/vf_semantic_search.py",
+    "instances/velvet-factory/scripts/attach-core.sh",
+    "/opt/cursor/artifacts/check-all-suite.log"
+  ],
+  "unresolved": [],
+  "last_updated": "2026-09-07T14:30:00Z",
+  "outcome": "four axes shipped; sensors green"
+}

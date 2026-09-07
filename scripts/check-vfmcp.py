@@ -337,7 +337,45 @@ def main() -> None:
     if "sk-" in out2:
         fail("vf_chatgpt.py must not print secrets")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api+chatgpt-api+ig-mcp+icloud")
+    preflight = ROOT / "scripts" / "vf_send_preflight.py"
+    if not preflight.is_file():
+        fail("missing scripts/vf_send_preflight.py")
+    send_law = (ROOT / "constitution" / "SEND.md").read_text(encoding="utf-8")
+    if "vf_send_preflight.py" not in send_law:
+        fail("constitution/SEND.md must mention vf_send_preflight.py")
+    vfigos_send = (ROOT / "packages" / "vfigos" / "SEND.md").read_text(encoding="utf-8")
+    if "vf_send_preflight.py" not in vfigos_send:
+        fail("vfigos/SEND.md must mention vf_send_preflight.py")
+    proc3 = subprocess.run(
+        [sys.executable, str(preflight)],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        env=env,
+    )
+    if proc3.returncode != 0:
+        fail(f"vf_send_preflight.py must exit 0: {proc3.stderr or proc3.stdout}")
+    try:
+        report = json.loads(proc3.stdout)
+    except json.JSONDecodeError as exc:
+        fail(f"vf_send_preflight.py must print JSON: {exc}")
+    if not report.get("ok") or "channels" not in report:
+        fail("vf_send_preflight.py report missing ok/channels")
+    for need in ("gmail", "instagram", "canva", "gemini", "chatgpt"):
+        if need not in report["channels"]:
+            fail(f"vf_send_preflight.py missing channel {need}")
+    proc4 = subprocess.run(
+        [sys.executable, str(preflight), "--gate", "instagram"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        env=env,
+    )
+    # Desk IG is needsAuth → expect failover exit 2 (actionable, not idle)
+    if proc4.returncode not in (0, 2):
+        fail(f"vf_send_preflight --gate instagram must exit 0 or 2, got {proc4.returncode}")
+
+    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api+chatgpt-api+ig-mcp+icloud+send-preflight")
 
 
 if __name__ == "__main__":

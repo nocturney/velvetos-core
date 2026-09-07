@@ -25,6 +25,19 @@ Path: `.cursor/environment.json`
 
 `vendor/velvetos-core/` stays **gitignored** — not duplicated in the instance repo.
 
+## Offline / network fail
+
+`attach-core.sh` must not brick the frontend office when GitHub is down:
+
+| Mode | How |
+|---|---|
+| Existing vendor | If `vendor/velvetos-core/packages/` is usable → keep it (stale OK) + stamp `ok-stale-*` |
+| Offline flag | `VELVETOS_CORE_OFFLINE=1` or `./scripts/attach-core.sh --offline` |
+| Local path | `VELVETOS_CORE_PATH=/path/to/velvetos-core` (copy/rsync; preferred on Cloud mirrors) |
+| Stamp | `vendor/.attach-stamp` — status for the next session |
+
+Never invent packs when attach fails with no vendor. Fail closed with the retry hint.
+
 ## New instance checklist
 
 1. Copy scaffold from `instances/velvet-factory/` or `instances/_template/`

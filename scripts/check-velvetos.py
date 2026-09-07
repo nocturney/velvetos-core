@@ -245,6 +245,26 @@ def main() -> None:
     if not any("velvetos-core" in d for d in deps):
         fail("instances/velvet-factory environment.json must list velvetos-core dependency")
 
+    attach = (vf_inst / "scripts" / "attach-core.sh").read_text(encoding="utf-8")
+    for needle in (
+        "VELVETOS_CORE_OFFLINE",
+        "VELVETOS_CORE_PATH",
+        "--offline",
+        "ok-stale",
+        ".attach-stamp",
+        "vendor_usable",
+    ):
+        if needle not in attach:
+            fail(f"instances/velvet-factory/scripts/attach-core.sh must support {needle}")
+    tmpl_attach = (INSTANCES / "_template" / "scripts" / "attach-core.sh").read_text(encoding="utf-8")
+    for needle in ("VELVETOS_CORE_OFFLINE", "VELVETOS_CORE_PATH", ".attach-stamp"):
+        if needle not in tmpl_attach:
+            fail(f"instances/_template/scripts/attach-core.sh must support {needle}")
+    inst_env = (PACK / "INSTANCE-ENV.md").read_text(encoding="utf-8")
+    for needle in ("Offline", "VELVETOS_CORE_OFFLINE", "VELVETOS_CORE_PATH", ".attach-stamp"):
+        if needle not in inst_env:
+            fail(f"INSTANCE-ENV.md must document offline attach ({needle})")
+
     if not (PACK / "INSTANCE-ENV.md").is_file():
         fail("missing packages/velvetos/INSTANCE-ENV.md")
 

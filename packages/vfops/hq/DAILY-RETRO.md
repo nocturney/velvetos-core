@@ -61,9 +61,19 @@
 | טענת הצלחה בלי אימות | Mastery gate — `verification-before-claim.md` · `MASTERY-MEMORY.md` |
 | אותה טעות פעמיים | Question-bank → ANTI-PATTERN או `LEARNING-RECORDS.md` |
 
+## חוזה יום (owner-memory)
+
+לפני שסוגרים רטרו — בלוק חדש ב־`owner-memory.md` חייב לעמוד ב־`MEMORY-UPDATE.md`:
+
+- כותרת `### YYYY-MM-DD …`
+- `**מושב:**` · `**למדנו:**` · `**מקור:**` (חובה)
+- `**מחר:**` אופציונלי
+
+סנסור: `python3 scripts/check-vfops-loop.py` (בלי Pydantic/Zod).
+
 ## פלט חובה
 
-1. **שורת יום** ב־`packages/vfops/data/owner-memory.md` (תאריך + תובנה אחת)
+1. **שורת יום** ב־`packages/vfops/data/owner-memory.md` (תאריך + תובנה אחת) — לפי החוזה למעלה
 2. **שורת לוג** בתחתית קובץ זה (או העתק ל־`DAILY-RETRO-LOG.md` אם הלוג גדל)
 3. **Checkpoint** אם job רב־שלבי פתוח — `vfharness/state/<task-id>.json`
 4. **תיקון מדריך** — אם אותה טעות פעמיים → שורת ANTI-PATTERN ב־`AGENTS.md` (מחר, לא הלילה)

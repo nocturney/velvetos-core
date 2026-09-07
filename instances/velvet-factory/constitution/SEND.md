@@ -7,7 +7,8 @@
 
 1. ארטיפקט פריפלייט כתוב (`vfgrowth/PREFLIGHT.md`) — VOICE + Canva/vfcovers + ציון עצמי + 2–3 קומפס.
 2. שער עריכה (`EDIT-GATE.md`) — לא JPEG גולמי.
-3. בלי שער עבור = **נכשל-סגור**. לא משבצים.
+3. פריפלייט שליחה מקומי: `python3 vendor/velvetos-core/scripts/vf_send_preflight.py --gate instagram` (יציאה 2 = failover Canva+Drive+Gmail).
+4. בלי שער עבור = **נכשל-סגור**. לא משבצים.
 
 ## משטח כריסטיאן
 

@@ -128,6 +128,14 @@ def main() -> None:
         if not (ROOT / "packages" / "vfmem" / name).is_file():
             fail(f"missing packages/vfmem/{name}")
 
+    semantic = ROOT / "packages" / "vfmem" / "scripts" / "vf_semantic_search.py"
+    if not semantic.is_file():
+        fail("missing packages/vfmem/scripts/vf_semantic_search.py")
+    semantic_src = semantic.read_text(encoding="utf-8")
+    for needle in ("atomic_pickle_dump", "os.replace", "semantic_index.pkl"):
+        if needle not in semantic_src:
+            fail(f"vf_semantic_search.py must implement atomic index write ({needle})")
+
     print(
         f"OK vfmem embed={embed} packs={len(packs)} "
         f"nodes={len(graph.nodes)} edges={len(graph.edges)} desk={desk_n}"

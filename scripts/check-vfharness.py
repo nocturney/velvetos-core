@@ -218,6 +218,20 @@ def main() -> None:
     failover = ROOT / "packages/vfharness/playbooks/grok-failover.md"
     if not failover.is_file():
         fail("missing packages/vfharness/playbooks/grok-failover.md")
+
+    four_axes = ROOT / "packages/vfharness/playbooks/core-stability-four-axes.md"
+    if not four_axes.is_file():
+        fail("missing packages/vfharness/playbooks/core-stability-four-axes.md")
+    axes = four_axes.read_text(encoding="utf-8")
+    for needle in (
+        "atomic",
+        "vf_send_preflight.py",
+        "owner-memory",
+        "attach-core",
+        "repository_dispatch",
+    ):
+        if needle not in axes:
+            fail(f"core-stability-four-axes.md must mention {needle}")
     failover_text = failover.read_text()
     for needle in (
         "מוכן-ל-Grok",
