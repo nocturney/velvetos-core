@@ -67,7 +67,7 @@ def main() -> None:
         (INSTANCE, ("רף סוכנות", "חצי-פק", "עברית", "PREFLIGHT.md")),
         (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "Canva MCP", "G004-STORIES-FIX", "PREFLIGHT.md", "רמה נמוכה")),
         (EDIT, ("JPEG גולמי", "Canva", "vfcovers", "G004-STORIES-FIX", "PREFLIGHT.md", "VOICE.md")),
-        (PREFLIGHT, ("VOICE.md", "VOICE-RESEARCH", "ציון עצמי", "נכשל-סגור", "2–3")),
+        (PREFLIGHT, ("VOICE.md", "VOICE-RESEARCH", "VOICE-CHART", "ציון עצמי", "נכשל-סגור", "2–3", "CONTENT-RUBRIC")),
         (CAL_OPS, ("לא שואלים", "Google Calendar", "050-2517000")),
         (STORIES, ("נייבי", "סיפור-מוצר", "050-2517000", "Canva MCP")),
         (STORIES_FIX, ("סיפור-מוצר", "050-2517000", "DAHUaUo3bAk", "X ₪")),

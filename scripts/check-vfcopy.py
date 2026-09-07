@@ -317,6 +317,75 @@ def lint_path_captions(path: Path) -> list[str]:
     return problems
 
 
+def parse_rubric(preflight_text: str) -> dict | None:
+    """Parse CONTENT-RUBRIC table from a preflight artifact. None = missing table."""
+    # Look for a markdown table row with 6+ numeric cells after a Rubric heading
+    lines = preflight_text.splitlines()
+    in_rubric = False
+    for i, line in enumerate(lines):
+        if "Rubric" in line or "CONTENT-RUBRIC" in line or "## ה ·" in line or "## ה " in line:
+            in_rubric = True
+        if not in_rubric:
+            continue
+        if not line.strip().startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        # Expect: 5 scores + total + decision (or 5 scores + total)
+        nums: list[int] = []
+        for c in cells:
+            if re.fullmatch(r"\d{1,2}", c):
+                nums.append(int(c))
+            elif re.fullmatch(r"\d{1,2}\s*/\s*25", c):
+                nums.append(int(c.split("/")[0].strip()))
+        if len(nums) >= 5:
+            scores = nums[:5]
+            total = nums[5] if len(nums) > 5 else sum(scores)
+            decision = ""
+            for c in cells:
+                if "עבור" in c or "חוזר" in c:
+                    decision = c
+                    break
+            return {"scores": scores, "total": total, "decision": decision, "sum": sum(scores)}
+    return None
+
+
+def lint_ready_preflight(paths: Paths, item: HandoffItem) -> list[str]:
+    """Ready (unlocked) items must have rubric + digest; structure ≠ design pass."""
+    problems: list[str] = []
+    preflight = paths.preflight_dir / f"{item.gid}.md"
+    if not preflight.is_file():
+        return problems  # missing file already reported
+    text = preflight.read_text(encoding="utf-8")
+    if "נכשל-סגור" in text or "**נכשל" in text:
+        problems.append(f"{item.gid} מסומן מוכן לשיבוץ אך preflight נכשל-סגור")
+        return problems
+    rubric = parse_rubric(text)
+    if rubric is None:
+        problems.append(f"{item.gid} מוכן לשיבוץ אך חסרה טבלת Rubric מלאה ב-preflight")
+        return problems
+    if any(s < 1 or s > 5 for s in rubric["scores"]):
+        problems.append(f"{item.gid} Rubric עם ציון מחוץ לטווח 1–5")
+    if 1 in rubric["scores"]:
+        problems.append(f"{item.gid} Rubric עם ציר=1 (דגל אדום / נכשל)")
+    if rubric["total"] != rubric["sum"]:
+        problems.append(
+            f"{item.gid} Rubric סה״כ שגוי: כתוב {rubric['total']} אך סכום={rubric['sum']}"
+        )
+    if rubric["total"] < 20:
+        problems.append(f"{item.gid} Rubric מתחת לסף 20/25 (סה״כ {rubric['total']})")
+    if "עבור" not in (rubric.get("decision") or "") and "עבור" not in text.split("## ה")[-1][:400]:
+        # decision cell or section gate
+        if "החלטה" in text and "עבור" not in text:
+            problems.append(f"{item.gid} Rubric בלי החלטת עבור")
+    # Artifact digest — version lock
+    if "caption_sha256" not in text and "artifact_digest" not in text and "sha256" not in text.lower():
+        problems.append(f"{item.gid} מוכן לשיבוץ אך חסר digest לגרסת תוצר (שער ו)")
+    # Visual evidence note
+    if "edit_url" not in text and "png" not in text.lower() and "ראייה" not in text and "thumbnail" not in text.lower():
+        problems.append(f"{item.gid} מוכן לשיבוץ אך חסרה ראיית ויזואל ב-preflight")
+    return problems
+
+
 def gate_handoff_requirements(paths: Paths, items: list[HandoffItem] | None = None) -> list[str]:
     if items is None:
         if not paths.handoff.is_file():
@@ -325,7 +394,6 @@ def gate_handoff_requirements(paths: Paths, items: list[HandoffItem] | None = No
     problems: list[str] = []
     for item in items:
         if item.status in {"historical", "blocked", "mention", "locked"}:
-            # locked/historical: no new artifact demand
             continue
         if item.needs_stories_fix:
             stories = paths.vfcopy / f"{item.gid}-STORIES-FIX.md"
@@ -340,11 +408,7 @@ def gate_handoff_requirements(paths: Paths, items: list[HandoffItem] | None = No
                     f"חסר {preflight.relative_to(paths.root)} ל-{item.gid} המסומן מוכן לשיבוץ"
                 )
             else:
-                pf = preflight.read_text(encoding="utf-8")
-                if "נכשל-סגור" in pf or "**נכשל" in pf:
-                    problems.append(
-                        f"{item.gid} מסומן מוכן לשיבוץ אך preflight נכשל-סגור"
-                    )
+                problems.extend(lint_ready_preflight(paths, item))
     return problems
 
 
@@ -375,7 +439,7 @@ def main() -> int:
         for line in result.problems:
             print("-", line)
         return 1
-    print("OK vfcopy captions+stories linted (behavioral=6)")
+    print("OK vfcopy captions+stories linted (behavioral=7)")
     return 0
 
 
@@ -469,6 +533,33 @@ class VfcopyLintTests(unittest.TestCase):
         blob = "\n".join(result.problems)
         self.assertIn("STORIES-FIX", blob)
         self.assertIn("preflight", blob)
+
+    def test_g_ready_story_bad_rubric_blocked(self) -> None:
+        """Rubric missing scores / under threshold / wrong total blocks ready item."""
+        (self.vfcopy / "G095.md").write_text(
+            "# G095\n\n## להדבקה\n\n```\nורוד על השידה\n\nוואטסאפ 050-2517000\n```\n",
+            encoding="utf-8",
+        )
+        (self.vfcopy / "G095-STORIES-FIX.md").write_text(
+            "# fix\n\n## ארבעה פריימים — להדבקה\n\n```\nורוד על השידה\n\nוואטסאפ 050-2517000\n```\n",
+            encoding="utf-8",
+        )
+        (self.preflight / "G095.md").write_text(
+            "# pf\nשער: עבור\n\n## ה · Rubric\n\n"
+            "| קהל | הוק/בהירות | קול | אמינות/חוק | פעולה | סה״כ | החלטה |\n"
+            "|---:|---:|---:|---:|---:|---:|---|\n"
+            "| 3 | 3 | 3 | 3 | 3 | 20/25 | עבור |\n",  # sum=15 but total claims 20
+            encoding="utf-8",
+        )
+        self.write_handoff(
+            "# מסירה\n\n### מוכן / משובץ\n\n"
+            "| # | מתי | מה | מועמד | מצב |\n|---|---|---|---|---|\n"
+            "| 1 | היום 20:30 | סטוריז | **G095** | מוכן לשיבוץ |\n"
+        )
+        result = check_vfcopy(self.root)
+        self.assertFalse(result.ok, result.problems)
+        blob = "\n".join(result.problems)
+        self.assertTrue("סה״כ שגוי" in blob or "מתחת לסף" in blob or "digest" in blob, blob)
 
     def test_f_historical_publish_no_new_demand(self) -> None:
         """ו. פרסום היסטורי אינו יוצר דרישה חדשה ללא הצדקה."""

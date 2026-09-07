@@ -1,6 +1,6 @@
 {
   "task_id": "swc-codex-001",
-  "status": "blocked",
+  "status": "done",
   "pack": "vfharness",
   "goal": "Phase A: read-only checkpoint validation and local artifact evidence report",
   "planned_steps": [
@@ -15,19 +15,18 @@
     "Read-only checkpoint audit and artifact integrity report implemented",
     "New ladder event logs recognized without implying task completion",
     "19 behavioral tests passed; latest baseline 23/23 and full suite 24/24 passed",
-    "Historical audit findings recorded separately without rewriting others records"
+    "Historical audit findings recorded separately without rewriting others records",
+    "merged to main via PR #108",
+    "phase A complete — phase B not in this task"
   ],
-  "next_step": "Cursor imports the scoped patch and opens a phase A PR; GitHub integration denied tree creation (403). Live brief integration requires separate phase B scope",
+  "next_step": "",
   "artifacts": [
     "scripts/vf_task_state.py",
     "scripts/check-vf-task-state.py",
     "packages/vfharness/playbooks/skillstate.md"
   ],
-  "unresolved": [
-    "Remote branch and PR were not created: GitHub tree creation returned 403 Resource not accessible by integration",
-    "Cursor review and merge pending"
-  ],
-  "pulse": "blocked",
+  "unresolved": [],
+  "pulse": "working",
   "last_updated": "2026-09-07",
   "execution_state": {
     "base_sha": "ebfbe2714f38d9eda8579d8651cac4df24659c8f",
@@ -81,14 +80,14 @@
       "changed_upstream_paths": 55,
       "overlap_with_owned_paths": 0,
       "compatibility_adjustment": "ladder-*.json arrays reported as event logs separately"
+    },
+    "phase_a_closed": {
+      "pr": 108,
+      "coordination_pr": 105,
+      "note": "phase B (live brief / consumers) tracked under Cursor PRs, not this task"
     }
   },
-  "latest_observation": "Current-base tests passed. Historical audit exits 1; ladder logs are observed separately. Four approved paths only; no live brief, schema, business-role or runtime changes.",
-  "outcome": "decision_gate",
-  "verification": "19 behavioral tests passed; all 24 sensors passed on ebfbe27 plus the scoped changes; digests recorded after validation",
-  "gate": {
-    "kind": "approval",
-    "waiting_for": "Cursor phase A PR review and merge",
-    "reason": "Implementation complete and tested; merge and runtime handoff remain coordinated"
-  }
+  "latest_observation": "Phase A merged on main via #108. Owned reader/sensor digests verified. Historical audit of other checkpoints remains separate (nonzero vf_task_state exit does not reopen phase A). Follow-ups: Cursor PRs #109–#114.",
+  "outcome": "worker_done",
+  "verification": "merged to main via PR #108 (06f9854); phase A artifacts digest-verified; phase B is separate SWC-CURSOR work"
 }

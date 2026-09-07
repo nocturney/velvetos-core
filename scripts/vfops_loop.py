@@ -798,7 +798,7 @@ def cmd_check(_args: argparse.Namespace) -> int:
         if path == CAL_OPS and "לא שואלים" not in text:
             fail("CALENDAR-OPS.md must lock autonomous slots")
     preflight = PREFLIGHT.read_text()
-    for needle in ("VOICE.md", "VOICE-RESEARCH", "נכשל-סגור", "רמה נמוכה", "ציון עצמי", "2–3"):
+    for needle in ("VOICE.md", "VOICE-RESEARCH", "VOICE-CHART", "נכשל-סגור", "רמה נמוכה", "ציון עצמי", "2–3", "CONTENT-RUBRIC"):
         if needle not in preflight:
             fail(f"PREFLIGHT.md must mention {needle}")
     if "אל תפנה לכריסטיאן על מדדים חלשים" not in HANDOFF.read_text():

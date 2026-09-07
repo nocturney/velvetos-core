@@ -10,9 +10,10 @@ After a design exists, hand the edit URL to `vfigos` for review / schedule / **s
 
 ## Laws
 
-- Hebrew, spoken voice. CTA is WhatsApp `050-2517000` / איסוף שדרות. Never «שלחו DM».
+- Hebrew, spoken voice (`vfcopy/VOICE.md` + `VOICE-CHART.md`). CTA is WhatsApp `050-2517000` / איסוף שדרות. Never «שלחו DM».
 - Do not invent ₪, Insights, brand hex/fonts, or a floor scene. Write `חסר` / `Can't verify`.
 - Do not construct Canva URLs. Use the `edit_url` the MCP returns.
+- Before handoff to schedule: `vfgrowth/PREFLIGHT.md` + `CONTENT-RUBRIC.md` (scores + visual evidence + digest). Structure-only checks are not a design pass.
 - Superdesign is fallback only when Canva MCP is down. Prefer `packages/vfcanva/studio/render.py` for a real PNG this HQ can produce without OAuth.
 
 ## Step 1 — Ticket

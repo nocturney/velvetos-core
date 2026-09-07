@@ -5,7 +5,9 @@
 
 מושב: סטודיו (`@content-creator` + `@brand-guardian`).  
 מחקר שכנים: `VOICE-RESEARCH.md`.  
-תבנית עבודה: `hq/templates/ig-caption.md`. לינט: `hq/PLAYBOOK.md` + `hq/ai-tells-he.md`.
+טבלת קול מהירה לכל עוזר: `VOICE-CHART.md` (משלים; במקרה סתירה קובץ זה + החוקה מנצחים).  
+תבנית עבודה: `hq/templates/ig-caption.md`. לינט: `hq/PLAYBOOK.md` + `hq/ai-tells-he.md`.  
+תגובות קהילה: `hq/community-replies.md`. שער איכות לפני שיבוץ: `vfgrowth/CONTENT-RUBRIC.md` + `PREFLIGHT.md`.
 
 חיים בפיד (לדג׳ר, בלי לשייך shortcode לכיתוב בלי צילום בעלים): G001 `DcqkjOLlYVX` · G002 `DcvuJLxCJgU`.  
 G003 SoccerBall כבר נעול בנפרד (`G003.md`) — לא דורסים. ריל תהליך **חדש** הולך לפי מצב **תהליך-קצר** למטה.
