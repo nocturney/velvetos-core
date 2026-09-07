@@ -17,6 +17,7 @@ BEST_SKILLS_SKILL = ROOT / ".cursor" / "skills" / "vf-best-skills" / "SKILL.md"
 LAST30 = ROOT / "packages" / "vfresearch" / "hq" / "LAST30.md"
 LAST30_SKILL = ROOT / ".cursor" / "skills" / "vf-last30" / "SKILL.md"
 PRINT_DEMAND = ROOT / "packages" / "vfresearch" / "hq" / "PRINT-DEMAND.md"
+MAKERWORLD_SCAN = ROOT / "packages" / "vfresearch" / "hq" / "MAKERWORLD-SCAN.md"
 DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
 MUSIC = ROOT / "packages" / "vfresearch" / "MUSIC.md"
 MUSIC_SOURCES = ROOT / "packages" / "vfresearch" / "SOURCES-MUSIC.json"
@@ -45,7 +46,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, LAST30, LAST30_SKILL, PRINT_DEMAND, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK, HQ_ROUTINE):
+    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, LAST30, LAST30_SKILL, PRINT_DEMAND, MAKERWORLD_SCAN, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK, HQ_ROUTINE):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -112,6 +113,15 @@ def main() -> None:
     hq_routine_txt = HQ_ROUTINE.read_text()
     if "PRINT-DEMAND.md" not in hq_routine_txt:
         fail("HQ-ROUTINE.md must mention PRINT-DEMAND.md in weekly cadence")
+    if "MAKERWORLD-SCAN.md" not in hq_routine_txt:
+        fail("HQ-ROUTINE.md must mention MAKERWORLD-SCAN.md")
+
+    scan = MAKERWORLD_SCAN.read_text()
+    for needle in ("ראשון", "רביעי", "NC", "אין שם", "סלייסר", "vfsku.py scan"):
+        if needle not in scan:
+            fail(f"MAKERWORLD-SCAN.md must mention {needle}")
+    if "מתעלמים מ־NC" in scan and "לא «מתעלמים" not in scan:
+        fail("MAKERWORLD-SCAN.md must not ignore international NC")
 
     orchestra = ORCHESTRA.read_text()
     if "WEEKLY.md" not in orchestra and "קישורי השראה" not in orchestra:

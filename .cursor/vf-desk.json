@@ -44,7 +44,7 @@
     "2026-09-05: Orchestra desks are API keys (vf_gemini.py / vf_chatgpt.py), not gemini.google.com or chatgpt.com in the Cloud browser — that trip Google/OpenAI security alerts. SUBSCRIPTIONS.md. Do not persist cookies. Plus ≠ API.",
     "2026-09-06: Instagram Publish/Insights via jlbadano/ig-mcp — mapped on vfigos/vfmcp (needsAuth until Meta token). CONNECT-IG.md. No auto-DM. Failover Canva+Drive+Gmail.",
     "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
-    "2026-09-07: Christian lock — surface decisions / hard blockers / live publish needing him only. Never weak metrics, רמה נמוכה, post-publish quality autopsy, or tool-unused shame. PREFLIGHT.md fail-closes schedule (VOICE + Canva/vfcovers + self-score + 2–3 IL comps)."
+    "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done."
   ],
   "studio": {
     "name": "Velvet Factory",

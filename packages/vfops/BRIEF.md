@@ -13,8 +13,8 @@
 | # | כותרת | מה נכנס | לא נכנס |
 |---|---|---|---|
 | 01 | קודם החלטה | כן/לא/דחה + מועד + **שערי לחיצה** מ־`hq/GATES.json` (`vfops_loop.py gate`) | לחץ מזויף, וואטסאפ לקוח, Print מ־HQ |
-| 02 | כסף בעבודה | הזמנות וחוב שכבר במערכת + **ספר:** `orders.json` / Invoice4U snapshot (דיסק, לא inbox) + **עלות חומר:** `python3 scripts/vfcost.py brief` דרך `vfops_loop.py` | ₪ מומצא, מייל ללקוח, מחיר מכירה בלי ראש צוות, גריפת תיבה ל־07:00 |
-| 03 | מה להדפיס ולפרסם | באצ׳ אחרי סלייס, רילס בלי מק״ט, **מדף:** `vfsku.py brief` + `vfsku.py scan` + `vfsku/week.md` + **צי:** `vfprod.py brief` דרך `vfops_loop.py brief` | מחיר בלי סכום מראש צוות, Print מ־HQ |
+| 02 | כסף בעבודה | הזמנות וחוב שכבר במערכת + **ספר:** `python3 scripts/vfbooks.py brief` + `orders.json` / Invoice4U snapshot (דיסק, לא inbox) + **עלות חומר:** `python3 scripts/vfcost.py brief` דרך `vfops_loop.py` | ₪ מומצא, מייל ללקוח, מחיר מכירה בלי ראש צוות, גריפת תיבה ל־07:00 |
+| 03 | מה להדפיס ולפרסם | באצ׳ אחרי סלייס, רילס בלי מק״ט, **מדף:** `vfsku.py brief` + `vfsku.py scan` + `vfsku/week.md` + **צי:** `vfprod.py brief` + `vfprod.py print-done` דרך `vfops_loop.py brief` | מחיר בלי סכום מראש צוות, Print מ־HQ, שם MakerWorld מהאוויר |
 | 04 | איך הסטודיו מרוויח | `FOLLOWER-GROWTH` + `vfbiz/out/week.md` היילייטס+וואטסאפ, איסוף שדרות, B2B נעול | אוטו־DM, מודעות, טיקטוק |
 | 05 | משרד | **מה נבנה / יועל** = CLI מ-24ש או «אין חדש במשרד» + פערים. לא קטלוג מ-`research.md` | פעילות מזויפת, כפילות פק |
 | 06 | מה קורה בעמוד | מספרים שנמדדו · אחרת «אין ספירה» | Insights מומצאים, חדשות רעות מומצאות לבעלים, «רמה נמוכה» |

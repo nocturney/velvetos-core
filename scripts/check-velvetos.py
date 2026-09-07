@@ -342,6 +342,8 @@ def main() -> None:
         "print.filament_short",
         "brief.gate_applied",
         "content.draft_ready",
+        "shelf.scan_pass",
+        "books.integrity_flag",
     ):
         if need not in event_ids:
             fail(f"events.catalog.json missing event {need}")

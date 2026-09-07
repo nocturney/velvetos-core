@@ -39,10 +39,12 @@ COPY_DIR = ROOT / "packages" / "vfcopy"
 STORIES_FIX = COPY_DIR / "G004-STORIES-FIX.md"
 VFSKU = ROOT / "scripts" / "vfsku.py"
 VFCOST = ROOT / "scripts" / "vfcost.py"
+VFBOOKS = ROOT / "scripts" / "vfbooks.py"
 VFPROD = ROOT / "scripts" / "vfprod.py"
 GATES = ROOT / "packages" / "vfops" / "hq" / "GATES.json"
 ORDERS = ROOT / "packages" / "vfbooks" / "data" / "orders.json"
 INVOICE4U = ROOT / "packages" / "vfbooks" / "data" / "invoice4u-snapshot.json"
+FUNNEL = ROOT / "packages" / "vfgrowth" / "hq" / "PROFILE-TO-WHATSAPP.md"
 CLI_LOG = ROOT / "packages" / "vfops" / "data" / "cli-runs.jsonl"
 TZ = ZoneInfo("Asia/Jerusalem")
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
@@ -59,6 +61,8 @@ AUDIT_PACKS = {
     "vfinsights",
     "vfresearch",
     "vfsku",
+    "vfbooks",
+    "vfprod",
 }
 
 CAPTION_FILES = (
@@ -187,10 +191,14 @@ def gap_lines(invoked: set[str]) -> str:
 
 def sku_line() -> str:
     line = run_cmd([sys.executable, str(VFSKU), "brief"], name="vfsku.py brief")
+    scan = run_cmd([sys.executable, str(VFSKU), "scan"], name="vfsku.py scan")
     week = fence_after_heading(WEEK, ("בלוק לבריף",))
+    parts = [line, scan]
     if week:
-        return f"{line}\n{week}"
-    return line
+        parts.append(week)
+    if VFPROD.is_file():
+        parts.append(run_cmd([sys.executable, str(VFPROD), "print-done"], name="vfprod.py print-done"))
+    return "\n".join(parts)
 
 
 def cost_line() -> str:
@@ -205,11 +213,11 @@ def prod_line() -> str:
     return run_cmd([sys.executable, str(VFPROD), "brief"], name="vfprod.py brief")
 
 
-def scan_line() -> str:
-    return run_cmd([sys.executable, str(VFSKU), "scan"], name="vfsku.py scan")
-
-
 def books_line() -> str:
+    if VFBOOKS.is_file():
+        books = run_cmd([sys.executable, str(VFBOOKS), "brief"], name="vfbooks.py brief")
+    else:
+        books = "חוב פתוח: אין ספירה · Invoice4U נשאר · בלי מייל גבייה מ-HQ"
     n_orders = 0
     n_inv = 0
     if ORDERS.is_file():
@@ -217,8 +225,10 @@ def books_line() -> str:
     if INVOICE4U.is_file():
         n_inv = len((json.loads(INVOICE4U.read_text(encoding="utf-8")).get("rows")) or [])
     if n_orders == 0 and n_inv == 0:
-        return "ספר: אין ספירה · orders.json + Invoice4U ריקים עד הדבקה (לא inbox ל-07:00)"
-    return f"ספר: הזמנות={n_orders} · Invoice4U={n_inv} · בלי ₪ מומצא"
+        disk = "ספר דיסק: אין ספירה · orders.json + Invoice4U ריקים עד הדבקה (לא inbox ל-07:00)"
+    else:
+        disk = f"ספר דיסק: הזמנות={n_orders} · Invoice4U={n_inv} · בלי ₪ מומצא"
+    return f"{books}\n{disk}"
 
 
 def gates_packet() -> tuple[str, list[list[str]], list[dict]]:
@@ -263,12 +273,18 @@ def gates_packet() -> tuple[str, list[list[str]], list[dict]]:
 
 def growth_line() -> str:
     block = fence_after_heading(FOLLOWER, ("בלוק לבריף",))
+    funnel = fence_after_heading(FUNNEL, ("בלוק לבריף",)) if FUNNEL.is_file() else ""
+    parts: list[str] = []
     if block:
-        return block
-    return (
-        "היילייטס + וואטסאפ 050-2517000 — לא DM\n"
-        "B2B נעול · איסוף שדרות"
-    )
+        parts.append(block)
+    else:
+        parts.append(
+            "היילייטס + וואטסאפ 050-2517000 — לא DM\n"
+            "B2B נעול · איסוף שדרות"
+        )
+    if funnel:
+        parts.append(funnel)
+    return "\n".join(parts)
 
 
 def biz_week_line() -> str:
@@ -302,7 +318,13 @@ def captions_rows() -> list[list[str]]:
     return rows
 
 
-ROUTINE_BRIEF_CLI = ("vfcost.py brief", "vfsku.py brief")
+ROUTINE_BRIEF_CLI = (
+    "vfcost.py brief",
+    "vfsku.py brief",
+    "vfsku.py scan",
+    "vfbooks.py brief",
+    "vfprod.py print-done",
+)
 
 
 def office_line(invoked: set[str]) -> str:
@@ -443,6 +465,39 @@ def consumer_registry() -> list[ConsumerSpec]:
             pack="vfharness",
             auto_daily=False,
             skip_reason="integrity belongs to `vfops_loop.py check` / CI — never from run/assemble (recursion)",
+        ),
+        ConsumerSpec(
+            id="vfbooks-brief",
+            title="vfbooks integrity line",
+            cadence="daily-07:00",
+            kind="exec",
+            argv=[sys.executable, str(VFBOOKS), "brief"],
+            timeout_s=30,
+            requires=(VFBOOKS,),
+            pack="vfbooks",
+            auto_daily=True,
+        ),
+        ConsumerSpec(
+            id="vfsku-scan",
+            title="MakerWorld scan line (Sun/Wed or not-scan-day)",
+            cadence="daily-07:00",
+            kind="exec",
+            argv=[sys.executable, str(VFSKU), "scan"],
+            timeout_s=30,
+            requires=(VFSKU,),
+            pack="vfsku",
+            auto_daily=True,
+        ),
+        ConsumerSpec(
+            id="vfprod-print-done",
+            title="print.done cards for brief",
+            cadence="daily-03",
+            kind="exec",
+            argv=[sys.executable, str(VFPROD), "print-done"],
+            timeout_s=30,
+            requires=(VFPROD,),
+            pack="vfprod",
+            auto_daily=True,
         ),
     ]
 
@@ -610,13 +665,13 @@ def assemble(today: str) -> dict:
     invoked: set[str] = {"vfops"}
     sku = sku_line()
     invoked.add("vfsku")
+    invoked.add("vfprod")
     cost = cost_line()
     invoked.add("vfcost")
     books = books_line()
     invoked.add("vfbooks")
     prod = prod_line()
     invoked.add("vfprod")
-    scan = scan_line()
     gate_prose, gate_rows, gate_actions = gates_packet()
     growth = growth_line()
     invoked.add("vfgrowth")
@@ -653,14 +708,14 @@ def assemble(today: str) -> dict:
                 "headers": ["קוד", "שלב", "חסם"],
                 "rows": [
                     ["פנייה", "אין", "אין ספירה"],
-                    ["ספר", "אין ספירה", "vfbooks"],
+                    ["ספר", "vfbooks.py brief", "בלי מייל גבייה"],
                     ["חומר", "vfcost.py brief", "בלי ₪ מכירה"],
                 ],
             },
             {
                 "kicker": "03 · מה להדפיס ולפרסם",
                 "title": "מדף",
-                "prose": f"{sku}\n{prod}\n{scan}",
+                "prose": f"{sku}\n{prod}",
             },
             {
                 "kicker": "04",
@@ -764,9 +819,11 @@ def write_status(today: str) -> None:
         "- `vfops_loop.py brief` — בריף סוכנות מפקים חיים",
         "- `vfcost.py brief` — עלות חומר חיה בחריץ 02 (בלי ₪ מכירה)",
         "- `vfprod.py brief` — צי + תחזוקה בחריץ 03 (אין Print מ-HQ)",
+        "- `vfprod.py print-done` — כרטיסי רצפה בחריץ 03 (אין Publish מהבריף)",
         "- מדף `vfsku.py brief` + `vfsku.py scan` + `week.md`",
         "- שערי 01 מ־`GATES.json` (לחיצת אדם, לא וואטסאפ)",
-        "- ספר 02 מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)",
+        "- `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)",
+        "- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)",
         "- FOLLOWER-GROWTH · היילייטס + וואטסאפ",
         "- כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)",
         "- חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ",

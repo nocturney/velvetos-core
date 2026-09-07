@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Floor fleet helpers: recommend a bed, check spool remainder, maintenance line.
+"""Floor fleet helpers + print-done cards for morning brief slot 03.
 
-No network. No send. No Print from HQ. No invented ₪ or telemetry.
+No network. No send. No Print from HQ. No invented ₪, telemetry, or floor scenes.
 """
 from __future__ import annotations
 
@@ -15,6 +15,8 @@ ROOT = Path(__file__).resolve().parents[1]
 FLEET = ROOT / "packages" / "vfprod" / "FLEET.json"
 SNAP = ROOT / "packages" / "vfprod" / "data" / "maintenance-snapshot.json"
 FILAMENTS = ROOT / "packages" / "vfcost" / "FILAMENTS.json"
+CARDS = ROOT / "packages" / "vfprod" / "hq" / "cards"
+SKIP = {"README.md", "PRINT-CARD-TEMPLATE.md"}
 
 MATERIALS = {
     "pla": {
@@ -204,8 +206,39 @@ def cmd_brief(_args: argparse.Namespace) -> int:
     return 0
 
 
+def list_cards() -> list[Path]:
+    if not CARDS.is_dir():
+        return []
+    return sorted(p for p in CARDS.glob("*.md") if p.name not in SKIP)
+
+
+def cmd_print_done(_args: argparse.Namespace) -> int:
+    cards = list_cards()
+    if not cards:
+        print(
+            "print.done: אין כרטיס רצפה\n"
+            "HQ לא מצלם מדפסת · PREFLIGHT לפני שיבוץ · אין Publish מהבריף"
+        )
+        return 0
+    ready = 0
+    blocked = 0
+    for path in cards:
+        text = path.read_text(encoding="utf-8")
+        if "חסר" in text and "proof על המיטה: כן" not in text:
+            blocked += 1
+        if "card_ready" in text or "draft" in text:
+            ready += 1
+    names = ", ".join(p.stem for p in cards[:5])
+    extra = "…" if len(cards) > 5 else ""
+    print(
+        f"print.done: {len(cards)} כרטיסים ({names}{extra}) · מוכנים/טיוטה={ready} · חסום-גלם={blocked}\n"
+        "אין חיבור למדפסת מ-HQ · תוכן אחרי PREFLIGHT · לא כפתור בריף"
+    )
+    return 0
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Velvet Factory floor fleet (recommend only)")
+    parser = argparse.ArgumentParser(description="Velvet Factory floor fleet + print.done cards")
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("fleet", help="list the four beds").set_defaults(func=cmd_fleet)
     route = sub.add_parser("route", help="recommend a bed from material/strength")
@@ -221,6 +254,9 @@ def main() -> int:
     )
     sub.add_parser("brief", help="one Hebrew line for morning brief slot 03").set_defaults(
         func=cmd_brief
+    )
+    sub.add_parser("print-done", help="brief line for print.done cards").set_defaults(
+        func=cmd_print_done
     )
     args = parser.parse_args()
     return args.func(args)

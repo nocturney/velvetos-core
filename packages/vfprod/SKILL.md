@@ -6,7 +6,8 @@
 פריפלייט STL: `PREFLIGHT.md` · `python3 scripts/vf_office.py print preflight`.  
 רצפה: `FLOOR.md` · ניתוב חומר→מיטה: `ROUTING.md` · `python3 scripts/vfprod.py route`.  
 אחרי הדפסה תקינה: `PRINT-DONE.md` (כרטיס → טיוטת תוכן, לא Publish אוטומטי).  
-תחזוקה מונעת: `MAINTENANCE.md` · `python3 scripts/vfprod.py maintain`.  
+בריף: `python3 scripts/vfprod.py brief` + `python3 scripts/vfprod.py print-done`.  
+תחזוקה מונעת: `MAINTENANCE.md` · `python3 scripts/vfprod.py maintain`.
 דשבורד חווה עתידי (Watchtower): `WATCHTOWER.md` — Edge על LAN שדרות, לא daemon בליבה.  
 3D AI Studio (מנוי): `3DAISTUDIO.md` · חיבור MCP: `CONNECT-3DAI.md`.  
 אחרי אישור: תור על הצינור `הדפסה`.  

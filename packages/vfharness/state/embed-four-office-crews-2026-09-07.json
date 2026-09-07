@@ -1,0 +1,66 @@
+{
+  "task_id": "embed-four-office-crews-2026-09-07",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfe2b",
+  "crew": "research",
+  "goal": "Embed four constitution-safe office crews on existing packs with brief CLIs",
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "python3 scripts/check-all.py passed=25",
+  "planned_steps": [
+    "Map four ideas onto research/content/books-data crews",
+    "Write playbooks + CLIs without new packs",
+    "Wire LOOP brief slots 02/03/04",
+    "Extend sensors",
+    "Run check-all"
+  ],
+  "completed_steps": [
+    "MAKERWORLD-SCAN + vfsku.py scan",
+    "PRINT-DONE CLI + content crew PREFLIGHT",
+    "PROFILE-TO-WHATSAPP + VOICE CTA",
+    "vfbooks.py brief + INTEGRITY",
+    "LOOP/crews/sensors/desk/vfmem",
+    "check-all 25/25"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "packages/vfresearch/hq/MAKERWORLD-SCAN.md",
+    "packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md",
+    "packages/vfbooks/INTEGRITY.md",
+    "scripts/vfsku.py",
+    "scripts/vfbooks.py",
+    "scripts/vfprod.py"
+  ],
+  "unresolved": [
+    "No live MakerWorld URL this pass — shelf stays 0/5 אין שם להציע",
+    "No print.done floor card — CLI reports אין כרטיס רצפה",
+    "jobs.csv empty — books line is אין ספירה",
+    "ig-mcp still needsAuth"
+  ],
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-07",
+  "latest_observation": "Sensors 25/25. Scan CLI distinguishes Sun vs Mon. Brief slot 02 pulls vfbooks; slot 03 pulls scan+print-done.",
+  "events": [
+    {
+      "name": "shelf.scan_pass",
+      "producedAt": "2026-09-07",
+      "sourceAgent": "vfsku.py scan",
+      "payload": {
+        "scanDay": false,
+        "shelfReady": 0,
+        "namedModels": []
+      }
+    },
+    {
+      "name": "books.integrity_flag",
+      "producedAt": "2026-09-07",
+      "sourceAgent": "vfbooks.py brief",
+      "payload": {
+        "missingInvoiceCount": 0,
+        "briefSlot": "02"
+      }
+    }
+  ]
+}

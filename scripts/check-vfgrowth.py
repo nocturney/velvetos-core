@@ -22,6 +22,7 @@ VOICE = ROOT / "packages" / "vfcopy" / "VOICE.md"
 VOICE_RESEARCH = ROOT / "packages" / "vfcopy" / "VOICE-RESEARCH.md"
 STORIES = ROOT / "packages" / "vfcopy" / "hq" / "templates" / "ig-stories.md"
 FOLLOWER = ROOT / "packages" / "vfgrowth" / "hq" / "FOLLOWER-GROWTH.md"
+FUNNEL = ROOT / "packages" / "vfgrowth" / "hq" / "PROFILE-TO-WHATSAPP.md"
 TAGS = ROOT / "constitution" / "tags.md"
 AGENTS = ROOT / "AGENTS.md"
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
@@ -44,7 +45,7 @@ def assert_no_ils(path: Path) -> None:
 
 
 def main() -> None:
-    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, COPY_G004, STORIES_FIX, STORIES_PLAY, VOICE, VOICE_RESEARCH, STORIES, FOLLOWER, PREFLIGHT, PREFLIGHT_G004):
+    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, COPY_G004, STORIES_FIX, STORIES_PLAY, VOICE, VOICE_RESEARCH, STORIES, FOLLOWER, FUNNEL, PREFLIGHT, PREFLIGHT_G004):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
         assert_no_ils(path)
@@ -226,6 +227,15 @@ def main() -> None:
     for needle in ("80", "0", "היילייטס", "050-2517000", "ריל תהליך", "אאוטבאונד"):
         if needle not in follower:
             fail(f"FOLLOWER-GROWTH.md missing {needle!r}")
+    if "PROFILE-TO-WHATSAPP" not in follower:
+        fail("FOLLOWER-GROWTH.md must point at PROFILE-TO-WHATSAPP.md")
+
+    funnel = FUNNEL.read_text()
+    for needle in ("תהליך-קצר", "סיפור-מוצר", "050-2517000", "אין ספירה", "PREFLIGHT", "שלחו DM"):
+        if needle not in funnel:
+            fail(f"PROFILE-TO-WHATSAPP.md missing {needle!r}")
+    if "ריל כל יום" in funnel and "אין ריל כל יום" not in funnel:
+        fail("PROFILE-TO-WHATSAPP.md must not schedule a reel every weekday")
 
     tags = TAGS.read_text()
     for needle in ("#צמיחה-חברתית", "#ריל-תהליך", "#היילייטס", "#המרת-פרופיל", "social-growth"):

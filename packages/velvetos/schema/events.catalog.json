@@ -110,6 +110,20 @@
       "note": "Draft reel/story ready for PREFLIGHT/vfigos — not a live publish claim"
     },
     {
+      "id": "shelf.scan_pass",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["scanDay", "shelfReady", "namedModels"],
+      "note": "Sun/Wed MakerWorld pass; namedModels stay empty until GATE+slice. HQ does not run Orca"
+    },
+    {
+      "id": "books.integrity_flag",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["missingInvoiceCount", "briefSlot"],
+      "note": "Internal missing-invoice flag for slot 02; no customer collection mail"
+    },
+    {
       "id": "sync.completed",
       "direction": "edge→kernel",
       "emits": "edge",

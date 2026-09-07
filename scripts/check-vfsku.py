@@ -133,6 +133,25 @@ def main() -> None:
     if 'add_parser("scan"' not in cli_src and "add_parser('scan'" not in cli_src:
         fail("vfsku.py must expose a scan subcommand")
 
+    import subprocess
+
+    sun = subprocess.run(
+        [sys.executable, str(CLI), "scan", "--date", "2026-09-06"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if sun.returncode != 0 or "יום סריקה" not in (sun.stdout or ""):
+        fail("vfsku.py scan on Sunday must say יום סריקה")
+    mon = subprocess.run(
+        [sys.executable, str(CLI), "scan", "--date", "2026-09-07"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if mon.returncode != 0 or "לא יום סריקה" not in (mon.stdout or ""):
+        fail("vfsku.py scan on Monday must say לא יום סריקה")
+
     lab = LAB.read_text()
     if "print-in-place" not in lab.lower() and "קופסה" not in lab:
         fail("LAB.md must keep a print-in-place / box direction")
@@ -157,6 +176,8 @@ def main() -> None:
         fail("vlicense/GATE.md must mark international commercial vs Israeli brand")
     if "TAG.md" not in license_gate:
         fail("vlicense/GATE.md must point VF tags at vfsku/TAG.md")
+    if "CC BY-NC" not in license_gate and "NC" not in license_gate:
+        fail("vlicense/GATE.md must lock NC as not-for-sale")
 
     brief = BRIEF.read_text()
     if "vfsku.py" not in brief:
@@ -165,7 +186,7 @@ def main() -> None:
         fail("BRIEF-SLOTS.md must hook slot 03 to vfsku.py")
 
     week = WEEK.read_text()
-    for needle in ("MakerWorld", "אין שם להציע", "הורדה", "G004"):
+    for needle in ("MakerWorld", "אין שם להציע", "הורדה", "G004", "MAKERWORLD-SCAN", "vfsku.py scan"):
         if needle not in week:
             fail(f"vfsku/week.md missing {needle!r}")
 
