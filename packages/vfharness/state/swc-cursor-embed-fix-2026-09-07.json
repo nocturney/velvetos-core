@@ -1,0 +1,27 @@
+{
+  "task_id": "swc-cursor-embed-fix-2026-09-07",
+  "status": "done",
+  "pack": "vfharness",
+  "completed_steps": [
+    "base main 556c998",
+    "PRs #109–#114 opened; #105 coordination updated",
+    "SWC-CODEX-001 phase A documented as merged #108",
+    "GrokBot G003/G004/ROUTINES + VF#3 preserved"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "https://github.com/nocturney/velvetos-core/pull/109",
+    "https://github.com/nocturney/velvetos-core/pull/110",
+    "https://github.com/nocturney/velvetos-core/pull/111",
+    "https://github.com/nocturney/velvetos-core/pull/112",
+    "https://github.com/nocturney/velvetos-core/pull/113",
+    "https://github.com/nocturney/velvetos-core/pull/114"
+  ],
+  "unresolved": [
+    "merge path: agent gh is read-only — PRs ready for Cursor/owner merge",
+    "stacked PRs #111/#113 retarget to main after #109 merges",
+    "GrokBot live G003/G004 publish remains GrokBot-owned (not this agent)"
+  ],
+  "last_updated": "2026-09-07",
+  "verification": "sensors green on feature branches; artifacts under /opt/cursor/artifacts"
+}
