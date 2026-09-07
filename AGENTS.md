@@ -18,7 +18,7 @@ BUILD: (no app binary — the catalog is the product)
 TEST: python3 scripts/check-all.py
 LINT: python3 scripts/check-hq-overlay.py && python3 scripts/check-vf-desk.py && python3 scripts/check-velvetos.py
 
-Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`.
+Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`, `docs/AUTONOMY-TOOLS.md`.
 
 ## RULES
 

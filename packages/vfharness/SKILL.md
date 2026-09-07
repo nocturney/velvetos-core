@@ -29,3 +29,7 @@
 סוכן HQ לא לוחץ Publish / Send / Boost / DM. אדם כן יכול לפרסם חי בזמן failover עם LIVE-PACKET. אין להמציא ₪ / Insights, אין CrewAI/AutoGPT, אין פק כפול, אין להסתיר סנסור אדום.
 
 ראה `hq/PLAYBOOK.md` ו-`EMBED.md`.
+
+## סולם הסלמה הדרגתי (2026-09-07)
+
+`scripts/vf_graceful_escalation.py` — 4 שלבים לפני הסלמה לאדם, במקום עצירה בינארית. פירוט מלא: [`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md).
