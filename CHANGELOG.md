@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **Print·Demand·Sound + Print-Done + לולאת פרנסה ברטרו:** דופק מחקר שבועי `vfresearch/hq/PRINT-DEMAND.md` (ויזואל 3D + ביקוש IL + סאונד; בלי אוטו־DM) · כרטיס רצפה `vfprod/PRINT-DONE.md` + אירועי `print.done` / `content.draft_ready` · רטרו עם פניות↔דגמים↔חומרים + kinds ב־`vf_retro_signals` · סנסורים check-vfresearch/velvetos/vfops-loop. בלי פק חדש / בלי DM engine / בלי poll→print. Office loop embed: research pulse + floor card → draft reel + revenue retro.
+
 - 2026-09-07 — **SoC שלוש שכבות + חוזה אירועים + Degraded + retro→signal:** ADR `velvetos/ADR-THREE-LAYERS.md` · `LAYERS.md` · `schema/events.catalog.json` + envelope · checkpoint `component_state` · `degraded-mode.md` + שם ב־ORCHESTRA · `vf_retro_signals.py` → `retro-signals.json` לבריף · ANTI-PATTERN נגד Core-as-nervous-runtime / zero-touch על ₪·WA. סנסורים: check-velvetos / check-vfharness / check-vfops-loop. בלי broker / runtime שני. Three-layer SoC embed; disk event contract; named Degraded Mode; retro signals to brief.
 
 - 2026-09-07 — **יציבות ליבה · ארבעה צירים:** (1) כתיבה אטומית ל־`semantic_index.pkl` (`os.replace`) · (2) `vf_send_preflight.py` לפני שליחה (desk+מפתח, בלי רשת; `--gate` יציאה 2=failover) · (3) חוזה יום Markdown ל־`owner-memory` (מושב/למדנו/מקור) + סנסור ב־`check-vfops-loop` · (4) `attach-core.sh` אופליין/stale-OK + `VELVETOS_CORE_PATH` + stamp. ADR: `vfharness/playbooks/core-stability-four-axes.md`. בלי Jinja / repository_dispatch / Pydantic. Core stability four axes on existing harness.

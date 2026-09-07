@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-07T17:34:59+03:00",
+  "generatedAt": "2026-09-07T18:13:14+03:00",
   "timezone": "Asia/Jerusalem",
   "rule": "Operational signals for office brief only. No invented ₪/Insights. No owner shame.",
   "catalogEvent": "retro.anomaly",
@@ -9,6 +9,13 @@
       "evidence": "owner-memory/2026-09-01",
       "briefSlot": "05",
       "detail": "- **מושב:** lead + ops",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "model_demand",
+      "evidence": "owner-memory/2026-09-02",
+      "briefSlot": "01",
+      "detail": "- **מושב:** ייצור",
       "event": "retro.anomaly"
     },
     {
@@ -40,6 +47,34 @@
       "event": "retro.anomaly"
     },
     {
+      "kind": "model_demand",
+      "evidence": "owner-memory/2026-09-07",
+      "briefSlot": "01",
+      "detail": "- **מושב:** מחקר + ייצור + ראש צוות",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "model_demand",
+      "evidence": "DAILY-RETRO.md#2026-09-07",
+      "briefSlot": "01",
+      "detail": "מה עבד: הוטמעו `PRINT-DEMAND` / `PRINT-DONE` / לולאת פרנסה ברטרו — בלי פק חדש ובלי אוטו־DM.",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "ingest_bottleneck",
+      "evidence": "DAILY-RETRO.md#2026-09-07",
+      "briefSlot": "05",
+      "detail": "מה לא: אין גלם רצפה חי למשמרת — כרטיס print.done ממתין להדפסה אמיתית.",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "ingest_bottleneck",
+      "evidence": "DAILY-RETRO.md#2026-09-07",
+      "briefSlot": "05",
+      "detail": "מה לא: אין reach מאומת ב־CSV — לא ממלאים.",
+      "event": "retro.anomaly"
+    },
+    {
       "kind": "sensor_repeat_fail",
       "evidence": "vfharness/state/access-blockers-2026-09-01.json",
       "briefSlot": "01",
@@ -52,41 +87,6 @@
       "briefSlot": "01",
       "detail": "task=agency-quality-gap-2026-09-07 component_state=None",
       "event": "retro.anomaly"
-    },
-    {
-      "kind": "sensor_repeat_fail",
-      "evidence": "vfharness/state/gemini-api-bridge-2026-09-05.json",
-      "briefSlot": "01",
-      "detail": "task=gemini-api-bridge-2026-09-05 component_state=None",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "sensor_repeat_fail",
-      "evidence": "vfharness/state/grok-failover-2026-08-31.json",
-      "briefSlot": "01",
-      "detail": "task=grok-failover-2026-08-31 component_state=None",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "sensor_repeat_fail",
-      "evidence": "vfharness/state/hq-health-2026-09-06.json",
-      "briefSlot": "01",
-      "detail": "task=hq-health-2026-09-06 component_state=None",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "sensor_repeat_fail",
-      "evidence": "vfharness/state/initial-retro-2026-09-01.json",
-      "briefSlot": "01",
-      "detail": "task=initial-retro-2026-09-01 component_state=None",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "sensor_repeat_fail",
-      "evidence": "vfharness/state/ops-publish-snapshot-pulse-2026-09-01.json",
-      "briefSlot": "01",
-      "detail": "task=ops-publish-snapshot-pulse-2026-09-01 component_state=None",
-      "event": "retro.anomaly"
     }
   ],
   "summary": {
@@ -94,6 +94,7 @@
     "kinds": [
       "ingest_bottleneck",
       "inquiry_lag",
+      "model_demand",
       "sensor_repeat_fail"
     ]
   }

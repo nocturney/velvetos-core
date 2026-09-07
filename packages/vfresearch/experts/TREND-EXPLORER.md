@@ -8,6 +8,7 @@ Treg **לא רלוונטי**. WebSearch / orchestra בלבד.
 - פתיחת עונה (`#vfseason`)
 - סאונד לריל (`MUSIC.md` + `vf-ig-music` skill)
 - סקירת קישורי השראה שבועית (`WEEKLY.md` + `LINKS.json`)
+- דופק Print·Demand·Sound (`hq/PRINT-DEMAND.md`) — ויזואל 3D + ביקוש IL + סאונד
 - פורמט תוכן חדש לבדיקה (קרוסלה, POV, timelapse)
 
 ## שרשרת
@@ -50,7 +51,8 @@ Treg **לא רלוונטי**. WebSearch / orchestra בלבד.
 
 ## שבועי (חובה)
 
-`.cursor/skills/vf-weekly-links/SKILL.md` — `@research-synthesist`
+`.cursor/skills/vf-weekly-links/SKILL.md` — `@research-synthesist`  
++ `hq/PRINT-DEMAND.md` באותו מעבר (בלי אוטו־DM / בלי Insights מומצאים).
 
 ## לולאת שיפור
 

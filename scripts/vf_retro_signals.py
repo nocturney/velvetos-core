@@ -25,7 +25,15 @@ TZ = ZoneInfo("Asia/Jerusalem")
 FAIL_PAT = re.compile(
     r"(סנסור\s*אדום|sensor\s*fail|FAIL\s+check-|נכשל|needsAuth|failover|Degraded|"
     r"חסר\s+מפתח|אין\s+MCP|צוואר\s*בקבוק|לא\s+נסגר|פניות?\s+פתוח|"
-    r"ingest|bottleneck)",
+    r"ingest|bottleneck|preflight\s*נכשל)",
+    re.I,
+)
+DEMAND_PAT = re.compile(
+    r"(מק[\"״]?ט|SKU|דגם|פניו?ת.*(דגם|מוצר)|ביקוש|לולאת\s*פרנסה)",
+    re.I,
+)
+MATERIAL_PAT = re.compile(
+    r"\b(PETG|PLA|ASA|ABS|TPU|Nylon|PA12|PEBA)\b|חומר\s*חוזר|מדף\s*חומר",
     re.I,
 )
 SENSOR_NAME = re.compile(r"check-[\w-]+\.py|vf_\w+\.py|[A-Za-z]+ MCP|Canva|Gmail|Drive", re.I)
@@ -60,17 +68,24 @@ def scan_memory(days: set[str]) -> list[dict]:
     for day, body in DAY_BLOCK.findall(text):
         if day not in days:
             continue
-        if not FAIL_PAT.search(body):
+        kind = None
+        if FAIL_PAT.search(body):
+            sensors = SENSOR_NAME.findall(body)
+            kind = "sensor_repeat_fail" if sensors else "ingest_bottleneck"
+            if re.search(r"פניות?|לא\s+נסגר|inquiry", body, re.I):
+                kind = "inquiry_lag"
+        elif DEMAND_PAT.search(body):
+            kind = "model_demand"
+        elif MATERIAL_PAT.search(body):
+            kind = "material_signal"
+        if not kind:
             continue
         sensors = SENSOR_NAME.findall(body)
-        kind = "sensor_repeat_fail" if sensors else "ingest_bottleneck"
-        if re.search(r"פניות?|לא\s+נסגר|inquiry", body, re.I):
-            kind = "inquiry_lag"
         hits.append(
             {
                 "kind": kind,
                 "evidence": f"owner-memory/{day}",
-                "briefSlot": "01" if kind in {"sensor_repeat_fail", "inquiry_lag"} else "05",
+                "briefSlot": "01" if kind in {"sensor_repeat_fail", "inquiry_lag", "model_demand"} else "05",
                 "detail": body.strip().splitlines()[0][:160] if body.strip() else day,
                 "sensors": sorted({s for s in sensors}),
             }
@@ -83,11 +98,41 @@ def scan_retro() -> list[dict]:
         return []
     text = RETRO.read_text(encoding="utf-8")
     hits: list[dict] = []
-    # Look at trailing log sections with today's or recent date in heading
-    for m in re.finditer(r"(?m)^## לוג · (\d{4}-\d{2}-\d{2}).*?\n(.*?)(?=^## |\Z)", text, re.S):
+    # Log entries use ### לוג · YYYY-MM-DD (history header is ## לוג · היסטוריה)
+    for m in re.finditer(
+        r"(?m)^### לוג · (\d{4}-\d{2}-\d{2}).*?\n(.*?)(?=^### לוג · |\Z)",
+        text,
+        re.S,
+    ):
         day, body = m.group(1), m.group(2)
         if day not in window_days(7):
             continue
+        if DEMAND_PAT.search(body):
+            hits.append(
+                {
+                    "kind": "model_demand",
+                    "evidence": f"DAILY-RETRO.md#{day}",
+                    "briefSlot": "01",
+                    "detail": next(
+                        (ln.strip() for ln in body.splitlines() if DEMAND_PAT.search(ln)),
+                        body.strip().splitlines()[0][:160] if body.strip() else day,
+                    ),
+                    "sensors": [],
+                }
+            )
+        if MATERIAL_PAT.search(body):
+            hits.append(
+                {
+                    "kind": "material_signal",
+                    "evidence": f"DAILY-RETRO.md#{day}",
+                    "briefSlot": "05",
+                    "detail": next(
+                        (ln.strip() for ln in body.splitlines() if MATERIAL_PAT.search(ln)),
+                        body.strip().splitlines()[0][:160] if body.strip() else day,
+                    ),
+                    "sensors": [],
+                }
+            )
         if "מה לא" in body or FAIL_PAT.search(body):
             hits.append(
                 {

@@ -61,6 +61,20 @@
       "note": "From vf_retro_signals.py — operational alert to brief, not owner shame"
     },
     {
+      "id": "print.done",
+      "direction": "edge→kernel→office",
+      "emits": "edge",
+      "payloadKeys": ["sku", "material", "grams", "minutes", "mediaPath", "license"],
+      "note": "Successful print card for content handoff; HQ does not drive printers. Missing media = חסר"
+    },
+    {
+      "id": "content.draft_ready",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["jobId", "format", "preflightPath"],
+      "note": "Draft reel/story ready for PREFLIGHT/vfigos — not a live publish claim"
+    },
+    {
       "id": "sync.completed",
       "direction": "edge→kernel",
       "emits": "edge",

@@ -1,0 +1,43 @@
+{
+  "task_id": "print-demand-loop-2026-09-07",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfresearch",
+  "goal": "Embed autonomous research pulse + print.done→draft reel + revenue retro without new pack or auto-DM",
+  "completed_steps": [
+    "PRINT-DEMAND playbook + weekly/HQ-ROUTINE wiring",
+    "PRINT-DONE card + FLOOR + hybrid-reel trigger + events catalog",
+    "DAILY-RETRO revenue loop + vf_retro_signals kinds",
+    "sensors check-vfresearch/velvetos/vfops-loop",
+    "skills MAP desk notes"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "packages/vfresearch/hq/PRINT-DEMAND.md",
+    "packages/vfresearch/sources/2026-09-07-print-demand.md",
+    "packages/vfprod/PRINT-DONE.md",
+    "packages/vfprod/hq/PRINT-CARD-TEMPLATE.md",
+    "packages/velvetos/schema/events.catalog.json",
+    "scripts/vf_retro_signals.py"
+  ],
+  "unresolved": [
+    "Live weekly WebSearch/last30 pass still pending next Sunday cadence",
+    "No live floor timelapse in this session — print.done waits for real print"
+  ],
+  "escalation": null,
+  "last_updated": "2026-09-07",
+  "events": [
+    {
+      "name": "content.draft_ready",
+      "producedAt": "2026-09-07",
+      "layer": "office",
+      "source": "print-demand-loop embed",
+      "payload": {
+        "jobId": "print-demand-loop-2026-09-07",
+        "format": "playbooks",
+        "preflightPath": null
+      }
+    }
+  ],
+  "latest_observation": "Embedded three approved loops into existing packs; DM engine and poll→print stay locked."
+}

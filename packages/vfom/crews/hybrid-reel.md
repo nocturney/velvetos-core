@@ -13,6 +13,15 @@ Packs: `vfprod`, `vfcanva`, `vfcovers`, `vfcopy`, `vfigos`.
 | Gate | `vfigos` | Review the mix. | Publish |
 | Human | — | Approves overlay density. | — |
 
+## Trigger from Print-Done
+
+When production hands a filled `packages/vfprod/PRINT-DONE.md` card (event `print.done`):
+
+1. Require `mediaPath` / Drive id on the card. Missing → **חסר**. Stop.
+2. Prefer material / minutes / grams from the card only — never invent specs for on-film text.
+3. After beat list + caption + cover brief exist, emit `content.draft_ready` (preflight still required before schedule).
+4. Do not publish from this crew.
+
 ## Run
 
 1. Anchor medium first. Typical VF mix: timelapse → de-support / finish → hero still. Missing a beat → **חסר**, keep the pack partial.

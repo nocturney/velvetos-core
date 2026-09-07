@@ -169,6 +169,14 @@
 - **מחר:** סוכן על `sderot-mac` יכול להריץ `agy` / `codex` בטרמינל המק. Worker לא נסגר. `--computer-use` עדיין לא.
 - **מקור:** שיחת בעלים 5.9.2026.
 
+### 2026-09-07 (print-demand · print.done · retro loop)
+
+- **מושב:** מחקר + ייצור + ראש צוות
+- **למדנו:** מחקר אוטונומי מתאים = Print·Demand·Sound שבועי על `vfresearch` — לא DM Engine. Print→Post = כרטיס `print.done` → טיוטה → PREFLIGHT, לא פרסום אוטומטי מהמדפסת.
+- **למדנו:** רטרו יומי כולל לולאת פרנסה (פניות↔דגמים↔חומרים) + אותות `model_demand` / `material_signal` ל־`vf_retro_signals`.
+- **מחר:** מעבר שבועי חי עם WebSearch/last30; כרטיס print.done בהדפסה התקינה הבאה.
+- **מקור:** שיחת בעלים 7.9.2026 · `PRINT-DEMAND.md` · `PRINT-DONE.md` · `DAILY-RETRO.md`.
+
 ### 2026-09-07 (מושב מחקר — הרצת כל החוקרים)
 
 - **מושב:** מחקר/אורקסטרציה

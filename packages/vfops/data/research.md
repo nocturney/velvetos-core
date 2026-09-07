@@ -12,6 +12,7 @@
 - vfmem semantic index --build (3938 chunks → semantic_index.pkl; gitignored)
 - vfinsights loop → LEARNINGS.md (0/1 measured — אין reach אמיתי; לא נוחש)
 - שבועי קישורים — אין חדש במשרד (sources/2026-09-07-weekly-links.md · 76 קישור)
+- print-demand — תבנית הוטמעה (sources/2026-09-07-print-demand.md); מעבר מקורות חי במעבר השבועי הבא
 - best-skills — triage ב־vfconvert + quote-ladder ב־vfsales + diagnosing-bugs ב־systematic-debugging (dataDate 2026-09-07)
 - LAST30 — שני ארטיפקטים באותו נושא (ראה LAST30.md · ריצה אחרונה)
 - vf_graceful_escalation --self-test OK · vf_quote_ladder sensor-check → חסר: + X ₪
@@ -27,6 +28,7 @@
 - `packages/vfresearch/sources/2026-09-07-orchestra.md`
 - `packages/vfresearch/sources/2026-09-07-best-skills.md`
 - `packages/vfresearch/sources/2026-09-07-weekly-links.md`
+- `packages/vfresearch/sources/2026-09-07-print-demand.md`
 - `packages/vfresearch/sources/2026-09-07-ig-maker-engagement-last30.md` (#106)
 - `packages/vfresearch/sources/2026-09-07-maker-ig-reels-engagement-last30.md` (ענף זה)
 - `packages/vfresearch/HQ-ROUTINE.md`
