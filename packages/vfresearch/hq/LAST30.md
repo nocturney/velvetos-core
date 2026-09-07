@@ -130,3 +130,9 @@ Google מצטבר עורכים. כאן — קהילה.
 - X/TikTok keys בגיט או על הסוכן
 - פק חדש לרעיון מחקר
 - הצגת WebSearch-בלבד כאילו רצו את מנוע last30days המלא — לציין במפורש: **דפוס VF / כלי משרד**
+
+## ריצה אחרונה
+
+| תאריך | נושא | ארטיפקט | מסירה |
+|---|---|---|---|
+| 2026-09-07 | maker IG Reels engagement (topic) | `sources/2026-09-07-maker-ig-reels-engagement-last30.md` | `vfcopy` · `vfgrowth` · בלוק 06 = «אין ספירה» עד CSV |

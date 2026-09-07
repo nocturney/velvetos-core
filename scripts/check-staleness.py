@@ -63,9 +63,12 @@ def check_running_checkpoints(today: date) -> list[str]:
         except json.JSONDecodeError:
             stale.append(f"{path.name}:invalid-json")
             continue
+        # Ladder logs are JSON arrays; only object checkpoints carry status.
+        if not isinstance(data, dict):
+            continue
         if data.get("status") != "running":
             continue
-        updated = data.get("last_updated")
+        updated = data.get("last_updated") or data.get("ts") or data.get("updated")
         if not updated:
             stale.append(f"{path.name}:missing-last_updated")
             continue

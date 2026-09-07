@@ -64,3 +64,11 @@
 
 בריף 07:00 קורא את `owner-memory.md` (בלוק קצר) — לא תיבת דואר.  
 `python3 scripts/vfmem.py who "daily retro"` → מסלול זה.
+
+---
+
+## לוג · 2026-09-07 (מושב מחקר)
+
+מה עבד: אינדקס סמנטי נבנה; Insights loop כנה (0 measured); weekly + best-skills + LAST30 עם ארטיפקטים; quote-ladder מוריד ל־`חסר:` בלי ₪ מומצא.  
+מה לא: אין reach מאומת ב־CSV — לא ממלאים.  
+מה לשנות מחר: בעלים מדביק Insights; המשרד לא מעלה מדדים חלשים לראש צוות.
