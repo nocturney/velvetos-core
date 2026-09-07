@@ -70,3 +70,5 @@ packages/vfgrowth/preflight/<G00X-or-sku>.md
 `vfops_loop.py handoff` מדפיס את הנתיב. בלי נתיב + שער עבור = השורה נשארת חסומה.
 
 אין Publish מכאן. אין ₪ מכירה. אין Insights מומצאים.
+
+מפעל אורגני (`ORGANIC_GROWTH.md`): אחרי PREFLIGHT — `policy_checked` ואז תור 07:00. אישור אדם ≠ פרסום.

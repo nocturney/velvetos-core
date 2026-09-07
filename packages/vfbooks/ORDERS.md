@@ -8,7 +8,7 @@ Invoice4U נשאר מערכת הסגירה אחרי סכום מראש צוות. 
 
 | קובץ | מה | ריק = |
 |---|---|---|
-| `data/orders.json` | הזמנות פתוחות בלי שמות מיותרים | אין ספירה |
+| `data/orders.json` | הזמנות פתוחות בלי שמות מיותרים (ספר לחריץ 02; לא `vfsales/data/orders.json`) | אין ספירה |
 | `data/invoice4u-snapshot.json` | חוב / שולם שהבעלים הדביק | אין ספירה |
 | `office/ledger/live/jobs.csv` | יומן עבודות (`vf_office.py jobs`) | אין ספירה |
 

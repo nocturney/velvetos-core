@@ -28,6 +28,7 @@
     "Research/orchestra seat (TEAM.md): packages/vfresearch/HQ-ROUTINE.md — daily orchestra, bi-daily best-skills, weekly links, monthly last30, end-of-day learning. No new pack / no second runtime.",
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md + Print·Demand·Sound (hq/PRINT-DEMAND.md). Same-day append for new URLs. No invented bodies. No auto-DM.",
     "Print-done handoff: packages/vfprod/PRINT-DONE.md card → vfom draft → PREFLIGHT → vfigos. HQ does not drive printers or auto-publish.",
+    "Organic Growth Control Plane: constitution/ORGANIC_GROWTH.md + vfgrowth/ORGANIC-GROWTH.md + scripts/vf_organic_growth.py. Drafts + 07:00 approval pack. No autopost, no auto-DM, no poll→Print, no certain conversion from WhatsApp.",
     "Floor fleet: packages/vfprod/FLEET.json + ROUTING.md — recommend bed by material (PETG/ASA/Nylon/PEBA). Watchtower stays Edge. Maintenance snapshot empty = אין ספירה.",
     "07:00 brief pulls orders.json + Invoice4U snapshot from disk (not inbox). Slot 01 one-click gates (GATES.json) are human — not WhatsApp close, not Print.",
     "B2B hyper-local is a pickup/WhatsApp pattern (LOCAL-B2B.md). Logo/QR/napkins stay examples, not a closed three-SKU catalog. Line locked until lead opens vfbiz.",
@@ -878,6 +879,7 @@
     ".cursor/skills/vf-velvetos/SKILL.md",
     ".cursor/skills/vf-daily-learning/SKILL.md",
     ".cursor/skills/vf-revenue-loop/SKILL.md",
+    ".cursor/skills/vf-organic-growth/SKILL.md",
     ".cursor/skills/vf-canva-instagram/SKILL.md"
   ]
 }

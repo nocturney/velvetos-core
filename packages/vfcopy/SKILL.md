@@ -10,4 +10,4 @@
 לינט anti-AI בעברית: `hq/ai-tells-he.md` (מ־write-better + Humanizer, בלי skill נפרד).  
 מסגרות אופציונליות: `vfmskill` (`copywriting` / `copy-editing`). החוקה + `VOICE.md` מנצחים.  
 מגישים ל־`#vfsales` ו־`#vfgrowth`. HQ שולח דרך כלים כשהטיוטה מוכנה (`constitution/SEND.md`).  
-לוח קבוע: `vfgrowth/CALENDAR.md`. G003 נעול ב־`G003.md`. G004 מחזיק-קטלבל ב־`G004.md` (סיפור-מוצר). סטוריז חי: `G004-STORIES-FIX.md` + `vfgrowth/STORIES.md`. תבנית: `hq/templates/ig-stories.md` (נייבי-זהב, CTA היילייטס+וואטסאפ). בלי Canva/vfcovers = לא משבצים. שיבוץ ב־instagram.com. רואים `hq/PLAYBOOK.md`.
+לוח קבוע: `vfgrowth/CALENDAR.md`. G003 נעול ב־`G003.md`. G004 מחזיק-קטלבל ב־`G004.md` (סיפור-מוצר). סטוריז חי: `G004-STORIES-FIX.md` + `vfgrowth/STORIES.md`. תבנית: `hq/templates/ig-stories.md` (נייבי-זהב, CTA היילייטס+וואטסאפ). ריל אורגני: `hq/templates/organic-reel.md`. בלי Canva/vfcovers = לא משבצים. שיבוץ ב־instagram.com. רואים `hq/PLAYBOOK.md`.

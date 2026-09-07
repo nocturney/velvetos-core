@@ -43,7 +43,7 @@ event: print.done
 ## מסירה
 - יעד תוכן: ריל / סטורי / דולג
 - מסר לצמיחה: vfom hybrid-reel או clip-factory
-- סטטוס: card_ready → draft → preflight → scheduled / blocked
+- סטטוס: card_ready → draft → preflight → pending_human_approval / blocked
 ```
 
 Envelope מינימלי (checkpoint / קובץ אירוע):
@@ -86,8 +86,10 @@ CLI לבריף 03/07: `python3 scripts/vfprod.py print-done` (כרטיסים ב�
 - אין חיבור HQ→מצלמת Bambu/Snapmaker/Elegoo כדמון בריפו Core (Edge עתידי / Grok־רצפה).
 - Watchtower (דשבורד חווה) = מקור Edge אפשרי לכרטיס הזה — [`WATCHTOWER.md`](WATCHTOWER.md). לא Print מ־HQ; לא Publish אוטומטי.
 - אין תזמון ישר לפיד בלי PREFLIGHT.
-- אין Print מ־HQ · אין סקר→הדפסה · אין אוטו־DM.
+- אין Print מ־HQ · אין סקר→הדפסה מ־HQ · אין אוטו־DM · Work Order קהילה = `pending_ops` בלבד (`vfgrowth/COMMUNITY.md`).
 - גרמים/דקות חסרים = `חסר` — לא ניחוש ל־`vfcost` / כיתוב.
+- תביעות חום/חוזק: `CLAIMS.md` — ריק עד מקור מאומת.
+- אחרי כרטיס: מפעל תוכן `vfgrowth/ORGANIC-GROWTH.md` + `python3 scripts/vf_organic_growth.py brief`.
 
 ## קישורים
 

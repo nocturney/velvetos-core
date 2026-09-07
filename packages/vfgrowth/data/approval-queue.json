@@ -1,0 +1,17 @@
+{
+  "updatedAt": "2026-09-07",
+  "rule": "Core never sets posted_manually. Human marks after instagram.com upload.",
+  "items": [
+    {
+      "content_id": "story_poll_2026-09-07_petg_nylon",
+      "format": "story",
+      "gate": "pending_human_approval",
+      "slot": "20:30",
+      "calendar_rule": "Sun-Thu only",
+      "poll_id": "petg_vs_nylon",
+      "cta": "050-2517000",
+      "human_marked": false,
+      "marked_by": null
+    }
+  ]
+}

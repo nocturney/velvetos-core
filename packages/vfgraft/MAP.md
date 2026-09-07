@@ -41,6 +41,7 @@ command-surface system       capabilities + pipeline board + portlets (future UI
 | weekly inspiration links / share refresh | [[packs]] → `vfresearch/WEEKLY.md` + `LINKS.json` → [[laws]] |
 | print-demand / טרנדים 3D + ביקוש IL + סאונד | [[packs]] → `vfresearch/hq/PRINT-DEMAND.md` → [[content-job]] → [[laws]] |
 | print.done / אחרי הדפסה → טיוטת ריל | `vfprod/PRINT-DONE.md` → `vfom/crews/hybrid-reel.md` → [[content-job]] → [[laws]] |
+| Organic Growth / מפעל תוכן / Decision Pack 07:00 | `constitution/ORGANIC_GROWTH.md` + `vfgrowth/ORGANIC-GROWTH.md` + `vf_organic_growth.py` → [[content-job]] → [[morning-job]] → [[laws]] |
 | MakerWorld scan א׳+ד׳ | `vfresearch/hq/MAKERWORLD-SCAN.md` + `vfsku.py scan` → [[packs]] → [[laws]] |
 | משפך פרופיל→וואטסאפ | `vfgrowth/hq/PROFILE-TO-WHATSAPP.md` → [[content-job]] → [[laws]] |
 | חשבונית חסרה / בקרת ספר | `vfbooks/INTEGRITY.md` + `vfbooks.py brief` → [[morning-job]] → [[laws]] |

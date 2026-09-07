@@ -43,6 +43,7 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 | Cost / ledger | `vfcost` `vfbooks` | `@pricing-analyst` `@bookkeeper-controller` | Gmail label חשבונות; never invent ₪ |
 | Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive search **or create** by job name; bed **recommend** `vfprod.py route` (no Print from HQ); catalog `vfsku.py scan`; 3D AI Studio mesh via `vfprod/3DAISTUDIO.md` |
 | Covers / content pack | `vfcovers` `vfgrowth` | `@visual-storyteller` `@image-prompt-engineer` | Canva first; Superdesign failover |
+| Organic Growth Control Plane | `vfgrowth` `vfprod` `vfinsights` `vfsales` | `@instagram-curator` `@offer-lead-gen-strategist` | `ORGANIC_GROWTH.md` + `vf_organic_growth.py` — drafts + 07:00 pack; no autopost / no auto-DM |
 | Marketing frameworks | `vfmskill` | `@content-creator` `@growth-hacker` | Curated Corey Haines skills. Read `.agents/product-marketing.md` first. No send. |
 | Reel plan / timelapse cut | `vfom` | `@visual-storyteller` `@instagram-curator` | OpenMontage crews; Canva stills; no Remotion vendor |
 | IG board | `vfigos` | `@instagram-curator` | Review, schedule, **send via tools** (`vfigos/SEND.md`) |

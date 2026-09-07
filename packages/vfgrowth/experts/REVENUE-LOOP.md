@@ -72,3 +72,4 @@ retention                @customer-success-manager
 ## אסור
 
 - אוטו-DM · בוסט בלי lead · ₪ / Insights מומצאים · «שלחו DM»
+- לסמן המרה ודאית רק כי הגיעה הודעת וואטסאפ (`ATTRIBUTION.md`)

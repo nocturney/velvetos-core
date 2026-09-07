@@ -1,0 +1,22 @@
+{
+  "updatedAt": "2026-09-07",
+  "rule": "Only polls the floor can actually run. Missing filament = do not offer that option.",
+  "polls": [
+    {
+      "poll_id": "petg_vs_nylon",
+      "question": "מה לבדוק מחר במעבדה?",
+      "options": ["PETG מול Nylon", "חוזק מול עמידות חום"],
+      "requires": ["PETG", "Nylon"],
+      "test_protocol": "cantilever_load_test_v1",
+      "followup": "reel_result"
+    },
+    {
+      "poll_id": "tpu_vs_pla",
+      "question": "איזה מבחן גמישות תרצו לראות?",
+      "options": ["TPU מול PLA", "התאמה רכה למעטפת"],
+      "requires": ["TPU", "PLA"],
+      "test_protocol": "flex_fit_test_v1",
+      "followup": "reel_result"
+    }
+  ]
+}

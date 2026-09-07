@@ -1,0 +1,46 @@
+{
+  "task_id": "organic-growth-plane-2026-09-07",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfgrowth",
+  "goal": "Embed Organic Growth Control Plane on existing packs: drafts + 07:00 approval pack without autopost/auto-DM/poll-to-print",
+  "completed_steps": [
+    "constitution/ORGANIC_GROWTH.md policy + humanGates ig-autopost/auto-dm/user-tag",
+    "vfgrowth factory GATE HASHTAGS COMMUNITY data + templates",
+    "vfprod CLAIMS + print-events fixture; PRINT-DONE pending_ops",
+    "vfsales ORDERS.json null ILS; vfinsights ATTRIBUTION",
+    "vf_organic_growth.py brief/policy/queue/score + check-organic-growth.py",
+    "vfops_loop consumer + brief slots 01/04/07; LOOP.json guides",
+    "desk skill MAP AGENTS anti-pattern"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "constitution/ORGANIC_GROWTH.md",
+    "packages/vfgrowth/ORGANIC-GROWTH.md",
+    "scripts/vf_organic_growth.py",
+    "scripts/check-organic-growth.py",
+    "packages/vfgrowth/data/growth-brief.json"
+  ],
+  "unresolved": [
+    "No live floor timelapse this session — reel stays blocked_no_media until a real print.done with media",
+    "ig-mcp still needsAuth; plane never marks posted_manually",
+    "orders.json empty until human logs WhatsApp leads",
+    "Two orders.json files remain separate: vfsales/data (leads) vs vfbooks/data (ledger/Invoice4U) — do not merge without a product decision"
+  ],
+  "escalation": null,
+  "last_updated": "2026-09-07",
+  "events": [
+    {
+      "name": "content.policy_checked",
+      "producedAt": "2026-09-07",
+      "layer": "office",
+      "source": "organic-growth-plane embed",
+      "payload": {
+        "contentId": "overlay",
+        "gate": "policy_checked",
+        "ok": true
+      }
+    }
+  ],
+  "latest_observation": "Merged origin/main (#123 five studio engines). Slot 01 unions GATES.json click-gates with Organic Growth rows. Approve ≠ publish. Two orders.json files stay in separate packs."
+}

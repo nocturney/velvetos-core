@@ -8,7 +8,10 @@
     "sale-ils",
     "customer-whatsapp-send",
     "boost",
-    "print-from-hq"
+    "print-from-hq",
+    "ig-autopost",
+    "auto-dm",
+    "user-tag-without-optin"
   ],
   "events": [
     {
@@ -108,6 +111,41 @@
       "emits": "office",
       "payloadKeys": ["jobId", "format", "preflightPath"],
       "note": "Draft reel/story ready for PREFLIGHT/vfigos — not a live publish claim"
+    },
+    {
+      "id": "content.policy_checked",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["contentId", "gate", "ok"],
+      "note": "ORGANIC_GROWTH policy pass; fail-closed stays blocked_policy"
+    },
+    {
+      "id": "content.approved_for_manual_posting",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["contentId", "gate"],
+      "note": "Human approval only — does not publish to Instagram"
+    },
+    {
+      "id": "content.posted_manually",
+      "direction": "office→kernel",
+      "emits": "office",
+      "payloadKeys": ["contentId", "humanMarkedBy"],
+      "note": "Only a human marks posted after instagram.com upload. Core API must not emit this."
+    },
+    {
+      "id": "community.work_order",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["workOrderId", "approvalState", "pollQuestion"],
+      "note": "pending_ops only — not Print from HQ, not auto-tag"
+    },
+    {
+      "id": "lead.attributed",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["orderId", "certainty", "sourceContentId"],
+      "note": "Probabilistic attribution; WhatsApp ping is not certain conversion; no invented ₪"
     },
     {
       "id": "shelf.scan_pass",

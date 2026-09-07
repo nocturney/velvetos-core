@@ -23,3 +23,8 @@
 ## מומחה — Revenue Loop
 
 מודול: `expert-revenue-loop` · `experts/REVENUE-LOOP.md` · `@offer-lead-gen-strategist` · skill `vf-revenue-loop`
+
+## מפעל צמיחה אורגני
+
+חוקה: `constitution/ORGANIC_GROWTH.md` · פלייבוק: `ORGANIC-GROWTH.md` · CLI: `python3 scripts/vf_organic_growth.py brief --write`  
+לא מפרסם. לא אוטו־DM. תור 07:00 = [אישור][עריכה][דחייה].

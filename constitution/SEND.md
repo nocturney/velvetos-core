@@ -73,6 +73,12 @@ python3 scripts/vf_send_preflight.py --gate instagram    # 2=failover Canva+Driv
 לא רלוונטי למשרד. לא login, לא `call`, לא failover דרכו.  
 חיפוש חי: `WebSearch` / `WebFetch` / תזמורת. Insights: מקור מאומת או «אין ספירה». מוזיקה: `MUSIC.md` / HeyOrca.
 
+## Organic Growth Control Plane — לא מפרסם
+
+[`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md): מפעל טיוטות + Decision Pack 07:00.  
+אישור אדם = `approved_for_manual_posting` — **לא** קריאת Publish ולא מעבר ל־`posted_manually`.  
+בריף 07:00 עדיין יוצא ב־Gmail דרך כלים. שליחת IG חיה נשארת משרה נפרדת לפי הטבלה למעלה, רק אחרי אישור אדם — לא מה־Control Plane.
+
 ## עדיין אסור
 
 אוטו־DM, בוסט בלי ראש צוות, ₪ / Insights מומצאים, גוף חסום מומצא, משלוח ארצי, סוד בגיט, `fcc-server` ב־Cloud Agent.

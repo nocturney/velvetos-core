@@ -1,0 +1,63 @@
+{
+  "updatedAt": "2026-09-07",
+  "rule": "8-15 tags per post. No spam 30-pack. Block only from imported performance.",
+  "geotags": ["שדרות", "נגב", "דרום"],
+  "maxGeotags": 2,
+  "minTags": 8,
+  "maxTags": 15,
+  "clusters": {
+    "regional": ["#שדרות", "#נגב", "#הדרום", "#עסקיםבדרום", "#Sderot"],
+    "professional": ["#פיתוחמוצר", "#אב_טיפוס", "#עיצובמוצר", "#ייצורקטן", "#ייצורמותאםאישית"],
+    "process": ["#הדפסתלתממד", "#הדפסהבתלתממד", "#3DPrinting", "#RapidPrototyping", "#VelvetFactory"],
+    "material": ["#PETG", "#Nylon", "#TPU", "#PLA", "#MaterialTesting"],
+    "use": ["#פתרוןמותאםאישית", "#חלקיםמותאמים", "#ייצורבהתאמהאישית", "#אב_טיפוס"]
+  },
+  "sets": [
+    {
+      "hashtag_set_id": "local_b2b_v1",
+      "clusters": ["regional", "professional", "process"],
+      "tags": [
+        "#שדרות",
+        "#נגב",
+        "#עסקיםבדרום",
+        "#פיתוחמוצר",
+        "#אב_טיפוס",
+        "#ייצורקטן",
+        "#הדפסתלתממד",
+        "#3DPrinting",
+        "#RapidPrototyping",
+        "#VelvetFactory"
+      ]
+    },
+    {
+      "hashtag_set_id": "material_lab_v1",
+      "clusters": ["material", "process", "regional"],
+      "tags": [
+        "#MaterialTesting",
+        "#PETG",
+        "#Nylon",
+        "#TPU",
+        "#הדפסתלתממד",
+        "#3DPrinting",
+        "#שדרות",
+        "#נגב",
+        "#פיתוחמוצר"
+      ]
+    },
+    {
+      "hashtag_set_id": "community_result_v1",
+      "clusters": ["use", "process", "regional"],
+      "tags": [
+        "#שדרות",
+        "#הדרום",
+        "#הדפסתלתממד",
+        "#חלקיםמותאמים",
+        "#פתרוןמותאםאישית",
+        "#3DPrinting",
+        "#VelvetFactory",
+        "#עסקיםבדרום"
+      ]
+    }
+  ],
+  "blocked": []
+}

@@ -15,3 +15,5 @@
 ## כלי מדידה חדש (2026-09-07)
 
 `scripts/vf_insights_loop.py` — לופ מדידה→למידה סגור. פירוט מלא: [`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md).
+
+ייחוס הסתברותי: [`ATTRIBUTION.md`](ATTRIBUTION.md) — לא ממציאים המרה מוואטסאפ.

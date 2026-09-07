@@ -41,6 +41,8 @@ VFSKU = ROOT / "scripts" / "vfsku.py"
 VFCOST = ROOT / "scripts" / "vfcost.py"
 VFBOOKS = ROOT / "scripts" / "vfbooks.py"
 VFPROD = ROOT / "scripts" / "vfprod.py"
+ORGANIC_CLI = ROOT / "scripts" / "vf_organic_growth.py"
+GROWTH_BRIEF = ROOT / "packages" / "vfgrowth" / "data" / "growth-brief.json"
 GATES = ROOT / "packages" / "vfops" / "hq" / "GATES.json"
 ORDERS = ROOT / "packages" / "vfbooks" / "data" / "orders.json"
 INVOICE4U = ROOT / "packages" / "vfbooks" / "data" / "invoice4u-snapshot.json"
@@ -284,6 +286,13 @@ def growth_line() -> str:
         )
     if funnel:
         parts.append(funnel)
+    if ORGANIC_CLI.is_file():
+        parts.append(
+            run_cmd(
+                [sys.executable, str(ORGANIC_CLI), "brief"],
+                name="vf_organic_growth.py brief",
+            )
+        )
     return "\n".join(parts)
 
 
@@ -323,7 +332,9 @@ ROUTINE_BRIEF_CLI = (
     "vfsku.py brief",
     "vfsku.py scan",
     "vfbooks.py brief",
+    "vfprod.py brief",
     "vfprod.py print-done",
+    "vf_organic_growth.py brief",
 )
 
 
@@ -497,6 +508,18 @@ def consumer_registry() -> list[ConsumerSpec]:
             timeout_s=30,
             requires=(VFPROD,),
             pack="vfprod",
+            auto_daily=True,
+        ),
+        ConsumerSpec(
+            id="organic-growth-brief",
+            title="organic growth 07:00 decision pack",
+            cadence="daily-07:00",
+            kind="exec",
+            argv=[sys.executable, str(ORGANIC_CLI), "brief", "--write"],
+            timeout_s=30,
+            requires=(ORGANIC_CLI,),
+            artifact=GROWTH_BRIEF,
+            pack="vfgrowth",
             auto_daily=True,
         ),
     ]
@@ -696,9 +719,15 @@ def assemble(today: str) -> dict:
             {
                 "kicker": "01 · קודם החלטה",
                 "title": "החלטות",
-                "prose": gate_prose,
+                "prose": (
+                    f"{gate_prose} Organic Growth: אישור = approved_for_manual_posting — לא Publish."
+                ),
                 "headers": ["החלטה", "כן/לא/דחה", "מועד"],
-                "rows": gate_rows,
+                "rows": gate_rows
+                + [
+                    ["ריל 16:00 (לוח א׳/ג׳)", "דחה עד גלם", "vf_organic_growth.py"],
+                    ["סטורי סקר 20:30", "ממתין לאישור", "לא מפרסם"],
+                ],
                 "actions": gate_actions,
             },
             {
@@ -735,7 +764,7 @@ def assemble(today: str) -> dict:
             {
                 "kicker": "07 · פיד בסוף",
                 "title": "מה עולה בפיד",
-                "prose": "מסירה: vfgrowth/HANDOFF-he.md · PREFLIGHT.md חובה לפני שיבוץ (VOICE + Canva/vfcovers + ציון עצמי + קומפס) · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · שער עריכה קשיח: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · נכשל-סגור = חסום · פער סוכנות = שורת פער למשרד, לא אשמת בעלים · סטוריז ב-instagram.com · לוח אוטונומי.",
+                "prose": "מסירה: vfgrowth/HANDOFF-he.md · PREFLIGHT.md חובה לפני שיבוץ (VOICE + Canva/vfcovers + ציון עצמי + קומפס) · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · שער עריכה קשיח: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · נכשל-סגור = חסום · פער סוכנות = שורת פער למשרד, לא אשמת בעלים · סטוריז ב-instagram.com · לוח אוטונומי · Organic Growth Decision Pack: vf_organic_growth.py · אישור ≠ פרסום.",
                 "headers": ["מזהה", "פתיחה", "מצב"],
                 "rows": captions,
             },
@@ -822,6 +851,7 @@ def write_status(today: str) -> None:
         "- `vfprod.py print-done` — כרטיסי רצפה בחריץ 03 (אין Publish מהבריף)",
         "- מדף `vfsku.py brief` + `vfsku.py scan` + `week.md`",
         "- שערי 01 מ־`GATES.json` (לחיצת אדם, לא וואטסאפ)",
+        "- Organic Growth Decision Pack `vf_organic_growth.py` — אישור ≠ פרסום",
         "- `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)",
         "- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)",
         "- FOLLOWER-GROWTH · היילייטס + וואטסאפ",

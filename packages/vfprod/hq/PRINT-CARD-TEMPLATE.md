@@ -20,4 +20,4 @@ event: print.done
 ## מסירה
 - יעד תוכן: ריל / סטורי / דולג
 - מסר לצמיחה: vfom hybrid-reel או clip-factory
-- סטטוס: card_ready
+- סטטוס: card_ready → draft → preflight → pending_human_approval / blocked

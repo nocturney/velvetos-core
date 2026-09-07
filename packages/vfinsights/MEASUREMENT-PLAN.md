@@ -43,3 +43,5 @@
 
 אין Insights מומצאים. חסר = «אין ספירה».
 
+ייחוס פניות: [`ATTRIBUTION.md`](ATTRIBUTION.md) · `vfsales/ORDERS.md`. וואטסאפ אחרי פוסט ≠ המרה ודאית.
+

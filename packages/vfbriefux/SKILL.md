@@ -9,6 +9,7 @@
 **DIAGRAM:** `hq/DIAGRAM-MAKER.md` + `hq/diagram-svg-template.html` — דיאגרמות לווין (openclaw diagram-maker). `render_mail.py --diagram pipeline|slots`. לא מחליף את המייל.  
 **CHARTS:** `hq/CHARTS.md` — מספרים שנמדדו (lieflat-charts pattern · Glance לבריף). לא מחליף טבלאות במייל.  
 **PORTLETS:** `hq/PORTLETS.md` — שמות דאשבורד עתידי על אותם חריצים (NetSuite/Salesforce), לא מבנה שני.  
+**GROWTH BRIEF:** `hq/GROWTH-BRIEF.md` — Decision Pack 07:00 (`vf_organic_growth.py`). אישור ≠ פרסום. לא מחליף חריצי 01–07.  
 טיוטת effective-html: `hq/brief-email.html` — רפרנס/Wireframe; מקור [effective-html](https://github.com/plannotator/effective-html). Mobbin חסום → עובדים על הקובץ הזה או על דיאגרמת SVG.
 
 לא ממציאים Insights. לא ממציאים מחיר.  
