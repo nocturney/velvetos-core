@@ -83,6 +83,7 @@ CLI לבריף 03/07: `python3 scripts/vfprod.py print-done` (כרטיסים ב�
 ## נעול
 
 - אין חיבור HQ→מצלמת Bambu/Snapmaker/Elegoo כדמון בריפו Core (Edge עתידי / Grok־רצפה).
+- Watchtower (דשבורד חווה) = מקור Edge אפשרי לכרטיס הזה — [`WATCHTOWER.md`](WATCHTOWER.md). לא Print מ־HQ; לא Publish אוטומטי.
 - אין תזמון ישר לפיד בלי PREFLIGHT.
 - אין Print מ־HQ · אין סקר→הדפסה · אין אוטו־DM.
 - גרמים/דקות חסרים = `חסר` — לא ניחוש ל־`vfcost` / כיתוב.
@@ -90,6 +91,7 @@ CLI לבריף 03/07: `python3 scripts/vfprod.py print-done` (כרטיסים ב�
 ## קישורים
 
 - רצפה: `FLOOR.md`
+- דשבורד חווה (Edge): `WATCHTOWER.md`
 - חומרים: `MATERIAL.md`
 - מחקר שבועי: `packages/vfresearch/hq/PRINT-DEMAND.md`
 - שליחה: `packages/vfigos/SEND.md` · `constitution/SEND.md`

@@ -29,6 +29,7 @@ ADR: `ADR-THREE-LAYERS.md`. לא runtime שני. לא broker.
 - **ביצוע תפעולי נמוך** (failover כלי, checkpoint, sensor suite, attach-core offline) = Kernel + harness.
 - **ניהול עסקי** (פנייה→הצעה, לוח תוכן, כסף מאומת, החלטות) = Office / HQ על הפקים.
 - **חומרה/רצפה** = Edge בלבד כשקיים מקור אמיתי — עד אז אין להמציא טלמטריה.
+- דוגמה Edge עתידית: דשבורד חווה מקומי (Watchtower) על LAN שדרות — `vfprod/WATCHTOWER.md`. מדבר עם מדפסות; Core נשאר קטלוג; HQ לא מדפיס.
 
 ## חוזה נתונים
 

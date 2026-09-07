@@ -1,0 +1,240 @@
+{
+  "format": "bento/slides",
+  "version": 1,
+  "title": "Velvet Factory — דק שבועי 2026-09-07",
+  "size": {
+    "width": 1280,
+    "height": 720
+  },
+  "theme": {
+    "background": "#11110f",
+    "color": "#f4efe6",
+    "accent": "#c9a227",
+    "fontFamily": "'Helvetica Neue', Arial, sans-serif"
+  },
+  "meta": {
+    "author": "Velvet Factory",
+    "company": "Velvet Factory",
+    "subject": "דק שבועי"
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "background": "#11110f",
+      "transition": "none",
+      "notes": "כיסוי — לא לפרסום, לצפייה פנימית בדפדפן בלבד.",
+      "elements": [
+        {
+          "id": "title",
+          "type": "text",
+          "x": 96,
+          "y": 280,
+          "w": 1088,
+          "h": 160,
+          "rotation": 0,
+          "opacity": 1,
+          "role": "title",
+          "html": "Velvet Factory<br>דק שבועי · 2026-09-07",
+          "fontSize": 64,
+          "fontWeight": 800,
+          "color": "#f4efe6",
+          "align": "right",
+          "valign": "top",
+          "lineHeight": 1.15,
+          "fx": {
+            "enter": "fade-up"
+          }
+        },
+        {
+          "id": "bar",
+          "type": "shape",
+          "shape": "rect",
+          "x": 96,
+          "y": 460,
+          "w": 220,
+          "h": 10,
+          "fill": "#c9a227",
+          "stroke": "none",
+          "strokeWidth": 0,
+          "radius": 0,
+          "rotation": 0,
+          "opacity": 1
+        }
+      ]
+    },
+    {
+      "id": "learnings",
+      "background": "#1b1a17",
+      "transition": "none",
+      "notes": "מקור: packages/vfinsights/data/LEARNINGS.md — אין המצאה.",
+      "elements": [
+        {
+          "id": "h2",
+          "type": "text",
+          "x": 96,
+          "y": 72,
+          "w": 1088,
+          "h": 84,
+          "rotation": 0,
+          "opacity": 1,
+          "role": "kicker",
+          "html": "מה למדנו",
+          "fontSize": 32,
+          "fontWeight": 800,
+          "color": "#c9a227",
+          "align": "right",
+          "valign": "top",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "body2",
+          "type": "text",
+          "x": 96,
+          "y": 208,
+          "w": 1088,
+          "h": 416,
+          "rotation": 0,
+          "opacity": 1,
+          "role": "body",
+          "html": "אין ספירה",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "color": "#f4efe6",
+          "align": "right",
+          "valign": "top",
+          "lineHeight": 1.4,
+          "fx": {
+            "enter": "fade-up"
+          }
+        }
+      ]
+    },
+    {
+      "id": "numbers",
+      "background": "#1b1a17",
+      "transition": "none",
+      "notes": "מקור: vfops/hq/LAST30.md — טקסט בלבד, לא צ'ארט, כי אין נתון מדיד מאומת עדיין.",
+      "elements": [
+        {
+          "id": "h3",
+          "type": "text",
+          "x": 96,
+          "y": 72,
+          "w": 1088,
+          "h": 84,
+          "rotation": 0,
+          "opacity": 1,
+          "role": "kicker",
+          "html": "מספרים (30 יום)",
+          "fontSize": 32,
+          "fontWeight": 800,
+          "color": "#c9a227",
+          "align": "right",
+          "valign": "top",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "body3",
+          "type": "text",
+          "x": 96,
+          "y": 208,
+          "w": 1088,
+          "h": 416,
+          "rotation": 0,
+          "opacity": 1,
+          "role": "body",
+          "html": "אין ספירה",
+          "fontSize": 28,
+          "fontWeight": 400,
+          "color": "#f4efe6",
+          "align": "right",
+          "valign": "top",
+          "lineHeight": 1.4,
+          "fx": {
+            "enter": "fade-up"
+          }
+        }
+      ]
+    },
+    {
+      "id": "retro",
+      "background": "#1b1a17",
+      "transition": "none",
+      "notes": "מקור: DAILY-RETRO.md + WEEKLY-LOAD.md.",
+      "elements": [
+        {
+          "id": "h4",
+          "type": "text",
+          "x": 96,
+          "y": 72,
+          "w": 528,
+          "h": 84,
+          "rotation": 0,
+          "opacity": 1,
+          "role": "kicker",
+          "html": "רטרו יומי",
+          "fontSize": 28,
+          "fontWeight": 800,
+          "color": "#c9a227",
+          "align": "right",
+          "valign": "top",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "h5",
+          "type": "text",
+          "x": 656,
+          "y": 72,
+          "w": 528,
+          "h": 84,
+          "rotation": 0,
+          "opacity": 1,
+          "role": "kicker",
+          "html": "עומס שבועי",
+          "fontSize": 28,
+          "fontWeight": 800,
+          "color": "#c9a227",
+          "align": "right",
+          "valign": "top",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "body4",
+          "type": "text",
+          "x": 96,
+          "y": 208,
+          "w": 528,
+          "h": 416,
+          "rotation": 0,
+          "opacity": 1,
+          "role": "body",
+          "html": "סוף יום — רטרו משרד (ראש צוות)\\u003cbr>מודול: `office-learning`.\\u003cbr>**ראש הצוות** (`@studio-operations` / `@chief-of-staff`) מבקש מכל המושבים לעבור על השיחות של היום — לא כדי לשפוט, אלא כדי שהמשרד יהיה חי ומשתפר.\\u003cbr>**פעם ראשונה / לפני שהרוטינה הייתה קיימת:** הרץ `INITIAL-RETRO.md` (catch-up מ-CHANGELOG + checkpoints).\\u003cbr>מתי\\u003cbr>כל ערב, אחרי 18:00 Asia/Jerusalem (או לפני סגירת משמרת).",
+          "fontSize": 24,
+          "fontWeight": 400,
+          "color": "#f4efe6",
+          "align": "right",
+          "valign": "top",
+          "lineHeight": 1.4
+        },
+        {
+          "id": "body5",
+          "type": "text",
+          "x": 656,
+          "y": 208,
+          "w": 528,
+          "h": 416,
+          "rotation": 0,
+          "opacity": 1,
+          "role": "body",
+          "html": "WEEKLY LOAD · איך השבוע הרגיש\\u003cbr>שבוע: ____ · מושב: תפעול.\\u003cbr>סוף יום (שעות): `DAILY-RETRO.md` בלוק מדידת עומס. קובץ זה = דופק שבועי סובייקטיבי — לא מחליף שורת `owner-memory.md`.\\u003cbr>איך העומס הרגיש (סובייקטיבי)\\u003cbr>1–10: _____\\u003cbr>למה?",
+          "fontSize": 24,
+          "fontWeight": 400,
+          "color": "#f4efe6",
+          "align": "right",
+          "valign": "top",
+          "lineHeight": 1.4
+        }
+      ]
+    }
+  ]
+}

@@ -14,3 +14,6 @@
 לא ממציאים Insights. לא ממציאים מחיר.  
 כריכות בגוף המייל (`cid:` בחריץ 07).  
 בפיילאובר Grok HQ שולח `htmlBody` תצוגה 3 אל `nocturney@gmail.com`. כש־Grok חי — הוא שולח. אין שליחה ללקוח.
+
+
+**BENTO (דק שבועי, לא אימייל):** `hq/BENTO.md` + `scripts/vf_weekly_deck.py` — בונה JSON `bento/slides` מנתונים אמיתיים (LEARNINGS/LAST30/רטרו). נפתח ידנית פעם בשבוע בדפדפן, לא נכנס לצינור השליחה היומי.
