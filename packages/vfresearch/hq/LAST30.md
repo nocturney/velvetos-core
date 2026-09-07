@@ -133,6 +133,11 @@ Google מצטבר עורכים. כאן — קהילה.
 
 ## ריצה אחרונה
 
-| תאריך | נושא | ארטיפקט | מסירה |
+שני מעברים ב־2026-09-07 על נושא דומה — **מסקנות שונות** (נשמרים שני הארטיפקטים):
+
+| תאריך | מעבר | מסקנה | ארטיפקט |
 |---|---|---|---|
-| 2026-09-07 | maker IG Reels engagement (topic) | `sources/2026-09-07-maker-ig-reels-engagement-last30.md` | `vfcopy` · `vfgrowth` · בלוק 06 = «אין ספירה» עד CSV |
+| 2026-09-07 | #106 HQ-ROUTINE | **nothing-solid** (WebSearch ריק בחלון) | `sources/2026-09-07-ig-maker-engagement-last30.md` |
+| 2026-09-07 | research-seat branch | חלקי — מקורות מדריך/קהילה; מדדי עמוד = «אין ספירה» | `sources/2026-09-07-maker-ig-reels-engagement-last30.md` |
+
+אין לבחור צד בלי ראש צוות אם רוצים הטמעת תוכן מ־#branch בלבד. עד אז: אין Insights מומצאים; בלוק 06 = «אין ספירה».

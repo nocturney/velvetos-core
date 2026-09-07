@@ -3,7 +3,7 @@
 Module id: `kernel-laws`
 
 ## Provides
-- Exactly five seats (lead / studio / growth / ops / production)
+- Exactly five **business** seats on instance frontends (lead / studio / growth / ops / production). Core HQ desk may add a sixth **research/orchestra** seat (`constitution/TEAM.md` + `vfresearch/HQ-ROUTINE.md`) that embeds patterns — not a parallel business seat
 - HQ sends Gmail + Instagram via tools (\`constitution/SEND.md\`)
 - Forbidden: auto-DM, boost without lead, invented ₪ / Insights
 

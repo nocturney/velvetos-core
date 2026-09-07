@@ -1,5 +1,8 @@
 # סקירת קישורים שבועית · 2026-09-07
 
+> מיזוג עם #106: אותו מסקנה «אין חדש במשרד»; כאן הטבלה המלאה (76). גרסת #106 הייתה מקוצרת.
+
+
 מושב: ייצור · Asia/Jerusalem
 רישום: packages/vfresearch/LINKS.json
 כלי: `gh api` לריפוז · sourceNote לחומות · **לא** chatgpt.com / gemini.google.com מ־Cloud

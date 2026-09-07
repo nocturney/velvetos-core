@@ -12,7 +12,7 @@
     "@research-synthesist",
     "@trend-researcher"
   ],
-  "seat": "ייצור",
+  "seat": "מחקר/אורקסטרציה",
   "alsoSeat": "ראש צוות קורא בבריף",
   "locks": [
     "hq-send-via-tools",

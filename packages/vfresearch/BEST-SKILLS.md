@@ -1,6 +1,6 @@
 # Best Skills — סקירת דירוג כל יומיים
 
-מושב: **ייצור** (`@research-synthesist`) + ראש צוות קורא בבריף.  
+מושב: **מחקר/אורקסטרציה** (`@research-synthesist`) + ראש צוות קורא בבריף.  
 מקור חי: [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) (Top 100, מתעדכן יומית).  
 לא פק חדש. לא `npx skills add` על Cloud Agent. דפוסים בלבד על פקים קיימים.
 
