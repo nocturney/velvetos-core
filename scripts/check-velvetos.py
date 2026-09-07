@@ -139,10 +139,12 @@ def check_b2b_examples_not_catalog(sample: dict, front: dict, studio_text: str) 
     """Owner correction 2026-09-07: logo/QR/napkins were examples, not a closed three-SKU B2B catalog."""
     lock = (ROOT / "packages" / "vfbiz" / "LOCK.md").read_text(encoding="utf-8")
     skill = (ROOT / "packages" / "vfbiz" / "SKILL.md").read_text(encoding="utf-8")
+    local = (ROOT / "packages" / "vfbiz" / "LOCAL-B2B.md").read_text(encoding="utf-8")
     inst_studio = (INSTANCES / "velvet-factory" / "constitution" / "STUDIO.md").read_text(encoding="utf-8")
     for label, text in (
         ("packages/vfbiz/LOCK.md", lock),
         ("packages/vfbiz/SKILL.md", skill),
+        ("packages/vfbiz/LOCAL-B2B.md", local),
         ("constitution/STUDIO.md", studio_text),
         ("instances/velvet-factory/constitution/STUDIO.md", inst_studio),
     ):
@@ -335,6 +337,10 @@ def main() -> None:
         "retro.anomaly",
         "mail.sent",
         "print.done",
+        "print.maintenance_due",
+        "print.route_suggested",
+        "print.filament_short",
+        "brief.gate_applied",
         "content.draft_ready",
     ):
         if need not in event_ids:

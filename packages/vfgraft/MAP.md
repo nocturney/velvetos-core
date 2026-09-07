@@ -42,6 +42,9 @@ command-surface system       capabilities + pipeline board + portlets (future UI
 | print-demand / טרנדים 3D + ביקוש IL + סאונד | [[packs]] → `vfresearch/hq/PRINT-DEMAND.md` → [[content-job]] → [[laws]] |
 | print.done / אחרי הדפסה → טיוטת ריל | `vfprod/PRINT-DONE.md` → `vfom/crews/hybrid-reel.md` → [[content-job]] → [[laws]] |
 | Watchtower / דשבורד חווה / farm dashboard | `vfprod/WATCHTOWER.md` → [[pipeline]] → `LAYERS.md` → [[laws]] |
+| ניתוב מדפסת / פילמנט / תחזוקה | `vfprod/ROUTING.md` + `MAINTENANCE.md` → [[pipeline]] → [[laws]] |
+| שערי בריף 01 / אישור בלחיצה | `vfops/hq/GATES.md` → [[morning-job]] → [[laws]] |
+| B2B מקומי (דפוס איסוף, לא 3 מק״ט) | `vfbiz/LOCAL-B2B.md` → [[inquiry-job]] → [[laws]] |
 | best-skills / skills.sh leaderboard (every 2 days) | [[packs]] → `vfresearch/BEST-SKILLS.md` + `BEST-SKILLS.json` → [[laws]] |
 | last 30 days / מחקר קהילה / what people say | [[packs]] → `vfresearch/hq/LAST30.md` + skill `vf-last30` → `@research-synthesist` / `@trend-researcher` → [[laws]] |
 | office console / CRM-ERP inspiration / command surface | [[blast]] → `vfops/hq/COMMAND-SURFACE.md` → `docs/OFFICE-OS-EMBED-he.md` → [[laws]] |

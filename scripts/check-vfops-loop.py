@@ -147,6 +147,37 @@ def main() -> None:
     floor_txt = floor.read_text(encoding="utf-8")
     if "WATCHTOWER.md" not in floor_txt:
         fail("FLOOR.md must point at WATCHTOWER.md")
+    if "ROUTING.md" not in floor_txt:
+        fail("FLOOR.md must point at ROUTING.md")
+
+    gates_json = ROOT / "packages" / "vfops" / "hq" / "GATES.json"
+    gates_md = ROOT / "packages" / "vfops" / "hq" / "GATES.md"
+    orders = ROOT / "packages" / "vfbooks" / "data" / "orders.json"
+    inv4u = ROOT / "packages" / "vfbooks" / "data" / "invoice4u-snapshot.json"
+    local_b2b = ROOT / "packages" / "vfbiz" / "LOCAL-B2B.md"
+    vfprod_cli = ROOT / "scripts" / "vfprod.py"
+    for path in (gates_json, gates_md, orders, inv4u, local_b2b, vfprod_cli):
+        if not path.is_file():
+            fail(f"missing {path.relative_to(ROOT)}")
+    gates = json.loads(gates_json.read_text(encoding="utf-8"))
+    if gates.get("name") != "vfops-gates":
+        fail("GATES.json name must be vfops-gates")
+    if "no-zero-touch-close" not in (gates.get("locks") or []):
+        fail("GATES.json must lock no-zero-touch-close")
+    if gates.get("items") not in ([], None) and not isinstance(gates.get("items"), list):
+        fail("GATES.json items must be a list")
+    local_txt = local_b2b.read_text(encoding="utf-8")
+    for needle in ("דוגמאות", "לא קטלוג סגור", "050-2517000", "איסוף"):
+        if needle not in local_txt:
+            fail(f"LOCAL-B2B.md must mention {needle}")
+    if "שלושת מוצרי ה-B2B" in local_txt:
+        fail("LOCAL-B2B.md must not treat three SKUs as a closed catalog")
+
+    brief_md = ROOT / "packages" / "vfops" / "BRIEF.md"
+    if "GATES.json" not in brief_md.read_text(encoding="utf-8"):
+        fail("BRIEF.md must hook slot 01 to GATES.json")
+    if "vfprod.py" not in brief_md.read_text(encoding="utf-8"):
+        fail("BRIEF.md must hook slot 03 to vfprod.py")
 
     for needle in ("RETRO-SIGNALS.md", "vf_retro_signals.py", "retro-signals.json"):
         if needle not in retro_txt:

@@ -48,4 +48,5 @@
 4. אין `reply` / `forward` / שליחה ללקוח.
 
 תבנית: `MAIL.html`. ממלא: `render_mail.py`. בדיקה: `python3 packages/vfbriefux/render_mail.py --check`.  
+חריץ 01 יכול לכלול כפתורי כן/דחה (`mailto:` ל־`nocturney@gmail.com`) מ־`vfops/hq/GATES.json`. לחיצה ≠ שליחת וואטסאפ ללקוח.  
 דיאגרמת לוויין (לא `htmlBody`): `python3 packages/vfbriefux/render_mail.py --diagram pipeline|slots -o …` · מפה: `hq/DIAGRAM-MAKER.md`.

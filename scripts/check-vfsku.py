@@ -14,6 +14,7 @@ LAB = ROOT / "packages" / "vfsku" / "LAB.md"
 FIRST = ROOT / "packages" / "vfsku" / "FIRST-PRINT.md"
 WEEK = ROOT / "packages" / "vfsku" / "week.md"
 CARDS = ROOT / "packages" / "vfsku" / "CARDS.md"
+TAG = ROOT / "packages" / "vfsku" / "TAG.md"
 SHOP_CLOSE = ROOT / "packages" / "vfprod" / "SHOP-CLOSE.md"
 CONVERT_PATH = ROOT / "packages" / "vfconvert" / "PATH.md"
 CLI = ROOT / "scripts" / "vfsku.py"
@@ -38,7 +39,7 @@ REQUIRED_LOCKS = {
 }
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
 NAMED_FIELDS = ("sourceUrl", "license", "licenseChecked")
-READY_FIELDS = NAMED_FIELDS + ("sliceGrams", "sliceMinutes")
+READY_FIELDS = NAMED_FIELDS + ("sliceGrams", "sliceMinutes", "slicePath", "costChecked")
 
 
 def fail(msg: str) -> None:
@@ -58,7 +59,7 @@ def assert_no_ils(path: Path) -> None:
 
 
 def main() -> None:
-    for path in (SHELF, GATE, LAB, FIRST, CARDS, WEEK, SHOP_CLOSE, CONVERT_PATH, CLI, BRIEF, SLOTS, LICENSE):
+    for path in (SHELF, GATE, LAB, FIRST, CARDS, WEEK, TAG, SHOP_CLOSE, CONVERT_PATH, CLI, BRIEF, SLOTS, LICENSE):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -107,7 +108,7 @@ def main() -> None:
             fail(f"slot {sid} israeliBrandStop must be blocked")
 
     gate = GATE.read_text()
-    for needle in ("SHELF.json", "FIRST-PRINT.md", "vfsku.py", "הורדה ≠"):
+    for needle in ("SHELF.json", "FIRST-PRINT.md", "vfsku.py", "הורדה ≠", "vfsku.py scan", "TAG.md"):
         if needle not in gate:
             fail(f"GATE.md must mention {needle}")
 
@@ -129,12 +130,19 @@ def main() -> None:
     cli_src = CLI.read_text()
     if 'add_parser("shop"' not in cli_src and "add_parser('shop'" not in cli_src:
         fail("vfsku.py must expose a shop subcommand")
+    if 'add_parser("scan"' not in cli_src and "add_parser('scan'" not in cli_src:
+        fail("vfsku.py must expose a scan subcommand")
 
     lab = LAB.read_text()
     if "print-in-place" not in lab.lower() and "קופסה" not in lab:
         fail("LAB.md must keep a print-in-place / box direction")
     if "חומרה" not in lab:
         fail("LAB.md must flag hardware as yellow")
+
+    tag = TAG.read_text()
+    for needle in ("Velvet Factory", "איסוף שדרות", "SHOP-CLOSE.md"):
+        if needle not in tag:
+            fail(f"TAG.md must mention {needle}")
 
     license_gate = LICENSE.read_text()
     if "Commercial License" not in license_gate and "מנוי יוצר" not in license_gate:
@@ -145,6 +153,10 @@ def main() -> None:
         fail("vlicense/GATE.md must re-check after MakerWorld term-change notification")
     if "מחזור החיוב" not in license_gate:
         fail("vlicense/GATE.md must mention billing-cycle end on cancel")
+    if "בינלאומי" not in license_gate:
+        fail("vlicense/GATE.md must mark international commercial vs Israeli brand")
+    if "TAG.md" not in license_gate:
+        fail("vlicense/GATE.md must point VF tags at vfsku/TAG.md")
 
     brief = BRIEF.read_text()
     if "vfsku.py" not in brief:
@@ -157,7 +169,7 @@ def main() -> None:
         if needle not in week:
             fail(f"vfsku/week.md missing {needle!r}")
 
-    for path in (SHELF, GATE, LAB, FIRST, CARDS, WEEK, SHOP_CLOSE):
+    for path in (SHELF, GATE, LAB, FIRST, CARDS, WEEK, TAG, SHOP_CLOSE):
         assert_no_ils(path)
 
     print("OK vfsku shelf=5 first-print=1 brief-hook=03 shop-close=1")

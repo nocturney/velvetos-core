@@ -155,6 +155,7 @@ def slot_html(slot: dict) -> str:
     headers = slot.get("headers") or []
     rows = slot.get("rows") or []
     covers = slot.get("covers") or []
+    actions = slot.get("actions") or []
     bits = [
         '<tr><td dir="rtl" bgcolor="#f7f3eb" style="padding:18px 28px 6px">',
         f'<div style="color:rgb(202,169,107);font-family:Georgia,serif;font-size:12px">{kicker}</div>',
@@ -168,8 +169,38 @@ def slot_html(slot: dict) -> str:
         bits.append(table_html(headers, rows))
     if covers:
         bits.append(covers_html(covers))
+    if actions:
+        bits.append(actions_html(actions))
     bits.append("</td></tr>")
     return "".join(bits)
+
+
+def actions_html(actions: list[dict]) -> str:
+    parts = [
+        '<div dir="rtl" style="margin:12px 0 4px;font-family:Georgia,serif;font-size:12px;color:rgb(202,169,107)">אישור בלחיצה · לא וואטסאפ לקוח · לא Print</div>'
+    ]
+    for item in actions:
+        label = esc(item.get("label") or item.get("id") or "שער")
+        yes = esc(item.get("yes") or "")
+        no = esc(item.get("no") or "")
+        defer = esc(item.get("defer") or "")
+        links = []
+        if yes:
+            links.append(
+                f'<a href="{yes}" style="color:rgb(16,26,53);text-decoration:none;border:1px solid rgb(202,169,107);padding:6px 10px;margin-left:8px;display:inline-block">כן</a>'
+            )
+        if no:
+            links.append(
+                f'<a href="{no}" style="color:rgb(16,26,53);text-decoration:none;border:1px solid rgb(180,80,80);padding:6px 10px;margin-left:8px;display:inline-block">דחה</a>'
+            )
+        if defer:
+            links.append(
+                f'<a href="{defer}" style="color:rgb(16,26,53);text-decoration:none;border:1px solid rgb(120,130,150);padding:6px 10px;display:inline-block">דחה-למועד</a>'
+            )
+        parts.append(
+            f'<p dir="rtl" style="font-family:Arial,sans-serif;font-size:13px;color:rgb(27,36,56);margin:8px 0">{label} {" ".join(links)}</p>'
+        )
+    return "".join(parts)
 
 
 def render(brief: dict, template: str | None = None) -> str:

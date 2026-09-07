@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **חמישה מנועי רצפה/בריף על פקים קיימים:** ניתוב חומר→מיטה `vfprod/FLEET.json` + `ROUTING.md` + `vfprod.py` (ארבע מיטות, אין Print מ-HQ) · יתרת גליל מול סלייס · תחזוקה מסנאפשוט Edge `MAINTENANCE.md` · בריף 07:00 מושך `orders.json`/Invoice4U מהדיסק + שערי כן/לא ב־`GATES.json` (לחיצת אדם, לא סגירת וואטסאפ) · דפוס B2B מקומי `vfbiz/LOCAL-B2B.md` (לוגו/QR/מפיות נשארות דוגמאות, הקו נעול) · סריקת קטלוג `vfsku.py scan` + תווית VF `TAG.md`. סנסור `check-vfprod.py`. בלי פק חדש / בלי daemon / בלי ₪ מומצא. Five studio engines embedded on existing packs; human gates stay.
+
 - 2026-09-07 — **B2B = דוגמאות, לא שלושה מק״ט:** תיקון בעלים. לוגו / QR / מפיות היו דוגמאות לקו B2B — לא קטלוג סגור. הנעילה נשארת על **הקו** עד ראש צוות (`vfbiz/LOCK.md` · `STUDIO.md`). extraLock `b2b-line-locked`. סנסור `check-velvetos.py`. בלי פתיחת B2B / בלי ₪. Owner correction: B2B examples ≠ closed three-SKU catalog; line stays locked.
 
 - 2026-09-07 — **Watchtower = Edge farm dashboard:** פלייבוק `vfprod/WATCHTOWER.md` — דשבורד חווה מקומי (כוונת רכישה) יושב על LAN שדרות, לא כדמון בליבה ולא Print מ־HQ. כרטיס `print.done` אחרי הצלחה; אנליטיקת vendor ≠ ₪ מכירה. סנסור `check-vfops-loop`. בלי התקנה / בלי מחיר מומצא. Watchtower maps to Edge; Core stays catalog; no HQ print.

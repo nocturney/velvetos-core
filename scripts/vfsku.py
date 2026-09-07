@@ -67,6 +67,32 @@ def cmd_brief(_args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_scan(_args: argparse.Namespace) -> int:
+    data = load_shelf()
+    slots = data.get("slots") or []
+    blocked: list[str] = []
+    for slot in slots:
+        sid = slot.get("id")
+        status = slot.get("status") or "empty"
+        name = slot_name(slot)
+        if slot.get("israeliBrandStop") is True and status not in {"blocked", "empty"}:
+            blocked.append(f"{sid} מותג ישראלי חייב blocked")
+        if status == "ready":
+            for field in ("sliceGrams", "sliceMinutes", "slicePath", "costChecked", "license", "licenseChecked"):
+                if not (slot.get(field) or "").strip():
+                    blocked.append(f"{sid} {name} ready בלי {field}")
+        if name != "—" and status not in {"empty", "blocked"}:
+            if not (slot.get("license") or "").strip() or not (slot.get("licenseChecked") or "").strip():
+                blocked.append(f"{sid} {name} בלי רישיון מאומת")
+    ready = sum(1 for s in slots if s.get("status") == READY)
+    if blocked:
+        print("קטלוג חסום: " + " · ".join(blocked))
+        print("אין הצעה/תוכן על מק״ט בלי סלייס מאומת + vfcost גרמים + vlicense")
+        return 0
+    print(f"קטלוג: {ready}/{len(slots)} ready אחרי סלייס+עלות+רישיון · מותג ישראלי=עצירה · תווית VF ב-TAG.md")
+    return 0
+
+
 def cmd_shop(_args: argparse.Namespace) -> int:
     data = load_shelf()
     slots = data.get("slots") or []
@@ -88,6 +114,7 @@ def main() -> int:
     sub = parser.add_subparsers(dest="cmd", required=True)
     sub.add_parser("shelf", help="print the 5-slot table").set_defaults(func=cmd_shelf)
     sub.add_parser("brief", help="one Hebrew line for morning brief slot 03").set_defaults(func=cmd_brief)
+    sub.add_parser("scan", help="refuse ready SKUs without verified slice + cost + license").set_defaults(func=cmd_scan)
     sub.add_parser("shop", help="tomorrow-shop line: ready slots only, no invented names").set_defaults(func=cmd_shop)
     args = parser.parse_args()
     return args.func(args)

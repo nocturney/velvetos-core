@@ -41,7 +41,7 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 | New inquiry | `vfconvert` | `@email-intelligence-engineer` then `@discovery-coach` | Gmail **read** the named thread; **reply** when the draft is ready |
 | Quote draft | `vfsales` + `vfcopy` | `@sales-engineer` `@content-creator` | After `vfcost`. One CTA. HQ **sends** Gmail via tool (no invented ₪) |
 | Cost / ledger | `vfcost` `vfbooks` | `@pricing-analyst` `@bookkeeper-controller` | Gmail label חשבונות; never invent ₪ |
-| Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive search **or create** by job name; 3D AI Studio mesh via `vfprod/3DAISTUDIO.md` |
+| Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive search **or create** by job name; bed **recommend** `vfprod.py route` (no Print from HQ); catalog `vfsku.py scan`; 3D AI Studio mesh via `vfprod/3DAISTUDIO.md` |
 | Covers / content pack | `vfcovers` `vfgrowth` | `@visual-storyteller` `@image-prompt-engineer` | Canva first; Superdesign failover |
 | Marketing frameworks | `vfmskill` | `@content-creator` `@growth-hacker` | Curated Corey Haines skills. Read `.agents/product-marketing.md` first. No send. |
 | Reel plan / timelapse cut | `vfom` | `@visual-storyteller` `@instagram-curator` | OpenMontage crews; Canva stills; no Remotion vendor |

@@ -5,7 +5,8 @@
 מקור Perplexity: הרחבת קטלוג מ־Tripo/Meshy — **לא אוטומטית.**
 
 כרטיס רק אחרי סלייס + שער רישיון.  
-משבצת חיה: `SHELF.json`. שעה למשבצת: `FIRST-PRINT.md`.
+משבצת חיה: `SHELF.json`. שעה למשבצת: `FIRST-PRINT.md`.  
+סריקה: `python3 scripts/vfsku.py scan` — אין הצעה בלי `slicePath` + `costChecked`. תווית: `TAG.md`.
 
 1. שם הדגם + מקור (MakerWorld / Printables / …) + מזהה אם יש.
 2. רישיון (`vlicense`) — ציבורי מסחרי.

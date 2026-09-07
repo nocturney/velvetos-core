@@ -23,7 +23,8 @@ python3 scripts/vfcost.py brief
 ```
 
 גלילי רצפה בשמות: Ella / Rachel / Gefen (`FILAMENTS.json`).  
-`ilsPerKg` ריק עד מלאי/חשבונית מאומתים. `--filament Ella` בלי ILS/kg לא ממציא 250.
+`ilsPerKg` ריק עד מלאי/חשבונית מאומתים. `--filament Ella` בלי ILS/kg לא ממציא 250.  
+`remainingGrams` ריק עד שקילה על הרצפה. חסר = `vfprod.py remaining` חוסם הדפסת לילה.
 
 ## איך תפעול / בריף מושכים שורה
 

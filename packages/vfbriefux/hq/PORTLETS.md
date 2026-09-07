@@ -8,9 +8,9 @@
 
 | Portlet (השראה) | חריץ VF | מקור אמת | ריק = |
 |---|---|---|---|
-| Decisions due | 01 קודם החלטה | ראש צוות / walls | אין החלטה פתוחה |
-| AR / cash in work | 02 כסף בעבודה | `vfbooks` מאומת | אין ספירה |
-| Print queue + publish queue | 03 מה להדפיס ולפרסם | סלייסר / `vfigos` | אין ספירה |
+| Decisions due | 01 קודם החלטה | `GATES.json` + ראש צוות / walls | אין החלטה פתוחה |
+| AR / cash in work | 02 כסף בעבודה | `vfbooks/data/orders.json` + Invoice4U snapshot מאומת | אין ספירה |
+| Print queue + publish queue | 03 מה להדפיס ולפרסם | סלייסר / `vfprod.py brief` / `vfigos` | אין ספירה |
 | Locked B2B / margin story | 04 איך הסטודיו מרוויח | `vfbiz` + `vfbiz/out/week.md` | נעול / בלי ₪ מומצא |
 | Office upgrades | 05 משרד | `vfops/data/research.md` | אין חדש במשרד |
 | Feed health | 06 מה קורה בעמוד | `vfinsights` אחרי פרסום+24ש | אין ספירה |
