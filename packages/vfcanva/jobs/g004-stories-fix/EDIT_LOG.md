@@ -61,7 +61,7 @@ Poll sticker for Instagram (not designed as extra CTA): כן/לא «יש לכן 
 | `story-3.png` | `DAHUfWdu4aM` | 1080×1920 |
 | `story-4.png` | `DAHUfVplwd8` | 1080×1920 |
 
-Export: Canva MCP `export-design` type `png` · `export_quality=pro` · `lossless=true` · 1080×1920. Disk: `/opt/cursor/artifacts/g004-stories-fix/`.
+Export: Canva MCP `export-design` type `png` · `export_quality=pro` · `lossless=true` · 1080×1920. Disk: `/opt/cursor/artifacts/g004-stories-fix/`. Studio pull: `packages/vfcanva/jobs/g004-stories-fix/story-1.png` … `story-4.png` (`PATHS.md`).
 
 ## Left untouched
 

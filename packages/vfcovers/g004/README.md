@@ -10,4 +10,6 @@ python3 packages/vfcovers/g004/compose_stories.py
 
 Needs the Canva PNG exports under `/opt/cursor/artifacts/g004-stories-fix/canva/` (`story-1.png`… plus `copyedit-1.png` when present). Output: `/opt/cursor/artifacts/g004-stories-fix/vfcovers/story-1.png` … `story-4.png`.
 
+Committed copies Studio can pull: `packages/vfcovers/g004/out/story-1.png` … `story-4.png`. Ship frames for review: `packages/vfcanva/jobs/g004-stories-fix/story-1.png` … `story-4.png` (`PATHS.md`).
+
 Does not publish. Does not invent rings inside the open kettlebell photo. Frame 4 on-image is WhatsApp `050-2517000` only.
