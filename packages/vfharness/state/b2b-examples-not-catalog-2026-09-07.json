@@ -1,7 +1,7 @@
 {
   "task_id": "b2b-examples-not-catalog-2026-09-07",
-  "status": "running",
-  "component_state": "Processing",
+  "status": "done",
+  "component_state": "Idle",
   "pack": "vfbiz",
   "goal": "Owner correction: B2B lock is the line, not a closed three-SKU catalog; logo/QR/napkins stay examples",
   "crew": "decide",
@@ -15,9 +15,10 @@
   "completed_steps": [
     "Rewrote STUDIO.md, vfbiz LOCK/SKILL/PLAYBOOK, extraLock b2b-line-locked",
     "Updated desk, product-marketing, vfmakers, vfmskill, inquiry skill, GATE",
-    "Added ANTI-PATTERN, owner-memory, sensor in check-velvetos.py"
+    "Added ANTI-PATTERN, owner-memory, sensor in check-velvetos.py",
+    "check-all.py 25/25 PASS"
   ],
-  "next_step": "python3 scripts/check-all.py then push PR",
+  "next_step": "none — owner correction is in living lock; sensors green",
   "artifacts": [
     "constitution/STUDIO.md",
     "packages/vfbiz/LOCK.md",
@@ -25,16 +26,17 @@
     "packages/vfops/data/owner-memory.md"
   ],
   "unresolved": [],
-  "outcome": null,
-  "pulse": "working",
-  "verification": "pending check-all.py",
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "check-all.py 25/25 PASS; negative extraLock + STUDIO without דוגמאות rejected",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-07",
   "execution_state": {
     "owner_correction": "logo/QR/napkins were examples not the catalog",
     "lock_stays": "B2B line locked until lead opens vfbiz",
-    "no_open_b2b": true
+    "no_open_b2b": true,
+    "sensors": "25/25"
   },
-  "latest_observation": "Living sources treated three SKUs as the closed B2B set; lock text rewritten to examples."
+  "latest_observation": "check-all.py passed 25/25. Sensor rejects old three-SKU extraLock and STUDIO without דוגמאות."
 }
