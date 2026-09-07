@@ -25,10 +25,8 @@
     "scripts/check-vf-task-state.py",
     "packages/vfharness/playbooks/skillstate.md"
   ],
-  "unresolved": [
-    "phase B (live brief / vfops_loop) not approved in original ACK — handled separately as SWC-CURSOR-VFOPS-RUN"
-  ],
-  "pulse": "blocked",
+  "unresolved": [],
+  "pulse": "working",
   "last_updated": "2026-09-07",
   "execution_state": {
     "base_sha": "ebfbe2714f38d9eda8579d8651cac4df24659c8f",
@@ -82,14 +80,14 @@
       "changed_upstream_paths": 55,
       "overlap_with_owned_paths": 0,
       "compatibility_adjustment": "ladder-*.json arrays reported as event logs separately"
+    },
+    "phase_a_closed": {
+      "pr": 108,
+      "coordination_pr": 105,
+      "note": "phase B (live brief / consumers) tracked under Cursor PRs, not this task"
     }
   },
-  "latest_observation": "Current-base tests passed. Historical audit exits 1; ladder logs are observed separately. Four approved paths only; no live brief, schema, business-role or runtime changes.",
-  "outcome": "decision_gate",
-  "verification": "merged via PR #108 to main as 06f9854; follow-ups are separate Cursor PRs",
-  "gate": {
-    "kind": "approval",
-    "waiting_for": "Cursor phase A PR review and merge",
-    "reason": "Implementation complete and tested; merge and runtime handoff remain coordinated"
-  }
+  "latest_observation": "Phase A merged on main via #108. Owned reader/sensor digests verified. Historical audit of other checkpoints remains separate (nonzero vf_task_state exit does not reopen phase A). Follow-ups: Cursor PRs #109–#114.",
+  "outcome": "worker_done",
+  "verification": "merged to main via PR #108 (06f9854); phase A artifacts digest-verified; phase B is separate SWC-CURSOR work"
 }
