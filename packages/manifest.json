@@ -5,9 +5,10 @@
   "role": "core",
   "displayName": "VelvetOS Core",
   "dumpedAt": "2026-08-30",
-  "catalogRefreshedAt": "2026-09-06",
+  "catalogRefreshedAt": "2026-09-07",
   "tag": "v0.1.0",
   "notes": [
+    "2026-09-07 evening catalog: GitHub nocturney/velvetos-core. Folded merged #118 print-demand/print.done/revenue retro, #117 three-layer SoC, #116 core stability, #115/#105 SWC board, #109\u2013#114 quality+loop+templates, #107/#106 research seat, #104/#103/#102 agency gate + G004 stories, #101 brief HTML, #100 vfbiz week. Origin not vendored (CLI not logged in). No open PRs at refresh.",
     "2026-09-06 evening catalog: GitHub nocturney/velvetos-core. Folded merged #97 vfcanva/G004, #96 vfops loop + agency floor, #95 vfcost material CLI, #94 ig-mcp+iCloud, #93 HQ sweep, #92/#73 best-skills, #89/#90 vfgrowth calendar, #77 vfresearch last30days. Origin not vendored (CLI not logged in). No open PRs at refresh.",
     "2026-09-03 evening catalog: GitHub nocturney/velvetos-core. Included merged #71 buildwithclaude, #59 office MCPs in Core, #72 best-skills. Origin not vendored (CLI not logged in). Open branches still on GitHub: #70 cursor/daily-research-2026-09-03-b067, #68 cursor/integrate-ig-mcp-abe1, #66 cursor/close-access-gaps-5b1b, #58 cursor/icloud-drive-dual-path-c95c.",
     "2026-09-03: Standing forever bi-daily LinklyAI/best-skills pulse \u2014 BEST-SKILLS.md + TIMER.md + standingForever. Renew subscribe_timer every pass. Sensor: scripts/check-vfresearch.py.",
@@ -100,7 +101,7 @@
     },
     {
       "name": "vfgrowth",
-      "summary": "Growth pack \u2014 standing IG calendar (CALENDAR.md / LEDGER.md / HANDOFF-he.md). Studio books on instagram.com; no Suite / boost / invented \u20aa.",
+      "summary": "Growth pack \u2014 standing IG calendar (CALENDAR.md / LEDGER.md / HANDOFF-he.md) + PREFLIGHT.md quality gate before schedule. Studio books on instagram.com; no Suite / boost / invented \u20aa.",
       "bcId": "bc-e68393a0",
       "agentUrl": "https://cursor.com/agents/bc-e68393a0",
       "originSlug": "christian-velvet/tmp-0093db8b6deea44f",
@@ -110,7 +111,7 @@
     },
     {
       "name": "vfprod",
-      "summary": "Production pack \u2014 print-floor and job tracking.",
+      "summary": "Production pack \u2014 print-floor and job tracking + PRINT-DONE.md (print.done / content.draft_ready handoff). No invented sale \u20aa.",
       "bcId": "bc-cd4a5cde",
       "agentUrl": "https://cursor.com/agents/bc-cd4a5cde",
       "originSlug": "christian-velvet/tmp-c9ca74be9225ac7d",
@@ -130,7 +131,7 @@
     },
     {
       "name": "vfops",
-      "summary": "Operations pack \u2014 run-the-studio procedures + office loop (LOOP.json / vfops_loop.py consume every pack into 07:00 brief + HANDOFF).",
+      "summary": "Operations pack \u2014 office loop (LOOP.json / vfops_loop.py run vs brief vs check) into 07:00 brief + HANDOFF + DAILY-RETRO. No invented \u20aa / Insights.",
       "bcId": "bc-93fbfca6",
       "agentUrl": "https://cursor.com/agents/bc-93fbfca6",
       "originSlug": null,
@@ -150,7 +151,7 @@
     },
     {
       "name": "vfinsights",
-      "summary": "Insights pack \u2014 performance reads; does not invent metrics.",
+      "summary": "Insights pack \u2014 closed measurement loop (scripts/vf_insights_loop.py) from owner snapshot / CSV only. Writes \u00ab\u05d0\u05d9\u05df \u05e1\u05e4\u05d9\u05e8\u05d4\u00bb when missing. Never invents metrics.",
       "bcId": "bc-02df9e72",
       "agentUrl": "https://cursor.com/agents/bc-02df9e72",
       "originSlug": null,
@@ -170,7 +171,7 @@
     },
     {
       "name": "vfresearch",
-      "summary": "Research pack \u2014 weekly links, bi-daily best-skills (BEST-SKILLS.md / TIMER.md / skill vf-best-skills), and last30 community research (hq/LAST30.md / skill vf-last30).",
+      "summary": "Research pack \u2014 weekly links, bi-daily best-skills, last30 community research, and weekly print-demand pulse (hq/PRINT-DEMAND.md). No invented trends.",
       "bcId": "bc-01278e9b",
       "agentUrl": "https://cursor.com/agents/bc-01278e9b",
       "originSlug": null,
@@ -180,7 +181,7 @@
     },
     {
       "name": "vfbiz",
-      "summary": "Business pack \u2014 studio strategy and decisions.",
+      "summary": "Business pack \u2014 studio strategy and decisions; week pulse in out/week.md (sale price stays X \u20aa until verified).",
       "bcId": "bc-3921041e",
       "agentUrl": "https://cursor.com/agents/bc-3921041e",
       "originSlug": null,
@@ -241,7 +242,7 @@
     },
     {
       "name": "vfcanva",
-      "summary": "Canva desk \u2014 Instagram visuals for @velvets_cloud (create / resize / review). Includes jobs/G004.md (VF-G004 kettlebell-holder pack). Send stays on vfigos.",
+      "summary": "Canva desk \u2014 Instagram visuals for @velvets_cloud (create / resize / review). Includes jobs/G004.md + G004 stories luxury rebuild. Send stays on vfigos.",
       "bcId": "bc-2020e135-820c-40b6-a922-e2822b5e81bf",
       "agentUrl": "https://cursor.com/agents/bc-2020e135-820c-40b6-a922-e2822b5e81bf",
       "originSlug": null,
@@ -343,7 +344,7 @@
     },
     {
       "name": "vfharness",
-      "summary": "Outer harness \u2014 six layers on existing packs (guides, sensors, loop, memory, permissions, observability). Includes verification-before-claim, skill-authoring, handoff, architecture-audit, brainstorm-gate, systematic-debugging. No second runtime.",
+      "summary": "Outer harness \u2014 six layers on existing packs. Includes core-stability four axes, send preflight, graduated escalation, verification-before-claim. No second runtime.",
       "bcId": "bc-c6e01d3b",
       "bcIdFull": "bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
       "agentUrl": "https://cursor.com/agents/bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
@@ -371,7 +372,7 @@
     },
     {
       "name": "vfmem",
-      "summary": "HQ memory graph \u2014 CBM-style queries over existing VF maps + MEMORY-UPDATE.md (buildwithclaude agent-memory-discipline). Pattern from DeusData/codebase-memory-mcp; no third-party binary.",
+      "summary": "HQ memory graph \u2014 CBM-style queries + local TF-IDF semantic search (scripts/vf_semantic_search.py). MEMORY-UPDATE.md. No third-party binary.",
       "bcId": "bc-8bd6ba75",
       "bcIdFull": "bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
       "agentUrl": "https://cursor.com/agents/bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
@@ -397,7 +398,7 @@
     },
     {
       "name": "velvetos",
-      "summary": "VelvetOS Core \u2014 backend kernel; modules always loaded; frontend scaffolds under instances/.",
+      "summary": "VelvetOS Core \u2014 backend kernel; modules always loaded; three-layer SoC (ADR-THREE-LAYERS.md). Frontend scaffolds under instances/.",
       "bcId": "bc-f7a22589",
       "bcIdFull": "bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
       "agentUrl": "https://cursor.com/agents/bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",

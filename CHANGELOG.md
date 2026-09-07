@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **גיבוי ערב קטלוג**: רענון `packages/manifest.json` (`catalogRefreshedAt` 2026-09-07). נכללו מוזגים #118 print-demand/print.done/revenue retro, #117 SoC שלוש שכבות, #116 יציבות ליבה, #115/#105 תיאום SWC, #109–#114 איכות+לולאה+תבניות, #107/#106 מושב מחקר, #104/#103/#102 שער+סטוריז G004, #101 בריף, #100 vfbiz. Origin לא שוכפל (אין login). אין PR פתוחים. Evening catalog refresh; Origin not vendored.
 - 2026-09-07 — **Print·Demand·Sound + Print-Done + לולאת פרנסה ברטרו:** דופק מחקר שבועי `vfresearch/hq/PRINT-DEMAND.md` (ויזואל 3D + ביקוש IL + סאונד; בלי אוטו־DM) · כרטיס רצפה `vfprod/PRINT-DONE.md` + אירועי `print.done` / `content.draft_ready` · רטרו עם פניות↔דגמים↔חומרים + kinds ב־`vf_retro_signals` · סנסורים check-vfresearch/velvetos/vfops-loop. בלי פק חדש / בלי DM engine / בלי poll→print. Office loop embed: research pulse + floor card → draft reel + revenue retro.
 
 - 2026-09-07 — **SoC שלוש שכבות + חוזה אירועים + Degraded + retro→signal:** ADR `velvetos/ADR-THREE-LAYERS.md` · `LAYERS.md` · `schema/events.catalog.json` + envelope · checkpoint `component_state` · `degraded-mode.md` + שם ב־ORCHESTRA · `vf_retro_signals.py` → `retro-signals.json` לבריף · ANTI-PATTERN נגד Core-as-nervous-runtime / zero-touch על ₪·WA. סנסורים: check-velvetos / check-vfharness / check-vfops-loop. בלי broker / runtime שני. Three-layer SoC embed; disk event contract; named Degraded Mode; retro signals to brief.

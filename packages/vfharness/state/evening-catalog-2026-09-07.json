@@ -1,0 +1,26 @@
+{
+  "task_id": "evening-catalog-2026-09-07",
+  "status": "done",
+  "pack": "vfharness",
+  "goal": "Same-day GitHub catalog refresh (catalogRefreshedAt 2026-09-07) even when Origin will not clone.",
+  "completed_steps": [
+    "Read origin/main + CHANGELOG Unreleased + packages/manifest.json",
+    "origin auth status: not logged in; skip vendor",
+    "Set catalogRefreshedAt 2026-09-07 and prepend evening note",
+    "Update pack summaries from the tree for packs touched today",
+    "Add CHANGELOG Unreleased evening-catalog line"
+  ],
+  "next_step": "Push branch + PR; push main if that remains the evening backup path.",
+  "artifacts": [
+    "packages/manifest.json",
+    "CHANGELOG.md"
+  ],
+  "unresolved": [
+    "Origin not vendored (CLI not logged in)",
+    "Six packs remain origin-unreachable until origin auth login"
+  ],
+  "last_updated": "2026-09-07",
+  "pulse": "working",
+  "verification": "scripts/check-all.py",
+  "outcome": "worker_done"
+}
