@@ -1,0 +1,269 @@
+{
+  "generatedFrom": ".cursor/rules/*.mdc",
+  "totalRules": 283,
+  "relevantCount": 50,
+  "buckets": {
+    "finance-lite": [
+      {
+        "slug": "accounts-payable-agent",
+        "bucket": "finance-lite",
+        "description": "Autonomous payment processing specialist that executes vendor payments, contractor invoices, and recurring bills across any payment rail — crypto, fiat, stablecoins. Integrates with AI agent workflows via tool calls."
+      },
+      {
+        "slug": "bookkeeper-controller",
+        "bucket": "finance-lite",
+        "description": "Expert bookkeeper and controller specializing in day-to-day accounting operations, financial reconciliations, month-end close processes, and internal controls. Ensures the accuracy, completeness, and timeliness of financial records while maintaining GAAP compliance and audit readiness at all times."
+      }
+    ],
+    "automation-devops": [
+      {
+        "slug": "agents-orchestrator",
+        "bucket": "automation-devops",
+        "description": "Autonomous pipeline manager that orchestrates the entire development workflow. You are the leader of this process."
+      },
+      {
+        "slug": "automation-governance-architect",
+        "bucket": "automation-devops",
+        "description": "Governance-first architect for business automations (n8n-first) who audits value, risk, and maintainability before implementation."
+      },
+      {
+        "slug": "devops-automator",
+        "bucket": "automation-devops",
+        "description": "Expert DevOps engineer specializing in infrastructure automation, CI/CD pipeline development, and cloud operations"
+      },
+      {
+        "slug": "email-intelligence-engineer",
+        "bucket": "automation-devops",
+        "description": "Expert in extracting structured, reasoning-ready data from raw email threads for AI agents and automation systems"
+      },
+      {
+        "slug": "git-workflow-master",
+        "bucket": "automation-devops",
+        "description": "Expert in Git workflows, branching strategies, and version control best practices including conventional commits, rebasing, worktrees, and CI-friendly branch management."
+      },
+      {
+        "slug": "jira-workflow-steward",
+        "bucket": "automation-devops",
+        "description": "Expert delivery operations specialist who enforces Jira-linked Git workflows, traceable commits, structured pull requests, and release-safe branch strategy across software teams."
+      },
+      {
+        "slug": "mcp-builder",
+        "bucket": "automation-devops",
+        "description": "Expert Model Context Protocol developer who designs, builds, and tests MCP servers that extend AI agent capabilities with custom tools, resources, and prompts."
+      },
+      {
+        "slug": "privacy-engineer",
+        "bucket": "automation-devops",
+        "description": "Expert privacy engineer who implements privacy in code — PII discovery and classification, data minimization, consent enforcement at the API layer, automated DSAR and deletion across services, pseudonymization/tokenization, and retention automation. Builds the technical controls a privacy policy only promises."
+      },
+      {
+        "slug": "short-video-editing-coach",
+        "bucket": "automation-devops",
+        "description": "Hands-on short-video editing coach covering the full post-production pipeline, with mastery of CapCut Pro, Premiere Pro, DaVinci Resolve, and Final Cut Pro across composition and camera language, color grading, audio engineering, motion graphics and VFX, subtitle design, multi-platform export optimization, editing workflow efficiency, and AI-assisted editing."
+      },
+      {
+        "slug": "test-automation-engineer",
+        "bucket": "automation-devops",
+        "description": "Expert end-to-end test automation engineer for Playwright and Cypress — resilient selectors, flake elimination, isolated test data, CI parallelization, and trace-driven failure debugging."
+      },
+      {
+        "slug": "unity-editor-tool-developer",
+        "bucket": "automation-devops",
+        "description": "Unity editor automation specialist - Masters custom EditorWindows, PropertyDrawers, AssetPostprocessors, ScriptedImporters, and pipeline automation that saves teams hours per week"
+      },
+      {
+        "slug": "workflow-architect",
+        "bucket": "automation-devops",
+        "description": "Workflow design specialist who maps complete workflow trees for every system, user journey, and agent interaction — covering happy paths, all branch conditions, failure modes, recovery paths, handoff contracts, and observable states to produce build-ready specs that agents can implement against and QA can test against."
+      },
+      {
+        "slug": "workflow-optimizer",
+        "bucket": "automation-devops",
+        "description": "Expert process improvement specialist focused on analyzing, optimizing, and automating workflows across all business functions for maximum productivity and efficiency"
+      },
+      {
+        "slug": "x-twitter-intelligence-analyst",
+        "bucket": "automation-devops",
+        "description": "Social intelligence specialist for X/Twitter research, trend detection, account monitoring, and evidence-backed audience insights using public signals and structured data workflows."
+      }
+    ],
+    "web-dashboard": [
+      {
+        "slug": "analytics-reporter",
+        "bucket": "web-dashboard",
+        "description": "Expert data analyst transforming raw data into actionable business insights. Creates dashboards, performs statistical analysis, tracks KPIs, and provides strategic decision support through data visualization and reporting."
+      },
+      {
+        "slug": "data-visualization-engineer",
+        "bucket": "web-dashboard",
+        "description": "Expert data visualization engineer — chart-type selection by data and question, perceptually honest encodings, colorblind-safe data palettes, accessible and interactive charts, and rendering large datasets performantly with D3, Vega, and charting libraries."
+      },
+      {
+        "slug": "document-generator",
+        "bucket": "web-dashboard",
+        "description": "Expert document creation specialist who generates professional PDF, PPTX, DOCX, and XLSX files using code-based approaches with proper formatting, charts, and data visualization."
+      },
+      {
+        "slug": "finops-engineer",
+        "bucket": "web-dashboard",
+        "description": "Expert cloud cost engineer for AWS/GCP/Azure — cost allocation and tagging, rightsizing, commitment planning (reserved instances/savings plans), egress and storage optimization, and unit-economics dashboards that tie spend to business value."
+      },
+      {
+        "slug": "frontend-developer",
+        "bucket": "web-dashboard",
+        "description": "Expert frontend developer specializing in modern web technologies, React/Vue/Angular frameworks, UI implementation, and performance optimization"
+      }
+    ],
+    "3d-printing-core": [
+      {
+        "slug": "behavioral-nudge-engine",
+        "bucket": "3d-printing-core",
+        "description": "Behavioral psychology specialist that adapts software interaction cadences and styles to maximize user motivation and success."
+      },
+      {
+        "slug": "blender-add-on-engineer",
+        "bucket": "3d-printing-core",
+        "description": "Blender tooling specialist - Builds Python add-ons, asset validators, exporters, and pipeline automations that turn repetitive DCC work into reliable one-click workflows"
+      },
+      {
+        "slug": "filament-optimization-specialist",
+        "bucket": "3d-printing-core",
+        "description": "Expert in restructuring and optimizing Filament PHP admin interfaces for maximum usability and efficiency. Focuses on impactful structural changes — not just cosmetic tweaks."
+      },
+      {
+        "slug": "mobile-release-engineer",
+        "bucket": "3d-printing-core",
+        "description": "Expert mobile release and distribution engineer for iOS and Android — code signing, provisioning, fastlane pipelines, App Store Connect and Play Console submission, phased rollouts, and crash-triaged release health."
+      },
+      {
+        "slug": "research-synthesist",
+        "bucket": "3d-printing-core",
+        "description": "Expert in literature review, source evaluation, and evidence synthesis — turns a scattered pile of sources into a structured, honestly-weighted map of what the evidence actually supports"
+      }
+    ],
+    "social-marketing": [
+      {
+        "slug": "carousel-growth-engine",
+        "bucket": "social-marketing",
+        "description": "Autonomous TikTok and Instagram carousel generation specialist. Analyzes any website URL with Playwright, generates viral 6-slide carousels via Gemini image generation, publishes directly to feed via Upload-Post API with auto trending music, fetches analytics, and iteratively improves through a data-driven learning loop."
+      },
+      {
+        "slug": "french-consulting-market-navigator",
+        "bucket": "social-marketing",
+        "description": "Navigate the French ESN/SI freelance ecosystem — margin models, platform mechanics (Malt, collective.work), portage salarial, rate positioning, and payment cycle realities"
+      },
+      {
+        "slug": "instagram-curator",
+        "bucket": "social-marketing",
+        "description": "Expert Instagram marketing specialist focused on visual storytelling, community building, and multi-format content optimization. Masters aesthetic development and drives meaningful engagement."
+      },
+      {
+        "slug": "pr-communications-manager",
+        "bucket": "social-marketing",
+        "description": "Strategic public relations and communications specialist for media relations, press releases, crisis communications, executive thought leadership, brand reputation management, and integrated communications planning — building and protecting reputations through earned media, storytelling, and proactive narrative control"
+      },
+      {
+        "slug": "support-responder",
+        "bucket": "social-marketing",
+        "description": "Expert customer support specialist delivering exceptional customer service, issue resolution, and user experience optimization. Specializes in multi-channel support, proactive customer care, and turning support interactions into positive brand experiences."
+      },
+      {
+        "slug": "twitter-engager",
+        "bucket": "social-marketing",
+        "description": "Expert Twitter marketing specialist focused on real-time engagement, thought leadership building, and community-driven growth. Builds brand authority through authentic conversation participation and viral thread creation."
+      },
+      {
+        "slug": "ui-designer",
+        "bucket": "social-marketing",
+        "description": "Expert UI designer specializing in visual design systems, component libraries, and pixel-perfect interface creation. Creates beautiful, consistent, accessible user interfaces that enhance UX and reflect brand identity"
+      },
+      {
+        "slug": "vf-canva-instagram",
+        "bucket": "social-marketing",
+        "description": ""
+      },
+      {
+        "slug": "visual-storyteller",
+        "bucket": "social-marketing",
+        "description": "Expert visual communication specialist focused on creating compelling visual narratives, multimedia content, and brand storytelling through design. Specializes in transforming complex information into engaging visual stories that connect with audiences and drive emotional engagement."
+      },
+      {
+        "slug": "whimsy-injector",
+        "bucket": "social-marketing",
+        "description": "Expert creative specialist focused on adding personality, delight, and playful elements to brand experiences. Creates memorable, joyful interactions that differentiate brands through unexpected moments of whimsy"
+      }
+    ],
+    "sales-ops": [
+      {
+        "slug": "customer-service",
+        "bucket": "sales-ops",
+        "description": "Friendly, professional customer service specialist for any industry — handling inquiries, complaints, account support, FAQs, and seamless escalation with warmth, efficiency, and a genuine commitment to customer satisfaction"
+      },
+      {
+        "slug": "data-consolidation-agent",
+        "bucket": "sales-ops",
+        "description": "AI agent that consolidates extracted sales data into live reporting dashboards with territory, rep, and pipeline summaries"
+      },
+      {
+        "slug": "discovery-coach",
+        "bucket": "sales-ops",
+        "description": "Coaches sales teams on elite discovery methodology — question design, current-state mapping, gap quantification, and call structure that surfaces real buying motivation."
+      },
+      {
+        "slug": "government-digital-presales-consultant",
+        "bucket": "sales-ops",
+        "description": "Presales expert for China"
+      },
+      {
+        "slug": "grant-writer",
+        "bucket": "sales-ops",
+        "description": "Expert grant writing specialist for nonprofits, research institutions, and social enterprises — covering prospect research, letter of inquiry writing, full proposal development, budget narratives, federal and foundation grants, and post-award reporting to maximize funding success"
+      },
+      {
+        "slug": "pipeline-analyst",
+        "bucket": "sales-ops",
+        "description": "Revenue operations analyst specializing in pipeline health diagnostics, deal velocity analysis, forecast accuracy, and data-driven sales coaching. Turns CRM data into actionable pipeline intelligence that surfaces risks before they become missed quarters."
+      },
+      {
+        "slug": "pricing-analyst",
+        "bucket": "sales-ops",
+        "description": "Specialized pricing analyst who develops optimal pricing models through market research, competitor analysis, cost structure evaluation, and margin optimization — turning pricing from guesswork into a data-driven competitive advantage."
+      },
+      {
+        "slug": "private-domain-operator",
+        "bucket": "sales-ops",
+        "description": "Expert in building enterprise WeChat (WeCom) private domain ecosystems, with deep expertise in SCRM systems, segmented community operations, Mini Program commerce integration, user lifecycle management, and full-funnel conversion optimization."
+      },
+      {
+        "slug": "report-distribution-agent",
+        "bucket": "sales-ops",
+        "description": "AI agent that automates distribution of consolidated sales reports to representatives based on territorial parameters"
+      },
+      {
+        "slug": "sales-coach",
+        "bucket": "sales-ops",
+        "description": "Expert sales coaching specialist focused on rep development, pipeline review facilitation, call coaching, deal strategy, and forecast accuracy. Makes every rep and every deal better through structured coaching methodology and behavioral feedback."
+      },
+      {
+        "slug": "sales-data-extraction-agent",
+        "bucket": "sales-ops",
+        "description": "AI agent specialized in monitoring Excel files and extracting key sales metrics (MTD, YTD, Year End) for internal live reporting"
+      },
+      {
+        "slug": "sales-engineer",
+        "bucket": "sales-ops",
+        "description": "Senior pre-sales engineer specializing in technical discovery, demo engineering, POC scoping, competitive battlecards, and bridging product capabilities to business outcomes. Wins the technical decision so the deal can close."
+      },
+      {
+        "slug": "sales-outreach",
+        "bucket": "sales-ops",
+        "description": "Consultative B2B sales outreach specialist for cold prospecting, lead follow-up, objection handling, proposal writing, and pipeline management — combining data-driven targeting with genuine relationship-building to open doors and close deals"
+      },
+      {
+        "slug": "salesforce-architect",
+        "bucket": "sales-ops",
+        "description": "Solution architecture for Salesforce platform — multi-cloud design, integration patterns, governor limits, deployment strategy, and data model governance for enterprise-scale orgs"
+      }
+    ]
+  }
+}
