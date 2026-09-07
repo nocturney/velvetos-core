@@ -135,6 +135,31 @@ def check_reference_vf(profile: dict, desk: dict, studio_text: str) -> None:
         fail("VF mcpBind.instagram.connect must point at CONNECT-IG.md")
 
 
+def check_b2b_examples_not_catalog(sample: dict, front: dict, studio_text: str) -> None:
+    """Owner correction 2026-09-07: logo/QR/napkins were examples, not a closed three-SKU B2B catalog."""
+    lock = (ROOT / "packages" / "vfbiz" / "LOCK.md").read_text(encoding="utf-8")
+    skill = (ROOT / "packages" / "vfbiz" / "SKILL.md").read_text(encoding="utf-8")
+    inst_studio = (INSTANCES / "velvet-factory" / "constitution" / "STUDIO.md").read_text(encoding="utf-8")
+    for label, text in (
+        ("packages/vfbiz/LOCK.md", lock),
+        ("packages/vfbiz/SKILL.md", skill),
+        ("constitution/STUDIO.md", studio_text),
+        ("instances/velvet-factory/constitution/STUDIO.md", inst_studio),
+    ):
+        if "B2B" not in text:
+            fail(f"{label} must keep the B2B lock")
+        if "דוגמאות" not in text:
+            fail(f"{label} must say logo/QR/napkins are examples, not a closed catalog")
+        if "נעול" not in text:
+            fail(f"{label} must keep B2B locked until lead opens it")
+    for label, profile in (("sample", sample), ("frontend-profile", front)):
+        extra = (profile.get("compliance") or {}).get("extraLocks") or []
+        if "b2b-logo-qr-napkins-locked" in extra:
+            fail(f"{label} extraLocks must not treat logo/QR/napkins as the closed B2B catalog")
+        if "b2b-line-locked" not in extra:
+            fail(f"{label} extraLocks must include b2b-line-locked")
+
+
 def main() -> None:
     for rel in REQUIRED_ROOT:
         if not (PACK / rel).is_file():
@@ -218,6 +243,7 @@ def main() -> None:
     studio_text = STUDIO.read_text(encoding="utf-8")
     check_reference_vf(sample, desk, studio_text)
     check_reference_vf(front, desk, studio_text)
+    check_b2b_examples_not_catalog(sample, front, studio_text)
 
     # desk should identify as core hosting reference front
     if desk.get("product") != "VelvetOS":

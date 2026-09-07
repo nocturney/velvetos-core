@@ -574,6 +574,32 @@ def consumer_brief_lines(results: list[dict] | None = None) -> str:
     return "צרכנים:\n" + "\n".join(lines)
 
 
+
+PAGES_BASE = "https://nocturney.github.io/velvetos-core/weekly-deck"
+
+
+def weekly_deck_line(today: str) -> str | None:
+    """Weekend-only slot: link to the latest published weekly recap deck.
+
+    Returns None on weekdays or if no deck has ever been published, so the
+    brief silently omits the slot rather than showing a dead link.
+    """
+    import datetime as _dt
+
+    try:
+        weekday = _dt.date.fromisoformat(today).weekday()  # Mon=0 .. Sun=6
+    except ValueError:
+        return None
+    if weekday not in (4, 5, 6):  # Fri, Sat, Sun
+        return None
+    docs_dir = ROOT / "docs" / "weekly-deck"
+    if not (docs_dir / "index.html").is_file():
+        return None
+    dated = sorted(docs_dir.glob("20*-*-*.html"))
+    stamp = dated[-1].stem if dated else "אין ספירה"
+    return f"דק שבועי · {stamp} · {PAGES_BASE}/"
+
+
 def assemble(today: str) -> dict:
     invoked: set[str] = {"vfops"}
     sku = sku_line()
@@ -601,11 +627,8 @@ def assemble(today: str) -> dict:
             if str(rec.get("key", "")).startswith(today + ":") and rec.get("ok") and rec.get("pack"):
                 invoked.add(str(rec["pack"]))
     office = office_line(invoked)
-    return {
-        "date_line": f"{today} · בריף סוכנות · תצוגה 3",
-        "bottom_line": "המשרד רץ. כריסטיאן יכול לשבת רגוע — בלי ₪ מומצא, בלי Insights מומצאים, בלי חצי-עבודה.",
-        "footer": "Velvet Factory · סוכנות פנימית · איסוף משדרות",
-        "slots": [
+    deck_line = weekly_deck_line(today)
+    slots = [
             {
                 "kicker": "01 · קודם החלטה",
                 "title": "החלטות",
@@ -655,7 +678,18 @@ def assemble(today: str) -> dict:
                 "headers": ["מזהה", "פתיחה", "מצב"],
                 "rows": captions,
             },
-        ],
+        ]
+    if deck_line:
+        slots.append({
+            "kicker": "08 · סופש",
+            "title": "דק שבועי",
+            "prose": f"{deck_line}\nמקור נתונים: LEARNINGS.md / LAST30.md / DAILY-RETRO.md / WEEKLY-LOAD.md. אין ספירה אם משהו חסר.",
+        })
+    return {
+        "date_line": f"{today} · בריף סוכנות · תצוגה 3",
+        "bottom_line": "המשרד רץ. כריסטיאן יכול לשבת רגוע — בלי ₪ מומצא, בלי Insights מומצאים, בלי חצי-עבודה.",
+        "footer": "Velvet Factory · סוכנות פנימית · איסוף משדרות",
+        "slots": slots,
     }
 
 
