@@ -14,6 +14,9 @@ __pycache__/
 *.pyc
 packages/vfcanva/studio/out/*.png
 packages/vfops/data/cli-runs.jsonl
+packages/vfops/out/report-*.md
+packages/vfops/out/report-*.json
+!packages/vfops/out/fixtures/
 office/ledger/live/*.csv
 packages/vfmem/semantic_index.pkl
 packages/vfops/data/consumer-runs.jsonl

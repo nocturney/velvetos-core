@@ -9,11 +9,11 @@ Use when there is a new פנייה, Instagram/WhatsApp/Gmail inquiry, or "quote 
 
 ## Chain (existing packs only)
 
-1. `vfconvert` + `@email-intelligence-engineer` + `@discovery-coach` — structured brief (size, use, pickup window, license).
+1. `vfconvert` + `@email-intelligence-engineer` + `@discovery-coach` — structured brief (size, use, pickup window, license). First reply follows `vfsales/SLA.md` (no ₪). New client → `office/clients/INTAKE-TEMPLATE.md` then private Client Record (never commit PII to public git).
 2. `vfprod` + `@studio-producer` — print feasibility. No national shipping.
 3. `vfcost` + `@pricing-analyst` — material line via `python3 scripts/vfcost.py material --grams <slicer> --ils-per-kg <verified>` (missing grams = refuse). Other cost factors from slicer / snapshot / an amount Christian stated. Else `X ₪`. Never a sale price from this pack.
-4. `vfsales` + `vfcopy` + `@sales-engineer` + `@content-creator` — quote **draft**. One CTA. Spoken Hebrew. No empty price promise. **No-fabricate** (proposal-drafter): if a fact is missing from the card/slicer/lead seat, the draft does not invent it — ask or write `X ₪` / חסר. Optional frameworks: `vfmskill` `offers` / `sales-enablement` / `customer-research`. ₪ still only after the lead seat.
-5. HQ **sends the Gmail quote via tool** (no invented ₪). Customer WhatsApp close stays human `050-2517000` + Invoice4U.
+4. `vfsales` + `vfcopy` + `@sales-engineer` + `@content-creator` — quote **draft** (`QUOTE.md` + optional `vf_quote_ladder.py`). One CTA. Spoken Hebrew. No empty price promise. **No-fabricate** (proposal-drafter): if a fact is missing from the card/slicer/lead seat, the draft does not invent it — ask or write `X ₪` / חסר. Optional frameworks: `vfmskill` `offers` / `sales-enablement` / `customer-research`. ₪ still only after the lead seat.
+5. HQ **sends the Gmail quote via tool** (no invented ₪). Customer WhatsApp close stays human `050-2517000` + Invoice4U. SLA does **not** authorize auto-messages.
 
 After each pack step: verify missing fields stay marked חסר. Do not invent ₪ to close the chain. Same sensor-class failure twice → escalate (`packages/vfharness/templates/escalation.md`). Guide: `AGENTS.md`.
 

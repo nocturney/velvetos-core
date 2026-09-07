@@ -97,5 +97,7 @@ GrokBot `weekday-ops` 07:00 = בריף/תפעול — **לא** יוצרים cron
 | כל יומיים | `vf-best-skills` | `vfresearch` |
 | שבועי | `vf-weekly-links` | `vfresearch` |
 | חודשי | `vf-last30` | `vfresearch` |
+| רבעוני | `OWNER-QUESTIONS-QUARTERLY.md` | `vfops` + `vfinsights` LEARNINGS — בלי המצאת מדדים |
 | סוף יום | `vf-daily-learning` | `vfops` |
 | ניתוב | `vf-hq-memory` | `vfmem` |
+| דוח מנתונים קיימים | `python3 scripts/vf_office_report.py` | `CLIENT-REPORT-TEMPLATE.md` · `--fixture` לנתוני דמה |
