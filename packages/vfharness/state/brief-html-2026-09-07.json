@@ -1,0 +1,30 @@
+{
+  "task_id": "brief-html-2026-09-07",
+  "status": "done",
+  "pack": "vfops",
+  "goal": "Land 7.9 תצוגה 3 HTML on GitHub for Grok pull; no email send; no invented sale ₪",
+  "completed_steps": [
+    "fetch-main",
+    "vfops-loop-brief-write",
+    "hebrew-date-line",
+    "render-mail-both-paths",
+    "copy-artifacts"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "packages/vfops/out/BRIEF-2026-09-07.html",
+    "packages/vfops/out/2026-09-07/brief-2026-09-07.html",
+    "/opt/cursor/artifacts/BRIEF-2026-09-07.html"
+  ],
+  "unresolved": [
+    "email not sent (task forbid)",
+    "Insights אין ספירה",
+    "sale price remains X ₪",
+    "no thumbs — packet has no cid covers"
+  ],
+  "escalation": null,
+  "last_updated": "2026-09-07",
+  "bytes": 10891,
+  "sha256": "7e1cceadcfda8c599c22cb45f7849472a4312932ae68cef497a739f652e1925a",
+  "latest_observation": "Calendar 7.9: G003 16:00 + G004 stories 20:30; no pickup window. Packet assembled from desks including vfbiz week.md."
+}

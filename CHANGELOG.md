@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **בריף HTML ל־Grok:** `vfops_loop.py brief --write --date 2026-09-07` + `render_mail.py` → `packages/vfops/out/BRIEF-2026-09-07.html` ועותק זהה `packages/vfops/out/2026-09-07/brief-2026-09-07.html` (10891 בתים). שורת תאריך: יום שני 7 בספטמבר 2026. חריץ 04 מ־`vfbiz/out/week.md`. בלי שליחת מייל. בלי ₪ מכירה. Morning brief HTML archived for Grok pull; not emailed.
+
 - 2026-09-07 — **דופק רווח vfbiz:** `packages/vfbiz/out/week.md` (7.9 Asia/Jerusalem) — `NO_DECISION` אין באצ׳ לפני איסוף חמישי 10.9; אין סלייס מתועד; B2B נעול; 3dwhy RH = הקטלוג שלהם (לא מעתיקים); Flexi Man NC לא למכירה; מחיר VF `X ₪`. חריץ 04 מושך את בלוק הבריף. בלי נגיעה ב־LOCK/CHAIN. VF profit week note on existing vfbiz; no invented sale ₪.
 
 - 2026-09-06 — **קול פיד נעול:** `packages/vfcopy/VOICE.md` — תהליך-קצר (שחמט) מול סיפור-מוצר (תמנון) מכיתובי כריסטיאן הראשונים. `STUDIO.md` (Core + instance) מצביעים לחוק. מחקר שכנים ציבורי ב־`VOICE-RESEARCH.md` (בלי ספירת עוקבים). G004 עבר לסיפור-מוצר. בלי Publish / ₪ מומצא. Locked @velvets_cloud voice from first two feed captions.
