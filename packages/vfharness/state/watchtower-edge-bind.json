@@ -1,0 +1,45 @@
+{
+  "task_id": "watchtower-edge-bind",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfprod",
+  "goal": "Map Watchtower farm dashboard to Edge without Core daemon or HQ print",
+  "completed_steps": [
+    "product-page-read",
+    "kickstarter-cloudflare-blocked",
+    "playbook-watchtower",
+    "layers-floor-print-done",
+    "sensor-needles"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "packages/vfprod/WATCHTOWER.md",
+    "packages/vfprod/FLOOR.md",
+    "packages/vfprod/PRINT-DONE.md",
+    "packages/velvetos/LAYERS.md"
+  ],
+  "unresolved": [
+    "Kickstarter campaign body blocked by Cloudflare from Cloud Agent — no pledge/ship date",
+    "Elegoo/Snapmaker not on Watchtower protocol list as of 2026-09-07",
+    "No license purchased yet — bind is playbook only"
+  ],
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "python3 scripts/check-all.py",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-07",
+  "latest_observation": "watchtower3d.com: local LAN dashboard, Bambu/PrusaLink/OctoPrint/Klipper; Kickstarter HTML not readable.",
+  "events": [
+    {
+      "name": "embed.done",
+      "producedAt": "2026-09-07",
+      "sourceAgent": "vfprod",
+      "payload": {
+        "pack": "vfprod",
+        "file": "WATCHTOWER.md",
+        "layer": "edge"
+      }
+    }
+  ]
+}

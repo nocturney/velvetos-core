@@ -5,6 +5,7 @@
 לפני התחייבות ללקוח: `hq/PLAYBOOK.md`.  
 פריפלייט STL: `PREFLIGHT.md` · `python3 scripts/vf_office.py print preflight`.  
 רצפה: `FLOOR.md` · אחרי הדפסה תקינה: `PRINT-DONE.md` (כרטיס → טיוטת תוכן, לא Publish אוטומטי).  
+דשבורד חווה עתידי (Watchtower): `WATCHTOWER.md` — Edge על LAN שדרות, לא daemon בליבה.  
 3D AI Studio (מנוי): `3DAISTUDIO.md` · חיבור MCP: `CONNECT-3DAI.md`.  
 אחרי אישור: תור על הצינור `הדפסה`.  
 רישיון קובץ: `#vlicense`.  
