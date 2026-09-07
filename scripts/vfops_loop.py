@@ -262,6 +262,34 @@ def insights_line() -> str:
     return "Insights: אין ספירה"
 
 
+
+
+CONSUMERS = [
+    ("velvetos modules", ["python3", "scripts/velvetos.py", "modules"]),
+    ("vfcanva render", ["python3", "packages/vfcanva/studio/render.py"]),
+    ("vfcovers compose", ["python3", "packages/vfcovers/g005/compose_slides.py"]),
+    ("vfresearch daily", ["python3", "scripts/vfresearch.py", "daily"]),
+    ("vfsales quote", ["python3", "scripts/vfsales.py", "quote"]),
+    ("vfinsights read", ["python3", "scripts/vfinsights.py", "read"]),
+    ("check-all", ["python3", "scripts/check-all.py"]),
+]
+
+
+def run_daily_consumers() -> list[str]:
+    gaps: list[str] = []
+    for name, cmd in CONSUMERS:
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True)
+        except FileNotFoundError:
+            gaps.append(f"פער: {name} · script missing")
+            continue
+        if result.returncode != 0:
+            msg = (result.stderr or result.stdout or "").strip().splitlines()
+            detail = msg[0] if msg else "unknown error"
+            gaps.append(f"פער: {name} · {detail}")
+    return gaps
+
+
 def assemble(today: str) -> dict:
     invoked: set[str] = {"vfops"}
     sku = sku_line()
