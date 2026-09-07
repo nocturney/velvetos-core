@@ -18,8 +18,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install semantic-search deps
+        run: pip install scikit-learn
+
       - name: Build semantic index
-        run: python3 packages/vfmem/scripts/vf_semantic_search.py --build || echo "semantic index build failed (no sklearn?)"
+        run: python3 packages/vfmem/scripts/vf_semantic_search.py --build || echo "semantic index build failed"
 
       - name: Run office sensor suite
         run: python3 scripts/check-all.py

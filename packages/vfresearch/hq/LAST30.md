@@ -20,6 +20,10 @@ Google מצטבר עורכים. כאן — קהילה.
 | **comparison** | «A vs B» (כלים / ריפוז / שיטות) | טבלת head-to-head + verdict קצר |
 | **discovery** | «מה מתפוצץ ב־…» בלי נושא סגור | 3–7 מועמדים עם רצפה — או **nothing-solid** |
 
+## מעבר אחרון (HQ)
+
+- **2026-09-07** — topic `IG / maker studio engagement` · **nothing-solid** (WebSearch ריק בחלון; אין מפתחות X/TikTok). ארטיפקט: `sources/2026-09-07-ig-maker-engagement-last30.md`. אין הטמעה חדשה ל־vfcopy/vfgrowth עד מקור עם ספירה.
+
 ## כלי המשרד (מיפוי מקורות)
 
 | מקור last30days | במשרד VF | הערה |
@@ -130,3 +134,7 @@ Google מצטבר עורכים. כאן — קהילה.
 - X/TikTok keys בגיט או על הסוכן
 - פק חדש לרעיון מחקר
 - הצגת WebSearch-בלבד כאילו רצו את מנוע last30days המלא — לציין במפורש: **דפוס VF / כלי משרד**
+
+## מעבר אחרון (HQ)
+
+- **2026-09-07** — topic `IG / maker studio engagement` · **nothing-solid** (WebSearch ריק בחלון; אין מפתחות X/TikTok). ארטיפקט: `sources/2026-09-07-ig-maker-engagement-last30.md`. אין הטמעה חדשה עד מקור עם ספירה.

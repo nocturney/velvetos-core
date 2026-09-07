@@ -105,8 +105,8 @@ def main() -> None:
     desk_n = sum(1 for n in graph.nodes.values() if n.label == "Specialist" and n.props.get("onDesk"))
     if desk_n != len(desk.get("desk", [])):
         fail(f"desk specialists {desk_n} != desk list {len(desk.get('desk', []))}")
-    if sum(1 for n in graph.nodes.values() if n.label == "Seat") != 5:
-        fail("expected 5 seats")
+    if sum(1 for n in graph.nodes.values() if n.label == "Seat") != 6:
+        fail("expected 6 seats (research + lead/studio/growth/ops/production)")
     if sum(1 for n in graph.nodes.values() if n.label == "Law") != len(catalog.get("adrs", [])):
         fail("law nodes != catalog adrs")
 
