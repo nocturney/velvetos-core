@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-07 — **תיאום #105 ממוזג:** לוח SHARED-WORK-COORDINATION מעודכן — SWC-001 done @ cb4dd02; Codex שלב א׳ #108; Cursor #109–#114 ממוזגים; GrokBot נשאר @ 0292d0e בלי pull. Coordination board post-merge ack; no auto version handoff.
+
 - 2026-09-07 — שכבת איכות: PREFLIGHT+TEMPLATE דורשים CONTENT-RUBRIC≥20/25 + ראיית ויזואל + digest; VOICE-CHART/UGC/community/MEASUREMENT-PLAN מחוברים לסקילים; check-vfcopy חוסם מוכן עם Rubric פסול.
 - 2026-09-07 — `vfops_loop.py run`: צרכנים יומיים עם תנאי/דילוג/ללא רקורסיית check-all; brief רק מרכיב; אין רנדור G005 אוטומטי.
 - 2026-09-07 — מחקר: `vfresearch_cadence.py` (map/status/verify/build-index fail-closed) + תיקון workflow בלי `|| echo` + DST Asia/Jerusalem; בלי cron כפול ל-GrokBot.
