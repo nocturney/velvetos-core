@@ -133,6 +133,21 @@ def main() -> None:
     for needle in ("print.done", "PREFLIGHT", "אוטו־DM", "hybrid-reel"):
         if needle not in pd_txt:
             fail(f"PRINT-DONE.md must mention {needle}")
+    if "WATCHTOWER.md" not in pd_txt:
+        fail("PRINT-DONE.md must point at WATCHTOWER.md Edge farm bind")
+
+    watchtower = ROOT / "packages" / "vfprod" / "WATCHTOWER.md"
+    floor = ROOT / "packages" / "vfprod" / "FLOOR.md"
+    if not watchtower.is_file():
+        fail("missing packages/vfprod/WATCHTOWER.md")
+    wt_txt = watchtower.read_text(encoding="utf-8")
+    for needle in ("Edge", "print.done", "אין Print", "Watchtower", "runtime שני"):
+        if needle not in wt_txt:
+            fail(f"WATCHTOWER.md must mention {needle}")
+    floor_txt = floor.read_text(encoding="utf-8")
+    if "WATCHTOWER.md" not in floor_txt:
+        fail("FLOOR.md must point at WATCHTOWER.md")
+
     for needle in ("RETRO-SIGNALS.md", "vf_retro_signals.py", "retro-signals.json"):
         if needle not in retro_txt:
             fail(f"DAILY-RETRO.md must wire retro→signal needle {needle!r}")

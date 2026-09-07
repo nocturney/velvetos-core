@@ -184,6 +184,13 @@
 - **מחר:** לא לכתוב «שלושת מוצרי ה-B2B» כאילו זה הסט המוגדר.
 - **מקור:** תיקון בעלים 7.9.2026 · `constitution/STUDIO.md` · `vfbiz/LOCK.md`.
 
+### 2026-09-07 (Watchtower · Edge farm dashboard)
+
+- **מושב:** ייצור
+- **למדנו:** Watchtower (דשבורד חווה, כוונת רכישה) = Edge על LAN שדרות — לא daemon ב־Core ולא Print מ־HQ. אחרי רכישה: כלי רצפה → כרטיס `print.done` → טיוטה, בלי פרסום אוטומטי. מחיר = X ₪ עד חשבונית. Elegoo לא ברשימת הפרוטוקולים בדף המוצר (7.9).
+- **מחר:** לא להתקין עד רישיון; לאמת מיטות מול Bambu/Klipper/PrusaLink/OctoPrint.
+- **מקור:** שיחת בעלים 7.9.2026 · `vfprod/WATCHTOWER.md` · watchtower3d.com (Kickstarter גוף חסום Cloudflare).
+
 ### 2026-09-07 (מושב מחקר — הרצת כל החוקרים)
 
 - **מושב:** מחקר/אורקסטרציה
