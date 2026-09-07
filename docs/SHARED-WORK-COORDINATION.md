@@ -89,7 +89,7 @@ Checkpoints תחת `packages/vfharness/state/*2026-09-07*.json` — כולם `do
 
 | מזהה | אחראי | מטרה | ריפו | ענף | קבצים/רכיבים | תלות | תנאי השלמה | סטטוס | PR |
 |---|---|---|---|---|---|---|---|---|---|
-| `SWC-001` | Cursor | הקמת רשומת תיאום + סקר מצב + תיחום Codex | core | `cursor/shared-work-coordination-7305` | `docs/SHARED-WORK-COORDINATION.md`, checkpoint תיאום | — | מסמך חי + PR תיעוד; Issue אם יופעל | **running** | (PR תיעוד — יעודכן) |
+| `SWC-001` | Cursor | הקמת רשומת תיאום + סקר מצב + תיחום Codex | core | `cursor/shared-work-coordination-7305` | `docs/SHARED-WORK-COORDINATION.md`, checkpoint תיאום | — | מסמך חי + PR תיעוד; Issue אם יופעל | **running** | [#105](https://github.com/nocturney/velvetos-core/pull/105) |
 | `SWC-VF-003` | לא ידוע (סוכן ישן) | סנכרון desk instance ל־Grok-primary | velvet-factory | `cursor/align-grok-constitution-f6b2` | `.cursor/vf-desk.json`, `AGENTS.md` | תלוי ביישור constitution ב־core (היסטורי) | סקירה + החלטה lead / Cursor | **open-draft — שמור** | [VF#3](https://github.com/nocturney/velvetos-velvet-factory/pull/3) |
 | `SWC-IDLE-*` | Cursor (היסטורי) | משימות 7.9 שמוזגו | core | ענפי `cursor/*` אחרי מיזוג | ראו #100–#104 | — | ממוזג ל־main | **merged — לא לגעת בענפים** | #100–#104 |
 
@@ -192,3 +192,4 @@ GrokBot: הפעלת משרד + דיווח התנהגות.
 | מתי (UTC) | מי | מה |
 |---|---|---|
 | 2026-09-07T06:30Z | Cursor | סקר שני הריפואים; Issues כבויים ב־core; נוצר מסמך תיאום + תיחום `SWC-CODEX-001`; אין מימוש Codex |
+| 2026-09-07T06:33Z | Cursor | PR תיעוד [#105](https://github.com/nocturney/velvetos-core/pull/105); בדיקות `check-hq-overlay` + `check-vfops-loop` ירוקות |

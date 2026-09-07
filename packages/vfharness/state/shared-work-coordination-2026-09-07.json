@@ -18,9 +18,11 @@
     "write-SHARED-WORK-COORDINATION.md",
     "propose-codex-scope"
   ],
-  "next_step": "push-docs-PR-and-hand-off-messages",
+  "next_step": "await Codex/GrokBot ack of SWC-CODEX-001 scope; peer review of PR #105",
   "artifacts": [
-    "docs/SHARED-WORK-COORDINATION.md"
+    "docs/SHARED-WORK-COORDINATION.md",
+    "https://github.com/nocturney/velvetos-core/pull/105",
+    "/opt/cursor/artifacts/shared-work-coordination-survey.log"
   ],
   "unresolved": [
     "GitHub Issue not created — velvetos-core has_issues=false",
@@ -28,12 +30,12 @@
     "Codex Mac local SHA unknown",
     "SWC-CODEX-001 ownership not yet confirmed by Codex reply"
   ],
-  "outcome": null,
-  "pulse": "working",
-  "verification": "repo survey via gh + git; issues create rejected; open PRs listed",
+  "outcome": "decision_gate",
+  "pulse": "blocked",
+  "verification": "check-hq-overlay.py OK; check-vfops-loop.py OK; PR #105 opened",
   "gate": {
     "kind": "decision_gate",
-    "waiting_for": "Codex + GrokBot acknowledge scope; owner may enable Issues on core",
+    "waiting_for": "Codex + GrokBot acknowledge scope; peer review of PR #105; owner may enable Issues on core",
     "reason": "Coordination setup complete as docs; Issue blocked by repo setting; implementation waits on explicit ownership"
   },
   "escalation": null,
@@ -43,7 +45,8 @@
     "vf_main": "27701889bb12c70dd62c4a22286be4828e86fee7",
     "coordination_path": "docs/SHARED-WORK-COORDINATION.md",
     "codex_task": "SWC-CODEX-001",
-    "issue_created": false
+    "issue_created": false,
+    "coordination_pr": 105
   },
-  "latest_observation": "Core issues disabled; no open core PRs; VF draft PR#3 preserved; vfops_loop hot from merged #104"
+  "latest_observation": "PR #105 draft opened; sensors green; waiting external ack before any Codex implementation"
 }
