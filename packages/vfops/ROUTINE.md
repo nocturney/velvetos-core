@@ -29,9 +29,11 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 | מתי | מה | קובץ |
 |---|---|---|
 | כל ~48 שעות (טיימר · דופק לנצח עד שהבעלים עוצר) | סקירת דירוג **LinklyAI/best-skills** — הטמעת דפוסים + חידוש טיימר | `vfresearch/BEST-SKILLS.md`, `TIMER.md`, `BEST-SKILLS.json`, skill `vf-best-skills` |
-| לפי דרישה | מחקר **30 יום / קהילה** (engagement, לא רק SEO) | `vfresearch/hq/LAST30.md`, skill `vf-last30` |
+| פעם בחודש / לפי דרישה | מחקר **30 יום / קהילה** (engagement) | `vfresearch/hq/LAST30.md`, skill `vf-last30`, `HQ-ROUTINE.md` |
 
 לא מחליף את 06:15 (שם צ'אטים חדשים). כאן חוזרים על הרישום. קישור חדש באמצע השבוע → נרשם ב־`LINKS.json` **באותו יום**. אירוע Calendar רק אם ראש צוות מבקש.
+
+מנדט מושב מחקר/אורקסטרציה: `packages/vfresearch/HQ-ROUTINE.md`.
 
 לפני פתיחת פק או קובץ ידני לשאלה «מי מטפל ב…» — להריץ `python3 scripts/vfmem.py who "<job>"` ואז `python3 packages/vfmem/scripts/vf_semantic_search.py "<השאלה החופשית>"` כדי למשוך קטעים רלוונטיים.
 

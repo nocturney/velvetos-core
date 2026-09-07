@@ -1,7 +1,7 @@
 {
   "name": "velvet-factory-desk",
   "title": "VelvetOS Core desk — reference bind Velvet Factory",
-  "updatedAt": "2026-09-06",
+  "updatedAt": "2026-09-07",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
   "product": "VelvetOS",
@@ -25,6 +25,7 @@
     "Research overlay @vfdsh maps awesome-dsh-plugin patterns onto existing packs. Do not install DeepSeek Harness.",
     "Harness: AGENTS.md + packages/vfharness. Six layers on existing packs. No second runtime. After catalog edits run python3 scripts/check-all.py.",
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
+    "Research/orchestra seat (TEAM.md): packages/vfresearch/HQ-ROUTINE.md — daily orchestra, bi-daily best-skills, weekly links, monthly last30, end-of-day learning. No new pack / no second runtime.",
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
     "Every ~2 days forever (until owner stops): LinklyAI/best-skills via BEST-SKILLS.md + TIMER.md + skill vf-best-skills. Renew subscribe_timer every pass. Embed patterns only; no npx skills on Cloud.",
     "Last-30-days community research: vfresearch/hq/LAST30.md + skill vf-last30 (mvanhorn/last30days-skill patterns). WebSearch/gh/orchestra only — no vendor CLI, no X/TikTok keys.",
@@ -245,6 +246,28 @@
   },
   "seats": [
     {
+      "id": "research",
+      "he": "מחקר/אורקסטרציה",
+      "packs": [
+        "vfresearch",
+        "vfe2b",
+        "vfdsh",
+        "vfgraft",
+        "vfagents"
+      ],
+      "specialists": [
+        "research-synthesist",
+        "trend-researcher"
+      ],
+      "tools": [
+        "web",
+        "gemini",
+        "chatgpt",
+        "vfmem"
+      ],
+      "decides": "Embed research/inspiration patterns into existing packs per HQ-ROUTINE.md. No new pack per idea. No invented bodies/₪/Insights."
+    },
+    {
       "id": "lead",
       "he": "ראש צוות",
       "packs": [
@@ -362,15 +385,12 @@
       "packs": [
         "vfprod",
         "vfsku",
-        "vlicense",
-        "vfresearch"
+        "vlicense"
       ],
       "specialists": [
         "studio-producer",
         "operations-manager",
         "legal-compliance-checker",
-        "research-synthesist",
-        "trend-researcher",
         "technical-artist"
       ],
       "tools": [

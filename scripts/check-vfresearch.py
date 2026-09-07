@@ -8,6 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LINKS = ROOT / "packages" / "vfresearch" / "LINKS.json"
+HQ_ROUTINE = ROOT / "packages" / "vfresearch" / "HQ-ROUTINE.md"
 WEEKLY = ROOT / "packages" / "vfresearch" / "WEEKLY.md"
 BEST_SKILLS = ROOT / "packages" / "vfresearch" / "BEST-SKILLS.md"
 BEST_SKILLS_JSON = ROOT / "packages" / "vfresearch" / "BEST-SKILLS.json"
@@ -43,9 +44,22 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, LAST30, LAST30_SKILL, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK):
+    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, LAST30, LAST30_SKILL, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK, HQ_ROUTINE):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
+
+    hq_routine = HQ_ROUTINE.read_text()
+    for needle in ("vf-best-skills", "vf-weekly-links", "vf-last30", "vf-daily-learning", "HQ-ROUTINE"):
+        if needle == "HQ-ROUTINE":
+            continue
+        if needle not in hq_routine:
+            fail(f"HQ-ROUTINE.md must mention {needle}")
+    if "אין חדש במשרד" not in hq_routine and "research.md" not in hq_routine:
+        fail("HQ-ROUTINE.md must point daily output at research.md / אין חדש במשרד")
+    if "npx" not in hq_routine.lower():
+        fail("HQ-ROUTINE.md must forbid npx skills on Cloud")
+    if "050-2517000" not in hq_routine:
+        fail("HQ-ROUTINE.md must keep WhatsApp CTA")
 
     data = json.loads(LINKS.read_text())
     if data.get("name") != "vfresearch-inspiration-links":

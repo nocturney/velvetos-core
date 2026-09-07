@@ -1,0 +1,35 @@
+{
+  "task_id": "research-hq-routine-2026-09-07",
+  "crew": "research",
+  "goal": "Activate research/orchestra seat cadence: HQ-ROUTINE, daily/weekly/bi-daily/last30 passes, timer renew, desk seat wire",
+  "status": "worker_done",
+  "planned_steps": [
+    "Fill HQ-ROUTINE.md stub",
+    "Wire research seat on vf-desk + sensors",
+    "Daily orchestra failover WebSearch",
+    "Best-skills 2026-09-07 + renew timer",
+    "Weekly links refresh",
+    "last30 nothing-solid",
+    "check-all + commit/push/PR"
+  ],
+  "completed_steps": [
+    "HQ-ROUTINE filled",
+    "desk seat research + check-vfmem=6",
+    "sources/2026-09-07-*.md written",
+    "timer vf-best-skills-bi-daily renewed",
+    "insights loop ran (אין ספירה)",
+    "semantic index built (sklearn)"
+  ],
+  "verification": "python3 scripts/check-all.py",
+  "artifacts": [
+    "packages/vfresearch/HQ-ROUTINE.md",
+    "packages/vfresearch/sources/2026-09-07-orchestra.md",
+    "packages/vfresearch/sources/2026-09-07-best-skills.md",
+    "packages/vfresearch/sources/2026-09-07-weekly-links.md",
+    "packages/vfresearch/sources/2026-09-07-ig-maker-engagement-last30.md",
+    "packages/vfops/data/research.md"
+  ],
+  "latest_observation": "Timer was empty; renewed. No ChatGPT/Gemini API keys — WebSearch failover. posts.csv has no reach.",
+  "pulse": "ok",
+  "outcome": "worker_done"
+}
