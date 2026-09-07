@@ -9,7 +9,8 @@
 חסר גלם מכריסטיאן → `MEDIA-NEEDED-FROM-CHRISTIAN`. לא ממציאים מדיה.
 
 לוח **קבוע**: `CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. שיבוץ ב־instagram.com (לא סוויט).  
-שער עריכה: `EDIT-GATE.md`. לוח אוטונומי: `CALENDAR-OPS.md`. סנסור `scripts/check-vfgrowth.py`.
+שער עריכה: `EDIT-GATE.md`. פריפלייט כתוב: `PREFLIGHT.md` (VOICE + ציון עצמי + 2–3 קומפס) — בלי `preflight/<id>.md` עבור = נכשל-סגור.  
+אל תפנה לכריסטיאן על מדדים חלשים. לוח אוטונומי: `CALENDAR-OPS.md`. סנסור `scripts/check-vfgrowth.py`.
 
 צמיחת עוקבים → פנייה (לא מרדף מספר): `hq/FOLLOWER-GROWTH.md`.  
 לולאת בוקר: `python3 scripts/vfops_loop.py brief` · מסירה: `HANDOFF-he.md` (G004).

@@ -17,6 +17,7 @@ STUDIO = ROOT / "constitution" / "STUDIO.md"
 ROUTINE = ROOT / "packages" / "vfops" / "ROUTINE.md"
 HANDOFF = ROOT / "packages" / "vfgrowth" / "HANDOFF-he.md"
 EDIT = ROOT / "packages" / "vfgrowth" / "EDIT-GATE.md"
+PREFLIGHT = ROOT / "packages" / "vfgrowth" / "PREFLIGHT.md"
 CAL_OPS = ROOT / "packages" / "vfgrowth" / "CALENDAR-OPS.md"
 STORIES = ROOT / "packages" / "vfgrowth" / "STORIES.md"
 STORIES_FIX = ROOT / "packages" / "vfcopy" / "G004-STORIES-FIX.md"
@@ -30,7 +31,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LOOP, CLI, PLAY, ORCHESTRA, INSTANCE, STUDIO, ROUTINE, HANDOFF, EDIT, CAL_OPS, STORIES, STORIES_FIX, GAP):
+    for path in (LOOP, CLI, PLAY, ORCHESTRA, INSTANCE, STUDIO, ROUTINE, HANDOFF, EDIT, PREFLIGHT, CAL_OPS, STORIES, STORIES_FIX, GAP):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -53,15 +54,20 @@ def main() -> None:
         fail("scripts/vfcost.py missing after rebase onto main")
 
     orch = ORCHESTRA.read_text()
-    for needle in ("vfops_loop.py", "07:00", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער"):
+    for needle in ("vfops_loop.py", "07:00", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער", "PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור"):
         if needle not in orch:
             fail(f"ORCHESTRA.md must mention {needle}")
     if "אין סטוריז" not in orch and "אין סטוריז ואין פיד" not in orch:
         fail("ORCHESTRA.md must hard-gate Stories without Canva/vfcovers")
+    send = (ROOT / "constitution" / "SEND.md").read_text()
+    for needle in ("PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור", "החלטה"):
+        if needle not in send:
+            fail(f"SEND.md must mention Christian-lock needle {needle}")
     for path, needles in (
-        (INSTANCE, ("רף סוכנות", "חצי-פק", "עברית")),
-        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "Canva MCP", "G004-STORIES-FIX")),
-        (EDIT, ("JPEG גולמי", "Canva", "vfcovers", "G004-STORIES-FIX")),
+        (INSTANCE, ("רף סוכנות", "חצי-פק", "עברית", "PREFLIGHT.md")),
+        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "Canva MCP", "G004-STORIES-FIX", "PREFLIGHT.md", "רמה נמוכה")),
+        (EDIT, ("JPEG גולמי", "Canva", "vfcovers", "G004-STORIES-FIX", "PREFLIGHT.md", "VOICE.md")),
+        (PREFLIGHT, ("VOICE.md", "VOICE-RESEARCH", "ציון עצמי", "נכשל-סגור", "2–3")),
         (CAL_OPS, ("לא שואלים", "Google Calendar", "050-2517000")),
         (STORIES, ("נייבי", "סיפור-מוצר", "050-2517000", "Canva MCP")),
         (STORIES_FIX, ("סיפור-מוצר", "050-2517000", "DAHUaUo3bAk", "X ₪")),
@@ -83,6 +89,10 @@ def main() -> None:
         fail("HANDOFF-he.md must point Stories at G004-STORIES-FIX.md")
     if "אין סטוריז בלי מעבר" not in handoff:
         fail("HANDOFF-he.md must hard-gate Stories without Canva/vfcovers")
+    if "אל תפנה לכריסטיאן על מדדים חלשים" not in handoff:
+        fail("HANDOFF-he.md must lock אל תפנה לכריסטיאן על מדדים חלשים")
+    if "PREFLIGHT.md" not in handoff or "preflight/G004.md" not in handoff:
+        fail("HANDOFF-he.md must require PREFLIGHT artifact path")
 
     if "check-vfops-loop.py" not in AGENTS.read_text():
         fail("AGENTS.md sensor table must list check-vfops-loop.py")

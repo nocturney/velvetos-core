@@ -38,7 +38,8 @@
     "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill.",
     "2026-09-05: Orchestra desks are API keys (vf_gemini.py / vf_chatgpt.py), not gemini.google.com or chatgpt.com in the Cloud browser — that trip Google/OpenAI security alerts. SUBSCRIPTIONS.md. Do not persist cookies. Plus ≠ API.",
     "2026-09-06: Instagram Publish/Insights via jlbadano/ig-mcp — mapped on vfigos/vfmcp (needsAuth until Meta token). CONNECT-IG.md. No auto-DM. Failover Canva+Drive+Gmail.",
-    "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh)."
+    "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
+    "2026-09-07: Christian lock — surface decisions / hard blockers / live publish needing him only. Never weak metrics, רמה נמוכה, post-publish quality autopsy, or tool-unused shame. PREFLIGHT.md fail-closes schedule (VOICE + Canva/vfcovers + self-score + 2–3 IL comps)."
   ],
   "studio": {
     "name": "Velvet Factory",

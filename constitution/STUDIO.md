@@ -44,3 +44,18 @@ G004 סטוריז: [`packages/vfcopy/G004-STORIES-FIX.md`](../packages/vfcopy/G0
 
 לא שואלים את כריסטיאן מתי לפרסם. הרשת קבועה ב־`vfgrowth/CALENDAR.md`.  
 כל פוסט מתוכנן עולה ל־Google Calendar של `nocturney@gmail.com` (תפעול, `CALENDAR-OPS.md`). שיבוץ הרשת: instagram.com.
+
+## נעילת כריסטיאן — משטח + פריפלייט (7.9.2026)
+
+משטח ראש צוות / כריסטיאן: **החלטה** · **חסם קשיח** · **פרסום חי שדורש אותו בלבד**.  
+אסור להעלות: מדדים חלשים · «רמה נמוכה» · תלונת איכות אחרי פרסום · דוח בושה על כלי שלא נצרך.
+
+כל סטוריז / פיד חייב ארטיפקט כתוב `packages/vfgrowth/preflight/<id>.md` לפני שיבוץ:
+
+1. התאמת `VOICE.md`
+2. Canva MCP או PNG מ־vfcovers / vfcanva — לא JPEG גולמי (`EDIT-GATE.md`)
+3. ציון עצמי מול רף סוכנות יקרה (ביקורת עצמית — לא Insights)
+4. 2–3 קומפס מ־`VOICE-RESEARCH.md` / שכני תלת־ממד·עיצוב·מתנה בישראל — מה מאמצים / מה דוחים
+
+נכשל-סגור → חסום שיבוץ. מתקנים במשרד. **אל תפנה לכריסטיאן על מדדים חלשים.**  
+פלייבוק: [`packages/vfgrowth/PREFLIGHT.md`](../packages/vfgrowth/PREFLIGHT.md).

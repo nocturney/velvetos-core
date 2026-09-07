@@ -1,0 +1,29 @@
+{
+  "task_id": "christian-preflight-lock-2026-09-07",
+  "status": "done",
+  "pack": "vfgrowth",
+  "goal": "Christian lock + written PREFLIGHT fail-closed before schedule; sensors green; no IG publish",
+  "crew": "content",
+  "planned_steps": [
+    "Encode lock in ORCHESTRA/STUDIO/SEND + VF copies",
+    "Add PREFLIGHT.md and wire HANDOFF/vfops",
+    "Harden sensors",
+    "check-all.py + PR"
+  ],
+  "completed_steps": [
+    "Wrote vfgrowth/PREFLIGHT.md + preflight/G004.md fail-closed",
+    "Encoded Christian surface + preflight in constitution + instance copies",
+    "Wired HANDOFF, EDIT-GATE, vfops brief/loop"
+  ],
+  "next_step": "none — sensors green; PR",
+  "artifacts": [
+    "packages/vfgrowth/PREFLIGHT.md",
+    "packages/vfgrowth/preflight/G004.md",
+    "constitution/ORCHESTRA.md",
+    "constitution/STUDIO.md",
+    "constitution/SEND.md"
+  ],
+  "unresolved": [],
+  "outcome": "check-all.py 23/23 PASS. Christian lock + PREFLIGHT fail-closed. No IG publish.",
+  "last_updated": "2026-09-07T09:02:00+03:00"
+}

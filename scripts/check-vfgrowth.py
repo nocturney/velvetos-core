@@ -16,6 +16,8 @@ COPY = ROOT / "packages" / "vfcopy" / "G003.md"
 COPY_G004 = ROOT / "packages" / "vfcopy" / "G004.md"
 STORIES_FIX = ROOT / "packages" / "vfcopy" / "G004-STORIES-FIX.md"
 STORIES_PLAY = ROOT / "packages" / "vfgrowth" / "STORIES.md"
+PREFLIGHT = ROOT / "packages" / "vfgrowth" / "PREFLIGHT.md"
+PREFLIGHT_G004 = ROOT / "packages" / "vfgrowth" / "preflight" / "G004.md"
 VOICE = ROOT / "packages" / "vfcopy" / "VOICE.md"
 VOICE_RESEARCH = ROOT / "packages" / "vfcopy" / "VOICE-RESEARCH.md"
 STORIES = ROOT / "packages" / "vfcopy" / "hq" / "templates" / "ig-stories.md"
@@ -42,7 +44,7 @@ def assert_no_ils(path: Path) -> None:
 
 
 def main() -> None:
-    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, COPY_G004, STORIES_FIX, STORIES_PLAY, VOICE, VOICE_RESEARCH, STORIES, FOLLOWER):
+    for path in (CAL, LEDGER, HANDOFF, G003, G004, COPY, COPY_G004, STORIES_FIX, STORIES_PLAY, VOICE, VOICE_RESEARCH, STORIES, FOLLOWER, PREFLIGHT, PREFLIGHT_G004):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
         assert_no_ils(path)
@@ -98,6 +100,9 @@ def main() -> None:
         "לא שואלים משבצת",
         "Google Calendar",
         "G004-STORIES-FIX",
+        "PREFLIGHT.md",
+        "preflight/G004.md",
+        "אל תפנה לכריסטיאן על מדדים חלשים",
     ):
         if needle not in handoff:
             fail(f"HANDOFF-he.md missing {needle!r}")
@@ -151,9 +156,31 @@ def main() -> None:
     studio = (ROOT / "constitution" / "STUDIO.md").read_text()
     if "VOICE.md" not in studio:
         fail("constitution/STUDIO.md must point at VOICE.md")
+    for needle in ("PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור", "VOICE-RESEARCH"):
+        if needle not in studio:
+            fail(f"constitution/STUDIO.md must lock Christian/preflight needle {needle!r}")
     inst_studio = (ROOT / "instances" / "velvet-factory" / "constitution" / "STUDIO.md").read_text()
     if "VOICE.md" not in inst_studio:
         fail("instances/velvet-factory/constitution/STUDIO.md must point at VOICE.md")
+    if "PREFLIGHT.md" not in inst_studio:
+        fail("instances/velvet-factory/constitution/STUDIO.md must point at PREFLIGHT.md")
+
+    preflight = PREFLIGHT.read_text()
+    for needle in (
+        "VOICE.md",
+        "VOICE-RESEARCH",
+        "ציון עצמי",
+        "2–3",
+        "נכשל-סגור",
+        "רמה נמוכה",
+        "אל תפנה לכריסטיאן על מדדים חלשים",
+        "Canva",
+    ):
+        if needle not in preflight:
+            fail(f"PREFLIGHT.md missing {needle!r}")
+    g004p = PREFLIGHT_G004.read_text()
+    if "נכשל-סגור" not in g004p:
+        fail("preflight/G004.md must stay fail-closed until the written gate passes")
 
     copy = COPY.read_text()
     if "מה יוצא מהמדפסת" not in copy:

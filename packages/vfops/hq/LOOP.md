@@ -23,8 +23,8 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 | 03 | `vfsku.py brief` + `vfsku/week.md` |
 | 04 | `vfgrowth/hq/FOLLOWER-GROWTH.md` + `vfbiz/out/week.md` + B2B נעול + וואטסאפ |
 | 05 | CLI אמיתי מ-24ש (`cli-runs.jsonl`) או «אין חדש במשרד» + שורות **פער** לפק שלא הורץ. לא קטלוג מ-`research.md` |
-| 06 | `vfinsights` — «אין ספירה» עד סנאפשוט / טוקן |
-| 07 | כיתובי `vfcopy` + `G004-STORIES-FIX.md` + `vfgrowth/HANDOFF-he.md` |
+| 06 | `vfinsights` — «אין ספירה» עד סנאפשוט / טוקן. מדדים חלשים = לוג פנימי, לא אשמת בעלים |
+| 07 | כיתובי `vfcopy` + `G004-STORIES-FIX.md` + `vfgrowth/HANDOFF-he.md` + נתיב `PREFLIGHT.md`. פער סוכנות = שורת פער למשרד |
 
 ## מסירה לסטודיו
 
@@ -32,7 +32,8 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 python3 scripts/vfops_loop.py handoff
 ```
 
-פותחים `vfgrowth/HANDOFF-he.md` — חבילת היום (עכשיו G004).
+פותחים `vfgrowth/HANDOFF-he.md` — חבילת היום (עכשיו G004).  
+בלי ארטיפקט `packages/vfgrowth/preflight/<id>.md` עבור = לא משבצים. אל תפנה לכריסטיאן על מדדים חלשים.
 
 ## מלאי
 
@@ -52,7 +53,7 @@ python3 scripts/vfops_loop.py weekly
 ## רף סוכנות
 
 בריף בטון סוכנות (`STUDIO.md` / `INSTANCE.md` / `ORCHESTRA.md`).  
-לפני שיבוץ — שער עריכה. משבצות בלי לשאול. לא חצי-פק.
+לפני שיבוץ — שער עריכה + `PREFLIGHT.md`. נכשל-סגור = חסום. משבצות בלי לשאול. לא חצי-פק. לא «רמה נמוכה» לבעלים.
 
 ## נעול
 

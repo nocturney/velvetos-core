@@ -16,6 +16,7 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 ## Laws
 
 - HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot. `send_message` / `reply` / `forward` are allowed. Grok Bot is optional backup.
+- Christian / CoS surface: decisions, hard blockers, live publish that needs him only. Never surface weak metrics, «רמה נמוכה», post-publish quality autopsies, or tool-unused shame. Preflight (`vfgrowth/PREFLIGHT.md`) fail-closes schedule.
 - auto-DM, boost without lead seat, follow-back, and story hacks stay forbidden. אוטו־DM נעול.
 - Do not invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף (canonical VelvetOS: lead → talk → offer → fulfill → close). No national shipping from HQ on this instance.
