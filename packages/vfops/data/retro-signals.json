@@ -1,0 +1,100 @@
+{
+  "generatedAt": "2026-09-07T17:34:59+03:00",
+  "timezone": "Asia/Jerusalem",
+  "rule": "Operational signals for office brief only. No invented ₪/Insights. No owner shame.",
+  "catalogEvent": "retro.anomaly",
+  "signals": [
+    {
+      "kind": "ingest_bottleneck",
+      "evidence": "owner-memory/2026-09-01",
+      "briefSlot": "05",
+      "detail": "- **מושב:** lead + ops",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "ingest_bottleneck",
+      "evidence": "owner-memory/2026-09-03",
+      "briefSlot": "05",
+      "detail": "- **מושב:** סטודיו + ייצור",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "owner-memory/2026-09-06",
+      "briefSlot": "01",
+      "detail": "- **מושב:** צמיחה",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "owner-memory/2026-09-07",
+      "briefSlot": "01",
+      "detail": "- **מושב:** lead + צמיחה",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "inquiry_lag",
+      "evidence": "owner-memory/2026-09-05",
+      "briefSlot": "01",
+      "detail": "- **מושב:** lead",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/access-blockers-2026-09-01.json",
+      "briefSlot": "01",
+      "detail": "task=access-blockers-2026-09-01 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/agency-quality-gap-2026-09-07.json",
+      "briefSlot": "01",
+      "detail": "task=agency-quality-gap-2026-09-07 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/gemini-api-bridge-2026-09-05.json",
+      "briefSlot": "01",
+      "detail": "task=gemini-api-bridge-2026-09-05 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/grok-failover-2026-08-31.json",
+      "briefSlot": "01",
+      "detail": "task=grok-failover-2026-08-31 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/hq-health-2026-09-06.json",
+      "briefSlot": "01",
+      "detail": "task=hq-health-2026-09-06 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/initial-retro-2026-09-01.json",
+      "briefSlot": "01",
+      "detail": "task=initial-retro-2026-09-01 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/ops-publish-snapshot-pulse-2026-09-01.json",
+      "briefSlot": "01",
+      "detail": "task=ops-publish-snapshot-pulse-2026-09-01 component_state=None",
+      "event": "retro.anomaly"
+    }
+  ],
+  "summary": {
+    "count": 12,
+    "kinds": [
+      "ingest_bottleneck",
+      "inquiry_lag",
+      "sensor_repeat_fail"
+    ]
+  }
+}

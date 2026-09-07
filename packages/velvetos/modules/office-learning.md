@@ -9,10 +9,12 @@ Living office culture: every specialist reviews the day's conversations, promote
 Playbooks:
 
 - Lead ritual: `packages/vfops/hq/DAILY-RETRO.md`
+- Retro → signal: `packages/vfops/hq/RETRO-SIGNALS.md` + `scripts/vf_retro_signals.py`
 - Memory writes: `packages/vfmem/MEMORY-UPDATE.md`
 - Mastery + layers: `packages/vfops/hq/MASTERY-MEMORY.md` (DeepTutor pattern — no second runtime)
 - Harness loop: `packages/vfharness/playbooks/daily-learning.md`
 - Skill: `.cursor/skills/vf-daily-learning/SKILL.md`
+- SoC ADR: `packages/velvetos/ADR-THREE-LAYERS.md`
 
 ## Packs
 

@@ -34,7 +34,8 @@ python3 scripts/check-all.py
 **משימה ארוכה (5+ tool calls):** פתח `state/<task-id>/` עם שלושת הקבצים מ-`PLANNING-FILES.md` (`task_plan.md`, `findings.md`, `progress.md`). קרא אותם בתחילת כל turn.
 
 כתוב `state/<task-id>.json` (או `state/<task-id>/checkpoint.json`) לפי `templates/checkpoint.schema.json`.  
-בפתיחה: קרא את הקובץ. אל תתחיל מחדש. אופציונלי: `execution_state` + `latest_observation` כשצריך משבצות דומיין מעבר לשדות הקבועים.
+בפתיחה: קרא את הקובץ. אל תתחיל מחדש. אופציונלי: `component_state` (`Idle`/`Processing`/`Degraded`/`Syncing`/`Blocked`) + `execution_state` + `latest_observation`.  
+כלי נפל → `Degraded` + `playbooks/degraded-mode.md` (שם רשמי ל־failover).
 
 שדה אופציונלי `goal`: תנאי סיום אחד (דפוס DeerFlow `/goal` — ראה `packages/vfe2b/DEER-FLOW-PATTERNS.md`).
 

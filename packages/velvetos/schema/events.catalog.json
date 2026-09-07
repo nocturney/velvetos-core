@@ -1,0 +1,85 @@
+{
+  "name": "velvetos-events",
+  "updatedAt": "2026-09-07",
+  "rule": "Events are JSON on disk / checkpoint.events — not a message broker. No invented ₪ or Insights.",
+  "envelope": "schema/event-envelope.schema.json",
+  "adr": "ADR-THREE-LAYERS.md",
+  "humanGates": [
+    "sale-ils",
+    "customer-whatsapp-send",
+    "boost",
+    "print-from-hq"
+  ],
+  "events": [
+    {
+      "id": "inquiry.received",
+      "direction": "edge-or-office→kernel→office",
+      "emits": "office",
+      "payloadKeys": ["channel", "threadRef", "summary"],
+      "note": "New lead/inquiry named; no invented customer fields"
+    },
+    {
+      "id": "task.state_changed",
+      "direction": "kernel↔office",
+      "emits": "kernel",
+      "payloadKeys": ["taskId", "componentState", "status"],
+      "note": "component_state: Idle|Processing|Degraded|Syncing|Blocked"
+    },
+    {
+      "id": "sensor.degraded",
+      "direction": "kernel→office",
+      "emits": "kernel",
+      "payloadKeys": ["sensorId", "reason", "failover"],
+      "note": "Computational sensor or tool entered Degraded Mode"
+    },
+    {
+      "id": "sensor.recovered",
+      "direction": "kernel→office",
+      "emits": "kernel",
+      "payloadKeys": ["sensorId"],
+      "note": "Left Degraded Mode"
+    },
+    {
+      "id": "tool.failover",
+      "direction": "kernel→office",
+      "emits": "kernel",
+      "payloadKeys": ["fromTool", "toTool", "artifact"],
+      "note": "Same-turn failover per ORCHESTRA.md"
+    },
+    {
+      "id": "mail.sent",
+      "direction": "office→kernel",
+      "emits": "office",
+      "payloadKeys": ["threadRef", "kind"],
+      "note": "Gmail tool receipt only — do not claim send without tool"
+    },
+    {
+      "id": "retro.anomaly",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["kind", "evidence", "briefSlot"],
+      "note": "From vf_retro_signals.py — operational alert to brief, not owner shame"
+    },
+    {
+      "id": "sync.completed",
+      "direction": "edge→kernel",
+      "emits": "edge",
+      "payloadKeys": ["bufferCount", "host"],
+      "note": "Future edge buffer flush; absent host = do not invent"
+    },
+    {
+      "id": "task.command",
+      "direction": "office→edge",
+      "emits": "office",
+      "payloadKeys": ["command", "taskId"],
+      "note": "Future edge command; never Print/boost/auto-DM"
+    },
+    {
+      "id": "sync.request",
+      "direction": "office→edge",
+      "emits": "office",
+      "payloadKeys": ["since"],
+      "note": "Ask edge to flush buffer when host is available"
+    }
+  ]
+}

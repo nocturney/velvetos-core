@@ -1,0 +1,53 @@
+{
+  "task_id": "soc-event-contract-degraded-2026-09-07",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "velvetos",
+  "goal": "Embed three-layer SoC + event catalog + component_state + Degraded Mode + retro→signal without a second runtime",
+  "planned_steps": [
+    "ADR + LAYERS + CORE/KERNEL/LOCK/REPOS",
+    "events.catalog + envelope schemas",
+    "checkpoint component_state + skillstate + degraded-mode",
+    "vf_retro_signals + DAILY-RETRO + BRIEF-SLOTS",
+    "sensors + AGENTS anti-pattern + check-all",
+    "commit push PR"
+  ],
+  "completed_steps": [
+    "Wrote ADR-THREE-LAYERS + LAYERS + event schemas",
+    "Extended checkpoint schema with component_state",
+    "Named Degraded Mode in ORCHESTRA + playbook",
+    "Added vf_retro_signals.py and RETRO-SIGNALS.md",
+    "Wired sensors and AGENTS anti-pattern",
+    "check-all.py 25/25 PASS"
+  ],
+  "next_step": "",
+  "artifacts": [
+    "packages/velvetos/ADR-THREE-LAYERS.md",
+    "packages/velvetos/LAYERS.md",
+    "packages/velvetos/schema/events.catalog.json",
+    "packages/vfharness/playbooks/degraded-mode.md",
+    "scripts/vf_retro_signals.py",
+    "packages/vfops/hq/RETRO-SIGNALS.md",
+    "packages/vfops/data/retro-signals.json",
+    "/opt/cursor/artifacts/check-all-soc-embed.log"
+  ],
+  "unresolved": [],
+  "pulse": "idle",
+  "verification": "python3 scripts/check-all.py → OK suite passed=25",
+  "outcome": "worker_done",
+  "escalation": null,
+  "last_updated": "2026-09-07",
+  "events": [
+    {
+      "name": "task.state_changed",
+      "producedAt": "2026-09-07",
+      "sourceAgent": "velvetos",
+      "payload": {
+        "taskId": "soc-event-contract-degraded-2026-09-07",
+        "componentState": "Idle",
+        "status": "done"
+      }
+    }
+  ],
+  "latest_observation": "check-all.py OK suite passed=25"
+}

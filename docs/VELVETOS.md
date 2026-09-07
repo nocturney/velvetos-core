@@ -1,11 +1,14 @@
 # VelvetOS
 
-**VelvetOS Core** (this repo) = באקאנד — חוקים, מודולים, פקים, סנסורים.  
-**VelvetOS — \<Business\>** = פרונט — משרד עסק אחד ששואב מהליבה.
+**VelvetOS Core** (this repo) = באקאנד — חוקים, מודולים, פקים, סנסורים, חוזי אירועים (**Kernel**).  
+**VelvetOS — \<Business\>** = פרונט — משרד עסק אחד ששואב מהליבה (**Office**).  
+**Edge** = אופציונלי (host/רצפה) — לא שם הריפו. ADR: `packages/velvetos/ADR-THREE-LAYERS.md` · `LAYERS.md`.
 
 | | |
 |---|---|
 | Core | `packages/velvetos/CORE.json` |
+| Layers | `packages/velvetos/LAYERS.md` |
+| Events | `packages/velvetos/schema/events.catalog.json` |
 | Modules | `packages/velvetos/modules/` (תמיד טעונים) |
 | Presets | תבניות לפרונט (יופי multi-IG, חוות דעת…) |
 | VF frontend scaffold | `instances/velvet-factory/` |

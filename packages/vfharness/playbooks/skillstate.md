@@ -47,10 +47,14 @@ Use when the job needs domain slots beyond the fixed harness keys:
 
 | Field | Role |
 |---|---|
+| `component_state` | Operational SoC enum: `Idle` · `Processing` · `Degraded` · `Syncing` · `Blocked` (ADR-THREE-LAYERS). Distinct from task `status`. |
 | `execution_state` | Object — domain Σ (flags found, missing fields, shelf slots, …) |
 | `latest_observation` | Short string — last \(O_t\) only |
+| `events` | Optional log of catalog events (`velvetos/schema/events.catalog.json`) |
 
 Core keys (`completed_steps`, `next_step`, `artifacts`, `unresolved`, `gate`, …) already are Σ for most HQ jobs. Prefer them first; add `execution_state` only when slots would otherwise leak into chat.
+
+When a tool fails mid-job: set `component_state` to `Degraded`, emit `tool.failover` / `sensor.degraded`, follow `playbooks/degraded-mode.md`.
 
 ## How this differs from siblings
 

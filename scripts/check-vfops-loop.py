@@ -113,6 +113,40 @@ def main() -> None:
     retro_txt = daily_retro.read_text(encoding="utf-8")
     if "חוזה יום" not in retro_txt or "MEMORY-UPDATE.md" not in retro_txt:
         fail("DAILY-RETRO.md must point at owner-memory day-block contract")
+    for needle in ("RETRO-SIGNALS.md", "vf_retro_signals.py", "retro-signals.json"):
+        if needle not in retro_txt:
+            fail(f"DAILY-RETRO.md must wire retro→signal needle {needle!r}")
+
+    signals_doc = ROOT / "packages" / "vfops" / "hq" / "RETRO-SIGNALS.md"
+    signals_cli = ROOT / "scripts" / "vf_retro_signals.py"
+    brief_slots = ROOT / "packages" / "vfops" / "hq" / "BRIEF-SLOTS.md"
+    for path in (signals_doc, signals_cli, brief_slots):
+        if not path.is_file():
+            fail(f"missing {path.relative_to(ROOT)}")
+    sig_doc = signals_doc.read_text(encoding="utf-8")
+    for needle in ("retro.anomaly", "briefSlot", "Christian", "vf_retro_signals.py"):
+        if needle not in sig_doc:
+            fail(f"RETRO-SIGNALS.md missing {needle!r}")
+    slots = brief_slots.read_text(encoding="utf-8")
+    if "retro-signals.json" not in slots:
+        fail("BRIEF-SLOTS.md must consume retro-signals.json")
+
+    proc_sig = subprocess.run(
+        [sys.executable, str(signals_cli), "--write"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if proc_sig.returncode != 0:
+        fail(f"vf_retro_signals.py --write: {proc_sig.stderr or proc_sig.stdout}")
+    out_sig = ROOT / "packages" / "vfops" / "data" / "retro-signals.json"
+    if not out_sig.is_file():
+        fail("vf_retro_signals.py did not write retro-signals.json")
+    sig_data = json.loads(out_sig.read_text(encoding="utf-8"))
+    if "signals" not in sig_data or "generatedAt" not in sig_data:
+        fail("retro-signals.json missing signals/generatedAt")
+    if sig_data.get("catalogEvent") != "retro.anomaly":
+        fail("retro-signals.json catalogEvent must be retro.anomaly")
 
     memory = memory_path.read_text(encoding="utf-8")
     # Split on dated day headers; skip catch-up prose that uses other headings.
