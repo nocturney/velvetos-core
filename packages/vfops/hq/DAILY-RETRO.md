@@ -75,9 +75,10 @@
 
 1. **שורת יום** ב־`packages/vfops/data/owner-memory.md` (תאריך + תובנה אחת) — לפי החוזה למעלה
 2. **שורת לוג** בתחתית קובץ זה (או העתק ל־`DAILY-RETRO-LOG.md` אם הלוג גדל)
-3. **Checkpoint** אם job רב־שלבי פתוח — `vfharness/state/<task-id>.json`
+3. **Checkpoint** אם job רב־שלבי פתוח — `vfharness/state/<task-id>.json` (+ `component_state` כשיש מצב תפעולי)
 4. **תיקון מדריך** — אם אותה טעות פעמיים → שורת ANTI-PATTERN ב־`AGENTS.md` (מחר, לא הלילה)
 5. **אימות** לפני «סיימנו את הרטרו» — `playbooks/verification-before-claim.md`
+6. **Retro → signal** — `python3 scripts/vf_retro_signals.py --write` → `vfops/data/retro-signals.json` לבריף 01/05 (`RETRO-SIGNALS.md`). לא מדדים חלשים לבעלים.
 
 ## מה לא לשמור
 
@@ -95,10 +96,13 @@
 - `packages/vfops/hq/MASTERY-MEMORY.md` — DeepTutor: mastery gate + L1/L2/L3 (דפוס בלבד)
 - `packages/vfops/hq/WEEKLY-LOAD.md` — דופק עומס שבועי
 - `packages/vfops/hq/INITIAL-RETRO.md` — catch-up חד־פעמי
+- `packages/vfops/hq/RETRO-SIGNALS.md` — רטרו → אותות בריף
+- `packages/velvetos/ADR-THREE-LAYERS.md` — SoC / events / Degraded
 
 ## בוקר למחרת
 
 בריף 07:00 קורא את `owner-memory.md` (בלוק קצר) — לא תיבת דואר.  
+אם קיים `retro-signals.json` מהיום — שורות פער בחריץ 01/05 (`BRIEF-SLOTS.md`).  
 `python3 scripts/vfmem.py who "daily retro"` → מסלול זה.
 
 ---

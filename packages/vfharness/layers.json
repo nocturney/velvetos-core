@@ -16,7 +16,9 @@
     "no-invented-prices",
     "no-invented-insights",
     "no-second-runtime",
-    "no-llm-judge-as-gate"
+    "no-llm-judge-as-gate",
+    "no-core-as-nervous-runtime",
+    "human-gate-money-send"
   ],
   "loop": {
     "maxRetries": 2,
@@ -196,9 +198,14 @@
   },
   "embed": [
     {
+      "pack": "velvetos",
+      "layer": "guides",
+      "how": "Three-layer SoC (Edge/Kernel/Office); event catalog on disk; Core ≠ nervous runtime."
+    },
+    {
       "pack": "vfops",
       "layer": "loop",
-      "how": "Morning brief and manager chain verify then escalate; no invented queue hours."
+      "how": "Morning brief and manager chain verify then escalate; no invented queue hours. Retro→signal via vf_retro_signals.py."
     },
     {
       "pack": "vfconvert",

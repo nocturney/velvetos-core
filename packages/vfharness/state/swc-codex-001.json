@@ -72,7 +72,7 @@
         "sha256": "f492abe30b0d6023f670f1bed25fd7bb5c7b95a9eba84448ae07730f73f6298e"
       },
       "packages/vfharness/playbooks/skillstate.md": {
-        "sha256": "1caf5ec0caeb8b6f4dee0f51f450f49440259ffc37d12c1705508c2ab84b3141"
+        "sha256": "12f3f2e8dc63de16e775af147bf33c31b0677eea12e443a6677e080055321a83"
       }
     },
     "upstream_refresh": {
@@ -87,7 +87,7 @@
       "note": "phase B (live brief / consumers) tracked under Cursor PRs, not this task"
     }
   },
-  "latest_observation": "Phase A merged on main via #108. Owned reader/sensor digests verified. Historical audit of other checkpoints remains separate (nonzero vf_task_state exit does not reopen phase A). Follow-ups: Cursor PRs #109–#114.",
+  "latest_observation": "Phase A merged on main via #108. Owned reader/sensor digests verified. skillstate.md digest refreshed 2026-09-07 after component_state / Degraded embed (ADR-THREE-LAYERS). Historical audit of other checkpoints remains separate. Follow-ups: Cursor PRs #109–#114.",
   "outcome": "worker_done",
   "verification": "merged to main via PR #108 (06f9854); phase A artifacts digest-verified; phase B is separate SWC-CURSOR work"
 }

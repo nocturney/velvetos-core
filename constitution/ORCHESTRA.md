@@ -27,6 +27,10 @@ Failover מיידי. בלי חצי-עבודה. בלי גוף/₪/Insights מומ
 
 ## Failover — אסור להישאר בלי תוצאה
 
+**Degraded Mode (שם רשמי):** כלי/רכיב נפל → מבודדים → failover לאותו תור → `component_state: Degraded` ב־checkpoint אם יש משימה · אירוע `tool.failover` / `sensor.degraded`.  
+פלייבוק: `packages/vfharness/playbooks/degraded-mode.md` · ADR: `packages/velvetos/ADR-THREE-LAYERS.md`.  
+יציאה מ־Degraded: `sensor.recovered` + חזרה ל־`Processing`/`Idle`.
+
 נעול 30.8.2026 ערב (Asia/Jerusalem):  
 כלי נפל / אין גישה / חומה / `needsAuth` / שגיאת MCP → **מעבירים את המשימה לכלי גיבוי באותו רגע.**  
 לא מחכים בסרק. לא סוגרים את המעבר בלי ארטיפקט.  

@@ -26,6 +26,8 @@ REQUIRED_LOCKS = {
     "no-invented-prices",
     "no-invented-insights",
     "no-second-runtime",
+    "no-core-as-nervous-runtime",
+    "human-gate-money-send",
 }
 AGENTS_NEEDLES = (
     "PROJECT:",
@@ -174,11 +176,39 @@ def main() -> None:
         if needle not in skillstate_text:
             fail(f"skillstate.md missing {needle!r}")
     schema_text = schema_path.read_text()
-    for needle in ("execution_state", "latest_observation", "SKILLSTATE"):
+    for needle in ("execution_state", "latest_observation", "SKILLSTATE", "component_state", "Degraded"):
         if needle not in schema_text:
             fail(f"checkpoint.schema.json missing SKILLSTATE field {needle!r}")
     if "skillstate.md" not in (ROOT / "packages/vfharness/EMBED.md").read_text():
         fail("EMBED.md must reference skillstate.md")
+
+    degraded = ROOT / "packages/vfharness/playbooks/degraded-mode.md"
+    if not degraded.is_file():
+        fail("missing packages/vfharness/playbooks/degraded-mode.md")
+    degraded_text = degraded.read_text()
+    for needle in ("Degraded", "component_state", "ORCHESTRA", "failover", "broker"):
+        if needle not in degraded_text:
+            fail(f"degraded-mode.md missing {needle!r}")
+    orch = (ROOT / "constitution" / "ORCHESTRA.md").read_text()
+    if "Degraded Mode" not in orch:
+        fail("ORCHESTRA.md must name Degraded Mode")
+    if example.get("component_state") not in {
+        "Idle",
+        "Processing",
+        "Degraded",
+        "Syncing",
+        "Blocked",
+        None,
+    }:
+        fail("checkpoint example component_state invalid when present")
+    if example.get("component_state") != "Idle":
+        fail("checkpoint example should demonstrate component_state Idle")
+    if run_example.get("component_state") != "Blocked":
+        fail("checkpoint example-run should demonstrate component_state Blocked")
+    skillstate_text = skillstate.read_text()
+    for needle in ("component_state", "degraded-mode", "events.catalog"):
+        if needle not in skillstate_text:
+            fail(f"skillstate.md missing three-layer needle {needle!r}")
 
     thrift = ROOT / "packages/vfharness/playbooks/context-thrift.md"
     if not thrift.is_file():

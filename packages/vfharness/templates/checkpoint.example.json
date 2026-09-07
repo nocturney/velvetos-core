@@ -1,6 +1,7 @@
 {
   "task_id": "huginn-embed-2026-08-31",
   "status": "done",
+  "component_state": "Idle",
   "pack": "vfe2b",
   "completed_steps": [
     "links-register",

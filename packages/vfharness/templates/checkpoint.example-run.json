@@ -1,6 +1,7 @@
 {
   "task_id": "inquiry-example-2026-08-31",
   "status": "blocked",
+  "component_state": "Blocked",
   "pack": "vfconvert",
   "goal": "Gmail reply sent in thread 19abc… with verified quantity and approved ₪",
   "crew": "inquiry",

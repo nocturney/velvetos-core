@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos-event-envelope",
+  "title": "VelvetOS event envelope",
+  "description": "Disk/checkpoint event contract. No broker. No invented ₪ or Insights in payload.",
+  "type": "object",
+  "required": ["name", "producedAt", "layer"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Catalog id from events.catalog.json (e.g. inquiry.received)"
+    },
+    "producedAt": {
+      "type": "string",
+      "minLength": 8,
+      "description": "ISO-8601 or YYYY-MM-DD"
+    },
+    "layer": {
+      "type": "string",
+      "enum": ["edge", "kernel", "office"],
+      "description": "Which SoC layer emitted the event"
+    },
+    "source": {
+      "type": "string",
+      "description": "Pack, script, or host that emitted"
+    },
+    "correlationId": {
+      "type": "string",
+      "description": "task_id or job folder name when known"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Event-specific fields; never invent ₪ / Insights / blocked bodies"
+    }
+  }
+}

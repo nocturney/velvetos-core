@@ -8,6 +8,11 @@
   "properties": {
     "task_id": { "type": "string", "minLength": 1 },
     "status": { "enum": ["running", "blocked", "escalated", "done"] },
+    "component_state": {
+      "type": "string",
+      "enum": ["Idle", "Processing", "Degraded", "Syncing", "Blocked"],
+      "description": "Operational SoC state (ADR-THREE-LAYERS). Distinct from task status. Degraded = failover active."
+    },
     "pack": { "type": "string", "minLength": 1 },
     "goal": {
       "type": "string",

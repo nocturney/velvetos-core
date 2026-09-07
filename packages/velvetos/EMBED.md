@@ -2,8 +2,10 @@
 
 ## 1. זהות
 
-- הריפו הזה = **VelvetOS Core** (backend)
-- פרונט VF = `instances/velvet-factory/` → לפרסם ל־`nocturney/velvetos-velvet-factory`
+- הריפו הזה = **VelvetOS Core** (backend / **Kernel** layer)
+- פרונט VF = `instances/velvet-factory/` → לפרסם ל־`nocturney/velvetos-velvet-factory` (**Office**)
+- שלוש שכבות: `LAYERS.md` · `ADR-THREE-LAYERS.md` — Core ≠ nervous-system runtime
+- חוזה אירועים: `schema/events.catalog.json` (דיסק בלבד, בלי broker)
 - ראו `REPOS.md`
 
 ## 2. מודולים

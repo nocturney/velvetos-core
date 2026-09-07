@@ -38,9 +38,13 @@ REQUIRED_ROOT = (
     "SKILL.md",
     "ORIGIN.md",
     "REPOS.md",
+    "LAYERS.md",
+    "ADR-THREE-LAYERS.md",
     "CORE.json",
     "modules/catalog.json",
     "schema/instance.schema.json",
+    "schema/events.catalog.json",
+    "schema/event-envelope.schema.json",
 )
 REQUIRED_PRESETS = ("maker-print", "beauty-multi-ig", "clinical-legal-opinions")
 
@@ -271,6 +275,63 @@ def main() -> None:
     kernel = KERNEL.read_text(encoding="utf-8")
     if "backend" not in kernel.lower() and "באקאנד" not in kernel:
         fail("KERNEL.md must state backend role")
+    for needle in ("LAYERS.md", "ADR-THREE-LAYERS", "Kernel", "nervous-system"):
+        if needle not in kernel:
+            fail(f"KERNEL.md must mention three-layer SoC needle {needle!r}")
+
+    layers_doc = (PACK / "LAYERS.md").read_text(encoding="utf-8")
+    for needle in ("Edge", "Kernel", "Office", "component_state", "Degraded", "human"):
+        if needle not in layers_doc:
+            fail(f"LAYERS.md missing {needle!r}")
+
+    adr = (PACK / "ADR-THREE-LAYERS.md").read_text(encoding="utf-8")
+    for needle in (
+        "מקובל",
+        "runtime שני",
+        "nervous-system",
+        "events.catalog",
+        "WhatsApp",
+        "vf_retro_signals",
+        "component_state",
+    ):
+        if needle not in adr:
+            fail(f"ADR-THREE-LAYERS.md missing {needle!r}")
+
+    events_cat = load(PACK / "schema" / "events.catalog.json")
+    if events_cat.get("name") != "velvetos-events":
+        fail("events.catalog.json name must be velvetos-events")
+    event_ids = {e.get("id") for e in events_cat.get("events") or []}
+    for need in (
+        "inquiry.received",
+        "task.state_changed",
+        "sensor.degraded",
+        "tool.failover",
+        "retro.anomaly",
+        "mail.sent",
+    ):
+        if need not in event_ids:
+            fail(f"events.catalog.json missing event {need}")
+    for gate in ("sale-ils", "customer-whatsapp-send", "boost", "print-from-hq"):
+        if gate not in (events_cat.get("humanGates") or []):
+            fail(f"events.catalog.json humanGates missing {gate}")
+
+    envelope = load(PACK / "schema" / "event-envelope.schema.json")
+    if "layer" not in (envelope.get("properties") or {}):
+        fail("event-envelope.schema.json must require layer property definition")
+    layer_enum = (envelope.get("properties") or {}).get("layer", {}).get("enum") or []
+    if set(layer_enum) != {"edge", "kernel", "office"}:
+        fail("event-envelope layer enum must be edge/kernel/office")
+
+    core_layers = core.get("layers") or {}
+    if "kernel" not in json.dumps(core_layers).lower():
+        fail("CORE.json must describe layers.kernel")
+    if "nervous-system runtime" not in json.dumps(core.get("metaphor", {})).lower():
+        fail("CORE.json metaphor must reject nervous-system runtime rename")
+
+    lock_txt = (PACK / "LOCK.md").read_text(encoding="utf-8")
+    for needle in ("שלוש שכבות", "Human gates", "Degraded Mode"):
+        if needle not in lock_txt:
+            fail(f"LOCK.md missing {needle!r}")
 
     if "velvetos" not in {p["name"] for p in load(MANIFEST).get("packs", [])}:
         fail("velvetos missing from manifest")
@@ -281,7 +342,8 @@ def main() -> None:
     print(
         f"OK velvetos-core modules={len(module_ids)} "
         f"presets={len(list(PRESETS.glob('*.json')))} "
-        f"frontend_scaffold=velvet-factory"
+        f"frontend_scaffold=velvet-factory "
+        f"events={len(event_ids)}"
     )
 
 

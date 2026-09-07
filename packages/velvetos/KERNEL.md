@@ -15,12 +15,17 @@ presets (blueprints)
 instances/*/ (scaffold to publish)
 ```
 
+שלוש שכבות SoC (לא runtime שני): **Edge** (אופציונלי/host) · **Kernel** (הריפו הזה) · **Office/HQ** (desk + frontend).  
+פירוט: `LAYERS.md` · ADR: `ADR-THREE-LAYERS.md` · אירועים: `schema/events.catalog.json`.
+
 ## מטאפורה
 
 | Core | Instance |
 |---|---|
-| Backend / OS kernel | Frontend / business office |
-| Shared capabilities | Identity, channels, tool binds, enabled modules |
+| Backend / OS kernel (Kernel layer) | Frontend / business office (Office layer) |
+| Shared capabilities + event contracts | Identity, channels, tool binds, enabled modules |
+
+**לא:** Core ≠ nervous-system runtime / IoT daemon. Edge = host/רצפה כשקיים מקור אמיתי.
 
 ## כלל ברזל
 

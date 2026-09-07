@@ -2,10 +2,22 @@
   "product": "VelvetOS",
   "role": "core",
   "displayName": "VelvetOS Core",
-  "updatedAt": "2026-08-31",
+  "updatedAt": "2026-09-07",
+  "layers": {
+    "adr": "packages/velvetos/ADR-THREE-LAYERS.md",
+    "doc": "packages/velvetos/LAYERS.md",
+    "edge": "optional host/floor nerves — local buffer, sync, degraded local — not this repo name",
+    "kernel": "this repository — laws, seats, packs, modules, event contracts, computational sensors",
+    "office": "desk + instance frontend — business decisions, CRM views, send via tools, retro→signal"
+  },
   "metaphor": {
-    "core": "backend — shared OS kernel (laws, seats, packs, modules, sensors)",
-    "instance": "frontend — one business office that enables modules and binds live tools"
+    "core": "backend — shared OS kernel (laws, seats, packs, modules, sensors); Kernel layer, not a nervous-system runtime",
+    "instance": "frontend — one business office that enables modules and binds live tools (Office layer)"
+  },
+  "events": {
+    "catalog": "packages/velvetos/schema/events.catalog.json",
+    "envelope": "packages/velvetos/schema/event-envelope.schema.json",
+    "rule": "Disk/checkpoint contracts only — no message broker"
   },
   "repos": {
     "core": "this repository (VelvetOS Core)",
