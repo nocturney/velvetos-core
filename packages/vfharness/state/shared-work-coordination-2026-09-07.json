@@ -25,9 +25,12 @@
     "fix-pr105-codex-review-notes",
     "SWC-CODEX-001 phase A merged as #108",
     "Cursor follow-up PRs #109–#114 opened from base 556c998",
-    "GrokBot G003/G004/ROUTINES + VF#3 preserved"
+    "GrokBot G003/G004/ROUTINES + VF#3 preserved",
+    "Cursor embed-fix PRs #109–#114 ready with CI/local 25/25",
+    "Rebased #112/#114 onto vfcopy fix; retargeted #111/#113 to main",
+    "SWC-CODEX-001 marked schema-valid done on #113"
   ],
-  "next_step": "peer review / merge #109–#114; keep #105 as coordination board; GrokBot live rows untouched",
+  "next_step": "Peer merge #109 then #110–#114; keep #105 draft until peer review; GrokBot live untouched",
   "artifacts": [
     "docs/SHARED-WORK-COORDINATION.md",
     "https://github.com/nocturney/velvetos-core/pull/105",
@@ -50,7 +53,7 @@
   "escalation": null,
   "last_updated": "2026-09-07",
   "execution_state": {
-    "core_main": "618ff1aa6a61ad48940c473fbc46ed2d4aab1cc2",
+    "core_main": "556c998d905d2a483c66499cf16dbab88ee204e0",
     "vf_main": "27701889bb12c70dd62c4a22286be4828e86fee7",
     "grokbot_core_checkout": "0292d0e",
     "grokbot_behind_commits": 5,
@@ -65,7 +68,16 @@
     "issue_created": false,
     "coordination_pr": 105,
     "grokbot_ownership_confirmed": true,
-    "merge_approved": false
+    "merge_approved": false,
+    "cursor_embed_prs": {
+      "109": "1838f54",
+      "110": "2a0b8ac",
+      "111": "1f5126c",
+      "112": "986b850",
+      "113": "4192431",
+      "114": "149f676",
+      "codex_108": "06f9854"
+    }
   },
-  "latest_observation": "Codex accepted role split; phase A scope owned on 4 paths; fixed Mac→Linux env; status blocked aligned with pulse; no merge approval for #105"
+  "latest_observation": "Embed-fix delivery closed for Cursor. Heads: #109 1838f54, #110 2a0b8ac, #111 1f5126c, #112 986b850, #113 4192431, #114 149f676. Base main checked 556c998. Agent cannot merge (gh read-only)."
 }

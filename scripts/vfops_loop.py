@@ -30,6 +30,7 @@ INSTANCE = ROOT / "constitution" / "INSTANCE.md"
 SKILLS = ROOT / ".cursor" / "skills"
 CONNECT_IG = ROOT / "packages" / "vfigos" / "CONNECT-IG.md"
 INSIGHTS = ROOT / "packages" / "vfinsights" / "READ.md"
+LEARNINGS = ROOT / "packages" / "vfinsights" / "LEARNINGS.md"
 BIZ_LOCK = ROOT / "packages" / "vfbiz" / "LOCK.md"
 BIZ_WEEK = ROOT / "packages" / "vfbiz" / "out" / "week.md"
 FLOOR = ROOT / "packages" / "vfcost" / "FLOOR-CARD.md"
@@ -250,9 +251,43 @@ def office_line(invoked: set[str]) -> str:
 
 
 def insights_line() -> str:
+    if LEARNINGS.is_file():
+        text = LEARNINGS.read_text(encoding="utf-8").strip()
+        if text:
+            first = next((l for l in text.splitlines() if l.strip()), "").strip("# ").strip()
+            if first:
+                return f"Insights: {first} · מקור {LEARNINGS.relative_to(ROOT)}"
     if CONNECT_IG.is_file() and "needsAuth" in CONNECT_IG.read_text():
         return "Insights: אין ספירה · ig-mcp needsAuth עד CONNECT-IG.md (צעד אדם)"
     return "Insights: אין ספירה"
+
+
+
+
+CONSUMERS = [
+    ("velvetos modules", ["python3", "scripts/velvetos.py", "modules"]),
+    ("vfcanva render", ["python3", "packages/vfcanva/studio/render.py"]),
+    ("vfcovers compose", ["python3", "packages/vfcovers/g005/compose_slides.py"]),
+    ("vfresearch daily", ["python3", "scripts/vfresearch.py", "daily"]),
+    ("vfsales quote", ["python3", "scripts/vfsales.py", "quote"]),
+    ("vfinsights read", ["python3", "scripts/vfinsights.py", "read"]),
+    ("check-all", ["python3", "scripts/check-all.py"]),
+]
+
+
+def run_daily_consumers() -> list[str]:
+    gaps: list[str] = []
+    for name, cmd in CONSUMERS:
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True)
+        except FileNotFoundError:
+            gaps.append(f"פער: {name} · script missing")
+            continue
+        if result.returncode != 0:
+            msg = (result.stderr or result.stdout or "").strip().splitlines()
+            detail = msg[0] if msg else "unknown error"
+            gaps.append(f"פער: {name} · {detail}")
+    return gaps
 
 
 def assemble(today: str) -> dict:

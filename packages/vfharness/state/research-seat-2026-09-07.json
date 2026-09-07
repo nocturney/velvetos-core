@@ -1,0 +1,17 @@
+{
+  "taskId": "research-seat-2026-09-07",
+  "status": "done",
+  "summary": "Ran all researchers: semantic index, insights loop, weekly links, best-skills, LAST30, daily learning, escalation+quote ladder; sensors pending",
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-07-weekly-links.md",
+    "packages/vfresearch/sources/2026-09-07-best-skills.md",
+    "packages/vfresearch/sources/2026-09-07-maker-ig-reels-engagement-last30.md",
+    "packages/vfresearch/sources/2026-09-07-orchestra.md",
+    "packages/vfinsights/LEARNINGS.md",
+    "packages/vfops/data/research.md",
+    "packages/vfconvert/hq/TRIAGE.md",
+    "packages/vfsales/scripts/vf_quote_ladder.py"
+  ],
+  "latest_observation": "posts.csv unmeasured; block 06 אין ספירה",
+  "ts": "2026-09-07T11:05:52.307413+00:00"
+}

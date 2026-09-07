@@ -50,3 +50,7 @@
 python3 scripts/vfmem.py who inquiry
 python3 scripts/check-vfmem.py
 ```
+
+## חיפוש סמנטי מקומי (2026-09-07)
+
+`scripts/vf_semantic_search.py` — אינדקס TF-IDF אמיתי על כל ה-Markdown, offline, בלי API. פירוט מלא: [`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md).

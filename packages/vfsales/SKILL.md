@@ -13,7 +13,8 @@
 מילוי אוטומטי: `hq/TIMELINE-AUTO.md` (מודול `expert-revenue-loop`).  
 סגירת עסקאות: `@deal-strategist` · retention: `@customer-success-manager` · nurture: `@email-marketing-strategist`.
 
-רתמה: טיוטה ≠ שליחה עד שיש כלי/הוראה. חסר מחיר נשאר `X ₪`. אחרי שני כשלי שדה — הסלמה, לא ניחוש.
+רתמה: טיוטה ≠ שליחה עד שיש כלי/הוראה. חסר מחיר נשאר `X ₪`. אחרי שני כשלי שדה — הסלמה, לא ניחוש.  
+סולם הצעה: `python3 packages/vfsales/scripts/vf_quote_ladder.py --task-id <id> --known "material=…"` → טיוטה חלקית עם `חסר:` (לא ₪ מומצא).
 
 ## חוק «אין בקלט — אין בפלט» (proposal-drafter)
 

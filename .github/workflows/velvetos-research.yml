@@ -1,0 +1,28 @@
+name: VelvetOS Research Cadence
+
+on:
+  schedule:
+    # Daily at 03:00 UTC (~06:00 Asia/Jerusalem)
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  daily-research:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install semantic-search deps
+        run: pip install scikit-learn
+
+      - name: Build semantic index
+        run: python3 packages/vfmem/scripts/vf_semantic_search.py --build || echo "semantic index build failed"
+
+      - name: Run office sensor suite
+        run: python3 scripts/check-all.py

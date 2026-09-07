@@ -14,6 +14,7 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 | אחרי בריף | פוסט מתוכנן → Google Calendar (בלי לשאול משבצת) | `vfgrowth/CALENDAR-OPS.md` |
 | לפני שיבוץ | שער עריכה + פריפלייט כתוב — לא JPEG גולמי. נכשל-סגור = לא משבצים | `vfgrowth/EDIT-GATE.md` · `vfgrowth/PREFLIGHT.md` · `constitution/STUDIO.md` |
 | אחרי פרסום חי (HQ דרך כלים / `#נשלח-מ-HQ`) | Insights ב־24 שעות. אם אין מספר — «אין» | `vfinsights` |
+| אחרי פרסום חי + לפני פוסט חדש | מילוי `packages/vfinsights/data/posts.csv` מנתוני Instagram Professional Dashboard + הרצת `python3 packages/vfinsights/scripts/vf_insights_loop.py` | `vfinsights/LEARNINGS.md` |
 
 ## שבוע
 
@@ -21,15 +22,20 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 |---|---|---|
 | פעם בשבוע (רמז: ראשון בבוקר) | סקירת **קישורי השראה והטמעה** שנשלחו — עדכונים + «מה חדש לחקור» | `vfresearch/WEEKLY.md`, `vfresearch/LINKS.json` |
 | פעם בשבוע (רמז: ראשון אחרי בריף) | מילוי משבצות הלוח הקבוע — ריל א׳/ג׳ 16:00, קרוסלה ה׳ 12:00, סטוריז 20:30. חסום = דילוג | `vfgrowth/CALENDAR.md`, `LEDGER.md`, `HANDOFF-he.md` |
+| פעם בשבוע (רמז: לפני מילוי לוח) | סקירת פניות עם קונספט בלבד או קובץ בעייתי → שימוש ב-3D AI Studio לפי `vfprod/3DAISTUDIO.md` לפני סלייסר | `vfprod/3DAISTUDIO.md`, `vfprod/CONNECT-3DAI.md` |
 
 ## כל יומיים
 
 | מתי | מה | קובץ |
 |---|---|---|
 | כל ~48 שעות (טיימר · דופק לנצח עד שהבעלים עוצר) | סקירת דירוג **LinklyAI/best-skills** — הטמעת דפוסים + חידוש טיימר | `vfresearch/BEST-SKILLS.md`, `TIMER.md`, `BEST-SKILLS.json`, skill `vf-best-skills` |
-| לפי דרישה | מחקר **30 יום / קהילה** (engagement, לא רק SEO) | `vfresearch/hq/LAST30.md`, skill `vf-last30` |
+| פעם בחודש / לפי דרישה | מחקר **30 יום / קהילה** (engagement) | `vfresearch/hq/LAST30.md`, skill `vf-last30`, `HQ-ROUTINE.md` |
 
 לא מחליף את 06:15 (שם צ'אטים חדשים). כאן חוזרים על הרישום. קישור חדש באמצע השבוע → נרשם ב־`LINKS.json` **באותו יום**. אירוע Calendar רק אם ראש צוות מבקש.
+
+מנדט מושב מחקר/אורקסטרציה: `packages/vfresearch/HQ-ROUTINE.md`.
+
+לפני פתיחת פק או קובץ ידני לשאלה «מי מטפל ב…» — להריץ `python3 scripts/vfmem.py who "<job>"` ואז `python3 packages/vfmem/scripts/vf_semantic_search.py "<השאלה החופשית>"` כדי למשוך קטעים רלוונטיים.
 
 מעבר ערב אחרי נעילה (כמו 30.8): רצים את 06:15 עכשיו. התוצר לבריף **של מחר**.
 
@@ -56,3 +62,5 @@ HQ שולח את הבריף ב־Gmail `send_message` אל `nocturney@gmail.com`.
 | Meta Suite / אוטו־DM | — | דולג |
 
 Make/Zapier/n8n ללקוח — לא. סגירה = אדם ב־050-2517000.
+
+כל ~48 שעות (טיימר) כבר כולל LinklyAI/best-skills. עבור תוכן אינסטגרם, להשתמש בסקיל `vf-canva-instagram` לפי `.cursor/skills/vf-canva-instagram/SKILL.md` לפני יציאה ל-Canva MCP.
