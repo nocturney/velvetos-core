@@ -53,7 +53,13 @@ def build_mime(*, html: str, images: list[Path], to: str, subject: str) -> MIMEM
     msg = MIMEMultipart("related")
     msg["To"] = to
     msg["Subject"] = subject
-    msg.attach(MIMEText(html, "html", "utf-8"))
+    html_part = MIMEText(html, "html", "utf-8")
+    # 8bit keeps cid: readable in the raw RFC822 (Gmail API accepts UTF-8 8bit).
+    if html_part["Content-Transfer-Encoding"]:
+        del html_part["Content-Transfer-Encoding"]
+    html_part.set_payload(html)
+    html_part["Content-Transfer-Encoding"] = "8bit"
+    msg.attach(html_part)
     for path in images:
         subtype = IMAGE_SUFFIXES[path.suffix.lower()]
         part = MIMEImage(path.read_bytes(), _subtype=subtype)

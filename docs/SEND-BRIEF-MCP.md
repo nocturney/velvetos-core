@@ -10,9 +10,11 @@ GrokBot Gmail MCP **לא מצליח** להעביר ~98KB `htmlBody` + JPEG inlin
 כשיש `GOOGLE_TOKEN` או ADC על הראנר:
 
 ```bash
-PYTHONPATH=packages python3 -m vfops.gmail_brief_send \
+PYTHONPATH=packages python -m vfops.gmail_brief_send \
   --html PATH --images DIR --to EMAIL --subject TEXT
 ```
+
+Same module: `python3 -m vfops.gmail_brief_send` (HQ runners).
 
 - קורא HTML + תמונות מהדיסק (אין גבול ארגומנט MCP)
 - בונה MIME `multipart/related` — `filename` = Content-ID (`cid:g001.jpg` ↔ `g001.jpg`)

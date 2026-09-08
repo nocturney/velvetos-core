@@ -1,7 +1,7 @@
 {
   "task_id": "gmail-brief-send",
-  "status": "running",
-  "component_state": "Degraded",
+  "status": "done",
+  "component_state": "Idle",
   "pack": "vfops",
   "goal": "Ship disk-file Gmail brief CLI + MCP 3-step doc so ~98KB html+CID does not go in one tool call.",
   "crew": "morning-brief",
@@ -16,17 +16,18 @@
     "docs/SEND-BRIEF-MCP.md",
     "Sensor hooks in check-vfops-loop.py"
   ],
-  "next_step": "Run sensors and open PR; do not send mail without token",
+  "next_step": "",
   "artifacts": [
     "packages/vfops/gmail_brief_send.py",
-    "docs/SEND-BRIEF-MCP.md"
+    "docs/SEND-BRIEF-MCP.md",
+    "https://github.com/nocturney/velvetos-core/pull/129"
   ],
   "unresolved": [
     "This VM has no GOOGLE_TOKEN / ADC — live send not run"
   ],
-  "outcome": null,
-  "pulse": "working",
-  "verification": "check-vfops-loop.py + python -m vfops.gmail_brief_send --help / no-token exit 2",
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "check-all.py 27/27 + gmail_brief_send --help + no-token exit 2 + MIME CID=filename",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-08",

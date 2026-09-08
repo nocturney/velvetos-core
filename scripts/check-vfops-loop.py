@@ -421,8 +421,9 @@ def main() -> None:
             fail("MIME Content-ID must equal the image filename")
         if "multipart/related" not in blob:
             fail("MIME must be multipart/related")
-        if '<img src="cid:cover.jpg"' not in blob:
-            fail("HTML cid: must survive into the MIME payload")
+        html_payload = mime.get_payload()[0].get_payload(decode=True) or b""
+        if b'<img src="cid:cover.jpg"' not in html_payload:
+            fail("HTML cid: must survive into the MIME HTML part")
 
     print("OK vfops-loop wired into orchestra+brief+handoff + consumers")
 
