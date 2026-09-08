@@ -40,6 +40,7 @@
 ## קשר
 
 - `playbooks/brainstorm-gate.md` — לפני בנייה (סיווג + אישור)
+- `playbooks/writing-plans.md` — תוכנית משימות אחרי אישור
 - `playbooks/systematic-debugging.md` — לפני תיקון באג
 - `playbooks/verification-before-claim.md` — אחרי העבודה
 - `playbooks/skill-authoring.md` — כשכותבים סקיל חדש

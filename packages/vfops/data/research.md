@@ -1,7 +1,20 @@
-# 05 · משרד · 7.9.2026 (מושב מחקר/אורקסטרציה — שני מעברים)
+# 05 · משרד · 8.9.2026
 
 חריץ 05 בבריף 07:00 כבר **לא** מדביק את הקטלוג מכאן.  
 `vfops_loop.py` רושם CLI אמיתי מ-24ש או **«אין חדש במשרד»** + שורות פער.
+
+מעבר best-skills הבי־יומי (טיימר · 8.9):
+
+```
+05 · משרד
+מה נבנה / יועל: best-skills — writing-plans ב־vfharness (אחרי brainstorm-gate) · dataDate 2026-09-07 · timer renewed
+```
+
+מקור: `packages/vfresearch/sources/2026-09-08-best-skills.md` · `vfharness/playbooks/writing-plans.md`
+
+---
+
+## ארכיון יום קודם · 7.9.2026 (מושב מחקר/אורקסטרציה — שני מעברים)
 
 שני מעברי מחקר באותו יום (מיזוג `main` #106 + ענף research-seat):
 
@@ -24,11 +37,11 @@
 פער כלים: `packages/vfops/hq/TOOL-USE-GAP-2026-09-07.md`.  
 פער מדידה: `posts.csv` שורת `DcqkjOLlYVX` בלי reach — בלוק 06 = «אין ספירה».
 
-ארטיפקטים:
+ארטיפקטים 7.9:
 - `packages/vfresearch/sources/2026-09-07-orchestra.md`
 - `packages/vfresearch/sources/2026-09-07-best-skills.md`
 - `packages/vfresearch/sources/2026-09-07-weekly-links.md`
 - `packages/vfresearch/sources/2026-09-07-print-demand.md`
 - `packages/vfresearch/sources/2026-09-07-ig-maker-engagement-last30.md` (#106)
-- `packages/vfresearch/sources/2026-09-07-maker-ig-reels-engagement-last30.md` (ענף זה)
+- `packages/vfresearch/sources/2026-09-07-maker-ig-reels-engagement-last30.md`
 - `packages/vfresearch/HQ-ROUTINE.md`

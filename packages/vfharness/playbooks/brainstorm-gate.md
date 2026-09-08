@@ -29,7 +29,7 @@
 2. שאלות מבהירות — רק העמוסות; אל תמציא ₪ / Insights.
 3. 2–3 גישות + המלצה אחת.
 4. הצג עיצוב / כוונה → **עצור**.
-5. אחרי אישור: משימות קטנות (2–5 דק׳ לוגית) עם קבצים לבדיקה — דפוס writing-plans.
+5. אחרי אישור: `writing-plans.md` — משימות קטנות (2–5 דק׳ לוגית) עם קבצים + אימות.
 6. אחרי ביצוע: `verification-before-claim.md` לפני «סיימתי».
 
 ## דגלים אדומים
@@ -60,6 +60,7 @@
 ## קשר
 
 - `playbooks/skill-first.md` — קרא סקיל לפני פעולה
+- `playbooks/writing-plans.md` — תוכנית משימות אחרי אישור
 - `playbooks/systematic-debugging.md` — באג לפני תיקון סימפטום
 - `playbooks/verification-before-claim.md` — אחרי העבודה
 - `vfmakers/crews/decide.md` — החלטת עסק / ₪

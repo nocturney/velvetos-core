@@ -40,7 +40,7 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-07",
+  "lastPass": "2026-09-08",
   "dataDate": "2026-09-07",
   "embedded": [
     {
@@ -144,13 +144,21 @@
       "path": "packages/vfsales/scripts/vf_quote_ladder.py",
       "firstEmbedded": "2026-09-07",
       "note": "Graceful escalation ladder for partial quotes; never invents ₪"
+    },
+    {
+      "id": "writing-plans",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/writing-plans.md",
+      "firstEmbedded": "2026-09-08",
+      "source": "https://github.com/obra/superpowers/tree/main/skills/writing-plans",
+      "note": "Bite-sized tasks after brainstorm-gate; plans under vfharness/state — not docs/superpowers"
     }
   ],
   "watchlist": [
     {
       "id": "obra-superpowers",
       "url": "https://github.com/obra/superpowers",
-      "note": "Partial+: verification + skill-first + brainstorm-gate + systematic-debugging. Still watch writing-plans / TDD / git-worktrees."
+      "note": "Partial+: verification + skill-first + brainstorm-gate + systematic-debugging + writing-plans (2026-09-08). Still watch TDD / git-worktrees / executing-plans."
     },
     {
       "id": "mattpocock-skills",
@@ -199,7 +207,7 @@
     {
       "id": "ponytail",
       "url": "https://github.com/DietrichGebert/ponytail",
-      "note": "YAGNI agent skills — watch; overlaps minimal-change / harness thrift. · also listed as dietrich-ponytail on #106"
+      "note": "YAGNI / minimal-change still watch; writing-plans YAGNI section covers office thrift partially. No npm @dietrichgebert/ponytail."
     },
     {
       "id": "caveman",
@@ -219,7 +227,12 @@
     {
       "id": "dietrich-ponytail",
       "url": "https://github.com/DietrichGebert/ponytail",
-      "note": "Top-repos #6 2026-09-07 — agent skills collection. Watch before any embed; no npx."
+      "note": "Duplicate of ponytail watch — top-repos #6. Prefer id=ponytail; no npx."
+    },
+    {
+      "id": "bmad-method",
+      "url": "https://github.com/bmad-code-org/BMAD-METHOD",
+      "note": "Top-repos #20 2026-09-07 latest. Agent method kit — watch before any embed; overlaps vfe2b crews; no second runtime."
     }
   ],
   "skipped": [
