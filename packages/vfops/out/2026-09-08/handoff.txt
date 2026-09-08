@@ -1,0 +1,39 @@
+=== מסירה לסטודיו · פתח כל בוקר ===
+רף: סוכנות יקרה · לא חצי-עבודה
+קובץ: packages/vfgrowth/HANDOFF-he.md
+חבילה: G004 קטלבל-מחזיק · vfcopy/G004-STORIES-FIX.md
+שער עריכה: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · אין סטוריז בלי מעבר
+פריפלייט חובה: packages/vfgrowth/PREFLIGHT.md + preflight/<id>.md
+בלי ארטיפקט עבור = נכשל-סגור · לא משבצים
+אל תפנה לכריסטיאן על מדדים חלשים
+לוח: אוטונומי · לא שואלים משבצת · Calendar-OPS
+CTA: וואטסאפ 050-2517000 · היילייטס · איסוף שדרות · לא DM
+סטוריז: instagram.com · ig-mcp ≠ stories
+מחיר: X ₪
+IG: needsAuth · CONNECT-IG.md צעד אדם
+
+# מסירה לסטודיו · פתח כל בוקר
+
+**לא לפרסם מכאן. לא בוסט. לא אוטו־DM. לא לפתוח Instagram או Gmail מהסוכן.**  
+שיבוץ: **instagram.com** על `@velvets_cloud`. לא Meta Suite. לא Buffer/Later בלי ראש צוות.  
+סטוריז = instagram.com (ig-mcp ≠ stories).
+
+לולאה: `python3 scripts/vfops_loop.py handoff` · בריף: `python3 scripts/vfops_loop.py brief`.
+
+## שער עריכה + פריפלייט — חובה לפני שיבוץ
+
+**לא** משבצים JPEG גולמי עם טקסט עליו. גלם מתיבת Grok = חומר בלבד.  
+עברו קודם: Canva MCP · `vfcovers` / `vfcanva` · או Gemini browser על המק (`EDIT-GATE.md`).  
+**חובה נתיב ארטיפקט:** `packages/vfgrowth/preflight/<id>.md` לפי `PREFLIGHT.md` (VOICE + ציון עצמי + 2–3 קומפס). בלי נתיב + שער עבור = **נכשל-סגור**.  
+בלי `edit_url` / PNG מורכב = השורה נשארת **חסום עריכה**. לא שואלים משבצת — הרשת ב־`CALENDAR.md`. כל מועמד עם תאריך → אירוע Google Calendar (`CALENDAR-OPS.md`).  
+**אל תפנה לכריסטיאן על מדדים חלשים.** אין «רמה נמוכה» לצ׳אט. משטח: החלטה / חסם קשיח / פרסום חי שדורש אותו.
+
+## חבילת היום — G004 קטלבל-מחזיק
+
+| | |
+|---|---|
+| מה | קטלבל ורוד = **מחזיק טבעות / תכשיטים לאימון** (לא משקולת) |
+| מדיה | תיבת Grok `kettlebells-pink-batch-2026-09-06-01…05.jpeg` + `…tops-print-end-2026-09-06.jpeg` |
+| כיתוב | **`packages/vfcopy/G004-STORIES-FIX.md`** — סטוריז. קרוסלה: `vfcopy/G004.md` |
+| עריכה | **שער עריכה קשיח** — Canva MCP או vfcovers / vfcanva לפני שיבוץ. **אין סטוריז בלי מעבר.** לא JPEG גולמי |
+| פריפ

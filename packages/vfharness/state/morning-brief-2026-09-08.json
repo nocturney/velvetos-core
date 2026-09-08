@@ -1,0 +1,33 @@
+{
+  "task_id": "morning-brief-2026-09-08",
+  "title": "VF morning brief HTML 8.9.2026 full agency pack",
+  "status": "done",
+  "component_state": "Idle",
+  "date": "2026-09-08",
+  "timezone": "Asia/Jerusalem",
+  "branch": "cursor/morning-brief-20260908-9784",
+  "cli": [
+    "python3 scripts/vfops_loop.py brief --write --date 2026-09-08",
+    "python3 scripts/vfops_loop.py handoff",
+    "python3 scripts/vfcost.py brief"
+  ],
+  "artifacts": {
+    "box_html": "/workspace/INSTA/brief-2026-09-08/send/brief-2026-09-08.html",
+    "box_plan": "/workspace/INSTA/brief-2026-09-08/send/SEND-PLAN.md",
+    "repo_html": "packages/vfops/out/BRIEF-2026-09-08.html",
+    "repo_day": "packages/vfops/out/2026-09-08/brief-2026-09-08.html",
+    "json": "packages/vfops/hq/brief-2026-09-08.json",
+    "bytes": 62872,
+    "sha256": "81fc6eb12187e23412a9e8f9f1f7ed256785eda779e09eacb70ceacf3d882ab4"
+  },
+  "locks": [
+    "no new_repo",
+    "no invented sale ILS",
+    "no 177.45",
+    "Insights אין ספירה",
+    "no Gmail send from this agent",
+    "no auto-DM",
+    "no HQ Print"
+  ],
+  "next": "Human or Grok sends htmlBody; do not claim IG posted"
+}

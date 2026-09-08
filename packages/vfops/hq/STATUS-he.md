@@ -1,4 +1,4 @@
-# סטטוס לולאת משרד · 2026-09-07
+# סטטוס לולאת משרד · 2026-09-08
 
 רף: סוכנות פרסום+תפעול יקרה. הבעלים יושב רגוע.
 
@@ -6,7 +6,13 @@
 
 - `vfops_loop.py brief` — בריף סוכנות מפקים חיים
 - `vfcost.py brief` — עלות חומר חיה בחריץ 02 (בלי ₪ מכירה)
-- מדף `vfsku.py brief` + `week.md`
+- `vfprod.py brief` — צי + תחזוקה בחריץ 03 (אין Print מ-HQ)
+- `vfprod.py print-done` — כרטיסי רצפה בחריץ 03 (אין Publish מהבריף)
+- מדף `vfsku.py brief` + `vfsku.py scan` + `week.md`
+- שערי 01 מ־`GATES.json` (לחיצת אדם, לא וואטסאפ)
+- Organic Growth Decision Pack `vf_organic_growth.py` — אישור ≠ פרסום
+- `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)
+- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)
 - FOLLOWER-GROWTH · היילייטס + וואטסאפ
 - כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)
 - חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ
@@ -29,7 +35,7 @@
 | `velvetos` | working-cli | on-instance | — |
 | `vfagents` | docs-playbook | on-job | — |
 | `vfbiz` | locked | daily-07:00 | B2B נעול עד בלוק 01 |
-| `vfbooks` | docs-playbook | weekly | אין ספירה בלי מקור מאומת |
+| `vfbooks` | working-cli | daily-07:00 | אין ספירה בלי מקור מאומת |
 | `vfbriefux` | working-cli | daily-07:00 | — |
 | `vfcanva` | mcp-ready | on-content | — |
 | `vfconvert` | docs-playbook | on-inquiry | אין פנייה חדשה = אין ספירה |
@@ -50,7 +56,7 @@
 | `vfmskill` | docs-playbook | on-content | — |
 | `vfom` | docs-playbook | on-floor-clip | אין גלם = אין ריל |
 | `vfops` | working-cli | daily-07:00 | — |
-| `vfprod` | docs-playbook | daily-03 | אין Print מ-HQ |
+| `vfprod` | working-cli | daily-03 | אין Print מ-HQ |
 | `vfresearch` | docs-playbook | daily-06:15 | — |
 | `vfsales` | docs-playbook | on-inquiry | X ₪ עד סכום מאומת |
 | `vfseason` | docs-playbook | daily-07:00 | אין חלון עונה בלי תאריך סטודיו |
