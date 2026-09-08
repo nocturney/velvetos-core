@@ -63,6 +63,11 @@
 
 עיצוב: לשמור על שפת `vfbriefux/hq/DESIGN.md` (RTL, navy/cream/gold) — לא סגול-SaaS גנרי.
 
+## Office Control Plane (2026-09-08)
+
+איחוד מקורות אמת — לא מערכת משרד שנייה: `office/control-plane.json` · `office/control/` · `python3 scripts/vf_control_plane.py`.  
+משטח בעלים = אדום/כתום בלבד (`POLICY.md`). Dead-letter + WIP→finished + מסירת מנהל לכל AI.
+
 ## מה לא לבחור עכשיו
 
 - להתקין Odoo/ERPNext/Twenty כמערכת חיה במקום ה־catalog.

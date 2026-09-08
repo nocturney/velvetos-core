@@ -13,3 +13,5 @@ Bind ייחוס (תאימות): Velvet Factory — שדרות · איסוף · �
 מפעל צמיחה אורגני: [`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) — טיוטות + בריף 07:00. לא בוט פרסום. לא אוטו־DM.
 
 מאגר מדיה משותף: [`docs/MEDIA-VAULT.md`](../docs/MEDIA-VAULT.md) · קטלוג אחד `packages/vfmedia/catalog.json`. תפעול קולט נכנס→מקור; העלאה ומיקום בתיקייה אינם אישור לפרסום.
+
+בקרת משרד (איחוד מקורות אמת, לא מערכת שנייה): [`office/control-plane.json`](../office/control-plane.json) · `office/control/` · `python3 scripts/vf_control_plane.py` · מדיניות Don't Bother Christian ב־`office/control/POLICY.md`.

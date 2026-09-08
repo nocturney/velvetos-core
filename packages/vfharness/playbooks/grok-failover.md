@@ -55,6 +55,7 @@
 
 ## קישורים
 
+- ניהול משרד (מנהל ראשי נפל): `docs/FAILOVER.md`
 - חוקת שליחה: `constitution/SEND.md`
 - תזמורת: `constitution/ORCHESTRA.md`
 - תור: `packages/vfigos/QUEUE.md`

@@ -1,0 +1,21 @@
+{
+  "task_id": "office-failover-doc-2026-09-08",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "Add docs/FAILOVER.md office-manager failover protocol and wire entry points",
+  "completed_steps": [
+    "create-docs-FAILOVER.md",
+    "link-entry-points",
+    "extend-check-vfharness",
+    "run-sensors"
+  ],
+  "next_step": "none",
+  "artifacts": [
+    "docs/FAILOVER.md",
+    "scripts/check-vfharness.py",
+    "/opt/cursor/artifacts/failover-check-all.log"
+  ],
+  "unresolved": [],
+  "last_updated": "2026-09-08"
+}

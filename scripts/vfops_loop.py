@@ -42,6 +42,7 @@ VFCOST = ROOT / "scripts" / "vfcost.py"
 VFBOOKS = ROOT / "scripts" / "vfbooks.py"
 VFPROD = ROOT / "scripts" / "vfprod.py"
 ORGANIC_CLI = ROOT / "scripts" / "vf_organic_growth.py"
+CONTROL_CLI = ROOT / "scripts" / "vf_control_plane.py"
 GROWTH_BRIEF = ROOT / "packages" / "vfgrowth" / "data" / "growth-brief.json"
 GATES = ROOT / "packages" / "vfops" / "hq" / "GATES.json"
 ORDERS = ROOT / "packages" / "vfbooks" / "data" / "orders.json"
@@ -231,6 +232,57 @@ def books_line() -> str:
     else:
         disk = f"ספר דיסק: הזמנות={n_orders} · Invoice4U={n_inv} · בלי ₪ מומצא"
     return f"{books}\n{disk}"
+
+
+def control_plane_brief_rows() -> tuple[str, list[list[str]]]:
+    """Owner-facing Control Plane slice for brief slot 01 — no low-level noise."""
+    if not CONTROL_CLI.is_file():
+        return "", []
+    raw = run_cmd(
+        [sys.executable, str(CONTROL_CLI), "brief-summary"],
+        name="vf_control_plane.py brief-summary",
+    )
+    if raw.startswith("חסר"):
+        return "Control Plane: חסר פלט", []
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        return "Control Plane: חסר JSON", []
+    prose_bits = [
+        f"בריאות משרד: {data.get('health') or 'אין ספירה'}",
+    ]
+    completed = data.get("completed_or_planned") or []
+    if completed:
+        prose_bits.append("מה המשרד עשה/מתכנן: " + " · ".join(str(x) for x in completed[:4]))
+    rows: list[list[str]] = []
+    for item in data.get("owner_decisions") or []:
+        rows.append(
+            [
+                str(item.get("text") or item.get("action") or item.get("id") or "החלטה"),
+                "כן/לא/דחה",
+                f"risk={item.get('risk') or 'red'}",
+            ]
+        )
+    for item in data.get("dead_letters_owner") or []:
+        rows.append(
+            [
+                f"dead-letter · {item.get('action') or item.get('id')}",
+                "בעלים" if item.get("owner_required") else "פנימי",
+                str(item.get("reason") or "")[:80],
+            ]
+        )
+    ready = data.get("wip_finished_ready") or []
+    if ready:
+        rows.append(
+            [
+                f"WIP→finished מוכן ({len(ready)})",
+                "המשך משרד",
+                "PREFLIGHT לפני שיבוץ",
+            ]
+        )
+    for gap in data.get("gaps_owner") or []:
+        rows.append([str(gap.get("code") or "פער"), gap.get("level") or "?", str(gap.get("detail") or "")[:80]])
+    return " · ".join(prose_bits), rows
 
 
 def gates_packet() -> tuple[str, list[list[str]], list[dict]]:
@@ -696,6 +748,7 @@ def assemble(today: str) -> dict:
     prod = prod_line()
     invoked.add("vfprod")
     gate_prose, gate_rows, gate_actions = gates_packet()
+    cp_prose, cp_rows = control_plane_brief_rows()
     growth = growth_line()
     invoked.add("vfgrowth")
     biz = biz_week_line()
@@ -715,15 +768,19 @@ def assemble(today: str) -> dict:
                 invoked.add(str(rec["pack"]))
     office = office_line(invoked)
     deck_line = weekly_deck_line(today)
+    decision_prose = (
+        f"{gate_prose} Organic Growth: אישור = approved_for_manual_posting — לא Publish."
+    )
+    if cp_prose:
+        decision_prose = f"{decision_prose} Control Plane: {cp_prose}."
     slots = [
             {
                 "kicker": "01 · קודם החלטה",
                 "title": "החלטות",
-                "prose": (
-                    f"{gate_prose} Organic Growth: אישור = approved_for_manual_posting — לא Publish."
-                ),
+                "prose": decision_prose,
                 "headers": ["החלטה", "כן/לא/דחה", "מועד"],
                 "rows": gate_rows
+                + cp_rows
                 + [
                     ["ריל 16:00 (לוח א׳/ג׳)", "דחה עד גלם", "vf_organic_growth.py"],
                     ["סטורי סקר 20:30", "ממתין לאישור", "לא מפרסם"],
@@ -852,6 +909,7 @@ def write_status(today: str) -> None:
         "- מדף `vfsku.py brief` + `vfsku.py scan` + `week.md`",
         "- שערי 01 מ־`GATES.json` (לחיצת אדם, לא וואטסאפ)",
         "- Organic Growth Decision Pack `vf_organic_growth.py` — אישור ≠ פרסום",
+        "- Office Control Plane `vf_control_plane.py` — SoT + dead-letter + WIP→finished (בלי ספאם לבעלים)",
         "- `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)",
         "- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)",
         "- FOLLOWER-GROWTH · היילייטס + וואטסאפ",

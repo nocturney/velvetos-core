@@ -8,6 +8,8 @@ https://drive.google.com/drive/folders/1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv
 
 קטלוג יחיד: [`packages/vfmedia/catalog.json`](../packages/vfmedia/catalog.json) · סכמה: [`packages/vfmedia/catalog.schema.json`](../packages/vfmedia/catalog.schema.json) · נוהל קטלוג: [`packages/vfmedia/CATALOG.md`](../packages/vfmedia/CATALOG.md)
 
+במעבר מנהל משרד: [`docs/FAILOVER.md`](FAILOVER.md) — אין vault מקביל; ממשיכים מהזרימה כאן.
+
 ---
 
 ## תיקיות נעולות (מזהים חובה)

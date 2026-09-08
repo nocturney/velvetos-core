@@ -39,6 +39,7 @@
 
 ## קישורים
 
+- ניהול משרד (החלפת מנהל): `docs/FAILOVER.md`
 - טבלאות כלי: `constitution/ORCHESTRA.md`
 - Grok quota: `playbooks/grok-failover.md`
 - Send preflight: `scripts/vf_send_preflight.py`

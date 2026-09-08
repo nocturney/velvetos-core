@@ -1,0 +1,68 @@
+{
+  "updatedAt": "2026-09-08T14:20:42+03:00",
+  "date": "2026-09-08",
+  "active_now": [],
+  "waiting": [],
+  "failed": [],
+  "owner_blocked": [],
+  "next": [
+    "הרץ watchdog",
+    "סגור followups ready_for_finished_content דרך EDIT-GATE+PREFLIGHT",
+    "אל תטריד את כריסטיאן על מדדים חלשים"
+  ],
+  "changed_today": [
+    "Office Control Plane מוטמע",
+    "followups=0",
+    "dead_letters=0"
+  ],
+  "authoritative_sources": {
+    "policy": "constitution/CONSTITUTION.md + constitution/ORCHESTRA.md",
+    "jobs": "office/ledger/live/jobs.csv",
+    "media": "packages/vfmedia/catalog.json + docs/MEDIA-VAULT.md",
+    "content_calendar": "packages/vfgrowth/CALENDAR.md",
+    "content_approval": "packages/vfgrowth/data/approval-queue.json",
+    "production_completion": "packages/vfprod/hq/cards/*.md via print.done",
+    "office_loop": "packages/vfops/LOOP.json",
+    "manager_handoff": "office/control/HANDOFF.json",
+    "decisions": "office/control/decisions.jsonl",
+    "dead_letter": "office/control/dead-letter.json",
+    "followups": "office/control/followups.json"
+  },
+  "tools_degraded": [],
+  "safe_for_next_ai": [
+    "python3 scripts/vf_control_plane.py watchdog",
+    "python3 scripts/vf_control_plane.py followups",
+    "python3 scripts/vfops_loop.py brief",
+    "python3 scripts/check-all.py"
+  ],
+  "must_never_repeat": [
+    "invent ₪ or Insights",
+    "auto-DM",
+    "claim published without verification",
+    "duplicate media catalog",
+    "Meta Business Suite",
+    "nationwide shipping",
+    "bother Christian with weak metrics"
+  ],
+  "latest_policy": [
+    "constitution/CONSTITUTION.md",
+    "constitution/ORCHESTRA.md",
+    "office/control/POLICY.md",
+    "office/control-plane.json"
+  ],
+  "chatgpt_tasks_safe_to_disable_after_proof": [
+    "Media Intake",
+    "Content Sprint",
+    "Insights/Office Review",
+    "Memory Hygiene",
+    "Opportunity Radar",
+    "WIP→Finished watcher",
+    "Dead-letter monitoring",
+    "routine watchdog",
+    "source-of-truth validation"
+  ],
+  "chatgpt_tasks_keep": [
+    "Velvet Morning Brief",
+    "optional Velvet Publish Watch / hard-blocker alert"
+  ]
+}

@@ -28,5 +28,6 @@
 
 ## קשר
 
+- החלפת מנהל משרד / דוח השתלטות: `docs/FAILOVER.md`
 - `PLANNING-FILES.md` · `templates/checkpoint.schema.json`
 - `playbooks/verification-before-claim.md` לפני «מסרתי והכל ירוק»

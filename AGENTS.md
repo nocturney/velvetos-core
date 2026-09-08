@@ -18,7 +18,7 @@ BUILD: (no app binary — the catalog is the product)
 TEST: python3 scripts/check-all.py
 LINT: python3 scripts/check-hq-overlay.py && python3 scripts/check-vf-desk.py && python3 scripts/check-velvetos.py
 
-Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `constitution/ORGANIC_GROWTH.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`, `docs/AUTONOMY-TOOLS.md`.
+Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `constitution/ORGANIC_GROWTH.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`, `docs/AUTONOMY-TOOLS.md`, `docs/FAILOVER.md`, `docs/SHARED-WORK-COORDINATION.md`, `docs/MEDIA-VAULT.md`.
 
 ## RULES
 
@@ -31,6 +31,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - Do not create a new pack for an idea. Map onto an existing pack the same day. New business = **frontend instance repo** that attaches Core modules (`packages/velvetos/REPOS.md` + `scripts/publish-instance.sh`), not a parallel pack tree inside Core.
 - Do not host a second live business frontend inside Core. Use `instances/<id>/` scaffolds + presets only.
 - Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
+- **Office-manager failover:** when the primary office manager (ChatGPT) is unavailable, temporary controlled handoff to Perplexity / Gemini / Grok / Cursor per `docs/FAILOVER.md`. Read truth sources first; emit דוח השתלטות; do not rebuild the system. Return handoff via `docs/SHARED-WORK-COORDINATION.md` + `packages/vfharness/templates/handoff.md`. No secrets in handoff docs.
 - Treg is **not relevant**. Do not login, `call`, or route failover through Treg. Live web = `WebSearch` / `WebFetch` / orchestra.
 - Gemini **API** (`GEMINI_API_KEY` + `scripts/vf_gemini.py`) and ChatGPT **API** (`OPENAI_API_KEY` + `scripts/vf_chatgpt.py`) are not the `gemini.google.com` / `chatgpt.com` subscriptions. Cloud Agent and Grok Bot **must not** open those sites (Google/OpenAI security alerts). Do not persist cookies. Do not install `aliargun/mcp-server-gemini` or `RLabs-Inc/gemini-mcp`. Without a key write «חסר מפתח Gemini» / «חסר מפתח ChatGPT» and fail over. Full Plus/Pro without extra API billing lives on the owner Mac (`packages/vfmcp/HOST.md`). Playbook: `packages/vfmcp/SUBSCRIPTIONS.md`.
 - Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.
@@ -45,6 +46,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - **Best skills pulse:** every ~2 days re-read [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) via `vfresearch/BEST-SKILLS.md` + `TIMER.md` + skill `vf-best-skills`. **Standing forever** until the owner explicitly stops (`standingForever` in `BEST-SKILLS.json`). Renew `subscribe_timer` every pass. Embed patterns into existing packs; constitution may update when a durable pattern wins. No `npx skills` on Cloud Agent.
 - **Revenue loop:** IG as income source — `expert-revenue-loop` + `expert-insights-ingest` + `expert-instance-onboard` for multi-frontend. Skill `.cursor/skills/vf-revenue-loop/SKILL.md`. Paid boost and ₪ changes stay lead-gated.
 - **Organic Growth Control Plane:** drafts + 07:00 Decision Pack on existing packs (`constitution/ORGANIC_GROWTH.md`). The plane never auto-posts, never auto-DMs, never marks `posted_manually`. Approve → `approved_for_manual_posting` only. No poll→Print from HQ. WhatsApp ping is not certain conversion. Skill `.cursor/skills/vf-organic-growth/SKILL.md`. CLI `scripts/vf_organic_growth.py`.
+- **Office Control Plane:** unify existing sources of truth (`office/control-plane.json` + `office/control/`). CLI `scripts/vf_control_plane.py`. Sensor `scripts/check-office-control-plane.py`. Don't Bother Christian (`office/control/POLICY.md`). Dead-letter + WIP→finished + manager handoff. Not a second office runtime.
 - **Shared media vault:** `docs/MEDIA-VAULT.md` · one catalog `packages/vfmedia/catalog.json` · תפעול owns intake. Historical Drive capability evidence is in the same procedure; verify access per tool/session. Upload and folder placement never replace version approval. Sensor: `scripts/check-vfmedia.py`.
 - No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
 - Warehouse specialists stay off the desk unless the user asks for that `@slug`.
@@ -92,6 +94,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
 | `scripts/check-vfgrowth.py` | Standing IG calendar + ledger + Studio handoff (instagram.com, no Suite) |
 | `scripts/check-organic-growth.py` | Organic Growth Control Plane — no autopost/auto-DM, gate states, `orders.json` null ILS, 07:00 Decision Pack |
+| `scripts/check-office-control-plane.py` | Office Control Plane — single SoT map, dead-letter, WIP→finished, owner surface, no duplicate authorities |
 | `scripts/check-vfops-loop.py` | Office activation loop — every pack consumed into 07:00 brief + HANDOFF |
 | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready + Gemini/ChatGPT API desks (`vf_gemini.py` / `vf_chatgpt.py`; not aliargun / RLabs; no Cloud browser login) |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |

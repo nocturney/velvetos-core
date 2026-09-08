@@ -27,6 +27,8 @@ Failover מיידי. בלי חצי-עבודה. בלי גוף/₪/Insights מומ
 
 ## Failover — אסור להישאר בלי תוצאה
 
+**ניהול משרד (מנהל ראשי נפל):** מעבר מבוקר בין ChatGPT · Perplexity · Gemini · Grok · Cursor — [`docs/FAILOVER.md`](../docs/FAILOVER.md) (מקור אמת + דוח השתלטות + בריף). לא בונים מערכת מחדש.
+
 **Degraded Mode (שם רשמי):** כלי/רכיב נפל → מבודדים → failover לאותו תור → `component_state: Degraded` ב־checkpoint אם יש משימה · אירוע `tool.failover` / `sensor.degraded`.  
 פלייבוק: `packages/vfharness/playbooks/degraded-mode.md` · ADR: `packages/velvetos/ADR-THREE-LAYERS.md`.  
 יציאה מ־Degraded: `sensor.recovered` + חזרה ל־`Processing`/`Idle`.
@@ -107,7 +109,9 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 ```
 
 מלאי: `python3 scripts/vfops_loop.py inventory`  
-מסירה לסטודיו: `python3 scripts/vfops_loop.py handoff` → `vfgrowth/HANDOFF-he.md`
+מסירה לסטודיו: `python3 scripts/vfops_loop.py handoff` → `vfgrowth/HANDOFF-he.md`  
+מסירת מנהל (Control Plane): `python3 scripts/vf_control_plane.py handoff` → `office/control/HANDOFF.json` + `HANDOFF-he.md`  
+מפת מקורות אמת: `office/control-plane.json` (לא מערכת משרד שנייה).
 
 חריץ 02 = `vfcost.py brief` (עלות חומר חיה, בלי ₪ מכירה).  
 חריץ 03 = `vfsku` + `week.md`.  

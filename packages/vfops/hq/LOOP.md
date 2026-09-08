@@ -40,6 +40,18 @@ python3 scripts/vfops_loop.py handoff
 פותחים `vfgrowth/HANDOFF-he.md` — חבילת היום (עכשיו G004).  
 בלי ארטיפקט `packages/vfgrowth/preflight/<id>.md` עבור = לא משבצים. אל תפנה לכריסטיאן על מדדים חלשים.
 
+## Office Control Plane
+
+לא מתזמן שני. מאחד מקורות אמת + watchdog:
+
+```
+python3 scripts/vf_control_plane.py status
+python3 scripts/vf_control_plane.py watchdog
+python3 scripts/vf_control_plane.py handoff
+```
+
+מפה: `office/control-plane.json` · מצב: `office/control/` · נכנס לבריף 01 (החלטות בעלים / dead-letter / WIP→finished) בלי רעש תפעולי.
+
 ## מלאי
 
 ```

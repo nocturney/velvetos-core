@@ -1,0 +1,5 @@
+{
+  "updatedAt": "2026-09-08",
+  "rule": "Every failed action that cannot complete after allowed failover lands here. Never silently lose failed work.",
+  "items": []
+}
