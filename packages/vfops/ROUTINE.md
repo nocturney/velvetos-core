@@ -11,12 +11,31 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 |---|---|---|
 | 06:15 | תזמורת: ChatGPT **וגם** Gemini **וגם** Perplexity · failover מיד אם כלי נפל | `constitution/ORCHESTRA.md`, `vfresearch/DAILY.md` |
 | 06:15–07:00 | צרכנים יומיים (בלי check-all / בלי G005 אוטומטי) | `python3 scripts/vfops_loop.py run` · אח״כ בריף |
-| 07:00 | בריף בוקר — **לולאה מושכת פקים** כולל שערי 01 + ספר דיסק + צי רצפה + Decision Pack | `python3 scripts/vfops_loop.py brief --write` · `BRIEF.md` · `hq/GATES.md` · `hq/LOOP.md` · `vf_organic_growth.py` |
-| אחרי בריף | פוסט מתוכנן → Google Calendar (בלי לשאול משבצת) | `vfgrowth/CALENDAR-OPS.md` |
-| לפי צורך | קליטת מדיה לכספת: נכנס → מקור (תפעול). GrokBot ב־Drive MCP; Cursor = סכמת `vfmedia`. העלאה ≠ אישור | `docs/MEDIA-VAULT.md` · `python3 scripts/vfmedia.py validate` |
-| לפני שיבוץ | שער עריכה + פריפלייט כתוב — לא JPEG גולמי. נכשל-סגור = לא משבצים | `vfgrowth/EDIT-GATE.md` · `vfgrowth/PREFLIGHT.md` · `constitution/STUDIO.md` |
-| אחרי פרסום חי (HQ דרך כלים / `#נשלח-מ-HQ`) | Insights ב־24 שעות. אם אין מספר — «אין» | `vfinsights` |
-| אחרי פרסום חי + לפני פוסט חדש | מילוי `packages/vfinsights/data/posts.csv` מנתוני Instagram Professional Dashboard + הרצת `python3 packages/vfinsights/scripts/vf_insights_loop.py` | `vfinsights/LEARNINGS.md` |
+| **07:00** | **Morning Brief** — עברית, קומפקטי: מה קרה / מה המשרד ביצע / מה מכין / live verify / צינור תוכן / Production→Content / מדיה / Yellow / רק Red אמיתי לבעלים | `python3 scripts/vfops_loop.py brief --write` · `BRIEF.md` · `hq/GATES.md` · `constitution/RISK.md` |
+| **09:00** | **Media Intake** יומי — נכנס → inspect → מקור (תפעול). Upload ≠ approval | `docs/MEDIA-VAULT.md` · `python3 scripts/vfmedia.py validate` |
+| **10:00** א׳/ג׳/ה׳ | **Content Sprint** — מועמדים, כיתוב, Canva, נגזרות, EDIT-GATE, PREFLIGHT, תור | skill `vf-content-sprint` · `vfgrowth` |
+| **11:00** | **Publish Watch** — 36 שעות הבאות: scheduled≠live, failed, dead-letter, needsAuth | `python3 scripts/vf_office_watchdog.py` · `vfigos/PUBLICATION-STATES.md` |
+| לפני שיבוץ | שער עריכה + פריפלייט — CTA = הודעת Instagram. נכשל-סגור = לא משבצים | `EDIT-GATE.md` · `PREFLIGHT.md` · `PUBLIC_CTA.md` |
+| אחרי בריף | פוסט מתוכנן → Google Calendar (בלי לשאול משבצת) · מצב = `scheduled` לא live | `vfgrowth/CALENDAR-OPS.md` |
+| אחרי `liveVerified` | Insights ב־24 שעות. חסר = «אין ספירה». מדדים חלשים ≠ Red | `vfinsights` · `constitution/RISK.md` |
+
+## ערב / פעמיים בשבוע
+
+| מתי | מה | קובץ |
+|---|---|---|
+| ראשון + חמישי ערב | **Insights Review** — רק מספרים מאומתים; למידה לצינור הבא; לא פינג לכריסטיאן על חולשה | `vfinsights` |
+| סוף יום | רטרו למידה + owner-memory | `vfops/hq/DAILY-RETRO.md` · skill `vf-daily-learning` |
+
+## Watchdog (תמיד)
+
+`python3 scripts/vf_office_watchdog.py [--write]`  
+בודק: צינור פרסום · vault · dead-letter · follow-ups · CTA · profile desired · IG needsAuth.  
+פלט: OK / AUTOFIXED / PREPARED / WAITING_EXTERNAL_TOOL / DEAD_LETTER / RED_BLOCKER.  
+לא לספאם את כריסטיאן.
+
+## NO INSTAGRAM CONNECTION ≠ NO OFFICE WORK
+
+כש־`instagram.status=needsAuth`: ממשיכים intake, inspection, copy, Canva, derivatives, preflight, queue, calendar candidates, feed audit. לא ממציאים live.
 
 ## שבוע
 
@@ -36,6 +55,8 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 
 לא מחליף את 06:15 (שם צ'אטים חדשים). כאן חוזרים על הרישום. קישור חדש באמצע השבוע → נרשם ב־`LINKS.json` **באותו יום**. אירוע Calendar רק אם ראש צוות מבקש.
 
+GitHub workflows קיימים (daily research / weekly deck) נשארים נפרדים — לא לשכפל jobs.
+
 מנדט מושב מחקר/אורקסטרציה: `packages/vfresearch/HQ-ROUTINE.md`.
 
 לפני פתיחת פק או קובץ ידני לשאלה «מי מטפל ב…» — להריץ `python3 scripts/vfmem.py who "<job>"` ואז `python3 packages/vfmem/scripts/vf_semantic_search.py "<השאלה החופשית>"` כדי למשוך קטעים רלוונטיים.
@@ -53,17 +74,24 @@ Cursor כותב ל־`packages/vfops/data/research.md` (הנתיב שהבריף 0
 
 HQ שולח את הבריף אל `nocturney@gmail.com` ב־`python -m vfops.gmail_brief_send` או ב־3 צעדי MCP (`docs/SEND-BRIEF-MCP.md`). לא `LOAD_FROM_FILE`. לא מחכים לגרוק.
 
+## בריף לכריסטיאן — מה כן / לא
+
+**כן (Red / החלטה אמיתית):** אישור בעלים · רכישה · מחיר לא ידוע · OAuth אנושי · פעולה הרסנית בפיד · מקור אמת שבור.
+
+**לא:** מדדים חלשים · תיקוני איכות שגרתיים · הכנת תוכן · קליטת מדיה · failover שעובד · משימות שהמשרד יכול לפתור (Green/Yellow).
+
 ## מה לא נכנס לשגרה
 
 | שלב שם | מה עושים ב־HQ | דילוג |
 |---|---|---|
 | פנייה חדשה | שורה פנימית בבלוק `02` / `vfconvert` | — |
-| בירור חומר/כמות/זמן/גימור | אדם בוואטסאפ (`vfcopy`, `vfconvert`) | צ׳אטבוט 24/7 |
+| בירור חומר/כמות/זמן/גימור | אדם בהודעות Instagram (ציבורי) · רשומת וואטסאפ פנימית כבויה ל־outreach | צ׳אטבוט 24/7 |
 | התראת טלפון | ראש צוות רואה בבריף | — |
-| אישור קבלה אוטומטי | **לא.** אדם בוואטסאפ 050-2517000 | מייל/DM אוטומטי |
+| אישור קבלה אוטומטי | **לא.** | מייל/DM אוטומטי |
 | Notion/Sheets חיצוני | לא חובה. הבריף הוא הגיליון | כפילות מערכת |
-| Meta Suite / אוטו־DM | — | דולג |
+| Meta Suite / אוטו־DM / Metricool חובה | — | דולג |
 
-Make/Zapier/n8n ללקוח — לא. סגירה = אדם ב־050-2517000.
+Make/Zapier/n8n ללקוח — לא.  
+PUBLIC_CURRENT_CTA = הודעת Instagram. BUSINESS_CONTACT_RECORD = `050-2517000` (לא CTA ציבורי).
 
 כל ~48 שעות (טיימר) כבר כולל LinklyAI/best-skills. עבור תוכן אינסטגרם, להשתמש בסקיל `vf-canva-instagram` לפי `.cursor/skills/vf-canva-instagram/SKILL.md` לפני יציאה ל-Canva MCP.

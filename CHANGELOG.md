@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-08 — **משרד פרסום אוטונומי + PUBLIC CTA = הודעת Instagram:** `constitution/PUBLIC_CTA.md` מפריד PUBLIC_CURRENT_CTA (IG message) מ־BUSINESS_CONTACT_RECORD (`050-2517000` disabled for public CTA). מצבי פרסום `vfigos/PUBLICATION-STATES` (scheduled/upload ≠ liveVerified). יכולות IG `CAPABILITIES.json` (בלי Metricool). פרופיל מבוקש `PROFILE-DESIRED.json` (prepared/pending-live-tool). ביקורת פיד `FEED-AUDIT` (#1–#2 reference, #3+ REVIEW_REQUIRED). Production→Content `PRODUCTION-CONTENT.md`. Risk GREEN/YELLOW/ORANGE/RED + dead-letter. Watchdog `vf_office_watchdog.py`. שגרה 07/09/10/11 ב־ROUTINE. סנסורים חדשים + עדכון CTA בכל נתיב תוכן. `check-all` 33. Autonomous publication office; IG-DM public CTA; no fake live.
+
 - 2026-09-08 — **סגירת רישום מיזוג המדיה #130:** checkpoint תקין (`done` / `Idle`), SHA המיזוג ל־main ובדיקות 28/28 אחרי המיזוג; הוסרה המתנה מיושנת מרשומת התיאום ותוכנית המשימה. Correct post-merge tracking only; no media/runtime changes.
 
 - 2026-09-08 — **איחוד #130 עם #131:** נשמרים נוהל `docs/MEDIA-VAULT.md`, קטלוג `packages/vfmedia/catalog.json` ותפעול כבעל קליטה. תיעוד יכולות Drive מ־#130 נשמר כראיה היסטורית מיוחסת; אין קטלוג/נוהל/חיישן מקבילים. נוספו הפניות קנוניות ובדיקת רגרסיה להפניות ישנות. Reconcile media-vault merge; preserve scoped capability evidence and main ownership.

@@ -32,7 +32,7 @@ Specialists on the desk: `@content-creator` `@brand-guardian` `@instagram-curato
 ## Laws (win over upstream)
 
 - HQ **sends Instagram and Gmail via tools** (`constitution/SEND.md`). Customer WhatsApp stays human. No auto-DM.
-- CTA is WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
+- CTA is **PUBLIC_CURRENT_CTA** = Instagram message / איסוף שדרות. Not bare «שלחו DM». Not WhatsApp phone in public copy. Business phone `050-2517000` = BUSINESS_CONTACT_RECORD only (`constitution/PUBLIC_CTA.md`).
 - No TikTok, ads, boost, or follow-back without the lead seat.
 - No invented ₪ (`X ₪`) or Insights («אין ספירה»).
 - One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping.

@@ -54,9 +54,12 @@ def main() -> None:
     if not organic.is_file():
         fail("missing vfgrowth/ORGANIC-GROWTH.md")
     og = organic.read_text()
-    for needle in ("print.done", "אין ריל כל יום", "approved_for_manual_posting", "050-2517000"):
+    for needle in ("print.done", "אין ריל כל יום", "approved_for_manual_posting"):
         if needle not in og:
             fail(f"ORGANIC-GROWTH.md missing {needle!r}")
+    # Phone OK only as BUSINESS_CONTACT_RECORD / disabled note — not required as public CTA
+    if not any(n in og for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA", "Instagram")):
+        fail("ORGANIC-GROWTH.md must mention Instagram-message public CTA")
     assert_no_ils(organic)
 
     cal = CAL.read_text()
@@ -116,10 +119,16 @@ def main() -> None:
     ):
         if needle not in handoff:
             fail(f"HANDOFF-he.md missing {needle!r}")
-    if "050-2517000" not in handoff:
-        fail("HANDOFF-he.md must include WhatsApp CTA")
+    if not any(n in handoff for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA", "שלחו לנו הודעה")):
+        fail("HANDOFF-he.md must include Instagram-message CTA (not WhatsApp phone)")
+    if "CTA" in handoff and "050-2517000" in handoff:
+        # phone may appear as BUSINESS_CONTACT_RECORD / disabled — not as required public CTA line
+        cta_lines = [ln for ln in handoff.splitlines() if "CTA" in ln]
+        if any("050-2517000" in ln and "BUSINESS" not in ln and "רשומת" not in ln and "disabled" not in ln.lower() for ln in cta_lines):
+            if not any("הודעה" in ln or "אינסטגרם" in ln for ln in cta_lines):
+                fail("HANDOFF-he.md public CTA must be Instagram-message, not WhatsApp phone")
     if "שלחו DM" in handoff and "לא «שלחו DM»" not in handoff and "בלי «שלחו DM»" not in handoff:
-        fail("HANDOFF-he.md must forbid שלחו DM")
+        fail("HANDOFF-he.md must forbid bare שלחו DM (auto-dm tooling)")
 
     g003 = G003.read_text()
     for needle in ("SoccerBall", "נעול", "משובץ", "7.9.2026", "16:00", "גיבוי"):
@@ -134,11 +143,13 @@ def main() -> None:
             fail(f"G004.md missing {needle!r}")
 
     copy4 = COPY_G004.read_text()
-    for needle in ("050-2517000", "מחזיק", "לא משקולת", "kettlebells-pink", "היילייטס", "הכירו", "מתאים", "VOICE.md"):
+    for needle in ("מחזיק", "לא משקולת", "kettlebells-pink", "היילייטס", "הכירו", "מתאים", "VOICE.md"):
         if needle not in copy4:
             fail(f"vfcopy/G004.md missing {needle!r}")
+    if not any(n in copy4 for n in ("הודעה", "אינסטגרם", "שלחו לנו הודעה")):
+        fail("vfcopy/G004.md must include Instagram-message CTA")
     if "שלחו DM" in copy4 and "לא «שלחו DM»" not in copy4 and "בלי «שלחו DM»" not in copy4:
-        fail("vfcopy/G004.md must forbid שלחו DM")
+        fail("vfcopy/G004.md must forbid bare שלחו DM")
     if "חמש ורודות מהמיטה" in copy4:
         fail("vfcopy/G004.md must not keep early thin copy")
 
@@ -149,14 +160,17 @@ def main() -> None:
         "22 שעות הדפסה בכמה שניות",
         "תנועה, צבע והמון אופי",
         "עקבו כדי לראות מה יוצא מהמדפסת בשבוע הבא",
-        "050-2517000",
+        "050-2517000",  # appears as forbidden-public / BUSINESS_CONTACT_RECORD note
         "מוכנים",
         "בלי משלוח",
+        "הודעה",
     ):
         if needle not in voice:
             fail(f"vfcopy/VOICE.md missing {needle!r}")
     if "X ₪" not in voice:
         fail("vfcopy/VOICE.md must keep X ₪ when sale amount is missing")
+    if not any(n in voice for n in ("PUBLIC_CURRENT_CTA", "PUBLIC_CTA", "אינסטגרם")):
+        fail("vfcopy/VOICE.md must lock Instagram-message PUBLIC_CURRENT_CTA")
 
     research = VOICE_RESEARCH.read_text()
     for needle in ("https://", "אין ספירת עוקבים", "לאמץ", "לדחות", "nisha.co", "studioarmadillo.com"):
@@ -188,30 +202,45 @@ def main() -> None:
         "Canva",
         "CONTENT-RUBRIC",
         "artifact_digest",
+        "PUBLIC_CURRENT_CTA",
     ):
         if needle not in preflight:
             fail(f"PREFLIGHT.md missing {needle!r}")
+    if "הודעה" not in preflight and "הודעת" not in preflight:
+        fail("PREFLIGHT.md must mention Instagram-message CTA (הודעה/הודעת)")
     if not (ROOT / "packages" / "vfgrowth" / "CONTENT-RUBRIC.md").is_file():
         fail("CONTENT-RUBRIC.md missing")
     if not (ROOT / "packages" / "vfcopy" / "VOICE-CHART.md").is_file():
         fail("VOICE-CHART.md missing")
-    if "Rubric" not in (ROOT / "packages" / "vfgrowth" / "preflight" / "TEMPLATE.md").read_text():
+    template_pf = (ROOT / "packages" / "vfgrowth" / "preflight" / "TEMPLATE.md").read_text()
+    if "Rubric" not in template_pf:
         fail("preflight/TEMPLATE.md must include Rubric table")
+    if not any(n in template_pf for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):
+        fail("preflight/TEMPLATE.md must use Instagram-message CTA (not WhatsApp phone)")
     g004p = PREFLIGHT_G004.read_text()
     if "נכשל-סגור" not in g004p:
         fail("preflight/G004.md must stay fail-closed until the written gate passes")
+    if not any(n in g004p for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):
+        fail("preflight/G004.md must use Instagram-message CTA")
 
     copy = COPY.read_text()
     if "מה יוצא מהמדפסת" not in copy:
         fail("vfcopy/G003.md must lock caption מה יוצא מהמדפסת")
-    if "050-2517000" not in copy:
-        fail("vfcopy/G003.md must include WhatsApp CTA")
+    if not any(n in copy for n in ("הודעה", "אינסטגרם", "שלחו לנו הודעה")):
+        fail("vfcopy/G003.md must include Instagram-message CTA")
+    if "050-2517000" in copy and "להדבקה" in copy:
+        # publishable fence must not use WhatsApp phone as CTA
+        fences = copy.split("```")
+        if len(fences) >= 2 and "050-2517000" in fences[1]:
+            fail("vfcopy/G003.md publishable caption must not use WhatsApp phone as CTA")
     if "שלחו DM" in copy and "לא «שלחו DM»" not in copy and "בלי «שלחו DM»" not in copy:
-        fail("vfcopy/G003.md must not instruct שלחו DM")
+        fail("vfcopy/G003.md must not instruct bare שלחו DM")
 
     stories = STORIES.read_text()
-    if "20:30" not in stories or "050-2517000" not in stories:
-        fail("ig-stories.md must lock 20:30 + WhatsApp CTA")
+    if "20:30" not in stories:
+        fail("ig-stories.md must lock 20:30")
+    if not any(n in stories for n in ("הודעה", "אינסטגרם", "שלחו לנו הודעה", "PUBLIC")):
+        fail("ig-stories.md must lock Instagram-message CTA (not WhatsApp phone)")
     if "היילייטס" not in stories:
         fail("ig-stories.md must point CTA to Highlights")
     for needle in ("סיפור-מוצר", "נייבי", "Canva MCP", "G004-STORIES-FIX"):
@@ -219,32 +248,53 @@ def main() -> None:
             fail(f"ig-stories.md must mention {needle!r}")
 
     fix = STORIES_FIX.read_text()
-    for needle in ("סיפור-מוצר", "050-2517000", "DAHUaUo3bAk", "X ₪", "הכירו"):
+    for needle in ("סיפור-מוצר", "DAHUaUo3bAk", "X ₪", "הכירו", "מחזיק"):
         if needle not in fix:
             fail(f"G004-STORIES-FIX.md missing {needle!r}")
+    if not any(n in fix for n in ("הודעה", "אינסטגרם", "שלחו לנו הודעה")):
+        fail("G004-STORIES-FIX.md must include Instagram-message CTA")
     if "שלחו DM" in fix and "לא «שלחו DM»" not in fix and "בלי «שלחו DM»" not in fix:
-        fail("G004-STORIES-FIX.md must forbid שלחו DM")
+        fail("G004-STORIES-FIX.md must forbid bare שלחו DM")
     if "חמש ורודות" in fix or "איפה הטבעת" in fix:
         fail("G004-STORIES-FIX.md must not keep thin catalog hooks")
+    # On-frame / publishable WA must be marked revised-media or BUSINESS_CONTACT
+    if "```" in fix:
+        fence_body = fix.split("```")[1]
+        if "050-2517000" in fence_body or "וואטסאפ" in fence_body:
+            fail("G004-STORIES-FIX.md publishable CTA must not be WhatsApp phone")
+    if "050-2517000" in fix and "revised-media" not in fix.lower() and "BUSINESS_CONTACT" not in fix:
+        # phone outside fence only OK with revised-media / business-record note
+        pass  # allow mention in notes if marked elsewhere; fence check above is hard
 
     play = STORIES_PLAY.read_text()
-    for needle in ("סיפור-מוצר", "תהליך-קצר", "050-2517000", "Canva MCP"):
+    for needle in ("סיפור-מוצר", "תהליך-קצר", "Canva MCP"):
         if needle not in play:
             fail(f"STORIES.md missing {needle!r}")
+    if not any(n in play for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):
+        fail("STORIES.md must use Instagram-message CTA")
 
     follower = FOLLOWER.read_text()
-    for needle in ("80", "0", "היילייטס", "050-2517000", "ריל תהליך", "אאוטבאונד"):
+    for needle in ("80", "0", "היילייטס", "ריל תהליך", "אאוטבאונד"):
         if needle not in follower:
             fail(f"FOLLOWER-GROWTH.md missing {needle!r}")
-    if "PROFILE-TO-WHATSAPP" not in follower:
-        fail("FOLLOWER-GROWTH.md must point at PROFILE-TO-WHATSAPP.md")
+    # phone OK as BUSINESS_CONTACT_RECORD note; public CTA = IG message
+    if not any(n in follower for n in ("הודעה", "אינסטגרם", "PUBLIC")):
+        if "050-2517000" not in follower:
+            fail("FOLLOWER-GROWTH.md must keep business contact or Instagram-message CTA")
+    if "PROFILE-TO-WHATSAPP" not in follower and "PROFILE-TO-INSTAGRAM" not in follower:
+        fail("FOLLOWER-GROWTH.md must point at PROFILE funnel doc")
 
     funnel = FUNNEL.read_text()
-    for needle in ("תהליך-קצר", "סיפור-מוצר", "050-2517000", "אין ספירה", "PREFLIGHT", "שלחו DM"):
+    for needle in ("תהליך-קצר", "סיפור-מוצר", "אין ספירה", "PREFLIGHT"):
         if needle not in funnel:
-            fail(f"PROFILE-TO-WHATSAPP.md missing {needle!r}")
+            fail(f"PROFILE funnel missing {needle!r}")
+    if not any(n in funnel for n in ("הודעה", "אינסטגרם", "Instagram", "PUBLIC_CURRENT_CTA")):
+        fail("PROFILE funnel must use Instagram-message CTA (not WhatsApp as public CTA)")
+    # BUSINESS_CONTACT_RECORD may keep phone as disabled
+    if "שלחו DM" not in funnel and "אוטו־DM" not in funnel and "auto-dm" not in funnel.lower():
+        fail("PROFILE funnel must ban bare שלחו DM / auto-dm")
     if "ריל כל יום" in funnel and "אין ריל כל יום" not in funnel:
-        fail("PROFILE-TO-WHATSAPP.md must not schedule a reel every weekday")
+        fail("PROFILE funnel must not schedule a reel every weekday")
 
     tags = TAGS.read_text()
     for needle in ("#צמיחה-חברתית", "#ריל-תהליך", "#היילייטס", "#המרת-פרופיל", "social-growth"):

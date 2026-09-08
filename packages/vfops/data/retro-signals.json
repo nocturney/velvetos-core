@@ -1,16 +1,9 @@
 {
-  "generatedAt": "2026-09-07T18:13:14+03:00",
+  "generatedAt": "2026-09-08T14:51:47+03:00",
   "timezone": "Asia/Jerusalem",
   "rule": "Operational signals for office brief only. No invented ₪/Insights. No owner shame.",
   "catalogEvent": "retro.anomaly",
   "signals": [
-    {
-      "kind": "ingest_bottleneck",
-      "evidence": "owner-memory/2026-09-01",
-      "briefSlot": "05",
-      "detail": "- **מושב:** lead + ops",
-      "event": "retro.anomaly"
-    },
     {
       "kind": "model_demand",
       "evidence": "owner-memory/2026-09-02",
@@ -55,6 +48,34 @@
     },
     {
       "kind": "model_demand",
+      "evidence": "owner-memory/2026-09-07",
+      "briefSlot": "01",
+      "detail": "- **מושב:** ייצור + תפעול",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "model_demand",
+      "evidence": "owner-memory/2026-09-07",
+      "briefSlot": "01",
+      "detail": "- **מושב:** lead + תפעול",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "model_demand",
+      "evidence": "DAILY-RETRO.md#2026-09-07",
+      "briefSlot": "01",
+      "detail": "מה עבד: תיקון בעלים — לוגו / QR / מפיות חזרו לדוגמאות; הנעילה היא על קו B2B, לא על שלושה מק״ט.",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "ingest_bottleneck",
+      "evidence": "DAILY-RETRO.md#2026-09-07",
+      "briefSlot": "05",
+      "detail": "מה לא: אין פתיחת B2B; אין מחירון.",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "model_demand",
       "evidence": "DAILY-RETRO.md#2026-09-07",
       "briefSlot": "01",
       "detail": "מה עבד: הוטמעו `PRINT-DEMAND` / `PRINT-DONE` / לולאת פרנסה ברטרו — בלי פק חדש ובלי אוטו־DM.",
@@ -65,27 +86,6 @@
       "evidence": "DAILY-RETRO.md#2026-09-07",
       "briefSlot": "05",
       "detail": "מה לא: אין גלם רצפה חי למשמרת — כרטיס print.done ממתין להדפסה אמיתית.",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "ingest_bottleneck",
-      "evidence": "DAILY-RETRO.md#2026-09-07",
-      "briefSlot": "05",
-      "detail": "מה לא: אין reach מאומת ב־CSV — לא ממלאים.",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "sensor_repeat_fail",
-      "evidence": "vfharness/state/access-blockers-2026-09-01.json",
-      "briefSlot": "01",
-      "detail": "task=access-blockers-2026-09-01 component_state=None",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "sensor_repeat_fail",
-      "evidence": "vfharness/state/agency-quality-gap-2026-09-07.json",
-      "briefSlot": "01",
-      "detail": "task=agency-quality-gap-2026-09-07 component_state=None",
       "event": "retro.anomaly"
     }
   ],

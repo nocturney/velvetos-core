@@ -76,15 +76,22 @@ def main() -> None:
         (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "Canva MCP", "G004-STORIES-FIX", "PREFLIGHT.md", "רמה נמוכה")),
         (EDIT, ("JPEG גולמי", "Canva", "vfcovers", "G004-STORIES-FIX", "PREFLIGHT.md", "VOICE.md")),
         (PREFLIGHT, ("VOICE.md", "VOICE-RESEARCH", "VOICE-CHART", "ציון עצמי", "נכשל-סגור", "2–3", "CONTENT-RUBRIC")),
-        (CAL_OPS, ("לא שואלים", "Google Calendar", "050-2517000")),
-        (STORIES, ("נייבי", "סיפור-מוצר", "050-2517000", "Canva MCP")),
-        (STORIES_FIX, ("סיפור-מוצר", "050-2517000", "DAHUaUo3bAk", "X ₪")),
+        (CAL_OPS, ("לא שואלים", "Google Calendar", "Instagram")),
+        (STORIES, ("נייבי", "סיפור-מוצר", "הודעה", "Canva MCP")),
+        (STORIES_FIX, ("סיפור-מוצר", "הודעה", "DAHUaUo3bAk", "X ₪")),
         (GAP, ("vfcopy", "vfcanva", "vfcovers", "פער", "7.9")),
     ):
         text = path.read_text()
         for needle in needles:
             if needle not in text:
+                if needle == "הודעה" and ("הודעת" in text or "אינסטגרם" in text or "Instagram" in text):
+                    continue
                 fail(f"{path.name} must mention {needle}")
+        # Public CTA must not require WhatsApp phone alone
+        if path in (STORIES, STORIES_FIX, CAL_OPS):
+            if "050-2517000" in text and "CTA" in text:
+                if not any(n in text for n in ("הודעה", "הודעת", "אינסטגרם", "Instagram")):
+                    fail(f"{path.name} still requires WhatsApp phone as public CTA")
 
     if "vfops_loop.py" not in ROUTINE.read_text():
         fail("ROUTINE.md must run vfops_loop.py at 07:00")
@@ -189,12 +196,12 @@ def main() -> None:
 
     for rel, needles in (
         ("packages/vfresearch/hq/MAKERWORLD-SCAN.md", ("ראשון", "רביעי", "vfsku.py scan", "NC")),
-        ("packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md", ("050-2517000", "VOICE.md", "אין ספירה")),
+        ("packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md", ("הודעה", "VOICE.md", "אין ספירה", "BUSINESS_CONTACT")),
         ("packages/vfbooks/INTEGRITY.md", ("Invoice4U", "vfbooks.py brief", "decision_gate")),
         ("scripts/vfbooks.py", ("brief", "אין ספירה", "Invoice4U")),
         ("scripts/vfprod.py", ("print-done", "PREFLIGHT")),
-        ("scripts/vf_organic_growth.py", ("approved_for_manual_posting", "אין ספירה", "050-2517000")),
-        ("constitution/ORGANIC_GROWTH.md", ("print.done", "posted_manually", "pending_ops")),
+        ("scripts/vf_organic_growth.py", ("approved_for_manual_posting", "אין ספירה")),
+        ("constitution/ORGANIC_GROWTH.md", ("print.done", "posted_manually", "pending_ops", "PUBLIC_CURRENT_CTA")),
     ):
         path = ROOT / rel
         if not path.is_file():

@@ -34,6 +34,8 @@ FORBIDDEN_PHRASES = [
 ]
 
 DM_ONLY = re.compile(r"שלחו(?:\s+)?DM", re.IGNORECASE)
+WA_PHONE_CTA = re.compile(r"050[-–]?2517000|וואטסאפ\s*050|whatsapp\s*050", re.IGNORECASE)
+PUBLIC_IG_CTA = re.compile(r"הודעה|אינסטגרם|שלחו לנו הודעה", re.IGNORECASE)
 FORBIDDEN_OPENING_NEG = re.compile(r"^\s*(לא|בלי|אין)\b")
 CAPTION_HEADING = re.compile(
     r"^#{1,3}\s+.*(להדבקה|ארבעה פריימים)",
@@ -176,7 +178,9 @@ def lint_caption_body(body: str, *, label: str) -> list[str]:
         if phrase.lower() in lower:
             problems.append(f"ביטוי AI/שיווק ריק ב-{label}: {phrase!r}")
     if DM_ONLY.search(body):
-        problems.append(f"CTA 'שלחו DM' אסור ב-{label}")
+        problems.append(f"CTA 'שלחו DM' אסור ב-{label} (אוטו־DM / אנגלית; השתמשו בהודעת Instagram בעברית)")
+    if WA_PHONE_CTA.search(body):
+        problems.append(f"CTA וואטסאפ/טלפון אסור בתוכן ציבורי ב-{label} — PUBLIC_CURRENT_CTA = הודעת Instagram")
     return problems
 
 
@@ -439,7 +443,7 @@ def main() -> int:
         for line in result.problems:
             print("-", line)
         return 1
-    print("OK vfcopy captions+stories linted (behavioral=7)")
+    print("OK vfcopy captions+stories linted (behavioral=8)")
     return 0
 
 
@@ -465,8 +469,8 @@ class VfcopyLintTests(unittest.TestCase):
         """א. הוראה פנימית אינה מזוהה ככיתוב."""
         path = self.vfcopy / "G090.md"
         path.write_text(
-            "# G090\n\nבלי «שלחו DM». CTA: וואטסאפ.\n\n## להדבקה\n\n```\n"
-            "ורוד על השידה\n\nוואטסאפ 050-2517000\n```\n",
+            "# G090\n\nבלי «שלחו DM». CTA: הודעת Instagram.\n\n## להדבקה\n\n```\n"
+            "ורוד על השידה\n\nלפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\n```\n",
             encoding="utf-8",
         )
         self.write_handoff(
@@ -491,6 +495,25 @@ class VfcopyLintTests(unittest.TestCase):
         self.assertTrue(any("שלחו DM" in p for p in problems), problems)
         self.assertTrue(any("חוויה ייחודית" in p for p in problems), problems)
 
+    def test_b2_whatsapp_phone_public_cta_fails(self) -> None:
+        """ב2. כיתוב ציבורי עם וואטסאפ/טלפון נכשל; הודעת Instagram עוברת."""
+        bad = self.vfcopy / "G091b.md"
+        bad.write_text(
+            "# G091b\n\n## להדבקה\n\n```\n"
+            "ורוד על השידה\n\nוואטסאפ 050-2517000\n```\n",
+            encoding="utf-8",
+        )
+        bad_problems = lint_path_captions(bad)
+        self.assertTrue(any("וואטסאפ" in p or "טלפון" in p for p in bad_problems), bad_problems)
+
+        good = self.vfcopy / "G091c.md"
+        good.write_text(
+            "# G091c\n\n## להדבקה\n\n```\n"
+            "ורוד על השידה\n\nלפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\n```\n",
+            encoding="utf-8",
+        )
+        self.assertEqual(lint_path_captions(good), [])
+
     def test_c_hook_checked_despite_document_title(self) -> None:
         """ג. ההוק נבדק גם כשיש כותרת מסמך לפניו."""
         path = self.vfcopy / "G092.md"
@@ -505,7 +528,8 @@ class VfcopyLintTests(unittest.TestCase):
     def test_d_reel_does_not_require_stories_fix(self) -> None:
         """ד. ריל אינו נדרש לתיקון סטוריז."""
         (self.vfcopy / "G093.md").write_text(
-            "# G093\nמשובץ\n\n## להדבקה\n\n```\nמה יוצא מהמדפסת?\n\nוואטסאפ 050-2517000\n```\n",
+            "# G093\nמשובץ\n\n## להדבקה\n\n```\nמה יוצא מהמדפסת?\n\n"
+            "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\n```\n",
             encoding="utf-8",
         )
         self.write_handoff(
@@ -520,7 +544,8 @@ class VfcopyLintTests(unittest.TestCase):
     def test_e_ready_story_missing_approvals_blocked(self) -> None:
         """ה. סטורי שמסומן מוכן וחסרים לו אישורים נחסם."""
         (self.vfcopy / "G094.md").write_text(
-            "# G094\n\n## להדבקה\n\n```\nורוד על השידה\n\nוואטסאפ 050-2517000\n```\n",
+            "# G094\n\n## להדבקה\n\n```\nורוד על השידה\n\n"
+            "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\n```\n",
             encoding="utf-8",
         )
         self.write_handoff(
@@ -537,11 +562,13 @@ class VfcopyLintTests(unittest.TestCase):
     def test_g_ready_story_bad_rubric_blocked(self) -> None:
         """Rubric missing scores / under threshold / wrong total blocks ready item."""
         (self.vfcopy / "G095.md").write_text(
-            "# G095\n\n## להדבקה\n\n```\nורוד על השידה\n\nוואטסאפ 050-2517000\n```\n",
+            "# G095\n\n## להדבקה\n\n```\nורוד על השידה\n\n"
+            "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\n```\n",
             encoding="utf-8",
         )
         (self.vfcopy / "G095-STORIES-FIX.md").write_text(
-            "# fix\n\n## ארבעה פריימים — להדבקה\n\n```\nורוד על השידה\n\nוואטסאפ 050-2517000\n```\n",
+            "# fix\n\n## ארבעה פריימים — להדבקה\n\n```\nורוד על השידה\n\n"
+            "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\n```\n",
             encoding="utf-8",
         )
         (self.preflight / "G095.md").write_text(
