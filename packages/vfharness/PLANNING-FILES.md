@@ -63,3 +63,7 @@ Cursor Cloud Agent = המשרד. ההזרקה היא **קריאה מפורשת**
 - `templates/task_plan.md`
 - `templates/findings.md`
 - `templates/progress.md`
+
+## כתיבת תכנית מפורטת
+
+לפני עריכה כבדה אחרי brainstorm: `playbooks/writing-plans.md` (דפוס obra writing-plans + executing-plans על `task_plan` / `planned_steps` — בלי vendor path).
