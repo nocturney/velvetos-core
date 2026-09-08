@@ -5,5 +5,6 @@
 - [x] Preserve attributed historical Drive evidence; unify references.
 - [x] Verify suite and regression failures.
 - [x] Apply validated patch in authorized Cursor checkout.
-- [x] Update #130 without force push (`8f0fe6c` on `cursor/media-vault-procedure-eaaf`).
-- [ ] Verify GitHub checks and complete merge after required review.
+- [x] Update #130 without force push (`8f0fe6c` merge + follow-ups on `cursor/media-vault-procedure-eaaf`).
+- [x] Verify GitHub checks (SUCCESS on tip `3f459f5`).
+- [ ] Complete merge after required review.

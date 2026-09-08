@@ -1,7 +1,3 @@
 # Progress
 
-User explicitly requested handling the reviewed #130/#131 conflict. Scope: reconcile #130 with current main, preserve vfmedia schema and catalog, unify references, retain capability evidence, validate and complete the requested merge. This is a task-specific owner instruction, not a change to standing Cursor coordination. No Drive operations or runtime changes.
-
-Validation: check-all.py passed 28/28. Four negative regression probes rejected duplicate catalog, legacy procedure, legacy sensor, and stale vfigos reference. Probe files were restored. No real media rows existed in the removed parallel catalog.
-
-Cursor applied the validated patch on a clean worktree above `origin/main` @ `06ca3bb`, created reconcile commit `4908a73`, then `git merge --no-ff -s ours 9e568fe` → merge tip `8f0fe6c` (descendant of main and #130). Pushed without force to `cursor/media-vault-procedure-eaaf`. Awaiting GitHub checks and required review before merge.
+Conflict #130/#131 reconciled on main ownership. Local check-all 28/28 + four negative probes. Merge tip `8f0fe6c` is a descendant of `06ca3bb` (main/#131) and `9e568fe` (#130). Non-force push succeeded. GitHub `VelvetOS Core Sensors / check-all` SUCCESS on tip `3f459f5`. Awaiting required review before merge. No Drive operations.
