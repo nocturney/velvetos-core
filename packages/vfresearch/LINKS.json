@@ -49,7 +49,7 @@
       "url": "https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19",
       "title": "סוכני בנייה",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-07",
+      "lastReviewed": "2026-09-08",
       "map": "packages/chatgpt-embed-map.json",
       "report": "docs/SHARE-EMBED-he.md",
       "packs": [
@@ -63,7 +63,8 @@
         "vfbiz",
         "vfbooks",
         "constitution"
-      ]
+      ],
+      "reviewNote": "2026-09-08: דולג — חומה/מנוי (Cloud לא פותח אתרי מנוי); sourceNote קיים"
     },
     {
       "id": "gemini-3dprint-agents",
@@ -72,7 +73,7 @@
       "openUrl": "https://gemini.google.com/share/4f223bc1774c",
       "title": "סוכני בינה לעסק הדפסות תלת-ממד",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-07",
+      "lastReviewed": "2026-09-08",
       "sourceNote": "packages/vfresearch/sources/gemini-hbuCq3MEy5po.md",
       "report": "docs/SHARES-2026-08-30.md",
       "packs": [
@@ -89,7 +90,8 @@
         "vfsku",
         "vlicense",
         "constitution"
-      ]
+      ],
+      "reviewNote": "2026-09-08: דולג — חומה/מנוי (Cloud לא פותח אתרי מנוי); sourceNote קיים"
     },
     {
       "id": "perplexity-c950af30",
@@ -97,7 +99,7 @@
       "url": "https://www.perplexity.ai/search/c950af30-8c60-4667-b7d6-84db67f62218",
       "title": "Perplexity — אתר AI / תמחור / שרשרת",
       "firstEmbedded": "2026-08-30",
-      "lastReviewed": "2026-09-07",
+      "lastReviewed": "2026-09-08",
       "sourceNote": "packages/vfresearch/sources/perplexity-c950af30.md",
       "report": "docs/SHARES-2026-08-30.md",
       "wallNote": "Live page may hit Cloudflare; use owner PDF / source note. Never invent body.",
@@ -114,7 +116,8 @@
         "vfresearch",
         "vlicense",
         "vfsku"
-      ]
+      ],
+      "reviewNote": "2026-09-08: דולג — חומה/מנוי (Cloud לא פותח אתרי מנוי); sourceNote קיים"
     },
     {
       "id": "awesome-mcp-servers",
