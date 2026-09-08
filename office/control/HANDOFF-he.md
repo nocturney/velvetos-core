@@ -6,8 +6,8 @@
 - אין פעיל מחוץ ללולאה הרגילה
 
 ## מדיה (פאזות נפרדות · קטלוג יחיד)
-- total=`400` · inbox=`398` · source=`2`
-- רשום בלבד=`398` · אומת ונקלט=`2` · נבדק חזותית=`0`
+- total=`400` · inbox=`396` · source=`4`
+- רשום בלבד=`396` · אומת ונקלט=`4` · נבדק חזותית=`0`
 - intake=`Idle` · activation=`True`
 - registered ≠ verified ≠ visually_reviewed · validate≠monitoring · upload≠approval · no invented SKU/job association
 
@@ -32,10 +32,10 @@
 - followups=0
 - dead_letters=0
 - media_catalog_items=400
-- media_inbox=398
-- media_source=2
-- media_verified=2
-- media_registered_only=398
+- media_inbox=396
+- media_source=4
+- media_verified=4
+- media_registered_only=396
 - media_visually_reviewed=0
 
 ## מקורות סמכות

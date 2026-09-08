@@ -62,14 +62,32 @@
       "viewDescription": "תמונת JPEG · שם קובץ: 9DBA09C6-2155-4A03-9A61-3BDD0D2BFB5C.JPG · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
       "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-08T14:50:02Z",
+        "verifiedAt": "2026-09-08T14:50:25Z",
+        "downloadBytes": 1287494,
+        "movedToSourceAt": "2026-09-08T14:50:25Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:a098eea9a0adf7c563f9a9f9ca00b2551cb1e299c08ca5cd7b19cead81e9b2eb",
+        "headRevisionId": null,
+        "md5Checksum": null,
+        "sha256Checksum": null,
+        "contentChangedAt": "2026-09-08T14:50:02Z",
+        "moveStartedAt": "2026-09-08T14:50:02Z"
+      },
+      "visualReview": {
         "state": "none",
-        "approvedBy": null,
-        "approvedAt": null
+        "reviewedAt": null,
+        "note": "reset after content change — approval not inherited"
       }
     },
     {
@@ -1829,14 +1847,32 @@
       "viewDescription": "וידאו QuickTime (MOV) מהטלפון · שם קובץ: IMG_0490.MOV · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
       "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-08T14:50:02Z",
+        "verifiedAt": "2026-09-08T14:50:25Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-08T14:50:25Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:f4cecfe22e8ab341eaab09a88bc6af1bca47bb3f64c00353d91742e8ab9ea979",
+        "headRevisionId": null,
+        "md5Checksum": null,
+        "sha256Checksum": null,
+        "contentChangedAt": "2026-09-08T14:50:02Z",
+        "moveStartedAt": "2026-09-08T14:50:02Z"
+      },
+      "visualReview": {
         "state": "none",
-        "approvedBy": null,
-        "approvedAt": null
+        "reviewedAt": null,
+        "note": "reset after content change — approval not inherited"
       }
     },
     {

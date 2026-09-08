@@ -1,27 +1,49 @@
 {
   "name": "vfmedia-intake-runner",
   "component_state": "Idle",
-  "updatedAt": "2026-09-08T14:10:26Z",
+  "updatedAt": "2026-09-08T14:50:25Z",
   "pagination": {
     "pageToken": null,
     "pageSize": 50
   },
-  "lastRunAt": "2026-09-08T14:07:28Z",
-  "lastSuccessAt": "2026-09-08T14:10:26Z",
+  "catalogDigest": "2eacfabae43b6bf377edd34512500955e270f25bcb479d1053cb8ee40031bf9e",
+  "inboxDigest": "fbf3ac693cfe30370ee6e1ccc0b2af137174c7fe892f94574a8b5317224c4558",
+  "lastRunAt": "2026-09-08T14:50:02Z",
+  "lastSuccessAt": "2026-09-08T14:50:25Z",
   "lastError": null,
+  "persistError": null,
   "auth": {
     "ready": true,
     "detail": "provider=listing"
   },
   "stats": {
-    "runs": 1,
+    "runs": 2,
     "registered": 1,
-    "verified": 1,
+    "verified": 3,
     "skipped": 0,
     "failed": 0,
-    "duplicates": 0
+    "duplicates": 0,
+    "content_changed": 2,
+    "recovered": 0,
+    "unverified": 0
   },
   "retries": {},
+  "backoffPolicy": {
+    "stepsSeconds": [
+      60,
+      300,
+      900,
+      3600,
+      14400
+    ],
+    "permanentStop": false,
+    "note": "never permanent stop — escalate then repeat last interval"
+  },
+  "schedule": {
+    "targetMinutes": 5,
+    "githubActionsCron": "*/5 * * * *",
+    "note": "GHA minimum interval is 5 minutes; runs may be delayed under platform load"
+  },
   "activation": {
     "proven": true,
     "evidence": "provider=listing; actions={'pending_move': 1}",
