@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -318,6 +319,111 @@ def main() -> None:
     finally:
         loop.CONSUMER_STATE = old_state
         tmp.cleanup()
+
+    gmail_cli = ROOT / "packages" / "vfops" / "gmail_brief_send.py"
+    gmail_init = ROOT / "packages" / "vfops" / "__init__.py"
+    send_brief_doc = ROOT / "docs" / "SEND-BRIEF-MCP.md"
+    for path in (gmail_cli, gmail_init, send_brief_doc):
+        if not path.is_file():
+            fail(f"missing {path.relative_to(ROOT)}")
+    send_brief = send_brief_doc.read_text(encoding="utf-8")
+    for needle in (
+        "create_draft",
+        "update_draft",
+        "send_message",
+        "draftId",
+        "LOAD_FROM_FILE",
+        "python -m vfops.gmail_brief_send",
+        "no token",
+    ):
+        if needle not in send_brief:
+            fail(f"SEND-BRIEF-MCP.md must mention {needle!r}")
+    if "LOAD_FROM_FILE" in send_brief and "דולף" not in send_brief and "leak" not in send_brief.lower():
+        fail("SEND-BRIEF-MCP.md must warn that LOAD_FROM_FILE leaks")
+
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(ROOT / "packages") + os.pathsep + env.get("PYTHONPATH", "")
+    env.pop("GOOGLE_TOKEN", None)
+    env.pop("GOOGLE_APPLICATION_CREDENTIALS", None)
+    help_proc = subprocess.run(
+        [sys.executable, "-m", "vfops.gmail_brief_send", "--help"],
+        cwd=ROOT,
+        env=env,
+        text=True,
+        capture_output=True,
+    )
+    if help_proc.returncode != 0:
+        fail(f"gmail_brief_send --help: {help_proc.stderr or help_proc.stdout}")
+    for flag in ("--html", "--images", "--to", "--subject"):
+        if flag not in (help_proc.stdout or ""):
+            fail(f"gmail_brief_send --help must list {flag}")
+
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        html = tmp_path / "brief.html"
+        html.write_text('<html><img src="cid:cover.jpg" alt=""></html>', encoding="utf-8")
+        images = tmp_path / "images"
+        images.mkdir()
+        # 1×1 JPEG — MIME test only, not a price or Insights source.
+        images.joinpath("cover.jpg").write_bytes(
+            b"\xff\xd8\xff\xdb\x00C\x00"
+            + (b"\x08" * 64)
+            + b"\xff\xc0\x00\x0b\x08\x00\x01\x00\x01\x01\x01\x11\x00"
+            + b"\xff\xc4\x00\x14\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00"
+            + b"\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+            + b"\xff\xda\x00\x08\x01\x01\x00\x00?\x00\x7f\xff\xd9"
+        )
+        isolated = env.copy()
+        isolated["HOME"] = str(tmp_path)
+        no_token = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "vfops.gmail_brief_send",
+                "--html",
+                str(html),
+                "--images",
+                str(images),
+                "--to",
+                "nocturney@gmail.com",
+                "--subject",
+                "brief send check",
+            ],
+            cwd=ROOT,
+            env=isolated,
+            text=True,
+            capture_output=True,
+        )
+        if no_token.returncode != 2:
+            fail(
+                "gmail_brief_send must exit 2 without token: "
+                f"{no_token.returncode} {no_token.stderr or no_token.stdout}"
+            )
+        if "no token" not in (no_token.stderr or "").lower():
+            fail("gmail_brief_send must print no token on stderr when creds are missing")
+
+        sys.path.insert(0, str(ROOT / "packages"))
+        from vfops.gmail_brief_send import build_mime, iter_images
+
+        parts = iter_images(images)
+        if [p.name for p in parts] != ["cover.jpg"]:
+            fail(f"iter_images should pick cover.jpg, got {[p.name for p in parts]}")
+        mime = build_mime(
+            html=html.read_text(encoding="utf-8"),
+            images=parts,
+            to="nocturney@gmail.com",
+            subject="cid check",
+        )
+        blob = mime.as_string()
+        if "Content-ID: <cover.jpg>" not in blob:
+            fail("MIME Content-ID must equal the image filename")
+        if "multipart/related" not in blob:
+            fail("MIME must be multipart/related")
+        html_payload = mime.get_payload()[0].get_payload(decode=True) or b""
+        if b'<img src="cid:cover.jpg"' not in html_payload:
+            fail("HTML cid: must survive into the MIME HTML part")
 
     print("OK vfops-loop wired into orchestra+brief+handoff + consumers")
 
