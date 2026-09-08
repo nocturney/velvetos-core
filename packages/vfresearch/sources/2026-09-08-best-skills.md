@@ -40,7 +40,7 @@
 
 ## טיימר
 
-standingForever=true · `TIMER.md` · `timer: renewed`
+standingForever=true · `TIMER.md` · `timer: ok` (subscribe dedupe — מנוי פעיל `sub_aee75da5…` אחרי fire; recurring)
 
 ## בלוק 05
 
