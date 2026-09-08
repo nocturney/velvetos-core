@@ -1,0 +1,25 @@
+{
+  "task_id": "live-commissioning-2026-09-08",
+  "goal": "VelvetOS Live Commissioning & Hardening — prove E2E office chain; fix autonomously; leave only real human blockers",
+  "component_state": "Idle",
+  "status": "done",
+  "updatedAt": "2026-09-08T16:32:56.286100+03:00",
+  "completed_steps": [
+    "fetch main including #129-#137",
+    "check-all 34/34",
+    "media vault intake catalog 399 + source move proof",
+    "suite_language false-positive fix",
+    "failover simulate scenario + handoff media fields",
+    "extract writing-plans from #126",
+    "morning brief generate + gmail no-token preflight",
+    "Meta app boundary documented needsAuth"
+  ],
+  "unresolved": [
+    "Instagram OAuth / Meta email verify / long-lived token (RED)",
+    "Gmail GOOGLE_TOKEN/ADC for live brief send (RED on this VM)",
+    "Insights live read blocked until IG ready (RED)",
+    "Remaining Drive inbox files beyond catalogued 399 may still exist (YELLOW — continue intake)",
+    "Most inbox media not yet visually reviewed (YELLOW)"
+  ],
+  "latest_observation": "E2E stops at IG needsAuth after media intake+catalog+handoff+brief generation proven"
+}

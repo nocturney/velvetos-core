@@ -11,6 +11,7 @@
 - מדף `vfsku.py brief` + `vfsku.py scan` + `week.md`
 - שערי 01 מ־`GATES.json` (לחיצת אדם, לא וואטסאפ)
 - Organic Growth Decision Pack `vf_organic_growth.py` — אישור ≠ פרסום
+- Office Control Plane `vf_control_plane.py` — SoT + dead-letter + WIP→finished (בלי ספאם לבעלים)
 - `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)
 - ספר 02 גם מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)
 - FOLLOWER-GROWTH · היילייטס + וואטסאפ
@@ -51,6 +52,7 @@
 | `vfigos` | needsAuth | daily-growth | needsAuth · טוקן Meta · סטוריז ב-instagram.com |
 | `vfinsights` | needsAuth | daily-07:00 | אין ספירה עד סנאפשוט / טוקן |
 | `vfmakers` | overlay | weekly | — |
+| `vfmedia` | working-cli | on-intake | העלאה ≠ אישור · תיקיית מאושר ≠ הוכחת אישור |
 | `vfmcp` | needsAuth | session-start | ig-mcp / Sheets / WhatsApp send לפי CONNECT |
 | `vfmem` | working-cli | session-start | — |
 | `vfmskill` | docs-playbook | on-content | — |

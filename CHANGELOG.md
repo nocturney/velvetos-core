@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-08 — **Live Commissioning & Hardening:** audit E2E על Control Plane הקיים · קליטת מדיה אמיתית ל־`vfmedia/catalog.json` (399) + הוכחת נכנס→מקור · תיקון false-positive `suite_language` · תרחיש `simulate --scenario failover` · HANDOFF עם מוני מדיה · חילוץ `writing-plans.md` מ־#126 · בלי SoT חדש / בלי fake ready / בלי ₪ או Insights מומצאים. Live office commissioning; prefer repair over new systems.
+
 - 2026-09-08 — **משרד פרסום על Control Plane (#137):** PUBLIC_CURRENT_CTA = הודעת Instagram · BUSINESS_CONTACT_RECORD = וואטסאפ פנימי · מצבי פרסום liveVerified · feed audit · profile desired · G004 identity. **בלי SoT מקביל** — dead-letter / followups / risk / watchdog נשארים ב־`office/control/` + `vf_control_plane.py`. Publication office features absorbed into existing Office Control Plane; no second runtime.
 
 - 2026-09-08 — **Failover מנהל משרד:** `docs/FAILOVER.md` — מעבר זמני מבוקר ChatGPT → Perplexity / Gemini / Grok / Cursor. מקור אמת + דוח השתלטות + בריף לבעלים + שרשרת תהליך→מוגמר על LEDGER/PRINT-DONE הקיימים. ממוזג עם GROK-FAILOVER / ORCHESTRA / handoff template / SWC — בלי מערכת כפולה. קישורי כניסה מ־README · AGENTS · constitution · harness. Office-manager failover protocol; read existing state; no second runtime.
