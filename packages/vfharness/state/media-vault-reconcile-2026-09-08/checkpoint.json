@@ -11,26 +11,32 @@
     "preserved-attributed-drive-capability-evidence",
     "applied-validated-patch-on-main",
     "check-all-28-of-28-after-reconciliation",
-    "four-negative-regression-probes-pass"
+    "four-negative-regression-probes-pass",
+    "ours-merged-pr-130-head",
+    "pushed-to-cursor-media-vault-procedure-eaaf"
   ],
-  "next_step": "Push to cursor/media-vault-procedure-eaaf, update PR #130 body, wait for GitHub checks, merge only after required review.",
+  "next_step": "Wait for GitHub checks on tip; merge #130 only after required review.",
   "artifacts": [
     "docs/MEDIA-VAULT.md",
     "scripts/check-vfmedia.py",
-    "https://github.com/nocturney/velvetos-core/pull/130"
+    "https://github.com/nocturney/velvetos-core/pull/130",
+    "merge_sha:8f0fe6cb8404bc1e8316a40f814d10d1618912a5"
   ],
   "unresolved": [
-    "PR #130 push/CI/merge still pending after Cursor apply."
+    "GitHub CI and required review pending before merge."
   ],
-  "last_updated": "2026-09-08T06:37:54Z",
+  "last_updated": "2026-09-08T06:39:30Z",
   "execution_state": {
     "base_sha": "06ca3bb3d0638582b6e49e318d75c42237b1b455",
     "original_pr_head": "9e568fe8d817aa0e7fe892bcd16f88229be762f6",
+    "reconcile_commit": "4908a73f8be44e6d439a028590bb6d25cbc4e49a",
+    "merge_sha": "8f0fe6cb8404bc1e8316a40f814d10d1618912a5",
+    "branch": "cursor/media-vault-procedure-eaaf",
     "catalog": "packages/vfmedia/catalog.json",
     "intake_owner": "תפעול",
     "drive_operations": false,
-    "prior_blocker": "Codex session hit GitHub HTTP 403 Resource not accessible by integration; Cursor apply unblocks write path.",
+    "prior_blocker": "Codex session hit GitHub HTTP 403; Cursor push succeeded without force.",
     "rollback": "Revert the reconciliation merge after inspecting subsequent changes; do not restore a second catalog."
   },
-  "verification": "check-all.py: 28/28; expected rejection of duplicate catalog, legacy procedure, legacy sensor, stale vfigos reference; git diff --check clean"
+  "verification": "check-all.py: 28/28; four negative probes rejected duplicate catalog, legacy procedure, legacy sensor, stale vfigos reference; git diff --check clean; descendant of main and #130 head"
 }
