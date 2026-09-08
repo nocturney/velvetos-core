@@ -1,0 +1,4 @@
+# Remote Instagram MCP host — adelaidasofia-instagram-mcp + VelvetOS bearer gate
+adelaidasofia-instagram-mcp>=0.1.2,<1.0
+fastmcp>=3.4.2,<4.0
+httpx>=0.27,<1.0

@@ -1,6 +1,9 @@
-# Instagram MCP · Codespace + remote autonomy
+# Instagram MCP · Codespace / local stdio (dev + fallback)
 
 Status date: **2026-09-08**. No secrets in this file. No invented remote endpoint.
+
+**Production / Cloud autonomy path:** [`REMOTE.md`](REMOTE.md) (Fly.io Streamable HTTP + bearer).  
+This file is **dev / Codespace fallback only**. Codespace stdio ≠ `remote_access: ready`.
 
 ## Verified (Codespace / stdio)
 
@@ -12,7 +15,7 @@ Status date: **2026-09-08**. No secrets in this file. No invented remote endpoin
 | `add_account` | label `velvets_cloud` · default `true` |
 | Smoke | `healthcheck` · `get_profile` · `list_media` OK |
 | Secrets location | **GitHub Codespaces Secrets / runtime env only** — never git, never committed mcp.json with tokens |
-| Desk status | `ready-codespace` · `auth: ready` · `transport: stdio` |
+| Desk status | `ready-codespace` · `auth: ready` · `transport: stdio` · `remote_access: pending` |
 
 ## Checklist — local / Codespace setup
 
@@ -23,24 +26,20 @@ Status date: **2026-09-08**. No secrets in this file. No invented remote endpoin
 5. Reload MCP client → run `healthcheck` → confirm default account `velvets_cloud`.
 6. Publishing still requires vault approval + Canva/vfcovers + PREFLIGHT + **live verify** after `publish_*`.
 
-## Architectural gap — remote autonomy
+## Why this is not Cloud autonomy
 
 | Item | Status |
 |---|---|
-| `remote-endpoint` | **pending** |
-| Cloud Agent always-on Instagram MCP | **not solved** |
-| stdio inside a **stopped / sleeping** Codespace | **insufficient** for full office autonomy |
+| Codespace sleep / stop | Breaks always-on reachability |
+| `remote_access` | Stays **pending** until [`REMOTE.md`](REMOTE.md) healthcheck exits 0 |
+| Truth file | `packages/vfigos/live/remote-health.json` |
 
-VelvetOS goal: prepare → publish → verify → measure → learn with minimal owner clicks.  
-Codespace stdio proves the Graph API path. It does **not** mean every Cloud Agent run can publish.
-
-### Next step (engineering — not faked)
-
-Expose a **supported remote MCP transport** or deploy the server in an **always-available** environment that Cursor Cloud / Team MCP can reach — still with secrets in the host vault, never in git. Until that lands:
+Until remote is verified:
 
 - Desk keeps `remote_access: pending`
 - Cloud / no-live-MCP runs use Canva + Drive + Gmail failover (`SEND.md`)
 - Do not claim the feed is live without `liveVerified`
+- Do not treat Codespace stdio as Cloud autonomy
 
 ## Explicit non-goals of this note
 
@@ -48,3 +47,4 @@ Expose a **supported remote MCP transport** or deploy the server in an **always-
 - Do not paste tokens into the repo or PR
 - Do not enable DM tools
 - Do not make the Drive vault world-readable
+- Do not mark `remote_access: ready` from Codespace alone

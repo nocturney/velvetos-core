@@ -852,15 +852,30 @@ def watchdog_issues() -> list[dict]:
 
     # Instagram needsAuth must not claim ready without healthcheck (CAPABILITIES + desk)
     desk = load_json(DESK, {})
-    ig_status = ((desk.get("tools") or {}).get("instagram") or {}).get("status") or "unknown"
+    ig_row = (desk.get("tools") or {}).get("instagram") or {}
+    ig_status = ig_row.get("status") or "unknown"
+    ig_remote = ig_row.get("remote_access") or "unknown"
     caps = load_json(IG_CAPABILITIES, {}) if IG_CAPABILITIES.is_file() else {}
     caps_status = caps.get("currentStatus") or ""
+    remote_health_path = ROOT / "packages" / "vfigos" / "live" / "remote-health.json"
+    remote_health = load_json(remote_health_path, {}) if remote_health_path.is_file() else {}
+    remote_ok = remote_health.get("ok") is True and remote_health.get("remote_access") == "ready"
+
     if caps_status == "ready" and ig_status != "ready":
         issues.append(
             {
                 "level": "red",
                 "code": "ig_fake_ready",
                 "detail": "CAPABILITIES claims ready while desk is not — refuse fake ready",
+                "outcome": "RED_BLOCKER",
+            }
+        )
+    elif ig_remote == "ready" and not remote_ok:
+        issues.append(
+            {
+                "level": "red",
+                "code": "ig_remote_fake_ready",
+                "detail": "desk remote_access=ready without remote-health.json ok — refuse; do not publish",
                 "outcome": "RED_BLOCKER",
             }
         )
@@ -873,6 +888,33 @@ def watchdog_issues() -> list[dict]:
                 "outcome": "WAITING_EXTERNAL_TOOL",
             }
         )
+    elif remote_health.get("remote_access") == "degraded":
+        issues.append(
+            {
+                "level": "orange",
+                "code": "ig_remote_degraded",
+                "detail": remote_health.get("error") or "Instagram remote MCP unhealthy — do not publish; keep queue",
+                "outcome": "WAITING_EXTERNAL_TOOL",
+            }
+        )
+    elif ig_remote == "pending":
+        issues.append(
+            {
+                "level": "yellow",
+                "code": "ig_remote_pending",
+                "detail": "remote_access pending — Codespace stdio ≠ Cloud autonomy; Canva+Drive+Gmail failover",
+                "outcome": "WAITING_EXTERNAL_TOOL",
+            }
+        )
+    elif ig_status == "ready" and remote_ok:
+        issues.append(
+            {
+                "level": "green",
+                "code": "ig_remote_ready",
+                "detail": "remote Instagram MCP healthy (publish still needs liveVerified)",
+                "outcome": "OK",
+            }
+        )
     elif ig_status == "ready":
         issues.append(
             {
@@ -880,6 +922,15 @@ def watchdog_issues() -> list[dict]:
                 "code": "ig_ready",
                 "detail": "desk ready (healthcheck still required before live)",
                 "outcome": "OK",
+            }
+        )
+    elif ig_status in {"ready-codespace", "ready-local"}:
+        issues.append(
+            {
+                "level": "yellow",
+                "code": "ig_local_only",
+                "detail": f"instagram.status={ig_status}; remote_access={ig_remote} — not Cloud autonomy",
+                "outcome": "WAITING_EXTERNAL_TOOL",
             }
         )
 

@@ -1,5 +1,5 @@
 {
-  "_comment": "Copy the servers you need into ~/.cursor/mcp.json (user global) or Codespace MCP config. Do NOT paste secrets into this repo's .cursor/mcp.json. Do NOT commit filled copies. Instagram canonical = adelaidasofia/instagram-mcp via command instagram-mcp + INSTAGRAM_MCP_* env.",
+  "_comment": "Copy the servers you need into ~/.cursor/mcp.json (user global) or Codespace MCP config. Do NOT paste secrets into this repo's .cursor/mcp.json. Do NOT commit filled copies. Instagram canonical = adelaidasofia/instagram-mcp. This file = stdio DEV/FALLBACK. Cloud/remote HTTP = mcp.cloud.example.json + REMOTE.md.",
   "mcpServers": {
     "mcp-gsheets": {
       "command": "npx",

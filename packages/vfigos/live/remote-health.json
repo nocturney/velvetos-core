@@ -1,0 +1,10 @@
+{
+  "checkedAt": null,
+  "endpoint": null,
+  "ok": false,
+  "remote_access": "pending",
+  "transport": "streamable-http",
+  "auth": "bearer",
+  "error": "No remote healthcheck has succeeded yet. Deploy packages/vfigos/remote (Fly.io) then run scripts/vf_instagram_mcp_remote_health.py --write.",
+  "note": "Do not set desk remote_access=ready until this file shows ok=true after a real probe. No secrets in this file."
+}

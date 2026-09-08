@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Light send preflight — local readiness only. No network. No send.
 
-Reads desk tool status + env key presence + CONNECT-IG markers.
+Reads desk tool status + env key presence + CONNECT-IG markers + remote-health.json.
 Prints one JSON object so HQ can failover before claiming a send.
 
 Usage:
@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DESK = ROOT / ".cursor" / "vf-desk.json"
 CONNECT_IG = ROOT / "packages" / "vfigos" / "CONNECT-IG.md"
 SEND = ROOT / "constitution" / "SEND.md"
+REMOTE_HEALTH = ROOT / "packages" / "vfigos" / "live" / "remote-health.json"
 
 # Statuses that mean "use this tool for the primary path"
 READY = {"ready", "skill-installed", "plugin-installed", "hq-native"}
@@ -46,6 +47,20 @@ def _tool(desk: dict[str, Any], name: str) -> dict[str, Any]:
     return row if isinstance(row, dict) else {}
 
 
+def _remote_health_ok() -> tuple[bool, dict[str, Any]]:
+    """Cloud autonomy truth: remote-health.json from vf_instagram_mcp_remote_health.py."""
+    if not REMOTE_HEALTH.is_file():
+        return False, {"ok": False, "remote_access": "pending", "error": "missing remote-health.json"}
+    try:
+        data = json.loads(REMOTE_HEALTH.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return False, {"ok": False, "remote_access": "degraded", "error": "remote-health.json unreadable"}
+    if not isinstance(data, dict):
+        return False, {"ok": False, "remote_access": "degraded", "error": "remote-health.json not object"}
+    ok = data.get("ok") is True and data.get("remote_access") == "ready"
+    return ok, data
+
+
 def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
     gmail = _tool(desk, "gmail")
     canva = _tool(desk, "canva")
@@ -56,17 +71,26 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
     ig_status = ig.get("status") or ""
     ig_remote = ig.get("remote_access") or ""
     ig_auth_ok = ig_status in IG_AUTH_READY or (ig.get("auth") == "ready")
-    # Live primary path needs auth-ready AND (remote ready OR local MCP secrets present)
     ig_secrets = _env_present("INSTAGRAM_MCP_ACCESS_TOKEN", "INSTAGRAM_ACCESS_TOKEN")
-    ig_session_ready = ig_auth_ok and (
-        ig_remote == "ready" or (ig_secrets and ig_status in IG_AUTH_READY)
-    )
-    # remote_access pending without secrets → failover (Cloud / stopped Codespace honesty)
+    remote_ok, remote_blob = _remote_health_ok()
+
+    # Cloud autonomy: desk remote_access ready AND verified remote-health.json
+    # Codespace/local secrets alone NEVER count as cloud autonomy.
+    ig_cloud_ready = ig_remote == "ready" and remote_ok
+    # Local/dev session (Codespace stdio with Meta secrets) — publish possible on that host only
+    ig_local_ready = bool(ig_auth_ok and ig_secrets and ig_status in IG_AUTH_READY)
+    # Gate "ready" for publish: cloud verified OR local secrets session
+    ig_session_ready = ig_cloud_ready or ig_local_ready
+
+    # Honesty: desk claiming remote ready without health file → not ready (sensor also fails)
+    fake_remote = ig_remote == "ready" and not remote_ok
+    # Cloud / stopped Codespace: remote pending + no Meta secrets on this agent → failover
     ig_needs_failover = (
-        ig_status in FAILOVER
+        fake_remote
+        or ig_status in FAILOVER
         or ig_status == "needsAuth"
         or not ig_auth_ok
-        or (ig_remote == "pending" and not ig_secrets)
+        or (not ig_session_ready)
     )
 
     gemini_key = _env_present("GEMINI_API_KEY", "GOOGLE_API_KEY")
@@ -92,12 +116,26 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
             "auth": ig.get("auth") or ("ready" if ig_auth_ok else "unknown"),
             "transport": ig.get("transport") or "stdio",
             "remote_access": ig_remote or "unknown",
-            "ready": ig_session_ready and not ig_needs_failover,
+            "cloud_autonomy_ready": ig_cloud_ready,
+            "local_stdio_session": ig_local_ready and not ig_cloud_ready,
+            "remote_health_ok": remote_ok,
+            "remote_health": {
+                "ok": remote_blob.get("ok"),
+                "remote_access": remote_blob.get("remote_access"),
+                "error": remote_blob.get("error"),
+                "endpoint": remote_blob.get("endpoint"),
+            },
+            "ready": ig_session_ready and not fake_remote,
             "needs_failover": ig_needs_failover,
             "action": "publish_image|carousel|reel|story (adelaidasofia/instagram-mcp) then list_media/get_media verify",
             "failover": "Canva + Drive create_file + Gmail same turn · #ממתין-ל-כלי-IG",
             "connect": "packages/vfigos/CONNECT-IG.md",
+            "remote": "packages/vfigos/REMOTE.md",
             "forbid": ["send_message DM", "auto-DM", "boost without lead", "INSTAGRAM_MCP_DM_ENABLED"],
+            "note": (
+                "cloud_autonomy_ready requires remote_access=ready AND remote-health.json ok; "
+                "Codespace stdio alone does not satisfy Cloud Agent autonomy"
+            ),
         },
         "gemini": {
             "desk_status": gemini.get("status") or "unknown",

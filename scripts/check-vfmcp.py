@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -186,8 +187,10 @@ def main() -> None:
         if "adelaidasofia" not in (ig.get("mcp") or "").lower():
             fail("vf-desk.json instagram.mcp must not list jlbadano as primary")
     if ig.get("status") in ("ready-codespace", "ready-local", "ready"):
-        if ig.get("status") == "ready-codespace" and ig.get("remote_access") not in ("pending", "ready"):
-            fail("ready-codespace must declare remote_access pending|ready")
+        if ig.get("status") == "ready-codespace" and ig.get("remote_access") not in ("pending", "ready", "degraded"):
+            fail("ready-codespace must declare remote_access pending|ready|degraded")
+        if ig.get("remote_access") == "ready" and ig.get("status") == "ready-codespace":
+            fail("ready-codespace must not claim remote_access=ready (stdio ≠ Cloud autonomy)")
         if ig.get("auth") not in (None, "ready", "ok"):
             fail("instagram.auth when set must be ready")
         if ig.get("dmEnabled") is True:
@@ -198,6 +201,42 @@ def main() -> None:
             "enabled",
         ):
             fail("instagram must allow publish_story / stories on same MCP")
+    remote_health = ROOT / "packages" / "vfigos" / "live" / "remote-health.json"
+    if not remote_health.is_file():
+        fail("packages/vfigos/live/remote-health.json required for remote honesty")
+    rh = json.loads(remote_health.read_text(encoding="utf-8"))
+    if ig.get("remote_access") == "ready":
+        if rh.get("ok") is not True or rh.get("remote_access") != "ready":
+            fail("desk remote_access=ready requires remote-health.json ok + remote_access ready")
+        if not str(rh.get("endpoint") or "").startswith("https://"):
+            fail("remote_access=ready requires https endpoint in remote-health.json")
+    if ig.get("remote_access") == "pending" and rh.get("ok") is True and rh.get("remote_access") == "ready":
+        fail("desk remote_access pending while remote-health ready — flip desk after verified deploy")
+    if not (ROOT / "packages" / "vfigos" / "REMOTE.md").is_file():
+        fail("packages/vfigos/REMOTE.md required")
+    if not (ROOT / "packages" / "vfigos" / "remote" / "serve.py").is_file():
+        fail("packages/vfigos/remote/serve.py required")
+    if not (ROOT / "packages" / "vfmcp" / "mcp.cloud.example.json").is_file():
+        fail("packages/vfmcp/mcp.cloud.example.json required")
+    if not (ROOT / "scripts" / "vf_instagram_mcp_remote_health.py").is_file():
+        fail("scripts/vf_instagram_mcp_remote_health.py required")
+    connect_needles_remote = ("REMOTE.md", "VELVET_INSTAGRAM_MCP_BEARER_TOKEN", "INSTAGRAM_MCP_REMOTE_URL")
+    connect_ig_blob = (ROOT / "packages" / "vfigos" / "CONNECT-IG.md").read_text(encoding="utf-8")
+    for needle in connect_needles_remote:
+        if needle not in connect_ig_blob:
+            fail(f"CONNECT-IG.md must mention {needle}")
+    # cloud example must not hardcode a live secret-bearing URL as the only path without env
+    cloud_ex = (ROOT / "packages" / "vfmcp" / "mcp.cloud.example.json").read_text(encoding="utf-8")
+    if "VELVET_INSTAGRAM_MCP_BEARER_TOKEN" not in cloud_ex:
+        fail("mcp.cloud.example.json must reference VELVET_INSTAGRAM_MCP_BEARER_TOKEN")
+    if re.search(r"EAA[A-Za-z0-9]{10,}|IGQV[A-Za-z0-9]{10,}", cloud_ex):
+        fail("mcp.cloud.example.json must not contain Meta token literals")
+    # preflight must distinguish cloud autonomy from local stdio
+    preflight_src = (ROOT / "scripts" / "vf_send_preflight.py").read_text(encoding="utf-8")
+    if "cloud_autonomy_ready" not in preflight_src or "remote-health.json" not in preflight_src:
+        fail("vf_send_preflight.py must expose cloud_autonomy_ready via remote-health.json")
+    if "local_stdio_session" not in preflight_src:
+        fail("vf_send_preflight.py must label local_stdio_session separately from cloud autonomy")
     icloud = tools.get("icloud") or {}
     if "CONNECT-ICLOUD.md" not in (icloud.get("useWhen") or "") and "CONNECT-ICLOUD.md" not in (icloud.get("rule") or ""):
         fail("vf-desk.json icloud must point at CONNECT-ICLOUD.md")

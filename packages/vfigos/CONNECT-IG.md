@@ -1,7 +1,10 @@
 # CONNECT-IG · Instagram MCP קנוני (adelaidasofia)
 
 סטטוס שולחן: **`ready-codespace`** — auth מאומת ב־GitHub Codespace (stdio).  
-`auth: ready` · `transport: stdio` · `remote_access: pending` (אין endpoint מרוחק תמיד-דלוק עדיין).
+`auth: ready` · `transport: stdio` · `remote_access: pending` (אין endpoint מרוחק תמיד-דלוק מאומת עדיין).
+
+**נתיב אוטונומיה (ייצור):** Streamable HTTP + bearer — [`REMOTE.md`](REMOTE.md) · `packages/vfigos/remote/` · `scripts/vf_instagram_mcp_remote_health.py`.  
+מצב בריאות מרוחק (בלי סודות): [`live/remote-health.json`](live/remote-health.json).
 
 MCP קנוני: [`adelaidasofia/instagram-mcp`](https://github.com/adelaidasofia/instagram-mcp) · חבילה `adelaidasofia-instagram-mcp` · שם שרת `instagram`.  
 **לגאסי:** [`jlbadano/ig-mcp`](https://github.com/jlbadano/ig-mcp) — לא ראשי יותר. ראו [`LEGACY-IG-MCP.md`](LEGACY-IG-MCP.md).
@@ -9,8 +12,9 @@ MCP קנוני: [`adelaidasofia/instagram-mcp`](https://github.com/adelaidasofia
 אין סודות בגיט. אין אוטו־DM. אין בוסט. אין Metricool כתלות תפעול.  
 Capability contract: [`CAPABILITIES.json`](CAPABILITIES.json).  
 מצבי פרסום: [`PUBLICATION-STATES.md`](PUBLICATION-STATES.md) — upload/schedule/publish tool ≠ `liveVerified`.  
-פריסת Codespace / פער remote: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).  
-מדיה ציבורית לפרסום: [`docs/MEDIA-VAULT.md`](../../docs/MEDIA-VAULT.md) § «URL ציבורי לפרסום».
+פריסת Codespace (stdio): [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).  
+**פריסה מרוחקת (Cloud autonomy):** [`REMOTE.md`](REMOTE.md).  
+מדיה ציבורית לפרסום: [`docs/MEDIA-VAULT.md`](../../docs/MEDIA-VAULT.md) § «URL ציבורי לפרסום» — נפרד מ־MCP transport.
 
 ## מצב מאומת (לא לבקש שוב מכריסטיאן)
 
@@ -108,6 +112,16 @@ JPEG גולמי מהמיטה **אסור** לסטורי. מקסימום 5 האש�
 }
 ```
 
+שמות סודות נוספים לנתיב המרוחק (ערכים רק ב־host / Team MCP — לא בגיט):
+
+| שם | תפקיד |
+|---|---|
+| `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` | שער MCP (≠ Meta token; ≥24 תווים) |
+| `INSTAGRAM_MCP_REMOTE_URL` | `https://…/mcp` אחרי deploy |
+| `INSTAGRAM_MCP_APP_SECRET` | אופציונלי |
+| `INSTAGRAM_MCP_DEFAULT_ACCOUNT` | `velvets_cloud` |
+| `INSTAGRAM_MCP_DM_ENABLED` | חייב להישאר כבוי |
+
 התקנה:
 
 ```bash
@@ -117,12 +131,22 @@ pip install adelaidasofia-instagram-mcp
 # cd instagram-mcp && python3 -m venv .venv && .venv/bin/pip install -e .
 ```
 
-## B) Cloud Agent / אוטונומיה מלאה
+## B) Cloud Agent / אוטונומיה מלאה (Streamable HTTP)
 
 stdio בתוך Codespace ישן/כבוי **אינו** מספיק למשרד תמיד-דלוק.  
-`remote_access: pending` — אין endpoint מרוחק מומצא.  
-עד שיש תעבורה מרוחקת נתמכת (או שרת תמיד-זמין): failover [`SEND.md`](SEND.md).  
-פירוט: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).
+נתיב ייצור: [`REMOTE.md`](REMOTE.md) · עטיפה `packages/vfigos/remote/` · Fly.io.
+
+| שדה | ערך נוכחי (אמת) |
+|---|---|
+| ארכיטקטורה | Fly.io Streamable HTTP + bearer gate |
+| URL צפוי אחרי deploy | `https://velvet-instagram-mcp.fly.dev/mcp` (לא מומצא כחי) |
+| Auth ל־MCP | `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` |
+| Meta token | רק על השרת המארח (`INSTAGRAM_MCP_ACCESS_TOKEN`) |
+| `remote_access` | **pending** עד `python3 scripts/vf_instagram_mcp_remote_health.py --write` יוצא 0 |
+| קובץ אמת | [`live/remote-health.json`](live/remote-health.json) |
+
+עד `remote_access: ready`: failover [`SEND.md`](SEND.md). אין לסמן ready בלי healthcheck מרוחק אמיתי.  
+Codespace/dev: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).
 
 ## C) Insights (vfinsights)
 
@@ -134,10 +158,11 @@ stdio בתוך Codespace ישן/כבוי **אינו** מספיק למשרד תמ
 
 ```
 instagram.enabled = true
-instagram.when = codespace-stdio-or-remote-when-ready
+instagram.when = remote-streamable-http-when-ready-or-codespace-stdio-fallback
 instagram.publish = true
 instagram.dm = false
 instagram.connect = packages/vfigos/CONNECT-IG.md
+instagram.remote = packages/vfigos/REMOTE.md
 ```
 
 ## E) חוקים שלא משתנים

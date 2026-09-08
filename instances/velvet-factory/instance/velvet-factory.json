@@ -185,12 +185,14 @@
     },
     "instagram": {
       "enabled": true,
-      "when": "codespace-stdio-or-remote-when-ready",
+      "when": "remote-streamable-http-when-ready-or-codespace-stdio-fallback",
       "publish": true,
       "dm": false,
       "stories": true,
       "canonicalMcp": "adelaidasofia/instagram-mcp",
-      "connect": "packages/vfigos/CONNECT-IG.md"
+      "connect": "packages/vfigos/CONNECT-IG.md",
+      "remote": "packages/vfigos/REMOTE.md",
+      "remoteHealth": "packages/vfigos/live/remote-health.json"
     }
   },
   "locks": [

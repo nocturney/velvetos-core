@@ -9,7 +9,7 @@ MCP קנוני: [`CONNECT-IG.md`](CONNECT-IG.md) (`adelaidasofia/instagram-mcp`)
 
 1. כיתוב סופי ב־`vfcopy` — **PUBLIC_CURRENT_CTA** = הודעת Instagram / «הזמנות» / איסוף שדרות (`constitution/PUBLIC_CTA.md`). לא «שלחו DM». לא וואטסאפ בכיתוב. מקסימום 5 האשטגים. לא אוטו־DM. לא ₪ מומצא.
 2. מדיה: גרסה מאושרת במאגר (`docs/MEDIA-VAULT.md` · `packages/vfmedia/catalog.json`) עם `versionApproval` לגרסה המדויקת; תיקיית מאושר לבד אינה הוכחה. יצירה/עריכה ב־Canva (מחובר) או `studio/render.py` / Superdesign חוזרת למסלול נגזרת→אישור. **רק נגזרת מאושרת** מקבלת URL HTTPS ציבורי זמני לפרסום — לא כל הכספת, לא מקור גולמי, לא שינוי שיתוף גלובלי ב־Drive.
-3. **פריפלייט שליחה** — `python3 scripts/vf_send_preflight.py --gate instagram` (exit `2` = failover מיד). אחר כך **אימות לפני שליחה (validate)** — checklist ב־`vfagents/playbooks/reflection-before-send.md` + וידוא שיש כלי Publish חי או failover מוכן. לא ממציאים ערוץ שלא מחובר. `remote_access: pending` בלי סשן MCP חי ≠ סרק משרד — ממשיכים הכנה.
+3. **פריפלייט שליחה** — `python3 scripts/vf_send_preflight.py --gate instagram` (exit `2` = failover מיד). בדוק `cloud_autonomy_ready` (דורש `remote_access=ready` + `live/remote-health.json` ok) — Codespace stdio לבד **לא** אוטונומיית Cloud. אחר כך **אימות לפני שליחה (validate)** — checklist ב־`vfagents/playbooks/reflection-before-send.md` + וידוא שיש כלי Publish חי או failover מוכן. לא ממציאים ערוץ שלא מחובר. `remote_access: pending` בלי סשן MCP חי ≠ סרק משרד — ממשיכים הכנה. Remote: [`REMOTE.md`](REMOTE.md).
 4. **Instagram MCP מחובר** → HQ מפרסם לפי פורמט:
    - תמונה → `publish_image`
    - קרוסלה → `publish_carousel`

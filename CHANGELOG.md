@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-08 — **Instagram MCP remote autonomy path:** עטיפת Streamable HTTP + bearer (`packages/vfigos/remote/`) סביב `adelaidasofia-instagram-mcp`; Fly.io `fly.toml`; `REMOTE.md`; `vf_instagram_mcp_remote_health.py` + `live/remote-health.json`; Team MCP example `mcp.cloud.example.json`; preflight `cloud_autonomy_ready` נפרד מ־Codespace stdio; watchdog `ig_remote_pending`/`degraded`; סנסור `check-instagram-remote.py`. **`remote_access` נשאר pending** עד deploy + healthcheck מרוחק אמיתי. אין סודות בגיט. אין Metricool/SaaS פרסום. Remote Instagram MCP hosting path; Codespace ≠ Cloud autonomy.
+
 - 2026-09-08 — **Instagram MCP קנוני = adelaidasofia/instagram-mcp:** מחליף את jlbadano/ig-mcp כראשי. שולחן `ready-codespace` (auth ready · transport stdio · `remote_access` pending). Stories+Insights+`publish_*` על אותו MCP. DM/`INSTAGRAM_MCP_DM_ENABLED` כבוי. Metricool אופציונלי/לגאסי. אימות חי חובה (`publish_pending_verification` → `liveVerified`). פלייבוקים: `CONNECT-IG.md` · `DEPLOY-CODESPACE.md` · `LEGACY-IG-MCP.md`. סנסורים מעודכנים. אין סודות בגיט. Canonical Instagram MCP; Codespace verified; remote autonomy still pending.
 
 - 2026-09-08 — **גיבוי ערב קטלוג**: רענון `packages/manifest.json` (`catalogRefreshedAt` 2026-09-08, 31 פקים כולל `vfmedia`). נכללו מוזגים #128 בריף בוקר, #129 Gmail brief CLI, #130/#131 כספת מדיה, #132–#134 מעקב vault, #135 Office Control Plane, #136 Failover, #137 משרד פרסום/IG-DM. נשאר פתוח: #138 live commissioning. Origin לא שוכפל (אין login). Evening catalog refresh; Origin not vendored. Left open: #138.

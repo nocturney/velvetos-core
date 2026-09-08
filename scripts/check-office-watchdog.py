@@ -23,6 +23,8 @@ def main() -> None:
         PLANE_CLI,
         ROOT / "packages" / "vfigos" / "CAPABILITIES.json",
         ROOT / "packages" / "vfigos" / "PROFILE-DESIRED.json",
+        ROOT / "packages" / "vfigos" / "REMOTE.md",
+        ROOT / "packages" / "vfigos" / "live" / "remote-health.json",
         ROOT / "packages" / "vfgrowth" / "FEED-AUDIT.md",
         ROOT / "packages" / "vfgrowth" / "data" / "feed-audit.json",
         ROOT / "constitution" / "RISK.md",
@@ -53,6 +55,12 @@ def main() -> None:
         fail("capabilities/desk must reference adelaidasofia Instagram MCP")
     if "jlbadano" in (caps.get("providerPreference") or "").lower():
         fail("CAPABILITIES providerPreference must not be jlbadano")
+    if caps.get("remote_access") == "ready" and desk_ig_status == "ready-codespace":
+        fail("CAPABILITIES remote_access ready incompatible with desk ready-codespace")
+    rh = json.loads((ROOT / "packages" / "vfigos" / "live" / "remote-health.json").read_text(encoding="utf-8"))
+    desk_remote = ((desk.get("tools") or {}).get("instagram") or {}).get("remote_access")
+    if desk_remote == "ready" and not (rh.get("ok") is True and rh.get("remote_access") == "ready"):
+        fail("desk remote_access=ready requires remote-health.json success")
     ids = {c["id"] for c in caps.get("capabilities") or []}
     for need in (
         "instagram.profile.read",
