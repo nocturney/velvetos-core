@@ -19,7 +19,7 @@
 7. הקשר כבד (thread, JSON, Drive dump) → `playbooks/context-thrift.md` — סיכום בשיחה, מקור ב-checkpoint.
 8. **סוף יום** — `playbooks/daily-learning.md` + `vfops/hq/DAILY-RETRO.md` (מודול `office-learning`).
 9. סוכן «נהיה גרוע» / כלי נדלג / זיכרון דולף → `playbooks/agent-architecture-audit.md` (דפוס buildwithclaude; בלי ECC install).
-10. לפני בנייה / פק חדש / שינוי צינור → `playbooks/brainstorm-gate.md` (דפוס obra brainstorming; אישור אנושי לפני יישום).
+10. לפני בנייה / פק חדש / שינוי צינור → `playbooks/brainstorm-gate.md` · `playbooks/writing-plans.md` (דפוס obra brainstorming; אישור אנושי לפני יישום).
 11. באג / סנסור אדום / כשל כלי → `playbooks/systematic-debugging.md` (שורש לפני תיקון; בלי ניחוש).
 
 צינור יחיד נשאר: פנייה · שיחה · הצעה · הדפסה · איסוף.
