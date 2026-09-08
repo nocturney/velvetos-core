@@ -17,8 +17,8 @@
     "repo_html": "packages/vfops/out/BRIEF-2026-09-08.html",
     "repo_day": "packages/vfops/out/2026-09-08/brief-2026-09-08.html",
     "json": "packages/vfops/hq/brief-2026-09-08.json",
-    "bytes": 62872,
-    "sha256": "81fc6eb12187e23412a9e8f9f1f7ed256785eda779e09eacb70ceacf3d882ab4"
+    "bytes": 62504,
+    "sha256": "443ff9ff4918a21e6560d01b327f08cda133ed6c6cdb7de7a032b0b52af1069f"
   },
   "locks": [
     "no new_repo",
