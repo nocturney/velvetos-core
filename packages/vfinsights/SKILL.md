@@ -2,9 +2,19 @@
 
 מושב: צמיחה. לא ממציאים מדד.
 
-רק מספר מ־IG Professional / סנאפשוט / `get_media_insights` אחרי חיבור ig-mcp (`vfigos/CONNECT-IG.md`).  
-בלי חיבור: הדבקת בעלים או «אין ספירה». לא ממציאים.  
-חלון רגיל: 24 שעות אחרי עלייה.
+**מקור מועדף:** Instagram MCP קנוני (`adelaidasofia/instagram-mcp` · [`vfigos/CONNECT-IG.md`](../vfigos/CONNECT-IG.md)):
+
+- `get_account_insights`
+- `get_media_insights`
+- `get_audience_insights`
+
+אם Meta לא מחזירה מדד → «אין ספירה» / unavailable. לא ממציאים.  
+גיבוי: הדבקת בעלים.  
+**Metricool** = אופציונלי/לגאסי בלבד — לא נדרש לתפעול ולא קנוני לאנליטיקס.
+
+חלון רגיל: 24 שעות אחרי `liveVerified`.  
+מדדים מאומתים נכנסים ל־`packages/vfinsights/data/posts.csv` כשישים.  
+`LEARNINGS.md` מתעדכן רק ממספרים שנמדדו בפועל.
 
 ## מומחה — Insights ingest
 
@@ -12,8 +22,8 @@
 
 קלט שבועי ל־`WEEKLY-REVENUE-PULSE.md` ול־Social Booster.
 
-## כלי מדידה חדש (2026-09-07)
+## כלי מדידה
 
-`scripts/vf_insights_loop.py` — לופ מדידה→למידה סגור. פירוט מלא: [`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md).
+`scripts/vf_insights_loop.py` — לופ מדידה→למידה סגור. פירוט: [`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md).
 
 ייחוס הסתברותי: [`ATTRIBUTION.md`](ATTRIBUTION.md) — לא ממציאים המרה מוואטסאפ.

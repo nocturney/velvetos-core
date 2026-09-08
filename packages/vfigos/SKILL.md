@@ -8,10 +8,12 @@
 **מאגר מדיה משותף:** [`docs/MEDIA-VAULT.md`](../../docs/MEDIA-VAULT.md) · קטלוג יחיד [`packages/vfmedia/catalog.json`](../vfmedia/catalog.json). תפעול בלבד קולט נכנס→מקור. עובדים על נגזרת ומוודאים `versionApproval` לגרסה המדויקת; אין קטלוג מקביל לכלי.
 
 סדר שליחה: `packages/vfigos/SEND.md` + `constitution/SEND.md`.  
-חיבור Publish/Insights: [`CONNECT-IG.md`](CONNECT-IG.md) (jlbadano/ig-mcp, `needsAuth` עד טוקן).  
-**validate → apply → verify** לפני תג «פורסם».  
-אם אין Publish MCP — Drive `create_file` + Gmail `send_message` באותו תור.  
+חיבור Publish/Insights/Stories: [`CONNECT-IG.md`](CONNECT-IG.md) — canonical [`adelaidasofia/instagram-mcp`](https://github.com/adelaidasofia/instagram-mcp) (`ready-codespace`, stdio; `remote_access` pending).  
+לגאסי: [`LEGACY-IG-MCP.md`](LEGACY-IG-MCP.md) (`jlbadano/ig-mcp`).  
+פריסה: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).  
+**validate → apply → verify** (`list_media`/`get_media`) לפני תג live.  
+אם אין Publish MCP חי — Drive `create_file` + Gmail `send_message` באותו תור.  
 תגיות: `#נשלח-מ-HQ` · `#ממתין-ל-כלי-IG`. Grok הוא גיבוי אופציונלי בלבד.
 
-לוח עומד: `vfgrowth/CALENDAR.md` + `RHYTHM.md`. מסירת שיבוץ: `HANDOFF-STANDING-he.md` (instagram.com, לא סוויט).  
-משימת לוח 5.9: אין שליחת IG/Gmail — רק הכנה ושיבוץ מתוכנן.
+לוח עומד: `vfgrowth/CALENDAR.md` + `RHYTHM.md`. מסירת שיבוץ: `HANDOFF-STANDING-he.md`.  
+Metricool אינו נדרש.

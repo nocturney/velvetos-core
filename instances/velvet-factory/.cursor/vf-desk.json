@@ -108,27 +108,49 @@
       "failover": "needsAuth → packages/vfcanva/studio/render.py → Superdesign. Say Canva לא מחובר."
     },
     "instagram": {
-      "status": "needsAuth",
+      "status": "ready-codespace",
+      "auth": "ready",
+      "transport": "stdio",
+      "remote_access": "pending",
       "namespace": "instagram",
       "account": "@velvets_cloud",
-      "mcp": "stdio · jlbadano/ig-mcp",
-      "useWhen": "vfigos publish, vfinsights verified metrics, feed review",
+      "igUserId": "17841407772120429",
+      "accountLabel": "velvets_cloud",
+      "mcp": "stdio · adelaidasofia/instagram-mcp",
+      "package": "adelaidasofia-instagram-mcp",
+      "source": "https://github.com/adelaidasofia/instagram-mcp",
+      "useWhen": "vfigos publish (image/carousel/reel/story), vfinsights verified metrics, feed review",
       "connect": "packages/vfigos/CONNECT-IG.md",
+      "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
+      "stories": "enabled-same-mcp",
+      "dmEnabled": false,
+      "boostEnabled": false,
+      "notRequired": ["Metricool", "Publer", "Postly", "SimplePost", "Meta Business Suite"],
       "allowed": [
-        "get_profile_info",
-        "get_media_posts",
+        "healthcheck",
+        "get_profile",
+        "list_media",
+        "get_media",
+        "get_account_insights",
         "get_media_insights",
-        "publish_media",
-        "get_account_pages"
+        "get_audience_insights",
+        "publish_image",
+        "publish_video",
+        "publish_reel",
+        "publish_carousel",
+        "publish_story"
       ],
       "forbidden": [
+        "send_message",
+        "list_conversations",
+        "get_messages",
         "send_dm",
-        "get_conversations",
         "auto-dm",
-        "boost"
+        "boost",
+        "ads"
       ],
-      "rule": "Canva export URL → publish_media. No invented Insights. No auto-DM. No boost. Never claim the feed posted without publish_media success.",
-      "failover": "needsAuth or down → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)"
+      "rule": "Approved public HTTPS media URL → publish_* → verify with list_media/get_media. No invented Insights. No auto-DM. No boost. publish success ≠ liveVerified.",
+      "failover": "MCP down or remote_access pending without live session → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)"
     },
     "web": {
       "status": "ready",
@@ -283,7 +305,7 @@
         "image",
         "web"
       ],
-      "decides": "content pack and cover drafts. HQ reviews/schedules and publishes via tools (ig-mcp or Canva+Drive+Gmail failover). Grok is optional backup."
+      "decides": "content pack and cover drafts. HQ reviews/schedules and publishes via Instagram MCP (adelaidasofia) or Canva+Drive+Gmail failover. Grok is optional backup."
     },
     {
       "id": "ops",

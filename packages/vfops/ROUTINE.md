@@ -35,7 +35,7 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 
 ## NO INSTAGRAM CONNECTION ≠ NO OFFICE WORK
 
-כש־`instagram.status=needsAuth`: ממשיכים intake, inspection, copy, Canva, derivatives, preflight, queue, calendar candidates, feed audit. לא ממציאים live.
+כש־`instagram.status` = `needsAuth` או `remote_access=pending` בלי סשן MCP חי: ממשיכים intake, inspection, copy, Canva, derivatives, preflight, queue, calendar candidates, feed audit. לא ממציאים live.
 
 ## שבוע
 

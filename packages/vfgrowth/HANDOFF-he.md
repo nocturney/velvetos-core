@@ -1,8 +1,8 @@
 # מסירה לסטודיו · פתח כל בוקר
 
 **לא לפרסם מכאן. לא בוסט. לא אוטו־DM. לא לפתוח Instagram או Gmail מהסוכן.**  
-שיבוץ: **instagram.com** על `@velvets_cloud`. לא Meta Suite. לא Buffer/Later בלי ראש צוות.  
-סטוריז = instagram.com (ig-mcp ≠ stories).
+שיבוץ: **instagram.com** על `@velvets_cloud` או Instagram MCP אחרי שערי אישור. לא Meta Suite. לא Buffer/Later בלי ראש צוות.  
+סטוריז = `publish_story` על MCP הקנוני אחרי Canva/vfcovers (לא JPEG גולמי).
 
 לולאה: `python3 scripts/vfops_loop.py handoff` · בריף: `python3 scripts/vfops_loop.py brief`.
 

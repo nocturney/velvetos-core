@@ -1,21 +1,31 @@
 {
   "id": "instagram-capabilities",
   "updatedAt": "2026-09-08",
-  "providerPreference": "instagram-api-or-meta-api-via-single-mcp",
+  "providerPreference": "adelaidasofia/instagram-mcp",
+  "canonicalMcp": "https://github.com/adelaidasofia/instagram-mcp",
+  "package": "adelaidasofia-instagram-mcp",
+  "legacyMcp": "https://github.com/jlbadano/ig-mcp",
   "notRequired": [
     "Metricool",
     "Publer",
     "Postly",
     "SimplePost",
-    "Meta Business Suite"
+    "Meta Business Suite",
+    "jlbadano/ig-mcp"
   ],
   "statusField": "tools.instagram.status",
-  "currentStatus": "needsAuth",
-  "readyRequires": "real healthcheck — never fake ready",
+  "currentStatus": "ready-codespace",
+  "auth": "ready",
+  "transport": "stdio",
+  "remote_access": "pending",
+  "igUserId": "17841407772120429",
+  "accountLabel": "velvets_cloud",
+  "readyRequires": "real healthcheck — Codespace verified; never fake Cloud remote as ready",
   "capabilities": [
     {
       "id": "instagram.profile.read",
-      "he": "קריאת פרופיל"
+      "he": "קריאת פרופיל",
+      "tools": ["get_profile", "account_info", "healthcheck"]
     },
     {
       "id": "instagram.profile.update",
@@ -23,39 +33,52 @@
     },
     {
       "id": "instagram.media.list",
-      "he": "רשימת מדיה אחרונה"
+      "he": "רשימת מדיה אחרונה",
+      "tools": ["list_media", "get_media"]
     },
     {
       "id": "instagram.publish.post",
-      "he": "פרסום תמונה/פוסט"
+      "he": "פרסום תמונה/פוסט",
+      "tools": ["publish_image"]
     },
     {
       "id": "instagram.publish.carousel",
-      "he": "פרסום קרוסלה"
+      "he": "פרסום קרוסלה",
+      "tools": ["publish_carousel"]
     },
     {
       "id": "instagram.publish.reel",
-      "he": "פרסום ריל/וידאו"
+      "he": "פרסום ריל/וידאו",
+      "tools": ["publish_reel", "publish_video"]
     },
     {
       "id": "instagram.publish.story",
-      "he": "פרסום סטורי"
+      "he": "פרסום סטורי",
+      "tools": ["publish_story"],
+      "note": "Same MCP — not a separate Stories system"
     },
     {
       "id": "instagram.insights.read",
-      "he": "קריאת Insights מאומתים"
+      "he": "קריאת Insights מאומתים",
+      "tools": ["get_account_insights", "get_media_insights", "get_audience_insights"]
     },
     {
       "id": "instagram.live.verify",
-      "he": "אימות שהפריט חי בפיד"
+      "he": "אימות שהפריט חי בפיד",
+      "tools": ["list_media", "get_media"],
+      "note": "publish_* success alone is not liveVerified"
     }
   ],
   "forbiddenCapabilities": [
+    "send_message",
+    "list_conversations",
+    "get_messages",
     "send_dm",
-    "get_conversations",
     "auto-dm",
-    "boost"
+    "boost",
+    "ads",
+    "INSTAGRAM_MCP_DM_ENABLED"
   ],
-  "officeRule": "Office logic binds to capability ids above — not to a single SaaS vendor name. needsAuth ≠ idle office work.",
+  "officeRule": "Office logic binds to capability ids above — not to a SaaS vendor. Metricool optional/legacy only. remote_access pending ≠ idle office work.",
   "noInstagramConnectionMeans": "continue media intake, copy, Canva, preflight, queue, calendar candidates, feed audit — do not pretend published"
 }

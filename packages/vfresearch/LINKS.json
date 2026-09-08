@@ -1241,17 +1241,36 @@
       "id": "ig-mcp-jlbadano",
       "kind": "github",
       "url": "https://github.com/jlbadano/ig-mcp",
-      "title": "ig-mcp — Instagram Graph API MCP (Publish + Insights)",
+      "title": "LEGACY — jlbadano/ig-mcp (superseded)",
       "firstEmbedded": "2026-09-06",
-      "lastReviewed": "2026-09-07",
-      "connect": "packages/vfigos/CONNECT-IG.md",
+      "lastReviewed": "2026-09-08",
+      "status": "legacy",
+      "connect": "packages/vfigos/LEGACY-IG-MCP.md",
       "packs": [
         "vfigos",
         "vfinsights",
         "vfgrowth",
         "vfmcp"
       ],
-      "note": "stdio Python; needsAuth until Meta token. Closes Publish gap + verified Insights. DM tools stay off. Failover Canva+Drive+Gmail."
+      "note": "LEGACY. Canonical is adelaidasofia/instagram-mcp. Keep for history only."
+    },
+    {
+      "id": "instagram-mcp-adelaidasofia",
+      "kind": "github",
+      "url": "https://github.com/adelaidasofia/instagram-mcp",
+      "title": "instagram-mcp — canonical Instagram Graph API MCP",
+      "firstEmbedded": "2026-09-08",
+      "lastReviewed": "2026-09-08",
+      "status": "canonical",
+      "connect": "packages/vfigos/CONNECT-IG.md",
+      "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
+      "packs": [
+        "vfigos",
+        "vfinsights",
+        "vfgrowth",
+        "vfmcp"
+      ],
+      "note": "Package adelaidasofia-instagram-mcp. Codespace stdio verified. Stories+Insights+publish_*. DM off. remote_access pending. Failover Canva+Drive+Gmail."
     }
   ],
   "addLink": {

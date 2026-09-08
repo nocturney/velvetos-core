@@ -12,7 +12,7 @@ Treg לא רלוונטי. Drive יוצר מסמכים לפי צורך.
 | ערוץ | מי | כלי | לא |
 |---|---|---|---|
 | ג׳ימייל | **סוכן HQ** | `send_message` / `reply` / `forward` על `nocturney@gmail.com` | לא מחכים לגרוק. לא מחכים לאדם ללחוץ Send |
-| אינסטגרם `@velvets_cloud` | **סוכן HQ** דרך כלי מחובר | **ig-mcp** `publish_media` אחרי Canva export (`vfigos/CONNECT-IG.md`). כשאין MCP — Gmail + Drive + Canva **באותו תור** | לא LIVE-PACKET לאדם כברירת מחדל. לא «מחכים למכסת Grok». לא אוטו־DM |
+| אינסטגרם `@velvets_cloud` | **סוכן HQ** דרך כלי מחובר | **adelaidasofia/instagram-mcp** `publish_image` / `publish_carousel` / `publish_reel` / `publish_story` אחרי שער Canva+vault (`vfigos/CONNECT-IG.md`). כשאין MCP חי / `remote_access` pending — Gmail + Drive + Canva **באותו תור** | לא LIVE-PACKET לאדם כברירת מחדל. לא «מחכים למכסת Grok». לא אוטו־DM. לא Metricool כתלות |
 | וואטסאפ לקוח | אדם `050-2517000` | Core: MCP חיפוש/טיוטה (`vfmcp/CONNECT-WHATSAPP.md`). VF `send=false` | HQ לא ממציא בוט · לא Infobip/ManyChat |
 | מדפסות | רצפה | `vfprod` | HQ לא לוחץ Print |
 | בוסט / אוטו־DM | — | נעול | נעול תמיד |
@@ -59,9 +59,9 @@ python3 scripts/vf_send_preflight.py --gate instagram    # 2=failover Canva+Driv
 
 1. **פריפלייט + שער עריכה** — ארטיפקט כתוב (`PREFLIGHT.md`) ואז Canva MCP / `vfcovers` / `vfcanva` (`studio/render.py`). **לא** טקסט על JPEG גולמי (`STUDIO.md`, `vfgrowth/EDIT-GATE.md`). Gemini browser רק על המק. בלי שער עבור = נכשל-סגור.
 2. `vfcopy` נותן כיתוב + **PUBLIC_CURRENT_CTA** (הודעת Instagram) + איסוף שדרות. לא וואטסאפ בכיתוב ציבורי (`constitution/PUBLIC_CTA.md`).
-3. אם **ig-mcp** מחובר (`packages/vfigos/CONNECT-IG.md`) — HQ מפרסם ב־`publish_media`, **מאמת תוצאת כלי** (validate→apply→verify ב־`vfigos/SEND.md`), ורק אז מסמן `#נשלח-מ-HQ` **ו־`liveVerified`**. `uploadAccepted` / `publishRequested` / Calendar ≠ live (`vfigos/PUBLICATION-STATES.md`).
-4. אם אין Publish MCP / `needsAuth` — **failover מיד:** יוצרים מסמך Drive + שולחים ג׳ימייל עם המדיה/הכיתוב/קישור העריכה. מסמנים `#נשלח-מ-HQ` (מסלול כלים) + `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה. **NO INSTAGRAM CONNECTION ≠ NO OFFICE WORK** — ממשיכים intake / copy / Canva / preflight / queue.
-5. לא סרק. לא «תעלה ידנית». לא ממציאים שנשלח לפיד אם לא עלה (accepted ≠ confirmed / לא `liveVerified`). לא `send_dm`.
+3. אם **Instagram MCP** מחובר (`packages/vfigos/CONNECT-IG.md` · `adelaidasofia/instagram-mcp`) — HQ מפרסם ב־`publish_*`, **מאמת ב־`list_media`/`get_media`** (validate→apply→verify ב־`vfigos/SEND.md`), ורק אז מסמן `#נשלח-מ-HQ` **ו־`liveVerified`**. בלי אימות חי → `publish_pending_verification`. `uploadAccepted` / `publishRequested` / Calendar ≠ live (`vfigos/PUBLICATION-STATES.md`). סטוריז = `publish_story` על אותו MCP (אחרי Canva/vfcovers).
+4. אם אין Publish MCP חי / `remote_access: pending` בלי סשן — **failover מיד:** יוצרים מסמך Drive + שולחים ג׳ימייל עם המדיה/הכיתוב/קישור העריכה. מסמנים `#נשלח-מ-HQ` (מסלול כלים) + `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה. **NO INSTAGRAM CONNECTION ≠ NO OFFICE WORK** — ממשיכים intake / copy / Canva / preflight / queue.
+5. לא סרק. לא «תעלה ידנית». לא ממציאים שנשלח לפיד אם לא עלה (publish tool ≠ liveVerified). לא `send_message` DM. לא `INSTAGRAM_MCP_DM_ENABLED`.
 
 ## Drive — יוצרים לפי צורך
 

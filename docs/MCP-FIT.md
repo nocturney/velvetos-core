@@ -5,7 +5,7 @@ Discovery index (Claude Code marketplace — **patterns only**, do not `/plugin 
 MCP Market mid-week (2026-09-05; Cloudflare on listing pages → GitHub bodies): Blender MCP · Archon · Jeffallan fullstack skills — [`packages/vfresearch/sources/2026-09-05-mcpmarket-three.md`](../packages/vfresearch/sources/2026-09-05-mcpmarket-three.md).  
 Grok / ChatGPT / Gemini / Perplexity gap vs this HQ: [`packages/vfmcp/GAP.md`](../packages/vfmcp/GAP.md) (reviewed 2026-08-31).  
 HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Boosts and auto-DM stay forbidden. Printers stay on the floor. Treg is not relevant.  
-Core **registers** WhatsApp / Sheets / Studio Hub / Instagram ig-mcp (`packages/vfmcp/CORE-MCP.md`). The factory instance binds via `mcpBind`. Do not invent prices. Do not commit secrets.
+Core **registers** WhatsApp / Sheets / Studio Hub / Instagram (`adelaidasofia/instagram-mcp`) (`packages/vfmcp/CORE-MCP.md`). The factory instance binds via `mcpBind`. Do not invent prices. Do not commit secrets.
 
 The awesome list is a directory of thousands of servers. Most of it is coding, crypto, or other people's SaaS. Below is only what maps onto Velvet Factory packs.
 
@@ -19,7 +19,7 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Google Drive** | Files and folders; **`create_file`**; Sheets **export** when a workbook is named (`vfbooks/SHEETS.md`) | `vfprod`, `vfcovers`, `vfsku`, `vfresearch`, `vfbooks` |
 | **Google Calendar** | Events | `vfseason`, `vfops`, `vfsales` |
 | **Canva** | Edit designs, brand-check, bulk-create, resize, `generate-design`. **Ready** on this Cloud Agent (2026-08-31, `DAGoYmCu4c4`) | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
-| **Instagram (ig-mcp)** | Publish, Insights, feed read via Graph API. **needsAuth** — Meta App + long-lived token (`packages/vfigos/CONNECT-IG.md`). Not in project `mcp.json` (secrets) | `vfigos`, `vfinsights`, `vfgrowth` |
+| **Instagram (canonical)** | Publish image/carousel/reel/**story**, Insights, feed read via Graph API. **ready-codespace** (stdio verified). `remote_access: pending`. [`packages/vfigos/CONNECT-IG.md`](../packages/vfigos/CONNECT-IG.md). Package `adelaidasofia-instagram-mcp`. Not in project `mcp.json` (secrets) | `vfigos`, `vfinsights`, `vfgrowth` |
 | **3D AI Studio** | Text/image → 3D mesh, STL/3MF export. **HTTP** `https://mcp.3daistudio.com/mcp` — OAuth **Desktop** (`.cursor/mcp.json`) **+ Cloud** (Dashboard → Integrations & MCP). See `packages/vfprod/CONNECT-3DAI.md` | `vfprod`, `vfsku`, `vlicense` |
 | **Studio MCP Hub** | HTTP `https://studiomcphub.com/mcp`. Free mockup/bg/resize; CMYK/`print_ready` for paper instances. VF skips CMYK. `packages/vfmcp/CONNECT-STUDIOHUB.md` | `vfprod`, `vfcovers`, `vfsku` |
 | **WebSearch / WebFetch** | Live web + URL fetch (ChatGPT/Gemini/Perplexity/Grok browse equivalent) | `vfresearch`, `vfgrowth` |
@@ -38,15 +38,19 @@ Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility”
 
 ## Installed in Core 2026-08-31 — instance binds what it needs
 
-Constitution: VF WhatsApp **send** stays human `050-2517000`. Instagram **publish** allowed via ig-mcp after Connect; **DM stays off**. HQ does not print. No invented ₪. No secrets in git.
+Constitution: VF WhatsApp **send** stays human `050-2517000`. Instagram **publish** allowed via canonical MCP after approval gates; **DM stays off**. HQ does not print. No invented ₪. No secrets in git. Metricool is optional/legacy — not required.
 
 Catalog: [`packages/vfmcp/CORE-MCP.md`](../packages/vfmcp/CORE-MCP.md) · [`core-mcp.json`](../packages/vfmcp/core-mcp.json). VF bind: `mcpBind` on `packages/velvetos/samples/velvet-factory.json`.
 
-### 0. Instagram Publish + Insights — ig-mcp · **in Core (needsAuth until token)**
+### 0. Instagram Publish + Insights + Stories — adelaidasofia/instagram-mcp · **canonical (ready-codespace)**
 
-[jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) via [`vfigos/CONNECT-IG.md`](../packages/vfigos/CONNECT-IG.md). Not in project `mcp.json` (secrets). Desktop `~/.cursor` or Cloud Team MCP secrets.
+[adelaidasofia/instagram-mcp](https://github.com/adelaidasofia/instagram-mcp) via [`vfigos/CONNECT-IG.md`](../packages/vfigos/CONNECT-IG.md) · deploy note [`DEPLOY-CODESPACE.md`](../packages/vfigos/DEPLOY-CODESPACE.md).  
+Env: `INSTAGRAM_MCP_ACCESS_TOKEN` · `INSTAGRAM_MCP_IG_USER_ID` (optional `INSTAGRAM_MCP_APP_SECRET`). **Do not enable** `INSTAGRAM_MCP_DM_ENABLED`.  
+Not in project `mcp.json` (secrets). Desktop / Codespace stdio verified. Cloud always-on remote: **pending**.
 
-Failover until token: Canva export → Drive `create_file` → Gmail `send_message` same turn.
+Legacy (do not use as primary): [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) — [`LEGACY-IG-MCP.md`](../packages/vfigos/LEGACY-IG-MCP.md).
+
+Failover until live MCP session: Canva export → Drive `create_file` → Gmail `send_message` same turn. Live claim requires `list_media`/`get_media` verify.
 
 ### 1. WhatsApp — inquiry-to-order · **in Core (draft/search)**
 
@@ -117,13 +121,13 @@ Cloud Agent **must not** open `gemini.google.com` or `chatgpt.com` (Google/OpenA
 
 ## Do this next (read-only growth)
 
-### Instagram research (optional) — send stays on ig-mcp / SEND.md
+### Instagram research (optional) — send stays on canonical MCP / SEND.md
 
 | Server | Role |
 |---|---|
 | [farukkolip/instapdown-mcp](https://github.com/farukkolip/instapdown-mcp) | Public toolkit: Reels/Story download, hashtags, engagement health, best-time tables. **No auth.** |
 
-Use for `vfigos` review, `vfgrowth` sprints, `vfinsights` reads. Schedule and copy stay in the pack. **HQ sends via ig-mcp or Canva+Drive+Gmail** (`CONNECT-IG.md`). Grok is optional backup.
+Use for `vfigos` review, `vfgrowth` sprints, `vfinsights` reads. Schedule and copy stay in the pack. **HQ sends via adelaidasofia Instagram MCP or Canva+Drive+Gmail** (`CONNECT-IG.md`). Grok is optional backup. Metricool is not required.
 
 ### Inbox triage on top of Gmail
 

@@ -1,0 +1,22 @@
+{
+  "task_id": "instagram-mcp-canonical-2026-09-08",
+  "title": "Make adelaidasofia/instagram-mcp canonical",
+  "component_state": "Idle",
+  "status": "done",
+  "updatedAt": "2026-09-08T17:49:00Z",
+  "facts": {
+    "canonical": "https://github.com/adelaidasofia/instagram-mcp",
+    "package": "adelaidasofia-instagram-mcp",
+    "igUserId": "17841407772120429",
+    "accountLabel": "velvets_cloud",
+    "deskStatus": "ready-codespace",
+    "auth": "ready",
+    "transport": "stdio",
+    "remote_access": "pending",
+    "legacy": "jlbadano/ig-mcp",
+    "secretsInGit": false,
+    "checkAll": "34/34 pass"
+  },
+  "latest_observation": "Repo integration complete. Codespace stdio verified per owner. Cloud always-on remote MCP still pending — do not claim solved.",
+  "next_step": "Expose supported remote MCP transport or always-on host for Cloud Agent autonomy; keep secrets in vault only."
+}

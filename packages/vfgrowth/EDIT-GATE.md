@@ -32,7 +32,7 @@
 גלם בתיבת Grok (G004) = חומר גלם. אחרי שער העריכה **ואחרי** `preflight/G004.md` עבור — ורק אז — שיבוץ instagram.com / Calendar.  
 סטוריז G004: `packages/vfcopy/G004-STORIES-FIX.md` + `STORIES.md`.
 
-סטוריז עדיין ב־instagram.com (ig-mcp ≠ stories). נכשל-סגור = חסום שיבוץ, תיקון במשרד — לא הסלמה לכריסטיאן.
+סטוריז = `publish_story` על Instagram MCP הקנוני אחרי Canva/vfcovers (לא JPEG גולמי). נכשל-סגור = חסום שיבוץ, תיקון במשרד — לא הסלמה לכריסטיאן.
 
 
 כל טקסט לסטוריז/פיד חייב להגיע דרך `packages/vfcopy` (VOICE + VOICE-CHART + templates). כיתובים שנכתבו מחוץ ל-vfcopy נחשבים גלם עד שיועברו לקובץ ויעברו לינט.  
