@@ -2,9 +2,22 @@
   "account": "@velvets_cloud",
   "language": "he",
   "cta": {
-    "whatsapp": "050-2517000",
+    "public": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+    "channel": "instagram-message",
     "pickup": "איסוף שדרות",
-    "forbidden": ["שלחו DM", "Send DM", "link in bio as the only close"]
+    "businessContact": {
+      "whatsapp": "050-2517000",
+      "status": "disabled-for-public-cta"
+    },
+    "forbidden": [
+      "050-2517000",
+      "וואטסאפ",
+      "WhatsApp",
+      "wa.me",
+      "send_dm",
+      "auto-dm",
+      "link in bio as the only close"
+    ]
   },
   "brandKit": {
     "canvaBrandKitId": null,

@@ -40,7 +40,7 @@ python3 scripts/vf_send_preflight.py --gate instagram    # 2=failover Canva+Driv
 - חבילת LIVE / כיתוב / קישור Canva / קישור Drive
 - `reply` / `forward` כשזה מקדם את הצינור
 
-אסור: דיוור המוני, חוב בלי ראש צוות, סודות, «שלחו DM».
+אסור: דיוור המוני, חוב בלי ראש צוות, סודות, אוטו־DM / `send_dm`.
 
 ## בריף 07:00 — לולאה לפני שליחה
 
@@ -58,10 +58,10 @@ python3 scripts/vf_send_preflight.py --gate instagram    # 2=failover Canva+Driv
 ## אינסטגרם — מותר דרך כלי
 
 1. **פריפלייט + שער עריכה** — ארטיפקט כתוב (`PREFLIGHT.md`) ואז Canva MCP / `vfcovers` / `vfcanva` (`studio/render.py`). **לא** טקסט על JPEG גולמי (`STUDIO.md`, `vfgrowth/EDIT-GATE.md`). Gemini browser רק על המק. בלי שער עבור = נכשל-סגור.
-2. `vfcopy` נותן כיתוב + CTA וואטסאפ / איסוף שדרות.
-3. אם **ig-mcp** מחובר (`packages/vfigos/CONNECT-IG.md`) — HQ מפרסם ב־`publish_media`, **מאמת תוצאת כלי** (validate→apply→verify ב־`vfigos/SEND.md`), ורק אז מסמן `#נשלח-מ-HQ`.
-4. אם אין Publish MCP / `needsAuth` — **failover מיד:** יוצרים מסמך Drive + שולחים ג׳ימייל עם המדיה/הכיתוב/קישור העריכה. מסמנים `#נשלח-מ-HQ` (מסלול כלים) + `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה.
-5. לא סרק. לא «תעלה ידנית». לא ממציאים שנשלח לפיד אם לא עלה (accepted ≠ confirmed). לא `send_dm`.
+2. `vfcopy` נותן כיתוב + **PUBLIC_CURRENT_CTA** (הודעת Instagram) + איסוף שדרות. לא וואטסאפ בכיתוב ציבורי (`constitution/PUBLIC_CTA.md`).
+3. אם **ig-mcp** מחובר (`packages/vfigos/CONNECT-IG.md`) — HQ מפרסם ב־`publish_media`, **מאמת תוצאת כלי** (validate→apply→verify ב־`vfigos/SEND.md`), ורק אז מסמן `#נשלח-מ-HQ` **ו־`liveVerified`**. `uploadAccepted` / `publishRequested` / Calendar ≠ live (`vfigos/PUBLICATION-STATES.md`).
+4. אם אין Publish MCP / `needsAuth` — **failover מיד:** יוצרים מסמך Drive + שולחים ג׳ימייל עם המדיה/הכיתוב/קישור העריכה. מסמנים `#נשלח-מ-HQ` (מסלול כלים) + `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה. **NO INSTAGRAM CONNECTION ≠ NO OFFICE WORK** — ממשיכים intake / copy / Canva / preflight / queue.
+5. לא סרק. לא «תעלה ידנית». לא ממציאים שנשלח לפיד אם לא עלה (accepted ≠ confirmed / לא `liveVerified`). לא `send_dm`.
 
 ## Drive — יוצרים לפי צורך
 

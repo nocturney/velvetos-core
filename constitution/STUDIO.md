@@ -12,10 +12,11 @@
 | מה | סטודיו להדפסות תלת־ממד |
 | איפה | שדרות |
 | איסוף | רק משדרות. אין משלוח ארצי מתוך HQ |
-| וואטסאפ | 050-2517000 |
+| וואטסאפ | 050-2517000 · BUSINESS_CONTACT_RECORD (disabled for public CTA) |
 | אינסטגרם | [@velvets_cloud](https://instagram.com/velvets_cloud) |
+| CTA ציבורי | הודעת Instagram — `constitution/PUBLIC_CTA.md` |
 | שפה | עברית |
-| סגירה | אדם בוואטסאפ + Invoice4U |
+| סגירה | אדם (הודעות IG / רשומת עסק פנימית) + Invoice4U |
 | צוות משרד | 5 מושבים — ראו [`TEAM.md`](TEAM.md) |
 | B2B נעול | קו B2B סגור עד שראש הצוות פותח. לוגו / QR / מפיות = דוגמאות, לא קטלוג סגור של שלושה מוצרים |
 

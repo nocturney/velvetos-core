@@ -64,4 +64,5 @@ cd ~/velvetos-core/instances/velvet-factory
 
 ## VF (קבוע)
 
-WhatsApp `050-2517000` · איסוף שדרות · IG `@velvets_cloud`
+**PUBLIC_CURRENT_CTA:** הודעת Instagram (`@velvets_cloud`) · איסוף שדרות  
+**BUSINESS_CONTACT_RECORD:** WhatsApp `050-2517000` (לא CTA ציבורי כרגע) · `constitution/PUBLIC_CTA.md`

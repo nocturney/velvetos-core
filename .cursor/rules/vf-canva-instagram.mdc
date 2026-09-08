@@ -22,5 +22,5 @@ When the job is Instagram visual content (post, story, reel cover, carousel, cov
 
 - HQ **sends Instagram via tools** (`constitution/SEND.md`). No auto-DM. No boost without the lead seat.
 - Never invent Canva links, ₪, Insights, brand hex/fonts, or floor scenes.
-- CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
+- CTA: **PUBLIC_CURRENT_CTA** = Instagram message («שלחו לנו הודעה כאן באינסטגרם») / איסוף שדרות. Not bare «שלחו DM». WhatsApp `050-2517000` = BUSINESS_CONTACT_RECORD only (not public CTA).
 - If Canva is disconnected: say `Canva לא מחובר`, point to `packages/vfcanva/CONNECT.md` (Uninstall marketplace plugin), and render with `packages/vfcanva/studio/render.py`.

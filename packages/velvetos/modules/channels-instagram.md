@@ -6,7 +6,8 @@ Module id: `channels-instagram`
 - \`channels.instagram[]\` with \`id\`, \`handle\`, \`purpose\`, \`primary\`
 - Exactly one primary when the list is non-empty
 - Dual-brand isolation: content for channel A does not cross to B without lead seat
-- CTA never «שלחו DM»
+- Public CTA from tenant \`PUBLIC_CURRENT_CTA\` (Instagram message / Hebrew «שלחו לנו הודעה…») — never auto-dm / \`send_dm\`
+- Never invent WhatsApp phone as public CTA; \`BUSINESS_CONTACT_RECORD\` stays in desk/integration only
 
 ## Packs
 \`vfigos\`, \`vfcanva\`, \`vfcovers\`

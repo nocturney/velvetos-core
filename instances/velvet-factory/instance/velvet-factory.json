@@ -96,15 +96,34 @@
     ]
   },
   "cta": {
-    "primary": "WhatsApp 050-2517000 / איסוף שדרות",
+    "primary": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+    "channel": "instagram-message",
+    "handle": "@velvets_cloud",
+    "pickup": "איסוף שדרות",
     "whatsapp": "050-2517000",
+    "businessContact": {
+      "whatsapp": "050-2517000",
+      "status": "disabled-for-public-cta",
+      "note": "BUSINESS_CONTACT_RECORD only — not PUBLIC_CURRENT_CTA"
+    },
+    "forbiddenPublic": [
+      "050-2517000",
+      "וואטסאפ",
+      "WhatsApp",
+      "wa.me",
+      "דברו איתנו בוואטסאפ",
+      "הזמנות בוואטסאפ"
+    ],
     "forbidden": [
-      "שלחו DM",
-      "send DM",
-      "DM us"
+      "send_dm",
+      "auto-dm",
+      "050-2517000",
+      "וואטסאפ",
+      "WhatsApp",
+      "wa.me"
     ]
   },
-  "close": "human WhatsApp + Invoice4U",
+  "close": "instagram-message public; human WhatsApp record disabled for outreach",
   "compliance": {
     "noInventedPrices": true,
     "noInventedInsights": true,
