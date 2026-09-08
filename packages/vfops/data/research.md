@@ -1,3 +1,24 @@
+# 05 · משרד · 2026-09-08 (best-skills bi-daily)
+
+חריץ 05 בבריף 07:00 כבר **לא** מדביק את הקטלוג מכאן.  
+`vfops_loop.py` רושם CLI אמיתי מ-24ש או **«אין חדש במשרד»** + שורות פער.
+
+תזמורת / חוקרים:
+
+```
+05 · משרד
+מה נבנה / יועל:
+- best-skills bi-daily — אין חדש במשרד (upstream latest ≡ 2026-09-07; אין data/2026-09-08)
+- watchlist +2: ui-ux-pro-max-skill · Understand-Anything
+- timer vf-best-skills-bi-daily renewed
+```
+
+05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md`.
+
+ארטיפקט: `packages/vfresearch/sources/2026-09-08-best-skills.md`
+
+---
+
 # 05 · משרד · 7.9.2026 (מושב מחקר/אורקסטרציה — שני מעברים)
 
 חריץ 05 בבריף 07:00 כבר **לא** מדביק את הקטלוג מכאן.  

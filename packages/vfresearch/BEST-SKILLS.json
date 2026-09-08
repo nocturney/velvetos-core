@@ -40,7 +40,7 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-07",
+  "lastPass": "2026-09-08",
   "dataDate": "2026-09-07",
   "embedded": [
     {
@@ -220,6 +220,16 @@
       "id": "dietrich-ponytail",
       "url": "https://github.com/DietrichGebert/ponytail",
       "note": "Top-repos #6 2026-09-07 — agent skills collection. Watch before any embed; no npx."
+    },
+    {
+      "id": "ui-ux-pro-max-skill",
+      "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "note": "Rising top-repos 2026-09-07. Watch methodology for internal brief only; public marketing site locked."
+    },
+    {
+      "id": "understand-anything",
+      "url": "https://github.com/Egonex-AI/Understand-Anything",
+      "note": "Codebase knowledge-graph skills. Overlaps vfmem/vfgraft — watch before any embed; no binary install."
     }
   ],
   "skipped": [
