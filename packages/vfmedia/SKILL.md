@@ -14,6 +14,7 @@
 2. שורה ב־`catalog.json` לפי `catalog.schema.json`. תיאור ממה שנראה.
 3. תפעול מעביר נכנס → מקור. GrokBot: Drive MCP. Cursor: סכמה.
 4. `python3 scripts/vfmedia.py validate`
+5. Control Plane intake state: `office/control-plane.json` → media SoT stays this catalog (WIP/finished/BTS/unknown). Never a second catalog.
 
 ## אל תעשה
 

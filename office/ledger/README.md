@@ -2,6 +2,8 @@
 
 Local CSV is the job book. Google Sheet is a view via Drive `create_file` (CSV → spreadsheet).
 
+Source of truth for jobs in the Office Control Plane: `office/ledger/live/jobs.csv` (see `office/control-plane.json`). Live `*.csv` is gitignored; bootstrap header-only from `templates/jobs.csv` when missing. Do not invent a second job book.
+
 Do not invent ₪. Do not put full customer names in git if you can use a short label.
 
 ```

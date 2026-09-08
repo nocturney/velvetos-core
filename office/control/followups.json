@@ -1,0 +1,5 @@
+{
+  "updatedAt": "2026-09-08",
+  "rule": "WIP→finished bridge. Never invent correlation_id. Scheduling/upload ≠ published. Only verified live publication closes the follow-up.",
+  "items": []
+}

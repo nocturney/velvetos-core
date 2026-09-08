@@ -9,6 +9,10 @@
 מערכת **ייצור טיוטות + תור אישור 07:00**.  
 לא מפרסמת ל־`@velvets_cloud`. לא שולחת DM. לא סוגרת וואטסאפ.
 
+עדיפות ספרינט תוכן (Control Plane — לא תור מקביל):
+1. `ready_for_finished_content` · 2. `print.done` עם מדיה · 3. מאושר שמחכה למשבצת · 4. מדיה חדשה מקליטה · 5. רק אז רעיונות חדשים.  
+CLI: `python3 scripts/vf_control_plane.py followups` · מפה: `office/control-plane.json`.
+
 ```
 print.done (Edge / מפעיל)
         → Media Capture (איכות / חסר=חסר)
