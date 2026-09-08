@@ -20,11 +20,13 @@
   "remote_access": "pending",
   "remoteTransportPreferred": "streamable-http",
   "remoteDeploy": "packages/vfigos/REMOTE.md",
+  "remoteHost": "google-cloud-run",
+  "remoteRegionPreferred": "me-west1",
   "remoteHealth": "packages/vfigos/live/remote-health.json",
   "remoteHealthScript": "scripts/vf_instagram_mcp_remote_health.py",
   "igUserId": "17841407772120429",
   "accountLabel": "velvets_cloud",
-  "readyRequires": "Cloud autonomy: remote healthcheck ok + remote_access ready. Codespace stdio proves Graph path only — never fake Cloud remote as ready",
+  "readyRequires": "Cloud autonomy: Cloud Run remote healthcheck ok + remote_access ready. Codespace stdio proves Graph path only — never fake Cloud remote as ready",
   "capabilities": [
     {
       "id": "instagram.profile.read",

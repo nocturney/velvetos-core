@@ -2,7 +2,7 @@
 
 Status date: **2026-09-08**. No secrets in this file. No invented remote endpoint.
 
-**Production / Cloud autonomy path:** [`REMOTE.md`](REMOTE.md) (Fly.io Streamable HTTP + bearer).  
+**Production / Cloud autonomy path:** [`REMOTE.md`](REMOTE.md) (Google Cloud Run Streamable HTTP + bearer, scale-to-zero).  
 This file is **dev / Codespace fallback only**. Codespace stdio ≠ `remote_access: ready`.
 
 ## Verified (Codespace / stdio)

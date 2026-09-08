@@ -20,9 +20,9 @@ Env (values never logged):
   MUST stay unset/false:
     INSTAGRAM_MCP_DM_ENABLED
 
-Bind:
+Bind (Cloud Run sets PORT):
   INSTAGRAM_MCP_HOST (default 0.0.0.0)
-  INSTAGRAM_MCP_PORT (default 8080)
+  PORT or INSTAGRAM_MCP_PORT (default 8080) — Cloud Run injects PORT
   INSTAGRAM_MCP_PATH (default /mcp)
 """
 from __future__ import annotations
@@ -30,6 +30,16 @@ from __future__ import annotations
 import hmac
 import os
 import sys
+
+
+def _listen_port() -> int:
+    """Cloud Run requires listening on $PORT; INSTAGRAM_MCP_PORT is local override."""
+    raw = (os.environ.get("PORT") or os.environ.get("INSTAGRAM_MCP_PORT") or "8080").strip()
+    try:
+        return int(raw)
+    except ValueError:
+        print(f"REFUSE: invalid PORT/INSTAGRAM_MCP_PORT={raw!r}", file=sys.stderr)
+        raise SystemExit(2) from None
 
 
 def _require_bearer() -> str:
@@ -97,7 +107,7 @@ def main() -> None:
         return
 
     host = (os.environ.get("INSTAGRAM_MCP_HOST") or "0.0.0.0").strip()
-    port = int((os.environ.get("INSTAGRAM_MCP_PORT") or "8080").strip())
+    port = _listen_port()
     path = (os.environ.get("INSTAGRAM_MCP_PATH") or "/mcp").strip() or "/mcp"
     if not path.startswith("/"):
         path = "/" + path

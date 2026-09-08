@@ -19,7 +19,7 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Google Drive** | Files and folders; **`create_file`**; Sheets **export** when a workbook is named (`vfbooks/SHEETS.md`) | `vfprod`, `vfcovers`, `vfsku`, `vfresearch`, `vfbooks` |
 | **Google Calendar** | Events | `vfseason`, `vfops`, `vfsales` |
 | **Canva** | Edit designs, brand-check, bulk-create, resize, `generate-design`. **Ready** on this Cloud Agent (2026-08-31, `DAGoYmCu4c4`) | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
-| **Instagram (canonical)** | Publish image/carousel/reel/**story**, Insights, feed read via Graph API. **ready-codespace** (stdio verified). Remote path: Streamable HTTP + bearer (`REMOTE.md` / Fly.io). `remote_access: pending` until live remote healthcheck. [`packages/vfigos/CONNECT-IG.md`](../packages/vfigos/CONNECT-IG.md). Package `adelaidasofia-instagram-mcp`. Not in project `mcp.json` (secrets) | `vfigos`, `vfinsights`, `vfgrowth` |
+| **Instagram (canonical)** | Publish image/carousel/reel/**story**, Insights, feed read via Graph API. **ready-codespace** (stdio verified). Remote path: Streamable HTTP + bearer on **Google Cloud Run** (`REMOTE.md`, `me-west1`, scale-to-zero). `remote_access: pending` until live remote healthcheck. [`packages/vfigos/CONNECT-IG.md`](../packages/vfigos/CONNECT-IG.md). Package `adelaidasofia-instagram-mcp`. Not in project `mcp.json` (secrets) | `vfigos`, `vfinsights`, `vfgrowth` |
 | **3D AI Studio** | Text/image → 3D mesh, STL/3MF export. **HTTP** `https://mcp.3daistudio.com/mcp` — OAuth **Desktop** (`.cursor/mcp.json`) **+ Cloud** (Dashboard → Integrations & MCP). See `packages/vfprod/CONNECT-3DAI.md` | `vfprod`, `vfsku`, `vlicense` |
 | **Studio MCP Hub** | HTTP `https://studiomcphub.com/mcp`. Free mockup/bg/resize; CMYK/`print_ready` for paper instances. VF skips CMYK. `packages/vfmcp/CONNECT-STUDIOHUB.md` | `vfprod`, `vfcovers`, `vfsku` |
 | **WebSearch / WebFetch** | Live web + URL fetch (ChatGPT/Gemini/Perplexity/Grok browse equivalent) | `vfresearch`, `vfgrowth` |
@@ -44,10 +44,10 @@ Catalog: [`packages/vfmcp/CORE-MCP.md`](../packages/vfmcp/CORE-MCP.md) · [`core
 
 ### 0. Instagram Publish + Insights + Stories — adelaidasofia/instagram-mcp · **canonical (ready-codespace; remote pending)**
 
-[adelaidasofia/instagram-mcp](https://github.com/adelaidasofia/instagram-mcp) via [`vfigos/CONNECT-IG.md`](../packages/vfigos/CONNECT-IG.md) · **production remote** [`REMOTE.md`](../packages/vfigos/REMOTE.md) · stdio fallback [`DEPLOY-CODESPACE.md`](../packages/vfigos/DEPLOY-CODESPACE.md).  
-Env (host): `INSTAGRAM_MCP_ACCESS_TOKEN` · `INSTAGRAM_MCP_IG_USER_ID` (optional `INSTAGRAM_MCP_APP_SECRET`).  
+[adelaidasofia/instagram-mcp](https://github.com/adelaidasofia/instagram-mcp) via [`vfigos/CONNECT-IG.md`](../packages/vfigos/CONNECT-IG.md) · **production remote** [`REMOTE.md`](../packages/vfigos/REMOTE.md) (Google Cloud Run) · stdio fallback [`DEPLOY-CODESPACE.md`](../packages/vfigos/DEPLOY-CODESPACE.md).  
+Env (host / Secret Manager): `INSTAGRAM_MCP_ACCESS_TOKEN` · `INSTAGRAM_MCP_IG_USER_ID` (optional `INSTAGRAM_MCP_APP_SECRET`).  
 Env (Cloud → MCP gate): `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` · `INSTAGRAM_MCP_REMOTE_URL`. **Do not enable** `INSTAGRAM_MCP_DM_ENABLED`.  
-Not in project `mcp.json` (secrets). Desktop / Codespace stdio verified. Cloud always-on remote: **implemented in-repo; `remote_access` pending until Fly deploy + `vf_instagram_mcp_remote_health.py` exits 0**. Team MCP example: `packages/vfmcp/mcp.cloud.example.json`.
+Not in project `mcp.json` (secrets). Desktop / Codespace stdio verified. Cloud remote: **Cloud Run path in-repo; `remote_access` pending until `gcloud run deploy` + `vf_instagram_mcp_remote_health.py` exits 0**. Team MCP example: `packages/vfmcp/mcp.cloud.example.json`. Fly.io deploy is legacy only (`LEGACY-FLY.toml`).
 
 Legacy (do not use as primary): [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) — [`LEGACY-IG-MCP.md`](../packages/vfigos/LEGACY-IG-MCP.md).
 

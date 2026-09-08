@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-09-08 — **Instagram MCP remote autonomy path:** עטיפת Streamable HTTP + bearer (`packages/vfigos/remote/`) סביב `adelaidasofia-instagram-mcp`; Fly.io `fly.toml`; `REMOTE.md`; `vf_instagram_mcp_remote_health.py` + `live/remote-health.json`; Team MCP example `mcp.cloud.example.json`; preflight `cloud_autonomy_ready` נפרד מ־Codespace stdio; watchdog `ig_remote_pending`/`degraded`; סנסור `check-instagram-remote.py`. **`remote_access` נשאר pending** עד deploy + healthcheck מרוחק אמיתי. אין סודות בגיט. אין Metricool/SaaS פרסום. Remote Instagram MCP hosting path; Codespace ≠ Cloud autonomy.
+- 2026-09-08 — **Instagram MCP remote host = Google Cloud Run (not Fly):** scale-to-zero (`min=0`, `max=1`), region `me-west1`, Secret Manager + bearer gate, `$PORT` bind. Fly path moved to `remote/LEGACY-FLY.toml`. `remote_access` still **pending** until live healthcheck. Cloud Run replaces Fly for Instagram MCP remote.
+
+- 2026-09-08 — **Instagram MCP remote autonomy path:** עטיפת Streamable HTTP + bearer (`packages/vfigos/remote/`) סביב `adelaidasofia-instagram-mcp`; `REMOTE.md`; `vf_instagram_mcp_remote_health.py` + `live/remote-health.json`; Team MCP example `mcp.cloud.example.json`; preflight `cloud_autonomy_ready` נפרד מ־Codespace stdio; watchdog `ig_remote_pending`/`degraded`; סנסור `check-instagram-remote.py`. **`remote_access` נשאר pending** עד deploy + healthcheck מרוחק אמיתי. אין סודות בגיט. אין Metricool/SaaS פרסום. Remote Instagram MCP hosting path; Codespace ≠ Cloud autonomy.
 
 - 2026-09-08 — **Instagram MCP קנוני = adelaidasofia/instagram-mcp:** מחליף את jlbadano/ig-mcp כראשי. שולחן `ready-codespace` (auth ready · transport stdio · `remote_access` pending). Stories+Insights+`publish_*` על אותו MCP. DM/`INSTAGRAM_MCP_DM_ENABLED` כבוי. Metricool אופציונלי/לגאסי. אימות חי חובה (`publish_pending_verification` → `liveVerified`). פלייבוקים: `CONNECT-IG.md` · `DEPLOY-CODESPACE.md` · `LEGACY-IG-MCP.md`. סנסורים מעודכנים. אין סודות בגיט. Canonical Instagram MCP; Codespace verified; remote autonomy still pending.
 

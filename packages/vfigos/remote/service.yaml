@@ -1,0 +1,51 @@
+# Google Cloud Run — Instagram MCP remote (reference / documentation)
+# Deploy with gcloud as documented in ../REMOTE.md — do not put secret values here.
+#
+# Runtime model:
+#   minScale: 0 (scale to zero)
+#   maxScale: 1
+#   region: me-west1 (Tel Aviv) — Cloud Run supported; closest practical to Israel
+#   ingress: all (HTTPS); MCP protected by app-layer bearer (VELVET_INSTAGRAM_MCP_BEARER_TOKEN)
+#   --allow-unauthenticated at Cloud Run IAM is OK only because serve.py enforces bearer
+#
+# Secrets (Cloud Run / Secret Manager — never git):
+#   INSTAGRAM_MCP_ACCESS_TOKEN
+#   INSTAGRAM_MCP_IG_USER_ID
+#   VELVET_INSTAGRAM_MCP_BEARER_TOKEN
+#   INSTAGRAM_MCP_APP_SECRET (optional)
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: velvet-instagram-mcp
+  annotations:
+    run.googleapis.com/launch-stage: GA
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "1"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      containers:
+        - image: PLACEHOLDER_IMAGE
+          ports:
+            - name: http1
+              containerPort: 8080
+          env:
+            - name: INSTAGRAM_MCP_HOST
+              value: "0.0.0.0"
+            - name: INSTAGRAM_MCP_PATH
+              value: "/mcp"
+            - name: INSTAGRAM_MCP_TRANSPORT
+              value: "streamable-http"
+            # Secrets injected at deploy time via --set-secrets / Secret Manager
+            # - INSTAGRAM_MCP_ACCESS_TOKEN
+            # - INSTAGRAM_MCP_IG_USER_ID
+            # - VELVET_INSTAGRAM_MCP_BEARER_TOKEN
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi

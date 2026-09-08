@@ -1,0 +1,13 @@
+# Build context for Cloud Run / Docker — keep image lean; never copy secrets.
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.*
+*.pem
+*.key
+fly.toml
+LEGACY-FLY.md
+README*
+.git
+.gitignore

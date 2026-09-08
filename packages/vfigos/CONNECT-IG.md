@@ -134,12 +134,12 @@ pip install adelaidasofia-instagram-mcp
 ## B) Cloud Agent / אוטונומיה מלאה (Streamable HTTP)
 
 stdio בתוך Codespace ישן/כבוי **אינו** מספיק למשרד תמיד-דלוק.  
-נתיב ייצור: [`REMOTE.md`](REMOTE.md) · עטיפה `packages/vfigos/remote/` · Fly.io.
+נתיב ייצור: [`REMOTE.md`](REMOTE.md) · עטיפה `packages/vfigos/remote/` · **Google Cloud Run** (`me-west1`, scale-to-zero).
 
 | שדה | ערך נוכחי (אמת) |
 |---|---|
-| ארכיטקטורה | Fly.io Streamable HTTP + bearer gate |
-| URL צפוי אחרי deploy | `https://velvet-instagram-mcp.fly.dev/mcp` (לא מומצא כחי) |
+| ארכיטקטורה | Cloud Run Streamable HTTP + bearer gate |
+| URL צפוי אחרי deploy | `https://<service>-<hash>-me-west1.a.run.app/mcp` (לא מומצא כחי) |
 | Auth ל־MCP | `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` |
 | Meta token | רק על השרת המארח (`INSTAGRAM_MCP_ACCESS_TOKEN`) |
 | `remote_access` | **pending** עד `python3 scripts/vf_instagram_mcp_remote_health.py --write` יוצא 0 |

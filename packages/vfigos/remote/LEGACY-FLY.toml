@@ -1,9 +1,10 @@
-# VelvetOS remote Instagram MCP (Streamable HTTP)
-# Deploy: flyctl launch --copy-config --yes  OR  flyctl deploy
-# Secrets: fly secrets set INSTAGRAM_MCP_ACCESS_TOKEN=… INSTAGRAM_MCP_IG_USER_ID=17841407772120429 VELVET_INSTAGRAM_MCP_BEARER_TOKEN=…
-# Do not put secret values in this file.
+# Legacy — Fly.io deploy for Instagram MCP remote (superseded 2026-09-08)
+#
+# Active production path: Google Cloud Run — see ../REMOTE.md and service.yaml.
+# This file is kept only as historical reference. Do not use for new deploys.
+# Sensors must NOT require this file.
 
-app = "velvet-instagram-mcp"
+app = "velvet-instagram-mcp-LEGACY-DO-NOT-USE"
 primary_region = "fra"
 
 [build]
@@ -14,7 +15,6 @@ primary_region = "fra"
   INSTAGRAM_MCP_PORT = "8080"
   INSTAGRAM_MCP_PATH = "/mcp"
   INSTAGRAM_MCP_TRANSPORT = "streamable-http"
-  # INSTAGRAM_MCP_DM_ENABLED must remain unset/false
 
 [http_service]
   internal_port = 8080

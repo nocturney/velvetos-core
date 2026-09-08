@@ -9,7 +9,7 @@
 
 סדר שליחה: `packages/vfigos/SEND.md` + `constitution/SEND.md`.  
 חיבור Publish/Insights/Stories: [`CONNECT-IG.md`](CONNECT-IG.md) — canonical [`adelaidasofia/instagram-mcp`](https://github.com/adelaidasofia/instagram-mcp) (`ready-codespace`, stdio; `remote_access` pending).  
-אוטונומיית Cloud: [`REMOTE.md`](REMOTE.md) (Streamable HTTP + bearer). Codespace: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md). 
+אוטונומיית Cloud: [`REMOTE.md`](REMOTE.md) (Google Cloud Run · Streamable HTTP + bearer · scale-to-zero). Codespace: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md). 
 לגאסי: [`LEGACY-IG-MCP.md`](LEGACY-IG-MCP.md) (`jlbadano/ig-mcp`).  
 פריסה: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).  
 **validate → apply → verify** (`list_media`/`get_media`) לפני תג live.  

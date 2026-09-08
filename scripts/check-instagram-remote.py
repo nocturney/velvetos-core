@@ -5,10 +5,11 @@ Guarantees:
   - remote_access cannot be ready without endpoint + successful remote-health.json
   - local stdio / ready-codespace is not mistaken for remote autonomy
   - no secret literals in tracked remote config
-  - DM stays disabled
-  - jlbadano is not canonical
+  - bearer remains required; DM stays disabled
+  - jlbadano is not canonical; Metricool stays notRequired
   - publish still requires live verification states
-  - remote wrapper / REMOTE.md / health script exist
+  - Cloud Run path is active; Fly is legacy-only (not required)
+  - no active *.fly.dev / FLY_API_TOKEN / fly deploy as production
 """
 from __future__ import annotations
 
@@ -23,8 +24,10 @@ CAPS = ROOT / "packages" / "vfigos" / "CAPABILITIES.json"
 REMOTE_MD = ROOT / "packages" / "vfigos" / "REMOTE.md"
 REMOTE_HEALTH = ROOT / "packages" / "vfigos" / "live" / "remote-health.json"
 SERVE = ROOT / "packages" / "vfigos" / "remote" / "serve.py"
-FLY = ROOT / "packages" / "vfigos" / "remote" / "fly.toml"
 DOCKER = ROOT / "packages" / "vfigos" / "remote" / "Dockerfile"
+SERVICE_YAML = ROOT / "packages" / "vfigos" / "remote" / "service.yaml"
+LEGACY_FLY = ROOT / "packages" / "vfigos" / "remote" / "LEGACY-FLY.toml"
+ACTIVE_FLY = ROOT / "packages" / "vfigos" / "remote" / "fly.toml"
 HEALTH_SCRIPT = ROOT / "scripts" / "vf_instagram_mcp_remote_health.py"
 CLOUD_EX = ROOT / "packages" / "vfmcp" / "mcp.cloud.example.json"
 CORE_MCP = ROOT / "packages" / "vfmcp" / "core-mcp.json"
@@ -32,6 +35,7 @@ PUB_STATES = ROOT / "packages" / "vfigos" / "PUBLICATION-STATES.json"
 CONNECT = ROOT / "packages" / "vfigos" / "CONNECT-IG.md"
 
 SECRET_LITERAL = re.compile(r"(EAA[A-Za-z0-9]{10,}|IGQV[A-Za-z0-9]{10,}|sk-[A-Za-z0-9]{20,})")
+ACTIVE_FLY_URL = re.compile(r"https://[a-z0-9.-]+\.fly\.dev", re.I)
 
 
 def fail(msg: str) -> None:
@@ -40,9 +44,25 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (DESK, CAPS, REMOTE_MD, REMOTE_HEALTH, SERVE, FLY, DOCKER, HEALTH_SCRIPT, CLOUD_EX, CORE_MCP, PUB_STATES, CONNECT):
+    for path in (
+        DESK,
+        CAPS,
+        REMOTE_MD,
+        REMOTE_HEALTH,
+        SERVE,
+        DOCKER,
+        SERVICE_YAML,
+        HEALTH_SCRIPT,
+        CLOUD_EX,
+        CORE_MCP,
+        PUB_STATES,
+        CONNECT,
+    ):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
+
+    if ACTIVE_FLY.is_file():
+        fail("packages/vfigos/remote/fly.toml must not remain as active deploy — use LEGACY-FLY.toml + Cloud Run")
 
     desk = json.loads(DESK.read_text(encoding="utf-8"))
     ig = (desk.get("tools") or {}).get("instagram") or {}
@@ -56,7 +76,6 @@ def main() -> None:
     if remote not in ("pending", "ready", "degraded"):
         fail("desk instagram.remote_access must be pending|ready|degraded")
 
-    # remote_access ready requires health ok + endpoint
     if remote == "ready":
         if health.get("ok") is not True:
             fail("remote_access=ready requires remote-health.json ok=true")
@@ -65,28 +84,25 @@ def main() -> None:
         endpoint = health.get("endpoint") or ""
         if not str(endpoint).startswith("https://"):
             fail("remote_access=ready requires https endpoint in remote-health.json")
+        if ".fly.dev" in str(endpoint):
+            fail("remote endpoint must not be fly.dev after Cloud Run cutover")
         if status not in ("ready",):
             fail("when remote_access=ready, desk status must be ready (not codespace-only)")
 
-    # Codespace / pending honesty
     if status == "ready-codespace" and remote == "ready":
         fail("ready-codespace must not claim remote_access=ready")
     if remote == "pending" and health.get("ok") is True and health.get("remote_access") == "ready":
-        # Allow desk lag only if operator forgot — prefer fail so flip is explicit
         fail("remote-health.json is ready but desk remote_access still pending — flip desk after verified deploy")
 
-    # Current truthful default: pending + not ok
     if remote == "pending":
         if health.get("ok") is True:
             fail("remote_access pending but remote-health ok=true — inconsistent")
         if health.get("remote_access") not in ("pending", "degraded"):
             fail("pending desk must have remote-health remote_access pending|degraded")
 
-    # CAPABILITIES align
     if caps.get("remote_access") != remote and not (
         remote == "degraded" and caps.get("remote_access") in ("pending", "degraded")
     ):
-        # Allow caps to stay pending while desk degraded mid-incident only if both not ready
         if remote == "ready" or caps.get("remote_access") == "ready":
             fail("CAPABILITIES.remote_access must match desk when either is ready")
 
@@ -96,6 +112,8 @@ def main() -> None:
         caps.get("providerPreference") or ""
     ):
         fail("canonical must remain adelaidasofia")
+    if "Metricool" not in (caps.get("notRequired") or []):
+        fail("Metricool must remain notRequired / optional-legacy")
 
     if ig.get("dmEnabled") is True:
         fail("instagram.dmEnabled must stay false")
@@ -103,7 +121,6 @@ def main() -> None:
     if "send_message" not in forbidden and "auto-dm" not in forbidden and "send_dm" not in forbidden:
         fail("desk must forbid DM tools")
 
-    # Publication live verification retained
     by_id = {s.get("id"): s for s in (states.get("states") or [])}
     if "publish_pending_verification" not in by_id:
         fail("PUBLICATION-STATES must keep publish_pending_verification")
@@ -112,7 +129,6 @@ def main() -> None:
     if "liveVerified" not in by_id:
         fail("PUBLICATION-STATES must keep liveVerified")
 
-    # Wrapper / docs content
     serve = SERVE.read_text(encoding="utf-8")
     for needle in (
         "VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
@@ -120,21 +136,62 @@ def main() -> None:
         "StaticTokenVerifier",
         "INSTAGRAM_MCP_DM_ENABLED",
         "adelaidasofia",
+        "PORT",
+        "_listen_port",
     ):
         if needle not in serve:
             fail(f"serve.py must mention {needle}")
 
+    docker = DOCKER.read_text(encoding="utf-8")
+    if "PORT" not in docker:
+        fail("Dockerfile must honor Cloud Run PORT")
+
+    service = SERVICE_YAML.read_text(encoding="utf-8")
+    for needle in ("minScale", "me-west1", "velvet-instagram-mcp", "0"):
+        if needle not in service and needle != "0":
+            fail(f"service.yaml must mention {needle}")
+    if 'minScale: "0"' not in service and "minScale: '0'" not in service:
+        fail("service.yaml must set minScale 0 (scale to zero)")
+    if 'maxScale: "1"' not in service and "maxScale: '1'" not in service:
+        fail("service.yaml must set maxScale 1")
+
     remote_md = REMOTE_MD.read_text(encoding="utf-8")
     for needle in (
-        "Fly.io",
+        "Cloud Run",
+        "gcloud run deploy",
+        "me-west1",
         "streamable-http",
         "VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
         "vf_instagram_mcp_remote_health.py",
         "remote_access",
         "Codespace",
+        "scale to zero",
+        "--min-instances=0",
     ):
-        if needle not in remote_md:
+        if needle not in remote_md and needle.lower() not in remote_md.lower():
+            # allow case variants for "scale to zero"
+            if needle == "scale to zero" and "Scale to zero" in remote_md:
+                continue
             fail(f"REMOTE.md must mention {needle}")
+    if "fly deploy" in remote_md or "fly secrets set" in remote_md or "FLY_API_TOKEN" in remote_md:
+        fail("REMOTE.md must not instruct active Fly deploy")
+    if ACTIVE_FLY_URL.search(remote_md) and "LEGACY" not in remote_md:
+        # allow mention only in legacy section
+        for line in remote_md.splitlines():
+            if ACTIVE_FLY_URL.search(line) and "legacy" not in line.lower() and "superseded" not in line.lower():
+                fail("REMOTE.md must not present *.fly.dev as active endpoint")
+
+    # Active config files must not hardcode fly.dev as expected URL
+    for path in (DESK, CORE_MCP, CLOUD_EX, CONNECT, REMOTE_HEALTH):
+        blob = path.read_text(encoding="utf-8")
+        if ".fly.dev" in blob:
+            fail(f"{path.name} must not hardcode *.fly.dev after Cloud Run cutover")
+
+    expected = ig.get("expectedRemoteUrlPattern") or ig.get("expectedRemoteUrlAfterDeploy") or ""
+    if ".fly.dev" in expected:
+        fail("desk expected remote URL must not be fly.dev")
+    if expected and "a.run.app" not in expected and "cloud-run" not in expected.lower() and "run.app" not in expected:
+        fail("desk expectedRemoteUrlPattern should describe Cloud Run URL pattern")
 
     health_src = HEALTH_SCRIPT.read_text(encoding="utf-8")
     for needle in ("accounts_configured", "live_check", "velvets_cloud", "17841407772120429", "REDACTED"):
@@ -144,14 +201,15 @@ def main() -> None:
     cloud_ex = CLOUD_EX.read_text(encoding="utf-8")
     if "INSTAGRAM_MCP_REMOTE_URL" not in cloud_ex or "VELVET_INSTAGRAM_MCP_BEARER_TOKEN" not in cloud_ex:
         fail("mcp.cloud.example.json must use remote URL + bearer env placeholders")
+    if "Cloud Run" not in cloud_ex and "cloud run" not in cloud_ex.lower():
+        fail("mcp.cloud.example.json must mention Cloud Run")
     if SECRET_LITERAL.search(cloud_ex):
         fail("mcp.cloud.example.json must not contain secret literals")
 
-    # No secret literals in tracked IG remote paths
     for path in (
         REMOTE_MD,
         SERVE,
-        FLY,
+        SERVICE_YAML,
         REMOTE_HEALTH,
         CONNECT,
         DESK,
@@ -165,6 +223,11 @@ def main() -> None:
         if "BEGIN PRIVATE" in blob:
             fail(f"{path.name} must not contain private key material")
 
+    if LEGACY_FLY.is_file():
+        legacy = LEGACY_FLY.read_text(encoding="utf-8")
+        if "LEGACY" not in legacy and "superseded" not in legacy.lower():
+            fail("LEGACY-FLY.toml must be clearly marked legacy")
+
     core_ig = next((s for s in (core.get("servers") or []) if s.get("id") == "instagram"), None)
     if not core_ig:
         fail("core-mcp.json missing instagram")
@@ -172,8 +235,12 @@ def main() -> None:
         fail("core-mcp remote_access ready without health ok")
     if "REMOTE.md" not in (core_ig.get("deploy") or ""):
         fail("core-mcp.json instagram.deploy should point at REMOTE.md for autonomy path")
+    cloud_blob = f"{core_ig.get('cloud') or ''} {core_ig.get('host') or ''}"
+    if "Cloud Run" not in cloud_blob and "cloud run" not in cloud_blob.lower():
+        fail("core-mcp.json instagram must declare Cloud Run as remote host")
+    if "Fly.io" in cloud_blob and "legacy" not in cloud_blob.lower():
+        fail("core-mcp.json must not list Fly.io as active remote host")
 
-    # Local stdio is not remote autonomy — document in desk
     if status == "ready-codespace" and ig.get("transport") == "streamable-http" and remote != "ready":
         fail("do not claim streamable-http transport on desk before remote ready")
 
