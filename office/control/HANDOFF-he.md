@@ -5,9 +5,11 @@
 ## מה פעיל עכשיו
 - אין פעיל מחוץ ללולאה הרגילה
 
-## מדיה (קטלוג יחיד)
-- total=`399` · inbox=`398` · source=`1`
-- upload≠approval · no invented SKU/job association from weak filenames
+## מדיה (פאזות נפרדות · קטלוג יחיד)
+- total=`400` · inbox=`398` · source=`2`
+- רשום בלבד=`398` · אומת ונקלט=`2` · נבדק חזותית=`0`
+- intake=`Idle` · activation=`True`
+- registered ≠ verified ≠ visually_reviewed · validate≠monitoring · upload≠approval · no invented SKU/job association
 
 ## מה ממתין
 - אין
@@ -20,7 +22,7 @@
 
 ## הבא בתור
 - הרץ watchdog
-- המשך קליטת מדיה נכנס→מקור (בלי association מומצא)
+- המשך קליטת מדיה אוטומטית (intake run) — לא רק validate
 - סגור followups ready_for_finished_content דרך EDIT-GATE+PREFLIGHT
 - אל תטריד את כריסטיאן על מדדים חלשים
 - Instagram stays needsAuth until Meta email verify + long-lived token
@@ -29,9 +31,12 @@
 - Office Control Plane מוטמע
 - followups=0
 - dead_letters=0
-- media_catalog_items=399
+- media_catalog_items=400
 - media_inbox=398
-- media_source=1
+- media_source=2
+- media_verified=2
+- media_registered_only=398
+- media_visually_reviewed=0
 
 ## מקורות סמכות
 - **policy:** `constitution/CONSTITUTION.md + constitution/ORCHESTRA.md`
@@ -62,6 +67,8 @@
 - `python3 scripts/vfops_loop.py brief`
 - `python3 scripts/check-all.py`
 - `python3 scripts/vfmedia.py validate`
+- `python3 scripts/vfmedia.py intake status`
+- `python3 scripts/vfmedia.py intake selftest`
 
 ## אסור לחזור
 - invent ₪ or Insights

@@ -3,7 +3,22 @@
   "rule": "Single office inbox. Do not create parallel inboxes per agent.",
   "buckets": {
     "content": [],
-    "production": [],
+    "production": [
+      {
+        "id": "vfmedia-auto-intake",
+        "title": "קליטת מדיה אוטומטית — נכנס→מקור",
+        "state": "Idle",
+        "updatedAt": "2026-09-08T14:10:26Z",
+        "counts": {
+          "registered_only": 398,
+          "verified_and_intaken": 2,
+          "visually_reviewed": 0,
+          "pending_moves": 0
+        },
+        "note": "registered ≠ verified ≠ visually_reviewed · validate≠monitoring",
+        "source": "vfmedia.intake"
+      }
+    ],
     "sales": [],
     "admin": [],
     "approvals": [],

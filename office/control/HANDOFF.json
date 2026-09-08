@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-08T16:30:43+03:00",
+  "updatedAt": "2026-09-08T17:14:02+03:00",
   "date": "2026-09-08",
   "active_now": [],
   "waiting": [],
@@ -7,14 +7,48 @@
   "owner_blocked": [],
   "media": {
     "catalog": "packages/vfmedia/catalog.json",
-    "total": 399,
+    "total": 400,
     "inbox": 398,
-    "source": 1,
-    "note": "upload≠approval · no invented SKU/job association from weak filenames"
+    "source": 2,
+    "registered_only": 398,
+    "verified_and_intaken": 2,
+    "visually_reviewed": 0,
+    "intake_runner": {
+      "component_state": "Idle",
+      "lastRunAt": "2026-09-08T14:07:28Z",
+      "activation_proven": true,
+      "auth": {
+        "ready": true,
+        "detail": "provider=listing"
+      }
+    },
+    "intake_brief": {
+      "generatedAt": "2026-09-08T14:10:26Z",
+      "slot": "05",
+      "title": "קליטת מדיה",
+      "phases": {
+        "registered_in_catalog": 400,
+        "registered_only": 398,
+        "verified_and_intaken": 2,
+        "visually_reviewed": 0
+      },
+      "runner": {
+        "component_state": "Idle",
+        "lastRunAt": "2026-09-08T14:07:28Z",
+        "lastError": null,
+        "activation_proven": true,
+        "auth": {
+          "ready": true,
+          "detail": "provider=listing"
+        }
+      },
+      "note": "מונים ב־HANDOFF אינם תחליף לאירוע קליטה עמיד · vfmedia.py validate ≠ ניטור"
+    },
+    "note": "registered ≠ verified ≠ visually_reviewed · validate≠monitoring · upload≠approval · no invented SKU/job association"
   },
   "next": [
     "הרץ watchdog",
-    "המשך קליטת מדיה נכנס→מקור (בלי association מומצא)",
+    "המשך קליטת מדיה אוטומטית (intake run) — לא רק validate",
     "סגור followups ready_for_finished_content דרך EDIT-GATE+PREFLIGHT",
     "אל תטריד את כריסטיאן על מדדים חלשים",
     "Instagram stays needsAuth until Meta email verify + long-lived token"
@@ -23,9 +57,12 @@
     "Office Control Plane מוטמע",
     "followups=0",
     "dead_letters=0",
-    "media_catalog_items=399",
+    "media_catalog_items=400",
     "media_inbox=398",
-    "media_source=1"
+    "media_source=2",
+    "media_verified=2",
+    "media_registered_only=398",
+    "media_visually_reviewed=0"
   ],
   "authoritative_sources": {
     "policy": "constitution/CONSTITUTION.md + constitution/ORCHESTRA.md",
@@ -53,7 +90,9 @@
     "python3 scripts/vf_control_plane.py simulate --scenario failover",
     "python3 scripts/vfops_loop.py brief",
     "python3 scripts/check-all.py",
-    "python3 scripts/vfmedia.py validate"
+    "python3 scripts/vfmedia.py validate",
+    "python3 scripts/vfmedia.py intake status",
+    "python3 scripts/vfmedia.py intake selftest"
   ],
   "must_never_repeat": [
     "invent ₪ or Insights",

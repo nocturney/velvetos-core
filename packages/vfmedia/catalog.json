@@ -7595,6 +7595,37 @@
         "approvedBy": null,
         "approvedAt": null
       }
+    },
+    {
+      "id": "media-1tMhfYL-7mOjD5AbBGYHrFRlfRnWIg8XE",
+      "sourceFile": {
+        "id": "1tMhfYL-7mOjD5AbBGYHrFRlfRnWIg8XE",
+        "url": "https://drive.google.com/file/d/1tMhfYL-7mOjD5AbBGYHrFRlfRnWIg8XE/view?usp=drivesdk"
+      },
+      "viewDescription": "טקסט · שם קובץ: VF-INTAKE-PROOF-2026-09-08.txt · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-08T14:07:28Z",
+        "verifiedAt": "2026-09-08T14:10:26Z",
+        "downloadBytes": 87,
+        "movedToSourceAt": "2026-09-08T14:10:26Z",
+        "attempts": 1,
+        "lastError": null
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
     }
   ]
 }
