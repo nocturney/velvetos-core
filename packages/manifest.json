@@ -8,6 +8,7 @@
   "catalogRefreshedAt": "2026-09-08",
   "tag": "v0.1.0",
   "notes": [
+    "2026-09-08 evening catalog: GitHub nocturney/velvetos-core. Folded merged #128 morning brief, #129 Gmail brief CLI, #130/#131 media vault (packages/vfmedia), #132\u2013#134 vault tracking, #135 Office Control Plane, #136 Failover, #137 publication office / IG-DM policy. Also after 7.9 evening: #120 Watchtower, #121 B2B examples, #122 office crews, #123 studio engines, #124 organic growth. Origin not vendored (CLI not logged in). Left open: #138 cursor/live-commissioning-hardening-16ad.",
     "2026-09-08: Shared media vault locked by Christian \u2014 packages/vfmedia one catalog + docs/MEDIA-VAULT.md. Drive root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv. \u05ea\u05e4\u05e2\u05d5\u05dc intake. No parallel catalogs. No invented SKUs/\u20aa. No Drive share-permission changes. Sensor: scripts/check-vfmedia.py.",
     "2026-09-07 evening catalog: GitHub nocturney/velvetos-core. Folded merged #118 print-demand/print.done/revenue retro, #117 three-layer SoC, #116 core stability, #115/#105 SWC board, #109\u2013#114 quality+loop+templates, #107/#106 research seat, #104/#103/#102 agency gate + G004 stories, #101 brief HTML, #100 vfbiz week. Origin not vendored (CLI not logged in). No open PRs at refresh.",
     "2026-09-06 evening catalog: GitHub nocturney/velvetos-core. Folded merged #97 vfcanva/G004, #96 vfops loop + agency floor, #95 vfcost material CLI, #94 ig-mcp+iCloud, #93 HQ sweep, #92/#73 best-skills, #89/#90 vfgrowth calendar, #77 vfresearch last30days. Origin not vendored (CLI not logged in). No open PRs at refresh.",
@@ -72,7 +73,7 @@
   "packs": [
     {
       "name": "vfigos",
-      "summary": "VF Instagram OS \u2014 review / schedule / SEND.md via connected publish or Canva+Drive+Gmail failover (CONNECT-IG.md). No auto-DM, no invented publish.",
+      "summary": "VF Instagram OS \u2014 review / schedule / SEND.md failover. Publication office on Control Plane: public CTA = Instagram message; WhatsApp is internal record. No auto-DM, no invented publish.",
       "bcId": "bc-c4a53ee3",
       "agentUrl": "https://cursor.com/agents/bc-c4a53ee3",
       "originSlug": "christian-velvet/tmp-20e9908caebda9d0",
@@ -102,7 +103,7 @@
     },
     {
       "name": "vfgrowth",
-      "summary": "Growth pack \u2014 standing IG calendar (CALENDAR.md / LEDGER.md / HANDOFF-he.md) + PREFLIGHT.md quality gate before schedule. Studio books on instagram.com; no Suite / boost / invented \u20aa.",
+      "summary": "Growth pack \u2014 standing IG calendar + PREFLIGHT.md + organic-growth overlay (print.done \u2192 draft reel/story for human post). No Suite / boost / autopost / invented \u20aa.",
       "bcId": "bc-e68393a0",
       "agentUrl": "https://cursor.com/agents/bc-e68393a0",
       "originSlug": "christian-velvet/tmp-0093db8b6deea44f",
@@ -112,7 +113,7 @@
     },
     {
       "name": "vfprod",
-      "summary": "Production pack \u2014 print-floor and job tracking + PRINT-DONE.md (print.done / content.draft_ready handoff). No invented sale \u20aa.",
+      "summary": "Production pack \u2014 print-floor (PRINT-DONE.md, FLEET.json, WATCHTOWER.md Edge dashboard). No Print from HQ. No invented sale \u20aa.",
       "bcId": "bc-cd4a5cde",
       "agentUrl": "https://cursor.com/agents/bc-cd4a5cde",
       "originSlug": "christian-velvet/tmp-c9ca74be9225ac7d",
@@ -132,7 +133,7 @@
     },
     {
       "name": "vfops",
-      "summary": "Operations pack \u2014 office loop (LOOP.json / vfops_loop.py run vs brief vs check) into 07:00 brief + HANDOFF + DAILY-RETRO. No invented \u20aa / Insights.",
+      "summary": "Operations pack \u2014 office loop (vfops_loop.py) + 07:00 brief + Gmail brief CLI (gmail_brief_send.py, disk HTML+CID). No invented \u20aa / Insights.",
       "bcId": "bc-93fbfca6",
       "agentUrl": "https://cursor.com/agents/bc-93fbfca6",
       "originSlug": null,
@@ -182,7 +183,7 @@
     },
     {
       "name": "vfbiz",
-      "summary": "Business pack \u2014 studio strategy and decisions; week pulse in out/week.md (sale price stays X \u20aa until verified).",
+      "summary": "Business pack \u2014 studio strategy; week pulse in out/week.md; B2B line locked (logo/QR/napkins are examples, not closed SKUs). Sale price stays X \u20aa until verified.",
       "bcId": "bc-3921041e",
       "agentUrl": "https://cursor.com/agents/bc-3921041e",
       "originSlug": null,
@@ -345,7 +346,7 @@
     },
     {
       "name": "vfharness",
-      "summary": "Outer harness \u2014 six layers on existing packs. Includes core-stability four axes, send preflight, graduated escalation, verification-before-claim. No second runtime.",
+      "summary": "Outer harness \u2014 six layers on existing packs. Includes core-stability, send preflight, office-manager failover (docs/FAILOVER.md). No second runtime.",
       "bcId": "bc-c6e01d3b",
       "bcIdFull": "bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
       "agentUrl": "https://cursor.com/agents/bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
@@ -411,7 +412,7 @@
     },
     {
       "name": "velvetos",
-      "summary": "VelvetOS Core \u2014 backend kernel; modules always loaded; three-layer SoC (ADR-THREE-LAYERS.md). Frontend scaffolds under instances/.",
+      "summary": "VelvetOS Core \u2014 backend kernel; three-layer SoC; Office Control Plane (office/control-plane.json, vf_control_plane.py). Frontend scaffolds under instances/.",
       "bcId": "bc-f7a22589",
       "bcIdFull": "bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
       "agentUrl": "https://cursor.com/agents/bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
