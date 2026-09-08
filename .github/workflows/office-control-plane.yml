@@ -1,0 +1,29 @@
+name: Office Control Plane
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  control-plane:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Watchdog
+        run: python3 scripts/vf_control_plane.py watchdog
+      - name: Memory hygiene
+        run: python3 scripts/vf_control_plane.py memory-hygiene
+      - name: Gaps
+        run: python3 scripts/vf_control_plane.py gaps
+      - name: Handoff validate
+        run: python3 scripts/vf_control_plane.py handoff
+      - name: Sensor
+        run: python3 scripts/check-office-control-plane.py
+      - name: Fail on control-plane error
+        if: failure()
+        run: echo "::error::Office Control Plane watchdog/sensor failed. See log above." && exit 1

@@ -1,0 +1,21 @@
+{
+  "task_id": "office-control-plane-2026-09-08",
+  "component_state": "Processing",
+  "goal": "Implement VelvetOS Office Control Plane per CURSOR handoff — unify SoT, absorb ChatGPT mechanical tasks",
+  "updatedAt": "2026-09-08T14:00:00+03:00",
+  "latest_observation": "Schema + CLI + sensor + vfops brief integration + GH workflow written. Running check-all.",
+  "artifacts": [
+    "office/control-plane.json",
+    "office/control/",
+    "scripts/vf_control_plane.py",
+    "scripts/check-office-control-plane.py",
+    ".github/workflows/office-control-plane.yml"
+  ],
+  "locks": [
+    "no-second-office-runtime",
+    "no-invented-ils",
+    "no-auto-dm",
+    "scheduling-is-not-publication"
+  ],
+  "next_step": "check-all.py green · commit · PR · refresh HANDOFF"
+}
