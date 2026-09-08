@@ -1,0 +1,74 @@
+{
+  "id": "publication-states",
+  "updatedAt": "2026-09-08",
+  "law": "prepared ≠ approved ≠ scheduled ≠ uploadAccepted ≠ publishRequested ≠ liveVerified",
+  "states": [
+    {
+      "id": "prepared",
+      "he": "מוכן במשרד",
+      "live": false,
+      "note": "טיוטה/חבילה אחרי עריכה. לא בפיד."
+    },
+    {
+      "id": "approved",
+      "he": "מאושר",
+      "live": false,
+      "note": "אישור אדם או versionApproval. לא live."
+    },
+    {
+      "id": "scheduled",
+      "he": "משובץ בלוח",
+      "live": false,
+      "note": "אירוע Calendar / משבצת CALENDAR.md. Calendar ≠ live."
+    },
+    {
+      "id": "uploadAccepted",
+      "he": "העלאה התקבלה",
+      "live": false,
+      "note": "API/כלי קיבל קובץ או container. לא verification."
+    },
+    {
+      "id": "publishRequested",
+      "he": "בקשת פרסום נשלחה",
+      "live": false,
+      "note": "קריאת publish. עדיין לא liveVerified."
+    },
+    {
+      "id": "liveVerified",
+      "he": "חי ומאומת",
+      "live": true,
+      "requires": [
+        "verificationEvidence"
+      ],
+      "note": "רק אחרי אימות אמיתי מהפלטפורמה (media id / permalink / tool verify)."
+    },
+    {
+      "id": "failed",
+      "he": "נכשל",
+      "live": false
+    },
+    {
+      "id": "deadLetter",
+      "he": "dead-letter",
+      "live": false,
+      "note": "אחרי retry+failover בלי פתרון. נשאר ניתן לגילוי."
+    }
+  ],
+  "forbiddenClaims": [
+    "Mark live because upload succeeded",
+    "Mark live because scheduler accepted",
+    "Mark live because calendar event exists",
+    "Mark live because API container created",
+    "Mark live because publish was requested"
+  ],
+  "organicGateMapping": {
+    "draft": "prepared",
+    "quality_checked": "prepared",
+    "policy_checked": "prepared",
+    "pending_human_approval": "prepared",
+    "approved_for_manual_posting": "approved",
+    "posted_manually": "liveVerified",
+    "blocked_policy": "failed",
+    "blocked_no_media": "failed"
+  }
+}

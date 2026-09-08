@@ -1,0 +1,18 @@
+{
+  "task_id": "ig-dm-publication-office-2026-09-08",
+  "updatedAt": "2026-09-08",
+  "component_state": "Idle",
+  "summary": "Implemented PUBLIC_CURRENT_CTA=Instagram DM, publication states, risk/dead-letter, watchdog, feed audit, production→content continuity.",
+  "latest_observation": {
+    "check_all": "33/33",
+    "instagram_status": "needsAuth",
+    "public_cta": "instagram-message",
+    "business_contact": "050-2517000-disabled-for-public-cta",
+    "red_blockers": [
+      "Instagram MCP OAuth / long-lived token (Christian on Mac)",
+      "Meta app email verify for App 1748471159829574",
+      "Owner decision on archive/republish for live posts after live audit"
+    ]
+  },
+  "next_step": "When IG tool ready: healthcheck → mark ready → apply PROFILE-DESIRED → live feed audit"
+}

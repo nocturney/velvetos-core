@@ -1,0 +1,61 @@
+{
+  "id": "instagram-capabilities",
+  "updatedAt": "2026-09-08",
+  "providerPreference": "instagram-api-or-meta-api-via-single-mcp",
+  "notRequired": [
+    "Metricool",
+    "Publer",
+    "Postly",
+    "SimplePost",
+    "Meta Business Suite"
+  ],
+  "statusField": "tools.instagram.status",
+  "currentStatus": "needsAuth",
+  "readyRequires": "real healthcheck — never fake ready",
+  "capabilities": [
+    {
+      "id": "instagram.profile.read",
+      "he": "קריאת פרופיל"
+    },
+    {
+      "id": "instagram.profile.update",
+      "he": "עדכון פרופיל"
+    },
+    {
+      "id": "instagram.media.list",
+      "he": "רשימת מדיה אחרונה"
+    },
+    {
+      "id": "instagram.publish.post",
+      "he": "פרסום תמונה/פוסט"
+    },
+    {
+      "id": "instagram.publish.carousel",
+      "he": "פרסום קרוסלה"
+    },
+    {
+      "id": "instagram.publish.reel",
+      "he": "פרסום ריל/וידאו"
+    },
+    {
+      "id": "instagram.publish.story",
+      "he": "פרסום סטורי"
+    },
+    {
+      "id": "instagram.insights.read",
+      "he": "קריאת Insights מאומתים"
+    },
+    {
+      "id": "instagram.live.verify",
+      "he": "אימות שהפריט חי בפיד"
+    }
+  ],
+  "forbiddenCapabilities": [
+    "send_dm",
+    "get_conversations",
+    "auto-dm",
+    "boost"
+  ],
+  "officeRule": "Office logic binds to capability ids above — not to a single SaaS vendor name. needsAuth ≠ idle office work.",
+  "noInstagramConnectionMeans": "continue media intake, copy, Canva, preflight, queue, calendar candidates, feed audit — do not pretend published"
+}

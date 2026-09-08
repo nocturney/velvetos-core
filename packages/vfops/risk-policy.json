@@ -1,0 +1,77 @@
+{
+  "id": "office-risk-policy",
+  "updatedAt": "2026-09-08",
+  "source": "constitution/RISK.md",
+  "levels": {
+    "GREEN": {
+      "execute": true,
+      "brief": false,
+      "escalate": false,
+      "examples": [
+        "organize-internal-state",
+        "media-intake",
+        "copy-draft",
+        "inspect-media",
+        "preflight",
+        "non-destructive-tracking",
+        "content-candidate",
+        "quality-fix",
+        "safe-read-retry"
+      ]
+    },
+    "YELLOW": {
+      "execute": true,
+      "brief": true,
+      "escalate": false,
+      "examples": [
+        "routine-cleanup",
+        "stale-calendar-metadata-fix",
+        "fallback-provider-used",
+        "ordinary-quality-repair",
+        "revised-creative-after-failed-preflight"
+      ]
+    },
+    "ORANGE": {
+      "execute": false,
+      "prepareOnly": true,
+      "brief": true,
+      "escalate": false,
+      "examples": [
+        "candidate-archive-live-post",
+        "prepared-profile-change",
+        "replace-already-live-content",
+        "material-public-change-hard-rollback",
+        "missing-product-fact"
+      ]
+    },
+    "RED": {
+      "execute": false,
+      "escalate": true,
+      "notifyChristian": true,
+      "onlyWhen": [
+        "required-owner-approval",
+        "purchase",
+        "payment",
+        "price-change-or-unknown-price",
+        "destructive-external-action",
+        "archive-delete-live-requires-owner",
+        "human-only-live-authorization",
+        "malformed-missing-source-of-truth",
+        "sensitive-ambiguity",
+        "unresolved-after-failover",
+        "owner-reserved-action"
+      ],
+      "neverFor": [
+        "weak-metrics",
+        "low-reach",
+        "routine-quality-fixes",
+        "ordinary-tool-outage-with-failover",
+        "normal-content-preparation",
+        "media-intake",
+        "routine-stale-data-repair",
+        "ordinary-copy-decision",
+        "non-destructive-internal-cleanup"
+      ]
+    }
+  }
+}
