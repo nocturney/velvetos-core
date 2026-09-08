@@ -193,6 +193,24 @@ def main() -> None:
     if other_catalogs:
         fail(f"parallel media catalog files: {other_catalogs}")
 
+    for legacy in ("constitution/MEDIA-VAULT.md", "scripts/check-media-vault.py"):
+        if (ROOT / legacy).exists():
+            fail(f"parallel media procedure/sensor: {legacy}")
+    # The merge can be textually clean while routing tools to a second catalog.
+    for relative in (
+        "AGENTS.md", "constitution/CONSTITUTION.md",
+        "packages/vfigos/SKILL.md", "packages/vfigos/SEND.md",
+        "packages/vfops/LOOP.json", ".cursor/vf-desk.json",
+    ):
+        text = (ROOT / relative).read_text(encoding="utf-8")
+        for legacy in ("constitution/MEDIA-VAULT.md", "media-catalog.json", "check-media-vault.py", "needs-appointment"):
+            if legacy in text:
+                fail(f"stale media vault reference in {relative}: {legacy}")
+        if relative != ".cursor/vf-desk.json":
+            for canonical in ("docs/MEDIA-VAULT.md", "packages/vfmedia/catalog.json"):
+                if canonical not in text:
+                    fail(f"missing canonical media vault reference in {relative}: {canonical}")
+
     proc = subprocess.run(
         [sys.executable, str(CLI), "validate"],
         cwd=ROOT,
