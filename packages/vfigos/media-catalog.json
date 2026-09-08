@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "title": "Velvet Media — קטלוג מרכזי אחד",
+  "updatedAt": "2026-09-08T05:42:00Z",
+  "vault": {
+    "rootId": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
+    "rootUrl": "https://drive.google.com/drive/folders/1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
+    "folders": {
+      "inbox": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "source": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "in_progress": "13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a",
+      "approved": "1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib"
+    }
+  },
+  "intakeManager": null,
+  "intakeManagerStatus": "needs-appointment",
+  "intakeManagerNote": "דווח למנהל VelvetOS: נדרש מינוי מנהל קליטה אחד. עד המינוי — אין קליטה אוטומטית נכנס→מקור.",
+  "laws": [
+    "קטלוג אחד בלבד — אל תיצור קטלוג מקביל לכל כלי",
+    "כפילות לפי fileId בלבד — שם זהה אינו הוכחה",
+    "אל תנחש מק״ט / חומר / לקוח / תאריך צילום / ₪",
+    "מיקום בתיקייה אינו אישור לפרסום",
+    "אל תשנה הרשאות שיתוף כדי לעקוף חסימה"
+  ],
+  "driveCapabilitiesVerifiedAt": "2026-09-08T05:39:00Z",
+  "driveCapabilities": {
+    "list": true,
+    "upload_image": true,
+    "download_image": true,
+    "move": true,
+    "copy": true,
+    "download_video": null,
+    "note": "וידאו טרם נבדק — אין דגימת וידאו במאגר"
+  },
+  "items": []
+}

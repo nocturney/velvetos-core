@@ -7,7 +7,7 @@
 ## סדר
 
 1. כיתוב סופי ב־`vfcopy` — CTA וואטסאפ `050-2517000` / איסוף שדרות. לא «שלחו DM». לא ₪ מומצא.
-2. מדיה: Canva (מחובר) או `studio/render.py` / Superdesign.
+2. מדיה: גרסה מאושרת ממאגר המדיה המשותף (`constitution/MEDIA-VAULT.md` · `media-catalog.json`) — תיקיית «מאושר לפרסום» + אישור מתועד. אחרת Canva (מחובר) או `studio/render.py` / Superdesign. קישור שיתוף Drive ≠ הורדה מתאימה; אמת שהכלי מקבל את הקובץ בפועל.
 3. **פריפלייט שליחה** — `python3 scripts/vf_send_preflight.py --gate instagram` (exit `2` = failover מיד). אחר כך **אימות לפני שליחה (validate)** — checklist ב־`vfagents/playbooks/reflection-before-send.md` + וידוא שיש כלי Publish או failover מוכן. לא ממציאים ערוץ שלא מחובר.
 4. **ig-mcp מחובר** (`CONNECT-IG.md`) → HQ מפרסם ב־`publish_media` ל־`@velvets_cloud` → **אימות אחרי שליחה (verify)** — קריאת תוצאת הכלי / id / סטטוס. רק אז `#נשלח-מ-HQ` ב־`QUEUE.md`. אם הכלי החזיר accepted אבל לא confirmed → `#ממתין-ל-כלי-IG`, לא «פורסם».
 5. **אין Publish MCP** → failover באותו תור:

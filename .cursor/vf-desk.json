@@ -45,7 +45,8 @@
     "2026-09-05: Orchestra desks are API keys (vf_gemini.py / vf_chatgpt.py), not gemini.google.com or chatgpt.com in the Cloud browser — that trip Google/OpenAI security alerts. SUBSCRIPTIONS.md. Do not persist cookies. Plus ≠ API.",
     "2026-09-06: Instagram Publish/Insights via jlbadano/ig-mcp — mapped on vfigos/vfmcp (needsAuth until Meta token). CONNECT-IG.md. No auto-DM. Failover Canva+Drive+Gmail.",
     "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
-    "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done."
+    "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done.",
+    "2026-09-08: Shared media vault Velvet Media (Drive) — constitution/MEDIA-VAULT.md + single catalog packages/vfigos/media-catalog.json. Inbox→source→in_progress→approved. One intake manager only (needs appointment). No parallel catalogs. Folder ≠ publish approval. Sensor check-media-vault.py."
   ],
   "studio": {
     "name": "Velvet Factory",

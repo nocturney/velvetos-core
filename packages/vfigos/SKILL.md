@@ -5,6 +5,9 @@
 מקבל חבילה מ־`#vfgrowth`+`#vfcovers`. בודק `#משובץ` `#לא-זז` `#לא-בוסט`.  
 אין אוטו־DM, אין follow-back, אין צפיית סטורי כטריק. אין בוסט בלי ראש צוות.
 
+**מאגר מדיה משותף:** [`constitution/MEDIA-VAULT.md`](../../constitution/MEDIA-VAULT.md) · קטלוג אחד [`media-catalog.json`](media-catalog.json).  
+מדיה נכנסת פעם אחת ל־Drive → נכנס → מקור → בעבודה → מאושר לפרסום. אין קטלוג מקביל. אין קליטה מתחרה בלי מנהל קליטה ממונה.
+
 סדר שליחה: `packages/vfigos/SEND.md` + `constitution/SEND.md`.  
 חיבור Publish/Insights: [`CONNECT-IG.md`](CONNECT-IG.md) (jlbadano/ig-mcp, `needsAuth` עד טוקן).  
 **validate → apply → verify** לפני תג «פורסם».  

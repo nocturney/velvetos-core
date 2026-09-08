@@ -175,7 +175,9 @@
       "consume": "packages/vfigos/CONNECT-IG.md",
       "briefSlot": "06",
       "handoff": "packages/vfigos/HANDOFF-STANDING-he.md",
-      "blocked": "needsAuth · טוקן Meta · סטוריז ב-instagram.com"
+      "mediaVault": "constitution/MEDIA-VAULT.md",
+      "mediaCatalog": "packages/vfigos/media-catalog.json",
+      "blocked": "needsAuth · טוקן Meta · סטוריז ב-instagram.com · intakeManager needs-appointment"
     },
     {
       "id": "vfinsights",
