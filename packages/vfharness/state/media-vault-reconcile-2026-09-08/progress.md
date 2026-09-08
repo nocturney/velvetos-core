@@ -1,3 +1,3 @@
 # Progress
 
-Conflict #130/#131 reconciled on main ownership. Local check-all 28/28 + four negative probes. Merge tip `8f0fe6c` is a descendant of `06ca3bb` (main/#131) and `9e568fe` (#130). Non-force push succeeded. GitHub `VelvetOS Core Sensors / check-all` SUCCESS on tip `3f459f5`. Awaiting required review before merge. No Drive operations.
+#130 squash-merged to main by nocturney at 2026-09-08T06:46:10Z as `4b66515`. Tree keeps #131 procedure/catalog/ownership, attributed #130 Drive capability evidence, and hardened `check-vfmedia` regressions. Post-merge check-all: 28/28. No Drive operations. Checkpoint closed (`done` / `Idle`).
