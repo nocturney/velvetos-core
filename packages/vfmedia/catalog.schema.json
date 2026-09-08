@@ -98,7 +98,33 @@
           "items": { "type": "string" },
           "description": "Provenance URLs the user named (MakerWorld, Drive, print.done). No invented links."
         },
-        "versionApproval": { "$ref": "#/$defs/versionApproval" }
+        "versionApproval": { "$ref": "#/$defs/versionApproval" },
+        "intake": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["phase"],
+          "description": "Auto-intake phases. registered ≠ verified. Visual review is separate and never blocks intake.",
+          "properties": {
+            "phase": { "enum": ["registered", "verified"] },
+            "registeredAt": { "type": ["string", "null"] },
+            "verifiedAt": { "type": ["string", "null"] },
+            "downloadBytes": { "type": ["integer", "null"] },
+            "movedToSourceAt": { "type": ["string", "null"] },
+            "attempts": { "type": "integer", "minimum": 0 },
+            "lastError": { "type": ["string", "null"] }
+          }
+        },
+        "visualReview": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state"],
+          "description": "Optional visual analysis. Does not block intake of an accessible file.",
+          "properties": {
+            "state": { "enum": ["none", "pending", "done"] },
+            "reviewedAt": { "type": ["string", "null"] },
+            "note": { "type": "string" }
+          }
+        }
       }
     }
   }

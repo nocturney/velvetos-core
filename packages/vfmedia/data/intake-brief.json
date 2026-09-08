@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-09-08T14:10:26Z",
+  "slot": "05",
+  "title": "קליטת מדיה",
+  "phases": {
+    "registered_in_catalog": 400,
+    "registered_only": 398,
+    "verified_and_intaken": 2,
+    "visually_reviewed": 0
+  },
+  "runner": {
+    "component_state": "Idle",
+    "lastRunAt": "2026-09-08T14:07:28Z",
+    "lastError": null,
+    "activation_proven": true,
+    "auth": {
+      "ready": true,
+      "detail": "provider=listing"
+    }
+  },
+  "note": "מונים ב־HANDOFF אינם תחליף לאירוע קליטה עמיד · vfmedia.py validate ≠ ניטור"
+}

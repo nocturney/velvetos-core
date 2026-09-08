@@ -1,0 +1,79 @@
+name: VF Media Auto Intake
+
+# Scheduled background intake for Drive inbox → canonical vfmedia catalog.
+# validate (vfmedia.py validate) is NOT this job — it is schema-only.
+# Exit 3 = missing Drive credentials in this runtime (reported, not faked green).
+
+on:
+  schedule:
+    - cron: "15 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      max_files:
+        description: "Max inbox files to process this run"
+        required: false
+        default: "50"
+      register_only:
+        description: "Register into catalog only (skip verify/move)"
+        required: false
+        default: "false"
+
+jobs:
+  media-intake:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Offline selftest (always)
+        run: python3 scripts/vfmedia.py intake selftest
+      - name: Install Drive client (optional)
+        run: pip install --quiet google-api-python-client google-auth || true
+      - name: Run intake against Google Drive
+        id: intake
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_PATH }}
+          VFMEDIA_DRIVE_CREDENTIALS: ${{ secrets.VFMEDIA_DRIVE_CREDENTIALS }}
+          GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
+          VFMEDIA_DRIVE_TOKEN: ${{ secrets.VFMEDIA_DRIVE_TOKEN }}
+        run: |
+          set +e
+          EXTRA=""
+          if [ "${{ github.event.inputs.register_only }}" = "true" ]; then
+            EXTRA="--register-only"
+          fi
+          MAX="${{ github.event.inputs.max_files }}"
+          MAX="${MAX:-50}"
+          python3 scripts/vfmedia.py intake run --provider google --max-files "$MAX" $EXTRA
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          if [ "$code" = "3" ]; then
+            echo "::warning::VF media intake AUTH — Drive credentials missing in Actions runtime. Code+selftest OK; live Drive scan blocked until secrets are set."
+            python3 scripts/vfmedia.py intake status
+            exit 0
+          fi
+          if [ "$code" = "2" ]; then
+            echo "::notice::Overlapping intake run skipped"
+            exit 0
+          fi
+          exit "$code"
+      - name: Sensor slice
+        run: |
+          python3 scripts/check-vfmedia.py
+          python3 scripts/vfmedia.py validate
+      - name: Commit intake state if changed
+        if: steps.intake.outputs.exit_code == '0'
+        run: |
+          if git diff --quiet -- packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json; then
+            echo "No intake artifacts to commit"
+            exit 0
+          fi
+          git config user.name "velvetos-media-intake"
+          git config user.email "noreply@velvetos.local"
+          git add packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json || true
+          git commit -m "vfmedia intake: durable catalog/state from scheduled run" || true
+          git push || echo "::warning::push failed — state remains in Actions log"

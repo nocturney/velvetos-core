@@ -1,0 +1,31 @@
+{
+  "name": "vfmedia-intake-runner",
+  "component_state": "Idle",
+  "updatedAt": "2026-09-08T14:10:26Z",
+  "pagination": {
+    "pageToken": null,
+    "pageSize": 50
+  },
+  "lastRunAt": "2026-09-08T14:07:28Z",
+  "lastSuccessAt": "2026-09-08T14:10:26Z",
+  "lastError": null,
+  "auth": {
+    "ready": true,
+    "detail": "provider=listing"
+  },
+  "stats": {
+    "runs": 1,
+    "registered": 1,
+    "verified": 1,
+    "skipped": 0,
+    "failed": 0,
+    "duplicates": 0
+  },
+  "retries": {},
+  "activation": {
+    "proven": true,
+    "evidence": "provider=listing; actions={'pending_move': 1}",
+    "note": "runner detected and processed new inbox file without manual catalog edit",
+    "provenAt": "2026-09-08T14:07:28Z"
+  }
+}

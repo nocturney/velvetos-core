@@ -20,6 +20,10 @@ LOCK = PACK / "LOCK.md"
 SKILL = PACK / "SKILL.md"
 ORIGIN = PACK / "ORIGIN.md"
 CLI = ROOT / "scripts" / "vfmedia.py"
+INTAKE_MD = PACK / "INTAKE.md"
+INTAKE_STATE = PACK / "state" / "intake-runner.json"
+INTAKE_WORKFLOW = ROOT / ".github" / "workflows" / "vfmedia-intake.yml"
+EVENTS_CATALOG = ROOT / "packages" / "velvetos" / "schema" / "events.catalog.json"
 LOOP = ROOT / "packages" / "vfops" / "LOOP.json"
 MANIFEST = ROOT / "packages" / "manifest.json"
 AGENTS = ROOT / "AGENTS.md"
@@ -88,6 +92,10 @@ def main() -> None:
         SKILL,
         ORIGIN,
         CLI,
+        INTAKE_MD,
+        INTAKE_STATE,
+        INTAKE_WORKFLOW,
+        EVENTS_CATALOG,
         LOOP,
         MANIFEST,
         AGENTS,
@@ -188,6 +196,41 @@ def main() -> None:
 
     if "vfmedia" not in SLOTS.read_text(encoding="utf-8"):
         fail("BRIEF-SLOTS.md must mention vfmedia")
+    slots = SLOTS.read_text(encoding="utf-8")
+    if "intake" not in slots.lower() and "קליטה" not in slots:
+        fail("BRIEF-SLOTS.md must mention media intake phases / intake")
+
+    intake_md = INTAKE_MD.read_text(encoding="utf-8")
+    for needle in (
+        "registered",
+        "verified",
+        "validate",
+        "לא מנגנון ניטור",
+        "intake run",
+        "activation",
+    ):
+        if needle not in intake_md:
+            fail(f"INTAKE.md missing {needle!r}")
+
+    events = json.loads(EVENTS_CATALOG.read_text(encoding="utf-8"))
+    ev_ids = {e.get("id") for e in events.get("events") or []}
+    for need in (
+        "media.intake.registered",
+        "media.intake.verified",
+        "media.intake.failed",
+    ):
+        if need not in ev_ids:
+            fail(f"events.catalog.json missing {need}")
+
+    workflow = INTAKE_WORKFLOW.read_text(encoding="utf-8")
+    if "cron:" not in workflow:
+        fail("vfmedia-intake.yml must declare schedule cron")
+    if "intake run" not in workflow and "intake selftest" not in workflow:
+        fail("vfmedia-intake.yml must run intake")
+    if "validate≠" in workflow or "NOT this job" not in workflow:
+        # require explicit note that validate is not the intake job
+        if "validate" in workflow and "NOT" not in workflow and "not this" not in workflow.lower():
+            fail("workflow must clarify validate is not intake monitoring")
 
     other_catalogs = list((ROOT / "packages").glob("**/media-catalog.json"))
     if other_catalogs:
@@ -220,7 +263,16 @@ def main() -> None:
     if proc.returncode != 0:
         fail(f"vfmedia.py validate: {proc.stderr or proc.stdout}")
 
-    print("OK vfmedia vault+catalog locked (one catalog, no Drive writes)")
+    selftest = subprocess.run(
+        [sys.executable, str(CLI), "intake", "selftest"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if selftest.returncode != 0:
+        fail(f"vfmedia.py intake selftest: {selftest.stderr or selftest.stdout}")
+
+    print("OK vfmedia vault+catalog+intake locked (validate≠monitor; one catalog)")
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ Perplexity הציע אותו חיבור (n8n/Make + ChatGPT) עם **צ׳אטבו
 | 06:15 | תזמורת: ChatGPT **וגם** Gemini **וגם** Perplexity · failover מיד אם כלי נפל | `constitution/ORCHESTRA.md`, `vfresearch/DAILY.md` |
 | 06:15–07:00 | צרכנים יומיים (בלי check-all / בלי G005 אוטומטי) | `python3 scripts/vfops_loop.py run` · אח״כ בריף |
 | **07:00** | **Morning Brief** — עברית, קומפקטי: מה קרה / מה המשרד ביצע / מה מכין / live verify / צינור תוכן / Production→Content / מדיה / Yellow / רק Red אמיתי לבעלים | `python3 scripts/vfops_loop.py brief --write` · `BRIEF.md` · `hq/GATES.md` · `constitution/RISK.md` |
-| **09:00** | **Media Intake** יומי — נכנס → inspect → מקור (תפעול). Upload ≠ approval | `docs/MEDIA-VAULT.md` · `python3 scripts/vfmedia.py validate` |
+| **09:00** | **Media Intake** יומי — נכנס → קטלוג → אימות הורדה → מקור (תפעול / auto-intake). Upload ≠ approval. `validate` ≠ ניטור | `docs/MEDIA-VAULT.md` · `python3 scripts/vfmedia.py intake run` · `intake status` · `validate` רק לסכמה |
 | **10:00** א׳/ג׳/ה׳ | **Content Sprint** — מועמדים, כיתוב, Canva, נגזרות, EDIT-GATE, PREFLIGHT, תור | skill `vf-content-sprint` · `vfgrowth` |
 | **11:00** | **Publish Watch** — 36 שעות הבאות: scheduled≠live, failed, dead-letter, needsAuth | `python3 scripts/vf_office_watchdog.py` · `vfigos/PUBLICATION-STATES.md` |
 | לפני שיבוץ | שער עריכה + פריפלייט — CTA = הודעת Instagram. נכשל-סגור = לא משבצים | `EDIT-GATE.md` · `PREFLIGHT.md` · `PUBLIC_CTA.md` |

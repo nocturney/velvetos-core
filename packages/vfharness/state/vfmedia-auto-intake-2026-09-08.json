@@ -1,0 +1,25 @@
+{
+  "task_id": "vfmedia-auto-intake-2026-09-08",
+  "component_state": "Idle",
+  "updatedAt": "2026-09-08T14:13:00Z",
+  "summary": "Durable auto-intake runner shipped on existing vfmedia catalog. Live proof file detected without manual catalog edit; verified after Drive MCP move.",
+  "phases": {
+    "registered": "catalog row exists",
+    "verified": "download checked + moved to source",
+    "visually_reviewed": "independent; does not block intake"
+  },
+  "activation": {
+    "proven": true,
+    "fileId": "1tMhfYL-7mOjD5AbBGYHrFRlfRnWIg8XE",
+    "name": "VF-INTAKE-PROOF-2026-09-08.txt",
+    "path": "packages/vfmedia/data/intake-events.jsonl"
+  },
+  "schedule": ".github/workflows/vfmedia-intake.yml cron 15 */6 * * *",
+  "runtime_blockers": {
+    "github_actions_drive_auth": "EXIT 3 until GOOGLE_APPLICATION_CREDENTIALS / VFMEDIA_DRIVE_* / GOOGLE_TOKEN secrets are set — code+selftest green without them"
+  },
+  "not_done": [
+    "Do not claim scheduled Actions live Drive scan is green until secrets exist",
+    "Bulk verify of remaining ~398 inbox rows still pending (pagination/retry ready)"
+  ]
+}

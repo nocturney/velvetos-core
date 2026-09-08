@@ -22,6 +22,8 @@ jobs:
         run: python3 scripts/vf_control_plane.py gaps
       - name: Handoff validate
         run: python3 scripts/vf_control_plane.py handoff
+      - name: Media intake status (non-blocking)
+        run: python3 scripts/vfmedia.py intake status || true
       - name: Sensor
         run: python3 scripts/check-office-control-plane.py
       - name: Fail on control-plane error

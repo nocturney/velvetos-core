@@ -181,6 +181,34 @@
       "emits": "office",
       "payloadKeys": ["since"],
       "note": "Ask edge to flush buffer when host is available"
+    },
+    {
+      "id": "media.intake.registered",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["fileId", "catalogId", "phase"],
+      "note": "Row added to canonical vfmedia catalog from inbox scan. Not verified yet. Not visual review."
+    },
+    {
+      "id": "media.intake.verified",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["fileId", "catalogId", "phase", "downloadBytes"],
+      "note": "Download verified + moved inbox→source. Visual review remains independent."
+    },
+    {
+      "id": "media.intake.move_pending",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["fileId", "catalogId", "pending"],
+      "note": "Download verified locally; Drive move awaiting MCP/API apply. Still registered until apply-moves."
+    },
+    {
+      "id": "media.intake.failed",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["fileId", "error", "attempts"],
+      "note": "Durable retry path; do not invent success. Max attempts then stay failed until recovery."
     }
   ]
 }

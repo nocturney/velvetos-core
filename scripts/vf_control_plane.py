@@ -1107,6 +1107,26 @@ def build_handoff() -> dict:
     media_inbox = sum(1 for it in media_items if (it.get("status") or "") == "inbox")
     media_source = sum(1 for it in media_items if (it.get("status") or "") == "source")
     media_total = len(media_items)
+    media_verified = 0
+    media_registered_only = 0
+    media_visual = 0
+    for it in media_items:
+        intake = it.get("intake") or {}
+        phase = intake.get("phase")
+        if phase == "verified" or (it.get("status") == "source" and phase != "registered"):
+            media_verified += 1
+        else:
+            media_registered_only += 1
+        if (it.get("visualReview") or {}).get("state") == "done":
+            media_visual += 1
+    intake_state = load_json(
+        ROOT / "packages" / "vfmedia" / "state" / "intake-runner.json",
+        {},
+    )
+    intake_brief = load_json(
+        ROOT / "packages" / "vfmedia" / "data" / "intake-brief.json",
+        {},
+    )
     surface = owner_surface_items(inbox=inbox, dead={"items": dead})
     degraded = [i for i in issues if i.get("level") in {"red", "orange"}]
     safe = [
@@ -1116,6 +1136,8 @@ def build_handoff() -> dict:
         "python3 scripts/vfops_loop.py brief",
         "python3 scripts/check-all.py",
         "python3 scripts/vfmedia.py validate",
+        "python3 scripts/vfmedia.py intake status",
+        "python3 scripts/vfmedia.py intake selftest",
     ]
     handoff = {
         "updatedAt": now_iso(),
@@ -1141,11 +1163,24 @@ def build_handoff() -> dict:
             "total": media_total,
             "inbox": media_inbox,
             "source": media_source,
-            "note": "upload≠approval · no invented SKU/job association from weak filenames",
+            "registered_only": media_registered_only,
+            "verified_and_intaken": media_verified,
+            "visually_reviewed": media_visual,
+            "intake_runner": {
+                "component_state": (intake_state or {}).get("component_state"),
+                "lastRunAt": (intake_state or {}).get("lastRunAt"),
+                "activation_proven": ((intake_state or {}).get("activation") or {}).get("proven"),
+                "auth": (intake_state or {}).get("auth"),
+            },
+            "intake_brief": intake_brief or None,
+            "note": (
+                "registered ≠ verified ≠ visually_reviewed · "
+                "validate≠monitoring · upload≠approval · no invented SKU/job association"
+            ),
         },
         "next": [
             "הרץ watchdog",
-            "המשך קליטת מדיה נכנס→מקור (בלי association מומצא)",
+            "המשך קליטת מדיה אוטומטית (intake run) — לא רק validate",
             "סגור followups ready_for_finished_content דרך EDIT-GATE+PREFLIGHT",
             "אל תטריד את כריסטיאן על מדדים חלשים",
             "Instagram stays needsAuth until Meta email verify + long-lived token",
@@ -1157,6 +1192,9 @@ def build_handoff() -> dict:
             f"media_catalog_items={media_total}",
             f"media_inbox={media_inbox}",
             f"media_source={media_source}",
+            f"media_verified={media_verified}",
+            f"media_registered_only={media_registered_only}",
+            f"media_visually_reviewed={media_visual}",
         ],
         "authoritative_sources": plane().get("sourcesOfTruth"),
         "tools_degraded": degraded,
@@ -1198,9 +1236,16 @@ def write_handoff_he(handoff: dict) -> None:
     if media:
         lines += [
             "",
-            "## מדיה (קטלוג יחיד)",
+            "## מדיה (פאזות נפרדות · קטלוג יחיד)",
             f"- total=`{media.get('total')}` · inbox=`{media.get('inbox')}` · source=`{media.get('source')}`",
-            f"- {media.get('note') or 'upload≠approval'}",
+            (
+                f"- רשום בלבד=`{media.get('registered_only')}` · "
+                f"אומת ונקלט=`{media.get('verified_and_intaken')}` · "
+                f"נבדק חזותית=`{media.get('visually_reviewed')}`"
+            ),
+            f"- intake=`{((media.get('intake_runner') or {}).get('component_state'))}` · "
+            f"activation=`{((media.get('intake_runner') or {}).get('activation_proven'))}`",
+            f"- {media.get('note') or 'registered ≠ verified ≠ visual · upload≠approval'}",
         ]
     lines += ["", "## מה ממתין"]
     waiting = handoff.get("waiting") or []
