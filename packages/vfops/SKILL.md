@@ -38,4 +38,6 @@
 
 לוח צינור: `hq/PIPELINE-BOARD.md`. משטח פקודות עתידי: `hq/COMMAND-SURFACE.md` + `hq/capabilities.json`.
 
+בריף גדול (HTML+CID): `PYTHONPATH=packages python3 -m vfops.gmail_brief_send --html PATH --images DIR --to EMAIL --subject TEXT`. בלי טוקן → `no token` / יציאה 2. עקיפת MCP: `docs/SEND-BRIEF-MCP.md`.
+
 רתמה: אחרי שרשרת — מה אומת / מה פתוח. סנסור אדום או «אין ספירה» לא הופכים לירוק. הסלמה: `packages/vfharness/templates/escalation.md`. מדריך: `AGENTS.md`.

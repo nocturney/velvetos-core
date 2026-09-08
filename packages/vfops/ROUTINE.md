@@ -50,7 +50,7 @@ Cursor כותב ל־`packages/vfops/data/research.md` (הנתיב שהבריף 0
 - פק יומי/`on-content` שלא הורץ: שורת **פער** בבריף (לא שקט).
 - 31.8 פערי כלים: `vfresearch/sources/2026-08-31-orchestra.md` · מפה `vfmcp/GAP.md`.
 
-HQ שולח את הבריף ב־Gmail `send_message` אל `nocturney@gmail.com`. לא מחכים לגרוק.
+HQ שולח את הבריף אל `nocturney@gmail.com` ב־`python -m vfops.gmail_brief_send` או ב־3 צעדי MCP (`docs/SEND-BRIEF-MCP.md`). לא `LOAD_FROM_FILE`. לא מחכים לגרוק.
 
 ## מה לא נכנס לשגרה
 

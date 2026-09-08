@@ -41,10 +41,10 @@
 
 1. ממלאים JSON בלי ₪ מומצא. אין ספירה אם אין מקור.
 2. `python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.json -o /tmp/brief.html`
-3. Gmail `send_message` אל `nocturney@gmail.com`:
-   - `htmlBody` = הקובץ שנוצר
-   - `body` = טקסט חלופי קצר
-   - כריכות: `attachments` עם `inline: true` ו־`filename` = ה־cid (למשל `G005.jpg`)
+3. שליחה אל `nocturney@gmail.com` — **לא** `htmlBody`+JPEG בארגומנט MCP אחד (~98KB נכשל; `LOAD_FROM_FILE` דולף):
+   - מועדף: `PYTHONPATH=packages python3 -m vfops.gmail_brief_send --html PATH --images DIR --to nocturney@gmail.com --subject TEXT` (`packages/vfops/gmail_brief_send.py`)
+   - MCP: `create_draft(html)` → `update_draft(attachments only)` → `send_message(draftId)` — `docs/SEND-BRIEF-MCP.md`
+   - כריכות: `filename` = ה־cid (למשל `g001.jpg`)
 4. אין `reply` / `forward` / שליחה ללקוח.
 
 תבנית: `MAIL.html`. ממלא: `render_mail.py`. בדיקה: `python3 packages/vfbriefux/render_mail.py --check`.  
