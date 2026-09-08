@@ -5,6 +5,10 @@
 ## מה פעיל עכשיו
 - אין פעיל מחוץ ללולאה הרגילה
 
+## מדיה (קטלוג יחיד)
+- total=`399` · inbox=`398` · source=`1`
+- upload≠approval · no invented SKU/job association from weak filenames
+
 ## מה ממתין
 - אין
 
@@ -16,13 +20,18 @@
 
 ## הבא בתור
 - הרץ watchdog
+- המשך קליטת מדיה נכנס→מקור (בלי association מומצא)
 - סגור followups ready_for_finished_content דרך EDIT-GATE+PREFLIGHT
 - אל תטריד את כריסטיאן על מדדים חלשים
+- Instagram stays needsAuth until Meta email verify + long-lived token
 
 ## מה השתנה היום
 - Office Control Plane מוטמע
 - followups=0
 - dead_letters=0
+- media_catalog_items=399
+- media_inbox=398
+- media_source=1
 
 ## מקורות סמכות
 - **policy:** `constitution/CONSTITUTION.md + constitution/ORCHESTRA.md`
@@ -44,13 +53,15 @@
 - **feed_audit:** `packages/vfgrowth/data/feed-audit.json`
 
 ## כלים מדולדלים
-- orange · suite_language · constitution/ORCHESTRA.md
+- אין חסם קשיח מדווח
 
 ## בטוח להמשך AI הבא
 - `python3 scripts/vf_control_plane.py watchdog`
 - `python3 scripts/vf_control_plane.py followups`
+- `python3 scripts/vf_control_plane.py simulate --scenario failover`
 - `python3 scripts/vfops_loop.py brief`
 - `python3 scripts/check-all.py`
+- `python3 scripts/vfmedia.py validate`
 
 ## אסור לחזור
 - invent ₪ or Insights

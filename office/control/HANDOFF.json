@@ -1,19 +1,31 @@
 {
-  "updatedAt": "2026-09-08T15:17:57+03:00",
+  "updatedAt": "2026-09-08T16:30:43+03:00",
   "date": "2026-09-08",
   "active_now": [],
   "waiting": [],
   "failed": [],
   "owner_blocked": [],
+  "media": {
+    "catalog": "packages/vfmedia/catalog.json",
+    "total": 399,
+    "inbox": 398,
+    "source": 1,
+    "note": "upload≠approval · no invented SKU/job association from weak filenames"
+  },
   "next": [
     "הרץ watchdog",
+    "המשך קליטת מדיה נכנס→מקור (בלי association מומצא)",
     "סגור followups ready_for_finished_content דרך EDIT-GATE+PREFLIGHT",
-    "אל תטריד את כריסטיאן על מדדים חלשים"
+    "אל תטריד את כריסטיאן על מדדים חלשים",
+    "Instagram stays needsAuth until Meta email verify + long-lived token"
   ],
   "changed_today": [
     "Office Control Plane מוטמע",
     "followups=0",
-    "dead_letters=0"
+    "dead_letters=0",
+    "media_catalog_items=399",
+    "media_inbox=398",
+    "media_source=1"
   ],
   "authoritative_sources": {
     "policy": "constitution/CONSTITUTION.md + constitution/ORCHESTRA.md",
@@ -34,19 +46,14 @@
     "profile_desired": "packages/vfigos/PROFILE-DESIRED.json",
     "feed_audit": "packages/vfgrowth/data/feed-audit.json"
   },
-  "tools_degraded": [
-    {
-      "level": "orange",
-      "code": "suite_language",
-      "detail": "constitution/ORCHESTRA.md",
-      "outcome": "PREPARED"
-    }
-  ],
+  "tools_degraded": [],
   "safe_for_next_ai": [
     "python3 scripts/vf_control_plane.py watchdog",
     "python3 scripts/vf_control_plane.py followups",
+    "python3 scripts/vf_control_plane.py simulate --scenario failover",
     "python3 scripts/vfops_loop.py brief",
-    "python3 scripts/check-all.py"
+    "python3 scripts/check-all.py",
+    "python3 scripts/vfmedia.py validate"
   ],
   "must_never_repeat": [
     "invent ₪ or Insights",

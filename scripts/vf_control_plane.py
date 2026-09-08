@@ -695,6 +695,20 @@ def watchdog_issues() -> list[dict]:
                 "outcome": "PREPARED",
             }
         )
+    else:
+        items = cat.get("items") or []
+        inbox_n = sum(1 for it in items if (it.get("status") or "") == "inbox")
+        source_n = sum(1 for it in items if (it.get("status") or "") == "source")
+        if inbox_n:
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "media_inbox_backlog",
+                    "detail": f"catalog inbox={inbox_n} source={source_n} total={len(items)} · intake continues; upload≠approval",
+                    "outcome": "WAITING_EXTERNAL_TOOL",
+                    "internal": True,
+                }
+            )
 
     # Calendar inconsistencies / stale scheduled (lightweight: CALENDAR.md exists)
     if CALENDAR.is_file():
@@ -890,8 +904,23 @@ def watchdog_issues() -> list[dict]:
         text = path.read_text(encoding="utf-8")
         idx = text.find("Meta Business Suite")
         if idx >= 0:
-            window = text[max(0, idx - 40) : idx + 40]
-            if "לא" not in window and "no Suite" not in text.lower():
+            window = text[max(0, idx - 40) : idx + 60]
+            window_l = window.lower()
+            # Prohibition / lock language is OK — do not false-positive locked rows.
+            prohibited_ok = any(
+                tok in window or tok in window_l
+                for tok in (
+                    "לא",
+                    "נעול",
+                    "אסור",
+                    "deny",
+                    "forbidden",
+                    "locked",
+                    "no suite",
+                    "no meta",
+                )
+            )
+            if not prohibited_ok and "no Suite" not in text.lower():
                 issues.append(
                     {
                         "level": "orange",
@@ -1073,13 +1102,20 @@ def build_handoff() -> dict:
     followups = load_json(FOLLOWUPS, {"items": []}).get("items") or []
     dead = load_json(DEAD, {"items": []}).get("items") or []
     inbox = load_json(INBOX, {"buckets": {}})
+    media_cat = load_json(MEDIA_CATALOG, {"items": []})
+    media_items = media_cat.get("items") or []
+    media_inbox = sum(1 for it in media_items if (it.get("status") or "") == "inbox")
+    media_source = sum(1 for it in media_items if (it.get("status") or "") == "source")
+    media_total = len(media_items)
     surface = owner_surface_items(inbox=inbox, dead={"items": dead})
     degraded = [i for i in issues if i.get("level") in {"red", "orange"}]
     safe = [
         "python3 scripts/vf_control_plane.py watchdog",
         "python3 scripts/vf_control_plane.py followups",
+        "python3 scripts/vf_control_plane.py simulate --scenario failover",
         "python3 scripts/vfops_loop.py brief",
         "python3 scripts/check-all.py",
+        "python3 scripts/vfmedia.py validate",
     ]
     handoff = {
         "updatedAt": now_iso(),
@@ -1100,15 +1136,27 @@ def build_handoff() -> dict:
             if d.get("status") in {"open", "unresolved", "failed", None}
         ],
         "owner_blocked": surface,
+        "media": {
+            "catalog": "packages/vfmedia/catalog.json",
+            "total": media_total,
+            "inbox": media_inbox,
+            "source": media_source,
+            "note": "upload≠approval · no invented SKU/job association from weak filenames",
+        },
         "next": [
             "הרץ watchdog",
+            "המשך קליטת מדיה נכנס→מקור (בלי association מומצא)",
             "סגור followups ready_for_finished_content דרך EDIT-GATE+PREFLIGHT",
             "אל תטריד את כריסטיאן על מדדים חלשים",
+            "Instagram stays needsAuth until Meta email verify + long-lived token",
         ],
         "changed_today": [
             "Office Control Plane מוטמע",
             f"followups={len(followups)}",
             f"dead_letters={len(dead)}",
+            f"media_catalog_items={media_total}",
+            f"media_inbox={media_inbox}",
+            f"media_source={media_source}",
         ],
         "authoritative_sources": plane().get("sourcesOfTruth"),
         "tools_degraded": degraded,
@@ -1146,6 +1194,14 @@ def write_handoff_he(handoff: dict) -> None:
     ]
     active = handoff.get("active_now") or []
     lines.append("- " + (", ".join(active) if active else "אין פעיל מחוץ ללולאה הרגילה"))
+    media = handoff.get("media") or {}
+    if media:
+        lines += [
+            "",
+            "## מדיה (קטלוג יחיד)",
+            f"- total=`{media.get('total')}` · inbox=`{media.get('inbox')}` · source=`{media.get('source')}`",
+            f"- {media.get('note') or 'upload≠approval'}",
+        ]
     lines += ["", "## מה ממתין"]
     waiting = handoff.get("waiting") or []
     if not waiting:
@@ -1375,6 +1431,20 @@ def cmd_simulate(args: argparse.Namespace) -> int:
         risks = ["invented correlation_id", "treating schedule as live publish"]
         gates = ["PREFLIGHT", "EDIT-GATE", "human post verification"]
         rollback = ["revert followups.json item state", "git checkout followups.json"]
+    elif scenario in {"failover", "manager_failover", "office_failover"}:
+        predicted = [
+            "Manager B reads docs/FAILOVER.md + office/control/HANDOFF.json",
+            "resume from authoritative_sources only (no new SoT)",
+            "run: vf_control_plane.py status|watchdog|followups|brief-summary",
+            "continue WIP/media/approvals from existing queues",
+        ]
+        risks = [
+            "building a parallel handoff/vault",
+            "inventing ₪ / Insights / liveVerified",
+            "idling on needsAuth instead of failover artifact",
+        ]
+        gates = ["read HANDOFF.json + POLICY.md before mutations"]
+        rollback = ["n/a read-only simulation — real handoff refresh via `handoff` cmd"]
     elif scenario in {"dead_letter", "dead"}:
         predicted = ["append dead-letter.json item", "owner_required only when appropriate"]
         risks = ["silent drop", "owner spam on green failures"]
