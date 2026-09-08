@@ -17,7 +17,7 @@
     "github-ci-passed-on-tip",
     "pr-130-merged-to-main"
   ],
-  "next_step": null,
+  "next_step": "",
   "artifacts": [
     "docs/MEDIA-VAULT.md",
     "scripts/check-vfmedia.py",
