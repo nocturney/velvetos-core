@@ -300,3 +300,4 @@ GrokBot: הפעלת משרד + דיווח התנהגות.
 | 2026-09-07T14:02Z | nocturney | [#105](https://github.com/nocturney/velvetos-core/pull/105) **MERGED** (`cb4dd02`) — ready_for_review → merged |
 | 2026-09-07T14:04Z | Cursor | ACK לוח: `SWC-001` done; main=`cb4dd02`; GrokBot נשאר @ `0292d0e` בלי pull; אין PRs פתוחים ב־core |
 | 2026-09-08T05:40Z | Cursor | כספת מדיה נעולה: `docs/MEDIA-VAULT.md` + `packages/vfmedia` (קטלוג אחד). תפעול=קליטה; GrokBot=Drive MCP; Cursor=סכמה. בלי שינוי שיתוף Drive |
+| 2026-09-08T05:50Z | Cursor | #131 rebase/merge על `main` אחרי #129: נשמרים MEDIA-VAULT + סכמת vfmedia + בעלות SWC; CHANGELOG משאיר גם את בריף Gmail CLI. בלי שינוי שיתוף Drive |
