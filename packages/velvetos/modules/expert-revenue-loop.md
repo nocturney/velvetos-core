@@ -18,10 +18,10 @@ Playbook: `packages/vfgrowth/experts/REVENUE-LOOP.md`. Weekly pulse: `packages/v
 
 ## Laws
 
-- CTA: WhatsApp `050-2517000` / איסוף — not DM
+- CTA: Instagram message (`PUBLIC_CURRENT_CTA`) · איסוף — not WhatsApp phone as public CTA; not auto-DM
 - ₪ only from verified source — else `X ₪`
 - Insights only from snapshot — else «אין ספירה»
-- WhatsApp send stays human; Gmail follow-up via tools allowed
+- BUSINESS_CONTACT_RECORD WhatsApp send stays human / integration only; Gmail follow-up via tools allowed
 - Boost / paid social: `gate: lead` only
 
 Always present in core. An instance enables it via `modulesEnabled`.

@@ -1,5 +1,6 @@
 VF-G004 Instagram Stories — locked on-image copy
 Growth + CoS 2026-09-07 · @velvets_cloud · do not publish from this job
+PUBLIC_CTA 8.9.2026: caption CTA = Instagram message; on-image WA = revised-media needed
 
 Frame 1 (LOCKED)
 On-image: מחזיק טבעות לזמן אימון
@@ -16,9 +17,11 @@ Frame 3 (VOICE סיפור-מוצר)
 למי שמתאמנת
 ולא רוצה לחפש טבעות על המזרן
 
-Frame 4 (LOCKED)
-On-image ONLY: וואטסאפ 050-2517000
-No DM. No ₪. No pickup / highlights / handle on-image.
+Frame 4 (HISTORICAL · revised-media needed)
+On-image WAS: וואטסאפ 050-2517000
+Do not schedule this frame until Canva replaces on-image WA with Instagram-message CTA (or strip phone).
+No auto-DM. No ₪. No pickup / highlights / handle on-image until revised.
 
-Caption stays in packages/vfcopy/G004.md (סיפור-מוצר). Price remains X ₪ until the lead seat.
-CTA for humans: WhatsApp 050-2517000 / איסוף שדרות.
+Caption stays in packages/vfcopy/G004-STORIES-FIX.md (סיפור-מוצר). Price remains X ₪ until the lead seat.
+Human CTA (caption / paste): לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם · איסוף שדרות.
+BUSINESS_CONTACT_RECORD 050-2517000 = disabled for public CTA.

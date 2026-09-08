@@ -13,7 +13,7 @@ VELVET ORGANIC GROWTH BRIEF — 07:00
 נושא: {reel_topic}
 Asset: {asset_or_חסר}
 Hook: {hook_or_חסר}
-CTA: לפנייה אנושית בוואטסאפ: 050-2517000
+CTA: לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם
 גיאוטג: {geotag_or_חסר}
 סט האשטגים: {hashtag_set_id}
 פעולה: [אישור] [עריכה] [דחייה]

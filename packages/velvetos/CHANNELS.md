@@ -25,7 +25,7 @@ VelvetOS תומך ב־**יותר מחשבון Instagram אחד** לכל tenant. 
 3. Canva / `vfigos` / `vfcanva` עובדים מול `handle` של הערוץ שנבחר בבריף.
 4. בלי Publish MCP — אותו failover (`SEND.md`) לכל ערוץ; לא לטעון שפורסם.
 5. אוטו־DM ובוסט אסורים בכל הערוצים.
-6. CTA מגיע מה־tenant — לא «שלחו DM».
+6. CTA מגיע מה־tenant (`PUBLIC_CURRENT_CTA`) — הודעת Instagram לתוכן ציבורי. לא וואטסאפ בכיתוב. לא אוטו־DM / «שלחו DM».
 
 ## דוגמת יופי (טיוטה)
 

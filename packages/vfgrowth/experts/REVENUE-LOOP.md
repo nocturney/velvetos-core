@@ -35,7 +35,7 @@ retention                @customer-success-manager
 |---|---|
 | מק״ט / שירות | `#vfsku` או תיאור מדויק |
 | מחיר | מאומת או `X ₪` |
-| CTA | וואטסאפ `050-2517000` / איסוף |
+| CTA | שלחו לנו הודעה כאן באינסטגרם / איסוף (`PUBLIC_CURRENT_CTA`) |
 | ig_post_ref | מזהה/תאריך לכרטיס pipeline |
 | proof | תמונה מהרצפה |
 
@@ -71,5 +71,5 @@ retention                @customer-success-manager
 
 ## אסור
 
-- אוטו-DM · בוסט בלי lead · ₪ / Insights מומצאים · «שלחו DM»
+- אוטו-DM · בוסט בלי lead · ₪ / Insights מומצאים · וואטסאפ / `050-2517000` כ־CTA ציבורי · «שלחו DM» ככלי
 - לסמן המרה ודאית רק כי הגיעה הודעת וואטסאפ (`ATTRIBUTION.md`)
