@@ -175,6 +175,8 @@
       "consume": "packages/vfigos/CONNECT-IG.md",
       "briefSlot": "06",
       "handoff": "packages/vfigos/HANDOFF-STANDING-he.md",
+      "mediaVault": "docs/MEDIA-VAULT.md",
+      "mediaCatalog": "packages/vfmedia/catalog.json",
       "blocked": "needsAuth · טוקן Meta · סטוריז ב-instagram.com"
     },
     {
