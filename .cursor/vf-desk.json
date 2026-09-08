@@ -1,7 +1,7 @@
 {
   "name": "velvet-factory-desk",
   "title": "VelvetOS Core desk — reference bind Velvet Factory",
-  "updatedAt": "2026-09-07",
+  "updatedAt": "2026-09-08",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
   "product": "VelvetOS",
@@ -45,7 +45,8 @@
     "2026-09-05: Orchestra desks are API keys (vf_gemini.py / vf_chatgpt.py), not gemini.google.com or chatgpt.com in the Cloud browser — that trip Google/OpenAI security alerts. SUBSCRIPTIONS.md. Do not persist cookies. Plus ≠ API.",
     "2026-09-06: Instagram Publish/Insights via jlbadano/ig-mcp — mapped on vfigos/vfmcp (needsAuth until Meta token). CONNECT-IG.md. No auto-DM. Failover Canva+Drive+Gmail.",
     "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
-    "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done."
+    "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done.",
+    "2026-09-08: Shared media vault locked by Christian — Drive Velvet Media (root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv). One catalog packages/vfmedia. תפעול owns intake נכנס→מקור. GrokBot uses Drive MCP. Cursor owns catalog schema. Upload ≠ approval. Approved folder alone ≠ approval proof. No share-permission changes. No invented SKUs or ₪."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -110,7 +111,8 @@
     "drive": {
       "status": "ready",
       "mode": "search-and-create",
-      "note": "Search by job/SKU. Create office docs/sheets with create_file when needed. Do not open personal, medical, or legal folders unless the user names them.",
+      "note": "Search by job/SKU. Create office docs/sheets with create_file when needed. Do not open personal, medical, or legal folders unless the user names them. Shared media vault (locked 2026-09-08): root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv — inbox 1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ · source 1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6 · in-progress 13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a · approved 1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib. Catalog is packages/vfmedia only. Do not change sharing. Do not delete vault files.",
+      "mediaVaultRootId": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
       "failover": "Use files/names the user gave in chat; still create a new office doc if the job needs one"
     },
     "superdesign": {
@@ -369,7 +371,8 @@
       "packs": [
         "vfcost",
         "vfbooks",
-        "vfbiz"
+        "vfbiz",
+        "vfmedia"
       ],
       "specialists": [
         "pricing-analyst",
@@ -417,7 +420,8 @@
         "vfops",
         "vfharness",
         "vfmem",
-        "velvetos"
+        "velvetos",
+        "vfmedia"
       ],
       "tools": [
         "calendar",

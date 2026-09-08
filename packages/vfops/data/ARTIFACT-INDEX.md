@@ -34,6 +34,7 @@
 | עלות חומר | `vfcost/FILAMENTS.json` + `CARDS.json` | תפעול אחרי סלייס + ILS/kg מאומת | בריף 02 (`vfcost.py brief`) |
 | לולאת משרד | `vfops/LOOP.json` + `hq/STATUS-he.md` | `vfops_loop.py brief` | בריף 01–07 + HANDOFF + סטטוס עברית |
 | חנות מחר | `vfprod/SHOP-CLOSE.md` | ייצור בסוף יום | `vfsku.py shop` + בריף 03 |
+| כספת מדיה | `vfmedia/catalog.json` + Drive `Velvet Media` (ארבע תיקיות נעולות) | תפעול קולט; GrokBot Drive MCP; Cursor סכמה | `vfmedia.py validate` · בריף 05 · `docs/MEDIA-VAULT.md` |
 | מסמכי עבודה | Drive `create_file` | כל מושב | חיפוש לפי job/SKU |
 | מייל שנשלח | Gmail (thread id) | HQ send | vfconvert / מעקב |
 | בריף htmlBody | `vfops/out/BRIEF-YYYY-MM-DD.html` | אחרי `send_message` | Grok / Cloud / GitHub — לא `/opt/cursor/artifacts` |

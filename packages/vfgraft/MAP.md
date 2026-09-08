@@ -52,6 +52,7 @@ command-surface system       capabilities + pipeline board + portlets (future UI
 | best-skills / skills.sh leaderboard (every 2 days) | [[packs]] → `vfresearch/BEST-SKILLS.md` + `BEST-SKILLS.json` → [[laws]] |
 | last 30 days / מחקר קהילה / what people say | [[packs]] → `vfresearch/hq/LAST30.md` + skill `vf-last30` → `@research-synthesist` / `@trend-researcher` → [[laws]] |
 | office console / CRM-ERP inspiration / command surface | [[blast]] → `vfops/hq/COMMAND-SURFACE.md` → `docs/OFFICE-OS-EMBED-he.md` → [[laws]] |
+| כספת מדיה / media vault / נכנס→מקור | `docs/MEDIA-VAULT.md` + `packages/vfmedia/CATALOG.md` → תפעול intake → [[tools]] (Drive) → [[laws]] |
 
 ## Hubs
 

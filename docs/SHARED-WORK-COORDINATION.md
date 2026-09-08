@@ -5,7 +5,7 @@
 | שדה | ערך |
 |---|---|
 | נוצר | 2026-09-07 |
-| מעודכן | 2026-09-07T14:04Z |
+| מעודכן | 2026-09-08T05:40Z |
 | מנהל מיזוגים | Cursor (בלעדי במסגרת העבודה המשותפת) |
 | סטטוס רשומה | פעילה · **#105 MERGED** (`cb4dd02`) · GrokBot אושר · Codex שלב א׳ ממוזג ב־#108 · Cursor #109–#114 ממוזגים |
 | Issue ב־GitHub | **לא נוצר** — `nocturney/velvetos-core` עם `has_issues=false`. גוף מוכן להעתקה בסעיף [Issue body](#issue-body-copy-when-enabled) |
@@ -34,7 +34,17 @@
 |---|---|
 | **Cursor** | מרכז תיאום, אינטגרציה, **מיזוגים בלבד** במסגרת העבודה המשותפת |
 | **ChatGPT/Codex** | תשתית משימות, מצב ביצוע, בריף, בדיקות התנהגות/איכות |
-| **GrokBot** | הפעלת משרד, תוצרים, דיווח התנהגות בפועל — לפי הרשאות קיימות |
+| **GrokBot** | הפעלת משרד, תוצרים, דיווח התנהגות בפועל — לפי הרשאות קיימות · **כספת מדיה:** Drive MCP על ארבע התיקיות הנעולות |
+
+### כספת מדיה (נעול Christian · 8.9.2026)
+
+| גורם | בעלות |
+|---|---|
+| **תפעול** | קליטה: נכנס → מקור. לא מאשר פרסום מההעלאה |
+| **Cursor** | סכמת הקטלוג היחיד (`packages/vfmedia/catalog.schema.json`) + חיישן |
+| **GrokBot** | עבודה על קבצים דרך **Drive MCP** — לא קטלוג שני, לא שינוי הרשאות שיתוף |
+
+נוהל: `docs/MEDIA-VAULT.md`. קטלוג אחד. העלאה ≠ אישור. תיקיית «מאושר לפרסום» לבד ≠ הוכחת אישור. לא מוחקים קבצים. לא ממציאים ₪ / מק״ט.
 
 כל משימת מימוש דורשת **בעלות מפורשת + תיחום קבצים** לפני תחילה.
 
@@ -125,6 +135,7 @@ Checkpoints תחת `packages/vfharness/state/*2026-09-07*.json` — רובם `do
 | `SWC-CURSOR-TEMPLATES` | Cursor | חיבור תבניות Intake/SLA/דוח | core | `cursor/office-templates-wiring-c62b` | office/clients + vf_office_report | בלי PII בגיט | fixtures מסומנים | **done · merged #114** | [#114](https://github.com/nocturney/velvetos-core/pull/114) |
 | `SWC-VF-003` | לא ידוע (סוכן ישן) | סנכרון desk instance ל־Grok-primary | velvet-factory | `cursor/align-grok-constitution-f6b2` | `.cursor/vf-desk.json`, `AGENTS.md` | תלוי ביישור constitution ב־core (היסטורי) | סקירה + החלטה lead / Cursor | **open-draft — שמור** | [VF#3](https://github.com/nocturney/velvetos-velvet-factory/pull/3) |
 | `SWC-IDLE-*` | Cursor (היסטורי) | משימות 7.9 שמוזגו | core | ענפי `cursor/*` אחרי מיזוג | ראו #100–#104 | — | ממוזג ל־main | **merged — לא לגעת בענפים** | #100–#104 |
+| `SWC-MEDIA-VAULT` | Cursor | נעילת כספת מדיה + קטלוג יחיד `vfmedia` | core | `cursor/media-vault-da7e` | `docs/MEDIA-VAULT.md`, `packages/vfmedia/*` | אין שינוי Drive sharing | נוהל + סכמה + סנסור ירוק | **running** · 2026-09-08 | — |
 
 ### סדר מיזוג (Cursor embed-fix) — סגור 2026-09-07
 
@@ -288,3 +299,4 @@ GrokBot: הפעלת משרד + דיווח התנהגות.
 | 2026-09-07 ~13:00–13:11Z | Cursor/nocturney | #109–#114 ממוזגים (vfcopy / retro / vfops / research / quality / templates) |
 | 2026-09-07T14:02Z | nocturney | [#105](https://github.com/nocturney/velvetos-core/pull/105) **MERGED** (`cb4dd02`) — ready_for_review → merged |
 | 2026-09-07T14:04Z | Cursor | ACK לוח: `SWC-001` done; main=`cb4dd02`; GrokBot נשאר @ `0292d0e` בלי pull; אין PRs פתוחים ב־core |
+| 2026-09-08T05:40Z | Cursor | כספת מדיה נעולה: `docs/MEDIA-VAULT.md` + `packages/vfmedia` (קטלוג אחד). תפעול=קליטה; GrokBot=Drive MCP; Cursor=סכמה. בלי שינוי שיתוף Drive |

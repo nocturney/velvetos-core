@@ -1,7 +1,7 @@
 {
   "name": "vfops-loop",
   "title": "לולאת משרד — כל פק נצרך",
-  "updatedAt": "2026-09-07",
+  "updatedAt": "2026-09-08",
   "rule": "Every packages/ folder has a consume step. Catalog without consume is a fail. No invented ₪ or Insights. No live IG publish from this loop.",
   "cli": "python3 scripts/vfops_loop.py",
   "briefCli": "python3 scripts/vfops_loop.py brief",
@@ -194,6 +194,15 @@
       "briefSlot": "07",
       "handoff": "packages/vfmakers/crews/cash-pulse.md",
       "blocked": null
+    },
+    {
+      "id": "vfmedia",
+      "kind": "working-cli",
+      "cadence": "on-intake",
+      "consume": "python3 scripts/vfmedia.py validate",
+      "briefSlot": "05",
+      "handoff": "docs/MEDIA-VAULT.md",
+      "blocked": "העלאה ≠ אישור · תיקיית מאושר ≠ הוכחת אישור"
     },
     {
       "id": "vfmcp",
@@ -535,6 +544,12 @@
       "path": "packages/vfgrowth/ORGANIC-GROWTH.md",
       "cadence": "daily-07:00",
       "consume": "packages/vfgrowth/GATE.md"
+    },
+    {
+      "id": "media-vault",
+      "path": "docs/MEDIA-VAULT.md",
+      "cadence": "on-intake",
+      "consume": "python3 scripts/vfmedia.py validate"
     }
   ]
 }

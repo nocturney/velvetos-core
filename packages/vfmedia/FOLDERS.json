@@ -1,0 +1,48 @@
+{
+  "name": "vfmedia-folders",
+  "title": "VelvetOS shared media vault — locked Drive folders",
+  "lockedAt": "2026-09-08",
+  "lockedBy": "Christian",
+  "sharePermissionChanges": "forbidden",
+  "deleteFiles": "forbidden",
+  "root": {
+    "id": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
+    "title": "Velvet Media",
+    "url": "https://drive.google.com/drive/folders/1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv"
+  },
+  "stages": [
+    {
+      "status": "inbox",
+      "he": "נכנס",
+      "title": "01 - נכנס",
+      "id": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "url": "https://drive.google.com/drive/folders/1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "owner": "intake-upload"
+    },
+    {
+      "status": "source",
+      "he": "מקור",
+      "title": "02 - מקור",
+      "id": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "url": "https://drive.google.com/drive/folders/1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "owner": "ops-intake"
+    },
+    {
+      "status": "in_progress",
+      "he": "בעבודה",
+      "title": "03 - בעבודה",
+      "id": "13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a",
+      "url": "https://drive.google.com/drive/folders/13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a",
+      "owner": "studio-growth"
+    },
+    {
+      "status": "approved",
+      "he": "מאושר לפרסום",
+      "title": "04 - מאושר לפרסום",
+      "id": "1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib",
+      "url": "https://drive.google.com/drive/folders/1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib",
+      "owner": "lead-version-approval",
+      "note": "Folder placement alone is not version-approval proof"
+    }
+  ]
+}

@@ -95,6 +95,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready + Gemini/ChatGPT API desks (`vf_gemini.py` / `vf_chatgpt.py`; not aliargun / RLabs; no Cloud browser login) |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
 | `scripts/check-velvetos.py` | VelvetOS Core + modules; VF frontend scaffold under instances/; backend≠frontend; B2B examples ≠ closed three-SKU catalog |
+| `scripts/check-vfmedia.py` | Shared media vault — one catalog, locked Drive folder IDs, upload≠approve, approved folder ≠ proof, no invented SKUs/₪, no share-permission changes |
 
 Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
 
