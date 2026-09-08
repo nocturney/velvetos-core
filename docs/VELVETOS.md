@@ -26,6 +26,8 @@
 3. במופע: `./scripts/attach-core.sh`  
 4. פתח את ריפו המופע ב־Cursor לניהול היומי  
 
+Failover מנהל משרד (כש־ChatGPT אינו זמין): [`docs/FAILOVER.md`](FAILOVER.md). 
+
 ## CLI
 
 ```bash

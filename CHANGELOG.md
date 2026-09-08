@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-08 — **Failover מנהל משרד:** `docs/FAILOVER.md` — מעבר זמני מבוקר ChatGPT → Perplexity / Gemini / Grok / Cursor. מקור אמת + דוח השתלטות + בריף לבעלים + שרשרת תהליך→מוגמר על LEDGER/PRINT-DONE הקיימים. ממוזג עם GROK-FAILOVER / ORCHESTRA / handoff template / SWC — בלי מערכת כפולה. קישורי כניסה מ־README · AGENTS · constitution · harness. Office-manager failover protocol; read existing state; no second runtime.
+
 - 2026-09-08 — **סגירת רישום מיזוג המדיה #130:** checkpoint תקין (`done` / `Idle`), SHA המיזוג ל־main ובדיקות 28/28 אחרי המיזוג; הוסרה המתנה מיושנת מרשומת התיאום ותוכנית המשימה. Correct post-merge tracking only; no media/runtime changes.
 
 - 2026-09-08 — **איחוד #130 עם #131:** נשמרים נוהל `docs/MEDIA-VAULT.md`, קטלוג `packages/vfmedia/catalog.json` ותפעול כבעל קליטה. תיעוד יכולות Drive מ־#130 נשמר כראיה היסטורית מיוחסת; אין קטלוג/נוהל/חיישן מקבילים. נוספו הפניות קנוניות ובדיקת רגרסיה להפניות ישנות. Reconcile media-vault merge; preserve scoped capability evidence and main ownership.

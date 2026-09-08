@@ -5,14 +5,17 @@
 | שדה | ערך |
 |---|---|
 | נוצר | 2026-09-07 |
-| מעודכן | 2026-09-08T05:40Z |
+| מעודכן | 2026-09-08T11:20Z |
 | מנהל מיזוגים | Cursor (בלעדי במסגרת העבודה המשותפת) |
 | סטטוס רשומה | פעילה · **#105 MERGED** (`cb4dd02`) · GrokBot אושר · Codex שלב א׳ ממוזג ב־#108 · Cursor #109–#114 ממוזגים |
 | Issue ב־GitHub | **לא נוצר** — `nocturney/velvetos-core` עם `has_issues=false`. גוף מוכן להעתקה בסעיף [Issue body](#issue-body-copy-when-enabled) |
 | מקור רישום GrokBot | [הערה ב־#105](https://github.com/nocturney/velvetos-core/pull/105#issuecomment-5566167914) · 2026-09-07 ~09:40 Asia/Jerusalem |
 | מקור ACK Codex | סקירת head `6610a70` + תיחום `SWC-CODEX-001` שלב א׳ · 2026-09-07 (ChatGPT Work / Linux) |
+| Failover מנהל משרד | [`docs/FAILOVER.md`](FAILOVER.md) — ChatGPT → Perplexity / Gemini / Grok / Cursor · לא בונים מערכת מחדש |
 
 זו **לא** מערכת ניהול משימות נוספת. אין runtime שני. Cursor נשאר המשרד; המסמך הזה הוא לוח בעלות ותיחום בלבד.
+
+**כשמנהל ראשי אינו זמין:** קרא [`docs/FAILOVER.md`](FAILOVER.md) לפני פעולה — דוח השתלטות, המשך מה־state החי, ועדכון לוח זה בחזרה למנהל הראשי.
 
 ---
 
@@ -303,3 +306,4 @@ GrokBot: הפעלת משרד + דיווח התנהגות.
 | 2026-09-07T14:04Z | Cursor | ACK לוח: `SWC-001` done; main=`cb4dd02`; GrokBot נשאר @ `0292d0e` בלי pull; אין PRs פתוחים ב־core |
 | 2026-09-08T05:40Z | Cursor | כספת מדיה נעולה: `docs/MEDIA-VAULT.md` + `packages/vfmedia` (קטלוג אחד). תפעול=קליטה; GrokBot=Drive MCP; Cursor=סכמה. בלי שינוי שיתוף Drive |
 | 2026-09-08T05:50Z | Cursor | #131 rebase/merge על `main` אחרי #129: נשמרים MEDIA-VAULT + סכמת vfmedia + בעלות SWC; CHANGELOG משאיר גם את בריף Gmail CLI. בלי שינוי שיתוף Drive |
+| 2026-09-08T11:20Z | Cursor | נוהל Failover מנהל משרד: `docs/FAILOVER.md` (ChatGPT→Perplexity/Gemini/Grok/Cursor). מיזוג עם GROK-FAILOVER / ORCHESTRA / handoff template — בלי מערכת כפולה |
