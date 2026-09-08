@@ -23,9 +23,11 @@
 - טקסט מודבק על הקובץ הגולמי בלי Canva / compose / render
 - קישור Canva מומצא
 - סצנת רצפה שלא נמסרה
-- ₪ בפריים · «שלחו DM»
+- ₪ בפריים · וואטסאפ / `050-2517000` / `wa.me` כ־CTA ציבורי · אוטו־DM
 - **סטוריז או פיד** בלי `edit_url` מ-Canva MCP או PNG מ-`vfcovers` / `vfcanva`
 - סטוריז מוצר במצב תהליך-קצר / הוק מגבלה («לא משקולת», «בלי משלוח»)
+- מדיה AI / נגזרת מהותית בלי metadata להצהרת פלטפורמה כשנדרש
+- שיבוץ בלי `versionApproval` כשיש פריט כספת · או claim live בלי אימות
 
 גלם בתיבת Grok (G004) = חומר גלם. אחרי שער העריכה **ואחרי** `preflight/G004.md` עבור — ורק אז — שיבוץ instagram.com / Calendar.  
 סטוריז G004: `packages/vfcopy/G004-STORIES-FIX.md` + `STORIES.md`.

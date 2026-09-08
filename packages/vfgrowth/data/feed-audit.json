@@ -1,0 +1,82 @@
+{
+  "updatedAt": "2026-09-08",
+  "handle": "@velvets_cloud",
+  "qualityBaseline": {
+    "posts": ["G001", "G002"],
+    "note": "First two posts are the preferred quality reference. Do not copy 1:1."
+  },
+  "g004Identity": {
+    "id": "G004",
+    "canonicalHe": "מחזיק טבעות לזמן אימון",
+    "forbiddenRelabels": ["משקולת כושר", "kettlebell workout weight"],
+    "publicationClaim": "scheduledCandidate — calendar alone is not live"
+  },
+  "access": "awaiting-live-audit",
+  "items": [
+    {
+      "ordinal": 1,
+      "contentId": "G001",
+      "shortcodeHint": "DcqkjOLlYVX",
+      "type": "feed",
+      "classification": "QUALITY_REFERENCE",
+      "recommendedAction": "KEEP",
+      "risk": "GREEN",
+      "ctaCompliance": "baseline",
+      "whatsappLeakage": "unknown-until-live-audit",
+      "editableInPlace": null,
+      "notes": "Quality reference — pace, simplicity, real photo feel."
+    },
+    {
+      "ordinal": 2,
+      "contentId": "G002",
+      "shortcodeHint": "DcvuJLxCJgU",
+      "type": "feed",
+      "classification": "QUALITY_REFERENCE",
+      "recommendedAction": "KEEP",
+      "risk": "GREEN",
+      "ctaCompliance": "baseline",
+      "whatsappLeakage": "unknown-until-live-audit",
+      "editableInPlace": null,
+      "notes": "Quality reference."
+    },
+    {
+      "ordinal": 3,
+      "contentId": "G003",
+      "type": "feed",
+      "classification": "REVIEW_REQUIRED",
+      "recommendedAction": "EDIT_CAPTION",
+      "risk": "ORANGE",
+      "ctaCompliance": "check-for-whatsapp",
+      "whatsappLeakage": "likely-in-templates",
+      "editableInPlace": true,
+      "preparedReplacement": null,
+      "notes": "Review required from post #3 onward per owner judgment."
+    },
+    {
+      "ordinal": 4,
+      "contentId": "G004",
+      "type": "stories-and-feed-candidates",
+      "classification": "REVIEW_REQUIRED",
+      "recommendedAction": "PREPARE_REVISED_VERSION",
+      "risk": "ORANGE",
+      "ctaCompliance": "whatsapp-on-frame-known",
+      "whatsappLeakage": "on-image-and-caption-in-repo-artifacts",
+      "editableInPlace": false,
+      "identity": "מחזיק טבעות לזמן אימון",
+      "preparedReplacement": "revised-media-ready pending — strip WhatsApp from on-frame CTA; use Instagram message CTA",
+      "notes": "Do not relabel as kettlebell weight. Calendar claims are scheduled only, not live."
+    },
+    {
+      "ordinal": 5,
+      "contentId": "G005",
+      "type": "feed-candidate",
+      "classification": "REVIEW_REQUIRED",
+      "recommendedAction": "PREPARE_REVISED_VERSION",
+      "risk": "ORANGE",
+      "ctaCompliance": "check-for-whatsapp",
+      "whatsappLeakage": "likely-in-templates",
+      "editableInPlace": null,
+      "notes": "REVIEW_REQUIRED. No live claim without verification."
+    }
+  ]
+}

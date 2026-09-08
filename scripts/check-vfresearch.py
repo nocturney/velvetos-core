@@ -60,8 +60,10 @@ def main() -> None:
         fail("HQ-ROUTINE.md must point daily output at research.md / אין חדש במשרד")
     if "npx" not in hq_routine.lower():
         fail("HQ-ROUTINE.md must forbid npx skills on Cloud")
-    if "050-2517000" not in hq_routine:
-        fail("HQ-ROUTINE.md must keep WhatsApp CTA")
+    if "050-2517000" not in hq_routine and "PUBLIC_CTA" not in hq_routine and "BUSINESS_CONTACT" not in hq_routine:
+        fail("HQ-ROUTINE.md must keep business phone record or PUBLIC_CTA")
+    if "CTA נשאר וואטסאפ" in hq_routine:
+        fail("HQ-ROUTINE.md must not require WhatsApp as public CTA")
 
     data = json.loads(LINKS.read_text())
     if data.get("name") != "vfresearch-inspiration-links":

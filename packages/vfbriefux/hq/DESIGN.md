@@ -103,13 +103,13 @@ Dark surface, gold label, white action text. Yes / No / Defer — no fake countd
 
 **Do**
 
-- Keep one CTA per customer-facing block: WhatsApp `050-2517000` or איסוף שדרות
+- Keep one CTA per customer-facing IG block: Instagram message (`PUBLIC_CURRENT_CTA`) or איסוף שדרות — not WhatsApp phone
 - Use verified numbers only in slot 06 — write «אין ספירה» when missing
 - Match Canva IG palette where brief covers appear in slot 07 (`#vfcovers`)
 
 **Don't**
 
-- «שלחו DM» or boost CTAs
+- WhatsApp / `050-2517000` as public CTA; auto-DM / «שלחו DM» as tooling; boost CTAs
 - Invent ₪, Insights, or queue hours
 - Swap תצוגה 3 structure for a «cleaner» single-column marketing layout
 - Add stock photos of bedrooms, national shipping badges, or generic startup illustrations

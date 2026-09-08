@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-08 — **משרד פרסום על Control Plane (#137):** PUBLIC_CURRENT_CTA = הודעת Instagram · BUSINESS_CONTACT_RECORD = וואטסאפ פנימי · מצבי פרסום liveVerified · feed audit · profile desired · G004 identity. **בלי SoT מקביל** — dead-letter / followups / risk / watchdog נשארים ב־`office/control/` + `vf_control_plane.py`. Publication office features absorbed into existing Office Control Plane; no second runtime.
+
 - 2026-09-08 — **Failover מנהל משרד:** `docs/FAILOVER.md` — מעבר זמני מבוקר ChatGPT → Perplexity / Gemini / Grok / Cursor. מקור אמת + דוח השתלטות + בריף לבעלים + שרשרת תהליך→מוגמר על LEDGER/PRINT-DONE הקיימים. ממוזג עם GROK-FAILOVER / ORCHESTRA / handoff template / SWC — בלי מערכת כפולה. קישורי כניסה מ־README · AGENTS · constitution · harness. Office-manager failover protocol; read existing state; no second runtime.
 
 - 2026-09-08 — **Office Control Plane:** איחוד מקורות אמת קיימים (`office/control-plane.json` + `office/control/`) · CLI `vf_control_plane.py` (status/watchdog/gaps/handoff/followups/review/memory-hygiene/simulate) · גשר WIP→finished על `print.done` · dead-letter · Don't Bother Christian · שילוב בבריף `vfops_loop` · workflow כל 6ש · סנסור `check-office-control-plane.py`. לא מערכת משרד שנייה / לא autopost / לא ₪ מומצא. Absorb ChatGPT mechanical office tasks into VelvetOS.

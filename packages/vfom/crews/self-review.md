@@ -24,7 +24,7 @@ Check these. Fail = return, do not hand to Grok.
 | Hook | First 2–3 seconds have a reason to stay |
 | Audio | If a music brief exists (`vfresearch/sources/*-ig-music.md`), the chosen sound matches it or is marked חסר מקור. Do not invent a track name to pass |
 | Safe zone | Hook/CTA clear of story chrome |
-| CTA | In the **paste-ready** caption block only: WhatsApp `050-2517000` / איסוף שדרות. A ban note that mentions «שלחו DM» is not a fail. Fail only if that phrase is the call to action. |
+| CTA | In the **paste-ready** caption block only: Instagram message (`PUBLIC_CURRENT_CTA` — שלחו לנו הודעה כאן באינסטגרם) · איסוף שדרות. Fail if WhatsApp / `050-2517000` is the call to action. A ban note that mentions «שלחו DM» / auto-dm is not a fail. Fail only if that phrase is the call to action. |
 | Money | No ₪ on the frame. No sale figure unless the lead seat wrote it |
 | Insights | No fake reach/saves |
 | Slot | Do not move `#משובץ`. No boost |

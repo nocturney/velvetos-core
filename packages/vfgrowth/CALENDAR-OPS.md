@@ -11,7 +11,7 @@
 1. קורא `CALENDAR.md` + `LEDGER.md`.
 2. לכל מועמד עם תאריך — `Google-calendar.create_event` (או `update_event` אם כבר יש מזהה).
 3. כותרת: `VF-G00x · פורמט · מועמד` · אזור: `Asia/Jerusalem`.
-4. תיאור: כיתוב `vfcopy` · שער עריכה `EDIT-GATE.md` · CTA `050-2517000` · בלי ₪.
+4. תיאור: כיתוב `vfcopy` · שער עריכה `EDIT-GATE.md` · CTA הודעת Instagram · בלי ₪ · בלי וואטסאפ בכיתוב.
 5. רושם את מזהה האירוע ב־`vfigos/HANDOFF-STANDING-he.md`.
 6. שיבוץ הרשת עצמה נשאר ב־**instagram.com**. הלוח = תזכורת לעין + אוטונומיית תפעול.
 

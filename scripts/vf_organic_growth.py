@@ -40,8 +40,17 @@ GATES_FORWARD = {
     "learned": set(),
 }
 
-FORBIDDEN_COPY = ("שלחו DM", "send_dm", "boost now", "follow-back")
-CTA_OK = "050-2517000"
+FORBIDDEN_COPY = (
+    "send_dm",
+    "boost now",
+    "follow-back",
+    "wa.me",
+    "050-2517000",
+    "הזמנות בוואטסאפ",
+    "דברו איתנו בוואטסאפ",
+)
+CTA_OK = "הודעה"
+CTA_OK_ALT = ("אינסטגרם", "שלחו לנו הודעה", "לפרטים — שלחו", "בהודעות")
 
 
 def fail(msg: str) -> int:
@@ -149,7 +158,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
             "topic": "חסר — אין print.done עם מדיה",
             "asset": "חסר",
             "hook": "חסר",
-            "cta": "לפנייה אנושית בוואטסאפ: 050-2517000",
+            "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
             "geotag": "שדרות" if gate != "blocked_no_media" else "חסר",
             "hashtag_set_id": tag_set.get("hashtag_set_id") or "local_b2b_v1",
             "actions": ["אישור", "עריכה", "דחייה"],
@@ -161,7 +170,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
             "poll_id": poll.get("poll_id"),
             "question": poll.get("question") or "חסר סקר בספרייה",
             "options": poll.get("options") or [],
-            "cta": "050-2517000",
+            "cta": "לפרטים — שלחו הודעה כאן באינסטגרם",
             "actions": ["אישור", "עריכה", "דחייה"],
         },
         "yesterday": {
@@ -220,11 +229,16 @@ def cmd_policy(_args: argparse.Namespace) -> int:
         if gate == "posted_manually" and not item.get("human_marked"):
             return fail(f"{item.get('content_id')}: posted_manually without human_marked")
         cta = str(item.get("cta") or "")
-        if CTA_OK not in cta and item.get("format") in {"reel", "story"}:
-            return fail(f"{item.get('content_id')}: story/reel missing WhatsApp CTA")
+        if item.get("format") in {"reel", "story"}:
+            ok = CTA_OK in cta or any(a in cta for a in CTA_OK_ALT)
+            if not ok:
+                return fail(f"{item.get('content_id')}: story/reel missing Instagram-message CTA")
+            for bad in ("050-2517000", "wa.me", "וואטסאפ", "WhatsApp"):
+                if bad in cta:
+                    return fail(f"{item.get('content_id')}: public CTA must not include {bad!r}")
         blob = json.dumps(item, ensure_ascii=False)
         for bad in FORBIDDEN_COPY:
-            if bad in blob and "לא" not in blob:
+            if bad in blob and "לא" not in blob and "disabled" not in blob.lower():
                 return fail(f"{item.get('content_id')}: forbidden copy {bad!r}")
         tags = item.get("tags") or []
         if tags and not (8 <= len(tags) <= 15):

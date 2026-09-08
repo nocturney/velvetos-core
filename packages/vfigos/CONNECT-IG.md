@@ -1,7 +1,11 @@
 # CONNECT-IG · צעד אדם (עמוד אחד)
 
 סטטוס השולחן: **needsAuth**. בלי טוקן — אין Publish, אין Insights חיים. כותבים **«אין ספירה»**.  
-סטוריז נשארות ב־**instagram.com** (ig-mcp ≠ Story API).
+סטוריז נשארות ב־**instagram.com** (ig-mcp ≠ Story API).  
+**needsAuth ≠ סרק משרד** — ממשיכים intake / copy / Canva / preflight / queue / feed audit (`ROUTINE.md`).  
+Capability contract (לא תלוי Metricool): [`CAPABILITIES.json`](CAPABILITIES.json).  
+מצבי פרסום: [`PUBLICATION-STATES.md`](PUBLICATION-STATES.md) — upload/schedule ≠ `liveVerified`.  
+פרופיל מבוקש (מוכן, לא חי עד כלי): [`PROFILE-DESIRED.json`](PROFILE-DESIRED.json).
 
 ## הצעד הבא (כריסטיאן) — רק זה
 
@@ -11,9 +15,10 @@
 3. צור **Long-lived Page Access Token** לעמוד המקושר ל־`@velvets_cloud`  
    ([AUTHENTICATION_GUIDE](https://github.com/jlbadano/ig-mcp/blob/main/AUTHENTICATION_GUIDE.md)).
 4. הדבק סודות ב־Cursor Dashboard → Integrations & MCP **וגם** ב־`~/.cursor/mcp.json` — **לא בגיט**.
-5. Reload. כש־`instagram` ירוק — אפשר לסמן `ready` בשולחן.
+5. Reload. כש־`instagram` ירוק **ואחרי healthcheck** — אפשר לסמן `ready` בשולחן. אל תסמן ready בלי בדיקה אמיתית.
+6. אחרי ready: watchdog יכול להריץ `instagram.profile.update` לפי PROFILE-DESIRED (ORANGE עד לאימות).
 
-עד אז: failover [`SEND.md`](SEND.md) (Canva+Drive+Gmail). לא ממציאים Insights. לא `send_dm`.
+עד אז: failover [`SEND.md`](SEND.md) (Canva+Drive+Gmail). לא ממציאים Insights. לא `send_dm`. PUBLIC_CURRENT_CTA = הודעת Instagram.
 
 ---
 

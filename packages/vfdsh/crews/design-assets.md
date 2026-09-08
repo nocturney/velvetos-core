@@ -7,7 +7,7 @@ Packs: `vfcopy`, `vfcovers`, `vfcanva`, `vfigos`.
 
 | Role | Pack | Does | Does not |
 |---|---|---|---|
-| Copy | `vfcopy` | Homework + Hebrew draft. WhatsApp CTA `050-2517000`. | «שלחו DM» |
+| Copy | `vfcopy` | Homework + Hebrew draft. Instagram-message CTA (`PUBLIC_CURRENT_CTA`). | WhatsApp public CTA · «שלחו DM» / auto-DM |
 | Cover | `vfcovers` | Brief from floor proof. Superdesign if asked. | Fake studio scene |
 | Canva | `vfcanva` | Create / resize / brand-check when Canva MCP is connected. | Invent a Canva URL |
 | Board | `vfigos` | Review / schedule. | Send, boost, DM |

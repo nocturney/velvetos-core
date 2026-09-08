@@ -127,10 +127,15 @@ def main() -> None:
     skill = SKILL.read_text()
     if "SEND.md" not in skill and "via tools" not in skill:
         fail("Cursor skill must route send via constitution/SEND.md")
-    if "שלחו DM" not in skill:
-        fail("Cursor skill must ban שלחו DM")
-    if "050-2517000" not in skill:
-        fail("Cursor skill must keep WhatsApp CTA")
+    if "שלחו DM" not in skill and "אוטו־DM" not in skill and "auto-dm" not in skill.lower():
+        fail("Cursor skill must ban שלחו DM / auto-dm")
+    # BUSINESS_CONTACT_RECORD phone OR PUBLIC_CTA — do not require WhatsApp as public CTA
+    if "050-2517000" not in skill and "PUBLIC_CTA" not in skill and "PUBLIC_CURRENT_CTA" not in skill:
+        fail("Cursor skill must keep business phone record OR mention PUBLIC_CTA")
+    if "WhatsApp CTA" in skill and "PUBLIC" not in skill:
+        # soft: prefer Instagram-message language if still saying WhatsApp CTA
+        if "הודעה" not in skill and "אינסטגרם" not in skill:
+            fail("Cursor skill must not require WhatsApp as public CTA")
 
     print(
         f"OK picks={len(picks)} embed={len(embed)} later={later} skip={skip} "

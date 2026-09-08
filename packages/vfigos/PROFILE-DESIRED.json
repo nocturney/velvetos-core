@@ -1,0 +1,36 @@
+{
+  "handle": "@velvets_cloud",
+  "updatedAt": "2026-09-08",
+  "status": "prepared",
+  "liveStatus": "pending-live-tool",
+  "note": "Desired profile state only. Do not claim bio was updated until Instagram tool is ready and verify succeeds.",
+  "desired": {
+    "name": "Velvet Factory",
+    "categoryHint": "3D print studio",
+    "bioHe": "Velvet Factory · הדפסות תלת־ממד בשדרות\nאיסוף עצמי · לפרטים — שלחו הודעה כאן",
+    "mustInclude": [
+      "Velvet Factory",
+      "הדפסות תלת־ממד",
+      "שדרות",
+      "איסוף",
+      "הודעה"
+    ],
+    "mustExclude": [
+      "050-2517000",
+      "wa.me",
+      "וואטסאפ",
+      "WhatsApp",
+      "משלוח לכל הארץ",
+      "₪"
+    ],
+    "cta": "instagram-message",
+    "fulfillment": "pickup-sderot",
+    "noNationwideShipping": true,
+    "noInventedPrice": true,
+    "tone": "local-hebrew-not-corporate"
+  },
+  "watchdog": {
+    "whenToolReady": "instagram.profile.update then instagram.live.verify",
+    "riskUntilLive": "ORANGE"
+  }
+}

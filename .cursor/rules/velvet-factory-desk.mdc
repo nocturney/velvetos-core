@@ -20,7 +20,7 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 - auto-DM, boost without lead seat, follow-back, and story hacks stay forbidden. אוטו־DM נעול.
 - Do not invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף (canonical VelvetOS: lead → talk → offer → fulfill → close). No national shipping from HQ on this instance.
-- CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM».
+- CTA: **PUBLIC_CURRENT_CTA** = Instagram message / איסוף שדרות. Not bare «שלחו DM». WhatsApp `050-2517000` = BUSINESS_CONTACT_RECORD only (`constitution/PUBLIC_CTA.md`).
 - New vertical → frontend instance repo from `instances/` + Core modules (`REPOS.md`). Presets are blueprints only.
 - Tool failover: if a tool is down / `needsAuth` / blocked, hand the task to the backup tool **in the same turn**. Never finish with no artifact. Failover ≠ invent ₪ / Insights / blocked bodies. Matrix: `constitution/ORCHESTRA.md`.
 - Grok Bot quota down: keep producing **and sending** via HQ tools. `#נשלח-מ-HQ` / `#ממתין-ל-כלי-IG`. Do not idle on `#מוכן-ל-Grok`. `docs/GROK-FAILOVER.md`.

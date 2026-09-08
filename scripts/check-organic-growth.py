@@ -48,7 +48,7 @@ def main() -> None:
         "approved_for_manual_posting",
         "posted_manually",
         "print.done",
-        "050-2517000",
+        "050-2517000",  # BUSINESS_CONTACT_RECORD / forbidden-public mention OK
         "אין ריל כל יום",
         "pending_ops",
         "vf_organic_growth.py",
@@ -56,10 +56,16 @@ def main() -> None:
     ):
         if needle not in policy:
             fail(f"ORGANIC_GROWTH.md missing {needle!r}")
-    if "שלחו DM" in policy and "לא «שלחו DM»" not in policy and "לא «שלחו DM»" not in policy:
-        # allow mention only as forbidden
-        if "אסור" not in policy:
-            fail("ORGANIC_GROWTH.md must forbid שלחו DM")
+    # PUBLIC_CURRENT_CTA = Instagram message (not WhatsApp phone)
+    cta_section = policy.split("## CTA", 1)[-1][:800] if "## CTA" in policy else ""
+    if not any(n in cta_section for n in ("PUBLIC_CURRENT_CTA", "הודעה", "אינסטגרם", "Instagram")):
+        fail("ORGANIC_GROWTH.md CTA section must prefer Instagram-message / PUBLIC_CURRENT_CTA")
+    if "אוטו־DM" not in policy and "auto-dm" not in policy.lower() and "send_dm" not in policy.lower():
+        fail("ORGANIC_GROWTH.md must forbid auto-dm / send_dm tooling")
+    # Bare English «שלחו DM» as public CTA instruction stays forbidden; Hebrew IG message is OK
+    if "שלחו DM" in policy and "לא «שלחו DM»" not in policy and "בלי «שלחו DM»" not in policy:
+        if "אסור" not in policy and "auto-dm" not in policy.lower():
+            fail("ORGANIC_GROWTH.md must forbid bare שלחו DM / auto-dm tooling")
 
     play = PLAY.read_text(encoding="utf-8")
     for needle in ("CONTROL", "print.done", "GATE.md", "אין ריל כל יום", "blocked_no_media"):

@@ -39,6 +39,11 @@ REQUIRED_SOT_KEYS = (
     "decisions",
     "dead_letter",
     "followups",
+    "public_cta",
+    "publication_states",
+    "instagram_capabilities",
+    "profile_desired",
+    "feed_audit",
 )
 
 
@@ -77,19 +82,54 @@ def main() -> None:
     must_exist = [
         ROOT / "constitution" / "CONSTITUTION.md",
         ROOT / "constitution" / "ORCHESTRA.md",
+        ROOT / "constitution" / "PUBLIC_CTA.md",
         jobs_live,
         ROOT / "packages" / "vfmedia" / "catalog.json",
         ROOT / "docs" / "MEDIA-VAULT.md",
         ROOT / "packages" / "vfgrowth" / "CALENDAR.md",
         ROOT / "packages" / "vfgrowth" / "data" / "approval-queue.json",
+        ROOT / "packages" / "vfgrowth" / "data" / "feed-audit.json",
+        ROOT / "packages" / "vfigos" / "PUBLICATION-STATES.json",
+        ROOT / "packages" / "vfigos" / "CAPABILITIES.json",
+        ROOT / "packages" / "vfigos" / "PROFILE-DESIRED.json",
         ROOT / "packages" / "vfops" / "LOOP.json",
         CONTROL / "dead-letter.json",
         CONTROL / "followups.json",
         CONTROL / "decisions.jsonl",
+        CONTROL / "POLICY.md",
     ]
     for path in must_exist:
         if not path.exists():
             fail(f"authoritative path missing: {path.relative_to(ROOT)}")
+
+    # No duplicate dead-letter / followups authority
+    harness_q = ROOT / "packages" / "vfharness" / "dead-letter" / "queue.json"
+    if harness_q.is_file():
+        hq = json.loads(harness_q.read_text(encoding="utf-8"))
+        if hq.get("sourceOfTruth") != "office/control/dead-letter.json":
+            fail("harness dead-letter queue must pointer to office/control/dead-letter.json")
+        if hq.get("items"):
+            fail("harness dead-letter queue must not hold authoritative items")
+    legacy_fu = ROOT / "packages" / "vfgrowth" / "data" / "production-content-followups.json"
+    if legacy_fu.is_file():
+        lf = json.loads(legacy_fu.read_text(encoding="utf-8"))
+        if lf.get("sourceOfTruth") != "office/control/followups.json":
+            fail("production-content-followups.json must pointer to office/control/followups.json")
+        if lf.get("followups"):
+            fail("legacy followups pointer must keep followups=[]")
+
+    # PUBLIC_CTA + publication states present in SoT map
+    if sot.get("public_cta") != "constitution/PUBLIC_CTA.md":
+        fail("sourcesOfTruth.public_cta mismatch")
+    if sot.get("publication_states") != "packages/vfigos/PUBLICATION-STATES.json":
+        fail("sourcesOfTruth.publication_states mismatch")
+    pub_states = json.loads(
+        (ROOT / "packages" / "vfigos" / "PUBLICATION-STATES.json").read_text(encoding="utf-8")
+    )
+    state_ids = {s.get("id") for s in pub_states.get("states") or []}
+    for need in ("prepared", "scheduled", "uploadAccepted", "publishRequested", "liveVerified"):
+        if need not in state_ids:
+            fail(f"PUBLICATION-STATES missing {need}")
 
     # No parallel SoT maps
     for rogue in (
@@ -146,8 +186,16 @@ def main() -> None:
         text=True,
         capture_output=True,
     )
-    if proc_w.returncode != 0:
+    # RED_BLOCKER → exit 1; WAITING_EXTERNAL_TOOL / DEAD_LETTER / OK → 0
+    if proc_w.returncode not in (0, 1):
         fail(f"watchdog: {proc_w.stderr or proc_w.stdout}")
+    if "WATCHDOG " not in (proc_w.stdout or ""):
+        fail("watchdog must print WATCHDOG <WORST>")
+    if proc_w.returncode == 1 and "RED_BLOCKER" not in (proc_w.stdout or ""):
+        fail(f"watchdog exit 1 without RED_BLOCKER: {proc_w.stdout}")
+    # Ambient state must not be RED_BLOCKER (repo health)
+    if "WATCHDOG RED_BLOCKER" in (proc_w.stdout or ""):
+        fail(f"watchdog RED_BLOCKER in ambient repo: {proc_w.stdout}")
 
     proc_t = subprocess.run(
         [sys.executable, str(CLI), "selftest"],
@@ -167,9 +215,14 @@ def main() -> None:
     locks = set(plane.get("locks") or [])
     for need in (
         "no-duplicate-sources-of-truth",
+        "no-duplicate-dead-letter",
+        "no-duplicate-followups",
         "no-invented-prices",
         "no-auto-dm",
         "scheduling-is-not-publication",
+        "live-requires-verification",
+        "public-cta-instagram-message",
+        "ig-needsauth-not-fake-ready",
     ):
         if need not in locks:
             fail(f"control-plane locks missing {need}")

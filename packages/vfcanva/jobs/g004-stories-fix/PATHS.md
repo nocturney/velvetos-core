@@ -35,6 +35,6 @@ packages/vfcovers/g004/out/story-4.png
 | `story-1.png` | open kettlebell · «מחזיק טבעות לזמן אימון» | `DAHUfU77wh4` |
 | `story-2.png` | «קטן, ורוד, והמון אופי» | `DAHUfWrh3KM` |
 | `story-3.png` | «למי שמתאמנת» | `DAHUfWdu4aM` |
-| `story-4.png` | «וואטסאפ 050-2517000» only | `DAHUfVplwd8` |
+| `story-4.png` | historical on-image «וואטסאפ 050-2517000» · **revised-media needed** | `DAHUfVplwd8` |
 
-Studio approved caption pack stays `packages/vfcopy/G004-STORIES-FIX.md`. Do not publish from HQ.
+Studio approved caption pack stays `packages/vfcopy/G004-STORIES-FIX.md` (Instagram-message CTA). Do not publish from HQ. Do not schedule Frame 4 until on-image WA is replaced.

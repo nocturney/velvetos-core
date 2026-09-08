@@ -15,6 +15,6 @@
 
 ## Notes
 
-- CTA: WhatsApp `050-2517000` / איסוף שדרות.
+- CTA: שלחו לנו הודעה כאן באינסטגרם · איסוף שדרות (`PUBLIC_CURRENT_CTA`). Not WhatsApp / `050-2517000` on public frames.
 - Do not invent ₪ or a floor scene.
 - HQ does not send.

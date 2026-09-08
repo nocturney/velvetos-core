@@ -1,0 +1,5 @@
+{
+  "sourceOfTruth": "office/control/dead-letter.json",
+  "note": "Compatibility pointer only — NOT authoritative. Do not write items here. CLI writes via vf_control_plane.record_dead_letter → office/control/dead-letter.json.",
+  "items": []
+}

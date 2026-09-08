@@ -80,6 +80,22 @@ def main() -> None:
             fail(f"missing {path.relative_to(ROOT)}")
 
     formats = json.loads(FORMATS.read_text())
+    # PUBLIC_CURRENT_CTA may live under cta.public; business phone under businessContact
+    cta = formats.get("cta") or {}
+    public = cta.get("public") or ""
+    if public:
+        if "050-2517000" in public or "וואטסאפ" in public:
+            fail("FORMATS.json cta.public must not be WhatsApp phone CTA")
+        if "הודעה" not in public and "אינסטגרם" not in public:
+            fail("FORMATS.json cta.public must be Instagram-message CTA")
+    # keep 050 as business record if present
+    bc = cta.get("businessContact") or {}
+    if isinstance(bc, dict) and bc.get("whatsapp") and bc.get("whatsapp") != "050-2517000":
+        fail("FORMATS.json businessContact.whatsapp must stay 050-2517000 when set")
+    # legacy top-level whatsapp alone is OK only if public is also set (not as sole CTA)
+    if cta.get("whatsapp") == "050-2517000" and not public and not bc:
+        fail("FORMATS.json must not treat whatsapp alone as public CTA — set cta.public")
+
     desk = json.loads(MAP.read_text())
     mcp = json.loads(MCP.read_text())
     manifest = json.loads(MANIFEST.read_text())
@@ -158,6 +174,8 @@ def main() -> None:
     for needle in ("SEND.md", "050-2517000", "Canva לא מחובר"):
         if needle not in rule:
             fail(f"rule missing {needle!r}")
+    if "הודעה" not in rule and "PUBLIC_CTA" not in rule and "אינסטגרם" not in rule:
+        fail("rule must mention Instagram-message public CTA (050 stays business record)")
 
     skill = SKILL.read_text()
     for needle in ("SEND.md", "FORMATS.json", "needsAuth"):

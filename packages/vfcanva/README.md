@@ -45,4 +45,4 @@ Or open [`studio/index.html`](studio/index.html) / [`OPEN.md`](OPEN.md). Do not 
 - Send, boost, auto-DM, or move a booked `vfigos` slot
 - Invent ₪ prices, Insights, or floor scenes
 - Copy Israeli brand files
-- Write CTA as «שלחו DM» — WhatsApp `050-2517000` / איסוף שדרות only
+- Write CTA as WhatsApp / `050-2517000` or bare «שלחו DM» — public CTA is Instagram message only (`PUBLIC_CURRENT_CTA`); auto-DM stays forbidden; BUSINESS_CONTACT_RECORD phone stays off-frame

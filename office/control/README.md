@@ -16,9 +16,15 @@ CLI: `python3 scripts/vf_control_plane.py`
 | `HANDOFF.json` | מסירת מנהל חיה לכל AI |
 | `HANDOFF-he.md` | אותה מסירה בעברית לקריאה |
 | `decisions.jsonl` | יומן החלטות append-only (supersede, לא מחיקה) |
-| `POLICY.md` | Don't Bother Christian — ירוק/צהוב/כתום/אדום |
+| `POLICY.md` | Don't Bother Christian — ירוק/צהוב/כתום/אדום (canonical; `constitution/RISK.md` + `vfops/risk-policy.json` are mirrors) |
+
+## מצביעי תאימות (לא SoT)
+
+- `packages/vfharness/dead-letter/queue.json` → `dead-letter.json`
+- `packages/vfgrowth/data/production-content-followups.json` → `followups.json`
 
 ## נעול
 
 אין המצאת ₪ / Insights / סיפור לקוח. אין אוטו־DM. אין Meta Suite.  
-שיבוץ ≠ פרסום חי. העלאה ≠ אישור. תיקיית מאושר ≠ הוכחת אישור.
+שיבוץ ≠ פרסום חי. העלאה ≠ אישור. תיקיית מאושר ≠ הוכחת אישור.  
+אין תור dead-letter / followups כפול. live דורש `verification_evidence`.

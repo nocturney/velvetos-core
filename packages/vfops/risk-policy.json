@@ -1,0 +1,58 @@
+{
+  "id": "office-risk-policy-mirror",
+  "updatedAt": "2026-09-08",
+  "sourceOfTruth": "office/control/POLICY.md",
+  "mirrorOf": "office/control-plane.json#dontBotherChristian",
+  "note": "Read-only color mirror. Sensors must treat office/control/POLICY.md as canonical — not this file.",
+  "levels": {
+    "GREEN": {
+      "execute": true,
+      "brief": false,
+      "escalate": false,
+      "pointer": "office/control/POLICY.md#ירוק"
+    },
+    "YELLOW": {
+      "execute": true,
+      "brief": true,
+      "escalate": false,
+      "pointer": "office/control/POLICY.md#צהוב"
+    },
+    "ORANGE": {
+      "execute": false,
+      "prepareOnly": true,
+      "brief": true,
+      "escalate": false,
+      "pointer": "office/control/POLICY.md#כתום"
+    },
+    "RED": {
+      "execute": false,
+      "escalate": true,
+      "notifyChristian": true,
+      "onlyWhen": [
+        "required-owner-approval",
+        "purchase",
+        "payment",
+        "price-change-or-unknown-price",
+        "destructive-external-action",
+        "archive-delete-live-requires-owner",
+        "human-only-live-authorization",
+        "malformed-missing-source-of-truth",
+        "sensitive-ambiguity",
+        "unresolved-after-failover",
+        "owner-reserved-action"
+      ],
+      "neverFor": [
+        "weak-metrics",
+        "low-reach",
+        "routine-quality-fixes",
+        "ordinary-tool-outage-with-failover",
+        "normal-content-preparation",
+        "media-intake",
+        "routine-stale-data-repair",
+        "ordinary-copy-decision",
+        "non-destructive-internal-cleanup"
+      ],
+      "pointer": "office/control/POLICY.md#אדום"
+    }
+  }
+}

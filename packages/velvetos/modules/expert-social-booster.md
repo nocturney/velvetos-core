@@ -18,9 +18,10 @@ Extends `social-growth`. Playbook: `packages/vfgrowth/experts/SOCIAL-BOOSTER.md`
 
 ## Laws
 
-- CTA: WhatsApp `050-2517000` / איסוף שדרות — not «שלחו DM»
+- CTA: Instagram message (`PUBLIC_CURRENT_CTA`) · איסוף שדרות — not WhatsApp phone / not auto-DM / not bare «שלחו DM»
 - No boost without lead seat
 - No invented Insights — verified snapshot or «אין ספירה»
 - Floor proof first — no invented scenes
+- BUSINESS_CONTACT_RECORD `050-2517000` stays desk/integration only (disabled for public CTA)
 
 Always present in core. An instance enables it via `modulesEnabled`.

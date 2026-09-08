@@ -46,7 +46,8 @@
     "2026-09-06: Instagram Publish/Insights via jlbadano/ig-mcp — mapped on vfigos/vfmcp (needsAuth until Meta token). CONNECT-IG.md. No auto-DM. Failover Canva+Drive+Gmail.",
     "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
     "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done.",
-    "2026-09-08: Shared media vault locked by Christian — Drive Velvet Media (root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv). One catalog packages/vfmedia. תפעול owns intake נכנס→מקור. GrokBot uses Drive MCP. Cursor owns catalog schema. Upload ≠ approval. Approved folder alone ≠ approval proof. No share-permission changes. No invented SKUs or ₪."
+    "2026-09-08: Shared media vault locked by Christian — Drive Velvet Media (root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv). One catalog packages/vfmedia. תפעול owns intake נכנס→מקור. GrokBot uses Drive MCP. Cursor owns catalog schema. Upload ≠ approval. Approved folder alone ≠ approval proof. No share-permission changes. No invented SKUs or ₪.",
+    "2026-09-08: PUBLIC_CURRENT_CTA = Instagram message only (@velvets_cloud). BUSINESS_CONTACT_RECORD WhatsApp 050-2517000 stays on desk but disabled for public CTA and customer outreach from HQ. constitution/PUBLIC_CTA.md. Auto-DM still forever forbidden. Publish states: prepared≠scheduled≠liveVerified (vfigos/PUBLICATION-STATES). Risk GREEN/YELLOW/ORANGE/RED (constitution/RISK.md). Office watchdog: scripts/vf_office_watchdog.py. Production→content continuity for process/WIP posts. Feed audit from post #3 REVIEW_REQUIRED. No Metricool dependency."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -54,9 +55,11 @@
     "where": "Sderot",
     "pickupOnly": true,
     "whatsapp": "050-2517000",
+    "publicCta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+    "publicCtaChannel": "instagram-message",
     "instagram": "@velvets_cloud",
     "language": "he",
-    "close": "human WhatsApp + Invoice4U",
+    "close": "instagram-message public; WhatsApp business record disabled for public CTA",
     "timezone": "Asia/Jerusalem"
   },
   "pipeline": [
@@ -134,8 +137,13 @@
       "namespace": "instagram",
       "account": "@velvets_cloud",
       "mcp": "stdio · jlbadano/ig-mcp",
+      "capabilities": "packages/vfigos/CAPABILITIES.json",
+      "publicationStates": "packages/vfigos/PUBLICATION-STATES.json",
+      "profileDesired": "packages/vfigos/PROFILE-DESIRED.json",
       "useWhen": "vfigos publish, vfinsights verified metrics, feed review",
       "connect": "packages/vfigos/CONNECT-IG.md",
+      "officeRule": "needsAuth ≠ no office work; never fake ready; live only after liveVerified",
+      "notRequired": ["Metricool", "Publer", "Postly", "SimplePost", "Meta Business Suite"],
       "allowed": [
         "get_profile_info",
         "get_media_posts",
