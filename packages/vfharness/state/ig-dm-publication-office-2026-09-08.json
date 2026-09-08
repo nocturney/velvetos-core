@@ -2,16 +2,21 @@
   "task_id": "ig-dm-publication-office-2026-09-08",
   "updatedAt": "2026-09-08",
   "component_state": "Idle",
-  "summary": "Implemented PUBLIC_CURRENT_CTA=Instagram DM, publication states, risk/dead-letter, watchdog, feed audit, production→content continuity.",
+  "summary": "PR #137 refactored onto Office Control Plane (#135). No duplicate SoT. PUBLIC_CTA + publication states + feed audit kept; dead-letter/followups/risk/watchdog canonical under office/control + vf_control_plane.py.",
   "latest_observation": {
-    "check_all": "33/33",
-    "instagram_status": "needsAuth",
-    "public_cta": "instagram-message",
-    "business_contact": "050-2517000-disabled-for-public-cta",
+    "check_all": "34/34",
+    "selftest": "OK",
+    "watchdog": "WAITING_EXTERNAL_TOOL",
+    "canonical": {
+      "dead_letter": "office/control/dead-letter.json",
+      "followups": "office/control/followups.json",
+      "risk": "office/control/POLICY.md",
+      "watchdog": "scripts/vf_control_plane.py watchdog"
+    },
     "red_blockers": [
       "Instagram MCP OAuth / long-lived token (Christian on Mac)",
       "Meta app email verify for App 1748471159829574",
-      "Owner decision on archive/republish for live posts after live audit"
+      "Owner decision on archive/republish after live feed audit"
     ]
   },
   "next_step": "When IG tool ready: healthcheck → mark ready → apply PROFILE-DESIRED → live feed audit"
