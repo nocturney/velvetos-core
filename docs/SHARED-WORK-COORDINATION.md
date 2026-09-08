@@ -135,7 +135,7 @@ Checkpoints תחת `packages/vfharness/state/*2026-09-07*.json` — רובם `do
 | `SWC-CURSOR-TEMPLATES` | Cursor | חיבור תבניות Intake/SLA/דוח | core | `cursor/office-templates-wiring-c62b` | office/clients + vf_office_report | בלי PII בגיט | fixtures מסומנים | **done · merged #114** | [#114](https://github.com/nocturney/velvetos-core/pull/114) |
 | `SWC-VF-003` | לא ידוע (סוכן ישן) | סנכרון desk instance ל־Grok-primary | velvet-factory | `cursor/align-grok-constitution-f6b2` | `.cursor/vf-desk.json`, `AGENTS.md` | תלוי ביישור constitution ב־core (היסטורי) | סקירה + החלטה lead / Cursor | **open-draft — שמור** | [VF#3](https://github.com/nocturney/velvetos-velvet-factory/pull/3) |
 | `SWC-IDLE-*` | Cursor (היסטורי) | משימות 7.9 שמוזגו | core | ענפי `cursor/*` אחרי מיזוג | ראו #100–#104 | — | ממוזג ל־main | **merged — לא לגעת בענפים** | #100–#104 |
-| `SWC-MEDIA-VAULT` | Cursor | נעילת כספת מדיה + קטלוג יחיד `vfmedia` | core | `cursor/media-vault-da7e` | `docs/MEDIA-VAULT.md`, `packages/vfmedia/*` | אין שינוי Drive sharing | נוהל + סכמה + סנסור ירוק | **running** · 2026-09-08 | — |
+| `SWC-MEDIA-VAULT` | Cursor | נעילת כספת מדיה + קטלוג יחיד `vfmedia` | core | `cursor/media-vault-da7e` | `docs/MEDIA-VAULT.md`, `packages/vfmedia/*` | אין שינוי Drive sharing | נוהל + סכמה + סנסור ירוק | **owned** · check-all 28/28 | [#131](https://github.com/nocturney/velvetos-core/pull/131) |
 
 ### סדר מיזוג (Cursor embed-fix) — סגור 2026-09-07
 
