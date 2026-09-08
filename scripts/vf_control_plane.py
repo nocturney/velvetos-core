@@ -31,6 +31,7 @@ POLICY_MD = CONTROL / "POLICY.md"
 CONSTITUTION = ROOT / "constitution" / "CONSTITUTION.md"
 ORCHESTRA = ROOT / "constitution" / "ORCHESTRA.md"
 JOBS_CSV = ROOT / "office" / "ledger" / "live" / "jobs.csv"
+JOBS_TEMPLATE = ROOT / "office" / "ledger" / "templates" / "jobs.csv"
 MEDIA_CATALOG = ROOT / "packages" / "vfmedia" / "catalog.json"
 MEDIA_VAULT = ROOT / "docs" / "MEDIA-VAULT.md"
 CALENDAR = ROOT / "packages" / "vfgrowth" / "CALENDAR.md"
@@ -109,7 +110,23 @@ def plane() -> dict:
     return data
 
 
+def ensure_jobs_csv() -> None:
+    """Live jobs.csv is gitignored — bootstrap header-only from template (no invented rows)."""
+    if JOBS_CSV.is_file():
+        return
+    JOBS_CSV.parent.mkdir(parents=True, exist_ok=True)
+    if JOBS_TEMPLATE.is_file():
+        JOBS_CSV.write_text(JOBS_TEMPLATE.read_text(encoding="utf-8"), encoding="utf-8")
+    else:
+        JOBS_CSV.write_text(
+            "job_id,opened,channel,client_label,phone,what_asked,sku,qty,size,color,material,"
+            "file_status,modeling,due,stage,price,notes\n",
+            encoding="utf-8",
+        )
+
+
 def required_paths() -> dict[str, Path]:
+    ensure_jobs_csv()
     return {
         "control_plane": CONTROL_PLANE,
         "inbox": INBOX,

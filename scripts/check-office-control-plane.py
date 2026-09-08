@@ -65,11 +65,19 @@ def main() -> None:
         if key not in sot:
             fail(f"sourcesOfTruth missing {key}")
 
-    # Authoritative paths must exist (globs excluded)
+    # Authoritative paths must exist (globs excluded). Live jobs.csv is gitignored — bootstrap header.
+    jobs_live = ROOT / "office" / "ledger" / "live" / "jobs.csv"
+    jobs_tmpl = ROOT / "office" / "ledger" / "templates" / "jobs.csv"
+    if not jobs_live.is_file():
+        if not jobs_tmpl.is_file():
+            fail("missing office/ledger/templates/jobs.csv")
+        jobs_live.parent.mkdir(parents=True, exist_ok=True)
+        jobs_live.write_text(jobs_tmpl.read_text(encoding="utf-8"), encoding="utf-8")
+
     must_exist = [
         ROOT / "constitution" / "CONSTITUTION.md",
         ROOT / "constitution" / "ORCHESTRA.md",
-        ROOT / "office" / "ledger" / "live" / "jobs.csv",
+        jobs_live,
         ROOT / "packages" / "vfmedia" / "catalog.json",
         ROOT / "docs" / "MEDIA-VAULT.md",
         ROOT / "packages" / "vfgrowth" / "CALENDAR.md",
