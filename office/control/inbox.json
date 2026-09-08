@@ -1,0 +1,13 @@
+{
+  "updatedAt": "2026-09-08",
+  "rule": "Single office inbox. Do not create parallel inboxes per agent.",
+  "buckets": {
+    "content": [],
+    "production": [],
+    "sales": [],
+    "admin": [],
+    "approvals": [],
+    "blocked": [],
+    "unknown": []
+  }
+}

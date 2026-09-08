@@ -2,7 +2,7 @@
   "name": "vfops-loop",
   "title": "לולאת משרד — כל פק נצרך",
   "updatedAt": "2026-09-08",
-  "rule": "Every packages/ folder has a consume step. Catalog without consume is a fail. No invented ₪ or Insights. No live IG publish from this loop.",
+  "rule": "Every packages/ folder has a consume step. Catalog without consume is a fail. No invented ₪ or Insights. No live IG publish from this loop. Office Control Plane (office/control-plane.json) unifies SoT — not a second scheduler.",
   "cli": "python3 scripts/vfops_loop.py",
   "briefCli": "python3 scripts/vfops_loop.py brief",
   "handoffCli": "python3 scripts/vfops_loop.py handoff",
@@ -558,6 +558,12 @@
       "path": "docs/MEDIA-VAULT.md",
       "cadence": "on-intake",
       "consume": "python3 scripts/vfmedia.py validate"
+    },
+    {
+      "id": "office-control-plane",
+      "path": "office/control-plane.json",
+      "cadence": "every-6h",
+      "consume": "python3 scripts/vf_control_plane.py watchdog"
     }
   ]
 }

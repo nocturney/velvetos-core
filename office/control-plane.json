@@ -1,0 +1,64 @@
+{
+  "name": "velvetos-office-control-plane",
+  "title": "Office Control Plane — unify existing sources of truth",
+  "updatedAt": "2026-09-08",
+  "rule": "Unify and harden. Do not duplicate approval queue, calendar, media catalog, job ledger, print.done, office loop, or handoff concepts. If two files claim authority over the same domain, the sensor must fail.",
+  "cli": "python3 scripts/vf_control_plane.py",
+  "sensor": "scripts/check-office-control-plane.py",
+  "workflow": ".github/workflows/office-control-plane.yml",
+  "dontBotherChristian": {
+    "green": "execute autonomously (classify, archive, draft internal, maintain handoff, routine quality fixes)",
+    "yellow": "execute + report in brief (prepare content, organize media, calendar plan, watchdog repairs)",
+    "orange": "prepare only, do not execute (new external message, unverified public claim, policy change, missing gate)",
+    "red": "Christian approval required (purchase, payment, price change, destructive action, owner-only publish, hard blocker, irreversible deletion, uncovered business commitment)"
+  },
+  "sourcesOfTruth": {
+    "policy": "constitution/CONSTITUTION.md + constitution/ORCHESTRA.md",
+    "jobs": "office/ledger/live/jobs.csv",
+    "media": "packages/vfmedia/catalog.json + docs/MEDIA-VAULT.md",
+    "content_calendar": "packages/vfgrowth/CALENDAR.md",
+    "content_approval": "packages/vfgrowth/data/approval-queue.json",
+    "production_completion": "packages/vfprod/hq/cards/*.md via print.done",
+    "office_loop": "packages/vfops/LOOP.json",
+    "manager_handoff": "office/control/HANDOFF.json",
+    "decisions": "office/control/decisions.jsonl",
+    "dead_letter": "office/control/dead-letter.json",
+    "followups": "office/control/followups.json"
+  },
+  "controlDir": "office/control",
+  "contentSprintPriority": [
+    "ready_for_finished_content",
+    "print.done_with_usable_media",
+    "approved_waiting_for_slot",
+    "new_media_from_intake",
+    "general_new_content_ideas"
+  ],
+  "locks": [
+    "no-duplicate-sources-of-truth",
+    "no-invented-prices",
+    "no-invented-insights",
+    "no-auto-dm",
+    "no-meta-business-suite",
+    "no-nationwide-shipping",
+    "scheduling-is-not-publication",
+    "upload-is-not-approval",
+    "approved-folder-is-not-approval-proof",
+    "no-owner-spam-from-low-level-gaps",
+    "no-silent-dead-letter-loss"
+  ],
+  "chatgptTaskReduction": {
+    "keep": ["Velvet Morning Brief", "optional Velvet Publish Watch / hard-blocker alert"],
+    "moveInsideVelvetOS": [
+      "Media Intake",
+      "Content Sprint",
+      "Insights/Office Review",
+      "Memory Hygiene",
+      "Opportunity Radar",
+      "WIP→Finished watcher",
+      "Dead-letter monitoring",
+      "routine watchdog",
+      "source-of-truth validation"
+    ],
+    "note": "Do not delete existing ChatGPT tasks until the replacement path is proven."
+  }
+}

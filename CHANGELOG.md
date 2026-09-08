@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-08 — **Office Control Plane:** איחוד מקורות אמת קיימים (`office/control-plane.json` + `office/control/`) · CLI `vf_control_plane.py` (status/watchdog/gaps/handoff/followups/review/memory-hygiene/simulate) · גשר WIP→finished על `print.done` · dead-letter · Don't Bother Christian · שילוב בבריף `vfops_loop` · workflow כל 6ש · סנסור `check-office-control-plane.py`. לא מערכת משרד שנייה / לא autopost / לא ₪ מומצא. Absorb ChatGPT mechanical office tasks into VelvetOS.
+
 - 2026-09-08 — **סגירת רישום מיזוג המדיה #130:** checkpoint תקין (`done` / `Idle`), SHA המיזוג ל־main ובדיקות 28/28 אחרי המיזוג; הוסרה המתנה מיושנת מרשומת התיאום ותוכנית המשימה. Correct post-merge tracking only; no media/runtime changes.
 
 - 2026-09-08 — **איחוד #130 עם #131:** נשמרים נוהל `docs/MEDIA-VAULT.md`, קטלוג `packages/vfmedia/catalog.json` ותפעול כבעל קליטה. תיעוד יכולות Drive מ־#130 נשמר כראיה היסטורית מיוחסת; אין קטלוג/נוהל/חיישן מקבילים. נוספו הפניות קנוניות ובדיקת רגרסיה להפניות ישנות. Reconcile media-vault merge; preserve scoped capability evidence and main ownership.

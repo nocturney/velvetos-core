@@ -107,7 +107,9 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 ```
 
 מלאי: `python3 scripts/vfops_loop.py inventory`  
-מסירה לסטודיו: `python3 scripts/vfops_loop.py handoff` → `vfgrowth/HANDOFF-he.md`
+מסירה לסטודיו: `python3 scripts/vfops_loop.py handoff` → `vfgrowth/HANDOFF-he.md`  
+מסירת מנהל (Control Plane): `python3 scripts/vf_control_plane.py handoff` → `office/control/HANDOFF.json` + `HANDOFF-he.md`  
+מפת מקורות אמת: `office/control-plane.json` (לא מערכת משרד שנייה).
 
 חריץ 02 = `vfcost.py brief` (עלות חומר חיה, בלי ₪ מכירה).  
 חריץ 03 = `vfsku` + `week.md`.  
