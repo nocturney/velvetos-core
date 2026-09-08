@@ -5,9 +5,10 @@
   "role": "core",
   "displayName": "VelvetOS Core",
   "dumpedAt": "2026-08-30",
-  "catalogRefreshedAt": "2026-09-07",
+  "catalogRefreshedAt": "2026-09-08",
   "tag": "v0.1.0",
   "notes": [
+    "2026-09-08: Shared media vault locked by Christian \u2014 packages/vfmedia one catalog + docs/MEDIA-VAULT.md. Drive root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv. \u05ea\u05e4\u05e2\u05d5\u05dc intake. No parallel catalogs. No invented SKUs/\u20aa. No Drive share-permission changes. Sensor: scripts/check-vfmedia.py.",
     "2026-09-07 evening catalog: GitHub nocturney/velvetos-core. Folded merged #118 print-demand/print.done/revenue retro, #117 three-layer SoC, #116 core stability, #115/#105 SWC board, #109\u2013#114 quality+loop+templates, #107/#106 research seat, #104/#103/#102 agency gate + G004 stories, #101 brief HTML, #100 vfbiz week. Origin not vendored (CLI not logged in). No open PRs at refresh.",
     "2026-09-06 evening catalog: GitHub nocturney/velvetos-core. Folded merged #97 vfcanva/G004, #96 vfops loop + agency floor, #95 vfcost material CLI, #94 ig-mcp+iCloud, #93 HQ sweep, #92/#73 best-skills, #89/#90 vfgrowth calendar, #77 vfresearch last30days. Origin not vendored (CLI not logged in). No open PRs at refresh.",
     "2026-09-03 evening catalog: GitHub nocturney/velvetos-core. Included merged #71 buildwithclaude, #59 office MCPs in Core, #72 best-skills. Origin not vendored (CLI not logged in). Open branches still on GitHub: #70 cursor/daily-research-2026-09-03-b067, #68 cursor/integrate-ig-mcp-abe1, #66 cursor/close-access-gaps-5b1b, #58 cursor/icloud-drive-dual-path-c95c.",
@@ -395,6 +396,18 @@
       "vendorStatus": "hq-native",
       "source": "https://github.com/Alishahryar1/free-claude-code",
       "writeup": "docs/FCC-FIT.md"
+    },
+    {
+      "name": "vfmedia",
+      "summary": "Shared media vault catalog \u2014 one Drive tree (Velvet Media) + one catalog.json. \u05ea\u05e4\u05e2\u05d5\u05dc owns intake. Cursor owns schema. GrokBot uses Drive MCP. No invented SKUs/\u20aa. No share-permission changes.",
+      "bcId": null,
+      "agentUrl": null,
+      "originSlug": null,
+      "codebaseUrl": null,
+      "cloneUrl": null,
+      "vendorStatus": "hq-native",
+      "docs": "docs/MEDIA-VAULT.md",
+      "skill": "packages/vfmedia/SKILL.md"
     },
     {
       "name": "velvetos",

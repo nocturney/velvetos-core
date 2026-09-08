@@ -41,6 +41,7 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 | New inquiry | `vfconvert` | `@email-intelligence-engineer` then `@discovery-coach` | Gmail **read** the named thread; **reply** when the draft is ready |
 | Quote draft | `vfsales` + `vfcopy` | `@sales-engineer` `@content-creator` | After `vfcost`. One CTA. HQ **sends** Gmail via tool (no invented ₪) |
 | Cost / ledger | `vfcost` `vfbooks` | `@pricing-analyst` `@bookkeeper-controller` | Gmail label חשבונות; never invent ₪ |
+| Shared media vault / כספת מדיה | `vfmedia` | `@studio-operations` | Drive MCP (GrokBot office) + `docs/MEDIA-VAULT.md`; תפעול intake נכנס→מקור; Cursor owns `catalog.schema.json`; upload ≠ approval; approved folder ≠ proof; no share-permission changes; no invented SKUs/₪ |
 | Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive search **or create** by job name; bed **recommend** `vfprod.py route` (no Print from HQ); catalog `vfsku.py scan`; 3D AI Studio mesh via `vfprod/3DAISTUDIO.md` |
 | Covers / content pack | `vfcovers` `vfgrowth` | `@visual-storyteller` `@image-prompt-engineer` | Canva first; Superdesign failover |
 | Organic Growth Control Plane | `vfgrowth` `vfprod` `vfinsights` `vfsales` | `@instagram-curator` `@offer-lead-gen-strategist` | `ORGANIC_GROWTH.md` + `vf_organic_growth.py` — drafts + 07:00 pack; no autopost / no auto-DM |
@@ -85,7 +86,7 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 
 - **Gmail:** Inbox `nocturney@gmail.com`. Read **and send** (`send_message` / `reply` / `forward`). 07:00 brief is תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`). Down → Drive doc + continue; never invent an inquiry.
 - **Calendar:** `list_events` on `nocturney@gmail.com`, timezone `Asia/Jerusalem`. Create events only if asked. Down → ask pickup window / «חסר לוח» and continue.
-- **Drive:** `search_files` by job/SKU **and `create_file`** for office docs/sheets. No dedicated VF folder required. Do not open personal, medical, or legal folders unless the user names them.
+- **Drive:** `search_files` by job/SKU **and `create_file`** for office docs/sheets. Shared media vault: `docs/MEDIA-VAULT.md` + `packages/vfmedia` (one catalog). Do not change public share permissions. Do not delete vault files. Do not open personal, medical, or legal folders unless the user names them.
 - **Canva:** Instagram visuals. Connected (`ready`). `needsAuth` → `packages/vfcanva/studio/render.py` then Superdesign. Say `Canva לא מחובר`.
 - **Web:** Cursor `WebSearch` / `WebFetch`. Down → orchestra ChatGPT+Gemini+Perplexity. Never invent a blocked body. **Not Treg.**
 - **Image:** Cursor `GenerateImage` + Canva `generate-design`. Instagram still Canva-first. Down → Superdesign / `studio/render.py`.

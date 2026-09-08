@@ -27,7 +27,7 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 | 02 | `vfcost.py brief` + `vfbooks.py brief` — עלות חומר + חוב/חשבונית חסרה פנימי (בלי ₪ מכירה, בלי מייל גבייה) + `vfbooks/data/orders.json` / Invoice4U snapshot |
 | 03 | `vfsku.py brief` + `vfsku.py scan` + `vfsku/week.md` + `vfprod.py brief` + `vfprod.py print-done` |
 | 04 | `vfgrowth/hq/FOLLOWER-GROWTH.md` + `PROFILE-TO-WHATSAPP` + `vf_organic_growth.py brief` + `vfbiz/out/week.md` + B2B נעול + וואטסאפ |
-| 05 | CLI אמיתי מ-24ש (`cli-runs.jsonl`) + סיכום `consumer-runs` מ־`run`, או «אין חדש במשרד» + שורות **פער** לפק יומי שלא הורץ. `on-content`/`on-inquiry` לא נחשבים פער בוקר. לא קטלוג מ-`research.md` |
+| 05 | CLI אמיתי מ-24ש (`cli-runs.jsonl`) + סיכום `consumer-runs` מ־`run`, או «אין חדש במשרד» + שורות **פער** לפק יומי שלא הורץ. `on-content`/`on-inquiry` לא נחשבים פער בוקר. לא קטלוג מ-`research.md` · כספת מדיה `vfmedia.py validate` (תפעול קולט; GrokBot Drive MCP; Cursor סכמה) |
 | 06 | `vfinsights` loop → `LEARNINGS.md` כשיש CSV; אחרת «אין ספירה». מדדים חלשים = לוג פנימי, לא אשמת בעלים |
 | 07 | כיתובי `vfcopy` + `G004-STORIES-FIX.md` + `vfgrowth/HANDOFF-he.md` + נתיב `PREFLIGHT.md`. פער סוכנות = שורת פער למשרד |
 

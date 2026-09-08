@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vfmedia-catalog",
+  "title": "VelvetOS shared media catalog — one catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "oneCatalog", "vaultRootId", "items"],
+  "properties": {
+    "name": { "const": "vfmedia-catalog" },
+    "title": { "type": "string" },
+    "oneCatalog": { "const": true },
+    "updatedAt": { "type": "string" },
+    "vaultRootId": { "const": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv" },
+    "locks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "items": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/mediaItem" }
+    }
+  },
+  "$defs": {
+    "driveRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "url"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "minLength": 8 }
+      }
+    },
+    "versionApproval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "state": { "enum": ["none", "pending", "approved", "rejected"] },
+        "approvedBy": { "type": ["string", "null"] },
+        "approvedAt": { "type": ["string", "null"] },
+        "note": { "type": "string" }
+      }
+    },
+    "mediaItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "sourceFile",
+        "viewDescription",
+        "uploadedAt",
+        "productLink",
+        "status",
+        "assignee",
+        "derivativeIds",
+        "sourceLinks",
+        "versionApproval"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Catalog row id. Not a SKU. Do not invent SKU names."
+        },
+        "sourceFile": {
+          "$ref": "#/$defs/driveRef",
+          "description": "Source file id + url from Drive. Required. No placeholder ids."
+        },
+        "viewDescription": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What is visible in the file. No invented floor scene."
+        },
+        "uploadedAt": {
+          "type": "string",
+          "minLength": 8,
+          "description": "Upload date (ISO date or datetime)."
+        },
+        "productLink": {
+          "type": ["string", "null"],
+          "description": "Known product / job link only. Null if unknown. Not a new SKU."
+        },
+        "status": {
+          "enum": ["inbox", "source", "in_progress", "approved"],
+          "description": "Matches vault folder stage. approved folder ≠ versionApproval."
+        },
+        "assignee": {
+          "type": ["string", "null"],
+          "description": "Seat or named owner. Null if unassigned."
+        },
+        "derivativeIds": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/driveRef" },
+          "description": "Edited / Canva / reel file ids. Empty until they exist."
+        },
+        "sourceLinks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Provenance URLs the user named (MakerWorld, Drive, print.done). No invented links."
+        },
+        "versionApproval": { "$ref": "#/$defs/versionApproval" }
+      }
+    }
+  }
+}

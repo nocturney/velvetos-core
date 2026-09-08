@@ -428,6 +428,20 @@
     },
     {
       "q": [
+        "media vault",
+        "כספת מדיה",
+        "vfmedia",
+        "נכנס מקור",
+        "מאושר לפרסום",
+        "shared media"
+      ],
+      "pack": "vfmedia",
+      "slug": "studio-operations",
+      "tool": "drive",
+      "note": "תפעול owns intake נכנס→מקור; Cursor owns catalog schema; GrokBot uses Drive MCP"
+    },
+    {
+      "q": [
         "artifact",
         "תוצרים",
         "אינדקס",
