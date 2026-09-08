@@ -277,9 +277,27 @@ def main() -> None:
     queue = ROOT / "packages/vfigos/QUEUE.md"
     live = ROOT / "packages/vfigos/LIVE-PACKET.md"
     docs_fo = ROOT / "docs/GROK-FAILOVER.md"
-    for path in (queue, live, docs_fo):
+    docs_office_fo = ROOT / "docs/FAILOVER.md"
+    for path in (queue, live, docs_fo, docs_office_fo):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
+    office_fo_text = docs_office_fo.read_text()
+    for needle in (
+        "דוח השתלטות",
+        "ChatGPT",
+        "Perplexity",
+        "Gemini",
+        "Grok",
+        "Cursor",
+        "SHARED-WORK-COORDINATION.md",
+        "MEDIA-VAULT.md",
+        "תהליך → מוכן → צילום סופי → פרסום",
+        "passwords",
+    ):
+        if needle not in office_fo_text:
+            fail(f"docs/FAILOVER.md missing {needle!r}")
+    if "docs/FAILOVER.md" not in agents_text and "Office-manager failover" not in agents_text:
+        fail("AGENTS.md must mention office-manager failover / docs/FAILOVER.md")
     queue_text = queue.read_text()
     for needle in ("#מוכן-ל-Grok", "#פרסום-חי-דחוף", "#נשלח-מ-HQ", "#ממתין-ל-כלי-IG"):
         if needle not in queue_text:

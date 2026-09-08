@@ -3,6 +3,8 @@
 ארבע תוספות שכל סוכן (Cursor / Grok / ChatGPT / Gemini / Perplexity) צריך להכיר לפני עבודה במשרד.
 לא פק חדש, לא סוכן חדש. סקריפטים בתוך packs קיימים.
 
+כשמנהל ראשי אינו זמין: קרא קודם [`docs/FAILOVER.md`](FAILOVER.md) (מקור אמת + דוח השתלטות + בריף לבעלים).
+
 | כלי | מיקום | פותר | הרצה |
 |---|---|---|---|
 | CI סנסורים | [`.github/workflows/check-all.yml`](../.github/workflows/check-all.yml) | בדיקה אוטומטית בכל push/PR — לא רק ידנית | רץ אוטומטית ב-GitHub |

@@ -13,6 +13,7 @@
 | [`TAGS.md`](TAGS.md) | תגיות בריף + מיפוי Gemini/Perplexity |
 | [`ORCHESTRA.md`](ORCHESTRA.md) | תזמורת הכלים החיצוניים — ChatGPT · Gemini · Perplexity |
 | [`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) | מפעל תוכן אורגני — טיוטות + בריף 07:00; לא פרסום אוטומטי |
+| [`../docs/FAILOVER.md`](../docs/FAILOVER.md) | מעבר מנהל משרד (ChatGPT → Perplexity / Gemini / Grok / Cursor) |
 | [`../AGENTS.md`](../AGENTS.md) | מדריך רתמה (Guides). מנצח את השיחה |
 | [`../docs/HARNESS.md`](../docs/HARNESS.md) | שתילת שש שכבות הרתמה על הפקים |
 | [`../docs/VELVETOS.md`](../docs/VELVETOS.md) | ליבה + מודולים + מופעים |

@@ -23,5 +23,6 @@ python3 scripts/check-all.py
 ```
 
 See `CHANGELOG.md`. Harness: [`docs/HARNESS.md`](docs/HARNESS.md). Constitution: [`constitution/`](constitution/).  
+**Office-manager failover** (ChatGPT → Perplexity / Gemini / Grok / Cursor): [`docs/FAILOVER.md`](docs/FAILOVER.md).  
 Origin slugs: never invent — [`docs/ORIGIN-SLUGS.md`](docs/ORIGIN-SLUGS.md). Do not invent Origin slugs; keep `unknown`.  
 Owner-only access steps: [`docs/OWNER-ACTIONS-he.md`](docs/OWNER-ACTIONS-he.md).

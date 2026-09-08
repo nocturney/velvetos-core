@@ -18,7 +18,7 @@ BUILD: (no app binary — the catalog is the product)
 TEST: python3 scripts/check-all.py
 LINT: python3 scripts/check-hq-overlay.py && python3 scripts/check-vf-desk.py && python3 scripts/check-velvetos.py
 
-Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `constitution/ORGANIC_GROWTH.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`, `docs/AUTONOMY-TOOLS.md`.
+Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `constitution/ORGANIC_GROWTH.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`, `docs/AUTONOMY-TOOLS.md`, `docs/FAILOVER.md`, `docs/SHARED-WORK-COORDINATION.md`, `docs/MEDIA-VAULT.md`.
 
 ## RULES
 
@@ -31,6 +31,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - Do not create a new pack for an idea. Map onto an existing pack the same day. New business = **frontend instance repo** that attaches Core modules (`packages/velvetos/REPOS.md` + `scripts/publish-instance.sh`), not a parallel pack tree inside Core.
 - Do not host a second live business frontend inside Core. Use `instances/<id>/` scaffolds + presets only.
 - Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
+- **Office-manager failover:** when the primary office manager (ChatGPT) is unavailable, temporary controlled handoff to Perplexity / Gemini / Grok / Cursor per `docs/FAILOVER.md`. Read truth sources first; emit דוח השתלטות; do not rebuild the system. Return handoff via `docs/SHARED-WORK-COORDINATION.md` + `packages/vfharness/templates/handoff.md`. No secrets in handoff docs.
 - Treg is **not relevant**. Do not login, `call`, or route failover through Treg. Live web = `WebSearch` / `WebFetch` / orchestra.
 - Gemini **API** (`GEMINI_API_KEY` + `scripts/vf_gemini.py`) and ChatGPT **API** (`OPENAI_API_KEY` + `scripts/vf_chatgpt.py`) are not the `gemini.google.com` / `chatgpt.com` subscriptions. Cloud Agent and Grok Bot **must not** open those sites (Google/OpenAI security alerts). Do not persist cookies. Do not install `aliargun/mcp-server-gemini` or `RLabs-Inc/gemini-mcp`. Without a key write «חסר מפתח Gemini» / «חסר מפתח ChatGPT» and fail over. Full Plus/Pro without extra API billing lives on the owner Mac (`packages/vfmcp/HOST.md`). Playbook: `packages/vfmcp/SUBSCRIPTIONS.md`.
 - Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.

@@ -27,6 +27,8 @@ Failover מיידי. בלי חצי-עבודה. בלי גוף/₪/Insights מומ
 
 ## Failover — אסור להישאר בלי תוצאה
 
+**ניהול משרד (מנהל ראשי נפל):** מעבר מבוקר בין ChatGPT · Perplexity · Gemini · Grok · Cursor — [`docs/FAILOVER.md`](../docs/FAILOVER.md) (מקור אמת + דוח השתלטות + בריף). לא בונים מערכת מחדש.
+
 **Degraded Mode (שם רשמי):** כלי/רכיב נפל → מבודדים → failover לאותו תור → `component_state: Degraded` ב־checkpoint אם יש משימה · אירוע `tool.failover` / `sensor.degraded`.  
 פלייבוק: `packages/vfharness/playbooks/degraded-mode.md` · ADR: `packages/velvetos/ADR-THREE-LAYERS.md`.  
 יציאה מ־Degraded: `sensor.recovered` + חזרה ל־`Processing`/`Idle`.
