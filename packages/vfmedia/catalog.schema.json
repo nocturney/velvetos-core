@@ -111,7 +111,14 @@
             "downloadBytes": { "type": ["integer", "null"] },
             "movedToSourceAt": { "type": ["string", "null"] },
             "attempts": { "type": "integer", "minimum": 0 },
-            "lastError": { "type": ["string", "null"] }
+            "lastError": { "type": ["string", "null"] },
+            "contentFingerprint": { "type": ["string", "null"] },
+            "headRevisionId": { "type": ["string", "null"] },
+            "md5Checksum": { "type": ["string", "null"] },
+            "sha256Checksum": { "type": ["string", "null"] },
+            "moveStartedAt": { "type": ["string", "null"] },
+            "contentChangedAt": { "type": ["string", "null"] },
+            "recoveredAfterMove": { "type": "boolean" }
           }
         },
         "visualReview": {

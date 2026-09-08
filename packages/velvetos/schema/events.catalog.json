@@ -207,8 +207,29 @@
       "id": "media.intake.failed",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["fileId", "error", "attempts"],
-      "note": "Durable retry path; do not invent success. Max attempts then stay failed until recovery."
+      "payloadKeys": ["fileId", "error", "attempts", "nextAfter"],
+      "note": "Backoff retry path; never permanentStop. Max delay then repeat last interval."
+    },
+    {
+      "id": "media.intake.unverified",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["fileId", "error", "phase"],
+      "note": "No real download bytes inspected — stay registered. Metadata/size is not proof."
+    },
+    {
+      "id": "media.intake.content_changed",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["fileId", "priorFingerprint", "newFingerprint", "approvalInherited"],
+      "note": "Same Drive fileId, new checksum/revision — versionApproval not inherited."
+    },
+    {
+      "id": "media.intake.listing_failed",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": ["error", "pageToken", "nextAfter"],
+      "note": "Inbox list/pagination failure with documented backoff recovery."
     }
   ]
 }

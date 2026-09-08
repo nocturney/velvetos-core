@@ -225,12 +225,26 @@ def main() -> None:
     workflow = INTAKE_WORKFLOW.read_text(encoding="utf-8")
     if "cron:" not in workflow:
         fail("vfmedia-intake.yml must declare schedule cron")
+    if "*/5" not in workflow:
+        fail("vfmedia-intake.yml must target 5-minute cadence (*/5) — GHA minimum")
+    if "concurrency:" not in workflow:
+        fail("vfmedia-intake.yml must declare concurrency to prevent overlapping runners")
+    if "git push ||" in workflow:
+        fail("vfmedia-intake.yml must not swallow git push failures")
+    if "|| echo" in workflow and "push" in workflow:
+        fail("vfmedia-intake.yml must not swallow git push failures with || echo")
+    if "credentials" not in workflow.lower() and "AUTH" not in workflow:
+        fail("workflow must treat Drive credentials as required")
     if "intake run" not in workflow and "intake selftest" not in workflow:
         fail("vfmedia-intake.yml must run intake")
-    if "validate≠" in workflow or "NOT this job" not in workflow:
-        # require explicit note that validate is not the intake job
-        if "validate" in workflow and "NOT" not in workflow and "not this" not in workflow.lower():
-            fail("workflow must clarify validate is not intake monitoring")
+    if "test_intake_hardening" not in workflow:
+        fail("vfmedia-intake.yml must run hardening unit tests")
+    if "NOT this job" not in workflow and "schema-only" not in workflow:
+        fail("workflow must clarify validate is not intake monitoring")
+
+    hardening = PACK / "tests" / "test_intake_hardening.py"
+    if not hardening.is_file():
+        fail("missing packages/vfmedia/tests/test_intake_hardening.py")
 
     other_catalogs = list((ROOT / "packages").glob("**/media-catalog.json"))
     if other_catalogs:
@@ -271,6 +285,15 @@ def main() -> None:
     )
     if selftest.returncode != 0:
         fail(f"vfmedia.py intake selftest: {selftest.stderr or selftest.stdout}")
+
+    hardening_proc = subprocess.run(
+        [sys.executable, str(hardening), "-v"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if hardening_proc.returncode != 0:
+        fail(f"intake hardening tests: {hardening_proc.stderr or hardening_proc.stdout}")
 
     print("OK vfmedia vault+catalog+intake locked (validate≠monitor; one catalog)")
 

@@ -1,12 +1,22 @@
 name: VF Media Auto Intake
 
 # Scheduled background intake for Drive inbox → canonical vfmedia catalog.
+# Target cadence: every 5 minutes (GitHub Actions minimum schedule interval).
+# Platform caveat: scheduled runs are best-effort and may be delayed under load.
 # validate (vfmedia.py validate) is NOT this job — it is schema-only.
-# Exit 3 = missing Drive credentials in this runtime (reported, not faked green).
+#
+# Exit codes:
+#   0 OK
+#   1 FAIL (listing/processing)
+#   2 BUSY (overlap)
+#   3 AUTH (Drive credentials missing — requirement blocker, not optional)
+#   4 PERSIST (state could not be saved)
+#
+# Drive credentials on the runner are REQUIRED to complete auto-intake — not optional.
 
 on:
   schedule:
-    - cron: "15 */6 * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
     inputs:
       max_files:
@@ -18,6 +28,10 @@ on:
         required: false
         default: "false"
 
+concurrency:
+  group: vfmedia-intake-${{ github.repository }}
+  cancel-in-progress: false
+
 jobs:
   media-intake:
     runs-on: ubuntu-latest
@@ -25,19 +39,49 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Offline selftest (always)
+
+      - name: Hardening unit tests
+        run: python3 packages/vfmedia/tests/test_intake_hardening.py -v
+
+      - name: Offline selftest
         run: python3 scripts/vfmedia.py intake selftest
-      - name: Install Drive client (optional)
-        run: pip install --quiet google-api-python-client google-auth || true
+
+      - name: Install Drive client
+        run: pip install --quiet google-api-python-client google-auth
+
+      - name: Materialize Drive credentials
+        id: creds
+        env:
+          VFMEDIA_DRIVE_CREDENTIALS_JSON: ${{ secrets.VFMEDIA_DRIVE_CREDENTIALS_JSON }}
+          VFMEDIA_DRIVE_CREDENTIALS: ${{ secrets.VFMEDIA_DRIVE_CREDENTIALS }}
+          GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
+          VFMEDIA_DRIVE_TOKEN: ${{ secrets.VFMEDIA_DRIVE_TOKEN }}
+        run: |
+          set -e
+          if [ -n "$VFMEDIA_DRIVE_CREDENTIALS_JSON" ]; then
+            printf '%s' "$VFMEDIA_DRIVE_CREDENTIALS_JSON" > "$RUNNER_TEMP/vfmedia-drive.json"
+            echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/vfmedia-drive.json" >> "$GITHUB_ENV"
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          elif [ -n "$VFMEDIA_DRIVE_CREDENTIALS" ] && [ -f "$VFMEDIA_DRIVE_CREDENTIALS" ]; then
+            echo "GOOGLE_APPLICATION_CREDENTIALS=$VFMEDIA_DRIVE_CREDENTIALS" >> "$GITHUB_ENV"
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          elif [ -n "$GOOGLE_TOKEN" ] || [ -n "$VFMEDIA_DRIVE_TOKEN" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::error::Drive credentials missing. Auto-intake requires VFMEDIA_DRIVE_CREDENTIALS_JSON (or GOOGLE_TOKEN) on the runner — not optional."
+          fi
+
       - name: Run intake against Google Drive
         id: intake
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_PATH }}
-          VFMEDIA_DRIVE_CREDENTIALS: ${{ secrets.VFMEDIA_DRIVE_CREDENTIALS }}
           GOOGLE_TOKEN: ${{ secrets.GOOGLE_TOKEN }}
           VFMEDIA_DRIVE_TOKEN: ${{ secrets.VFMEDIA_DRIVE_TOKEN }}
         run: |
@@ -48,32 +92,58 @@ jobs:
           fi
           MAX="${{ github.event.inputs.max_files }}"
           MAX="${MAX:-50}"
-          python3 scripts/vfmedia.py intake run --provider google --max-files "$MAX" $EXTRA
+          python3 scripts/vfmedia.py intake run --provider google --max-files "$MAX" --mark-activation $EXTRA
           code=$?
           echo "exit_code=$code" >> "$GITHUB_OUTPUT"
-          if [ "$code" = "3" ]; then
-            echo "::warning::VF media intake AUTH — Drive credentials missing in Actions runtime. Code+selftest OK; live Drive scan blocked until secrets are set."
-            python3 scripts/vfmedia.py intake status
+          python3 scripts/vfmedia.py intake status || true
+          exit 0
+
+      - name: Persist intake state (including blocked/fail)
+        id: persist
+        run: |
+          set -e
+          git config user.name "velvetos-media-intake"
+          git config user.email "noreply@velvetos.local"
+          git pull --rebase --autostash origin "${{ github.ref_name }}" || git pull --rebase --autostash origin HEAD || true
+          if git diff --quiet -- packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No intake artifacts to commit"
             exit 0
           fi
-          if [ "$code" = "2" ]; then
-            echo "::notice::Overlapping intake run skipped"
-            exit 0
-          fi
-          exit "$code"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          git add packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json
+          git commit -m "vfmedia intake: durable catalog/state from scheduled run (exit ${{ steps.intake.outputs.exit_code }})"
+          git push
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
       - name: Sensor slice
         run: |
           python3 scripts/check-vfmedia.py
           python3 scripts/vfmedia.py validate
-      - name: Commit intake state if changed
-        if: steps.intake.outputs.exit_code == '0'
+
+      - name: Fail on AUTH / FAIL / PERSIST / push problems
+        if: always()
         run: |
-          if git diff --quiet -- packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json; then
-            echo "No intake artifacts to commit"
+          code="${{ steps.intake.outputs.exit_code }}"
+          ready="${{ steps.creds.outputs.ready }}"
+          if [ "$ready" != "true" ] || [ "$code" = "3" ]; then
+            echo "::error::Drive AUTH blocked auto-intake (exit=$code). Credentials are required to complete this requirement."
+            exit 1
+          fi
+          if [ "$code" = "4" ]; then
+            echo "::error::Persist failure — state could not be saved durably (exit 4)."
+            exit 1
+          fi
+          if [ "$code" = "1" ]; then
+            echo "::error::Intake failed (exit 1). See logs; backoff recorded in runner state."
+            exit 1
+          fi
+          if [ "$code" = "2" ]; then
+            echo "::notice::Overlapping intake skipped (concurrency/local lock)."
             exit 0
           fi
-          git config user.name "velvetos-media-intake"
-          git config user.email "noreply@velvetos.local"
-          git add packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json || true
-          git commit -m "vfmedia intake: durable catalog/state from scheduled run" || true
-          git push || echo "::warning::push failed — state remains in Actions log"
+          if [ "$code" != "0" ] && [ -n "$code" ]; then
+            echo "::error::Unexpected intake exit=$code"
+            exit 1
+          fi
+          exit 0
