@@ -1,48 +1,28 @@
 {
-  "id": "office-risk-policy",
+  "id": "office-risk-policy-mirror",
   "updatedAt": "2026-09-08",
-  "source": "constitution/RISK.md",
+  "sourceOfTruth": "office/control/POLICY.md",
+  "mirrorOf": "office/control-plane.json#dontBotherChristian",
+  "note": "Read-only color mirror. Sensors must treat office/control/POLICY.md as canonical — not this file.",
   "levels": {
     "GREEN": {
       "execute": true,
       "brief": false,
       "escalate": false,
-      "examples": [
-        "organize-internal-state",
-        "media-intake",
-        "copy-draft",
-        "inspect-media",
-        "preflight",
-        "non-destructive-tracking",
-        "content-candidate",
-        "quality-fix",
-        "safe-read-retry"
-      ]
+      "pointer": "office/control/POLICY.md#ירוק"
     },
     "YELLOW": {
       "execute": true,
       "brief": true,
       "escalate": false,
-      "examples": [
-        "routine-cleanup",
-        "stale-calendar-metadata-fix",
-        "fallback-provider-used",
-        "ordinary-quality-repair",
-        "revised-creative-after-failed-preflight"
-      ]
+      "pointer": "office/control/POLICY.md#צהוב"
     },
     "ORANGE": {
       "execute": false,
       "prepareOnly": true,
       "brief": true,
       "escalate": false,
-      "examples": [
-        "candidate-archive-live-post",
-        "prepared-profile-change",
-        "replace-already-live-content",
-        "material-public-change-hard-rollback",
-        "missing-product-fact"
-      ]
+      "pointer": "office/control/POLICY.md#כתום"
     },
     "RED": {
       "execute": false,
@@ -71,7 +51,8 @@
         "routine-stale-data-repair",
         "ordinary-copy-decision",
         "non-destructive-internal-cleanup"
-      ]
+      ],
+      "pointer": "office/control/POLICY.md#אדום"
     }
   }
 }

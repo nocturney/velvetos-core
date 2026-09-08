@@ -1,31 +1,11 @@
-# Dead-letter — כשלים שלא נעלמים
+# Dead-letter — compatibility pointer
 
-מושב: `vfharness`. חוקה: `constitution/RISK.md`.  
-תור: [`queue.json`](queue.json) · סכמה: [`schema.json`](schema.json).
+**SOURCE OF TRUTH:** `office/control/dead-letter.json`  
+**CLI / API:** `scripts/vf_control_plane.py` · `record_dead_letter` / `list_dead_letters`  
+**Thin wrapper (compat):** `python3 scripts/vf_dead_letter.py list|add|resolve`
 
-## זרימה
+`queue.json` here is a **pointer only** (`sourceOfTruth` + empty `items`).  
+Do **not** write dead-letter items into this pack. Sensors fail red if this file holds real authoritative items.
 
-`attempt` → `retry policy` → `fallback` → `downgrade where valid` → **dead-letter** אם לא נפתר.
-
-## שדות חובה
-
-- actionId
-- jobOrContentId
-- attemptedTool
-- time
-- failureSummary
-- retries
-- fallbackAttempted
-- currentState
-- nextSafeAction
-- riskColor
-- christianRequired
-
-## חוקים
-
-- Dead-letter ≠ forgotten.
-- Watchdog סורק ומנסה לפתור אוטונומית כש־GREEN/YELLOW.
-- RED → כריסטיאן בלבד.
-- אסור למחוק פריט בלי `resolved: true` + סיבה.
-
-CLI: `python3 scripts/vf_dead_letter.py list|add|resolve`
+Policy: `office/control/POLICY.md` (mirror: `constitution/RISK.md`).  
+Watchdog: `python3 scripts/vf_control_plane.py watchdog` (wrapper: `vf_office_watchdog.py`).

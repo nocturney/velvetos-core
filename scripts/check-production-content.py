@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Production→content continuity rules. No network."""
+"""Production→content continuity — canonical followups via vf_control_plane. No network."""
 from __future__ import annotations
 
 import json
@@ -7,30 +7,19 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from vf_control_plane import defensible_match, sync_followups  # noqa: E402
+
 DOC = ROOT / "packages" / "vfgrowth" / "PRODUCTION-CONTENT.md"
-DATA = ROOT / "packages" / "vfgrowth" / "data" / "production-content-followups.json"
+POINTER = ROOT / "packages" / "vfgrowth" / "data" / "production-content-followups.json"
+CANONICAL = ROOT / "office" / "control" / "followups.json"
 PRINT = ROOT / "packages" / "vfprod" / "PRINT-DONE.md"
 
 
 def fail(msg: str) -> None:
     print(f"FAIL {msg}", file=sys.stderr)
     raise SystemExit(1)
-
-
-def matching_closes(followup: dict, print_done: dict) -> bool:
-    """Defensible match only — name similarity alone is insufficient."""
-    for key in ("jobId", "correlationId", "printCardPath"):
-        a = followup.get(key)
-        b = print_done.get(key)
-        if a and b and a == b:
-            return True
-    sku_a = followup.get("sku")
-    sku_b = print_done.get("sku")
-    src_a = followup.get("sourceLink")
-    src_b = print_done.get("sourceLink")
-    if sku_a and sku_b and sku_a == sku_b and src_a and src_b and src_a == src_b:
-        return True
-    return False
 
 
 def main() -> None:
@@ -42,47 +31,56 @@ def main() -> None:
         "finished-media-required",
         "Matching defensible",
         "print.done",
+        "office/control/followups.json",
+        "vf_control_plane",
+        "defensible_match",
     ):
         if needle not in doc:
             fail(f"PRODUCTION-CONTENT.md missing {needle!r}")
 
-    data = json.loads(DATA.read_text(encoding="utf-8"))
-    if "followups" not in data:
-        fail("followups array required")
+    if not CANONICAL.is_file():
+        fail("missing office/control/followups.json")
 
-    # Unit-style: process content creates follow-up contract
+    ptr = json.loads(POINTER.read_text(encoding="utf-8"))
+    if ptr.get("sourceOfTruth") != "office/control/followups.json":
+        fail("production-content-followups.json must pointer to office/control/followups.json")
+    if ptr.get("followups"):
+        fail("pointer followups array must stay empty (not authoritative)")
+
+    # Unit-style via control-plane defensible_match
     sample_fu = {
         "contentId": "process-demo-1",
         "kind": "process",
-        "status": "waiting_for_matching_print.done",
+        "state": "waiting_for_print_done",
         "jobId": "JOB-100",
         "sku": "G004",
         "sourceLink": "src://g004",
     }
-    wrong = {"jobId": "JOB-999", "sku": "G004", "sourceLink": "src://other", "correlationId": "x"}
+    wrong = {"jobId": "JOB-999", "sku": "G004", "sourceLink": "src://other", "correlation_id": "x"}
     right = {
         "jobId": "JOB-100",
         "sku": "G004",
         "sourceLink": "src://g004",
-        "correlationId": "JOB-100",
+        "correlation_id": "JOB-100",
     }
-    if matching_closes(sample_fu, wrong):
+    name_only = {"sku": "G004-lookalike", "jobId": "OTHER"}
+    if defensible_match(sample_fu, wrong):
         fail("wrong print.done must not close unrelated follow-up")
-    if not matching_closes(sample_fu, right):
+    if not defensible_match(sample_fu, right):
         fail("matching print.done must close follow-up")
+    if defensible_match({"sku": "Ring"}, {"sku": "RingHolder"}):
+        fail("name/sku similarity alone must never match")
+    if defensible_match(sample_fu, name_only):
+        fail("sku without matching sourceLink / jobId must not match")
 
-    # finished path
-    after = dict(sample_fu)
-    after["status"] = "finished-content-prep"
-    after["next"] = ["edit-gate", "preflight", "calendar-slot", "publish-when-ready", "live-verify"]
-    if "finished-media-required" not in doc:
-        fail("missing finished-media-required path")
+    # sync_followups is callable (dry)
+    sync_followups(mutate=False)
 
     print_done = PRINT.read_text(encoding="utf-8")
     if "print.done" not in print_done:
         fail("PRINT-DONE.md must keep print.done")
 
-    print("OK production-content continuity")
+    print("OK production-content continuity (control-plane match)")
 
 
 if __name__ == "__main__":

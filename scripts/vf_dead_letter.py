@@ -1,89 +1,86 @@
 #!/usr/bin/env python3
-"""Dead-letter queue helpers. No network. No send."""
+"""Thin wrapper — canonical dead-letter is office/control/dead-letter.json via vf_control_plane.
+
+Do not maintain a second queue under packages/vfharness/dead-letter/.
+"""
 from __future__ import annotations
 
 import argparse
 import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-QUEUE = ROOT / "packages" / "vfharness" / "dead-letter" / "queue.json"
-SCHEMA_KEYS = (
-    "actionId",
-    "jobOrContentId",
-    "attemptedTool",
-    "time",
-    "failureSummary",
-    "retries",
-    "fallbackAttempted",
-    "currentState",
-    "nextSafeAction",
-    "riskColor",
-    "christianRequired",
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from vf_control_plane import (  # noqa: E402
+    DEAD,
+    list_dead_letters,
+    load_json,
+    now_iso,
+    record_dead_letter,
+    resolve_dead_letter,
+    today,
+    write_json,
 )
 
 
-def load() -> dict:
-    return json.loads(QUEUE.read_text(encoding="utf-8"))
-
-
-def save(data: dict) -> None:
-    data["updatedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    QUEUE.write_text(
-        json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
-
-
 def cmd_list(_: argparse.Namespace) -> int:
-    data = load()
-    open_items = [i for i in data.get("items") or [] if not i.get("resolved")]
-    print(json.dumps({"open": len(open_items), "items": open_items}, ensure_ascii=False, indent=2))
+    open_items = list_dead_letters(open_only=True)
+    print(
+        json.dumps(
+            {
+                "sourceOfTruth": "office/control/dead-letter.json",
+                "open": len(open_items),
+                "items": open_items,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
     return 0
 
 
 def cmd_add(args: argparse.Namespace) -> int:
-    data = load()
-    item = {
-        "actionId": args.action_id,
-        "jobOrContentId": args.job,
-        "attemptedTool": args.tool,
-        "time": args.time or datetime.now(timezone.utc).isoformat(),
-        "failureSummary": args.summary,
-        "retries": args.retries,
-        "fallbackAttempted": args.fallback,
-        "currentState": args.state,
-        "nextSafeAction": args.next,
-        "riskColor": args.risk,
-        "christianRequired": args.christian,
-        "resolved": False,
-        "resolvedAt": None,
-    }
-    for k in SCHEMA_KEYS:
-        if item.get(k) is None or item.get(k) == "":
-            print(f"FAIL missing {k}", file=sys.stderr)
-            return 1
-    data.setdefault("items", []).append(item)
-    save(data)
-    print(f"OK added {item['actionId']}")
+    risk = (args.risk or "YELLOW").lower()
+    item = record_dead_letter(
+        action=args.action_id,
+        source=args.tool,
+        reason=args.summary,
+        risk=risk,
+        owner_required=bool(args.christian),
+        correlation_id=args.job or None,
+        attempts=int(args.retries),
+        last_error=args.summary,
+        next_safe_action=args.next,
+    )
+    # Preserve legacy field aliases on the same canonical item (still one store)
+    data = load_json(DEAD, {"items": []})
+    for row in data.get("items") or []:
+        if row.get("id") == item["id"]:
+            row["actionId"] = args.action_id
+            row["jobOrContentId"] = args.job
+            row["attemptedTool"] = args.tool
+            row["time"] = args.time or now_iso()
+            row["failureSummary"] = args.summary
+            row["retries"] = args.retries
+            row["fallbackAttempted"] = bool(args.fallback)
+            row["currentState"] = args.state
+            row["nextSafeAction"] = args.next
+            row["riskColor"] = (args.risk or "YELLOW").upper()
+            row["christianRequired"] = bool(args.christian)
+            break
+    data["updatedAt"] = today()
+    write_json(DEAD, data)
+    print(f"OK added {args.action_id} → office/control/dead-letter.json ({item['id']})")
     return 0
 
 
 def cmd_resolve(args: argparse.Namespace) -> int:
-    data = load()
-    found = False
-    for item in data.get("items") or []:
-        if item.get("actionId") == args.action_id:
-            item["resolved"] = True
-            item["resolvedAt"] = datetime.now(timezone.utc).isoformat()
-            item["resolveNote"] = args.note or "resolved"
-            found = True
-            break
-    if not found:
-        print(f"FAIL actionId not found: {args.action_id}", file=sys.stderr)
+    ok = resolve_dead_letter(args.action_id, note=args.note or "resolved")
+    if not ok:
+        print(f"FAIL actionId/id not found: {args.action_id}", file=sys.stderr)
         return 1
-    save(data)
     print(f"OK resolved {args.action_id}")
     return 0
 

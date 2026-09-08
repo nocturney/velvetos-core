@@ -1,55 +1,25 @@
-# מדיניות סיכון — משרד אוטונומי
+# מדיניות סיכון — מראה (mirror)
 
-נעילה 8.9.2026 — Christian.  
-מקור אמת לצבע סיכון. לא פק חדש.  
-ברירת מחדל: **האם המשרד יכול לפתור בבטחה תחת המדיניות?** — לא «האם לשאול את כריסטיאן?»
+**SOURCE OF TRUTH:** `office/control/POLICY.md`  
+**Don't Bother Christian map:** `office/control-plane.json` → `dontBotherChristian`
 
-## צבעים
+קובץ זה הוא **מצביע קצר** בלבד — לא מדיניות מתחרה.  
+צבעים GREEN / YELLOW / ORANGE / RED = אותם שכבות כמו ב־POLICY / control-plane.
 
-### GREEN — בצע אוטונומית
+| צבע | משמעות (מצביע) |
+|---|---|
+| **GREEN** | לבצע אוטונומית — ראה POLICY.md |
+| **YELLOW** | לבצע + לדווח בבריף — ראה POLICY.md |
+| **ORANGE** | להכין בלבד — ראה POLICY.md |
+| **RED** | אישור כריסטיאן — ראה POLICY.md |
 
-ארגון מצב פנימי · קליטת מדיה · טיוטת כיתוב · בדיקת מדיה · PREFLIGHT · מעקב פנימי לא־הרסני · מועמד תוכן · תיקון איכות · retry קריאה בטוחה.
-
-### YELLOW — בצע אוטונומית + ציין בבריף הבא
-
-ניקוי שגרתי · תיקון מטא־נתונים של לוח · failover לספק גיבוי · תיקון איכות רגיל · קריאייטיב מתוקן אחרי PREFLIGHT שנכשל.
-
-### ORANGE — הכן בלבד, אל תבצע חיצונית
-
-מועמד לארכיון של פוסט חי · שינוי פרופיל מוכן לפני כלי · החלפת תוכן שכבר חי · שינוי ציבורי מהותי שקשה לגלגל אחורה · תוכן שדורש עובדת מוצר חסרה.
-
-### RED — כריסטיאן בלבד
-
-רק כאשר באמת נדרש:
-
-- אישור בעלים חובה
-- רכישה / תשלום
-- שינוי מחיר / החלטת מחיר לא ידוע
-- פעולה חיצונית הרסנית
-- ארכיון/מחיקה של פריט חי כשהמדיניות דורשת בעלים
-- אישור חי אנושי בלבד
-- מקור אמת שבור / חסר
-- עמימות רגישה
-- כשל שהמשרד לא פתר אחרי failover
-- פעולה ששמורה במפורש לבעלים
-
-## אסור להסלים ל־RED
-
-- מדדים חלשים / חשיפה נמוכה
-- תיקוני איכות שגרתיים
-- כלי שנפל כשה־failover עובד
-- הכנת תוכן רגילה
-- קליטת מדיה
-- תיקון נתונים ישנים שגרתי
-- החלטת כיתוב רגילה
-- ניקוי פנימי לא־הרסני
+אסור להסלים ל־RED על מדדים חלשים / weak-metrics / כשל כלי רגיל עם failover.
 
 ## Dead-letter
 
-כשל שלא נפתר אחרי retry + failover → פריט dead-letter (לא «נכשל ונשכח»).  
-מבנה: `packages/vfharness/dead-letter/`.  
-ה־watchdog סורק. Green/Yellow → מנסה לפתור. Red → מעלה לכריסטיאן.
+**SoT:** `office/control/dead-letter.json` (לא `packages/vfharness/dead-letter/queue.json`).  
+CLI: `vf_control_plane.record_dead_letter` · wrapper `vf_dead_letter.py`.
 
 ## Watchdog
 
-`python3 scripts/vf_office_watchdog.py` · חיישן `scripts/check-office-watchdog.py`.
+`python3 scripts/vf_control_plane.py watchdog` · wrapper `vf_office_watchdog.py` · חיישן `check-office-watchdog.py`.

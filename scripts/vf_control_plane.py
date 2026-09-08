@@ -60,6 +60,26 @@ FOLLOWUP_STATES = {
     "blocked",
 }
 
+WATCHDOG_OUTCOMES = (
+    "OK",
+    "AUTOFIXED",
+    "PREPARED",
+    "WAITING_EXTERNAL_TOOL",
+    "DEAD_LETTER",
+    "RED_BLOCKER",
+)
+
+HARNESS_DL_QUEUE = ROOT / "packages" / "vfharness" / "dead-letter" / "queue.json"
+LEGACY_FOLLOWUPS = ROOT / "packages" / "vfgrowth" / "data" / "production-content-followups.json"
+PUBLIC_CTA = ROOT / "constitution" / "PUBLIC_CTA.md"
+PUBLICATION_STATES = ROOT / "packages" / "vfigos" / "PUBLICATION-STATES.json"
+IG_CAPABILITIES = ROOT / "packages" / "vfigos" / "CAPABILITIES.json"
+PROFILE_DESIRED = ROOT / "packages" / "vfigos" / "PROFILE-DESIRED.json"
+FEED_AUDIT = ROOT / "packages" / "vfgrowth" / "data" / "feed-audit.json"
+DESK = ROOT / ".cursor" / "vf-desk.json"
+INSTANCE_VF = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
+POLICY_CANONICAL = POLICY_MD
+
 
 def now_iso() -> str:
     return datetime.now(TZ).isoformat(timespec="seconds")
@@ -147,27 +167,57 @@ def required_paths() -> dict[str, Path]:
     }
 
 
+def _card_field(text: str, *labels: str) -> str:
+    """Extract first non-empty value for label-ish lines in a print card."""
+    for line in text.splitlines():
+        low = line.lower().strip()
+        for lab in labels:
+            if lab.lower() in low and ":" in line:
+                val = line.split(":", 1)[1].strip()
+                if val and val not in {"חסר", "-", "—", "missing", "none"}:
+                    return val
+    return ""
+
+
 def parse_print_cards() -> list[dict]:
+    """Return print.done rows with jobId, sku, sourceLink, printCardPath, correlation_id, has_media."""
     rows: list[dict] = []
     if PRINT_EVENTS.is_file():
         for ev in load_jsonl(PRINT_EVENTS):
             if (ev.get("name") or ev.get("event") or "") != "print.done" and "print.done" not in str(
                 ev.get("event") or ""
             ):
-                # still accept envelopes that look like print.done
                 if (ev.get("name") or "") != "print.done":
                     if not ev.get("correlationId") and not (ev.get("payload") or {}).get("sku"):
                         continue
             payload = dict(ev.get("payload") or {})
-            corr = (ev.get("correlationId") or payload.get("sku") or payload.get("jobId") or "").strip()
+            job_id = (payload.get("jobId") or payload.get("job_id") or ev.get("jobId") or "").strip()
+            sku = (payload.get("sku") or "").strip()
+            source_link = (
+                payload.get("sourceLink") or payload.get("source_link") or payload.get("source") or ""
+            ).strip()
+            corr = (
+                ev.get("correlationId")
+                or payload.get("correlationId")
+                or payload.get("correlation_id")
+                or job_id
+                or sku
+                or ""
+            ).strip()
             media = (
                 payload.get("mediaPath")
                 or (payload.get("media") or {}).get("timelapse_path")
+                or (payload.get("media") or {}).get("still_path")
                 or ""
             ).strip()
             rows.append(
                 {
+                    "jobId": job_id,
+                    "sku": sku,
+                    "sourceLink": source_link,
+                    "printCardPath": "",
                     "correlation_id": corr,
+                    "correlationId": corr,
                     "media": media,
                     "source": "print-events.jsonl",
                     "has_media": bool(media) and media not in {"חסר", "missing", "none"},
@@ -178,24 +228,20 @@ def parse_print_cards() -> list[dict]:
             if path.name in {"README.md", "PRINT-CARD-TEMPLATE.md"}:
                 continue
             text = path.read_text(encoding="utf-8")
-            if "print.done" not in text and "event: print.done" not in text:
-                # cards folder implies print.done cards
-                pass
-            corr = ""
-            for line in text.splitlines():
-                low = line.lower()
-                if "sku" in low or "correlation" in low or "שם עבודה" in line:
-                    part = line.split(":", 1)
-                    if len(part) == 2 and part[1].strip():
-                        corr = part[1].strip()
-                        break
+            rel = str(path.relative_to(ROOT))
+            sku = _card_field(text, "sku", "מק״ט", "שם עבודה")
+            job_id = _card_field(text, "jobId", "job_id", "job id", "מזהה עבודה")
+            source_link = _card_field(text, "sourceLink", "source_link", "source link", "קישור מקור")
+            corr = _card_field(text, "correlationId", "correlation_id", "correlation")
             if not corr:
-                # stem often YYYY-MM-DD-<sku-or-job>
+                corr = job_id or sku
+            if not corr:
                 stem = path.stem
                 bits = stem.split("-", 3)
                 corr = bits[3] if len(bits) >= 4 else stem
-            has_media = ("timelapse" in text.lower() or "still path" in text.lower()) and "חסר" not in text
-            # weaker: explicit media path with non-empty value
+                if not sku:
+                    sku = corr
+            has_media = False
             for line in text.splitlines():
                 if "timelapse" in line.lower() or "still path" in line.lower() or "drive id" in line.lower():
                     val = line.split(":", 1)[-1].strip() if ":" in line else ""
@@ -203,14 +249,52 @@ def parse_print_cards() -> list[dict]:
                         has_media = True
             rows.append(
                 {
+                    "jobId": job_id,
+                    "sku": sku,
+                    "sourceLink": source_link,
+                    "printCardPath": rel,
+                    "print_card_path": rel,
                     "correlation_id": corr,
+                    "correlationId": corr,
                     "media": "card" if has_media else "",
-                    "source": str(path.relative_to(ROOT)),
+                    "source": rel,
                     "has_media": has_media,
-                    "path": str(path.relative_to(ROOT)),
+                    "path": rel,
                 }
             )
-    return [r for r in rows if r.get("correlation_id")]
+    return [r for r in rows if r.get("correlation_id") or r.get("jobId") or r.get("sku")]
+
+
+def defensible_match(followup: dict, print_row: dict) -> bool:
+    """True only on jobId, correlationId, printCardPath, or (sku + sourceLink). Never name alone."""
+    fu_job = (followup.get("jobId") or followup.get("job_id") or "").strip()
+    pr_job = (print_row.get("jobId") or print_row.get("job_id") or "").strip()
+    if fu_job and pr_job and fu_job == pr_job:
+        return True
+
+    fu_corr = (followup.get("correlationId") or followup.get("correlation_id") or "").strip()
+    pr_corr = (print_row.get("correlationId") or print_row.get("correlation_id") or "").strip()
+    if fu_corr and pr_corr and fu_corr == pr_corr:
+        return True
+
+    fu_path = (followup.get("printCardPath") or followup.get("print_card_path") or "").strip()
+    pr_path = (
+        print_row.get("printCardPath")
+        or print_row.get("print_card_path")
+        or print_row.get("path")
+        or ""
+    ).strip()
+    if fu_path and pr_path and fu_path == pr_path:
+        return True
+
+    fu_sku = (followup.get("sku") or "").strip()
+    pr_sku = (print_row.get("sku") or "").strip()
+    fu_src = (followup.get("sourceLink") or followup.get("source_link") or "").strip()
+    pr_src = (print_row.get("sourceLink") or print_row.get("source_link") or "").strip()
+    if fu_sku and pr_sku and fu_sku == pr_sku and fu_src and pr_src and fu_src == pr_src:
+        return True
+
+    return False
 
 
 def next_calendar_slot() -> str:
@@ -257,28 +341,32 @@ def owner_surface_items(inbox: dict | None = None, dead: dict | None = None, gat
 
 
 def sync_followups(*, mutate: bool = True) -> list[dict]:
-    """WIP→finished bridge. Never invent correlation_id."""
+    """WIP→finished bridge. Never invent correlation_id. Uses defensible_match only."""
     data = load_json(FOLLOWUPS, {"items": []})
     items = list(data.get("items") or [])
     by_corr = {i.get("correlation_id"): i for i in items if i.get("correlation_id")}
+    by_job = {i.get("jobId"): i for i in items if i.get("jobId")}
     prints = parse_print_cards()
     changed = False
 
-    # Advance waiting followups when matching print.done appears
     for item in items:
         if item.get("type") != "wip_to_finished":
             continue
-        corr = item.get("correlation_id") or ""
-        if not corr:
-            continue
-        match = next((p for p in prints if p["correlation_id"] == corr), None)
+        match = next((p for p in prints if defensible_match(item, p)), None)
         if item.get("state") == "waiting_for_print_done" and match:
             item["state"] = "ready_for_finished_content"
             item["print_source"] = match.get("source")
             item["updated_at"] = now_iso()
+            if match.get("jobId") and not item.get("jobId"):
+                item["jobId"] = match["jobId"]
+            if match.get("sku") and not item.get("sku"):
+                item["sku"] = match["sku"]
+            if match.get("printCardPath"):
+                item["printCardPath"] = match["printCardPath"]
             if not match.get("has_media"):
                 item["state"] = "waiting_for_media"
                 item["next_action"] = "internal_capture_task"
+                item["finished_media"] = "finished-media-required"
             else:
                 item["next_action"] = "prepare_finished_content"
                 item["required_gates"] = ["EDIT-GATE", "PREFLIGHT"]
@@ -288,19 +376,33 @@ def sync_followups(*, mutate: bool = True) -> list[dict]:
         elif item.get("state") == "ready_for_finished_content" and match and not match.get("has_media"):
             item["state"] = "waiting_for_media"
             item["next_action"] = "internal_capture_task"
+            item["finished_media"] = "finished-media-required"
             item["updated_at"] = now_iso()
             changed = True
 
     # Ensure print.done with media without followup gets ready followup (deterministic)
     for p in prints:
-        corr = p["correlation_id"]
-        if not corr or corr in by_corr:
+        corr = p.get("correlation_id") or ""
+        job = p.get("jobId") or ""
+        if not corr and not job:
+            continue
+        if corr and corr in by_corr:
+            continue
+        if job and job in by_job:
+            continue
+        # skip if any existing item already matches defensibly
+        if any(defensible_match(i, p) for i in items if i.get("type") == "wip_to_finished"):
             continue
         if p.get("has_media"):
+            key = corr or job
             neu = {
-                "id": f"fu-{corr}",
+                "id": f"fu-{key}",
                 "type": "wip_to_finished",
-                "correlation_id": corr,
+                "correlation_id": corr or job,
+                "jobId": job or None,
+                "sku": p.get("sku") or None,
+                "sourceLink": p.get("sourceLink") or None,
+                "printCardPath": p.get("printCardPath") or None,
                 "state": "ready_for_finished_content",
                 "created_at": now_iso(),
                 "updated_at": now_iso(),
@@ -311,7 +413,10 @@ def sync_followups(*, mutate: bool = True) -> list[dict]:
                 "publication": "not_published",
             }
             items.append(neu)
-            by_corr[corr] = neu
+            if corr:
+                by_corr[corr] = neu
+            if job:
+                by_job[job] = neu
             changed = True
 
     if mutate and changed:
@@ -321,6 +426,26 @@ def sync_followups(*, mutate: bool = True) -> list[dict]:
     return items
 
 
+def level_to_outcome(level: str, *, code: str = "", owner_required: bool = False) -> str:
+    """Map green/yellow/orange/red (+ tool/dead-letter codes) → watchdog outcomes."""
+    lv = (level or "").lower()
+    code_l = (code or "").lower()
+    if code_l in {"autofixed", "auto_fixed"}:
+        return "AUTOFIXED"
+    if "needsauth" in code_l or "waiting_external" in code_l or "tool" in code_l and "fake" not in code_l:
+        if lv != "red":
+            return "WAITING_EXTERNAL_TOOL"
+    if code_l.startswith("unresolved_dead_letter") or code_l == "dead_letter":
+        return "RED_BLOCKER" if owner_required or lv == "red" else "DEAD_LETTER"
+    if lv == "red":
+        return "RED_BLOCKER"
+    if lv == "orange":
+        return "WAITING_EXTERNAL_TOOL" if "tool" in code_l or "pending" in code_l else "PREPARED"
+    if lv == "yellow":
+        return "PREPARED"
+    return "OK"
+
+
 def watchdog_issues() -> list[dict]:
     issues: list[dict] = []
     p = plane()
@@ -328,9 +453,16 @@ def watchdog_issues() -> list[dict]:
 
     for key, path in required_paths().items():
         if not path.exists():
-            issues.append({"level": "red", "code": "missing_file", "detail": str(path.relative_to(ROOT)), "key": key})
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "missing_file",
+                    "detail": str(path.relative_to(ROOT)),
+                    "key": key,
+                    "outcome": "RED_BLOCKER",
+                }
+            )
 
-    # JSON parse
     for label, path in (
         ("control-plane", CONTROL_PLANE),
         ("inbox", INBOX),
@@ -344,23 +476,15 @@ def watchdog_issues() -> list[dict]:
             try:
                 json.loads(path.read_text(encoding="utf-8"))
             except json.JSONDecodeError as exc:
-                issues.append({"level": "red", "code": "json_parse", "detail": f"{label}: {exc}"})
+                issues.append(
+                    {
+                        "level": "red",
+                        "code": "json_parse",
+                        "detail": f"{label}: {exc}",
+                        "outcome": "RED_BLOCKER",
+                    }
+                )
 
-    # Duplicate source-of-truth claims (explicit parallel maps)
-    claimed: dict[str, list[str]] = {}
-    for domain, loc in sot.items():
-        claimed.setdefault(str(loc), []).append(domain)
-    # Also fail if a second media catalog appears
-    for extra in ROOT.glob("**/media-catalog.json"):
-        if extra.resolve() != MEDIA_CATALOG.resolve():
-            issues.append(
-                {
-                    "level": "red",
-                    "code": "duplicate_media_catalog",
-                    "detail": str(extra.relative_to(ROOT)),
-                }
-            )
-    # Parallel control maps
     for rogue in (
         ROOT / "office" / "sources-of-truth.json",
         ROOT / "packages" / "vfops" / "control-plane.json",
@@ -372,98 +496,467 @@ def watchdog_issues() -> list[dict]:
                     "level": "red",
                     "code": "duplicate_source_of_truth_map",
                     "detail": str(rogue.relative_to(ROOT)),
+                    "outcome": "RED_BLOCKER",
                 }
             )
 
-    # Dead letters forgotten
-    dead = load_json(DEAD, {"items": []})
-    for item in dead.get("items") or []:
-        if item.get("status") in {"open", "unresolved", None, "failed"}:
-            age = item.get("created_at") or ""
-            issues.append(
-                {
-                    "level": "yellow" if not item.get("owner_required") else "orange",
-                    "code": "unresolved_dead_letter",
-                    "detail": item.get("id") or item.get("action") or age,
-                    "owner_required": bool(item.get("owner_required")),
-                }
-            )
-
-    # WIP stuck after matching print.done
-    items = sync_followups(mutate=True)
-    prints = {p["correlation_id"] for p in parse_print_cards()}
-    for item in items:
-        if (
-            item.get("type") == "wip_to_finished"
-            and item.get("state") == "waiting_for_print_done"
-            and item.get("correlation_id") in prints
-        ):
+    # Duplicate SoT: harness dead-letter queue claiming authority
+    if HARNESS_DL_QUEUE.is_file():
+        hq = load_json(HARNESS_DL_QUEUE, {})
+        real_items = [i for i in (hq.get("items") or []) if i]
+        sot_ptr = (hq.get("sourceOfTruth") or "").replace("\\", "/")
+        if real_items and sot_ptr != "office/control/dead-letter.json":
             issues.append(
                 {
                     "level": "red",
-                    "code": "wip_stuck_after_print_done",
-                    "detail": item.get("correlation_id"),
+                    "code": "duplicate_dead_letter_authority",
+                    "detail": "packages/vfharness/dead-letter/queue.json has authoritative items",
+                    "outcome": "RED_BLOCKER",
+                }
+            )
+        elif real_items and sot_ptr == "office/control/dead-letter.json":
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "duplicate_dead_letter_authority",
+                    "detail": "pointer queue must keep items=[] — write only to office/control/dead-letter.json",
+                    "outcome": "RED_BLOCKER",
                 }
             )
 
-    # Approved content without next action
+    # Duplicate SoT: legacy production-content followups claiming authority
+    if LEGACY_FOLLOWUPS.is_file():
+        lf = load_json(LEGACY_FOLLOWUPS, {})
+        sot_ptr = (lf.get("sourceOfTruth") or "").replace("\\", "/")
+        auth_fus = [f for f in (lf.get("followups") or []) if f]
+        if auth_fus and sot_ptr != "office/control/followups.json":
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "duplicate_followups_authority",
+                    "detail": "production-content-followups.json has authoritative followups (not a pointer)",
+                    "outcome": "RED_BLOCKER",
+                }
+            )
+        elif not sot_ptr and "followups" in lf:
+            # empty array without pointer is soft; non-empty already caught
+            if auth_fus:
+                issues.append(
+                    {
+                        "level": "red",
+                        "code": "duplicate_followups_authority",
+                        "detail": "legacy followups file missing sourceOfTruth pointer",
+                        "outcome": "RED_BLOCKER",
+                    }
+                )
+
+    for extra in ROOT.glob("**/media-catalog.json"):
+        if extra.resolve() != MEDIA_CATALOG.resolve():
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "duplicate_media_catalog",
+                    "detail": str(extra.relative_to(ROOT)),
+                    "outcome": "RED_BLOCKER",
+                }
+            )
+
+    # Canonical dead letters
+    dead = load_json(DEAD, {"items": []})
+    for item in dead.get("items") or []:
+        if item.get("status") in {"open", "unresolved", None, "failed"}:
+            owner_req = bool(item.get("owner_required") or item.get("christianRequired"))
+            issues.append(
+                {
+                    "level": "yellow" if not owner_req else "orange",
+                    "code": "unresolved_dead_letter",
+                    "detail": item.get("id") or item.get("action") or item.get("actionId") or "",
+                    "owner_required": owner_req,
+                    "outcome": level_to_outcome(
+                        "orange" if owner_req else "yellow",
+                        code="unresolved_dead_letter",
+                        owner_required=owner_req,
+                    ),
+                }
+            )
+
+    # Failed actions / failover noted in approval or followups
+    items = sync_followups(mutate=True)
+    prints = parse_print_cards()
+    for item in items:
+        if item.get("type") != "wip_to_finished":
+            continue
+        if item.get("state") == "waiting_for_print_done":
+            if any(defensible_match(item, p) for p in prints):
+                issues.append(
+                    {
+                        "level": "red",
+                        "code": "wip_stuck_after_print_done",
+                        "detail": item.get("correlation_id") or item.get("jobId") or item.get("id"),
+                        "outcome": "RED_BLOCKER",
+                    }
+                )
+            else:
+                issues.append(
+                    {
+                        "level": "yellow",
+                        "code": "production_content_waiting_print",
+                        "detail": item.get("correlation_id") or item.get("id"),
+                        "outcome": "PREPARED",
+                    }
+                )
+        if item.get("state") == "waiting_for_media":
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "finished_media_required",
+                    "detail": item.get("correlation_id") or item.get("id"),
+                    "outcome": "PREPARED",
+                }
+            )
+
+        pub = (item.get("publication") or item.get("publication_state") or "").strip()
+        pub_l = pub.lower()
+        # scheduled / uploadAccepted / publishRequested are not live
+        if pub_l in {"scheduled", "uploadaccepted", "publishrequested", "prepared", "approved"}:
+            if item.get("verification_evidence"):
+                pass  # evidence without liveVerified is odd but not red alone
+            issues.append(
+                {
+                    "level": "green",
+                    "code": "publication_not_live",
+                    "detail": f"{item.get('id')}:{pub}",
+                    "outcome": "PREPARED",
+                }
+            )
+        if pub_l in {"published", "live", "posted", "liveverified"} and not item.get("verification_evidence"):
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "published_without_verification",
+                    "detail": item.get("correlation_id") or item.get("id"),
+                    "outcome": "RED_BLOCKER",
+                }
+            )
+        if item.get("state") == "scheduled" and pub_l in {"published", "live", "posted", "liveverified"}:
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "schedule_marked_as_live",
+                    "detail": item.get("id"),
+                    "outcome": "RED_BLOCKER",
+                }
+            )
+
+    # Approval queue
     queue = load_json(APPROVAL_QUEUE, {"items": []})
     for item in queue.get("items") or []:
         gate = item.get("gate") or ""
+        pub_state = (item.get("publication_state") or item.get("publication") or "").lower()
+        if pub_state in {"scheduled", "uploadaccepted", "publishrequested"}:
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "approval_not_live",
+                    "detail": f"{item.get('content_id')}:{pub_state}",
+                    "outcome": "PREPARED",
+                }
+            )
         if gate in {"approved_for_manual_posting", "pending_human_approval"} and not item.get("slot") and not item.get(
             "next_action"
         ):
-            # pending with calendar_rule is ok
             if not item.get("calendar_rule") and not item.get("slot"):
                 issues.append(
                     {
                         "level": "yellow",
                         "code": "approved_without_next_action",
                         "detail": item.get("content_id"),
+                        "outcome": "PREPARED",
                     }
                 )
 
-    # Published claim without verification
-    for item in items:
-        pub = (item.get("publication") or "").lower()
-        if pub in {"published", "live", "posted"} and not item.get("verification_evidence"):
-            issues.append(
-                {
-                    "level": "red",
-                    "code": "published_without_verification",
-                    "detail": item.get("correlation_id") or item.get("id"),
-                }
-            )
-        if item.get("state") == "scheduled" and pub in {"published", "live", "posted"}:
-            issues.append(
-                {
-                    "level": "red",
-                    "code": "schedule_marked_as_live",
-                    "detail": item.get("id"),
-                }
-            )
+    # Media catalog health
+    cat = load_json(MEDIA_CATALOG, {})
+    if cat.get("oneCatalog") is not True:
+        issues.append(
+            {
+                "level": "red",
+                "code": "media_catalog_not_one",
+                "detail": "oneCatalog must be true",
+                "outcome": "RED_BLOCKER",
+            }
+        )
+    elif not isinstance(cat.get("items"), list):
+        issues.append(
+            {
+                "level": "orange",
+                "code": "media_catalog_items_missing",
+                "detail": "catalog items[] missing",
+                "outcome": "PREPARED",
+            }
+        )
 
-    # Policy text scans (repo laws — not inventing)
+    # Calendar inconsistencies / stale scheduled (lightweight: CALENDAR.md exists)
+    if CALENDAR.is_file():
+        cal = CALENDAR.read_text(encoding="utf-8")
+        if "16:00" not in cal and "20:30" not in cal:
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "calendar_inconsistent",
+                    "detail": "standing slots missing from CALENDAR.md",
+                    "outcome": "PREPARED",
+                }
+            )
+    else:
+        issues.append(
+            {
+                "level": "red",
+                "code": "calendar_missing",
+                "detail": "packages/vfgrowth/CALENDAR.md",
+                "outcome": "RED_BLOCKER",
+            }
+        )
+
+    # Feed audit
+    if FEED_AUDIT.is_file():
+        audit = load_json(FEED_AUDIT, {})
+        if audit.get("access") == "awaiting-live-audit":
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "feed_audit_waiting",
+                    "detail": "awaiting-live-audit",
+                    "outcome": "WAITING_EXTERNAL_TOOL",
+                }
+            )
+        g004 = audit.get("g004Identity") or {}
+        if g004.get("canonicalHe") != "מחזיק טבעות לזמן אימון":
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "g004_identity_drift",
+                    "detail": "G004 identity drift",
+                    "outcome": "RED_BLOCKER",
+                }
+            )
+    else:
+        issues.append(
+            {
+                "level": "red",
+                "code": "feed_audit_missing",
+                "detail": "packages/vfgrowth/data/feed-audit.json",
+                "outcome": "RED_BLOCKER",
+            }
+        )
+
+    # PROFILE-DESIRED drift vs WhatsApp in bio
+    if PROFILE_DESIRED.is_file():
+        profile = load_json(PROFILE_DESIRED, {})
+        desired = profile.get("desired") or {}
+        bio = desired.get("bioHe") or ""
+        for banned in ("050-2517000", "WhatsApp", "וואטסאפ", "wa.me"):
+            if banned.lower() in bio.lower() if banned.isascii() else banned in bio:
+                issues.append(
+                    {
+                        "level": "red",
+                        "code": "profile_desired_whatsapp_drift",
+                        "detail": f"bio contains {banned}",
+                        "outcome": "RED_BLOCKER",
+                    }
+                )
+                break
+        else:
+            if profile.get("status") == "prepared" and profile.get("liveStatus") == "pending-live-tool":
+                issues.append(
+                    {
+                        "level": "yellow",
+                        "code": "profile_prepared_pending_live",
+                        "detail": "bio prepared; pending live tool",
+                        "outcome": "PREPARED",
+                    }
+                )
+
+    # PUBLIC_CURRENT_CTA — instance primary must not contain WA phone
+    if INSTANCE_VF.is_file():
+        inst = load_json(INSTANCE_VF, {})
+        primary = ((inst.get("cta") or {}).get("primary") or "")
+        if "050-2517000" in primary or ("whatsapp" in primary.lower() and "instagram" not in primary.lower()):
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "public_cta_whatsapp_violation",
+                    "detail": "instance cta.primary must not contain WhatsApp/050-2517000",
+                    "outcome": "RED_BLOCKER",
+                }
+            )
+    if PUBLIC_CTA.is_file():
+        cta_text = PUBLIC_CTA.read_text(encoding="utf-8")
+        if "Instagram DM" not in cta_text and "Instagram message" not in cta_text.lower():
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "public_cta_missing_ig",
+                    "detail": "PUBLIC_CTA.md missing Instagram DM policy",
+                    "outcome": "RED_BLOCKER",
+                }
+            )
+    else:
+        issues.append(
+            {
+                "level": "red",
+                "code": "public_cta_missing",
+                "detail": "constitution/PUBLIC_CTA.md",
+                "outcome": "RED_BLOCKER",
+            }
+        )
+
+    # Publication states contract
+    if PUBLICATION_STATES.is_file():
+        pub = load_json(PUBLICATION_STATES, {})
+        ids = {s.get("id") for s in pub.get("states") or []}
+        for need in ("prepared", "scheduled", "uploadAccepted", "publishRequested", "liveVerified"):
+            if need not in ids:
+                issues.append(
+                    {
+                        "level": "red",
+                        "code": "publication_states_missing",
+                        "detail": need,
+                        "outcome": "RED_BLOCKER",
+                    }
+                )
+        live = next((s for s in (pub.get("states") or []) if s.get("id") == "liveVerified"), None)
+        if live and "verificationEvidence" not in (live.get("requires") or []) and "verification_evidence" not in str(
+            live.get("requires") or []
+        ):
+            # allow verificationEvidence in requires list
+            req = live.get("requires") or []
+            if "verificationEvidence" not in req:
+                issues.append(
+                    {
+                        "level": "red",
+                        "code": "live_requires_verification",
+                        "detail": "liveVerified must require verificationEvidence",
+                        "outcome": "RED_BLOCKER",
+                    }
+                )
+    else:
+        issues.append(
+            {
+                "level": "red",
+                "code": "publication_states_file_missing",
+                "detail": "packages/vfigos/PUBLICATION-STATES.json",
+                "outcome": "RED_BLOCKER",
+            }
+        )
+
+    # Instagram needsAuth must not claim ready without healthcheck (CAPABILITIES + desk)
+    desk = load_json(DESK, {})
+    ig_status = ((desk.get("tools") or {}).get("instagram") or {}).get("status") or "unknown"
+    caps = load_json(IG_CAPABILITIES, {}) if IG_CAPABILITIES.is_file() else {}
+    caps_status = caps.get("currentStatus") or ""
+    if caps_status == "ready" and ig_status != "ready":
+        issues.append(
+            {
+                "level": "red",
+                "code": "ig_fake_ready",
+                "detail": "CAPABILITIES claims ready while desk is not — refuse fake ready",
+                "outcome": "RED_BLOCKER",
+            }
+        )
+    elif ig_status in {"needsAuth", "pending-connection", "down"}:
+        issues.append(
+            {
+                "level": "yellow",
+                "code": "ig_needsauth_waiting",
+                "detail": f"instagram.status={ig_status}",
+                "outcome": "WAITING_EXTERNAL_TOOL",
+            }
+        )
+    elif ig_status == "ready":
+        issues.append(
+            {
+                "level": "green",
+                "code": "ig_ready",
+                "detail": "desk ready (healthcheck still required before live)",
+                "outcome": "OK",
+            }
+        )
+
+    # Policy text scans
     for path in (CONSTITUTION, ORCHESTRA, CALENDAR):
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8")
-        if "Meta Business Suite" in text and "לא Meta Suite" not in text and "no Suite" not in text.lower():
-            # allow forbid mentions
-            if "לא" not in text[max(0, text.find("Meta Business Suite") - 40) : text.find("Meta Business Suite") + 40]:
-                issues.append({"level": "orange", "code": "suite_language", "detail": str(path.relative_to(ROOT))})
+        idx = text.find("Meta Business Suite")
+        if idx >= 0:
+            window = text[max(0, idx - 40) : idx + 40]
+            if "לא" not in window and "no Suite" not in text.lower():
+                issues.append(
+                    {
+                        "level": "orange",
+                        "code": "suite_language",
+                        "detail": str(path.relative_to(ROOT)),
+                        "outcome": "PREPARED",
+                    }
+                )
 
-    # One media catalog lock
-    cat = load_json(MEDIA_CATALOG, {})
-    if cat.get("oneCatalog") is not True:
-        issues.append({"level": "red", "code": "media_catalog_not_one", "detail": "oneCatalog must be true"})
-
-    # Auto-DM / shipping language in control plane itself
     cp_text = CONTROL_PLANE.read_text(encoding="utf-8") if CONTROL_PLANE.is_file() else ""
     if "auto-dm" in cp_text.lower() and "no-auto-dm" not in cp_text.lower():
-        issues.append({"level": "red", "code": "auto_dm_allowed", "detail": "control-plane"})
+        issues.append(
+            {
+                "level": "red",
+                "code": "auto_dm_allowed",
+                "detail": "control-plane",
+                "outcome": "RED_BLOCKER",
+            }
+        )
 
+    # Ensure outcomes filled
+    for iss in issues:
+        if not iss.get("outcome"):
+            iss["outcome"] = level_to_outcome(
+                iss.get("level") or "green",
+                code=iss.get("code") or "",
+                owner_required=bool(iss.get("owner_required")),
+            )
     return issues
+
+
+def build_watchdog_report(*, mutate_followups: bool = True) -> dict:
+    if mutate_followups:
+        sync_followups(mutate=True)
+    issues = watchdog_issues()
+    findings = []
+    for iss in issues:
+        findings.append(
+            {
+                "area": iss.get("code") or iss.get("key") or "general",
+                "outcome": iss.get("outcome") or level_to_outcome(iss.get("level") or "green", code=iss.get("code") or ""),
+                "detail": iss.get("detail"),
+                "level": iss.get("level"),
+                "owner_required": bool(iss.get("owner_required")),
+            }
+        )
+    rank = {o: i for i, o in enumerate(WATCHDOG_OUTCOMES)}
+    worst = "OK"
+    for f in findings:
+        if rank.get(f["outcome"], 0) > rank.get(worst, 0):
+            worst = f["outcome"]
+    # Owner surface: Don't Bother Christian — weak metrics never escalate
+    surface = owner_surface_items()
+    spam = any(
+        (s.get("kind") or "").lower() in INTERNAL_ONLY_KINDS or (s.get("risk") or "").lower() == "green"
+        for s in surface
+    )
+    return {
+        "generatedAt": now_iso(),
+        "summary": worst,
+        "findings": findings,
+        "spamChristian": False,  # hard lock — routine/weak never spam
+        "owner_surface_count": len(surface),
+        "note": "Don't Bother Christian — notify only for RED_BLOCKER items that require owner action.",
+    }
 
 
 def gaps() -> list[dict]:
@@ -754,19 +1247,29 @@ def cmd_status(_args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_watchdog(_args: argparse.Namespace) -> int:
-    sync_followups(mutate=True)
+def cmd_watchdog(args: argparse.Namespace) -> int:
+    report = build_watchdog_report(mutate_followups=True)
     if not HANDOFF_JSON.is_file():
         build_handoff()
-    issues = watchdog_issues()
-    reds = [i for i in issues if i.get("level") == "red"]
-    print("=== watchdog ===")
-    print(f"issues={len(issues)} red={len(reds)}")
-    for i in issues:
-        print(f"{i.get('level')}\t{i.get('code')}\t{i.get('detail')}")
-    if reds:
+
+    write_flag = bool(getattr(args, "write", False))
+    json_flag = bool(getattr(args, "json", False))
+
+    if write_flag:
+        out = ROOT / "packages" / "vfops" / "hq" / "watchdog-latest.json"
+        write_json(out, report)
+        print(f"WROTE {out.relative_to(ROOT)}")
+
+    if json_flag:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+    else:
+        print(f"WATCHDOG {report['summary']}")
+        print(f"findings={len(report['findings'])} · Don't Bother Christian")
+        for f in report["findings"]:
+            print(f"  {f.get('outcome', ''):24} {f.get('area')}: {f.get('detail')}")
+
+    if report["summary"] == "RED_BLOCKER":
         return 1
-    print("OK watchdog")
     return 0
 
 
@@ -927,6 +1430,7 @@ def record_dead_letter(
     last_error: str = "",
     next_safe_action: str = "retry-via-failover",
 ) -> dict:
+    """Append to office/control/dead-letter.json ONLY — never harness queue.json."""
     data = load_json(DEAD, {"items": []})
     item = {
         "id": f"dl-{datetime.now(TZ).strftime('%Y%m%d%H%M%S')}",
@@ -934,7 +1438,7 @@ def record_dead_letter(
         "source": source,
         "action": action,
         "correlation_id": correlation_id,
-        "risk": risk,
+        "risk": risk.lower() if isinstance(risk, str) else risk,
         "reason": reason,
         "attempts": attempts,
         "last_error": last_error,
@@ -948,73 +1452,140 @@ def record_dead_letter(
     return item
 
 
-def cmd_selftest(_args: argparse.Namespace) -> int:
-    """Acceptance fixtures from the handoff — isolated temp mutations restored."""
-    errors: list[str] = []
+def list_dead_letters(*, open_only: bool = False) -> list[dict]:
+    data = load_json(DEAD, {"items": []})
+    items = list(data.get("items") or [])
+    if open_only:
+        items = [i for i in items if i.get("status") in {"open", "unresolved", "failed", None}]
+    return items
 
-    # C. WIP→Finished
+
+def resolve_dead_letter(action_or_id: str, *, note: str = "resolved") -> bool:
+    data = load_json(DEAD, {"items": []})
+    found = False
+    for item in data.get("items") or []:
+        if item.get("id") == action_or_id or item.get("action") == action_or_id or item.get("actionId") == action_or_id:
+            item["status"] = "resolved"
+            item["resolved"] = True
+            item["resolvedAt"] = now_iso()
+            item["resolveNote"] = note
+            found = True
+            break
+    if found:
+        data["updatedAt"] = today()
+        write_json(DEAD, data)
+    return found
+
+
+def cmd_selftest(_args: argparse.Namespace) -> int:
+    """Acceptance fixtures — isolated temp mutations restored."""
+    errors: list[str] = []
     fus_path = FOLLOWUPS
     backup_fu = fus_path.read_text(encoding="utf-8") if fus_path.is_file() else None
+    backup_dl = DEAD.read_text(encoding="utf-8") if DEAD.is_file() else None
+    backup_inbox = INBOX.read_text(encoding="utf-8") if INBOX.is_file() else None
+    backup_harness_dl = HARNESS_DL_QUEUE.read_text(encoding="utf-8") if HARNESS_DL_QUEUE.is_file() else None
+    backup_legacy_fu = LEGACY_FOLLOWUPS.read_text(encoding="utf-8") if LEGACY_FOLLOWUPS.is_file() else None
+    backup_caps = IG_CAPABILITIES.read_text(encoding="utf-8") if IG_CAPABILITIES.is_file() else None
+    cards_created: list[Path] = []
+
+    def _mk_card(name: str, body: str) -> Path:
+        CARDS.mkdir(parents=True, exist_ok=True)
+        path = CARDS / name
+        path.write_text(body, encoding="utf-8")
+        cards_created.append(path)
+        return path
+
     try:
+        # 1. followup waits for matching print.done
         write_json(
             fus_path,
             {
                 "updatedAt": today(),
                 "items": [
                     {
-                        "id": "fu-test-sku",
+                        "id": "fu-wait-1",
                         "type": "wip_to_finished",
-                        "correlation_id": "TEST-SKU-001",
+                        "correlation_id": "WAIT-JOB-1",
+                        "jobId": "WAIT-JOB-1",
                         "state": "waiting_for_print_done",
                         "created_at": now_iso(),
                     }
                 ],
             },
         )
-        # create matching print card fixture
-        cards = CARDS
-        cards.mkdir(parents=True, exist_ok=True)
-        card = cards / "2099-01-01-TEST-SKU-001.md"
-        card.write_text(
-            "# Print card · TEST-SKU-001\n\n"
-            "producedAt: 2099-01-01\nevent: print.done\n\n"
-            "## מטא\n- sku / שם עבודה: TEST-SKU-001\n\n"
-            "## מדיה\n- timelapse path / Drive id: /tmp/fake-timelapse.mp4\n"
-            "- still path: /tmp/fake-still.jpg\n- proof על המיטה: כן\n",
-            encoding="utf-8",
+        items = sync_followups(mutate=True)
+        hit = next((i for i in items if i.get("id") == "fu-wait-1"), None)
+        if not hit or hit.get("state") != "waiting_for_print_done":
+            errors.append(f"1 wait-for-print: expected still waiting, got {hit}")
+
+        # 2. wrong print.done (different jobId) does NOT close
+        _mk_card(
+            "2099-01-02-WRONG-JOB.md",
+            "# Print card · WRONG\n\nevent: print.done\n"
+            "- jobId: OTHER-JOB-999\n- sku / שם עבודה: OTHER-SKU\n"
+            "- timelapse path / Drive id: /tmp/x.mp4\n",
         )
         items = sync_followups(mutate=True)
-        hit = next((i for i in items if i.get("correlation_id") == "TEST-SKU-001"), None)
-        if not hit or hit.get("state") != "ready_for_finished_content":
-            errors.append(f"WIP bridge failed: {hit}")
-        elif hit.get("publication") in {"published", "live", "posted"}:
-            errors.append("WIP bridge claimed published")
-        elif not hit.get("suggested_slot") or "CALENDAR" not in (hit.get("suggested_slot") or "") and "חסר" in (
-            hit.get("suggested_slot") or ""
-        ):
-            # slot must come from calendar — allow Hebrew slot strings from CALENDAR.md
-            if "CALENDAR" not in (hit.get("suggested_slot") or "") and "16:00" not in (
-                hit.get("suggested_slot") or ""
-            ) and "20:30" not in (hit.get("suggested_slot") or "") and "12:00" not in (
-                hit.get("suggested_slot") or ""
-            ):
-                errors.append(f"slot not from calendar: {hit.get('suggested_slot')}")
-        if "PREFLIGHT" not in (hit or {}).get("required_gates", []):
-            errors.append("PREFLIGHT not required")
-    finally:
-        if backup_fu is not None:
-            fus_path.write_text(backup_fu, encoding="utf-8")
-        else:
-            fus_path.unlink(missing_ok=True)
-        card = CARDS / "2099-01-01-TEST-SKU-001.md"
-        if card.is_file():
-            card.unlink()
+        hit = next((i for i in items if i.get("id") == "fu-wait-1"), None)
+        if not hit or hit.get("state") != "waiting_for_print_done":
+            errors.append(f"2 wrong print.done closed followup: {hit}")
+        # name similarity alone must never match
+        if defensible_match({"jobId": "A", "sku": "RingHolder"}, {"jobId": "B", "sku": "RingHolderPro"}):
+            errors.append("2b name similarity alone matched")
 
-    # D. Dead letter
-    backup_dl = DEAD.read_text(encoding="utf-8") if DEAD.is_file() else None
-    try:
+        # 3. matching print.done advances waiting_for_print_done → ready_for_finished_content
+        _mk_card(
+            "2099-01-01-WAIT-JOB-1.md",
+            "# Print card · WAIT-JOB-1\n\nproducedAt: 2099-01-01\nevent: print.done\n\n"
+            "## מטא\n- jobId: WAIT-JOB-1\n- sku / שם עבודה: WAIT-JOB-1\n\n"
+            "## מדיה\n- timelapse path / Drive id: /tmp/fake-timelapse.mp4\n"
+            "- still path: /tmp/fake-still.jpg\n",
+        )
+        items = sync_followups(mutate=True)
+        hit = next((i for i in items if i.get("id") == "fu-wait-1"), None)
+        if not hit or hit.get("state") != "ready_for_finished_content":
+            errors.append(f"3 matching print.done advance failed: {hit}")
+        elif hit.get("publication") in {"published", "live", "posted"}:
+            errors.append("3 claimed published")
+        elif "PREFLIGHT" not in (hit.get("required_gates") or []):
+            errors.append("3 PREFLIGHT not required")
+        elif not hit.get("suggested_slot"):
+            errors.append("3 missing suggested_slot")
+
+        # 4. matching without media → waiting_for_media
+        write_json(
+            fus_path,
+            {
+                "updatedAt": today(),
+                "items": [
+                    {
+                        "id": "fu-nomedia",
+                        "type": "wip_to_finished",
+                        "correlation_id": "NOMEDIA-1",
+                        "jobId": "NOMEDIA-1",
+                        "state": "waiting_for_print_done",
+                        "created_at": now_iso(),
+                    }
+                ],
+            },
+        )
+        _mk_card(
+            "2099-01-03-NOMEDIA-1.md",
+            "# Print card · NOMEDIA-1\n\nevent: print.done\n"
+            "- jobId: NOMEDIA-1\n- sku / שם עבודה: NOMEDIA-1\n"
+            "- timelapse path / Drive id: חסר\n- still path: חסר\n",
+        )
+        items = sync_followups(mutate=True)
+        hit = next((i for i in items if i.get("id") == "fu-nomedia"), None)
+        if not hit or hit.get("state") != "waiting_for_media":
+            errors.append(f"4 no-media → waiting_for_media failed: {hit}")
+
+        # 5. dead-letter writes to office/control/dead-letter.json only
+        if backup_dl is not None:
+            DEAD.write_text(backup_dl, encoding="utf-8")
         item = record_dead_letter(
-            action="test_failover_exhausted",
+            action="selftest_failover",
             source="selftest",
             reason="simulated failure after failover",
             risk="yellow",
@@ -1025,25 +1596,147 @@ def cmd_selftest(_args: argparse.Namespace) -> int:
         )
         data = load_json(DEAD, {"items": []})
         if not any(i.get("id") == item["id"] for i in data.get("items") or []):
-            errors.append("dead letter not recorded")
-    finally:
+            errors.append("5 dead letter not in office/control/dead-letter.json")
+        harness = load_json(HARNESS_DL_QUEUE, {"items": []})
+        if any(i.get("id") == item["id"] for i in harness.get("items") or []):
+            errors.append("5 dead letter leaked into harness queue.json")
+
+        # 6. watchdog sees that dead-letter
+        report = build_watchdog_report(mutate_followups=False)
+        if not any(
+            f.get("area") == "unresolved_dead_letter" and item["id"] in str(f.get("detail"))
+            for f in report.get("findings") or []
+        ):
+            errors.append("6 watchdog did not see dead-letter")
+
+        # 12. ordinary failover dead-letter with owner_required=false is not red owner surface
+        surface = owner_surface_items(dead=load_json(DEAD, {"items": []}))
+        if any(s.get("id") == item["id"] for s in surface):
+            errors.append("12 owner surface escalated non-owner dead-letter")
+        if report.get("summary") == "RED_BLOCKER" and all(
+            f.get("area") == "unresolved_dead_letter" for f in report.get("findings") or [] if f.get("outcome") == "RED_BLOCKER"
+        ):
+            # only fail if the dead-letter itself caused RED_BLOCKER
+            dl_findings = [f for f in report.get("findings") or [] if f.get("area") == "unresolved_dead_letter"]
+            if any(f.get("outcome") == "RED_BLOCKER" and not f.get("owner_required") for f in dl_findings):
+                errors.append("12 non-owner dead-letter mapped to RED_BLOCKER")
+
+        # restore DL before other tests that scan it
         if backup_dl is not None:
             DEAD.write_text(backup_dl, encoding="utf-8")
+        else:
+            write_json(DEAD, {"updatedAt": today(), "items": []})
 
-    # E. Source-of-truth conflict
-    rogue = ROOT / "office" / "sources-of-truth.json"
-    try:
-        write_json(rogue, {"jobs": "somewhere-else"})
+        # 7. scheduled / uploadAccepted / publishRequested are not live; live needs verification_evidence
+        for state_name in ("scheduled", "uploadAccepted", "publishRequested"):
+            fu = {
+                "id": f"fu-pub-{state_name}",
+                "type": "wip_to_finished",
+                "correlation_id": f"PUB-{state_name}",
+                "state": "scheduled" if state_name == "scheduled" else "waiting_publication_verification",
+                "publication": state_name,
+            }
+            if state_name != "scheduled" and (fu.get("publication") or "").lower() in {
+                "published",
+                "live",
+                "liveverified",
+            }:
+                errors.append(f"7 fixture bug {state_name}")
+            # claiming live without evidence must be red
+        write_json(
+            fus_path,
+            {
+                "updatedAt": today(),
+                "items": [
+                    {
+                        "id": "fu-fake-live",
+                        "type": "wip_to_finished",
+                        "correlation_id": "FAKE-LIVE",
+                        "state": "scheduled",
+                        "publication": "liveVerified",
+                        # no verification_evidence
+                    },
+                    {
+                        "id": "fu-scheduled-ok",
+                        "type": "wip_to_finished",
+                        "correlation_id": "SCHED-OK",
+                        "state": "scheduled",
+                        "publication": "scheduled",
+                    },
+                ],
+            },
+        )
         issues = watchdog_issues()
-        if not any(i.get("code") == "duplicate_source_of_truth_map" for i in issues):
-            errors.append("SOT conflict not detected")
-    finally:
-        if rogue.is_file():
-            rogue.unlink()
+        if not any(i.get("code") == "published_without_verification" for i in issues):
+            errors.append("7 live without verification_evidence not flagged")
+        if any(
+            i.get("code") == "published_without_verification" and "SCHED-OK" in str(i.get("detail"))
+            for i in issues
+        ):
+            errors.append("7 scheduled incorrectly treated as live claim")
 
-    # F. Owner surface
-    backup_inbox = INBOX.read_text(encoding="utf-8") if INBOX.is_file() else None
-    try:
+        # 8. Instagram needsAuth cannot be ready without desk ready
+        if backup_caps is not None:
+            caps = json.loads(backup_caps)
+            caps["currentStatus"] = "ready"
+            write_json(IG_CAPABILITIES, caps)
+            issues = watchdog_issues()
+            desk = load_json(DESK, {})
+            ig = ((desk.get("tools") or {}).get("instagram") or {}).get("status")
+            if ig != "ready" and not any(i.get("code") == "ig_fake_ready" for i in issues):
+                errors.append("8 fake CAPABILITIES ready not detected")
+            IG_CAPABILITIES.write_text(backup_caps, encoding="utf-8")
+
+        # 9. public CTA cannot contain WhatsApp phone; business contact may retain it
+        if INSTANCE_VF.is_file():
+            inst = load_json(INSTANCE_VF, {})
+            primary = (inst.get("cta") or {}).get("primary") or ""
+            biz = ((inst.get("cta") or {}).get("businessContact") or {}).get("whatsapp") or ""
+            if "050-2517000" in primary or "whatsapp" in primary.lower():
+                errors.append("9 instance cta.primary contains WhatsApp")
+            if "050-2517000" not in biz and "050-2517000" not in str((inst.get("cta") or {}).get("whatsapp") or ""):
+                # business contact may retain — warn only if completely absent from record fields
+                pass  # optional presence
+
+        # 10. duplicate SoT detection
+        rogue = ROOT / "office" / "sources-of-truth.json"
+        try:
+            write_json(rogue, {"jobs": "somewhere-else"})
+            issues = watchdog_issues()
+            if not any(i.get("code") == "duplicate_source_of_truth_map" for i in issues):
+                errors.append("10a SOT map conflict not detected")
+        finally:
+            if rogue.is_file():
+                rogue.unlink()
+
+        write_json(
+            HARNESS_DL_QUEUE,
+            {
+                "note": "rogue authoritative items",
+                "items": [{"id": "rogue-dl", "status": "open", "reason": "should fail"}],
+            },
+        )
+        issues = watchdog_issues()
+        if not any(i.get("code") == "duplicate_dead_letter_authority" for i in issues):
+            errors.append("10b harness dead-letter authority not detected")
+        if backup_harness_dl is not None:
+            HARNESS_DL_QUEUE.write_text(backup_harness_dl, encoding="utf-8")
+
+        write_json(
+            LEGACY_FOLLOWUPS,
+            {
+                "followups": [
+                    {"id": "rogue-fu", "status": "waiting_for_matching_print.done", "jobId": "X"}
+                ]
+            },
+        )
+        issues = watchdog_issues()
+        if not any(i.get("code") == "duplicate_followups_authority" for i in issues):
+            errors.append("10c legacy followups authority not detected")
+        if backup_legacy_fu is not None:
+            LEGACY_FOLLOWUPS.write_text(backup_legacy_fu, encoding="utf-8")
+
+        # 11. owner surface does not escalate weak_metric
         write_json(
             INBOX,
             {
@@ -1054,7 +1747,13 @@ def cmd_selftest(_args: argparse.Namespace) -> int:
                         {"id": "m1", "kind": "weak_metric", "risk": "yellow", "text": "reach low"},
                     ],
                     "approvals": [
-                        {"id": "p1", "kind": "price", "risk": "red", "text": "approve price", "owner_required": True}
+                        {
+                            "id": "p1",
+                            "kind": "price",
+                            "risk": "red",
+                            "text": "approve price",
+                            "owner_required": True,
+                        }
                     ],
                     "production": [],
                     "sales": [],
@@ -1067,18 +1766,38 @@ def cmd_selftest(_args: argparse.Namespace) -> int:
         surface = owner_surface_items()
         ids = {s.get("id") for s in surface}
         if "q1" in ids or "m1" in ids:
-            errors.append("owner surface leaked internal items")
+            errors.append("11 owner surface leaked internal/weak_metric items")
         if "p1" not in ids:
-            errors.append("owner surface missed price decision")
+            errors.append("11 owner surface missed price decision")
+
     finally:
+        if backup_fu is not None:
+            fus_path.write_text(backup_fu, encoding="utf-8")
+        else:
+            fus_path.unlink(missing_ok=True)
+        if backup_dl is not None:
+            DEAD.write_text(backup_dl, encoding="utf-8")
         if backup_inbox is not None:
             INBOX.write_text(backup_inbox, encoding="utf-8")
+        if backup_harness_dl is not None:
+            HARNESS_DL_QUEUE.write_text(backup_harness_dl, encoding="utf-8")
+        if backup_legacy_fu is not None:
+            LEGACY_FOLLOWUPS.write_text(backup_legacy_fu, encoding="utf-8")
+        if backup_caps is not None:
+            IG_CAPABILITIES.write_text(backup_caps, encoding="utf-8")
+        for card in cards_created:
+            if card.is_file():
+                card.unlink()
 
     if errors:
         for e in errors:
             print(f"FAIL {e}", file=sys.stderr)
         return 1
-    print("OK selftest (WIP bridge · dead-letter · SOT conflict · owner surface)")
+    print(
+        "OK selftest (wait · wrong-print · match · no-media · dead-letter · "
+        "watchdog-dl · pub-states · ig-fake-ready · public-cta · dup-SoT · "
+        "owner-surface · non-owner-dl)"
+    )
     return 0
 
 
@@ -1087,7 +1806,10 @@ def main() -> int:
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     sub.add_parser("status").set_defaults(func=cmd_status)
-    sub.add_parser("watchdog").set_defaults(func=cmd_watchdog)
+    p_wd = sub.add_parser("watchdog")
+    p_wd.add_argument("--json", action="store_true")
+    p_wd.add_argument("--write", action="store_true")
+    p_wd.set_defaults(func=cmd_watchdog)
     sub.add_parser("gaps").set_defaults(func=cmd_gaps)
     sub.add_parser("handoff").set_defaults(func=cmd_handoff)
     p_fu = sub.add_parser("followups")

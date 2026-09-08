@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-08T14:20:42+03:00",
+  "updatedAt": "2026-09-08T15:17:57+03:00",
   "date": "2026-09-08",
   "active_now": [],
   "waiting": [],
@@ -17,6 +17,7 @@
   ],
   "authoritative_sources": {
     "policy": "constitution/CONSTITUTION.md + constitution/ORCHESTRA.md",
+    "risk_policy": "office/control/POLICY.md",
     "jobs": "office/ledger/live/jobs.csv",
     "media": "packages/vfmedia/catalog.json + docs/MEDIA-VAULT.md",
     "content_calendar": "packages/vfgrowth/CALENDAR.md",
@@ -26,9 +27,21 @@
     "manager_handoff": "office/control/HANDOFF.json",
     "decisions": "office/control/decisions.jsonl",
     "dead_letter": "office/control/dead-letter.json",
-    "followups": "office/control/followups.json"
+    "followups": "office/control/followups.json",
+    "public_cta": "constitution/PUBLIC_CTA.md",
+    "publication_states": "packages/vfigos/PUBLICATION-STATES.json",
+    "instagram_capabilities": "packages/vfigos/CAPABILITIES.json",
+    "profile_desired": "packages/vfigos/PROFILE-DESIRED.json",
+    "feed_audit": "packages/vfgrowth/data/feed-audit.json"
   },
-  "tools_degraded": [],
+  "tools_degraded": [
+    {
+      "level": "orange",
+      "code": "suite_language",
+      "detail": "constitution/ORCHESTRA.md",
+      "outcome": "PREPARED"
+    }
+  ],
   "safe_for_next_ai": [
     "python3 scripts/vf_control_plane.py watchdog",
     "python3 scripts/vf_control_plane.py followups",

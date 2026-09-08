@@ -26,6 +26,7 @@
 
 ## מקורות סמכות
 - **policy:** `constitution/CONSTITUTION.md + constitution/ORCHESTRA.md`
+- **risk_policy:** `office/control/POLICY.md`
 - **jobs:** `office/ledger/live/jobs.csv`
 - **media:** `packages/vfmedia/catalog.json + docs/MEDIA-VAULT.md`
 - **content_calendar:** `packages/vfgrowth/CALENDAR.md`
@@ -36,9 +37,14 @@
 - **decisions:** `office/control/decisions.jsonl`
 - **dead_letter:** `office/control/dead-letter.json`
 - **followups:** `office/control/followups.json`
+- **public_cta:** `constitution/PUBLIC_CTA.md`
+- **publication_states:** `packages/vfigos/PUBLICATION-STATES.json`
+- **instagram_capabilities:** `packages/vfigos/CAPABILITIES.json`
+- **profile_desired:** `packages/vfigos/PROFILE-DESIRED.json`
+- **feed_audit:** `packages/vfgrowth/data/feed-audit.json`
 
 ## כלים מדולדלים
-- אין חסם קשיח מדווח
+- orange · suite_language · constitution/ORCHESTRA.md
 
 ## בטוח להמשך AI הבא
 - `python3 scripts/vf_control_plane.py watchdog`

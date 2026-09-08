@@ -14,6 +14,7 @@
   },
   "sourcesOfTruth": {
     "policy": "constitution/CONSTITUTION.md + constitution/ORCHESTRA.md",
+    "risk_policy": "office/control/POLICY.md",
     "jobs": "office/ledger/live/jobs.csv",
     "media": "packages/vfmedia/catalog.json + docs/MEDIA-VAULT.md",
     "content_calendar": "packages/vfgrowth/CALENDAR.md",
@@ -23,7 +24,12 @@
     "manager_handoff": "office/control/HANDOFF.json",
     "decisions": "office/control/decisions.jsonl",
     "dead_letter": "office/control/dead-letter.json",
-    "followups": "office/control/followups.json"
+    "followups": "office/control/followups.json",
+    "public_cta": "constitution/PUBLIC_CTA.md",
+    "publication_states": "packages/vfigos/PUBLICATION-STATES.json",
+    "instagram_capabilities": "packages/vfigos/CAPABILITIES.json",
+    "profile_desired": "packages/vfigos/PROFILE-DESIRED.json",
+    "feed_audit": "packages/vfgrowth/data/feed-audit.json"
   },
   "controlDir": "office/control",
   "contentSprintPriority": [
@@ -35,12 +41,17 @@
   ],
   "locks": [
     "no-duplicate-sources-of-truth",
+    "no-duplicate-dead-letter",
+    "no-duplicate-followups",
     "no-invented-prices",
     "no-invented-insights",
     "no-auto-dm",
     "no-meta-business-suite",
     "no-nationwide-shipping",
     "scheduling-is-not-publication",
+    "live-requires-verification",
+    "public-cta-instagram-message",
+    "ig-needsauth-not-fake-ready",
     "upload-is-not-approval",
     "approved-folder-is-not-approval-proof",
     "no-owner-spam-from-low-level-gaps",

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-08",
-  "note": "Failed actions after retry+failover. Watchdog scans this file. Not forgotten.",
+  "sourceOfTruth": "office/control/dead-letter.json",
+  "note": "Compatibility pointer only — NOT authoritative. Do not write items here. CLI writes via vf_control_plane.record_dead_letter → office/control/dead-letter.json.",
   "items": []
 }

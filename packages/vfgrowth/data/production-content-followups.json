@@ -1,4 +1,5 @@
 {
-  "updatedAt": "2026-09-08",
+  "sourceOfTruth": "office/control/followups.json",
+  "note": "Compatibility pointer only — NOT authoritative. Canonical WIP→finished store is office/control/followups.json via vf_control_plane.py sync_followups.",
   "followups": []
 }

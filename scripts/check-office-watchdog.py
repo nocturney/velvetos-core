@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Office watchdog sensor — files + non-fake IG ready + G004 + CTA."""
+"""Office watchdog sensor — wrapper + vf_control_plane outcomes. No network."""
 from __future__ import annotations
 
 import json
@@ -8,7 +8,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CLI = ROOT / "scripts" / "vf_office_watchdog.py"
+WRAPPER = ROOT / "scripts" / "vf_office_watchdog.py"
+PLANE_CLI = ROOT / "scripts" / "vf_control_plane.py"
 
 
 def fail(msg: str) -> None:
@@ -18,16 +19,22 @@ def fail(msg: str) -> None:
 
 def main() -> None:
     for path in (
-        CLI,
+        WRAPPER,
+        PLANE_CLI,
         ROOT / "packages" / "vfigos" / "CAPABILITIES.json",
         ROOT / "packages" / "vfigos" / "PROFILE-DESIRED.json",
         ROOT / "packages" / "vfgrowth" / "FEED-AUDIT.md",
         ROOT / "packages" / "vfgrowth" / "data" / "feed-audit.json",
         ROOT / "constitution" / "RISK.md",
+        ROOT / "office" / "control" / "POLICY.md",
         ROOT / "packages" / "vfops" / "ROUTINE.md",
     ):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
+
+    wrapper_src = WRAPPER.read_text(encoding="utf-8")
+    if "vf_control_plane" not in wrapper_src or "cmd_watchdog" not in wrapper_src:
+        fail("vf_office_watchdog.py must be a thin wrapper around vf_control_plane.cmd_watchdog")
 
     caps = json.loads((ROOT / "packages" / "vfigos" / "CAPABILITIES.json").read_text(encoding="utf-8"))
     if caps.get("currentStatus") == "ready":
@@ -67,30 +74,40 @@ def main() -> None:
     routine = (ROOT / "packages" / "vfops" / "ROUTINE.md").read_text(encoding="utf-8")
     for needle in ("07:00", "Media Intake", "Publish Watch", "Insights", "watchdog"):
         if needle not in routine and needle.lower() not in routine.lower():
-            # Hebrew alternatives
             if needle == "Media Intake" and "קליטת מדיה" not in routine:
                 fail(f"ROUTINE.md missing {needle}")
             elif needle == "Publish Watch" and "Publish" not in routine and "פרסום" not in routine:
-                fail(f"ROUTINE.md missing publish watch")
-            elif needle == "watchdog" and "watchdog" not in routine.lower() and "Watchdog" not in routine:
+                fail("ROUTINE.md missing publish watch")
+            elif needle == "watchdog" and "watchdog" not in routine.lower():
                 fail("ROUTINE.md must mention watchdog")
             elif needle in ("07:00", "Insights"):
                 if needle not in routine:
                     fail(f"ROUTINE.md missing {needle}")
 
+    # Wrapper --json
     proc = subprocess.run(
-        [sys.executable, str(CLI), "--json"],
+        [sys.executable, str(WRAPPER), "--json"],
         cwd=ROOT,
         text=True,
         capture_output=True,
     )
-    if proc.returncode not in (0, 2):
-        fail(f"watchdog failed: {proc.stderr or proc.stdout}")
-    report = json.loads(proc.stdout.split("WROTE")[0] if False else proc.stdout)
-    # When --json only, stdout is pure json
+    if proc.returncode not in (0, 1, 2):
+        fail(f"watchdog wrapper failed: {proc.stderr or proc.stdout}")
+    try:
+        report = json.loads(proc.stdout)
+    except json.JSONDecodeError:
+        fail(f"watchdog --json must return JSON, got: {proc.stdout[:400]}")
     if "summary" not in report:
-        # maybe mixed — find json
         fail("watchdog --json must return summary")
+    if report["summary"] not in {
+        "OK",
+        "AUTOFIXED",
+        "PREPARED",
+        "WAITING_EXTERNAL_TOOL",
+        "DEAD_LETTER",
+        "RED_BLOCKER",
+    }:
+        fail(f"unknown summary outcome {report['summary']}")
     for outcome in report.get("findings") or []:
         if outcome.get("outcome") not in {
             "OK",
@@ -101,6 +118,20 @@ def main() -> None:
             "RED_BLOCKER",
         }:
             fail(f"unknown outcome {outcome.get('outcome')}")
+    if report.get("spamChristian") is True:
+        fail("watchdog must not spam Christian (Don't Bother Christian)")
+
+    # Control-plane watchdog text form
+    proc2 = subprocess.run(
+        [sys.executable, str(PLANE_CLI), "watchdog"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if proc2.returncode not in (0, 1):
+        fail(f"vf_control_plane watchdog failed: {proc2.stderr or proc2.stdout}")
+    if "WATCHDOG " not in (proc2.stdout or ""):
+        fail("vf_control_plane watchdog must print WATCHDOG <WORST>")
 
     print("OK office-watchdog")
 
