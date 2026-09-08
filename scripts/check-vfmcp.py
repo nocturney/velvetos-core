@@ -170,12 +170,34 @@ def main() -> None:
         if not (row.get("failover") or ""):
             fail(f"vf-desk.json tools.{key} must declare failover")
     ig = tools.get("instagram") or {}
-    if ig.get("status") not in ("needsAuth", "ready"):
-        fail("vf-desk.json instagram.status must be needsAuth or ready after ig-mcp map")
+    ig_ok_status = ("needsAuth", "ready", "ready-codespace", "ready-local")
+    if ig.get("status") not in ig_ok_status:
+        fail("vf-desk.json instagram.status must be needsAuth|ready|ready-codespace|ready-local")
     if "CONNECT-IG.md" not in (ig.get("connect") or "") and "CONNECT-IG.md" not in (ig.get("useWhen") or ""):
         fail("vf-desk.json instagram must point at CONNECT-IG.md")
-    if "send_dm" not in " ".join(ig.get("forbidden") or []) and "auto-dm" not in " ".join(ig.get("forbidden") or []).lower():
-        fail("vf-desk.json instagram must forbid send_dm / auto-dm")
+    forbidden_blob = " ".join(ig.get("forbidden") or []).lower()
+    if "send_dm" not in forbidden_blob and "auto-dm" not in forbidden_blob and "send_message" not in forbidden_blob:
+        fail("vf-desk.json instagram must forbid send_dm / auto-dm / DM send_message")
+    mcp_blob = f"{ig.get('mcp') or ''} {ig.get('source') or ''} {ig.get('package') or ''}"
+    if "adelaidasofia" not in mcp_blob.lower() and "adelaidasofia" not in (ig.get("rule") or "").lower():
+        fail("vf-desk.json instagram must point at adelaidasofia/instagram-mcp as canonical")
+    if "jlbadano" in (ig.get("mcp") or "").lower() and "legacy" not in (ig.get("legacyMcp") or "").lower():
+        # primary mcp field must not still be jlbadano
+        if "adelaidasofia" not in (ig.get("mcp") or "").lower():
+            fail("vf-desk.json instagram.mcp must not list jlbadano as primary")
+    if ig.get("status") in ("ready-codespace", "ready-local", "ready"):
+        if ig.get("status") == "ready-codespace" and ig.get("remote_access") not in ("pending", "ready"):
+            fail("ready-codespace must declare remote_access pending|ready")
+        if ig.get("auth") not in (None, "ready", "ok"):
+            fail("instagram.auth when set must be ready")
+        if ig.get("dmEnabled") is True:
+            fail("instagram.dmEnabled must stay false")
+        if "publish_story" not in " ".join(ig.get("allowed") or []) and ig.get("stories") not in (
+            "enabled-same-mcp",
+            True,
+            "enabled",
+        ):
+            fail("instagram must allow publish_story / stories on same MCP")
     icloud = tools.get("icloud") or {}
     if "CONNECT-ICLOUD.md" not in (icloud.get("useWhen") or "") and "CONNECT-ICLOUD.md" not in (icloud.get("rule") or ""):
         fail("vf-desk.json icloud must point at CONNECT-ICLOUD.md")
@@ -194,16 +216,43 @@ def main() -> None:
         (CONNECT_WA, ("lharries/whatsapp-mcp", "050-2517000", "send=false", "Infobip")),
         (CONNECT_GEMINI, ("חסר מפתח Gemini", "vf_gemini.py", "aliargun", "gemini.google.com", "לא ממציאים", "RLabs")),
         (CONNECT_CHATGPT, ("חסר מפתח ChatGPT", "vf_chatgpt.py", "chatgpt.com", "OPENAI_API_KEY", "לא ממציאים")),
-        (CONNECT_IG, ("jlbadano/ig-mcp", "publish_media", "needsAuth", "אוטו־DM", "SEND.md", "צעד אדם", "אין ספירה")),
+        (CONNECT_IG, (
+            "adelaidasofia/instagram-mcp",
+            "publish_image",
+            "publish_story",
+            "אוטו־DM",
+            "SEND.md",
+            "אין ספירה",
+            "liveVerified",
+            "INSTAGRAM_MCP_ACCESS_TOKEN",
+            "remote_access",
+        )),
         (CONNECT_ICLOUD, ("iCloud", "Cloud Agent", "ICLOUD-DRIVE-SYNC.md", "Drive")),
         (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py", "perplexity-user-mcp", "patchright", "HOST.md")),
         (HOST, ("המק בשדרות", "codex login", "Gemini CLI", "perplexity.ai", "Cloud Agent", "לא ממציאים", "agent worker", "computer-use")),
-        (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "Gemini API", "ChatGPT API", "ig-mcp")),
+        (CORE_MCP_MD, ("mcpBind", "studiomcphub", "mcp-gsheets", "WhatsApp", "Gemini API", "ChatGPT API", "adelaidasofia")),
     ):
         text = path.read_text(encoding="utf-8")
         for needle in needles:
             if needle not in text:
                 fail(f"{path.name} must mention {needle}")
+    connect_ig_text = CONNECT_IG.read_text(encoding="utf-8")
+    # Canonical must not still present jlbadano as the primary install path
+    if "git clone https://github.com/jlbadano/ig-mcp" in connect_ig_text:
+        fail("CONNECT-IG.md must not clone jlbadano as primary install")
+    if "jlbadano/ig-mcp" in connect_ig_text and "לגאסי" not in connect_ig_text and "LEGACY" not in connect_ig_text and "legacy" not in connect_ig_text.lower():
+        fail("CONNECT-IG.md may mention jlbadano only as legacy")
+    if "Stories" in connect_ig_text and "לא Story" in connect_ig_text:
+        fail("CONNECT-IG.md must not claim Stories unsupported")
+    if connect_ig_text.count("https://github.com/adelaidasofia/instagram-mcp") < 1:
+        fail("CONNECT-IG.md must declare adelaidasofia canonical repo")
+    # Secrets must not appear in tracked Instagram docs/config
+    for secret_path in (CONNECT_IG, CORE_MCP, DESK, ROOT / "packages" / "vfmcp" / "mcp.desktop.example.json"):
+        blob = secret_path.read_text(encoding="utf-8")
+        if "EAA" in blob or "IGQV" in blob:
+            fail(f"{secret_path.name} must not contain Meta token-looking strings")
+        if "BEGIN PRIVATE" in blob or "sk-" in blob:
+            fail(f"{secret_path.name} must not contain private key material")
 
     gemini = tools.get("gemini") or {}
     if not gemini:
@@ -257,14 +306,36 @@ def main() -> None:
         fail("vfmcp/ORIGIN.md must mention SUBSCRIPTIONS.md")
     if "HOST.md" not in ORIGIN.read_text():
         fail("vfmcp/ORIGIN.md must mention HOST.md")
-    if "CONNECT-IG.md" not in ORIGIN.read_text() and "ig-mcp" not in ORIGIN.read_text():
-        fail("vfmcp/ORIGIN.md must mention ig-mcp / CONNECT-IG.md")
+    origin_text = ORIGIN.read_text()
+    if "CONNECT-IG.md" not in origin_text and "instagram-mcp" not in origin_text:
+        fail("vfmcp/ORIGIN.md must mention CONNECT-IG.md / instagram-mcp")
 
     desktop = (ROOT / "packages" / "vfmcp" / "mcp.desktop.example.json").read_text(encoding="utf-8")
-    if "instagram" not in desktop or "ig-mcp" not in desktop:
-        fail("mcp.desktop.example.json must include ig-mcp instagram server")
+    if "instagram" not in desktop or "instagram-mcp" not in desktop:
+        fail("mcp.desktop.example.json must include adelaidasofia instagram-mcp server")
+    if "INSTAGRAM_MCP_ACCESS_TOKEN" not in desktop:
+        fail("mcp.desktop.example.json must use INSTAGRAM_MCP_ACCESS_TOKEN env passthrough")
+    ig_block = desktop
+    if '"instagram"' in desktop:
+        ig_block = desktop.split('"instagram"', 1)[1]
+        if '"icloud"' in ig_block:
+            ig_block = ig_block.split('"icloud"', 1)[0]
+    if "jlbadano" in ig_block or "/ABS/PATH/ig-mcp" in ig_block or "instagram_mcp_server.py" in ig_block:
+        fail("mcp.desktop.example.json must not use jlbadano/ig-mcp as primary")
     if "icloud" not in desktop:
         fail("mcp.desktop.example.json must include icloud desktop server")
+
+    core_ig = next((s for s in (core_mcp.get("servers") or []) if s.get("id") == "instagram"), None)
+    if not core_ig:
+        fail("core-mcp.json missing instagram server")
+    if "adelaidasofia" not in (core_ig.get("source") or ""):
+        fail("core-mcp.json instagram.source must be adelaidasofia/instagram-mcp")
+    if core_ig.get("canonical") is False:
+        fail("core-mcp.json must keep a single canonical Instagram MCP")
+    # Only one Instagram server id
+    ig_servers = [s for s in (core_mcp.get("servers") or []) if s.get("id") == "instagram"]
+    if len(ig_servers) != 1:
+        fail("core-mcp.json must declare exactly one canonical Instagram MCP id")
 
     sys.path.insert(0, str(ROOT / "scripts"))
     import vf_gemini  # noqa: E402
@@ -375,7 +446,7 @@ def main() -> None:
     if proc4.returncode not in (0, 2):
         fail(f"vf_send_preflight --gate instagram must exit 0 or 2, got {proc4.returncode}")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api+chatgpt-api+ig-mcp+icloud+send-preflight")
+    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api+chatgpt-api+instagram-mcp+icloud+send-preflight")
 
 
 if __name__ == "__main__":

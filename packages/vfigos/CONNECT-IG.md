@@ -1,171 +1,149 @@
-# CONNECT-IG · צעד אדם (עמוד אחד)
+# CONNECT-IG · Instagram MCP קנוני (adelaidasofia)
 
-סטטוס השולחן: **needsAuth**. בלי טוקן — אין Publish, אין Insights חיים. כותבים **«אין ספירה»**.  
-סטוריז נשארות ב־**instagram.com** (ig-mcp ≠ Story API).  
-**needsAuth ≠ סרק משרד** — ממשיכים intake / copy / Canva / preflight / queue / feed audit (`ROUTINE.md`).  
-Capability contract (לא תלוי Metricool): [`CAPABILITIES.json`](CAPABILITIES.json).  
-מצבי פרסום: [`PUBLICATION-STATES.md`](PUBLICATION-STATES.md) — upload/schedule ≠ `liveVerified`.  
-פרופיל מבוקש (מוכן, לא חי עד כלי): [`PROFILE-DESIRED.json`](PROFILE-DESIRED.json).
+סטטוס שולחן: **`ready-codespace`** — auth מאומת ב־GitHub Codespace (stdio).  
+`auth: ready` · `transport: stdio` · `remote_access: pending` (אין endpoint מרוחק תמיד-דלוק עדיין).
 
-## הצעד הבא (כריסטיאן) — רק זה
+MCP קנוני: [`adelaidasofia/instagram-mcp`](https://github.com/adelaidasofia/instagram-mcp) · חבילה `adelaidasofia-instagram-mcp` · שם שרת `instagram`.  
+**לגאסי:** [`jlbadano/ig-mcp`](https://github.com/jlbadano/ig-mcp) — לא ראשי יותר. ראו [`LEGACY-IG-MCP.md`](LEGACY-IG-MCP.md).
 
-1. פתח את האפליקציה **אינסטה מנג׳ר** `1748471159829574`  
-   https://developers.facebook.com/apps/1748471159829574/
-2. אמת את מייל הקשר `nocturney@gmail.com` (כרגע **לא מאומת**). האפליקציה ב־**dev_mode**.
-3. צור **Long-lived Page Access Token** לעמוד המקושר ל־`@velvets_cloud`  
-   ([AUTHENTICATION_GUIDE](https://github.com/jlbadano/ig-mcp/blob/main/AUTHENTICATION_GUIDE.md)).
-4. הדבק סודות ב־Cursor Dashboard → Integrations & MCP **וגם** ב־`~/.cursor/mcp.json` — **לא בגיט**.
-5. Reload. כש־`instagram` ירוק **ואחרי healthcheck** — אפשר לסמן `ready` בשולחן. אל תסמן ready בלי בדיקה אמיתית.
-6. אחרי ready: watchdog יכול להריץ `instagram.profile.update` לפי PROFILE-DESIRED (ORANGE עד לאימות).
+אין סודות בגיט. אין אוטו־DM. אין בוסט. אין Metricool כתלות תפעול.  
+Capability contract: [`CAPABILITIES.json`](CAPABILITIES.json).  
+מצבי פרסום: [`PUBLICATION-STATES.md`](PUBLICATION-STATES.md) — upload/schedule/publish tool ≠ `liveVerified`.  
+פריסת Codespace / פער remote: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).  
+מדיה ציבורית לפרסום: [`docs/MEDIA-VAULT.md`](../../docs/MEDIA-VAULT.md) § «URL ציבורי לפרסום».
 
-עד אז: failover [`SEND.md`](SEND.md) (Canva+Drive+Gmail). לא ממציאים Insights. לא `send_dm`. PUBLIC_CURRENT_CTA = הודעת Instagram.
+## מצב מאומת (לא לבקש שוב מכריסטיאן)
 
----
-
-# איך מחברים את Instagram MCP (ig-mcp) ל-Cursor
-
-מקור: [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) — MCP על Instagram Graph API.  
-פרוטוקול שליחה: [`SEND.md`](SEND.md) + [`constitution/SEND.md`](../../constitution/SEND.md).  
-קטלוג ליבה: [`packages/vfmcp/CORE-MCP.md`](../vfmcp/CORE-MCP.md) · [`core-mcp.json`](../vfmcp/core-mcp.json).  
-אין סודות בגיט. אין אוטו־DM. אין בוסט.
-
-## מה זה סוגר
-
-| פער היום | אחרי חיבור |
+| עובדה | ערך |
 |---|---|
-| Publish לפיד — `#ממתין-ל-כלי-IG` | `publish_media` → `#נשלח-מ-HQ` |
-| Insights — «אין ספירה» / הדבקת בעלים | `get_media_insights` + resources מאומתים |
-| סקירת פיד / פוסטים אחרונים | `get_media_posts` · `get_profile_info` |
-| Failover Canva+Drive+Gmail | נשאר — רק כש־MCP down או `needsAuth` |
+| חשבון | `@velvets_cloud` |
+| Instagram Business Account ID | `17841407772120429` |
+| קישור לעמוד Facebook | מאומת |
+| `add_account` | label `velvets_cloud` · default `true` |
+| כלים שעבדו ב־Codespace | `healthcheck` · `get_profile` · `list_media` |
+| סודות | Codespaces Secrets / runtime env בלבד — **לא בגיט** |
 
-## מה זה **לא** סוגר
+## מה סוגר עכשיו (כשה־MCP חי בסביבה)
 
-| נושא | למה |
+| יכולת | כלי MCP |
 |---|---|
-| **Stories** | ig-mcp מפרסם פוסט/קרוסלה/וידאו לפיד — לא Story API |
-| **אוטו־DM / follow-back** | נעול בחוקה. `send_dm` / `get_conversations` דורשים Meta App Review — **לא מפעילים** |
-| **בוסט / Ads** | [`meta-ads-mcp`](../../docs/MCP-FIT.md) — lead gate בלבד |
-| **וואטסאפ לקוח** | אדם `050-2517000` — אין MCP שליחה |
-| **Canva** | עדיין מקור המדיה. ig-mcp מקבל URL לתמונה/וידאו (export מ־Canva) |
+| בריאות / חשבונות | `healthcheck` · `list_accounts` · `account_info` |
+| פרופיל / מדיה | `get_profile` · `list_media` · `get_media` |
+| Insights | `get_account_insights` · `get_media_insights` · `get_audience_insights` |
+| פרסום פיד | `publish_image` · `publish_carousel` · `publish_video` |
+| ריל | `publish_reel` |
+| **סטורי** | `publish_story` (אותו MCP — לא מערכת נפרדת) |
+| תגובות | `get_comments` · `reply_to_comment` · hide/delete לפי מדיניות מודרציה |
+| מחקר | `get_mentions` · `publishing_limit` · `business_discovery` לפי צורך |
+| Failover כש־MCP down / remote pending | Canva + Drive + Gmail — [`SEND.md`](SEND.md) |
 
-## דרישות מוקדמות
+## מדיניות הרשאות (VelvetOS)
 
-1. **`@velvets_cloud` = Business Account** מקושר ל־Facebook Page
-2. **Facebook Developer App** עם Instagram Graph API
-3. **Long-lived Page Access Token** (מתחדש ~כל 60 יום)
-4. **Python 3.10+** על המחשב שמריץ את שרת ה־MCP
+### מותר — קריאה
 
-הרשאות Standard (מיד): `instagram_basic`, `instagram_content_publish`, `instagram_manage_insights`, `pages_show_list`, `pages_read_engagement`.
+`healthcheck` · `list_accounts` · `account_info` · `get_profile` · `list_media` · `get_media` · `get_account_insights` · `get_media_insights` · `get_audience_insights` · `get_comments` · `get_mentions` · `publishing_limit` · `business_discovery` (מחקר)
 
-מדריך מהיר: [AUTHENTICATION_GUIDE.md](https://github.com/jlbadano/ig-mcp/blob/main/AUTHENTICATION_GUIDE.md).
+### מותר — כתיבה רק אחרי שערי אישור קיימים
 
-## A) Desktop — Cursor Agent מקומי
+`publish_image` · `publish_video` · `publish_reel` · `publish_carousel` · `publish_story` · `reply_to_comment` · `hide_comment` / `delete_comment` רק כשמדיניות מודרציה מחייבת
 
-לא שמים את השרת ב־`.cursor/mcp.json` של הריפו (טוקן + נתיב מקומי). כמו Sheets/WhatsApp — רק ב־`~/.cursor/mcp.json`.
+שערים לפני publish: מאגר מדיה + `versionApproval` · Canva/vfcovers · `vfgrowth/PREFLIGHT.md` · `vf_send_preflight.py --gate instagram` · אז כלי `publish_*`.
 
-### 1. התקנת השרת (פעם אחת)
+### אסור תמיד
 
-```bash
-git clone https://github.com/jlbadano/ig-mcp.git ~/ig-mcp
-cd ~/ig-mcp
-python3 -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-cp env.example .env
-# ערוך .env — אין commit
-python scripts/setup.py      # בדיקת credentials
+`send_message` · `list_conversations` · `get_messages` · אוטו־DM · follow/unfollow · boost · Ads · API פרטי/scraping · username/password · עקיפת מגבלות Meta  
+**`INSTAGRAM_MCP_DM_ENABLED` לא מופעל** במשרד.
+
+Metricool / Publer / Postly / SimplePost / Meta Business Suite = **לא נדרשים** (אופציונלי/לגאסי בלבד).
+
+## זרימת פרסום קנונית
+
+```
+Drive Media Vault (מקור פרטי)
+  → נגזרת Canva / vfcovers (בעבודה)
+  → שער אישור (versionApproval + PREFLIGHT)
+  → URL HTTPS ציבורי לנגזרת המאושרת בלבד (לא כל הכספת)
+  → Instagram MCP publish_image | publish_carousel | publish_reel | publish_story
+  → אימות חי: list_media / get_media (media id / permalink)
+  → רק אז liveVerified + ledger/catalog
+  → Insights מאוחר יותר (get_*_insights)
 ```
 
-### 2. הוספה ל־`~/.cursor/mcp.json`
+| פורמט | כלי |
+|---|---|
+| תמונה / פוסט | `publish_image` |
+| קרוסלה | `publish_carousel` |
+| ריל / וידאו | `publish_reel` / `publish_video` |
+| סטורי | `publish_story` |
 
-`Ctrl+Shift+P` → **View: Open MCP Settings** → הוסף ל־`mcpServers` (או העתק מ־[`mcp.desktop.example.json`](../vfmcp/mcp.desktop.example.json)):
+**חוק אימות:** תשובת publish מוצלחת ≠ «פורסם». בלי `list_media`/`get_media` שמאשרים פריט חי → מסמנים `publish_pending_verification` — לא `liveVerified`.  
+JPEG גולמי מהמיטה **אסור** לסטורי. מקסימום 5 האשטגים. CTA: `PUBLIC_CURRENT_CTA` (הודעת Instagram / «הזמנות») — לא «שלחו DM», לא טלפון וואטסאפ בכיתוב ציבורי.
+
+## משתני ריצה (שמות בלבד — בלי ערכים בגיט)
+
+חובה:
+
+- `INSTAGRAM_MCP_ACCESS_TOKEN`
+- `INSTAGRAM_MCP_IG_USER_ID` (= `17841407772120429` לסטודיו)
+
+אופציונלי:
+
+- `INSTAGRAM_MCP_APP_SECRET`
+
+אסור להפעיל:
+
+- `INSTAGRAM_MCP_DM_ENABLED`
+
+## A) Desktop / Codespace — stdio
+
+לא שמים טוקן ב־`.cursor/mcp.json` של הריפו. העתק מ־[`mcp.desktop.example.json`](../vfmcp/mcp.desktop.example.json) ל־`~/.cursor/mcp.json` או ל־Codespaces secrets:
 
 ```json
 "instagram": {
-  "command": "/ABS/PATH/ig-mcp/.venv/bin/python",
-  "args": ["/ABS/PATH/ig-mcp/src/instagram_mcp_server.py"],
+  "command": "instagram-mcp",
   "env": {
-    "INSTAGRAM_ACCESS_TOKEN": "${env:INSTAGRAM_ACCESS_TOKEN}",
-    "INSTAGRAM_BUSINESS_ACCOUNT_ID": "${env:INSTAGRAM_BUSINESS_ACCOUNT_ID}",
-    "FACEBOOK_APP_ID": "${env:FACEBOOK_APP_ID}",
-    "FACEBOOK_APP_SECRET": "${env:FACEBOOK_APP_SECRET}"
+    "INSTAGRAM_MCP_ACCESS_TOKEN": "${env:INSTAGRAM_MCP_ACCESS_TOKEN}",
+    "INSTAGRAM_MCP_IG_USER_ID": "${env:INSTAGRAM_MCP_IG_USER_ID}"
   }
 }
 ```
 
-**אל תדביק טוקנים בגיט** — רק ב־mcp.json המקומי או ב־env vars של המערכת.
-
-### 3. Reload + בדיקה
-
-1. **Developer: Reload Window**
-2. MCP Settings → `instagram` אמור להיות ירוק
-3. בצ'אט Agent מקומי: «הצג פרופיל @velvets_cloud» או «5 פוסטים אחרונים עם insights»
-
-## B) Cloud Agent
-
-ig-mcp הוא **stdio Python** — לא HTTP כמו Canva. שני מסלולים:
-
-### מסלול 1 (מומלץ): Team MCP + secrets בדשבורד
-
-1. [cursor.com/dashboard](https://cursor.com/dashboard) → **Cloud Agents** → **Integrations & MCP**
-2. **Add MCP server** → **stdio** (או Custom command)
-3. Command: נתיב ל־python + `instagram_mcp_server.py` (או image מ־[`docker-compose.yml`](https://github.com/jlbadano/ig-mcp/blob/main/docker-compose.yml))
-4. Secrets: `INSTAGRAM_ACCESS_TOKEN`, `INSTAGRAM_BUSINESS_ACCOUNT_ID`, `FACEBOOK_APP_ID`, `FACEBOOK_APP_SECRET` — **בדשבורד בלבד**
-
-### מסלול 2: environment build
-
-אם צריך ig-mcp על כל ריצת Cloud Agent — הוסף install ב־environment (לא בגיט עם סודות) + Team MCP עם env vars.
-
-עד שסודות מוגדרים: סטטוס השולחן נשאר `needsAuth` → failover Canva+Drive+Gmail.
-
-## C) זרימת פרסום (vfigos)
-
-```
-vfcopy (כיתוב + CTA WhatsApp)
-  → Canva export-design (URL לתמונה/וידאו)
-  → instagram publish_media (caption + media_url)
-  → #נשלח-מ-HQ ב־QUEUE.md
-```
-
-אם `instagram` = `needsAuth` / down:
-
-```
-Canva export → Drive create_file → Gmail send_message
-→ #נשלח-מ-HQ + #ממתין-ל-כלי-IG
-```
-
-## D) Insights מאומתים (vfinsights)
-
-אחרי חיבור: `get_media_insights` / resources — מספרים מ־Graph API בלבד.  
-בלי חיבור: הדבקת בעלים או «אין ספירה» — לא ממציאים.
-
-## E) תחזוקת טוקן
-
-Long-lived token פג תוקף ~60 יום. לפני תפוגה:
+התקנה:
 
 ```bash
-curl -G "https://graph.facebook.com/v19.0/oauth/access_token" \
-  --data-urlencode "grant_type=fb_exchange_token" \
-  --data-urlencode "client_id=APP_ID" \
-  --data-urlencode "client_secret=APP_SECRET" \
-  --data-urlencode "fb_exchange_token=CURRENT_TOKEN"
+pip install adelaidasofia-instagram-mcp
+# או מ־source:
+# git clone https://github.com/adelaidasofia/instagram-mcp
+# cd instagram-mcp && python3 -m venv .venv && .venv/bin/pip install -e .
 ```
 
-עדכן את ה־secret בדשבורד / mcp.json המקומי — לא בגיט.
+## B) Cloud Agent / אוטונומיה מלאה
 
-## F) VF `mcpBind`
+stdio בתוך Codespace ישן/כבוי **אינו** מספיק למשרד תמיד-דלוק.  
+`remote_access: pending` — אין endpoint מרוחק מומצא.  
+עד שיש תעבורה מרוחקת נתמכת (או שרת תמיד-זמין): failover [`SEND.md`](SEND.md).  
+פירוט: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).
+
+## C) Insights (vfinsights)
+
+מקור מועדף: `get_account_insights` / `get_media_insights` / `get_audience_insights`.  
+מדד ש־Meta לא מחזירה → «אין ספירה» / unavailable. לא ממציאים.  
+הדבקת בעלים נשארת גיבוי כשאין MCP. Metricool = אופציונלי לגאסי, לא קנוני.
+
+## D) VF `mcpBind`
 
 ```
 instagram.enabled = true
-instagram.when = desktop-or-team-mcp
+instagram.when = codespace-stdio-or-remote-when-ready
 instagram.publish = true
 instagram.dm = false
+instagram.connect = packages/vfigos/CONNECT-IG.md
 ```
 
-## G) חוקים (לא משתנים)
+## E) חוקים שלא משתנים
 
-- **מותר:** publish פוסט/קרוסלה/ריל (וידאו) אחרי סקירה; insights; קריאת פיד
-- **אסור:** auto-DM, boost, follow-back, story hacks, ₪/Insights מומצאים
-- **לא טוענים** שעלה לפיד אם `publish_media` לא החזיר success
+- מותר: publish אחרי שערים + verify חי; Insights מאומתים; קריאת פיד/סטורי דרך אותו MCP
+- אסור: auto-DM, boost, follow-back, ₪/Insights/SKU מומצאים, לטעון live בלי אימות
+- אין סוד בגיט
 
-מפת פערים: [`packages/vfmcp/GAP.md`](../vfmcp/GAP.md).
+קטלוג ליבה: [`packages/vfmcp/CORE-MCP.md`](../vfmcp/CORE-MCP.md). מפת פערים: [`GAP.md`](../vfmcp/GAP.md).

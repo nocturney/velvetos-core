@@ -31,6 +31,7 @@ SEND = ROOT / "constitution" / "SEND.md"
 
 # Statuses that mean "use this tool for the primary path"
 READY = {"ready", "skill-installed", "plugin-installed", "hq-native"}
+IG_AUTH_READY = {"ready", "ready-codespace", "ready-local"}
 # Statuses that mean "primary path blocked — failover same turn"
 FAILOVER = {"needsAuth", "needs-key", "down", "not-on-this-cloud-agent"}
 
@@ -52,9 +53,20 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
     gemini = _tool(desk, "gemini")
     chatgpt = _tool(desk, "chatgpt")
 
-    ig_connect = CONNECT_IG.read_text(encoding="utf-8") if CONNECT_IG.is_file() else ""
-    ig_needs_auth = "needsAuth" in (ig.get("status") or "") or (
-        "needsAuth" in ig_connect and "ready" not in (ig.get("status") or "")
+    ig_status = ig.get("status") or ""
+    ig_remote = ig.get("remote_access") or ""
+    ig_auth_ok = ig_status in IG_AUTH_READY or (ig.get("auth") == "ready")
+    # Live primary path needs auth-ready AND (remote ready OR local MCP secrets present)
+    ig_secrets = _env_present("INSTAGRAM_MCP_ACCESS_TOKEN", "INSTAGRAM_ACCESS_TOKEN")
+    ig_session_ready = ig_auth_ok and (
+        ig_remote == "ready" or (ig_secrets and ig_status in IG_AUTH_READY)
+    )
+    # remote_access pending without secrets → failover (Cloud / stopped Codespace honesty)
+    ig_needs_failover = (
+        ig_status in FAILOVER
+        or ig_status == "needsAuth"
+        or not ig_auth_ok
+        or (ig_remote == "pending" and not ig_secrets)
     )
 
     gemini_key = _env_present("GEMINI_API_KEY", "GOOGLE_API_KEY")
@@ -76,13 +88,16 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
             or "Canva לא מחובר → packages/vfcanva/studio/render.py → Superdesign",
         },
         "instagram": {
-            "desk_status": ig.get("status") or "unknown",
-            "ready": (ig.get("status") or "") in READY and not ig_needs_auth,
-            "needs_failover": ig_needs_auth or (ig.get("status") or "") in FAILOVER,
-            "action": "publish_media (ig-mcp) when ready",
+            "desk_status": ig_status or "unknown",
+            "auth": ig.get("auth") or ("ready" if ig_auth_ok else "unknown"),
+            "transport": ig.get("transport") or "stdio",
+            "remote_access": ig_remote or "unknown",
+            "ready": ig_session_ready and not ig_needs_failover,
+            "needs_failover": ig_needs_failover,
+            "action": "publish_image|carousel|reel|story (adelaidasofia/instagram-mcp) then list_media/get_media verify",
             "failover": "Canva + Drive create_file + Gmail same turn · #ממתין-ל-כלי-IG",
             "connect": "packages/vfigos/CONNECT-IG.md",
-            "forbid": ["send_dm", "auto-DM", "boost without lead"],
+            "forbid": ["send_message DM", "auto-DM", "boost without lead", "INSTAGRAM_MCP_DM_ENABLED"],
         },
         "gemini": {
             "desk_status": gemini.get("status") or "unknown",
@@ -118,31 +133,21 @@ def gate_channel(report: dict[str, Any], name: str) -> int:
     if ch.get("ready"):
         print(f"GATE {name}=ready")
         return 0
-    if name == "instagram" and ch.get("needs_failover"):
-        print(
-            f"GATE {name}=failover · {ch.get('failover')}",
-            file=sys.stderr,
-        )
+    if ch.get("needs_failover") or not ch.get("ready"):
+        print(f"GATE {name}=failover")
         return 2
-    if name in {"gemini", "chatgpt"} and not ch.get("key_present"):
-        print(
-            f"GATE {name}=חסר מפתח · {ch.get('failover')}",
-            file=sys.stderr,
-        )
-        return 2
-    print(f"GATE {name}=blocked · {ch.get('failover')}", file=sys.stderr)
-    return 2
+    print(f"GATE {name}=blocked", file=sys.stderr)
+    return 1
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument(
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
         "--gate",
         choices=("gmail", "instagram", "canva", "gemini", "chatgpt"),
-        help="Exit non-zero when this channel is not ready (2 = failover)",
+        help="Exit 0 if channel ready, 2 if failover required",
     )
-    ap.add_argument("--pretty", action="store_true")
-    args = ap.parse_args()
+    args = parser.parse_args()
 
     if not DESK.is_file():
         print("FAIL missing .cursor/vf-desk.json", file=sys.stderr)
@@ -150,8 +155,7 @@ def main() -> int:
 
     desk = json.loads(DESK.read_text(encoding="utf-8"))
     report = channel_report(desk)
-    dump = json.dumps(report, ensure_ascii=False, indent=2 if args.pretty else None)
-    print(dump)
+    print(json.dumps(report, ensure_ascii=False, indent=2))
 
     if args.gate:
         return gate_channel(report, args.gate)
@@ -159,4 +163,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(main())

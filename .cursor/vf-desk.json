@@ -43,7 +43,8 @@
     "2026-08-31: VelvetOS Core backend + frontend scaffolds under instances/. Sensor: scripts/check-velvetos.py.",
     "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill.",
     "2026-09-05: Orchestra desks are API keys (vf_gemini.py / vf_chatgpt.py), not gemini.google.com or chatgpt.com in the Cloud browser — that trip Google/OpenAI security alerts. SUBSCRIPTIONS.md. Do not persist cookies. Plus ≠ API.",
-    "2026-09-06: Instagram Publish/Insights via jlbadano/ig-mcp — mapped on vfigos/vfmcp (needsAuth until Meta token). CONNECT-IG.md. No auto-DM. Failover Canva+Drive+Gmail.",
+    "2026-09-08: Instagram canonical MCP = adelaidasofia/instagram-mcp (ready-codespace, stdio). jlbadano/ig-mcp legacy. Stories+Insights on same MCP. DM off. remote_access pending. CONNECT-IG.md + DEPLOY-CODESPACE.md. No secrets in git.",
+    "2026-09-06: (superseded) Instagram was mapped via jlbadano/ig-mcp needsAuth — see LEGACY-IG-MCP.md.",
     "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
     "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done.",
     "2026-09-08: Shared media vault locked by Christian — Drive Velvet Media (root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv). One catalog packages/vfmedia. תפעול owns intake נכנס→מקור. GrokBot uses Drive MCP. Cursor owns catalog schema. Upload ≠ approval. Approved folder alone ≠ approval proof. No share-permission changes. No invented SKUs or ₪.",
@@ -133,32 +134,62 @@
       "failover": "needsAuth → packages/vfcanva/studio/render.py → Superdesign. Say Canva לא מחובר."
     },
     "instagram": {
-      "status": "needsAuth",
+      "status": "ready-codespace",
+      "auth": "ready",
+      "transport": "stdio",
+      "remote_access": "pending",
       "namespace": "instagram",
       "account": "@velvets_cloud",
-      "mcp": "stdio · jlbadano/ig-mcp",
+      "igUserId": "17841407772120429",
+      "accountLabel": "velvets_cloud",
+      "mcp": "stdio · adelaidasofia/instagram-mcp",
+      "package": "adelaidasofia-instagram-mcp",
+      "source": "https://github.com/adelaidasofia/instagram-mcp",
+      "legacyMcp": "jlbadano/ig-mcp",
       "capabilities": "packages/vfigos/CAPABILITIES.json",
       "publicationStates": "packages/vfigos/PUBLICATION-STATES.json",
       "profileDesired": "packages/vfigos/PROFILE-DESIRED.json",
-      "useWhen": "vfigos publish, vfinsights verified metrics, feed review",
+      "useWhen": "vfigos publish (image/carousel/reel/story), vfinsights verified metrics, feed review",
       "connect": "packages/vfigos/CONNECT-IG.md",
-      "officeRule": "needsAuth ≠ no office work; never fake ready; live only after liveVerified",
+      "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
+      "officeRule": "auth ready in Codespace; remote_access pending for Cloud autonomy; never fake live; live only after liveVerified via list_media/get_media",
       "notRequired": ["Metricool", "Publer", "Postly", "SimplePost", "Meta Business Suite"],
+      "stories": "enabled-same-mcp",
+      "dmEnabled": false,
+      "boostEnabled": false,
       "allowed": [
-        "get_profile_info",
-        "get_media_posts",
+        "healthcheck",
+        "list_accounts",
+        "account_info",
+        "get_profile",
+        "list_media",
+        "get_media",
+        "get_account_insights",
         "get_media_insights",
-        "publish_media",
-        "get_account_pages"
+        "get_audience_insights",
+        "get_comments",
+        "get_mentions",
+        "publishing_limit",
+        "business_discovery",
+        "publish_image",
+        "publish_video",
+        "publish_reel",
+        "publish_carousel",
+        "publish_story",
+        "reply_to_comment"
       ],
       "forbidden": [
+        "send_message",
+        "list_conversations",
+        "get_messages",
         "send_dm",
-        "get_conversations",
         "auto-dm",
-        "boost"
+        "boost",
+        "ads",
+        "INSTAGRAM_MCP_DM_ENABLED"
       ],
-      "rule": "Canva export URL → publish_media. No invented Insights. No auto-DM. No boost. Never claim the feed posted without publish_media success.",
-      "failover": "needsAuth or down → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)"
+      "rule": "Approved public HTTPS media URL → publish_image|carousel|reel|story → verify live with list_media/get_media. No invented Insights. No auto-DM. No boost. publish tool success ≠ liveVerified.",
+      "failover": "MCP down or remote_access pending without live session → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)"
     },
     "web": {
       "status": "ready",
@@ -371,7 +402,7 @@
         "image",
         "web"
       ],
-      "decides": "content pack and cover drafts. HQ reviews/schedules and publishes via tools (ig-mcp or Canva+Drive+Gmail failover). Grok is optional backup."
+      "decides": "content pack and cover drafts. HQ reviews/schedules and publishes via Instagram MCP (adelaidasofia) or Canva+Drive+Gmail failover. Grok is optional backup."
     },
     {
       "id": "ops",

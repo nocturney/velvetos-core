@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-08 — **Instagram MCP קנוני = adelaidasofia/instagram-mcp:** מחליף את jlbadano/ig-mcp כראשי. שולחן `ready-codespace` (auth ready · transport stdio · `remote_access` pending). Stories+Insights+`publish_*` על אותו MCP. DM/`INSTAGRAM_MCP_DM_ENABLED` כבוי. Metricool אופציונלי/לגאסי. אימות חי חובה (`publish_pending_verification` → `liveVerified`). פלייבוקים: `CONNECT-IG.md` · `DEPLOY-CODESPACE.md` · `LEGACY-IG-MCP.md`. סנסורים מעודכנים. אין סודות בגיט. Canonical Instagram MCP; Codespace verified; remote autonomy still pending.
+
 - 2026-09-08 — **גיבוי ערב קטלוג**: רענון `packages/manifest.json` (`catalogRefreshedAt` 2026-09-08, 31 פקים כולל `vfmedia`). נכללו מוזגים #128 בריף בוקר, #129 Gmail brief CLI, #130/#131 כספת מדיה, #132–#134 מעקב vault, #135 Office Control Plane, #136 Failover, #137 משרד פרסום/IG-DM. נשאר פתוח: #138 live commissioning. Origin לא שוכפל (אין login). Evening catalog refresh; Origin not vendored. Left open: #138.
 - 2026-09-08 — **משרד פרסום על Control Plane (#137):** PUBLIC_CURRENT_CTA = הודעת Instagram · BUSINESS_CONTACT_RECORD = וואטסאפ פנימי · מצבי פרסום liveVerified · feed audit · profile desired · G004 identity. **בלי SoT מקביל** — dead-letter / followups / risk / watchdog נשארים ב־`office/control/` + `vf_control_plane.py`. Publication office features absorbed into existing Office Control Plane; no second runtime.
 

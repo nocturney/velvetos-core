@@ -31,7 +31,13 @@
       "id": "publishRequested",
       "he": "בקשת פרסום נשלחה",
       "live": false,
-      "note": "קריאת publish. עדיין לא liveVerified."
+      "note": "קריאת publish_*. עדיין לא liveVerified."
+    },
+    {
+      "id": "publish_pending_verification",
+      "he": "ממתין לאימות חי",
+      "live": false,
+      "note": "publish_* החזיר success/accepted אבל list_media/get_media עדיין לא אישרו פריט חי. אסור לטעון published/live."
     },
     {
       "id": "liveVerified",
@@ -40,7 +46,7 @@
       "requires": [
         "verificationEvidence"
       ],
-      "note": "רק אחרי אימות אמיתי מהפלטפורמה (media id / permalink / tool verify)."
+      "note": "רק אחרי אימות אמיתי מהפלטפורמה (list_media / get_media / media id / permalink)."
     },
     {
       "id": "failed",
@@ -59,7 +65,8 @@
     "Mark live because scheduler accepted",
     "Mark live because calendar event exists",
     "Mark live because API container created",
-    "Mark live because publish was requested"
+    "Mark live because publish was requested",
+    "Mark live because publish_* tool returned success without list_media/get_media verify"
   ],
   "organicGateMapping": {
     "draft": "prepared",

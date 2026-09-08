@@ -21,9 +21,9 @@
 
 ## חסום על אדם / לוגין
 
-- ig-mcp **needsAuth** עד טוקן Meta (`CONNECT-IG.md` צעד אדם)
-- Insights = אין ספירה
-- סטוריז = instagram.com (ig-mcp ≠ stories)
+- Instagram MCP **ready-codespace** (auth OK · stdio) — **`remote_access` pending** לענן תמיד-דלוק (`CONNECT-IG.md` · `DEPLOY-CODESPACE.md`)
+- Insights = MCP `get_*_insights` כשיש סשן; אחרת אין ספירה / הדבקת בעלים — Metricool לא נדרש
+- סטוריז = `publish_story` על אותו MCP אחרי Canva/vfcovers (לא מערכת נפרדת)
 - מדף MakerWorld 0/5 עד GATE+רישיון+סלייס
 - מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה
 - B2B נעול · וואטסאפ לקוח = אדם 050-2517000
@@ -48,10 +48,10 @@
 | `vfgraft` | docs-playbook | session-start | — |
 | `vfgrowth` | docs-playbook | daily-07:00 | — |
 | `vfharness` | working-cli | after-edit | — |
-| `vfigos` | needsAuth | daily-growth | needsAuth · טוקן Meta · סטוריז ב-instagram.com |
-| `vfinsights` | needsAuth | daily-07:00 | אין ספירה עד סנאפשוט / טוקן |
+| `vfigos` | ready-codespace | daily-growth | remote_access pending · Stories via publish_story · verify live |
+| `vfinsights` | mcp-preferred | daily-07:00 | אין ספירה עד MCP insights / סנאפשוט |
 | `vfmakers` | overlay | weekly | — |
-| `vfmcp` | needsAuth | session-start | ig-mcp / Sheets / WhatsApp send לפי CONNECT |
+| `vfmcp` | mapped | session-start | Instagram canonical adelaidasofia · Sheets / WhatsApp לפי CONNECT |
 | `vfmem` | working-cli | session-start | — |
 | `vfmskill` | docs-playbook | on-content | — |
 | `vfom` | docs-playbook | on-floor-clip | אין גלם = אין ריל |

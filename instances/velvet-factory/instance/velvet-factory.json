@@ -185,9 +185,11 @@
     },
     "instagram": {
       "enabled": true,
-      "when": "desktop-or-team-mcp",
+      "when": "codespace-stdio-or-remote-when-ready",
       "publish": true,
       "dm": false,
+      "stories": true,
+      "canonicalMcp": "adelaidasofia/instagram-mcp",
       "connect": "packages/vfigos/CONNECT-IG.md"
     }
   },

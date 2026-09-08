@@ -1,5 +1,5 @@
 {
-  "_comment": "Copy the servers you need into ~/.cursor/mcp.json (user global). Do NOT paste secrets into this repo's .cursor/mcp.json. Do NOT commit filled copies.",
+  "_comment": "Copy the servers you need into ~/.cursor/mcp.json (user global) or Codespace MCP config. Do NOT paste secrets into this repo's .cursor/mcp.json. Do NOT commit filled copies. Instagram canonical = adelaidasofia/instagram-mcp via command instagram-mcp + INSTAGRAM_MCP_* env.",
   "mcpServers": {
     "mcp-gsheets": {
       "command": "npx",
@@ -19,13 +19,10 @@
       ]
     },
     "instagram": {
-      "command": "/ABS/PATH/ig-mcp/.venv/bin/python",
-      "args": ["/ABS/PATH/ig-mcp/src/instagram_mcp_server.py"],
+      "command": "instagram-mcp",
       "env": {
-        "INSTAGRAM_ACCESS_TOKEN": "${env:INSTAGRAM_ACCESS_TOKEN}",
-        "INSTAGRAM_BUSINESS_ACCOUNT_ID": "${env:INSTAGRAM_BUSINESS_ACCOUNT_ID}",
-        "FACEBOOK_APP_ID": "${env:FACEBOOK_APP_ID}",
-        "FACEBOOK_APP_SECRET": "${env:FACEBOOK_APP_SECRET}"
+        "INSTAGRAM_MCP_ACCESS_TOKEN": "${env:INSTAGRAM_MCP_ACCESS_TOKEN}",
+        "INSTAGRAM_MCP_IG_USER_ID": "${env:INSTAGRAM_MCP_IG_USER_ID}"
       }
     },
     "icloud": {

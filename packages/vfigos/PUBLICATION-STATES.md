@@ -8,11 +8,11 @@
 
 אלה מצבים **שונים**:
 
-`prepared` → `approved` → `scheduled` → `uploadAccepted` → `publishRequested` → `liveVerified`
+`prepared` → `approved` → `scheduled` → `uploadAccepted` → `publishRequested` → `publish_pending_verification` → `liveVerified`
 
 או: `failed` → (retry/failover) → `deadLetter`
 
-**LIVE רק אחרי `liveVerified`** — עם ראיית אימות אמיתית מהפלטפורמה.
+**LIVE רק אחרי `liveVerified`** — עם ראיית אימות אמיתית מהפלטפורמה (`list_media` / `get_media`).
 
 אסור לסמן live בגלל:
 
@@ -21,6 +21,7 @@
 - calendar event
 - API container created
 - publish requested
+- **publish_* tool success בלי אימות חי** → זה `publish_pending_verification` בלבד
 
 ## קשר ל־Organic GATE
 
@@ -37,8 +38,8 @@
 | `#טיוטה` | prepared |
 | `#לסקירה` | prepared |
 | `#משובץ` | scheduled |
-| `#נשלח-מ-HQ` | publishRequested או failover נשלח (לא בהכרח live) |
-| `#ממתין-ל-כלי-IG` | waiting external tool |
+| `#נשלח-מ-HQ` | publishRequested / publish_pending_verification או failover נשלח (לא בהכרח live) |
+| `#ממתין-ל-כלי-IG` | waiting external tool או ממתין לאימות חי |
 | `#אחרי-פרסום` | רק אחרי liveVerified |
 
 ## בדיקה

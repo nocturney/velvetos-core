@@ -15,4 +15,5 @@ HQ-native embed: full tree lives in this Core repo (SKILL.md + hq/). No separate
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
 
 Embedded 30.8.2026 from Gemini share: `READ.md` (measured only).  
-Perplexity: Metricool confirmed as read-only; no invented competitor stats.
+Canonical Insights source (2026-09-08): Instagram MCP `get_*_insights` (`vfigos/CONNECT-IG.md`).  
+Metricool: historical research note / optional legacy experiment only — not required for analytics or publishing.

@@ -37,10 +37,22 @@ def main() -> None:
         fail("vf_office_watchdog.py must be a thin wrapper around vf_control_plane.cmd_watchdog")
 
     caps = json.loads((ROOT / "packages" / "vfigos" / "CAPABILITIES.json").read_text(encoding="utf-8"))
-    if caps.get("currentStatus") == "ready":
-        desk = json.loads((ROOT / ".cursor" / "vf-desk.json").read_text(encoding="utf-8"))
-        if ((desk.get("tools") or {}).get("instagram") or {}).get("status") != "ready":
-            fail("instagram capabilities must not claim ready without desk ready")
+    desk = json.loads((ROOT / ".cursor" / "vf-desk.json").read_text(encoding="utf-8"))
+    desk_ig_status = ((desk.get("tools") or {}).get("instagram") or {}).get("status")
+    ready_like = {"ready", "ready-codespace", "ready-local"}
+    if caps.get("currentStatus") in ready_like:
+        if desk_ig_status not in ready_like:
+            fail("instagram capabilities must not claim ready* without desk ready*")
+        if caps.get("currentStatus") == "ready" and desk_ig_status != "ready":
+            fail("instagram capabilities ready must match desk ready")
+    if caps.get("currentStatus") == "needsAuth" and desk_ig_status in ready_like:
+        fail("CAPABILITIES currentStatus still needsAuth while desk is ready*")
+    if "adelaidasofia" not in json.dumps(caps).lower() and "adelaidasofia" not in (
+        ((desk.get("tools") or {}).get("instagram") or {}).get("mcp") or ""
+    ).lower():
+        fail("capabilities/desk must reference adelaidasofia Instagram MCP")
+    if "jlbadano" in (caps.get("providerPreference") or "").lower():
+        fail("CAPABILITIES providerPreference must not be jlbadano")
     ids = {c["id"] for c in caps.get("capabilities") or []}
     for need in (
         "instagram.profile.read",
