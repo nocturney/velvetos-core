@@ -16,7 +16,7 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
   -o packages/vfops/out/BRIEF-YYYY-MM-DD.html
 ```
 
-שליחת המייל: `constitution/SEND.md` — `htmlBody` תצוגה 3 אל `nocturney@gmail.com`.  
+שליחת המייל: `constitution/SEND.md` — תצוגה 3 אל `nocturney@gmail.com` דרך `python -m vfops.gmail_brief_send` או 3־צעדי MCP (`docs/SEND-BRIEF-MCP.md`). לא `LOAD_FROM_FILE`.  
 המשימה הזו **לא** שולחת (בריף 6.9 כבר יצא).
 
 ## מה נמשך אוטומטית

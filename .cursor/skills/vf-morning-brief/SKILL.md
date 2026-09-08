@@ -16,7 +16,7 @@ Use when the user asks for בריף בוקר, morning brief, what is open today,
 ## Tools
 
 1. **Google Calendar** — `list_calendars` then `list_events` on `nocturney@gmail.com` for **today** in `Asia/Jerusalem`. Pickup windows and named holds only.
-2. **Gmail — send only for the brief** — render `vfbriefux/MAIL.html` and `send_message` the office brief (`htmlBody` תצוגה 3) to `nocturney@gmail.com`. Do not `reply` / `forward` / send to a customer.
+2. **Gmail — send only for the brief** — render `vfbriefux/MAIL.html`. Prefer `python -m vfops.gmail_brief_send` (HTML file + CID image dir). If MCP only: `create_draft(html)` → `update_draft(attachments)` → `send_message(draftId)` — `docs/SEND-BRIEF-MCP.md`. Never `LOAD_FROM_FILE`. Do not `reply` / `forward` / send to a customer.
 3. **Gmail — inbox read: skip for the brief** — `search_threads` / `in:inbox newer_than:1d` stay available on the desk for `vfconvert`, `vfbooks`, and named threads. **Do not call them to populate the 07:00 brief** — incoming mail is not a work source right now. If the user names a thread, read that thread only.
 4. **Drive** — skip unless the user names a job file or SKU.
 

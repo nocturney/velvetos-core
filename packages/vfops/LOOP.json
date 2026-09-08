@@ -321,6 +321,12 @@
       "consume": "constitution/SEND.md"
     },
     {
+      "id": "send-brief-mcp",
+      "path": "docs/SEND-BRIEF-MCP.md",
+      "cadence": "on-send",
+      "consume": "docs/SEND-BRIEF-MCP.md"
+    },
+    {
       "id": "organic-growth",
       "path": "constitution/ORGANIC_GROWTH.md",
       "cadence": "daily-07:00",

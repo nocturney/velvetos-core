@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-08 — **בריף Gmail בלי ארגומנט MCP ענק:** CLI `python -m vfops.gmail_brief_send` (`packages/vfops/gmail_brief_send.py`) — HTML + JPEG inline CID מהדיסק, Gmail API אם `GOOGLE_TOKEN`/ADC, אחרת `no token` יציאה 2. מסמך עקיפת MCP ב־3 צעדים: `docs/SEND-BRIEF-MCP.md` (`create_draft` → `update_draft(attachments)` → `send_message(draftId)`). בלי `LOAD_FROM_FILE`. בלי ₪ מומצא. בלי שליחה מה־VM בלי טוקן.
 - 2026-09-07 — **Organic Growth Control Plane:** שכבת־על על פקים קיימים — `constitution/ORGANIC_GROWTH.md` · מפעל תוכן `vfgrowth` · `print.done` → טיוטות Reel/Story + תעודה + סקר קהילה `pending_ops` · בריף 07:00 עם [אישור|עריכה|דחייה] (`vf_organic_growth.py`) · ייחוס הסתברותי `orders.json` בלי ₪ מומצא · אין autopost / אוטו־DM / סקר→Print מ־HQ / המרה ודאית מוואטסאפ. סנסור `check-organic-growth.py`. Organic growth factory overlay; human posts; no new pack.
 - 2026-09-07 — **חמישה מנועי רצפה/בריף על פקים קיימים:** ניתוב חומר→מיטה `vfprod/FLEET.json` + `ROUTING.md` + `vfprod.py` (ארבע מיטות, אין Print מ-HQ) · יתרת גליל מול סלייס · תחזוקה מסנאפשוט Edge `MAINTENANCE.md` · בריף 07:00 מושך `orders.json`/Invoice4U מהדיסק + שערי כן/לא ב־`GATES.json` (לחיצת אדם, לא סגירת וואטסאפ) · דפוס B2B מקומי `vfbiz/LOCAL-B2B.md` (לוגו/QR/מפיות נשארות דוגמאות, הקו נעול) · סריקת קטלוג `vfsku.py scan` + תווית VF `TAG.md`. סנסור `check-vfprod.py`. בלי פק חדש / בלי daemon / בלי ₪ מומצא. Five studio engines embedded on existing packs; human gates stay.
 

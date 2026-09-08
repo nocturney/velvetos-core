@@ -45,7 +45,7 @@ python3 scripts/vf_send_preflight.py --gate instagram    # 2=failover Canva+Driv
 ## בריף 07:00 — לולאה לפני שליחה
 
 `python3 scripts/vfops_loop.py brief --write` מרכיב את החריצים מפקים חיים.  
-אחר כך `render_mail.py` + `send_message` (`htmlBody` תצוגה 3). המעבר הזה לא מפרסם IG.
+אחר כך `render_mail.py`. שליחה: CLI `python -m vfops.gmail_brief_send` (קובץ HTML + תיקיית CID) או פיצול MCP ב־`docs/SEND-BRIEF-MCP.md` — לא `htmlBody`+JPEG בקריאה אחת, לא `LOAD_FROM_FILE`. המעבר הזה לא מפרסם IG.
 
 ## נעילת כריסטיאן — לפני שיבוץ / חי
 
