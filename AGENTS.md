@@ -45,6 +45,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - **Best skills pulse:** every ~2 days re-read [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) via `vfresearch/BEST-SKILLS.md` + `TIMER.md` + skill `vf-best-skills`. **Standing forever** until the owner explicitly stops (`standingForever` in `BEST-SKILLS.json`). Renew `subscribe_timer` every pass. Embed patterns into existing packs; constitution may update when a durable pattern wins. No `npx skills` on Cloud Agent.
 - **Revenue loop:** IG as income source — `expert-revenue-loop` + `expert-insights-ingest` + `expert-instance-onboard` for multi-frontend. Skill `.cursor/skills/vf-revenue-loop/SKILL.md`. Paid boost and ₪ changes stay lead-gated.
 - **Organic Growth Control Plane:** drafts + 07:00 Decision Pack on existing packs (`constitution/ORGANIC_GROWTH.md`). The plane never auto-posts, never auto-DMs, never marks `posted_manually`. Approve → `approved_for_manual_posting` only. No poll→Print from HQ. WhatsApp ping is not certain conversion. Skill `.cursor/skills/vf-organic-growth/SKILL.md`. CLI `scripts/vf_organic_growth.py`.
+- **Office Control Plane:** unify existing sources of truth (`office/control-plane.json` + `office/control/`). CLI `scripts/vf_control_plane.py`. Sensor `scripts/check-office-control-plane.py`. Don't Bother Christian (`office/control/POLICY.md`). Dead-letter + WIP→finished + manager handoff. Not a second office runtime.
 - **Shared media vault:** `docs/MEDIA-VAULT.md` · one catalog `packages/vfmedia/catalog.json` · תפעול owns intake. Historical Drive capability evidence is in the same procedure; verify access per tool/session. Upload and folder placement never replace version approval. Sensor: `scripts/check-vfmedia.py`.
 - No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
 - Warehouse specialists stay off the desk unless the user asks for that `@slug`.
@@ -92,6 +93,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
 | `scripts/check-vfgrowth.py` | Standing IG calendar + ledger + Studio handoff (instagram.com, no Suite) |
 | `scripts/check-organic-growth.py` | Organic Growth Control Plane — no autopost/auto-DM, gate states, `orders.json` null ILS, 07:00 Decision Pack |
+| `scripts/check-office-control-plane.py` | Office Control Plane — single SoT map, dead-letter, WIP→finished, owner surface, no duplicate authorities |
 | `scripts/check-vfops-loop.py` | Office activation loop — every pack consumed into 07:00 brief + HANDOFF |
 | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready + Gemini/ChatGPT API desks (`vf_gemini.py` / `vf_chatgpt.py`; not aliargun / RLabs; no Cloud browser login) |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
