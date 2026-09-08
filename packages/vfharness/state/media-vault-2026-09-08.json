@@ -15,7 +15,11 @@
     "verify-drive-folder-ids-read-only",
     "write-docs-MEDIA-VAULT.md",
     "scaffold-packages-vfmedia",
-    "wire-loop-desk-swc-vfmem"
+    "wire-loop-desk-swc-vfmem",
+    "check-all-28-of-28",
+    "open-pr-131",
+    "resolve-conflict-with-main-129",
+    "check-all-28-of-28-after-merge"
   ],
   "next_step": "",
   "artifacts": [
@@ -33,7 +37,7 @@
   ],
   "outcome": "worker_done",
   "pulse": "idle",
-  "verification": "check-all.py 28/28 + vfmedia.py validate + reject SKU/folder-alone + vfmem who כספת מדיה",
+  "verification": "check-all.py 28/28 after merging origin/main (#129); vfmedia.py validate; vfmem who כספת מדיה",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-08",
@@ -53,5 +57,5 @@
     "share_changed": false,
     "files_deleted": false
   },
-  "latest_observation": "PR #131 open; check-all 28/28; Drive sharing unchanged; catalog items still empty"
+  "latest_observation": "PR #131 CLEAN/MERGEABLE; conflict with #129 resolved; check-all 28/28; Drive sharing unchanged"
 }
