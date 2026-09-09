@@ -1,0 +1,29 @@
+{
+  "task_id": "instagram-mcp-insights-media-period-2026-09-09",
+  "component_state": "Degraded",
+  "execution_state": {
+    "phase": "code_ready_deploy_pending",
+    "chatgpt_connected": true,
+    "insights_code": "ready",
+    "media_default_fix": "saved_not_saves_type_aware",
+    "account_period_partition": "days_28_partials",
+    "insights_public_fixed": false,
+    "auth_changed": false,
+    "token_changed": false,
+    "bio_mutated": false,
+    "caption_mutated": false,
+    "publish_exercised": false,
+    "dm_enabled": false,
+    "deploy_path": "blocked_no_gcloud"
+  },
+  "latest_observation": "Root causes confirmed live: (1) get_media_insights remapped media saved→account saves causing Meta #100 metric[4] on Reel 17873372004572489; (2) days_28 mixed request failed whole snapshot on follower_count then profile_views. Fix: media-type defaults + MEDIA_METRIC_ALIASES saves→saved; account period partition with structured period_incompatible partials. No gcloud in this Cloud Agent.",
+  "next_step": "Owner only: ./packages/vfigos/remote/deploy.sh  then  INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 python3 packages/vfigos/remote/smoke_public.py",
+  "locks": [
+    "no-secrets-in-git",
+    "no-auto-dm",
+    "no-live-publish-this-task",
+    "no-bio-caption-mutation-this-task",
+    "no-auth-token-changes",
+    "no-github-permission-fix"
+  ]
+}

@@ -293,11 +293,21 @@ def main() -> None:
         "total_interactions",
         "DEFAULT_ACCOUNT_METRICS_V21",
         "partition_account_metrics",
+        "partition_account_metrics_by_period",
+        "period_incompatible",
+        "MEDIA_METRIC_ALIASES",
+        "DEFAULT_MEDIA_METRICS_REELS",
+        "saved",
     ):
         if needle not in insights_src:
             fail(f"remote/insights_v21.py must mention {needle}")
     if "reach,impressions,profile_views,follower_count" in insights_src:
         fail("insights_v21 must not keep the broken upstream default string as active default")
+    # Media must not apply account saved→saves remap (live Reel #100 metric[4]).
+    if "ACCOUNT_METRIC_ALIASES.get(p.lower(), p)" in insights_src:
+        fail("get_media_insights must not remap via ACCOUNT_METRIC_ALIASES (saves≠saved)")
+    if '"saved": "saves"' in insights_src and "MEDIA_METRIC_ALIASES" not in insights_src:
+        fail("media insights must keep a separate MEDIA_METRIC_ALIASES map")
     mutations_md = ROOT / "packages" / "vfigos" / "GRAPH-MUTATIONS.md"
     if not mutations_md.is_file():
         fail("missing packages/vfigos/GRAPH-MUTATIONS.md")
