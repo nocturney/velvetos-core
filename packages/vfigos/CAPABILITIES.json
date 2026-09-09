@@ -14,22 +14,25 @@
     "jlbadano/ig-mcp"
   ],
   "statusField": "tools.instagram.status",
-  "currentStatus": "ready-codespace",
+  "currentStatus": "ready",
   "auth": "ready",
-  "transport": "stdio",
-  "remote_access": "pending",
+  "transport": "streamable-http",
+  "remote_access": "ready",
   "remoteVerify": {
     "date": "2026-09-09",
     "namespace": "instagram",
     "namespaceReady": true,
     "listAccountsOk": true,
     "igUserId": "17841407772120429",
-    "liveCheckOk": false,
-    "blocker": "Meta long-lived access token expired (oauth)"
+    "liveCheckOk": true,
+    "username": "velvets_cloud",
+    "listMediaOk": true,
+    "listMediaCountSample": 5,
+    "blocker": null
   },
   "igUserId": "17841407772120429",
   "accountLabel": "velvets_cloud",
-  "readyRequires": "real healthcheck with live_check.ok=true — Codespace verified; Cloud remote MCP reachable 2026-09-09 but oauth expired; never fake remote_access ready",
+  "readyRequires": "real healthcheck with live_check.ok=true + get_profile username velvets_cloud — Cloud remote verified 2026-09-09 after token refresh",
   "capabilities": [
     {
       "id": "instagram.profile.read",
@@ -88,6 +91,6 @@
     "ads",
     "INSTAGRAM_MCP_DM_ENABLED"
   ],
-  "officeRule": "Office logic binds to capability ids above — not to a SaaS vendor. Metricool optional/legacy only. remote_access pending ≠ idle office work.",
+  "officeRule": "Office logic binds to capability ids above — not to a SaaS vendor. Metricool optional/legacy only. remote_access ready after live_check.ok.",
   "noInstagramConnectionMeans": "continue media intake, copy, Canva, preflight, queue, calendar candidates, feed audit — do not pretend published"
 }

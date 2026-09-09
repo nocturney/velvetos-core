@@ -44,7 +44,7 @@
 - **feed_audit:** `packages/vfgrowth/data/feed-audit.json`
 
 ## כלים מדולדלים
-- orange · suite_language · constitution/ORCHESTRA.md
+- אין חסם קשיח מדווח
 
 ## בטוח להמשך AI הבא
 - `python3 scripts/vf_control_plane.py watchdog`

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-09",
   "handle": "@velvets_cloud",
   "qualityBaseline": {
     "posts": ["G001", "G002"],
@@ -11,46 +11,54 @@
     "forbiddenRelabels": ["משקולת כושר", "kettlebell workout weight"],
     "publicationClaim": "scheduledCandidate — calendar alone is not live"
   },
-  "access": "awaiting-live-audit",
+  "access": "live-audit-2026-09-09",
+  "liveSource": "instagram MCP list_media (read-only; no publish/DM)",
   "items": [
     {
       "ordinal": 1,
       "contentId": "G001",
       "shortcodeHint": "DcqkjOLlYVX",
+      "livePermalink": "https://www.instagram.com/reel/DcqkjOLlYVX/",
+      "liveMediaType": "REELS",
       "type": "feed",
       "classification": "QUALITY_REFERENCE",
       "recommendedAction": "KEEP",
       "risk": "GREEN",
       "ctaCompliance": "baseline",
-      "whatsappLeakage": "unknown-until-live-audit",
+      "whatsappLeakage": "none-in-live-caption-sample",
       "editableInPlace": null,
-      "notes": "Quality reference — pace, simplicity, real photo feel."
+      "notes": "Quality reference — pace, simplicity, real photo feel. Confirmed live via list_media."
     },
     {
       "ordinal": 2,
       "contentId": "G002",
       "shortcodeHint": "DcvuJLxCJgU",
+      "livePermalink": "https://www.instagram.com/reel/DcvuJLxCJgU/",
+      "liveMediaType": "REELS",
       "type": "feed",
       "classification": "QUALITY_REFERENCE",
       "recommendedAction": "KEEP",
       "risk": "GREEN",
       "ctaCompliance": "baseline",
-      "whatsappLeakage": "unknown-until-live-audit",
+      "whatsappLeakage": "none-in-live-caption-sample",
       "editableInPlace": null,
-      "notes": "Quality reference."
+      "notes": "Quality reference. Confirmed live via list_media."
     },
     {
       "ordinal": 3,
       "contentId": "G003",
+      "shortcodeHint": "DdAPhozlNe2",
+      "livePermalink": "https://www.instagram.com/reel/DdAPhozlNe2/",
+      "liveMediaType": "REELS",
       "type": "feed",
       "classification": "REVIEW_REQUIRED",
       "recommendedAction": "EDIT_CAPTION",
       "risk": "ORANGE",
-      "ctaCompliance": "check-for-whatsapp",
-      "whatsappLeakage": "likely-in-templates",
+      "ctaCompliance": "whatsapp-in-caption",
+      "whatsappLeakage": "phone-in-live-caption",
       "editableInPlace": true,
       "preparedReplacement": null,
-      "notes": "Review required from post #3 onward per owner judgment."
+      "notes": "Live caption includes WhatsApp phone — prepare Instagram-message CTA edit. No live edit this session."
     },
     {
       "ordinal": 4,
@@ -77,6 +85,18 @@
       "whatsappLeakage": "likely-in-templates",
       "editableInPlace": null,
       "notes": "REVIEW_REQUIRED. No live claim without verification."
+    }
+  ],
+  "liveSampleExtra": [
+    {
+      "permalink": "https://www.instagram.com/p/Dc1g1sJGzgq/",
+      "media_type": "CAROUSEL_ALBUM",
+      "whatsappLeakage": "phone-in-live-caption"
+    },
+    {
+      "permalink": "https://www.instagram.com/p/Dc0cKegEbxd/",
+      "media_type": "CAROUSEL_ALBUM",
+      "whatsappLeakage": "none-in-live-caption-sample"
     }
   ]
 }

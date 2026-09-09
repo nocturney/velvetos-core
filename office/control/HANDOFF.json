@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-09T10:40:55+03:00",
+  "updatedAt": "2026-09-09T11:25:41+03:00",
   "date": "2026-09-09",
   "active_now": [],
   "waiting": [],
@@ -34,14 +34,7 @@
     "profile_desired": "packages/vfigos/PROFILE-DESIRED.json",
     "feed_audit": "packages/vfgrowth/data/feed-audit.json"
   },
-  "tools_degraded": [
-    {
-      "level": "orange",
-      "code": "suite_language",
-      "detail": "constitution/ORCHESTRA.md",
-      "outcome": "PREPARED"
-    }
-  ],
+  "tools_degraded": [],
   "safe_for_next_ai": [
     "python3 scripts/vf_control_plane.py watchdog",
     "python3 scripts/vf_control_plane.py followups",

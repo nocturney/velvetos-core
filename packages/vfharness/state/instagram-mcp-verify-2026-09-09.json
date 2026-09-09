@@ -1,23 +1,28 @@
 {
   "task_id": "instagram-mcp-verify-2026-09-09",
-  "status": "blocked",
-  "component_state": "Blocked",
-  "last_updated": "2026-09-09T10:45:00+03:00",
+  "status": "completed",
+  "component_state": "Idle",
+  "last_updated": "2026-09-09T11:30:00+03:00",
   "latest_observation": {
     "mcp_namespace": "instagram",
     "namespaceStatus": "ready",
-    "list_accounts": "ok ig_user_id=17841407772120429 label=env dm_enabled=false",
-    "healthcheck_live_check_ok": false,
-    "blocker": "Meta long-lived access token expired (oauth)",
-    "get_profile": "fail oauth",
-    "list_media": "fail oauth",
-    "vf_send_preflight_instagram": "ready=false needs_failover=true exit=2",
-    "watchdog_summary": "WAITING_EXTERNAL_TOOL",
-    "owner_action": "Refresh INSTAGRAM_MCP_ACCESS_TOKEN on Cloud Run / MCP host vault; re-run healthcheck until live_check.ok=true"
+    "healthcheck": "ok live_check.ok=true username=velvets_cloud dm_enabled=false",
+    "get_profile": "ok username=velvets_cloud id=17841407772120429 media_count=7",
+    "list_media": "ok count=5 usernames=velvets_cloud",
+    "list_accounts": "ok ig_user_id=17841407772120429 label=env",
+    "vf_send_preflight_instagram": "ready=true needs_failover=false exit=0",
+    "watchdog_summary": "PREPARED",
+    "watchdog_ig": "OK ig_ready",
+    "watchdog_remaining": "profile_prepared_pending_live — live bio still has WhatsApp; no bio update this session",
+    "desk": "status=ready auth=ready transport=streamable-http remote_access=ready",
+    "team_scope": "not verified via environment-info",
+    "check_all": "OK suite passed=34",
+    "remaining_blocker": "PROFILE-DESIRED pending-live-tool until live bio drops WhatsApp (no content change this session); Team MCP scope metadata not exposed"
   },
   "execution_state": {
     "no_publish": true,
     "no_dm": true,
-    "remote_access_desk": "pending"
+    "remote_access_desk": "ready",
+    "token_refresh": "owner refreshed long-lived token + Cloud Run redeploy"
   }
 }

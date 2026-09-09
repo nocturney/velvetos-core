@@ -44,7 +44,7 @@
     "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill.",
     "2026-09-05: Orchestra desks are API keys (vf_gemini.py / vf_chatgpt.py), not gemini.google.com or chatgpt.com in the Cloud browser — that trip Google/OpenAI security alerts. SUBSCRIPTIONS.md. Do not persist cookies. Plus ≠ API.",
     "2026-09-08: Instagram canonical MCP = adelaidasofia/instagram-mcp (ready-codespace, stdio). jlbadano/ig-mcp legacy. Stories+Insights on same MCP. DM off. remote_access pending. CONNECT-IG.md + DEPLOY-CODESPACE.md. No secrets in git.",
-    "2026-09-09: Cloud Team MCP namespace instagram reachable (Cloud Run /mcp). list_accounts ok for ig_user_id 17841407772120429. live_check FAIL — Meta token expired. remote_access stays pending until live_check.ok. No secrets in git.",
+    "2026-09-09: Cloud Team MCP namespace instagram reachable (Cloud Run /mcp). After token refresh+redeploy: live_check.ok + get_profile velvets_cloud + list_media OK. remote_access ready. No secrets in git.",
     "2026-09-06: (superseded) Instagram was mapped via jlbadano/ig-mcp needsAuth — see LEGACY-IG-MCP.md.",
     "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
     "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done.",
@@ -135,16 +135,16 @@
       "failover": "needsAuth → packages/vfcanva/studio/render.py → Superdesign. Say Canva לא מחובר."
     },
     "instagram": {
-      "status": "ready-codespace",
+      "status": "ready",
       "auth": "ready",
-      "transport": "stdio",
-      "remote_access": "pending",
-      "remote_mcp_note": "Cloud Team MCP namespace instagram bound to Cloud Run /mcp — live_check oauth expired 2026-09-09; do not set remote_access ready until live_check.ok",
+      "transport": "streamable-http",
+      "remote_access": "ready",
+      "remote_mcp_note": "Cloud Team MCP namespace instagram · Cloud Run /mcp · live_check.ok 2026-09-09 after long-lived token refresh",
       "namespace": "instagram",
       "account": "@velvets_cloud",
       "igUserId": "17841407772120429",
       "accountLabel": "velvets_cloud",
-      "mcp": "stdio · adelaidasofia/instagram-mcp · Cloud Team MCP namespace instagram",
+      "mcp": "Cloud Team MCP namespace instagram · adelaidasofia/instagram-mcp",
       "package": "adelaidasofia-instagram-mcp",
       "source": "https://github.com/adelaidasofia/instagram-mcp",
       "legacyMcp": "jlbadano/ig-mcp",
@@ -154,7 +154,7 @@
       "useWhen": "vfigos publish (image/carousel/reel/story), vfinsights verified metrics, feed review",
       "connect": "packages/vfigos/CONNECT-IG.md",
       "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
-      "officeRule": "Codespace stdio auth ready; Cloud remote MCP reachable but Graph token must pass live_check before remote_access ready; never fake live; live only after liveVerified via list_media/get_media",
+      "officeRule": "Cloud remote MCP live_check.ok + get_profile @velvets_cloud verified 2026-09-09; never fake liveVerified without list_media/get_media after publish; DM off",
       "notRequired": ["Metricool", "Publer", "Postly", "SimplePost", "Meta Business Suite"],
       "stories": "enabled-same-mcp",
       "dmEnabled": false,
@@ -191,7 +191,7 @@
         "INSTAGRAM_MCP_DM_ENABLED"
       ],
       "rule": "Approved public HTTPS media URL → publish_image|carousel|reel|story → verify live with list_media/get_media. No invented Insights. No auto-DM. No boost. publish tool success ≠ liveVerified.",
-      "failover": "MCP down or remote_access pending without live session → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)"
+      "failover": "MCP down / oauth fail at runtime → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)"
     },
     "web": {
       "status": "ready",

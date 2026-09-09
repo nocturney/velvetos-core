@@ -209,8 +209,9 @@
 
 ### 2026-09-09 (אימות Instagram MCP מרוחק)
 
-- **למדנו:** Team MCP namespace `instagram` זמין ב־Cloud Agent; `list_accounts` מחזיר IG user id של `@velvets_cloud`.
-- **חסם:** טוקן Meta long-lived על שרת ה־MCP **פג** → `live_check.ok=false` · `get_profile`/`list_media` נכשלים (oauth). `remote_access` נשאר `pending`.
-- **מחר / פעולת בעלים:** לרענן `INSTAGRAM_MCP_ACCESS_TOKEN` ב־host vault של Cloud Run (לא בגיט) → healthcheck עד `live_check.ok=true` → רק אז `remote_access: ready`.
+- **מושב:** צמיחה / תפעול
+- **למדנו:** Team MCP namespace `instagram` חי ב־Cloud Agent. אחרי רענון טוקן ארוך-טווח + Redeploy: `live_check.ok=true` · `get_profile`=`velvets_cloud` · `list_media` ok · `remote_access: ready` · preflight Instagram `ready`.
+- **למדנו:** bio חי עדיין עם וואטסאפ בטלפון — `PROFILE-DESIRED` נשאר `pending-live-tool` עד עדכון פרופיל (לא בוצע במושב אימות).
+- **מחר:** אחרי שערים — אפשר Publish דרך MCP; קודם לתקן כיתובי WhatsApp בפיד (G003+) לפי feed-audit חי.
 - **מקור:** אימות Cloud Agent 9.9.2026 · `vfigos/DEPLOY-CODESPACE.md` · checkpoint `instagram-mcp-verify-2026-09-09`.
 

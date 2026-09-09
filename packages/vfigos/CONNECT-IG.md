@@ -1,9 +1,8 @@
 # CONNECT-IG · Instagram MCP קנוני (adelaidasofia)
 
-סטטוס שולחן: **`ready-codespace`** — auth מאומת ב־GitHub Codespace (stdio).  
-`auth: ready` · `transport: stdio` (+ Cloud Team MCP Streamable HTTP) · `remote_access: pending` עד `live_check.ok=true`.
-
-**אימות Cloud 2026-09-09:** namespace `instagram` זמין בסוכן · שרת מרוחק `…a.run.app/mcp` עונה · `list_accounts` מחזיר IG user id `17841407772120429` · **`live_check.ok=false`** — טוקן Meta long-lived **פג** (oauth). עד רענון טוקן ב־host vault של השרת: אין Publish / אין claim ready מרוחק.
+סטטוס שולחן: **`ready`** — Cloud Team MCP namespace `instagram` מאומת ב־2026-09-09.  
+`auth: ready` · `transport: streamable-http` · **`remote_access: ready`** (`live_check.ok=true` · `get_profile`=`velvets_cloud` · `list_media` ok).  
+Codespace stdio נשאר נתיב גיבוי מקומי (ראה [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md)).
 
 MCP קנוני: [`adelaidasofia/instagram-mcp`](https://github.com/adelaidasofia/instagram-mcp) · חבילה `adelaidasofia-instagram-mcp` · שם שרת `instagram`.  
 **לגאסי:** [`jlbadano/ig-mcp`](https://github.com/jlbadano/ig-mcp) — לא ראשי יותר. ראו [`LEGACY-IG-MCP.md`](LEGACY-IG-MCP.md).
@@ -121,10 +120,10 @@ pip install adelaidasofia-instagram-mcp
 
 ## B) Cloud Agent / אוטונומיה מלאה
 
-stdio בתוך Codespace ישן/כבוי **אינו** מספיק למשרד תמיד-דלוק.  
-Endpoint מרוחק (Cloud Run / Team MCP, שם שרת `instagram`) **קיים** — ראו [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).  
-`remote_access: pending` נשאר עד `healthcheck.live_check.ok=true` על `@velvets_cloud` (לא מספיק שה־MCP namespace ירוק אם Graph oauth נכשל).  
-כש־oauth / remote לא מוכנים: failover [`SEND.md`](SEND.md).
+Endpoint מרוחק (Cloud Run / Team MCP, שם שרת `instagram`) **מאומת** ב־2026-09-09:  
+`healthcheck.live_check.ok=true` · `get_profile.username=velvets_cloud` · `list_media` ok.  
+שולחן: `remote_access: ready`. סודות רק ב־host vault — לא בגיט.  
+אם MCP/oauth נכשל בזמן אמת: failover [`SEND.md`](SEND.md) אותו תור.
 
 ## C) Insights (vfinsights)
 
