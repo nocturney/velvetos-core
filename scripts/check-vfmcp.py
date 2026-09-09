@@ -247,11 +247,29 @@ def main() -> None:
         fail("token-watch.json must not store token values")
     if "never-store-access-token" not in (tw.get("locks") or []):
         fail("token-watch.json must lock never-store-access-token")
-    if tw.get("expiresAt") not in (None, "") and not tw.get("expiresAtSource"):
-        fail("token-watch expiresAt requires expiresAtSource when set")
+    if tw.get("expiresAt") not in (None, "") and not (
+        tw.get("expiresAtSource") or (tw.get("expiryEvidence") or {}).get("source")
+    ):
+        fail("token-watch expiresAt requires expiresAtSource or expiryEvidence.source when set")
+    mode = (tw.get("expiryMode") or "unknown").strip()
+    if mode not in {"unknown", "limited", "none"}:
+        fail("token-watch expiryMode must be unknown|limited|none")
+    if mode == "none":
+        src = ((tw.get("expiryEvidence") or {}).get("source") or "").lower()
+        if src not in {"owner-reported-meta", "owner_reported_meta"}:
+            fail("expiryMode=none requires expiryEvidence.source=owner-reported-meta")
+    if mode == "limited" and not tw.get("expiresAt"):
+        fail("expiryMode=limited requires expiresAt")
+    plane_src = (ROOT / "scripts" / "vf_control_plane.py").read_text(encoding="utf-8")
+    if "classify_token_expiry" not in plane_src or "run_token_watch_behavior_tests" not in plane_src:
+        fail("vf_control_plane.py must define classify_token_expiry + run_token_watch_behavior_tests")
     token_watch_md = ROOT / "packages" / "vfigos" / "TOKEN-WATCH.md"
     if not token_watch_md.is_file():
         fail("missing packages/vfigos/TOKEN-WATCH.md")
+    tw_md = token_watch_md.read_text(encoding="utf-8")
+    for needle in ("expiryMode", "owner-reported-meta", "unknown", "limited", "none"):
+        if needle not in tw_md:
+            fail(f"TOKEN-WATCH.md must mention {needle}")
 
     # Canonical must not still present jlbadano as the primary install path
     if "git clone https://github.com/jlbadano/ig-mcp" in connect_ig_text:

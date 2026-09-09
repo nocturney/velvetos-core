@@ -69,7 +69,7 @@
       "id": "instagram.publish.story",
       "he": "פרסום סטורי",
       "tools": ["publish_story"],
-      "note": "Same MCP — not a separate Stories system"
+      "note": "Declared on same MCP — not a separate Stories system. Live publish_story not exercised in 2026-09-09 verify/fix work (no publish)."
     },
     {
       "id": "instagram.insights.read",

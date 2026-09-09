@@ -2,20 +2,26 @@
   "task_id": "instagram-mcp-verify-2026-09-09",
   "status": "completed",
   "component_state": "Idle",
-  "last_updated": "2026-09-09T11:45:00+03:00",
+  "last_updated": "2026-09-09T12:20:00+03:00",
   "latest_observation": {
-    "mcp_live": "healthcheck+get_profile+list_media OK; remote_access ready",
-    "token_watch": "added packages/vfigos/data/token-watch.json; expiresAt=null → brief/watchdog ig_token_expiry_unverified",
+    "mcp_live": "healthcheck+get_profile+list_media OK; remote_access ready (prior verify)",
+    "token_watch": "expiryMode=none + owner-reported-meta; no missing-expiry alert; live healthcheck still required",
+    "status_brief": "STATUS-he + brief regenerated from desk/CAPABILITIES evidence; no needsAuth / no ig-mcp≠stories myth",
     "team_scope": "not verified",
-    "next_post_draft": "packages/vfgrowth/drafts/NEXT-2026-09-09-G004-stories.md",
-    "followup": "fu-G003-soccerball waiting_for_print_done (orders אין ספירה)",
-    "check_all": "OK suite passed=34",
+    "calendar": "2026-09-09=Wed; 20:30 contested poll↔G004; G003 locked 7.9 16:00 unchanged; no Calendar create",
+    "followups": "fu-G003-soccerball waiting_for_print_done; brief followups=1",
+    "orders": "empty orders.json reported as sync gap — not proof of zero orders; no invented G003 order link",
+    "next_post_draft": "packages/vfgrowth/drafts/NEXT-2026-09-09-G004-stories.md + real Canva frame previews under /opt/cursor/artifacts/g004-stories-preview/",
+    "preflight": "G004 still fail-closed — on-frame copy not yet G004-STORIES-FIX",
     "no_publish": true,
+    "no_schedule": true,
     "no_bio_edit": true,
-    "no_caption_edit_live": true
+    "no_caption_edit_live": true,
+    "no_live_whatsapp_change": true
   },
   "execution_state": {
     "remote_access_desk": "ready",
-    "token_refresh": "owner refreshed; Meta expires_at paste still required"
+    "token_expiry": "none (owner-reported Meta; not agent API verify)",
+    "publish_story": "declared; live publish not tested this pass"
   }
 }

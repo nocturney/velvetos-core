@@ -13,21 +13,22 @@
 - Organic Growth Decision Pack `vf_organic_growth.py` — אישור ≠ פרסום
 - Office Control Plane `vf_control_plane.py` — SoT + dead-letter + WIP→finished (בלי ספאם לבעלים)
 - `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)
-- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)
-- FOLLOWER-GROWTH · היילייטס + וואטסאפ
+- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (ריק = פער סנכרון, לא הוכחת אפס הזמנות)
+- FOLLOWER-GROWTH · היילייטס + CTA הודעת Instagram
 - כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)
 - חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ
 - מסירת סטודיו + שער עריכה קשיח (אין סטוריז בלי Canva/vfcovers) + לוח אוטונומי
 - Canva MCP ready · Gmail/Calendar/Drive ready
 
-## חסום על אדם / לוגין
+## חסום על אדם / לוגין / מצב חיבור
 
-- ig-mcp **needsAuth** עד טוקן Meta (`CONNECT-IG.md` צעד אדם)
-- Insights = אין ספירה
-- סטוריז = instagram.com (ig-mcp ≠ stories)
+- IG MCP חיבור מאומת בראיות (velvets_cloud · live_check 2026-09-09 · status=ready · remote=ready) — לא מחרוזת קבועה
+- publish_story מוצהר באותו MCP · פרסום סטורי חי לא נבדק בעבודה זו · לא «ig-mcp ≠ stories»
+- Team MCP scope: לא מאומת (not-verified)
+- Insights = אין ספירה עד סנאפשוט בעלים
 - מדף MakerWorld 0/5 עד GATE+רישיון+סלייס
 - מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה
-- B2B נעול · וואטסאפ לקוח = אדם 050-2517000
+- B2B נעול · וואטסאפ לקוח = אדם 050-2517000 (BUSINESS_CONTACT_RECORD)
 
 ## מלאי פקים
 
@@ -49,11 +50,11 @@
 | `vfgraft` | docs-playbook | session-start | — |
 | `vfgrowth` | docs-playbook | daily-07:00 | — |
 | `vfharness` | working-cli | after-edit | — |
-| `vfigos` | needsAuth | daily-growth | needsAuth · טוקן Meta · סטוריז ב-instagram.com |
+| `vfigos` | evidence-ready | daily-growth | live_check ok · publish_story מוצהר · פרסום חי לא נבדק · Team scope לא מאומת |
 | `vfinsights` | needsAuth | daily-07:00 | אין ספירה עד סנאפשוט / טוקן |
 | `vfmakers` | overlay | weekly | — |
 | `vfmedia` | working-cli | on-intake | העלאה ≠ אישור · תיקיית מאושר ≠ הוכחת אישור |
-| `vfmcp` | needsAuth | session-start | ig-mcp / Sheets / WhatsApp send לפי CONNECT |
+| `vfmcp` | working-cli | session-start | IG remote לפי desk · Sheets / WhatsApp send לפי CONNECT |
 | `vfmem` | working-cli | session-start | — |
 | `vfmskill` | docs-playbook | on-content | — |
 | `vfom` | docs-playbook | on-floor-clip | אין גלם = אין ריל |

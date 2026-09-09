@@ -447,10 +447,145 @@ def level_to_outcome(level: str, *, code: str = "", owner_required: bool = False
     return "OK"
 
 
-def ig_token_watch_issues() -> list[dict]:
-    """Alert on Instagram token expiry using verified expiresAt only. Never reads token values."""
+def _parse_token_expiry(expires_raw: Any, tz_name: str | None) -> datetime | None:
+    """Parse limited-expiry timestamp. Supports date-only and full ISO with offset/Z."""
+    raw = str(expires_raw or "").strip()
+    if not raw:
+        return None
+    tz = ZoneInfo(tz_name) if tz_name else TZ
+    try:
+        if len(raw) == 10 and raw[4] == "-" and raw[7] == "-":
+            # Date-only → end of that calendar day in declared timezone (still compare as datetime)
+            return datetime(int(raw[0:4]), int(raw[5:7]), int(raw[8:10]), 23, 59, 59, tzinfo=tz)
+        normalized = raw.replace("Z", "+00:00")
+        exp = datetime.fromisoformat(normalized)
+        if exp.tzinfo is None:
+            exp = exp.replace(tzinfo=tz)
+        return exp
+    except (ValueError, TypeError, OSError):
+        return None
+
+
+def classify_token_expiry(watch: dict, *, now: datetime | None = None) -> list[dict]:
+    """Pure classifier for token-watch records. Never reads token secret values.
+
+    Modes (expiryMode):
+      - unknown — no honest expiry evidence
+      - limited — expiresAt timestamp (+ timezone) from a real source
+      - none — owner-reported Meta shows no expiry (expiresAt=null alone is NOT enough)
+    """
     issues: list[dict] = []
-    if not TOKEN_WATCH.is_file():
+    now = now or datetime.now(TZ)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=TZ)
+
+    mode = (watch.get("expiryMode") or "").strip().lower()
+    expires_raw = watch.get("expiresAt")
+    evidence = watch.get("expiryEvidence") or {}
+    evidence_source = (evidence.get("source") or watch.get("expiresAtSource") or "").strip()
+    warn_days = int(watch.get("warnDaysBefore") or 14)
+    tz_name = (
+        watch.get("expiresAtTimezone")
+        or evidence.get("timezone")
+        or "Asia/Jerusalem"
+    )
+
+    owner_none_sources = {"owner-reported-meta", "owner_reported_meta"}
+
+    # expiresAt=null alone is insufficient — need explicit mode + evidence for "none"
+    if mode in {"", "unknown"} or mode not in {"none", "limited", "unknown"}:
+        if mode not in {"none", "limited", "unknown"}:
+            mode = "unknown"
+        if mode == "unknown" and not expires_raw:
+            # Explicit none only when mode=none AND owner-reported evidence
+            pass
+
+    if mode == "none":
+        if evidence_source.lower() not in owner_none_sources:
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "ig_token_expiry_unverified",
+                    "detail": "expiryMode=none בלי מקור ראיה owner-reported-meta — לא ממציאים «ללא תפוגה»",
+                    "outcome": "PREPARED",
+                    "brief": True,
+                }
+            )
+            return issues
+        # No «חסר מועד פקיעה» alert. Live healthchecks remain elsewhere.
+        return issues
+
+    if mode == "limited" or (expires_raw and mode != "none"):
+        if mode != "limited":
+            # Legacy: expiresAt set without mode → treat as limited if source present
+            mode = "limited"
+        if not evidence_source and not watch.get("expiresAtSource"):
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "ig_token_expiry_unverified",
+                    "detail": "תוקף מוגבל בלי מקור ראיה (debug_token|app_dashboard|…) — לא ממציאים תאריך",
+                    "outcome": "PREPARED",
+                    "brief": True,
+                }
+            )
+            return issues
+        exp = _parse_token_expiry(expires_raw, tz_name)
+        if exp is None:
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "ig_token_expiry_unverified",
+                    "detail": "expiresAt פגום / לא ISO — לא ממציאים תאריך",
+                    "outcome": "PREPARED",
+                    "brief": True,
+                }
+            )
+            return issues
+        # Compare datetime-to-datetime (same-day earlier expiry counts as expired)
+        if now >= exp:
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "ig_token_expired",
+                    "detail": f"טוקן IG פג לפי תוקף מוגבל ({exp.isoformat()}) — failover SEND.md",
+                    "outcome": "RED_BLOCKER",
+                    "owner_required": True,
+                    "brief": True,
+                }
+            )
+            return issues
+        seconds_left = (exp - now).total_seconds()
+        days_left = seconds_left / 86400.0
+        if days_left <= warn_days:
+            issues.append(
+                {
+                    "level": "orange",
+                    "code": "ig_token_expiry_soon",
+                    "detail": f"לרענן טוקן IG עד {exp.isoformat()} (נותרו ~{days_left:.1f} ימים)",
+                    "outcome": "PREPARED",
+                    "brief": True,
+                }
+            )
+        return issues
+
+    # unknown (default): missing expiry — but only alert when remote is ready (caller may filter)
+    issues.append(
+        {
+            "level": "yellow",
+            "code": "ig_token_expiry_unverified",
+            "detail": "תוקף טוקן IG לא ידוע — חסר expiryMode/ראיה; לא ממציאים תאריך",
+            "outcome": "PREPARED",
+            "brief": True,
+        }
+    )
+    return issues
+
+
+def ig_token_watch_issues(*, now: datetime | None = None, watch_override: dict | None = None) -> list[dict]:
+    """Alert on Instagram token expiry modes. Never reads token secret values."""
+    issues: list[dict] = []
+    if watch_override is None and not TOKEN_WATCH.is_file():
         issues.append(
             {
                 "level": "yellow",
@@ -461,7 +596,7 @@ def ig_token_watch_issues() -> list[dict]:
         )
         return issues
     try:
-        watch = load_json(TOKEN_WATCH, {})
+        watch = watch_override if watch_override is not None else load_json(TOKEN_WATCH, {})
     except Exception:
         issues.append(
             {
@@ -491,62 +626,116 @@ def ig_token_watch_issues() -> list[dict]:
     desk = load_json(DESK, {})
     ig = (desk.get("tools") or {}).get("instagram") or {}
     remote_ready = (ig.get("remote_access") or "") == "ready" or (ig.get("status") or "") == "ready"
-    expires_raw = watch.get("expiresAt")
-    warn_days = int(watch.get("warnDaysBefore") or 14)
-    today_d = today()
-    if isinstance(today_d, str):
-        today_d = date.fromisoformat(today_d[:10])
 
-    if not expires_raw:
-        if remote_ready:
-            issues.append(
-                {
-                    "level": "yellow",
-                    "code": "ig_token_expiry_unverified",
-                    "detail": "חסר תוקף מאומת לטוקן IG — להדביק expiresAt מ־Meta debug_token בלבד",
-                    "outcome": "PREPARED",
-                    "brief": True,
-                }
-            )
-        return issues
+    classified = classify_token_expiry(watch, now=now)
+    if not remote_ready:
+        # When MCP not ready, skip soft unknown/missing-expiry brief noise (connection is the blocker)
+        classified = [i for i in classified if i.get("code") != "ig_token_expiry_unverified"]
+    return classified
 
-    try:
-        exp = date.fromisoformat(str(expires_raw)[:10])
-    except ValueError:
-        issues.append(
-            {
-                "level": "yellow",
-                "code": "ig_token_expiry_unverified",
-                "detail": "expiresAt לא ISO תקין — לא ממציאים תאריך",
-                "outcome": "PREPARED",
-                "brief": True,
-            }
-        )
-        return issues
 
-    days_left = (exp - today_d).days
-    if days_left < 0:
-        issues.append(
-            {
-                "level": "red",
-                "code": "ig_token_expired",
-                "detail": f"טוקן IG פג לפי תוקף מאומת ({exp.isoformat()}) — failover SEND.md",
-                "outcome": "RED_BLOCKER",
-                "owner_required": True,
-                "brief": True,
-            }
-        )
-    elif days_left <= warn_days:
-        issues.append(
-            {
-                "level": "orange",
-                "code": "ig_token_expiry_soon",
-                "detail": f"לרענן טוקן IG עד {exp.isoformat()} (נותרו {days_left} ימים)",
-                "outcome": "PREPARED",
-                "brief": True,
-            }
-        )
-    return issues
+def run_token_watch_behavior_tests() -> list[str]:
+    """In-memory behavior tests — no secrets, no disk mutation of token-watch.json."""
+    errors: list[str] = []
+    now = datetime(2026, 9, 9, 15, 0, 0, tzinfo=TZ)
+
+    # 1) unknown → unverified alert
+    got = classify_token_expiry({"expiryMode": "unknown", "expiresAt": None, "warnDaysBefore": 14}, now=now)
+    if not any(i.get("code") == "ig_token_expiry_unverified" for i in got):
+        errors.append("unknown mode must yield ig_token_expiry_unverified")
+    if any("חסר מועד פקיעה" in str(i.get("detail")) for i in got):
+        errors.append("unknown alert wording should not be legacy «חסר מועד פקיעה» only")
+
+    # 2) expiresAt=null alone with no mode/evidence ≠ none
+    got = classify_token_expiry({"expiresAt": None, "warnDaysBefore": 14}, now=now)
+    if not any(i.get("code") == "ig_token_expiry_unverified" for i in got):
+        errors.append("null expiresAt without mode must be unknown/unverified")
+
+    # 3) none + owner-reported-meta → no missing-expiry alert
+    got = classify_token_expiry(
+        {
+            "expiryMode": "none",
+            "expiresAt": None,
+            "expiryEvidence": {"source": "owner-reported-meta", "reportedAt": "2026-09-09"},
+            "warnDaysBefore": 14,
+        },
+        now=now,
+    )
+    if got:
+        errors.append(f"none+owner-reported-meta must not alert, got {got}")
+
+    # 4) none without evidence → unverified
+    got = classify_token_expiry({"expiryMode": "none", "expiresAt": None, "warnDaysBefore": 14}, now=now)
+    if not any(i.get("code") == "ig_token_expiry_unverified" for i in got):
+        errors.append("none without owner-reported evidence must be unverified")
+
+    # 5) limited: expired earlier same day
+    got = classify_token_expiry(
+        {
+            "expiryMode": "limited",
+            "expiresAt": "2026-09-09T08:00:00+03:00",
+            "expiresAtTimezone": "Asia/Jerusalem",
+            "expiresAtSource": "debug_token",
+            "expiryEvidence": {"source": "debug_token"},
+            "warnDaysBefore": 14,
+        },
+        now=now,
+    )
+    if not any(i.get("code") == "ig_token_expired" for i in got):
+        errors.append("same-day earlier expiry must be ig_token_expired")
+
+    # 6) limited: still valid later today
+    got = classify_token_expiry(
+        {
+            "expiryMode": "limited",
+            "expiresAt": "2026-09-09T20:00:00+03:00",
+            "expiresAtSource": "debug_token",
+            "expiryEvidence": {"source": "debug_token"},
+            "warnDaysBefore": 14,
+        },
+        now=now,
+    )
+    if any(i.get("code") == "ig_token_expired" for i in got):
+        errors.append("later-today expiry must not be expired at 15:00")
+    if not any(i.get("code") == "ig_token_expiry_soon" for i in got):
+        errors.append("later-today within warn window must be expiry_soon")
+
+    # 7) timezone: UTC expiry vs Jerusalem now
+    got = classify_token_expiry(
+        {
+            "expiryMode": "limited",
+            "expiresAt": "2026-09-09T10:00:00Z",  # 13:00 Asia/Jerusalem — before 15:00
+            "expiresAtSource": "debug_token",
+            "expiryEvidence": {"source": "debug_token"},
+            "warnDaysBefore": 14,
+        },
+        now=now,
+    )
+    if not any(i.get("code") == "ig_token_expired" for i in got):
+        errors.append("UTC expiry earlier than Jerusalem now must be expired")
+
+    # 8) bad input
+    got = classify_token_expiry(
+        {
+            "expiryMode": "limited",
+            "expiresAt": "not-a-date",
+            "expiresAtSource": "debug_token",
+            "expiryEvidence": {"source": "debug_token"},
+            "warnDaysBefore": 14,
+        },
+        now=now,
+    )
+    if not any(i.get("code") == "ig_token_expiry_unverified" for i in got):
+        errors.append("bad expiresAt must be unverified, not invented")
+
+    # 9) secret leak path
+    leak = ig_token_watch_issues(watch_override={"access_token": "REDACTED_TEST_ONLY", "expiryMode": "unknown"})
+    if not any(i.get("code") == "ig_token_watch_secret_leak" for i in leak):
+        errors.append("secret field must trigger ig_token_watch_secret_leak")
+    if any("REDACTED" in json.dumps(i) for i in leak):
+        errors.append("secret value must not appear in issue details")
+
+    return errors
 
 
 def watchdog_issues() -> list[dict]:
@@ -1316,26 +1505,35 @@ def write_handoff_he(handoff: dict) -> None:
 
 def brief_summary() -> dict:
     """Concise owner-facing slice for Morning Brief — no low-level noise."""
-    handoff = load_json(HANDOFF_JSON) or build_handoff()
+    # Always rebuild so followups=/dead_letters= reflect live control files
+    handoff = build_handoff()
     surface = handoff.get("owner_blocked") or []
-    dead_owner = [d for d in (handoff.get("failed") or []) if True]
-    # filter dead to owner_required from file
     dead_items = load_json(DEAD, {"items": []}).get("items") or []
     dead_owner = [d for d in dead_items if d.get("owner_required") and d.get("status") in {"open", "unresolved", "failed", None}]
-    fus = [f for f in (load_json(FOLLOWUPS, {"items": []}).get("items") or []) if f.get("state") == "ready_for_finished_content"]
+    all_fus = load_json(FOLLOWUPS, {"items": []}).get("items") or []
+    fus = [f for f in all_fus if f.get("state") == "ready_for_finished_content"]
+    waiting_fus = [f for f in all_fus if (f.get("state") or "").startswith("waiting")]
     health_issues = [i for i in watchdog_issues() if i.get("level") == "red"]
     token_alerts = [
         i
         for i in watchdog_issues()
         if i.get("brief") and str(i.get("code") or "").startswith("ig_token_")
     ]
+    completed = list(handoff.get("changed_today") or [])
+    # Ensure followups count is never stale prose from an older HANDOFF.json
+    completed = [c for c in completed if not str(c).startswith("followups=")]
+    completed.insert(0, f"followups={len(all_fus)} (waiting={len(waiting_fus)})")
     return {
         "owner_decisions": surface,
         "dead_letters_owner": dead_owner,
         "wip_finished_ready": fus,
+        "open_followups": [
+            {"id": f.get("id"), "state": f.get("state"), "contentId": f.get("contentId")}
+            for f in waiting_fus
+        ],
         "gaps_owner": [g for g in gaps() if g.get("level") in {"red", "orange"} and not g.get("internal")],
         "health": "ok" if not health_issues else f"degraded:{len(health_issues)}",
-        "completed_or_planned": handoff.get("changed_today") or [],
+        "completed_or_planned": completed,
         "ig_token_watch": [
             {
                 "code": i.get("code"),
@@ -1743,6 +1941,10 @@ def cmd_selftest(_args: argparse.Namespace) -> int:
             DEAD.write_text(backup_dl, encoding="utf-8")
         else:
             write_json(DEAD, {"updatedAt": today(), "items": []})
+
+        # 6b. Instagram token-watch behavior (in-memory; no secrets)
+        for err in run_token_watch_behavior_tests():
+            errors.append(f"6b token-watch: {err}")
 
         # 7. scheduled / uploadAccepted / publishRequested are not live; live needs verification_evidence
         for state_name in ("scheduled", "uploadAccepted", "publishRequested"):

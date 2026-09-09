@@ -6,25 +6,37 @@
 
 `packages/vfigos/data/token-watch.json`
 
-| שדה | חוק |
-|---|---|
-| `expiresAt` | ISO `YYYY-MM-DD` **רק** מ־Meta debug_token / App Dashboard — אחרת `null` |
-| `expiresAtSource` | `debug_token` / `app_dashboard` / `null` |
-| `lastLiveOkAt` | מתעדכן אחרי `healthcheck` עם `live_check.ok=true` (בלי סוד) |
-| `warnDaysBefore` | ברירת מחדל 14 |
+### מצבי תוקף (`expiryMode`)
+
+| מצב | משמעות | ראיה חובה |
+|---|---|---|
+| `unknown` | תוקף לא ידוע | — |
+| `limited` | תוקף מוגבל עם timestamp + אזור זמן | `expiresAt` ISO + `expiryEvidence.source` (`debug_token` / `app_dashboard` / …) |
+| `none` | ללא תפוגה לפי דיווח בעלים על Meta | `expiryEvidence.source=owner-reported-meta` + `reportedAt` |
+
+**`expiresAt=null` לבדו אינו מספיק** להבחין בין unknown ל־none.
+
+מקור הראיה נשמר בכנות: `owner-reported-meta` = דיווח בעלים מ־Meta UI/Debugger — **לא** אימות API שביצע הסוכן.
 
 ## התראות
 
 | מצב | watchdog | בריף 01 |
 |---|---|---|
-| `expiresAt` חסר + MCP `remote_access=ready` | `ig_token_expiry_unverified` (yellow / PREPARED) | «חסר תוקף מאומת לטוקן IG» |
-| נשארו ≤ `warnDaysBefore` ימים | `ig_token_expiry_soon` (orange) | «לרענן טוקן IG עד תאריך» |
-| `expiresAt` עבר | `ig_token_expired` (red) | חסם — failover `SEND.md` |
+| `unknown` + MCP `remote_access=ready` | `ig_token_expiry_unverified` | תוקף לא ידוע — לא ממציאים תאריך |
+| `none` + `owner-reported-meta` | **אין** התראת «חסר מועד פקיעה» | שורת מצב: ללא תפוגה (דיווח בעלים) · healthcheck חי נמשך |
+| `limited` ונותרו ≤ `warnDaysBefore` ימים | `ig_token_expiry_soon` (orange) | לרענן עד timestamp |
+| `limited` ו־`now >= expiresAt` (כולל פקיעה מוקדמת באותו יום) | `ig_token_expired` (red) | failover `SEND.md` |
+| קלט פגום ל־`expiresAt` | `ig_token_expiry_unverified` | לא ממציאים תאריך |
 
-## איך מאמתים תוקף (בעלים / מק)
+השוואת תוקף מוגבל היא **datetime מול עכשיו** עם אזורי זמן — לא «יום אחרי».
 
-1. במארח ה־MCP בלבד — Meta Access Token Debugger / `debug_token`.
-2. מעתיקים **רק** את תאריך הפקיעה ל־`expiresAt`.
-3. לא מדביקים את הטוקן לשיחת Cursor / Drive ציבורי / git.
+ללא תפוגה **אינו** מבטיח שהטוקן לא יבוטל או שהרשאותיו לא ישתנו — ממשיכים `healthcheck` חי.
 
-CLI: `python3 scripts/vf_control_plane.py watchdog` · בריף: `python3 scripts/vfops_loop.py brief --write`.
+## איך מעדכנים (בעלים / מק)
+
+1. במארח ה־MCP בלבד — Meta Access Token Debugger / App Dashboard.
+2. אם יש תאריך פקיעה → `expiryMode=limited` + ISO datetime בלבד.
+3. אם Meta מציג שאין תפוגה → `expiryMode=none` + `owner-reported-meta` (בלי להמציא תאריך).
+4. לא מדביקים את הטוקן לשיחת Cursor / Drive ציבורי / git.
+
+CLI: `python3 scripts/vf_control_plane.py watchdog` · בדיקות התנהגות: `simulate` · בריף: `python3 scripts/vfops_loop.py brief --write`.
