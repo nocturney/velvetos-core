@@ -32,7 +32,7 @@ Never set `INSTAGRAM_MCP_DM_ENABLED` for VelvetOS HQ.
 
 | Module | Purpose |
 |---|---|
-| `insights_v21.py` | Fix Graph v21 Insights defaults + `metric_type=total_value` split |
+| `insights_v21.py` | Fix Graph v21 Insights: media-type defaults (`saved`≠`saves`), `metric_type` split, period partitioning (no fabricated days_28) |
 | `mutations.py` | `graph_mutation_matrix` SoT + gated `delete_media`; profile/caption writes **not exposed** |
 | `cta_tools.py` / `cta_audit.py` | Read-only PUBLIC_CURRENT_CTA audit of live captions/bio |
 | `test_insights_v21.py` | Regression tests for the two ChatGPT Insights failures |

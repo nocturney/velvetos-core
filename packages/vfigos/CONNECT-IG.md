@@ -12,6 +12,8 @@ Capability contract: [`CAPABILITIES.json`](CAPABILITIES.json).
 ChatGPT Business connect: [`CHATGPT-MCP.md`](CHATGPT-MCP.md) — **CONNECTED + VERIFIED 2026-09-09** (API key).  
 Graph mutations honesty: [`GRAPH-MUTATIONS.md`](GRAPH-MUTATIONS.md).  
 Insights Graph v21 overlay: [`remote/insights_v21.py`](remote/insights_v21.py) (deploy required).  
+Media defaults are type-aware (`IMAGE` / `CAROUSEL_ALBUM` / `REELS` / `VIDEO` / `STORY`); media metric is `saved` (account metric is `saves`).  
+Account `period=days_28` returns compatible metrics (e.g. `reach`) and structured `period_incompatible` partials for day-only metrics — no fabricated 28-day totals.  
 CTA live audit: `audit_public_cta` / [`cta_audit.py`](cta_audit.py).  
 מצבי פרסום: [`PUBLICATION-STATES.md`](PUBLICATION-STATES.md) — upload/schedule/publish tool ≠ `liveVerified`.  
 פריסת Codespace / פער remote: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).  

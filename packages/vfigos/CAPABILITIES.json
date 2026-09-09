@@ -44,10 +44,11 @@
     },
     "insightsGraphCompat": {
       "code": "ready",
-      "deployed": true,
+      "deployed": false,
       "verifiedAt": "2026-09-09T18:22:38Z",
-      "imageTag": "insights-v21-2026-09-09c",
-      "note": "Public smoke PASS on /mcp (no trailing slash) with INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 — insights_default + insights_mixed + noauth_401."
+      "lastDeployedImageTag": "insights-v21-2026-09-09c",
+      "pendingImageTag": "insights-v21-media-period-2026-09-09",
+      "note": "PR #145 metric_type split is live. Follow-up (media saved≠saves defaults + days_28 period partition) is code-ready — redeploy ./packages/vfigos/remote/deploy.sh then INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 smoke."
     },
     "chatgptNoAuthFailsWith": "HTTP 401 on initialize",
     "chatgptOAuthFailsWith": "MCP server does not implement OAuth",

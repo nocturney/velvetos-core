@@ -1,0 +1,29 @@
+{
+  "task_id": "instagram-mcp-insights-media-period-2026-09-09",
+  "component_state": "Blocked",
+  "execution_state": {
+    "phase": "deploy_blocked_owner_gcp",
+    "pr": "https://github.com/nocturney/velvetos-core/pull/146",
+    "pr_head_sha": "77e574cde0fff3994bd7b060391e59782bc017b7",
+    "code_ready": true,
+    "deployed": false,
+    "cloud_run_revision": null,
+    "auth_changed": false,
+    "secrets_changed": false,
+    "check_all": "34/34",
+    "smoke_public_expect_fixed": "FAIL (media_default + days28_partial still broken on live image insights-v21-2026-09-09c)",
+    "reel_default": "FAIL",
+    "image_default": "FAIL",
+    "carousel_default": "FAIL",
+    "days28_partial": "FAIL"
+  },
+  "latest_observation": "Deploy requires owner Google Cloud Shell with project instamcp (identical path to PR #145). Cloud Agent has bearer smoke secrets only; no gcloud ADC. sderot-mac worker is online but this session is on managed cloud VM and cannot retarget mid-flight.",
+  "next_step": "Owner Cloud Shell: git fetch/checkout cursor/ig-insights-media-period-085f && GCP_PROJECT_ID=instamcp ./packages/vfigos/remote/deploy.sh then reply עלה — agent will re-run smoke + live probes.",
+  "locks": [
+    "no-secrets-in-git",
+    "no-auto-dm",
+    "no-live-publish-this-task",
+    "no-bio-caption-mutation-this-task",
+    "no-auth-token-changes"
+  ]
+}

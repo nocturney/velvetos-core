@@ -222,9 +222,82 @@ def main() -> int:
         "yes",
     }
     report["insights"]["expect_fixed"] = expect_fixed
+
+    # Follow-up regressions (ChatGPT live 2026-09-09): media default + days_28 partition.
+    media_id = None
+    for item in items:
+        if not isinstance(item, dict) or not item.get("id"):
+            continue
+        if (item.get("media_product_type") or "").upper() == "REELS":
+            media_id = item["id"]
+            break
+        if media_id is None:
+            media_id = item["id"]
+    if media_id:
+        c, media_ins = call("get_media_insights", {"media_id": media_id}, rid=17)
+    else:
+        c, media_ins = 0, {"ok": False, "error": "no media_id"}
+    media_ok = (
+        c == 200
+        and isinstance(media_ins, dict)
+        and media_ins.get("ok") is True
+        and "saves" not in (media_ins.get("metrics_requested") or [])
+    )
+    media_err = (media_ins or {}).get("error") if isinstance(media_ins, dict) else None
+    report["insights"]["media_default_ok"] = media_ok
+    report["insights"]["media_default_error"] = media_err
+    report["insights"]["media_id"] = media_id
+    report["insights"]["media_saves_leaked"] = bool(
+        isinstance(media_ins, dict)
+        and "saves" in (media_ins.get("metrics_requested") or [])
+    ) or bool(media_err and "metric[4]" in str(media_err))
+
+    c, days28 = call(
+        "get_account_insights",
+        {
+            "period": "days_28",
+            "metrics": (
+                "reach,follower_count,profile_views,total_interactions,"
+                "likes,comments,shares,saves"
+            ),
+        },
+        rid=18,
+    )
+    days28_ok = c == 200 and isinstance(days28, dict) and days28.get("ok") is True
+    days28_partial = bool(isinstance(days28, dict) and days28.get("partial"))
+    days28_names = {
+        row.get("name")
+        for row in ((days28 or {}).get("insights") or [])
+        if isinstance(row, dict)
+    }
+    days28_err_classes = {
+        p.get("error_class")
+        for p in ((days28 or {}).get("partial_errors") or [])
+        if isinstance(p, dict)
+    }
+    report["insights"]["days28_ok"] = days28_ok
+    report["insights"]["days28_partial"] = days28_partial
+    report["insights"]["days28_insight_names"] = sorted(n for n in days28_names if n)
+    report["insights"]["days28_error"] = (
+        (days28 or {}).get("error") if isinstance(days28, dict) else None
+    )
+    report["insights"]["days28_whole_snapshot_failed"] = bool(
+        isinstance(days28, dict)
+        and days28.get("ok") is False
+        and "incompatible with the metric (follower_count)" in str(days28.get("error") or "")
+    )
+
     if expect_fixed:
         report["checks"]["insights_default"] = default_ok and not report["insights"]["impressions_rejected"]
         report["checks"]["insights_mixed"] = mixed_ok and not report["insights"]["metric_type_error"]
+        report["checks"]["insights_media_default"] = media_ok and not report["insights"]["media_saves_leaked"]
+        report["checks"]["insights_days28_partial"] = (
+            days28_ok
+            and days28_partial
+            and "reach" in days28_names
+            and "period_incompatible" in days28_err_classes
+            and not report["insights"]["days28_whole_snapshot_failed"]
+        )
     else:
         report["insights"]["note"] = (
             "Insights reported only — set INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 after "
