@@ -1,0 +1,202 @@
+{
+  "generatedAt": "2026-09-09T23:16:08+03:00",
+  "kind": "velvet-world-model-projection",
+  "rule": "projection-only — sources remain canonical SoTs",
+  "sourcesOfTruth": {
+    "policy": "constitution/CONSTITUTION.md + constitution/ORCHESTRA.md",
+    "risk_policy": "office/control/POLICY.md",
+    "jobs": "office/ledger/live/jobs.csv",
+    "media": "packages/vfmedia/catalog.json + docs/MEDIA-VAULT.md",
+    "content_calendar": "packages/vfgrowth/CALENDAR.md",
+    "content_approval": "packages/vfgrowth/data/approval-queue.json",
+    "production_completion": "packages/vfprod/hq/cards/*.md via print.done",
+    "office_loop": "packages/vfops/LOOP.json",
+    "manager_handoff": "office/control/HANDOFF.json",
+    "decisions": "office/control/decisions.jsonl",
+    "dead_letter": "office/control/dead-letter.json",
+    "followups": "office/control/followups.json",
+    "public_cta": "constitution/PUBLIC_CTA.md",
+    "publication_states": "packages/vfigos/PUBLICATION-STATES.json",
+    "instagram_capabilities": "packages/vfigos/CAPABILITIES.json",
+    "profile_desired": "packages/vfigos/PROFILE-DESIRED.json",
+    "feed_audit": "packages/vfgrowth/data/feed-audit.json"
+  },
+  "active_jobs": [],
+  "jobs_count": 0,
+  "followups": {
+    "total": 7,
+    "by_state": {
+      "waiting_for_print_done": 1,
+      "ready_for_finished_content": 6
+    }
+  },
+  "media": {
+    "total": 400,
+    "inbox": 396,
+    "source": 4,
+    "verified": 3,
+    "registered_only": 0,
+    "unassociated": 400
+  },
+  "approvals": {
+    "total": 1
+  },
+  "production": {
+    "print_done_signals": [
+      {
+        "name": "print.done",
+        "producedAt": "2026-09-07",
+        "layer": "office",
+        "source": "vfprod/PRINT-DONE fixture",
+        "correlationId": "print_fixture_no_media",
+        "payload": {
+          "event_id": "print_fixture_no_media",
+          "printer": null,
+          "status": "completed",
+          "sku": null,
+          "product_name": null,
+          "material": null,
+          "grams": null,
+          "minutes": null,
+          "mediaPath": "",
+          "license": "חסר",
+          "media": {
+            "timelapse_path": "",
+            "hero_frame_path": ""
+          },
+          "approval_state": "pending",
+          "note": "fixture: no live floor media — do not invent a reel"
+        }
+      },
+      {
+        "card": "README.md",
+        "has_print_done": true
+      }
+    ],
+    "fleet_beds": 4
+  },
+  "publication": {
+    "instagram": {
+      "currentStatus": "ready",
+      "auth": "ready",
+      "remote_access": "ready",
+      "account": "velvets_cloud",
+      "insights_deployed": true,
+      "insights_code": "ready",
+      "publish": "available_not_live_tested",
+      "dm_forbidden": true
+    },
+    "publication_states_present": true
+  },
+  "approvals_queue_total": 1,
+  "blockers": {
+    "dead_letter_open": [],
+    "owner_blocked": []
+  },
+  "decisions_count": 13,
+  "decisions_latest": [
+    {
+      "decision_id": "dec-20260909-49702e",
+      "timestamp": "2026-09-09T23:10:41+03:00",
+      "actor": "living-studio-intake",
+      "triggering_signal": "intake.meeting",
+      "options_considered": null,
+      "chosen_action": "route_to_execution",
+      "reason": "Universal Intake classified as meeting",
+      "evidence": {
+        "text_excerpt": "סיכום פגישה: להכין טיוטת תוכן לכדורגל אחרי print.done lncvqvwh"
+      },
+      "confidence": 0.6,
+      "human_or_agent": "agent",
+      "outcome": null,
+      "status": "active",
+      "source": "universal-intake"
+    },
+    {
+      "decision_id": "dec-20260909-dea887",
+      "timestamp": "2026-09-09T23:11:22+03:00",
+      "actor": "living-studio",
+      "triggering_signal": "selftest",
+      "options_considered": null,
+      "chosen_action": "selftest-decision",
+      "reason": "living studio selftest",
+      "evidence": null,
+      "confidence": 0.7,
+      "human_or_agent": "agent",
+      "outcome": null,
+      "status": "active",
+      "source": "decision-journal"
+    },
+    {
+      "decision_id": "dec-20260909-2dba74",
+      "timestamp": "2026-09-09T23:11:22+03:00",
+      "actor": "living-studio-intake",
+      "triggering_signal": "intake.meeting",
+      "options_considered": null,
+      "chosen_action": "route_to_execution",
+      "reason": "Universal Intake classified as meeting",
+      "evidence": {
+        "text_excerpt": "סיכום פגישה: להכין טיוטת תוכן לכדורגל אחרי print.done r7og37w4"
+      },
+      "confidence": 0.6,
+      "human_or_agent": "agent",
+      "outcome": null,
+      "status": "active",
+      "source": "universal-intake"
+    },
+    {
+      "decision_id": "dec-20260909-c01a9c",
+      "timestamp": "2026-09-09T23:13:16+03:00",
+      "actor": "living-studio",
+      "triggering_signal": "selftest",
+      "options_considered": null,
+      "chosen_action": "selftest-decision",
+      "reason": "living studio selftest",
+      "evidence": null,
+      "confidence": 0.7,
+      "human_or_agent": "agent",
+      "outcome": null,
+      "status": "active",
+      "source": "decision-journal"
+    },
+    {
+      "decision_id": "dec-20260909-8a3558",
+      "timestamp": "2026-09-09T23:13:16+03:00",
+      "actor": "living-studio-intake",
+      "triggering_signal": "intake.meeting",
+      "options_considered": null,
+      "chosen_action": "route_to_execution",
+      "reason": "Universal Intake classified as meeting",
+      "evidence": {
+        "text_excerpt": "סיכום פגישה: להכין טיוטת תוכן לכדורגל אחרי print.done g9ctphj3"
+      },
+      "confidence": 0.6,
+      "human_or_agent": "agent",
+      "outcome": null,
+      "status": "active",
+      "source": "universal-intake"
+    }
+  ],
+  "inbox_buckets": {
+    "content": 0,
+    "production": 0,
+    "sales": 0,
+    "admin": 0,
+    "approvals": 0,
+    "blocked": 0,
+    "unknown": 0,
+    "notes": 14,
+    "meetings": 6
+  },
+  "office_loop": {
+    "paused": false,
+    "path": "packages/vfops/LOOP.json"
+  },
+  "system_health_hint": "see watchdog",
+  "opportunities_seed": true,
+  "experiments_path": "office/learning/lab/experiments.jsonl",
+  "knowledge": {
+    "owner_memory_present": true,
+    "vfmem": "python3 scripts/vfmem.py who <job>"
+  }
+}

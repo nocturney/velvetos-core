@@ -8,6 +8,190 @@
     "admin": [],
     "approvals": [],
     "blocked": [],
-    "unknown": []
+    "unknown": [],
+    "notes": [
+      {
+        "id": "uin-84919d0831",
+        "at": "2026-09-09T23:07:59+03:00",
+        "kind": "note",
+        "textHash": "c6733d6301f48b59",
+        "excerpt": "idempotency probe f383ec09eb924f20855c9481961e7347",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-34da506c80",
+        "at": "2026-09-09T23:08:14+03:00",
+        "kind": "note",
+        "textHash": "2c11f03c100c287b",
+        "excerpt": "idempotency probe 401e43f4ee7d4ddab8766aec70cf8219",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-6c19c1440b",
+        "at": "2026-09-09T23:08:31+03:00",
+        "kind": "note",
+        "textHash": "6055ff24436514a0",
+        "excerpt": "idempotency probe 8c9b6845c4724efda0b893b315806296",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-842b14366c",
+        "at": "2026-09-09T23:08:37+03:00",
+        "kind": "note",
+        "textHash": "56c8a9679e1a909a",
+        "excerpt": "idempotency probe f0251506e1e142819eaeeb9f154badb4",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-70ba89f733",
+        "at": "2026-09-09T23:08:38+03:00",
+        "kind": "note",
+        "textHash": "e484f451809caeb9",
+        "excerpt": "unique living studio idempotency 8ic0pbb0",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-d5277578fe",
+        "at": "2026-09-09T23:08:45+03:00",
+        "kind": "note",
+        "textHash": "d55bcb791280eac7",
+        "excerpt": "unique living studio idempotency 0u0yc6ox",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-893af1f613",
+        "at": "2026-09-09T23:09:02+03:00",
+        "kind": "note",
+        "textHash": "0c1f19504e3100d9",
+        "excerpt": "idempotency probe 312b48439fad435e8cc5b99b9d2b25d3",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-aa74ef882c",
+        "at": "2026-09-09T23:09:02+03:00",
+        "kind": "note",
+        "textHash": "c8c3391014f7023b",
+        "excerpt": "unique living studio idempotency j2uk2d5a",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-9610a1a392",
+        "at": "2026-09-09T23:10:41+03:00",
+        "kind": "note",
+        "textHash": "b90248b024b00fae",
+        "excerpt": "idempotency probe 3ee1dee4d7984eea9d976cfa52f5e8ad",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-cf5320d031",
+        "at": "2026-09-09T23:10:41+03:00",
+        "kind": "note",
+        "textHash": "fcf1a34b97175de2",
+        "excerpt": "unique living studio idempotency jxq0zis4",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-5f21851f0b",
+        "at": "2026-09-09T23:11:22+03:00",
+        "kind": "note",
+        "textHash": "c49d3301f9fe70d2",
+        "excerpt": "idempotency probe e157f87cc0cd4336bc9b747315db2fba",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-2fdc82441d",
+        "at": "2026-09-09T23:11:22+03:00",
+        "kind": "note",
+        "textHash": "e3556ab4b6365539",
+        "excerpt": "unique living studio idempotency t57nzflu",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-886015dabe",
+        "at": "2026-09-09T23:13:16+03:00",
+        "kind": "note",
+        "textHash": "bd17730eef9247c8",
+        "excerpt": "idempotency probe 4c452b5e741d4cd099a6fac00b17d749",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      },
+      {
+        "id": "uin-5147b8fceb",
+        "at": "2026-09-09T23:13:16+03:00",
+        "kind": "note",
+        "textHash": "3b2c6a1dd36d80a5",
+        "excerpt": "unique living studio idempotency vlfnr1ff",
+        "route": "knowledge-base-curator",
+        "status": "routed"
+      }
+    ],
+    "meetings": [
+      {
+        "id": "uin-f9f4a5d8bb",
+        "at": "2026-09-09T23:08:38+03:00",
+        "kind": "meeting",
+        "textHash": "c256497809c4694e",
+        "excerpt": "סיכום פגישה: להכין טיוטת תוכן לכדורגל אחרי print.done wx6c3kyl",
+        "route": "meeting-to-execution",
+        "status": "routed"
+      },
+      {
+        "id": "uin-e3fe624f77",
+        "at": "2026-09-09T23:08:45+03:00",
+        "kind": "meeting",
+        "textHash": "be3007e809666ab7",
+        "excerpt": "סיכום פגישה: להכין טיוטת תוכן לכדורגל אחרי print.done gku3vwup",
+        "route": "meeting-to-execution",
+        "status": "routed"
+      },
+      {
+        "id": "uin-99d2ee59c6",
+        "at": "2026-09-09T23:09:02+03:00",
+        "kind": "meeting",
+        "textHash": "b3fcee9d6c7c76e2",
+        "excerpt": "סיכום פגישה: להכין טיוטת תוכן לכדורגל אחרי print.done 5nkklve9",
+        "route": "meeting-to-execution",
+        "status": "routed"
+      },
+      {
+        "id": "uin-36d1d7ec8a",
+        "at": "2026-09-09T23:10:41+03:00",
+        "kind": "meeting",
+        "textHash": "7bc93939b0e6e5a2",
+        "excerpt": "סיכום פגישה: להכין טיוטת תוכן לכדורגל אחרי print.done lncvqvwh",
+        "route": "meeting-to-execution",
+        "status": "routed"
+      },
+      {
+        "id": "uin-1b505a4e48",
+        "at": "2026-09-09T23:11:22+03:00",
+        "kind": "meeting",
+        "textHash": "733e4e9c510c4e03",
+        "excerpt": "סיכום פגישה: להכין טיוטת תוכן לכדורגל אחרי print.done r7og37w4",
+        "route": "meeting-to-execution",
+        "status": "routed"
+      },
+      {
+        "id": "uin-4479ef0247",
+        "at": "2026-09-09T23:13:16+03:00",
+        "kind": "meeting",
+        "textHash": "6d378baa5974b5ba",
+        "excerpt": "סיכום פגישה: להכין טיוטת תוכן לכדורגל אחרי print.done g9ctphj3",
+        "route": "meeting-to-execution",
+        "status": "routed"
+      }
+    ]
   }
 }

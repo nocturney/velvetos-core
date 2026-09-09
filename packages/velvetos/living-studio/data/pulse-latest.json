@@ -1,0 +1,142 @@
+{
+  "generatedAt": "2026-09-09T23:16:08+03:00",
+  "kind": "studio-pulse",
+  "what_happening_now": {
+    "jobs": 0,
+    "followups": {
+      "waiting_for_print_done": 1,
+      "ready_for_finished_content": 6
+    },
+    "media_inbox": 396,
+    "media_source": 4,
+    "ig": "ready",
+    "office_paused": false
+  },
+  "what_moved_since_last": [],
+  "what_stuck": [
+    "followup:waiting_for_print_done=1",
+    "followup:ready_for_finished_content=6",
+    "media_unassociated=400"
+  ],
+  "what_requires_christian": [],
+  "what_office_can_solve": [
+    "classify inbox / media registered→verified retries",
+    "watchdog autofix + handoff refresh",
+    "Hebrew copy lint / preflight drafts",
+    "dead-letter triage that is green/yellow"
+  ],
+  "ready_to_publish": [],
+  "print_done_recent": [
+    {
+      "name": "print.done",
+      "producedAt": "2026-09-07",
+      "layer": "office",
+      "source": "vfprod/PRINT-DONE fixture",
+      "correlationId": "print_fixture_no_media",
+      "payload": {
+        "event_id": "print_fixture_no_media",
+        "printer": null,
+        "status": "completed",
+        "sku": null,
+        "product_name": null,
+        "material": null,
+        "grams": null,
+        "minutes": null,
+        "mediaPath": "",
+        "license": "חסר",
+        "media": {
+          "timelapse_path": "",
+          "hero_frame_path": ""
+        },
+        "approval_state": "pending",
+        "note": "fixture: no live floor media — do not invent a reel"
+      }
+    },
+    {
+      "card": "README.md",
+      "has_print_done": true
+    }
+  ],
+  "media_missing": {
+    "inbox_unverified": 0,
+    "unassociated": 400
+  },
+  "nearest_opportunity": [
+    {
+      "opportunity": "Clear media inbox → finished-content candidates",
+      "evidence": "inbox=396 source=4",
+      "confidence": 0.7,
+      "why_now": "bytes already in vault",
+      "effort": "low",
+      "blockers": [
+        "Drive AUTH for scheduled intake"
+      ],
+      "suggested_next_experiment": "Content Factory on 1 verified finished item",
+      "do_nothing_option": "Leave backlog if floor capacity is zero today"
+    }
+  ],
+  "do_not_do_now": [
+    "auto-DM",
+    "boost without lead seat",
+    "Print from HQ",
+    "invent ₪ or Insights",
+    "resume paused routines without owner",
+    "claim IG liveVerified without publish tool proof"
+  ],
+  "invisible_work_high": [
+    {
+      "id": "inv-fu-ready-fu-intake-84681552",
+      "kind": "print_done_without_content",
+      "impact": "high",
+      "title": "Finished followup fu-intake-84681552 needs content",
+      "why": "print/work done but content not started",
+      "owner_required": false,
+      "office_action": "Content Factory draft + PREFLIGHT"
+    },
+    {
+      "id": "inv-fu-ready-fu-intake-624f37d7",
+      "kind": "print_done_without_content",
+      "impact": "high",
+      "title": "Finished followup fu-intake-624f37d7 needs content",
+      "why": "print/work done but content not started",
+      "owner_required": false,
+      "office_action": "Content Factory draft + PREFLIGHT"
+    },
+    {
+      "id": "inv-fu-ready-fu-intake-663fc728",
+      "kind": "print_done_without_content",
+      "impact": "high",
+      "title": "Finished followup fu-intake-663fc728 needs content",
+      "why": "print/work done but content not started",
+      "owner_required": false,
+      "office_action": "Content Factory draft + PREFLIGHT"
+    },
+    {
+      "id": "inv-fu-ready-fu-intake-80b5b5a9",
+      "kind": "print_done_without_content",
+      "impact": "high",
+      "title": "Finished followup fu-intake-80b5b5a9 needs content",
+      "why": "print/work done but content not started",
+      "owner_required": false,
+      "office_action": "Content Factory draft + PREFLIGHT"
+    },
+    {
+      "id": "inv-fu-ready-fu-intake-9b1cdedd",
+      "kind": "print_done_without_content",
+      "impact": "high",
+      "title": "Finished followup fu-intake-9b1cdedd needs content",
+      "why": "print/work done but content not started",
+      "owner_required": false,
+      "office_action": "Content Factory draft + PREFLIGHT"
+    }
+  ],
+  "system_health": "see watchdog",
+  "feeds": {
+    "morning_brief": "composer — brief is presentation/delivery",
+    "handoff": "python3 scripts/vf_control_plane.py handoff",
+    "status": "python3 scripts/vf_control_plane.py status"
+  },
+  "media_total": 400,
+  "followups_total": 7,
+  "insights_deployed": true
+}
