@@ -299,9 +299,15 @@ def suggest_style_rewrite(body: str) -> str:
         text = text.replace(old, new)
     text = re.sub(r"\n{3,}", "\n\n", text).strip()
     text = re.sub(r"[ \t]{2,}", " ", text)
-    text = re.sub(r"\s+([!.?])", r"\1", text)
-    text = re.sub(r"^\s*[!.?]+\s*", "", text)
     text = re.sub(r"שבה\s+(את\s+)?", "עם ", text, count=1)
+    text = re.sub(r"\s+([!.?])", r"\1", text)
+    text = re.sub(r"([.!?]){2,}", r"\1", text)
+    text = re.sub(r"^\s*[!.?]+\s*", "", text)
+    text = text.strip(" .!")
+    if text and text[-1] not in ".!?":
+        # keep as fragment — VF voice allows short lines without forced period
+        pass
+    text = text.strip()
     lines = text.splitlines()
     if lines:
         first = lines[0]
