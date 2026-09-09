@@ -194,7 +194,16 @@ def main() -> None:
         fail("desk expectedRemoteUrlPattern should describe Cloud Run URL pattern")
 
     health_src = HEALTH_SCRIPT.read_text(encoding="utf-8")
-    for needle in ("accounts_configured", "live_check", "velvets_cloud", "17841407772120429", "REDACTED"):
+    for needle in (
+        "accounts_configured",
+        "live_check",
+        "velvets_cloud",
+        "17841407772120429",
+        "REDACTED",
+        "list_media",
+        "bearer_internal_whitespace",
+        "sanitize-whitespace",
+    ):
         if needle not in health_src:
             fail(f"remote health script must mention {needle}")
 

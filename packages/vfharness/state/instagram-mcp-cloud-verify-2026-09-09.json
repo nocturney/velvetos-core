@@ -1,0 +1,51 @@
+{
+  "task_id": "instagram-mcp-cloud-verify-2026-09-09",
+  "component_state": "Degraded",
+  "pr": 141,
+  "branch": "cursor/instagram-cloud-verify-b49f",
+  "bcId": "bc-01a084e2-fb4d-7559-b48e-1c3941deb49f",
+  "consumer": "cursor-cloud-agent",
+  "transport": "streamable-http",
+  "endpoint": "https://velvet-instagram-mcp-3sz7smh74a-zf.a.run.app/mcp",
+  "published": false,
+  "secrets_committed": false,
+  "env": {
+    "INSTAGRAM_MCP_REMOTE_URL_available": true,
+    "VELVET_INSTAGRAM_MCP_BEARER_TOKEN_available": true,
+    "url_had_edge_whitespace": true,
+    "bearer_had_internal_whitespace": true,
+    "bearer_len_raw": 65,
+    "bearer_len_sanitized": 64,
+    "cursor_team_mcp_namespace_instagram": false,
+    "note": "Team secrets present but paste-corrupted. Native Cursor MCP namespace 'instagram' not in tool catalog yet — Streamable HTTP consumer path verified via scripts/vf_instagram_mcp_remote_health.py"
+  },
+  "raw_probe": {
+    "exit": 1,
+    "error": "bearer_internal_whitespace",
+    "ok": false
+  },
+  "sanitized_recovery_probe": {
+    "exit": 0,
+    "ok": true,
+    "remote_access": "ready",
+    "accounts_configured": 1,
+    "live_check_ok": true,
+    "account": "velvets_cloud",
+    "ig_user_id": "17841407772120429",
+    "profile_ok": true,
+    "list_media_ok": true,
+    "list_media_count": 7,
+    "dm_enabled": false
+  },
+  "preflight": {
+    "gate": "instagram=ready",
+    "cloud_autonomy_ready": true
+  },
+  "watchdog": "ig_remote_ready",
+  "owner_action_required": [
+    "Re-save INSTAGRAM_MCP_REMOTE_URL in Cursor Team / Cloud env as a single line with no leading/trailing newlines",
+    "Re-save VELVET_INSTAGRAM_MCP_BEARER_TOKEN from Secret Manager velvet-instagram-mcp-bearer with NO internal spaces",
+    "Register Team MCP HTTP server from packages/vfmcp/mcp.cloud.example.json so namespace 'instagram' appears in Cloud Agent tools"
+  ],
+  "updated_at": "2026-09-09T06:42:00Z"
+}

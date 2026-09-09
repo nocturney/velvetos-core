@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-09T06:10:13Z",
+  "checkedAt": "2026-09-09T06:42:55Z",
   "endpoint": "https://velvet-instagram-mcp-3sz7smh74a-zf.a.run.app/mcp",
   "transport": "streamable-http",
   "auth": "bearer",
@@ -8,7 +8,7 @@
   "accounts_configured": 1,
   "live_check_ok": true,
   "account": "velvets_cloud",
-  "ig_user_id": null,
+  "ig_user_id": "17841407772120429",
   "error": null,
   "tools_seen": [
     "account_info",
@@ -54,5 +54,24 @@
     }
   },
   "default_account_label": "env",
-  "profile_ok": false
+  "profile_ok": true,
+  "profile": {
+    "username": "velvets_cloud",
+    "id": "17841407772120429",
+    "name": "Velvet Factory | הדפסות תלת־ממד",
+    "media_count": 7
+  },
+  "list_media_ok": true,
+  "list_media_count": 7,
+  "list_media_read_only": true,
+  "env": {
+    "url_had_edge_whitespace": true,
+    "bearer_had_internal_whitespace": true,
+    "bearer_len_raw": 65,
+    "sanitized": true,
+    "consumer": "cursor-cloud-agent",
+    "transport_path": "streamable-http",
+    "published": false,
+    "bearer_len_sanitized": 64
+  }
 }

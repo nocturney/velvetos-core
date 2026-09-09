@@ -60,6 +60,8 @@ Client env (values never in git):
 - `INSTAGRAM_MCP_REMOTE_URL` = service URL + `/mcp` (from `gcloud run services describe` or remote-health `endpoint`)
 - `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` = same Secret Manager value as Cloud Run (`velvet-instagram-mcp-bearer`)
 
+**Paste hygiene (Cloud Agent / Team secrets):** paste URL and bearer as single-line values with **no** leading/trailing newlines and **no** spaces inside the bearer. A single space inside the bearer yields `401 invalid_token`. Diagnose with `python3 scripts/vf_instagram_mcp_remote_health.py --json` (exits `1` on `bearer_internal_whitespace`). Recovery probe only: `--sanitize-whitespace` (still re-save clean Team secrets afterward).
+
 ## Region
 
 Default: **`me-west1` (Tel Aviv)** — verified supported for this project. Override with `REGION=…` only if unavailable.
@@ -121,7 +123,7 @@ python3 scripts/vf_instagram_mcp_remote_health.py --write --json
 }
 ```
 
-Set both env vars in Cursor Team / Cloud Integrations. Never commit filled mcp.json. Never put the Meta Graph token in the Cloud Agent client.
+Set both env vars in Cursor Team / Cloud Integrations **and** register the HTTP MCP server (`type: http`) so the Cloud Agent tool catalog exposes namespace `instagram`. Env alone is not enough for Cursor `CallDynamicTool` — without Team MCP binding, consumer verification uses `scripts/vf_instagram_mcp_remote_health.py` over Streamable HTTP. Never commit filled mcp.json. Never put the Meta Graph token in the Cloud Agent client.
 
 ## Healthcheck success criteria
 

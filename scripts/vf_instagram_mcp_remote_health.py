@@ -59,6 +59,22 @@ def _env(name: str) -> str:
     return (os.environ.get(name) or "").strip()
 
 
+def _env_raw(name: str) -> str:
+    return os.environ.get(name) or ""
+
+
+def _bearer_has_internal_whitespace(raw: str) -> bool:
+    """True when paste corruption put whitespace inside the token (not only ends)."""
+    if not raw:
+        return False
+    return any(c.isspace() for c in raw.strip())
+
+
+def _sanitize_bearer(raw: str) -> str:
+    """Remove all whitespace from a paste-corrupted bearer. Never log the value."""
+    return "".join((raw or "").split())
+
+
 def _extract_payload(result: Any) -> dict[str, Any]:
     data = getattr(result, "data", None)
     if isinstance(data, dict):
@@ -142,11 +158,36 @@ async def _probe(url: str, bearer: str) -> dict[str, Any]:
                 try:
                     prof = _extract_payload(await client.call_tool("get_profile", {}))
                     if isinstance(prof, dict):
-                        username = username or prof.get("username")
-                        ig_id = prof.get("id") or prof.get("ig_user_id")
-                        report["profile_ok"] = bool(prof.get("username") or prof.get("id"))
+                        inner = prof.get("profile") if isinstance(prof.get("profile"), dict) else prof
+                        username = username or inner.get("username")
+                        ig_id = inner.get("id") or inner.get("ig_user_id") or prof.get("id")
+                        report["profile_ok"] = bool(inner.get("username") or inner.get("id"))
+                        # Never store biography / tokens — identity fields only
+                        report["profile"] = {
+                            k: inner.get(k)
+                            for k in ("username", "id", "name", "account_type", "media_count")
+                            if k in inner
+                        }
                 except Exception as exc:  # noqa: BLE001
                     report["profile_error"] = _scrub(str(exc))[:200]
+
+            if "list_media" in names and (accounts or 0) >= 1:
+                try:
+                    media = _extract_payload(await client.call_tool("list_media", {}))
+                    if isinstance(media, dict):
+                        items = media.get("media") or media.get("data") or media.get("items")
+                        count = media.get("count")
+                        if not isinstance(count, int):
+                            count = len(items) if isinstance(items, list) else None
+                        report["list_media_ok"] = media.get("ok") is True or isinstance(items, list)
+                        report["list_media_count"] = count
+                        report["list_media_read_only"] = True
+                    else:
+                        report["list_media_ok"] = False
+                        report["list_media_error"] = "unparseable_list_media_result"
+                except Exception as exc:  # noqa: BLE001
+                    report["list_media_ok"] = False
+                    report["list_media_error"] = _scrub(str(exc))[:200]
 
             report["account"] = username
             report["ig_user_id"] = str(ig_id) if ig_id is not None else None
@@ -201,10 +242,29 @@ def main() -> int:
     parser.add_argument("--url", help="Override INSTAGRAM_MCP_REMOTE_URL")
     parser.add_argument("--write", action="store_true", help=f"Write {OUT.relative_to(ROOT)}")
     parser.add_argument("--json", action="store_true", help="Print report JSON to stdout")
+    parser.add_argument(
+        "--sanitize-whitespace",
+        action="store_true",
+        help=(
+            "Recovery only: strip URL ends and remove ALL whitespace from bearer "
+            "(paste-corruption workaround). Re-set Cursor Team secrets without spaces/newlines."
+        ),
+    )
     args = parser.parse_args()
 
-    url = (args.url or _env("INSTAGRAM_MCP_REMOTE_URL")).strip()
-    bearer = _env("VELVET_INSTAGRAM_MCP_BEARER_TOKEN")
+    url_raw = args.url or _env_raw("INSTAGRAM_MCP_REMOTE_URL")
+    bearer_raw = _env_raw("VELVET_INSTAGRAM_MCP_BEARER_TOKEN")
+    url = (url_raw or "").strip()
+    bearer = (bearer_raw or "").strip()
+    env_notes: dict[str, Any] = {
+        "url_had_edge_whitespace": bool(url_raw) and url_raw != url,
+        "bearer_had_internal_whitespace": _bearer_has_internal_whitespace(bearer_raw),
+        "bearer_len_raw": len(bearer_raw),
+        "sanitized": False,
+        "consumer": "cursor-cloud-agent",
+        "transport_path": "streamable-http",
+        "published": False,
+    }
 
     if not url:
         report = {
@@ -213,6 +273,7 @@ def main() -> int:
             "ok": False,
             "remote_access": "pending",
             "error": "INSTAGRAM_MCP_REMOTE_URL unset — remote autonomy not configured",
+            "env": env_notes,
         }
         if args.write:
             OUT.parent.mkdir(parents=True, exist_ok=True)
@@ -222,6 +283,33 @@ def main() -> int:
         else:
             print("REMOTE Instagram MCP: pending (no INSTAGRAM_MCP_REMOTE_URL)")
         return 2
+
+    if env_notes["bearer_had_internal_whitespace"]:
+        if not args.sanitize_whitespace:
+            print(
+                "FAIL VELVET_INSTAGRAM_MCP_BEARER_TOKEN contains internal whitespace "
+                "(paste corruption in Cursor Team / Cloud env). "
+                "Re-set the secret from Secret Manager velvet-instagram-mcp-bearer "
+                "with NO spaces/newlines. Or pass --sanitize-whitespace for one recovery probe.",
+                file=sys.stderr,
+            )
+            report = {
+                "checkedAt": _now(),
+                "endpoint": url if url.startswith("https://") else None,
+                "ok": False,
+                "remote_access": "degraded",
+                "error": "bearer_internal_whitespace",
+                "env": env_notes,
+            }
+            if args.write:
+                OUT.parent.mkdir(parents=True, exist_ok=True)
+                OUT.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            if args.json:
+                print(json.dumps(report, ensure_ascii=False, indent=2))
+            return 1
+        bearer = _sanitize_bearer(bearer_raw)
+        env_notes["sanitized"] = True
+        env_notes["bearer_len_sanitized"] = len(bearer)
 
     if not url.startswith("https://"):
         print("FAIL remote URL must be https://", file=sys.stderr)
@@ -234,6 +322,7 @@ def main() -> int:
         return 1
 
     report = asyncio.run(_probe(url, bearer))
+    report["env"] = env_notes
     # Never echo bearer / Meta tokens
     blob = json.dumps(report, ensure_ascii=False, indent=2)
     blob = _scrub(blob)
@@ -247,6 +336,12 @@ def main() -> int:
 
     if report.get("ok") and report.get("remote_access") == "ready":
         print("REMOTE Instagram MCP: ready", file=sys.stderr)
+        if env_notes.get("sanitized") or env_notes.get("url_had_edge_whitespace"):
+            print(
+                "WARN Cursor Team env still needs clean re-save "
+                "(URL edge whitespace and/or bearer internal whitespace).",
+                file=sys.stderr,
+            )
         return 0
     print(f"REMOTE Instagram MCP: {report.get('remote_access')} — {report.get('error')}", file=sys.stderr)
     return 2
