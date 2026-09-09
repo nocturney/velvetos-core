@@ -13,14 +13,18 @@ ChatGPT must use **Authentication = API key**, not No Auth / OAuth. See [`../CHA
 
 ## Env (names only — values in Secret Manager)
 
-| Name | Role |
-|---|---|
-| `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` | Connector auth (ChatGPT / Cursor → this service) |
-| `INSTAGRAM_MCP_ACCESS_TOKEN` | Meta Graph (service → Instagram) |
-| `INSTAGRAM_MCP_IG_USER_ID` | IG business account id |
-| `INSTAGRAM_MCP_APP_SECRET` | optional Meta appsecret_proof |
-| `PORT` | Cloud Run port (default 8080) |
-| `MCP_PATH` | default `/mcp` |
+Cloud Run **env** names (left) map to GSM **secret** names on project `instamcp` (right):
+
+| Cloud Run env | GSM secret (`instamcp`) | Role |
+|---|---|---|
+| `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` | `velvet-instagram-mcp-bearer` | Connector auth (ChatGPT / Cursor → this service) |
+| `INSTAGRAM_MCP_ACCESS_TOKEN` | `velvet-instagram-mcp-access` | Meta Graph (service → Instagram) |
+| `INSTAGRAM_MCP_IG_USER_ID` | `velvet-instagram-mcp-ig-user` | IG business account id |
+| `INSTAGRAM_MCP_APP_SECRET` | (optional) | Meta appsecret_proof |
+| `PORT` | — | Cloud Run port (default 8080) |
+| `MCP_PATH` | — | default `/mcp` |
+
+`deploy.sh` defaults to those kebab GSM names. Override with `GSM_BEARER_SECRET` / `GSM_ACCESS_SECRET` / `GSM_IG_USER_SECRET` if needed.
 
 Never set `INSTAGRAM_MCP_DM_ENABLED` for VelvetOS HQ.
 
