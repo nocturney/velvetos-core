@@ -218,7 +218,22 @@ def main() -> None:
     if not any(n in template_pf for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):
         fail("preflight/TEMPLATE.md must use Instagram-message CTA (not WhatsApp phone)")
     g004p = PREFLIGHT_G004.read_text()
-    if "נכשל-סגור" not in g004p:
+    gate_closed = "נכשל-סגור" in g004p
+    gate_open = "## שער" in g004p and "**עבור**" in g004p.split("## שער", 1)[1][:600]
+    if gate_open:
+        # Open gate requires written Canva/edit evidence — never a bare עבור.
+        for needle in (
+            "DAHUaUo3bAk",
+            "DAHUfRQMH60",
+            "g004-stories-final",
+            "EDIT-GATE",
+            "G004-STORIES-FIX",
+        ):
+            if needle not in g004p:
+                fail(f"preflight/G004.md עבור requires evidence needle {needle!r}")
+        if "נכשל-סגור" in g004p.split("## שער", 1)[1][:600]:
+            fail("preflight/G004.md gate section cannot be both עבור and נכשל-סגור")
+    elif not gate_closed:
         fail("preflight/G004.md must stay fail-closed until the written gate passes")
     if not any(n in g004p for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):
         fail("preflight/G004.md must use Instagram-message CTA")
