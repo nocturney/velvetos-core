@@ -226,6 +226,9 @@ def main() -> None:
             "liveVerified",
             "INSTAGRAM_MCP_ACCESS_TOKEN",
             "remote_access",
+            "CHATGPT-MCP.md",
+            "VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
+            "API key",
         )),
         (CONNECT_ICLOUD, ("iCloud", "Cloud Agent", "ICLOUD-DRIVE-SYNC.md", "Drive")),
         (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py", "perplexity-user-mcp", "patchright", "HOST.md")),
@@ -237,6 +240,34 @@ def main() -> None:
             if needle not in text:
                 fail(f"{path.name} must mention {needle}")
     connect_ig_text = CONNECT_IG.read_text(encoding="utf-8")
+    chatgpt_mcp = ROOT / "packages" / "vfigos" / "CHATGPT-MCP.md"
+    if not chatgpt_mcp.is_file():
+        fail("missing packages/vfigos/CHATGPT-MCP.md")
+    chatgpt_text = chatgpt_mcp.read_text(encoding="utf-8")
+    for needle in (
+        "API key",
+        "VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
+        "No Auth",
+        "does not implement OAuth",
+        "401",
+        "INSTAGRAM_MCP_ACCESS_TOKEN",
+    ):
+        if needle not in chatgpt_text:
+            fail(f"CHATGPT-MCP.md must mention {needle}")
+    remote_dir = ROOT / "packages" / "vfigos" / "remote"
+    for rel in ("http_server.py", "Dockerfile", "deploy.sh", "smoke_public.py", "README.md"):
+        if not (remote_dir / rel).is_file():
+            fail(f"missing packages/vfigos/remote/{rel}")
+    remote_http = (remote_dir / "http_server.py").read_text(encoding="utf-8")
+    for needle in (
+        "StaticTokenVerifier",
+        "VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
+        "INSTAGRAM_MCP_ACCESS_TOKEN",
+        "streamable-http",
+        "chatgpt.com",
+    ):
+        if needle not in remote_http:
+            fail(f"remote/http_server.py must mention {needle}")
     if "TOKEN-WATCH.md" not in connect_ig_text and "token-watch" not in connect_ig_text.lower():
         fail("CONNECT-IG.md must mention TOKEN-WATCH / token-watch")
     token_watch = ROOT / "packages" / "vfigos" / "data" / "token-watch.json"

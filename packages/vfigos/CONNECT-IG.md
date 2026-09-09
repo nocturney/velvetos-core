@@ -125,6 +125,20 @@ Endpoint מרוחק (Cloud Run / Team MCP, שם שרת `instagram`) **מאומת
 שולחן: `remote_access: ready`. סודות רק ב־host vault — לא בגיט.  
 אם MCP/oauth נכשל בזמן אמת: failover [`SEND.md`](SEND.md) אותו תור.
 
+Public URL (streamable-http): `https://velvet-instagram-mcp-1016876126699.me-west1.run.app/mcp`  
+Connector auth: `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` (Bearer) — **לא** הטוקן של Meta.  
+Remote entry source: [`remote/`](remote/README.md). ChatGPT Business: [`CHATGPT-MCP.md`](CHATGPT-MCP.md).
+
+### ChatGPT Business · Custom MCP
+
+| Authentication ב־ChatGPT | תוצאה |
+|---|---|
+| OAuth | נכשל — השרת לא מממש OAuth discovery (צפוי) |
+| No Auth | נכשל — `initialize` מחזיר **401 Bearer** (השרת דורש מפתח מחבר) |
+| **API key** | הנכון — להדביק `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` |
+
+אין להשאיר endpoint עם publish כ־No Auth ציבורי. אין להדביק `INSTAGRAM_MCP_ACCESS_TOKEN` ב־ChatGPT.
+
 ## C) Insights (vfinsights)
 
 מקור מועדף: `get_account_insights` / `get_media_insights` / `get_audience_insights`.  

@@ -18,12 +18,16 @@ Status date: **2026-09-09**. No secrets in this file.
 |---|---|
 | Cursor namespace | `instagram` · ready |
 | Host | Cloud Run MCP path `/mcp` (Team MCP binding named `instagram`) |
+| Public URL | `https://velvet-instagram-mcp-1016876126699.me-west1.run.app/mcp` |
+| Connector auth | Bearer `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` (≠ Meta token) |
 | Transport | Streamable HTTP via Cursor Team MCP session (Team-scope metadata **not verified** — `environment-info` / Meta DevTools do not expose Cursor Team binding scope) |
 | `healthcheck` | `live_check.ok=true` · username `velvets_cloud` |
 | `get_profile` | username `velvets_cloud` · id `17841407772120429` |
 | `list_media` | ok · sample count 5 · usernames `velvets_cloud` |
 | Desk | `status: ready` · `auth: ready` · `transport: streamable-http` · **`remote_access: ready`** |
 | DM | `dm_enabled: false` |
+| ChatGPT Business | Authentication = **API key** — see [`CHATGPT-MCP.md`](CHATGPT-MCP.md). No Auth → 401. OAuth → not implemented. |
+| Remote source | [`remote/`](remote/README.md) · smoke `python3 packages/vfigos/remote/smoke_public.py` |
 
 ## Checklist — local / Codespace setup
 
