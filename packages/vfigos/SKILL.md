@@ -8,8 +8,8 @@
 **מאגר מדיה משותף:** [`docs/MEDIA-VAULT.md`](../../docs/MEDIA-VAULT.md) · קטלוג יחיד [`packages/vfmedia/catalog.json`](../vfmedia/catalog.json). תפעול בלבד קולט נכנס→מקור. עובדים על נגזרת ומוודאים `versionApproval` לגרסה המדויקת; אין קטלוג מקביל לכלי.
 
 סדר שליחה: `packages/vfigos/SEND.md` + `constitution/SEND.md`.  
-חיבור Publish/Insights/Stories: [`CONNECT-IG.md`](CONNECT-IG.md) — canonical [`adelaidasofia/instagram-mcp`](https://github.com/adelaidasofia/instagram-mcp) (`ready-codespace`, stdio; `remote_access` pending).  
-אוטונומיית Cloud: [`REMOTE.md`](REMOTE.md) (Google Cloud Run · Streamable HTTP + bearer · scale-to-zero). Codespace: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md). 
+חיבור Publish/Insights/Stories: [`CONNECT-IG.md`](CONNECT-IG.md) — canonical [`adelaidasofia/instagram-mcp`](https://github.com/adelaidasofia/instagram-mcp) (`ready`, Streamable HTTP; `remote_access` ready).  
+אוטונומיית Cloud: [`REMOTE.md`](REMOTE.md) (Google Cloud Run · `instamcp` · `me-west1` · bearer). Codespace: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md) fallback. 
 לגאסי: [`LEGACY-IG-MCP.md`](LEGACY-IG-MCP.md) (`jlbadano/ig-mcp`).  
 פריסה: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).  
 **validate → apply → verify** (`list_media`/`get_media`) לפני תג live.  

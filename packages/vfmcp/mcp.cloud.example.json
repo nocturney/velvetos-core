@@ -1,5 +1,5 @@
 {
-  "_comment": "Team MCP / Cloud Agent HTTP example for remote Instagram MCP on Google Cloud Run. Copy into Team Integrations or cloud env — NOT into this repo's .cursor/mcp.json with real secrets. Fill INSTAGRAM_MCP_REMOTE_URL only after gcloud run deploy + successful remote healthcheck (https://<service>-….a.run.app/mcp). Bearer is VELVET_INSTAGRAM_MCP_BEARER_TOKEN (MCP gate), never the Meta Graph token.",
+  "_comment": "Team MCP / Cloud Agent HTTP for live Instagram MCP on Google Cloud Run. Copy into Team Integrations or cloud env — NOT into this repo's .cursor/mcp.json with real secrets. Set INSTAGRAM_MCP_REMOTE_URL from packages/vfigos/live/remote-health.json endpoint (or gcloud run services describe). Bearer is VELVET_INSTAGRAM_MCP_BEARER_TOKEN from Secret Manager velvet-instagram-mcp-bearer — never the Meta Graph token.",
   "mcpServers": {
     "instagram": {
       "type": "http",
@@ -19,8 +19,9 @@
     }
   },
   "_notes": [
-    "Primary for Cloud autonomy: Cloud Run Streamable HTTP at /mcp after packages/vfigos/REMOTE.md",
-    "Region preferred: me-west1; min instances 0 (scale to zero)",
+    "Primary for Cloud autonomy: Cloud Run Streamable HTTP at /mcp (packages/vfigos/REMOTE.md)",
+    "Live: project instamcp · region me-west1 · service velvet-instagram-mcp · min instances 0",
+    "remote_access ready after remote-health.json ok — see packages/vfigos/live/remote-health.json",
     "Fallback/dev: stdio via mcp.desktop.example.json",
     "Do not enable INSTAGRAM_MCP_DM_ENABLED",
     "Do not commit filled copies"

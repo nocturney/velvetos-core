@@ -1,6 +1,6 @@
 {
   "id": "instagram-capabilities",
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-09",
   "providerPreference": "adelaidasofia/instagram-mcp",
   "canonicalMcp": "https://github.com/adelaidasofia/instagram-mcp",
   "package": "adelaidasofia-instagram-mcp",
@@ -14,19 +14,23 @@
     "jlbadano/ig-mcp"
   ],
   "statusField": "tools.instagram.status",
-  "currentStatus": "ready-codespace",
+  "currentStatus": "ready",
   "auth": "ready",
-  "transport": "stdio",
-  "remote_access": "pending",
+  "transport": "streamable-http",
+  "remote_access": "ready",
   "remoteTransportPreferred": "streamable-http",
+  "localFallbackTransport": "stdio",
   "remoteDeploy": "packages/vfigos/REMOTE.md",
   "remoteHost": "google-cloud-run",
+  "remoteRegion": "me-west1",
   "remoteRegionPreferred": "me-west1",
+  "remoteServiceName": "velvet-instagram-mcp",
+  "remoteProjectId": "instamcp",
   "remoteHealth": "packages/vfigos/live/remote-health.json",
   "remoteHealthScript": "scripts/vf_instagram_mcp_remote_health.py",
   "igUserId": "17841407772120429",
   "accountLabel": "velvets_cloud",
-  "readyRequires": "Cloud autonomy: Cloud Run remote healthcheck ok + remote_access ready. Codespace stdio proves Graph path only — never fake Cloud remote as ready",
+  "readyRequires": "Cloud autonomy: Cloud Run remote healthcheck ok + remote_access ready. Evidence: packages/vfigos/live/remote-health.json. Local stdio remains fallback only.",
   "capabilities": [
     {
       "id": "instagram.profile.read",
@@ -85,6 +89,6 @@
     "ads",
     "INSTAGRAM_MCP_DM_ENABLED"
   ],
-  "officeRule": "Office logic binds to capability ids above — not to a SaaS vendor. Metricool optional/legacy only. Codespace stdio ≠ Cloud autonomy. remote_access pending ≠ idle office work — continue drafts/queue; do not publish via MCP until remote-health.json ok or live local session.",
+  "officeRule": "Office logic binds to capability ids above — not to a SaaS vendor. Metricool optional/legacy only. Cloud autonomy is Cloud Run Streamable HTTP (remote_access ready). Codespace stdio = local fallback. Do not publish via MCP when remote-health.json is degraded.",
   "noInstagramConnectionMeans": "continue media intake, copy, Canva, preflight, queue, calendar candidates, feed audit — do not pretend published"
 }

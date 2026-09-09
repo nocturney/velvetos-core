@@ -1,7 +1,8 @@
 # CONNECT-IG · Instagram MCP קנוני (adelaidasofia)
 
-סטטוס שולחן: **`ready-codespace`** — auth מאומת ב־GitHub Codespace (stdio).  
-`auth: ready` · `transport: stdio` · `remote_access: pending` (אין endpoint מרוחק תמיד-דלוק מאומת עדיין).
+סטטוס שולחן: **`ready`** — Cloud Run Streamable HTTP מאומת (`remote_access: ready`).  
+`auth: ready` · `transport: streamable-http` · `remote_access: ready`.  
+Fallback מקומי: Codespace/Desktop **stdio** (`DEPLOY-CODESPACE.md`) — לא מחליף אוטונומיית Cloud.
 
 **נתיב אוטונומיה (ייצור):** Streamable HTTP + bearer — [`REMOTE.md`](REMOTE.md) · `packages/vfigos/remote/` · `scripts/vf_instagram_mcp_remote_health.py`.  
 מצב בריאות מרוחק (בלי סודות): [`live/remote-health.json`](live/remote-health.json).
@@ -25,7 +26,7 @@ Capability contract: [`CAPABILITIES.json`](CAPABILITIES.json).
 | קישור לעמוד Facebook | מאומת |
 | `add_account` | label `velvets_cloud` · default `true` |
 | כלים שעבדו ב־Codespace | `healthcheck` · `get_profile` · `list_media` |
-| סודות | Codespaces Secrets / runtime env בלבד — **לא בגיט** |
+| סודות | Secret Manager / Cloud Run + Codespaces Secrets / runtime env — **לא בגיט** |
 
 ## מה סוגר עכשיו (כשה־MCP חי בסביבה)
 
@@ -139,14 +140,15 @@ stdio בתוך Codespace ישן/כבוי **אינו** מספיק למשרד תמ
 | שדה | ערך נוכחי (אמת) |
 |---|---|
 | ארכיטקטורה | Cloud Run Streamable HTTP + bearer gate |
-| URL צפוי אחרי deploy | `https://<service>-<hash>-me-west1.a.run.app/mcp` (לא מומצא כחי) |
+| Host / region / service | `instamcp` · `me-west1` · `velvet-instagram-mcp` |
+| URL | נשמר ב־`live/remote-health.json` אחרי healthcheck (אין סודות) · client: `INSTAGRAM_MCP_REMOTE_URL` |
 | Auth ל־MCP | `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` |
-| Meta token | רק על השרת המארח (`INSTAGRAM_MCP_ACCESS_TOKEN`) |
-| `remote_access` | **pending** עד `python3 scripts/vf_instagram_mcp_remote_health.py --write` יוצא 0 |
+| Meta token | רק על השרת המארח (`INSTAGRAM_MCP_ACCESS_TOKEN` ב־Secret Manager) |
+| `remote_access` | **ready** — `python3 scripts/vf_instagram_mcp_remote_health.py --write` יצא 0 (2026-09-09) |
 | קובץ אמת | [`live/remote-health.json`](live/remote-health.json) |
 
-עד `remote_access: ready`: failover [`SEND.md`](SEND.md). אין לסמן ready בלי healthcheck מרוחק אמיתי.  
-Codespace/dev: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).
+כש־`remote-health.json` degraded: failover [`SEND.md`](SEND.md). אין לפרסם דרך MCP בלי health ok.  
+Codespace/dev fallback: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).
 
 ## C) Insights (vfinsights)
 

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-09 — **Instagram MCP Cloud Run live:** project `instamcp` · region `me-west1` · service `velvet-instagram-mcp` · Streamable HTTP `/mcp` + bearer · scale-to-zero. `vf_instagram_mcp_remote_health.py --write` exit 0 · `@velvets_cloud` verified · desk `remote_access=ready` · `transport=streamable-http` · `status=ready`. Local stdio fallback preserved. No secrets in git. DM off.
+
 - 2026-09-08 — **Instagram MCP remote host = Google Cloud Run (not Fly):** scale-to-zero (`min=0`, `max=1`), region `me-west1`, Secret Manager + bearer gate, `$PORT` bind. Fly path moved to `remote/LEGACY-FLY.toml`. `remote_access` still **pending** until live healthcheck. Cloud Run replaces Fly for Instagram MCP remote.
 
 - 2026-09-08 — **Instagram MCP remote autonomy path:** עטיפת Streamable HTTP + bearer (`packages/vfigos/remote/`) סביב `adelaidasofia-instagram-mcp`; `REMOTE.md`; `vf_instagram_mcp_remote_health.py` + `live/remote-health.json`; Team MCP example `mcp.cloud.example.json`; preflight `cloud_autonomy_ready` נפרד מ־Codespace stdio; watchdog `ig_remote_pending`/`degraded`; סנסור `check-instagram-remote.py`. **`remote_access` נשאר pending** עד deploy + healthcheck מרוחק אמיתי. אין סודות בגיט. אין Metricool/SaaS פרסום. Remote Instagram MCP hosting path; Codespace ≠ Cloud autonomy.

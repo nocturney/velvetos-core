@@ -1,0 +1,14 @@
+{
+  "task_id": "instagram-mcp-remote-deploy-2026-09-09",
+  "component_state": "Idle",
+  "pr": 141,
+  "branch": "cursor/instagram-mcp-remote-462c",
+  "project_id": "instamcp",
+  "region": "me-west1",
+  "service_name": "velvet-instagram-mcp",
+  "service_url": "https://velvet-instagram-mcp-3sz7smh74a-zf.a.run.app",
+  "remote_access": "ready",
+  "healthcheck": "exit_0",
+  "account": "velvets_cloud",
+  "updated_at": "2026-09-09T06:13:07.485857+00:00"
+}
