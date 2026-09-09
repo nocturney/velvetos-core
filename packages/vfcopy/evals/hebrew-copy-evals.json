@@ -1,0 +1,311 @@
+{
+  "schema": "vfcopy.hebrew-copy-evals/v1",
+  "skill": "packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md",
+  "note": "Numeric factual claims PASS only with matching verified context (price / turnaround / customer / print_duration_hours).",
+  "cases": [
+    {
+      "id": "simple-product",
+      "title": "מוצר פשוט",
+      "tags": ["style", "fact"],
+      "context": {"mode": "סיפור-מוצר", "product": "מחזיק טבעות ורוד", "facts_ok": true},
+      "body": "ורוד על השידה, והטבעות כבר במקום 💍\n\nהכירו את מחזיק הטבעות שלנו — קטן, יציב, עם אופי.\n\nלפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\n\n📍 איסוף עצמי משדרות\n\n#VelvetFactory #הדפסתתלתממד #MadeInSderot",
+      "expect": "pass"
+    },
+    {
+      "id": "custom-product",
+      "title": "מוצר מותאם",
+      "tags": ["style", "fact"],
+      "context": {"mode": "סיפור-מוצר", "product": "שלט שם בהתאמה", "facts_ok": true},
+      "body": "השם שלכם על המדף — לא שבלונה מהקטלוג.\n\nהדפסנו שלט בהתאמה אישית לפי הקובץ ששלחתם.\n\nרוצים אחד משלכם? שלחו לנו הודעה כאן באינסטגרם\n\n📍 איסוף שדרות\n\n#VelvetFactory #הדפסהבהתאמה",
+      "expect": "pass"
+    },
+    {
+      "id": "wip",
+      "title": "WIP",
+      "tags": ["style"],
+      "context": {"mode": "תהליך-קצר", "stage": "wip"},
+      "body": "עדיין על המיטה — שכבה אחרי שכבה.\n\nעקבו כדי לראות מה יוצא מהמדפסת בשבוע הבא.\n\n#VelvetFactory #תהליךהדפסה #3DPrintingIsrael",
+      "expect": "pass"
+    },
+    {
+      "id": "timelapse",
+      "title": "timelapse",
+      "tags": ["style", "fact"],
+      "context": {
+        "mode": "תהליך-קצר",
+        "print_duration_hours": 14,
+        "print_duration_hours_verified": true,
+        "verified_facts": ["print_duration_hours"]
+      },
+      "body": "14 שעות הדפסה בכמה שניות.\n\nכך נראית החשיפה כשהמדפסת מסיימת.\n\nעקבו כדי לראות מה יוצא מהמדפסת בשבוע הבא.\n\n#VelvetFactory #תהליךהדפסה #MadeInSderot",
+      "expect": "pass"
+    },
+    {
+      "id": "finished-print",
+      "title": "finished print",
+      "tags": ["style", "fact"],
+      "context": {"mode": "סיפור-מוצר"},
+      "body": "יצא מהמיטה — גימור נקי, צבע אחיד.\n\nהכירו את הפריט שסיימנו היום בסטודיו.\n\nלפרטים — שלחו לנו הודעה כאן באינסטגרם\n\n📍 איסוף עצמי משדרות\n\n#VelvetFactory #הדפסתתלתממד",
+      "expect": "pass"
+    },
+    {
+      "id": "business-series",
+      "title": "סדרה לעסק",
+      "tags": ["style", "fact"],
+      "context": {"mode": "סיפור-מוצר", "note": "B2B line locked — no invented SKU shelf"},
+      "body": "עשר יחידות זהות מהמדפסת — לא קטלוג מומצא, הזמנה ספציפית.\n\nפרטים והתאמה: שלחו לנו הודעה כאן באינסטגרם\n\n📍 איסוף שדרות\n\n#VelvetFactory #הדפסתתלתממד #סדרה",
+      "expect": "pass"
+    },
+    {
+      "id": "carousel",
+      "title": "carousel",
+      "tags": ["style"],
+      "context": {"format": "carousel", "mode": "סיפור-מוצר"},
+      "body": "שקופית אחת — רעיון אחד.\n\nהכירו את המודל המפרקי: תנועה אמיתית בין החלקים.\n\nרוצים לראות מקרוב? שלחו הודעה כאן באינסטגרם\n\n#VelvetFactory #קרוסלה #הדפסתתלתממד",
+      "expect": "pass"
+    },
+    {
+      "id": "reel",
+      "title": "Reel",
+      "tags": ["style"],
+      "context": {"format": "reel", "mode": "תהליך-קצר"},
+      "body": "מה יוצא מהמדפסת?\n\nשכבה אחר שכבה עד לחשיפה.\n\nעקבו כדי לראות מה יוצא מהמדפסת בשבוע הבא.\n\n#VelvetFactory #תהליךהדפסה",
+      "expect": "pass"
+    },
+    {
+      "id": "missing-price",
+      "title": "מחיר חסר",
+      "tags": ["fact"],
+      "context": {"requires": ["price"], "price": null},
+      "body": "הכירו את התמנון שלנו — עכשיו במבצע מיוחד!\n\nלפרטים שלחו הודעה",
+      "expect": "needs_input"
+    },
+    {
+      "id": "missing-customer-name",
+      "title": "שם לקוח חסר",
+      "tags": ["fact"],
+      "context": {"requires": ["customer_name"], "customer_name": null},
+      "body": "תודה ללקוח המדהים שלנו דני על הביקורת החמה!\n\nהזמינו גם אתם",
+      "expect": "needs_input"
+    },
+    {
+      "id": "missing-turnaround",
+      "title": "זמן הכנה חסר",
+      "tags": ["fact"],
+      "context": {"requires": ["turnaround"], "turnaround": null},
+      "body": "הזמינו היום — מוכן תוך 24 שעות לאיסוף!\n\nשלחו הודעה",
+      "expect": "needs_input"
+    },
+    {
+      "id": "thin-input",
+      "title": "input דל",
+      "tags": ["fact", "style"],
+      "context": {"product": null, "media": null},
+      "body": "מוצר חדש ומדהים מחכה לכם בסטודיו שלנו!",
+      "expect": "needs_input"
+    },
+    {
+      "id": "no-cta-needed",
+      "title": "no CTA needed",
+      "tags": ["style", "fact"],
+      "context": {
+        "mode": "תהליך-קצר",
+        "cta_required": false,
+        "print_duration_hours": 22,
+        "print_duration_hours_verified": true,
+        "verified_facts": ["print_duration_hours"]
+      },
+      "body": "22 שעות על המיטה — והחשיפה בדיוק כמו שתכננו.\n\n#VelvetFactory #תהליךהדפסה",
+      "expect": "pass"
+    },
+    {
+      "id": "no-hashtags-needed",
+      "title": "no hashtags needed",
+      "tags": ["style"],
+      "context": {"mode": "תהליך-קצר"},
+      "body": "שכבה אחרי שכבה, בלי רעש מסביב.\n\nעקבו בשבוע הבא — יש עוד משהו על המיטה.",
+      "expect": "pass"
+    },
+    {
+      "id": "generic-ai-copy",
+      "title": "generic AI copy",
+      "tags": ["style"],
+      "context": {},
+      "body": "אנו גאים להציג חוויה ייחודית שבה היצירתיות פוגשת את הטכנולוגיה.\n\nכל פרט מספר סיפור, והקסם קורה כשהחלום הופך למציאות.\n\nנשמח לעמוד לשירותכם!",
+      "expect": "fail_style"
+    },
+    {
+      "id": "corporate-hebrew",
+      "title": "corporate Hebrew",
+      "tags": ["style"],
+      "context": {},
+      "body": "נרגשים לשתף כי לקחנו את ההדפסה לשלב הבא.\n\nלא רק מוצר אלא פתרון מקיף בדיוק בשבילכם.\n\nמושלם לכל אירוע.",
+      "expect": "fail_style"
+    },
+    {
+      "id": "translated-english",
+      "title": "translated-English Hebrew",
+      "tags": ["style"],
+      "context": {},
+      "body": "Unlock your creativity עם ה־game-changer שלנו.\n\nוזה בדיוק מה שאנחנו אוהבים — elevate את החלל שלכם.\n\nהתוצאה? פשוט wow.",
+      "expect": "fail_style"
+    },
+    {
+      "id": "excessive-emojis",
+      "title": "excessive emojis",
+      "tags": ["style"],
+      "context": {},
+      "body": "🎉🔥✨🚀💖 מוצר חדש בסטודיו 😍🙌💯\n\nבואו לראות!",
+      "expect": "fail_style"
+    },
+    {
+      "id": "excessive-hashtags",
+      "title": "excessive hashtags",
+      "tags": ["style"],
+      "context": {},
+      "body": "יצא מהמדפסת היום.\n\n#a #b #c #d #e #f #g #h #i",
+      "expect": "fail_style"
+    },
+    {
+      "id": "invented-facts",
+      "title": "invented facts",
+      "tags": ["fact"],
+      "context": {"shipping": null, "price": null},
+      "body": "משלוח לכל הארץ תוך יומיים — מבצע מיוחד בלי סכום מאומת!\n\nהזמינו עכשיו בוואטסאפ 050-2517000",
+      "expect": "fail_fact"
+    },
+    {
+      "id": "needs-input-flag",
+      "title": "needs_input explicit",
+      "tags": ["fact"],
+      "context": {"requires": ["price", "turnaround"], "price": null, "turnaround": null},
+      "body": "כמה זה עולה ומתי מוכן? נעדכן אחרי סלייס — כרגע חסר מחיר וזמן הכנה מהרצפה.",
+      "expect": "needs_input"
+    },
+    {
+      "id": "image-description-only",
+      "title": "image-description-only copy",
+      "tags": ["style"],
+      "context": {},
+      "body": "בתמונה רואים אובייקט ורוד על שולחן לבן עם טבעות לידו.\n\nהאובייקט הוא מחזיק והצבע הוא ורוד.",
+      "expect": "fail_style"
+    },
+    {
+      "id": "unnecessary-cta",
+      "title": "unnecessary CTA on process",
+      "tags": ["style"],
+      "context": {"mode": "תהליך-קצר", "cta_required": false},
+      "body": "שכבות על המיטה.\n\nשלחו DM עכשיו לקנייה!\n\n#a #b #c #d #e #f",
+      "expect": "fail_style"
+    },
+    {
+      "id": "symmetry-rule-of-three",
+      "title": "sentence symmetry / rule of three",
+      "tags": ["style"],
+      "context": {},
+      "body": "אנחנו מעצבים. אנחנו מדפיסים. אנחנו משנים חיים.\n\nכי בסוף, זה לא רק פלסטיק — זה חלום.",
+      "expect": "fail_style"
+    },
+    {
+      "id": "verified-price-pass",
+      "title": "verified price → PASS",
+      "tags": ["fact"],
+      "context": {
+        "mode": "סיפור-מוצר",
+        "product": "מחזיק טבעות",
+        "price": 120,
+        "price_verified": true,
+        "verified_facts": ["price"]
+      },
+      "body": "הכירו את מחזיק הטבעות — קטן על השידה.\n\n120 ₪ · איסוף שדרות\n\nלפרטים — שלחו לנו הודעה כאן באינסטגרם\n\n#VelvetFactory #הדפסתתלתממד",
+      "expect": "pass"
+    },
+    {
+      "id": "invented-price-reject",
+      "title": "invented price → needs_input",
+      "tags": ["fact"],
+      "context": {"mode": "סיפור-מוצר", "price": null},
+      "body": "הכירו את התמנון שלנו.\n\nרק ב־89 ₪ השבוע!\n\nשלחו לנו הודעה כאן באינסטגרם",
+      "expect": "needs_input"
+    },
+    {
+      "id": "price-mismatch-fail",
+      "title": "price mismatch → fail_fact",
+      "tags": ["fact"],
+      "context": {
+        "price": 120,
+        "price_verified": true,
+        "verified_facts": ["price"]
+      },
+      "body": "הפריט מוכן לאיסוף.\n\nרק ב־99 ₪\n\nשלחו לנו הודעה כאן באינסטגרם",
+      "expect": "fail_fact"
+    },
+    {
+      "id": "verified-turnaround-pass",
+      "title": "verified turnaround → PASS",
+      "tags": ["fact"],
+      "context": {
+        "mode": "סיפור-מוצר",
+        "turnaround_hours": 24,
+        "turnaround_verified": true,
+        "verified_facts": ["turnaround", "turnaround_hours"]
+      },
+      "body": "הזמנה מאושרת — מוכן תוך 24 שעות לאיסוף בשדרות.\n\nשלחו לנו הודעה כאן באינסטגרם\n\n#VelvetFactory",
+      "expect": "pass"
+    },
+    {
+      "id": "unverified-turnaround-needs-input",
+      "title": "turnaround ללא context → needs_input",
+      "tags": ["fact"],
+      "context": {"mode": "סיפור-מוצר"},
+      "body": "הזמינו היום — מוכן תוך יומיים לאיסוף!\n\nשלחו לנו הודעה כאן באינסטגרם",
+      "expect": "needs_input"
+    },
+    {
+      "id": "verified-customer-pass",
+      "title": "verified customer name → PASS",
+      "tags": ["fact"],
+      "context": {
+        "customer_name": "דני",
+        "customer_name_verified": true,
+        "testimonial_verified": true,
+        "verified_facts": ["customer_name", "testimonial"]
+      },
+      "body": "תודה ללקוח המדהים שלנו דני על הביקורת החמה!\n\nשלחו לנו הודעה כאן באינסטגרם אם בא לכם אחד כזה.",
+      "expect": "pass"
+    },
+    {
+      "id": "customer-mismatch-fail",
+      "title": "customer name mismatch → fail_fact",
+      "tags": ["fact"],
+      "context": {
+        "customer_name": "נועה",
+        "customer_name_verified": true,
+        "verified_facts": ["customer_name"]
+      },
+      "body": "תודה ללקוח המדהים שלנו דני על הביקורת החמה!\n\nשלחו לנו הודעה כאן באינסטגרם",
+      "expect": "fail_fact"
+    },
+    {
+      "id": "verified-print-duration-pass",
+      "title": "verified numeric print duration → PASS",
+      "tags": ["fact"],
+      "context": {
+        "mode": "תהליך-קצר",
+        "print_duration_hours": 22,
+        "print_duration_hours_verified": true,
+        "verified_facts": ["print_duration_hours"]
+      },
+      "body": "22 שעות הדפסה בכמה שניות 👑\n\nעקבו כדי לראות מה יוצא מהמדפסת בשבוע הבא.\n\n#VelvetFactory #תהליךהדפסה",
+      "expect": "pass"
+    },
+    {
+      "id": "unverified-print-duration-needs-input",
+      "title": "numeric duration ללא verification → needs_input",
+      "tags": ["fact"],
+      "context": {"mode": "תהליך-קצר"},
+      "body": "18 שעות הדפסה בכמה שניות.\n\nעקבו בשבוע הבא.\n\n#VelvetFactory #תהליךהדפסה",
+      "expect": "needs_input"
+    }
+  ]
+}
