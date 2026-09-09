@@ -1,6 +1,6 @@
 {
   "date": "2026-09-09",
-  "generatedAt": "2026-09-09T23:48:56+03:00",
+  "generatedAt": "2026-09-09T12:19:03+03:00",
   "component_state": "Blocked",
   "goal": "פניות B2B בדרום עבור אב-טיפוס / חלקים מותאמים.",
   "locks": [
@@ -14,8 +14,8 @@
   "weekdayNote": "2026-09-09 = רביעי (Asia/Jerusalem)",
   "slotRecommendation": {
     "choice": "G004",
-    "when": "2026-09-10T20:30+03:00",
-    "whenHe": "חמישי 2026-09-10 20:30 Asia/Jerusalem",
+    "when": "2026-09-09T20:30+03:00",
+    "whenHe": "רביעי 2026-09-09 20:30 Asia/Jerusalem",
     "reasonShort": "מוצר מוכן לעריכה+פריפלייט · פרנסה מסיפור-מוצר",
     "reason": "G004 מחזיק-טבעות עבר EDIT-GATE/Canva + preflight עבור; משרת הצעת מוצר/פנייה. סקר PETG/Nylon נדחה למשבצת סטוריז פנויה אחרת — לא שני שיבוצים על 20:30. בלי Calendar create · G003 הנעול לא זז.",
     "deferred": {
@@ -42,11 +42,11 @@
   "story": {
     "slot": "היום 20:30 · סטוריז א׳–ה׳",
     "gate": "recommended_g004_pending_human_post",
-    "slotStatus": "המלצה יחידה · G004 · חמישי 2026-09-10 20:30 Asia/Jerusalem",
+    "slotStatus": "המלצה יחידה · G004 · רביעי 2026-09-09 20:30 Asia/Jerusalem",
     "recommendation": {
       "choice": "G004",
-      "when": "2026-09-10T20:30+03:00",
-      "whenHe": "חמישי 2026-09-10 20:30 Asia/Jerusalem",
+      "when": "2026-09-09T20:30+03:00",
+      "whenHe": "רביעי 2026-09-09 20:30 Asia/Jerusalem",
       "reasonShort": "מוצר מוכן לעריכה+פריפלייט · פרנסה מסיפור-מוצר",
       "reason": "G004 מחזיק-טבעות עבר EDIT-GATE/Canva + preflight עבור; משרת הצעת מוצר/פנייה. סקר PETG/Nylon נדחה למשבצת סטוריז פנויה אחרת — לא שני שיבוצים על 20:30. בלי Calendar create · G003 הנעול לא זז.",
       "deferred": {
@@ -76,7 +76,7 @@
   },
   "studio_tasks": [
     "למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.",
-    "לאשר ידנית G004 ל־חמישי 2026-09-10 20:30 Asia/Jerusalem (לא מפרסם מ־HQ).",
+    "לאשר ידנית G004 ל־רביעי 2026-09-09 20:30 Asia/Jerusalem (לא מפרסם מ־HQ).",
     "לא להציג חום/חוזק בלי vfprod/CLAIMS.md."
   ],
   "print_events": 1,
