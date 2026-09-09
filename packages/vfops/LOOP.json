@@ -573,10 +573,10 @@
     },
     {
       "path": "packages/velvetos/living-studio/README.md",
-      "note": "Living Studio connective tissue — projection/router; not a second Control Plane",
+      "note": "Living Studio connective tissue — projection/router; selftest is non-mutating CI only, not LOOP consume",
       "id": "living-studio",
       "cadence": "on-demand",
-      "consume": "python3 scripts/vf_living_studio.py pulse && python3 scripts/vf_living_studio.py selftest"
+      "consume": "python3 scripts/vf_living_studio.py pulse && python3 scripts/vf_living_studio.py skill verify-all"
     },
     {
       "id": "skill-living-studio",

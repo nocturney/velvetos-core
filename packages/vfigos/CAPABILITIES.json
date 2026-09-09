@@ -165,7 +165,7 @@
         "get_media_insights",
         "get_audience_insights"
       ],
-      "note": "Graph v21 patch in remote/insights_v21.py — deploy required before public smoke marks fixed"
+      "note": "Graph v21 + media-period defaults live on Cloud Run — verified EXPECT_FIXED=1 smoke 2026-09-09. No invented metrics."
     },
     {
       "id": "instagram.cta.audit",

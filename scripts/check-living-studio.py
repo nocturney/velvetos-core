@@ -70,6 +70,18 @@ def main() -> None:
     if "velvet-hebrew-copy" not in json.dumps(brand):
         fail("Brand Voice Guardian must route to velvet-hebrew-copy")
 
+    # Projections must not become competing SoTs
+    projections = plane.get("projections") or {}
+    for key, path in projections.items():
+        if path in (sots.values() if isinstance(sots, dict) else []):
+            fail(f"projection {key} collides with sourcesOfTruth")
+
+    # Control SoTs must not contain selftest pollution
+    inbox = json.loads((ROOT / "office" / "control" / "inbox.json").read_text(encoding="utf-8"))
+    blob = json.dumps(inbox, ensure_ascii=False)
+    if "idempotency probe" in blob or "unique living studio idempotency" in blob:
+        fail("inbox.json contains selftest pollution — selftest must be non-mutating")
+
     # Events for living studio / media intake present
     ev = json.loads(EVENTS.read_text(encoding="utf-8"))
     ids = {e.get("id") for e in ev.get("events") or []}
@@ -85,17 +97,21 @@ def main() -> None:
         if need not in ids:
             fail(f"events.catalog missing {need}")
 
-    # Manifest / AGENTS must not claim stale "repo does not send Instagram" as current law without SEND nuance —
-    # soft check: living studio README + CLI referenced somewhere important
-    agents = AGENTS.read_text(encoding="utf-8")
-    if "Office Control Plane" not in agents and "control-plane" not in agents:
-        # AGENTS may reference via organic growth; require living studio mention after embed
-        pass
+    # Manifest / AGENTS must mention Living Studio
     manifest = MANIFEST.read_text(encoding="utf-8")
     if "living-studio" not in manifest and "Living Studio" not in manifest:
         fail("packages/manifest.json must mention Living Studio after unification")
 
-    # Behavioral CLI selftest
+    # Skill verify-all + non-mutating selftest
+    verify = subprocess.run(
+        [sys.executable, str(CLI), "skill", "verify-all"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if verify.returncode != 0:
+        fail(f"skill verify-all: {verify.stderr or verify.stdout}")
+
     proc = subprocess.run(
         [sys.executable, str(CLI), "selftest"],
         cwd=ROOT,
@@ -104,6 +120,8 @@ def main() -> None:
     )
     if proc.returncode != 0:
         fail(f"vf_living_studio.py selftest: {proc.stderr or proc.stdout}")
+    if "non-mutating" not in (proc.stdout or ""):
+        fail("selftest must declare non-mutating")
 
     # Unit tests
     tests = LS / "tests" / "test_living_studio.py"

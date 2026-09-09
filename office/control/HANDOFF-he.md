@@ -3,7 +3,7 @@
 לא מערכת משרד שנייה. מקורות אמת: `office/control-plane.json`.
 
 ## מה פעיל עכשיו
-- fu-intake-84681552, fu-intake-624f37d7, fu-intake-663fc728, fu-intake-80b5b5a9, fu-intake-9b1cdedd, fu-intake-8bab908e
+- אין פעיל מחוץ ללולאה הרגילה
 
 ## מה ממתין
 - `fu-G003-soccerball` · waiting_for_print_done
@@ -21,7 +21,7 @@
 
 ## מה השתנה היום
 - Office Control Plane מוטמע
-- followups=7
+- followups=1
 - dead_letters=0
 
 ## מקורות סמכות

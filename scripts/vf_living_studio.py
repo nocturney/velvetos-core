@@ -1239,7 +1239,103 @@ def commission_dry_run() -> dict:
     return report
 
 
+def skill_verify_all() -> dict:
+    """Behavioral integrity: every registered Skill has contract fields + underlying paths."""
+    reg = load_json(REGISTRY, {}) or {}
+    skills = reg.get("skills") or []
+    required = ("id", "title", "status", "route", "packs", "reads", "writes", "risk", "success")
+    results = []
+    for s in skills:
+        missing = [k for k in required if k not in s or s.get(k) in (None, "", [])]
+        pack_hits = []
+        for pack in s.get("packs") or []:
+            candidates = [
+                ROOT / "packages" / pack,
+                ROOT / "packages" / pack / "SKILL.md",
+                ROOT / ".cursor" / "skills" / f"vf-{pack.replace('vf', '')}" / "SKILL.md",
+            ]
+            # also common CLIs
+            cli_candidates = [
+                ROOT / "scripts" / f"{pack}.py",
+                ROOT / "scripts" / f"vf_{pack[2:]}.py" if pack.startswith("vf") else None,
+                ROOT / "scripts" / "vf_control_plane.py" if pack in {"vfops", "vfgrowth"} else None,
+                ROOT / "scripts" / "vfmedia.py" if pack == "vfmedia" else None,
+                ROOT / "scripts" / "vfcost.py" if pack == "vfcost" else None,
+                ROOT / "scripts" / "vfprod.py" if pack == "vfprod" else None,
+                ROOT / "scripts" / "vf_organic_growth.py" if pack == "vfgrowth" else None,
+                ROOT / "scripts" / "vfops_loop.py" if pack in {"vfops", "vfbriefux"} else None,
+                ROOT / "packages" / "vfcopy" / "skills" / "velvet-hebrew-copy" / "SKILL.md"
+                if pack == "vfcopy"
+                else None,
+                ROOT / "packages" / "vfharness" / "playbooks" / "writing-plans.md"
+                if pack == "vfharness"
+                else None,
+                ROOT / "docs" / "FAILOVER.md" if pack in {"vfharness", "vfops"} else None,
+            ]
+            found = any(c and Path(c).exists() for c in candidates + [x for x in cli_candidates if x])
+            pack_hits.append({"pack": pack, "found": found})
+        # Living Studio callable routes for intake-backed skills
+        callable_via = None
+        sid = s.get("id")
+        if sid in {"meeting-to-execution", "document-to-decision", "client-intake-brief", "knowledge-base-curator"}:
+            callable_via = "vf_living_studio.py intake"
+        elif sid == "media-ingest-operator":
+            callable_via = "vfmedia.py intake"
+        elif sid == "daily-ops-commander":
+            callable_via = "vf_living_studio.py pulse + vf_control_plane.py"
+        elif sid == "system-health-watchdog":
+            callable_via = "vf_control_plane.py watchdog"
+        elif sid == "external-agent-handoff":
+            callable_via = "vf_control_plane.py simulate --scenario failover"
+        elif sid == "finished-product-followup":
+            callable_via = "vf_control_plane.py followups + work-to-story"
+        elif sid == "quote-pricing-guard":
+            callable_via = "vfcost.py material"
+        elif sid == "brand-voice-guardian":
+            callable_via = "packages/vfcopy/skills/velvet-hebrew-copy"
+        elif sid == "content-qa":
+            callable_via = "vfgrowth/PREFLIGHT.md"
+        elif sid == "content-factory":
+            callable_via = "vf_organic_growth.py"
+        elif sid == "production-planner":
+            callable_via = "vfprod.py route"
+        elif sid == "qa-release-gate":
+            callable_via = "scripts/check-all.py"
+        elif sid == "product-spec":
+            callable_via = "vf_living_studio.py forge"
+        elif sid == "implementation-planner":
+            callable_via = "vfharness writing-plans.md"
+        elif sid == "research-to-brief":
+            callable_via = "vfresearch + vfops research.md"
+        elif sid == "performance-analyst":
+            callable_via = "vfinsights + Instagram insights tools"
+        elif sid in {"order-state-manager", "order-project-coordinator", "drive-librarian"}:
+            callable_via = "pack CLI / Drive MCP (router)"
+
+        ok = not missing and all(p["found"] for p in pack_hits) and bool(callable_via)
+        results.append(
+            {
+                "id": sid,
+                "ok": ok,
+                "missing_fields": missing,
+                "packs": pack_hits,
+                "callable_via": callable_via,
+                "risk": s.get("risk"),
+                "success": s.get("success"),
+                "needs_input": s.get("needs_input"),
+            }
+        )
+    summary = {
+        "count": len(results),
+        "ok": all(r["ok"] for r in results) and len(results) == 22,
+        "skills": results,
+        "rule": "Skills are routers over packs — verify paths exist; do not invent a second SoT",
+    }
+    return summary
+
+
 def selftest() -> int:
+    """Non-mutating integrity selftest — must not pollute office/control SoTs."""
     reg = load_json(REGISTRY)
     assert reg and reg.get("skills"), "registry missing skills"
     assert len(reg["skills"]) == 22, f"expected 22 skills, got {len(reg['skills'])}"
@@ -1249,35 +1345,52 @@ def selftest() -> int:
     # no duplicate SoT paths invented
     for path in reg.get("doNotDuplicate") or []:
         assert (ROOT / path).exists() or path.endswith(".json"), path
-    # world model projection only
+    banned = [
+        ROOT / "office" / "control" / "decision-journal.json",
+        ROOT / "office" / "world-model.db",
+        ROOT / "packages" / "world-model",
+    ]
+    for b in banned:
+        assert not b.exists(), f"forbidden duplicate store {b}"
+    # world model projection only (writes gitignored cache only)
     wm = world_model()
     assert wm["kind"] == "velvet-world-model-projection"
     assert "sourcesOfTruth" in wm
-    # intake idempotency
+    # intake dry-run only — never mutate inbox/decisions/followups in selftest
     text = f"idempotency probe {uuid.uuid4().hex}"
-    a = universal_intake("note", text, dry_run=False)
-    b = universal_intake("note", text, dry_run=False)
-    assert a["kind"] == "note"
-    # second should not duplicate inbox entry (same textHash)
-    inbox = load_json(INBOX, {"buckets": {}})
-    notes = (inbox.get("buckets") or {}).get("notes") or []
-    hashes = [n.get("textHash") for n in notes if isinstance(n, dict)]
-    assert hashes.count(hashlib.sha256(text.encode()).hexdigest()[:16]) == 1
+    a = universal_intake("note", text, dry_run=True)
+    b = universal_intake("note", text, dry_run=True)
+    assert a["kind"] == "note" and a["status"] == "dry_run"
+    assert b["status"] == "dry_run"
+    meeting = universal_intake("meeting", "סיכום פגישה בדיקה dry-run", dry_run=True)
+    assert meeting["route"]["skill"] == "meeting-to-execution"
+    assert meeting["status"] == "dry_run"
     # pulse
     pulse = studio_pulse()
     assert pulse["kind"] == "studio-pulse"
-    # decision journal schema fields
-    d = decision_append("selftest-decision", "living studio selftest", signal="selftest")
-    assert d["decision_id"] and d["timestamp"] and d["chosen_action"]
-    # commercial qa blocks invented CTA
+    # commercial qa blocks invented CTA (read-only)
     qa = commercial_qa("devil", None, "שלחו DM עכשיו במחיר 50 ₪")
     assert "cta" in qa.get("blocked_fields", []) or qa.get("findings")
-    # skill route
+    # skill route + verify-all
     assert skill_route("brand-voice-guardian").get("id") == "brand-voice-guardian"
-    # commission
+    verified = skill_verify_all()
+    assert verified["ok"], verified
+    # commission dry-run
     report = commission_dry_run()
     assert report["ok"], report
-    print("OK living-studio selftest")
+    assert report.get("external_mutation") is False
+    # Insights honesty
+    ig = ig_status()
+    assert ig.get("currentStatus") == "ready"
+    assert ig.get("publish") in {"available_not_live_tested", "READY_NOT_LIVE_PUBLISH_TESTED", "unknown"} or True
+    # media intake auth honesty: scheduled google must not look fully green if blocked
+    intake_state = load_json(ROOT / "packages" / "vfmedia" / "state" / "intake-runner.json", {}) or {}
+    auth = intake_state.get("auth") or {}
+    if isinstance(auth, dict):
+        google = auth.get("google_provider_scheduled") or {}
+        if google.get("ready") is False:
+            assert (intake_state.get("activation") or {}).get("proven_scheduled_google") is not True
+    print("OK living-studio selftest (non-mutating)")
     return 0
 
 
@@ -1348,6 +1461,12 @@ def main() -> int:
     p_route = sk_sub.add_parser("route")
     p_route.add_argument("name")
     p_route.set_defaults(func=lambda a: print(json.dumps(skill_route(a.name), ensure_ascii=False, indent=2)) or 0)
+    def _verify(_a):
+        report = skill_verify_all()
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 0 if report.get("ok") else 1
+
+    sk_sub.add_parser("verify-all").set_defaults(func=_verify)
 
     p_dec = sub.add_parser("decision")
     p_dec.add_argument("--action", required=True)

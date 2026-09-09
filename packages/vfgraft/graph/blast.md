@@ -34,7 +34,7 @@ Blast radius for this office: which jobs and tools break when a law, tool mode, 
 | Research desk wall (ChatGPT/Gemini/Perplexity) | 06:15 orchestra — **API** (`vf_chatgpt.py` / `vf_gemini.py`), not Cloud browser login to chatgpt.com / gemini.google.com (security alerts). Plus ≠ API. Hub: `SUBSCRIPTIONS.md`. Never invent body. |
 | Web / image native tools | `vfresearch`, `vfcovers` — failover in `constitution/ORCHESTRA.md`; Instagram still Canva-first |
 | 3D AI Studio MCP / credits | `vfprod` concept mesh — site UI + Drive (`3DAISTUDIO.md`); still `vlicense` + slice; no print from HQ |
-| Instagram MCP (adelaidasofia) / Meta token | `vfigos` publish + `vfinsights` verified metrics — Codespace ready; remote_access pending → Canva+Drive+Gmail same turn. No auto-DM. |
+| Instagram MCP (adelaidasofia) / Meta token | `vfigos` publish + `vfinsights` verified metrics — Cloud remote `ready`; Insights deployed; publish tools declared (`READY_NOT_LIVE_PUBLISH_TESTED`). No auto-DM. Failover still Canva+Drive+Gmail if publish MCP down. |
 | iCloud Desktop MCP | Cloud HQ reads Drive `Velvet Factory/iCloud mirror` only (`CONNECT-ICLOUD.md`) |
 
 Do not "fix" a missing ₪ or Insights number to make the blast look closed.

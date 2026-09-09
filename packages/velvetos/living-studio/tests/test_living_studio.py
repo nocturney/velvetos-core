@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Behavioral tests for Living Studio connective tissue."""
+"""Behavioral tests for Living Studio connective tissue (non-mutating)."""
 from __future__ import annotations
 
 import importlib.util
@@ -25,6 +25,11 @@ class LivingStudioTests(unittest.TestCase):
         reg = json.loads((ROOT / "packages/velvetos/living-studio/REGISTRY.json").read_text())
         self.assertEqual(len(reg["skills"]), 22)
 
+    def test_skill_verify_all(self):
+        v = mod.skill_verify_all()
+        self.assertTrue(v["ok"], v)
+        self.assertEqual(v["count"], 22)
+
     def test_world_model_is_projection(self):
         wm = mod.world_model()
         self.assertEqual(wm["kind"], "velvet-world-model-projection")
@@ -44,26 +49,20 @@ class LivingStudioTests(unittest.TestCase):
         ):
             self.assertIn(key, pulse)
 
-    def test_intake_idempotent(self):
-        text = "unique living studio idempotency " + next(tempfile._get_candidate_names())
-        a = mod.universal_intake("note", text)
-        b = mod.universal_intake("note", text)
-        self.assertEqual(a["kind"], "note")
+    def test_intake_dry_run_does_not_require_write(self):
+        text = "unique living studio dry-run " + next(tempfile._get_candidate_names())
+        a = mod.universal_intake("note", text, dry_run=True)
+        self.assertEqual(a["status"], "dry_run")
+        # inbox should not gain this excerpt
         inbox = json.loads((ROOT / "office/control/inbox.json").read_text())
-        notes = inbox.get("buckets", {}).get("notes", [])
-        hashes = [n.get("textHash") for n in notes if isinstance(n, dict)]
-        import hashlib
+        blob = json.dumps(inbox)
+        self.assertNotIn(text, blob)
 
-        th = hashlib.sha256(text.encode()).hexdigest()[:16]
-        self.assertEqual(hashes.count(th), 1)
-
-    def test_intake_routes_meeting_to_decisions(self):
-        text = "סיכום פגישה: להכין טיוטת תוכן לכדורגל אחרי print.done " + next(
-            tempfile._get_candidate_names()
-        )
-        r = mod.universal_intake("meeting", text)
+    def test_intake_routes_meeting_dry_run(self):
+        text = "סיכום פגישה dry-run " + next(tempfile._get_candidate_names())
+        r = mod.universal_intake("meeting", text, dry_run=True)
         self.assertEqual(r["route"]["skill"], "meeting-to-execution")
-        self.assertTrue(r.get("decision_id"))
+        self.assertEqual(r["status"], "dry_run")
 
     def test_commercial_qa_blocks_bare_dm_and_ils(self):
         qa = mod.commercial_qa("devil", None, "שלחו DM במחיר 99 ₪ עכשיו")
@@ -100,6 +99,17 @@ class LivingStudioTests(unittest.TestCase):
         room = mod.signal_room(5)
         self.assertEqual(room["kind"], "signal-room")
         self.assertIn("event_contract_count", room)
+
+    def test_canonical_sots_unchanged_by_selftest_contract(self):
+        # Selftest must be non-mutating — inbox buckets stay the main template set
+        inbox = json.loads((ROOT / "office/control/inbox.json").read_text())
+        self.assertIn("buckets", inbox)
+        # no selftest pollution keys required empty
+        for bucket in (inbox.get("buckets") or {}).values():
+            if isinstance(bucket, list):
+                for item in bucket:
+                    if isinstance(item, dict):
+                        self.assertNotIn("idempotency probe", str(item.get("excerpt") or ""))
 
 
 if __name__ == "__main__":

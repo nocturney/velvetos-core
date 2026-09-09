@@ -48,6 +48,7 @@ https://drive.google.com/drive/folders/1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv
 4. **עבודה:** עותק / נגזרת ב־`03 - בעבודה`. רושמים `derivativeIds` + `sourceLinks`. המקור נשאר ב־מקור. סטטוס `in_progress`.
 5. **אישור גרסה:** ראש צוות ממלא `versionApproval` בקטלוג (`approved` + מי + מתי). רק אז מעבירים את הנגזרת המאושרת ל־`04 - מאושר לפרסום`. שיבוץ IG עדיין עובר `vfgrowth/PREFLIGHT.md` + `vfigos/SEND.md`.
 6. **פרסום** הוא צעד נפרד. מיזוג קוד ≠ אישור פרסום. תיקיית מאושר ≠ הוכחת אישור.
+7. **URL HTTPS ציבורי לפרסום (Instagram Graph):** ה־MCP (`publish_*`) דורש ש־Instagram ישלוף מדיה מ־**HTTPS ציבורי**. רק **נגזרת שאושרה לפרסום** רשאית לקבל URL כזה (למשל Canva export CDN, או העתק זמני מארח ציבורי). מקור / בעבודה נשארים פרטיים. **אין** לפתוח את כל הכספת או תיקיות מקור ל־`anyone with the link`. אין שינוי הרשאות שיתוף גלובלי מ־HQ. אחרי פרסום+אימות — אפשר להסיר את ה־URL הזמני; הקטלוג והמקור נשארים.
 
 פאזות דיווח (נפרדות): **רשום בקטלוג** · **אומת ונקלט** · **נבדק חזותית**. פרטים: [`packages/vfmedia/INTAKE.md`](../packages/vfmedia/INTAKE.md).
 
@@ -62,9 +63,10 @@ https://drive.google.com/drive/folders/1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv
 5. **תיקיית «מאושר לפרסום» לבד ≠ הוכחת אישור.** חייב `versionApproval` בקטלוג.
 6. **לא ממציאים ₪** ולא Insights. כותבים `X ₪` / «אין ספירה» כשחסר מקור.
 7. **לא ממציאים מק״ט.** קישור מוצר רק אם כבר ידוע (שם עבודה / כרטיס `vfsku` קיים). אחרת `productLink: null`.
-8. **אין שינוי הרשאות שיתוף ציבורי** מ־HQ. לא `anyone with the link`, לא העברת בעלות, לא מחיקה.
+8. **אין שינוי הרשאות שיתוף ציבורי** מ־HQ על מקור/נכנס/בעבודה. לא `anyone with the link` על הכספת. URL ציבורי זמני — **רק** לנגזרת מאושרת לפרסום (ראה סעיף 7 בנוהל).
 9. **לא מוחקים קבצים** מהכספת. העברה בין ארבע התיקיות בלבד.
 10. **PUBLIC_CURRENT_CTA** = הודעת Instagram בלבד («לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם»). אסור וואטסאפ / `050-2517000` / `wa.me` בתוכן ציבורי. רשומת עסק פנימית נשארת ב־`BUSINESS_CONTACT_RECORD`. אוטו־DM נעול. מקור: `constitution/PUBLIC_CTA.md`.
+11. **publish_* ≠ live.** אחרי Instagram MCP חייבים `list_media`/`get_media` לפני `liveVerified`.
 
 ---
 
