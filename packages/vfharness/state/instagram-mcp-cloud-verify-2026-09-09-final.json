@@ -1,0 +1,43 @@
+{
+  "task_id": "instagram-mcp-cloud-verify-2026-09-09-final",
+  "component_state": "Blocked",
+  "pr": 141,
+  "bcId": "bc-01a084e2-fb4d-7559-b48e-1c3941deb49f",
+  "consumer": "cursor-cloud-agent",
+  "transport": "streamable-http",
+  "endpoint": "https://velvet-instagram-mcp-3sz7smh74a-zf.a.run.app/mcp",
+  "published": false,
+  "secrets_committed": false,
+  "final_verify": {
+    "ok": false,
+    "exit": 1,
+    "error": "bearer_internal_whitespace",
+    "blocked_reason": "Cursor Team/Cloud env still paste-corrupted in this running agent (identical fingerprint to prior probe). Cannot claim final consumer ready."
+  },
+  "env_fingerprint": {
+    "INSTAGRAM_MCP_REMOTE_URL_available": true,
+    "url_raw_len": 61,
+    "url_strip_len": 56,
+    "url_ws_indexes": [0, 1, 58, 59, 60],
+    "VELVET_INSTAGRAM_MCP_BEARER_TOKEN_available": true,
+    "bearer_raw_len": 65,
+    "bearer_internal_ws_indexes": [49],
+    "bearer_sha256_8_raw": "4b1f87c6",
+    "bearer_sha256_8_nospace": "e73574ea",
+    "cursor_team_mcp_namespace_instagram": false
+  },
+  "owner_action_required": [
+    "DELETE+recreate INSTAGRAM_MCP_REMOTE_URL as single line https://velvet-instagram-mcp-3sz7smh74a-zf.a.run.app/mcp",
+    "DELETE+recreate VELVET_INSTAGRAM_MCP_BEARER_TOKEN from Secret Manager velvet-instagram-mcp-bearer with NO internal spaces",
+    "Register Team MCP HTTP from packages/vfmcp/mcp.cloud.example.json",
+    "Start a NEW Cloud Agent after secret save (this run keeps boot-time env)"
+  ],
+  "prior_recovery_probe": {
+    "note": "Earlier --sanitize-whitespace probe proved Cloud Run + Meta Graph path works from this VM",
+    "accounts_configured": 1,
+    "live_check_ok": true,
+    "account": "velvets_cloud",
+    "list_media_count": 7
+  },
+  "updated_at": "2026-09-09T06:56:00Z"
+}

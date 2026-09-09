@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-09 — **Cloud Agent FINAL verify BLOCKED:** run `bc-01a084e2…` still has paste-corrupted Team env (URL edge newlines + bearer internal space @49; fingerprint unchanged). Raw `vf_instagram_mcp_remote_health.py` exit 1 `bearer_internal_whitespace`. Cursor namespace `instagram` still absent. Cloud Run path previously proven via sanitize recovery. **No publish. No secrets committed.** Owner: DELETE+recreate Team secrets + register HTTP MCP + start NEW agent.
+
 - 2026-09-09 — **Cloud Agent consumer verify (PR #141):** from Cursor Cloud Agent `bc-01a084e2…` — env vars present; raw Team paste had URL edge newlines + **one space inside bearer** → `401 invalid_token`. Recovery: `vf_instagram_mcp_remote_health.py --sanitize-whitespace --write` → healthcheck + `get_profile` + `list_media` (7) · `@velvets_cloud` · `accounts_configured=1` · `live_check.ok` · preflight `cloud_autonomy_ready` · GATE `instagram=ready` · watchdog `ig_remote_ready` · `check-all` 35/35. **No publish. No secrets committed.** Owner must re-save clean Team secrets + register HTTP MCP (`mcp.cloud.example.json`).
 
 - 2026-09-09 — **Instagram MCP Cloud Run live:** project `instamcp` · region `me-west1` · service `velvet-instagram-mcp` · Streamable HTTP `/mcp` + bearer · scale-to-zero. `vf_instagram_mcp_remote_health.py --write` exit 0 · `@velvets_cloud` verified · desk `remote_access=ready` · `transport=streamable-http` · `status=ready`. Local stdio fallback preserved. No secrets in git. DM off.
