@@ -56,10 +56,12 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 |---|---|
 | סטודיו קטן · שדרות · איסוף עצמי | הזכירו איסוף רק כשצריך CTA מוצר |
 | אין משלוח ארצי | אל תמציאו משלוח |
-| אין מחיר / מבצע / זמן הכנה / לקוח / testimonial / Insights מומצאים | `needs_input` או `X ₪` / «אין ספירה» במשרד |
+| אין מחיר / מבצע / זמן הכנה / לקוח / testimonial / Insights **מומצאים** | claim מותר רק עם context מאומת (`price_verified` / `verified_facts`) שתואם; אחרת `needs_input` או `fail_fact` |
 | אין auto-DM · אין Meta Business Suite | — |
 | אין «שלחו DM» כברירת מחדל | PUBLIC_CURRENT_CTA = הודעת Instagram בעברית |
 | אל תמציאו מידע חסר | `needs_input` — לא השלמה יצירתית |
+
+**FACT CLAIM ≠ INVENTED FACT:** מספר/מחיר/זמן/שם לקוח בטקסט מותרים כשה־context מאמת ותואם. בלי verification → `needs_input`. סתירה ל־context → `fail_fact`.
 
 מספר טלפון / handle: קחו מ־`constitution/PUBLIC_CTA.md` / desk / STUDIO — לא hardcode חדש.
 

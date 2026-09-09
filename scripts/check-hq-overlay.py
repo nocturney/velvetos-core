@@ -130,6 +130,9 @@ def main() -> None:
                 continue
             if path.name == "ORIGIN.md":
                 continue
+            # Eval fixtures intentionally include verified + invented price claims.
+            if "packages/vfcopy/evals" in str(path).replace("\\", "/"):
+                continue
             text = path.read_text()
             for m in ILS_NUMBER.finditer(text):
                 snippet = text[max(0, m.start() - 24) : m.end() + 8]

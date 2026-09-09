@@ -54,18 +54,23 @@ NATIONAL_SHIPPING = re.compile(
     r"משלוח\s+לכל\s+הארץ|משלוחים?\s+לכל\s+הארץ|shipping\s+nationwide|national\s+shipping",
     re.IGNORECASE,
 )
-INVENTED_PRICE = re.compile(
-    r"(?:רק\s+ב[־\-]?\s*|ב[־\-]?\s*|רק\s+)\d{1,5}\s*₪|₪\s*\d{1,5}|(?:מבצע|דיל)\s+[^\n]{0,20}\d+\s*₪",
+PRICE_CLAIM = re.compile(
+    r"(?:רק\s+ב[־\-]?\s*|ב[־\-]?\s*|רק\s+)?(\d{1,5})\s*₪|₪\s*(\d{1,5})",
     re.IGNORECASE,
 )
-TURNAROUND_CLAIM = re.compile(
-    r"מוכן\s+תוך\s+\d+|תוך\s+24\s*שעות|תוך\s+יומיים|מוכן\s+מחר|same[\s\-]?day",
+TURNAROUND_HOURS = re.compile(
+    r"(?:מוכן\s+)?תוך\s+(\d+)\s*שעות|same[\s\-]?day",
     re.IGNORECASE,
 )
-FAKE_TESTIMONIAL = re.compile(
-    r"תודה\s+ללקוח|הלקוח\s+המדהים|ביקורת\s+חמה|testimonial|★★★★★",
+TURNAROUND_DAYS = re.compile(
+    r"(?:מוכן\s+)?תוך\s+(\d+)\s*ימים|תוך\s+יומיים|מוכן\s+מחר",
     re.IGNORECASE,
 )
+CUSTOMER_MENTION = re.compile(
+    r"תודה\s+ללקוח|הלקוח\s+(?:המדהים\s+)?שלנו|ביקורת\s+חמה|testimonial|★★★★★",
+    re.IGNORECASE,
+)
+HOURS_ANY = re.compile(r"(\d{1,3})\s*שעות")
 DM_ONLY = re.compile(r"שלחו(?:\s+)?DM", re.IGNORECASE)
 WA_PHONE_CTA = re.compile(
     r"050[-–]?2517000|וואטסאפ\s*050|whatsapp\s*050|wa\.me/",
@@ -91,6 +96,199 @@ TRANSLATED_EN = re.compile(
     r"\b(?:unlock|elevate|game[\s\-]?changer|wow\.?|leverage|seamless)\b",
     re.IGNORECASE,
 )
+
+
+def _fact_verified(ctx: dict[str, Any], key: str) -> bool:
+    """True when context marks a fact as human/source verified — not merely present."""
+    if ctx.get(f"{key}_verified") is True:
+        return True
+    verified = ctx.get("verified_facts") or []
+    if isinstance(verified, (list, tuple, set)) and key in verified:
+        return True
+    return False
+
+
+def _as_int(value: Any) -> int | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return int(value)
+    if isinstance(value, str):
+        s = value.strip().replace(",", "")
+        if re.fullmatch(r"\d+", s):
+            return int(s)
+        m = re.search(r"(\d+)", s)
+        if m:
+            return int(m.group(1))
+    return None
+
+
+def _extract_prices(body: str) -> list[int]:
+    out: list[int] = []
+    for m in PRICE_CLAIM.finditer(body):
+        raw = m.group(1) or m.group(2)
+        if raw:
+            out.append(int(raw))
+    return out
+
+
+def _extract_turnaround_claims(body: str) -> list[tuple[str, int]]:
+    """Return list of ('hours'|'days', n) claimed in copy."""
+    claims: list[tuple[str, int]] = []
+    if re.search(r"same[\s\-]?day", body, re.IGNORECASE):
+        claims.append(("days", 1))
+    for m in re.finditer(r"(?:מוכן\s+)?תוך\s+(\d+)\s*שעות", body):
+        claims.append(("hours", int(m.group(1))))
+    if re.search(r"תוך\s+יומיים", body):
+        claims.append(("days", 2))
+    if re.search(r"מוכן\s+מחר", body):
+        claims.append(("days", 1))
+    for m in re.finditer(r"(?:מוכן\s+)?תוך\s+(\d+)\s*ימים", body):
+        claims.append(("days", int(m.group(1))))
+    return claims
+
+
+def _context_turnaround(ctx: dict[str, Any]) -> tuple[str, int] | None:
+    if ctx.get("turnaround_hours") is not None:
+        n = _as_int(ctx.get("turnaround_hours"))
+        return ("hours", n) if n is not None else None
+    if ctx.get("turnaround_days") is not None:
+        n = _as_int(ctx.get("turnaround_days"))
+        return ("days", n) if n is not None else None
+    t = ctx.get("turnaround")
+    if t is None or t == "":
+        return None
+    if isinstance(t, (int, float)):
+        return ("hours", int(t))
+    if isinstance(t, str):
+        if m := re.search(r"(\d+)\s*שעות", t):
+            return ("hours", int(m.group(1)))
+        if m := re.search(r"(\d+)\s*ימים", t):
+            return ("days", int(m.group(1)))
+        if "יומיים" in t:
+            return ("days", 2)
+        if "מחר" in t:
+            return ("days", 1)
+        n = _as_int(t)
+        if n is not None:
+            return ("hours", n)
+    return None
+
+
+def _extract_print_duration_hours(body: str) -> list[int]:
+    """Hours that look like print duration — not turnaround ('תוך N שעות')."""
+    out: list[int] = []
+    for m in HOURS_ANY.finditer(body):
+        prefix = body[max(0, m.start() - 12) : m.start()]
+        if "תוך" in prefix:
+            continue
+        out.append(int(m.group(1)))
+    return out
+
+
+def _validate_verified_facts(
+    body: str,
+    ctx: dict[str, Any],
+    *,
+    label: str,
+) -> tuple[list[str], list[str], bool]:
+    """Separate FACT CLAIM (allowed when verified) from INVENTED FACT.
+
+    Returns (problems, kinds, needs_input).
+    """
+    problems: list[str] = []
+    kinds: list[str] = []
+    needs_input = False
+
+    # --- price ---
+    prices = _extract_prices(body)
+    price_verified = _fact_verified(ctx, "price")
+    expected_price = _as_int(ctx.get("price"))
+    if prices:
+        if price_verified and expected_price is not None:
+            for p in prices:
+                if p != expected_price:
+                    problems.append(
+                        f"מחיר בכיתוב ({p} ₪) לא תואם context מאומת ({expected_price} ₪) ב-{label}"
+                    )
+                    kinds.append("fact")
+        elif "X ₪" in body and not prices:
+            pass
+        else:
+            problems.append(
+                f"מחיר מספרי בכיתוב ב-{label} בלי context מאומת — אין להמציא ₪"
+            )
+            kinds.append("fact")
+            needs_input = True
+    elif re.search(r"מבצע|דיל\s+מיוחד|עכשיו\s+ב[־\-]", body):
+        if not (price_verified and expected_price is not None):
+            needs_input = True
+            problems.append(f"needs_input: מבצע/מחיר ב-{label} בלי סכום מאומת")
+            kinds.append("needs_input")
+
+    # --- turnaround ---
+    ta_claims = _extract_turnaround_claims(body)
+    ta_verified = _fact_verified(ctx, "turnaround") or _fact_verified(
+        ctx, "turnaround_hours"
+    ) or _fact_verified(ctx, "turnaround_days")
+    expected_ta = _context_turnaround(ctx)
+    if ta_claims:
+        if ta_verified and expected_ta is not None:
+            for unit, n in ta_claims:
+                exp_unit, exp_n = expected_ta
+                if unit != exp_unit or n != exp_n:
+                    problems.append(
+                        f"זמן הכנה בכיתוב ({n} {unit}) לא תואם context מאומת "
+                        f"({exp_n} {exp_unit}) ב-{label}"
+                    )
+                    kinds.append("fact")
+        else:
+            problems.append(f"הבטחת זמן הכנה ב-{label} בלי מקור/context מאומת")
+            kinds.append("fact")
+            needs_input = True
+
+    # --- customer / testimonial ---
+    if CUSTOMER_MENTION.search(body):
+        name = ctx.get("customer_name")
+        cust_verified = _fact_verified(ctx, "customer_name") or _fact_verified(
+            ctx, "testimonial"
+        )
+        if cust_verified and name not in (None, ""):
+            if str(name) not in body:
+                problems.append(
+                    f"שם לקוח בכיתוב לא תואם customer_name מאומת ({name!r}) ב-{label}"
+                )
+                kinds.append("fact")
+        else:
+            problems.append(f"לקוח/testimonial ב-{label} בלי verification ב־context")
+            kinds.append("fact")
+            needs_input = True
+
+    # --- print duration hours ---
+    durations = _extract_print_duration_hours(body)
+    dur_verified = _fact_verified(ctx, "print_duration_hours")
+    expected_dur = _as_int(ctx.get("print_duration_hours"))
+    if durations:
+        if dur_verified and expected_dur is not None:
+            for h in durations:
+                if h != expected_dur:
+                    problems.append(
+                        f"משך הדפסה בכיתוב ({h} שעות) לא תואם context מאומת "
+                        f"({expected_dur} שעות) ב-{label}"
+                    )
+                    kinds.append("fact")
+        else:
+            problems.append(
+                f"משך הדפסה מספרי ב-{label} בלי verification ב־context"
+            )
+            kinds.append("fact")
+            needs_input = True
+
+    return problems, kinds, needs_input
 
 
 @dataclass
@@ -228,34 +426,21 @@ def lint_hebrew_copy(
             f"CTA וואטסאפ/טלפון אסור בתוכן ציבורי ב-{label} — PUBLIC_CURRENT_CTA = הודעת Instagram"
         )
         kinds.append("fact")
-    if INVENTED_PRICE.search(body) and "X ₪" not in body:
-        problems.append(
-            f"מחיר מספרי בכיתוב ב-{label} — אין להמציא ₪; במשרד השתמשו ב־X ₪ עד אימות"
-        )
-        kinds.append("fact")
-    if TURNAROUND_CLAIM.search(body):
-        problems.append(f"הבטחת זמן הכנה ב-{label} בלי מקור רצפה")
-        kinds.append("fact")
+
+    # Price / turnaround / customer / print duration: claim OK iff context verified + match.
+    fact_problems, fact_kinds, fact_needs = _validate_verified_facts(
+        body, ctx, label=label
+    )
+    problems.extend(fact_problems)
+    kinds.extend(fact_kinds)
+    if fact_needs:
         needs_input = True
-    if FAKE_TESTIMONIAL.search(body):
-        problems.append(f"לקוח/testimonial מומצא או לא מאומת ב-{label}")
-        kinds.append("fact")
-        if ctx.get("customer_name") is None:
-            needs_input = True
 
     for req in ctx.get("requires") or []:
         if ctx.get(req) in (None, "", []):
             needs_input = True
             problems.append(f"needs_input: חסר {req} ב-{label}")
             kinds.append("needs_input")
-
-    if re.search(r"מבצע|דיל\s+מיוחד|עכשיו\s+ב[־\-]", body) and ctx.get("price") in (
-        None,
-        "",
-    ):
-        needs_input = True
-        problems.append(f"needs_input: מבצע/מחיר ב-{label} בלי סכום מאומת")
-        kinds.append("needs_input")
 
     problems = list(dict.fromkeys(problems))
     kinds = list(dict.fromkeys(kinds))
@@ -412,4 +597,7 @@ def assert_skill_wired(root: Path) -> list[str]:
         n = len(data.get("cases") or [])
         if n < 20:
             problems.append(f"evals must have ≥20 cases (have {n})")
+        # Prefer expanded verified-fact suite (kept ≥20 as floor).
+        if n < 29:
+            problems.append(f"evals should include verified-fact cases (≥29; have {n})")
     return problems

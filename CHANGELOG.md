@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-09-09 — **velvet-hebrew-copy על vfcopy:** שכבת כתיבה עברית טבעית בתוך הפק הקיים — `skills/velvet-hebrew-copy/` · קורפוס `voice/approved/` vs `voice/generated/` · lint `lint_he.py` · evals עברית (24) · CLI `check-vfcopy.py lint|eval` · Cursor skill `vf-hebrew-copy`. רעיונות מ־social-media-skills + thekozugroup/humanizer (MIT, בלי vendoring). בלי publish / בלי שינוי תוכן חי / בלי ₪ מומצא. Hebrew copy QA layer embedded on vfcopy; anti-AI + business-truth gates.
+- 2026-09-09 — **velvet-hebrew-copy · FACT vs INVENTED:** lint מאמת מחיר/turnaround/לקוח/משך הדפסה מול context מאומת (`price_verified` / `verified_facts`); mismatch=`fail_fact`, בלי אימות=`needs_input`. Evals מורחבים. בלי שינוי PUBLIC_CTA / vfigos.
+- 2026-09-09 — **velvet-hebrew-copy על vfcopy:** שכבת כתיבה עברית טבעית בתוך הפק הקיים — `skills/velvet-hebrew-copy/` · קורפוס `voice/approved/` vs `voice/generated/` · lint `lint_he.py` · evals עברית · CLI `check-vfcopy.py lint|eval` · Cursor skill `vf-hebrew-copy`. רעיונות מ־social-media-skills + thekozugroup/humanizer (MIT, בלי vendoring). בלי publish / בלי שינוי תוכן חי / בלי ₪ מומצא. Hebrew copy QA layer embedded on vfcopy; anti-AI + business-truth gates.
 
 - 2026-09-08 — **Instagram MCP קנוני = adelaidasofia/instagram-mcp:** מחליף את jlbadano/ig-mcp כראשי. שולחן `ready-codespace` (auth ready · transport stdio · `remote_access` pending). Stories+Insights+`publish_*` על אותו MCP. DM/`INSTAGRAM_MCP_DM_ENABLED` כבוי. Metricool אופציונלי/לגאסי. אימות חי חובה (`publish_pending_verification` → `liveVerified`). פלייבוקים: `CONNECT-IG.md` · `DEPLOY-CODESPACE.md` · `LEGACY-IG-MCP.md`. סנסורים מעודכנים. אין סודות בגיט. Canonical Instagram MCP; Codespace verified; remote autonomy still pending.
 

@@ -1,6 +1,7 @@
 {
   "schema": "vfcopy.hebrew-copy-evals/v1",
   "skill": "packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md",
+  "note": "Numeric factual claims PASS only with matching verified context (price / turnaround / customer / print_duration_hours).",
   "cases": [
     {
       "id": "simple-product",
@@ -29,8 +30,13 @@
     {
       "id": "timelapse",
       "title": "timelapse",
-      "tags": ["style"],
-      "context": {"mode": "תהליך-קצר"},
+      "tags": ["style", "fact"],
+      "context": {
+        "mode": "תהליך-קצר",
+        "print_duration_hours": 14,
+        "print_duration_hours_verified": true,
+        "verified_facts": ["print_duration_hours"]
+      },
       "body": "14 שעות הדפסה בכמה שניות.\n\nכך נראית החשיפה כשהמדפסת מסיימת.\n\nעקבו כדי לראות מה יוצא מהמדפסת בשבוע הבא.\n\n#VelvetFactory #תהליךהדפסה #MadeInSderot",
       "expect": "pass"
     },
@@ -101,8 +107,14 @@
     {
       "id": "no-cta-needed",
       "title": "no CTA needed",
-      "tags": ["style"],
-      "context": {"mode": "תהליך-קצר", "cta_required": false},
+      "tags": ["style", "fact"],
+      "context": {
+        "mode": "תהליך-קצר",
+        "cta_required": false,
+        "print_duration_hours": 22,
+        "print_duration_hours_verified": true,
+        "verified_facts": ["print_duration_hours"]
+      },
       "body": "22 שעות על המיטה — והחשיפה בדיוק כמו שתכננו.\n\n#VelvetFactory #תהליךהדפסה",
       "expect": "pass"
     },
@@ -193,6 +205,107 @@
       "context": {},
       "body": "אנחנו מעצבים. אנחנו מדפיסים. אנחנו משנים חיים.\n\nכי בסוף, זה לא רק פלסטיק — זה חלום.",
       "expect": "fail_style"
+    },
+    {
+      "id": "verified-price-pass",
+      "title": "verified price → PASS",
+      "tags": ["fact"],
+      "context": {
+        "mode": "סיפור-מוצר",
+        "product": "מחזיק טבעות",
+        "price": 120,
+        "price_verified": true,
+        "verified_facts": ["price"]
+      },
+      "body": "הכירו את מחזיק הטבעות — קטן על השידה.\n\n120 ₪ · איסוף שדרות\n\nלפרטים — שלחו לנו הודעה כאן באינסטגרם\n\n#VelvetFactory #הדפסתתלתממד",
+      "expect": "pass"
+    },
+    {
+      "id": "invented-price-reject",
+      "title": "invented price → needs_input",
+      "tags": ["fact"],
+      "context": {"mode": "סיפור-מוצר", "price": null},
+      "body": "הכירו את התמנון שלנו.\n\nרק ב־89 ₪ השבוע!\n\nשלחו לנו הודעה כאן באינסטגרם",
+      "expect": "needs_input"
+    },
+    {
+      "id": "price-mismatch-fail",
+      "title": "price mismatch → fail_fact",
+      "tags": ["fact"],
+      "context": {
+        "price": 120,
+        "price_verified": true,
+        "verified_facts": ["price"]
+      },
+      "body": "הפריט מוכן לאיסוף.\n\nרק ב־99 ₪\n\nשלחו לנו הודעה כאן באינסטגרם",
+      "expect": "fail_fact"
+    },
+    {
+      "id": "verified-turnaround-pass",
+      "title": "verified turnaround → PASS",
+      "tags": ["fact"],
+      "context": {
+        "mode": "סיפור-מוצר",
+        "turnaround_hours": 24,
+        "turnaround_verified": true,
+        "verified_facts": ["turnaround", "turnaround_hours"]
+      },
+      "body": "הזמנה מאושרת — מוכן תוך 24 שעות לאיסוף בשדרות.\n\nשלחו לנו הודעה כאן באינסטגרם\n\n#VelvetFactory",
+      "expect": "pass"
+    },
+    {
+      "id": "unverified-turnaround-needs-input",
+      "title": "turnaround ללא context → needs_input",
+      "tags": ["fact"],
+      "context": {"mode": "סיפור-מוצר"},
+      "body": "הזמינו היום — מוכן תוך יומיים לאיסוף!\n\nשלחו לנו הודעה כאן באינסטגרם",
+      "expect": "needs_input"
+    },
+    {
+      "id": "verified-customer-pass",
+      "title": "verified customer name → PASS",
+      "tags": ["fact"],
+      "context": {
+        "customer_name": "דני",
+        "customer_name_verified": true,
+        "testimonial_verified": true,
+        "verified_facts": ["customer_name", "testimonial"]
+      },
+      "body": "תודה ללקוח המדהים שלנו דני על הביקורת החמה!\n\nשלחו לנו הודעה כאן באינסטגרם אם בא לכם אחד כזה.",
+      "expect": "pass"
+    },
+    {
+      "id": "customer-mismatch-fail",
+      "title": "customer name mismatch → fail_fact",
+      "tags": ["fact"],
+      "context": {
+        "customer_name": "נועה",
+        "customer_name_verified": true,
+        "verified_facts": ["customer_name"]
+      },
+      "body": "תודה ללקוח המדהים שלנו דני על הביקורת החמה!\n\nשלחו לנו הודעה כאן באינסטגרם",
+      "expect": "fail_fact"
+    },
+    {
+      "id": "verified-print-duration-pass",
+      "title": "verified numeric print duration → PASS",
+      "tags": ["fact"],
+      "context": {
+        "mode": "תהליך-קצר",
+        "print_duration_hours": 22,
+        "print_duration_hours_verified": true,
+        "verified_facts": ["print_duration_hours"]
+      },
+      "body": "22 שעות הדפסה בכמה שניות 👑\n\nעקבו כדי לראות מה יוצא מהמדפסת בשבוע הבא.\n\n#VelvetFactory #תהליךהדפסה",
+      "expect": "pass"
+    },
+    {
+      "id": "unverified-print-duration-needs-input",
+      "title": "numeric duration ללא verification → needs_input",
+      "tags": ["fact"],
+      "context": {"mode": "תהליך-קצר"},
+      "body": "18 שעות הדפסה בכמה שניות.\n\nעקבו בשבוע הבא.\n\n#VelvetFactory #תהליךהדפסה",
+      "expect": "needs_input"
     }
   ]
 }
