@@ -1121,6 +1121,34 @@
       "note": "Embed COPYWRITING MODE into vfcopy/hq/reader-first-he.md; strengthen ai-tells-he.md. No npx skills add. Skip LinkedIn/strategic-blog (public site locked). Complements plannotator-write-better."
     },
     {
+      "id": "social-media-skills",
+      "kind": "repo",
+      "url": "https://github.com/social-media-skills/skills",
+      "title": "social-media-skills — caption/hook/voice/carousel/reels/SEO craft",
+      "firstEmbedded": "2026-09-09",
+      "lastReviewed": "2026-09-09",
+      "sourceNote": "packages/vfresearch/sources/2026-09-09-velvet-hebrew-copy-embed.md",
+      "packs": [
+        "vfcopy",
+        "vfresearch"
+      ],
+      "note": "MIT ideas only into vfcopy/skills/velvet-hebrew-copy (no vendoring). brand-profile/voice-builder/caption/hook/carousel/reels/SEO mapped in ADAPTATION.md. Hebrew + PUBLIC_CTA laws win."
+    },
+    {
+      "id": "thekozugroup-humanizer",
+      "kind": "repo",
+      "url": "https://github.com/thekozugroup/humanizer",
+      "title": "humanizer — AI-tell detect + rewrite (MIT)",
+      "firstEmbedded": "2026-09-09",
+      "lastReviewed": "2026-09-09",
+      "sourceNote": "packages/vfresearch/sources/2026-09-09-velvet-hebrew-copy-embed.md",
+      "packs": [
+        "vfcopy",
+        "vfresearch"
+      ],
+      "note": "Patterns only in lint_he.py + ai-tells-he.md. No Rust binary. Complements write-better + ai-copywriter embeds."
+    },
+    {
       "id": "debpalash-voicestudio",
       "kind": "repo",
       "url": "https://github.com/debpalash/VoiceStudio",

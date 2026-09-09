@@ -374,6 +374,12 @@
       "consume": ".cursor/skills/vf-content-sprint/SKILL.md"
     },
     {
+      "id": "skill-hebrew-copy",
+      "path": ".cursor/skills/vf-hebrew-copy/SKILL.md",
+      "cadence": "on-content",
+      "consume": "python3 scripts/check-vfcopy.py lint"
+    },
+    {
       "id": "skill-best-skills",
       "path": ".cursor/skills/vf-best-skills/SKILL.md",
       "cadence": "bi-daily",

@@ -9,6 +9,8 @@ Model (not whole-file scan):
   locked/scheduled; reels do not need STORIES-FIX; blocked/future candidates may stay
   incomplete without failing the repo; historical live posts do not invent new artifact
   demands; ready-but-unlocked items must pass required gates.
+- Hebrew style + business-truth layer: packages/vfcopy/lint_he.py (velvet-hebrew-copy).
+- Eval suite: packages/vfcopy/evals/hebrew-copy-evals.json via `eval` subcommand.
 
 Static lint only: no network, no send, no invented approvals.
 """
@@ -16,19 +18,32 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+import argparse
+import json
 import re
 import sys
 import tempfile
 import unittest
 
 HERE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(HERE / "packages" / "vfcopy"))
+from lint_he import (  # noqa: E402
+    assert_skill_wired,
+    lint_hebrew_copy,
+    run_eval_suite,
+)
 
 FORBIDDEN_PHRASES = [
     "בעידן הדיגיטלי",
     "בעולם שבו",
     "נשמח לעמוד לשירותך",
+    "נשמח לעמוד לשירותכם",
     "חוויה ייחודית",
     "פתרון מקיף",
+    "אנו גאים להציג",
+    "נרגשים לשתף",
+    "כל פרט מספר סיפור",
+    "הקסם קורה",
     "game-changer",
     "unlock",
 ]
@@ -43,6 +58,7 @@ CAPTION_HEADING = re.compile(
 )
 GID_RE = re.compile(r"\bG0\d{2,3}\b")
 TABLE_ROW = re.compile(r"^\|\s*\d+\s*\|")
+EVALS_PATH = HERE / "packages" / "vfcopy" / "evals" / "hebrew-copy-evals.json"
 
 
 @dataclass
@@ -164,6 +180,8 @@ def hook_line(body: str) -> str:
 
 def lint_caption_body(body: str, *, label: str) -> list[str]:
     """Lint a single publishable caption body (not instructions)."""
+    # Legacy phrase/opening checks kept for behavioral fixtures; full Hebrew
+    # layer runs via lint_hebrew_copy (style + business truth).
     problems: list[str] = []
     if not body.strip():
         return [f"ריק: {label}"]
@@ -178,9 +196,17 @@ def lint_caption_body(body: str, *, label: str) -> list[str]:
         if phrase.lower() in lower:
             problems.append(f"ביטוי AI/שיווק ריק ב-{label}: {phrase!r}")
     if DM_ONLY.search(body):
-        problems.append(f"CTA 'שלחו DM' אסור ב-{label} (אוטו־DM / אנגלית; השתמשו בהודעת Instagram בעברית)")
+        problems.append(
+            f"CTA 'שלחו DM' אסור ב-{label} (אוטו־DM / אנגלית; השתמשו בהודעת Instagram בעברית)"
+        )
     if WA_PHONE_CTA.search(body):
-        problems.append(f"CTA וואטסאפ/טלפון אסור בתוכן ציבורי ב-{label} — PUBLIC_CURRENT_CTA = הודעת Instagram")
+        problems.append(
+            f"CTA וואטסאפ/טלפון אסור בתוכן ציבורי ב-{label} — PUBLIC_CURRENT_CTA = הודעת Instagram"
+        )
+    he = lint_hebrew_copy(body, label=label)
+    for p in he.problems:
+        if p not in problems:
+            problems.append(p)
     return problems
 
 
@@ -422,6 +448,10 @@ def check_vfcopy(root: Path | None = None) -> LintResult:
     if not paths.vfcopy.is_dir():
         return result
 
+    # Skill wiring only on the real repo tree (fixtures omit the skill files).
+    if paths.root == HERE:
+        result.extend(assert_skill_wired(paths.root))
+
     for path in sorted(paths.vfcopy.glob("G0*.md")):
         result.extend(lint_path_captions(path))
 
@@ -431,19 +461,61 @@ def check_vfcopy(root: Path | None = None) -> LintResult:
     return result
 
 
-def main() -> int:
+def cmd_eval() -> int:
+    if not EVALS_PATH.is_file():
+        print(f"FAIL missing {EVALS_PATH}")
+        return 1
+    passed, total, failed = run_eval_suite(EVALS_PATH)
+    if failed:
+        print(f"FAIL hebrew-copy evals {passed}/{total}")
+        for line in failed:
+            print("-", line)
+        return 1
+    print(f"OK hebrew-copy evals {passed}/{total}")
+    return 0
+
+
+def cmd_lint_text(text: str, *, rewrite: bool) -> int:
+    verdict = lint_hebrew_copy(text, label="cli", offer_rewrite=rewrite)
+    payload = {
+        "status": verdict.status,
+        "problems": verdict.problems,
+        "kind": verdict.kind,
+    }
+    if rewrite and verdict.rewrite:
+        payload["rewrite"] = verdict.rewrite
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return 0 if verdict.ok else 1
+
+
+def main(argv: list[str] | None = None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] in {"test", "--test"}:
+        return run_tests()
+    if argv and argv[0] == "eval":
+        return cmd_eval()
+    if argv and argv[0] == "lint":
+        parser = argparse.ArgumentParser(prog="check-vfcopy lint")
+        parser.add_argument("--text", required=True)
+        parser.add_argument("--rewrite", action="store_true")
+        ns = parser.parse_args(argv[1:])
+        return cmd_lint_text(ns.text, rewrite=ns.rewrite)
+
     # Behavioral fixtures first — prove the model, then lint the live tree.
     test_rc = run_tests(quiet=True)
     if test_rc != 0:
         print("FAIL vfcopy behavioral tests")
         return test_rc
+    eval_rc = cmd_eval()
+    if eval_rc != 0:
+        return eval_rc
     result = check_vfcopy()
     if not result.ok:
         print("FAIL vfcopy content lint:")
         for line in result.problems:
             print("-", line)
         return 1
-    print("OK vfcopy captions+stories linted (behavioral=8)")
+    print("OK vfcopy captions+stories+hebrew-copy (behavioral=8)")
     return 0
 
 
@@ -620,6 +692,4 @@ def run_tests(*, quiet: bool = False) -> int:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] in {"test", "--test"}:
-        raise SystemExit(run_tests())
     raise SystemExit(main())

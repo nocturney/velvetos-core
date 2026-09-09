@@ -50,4 +50,5 @@
 
 ## חוק מפעיל
 
-כל כלי (Cursor, ChatGPT, Gemini, Perplexity, Canva או סקריפט) שמפיק טקסט ציבורי חייב לקרוא בסדר זה: `VOICE.md` → קובץ זה → `hq/reader-first-he.md` → `hq/ai-tells-he.md` → תבנית הערוץ. בלי מקור/צילום/פרטי מוצר אמיתיים: התוצאה היא שאלת הבהרה או ״חסר״ — לא המצאה.
+כל כלי (Cursor, ChatGPT, Gemini, Perplexity, Canva או סקריפט) שמפיק טקסט ציבורי חייב לקרוא בסדר זה: `VOICE.md` → קובץ זה → `skills/velvet-hebrew-copy/SKILL.md` → `hq/reader-first-he.md` → `hq/ai-tells-he.md` → תבנית הערוץ → `python3 scripts/check-vfcopy.py lint`. בלי מקור/צילום/פרטי מוצר אמיתיים: התוצאה היא `needs_input` / שאלת הבהרה או ״חסר״ — לא המצאה.  
+קורפוס לדוגמאות: `voice/approved/` בלבד.
