@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-09 — **ChatGPT Business ↔ Instagram MCP:** סיבת כשל Create עם No Auth = HTTP 401 (השרת דורש Bearer `VELVET_INSTAGRAM_MCP_BEARER_TOKEN`); OAuth לא ממומש (צפוי). Authentication הנכון ב־ChatGPT = **API key**. תיעוד `vfigos/CHATGPT-MCP.md` · מקור Cloud Run `vfigos/remote/` (Bearer ≠ Meta token · CORS · smoke). אין publish / אין No Auth ציבורי לכתיבה. ChatGPT connector root cause + API key auth; remote HTTP source of truth.
+
 - 2026-09-09 — **velvet-hebrew-copy · FACT vs INVENTED:** lint מאמת מחיר/turnaround/לקוח/משך הדפסה מול context מאומת (`price_verified` / `verified_facts`); mismatch=`fail_fact`, בלי אימות=`needs_input`. Evals מורחבים. בלי שינוי PUBLIC_CTA / vfigos.
 - 2026-09-09 — **velvet-hebrew-copy על vfcopy:** שכבת כתיבה עברית טבעית בתוך הפק הקיים — `skills/velvet-hebrew-copy/` · קורפוס `voice/approved/` vs `voice/generated/` · lint `lint_he.py` · evals עברית · CLI `check-vfcopy.py lint|eval` · Cursor skill `vf-hebrew-copy`. רעיונות מ־social-media-skills + thekozugroup/humanizer (MIT, בלי vendoring). בלי publish / בלי שינוי תוכן חי / בלי ₪ מומצא. Hebrew copy QA layer embedded on vfcopy; anti-AI + business-truth gates.
 

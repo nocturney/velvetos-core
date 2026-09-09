@@ -30,6 +30,11 @@
     "listMediaCountSample": 5,
     "teamScope": "not-verified",
     "teamScopeNote": "environment-info / Meta DevTools do not expose Cursor Team MCP binding scope",
+    "publicUrl": "https://velvet-instagram-mcp-1016876126699.me-west1.run.app/mcp",
+    "connectorAuth": "bearer-VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
+    "chatgptAuth": "API key",
+    "chatgptNoAuthFailsWith": "HTTP 401 on initialize",
+    "chatgptOAuthFailsWith": "MCP server does not implement OAuth",
     "blocker": null
   },
   "igUserId": "17841407772120429",

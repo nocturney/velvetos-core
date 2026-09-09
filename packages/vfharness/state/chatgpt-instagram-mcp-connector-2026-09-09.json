@@ -1,0 +1,18 @@
+{
+  "task_id": "chatgpt-instagram-mcp-connector-2026-09-09",
+  "status": "completed",
+  "component_state": "Idle",
+  "last_updated": "2026-09-09T15:35:00+03:00",
+  "latest_observation": {
+    "root_cause": "ChatGPT No Auth hits initialize without Authorization → HTTP 401 WWW-Authenticate Bearer from FastMCP StaticTokenVerifier. OAuth fails because no /.well-known oauth metadata. Protocol handshake + tools work with Bearer.",
+    "chatgpt_auth": "API key (VELVET_INSTAGRAM_MCP_BEARER_TOKEN) — not No Auth, not OAuth, not Meta INSTAGRAM_MCP_ACCESS_TOKEN",
+    "public_smoke": "initialize/initialized/tools/list/healthcheck/get_profile/list_media OK on velvet-instagram-mcp …/mcp; username velvets_cloud; no publish",
+    "deploy": "gcloud credentials not available in this Cloud Agent — live service already Bearer-gated; remote/ package is deploy source for CORS/X-Api-Key/healthz improvements",
+    "no_meta_token_in_chatgpt": true
+  },
+  "execution_state": {
+    "docs": "CHATGPT-MCP.md + CONNECT-IG + DEPLOY-CODESPACE + CAPABILITIES",
+    "remote_package": "packages/vfigos/remote/",
+    "sensors": "check-vfmcp extended"
+  }
+}
