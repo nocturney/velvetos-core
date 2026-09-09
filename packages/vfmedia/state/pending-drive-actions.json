@@ -1,0 +1,32 @@
+{
+  "actions": [
+    {
+      "op": "move",
+      "fileId": "1tMhfYL-7mOjD5AbBGYHrFRlfRnWIg8XE",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "doneAt": "2026-09-08T14:10:26Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1QOv6ZDkCI91GpKa3WP5vjbG23chHkycD",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-08T14:50:02Z",
+      "doneAt": "2026-09-08T14:50:25Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1gvWFaxgxEZHKm4FZhu4g1NYPiVOtO8kN",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-08T14:50:02Z",
+      "doneAt": "2026-09-08T14:50:25Z"
+    }
+  ],
+  "updatedAt": "2026-09-08T14:50:02Z",
+  "note": "pending Drive moves for MCP/API apply — not a second catalog"
+}

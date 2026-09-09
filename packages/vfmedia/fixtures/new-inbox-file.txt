@@ -1,0 +1,2 @@
+# Auto-generated local bytes for fixture download verify
+vfmedia-intake-fixture-proof

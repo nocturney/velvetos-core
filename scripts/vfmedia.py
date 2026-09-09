@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Validate the single VelvetOS media catalog. No network. No Drive writes."""
+"""VelvetOS shared media catalog CLI.
+
+Subcommands:
+  validate — schema/locks check only. No network. No Drive writes. Not a monitor.
+  folders  — print locked Drive folder ids
+  intake   — durable auto-intake runner (scan inbox → catalog → verify → source)
+"""
 from __future__ import annotations
 
 import argparse
@@ -32,6 +38,7 @@ ITEM_FIELDS = (
     "sourceLinks",
     "versionApproval",
 )
+OPTIONAL_ITEM_FIELDS = ("intake", "visualReview")
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
 SKU_KEY = re.compile(r"(?i)^(sku|skus|מק״ט|מק\"ט)$")
 
@@ -67,11 +74,31 @@ def validate_drive_ref(label: str, ref: object) -> None:
         fail(f"{label} invented Drive id")
 
 
+def validate_intake_block(item: dict, index: int) -> None:
+    intake = item.get("intake")
+    if intake is None:
+        return
+    if not isinstance(intake, dict):
+        fail(f"items[{index}].intake must be an object")
+    phase = intake.get("phase")
+    if phase not in {"registered", "verified"}:
+        fail(f"items[{index}].intake.phase invalid: {phase!r}")
+    # Visual review must not be required for verified
+    visual = item.get("visualReview")
+    if visual is None:
+        return
+    if not isinstance(visual, dict):
+        fail(f"items[{index}].visualReview must be an object")
+    if visual.get("state") not in {"none", "pending", "done"}:
+        fail(f"items[{index}].visualReview.state invalid")
+
+
 def validate_item(item: dict, index: int) -> None:
     missing = [k for k in ITEM_FIELDS if k not in item]
     if missing:
         fail(f"items[{index}] missing fields {missing}")
-    extra = [k for k in item if k not in ITEM_FIELDS]
+    allowed = set(ITEM_FIELDS) | set(OPTIONAL_ITEM_FIELDS)
+    extra = [k for k in item if k not in allowed]
     if extra:
         fail(f"items[{index}] unknown fields {extra} — do not invent SKU keys")
     for key in item:
@@ -105,6 +132,7 @@ def validate_item(item: dict, index: int) -> None:
             f"items[{index}] status=approved but versionApproval is not approved "
             "(approved folder alone is not proof)"
         )
+    validate_intake_block(item, index)
 
 
 def cmd_validate(_args: argparse.Namespace) -> int:
@@ -132,6 +160,10 @@ def cmd_validate(_args: argparse.Namespace) -> int:
     )
     if set(ITEM_FIELDS) != item_req:
         fail(f"schema mediaItem fields mismatch: {sorted(item_req)}")
+    props = ((schema.get("$defs") or {}).get("mediaItem") or {}).get("properties") or {}
+    for opt in OPTIONAL_ITEM_FIELDS:
+        if opt not in props:
+            fail(f"schema mediaItem missing optional {opt}")
     items = catalog.get("items")
     if not isinstance(items, list):
         fail("catalog.json items must be a list")
@@ -144,7 +176,7 @@ def cmd_validate(_args: argparse.Namespace) -> int:
             fail(f"duplicate catalog id {rid!r}")
         seen.add(rid)
         validate_item(item, i)
-    print(f"OK vfmedia catalog items={len(items)} oneCatalog=true")
+    print(f"OK vfmedia catalog items={len(items)} oneCatalog=true (validate≠monitor)")
     return 0
 
 
@@ -156,13 +188,80 @@ def cmd_folders(_args: argparse.Namespace) -> int:
     return 0
 
 
+def _intake_ns(args: argparse.Namespace) -> argparse.Namespace:
+    return args
+
+
+def cmd_intake(args: argparse.Namespace) -> int:
+    # Load pack-local module (packages/ is not a Python package root)
+    if str(PACK) not in sys.path:
+        sys.path.insert(0, str(PACK))
+    from intake import runner as intake_runner  # type: ignore
+
+    if args.intake_cmd == "status":
+        return intake_runner.cmd_status(args)
+    if args.intake_cmd == "selftest":
+        return intake_runner.run_selftest(args)
+    if args.intake_cmd == "apply-moves":
+        if not args.confirmed:
+            fail("apply-moves requires --confirmed PATH")
+        return intake_runner.apply_confirmed_moves(Path(args.confirmed))
+    if args.intake_cmd == "run":
+        return intake_runner.run_intake(args)
+    fail(f"unknown intake command {args.intake_cmd}")
+    return 1
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="VelvetOS shared media catalog (no Drive writes).")
-    sub = parser.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("validate", help="validate catalog.json against the locked schema").set_defaults(
-        func=cmd_validate
+    parser = argparse.ArgumentParser(
+        description="VelvetOS shared media catalog. validate=check only; intake=auto runner."
     )
+    sub = parser.add_subparsers(dest="cmd", required=True)
+    sub.add_parser(
+        "validate",
+        help="validate catalog.json against the locked schema (no Drive; not a monitor)",
+    ).set_defaults(func=cmd_validate)
     sub.add_parser("folders", help="print locked Drive folder ids").set_defaults(func=cmd_folders)
+
+    intake = sub.add_parser("intake", help="durable auto-intake (inbox→catalog→verify→source)")
+    intake_sub = intake.add_subparsers(dest="intake_cmd", required=True)
+
+    p_run = intake_sub.add_parser("run", help="scan inbox and intake")
+    p_run.add_argument(
+        "--provider",
+        choices=("google", "listing", "fixture"),
+        default="google",
+        help="google=API credentials; listing=MCP export; fixture=selftest data",
+    )
+    p_run.add_argument("--listing", help="path to inbox listing JSON (listing/fixture)")
+    p_run.add_argument(
+        "--move-mode",
+        choices=("pending", "memory"),
+        default="pending",
+        help="listing provider: pending writes Drive actions for MCP apply; memory for tests",
+    )
+    p_run.add_argument("--page-size", type=int, default=50)
+    p_run.add_argument("--page-token", default=None)
+    p_run.add_argument("--reset-pagination", action="store_true")
+    p_run.add_argument("--max-files", type=int, default=50)
+    p_run.add_argument("--register-only", action="store_true")
+    p_run.add_argument("--only-file-id", default=None)
+    p_run.add_argument(
+        "--mark-activation",
+        action="store_true",
+        help="mark activation.proven when this run processes a new file",
+    )
+    p_run.set_defaults(func=cmd_intake)
+
+    p_apply = intake_sub.add_parser("apply-moves", help="confirm pending moves after Drive MCP/API")
+    p_apply.add_argument("--confirmed", required=True, help="JSON with movedFileIds[]")
+    p_apply.set_defaults(func=cmd_intake)
+
+    intake_sub.add_parser("status", help="print runner + phase counts").set_defaults(func=cmd_intake)
+    intake_sub.add_parser("selftest", help="offline intake proof (no Drive)").set_defaults(
+        func=cmd_intake
+    )
+
     args = parser.parse_args()
     return args.func(args)
 

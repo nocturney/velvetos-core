@@ -1,0 +1,17 @@
+{
+  "folderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+  "pageToken": null,
+  "nextPageToken": null,
+  "files": [
+    {
+      "id": "FIXTURE_NEW_INTAKE_FILE_001",
+      "name": "vfmedia-intake-fixture-proof.txt",
+      "mimeType": "text/plain",
+      "createdTime": "2026-09-08T12:00:00.000Z",
+      "size": "48",
+      "webViewLink": "https://drive.google.com/file/d/FIXTURE_NEW_INTAKE_FILE_001/view",
+      "parents": ["1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ"],
+      "localPath": "packages/vfmedia/fixtures/new-inbox-file.txt"
+    }
+  ]
+}

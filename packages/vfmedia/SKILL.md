@@ -11,10 +11,11 @@
 ## עשה
 
 1. `docs/MEDIA-VAULT.md` + `FOLDERS.json` — רק ארבע התיקיות הנעולות.
-2. שורה ב־`catalog.json` לפי `catalog.schema.json`. תיאור ממה שנראה.
-3. תפעול מעביר נכנס → מקור. GrokBot: Drive MCP. Cursor: סכמה.
-4. `python3 scripts/vfmedia.py validate`
-5. Control Plane intake state: `office/control-plane.json` → media SoT stays this catalog (WIP/finished/BTS/unknown). Never a second catalog.
+2. קליטה אוטומטית: `python3 scripts/vfmedia.py intake run` (או `selftest` / `status`). ראה `INTAKE.md`.
+3. שורה ב־`catalog.json` לפי `catalog.schema.json`. פאזות: רשום / אומת / חזותי — בנפרד.
+4. תפעול מעביר נכנס → מקור (או runner + Drive MCP apply-moves). GrokBot: Drive MCP. Cursor: סכמה + runner.
+5. `python3 scripts/vfmedia.py validate` — **רק** בדיקת סכמה; לא ניטור תיקייה.
+6. Control Plane intake state: `office/control-plane.json` → media SoT stays this catalog. Never a second catalog.
 
 ## אל תעשה
 
