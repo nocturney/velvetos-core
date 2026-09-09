@@ -1,7 +1,14 @@
 {
-  "updatedAt": "2026-09-09T12:20:00+03:00",
+  "updatedAt": "2026-09-09T23:17:10+03:00",
   "date": "2026-09-09",
-  "active_now": [],
+  "active_now": [
+    "fu-intake-84681552",
+    "fu-intake-624f37d7",
+    "fu-intake-663fc728",
+    "fu-intake-80b5b5a9",
+    "fu-intake-9b1cdedd",
+    "fu-intake-8bab908e"
+  ],
   "waiting": [
     {
       "id": "fu-G003-soccerball",
@@ -18,7 +25,7 @@
   ],
   "changed_today": [
     "Office Control Plane מוטמע",
-    "followups=1",
+    "followups=7",
     "dead_letters=0"
   ],
   "authoritative_sources": {
@@ -71,7 +78,13 @@
     "WIP→Finished watcher",
     "Dead-letter monitoring",
     "routine watchdog",
-    "source-of-truth validation"
+    "source-of-truth validation",
+    "Studio Pulse",
+    "Universal Intake",
+    "Invisible Work Detector",
+    "Failure Museum",
+    "Velvet Lab",
+    "Living Studio Skills Registry"
   ],
   "chatgpt_tasks_keep": [
     "Velvet Morning Brief",

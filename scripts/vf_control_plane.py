@@ -1147,6 +1147,44 @@ def watchdog_issues() -> list[dict]:
                 "outcome": "PREPARED",
             }
         )
+    else:
+        items = cat.get("items") or []
+        inbox_n = sum(1 for it in items if (it.get("status") or "") == "inbox")
+        if inbox_n:
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "media_inbox_backlog",
+                    "detail": f"catalog inbox={inbox_n} — office can intake; do not bother Christian",
+                    "outcome": "PREPARED",
+                    "brief": False,
+                }
+            )
+        intake_state = load_json(ROOT / "packages" / "vfmedia" / "state" / "intake-runner.json", {})
+        auth = (intake_state or {}).get("auth")
+        auth_blocked = False
+        if isinstance(auth, dict):
+            google = auth.get("google_provider_scheduled") or {}
+            if google.get("ready") is False:
+                auth_blocked = True
+            if auth.get("ready") is False:
+                auth_blocked = True
+            detail = auth.get("detail") or google.get("detail") or "intake auth"
+        else:
+            auth_blocked = auth in {"missing", "failed", "AUTH"}
+            detail = f"scheduled Drive intake AUTH blocked — {auth}"
+        if auth_blocked:
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "media_intake_auth",
+                    "detail": detail
+                    if isinstance(detail, str)
+                    else "scheduled Drive intake AUTH blocked — VFMEDIA_DRIVE_CREDENTIALS_JSON",
+                    "outcome": "WAITING_EXTERNAL_TOOL",
+                    "brief": True,
+                }
+            )
 
     # Calendar inconsistencies / stale scheduled (lightweight: CALENDAR.md exists)
     if CALENDAR.is_file():
@@ -1342,8 +1380,23 @@ def watchdog_issues() -> list[dict]:
         text = path.read_text(encoding="utf-8")
         idx = text.find("Meta Business Suite")
         if idx >= 0:
-            window = text[max(0, idx - 40) : idx + 40]
-            if "לא" not in window and "no Suite" not in text.lower():
+            window = text[max(0, idx - 40) : idx + 60]
+            window_l = window.lower()
+            # Prohibition / lock language is OK — do not false-positive locked rows.
+            prohibited_ok = any(
+                tok in window or tok in window_l
+                for tok in (
+                    "לא",
+                    "נעול",
+                    "אסור",
+                    "deny",
+                    "forbidden",
+                    "locked",
+                    "no suite",
+                    "no meta",
+                )
+            )
+            if not prohibited_ok and "no Suite" not in text.lower():
                 issues.append(
                     {
                         "level": "orange",
@@ -1682,6 +1735,18 @@ def brief_summary() -> dict:
     # Ensure followups count is never stale prose from an older HANDOFF.json
     completed = [c for c in completed if not str(c).startswith("followups=")]
     completed.insert(0, f"followups={len(all_fus)} (waiting={len(waiting_fus)})")
+
+    # Studio Pulse is composer source; Morning Brief remains presentation/delivery.
+    studio_pulse = None
+    pulse_path = ROOT / "packages" / "velvetos" / "living-studio" / "data" / "pulse-latest.json"
+    if pulse_path.is_file():
+        studio_pulse = load_json(pulse_path, None)
+    media_cat = load_json(MEDIA_CATALOG, {"items": []}) or {}
+    media_items = media_cat.get("items") or []
+    media_inbox = sum(1 for it in media_items if (it.get("status") or "") == "inbox")
+    ig_caps = load_json(IG_CAPABILITIES, {}) or {}
+    ig_insights = ((ig_caps.get("remoteVerify") or {}).get("insightsGraphCompat") or {})
+
     return {
         "owner_decisions": surface,
         "dead_letters_owner": dead_owner,
@@ -1701,6 +1766,32 @@ def brief_summary() -> dict:
             }
             for i in token_alerts
         ],
+        "studio_pulse": {
+            "path": "packages/velvetos/living-studio/data/pulse-latest.json",
+            "cli": "python3 scripts/vf_living_studio.py pulse",
+            "snapshot": {
+                "generatedAt": (studio_pulse or {}).get("generatedAt"),
+                "what_happening_now": (studio_pulse or {}).get("what_happening_now"),
+                "what_requires_christian": (studio_pulse or {}).get("what_requires_christian"),
+                "invisible_work_high": (studio_pulse or {}).get("invisible_work_high"),
+                "nearest_opportunity": (studio_pulse or {}).get("nearest_opportunity"),
+                "do_not_do_now": (studio_pulse or {}).get("do_not_do_now"),
+            }
+            if studio_pulse
+            else None,
+            "note": "Pulse is source/composer; this brief is delivery. Refresh via vf_living_studio.py pulse.",
+        },
+        "media": {
+            "total": len(media_items),
+            "inbox": media_inbox,
+            "note": "upload≠approval · registered≠verified",
+        },
+        "instagram": {
+            "status": ig_caps.get("currentStatus"),
+            "insights_deployed": ig_insights.get("deployed"),
+            "publish": ((ig_caps.get("remoteVerify") or {}).get("chatgptSmoke") or {}).get("publish"),
+        },
+        "opportunities": opportunity_radar()[:3],
     }
 
 
@@ -1849,6 +1940,22 @@ def cmd_simulate(args: argparse.Namespace) -> int:
         risks = ["invented correlation_id", "treating schedule as live publish"]
         gates = ["PREFLIGHT", "EDIT-GATE", "human post verification"]
         rollback = ["revert followups.json item state", "git checkout followups.json"]
+    elif scenario in {"failover", "manager_failover", "office_failover"}:
+        predicted = [
+            "Manager B reads docs/FAILOVER.md + office/control/HANDOFF.json",
+            "resume from authoritative_sources only (no new SoT)",
+            "run: vf_control_plane.py status|watchdog|followups|brief-summary",
+            "run: vf_living_studio.py pulse|world-model (projection only)",
+            "continue WIP/media/approvals from existing queues",
+        ]
+        risks = [
+            "building a parallel handoff/vault",
+            "inventing ₪ / Insights / liveVerified",
+            "idling on needsAuth instead of failover artifact",
+            "resuming paused routines without owner",
+        ]
+        gates = ["read HANDOFF.json + POLICY.md before mutations"]
+        rollback = ["n/a read-only simulation — real handoff refresh via `handoff` cmd"]
     elif scenario in {"dead_letter", "dead"}:
         predicted = ["append dead-letter.json item", "owner_required only when appropriate"]
         risks = ["silent drop", "owner spam on green failures"]

@@ -1,7 +1,7 @@
 {
   "name": "velvetos-office-control-plane",
   "title": "Office Control Plane — unify existing sources of truth",
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-09",
   "rule": "Unify and harden. Do not duplicate approval queue, calendar, media catalog, job ledger, print.done, office loop, or handoff concepts. If two files claim authority over the same domain, the sensor must fail.",
   "cli": "python3 scripts/vf_control_plane.py",
   "sensor": "scripts/check-office-control-plane.py",
@@ -58,7 +58,10 @@
     "no-silent-dead-letter-loss"
   ],
   "chatgptTaskReduction": {
-    "keep": ["Velvet Morning Brief", "optional Velvet Publish Watch / hard-blocker alert"],
+    "keep": [
+      "Velvet Morning Brief",
+      "optional Velvet Publish Watch / hard-blocker alert"
+    ],
     "moveInsideVelvetOS": [
       "Media Intake",
       "Content Sprint",
@@ -68,8 +71,41 @@
       "WIP→Finished watcher",
       "Dead-letter monitoring",
       "routine watchdog",
-      "source-of-truth validation"
+      "source-of-truth validation",
+      "Studio Pulse",
+      "Universal Intake",
+      "Invisible Work Detector",
+      "Failure Museum",
+      "Velvet Lab",
+      "Living Studio Skills Registry"
     ],
     "note": "Do not delete existing ChatGPT tasks until the replacement path is proven."
+  },
+  "livingStudio": {
+    "layer": "packages/velvetos/living-studio",
+    "cli": "python3 scripts/vf_living_studio.py",
+    "sensor": "scripts/check-living-studio.py",
+    "registry": "packages/velvetos/living-studio/REGISTRY.json",
+    "rule": "projection/router layer only — never a competing SoT",
+    "commands": [
+      "world-model",
+      "pulse",
+      "signal-room",
+      "intake",
+      "invisible-work",
+      "failure-museum",
+      "lab",
+      "opportunity",
+      "commercial-qa",
+      "content-universe",
+      "work-to-story",
+      "commission",
+      "selftest"
+    ]
+  },
+  "projections": {
+    "world_model": "packages/velvetos/living-studio/data/world-model-latest.json",
+    "studio_pulse": "packages/velvetos/living-studio/data/pulse-latest.json",
+    "signal_room": "packages/velvetos/living-studio/data/signal-room.jsonl"
   }
 }

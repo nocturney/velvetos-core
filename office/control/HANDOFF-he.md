@@ -3,7 +3,7 @@
 לא מערכת משרד שנייה. מקורות אמת: `office/control-plane.json`.
 
 ## מה פעיל עכשיו
-- אין פעיל מחוץ ללולאה הרגילה
+- fu-intake-84681552, fu-intake-624f37d7, fu-intake-663fc728, fu-intake-80b5b5a9, fu-intake-9b1cdedd, fu-intake-8bab908e
 
 ## מה ממתין
 - `fu-G003-soccerball` · waiting_for_print_done
@@ -21,7 +21,7 @@
 
 ## מה השתנה היום
 - Office Control Plane מוטמע
-- followups=1
+- followups=7
 - dead_letters=0
 
 ## מקורות סמכות
@@ -69,6 +69,6 @@
 
 ## משימות ChatGPT (רק אחרי הוכחת נתיב)
 להשאיר: Velvet Morning Brief, optional Velvet Publish Watch / hard-blocker alert
-מועמדים לכיבוי אחרי הוכחה: Media Intake, Content Sprint, Insights/Office Review, Memory Hygiene, Opportunity Radar, WIP→Finished watcher, Dead-letter monitoring, routine watchdog, source-of-truth validation
+מועמדים לכיבוי אחרי הוכחה: Media Intake, Content Sprint, Insights/Office Review, Memory Hygiene, Opportunity Radar, WIP→Finished watcher, Dead-letter monitoring, routine watchdog, source-of-truth validation, Studio Pulse, Universal Intake, Invisible Work Detector, Failure Museum, Velvet Lab, Living Studio Skills Registry
 
 אל תפנה לכריסטיאן על מדדים חלשים.

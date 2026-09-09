@@ -40,20 +40,38 @@
       "get_profile": "PASS",
       "list_media": "PASS",
       "get_account_insights_default": "PASS_post_deploy_2026-09-09",
-      "publish": "available_not_live_tested"
+      "publish": "available_not_live_tested",
+      "get_media_insights_defaults": "PASS_media_period_2026-09-09",
+      "days_28_partial": "PASS_media_period_2026-09-09"
     },
     "insightsGraphCompat": {
       "code": "ready",
-      "deployed": false,
-      "verifiedAt": "2026-09-09T18:22:38Z",
-      "lastDeployedImageTag": "insights-v21-2026-09-09c",
-      "pendingImageTag": "insights-v21-media-period-2026-09-09",
-      "note": "PR #145 metric_type split is live. Follow-up (media saved≠saves defaults + days_28 period partition) is code-ready — redeploy ./packages/vfigos/remote/deploy.sh then INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 smoke."
+      "deployed": true,
+      "verifiedAt": "2026-09-09T20:00:15Z",
+      "lastDeployedImageTag": "insights-v21-media-period-2026-09-09",
+      "pendingImageTag": null,
+      "note": "PR #146 media-type defaults + days_28 partition verified live via public smoke EXPECT_FIXED=1 on 2026-09-09. Both Cloud Run URL aliases pass.",
+      "evidence": {
+        "smoke": "INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 packages/vfigos/remote/smoke_public.py",
+        "urlsVerified": [
+          "https://velvet-instagram-mcp-3sz7smh74a-zf.a.run.app/mcp",
+          "https://velvet-instagram-mcp-1016876126699.me-west1.run.app/mcp"
+        ],
+        "media_default_ok": true,
+        "media_saves_leaked": false,
+        "days28_partial_ok": true,
+        "days28_whole_snapshot_failed": false,
+        "mcp_healthcheck": true,
+        "namespace": "instagram"
+      }
     },
     "chatgptNoAuthFailsWith": "HTTP 401 on initialize",
     "chatgptOAuthFailsWith": "MCP server does not implement OAuth",
     "githubConnectorNote": "ChatGPT GitHub connector disabled is ChatGPT/plugin-side — not an Instagram MCP issue. Do not change GitHub auth from VelvetOS.",
-    "blocker": null
+    "blocker": null,
+    "publicUrlAliases": [
+      "https://velvet-instagram-mcp-3sz7smh74a-zf.a.run.app/mcp"
+    ]
   },
   "igUserId": "17841407772120429",
   "accountLabel": "velvets_cloud",
@@ -62,27 +80,40 @@
     {
       "id": "instagram.profile.read",
       "he": "קריאת פרופיל",
-      "tools": ["get_profile", "account_info", "healthcheck", "audit_profile_cta"]
+      "tools": [
+        "get_profile",
+        "account_info",
+        "healthcheck",
+        "audit_profile_cta"
+      ]
     },
     {
       "id": "instagram.profile.update",
       "he": "עדכון פרופיל",
       "status": "unsupported_by_official_graph",
       "supported": false,
-      "tools": ["graph_mutation_matrix"],
+      "tools": [
+        "graph_mutation_matrix"
+      ],
       "note": "Meta IG User Updating not supported. No MCP write tool exposed (update_profile removed — misleading). SoT: graph_mutation_matrix. Human edits via Instagram app. See GRAPH-MUTATIONS.md + PROFILE-DESIRED.json."
     },
     {
       "id": "instagram.media.list",
       "he": "רשימת מדיה אחרונה",
-      "tools": ["list_media", "get_media", "audit_public_cta"]
+      "tools": [
+        "list_media",
+        "get_media",
+        "audit_public_cta"
+      ]
     },
     {
       "id": "instagram.media.caption.update",
       "he": "עריכת כיתוב קיים",
       "status": "unsupported_by_official_graph",
       "supported": false,
-      "tools": ["graph_mutation_matrix"],
+      "tools": [
+        "graph_mutation_matrix"
+      ],
       "note": "POST /{ig-media-id} only toggles comment_enabled. update_media_caption is NOT registered as an MCP tool. SoT: graph_mutation_matrix."
     },
     {
@@ -90,46 +121,68 @@
       "he": "מחיקת מדיה",
       "status": "supported_gated",
       "supported": true,
-      "tools": ["delete_media", "graph_mutation_matrix"],
+      "tools": [
+        "delete_media",
+        "graph_mutation_matrix"
+      ],
       "note": "Official DELETE /{ig-media-id} requires instagram_manage_contents + confirm_irreversible. No live delete in hardening task."
     },
     {
       "id": "instagram.publish.post",
       "he": "פרסום תמונה/פוסט",
-      "tools": ["publish_image"]
+      "tools": [
+        "publish_image"
+      ]
     },
     {
       "id": "instagram.publish.carousel",
       "he": "פרסום קרוסלה",
-      "tools": ["publish_carousel"]
+      "tools": [
+        "publish_carousel"
+      ]
     },
     {
       "id": "instagram.publish.reel",
       "he": "פרסום ריל/וידאו",
-      "tools": ["publish_reel", "publish_video"]
+      "tools": [
+        "publish_reel",
+        "publish_video"
+      ]
     },
     {
       "id": "instagram.publish.story",
       "he": "פרסום סטורי",
-      "tools": ["publish_story"],
+      "tools": [
+        "publish_story"
+      ],
       "note": "Declared on same MCP — not a separate Stories system. Live publish_story not exercised in 2026-09-09 verify/fix work (no publish)."
     },
     {
       "id": "instagram.insights.read",
       "he": "קריאת Insights מאומתים",
-      "tools": ["get_account_insights", "get_media_insights", "get_audience_insights"],
+      "tools": [
+        "get_account_insights",
+        "get_media_insights",
+        "get_audience_insights"
+      ],
       "note": "Graph v21 patch in remote/insights_v21.py — deploy required before public smoke marks fixed"
     },
     {
       "id": "instagram.cta.audit",
       "he": "ביקורת CTA ציבורי חי",
-      "tools": ["audit_public_cta", "audit_profile_cta"],
+      "tools": [
+        "audit_public_cta",
+        "audit_profile_cta"
+      ],
       "note": "Read-only. Historical violations ≠ auto-rewrite."
     },
     {
       "id": "instagram.live.verify",
       "he": "אימות שהפריט חי בפיד",
-      "tools": ["list_media", "get_media"],
+      "tools": [
+        "list_media",
+        "get_media"
+      ],
       "note": "publish_* success alone is not liveVerified"
     }
   ],
