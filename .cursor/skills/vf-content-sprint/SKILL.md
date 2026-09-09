@@ -18,6 +18,7 @@ Use when the user asks for חבילת תוכן, covers, reel draft, or a post af
 - Organic Growth plane: `constitution/ORGANIC_GROWTH.md` + `python3 scripts/vf_organic_growth.py brief` — queue for 07:00 human approval. Do not auto-post. Do not invent a Reel when media is missing.
 - After publish (when a real snapshot exists): `vfinsights` + `@analytics-reporter`
 - Frameworks (optional): `vfmskill` + `.cursor/skills/vf-marketing-skills` — `social` / `video` / `image`. Desk laws win.
+- Hebrew copy authority: `.cursor/skills/vf-hebrew-copy` → `packages/vfcopy/skills/velvet-hebrew-copy/` + `VOICE.md`. Lint: `python3 scripts/check-vfcopy.py lint`. Missing facts → `needs_input`.
 - Music / reel sound (optional): `vfresearch` + `@trend-researcher` via `.cursor/skills/vf-ig-music` — live source or «חסר מקור»; never invent track names.
 - Weekly research pulse: `vfresearch/hq/PRINT-DEMAND.md` (trends + IL demand + sound) — not a DM hunter.
 
@@ -30,9 +31,9 @@ Use when the user asks for חבילת תוכן, covers, reel draft, or a post af
 
 ## Draft output
 
-**Reel:** Hook · on-film text · caption · CTA WhatsApp `050-2517000` / איסוף שדרות. Music line from `vfresearch/MUSIC.md` brief when present.
+**Reel:** Hook · on-film text · caption (תהליך-קצר או סיפור-מוצר per `VOICE.md`) · CTA = הודעת Instagram / איסוף שדרות (`PUBLIC_CURRENT_CTA`). Music line from `vfresearch/MUSIC.md` brief when present. Run `velvet-hebrew-copy` + lint before handoff.
 
-**Story (review only):** guess-the-print (no private-client spoiler) · timelapse · result · WhatsApp CTA.
+**Story (review only):** guess-the-print (no private-client spoiler) · timelapse · result · Instagram-message CTA (+ איסוף). WhatsApp phone stays BUSINESS_CONTACT_RECORD only — not on public frames.
 
 Hashtags: at most 5, relevant. Do not move a booked `vfigos` slot. No boost. No "שלחו DM".
 

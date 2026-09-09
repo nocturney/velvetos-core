@@ -6,7 +6,9 @@
 מושב: סטודיו (`@content-creator` + `@brand-guardian`).  
 מחקר שכנים: `VOICE-RESEARCH.md`.  
 טבלת קול מהירה לכל עוזר: `VOICE-CHART.md` (משלים; במקרה סתירה קובץ זה + החוקה מנצחים).  
-תבנית עבודה: `hq/templates/ig-caption.md`. לינט: `hq/PLAYBOOK.md` + `hq/ai-tells-he.md`.  
+**שכבת כתיבה עברית:** `skills/velvet-hebrew-copy/SKILL.md` + `PIPELINE.md` — חובה לפני מסירה ל־`#vfigos`.  
+קורפוס ללמידה: `voice/approved/` בלבד — לא `voice/generated/`.  
+תבנית עבודה: `hq/templates/ig-caption.md`. לינט: `hq/PLAYBOOK.md` + `hq/ai-tells-he.md` + `python3 scripts/check-vfcopy.py lint`.  
 תגובות קהילה: `hq/community-replies.md`. שער איכות לפני שיבוץ: `vfgrowth/CONTENT-RUBRIC.md` + `PREFLIGHT.md`.  
 CTA ציבורי: `constitution/PUBLIC_CTA.md` — **הודעת Instagram בלבד**.
 
@@ -23,6 +25,8 @@ Velvet Factory = עברית טבעית, קצרה, מקומית, נקייה.
 אין: «נשמח לעמוד לשירותכם» · «אל תהססו לפנות» · טקסט תאגידי · buzzwords · ₪ מומצא · מבצע מומצא · תאריך מוכנות מומצא · Insights מומצאים · סיפור לקוח מומצא · testimonial · משלוח ארצי.
 
 Fulfilment: **איסוף עצמי בשדרות**.
+
+חסר עובדה הכרחית → `needs_input` (לא השלמה יצירתית). ראו `skills/velvet-hebrew-copy/`.
 
 ## שני מצבים
 

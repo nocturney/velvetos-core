@@ -1,0 +1,10 @@
+{
+  "task_id": "velvet-hebrew-copy-qa-2026-09-09",
+  "component_state": "Idle",
+  "status": "done",
+  "branch": "cursor/velvet-hebrew-copy-qa-cd42",
+  "summary": "Embedded velvet-hebrew-copy on vfcopy with lint_he, 24 Hebrew evals, approved/generated voice split, docs wired.",
+  "avoided": ["packages/vfigos (PR #141/#142)", "live captions", "bio", "secrets"],
+  "sensors": ["check-vfcopy.py", "check-vfgrowth.py", "check-vf-desk.py", "check-vfresearch.py"],
+  "updated": "2026-09-09"
+}

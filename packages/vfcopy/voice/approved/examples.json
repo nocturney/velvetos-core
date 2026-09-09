@@ -1,0 +1,19 @@
+{
+  "schema": "vfcopy.voice.approved/v1",
+  "source": "packages/vfcopy/VOICE.md",
+  "trust": "human-approved-or-published",
+  "examples": [
+    {
+      "id": "canonical-process-chess",
+      "mode": "תהליך-קצר",
+      "format": "reel",
+      "body": "22 שעות הדפסה בכמה שניות 👑\n\nכך נראית סדרת כלי שחמט כשהיא יוצאת מהמדפסת — שכבה אחר שכבה, עד לחשיפה הסופית.\n\nעקבו כדי לראות מה יוצא מהמדפסת בשבוע הבא.\n\n#VelvetFactory #הדפסתתלתממד #3DPrintingIsrael #MadeInSderot #תהליךהדפסה"
+    },
+    {
+      "id": "canonical-product-octopus",
+      "mode": "סיפור-מוצר",
+      "format": "feed",
+      "body": "תנועה, צבע והמון אופי 🐙\n\nהכירו את התמנון המכני המפרקי שלנו — מודל מרשים שהודפס בתלת־ממד, עם חלקים נעים וגימור שאי אפשר להתעלם ממנו.\n\nמתאים כפריט אספנות, כמתנה מיוחדת או פשוט לכל מי שאוהב עיצובים יוצאי דופן.\n\nרוצים אחד משלכם?\nלפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\n\n📍 איסוף עצמי משדרות\n\n#VelvetFactory #הדפסותתלתמימד #עיצובייחודי #מתנהמקורית #3DPrintingIsrael"
+    }
+  ]
+}

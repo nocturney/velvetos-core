@@ -7,7 +7,7 @@
 
 1. בחר תבנית לפי סוג מסר.
 2. מלא משתנים `{…}` רק ממקור מאומת (שרשור, Drive, רצפה).
-3. לפני טיוטה: `../../VOICE.md` (מצב קול) + `../reader-first-he.md`. Pass אחרון: `../PLAYBOOK.md` + `../ai-tells-he.md`.
+3. לפני טיוטה: `../../VOICE.md` (מצב קול) + `../reader-first-he.md` + `../../skills/velvet-hebrew-copy/SKILL.md`. Pass אחרון: `../PLAYBOOK.md` + `../ai-tells-he.md` + `python3 scripts/check-vfcopy.py lint`.
 4. טיוטה מוכנה → HQ שולח דרך כלים (`constitution/SEND.md`); וואטסאפ לקוח נשאר אדם.
 
 ## תבניות
@@ -21,5 +21,5 @@
 | `organic-reel.md` | ריל מפעל תוכן למשבצת א׳/ג׳ 16:00 |
 | `organic-story-poll.md` | סטורי סקר 20:30 · תור אישור |
 
-אין `{מחיר}` בלי מקור. קול: `VOICE.md`. סיפור-מוצר: הודעה באינסטגרם או וואטסאפ + `050-2517000` + איסוף — לא «שלחו DM» עירום.  
+אין `{מחיר}` בלי מקור. קול: `VOICE.md` + `velvet-hebrew-copy`. סיפור-מוצר: הודעת Instagram + איסוף שדרות — לא «שלחו DM» עירום; לא וואטסאפ בכיתוב ציבורי (`PUBLIC_CTA.md`).  
 דליפת פרופיל (80 עוקבים / 0 DM, 6.9): `vfgrowth/hq/FOLLOWER-GROWTH.md`.

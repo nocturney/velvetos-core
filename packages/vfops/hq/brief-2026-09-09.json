@@ -1,0 +1,61 @@
+{
+  "date_line": "2026-09-09 · בריף סוכנות · תצוגה 3",
+  "bottom_line": "המשרד רץ. היום: הטמעת velvet-hebrew-copy על vfcopy — בלי Publish, בלי ₪ מומצא, בלי Insights מומצאים.",
+  "footer": "Velvet Factory · סוכנות פנימית · איסוף משדרות",
+  "slots": [
+    {
+      "kicker": "01 · קודם החלטה",
+      "title": "החלטות",
+      "prose": "מחיר מכירה דחה עד סכום מראש צוות (X ₪). אין שינוי לכיתובי חיים / bio. PR עבודה: velvet-hebrew-copy על vfcopy. PR מקבילים #141/#142 (Instagram MCP) — לא דורסים. Organic Growth: אישור ≠ Publish.",
+      "headers": ["החלטה", "כן/לא/דחה", "מועד"],
+      "rows": [
+        ["מחיר מכירה", "דחה", "X ₪"],
+        ["שינוי captions חיים", "דחה", "אסור במשימה"],
+        ["velvet-hebrew-copy", "כן", "vfcopy skill+lint+evals"],
+        ["ig-mcp live publish", "דחה", "PR #141/#142"]
+      ],
+      "actions": []
+    },
+    {
+      "kicker": "02 · כסף בעבודה",
+      "title": "הזמנות ומעקב",
+      "prose": "חוב פתוח: אין ספירה · Invoice4U: אין ספירה · בלי מייל גבייה מ-HQ · בלי ₪ מכירה מומצא",
+      "headers": ["קוד", "שלב", "חסם"],
+      "rows": [
+        ["פנייה", "אין", "אין ספירה"],
+        ["ספר", "vfbooks.py brief", "בלי מייל גבייה"],
+        ["חומר", "vfcost.py brief", "בלי ₪ מכירה"]
+      ]
+    },
+    {
+      "kicker": "03 · מה להדפיס ולפרסם",
+      "title": "מדף + קופי",
+      "prose": "מדף: אין ספירה עד vfsku.py shop. print.done: אין כרטיס חדש מהמשימה הזו. קופי: velvet-hebrew-copy + check-vfcopy.py lint|eval. HQ לא מדפיס."
+    },
+    {
+      "kicker": "04",
+      "title": "איך הסטודיו מרוויח",
+      "prose": "CTA ציבורי = הודעת Instagram / איסוף שדרות (PUBLIC_CURRENT_CTA). BUSINESS_CONTACT_RECORD וואטסאפ נשאר פנימי. Insights: אין ספירה. אין אוטו-DM / אין בוסט."
+    },
+    {
+      "kicker": "05 · משרד",
+      "title": "פער כלים / משרד",
+      "prose": "היום: הרחבת vfcopy (lint_he + evals עברית + skill). Perplexity connector לא בשימוש למשימה זו. Canva/IG send: ללא שינוי חי. פער: אין ספירה חדשה מעבר ללינט שעבר."
+    },
+    {
+      "kicker": "05a · זיכרון",
+      "title": "זיכרון בעלים",
+      "prose": "קורפוס קול: voice/approved בלבד — לא ללמוד מ־voice/generated. ראו owner-memory לקידום עתידי אחרי מיזוג."
+    },
+    {
+      "kicker": "06 · Insights",
+      "title": "מה קורה בעמוד",
+      "prose": "אין ספירה — בלי סנאפשוט בעלים חדש היום."
+    },
+    {
+      "kicker": "07 · פיד",
+      "title": "פיד בסוף",
+      "prose": "אין Publish מהמשימה. PREFLIGHT לפני שיבוץ. G003/G004/G005 חיים — לא נוגעים."
+    }
+  ]
+}
