@@ -46,7 +46,7 @@
       "code": "ready",
       "deployed": true,
       "verifiedAt": "2026-09-09T17:59:35Z",
-      "note": "Public smoke PASS with INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 (insights_default + insights_mixed). Slash-redirect hotfix may still need one more Cloud Run revision so /mcp (no trailing slash) returns 401 without 307."
+      "note": "Public smoke PASS with INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1. Slash fix uses NormalizeMcpPathMiddleware (Starlette 1.x rejected redirect_slashes= and crashed Cloud Run revision)."
     },
     "chatgptNoAuthFailsWith": "HTTP 401 on initialize",
     "chatgptOAuthFailsWith": "MCP server does not implement OAuth",

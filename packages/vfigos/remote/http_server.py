@@ -132,9 +132,30 @@ class ApiKeyHeaderMiddleware:
         await self.app(scope, receive, send)
 
 
+class NormalizeMcpPathMiddleware:
+    """Rewrite POST /mcp → /mcp/ in-process (no HTTP 307).
+
+    Starlette Mount redirects /mcp → /mcp/ by default; some clients drop
+    Authorization on that hop. Starlette 1.x no longer accepts a
+    redirect-slashes kwarg on Starlette(), so we normalize the path here.
+    """
+
+    def __init__(self, app, mcp_path: str = "/mcp"):
+        self.app = app
+        self.mcp_path = (mcp_path or "/mcp").rstrip("/") or "/mcp"
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] == "http":
+            path = scope.get("path") or ""
+            if path == self.mcp_path:
+                scope = dict(scope)
+                scope["path"] = self.mcp_path + "/"
+        await self.app(scope, receive, send)
+
+
 def create_app() -> Starlette:
     mcp = _build_mcp()
-    path = os.environ.get("MCP_PATH", "/mcp")
+    path = (os.environ.get("MCP_PATH") or "/mcp").rstrip("/") or "/mcp"
     mcp_app = mcp.http_app(
         path="/",
         transport="streamable-http",
@@ -165,17 +186,18 @@ def create_app() -> Starlette:
         allow_credentials=False,
     )
 
-    # redirect_slashes=False: keep POST /mcp (ChatGPT + smoke URL) from 307→/mcp/
-    # which strips Authorization on some clients and breaks the connector.
     app = Starlette(
         routes=[
             Route("/healthz", healthz, methods=["GET"]),
             Route("/health", healthz, methods=["GET"]),
-            Mount(path.rstrip("/") or "/mcp", app=mcp_app),
+            Mount(path, app=mcp_app),
         ],
-        middleware=[cors, Middleware(ApiKeyHeaderMiddleware)],
+        middleware=[
+            cors,
+            Middleware(NormalizeMcpPathMiddleware, mcp_path=path),
+            Middleware(ApiKeyHeaderMiddleware),
+        ],
         lifespan=mcp_app.lifespan,
-        redirect_slashes=False,
     )
     return app
 
