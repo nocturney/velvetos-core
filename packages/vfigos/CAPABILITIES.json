@@ -1,6 +1,6 @@
 {
   "id": "instagram-capabilities",
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-09",
   "providerPreference": "adelaidasofia/instagram-mcp",
   "canonicalMcp": "https://github.com/adelaidasofia/instagram-mcp",
   "package": "adelaidasofia-instagram-mcp",
@@ -18,9 +18,18 @@
   "auth": "ready",
   "transport": "stdio",
   "remote_access": "pending",
+  "remoteVerify": {
+    "date": "2026-09-09",
+    "namespace": "instagram",
+    "namespaceReady": true,
+    "listAccountsOk": true,
+    "igUserId": "17841407772120429",
+    "liveCheckOk": false,
+    "blocker": "Meta long-lived access token expired (oauth)"
+  },
   "igUserId": "17841407772120429",
   "accountLabel": "velvets_cloud",
-  "readyRequires": "real healthcheck — Codespace verified; never fake Cloud remote as ready",
+  "readyRequires": "real healthcheck with live_check.ok=true — Codespace verified; Cloud remote MCP reachable 2026-09-09 but oauth expired; never fake remote_access ready",
   "capabilities": [
     {
       "id": "instagram.profile.read",

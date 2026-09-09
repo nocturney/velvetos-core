@@ -1,0 +1,23 @@
+{
+  "task_id": "instagram-mcp-verify-2026-09-09",
+  "status": "blocked",
+  "component_state": "Blocked",
+  "last_updated": "2026-09-09T10:45:00+03:00",
+  "latest_observation": {
+    "mcp_namespace": "instagram",
+    "namespaceStatus": "ready",
+    "list_accounts": "ok ig_user_id=17841407772120429 label=env dm_enabled=false",
+    "healthcheck_live_check_ok": false,
+    "blocker": "Meta long-lived access token expired (oauth)",
+    "get_profile": "fail oauth",
+    "list_media": "fail oauth",
+    "vf_send_preflight_instagram": "ready=false needs_failover=true exit=2",
+    "watchdog_summary": "WAITING_EXTERNAL_TOOL",
+    "owner_action": "Refresh INSTAGRAM_MCP_ACCESS_TOKEN on Cloud Run / MCP host vault; re-run healthcheck until live_check.ok=true"
+  },
+  "execution_state": {
+    "no_publish": true,
+    "no_dm": true,
+    "remote_access_desk": "pending"
+  }
+}

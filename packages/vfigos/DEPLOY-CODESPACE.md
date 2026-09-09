@@ -1,6 +1,6 @@
 # Instagram MCP · Codespace + remote autonomy
 
-Status date: **2026-09-08**. No secrets in this file. No invented remote endpoint.
+Status date: **2026-09-09**. No secrets in this file.
 
 ## Verified (Codespace / stdio)
 
@@ -10,7 +10,7 @@ Status date: **2026-09-08**. No secrets in this file. No invented remote endpoin
 | Transport | **stdio** |
 | Account | `@velvets_cloud` · IG user id `17841407772120429` · linked to Facebook Page |
 | `add_account` | label `velvets_cloud` · default `true` |
-| Smoke | `healthcheck` · `get_profile` · `list_media` OK |
+| Smoke | `healthcheck` · `get_profile` · `list_media` OK (2026-09-08 Codespace) |
 | Secrets location | **GitHub Codespaces Secrets / runtime env only** — never git, never committed mcp.json with tokens |
 | Desk status | `ready-codespace` · `auth: ready` · `transport: stdio` |
 
@@ -23,28 +23,32 @@ Status date: **2026-09-08**. No secrets in this file. No invented remote endpoin
 5. Reload MCP client → run `healthcheck` → confirm default account `velvets_cloud`.
 6. Publishing still requires vault approval + Canva/vfcovers + PREFLIGHT + **live verify** after `publish_*`.
 
-## Architectural gap — remote autonomy
+## Remote Cloud / Team MCP (2026-09-09)
 
 | Item | Status |
 |---|---|
-| `remote-endpoint` | **pending** |
-| Cloud Agent always-on Instagram MCP | **not solved** |
-| stdio inside a **stopped / sleeping** Codespace | **insufficient** for full office autonomy |
+| Cursor namespace | `instagram` · `namespaceStatus: ready` in Cloud Agent |
+| Host | Cloud Run MCP path `/mcp` (Team MCP binding named `instagram`) |
+| Transport observed | Cursor MCP session live (Streamable HTTP details / Team-scope metadata **not** exposed by `environment-info` — not verified beyond namespace ready) |
+| Account wiring | `list_accounts` → ig_user_id `17841407772120429` · label `env` · `dm_enabled: false` |
+| Live Graph | **FAIL** — `live_check.ok=false` · Meta access token **expired** (oauth class) on 2026-09-09 |
+| Desk `remote_access` | stays **`pending`** until `live_check.ok=true` + `get_profile` username `@velvets_cloud` |
 
-VelvetOS goal: prepare → publish → verify → measure → learn with minimal owner clicks.  
-Codespace stdio proves the Graph API path. It does **not** mean every Cloud Agent run can publish.
+### Owner action required (blocker)
 
-### Next step (engineering — not faked)
+Refresh the long-lived Instagram Graph API access token on the **Cloud Run / MCP host vault** (`INSTAGRAM_MCP_ACCESS_TOKEN` — value never in git). Then re-run from Cloud Agent:
 
-Expose a **supported remote MCP transport** or deploy the server in an **always-available** environment that Cursor Cloud / Team MCP can reach — still with secrets in the host vault, never in git. Until that lands:
+1. `healthcheck` → expect `live_check.ok=true`
+2. `get_profile` → `@velvets_cloud`
+3. `list_media` (limit small, read-only)
+4. `python3 scripts/vf_send_preflight.py --gate instagram` → `ready`
+5. Only then set desk `remote_access: ready` and re-run `python3 scripts/check-all.py`
 
-- Desk keeps `remote_access: pending`
-- Cloud / no-live-MCP runs use Canva + Drive + Gmail failover (`SEND.md`)
-- Do not claim the feed is live without `liveVerified`
+Until then: failover Canva + Drive + Gmail (`SEND.md`). Do not Publish. Do not claim the feed posted.
 
 ## Explicit non-goals of this note
 
-- Do not invent a public HTTPS MCP URL
 - Do not paste tokens into the repo or PR
 - Do not enable DM tools
 - Do not make the Drive vault world-readable
+- Do not mark `remote_access: ready` while `live_check.ok=false`

@@ -1,0 +1,129 @@
+{
+  "date_line": "2026-09-09 · בריף סוכנות · תצוגה 3",
+  "bottom_line": "המשרד רץ. כריסטיאן יכול לשבת רגוע — בלי ₪ מומצא, בלי Insights מומצאים, בלי חצי-עבודה.",
+  "footer": "Velvet Factory · סוכנות פנימית · איסוף משדרות",
+  "slots": [
+    {
+      "kicker": "01 · קודם החלטה",
+      "title": "החלטות",
+      "prose": "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 סטוריז = G004-STORIES-FIX.md. שיבוץ בלי לשאול משבצת — אחרי שער עריכה (Canva/vfcovers). לחיצת כן/דחה לא שולחת וואטסאפ ולא מדפיסה מ-HQ. Organic Growth: אישור = approved_for_manual_posting — לא Publish. Control Plane: בריאות משרד: ok · מה המשרד עשה/מתכנן: Office Control Plane מוטמע · followups=0 · dead_letters=0.",
+      "headers": [
+        "החלטה",
+        "כן/לא/דחה",
+        "מועד"
+      ],
+      "rows": [
+        [
+          "מחיר מכירה",
+          "דחה",
+          "X ₪"
+        ],
+        [
+          "כיתוב G004 סטוריז",
+          "כן",
+          "vfcopy/G004-STORIES-FIX.md"
+        ],
+        [
+          "ig-mcp Publish",
+          "דחה",
+          "remote MCP חי · טוקן Meta פג · בלי Publish"
+        ],
+        [
+          "suite_language",
+          "orange",
+          "constitution/ORCHESTRA.md"
+        ],
+        [
+          "ריל 16:00 (לוח א׳/ג׳)",
+          "דחה עד גלם",
+          "vf_organic_growth.py"
+        ],
+        [
+          "סטורי סקר 20:30",
+          "ממתין לאישור",
+          "לא מפרסם"
+        ]
+      ],
+      "actions": []
+    },
+    {
+      "kicker": "02 · כסף בעבודה",
+      "title": "הזמנות ומעקב",
+      "prose": "חוב פתוח: אין ספירה · חשבונית חסרה: אין ספירה\nInvoice4U נשאר · בלי מייל גבייה מ-HQ · decision_gate = ₪ לראש צוות\nספר דיסק: אין ספירה · orders.json + Invoice4U ריקים עד הדבקה (לא inbox ל-07:00)\nפנייה חדשה: אין ספירה.\nעלות חומר: אין כרטיס עם גרמים · בלי ₪ מכירה",
+      "headers": [
+        "קוד",
+        "שלב",
+        "חסם"
+      ],
+      "rows": [
+        [
+          "פנייה",
+          "אין",
+          "אין ספירה"
+        ],
+        [
+          "ספר",
+          "vfbooks.py brief",
+          "בלי מייל גבייה"
+        ],
+        [
+          "חומר",
+          "vfcost.py brief",
+          "בלי ₪ מכירה"
+        ]
+      ]
+    },
+    {
+      "kicker": "03 · מה להדפיס ולפרסם",
+      "title": "מדף",
+      "prose": "מדף חוזר: 0/5 כרטיסים אחרי שער+סלייס · אין שם להציע\nסריקת MakerWorld: יום סריקה · בלי שם מהאוויר · 2026-09-09\nמדף: 0/5 · אין שם להציע עד GATE+רישיון+סלייס\nNC ≠ מכירה · הורדה ≠ רישיון · סלייס ברצפה בלבד · בלי ₪ מכירה\nקטלוג: 0/5 ready אחרי סלייס+עלות+רישיון · מותג ישראלי=עצירה · תווית VF ב-TAG.md\nMakerWorld: בלי שם מהאוויר · הורדה ≠ רישיון · אין שם להציע\nG004 קטלבל-מחזיק = תוכן רצפה, לא משבצת מדף\nprint.done: אין כרטיס רצפה\nHQ לא מצלם מדפסת · PREFLIGHT לפני שיבוץ · אין Publish מהבריף\nצי: 4 מיטות · ניתוב לפי חומר ב-vfprod.py route · תחזוקה: אין ספירת Edge · אין Print מ-HQ"
+    },
+    {
+      "kicker": "04",
+      "title": "איך הסטודיו מרוויח",
+      "prose": "היילייטס: הזמנה · איסוף שדרות · איך מזמינים\nCTA: שלחו לנו הודעה כאן באינסטגרם — לא אוטו־DM\nסנאפשוט 6.9: 80 עוקבים · DM 0 · המרת פרופיל חלשה\nInsights מעבר לזה: אין ספירה\nBUSINESS_CONTACT_RECORD: 050-2517000 (disabled for public CTA)\nמשפך: פרופיל → הודעת Instagram · לא אוטו־DM\nCTA לפי VOICE / PUBLIC_CTA · Offer על פיד · Insights: אין ספירה עד סנאפשוט\nBUSINESS_CONTACT_RECORD: 050-2517000 (disabled for public CTA)\nVELVET ORGANIC GROWTH BRIEF — 07:00\nיעד היום: פניות B2B בדרום עבור אב-טיפוס / חלקים מותאמים.\n1. REEL · אין משבצת ריל היום (לוח: א׳/ג׳ 16:00 בלבד) · gate=blocked_no_media\nאין Reel איכותי אוטומטי להיום. נדרשים 15 שניות צילום ידני: קלוז־אפ של המוצר ביד + בדיקת התאמה.\nCTA: לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\nסט האשטגים: local_b2b_v1\nפעולה: [אישור] [עריכה] [דחייה] — אישור ≠ פרסום\n2. STORY · היום 20:30 · סטוריז א׳–ה׳ · מה לבדוק מחר במעבדה?\nאפשרויות: PETG מול Nylon / חוזק מול עמידות חום\nפעולה: [אישור] [עריכה] [דחייה]\n3. אתמול: Insights אין ספירה · WhatsApp אין ספירה\n4. סטודיו: למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.; לאשר או לדחות את סקר הערב בבריף (לא מפרסם).; לא להציג חום/חוזק בלי vfprod/CLAIMS.md.\nאין Publish / אין אוטו-DM / אין ₪ מומצא.\nאין באצ׳ חדש לפני איסוף חמישי 10.9 — אין סלייס מתועד, B2B נעול. מחיר מכירה VF: X ₪ עד סלייס."
+    },
+    {
+      "kicker": "05 · משרד",
+      "title": "מה נבנה / יועל",
+      "prose": "05 · משרד\nמה נבנה / יועל:\nCLI 21:33 · /usr/bin/python3 /workspace/scripts/vf_control_plane.py brief-summary\nCLI 21:33 · /usr/bin/python3 /workspace/scripts/velvetos.py modules\nCLI 21:33 · /usr/bin/python3 /workspace/packages/vfinsights/scripts/vf_insights_loop.py --data /workspace/packages/vfinsights/data/posts.csv\nCLI 21:33 · verify vfresearch-daily\nצרכנים: אין הרצה היום\nפערים (לא הורץ הבוקר)\nפער: vfbriefux לא הורץ · python3 packages/vfbriefux/render_mail.py --check\nפער: vfigos לא הורץ · packages/vfigos/CONNECT-IG.md · needsAuth · טוקן Meta · סטוריז ב-instagram.com\nפער: vfresearch לא הורץ · packages/vfresearch/DAILY.md\nפער: vfseason לא הורץ · packages/vfseason/hq/PLAYBOOK.md · אין חלון עונה בלי תאריך סטודיו"
+    },
+    {
+      "kicker": "06",
+      "title": "מה קורה בעמוד",
+      "prose": "Insights: Learnings — closed measurement loop · מקור packages/vfinsights/LEARNINGS.md · בלי חדשות רעות מומצאות לבעלים · מדדים חלשים נשארים פער פנימי."
+    },
+    {
+      "kicker": "07 · פיד בסוף",
+      "title": "מה עולה בפיד",
+      "prose": "מסירה: vfgrowth/HANDOFF-he.md · PREFLIGHT.md חובה לפני שיבוץ (VOICE + Canva/vfcovers + ציון עצמי + קומפס) · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · שער עריכה קשיח: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · נכשל-סגור = חסום · פער סוכנות = שורת פער למשרד, לא אשמת בעלים · סטוריז ב-instagram.com · לוח אוטונומי · Organic Growth Decision Pack: vf_organic_growth.py · אישור ≠ פרסום.",
+      "headers": [
+        "מזהה",
+        "פתיחה",
+        "מצב"
+      ],
+      "rows": [
+        [
+          "G004-STORIES-FIX",
+          "ורוד על השידה — והטבעות כבר במקום 💍",
+          "מוכן להדבקה"
+        ],
+        [
+          "G004",
+          "ורוד על השידה — והטבעות כבר במקום 💍",
+          "מוכן להדבקה"
+        ],
+        [
+          "G003",
+          "מה יוצא מהמדפסת?",
+          "נעול · משובץ"
+        ],
+        [
+          "G005-d12b",
+          "5 דברים שכדאי לדעת לפני שמזמינים הדפסת תלת־ממד",
+          "מוכן להדבקה"
+        ]
+      ]
+    }
+  ]
+}

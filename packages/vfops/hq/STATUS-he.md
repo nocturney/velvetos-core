@@ -1,4 +1,4 @@
-# סטטוס לולאת משרד · 2026-09-08
+# סטטוס לולאת משרד · 2026-09-09
 
 רף: סוכנות פרסום+תפעול יקרה. הבעלים יושב רגוע.
 
@@ -11,6 +11,7 @@
 - מדף `vfsku.py brief` + `vfsku.py scan` + `week.md`
 - שערי 01 מ־`GATES.json` (לחיצת אדם, לא וואטסאפ)
 - Organic Growth Decision Pack `vf_organic_growth.py` — אישור ≠ פרסום
+- Office Control Plane `vf_control_plane.py` — SoT + dead-letter + WIP→finished (בלי ספאם לבעלים)
 - `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)
 - ספר 02 גם מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)
 - FOLLOWER-GROWTH · היילייטס + וואטסאפ
@@ -21,9 +22,9 @@
 
 ## חסום על אדם / לוגין
 
-- Instagram MCP **ready-codespace** (auth OK · stdio) — **`remote_access` pending** לענן תמיד-דלוק (`CONNECT-IG.md` · `DEPLOY-CODESPACE.md`)
-- Insights = MCP `get_*_insights` כשיש סשן; אחרת אין ספירה / הדבקת בעלים — Metricool לא נדרש
-- סטוריז = `publish_story` על אותו MCP אחרי Canva/vfcovers (לא מערכת נפרדת)
+- ig-mcp **needsAuth** עד טוקן Meta (`CONNECT-IG.md` צעד אדם)
+- Insights = אין ספירה
+- סטוריז = instagram.com (ig-mcp ≠ stories)
 - מדף MakerWorld 0/5 עד GATE+רישיון+סלייס
 - מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה
 - B2B נעול · וואטסאפ לקוח = אדם 050-2517000
@@ -48,10 +49,11 @@
 | `vfgraft` | docs-playbook | session-start | — |
 | `vfgrowth` | docs-playbook | daily-07:00 | — |
 | `vfharness` | working-cli | after-edit | — |
-| `vfigos` | ready-codespace | daily-growth | remote_access pending · Stories via publish_story · verify live |
-| `vfinsights` | mcp-preferred | daily-07:00 | אין ספירה עד MCP insights / סנאפשוט |
+| `vfigos` | needsAuth | daily-growth | needsAuth · טוקן Meta · סטוריז ב-instagram.com |
+| `vfinsights` | needsAuth | daily-07:00 | אין ספירה עד סנאפשוט / טוקן |
 | `vfmakers` | overlay | weekly | — |
-| `vfmcp` | mapped | session-start | Instagram canonical adelaidasofia · Sheets / WhatsApp לפי CONNECT |
+| `vfmedia` | working-cli | on-intake | העלאה ≠ אישור · תיקיית מאושר ≠ הוכחת אישור |
+| `vfmcp` | needsAuth | session-start | ig-mcp / Sheets / WhatsApp send לפי CONNECT |
 | `vfmem` | working-cli | session-start | — |
 | `vfmskill` | docs-playbook | on-content | — |
 | `vfom` | docs-playbook | on-floor-clip | אין גלם = אין ריל |

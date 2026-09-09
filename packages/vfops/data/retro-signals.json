@@ -1,16 +1,9 @@
 {
-  "generatedAt": "2026-09-08T15:17:43+03:00",
+  "generatedAt": "2026-09-09T10:40:57+03:00",
   "timezone": "Asia/Jerusalem",
   "rule": "Operational signals for office brief only. No invented ₪/Insights. No owner shame.",
   "catalogEvent": "retro.anomaly",
   "signals": [
-    {
-      "kind": "model_demand",
-      "evidence": "owner-memory/2026-09-02",
-      "briefSlot": "01",
-      "detail": "- **מושב:** ייצור",
-      "event": "retro.anomaly"
-    },
     {
       "kind": "ingest_bottleneck",
       "evidence": "owner-memory/2026-09-03",
@@ -86,6 +79,13 @@
       "evidence": "DAILY-RETRO.md#2026-09-07",
       "briefSlot": "05",
       "detail": "מה לא: אין גלם רצפה חי למשמרת — כרטיס print.done ממתין להדפסה אמיתית.",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "ingest_bottleneck",
+      "evidence": "DAILY-RETRO.md#2026-09-07",
+      "briefSlot": "05",
+      "detail": "מה לא: אין reach מאומת ב־CSV — לא ממלאים.",
       "event": "retro.anomaly"
     }
   ],

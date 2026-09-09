@@ -205,3 +205,12 @@
 - **למדנו:** triage לפני grill (`vfconvert/hq/TRIAGE.md`) + quote-ladder לטיוטה חלקית עם `חסר:` / `X ₪`.
 - **מחר:** למלא reach ל־`DcqkjOLlYVX` מהדשבורד; להמשיך דופק best-skills (טיימר חודש).
 - **מקור:** `sources/2026-09-07-orchestra.md` · weekly-links · best-skills · last30.
+
+
+### 2026-09-09 (אימות Instagram MCP מרוחק)
+
+- **למדנו:** Team MCP namespace `instagram` זמין ב־Cloud Agent; `list_accounts` מחזיר IG user id של `@velvets_cloud`.
+- **חסם:** טוקן Meta long-lived על שרת ה־MCP **פג** → `live_check.ok=false` · `get_profile`/`list_media` נכשלים (oauth). `remote_access` נשאר `pending`.
+- **מחר / פעולת בעלים:** לרענן `INSTAGRAM_MCP_ACCESS_TOKEN` ב־host vault של Cloud Run (לא בגיט) → healthcheck עד `live_check.ok=true` → רק אז `remote_access: ready`.
+- **מקור:** אימות Cloud Agent 9.9.2026 · `vfigos/DEPLOY-CODESPACE.md` · checkpoint `instagram-mcp-verify-2026-09-09`.
+
