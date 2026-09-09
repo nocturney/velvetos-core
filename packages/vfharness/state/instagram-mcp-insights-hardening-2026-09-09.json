@@ -1,0 +1,25 @@
+{
+  "task_id": "instagram-mcp-insights-hardening-2026-09-09",
+  "component_state": "Degraded",
+  "execution_state": {
+    "phase": "code_ready_deploy_pending",
+    "chatgpt_connected": true,
+    "insights_code": "ready",
+    "insights_public_fixed": false,
+    "bio_mutated": false,
+    "caption_mutated": false,
+    "publish_exercised": false,
+    "dm_enabled": false,
+    "misleading_write_tools": "removed",
+    "deploy_path": "blocked_no_authorized_automation"
+  },
+  "latest_observation": "Misleading update_profile/update_media_caption tools removed; graph_mutation_matrix is SoT with supported=false. No authorized auto-deploy path (no gcloud, no GCP env, no GH Actions Cloud Run workflow). Production still pre-patch Insights.",
+  "next_step": "Owner only: ./packages/vfigos/remote/deploy.sh  then  INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 python3 packages/vfigos/remote/smoke_public.py. Merge recommendation: B — merge only #145; close #144 as superseded.",
+  "locks": [
+    "no-secrets-in-git",
+    "no-auto-dm",
+    "no-live-publish-this-task",
+    "no-bio-caption-mutation-this-task",
+    "no-github-permission-fix"
+  ]
+}

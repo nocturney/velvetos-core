@@ -139,7 +139,7 @@
       "auth": "ready",
       "transport": "streamable-http",
       "remote_access": "ready",
-      "remote_mcp_note": "Cloud Team MCP namespace instagram · Cloud Run /mcp · live_check.ok 2026-09-09 after long-lived token refresh",
+      "remote_mcp_note": "Cloud Team MCP namespace instagram · Cloud Run /mcp · Bearer VELVET_INSTAGRAM_MCP_BEARER_TOKEN · ChatGPT Auth=API key (No Auth→401) · live_check.ok 2026-09-09 · see packages/vfigos/CHATGPT-MCP.md",
       "namespace": "instagram",
       "account": "@velvets_cloud",
       "igUserId": "17841407772120429",

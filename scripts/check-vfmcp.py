@@ -226,6 +226,9 @@ def main() -> None:
             "liveVerified",
             "INSTAGRAM_MCP_ACCESS_TOKEN",
             "remote_access",
+            "CHATGPT-MCP.md",
+            "VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
+            "API key",
         )),
         (CONNECT_ICLOUD, ("iCloud", "Cloud Agent", "ICLOUD-DRIVE-SYNC.md", "Drive")),
         (SUBSCRIPTIONS, ("חסר מפתח Gemini", "חסר מפתח ChatGPT", "עוגיות", "chatgpt.com", "gemini.google.com", "vf_chatgpt.py", "perplexity-user-mcp", "patchright", "HOST.md")),
@@ -237,6 +240,116 @@ def main() -> None:
             if needle not in text:
                 fail(f"{path.name} must mention {needle}")
     connect_ig_text = CONNECT_IG.read_text(encoding="utf-8")
+    chatgpt_mcp = ROOT / "packages" / "vfigos" / "CHATGPT-MCP.md"
+    if not chatgpt_mcp.is_file():
+        fail("missing packages/vfigos/CHATGPT-MCP.md")
+    chatgpt_text = chatgpt_mcp.read_text(encoding="utf-8")
+    for needle in (
+        "API key",
+        "VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
+        "No Auth",
+        "does not implement OAuth",
+        "401",
+        "INSTAGRAM_MCP_ACCESS_TOKEN",
+        "CONNECTED + VERIFIED",
+    ):
+        if needle not in chatgpt_text:
+            fail(f"CHATGPT-MCP.md must mention {needle}")
+    remote_dir = ROOT / "packages" / "vfigos" / "remote"
+    for rel in (
+        "http_server.py",
+        "Dockerfile",
+        "deploy.sh",
+        "smoke_public.py",
+        "README.md",
+        "insights_v21.py",
+        "mutations.py",
+        "cta_tools.py",
+        "cta_audit.py",
+        "test_insights_v21.py",
+    ):
+        if not (remote_dir / rel).is_file():
+            fail(f"missing packages/vfigos/remote/{rel}")
+    remote_http = (remote_dir / "http_server.py").read_text(encoding="utf-8")
+    for needle in (
+        "StaticTokenVerifier",
+        "VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
+        "INSTAGRAM_MCP_ACCESS_TOKEN",
+        "streamable-http",
+        "chatgpt.com",
+        "insights_v21",
+        "apply_insights_patch",
+        "apply_mutation_tools",
+        "apply_cta_audit_tools",
+    ):
+        if needle not in remote_http:
+            fail(f"remote/http_server.py must mention {needle}")
+    insights_src = (remote_dir / "insights_v21.py").read_text(encoding="utf-8")
+    for needle in (
+        "metric_type",
+        "total_value",
+        "impressions",
+        "profile_views",
+        "total_interactions",
+        "DEFAULT_ACCOUNT_METRICS_V21",
+        "partition_account_metrics",
+    ):
+        if needle not in insights_src:
+            fail(f"remote/insights_v21.py must mention {needle}")
+    if "reach,impressions,profile_views,follower_count" in insights_src:
+        fail("insights_v21 must not keep the broken upstream default string as active default")
+    mutations_md = ROOT / "packages" / "vfigos" / "GRAPH-MUTATIONS.md"
+    if not mutations_md.is_file():
+        fail("missing packages/vfigos/GRAPH-MUTATIONS.md")
+    mut_text = mutations_md.read_text(encoding="utf-8")
+    for needle in (
+        "unsupported_by_official_graph",
+        "update_biography",
+        "update_media_caption",
+        "delete_media",
+        "instagram_manage_contents",
+        "graph_mutation_matrix",
+        "Not exposed",
+    ):
+        if needle not in mut_text:
+            fail(f"GRAPH-MUTATIONS.md must mention {needle}")
+    mutations_py = (remote_dir / "mutations.py").read_text(encoding="utf-8")
+    if "NEVER_EXPOSE_AS_WRITE_TOOLS" not in mutations_py:
+        fail("mutations.py must define NEVER_EXPOSE_AS_WRITE_TOOLS")
+    # Misleading write tools must not be registered as @mcp.tool functions.
+    if "def update_profile(" in mutations_py or "def update_media_caption(" in mutations_py:
+        fail("mutations.py must not register update_profile/update_media_caption as MCP tools")
+    if "def graph_mutation_matrix(" not in mutations_py:
+        fail("mutations.py must expose graph_mutation_matrix as capability SoT")
+    caps = json.loads((ROOT / "packages" / "vfigos" / "CAPABILITIES.json").read_text(encoding="utf-8"))
+    for cap_id in ("instagram.profile.update", "instagram.media.caption.update"):
+        row = next((c for c in (caps.get("capabilities") or []) if c.get("id") == cap_id), None)
+        if not row:
+            fail(f"CAPABILITIES missing {cap_id}")
+        if row.get("supported") is not False:
+            fail(f"{cap_id} must set supported=false")
+        cap_tools = row.get("tools") or []
+        if "update_profile" in cap_tools or "update_media_caption" in cap_tools:
+            fail(f"{cap_id} must not list misleading write tool names")
+        if "graph_mutation_matrix" not in cap_tools:
+            fail(f"{cap_id} must point agents at graph_mutation_matrix SoT")
+    rv = caps.get("remoteVerify") or {}
+    if rv.get("chatgptConnected") is not True:
+        fail("CAPABILITIES remoteVerify.chatgptConnected must be true after 2026-09-09 verify")
+    if (rv.get("insightsGraphCompat") or {}).get("deployed") is True and not (
+        remote_dir / "insights_v21.py"
+    ).is_file():
+        fail("insights marked deployed but insights_v21.py missing")
+    # Insights must not be marked fixed until public smoke post-deploy.
+    if (rv.get("insightsGraphCompat") or {}).get("deployed") is True and (
+        rv.get("chatgptSmoke") or {}
+    ).get("get_account_insights_default") == "FAIL_pre_patch_impressions":
+        fail("CAPABILITIES cannot claim insights deployed while chatgptSmoke still FAIL_pre_patch")
+    cta_audit = ROOT / "packages" / "vfigos" / "cta_audit.py"
+    if not cta_audit.is_file():
+        fail("missing packages/vfigos/cta_audit.py")
+    if "050-2517000" not in cta_audit.read_text(encoding="utf-8"):
+        fail("cta_audit.py must know BUSINESS_CONTACT_RECORD phone for detection")
     if "TOKEN-WATCH.md" not in connect_ig_text and "token-watch" not in connect_ig_text.lower():
         fail("CONNECT-IG.md must mention TOKEN-WATCH / token-watch")
     token_watch = ROOT / "packages" / "vfigos" / "data" / "token-watch.json"

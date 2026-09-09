@@ -27,9 +27,31 @@
     "liveCheckOk": true,
     "username": "velvets_cloud",
     "listMediaOk": true,
-    "listMediaCountSample": 5,
+    "listMediaCountSample": 7,
     "teamScope": "not-verified",
     "teamScopeNote": "environment-info / Meta DevTools do not expose Cursor Team MCP binding scope",
+    "publicUrl": "https://velvet-instagram-mcp-1016876126699.me-west1.run.app/mcp",
+    "connectorAuth": "bearer-VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
+    "chatgptAuth": "API key",
+    "chatgptConnected": true,
+    "chatgptVerifiedAt": "2026-09-09",
+    "chatgptSmoke": {
+      "healthcheck": "PASS",
+      "get_profile": "PASS",
+      "list_media": "PASS",
+      "get_account_insights_default": "PASS_post_deploy_2026-09-09",
+      "publish": "available_not_live_tested"
+    },
+    "insightsGraphCompat": {
+      "code": "ready",
+      "deployed": true,
+      "verifiedAt": "2026-09-09T18:22:38Z",
+      "imageTag": "insights-v21-2026-09-09c",
+      "note": "Public smoke PASS on /mcp (no trailing slash) with INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 — insights_default + insights_mixed + noauth_401."
+    },
+    "chatgptNoAuthFailsWith": "HTTP 401 on initialize",
+    "chatgptOAuthFailsWith": "MCP server does not implement OAuth",
+    "githubConnectorNote": "ChatGPT GitHub connector disabled is ChatGPT/plugin-side — not an Instagram MCP issue. Do not change GitHub auth from VelvetOS.",
     "blocker": null
   },
   "igUserId": "17841407772120429",
@@ -39,16 +61,36 @@
     {
       "id": "instagram.profile.read",
       "he": "קריאת פרופיל",
-      "tools": ["get_profile", "account_info", "healthcheck"]
+      "tools": ["get_profile", "account_info", "healthcheck", "audit_profile_cta"]
     },
     {
       "id": "instagram.profile.update",
-      "he": "עדכון פרופיל"
+      "he": "עדכון פרופיל",
+      "status": "unsupported_by_official_graph",
+      "supported": false,
+      "tools": ["graph_mutation_matrix"],
+      "note": "Meta IG User Updating not supported. No MCP write tool exposed (update_profile removed — misleading). SoT: graph_mutation_matrix. Human edits via Instagram app. See GRAPH-MUTATIONS.md + PROFILE-DESIRED.json."
     },
     {
       "id": "instagram.media.list",
       "he": "רשימת מדיה אחרונה",
-      "tools": ["list_media", "get_media"]
+      "tools": ["list_media", "get_media", "audit_public_cta"]
+    },
+    {
+      "id": "instagram.media.caption.update",
+      "he": "עריכת כיתוב קיים",
+      "status": "unsupported_by_official_graph",
+      "supported": false,
+      "tools": ["graph_mutation_matrix"],
+      "note": "POST /{ig-media-id} only toggles comment_enabled. update_media_caption is NOT registered as an MCP tool. SoT: graph_mutation_matrix."
+    },
+    {
+      "id": "instagram.media.delete",
+      "he": "מחיקת מדיה",
+      "status": "supported_gated",
+      "supported": true,
+      "tools": ["delete_media", "graph_mutation_matrix"],
+      "note": "Official DELETE /{ig-media-id} requires instagram_manage_contents + confirm_irreversible. No live delete in hardening task."
     },
     {
       "id": "instagram.publish.post",
@@ -74,7 +116,14 @@
     {
       "id": "instagram.insights.read",
       "he": "קריאת Insights מאומתים",
-      "tools": ["get_account_insights", "get_media_insights", "get_audience_insights"]
+      "tools": ["get_account_insights", "get_media_insights", "get_audience_insights"],
+      "note": "Graph v21 patch in remote/insights_v21.py — deploy required before public smoke marks fixed"
+    },
+    {
+      "id": "instagram.cta.audit",
+      "he": "ביקורת CTA ציבורי חי",
+      "tools": ["audit_public_cta", "audit_profile_cta"],
+      "note": "Read-only. Historical violations ≠ auto-rewrite."
     },
     {
       "id": "instagram.live.verify",

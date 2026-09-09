@@ -1,15 +1,22 @@
 {
   "handle": "@velvets_cloud",
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-09",
   "status": "prepared",
   "liveStatus": "pending-live-tool",
-  "note": "Desired profile state only. Do not claim bio was updated until Instagram tool updates bio and verify succeeds. Tool read OK 2026-09-09 (get_profile velvets_cloud); live bio still contains WhatsApp phone — keep pending-live-tool until bio update.",
+  "note": "Desired profile state only. Official Graph does NOT support biography/website/name updates (unsupported_by_official_graph). Human Instagram-app edit required. Tool read OK 2026-09-09 (get_profile velvets_cloud); live bio still contains WhatsApp phone.",
+  "liveSnapshot": {
+    "sourcedAt": "2026-09-09",
+    "source": "instagram MCP get_profile (ChatGPT + Cursor)",
+    "name": "Velvet Factory | הדפסות תלת־ממד",
+    "biography": "הדפסות תלת־ממד בעיצוב ייחודי\nמוצרים מוכנים • מודלים בהתאמה אישית\nייצור סדרות לעסקים\n📍 איסוף משדרות | WhatsApp 050-2517000",
+    "conflictWithPublicCta": true,
+    "conflictDetail": "WhatsApp phone exposed in public bio — BUSINESS_CONTACT_RECORD must not be PUBLIC_CURRENT_CTA"
+  },
   "desired": {
-    "name": "Velvet Factory",
+    "name": "Velvet Factory | הדפסות תלת־ממד",
     "categoryHint": "3D print studio",
-    "bioHe": "Velvet Factory · הדפסות תלת־ממד בשדרות\nאיסוף עצמי · לפרטים — שלחו הודעה כאן",
+    "bioHe": "הדפסות תלת־ממד בעיצוב ייחודי\nמוצרים מוכנים • מודלים בהתאמה אישית\nייצור סדרות לעסקים\n📍 איסוף משדרות\nלפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
     "mustInclude": [
-      "Velvet Factory",
       "הדפסות תלת־ממד",
       "שדרות",
       "איסוף",
@@ -29,8 +36,14 @@
     "noInventedPrice": true,
     "tone": "local-hebrew-not-corporate"
   },
+  "execution": {
+    "graphWrite": "unsupported_by_official_graph",
+    "mcpTool": "none — graph_mutation_matrix only (update_profile not exposed as write tool)",
+    "humanPath": "Instagram app → Edit profile → paste desired.bioHe → save → re-run get_profile / audit_profile_cta",
+    "doNot": ["browser automation", "private API", "auto-mutate from HQ"]
+  },
   "watchdog": {
-    "whenToolReady": "instagram.profile.update then instagram.live.verify",
+    "whenToolReady": "instagram.profile.update then instagram.live.verify — blocked until Meta exposes Graph write",
     "riskUntilLive": "ORANGE"
   }
 }

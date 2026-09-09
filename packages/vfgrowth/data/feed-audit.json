@@ -12,7 +12,10 @@
     "publicationClaim": "scheduledCandidate — calendar alone is not live"
   },
   "access": "live-audit-2026-09-09",
-  "liveSource": "instagram MCP list_media (read-only; no publish/DM)",
+  "liveSource": "instagram MCP list_media (ChatGPT + Cursor; read-only; no publish/DM/mutate)",
+  "law": "constitution/PUBLIC_CTA.md",
+  "captionEditViaGraph": "unsupported_by_official_graph",
+  "autoMutateHistory": false,
   "items": [
     {
       "ordinal": 1,
@@ -21,12 +24,13 @@
       "livePermalink": "https://www.instagram.com/reel/DcqkjOLlYVX/",
       "liveMediaType": "REELS",
       "type": "feed",
+      "bucket": "historical_live",
       "classification": "QUALITY_REFERENCE",
       "recommendedAction": "KEEP",
       "risk": "GREEN",
       "ctaCompliance": "baseline",
       "whatsappLeakage": "none-in-live-caption-sample",
-      "editableInPlace": null,
+      "editableInPlace": false,
       "notes": "Quality reference — pace, simplicity, real photo feel. Confirmed live via list_media."
     },
     {
@@ -36,12 +40,13 @@
       "livePermalink": "https://www.instagram.com/reel/DcvuJLxCJgU/",
       "liveMediaType": "REELS",
       "type": "feed",
+      "bucket": "historical_live",
       "classification": "QUALITY_REFERENCE",
       "recommendedAction": "KEEP",
       "risk": "GREEN",
       "ctaCompliance": "baseline",
       "whatsappLeakage": "none-in-live-caption-sample",
-      "editableInPlace": null,
+      "editableInPlace": false,
       "notes": "Quality reference. Confirmed live via list_media."
     },
     {
@@ -51,19 +56,22 @@
       "livePermalink": "https://www.instagram.com/reel/DdAPhozlNe2/",
       "liveMediaType": "REELS",
       "type": "feed",
+      "bucket": "historical_live",
       "classification": "REVIEW_REQUIRED",
-      "recommendedAction": "EDIT_CAPTION",
+      "recommendedAction": "EDIT_CAPTION_CANDIDATE",
       "risk": "ORANGE",
       "ctaCompliance": "whatsapp-in-caption",
       "whatsappLeakage": "phone-in-live-caption",
-      "editableInPlace": true,
+      "editableInPlace": false,
+      "editableViaOfficialGraph": false,
       "preparedReplacement": null,
-      "notes": "Live caption includes WhatsApp phone — prepare Instagram-message CTA edit. No live edit this session."
+      "notes": "ChatGPT live audit: WhatsApp/phone CTA in caption. Prepare Instagram-message CTA for human edit. No auto-mutate."
     },
     {
       "ordinal": 4,
       "contentId": "G004",
       "type": "stories-and-feed-candidates",
+      "bucket": "publish_candidate",
       "classification": "REVIEW_REQUIRED",
       "recommendedAction": "PREPARE_REVISED_VERSION",
       "risk": "ORANGE",
@@ -78,25 +86,64 @@
       "ordinal": 5,
       "contentId": "G005",
       "type": "feed-candidate",
+      "bucket": "publish_candidate",
       "classification": "REVIEW_REQUIRED",
       "recommendedAction": "PREPARE_REVISED_VERSION",
       "risk": "ORANGE",
       "ctaCompliance": "check-for-whatsapp",
       "whatsappLeakage": "likely-in-templates",
-      "editableInPlace": null,
+      "editableInPlace": false,
       "notes": "REVIEW_REQUIRED. No live claim without verification."
     }
   ],
-  "liveSampleExtra": [
+  "historicalLiveExtra": [
     {
+      "shortcode": "Dc1g1sJGzgq",
       "permalink": "https://www.instagram.com/p/Dc1g1sJGzgq/",
       "media_type": "CAROUSEL_ALBUM",
-      "whatsappLeakage": "phone-in-live-caption"
+      "bucket": "historical_live",
+      "whatsappLeakage": "phone-in-live-caption",
+      "recommendedAction": "EDIT_CAPTION_CANDIDATE",
+      "editableViaOfficialGraph": false,
+      "notes": "ChatGPT live audit finding — do not auto-delete/republish"
+    },
+    {
+      "shortcode": "Dci5EyuoWVJ",
+      "permalink": "https://www.instagram.com/p/Dci5EyuoWVJ/",
+      "media_type": "IMAGE",
+      "bucket": "historical_live",
+      "whatsappLeakage": "phone-in-live-caption",
+      "recommendedAction": "EDIT_CAPTION_CANDIDATE",
+      "editableViaOfficialGraph": false,
+      "notes": "ChatGPT live audit finding"
+    },
+    {
+      "shortcode": "Dci0aRzIO1F",
+      "permalink": "https://www.instagram.com/p/Dci0aRzIO1F/",
+      "media_type": "IMAGE",
+      "bucket": "historical_live",
+      "whatsappLeakage": "phone-in-live-caption",
+      "alias": "welcome-image",
+      "recommendedAction": "EDIT_CAPTION_CANDIDATE",
+      "editableViaOfficialGraph": false,
+      "notes": "ChatGPT live audit finding — welcome image"
     },
     {
       "permalink": "https://www.instagram.com/p/Dc0cKegEbxd/",
       "media_type": "CAROUSEL_ALBUM",
+      "bucket": "historical_live",
       "whatsappLeakage": "none-in-live-caption-sample"
     }
-  ]
+  ],
+  "profileBio": {
+    "conflictWithPublicCta": true,
+    "whatsappLeakage": "phone-in-live-bio",
+    "recommendedAction": "HUMAN_EDIT_VIA_INSTAGRAM_APP",
+    "graphWrite": "unsupported_by_official_graph",
+    "desiredRef": "packages/vfigos/PROFILE-DESIRED.json"
+  },
+  "tools": {
+    "audit": ["audit_public_cta", "audit_profile_cta"],
+    "cli": "python3 -c \"from packages.vfigos.cta_audit import audit_caption; …\""
+  }
 }

@@ -1,0 +1,14 @@
+{
+  "task_id": "instagram-mcp-insights-hardening",
+  "component_state": "Idle",
+  "summary_he": "פריסת insights-v21-2026-09-09c אומתה: Insights + /mcp בלי slash + Bearer 401",
+  "verified": {
+    "insights_default": true,
+    "insights_mixed": true,
+    "noauth_401_on_mcp_no_slash": true,
+    "health_insights_compat": "graph_v21",
+    "image_tag": "insights-v21-2026-09-09c",
+    "smoke_at": "2026-09-09T18:22:38Z"
+  },
+  "next": "Ready for human review of PR #145; do not merge both #144 and #145"
+}
