@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-08T14:50:25Z",
+  "generatedAt": "2026-09-09T23:09:17Z",
   "slot": "05",
   "title": "קליטת מדיה",
   "phases": {
@@ -9,14 +9,14 @@
     "visually_reviewed": 0
   },
   "runner": {
-    "component_state": "Idle",
-    "lastRunAt": "2026-09-08T14:50:02Z",
-    "lastError": null,
+    "component_state": "Blocked",
+    "lastRunAt": "2026-09-09T23:09:17Z",
+    "lastError": "חסר Drive auth לסביבת רקע: אין GOOGLE_APPLICATION_CREDENTIALS / VFMEDIA_DRIVE_CREDENTIALS / GOOGLE_TOKEN / VFMEDIA_DRIVE_TOKEN",
     "persistError": null,
     "activation_proven": true,
     "auth": {
-      "ready": true,
-      "detail": "provider=listing"
+      "ready": false,
+      "detail": "חסר Drive auth לסביבת רקע: אין GOOGLE_APPLICATION_CREDENTIALS / VFMEDIA_DRIVE_CREDENTIALS / GOOGLE_TOKEN / VFMEDIA_DRIVE_TOKEN"
     }
   },
   "note": "מונים ב־HANDOFF אינם תחליף לאירוע קליטה עמיד · vfmedia.py validate ≠ ניטור"
