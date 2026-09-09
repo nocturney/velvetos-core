@@ -44,7 +44,7 @@
     "2026-09-01: Expert modules + office-learning + revenue loop (expert-revenue-loop, insights-ingest, instance-onboard) and 7 revenue desk specialists. See vf-revenue-loop skill.",
     "2026-09-05: Orchestra desks are API keys (vf_gemini.py / vf_chatgpt.py), not gemini.google.com or chatgpt.com in the Cloud browser — that trip Google/OpenAI security alerts. SUBSCRIPTIONS.md. Do not persist cookies. Plus ≠ API.",
     "2026-09-08: Instagram canonical MCP = adelaidasofia/instagram-mcp (ready-codespace, stdio). jlbadano/ig-mcp legacy. Stories+Insights on same MCP. DM off. remote_access pending. CONNECT-IG.md + DEPLOY-CODESPACE.md. No secrets in git.",
-    "2026-09-09: Cloud Team MCP namespace instagram reachable (Cloud Run /mcp). After token refresh+redeploy: live_check.ok + get_profile velvets_cloud + list_media OK. remote_access ready. No secrets in git.",
+    "2026-09-09: Cloud Team MCP namespace instagram live Graph OK; remote_access ready. Token expiry watch via vfigos/data/token-watch.json (verified expiresAt only; never store token). Team MCP scope still not verified.",
     "2026-09-06: (superseded) Instagram was mapped via jlbadano/ig-mcp needsAuth — see LEGACY-IG-MCP.md.",
     "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
     "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done.",

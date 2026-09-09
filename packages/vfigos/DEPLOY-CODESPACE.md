@@ -18,7 +18,7 @@ Status date: **2026-09-09**. No secrets in this file.
 |---|---|
 | Cursor namespace | `instagram` · ready |
 | Host | Cloud Run MCP path `/mcp` (Team MCP binding named `instagram`) |
-| Transport | Streamable HTTP via Cursor Team MCP session (Team-scope metadata not exposed by `environment-info` — left unverified) |
+| Transport | Streamable HTTP via Cursor Team MCP session (Team-scope metadata **not verified** — `environment-info` / Meta DevTools do not expose Cursor Team binding scope) |
 | `healthcheck` | `live_check.ok=true` · username `velvets_cloud` |
 | `get_profile` | username `velvets_cloud` · id `17841407772120429` |
 | `list_media` | ok · sample count 5 · usernames `velvets_cloud` |

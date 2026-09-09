@@ -10,7 +10,7 @@ import argparse
 import json
 import re
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -77,6 +77,7 @@ IG_CAPABILITIES = ROOT / "packages" / "vfigos" / "CAPABILITIES.json"
 PROFILE_DESIRED = ROOT / "packages" / "vfigos" / "PROFILE-DESIRED.json"
 FEED_AUDIT = ROOT / "packages" / "vfgrowth" / "data" / "feed-audit.json"
 DESK = ROOT / ".cursor" / "vf-desk.json"
+TOKEN_WATCH = ROOT / "packages" / "vfigos" / "data" / "token-watch.json"
 INSTANCE_VF = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
 POLICY_CANONICAL = POLICY_MD
 
@@ -446,8 +447,111 @@ def level_to_outcome(level: str, *, code: str = "", owner_required: bool = False
     return "OK"
 
 
+def ig_token_watch_issues() -> list[dict]:
+    """Alert on Instagram token expiry using verified expiresAt only. Never reads token values."""
+    issues: list[dict] = []
+    if not TOKEN_WATCH.is_file():
+        issues.append(
+            {
+                "level": "yellow",
+                "code": "ig_token_watch_missing",
+                "detail": "packages/vfigos/data/token-watch.json",
+                "outcome": "PREPARED",
+            }
+        )
+        return issues
+    try:
+        watch = load_json(TOKEN_WATCH, {})
+    except Exception:
+        issues.append(
+            {
+                "level": "yellow",
+                "code": "ig_token_watch_invalid",
+                "detail": "token-watch.json unreadable",
+                "outcome": "PREPARED",
+            }
+        )
+        return issues
+
+    # Refuse accidental secret dumps
+    blob = json.dumps(watch, ensure_ascii=False).lower()
+    for bad in ("access_token", "bearer ", "instagram_mcp_access_token="):
+        if bad in blob:
+            issues.append(
+                {
+                    "level": "red",
+                    "code": "ig_token_watch_secret_leak",
+                    "detail": "token-watch must never store access tokens",
+                    "outcome": "RED_BLOCKER",
+                    "owner_required": True,
+                }
+            )
+            return issues
+
+    desk = load_json(DESK, {})
+    ig = (desk.get("tools") or {}).get("instagram") or {}
+    remote_ready = (ig.get("remote_access") or "") == "ready" or (ig.get("status") or "") == "ready"
+    expires_raw = watch.get("expiresAt")
+    warn_days = int(watch.get("warnDaysBefore") or 14)
+    today_d = today()
+    if isinstance(today_d, str):
+        today_d = date.fromisoformat(today_d[:10])
+
+    if not expires_raw:
+        if remote_ready:
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "ig_token_expiry_unverified",
+                    "detail": "חסר תוקף מאומת לטוקן IG — להדביק expiresAt מ־Meta debug_token בלבד",
+                    "outcome": "PREPARED",
+                    "brief": True,
+                }
+            )
+        return issues
+
+    try:
+        exp = date.fromisoformat(str(expires_raw)[:10])
+    except ValueError:
+        issues.append(
+            {
+                "level": "yellow",
+                "code": "ig_token_expiry_unverified",
+                "detail": "expiresAt לא ISO תקין — לא ממציאים תאריך",
+                "outcome": "PREPARED",
+                "brief": True,
+            }
+        )
+        return issues
+
+    days_left = (exp - today_d).days
+    if days_left < 0:
+        issues.append(
+            {
+                "level": "red",
+                "code": "ig_token_expired",
+                "detail": f"טוקן IG פג לפי תוקף מאומת ({exp.isoformat()}) — failover SEND.md",
+                "outcome": "RED_BLOCKER",
+                "owner_required": True,
+                "brief": True,
+            }
+        )
+    elif days_left <= warn_days:
+        issues.append(
+            {
+                "level": "orange",
+                "code": "ig_token_expiry_soon",
+                "detail": f"לרענן טוקן IG עד {exp.isoformat()} (נותרו {days_left} ימים)",
+                "outcome": "PREPARED",
+                "brief": True,
+            }
+        )
+    return issues
+
+
 def watchdog_issues() -> list[dict]:
     issues: list[dict] = []
+    issues.extend(ig_token_watch_issues())
     p = plane()
     sot = p.get("sourcesOfTruth") or {}
 
@@ -1220,6 +1324,11 @@ def brief_summary() -> dict:
     dead_owner = [d for d in dead_items if d.get("owner_required") and d.get("status") in {"open", "unresolved", "failed", None}]
     fus = [f for f in (load_json(FOLLOWUPS, {"items": []}).get("items") or []) if f.get("state") == "ready_for_finished_content"]
     health_issues = [i for i in watchdog_issues() if i.get("level") == "red"]
+    token_alerts = [
+        i
+        for i in watchdog_issues()
+        if i.get("brief") and str(i.get("code") or "").startswith("ig_token_")
+    ]
     return {
         "owner_decisions": surface,
         "dead_letters_owner": dead_owner,
@@ -1227,6 +1336,14 @@ def brief_summary() -> dict:
         "gaps_owner": [g for g in gaps() if g.get("level") in {"red", "orange"} and not g.get("internal")],
         "health": "ok" if not health_issues else f"degraded:{len(health_issues)}",
         "completed_or_planned": handoff.get("changed_today") or [],
+        "ig_token_watch": [
+            {
+                "code": i.get("code"),
+                "level": i.get("level"),
+                "detail": i.get("detail"),
+            }
+            for i in token_alerts
+        ],
     }
 
 

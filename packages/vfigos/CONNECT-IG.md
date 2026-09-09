@@ -141,7 +141,13 @@ instagram.dm = false
 instagram.connect = packages/vfigos/CONNECT-IG.md
 ```
 
-## E) חוקים שלא משתנים
+## E) מעקב פקיעת טוקן
+
+קובץ: [`data/token-watch.json`](data/token-watch.json) · מדריך: [`TOKEN-WATCH.md`](TOKEN-WATCH.md).  
+Watchdog + בריף 01 מתריעים כש־`expiresAt` חסר / קרוב / פג — **רק מתאריך Meta מאומת**.  
+אסור לשמור את הטוקן עצמו בדוחות, בגיט או בבריף.
+
+## F) חוקים שלא משתנים
 
 - מותר: publish אחרי שערים + verify חי; Insights מאומתים; קריאת פיד/סטורי דרך אותו MCP
 - אסור: auto-DM, boost, follow-back, ₪/Insights/SKU מומצאים, לטעון live בלי אימות

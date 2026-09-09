@@ -282,6 +282,14 @@ def control_plane_brief_rows() -> tuple[str, list[list[str]]]:
         )
     for gap in data.get("gaps_owner") or []:
         rows.append([str(gap.get("code") or "פער"), gap.get("level") or "?", str(gap.get("detail") or "")[:80]])
+    for tok in data.get("ig_token_watch") or []:
+        rows.append(
+            [
+                str(tok.get("code") or "ig_token"),
+                str(tok.get("level") or "?"),
+                str(tok.get("detail") or "")[:80],
+            ]
+        )
     return " · ".join(prose_bits), rows
 
 
@@ -289,7 +297,8 @@ def gates_packet() -> tuple[str, list[list[str]], list[dict]]:
     rows = [
         ["מחיר מכירה", "דחה", "X ₪"],
         ["כיתוב G004 סטוריז", "כן", "vfcopy/G004-STORIES-FIX.md"],
-        ["ig-mcp Publish", "דחה", "needsAuth"],
+        ["ig-mcp Publish", "מוכן לקריאה", "remote_access ready · בלי Publish אוטומטי"],
+        ["תוקף טוקן IG", "להשלים", "expiresAt מאומת ב־token-watch.json"],
     ]
     default_prose = (
         "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 סטוריז = G004-STORIES-FIX.md. "

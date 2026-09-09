@@ -1,8 +1,14 @@
 {
-  "updatedAt": "2026-09-09T11:25:41+03:00",
+  "updatedAt": "2026-09-09T11:37:32+03:00",
   "date": "2026-09-09",
   "active_now": [],
-  "waiting": [],
+  "waiting": [
+    {
+      "id": "fu-G003-soccerball",
+      "state": "waiting_for_print_done",
+      "correlation_id": null
+    }
+  ],
   "failed": [],
   "owner_blocked": [],
   "next": [
@@ -12,7 +18,7 @@
   ],
   "changed_today": [
     "Office Control Plane מוטמע",
-    "followups=0",
+    "followups=1",
     "dead_letters=0"
   ],
   "authoritative_sources": {

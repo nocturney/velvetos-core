@@ -1,0 +1,33 @@
+{
+  "id": "instagram-token-watch",
+  "updatedAt": "2026-09-09",
+  "handle": "@velvets_cloud",
+  "igUserId": "17841407772120429",
+  "warnDaysBefore": 14,
+  "expiresAt": null,
+  "expiresAtSource": null,
+  "expiresAtVerifiedAt": null,
+  "lastLiveOkAt": "2026-09-09T11:20:00+03:00",
+  "lastLiveCheckOk": true,
+  "lastLiveUsername": "velvets_cloud",
+  "refreshNotedAt": "2026-09-09",
+  "refreshNotedBy": "owner",
+  "refreshNote": "Owner refreshed long-lived token + Cloud Run redeploy; Meta expires_at not yet pasted",
+  "locks": [
+    "never-store-access-token",
+    "expiresAt-only-from-Meta-verified-source",
+    "no-invented-expiry"
+  ],
+  "howToSetExpiresAt": [
+    "On the MCP host (not in git): open Meta Access Token Debugger or Graph debug_token",
+    "Copy only the expires_at date (ISO YYYY-MM-DD) into expiresAt",
+    "Set expiresAtSource to debug_token|app_dashboard and expiresAtVerifiedAt to today",
+    "Never paste the access token into this file, briefs, logs, or PRs"
+  ],
+  "briefSlot": "01",
+  "watchdogCodes": [
+    "ig_token_expiry_unverified",
+    "ig_token_expiry_soon",
+    "ig_token_expired"
+  ]
+}

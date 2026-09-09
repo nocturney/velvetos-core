@@ -26,12 +26,17 @@
         [
           "ig-mcp Publish",
           "מוכן לקריאה",
-          "remote_access ready · בלי Publish במושב זה"
+          "remote_access ready · בלי Publish אוטומטי"
         ],
         [
-          "suite_language",
-          "orange",
-          "constitution/ORCHESTRA.md"
+          "תוקף טוקן IG",
+          "להשלים",
+          "expiresAt מאומת ב־token-watch.json"
+        ],
+        [
+          "ig_token_expiry_unverified",
+          "yellow",
+          "חסר תוקף מאומת לטוקן IG — להדביק expiresAt מ־Meta debug_token בלבד"
         ],
         [
           "ריל 16:00 (לוח א׳/ג׳)",

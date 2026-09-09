@@ -96,6 +96,13 @@ def main() -> None:
                 if needle not in routine:
                     fail(f"ROUTINE.md missing {needle}")
 
+    tw_path = ROOT / "packages" / "vfigos" / "data" / "token-watch.json"
+    if not tw_path.is_file():
+        fail("missing packages/vfigos/data/token-watch.json")
+    plane_src = (ROOT / "scripts" / "vf_control_plane.py").read_text(encoding="utf-8")
+    if "ig_token_watch_issues" not in plane_src:
+        fail("vf_control_plane.py must define ig_token_watch_issues")
+
     # Wrapper --json
     proc = subprocess.run(
         [sys.executable, str(WRAPPER), "--json"],

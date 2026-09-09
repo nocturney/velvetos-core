@@ -6,7 +6,7 @@
 - אין פעיל מחוץ ללולאה הרגילה
 
 ## מה ממתין
-- אין
+- `fu-G003-soccerball` · waiting_for_print_done
 
 ## מה נכשל (dead letter)
 - אין
@@ -21,7 +21,7 @@
 
 ## מה השתנה היום
 - Office Control Plane מוטמע
-- followups=0
+- followups=1
 - dead_letters=0
 
 ## מקורות סמכות

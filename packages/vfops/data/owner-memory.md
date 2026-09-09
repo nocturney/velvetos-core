@@ -212,6 +212,7 @@
 - **מושב:** צמיחה / תפעול
 - **למדנו:** Team MCP namespace `instagram` חי ב־Cloud Agent. אחרי רענון טוקן ארוך-טווח + Redeploy: `live_check.ok=true` · `get_profile`=`velvets_cloud` · `list_media` ok · `remote_access: ready` · preflight Instagram `ready`.
 - **למדנו:** bio חי עדיין עם וואטסאפ בטלפון — `PROFILE-DESIRED` נשאר `pending-live-tool` עד עדכון פרופיל (לא בוצע במושב אימות).
-- **מחר:** אחרי שערים — אפשר Publish דרך MCP; קודם לתקן כיתובי WhatsApp בפיד (G003+) לפי feed-audit חי.
-- **מקור:** אימות Cloud Agent 9.9.2026 · `vfigos/DEPLOY-CODESPACE.md` · checkpoint `instagram-mcp-verify-2026-09-09`.
+- **למדנו:** מעקב פקיעת טוקן = `vfigos/data/token-watch.json` (רק `expiresAt` מאומת מ־Meta; בלי טוקן בדוחות). היקף Team MCP = לא מאומת.
+- **מחר:** להדביק `expiresAt` מ־debug_token; טיוטת G004 סטוריז ב־`vfgrowth/drafts/NEXT-2026-09-09-G004-stories.md`; follow-up G003→מוגמר `fu-G003-soccerball`.
+- **מקור:** אימות Cloud Agent 9.9.2026 · `vfigos/TOKEN-WATCH.md` · checkpoint `instagram-mcp-verify-2026-09-09`.
 

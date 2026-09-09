@@ -237,6 +237,22 @@ def main() -> None:
             if needle not in text:
                 fail(f"{path.name} must mention {needle}")
     connect_ig_text = CONNECT_IG.read_text(encoding="utf-8")
+    if "TOKEN-WATCH.md" not in connect_ig_text and "token-watch" not in connect_ig_text.lower():
+        fail("CONNECT-IG.md must mention TOKEN-WATCH / token-watch")
+    token_watch = ROOT / "packages" / "vfigos" / "data" / "token-watch.json"
+    if not token_watch.is_file():
+        fail("missing packages/vfigos/data/token-watch.json")
+    tw = json.loads(token_watch.read_text(encoding="utf-8"))
+    if any(k in tw for k in ("access_token", "accessToken", "token")):
+        fail("token-watch.json must not store token values")
+    if "never-store-access-token" not in (tw.get("locks") or []):
+        fail("token-watch.json must lock never-store-access-token")
+    if tw.get("expiresAt") not in (None, "") and not tw.get("expiresAtSource"):
+        fail("token-watch expiresAt requires expiresAtSource when set")
+    token_watch_md = ROOT / "packages" / "vfigos" / "TOKEN-WATCH.md"
+    if not token_watch_md.is_file():
+        fail("missing packages/vfigos/TOKEN-WATCH.md")
+
     # Canonical must not still present jlbadano as the primary install path
     if "git clone https://github.com/jlbadano/ig-mcp" in connect_ig_text:
         fail("CONNECT-IG.md must not clone jlbadano as primary install")

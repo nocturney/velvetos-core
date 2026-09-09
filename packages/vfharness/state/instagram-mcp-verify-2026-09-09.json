@@ -2,27 +2,20 @@
   "task_id": "instagram-mcp-verify-2026-09-09",
   "status": "completed",
   "component_state": "Idle",
-  "last_updated": "2026-09-09T11:30:00+03:00",
+  "last_updated": "2026-09-09T11:45:00+03:00",
   "latest_observation": {
-    "mcp_namespace": "instagram",
-    "namespaceStatus": "ready",
-    "healthcheck": "ok live_check.ok=true username=velvets_cloud dm_enabled=false",
-    "get_profile": "ok username=velvets_cloud id=17841407772120429 media_count=7",
-    "list_media": "ok count=5 usernames=velvets_cloud",
-    "list_accounts": "ok ig_user_id=17841407772120429 label=env",
-    "vf_send_preflight_instagram": "ready=true needs_failover=false exit=0",
-    "watchdog_summary": "PREPARED",
-    "watchdog_ig": "OK ig_ready",
-    "watchdog_remaining": "profile_prepared_pending_live — live bio still has WhatsApp; no bio update this session",
-    "desk": "status=ready auth=ready transport=streamable-http remote_access=ready",
-    "team_scope": "not verified via environment-info",
+    "mcp_live": "healthcheck+get_profile+list_media OK; remote_access ready",
+    "token_watch": "added packages/vfigos/data/token-watch.json; expiresAt=null → brief/watchdog ig_token_expiry_unverified",
+    "team_scope": "not verified",
+    "next_post_draft": "packages/vfgrowth/drafts/NEXT-2026-09-09-G004-stories.md",
+    "followup": "fu-G003-soccerball waiting_for_print_done (orders אין ספירה)",
     "check_all": "OK suite passed=34",
-    "remaining_blocker": "PROFILE-DESIRED pending-live-tool until live bio drops WhatsApp (no content change this session); Team MCP scope metadata not exposed"
+    "no_publish": true,
+    "no_bio_edit": true,
+    "no_caption_edit_live": true
   },
   "execution_state": {
-    "no_publish": true,
-    "no_dm": true,
     "remote_access_desk": "ready",
-    "token_refresh": "owner refreshed long-lived token + Cloud Run redeploy"
+    "token_refresh": "owner refreshed; Meta expires_at paste still required"
   }
 }
