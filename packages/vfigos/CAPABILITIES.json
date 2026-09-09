@@ -39,13 +39,14 @@
       "healthcheck": "PASS",
       "get_profile": "PASS",
       "list_media": "PASS",
-      "get_account_insights_default": "FAIL_pre_patch_impressions",
+      "get_account_insights_default": "PASS_post_deploy_2026-09-09",
       "publish": "available_not_live_tested"
     },
     "insightsGraphCompat": {
       "code": "ready",
-      "deployed": false,
-      "note": "remote/insights_v21.py patches get_account_insights for Graph v21 metric_type split — mark fixed only after public-endpoint smoke post-deploy"
+      "deployed": true,
+      "verifiedAt": "2026-09-09T17:59:35Z",
+      "note": "Public smoke PASS with INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 (insights_default + insights_mixed). Slash-redirect hotfix may still need one more Cloud Run revision so /mcp (no trailing slash) returns 401 without 307."
     },
     "chatgptNoAuthFailsWith": "HTTP 401 on initialize",
     "chatgptOAuthFailsWith": "MCP server does not implement OAuth",

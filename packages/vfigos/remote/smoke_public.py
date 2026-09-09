@@ -88,6 +88,29 @@ def main() -> int:
         },
         token=None,
     )
+    # Starlette Mount may 307 /mcp → /mcp/; urllib does not preserve auth on that hop.
+    if code in (301, 302, 307, 308) and not url.endswith("/"):
+        alt = url + "/"
+        code2, _, _ = _post(
+            alt,
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2025-03-26",
+                    "capabilities": {},
+                    "clientInfo": {"name": "noauth", "version": "1"},
+                },
+            },
+            token=None,
+        )
+        if code2 == 401:
+            url = alt
+            report["url"] = url
+            report["checks"]["slash_redirect_workaround"] = True
+            code = code2
+
     report["checks"]["noauth_401"] = code == 401
     if code != 401:
         print(json.dumps(report, ensure_ascii=False, indent=2))

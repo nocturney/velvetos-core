@@ -165,14 +165,17 @@ def create_app() -> Starlette:
         allow_credentials=False,
     )
 
+    # redirect_slashes=False: keep POST /mcp (ChatGPT + smoke URL) from 307→/mcp/
+    # which strips Authorization on some clients and breaks the connector.
     app = Starlette(
         routes=[
             Route("/healthz", healthz, methods=["GET"]),
             Route("/health", healthz, methods=["GET"]),
-            Mount(path, app=mcp_app),
+            Mount(path.rstrip("/") or "/mcp", app=mcp_app),
         ],
         middleware=[cors, Middleware(ApiKeyHeaderMiddleware)],
         lifespan=mcp_app.lifespan,
+        redirect_slashes=False,
     )
     return app
 
