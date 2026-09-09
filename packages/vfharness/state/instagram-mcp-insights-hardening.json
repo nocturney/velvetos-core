@@ -1,17 +1,14 @@
 {
   "task_id": "instagram-mcp-insights-hardening",
-  "component_state": "Degraded",
-  "summary_he": "Insights חיים על revision קודם; deploy slash נכשל בגלל redirect_slashes ב-Starlette 1.x — תוקן ב-NormalizeMcpPathMiddleware, ממתין redeploy עם תג insights-v21-2026-09-09c",
+  "component_state": "Idle",
+  "summary_he": "פריסת insights-v21-2026-09-09c אומתה: Insights + /mcp בלי slash + Bearer 401",
   "verified": {
     "insights_default": true,
     "insights_mixed": true,
+    "noauth_401_on_mcp_no_slash": true,
     "health_insights_compat": "graph_v21",
-    "smoke_at": "2026-09-09T17:59:35Z"
+    "image_tag": "insights-v21-2026-09-09c",
+    "smoke_at": "2026-09-09T18:22:38Z"
   },
-  "next": "Owner redeploy for redirect_slashes=False; then smoke without slash workaround",
-  "crash": {
-    "revision": "velvet-instagram-mcp-00008-kkg",
-    "cause": "Starlette.__init__() unexpected keyword argument redirect_slashes",
-    "fix": "NormalizeMcpPathMiddleware + image tag 09c"
-  }
+  "next": "Ready for human review of PR #145; do not merge both #144 and #145"
 }

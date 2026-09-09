@@ -45,8 +45,9 @@
     "insightsGraphCompat": {
       "code": "ready",
       "deployed": true,
-      "verifiedAt": "2026-09-09T17:59:35Z",
-      "note": "Public smoke PASS with INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1. Slash fix uses NormalizeMcpPathMiddleware (Starlette 1.x rejected redirect_slashes= and crashed Cloud Run revision)."
+      "verifiedAt": "2026-09-09T18:22:38Z",
+      "imageTag": "insights-v21-2026-09-09c",
+      "note": "Public smoke PASS on /mcp (no trailing slash) with INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 — insights_default + insights_mixed + noauth_401."
     },
     "chatgptNoAuthFailsWith": "HTTP 401 on initialize",
     "chatgptOAuthFailsWith": "MCP server does not implement OAuth",
