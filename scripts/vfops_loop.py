@@ -30,6 +30,10 @@ STUDIO = ROOT / "constitution" / "STUDIO.md"
 INSTANCE = ROOT / "constitution" / "INSTANCE.md"
 SKILLS = ROOT / ".cursor" / "skills"
 CONNECT_IG = ROOT / "packages" / "vfigos" / "CONNECT-IG.md"
+DESK = ROOT / ".cursor" / "vf-desk.json"
+IG_CAPABILITIES = ROOT / "packages" / "vfigos" / "CAPABILITIES.json"
+TOKEN_WATCH = ROOT / "packages" / "vfigos" / "data" / "token-watch.json"
+FOLLOWUPS_CTRL = ROOT / "office" / "control" / "followups.json"
 INSIGHTS = ROOT / "packages" / "vfinsights" / "READ.md"
 LEARNINGS = ROOT / "packages" / "vfinsights" / "LEARNINGS.md"
 BIZ_LOCK = ROOT / "packages" / "vfbiz" / "LOCK.md"
@@ -228,7 +232,10 @@ def books_line() -> str:
     if INVOICE4U.is_file():
         n_inv = len((json.loads(INVOICE4U.read_text(encoding="utf-8")).get("rows")) or [])
     if n_orders == 0 and n_inv == 0:
-        disk = "ספר דיסק: אין ספירה · orders.json + Invoice4U ריקים עד הדבקה (לא inbox ל-07:00)"
+        disk = (
+            "ספר דיסק: פער סנכרון · orders.json ריק ≠ הוכחה שאין הזמנות · "
+            "Invoice4U ריק עד הדבקה (לא inbox ל-07:00) · אין ספירה"
+        )
     else:
         disk = f"ספר דיסק: הזמנות={n_orders} · Invoice4U={n_inv} · בלי ₪ מומצא"
     return f"{books}\n{disk}"
@@ -280,16 +287,108 @@ def control_plane_brief_rows() -> tuple[str, list[list[str]]]:
                 "PREFLIGHT לפני שיבוץ",
             ]
         )
+    open_fu = data.get("open_followups") or []
+    if open_fu:
+        ids = ", ".join(str(f.get("id") or "?") for f in open_fu[:4])
+        rows.append(
+            [
+                f"followups ממתינים ({len(open_fu)})",
+                "פנימי",
+                ids,
+            ]
+        )
     for gap in data.get("gaps_owner") or []:
         rows.append([str(gap.get("code") or "פער"), gap.get("level") or "?", str(gap.get("detail") or "")[:80]])
+    for tok in data.get("ig_token_watch") or []:
+        rows.append(
+            [
+                str(tok.get("code") or "ig_token"),
+                str(tok.get("level") or "?"),
+                str(tok.get("detail") or "")[:80],
+            ]
+        )
     return " · ".join(prose_bits), rows
 
 
+def ig_connection_evidence() -> dict:
+    """Derive IG connection lines from desk + CAPABILITIES — never hardcode ready."""
+    desk_ig: dict = {}
+    caps: dict = {}
+    if DESK.is_file():
+        desk_ig = ((json.loads(DESK.read_text(encoding="utf-8")).get("tools") or {}).get("instagram") or {})
+    if IG_CAPABILITIES.is_file():
+        caps = json.loads(IG_CAPABILITIES.read_text(encoding="utf-8"))
+    status = (desk_ig.get("status") or caps.get("currentStatus") or "unknown").strip()
+    remote = (desk_ig.get("remote_access") or caps.get("remote_access") or "unknown").strip()
+    verify = caps.get("remoteVerify") or {}
+    live_ok = bool(verify.get("liveCheckOk"))
+    stories_declared = "publish_story" in (desk_ig.get("allowed") or []) or any(
+        c.get("id") == "instagram.publish.story" for c in (caps.get("capabilities") or [])
+    )
+    team_scope = verify.get("teamScope") or "not-verified"
+    ready_evidence = status == "ready" and remote == "ready" and live_ok
+    return {
+        "status": status,
+        "remote": remote,
+        "live_ok": live_ok,
+        "ready_evidence": ready_evidence,
+        "stories_declared": stories_declared,
+        "team_scope": team_scope,
+        "username": verify.get("username") or desk_ig.get("accountLabel") or "אין ספירה",
+        "verify_date": verify.get("date") or "אין ספירה",
+    }
+
+
+def token_watch_gate_row() -> list[str]:
+    if not TOKEN_WATCH.is_file():
+        return ["תוקף טוקן IG", "לא ידוע", "חסר token-watch.json"]
+    tw = json.loads(TOKEN_WATCH.read_text(encoding="utf-8"))
+    mode = (tw.get("expiryMode") or "unknown").strip()
+    evidence = tw.get("expiryEvidence") or {}
+    src = evidence.get("source") or tw.get("expiresAtSource") or "אין"
+    if mode == "none" and str(src).lower() in {"owner-reported-meta", "owner_reported_meta"}:
+        return [
+            "תוקף טוקן IG",
+            "ללא תפוגה (דיווח בעלים)",
+            "owner-reported Meta · לא אימות API של הסוכן · חי healthcheck נמשך",
+        ]
+    if mode == "limited" and tw.get("expiresAt"):
+        return ["תוקף טוקן IG", "מוגבל", f"עד {tw.get('expiresAt')} · מקור {src}"]
+    return ["תוקף טוקן IG", "לא ידוע", "expiryMode=unknown · לא ממציאים תאריך"]
+
+
 def gates_packet() -> tuple[str, list[list[str]], list[dict]]:
+    ig = ig_connection_evidence()
+    if ig["ready_evidence"]:
+        publish_row = [
+            "ig-mcp Publish",
+            "חיבור מאומת לקריאה",
+            f"status={ig['status']} · remote={ig['remote']} · live_check {ig['verify_date']} · בלי Publish אוטומטי",
+        ]
+    elif ig["status"] == "needsAuth" or ig["remote"] in {"pending", "needsAuth"}:
+        publish_row = [
+            "ig-mcp Publish",
+            "needsAuth",
+            "CONNECT-IG.md צעד אדם · בלי Publish אוטומטי",
+        ]
+    else:
+        publish_row = [
+            "ig-mcp Publish",
+            ig["status"],
+            f"remote={ig['remote']} · בלי Publish אוטומטי",
+        ]
+    story_cap = (
+        "publish_story מוצהר באותו MCP · פרסום חי לא נבדק בעבודה זו"
+        if ig["stories_declared"]
+        else "יכולת סטורי לא מוצהרת ב-desk"
+    )
     rows = [
         ["מחיר מכירה", "דחה", "X ₪"],
         ["כיתוב G004 סטוריז", "כן", "vfcopy/G004-STORIES-FIX.md"],
-        ["ig-mcp Publish", "דחה", "needsAuth"],
+        publish_row,
+        token_watch_gate_row(),
+        ["סטורי MCP", "מוצהר" if ig["stories_declared"] else "לא מוצהר", story_cap],
+        ["Team MCP scope", "לא מאומת", str(ig["team_scope"])],
     ]
     default_prose = (
         "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 סטוריז = G004-STORIES-FIX.md. "
@@ -408,16 +507,68 @@ def office_line(invoked: set[str]) -> str:
     return built
 
 
+def insights_status_evidence() -> dict:
+    """Derive Insights STATUS from live MCP probe file — never invent metrics."""
+    probe_path = ROOT / "packages" / "vfinsights" / "data" / "mcp-live-probe.json"
+    if not probe_path.is_file():
+        return {
+            "kind": "unknown",
+            "line": "Insights: אין ספירה · חסר mcp-live-probe.json",
+            "loop_kind": None,
+            "blocked": None,
+        }
+    try:
+        probe = json.loads(probe_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {
+            "kind": "invalid",
+            "line": "Insights: אין ספירה · probe לא קריא",
+            "loop_kind": None,
+            "blocked": None,
+        }
+    summary = probe.get("summary") or {}
+    auth = summary.get("auth") or "unknown"
+    if auth == "needsAuth" or summary.get("permission") == "needsAuth":
+        return {
+            "kind": "needsAuth",
+            "line": "Insights: MCP Insights needsAuth · אין ספירה",
+            "loop_kind": "needsAuth",
+            "blocked": "needsAuth · אין ספירה",
+        }
+    if summary.get("toolAvailable") and summary.get("statusKind") == "mcp-callable-partial-data":
+        return {
+            "kind": "mcp-callable-partial-data",
+            "line": "Insights: MCP callable (probe) · אין ספירה מלאה לבעלים · לא ממציאים מדדים",
+            "loop_kind": "mcp-callable",
+            "blocked": "MCP callable · נתונים חלקיים · אין ספירה מלאה · לא ממציאים מדדים",
+        }
+    if summary.get("toolAvailable") is False:
+        return {
+            "kind": "tool-missing",
+            "line": "Insights: כלי MCP חסר · אין ספירה",
+            "loop_kind": "docs-playbook",
+            "blocked": "כלי Insights חסר · אין ספירה",
+        }
+    return {
+        "kind": "unavailable",
+        "line": "Insights: אין ספירה · נתונים לא זמינים לפי probe",
+        "loop_kind": "docs-playbook",
+        "blocked": "נתונים לא זמינים · אין ספירה",
+    }
+
+
 def insights_line() -> str:
+    """Prefer live MCP probe evidence over stale LEARNINGS for auth/status honesty."""
+    evid = insights_status_evidence()
+    if evid.get("kind") not in {None, "unknown", "invalid"}:
+        return evid["line"]
     if LEARNINGS.is_file():
         text = LEARNINGS.read_text(encoding="utf-8").strip()
         if text:
             first = next((l for l in text.splitlines() if l.strip()), "").strip("# ").strip()
             if first:
                 return f"Insights: {first} · מקור {LEARNINGS.relative_to(ROOT)}"
-    if CONNECT_IG.is_file() and "needsAuth" in CONNECT_IG.read_text():
-        return "Insights: אין ספירה · ig-mcp needsAuth עד CONNECT-IG.md (צעד אדם)"
-    return "Insights: אין ספירה"
+    return evid["line"]
 
 
 
@@ -773,6 +924,35 @@ def assemble(today: str) -> dict:
     )
     if cp_prose:
         decision_prose = f"{decision_prose} Control Plane: {cp_prose}."
+    growth_brief_path = ROOT / "packages" / "vfgrowth" / "data" / "growth-brief.json"
+    story_20_row = ["סטורי 20:30", "ממתין לאישור", "לא מפרסם"]
+    if growth_brief_path.is_file():
+        try:
+            gb = json.loads(growth_brief_path.read_text(encoding="utf-8"))
+            st = gb.get("story") or {}
+            rec = gb.get("slotRecommendation") or st.get("recommendation") or {}
+            if rec.get("choice"):
+                story_20_row = [
+                    f"סטורי {rec.get('when') or '20:30'}",
+                    f"המלצה: {rec.get('choice')}",
+                    str(rec.get("reasonShort") or rec.get("reason") or "לא מפרסם · לא משבץ מ־HQ")[:80],
+                ]
+            elif st.get("gate") == "slot_contested_pending_human_choice" or "תפוסה" in str(
+                st.get("slotStatus") or ""
+            ):
+                story_20_row = [
+                    "סטורי 20:30",
+                    "תפוסה להצעות · לא פנויה",
+                    "סקר ↔ G004 · בלי תזמון",
+                ]
+        except json.JSONDecodeError:
+            pass
+    ig = ig_connection_evidence()
+    feed_stories = (
+        "publish_story מוצהר באותו MCP · פרסום חי לא נבדק בעבודה זו"
+        if ig["stories_declared"]
+        else "סטוריז — יכולת לא מוצהרת ב-desk"
+    )
     slots = [
             {
                 "kicker": "01 · קודם החלטה",
@@ -783,7 +963,7 @@ def assemble(today: str) -> dict:
                 + cp_rows
                 + [
                     ["ריל 16:00 (לוח א׳/ג׳)", "דחה עד גלם", "vf_organic_growth.py"],
-                    ["סטורי סקר 20:30", "ממתין לאישור", "לא מפרסם"],
+                    story_20_row,
                 ],
                 "actions": gate_actions,
             },
@@ -821,7 +1001,13 @@ def assemble(today: str) -> dict:
             {
                 "kicker": "07 · פיד בסוף",
                 "title": "מה עולה בפיד",
-                "prose": "מסירה: vfgrowth/HANDOFF-he.md · PREFLIGHT.md חובה לפני שיבוץ (VOICE + Canva/vfcovers + ציון עצמי + קומפס) · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · שער עריכה קשיח: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · נכשל-סגור = חסום · פער סוכנות = שורת פער למשרד, לא אשמת בעלים · סטוריז ב-instagram.com · לוח אוטונומי · Organic Growth Decision Pack: vf_organic_growth.py · אישור ≠ פרסום.",
+                "prose": (
+                    "מסירה: vfgrowth/HANDOFF-he.md · PREFLIGHT.md חובה לפני שיבוץ "
+                    "(VOICE + Canva/vfcovers + ציון עצמי + קומפס) · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · "
+                    f"שער עריכה קשיח: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · נכשל-סגור = חסום · "
+                    f"פער סוכנות = שורת פער למשרד, לא אשמת בעלים · {feed_stories} · לוח אוטונומי · "
+                    "Organic Growth Decision Pack: vf_organic_growth.py · אישור ≠ פרסום."
+                ),
                 "headers": ["מזהה", "פתיחה", "מצב"],
                 "rows": captions,
             },
@@ -895,13 +1081,34 @@ def cmd_brief(args: argparse.Namespace) -> int:
 
 def write_status(today: str) -> None:
     data = load_loop()
-    lines = [
-        f"# סטטוס לולאת משרד · {today}",
-        "",
-        "רף: סוכנות פרסום+תפעול יקרה. הבעלים יושב רגוע.",
-        "",
-        "## רץ אוטומטית עכשיו",
-        "",
+    ig = ig_connection_evidence()
+    blocked_human: list[str] = []
+    if ig["ready_evidence"]:
+        blocked_human.append(
+            f"- IG MCP חיבור מאומת בראיות ({ig['username']} · live_check {ig['verify_date']} · "
+            f"status={ig['status']} · remote={ig['remote']}) — לא מחרוזת קבועה"
+        )
+        if ig["stories_declared"]:
+            blocked_human.append(
+                "- publish_story מוצהר באותו MCP · פרסום סטורי חי לא נבדק בעבודה זו · לא «ig-mcp ≠ stories»"
+            )
+        else:
+            blocked_human.append("- יכולת סטורי לא מוצהרת ב-desk")
+        blocked_human.append(f"- Team MCP scope: לא מאומת ({ig['team_scope']})")
+    elif ig["status"] == "needsAuth" or ig["remote"] in {"pending", "needsAuth", "unknown"}:
+        blocked_human.append("- ig-mcp needsAuth / remote לא מוכן עד CONNECT-IG.md (צעד אדם)")
+        blocked_human.append("- Insights = אין ספירה")
+    else:
+        blocked_human.append(f"- IG status={ig['status']} · remote={ig['remote']} · אין ספירת חיבור מלאה")
+    blocked_human.extend(
+        [
+            f"- {insights_status_evidence()['line']}",
+            "- מדף MakerWorld 0/5 עד GATE+רישיון+סלייס",
+            "- מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה",
+            "- B2B נעול · וואטסאפ לקוח = אדם 050-2517000 (BUSINESS_CONTACT_RECORD)",
+        ]
+    )
+    running = [
         "- `vfops_loop.py brief` — בריף סוכנות מפקים חיים",
         "- `vfcost.py brief` — עלות חומר חיה בחריץ 02 (בלי ₪ מכירה)",
         "- `vfprod.py brief` — צי + תחזוקה בחריץ 03 (אין Print מ-HQ)",
@@ -911,21 +1118,25 @@ def write_status(today: str) -> None:
         "- Organic Growth Decision Pack `vf_organic_growth.py` — אישור ≠ פרסום",
         "- Office Control Plane `vf_control_plane.py` — SoT + dead-letter + WIP→finished (בלי ספאם לבעלים)",
         "- `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)",
-        "- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)",
-        "- FOLLOWER-GROWTH · היילייטס + וואטסאפ",
+        "- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (ריק = פער סנכרון, לא הוכחת אפס הזמנות)",
+        "- FOLLOWER-GROWTH · היילייטס + CTA הודעת Instagram",
         "- כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)",
         "- חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ",
         "- מסירת סטודיו + שער עריכה קשיח (אין סטוריז בלי Canva/vfcovers) + לוח אוטונומי",
         "- Canva MCP ready · Gmail/Calendar/Drive ready",
+    ]
+    lines = [
+        f"# סטטוס לולאת משרד · {today}",
         "",
-        "## חסום על אדם / לוגין",
+        "רף: סוכנות פרסום+תפעול יקרה. הבעלים יושב רגוע.",
         "",
-        "- ig-mcp **needsAuth** עד טוקן Meta (`CONNECT-IG.md` צעד אדם)",
-        "- Insights = אין ספירה",
-        "- סטוריז = instagram.com (ig-mcp ≠ stories)",
-        "- מדף MakerWorld 0/5 עד GATE+רישיון+סלייס",
-        "- מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה",
-        "- B2B נעול · וואטסאפ לקוח = אדם 050-2517000",
+        "## רץ אוטומטית עכשיו",
+        "",
+        *running,
+        "",
+        "## חסום על אדם / לוגין / מצב חיבור",
+        "",
+        *blocked_human,
         "",
         "## מלאי פקים",
         "",
@@ -934,7 +1145,19 @@ def write_status(today: str) -> None:
     ]
     for row in data.get("packs") or []:
         blocked = row.get("blocked") or "—"
-        lines.append(f"| `{row['id']}` | {row['kind']} | {row['cadence']} | {blocked} |")
+        # Prefer live IG evidence over stale LOOP kind for vfigos display note
+        if row["id"] == "vfigos" and ig["ready_evidence"]:
+            lines.append(
+                f"| `{row['id']}` | evidence-ready | {row['cadence']} | "
+                f"live_check ok · publish_story מוצהר · פרסום חי לא נבדק · Team scope לא מאומת |"
+            )
+        elif row["id"] == "vfinsights":
+            ie = insights_status_evidence()
+            kind = ie.get("loop_kind") or row["kind"]
+            blocked_i = ie.get("blocked") or blocked
+            lines.append(f"| `{row['id']}` | {kind} | {row['cadence']} | {blocked_i} |")
+        else:
+            lines.append(f"| `{row['id']}` | {row['kind']} | {row['cadence']} | {blocked} |")
     lines.append("")
     STATUS.write_text("\n".join(lines) + "\n")
 
@@ -960,6 +1183,7 @@ def cmd_weekly(_args: argparse.Namespace) -> int:
 
 
 def cmd_handoff(_args: argparse.Namespace) -> int:
+    ig = ig_connection_evidence()
     print("=== מסירה לסטודיו · פתח כל בוקר ===")
     print("רף: סוכנות יקרה · לא חצי-עבודה")
     print("קובץ: packages/vfgrowth/HANDOFF-he.md")
@@ -969,11 +1193,19 @@ def cmd_handoff(_args: argparse.Namespace) -> int:
     print("בלי ארטיפקט עבור = נכשל-סגור · לא משבצים")
     print("אל תפנה לכריסטיאן על מדדים חלשים")
     print("לוח: אוטונומי · לא שואלים משבצת · Calendar-OPS")
-    print("CTA: וואטסאפ 050-2517000 · היילייטס · איסוף שדרות · לא DM")
-    print("סטוריז: instagram.com · ig-mcp ≠ stories")
+    print("CTA: שלחו לנו הודעה כאן באינסטגרם · היילייטס · איסוף שדרות · לא DM ציבורי")
+    print("BUSINESS_CONTACT_RECORD: 050-2517000 (לא CTA ציבורי)")
+    if ig["stories_declared"]:
+        print("סטוריז: publish_story מוצהר באותו MCP · פרסום חי לא נבדק בעבודה זו")
+    else:
+        print("סטוריז: יכולת לא מוצהרת ב-desk")
     print("מחיר: X ₪")
-    if CONNECT_IG.is_file():
+    if ig["ready_evidence"]:
+        print(f"IG: חיבור מאומת בראיות · {ig['username']} · live_check {ig['verify_date']} · Team scope לא מאומת")
+    elif ig["status"] == "needsAuth":
         print("IG: needsAuth · CONNECT-IG.md צעד אדם")
+    else:
+        print(f"IG: status={ig['status']} · remote={ig['remote']}")
     print()
     if HANDOFF.is_file():
         print(HANDOFF.read_text().split("## קופי")[0].strip()[:1400])
@@ -1053,7 +1285,6 @@ def cmd_check(_args: argparse.Namespace) -> int:
         "אין ספירה",
         "X ₪",
         "G004",
-        "needsAuth",
         "סוכנות",
         "שער עריכה",
         "עלות חומר",
@@ -1063,6 +1294,25 @@ def cmd_check(_args: argparse.Namespace) -> int:
     ):
         if needle not in blob:
             fail(f"assembled brief missing {needle!r}")
+    ig = ig_connection_evidence()
+    if ig["ready_evidence"]:
+        if "ig-mcp ≠ stories" in blob or "ig-mcp ≠" in blob:
+            fail("brief must not claim ig-mcp ≠ stories when publish_story is declared")
+        # Historical needsAuth string may still appear in CONNECT paths; connection rows must not claim needsAuth as current
+        for slot in brief.get("slots") or []:
+            for row in slot.get("rows") or []:
+                if row and row[0] == "ig-mcp Publish" and "needsAuth" in " ".join(row):
+                    fail("ig-mcp Publish row must not say needsAuth when connection evidence is ready")
+    else:
+        if "needsAuth" not in blob and ig["status"] == "needsAuth":
+            fail("assembled brief missing needsAuth while desk IG is needsAuth")
+    if "פער סנכרון" not in blob and "orders.json" in blob:
+        # empty orders must surface sync-gap honesty when books_line runs
+        pass
+    if FOLLOWUPS_CTRL.is_file():
+        fus = json.loads(FOLLOWUPS_CTRL.read_text(encoding="utf-8")).get("items") or []
+        if fus and "followups=0" in blob:
+            fail("brief must not claim followups=0 while office/control/followups.json has items")
     if "רמה נמוכה" in blob:
         fail("assembled brief must not surface רמה נמוכה to the owner")
     if "אין חדש במשרד" not in blob and "CLI " not in blob:

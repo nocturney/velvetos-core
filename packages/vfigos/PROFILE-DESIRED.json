@@ -3,7 +3,7 @@
   "updatedAt": "2026-09-08",
   "status": "prepared",
   "liveStatus": "pending-live-tool",
-  "note": "Desired profile state only. Do not claim bio was updated until Instagram tool is ready and verify succeeds.",
+  "note": "Desired profile state only. Do not claim bio was updated until Instagram tool updates bio and verify succeeds. Tool read OK 2026-09-09 (get_profile velvets_cloud); live bio still contains WhatsApp phone — keep pending-live-tool until bio update.",
   "desired": {
     "name": "Velvet Factory",
     "categoryHint": "3D print studio",

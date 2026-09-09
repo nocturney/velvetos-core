@@ -96,6 +96,32 @@ def main() -> None:
                 if needle not in routine:
                     fail(f"ROUTINE.md missing {needle}")
 
+    tw_path = ROOT / "packages" / "vfigos" / "data" / "token-watch.json"
+    if not tw_path.is_file():
+        fail("missing packages/vfigos/data/token-watch.json")
+    plane_src = (ROOT / "scripts" / "vf_control_plane.py").read_text(encoding="utf-8")
+    if "ig_token_watch_issues" not in plane_src:
+        fail("vf_control_plane.py must define ig_token_watch_issues")
+    if "run_token_watch_behavior_tests" not in plane_src:
+        fail("vf_control_plane.py must define run_token_watch_behavior_tests")
+    # In-memory behavior tests (unknown / none / limited same-day / bad input)
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("vf_control_plane", ROOT / "scripts" / "vf_control_plane.py")
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    beh_errors = mod.run_token_watch_behavior_tests()
+    if beh_errors:
+        fail("token-watch behavior: " + "; ".join(beh_errors))
+    tw = json.loads(tw_path.read_text(encoding="utf-8"))
+    if (tw.get("expiryMode") or "") == "none":
+        issues = mod.ig_token_watch_issues()
+        if any(i.get("code") == "ig_token_expiry_unverified" for i in issues):
+            fail("expiryMode=none with owner evidence must not raise ig_token_expiry_unverified")
+        if any("חסר מועד פקיעה" in str(i.get("detail")) for i in issues):
+            fail("none mode must not alert חסר מועד פקיעה")
+
     # Wrapper --json
     proc = subprocess.run(
         [sys.executable, str(WRAPPER), "--json"],

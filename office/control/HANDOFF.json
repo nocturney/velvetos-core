@@ -1,8 +1,14 @@
 {
-  "updatedAt": "2026-09-08T15:17:57+03:00",
-  "date": "2026-09-08",
+  "updatedAt": "2026-09-09T12:20:00+03:00",
+  "date": "2026-09-09",
   "active_now": [],
-  "waiting": [],
+  "waiting": [
+    {
+      "id": "fu-G003-soccerball",
+      "state": "waiting_for_print_done",
+      "correlation_id": null
+    }
+  ],
   "failed": [],
   "owner_blocked": [],
   "next": [
@@ -12,7 +18,7 @@
   ],
   "changed_today": [
     "Office Control Plane מוטמע",
-    "followups=0",
+    "followups=1",
     "dead_letters=0"
   ],
   "authoritative_sources": {
@@ -34,14 +40,7 @@
     "profile_desired": "packages/vfigos/PROFILE-DESIRED.json",
     "feed_audit": "packages/vfgrowth/data/feed-audit.json"
   },
-  "tools_degraded": [
-    {
-      "level": "orange",
-      "code": "suite_language",
-      "detail": "constitution/ORCHESTRA.md",
-      "outcome": "PREPARED"
-    }
-  ],
+  "tools_degraded": [],
   "safe_for_next_ai": [
     "python3 scripts/vf_control_plane.py watchdog",
     "python3 scripts/vf_control_plane.py followups",

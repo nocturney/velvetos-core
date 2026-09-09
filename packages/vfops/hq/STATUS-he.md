@@ -1,4 +1,4 @@
-# סטטוס לולאת משרד · 2026-09-08
+# סטטוס לולאת משרד · 2026-09-09
 
 רף: סוכנות פרסום+תפעול יקרה. הבעלים יושב רגוע.
 
@@ -11,22 +11,24 @@
 - מדף `vfsku.py brief` + `vfsku.py scan` + `week.md`
 - שערי 01 מ־`GATES.json` (לחיצת אדם, לא וואטסאפ)
 - Organic Growth Decision Pack `vf_organic_growth.py` — אישור ≠ פרסום
+- Office Control Plane `vf_control_plane.py` — SoT + dead-letter + WIP→finished (בלי ספאם לבעלים)
 - `vfbooks.py brief` — חוב/חשבונית חסרה פנימי (Invoice4U נשאר)
-- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (אין ספירה אם ריק)
-- FOLLOWER-GROWTH · היילייטס + וואטסאפ
+- ספר 02 גם מ־`orders.json` / Invoice4U snapshot (ריק = פער סנכרון, לא הוכחת אפס הזמנות)
+- FOLLOWER-GROWTH · היילייטס + CTA הודעת Instagram
 - כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)
 - חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ
 - מסירת סטודיו + שער עריכה קשיח (אין סטוריז בלי Canva/vfcovers) + לוח אוטונומי
 - Canva MCP ready · Gmail/Calendar/Drive ready
 
-## חסום על אדם / לוגין
+## חסום על אדם / לוגין / מצב חיבור
 
-- Instagram MCP **ready-codespace** (auth OK · stdio) — **`remote_access` pending** לענן תמיד-דלוק (`CONNECT-IG.md` · `DEPLOY-CODESPACE.md`)
-- Insights = MCP `get_*_insights` כשיש סשן; אחרת אין ספירה / הדבקת בעלים — Metricool לא נדרש
-- סטוריז = `publish_story` על אותו MCP אחרי Canva/vfcovers (לא מערכת נפרדת)
+- IG MCP חיבור מאומת בראיות (velvets_cloud · live_check 2026-09-09 · status=ready · remote=ready) — לא מחרוזת קבועה
+- publish_story מוצהר באותו MCP · פרסום סטורי חי לא נבדק בעבודה זו · לא «ig-mcp ≠ stories»
+- Team MCP scope: לא מאומת (not-verified)
+- Insights: MCP callable (probe) · אין ספירה מלאה לבעלים · לא ממציאים מדדים
 - מדף MakerWorld 0/5 עד GATE+רישיון+סלייס
 - מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה
-- B2B נעול · וואטסאפ לקוח = אדם 050-2517000
+- B2B נעול · וואטסאפ לקוח = אדם 050-2517000 (BUSINESS_CONTACT_RECORD)
 
 ## מלאי פקים
 
@@ -48,10 +50,11 @@
 | `vfgraft` | docs-playbook | session-start | — |
 | `vfgrowth` | docs-playbook | daily-07:00 | — |
 | `vfharness` | working-cli | after-edit | — |
-| `vfigos` | ready-codespace | daily-growth | remote_access pending · Stories via publish_story · verify live |
-| `vfinsights` | mcp-preferred | daily-07:00 | אין ספירה עד MCP insights / סנאפשוט |
+| `vfigos` | evidence-ready | daily-growth | live_check ok · publish_story מוצהר · פרסום חי לא נבדק · Team scope לא מאומת |
+| `vfinsights` | mcp-callable | daily-07:00 | MCP callable · נתונים חלקיים · אין ספירה מלאה · לא ממציאים מדדים |
 | `vfmakers` | overlay | weekly | — |
-| `vfmcp` | mapped | session-start | Instagram canonical adelaidasofia · Sheets / WhatsApp לפי CONNECT |
+| `vfmedia` | working-cli | on-intake | העלאה ≠ אישור · תיקיית מאושר ≠ הוכחת אישור |
+| `vfmcp` | working-cli | session-start | IG remote לפי desk · Sheets / WhatsApp send לפי CONNECT |
 | `vfmem` | working-cli | session-start | — |
 | `vfmskill` | docs-playbook | on-content | — |
 | `vfom` | docs-playbook | on-floor-clip | אין גלם = אין ריל |

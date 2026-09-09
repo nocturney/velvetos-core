@@ -1,5 +1,28 @@
 {
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-09",
   "rule": "WIP→finished bridge. Never invent correlation_id. Scheduling/upload ≠ published. Only verified live publication closes the follow-up.",
-  "items": []
+  "items": [
+    {
+      "id": "fu-G003-soccerball",
+      "type": "wip_to_finished",
+      "kind": "process",
+      "contentId": "G003",
+      "productHint": "SoccerBall",
+      "livePermalink": "https://www.instagram.com/reel/DdAPhozlNe2/",
+      "liveMediaId": "17873372004572489",
+      "liveVerifiedAt": "2026-09-09",
+      "correlation_id": null,
+      "jobId": null,
+      "sku": null,
+      "sourceLink": null,
+      "state": "waiting_for_print_done",
+      "ordersStatus": "פער סנכרון · orders.json ריק ≠ הוכחה שאין הזמנות · אין קישור הזמנה ל־G003 בלי ראיה",
+      "created_at": "2026-09-09T11:35:00+03:00",
+      "updated_at": "2026-09-09T12:05:00+03:00",
+      "next_action": "wait_matching_print_done",
+      "required_gates": ["EDIT-GATE", "PREFLIGHT"],
+      "publication": "process_live_finished_not_published",
+      "note": "G003 process reel is live. Open finished-product thread when a defensible print.done (+ finished media) exists. Do not invent jobId/correlation_id/₪/order link. Empty orders.json is a sync gap, not proof of zero orders."
+    }
+  ]
 }

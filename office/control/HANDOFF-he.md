@@ -1,4 +1,4 @@
-# מסירת מנהל · Office Control Plane · 2026-09-08
+# מסירת מנהל · Office Control Plane · 2026-09-09
 
 לא מערכת משרד שנייה. מקורות אמת: `office/control-plane.json`.
 
@@ -6,7 +6,7 @@
 - אין פעיל מחוץ ללולאה הרגילה
 
 ## מה ממתין
-- אין
+- `fu-G003-soccerball` · waiting_for_print_done
 
 ## מה נכשל (dead letter)
 - אין
@@ -21,7 +21,7 @@
 
 ## מה השתנה היום
 - Office Control Plane מוטמע
-- followups=0
+- followups=1
 - dead_letters=0
 
 ## מקורות סמכות
@@ -44,7 +44,7 @@
 - **feed_audit:** `packages/vfgrowth/data/feed-audit.json`
 
 ## כלים מדולדלים
-- orange · suite_language · constitution/ORCHESTRA.md
+- אין חסם קשיח מדווח
 
 ## בטוח להמשך AI הבא
 - `python3 scripts/vf_control_plane.py watchdog`

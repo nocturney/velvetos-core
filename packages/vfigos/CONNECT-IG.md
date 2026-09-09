@@ -1,7 +1,8 @@
 # CONNECT-IG · Instagram MCP קנוני (adelaidasofia)
 
-סטטוס שולחן: **`ready-codespace`** — auth מאומת ב־GitHub Codespace (stdio).  
-`auth: ready` · `transport: stdio` · `remote_access: pending` (אין endpoint מרוחק תמיד-דלוק עדיין).
+סטטוס שולחן: **`ready`** — Cloud Team MCP namespace `instagram` מאומת ב־2026-09-09.  
+`auth: ready` · `transport: streamable-http` · **`remote_access: ready`** (`live_check.ok=true` · `get_profile`=`velvets_cloud` · `list_media` ok).  
+Codespace stdio נשאר נתיב גיבוי מקומי (ראה [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md)).
 
 MCP קנוני: [`adelaidasofia/instagram-mcp`](https://github.com/adelaidasofia/instagram-mcp) · חבילה `adelaidasofia-instagram-mcp` · שם שרת `instagram`.  
 **לגאסי:** [`jlbadano/ig-mcp`](https://github.com/jlbadano/ig-mcp) — לא ראשי יותר. ראו [`LEGACY-IG-MCP.md`](LEGACY-IG-MCP.md).
@@ -119,10 +120,10 @@ pip install adelaidasofia-instagram-mcp
 
 ## B) Cloud Agent / אוטונומיה מלאה
 
-stdio בתוך Codespace ישן/כבוי **אינו** מספיק למשרד תמיד-דלוק.  
-`remote_access: pending` — אין endpoint מרוחק מומצא.  
-עד שיש תעבורה מרוחקת נתמכת (או שרת תמיד-זמין): failover [`SEND.md`](SEND.md).  
-פירוט: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).
+Endpoint מרוחק (Cloud Run / Team MCP, שם שרת `instagram`) **מאומת** ב־2026-09-09:  
+`healthcheck.live_check.ok=true` · `get_profile.username=velvets_cloud` · `list_media` ok.  
+שולחן: `remote_access: ready`. סודות רק ב־host vault — לא בגיט.  
+אם MCP/oauth נכשל בזמן אמת: failover [`SEND.md`](SEND.md) אותו תור.
 
 ## C) Insights (vfinsights)
 
@@ -140,7 +141,13 @@ instagram.dm = false
 instagram.connect = packages/vfigos/CONNECT-IG.md
 ```
 
-## E) חוקים שלא משתנים
+## E) מעקב פקיעת טוקן
+
+קובץ: [`data/token-watch.json`](data/token-watch.json) · מדריך: [`TOKEN-WATCH.md`](TOKEN-WATCH.md).  
+Watchdog + בריף 01 מתריעים כש־`expiresAt` חסר / קרוב / פג — **רק מתאריך Meta מאומת**.  
+אסור לשמור את הטוקן עצמו בדוחות, בגיט או בבריף.
+
+## F) חוקים שלא משתנים
 
 - מותר: publish אחרי שערים + verify חי; Insights מאומתים; קריאת פיד/סטורי דרך אותו MCP
 - אסור: auto-DM, boost, follow-back, ₪/Insights/SKU מומצאים, לטעון live בלי אימות

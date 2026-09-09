@@ -1,0 +1,45 @@
+{
+  "id": "instagram-token-watch",
+  "updatedAt": "2026-09-09",
+  "handle": "@velvets_cloud",
+  "igUserId": "17841407772120429",
+  "warnDaysBefore": 14,
+  "expiryMode": "none",
+  "expiresAt": null,
+  "expiresAtTimezone": "Asia/Jerusalem",
+  "expiresAtSource": null,
+  "expiresAtVerifiedAt": null,
+  "expiryEvidence": {
+    "source": "owner-reported-meta",
+    "reportedAt": "2026-09-09",
+    "timezone": "Asia/Jerusalem",
+    "note": "Owner reports Meta Access Token Debugger / UI shows no expiry date for the current long-lived token. Not an API verification performed by the agent. expiresAt=null alone is not sufficient — mode+evidence required."
+  },
+  "lastLiveOkAt": "2026-09-09T11:20:00+03:00",
+  "lastLiveCheckOk": true,
+  "lastLiveUsername": "velvets_cloud",
+  "refreshNotedAt": "2026-09-09",
+  "refreshNotedBy": "owner",
+  "refreshNote": "Owner refreshed long-lived token + Cloud Run redeploy; Meta UI shows no expiry (owner-reported)",
+  "locks": [
+    "never-store-access-token",
+    "no-invented-expiry",
+    "expiresAt-null-alone-not-none",
+    "no-expiry-still-requires-live-healthcheck",
+    "evidence-source-honest"
+  ],
+  "howToSetExpiry": [
+    "If Meta shows an expires_at: set expiryMode=limited, paste ISO datetime into expiresAt, set expiresAtTimezone, set expiryEvidence.source to debug_token|app_dashboard",
+    "If Meta shows no expiry (owner report): set expiryMode=none, expiresAt=null, expiryEvidence.source=owner-reported-meta with reportedAt — do not invent a date",
+    "If unknown: expiryMode=unknown, expiresAt=null — office alerts unverified; never invent",
+    "Never paste the access token into this file, briefs, logs, or PRs"
+  ],
+  "briefSlot": "01",
+  "watchdogCodes": [
+    "ig_token_expiry_unverified",
+    "ig_token_expiry_partial",
+    "ig_token_expiry_soon",
+    "ig_token_expired",
+    "ig_token_watch_invalid"
+  ]
+}

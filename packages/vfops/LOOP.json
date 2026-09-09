@@ -12,7 +12,7 @@
     "no-invented-insights",
     "no-live-ig-publish",
     "no-auto-dm",
-    "stories-via-instagram-com",
+    "stories-publish-story-declared-live-untested",
     "vfcost-cli-integrate-not-duplicate"
   ],
   "packs": [
@@ -170,23 +170,23 @@
     },
     {
       "id": "vfigos",
-      "kind": "needsAuth",
+      "kind": "mcp-ready",
       "cadence": "daily-growth",
       "consume": "packages/vfigos/CONNECT-IG.md",
       "briefSlot": "06",
       "handoff": "packages/vfigos/HANDOFF-STANDING-he.md",
       "mediaVault": "docs/MEDIA-VAULT.md",
       "mediaCatalog": "packages/vfmedia/catalog.json",
-      "blocked": "needsAuth · טוקן Meta · סטוריז ב-instagram.com"
+      "blocked": "חיבור לפי desk/CAPABILITIES · publish_story מוצהר · פרסום חי לא נבדק · Team scope לא מאומת"
     },
     {
       "id": "vfinsights",
-      "kind": "needsAuth",
+      "kind": "mcp-callable",
       "cadence": "daily-07:00",
       "consume": "packages/vfinsights/READ.md",
       "briefSlot": "06",
       "handoff": "packages/vfinsights/templates/snapshot-ingest.md",
-      "blocked": "אין ספירה עד סנאפשוט / טוקן"
+      "blocked": "MCP callable · נתונים חלקיים לפי mcp-live-probe.json · אין ספירה מלאה · לא ממציאים מדדים"
     },
     {
       "id": "vfmakers",
@@ -208,12 +208,12 @@
     },
     {
       "id": "vfmcp",
-      "kind": "needsAuth",
+      "kind": "working-cli",
       "cadence": "session-start",
       "consume": "packages/vfmcp/GAP.md",
       "briefSlot": "05",
       "handoff": "packages/vfigos/CONNECT-IG.md",
-      "blocked": "ig-mcp / Sheets / WhatsApp send לפי CONNECT"
+      "blocked": "IG remote לפי desk · Sheets / WhatsApp send לפי CONNECT"
     },
     {
       "id": "vfmem",

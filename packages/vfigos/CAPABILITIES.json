@@ -1,6 +1,6 @@
 {
   "id": "instagram-capabilities",
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-09",
   "providerPreference": "adelaidasofia/instagram-mcp",
   "canonicalMcp": "https://github.com/adelaidasofia/instagram-mcp",
   "package": "adelaidasofia-instagram-mcp",
@@ -14,13 +14,27 @@
     "jlbadano/ig-mcp"
   ],
   "statusField": "tools.instagram.status",
-  "currentStatus": "ready-codespace",
+  "currentStatus": "ready",
   "auth": "ready",
-  "transport": "stdio",
-  "remote_access": "pending",
+  "transport": "streamable-http",
+  "remote_access": "ready",
+  "remoteVerify": {
+    "date": "2026-09-09",
+    "namespace": "instagram",
+    "namespaceReady": true,
+    "listAccountsOk": true,
+    "igUserId": "17841407772120429",
+    "liveCheckOk": true,
+    "username": "velvets_cloud",
+    "listMediaOk": true,
+    "listMediaCountSample": 5,
+    "teamScope": "not-verified",
+    "teamScopeNote": "environment-info / Meta DevTools do not expose Cursor Team MCP binding scope",
+    "blocker": null
+  },
   "igUserId": "17841407772120429",
   "accountLabel": "velvets_cloud",
-  "readyRequires": "real healthcheck — Codespace verified; never fake Cloud remote as ready",
+  "readyRequires": "real healthcheck with live_check.ok=true + get_profile username velvets_cloud — Cloud remote verified 2026-09-09 after token refresh",
   "capabilities": [
     {
       "id": "instagram.profile.read",
@@ -55,7 +69,7 @@
       "id": "instagram.publish.story",
       "he": "פרסום סטורי",
       "tools": ["publish_story"],
-      "note": "Same MCP — not a separate Stories system"
+      "note": "Declared on same MCP — not a separate Stories system. Live publish_story not exercised in 2026-09-09 verify/fix work (no publish)."
     },
     {
       "id": "instagram.insights.read",
@@ -79,6 +93,6 @@
     "ads",
     "INSTAGRAM_MCP_DM_ENABLED"
   ],
-  "officeRule": "Office logic binds to capability ids above — not to a SaaS vendor. Metricool optional/legacy only. remote_access pending ≠ idle office work.",
+  "officeRule": "Office logic binds to capability ids above — not to a SaaS vendor. Metricool optional/legacy only. remote_access ready after live_check.ok.",
   "noInstagramConnectionMeans": "continue media intake, copy, Canva, preflight, queue, calendar candidates, feed audit — do not pretend published"
 }

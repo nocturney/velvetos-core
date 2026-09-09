@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -132,9 +132,55 @@ def story_slot(today: datetime) -> str:
     return "היום 20:30 · סטוריז א׳–ה׳"
 
 
+def g004_stories_draft_contests_slot(today: date) -> bool:
+    """True when a same-day G004 stories draft targets the 20:30 slot (no schedule)."""
+    drafts = GROWTH / "drafts"
+    if not drafts.is_dir():
+        return False
+    needle = f"NEXT-{today.isoformat()}-G004"
+    for path in drafts.glob(f"{needle}*.md"):
+        text = path.read_text(encoding="utf-8")
+        if "20:30" in text and "G004" in text:
+            return True
+    return False
+
+
+def g004_ready_for_slot() -> bool:
+    """True only when G004 preflight gate section is עבור (not נכשל-סגור)."""
+    path = GROWTH / "preflight" / "G004.md"
+    if not path.is_file():
+        return False
+    text = path.read_text(encoding="utf-8")
+    if "## שער" in text:
+        gate = text.split("## שער", 1)[1][:600]
+        if "נכשל-סגור" in gate:
+            return False
+        if "**עבור**" in gate or "\nעבור\n" in f"\n{gate}\n":
+            return True
+        return False
+    # No gate section → not ready
+    return False
+
+
+def next_stories_slot_after(now: datetime) -> dict:
+    """Next A–Th 20:30 Asia/Jerusalem stories slot at or after now (no schedule)."""
+    t = now
+    for _ in range(8):
+        candidate = t.replace(hour=20, minute=30, second=0, microsecond=0)
+        if candidate.weekday() < 5 and candidate >= now:
+            he = ["שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"][candidate.weekday()]
+            return {
+                "when": candidate.isoformat(timespec="minutes"),
+                "whenHe": f"{he} {candidate.date().isoformat()} 20:30 Asia/Jerusalem",
+            }
+        t = (t + __import__("datetime").timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    return {"when": "חסר", "whenHe": "חסר משבצת"}
+
+
 def cmd_brief(args: argparse.Namespace) -> int:
     now = datetime.now(TZ)
     today = now.date().isoformat()
+    today_d = now.date()
     payloads = print_payloads()
     gate, media_line = media_quality_line(payloads)
     queue = load_json(QUEUE, {"items": []})
@@ -146,12 +192,75 @@ def cmd_brief(args: argparse.Namespace) -> int:
     orders = load_json(ORDERS, {"orders": []})
     n_orders = len(orders.get("orders") or [])
     story_items = [i for i in items if i.get("format") == "story"]
+    g004_ready = g004_ready_for_slot()
+    contested = g004_stories_draft_contests_slot(today_d) and not g004_ready
+    slot_meta = next_stories_slot_after(now)
+    # Single recommendation: prefer G004 when edit/preflight ready; else poll if still before slot
+    if g004_ready:
+        slot_rec = {
+            "choice": "G004",
+            "when": slot_meta["when"],
+            "whenHe": slot_meta["whenHe"],
+            "reasonShort": "מוצר מוכן לעריכה+פריפלייט · פרנסה מסיפור-מוצר",
+            "reason": (
+                "G004 מחזיק-טבעות עבר EDIT-GATE/Canva + preflight עבור; "
+                "משרת הצעת מוצר/פנייה. סקר PETG/Nylon נדחה למשבצת סטוריז פנויה אחרת — "
+                "לא שני שיבוצים על 20:30. בלי Calendar create · G003 הנעול לא זז."
+            ),
+            "deferred": {"id": f"poll-{poll.get('poll_id') or 'petg_vs_nylon'}", "to": "משבצת סטוריז פנויה אחרת"},
+        }
+        story_gate = "recommended_g004_pending_human_post"
+        slot_status = f"המלצה יחידה · G004 · {slot_meta['whenHe']}"
+        story_note = "בחירה אחת: G004. סקר לא משובץ במקביל. אישור ≠ פרסום · בלי תזמון מ־HQ."
+        studio_story_task = f"לאשר ידנית G004 ל־{slot_meta['whenHe']} (לא מפרסם מ־HQ)."
+    elif now.weekday() < 5 and (
+        now.hour < 20 or (now.hour == 20 and now.minute < 30)
+    ):
+        slot_rec = {
+            "choice": "poll",
+            "when": slot_meta["when"],
+            "whenHe": slot_meta["whenHe"],
+            "reasonShort": "G004 עדיין חסום עריכה/preflight · סקר קל יותר הערב",
+            "reason": (
+                "G004 עדיין לא עבור בשערי עריכה — לא ממליצים לשבץ מוצר לא מוכן. "
+                f"סקר organic `{poll.get('poll_id') or 'petg_vs_nylon'}` למשבצת {slot_meta['whenHe']}. "
+                "בלי Calendar create."
+            ),
+            "deferred": {"id": "G004-stories", "to": "אחרי EDIT-GATE+PREFLIGHT עבור"},
+        }
+        story_gate = "recommended_poll_pending_human_post"
+        slot_status = f"המלצה יחידה · סקר · {slot_meta['whenHe']}"
+        story_note = "בחירה אחת: סקר. G004 נדחה עד שער עבור. אישור ≠ פרסום."
+        studio_story_task = f"לאשר או לדחות סקר ל־{slot_meta['whenHe']} (לא מפרסם)."
+    else:
+        slot_rec = {
+            "choice": "poll" if not g004_ready else "G004",
+            "when": slot_meta["when"],
+            "whenHe": slot_meta["whenHe"],
+            "reasonShort": "20:30 היום חלף · משבצת הבאה",
+            "reason": f"20:30 היום חלף. משבצת סטוריז הבאה: {slot_meta['whenHe']}. בלי תזמון מ־HQ.",
+        }
+        story_gate = "next_slot_recommendation"
+        slot_status = f"המלצה · {slot_meta['whenHe']}"
+        story_note = "המשבצת להיום חלפה — הצעה למשבצת הבאה בלבד."
+        studio_story_task = f"לתכנן ידנית למשבצת {slot_meta['whenHe']} — לא Calendar מ־HQ."
+
+    weekday_he = ["שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת", "ראשון"][now.weekday()]
     pack = {
         "date": today,
         "generatedAt": now.isoformat(timespec="seconds"),
         "component_state": "Idle" if gate != "blocked_no_media" else "Blocked",
         "goal": "פניות B2B בדרום עבור אב-טיפוס / חלקים מותאמים.",
-        "locks": ["no-autopost", "no-auto-dm", "no-boost", "no-invented-insights", "no-invented-ils"],
+        "locks": [
+            "no-autopost",
+            "no-auto-dm",
+            "no-boost",
+            "no-invented-insights",
+            "no-invented-ils",
+            "no-schedule-from-hq",
+        ],
+        "weekdayNote": f"{today} = {weekday_he} (Asia/Jerusalem)",
+        "slotRecommendation": slot_rec,
         "reel": {
             "slot": next_reel_slot(now),
             "gate": gate,
@@ -166,39 +275,62 @@ def cmd_brief(args: argparse.Namespace) -> int:
         },
         "story": {
             "slot": story_slot(now),
-            "gate": (story_items[0].get("gate") if story_items else "pending_human_approval"),
+            "gate": story_gate,
+            "slotStatus": slot_status,
+            "recommendation": slot_rec,
             "poll_id": poll.get("poll_id"),
             "question": poll.get("question") or "חסר סקר בספרייה",
             "options": poll.get("options") or [],
             "cta": "לפרטים — שלחו הודעה כאן באינסטגרם",
             "actions": ["אישור", "עריכה", "דחייה"],
+            "note": story_note,
         },
         "yesterday": {
             "insights": "אין ספירה",
-            "whatsapp_leads": n_orders if n_orders else "אין ספירה",
+            "whatsapp_leads": "אין ספירה" if not n_orders else "אין ספירה",
             "leading_format": "אין ספירה",
-            "recommendation": "אין ספירה עד סנאפשוט + שורת orders.json",
+            "recommendation": (
+                "פער סנכרון · orders.json ריק ≠ הוכחה שאין הזמנות"
+                if n_orders == 0
+                else "אין ספירה עד סנאפשוט + שורת orders.json"
+            ),
         },
         "studio_tasks": [
             "למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.",
-            "לאשר או לדחות את סקר הערב בבריף (לא מפרסם).",
+            studio_story_task,
             "לא להציג חום/חוזק בלי vfprod/CLAIMS.md.",
         ],
         "print_events": len(payloads),
         "queue_count": len(items),
     }
+    if contested:
+        pack["story"]["conflict"] = {
+            "proposals": [
+                {"id": f"poll-{poll.get('poll_id') or 'unknown'}", "kind": "organic-growth-poll"},
+                {
+                    "id": "G004-stories",
+                    "kind": "product-story-draft",
+                    "source": f"packages/vfgrowth/drafts/NEXT-{today}-G004-stories.md",
+                },
+            ],
+            "resolution": "אם G004 לא מוכן — המלצה יחידה לסקר; אחרת המלצה יחידה ל-G004",
+        }
     text = (
         f"VELVET ORGANIC GROWTH BRIEF — 07:00\n"
+        f"יום: {pack['weekdayNote']}\n"
         f"יעד היום: {pack['goal']}\n"
         f"1. REEL · {pack['reel']['slot']} · gate={pack['reel']['gate']}\n"
         f"{pack['reel']['no_media_line']}\n"
         f"CTA: {pack['reel']['cta']}\n"
         f"סט האשטגים: {pack['reel']['hashtag_set_id']}\n"
         f"פעולה: [אישור] [עריכה] [דחייה] — אישור ≠ פרסום\n"
-        f"2. STORY · {pack['story']['slot']} · {pack['story']['question']}\n"
-        f"אפשרויות: {' / '.join(pack['story']['options'])}\n"
+        f"2. STORY · {pack['story']['slotStatus']} · gate={pack['story']['gate']}\n"
+        f"המלצה יחידה: {slot_rec['choice']} · {slot_rec['whenHe']}\n"
+        f"נימוק: {slot_rec['reason']}\n"
+        f"סקר (לא שיבוץ מקביל): {pack['story']['question']} · {' / '.join(pack['story']['options'])}\n"
+        f"{pack['story'].get('note')}\n"
         f"פעולה: [אישור] [עריכה] [דחייה]\n"
-        f"3. אתמול: Insights {pack['yesterday']['insights']} · WhatsApp {pack['yesterday']['whatsapp_leads']}\n"
+        f"3. אתמול: Insights {pack['yesterday']['insights']} · הזמנות {pack['yesterday']['recommendation']}\n"
         f"4. סטודיו: {'; '.join(pack['studio_tasks'])}\n"
         "אין Publish / אין אוטו-DM / אין ₪ מומצא."
     )
