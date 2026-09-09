@@ -34,7 +34,7 @@ Stabilize VelvetOS Core with four local fixes — not a sync/observability rewri
 
 ```bash
 python3 scripts/vf_send_preflight.py --pretty
-python3 scripts/vf_send_preflight.py --gate instagram   # expect exit 2 while remote_access pending / no MCP secrets
+python3 scripts/vf_send_preflight.py --gate instagram   # ready when MCP live_check.ok; exit 2 only if auth/remote down or no secrets
 VELVETOS_CORE_OFFLINE=1 VELVETOS_CORE_PATH=/workspace \
   instances/velvet-factory/scripts/attach-core.sh
 python3 scripts/check-all.py
