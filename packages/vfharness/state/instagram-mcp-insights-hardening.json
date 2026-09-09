@@ -1,0 +1,12 @@
+{
+  "task_id": "instagram-mcp-insights-hardening",
+  "component_state": "Syncing",
+  "summary_he": "Insights עלו לפרודקשן ואומתו ב-smoke; נדרש revision נוסף לתיקון 307 /mcp→/mcp/",
+  "verified": {
+    "insights_default": true,
+    "insights_mixed": true,
+    "health_insights_compat": "graph_v21",
+    "smoke_at": "2026-09-09T17:59:35Z"
+  },
+  "next": "Owner redeploy for redirect_slashes=False; then smoke without slash workaround"
+}
