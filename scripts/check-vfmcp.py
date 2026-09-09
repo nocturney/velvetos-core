@@ -308,10 +308,31 @@ def main() -> None:
         "update_media_caption",
         "delete_media",
         "instagram_manage_contents",
+        "graph_mutation_matrix",
+        "Not exposed",
     ):
         if needle not in mut_text:
             fail(f"GRAPH-MUTATIONS.md must mention {needle}")
+    mutations_py = (remote_dir / "mutations.py").read_text(encoding="utf-8")
+    if "NEVER_EXPOSE_AS_WRITE_TOOLS" not in mutations_py:
+        fail("mutations.py must define NEVER_EXPOSE_AS_WRITE_TOOLS")
+    # Misleading write tools must not be registered as @mcp.tool functions.
+    if "def update_profile(" in mutations_py or "def update_media_caption(" in mutations_py:
+        fail("mutations.py must not register update_profile/update_media_caption as MCP tools")
+    if "def graph_mutation_matrix(" not in mutations_py:
+        fail("mutations.py must expose graph_mutation_matrix as capability SoT")
     caps = json.loads((ROOT / "packages" / "vfigos" / "CAPABILITIES.json").read_text(encoding="utf-8"))
+    for cap_id in ("instagram.profile.update", "instagram.media.caption.update"):
+        row = next((c for c in (caps.get("capabilities") or []) if c.get("id") == cap_id), None)
+        if not row:
+            fail(f"CAPABILITIES missing {cap_id}")
+        if row.get("supported") is not False:
+            fail(f"{cap_id} must set supported=false")
+        cap_tools = row.get("tools") or []
+        if "update_profile" in cap_tools or "update_media_caption" in cap_tools:
+            fail(f"{cap_id} must not list misleading write tool names")
+        if "graph_mutation_matrix" not in cap_tools:
+            fail(f"{cap_id} must point agents at graph_mutation_matrix SoT")
     rv = caps.get("remoteVerify") or {}
     if rv.get("chatgptConnected") is not True:
         fail("CAPABILITIES remoteVerify.chatgptConnected must be true after 2026-09-09 verify")

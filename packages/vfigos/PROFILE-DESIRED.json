@@ -38,7 +38,7 @@
   },
   "execution": {
     "graphWrite": "unsupported_by_official_graph",
-    "mcpTool": "update_profile → always unsupported",
+    "mcpTool": "none — graph_mutation_matrix only (update_profile not exposed as write tool)",
     "humanPath": "Instagram app → Edit profile → paste desired.bioHe → save → re-run get_profile / audit_profile_cta",
     "doNot": ["browser automation", "private API", "auto-mutate from HQ"]
   },

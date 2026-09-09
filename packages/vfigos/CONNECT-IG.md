@@ -36,7 +36,7 @@ CTA live audit: `audit_public_cta` / [`cta_audit.py`](cta_audit.py).
 | פרופיל / מדיה | `get_profile` · `list_media` · `get_media` |
 | Insights (Graph v21 overlay) | `get_account_insights` · `get_media_insights` · `get_audience_insights` — splits `metric_type=total_value`; no invented metrics |
 | CTA audit (read-only) | `audit_public_cta` · `audit_profile_cta` |
-| Mutation honesty | `graph_mutation_matrix` · `update_profile` / `update_media_caption` → `unsupported_by_official_graph` · `delete_media` gated |
+| Mutation honesty | `graph_mutation_matrix` (SoT) · profile/caption writes **not exposed** · `delete_media` gated |
 | פרסום פיד | `publish_image` · `publish_carousel` · `publish_video` |
 | ריל | `publish_reel` |
 | **סטורי** | `publish_story` (אותו MCP — לא מערכת נפרדת) |

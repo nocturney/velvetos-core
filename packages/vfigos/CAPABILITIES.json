@@ -65,8 +65,9 @@
       "id": "instagram.profile.update",
       "he": "עדכון פרופיל",
       "status": "unsupported_by_official_graph",
-      "tools": ["update_profile", "graph_mutation_matrix"],
-      "note": "Meta IG User Updating not supported. Tool returns unsupported_by_official_graph; human edits via Instagram app. See GRAPH-MUTATIONS.md + PROFILE-DESIRED.json."
+      "supported": false,
+      "tools": ["graph_mutation_matrix"],
+      "note": "Meta IG User Updating not supported. No MCP write tool exposed (update_profile removed — misleading). SoT: graph_mutation_matrix. Human edits via Instagram app. See GRAPH-MUTATIONS.md + PROFILE-DESIRED.json."
     },
     {
       "id": "instagram.media.list",
@@ -77,14 +78,16 @@
       "id": "instagram.media.caption.update",
       "he": "עריכת כיתוב קיים",
       "status": "unsupported_by_official_graph",
-      "tools": ["update_media_caption"],
-      "note": "POST /{ig-media-id} only toggles comment_enabled. No live caption mutation from HQ."
+      "supported": false,
+      "tools": ["graph_mutation_matrix"],
+      "note": "POST /{ig-media-id} only toggles comment_enabled. update_media_caption is NOT registered as an MCP tool. SoT: graph_mutation_matrix."
     },
     {
       "id": "instagram.media.delete",
       "he": "מחיקת מדיה",
       "status": "supported_gated",
-      "tools": ["delete_media"],
+      "supported": true,
+      "tools": ["delete_media", "graph_mutation_matrix"],
       "note": "Official DELETE /{ig-media-id} requires instagram_manage_contents + confirm_irreversible. No live delete in hardening task."
     },
     {

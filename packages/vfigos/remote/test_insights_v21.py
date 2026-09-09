@@ -191,15 +191,32 @@ class MutationMatrixTests(unittest.TestCase):
             "update_website",
             "update_name",
             "update_media_caption",
+            "update_profile",
             "archive_media",
         ):
             self.assertEqual(MATRIX[op]["status"], "unsupported_by_official_graph")
+            self.assertIs(MATRIX[op]["supported"], False)
+            self.assertIsNone(MATRIX[op].get("mcp_tool"))
             out = _unsupported(op)
             self.assertFalse(out["mutated"])
+            self.assertIs(out["supported"], False)
             self.assertEqual(out["status"], "unsupported_by_official_graph")
 
+    def test_misleading_write_tools_not_registered(self):
+        from mutations import NEVER_EXPOSE_AS_WRITE_TOOLS, apply_mutation_tools
+        from instagram_mcp.server import mcp
+        import asyncio
+
+        apply_mutation_tools(mcp)
+        names = {t.name for t in asyncio.run(mcp.list_tools())}
+        for banned in NEVER_EXPOSE_AS_WRITE_TOOLS:
+            self.assertNotIn(banned, names)
+        self.assertIn("graph_mutation_matrix", names)
+        self.assertIn("delete_media", names)
+
     def test_delete_supported_but_destructive(self):
-        self.assertEqual(MATRIX["delete_media"]["status"], "supported")
+        self.assertIs(MATRIX["delete_media"]["supported"], True)
+        self.assertEqual(MATRIX["delete_media"]["mcp_tool"], "delete_media")
         self.assertIn("instagram_manage_contents", MATRIX["delete_media"]["permissions"])
 
 

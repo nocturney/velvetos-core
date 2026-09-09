@@ -73,7 +73,7 @@ Overlays (do not fork the whole Instagram MCP):
 | File | Role |
 |---|---|
 | `remote/insights_v21.py` | Graph v21 Insights metric_type split + sane defaults |
-| `remote/mutations.py` | Honest `unsupported_by_official_graph` + gated `delete_media` |
+| `remote/mutations.py` | `graph_mutation_matrix` SoT + gated `delete_media` (no misleading update_profile/caption tools) |
 | `remote/cta_tools.py` | Read-only `audit_public_cta` / `audit_profile_cta` |
 
 Redeploy with owner `gcloud` (`./packages/vfigos/remote/deploy.sh`) after Insights/CTA/mutation overlays change. This Cloud Agent has **no GCP credentials** — report `CODE READY / DEPLOYMENT PENDING OWNER GCP` when deploy is blocked.

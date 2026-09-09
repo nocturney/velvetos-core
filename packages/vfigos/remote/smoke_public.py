@@ -208,28 +208,34 @@ def main() -> int:
             "Cloud Run deploy of remote/insights_v21.py to gate the suite on them."
         )
 
-    # Mutation honesty tools — only gate when present or when deploy is expected fixed.
+    # Mutation SoT — unsupported writes must NOT appear as tools.
     tool_set = set(names)
+    banned_writes = {
+        "update_profile",
+        "update_media_caption",
+        "update_biography",
+        "update_website",
+        "update_name",
+        "archive_media",
+    }
     if "graph_mutation_matrix" in tool_set:
-        report["checks"]["mutation_tools_present"] = {
-            "graph_mutation_matrix",
-            "update_profile",
-            "update_media_caption",
-            "audit_public_cta",
-        }.issubset(tool_set)
+        report["checks"]["no_misleading_write_tools"] = tool_set.isdisjoint(banned_writes)
+        report["checks"]["mutation_sot_present"] = "graph_mutation_matrix" in tool_set
         c, matrix = call("graph_mutation_matrix", rid=16)
         report["checks"]["graph_mutation_matrix"] = (
-            c == 200 and isinstance(matrix, dict) and matrix.get("ok") is True
-        )
-        c, up = call("update_profile", {"biography": "test"}, rid=17)
-        report["checks"]["update_profile_unsupported"] = (
             c == 200
-            and isinstance(up, dict)
-            and up.get("status") == "unsupported_by_official_graph"
-            and up.get("mutated") is False
+            and isinstance(matrix, dict)
+            and matrix.get("ok") is True
+            and "matrix" in matrix
         )
+        if isinstance(matrix, dict):
+            m = matrix.get("matrix") or {}
+            report["checks"]["matrix_profile_unsupported"] = (
+                (m.get("update_profile") or {}).get("supported") is False
+                and (m.get("update_media_caption") or {}).get("supported") is False
+            )
     elif expect_fixed:
-        report["checks"]["mutation_tools_present"] = False
+        report["checks"]["mutation_sot_present"] = False
 
     ok = all(report["checks"].values())
     report["ok"] = ok

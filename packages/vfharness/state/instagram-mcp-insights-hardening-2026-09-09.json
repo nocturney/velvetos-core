@@ -9,10 +9,12 @@
     "bio_mutated": false,
     "caption_mutated": false,
     "publish_exercised": false,
-    "dm_enabled": false
+    "dm_enabled": false,
+    "misleading_write_tools": "removed",
+    "deploy_path": "blocked_no_authorized_automation"
   },
-  "latest_observation": "Graph v21 Insights patch + mutation matrix + CTA audit committed. Production Cloud Run still serves pre-patch insights (impressions / metric_type failures). No gcloud in this Cloud Agent — DEPLOYMENT PENDING OWNER GCP. ChatGPT Business API-key connect verified for healthcheck/get_profile/list_media.",
-  "next_step": "Owner: ./packages/vfigos/remote/deploy.sh then INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 python3 packages/vfigos/remote/smoke_public.py. Human: edit bio via Instagram app per PROFILE-DESIRED.json. ChatGPT: call get_account_insights after deploy; audit_public_cta for historical CTA report; do not mutate history.",
+  "latest_observation": "Misleading update_profile/update_media_caption tools removed; graph_mutation_matrix is SoT with supported=false. No authorized auto-deploy path (no gcloud, no GCP env, no GH Actions Cloud Run workflow). Production still pre-patch Insights.",
+  "next_step": "Owner only: ./packages/vfigos/remote/deploy.sh  then  INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 python3 packages/vfigos/remote/smoke_public.py. Merge recommendation: B — merge only #145; close #144 as superseded.",
   "locks": [
     "no-secrets-in-git",
     "no-auto-dm",
