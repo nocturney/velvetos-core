@@ -26,7 +26,7 @@
 | 1 | `/opt/cursor/artifacts/g004-stories-preview/g004-frame-01.png` | איפה הטבעת? · לפני האימון | ורוד על השידה |
 | 2 | `/opt/cursor/artifacts/g004-stories-preview/g004-frame-02.png` | הטבעות למעלה · לא על הרצפה | הטבעות למעלה לפני האימון |
 | 3 | `/opt/cursor/artifacts/g004-stories-preview/g004-frame-03.png` | קטלבל ורוד · ובפנים טבעות | מתנה · פינת אימון · אופי |
-| 4 | `/opt/cursor/artifacts/g004-stories-preview/g004-frame-04.png` | (ייצוא PNG עמוד 4) | שלחו הודעה כאן באינסטגרם · איסוף שדרות |
+| 4 | `/opt/cursor/artifacts/g004-stories-preview/g004-frame-04.png` (מ־`DAHUfRQMH60` — עמוד 4 ב־`DAHUaUo3bAk` יצא ריק בייצוא) | **עדיין וואטסאפ `050-2517000` על הפריים** → revised-media לפי `G004-STORIES-FIX` | שלחו הודעה כאן באינסטגרם · איסוף שדרות |
 
 **שער עריכה:** הפריים החיים עדיין בקופי חידה/מגבלה — **לא** יושמו עדיין שורות `G004-STORIES-FIX` «על הפריים». כיתוב נעול לא שונה; הצעת שינוי לקופי על הפריים נשארת ב־`G004-STORIES-FIX.md` (לא נעילה מחדש כאן).
 
