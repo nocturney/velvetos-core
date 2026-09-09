@@ -69,6 +69,6 @@
 
 ## משימות ChatGPT (רק אחרי הוכחת נתיב)
 להשאיר: Velvet Morning Brief, optional Velvet Publish Watch / hard-blocker alert
-מועמדים לכיבוי אחרי הוכחה: Media Intake, Content Sprint, Insights/Office Review, Memory Hygiene, Opportunity Radar, WIP→Finished watcher, Dead-letter monitoring, routine watchdog, source-of-truth validation
+מועמדים לכיבוי אחרי הוכחה: Media Intake, Content Sprint, Insights/Office Review, Memory Hygiene, Opportunity Radar, WIP→Finished watcher, Dead-letter monitoring, routine watchdog, source-of-truth validation, Studio Pulse, Universal Intake, Invisible Work Detector, Failure Museum, Velvet Lab, Living Studio Skills Registry
 
 אל תפנה לכריסטיאן על מדדים חלשים.

@@ -1288,7 +1288,7 @@
       "url": "https://github.com/adelaidasofia/instagram-mcp",
       "title": "instagram-mcp — canonical Instagram Graph API MCP",
       "firstEmbedded": "2026-09-08",
-      "lastReviewed": "2026-09-08",
+      "lastReviewed": "2026-09-09",
       "status": "canonical",
       "connect": "packages/vfigos/CONNECT-IG.md",
       "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
@@ -1298,7 +1298,7 @@
         "vfgrowth",
         "vfmcp"
       ],
-      "note": "Package adelaidasofia-instagram-mcp. Codespace stdio verified. Stories+Insights+publish_*. DM off. remote_access pending. Failover Canva+Drive+Gmail."
+      "note": "Package adelaidasofia-instagram-mcp. Cloud remote ready (auth+remote_access). Stories+Insights deployed live+publish_* available_not_live_tested. DM off. Failover Canva+Drive+Gmail."
     }
   ],
   "addLink": {

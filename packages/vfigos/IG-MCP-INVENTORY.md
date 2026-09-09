@@ -1,5 +1,9 @@
 # Inventory · Instagram integration (pre-edit · 2026-09-08)
 
+> **Historical pre-edit audit only.** Current SoT: `packages/vfigos/CAPABILITIES.json`  
+> (`currentStatus`/`auth`/`remote_access` = `ready`, Insights `deployed=true`, publish = available_not_live_tested).  
+> Do not treat the “Old claim” column below as live status.
+
 Audit before making `adelaidasofia/instagram-mcp` canonical. No secrets.
 
 ## Hot paths (canonical today → must change)

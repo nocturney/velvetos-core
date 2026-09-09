@@ -18,169 +18,405 @@
       "id": "inquiry.received",
       "direction": "edge-or-office→kernel→office",
       "emits": "office",
-      "payloadKeys": ["channel", "threadRef", "summary"],
+      "payloadKeys": [
+        "channel",
+        "threadRef",
+        "summary"
+      ],
       "note": "New lead/inquiry named; no invented customer fields"
     },
     {
       "id": "task.state_changed",
       "direction": "kernel↔office",
       "emits": "kernel",
-      "payloadKeys": ["taskId", "componentState", "status"],
+      "payloadKeys": [
+        "taskId",
+        "componentState",
+        "status"
+      ],
       "note": "component_state: Idle|Processing|Degraded|Syncing|Blocked"
     },
     {
       "id": "sensor.degraded",
       "direction": "kernel→office",
       "emits": "kernel",
-      "payloadKeys": ["sensorId", "reason", "failover"],
+      "payloadKeys": [
+        "sensorId",
+        "reason",
+        "failover"
+      ],
       "note": "Computational sensor or tool entered Degraded Mode"
     },
     {
       "id": "sensor.recovered",
       "direction": "kernel→office",
       "emits": "kernel",
-      "payloadKeys": ["sensorId"],
+      "payloadKeys": [
+        "sensorId"
+      ],
       "note": "Left Degraded Mode"
     },
     {
       "id": "tool.failover",
       "direction": "kernel→office",
       "emits": "kernel",
-      "payloadKeys": ["fromTool", "toTool", "artifact"],
+      "payloadKeys": [
+        "fromTool",
+        "toTool",
+        "artifact"
+      ],
       "note": "Same-turn failover per ORCHESTRA.md"
     },
     {
       "id": "mail.sent",
       "direction": "office→kernel",
       "emits": "office",
-      "payloadKeys": ["threadRef", "kind"],
+      "payloadKeys": [
+        "threadRef",
+        "kind"
+      ],
       "note": "Gmail tool receipt only — do not claim send without tool"
     },
     {
       "id": "retro.anomaly",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["kind", "evidence", "briefSlot"],
+      "payloadKeys": [
+        "kind",
+        "evidence",
+        "briefSlot"
+      ],
       "note": "From vf_retro_signals.py — operational alert to brief, not owner shame"
     },
     {
       "id": "print.done",
       "direction": "edge→kernel→office",
       "emits": "edge",
-      "payloadKeys": ["sku", "material", "grams", "minutes", "mediaPath", "license"],
+      "payloadKeys": [
+        "sku",
+        "material",
+        "grams",
+        "minutes",
+        "mediaPath",
+        "license"
+      ],
       "note": "Successful print card for content handoff; HQ does not drive printers. Edge emitter may be a floor farm dashboard (Watchtower) — vfprod/WATCHTOWER.md. Missing media = חסר"
     },
     {
       "id": "print.route_suggested",
       "direction": "office→edge",
       "emits": "office",
-      "payloadKeys": ["material", "printerId", "reason"],
+      "payloadKeys": [
+        "material",
+        "printerId",
+        "reason"
+      ],
       "note": "Bed recommendation only. Floor assigns. Never Print from HQ."
     },
     {
       "id": "print.filament_short",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["filamentId", "sliceGrams", "remainingGrams"],
+      "payloadKeys": [
+        "filamentId",
+        "sliceGrams",
+        "remainingGrams"
+      ],
       "note": "Night-print block when slice grams exceed verified spool remainder. Missing remainder = אין ספירה"
     },
     {
       "id": "print.maintenance_due",
       "direction": "edge→office",
       "emits": "edge",
-      "payloadKeys": ["printerId", "kind", "evidence"],
+      "payloadKeys": [
+        "printerId",
+        "kind",
+        "evidence"
+      ],
       "note": "Nozzle/lube/filter after print.done — brief slot 03. No invented telemetry."
     },
     {
       "id": "brief.gate_applied",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["gateId", "decision", "kind"],
+      "payloadKeys": [
+        "gateId",
+        "decision",
+        "kind"
+      ],
       "note": "Human yes/no/defer from 07:00 brief. Not WhatsApp send. Not sale ₪."
     },
     {
       "id": "catalog.scan_blocked",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["slotId", "reason"],
+      "payloadKeys": [
+        "slotId",
+        "reason"
+      ],
       "note": "SKU offered without verified slice/cost/license — fail-closed"
     },
     {
       "id": "content.draft_ready",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["jobId", "format", "preflightPath"],
+      "payloadKeys": [
+        "jobId",
+        "format",
+        "preflightPath"
+      ],
       "note": "Draft reel/story ready for PREFLIGHT/vfigos — not a live publish claim"
     },
     {
       "id": "content.policy_checked",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["contentId", "gate", "ok"],
+      "payloadKeys": [
+        "contentId",
+        "gate",
+        "ok"
+      ],
       "note": "ORGANIC_GROWTH policy pass; fail-closed stays blocked_policy"
     },
     {
       "id": "content.approved_for_manual_posting",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["contentId", "gate"],
+      "payloadKeys": [
+        "contentId",
+        "gate"
+      ],
       "note": "Human approval only — does not publish to Instagram"
     },
     {
       "id": "content.posted_manually",
       "direction": "office→kernel",
       "emits": "office",
-      "payloadKeys": ["contentId", "humanMarkedBy"],
+      "payloadKeys": [
+        "contentId",
+        "humanMarkedBy"
+      ],
       "note": "Only a human marks posted after instagram.com upload. Core API must not emit this."
     },
     {
       "id": "community.work_order",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["workOrderId", "approvalState", "pollQuestion"],
+      "payloadKeys": [
+        "workOrderId",
+        "approvalState",
+        "pollQuestion"
+      ],
       "note": "pending_ops only — not Print from HQ, not auto-tag"
     },
     {
       "id": "lead.attributed",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["orderId", "certainty", "sourceContentId"],
+      "payloadKeys": [
+        "orderId",
+        "certainty",
+        "sourceContentId"
+      ],
       "note": "Probabilistic attribution; WhatsApp ping is not certain conversion; no invented ₪"
     },
     {
       "id": "shelf.scan_pass",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["scanDay", "shelfReady", "namedModels"],
+      "payloadKeys": [
+        "scanDay",
+        "shelfReady",
+        "namedModels"
+      ],
       "note": "Sun/Wed MakerWorld pass; namedModels stay empty until GATE+slice. HQ does not run Orca"
     },
     {
       "id": "books.integrity_flag",
       "direction": "office→office",
       "emits": "office",
-      "payloadKeys": ["missingInvoiceCount", "briefSlot"],
+      "payloadKeys": [
+        "missingInvoiceCount",
+        "briefSlot"
+      ],
       "note": "Internal missing-invoice flag for slot 02; no customer collection mail"
     },
     {
       "id": "sync.completed",
       "direction": "edge→kernel",
       "emits": "edge",
-      "payloadKeys": ["bufferCount", "host"],
+      "payloadKeys": [
+        "bufferCount",
+        "host"
+      ],
       "note": "Future edge buffer flush; absent host = do not invent"
     },
     {
       "id": "task.command",
       "direction": "office→edge",
       "emits": "office",
-      "payloadKeys": ["command", "taskId"],
+      "payloadKeys": [
+        "command",
+        "taskId"
+      ],
       "note": "Future edge command; never Print/boost/auto-DM"
     },
     {
       "id": "sync.request",
       "direction": "office→edge",
       "emits": "office",
-      "payloadKeys": ["since"],
+      "payloadKeys": [
+        "since"
+      ],
       "note": "Ask edge to flush buffer when host is available"
+    },
+    {
+      "id": "media.intake.registered",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "fileId",
+        "catalogId",
+        "phase"
+      ],
+      "note": "Row added to canonical vfmedia catalog from inbox scan. Not verified yet. Not visual review."
+    },
+    {
+      "id": "media.intake.verified",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "fileId",
+        "catalogId",
+        "phase",
+        "downloadBytes"
+      ],
+      "note": "Download verified + moved inbox→source. Visual review remains independent."
+    },
+    {
+      "id": "media.intake.move_pending",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "fileId",
+        "catalogId",
+        "pending"
+      ],
+      "note": "Download verified locally; Drive move awaiting MCP/API apply. Still registered until apply-moves."
+    },
+    {
+      "id": "media.intake.failed",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "fileId",
+        "error",
+        "attempts",
+        "nextAfter"
+      ],
+      "note": "Backoff retry path; never permanentStop. Max delay then repeat last interval."
+    },
+    {
+      "id": "media.intake.unverified",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "fileId",
+        "error",
+        "phase"
+      ],
+      "note": "No real download bytes inspected — stay registered. Metadata/size is not proof."
+    },
+    {
+      "id": "media.intake.content_changed",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "fileId",
+        "priorFingerprint",
+        "newFingerprint",
+        "approvalInherited"
+      ],
+      "note": "Same Drive fileId, new checksum/revision — versionApproval not inherited."
+    },
+    {
+      "id": "media.intake.listing_failed",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "error",
+        "pageToken",
+        "nextAfter"
+      ],
+      "note": "Inbox list/pagination failure with documented backoff recovery."
+    },
+    {
+      "id": "signal.room.emitted",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "signalId",
+        "kind",
+        "source",
+        "entityId"
+      ],
+      "note": "Normalized Signal Room envelope over existing SoT changes. Not an event broker."
+    },
+    {
+      "id": "studio.pulse.generated",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "generatedAt",
+        "blockerCount",
+        "ownerRequired"
+      ],
+      "note": "Studio Pulse projection generated from World Model / Control Plane."
+    },
+    {
+      "id": "intake.universal.routed",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "intakeId",
+        "kind",
+        "route",
+        "receiptId"
+      ],
+      "note": "Universal Intake classified and routed to existing SoT. No universal DB."
+    },
+    {
+      "id": "invisible.work.detected",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "itemId",
+        "impact",
+        "kind"
+      ],
+      "note": "Invisible Work Detector found known-but-underwatched work."
+    },
+    {
+      "id": "failure.museum.recorded",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "failureId",
+        "lesson",
+        "linked"
+      ],
+      "note": "Failure Museum learning record from dead-letter/retro/checkpoint evidence."
+    },
+    {
+      "id": "lab.experiment.recorded",
+      "direction": "office→office",
+      "emits": "office",
+      "payloadKeys": [
+        "experimentId",
+        "hypothesis",
+        "result"
+      ],
+      "note": "Velvet Lab experiment record. No invented metrics."
     }
   ]
 }

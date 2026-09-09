@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-09T12:20:00+03:00",
+  "updatedAt": "2026-09-09T23:48:56+03:00",
   "date": "2026-09-09",
   "active_now": [],
   "waiting": [
@@ -71,7 +71,13 @@
     "WIP→Finished watcher",
     "Dead-letter monitoring",
     "routine watchdog",
-    "source-of-truth validation"
+    "source-of-truth validation",
+    "Studio Pulse",
+    "Universal Intake",
+    "Invisible Work Detector",
+    "Failure Museum",
+    "Velvet Lab",
+    "Living Studio Skills Registry"
   ],
   "chatgpt_tasks_keep": [
     "Velvet Morning Brief",
