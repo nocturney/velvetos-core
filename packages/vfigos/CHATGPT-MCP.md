@@ -19,6 +19,31 @@ Protocol smoke (with Bearer) from the public URL:
 `initialize` → `notifications/initialized` → `tools/list` → `healthcheck` / `get_profile` / `list_media` — OK.  
 `get_profile.profile.username` = `velvets_cloud`. No publish exercised.
 
+## ChatGPT Business — CONNECTED + VERIFIED 2026-09-09
+
+VelvetOS_Instagram plugin visible with 29 upstream tools (+ VelvetOS overlays after deploy).
+
+| Check | Result |
+|---|---|
+| healthcheck | PASS |
+| Graph reachable | PASS |
+| default account | env |
+| username | velvets_cloud |
+| get_profile | PASS |
+| list_media | PASS (7 live items) |
+| get_account_insights (pre-patch) | FAIL — deprecated `impressions` + missing `metric_type=total_value` |
+| publish_* | available · **not** live-tested this task |
+| DM | disabled (Velvet policy) |
+
+Insights fix lives in [`remote/insights_v21.py`](remote/insights_v21.py). Mark Insights **fixed** only after owner Cloud Run redeploy + `INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 python3 packages/vfigos/remote/smoke_public.py`.
+
+CTA audit (read-only): `audit_public_cta` / `audit_profile_cta` after deploy.  
+Profile/caption writes: [`GRAPH-MUTATIONS.md`](GRAPH-MUTATIONS.md) — mostly `unsupported_by_official_graph`.
+
+### Not an Instagram MCP issue
+
+ChatGPT may also show a GitHub connector that returns “disabled” on invoke. That is ChatGPT/plugin-side state — do **not** change GitHub auth, tokens, Actions, or Apps from VelvetOS to “fix” it.
+
 ## What to choose in ChatGPT
 
 1. Developer Mode / Create custom MCP connector.
@@ -41,7 +66,17 @@ If the UI only offers OAuth and No Auth (no API key), stop and escalate — do n
 
 ## Remote package (deploy source of truth)
 
-HTTP entry for Cloud Run lives under [`remote/`](remote/README.md). Redeploy only when changing auth/CORS/entrypoint — not required just to pick API key in ChatGPT.
+HTTP entry for Cloud Run lives under [`remote/`](remote/README.md).
+
+Overlays (do not fork the whole Instagram MCP):
+
+| File | Role |
+|---|---|
+| `remote/insights_v21.py` | Graph v21 Insights metric_type split + sane defaults |
+| `remote/mutations.py` | Honest `unsupported_by_official_graph` + gated `delete_media` |
+| `remote/cta_tools.py` | Read-only `audit_public_cta` / `audit_profile_cta` |
+
+Redeploy with owner `gcloud` (`./packages/vfigos/remote/deploy.sh`) after Insights/CTA/mutation overlays change. This Cloud Agent has **no GCP credentials** — report `CODE READY / DEPLOYMENT PENDING OWNER GCP` when deploy is blocked.
 
 ## Related
 

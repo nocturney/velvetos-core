@@ -34,6 +34,12 @@
 
 אם אין כלי IG חי: `awaiting-live-audit` — מכינים מתוך ראיות ריפו/מדיה.
 
+## כלים
+
+אחרי חיבור MCP: `audit_public_cta` / `audit_profile_cta` (read-only).  
+עריכת כיתוב/ביו דרך Graph = `unsupported_by_official_graph` — ראו `packages/vfigos/GRAPH-MUTATIONS.md`.  
+אין מחיקה/ארכיון אוטומטי להיסטוריה בגלל CTA ישן.
+
 ## אחסון
 
 [`data/feed-audit.json`](data/feed-audit.json)

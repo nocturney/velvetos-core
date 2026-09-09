@@ -1,0 +1,23 @@
+{
+  "task_id": "instagram-mcp-insights-hardening-2026-09-09",
+  "component_state": "Degraded",
+  "execution_state": {
+    "phase": "code_ready_deploy_pending",
+    "chatgpt_connected": true,
+    "insights_code": "ready",
+    "insights_public_fixed": false,
+    "bio_mutated": false,
+    "caption_mutated": false,
+    "publish_exercised": false,
+    "dm_enabled": false
+  },
+  "latest_observation": "Graph v21 Insights patch + mutation matrix + CTA audit committed. Production Cloud Run still serves pre-patch insights (impressions / metric_type failures). No gcloud in this Cloud Agent — DEPLOYMENT PENDING OWNER GCP. ChatGPT Business API-key connect verified for healthcheck/get_profile/list_media.",
+  "next_step": "Owner: ./packages/vfigos/remote/deploy.sh then INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 python3 packages/vfigos/remote/smoke_public.py. Human: edit bio via Instagram app per PROFILE-DESIRED.json. ChatGPT: call get_account_insights after deploy; audit_public_cta for historical CTA report; do not mutate history.",
+  "locks": [
+    "no-secrets-in-git",
+    "no-auto-dm",
+    "no-live-publish-this-task",
+    "no-bio-caption-mutation-this-task",
+    "no-github-permission-fix"
+  ]
+}

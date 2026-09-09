@@ -7,7 +7,9 @@ Requires env:
 
 Checks: no-auth 401, initialize → initialized → tools/list,
 healthcheck, get_profile (@velvets_cloud), list_media.
-Never calls publish_*.
+Optional Insights Graph v21 checks (reported; fail suite only when
+INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 after production deploy).
+Never calls publish_* / delete_media / DM.
 """
 
 from __future__ import annotations
@@ -163,6 +165,71 @@ def main() -> int:
         c == 200 and isinstance(count, int) and count >= 1 and (not usernames or usernames == {EXPECTED_USER})
     )
     report["list_media_count"] = count
+
+    # Insights Graph v21 — do not invent metrics; surface Meta errors.
+    c, ins_default = call("get_account_insights", {"period": "day"}, rid=14)
+    default_ok = c == 200 and isinstance(ins_default, dict) and ins_default.get("ok") is True
+    default_err = (ins_default or {}).get("error") if isinstance(ins_default, dict) else None
+    report["insights"] = {
+        "default_ok": default_ok,
+        "default_error": default_err,
+        "impressions_rejected": bool(default_err and "impressions" in str(default_err).lower())
+        or bool(default_err and "metric[1]" in str(default_err)),
+    }
+    c, ins_mixed = call(
+        "get_account_insights",
+        {
+            "period": "day",
+            "metrics": "reach,profile_views,follower_count,total_interactions",
+        },
+        rid=15,
+    )
+    mixed_ok = c == 200 and isinstance(ins_mixed, dict) and (
+        ins_mixed.get("ok") is True or ins_mixed.get("partial") is True
+    )
+    mixed_err = (ins_mixed or {}).get("error") if isinstance(ins_mixed, dict) else None
+    report["insights"]["mixed_ok"] = mixed_ok
+    report["insights"]["mixed_error"] = mixed_err
+    report["insights"]["metric_type_error"] = bool(
+        mixed_err and "metric_type=total_value" in str(mixed_err)
+    )
+    expect_fixed = os.environ.get("INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED", "").strip() in {
+        "1",
+        "true",
+        "yes",
+    }
+    report["insights"]["expect_fixed"] = expect_fixed
+    if expect_fixed:
+        report["checks"]["insights_default"] = default_ok and not report["insights"]["impressions_rejected"]
+        report["checks"]["insights_mixed"] = mixed_ok and not report["insights"]["metric_type_error"]
+    else:
+        report["insights"]["note"] = (
+            "Insights reported only — set INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 after "
+            "Cloud Run deploy of remote/insights_v21.py to gate the suite on them."
+        )
+
+    # Mutation honesty tools — only gate when present or when deploy is expected fixed.
+    tool_set = set(names)
+    if "graph_mutation_matrix" in tool_set:
+        report["checks"]["mutation_tools_present"] = {
+            "graph_mutation_matrix",
+            "update_profile",
+            "update_media_caption",
+            "audit_public_cta",
+        }.issubset(tool_set)
+        c, matrix = call("graph_mutation_matrix", rid=16)
+        report["checks"]["graph_mutation_matrix"] = (
+            c == 200 and isinstance(matrix, dict) and matrix.get("ok") is True
+        )
+        c, up = call("update_profile", {"biography": "test"}, rid=17)
+        report["checks"]["update_profile_unsupported"] = (
+            c == 200
+            and isinstance(up, dict)
+            and up.get("status") == "unsupported_by_official_graph"
+            and up.get("mutated") is False
+        )
+    elif expect_fixed:
+        report["checks"]["mutation_tools_present"] = False
 
     ok = all(report["checks"].values())
     report["ok"] = ok

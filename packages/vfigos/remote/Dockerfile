@@ -15,8 +15,8 @@ RUN pip install --no-cache-dir \
     "uvicorn[standard]>=0.30" \
     "starlette>=0.37"
 
-# Copy only the remote entry (tools come from the installed package).
-COPY http_server.py /app/http_server.py
+# Remote entry + Graph v21 insights / mutation / CTA audit overlays.
+COPY *.py /app/
 
 # Non-root
 RUN useradd -r -u 10001 mcp && chown -R mcp:mcp /app

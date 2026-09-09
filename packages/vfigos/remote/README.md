@@ -24,6 +24,15 @@ ChatGPT must use **Authentication = API key**, not No Auth / OAuth. See [`../CHA
 
 Never set `INSTAGRAM_MCP_DM_ENABLED` for VelvetOS HQ.
 
+## Overlays (VelvetOS — not a second Instagram MCP)
+
+| Module | Purpose |
+|---|---|
+| `insights_v21.py` | Fix Graph v21 Insights defaults + `metric_type=total_value` split |
+| `mutations.py` | Official support matrix; unsupported profile/caption writes stay honest |
+| `cta_tools.py` / `cta_audit.py` | Read-only PUBLIC_CURRENT_CTA audit of live captions/bio |
+| `test_insights_v21.py` | Regression tests for the two ChatGPT Insights failures |
+
 ## Local run
 
 ```bash

@@ -9,6 +9,10 @@ MCP קנוני: [`adelaidasofia/instagram-mcp`](https://github.com/adelaidasofia
 
 אין סודות בגיט. אין אוטו־DM. אין בוסט. אין Metricool כתלות תפעול.  
 Capability contract: [`CAPABILITIES.json`](CAPABILITIES.json).  
+ChatGPT Business connect: [`CHATGPT-MCP.md`](CHATGPT-MCP.md) — **CONNECTED + VERIFIED 2026-09-09** (API key).  
+Graph mutations honesty: [`GRAPH-MUTATIONS.md`](GRAPH-MUTATIONS.md).  
+Insights Graph v21 overlay: [`remote/insights_v21.py`](remote/insights_v21.py) (deploy required).  
+CTA live audit: `audit_public_cta` / [`cta_audit.py`](cta_audit.py).  
 מצבי פרסום: [`PUBLICATION-STATES.md`](PUBLICATION-STATES.md) — upload/schedule/publish tool ≠ `liveVerified`.  
 פריסת Codespace / פער remote: [`DEPLOY-CODESPACE.md`](DEPLOY-CODESPACE.md).  
 מדיה ציבורית לפרסום: [`docs/MEDIA-VAULT.md`](../../docs/MEDIA-VAULT.md) § «URL ציבורי לפרסום».
@@ -30,7 +34,9 @@ Capability contract: [`CAPABILITIES.json`](CAPABILITIES.json).
 |---|---|
 | בריאות / חשבונות | `healthcheck` · `list_accounts` · `account_info` |
 | פרופיל / מדיה | `get_profile` · `list_media` · `get_media` |
-| Insights | `get_account_insights` · `get_media_insights` · `get_audience_insights` |
+| Insights (Graph v21 overlay) | `get_account_insights` · `get_media_insights` · `get_audience_insights` — splits `metric_type=total_value`; no invented metrics |
+| CTA audit (read-only) | `audit_public_cta` · `audit_profile_cta` |
+| Mutation honesty | `graph_mutation_matrix` · `update_profile` / `update_media_caption` → `unsupported_by_official_graph` · `delete_media` gated |
 | פרסום פיד | `publish_image` · `publish_carousel` · `publish_video` |
 | ריל | `publish_reel` |
 | **סטורי** | `publish_story` (אותו MCP — לא מערכת נפרדת) |

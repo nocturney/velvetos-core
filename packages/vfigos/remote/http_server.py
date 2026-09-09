@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import os
 import sys
+from pathlib import Path
 
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
@@ -24,6 +25,14 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.routing import Mount, Route
+
+# Allow `python3 http_server.py` in Docker (/app) and repo checkouts.
+_HERE = Path(__file__).resolve().parent
+if str(_HERE) not in sys.path:
+    sys.path.insert(0, str(_HERE))
+_REPO = _HERE.parents[2] if len(_HERE.parents) >= 3 else None
+if _REPO and str(_REPO) not in sys.path:
+    sys.path.insert(0, str(_REPO))
 
 
 def _require_bearer() -> str:
@@ -49,6 +58,21 @@ def _build_mcp():
 
     # Import after env checks so missing Meta token fails closed before binding tools.
     from instagram_mcp.server import mcp as ig_mcp
+
+    # Graph v21 Insights hardening (does not rebuild the MCP — patches insights tools only).
+    from insights_v21 import apply_insights_patch
+
+    apply_insights_patch(ig_mcp)
+
+    # Official Graph mutation matrix tools (honest unsupported + gated delete).
+    from mutations import apply_mutation_tools
+
+    apply_mutation_tools(ig_mcp)
+
+    # Read-only live CTA constitution audit (no caption/bio mutation).
+    from cta_tools import apply_cta_audit_tools
+
+    apply_cta_audit_tools(ig_mcp)
 
     bearer = _require_bearer()
     ig_mcp.auth = StaticTokenVerifier(
@@ -78,6 +102,7 @@ async def healthz(_request: Request) -> Response:
             "auth": "bearer",
             "chatgpt_auth": "API key",
             "mcp_path": os.environ.get("MCP_PATH", "/mcp"),
+            "insights_compat": "graph_v21",
         }
     )
 
@@ -162,7 +187,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # Allow `python3 http_server.py` from this directory and module form.
-    if __package__ is None:
-        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
     main()

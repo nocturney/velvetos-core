@@ -11,7 +11,7 @@ if [[ "$PROJECT" =~ ^[0-9]+$ ]]; then
 fi
 REGION="${GCP_REGION:-me-west1}"
 SERVICE="${CLOUD_RUN_SERVICE:-velvet-instagram-mcp}"
-IMAGE="${CLOUD_RUN_IMAGE:-gcr.io/${PROJECT}/${SERVICE}:chatgpt-connector}"
+IMAGE="${CLOUD_RUN_IMAGE:-gcr.io/${PROJECT}/${SERVICE}:insights-v21-2026-09-09}"
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
 if ! command -v gcloud >/dev/null 2>&1; then
