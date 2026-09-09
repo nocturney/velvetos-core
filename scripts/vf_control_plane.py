@@ -447,23 +447,79 @@ def level_to_outcome(level: str, *, code: str = "", owner_required: bool = False
     return "OK"
 
 
-def _parse_token_expiry(expires_raw: Any, tz_name: str | None) -> datetime | None:
-    """Parse limited-expiry timestamp. Supports date-only and full ISO with offset/Z."""
-    raw = str(expires_raw or "").strip()
-    if not raw:
-        return None
-    tz = ZoneInfo(tz_name) if tz_name else TZ
+def _resolve_timezone(tz_name: str | None) -> tuple[ZoneInfo | None, str | None]:
+    """Return (tz, error_code). Never raises ZoneInfoNotFoundError to callers."""
+    name = (tz_name or "Asia/Jerusalem").strip() or "Asia/Jerusalem"
     try:
-        if len(raw) == 10 and raw[4] == "-" and raw[7] == "-":
-            # Date-only → end of that calendar day in declared timezone (still compare as datetime)
-            return datetime(int(raw[0:4]), int(raw[5:7]), int(raw[8:10]), 23, 59, 59, tzinfo=tz)
-        normalized = raw.replace("Z", "+00:00")
+        return ZoneInfo(name), None
+    except Exception as exc:  # ZoneInfoNotFoundError and odd inputs
+        return None, f"timezone_invalid:{type(exc).__name__}"
+
+
+def _parse_warn_days(raw: Any) -> tuple[int | None, str | None]:
+    """Parse warnDaysBefore; bad types → (None, error)."""
+    if raw is None or raw == "":
+        return 14, None
+    try:
+        if isinstance(raw, bool):
+            return None, "warnDaysBefore_bool"
+        val = int(raw)
+        if val < 0:
+            return None, "warnDaysBefore_negative"
+        return val, None
+    except (TypeError, ValueError):
+        return None, "warnDaysBefore_invalid"
+
+
+def _parse_token_expiry(expires_raw: Any, tz_name: str | None) -> dict:
+    """Parse limited-expiry input without inventing an unverified clock time.
+
+    Returns dict:
+      kind: full | date_only | invalid
+      when: datetime | None  (only for kind=full)
+      date_only: date | None (only for kind=date_only)
+      detail: str | None
+    Date-only NEVER becomes 23:59:59 — that hour was not verified.
+    """
+    raw = expires_raw
+    if raw is None or (isinstance(raw, str) and not raw.strip()):
+        return {"kind": "invalid", "when": None, "date_only": None, "detail": "expiresAt empty"}
+    if not isinstance(raw, (str, int, float)):
+        # reject lists/dicts/bools pretending to be dates
+        if isinstance(raw, bool):
+            return {"kind": "invalid", "when": None, "date_only": None, "detail": "expiresAt bool"}
+        return {"kind": "invalid", "when": None, "date_only": None, "detail": "expiresAt bad type"}
+    text = str(raw).strip()
+    tz, tz_err = _resolve_timezone(tz_name)
+    if tz is None:
+        return {"kind": "invalid", "when": None, "date_only": None, "detail": tz_err or "timezone_invalid"}
+
+    # Date-only YYYY-MM-DD — partial information, no invented time-of-day
+    if len(text) == 10 and text[4] == "-" and text[7] == "-":
+        try:
+            d = date.fromisoformat(text)
+        except ValueError:
+            return {"kind": "invalid", "when": None, "date_only": None, "detail": "expiresAt date-only invalid"}
+        return {
+            "kind": "date_only",
+            "when": None,
+            "date_only": d,
+            "detail": "expiresAt date-only without verified time-of-day",
+        }
+
+    try:
+        normalized = text.replace("Z", "+00:00")
         exp = datetime.fromisoformat(normalized)
         if exp.tzinfo is None:
             exp = exp.replace(tzinfo=tz)
-        return exp
-    except (ValueError, TypeError, OSError):
-        return None
+        return {"kind": "full", "when": exp, "date_only": None, "detail": None}
+    except (ValueError, TypeError, OSError) as exc:
+        return {
+            "kind": "invalid",
+            "when": None,
+            "date_only": None,
+            "detail": f"expiresAt not ISO ({type(exc).__name__})",
+        }
 
 
 def classify_token_expiry(watch: dict, *, now: datetime | None = None) -> list[dict]:
@@ -479,26 +535,48 @@ def classify_token_expiry(watch: dict, *, now: datetime | None = None) -> list[d
     if now.tzinfo is None:
         now = now.replace(tzinfo=TZ)
 
-    mode = (watch.get("expiryMode") or "").strip().lower()
+    mode_raw = watch.get("expiryMode")
+    mode = (str(mode_raw).strip().lower() if mode_raw is not None else "") or "unknown"
+    if mode not in {"none", "limited", "unknown"}:
+        mode = "unknown"
+
     expires_raw = watch.get("expiresAt")
-    evidence = watch.get("expiryEvidence") or {}
-    evidence_source = (evidence.get("source") or watch.get("expiresAtSource") or "").strip()
-    warn_days = int(watch.get("warnDaysBefore") or 14)
+    evidence = watch.get("expiryEvidence") if isinstance(watch.get("expiryEvidence"), dict) else {}
+    evidence_source = str(evidence.get("source") or watch.get("expiresAtSource") or "").strip()
+    warn_days, warn_err = _parse_warn_days(watch.get("warnDaysBefore"))
+    if warn_err:
+        issues.append(
+            {
+                "level": "yellow",
+                "code": "ig_token_watch_invalid",
+                "detail": f"warnDaysBefore פגום ({warn_err}) — לא ממציאים סף",
+                "outcome": "PREPARED",
+                "brief": True,
+            }
+        )
+        return issues
+    assert warn_days is not None
+
     tz_name = (
         watch.get("expiresAtTimezone")
         or evidence.get("timezone")
         or "Asia/Jerusalem"
     )
+    # Probe timezone early when limited path will need it
+    _, tz_err = _resolve_timezone(str(tz_name) if tz_name is not None else None)
+    if tz_err and mode == "limited":
+        issues.append(
+            {
+                "level": "yellow",
+                "code": "ig_token_expiry_unverified",
+                "detail": f"אזור זמן לא תקין לטוקן IG ({tz_err}) — לא מפילים watchdog; לא ממציאים תאריך",
+                "outcome": "PREPARED",
+                "brief": True,
+            }
+        )
+        return issues
 
     owner_none_sources = {"owner-reported-meta", "owner_reported_meta"}
-
-    # expiresAt=null alone is insufficient — need explicit mode + evidence for "none"
-    if mode in {"", "unknown"} or mode not in {"none", "limited", "unknown"}:
-        if mode not in {"none", "limited", "unknown"}:
-            mode = "unknown"
-        if mode == "unknown" and not expires_raw:
-            # Explicit none only when mode=none AND owner-reported evidence
-            pass
 
     if mode == "none":
         if evidence_source.lower() not in owner_none_sources:
@@ -515,9 +593,8 @@ def classify_token_expiry(watch: dict, *, now: datetime | None = None) -> list[d
         # No «חסר מועד פקיעה» alert. Live healthchecks remain elsewhere.
         return issues
 
-    if mode == "limited" or (expires_raw and mode != "none"):
+    if mode == "limited" or (expires_raw not in (None, "") and mode != "none"):
         if mode != "limited":
-            # Legacy: expiresAt set without mode → treat as limited if source present
             mode = "limited"
         if not evidence_source and not watch.get("expiresAtSource"):
             issues.append(
@@ -530,19 +607,35 @@ def classify_token_expiry(watch: dict, *, now: datetime | None = None) -> list[d
                 }
             )
             return issues
-        exp = _parse_token_expiry(expires_raw, tz_name)
-        if exp is None:
+        parsed = _parse_token_expiry(expires_raw, str(tz_name) if tz_name is not None else None)
+        if parsed["kind"] == "invalid":
             issues.append(
                 {
                     "level": "yellow",
                     "code": "ig_token_expiry_unverified",
-                    "detail": "expiresAt פגום / לא ISO — לא ממציאים תאריך",
+                    "detail": f"expiresAt פגום / לא ISO ({parsed.get('detail')}) — לא ממציאים תאריך",
                     "outcome": "PREPARED",
                     "brief": True,
                 }
             )
             return issues
-        # Compare datetime-to-datetime (same-day earlier expiry counts as expired)
+        if parsed["kind"] == "date_only":
+            d = parsed["date_only"]
+            issues.append(
+                {
+                    "level": "yellow",
+                    "code": "ig_token_expiry_partial",
+                    "detail": (
+                        f"תוקף חלקי: יש תאריך {d.isoformat() if d else '?'} בלי שעת פקיעה מאומתת — "
+                        "לא מציגים תוקף מדויק ולא קובעים תקינות ודאית"
+                    ),
+                    "outcome": "PREPARED",
+                    "brief": True,
+                }
+            )
+            return issues
+        exp = parsed["when"]
+        assert isinstance(exp, datetime)
         if now >= exp:
             issues.append(
                 {
@@ -569,7 +662,6 @@ def classify_token_expiry(watch: dict, *, now: datetime | None = None) -> list[d
             )
         return issues
 
-    # unknown (default): missing expiry — but only alert when remote is ready (caller may filter)
     issues.append(
         {
             "level": "yellow",
@@ -714,7 +806,7 @@ def run_token_watch_behavior_tests() -> list[str]:
     if not any(i.get("code") == "ig_token_expired" for i in got):
         errors.append("UTC expiry earlier than Jerusalem now must be expired")
 
-    # 8) bad input
+    # 8) bad expiresAt string
     got = classify_token_expiry(
         {
             "expiryMode": "limited",
@@ -728,7 +820,74 @@ def run_token_watch_behavior_tests() -> list[str]:
     if not any(i.get("code") == "ig_token_expiry_unverified" for i in got):
         errors.append("bad expiresAt must be unverified, not invented")
 
-    # 9) secret leak path
+    # 9) date-only → partial (never invent 23:59:59 / exact expiry certainty)
+    got = classify_token_expiry(
+        {
+            "expiryMode": "limited",
+            "expiresAt": "2026-09-20",
+            "expiresAtTimezone": "Asia/Jerusalem",
+            "expiresAtSource": "debug_token",
+            "expiryEvidence": {"source": "debug_token"},
+            "warnDaysBefore": 14,
+        },
+        now=now,
+    )
+    if not any(i.get("code") == "ig_token_expiry_partial" for i in got):
+        errors.append("date-only expiresAt must yield ig_token_expiry_partial")
+    if any(i.get("code") in {"ig_token_expired", "ig_token_expiry_soon"} for i in got):
+        errors.append("date-only must not claim exact expired/soon")
+    if any("23:59:59" in str(i.get("detail")) for i in got):
+        errors.append("date-only must not invent 23:59:59")
+    parsed = _parse_token_expiry("2026-09-20", "Asia/Jerusalem")
+    if parsed.get("kind") != "date_only" or parsed.get("when") is not None:
+        errors.append("date-only parse must be kind=date_only with when=None")
+
+    # 10) invalid timezone → soft unverified, no crash
+    try:
+        got = classify_token_expiry(
+            {
+                "expiryMode": "limited",
+                "expiresAt": "2026-09-09T20:00:00+03:00",
+                "expiresAtTimezone": "Not/A_Real_Zone",
+                "expiresAtSource": "debug_token",
+                "expiryEvidence": {"source": "debug_token", "timezone": "Not/A_Real_Zone"},
+                "warnDaysBefore": 14,
+            },
+            now=now,
+        )
+    except Exception as exc:
+        errors.append(f"bad timezone must not raise: {type(exc).__name__}")
+        got = []
+    if not any(i.get("code") == "ig_token_expiry_unverified" for i in got):
+        errors.append("invalid ZoneInfo must yield ig_token_expiry_unverified")
+
+    # 11) bad warnDaysBefore
+    got = classify_token_expiry(
+        {
+            "expiryMode": "limited",
+            "expiresAt": "2026-09-09T20:00:00+03:00",
+            "expiresAtSource": "debug_token",
+            "expiryEvidence": {"source": "debug_token"},
+            "warnDaysBefore": "fourteen",
+        },
+        now=now,
+    )
+    if not any(i.get("code") == "ig_token_watch_invalid" for i in got):
+        errors.append("bad warnDaysBefore must yield ig_token_watch_invalid")
+    got = classify_token_expiry(
+        {
+            "expiryMode": "limited",
+            "expiresAt": {"year": 2026},
+            "expiresAtSource": "debug_token",
+            "expiryEvidence": {"source": "debug_token"},
+            "warnDaysBefore": 14,
+        },
+        now=now,
+    )
+    if not any(i.get("code") == "ig_token_expiry_unverified" for i in got):
+        errors.append("dict expiresAt must be unverified")
+
+    # 12) secret leak path
     leak = ig_token_watch_issues(watch_override={"access_token": "REDACTED_TEST_ONLY", "expiryMode": "unknown"})
     if not any(i.get("code") == "ig_token_watch_secret_leak" for i in leak):
         errors.append("secret field must trigger ig_token_watch_secret_leak")

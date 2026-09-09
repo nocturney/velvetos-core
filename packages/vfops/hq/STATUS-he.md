@@ -25,7 +25,7 @@
 - IG MCP חיבור מאומת בראיות (velvets_cloud · live_check 2026-09-09 · status=ready · remote=ready) — לא מחרוזת קבועה
 - publish_story מוצהר באותו MCP · פרסום סטורי חי לא נבדק בעבודה זו · לא «ig-mcp ≠ stories»
 - Team MCP scope: לא מאומת (not-verified)
-- Insights = אין ספירה עד סנאפשוט בעלים
+- Insights: MCP callable (probe) · אין ספירה מלאה לבעלים · לא ממציאים מדדים
 - מדף MakerWorld 0/5 עד GATE+רישיון+סלייס
 - מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה
 - B2B נעול · וואטסאפ לקוח = אדם 050-2517000 (BUSINESS_CONTACT_RECORD)
@@ -51,7 +51,7 @@
 | `vfgrowth` | docs-playbook | daily-07:00 | — |
 | `vfharness` | working-cli | after-edit | — |
 | `vfigos` | evidence-ready | daily-growth | live_check ok · publish_story מוצהר · פרסום חי לא נבדק · Team scope לא מאומת |
-| `vfinsights` | needsAuth | daily-07:00 | אין ספירה עד סנאפשוט / טוקן |
+| `vfinsights` | mcp-callable | daily-07:00 | MCP callable · נתונים חלקיים · אין ספירה מלאה · לא ממציאים מדדים |
 | `vfmakers` | overlay | weekly | — |
 | `vfmedia` | working-cli | on-intake | העלאה ≠ אישור · תיקיית מאושר ≠ הוכחת אישור |
 | `vfmcp` | working-cli | session-start | IG remote לפי desk · Sheets / WhatsApp send לפי CONNECT |

@@ -37,7 +37,9 @@
   "briefSlot": "01",
   "watchdogCodes": [
     "ig_token_expiry_unverified",
+    "ig_token_expiry_partial",
     "ig_token_expiry_soon",
-    "ig_token_expired"
+    "ig_token_expired",
+    "ig_token_watch_invalid"
   ]
 }

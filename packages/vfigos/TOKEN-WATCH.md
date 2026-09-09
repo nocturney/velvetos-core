@@ -24,9 +24,8 @@
 |---|---|---|
 | `unknown` + MCP `remote_access=ready` | `ig_token_expiry_unverified` | תוקף לא ידוע — לא ממציאים תאריך |
 | `none` + `owner-reported-meta` | **אין** התראת «חסר מועד פקיעה» | שורת מצב: ללא תפוגה (דיווח בעלים) · healthcheck חי נמשך |
-| `limited` ונותרו ≤ `warnDaysBefore` ימים | `ig_token_expiry_soon` (orange) | לרענן עד timestamp |
-| `limited` ו־`now >= expiresAt` (כולל פקיעה מוקדמת באותו יום) | `ig_token_expired` (red) | failover `SEND.md` |
-| קלט פגום ל־`expiresAt` | `ig_token_expiry_unverified` | לא ממציאים תאריך |
+| `limited` עם תאריך בלבד (בלי שעה מאומתת) | `ig_token_expiry_partial` | תוקף חלקי — לא מציגים תוקף מדויק / לא קובעים תקינות ודאית |
+| אזור זמן / `warnDaysBefore` / טיפוס פגום | `ig_token_expiry_unverified` או `ig_token_watch_invalid` | התראה מסוננת — לא מפילים watchdog |
 
 השוואת תוקף מוגבל היא **datetime מול עכשיו** עם אזורי זמן — לא «יום אחרי».
 

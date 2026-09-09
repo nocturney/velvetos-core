@@ -1,6 +1,6 @@
 {
   "date": "2026-09-09",
-  "generatedAt": "2026-09-09T11:56:15+03:00",
+  "generatedAt": "2026-09-09T12:19:03+03:00",
   "component_state": "Blocked",
   "goal": "פניות B2B בדרום עבור אב-טיפוס / חלקים מותאמים.",
   "locks": [
@@ -12,6 +12,17 @@
     "no-schedule-from-hq"
   ],
   "weekdayNote": "2026-09-09 = רביעי (Asia/Jerusalem)",
+  "slotRecommendation": {
+    "choice": "G004",
+    "when": "2026-09-09T20:30+03:00",
+    "whenHe": "רביעי 2026-09-09 20:30 Asia/Jerusalem",
+    "reasonShort": "מוצר מוכן לעריכה+פריפלייט · פרנסה מסיפור-מוצר",
+    "reason": "G004 מחזיק-טבעות עבר EDIT-GATE/Canva + preflight עבור; משרת הצעת מוצר/פנייה. סקר PETG/Nylon נדחה למשבצת סטוריז פנויה אחרת — לא שני שיבוצים על 20:30. בלי Calendar create · G003 הנעול לא זז.",
+    "deferred": {
+      "id": "poll-petg_vs_nylon",
+      "to": "משבצת סטוריז פנויה אחרת"
+    }
+  },
   "reel": {
     "slot": "אין משבצת ריל היום (לוח: א׳/ג׳ 16:00 בלבד)",
     "gate": "blocked_no_media",
@@ -30,8 +41,19 @@
   },
   "story": {
     "slot": "היום 20:30 · סטוריז א׳–ה׳",
-    "gate": "slot_contested_pending_human_choice",
-    "slotStatus": "תפוסה להצעות · לא פנויה",
+    "gate": "recommended_g004_pending_human_post",
+    "slotStatus": "המלצה יחידה · G004 · רביעי 2026-09-09 20:30 Asia/Jerusalem",
+    "recommendation": {
+      "choice": "G004",
+      "when": "2026-09-09T20:30+03:00",
+      "whenHe": "רביעי 2026-09-09 20:30 Asia/Jerusalem",
+      "reasonShort": "מוצר מוכן לעריכה+פריפלייט · פרנסה מסיפור-מוצר",
+      "reason": "G004 מחזיק-טבעות עבר EDIT-GATE/Canva + preflight עבור; משרת הצעת מוצר/פנייה. סקר PETG/Nylon נדחה למשבצת סטוריז פנויה אחרת — לא שני שיבוצים על 20:30. בלי Calendar create · G003 הנעול לא זז.",
+      "deferred": {
+        "id": "poll-petg_vs_nylon",
+        "to": "משבצת סטוריז פנויה אחרת"
+      }
+    },
     "poll_id": "petg_vs_nylon",
     "question": "מה לבדוק מחר במעבדה?",
     "options": [
@@ -44,21 +66,7 @@
       "עריכה",
       "דחייה"
     ],
-    "note": "אל תציגו את 20:30 כפנויה. שתי הצעות: סקר organic ↔ טיוטת G004. בלי Calendar create.",
-    "conflict": {
-      "proposals": [
-        {
-          "id": "poll-petg_vs_nylon",
-          "kind": "organic-growth-poll"
-        },
-        {
-          "id": "G004-stories",
-          "kind": "product-story-draft",
-          "source": "packages/vfgrowth/drafts/NEXT-2026-09-09-G004-stories.md"
-        }
-      ],
-      "resolution": "בחירת אדם בבריף — בלי Calendar create · בלי הזזת שיבוץ נעול"
-    }
+    "note": "בחירה אחת: G004. סקר לא משובץ במקביל. אישור ≠ פרסום · בלי תזמון מ־HQ."
   },
   "yesterday": {
     "insights": "אין ספירה",
@@ -68,7 +76,7 @@
   },
   "studio_tasks": [
     "למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.",
-    "לבחור בין סקר 20:30 לבין טיוטת G004 (משבצת לא פנויה) — לא מפרסם ולא משבץ מ־HQ.",
+    "לאשר ידנית G004 ל־רביעי 2026-09-09 20:30 Asia/Jerusalem (לא מפרסם מ־HQ).",
     "לא להציג חום/חוזק בלי vfprod/CLAIMS.md."
   ],
   "print_events": 1,

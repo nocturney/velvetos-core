@@ -181,12 +181,12 @@
     },
     {
       "id": "vfinsights",
-      "kind": "needsAuth",
+      "kind": "mcp-callable",
       "cadence": "daily-07:00",
       "consume": "packages/vfinsights/READ.md",
       "briefSlot": "06",
       "handoff": "packages/vfinsights/templates/snapshot-ingest.md",
-      "blocked": "אין ספירה עד סנאפשוט / טוקן"
+      "blocked": "MCP callable · נתונים חלקיים לפי mcp-live-probe.json · אין ספירה מלאה · לא ממציאים מדדים"
     },
     {
       "id": "vfmakers",

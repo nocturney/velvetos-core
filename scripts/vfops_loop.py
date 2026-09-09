@@ -507,17 +507,68 @@ def office_line(invoked: set[str]) -> str:
     return built
 
 
+def insights_status_evidence() -> dict:
+    """Derive Insights STATUS from live MCP probe file — never invent metrics."""
+    probe_path = ROOT / "packages" / "vfinsights" / "data" / "mcp-live-probe.json"
+    if not probe_path.is_file():
+        return {
+            "kind": "unknown",
+            "line": "Insights: אין ספירה · חסר mcp-live-probe.json",
+            "loop_kind": None,
+            "blocked": None,
+        }
+    try:
+        probe = json.loads(probe_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return {
+            "kind": "invalid",
+            "line": "Insights: אין ספירה · probe לא קריא",
+            "loop_kind": None,
+            "blocked": None,
+        }
+    summary = probe.get("summary") or {}
+    auth = summary.get("auth") or "unknown"
+    if auth == "needsAuth" or summary.get("permission") == "needsAuth":
+        return {
+            "kind": "needsAuth",
+            "line": "Insights: MCP Insights needsAuth · אין ספירה",
+            "loop_kind": "needsAuth",
+            "blocked": "needsAuth · אין ספירה",
+        }
+    if summary.get("toolAvailable") and summary.get("statusKind") == "mcp-callable-partial-data":
+        return {
+            "kind": "mcp-callable-partial-data",
+            "line": "Insights: MCP callable (probe) · אין ספירה מלאה לבעלים · לא ממציאים מדדים",
+            "loop_kind": "mcp-callable",
+            "blocked": "MCP callable · נתונים חלקיים · אין ספירה מלאה · לא ממציאים מדדים",
+        }
+    if summary.get("toolAvailable") is False:
+        return {
+            "kind": "tool-missing",
+            "line": "Insights: כלי MCP חסר · אין ספירה",
+            "loop_kind": "docs-playbook",
+            "blocked": "כלי Insights חסר · אין ספירה",
+        }
+    return {
+        "kind": "unavailable",
+        "line": "Insights: אין ספירה · נתונים לא זמינים לפי probe",
+        "loop_kind": "docs-playbook",
+        "blocked": "נתונים לא זמינים · אין ספירה",
+    }
+
+
 def insights_line() -> str:
+    """Prefer live MCP probe evidence over stale LEARNINGS for auth/status honesty."""
+    evid = insights_status_evidence()
+    if evid.get("kind") not in {None, "unknown", "invalid"}:
+        return evid["line"]
     if LEARNINGS.is_file():
         text = LEARNINGS.read_text(encoding="utf-8").strip()
         if text:
             first = next((l for l in text.splitlines() if l.strip()), "").strip("# ").strip()
             if first:
                 return f"Insights: {first} · מקור {LEARNINGS.relative_to(ROOT)}"
-    ig = ig_connection_evidence()
-    if not ig["ready_evidence"]:
-        return "Insights: אין ספירה · חיבור IG לא מאומת בראיות desk/CAPABILITIES"
-    return "Insights: אין ספירה עד סנאפשוט בעלים"
+    return evid["line"]
 
 
 
@@ -874,12 +925,19 @@ def assemble(today: str) -> dict:
     if cp_prose:
         decision_prose = f"{decision_prose} Control Plane: {cp_prose}."
     growth_brief_path = ROOT / "packages" / "vfgrowth" / "data" / "growth-brief.json"
-    story_20_row = ["סטורי סקר 20:30", "ממתין לאישור", "לא מפרסם"]
+    story_20_row = ["סטורי 20:30", "ממתין לאישור", "לא מפרסם"]
     if growth_brief_path.is_file():
         try:
             gb = json.loads(growth_brief_path.read_text(encoding="utf-8"))
             st = gb.get("story") or {}
-            if st.get("gate") == "slot_contested_pending_human_choice" or "תפוסה" in str(
+            rec = gb.get("slotRecommendation") or st.get("recommendation") or {}
+            if rec.get("choice"):
+                story_20_row = [
+                    f"סטורי {rec.get('when') or '20:30'}",
+                    f"המלצה: {rec.get('choice')}",
+                    str(rec.get("reasonShort") or rec.get("reason") or "לא מפרסם · לא משבץ מ־HQ")[:80],
+                ]
+            elif st.get("gate") == "slot_contested_pending_human_choice" or "תפוסה" in str(
                 st.get("slotStatus") or ""
             ):
                 story_20_row = [
@@ -1044,7 +1102,7 @@ def write_status(today: str) -> None:
         blocked_human.append(f"- IG status={ig['status']} · remote={ig['remote']} · אין ספירת חיבור מלאה")
     blocked_human.extend(
         [
-            "- Insights = אין ספירה עד סנאפשוט בעלים",
+            f"- {insights_status_evidence()['line']}",
             "- מדף MakerWorld 0/5 עד GATE+רישיון+סלייס",
             "- מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה",
             "- B2B נעול · וואטסאפ לקוח = אדם 050-2517000 (BUSINESS_CONTACT_RECORD)",
@@ -1093,6 +1151,11 @@ def write_status(today: str) -> None:
                 f"| `{row['id']}` | evidence-ready | {row['cadence']} | "
                 f"live_check ok · publish_story מוצהר · פרסום חי לא נבדק · Team scope לא מאומת |"
             )
+        elif row["id"] == "vfinsights":
+            ie = insights_status_evidence()
+            kind = ie.get("loop_kind") or row["kind"]
+            blocked_i = ie.get("blocked") or blocked
+            lines.append(f"| `{row['id']}` | {kind} | {row['cadence']} | {blocked_i} |")
         else:
             lines.append(f"| `{row['id']}` | {row['kind']} | {row['cadence']} | {blocked} |")
     lines.append("")
