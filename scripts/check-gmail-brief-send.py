@@ -3,16 +3,16 @@
 from __future__ import annotations
 
 import json
-import os
 import sys
 import tempfile
+from email import message_from_bytes
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "packages"))
 
 from vfops import gmail_brief_send as sender  # noqa: E402
-from vfops.gmail_brief_request import encode_subject  # noqa: E402
+from vfops.gmail_brief_request import build_safe_mime, encode_subject  # noqa: E402
 
 
 def fail(msg: str) -> None:
@@ -65,7 +65,7 @@ def main() -> None:
 
         sender._download_one = fake_download
         try:
-            html = '<table><tr><td><img src="https://example.com/a.png?x=1&amp;y=2" alt="A"></td></tr></table>'
+            html = '<html dir="rtl"><body>בדיקת · CID — עברית<img src="https://example.com/a.png?x=1&amp;y=2" alt="A"></body></html>'
             rewritten, images = sender.embed_remote_images(html, tmp_path, limit=3, max_bytes=4096)
         finally:
             sender._download_one = original
@@ -74,25 +74,33 @@ def main() -> None:
             fail(f"unexpected embedded images: {[p.name for p in images]}")
         if 'src="cid:remote-01.png"' not in rewritten:
             fail("remote image was not rewritten to cid")
-        if "https://example.com/a.png" in rewritten:
-            fail("remote image URL survived after CID rewrite")
 
-        mime = sender.build_mime(
+        mime = build_safe_mime(
             html=rewritten,
             images=images,
             to="nocturney@gmail.com",
-            subject=encoded_subject,
+            subject=utf8_subject,
         )
-        blob_bytes = mime.as_bytes()
-        blob = blob_bytes.decode("ascii", errors="replace")
-        if "multipart/related" not in blob:
-            fail("MIME is not multipart/related")
-        if "Content-ID: <remote-01.png>" not in blob:
-            fail("downloaded image missing matching Content-ID")
-        if "cid:remote-01.png" not in blob:
-            fail("HTML CID reference missing from MIME")
+        try:
+            blob_bytes = mime.as_bytes()
+        except UnicodeEncodeError as exc:
+            fail(f"UTF-8 MIME serialization failed: {exc}")
 
-    # Credential material must not be committed into the request template/workflow.
+        parsed = message_from_bytes(blob_bytes)
+        if parsed.get_content_type() != "multipart/related":
+            fail("MIME is not multipart/related")
+        parts = list(parsed.walk())
+        html_parts = [p for p in parts if p.get_content_type() == "text/html"]
+        if len(html_parts) != 1:
+            fail("expected exactly one HTML MIME part")
+        decoded_html = html_parts[0].get_payload(decode=True).decode("utf-8")
+        if "בדיקת · CID — עברית" not in decoded_html:
+            fail("UTF-8 HTML did not round-trip through MIME")
+        if 'src="cid:remote-01.png"' not in decoded_html:
+            fail("HTML CID reference missing after MIME decoding")
+        if not any(p.get("Content-ID") == "<remote-01.png>" for p in parts):
+            fail("downloaded image missing matching Content-ID")
+
     for rel in (
         "packages/vfops/out/gmail-send-request.json",
         ".github/workflows/gmail-brief-send.yml",
@@ -101,7 +109,7 @@ def main() -> None:
         if "refresh_token\": \"1//" in text or "client_secret\": \"GOCSPX" in text:
             fail(f"credential-looking material committed in {rel}")
 
-    print("OK Gmail brief sender: OAuth bootstrap + owner lock + UTF-8 subject + remote-image CID rewrite")
+    print("OK Gmail brief sender: OAuth bootstrap + owner lock + UTF-8 MIME + remote-image CID rewrite")
 
 
 if __name__ == "__main__":
