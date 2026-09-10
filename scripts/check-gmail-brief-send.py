@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "packages"))
 
 from vfops import gmail_brief_send as sender  # noqa: E402
+from vfops.gmail_brief_request import encode_subject  # noqa: E402
 
 
 def fail(msg: str) -> None:
@@ -42,6 +43,15 @@ def main() -> None:
     if request.get("to") != "nocturney@gmail.com":
         fail("send request owner recipient lock changed")
 
+    utf8_subject = "Velvet Factory — בריף הבוקר · בדיקה"
+    encoded_subject = encode_subject(utf8_subject)
+    try:
+        encoded_subject.encode("ascii")
+    except UnicodeEncodeError:
+        fail("UTF-8 subject was not converted to ASCII-safe RFC 2047")
+    if "=?utf-8?" not in encoded_subject.lower():
+        fail("UTF-8 subject is missing RFC 2047 encoding")
+
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)
         original = sender._download_one
@@ -71,9 +81,10 @@ def main() -> None:
             html=rewritten,
             images=images,
             to="nocturney@gmail.com",
-            subject="CID sensor",
+            subject=encoded_subject,
         )
-        blob = mime.as_string()
+        blob_bytes = mime.as_bytes()
+        blob = blob_bytes.decode("ascii", errors="replace")
         if "multipart/related" not in blob:
             fail("MIME is not multipart/related")
         if "Content-ID: <remote-01.png>" not in blob:
@@ -90,7 +101,7 @@ def main() -> None:
         if "refresh_token\": \"1//" in text or "client_secret\": \"GOCSPX" in text:
             fail(f"credential-looking material committed in {rel}")
 
-    print("OK Gmail brief sender: OAuth bootstrap + owner lock + remote-image CID rewrite")
+    print("OK Gmail brief sender: OAuth bootstrap + owner lock + UTF-8 subject + remote-image CID rewrite")
 
 
 if __name__ == "__main__":
