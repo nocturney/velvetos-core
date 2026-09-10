@@ -1,0 +1,80 @@
+{
+  "date_line": "חמישי · 10.9.2026 · 14:40 · דוגמת V10",
+  "bottom_line": "המערכת תקינה. שלוש עבודות פעילות; פעולה אחת דורשת ממך תשובה, ומשבצת תוכן אחת עדיין מחכה לאימות חי.",
+  "footer": "Velvet Factory · שדרות · בריף V10 · נתונים מאומתים בלבד",
+  "attention": {
+    "state": "yellow",
+    "label": "מצב העסק",
+    "text": "דורש מעקב"
+  },
+  "system_health": {
+    "state": "green",
+    "label": "בריאות מערכת",
+    "text": "תקינה"
+  },
+  "kpis": [
+    {"value": "3", "label": "עבודות פעילות", "state": "purple"},
+    {"value": "1", "label": "צריך ממך", "state": "red"},
+    {"value": "₪4,350", "label": "סופק · טרם שולם", "state": "yellow"},
+    {"value": "80", "label": "עוקבים", "state": "blue"}
+  ],
+  "changes": [
+    {"text": "אלה: הדגם החדש אושר; השלב הבא הוא התאמת גודל הלוגו ושליחת דוגמה חדשה", "state": "green"},
+    {"text": "G004 של 12:00 עדיין ללא הוכחת פרסום חי", "state": "yellow"},
+    {"text": "VelvetOS: נתיב Jobs + Intake + Autonomy + Insights מחובר למערכת הקיימת", "state": "purple"}
+  ],
+  "slots": [
+    {
+      "kind": "decision",
+      "kicker": "צריך ממך · 1",
+      "title": "ודים · נוסח ההקדשה",
+      "delta": {"text": "ללא שינוי — עדיין החסם הישיר הבא", "state": "yellow"},
+      "prose": "הנשקים הודפסו. כדי להשלים את המעמד חסר רק נוסח ההקדשה."
+    },
+    {
+      "kind": "money",
+      "kicker": "מצב הכסף",
+      "title": "גבייה פתוחה",
+      "prose": "סינקופה — 4,350 ₪ סופקו וטרם שולמו. אלה — 100 ₪ טרם סופקו/שולמו."
+    },
+    {
+      "kind": "production",
+      "kicker": "עבודות חיות",
+      "title": "ייצור והזמנות",
+      "headers": ["לקוח", "מצב", "השלב הבא"],
+      "rows": [
+        ["לינה", "בהדפסה", "השלמת צלוחית הדרקון"],
+        ["אלה", "דגם אושר", "התאמת לוגו + דוגמה חדשה"],
+        ["ודים", "ממתין לתוכן", "נוסח הקדשה"]
+      ]
+    },
+    {
+      "kind": "insights",
+      "kicker": "Instagram · חי",
+      "title": "מצב העמוד",
+      "prose": "80 עוקבים · 7 פריטי מדיה. הריל האחרון: reach 9 · interaction 1.",
+      "covers": [
+        {
+          "url": "https://scontent-sof1-1.cdninstagram.com/v/t51.82787-15/798017693_18340721332259071_8806787213442975594_n.jpg",
+          "href": "https://www.instagram.com/reel/DdAPhozlNe2/",
+          "caption": "הריל האחרון · מאומת חי",
+          "alt": "תמונה מהריל האחרון של Velvet Factory"
+        }
+      ]
+    },
+    {
+      "kind": "content",
+      "kicker": "רדאר תוכן",
+      "title": "G004 · דורש אימות",
+      "delta": {"text": "המשבצת של 12:00 חלפה בלי הוכחת live", "state": "yellow"},
+      "prose": "ב־V10 scheduled/uploaded לעולם לא מוצג כאילו הוא published. אם אין proof — הכרטיס משנה מצב לאימות/התאוששות."
+    },
+    {
+      "kind": "office",
+      "density": "compact",
+      "kicker": "פעילות VelvetOS",
+      "title": "מה המערכת עשתה בפועל",
+      "prose": "Jobs Sheet נשאר מקור אמת · Intake מנתב לעבודה · Autonomy execute מחובר · Insights חיים זמינים ללולאת הלמידה."
+    }
+  ]
+}
