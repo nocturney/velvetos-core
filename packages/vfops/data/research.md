@@ -1,4 +1,21 @@
-# 05 · משרד · 7.9.2026 (מושב מחקר/אורקסטרציה — שני מעברים)
+# 05 · משרד · 10.9.2026
+
+מחקר יומי חי חזר לפעולה. מקור מלא: `packages/vfresearch/sources/2026-09-10-orchestra.md`.
+
+```
+05 · מחקר ורעיונות
+- Meta: original content מקבל משקל חזק יותר בהמלצות; ל־Velvet עדיפות למדיה אמיתית מהדפסה/גימור/assembly/reveal, לא repost/ויזואל גנרי.
+- אות maker עדכני: desk organizers / cable management / אביזרי שולחן הם משפחת SKU ראויה ל־preflight מקומי — לא הוכחת ביקוש ישראלי.
+- מודולריות והתאמה אישית הן כיוון טוב, אבל רישוי הוא gate: השראה ממודל NC אינה רישיון למסחור.
+- מועמד Quick-win לבדיקה: cable holder קטן ו־support-free; למדוד אצלנו זמן/גרמים ורישיון לפני כל החלטת קטלוג/מחיר.
+```
+
+Freshness: **2026-09-10 · GREEN body evidence**.  
+ה־Research Cadence ב־GitHub מאמת גוף מחקר מתוארך; index/sensors לבדם אינם נחשבים ריצת מחקר.
+
+---
+
+## היסטוריה · 7.9.2026
 
 חריץ 05 בבריף 07:00 כבר **לא** מדביק את הקטלוג מכאן.  
 `vfops_loop.py` רושם CLI אמיתי מ-24ש או **«אין חדש במשרד»** + שורות פער.
@@ -19,16 +36,10 @@
 פער: חסר מפתח ChatGPT/Gemini — failover WebSearch · posts.csv בלי מספרים מ-Dashboard
 ```
 
-05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md`.
-
-פער כלים: `packages/vfops/hq/TOOL-USE-GAP-2026-09-07.md`.  
-פער מדידה: `posts.csv` שורת `DcqkjOLlYVX` בלי reach — בלוק 06 = «אין ספירה».
-
-ארטיפקטים:
+ארטיפקטים היסטוריים:
 - `packages/vfresearch/sources/2026-09-07-orchestra.md`
 - `packages/vfresearch/sources/2026-09-07-best-skills.md`
 - `packages/vfresearch/sources/2026-09-07-weekly-links.md`
 - `packages/vfresearch/sources/2026-09-07-print-demand.md`
-- `packages/vfresearch/sources/2026-09-07-ig-maker-engagement-last30.md` (#106)
-- `packages/vfresearch/sources/2026-09-07-maker-ig-reels-engagement-last30.md` (ענף זה)
-- `packages/vfresearch/HQ-ROUTINE.md`
+- `packages/vfresearch/sources/2026-09-07-ig-maker-engagement-last30.md`
+- `packages/vfresearch/sources/2026-09-07-maker-ig-reels-engagement-last30.md`
