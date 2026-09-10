@@ -1,52 +1,105 @@
-# מייל בריף · תצוגה 3 vfops
+# מייל בריף · Brief V6 App Dashboard
 
-לא מחליפים מבנה. זה החוזה שננעל אחרי תצוגה → תצוגה 2 → תצוגה 3 (30.8.2026).
+המשך ישיר ל־`תצוגה 3` (תאימות CI/renderer), אבל מבנה המידע משתנה לפי החלטת בעלים 10.9.2026: הבריף הוא **מסך שליטה ניהולי**, לא מסמך 01–07 ולא פתק טקסט.
 
-מקור חי: `תצוגה 3 vfops — לא בריף 07:00` · thread `1a052a15806aedad` · message `1a052a334330df0c`.
+## מטרה
 
-## תגובות שננעלו (29.8–30.8)
+תוך 20–30 שניות כריסטיאן צריך לדעת:
+1. האם צריך ממנו משהו עכשיו.
+2. איפה הכסף/ההזמנות/הייצור תקועים.
+3. מה קורה היום.
+4. מה מצב העמוד והתוכן לפי Insights חיים.
+5. מה החוקרים מצאו ומה עושים עם זה.
+6. האם יש תקלה מערכתית אמיתית.
 
-אין תשובת בעלים על thread תצוגה 3 (הודעה אחת בלבד, 30.8 12:27 UTC).  
-סוכני המקור `bc-93fbfca6` / `bc-9e0be231` לא נגישים מכאן.  
-התגובות הן האיטרציה עצמה — לא מחליפים אחרי זה:
+## סדר הופעה — נעול לפי ערך ניהולי
 
-| מייל | מה ננעל |
-|---|---|
-| `[ניסיון עיצוב]` 29.8 | כהה, זהב, ושקט. כריכות יושבות בתוך המייל |
-| `[ניסיון כריכות]` 29.8 | כריכות למטה / בפנים / משובצות — לא קישור |
-| `תצוגה vfops` 30.8 12:06 | RTL + טבלאות. לא בריף 07:00 |
-| `תצוגה 2 vfops` 30.8 12:14 | `bgcolor` + סדר החלטה→כסף→הדפסה. `cid` אם ג׳ימייל מציג |
-| `תצוגה 3 vfops` 30.8 12:27 · `1a052a334330df0c` | 01–07 מלא. חריץ 05: RTL, bgcolor, טבלאות, אגודל+קישור. חריץ 07: «בבריף 07:00 הן יושבות בגוף המייל אחרי הדבקה בג׳ימייל — לא כקישור». מצורפים G001/G002/G005.jpg |
+| עדיפות | אזור | כלל |
+|---:|---|---|
+| 0 | Hero | זמן רענון + GREEN/YELLOW/RED + שורה תחתונה אחת |
+| 1 | **צריך ממך** | מופיע מיד אחרי Hero אם יש החלטה/אישור/חסם בעלים; לא נקבר בתחתית |
+| 2 | כסף + דחוף | גבייה מאומתת, due/overdue, עבודות פעילות/בהדפסה/חסומות |
+| 3 | היום | timeline אחד: ייצור, איסופים, תוכן, Calendar, followups |
+| 4 | הזמנות וייצור | 3–6 עבודות לפי דחיפות/הכנסה/חסם |
+| 5 | Instagram Insights | נתוני account + media חיים; thumbnails וקישור לפוסט |
+| 6 | תוכן על המסך | candidate/scheduled/verified-live + תמונה אמיתית בתוך הכרטיס |
+| 7 | מחקר ורעיונות | עד 3 findings, כל אחד thumbnail + מקור + תאריך + link + `מה עושים עם זה` |
+| 8 | מה השתנה | עד 4 שינויים משמעותיים מאז אתמול |
+| 9 | בריאות מערכת | footer קטן; פרטים טכניים רק כשיש degradation |
 
-## למה המייל יצא טקסט
+אם `צריך ממך` ריק — מציגים שורת GREEN קטנה בלבד. לא ממציאים משימה.
 
-פיילאובר 31.8 שלח `body` / `<br/>` מ־`MAIL-PACK.md`.  
-תצוגה 3 היא **HTML טבלאות** (`htmlBody`) + כריכות בגוף. לא טקסט.
+## תמונות בתוך הכרטיסים
 
-## חוזה ויזואלי (לא זז)
+תמונה היא חלק מהכרטיס, לא attachment דקורטיבי.
 
-| שדה | ערך |
-|---|---|
-| RTL | `dir="rtl"` על מעטפת, כרטיס, תאים, פסקאות |
-| רקע חיצוני | `bgcolor="#0b1224"` |
-| כרטיס | 640px · `bgcolor="#f7f3eb"` |
-| כותרת | `bgcolor="#101a35"` · פס זהב `border-right:6px solid #caa96b` |
-| תוויות | Georgia · `#caa96b` |
-| גוף | Arial · `#1b2438` |
-| טבלאות | כותרת כהה/זהב · זברה `#fffdf8` / `#f7f3eb` |
-| סדר | 01–07 לפי `vfops/BRIEF.md` |
-| כריכות | `cid:` בגוף בחריץ 07. לא קישור. מצורף רגיל רק כגיבוי תצוגה |
+מסלול מועדף:
+- `packages/vfops/gmail_brief_send.py` → MIME `multipart/related` → `cid:<filename>`.
+- `filename` של קובץ התמונה חייב להיות זהה ל־Content-ID שה־HTML מפנה אליו.
 
-## שליחה (פיילאובר Grok)
+מסלול connector/live:
+- Instagram: `thumbnail_url` / `media_url` שהוחזרו מ־VelvetOS Instagram, בתוך `<img>` ובתוך `<a href="permalink">`.
+- מקור מחקר ציבורי: thumbnail/hero/OG אמיתי של אותו מקור, clickable ל־source URL.
+- Drive פרטי בלבד: CID כשהקובץ ניתן לחומרה/הורדה. אם לא — preview link מסומן; **לא** מציגים attachment כאילו הוא inline.
 
-1. ממלאים JSON בלי ₪ מומצא. אין ספירה אם אין מקור.
-2. `python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.json -o /tmp/brief.html`
-3. שליחה אל `nocturney@gmail.com` — **לא** `htmlBody`+JPEG בארגומנט MCP אחד (~98KB נכשל; `LOAD_FROM_FILE` דולף):
-   - מועדף: `PYTHONPATH=packages python3 -m vfops.gmail_brief_send --html PATH --images DIR --to nocturney@gmail.com --subject TEXT` (`packages/vfops/gmail_brief_send.py`)
-   - MCP: `create_draft(html)` → `update_draft(attachments only)` → `send_message(draftId)` — `docs/SEND-BRIEF-MCP.md`
-   - כריכות: `filename` = ה־cid (למשל `g001.jpg`)
-4. אין `reply` / `forward` / שליחה ללקוח.
+לכל תמונה: `alt`, caption קצר, וקישור כשיש יעד אמיתי.
 
-תבנית: `MAIL.html`. ממלא: `render_mail.py`. בדיקה: `python3 packages/vfbriefux/render_mail.py --check`.  
-חריץ 01 יכול לכלול כפתורי כן/דחה (`mailto:` ל־`nocturney@gmail.com`) מ־`vfops/hq/GATES.json`. לחיצה ≠ שליחת וואטסאפ ללקוח.  
-דיאגרמת לוויין (לא `htmlBody`): `python3 packages/vfbriefux/render_mail.py --diagram pipeline|slots -o …` · מפה: `hq/DIAGRAM-MAKER.md`.
+## Instagram · מצב העמוד
+
+הבריף חייב לבצע probe חי דרך VelvetOS Instagram בכל בוקר:
+- `account_info` / profile: followers/media count.
+- `get_account_insights`: reach/profile views/total interactions לפי מה ש־Graph מחזיר בפועל.
+- `list_media` + `get_media_insights` ל־2–3 פריטים מייצגים/אחרונים: reach/views/interactions/saved/shares כשזמין.
+
+אין `אין ספירה` אם ה־connector כן מחזיר נתון חי. אין השלמה או inference למדד שלא הוחזר.
+
+כרטיס media כולל thumbnail אמיתי, סוג (Reel/Carousel/Post), זמן, נתוני lifetime/period עם תווית ברורה וקישור ישיר ל־Instagram.
+
+## Research cards
+
+Research = GREEN רק עם `packages/vfresearch/sources/<YYYY-MM-DD>-orchestra.md` של אותו יום שמוכיח body run אמיתי.
+
+כל אחד מעד 3 הכרטיסים:
+- thumbnail אמיתי מאותו מקור (או source-logo fallback).
+- source/domain.
+- תאריך מקור.
+- כותרת אמיתית.
+- משפט ממצא אחד.
+- `מה עושים עם זה` — משפט אחד.
+- `למקור ↗` direct URL.
+
+אסור למחזר artifact ישן כאילו הוא היום. stale = YELLOW + fallback מסומן.
+
+## שפה ויזואלית
+
+- RTL מלא.
+- מעטפת navy כהה; cards קרם/לבן; gold רק להיררכיה/פעולה.
+- state pills: green/yellow/red ברורים גם בטקסט, לא רק בצבע.
+- mobile-first; זרימה אנכית. KPI יכול להיות grid קצר כל עוד קריא בטלפון.
+- body 12–16px; כפתורים/קישורים tappable; thumbnails בערך 80–120px בכרטיסי media/research.
+- מידע חשוב גלוי ללא hover.
+- dark-mode resilient; אין טקסט קריטי כתמונה.
+- מייל לא ארוך ללא צורך: פרטים עמוקים עוברים לקישור המקור/Instagram/GitHub.
+
+## מקור השראה / מחקר פורמט · 10.9.2026
+
+החלטות העיצוב נשענות על:
+- Litmus inverted-pyramid email: כותרת רחבה שמכוונת לפעולה החשובה.
+- Mailchimp mobile email guidance: single-column/stacking, קריאות ו־tap targets גדולים.
+- RGE Studio: mobile stacking, dark-mode preview, grid/padding עקבי.
+
+היישום אצלנו: **owner action → money/urgency → today/operations → Insights/content → research → system health**.
+
+## שליחה
+
+Production renderer: `packages/vfbriefux/render_mail.py` + `MAIL.html`.
+
+CID production path:
+```bash
+PYTHONPATH=packages python3 -m vfops.gmail_brief_send \
+  --html PATH --images DIR --to nocturney@gmail.com --subject TEXT
+```
+
+חוזה Gmail/MCP: `docs/SEND-BRIEF-MCP.md`. אם נתיב השליחה אינו מסוגל CID, מותר להשתמש בתמונת HTTPS אמיתית בתוך HTML; אין לשלוח attachment ולדווח שהוא inline.
+
+אין המצאת ₪, Insights, סטטוס פרסום, לקוח או השלמת ייצור. `scheduled/uploaded != verified live`.
