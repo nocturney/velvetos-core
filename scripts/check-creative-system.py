@@ -101,9 +101,14 @@ def main() -> None:
     if not needed.issubset(required):
         fail(f"Creative Manifest required fields missing {sorted(needed - required)}")
     props = schema.get("properties") or {}
-    for name in ("overlays", "feed", "derivativeRefs", "rightsNotes"):
+    for name in ("overlays", "visualCopy", "feed", "derivativeRefs", "rightsNotes"):
         if name not in props:
             fail(f"Creative Manifest missing {name}")
+    visual_copy_schema = props.get("visualCopy") or {}
+    visual_copy_required = set(visual_copy_schema.get("required") or [])
+    expected_visual_copy_required = {"decision", "noTextCompared", "pipeline", "candidates"}
+    if not expected_visual_copy_required.issubset(visual_copy_required):
+        fail(f"Creative Manifest visualCopy required fields missing {sorted(expected_visual_copy_required - visual_copy_required)}")
 
     must_contain(VFOM / "MOTION-PRESETS.md", ("VELVET_HARD_CUT", "VELVET_PROOF_FREEZE", "VELVET_STRESS_SLOWMO"))
     must_contain(VFOM / "FORMAT-GENOMES.md", ("PROOF_UNDER_PRESSURE", "FAIL_FIX_PROVE", "PROBLEM_TO_PART"))
