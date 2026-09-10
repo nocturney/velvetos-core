@@ -256,7 +256,7 @@ def build_metadata(
     path = f"{prefix}/{day}/{correlation}/{filename}"
     metadata_path = f"{path}.json"
     public_url = f"{cfg['publicBaseUrl'].rstrip('/')}/{day}/{correlation}/{filename}"
-    expires = now + dt.timedelta(days=int(cfg["retention"]["activeDays"]))
+    archive_after = now + dt.timedelta(days=int(cfg["retention"]["activeDays"]))
     return {
         "schemaVersion": 1,
         "state": "staged_not_published",
@@ -264,8 +264,8 @@ def build_metadata(
         "approvalRef": approval_ref,
         "sourceRefHash": hashlib.sha256(source_ref.encode("utf-8")).hexdigest(),
         "createdAt": now.isoformat().replace("+00:00", "Z"),
-        "removeFromBranchHeadAfter": expires.isoformat().replace("+00:00", "Z"),
-        "historyErasure": False,
+        "archiveAfter": archive_after.isoformat().replace("+00:00", "Z"),
+        "archiveRetention": cfg["retention"].get("archiveRetention", "unlimited"),
         "sha256": digest,
         "contentType": content_type,
         **details,
@@ -309,6 +309,8 @@ def cmd_prepare(args: argparse.Namespace, stage: bool) -> int:
             },
             "publicReleaseApproved": bool(args.public_release_approved),
             "target": {"path": metadata["path"], "publicUrl": metadata["publicUrl"]},
+            "archiveAfter": metadata["archiveAfter"],
+            "archiveRetention": metadata["archiveRetention"],
             "rule": "staged/fetch_verified != published; publish_* receipt + live verification are still required",
         }
         if stage:
