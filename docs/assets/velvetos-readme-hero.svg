@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">VelvetOS — Headquarters &amp; Operating System</title>
+  <desc id="desc">Ink &amp; Candy visual identity for the VelvetOS living README.</desc>
+  <rect width="1200" height="360" rx="28" fill="#161827"/>
+  <circle cx="1050" cy="72" r="150" fill="#FF4F91" opacity=".96"/>
+  <circle cx="1112" cy="288" r="112" fill="#B8F34A" opacity=".95"/>
+  <rect x="72" y="62" width="18" height="76" rx="9" fill="#6C7CFF"/>
+  <text x="116" y="106" fill="#F7F8FF" font-family="Arial, Helvetica, sans-serif" font-size="56" font-weight="700">VelvetOS</text>
+  <text x="116" y="151" fill="#BFC5FF" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="600" letter-spacing="2">HEADQUARTERS &amp; OPERATING SYSTEM</text>
+  <text x="72" y="218" fill="#F7F8FF" font-family="Arial, Helvetica, sans-serif" font-size="26">Living system map · operational truth · governed autonomy</text>
+  <text x="72" y="257" fill="#D8DBE8" font-family="Arial, Helvetica, sans-serif" font-size="22">מפת מערכת חיה · אמת תפעולית · אוטונומיה מבוקרת</text>
+  <rect x="72" y="292" width="164" height="38" rx="19" fill="#FF4F91"/>
+  <text x="154" y="318" text-anchor="middle" fill="#321627" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700">LIVE README</text>
+  <rect x="248" y="292" width="172" height="38" rx="19" fill="#6C7CFF"/>
+  <text x="334" y="318" text-anchor="middle" fill="#FFFFFF" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700">SENSOR PROVEN</text>
+  <rect x="432" y="292" width="180" height="38" rx="19" fill="#B8F34A"/>
+  <text x="522" y="318" text-anchor="middle" fill="#1B2812" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700">FAIL-CLOSED</text>
+</svg>
