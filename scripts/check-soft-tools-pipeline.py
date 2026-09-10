@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED_FILES = {
     "contract": ROOT / "packages/vfcopy/SOFT-TOOLS-CONTRACT.md",
+    "vfcopy": ROOT / "packages/vfcopy/SKILL.md",
     "copy_pipeline": ROOT / "packages/vfcopy/skills/velvet-hebrew-copy/PIPELINE.md",
     "content_sprint": ROOT / ".cursor/skills/vf-content-sprint/SKILL.md",
     "cursor_rule": ROOT / ".cursor/rules/velvet-public-copy-soft-tools.mdc",
@@ -47,7 +48,20 @@ TOKEN_REQUIREMENTS = {
         "check-vfcopy.py lint",
         "CONTENT-RUBRIC",
         "PREFLIGHT",
-        "actual final copy",
+        "final copy",
+    ],
+    "vfcopy": [
+        "SOFT-TOOLS-CONTRACT.md",
+        "reader-first-he.md",
+        "copywriting",
+        "copy-editing",
+        "marketing-psychology",
+        "VOICE-CHART",
+        "velvet-hebrew-copy",
+        "ai-tells-he.md",
+        "check-vfcopy.py lint",
+        "CONTENT-RUBRIC",
+        "PREFLIGHT",
     ],
     "copy_pipeline": [
         "Reader-first",
@@ -65,7 +79,7 @@ TOKEN_REQUIREMENTS = {
         "velvet-hebrew-copy",
         "ai-tells-he.md",
         "check-vfcopy.py lint",
-        "actual final copy",
+        "final copy",
         "CONTENT-RUBRIC",
         "PREFLIGHT",
     ],
@@ -160,8 +174,9 @@ def main() -> int:
         body = bodies.get(name)
         if body is None:
             continue
+        body_folded = body.casefold()
         for token in tokens:
-            if token not in body:
+            if token.casefold() not in body_folded:
                 problems.append(f"{name} is not wired to required token: {token!r}")
 
     for name, forbidden in FORBIDDEN_WEAKENING.items():
@@ -186,7 +201,7 @@ def main() -> int:
 
     print("SOFT TOOLS PIPELINE: PASS")
     print("- reader-first -> voice -> marketing aids -> templates -> velvet-hebrew-copy -> humanizer/lint -> fact gate")
-    print("- Cursor rule, content sprint, edit gate, preflight/template and publish gate all reference the mandatory contract")
+    print("- vfcopy, Cursor rule, content sprint, edit gate, preflight/template and publish gate all reference the mandatory contract")
     print("- copy-version invalidation is fail-closed")
     return 0
 
