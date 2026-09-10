@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "state": "staged_not_published",
+  "correlation": "G004",
+  "approvalRef": "packages/vfgrowth/preflight/G004.md",
+  "sourceRefHash": "189c6615048291882532cfe6912ef3471742b9fcbd1a106099ca59d1e6803d7b",
+  "createdAt": "2026-09-10T17:53:12.127799Z",
+  "archiveAfter": "2026-09-24T17:53:12.127799Z",
+  "archiveRetention": "unlimited",
+  "sha256": "5ce901eb6b27697bb9e7e8bb20fe2fefb9b49137cbed5e6c721a8da98e803260",
+  "contentType": "video/mp4",
+  "sizeBytes": 275806,
+  "path": "publish-bridge/assets/2026-09-10/G004/5ce901eb6b27697bb9e7.mp4",
+  "metadataPath": "publish-bridge/assets/2026-09-10/G004/5ce901eb6b27697bb9e7.mp4.json",
+  "publicUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/2026-09-10/G004/5ce901eb6b27697bb9e7.mp4"
+}
