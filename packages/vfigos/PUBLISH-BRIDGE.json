@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "velvet-publish-bridge",
+  "status": "active",
+  "provider": "github-branch",
+  "repository": "nocturney/velvetos-core",
+  "branch": "publish-bridge",
+  "pathPrefix": "publish-bridge/assets",
+  "publicBaseUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets",
+  "publicReleaseGate": "approved_for_public_release",
+  "imageNormalization": {
+    "inputExtensions": [".jpg", ".jpeg", ".png", ".webp"],
+    "outputExtension": ".jpg",
+    "contentType": "image/jpeg",
+    "quality": 92,
+    "stripMetadata": true,
+    "maxBytes": 20971520
+  },
+  "videoNormalization": {
+    "inputExtensions": [".mp4"],
+    "outputExtension": ".mp4",
+    "contentType": "video/mp4",
+    "stripMetadataWithFfmpeg": true,
+    "maxBytes": 52428800
+  },
+  "retention": {
+    "activeDays": 14,
+    "cleanupMode": "remove_from_branch_head",
+    "historyErasure": false,
+    "note": "Git cleanup deindexes expired assets from the branch head; it is not secure erasure from repository history. Stage only assets already approved for public release."
+  },
+  "forbidden": [
+    "raw Drive originals",
+    "unapproved derivatives",
+    "private CAD",
+    "customer-identifying media without rights",
+    "secrets or tokens",
+    "ambiguous-rights media",
+    "price claims not already approved"
+  ],
+  "fallback": {
+    "transformProxy": "wsrv.nl",
+    "role": "format conversion or transport fallback only; never source of truth"
+  },
+  "futureObjectStorageProvider": "GCS signed/public object bridge when the dedicated bucket is deployed"
+}
