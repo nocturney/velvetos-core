@@ -8,10 +8,10 @@
         "id": "vfmedia-auto-intake",
         "title": "קליטת מדיה אוטומטית — נכנס→מקור",
         "state": "Idle",
-        "updatedAt": "2026-09-10T05:54:41Z",
+        "updatedAt": "2026-09-10T10:17:35Z",
         "counts": {
-          "registered_only": 346,
-          "verified_and_intaken": 54,
+          "registered_only": 296,
+          "verified_and_intaken": 104,
           "visually_reviewed": 0,
           "pending_moves": 0
         },

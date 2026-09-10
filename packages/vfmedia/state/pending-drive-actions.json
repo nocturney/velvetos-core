@@ -425,8 +425,408 @@
       "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
       "status": "done",
       "updatedAt": "2026-09-10T05:54:41Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1-sv934sNMhssxbjoTr8IGFoDjLRW8pgo",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:15:38Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1FFL7zusvPAncgphUkYlXJ68uMNBq_Fd5",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:15:41Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1MhQgLz7TbxT5h31ZEmfqXfqxyl_D_b7v",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:15:43Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1BzoQTD2AZMeuEgTcbrAMHUEdxohgydn5",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:15:48Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1HtI9eajc_7aogToNe2ZlpujuxsjC0VCt",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:15:50Z"
+    },
+    {
+      "op": "move",
+      "fileId": "12IlMX8ArJf5Z5BhMio9N9NzHCJ50N4Ci",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:15:52Z"
+    },
+    {
+      "op": "move",
+      "fileId": "12ZKqf0TkPrT9XH2xuNhwrhoccIrStk31",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:15:55Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1JXJGcIbXhs8Tuu80RA4MemOuqajcmxZh",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:15:57Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1ktXDni61EFaS7XB0haFgA4vzYiHS9urc",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:15:59Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1fayE_8622oHn_xu0WzILp1V_TRjW6h59",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:01Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1ArSeWYrH-2XDdBzZutpEb8zJig80E9F4",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:03Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1_TBBDCxTwAvlnNnngLdbL1glSRaARP3v",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:07Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1pZrOIhbHGQcFjCCbR5BEPoNTJIW17ZTn",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:09Z"
+    },
+    {
+      "op": "move",
+      "fileId": "18vsrBWPGrK8-DACJS54lceE6yFWTNEny",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:11Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1bzRU0WhYfmPR4uclwzAgnU6wr3QLePeT",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:13Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1jHNelgOaGRy8ZJBHQi-0pJopaB2P0c8X",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:15Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1-r7GVHaOdJzdEs-ZIs4xnBDyMeH3O2mi",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:17Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1KfEyZ-m7m4FUc53tX3Rpwp0jEKmqUrkn",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:19Z"
+    },
+    {
+      "op": "move",
+      "fileId": "139JqRHPj7ek6uQPxKcanXsHI5js809P8",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:21Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1GEIq5uor4mPodQffJWT5QbpzUAwrvCMt",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:23Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1HEwqndM417jR1Qbpf_k62aathFC3D4kf",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:28Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1cSPKscHoicWpTY3OvLHRAYH2rqYX3Y-5",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:30Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1yOZiOs65Qe2nORMMQ6bFghHT4FjTS6BQ",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:31Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1W-_DVSrn9HgfPAO-59kduHDbkPZzkOBn",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:36Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1Itfgk3kb9ATh-8ZP5uzL12dST4cNjtIN",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:38Z"
+    },
+    {
+      "op": "move",
+      "fileId": "14sCyTqAmdRWme58h246CZ8qkbzh8r_wg",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:40Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1PW8o3HY3PFod2_KlAr-KFr4to5I_13P6",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:42Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1tsDUfaDFKV1LQ4s-DW8Jg4yVO-cGgjVR",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:47Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1_c_THu0fGUU2f4mP5K2Lv5DfV3MyOVko",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:49Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1-nmSJiKEU1OEkUoDDebumx0gXDOREm8a",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:51Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1qq4R3tGS33nQR14iauah7oqPHakbLSrD",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:53Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1lU7qLUwEy8ANVPbjmPItrmRYS3CFsUvk",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:56Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1cyrsh3qiOBV6k0zcHFj_LDRs4TaywvX-",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:16:58Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1hhzweX2mNmSnnLaQb7OTxmgmUXDLU3Lx",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:00Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1U2pr0VfIZOOP71JMQPyNH0umiPcWsp6r",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:03Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1hDT9Tj0ypE2hzL7OH36nuXZ3GkG3P-tu",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:05Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1dFGPn9PdB_oJiIUV3EgvBuOfH1z728yh",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:08Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1hCGP8CTcsLM81qGTlEzjKnBtncdkJB_n",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:10Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1wJTRa5_X5rVVieLlC4CplllAy9CFgOQr",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:11Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1Bn6DieDxQHzrXxYK_VvLflHUTWAYZb73",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:13Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1l1dyeiEM4Pv6Y9dDPya-LRIEsILKHi8y",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:15Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1Y1bsh9vI7MvWr5eYwfhvjBnhjTU4694e",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:18Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1EzqzPOYc6WET4wPDEkFurhZon-gE_Ev5",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:20Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1TJ0IcefCi2dBBWGC__UkbJrRyGBtjLAA",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:22Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1uP6v-vuyBjPe2j9S4012E7m40RLPx6__",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:24Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1PwGtMh_9pJ49FNnF7hp_h8SrLgn6vd72",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:26Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1oNEC0LvFpx2AEOJXX-FuNGuEbvpoe6-U",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:28Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1Sx_-MYMRna73i5mH08E5iHXxEo_HJ2hh",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:30Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1T6mMmPWcY94kwNiON0GF5P4b7_yJ5aqg",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:32Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1iEvWVEmunMImNtn7ukAR--ApT4i_dFs5",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-10T10:17:35Z"
     }
   ],
-  "updatedAt": "2026-09-10T05:54:41Z",
+  "updatedAt": "2026-09-10T10:17:35Z",
   "note": "pending Drive moves for MCP/API apply — not a second catalog"
 }
