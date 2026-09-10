@@ -1,129 +1,150 @@
 ---
-name: Velvet Factory Office
-version: "1.0"
+name: Velvet Factory Brief V10.2
+version: "10.2"
 tokens:
   color:
-    canvas: "#0b1224"
-    surface-dark: "#101a35"
-    surface-cream: "#f7f3eb"
-    accent-gold: "#caa96b"
-    text-on-dark: "#f4ead3"
-    text-on-dark-muted: "#d8deeb"
-    text-on-cream: "#101a35"
-    text-muted: "#c9d0df"
-    white: "#ffffff"
-  typography:
-    display: "Georgia, serif"
-    body: "Arial, sans-serif"
-    label-size: "11px"
-    body-size: "14px"
-    title-size: "28px"
-    bottom-line-size: "17px"
-  spacing:
-    outer: "24px 12px"
-    card-padding: "28px"
-    section-gap: "20px"
-    accent-border: "6px"
+    ink: "#101828"
+    ink-surface: "#151D2E"
+    pink: "#FF4F91"
+    periwinkle: "#6C7CFF"
+    lime: "#B8F34A"
+    cyan: "#45D7FF"
+    coral: "#FF8C66"
+    butter: "#FFD45A"
+    paper: "#F4F6FB"
+    white: "#FFFFFF"
+    text-dark: "#171D2C"
+    text-muted: "#697287"
   layout:
-    max-width: "640px"
+    max-width: "680px"
     direction: rtl
-  components:
-    header-bar:
-      backgroundColor: "{color.surface-dark}"
-      borderRight: "{spacing.accent-border} solid {color.accent-gold}"
-      padding: "{spacing.card-padding}"
-    bottom-line-card:
-      backgroundColor: "{color.surface-dark}"
-      textColor: "{color.white}"
-      labelColor: "{color.accent-gold}"
-      padding: "16px"
-    slot-body:
-      backgroundColor: "{color.surface-cream}"
-      textColor: "{color.text-on-cream}"
-      padding: "{spacing.card-padding}"
-    footer:
-      backgroundColor: "{color.surface-dark}"
-      textColor: "{color.text-muted}"
-      fontSize: "12px"
-      padding: "16px 28px"
 ---
 
-# Velvet Factory — Office Visual Identity
+# Velvet Factory — Brief V10.2 · Ink & Candy
 
-## Design Philosophy
+## עיקרון
 
-**Architectural warmth meets print-floor clarity.** The office UI reads like a morning brief from a small studio — not a SaaS dashboard. Dark navy grounds the eye; cream surfaces carry readable content; gold accents mark decisions and hierarchy. RTL-first. Pickup-only, human CTA.
+V10.2 הוא **מגזין מודיעין יומי חי**, לא dashboard גנרי. הוא צריך להיות חד, עשיר בתמונות אמיתיות, קל לסריקה בטלפון ומושך מספיק כדי להרגיש כמו מוצר שאנשים אחרים היו רוצים לקבל.
 
-Target audience: studio lead reading the 07:00 brief on phone. Emotional tone: calm authority, no urgency theater, no fake scarcity.
+עברית היא ברירת המחדל. אנגלית נשארת רק למונחים טבעיים כמו `Instagram`, `Reel`, `Canva`, `Insights`, `VelvetOS` ו־`V10.2`.
 
-## Color
+## פלטת Ink & Candy
 
-| Token | Hex | Use |
-|---|---|---|
-| canvas | `#0b1224` | Email outer background (תצוגה 3) |
-| surface-dark | `#101a35` | Headers, decision cards, footer |
-| surface-cream | `#f7f3eb` | Slot body, readable blocks |
-| accent-gold | `#caa96b` | Labels, right border, emphasis |
-| text-on-dark | `#f4ead3` | Subtitle on dark |
-| text-muted | `#c9d0df` | Footer, secondary |
+- `#101828` — קנבס Ink כהה.
+- `#151D2E` — מעטפת ו־Hero surface.
+- `#FF4F91` — החלטה / צריך ממך / תוכן שדורש תשומת לב.
+- `#6C7CFF` — מערכת / VelvetOS / מידע ניהולי.
+- `#B8F34A` — תקין / הצלחה / אות חיובי.
+- `#45D7FF` — מידע חי / Insights.
+- `#FF8C66` — ייצור והדפסה.
+- `#FFD45A` — כסף / הזדמנות / מעקב.
+- `#F4F6FB` — משטח קריאה בהיר.
 
-Do not introduce bright greens, purple gradients, or pure black `#000`. Do not use light gray `#f5f5f5` as primary surface — cream is the light surface.
+הצבעים סמנטיים. אין לצבוע כל כרטיס רק בשביל אפקט; צבע מדגיש משמעות.
 
-## Typography
+## תמונות הן חלק מהגריד
 
-- **Labels** (e.g. «השורה התחתונה», slot numbers): Georgia 11px, gold, letter-spaced feel
-- **Titles**: Arial 28px white on dark
-- **Body / slots**: Arial 14px, line-height ~1.55
-- **Bottom line**: Arial 17px white — one sentence max
+V10.2 מבטל את הגישה של “כרטיס ואז אולי תמונה”. כל אזור ויזואלי משתמש בפריסת מדיה מפורשת:
 
-Hebrew copy only in product-facing blocks. English OK in dev docs and token names.
+1. `hero_visual` — **תמונת היום** גדולה, כמעט ברוחב מלא. מקור: studio/WIP/finished/live content אמיתי בלבד.
+2. `layout=split` — כרטיס עבודה שבו כ־⅓ מהשטח מוקדש לתמונה וכ־⅔ למצב, חסם ושלב הבא.
+3. `cards[]` — עד 3 mini-cards לתוכן/מחקר/הזדמנויות; כל כרטיס יכול להכיל thumbnail, כותרת, ממצא ופעולה.
+4. `covers[]` — תמונות נוספות בתוך כרטיס כשבאמת נדרש.
 
-## Layout & Spacing
+אם אין asset אמיתי — אזור התמונה לא נוצר. אין placeholder בפרודקשן, stock או filler.
 
-- Max content width: **640px** centered on canvas
-- Direction: **rtl** on all presentation tables and slot content
-- Header: 6px solid gold border on the **right** (RTL accent)
-- Section padding: 28px horizontal on cards; 20px between stacked blocks
+## בחירת תמונת היום
 
-## Components
+אם ה־payload מספק `hero_visual`, הוא מנצח. אחרת ה־renderer רשאי לקדם תמונה קיימת מתוך ה־brief לפי סדר עדיפות:
 
-### Morning brief envelope (MAIL.html)
+1. עבודה/ייצור פעיל.
+2. תוכן רלוונטי.
+3. Instagram/Insights חי.
+4. הזדמנות/מחקר.
 
-Locked structure 01–07. Agent fills `{{SLOTS}}` only — never reorders slots. Header/footer tokens fixed. See `packages/vfops/hq/BRIEF-SLOTS.md`.
+תמונה שקודמה ל־Hero לא משוכפלת שוב בכרטיס המקורי.
 
-### Wireframe (brief-email.html)
+## היררכיה
 
-Same tokens for Mobbin-blocked / effective-html reference. Not the live send path — `MAIL.html` + `render_mail.py` is production.
+1. Hero: תאריך, גרסה, מצב העסק ובריאות מערכת.
+2. **תמונת היום** — כשיש asset אמיתי.
+3. עד 4 KPI מאומתים.
+4. תמונת מצב במשפט אחד.
+5. מה השתנה מאז הבריף הקודם.
+6. צריך ממך.
+7. כסף / עבודות / היום.
+8. רדאר תוכן עם visual proof.
+9. שולחן המחקר — עד 3 findings, רצוי עם thumbnail מאותו source.
+10. הזדמנות קרובה — רק אם Studio Pulse מחזיר אות אמיתי.
+11. פעילות VelvetOS — receipts ושינויים שבוצעו בפועל; בדרך כלל בלי תמונות.
 
-### Decision card (slot 01 pattern)
+## שדות V10.2
 
-Dark surface, gold label, white action text. Yes / No / Defer — no fake countdown timers.
+### Hero
 
-## Do's and Don'ts
+```json
+{
+  "hero_visual": {
+    "cid": "IMG_123.jpg",
+    "href": "https://...",
+    "eyebrow": "תמונת היום",
+    "title": "העבודה המרכזית",
+    "caption": "מה חשוב לראות כאן"
+  }
+}
+```
 
-**Do**
+במקום `cid` אפשר `url`/`src` אמיתי.
 
-- Keep one CTA per customer-facing IG block: Instagram message (`PUBLIC_CURRENT_CTA`) or איסוף שדרות — not WhatsApp phone
-- Use verified numbers only in slot 06 — write «אין ספירה» when missing
-- Match Canva IG palette where brief covers appear in slot 07 (`#vfcovers`)
+### Split card
 
-**Don't**
+```json
+{
+  "kind": "production",
+  "layout": "split",
+  "title": "עבודה חיה",
+  "covers": [{"cid": "job.jpg", "caption": "מצב נוכחי"}]
+}
+```
 
-- WhatsApp / `050-2517000` as public CTA; auto-DM / «שלחו DM» as tooling; boost CTAs
-- Invent ₪, Insights, or queue hours
-- Swap תצוגה 3 structure for a «cleaner» single-column marketing layout
-- Add stock photos of bedrooms, national shipping badges, or generic startup illustrations
+### Mini visual cards
 
-## Breakpoints
+```json
+{
+  "kind": "content",
+  "title": "רדאר תוכן",
+  "cards": [
+    {
+      "url": "https://...",
+      "href": "https://...",
+      "kicker": "מאומת חי",
+      "title": "Reel אחרון",
+      "text": "הנתון החשוב",
+      "action": "מה עושים עכשיו"
+    }
+  ]
+}
+```
 
-Email target: mobile-first 320–640px. Tables use `role="presentation"` — no responsive framework required. Desktop: same 640px card centered on `#0b1224` canvas.
+## חוקי אמת
 
-## Related files
+- אין ₪ מומצא.
+- אין Insights מומצאים.
+- `scheduled/uploaded != verified live`.
+- `0` אינו תחליף למידע חסר.
+- תמונה היא evidence של אותו item/source.
+- thumbnail מחקרי חייב להגיע מאותו מקור או להיעלם.
+- פעילות VelvetOS מציגה פעולה/receipt שבאמת קרו.
 
-| File | Role |
-|---|---|
-| `../MAIL.html` | Live brief template (תצוגה 3) |
-| `brief-email.html` | Wireframe reference |
-| `DESIGN-EMBED.md` | Source map (awesome-design-md) |
-| `EFFECTIVE-HTML.md` | Slot → html-plan mapping |
-| `packages/vfcanva/` | Instagram visuals — Canva brand kit is authoritative for feed |
+## Gmail / mobile
+
+- RTL מלא.
+- 320–680px, mobile-first.
+- table-based, Gmail-safe.
+- split/cards נערמים במובייל.
+- טקסט קריטי לעולם לא נצרב בתוך תמונה.
+- תמונות לחיצות כאשר יש יעד אמיתי.
+
+## תאימות
+
+JSON ישן של 01–07 ממשיך לעבוד. שדות V10.2 אופציונליים. `Studio Pulse` נשאר projection fallback בלבד — לא מקור אמת חדש.

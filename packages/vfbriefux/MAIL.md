@@ -1,142 +1,170 @@
-# מייל בריף · Brief V6 App Dashboard
+# מייל בריף · V10.2 · Ink & Candy
 
-המשך ישיר ל־`תצוגה 3` (תאימות CI/renderer), אבל מבנה המידע משתנה לפי החלטת בעלים 10.9.2026: הבריף הוא **מסך שליטה ניהולי**, לא מסמך 01–07 ולא פתק טקסט.
+V10.2 הופך את הבריף מ־dashboard שנשלח במייל ל־**מגזין מודיעין יומי חי**: עברית תחילה, דלתא תחילה, תמונות אמיתיות כחלק מהגריד, ומבנה שמכוון את העין למה שדורש פעולה.
 
-## מטרה
+## המטרה
 
-תוך 20–30 שניות כריסטיאן צריך לדעת:
-1. האם צריך ממנו משהו עכשיו.
-2. איפה הכסף/ההזמנות/הייצור תקועים.
-3. מה קורה היום.
-4. מה מצב העמוד והתוכן לפי Insights חיים.
-5. מה החוקרים מצאו ומה עושים עם זה.
-6. האם יש תקלה מערכתית אמיתית.
+תוך 20–30 שניות צריך להיות ברור:
+1. האם צריך ממני משהו עכשיו.
+2. מה השתנה מאז הבריף הקודם.
+3. מה קורה בעבודות, כסף וייצור.
+4. מה כבר היה אמור לקרות היום.
+5. מה קרה בפועל ב־Instagram ובתוכן.
+6. מה המחקר מצא ומה עושים עם זה.
+7. מה VelvetOS ביצעה בפועל.
+8. האם יש תקלה מערכתית אמיתית.
 
-## סטטוסים — שני צירים, בלי סתירה
+## עברית תחילה
 
-ה־Hero מציג **שני badges נפרדים ומסומנים בשם**:
+עברית היא שפת ברירת המחדל. אנגלית נשארת רק למונחים טבעיים: `Instagram`, `Reel`, `Canva`, `Insights`, `VelvetOS`, `V10.2`.
 
-- `מצב העסק / Attention` — מה דורש תשומת לב ניהולית עכשיו.
-  - GREEN: אין חסם/החלטה/כסף דחוף שמצריך תשומת לב.
-  - YELLOW: יש follow-up, חסם לא קריטי, גבייה/מועד או החלטה שכדאי לטפל בהם.
-  - RED: אישור בעלים, hard blocker, סיכון לקוח/כסף דחוף או פעולה אדומה.
-- `בריאות מערכת` — תשתיות בלבד: Gmail / GitHub / Drive / Instagram / Media Intake / Research / automations.
+כותרות ברירת מחדל:
+- `תמונת היום`
+- `תמונת מצב עכשיו`
+- `מה השתנה מאז הבריף הקודם`
+- `צריך ממך`
+- `מצב הכסף`
+- `עבודות חיות`
+- `היום / בהמשך`
+- `מצב העמוד`
+- `רדאר תוכן`
+- `שולחן המחקר`
+- `הזדמנות קרובה`
+- `פעילות VelvetOS`
 
-לכן מצב תקין לדוגמה הוא: **מצב העסק YELLOW · בריאות מערכת GREEN** — המשרד והחיבורים עובדים, אבל יש משהו עסקי שמחכה לטיפול. אסור להציג badge יחיד YELLOW ולכתוב לידו «המערכת ירוקה» בלי להסביר את הציר.
+## סדר מידע
 
-## סדר הופעה — נעול לפי ערך ניהולי
+1. Hero: תאריך, מצב העסק, בריאות מערכת.
+2. `hero_visual` / תמונת היום — רק אם יש asset אמיתי.
+3. עד 4 KPI מאומתים.
+4. תמונת מצב במשפט אחד.
+5. עד 4 דלתאות משמעותיות.
+6. צריך ממך — אם יש.
+7. כסף / עבודות / היום.
+8. Instagram + רדאר תוכן עם visual proof.
+9. מחקר — עד 3 findings עם תמונה מאותו source כשזמינה.
+10. הזדמנות קרובה — רק אות אמיתי.
+11. פעילות VelvetOS — receipts ושינויים שבוצעו בפועל.
 
-| עדיפות | אזור | כלל |
-|---:|---|---|
-| 0 | Hero | זמן רענון + `מצב העסק` + `בריאות מערכת` + שורה תחתונה אחת שתואמת לשניהם |
-| 1 | **צריך ממך** | מופיע מיד אחרי Hero אם יש החלטה/אישור/חסם בעלים; לא נקבר בתחתית |
-| 2 | כסף + דחוף | גבייה מאומתת, due/overdue, עבודות פעילות/בהדפסה/חסומות |
-| 3 | היום | timeline אחד: ייצור, איסופים, תוכן, Calendar, followups; **כל פריט ויזואלי מקבל thumbnail אמיתי** |
-| 4 | הזמנות וייצור | 3–6 עבודות לפי דחיפות/הכנסה/חסם |
-| 5 | Instagram Insights | נתוני account + media חיים; thumbnails וקישור לפוסט |
-| 6 | תוכן על המסך | candidate/scheduled/verified-live + תמונה אמיתית בתוך הכרטיס |
-| 7 | מחקר ורעיונות | עד 3 findings, כל אחד thumbnail + מקור + תאריך + link + `מה עושים עם זה` |
-| 8 | מה השתנה | עד 4 שינויים משמעותיים מאז אתמול |
-| 9 | בריאות מערכת | footer קטן; פרטים טכניים רק כשיש degradation |
+## תמונות והוכחה ויזואלית
 
-אם `צריך ממך` ריק — מציגים שורת GREEN קטנה בלבד. לא ממציאים משימה.
+תמונה אינה קישוט. היא evidence של אותו פריט.
 
-## `היום` — timeline עם thumbnails
+מקורות עדיפות:
+1. studio / WIP / finished asset אמיתי.
+2. Instagram `thumbnail_url` / `media_url` חי.
+3. Canva thumbnail אמיתי.
+4. Drive/Media Vault דרך CID.
+5. source image אמיתי של finding מחקרי.
 
-כל item שמייצג Reel / Story / Carousel / candidate / live post / מוצר או עבודה שיש להם proof ויזואלי, מציג thumbnail בגודל בערך 72–96px בתוך הכרטיס.
+אין stock/filler. אם אין תמונה אמיתית — הכרטיס נשאר טקסטואלי או לא מופיע.
 
-מקור thumbnail לפי סדר עדיפות:
-1. candidate/live visual אמיתי של אותו item.
-2. Instagram `thumbnail_url` / `media_url` שהוחזרו live.
-3. Canva design thumbnail אמיתי של אותו candidate.
-4. Drive/Media Vault asset דרך CID כשהקובץ ניתן לחומרה/הורדה.
+### `hero_visual`
 
-התמונה clickable ל־Instagram permalink / Canva edit-view / Drive preview כשיש יעד אמיתי. אין תמונת filler לפגישה, גבייה או אירוע לא ויזואלי.
+```json
+{
+  "hero_visual": {
+    "cid": "photo.jpg",
+    "href": "https://...",
+    "eyebrow": "תמונת היום",
+    "title": "העבודה המרכזית",
+    "caption": "מה חשוב לראות"
+  }
+}
+```
 
-## תמונות בתוך הכרטיסים
+אפשר `url`/`src` במקום `cid`. אם אין `hero_visual` מפורש, ה־renderer רשאי לקדם תמונה אמיתית קיימת מתוך העבודה/תוכן/Instagram לפי סדר עדיפות. תמונה שקודמה לא משוכפלת בכרטיס המקורי.
 
-תמונה היא חלק מהכרטיס, לא attachment דקורטיבי.
+### Split card
 
-מסלול מועדף:
-- `packages/vfops/gmail_brief_send.py` → MIME `multipart/related` → `cid:<filename>`.
-- `filename` של קובץ התמונה חייב להיות זהה ל־Content-ID שה־HTML מפנה אליו.
+לעבודות וייצור ניתן להשתמש ב־`layout=split`: כשליש תמונה ושני שלישים טקסט בדסקטופ; במובייל הכול נערם.
 
-מסלול connector/live:
-- Instagram: `thumbnail_url` / `media_url` שהוחזרו מ־VelvetOS Instagram, בתוך `<img>` ובתוך `<a href="permalink">`.
-- Canva: thumbnail אמיתי מה־design כאשר הוא מייצג item שמופיע בבריף.
-- מקור מחקר ציבורי: thumbnail/hero/OG אמיתי של אותו מקור, clickable ל־source URL.
-- Drive פרטי בלבד: CID כשהקובץ ניתן לחומרה/הורדה. אם לא — preview link מסומן; **לא** מציגים attachment כאילו הוא inline.
+### `cards[]`
 
-לכל תמונה: `alt`, caption קצר, וקישור כשיש יעד אמיתי.
+רדאר תוכן, מחקר והזדמנויות יכולים לקבל עד 3 mini-cards:
 
-## Instagram · מצב העמוד
+```json
+{
+  "cards": [
+    {
+      "url": "https://...",
+      "href": "https://...",
+      "kicker": "מאומת חי",
+      "title": "כותרת",
+      "text": "הממצא החשוב",
+      "action": "מה עושים עכשיו"
+    }
+  ]
+}
+```
 
-הבריף חייב לבצע probe חי דרך VelvetOS Instagram בכל בוקר:
-- `account_info` / profile: followers + media count.
-- `get_account_insights`: reach/profile views/total interactions לפי מה ש־Graph מחזיר בפועל.
-- `list_media` + `get_media_insights` ל־2–3 פריטים מייצגים/אחרונים: reach/views/interactions/saved/shares כשזמין.
+## סטטוסים ודלתא
 
-אין `אין ספירה` אם ה־connector כן מחזיר נתון חי. אין השלמה או inference למדד שלא הוחזר.
+- `מצב העסק` — החלטה, כסף, חסם או follow-up ניהולי.
+- `בריאות מערכת` — Gmail / GitHub / Drive / Instagram / Media Intake / Research / automations.
+- `changes[]` מציג רק שינוי אמיתי מאז הריצה הקודמת.
+- `slots[].delta` מציג שינוי מקומי בכרטיס.
+- `density=compact` מקצר אזור יציב.
 
-כרטיס media כולל thumbnail אמיתי, סוג (Reel/Carousel/Post), זמן, נתוני lifetime/period עם תווית ברורה וקישור ישיר ל־Instagram.
+## Instagram
 
-## Story autonomy
+כאשר החיבור זמין:
+- profile/account info.
+- Insights חיים לפי המדדים שהוחזרו בפועל.
+- `list_media`.
+- `get_media_insights` לפריטים רלוונטיים.
 
-`חסר קליפ יומי` הוא **טריגר לעבודה**, לא final blocker.
+פריט media רצוי שיופיע עם thumbnail וקישור ישיר.
 
-לפני שסטורי מוצג כחסום:
-1. מחפשים Media Vault / Drive source / catalog לחומר אמיתי usable, בדגש על unused WIP/BTS/product footage.
-2. בודקים Canva/vfcovers קיימים למועמד הרלוונטי.
-3. אם יש חומר — מכינים/מרכיבים Story package לפי VOICE + EDIT-GATE + CTA, גם מסטילס כשאין דרישה אמיתית לתנועה.
-4. מבקשים צילום חדש מכריסטיאן רק אם חיפוש אמיתי הוכיח שאין חומר מתאים. הבקשה חייבת להיות ספציפית: איזה shot, למה הקיים לא מספיק, ומה המינימום לצלם.
+`scheduled/uploaded != verified live`.
 
-לא מעבירים לבעלים משימת «תביא קליפ» רק מפני שה־Calendar כתב `חסר`.
+אם מועד עבר ואין proof חי — המצב משתנה ל־`דורש אימות`/`התאוששות`.
 
-## Research cards
+## שולחן המחקר
 
-Research = GREEN רק עם `packages/vfresearch/sources/<YYYY-MM-DD>-orchestra.md` של אותו יום שמוכיח body run אמיתי.
+עד 3 findings בלבד. כל כרטיס צריך לכלול, כשקיים במקור:
+- thumbnail מאותו source.
+- source/domain ותאריך.
+- כותרת/ממצא.
+- רמת ביטחון כשיש בסיס.
+- `מה עושים עם זה`.
+- link ישיר.
 
-כל אחד מעד 3 הכרטיסים:
-- thumbnail אמיתי מאותו מקור (או source-logo fallback).
-- source/domain.
-- תאריך מקור.
-- כותרת אמיתית.
-- משפט ממצא אחד.
-- `מה עושים עם זה` — משפט אחד.
-- `למקור ↗` direct URL.
+מחקר stale מסומן stale. אין recycling כאילו הוא חדש.
 
-אסור למחזר artifact ישן כאילו הוא היום. stale = YELLOW + fallback מסומן.
+## פעילות VelvetOS
 
-## שפה ויזואלית
+הבלוק מתאר **מה בוצע בפועל**: סנכרון, routing, state repair, media ranking, follow-up, anomaly detection או receipt אחר. בדרך כלל אין צורך בתמונה כאן.
 
-- RTL מלא.
-- מעטפת navy כהה; cards קרם/לבן; gold רק להיררכיה/פעולה.
-- state pills: green/yellow/red ברורים גם בטקסט, לא רק בצבע.
-- mobile-first; זרימה אנכית. KPI יכול להיות grid קצר כל עוד קריא בטלפון.
-- body 12–16px; כפתורים/קישורים tappable; timeline thumbnails בערך 72–96px; media/research בערך 80–120px.
-- מידע חשוב גלוי ללא hover.
-- dark-mode resilient; אין טקסט קריטי כתמונה.
-- מייל לא ארוך ללא צורך: פרטים עמוקים עוברים לקישור המקור/Instagram/GitHub.
+אם לא קרה משהו משמעותי, הכרטיס מתקצר.
 
-## מקור השראה / מחקר פורמט · 10.9.2026
+## Living Studio
 
-החלטות העיצוב נשענות על:
-- Litmus inverted-pyramid email: כותרת רחבה שמכוונת לפעולה החשובה.
-- Mailchimp mobile email guidance: single-column/stacking, קריאות ו־tap targets גדולים.
-- RGE Studio: mobile stacking, dark-mode preview, grid/padding עקבי.
-
-היישום אצלנו: **owner action → money/urgency → today/operations → Insights/content → research → system health**.
+`render_mail.py` רשאי להשלים שדות V10.2 חסרים מתוך `packages/velvetos/living-studio/data/pulse-latest.json` בלבד. זהו projection fallback; הוא אינו מקור אמת חדש ואינו מנצח שדה מפורש ב־brief.
 
 ## שליחה
 
-Production renderer: `packages/vfbriefux/render_mail.py` + `MAIL.html`.
+Production renderer:
+- `packages/vfbriefux/render_mail.py`
+- `packages/vfbriefux/MAIL.html`
 
-CID production path:
+CID path:
+
 ```bash
 PYTHONPATH=packages python3 -m vfops.gmail_brief_send \
   --html PATH --images DIR --to nocturney@gmail.com --subject TEXT
 ```
 
-חוזה Gmail/MCP: `docs/SEND-BRIEF-MCP.md`. במסלול connector, גוף ה־HTML נשלח כ־`htmlBody`/`html_body` אמיתי; אם הנתיב אינו מסוגל CID, מותר להשתמש בתמונת HTTPS אמיתית בתוך HTML. אין לשלוח attachment ולדווח שהוא inline.
+במסלול connector/live גוף המייל חייב להישלח כ־`htmlBody`/`html_body` אמיתי. תמונת HTTPS אמיתית מותרת. attachment רגיל אינו inline.
 
-אין המצאת ₪, Insights, סטטוס פרסום, לקוח או השלמת ייצור. `scheduled/uploaded != verified live`.
+## חוקי אמת
+
+- אין המצאת ₪.
+- אין המצאת Insights.
+- אין המצאת לקוח/סטטוס ייצור/פרסום.
+- `scheduled/uploaded != verified live`.
+- `0` אינו תחליף למידע חסר.
+- תמונה חייבת לתמוך באותו item/source.
+- כל delta חייב להיות ניתן לגיבוי במקור אמת.
+
+עקרונות העיצוב: `hq/DESIGN.md`.
