@@ -6,7 +6,7 @@
     {
       "step": "A.sandbox_jobs_pull",
       "ok": true,
-      "detail": "{\n  \"status\": \"pulled\",\n  \"at\": \"2026-09-10T09:53:26Z\",\n  \"canonical\": {\n    \"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\",\n    \"title\": \"VF HQ · jobs\",\n    \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\",\n    \"canonical\": \"goog"
+      "detail": "{\n  \"status\": \"pulled\",\n  \"at\": \"2026-09-10T09:55:14Z\",\n  \"canonical\": {\n    \"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\",\n    \"title\": \"VF HQ · jobs\",\n    \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\",\n    \"canonical\": \"goog"
     },
     {
       "step": "A.sandbox_jobs_ready",
@@ -21,17 +21,17 @@
     {
       "step": "A.autonomy_snapshot_jobs_state",
       "ok": true,
-      "detail": "{\n  \"name\": \"velvetos-autonomy-snapshot\",\n  \"generatedAt\": \"2026-09-10T12:53:26+03:00\",\n  \"contract\": {\n    \"requiredIds\": [\n      \"run_id\",\n      \"idempotency_key\",\n      \"correlation_id\"\n    ],\n    \"states\": [\n      \"queued\",\n      \"running\",\n     "
+      "detail": "{\n  \"name\": \"velvetos-autonomy-snapshot\",\n  \"generatedAt\": \"2026-09-10T12:55:14+03:00\",\n  \"contract\": {\n    \"requiredIds\": [\n      \"run_id\",\n      \"idempotency_key\",\n      \"correlation_id\"\n    ],\n    \"states\": [\n      \"queued\",\n      \"running\",\n     "
     },
     {
       "step": "A.world_model",
       "ok": true,
-      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:53:26+03:00\",\n  \"kind\": \"velvet-world-model-projection\",\n  \"rule\": \"projection-only — sources remain canonical SoTs; numeric ₪ redacted to X ₪ (Sheet holds verified a"
+      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:55:14+03:00\",\n  \"kind\": \"velvet-world-model-projection\",\n  \"rule\": \"projection-only — sources remain canonical SoTs; numeric ₪ redacted to X ₪ (Sheet holds verified a"
     },
     {
       "step": "A.studio_pulse",
       "ok": true,
-      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:53:26+03:00\",\n  \"kind\": \"studio-pulse\",\n  \"what_happening_now\": {\n    \"jobs\": 5,\n    \"followups\": {\n      \"waiting_for_print_done\": 1\n    },\n    \"media_inbox\": 346,\n "
+      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:55:14+03:00\",\n  \"kind\": \"studio-pulse\",\n  \"what_happening_now\": {\n    \"jobs\": 5,\n    \"followups\": {\n      \"waiting_for_print_done\": 1\n    },\n    \"media_inbox\": 346,\n "
     },
     {
       "step": "A.autonomy_next",
@@ -41,12 +41,12 @@
     {
       "step": "A.autonomy_execute_green_dry",
       "ok": true,
-      "detail": "{\n  \"run_id\": \"arun-43348dad9cd2\",\n  \"correlation_id\": \"corr-5f055e1eae44\",\n  \"idempotency_key\": \"exec|projection_refresh|None|33ae4eeede\",\n  \"source\": \"vf_autonomy\",\n  \"action\": \"projection_refresh\",\n  \"target_id\": null,\n  \"risk\": \"green\",\n  \"resolv"
+      "detail": "{\n  \"run_id\": \"arun-ef4e66e20219\",\n  \"correlation_id\": \"corr-5f055e1eae44\",\n  \"idempotency_key\": \"exec|projection_refresh|None|33ae4eeede\",\n  \"source\": \"vf_autonomy\",\n  \"action\": \"projection_refresh\",\n  \"target_id\": null,\n  \"risk\": \"green\",\n  \"resolv"
     },
     {
       "step": "A.dry_run_no_runs_file",
       "ok": true,
-      "detail": "/tmp/vf-office-sandbox-sdw19tqm/packages/velvetos/living-studio/data/autonomy-runs.jsonl"
+      "detail": "/tmp/vf-office-sandbox-uqoe_7ob/packages/velvetos/living-studio/data/autonomy-runs.jsonl"
     },
     {
       "step": "B.inquiry_dry",
@@ -111,12 +111,12 @@
     "packages/vfgrowth/data/approval-queue.json": "ffb430f1fa8cac3e7159fe7967e7fdc3c55ff496186932aab2d487fc0baefe7a",
     "packages/velvetos/living-studio/data/autonomy-runs.jsonl": null,
     "office/learning/lab/experiments.jsonl": null,
-    "office/control/HANDOFF.json": "a2847528f46cf13df12159b05b29094a5f557fa2aacf85e896479e72b8f2012f",
+    "office/control/HANDOFF.json": "1548ba9441c706a761465c1258082dfcc0e8a79ba70d1c6528827116c0166a2b",
     "office/ledger/live/jobs.csv": "b604427a287359b446ea035ce227f343efb0706de595a6ec9741bcac2cf05bc0",
-    "office/ledger/live/sync-receipt.json": "a2c59de5f0d85a2bcf90a4731d2cdef35dce236313a88c400ed13aaf06c96673",
-    "packages/velvetos/living-studio/data/intake-receipts.jsonl": null,
-    "packages/velvetos/living-studio/data/signal-room.jsonl": "f1e5f0ca28fa5528e2c53a7d7247b7dd400fe9ba5650518d0e51f4b1ad9a9396",
-    "packages/velvetos/living-studio/data/receipts.jsonl": "f0c1a910e8bb41c47fb9bfd234737e78bc623eea61c77a50c58aa2e25276eed5"
+    "office/ledger/live/sync-receipt.json": "28273ac82c9d566eca119975e2ed2950f4f429ff0aefa103c1b7e78331e946fe",
+    "packages/velvetos/living-studio/data/intake-receipts.jsonl": "b2d59f7bc1519a71920d898c04a6f9e44f28b76bc8ab1151350f7bdf3a44e3a7",
+    "packages/velvetos/living-studio/data/signal-room.jsonl": "9e46d75437380082c1061f0b7d195a63d128f3a9021950f1c6e4b973d4f8f4c7",
+    "packages/velvetos/living-studio/data/receipts.jsonl": "a4c92f4ab6fccb8ad34530968fc9fb73df9f6e1a88ad1065bc4b313692ecda98"
   },
   "checksumAfter": {
     "office/control/decisions.jsonl": "2ad3df52339d1bd04888f7085805f82068618df3f3a2ecf9c677b9b350af9011",
@@ -129,13 +129,13 @@
     "packages/vfgrowth/data/approval-queue.json": "ffb430f1fa8cac3e7159fe7967e7fdc3c55ff496186932aab2d487fc0baefe7a",
     "packages/velvetos/living-studio/data/autonomy-runs.jsonl": null,
     "office/learning/lab/experiments.jsonl": null,
-    "office/control/HANDOFF.json": "a2847528f46cf13df12159b05b29094a5f557fa2aacf85e896479e72b8f2012f",
+    "office/control/HANDOFF.json": "1548ba9441c706a761465c1258082dfcc0e8a79ba70d1c6528827116c0166a2b",
     "office/ledger/live/jobs.csv": "b604427a287359b446ea035ce227f343efb0706de595a6ec9741bcac2cf05bc0",
-    "office/ledger/live/sync-receipt.json": "a2c59de5f0d85a2bcf90a4731d2cdef35dce236313a88c400ed13aaf06c96673",
-    "packages/velvetos/living-studio/data/intake-receipts.jsonl": null,
-    "packages/velvetos/living-studio/data/signal-room.jsonl": "f1e5f0ca28fa5528e2c53a7d7247b7dd400fe9ba5650518d0e51f4b1ad9a9396",
-    "packages/velvetos/living-studio/data/receipts.jsonl": "f0c1a910e8bb41c47fb9bfd234737e78bc623eea61c77a50c58aa2e25276eed5"
+    "office/ledger/live/sync-receipt.json": "28273ac82c9d566eca119975e2ed2950f4f429ff0aefa103c1b7e78331e946fe",
+    "packages/velvetos/living-studio/data/intake-receipts.jsonl": "b2d59f7bc1519a71920d898c04a6f9e44f28b76bc8ab1151350f7bdf3a44e3a7",
+    "packages/velvetos/living-studio/data/signal-room.jsonl": "9e46d75437380082c1061f0b7d195a63d128f3a9021950f1c6e4b973d4f8f4c7",
+    "packages/velvetos/living-studio/data/receipts.jsonl": "a4c92f4ab6fccb8ad34530968fc9fb73df9f6e1a88ad1065bc4b313692ecda98"
   },
   "drifted": [],
-  "generatedAt": "2026-09-10T09:53:26Z"
+  "generatedAt": "2026-09-10T09:55:15Z"
 }

@@ -1,52 +1,34 @@
 # פעולות בעלים — מה Cloud Agent לא יכול לסגור לבד
 
-עודכן 2026-09-10 אחרי סגירת פערים תפעוליים (Sheet jobs adapter, IG MCP Insights, Media Auto Intake OIDC).
+עודכן 2026-09-10 אחרי תיקון חוסמי מיזוג ב־PR #160 (בידוד commission, Sheet write-through honesty, intake idempotency).
 
-## מצב נוכחי — אין פעולת בעלים נדרשת לסגירת הפערים התפעוליים האלה
+## מצב נוכחי — אין פעולת בעלים (Christian) נדרשת
 
 | נושא | סטטוס נוכחי |
 |------|-------------|
-| Instagram MCP (`instagram`) | **ready** — profile / media / insights / publish tools חיים |
-| Media Auto Intake (GHA OIDC/WIF) | **commissioned** — `packages/vfmedia/state/intake-runner.json` · `auth.ready=true` · `activation.proven=true` |
-| Jobs ledger | **Google Sheet קנוני** (`VF HQ · jobs`) + cache מקומי דרך `vf_office.py jobs pull` |
-| Insights | MCP מאומת → `vf_insights_ingest.py` → `posts.csv` / LEARNINGS |
-
-אם אין חוסם חיצוני אמיתי:
+| Instagram MCP (`instagram`) | **ready** — Insights verified; אין צורך ב־Professional Dashboard ידני כש־MCP חי |
+| Media Auto Intake (GHA OIDC/WIF) | **commissioned** — `intake-runner.json` · `auth.ready=true` · `activation.proven=true` · **לא** דורש `VFMEDIA_DRIVE_CREDENTIALS_JSON` |
+| Jobs **read** | Google Sheet קנוני + `jobs pull` (Drive MCP CSV או API) — cache לא = אפס הזמנות |
+| Jobs **write-through** | **PARTIAL** על Cloud: `push_write_through` → `write_pending_provider` בלי Sheets API auth/libs. Cache נשאר dirty עד כתיבה אמיתית לגיליון (Desktop `mcp-gsheets` / GOOGLE_TOKEN+spreadsheets). לא ממציאים COMPLETE |
+| Approval queue | `pending_human_approval` ישן **לא** הופך אוטומטית לכתום אצל כריסטיאן תחת standing authorization; פריט 2026-09-07 → `stale_orphan` |
+| Insights learning | MCP ingest חי; מדגם קטן → «insufficient evidence» — בלי המלצת סגנון כוזבת |
 
 **No owner action required.**
 
+(אופציונלי לולאת כתיבה מלאה לגיליון: חיבור Sheets write על Desktop או מפתח Cloud — לא חוסם קריאה/תפעול יומי ולא משטח כריסטיאן.)
+
 ---
 
-## היסטורי / לא חוסם את המשרד כרגע (superseded או אופציונלי)
-
-### Origin vendor (6 פקים `tmp-*`) — היסטורי 2026-09-01
-
-`origin auth login` נשאר אופציונלי לפקים `tmp-*`. העץ החי ב-Core הוא hq-native — לא חוסם תפעול יומי.
-
-### Push ל-`velvetos-velvet-factory` — אופציונלי
-
-נדרש רק כשמפרסמים instance frontend. לא חוסם Core HQ.
-
-### Mobbin MCP על Cloud — אופציונלי
-
-Failover: `vfbriefux` templates / Superdesign. לא חוסם בריף.
-
-### ~~Instagram Publish MCP~~ — SUPERSEDED 2026-09-09/10
-
-~~אין namespace~~ → **שגוי.** Namespace `instagram` מחובר ומוכן. ראו `packages/vfigos/CAPABILITIES.json`.
+## היסטורי / לא חוסם (superseded)
 
 ### ~~VFMEDIA_DRIVE_CREDENTIALS_JSON~~ — SUPERSEDED 2026-09-10
 
-~~בעלים חייב להוסיף JSON credentials ל-runner~~ → **שגוי.** Media Auto Intake רץ עם GitHub OIDC/WIF (`GOOGLE_TOKEN`). ראיות: `intake-runner.json`.
+~~בעלים חייב להוסיף JSON credentials~~ → **שגוי.** OIDC/WIF על GHA.
 
----
+### ~~Instagram Publish MCP חסר~~ — SUPERSEDED 2026-09-09/10
 
-## מה כבר תוקן בקוד
+Namespace `instagram` מחובר. ראו `packages/vfigos/CAPABILITIES.json`.
 
-| נושא | סטטוס |
-|------|--------|
-| 3D AI Studio על Cloud | ready |
-| פקים בלי Origin slug | hq-native |
-| Instagram Insights live | verified via MCP |
-| Creative Autopilot / autonomy composition | על main |
-| Jobs Sheet adapter | `jobs pull` / `push` / `reconcile` |
+### Origin vendor / Push instance / Mobbin — אופציונלי
+
+לא חוסמים תפעול יומי של Core HQ.

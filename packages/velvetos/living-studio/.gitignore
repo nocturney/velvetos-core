@@ -4,3 +4,4 @@ data/intake-receipts.jsonl
 data/signal-room.jsonl
 data/pulse-latest.json
 data/world-model-latest.json
+data/autonomy-runs.jsonl

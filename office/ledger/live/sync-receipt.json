@@ -1,6 +1,6 @@
 {
   "status": "pulled",
-  "at": "2026-09-10T09:37:13Z",
+  "at": "2026-09-10T09:55:01Z",
   "canonical": {
     "spreadsheetId": "13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao",
     "title": "VF HQ · jobs",
@@ -9,8 +9,8 @@
     "localCache": "office/ledger/live/jobs.csv"
   },
   "source": "file:/tmp/vf-jobs-sheet.csv",
-  "dirty": false,
-  "dirtyReason": null,
+  "dirty": true,
+  "dirtyReason": "write_pending_provider",
   "rowCount": 5,
   "idempotency_key": "pull|13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao|fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc",
   "lastPullDigest": "fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc",
@@ -35,5 +35,10 @@
     "VF-20260908-004",
     "VF-20260908-005"
   ],
-  "rule": "Google Sheet canonical; local CSV is adapter cache only"
+  "rule": "Google Sheet canonical; local CSV is adapter cache only",
+  "dirtyAt": "2026-09-10T09:55:01Z",
+  "lastPushDigest": "fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc",
+  "lastPushAt": "2026-09-10T09:55:01Z",
+  "pendingPath": "office/ledger/live/pending-push.csv",
+  "lastWriteStatus": "write_pending_provider"
 }
