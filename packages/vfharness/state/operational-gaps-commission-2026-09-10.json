@@ -1,117 +1,141 @@
 {
   "ok": true,
-  "passed": 22,
+  "passed": 19,
   "failed": 0,
   "results": [
     {
-      "step": "A.jobs_pull",
+      "step": "A.sandbox_jobs_pull",
       "ok": true,
-      "detail": "{\n  \"status\": \"pulled\",\n  \"at\": \"2026-09-10T09:21:37Z\",\n  \"canonical\": {\n    \"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\",\n    \"title\": \"VF HQ · jobs\",\n    \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\",\n    \"canonical\": \"goog"
+      "detail": "{\n  \"status\": \"pulled\",\n  \"at\": \"2026-09-10T09:53:26Z\",\n  \"canonical\": {\n    \"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\",\n    \"title\": \"VF HQ · jobs\",\n    \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\",\n    \"canonical\": \"goog"
     },
     {
-      "step": "A.jobs_ready",
+      "step": "A.sandbox_jobs_ready",
       "ok": true,
       "detail": "{\"canonical\": {\"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\", \"title\": \"VF HQ · jobs\", \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\", \"canonical\": \"google_sheet\", \"localCache\": \"office/ledger/live/jobs.csv\"}, \"cachePath\": \"off"
     },
     {
-      "step": "A.real_job_VF-20260908-001",
+      "step": "A.jobs_state_needs_sync_empty_cache",
       "ok": true,
-      "detail": "VF-20260908-001"
+      "detail": "{\n  \"canonical\": {\n    \"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\",\n    \"title\": \"VF HQ · jobs\",\n    \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\",\n    \"canonical\": \"google_sheet\",\n    \"localCache\": \"office/ledger/live/jobs."
+    },
+    {
+      "step": "A.autonomy_snapshot_jobs_state",
+      "ok": true,
+      "detail": "{\n  \"name\": \"velvetos-autonomy-snapshot\",\n  \"generatedAt\": \"2026-09-10T12:53:26+03:00\",\n  \"contract\": {\n    \"requiredIds\": [\n      \"run_id\",\n      \"idempotency_key\",\n      \"correlation_id\"\n    ],\n    \"states\": [\n      \"queued\",\n      \"running\",\n     "
     },
     {
       "step": "A.world_model",
       "ok": true,
-      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:21:37+03:00\",\n  \"kind\": \"velvet-world-model-projection\",\n  \"rule\": \"projection-only — sources remain canonical SoTs; numeric ₪ redacted to X ₪ (Sheet holds verified a"
+      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:53:26+03:00\",\n  \"kind\": \"velvet-world-model-projection\",\n  \"rule\": \"projection-only — sources remain canonical SoTs; numeric ₪ redacted to X ₪ (Sheet holds verified a"
     },
     {
       "step": "A.studio_pulse",
       "ok": true,
-      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:21:37+03:00\",\n  \"kind\": \"studio-pulse\",\n  \"what_happening_now\": {\n    \"jobs\": 5,\n    \"followups\": {\n      \"waiting_for_print_done\": 1,\n      \"ready_for_finished_conte"
+      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:53:26+03:00\",\n  \"kind\": \"studio-pulse\",\n  \"what_happening_now\": {\n    \"jobs\": 5,\n    \"followups\": {\n      \"waiting_for_print_done\": 1\n    },\n    \"media_inbox\": 346,\n "
     },
     {
       "step": "A.autonomy_next",
       "ok": true,
-      "detail": "{\n  \"kind\": \"approval\",\n  \"id\": \"story_poll_2026-09-07_petg_nylon\",\n  \"action\": \"pending_human_approval\",\n  \"reason\": \"highest-gated owner decision currently present in canonical approval sources\",\n  "
+      "detail": "{\n  \"kind\": \"blocker\",\n  \"id\": \"fu-G003-soccerball\",\n  \"action\": \"wait_matching_print_done\",\n  \"reason\": \"canonical waiting item already declares a next action\",\n  \"risk\": \"\",\n  \"source\": \"office/cont"
     },
     {
-      "step": "A.autonomy_execute_green",
+      "step": "A.autonomy_execute_green_dry",
       "ok": true,
-      "detail": "{\n  \"run_id\": \"arun-c354317db6a2\",\n  \"correlation_id\": \"corr-5f055e1eae44\",\n  \"idempotency_key\": \"exec|projection_refresh|None|33ae4eeede\",\n  \"source\": \"selftest\",\n  \"decision\": \"execute\",\n  \"action\": \"projection_refresh\",\n  \"target_id\": null,\n  \"ris"
+      "detail": "{\n  \"run_id\": \"arun-43348dad9cd2\",\n  \"correlation_id\": \"corr-5f055e1eae44\",\n  \"idempotency_key\": \"exec|projection_refresh|None|33ae4eeede\",\n  \"source\": \"vf_autonomy\",\n  \"action\": \"projection_refresh\",\n  \"target_id\": null,\n  \"risk\": \"green\",\n  \"resolv"
+    },
+    {
+      "step": "A.dry_run_no_runs_file",
+      "ok": true,
+      "detail": "/tmp/vf-office-sandbox-sdw19tqm/packages/velvetos/living-studio/data/autonomy-runs.jsonl"
     },
     {
       "step": "B.inquiry_dry",
       "ok": true,
-      "detail": "{\n  \"intakeId\": \"uin-7f409becc7\",\n  \"kind\": \"inquiry\",\n  \"route\": {\n    \"skill\": \"client-intake-brief\",\n    \"packs\": [\n      \"vfconvert\"\n    ],\n    \"writes\": [\n      \"office/control/inbox.json\",\n      \"office/ledger/live/jobs.csv\"\n    ]\n  },\n  \"skill\": \"client-intake-brief\",\n  \"needs_input\": [],\n  \""
+      "detail": "{\n  \"intakeId\": \"uin-42e8b59f6d\",\n  \"idempotency_key\": \"42e8b59f6d24d1b0\",\n  \"kind\": \"inquiry\",\n  \"route\": {\n    \"skill\": \"client-intake-brief\",\n    \"packs\": [\n      \"vfconvert\"\n    ],\n    \"writes\": [\n      \"office/control/inbox.json\",\n      \"office/ledger/live/jobs.csv\"\n    ]\n  },\n  \"skill\": \"clien"
     },
     {
-      "step": "B.inquiry_dispatch",
+      "step": "C.client_notes_needs_input",
       "ok": true,
-      "detail": "{\"ok\": true, \"action\": \"vf_office.jobs.add\", \"job_id\": \"VF-20260910-001\", \"stage\": \"פנייה\", \"canonical_state\": \"office/ledger/live/jobs.csv#VF-20260910-001\"}"
+      "detail": "{\"intakeId\": \"uin-196b569a7b\", \"idempotency_key\": \"196b569a7b70728f\", \"kind\": \"client_notes\", \"route\": {\"skill\": \"client-intake-brief\", \"packs\": [\"vfconvert\"], \"writes\": [\"office/control/inbox.json\"]}, \"skill\": \"client-intake-brief\", \"needs_input\": [\"job_id (VF-…) or unique client_label matching an existing job\"], \"status\": \"needs_input\", \"decision_id\": null, \"followup_id\": null, \"inbox_ref\": null"
     },
     {
-      "step": "C.media_dispatch",
+      "step": "D.meeting_idempotent_one_decision",
       "ok": true,
-      "detail": "{\"ok\": true, \"action\": \"vfmedia catalog association\", \"fileId\": \"media-1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj\", \"phase\": \"inbox\", \"canonical_state\": \"packages/vfmedia/catalog.json#media-1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj\", \"content_opportunity\": true}"
+      "detail": "dec_count=1 m1=dispatched m2=idempotent_reuse ids=dec-20260910-7e7620/dec-20260910-7e7620"
     },
     {
-      "step": "D.production_dispatch",
+      "step": "E.meeting_no_route_to_execution",
       "ok": true,
-      "detail": "{\"ok\": true, \"action\": \"vfprod/production path via print-events + followups\", \"followup_id\": \"fu-prod-366dfddd2a6f\", \"canonical_state\": \"office/control/followups.json\"}"
+      "detail": "{\"next_safe\": \"route_document_needs_human_clarity\", \"decision_id\": null, \"status\": \"dispatched\"}"
     },
     {
-      "step": "D.work_to_story",
+      "step": "F.insights_insufficient_evidence",
       "ok": true,
-      "detail": "{\n  \"pipeline\": [\n    \"production/work begins\",\n    \"process media/content\",\n    \"followup remains open\",\n    \"print.done\",\n    \"finished media detected\",\n    \"finished-content candidate\",\n    \"Conten"
+      "detail": "Recommendation:** insufficient evidence — no format/style winner yet (need ≥3 measured posts; have 1). Ranking table kept for transparency.\n"
     },
     {
-      "step": "E.vfmem_invoked",
+      "step": "F.insights_ranking_table_present",
       "ok": true,
-      "detail": "{\"ok\": true, \"action\": \"vfmem.who + inbox/optional owner-memory\", \"vfmem\": {\"invoked\": true, \"query\": \"הערה פנימית: לבדוק צינור inquiry לפני הצעה\", \"exitCode\": 0, \"rule\": \"retrieval only — generated text is never fact\", \"result\": {\"query\": \"הערה פנימית: לבדוק צינור inquiry לפני הצעה\", \"routes\": [{\"q\": [\"inquiry\", \"פנייה\", \"quote this\", \"פניה\"], \"pack\": \"vfconvert\", \"slug\": \"email-intelligence-engi"
+      "detail": "ranking table kept for transparency"
     },
     {
-      "step": "E.meeting_decision_followup",
+      "step": "F.source_column_documented",
       "ok": true,
-      "detail": "{\"decision\": \"dec-20260910-d29ecf\", \"fu\": \"fu-intake-62da3ea9\"}"
+      "detail": "LEARNINGS documents source column / MCP origin"
     },
     {
-      "step": "F.account_insights_file",
+      "step": "G.autonomy_selftest",
       "ok": true,
-      "detail": "/workspace/packages/vfinsights/data/account-insights-latest.json"
+      "detail": "{\n  \"ok\": true,\n  \"nextBestAction\": {\n    \"kind\": \"blocker\",\n    \"id\": \"fu-intake-7e7620213d\",\n    \"action\": \"write_decision_journal\",\n    \"reason\": \"canonical waiting item already declares a next action\",\n    \"risk\": \"\",\n    \"source\": \"office/control/followups.json\"\n  },\n  \"execute\": \"wired\",\n  \"jo"
     },
     {
-      "step": "F.posts_measured",
+      "step": "H.approval_bundle_excludes_stale_poll",
       "ok": true,
-      "detail": "post_id,date,type,reach,likes,saves,comments,caption_style,views,shares,source\nDcqkjOLlYVX,2026-08-30,reel,187,0,0,0,תהליך-קצר,233,0,instagram_mcp\n"
+      "detail": "[]\n"
     },
     {
-      "step": "F.learnings_no_dashboard",
+      "step": "Z.canonical_sots_unchanged",
       "ok": true,
-      "detail": "# Learnings — closed measurement loop\n\nMeasured 1 of 1 posts. 0 still have no real number (excluded from ranking, not guessed).\n\nSource preference: Instagram MCP verified Insights → `scripts/vf_insigh"
-    },
-    {
-      "step": "F.follower_unknown",
-      "ok": true,
-      "detail": "unknown list"
-    },
-    {
-      "step": "F.content_universe_insights",
-      "ok": true,
-      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:21:37+03:00\",\n  \"media\": {\n    \"total\": 400,\n    \"inbox\": 346,\n    \"source\": 54,\n    \"verified\": 53,\n    \"registered_only\": 0,\n    \"unassociated\": 400\n  },\n  \"followup_phases\": {\n    \"process_only\": 1,\n    \"finished_"
-    },
-    {
-      "step": "scrub.owner_no_ig_missing",
-      "ok": true,
-      "detail": "OWNER-ACTIONS"
-    },
-    {
-      "step": "scrub.no_creds_json_current",
-      "ok": true,
-      "detail": "OWNER-ACTIONS"
-    },
-    {
-      "step": "scrub.registry_no_creds_blocker",
-      "ok": true,
-      "detail": "None"
+      "detail": "all SoTs identical"
     }
-  ]
+  ],
+  "sandboxNote": "VF_OFFICE_ROOT temp sandbox; production SoTs checksummed",
+  "checksumBefore": {
+    "office/control/decisions.jsonl": "2ad3df52339d1bd04888f7085805f82068618df3f3a2ecf9c677b9b350af9011",
+    "office/control/followups.json": "c99425eea6037722ca7242ea7d00b2ead8f9dd00fbce8c3f6b2abec34f446d19",
+    "office/control/inbox.json": "38246194d81e8f0348041e0688abc8d9aa2de3021833a34048e31abec62f5757",
+    "packages/vfprod/data/print-events.jsonl": "bf45d58e65eb532cc27b479a31436c25e2b2a8453eaf3f3e9ba6dc592d2d16ec",
+    "packages/vfmedia/catalog.json": "ba8ed3a41d7f8aea9a1394370a4d307a94ff4c5b61336f02b2f8daee2f6f7112",
+    "packages/vfops/data/owner-memory.md": "20465105305a3d1f9ce92be6ff7a7718c9e93db1331e1ffefead2ac9aa957e2d",
+    "packages/vfops/data/research.md": "2a2eda81367c5ec6ee313439b0a084811463531420f426a8142732e870286d74",
+    "packages/vfgrowth/data/approval-queue.json": "ffb430f1fa8cac3e7159fe7967e7fdc3c55ff496186932aab2d487fc0baefe7a",
+    "packages/velvetos/living-studio/data/autonomy-runs.jsonl": null,
+    "office/learning/lab/experiments.jsonl": null,
+    "office/control/HANDOFF.json": "a2847528f46cf13df12159b05b29094a5f557fa2aacf85e896479e72b8f2012f",
+    "office/ledger/live/jobs.csv": "b604427a287359b446ea035ce227f343efb0706de595a6ec9741bcac2cf05bc0",
+    "office/ledger/live/sync-receipt.json": "a2c59de5f0d85a2bcf90a4731d2cdef35dce236313a88c400ed13aaf06c96673",
+    "packages/velvetos/living-studio/data/intake-receipts.jsonl": null,
+    "packages/velvetos/living-studio/data/signal-room.jsonl": "f1e5f0ca28fa5528e2c53a7d7247b7dd400fe9ba5650518d0e51f4b1ad9a9396",
+    "packages/velvetos/living-studio/data/receipts.jsonl": "f0c1a910e8bb41c47fb9bfd234737e78bc623eea61c77a50c58aa2e25276eed5"
+  },
+  "checksumAfter": {
+    "office/control/decisions.jsonl": "2ad3df52339d1bd04888f7085805f82068618df3f3a2ecf9c677b9b350af9011",
+    "office/control/followups.json": "c99425eea6037722ca7242ea7d00b2ead8f9dd00fbce8c3f6b2abec34f446d19",
+    "office/control/inbox.json": "38246194d81e8f0348041e0688abc8d9aa2de3021833a34048e31abec62f5757",
+    "packages/vfprod/data/print-events.jsonl": "bf45d58e65eb532cc27b479a31436c25e2b2a8453eaf3f3e9ba6dc592d2d16ec",
+    "packages/vfmedia/catalog.json": "ba8ed3a41d7f8aea9a1394370a4d307a94ff4c5b61336f02b2f8daee2f6f7112",
+    "packages/vfops/data/owner-memory.md": "20465105305a3d1f9ce92be6ff7a7718c9e93db1331e1ffefead2ac9aa957e2d",
+    "packages/vfops/data/research.md": "2a2eda81367c5ec6ee313439b0a084811463531420f426a8142732e870286d74",
+    "packages/vfgrowth/data/approval-queue.json": "ffb430f1fa8cac3e7159fe7967e7fdc3c55ff496186932aab2d487fc0baefe7a",
+    "packages/velvetos/living-studio/data/autonomy-runs.jsonl": null,
+    "office/learning/lab/experiments.jsonl": null,
+    "office/control/HANDOFF.json": "a2847528f46cf13df12159b05b29094a5f557fa2aacf85e896479e72b8f2012f",
+    "office/ledger/live/jobs.csv": "b604427a287359b446ea035ce227f343efb0706de595a6ec9741bcac2cf05bc0",
+    "office/ledger/live/sync-receipt.json": "a2c59de5f0d85a2bcf90a4731d2cdef35dce236313a88c400ed13aaf06c96673",
+    "packages/velvetos/living-studio/data/intake-receipts.jsonl": null,
+    "packages/velvetos/living-studio/data/signal-room.jsonl": "f1e5f0ca28fa5528e2c53a7d7247b7dd400fe9ba5650518d0e51f4b1ad9a9396",
+    "packages/velvetos/living-studio/data/receipts.jsonl": "f0c1a910e8bb41c47fb9bfd234737e78bc623eea61c77a50c58aa2e25276eed5"
+  },
+  "drifted": [],
+  "generatedAt": "2026-09-10T09:53:26Z"
 }
