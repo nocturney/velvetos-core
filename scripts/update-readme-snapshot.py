@@ -83,6 +83,10 @@ def newest_verification(*values: object) -> str:
     return parsed[-1][1]
 
 
+def bilingual_label(en: str, he: str) -> str:
+    return f'<span dir="ltr">{esc(en)}</span><br><span dir="rtl">{esc(he)}</span>'
+
+
 def render() -> str:
     registry = load_json(REGISTRY)
     manifest = load_json(MANIFEST)
@@ -141,16 +145,16 @@ def render() -> str:
     return f'''{START}
 <table>
 <tr>
-<td align="center"><strong>{health}</strong><br><sub>System Health · בריאות מערכת</sub></td>
-<td align="center"><strong>{live_integrations}</strong><br><sub>Live/Bound Paths · נתיבים חיים/מחוברים</sub></td>
-<td align="center"><strong>{gated}</strong><br><sub>Gated Actions · פעולות מבוקרות</sub></td>
-<td align="center"><strong>{attention}</strong><br><sub>Needs Attention · דורש טיפול</sub></td>
+<td align="center"><strong>{health}</strong><br><sub>{bilingual_label("System Health", "בריאות מערכת")}</sub></td>
+<td align="center"><strong>{live_integrations}</strong><br><sub>{bilingual_label("Live / Bound Paths", "נתיבים חיים / מחוברים")}</sub></td>
+<td align="center"><strong>{gated}</strong><br><sub>{bilingual_label("Gated Actions", "פעולות מבוקרות")}</sub></td>
+<td align="center"><strong>{attention}</strong><br><sub>{bilingual_label("Needs Attention", "דורש טיפול")}</sub></td>
 </tr>
 <tr>
-<td align="center"><strong>{skills}</strong><br><sub>Living Studio Skills · יכולות</sub></td>
-<td align="center"><strong>{sensors}</strong><br><sub>Sensors · חיישנים</sub></td>
-<td align="center"><strong>{workflows}</strong><br><sub>Workflows · אוטומציות</sub></td>
-<td align="center"><strong>{packs}</strong><br><sub>Packs · חבילות</sub></td>
+<td align="center"><strong>{skills}</strong><br><sub>{bilingual_label("Living Studio Skills", "יכולות")}</sub></td>
+<td align="center"><strong>{sensors}</strong><br><sub>{bilingual_label("Sensors", "חיישנים")}</sub></td>
+<td align="center"><strong>{workflows}</strong><br><sub>{bilingual_label("Workflows", "אוטומציות")}</sub></td>
+<td align="center"><strong>{packs}</strong><br><sub>{bilingual_label("Packs", "חבילות")}</sub></td>
 </tr>
 </table>
 
@@ -165,11 +169,14 @@ def render() -> str:
 | **Degraded tools** | {degraded} |
 | **Last verified / refreshed evidence** | `{esc(last_verified)}` |
 
-**What changed · מה השתנה:** {esc(recent_ops)}
+<div dir="rtl"><strong>מה השתנה:</strong> {esc(recent_ops)}</div>
+<div dir="ltr"><strong>What changed:</strong> {esc(recent_ops)}</div>
 
-**Latest implementation change · שינוי הטמעה אחרון:** {esc(latest_change())}
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> {esc(latest_change())}</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> {esc(latest_change())}</div>
 
-> **Pulse contract · חוזה הפולס:** this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”. · הבלוק מציג את הראיות האחרונות שנשמרו בריפו; הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.
+<div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
+<div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
 {END}'''
 
 
