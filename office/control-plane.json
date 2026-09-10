@@ -55,7 +55,10 @@
     "upload-is-not-approval",
     "approved-folder-is-not-approval-proof",
     "no-owner-spam-from-low-level-gaps",
-    "no-silent-dead-letter-loss"
+    "no-silent-dead-letter-loss",
+    "autonomy-reconcile-before-retry",
+    "autonomy-idempotency-required",
+    "autonomy-no-second-runtime"
   ],
   "chatgptTaskReduction": {
     "keep": [
@@ -104,9 +107,26 @@
       "selftest"
     ]
   },
+  "autonomyComposition": {
+    "config": "packages/velvetos/living-studio/AUTONOMY.json",
+    "cli": "python3 scripts/vf_autonomy.py",
+    "sensor": "scripts/check-vf-autonomy.py",
+    "rule": "Compose routing, context, waiting, approvals, reliability, prioritization and quiet-hours policy over existing canonical SoTs. No second runtime or queue.",
+    "commands": [
+      "status",
+      "next-action",
+      "blockers",
+      "approvals",
+      "context",
+      "quiet-plan",
+      "snapshot",
+      "selftest"
+    ]
+  },
   "projections": {
     "world_model": "packages/velvetos/living-studio/data/world-model-latest.json",
     "studio_pulse": "packages/velvetos/living-studio/data/pulse-latest.json",
-    "signal_room": "packages/velvetos/living-studio/data/signal-room.jsonl"
+    "signal_room": "packages/velvetos/living-studio/data/signal-room.jsonl",
+    "autonomy_snapshot": "packages/velvetos/living-studio/data/autonomy-latest.json"
   }
 }
