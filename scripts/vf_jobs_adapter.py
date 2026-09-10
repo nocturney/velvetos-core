@@ -92,13 +92,33 @@ def _rel(path: Path) -> str:
 
 def sheet_meta() -> dict[str, str]:
     jobs = (load_bindings().get("workbooks") or {}).get("jobs") or {}
+    sheet_name = resolve_jobs_sheet_name(jobs)
     return {
         "spreadsheetId": jobs["spreadsheetId"],
         "title": jobs.get("title") or "VF HQ · jobs",
+        "sheetName": sheet_name,
         "viewUrl": jobs.get("viewUrl") or "",
         "canonical": "google_sheet",
         "localCache": _rel(CACHE),
     }
+
+
+def resolve_jobs_sheet_name(jobs: dict[str, Any] | None = None) -> str:
+    """Canonical tab name from bindings — fail closed; never invent ``jobs``."""
+    if jobs is None:
+        jobs = (load_bindings().get("workbooks") or {}).get("jobs") or {}
+    name = (jobs.get("sheetName") or "").strip()
+    if not name:
+        raise JobsAdapterError(
+            "חסר sheetName ב-office/ledger/bindings.json workbooks.jobs — "
+            "fail closed (no guessed tab like 'jobs')"
+        )
+    return name
+
+
+def write_range_a1(*, jobs: dict[str, Any] | None = None) -> str:
+    """A1 range for values.update — always from canonical sheetName binding."""
+    return f"'{resolve_jobs_sheet_name(jobs)}'!A1"
 
 
 def ensure_cache_header() -> Path:
@@ -416,25 +436,155 @@ def _rows_to_values(rows: list[dict[str, str]]) -> list[list[str]]:
     return [JOB_FIELDS] + [[row.get(k, "") for k in JOB_FIELDS] for row in rows]
 
 
+def _values_to_rows(values: list[list[Any]]) -> list[dict[str, str]]:
+    if not values:
+        return []
+    header = [str(c).strip() for c in values[0]]
+    rows: list[dict[str, str]] = []
+    for raw in values[1:]:
+        mapped = {
+            header[i]: (str(raw[i]).strip() if i < len(raw) and raw[i] is not None else "")
+            for i in range(len(header))
+        }
+        cleaned = {k: (mapped.get(k) or "").strip() for k in JOB_FIELDS}
+        if cleaned["job_id"]:
+            rows.append(cleaned)
+    return rows
+
+
+def verify_configured_tab(sheets: Any, spreadsheet_id: str, sheet_name: str) -> dict[str, Any]:
+    """Fail closed if Sheets metadata does not list the configured tab."""
+    meta = (
+        sheets.spreadsheets()
+        .get(spreadsheetId=spreadsheet_id, fields="sheets.properties.title")
+        .execute()
+    )
+    titles = [
+        (s.get("properties") or {}).get("title")
+        for s in (meta.get("sheets") or [])
+        if (s.get("properties") or {}).get("title")
+    ]
+    if sheet_name not in titles:
+        return {
+            "ok": False,
+            "configured": sheet_name,
+            "available": titles,
+            "error": f"configured sheetName {sheet_name!r} not found in spreadsheet tabs",
+        }
+    return {"ok": True, "configured": sheet_name, "available": titles}
+
+
+def fetch_remote_rows_via_sheets(sheets: Any, spreadsheet_id: str, sheet_name: str) -> list[dict[str, str]]:
+    range_a1 = f"'{sheet_name}'!A1:Z"
+    result = (
+        sheets.spreadsheets()
+        .values()
+        .get(spreadsheetId=spreadsheet_id, range=range_a1)
+        .execute()
+    )
+    return _values_to_rows(result.get("values") or [])
+
+
+def preflight_concurrency_check(
+    *,
+    base_digest: str | None,
+    remote_rows: list[dict[str, str]],
+    local_rows: list[dict[str, str]],
+) -> dict[str, Any]:
+    """Compare remote digest to last successful pull before any mutation.
+
+    Any remote change while local is dirty → conflict (no silent last-write-wins).
+    Same-job divergent edits fail closed. Non-overlapping remote-only rows are
+    reported in reconciliation evidence but still block write until force-pull merge.
+    """
+    remote_digest = rows_digest(remote_rows)
+    recon = reconcile(local_rows, remote_rows)
+    if not base_digest:
+        return {
+            "ok": False,
+            "status": "conflict",
+            "reason": "no lastPullDigest — pull canonical Sheet before write",
+            "remoteDigest": remote_digest,
+            "reconciliation": recon,
+        }
+    if remote_digest != base_digest:
+        same_job_conflicts = recon.get("conflicts") or []
+        return {
+            "ok": False,
+            "status": "conflict",
+            "reason": "canonical Sheet changed since last pull — refuse stale overwrite",
+            "expectedDigest": base_digest,
+            "remoteDigest": remote_digest,
+            "reconciliation": recon,
+            "changed_job_ids": sorted(
+                set(recon.get("only_remote") or [])
+                | set(recon.get("only_local") or [])
+                | {c["job_id"] for c in same_job_conflicts}
+            ),
+            "same_job_conflicts": same_job_conflicts,
+            "rule": "fail closed — no silent last-write-wins; re-pull or resolve then retry",
+        }
+    return {
+        "ok": True,
+        "status": "preflight_ok",
+        "expectedDigest": base_digest,
+        "remoteDigest": remote_digest,
+        "reconciliation": recon,
+    }
+
+
+# Test hooks (None in production) — allow behavioral tests without network.
+_TEST_SHEETS_SERVICE: Any = None
+_TEST_REMOTE_ROWS: list[dict[str, str]] | None = None
+_TEST_TAB_TITLES: list[str] | None = None
+_TEST_WRITES: list[dict[str, Any]] = []
+
+
+def set_test_remote_rows(rows: list[dict[str, str]] | None) -> None:
+    global _TEST_REMOTE_ROWS
+    _TEST_REMOTE_ROWS = rows
+
+
+def reset_test_hooks() -> None:
+    global _TEST_SHEETS_SERVICE, _TEST_REMOTE_ROWS, _TEST_TAB_TITLES, _TEST_WRITES
+    _TEST_SHEETS_SERVICE = None
+    _TEST_REMOTE_ROWS = None
+    _TEST_TAB_TITLES = None
+    _TEST_WRITES = []
+
+
 def push_write_through() -> dict[str, Any]:
     """Attempt real Sheet write → verify → refresh cache → clear dirty.
+
+    Preflight: fetch remote digest and refuse if it diverged from lastPullDigest.
+    Tab: only the canonical bindings sheetName (fail closed; never invent ``jobs``).
 
     If auth/libs cannot write, leave dirty + pending CSV and return
     ``write_pending_provider`` — never claim canonical Sheet changed.
     """
     meta = sheet_meta()
+    sheet_name = meta["sheetName"]
+    range_a1 = write_range_a1()
     rows = read_cache()
     text = export_csv(rows)
     LIVE_DIR.mkdir(parents=True, exist_ok=True)
     PENDING_PUSH.write_text(text, encoding="utf-8")
     digest = rows_digest(rows)
-    sheets, err = _sheets_service()
+    receipt = load_receipt()
+    base_digest = receipt.get("lastPullDigest")
+
+    sheets, err = None, None
+    if _TEST_SHEETS_SERVICE is not None:
+        sheets, err = _TEST_SHEETS_SERVICE, None
+    else:
+        sheets, err = _sheets_service()
     if err or sheets is None:
-        receipt = load_receipt()
         out = {
             "status": "write_pending_provider",
             "at": now_utc(),
             "canonical": meta,
+            "writeTarget": range_a1,
+            "sheetName": sheet_name,
             "rowCount": len(rows),
             "digest": digest,
             "dirty": True,
@@ -456,28 +606,122 @@ def push_write_through() -> dict[str, Any]:
                 "lastPushAt": now_utc(),
                 "pendingPath": out["pendingPath"],
                 "lastWriteStatus": out["status"],
+                "writeTarget": range_a1,
             }
         )
         save_receipt(receipt)
         return out
 
-    sheet_title = ((load_bindings().get("workbooks") or {}).get("jobs") or {}).get(
-        "sheetName"
-    ) or "jobs"
-    range_a1 = f"'{sheet_title}'!A1"
+    # Verify configured tab exists (or test hook titles)
+    if _TEST_TAB_TITLES is not None:
+        tab_check = {
+            "ok": sheet_name in _TEST_TAB_TITLES,
+            "configured": sheet_name,
+            "available": list(_TEST_TAB_TITLES),
+            "error": None
+            if sheet_name in _TEST_TAB_TITLES
+            else f"configured sheetName {sheet_name!r} not found in spreadsheet tabs",
+        }
+    else:
+        try:
+            tab_check = verify_configured_tab(sheets, meta["spreadsheetId"], sheet_name)
+        except Exception as exc:  # noqa: BLE001
+            tab_check = {
+                "ok": False,
+                "configured": sheet_name,
+                "available": [],
+                "error": f"tab metadata failed: {exc}",
+            }
+    if not tab_check.get("ok"):
+        out = {
+            "status": "tab_unresolved",
+            "at": now_utc(),
+            "canonical": meta,
+            "writeTarget": range_a1,
+            "sheetName": sheet_name,
+            "tabCheck": tab_check,
+            "dirty": True,
+            "canonical_changed": False,
+            "rule": "fail closed — configured sheetName must resolve before write",
+        }
+        receipt.update({"lastWriteStatus": out["status"], "dirty": True, "writeTarget": range_a1})
+        save_receipt(receipt)
+        return out
+
+    # Preflight concurrency: fetch current remote
     try:
-        sheets.spreadsheets().values().update(
-            spreadsheetId=meta["spreadsheetId"],
-            range=range_a1,
-            valueInputOption="RAW",
-            body={"values": _rows_to_values(rows)},
-        ).execute()
+        if _TEST_REMOTE_ROWS is not None:
+            remote_rows = list(_TEST_REMOTE_ROWS)
+        else:
+            remote_rows = fetch_remote_rows_via_sheets(sheets, meta["spreadsheetId"], sheet_name)
     except Exception as exc:  # noqa: BLE001
-        receipt = load_receipt()
         out = {
             "status": "write_pending_provider",
             "at": now_utc(),
             "canonical": meta,
+            "writeTarget": range_a1,
+            "dirty": True,
+            "canonical_changed": False,
+            "provider_boundary": f"preflight remote fetch failed: {exc}",
+        }
+        receipt.update({"lastWriteStatus": out["status"], "dirty": True})
+        save_receipt(receipt)
+        return out
+
+    preflight = preflight_concurrency_check(
+        base_digest=base_digest,
+        remote_rows=remote_rows,
+        local_rows=rows,
+    )
+    if not preflight.get("ok"):
+        out = {
+            "status": "conflict",
+            "at": now_utc(),
+            "canonical": meta,
+            "writeTarget": range_a1,
+            "sheetName": sheet_name,
+            "dirty": True,
+            "canonical_changed": False,
+            "preflight": preflight,
+            "rule": "pre-write concurrency guard — Sheet not mutated",
+        }
+        receipt.update(
+            {
+                "lastWriteStatus": "conflict",
+                "dirty": True,
+                "dirtyReason": "preflight_remote_changed",
+                "preflight": preflight,
+                "writeTarget": range_a1,
+            }
+        )
+        save_receipt(receipt)
+        return out
+
+    try:
+        if _TEST_SHEETS_SERVICE is not None:
+            _TEST_WRITES.append(
+                {
+                    "spreadsheetId": meta["spreadsheetId"],
+                    "range": range_a1,
+                    "sheetName": sheet_name,
+                    "values": _rows_to_values(rows),
+                }
+            )
+            # simulate successful write: remote becomes local
+            set_test_remote_rows([dict(r) for r in rows])
+        else:
+            sheets.spreadsheets().values().update(
+                spreadsheetId=meta["spreadsheetId"],
+                range=range_a1,
+                valueInputOption="RAW",
+                body={"values": _rows_to_values(rows)},
+            ).execute()
+    except Exception as exc:  # noqa: BLE001
+        out = {
+            "status": "write_pending_provider",
+            "at": now_utc(),
+            "canonical": meta,
+            "writeTarget": range_a1,
             "rowCount": len(rows),
             "digest": digest,
             "dirty": True,
@@ -489,51 +733,69 @@ def push_write_through() -> dict[str, Any]:
         save_receipt(receipt)
         return out
 
-    # Verify by re-export
-    verify = pull_from_google_api(force=True)
-    if verify.get("status") not in {"pulled", "idempotent_skip"}:
+    # Verify by re-read of canonical tab
+    try:
+        if _TEST_REMOTE_ROWS is not None:
+            verified_rows = list(_TEST_REMOTE_ROWS)
+            verify = {"status": "pulled", "source": "test_hook"}
+        else:
+            verified_rows = fetch_remote_rows_via_sheets(sheets, meta["spreadsheetId"], sheet_name)
+            verify = {"status": "pulled", "source": "sheets_values_get"}
+            apply_remote_rows(
+                verified_rows,
+                source="sheets_post_write_verify",
+                force=True,
+                evidence={"writeTarget": range_a1},
+            )
+    except Exception as exc:  # noqa: BLE001
         return {
             "status": "write_verify_failed",
             "at": now_utc(),
             "canonical": meta,
+            "writeTarget": range_a1,
             "dirty": True,
-            "verify": verify,
             "canonical_changed": False,
+            "error": str(exc),
             "pendingPath": _rel(PENDING_PUSH),
         }
-    remote_rows = read_cache()
-    if rows_digest(remote_rows) != digest and not all(
-        r["job_id"] in {x["job_id"] for x in remote_rows} for r in rows if r.get("job_id")
-    ):
-        # soft check: every local job_id must appear after write
-        missing = [r["job_id"] for r in rows if r["job_id"] not in {x["job_id"] for x in remote_rows}]
-        if missing:
-            return {
-                "status": "write_verify_failed",
-                "at": now_utc(),
-                "canonical": meta,
-                "dirty": True,
-                "missing_after_write": missing,
-                "canonical_changed": False,
-            }
-    receipt = {
+
+    if _TEST_SHEETS_SERVICE is not None:
+        write_cache(verified_rows)
+
+    missing = [r["job_id"] for r in rows if r["job_id"] not in {x["job_id"] for x in verified_rows}]
+    if missing:
+        return {
+            "status": "write_verify_failed",
+            "at": now_utc(),
+            "canonical": meta,
+            "writeTarget": range_a1,
+            "dirty": True,
+            "missing_after_write": missing,
+            "canonical_changed": False,
+        }
+
+    new_digest = rows_digest(verified_rows)
+    out = {
         "status": "written",
         "at": now_utc(),
         "canonical": meta,
-        "rowCount": len(remote_rows),
-        "digest": rows_digest(remote_rows),
+        "writeTarget": range_a1,
+        "sheetName": sheet_name,
+        "rowCount": len(verified_rows),
+        "digest": new_digest,
         "dirty": False,
         "dirtyReason": None,
-        "lastPullDigest": rows_digest(remote_rows),
+        "lastPullDigest": new_digest,
         "lastWriteStatus": "written",
         "canonical_changed": True,
         "verifiedFrom": verify.get("source"),
-        "rule": "Sheet write-through verified; cache refreshed from Sheet",
+        "preflight": preflight,
+        "rule": "Sheet write-through verified on configured tab; cache refreshed; dirty cleared",
     }
-    save_receipt(receipt)
+    save_receipt(out)
     if PENDING_PUSH.is_file():
         PENDING_PUSH.unlink()
-    return receipt
+    return out
 
 
 def push(*, write_pending: bool = True, write_through: bool = True) -> dict[str, Any]:
@@ -551,6 +813,8 @@ def push(*, write_pending: bool = True, write_through: bool = True) -> dict[str,
         "status": "push_ready",
         "at": now_utc(),
         "canonical": meta,
+        "writeTarget": write_range_a1(),
+        "sheetName": meta["sheetName"],
         "rowCount": len(rows),
         "digest": digest,
         "pendingPath": _rel(PENDING_PUSH) if write_pending else None,
@@ -566,6 +830,7 @@ def push(*, write_pending: bool = True, write_through: bool = True) -> dict[str,
             "lastPushDigest": digest,
             "lastPushAt": now_utc(),
             "pendingPath": out["pendingPath"],
+            "writeTarget": out["writeTarget"],
         }
     )
     save_receipt(receipt)

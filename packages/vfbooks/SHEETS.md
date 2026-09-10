@@ -5,6 +5,7 @@
 ## סמכות קנונית (2026-09-10)
 
 **Google Sheet `VF HQ · jobs` הוא ה-SoT.**
+טאב קנוני: `sheetName=Untitled` ב־`office/ledger/bindings.json` (לא לנחש `jobs`).
 `office/ledger/live/jobs.csv` הוא **cache מקומי** בלבד (gitignore) — לא ספר שני.
 
 הגשר:
@@ -12,10 +13,11 @@
 1. קריאה: Drive MCP `download_file_content` + `exportMimeType=text/csv` **או** Drive API כשיש `GOOGLE_TOKEN` / credentials כמו vfmedia.
 2. טעינה ל-cache: `python3 scripts/vf_office.py jobs pull --from-csv PATH`
 3. צרכנים (Living Studio / World Model / Autonomy) קוראים את ה-cache אחרי pull.
-4. כתיבה: עדכון cache (`jobs add` / `jobs stage`) → `jobs push` → העלאה לגיליון → `jobs pull --force` לאימות.
-5. קונפליקט: cache מלוכלך + Sheet שונה → `status=conflict` בלי דריסה (אלא אם `--force`).
+4. כתיבה: עדכון cache → `jobs push` / `push_write_through` על `'Untitled'!A1` מ־bindings → אימות → ניקוי dirty.
+5. קונפליקט לפני כתיבה: אם הגיליון השתנה מאז `lastPullDigest` → `status=conflict`, **בלי** דריסה שקטה.
+6. קונפליקט pull: cache מלוכלך + Sheet שונה → `status=conflict` (אלא אם `--force`).
 
-IDs חיים: `office/ledger/bindings.json` (לא סוד). בלי קובץ / בלי ID: כותבים **חסר גיליון** וממשיכים.
+IDs חיים: `office/ledger/bindings.json` (לא סוד). בלי קובץ / בלי ID / בלי `sheetName`: כותבים **חסר גיליון** / fail-closed וממשיכים.
 
 תאי גיליון (Desktop): `mcp-gsheets` ב־`~/.cursor/mcp.json` — `packages/vfmcp/CONNECT-SHEETS.md`. לא בפרויקט (מפתח שירות). Cloud: CSV + Drive מספיקים.
 
@@ -25,7 +27,7 @@ IDs חיים: `office/ledger/bindings.json` (לא סוד). בלי קובץ / ב�
 
 | ספר | spreadsheetId | שם |
 |---|---|---|
-| יומן עבודות | `13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao` | VF HQ · jobs |
+| יומן עבודות | `13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao` | VF HQ · jobs · tab `Untitled` |
 | מק״ט | `1eHfokYC0T4JZT2hvxnVy_CWThIEMrBwrhVUMuQqYnGE` | VF HQ · sku |
 | הצעות | `13-kaFD8OpQ0ozMB0UuBNnpfYsvQZ1NVBWg05WrmIn1w` | VF HQ · quotes |
 | ספר | `11eRkRT78Nzacef8PmPCk0xqtPXy0uw9ivu747bw0FIs` | VF HQ · books |
