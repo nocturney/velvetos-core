@@ -89,7 +89,7 @@
     "studiomcphub": {"enabled": true, "use": ["search_tools", "remove_background", "resize_image"], "skip": ["print_ready", "convert_color_profile", "x402", "nft"]},
     "mcp-gsheets": {"enabled": true, "when": "desktop-credentials", "bindings": "office/ledger/bindings.json"},
     "whatsapp": {"enabled": true, "when": "desktop-lharries", "mode": "search-and-draft", "send": false},
-    "instagram": {"enabled": true, "when": "codespace-stdio-or-remote-when-ready", "publish": true, "dm": false, "stories": true, "canonicalMcp": "adelaidasofia/instagram-mcp", "connect": "packages/vfigos/CONNECT-IG.md"}
+    "instagram": {"enabled": true, "when": "codespace-stdio-or-remote-when-ready", "publish": true, "dm": false, "stories": true, "canonicalMcp": "adelaidasofia/instagram-mcp", "connect": "packages/vfigos/CONNECT-IG.md", "publishBridge": "packages/vfigos/PUBLISH-BRIDGE.json"}
   },
   "creativeAutonomy": {
     "enabled": true,
@@ -126,6 +126,8 @@
       "scope": ["organic-instagram-routine"],
       "allowedFormats": ["reel", "story", "carousel", "post"],
       "calendarAuthority": "packages/vfgrowth/CALENDAR.md",
+      "transportBridge": "packages/vfigos/PUBLISH-BRIDGE.json",
+      "transportBridgeRequiredForPrivateAssets": true,
       "requirePreflight": true,
       "requireKnownRights": true,
       "requireContentContract": true,
@@ -148,5 +150,5 @@
   },
   "locks": ["human-close-whatsapp", "pickup-only", "b2b-locked", "public-commercial-files-only"],
   "packPrefix": "vf",
-  "notes": "Live Velvet Factory office frontend. Pulls modules/packs from VelvetOS Core. Velvet Visual Foundry uses one Creative Manifest plus Creative Director, Brand Guardian and Media Librarian specialists; exception-only and standing-authorized for LOW-risk routine organic Instagram only."
+  "notes": "Live Velvet Factory office frontend. Pulls modules/packs from VelvetOS Core. Velvet Visual Foundry uses one Creative Manifest plus Creative Director, Brand Guardian and Media Librarian specialists; exception-only and standing-authorized for LOW-risk routine organic Instagram only. Approved private-source derivatives route through the canonical Publish Bridge before Instagram publish."
 }
