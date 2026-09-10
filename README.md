@@ -25,8 +25,8 @@
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub>Living Studio Skills · יכולות</sub></td>
-<td align="center"><strong>39</strong><br><sub>Sensors · חיישנים</sub></td>
-<td align="center"><strong>7</strong><br><sub>Workflows · אוטומציות</sub></td>
+<td align="center"><strong>42</strong><br><sub>Sensors · חיישנים</sub></td>
+<td align="center"><strong>8</strong><br><sub>Workflows · אוטומציות</sub></td>
 <td align="center"><strong>31</strong><br><sub>Packs · חבילות</sub></td>
 </tr>
 </table>
@@ -44,7 +44,7 @@
 
 **What changed · מה השתנה:** Office Control Plane מוטמע · followups=1 · dead_letters=0
 
-**Latest implementation change · שינוי הטמעה אחרון:** 2026-09-10 — **Jobs Sheet write-through harden:** bindings `sheetName=Untitled` (fail-closed, no guessed `jobs` tab); pre-write remote digest concurrency guard → conflict without mutation; behavioral tests in `check-vf-office.py`.
+**Latest implementation change · שינוי הטמעה אחרון:** 2026-09-10 — **Jobs Sheet write-through harden:** bindings `sheetName=Untitled` (fail-closed, no guessed `jobs` tab); pre-write remote digest concurrency guard → conflict without mutation; behavioral tests in `…
 
 > **Pulse contract · חוזה הפולס:** this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”. · הבלוק מציג את הראיות האחרונות שנשמרו בריפו; הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.
 <!-- OPERATIONAL-SNAPSHOT:END -->
