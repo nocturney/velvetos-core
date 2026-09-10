@@ -6,7 +6,7 @@
 שער: **חסום** עד כל השערים הרלוונטיים עוברים.
 
 מחיר בפריים/כיתוב: `X ₪` או אין. בלי ₪ מומצא.  
-CTA public: לפי `constitution/PUBLIC_CTA.md` — **הודעת Instagram** כשנדרש; בלי WhatsApp/טלפון ציבורי. Showcase יכול לבחור CTA ניטרלי/ללא CTA לפי intent הפעיל.  
+CTA public: לפי `constitution/PUBLIC_CTA.md` / `PUBLIC_CURRENT_CTA` — **הודעה באינסטגרם** כשנדרש; בלי WhatsApp/טלפון ציבורי. Showcase יכול לבחור CTA ניטרלי/ללא CTA לפי intent הפעיל.  
 חוזה טקסט: `constitution/VISIBLE_TEXT.md` + `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`. רובריקה: `CONTENT-RUBRIC.md`.
 
 > Publish contract v2: אישור תוכן כללי או Canva edit אינו אישור לפרסום. השער חייב להיות מחובר ל־**תוצר הסופי המרונדר המדויק** ולגרסת הקופי המדויקת שעברה Visible Text Gate + lint.
