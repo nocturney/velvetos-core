@@ -1,36 +1,44 @@
-<!-- תצוגה 3 vfops: 01–07 · bgcolor #0b1224 · dir=rtl · כהה/זהב · כריכות בגוף -->
-<div dir="ltr">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" bgcolor="#0b1224" style="color:rgb(0,0,0);font-family:Arial,sans-serif;font-size:medium;background-color:rgb(11,18,36)">
+<!-- Brief V6 App Dashboard · תצוגה 3 compatibility · RTL · navy/gold · CID/remote thumbnails -->
+<div dir="ltr" style="margin:0;padding:0;background:#0b1224">
+<style>
+@media only screen and (max-width:620px){
+  .vf-wrap{width:100%!important;max-width:100%!important}
+  .vf-pad{padding-left:14px!important;padding-right:14px!important}
+  .vf-title{font-size:27px!important;line-height:31px!important}
+  .vf-slot{padding-left:14px!important;padding-right:14px!important}
+  .vf-img{width:100%!important;max-width:100%!important;height:auto!important}
+  .vf-touch{display:block!important;min-height:44px!important;line-height:44px!important}
+}
+</style>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" bgcolor="#0b1224" style="width:100%;background:#0b1224;font-family:Arial,Helvetica,sans-serif">
 <tbody>
 <tr>
-<td align="center" dir="rtl" bgcolor="#0b1224" style="padding:24px 12px">
-<table role="presentation" width="640" cellpadding="0" cellspacing="0" border="0" dir="rtl" bgcolor="#f7f3eb" style="max-width:640px;width:640px">
+<td align="center" dir="rtl" bgcolor="#0b1224" style="padding:18px 8px 32px">
+<table role="presentation" width="660" cellpadding="0" cellspacing="0" border="0" dir="rtl" class="vf-wrap" style="width:100%;max-width:660px;border-collapse:separate;border-spacing:0">
 <tbody>
 <tr>
-<td dir="rtl" bgcolor="#101a35" style="padding:28px 28px 22px;border-right:6px solid rgb(202,169,107)">
-<div style="color:rgb(217,189,132);font-family:Georgia,serif;font-size:12px">ולווט פקטורי</div>
-<div style="color:rgb(244,234,211);font-family:Arial,sans-serif;font-size:13px">סטודיו להדפסות תלת־ממד · שדרות</div>
-<h1 style="margin:14px 0px 6px;color:rgb(255,255,255);font-family:Arial,sans-serif;font-size:28px">בריף הבוקר</h1>
-<div style="color:rgb(216,222,235);font-family:Arial,sans-serif;font-size:14px">{{DATE_LINE}}</div>
+<td dir="rtl" bgcolor="#111a31" class="vf-pad" style="padding:25px 24px 22px;border:1px solid #283552;border-radius:22px 22px 0 0;border-right:5px solid #caa96b">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl"><tr>
+<td valign="top" dir="rtl">
+<div style="color:#d9bd84;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:800;letter-spacing:1.5px">VELVET FACTORY · CONTROL ROOM</div>
+<h1 class="vf-title" style="margin:9px 0 5px;color:#ffffff;font-family:Arial,Helvetica,sans-serif;font-size:30px;line-height:34px;font-weight:900">בריף הבוקר</h1>
+<div style="color:#aeb9cd;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px">{{DATE_LINE}}</div>
+</td>
+<td align="left" valign="top" style="width:80px"><div style="display:inline-block;background:#caa96b;color:#111a31;border-radius:999px;padding:7px 10px;font-size:10px;font-weight:900;white-space:nowrap">V6 · LIVE</div></td>
+</tr></table>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:18px"><tr><td bgcolor="#0a1225" style="padding:14px 15px;border-radius:13px;border-right:4px solid #caa96b">
+<div style="color:#caa96b;font-size:10px;font-weight:800">השורה התחתונה</div>
+<div style="margin-top:5px;color:#fffaf0;font-size:17px;line-height:25px;font-weight:800">{{BOTTOM_LINE}}</div>
+</td></tr></table>
 </td>
 </tr>
 <tr>
-<td dir="rtl" bgcolor="#f7f3eb" style="padding:20px 28px 8px;font-family:Arial,sans-serif">
-<table width="100%" cellpadding="16" cellspacing="0" border="0" dir="rtl" bgcolor="#101a35">
-<tbody>
-<tr>
-<td dir="rtl" bgcolor="#101a35" style="color:rgb(244,234,211)">
-<div style="color:rgb(202,169,107);font-size:11px;font-family:Georgia,serif">השורה התחתונה</div>
-<div style="font-size:17px;line-height:1.55;color:rgb(255,255,255);margin-top:6px">{{BOTTOM_LINE}}</div>
-</td>
-</tr>
-</tbody>
-</table>
-</td>
-</tr>
+<td dir="rtl" bgcolor="#f4efe6" style="padding:4px 0 10px;border-left:1px solid #283552;border-right:1px solid #283552">
 {{SLOTS}}
+</td>
+</tr>
 <tr>
-<td dir="rtl" bgcolor="#101a35" style="padding:16px 28px;color:rgb(201,208,223);font-family:Arial,sans-serif;font-size:12px">{{FOOTER}}</td>
+<td dir="rtl" bgcolor="#111a31" class="vf-pad" style="padding:15px 24px 17px;border:1px solid #283552;border-top:0;border-radius:0 0 22px 22px;color:#8f9cb2;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:16px;text-align:center">{{FOOTER}}</td>
 </tr>
 </tbody>
 </table>
