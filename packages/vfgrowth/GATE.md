@@ -12,11 +12,13 @@
 | `quality_checked` | משרד אחרי Rubric + מדיה | בלי גלם = `blocked_no_media` |
 | `policy_checked` | `vf_organic_growth.py policy` | אסור/מותר מ־ORGANIC_GROWTH |
 | `pending_publish_authorization` | אחרי policy | דורש human approval נקודתי או standing authorization תקף |
+| `pending_human_approval` | legacy alias | תאימות ל־queue/CLI הישן; מפורש כ־`pending_publish_authorization` |
 | `approved_for_manual_posting` | אדם: אישור נקודתי | תאימות legacy; לא טענת פרסום |
 | `authorized_for_tool_publish` | instance standing authorization | רק תוכן שגרתי שעבר PREFLIGHT + rights + Visual OS QA |
 | `rejected` | אדם: דחייה | נשאר במשרד |
 | `edit` | אדם או QA | חוזר ל־draft |
 | `published_verified` | `vfigos` אחרי tool receipt + verification evidence | לא מסמנים בלי ראיה |
+| `posted_manually` | אדם במסלול legacy | רק אחרי העלאה ידנית אמיתית |
 | `performance_imported` | סנאפשוט / CSV | חסר = אין ספירה |
 | `attributed` | ייחוס הסתברותי | לא «וודאי» |
 | `learned` | רטרו / brief מחר | בלי בושה לבעלים |
