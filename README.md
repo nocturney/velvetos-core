@@ -1,159 +1,81 @@
-# VelvetOS Core
+<p align="center">
+  <img src="docs/assets/velvetos-readme-hero.svg" alt="VelvetOS — Headquarters & Operating System" width="100%">
+</p>
 
-> **VELVET FACTORY HEADQUARTERS & OS** — an operational AI/business operating system for Velvet Factory, with a reusable Core, governed office control plane, sensors, automations, agents/skills, business memory, media/content pipelines and external-tool integrations.
+<p align="center">
+  <strong>Velvet Factory Headquarters & OS</strong><br>
+  מערכת הפעלה עסקית חיה ל־Velvet Factory · A living operational OS for Velvet Factory
+</p>
 
-VelvetOS is no longer just a backend scaffold. This repository is the **system of record for the operating model**: what the office can do, which actions are autonomous vs gated, how work moves from intake to execution, which integrations are actually live, and which sensors prove that the system still behaves as intended.
-
-**Active tenant:** Velvet Factory · Sderot  
-**Daily business channels:** Instagram `@velvets_cloud` · WhatsApp `050-2517000` · local pickup in Sderot  
-**Start here (Hebrew):** [`docs/START-HERE-HE.md`](docs/START-HERE-HE.md)
-
----
-
-## What VelvetOS is
-
-VelvetOS is built as three cooperating layers:
-
-1. **Core / Kernel** — reusable laws, modules, schemas, packs, sensors and contracts.
-2. **Office / Control Plane** — the operational layer for the active business: intake, jobs, follow-ups, approvals, memory, briefs, media/content work and completion tracking.
-3. **Edge (optional)** — machine/floor/host-side execution where a task must leave the office and touch real equipment or a local runtime.
-
-Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/velvetos/LAYERS.md`](packages/velvetos/LAYERS.md) · [`packages/velvetos/ADR-THREE-LAYERS.md`](packages/velvetos/ADR-THREE-LAYERS.md)
-
-The design rule is **one source of truth, many views/automations**. New ideas should extend existing SoTs and control planes rather than create parallel mini-systems.
+<p align="center">
+  <a href="#עברית">עברית</a> · <a href="#english">English</a> · <a href="CHANGELOG.md">Changelog</a> · <a href="docs/START-HERE-HE.md">Start Here</a>
+</p>
 
 ---
 
-## Capability status vocabulary
+## Operational Snapshot · תמונת מצב
 
-Status words in this README are deliberate:
+<!-- OPERATIONAL-SNAPSHOT:START -->
+<table>
+<tr>
+<td align="center"><strong>22</strong><br><sub>Skills · יכולות Living Studio</sub></td>
+<td align="center"><strong>39</strong><br><sub>Sensors · חיישני חוזה</sub></td>
+<td align="center"><strong>7</strong><br><sub>Workflows · אוטומציות GitHub</sub></td>
+<td align="center"><strong>31</strong><br><sub>Packs · חבילות מערכת</sub></td>
+</tr>
+</table>
 
-- **LIVE / VERIFIED** — external path was verified against the real provider/runtime.
-- **IMPLEMENTED** — code + local behavioral checks exist in this repo.
-- **GATED** — implemented, but a human/owner or policy gate is intentionally required.
-- **OPTIONAL / FAILOVER** — supported path, not the primary runtime.
-- **PLANNED** — concept only. Planned work must never be described as operational capability.
+> **System posture · מצב מערכת:** capability claims are evidence-based; provider-dependent actions remain gated/fail-closed unless live-verified. · הצהרות יכולת נשענות על ראיות; פעולות תלויות ספק נשארות מבוקרות/סגורות-בטוח עד אימות חי.
+<!-- OPERATIONAL-SNAPSHOT:END -->
 
----
-
-## Current capability map
-
-### Office Control Plane — IMPLEMENTED
-
-Canonical office coordination lives under `office/control-plane.json`, `office/control/` and the existing VelvetOS packs.
-
-It provides office status/watchdog views, gap detection, follow-ups, WIP → finished bridging, dead-letter handling, handoff/failover state, review, memory hygiene, risk-aware actions and integration with the operating brief.
-
-CLI: `scripts/vf_control_plane.py`  
-Sensor: `scripts/check-office-control-plane.py`
-
-### Living Studio — IMPLEMENTED
-
-`packages/velvetos/living-studio/` is the connective tissue between existing sources of truth, not a second operating system.
-
-Its registry currently exposes **22 operational skills/capabilities**, including World Model, Signal Room, Studio Pulse, Universal Intake, Invisible Work, Failure Museum, Lab, Opportunity detection, Commercial QA, Content Universe, Work-to-Story and commissioning.
-
-CLI: `scripts/vf_living_studio.py`  
-Sensor: `scripts/check-living-studio.py`
-
-### Universal Intake → existing handlers — IMPLEMENTED
-
-Incoming work can be normalized and routed into existing domain handlers rather than copied into a parallel inbox. Intake is designed to be idempotent and preserve source identity/evidence.
-
-### Jobs state + Google Sheet bridge — IMPLEMENTED / FAIL-CLOSED
-
-VelvetOS has a canonical Velvet Factory jobs model plus a Sheet adapter with pull / push / reconcile behavior.
-
-Important behavior:
-
-- no guessed Sheet tab names
-- pre-write remote digest/concurrency guard
-- conflicts do not mutate remote state
-- provider-unavailable writes remain honestly marked pending/needs-sync instead of pretending success
-
-### Business memory (`vfmem`) — IMPLEMENTED
-
-Memory is part of the workflow before notes, meetings and documents become operational state. Identity gates reduce the risk of attaching client notes to the wrong entity.
-
-### Automation + risk gates — IMPLEMENTED
-
-VelvetOS separates low-risk executable work from actions that require approval. Green/yellow action execution exists, with risk rules designed to tighten safely rather than silently expand authority.
-
-“Autonomous” does **not** mean permission to mutate anything. External writes remain bounded by provider capability, verified auth and business policy.
-
-### Instagram MCP + Insights — LIVE / VERIFIED for supported reads
-
-The canonical Instagram MCP path supports verified Insights reads and public CTA auditing.
-
-Honesty constraints are part of the capability model:
-
-- unsupported profile/caption Graph mutations are not exposed as fake write tools
-- publishing is not called live unless explicitly verified
-- DM automation remains disabled
-- period-incompatible Insights return structured partials instead of fabricated totals
-
-Docs: `vfigos/CHATGPT-MCP.md` · `vfigos/GRAPH-MUTATIONS.md`
-
-### Media Vault + vfmedia intake — IMPLEMENTED
-
-The media flow keeps one catalog/source of truth and separates:
-
-`incoming → source → work-in-progress → approved-for-publishing`
-
-Core rules: upload ≠ approval; approved-folder membership ≠ proof of approval; real bytes/checksums are preserved; moves happen after persistence succeeds; permission changes/destructive cleanup are never inferred.
-
-Docs: [`docs/MEDIA-VAULT.md`](docs/MEDIA-VAULT.md)  
-Pack: `packages/vfmedia/`
-
-### Hebrew copy / business-truth QA — IMPLEMENTED
-
-The copy stack includes a Hebrew natural-writing layer with lint/evals and a strict **FACT vs INVENTED** gate.
-
-It must not invent prices in ₪, turnaround, customer facts, print duration or unsupported business claims. Unverified facts become input/fact failures rather than polished fiction.
-
-### Organic Growth / content factory — IMPLEMENTED / HUMAN-GATED
-
-Real work/completion events can become draft Reel/Story ideas, certificates and community-poll candidates, with approval choices in the operating brief.
-
-This does **not** equal automatic publishing: no default autopost, no auto-DM, no invented attribution and no invented prices.
-
-### Production/floor support — IMPLEMENTED as governed planning data
-
-Existing production packs cover machine/material routing, spool/slice balance and maintenance signals from Edge snapshots. Headquarters planning does not imply HQ can physically start a printer without the appropriate Edge/runtime path.
-
-### Gmail operating brief — IMPLEMENTED
-
-The repo contains a Gmail brief path that can produce/send the operating brief when valid Google credentials are available, including HTML + inline media handling.
-
-Workflow: `.github/workflows/gmail-brief-send.yml`  
-Module: `packages/vfops/gmail_brief_send.py`  
-MCP fallback: [`docs/SEND-BRIEF-MCP.md`](docs/SEND-BRIEF-MCP.md)
-
-### Failover office manager — OPTIONAL / GOVERNED
-
-If the primary ChatGPT operating path is unavailable, VelvetOS defines a controlled takeover/handoff process for other supported assistants/tools without creating a second source of truth.
-
-Docs: [`docs/FAILOVER.md`](docs/FAILOVER.md)
-
-### Agents / skills / specialist rules — AVAILABLE TOOLING
-
-The repository includes a large specialist-agent/rule catalog under `.cursor/rules/`, plus Velvet-specific agents, packs and skill registries.
-
-**Presence alone is not proof of active capability.** README claims must be backed by an active registry, workflow, CLI/handler, source of truth, sensor or verified provider path — not merely by a prompt/rule file sitting in the repo.
-
-### Sensors + CI — ACTIVE
-
-`scripts/check-all.py` discovers and runs the repository's `check-*.py` computational sensors. GitHub Actions runs the sensor suite on pushes and pull requests to `main`, including commission-isolation checks.
-
-Workflow: `.github/workflows/check-all.yml`
-
-Sensors are the executable evidence layer: when documentation says a behavior is implemented, there should ideally be a deterministic check proving its contract.
+<p align="center">
+  <strong>LIVE / VERIFIED</strong> · <strong>IMPLEMENTED</strong> · <strong>GATED</strong> · <strong>OPTIONAL</strong> · <strong>PLANNED</strong>
+</p>
 
 ---
 
-## Operational GitHub workflows
+# עברית
 
-Current workflows include:
+## מה זה VelvetOS
+
+VelvetOS הוא כבר לא "backend kernel" בלבד. זהו **מערך ההפעלה של המשרד והעסק**: מקורות אמת, זיכרון עסקי, Intake, ניהול עבודות, אוטומציות, Skills, חיישנים, בקרה, תוכן, מדיה, תפעול, אינטגרציות ונתיבי failover — עם הבחנה ברורה בין מה שקיים בקוד, מה מאומת חי ומה עדיין דורש אישור או ספק חיצוני.
+
+**Tenant פעיל:** Velvet Factory · שדרות  
+**ערוצים פעילים:** Instagram `@velvets_cloud` · WhatsApp `050-2517000` · איסוף עצמי בשדרות
+
+### שלוש שכבות
+
+| שכבה | תפקיד |
+|---|---|
+| **Core / Kernel** | חוקים, schemas, modules, packs, sensors וחוזי אירועים משותפים |
+| **Office / Control Plane** | Intake, jobs, approvals, follow-ups, briefs, memory, content ומעקב ביצוע |
+| **Edge** | ביצוע מקומי/פיזי כשצריך לגעת במכונות או runtime מקומי |
+
+ארכיטקטורה קנונית: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/velvetos/LAYERS.md`](packages/velvetos/LAYERS.md) · [`packages/velvetos/ADR-THREE-LAYERS.md`](packages/velvetos/ADR-THREE-LAYERS.md)
+
+> **עיקרון:** מקור אמת אחד, הרבה תצוגות ואוטומציות. לא בונים מערכת מקבילה רק כי עלה רעיון חדש.
+
+## מפת היכולות
+
+<table>
+<tr><td><strong>Office Control Plane</strong></td><td><strong>IMPLEMENTED</strong></td><td>סטטוס משרד, watchdog, gaps, follow-ups, dead-letter, handoff, review, memory hygiene ו־WIP→finished.</td></tr>
+<tr><td><strong>Living Studio</strong></td><td><strong>IMPLEMENTED</strong></td><td>שכבת חיבור על מקורות האמת הקיימים עם 22 Skills תפעוליים.</td></tr>
+<tr><td><strong>Universal Intake</strong></td><td><strong>IMPLEMENTED</strong></td><td>נרמול וניתוב פניות/מסמכים/פגישות/מדיה ל־handlers קיימים, בלי Inbox מקביל.</td></tr>
+<tr><td><strong>Jobs + Google Sheet bridge</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td>pull/push/reconcile, הגנת concurrency וללא ניחוש tab.</td></tr>
+<tr><td><strong>vfmem</strong></td><td><strong>IMPLEMENTED</strong></td><td>זיכרון עסקי והקשר לפני הפיכת notes/meetings/documents למצב תפעולי.</td></tr>
+<tr><td><strong>Autonomy + Risk Gates</strong></td><td><strong>IMPLEMENTED</strong></td><td>הפרדה בין פעולות בסיכון נמוך לבין פעולות שדורשות gate/approval.</td></tr>
+<tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>נתיבי Insights נתמכים ו־CTA audit מאומתים; mutations לא נתמכים לא מוצגים כאילו הם עובדים.</td></tr>
+<tr><td><strong>Media Vault + vfmedia</strong></td><td><strong>IMPLEMENTED</strong></td><td>incoming → source → WIP → approved, עם checksum ו־persist-before-move.</td></tr>
+<tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>עברית טבעית, anti-AI QA ושער FACT vs INVENTED.</td></tr>
+<tr><td><strong>Organic Growth / Content Factory</strong></td><td><strong>IMPLEMENTED / HUMAN-GATED</strong></td><td>עבודה אמיתית → רעיונות/טיוטות/approval queue; בלי autopost ובלי auto-DM.</td></tr>
+<tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td>routing, חומר, spool/slice, maintenance signals ותכנון ייצור מבוקר.</td></tr>
+<tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td>בריף HTML עם מדיה inline ושליחה כאשר קיימים credentials תקפים.</td></tr>
+<tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td>מעבר מבוקר לכלי חלופי בלי לייצר SoT נוסף.</td></tr>
+<tr><td><strong>Agents / Skills catalog</strong></td><td><strong>AVAILABLE TOOLING</strong></td><td>קטלוג specialists גדול; עצם קיום prompt/rule לא נחשב הוכחת capability פעילה.</td></tr>
+<tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td>חיישני `check-*.py` ו־GitHub Actions כראיית חוזה executable.</td></tr>
+</table>
+
+## אוטומציות פעילות בריפו
 
 - full sensor suite
 - Gmail brief send
@@ -163,72 +85,128 @@ Current workflows include:
 - weekly deck generation
 - vfmedia intake
 
-See `.github/workflows/` for the executable list. A workflow file proves the automation exists; a provider-dependent action is only **LIVE** when credentials/runtime have also been verified.
+קובץ workflow מוכיח שהאוטומציה קיימת; פעולה חיצונית נחשבת **LIVE** רק אחרי אימות אמיתי מול provider/runtime.
+
+## מקורות אמת
+
+| תחום | מיקום קנוני |
+|---|---|
+| זהות Core | `packages/velvetos/CORE.json` |
+| שכבות | `packages/velvetos/LAYERS.md` |
+| Event contracts | `packages/velvetos/schema/events.catalog.json` |
+| Office control | `office/control-plane.json` + `office/control/` |
+| Living Studio | `packages/velvetos/living-studio/` |
+| Media catalog | `packages/vfmedia/` |
+| חוקי מערכת | `constitution/` |
+| Sensors | `scripts/check-*.py` |
+| Workflows | `.github/workflows/` |
+| היסטוריית שינויים | [`CHANGELOG.md`](CHANGELOG.md) |
+| הנחיות agents | [`AGENTS.md`](AGENTS.md) |
+
+## חוקי אמת עסקית
+
+- לא ממציאים מחירי ₪.
+- לא ממציאים לקוחות, הזמנות או זמני ביצוע.
+- לא טוענים שפעולת provider הצליחה בלי ראיה.
+- לא ממציאים Origin slugs; אם לא ידוע — `unknown`.
+- לא יוצרים source of truth מקביל בשקט.
+- פרסום ותקשורת חיצונית כפופים ל־approval/capability gates.
+- איסוף נשאר בשדרות כל עוד הרשומה הקנונית לא שונתה.
+
+## README חי
+
+ה־README הוא חלק מהמוצר. שינוי מהותי ב־`packages/`, `office/`, `scripts/`, `.github/workflows/` או `constitution/` מחייב עדכון README באותו PR, אלא אם מדובר בשינוי פנימי שאינו משנה capability.
+
+ה־Operational Snapshot למעלה **נוצר מנתוני הריפו עצמו**. להרצה ידנית:
+
+```bash
+python3 scripts/update-readme-snapshot.py
+python3 scripts/update-readme-snapshot.py --check
+```
+
+**Definition of Done:** implementation + evidence/sensor + changelog + README capability/status update.
 
 ---
 
-## Sources of truth
+# English
+
+## What VelvetOS is
+
+VelvetOS is no longer only a backend kernel. It is the **operating layer for the office and the business**: sources of truth, business memory, intake, job state, automations, skills, sensors, control planes, content/media pipelines, external integrations and governed failover.
+
+**Active tenant:** Velvet Factory · Sderot  
+**Active channels:** Instagram `@velvets_cloud` · WhatsApp `050-2517000` · local pickup in Sderot
+
+### Three layers
+
+| Layer | Role |
+|---|---|
+| **Core / Kernel** | Shared laws, schemas, modules, packs, sensors and event contracts |
+| **Office / Control Plane** | Intake, jobs, approvals, follow-ups, briefs, memory, content and completion tracking |
+| **Edge** | Local/physical execution when work must reach machines or a local runtime |
+
+Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/velvetos/LAYERS.md`](packages/velvetos/LAYERS.md) · [`packages/velvetos/ADR-THREE-LAYERS.md`](packages/velvetos/ADR-THREE-LAYERS.md)
+
+> **Principle:** one source of truth, many projections and automations. New ideas extend existing SoTs instead of creating parallel systems.
+
+## Capability map
+
+<table>
+<tr><td><strong>Office Control Plane</strong></td><td><strong>IMPLEMENTED</strong></td><td>Status, watchdog, gaps, follow-ups, dead-letter, handoff, review, memory hygiene and WIP→finished.</td></tr>
+<tr><td><strong>Living Studio</strong></td><td><strong>IMPLEMENTED</strong></td><td>Connective layer over canonical SoTs with 22 operational skills.</td></tr>
+<tr><td><strong>Universal Intake</strong></td><td><strong>IMPLEMENTED</strong></td><td>Normalizes and routes inquiries, documents, meetings and media into existing handlers.</td></tr>
+<tr><td><strong>Jobs + Google Sheet bridge</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td>Pull/push/reconcile with concurrency guards and no guessed tab names.</td></tr>
+<tr><td><strong>vfmem</strong></td><td><strong>IMPLEMENTED</strong></td><td>Business context before notes, meetings and documents become operational state.</td></tr>
+<tr><td><strong>Autonomy + Risk Gates</strong></td><td><strong>IMPLEMENTED</strong></td><td>Separates low-risk execution from actions that require explicit approval.</td></tr>
+<tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>Supported Insights reads and CTA audit are verified; unsupported mutations are not presented as working writes.</td></tr>
+<tr><td><strong>Media Vault + vfmedia</strong></td><td><strong>IMPLEMENTED</strong></td><td>Incoming → source → WIP → approved with checksums and persist-before-move.</td></tr>
+<tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>Natural Hebrew, anti-AI QA and FACT vs INVENTED gates.</td></tr>
+<tr><td><strong>Organic Growth / Content Factory</strong></td><td><strong>IMPLEMENTED / HUMAN-GATED</strong></td><td>Real work becomes drafts and approval candidates; no default autopost or auto-DM.</td></tr>
+<tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td>Routing, material/spool planning and maintenance signals.</td></tr>
+<tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td>HTML + inline media brief path when valid credentials exist.</td></tr>
+<tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td>Controlled takeover without creating another source of truth.</td></tr>
+<tr><td><strong>Agents / Skills catalog</strong></td><td><strong>AVAILABLE TOOLING</strong></td><td>Large specialist catalog; a prompt/rule file alone is not proof of active capability.</td></tr>
+<tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td>`check-*.py` sensors and GitHub Actions provide executable contract evidence.</td></tr>
+</table>
+
+## Operational workflows
+
+The repository currently carries workflows for the sensor suite, Gmail brief, Office Control Plane, publish-bridge cleanup, VelvetOS research, weekly deck generation and vfmedia intake.
+
+A workflow file proves automation exists; provider-dependent behavior is **LIVE** only after real provider/runtime verification.
+
+## Canonical sources
 
 | Area | Canonical location |
 |---|---|
 | Core identity | `packages/velvetos/CORE.json` |
 | Layer model | `packages/velvetos/LAYERS.md` |
 | Event contracts | `packages/velvetos/schema/events.catalog.json` |
-| Core modules | `packages/velvetos/modules/` |
 | Office control | `office/control-plane.json` + `office/control/` |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
-| Constitution / laws | `constitution/` |
+| Constitution | `constitution/` |
 | Sensors | `scripts/check-*.py` |
-| Automations | `.github/workflows/` |
-| Implemented-change history | [`CHANGELOG.md`](CHANGELOG.md) |
-| Agent operating guidance | [`AGENTS.md`](AGENTS.md) |
-
-When two documents disagree, prefer the executable/canonical SoT and fix stale documentation in the same change.
-
----
-
-## Non-negotiable Velvet Factory constraints
-
-- do not invent ₪ prices
-- do not invent customer/order facts
-- do not claim external mutation succeeded without provider evidence
-- do not invent Origin slugs; keep `unknown` when unknown
-- do not silently create a parallel source of truth
-- publishing/external communication must respect approval and capability gates
-- fulfillment remains local pickup in Sderot unless the canonical business record changes
-
-Origin rules: [`docs/ORIGIN-SLUGS.md`](docs/ORIGIN-SLUGS.md)  
-Owner-only operations: [`docs/OWNER-ACTIONS-he.md`](docs/OWNER-ACTIONS-he.md)
-
----
+| Workflows | `.github/workflows/` |
+| Change history | [`CHANGELOG.md`](CHANGELOG.md) |
+| Agent guidance | [`AGENTS.md`](AGENTS.md) |
 
 ## Living README contract
 
-**This README is part of the product, not a one-time description.**
+This README is part of the product. Material capability/runtime changes must update it in the same PR.
 
-Any merged change that materially adds, removes or changes a user/business-facing capability must update this README in the **same change** and normally `CHANGELOG.md` as well.
+The Operational Snapshot above is generated from repository sources:
 
-A README update is required when a change affects one or more of:
+```bash
+python3 scripts/update-readme-snapshot.py
+python3 scripts/update-readme-snapshot.py --check
+```
 
-- `packages/` capability/runtime behavior
-- `office/` operating behavior or source of truth
-- `scripts/` operational CLIs, handlers or sensors
-- `.github/workflows/` automations
-- external integrations or verified status
-- autonomy / approval / risk boundaries
-- active skills / registries
-- business constraints or canonical channels
-
-Documentation-only fixes, formatting, tests that do not change behavior and purely internal refactors may be exempt.
-
-**Definition of Done:** implementation + evidence/sensor + changelog + README capability/status update when applicable.
-
-The README must never upgrade a concept to “implemented” just because scaffolding exists. Use the status vocabulary above and keep provider-dependent claims honest.
+**Definition of Done:** implementation + evidence/sensor + changelog + README capability/status update.
 
 ---
 
-## Quick health check
+## Quick health check · בדיקת בריאות מהירה
 
 ```bash
 python3 scripts/velvetos.py core
@@ -236,20 +214,13 @@ python3 scripts/velvetos.py modules
 python3 scripts/velvetos.py instances
 python3 scripts/check-all.py
 python3 scripts/check-commission-isolation.py
+python3 scripts/update-readme-snapshot.py --check
 ```
 
----
+## Read next · המשך קריאה
 
-## Read next
-
-- [`CHANGELOG.md`](CHANGELOG.md) — chronological truth of what changed
-- [`AGENTS.md`](AGENTS.md) — operating instructions for AI/dev agents
-- [`docs/HARNESS.md`](docs/HARNESS.md) — harness/tooling model
-- [`docs/FAILOVER.md`](docs/FAILOVER.md) — controlled office-manager failover
-- [`docs/MEDIA-VAULT.md`](docs/MEDIA-VAULT.md) — media source-of-truth workflow
-- [`constitution/`](constitution/) — operating laws and authority constraints
-- [`packages/velvetos/`](packages/velvetos/) — Core architecture, modules and schemas
+[`CHANGELOG.md`](CHANGELOG.md) · [`AGENTS.md`](AGENTS.md) · [`docs/HARNESS.md`](docs/HARNESS.md) · [`docs/FAILOVER.md`](docs/FAILOVER.md) · [`docs/MEDIA-VAULT.md`](docs/MEDIA-VAULT.md) · [`constitution/`](constitution/) · [`packages/velvetos/`](packages/velvetos/)
 
 ---
 
-> **If VelvetOS can really do it, the README should say so. If it cannot prove it, the README should not pretend it can.**
+<p align="center"><strong>If VelvetOS can really do it, the README should say so.<br>אם VelvetOS באמת יודע לעשות את זה — ה־README צריך להגיד את זה.</strong></p>
