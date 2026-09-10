@@ -1,0 +1,43 @@
+{
+  "jobId": "VF-R003",
+  "objective": "Use the real helmet-form rotation/viewpoint change to show surface detail and changing reflected appearance without claiming an unverified material or finishing process.",
+  "format": "reel",
+  "targetDurationSeconds": {"min": 7, "max": 10},
+  "requiredSubject": "the decorative helmet form with copper/gold appearance and dark crest shown in IMG_0470.mov",
+  "truthClaims": [
+    {
+      "claim": "The source video shows the same decorative helmet form from multiple viewpoints with copper/gold-colored reflective-looking surface detail and a dark crest.",
+      "status": "verified",
+      "evidenceAssetIds": ["1V5daU2XcB0kMsDo_erzv3AkumElfmrr5"],
+      "sourceRefs": ["IMG_0470.mov"],
+      "note": "Visible directly in the reviewed source video; wording describes appearance, not material composition."
+    },
+    {
+      "claim": "The object is made of metal, has a specific paint/coating, represents a specific historical helmet, or used a named finishing technique.",
+      "status": "unsupported",
+      "evidenceAssetIds": [],
+      "sourceRefs": [],
+      "note": "Do not state or imply from appearance alone."
+    },
+    {
+      "claim": "Any specific material, print duration, dimensions, durability or customer use.",
+      "status": "unsupported",
+      "evidenceAssetIds": [],
+      "sourceRefs": [],
+      "note": "Not established by the selected footage."
+    }
+  ],
+  "syntheticPolicy": {
+    "allowedUses": ["non-factual transition", "background support that does not replace the photographed subject"],
+    "forbiddenUses": ["change helmet geometry", "change ornament/crest shape", "prove a finishing/material process", "invent historical identity", "replace the real product", "generate Hebrew text inside synthetic imagery"]
+  },
+  "subjectPack": {
+    "referenceAssetIds": ["1V5daU2XcB0kMsDo_erzv3AkumElfmrr5"],
+    "geometryInvariants": ["helmet-like shell with two pointed cheek/front guards", "raised ornamental surface", "large dark central crest"],
+    "materialInvariants": [],
+    "colorInvariants": ["copper/gold visual appearance on shell", "dark blue/black crest appearance"],
+    "mustNotChange": ["crest silhouette", "front opening/guard geometry", "ornamental relief as photographed", "real source-product identity"]
+  },
+  "successDefinition": {"brandScore": 80, "realityScore": 90, "artifactScore": 90},
+  "novelty": null
+}
