@@ -5,7 +5,7 @@
 הכלים תופסים **איכות לפני** שיבוץ / פרסום חי. לא אחרי.
 
 חוקה: `constitution/STUDIO.md` · `ORCHESTRA.md` · `SEND.md`.  
-שער עריכה: `EDIT-GATE.md`. קול: `vfcopy/VOICE.md` + `vfcopy/VOICE-CHART.md`. שכנים: `vfcopy/VOICE-RESEARCH.md`.  
+שער עריכה: `EDIT-GATE.md`. חוזה קופי חובה: `../vfcopy/SOFT-TOOLS-CONTRACT.md`. קול: `vfcopy/VOICE.md` + `vfcopy/VOICE-CHART.md`. שכנים: `vfcopy/VOICE-RESEARCH.md`.  
 רובריקת איכות (חובה לפני «מוכן»): [`CONTENT-RUBRIC.md`](CONTENT-RUBRIC.md).  
 UGC: [`UGC.md`](UGC.md). מסירה: `HANDOFF-he.md`.
 
@@ -16,12 +16,12 @@ UGC: [`UGC.md`](UGC.md). מסירה: `HANDOFF-he.md`.
 
 | # | בדיקה | עובר רק אם |
 |---|---|---|
-| א | **VOICE.md** (+ Voice Chart) | מצב אחד: תהליך-קצר **או** סיפור-מוצר. בלי פתיחת מגבלה / «מוכנים» / «בלי משלוח» / קופי דק |
+| א | **SOFT-TOOLS-CONTRACT + VOICE** | הקופי הסופי עבר reader-first → `VOICE.md`/`VOICE-CHART.md`/`voice/approved/` → template מתאים → `velvet-hebrew-copy` → `ai-tells-he.md` → `python3 scripts/check-vfcopy.py lint` על הטקסט הסופי עם context מאומת → fact gate. חובה לשמור `copy_version`/digest + `vfcopy_lint=pass`; `needs_input` = חסום. `VOICE.md` לבדו אינו pass |
 | ב | **Canva / vfcovers** + ראיית ויזואל | `edit_url` אמיתי מ־Canva MCP **או** PNG מ־`vfcovers` / `vfcanva`. לא JPEG גולמי. ראייה: thumbnail/export path או צילום מסך מקומי — לא «נראה טוב» בעל־פה |
 | ג | **ציון עצמי מול רף סוכנות** | ביקורת עצמית כתובה (לא Insights). כל שורת רף = כן. לא = נכשל-סגור |
 | ד | **2–3 קומפס** | שמות מעמודי `VOICE-RESEARCH.md` / שכני תלת־ממד·עיצוב·מתנה בישראל — מה מאמצים / מה דוחים. בלי ספירת עוקבים |
 | ה | **CONTENT-RUBRIC** | טבלת Rubric מלאה (5 צירים). עובר רק ב־**≥20/25**, בלי 1 בכל ציר, בלי דגל אדום. חסר ציון / סה״כ שגוי / ״עבור״ בלי טבלה = נכשל-סגור |
-| ו | **גרסת תוצר** | `artifact_digest` (sha256 של כיתוב להדבקה + מזהה ויזואל שאושרו). שינוי מהותי אחרי אישור → בדיקה מחודשת |
+| ו | **גרסת תוצר** | `artifact_digest` (sha256 של הכיתוב הסופי + מזהה ויזואל שאושרו). שינוי קופי אחרי lint מחייב lint מחדש; שינוי מהותי אחרי Rubric/PREFLIGHT מבטל את האישור ומחייב בדיקה מחודשת |
 
 חסר אחד מהשערים = **נכשל-סגור**. אין «כמעט» ואין שיבוץ על תנאי.
 
@@ -32,19 +32,19 @@ UGC: [`UGC.md`](UGC.md). מסירה: `HANDOFF-he.md`.
 כותבים כן/לא. לא ממציאים Insights. לא ממציאים ₪.
 
 1. סוכנות פרסום יקרה הייתה שולחת את הפריים והכיתוב כמו שהם?
-2. העברית יושבת על `VOICE.md` (מצב נכון, הוק חם, **PUBLIC_CURRENT_CTA** = הודעת Instagram / איסוף שדרות — בלי וואטסאפ בכיתוב)?
+2. הקופי עבר את כל `vfcopy/SOFT-TOOLS-CONTRACT.md` על **הגרסה הסופית**; יש reader-first קצר, מצב קול, lint pass ו־fact gate pass/needs_input מתועד?
 3. הוויזואל עבר `EDIT-GATE.md` (כלי אמיתי, לא טקסט על JPEG גולמי)?
 4. שני–שלושה קומפס כתובים — מה תואם שכן ישראלי, מה נדחה (מפעל / משלוח ארצי / 14 האשטגים / אוטו־DM / וואטסאפ כ־CTA ציבורי)?
 5. אין ₪ מומצא · אין מק״ט מומצא · אין עובדות לקוח מומצאות · `versionApproval` במדיה אם רלוונטי · משבצת לוח קיימת · אין כפילות פרסום · אין claim של live בלי `liveVerified` (`PUBLICATION-STATES.md`).
-6. CTA נוכחי = Instagram message בלבד (`constitution/PUBLIC_CTA.md`). אסור `050-2517000` / wa.me / וואטסאפ בתוכן ציבורי.
+6. CTA נוכחי לפי `constitution/PUBLIC_CTA.md`; אין CTA אסור או כזה שאינו תואם לחוקה הנוכחית.
 
 לא אחד = נכשל-סגור. מתקנים Canva / כיתוב / פריים במשרד.
 
 ## קומפס — מאיפה
 
 רק מקורות שכבר ב־`VOICE-RESEARCH.md` או עמוד IL ציבורי שנפתח ב־WebSearch/WebFetch (גוף אמיתי או «אין גוף»).  
-דוגמאות קבועות: נישה, Armadillo, REUT'S / Hili / MD4U, YoYo — **לאמץ** חום + טלפון גלוי + סיפור מוצר.  
-**לדחות:** 3d3 / Indus3D (טון מפעל), משלוח לכל הארץ, מחירון בפיד, האשטגים באנגלית למכביר.
+דוגמאות קבועות: נישה, Armadillo, REUT'S / Hili / MD4U, YoYo — **לאמץ** חום + סיפור מוצר.  
+**לדחות:** טון מפעל, משלוח לכל הארץ כשאינו נכון, מחירון בפיד בלי מקור, האשטגים באנגלית למכביר.
 
 אין ספירת עוקבים. אין «#1». אין המצאת handle.
 
@@ -54,7 +54,7 @@ UGC: [`UGC.md`](UGC.md). מסירה: `HANDOFF-he.md`.
 |---|---|
 | חסום שיבוץ ב־`HANDOFF-he.md` | «רמה נמוכה» |
 | שורת **פער** פנימית (לוג צמיחה / `vfinsights` פנימי) | תלונת איכות אחרי פרסום |
-| תיקון Canva + VOICE + קומפס באותו תור | דוח בושה «לא השתמשתם בכלים» |
+| תיקון Canva + copy chain + קומפס באותו תור | דוח בושה «לא השתמשתם בכלים» |
 | מדדים חלשים — לוג פנימי בלבד | פינג בצ׳אט על Insights חלשים |
 
 **אל תפנה לכריסטיאן על מדדים חלשים.**  
