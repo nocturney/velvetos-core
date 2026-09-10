@@ -18,8 +18,20 @@
 מסגרת אודיו כללית (לא תחליף למחקר חי): `packages/vfmskill/vendor/social/references/short-form-video.md` → Audio Strategy.  
 רישום מקורות: `SOURCES-MUSIC.json` + שורות ב־`LINKS.json`.
 
+## Audio Gate — חלק מחבילת הווידאו, לא תוספת אופציונלית
+
+כל Reel / Story וידאו חייב לקבל החלטת אודיו בזמן ה־Creative Manifest. `audioStrategy` אינו שדה תיעודי בלבד: לפני exact-final QA יש למדוד ולבדוק stream presence, loudness, clipping/noise, sync והתאמה לסיפור.
+
+- audio stream חסר → `audio_repair`.
+- stream קיים אבל near-silent → `audio_repair`.
+- silence מותר רק כאשר הוא מכוון, מנומק ומאושר בקריאייטיב; שקט מקרי אינו PASS.
+- source sound מועדף כשיש בו ערך ממשי של סטודיו/מכניקה.
+- music/SFX צריכים לתמוך בהוק, proof, קצב ו־ending; לא רק “למלא שקט”.
+- בחירת מוזיקה מתוך Instagram בזמן פרסום חייבת להיות מתועדת בבריף לפני השיבוץ ולאמת זמינות בחשבון בפועל.
+
 ## מתי
 
+- **חובה** לפני `ready_for_publish` לכל ריל / סטורי וידאו שאין בו סאונד מקור שימושי וברמת loudness מתאימה.
 - לפני חבילת תוכן עם ריל / סטורי וידאו / טיימלאפס.
 - כשראש צוות שואל «איזו מוזיקה» / «סאונד טרנדי» / «מה רץ באינסטגרם».
 - לא בכל בריף בוקר — רק כשיש וידאו בלוח או בקשה מפורשת.
@@ -59,7 +71,8 @@
 
 חוקי מותג:
 
-- CTA בכיתוב בלבד: WhatsApp `050-2517000` / איסוף שדרות. לא «שלחו DM».
+- CTA ציבורי לפי `constitution/PUBLIC_CTA.md`; **אין WhatsApp / 050-2517000 / wa.me בתוכן ציבורי**.
+- תוכן showcase/editorial אינו חייב CTA מכירתי; אם יש CTA, הוא יכול להיות follow/comment/שאלה או Instagram message ניטרלי לפי ההקשר והחוקה.
 - אין ₪ על הפריים / בכותרת השיר.
 - בלי מוזיקה מוגנת זכויות מחוץ לספריית הפלטפורמה — אלא אם ראש צוות פתח רישיון. חשבון Business = ספרייה מסחרית מצומצמת — לאמת ב־IG לפני שיבוץ.
 - עברית בכיתוב; שם סאונד יכול להישאר כמו ב־IG.
@@ -89,8 +102,17 @@
 
 ## בלי שמות (אם אין מקור)
 - קצב / תחושה: …
-- ducking מתחת ל־VO: כן/לא
+- source / music / SFX / שילוב: …
+- ducking מתחת ל־VO/סאונד מקור: כן/לא
 - חלופה: ספריית IG «search terms» להעביר ל־Grok: …
+
+## Audio QA
+- stream presence: PASS / FAIL
+- loudness: PASS / FAIL · measurement: …
+- clipping/noise: PASS / FAIL
+- sync: PASS / FAIL
+- story-fit: PASS / FAIL
+- intentional silence: no / yes + reason
 
 ## מסירה
 - → `vfom` / `vfgrowth`: שורה בכרטיס קליפ
@@ -103,11 +125,12 @@
 1. `@trend-researcher` כותב את הארטיפקט אחרי קריאת HeyOrca (או מקור חי אחר מהרשימה).
 2. `@visual-storyteller` (`vfom`) רושם את בחירת האודיו בכרטיס הריל.
 3. `@instagram-curator` (`vfigos`) מאשר בסקירה — לא מזיז `#משובץ`, לא בוסט.
-4. אדם מאשר → Grok שולח / משבץ (ובודק שהסאונד זמין בספריית החשבון).
+4. אודיו עובר exact-final Audio Gate; חסר/near-silent אינו `ready_for_publish`.
+5. כשנדרש IG-native audio, זמינות הסאונד נבדקת בחשבון בזמן השיבוץ/פרסום ומאומתת לאחר הפרסום.
 
 ## נעילות
 
-- אין שליחת אינסטגרם / Gmail / WhatsApp מ־HQ
+- אין שליחת Instagram / Gmail / WhatsApp מ־HQ
 - אין פק חדש לרעיון «סוכן מוזיקה»
 - אין Insights / מספרי שימושים מומצאים
 - אין שמות שירים מומצאים כשאין מקור
