@@ -37,7 +37,7 @@ def must_contain(path: Path, needles: tuple[str, ...]) -> str:
 
 def main() -> None:
     must_contain(AUTOPILOT, (
-        "no second orchestrator",
+        "orchestrator שני",
         "AUTO_WITH_GUARDRAILS",
         "HUMAN_REQUIRED",
         "standingAuthorization",
@@ -48,7 +48,7 @@ def main() -> None:
     must_contain(EDIT, ("Edit Decision List", "shotRequest", "hard cut"))
     must_contain(MEDIA_DIRECTOR, ("Creative Director", "Edit Director", "Publishing Director", "standingAuthorization"))
     must_contain(MODULE, ("CREATIVE-AUTOPILOT.md", "VISUAL-OS.md", "EDIT-DIRECTOR.md"))
-    must_contain(CREW, ("waiting_for_media", "published_verified", "Routine creative", "vfigos"))
+    must_contain(CREW, ("waiting_for_media", "published_verified", "Routine hook/cover/cut/caption", "vfigos"))
     must_contain(SCENARIO, ("standing authorization", "auto-fix", "receipt + live evidence"))
     must_contain(GATE, ("authorized_for_tool_publish", "pending_human_approval", "published_verified"))
     must_contain(POLICY, ("Creative Autopilot", "standingAuthorization", "אין ריל כל יום", "posted_manually"))
