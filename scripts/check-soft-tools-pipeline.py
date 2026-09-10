@@ -16,8 +16,11 @@ REQUIRED_FILES = {
     "contract": ROOT / "packages/vfcopy/SOFT-TOOLS-CONTRACT.md",
     "copy_pipeline": ROOT / "packages/vfcopy/skills/velvet-hebrew-copy/PIPELINE.md",
     "content_sprint": ROOT / ".cursor/skills/vf-content-sprint/SKILL.md",
+    "cursor_rule": ROOT / ".cursor/rules/velvet-public-copy-soft-tools.mdc",
+    "marketing_embed": ROOT / "packages/vfmskill/EMBED.md",
     "edit_gate": ROOT / "packages/vfgrowth/EDIT-GATE.md",
     "preflight": ROOT / "packages/vfgrowth/PREFLIGHT.md",
+    "preflight_template": ROOT / "packages/vfgrowth/preflight/TEMPLATE.md",
     "publish_gate": ROOT / "packages/vfgrowth/GATE.md",
     "playbook": ROOT / "packages/vfcopy/hq/PLAYBOOK.md",
     "reader_first": ROOT / "packages/vfcopy/hq/reader-first-he.md",
@@ -33,8 +36,14 @@ TOKEN_REQUIREMENTS = {
         "VOICE.md",
         "VOICE-CHART.md",
         "voice/approved/",
+        "copywriting",
+        "copy-editing",
+        "marketing-psychology",
+        "prompts.chat",
         "velvet-hebrew-copy",
         "ai-tells-he.md",
+        "write-better",
+        "Humanizer",
         "check-vfcopy.py lint",
         "CONTENT-RUBRIC",
         "PREFLIGHT",
@@ -60,6 +69,27 @@ TOKEN_REQUIREMENTS = {
         "CONTENT-RUBRIC",
         "PREFLIGHT",
     ],
+    "cursor_rule": [
+        "alwaysApply: true",
+        "SOFT-TOOLS-CONTRACT.md",
+        "reader-first",
+        "copywriting/copy-editing/marketing-psychology",
+        "velvet-hebrew-copy",
+        "check-vfcopy.py lint",
+        "CONTENT-RUBRIC",
+        "PREFLIGHT",
+    ],
+    "marketing_embed": [
+        "SOFT-TOOLS-CONTRACT.md",
+        "copywriting",
+        "copy-editing",
+        "marketing-psychology",
+        "reader-first-he.md",
+        "VOICE-CHART.md",
+        "velvet-hebrew-copy",
+        "check-vfcopy.py lint",
+        "PUBLIC_CTA.md",
+    ],
     "edit_gate": [
         "SOFT-TOOLS-CONTRACT.md",
         "reader-first",
@@ -76,6 +106,18 @@ TOKEN_REQUIREMENTS = {
         "check-vfcopy.py lint",
         "vfcopy_lint=pass",
         "needs_input",
+    ],
+    "preflight_template": [
+        "SOFT-TOOLS-CONTRACT.md",
+        "reader_first:",
+        "marketing_aids:",
+        "copywriting:",
+        "copy-editing:",
+        "marketing-psychology:",
+        "vfcopy_lint:",
+        "vfcopy_lint_version:",
+        "fact_gate:",
+        "visual_copy_decision:",
     ],
     "publish_gate": [
         "SOFT-TOOLS-CONTRACT.md",
@@ -96,6 +138,10 @@ TOKEN_REQUIREMENTS = {
 FORBIDDEN_WEAKENING = {
     "content_sprint": [
         "draft Hebrew through `vfcopy/VOICE.md`; use",
+    ],
+    "marketing_embed": [
+        "CTA וואטסאפ",
+        "שלחו DM",
     ],
 }
 
@@ -123,7 +169,7 @@ def main() -> int:
         for token in forbidden:
             if token in body:
                 problems.append(
-                    f"{name} still contains weak VOICE-only route that can bypass the full copy chain: {token!r}"
+                    f"{name} still contains a weakening/legacy route that can bypass current copy policy: {token!r}"
                 )
 
     contract = bodies.get("contract", "")
@@ -139,8 +185,8 @@ def main() -> int:
         return 1
 
     print("SOFT TOOLS PIPELINE: PASS")
-    print("- reader-first -> voice -> velvet-hebrew-copy -> humanizer/lint -> fact gate")
-    print("- content sprint, edit gate, preflight and publish gate all reference the mandatory contract")
+    print("- reader-first -> voice -> marketing aids -> templates -> velvet-hebrew-copy -> humanizer/lint -> fact gate")
+    print("- Cursor rule, content sprint, edit gate, preflight/template and publish gate all reference the mandatory contract")
     print("- copy-version invalidation is fail-closed")
     return 0
 
