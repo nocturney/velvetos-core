@@ -1,22 +1,25 @@
 ---
 name: vf-morning-brief
-description: Build the Velvet Factory morning brief from Calendar and vfops — not from Gmail inbox reads. Send the 07:00 brief via Gmail when ready. Never invent queue hours.
+description: Build the Velvet Factory morning brief from Calendar and vfops — not from Gmail inbox reads. Human-visible brief prose must pass the owner-brief Visible Text Gate before HTML render/send. Never invent queue hours.
 ---
 
 # Morning brief
 
 Use when the user asks for בריף בוקר, morning brief, what is open today, or the lead-seat start.
 
+Human-visible text authority: `constitution/VISIBLE_TEXT.md` → `.cursor/skills/vf-hebrew-copy/SKILL.md`, mode `owner-brief`.
+
 ## Packs and specialists
 
 - Pack: `vfops` (+ `vfbriefux` for layout only)
 - Mention: `@studio-operations` (and `@meeting-notes-specialist` if there is a transcript)
+- Copy quality: `vfcopy` owner-brief mode; `reader-first-he.md` + Humanizer/AI-tells. This is operational writing, **not** Instagram voice.
 - Layout research: `@ux-architect` + Mobbin **only** when the user asks to change the brief format
 
 ## Tools
 
 1. **Google Calendar** — `list_calendars` then `list_events` on `nocturney@gmail.com` for **today** in `Asia/Jerusalem`. Pickup windows and named holds only.
-2. **Gmail — send only for the brief** — render `vfbriefux/MAIL.html`. Prefer `python -m vfops.gmail_brief_send` (HTML file + CID image dir). If MCP only: `create_draft(html)` → `update_draft(attachments)` → `send_message(draftId)` — `docs/SEND-BRIEF-MCP.md`. Never `LOAD_FROM_FILE`. Do not `reply` / `forward` / send to a customer.
+2. **Gmail — send only for the brief** — only after `visible_text_gate: PASS`; render `vfbriefux/MAIL.html`. Prefer `python -m vfops.gmail_brief_send` (HTML file + CID image dir). If MCP only: `create_draft(html)` → `update_draft(attachments)` → `send_message(draftId)` — `docs/SEND-BRIEF-MCP.md`. Never `LOAD_FROM_FILE`. Do not `reply` / `forward` / send to a customer.
 3. **Gmail — inbox read: skip for the brief** — `search_threads` / `in:inbox newer_than:1d` stay available on the desk for `vfconvert`, `vfbooks`, and named threads. **Do not call them to populate the 07:00 brief** — incoming mail is not a work source right now. If the user names a thread, read that thread only.
 4. **Drive** — skip unless the user names a job file or SKU.
 
@@ -28,7 +31,7 @@ Use when the user asks for בריף בוקר, morning brief, what is open today,
 - 🖨️ queue hours — only from slicer / snapshot. If missing: «אין ספירה»
 
 One pipeline reminder: פנייה → שיחה → הצעה → הדפסה → איסוף. Pickup in Sderot only.  
-Tone: agency-grade (`constitution/STUDIO.md` רף סוכנות). Christian reads and sits calmly — no half-finished slots, no «מתי לפרסם?». Slots 06/07 never invent bad news or «רמה נמוכה»; agency gaps stay internal **פער** lines.
+Tone: agency-grade (`constitution/STUDIO.md` רף סוכנות), natural operational Hebrew. Christian should see the decision/status first, not filler. No half-finished slots, no «מתי לפרסם?». Slots 06/07 never invent bad news or «רמה נמוכה»; agency gaps stay internal **פער** lines.
 
 Before filling slots, run `python3 scripts/vfops_loop.py brief --write` so תפעול gets growth/copy/sku/office blocks without pasting from random docs.
 
@@ -42,10 +45,22 @@ If constitution overlays exist (`packages/vfops/hq/BRIEF-SLOTS.md` or `packages/
 
 Organic Growth Decision Pack: `python3 scripts/vf_organic_growth.py brief --write` lands in slot 01/04/07 (`vfbriefux/hq/GROWTH-BRIEF.md`). Approve ≠ publish.
 
-## HTML draft (optional)
+## Visible Text Gate — mandatory before layout lock
 
-Production mail: `render_mail.py` + `MAIL.html` (תצוגה 3). Reference/wireframe: `packages/vfbriefux/hq/brief-email.html` (effective-html). Pipeline/slot companion diagrams: `render_mail.py --diagram pipeline|slots` + `vfbriefux/hq/DIAGRAM-MAKER.md` (not inside Gmail body). During Grok failover, HQ sends `htmlBody` to `nocturney@gmail.com` per `MAIL.md`.
+After the factual slots are assembled and **before** the HTML is considered final:
+
+1. Preserve raw facts/IDs/status/dates/numbers exactly.
+2. Run `reader-first-he.md` in `owner-brief` mode: what Christian needs to know/decide now.
+3. Route AI-authored headings, summaries, explanations and recommendations through `.cursor/skills/vf-hebrew-copy/SKILL.md`.
+4. Run Humanizer/AI-tells + surface-aware lint. It may remove filler; it may not soften a blocker or alter a source value.
+5. Record/retain `visible_text_gate: PASS` for the exact final brief body. Any material prose rewrite requires the gate again.
+
+Literal machine rows/IDs can pass through unchanged; prose that interprets them is in scope.
+
+## HTML draft
+
+Production mail: only after the owner-brief text gate passes, `render_mail.py` + `MAIL.html` (תצוגה 3). Reference/wireframe: `packages/vfbriefux/hq/brief-email.html` (effective-html). Pipeline/slot companion diagrams: `render_mail.py --diagram pipeline|slots` + `vfbriefux/hq/DIAGRAM-MAKER.md` (not inside Gmail body). During Grok failover, HQ sends `htmlBody` to `nocturney@gmail.com` per `MAIL.md`.
 
 ## Harness
 
-Read `AGENTS.md` if this is a new session. Do not invent queue hours to pass the brief. If Calendar read fails twice, escalate with `packages/vfharness/templates/escalation.md`. If Gmail **send** fails twice, use Drive failover for the brief body. Long brief work: optional checkpoint in `packages/vfharness/state/`.
+Read `AGENTS.md` if this is a new session. Do not invent queue hours to pass the brief. Do not claim `visible_text_gate: PASS` without actually running the required stages. If Calendar read fails twice, escalate with `packages/vfharness/templates/escalation.md`. If Gmail **send** fails twice, use Drive failover for the brief body. Long brief work: optional checkpoint in `packages/vfharness/state/`.
