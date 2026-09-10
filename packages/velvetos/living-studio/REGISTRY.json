@@ -36,12 +36,13 @@
         "customer name",
         "requested product",
         "pickup constraint"
-      ]
+      ],
+      "note": "pending_sheet_write honesty: when Sheets write auth is absent, intake may return pending_sheet_write / dirty local cache — never claim Sheet updated"
     },
     {
       "id": "order-state-manager",
       "title": "Order State Manager",
-      "status": "EXISTING_COMPLETE",
+      "status": "EXISTING_PARTIAL",
       "route": [
         "vf_office.py jobs",
         "vfsales/ORDERS.md"
@@ -59,7 +60,8 @@
       ],
       "risk": "green",
       "approval": "red for price change",
-      "success": "canonical stage advanced without invented ₪"
+      "success": "canonical stage advanced without invented ₪",
+      "note": "Sheet write-through requires Sheets API auth (write_pending_provider on Cloud); read path COMPLETE via pull"
     },
     {
       "id": "order-project-coordinator",
@@ -346,7 +348,8 @@
         "office/control/followups.json"
       ],
       "risk": "yellow",
-      "success": "decisions+tasks in canonical SoTs; deadline only if explicit"
+      "success": "decisions+tasks in canonical SoTs; deadline only if explicit",
+      "note": "structured extract gates Decision Journal — no decision phrase ⇒ no route_to_execution"
     },
     {
       "id": "document-to-decision",
