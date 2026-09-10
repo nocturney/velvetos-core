@@ -6,19 +6,34 @@
 שער: **חסום** עד א–ו עבור.
 
 מחיר בפריים/כיתוב: `X ₪` או אין. בלי ₪ מומצא.  
-CTA: לפי `constitution/PUBLIC_CTA.md`: showcase יכול להיות ללא CTA / engagement / הודעת Instagram ניטרלית; commercial משתמש ב־Instagram message. אין WhatsApp.  
-קול: `VOICE.md` + `VOICE-CHART.md`. רובריקה: `CONTENT-RUBRIC.md`.
+CTA: לפי `constitution/PUBLIC_CTA.md`.  
+חוזה קופי: `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`. רובריקה: `CONTENT-RUBRIC.md`.
 
-> Publish contract v2: אישור תוכן כללי או Canva edit אינו אישור לפרסום. השער חייב להיות מחובר ל־**תוצר הסופי המרונדר המדויק**.
+> Publish contract v2: אישור תוכן כללי או Canva edit אינו אישור לפרסום. השער חייב להיות מחובר ל־**תוצר הסופי המרונדר המדויק** ולגרסת הקופי המדויקת שעברה lint.
 
-## א · VOICE.md
+## א · Soft Tools / Copy Gate
 
-- מצב (אחד): תהליך-קצר / סיפור-מוצר
-- public intent: `showcase` / `commercial`
-- כיתוב: `packages/vfcopy/…`
-- הוק חם? כן/לא
-- פתיחת מגבלה / «מוכנים» / «בלי משלוח» / קופי דק? כן=נכשל
-- אם `showcase`: אין «הזמנות», «רוצים אחד כזה/משלכם», מחיר/זמינות של המודל המצולם או ניסוח הצעת מכר.
+```yaml
+reader_first: <reader state / useful point / real proof>
+voice_mode: process-short | product-story
+marketing_aids:
+  copywriting: APPLIED | N/A
+  copy-editing: APPLIED | N/A
+  marketing-psychology: APPLIED | N/A
+template_or_prompt_frame: <path/name>
+copy_path: <packages/vfcopy/...>
+copy_version: <id or digest>
+vfcopy_lint: PASS | FAIL | NEEDS_INPUT
+vfcopy_lint_version: <same copy version/digest>
+fact_gate: PASS | NEEDS_INPUT | FAIL
+visual_copy_decision: TEXT_WINS | NO_TEXT | N/A
+visual_copy_reason: <required for TEXT_WINS>
+```
+
+עובר רק אם הגרסה הסופית עברה בפועל:
+`verified context → reader-first → VOICE + VOICE-CHART + voice/approved → vfmskill writing aids כשיווקי → template → velvet-hebrew-copy → ai-tells-he → check-vfcopy.py lint(actual final copy) → fact gate`.
+
+`VOICE.md` בלבד, Brand Guardian, Rubric או CI/eval אינם תחליף. `NEEDS_INPUT` = חסום. שינוי קופי אחרי lint מבטל PASS ומחייב lint מחדש.
 
 **א:** עבור / נכשל-סגור
 
@@ -36,7 +51,7 @@ CTA: לפי `constitution/PUBLIC_CTA.md`: showcase יכול להיות ללא CT
 | שאלה | כן/לא |
 |---|---|
 | סוכנות יקרה הייתה שולחת כמו שזה? | |
-| העברית על `VOICE.md` + CTA נכון? | |
+| הקופי עבר `SOFT-TOOLS-CONTRACT.md` על הגרסה הסופית? | |
 | הוויזואל עבר `EDIT-GATE.md`? | |
 | 2–3 קומפס כתובים למטה? | |
 
@@ -111,9 +126,9 @@ audio_gate: FAIL | PASS | N/A
 
 כל שדה `PASS` נכתב רק אחרי בדיקה של הייצוא הסופי עצמו. בסטוריז/ריל וידאו גם `audio_gate` חייב להיות `PASS` לפני publish. בסטילס/קרוסלה הוא `N/A`.
 
-**אסור waiver לקריאות/ניגודיות/אודיו שנשכח.** ניסוח כמו «רכה אבל קריאה», «לא חוסם», «מספיק טוב», «יש stream אז סבבה» או אישור על בסיס Canva edit/thumbnail בלבד אינו `PASS`. משנים צבע/רקע/צל/overlay/מיקום/אודיו, מייצאים מחדש, מחשבים `final_package_sha256` חדש ומריצים את השער מחדש.
+**אסור waiver לקריאות/ניגודיות/אודיו שנשכח.** אישור על בסיס Canva edit/thumbnail בלבד אינו `PASS`. משנים, מייצאים מחדש, מחשבים `final_package_sha256` חדש ומריצים את השער מחדש.
 
-שינוי מהותי בכיתוב, בוויזואל או באודיו אחרי אישור → `approval_invalidated: true` ומחזירים שער א–ה + QA final render.
+שינוי מהותי בכיתוב אחרי lint → `vfcopy_lint: FAIL`/invalidated עד lint מחדש. שינוי מהותי בכיתוב, בוויזואל או באודיו אחרי Rubric/PREFLIGHT → `approval_invalidated: true` ומחזירים שער א–ה + QA final render.
 
 **ו:** עבור / נכשל-סגור
 
@@ -126,4 +141,4 @@ audio_gate: FAIL | PASS | N/A
 
 ## שער
 
-`publish_gate: PASS` רק אם א+ב+ג+ד+ה+ו = עבור, ה־Rubric ≥20/25, וה־QA של התוצר הסופי עבר. בווידאו נדרש גם `audio_gate: PASS`. אחרת `publish_gate: BLOCKED` / **נכשל-סגור** — חסום שיבוץ ופרסום.
+`publish_gate: PASS` רק אם א+ב+ג+ד+ה+ו = עבור, `vfcopy_lint: PASS` תואם לגרסת הקופי הסופית, `fact_gate: PASS`, ה־Rubric ≥20/25, וה־QA של התוצר הסופי עבר. בווידאו נדרש גם `audio_gate: PASS`. אחרת `publish_gate: BLOCKED` / **נכשל-סגור**.

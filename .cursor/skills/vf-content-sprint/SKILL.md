@@ -9,7 +9,7 @@ Use the existing office orchestrator only. Never install or simulate a second ru
 
 ## Core flow
 
-1. Read `packages/vfom/FOUNDRY.json`, `CREATIVE-AUTOPILOT.md`, `VISUAL-OS.md`, `VISUAL-DNA.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md` and `FORMAT-GENOMES.md`.
+1. Read `packages/vfom/FOUNDRY.json`, `CREATIVE-AUTOPILOT.md`, `VISUAL-OS.md`, `VISUAL-DNA.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md`, `FORMAT-GENOMES.md` and the mandatory public-copy invariant `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`.
 2. Start from real proof: `packages/vfprod/PRINT-DONE.md` / `print.done`, verified Media Vault item, named product/material/failure, or another evidenced opportunity. No invented floor scene.
 3. Qualify the opportunity. Check novelty/fatigue against existing office-learning/vfinsights history. Archive weak/duplicate opportunities with a reason instead of producing filler.
 4. Read Asset Truth from the canonical Media Vault. Missing `truth` means `unverified` for public factual claims. Build Claim Provenance separately: a real asset does not automatically prove every claim.
@@ -18,9 +18,9 @@ Use the existing office orchestrator only. Never install or simulate a second ru
 7. Invoke `.cursor/skills/velvet-creative-director/SKILL.md` for concept, 3-5 first-frame candidates, format genome, exact shot plan, shot gaps, EDL, overlays and cover directions. Do not ask the owner to choose routine creative options.
 8. Invoke `.cursor/skills/velvet-media-librarian/SKILL.md` to search/classify canonical Media Vault assets and write concrete asset refs, rights notes and exact gaps into the Manifest. If a critical physical shot is missing, stop only that blocked branch as `waiting_for_media`.
 9. Use progressive variants: many cheap concepts/storyboards, fewer rough cuts, at most two full-quality renders by default. Do not spend a final render on an unranked concept.
-10. Build/edit through `EDIT-DIRECTOR.md`; draft Hebrew through `vfcopy/VOICE.md`; use `MOTION-PRESETS.md`; build/select cover through existing Canva/vfcovers paths.
-11. Invoke `.cursor/skills/velvet-brand-guardian/SKILL.md` for deterministic + Brand/Hook/composition/Reality/Originality + subject/reference + artifact checks, feed continuity and repair instructions. Require Visual OS brandScore >=80 + CONTENT-RUBRIC >=20/25 + Content Contract + policy + rights + written PREFLIGHT.
-12. Repair ordinary quality failures automatically and re-run Brand Guardian. Keep repair cycles bounded by `FOUNDRY.json`. Low quality is not an owner gate.
+10. Build/edit through `EDIT-DIRECTOR.md`; every public Hebrew text artifact MUST run the full `packages/vfcopy/SOFT-TOOLS-CONTRACT.md` chain: verified context -> `hq/reader-first-he.md` -> `VOICE.md` + `VOICE-CHART.md` + `voice/approved/` -> relevant template -> `velvet-hebrew-copy` -> `hq/ai-tells-he.md` -> `python3 scripts/check-vfcopy.py lint` on the ACTUAL final copy with verified context -> factual gate -> `TEXT_WINS`/`NO_TEXT` when visual copy applies. `VOICE.md` alone is never sufficient. Use `MOTION-PRESETS.md`; build/select cover through existing Canva/vfcovers paths.
+11. Invoke `.cursor/skills/velvet-brand-guardian/SKILL.md` for deterministic + Brand/Hook/composition/Reality/Originality + subject/reference + artifact checks, feed continuity and repair instructions. Require evidence that the current copy version passed `vfcopy` lint/fact gate, plus Visual OS brandScore >=80 + CONTENT-RUBRIC >=20/25 + Content Contract + policy + rights + written PREFLIGHT. Brand Guardian never substitutes for the copy chain.
+12. Repair ordinary quality failures automatically and re-run the affected gates. Any copy rewrite after lint must be linted again; any material change after rubric/preflight invalidates those passes. Keep repair cycles bounded by `FOUNDRY.json`. Low quality is not an owner gate.
 13. Render relevant derivatives through existing tools only and write real derivative refs back to Media Vault and the Manifest. No second render database.
 14. Use the Exception Queue policy. LOW-risk routine content may proceed under standing authorization; MEDIUM uses the existing approval path when policy requires; HIGH becomes `human_required`.
 15. If `creativeAutonomy.publish.standingAuthorization=true`, LOW-risk routine organic content that passed every gate may be sent through `vfigos` without per-asset approval.
@@ -40,7 +40,7 @@ Use the existing office orchestrator only. Never install or simulate a second ru
 
 - `vfom` — Visual Foundry policy, Creative Manifest, visual constitution and edit vocabulary.
 - `vfmedia` — canonical asset intake/catalog + Asset Truth.
-- `vfcopy` — Hebrew copy/VOICE.
+- `vfcopy` — mandatory `SOFT-TOOLS-CONTRACT.md`: reader-first, voice, Hebrew copy, Humanizer/AI-tells, actual-copy lint and factual gate.
 - `vfcovers` + `vfcanva` — cover/visual production.
 - `vfgrowth` — calendar, rubric, policy, preflight.
 - `vfigos` — real Instagram tool send + verification/failover.

@@ -12,10 +12,11 @@
 
 **אצלנו:**
 
-1. קרא `packages/vfcopy/hq/PLAYBOOK.md`, `hq/reader-first-he.md` (לפני טיוטה), `hq/ai-tells-he.md` (pass אחרון), ו־`DESK.md`.
-2. עברית מדוברת. CTA אחד. וואטסאפ `050-2517000` / איסוף שדרות.
-3. בלי «שלחו DM». בלי ₪ בלי מקור. בלי הבטחת דדליין לפני `vfprod`.
-4. טיוטה ל־`vfcopy`. HQ שולח דרך כלים כשמוכן (`constitution/SEND.md`).
+1. כל קופי ציבורי מתחיל מ־`packages/vfcopy/SOFT-TOOLS-CONTRACT.md`; vfmskill הוא שכבת מתודולוגיה בתוך השרשרת ולא מסלול מקביל.
+2. קרא `packages/vfcopy/hq/PLAYBOOK.md`, `hq/reader-first-he.md` לפני טיוטה, `VOICE.md` + `VOICE-CHART.md` + `voice/approved/`, ואת `hq/ai-tells-he.md` לפני final.
+3. הפעל `copywriting` + `marketing-psychology` בזמן framing/draft ו־`copy-editing` לפני final, ואז העבר דרך `velvet-hebrew-copy` ו־`python3 scripts/check-vfcopy.py lint` על הטקסט הסופי עם context מאומת.
+4. CTA לפי `constitution/PUBLIC_CTA.md`; אין להעתיק CTA מה־vendor. אין ₪ בלי מקור, אין הבטחת זמן בלי verification, אין customer/Insights claim בלי proof.
+5. טיוטה שנכתבה כאן נשארת raw candidate עד שעברה fact gate, CONTENT-RUBRIC ו־PREFLIGHT במסלול הקנוני.
 
 ## 2. תוכן ואינסטגרם — `social` + `content-strategy` + `video` + `image`
 
@@ -24,9 +25,9 @@
 **אצלנו:**
 
 1. חומר רק מעבודה גמורה / קובץ Drive שהמשתמש נקב. חסר הוכחה = חלקי.
-2. ריל: Hook · כיתוב על הסרטון · כיתוב · CTA וואטסאפ.
+2. ריל/סטורי/קרוסלה עוברים דרך `.cursor/skills/vf-content-sprint/SKILL.md`; כל טקסט ציבורי שם כפוף ל־`vfcopy/SOFT-TOOLS-CONTRACT.md`.
 3. כריכה ב־`vfcovers` / `vfcanva`. Superdesign רק אם Canva לא מחובר.
-4. `vfigos` סוקר ומשבץ. **HQ לא שולח.** Grok שולח.
+4. `vfigos` סוקר/שולח רק אחרי gates הקנוניים; אין claim live בלי tool receipt + verification.
 5. בלי TikTok, בוסט, follow-back, או צפיית־סטורי כטריק.
 
 ## 3. פנייה והצעה — `customer-research` + `offers` + `sales-enablement`
@@ -65,6 +66,7 @@
 
 ```bash
 python3 scripts/check-vfmskill.py
+python3 scripts/check-soft-tools-pipeline.py
 ```
 
-אין UI חי. אין דפדפן לאמת שליחה. העקביות היא מול הנעילות והמניפסט.
+אין UI חי. אין דפדפן לאמת שליחה. העקביות היא מול הנעילות, החוקה, ה־manifest וה־copy/preflight evidence.

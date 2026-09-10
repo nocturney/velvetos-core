@@ -1,0 +1,25 @@
+---
+description: 'Mandatory Velvet Factory public-copy pipeline: reader-first, voice, marketing writing aids, Hebrew copy, Humanizer/AI-tells, fact lint, rubric and preflight.'
+globs: ""
+alwaysApply: true
+---
+
+# Velvet public copy — soft tools are pipeline, not references
+
+For Velvet Factory public-facing Hebrew copy, `packages/vfcopy/SOFT-TOOLS-CONTRACT.md` is mandatory.
+
+Do not treat `VOICE.md`, a Brand Guardian pass, a template, a rubric score, or successful lint tests as proof that the actual candidate passed the copy pipeline.
+
+Before any caption, Reel/Story/carousel text, cover/first-frame text, overlay, public bio/profile copy, or other public Hebrew text may advance to `quality_checked`, `ready_for_publish`, PREFLIGHT or publish authorization, run the current text through:
+
+`verified context -> reader-first -> VOICE + VOICE-CHART + voice/approved -> vfmskill copywriting/copy-editing/marketing-psychology when marketing copy is in scope -> relevant template/prompts.chat method -> velvet-hebrew-copy -> ai-tells-he/Humanizer -> check-vfcopy.py lint on the actual final copy -> fact gate -> TEXT_WINS/NO_TEXT when applicable -> CONTENT-RUBRIC -> written PREFLIGHT`.
+
+Rules:
+
+- Unknown fact stays unknown. `needs_input` blocks progression.
+- No invented price, turnaround, print duration, customer/testimonial, shipping, SKU or Insights claim.
+- Copy from ChatGPT, Cursor, Gemini, Perplexity, Canva, Grok, scripts or humans receives the same gate.
+- Any rewrite after lint invalidates the lint pass. Material changes after Rubric/PREFLIGHT invalidate those passes too.
+- Copy produced outside `packages/vfcopy` is raw input until it passes the canonical chain.
+- `vfmskill` and upstream inspirations supply methods only; Velvet constitution/current CTA/voice/truth rules always win.
+- Never duplicate this pipeline in a parallel runtime or new database. Store evidence in the existing content job / manifest / preflight.
