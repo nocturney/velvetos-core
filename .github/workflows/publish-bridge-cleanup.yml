@@ -1,4 +1,4 @@
-name: Publish bridge cleanup
+name: Publish bridge archive
 
 on:
   schedule:
@@ -9,11 +9,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: publish-bridge-cleanup
+  group: publish-bridge-archive
   cancel-in-progress: false
 
 jobs:
-  cleanup:
+  archive:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout core policy/scripts
@@ -29,21 +29,22 @@ jobs:
           fetch-depth: 0
           path: bridge
 
-      - name: Remove expired assets from branch head
+      - name: Archive expired active assets
         run: |
           python3 core/scripts/vf_publish_bridge_cleanup.py \
             --root bridge/publish-bridge/assets \
+            --archive-root bridge/publish-bridge/archive \
             --retention-days 14
 
-      - name: Commit cleanup when needed
+      - name: Commit archive moves when needed
         working-directory: bridge
         run: |
-          if git diff --quiet -- publish-bridge/assets; then
-            echo "No expired bridge assets"
+          if git diff --quiet -- publish-bridge/assets publish-bridge/archive; then
+            echo "No bridge assets ready for archive"
             exit 0
           fi
           git config user.name "VelvetOS Publish Bridge"
           git config user.email "actions@users.noreply.github.com"
-          git add -A publish-bridge/assets
-          git commit -m "publish-bridge: prune expired assets from branch head"
+          git add -A publish-bridge/assets publish-bridge/archive
+          git commit -m "publish-bridge: archive expired active assets"
           git push origin HEAD:publish-bridge
