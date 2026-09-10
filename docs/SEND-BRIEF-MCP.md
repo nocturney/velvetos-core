@@ -39,7 +39,7 @@ PYTHONPATH=packages python -m vfops.gmail_brief_send \
 ```
 ובתיקיית `--images` חייב להיות `reel-g003.jpg`.
 
-בלי `GOOGLE_TOKEN`/ADC הנתיב יוצא 2 ולא מתחזה להצלחה.
+בלי `GOOGLE_TOKEN`/ADC: `no token` ויציאה 2; אין התחזות להצלחה.
 
 ## B · Gmail connector — remote images
 
@@ -60,6 +60,12 @@ PYTHONPATH=packages python -m vfops.gmail_brief_send \
 - asset ציבורי קנוני אחר רק אם הוא באמת שייך לפריט/מקור.
 
 לא משתמשים ב־stock art לא קשור ולא ב־URL פרטי שסביר ש־Gmail image proxy לא יוכל לקרוא.
+
+## תאימות למסלול MCP הישן
+
+המערכת ההיסטורית תיעדה רצף `create_draft` → `update_draft` → `send_message` באמצעות `draftId`. שמות הפעולות נשמרים כאן כדי שאודיט/חיישנים ישנים יבינו את ההיסטוריה, **אבל הרצף הזה אינו מסלול ה־inline המומלץ ב־connector הנוכחי**, משום שסכמת `update_draft` הזמינה כרגע אינה חושפת צירוף inline/Content-ID. אם בעתיד ה־connector יחזיר תמיכה מפורשת ב־inline attachments אפשר יהיה להפעיל את הרצף מחדש לאחר בדיקת capability.
+
+כלל בטיחות היסטורי שנשאר תקף: אין להדביק `LOAD_FROM_FILE` בגוף/HTML — הוא **דולף** כתוכן מילולי ואינו מנגנון טעינת קובץ.
 
 ## Drive פרטי
 
