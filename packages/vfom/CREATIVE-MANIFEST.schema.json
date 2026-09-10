@@ -131,6 +131,37 @@
         }
       }
     },
+    "visualCopy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "noTextCompared", "pipeline", "candidates"],
+      "properties": {
+        "decision": {"enum": ["TEXT_WINS", "NO_TEXT", "NOT_APPLICABLE"]},
+        "selectedText": {"type": "string"},
+        "noTextCompared": {"type": "boolean"},
+        "pipeline": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["text", "result"],
+            "properties": {
+              "text": {"type": "string"},
+              "result": {"enum": ["selected", "rejected", "baseline"]},
+              "reason": {"type": "string"}
+            }
+          }
+        },
+        "ownerPreference": {"type": "string"},
+        "readerFirstNote": {"type": "string"},
+        "humanizerNote": {"type": "string"},
+        "decisionRationale": {"type": "string"}
+      }
+    },
     "cover": {
       "type": "object",
       "additionalProperties": false,
