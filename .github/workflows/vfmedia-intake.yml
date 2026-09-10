@@ -6,7 +6,8 @@ name: VF Media Auto Intake
 # validate (vfmedia.py validate) is NOT this job - it is schema-only.
 #
 # Authentication uses GitHub OIDC -> Google Workload Identity Federation.
-# No long-lived Google JSON key or repository secret is required.
+# The workflow mints a short-lived Drive access token; no long-lived Google
+# JSON key or repository secret is required.
 #
 # Exit codes:
 #   0 OK
@@ -59,31 +60,33 @@ jobs:
         run: pip install --quiet google-api-python-client google-auth
 
       - name: Authenticate to Google Cloud with GitHub OIDC
+        id: auth
         uses: google-github-actions/auth@v2
         with:
           workload_identity_provider: projects/1016876126699/locations/global/workloadIdentityPools/github-actions/providers/velvetos-core
           service_account: velvetos-media-intake@instamcp.iam.gserviceaccount.com
-          create_credentials_file: true
-          export_environment_variables: true
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/drive
+          create_credentials_file: false
 
       - name: Verify federated credentials
         id: creds
+        env:
+          GOOGLE_TOKEN: ${{ steps.auth.outputs.access_token }}
         run: |
           set -e
-          if [ -z "${GOOGLE_APPLICATION_CREDENTIALS:-}" ] || [ ! -f "$GOOGLE_APPLICATION_CREDENTIALS" ]; then
+          if [ -z "${GOOGLE_TOKEN:-}" ]; then
             echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "::error::OIDC authentication did not produce GOOGLE_APPLICATION_CREDENTIALS."
+            echo "::error::OIDC authentication did not mint a Drive access token."
             exit 1
           fi
-          python3 - <<'PY'
-          import google.auth
-          creds, project = google.auth.default(scopes=["https://www.googleapis.com/auth/drive"])
-          print(f"ADC ready; project={project or 'external-account'}; type={type(creds).__name__}")
-          PY
+          echo "OIDC/WIF Drive token minted successfully"
           echo "ready=true" >> "$GITHUB_OUTPUT"
 
       - name: Run intake against Google Drive
         id: intake
+        env:
+          GOOGLE_TOKEN: ${{ steps.auth.outputs.access_token }}
         run: |
           set +e
           EXTRA=""
