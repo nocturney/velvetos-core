@@ -83,7 +83,7 @@ def main() -> None:
     require(
         "packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md",
         (
-            "human-visible AI text",
+            "לכל טקסט אנושי נראה",
             "customer-message",
             "sales-proposal",
             "owner-brief",
@@ -194,8 +194,6 @@ def main() -> None:
     if "surface not in PUBLIC_SURFACES" not in gate:
         fail("surface-aware gate must distinguish public-only lint rules")
 
-    # Visual copy must still route through the creative system rather than becoming
-    # a generic writing-only pass.
     require(
         "packages/vfom/FOUNDRY.json",
         ("visualCopyPolicy", "noTextBaselineRequired", "vf-hebrew-copy", "ai-tells-he.md"),
