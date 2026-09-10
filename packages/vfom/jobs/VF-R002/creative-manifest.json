@@ -42,6 +42,22 @@
     "timeline": []
   },
   "overlays": [],
+  "visualCopy": {
+    "decision": "NO_TEXT",
+    "selectedText": "",
+    "noTextCompared": true,
+    "pipeline": ["reader-first-he", "velvet-hebrew-copy", "ai-tells-he", "owner-preference-lock"],
+    "candidates": [
+      {"text": "", "result": "selected", "reason": "owner-selected; the dragon image itself has enough detail and hierarchy to carry the opening"},
+      {"text": "כל זווית אחרת", "result": "rejected", "reason": "generic and does not add enough over the visible sequence"},
+      {"text": "תתקרבו רגע", "result": "rejected", "reason": "natural but unnecessary"},
+      {"text": "תמונה אחת לא מספיקה", "result": "rejected", "reason": "functional but still feels like copy added to explain carousel behavior"}
+    ],
+    "ownerPreference": "NO_TEXT",
+    "readerFirstNote": "Viewer encounters a dense, sculptural image. The easiest path is to let the visual create curiosity instead of asking the reader to process a headline first.",
+    "humanizerNote": "No-text decision passes because every proposed line either becomes generic or explains what the visual already does.",
+    "decisionRationale": "NO_TEXT wins: text would reduce rather than improve the first-frame impact."
+  },
   "cover": {
     "candidates": [
       {"id": "c0-no-text", "headline": "", "subjectCrop": "IMG_1277 strongest full-bleed 4:5 crop preserving face, wing and silhouette", "textPlacement": "none", "gridRationale": "owner-selected; dense sculptural detail is stronger without an editorial header"},
