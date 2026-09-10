@@ -1,10 +1,10 @@
 {
-  "enabled": true,
-  "requestId": "cid-smoke-2026-09-10-2303",
-  "html": "packages/vfops/out/CID-SMOKE-TEST.html",
+  "enabled": false,
+  "requestId": "bootstrap-disabled",
+  "html": "",
   "images": "",
   "to": "nocturney@gmail.com",
-  "subject": "Velvet Factory — בריף הבוקר · CID Smoke Test",
+  "subject": "",
   "embedRemoteImages": true,
   "remoteImageLimit": 12
 }
