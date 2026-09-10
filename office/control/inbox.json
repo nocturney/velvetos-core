@@ -7,11 +7,11 @@
       {
         "id": "vfmedia-auto-intake",
         "title": "קליטת מדיה אוטומטית — נכנס→מקור",
-        "state": "Blocked",
-        "updatedAt": "2026-09-10T01:02:53Z",
+        "state": "Idle",
+        "updatedAt": "2026-09-10T05:54:41Z",
         "counts": {
-          "registered_only": 396,
-          "verified_and_intaken": 4,
+          "registered_only": 346,
+          "verified_and_intaken": 54,
           "visually_reviewed": 0,
           "pending_moves": 0
         },

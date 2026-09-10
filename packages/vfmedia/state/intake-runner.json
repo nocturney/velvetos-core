@@ -1,25 +1,25 @@
 {
   "name": "vfmedia-intake-runner",
-  "component_state": "Blocked",
-  "updatedAt": "2026-09-10T01:02:53Z",
+  "component_state": "Idle",
+  "updatedAt": "2026-09-10T05:54:41Z",
   "pagination": {
     "pageToken": null,
     "pageSize": 50
   },
-  "catalogDigest": "2eacfabae43b6bf377edd34512500955e270f25bcb479d1053cb8ee40031bf9e",
-  "inboxDigest": "8ce8882b3de16336847bc1ac33f414999ca15772cc35a79a3199e7f6f06f29e1",
-  "lastRunAt": "2026-09-10T01:02:53Z",
-  "lastSuccessAt": "2026-09-08T14:50:25Z",
-  "lastError": "חסר Drive auth לסביבת רקע: אין GOOGLE_APPLICATION_CREDENTIALS / VFMEDIA_DRIVE_CREDENTIALS / GOOGLE_TOKEN / VFMEDIA_DRIVE_TOKEN",
+  "catalogDigest": "ba8ed3a41d7f8aea9a1394370a4d307a94ff4c5b61336f02b2f8daee2f6f7112",
+  "inboxDigest": "38246194d81e8f0348041e0688abc8d9aa2de3021833a34048e31abec62f5757",
+  "lastRunAt": "2026-09-10T05:52:51Z",
+  "lastSuccessAt": "2026-09-10T05:54:41Z",
+  "lastError": null,
   "persistError": null,
   "auth": {
-    "ready": false,
-    "detail": "חסר Drive auth לסביבת רקע: אין GOOGLE_APPLICATION_CREDENTIALS / VFMEDIA_DRIVE_CREDENTIALS / GOOGLE_TOKEN / VFMEDIA_DRIVE_TOKEN"
+    "ready": true,
+    "detail": "provider=google"
   },
   "stats": {
-    "runs": 2,
+    "runs": 3,
     "registered": 1,
-    "verified": 3,
+    "verified": 53,
     "skipped": 0,
     "failed": 0,
     "duplicates": 0,
@@ -46,10 +46,8 @@
   },
   "activation": {
     "proven": true,
-    "evidence": "provider=listing; actions={'pending_move': 1}",
-    "note": "controlled byte path GREEN; scheduled Drive API RED until secrets",
-    "provenAt": "2026-09-08T14:07:28Z",
-    "proven_controlled": true,
-    "proven_scheduled_google": false
+    "evidence": "provider=google; actions={'verified': 50}",
+    "provenAt": "2026-09-10T05:54:41Z",
+    "note": "Drive API live verify+move"
   }
 }
