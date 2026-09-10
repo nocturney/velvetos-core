@@ -17,7 +17,7 @@ SCENARIO = ROOT / "packages" / "vfe2b" / "scenarios" / "content-live.md"
 GATE = ROOT / "packages" / "vfgrowth" / "GATE.md"
 POLICY = ROOT / "constitution" / "ORGANIC_GROWTH.md"
 INSTANCE = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
-SKILL = ROOT / ".cursor" / "skills" / "vf-creative-autopilot" / "SKILL.md"
+SKILL = ROOT / ".cursor" / "skills" / "vf-content-sprint" / "SKILL.md"
 
 
 def fail(msg: str) -> None:
@@ -48,11 +48,11 @@ def main() -> None:
     must_contain(EDIT, ("Edit Decision List", "shotRequest", "hard cut"))
     must_contain(MEDIA_DIRECTOR, ("Creative Director", "Edit Director", "Publishing Director", "standingAuthorization"))
     must_contain(MODULE, ("CREATIVE-AUTOPILOT.md", "VISUAL-OS.md", "EDIT-DIRECTOR.md"))
-    must_contain(CREW, ("waiting_for_media", "published_verified", "Routine hook/cover/cut/caption", "vfigos"))
+    must_contain(CREW, ("waiting_for_media", "published_verified", "PRINT-DONE.md", "vfigos"))
     must_contain(SCENARIO, ("standing authorization", "auto-fix", "receipt + live evidence"))
-    must_contain(GATE, ("authorized_for_tool_publish", "pending_human_approval", "published_verified"))
+    must_contain(GATE, ("authorized_for_tool_publish", "pending_human_approval", "published_verified", "human_marked"))
     must_contain(POLICY, ("Creative Autopilot", "standingAuthorization", "אין ריל כל יום", "posted_manually"))
-    must_contain(SKILL, ("exception-only", "shotRequest", "published_verified"))
+    must_contain(SKILL, ("Creative Autopilot", "shotRequest", "published_verified"))
 
     if not INSTANCE.is_file():
         fail("missing Velvet Factory instance profile")
