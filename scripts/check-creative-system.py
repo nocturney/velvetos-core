@@ -97,7 +97,7 @@ def main() -> None:
 
     schema = load_json(VFOM / "CREATIVE-MANIFEST.schema.json")
     required = set(schema.get("required") or [])
-    needed = {"jobId", "format", "status", "sourceEvidence", "concept", "hook", "shots", "edit", "cover", "qa"}
+    needed = {"jobId", "format", "status", "sourceEvidence", "concept", "hook", "shots", "edit", "visualCopy", "cover", "qa"}
     if not needed.issubset(required):
         fail(f"Creative Manifest required fields missing {sorted(needed - required)}")
     props = schema.get("properties") or {}
