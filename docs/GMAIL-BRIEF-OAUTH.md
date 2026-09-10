@@ -14,9 +14,10 @@
 בפרויקט Google Cloud שבבעלות Christian (כיום `instamcp`):
 
 1. לוודא ש-**Gmail API** פעיל.
-2. OAuth consent screen: אם האפליקציה במצב Testing, להוסיף `nocturney@gmail.com` כ-test user.
-3. ליצור OAuth Client מסוג **Desktop app**. אין צורך ב-client מסוג Web.
-4. להוריד את קובץ ה-client JSON למחשב מהימן. הקובץ הוא סוד; לא להעלות לריפו/צ'אט.
+2. להגדיר OAuth consent עבור החשבון `nocturney@gmail.com`.
+3. **לשימוש קבוע:** לא להשאיר את OAuth app ב-`Testing`. Google מגבילה refresh tokens של אפליקציות External במצב Testing לכ-7 ימים. להעביר ל-`In production` לפני שמכריזים על המסלול כ-production. בהתאם להגדרות החשבון/scope, Google עשויה להציג אזהרת unverified או לדרוש verification; אנחנו מבקשים רק את scope המינימלי `gmail.send`.
+4. ליצור OAuth Client מסוג **Desktop app**. אין צורך ב-client מסוג Web.
+5. להוריד את קובץ ה-client JSON למחשב מהימן. הקובץ הוא סוד; לא להעלות לריפו/צ'אט.
 
 ## יצירת refresh token
 
