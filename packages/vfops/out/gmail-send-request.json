@@ -1,10 +1,10 @@
 {
-  "enabled": false,
-  "requestId": "bootstrap-disabled",
-  "html": "",
+  "enabled": true,
+  "requestId": "v10-3-outlook-responsive-acceptance-2026-09-10",
+  "html": "packages/vfops/out/FULL-DUMMY-BRIEF-V10.3-RESPONSIVE.html",
   "images": "",
   "to": "nocturney@gmail.com",
-  "subject": "",
+  "subject": "Velvet Factory — V10.3 · בדיקת Outlook Responsive",
   "embedRemoteImages": true,
   "remoteImageLimit": 12
 }
