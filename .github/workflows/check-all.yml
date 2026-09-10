@@ -11,14 +11,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+      - name: Living README contract
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="${{ github.event.pull_request.base.sha }}"
+          HEAD="${{ github.event.pull_request.head.sha }}"
+          CHANGED="$(git diff --name-only "$BASE" "$HEAD")"
+
+          if printf '%s\n' "$CHANGED" | grep -Eq '^(packages/|office/|scripts/|\.github/workflows/|constitution/)'; then
+            if ! printf '%s\n' "$CHANGED" | grep -qx 'README.md'; then
+              echo '::error::Capability/runtime files changed without README.md. VelvetOS uses a living README; update the capability/status map in this PR or narrow the change to a documented exemption.'
+              echo 'Changed capability-sensitive files:'
+              printf '%s\n' "$CHANGED" | grep -E '^(packages/|office/|scripts/|\.github/workflows/|constitution/)' || true
+              exit 1
+            fi
+          fi
+
       - name: Run all VelvetOS sensors
         run: python3 scripts/check-all.py
+
       - name: Commission isolation (non-mutating SoT checksum)
         run: python3 scripts/check-commission-isolation.py
+
       - name: Fail build on sensor error
         if: failure()
-        run: echo "::error::One or more check-*.py sensors failed. See log above." && exit 1
+        run: echo "::error::One or more VelvetOS contract checks failed. See log above." && exit 1
