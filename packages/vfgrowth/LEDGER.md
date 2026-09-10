@@ -20,6 +20,18 @@
 | `instagram.com/p/Dci5EyuoWVJ/` | Image | ARCHIVE_PENDING_MANUAL |
 | `instagram.com/p/Dci0aRzIO1F/` | Image | ARCHIVE_PENDING_MANUAL |
 
+## Historical identity map — audit only
+
+הטבלה נשמרת כדי לשמר lineage עבור sensors/Insights. היא **לא** תור פרסום פעיל.
+
+| מזהה היסטורי | ראיה/shortcode | מצב היסטורי | מצב reset |
+|---|---|---|---|
+| **G001** | `DcqkjOLlYVX` | Reel #1 | historical learning · archive pending |
+| **G002** | `DcvuJLxCJgU` | Reel #2 | historical learning · archive pending |
+| **G005** | `Dc0cKegEbxd` | Carousel | historical learning · archive pending |
+| **G003** | `DdAPhozlNe2` · **SoccerBall** | היה `משובץ` היסטורית | **חסום** מכל reuse ללא qualification חדש |
+| **G004** | מחזיק טבעות לזמן אימון | מועמד/פרסום היסטורי | stale · **חסום** מכל reuse אוטומטי |
+
 ## תור חדש
 
 | מזהה | פורמט | תפקיד | Media evidence | Creative direction | מצב |
