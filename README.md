@@ -13,19 +13,40 @@
 
 ---
 
-## Operational Snapshot · תמונת מצב
+## System Pulse · דופק המערכת
 
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
 <tr>
-<td align="center"><strong>22</strong><br><sub>Skills · יכולות Living Studio</sub></td>
-<td align="center"><strong>39</strong><br><sub>Sensors · חיישני חוזה</sub></td>
-<td align="center"><strong>7</strong><br><sub>Workflows · אוטומציות GitHub</sub></td>
-<td align="center"><strong>31</strong><br><sub>Packs · חבילות מערכת</sub></td>
+<td align="center"><strong>HEALTHY</strong><br><sub>System Health · בריאות מערכת</sub></td>
+<td align="center"><strong>4</strong><br><sub>Live/Bound Paths · נתיבים חיים/מחוברים</sub></td>
+<td align="center"><strong>2</strong><br><sub>Gated Actions · פעולות מבוקרות</sub></td>
+<td align="center"><strong>0</strong><br><sub>Needs Attention · דורש טיפול</sub></td>
+</tr>
+<tr>
+<td align="center"><strong>22</strong><br><sub>Living Studio Skills · יכולות</sub></td>
+<td align="center"><strong>39</strong><br><sub>Sensors · חיישנים</sub></td>
+<td align="center"><strong>7</strong><br><sub>Workflows · אוטומציות</sub></td>
+<td align="center"><strong>31</strong><br><sub>Packs · חבילות</sub></td>
 </tr>
 </table>
 
-> **System posture · מצב מערכת:** capability claims are evidence-based; provider-dependent actions remain gated/fail-closed unless live-verified. · הצהרות יכולת נשענות על ראיות; פעולות תלויות ספק נשארות מבוקרות/סגורות-בטוח עד אימות חי.
+| Pulse | Current committed evidence |
+|---|---|
+| **Instagram MCP** | LIVE / VERIFIED |
+| **Instagram Insights** | LIVE / VERIFIED |
+| **Media Intake / Drive** | LIVE / VERIFIED |
+| **Jobs source of truth** | Google Sheet bound |
+| **Waiting work** | 1 |
+| **Owner blocked** | 0 |
+| **Degraded tools** | 0 |
+| **Last verified / refreshed evidence** | `2026-09-10T10:17:35Z` |
+
+**What changed · מה השתנה:** Office Control Plane מוטמע · followups=1 · dead_letters=0
+
+**Latest implementation change · שינוי הטמעה אחרון:** 2026-09-10 — **Jobs Sheet write-through harden:** bindings `sheetName=Untitled` (fail-closed, no guessed `jobs` tab); pre-write remote digest concurrency guard → conflict without mutation; behavioral tests in `check-vf-office.py`.
+
+> **Pulse contract · חוזה הפולס:** this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”. · הבלוק מציג את הראיות האחרונות שנשמרו בריפו; הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.
 <!-- OPERATIONAL-SNAPSHOT:END -->
 
 <p align="center">
@@ -36,14 +57,39 @@
 
 # עברית
 
-## מה זה VelvetOS
+## מה זה VelvetOS — בפשטות
 
-VelvetOS הוא כבר לא "backend kernel" בלבד. זהו **מערך ההפעלה של המשרד והעסק**: מקורות אמת, זיכרון עסקי, Intake, ניהול עבודות, אוטומציות, Skills, חיישנים, בקרה, תוכן, מדיה, תפעול, אינטגרציות ונתיבי failover — עם הבחנה ברורה בין מה שקיים בקוד, מה מאומת חי ומה עדיין דורש אישור או ספק חיצוני.
+**VelvetOS היא שכבת ניהול והפעלה לעסק שמחברת בין אנשים, AI, מידע, כלים ותהליכים — והופכת אותם למערכת אחת שיודעת להבין מה קורה, להחליט מה השלב הבא, לבצע מה שמותר לה לבצע, ולבקש אישור כשצריך.**
+
+במקום שהעסק יתפזר בין שיחות, גיליונות, קבצים, אינסטגרם, תזכורות, כלי AI והרבה ידע שנשאר בראש של אנשים, VelvetOS נותנת לכל אלה מבנה משותף. פנייה יכולה להפוך לעבודה; עבודה יכולה לעבור לתכנון ייצור; תמונה מהשטח יכולה להיכנס למאגר המדיה ולהפוך לחומר לתוכן; נתוני ביצועים יכולים לחזור למערכת כלמידה; והכול נשען על מקורות אמת ברורים ועל היסטוריה שאפשר לבדוק.
+
+המטרה אינה להחליף בני אדם באוטומציה עיוורת. המטרה היא **להוריד עבודה מכנית, למנוע טעויות, לשמור הקשר, לחבר בין חלקי העסק ולהשאיר החלטות רגישות בידיים הנכונות**. לכן כל כלי ויכולת מקבלים גבולות: מה מותר לבצע לבד, מה דורש אישור, מה רק מציע, ומה אסור למערכת להמציא או להניח.
+
+### איך זה עובד
+
+VelvetOS פועלת כמו משרד דיגיטלי עם כמה שכבות שעובדות יחד: היא קולטת מידע ואירועים, מעדכנת מקורות אמת, בונה תמונת מצב, מפעילה Skills ו־handlers ייעודיים, מריצה חיישנים שבודקים שהחוזים נשמרים, ומייצרת תוצרים או פעולות בהתאם לרמת הסיכון. מעל הכול נמצא Control Plane שמוודא שהעבודה מתקדמת בלי ליצור מערכות כפולות ובלי לאבד את ההקשר העסקי.
+
+המערכת בנויה כך ש־**אוטומציה אינה שווה סמכות מלאה**. קריאה, ניתוח, סיווג, הכנת טיוטה או סנכרון בטוח יכולים להיות אוטונומיים; מחיר, פרסום, מחיקה או פעולה בלתי הפיכה יכולים להישאר מאחורי gate. אם ספק חיצוני לא זמין או שאין הוכחה שהפעולה הצליחה, VelvetOS אמורה לדווח על זה כפי שהוא — לא להעמיד פנים שהכול עבד.
+
+### למה היא בנויה כך
+
+- **מקור אמת אחד לכל תחום** — כדי שאותו לקוח, job או asset לא יקבל כמה גרסאות סותרות.
+- **Evidence before confidence** — יכולת נחשבת חיה רק כשהיא מגובה בראיה, sensor או אימות provider.
+- **Fail-closed במקום ניחוש** — כשלא יודעים, עוצרים או מסמנים `needs_sync` / `needs_input`; לא ממציאים.
+- **Human-in-the-loop איפה שיש משמעות אמיתית** — מערכת טובה חוסכת החלטות קטנות, לא גונבת החלטות גדולות.
+- **למידה מהעבודה עצמה** — אירועים, תוצאות, תוכן, failures ו־Insights חוזרים למערכת ומשפרים את ההחלטה הבאה.
+- **יכולת להתרחב בלי לבנות הכול מחדש** — ה־Core, החוקים וה־patterns נועדו לאפשר בעתיד Offices/עסקים נוספים עם זהות ותהליכים משלהם, בלי לשכפל את הליבה.
+
+### כמוצר
+
+אפשר לחשוב על VelvetOS כעל **Business Operating System עם AI מובנה**: לא עוד chatbot שעונה על שאלות, ולא רק אוסף אוטומציות. זו שכבה מתמשכת שיושבת מעל כלי העסק הקיימים, זוכרת את המבנה והחוקים, מחברת בין אירועים, מפעילה מומחים לפי צורך, שומרת על גבולות סמכות ומספקת תמונת מצב אמינה לבעלים ולצוות.
+
+היום המופע הפעיל הוא **Velvet Factory**, סטודיו להדפסות תלת־ממד בשדרות. הכיוון קדימה הוא מערכת שניתן יהיה להצמיד לעסקים נוספים: אותו מנוע עקרונות, בקרה ואוטומציה — עם tenant, workflows, integrations ו־policies שמתאימים לכל עסק.
 
 **Tenant פעיל:** Velvet Factory · שדרות  
 **ערוצים פעילים:** Instagram `@velvets_cloud` · WhatsApp `050-2517000` · איסוף עצמי בשדרות
 
-### שלוש שכבות
+## המבנה הטכני בקצרה
 
 | שכבה | תפקיד |
 |---|---|
@@ -117,7 +163,7 @@ VelvetOS הוא כבר לא "backend kernel" בלבד. זהו **מערך ההפ�
 
 ה־README הוא חלק מהמוצר. שינוי מהותי ב־`packages/`, `office/`, `scripts/`, `.github/workflows/` או `constitution/` מחייב עדכון README באותו PR, אלא אם מדובר בשינוי פנימי שאינו משנה capability.
 
-ה־Operational Snapshot למעלה **נוצר מנתוני הריפו עצמו**. להרצה ידנית:
+ה־System Pulse למעלה **נוצר מנתוני הריפו עצמו**. להרצה ידנית:
 
 ```bash
 python3 scripts/update-readme-snapshot.py
@@ -130,14 +176,39 @@ python3 scripts/update-readme-snapshot.py --check
 
 # English
 
-## What VelvetOS is
+## What VelvetOS is — in plain language
 
-VelvetOS is no longer only a backend kernel. It is the **operating layer for the office and the business**: sources of truth, business memory, intake, job state, automations, skills, sensors, control planes, content/media pipelines, external integrations and governed failover.
+**VelvetOS is a business operating layer that connects people, AI, information, tools and workflows into one system that can understand what is happening, determine the next step, execute what it is allowed to execute, and ask for approval when human judgment matters.**
+
+Instead of letting the business fragment across chats, spreadsheets, files, Instagram, reminders, AI tools and knowledge trapped in people's heads, VelvetOS gives those parts a shared operating model. An inquiry can become a job; a job can move into production planning; media from real work can enter the media vault and become content material; performance data can return as learning; and every important transition can remain tied to a canonical source and auditable evidence.
+
+The goal is not blind automation or replacing people. It is to **remove mechanical work, reduce mistakes, preserve context, connect the business end-to-end and keep consequential decisions with the right person**. Every capability therefore has an authority boundary: what can run autonomously, what requires approval, what may only recommend, and what the system is never allowed to invent or assume.
+
+### How it works
+
+VelvetOS behaves like a digital office made of cooperating layers. It ingests information and events, updates canonical sources, builds an operational picture, routes work to specialized skills and handlers, runs sensors that verify contracts, and produces outputs or actions according to risk. A Control Plane sits across those workflows so new automation extends the existing operating model instead of creating disconnected mini-systems.
+
+The system deliberately separates **automation from authority**. Reading, classification, analysis, safe synchronization and draft generation can be autonomous; pricing, publishing, deletion or irreversible actions can remain gated. When a provider is unavailable or success cannot be proven, VelvetOS is expected to say so rather than report fictional completion.
+
+### Why it is designed this way
+
+- **One canonical source per domain** — customers, jobs and assets should not develop competing versions of truth.
+- **Evidence before confidence** — a capability is treated as live only when backed by a sensor, receipt or provider verification.
+- **Fail closed instead of guessing** — unknown state becomes `needs_sync` / `needs_input`, not fabricated certainty.
+- **Human-in-the-loop where consequences matter** — remove repetitive decisions without stealing important ones.
+- **Learn from real work** — outcomes, failures, content performance and operational signals feed the next decision.
+- **Scale without rebuilding the system** — Core laws and patterns are intended to support additional business Offices with their own tenants, workflows, integrations and policies.
+
+### As a product
+
+VelvetOS can be understood as a **Business Operating System with AI built into the operating model**. It is not merely a chatbot and not merely a collection of automations. It is a persistent layer above the tools a business already uses: it understands the structure and rules, connects events across systems, invokes specialists when needed, preserves authority boundaries and gives owners and teams a reliable operational picture.
+
+The active deployment today is **Velvet Factory**, a 3D-printing studio in Sderot. The direction forward is a reusable operating layer that can support additional businesses: the same Core principles, governance and automation patterns, with each business receiving its own tenant identity, workflows, integrations and policy boundaries.
 
 **Active tenant:** Velvet Factory · Sderot  
 **Active channels:** Instagram `@velvets_cloud` · WhatsApp `050-2517000` · local pickup in Sderot
 
-### Three layers
+## Technical shape at a glance
 
 | Layer | Role |
 |---|---|
@@ -195,7 +266,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 
 This README is part of the product. Material capability/runtime changes must update it in the same PR.
 
-The Operational Snapshot above is generated from repository sources:
+The System Pulse above is generated from repository sources:
 
 ```bash
 python3 scripts/update-readme-snapshot.py
