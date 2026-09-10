@@ -18,7 +18,7 @@ Packs: `vfcopy`, `vfcovers`, `vfigos`, `vfgrowth`, `vfom`, `vfmedia`.
 
 ## Run
 
-1. Start from real opportunity: `print.done`, verified media intake, product/material/failure evidence. No invented floor scene.
+1. Start from real opportunity: `packages/vfprod/PRINT-DONE.md` / `print.done`, verified media intake, product/material/failure evidence. No invented floor scene.
 2. Run Creative Director from `vfom/CREATIVE-AUTOPILOT.md` + `VISUAL-OS.md`: choose concept + best first frame + shot list autonomously.
 3. If critical physical footage is missing, emit a minimal `shotRequest` and mark `waiting_for_media`. Do not ask broad creative questions.
 4. Classify existing assets through Media Vault vocabulary and build EDL from `EDIT-DIRECTOR.md`.
