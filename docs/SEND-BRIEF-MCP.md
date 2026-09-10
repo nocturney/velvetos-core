@@ -1,70 +1,113 @@
-# שליחת בריף דרך Gmail MCP — פיצול ל־3 קריאות
+# שליחת Brief V6 — תמונות בתוך הכרטיסים
 
-GrokBot Gmail MCP **לא מצליח** להעביר ~98KB `htmlBody` + JPEG inline ב־**קריאת כלי אחת**.  
-סמני `LOAD_FROM_FILE` דולפים לגוף המייל — **אסור** לשים אותם ב־`htmlBody` / `content`.
+בריף משרד אל `nocturney@gmail.com` בלבד. אין ₪/Insights מומצאים ואין טענה ש־attachment הוא inline.
 
-אין ₪ מומצא. אין דיוור המוני. בריף משרד אל `nocturney@gmail.com` בלבד.
+## עיקרון
 
-## מסלול מועדף על הראנר — CLI (קובץ, לא ארגומנט MCP)
+Brief V6 דורש תמונות **בתוך** כרטיסי media/research/content. יש שני מסלולים תקינים:
 
-כשיש `GOOGLE_TOKEN` או ADC על הראנר:
+1. **CID אמיתי — מועדף כשיש runner עם Gmail token/ADC**
+2. **HTTPS image URL אמיתי בתוך HTML — מועדף דרך Gmail connector**
+
+attachment רגיל הוא fallback תצוגה בלבד ואינו נחשב עמידה בדרישת inline.
+
+## A · Runner CLI — CID `multipart/related`
+
+מודול: `packages/vfops/gmail_brief_send.py`.
 
 ```bash
 PYTHONPATH=packages python -m vfops.gmail_brief_send \
-  --html PATH --images DIR --to EMAIL --subject TEXT
+  --html PATH \
+  --images DIR \
+  --to nocturney@gmail.com \
+  --subject "Velvet Factory — בריף הבוקר | YYYY-MM-DD"
 ```
 
-Same module: `python3 -m vfops.gmail_brief_send` (HQ runners).
+המודול:
+- קורא HTML ותמונות מהדיסק.
+- בונה MIME `multipart/related`.
+- כל filename הופך ל־Content-ID.
+- HTML מפנה ל־`cid:<filename>`.
+- `Content-Disposition: inline`.
+- שולח הודעה אחת ב־Gmail API.
 
-- קורא HTML + תמונות מהדיסק (אין גבול ארגומנט MCP)
-- בונה MIME `multipart/related` — `filename` = Content-ID (`cid:g001.jpg` ↔ `g001.jpg`)
-- שולח **הודעה אחת** ב־Gmail API
-- מדפיס את מזהה ההודעה
-- בלי טוקן: מדפיס `no token` ויוצא `2`
+דוגמה:
+```html
+<a href="https://www.instagram.com/reel/.../">
+  <img src="cid:reel-g003.jpg" alt="G003" width="108">
+</a>
+```
+ובתיקיית `--images` חייב להיות `reel-g003.jpg`.
 
-מודול: `packages/vfops/gmail_brief_send.py`.  
-חוזה ויזואלי: `packages/vfbriefux/MAIL.md`.
+בלי `GOOGLE_TOKEN`/ADC: `no token` ויציאה 2; אין התחזות להצלחה.
 
-## עקיפת MCP — 3 צעדים (כשאין CLI / יש MCP בלבד)
+## B · Gmail connector — remote images
 
-אל תקראו `send_message` עם `htmlBody` **וגם** `attachments` באותה קריאה.  
-אל תדביקו `LOAD_FROM_FILE` בשום שדה.
+ה־Gmail connector הנוכחי מקבל `html_body` ו־`attachment_files`, אך אינו חושף flag של `inline`/`Content-ID` למצורף. לכן אין להשתמש במצורף רגיל כדי לטעון שהתמונה יושבת בכרטיס.
 
-### 1) `create_draft` — HTML בלבד
+דרך connector משתמשים ב־HTTPS URL אמיתי בתוך `<img>`:
 
-- `to`: `["nocturney@gmail.com"]`
-- `subject`: נושא הבריף
-- `htmlBody`: תוכן הקובץ ש־`render_mail.py` יצר (תצוגה 3)
-- `body`: טקסט חלופי קצר (בלי `LOAD_FROM_FILE`)
-- **בלי** `attachments`
+```html
+<a href="SOURCE_OR_PERMALINK">
+  <img src="REAL_HTTPS_THUMBNAIL" alt="..." width="108"
+       style="display:block;border:0;border-radius:10px;width:108px;max-width:100%;height:auto">
+</a>
+```
 
-שמרו את `id` של הטיוטה (`draftId`).
+מקורות מותרים:
+- Instagram `thumbnail_url`/`media_url` שהוחזרו בזמן אמת מ־VelvetOS Instagram.
+- hero/OG/preview image ציבורי מאותו מקור מחקר.
+- asset ציבורי קנוני אחר רק אם הוא באמת שייך לפריט/מקור.
 
-### 2) `update_draft` — מצורפים בלבד
+לא משתמשים ב־stock art לא קשור ולא ב־URL פרטי שסביר ש־Gmail image proxy לא יוכל לקרוא.
 
-- `draftId`: מזהה הצעד הקודם
-- `attachments`: כריכות inline בלבד
-  - `content`: base64 של הקובץ
-  - `filename`: ה־cid כמו ב־HTML (למשל `g001.jpg`)
-  - `inline`: `true`
-  - `mimeType`: `image/jpeg`
-- **אל תעבירו** `htmlBody` / `body` / `subject` / `to` — מיזוג: שדה ריק מוחק HTML
-- אזהרה: מצורפים **לא** מתמזגים; רשימה ריקה מוחקת מצורפים קיימים. העבירו את **כל** הכריכות כאן
+## תאימות למסלול MCP הישן
 
-### 3) `send_message` — לפי טיוטה
+המערכת ההיסטורית תיעדה רצף `create_draft` → `update_draft` → `send_message` באמצעות `draftId`. שמות הפעולות נשמרים כאן כדי שאודיט/חיישנים ישנים יבינו את ההיסטוריה, **אבל הרצף הזה אינו מסלול ה־inline המומלץ ב־connector הנוכחי**, משום שסכמת `update_draft` הזמינה כרגע אינה חושפת צירוף inline/Content-ID. אם בעתיד ה־connector יחזיר תמיכה מפורשת ב־inline attachments אפשר יהיה להפעיל את הרצף מחדש לאחר בדיקת capability.
 
-- `draftId`: אותו מזהה
-- **בלי** `htmlBody` / `attachments` / `to` / `subject` — הטיוטה נשלחת כמו שהיא
+כלל בטיחות היסטורי שנשאר תקף: אין להדביק `LOAD_FROM_FILE` בגוף/HTML — הוא **דולף** כתוכן מילולי ואינו מנגנון טעינת קובץ.
 
-אחרי שליחה: רושמים את מזהה ההודעה. `#נשלח-מ-HQ`. לא טוענים שעלה לפיד.
+## Drive פרטי
 
-## מתי מה
+ל־Drive asset פרטי:
+- אם runner יכול להוריד את הקובץ → CID דרך מסלול A.
+- אם אין CID → כרטיס מציג `preview unavailable` + קישור Drive אמיתי. אפשר לצרף את הקובץ בנוסף, אבל לא לקרוא לו inline.
+- אסור להפוך מדיה פרטית לציבורית רק כדי להציג thumbnail במייל.
 
-| מצב | מה עושים |
-|---|---|
-| יש `GOOGLE_TOKEN` / ADC | CLI למעלה |
-| יש Gmail MCP, HTML+JPEG גדול מדי לקריאה אחת | 3 הצעדים |
-| MCP down | Drive `create_file` + ממשיכים · לא ממציאים פנייה |
-| אין טוקן על הראנר | CLI יוצא `2` · לא שולחים מה־VM |
+## Research preview card
 
-`LOAD_FROM_FILE` אינו פתרון. הוא דולף.
+כל finding שמופיע בבריף כולל:
+- `source_title`
+- `source_domain`
+- `source_date`
+- `source_url`
+- `thumbnail_url` אם נמצא preview אמין מאותו מקור
+- finding קצר
+- `מה עושים עם זה`
+
+התמונה והכפתור `למקור ↗` שניהם לחיצים לאותו source URL.
+
+## Instagram preview card
+
+הבריף מבצע live probe ומציג:
+- thumbnail אמיתי
+- permalink
+- media type
+- timestamp
+- reach/views/interactions/saves/shares רק אם Meta החזירה אותם
+
+## Mobile / email safety
+
+- HTML table-based + inline CSS.
+- `alt` לכל `<img>`; המסר חייב להישאר מובן גם כשהתמונות חסומות.
+- width/height או width מפורש לתמונות כדי למנוע מתיחה בלקוחות מייל.
+- CTA/קישורים גדולים ונוחים למגע.
+- אין מידע קריטי שנמצא רק בתוך תמונה.
+
+## אסור
+
+- `LOAD_FROM_FILE` בתוך גוף המייל.
+- base64 data-URI בתוך `<img>` כתחליף ל־CID.
+- attachment + טענה שהוא inline.
+- URL זמני/לא קשור בלי fallback טקסט.
+- פרסום/DM/boost כתוצאה משליחת הבריף.
