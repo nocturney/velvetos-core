@@ -1,0 +1,68 @@
+{
+  "jobId": "VF-R002",
+  "format": "carousel",
+  "status": "storyboarded",
+  "sourceEvidence": [
+    "drive:143MrZsroIcyh4DZqYLq1-iEFAY9Bd8KD:IMG_1277.HEIC:4032x3024",
+    "drive:1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi:IMG_1278.HEIC:4032x3024",
+    "drive:1NW2nOJucAEEiIovlqm49uzNmNDbfn08k:IMG_1280.HEIC:4032x3024",
+    "drive:1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ:IMG_1281.HEIC:4032x3024"
+  ],
+  "concept": {
+    "coreIdea": "Use four genuinely different views of the same finished dragon sculpture so each swipe reveals a new detail instead of repeating the same catalogue angle.",
+    "emotion": "dark tactile curiosity",
+    "formatGenome": "PRODUCT_DETAIL_SEQUENCE",
+    "objective": "turn product detail into saves/shares and a clear sense of Velvet visual identity",
+    "audience": "people who notice sculptural detail, fantasy forms and unusual 3D-printed display pieces"
+  },
+  "hook": {
+    "candidates": [
+      {"id": "h1", "visual": "tight three-quarter dragon view with face, wing and textured base visible", "text": "כל זווית מגלה משהו אחר", "reason": "promises a swipe payoff that the four real angles can fulfill"},
+      {"id": "h2", "visual": "close detail on head and wing", "text": "הפרטים הם כל הסיפור", "reason": "clear but more generic"},
+      {"id": "h3", "visual": "close crop on scales and face", "text": "תתקרבו רגע", "reason": "short invitation to inspect detail"},
+      {"id": "h4", "visual": "full sculpture with circular body/base", "text": "תמונה אחת לא מספיקה", "reason": "supports carousel behavior without inventing a physical claim"}
+    ],
+    "selected": "h1"
+  },
+  "shots": {
+    "plan": [
+      {"assetRef": "drive:143MrZsroIcyh4DZqYLq1-iEFAY9Bd8KD", "shotType": "hero", "orientation": "horizontal", "angle": "front three-quarter", "distance": "close", "action": "portrait crop preserving head, wing and circular body/base", "targetDurationSec": 0, "proof": "real finished sculpture and dense visible surface detail"},
+      {"assetRef": "drive:1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi", "shotType": "proof", "orientation": "horizontal", "angle": "wider front three-quarter", "distance": "medium", "action": "show the complete curled silhouette and relationship to the base", "targetDurationSec": 0, "proof": "overall geometry from a second real angle"},
+      {"assetRef": "drive:1NW2nOJucAEEiIovlqm49uzNmNDbfn08k", "shotType": "macro", "orientation": "horizontal", "angle": "left/front detail", "distance": "close", "action": "emphasize face, horn/scales and layered surface texture", "targetDurationSec": 0, "proof": "real visible detail"},
+      {"assetRef": "drive:1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ", "shotType": "hero", "orientation": "horizontal", "angle": "wider side/front", "distance": "medium", "action": "finish with a clean full-object view", "targetDurationSec": 0, "proof": "full real object from another angle"}
+    ],
+    "missing": []
+  },
+  "edit": {
+    "durationTargetSec": 0,
+    "audioStrategy": "not_applicable for carousel",
+    "timeline": []
+  },
+  "overlays": [
+    {"id": "ov1", "text": "כל זווית מגלה משהו אחר", "placement": "first-slide upper safe zone with high-contrast deterministic backing if needed", "accent": "זווית"}
+  ],
+  "cover": {
+    "candidates": [
+      {"id": "c1", "headline": "כל זווית אחרת", "subjectCrop": "IMG_1277 tight 4:5 crop preserving face + wing", "textPlacement": "upper-left safe zone", "gridRationale": "strong face/wing silhouette and a clear swipe promise"},
+      {"id": "c2", "headline": "תתקרבו רגע", "subjectCrop": "IMG_1280 close crop on face and scales", "textPlacement": "upper-right safe zone", "gridRationale": "macro-first direction adds texture variety to the reset grid"},
+      {"id": "c3", "headline": "הפרטים", "subjectCrop": "IMG_1278 wider full-object crop", "textPlacement": "top center", "gridRationale": "minimal type lets the sculpture dominate at grid size"}
+    ],
+    "selected": "c1"
+  },
+  "qa": {
+    "brandScore": 0,
+    "hookScore": 0,
+    "realityScore": 0,
+    "originalityScore": 0,
+    "artifactScore": 0,
+    "deterministicChecks": {"state": "not_run", "reason": "portrait crops and exact final slides do not exist yet"},
+    "failures": ["Exact 1080x1350 crops, overlay readability, rights and Brand Guardian review have not run."],
+    "repairs": []
+  },
+  "feed": {
+    "continuityDecision": "provisional-pass",
+    "reasoning": "provides a dark sculptural multi-angle carousel between two motion-led Reels; final first-slide crop must avoid looking like the old generic product catalogue posts."
+  },
+  "derivativeRefs": [],
+  "rightsNotes": ["Possession/source location is not rights approval. Public-release rights must be documented before media_ready/publish."]
+}
