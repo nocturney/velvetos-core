@@ -18,10 +18,11 @@ BUILD: (no app binary — the catalog is the product)
 TEST: python3 scripts/check-all.py
 LINT: python3 scripts/check-hq-overlay.py && python3 scripts/check-vf-desk.py && python3 scripts/check-velvetos.py
 
-Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `constitution/ORGANIC_GROWTH.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`, `docs/AUTONOMY-TOOLS.md`, `docs/FAILOVER.md`, `docs/SHARED-WORK-COORDINATION.md`, `docs/MEDIA-VAULT.md`.
+Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `constitution/VISIBLE_TEXT.md`, `constitution/ORGANIC_GROWTH.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`, `docs/AUTONOMY-TOOLS.md`, `docs/FAILOVER.md`, `docs/SHARED-WORK-COORDINATION.md`, `docs/MEDIA-VAULT.md`.
 
 ## RULES
 
+- **Visible Text Gate is global:** any prose/microcopy an AI creates or rewrites and Christian, a customer, the public, a partner, or another human will read is not final until the relevant `constitution/VISIBLE_TEXT.md` chain actually ran. Route through `vfcopy`; select the real surface (`public-social`, `visual-microcopy`, `customer-message`, `sales-proposal`, `owner-brief`, `human-document`, `ui-microcopy`, `desk`), use reader-first + relevant domain/writing tools + Humanizer/AI-tells + factual/surface QA, and bind PASS to the exact text/version when the surface has an artifact/digest. Do not humanize verbatim source, IDs, hashes, URLs, code, raw logs or machine payloads. CI/skill existence is not a candidate receipt; unproven execution = `UNPROVEN`, not PASS.
 - HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot to press Send/Publish. Grok Bot is optional backup.
 - Gmail: `send_message` / `reply` / `forward` are **allowed** for office mail and named inquiry threads. No blast list. No invented ₪. Office 07:00 brief is תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`).
 - Instagram `@velvets_cloud`: send via a connected publish tool; if none, failover **same turn** to Canva + Drive `create_file` + Gmail (`vfigos/SEND.md`). Do not idle. Do not claim the feed posted if it did not.
@@ -76,6 +77,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - 2026-09-07 — Renamed `velvetos-core` into a nervous-system / event-bus runtime, or promised zero-touch inquiry→close on ₪ / WhatsApp. Core stays **Kernel** (catalog + contracts); Edge is optional host; Office/HQ owns decisions; human gates stay. Embed: `packages/velvetos/ADR-THREE-LAYERS.md` + `LAYERS.md` + `schema/events.catalog.json` + `component_state` + Degraded Mode + `vf_retro_signals.py`. Sensor: `scripts/check-velvetos.py` + `scripts/check-vfharness.py` + `scripts/check-vfops-loop.py`.
 - 2026-09-07 — Treated logo/QR/napkins as a closed B2B catalog of three products. Those were **examples**. B2B as a line stays locked until the lead seat opens it; HQ must not invent a three-SKU B2B shelf. Sensor: `scripts/check-velvetos.py`.
 - 2026-09-07 — Built an Instagram bot (auto-post / auto-DM / poll→Print / treating WhatsApp as certain conversion). Core is a **content factory + experiments + measurement + 07:00 approval pack**. Human posts; conversion closes on WhatsApp by a human. Embed: `constitution/ORGANIC_GROWTH.md`. Sensor: `scripts/check-organic-growth.py`.
+- 2026-09-11 — Surfaced AI-authored owner/customer/public prose as “final” merely because a skill or lint existed. Human-visible prose must follow `constitution/VISIBLE_TEXT.md`; relevant tools must actually run on the candidate, and exact artifact text must carry/derive a real gate receipt. Literal source values stay literal. Sensor: `scripts/check-visible-text-gate.py`.
 
 ## SENSORS (run after changes)
 
@@ -102,6 +104,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
 | `scripts/check-velvetos.py` | VelvetOS Core + modules; VF frontend scaffold under instances/; backend≠frontend; B2B examples ≠ closed three-SKU catalog |
 | `scripts/check-vfmedia.py` | Shared media vault — one catalog, locked Drive folder IDs, upload≠approve, approved folder ≠ proof, no invented SKUs/₪, no share-permission changes |
+| `scripts/check-visible-text-gate.py` | Visible Text Gate — global human-facing routes, surface-aware validator, owner/customer/public wiring; static wiring only, not a candidate execution receipt |
 
 Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
 
