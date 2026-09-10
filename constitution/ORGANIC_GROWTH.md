@@ -1,63 +1,80 @@
 # Organic Growth Control Plane
 
-מושב: **צמיחה** על פקים קיימים (`vfgrowth` · `vfprod` · `vfcopy` · `vfcanva` · `vfbriefux` · `vfinsights` · `vfsales` · `vfops`).  
+מושב: **צמיחה** על פקים קיימים (`vfgrowth` · `vfprod` · `vfcopy` · `vfcanva` · `vfbriefux` · `vfinsights` · `vfsales` · `vfops` · `vfom` · `vfigos`).  
 לא פק חדש. לא בוט אינסטגרם. לא runtime שני.
 
-VelvetOS Core מייצר **תוכן, ניסויים, מדידה והמלצות**.  
-בריף 07:00 מביא לראש הצוות חבילת **מאושרת־מוכנה** — לא פרסום חי.
+ה־Control Plane מייצר **הזדמנויות תוכן, תוכן, QA, ניסויים, מדידה והמלצות**. הוא אינו Publish API בעצמו. שליחה בפועל שייכת ל־`vfigos` דרך כלי מחובר ובהתאם להרשאת ה־instance.
 
 ## עיקרון
 
-| שלב | Core עושה אוטונומית | נשאר אנושי |
+| שלב | המשרד עושה אוטונומית | נשאר אנושי רק כשנדרש |
 |---|---|---|
-| לכידת מדיה | קורא `print.done` אמיתי, בודק איכות, מסווג | צילום חריג / השלמת וידאו |
-| יצירת תוכן | טיוטת Reel / Story / כיתוב / האשטגים / תעודה | אישור, עריכה, שינוי מסר |
-| פרסום | קובץ / קישור / מסך העתקה + שעה מהלוח הקבוע | העלאה ל־`@velvets_cloud` |
-| קהילה | מציע סקר → Work Order `pending_ops` | פרסום הסקר + אישור ביצוע מבחן |
-| המרה | ייחוס **הסתברותי** לחשיפה↔פניית הודעת Instagram | מענה, תמחור, סגירה |
+| לכידת מדיה | קורא `print.done`/media אמיתי, בודק ומסווג | צילום/סטייג'ינג פיזי שחסר |
+| קריאייטיב | concept, Hook, shot list, EDL, cover, caption, QA | אין בחירת Hook/cover שגרתית |
+| פרסום | מעביר ל־`vfigos`; standing authorization מאפשר tool publish | ללא standing authorization או שער חוקי/עסקי |
+| קהילה | טיוטות/Work Order `pending_ops` | פעולה חיצונית חריגה |
+| המרה | ייחוס הסתברותי | תמחור/סגירה/WhatsApp ללקוח |
 
-אירוע רצפה = `print.done` (לא ניחוש מ־G-code). כינוי בטיוטות: `print_completed`.
+אירוע רצפה = `print.done` (לא ניחוש מ־G-code). חסר צילום אמיתי = `waiting_for_media` + `shotRequest` מדויק.
 
 ## שער מצבים
 
-```
+```text
 draft
-  → quality_checked
-  → policy_checked
-  → pending_human_approval
-  → approved_for_manual_posting
-  → posted_manually
-  → performance_imported
-  → attributed
-  → learned
+  -> quality_checked
+  -> policy_checked
+  -> pending_publish_authorization
+      -> authorized_for_tool_publish   (standing authorization)
+      -> approved_for_manual_posting   (legacy / human path)
+  -> published_verified | posted_manually
+  -> performance_imported
+  -> attributed
+  -> learned
 ```
 
-- **אישור** משנה רק ל־`approved_for_manual_posting`. לא מפרסם.
-- Core **לא** מעביר `pending_human_approval` → `posted_manually`. רק אדם מסמן אחרי העלאה ב־instagram.com.
-- בלי מדיה איכותית: אין Reel מומצא. בבריף: «אין Reel איכותי אוטומטי… נדרשים 15 שניות צילום ידני».
-- לוח קבוע ב־`vfgrowth/CALENDAR.md` מנצח: ריל א׳/ג׳ 16:00 · סטוריז א׳–ה׳ 20:30 · אין פיד ו׳–ש׳ · **אין ריל כל יום עבודה**.
+`posted_manually` נשמר כתאימות למסלול שבו אדם העלה ידנית. במסלול כלי, הצלחה היא `published_verified` ורק עם receipt + verification evidence.
+
+## Creative Autopilot
+
+מקור: `packages/vfom/CREATIVE-AUTOPILOT.md` · `VISUAL-OS.md` · `EDIT-DIRECTOR.md`.
+
+- החלטות קריאטיביות שגרתיות מבוצעות אוטונומית.
+- כשל איכות חוזר לתיקון פנימי; לא לבעלים.
+- Visual OS brandScore >=80 + `CONTENT-RUBRIC >=20/25` + policy + written PREFLIGHT + rights הם תנאי מעבר.
+- אם `creativeAutonomy.publish.standingAuthorization=true` בפרופיל ה־instance, תוכן שגרתי שעבר את כל השערים רשאי לעבור ל־`vfigos` בלי אישור נכס נוסף.
+- אין publish tool/receipt/verification -> failover כנה; לא לטעון “פורסם”.
+
+## Human Required
+
+- צילום/סטייג'ינג פיזי שחסר.
+- זכויות לקוח/מדיה, private CAD או זהות לקוח שאינן ברורות.
+- מחיר, רכישה, Boost/Ads או הוצאה.
+- הצעת מחיר/התחייבות עסקית או customer WhatsApp send.
+- Print from HQ.
+- תיוג משתמש בלי opt-in.
+- חסם קשיח אחרי failover מתועד.
 
 ## מותר
 
 - קליטת סטטוס הדפסה ומדיה אחרי `print.done`.
-- טיוטות Reels / Stories / Covers / כיתובי `vfcopy`.
-- כרטיס הנדסי + סט האשטגים (`hashtag_set_id`) + 1–2 גיאוטגים.
-- ניתוח Insights **מיובאים** (סנאפשוט / CSV). חסר = «אין ספירה».
+- טיוטות Reels / Stories / Covers / כיתובים והאשטגים.
+- בחירה אוטונומית של Hook/cover/edit/slot בתוך הלוח הקבוע.
+- tool publish דרך `vfigos` אם standing authorization פעיל וכל השערים עברו.
+- ניתוח Insights **מיובאים** בלבד; חסר = «אין ספירה».
 - סקרי קהילה כטיוטה; Work Order פנימי `pending_ops`.
-- משימות רצפה למפעיל; בריף 07:00 עם [אישור] [עריכה] [דחייה].
-- סימון `approved_for_manual_posting`.
+- `approved_for_manual_posting` במסלול legacy שבו אדם בוחר לפרסם ידנית.
 
 ## אסור
 
-- פרסום אוטומטי באינסטגרם (ה־Control Plane לא קורא Publish API).
-- DM / תגובה / Follow / Like / unfollow אוטומטיים.
-- רכישת עוקבים, מעורבות או חשיפה.
-- מודעות, Boost, קמפיין ממומן בלי ראש צוות.
-- תיוג משתמשים בלי opt-in + אישור אדם.
-- הצעת מחיר או תשובת וואטסאפ אוטומטית ללקוח.
+- שה־Control Plane עצמו יהפוך ל־Instagram bot או יקרא Publish API ישירות.
+- auto-DM / `send_dm`, תגובה, Follow/Like/unfollow אוטומטיים.
+- רכישת עוקבים/מעורבות.
+- Boost/Ads בלי ראש צוות.
+- תיוג משתמשים בלי opt-in.
+- הצעת מחיר או customer WhatsApp send אוטומטי.
 - הצגת ייחוס הסתברותי כאמת מוחלטת.
-- פרסום תצלום לקוח / שם / CAD / מידע עסקי בלי אישור.
-- סקר→Print מ־HQ. Work Order ≠ הדפסה.
+- פרסום תצלום לקוח / שם / CAD / מידע עסקי בלי אישור זכויות ברור.
+- סקר->Print מ־HQ. Work Order ≠ הדפסה.
 - המצאת ₪ / Insights / סצנת רצפה / חוזק/חום בלי מקור.
 
 ## CTA
@@ -65,38 +82,26 @@ draft
 **PUBLIC_CURRENT_CTA** = הודעת Instagram בלבד (`@velvets_cloud`).  
 ברירת מחדל: «לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם».  
 אסור בתוכן ציבורי: וואטסאפ / `050-2517000` / `wa.me` / «הזמנות בוואטסאפ».  
-אוטו־DM / `send_dm` נשאר נעול לנצח.  
-רשומת עסק פנימית (BUSINESS_CONTACT_RECORD): `050-2517000` — לא CTA ציבורי.  
-מקור: `constitution/PUBLIC_CTA.md`.
+BUSINESS_CONTACT_RECORD: `050-2517000` פנימי בלבד. אוטו־DM נשאר נעול.
 
-קוד מקור אופציונלי שהאדם כותב כשהוא פונה בהודעה: `REEL` / `STORY` / `MATERIAL` / `B2B` — לא הודעת בוט.
+## לוח
+
+`vfgrowth/CALENDAR.md` מנצח. **אין ריל כל יום**; אין cadence מומצא. Feed Architect רשאי לבחור רק בין משבצות מותרות קיימות.
 
 ## מדידה
 
-שלוש רמות ב־`vfinsights/ATTRIBUTION.md` + `vfsales/ORDERS.md`.  
-`estimated_value_ils` / `closed_value_ils` נשארים `null` עד אימות אדם.  
-ציון תוכן — רק ממספרים מיובאים; אחרת «אין ספירה».
+`vfinsights/ATTRIBUTION.md` + `vfsales/ORDERS.md`.  
+`estimated_value_ils` / `closed_value_ils` נשארים `null` עד אימות אדם. חסר מספר אמיתי = «אין ספירה».
 
 ## CLI
 
-```
+```text
 python3 scripts/vf_organic_growth.py brief [--write]
 python3 scripts/vf_organic_growth.py policy
 python3 scripts/vf_organic_growth.py queue
 python3 scripts/vf_organic_growth.py score
 ```
 
-בריף 07:00: `vfops_loop.py brief` מושך את ה־Decision Pack. שליחת המייל — `SEND.md` (Gmail). הבריף **לא** מפרסם IG.
+בריף 07:00 הוא read model/exception surface. כש־Creative Autopilot פעיל הוא לא מבקש אישור על החלטות קריאטיביות שגרתיות; הוא מציג רק `human_required` אמיתי.
 
-## פקים
-
-| שכבה | פק | קובץ |
-|---|---|---|
-| מדיניות | constitution | זה |
-| מפעל תוכן | vfgrowth | `ORGANIC-GROWTH.md` · `GATE.md` · `HASHTAGS.md` · `COMMUNITY.md` |
-| רצפה | vfprod | `PRINT-DONE.md` · `CLAIMS.md` |
-| כיתוב | vfcopy | `hq/templates/organic-reel.md` |
-| בריף | vfbriefux | `hq/GROWTH-BRIEF.md` |
-| ייחוס | vfinsights + vfsales | `ATTRIBUTION.md` · `ORDERS.md` |
-
-סנסור: `scripts/check-organic-growth.py`.
+סנסורים: `scripts/check-organic-growth.py` + `scripts/check-creative-autopilot.py`.
