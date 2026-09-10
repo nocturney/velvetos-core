@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 VFOM = ROOT / "packages" / "vfom"
 INSTANCE = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
 CONTENT_SPRINT = ROOT / ".cursor" / "skills" / "vf-content-sprint" / "SKILL.md"
+IG_MUSIC_SKILL = ROOT / ".cursor" / "skills" / "vf-ig-music" / "SKILL.md"
+MUSIC_PLAYBOOK = ROOT / "packages" / "vfresearch" / "MUSIC.md"
 SPECIALISTS = {
     "creativeDirector": ROOT / ".cursor" / "skills" / "velvet-creative-director" / "SKILL.md",
     "brandGuardian": ROOT / ".cursor" / "skills" / "velvet-brand-guardian" / "SKILL.md",
@@ -53,6 +55,23 @@ def main() -> None:
     if manifest_policy.get("notASecondStateMachine") is not True or manifest_policy.get("notAMediaCatalog") is not True:
         fail("Creative Manifest must not become a second state machine/catalog")
 
+    audio = foundry.get("audioPolicy") or {}
+    if audio.get("requiredForVideo") is not True:
+        fail("FOUNDRY audioPolicy.requiredForVideo must be true")
+    if audio.get("defaultSilence") != "fail" or audio.get("nearSilent") != "fail":
+        fail("FOUNDRY must fail accidental silence and near-silence")
+    if audio.get("intentionalSilenceRequiresReason") is not True:
+        fail("intentional silence must require a documented reason")
+    required_audio_checks = {"stream_presence", "loudness", "sync", "story_fit"}
+    if not required_audio_checks.issubset(set(audio.get("checks") or [])):
+        fail("FOUNDRY audioPolicy missing required audio checks")
+    if audio.get("skill") != ".cursor/skills/vf-ig-music/SKILL.md":
+        fail("FOUNDRY audioPolicy must bind vf-ig-music skill")
+
+    rights = foundry.get("rightsPolicy") or {}
+    if rights.get("modelLicenseDefault") != "not-a-showcase-publish-gate":
+        fail("showcase model-license policy must not be a blanket publish gate")
+
     schema = load_json(VFOM / "CREATIVE-MANIFEST.schema.json")
     required = set(schema.get("required") or [])
     needed = {"jobId", "format", "status", "sourceEvidence", "concept", "hook", "shots", "edit", "cover", "qa"}
@@ -65,6 +84,9 @@ def main() -> None:
 
     must_contain(VFOM / "MOTION-PRESETS.md", ("VELVET_HARD_CUT", "VELVET_PROOF_FREEZE", "VELVET_STRESS_SLOWMO"))
     must_contain(VFOM / "FORMAT-GENOMES.md", ("PROOF_UNDER_PRESSURE", "FAIL_FIX_PROVE", "PROBLEM_TO_PART"))
+    must_contain(VFOM / "VISUAL-OS.md", ("## Audio Gate", "near-silence", "vf-ig-music", "אינו gate רישיון-מודל אוטומטי"))
+    must_contain(IG_MUSIC_SKILL, ("Instagram music researcher", "MUSIC.md"))
+    must_contain(MUSIC_PLAYBOOK, ("## Audio Gate", "audio_repair", "stream presence", "loudness"))
 
     must_contain(CONTENT_SPRINT, ("Creative Manifest", "velvet-creative-director", "velvet-brand-guardian", "velvet-media-librarian"))
     must_contain(SPECIALISTS["creativeDirector"], ("first-frame", "shotRequest", "EDL", "Creative Manifest"))
@@ -100,7 +122,7 @@ def main() -> None:
         if specialists.get(key) != value or foundry_specialists.get(key) != value:
             fail(f"specialist binding mismatch for {key}")
 
-    print("OK creative-system manifest specialists motion-genomes bound")
+    print("OK creative-system manifest specialists motion-genomes audio-gate bound")
 
 
 if __name__ == "__main__":
