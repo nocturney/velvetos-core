@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-10 — **best-skills bi-daily**: dataDate **2026-09-09** — הטמעת obra `executing-plans` → `vfharness/playbooks/executing-plans.md`; רישום `writing-plans` ב־BEST-SKILLS.json. ארטיפקט `sources/2026-09-10-best-skills.md`. MemPalace/TDD ל־watch. בלי npx / runtime שני.
+
 - 2026-09-09 — **Living Studio capability unification:** שכבת חיבור על SoTs קיימים — `packages/velvetos/living-studio/` (REGISTRY 22 Skills) · CLI `vf_living_studio.py` (World Model / Signal Room / Studio Pulse / Universal Intake / Invisible Work / Failure Museum / Lab / Opportunity / Commercial QA / Content Universe / Work-to-Story / commission) · סנסור `check-living-studio.py`. הועבר ייחודי מ־#138: vfmedia intake (real bytes, persist-before-move, checksum, backoff, GHA `*/5`) + `writing-plans.md`. Insights #146 **verified live** (`deployed=true`). #141 superseded. בלי SoT מקביל / בלי autopost / בלי ₪ מומצא. Living Studio connective tissue; reuse Control Plane + packs.
 
 - 2026-09-09 — **Instagram MCP Insights follow-up (post-#145):** `get_media_insights` defaults media-type-aware; media uses Graph `saved` (not account `saves`). `get_account_insights` partitions by official period — `days_28` + `follower_count`/`profile_views`/engagement returns reach + structured `period_incompatible` partials (no fabricated 28-day totals). Regression tests for live ChatGPT failures. בלי auth/token/publish/DM. **Live smoke EXPECT_FIXED=1 PASS** on Cloud Run (2026-09-09 verification). Media/period Insights compat live.

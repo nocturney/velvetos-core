@@ -88,6 +88,7 @@ packages/vfharness/state/<task-id>/task_plan.md
 ## קשר
 
 - `playbooks/brainstorm-gate.md` — אישור לפני תוכנית
+- `playbooks/executing-plans.md` — ביצוע התוכנית משימה-משימה
 - `playbooks/skillstate.md` — \(P,\Sigma,O\) לכל צעד ארוך
 - `playbooks/systematic-debugging.md` — כשהתוכנית נשברת על באג
 - `playbooks/verification-before-claim.md` — לפני «סיימתי»

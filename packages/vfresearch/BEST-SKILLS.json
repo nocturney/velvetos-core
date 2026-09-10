@@ -40,8 +40,8 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-07",
-  "dataDate": "2026-09-07",
+  "lastPass": "2026-09-10",
+  "dataDate": "2026-09-09",
   "embedded": [
     {
       "id": "grill-me",
@@ -144,13 +144,30 @@
       "path": "packages/vfsales/scripts/vf_quote_ladder.py",
       "firstEmbedded": "2026-09-07",
       "note": "Graceful escalation ladder for partial quotes; never invents ₪"
+    },
+    {
+      "id": "writing-plans",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/writing-plans.md",
+      "firstEmbedded": "2026-09-08",
+      "deepened": "2026-09-10",
+      "source": "https://github.com/obra/superpowers/tree/main/skills/writing-plans",
+      "note": "On disk from prior pass; registered in state 2026-09-10. Plans under vfharness/state."
+    },
+    {
+      "id": "executing-plans",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/executing-plans.md",
+      "firstEmbedded": "2026-09-10",
+      "source": "https://github.com/obra/superpowers/tree/main/skills/executing-plans",
+      "note": "One task + verify; stop on blocker; no subagent/runtime-two"
     }
   ],
   "watchlist": [
     {
       "id": "obra-superpowers",
       "url": "https://github.com/obra/superpowers",
-      "note": "Partial+: verification + skill-first + brainstorm-gate + systematic-debugging. Still watch writing-plans / TDD / git-worktrees."
+      "note": "Partial+: verification + skill-first + brainstorm + writing-plans + executing-plans + systematic-debugging. Still watch TDD / git-worktrees / code-review."
     },
     {
       "id": "mattpocock-skills",
@@ -184,7 +201,7 @@
     {
       "id": "openspec",
       "url": "https://github.com/Fission-AI/OpenSpec",
-      "note": "Spec-driven development. Overlaps planning-with-files — watch before second SDD layer."
+      "note": "Top-repos ~#18 on 2026-09-09. Spec-driven — overlaps planning-with-files + writing/executing-plans; watch before second SDD layer."
     },
     {
       "id": "impeccable",
@@ -199,12 +216,12 @@
     {
       "id": "ponytail",
       "url": "https://github.com/DietrichGebert/ponytail",
-      "note": "YAGNI agent skills — watch; overlaps minimal-change / harness thrift. · also listed as dietrich-ponytail on #106"
+      "note": "top-repos #5 2026-09-09. YAGNI — writing-plans YAGNI section covers thrift partially; no npm."
     },
     {
       "id": "caveman",
       "url": "https://github.com/JuliusBrussee/caveman",
-      "note": "Token thrift meme skill — watch; context-thrift already covers CCR."
+      "note": "best-100 #98 + top-repos #10. Token thrift meme — context-thrift covers CCR; watch only, no install."
     },
     {
       "id": "diagram-design",
@@ -220,6 +237,16 @@
       "id": "dietrich-ponytail",
       "url": "https://github.com/DietrichGebert/ponytail",
       "note": "Top-repos #6 2026-09-07 — agent skills collection. Watch before any embed; no npx."
+    },
+    {
+      "id": "mempalace",
+      "url": "https://github.com/MemPalace/mempalace",
+      "note": "Top-repos ~#22 2026-09-09. Agent memory palace — watch vs vfmem; no second memory runtime."
+    },
+    {
+      "id": "tdd-obra",
+      "url": "https://github.com/obra/superpowers/tree/main/skills/test-driven-development",
+      "note": "mattpocock tdd + obra TDD still strong in rankings. Map later to sensor-first harness; verification-before-claim already covers claims."
     }
   ],
   "skipped": [
@@ -254,6 +281,10 @@
     {
       "id": "google-agents-cli",
       "why": "Vendor CLI scaffold/deploy outside VF Cloud mandate"
+    },
+    {
+      "id": "azure-skills-block",
+      "why": "Azure skill flood in 09-08/09 rankings — not VF office domain"
     }
   ]
 }
