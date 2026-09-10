@@ -2986,7 +2986,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0666.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -2994,6 +2994,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:24Z",
+        "verifiedAt": "2026-09-10T20:08:26Z",
+        "downloadBytes": 1504210,
+        "movedToSourceAt": "2026-09-10T20:08:26Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:84e7110c613ed1f969efd530c06883ed7982dcce080a06041d07b0449cfc46bc",
+        "md5Checksum": "e1c8b630a14c45a350f136e0af1531d8",
+        "sha256Checksum": "84e7110c613ed1f969efd530c06883ed7982dcce080a06041d07b0449cfc46bc",
+        "headRevisionId": "0B_YIZLrmyOz4bnhpNldzNE8zTndxSGVRemVYdHFmVVNzbmdFPQ",
+        "moveStartedAt": "2026-09-10T20:08:25Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3005,7 +3024,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0683.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3013,6 +3032,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:22Z",
+        "verifiedAt": "2026-09-10T20:08:24Z",
+        "downloadBytes": 1582257,
+        "movedToSourceAt": "2026-09-10T20:08:24Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:372aafd8c383b93bca72d1b668ee9dbe910729c76e29f6ebb2e0cb9d2fcf5aba",
+        "md5Checksum": "2d43886eb3e5655b36edf2393d09dcf1",
+        "sha256Checksum": "372aafd8c383b93bca72d1b668ee9dbe910729c76e29f6ebb2e0cb9d2fcf5aba",
+        "headRevisionId": "0B_YIZLrmyOz4dTNpcmNDWWJtZC8zeTdGKzFnN2V1WmxnNW5ZPQ",
+        "moveStartedAt": "2026-09-10T20:08:22Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3024,7 +3062,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0675.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3032,6 +3070,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:20Z",
+        "verifiedAt": "2026-09-10T20:08:22Z",
+        "downloadBytes": 1469271,
+        "movedToSourceAt": "2026-09-10T20:08:22Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:c09901607ae9701b40bf03c893be32f758cb58f305a6d53a623e132ed1dbe9e7",
+        "md5Checksum": "d7b87a0ad35ef290bf8d59e3bf4c77dd",
+        "sha256Checksum": "c09901607ae9701b40bf03c893be32f758cb58f305a6d53a623e132ed1dbe9e7",
+        "headRevisionId": "0B_YIZLrmyOz4ejFZSjVORlBoU1RQM2dXUWFUTVlQVjZkTVhVPQ",
+        "moveStartedAt": "2026-09-10T20:08:20Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3043,7 +3100,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0684.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3051,6 +3108,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:17Z",
+        "verifiedAt": "2026-09-10T20:08:20Z",
+        "downloadBytes": 1855853,
+        "movedToSourceAt": "2026-09-10T20:08:20Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:2e1f45c2fd7f4c45a839f3d31dd20f5789c54dd9392bbeb9c1c1c824599cd8bb",
+        "md5Checksum": "1f173e78608364ae2cda47edd5933bdc",
+        "sha256Checksum": "2e1f45c2fd7f4c45a839f3d31dd20f5789c54dd9392bbeb9c1c1c824599cd8bb",
+        "headRevisionId": "0B_YIZLrmyOz4TXhlLzZUdDVBN1dNNCs5MGorK2JkendOcDJVPQ",
+        "moveStartedAt": "2026-09-10T20:08:18Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3062,7 +3138,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0685.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3070,6 +3146,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:13Z",
+        "verifiedAt": "2026-09-10T20:08:17Z",
+        "downloadBytes": 1436131,
+        "movedToSourceAt": "2026-09-10T20:08:17Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:62961e895b8316c6e1ee647ec3e837eead7de681199c011328ee3a7e1a11c593",
+        "md5Checksum": "9d071289cc3af125dab5c2afc2d52c80",
+        "sha256Checksum": "62961e895b8316c6e1ee647ec3e837eead7de681199c011328ee3a7e1a11c593",
+        "headRevisionId": "0B_YIZLrmyOz4QVBiMEcrb3RDUlNLZXlDOURLd2JCcmRVbWVBPQ",
+        "moveStartedAt": "2026-09-10T20:08:14Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3081,7 +3176,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0681.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3089,6 +3184,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:11Z",
+        "verifiedAt": "2026-09-10T20:08:13Z",
+        "downloadBytes": 1716883,
+        "movedToSourceAt": "2026-09-10T20:08:13Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:f52b8f62ce1e11f47bed7b79f72842618d9db76c6413ab5e2f6944dea4ab44a3",
+        "md5Checksum": "e992bff7c37fd372c179f22f4120e327",
+        "sha256Checksum": "f52b8f62ce1e11f47bed7b79f72842618d9db76c6413ab5e2f6944dea4ab44a3",
+        "headRevisionId": "0B_YIZLrmyOz4cHhzZ0FxWmluVzZaUDZBYWpscE9Pc0lhUjRzPQ",
+        "moveStartedAt": "2026-09-10T20:08:12Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3100,7 +3214,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0686.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3108,6 +3222,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:09Z",
+        "verifiedAt": "2026-09-10T20:08:11Z",
+        "downloadBytes": 1504213,
+        "movedToSourceAt": "2026-09-10T20:08:11Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:4058b4aaa1245e69a06a6184872e3b3baf86e8b0ee1a64f48595e0e1aa878109",
+        "md5Checksum": "53ef67e9561271980f02e31dd8e9f997",
+        "sha256Checksum": "4058b4aaa1245e69a06a6184872e3b3baf86e8b0ee1a64f48595e0e1aa878109",
+        "headRevisionId": "0B_YIZLrmyOz4T3BteGx6Z0Y1WGhMZ3hzZWs4QXVVWkRSM01rPQ",
+        "moveStartedAt": "2026-09-10T20:08:10Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3119,7 +3252,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0688.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3127,6 +3260,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:07Z",
+        "verifiedAt": "2026-09-10T20:08:09Z",
+        "downloadBytes": 1670214,
+        "movedToSourceAt": "2026-09-10T20:08:09Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:c15d2cfbcb522b2ef6ee865337f387f8e8ac500317a40a563011f53d34f77154",
+        "md5Checksum": "dd322883a1bf8a23a2c31e9df75388df",
+        "sha256Checksum": "c15d2cfbcb522b2ef6ee865337f387f8e8ac500317a40a563011f53d34f77154",
+        "headRevisionId": "0B_YIZLrmyOz4cmpWaHp2RjY2b2F5U1loWTJCeHRIeHMrK1FBPQ",
+        "moveStartedAt": "2026-09-10T20:08:08Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3138,7 +3290,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0689.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3146,6 +3298,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:05Z",
+        "verifiedAt": "2026-09-10T20:08:07Z",
+        "downloadBytes": 1278978,
+        "movedToSourceAt": "2026-09-10T20:08:07Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:9c180bdf9df673e19b7168e0de23965ddf74423f3e6e82a71321e0d018e863cc",
+        "md5Checksum": "bc34c64d88b8633cc15875574304db32",
+        "sha256Checksum": "9c180bdf9df673e19b7168e0de23965ddf74423f3e6e82a71321e0d018e863cc",
+        "headRevisionId": "0B_YIZLrmyOz4UW9QbHlJRWRUdEQvQ0ZTN29FUkpDMUlMZno4PQ",
+        "moveStartedAt": "2026-09-10T20:08:06Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3157,7 +3328,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0687.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3165,6 +3336,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:03Z",
+        "verifiedAt": "2026-09-10T20:08:05Z",
+        "downloadBytes": 1585149,
+        "movedToSourceAt": "2026-09-10T20:08:05Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:f65c61389379027e4e627b3c5c9e9b8d722513e70f77e4a341d3f6b63eb7af7d",
+        "md5Checksum": "ce0ef63d6a067565494eae84399b72d4",
+        "sha256Checksum": "f65c61389379027e4e627b3c5c9e9b8d722513e70f77e4a341d3f6b63eb7af7d",
+        "headRevisionId": "0B_YIZLrmyOz4TTNoUUtzUW12a1B2My9FTjEwbjl3LzNLajNZPQ",
+        "moveStartedAt": "2026-09-10T20:08:04Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3176,7 +3366,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0678.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3184,6 +3374,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:08:01Z",
+        "verifiedAt": "2026-09-10T20:08:03Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:08:03Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:e5a381c99b10899f8daf864b643b072799d69a22c3082bc8509713bf4414d552",
+        "md5Checksum": "9f9734248dd5450e34c74aa475f7ba4c",
+        "sha256Checksum": "e5a381c99b10899f8daf864b643b072799d69a22c3082bc8509713bf4414d552",
+        "headRevisionId": "0B_YIZLrmyOz4SStKZEdlWktSN3h6T3VnNGRDSVhXbmJoUkRzPQ",
+        "moveStartedAt": "2026-09-10T20:08:02Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3195,7 +3404,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0679.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3203,6 +3412,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:59Z",
+        "verifiedAt": "2026-09-10T20:08:01Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:08:01Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:2b7773b02951a28156c934277d3b8e2813439323842813aa434cda3f11bcbafc",
+        "md5Checksum": "c9a54acffa9f278d21e6544102fd6917",
+        "sha256Checksum": "2b7773b02951a28156c934277d3b8e2813439323842813aa434cda3f11bcbafc",
+        "headRevisionId": "0B_YIZLrmyOz4N1ZMc2QrSVltVkIxcklRZ01iMjN2b0VNWENJPQ",
+        "moveStartedAt": "2026-09-10T20:08:00Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3214,7 +3442,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0692.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3222,6 +3450,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:57Z",
+        "verifiedAt": "2026-09-10T20:07:59Z",
+        "downloadBytes": 1026007,
+        "movedToSourceAt": "2026-09-10T20:07:59Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:7a30374b71986643e98b3af11cade6111a142f2713c7dbc34e2010746961a439",
+        "md5Checksum": "47b317f6ea09404b5cc02ff120d78dbe",
+        "sha256Checksum": "7a30374b71986643e98b3af11cade6111a142f2713c7dbc34e2010746961a439",
+        "headRevisionId": "0B_YIZLrmyOz4dWViMGdYQVc5Mmpjc25NTFVXMVVEZVVmSjVVPQ",
+        "moveStartedAt": "2026-09-10T20:07:58Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3233,7 +3480,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0691.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3241,6 +3488,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:55Z",
+        "verifiedAt": "2026-09-10T20:07:57Z",
+        "downloadBytes": 1090877,
+        "movedToSourceAt": "2026-09-10T20:07:57Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:8a557fa8d638ce48e04a90f10d7274d4d8a1280773a2b3178d89b47603b8e305",
+        "md5Checksum": "b4b80a9b4f25d95995f643a0074bb054",
+        "sha256Checksum": "8a557fa8d638ce48e04a90f10d7274d4d8a1280773a2b3178d89b47603b8e305",
+        "headRevisionId": "0B_YIZLrmyOz4RmhNbFp5eTIyS1NyU01LR1F0K0NuQzErL2ZBPQ",
+        "moveStartedAt": "2026-09-10T20:07:56Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3252,7 +3518,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0693.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3260,6 +3526,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:52Z",
+        "verifiedAt": "2026-09-10T20:07:55Z",
+        "downloadBytes": 1033009,
+        "movedToSourceAt": "2026-09-10T20:07:55Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:782919cfb48a2061bd603fcd59f944332d0f56782ba02bd3ce7594bc6cd4fbb4",
+        "md5Checksum": "1e0a5450fac136b0aef61d087c686648",
+        "sha256Checksum": "782919cfb48a2061bd603fcd59f944332d0f56782ba02bd3ce7594bc6cd4fbb4",
+        "headRevisionId": "0B_YIZLrmyOz4SzlkbW9jNEZOSEZDZldrWUdxRk1OeWM1YkYwPQ",
+        "moveStartedAt": "2026-09-10T20:07:53Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3271,7 +3556,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0690.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3279,6 +3564,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:49Z",
+        "verifiedAt": "2026-09-10T20:07:52Z",
+        "downloadBytes": 1271997,
+        "movedToSourceAt": "2026-09-10T20:07:52Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:87b9e6a199176a3674e86469905a458c1b5eddcb0240fb3c7e16954714ac628f",
+        "md5Checksum": "7eb792406f6d1279180d07ba52f1806d",
+        "sha256Checksum": "87b9e6a199176a3674e86469905a458c1b5eddcb0240fb3c7e16954714ac628f",
+        "headRevisionId": "0B_YIZLrmyOz4dlFiYVZuTXczZEVPY1hzK0l6aWs5bjErYzBJPQ",
+        "moveStartedAt": "2026-09-10T20:07:50Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3290,7 +3594,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0694.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3298,6 +3602,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:47Z",
+        "verifiedAt": "2026-09-10T20:07:49Z",
+        "downloadBytes": 1010501,
+        "movedToSourceAt": "2026-09-10T20:07:49Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:ddcf505ed7b0f2c8f2da95311764a24b1fa6e21326cd2def30e037971ead58b1",
+        "md5Checksum": "3ad09897de3abec3990cf19295280ab0",
+        "sha256Checksum": "ddcf505ed7b0f2c8f2da95311764a24b1fa6e21326cd2def30e037971ead58b1",
+        "headRevisionId": "0B_YIZLrmyOz4bTRIOTNiK0NZZ0JzaGVNajhlSHFXS094N2FvPQ",
+        "moveStartedAt": "2026-09-10T20:07:48Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3309,7 +3632,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0696.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3317,6 +3640,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:43Z",
+        "verifiedAt": "2026-09-10T20:07:47Z",
+        "downloadBytes": 1045470,
+        "movedToSourceAt": "2026-09-10T20:07:47Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:ecec0d2a262aff9c6311aecb37919e3c5c9967ba884263e1ee98b584f58b76d0",
+        "md5Checksum": "cc0ab35dfe2d3298a0c9309725c08cfd",
+        "sha256Checksum": "ecec0d2a262aff9c6311aecb37919e3c5c9967ba884263e1ee98b584f58b76d0",
+        "headRevisionId": "0B_YIZLrmyOz4MnNnOGNhR2t1Q1YwNG1NVEduTGgyS21RV1dnPQ",
+        "moveStartedAt": "2026-09-10T20:07:44Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3328,7 +3670,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0695.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3336,6 +3678,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:41Z",
+        "verifiedAt": "2026-09-10T20:07:43Z",
+        "downloadBytes": 1002936,
+        "movedToSourceAt": "2026-09-10T20:07:43Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:ce1d0ac5f8ecc1765bf712dc9d2b8dcc5130e59e2643441d46bd6c0666962260",
+        "md5Checksum": "60ecd33d2aa3261854f6a0bb40876587",
+        "sha256Checksum": "ce1d0ac5f8ecc1765bf712dc9d2b8dcc5130e59e2643441d46bd6c0666962260",
+        "headRevisionId": "0B_YIZLrmyOz4SWNIWFA1b3FmNGlKRjQrYXNkOHZOTjNmVUpNPQ",
+        "moveStartedAt": "2026-09-10T20:07:42Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3347,7 +3708,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0697.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3355,6 +3716,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:39Z",
+        "verifiedAt": "2026-09-10T20:07:41Z",
+        "downloadBytes": 1186090,
+        "movedToSourceAt": "2026-09-10T20:07:41Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:b6f7e14255f5797b45052649873a292986e849a52045eb65780fb1d4dcfa5c37",
+        "md5Checksum": "8b6a6d560c4d3b507acd39479acd5476",
+        "sha256Checksum": "b6f7e14255f5797b45052649873a292986e849a52045eb65780fb1d4dcfa5c37",
+        "headRevisionId": "0B_YIZLrmyOz4Qk1WRGVLYVIxUlEwcExQaDROejByRUFnano0PQ",
+        "moveStartedAt": "2026-09-10T20:07:40Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3366,7 +3746,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0698.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3374,6 +3754,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:37Z",
+        "verifiedAt": "2026-09-10T20:07:39Z",
+        "downloadBytes": 1632259,
+        "movedToSourceAt": "2026-09-10T20:07:39Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:bfdc44468f817a66db4639426aa2c0633cfd11d01f7188af2f843efab8a67cca",
+        "md5Checksum": "aae035ce67928dbb1f15d63de1a5216d",
+        "sha256Checksum": "bfdc44468f817a66db4639426aa2c0633cfd11d01f7188af2f843efab8a67cca",
+        "headRevisionId": "0B_YIZLrmyOz4OXF1UFFBVTZubms0Z2ZONUlSa0V2dUl0MmJvPQ",
+        "moveStartedAt": "2026-09-10T20:07:38Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3385,7 +3784,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0699.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3393,6 +3792,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:35Z",
+        "verifiedAt": "2026-09-10T20:07:37Z",
+        "downloadBytes": 1801505,
+        "movedToSourceAt": "2026-09-10T20:07:37Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:761d05b4bfefe2e10a88b8cb3f5d4027dd02331691f183231b226d1dccb57fe5",
+        "md5Checksum": "b0a6fd59f3ef3fd1a561be047b5ab94a",
+        "sha256Checksum": "761d05b4bfefe2e10a88b8cb3f5d4027dd02331691f183231b226d1dccb57fe5",
+        "headRevisionId": "0B_YIZLrmyOz4NDNscytHMDVONXltZ25oMmFjUkRPQ3lpRGxVPQ",
+        "moveStartedAt": "2026-09-10T20:07:36Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3404,7 +3822,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0726.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3412,6 +3830,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:33Z",
+        "verifiedAt": "2026-09-10T20:07:35Z",
+        "downloadBytes": 1574690,
+        "movedToSourceAt": "2026-09-10T20:07:35Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:857c9126976b02931b5b64d162bc0bace236d0809f5f953f91361f03c05d6e9e",
+        "md5Checksum": "4fadc160a23911646fcdd9d6bf821a4d",
+        "sha256Checksum": "857c9126976b02931b5b64d162bc0bace236d0809f5f953f91361f03c05d6e9e",
+        "headRevisionId": "0B_YIZLrmyOz4NE9WclJMak52RU5zNFNCUkt4QTVTdnFWZlA4PQ",
+        "moveStartedAt": "2026-09-10T20:07:34Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3423,7 +3860,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0700.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3431,6 +3868,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:31Z",
+        "verifiedAt": "2026-09-10T20:07:33Z",
+        "downloadBytes": 1272833,
+        "movedToSourceAt": "2026-09-10T20:07:33Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:effbb2e12ebb9f3a46789d0c26d132b688a46251149d2a5be600d22b166c6f95",
+        "md5Checksum": "dd2c149f8434d92979e035f3c10ce073",
+        "sha256Checksum": "effbb2e12ebb9f3a46789d0c26d132b688a46251149d2a5be600d22b166c6f95",
+        "headRevisionId": "0B_YIZLrmyOz4TVVmTHc1Um9XYmdhUHVMblQ5VGNUUnNUcVY0PQ",
+        "moveStartedAt": "2026-09-10T20:07:32Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3442,7 +3898,7 @@
       "viewDescription": "תמונת JPEG · שם קובץ: 6886EFD3-D4BE-4E09-9962-65F3A3694C6C.JPG · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3450,6 +3906,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:30Z",
+        "verifiedAt": "2026-09-10T20:07:31Z",
+        "downloadBytes": 1933477,
+        "movedToSourceAt": "2026-09-10T20:07:31Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:a04382f8ccbaddf98b222b61462719529f307d27aa439799d58fafa4f1df1b87",
+        "md5Checksum": "8752b9d1f9824783230d320ae5501a15",
+        "sha256Checksum": "a04382f8ccbaddf98b222b61462719529f307d27aa439799d58fafa4f1df1b87",
+        "headRevisionId": "0B_YIZLrmyOz4cTJxc2lZMzhaazJQZ01wd2pkeTY4RTdXTWFZPQ",
+        "moveStartedAt": "2026-09-10T20:07:30Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3461,7 +3936,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0727.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3469,6 +3944,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:28Z",
+        "verifiedAt": "2026-09-10T20:07:30Z",
+        "downloadBytes": 1696152,
+        "movedToSourceAt": "2026-09-10T20:07:30Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:bb301f4b9a0dafe15830ba7693bb966df37354dee6a8dc2099b92028f956df17",
+        "md5Checksum": "72fc2b969bcc4313fb942cf5511e897e",
+        "sha256Checksum": "bb301f4b9a0dafe15830ba7693bb966df37354dee6a8dc2099b92028f956df17",
+        "headRevisionId": "0B_YIZLrmyOz4SXJWeEFpclVjeWhORkJWYmFxN3NwVndpQUZFPQ",
+        "moveStartedAt": "2026-09-10T20:07:28Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3480,7 +3974,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0758.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3488,6 +3982,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:26Z",
+        "verifiedAt": "2026-09-10T20:07:27Z",
+        "downloadBytes": 1677268,
+        "movedToSourceAt": "2026-09-10T20:07:27Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:b5ce0c2c466e59eb2be95cb76c9acb6969dfcd9df3c7fb354a31f910fa156be9",
+        "md5Checksum": "ea57e56b7dd58aa77986fefb7a12046f",
+        "sha256Checksum": "b5ce0c2c466e59eb2be95cb76c9acb6969dfcd9df3c7fb354a31f910fa156be9",
+        "headRevisionId": "0B_YIZLrmyOz4K2FhVjE5Zm1Nb1FCc2NVdFdnMkRob1Y2RVpzPQ",
+        "moveStartedAt": "2026-09-10T20:07:26Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3499,7 +4012,7 @@
       "viewDescription": "תמונת JPEG · שם קובץ: B0FFFBC6-C4F0-4540-A274-8BE30B93EF01.JPG · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3507,6 +4020,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:24Z",
+        "verifiedAt": "2026-09-10T20:07:26Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:07:26Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:65280a7f7a6fe05b40ffe85fff378b276ad68bcdef1f1b95be9298a2e4556450",
+        "md5Checksum": "987780499d27d1377baf2cf08ee3d020",
+        "sha256Checksum": "65280a7f7a6fe05b40ffe85fff378b276ad68bcdef1f1b95be9298a2e4556450",
+        "headRevisionId": "0B_YIZLrmyOz4QVM0dnAzR0hFMnFNMDJKaDJhZkFlTll2eUNjPQ",
+        "moveStartedAt": "2026-09-10T20:07:24Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3518,7 +4050,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0780.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3526,6 +4058,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:22Z",
+        "verifiedAt": "2026-09-10T20:07:24Z",
+        "downloadBytes": 1642983,
+        "movedToSourceAt": "2026-09-10T20:07:24Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:d042332d092ddb1a7030faed2752b3a52fc1f9974a4760fe2e1de5e9c25ff455",
+        "md5Checksum": "8a912a21639d4493c9ebc4d55a6d6d2d",
+        "sha256Checksum": "d042332d092ddb1a7030faed2752b3a52fc1f9974a4760fe2e1de5e9c25ff455",
+        "headRevisionId": "0B_YIZLrmyOz4d2pWcU01RGdCWlk4bXJLbW5BZ3k3SUxUQldJPQ",
+        "moveStartedAt": "2026-09-10T20:07:22Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3537,7 +4088,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0777.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3545,6 +4096,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:19Z",
+        "verifiedAt": "2026-09-10T20:07:21Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:07:21Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:502099f82f3fd2d540bb4ea0fe2d0937745c8f3a66d9c71b26cc5e849121858b",
+        "md5Checksum": "1915b9facc745fa88d74cf04ab480812",
+        "sha256Checksum": "502099f82f3fd2d540bb4ea0fe2d0937745c8f3a66d9c71b26cc5e849121858b",
+        "headRevisionId": "0B_YIZLrmyOz4RTA0N0lJTW9hSGJzTGJqTXc4cmdoamRDRHZJPQ",
+        "moveStartedAt": "2026-09-10T20:07:20Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3556,7 +4126,7 @@
       "viewDescription": "תמונת JPEG · שם קובץ: EAE8D9E3-64FC-4596-9811-8591BA4F0A73.JPG · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3564,6 +4134,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:17Z",
+        "verifiedAt": "2026-09-10T20:07:19Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:07:19Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:c15db141f37216eb0f32ca865f320bea2468a1daaeac14d043e8fb78acbcc9ea",
+        "md5Checksum": "56148122ffff3b30d7d421dbc6f29477",
+        "sha256Checksum": "c15db141f37216eb0f32ca865f320bea2468a1daaeac14d043e8fb78acbcc9ea",
+        "headRevisionId": "0B_YIZLrmyOz4amRGWnJmSk1WaW51S05BMWJudStWbWdPOHdZPQ",
+        "moveStartedAt": "2026-09-10T20:07:18Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3575,7 +4164,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0783.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3583,6 +4172,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:15Z",
+        "verifiedAt": "2026-09-10T20:07:17Z",
+        "downloadBytes": 1933619,
+        "movedToSourceAt": "2026-09-10T20:07:17Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:4148a6d62e41e841afe4b943399363d2dff312611fdc2f39874aac1afbda5c60",
+        "md5Checksum": "f7113ecb63926c743949f609baf1a549",
+        "sha256Checksum": "4148a6d62e41e841afe4b943399363d2dff312611fdc2f39874aac1afbda5c60",
+        "headRevisionId": "0B_YIZLrmyOz4aStrbDlJZ0hhQS8yNWZYVmZic2ZxdVdFWlRRPQ",
+        "moveStartedAt": "2026-09-10T20:07:15Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3594,7 +4202,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0782.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3602,6 +4210,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:13Z",
+        "verifiedAt": "2026-09-10T20:07:15Z",
+        "downloadBytes": 1863718,
+        "movedToSourceAt": "2026-09-10T20:07:15Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:c27468a2972cbcb34c800781b469680d5ffccd6c56a1cb778855736b39450d6b",
+        "md5Checksum": "948f19d3a84b7124e84bf4cd74d0e4e6",
+        "sha256Checksum": "c27468a2972cbcb34c800781b469680d5ffccd6c56a1cb778855736b39450d6b",
+        "headRevisionId": "0B_YIZLrmyOz4Smc3MzhPcWM0S004YTZ2aVFSVHlRZWV4YXZnPQ",
+        "moveStartedAt": "2026-09-10T20:07:13Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3613,7 +4240,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0776.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3621,6 +4248,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:10Z",
+        "verifiedAt": "2026-09-10T20:07:13Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:07:13Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:898671d32e35ccb6063d892e4a060ed4501fb942d0744c657487519692b5a333",
+        "md5Checksum": "03d705f8354f23924bd574ddf1496cb3",
+        "sha256Checksum": "898671d32e35ccb6063d892e4a060ed4501fb942d0744c657487519692b5a333",
+        "headRevisionId": "0B_YIZLrmyOz4MjZOSFlpcnVITGIwWG83RmNhNkIraUl1ZG00PQ",
+        "moveStartedAt": "2026-09-10T20:07:11Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3632,7 +4278,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0784.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3640,6 +4286,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:08Z",
+        "verifiedAt": "2026-09-10T20:07:10Z",
+        "downloadBytes": 1786698,
+        "movedToSourceAt": "2026-09-10T20:07:10Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:af4782e05756bc7e1b5e394f88d8a2d44a3d47c19ffb350cf42322afd2f5a057",
+        "md5Checksum": "f91382db4740007677d1cb714b00d851",
+        "sha256Checksum": "af4782e05756bc7e1b5e394f88d8a2d44a3d47c19ffb350cf42322afd2f5a057",
+        "headRevisionId": "0B_YIZLrmyOz4Q0VHc1hKZUdQMlFGRC9qRGwwR29qZXF4SE00PQ",
+        "moveStartedAt": "2026-09-10T20:07:09Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3651,7 +4316,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0781.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3659,6 +4324,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:06Z",
+        "verifiedAt": "2026-09-10T20:07:08Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:07:08Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:96e80c23e935e59402fced6f8afc6e450a9474be4451746aac778a266dc94930",
+        "md5Checksum": "6af8c2d05606a51b35087fad921c9860",
+        "sha256Checksum": "96e80c23e935e59402fced6f8afc6e450a9474be4451746aac778a266dc94930",
+        "headRevisionId": "0B_YIZLrmyOz4QlRkQnJmeUx1RWZaT2lhT0YwY3R5aE81ZDFvPQ",
+        "moveStartedAt": "2026-09-10T20:07:07Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3670,7 +4354,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0820.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3678,6 +4362,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:03Z",
+        "verifiedAt": "2026-09-10T20:07:06Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:07:06Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:c6561288750797028559b344824d0c71e2a29a295cd4396af7cf8c4873aa7c6b",
+        "md5Checksum": "1a1d351ea04af187c7c606cb95250d55",
+        "sha256Checksum": "c6561288750797028559b344824d0c71e2a29a295cd4396af7cf8c4873aa7c6b",
+        "headRevisionId": "0B_YIZLrmyOz4ZjlJL1pwK1hQdFBhS1R0d0trZWhKcWZDa3FjPQ",
+        "moveStartedAt": "2026-09-10T20:07:04Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3689,7 +4392,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0821.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3697,6 +4400,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:07:01Z",
+        "verifiedAt": "2026-09-10T20:07:03Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:07:03Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:d24796ddfaa326e84cec5b55e3ab38a9f4cd44c02378c308c17f21aa12d6cab3",
+        "md5Checksum": "4f1131f06e3a8442f1368b5310107dd8",
+        "sha256Checksum": "d24796ddfaa326e84cec5b55e3ab38a9f4cd44c02378c308c17f21aa12d6cab3",
+        "headRevisionId": "0B_YIZLrmyOz4YXBJZXErY3RSRHdzQkNET01wdWthZHJGMC9RPQ",
+        "moveStartedAt": "2026-09-10T20:07:02Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3708,7 +4430,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0822.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3716,6 +4438,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:59Z",
+        "verifiedAt": "2026-09-10T20:07:01Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:07:01Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:8dcc41510ac80f83bddc4adecbe3506121f9e451f2eb83a807317c1d909065eb",
+        "md5Checksum": "2e007189795e759805d95d9e1198df58",
+        "sha256Checksum": "8dcc41510ac80f83bddc4adecbe3506121f9e451f2eb83a807317c1d909065eb",
+        "headRevisionId": "0B_YIZLrmyOz4Nm45V2VHVjBIYXdXVVIyZXVXMXVOY1VzSUpFPQ",
+        "moveStartedAt": "2026-09-10T20:07:00Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3727,7 +4468,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0841.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3735,6 +4476,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:57Z",
+        "verifiedAt": "2026-09-10T20:06:59Z",
+        "downloadBytes": 1377959,
+        "movedToSourceAt": "2026-09-10T20:06:59Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:c608e9cd8d6c4d048b364ab0d07a0b14de5e45e2a30bf87ff1a5e2736d2b535f",
+        "md5Checksum": "5678b077cb49d2a8a63cee187d1121b1",
+        "sha256Checksum": "c608e9cd8d6c4d048b364ab0d07a0b14de5e45e2a30bf87ff1a5e2736d2b535f",
+        "headRevisionId": "0B_YIZLrmyOz4aXczM0FJSVFTTzNTckMxNzdielRwa2R6dDk4PQ",
+        "moveStartedAt": "2026-09-10T20:06:57Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3746,7 +4506,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0842.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3754,6 +4514,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:54Z",
+        "verifiedAt": "2026-09-10T20:06:57Z",
+        "downloadBytes": 1556541,
+        "movedToSourceAt": "2026-09-10T20:06:57Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:5e17d4efa7c0a550664618ef1a02bafd8c70889b77c4f1a0ae58fbd2a65c3274",
+        "md5Checksum": "928684e226d82e835df2353b4075bbbe",
+        "sha256Checksum": "5e17d4efa7c0a550664618ef1a02bafd8c70889b77c4f1a0ae58fbd2a65c3274",
+        "headRevisionId": "0B_YIZLrmyOz4QUEwck1pYWd3bWNpMVVLazNFeHVveEFPdjJjPQ",
+        "moveStartedAt": "2026-09-10T20:06:55Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3765,7 +4544,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0824.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3773,6 +4552,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:52Z",
+        "verifiedAt": "2026-09-10T20:06:54Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:06:54Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:27cb17a612d2ca38fa1f3d04789a0fc0af9df5374578b91acb0ec94753b1b724",
+        "md5Checksum": "3d0cb83e7eb8df7c492712625fb467c0",
+        "sha256Checksum": "27cb17a612d2ca38fa1f3d04789a0fc0af9df5374578b91acb0ec94753b1b724",
+        "headRevisionId": "0B_YIZLrmyOz4RXdZR2VQcWprQ0l5NTlSSUZTSnhqTEhZbUp3PQ",
+        "moveStartedAt": "2026-09-10T20:06:53Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3784,7 +4582,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0843.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3792,6 +4590,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:51Z",
+        "verifiedAt": "2026-09-10T20:06:52Z",
+        "downloadBytes": 1959594,
+        "movedToSourceAt": "2026-09-10T20:06:52Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:def6a9715a19bc23d432afa48e94d6faea2996649a7b09e4cc30aabbd9e8b2f6",
+        "md5Checksum": "67aa6b66d9dc6c742004aea5c4b5d644",
+        "sha256Checksum": "def6a9715a19bc23d432afa48e94d6faea2996649a7b09e4cc30aabbd9e8b2f6",
+        "headRevisionId": "0B_YIZLrmyOz4UzdLUE1hTkNSRHVIUlVIWmNUV3VUeTl1WUI0PQ",
+        "moveStartedAt": "2026-09-10T20:06:51Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3803,7 +4620,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0825.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3811,6 +4628,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:48Z",
+        "verifiedAt": "2026-09-10T20:06:51Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:06:51Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:6854cf2454dc5c840d3e6e8243d8563ff1dd164aea7049a91ca559e28c2d87d6",
+        "md5Checksum": "4656fcacfb23c81f79adfb70b7641124",
+        "sha256Checksum": "6854cf2454dc5c840d3e6e8243d8563ff1dd164aea7049a91ca559e28c2d87d6",
+        "headRevisionId": "0B_YIZLrmyOz4Rk1xS2tQNUtJWldLT0xQcjV1SkdhZHRRZDZFPQ",
+        "moveStartedAt": "2026-09-10T20:06:49Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3822,7 +4658,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0844.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3830,6 +4666,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:46Z",
+        "verifiedAt": "2026-09-10T20:06:48Z",
+        "downloadBytes": 1568082,
+        "movedToSourceAt": "2026-09-10T20:06:48Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:08cdbfa32ba7a17889fe727c5d805dcdacd9815383de8f3e4f4a943ec1086bd2",
+        "md5Checksum": "107769f18fc479d5181838d47710a2c7",
+        "sha256Checksum": "08cdbfa32ba7a17889fe727c5d805dcdacd9815383de8f3e4f4a943ec1086bd2",
+        "headRevisionId": "0B_YIZLrmyOz4WVpZb3Q2amc4ZWVVTDFrRTQzd3pKZXNQVWF3PQ",
+        "moveStartedAt": "2026-09-10T20:06:47Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3841,7 +4696,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0826.heic · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3849,6 +4704,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:44Z",
+        "verifiedAt": "2026-09-10T20:06:46Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-10T20:06:46Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:2426953255a059d28b146cc6518805e61e6e7749db9421a145e5526c89adb922",
+        "md5Checksum": "6f75126288b01ea275ddc246e4d08420",
+        "sha256Checksum": "2426953255a059d28b146cc6518805e61e6e7749db9421a145e5526c89adb922",
+        "headRevisionId": "0B_YIZLrmyOz4TmRGcEtjQXFJTE5vUXhlSndKSlZrR3hzYzI4PQ",
+        "moveStartedAt": "2026-09-10T20:06:45Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3860,7 +4734,7 @@
       "viewDescription": "תמונת JPEG · שם קובץ: IMG_0911.JPG · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3868,6 +4742,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:42Z",
+        "verifiedAt": "2026-09-10T20:06:44Z",
+        "downloadBytes": 86227,
+        "movedToSourceAt": "2026-09-10T20:06:44Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:46bfbfd0d18fb67e1d48599b82614a87ace7a26c6ca6c82140c2a193c2ee8bc9",
+        "md5Checksum": "f0930fcc3817c40c6e8be8fce6665046",
+        "sha256Checksum": "46bfbfd0d18fb67e1d48599b82614a87ace7a26c6ca6c82140c2a193c2ee8bc9",
+        "headRevisionId": "0B_YIZLrmyOz4VXcrTFZNdFZHOWVRQ1Jyb0ZLTFhNY0xQMUZjPQ",
+        "moveStartedAt": "2026-09-10T20:06:43Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3879,7 +4772,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0904.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3887,6 +4780,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:40Z",
+        "verifiedAt": "2026-09-10T20:06:42Z",
+        "downloadBytes": 1377159,
+        "movedToSourceAt": "2026-09-10T20:06:42Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:6d3aef7ee2010f818c0b15c062f7955f2554355e07519819b39f13155b5777b7",
+        "md5Checksum": "ba4e3bafeca8f7af3c88173df40bf8de",
+        "sha256Checksum": "6d3aef7ee2010f818c0b15c062f7955f2554355e07519819b39f13155b5777b7",
+        "headRevisionId": "0B_YIZLrmyOz4RFNIa1B5alFzUHFxbTc2UlhETkxscVNZNnVVPQ",
+        "moveStartedAt": "2026-09-10T20:06:41Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3898,7 +4810,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0902.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3906,6 +4818,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:38Z",
+        "verifiedAt": "2026-09-10T20:06:40Z",
+        "downloadBytes": 1374372,
+        "movedToSourceAt": "2026-09-10T20:06:40Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:544569b803d49407bd6749e2acc68cbcd1acdec02fd3a88e3461224f9999fad4",
+        "md5Checksum": "dd5bc2ac5d7c0329d0d7e0e6933a2515",
+        "sha256Checksum": "544569b803d49407bd6749e2acc68cbcd1acdec02fd3a88e3461224f9999fad4",
+        "headRevisionId": "0B_YIZLrmyOz4WTI4WEtvZ0hMWE4wM09xNGdDblNZc0lReUVRPQ",
+        "moveStartedAt": "2026-09-10T20:06:39Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -3917,7 +4848,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0903.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -3925,6 +4856,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-10T20:06:36Z",
+        "verifiedAt": "2026-09-10T20:06:38Z",
+        "downloadBytes": 1409583,
+        "movedToSourceAt": "2026-09-10T20:06:38Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:3b17f8500a953351fa747c2a76248b91bca660213ffcda4163d7d6b87dadd84b",
+        "md5Checksum": "a829654989d9f3a618644940034e5515",
+        "sha256Checksum": "3b17f8500a953351fa747c2a76248b91bca660213ffcda4163d7d6b87dadd84b",
+        "headRevisionId": "0B_YIZLrmyOz4SlFmR0FXQkM0Tm44N25FQzR6aFZpdHZkTEFVPQ",
+        "moveStartedAt": "2026-09-10T20:06:37Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
