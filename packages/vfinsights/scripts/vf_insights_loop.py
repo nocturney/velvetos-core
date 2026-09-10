@@ -18,6 +18,10 @@ TEMPLATE_PATH = DATA_DIR / "posts.csv"
 LEARNINGS_PATH = HERE.parent / "LEARNINGS.md"
 FIELDS = ["post_id", "date", "type", "reach", "likes", "saves", "comments", "caption_style", "views", "shares", "source"]
 
+# Do not recommend a format/style winner below this measured-post sample size.
+MIN_MEASURED_POSTS_FOR_RECOMMENDATION = 3
+MIN_STYLES_OR_DISTINCT = 3  # at least 3 measured posts before any "favor style" recommendation
+
 def init_template():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     if TEMPLATE_PATH.exists():
@@ -31,15 +35,26 @@ def init_template():
     print("Fill via Instagram MCP (scripts/vf_insights_ingest.py) or owner paste. Leave blank if unknown — do not guess.")
 
 def load_rows(path):
+    """Load CSV rows. Preserve explicit 0 vs blank: blank → None metric; '0' stays 0."""
     rows = []
     with open(path, encoding="utf-8") as f:
         for row in csv.DictReader(f):
-            rows.append({k: (v or "").strip() for k, v in row.items()})
+            # Keep raw cell text so analyze can distinguish "" (unknown) from "0" (measured zero).
+            rows.append({k: (v if v is not None else "") for k, v in row.items()})
+            for k, v in list(rows[-1].items()):
+                if isinstance(v, str):
+                    rows[-1][k] = v.strip()
     return rows
 
 def to_float(v):
+    """Blank/missing → None (אין ספירה). Explicit '0' → 0.0 (preserved measured zero from MCP)."""
+    if v is None:
+        return None
+    s = str(v).strip()
+    if s == "":
+        return None
     try:
-        return float(v)
+        return float(s)
     except (TypeError, ValueError):
         return None
 
@@ -53,7 +68,7 @@ def analyze(rows):
         if reach is None:
             continue
         saves = to_float(r.get("saves"))
-        # missing saves ≠ 0 for rate; only compute when saves present
+        # missing saves ≠ 0 for rate; only compute when saves present (including explicit 0)
         engagement = (saves / reach) if (saves is not None and reach) else None
         by_style.setdefault(style, []).append({"reach": reach, "engagement_rate": engagement})
     style_summary = []
@@ -71,15 +86,26 @@ def analyze(rows):
         ),
         reverse=True,
     )
-    return {"n_total": len(rows), "n_measured": len(measured), "n_unmeasured": len(unmeasured),
-            "unmeasured_ids": [r["post_id"] for r in unmeasured], "style_ranking": style_summary}
+    n_measured = len(measured)
+    can_recommend = n_measured >= MIN_MEASURED_POSTS_FOR_RECOMMENDATION and n_measured >= MIN_STYLES_OR_DISTINCT
+    return {
+        "n_total": len(rows),
+        "n_measured": n_measured,
+        "n_unmeasured": len(unmeasured),
+        "unmeasured_ids": [r["post_id"] for r in unmeasured],
+        "style_ranking": style_summary,
+        "can_recommend": can_recommend,
+        "min_measured_for_recommendation": MIN_MEASURED_POSTS_FOR_RECOMMENDATION,
+    }
 
 def write_learnings(result):
     lines = ["# Learnings — closed measurement loop", "",
               f"Measured {result['n_measured']} of {result['n_total']} posts. "
               f"{result['n_unmeasured']} still have no real number (excluded from ranking, not guessed).", "",
               "Source preference: Instagram MCP verified Insights → `scripts/vf_insights_ingest.py` → `data/posts.csv`.",
-              "Missing metric = אין ספירה / blank — never invent, never coerce unavailable → 0.", ""]
+              "Missing metric = אין ספירה / blank — never invent, never coerce unavailable → 0.",
+              "Explicit CSV `0` is preserved as measured zero (MCP returned 0); blank cell stays unknown.",
+              "The `source` column proves MCP origin when set to `instagram_mcp` (vs owner paste / blank).", ""]
     if result["n_unmeasured"]:
         lines.append("## Missing data (fetch via Instagram MCP before next brief)")
         for pid in result["unmeasured_ids"]:
@@ -94,19 +120,28 @@ def write_learnings(result):
             er = s["avg_engagement_rate"] if s["avg_engagement_rate"] is not None else "אין ספירה"
             lines.append(f"| {s['style']} | {s['n_posts']} | {s['avg_reach']} | {er} |")
         lines.append("")
-        best = result["style_ranking"][0]
-        if best.get("avg_engagement_rate") is not None:
-            lines.append(
-                f"**Recommendation for next post:** favor style `{best['style']}` "
-                f"(highest measured engagement rate so far: {best['avg_engagement_rate']})."
-            )
+        if result.get("can_recommend"):
+            best = result["style_ranking"][0]
+            if best.get("avg_engagement_rate") is not None:
+                lines.append(
+                    f"**Recommendation for next post:** favor style `{best['style']}` "
+                    f"(highest measured engagement rate so far: {best['avg_engagement_rate']})."
+                )
+            else:
+                lines.append(
+                    f"**Recommendation for next post:** favor style `{best['style']}` "
+                    f"(highest measured avg reach so far: {best['avg_reach']}; engagement rate אין ספירה)."
+                )
         else:
             lines.append(
-                f"**Recommendation for next post:** favor style `{best['style']}` "
-                f"(highest measured avg reach so far: {best['avg_reach']}; engagement rate אין ספירה)."
+                f"**Recommendation:** insufficient evidence — no format/style winner yet "
+                f"(need ≥{result.get('min_measured_for_recommendation', MIN_MEASURED_POSTS_FOR_RECOMMENDATION)} "
+                f"measured posts; have {result['n_measured']}). Ranking table kept for transparency."
             )
     else:
         lines.append("No measured posts yet — ingest Instagram MCP Insights first.")
+        lines.append("")
+        lines.append("**Recommendation:** insufficient evidence — no format/style winner yet")
     LEARNINGS_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"wrote {LEARNINGS_PATH}")
 
