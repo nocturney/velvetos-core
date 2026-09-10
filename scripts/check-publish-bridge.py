@@ -10,10 +10,13 @@ ROOT = Path(__file__).resolve().parents[1]
 CFG = ROOT / "packages" / "vfigos" / "PUBLISH-BRIDGE.json"
 DOC = ROOT / "packages" / "vfigos" / "PUBLISH-BRIDGE.md"
 STAGE = ROOT / "scripts" / "vf_publish_bridge.py"
+HANDOFF = ROOT / "scripts" / "vf_publish_handoff.py"
 ARCHIVE = ROOT / "scripts" / "vf_publish_bridge_cleanup.py"
 WORKFLOW = ROOT / ".github" / "workflows" / "publish-bridge-cleanup.yml"
 SEND = ROOT / "packages" / "vfigos" / "SEND.md"
 INSTANCE = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
+STORY_PATCH = ROOT / "packages" / "vfigos" / "remote" / "story_publish.py"
+HTTP_ENTRY = ROOT / "packages" / "vfigos" / "remote" / "http_server.py"
 
 
 def fail(msg: str) -> None:
@@ -22,7 +25,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> int:
-    for path in (CFG, DOC, STAGE, ARCHIVE, WORKFLOW, SEND, INSTANCE):
+    for path in (CFG, DOC, STAGE, HANDOFF, ARCHIVE, WORKFLOW, SEND, INSTANCE, STORY_PATCH, HTTP_ENTRY):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -63,15 +66,42 @@ def main() -> int:
         fail("workflow must commit both active removals and archive additions")
 
     doc = DOC.read_text(encoding="utf-8")
-    for needle in ("Archive retention", "unlimited", "never automatically delete"):
+    for needle in (
+        "Archive retention",
+        "unlimited",
+        "never automatically delete",
+        "Artifact handoff",
+        "approved_export_local",
+        "blocked_publish_transport",
+    ):
         if needle not in doc:
-            fail(f"PUBLISH-BRIDGE.md missing archive rule {needle}")
+            fail(f"PUBLISH-BRIDGE.md missing {needle}")
 
     stage = STAGE.read_text(encoding="utf-8")
     if '"archiveAfter"' not in stage or '"archiveRetention"' not in stage:
         fail("new staged asset metadata must record archive timing/retention")
     if "removeFromBranchHeadAfter" in stage:
         fail("legacy deletion-oriented metadata key must not return")
+    if "progressive=False" not in stage:
+        fail("bridge must emit baseline JPEG (progressive breaks Instagram fetch)")
+
+    handoff = HANDOFF.read_text(encoding="utf-8")
+    for needle in (
+        "blocked_artifact_retrieval",
+        "blocked_bridge_staging",
+        "blocked_public_fetch",
+        "published_verified",
+        "FORBIDDEN_SOURCE_PATTERNS",
+    ):
+        if needle not in handoff:
+            fail(f"vf_publish_handoff.py missing {needle}")
+
+    story = STORY_PATCH.read_text(encoding="utf-8")
+    if "_wait_container_ready" not in story or "apply_story_publish_patch" not in story:
+        fail("story_publish overlay must wait FINISHED for image Stories")
+    http_entry = HTTP_ENTRY.read_text(encoding="utf-8")
+    if "apply_story_publish_patch" not in http_entry:
+        fail("http_server.py must apply story_publish overlay")
 
     send = SEND.read_text(encoding="utf-8")
     if "PUBLISH-BRIDGE.md" not in send or "publish-bridge" not in send:
@@ -88,7 +118,7 @@ def main() -> int:
     if creative_publish.get("transportBridgeRequiredForPrivateAssets") is not True:
         fail("private publish assets must require the transport bridge")
 
-    print("OK publish bridge active · instance-bound · archive-preserving · no auto-delete · public-release gate")
+    print("OK publish bridge active · handoff/recovery · story FINISHED wait · baseline JPEG · archive-preserving")
     return 0
 
 

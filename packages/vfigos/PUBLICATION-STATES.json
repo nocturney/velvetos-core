@@ -1,7 +1,7 @@
 {
   "id": "publication-states",
-  "updatedAt": "2026-09-08",
-  "law": "prepared ≠ approved ≠ scheduled ≠ uploadAccepted ≠ publishRequested ≠ liveVerified",
+  "updatedAt": "2026-09-10",
+  "law": "prepared ≠ approved ≠ staged ≠ fetch_verified ≠ publish_requested ≠ published ≠ published_verified / liveVerified",
   "states": [
     {
       "id": "prepared",
@@ -13,13 +13,31 @@
       "id": "approved",
       "he": "מאושר",
       "live": false,
-      "note": "אישור אדם או versionApproval. לא live."
+      "note": "אישור אדם או versionApproval / PREFLIGHT. לא live."
+    },
+    {
+      "id": "approved_export_local",
+      "he": "ייצוא מאושר מקומי",
+      "live": false,
+      "note": "קובץ מסירה מאושר קיים (Cursor artifacts / re-export). חובה לנסות handoff→bridge לפני חסימת תחבורה."
     },
     {
       "id": "scheduled",
       "he": "משובץ בלוח",
       "live": false,
       "note": "אירוע Calendar / משבצת CALENDAR.md. Calendar ≠ live."
+    },
+    {
+      "id": "staged",
+      "he": "שלב ב־Publish Bridge",
+      "live": false,
+      "note": "אובייקט על ענף publish-bridge. staged ≠ published."
+    },
+    {
+      "id": "fetch_verified",
+      "he": "URL ציבורי אומת",
+      "live": false,
+      "note": "HTTPS fetch חיצוני החזיר JPEG/MP4 עם SHA תואם. fetch ≠ published."
     },
     {
       "id": "uploadAccepted",
@@ -31,13 +49,35 @@
       "id": "publishRequested",
       "he": "בקשת פרסום נשלחה",
       "live": false,
-      "note": "קריאת publish_*. עדיין לא liveVerified."
+      "note": "קריאת publish_*. עדיין לא liveVerified. alias: publish_requested."
+    },
+    {
+      "id": "publish_requested",
+      "he": "בקשת פרסום נשלחה",
+      "live": false,
+      "note": "Snake_case alias of publishRequested for handoff ledger."
+    },
+    {
+      "id": "published",
+      "he": "קבלה מפרסום",
+      "live": false,
+      "note": "יש receipt/media_id מכלי publish_*. עדיין דורש אימות חי."
     },
     {
       "id": "publish_pending_verification",
       "he": "ממתין לאימות חי",
       "live": false,
-      "note": "publish_* החזיר success/accepted אבל list_media/get_media עדיין לא אישרו פריט חי. אסור לטעון published/live."
+      "note": "publish_* החזיר success/accepted אבל list_media/get_media עדיין לא אישרו פריט חי. אסור לטעון published_verified/live."
+    },
+    {
+      "id": "published_verified",
+      "he": "פורסם ומאומת",
+      "live": true,
+      "requires": [
+        "publishReceipt",
+        "liveVerification"
+      ],
+      "note": "רק אחרי receipt + get_media/list_media. alias חי ל־liveVerified."
     },
     {
       "id": "liveVerified",
@@ -47,6 +87,48 @@
         "verificationEvidence"
       ],
       "note": "רק אחרי אימות אמיתי מהפלטפורמה (list_media / get_media / media id / permalink)."
+    },
+    {
+      "id": "blocked_creative_preflight",
+      "he": "חסום פריפלייט/יצירה",
+      "live": false,
+      "note": "EDIT-GATE / PREFLIGHT / CTA / rights. לא תחבורה."
+    },
+    {
+      "id": "blocked_artifact_retrieval",
+      "he": "חסום שליפת ארטיפקט",
+      "live": false,
+      "note": "אין ייצוא מאושר נגיש (Cursor path אבוד + Canva re-export נכשל). אחרי ניסיונות שחזור בלבד."
+    },
+    {
+      "id": "blocked_bridge_staging",
+      "he": "חסום staging ב־bridge",
+      "live": false,
+      "note": "normalize/stage ל־publish-bridge נכשל אחרי שיש ייצוא מאושר."
+    },
+    {
+      "id": "blocked_public_fetch",
+      "he": "חסום אימות URL ציבורי",
+      "live": false,
+      "note": "raw.githubusercontent fetch נכשל / SHA לא תואם."
+    },
+    {
+      "id": "blocked_instagram_publisher",
+      "he": "חסום מוציא Instagram",
+      "live": false,
+      "note": "publish_* נכשל (הרשאות / timeout / Graph). לא לבלבל עם תחבורה."
+    },
+    {
+      "id": "blocked_live_verification",
+      "he": "חסום אימות חי",
+      "live": false,
+      "note": "יש receipt אבל get_media/list_media לא סגרו."
+    },
+    {
+      "id": "blocked_publish_transport",
+      "he": "חסום תחבורה (טרמינלי)",
+      "live": false,
+      "note": "רק אחרי שכל נתיבי השחזור (local export → Canva re-export → bridge stage → fetch) נכשלו באמת. לא ברירת מחדל."
     },
     {
       "id": "failed",
@@ -66,7 +148,9 @@
     "Mark live because calendar event exists",
     "Mark live because API container created",
     "Mark live because publish was requested",
-    "Mark live because publish_* tool returned success without list_media/get_media verify"
+    "Mark live because publish_* tool returned success without list_media/get_media verify",
+    "Mark blocked_publish_transport while an approved local export still exists unrecovered",
+    "Mark published_verified without publish receipt + live verification"
   ],
   "organicGateMapping": {
     "draft": "prepared",
@@ -75,7 +159,17 @@
     "pending_human_approval": "prepared",
     "approved_for_manual_posting": "approved",
     "posted_manually": "liveVerified",
-    "blocked_policy": "failed",
-    "blocked_no_media": "failed"
-  }
+    "blocked_policy": "blocked_creative_preflight",
+    "blocked_no_media": "blocked_artifact_retrieval"
+  },
+  "transportRecoveryOrder": [
+    "approved_export_local",
+    "attempt_exact_artifact_retrieval",
+    "attempt_canva_reexport_from_source_ref",
+    "attempt_canonical_bridge_staging",
+    "public_fetch_verify",
+    "publish",
+    "live_verify",
+    "only_then_blocked_publish_transport"
+  ]
 }

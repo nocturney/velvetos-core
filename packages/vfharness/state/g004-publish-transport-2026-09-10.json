@@ -1,0 +1,14 @@
+{
+  "taskId": "g004-publish-transport-2026-09-10",
+  "status": "worker_done",
+  "component_state": "Idle",
+  "summary": "G004 Stories published_verified; publish handoff + story FINISHED overlay committed",
+  "publication": "packages/vfigos/data/publications/G004.json",
+  "media_ids": [
+    "17953408503217497",
+    "18114907102964081",
+    "18376412014224377",
+    "17971746960141328"
+  ],
+  "redeployRequired": "packages/vfigos/remote/story_publish.py needs Cloud Run deploy for image Stories path"
+}

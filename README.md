@@ -154,7 +154,7 @@
 - ‏לא ממציאים מחירי ₪.
 - ‏לא ממציאים לקוחות, הזמנות או זמני ביצוע.
 - ‏לא טוענים שפעולת provider הצליחה בלי ראיה.
-- ‏לא ממציאים Origin slugs; אם לא ידוע — `unknown`.
+- ‏לא ממציאים Origin slugs; אם לא ידוע — `unknown` ([`docs/ORIGIN-SLUGS.md`](docs/ORIGIN-SLUGS.md)).
 - ‏לא יוצרים source of truth מקביל בשקט.
 - ‏פרסום ותקשורת חיצונית כפופים ל־approval/capability gates.
 - ‏איסוף נשאר בשדרות כל עוד הרשומה הקנונית לא שונתה.

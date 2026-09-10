@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "correlation": "G004",
+  "state": "published_verified",
+  "updatedAt": "2026-09-10T18:01:13Z",
+  "approvalRef": "packages/vfgrowth/preflight/G004.md",
+  "packageFingerprint": "g004-2026-09-10-stories-current",
+  "designIds": {
+    "frames1to3": "DAHUaUo3bAk",
+    "frame4": "DAHUfRQMH60"
+  },
+  "publicCta": {
+    "text": "שלחו הודעה כאן באינסטגרם\nאיסוף שדרות",
+    "forbiddenAbsent": ["price", "₪", "WhatsApp", "phone", "wa.me", "auto-DM"]
+  },
+  "transportNote": "Image publish_story on current Cloud Run MCP races FINISHED (9007). G004 went live as 3s still-as-video Stories via the polled video path; visual content is the approved Canva exports. story_publish.py overlay waits for image Stories after Cloud Run redeploy.",
+  "frames": [
+    {
+      "frameIndex": 1,
+      "sourceRef": "canva:DAHUaUo3bAk",
+      "approvalRef": "packages/vfgrowth/preflight/G004.md",
+      "exportPngSha256": "ca6fbef7d87dd393c92d151fa89811078a7bbac27bb26256162eb76d3250621c",
+      "sha256": "06e9226a155bd3e5f4674e53330ba7b99aa8f33159ed3af2ba9e1d2ced4340b3",
+      "contentType": "image/jpeg",
+      "width": 1080,
+      "height": 1920,
+      "sizeBytes": 357236,
+      "path": "publish-bridge/assets/2026-09-10/G004/06e9226a155bd3e5f467.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/2026-09-10/G004/06e9226a155bd3e5f467.jpg",
+      "bridgeCommit": "967612df7b4d5908357c697b31753c44e088cdd7",
+      "fetchVerified": true,
+      "publishTransport": {
+        "mediaKind": "video/mp4",
+        "sha256": "5ce901eb6b27697bb9e7e8bb20fe2fefb9b49137cbed5e6c721a8da98e803260",
+        "publicUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/2026-09-10/G004/5ce901eb6b27697bb9e7.mp4",
+        "bridgeCommit": "d5baf95140b275afc21aa07bfb0bfa09415b60f9",
+        "reason": "image_story_mcp_9007_workaround_still_as_video"
+      }
+    },
+    {
+      "frameIndex": 2,
+      "sourceRef": "canva:DAHUaUo3bAk",
+      "approvalRef": "packages/vfgrowth/preflight/G004.md",
+      "exportPngSha256": "4cf41fe24d4adc480e537263a3cdc1c9c0838b41dd5bc3d18ddfd6d57a159eb4",
+      "sha256": "b684633900da766f8ff5f3b40b0f2f5aec286f8965347b4ec703fde562fcfd2a",
+      "contentType": "image/jpeg",
+      "width": 1080,
+      "height": 1920,
+      "sizeBytes": 353953,
+      "path": "publish-bridge/assets/2026-09-10/G004/b684633900da766f8ff5.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/2026-09-10/G004/b684633900da766f8ff5.jpg",
+      "bridgeCommit": "6d3b116e8d9dd537c4001738a24592c7d3380634",
+      "fetchVerified": true,
+      "publishTransport": {
+        "mediaKind": "video/mp4",
+        "sha256": "392e57b58184938c08a117f98bb4f05b088bb04f86dd56d7784abcf0299ffa77",
+        "publicUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/2026-09-10/G004/392e57b58184938c08a1.mp4",
+        "bridgeCommit": "9cf46412ffc06105f188061a44278eef575ba8c0",
+        "reason": "image_story_mcp_9007_workaround_still_as_video"
+      }
+    },
+    {
+      "frameIndex": 3,
+      "sourceRef": "canva:DAHUaUo3bAk",
+      "approvalRef": "packages/vfgrowth/preflight/G004.md",
+      "exportPngSha256": "09ed96ad5675ab42d3add14586620ee3d77e3a0812bc8324e4c59faa3e1e027c",
+      "sha256": "a9433ce659e3d54595114a908a23716ab2922cfd62dde3cdf5421bd76c58f90b",
+      "contentType": "image/jpeg",
+      "width": 1080,
+      "height": 1920,
+      "sizeBytes": 395592,
+      "path": "publish-bridge/assets/2026-09-10/G004/a9433ce659e3d5459511.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/2026-09-10/G004/a9433ce659e3d5459511.jpg",
+      "bridgeCommit": "99c22928e937ed420852686a9ce87b754365d578",
+      "fetchVerified": true,
+      "publishTransport": {
+        "mediaKind": "video/mp4",
+        "sha256": "579bf9963fd8c6519cde20c00ed147eec22838d86c6af0a4f5b7b93dba3ee607",
+        "publicUrl": "https://cdn.jsdelivr.net/gh/nocturney/velvetos-core@publish-bridge/publish-bridge/assets/2026-09-10/G004/579bf9963fd8c6519cde.mp4",
+        "bridgeCanonicalUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/2026-09-10/G004/579bf9963fd8c6519cde.mp4",
+        "bridgeCommit": "43c3633f635a732fc900f4e56e32af19466a0edd",
+        "reason": "image_story_mcp_9007_workaround_still_as_video"
+      }
+    },
+    {
+      "frameIndex": 4,
+      "sourceRef": "canva:DAHUfRQMH60",
+      "approvalRef": "packages/vfgrowth/preflight/G004.md",
+      "exportPngSha256": "ef37a0c593f0133ddf74a3ef1b58c85977a2ea7341e9ee26cecd1091d486ef55",
+      "sha256": "12b6284ea6ebf6fb865cdf43f38dbf7298d8b69527d670551ca9493a5b926b6c",
+      "contentType": "image/jpeg",
+      "width": 1080,
+      "height": 1920,
+      "sizeBytes": 279953,
+      "path": "publish-bridge/assets/2026-09-10/G004/12b6284ea6ebf6fb865c.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/2026-09-10/G004/12b6284ea6ebf6fb865c.jpg",
+      "bridgeCommit": "1411068c8fdf38d4282e973f34339757e551ff1a",
+      "fetchVerified": true,
+      "publishTransport": {
+        "mediaKind": "video/mp4",
+        "sha256": "22cb8ae817758c53ac132ff9d1e17cb8be0741b9535be42f790f88e26980d4a9",
+        "publicUrl": "https://cdn.jsdelivr.net/gh/nocturney/velvetos-core@publish-bridge/publish-bridge/assets/2026-09-10/G004/22cb8ae817758c53ac13.mp4",
+        "bridgeCanonicalUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/2026-09-10/G004/22cb8ae817758c53ac13.mp4",
+        "bridgeCommit": "1c971f379323bfd3070e702a9741556a2b992146",
+        "reason": "image_story_mcp_9007_workaround_still_as_video"
+      }
+    }
+  ],
+  "receipts": [
+    {
+      "frameIndex": 1,
+      "ok": true,
+      "account": "env",
+      "media_id": "17953408503217497",
+      "container_id": "18341480329259071",
+      "tool": "publish_story",
+      "recordedAt": "2026-09-10T17:54:21Z"
+    },
+    {
+      "frameIndex": 2,
+      "ok": true,
+      "account": "env",
+      "media_id": "18114907102964081",
+      "container_id": "18341480446259071",
+      "tool": "publish_story",
+      "recordedAt": "2026-09-10T17:55:19Z"
+    },
+    {
+      "frameIndex": 3,
+      "ok": true,
+      "account": "env",
+      "media_id": "18376412014224377",
+      "container_id": "18341481031259071",
+      "tool": "publish_story",
+      "recordedAt": "2026-09-10T18:00:35Z"
+    },
+    {
+      "frameIndex": 4,
+      "ok": true,
+      "account": "env",
+      "media_id": "17971746960141328",
+      "container_id": "18341481256259071",
+      "tool": "publish_story",
+      "recordedAt": "2026-09-10T18:01:13Z"
+    }
+  ],
+  "liveVerification": [
+    {
+      "media_id": "17953408503217497",
+      "verified": true,
+      "product": "STORY",
+      "type": "VIDEO",
+      "username": "velvets_cloud",
+      "permalink": "https://www.instagram.com/stories/velvets_cloud/3983270198852482421",
+      "timestamp": "2026-09-10T17:54:21+0000",
+      "verifiedAt": "2026-09-10T18:02:00Z"
+    },
+    {
+      "media_id": "18114907102964081",
+      "verified": true,
+      "product": "STORY",
+      "type": "VIDEO",
+      "username": "velvets_cloud",
+      "permalink": "https://www.instagram.com/stories/velvets_cloud/3983270698151691246",
+      "timestamp": "2026-09-10T17:55:19+0000",
+      "verifiedAt": "2026-09-10T18:02:00Z"
+    },
+    {
+      "media_id": "18376412014224377",
+      "verified": true,
+      "product": "STORY",
+      "type": "VIDEO",
+      "username": "velvets_cloud",
+      "permalink": "https://www.instagram.com/stories/velvets_cloud/3983273354521850457",
+      "timestamp": "2026-09-10T18:00:35+0000",
+      "verifiedAt": "2026-09-10T18:02:00Z"
+    },
+    {
+      "media_id": "17971746960141328",
+      "verified": true,
+      "product": "STORY",
+      "type": "VIDEO",
+      "username": "velvets_cloud",
+      "permalink": "https://www.instagram.com/stories/velvets_cloud/3983273652174501367",
+      "timestamp": "2026-09-10T18:01:13+0000",
+      "verifiedAt": "2026-09-10T18:02:00Z"
+    }
+  ],
+  "history": [
+    {
+      "at": "2026-09-10T17:41:00Z",
+      "to": "approved_export_local",
+      "note": "Canva re-export recovered after missing /opt/cursor/artifacts path"
+    },
+    {
+      "at": "2026-09-10T17:46:00Z",
+      "to": "fetch_verified",
+      "note": "four baseline JPEG URLs staged + fetch-verified on publish-bridge"
+    },
+    {
+      "at": "2026-09-10T18:01:13Z",
+      "to": "published",
+      "note": "four publish_story receipts"
+    },
+    {
+      "at": "2026-09-10T18:02:00Z",
+      "to": "published_verified",
+      "note": "get_media closed for all four media_ids on @velvets_cloud"
+    }
+  ]
+}
