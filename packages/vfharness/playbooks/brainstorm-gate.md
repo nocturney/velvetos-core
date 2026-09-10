@@ -1,6 +1,6 @@
 # Brainstorm gate — לפני בנייה
 
-מקור דפוס: [obra/superpowers `brainstorming`](https://github.com/obra/superpowers/tree/main/skills/brainstorming) (+ `writing-plans`).  
+מקור דפוס: [obra/superpowers `brainstorming`](https://github.com/obra/superpowers/tree/main/skills/brainstorming) (+ `writing-plans` + `executing-plans`).
 רתמה: `vfharness` · מחליטים: `vfmakers/crews/decide.md` · גריל פנייה: `vfconvert/hq/GRILL.md`.
 
 ## חוק ברזל

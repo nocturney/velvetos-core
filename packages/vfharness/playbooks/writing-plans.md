@@ -1,7 +1,7 @@
 # Writing plans — אחרי אישור, לפני יישום
 
 מקור דפוס: [obra/superpowers `writing-plans`](https://github.com/obra/superpowers/tree/main/skills/writing-plans).  
-רתמה: `vfharness` · לפני: `brainstorm-gate.md` · אחרי: `verification-before-claim.md` · מצב: `state/<task-id>.json`.
+רתמה: `vfharness` · לפני: `brainstorm-gate.md` · אחרי: `executing-plans.md` + `verification-before-claim.md` · מצב: `state/<task-id>.json`.
 
 ## מתי
 

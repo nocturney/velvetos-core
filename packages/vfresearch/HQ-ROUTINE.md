@@ -47,7 +47,7 @@ GrokBot `weekday-ops` 07:00 = בריף/תפעול — **לא** יוצרים cron
 
 ### ג. אחרי פרסום חי
 
-1. לעדכן `packages/vfinsights/data/posts.csv` מנתוני Instagram Professional Dashboard (בעלים / כלי מחובר).
+1. לעדכן `packages/vfinsights/data/posts.csv` מנתוני Instagram MCP מאומתים (`vf_insights_ingest.py`) או הדבקת בעלים.
 2. `python3 packages/vfinsights/scripts/vf_insights_loop.py --data packages/vfinsights/data/posts.csv` → `LEARNINGS.md`.
 3. בלי reach אמיתי — שדה ריק + «אין ספירה» בבריף 06. לא לנחש.
 

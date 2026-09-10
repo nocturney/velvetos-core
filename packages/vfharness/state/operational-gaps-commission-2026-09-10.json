@@ -1,0 +1,117 @@
+{
+  "ok": true,
+  "passed": 22,
+  "failed": 0,
+  "results": [
+    {
+      "step": "A.jobs_pull",
+      "ok": true,
+      "detail": "{\n  \"status\": \"pulled\",\n  \"at\": \"2026-09-10T09:21:37Z\",\n  \"canonical\": {\n    \"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\",\n    \"title\": \"VF HQ · jobs\",\n    \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\",\n    \"canonical\": \"goog"
+    },
+    {
+      "step": "A.jobs_ready",
+      "ok": true,
+      "detail": "{\"canonical\": {\"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\", \"title\": \"VF HQ · jobs\", \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\", \"canonical\": \"google_sheet\", \"localCache\": \"office/ledger/live/jobs.csv\"}, \"cachePath\": \"off"
+    },
+    {
+      "step": "A.real_job_VF-20260908-001",
+      "ok": true,
+      "detail": "VF-20260908-001"
+    },
+    {
+      "step": "A.world_model",
+      "ok": true,
+      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:21:37+03:00\",\n  \"kind\": \"velvet-world-model-projection\",\n  \"rule\": \"projection-only — sources remain canonical SoTs; numeric ₪ redacted to X ₪ (Sheet holds verified a"
+    },
+    {
+      "step": "A.studio_pulse",
+      "ok": true,
+      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:21:37+03:00\",\n  \"kind\": \"studio-pulse\",\n  \"what_happening_now\": {\n    \"jobs\": 5,\n    \"followups\": {\n      \"waiting_for_print_done\": 1,\n      \"ready_for_finished_conte"
+    },
+    {
+      "step": "A.autonomy_next",
+      "ok": true,
+      "detail": "{\n  \"kind\": \"approval\",\n  \"id\": \"story_poll_2026-09-07_petg_nylon\",\n  \"action\": \"pending_human_approval\",\n  \"reason\": \"highest-gated owner decision currently present in canonical approval sources\",\n  "
+    },
+    {
+      "step": "A.autonomy_execute_green",
+      "ok": true,
+      "detail": "{\n  \"run_id\": \"arun-c354317db6a2\",\n  \"correlation_id\": \"corr-5f055e1eae44\",\n  \"idempotency_key\": \"exec|projection_refresh|None|33ae4eeede\",\n  \"source\": \"selftest\",\n  \"decision\": \"execute\",\n  \"action\": \"projection_refresh\",\n  \"target_id\": null,\n  \"ris"
+    },
+    {
+      "step": "B.inquiry_dry",
+      "ok": true,
+      "detail": "{\n  \"intakeId\": \"uin-7f409becc7\",\n  \"kind\": \"inquiry\",\n  \"route\": {\n    \"skill\": \"client-intake-brief\",\n    \"packs\": [\n      \"vfconvert\"\n    ],\n    \"writes\": [\n      \"office/control/inbox.json\",\n      \"office/ledger/live/jobs.csv\"\n    ]\n  },\n  \"skill\": \"client-intake-brief\",\n  \"needs_input\": [],\n  \""
+    },
+    {
+      "step": "B.inquiry_dispatch",
+      "ok": true,
+      "detail": "{\"ok\": true, \"action\": \"vf_office.jobs.add\", \"job_id\": \"VF-20260910-001\", \"stage\": \"פנייה\", \"canonical_state\": \"office/ledger/live/jobs.csv#VF-20260910-001\"}"
+    },
+    {
+      "step": "C.media_dispatch",
+      "ok": true,
+      "detail": "{\"ok\": true, \"action\": \"vfmedia catalog association\", \"fileId\": \"media-1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj\", \"phase\": \"inbox\", \"canonical_state\": \"packages/vfmedia/catalog.json#media-1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj\", \"content_opportunity\": true}"
+    },
+    {
+      "step": "D.production_dispatch",
+      "ok": true,
+      "detail": "{\"ok\": true, \"action\": \"vfprod/production path via print-events + followups\", \"followup_id\": \"fu-prod-366dfddd2a6f\", \"canonical_state\": \"office/control/followups.json\"}"
+    },
+    {
+      "step": "D.work_to_story",
+      "ok": true,
+      "detail": "{\n  \"pipeline\": [\n    \"production/work begins\",\n    \"process media/content\",\n    \"followup remains open\",\n    \"print.done\",\n    \"finished media detected\",\n    \"finished-content candidate\",\n    \"Conten"
+    },
+    {
+      "step": "E.vfmem_invoked",
+      "ok": true,
+      "detail": "{\"ok\": true, \"action\": \"vfmem.who + inbox/optional owner-memory\", \"vfmem\": {\"invoked\": true, \"query\": \"הערה פנימית: לבדוק צינור inquiry לפני הצעה\", \"exitCode\": 0, \"rule\": \"retrieval only — generated text is never fact\", \"result\": {\"query\": \"הערה פנימית: לבדוק צינור inquiry לפני הצעה\", \"routes\": [{\"q\": [\"inquiry\", \"פנייה\", \"quote this\", \"פניה\"], \"pack\": \"vfconvert\", \"slug\": \"email-intelligence-engi"
+    },
+    {
+      "step": "E.meeting_decision_followup",
+      "ok": true,
+      "detail": "{\"decision\": \"dec-20260910-d29ecf\", \"fu\": \"fu-intake-62da3ea9\"}"
+    },
+    {
+      "step": "F.account_insights_file",
+      "ok": true,
+      "detail": "/workspace/packages/vfinsights/data/account-insights-latest.json"
+    },
+    {
+      "step": "F.posts_measured",
+      "ok": true,
+      "detail": "post_id,date,type,reach,likes,saves,comments,caption_style,views,shares,source\nDcqkjOLlYVX,2026-08-30,reel,187,0,0,0,תהליך-קצר,233,0,instagram_mcp\n"
+    },
+    {
+      "step": "F.learnings_no_dashboard",
+      "ok": true,
+      "detail": "# Learnings — closed measurement loop\n\nMeasured 1 of 1 posts. 0 still have no real number (excluded from ranking, not guessed).\n\nSource preference: Instagram MCP verified Insights → `scripts/vf_insigh"
+    },
+    {
+      "step": "F.follower_unknown",
+      "ok": true,
+      "detail": "unknown list"
+    },
+    {
+      "step": "F.content_universe_insights",
+      "ok": true,
+      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:21:37+03:00\",\n  \"media\": {\n    \"total\": 400,\n    \"inbox\": 346,\n    \"source\": 54,\n    \"verified\": 53,\n    \"registered_only\": 0,\n    \"unassociated\": 400\n  },\n  \"followup_phases\": {\n    \"process_only\": 1,\n    \"finished_"
+    },
+    {
+      "step": "scrub.owner_no_ig_missing",
+      "ok": true,
+      "detail": "OWNER-ACTIONS"
+    },
+    {
+      "step": "scrub.no_creds_json_current",
+      "ok": true,
+      "detail": "OWNER-ACTIONS"
+    },
+    {
+      "step": "scrub.registry_no_creds_blocker",
+      "ok": true,
+      "detail": "None"
+    }
+  ]
+}
