@@ -18,7 +18,7 @@
 | `rejected` | אדם: דחייה | נשאר במשרד |
 | `edit` | אדם או QA | חוזר ל־draft |
 | `published_verified` | `vfigos` אחרי tool receipt + verification evidence | לא מסמנים בלי ראיה |
-| `posted_manually` | אדם במסלול legacy | רק אחרי העלאה ידנית אמיתית |
+| `posted_manually` | אדם במסלול legacy | רק אחרי העלאה ידנית אמיתית עם `human_marked=true` + `marked_by` |
 | `performance_imported` | סנאפשוט / CSV | חסר = אין ספירה |
 | `attributed` | ייחוס הסתברותי | לא «וודאי» |
 | `learned` | רטרו / brief מחר | בלי בושה לבעלים |
