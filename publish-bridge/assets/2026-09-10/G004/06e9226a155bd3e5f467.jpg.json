@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "state": "staged_not_published",
+  "correlation": "G004",
+  "approvalRef": "packages/vfgrowth/preflight/G004.md",
+  "sourceRefHash": "189c6615048291882532cfe6912ef3471742b9fcbd1a106099ca59d1e6803d7b",
+  "createdAt": "2026-09-10T17:45:45.565064Z",
+  "archiveAfter": "2026-09-24T17:45:45.565064Z",
+  "archiveRetention": "unlimited",
+  "sha256": "06e9226a155bd3e5f4674e53330ba7b99aa8f33159ed3af2ba9e1d2ced4340b3",
+  "contentType": "image/jpeg",
+  "width": 1080,
+  "height": 1920,
+  "sizeBytes": 357236,
+  "path": "publish-bridge/assets/2026-09-10/G004/06e9226a155bd3e5f467.jpg",
+  "metadataPath": "publish-bridge/assets/2026-09-10/G004/06e9226a155bd3e5f467.jpg.json",
+  "publicUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/2026-09-10/G004/06e9226a155bd3e5f467.jpg"
+}
