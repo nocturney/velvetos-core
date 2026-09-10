@@ -1,0 +1,43 @@
+{
+  "jobId": "VF-R001",
+  "objective": "Show the real articulated object's visible movement immediately and turn discovery into product curiosity without unsupported claims.",
+  "format": "reel",
+  "targetDurationSeconds": {"min": 7, "max": 10},
+  "requiredSubject": "the multicolor articulated mechanical-octopus object shown in the source video",
+  "truthClaims": [
+    {
+      "claim": "The depicted object has multiple articulated limbs that visibly move while it is handled.",
+      "status": "verified",
+      "evidenceAssetIds": ["1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3"],
+      "sourceRefs": ["14957BFD-A1BC-45CB-BC24-92BDEC4E4B21.MP4"],
+      "note": "Visible directly in the reviewed source video."
+    },
+    {
+      "claim": "The object was printed in one piece / print-in-place.",
+      "status": "unsupported",
+      "evidenceAssetIds": [],
+      "sourceRefs": [],
+      "note": "Do not state or imply without separate production evidence."
+    },
+    {
+      "claim": "Any specific material, print duration, durability, load capability or customer use.",
+      "status": "unsupported",
+      "evidenceAssetIds": [],
+      "sourceRefs": [],
+      "note": "Not established by the selected footage."
+    }
+  ],
+  "syntheticPolicy": {
+    "allowedUses": ["non-factual transition", "background support", "atmosphere if it does not replace the real subject"],
+    "forbiddenUses": ["replace product geometry", "prove articulation", "invent physical result", "invent customer context", "generate Hebrew text inside synthetic imagery"]
+  },
+  "subjectPack": {
+    "referenceAssetIds": ["1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3"],
+    "geometryInvariants": ["mechanical octopus-like body", "multiple segmented articulated limbs", "prominent rounded eye forms"],
+    "materialInvariants": [],
+    "colorInvariants": ["orange dominant body", "green/turquoise accents", "dark and light mechanical details"],
+    "mustNotChange": ["limb count/structure as visible in source", "head/body proportions", "visible eye forms", "real source-product identity"]
+  },
+  "successDefinition": {"brandScore": 80, "realityScore": 90, "artifactScore": 90},
+  "novelty": null
+}
