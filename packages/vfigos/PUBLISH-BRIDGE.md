@@ -6,15 +6,20 @@ This is not a second media vault, not an approval system, and not evidence that 
 
 ## Current provider
 
-`github-branch` on repository `nocturney/velvetos-core`, dedicated branch **`publish-bridge`**, prefix `publish-bridge/assets/`.
+`github-branch` on repository `nocturney/velvetos-core`, dedicated branch **`publish-bridge`**.
 
-Public URL shape:
+Active transport prefix: `publish-bridge/assets/`  
+Archive prefix: `publish-bridge/archive/`
+
+Public active URL shape:
 
 ```text
 https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets/<YYYY-MM-DD>/<correlation>/<sha20>.jpg
 ```
 
-`main` is never a media staging target. A branch cleanup workflow removes old assets from the current branch head after the configured retention window. **Git cleanup is not secure erasure from repository history**, so this provider is allowed only for media that is already `approved_for_public_release` and may safely become public permanently.
+`main` is never a media staging target. Assets older than the configured active window leave the active transport path and move to the archive path. **They are not automatically deleted.** Archived assets are retained indefinitely unless the owner explicitly approves a different retention policy.
+
+Because the current provider is Git-backed and assets are already public-release-approved, both active and archived derivatives must be safe to remain retrievable. Archive is preservation, not privacy restoration.
 
 ## Hard gate
 
@@ -59,25 +64,45 @@ The public metadata sibling stores only a hash of the private source reference, 
 private source (Drive / Media Vault)
   -> approved derivative (Canva / vfcovers / vfcanva)
   -> exact version approval + PREFLIGHT + rights/privacy
-  -> Publish Bridge normalize + stage
+  -> Publish Bridge normalize + stage in assets/
   -> external HTTPS fetch verification
-  -> Instagram publish_* using the bridge URL
+  -> Instagram publish_* using the active bridge URL
   -> real publish receipt
   -> live list_media/get_media verification
   -> only then published_verified / liveVerified
+  -> after active window: move assets/<date>/... -> archive/<date>/...
 ```
 
 `staged`, `fetch_verified`, `publish_requested`, or a Calendar slot are **not** publication.
+
+## Archive retention
+
+The active transport window is currently 14 days. `.github/workflows/publish-bridge-cleanup.yml` runs daily and moves expired dated directories from:
+
+```text
+publish-bridge/assets/<YYYY-MM-DD>/...
+```
+
+to:
+
+```text
+publish-bridge/archive/<YYYY-MM-DD>/...
+```
+
+Rules:
+
+- archive retention is **unlimited**;
+- automatic deletion of archived assets is **disabled**;
+- existing archive destinations are never overwritten; a collision fails closed;
+- the move preserves the derivative and its metadata together;
+- the archive is not used as the normal Instagram transport path;
+- reusing an archived asset for a new publication should create/re-stage the exact currently approved derivative through the normal bridge flow rather than silently treating an old archived URL as current approval.
 
 ## Fallbacks and limits
 
 - `wsrv.nl` may be used only as a format/transport converter for an already-public approved bridge asset. It is not the source of truth and should not be needed for normal image staging because the bridge emits JPEG.
 - The Velvet bridge fails closed at 50 MiB for MP4 and 20 MiB for images. GitHub blocks regular Git objects above 100 MiB, so large reels/video must use an object-storage provider rather than being forced into Git.
-- Planned stronger provider: dedicated GCS object storage with expiring/signed publishing objects. Until that is deployed, do not claim Git retention is true expiry.
-
-## Retention
-
-`.github/workflows/publish-bridge-cleanup.yml` removes dated asset directories older than `retention.activeDays` from the **branch head**. The cleanup job is hygiene/deindexing only. It does not rewrite Git history.
+- Planned stronger provider: dedicated GCS object storage. The provider can change without changing the approval/publish contract; if that happens, archive-preservation remains the default unless Christian explicitly changes it.
 
 ## Never
 
@@ -86,4 +111,6 @@ private source (Drive / Media Vault)
 - never put publish binaries on `main`;
 - never treat public URL creation as approval or live publication;
 - never bypass PREFLIGHT/rights/privacy because transport is available;
+- never automatically delete archived publish assets;
+- never overwrite an archive collision;
 - never auto-DM, boost, change price, send customer WhatsApp, or trigger Print from this bridge.
