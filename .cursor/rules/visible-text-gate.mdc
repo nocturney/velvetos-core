@@ -1,0 +1,33 @@
+---
+description: Global human-visible AI text gate. Always route owner/customer/public prose through the relevant copy and truth tools before final output.
+alwaysApply: true
+---
+
+# Visible Text Gate · always on
+
+Authority: `constitution/VISIBLE_TEXT.md`.
+
+Any prose or microcopy created/rephrased by an AI and intended to be read by Christian, a customer, the public, a partner, or another human is **not final** until the relevant Visible Text Gate passes.
+
+## Mandatory baseline for Hebrew AI-authored text
+
+1. Read task/domain truth first; preserve source facts, IDs and numbers.
+2. Read `packages/vfcopy/hq/reader-first-he.md`.
+3. Route through `.cursor/skills/vf-hebrew-copy/SKILL.md` → `packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md`.
+4. Run the relevant channel/domain layer: public social → VOICE/PUBLIC_CTA/vfgrowth; customer/quote → vfconvert/vfsales/vfcost/vlicense when relevant; owner brief/report → owner-brief mode without public CTA; visual copy → NO_TEXT comparison + Creative Director/Brand Guardian.
+5. Run `packages/vfcopy/hq/ai-tells-he.md` and `python3 scripts/check-vfcopy.py lint --text '…'`.
+6. Marketing/sales long-form uses `vfmskill` copywriting/copy-editing when relevant; it never replaces vfcopy/Humanizer.
+7. Fact/constraint validation after style pass. Missing facts stay `needs_input` / `חסר`.
+
+## Scope
+
+Includes: ChatGPT/Cursor/Gemini/Perplexity/Grok owner-facing final prose, briefs, emails, customer replies, WhatsApp drafts, quotes, proposals, captions, Stories/Reels/carousels, cover/overlay/slide text, human-facing docs and AI-written UI microcopy.
+
+Excludes from rewriting: verbatim source quotes, code, raw logs, filenames, IDs, hashes, URLs, machine JSON/CSV and canonical deterministic labels. AI-written explanation around them is in scope.
+
+## Fail closed
+
+- No `PASS` by declaration. If a required stage was not actually run, status is `UNPROVEN`/`DRAFT`/`BLOCKED`.
+- Do not send/publish/render-as-final/surface-as-final after a failed gate.
+- Exact approved static copy may be reused only unchanged; meaningful edits invalidate approval.
+- An explicit owner wording preference is strong: validate it, do not rewrite its point back into generic marketing copy.
