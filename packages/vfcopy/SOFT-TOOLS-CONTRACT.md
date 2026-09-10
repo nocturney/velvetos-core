@@ -13,17 +13,17 @@ Before AI-authored human-visible text can be marked `final`, `ready`, `quality_c
 3. **Surface route** — choose `public-social`, `visual-microcopy`, `customer-message`, `sales-proposal`, `owner-brief`, `human-document`, `ui-microcopy`, or `desk`.
 4. **Relevant domain tools** — apply the packs that own truth/intent for that surface; do not use irrelevant tools just to satisfy a checklist.
 5. **velvet-hebrew-copy** — `.cursor/skills/vf-hebrew-copy/SKILL.md` → `skills/velvet-hebrew-copy/SKILL.md` + `PIPELINE.md`.
-6. **Humanizer / AI-tells** — `hq/ai-tells-he.md`.
-7. **Executable lint on the ACTUAL final text** — use `scripts/vf_visible_text.py` with the correct `--surface`; public-social may also use `python3 scripts/check-vfcopy.py lint`. A CI test of the linter is not evidence that a candidate passed.
+6. **Humanizer / AI-tells** — `hq/ai-tells-he.md`, whose embedded adaptation includes `write-better` + Humanizer patterns.
+7. **Executable lint on the ACTUAL final text** — use `scripts/vf_visible_text.py` with the correct `--surface`; public-social remains compatible with `python3 scripts/check-vfcopy.py lint`. A CI test of the linter is not evidence that a candidate passed.
 8. **Factual/constraint gate** — price, turnaround, customer, shipping, status, Insights, license/privacy and other claims only from the relevant verified source.
 9. **Surface-specific QA** — visual, sales, public, owner, document or UI requirements below.
-10. **Evidence tied to the exact text/version** — where an existing manifest/preflight/artifact has a digest, the text gate is bound to that digest. Material rewrite invalidates it.
+10. **Evidence tied to the exact text/version** — where an existing manifest/PREFLIGHT/artifact has a digest, the text gate is bound to that digest. Material rewrite invalidates it.
 
 ## Relevant-tool matrix
 
 | Surface | Extra tools/authorities that are relevant |
 |---|---|
-| `public-social` | `VOICE.md` + `VOICE-CHART.md` + `PUBLIC_CTA.md`; `vfmskill` copywriting/copy-editing/marketing-psychology when promotional; vfgrowth rubric/preflight |
+| `public-social` | `VOICE.md` + `VOICE-CHART.md` + examples from `voice/approved/` only + `PUBLIC_CTA.md`; `vfmskill` copywriting/copy-editing/marketing-psychology when promotional; `CONTENT-RUBRIC` + `PREFLIGHT` |
 | `visual-microcopy` | public voice when public + Creative Director + Brand Guardian + 3–5 candidates + `NO_TEXT` baseline |
 | `customer-message` | actual thread/card + `vfconvert`; add `vfsales`, `vfcost`, `vlicense` only when the message needs them; private CTA/channel from the real conversation |
 | `sales-proposal` | `vfsales` + `vfconvert` + `vfcost`/price approval; `vfmskill` copywriting/copy-editing when persuasive/long-form; `vlicense` when relevant |
@@ -35,7 +35,7 @@ Before AI-authored human-visible text can be marked `final`, `ready`, `quality_c
 
 For caption, Reel/Story/Carousel copy, public bio/profile copy:
 
-`verified context → reader-first → VOICE/VOICE-CHART/approved examples → relevant vfmskill writing aids → type template → velvet-hebrew-copy → Humanizer/AI-tells → surface-aware lint(actual final copy) → fact gate → CONTENT-RUBRIC → PREFLIGHT/exact digest → publish policy`
+`verified context → reader-first → VOICE.md / VOICE-CHART.md / voice/approved/ → relevant vfmskill copywriting + copy-editing + marketing-psychology → prompts.chat-derived type template/prompt anatomy → velvet-hebrew-copy → Humanizer/write-better/ai-tells-he.md → check-vfcopy.py lint on final copy → fact gate → CONTENT-RUBRIC → written PREFLIGHT/exact digest → publish policy`
 
 For cover/first-frame/overlay/slide text, add `NO_TEXT` comparison. Text must add value rather than decorate or restate the image.
 
@@ -43,7 +43,7 @@ For cover/first-frame/overlay/slide text, add `NO_TEXT` comparison. Text must ad
 
 For Gmail/WhatsApp/IG private reply, quote or proposal:
 
-`actual thread/card → relevant convert/sales/cost/license truth → reader-first → relevant sales/copywriting aids → velvet-hebrew-copy → Humanizer/AI-tells → surface-aware lint(actual final copy) → fact gate → ready_to_send/handoff`
+`actual thread/card → relevant convert/sales/cost/license truth → reader-first → relevant sales/copywriting aids → velvet-hebrew-copy → Humanizer/AI-tells → scripts/vf_visible_text.py on final copy → fact gate → ready_to_send/handoff`
 
 A phone/WhatsApp reference in a private customer message is not rejected merely because it would be forbidden as a public Instagram CTA.
 
@@ -51,7 +51,7 @@ A phone/WhatsApp reference in a private customer message is not rejected merely 
 
 For the 07:00 brief, direct office summary, status explanation, decision copy or owner-facing HTML:
 
-`office truth → reader-first(owner-brief) → velvet-hebrew-copy operational mode → Humanizer/AI-tells → surface-aware lint → fact/status validation → owner surface`
+`office truth → reader-first(owner-brief) → velvet-hebrew-copy operational mode → Humanizer/AI-tells → scripts/vf_visible_text.py on final copy → fact/status validation → owner surface`
 
 Humanizer may remove filler; it may **not** soften a blocker, alter an ID/hash/number, or make a red sensor sound green.
 
@@ -64,10 +64,10 @@ AI-authored prose in DOC/PDF/slide/HTML/Canva or dashboard UI passes the same ba
 - `VOICE.md` alone is not a copy-quality pass.
 - Brand Guardian does not replace copy lint; copy lint does not replace Brand Guardian on visual/public work.
 - Successful CI/evals do not prove a specific candidate passed.
-- `vfmskill`, reader-first, Humanizer and AI-tells are working methods, not reference shelves; when relevant they must affect/review the candidate.
-- Text created by ChatGPT, Cursor, Gemini, Perplexity, Grok, Canva, scripts or templates gets no origin exemption.
+- `vfmskill`, prompts.chat methodology, reader-first, `write-better`, Humanizer and AI-tells are working methods, not reference shelves; when relevant they must affect/review the candidate.
+- Text created by ChatGPT, Cursor, Gemini, Perplexity, Grok, Canva, scripts, templates, **or a human** is treated identically once it enters a gated public/customer/owner artifact. **Origin grants no exemption.**
 - Copy written outside `packages/vfcopy` is raw input until it passes the relevant chain.
-- Any rewrite after lint requires lint again. Material rewrite after rubric/preflight/render QA invalidates those approvals where applicable.
+- **Any rewrite after lint requires lint again.** Material rewrite after rubric/PREFLIGHT/render QA invalidates those approvals where applicable.
 - Missing proof produces `needs_input` / `חסר` / blocked state — never an invented completion claim.
 - `visible_text_gate: PASS` cannot be written just because the policy file exists. If actual execution is unproven, use `UNPROVEN`.
 
@@ -77,7 +77,7 @@ Stable text may be marked `approved_static_copy` only after a real pass. It may 
 
 ## Evidence
 
-Use the existing artifact/manifest/preflight for evidence; do not create a competing approval database. Where useful retain:
+Use the existing artifact/manifest/PREFLIGHT for evidence; do not create a competing approval database. Where useful retain:
 
 - `surface`
 - `reader_first`
@@ -87,8 +87,14 @@ Use the existing artifact/manifest/preflight for evidence; do not create a compe
 - `vfcopy_lint` + surface
 - `fact_gate`
 - `visual_copy_decision` when applicable
+- `content_rubric`: CONTENT-RUBRIC score/result when public content requires it
+- `preflight`: PREFLIGHT artifact path + digest when that surface has one
 - `surface_qa`
 - `visible_text_gate`
+
+## Compatibility invariant
+
+The older public-copy sensor remains intentionally valid as a subset of this broader contract. Its required concepts are still explicit here: `VOICE.md`, `VOICE-CHART.md`, `voice/approved/`, `copywriting`, `copy-editing`, `marketing-psychology`, `prompts.chat`, `velvet-hebrew-copy`, `ai-tells-he.md`, `write-better`, `Humanizer`, `check-vfcopy.py lint`, `CONTENT-RUBRIC`, `PREFLIGHT`, and the exact **final copy**. The new Visible Text Gate broadens the scope; it does not weaken that chain.
 
 ## Scope boundary
 
