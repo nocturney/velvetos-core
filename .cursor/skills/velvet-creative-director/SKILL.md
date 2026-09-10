@@ -9,7 +9,7 @@ Operate as the single creative-planning specialist inside VelvetOS. `vf-content-
 
 ## Authorities
 
-Read `packages/vfom/VISUAL-OS.md`, `VISUAL-DNA.json`, `FOUNDRY.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md`, `FORMAT-GENOMES.md` and `packages/vfcopy/VOICE.md`.
+Read `packages/vfom/VISUAL-OS.md`, `VISUAL-DNA.json`, `FOUNDRY.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md`, `FORMAT-GENOMES.md`, `packages/vfcopy/VOICE.md`, `packages/vfcopy/hq/reader-first-he.md`, `packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md`, `PIPELINE.md` and `packages/vfcopy/hq/ai-tells-he.md`.
 
 ## Workflow
 
@@ -19,14 +19,16 @@ Read `packages/vfom/VISUAL-OS.md`, `VISUAL-DNA.json`, `FOUNDRY.json`, `CREATIVE-
 4. Build the shot plan. For every shot specify `shotType`, real asset/ref when available, orientation, angle, distance, action, target duration and what it proves.
 5. Detect gaps before edit. If a critical physical shot is absent, emit the smallest exact `shotRequest`: what to film, orientation, angle, duration, action and why. Mark only the blocked branch `waiting_for_media`.
 6. Build an executable EDL through `EDIT-DIRECTOR.md`: exact in/out timing, asset refs, crop, speed, cut/transition, overlay and audio note. Use only approved motion presets and only when they serve the story.
-7. Define overlay layout: hook <=7 words, one short information sentence per screen, explicit accent words, clean frames when text adds no value, and no UI/subject obstruction.
-8. Produce three cover directions, choose one, and record its 2-5 word headline, subject crop, text placement and grid rationale.
-9. Update one canonical Creative Manifest rather than returning disconnected prose. Preserve evidence refs and unresolved gaps.
-10. Hand off to Brand Guardian. Ordinary creative-quality failures are repair work, not owner gates.
+7. For every Hebrew first-frame hook, cover headline or overlay, create 3-5 candidates **plus a `NO_TEXT` baseline**. Route all textual candidates through `reader-first-he.md` → `velvet-hebrew-copy` → `ai-tells-he.md`/lint. Generic copy, image-description copy or copy that fails the bakery test cannot be selected. `NO_TEXT` is a valid preferred result when the clean visual is stronger.
+8. Define overlay layout only after the Hebrew-copy decision: hook <=7 words, one short information sentence per screen, explicit accent words, clean frames when text adds no value, and no UI/subject obstruction.
+9. Produce three cover directions, but do not force text onto all of them. At least one cover direction must be `NO_TEXT`. For any text-bearing cover, record headline, subject crop, text placement, grid rationale and why `TEXT_WINS` over the clean version.
+10. Treat explicit owner wording preference as strong creative evidence. Preserve the chosen point/voice and only polish for naturalness, truth or readability; do not automatically replace it with more promotional language.
+11. Update one canonical Creative Manifest rather than returning disconnected prose. Preserve evidence refs and unresolved gaps.
+12. Hand off to Brand Guardian. Ordinary creative-quality failures are repair work, not owner gates.
 
 ## Required manifest contribution
 
-Write or update `concept`, `hook`, `shots`, `edit`, `overlays`, `cover` and `status`. Keep factual claims linked to the Content Contract; a real asset is not universal claim proof.
+Write or update `concept`, `hook`, `shots`, `edit`, `overlays`, `cover` and `status`. Keep factual claims linked to the Content Contract; a real asset is not universal claim proof. For Hebrew visual microcopy, record the human-copy/Humanizer pass and the `TEXT_WINS` or `NO_TEXT` decision in the existing manifest QA/decision fields until a dedicated schema field is added.
 
 ## Human surface
 
