@@ -45,6 +45,23 @@
     ]
   },
   "overlays": [],
+  "visualCopy": {
+    "decision": "TEXT_WINS",
+    "selectedText": "פה הזווית משנה הכול",
+    "noTextCompared": true,
+    "pipeline": ["reader-first-he", "velvet-hebrew-copy", "ai-tells-he", "owner-preference-lock"],
+    "candidates": [
+      {"text": "", "result": "baseline", "reason": "clean visual baseline; viable because the reflective detail is strong"},
+      {"text": "נראה אחרת בתנועה", "result": "rejected", "reason": "generic and mostly descriptive"},
+      {"text": "זווית אחרת", "result": "rejected", "reason": "too generic to justify occupying the cover"},
+      {"text": "פרט אחד, זווית אחרת", "result": "rejected", "reason": "accurate but more editorial than conversational"},
+      {"text": "פה הזווית משנה הכול", "result": "selected", "reason": "owner-selected; natural spoken Hebrew that expresses the visual mechanism as a point"}
+    ],
+    "ownerPreference": "פה הזווית משנה הכול",
+    "readerFirstNote": "Viewer sees one object changing as it rotates; the simplest useful line is that the angle is what changes the experience of the details.",
+    "humanizerNote": "Passes as conversational Hebrew in this visual context; avoids process claims, corporate language and image-description phrasing.",
+    "decisionRationale": "TEXT_WINS because it gives the rotation a clear reason to watch, while the clean visual alone is attractive but less explicit."
+  },
   "cover": {
     "candidates": [
       {"id": "c0-no-text", "headline": "", "subjectCrop": "front metallic hero angle", "textPlacement": "none", "gridRationale": "mandatory clean baseline; viable because the reflective subject is visually strong"},
