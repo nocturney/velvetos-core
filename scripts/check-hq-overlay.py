@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Validate ChatGPT-share embed: existing packs only, overlays present, no invented ILS."""
+"""Validate HQ overlays, Brief V10.2 contract, and no invented ILS."""
 from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -11,11 +12,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = json.loads((ROOT / "packages/manifest.json").read_text())
 MAP = json.loads((ROOT / "packages/chatgpt-embed-map.json").read_text())
 PACK_NAMES = {p["name"] for p in MANIFEST["packs"]}
-
 ALLOWED_PACKS = PACK_NAMES | {"constitution"}
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
-PHONE_OK = re.compile(r"050-2517000")
-X_ILS_OK = re.compile(r"\bX\s*₪")
 
 
 def fail(msg: str) -> None:
@@ -24,7 +22,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    if MAP["rule"].find("existing") < 0:
+    if "existing" not in MAP["rule"]:
         fail("map rule must say embed into existing packs")
 
     for agent in MAP["agents"]:
@@ -42,47 +40,59 @@ def main() -> None:
                 if not (ROOT / "packages" / pack / "hq").is_dir():
                     fail(f"missing hq overlay for {pack}")
 
-    if not (ROOT / "packages/vfbriefux/hq/PACKET.md").is_file():
-        fail("missing daily brief packet")
-    if not (ROOT / "packages/vfbriefux/hq/DIAGRAM-MAKER.md").is_file():
-        fail("missing vfbriefux diagram-maker embed map")
-    if not (ROOT / "packages/vfbriefux/hq/diagram-svg-template.html").is_file():
-        fail("missing vfbriefux diagram SVG template")
-
-    mail_html = ROOT / "packages/vfbriefux/MAIL.html"
-    mail_md = ROOT / "packages/vfbriefux/MAIL.md"
-    render = ROOT / "packages/vfbriefux/render_mail.py"
-    for path in (mail_html, mail_md, render):
+    required = (
+        ROOT / "packages/vfbriefux/hq/PACKET.md",
+        ROOT / "packages/vfbriefux/hq/DIAGRAM-MAKER.md",
+        ROOT / "packages/vfbriefux/hq/diagram-svg-template.html",
+        ROOT / "packages/vfbriefux/MAIL.html",
+        ROOT / "packages/vfbriefux/MAIL.md",
+        ROOT / "packages/vfbriefux/render_mail.py",
+        ROOT / "packages/vfbriefux/hq/DESIGN.md",
+    )
+    for path in required:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
-    # V10 presentation contract: Hebrew-first, dark living shell, V10 optional blocks.
-    mail_text = mail_html.read_text()
+    mail_text = (ROOT / "packages/vfbriefux/MAIL.html").read_text()
     for token in (
-        'bgcolor="#080a14"',
+        'bgcolor="#101828"',
         'dir="rtl"',
         "{{DATE_LINE}}",
         "{{SLOTS}}",
         "{{STATUS_BADGES}}",
+        "{{HERO_VISUAL}}",
         "{{KPI_STRIP}}",
         "{{DELTA_STRIP}}",
-        "V10",
+        "V10.2",
         "תמונת מצב עכשיו",
+        "#FF4F91",
+        "#6C7CFF",
+        "#B8F34A",
     ):
         if token not in mail_text:
             fail(f"MAIL.html missing {token}")
 
-    mail_contract = mail_md.read_text()
-    for token in ("htmlBody", "עברית", "מה השתנה מאז הבריף הקודם", "scheduled/uploaded != verified live"):
+    mail_contract = (ROOT / "packages/vfbriefux/MAIL.md").read_text()
+    for token in (
+        "htmlBody",
+        "עברית",
+        "תמונת היום",
+        "hero_visual",
+        "layout=split",
+        "cards[]",
+        "מה השתנה מאז הבריף הקודם",
+        "scheduled/uploaded != verified live",
+    ):
         if token not in mail_contract:
-            fail(f"MAIL.md missing V10 contract token {token!r}")
+            fail(f"MAIL.md missing V10.2 contract token {token!r}")
 
-    proc = __import__("subprocess").run(
-        [sys.executable, str(render), "--check"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-    )
+    design = (ROOT / "packages/vfbriefux/hq/DESIGN.md").read_text()
+    for token in ("Ink & Candy", "#101828", "#FF4F91", "#6C7CFF", "#B8F34A", "hero_visual"):
+        if token not in design:
+            fail(f"DESIGN.md missing V10.2 token {token!r}")
+
+    render = ROOT / "packages/vfbriefux/render_mail.py"
+    proc = subprocess.run([sys.executable, str(render), "--check"], cwd=ROOT, text=True, capture_output=True)
     if proc.returncode != 0:
         fail(f"render_mail.py --check: {proc.stderr or proc.stdout}")
 
@@ -98,54 +108,40 @@ def main() -> None:
 
     follower = ROOT / "packages/vfgrowth/hq/FOLLOWER-GROWTH.md"
     if not follower.is_file():
-        fail("missing vfgrowth/hq/FOLLOWER-GROWTH.md (ChatGPT content-agent embed)")
+        fail("missing vfgrowth/hq/FOLLOWER-GROWTH.md")
     loop_json = ROOT / "packages/vfops/LOOP.json"
     loop_cli = ROOT / "scripts/vfops_loop.py"
-    if not loop_json.is_file():
-        fail("missing packages/vfops/LOOP.json (office activation loop)")
-    if not loop_cli.is_file():
-        fail("missing scripts/vfops_loop.py")
-    loop_proc = __import__("subprocess").run(
-        [sys.executable, str(loop_cli), "check"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-    )
+    if not loop_json.is_file() or not loop_cli.is_file():
+        fail("missing vfops loop")
+    loop_proc = subprocess.run([sys.executable, str(loop_cli), "check"], cwd=ROOT, text=True, capture_output=True)
     if loop_proc.returncode != 0:
         fail(f"vfops_loop.py check: {loop_proc.stderr or loop_proc.stdout}")
 
     research = ROOT / "packages/vfops/data/research.md"
     if not research.is_file():
-        fail("missing vfops/data/research.md (07:00 block 05 pickup)")
+        fail("missing vfops/data/research.md")
     research_text = research.read_text()
     if "מה נבנה / יועל" not in research_text and "אין חדש במשרד" not in research_text:
-        fail("vfops/data/research.md must carry «מה נבנה / יועל» or exact empty-state אין חדש במשרד")
+        fail("vfops/data/research.md missing office brief state")
 
     vendor = (ROOT / "scripts/vendor-origin-packs.sh").read_text()
     if "HQ overlay wins" not in vendor:
         fail("vendor script must preserve hq overlay")
 
-    skip_need = ["auto-DM", "boost", "invented ILS prices"]
-    for s in skip_need:
+    for s in ("auto-DM", "boost", "invented ILS prices"):
         if s not in MAP["skipped"]:
             fail(f"skipped list missing {s}")
 
-    # No invented sale prices in HQ overlays (X ₪ and phone are ok).
-    overlay_roots = [ROOT / "constitution", ROOT / "packages"]
-    for folder in overlay_roots:
+    for folder in (ROOT / "constitution", ROOT / "packages"):
         for path in folder.rglob("*"):
-            if path.suffix not in {".md", ".json"}:
-                continue
-            if path.name == "ORIGIN.md":
+            if path.suffix not in {".md", ".json"} or path.name == "ORIGIN.md":
                 continue
             if "packages/vfcopy/evals" in str(path).replace("\\", "/"):
                 continue
             text = path.read_text()
             for m in ILS_NUMBER.finditer(text):
                 snippet = text[max(0, m.start() - 24):m.end() + 8]
-                if "X ₪" in snippet or "X   ₪" in snippet:
-                    continue
-                if "050-2517000" in snippet:
+                if "X ₪" in snippet or "X   ₪" in snippet or "050-2517000" in snippet:
                     continue
                 if re.search(r"(בלי|אין|לא)\s*₪|₪\s*רק", snippet):
                     continue
@@ -153,7 +149,7 @@ def main() -> None:
                     continue
                 fail(f"possible invented ILS in {path.relative_to(ROOT)}: {snippet!r}")
 
-    print("OK hq overlay + Brief V10 contract")
+    print("OK hq overlay + Brief V10.2 Ink & Candy image-first contract")
 
 
 if __name__ == "__main__":
