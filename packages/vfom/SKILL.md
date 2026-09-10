@@ -25,9 +25,9 @@
 
 `vf-content-sprint` הוא ה־orchestrator היחיד ומאציל עבודה לשלושה specialists, לא לשלושה runtimes:
 
-- `.cursor/skills/vf-creative-director/SKILL.md` — concept + First-Frame Hunter + shot list/gaps + timeline + overlay + cover direction.
-- `.cursor/skills/vf-media-librarian/SKILL.md` — canonical Media Vault intake/search/tagging/rights/truth; אין קטלוג שני.
-- `.cursor/skills/vf-brand-guardian/SKILL.md` — Brand Compliance Visual QA + originality/fatigue + feed continuity + targeted repair.
+- `.cursor/skills/velvet-creative-director/SKILL.md` — concept + First-Frame Hunter + shot list/gaps + timeline + overlay + cover direction.
+- `.cursor/skills/velvet-media-librarian/SKILL.md` — canonical Media Vault intake/search/tagging/rights/truth; אין קטלוג שני.
+- `.cursor/skills/velvet-brand-guardian/SKILL.md` — Brand Compliance Visual QA + originality/fatigue + feed continuity + targeted repair.
 
 ## Architecture law
 
