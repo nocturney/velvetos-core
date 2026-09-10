@@ -22,7 +22,7 @@ Packs: `vfcopy`, `vfcovers`, `vfigos`, `vfgrowth`, `vfom`, `vfmedia`.
 2. Run Creative Director from `vfom/CREATIVE-AUTOPILOT.md` + `VISUAL-OS.md`: choose concept + best first frame + shot list autonomously.
 3. If critical physical footage is missing, emit a minimal `shotRequest` and mark `waiting_for_media`. Do not ask broad creative questions.
 4. Classify existing assets through Media Vault vocabulary and build EDL from `EDIT-DIRECTOR.md`.
-5. Draft Hebrew through `vfcopy/VOICE.md`; CTA follows current constitution. No invented ₪/claims/Insights.
+5. Draft Hebrew through `vfcopy/VOICE.md`; funnel/CTA authority remains `packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md` + current constitution. No invented ₪/claims/Insights.
 6. Build/select cover. Canva first; failover per desk law. No raw JPEG as final branded cover.
 7. Written PREFLIGHT + Visual OS brandScore >=80 + CONTENT-RUBRIC >=20/25 + policy + rights. If quality fails, repair and re-run internally.
 8. Authorization:
