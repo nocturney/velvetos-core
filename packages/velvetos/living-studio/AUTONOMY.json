@@ -1,0 +1,108 @@
+{
+  "name": "velvetos-autonomy-composition",
+  "updatedAt": "2026-09-10",
+  "rule": "Composition over existing VelvetOS sources of truth. This is not a second runtime, queue, database, approval system, or event bus.",
+  "controlPlane": "office/control-plane.json",
+  "riskPolicy": "office/control/POLICY.md",
+  "cli": "python3 scripts/vf_autonomy.py",
+  "sensor": "scripts/check-vf-autonomy.py",
+  "businessRules": {
+    "pickupOnly": "Sderot",
+    "nationwideShipping": false,
+    "publicCTA": "Instagram message",
+    "customerWhatsAppSend": "human",
+    "inventSaleILS": false,
+    "inventInsights": false,
+    "destructiveAutonomy": false
+  },
+  "executionContract": {
+    "requiredIds": ["run_id", "idempotency_key", "correlation_id"],
+    "states": ["queued", "running", "waiting_approval", "completed", "failed"],
+    "checkpointAfter": ["state-changing internal step", "external-tool attempt", "approval boundary"],
+    "retry": {
+      "maxAutomaticRetries": 1,
+      "beforeRetry": "reconcile actual external/internal state",
+      "neverRetryBlindly": true
+    },
+    "receipt": ["input_ref", "decision", "action", "evidence", "result_state"]
+  },
+  "components": [
+    {
+      "id": "foundation-runtime-contract",
+      "kind": "contract",
+      "status": "ACTIVE",
+      "purpose": "Shared run/state/idempotency/checkpoint contract for workflows without introducing a second runtime.",
+      "reads": ["packages/velvetos/schema/events.catalog.json", "packages/vfharness/state/"],
+      "writes": ["packages/vfharness/state/"],
+      "approval": "existing office/control/POLICY.md gates"
+    },
+    {
+      "id": "router-context-engine",
+      "kind": "composition",
+      "status": "ACTIVE",
+      "purpose": "Route incoming work and assemble a small source-linked context pack before a specialist acts.",
+      "uses": ["universal-intake", "knowledge-base-curator", "client-intake-brief", "order-project-coordinator"],
+      "reads": ["office/control/inbox.json", "office/ledger/live/jobs.csv", "office/control/decisions.jsonl", "office/control/followups.json"],
+      "writes": ["existing canonical SoTs only"]
+    },
+    {
+      "id": "blocker-waiting-engine",
+      "kind": "composition",
+      "status": "ACTIVE",
+      "purpose": "Treat waiting as managed state: what is missing, from whom, what is blocked, when risk rises, and the next safe follow-up.",
+      "uses": ["finished-product-followup", "order-project-coordinator"],
+      "reads": ["office/control/followups.json", "office/control/inbox.json", "office/control/dead-letter.json"],
+      "writes": ["office/control/followups.json", "office/control/inbox.json"],
+      "blockerFields": ["waiting_for", "blocked_item", "since", "safe_until", "next_action", "risk"]
+    },
+    {
+      "id": "project-lifecycle-engine",
+      "kind": "composition",
+      "status": "ACTIVE",
+      "purpose": "Standardize project/order kickoff, missing inputs, milestones, production handoff, QA and completion using the existing job/order/print sources.",
+      "uses": ["client-intake-brief", "order-state-manager", "production-planner", "qa-release-gate"],
+      "reads": ["office/ledger/live/jobs.csv", "packages/vfsales/data/orders.json", "packages/vfprod/hq/cards/"],
+      "writes": ["existing job/order/print sources only"]
+    },
+    {
+      "id": "approval-system",
+      "kind": "projection",
+      "status": "ACTIVE",
+      "purpose": "Bundle approval decisions instead of interrupting the owner with low-level requests.",
+      "reads": ["office/control/inbox.json", "packages/vfgrowth/data/approval-queue.json", "office/control/POLICY.md"],
+      "writes": ["none; projection only"],
+      "ownerSurface": ["orange", "red"]
+    },
+    {
+      "id": "reliability-exception-engine",
+      "kind": "composition",
+      "status": "ACTIVE",
+      "purpose": "Reconcile before retry, surface duplicates/failed work, preserve dead-letter evidence and validate acceptance gates.",
+      "uses": ["system-health-watchdog", "qa-release-gate", "external-agent-handoff"],
+      "reads": ["office/control/dead-letter.json", "office/control/decisions.jsonl", "packages/vfharness/state/"],
+      "writes": ["existing dead-letter/checkpoint/handoff sources only"]
+    },
+    {
+      "id": "work-prioritization",
+      "kind": "projection",
+      "status": "ACTIVE",
+      "purpose": "Return one next-best action and a compact queue based on impact, urgency, unblock value, confidence and effort.",
+      "reads": ["office/control/inbox.json", "office/control/followups.json", "office/control/dead-letter.json"],
+      "writes": ["none; projection only"],
+      "score": "impact * urgency * unblock_value * confidence / estimated_effort"
+    },
+    {
+      "id": "background-executor-policy",
+      "kind": "policy",
+      "status": "ACTIVE",
+      "purpose": "Allow quiet-hours work only for reversible green/yellow internal actions; external commitments and destructive actions remain gated.",
+      "reads": ["office/control/POLICY.md", "office/control-plane.json"],
+      "writes": ["existing canonical SoTs only"],
+      "allowed": ["classify", "deduplicate suggestion", "internal draft", "context pack", "readiness check", "checkpoint", "projection refresh"],
+      "forbidden": ["purchase", "payment", "price change", "irreversible deletion", "customer WhatsApp send", "unverified public claim"]
+    }
+  ],
+  "projections": {
+    "snapshot": "packages/velvetos/living-studio/data/autonomy-latest.json"
+  }
+}
