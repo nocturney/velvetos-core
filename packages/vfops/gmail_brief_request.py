@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+from email.header import Header
 from pathlib import Path
 
 from vfops import gmail_brief_send
@@ -37,6 +38,11 @@ def load_request(path: Path) -> dict:
     return data
 
 
+def encode_subject(subject: str) -> str:
+    """Return an ASCII-safe RFC 2047 Subject for the legacy MIME builder."""
+    return Header(subject, "utf-8").encode()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Execute one VelvetOS Gmail brief send request")
     parser.add_argument("--request", type=Path, default=DEFAULT_REQUEST)
@@ -55,6 +61,7 @@ def main() -> int:
     subject = str(request.get("subject") or "").strip()
     if not subject:
         raise RuntimeError("send request missing subject")
+    encoded_subject = encode_subject(subject)
 
     html = repo_path(str(request.get("html") or ""))
     images_raw = str(request.get("images") or "").strip()
@@ -74,7 +81,7 @@ def main() -> int:
         "--to",
         to,
         "--subject",
-        subject,
+        encoded_subject,
     ]
     if request.get("embedRemoteImages", True):
         argv.append("--embed-remote-images")
