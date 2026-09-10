@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -17,6 +17,8 @@ SCENARIOS = ROOT / "packages" / "vfe2b" / "scenarios.json"
 LINKS_MAX_STALE_DAYS = 8
 CHECKPOINT_MAX_STALE_DAYS = 2
 TZ = ZoneInfo("Asia/Jerusalem")
+BRIEF_DUE = time(7, 0)
+BRIEF_GRACE = timedelta(minutes=15)
 
 
 def fail(msg: str) -> None:
@@ -53,6 +55,11 @@ def check_brief_today(today: date) -> bool:
     return any(p.is_file() for p in candidates)
 
 
+def brief_enforcement_time(now: datetime) -> datetime:
+    due = datetime.combine(now.date(), BRIEF_DUE, tzinfo=TZ)
+    return due + BRIEF_GRACE
+
+
 def check_running_checkpoints(today: date) -> list[str]:
     stale: list[str] = []
     if not STATE.is_dir():
@@ -83,18 +90,21 @@ def main() -> None:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
-    today = datetime.now(TZ).date()
+    now = datetime.now(TZ)
+    today = now.date()
     link_count, stale_links = check_links_stale(today)
     brief_ok = check_brief_today(today)
     stale_runs = check_running_checkpoints(today)
+    enforce_brief_at = brief_enforcement_time(now)
 
     if stale_links:
         fail(
             f"LINKS.json stale>{LINKS_MAX_STALE_DAYS}d: {', '.join(stale_links)}"
         )
-    if not brief_ok:
+    if not brief_ok and now >= enforce_brief_at:
         fail(
-            f"no brief artifact for {today.isoformat()} "
+            f"no brief artifact for {today.isoformat()} after "
+            f"{enforce_brief_at.strftime('%H:%M')} Asia/Jerusalem "
             f"(want BRIEF-{today}.md or hq/brief-{today}.json)"
         )
     if stale_runs:
@@ -103,8 +113,13 @@ def main() -> None:
             f"{', '.join(stale_runs)}"
         )
 
+    brief_state = (
+        today.isoformat()
+        if brief_ok
+        else f"pending-until-{enforce_brief_at.strftime('%H:%M')}"
+    )
     print(
-        f"OK staleness links={link_count} brief={today.isoformat()} "
+        f"OK staleness links={link_count} brief={brief_state} "
         f"running_checkpoints=0 stale"
     )
 
