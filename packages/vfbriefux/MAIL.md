@@ -1,6 +1,6 @@
-# מייל בריף · V10.2 · Ink & Candy
+# מייל בריף · V10.3 · Ink & Candy · Hybrid Responsive
 
-V10.2 הופך את הבריף מ־dashboard שנשלח במייל ל־**מגזין מודיעין יומי חי**: עברית תחילה, דלתא תחילה, תמונות אמיתיות כחלק מהגריד, ומבנה שמכוון את העין למה שדורש פעולה.
+V10.3 שומר על ה־V10.2 image-first וה־RTL, אבל הופך את המייל ל־**hybrid responsive אמיתי**: מובייל נשאר צפוף ונוח, ובדסקטופ — במיוחד Outlook for Windows — הבריף מקבל canvas רחב יותר, טיפוגרפיה גדולה יותר ופריסת side-by-side יציבה.
 
 ## המטרה
 
@@ -14,9 +14,20 @@ V10.2 הופך את הבריף מ־dashboard שנשלח במייל ל־**מגז�
 7. מה VelvetOS ביצעה בפועל.
 8. האם יש תקלה מערכתית אמיתית.
 
+## Responsive / Outlook contract
+
+- Desktop canvas: `780px`.
+- Mobile breakpoint: `680px` ומטה → `width:100%` וערימת KPI/cards/split cells.
+- Classic Outlook מקבל MSO conditional wrapper ברוחב 780px כדי לא להישען על `max-width` בלבד.
+- טיפוגרפיה תפעולית לא אמורה לרדת מתחת לכ־11–12px; body סביב 14–15px; כותרות 20px+.
+- `mso-line-height-rule:exactly` משמש בבלוקים קריטיים כדי לצמצם עיוותי line-height ב־Outlook Windows.
+- תמונות מקבלות גם width מפורש וגם `width:100%;max-width:...` כדי לעבוד גם ב־Word rendering וגם בלקוחות מודרניים.
+- בדסקטופ split cards נשארים side-by-side; במובייל הם נערמים.
+- Mobile Gmail/iOS נשאר source-of-truth לחוויה הצרה; Outlook desktop מקבל layout רחב ולא scaling של גרסת מובייל.
+
 ## עברית תחילה
 
-עברית היא שפת ברירת המחדל. אנגלית נשארת רק למונחים טבעיים: `Instagram`, `Reel`, `Canva`, `Insights`, `VelvetOS`, `V10.2`.
+עברית היא שפת ברירת המחדל. אנגלית נשארת רק למונחים טבעיים: `Instagram`, `Reel`, `Canva`, `Insights`, `VelvetOS`, `V10.3`.
 
 כותרות ברירת מחדל:
 - `תמונת היום`
@@ -77,7 +88,7 @@ V10.2 הופך את הבריף מ־dashboard שנשלח במייל ל־**מגז�
 
 ### Split card
 
-לעבודות וייצור ניתן להשתמש ב־`layout=split`: כשליש תמונה ושני שלישים טקסט בדסקטופ; במובייל הכול נערם.
+לעבודות וייצור ניתן להשתמש ב־`layout=split`: בערך 38% תמונה ו־62% טקסט בדסקטופ; במובייל הכול נערם.
 
 ### `cards[]`
 
@@ -97,6 +108,8 @@ V10.2 הופך את הבריף מ־dashboard שנשלח במייל ל־**מגז�
   ]
 }
 ```
+
+בדסקטופ שלושה cards יכולים להישאר בשורה; במובייל הם נערמים אוטומטית.
 
 ## סטטוסים ודלתא
 
@@ -140,7 +153,7 @@ V10.2 הופך את הבריף מ־dashboard שנשלח במייל ל־**מגז�
 
 ## Living Studio
 
-`render_mail.py` רשאי להשלים שדות V10.2 חסרים מתוך `packages/velvetos/living-studio/data/pulse-latest.json` בלבד. זהו projection fallback; הוא אינו מקור אמת חדש ואינו מנצח שדה מפורש ב־brief.
+`render_mail.py` רשאי להשלים שדות V10.3 חסרים מתוך `packages/velvetos/living-studio/data/pulse-latest.json` בלבד. זהו projection fallback; הוא אינו מקור אמת חדש ואינו מנצח שדה מפורש ב־brief.
 
 ## שליחה
 
@@ -155,7 +168,7 @@ PYTHONPATH=packages python3 -m vfops.gmail_brief_send \
   --html PATH --images DIR --to nocturney@gmail.com --subject TEXT
 ```
 
-במסלול connector/live גוף המייל חייב להישלח כ־`htmlBody`/`html_body` אמיתי. תמונת HTTPS אמיתית מותרת. attachment רגיל אינו inline.
+במסלול production התמונות צריכות להיכנס כ־CID/multipart-related כשנדרש inline rendering. attachment רגיל אינו inline.
 
 ## חוקי אמת
 
