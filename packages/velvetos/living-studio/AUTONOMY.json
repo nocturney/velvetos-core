@@ -98,11 +98,17 @@
       "purpose": "Allow quiet-hours work only for reversible green/yellow internal actions; external commitments and destructive actions remain gated.",
       "reads": ["office/control/POLICY.md", "office/control-plane.json"],
       "writes": ["existing canonical SoTs only"],
-      "allowed": ["classify", "deduplicate suggestion", "internal draft", "context pack", "readiness check", "checkpoint", "projection refresh"],
+      "allowed": ["classify", "deduplicate suggestion", "internal draft", "context pack", "readiness check", "checkpoint", "projection refresh", "media intake status", "vfmem retrieval", "reconcile before retry", "content factory prepare"],
       "forbidden": ["purchase", "payment", "price change", "irreversible deletion", "customer WhatsApp send", "unverified public claim"]
     }
   ],
+  "executor": {
+    "cli": "python3 scripts/vf_autonomy.py execute",
+    "lifecycle": ["queued", "running", "checkpoint", "completed", "waiting_approval", "failed"],
+    "rule": "Green/yellow invoke existing handlers; orange/red gated by POLICY; reconcile before retry"
+  },
   "projections": {
-    "snapshot": "packages/velvetos/living-studio/data/autonomy-latest.json"
+    "snapshot": "packages/velvetos/living-studio/data/autonomy-latest.json",
+    "runs": "packages/velvetos/living-studio/data/autonomy-runs.jsonl"
   }
 }

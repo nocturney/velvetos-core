@@ -1180,7 +1180,7 @@ def watchdog_issues() -> list[dict]:
                     "code": "media_intake_auth",
                     "detail": detail
                     if isinstance(detail, str)
-                    else "scheduled Drive intake AUTH blocked — VFMEDIA_DRIVE_CREDENTIALS_JSON",
+                    else "scheduled Drive intake AUTH blocked — check intake-runner.json auth.ready / GOOGLE_TOKEN",
                     "outcome": "WAITING_EXTERNAL_TOOL",
                     "brief": True,
                 }

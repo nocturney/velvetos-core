@@ -1,7 +1,10 @@
 {
-  "updatedAt": "2026-09-09T23:48:56+03:00",
-  "date": "2026-09-09",
-  "active_now": [],
+  "updatedAt": "2026-09-10T12:21:29+03:00",
+  "date": "2026-09-10",
+  "active_now": [
+    "fu-prod-366dfddd2a6f",
+    "fu-intake-62da3ea9"
+  ],
   "waiting": [
     {
       "id": "fu-G003-soccerball",
@@ -18,13 +21,15 @@
   ],
   "changed_today": [
     "Office Control Plane מוטמע",
-    "followups=1",
+    "followups=3",
     "dead_letters=0"
   ],
   "authoritative_sources": {
     "policy": "constitution/CONSTITUTION.md + constitution/ORCHESTRA.md",
     "risk_policy": "office/control/POLICY.md",
-    "jobs": "office/ledger/live/jobs.csv",
+    "jobs": "Google Sheet VF HQ · jobs (office/ledger/bindings.json) — local adapter cache office/ledger/live/jobs.csv via vf_office.py jobs pull",
+    "jobs_bindings": "office/ledger/bindings.json",
+    "jobs_cache": "office/ledger/live/jobs.csv",
     "media": "packages/vfmedia/catalog.json + docs/MEDIA-VAULT.md",
     "content_calendar": "packages/vfgrowth/CALENDAR.md",
     "content_approval": "packages/vfgrowth/data/approval-queue.json",
@@ -38,7 +43,8 @@
     "publication_states": "packages/vfigos/PUBLICATION-STATES.json",
     "instagram_capabilities": "packages/vfigos/CAPABILITIES.json",
     "profile_desired": "packages/vfigos/PROFILE-DESIRED.json",
-    "feed_audit": "packages/vfgrowth/data/feed-audit.json"
+    "feed_audit": "packages/vfgrowth/data/feed-audit.json",
+    "insights": "packages/vfinsights/data/ (MCP-verified via vf_insights_ingest.py)"
   },
   "tools_degraded": [],
   "safe_for_next_ai": [
@@ -81,6 +87,7 @@
   ],
   "chatgpt_tasks_keep": [
     "Velvet Morning Brief",
+    "Velvet Research Seat — 06:15 live web research body; non-mechanical intelligence task",
     "optional Velvet Publish Watch / hard-blocker alert"
   ]
 }

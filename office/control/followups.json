@@ -20,9 +20,33 @@
       "created_at": "2026-09-09T11:35:00+03:00",
       "updated_at": "2026-09-09T12:05:00+03:00",
       "next_action": "wait_matching_print_done",
-      "required_gates": ["EDIT-GATE", "PREFLIGHT"],
+      "required_gates": [
+        "EDIT-GATE",
+        "PREFLIGHT"
+      ],
       "publication": "process_live_finished_not_published",
       "note": "G003 process reel is live. Open finished-product thread when a defensible print.done (+ finished media) exists. Do not invent jobId/correlation_id/₪/order link. Empty orders.json is a sync gap, not proof of zero orders."
+    },
+    {
+      "id": "fu-prod-366dfddd2a6f",
+      "state": "ready_for_finished_content",
+      "createdAt": "2026-09-10T12:15:37+03:00",
+      "updatedAt": "2026-09-10T12:15:37+03:00",
+      "source": "universal-intake",
+      "note": "print.done commissioning: spool finished on bed A — work-to-story candidate",
+      "next_action": "work_to_story",
+      "owner": "office"
+    },
+    {
+      "id": "fu-intake-62da3ea9",
+      "state": "ready_for_finished_content",
+      "createdAt": "2026-09-10T12:15:37+03:00",
+      "updatedAt": "2026-09-10T12:15:37+03:00",
+      "source": "universal-intake",
+      "intakeExcerptKey": "c274b0b4aa29",
+      "note": "From meeting intake — needs human refinement",
+      "vfmemQuery": "סיכום פגישה: להמשיך מעמד נשקים אחרי הקדשה —",
+      "owner": "office"
     }
   ]
 }

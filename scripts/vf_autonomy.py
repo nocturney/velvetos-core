@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """VelvetOS autonomy composition — projections over existing Office/HQ sources of truth.
 
-No network. No send. No second queue/database/runtime.
+Compose next-action + safe execute over existing handlers.
+No second queue/database/runtime. Orange/red stay gated by POLICY.
 
 CLI:
   python3 scripts/vf_autonomy.py status
@@ -11,14 +12,18 @@ CLI:
   python3 scripts/vf_autonomy.py context <id>
   python3 scripts/vf_autonomy.py quiet-plan
   python3 scripts/vf_autonomy.py snapshot
+  python3 scripts/vf_autonomy.py execute [--action ...] [--dry-run]
   python3 scripts/vf_autonomy.py selftest
 """
 from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
+import subprocess
 import sys
+import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -29,6 +34,7 @@ TZ = ZoneInfo("Asia/Jerusalem")
 
 CONFIG = ROOT / "packages" / "velvetos" / "living-studio" / "AUTONOMY.json"
 OUT = ROOT / "packages" / "velvetos" / "living-studio" / "data" / "autonomy-latest.json"
+RUNS = ROOT / "packages" / "velvetos" / "living-studio" / "data" / "autonomy-runs.jsonl"
 INBOX = ROOT / "office" / "control" / "inbox.json"
 FOLLOWUPS = ROOT / "office" / "control" / "followups.json"
 DEAD = ROOT / "office" / "control" / "dead-letter.json"
@@ -38,10 +44,33 @@ JOBS = ROOT / "office" / "ledger" / "live" / "jobs.csv"
 JOBS_TEMPLATE = ROOT / "office" / "ledger" / "templates" / "jobs.csv"
 POLICY = ROOT / "office" / "control" / "POLICY.md"
 CONTROL_PLANE = ROOT / "office" / "control-plane.json"
+INTAKE_RUNNER = ROOT / "packages" / "vfmedia" / "state" / "intake-runner.json"
 
 RISK_ORDER = {"red": 0, "orange": 1, "yellow": 2, "green": 3, "": 4}
 CLOSED_STATES = {"closed", "closed_verified", "completed", "done", "resolved"}
 WAITING_PREFIXES = ("waiting_", "blocked")
+
+# Actions autonomy may execute without owner (green/yellow internal)
+SAFE_ACTIONS = {
+    "reconcile_before_retry",
+    "projection refresh",
+    "projection_refresh",
+    "refresh_projections",
+    "media_intake_retry",
+    "run_media_intake_status",
+    "jobs_pull_status",
+    "memory_context",
+    "vfmem_who",
+    "content_factory_prepare",
+    "watchdog_repair",
+    "health_repair",
+    "followup_safe_transition",
+    "review_current_state",
+    "classify",
+    "checkpoint",
+    "context pack",
+    "readiness check",
+}
 
 
 def now_iso() -> str:
@@ -70,11 +99,31 @@ def jobs_path() -> Path:
 
 
 def load_jobs() -> list[dict[str, str]]:
-    path = jobs_path()
-    if not path.is_file():
-        return []
-    with path.open("r", encoding="utf-8-sig", newline="") as fh:
-        return [dict(row) for row in csv.DictReader(fh)]
+    sys.path.insert(0, str(ROOT / "scripts"))
+    try:
+        import vf_jobs_adapter as jobs_adapter  # noqa: WPS433
+
+        return jobs_adapter.read_cache()
+    except Exception:  # noqa: BLE001
+        path = jobs_path()
+        if not path.is_file():
+            return []
+        with path.open("r", encoding="utf-8-sig", newline="") as fh:
+            return [dict(row) for row in csv.DictReader(fh) if (row.get("job_id") or "").strip()]
+
+
+def _append_run(row: dict[str, Any]) -> None:
+    RUNS.parent.mkdir(parents=True, exist_ok=True)
+    with RUNS.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+
+def _risk_allows_execute(risk: str) -> str:
+    """Return decision: execute | waiting_approval | refuse."""
+    r = (risk or "green").lower()
+    if r in {"red", "orange"}:
+        return "waiting_approval"
+    return "execute"
 
 
 def flatten_inbox() -> list[dict[str, Any]]:
@@ -294,17 +343,290 @@ def quiet_plan() -> dict[str, Any]:
     candidates: list[dict[str, Any]] = []
     for row in blockers():
         action = str(row.get("next_action") or "")
-        if action in {"reconcile_before_retry", "wait_matching_print_done"}:
-            candidates.append({"id": row.get("id"), "action": action, "source": row.get("source")})
-    candidates.append({"id": "autonomy-snapshot", "action": "projection refresh", "source": "AUTONOMY.json"})
+        if action in {"reconcile_before_retry", "wait_matching_print_done", "media_intake_retry", "projection_refresh"}:
+            candidates.append({"id": row.get("id"), "action": action, "source": row.get("source"), "risk": row.get("risk") or "yellow"})
+    candidates.append({"id": "autonomy-snapshot", "action": "projection_refresh", "source": "AUTONOMY.json", "risk": "green"})
+    candidates.append({"id": "media-intake-status", "action": "run_media_intake_status", "source": "vfmedia", "risk": "green"})
     return {
         "generatedAt": now_iso(),
         "mode": "quiet-hours-safe-plan",
         "allowed": bg.get("allowed") or [],
         "forbidden": bg.get("forbidden") or [],
         "candidates": candidates,
-        "note": "plan/projection only; this command performs no external action and makes no business commitment",
+        "note": "green/yellow candidates may be executed via vf_autonomy.py execute; orange/red stay gated",
     }
+
+
+def _reconcile_before_action(action: str, target_id: str | None) -> dict[str, Any]:
+    """Reconcile actual state before retry — never blind retry."""
+    evidence: dict[str, Any] = {"action": action, "target_id": target_id}
+    if action in {"media_intake_retry", "run_media_intake_status"}:
+        state = load_json(INTAKE_RUNNER, {})
+        evidence["intake_runner"] = {
+            "auth_ready": (state.get("auth") or {}).get("ready"),
+            "lastSuccessAt": state.get("lastSuccessAt"),
+            "activation_proven": (state.get("activation") or {}).get("proven"),
+            "lastError": state.get("lastError"),
+        }
+    if action in {"reconcile_before_retry"} and target_id:
+        # look up followup/dead-letter current state
+        for item in load_json(FOLLOWUPS, {"items": []}).get("items") or []:
+            if item.get("id") == target_id:
+                evidence["followup"] = {"state": item.get("state"), "next_action": item.get("next_action")}
+        for item in load_json(DEAD, {"items": []}).get("items") or []:
+            if item.get("id") == target_id:
+                evidence["dead_letter"] = {"status": item.get("status") or item.get("state")}
+    if action in {"projection_refresh", "projection refresh", "refresh_projections"}:
+        evidence["projections"] = {
+            "autonomy": OUT.is_file(),
+            "pulse": (ROOT / "packages/velvetos/living-studio/data/pulse-latest.json").is_file(),
+        }
+    sys.path.insert(0, str(ROOT / "scripts"))
+    try:
+        import vf_jobs_adapter as jobs_adapter  # noqa: WPS433
+
+        evidence["jobs"] = jobs_adapter.status()
+    except Exception as exc:  # noqa: BLE001
+        evidence["jobs_error"] = str(exc)
+    return evidence
+
+
+def _run_handler(action: str, *, target_id: str | None, dry_run: bool) -> dict[str, Any]:
+    action_norm = action.strip().replace(" ", "_").lower()
+    if action in {"projection refresh", "projection_refresh", "refresh_projections"} or action_norm == "projection_refresh":
+        if dry_run:
+            return {"ok": True, "dry_run": True, "handler": "snapshot+pulse+world-model"}
+        snap = snapshot()
+        pulse = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "vf_living_studio.py"), "pulse"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        world = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "vf_living_studio.py"), "world-model"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return {
+            "ok": pulse.returncode == 0 and world.returncode == 0,
+            "handler": "snapshot+pulse+world-model",
+            "nextBestAction": snap.get("nextBestAction"),
+            "pulse_exit": pulse.returncode,
+            "world_exit": world.returncode,
+        }
+
+    if action in {"run_media_intake_status", "media_intake_retry"} or action_norm in {
+        "run_media_intake_status",
+        "media_intake_retry",
+    }:
+        if dry_run:
+            return {"ok": True, "dry_run": True, "handler": "vfmedia.py intake status"}
+        proc = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "vfmedia.py"), "intake", "status"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        body = {}
+        try:
+            body = json.loads(proc.stdout) if proc.stdout.strip() else {}
+        except json.JSONDecodeError:
+            body = {"raw": (proc.stdout or "")[:500]}
+        # retry only when auth ready and lastError set — never invent success
+        retried = False
+        if action in {"media_intake_retry", "media_intake_retry"} and (body.get("auth") or {}).get("ready") and body.get("lastError"):
+            # status-only safe path here; full google run stays on GHA OIDC runner
+            retried = False
+        return {
+            "ok": proc.returncode == 0,
+            "handler": "vfmedia.py intake status",
+            "status": body,
+            "retried_run": retried,
+            "note": "full Drive intake remains on commissioned GHA OIDC runner when auth.ready",
+        }
+
+    if action in {"reconcile_before_retry"} or action_norm == "reconcile_before_retry":
+        evidence = _reconcile_before_action(action, target_id)
+        # safe followup transition: if waiting item already resolved externally, mark note
+        if target_id and not dry_run:
+            fu = load_json(FOLLOWUPS, {"items": []})
+            changed = False
+            for item in fu.get("items") or []:
+                if item.get("id") == target_id and item.get("state") not in CLOSED_STATES:
+                    item["lastReconcileAt"] = now_iso()
+                    item["reconcileNote"] = "autonomy reconciled actual state before retry"
+                    changed = True
+            if changed:
+                FOLLOWUPS.write_text(json.dumps(fu, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        return {"ok": True, "handler": "reconcile_before_retry", "evidence": evidence, "dry_run": dry_run}
+
+    if action in {"memory_context", "vfmem_who", "context pack"} or action_norm in {"memory_context", "vfmem_who"}:
+        q = target_id or "inquiry"
+        if dry_run:
+            return {"ok": True, "dry_run": True, "handler": "vfmem.py who", "query": q}
+        proc = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "vfmem.py"), "--json", "who", q],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        result = None
+        if proc.stdout.strip():
+            try:
+                result = json.loads(proc.stdout)
+            except json.JSONDecodeError:
+                result = {"text": proc.stdout[:1000]}
+        return {"ok": proc.returncode == 0, "handler": "vfmem.py who", "query": q, "result": result}
+
+    if action in {"content_factory_prepare"} or action_norm == "content_factory_prepare":
+        if dry_run:
+            return {"ok": True, "dry_run": True, "handler": "vf_living_studio work-to-story + content-universe"}
+        wts = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "vf_living_studio.py"), "work-to-story"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        cu = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "vf_living_studio.py"), "content-universe"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return {
+            "ok": wts.returncode == 0 and cu.returncode == 0,
+            "handler": "work-to-story + content-universe",
+            "note": "prepare only — no publish",
+        }
+
+    if action in {"watchdog_repair", "health_repair"} or action_norm in {"watchdog_repair", "health_repair"}:
+        if dry_run:
+            return {"ok": True, "dry_run": True, "handler": "vf_control_plane.py watchdog"}
+        proc = subprocess.run(
+            [sys.executable, str(ROOT / "scripts" / "vf_control_plane.py"), "watchdog"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return {
+            "ok": proc.returncode == 0,
+            "handler": "vf_control_plane.py watchdog",
+            "stdout": (proc.stdout or "")[:1000],
+        }
+
+    if action in {"followup_safe_transition"} or action_norm == "followup_safe_transition":
+        return _run_handler("reconcile_before_retry", target_id=target_id, dry_run=dry_run)
+
+    if action in {"review_current_state", "classify", "checkpoint", "readiness check", "jobs_pull_status"}:
+        if dry_run:
+            return {"ok": True, "dry_run": True, "handler": "jobs status + snapshot"}
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import vf_jobs_adapter as jobs_adapter  # noqa: WPS433
+
+        st = jobs_adapter.status()
+        snap = snapshot()
+        return {"ok": True, "handler": "jobs.status + snapshot", "jobs": st, "next": snap.get("nextBestAction")}
+
+    if action in {"wait_matching_print_done", "wait", "none", "no_action"}:
+        return {"ok": True, "handler": "noop_wait", "note": "waiting is managed state — no mutation"}
+
+    return {"ok": False, "handler": None, "error": f"no safe handler for action {action!r}"}
+
+
+def execute_action(
+    action: str | None = None,
+    *,
+    target_id: str | None = None,
+    risk: str | None = None,
+    dry_run: bool = False,
+    source: str = "vf_autonomy",
+) -> dict[str, Any]:
+    """Lifecycle: queued → running → checkpoint → completed | waiting_approval | failed."""
+    nxt = next_action() if not action else {
+        "kind": "manual",
+        "id": target_id,
+        "action": action,
+        "risk": risk or "green",
+        "source": source,
+        "reason": "explicit execute",
+    }
+    act = action or str(nxt.get("action") or "")
+    tid = target_id or (str(nxt.get("id")) if nxt.get("id") else None)
+    risk_val = (risk or nxt.get("risk") or "green")
+    run_id = f"arun-{uuid.uuid4().hex[:12]}"
+    correlation_id = f"corr-{hashlib.sha256(f'{act}|{tid}'.encode()).hexdigest()[:12]}"
+    idempotency_key = f"exec|{act}|{tid}|{rows_fingerprint(act, tid)}"
+    # idempotent: skip if same key completed recently
+    if RUNS.is_file():
+        for line in RUNS.read_text(encoding="utf-8").splitlines()[-200:]:
+            try:
+                prev = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if prev.get("idempotency_key") == idempotency_key and prev.get("state") == "completed":
+                return {**prev, "status": "idempotent_skip"}
+
+    decision = _risk_allows_execute(str(risk_val))
+    row: dict[str, Any] = {
+        "run_id": run_id,
+        "correlation_id": correlation_id,
+        "idempotency_key": idempotency_key,
+        "source": source,
+        "decision": decision,
+        "action": act,
+        "target_id": tid,
+        "risk": risk_val,
+        "state": "queued",
+        "at": now_iso(),
+        "next_action_snapshot": nxt,
+    }
+    _append_run(row)
+
+    if decision == "waiting_approval":
+        row["state"] = "waiting_approval"
+        row["evidence"] = {"policy": "office/control/POLICY.md", "gate": risk_val}
+        row["resulting_state"] = "waiting_approval"
+        _append_run(row)
+        return row
+
+    row["state"] = "running"
+    _append_run({"run_id": run_id, "state": "running", "at": now_iso()})
+
+    reconcile = _reconcile_before_action(act, tid)
+    row["checkpoint"] = {"reconcile": reconcile, "at": now_iso()}
+    _append_run({"run_id": run_id, "state": "checkpoint", "checkpoint": row["checkpoint"]})
+
+    try:
+        result = _run_handler(act, target_id=tid, dry_run=dry_run)
+        row["evidence"] = result
+        if result.get("ok"):
+            row["state"] = "completed"
+            row["resulting_state"] = "completed"
+        else:
+            row["state"] = "failed"
+            row["resulting_state"] = "failed"
+            row["error"] = result.get("error") or result.get("stderr")
+    except Exception as exc:  # noqa: BLE001
+        row["state"] = "failed"
+        row["resulting_state"] = "failed"
+        row["error"] = str(exc)
+        row["evidence"] = {"exception": str(exc)}
+    row["finishedAt"] = now_iso()
+    _append_run(row)
+    return row
+
+
+def rows_fingerprint(action: str, target_id: str | None) -> str:
+    return hashlib.sha256(f"{action}|{target_id}|{datetime.now(TZ).date().isoformat()}".encode()).hexdigest()[:10]
 
 
 def snapshot() -> dict[str, Any]:
@@ -318,6 +640,7 @@ def snapshot() -> dict[str, Any]:
         "blockers": blockers(),
         "approvalBundle": approval_bundle(),
         "quietPlan": quiet_plan(),
+        "executor": "vf_autonomy.py execute — composition over existing handlers",
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -354,6 +677,15 @@ def selftest() -> tuple[bool, list[str]]:
     states = set(contract.get("states") or [])
     if not {"queued", "running", "waiting_approval", "completed", "failed"}.issubset(states):
         errors.append("execution contract states incomplete")
+    # behavioral: green execute dry-run
+    ex = execute_action("projection_refresh", risk="green", dry_run=True, source="selftest")
+    if ex.get("state") not in {"completed", "idempotent_skip"} and ex.get("status") != "idempotent_skip":
+        if ex.get("state") != "completed":
+            errors.append(f"execute dry-run failed: {ex.get('state')} {ex.get('error')}")
+    # orange gated
+    gated = execute_action("content_factory_prepare", risk="orange", dry_run=True, source="selftest")
+    if gated.get("state") != "waiting_approval" and gated.get("decision") != "waiting_approval":
+        errors.append("orange action must wait for approval")
     return not errors, errors
 
 
@@ -372,6 +704,11 @@ def main() -> int:
     ctx.add_argument("identifier")
     sub.add_parser("quiet-plan")
     sub.add_parser("snapshot")
+    ex = sub.add_parser("execute", help="run next safe action or an explicit green/yellow action")
+    ex.add_argument("--action", default="")
+    ex.add_argument("--id", default="")
+    ex.add_argument("--risk", default="")
+    ex.add_argument("--dry-run", action="store_true")
     sub.add_parser("selftest")
     args = parser.parse_args()
 
@@ -385,6 +722,7 @@ def main() -> int:
                 "nextBestAction": next_action(),
                 "blockerCount": len(blockers()),
                 "approvalCount": len(approval_bundle()),
+                "executor": "execute",
             }
         )
         return 0
@@ -406,12 +744,22 @@ def main() -> int:
     if args.cmd == "snapshot":
         print_json(snapshot())
         return 0
+    if args.cmd == "execute":
+        print_json(
+            execute_action(
+                args.action or None,
+                target_id=args.id or None,
+                risk=args.risk or None,
+                dry_run=bool(args.dry_run),
+            )
+        )
+        return 0
     if args.cmd == "selftest":
         ok, errors = selftest()
         if not ok:
             print_json({"ok": False, "errors": errors})
             return 1
-        print_json({"ok": True, "nextBestAction": next_action()})
+        print_json({"ok": True, "nextBestAction": next_action(), "execute": "wired"})
         return 0
     return 2
 

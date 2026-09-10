@@ -1,9 +1,9 @@
-# מסירת מנהל · Office Control Plane · 2026-09-09
+# מסירת מנהל · Office Control Plane · 2026-09-10
 
 לא מערכת משרד שנייה. מקורות אמת: `office/control-plane.json`.
 
 ## מה פעיל עכשיו
-- אין פעיל מחוץ ללולאה הרגילה
+- fu-prod-366dfddd2a6f, fu-intake-62da3ea9
 
 ## מה ממתין
 - `fu-G003-soccerball` · waiting_for_print_done
@@ -21,13 +21,15 @@
 
 ## מה השתנה היום
 - Office Control Plane מוטמע
-- followups=1
+- followups=3
 - dead_letters=0
 
 ## מקורות סמכות
 - **policy:** `constitution/CONSTITUTION.md + constitution/ORCHESTRA.md`
 - **risk_policy:** `office/control/POLICY.md`
-- **jobs:** `office/ledger/live/jobs.csv`
+- **jobs:** `Google Sheet VF HQ · jobs (office/ledger/bindings.json) — local adapter cache office/ledger/live/jobs.csv via vf_office.py jobs pull`
+- **jobs_bindings:** `office/ledger/bindings.json`
+- **jobs_cache:** `office/ledger/live/jobs.csv`
 - **media:** `packages/vfmedia/catalog.json + docs/MEDIA-VAULT.md`
 - **content_calendar:** `packages/vfgrowth/CALENDAR.md`
 - **content_approval:** `packages/vfgrowth/data/approval-queue.json`
@@ -42,6 +44,7 @@
 - **instagram_capabilities:** `packages/vfigos/CAPABILITIES.json`
 - **profile_desired:** `packages/vfigos/PROFILE-DESIRED.json`
 - **feed_audit:** `packages/vfgrowth/data/feed-audit.json`
+- **insights:** `packages/vfinsights/data/ (MCP-verified via vf_insights_ingest.py)`
 
 ## כלים מדולדלים
 - אין חסם קשיח מדווח
@@ -68,7 +71,7 @@
 - `office/control-plane.json`
 
 ## משימות ChatGPT (רק אחרי הוכחת נתיב)
-להשאיר: Velvet Morning Brief, optional Velvet Publish Watch / hard-blocker alert
+להשאיר: Velvet Morning Brief, Velvet Research Seat — 06:15 live web research body; non-mechanical intelligence task, optional Velvet Publish Watch / hard-blocker alert
 מועמדים לכיבוי אחרי הוכחה: Media Intake, Content Sprint, Insights/Office Review, Memory Hygiene, Opportunity Radar, WIP→Finished watcher, Dead-letter monitoring, routine watchdog, source-of-truth validation, Studio Pulse, Universal Intake, Invisible Work Detector, Failure Museum, Velvet Lab, Living Studio Skills Registry
 
 אל תפנה לכריסטיאן על מדדים חלשים.
