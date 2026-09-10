@@ -19,6 +19,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install sensor runtime dependencies
+        run: python3 -m pip install --disable-pip-version-check Pillow
+
       - name: Living README contract
         if: github.event_name == 'pull_request'
         shell: bash
