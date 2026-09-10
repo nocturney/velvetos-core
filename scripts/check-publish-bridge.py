@@ -63,9 +63,15 @@ def main() -> int:
         fail("workflow must commit both active removals and archive additions")
 
     doc = DOC.read_text(encoding="utf-8")
-    for needle in ("archiveRetention", "unlimited", "never automatically delete"):
+    for needle in ("Archive retention", "unlimited", "never automatically delete"):
         if needle not in doc:
             fail(f"PUBLISH-BRIDGE.md missing archive rule {needle}")
+
+    stage = STAGE.read_text(encoding="utf-8")
+    if '"archiveAfter"' not in stage or '"archiveRetention"' not in stage:
+        fail("new staged asset metadata must record archive timing/retention")
+    if "removeFromBranchHeadAfter" in stage:
+        fail("legacy deletion-oriented metadata key must not return")
 
     send = SEND.read_text(encoding="utf-8")
     if "PUBLISH-BRIDGE.md" not in send or "publish-bridge" not in send:
