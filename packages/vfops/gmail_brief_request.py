@@ -10,7 +10,11 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import tempfile
 from email.header import Header
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from pathlib import Path
 
 from vfops import gmail_brief_send
@@ -39,8 +43,28 @@ def load_request(path: Path) -> dict:
 
 
 def encode_subject(subject: str) -> str:
-    """Return an ASCII-safe RFC 2047 Subject for the legacy MIME builder."""
+    """Return an ASCII-safe RFC 2047 Subject."""
     return Header(subject, "utf-8").encode()
+
+
+def build_safe_mime(*, html: str, images: list[Path], to: str, subject: str) -> MIMEMultipart:
+    """Build RFC-safe multipart/related MIME with UTF-8 HTML and CID images."""
+    msg = MIMEMultipart("related")
+    msg["To"] = to
+    msg["Subject"] = encode_subject(subject)
+    # Keep MIMEText's standard UTF-8 transfer encoding. Overriding it to raw
+    # 8bit breaks serialization under the legacy email policy when HTML
+    # contains Hebrew or punctuation such as an em dash / middle dot.
+    msg.attach(MIMEText(html, "html", "utf-8"))
+    for path in images:
+        subtype = gmail_brief_send.IMAGE_SUFFIXES[path.suffix.lower()]
+        part = MIMEImage(path.read_bytes(), _subtype=subtype)
+        cid = path.name
+        part.add_header("Content-ID", f"<{cid}>")
+        part.add_header("Content-Disposition", "inline", filename=cid)
+        part.set_param("name", cid)
+        msg.attach(part)
+    return msg
 
 
 def main() -> int:
@@ -61,35 +85,41 @@ def main() -> int:
     subject = str(request.get("subject") or "").strip()
     if not subject:
         raise RuntimeError("send request missing subject")
-    encoded_subject = encode_subject(subject)
 
-    html = repo_path(str(request.get("html") or ""))
+    html_path = repo_path(str(request.get("html") or ""))
     images_raw = str(request.get("images") or "").strip()
     if images_raw:
-        images = repo_path(images_raw)
-        if not images.is_dir():
+        images_dir = repo_path(images_raw)
+        if not images_dir.is_dir():
             raise RuntimeError("send request images path must be a directory")
     else:
-        images = ROOT / "packages" / "vfops" / "out" / ".empty-images"
-        images.mkdir(parents=True, exist_ok=True)
+        images_dir = ROOT / "packages" / "vfops" / "out" / ".empty-images"
+        images_dir.mkdir(parents=True, exist_ok=True)
 
-    argv = [
-        "--html",
-        str(html),
-        "--images",
-        str(images),
-        "--to",
-        to,
-        "--subject",
-        encoded_subject,
-    ]
-    if request.get("embedRemoteImages", True):
-        argv.append("--embed-remote-images")
-    if request.get("remoteImageLimit") is not None:
-        argv.extend(["--remote-image-limit", str(int(request["remoteImageLimit"]))])
+    html = html_path.read_text(encoding="utf-8")
+    images = gmail_brief_send.iter_images(images_dir)
+    remote_limit = int(request.get("remoteImageLimit", gmail_brief_send.DEFAULT_REMOTE_IMAGE_LIMIT))
 
-    print(f"SEND request={request.get('requestId', 'unknown')} to={to} html={html.relative_to(ROOT)}")
-    return gmail_brief_send.main(argv)
+    print(f"SEND request={request.get('requestId', 'unknown')} to={to} html={html_path.relative_to(ROOT)}")
+    try:
+        with tempfile.TemporaryDirectory(prefix="vfbrief-cid-") as tmp:
+            if request.get("embedRemoteImages", True):
+                html, remote_images = gmail_brief_send.embed_remote_images(
+                    html,
+                    Path(tmp),
+                    limit=remote_limit,
+                    max_bytes=gmail_brief_send.DEFAULT_REMOTE_IMAGE_MAX_BYTES,
+                )
+                images.extend(remote_images)
+            mime = build_safe_mime(html=html, images=images, to=to, subject=subject)
+            access_token = gmail_brief_send.mint_access_token()
+            message_id = gmail_brief_send.send_raw_rfc822(access_token, mime.as_bytes())
+    except Exception as exc:
+        print(str(exc), file=os.sys.stderr)
+        return 1
+
+    print(message_id)
+    return 0
 
 
 if __name__ == "__main__":
