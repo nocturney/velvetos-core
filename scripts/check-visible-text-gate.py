@@ -51,6 +51,19 @@ def main() -> None:
         "constitution/CONSTITUTION.md",
         ("Visible Text Gate", "VISIBLE_TEXT.md", "packages/vfcopy", "אין `PASS` בלי ביצוע בפועל"),
     )
+    require(
+        "AGENTS.md",
+        (
+            "Visible Text Gate is global",
+            "constitution/VISIBLE_TEXT.md",
+            "customer-message",
+            "owner-brief",
+            "human-document",
+            "ui-microcopy",
+            "UNPROVEN",
+            "scripts/check-visible-text-gate.py",
+        ),
+    )
     rule = text(".cursor/rules/visible-text-gate.mdc")
     if "alwaysApply: true" not in rule:
         fail(".cursor/rules/visible-text-gate.mdc must be alwaysApply: true")
@@ -207,7 +220,7 @@ def main() -> None:
         ("NO_TEXT", "velvet-hebrew-copy", "ai-tells-he.md"),
     )
 
-    print("OK visible-text-gate global human-facing routes + surface-aware executable bound")
+    print("OK visible-text-gate global human-facing routes + agent guide + surface-aware executable bound")
 
 
 if __name__ == "__main__":
