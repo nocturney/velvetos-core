@@ -33,7 +33,25 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Inspect send request
+        id: request
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ['REQUEST_PATH'])
+          data = json.loads(p.read_text(encoding='utf-8'))
+          enabled = data.get('enabled') is True
+          print('enabled=' + ('true' if enabled else 'false'))
+          print('request_id=' + str(data.get('requestId') or 'unknown'))
+          PY
+
+      - name: Disabled request
+        if: steps.request.outputs.enabled != 'true'
+        run: echo "Gmail brief send request is disabled; no email sent."
+
       - name: Materialize Gmail OAuth secret
+        if: steps.request.outputs.enabled == 'true'
         env:
           GMAIL_OAUTH_JSON: ${{ secrets.GMAIL_OAUTH_JSON }}
         run: |
@@ -55,6 +73,7 @@ jobs:
           PY
 
       - name: Send brief through Gmail API with CID images
+        if: steps.request.outputs.enabled == 'true'
         env:
           GOOGLE_TOKEN: ${{ runner.temp }}/gmail-oauth.json
         run: |
