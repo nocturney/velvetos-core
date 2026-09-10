@@ -25,20 +25,23 @@ G004/G006/G007/G008/G009/G010 וכל נגזרת עתידית שנוצרה לפנ
 
 ## שלישיית ההשקה
 
-| מזהה | תפקיד | פורמט | evidence | מצב |
+| מזהה | תפקיד | פורמט | exact-final assets | מצב |
 |---|---|---|---|---|
-| **VF-R001** | Discovery + movement proof | Reel | `1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3` · mechanical octopus in hand | `evidence_selected` |
-| **VF-R002** | Product story + detail | Carousel | IMG_1277–1281 batch · dark dragon sculpture | `evidence_selected` |
-| **VF-R003** | Studio visual intelligence + reveal | Reel | `1V5daU2XcB0kMsDo_erzv3AkumElfmrr5` · metallic helmet rotation | `evidence_selected` |
+| **VF-R001** | Discovery + movement proof | Reel | Reel `1pHS6-rBuQ-bEhLrwkPRU9eoTvL3D7FiJ` · Cover `1OVSZF_8MQSP7zksxPVTA0RmY6ofVQtW2` | `rendered · QA pass · BLOCKED rights+receipt` |
+| **VF-R002** | Product story + detail | Carousel | `1np7Wv…` / `17Ol5…` / `1L4o4…` / `1NC93…` | `rendered · QA pass · BLOCKED rights+receipt` |
+| **VF-R003** | Studio visual intelligence + reveal | Reel | Reel `1gz5vjne9EegNpa3K0Ol9b50KjmCLhR5n` · Cover `19KUhou5sLBWQ-MRHntl6J2F8zhmJPRty` | `rendered · QA pass · BLOCKED rights+receipt` |
 
-המפרט המלא, first-frame candidates והגבלות claim נמצאים ב־`RESET-LAUNCH-TRIO.md`.
+ה־preflights המחייבים: `preflight/VF-R001.md`, `preflight/VF-R002.md`, `preflight/VF-R003.md`.
+
+כל שלושת הפריטים עברו exact-final media/copy/readability/contrast review. הם **לא** `ready_for_publish` כל עוד אין הוכחת זכויות פרסום מתועדת ואין execution receipt מחייב משכבת ה־Skill Enforcement.
 
 ## סדר מעבר
 
-1. להביא את VF-R001/R002/R003 ל־`ready_for_publish` עם כל ה־gates.
-2. רק אז Christian מבצע באפליקציית Instagram: **Archive ל־8/8 הפריטים הישנים** + עדכון bio לפי `packages/vfigos/PROFILE-DESIRED.json`.
-3. לבצע live verification שהפיד הישן הוסר מהתצוגה והביו תואם `PUBLIC_CURRENT_CTA`.
-4. לשבץ/לפרסם את שלישיית הפתיחה לפי readiness ומרווח סביר; לא חייבים למלא תאריך אם אחד מהם חלש או חסום.
+1. לסגור זכויות + execution receipts על אותה חבילה מדויקת.
+2. להביא את VF-R001/R002/R003 ל־`ready_for_publish` בלי לשנות media/copy אחרי האישור.
+3. רק אז Christian מבצע באפליקציית Instagram: **Archive ל־8/8 הפריטים הישנים** + עדכון bio לפי `packages/vfigos/PROFILE-DESIRED.json`.
+4. לבצע live verification שהפיד הישן הוסר מהתצוגה והביו תואם `PUBLIC_CURRENT_CTA`.
+5. לשבץ/לפרסם את שלישיית הפתיחה לפי readiness ומרווח סביר; לא חייבים למלא תאריך אם אחד מהם חלש או חסום.
 
 ## cadence לאחר ההשקה
 
