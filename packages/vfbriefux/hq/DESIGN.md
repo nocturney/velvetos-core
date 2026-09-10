@@ -1,129 +1,159 @@
 ---
-name: Velvet Factory Office
-version: "1.0"
+name: Velvet Factory Brief V10
+version: "10.0"
 tokens:
   color:
-    canvas: "#0b1224"
-    surface-dark: "#101a35"
-    surface-cream: "#f7f3eb"
-    accent-gold: "#caa96b"
-    text-on-dark: "#f4ead3"
-    text-on-dark-muted: "#d8deeb"
-    text-on-cream: "#101a35"
-    text-muted: "#c9d0df"
+    canvas: "#080a14"
+    surface-dark: "#11142a"
+    surface-soft: "#f6f5fb"
+    violet: "#7c5cff"
+    cyan: "#20d9ff"
+    pink: "#ff5fa2"
+    coral: "#ff8a65"
+    lime: "#a3e635"
+    yellow: "#f5c451"
+    text-dark: "#161a2d"
+    text-muted: "#697386"
     white: "#ffffff"
   typography:
-    display: "Georgia, serif"
+    display: "Arial, sans-serif"
     body: "Arial, sans-serif"
-    label-size: "11px"
+    label-size: "10px"
     body-size: "14px"
-    title-size: "28px"
+    title-size: "31px"
     bottom-line-size: "17px"
   spacing:
-    outer: "24px 12px"
-    card-padding: "28px"
-    section-gap: "20px"
-    accent-border: "6px"
+    outer: "18px 8px 34px"
+    card-padding: "17px 20px"
+    section-gap: "12px"
+    accent-border: "4px"
   layout:
-    max-width: "640px"
+    max-width: "680px"
     direction: rtl
-  components:
-    header-bar:
-      backgroundColor: "{color.surface-dark}"
-      borderRight: "{spacing.accent-border} solid {color.accent-gold}"
-      padding: "{spacing.card-padding}"
-    bottom-line-card:
-      backgroundColor: "{color.surface-dark}"
-      textColor: "{color.white}"
-      labelColor: "{color.accent-gold}"
-      padding: "16px"
-    slot-body:
-      backgroundColor: "{color.surface-cream}"
-      textColor: "{color.text-on-cream}"
-      padding: "{spacing.card-padding}"
-    footer:
-      backgroundColor: "{color.surface-dark}"
-      textColor: "{color.text-muted}"
-      fontSize: "12px"
-      padding: "16px 28px"
 ---
 
-# Velvet Factory — Office Visual Identity
+# Velvet Factory — Brief V10 Visual Identity
 
-## Design Philosophy
+## עיקרון
 
-**Architectural warmth meets print-floor clarity.** The office UI reads like a morning brief from a small studio — not a SaaS dashboard. Dark navy grounds the eye; cream surfaces carry readable content; gold accents mark decisions and hierarchy. RTL-first. Pickup-only, human CTA.
+הבריף הוא **מסך שליטה יומי שחי בתוך המייל**, לא memo ולא dashboard גנרי. הוא צריך להרגיש כמו מוצר מודרני של VelvetOS: חד, צבעוני, עשיר אך לא צעקני, וניתן לסריקה בטלפון תוך 20–30 שניות.
 
-Target audience: studio lead reading the 07:00 brief on phone. Emotional tone: calm authority, no urgency theater, no fake scarcity.
+שפת ברירת המחדל היא **עברית**. אנגלית מותרת רק כמיקרו־לייבל קצר כאשר היא באמת מוסיפה אופי או מוכרת מונח מערכת; אין כותרות שלמות באנגלית כאשר יש ניסוח עברי טבעי.
 
-## Color
+## שפה חזותית
 
-| Token | Hex | Use |
-|---|---|---|
-| canvas | `#0b1224` | Email outer background (תצוגה 3) |
-| surface-dark | `#101a35` | Headers, decision cards, footer |
-| surface-cream | `#f7f3eb` | Slot body, readable blocks |
-| accent-gold | `#caa96b` | Labels, right border, emphasis |
-| text-on-dark | `#f4ead3` | Subtitle on dark |
-| text-muted | `#c9d0df` | Footer, secondary |
+V10 מחליף את נעילת navy/gold הישנה בשפה רחבה יותר:
 
-Do not introduce bright greens, purple gradients, or pure black `#000`. Do not use light gray `#f5f5f5` as primary surface — cream is the light surface.
+| צבע | שימוש |
+|---|---|
+| `#080a14` | קנבס חיצוני כהה מאוד |
+| `#11142a` | מעטפת/hero כהה |
+| `#7c5cff` | מערכת, משרד, VelvetOS, version |
+| `#20d9ff` | מידע חי, Insights, תמונת מצב |
+| `#ff5fa2` | צריך ממך / החלטה / תשומת לב |
+| `#ff8a65` | ייצור והדפסה |
+| `#a3e635` | כסף שהושלם/תקין/חיובי |
+| `#f5c451` | הזדמנות/פרנסה/מעקב |
+| `#f6f5fb` | משטח תוכן בהיר |
 
-## Typography
+הצבעים הם **סמנטיים**, לא קישוט: אותו סוג מידע מקבל אותה משפחת צבעים לאורך הבריף. מותר gradient עדין ב־Hero בלבד; גוף המייל נשאר Gmail-safe ופשוט.
 
-- **Labels** (e.g. «השורה התחתונה», slot numbers): Georgia 11px, gold, letter-spaced feel
-- **Titles**: Arial 28px white on dark
-- **Body / slots**: Arial 14px, line-height ~1.55
-- **Bottom line**: Arial 17px white — one sentence max
+## היררכיה
 
-Hebrew copy only in product-facing blocks. English OK in dev docs and token names.
+1. Hero — תאריך, גרסה, מצב עסק, בריאות מערכת.
+2. KPI — עד ארבעה נתונים בלבד, מאומתים.
+3. **תמונת מצב עכשיו** — משפט אחד.
+4. **מה השתנה מאז הבריף הקודם** — עד ארבעה delta משמעותיים.
+5. צריך ממך — אם קיים, גבוה בדף.
+6. כסף / ייצור / היום / הזמנות.
+7. Instagram + תוכן חי עם thumbnails.
+8. מחקר — רק findings עם פעולה מומלצת.
+9. VelvetOS Activity — מה בוצע בפועל, לא רשימת שירותים כללית.
+10. בריאות מערכת מפורטת רק כשיש degradation.
 
-## Layout & Spacing
+## צפיפות אדפטיבית
 
-- Max content width: **640px** centered on canvas
-- Direction: **rtl** on all presentation tables and slot content
-- Header: 6px solid gold border on the **right** (RTL accent)
-- Section padding: 28px horizontal on cards; 20px between stacked blocks
+- בלוק שלא השתנה ובלי חריגה: `density=compact` או שורה קצרה.
+- בלוק עם שינוי: מקבל `delta` מודגש.
+- חריגה/חסם: עולה מוקדם יותר בתוך הנתונים שהקומפוזר מספק.
+- אין להאריך את המייל רק כדי לשמר שבעה אזורים באותו גובה.
+- אין להמציא שינוי כדי להצדיק צבע או badge.
 
-## Components
+## תמונות
 
-### Morning brief envelope (MAIL.html)
+תמונה היא **הוכחה ויזואלית**, לא filler.
 
-Locked structure 01–07. Agent fills `{{SLOTS}}` only — never reorders slots. Header/footer tokens fixed. See `packages/vfops/hq/BRIEF-SLOTS.md`.
+מקורות נתמכים:
+1. `cid:<filename>` לנכס פרטי/מקומי דרך Gmail sender.
+2. `url`/`src` אמיתי שהוחזר מ־Instagram/Canva/public source.
+3. `href` אופציונלי הופך את התמונה ללחיצה ישירה ליעד האמיתי.
 
-### Wireframe (brief-email.html)
+לכל תמונה: `alt`, caption קצר, וקישור כשהוא קיים. אין stock images ואין תמונה לא קשורה רק כדי “להחיות” בלוק.
 
-Same tokens for Mobbin-blocked / effective-html reference. Not the live send path — `MAIL.html` + `render_mail.py` is production.
+## עברית תחילה
 
-### Decision card (slot 01 pattern)
+מומלץ:
+- `תמונת מצב עכשיו` במקום `NOW READ`
+- `מה השתנה מאז הבריף הקודם` במקום `WHAT CHANGED`
+- `צריך ממך` במקום `OWNER ACTION`
+- `מצב הכסף` במקום `CASH STATE`
+- `רדאר תוכן` במקום `CONTENT RADAR`
+- `שולחן המחקר` במקום `RESEARCH DESK`
+- `היום / בהמשך` במקום `TODAY / NEXT`
+- `פעילות VelvetOS` במקום `VELVETOS ACTIVITY`
 
-Dark surface, gold label, white action text. Yes / No / Defer — no fake countdown timers.
+מותר להשאיר `V10`, `Instagram`, `VelvetOS`, `Reel`, `Canva`, `Insights` וכדומה כשהמונח עצמו טבעי יותר כך.
 
-## Do's and Don'ts
+## סטטוסים
 
-**Do**
+Hero מציג שני צירים נפרדים:
 
-- Keep one CTA per customer-facing IG block: Instagram message (`PUBLIC_CURRENT_CTA`) or איסוף שדרות — not WhatsApp phone
-- Use verified numbers only in slot 06 — write «אין ספירה» when missing
-- Match Canva IG palette where brief covers appear in slot 07 (`#vfcovers`)
+- `מצב העסק` — GREEN/YELLOW/RED מבחינת תשומת לב ניהולית.
+- `בריאות מערכת` — תשתיות בלבד.
 
-**Don't**
+במייל עצמו הטקסט העברי קודם לצבע. צבע לעולם אינו הסימן היחיד למצב.
 
-- WhatsApp / `050-2517000` as public CTA; auto-DM / «שלחו DM» as tooling; boost CTAs
-- Invent ₪, Insights, or queue hours
-- Swap תצוגה 3 structure for a «cleaner» single-column marketing layout
-- Add stock photos of bedrooms, national shipping badges, or generic startup illustrations
+## כללי אמת
 
-## Breakpoints
+- אין ₪ מומצא.
+- אין Insights מומצאים.
+- scheduled/uploaded ≠ verified live.
+- אין `0` במקום מידע חסר; משתמשים ב־`אין ספירה`/`לא זמין` לפי ההקשר.
+- thumbnail של מקור מחקרי צריך להיות מאותו מקור; אם אין, משתמשים ב־logo fallback או בלי תמונה.
+- פעילות VelvetOS מתארת receipt/שינוי שבאמת קרה מאז הריצה הקודמת.
 
-Email target: mobile-first 320–640px. Tables use `role="presentation"` — no responsive framework required. Desktop: same 640px card centered on `#0b1224` canvas.
+## Gmail / mobile
+
+- RTL בכל טבלאות התצוגה.
+- 320–680px, mobile-first.
+- מבנה table-based; CSS פשוט ו-inline ככל האפשר.
+- כפתורים touch-friendly.
+- dark-mode resilient.
+- מידע קריטי לעולם לא כתמונה בלבד.
+
+## תאימות לאחור
+
+`render_mail.py` ממשיך לקבל JSON ישן של 01–07. שדות V10 חדשים הם אופציונליים:
+
+- `attention`
+- `system_health`
+- `kpis[]`
+- `changes[]`
+- `slots[].kind`
+- `slots[].density`
+- `slots[].delta`
+- `covers[].cid` או `covers[].url/src`
+- `covers[].href`
+
+כך אפשר לעבור ל־V10 בהדרגה בלי לשבור את לולאת הבריף הקיימת.
 
 ## Related files
 
 | File | Role |
 |---|---|
-| `../MAIL.html` | Live brief template (תצוגה 3) |
-| `brief-email.html` | Wireframe reference |
-| `DESIGN-EMBED.md` | Source map (awesome-design-md) |
-| `EFFECTIVE-HTML.md` | Slot → html-plan mapping |
-| `packages/vfcanva/` | Instagram visuals — Canva brand kit is authoritative for feed |
+| `../MAIL.html` | מעטפת V10 החיה |
+| `../render_mail.py` | renderer בעברית־תחילה + V10 fields |
+| `../MAIL.md` | חוזה תוכן/מקורות/שליחה |
+| `packages/vfops/hq/BRIEF-SLOTS.md` | מקורות המידע הקנוניים |
+| `packages/vfmedia/catalog.json` | מדיה אמיתית |
+| `packages/velvetos/living-studio/` | Studio Pulse / Living Studio inputs |
