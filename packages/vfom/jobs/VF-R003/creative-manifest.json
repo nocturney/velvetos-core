@@ -35,11 +35,11 @@
   },
   "edit": {
     "durationTargetSec": 8.5,
-    "audioStrategy": "source contains no audio; keep silence unless a separately licensed supporting track is added later",
+    "audioStrategy": "The source and rendered Reel contain no audio stream. Accidental silence FAILS the Audio Gate. Route through vf-ig-music/audio repair: select suitable IG-native music/SFX or another intentional audio treatment; intentional silence is allowed only with a documented creative reason and review. Re-render/re-package if audio is embedded, or bind the IG-native selection to publication verification.",
     "timeline": [
-      {"startSec": 0.0, "endSec": 2.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "respect rotation metadata; vertical 9:16 crop centered on helmet; preserve front silhouette", "speed": 1.5, "cut": "hard", "audio": "none"},
-      {"startSec": 2.0, "endSec": 5.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "tight vertical detail crop while side ornament and crest become visible", "speed": 1.5, "cut": "hard", "audio": "none"},
-      {"startSec": 5.0, "endSec": 8.5, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "clean medium-close crop completing rotation; avoid hand/UI obstruction", "speed": 1.5, "cut": "hard", "audio": "none"}
+      {"startSec": 0.0, "endSec": 2.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "respect rotation metadata; vertical 9:16 crop centered on helmet; preserve front silhouette", "speed": 1.5, "cut": "hard", "audio": "missing-fail"},
+      {"startSec": 2.0, "endSec": 5.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "tight vertical detail crop while side ornament and crest become visible", "speed": 1.5, "cut": "hard", "audio": "missing-fail"},
+      {"startSec": 5.0, "endSec": 8.5, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "clean medium-close crop completing rotation; avoid hand/UI obstruction", "speed": 1.5, "cut": "hard", "audio": "missing-fail"}
     ]
   },
   "overlays": [],
@@ -58,15 +58,26 @@
     "originalityScore": 84,
     "artifactScore": 92,
     "deterministicChecks": {
-      "state": "pass",
+      "state": "fail",
       "exactFinalPackageSha256": "0048f0cf533d7c1f673a541c42ca48f837b159aa1291e2f36d10f8de6811b259",
       "video": "1080x1920 h264 8.5s",
-      "caption": "no WhatsApp/phone/currency; Instagram-message CTA; pickup Sderot; 5 hashtags",
+      "caption": "current Drive caption uses a lead/pickup framing that should be rewritten for the new showcase intent",
       "coverContrast": "15.48:1 ink-on-cream",
-      "visualReview": "exact-final contact sheet reviewed; rotation remains centered, readable and distinct from R001"
+      "visualReview": "exact-final contact sheet reviewed; rotation remains centered, readable and distinct from R001",
+      "audioStream": "none",
+      "audioGate": "FAIL_NO_AUDIO"
     },
-    "failures": ["Public-release rights evidence is not documented yet.", "Skill execution receipt is not yet bound by the enforcement layer."],
-    "repairs": ["Kept video text-free so reflected detail stays the subject.", "Reframed copy to describe only visible light/angle change, not an unverified finishing process.", "Rebuilt cover using verified vfcanva typography/color tokens and deterministic contrast."]
+    "failures": [
+      "Audio Gate FAIL: final Reel contains no audio stream and no intentional-silence decision was documented.",
+      "Copy repair required: current public caption should be reframed as non-transactional showcase.",
+      "Skill execution receipt is not yet bound by the enforcement layer."
+    ],
+    "repairs": [
+      "Kept video text-free so reflected detail stays the subject.",
+      "Reframed visual claims to describe only visible light/angle change, not an unverified finishing process.",
+      "Rebuilt cover using verified vfcanva typography/color tokens and deterministic contrast.",
+      "Next: run vf-ig-music/audio repair, rewrite caption as non-transactional showcase, then re-render/re-hash/re-run exact-final QA."
+    ]
   },
   "feed": {
     "continuityDecision": "pass",
@@ -77,5 +88,7 @@
     "drive:19KUhou5sLBWQ-MRHntl6J2F8zhmJPRty:VF-R003-cover.jpg",
     "drive:1YTU28fQUXFF6FLB4fd5RmgA3tux-pvZ6:VF-R003-caption.txt"
   ],
-  "rightsNotes": ["Possession/source location is not rights approval. Public-release rights must be documented before media_ready/publish."]
+  "rightsNotes": [
+    "Owner decision 2026-09-10: owner-captured showcase content is not blocked by a blanket model-license gate. Rights/privacy escalation remains for third-party media, UGC, identifiable-person privacy, known restrictions, or explicit commercial promotion of the depicted model."
+  ]
 }
