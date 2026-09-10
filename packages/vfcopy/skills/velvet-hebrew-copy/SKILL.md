@@ -3,8 +3,9 @@ name: velvet-hebrew-copy
 description: >-
   Authority for Velvet Factory Hebrew writing style — natural Israeli Hebrew for a small
   3D-print studio in Sderot. Use when drafting or editing Instagram captions, Reels, carousels,
-  stories, desk replies, or any public Hebrew copy for @velvets_cloud. Runs after brand/voice
-  context and before vfigos review. Rejects ChatGPT-Hebrew, corporate tone, and invented facts.
+  stories, cover headlines, overlays, hooks, desk replies, or any public Hebrew copy for
+  @velvets_cloud. Runs after brand/voice context and before visual lock/vfigos review. Rejects
+  ChatGPT-Hebrew, corporate tone, generic visual copy, and invented facts.
 license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 ---
 
@@ -19,8 +20,9 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 ## מתי
 
 - כל טיוטת כיתוב / ריל / קרוסלה / סטוריז / תשובת דלפק בעברית ל־`@velvets_cloud` או למשרד.
-- אחרי שיש הקשר מוצר/מדיה מאומת — לפני `#vfigos`.
-- כשטיוטה «נשמעת כמו ChatGPT בעברית».
+- **כל טקסט עברי שמופיע על ויזואל ציבורי:** first-frame hook, cover headline, overlay, slide headline או CTA על פריים.
+- אחרי שיש הקשר מוצר/מדיה מאומת — לפני נעילת cover/render ולפני `#vfigos`.
+- כשטיוטה «נשמעת כמו ChatGPT בעברית», כמו סלוגן גנרי, או כשהטקסט אינו מוסיף דבר לתמונה.
 
 ## סדר חובה (pipeline)
 
@@ -29,12 +31,13 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 1. verified media / product / order context  
 2. business truth + constitution  
 3. brand + Velvet voice (`VOICE.md` · `VOICE-CHART.md` · `voice/approved/`)  
-4. writer לפי type (caption / carousel / reel)  
-5. hook כשמתאים  
-6. **velvet-hebrew-copy** (שכבה זו)  
-7. style / AI-tells QA (`hq/ai-tells-he.md` + lint)  
-8. factual / constraint validation  
-9. **content candidate** | **needs_input**
+4. reader-first: מה האדם רואה/מרגיש ומה הדרך הכי פשוטה להגיד את זה  
+5. writer לפי type (caption / carousel / reel / cover / overlay)  
+6. hook/microcopy candidates כשמתאים + **מועמד No Text חובה לטקסט על ויזואל**  
+7. **velvet-hebrew-copy** (שכבה זו)  
+8. style / AI-tells QA (`hq/ai-tells-he.md` + lint)  
+9. factual / constraint validation  
+10. **content candidate** | **needs_input**
 
 אין שליחה מכאן. אין Publish. אין auto-DM.
 
@@ -76,13 +79,25 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 
 ### Carousel
 
-מבנה קרוסלה (שקופית כיסוי = הוק + הבטחה, רעיון אחד לשקופית) → hook → **velvet-hebrew-copy**.  
+מבנה קרוסלה (שקופית כיסוי = הוק + הבטחה **רק אם טקסט מוסיף ערך**) → hook → **velvet-hebrew-copy**.  
+לכל cover/slide headline יש להשוות מול גרסת **No Text**; אם הטקסט לא מנצח — משאירים את הוויזואל נקי.  
 כיתוב נפרד לפי Caption. ויזואל: Canva (`vfcanva`).
 
 ### Reel
 
-לוגיקת ריל (הוק ~3 שנ׳, עובד גם בלי סאונד, תהליך-קצר או סיפור-מוצר) → hook → **velvet-hebrew-copy**.  
+לוגיקת ריל (הוק ~3 שנ׳, עובד גם בלי סאונד, תהליך-קצר או סיפור-מוצר) → hook/overlay/cover candidates → **velvet-hebrew-copy**.  
+כל headline/overlay נבדק גם מול **No Text**. טקסט שאפשר להלביש על כמעט כל ריל נכשל מבחן מאפייה.  
 כיתוב לפי Caption. סאונד: `vfresearch/MUSIC.md` — לא ממציאים שם track.
+
+### Cover / Overlay microcopy
+
+- טקסט על תמונה **אינו ברירת מחדל**.
+- עבור כל cover/overlay עם עברית: צרו 3–5 ניסוחים + `NO_TEXT`, ואז העבירו את הטקסט דרך reader-first → velvet-hebrew-copy → AI-tells.
+- הטקסט חייב להוסיף לפחות אחד: פואנטה, פרט ספציפי, מתח, payoff, או סיבה להמשיך לצפות/להחליק.
+- תיאור מילולי של מה שכבר רואים, «משפט אווירה», סלוגן גנרי או ניסוח שניתן להחלפה בין מוצרים = FAIL.
+- העדיפו 2–5 מילים כשאפשר; קצר אינו ערך בפני עצמו.
+- החלטת `NO_TEXT` היא תוצאה תקינה ואף מועדפת כשהוויזואל חזק יותר לבדו.
+- בחירת בעלים בטקסט מסוים היא preference חזקה; משייפים רק אם נדרש לטבעיות/דיוק ולא מחליפים את הפואנטה ללא סיבה.
 
 ### SEO
 
@@ -99,20 +114,22 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 
 ## QA
 
-1. הרצה סטטית: `python3 scripts/check-vfcopy.py lint --text '…'`  
-2. Eval suite: `python3 scripts/check-vfcopy.py eval`  
-3. Pass אחרון ידני: `hq/ai-tells-he.md`  
-4. בעיה סגנונית → rewrite אחד ממוקד (`lint --rewrite`).  
-5. בעיה עובדתית → `needs_input`. אין loop אינסופי.
+1. לפני טיוטה/מיקרוקופי: `hq/reader-first-he.md`.  
+2. הרצה סטטית: `python3 scripts/check-vfcopy.py lint --text '…'`  
+3. Eval suite: `python3 scripts/check-vfcopy.py eval`  
+4. Pass אחרון ידני: `hq/ai-tells-he.md`  
+5. לטקסט על ויזואל: רשמו גם `noTextCompared: true` + החלטה מדוע הטקסט מנצח, או בחרו `NO_TEXT`.  
+6. בעיה סגנונית → rewrite אחד ממוקד (`lint --rewrite`).  
+7. בעיה עובדתית → `needs_input`. אין loop אינסופי.
 
 ## פלט
 
 ```text
 status: content_candidate | needs_input
-mode: תהליך-קצר | סיפור-מוצר | desk
+mode: תהליך-קצר | סיפור-מוצר | desk | visual-microcopy
 body: |
   …
-notes: חסר / לינט / rewrite
+notes: חסר / לינט / rewrite / no-text decision
 ```
 
 ## אל
@@ -121,11 +138,13 @@ notes: חסר / לינט / rewrite
 - פק writing חדש מחוץ ל־vfcopy
 - Publish / שינוי bio / captions חיים / secrets
 - המצאת ₪ / משלוח / turnaround / לקוח / סיפור
+- טקסט על cover רק כדי «שיהיה משהו כתוב»
 
 ## קישורים
 
 - התאמת מקורות חיצוניים: `ADAPTATION.md`
 - צינור: `PIPELINE.md`
 - קול נעול: `../../VOICE.md` · `../../VOICE-CHART.md`
-- לינט עברי: `../../hq/ai-tells-he.md`
+- reader-first: `../../hq/reader-first-he.md`
+- לינט עברי / Humanizer: `../../hq/ai-tells-he.md`
 - תבניות: `../../hq/templates/`
