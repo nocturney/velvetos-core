@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Research cadence status + index build for vfresearch.
+"""Research cadence status + freshness + index build for vfresearch.
 
 Separates:
 - status/verify: which routines exist, who runs them, last artifact (no fake 'activated')
+- freshness: prove a same-day research body exists and is consumable by the morning brief
 - build-index: semantic index for vfmem consumers (fails closed — no || echo)
 - Does NOT pretend weekly-links / best-skills / LAST30 ran just because CI started
 
-No network required for status/verify. build-index needs scikit-learn locally/CI.
+No network required for status/verify/freshness. build-index needs scikit-learn locally/CI.
 No send. No invented Insights.
 """
 from __future__ import annotations
@@ -34,13 +35,13 @@ ROUTINES = (
     {
         "id": "daily-orchestra",
         "title": "מחקר יומי / תזמורת 06:15",
-        "trigger": "skill vf-morning-brief + packages/vfresearch/DAILY.md · office ROUTINE 06:15",
-        "environment": "Cloud Agent (WebSearch/API keys) or Mac HOST Plus desks — not GH Actions body fetch",
-        "permissions": "read packs; write sources/ + research.md; no chatgpt.com/gemini.google.com browser on Cloud",
-        "input": "yesterday brief, CALENDAR, vfsku brief",
+        "trigger": "ChatGPT automation Velvet Research Seat 06:15 + packages/vfresearch/DAILY.md",
+        "environment": "ChatGPT WebSearch/connectors; Cloud Agent/Cursor may supplement — not GH Actions body fetch",
+        "permissions": "read packs; web research; write sources/ + research.md; no subscription UI scraping",
+        "input": "yesterday brief, CALENDAR, vfsku/production, live office context",
         "artifact_glob": "*-*-orchestra.md",
-        "consumer": "vfops/data/research.md → brief slot 05",
-        "owner": "Cursor / research seat (GrokBot weekday-ops is 07:00 brief — do not duplicate)",
+        "consumer": "vfops/data/research.md → morning brief slot 05",
+        "owner": "Velvet Research Seat; Morning Brief verifies freshness and may fallback without faking provenance",
     },
     {
         "id": "weekly-links",
@@ -115,13 +116,13 @@ def dst_note() -> str:
     now = jerusalem_now()
     offset = now.utcoffset() or timedelta(0)
     hours = int(offset.total_seconds() // 3600)
-    # workflow cron: 0 3 * * * UTC
-    local_from_cron = 3 + hours
+    # workflow cron: 30 4 * * * UTC
+    local_from_cron_hour = 4 + hours
     season = "IDT (קיץ)" if hours == 3 else "IST (חורף)" if hours == 2 else f"UTC{hours:+d}"
     return (
         f"עכשיו {now.isoformat(timespec='minutes')} · {season} · "
-        f"cron '0 3 * * *' UTC ≈ {local_from_cron:02d}:00 Asia/Jerusalem · "
-        f"חלון משרד 06:15 — בחורף ה-cron מקדים בכ־שעה; לא יוצרים cron כפול אצל GrokBot"
+        f"cron '30 4 * * *' UTC ≈ {local_from_cron_hour:02d}:30 Asia/Jerusalem · "
+        f"Research Seat exact 06:15 Asia/Jerusalem; CI runs after it in both DST seasons"
     )
 
 
@@ -152,12 +153,11 @@ def cmd_status(_args: argparse.Namespace) -> int:
         due = "—"
         if row["id"] == "best-skills":
             due = f"lastPass={best.get('lastPass')} standingForever={best.get('standingForever')}"
-        # Honest activation flag: artifact evidence only
         activated = "evidence" if art else "not-run-here"
         print(f"| {row['id']} | {last} | {due if due != '—' else (when or '—')} | {row['environment'][:40]}… | {activated} |")
     print()
-    print("GrokBot overlap check: weekday-ops 07:00 owns live brief/ops — research skills stay Cursor/CI.")
-    print("CI velvetos-research.yml proves index+sensors, NOT weekly/best/last30 body runs.")
+    print("Daily research body owner: Velvet Research Seat at 06:15 Asia/Jerusalem.")
+    print("CI velvetos-research.yml proves freshness+index+sensors; it does NOT fetch research bodies itself.")
     return 0
 
 
@@ -169,6 +169,41 @@ def cmd_map(_args: argparse.Namespace) -> int:
         print()
     print("## DST / cron")
     print(dst_note())
+    return 0
+
+
+def cmd_freshness(_args: argparse.Namespace) -> int:
+    """Fail unless today's actual research-body artifact is present and consumable."""
+    today = jerusalem_now().date().isoformat()
+    artifact = SOURCES / f"{today}-orchestra.md"
+    problems: list[str] = []
+    if not artifact.is_file():
+        problems.append(f"missing same-day research body {artifact.relative_to(ROOT)}")
+        body = ""
+    else:
+        body = artifact.read_text(encoding="utf-8")
+        if len(body.strip()) < 300:
+            problems.append("same-day orchestra artifact is too small to prove a body run")
+        urls = re.findall(r"https?://[^\s)>]+", body)
+        if not urls:
+            problems.append("same-day orchestra has no external source URL; CI/index output alone is not research")
+        if "אין חדש במשרד" not in body and not any(
+            marker in body for marker in ("## ממצאים", "## What I learned", "## מה למדנו", "## תוצאות", "## מה נשאל / מה רץ")
+        ):
+            problems.append("same-day orchestra has neither findings section nor explicit 'אין חדש במשרד'")
+
+    research = RESEARCH_MD.read_text(encoding="utf-8") if RESEARCH_MD.is_file() else ""
+    if today not in research and f"{today}-orchestra.md" not in research:
+        problems.append("vfops/data/research.md does not reference today's research body")
+
+    if problems:
+        print("FAIL daily research freshness")
+        for problem in problems:
+            print("-", problem)
+        return 1
+
+    source_count = len(re.findall(r"https?://[^\s)>]+", body))
+    print(f"OK daily research fresh date={today} artifact={artifact.relative_to(ROOT)} external_sources={source_count}")
     return 0
 
 
@@ -201,13 +236,11 @@ def cmd_verify(_args: argparse.Namespace) -> int:
     for path in (BEST_JSON, LINKS, RESEARCH_MD, INDEX_SCRIPT):
         if not path.is_file():
             bad.append(f"missing {path.relative_to(ROOT)}")
-    # Evidence from last research seat (if present) must be consumable
     weekly = latest_source("*-*-weekly-links.md")
     best = latest_source("*-*-best-skills.md")
     last30 = latest_source("*-*-*last30*.md")
     research = RESEARCH_MD.read_text(encoding="utf-8") if RESEARCH_MD.is_file() else ""
     if weekly and weekly.stem[:10] not in research and "weekly" not in research.lower():
-        # soft: research.md should mention recent work somehow — warn only if empty
         if not research.strip():
             bad.append("research.md empty while weekly artifact exists")
     print("verify artifacts:")
@@ -230,6 +263,7 @@ def main() -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("status", help="honest status table").set_defaults(func=cmd_status)
     sub.add_parser("map", help="full activator map").set_defaults(func=cmd_map)
+    sub.add_parser("freshness", help="require today's real research-body artifact").set_defaults(func=cmd_freshness)
     sub.add_parser("build-index", help="build semantic index; fail closed").set_defaults(func=cmd_build_index)
     sub.add_parser("verify", help="structure verify").set_defaults(func=cmd_verify)
     args = ap.parse_args()

@@ -1,12 +1,12 @@
 name: VelvetOS Research Cadence
 
-# Asia/Jerusalem timing:
-# cron '0 3 * * *' is 06:00 IDT (UTC+3, summer) and 05:00 IST (UTC+2, winter).
-# Office research window is 06:15 Asia/Jerusalem — winter runs ~1h early; do NOT add a
-# second GrokBot cron (SWC-GROK-ROUTINES owns 07:00 weekday-ops). workflow_dispatch OK.
+# The actual research body is produced by the owner-facing Velvet Research Seat at
+# 06:15 Asia/Jerusalem. GitHub Actions does not pretend to replace WebSearch/body research;
+# it verifies freshness, builds the semantic index, and runs sensors after the body window.
+# 04:30 UTC is 07:30 IDT (summer) / 06:30 IST (winter), always after the 06:15 seat.
 on:
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '30 4 * * *'
   workflow_dispatch:
 
 jobs:
@@ -26,6 +26,9 @@ jobs:
 
       - name: Cadence map + DST note
         run: python3 scripts/vfresearch_cadence.py map
+
+      - name: Verify same-day research body freshness
+        run: python3 scripts/vfresearch_cadence.py freshness
 
       - name: Build semantic index (fail closed)
         run: python3 scripts/vfresearch_cadence.py build-index
