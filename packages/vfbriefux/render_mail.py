@@ -3,7 +3,8 @@
 
 Gmail-safe table HTML, RTL-first, Hebrew-first. Backward-compatible with the
 legacy 01–07 JSON while supporting V10 status badges, KPI cards, delta-first
-changes, semantic card colors, and clickable CID/remote thumbnails.
+changes, semantic card colors, clickable CID/remote thumbnails, and fallback
+enrichment from the canonical Living Studio pulse projection.
 """
 from __future__ import annotations
 
@@ -17,6 +18,7 @@ from pathlib import Path
 PACK = Path(__file__).resolve().parent
 TEMPLATE = PACK / "MAIL.html"
 DIAGRAM_SHELL = PACK / "hq" / "diagram-svg-template.html"
+PULSE_LATEST = PACK.parent / "velvetos" / "living-studio" / "data" / "pulse-latest.json"
 LTR = re.compile(r"^(VF-[\w.-]+|[A-Z]{2,}[-/]?\d[\w.-]*|G00\d)$")
 
 PIPELINE_NODES = (
@@ -146,6 +148,132 @@ def slot_kind(slot: dict) -> str:
     if "07" in hay or "פיד" in hay or "תוכן" in hay:
         return "content"
     return "neutral"
+
+
+def _load_pulse() -> dict:
+    if not PULSE_LATEST.is_file():
+        return {}
+    try:
+        data = json.loads(PULSE_LATEST.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _he_change(raw: object) -> str:
+    text = str(raw or "").strip()
+    if not text:
+        return ""
+    if text == "first pulse this session":
+        return "נוצר Studio Pulse ראשון בסשן"
+    if text.startswith("media "):
+        return "מדיה: " + text[6:]
+    if text.startswith("followups "):
+        return "מעקבים: " + text[10:]
+    if text.startswith("insights_deployed→"):
+        val = text.split("→", 1)[1]
+        return "Insights: " + ("הוטמע" if val.lower() == "true" else "לא מוטמע")
+    return text
+
+
+def enrich_v10(brief: dict) -> dict:
+    """Fill missing V10 presentation fields from canonical Studio Pulse only.
+
+    This is projection enrichment, not a second source of truth. Missing or stale
+    pulse data never becomes zero and never overrides explicit brief fields.
+    """
+    pulse = _load_pulse()
+    if not pulse:
+        return brief
+
+    now = pulse.get("what_happening_now") or {}
+    moved = pulse.get("what_moved_since_last") or []
+    stuck = pulse.get("what_stuck") or []
+    needs = pulse.get("what_requires_christian") or []
+
+    if not brief.get("attention"):
+        if needs:
+            brief["attention"] = {
+                "state": "red",
+                "label": "מצב העסק",
+                "text": f"{len(needs)} דורשים אותך",
+            }
+        elif stuck:
+            brief["attention"] = {
+                "state": "yellow",
+                "label": "מצב העסק",
+                "text": f"{len(stuck)} במעקב",
+            }
+        else:
+            brief["attention"] = {
+                "state": "green",
+                "label": "מצב העסק",
+                "text": "ללא חסם בעלים",
+            }
+
+    if not brief.get("system_health"):
+        health = str(pulse.get("system_health") or "").strip()
+        paused = bool(now.get("office_paused"))
+        lower = health.lower()
+        if paused:
+            state, text = "yellow", "המשרד מושהה לפי בעלים"
+        elif any(word in lower for word in ("green", "healthy", " ok", "ok", "תקין")):
+            state, text = "green", "תקינה"
+        elif health:
+            state, text = "yellow", health[:56]
+        else:
+            state, text = "neutral", "אין סטטוס"
+        brief["system_health"] = {
+            "state": state,
+            "label": "בריאות מערכת",
+            "text": text,
+        }
+
+    if not brief.get("changes"):
+        changes = []
+        for raw in moved[:4]:
+            text = _he_change(raw)
+            if text:
+                changes.append({"text": text, "state": "blue"})
+        if changes:
+            brief["changes"] = changes
+
+    if not brief.get("kpis"):
+        kpis = []
+        jobs = now.get("jobs")
+        if isinstance(jobs, int):
+            kpis.append({"value": str(jobs), "label": "עבודות במקור האמת", "state": "purple"})
+        kpis.append({
+            "value": str(len(needs)),
+            "label": "צריך ממך",
+            "state": "red" if needs else "green",
+        })
+        followups = now.get("followups")
+        if isinstance(followups, dict):
+            total = sum(v for v in followups.values() if isinstance(v, int))
+            kpis.append({"value": str(total), "label": "מעקבים פתוחים", "state": "yellow" if total else "green"})
+        media_inbox = now.get("media_inbox")
+        if isinstance(media_inbox, int):
+            kpis.append({"value": str(media_inbox), "label": "מדיה בקליטה", "state": "blue"})
+        if kpis:
+            brief["kpis"] = kpis[:4]
+
+    slots = brief.get("slots") or []
+    translated_changes = [_he_change(x) for x in moved if _he_change(x)]
+    for slot in slots:
+        kind = slot_kind(slot)
+        slot.setdefault("kind", kind)
+        if kind == "office":
+            if translated_changes and not slot.get("delta"):
+                slot["delta"] = {
+                    "text": f"{len(translated_changes)} שינויים נקלטו ב־Studio Pulse",
+                    "state": "purple",
+                }
+            elif not translated_changes:
+                slot.setdefault("density", "compact")
+        if kind == "decision" and not needs:
+            slot.setdefault("density", "compact")
+    return brief
 
 
 def table_html(headers: list[str], rows: list[list[str]], theme: tuple[str, str, str, str]) -> str:
@@ -307,6 +435,7 @@ def delta_strip_html(changes: list[object]) -> str:
 
 
 def render(brief: dict, template: str | None = None) -> str:
+    brief = enrich_v10(dict(brief))
     shell = template if template is not None else TEMPLATE.read_text()
     out = shell
     out = out.replace("{{DATE_LINE}}", prose_html(brief.get("date_line") or ""))
@@ -338,9 +467,9 @@ def _flow_svg(nodes: tuple[tuple[str, str, str], ...], title: str, *, box_w: int
 def render_diagram(kind: str, template: str | None = None) -> str:
     shell = template if template is not None else DIAGRAM_SHELL.read_text()
     if kind == "pipeline":
-        title, svg, heading, sub, doc_title = "צינור הסטודיו", _flow_svg(PIPELINE_NODES, "צינור הסטודיו", box_w=108, gap=20), "צינור · פנייה עד איסוף", "clean-svg · לוויין לבריף · איסוף שדרות בלבד", "Velvet Factory · צינור הסטודיו"
+        svg, heading, sub, doc_title = _flow_svg(PIPELINE_NODES, "צינור הסטודיו", box_w=108, gap=20), "צינור · פנייה עד איסוף", "clean-svg · לוויין לבריף · איסוף שדרות בלבד", "Velvet Factory · צינור הסטודיו"
     elif kind == "slots":
-        title, svg, heading, sub, doc_title = "חריצי בריף 01–07", _flow_svg(SLOT_NODES, "חריצי בריף 01–07", box_w=86, gap=12), "מבנה בריף · חריצים", "clean-svg · לא מחליף MAIL.html", "Velvet Factory · חריצי בריף"
+        svg, heading, sub, doc_title = _flow_svg(SLOT_NODES, "חריצי בריף 01–07", box_w=86, gap=12), "מבנה בריף · חריצים", "clean-svg · לא מחליף MAIL.html", "Velvet Factory · חריצי בריף"
     else:
         raise SystemExit(f"unknown diagram kind: {kind}")
     out = shell.replace("<title>Velvet Factory · דיאגרמת בריף</title>", f"<title>{esc(doc_title)}</title>", 1)
@@ -365,6 +494,9 @@ def self_check() -> None:
         raise SystemExit("FAIL placeholders left in output")
     remote = render({
         "date_line": "x", "bottom_line": "x",
+        "attention": {"state": "green", "label": "מצב העסק", "text": "תקין"},
+        "system_health": {"state": "green", "label": "בריאות מערכת", "text": "תקינה"},
+        "kpis": [], "changes": [],
         "slots": [{"kicker": "06", "title": "עמוד", "covers": [{"url": "https://example.com/a.jpg", "href": "https://example.com/post", "caption": "חי"}]}],
     })
     if 'src="https://example.com/a.jpg"' not in remote or 'href="https://example.com/post"' not in remote:
@@ -376,7 +508,7 @@ def self_check() -> None:
         miss = [token for token in must if token not in diagram]
         if miss:
             raise SystemExit(f"FAIL diagram {kind} missing {miss}")
-    print("OK Brief V10 · עברית תחילה · living visual")
+    print("OK Brief V10 · עברית תחילה · living visual · Studio Pulse fallback")
 
 
 def main() -> int:
