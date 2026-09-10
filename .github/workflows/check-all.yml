@@ -37,7 +37,8 @@ jobs:
             fi
           fi
 
-      - name: README Operational Snapshot is current
+      - name: README System Pulse is current
+        if: github.event_name == 'pull_request'
         run: python3 scripts/update-readme-snapshot.py --check
 
       - name: Run all VelvetOS sensors
