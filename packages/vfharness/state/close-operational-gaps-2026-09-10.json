@@ -2,9 +2,11 @@
   "task_id": "close-operational-gaps-2026-09-10",
   "component_state": "Idle",
   "execution_state": {
-    "phase": "commissioned",
-    "commission": "22/22"
+    "phase": "behaviorally_commissioned",
+    "behavioral_commission": "22/22",
+    "live_activation": "partial",
+    "live_activation_note": "22/22 proves the non-mutating commissioning matrix and contracts, not that every provider-backed path has been exercised live. Jobs Sheet read/sync is proven but write-through remains provider-pending; provider-live proof must be tracked separately."
   },
-  "latest_observation": "Sheet-canonical jobs adapter, Universal Intake dispatch, autonomy execute, vfmem retrieval, Insights MCP wire, Drive auth scrub, #148/#149 reconcile",
-  "updatedAt": "2026-09-10T12:20:00+03:00"
+  "latest_observation": "Behavioral matrix 22/22 is valid; live activation is partial. Media intake and Instagram read/Insights have live proof. Gmail transport is live via connected Gmail, but the GitHub Action sender has not completed a real enabled send. Jobs Sheet read/sync is live-proven; write-through remains write_pending_provider.",
+  "updatedAt": "2026-09-10T16:25:00+03:00"
 }
