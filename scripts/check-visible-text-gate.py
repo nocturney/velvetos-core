@@ -64,6 +64,17 @@ def main() -> None:
             "scripts/check-visible-text-gate.py",
         ),
     )
+    require(
+        "packages/vfharness/SKILL.md",
+        (
+            "Human-visible output",
+            "constitution/VISIBLE_TEXT.md",
+            "visible_text_gate: PASS",
+            "UNPROVEN",
+            "EXECUTION_PROVEN",
+            "checkpoint / execution_state",
+        ),
+    )
     rule = text(".cursor/rules/visible-text-gate.mdc")
     if "alwaysApply: true" not in rule:
         fail(".cursor/rules/visible-text-gate.mdc must be alwaysApply: true")
@@ -174,7 +185,7 @@ def main() -> None:
     )
     require(
         "packages/vfgrowth/PREFLIGHT.md",
-        ("VISIBLE_TEXT.md", "visible_text_gate: PASS", "text_sha256", "visual-microcopy", "UNPROVEN"),
+        ("VISIBLE_TEXT.md", "visible_text_gate: PASS", "text_sha256", "visual-microcopy", "UNPROVEN", "הודעת Instagram"),
     )
     require(
         "packages/vfgrowth/preflight/TEMPLATE.md",
@@ -220,7 +231,7 @@ def main() -> None:
         ("NO_TEXT", "velvet-hebrew-copy", "ai-tells-he.md"),
     )
 
-    print("OK visible-text-gate global human-facing routes + agent guide + surface-aware executable bound")
+    print("OK visible-text-gate global human-facing routes + agent guide + outer harness + surface-aware executable bound")
 
 
 if __name__ == "__main__":
