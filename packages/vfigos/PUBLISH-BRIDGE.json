@@ -6,6 +6,7 @@
   "repository": "nocturney/velvetos-core",
   "branch": "publish-bridge",
   "pathPrefix": "publish-bridge/assets",
+  "archivePathPrefix": "publish-bridge/archive",
   "publicBaseUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/publish-bridge/publish-bridge/assets",
   "publicReleaseGate": "approved_for_public_release",
   "imageNormalization": {
@@ -25,9 +26,11 @@
   },
   "retention": {
     "activeDays": 14,
-    "cleanupMode": "remove_from_branch_head",
+    "cleanupMode": "move_to_archive",
+    "archiveRetention": "unlimited",
+    "deleteArchived": false,
     "historyErasure": false,
-    "note": "Git cleanup deindexes expired assets from the branch head; it is not secure erasure from repository history. Stage only assets already approved for public release."
+    "note": "Assets older than activeDays move from publish-bridge/assets to publish-bridge/archive. Archived assets are preserved indefinitely unless an explicit owner-approved retention policy replaces this one."
   },
   "forbidden": [
     "raw Drive originals",
