@@ -102,6 +102,15 @@
     "orchestration": "packages/vfom/CREATIVE-AUTOPILOT.md",
     "foundryPolicy": "packages/vfom/FOUNDRY.json",
     "contentContractSchema": "packages/vfom/CONTENT-CONTRACT.schema.json",
+    "creativeManifestSchema": "packages/vfom/CREATIVE-MANIFEST.schema.json",
+    "motionPresets": "packages/vfom/MOTION-PRESETS.md",
+    "formatGenomes": "packages/vfom/FORMAT-GENOMES.md",
+    "specialists": {
+      "creativeDirector": ".cursor/skills/velvet-creative-director/SKILL.md",
+      "brandGuardian": ".cursor/skills/velvet-brand-guardian/SKILL.md",
+      "mediaLibrarian": ".cursor/skills/velvet-media-librarian/SKILL.md"
+    },
+    "creativeManifestRequired": true,
     "mediaCatalog": "packages/vfmedia/catalog.json",
     "assetTruthSchema": "packages/vfmedia/catalog.schema.json#/$defs/assetTruth",
     "learningAuthority": "vfinsights+office-learning",
@@ -139,5 +148,5 @@
   },
   "locks": ["human-close-whatsapp", "pickup-only", "b2b-locked", "public-commercial-files-only"],
   "packPrefix": "vf",
-  "notes": "Live Velvet Factory office frontend. Pulls modules/packs from VelvetOS Core. Velvet Visual Foundry is exception-only and standing-authorized for LOW-risk routine organic Instagram only."
+  "notes": "Live Velvet Factory office frontend. Pulls modules/packs from VelvetOS Core. Velvet Visual Foundry uses one Creative Manifest plus Creative Director, Brand Guardian and Media Librarian specialists; exception-only and standing-authorized for LOW-risk routine organic Instagram only."
 }

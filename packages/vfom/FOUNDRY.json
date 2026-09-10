@@ -1,11 +1,27 @@
 {
   "name": "velvet-visual-foundry",
-  "version": 1,
+  "version": 2,
   "role": "machine-readable creative orchestration policy over existing VelvetOS packs",
   "noSecondRuntime": true,
+  "specialists": {
+    "creativeDirector": ".cursor/skills/velvet-creative-director/SKILL.md",
+    "brandGuardian": ".cursor/skills/velvet-brand-guardian/SKILL.md",
+    "mediaLibrarian": ".cursor/skills/velvet-media-librarian/SKILL.md"
+  },
+  "sharedAuthorities": {
+    "visualConstitution": "packages/vfom/VISUAL-OS.md",
+    "visualDNA": "packages/vfom/VISUAL-DNA.json",
+    "creativeManifestSchema": "packages/vfom/CREATIVE-MANIFEST.schema.json",
+    "contentContractSchema": "packages/vfom/CONTENT-CONTRACT.schema.json",
+    "motionPresets": "packages/vfom/MOTION-PRESETS.md",
+    "formatGenomes": "packages/vfom/FORMAT-GENOMES.md",
+    "mediaCatalog": "packages/vfmedia/catalog.json"
+  },
   "layers": {
     "creativeIntelligence": [
       "creative-director",
+      "brand-guardian",
+      "media-librarian",
       "proof-first-storyboarder",
       "visual-evaluator",
       "repair-planner",
@@ -14,6 +30,7 @@
     "orchestration": [
       "content-job-state-machine",
       "content-contract",
+      "creative-manifest",
       "opportunity-scoring",
       "progressive-variants",
       "threshold-policy",
@@ -30,6 +47,14 @@
       "vfigos-publish-verification",
       "vfinsights-performance-evidence"
     ]
+  },
+  "creativeManifest": {
+    "enabled": true,
+    "schema": "packages/vfom/CREATIVE-MANIFEST.schema.json",
+    "role": "single per-content-job coordination artifact shared by creative direction, media selection, edit, cover, QA, feed continuity and publish handoff",
+    "notASecondStateMachine": true,
+    "notAMediaCatalog": true,
+    "notAClaimAuthority": true
   },
   "stateMachine": [
     "discovered",

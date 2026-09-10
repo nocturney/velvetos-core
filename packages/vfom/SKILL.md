@@ -8,19 +8,30 @@
 
 ברירת העבודה ל־Velvet Factory כאשר ה־instance מפעיל `creativeAutonomy`:
 
-- `FOUNDRY.json` — machine-readable policy: layers, state machine, truth, variants, evaluation, novelty, learning, budget and human surface.
+- `FOUNDRY.json` — machine-readable policy: layers, specialists, state machine, truth, variants, evaluation, novelty, learning, budget and human surface.
 - `CONTENT-CONTRACT.schema.json` — חוזה objective + Claim Provenance + synthetic policy + Subject Pack + success thresholds לכל content job.
+- `CREATIVE-MANIFEST.schema.json` — coordination artifact יחיד לכל content job: concept, hooks, shots, EDL, overlays, cover, QA, feed and derivative refs. אינו state machine/Media Vault/Claim authority נוסף.
 - `VISUAL-DNA.json` — projection machine-readable של חוקי המותג; `VISUAL-OS.md` נשאר authority.
 - `CREATIVE-AUTOPILOT.md` — orchestration + Exception Queue + Human Intervention Policy.
 - `VISUAL-OS.md` — Visual Constitution + proof-first + first frame + cover + QA + Subject Lock + fatigue guard.
 - `EDIT-DIRECTOR.md` — EDL אופרטיבי + shot-gap handling.
+- `MOTION-PRESETS.md` — motion vocabulary מצומצם וקנוני.
+- `FORMAT-GENOMES.md` — מבני סיפור חוזרים; mechanics ולא זהות מועתקת.
 - `experts/MEDIA-DIRECTOR.md` — Creative/Edit/Publishing Director מאוחד.
 
 הפעלה ישירה ב־Cursor: `.cursor/skills/vf-content-sprint/SKILL.md`.
 
+## Specialists
+
+`vf-content-sprint` הוא ה־orchestrator היחיד ומאציל עבודה לשלושה specialists, לא לשלושה runtimes:
+
+- `.cursor/skills/velvet-creative-director/SKILL.md` — concept + First-Frame Hunter + shot list/gaps + timeline + overlay + cover direction.
+- `.cursor/skills/velvet-media-librarian/SKILL.md` — canonical Media Vault intake/search/tagging/rights/truth; אין קטלוג שני.
+- `.cursor/skills/velvet-brand-guardian/SKILL.md` — Brand Compliance Visual QA + originality/fatigue + feed continuity + targeted repair.
+
 ## Architecture law
 
-Creative intelligence יכולה לחשוב: Creative Director, Storyboarder, Evaluation/Repair Planner, Experiment Director.
+Creative intelligence יכולה לחשוב: Creative Director, Brand Guardian, Media Librarian, Storyboarder, Evaluation/Repair Planner, Experiment Director.
 
 Orchestration ו־deterministic services נשארים במערכת הקיימת: state/control plane, Media Vault, validation, composition/render, Drive, publish verification, Insights ingest. אל תהפוך כל שירות ל־Agent ואל תיצור queue/catalog/memory DB מקביל.
 
