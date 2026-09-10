@@ -12,6 +12,11 @@ INSTANCE = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.
 CONTENT_SPRINT = ROOT / ".cursor" / "skills" / "vf-content-sprint" / "SKILL.md"
 IG_MUSIC_SKILL = ROOT / ".cursor" / "skills" / "vf-ig-music" / "SKILL.md"
 MUSIC_PLAYBOOK = ROOT / "packages" / "vfresearch" / "MUSIC.md"
+VFCOPY_ROUTER = ROOT / ".cursor" / "skills" / "vf-hebrew-copy" / "SKILL.md"
+VFCOPY_AUTHORITY = ROOT / "packages" / "vfcopy" / "skills" / "velvet-hebrew-copy" / "SKILL.md"
+VFCOPY_PIPELINE = ROOT / "packages" / "vfcopy" / "skills" / "velvet-hebrew-copy" / "PIPELINE.md"
+READER_FIRST = ROOT / "packages" / "vfcopy" / "hq" / "reader-first-he.md"
+AI_TELLS = ROOT / "packages" / "vfcopy" / "hq" / "ai-tells-he.md"
 SPECIALISTS = {
     "creativeDirector": ROOT / ".cursor" / "skills" / "velvet-creative-director" / "SKILL.md",
     "brandGuardian": ROOT / ".cursor" / "skills" / "velvet-brand-guardian" / "SKILL.md",
@@ -68,6 +73,24 @@ def main() -> None:
     if audio.get("skill") != ".cursor/skills/vf-ig-music/SKILL.md":
         fail("FOUNDRY audioPolicy must bind vf-ig-music skill")
 
+    visual_copy = foundry.get("visualCopyPolicy") or {}
+    if visual_copy.get("requiredForHebrewVisualText") is not True:
+        fail("FOUNDRY visualCopyPolicy.requiredForHebrewVisualText must be true")
+    if visual_copy.get("noTextBaselineRequired") is not True:
+        fail("visual-copy gate must compare against NO_TEXT")
+    if visual_copy.get("defaultWhenTextAddsNoValue") != "NO_TEXT":
+        fail("visual-copy default must be NO_TEXT when copy adds no value")
+    if visual_copy.get("skill") != ".cursor/skills/vf-hebrew-copy/SKILL.md":
+        fail("visualCopyPolicy must bind vf-hebrew-copy router")
+    if visual_copy.get("authority") != "packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md":
+        fail("visualCopyPolicy must bind canonical Hebrew-copy authority")
+    if visual_copy.get("readerFirst") != "packages/vfcopy/hq/reader-first-he.md":
+        fail("visualCopyPolicy must bind reader-first")
+    if visual_copy.get("humanizer") != "packages/vfcopy/hq/ai-tells-he.md":
+        fail("visualCopyPolicy must bind Humanizer/AI-tells")
+    if visual_copy.get("candidateMin") != 3 or visual_copy.get("candidateMax") != 5:
+        fail("visual-copy gate must use 3-5 text candidates")
+
     rights = foundry.get("rightsPolicy") or {}
     if rights.get("modelLicenseDefault") != "not-a-showcase-publish-gate":
         fail("showcase model-license policy must not be a blanket publish gate")
@@ -88,9 +111,15 @@ def main() -> None:
     must_contain(IG_MUSIC_SKILL, ("Instagram music researcher", "MUSIC.md"))
     must_contain(MUSIC_PLAYBOOK, ("## Audio Gate", "audio_repair", "stream presence", "loudness"))
 
+    must_contain(VFCOPY_ROUTER, ("cover headline", "overlay", "NO_TEXT", "reader-first-he.md", "ai-tells-he.md"))
+    must_contain(VFCOPY_AUTHORITY, ("Cover / Overlay microcopy", "NO_TEXT", "מבחן מאפייה", "reader-first-he.md", "ai-tells-he.md"))
+    must_contain(VFCOPY_PIPELINE, ("Reader-first", "Humanizer", "NO_TEXT", "TEXT_WINS"))
+    must_contain(READER_FIRST, ("שתי שאלות לפני מילה", "מה האדם מרגיש", "הדרך הכי פשוטה"))
+    must_contain(AI_TELLS, ("כל משפט מרוויח מקום", "מבחן מאפייה", "תיאור תמונה"))
+
     must_contain(CONTENT_SPRINT, ("Creative Manifest", "velvet-creative-director", "velvet-brand-guardian", "velvet-media-librarian"))
-    must_contain(SPECIALISTS["creativeDirector"], ("first-frame", "shotRequest", "EDL", "Creative Manifest"))
-    must_contain(SPECIALISTS["brandGuardian"], ("Brand", "Originality", "feed", "Creative Manifest"))
+    must_contain(SPECIALISTS["creativeDirector"], ("first-frame", "shotRequest", "EDL", "Creative Manifest", "NO_TEXT", "velvet-hebrew-copy", "reader-first-he.md"))
+    must_contain(SPECIALISTS["brandGuardian"], ("Brand", "Originality", "feed", "Creative Manifest", "NO_TEXT", "velvet-hebrew-copy", "ai-tells-he.md"))
     must_contain(SPECIALISTS["mediaLibrarian"], ("Media Vault", "Asset Truth", "Claim Truth", "Creative Manifest"))
 
     for path in SPECIALISTS.values():
@@ -122,7 +151,7 @@ def main() -> None:
         if specialists.get(key) != value or foundry_specialists.get(key) != value:
             fail(f"specialist binding mismatch for {key}")
 
-    print("OK creative-system manifest specialists motion-genomes audio-gate bound")
+    print("OK creative-system manifest specialists motion-genomes audio-gate visual-copy-gate bound")
 
 
 if __name__ == "__main__":
