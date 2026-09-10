@@ -2,16 +2,22 @@
 
 מושב: **תפעול**. לא MCP Sheets נפרד. לא פק חדש.
 
-Grok וג׳ימיני יודעים לערוך Google Sheets כמחבר. כאן אין שרת Sheets נפרד.
+## סמכות קנונית (2026-09-10)
 
-הגשר (31.8.2026, `bc-1764e30f`): CSV מקומי + ייצוא ל־Drive.
+**Google Sheet `VF HQ · jobs` הוא ה-SoT.**
+`office/ledger/live/jobs.csv` הוא **cache מקומי** בלבד (gitignore) — לא ספר שני.
 
-- קובץ חי: `office/ledger/live/jobs.csv` (נוצר ב־`python3 scripts/vf_office.py jobs add`).
-- תבניות ריקות: `office/ledger/templates/` — בלי שורות ₪.
-- ייצוא: `python3 scripts/vf_office.py jobs csv`
-- Drive: `create_file` עם `contentMimeType=text/csv` (הופך לגיליון) או עדכון אחרי שנקב ID.
-- IDs חיים: `office/ledger/bindings.json` (לא סוד). בלי קובץ / בלי ID: כותבים **חסר גיליון** וממשיכים.
-- תאי גיליון (Desktop): `mcp-gsheets` ב־`~/.cursor/mcp.json` — `packages/vfmcp/CONNECT-SHEETS.md`. לא בפרויקט (מפתח שירות).
+הגשר:
+
+1. קריאה: Drive MCP `download_file_content` + `exportMimeType=text/csv` **או** Drive API כשיש `GOOGLE_TOKEN` / credentials כמו vfmedia.
+2. טעינה ל-cache: `python3 scripts/vf_office.py jobs pull --from-csv PATH`
+3. צרכנים (Living Studio / World Model / Autonomy) קוראים את ה-cache אחרי pull.
+4. כתיבה: עדכון cache (`jobs add` / `jobs stage`) → `jobs push` → העלאה לגיליון → `jobs pull --force` לאימות.
+5. קונפליקט: cache מלוכלך + Sheet שונה → `status=conflict` בלי דריסה (אלא אם `--force`).
+
+IDs חיים: `office/ledger/bindings.json` (לא סוד). בלי קובץ / בלי ID: כותבים **חסר גיליון** וממשיכים.
+
+תאי גיליון (Desktop): `mcp-gsheets` ב־`~/.cursor/mcp.json` — `packages/vfmcp/CONNECT-SHEETS.md`. לא בפרויקט (מפתח שירות). Cloud: CSV + Drive מספיקים.
 
 ## מתי יש ID (נזרע 31.8.2026)
 
@@ -25,9 +31,9 @@ Grok וג׳ימיני יודעים לערוך Google Sheets כמחבר. כאן �
 | ספר | `11eRkRT78Nzacef8PmPCk0xqtPXy0uw9ivu747bw0FIs` | VF HQ · books |
 
 1. `search_files` לפי השם למעלה (לא סריקת תיקיות אישיות).
-2. `download_file_content` עם `exportMimeType=text/csv` — שורות לספר / מק״ט / תור.
-3. או `read_file_content` אם צריך תקציר ולא טבלה.
-4. כתיבה לגיליון: מעדכנים את ה־CSV המקומי ואז `create_file` / ייצוא. Drive MCP לא עורך תא בודד.
+2. `download_file_content` עם `exportMimeType=text/csv`.
+3. `python3 scripts/vf_office.py jobs pull --from-csv …`
+4. או `read_file_content` אם צריך תקציר ולא טבלה.
 
 בלי ID / בלי שם: כותבים «חסר גיליון» וממשיכים מ־Gmail תווית חשבונות או מהמשתמש הדביק. לא ממציאים שורות. לא ממציאים ₪. X ₪ אם חסר סכום מאומת.
 
@@ -35,6 +41,7 @@ Grok וג׳ימיני יודעים לערוך Google Sheets כמחבר. כאן �
 
 | הצעה | למה |
 |---|---|
-| לחבר MCP Sheets בלי ID | אין צורך — CSV + Drive מספיקים עד שכריסטיאן ירצה עריכת תאים |
+| להכריז על CSV מקומי כ-SoT בזמן שהוא gitignored | נסגר — Sheet קנוני + adapter |
+| לחבר MCP Sheets בלי ID | אין צורך — CSV export + Drive מספיקים |
 | לפתוח גיליון Fitbit / איקאה / רפואי | אישי. לא הסטודיו |
 | למלא מחיר ביומן | רק סכום מראש צוות. אחרת ריק / X ₪ |

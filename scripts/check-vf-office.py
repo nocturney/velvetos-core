@@ -2,6 +2,8 @@
 """Sensors for the office bridge: ledger, WhatsApp drafts, STL preflight. No network. No send."""
 from __future__ import annotations
 
+import csv
+import io
 import json
 import struct
 import sys
@@ -154,7 +156,7 @@ def main() -> None:
         fail("bindings.json must not invent a ₪")
 
     sheets = SHEETS.read_text(encoding="utf-8")
-    for needle in ("vf_office.py", "exportMimeType", "חסר גיליון", "לא ממציאים", jobs_id, "CONNECT-SHEETS.md"):
+    for needle in ("vf_office.py", "exportMimeType", "חסר גיליון", "לא ממציאים", jobs_id, "CONNECT-SHEETS.md", "jobs pull", "קנוני"):
         if needle not in sheets:
             fail(f"SHEETS.md must mention {needle}")
     if "X ₪" not in sheets:
@@ -174,7 +176,58 @@ def main() -> None:
     if "vf_office.py" not in fit:
         fail("MCP-FIT.md must point at the office bridge")
 
-    print("OK vf-office ledger+whatsapp-draft+stl-preflight")
+    # Sheet-canonical adapter (local cache) — behavioral, no network
+    import vf_jobs_adapter as jobs_adapter
+
+    def _fixture_csv(stage: str) -> str:
+        buf = io.StringIO()
+        w = csv.DictWriter(buf, fieldnames=jobs_adapter.JOB_FIELDS, lineterminator="\n")
+        w.writeheader()
+        w.writerow(
+            {
+                "job_id": "VF-20990101-001",
+                "opened": "2099-01-01",
+                "channel": "test",
+                "client_label": "fixture-client",
+                "phone": "",
+                "what_asked": "fixture what",
+                "stage": stage,
+            }
+        )
+        return buf.getvalue()
+
+    with tempfile.TemporaryDirectory() as raw2:
+        export = Path(raw2) / "sheet.csv"
+        export.write_text(_fixture_csv("פנייה"), encoding="utf-8")
+        old_cache, old_receipt, old_live = jobs_adapter.CACHE, jobs_adapter.RECEIPT, jobs_adapter.LIVE_DIR
+        jobs_adapter.LIVE_DIR = Path(raw2) / "live"
+        jobs_adapter.LIVE_DIR.mkdir()
+        jobs_adapter.CACHE = jobs_adapter.LIVE_DIR / "jobs.csv"
+        jobs_adapter.RECEIPT = jobs_adapter.LIVE_DIR / "sync-receipt.json"
+        try:
+            pulled = jobs_adapter.pull_from_path(export, force=True)
+            if pulled.get("status") != "pulled" or pulled.get("rowCount") != 1:
+                fail(f"jobs pull failed: {pulled}")
+            if jobs_adapter.get_job("VF-20990101-001").get("stage") != "פנייה":
+                fail(f"fixture stage not parsed: {jobs_adapter.get_job('VF-20990101-001')}")
+            idem = jobs_adapter.pull_from_path(export, force=False)
+            if idem.get("status") != "idempotent_skip":
+                fail(f"jobs pull not idempotent: {idem}")
+            jobs_adapter.mark_local_dirty("test")
+            export.write_text(_fixture_csv("בדיקה"), encoding="utf-8")
+            conflict = jobs_adapter.pull_from_path(export, force=False)
+            if conflict.get("status") != "conflict":
+                fail(f"expected conflict, got {conflict}")
+            forced = jobs_adapter.pull_from_path(export, force=True)
+            if forced.get("status") != "pulled":
+                fail(f"force pull failed: {forced}")
+            job = jobs_adapter.get_job("VF-20990101-001")
+            if not job or job.get("stage") != "בדיקה":
+                fail(f"force pull did not apply sheet stage: {job}")
+        finally:
+            jobs_adapter.CACHE, jobs_adapter.RECEIPT, jobs_adapter.LIVE_DIR = old_cache, old_receipt, old_live
+
+    print("OK vf-office ledger+whatsapp-draft+stl-preflight+jobs-adapter")
 
 
 if __name__ == "__main__":
