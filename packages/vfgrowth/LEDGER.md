@@ -7,7 +7,7 @@
 
 כל 8 פריטי Feed/Reels החיים שנמצאו ב־10.9.2026 הם **historical learning only** ו־`ARCHIVE_PENDING_MANUAL`.
 
-אין למחוק אותם מהראיות/Insights. הפעולה הרצויה בפלטפורמה היא **Archive, לא Delete**, ורק לאחר ש־VF-R001/R002/R003 מוכנים לפרסום. כלי Instagram המחובר אינו חושף Archive/Delete למדיה, ולכן פעולת הפלטפורמה עצמה נשארת human-only באפליקציה.
+אין למחוק אותם מהראיות/Insights. הפעולה הרצויה בפלטפורמה היא **Archive, לא Delete**, ורק לאחר ש־VF-R001/R002/R003 מגיעים ל־`ready_for_publish`. כלי Instagram המחובר אינו חושף Archive/Delete למדיה, ולכן פעולת הפלטפורמה עצמה נשארת human-only באפליקציה.
 
 | permalink | פורמט | מצב reset |
 |---|---|---|
@@ -34,13 +34,15 @@
 
 ## תור חדש
 
-| מזהה | פורמט | תפקיד | Media evidence | Creative direction | מצב |
+| מזהה | פורמט | תפקיד | Final media | Creative direction | מצב |
 |---|---|---|---|---|---|
-| **VF-R001** | Reel | Reach + product movement proof | Drive `1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3` | `כל זרוע זזה אחרת` | **evidence_selected** |
-| **VF-R002** | Carousel | Product story + detail | Drive batch IMG_1277–1281 | `כל זווית מגלה משהו אחר` | **evidence_selected** |
-| **VF-R003** | Reel | Studio visual intelligence + reveal | Drive `1V5daU2XcB0kMsDo_erzv3AkumElfmrr5` | `הגימור נראה אחרת בתנועה` | **evidence_selected** |
+| **VF-R001** | Reel | Reach + product movement proof | Drive Reel `1pHS6-rBuQ-bEhLrwkPRU9eoTvL3D7FiJ` · Cover `1OVSZF_8MQSP7zksxPVTA0RmY6ofVQtW2` | `כל זרוע זזה אחרת` / cover `הכול זז` | **rendered · QA pass · BLOCKED rights+receipt** |
+| **VF-R002** | Carousel | Product story + detail | 4× Drive `1np7Wv…` / `17Ol5…` / `1L4o4…` / `1NC93…` | `תמונה אחת לא מספיקה` | **rendered · QA pass · BLOCKED rights+receipt** |
+| **VF-R003** | Reel | Studio visual intelligence + reveal | Drive Reel `1gz5vjne9EegNpa3K0Ol9b50KjmCLhR5n` · Cover `19KUhou5sLBWQ-MRHntl6J2F8zhmJPRty` | `נראה אחרת בתנועה` | **rendered · QA pass · BLOCKED rights+receipt** |
 
-`evidence_selected` אינו approval. לפני `media_ready` יש להשלים Media Librarian classification/rights/quality evidence. לפני `ready_for_publish` נדרשים exact-render receipts מכל ה־gates הרלוונטיים.
+ה־preflights המחייבים: `preflight/VF-R001.md`, `preflight/VF-R002.md`, `preflight/VF-R003.md`.
+
+`rendered · QA pass` אינו `ready_for_publish`: exact-final media/copy/readability/contrast עברו, אבל זכויות פרסום עדיין אינן מתועדות וה־Skill Enforcement Layer עדיין אינו מספק execution receipt מחייב. לכן אין שיבוץ ואין publish.
 
 ## ישן = STALE
 
