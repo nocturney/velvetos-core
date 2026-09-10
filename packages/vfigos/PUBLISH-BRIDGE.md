@@ -64,6 +64,7 @@ The public metadata sibling stores only a hash of the private source reference, 
 private source (Drive / Media Vault)
   -> approved derivative (Canva / vfcovers / vfcanva)
   -> exact version approval + PREFLIGHT + rights/privacy
+  -> approved export handoff (register local + Canva sourceRef)
   -> Publish Bridge normalize + stage in assets/
   -> external HTTPS fetch verification
   -> Instagram publish_* using the active bridge URL
@@ -74,6 +75,20 @@ private source (Drive / Media Vault)
 ```
 
 `staged`, `fetch_verified`, `publish_requested`, or a Calendar slot are **not** publication.
+
+## Artifact handoff / recovery (do not strand Cursor exports)
+
+Cursor may write approved delivery PNGs under `/opt/cursor/artifacts/...`. That path is **ephemeral** — ChatGPT/HQ cannot rely on it alone.
+
+After PREFLIGHT / public-release approval:
+
+1. `python3 scripts/vf_publish_handoff.py register …` writes a **manifest** under `packages/vfigos/handoff/` (git, no binaries on `main`).
+2. Prefer immediate `recover --stage` so the exact export lands on `publish-bridge` the same turn.
+3. If a later agent finds `approved_export_local` but no bridge asset: run recovery automatically — re-read local file if still present, else re-export from `sourceRef` (`canva:DESIGN_ID`), stage, fetch-verify. Only after those paths fail emit a **layer-specific** blocker (`blocked_artifact_retrieval` / `blocked_bridge_staging` / `blocked_public_fetch`), never a vague immediate `blocked_publish_transport`.
+
+Rejected as current delivery source (fail closed): historical `vfcanva/jobs/**/story-*.png`, Canva preview/thumbnail URLs, private Drive URLs, `wsrv.nl` as SoT, arbitrary files from `main`.
+
+Publication ledger: `packages/vfigos/data/publications/<CORRELATION>.json` tracks `approved → staged → fetch_verified → published → published_verified` with receipts. Idempotent on content hash + media_id.
 
 ## Archive retention
 

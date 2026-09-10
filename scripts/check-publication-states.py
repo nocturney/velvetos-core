@@ -25,16 +25,27 @@ def main() -> None:
     for need in (
         "prepared",
         "approved",
+        "approved_export_local",
+        "staged",
+        "fetch_verified",
         "scheduled",
         "uploadAccepted",
         "publishRequested",
+        "published",
+        "published_verified",
         "liveVerified",
+        "blocked_creative_preflight",
+        "blocked_artifact_retrieval",
+        "blocked_bridge_staging",
+        "blocked_public_fetch",
+        "blocked_instagram_publisher",
+        "blocked_live_verification",
         "failed",
         "deadLetter",
     ):
         if need not in by_id:
             fail(f"missing state {need}")
-        if need != "liveVerified" and by_id[need].get("live") is True:
+        if need not in {"liveVerified", "published_verified"} and by_id[need].get("live") is True:
             fail(f"{need} must not be live=true")
     if "publish_pending_verification" not in by_id:
         fail("missing state publish_pending_verification")
@@ -42,8 +53,16 @@ def main() -> None:
         fail("publish_pending_verification must not be live=true")
     if by_id["liveVerified"].get("live") is not True:
         fail("liveVerified must be live=true")
+    if by_id["published_verified"].get("live") is not True:
+        fail("published_verified must be live=true")
     if "verificationEvidence" not in (by_id["liveVerified"].get("requires") or []):
         fail("liveVerified requires verificationEvidence")
+    req = by_id["published_verified"].get("requires") or []
+    if "publishReceipt" not in req or "liveVerification" not in req:
+        fail("published_verified requires publishReceipt + liveVerification")
+    order = data.get("transportRecoveryOrder") or []
+    if "attempt_canonical_bridge_staging" not in order or order[-1] != "only_then_blocked_publish_transport":
+        fail("transportRecoveryOrder must attempt bridge before terminal transport block")
 
     forbidden = data.get("forbiddenClaims") or []
     blob = " ".join(forbidden).lower()

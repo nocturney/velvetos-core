@@ -64,6 +64,11 @@ def _build_mcp():
 
     apply_insights_patch(ig_mcp)
 
+    # Image Stories must poll FINISHED before media_publish (upstream skips wait → 9007).
+    from story_publish import apply_story_publish_patch
+
+    apply_story_publish_patch(ig_mcp)
+
     # Official Graph mutation matrix tools (honest unsupported + gated delete).
     from mutations import apply_mutation_tools
 

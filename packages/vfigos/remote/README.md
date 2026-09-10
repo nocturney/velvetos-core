@@ -3,6 +3,13 @@
 Source of truth for the VelvetOS Instagram **streamable-http** Cloud Run service.
 Wraps canonical [`adelaidasofia-instagram-mcp`](https://github.com/adelaidasofia/instagram-mcp) with connector Bearer auth (not the Meta Graph token).
 
+Overlays applied at boot (`http_server.py`):
+
+- `insights_v21.py` — Graph v21 Insights metric splits
+- `story_publish.py` — image Stories wait for `FINISHED` before `media_publish` (upstream skips → 9007)
+- `mutations.py` — honest Graph mutation matrix
+- `cta_tools.py` — public CTA audit
+
 ## Why this exists
 
 ChatGPT Business Custom MCP + Cursor Team MCP need a public HTTPS `/mcp` endpoint.

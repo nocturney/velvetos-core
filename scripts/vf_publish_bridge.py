@@ -79,7 +79,9 @@ def normalize_image(src: Path, dst: Path, quality: int) -> tuple[int, int]:
             im = im.convert("RGB")
         width, height = im.size
         # No EXIF/ICC payload is passed: the derivative is metadata-stripped.
-        im.save(dst, "JPEG", quality=quality, optimize=True, progressive=True)
+        # Baseline JPEG (not progressive): Instagram Graph fetch/publish is unreliable
+        # with progressive scans ("Only photo or video" / container never FINISHED).
+        im.save(dst, "JPEG", quality=quality, optimize=True, progressive=False)
         return width, height
 
 

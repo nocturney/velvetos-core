@@ -18,16 +18,16 @@
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
 <tr>
-<td align="center"><strong>HEALTHY</strong><br><sub>System Health · בריאות מערכת</sub></td>
-<td align="center"><strong>4</strong><br><sub>Live/Bound Paths · נתיבים חיים/מחוברים</sub></td>
-<td align="center"><strong>2</strong><br><sub>Gated Actions · פעולות מבוקרות</sub></td>
-<td align="center"><strong>0</strong><br><sub>Needs Attention · דורש טיפול</sub></td>
+<td align="center"><strong>HEALTHY</strong><br><sub><span dir="ltr">System Health</span><br><span dir="rtl">בריאות מערכת</span></sub></td>
+<td align="center"><strong>4</strong><br><sub><span dir="ltr">Live / Bound Paths</span><br><span dir="rtl">נתיבים חיים / מחוברים</span></sub></td>
+<td align="center"><strong>2</strong><br><sub><span dir="ltr">Gated Actions</span><br><span dir="rtl">פעולות מבוקרות</span></sub></td>
+<td align="center"><strong>0</strong><br><sub><span dir="ltr">Needs Attention</span><br><span dir="rtl">דורש טיפול</span></sub></td>
 </tr>
 <tr>
-<td align="center"><strong>22</strong><br><sub>Living Studio Skills · יכולות</sub></td>
-<td align="center"><strong>42</strong><br><sub>Sensors · חיישנים</sub></td>
-<td align="center"><strong>8</strong><br><sub>Workflows · אוטומציות</sub></td>
-<td align="center"><strong>31</strong><br><sub>Packs · חבילות</sub></td>
+<td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
+<td align="center"><strong>43</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>8</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
+<td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
 </table>
 
@@ -40,13 +40,16 @@
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-10T10:17:35Z` |
+| **Last verified / refreshed evidence** | `2026-09-10T17:51:03Z` |
 
-**What changed · מה השתנה:** Office Control Plane מוטמע · followups=1 · dead_letters=0
+<div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
+<div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-**Latest implementation change · שינוי הטמעה אחרון:** 2026-09-10 — **Jobs Sheet write-through harden:** bindings `sheetName=Untitled` (fail-closed, no guessed `jobs` tab); pre-write remote digest concurrency guard → conflict without mutation; behavioral tests in `…
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-10 — **Jobs Sheet write-through harden:** bindings `sheetName=Untitled` (fail-closed, no guessed `jobs` tab); pre-write remote digest concurrency guard → conflict without mutation; behavioral tests in `…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-10 — **Jobs Sheet write-through harden:** bindings `sheetName=Untitled` (fail-closed, no guessed `jobs` tab); pre-write remote digest concurrency guard → conflict without mutation; behavioral tests in `…</div>
 
-> **Pulse contract · חוזה הפולס:** this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”. · הבלוק מציג את הראיות האחרונות שנשמרו בריפו; הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.
+<div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
+<div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
 <!-- OPERATIONAL-SNAPSHOT:END -->
 
 <p align="center">
@@ -154,7 +157,7 @@
 - ‏לא ממציאים מחירי ₪.
 - ‏לא ממציאים לקוחות, הזמנות או זמני ביצוע.
 - ‏לא טוענים שפעולת provider הצליחה בלי ראיה.
-- ‏לא ממציאים Origin slugs; אם לא ידוע — `unknown`.
+- ‏לא ממציאים Origin slugs; אם לא ידוע — `unknown` ([`docs/ORIGIN-SLUGS.md`](docs/ORIGIN-SLUGS.md)).
 - ‏לא יוצרים source of truth מקביל בשקט.
 - ‏פרסום ותקשורת חיצונית כפופים ל־approval/capability gates.
 - ‏איסוף נשאר בשדרות כל עוד הרשומה הקנונית לא שונתה.
