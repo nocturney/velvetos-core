@@ -2,7 +2,7 @@
 
 מושב: צמיחה. חוקה: `constitution/ORGANIC_GROWTH.md`.  
 פריפלייט איכות נשאר `PREFLIGHT.md` (נכשל-סגור לפני שיבוץ).  
-השער הזה מוסיף **מדיניות + אישור אדם** לפני «מוכן להעלאה ידנית».
+השער הזה מוסיף **מדיניות + הרשאת פרסום** לפני מסירה ל־`vfigos`.
 
 ## מצבים
 
@@ -11,25 +11,41 @@
 | `draft` | מפעל תוכן | טיוטה פנימית |
 | `quality_checked` | משרד אחרי Rubric + מדיה | בלי גלם = `blocked_no_media` |
 | `policy_checked` | `vf_organic_growth.py policy` | אסור/מותר מ־ORGANIC_GROWTH |
-| `pending_human_approval` | אחרי policy | מופיע בבריף 07:00 |
-| `approved_for_manual_posting` | אדם: אישור | **לא** פרסום |
+| `pending_publish_authorization` | אחרי policy | דורש human approval נקודתי או standing authorization תקף |
+| `approved_for_manual_posting` | אדם: אישור נקודתי | תאימות legacy; לא טענת פרסום |
+| `authorized_for_tool_publish` | instance standing authorization | רק תוכן שגרתי שעבר PREFLIGHT + rights + Visual OS QA |
 | `rejected` | אדם: דחייה | נשאר במשרד |
-| `edit` | אדם: עריכה | חוזר ל־draft |
-| `posted_manually` | אדם אחרי העלאה ב־instagram.com | Core לא מעביר לכאן |
+| `edit` | אדם או QA | חוזר ל־draft |
+| `published_verified` | `vfigos` אחרי tool receipt + verification evidence | לא מסמנים בלי ראיה |
 | `performance_imported` | סנאפשוט / CSV | חסר = אין ספירה |
 | `attributed` | ייחוס הסתברותי | לא «וודאי» |
 | `learned` | רטרו / brief מחר | בלי בושה לבעלים |
-| `blocked_no_media` | מפעל | אין Reel מומצא |
+| `blocked_no_media` | מפעל | אין Reel מומצא; צור shotRequest מדויק |
 | `blocked_policy` | policy | נכשל-סגור |
+| `human_required` | משרד | רק חסר פיזי/זכויות/כסף/WhatsApp/Print/חסם קשיח |
 
-## מעברים אסורים ל־Core
+## הרשאה
 
-- כל מעבר אל `posted_manually` בלי `"human_marked": true` **ו** `"marked_by"` אדם.
-- קפיצה מ־`draft` ל־`approved_for_manual_posting`.
-- `pending_human_approval` → Publish API.
+ברירת המחדל הכללית נשארת human approval. Instance יכול להפעיל:
 
-שדה חובה בכל פריט תור: `content_id`, `gate`, `format` (`reel`|`story`|`card`|`poll`).
+`creativeAutonomy.publish.standingAuthorization=true`
 
-## פעולות בריף
+במצב זה, `pending_publish_authorization` יכול לעבור ל־`authorized_for_tool_publish` ללא אישור לכל נכס, **רק** אם:
 
-לכל נכס רק: **אישור** · **עריכה** · **דחייה**.
+1. `VISUAL-OS.md` brandScore >=80.
+2. `CONTENT-RUBRIC >=20/25`.
+3. policy pass + written PREFLIGHT.
+4. rights/privacy ברורים.
+5. אין ₪/Boost/Ads/customer WhatsApp/Print.
+6. קיים publish tool אמיתי.
+
+## מעברים אסורים
+
+- `draft` ישירות ל־publish.
+- publish claim בלי tool receipt + verification evidence.
+- standing authorization על כסף, Boost/Ads, customer WhatsApp, Print from HQ, auto-DM, user tag בלי opt-in או זכויות לא ברורות.
+
+## פעולות בעלים
+
+כאשר אין standing authorization או שיש `human_required`: **אישור** · **עריכה** · **דחייה**.  
+כשלי Hook/cover/crop/caption/QA רגילים אינם פעולת בעלים — מתקנים אוטונומית.
