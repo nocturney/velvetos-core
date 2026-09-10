@@ -13,7 +13,7 @@
 - `EDIT-DIRECTOR.md` — EDL אופרטיבי + shot-gap handling.
 - `experts/MEDIA-DIRECTOR.md` — Creative/Edit/Publishing Director מאוחד.
 
-הפעלה ישירה ב־Cursor: `.cursor/skills/vf-creative-autopilot/SKILL.md`.
+הפעלה ישירה ב־Cursor: `.cursor/skills/vf-content-sprint/SKILL.md`.
 
 ## Crews existing
 
