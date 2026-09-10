@@ -47,7 +47,7 @@
 ## Instagram · מצב העמוד
 
 הבריף חייב לבצע probe חי דרך VelvetOS Instagram בכל בוקר:
-- `account_info` / profile: followers/media count.
+- `account_info` / profile: followers + media count.
 - `get_account_insights`: reach/profile views/total interactions לפי מה ש־Graph מחזיר בפועל.
 - `list_media` + `get_media_insights` ל־2–3 פריטים מייצגים/אחרונים: reach/views/interactions/saved/shares כשזמין.
 
@@ -100,6 +100,6 @@ PYTHONPATH=packages python3 -m vfops.gmail_brief_send \
   --html PATH --images DIR --to nocturney@gmail.com --subject TEXT
 ```
 
-חוזה Gmail/MCP: `docs/SEND-BRIEF-MCP.md`. אם נתיב השליחה אינו מסוגל CID, מותר להשתמש בתמונת HTTPS אמיתית בתוך HTML; אין לשלוח attachment ולדווח שהוא inline.
+חוזה Gmail/MCP: `docs/SEND-BRIEF-MCP.md`. במסלול connector, גוף ה־HTML נשלח כ־`htmlBody`/`html_body` אמיתי; אם הנתיב אינו מסוגל CID, מותר להשתמש בתמונת HTTPS אמיתית בתוך HTML. אין לשלוח attachment ולדווח שהוא inline.
 
 אין המצאת ₪, Insights, סטטוס פרסום, לקוח או השלמת ייצור. `scheduled/uploaded != verified live`.
