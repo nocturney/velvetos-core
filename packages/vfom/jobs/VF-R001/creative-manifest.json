@@ -1,11 +1,12 @@
 {
   "jobId": "VF-R001",
   "format": "reel",
-  "status": "storyboarded",
+  "status": "rendered",
   "sourceEvidence": [
     "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3",
     "file:14957BFD-A1BC-45CB-BC24-92BDEC4E4B21.MP4",
-    "verified-video:1080x1920@30fps:11.366667s"
+    "verified-video:1080x1920@30fps:11.366667s",
+    "final-package-sha256:53b940c08437150a695077d24645418e248018898e9504665b51c13b5713348f"
   ],
   "concept": {
     "coreIdea": "Open on the real articulated object already moving in-hand; let the visible limb motion be the proof instead of explaining the print.",
@@ -40,31 +41,40 @@
       {"startSec": 5.0, "endSec": 8.5, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "clean full-subject hand-held view", "speed": 1.0, "cut": "hard", "audio": "source"}
     ]
   },
-  "overlays": [
-    {"id": "ov1", "text": "כל זרוע זזה אחרת", "placement": "upper safe zone away from subject and UI", "accent": "זרוע"}
-  ],
+  "overlays": [],
   "cover": {
     "candidates": [
-      {"id": "c1", "headline": "הכול זז", "subjectCrop": "front close-up of full object", "textPlacement": "upper-left safe zone", "gridRationale": "movement promise is readable at grid size"},
+      {"id": "c1", "headline": "הכול זז", "subjectCrop": "front close-up of full object", "textPlacement": "cream editorial header", "gridRationale": "movement promise is readable at grid size"},
       {"id": "c2", "headline": "כל זרוע אחרת", "subjectCrop": "close crop emphasizing articulated limbs", "textPlacement": "upper-right safe zone", "gridRationale": "specificity distinguishes it from generic product posts"},
       {"id": "c3", "headline": "בתנועה", "subjectCrop": "three-quarter hand-held view", "textPlacement": "top center", "gridRationale": "minimal cover with clear subject hierarchy"}
     ],
-    "selected": "c2"
+    "selected": "c1"
   },
   "qa": {
-    "brandScore": 0,
-    "hookScore": 0,
-    "realityScore": 0,
-    "originalityScore": 0,
-    "artifactScore": 0,
-    "deterministicChecks": {"state": "not_run", "reason": "no exact final render exists yet"},
-    "failures": ["Exact-final Brand Guardian and deterministic QA have not run."],
-    "repairs": []
+    "brandScore": 86,
+    "hookScore": 88,
+    "realityScore": 96,
+    "originalityScore": 82,
+    "artifactScore": 90,
+    "deterministicChecks": {
+      "state": "pass",
+      "exactFinalPackageSha256": "53b940c08437150a695077d24645418e248018898e9504665b51c13b5713348f",
+      "video": "1080x1920 h264 8.521s",
+      "caption": "no WhatsApp/phone/currency; Instagram-message CTA; pickup Sderot; 5 hashtags",
+      "coverContrast": "15.48:1 ink-on-cream",
+      "visualReview": "exact-final contact sheet reviewed; subject remains clear throughout"
+    },
+    "failures": ["Public-release rights evidence is not documented yet.", "Skill execution receipt is not yet bound by the enforcement layer."],
+    "repairs": ["Re-cropped final Reel to enlarge the real subject while preserving full movement.", "Removed in-video overlay so proof stays clean and readable.", "Rebuilt cover with verified vfcanva typography/color tokens and deterministic contrast."]
   },
   "feed": {
-    "continuityDecision": "provisional-pass",
-    "reasoning": "opens the reset with real hand-held motion rather than another static catalogue/studio montage; final fatigue check must run on the rendered cover."
+    "continuityDecision": "pass",
+    "reasoning": "opens the reset with real hand-held movement proof and a clean editorial cover rather than another static catalogue/studio montage."
   },
-  "derivativeRefs": [],
+  "derivativeRefs": [
+    "drive:1pHS6-rBuQ-bEhLrwkPRU9eoTvL3D7FiJ:VF-R001-reel.mp4",
+    "drive:1OVSZF_8MQSP7zksxPVTA0RmY6ofVQtW2:VF-R001-cover.jpg",
+    "drive:1_HlMjps5JlXUy2RiR04L3KvVkcor42_z:VF-R001-caption.txt"
+  ],
   "rightsNotes": ["Possession/source location is not rights approval. Public-release rights must be documented before media_ready/publish."]
 }
