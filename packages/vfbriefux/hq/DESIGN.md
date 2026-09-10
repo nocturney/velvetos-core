@@ -1,159 +1,150 @@
 ---
-name: Velvet Factory Brief V10
-version: "10.0"
+name: Velvet Factory Brief V10.2
+version: "10.2"
 tokens:
   color:
-    canvas: "#080a14"
-    surface-dark: "#11142a"
-    surface-soft: "#f6f5fb"
-    violet: "#7c5cff"
-    cyan: "#20d9ff"
-    pink: "#ff5fa2"
-    coral: "#ff8a65"
-    lime: "#a3e635"
-    yellow: "#f5c451"
-    text-dark: "#161a2d"
-    text-muted: "#697386"
-    white: "#ffffff"
-  typography:
-    display: "Arial, sans-serif"
-    body: "Arial, sans-serif"
-    label-size: "10px"
-    body-size: "14px"
-    title-size: "31px"
-    bottom-line-size: "17px"
-  spacing:
-    outer: "18px 8px 34px"
-    card-padding: "17px 20px"
-    section-gap: "12px"
-    accent-border: "4px"
+    ink: "#101828"
+    ink-surface: "#151D2E"
+    pink: "#FF4F91"
+    periwinkle: "#6C7CFF"
+    lime: "#B8F34A"
+    cyan: "#45D7FF"
+    coral: "#FF8C66"
+    butter: "#FFD45A"
+    paper: "#F4F6FB"
+    white: "#FFFFFF"
+    text-dark: "#171D2C"
+    text-muted: "#697287"
   layout:
     max-width: "680px"
     direction: rtl
 ---
 
-# Velvet Factory — Brief V10 Visual Identity
+# Velvet Factory — Brief V10.2 · Ink & Candy
 
 ## עיקרון
 
-הבריף הוא **מסך שליטה יומי שחי בתוך המייל**, לא memo ולא dashboard גנרי. הוא צריך להרגיש כמו מוצר מודרני של VelvetOS: חד, צבעוני, עשיר אך לא צעקני, וניתן לסריקה בטלפון תוך 20–30 שניות.
+V10.2 הוא **מגזין מודיעין יומי חי**, לא dashboard גנרי. הוא צריך להיות חד, עשיר בתמונות אמיתיות, קל לסריקה בטלפון ומושך מספיק כדי להרגיש כמו מוצר שאנשים אחרים היו רוצים לקבל.
 
-שפת ברירת המחדל היא **עברית**. אנגלית מותרת רק כמיקרו־לייבל קצר כאשר היא באמת מוסיפה אופי או מוכרת מונח מערכת; אין כותרות שלמות באנגלית כאשר יש ניסוח עברי טבעי.
+עברית היא ברירת המחדל. אנגלית נשארת רק למונחים טבעיים כמו `Instagram`, `Reel`, `Canva`, `Insights`, `VelvetOS` ו־`V10.2`.
 
-## שפה חזותית
+## פלטת Ink & Candy
 
-V10 מחליף את נעילת navy/gold הישנה בשפה רחבה יותר:
+- `#101828` — קנבס Ink כהה.
+- `#151D2E` — מעטפת ו־Hero surface.
+- `#FF4F91` — החלטה / צריך ממך / תוכן שדורש תשומת לב.
+- `#6C7CFF` — מערכת / VelvetOS / מידע ניהולי.
+- `#B8F34A` — תקין / הצלחה / אות חיובי.
+- `#45D7FF` — מידע חי / Insights.
+- `#FF8C66` — ייצור והדפסה.
+- `#FFD45A` — כסף / הזדמנות / מעקב.
+- `#F4F6FB` — משטח קריאה בהיר.
 
-| צבע | שימוש |
-|---|---|
-| `#080a14` | קנבס חיצוני כהה מאוד |
-| `#11142a` | מעטפת/hero כהה |
-| `#7c5cff` | מערכת, משרד, VelvetOS, version |
-| `#20d9ff` | מידע חי, Insights, תמונת מצב |
-| `#ff5fa2` | צריך ממך / החלטה / תשומת לב |
-| `#ff8a65` | ייצור והדפסה |
-| `#a3e635` | כסף שהושלם/תקין/חיובי |
-| `#f5c451` | הזדמנות/פרנסה/מעקב |
-| `#f6f5fb` | משטח תוכן בהיר |
+הצבעים סמנטיים. אין לצבוע כל כרטיס רק בשביל אפקט; צבע מדגיש משמעות.
 
-הצבעים הם **סמנטיים**, לא קישוט: אותו סוג מידע מקבל אותה משפחת צבעים לאורך הבריף. מותר gradient עדין ב־Hero בלבד; גוף המייל נשאר Gmail-safe ופשוט.
+## תמונות הן חלק מהגריד
+
+V10.2 מבטל את הגישה של “כרטיס ואז אולי תמונה”. כל אזור ויזואלי משתמש בפריסת מדיה מפורשת:
+
+1. `hero_visual` — **תמונת היום** גדולה, כמעט ברוחב מלא. מקור: studio/WIP/finished/live content אמיתי בלבד.
+2. `layout=split` — כרטיס עבודה שבו כ־⅓ מהשטח מוקדש לתמונה וכ־⅔ למצב, חסם ושלב הבא.
+3. `cards[]` — עד 3 mini-cards לתוכן/מחקר/הזדמנויות; כל כרטיס יכול להכיל thumbnail, כותרת, ממצא ופעולה.
+4. `covers[]` — תמונות נוספות בתוך כרטיס כשבאמת נדרש.
+
+אם אין asset אמיתי — אזור התמונה לא נוצר. אין placeholder בפרודקשן, stock או filler.
+
+## בחירת תמונת היום
+
+אם ה־payload מספק `hero_visual`, הוא מנצח. אחרת ה־renderer רשאי לקדם תמונה קיימת מתוך ה־brief לפי סדר עדיפות:
+
+1. עבודה/ייצור פעיל.
+2. תוכן רלוונטי.
+3. Instagram/Insights חי.
+4. הזדמנות/מחקר.
+
+תמונה שקודמה ל־Hero לא משוכפלת שוב בכרטיס המקורי.
 
 ## היררכיה
 
-1. Hero — תאריך, גרסה, מצב עסק, בריאות מערכת.
-2. KPI — עד ארבעה נתונים בלבד, מאומתים.
-3. **תמונת מצב עכשיו** — משפט אחד.
-4. **מה השתנה מאז הבריף הקודם** — עד ארבעה delta משמעותיים.
-5. צריך ממך — אם קיים, גבוה בדף.
-6. כסף / ייצור / היום / הזמנות.
-7. Instagram + תוכן חי עם thumbnails.
-8. מחקר — רק findings עם פעולה מומלצת.
-9. VelvetOS Activity — מה בוצע בפועל, לא רשימת שירותים כללית.
-10. בריאות מערכת מפורטת רק כשיש degradation.
+1. Hero: תאריך, גרסה, מצב העסק ובריאות מערכת.
+2. **תמונת היום** — כשיש asset אמיתי.
+3. עד 4 KPI מאומתים.
+4. תמונת מצב במשפט אחד.
+5. מה השתנה מאז הבריף הקודם.
+6. צריך ממך.
+7. כסף / עבודות / היום.
+8. רדאר תוכן עם visual proof.
+9. שולחן המחקר — עד 3 findings, רצוי עם thumbnail מאותו source.
+10. הזדמנות קרובה — רק אם Studio Pulse מחזיר אות אמיתי.
+11. פעילות VelvetOS — receipts ושינויים שבוצעו בפועל; בדרך כלל בלי תמונות.
 
-## צפיפות אדפטיבית
+## שדות V10.2
 
-- בלוק שלא השתנה ובלי חריגה: `density=compact` או שורה קצרה.
-- בלוק עם שינוי: מקבל `delta` מודגש.
-- חריגה/חסם: עולה מוקדם יותר בתוך הנתונים שהקומפוזר מספק.
-- אין להאריך את המייל רק כדי לשמר שבעה אזורים באותו גובה.
-- אין להמציא שינוי כדי להצדיק צבע או badge.
+### Hero
 
-## תמונות
+```json
+{
+  "hero_visual": {
+    "cid": "IMG_123.jpg",
+    "href": "https://...",
+    "eyebrow": "תמונת היום",
+    "title": "העבודה המרכזית",
+    "caption": "מה חשוב לראות כאן"
+  }
+}
+```
 
-תמונה היא **הוכחה ויזואלית**, לא filler.
+במקום `cid` אפשר `url`/`src` אמיתי.
 
-מקורות נתמכים:
-1. `cid:<filename>` לנכס פרטי/מקומי דרך Gmail sender.
-2. `url`/`src` אמיתי שהוחזר מ־Instagram/Canva/public source.
-3. `href` אופציונלי הופך את התמונה ללחיצה ישירה ליעד האמיתי.
+### Split card
 
-לכל תמונה: `alt`, caption קצר, וקישור כשהוא קיים. אין stock images ואין תמונה לא קשורה רק כדי “להחיות” בלוק.
+```json
+{
+  "kind": "production",
+  "layout": "split",
+  "title": "עבודה חיה",
+  "covers": [{"cid": "job.jpg", "caption": "מצב נוכחי"}]
+}
+```
 
-## עברית תחילה
+### Mini visual cards
 
-מומלץ:
-- `תמונת מצב עכשיו` במקום `NOW READ`
-- `מה השתנה מאז הבריף הקודם` במקום `WHAT CHANGED`
-- `צריך ממך` במקום `OWNER ACTION`
-- `מצב הכסף` במקום `CASH STATE`
-- `רדאר תוכן` במקום `CONTENT RADAR`
-- `שולחן המחקר` במקום `RESEARCH DESK`
-- `היום / בהמשך` במקום `TODAY / NEXT`
-- `פעילות VelvetOS` במקום `VELVETOS ACTIVITY`
+```json
+{
+  "kind": "content",
+  "title": "רדאר תוכן",
+  "cards": [
+    {
+      "url": "https://...",
+      "href": "https://...",
+      "kicker": "מאומת חי",
+      "title": "Reel אחרון",
+      "text": "הנתון החשוב",
+      "action": "מה עושים עכשיו"
+    }
+  ]
+}
+```
 
-מותר להשאיר `V10`, `Instagram`, `VelvetOS`, `Reel`, `Canva`, `Insights` וכדומה כשהמונח עצמו טבעי יותר כך.
-
-## סטטוסים
-
-Hero מציג שני צירים נפרדים:
-
-- `מצב העסק` — GREEN/YELLOW/RED מבחינת תשומת לב ניהולית.
-- `בריאות מערכת` — תשתיות בלבד.
-
-במייל עצמו הטקסט העברי קודם לצבע. צבע לעולם אינו הסימן היחיד למצב.
-
-## כללי אמת
+## חוקי אמת
 
 - אין ₪ מומצא.
 - אין Insights מומצאים.
-- scheduled/uploaded ≠ verified live.
-- אין `0` במקום מידע חסר; משתמשים ב־`אין ספירה`/`לא זמין` לפי ההקשר.
-- thumbnail של מקור מחקרי צריך להיות מאותו מקור; אם אין, משתמשים ב־logo fallback או בלי תמונה.
-- פעילות VelvetOS מתארת receipt/שינוי שבאמת קרה מאז הריצה הקודמת.
+- `scheduled/uploaded != verified live`.
+- `0` אינו תחליף למידע חסר.
+- תמונה היא evidence של אותו item/source.
+- thumbnail מחקרי חייב להגיע מאותו מקור או להיעלם.
+- פעילות VelvetOS מציגה פעולה/receipt שבאמת קרו.
 
 ## Gmail / mobile
 
-- RTL בכל טבלאות התצוגה.
+- RTL מלא.
 - 320–680px, mobile-first.
-- מבנה table-based; CSS פשוט ו-inline ככל האפשר.
-- כפתורים touch-friendly.
-- dark-mode resilient.
-- מידע קריטי לעולם לא כתמונה בלבד.
+- table-based, Gmail-safe.
+- split/cards נערמים במובייל.
+- טקסט קריטי לעולם לא נצרב בתוך תמונה.
+- תמונות לחיצות כאשר יש יעד אמיתי.
 
-## תאימות לאחור
+## תאימות
 
-`render_mail.py` ממשיך לקבל JSON ישן של 01–07. שדות V10 חדשים הם אופציונליים:
-
-- `attention`
-- `system_health`
-- `kpis[]`
-- `changes[]`
-- `slots[].kind`
-- `slots[].density`
-- `slots[].delta`
-- `covers[].cid` או `covers[].url/src`
-- `covers[].href`
-
-כך אפשר לעבור ל־V10 בהדרגה בלי לשבור את לולאת הבריף הקיימת.
-
-## Related files
-
-| File | Role |
-|---|---|
-| `../MAIL.html` | מעטפת V10 החיה |
-| `../render_mail.py` | renderer בעברית־תחילה + V10 fields |
-| `../MAIL.md` | חוזה תוכן/מקורות/שליחה |
-| `packages/vfops/hq/BRIEF-SLOTS.md` | מקורות המידע הקנוניים |
-| `packages/vfmedia/catalog.json` | מדיה אמיתית |
-| `packages/velvetos/living-studio/` | Studio Pulse / Living Studio inputs |
+JSON ישן של 01–07 ממשיך לעבוד. שדות V10.2 אופציונליים. `Studio Pulse` נשאר projection fallback בלבד — לא מקור אמת חדש.
