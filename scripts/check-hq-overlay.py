@@ -39,7 +39,6 @@ def main() -> None:
             if not skill.is_file():
                 fail(f"missing {skill.relative_to(ROOT)}")
             if not play.is_file() and pack not in {"vfbriefux"}:
-                # vfbriefux uses PACKET.md
                 if not (ROOT / "packages" / pack / "hq").is_dir():
                     fail(f"missing hq overlay for {pack}")
 
@@ -49,24 +48,35 @@ def main() -> None:
         fail("missing vfbriefux diagram-maker embed map")
     if not (ROOT / "packages/vfbriefux/hq/diagram-svg-template.html").is_file():
         fail("missing vfbriefux diagram SVG template")
+
     mail_html = ROOT / "packages/vfbriefux/MAIL.html"
     mail_md = ROOT / "packages/vfbriefux/MAIL.md"
     render = ROOT / "packages/vfbriefux/render_mail.py"
     for path in (mail_html, mail_md, render):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
+
+    # V10 presentation contract: Hebrew-first, dark living shell, V10 optional blocks.
     mail_text = mail_html.read_text()
     for token in (
-        'bgcolor="#0b1224"',
+        'bgcolor="#080a14"',
         'dir="rtl"',
         "{{DATE_LINE}}",
         "{{SLOTS}}",
-        "תצוגה 3",
+        "{{STATUS_BADGES}}",
+        "{{KPI_STRIP}}",
+        "{{DELTA_STRIP}}",
+        "V10",
+        "תמונת מצב עכשיו",
     ):
         if token not in mail_text:
             fail(f"MAIL.html missing {token}")
-    if "htmlBody" not in mail_md.read_text():
-        fail("MAIL.md must require htmlBody")
+
+    mail_contract = mail_md.read_text()
+    for token in ("htmlBody", "עברית", "מה השתנה מאז הבריף הקודם", "scheduled/uploaded != verified live"):
+        if token not in mail_contract:
+            fail(f"MAIL.md missing V10 contract token {token!r}")
+
     proc = __import__("subprocess").run(
         [sys.executable, str(render), "--check"],
         cwd=ROOT,
@@ -75,6 +85,7 @@ def main() -> None:
     )
     if proc.returncode != 0:
         fail(f"render_mail.py --check: {proc.stderr or proc.stdout}")
+
     if not (ROOT / "constitution/CONSTITUTION.md").is_file():
         fail("missing constitution")
     tags_path = ROOT / "constitution/tags.md"
@@ -84,6 +95,7 @@ def main() -> None:
     for needle in ("#צמיחה-חברתית", "#ריל-תהליך", "#היילייטס", "social-growth"):
         if needle not in tags_text:
             fail(f"constitution/tags.md missing social-growth needle {needle!r}")
+
     follower = ROOT / "packages/vfgrowth/hq/FOLLOWER-GROWTH.md"
     if not follower.is_file():
         fail("missing vfgrowth/hq/FOLLOWER-GROWTH.md (ChatGPT content-agent embed)")
@@ -113,11 +125,7 @@ def main() -> None:
     if "HQ overlay wins" not in vendor:
         fail("vendor script must preserve hq overlay")
 
-    skip_need = [
-        "auto-DM",
-        "boost",
-        "invented ILS prices",
-    ]
+    skip_need = ["auto-DM", "boost", "invented ILS prices"]
     for s in skip_need:
         if s not in MAP["skipped"]:
             fail(f"skipped list missing {s}")
@@ -130,24 +138,22 @@ def main() -> None:
                 continue
             if path.name == "ORIGIN.md":
                 continue
-            # Eval fixtures intentionally include verified + invented price claims.
             if "packages/vfcopy/evals" in str(path).replace("\\", "/"):
                 continue
             text = path.read_text()
             for m in ILS_NUMBER.finditer(text):
-                snippet = text[max(0, m.start() - 24) : m.end() + 8]
+                snippet = text[max(0, m.start() - 24):m.end() + 8]
                 if "X ₪" in snippet or "X   ₪" in snippet:
                     continue
                 if "050-2517000" in snippet:
                     continue
-                # Policy / list-item ₪ (e.g. "4. ₪ רק אחרי", "בלי ₪") is not a price.
                 if re.search(r"(בלי|אין|לא)\s*₪|₪\s*רק", snippet):
                     continue
                 if re.fullmatch(r"\d+\.\s*₪", m.group(0).strip()):
                     continue
                 fail(f"possible invented ILS in {path.relative_to(ROOT)}: {snippet!r}")
 
-    print("OK hq overlay + share map")
+    print("OK hq overlay + Brief V10 contract")
 
 
 if __name__ == "__main__":
