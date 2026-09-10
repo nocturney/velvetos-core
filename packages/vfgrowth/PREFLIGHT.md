@@ -6,7 +6,7 @@ Visible Text extension: 11.9.2026.
 הכלים תופסים **איכות לפני** שיבוץ / פרסום חי. לא אחרי.
 
 חוקה: `constitution/STUDIO.md` · `constitution/VISIBLE_TEXT.md` · `ORCHESTRA.md` · `SEND.md`.  
-שער עריכה: `EDIT-GATE.md`. חוזה קופי חובה: `../vfcopy/SOFT-TOOLS-CONTRACT.md`. קול public: `vfcopy/VOICE.md` + `vfcopy/VOICE-CHART.md`.  
+שער עריכה: `EDIT-GATE.md`. חוזה קופי חובה: `../vfcopy/SOFT-TOOLS-CONTRACT.md`. קול public: `vfcopy/VOICE.md` + `vfcopy/VOICE-CHART.md`. קומפס/מחקר קול: `vfcopy/VOICE-RESEARCH.md`.  
 רובריקת איכות: [`CONTENT-RUBRIC.md`](CONTENT-RUBRIC.md). UGC: [`UGC.md`](UGC.md). מסירה: `HANDOFF-he.md`.
 
 **בלי ארטיפקט כתוב ב־`preflight/<id>.md` עם שער = עבור = לא משבצים.**  
@@ -16,15 +16,15 @@ Visible Text extension: 11.9.2026.
 
 | # | בדיקה | עובר רק אם |
 |---|---|---|
-| א | **Visible Text + SOFT-TOOLS-CONTRACT + VOICE** | כל AI-authored copy שהקהל רואה עבר `public-social` Visible Text Gate על **הגרסה הסופית**: verified context → reader-first → VOICE/VOICE-CHART/approved voice → relevant vfmskill aids → template → velvet-hebrew-copy → Humanizer/AI-tells → surface-aware lint → fact gate. חובה `visible_text_gate=PASS`, `surface`, `text_sha256`/copy digest, ו־`vfcopy_lint=PASS` |
+| א | **Visible Text + SOFT-TOOLS-CONTRACT + VOICE** | כל AI-authored copy שהקהל רואה עבר `public-social` Visible Text Gate על **הגרסה הסופית**: verified context → reader-first → VOICE/VOICE-CHART/`voice/approved/` → relevant vfmskill aids → template → `velvet-hebrew-copy` → `ai-tells-he.md` → `python3 scripts/check-vfcopy.py lint` / surface-aware gate על actual final copy → fact gate. חובה `visible_text_gate=PASS`, `surface`, `text_sha256`/copy digest, ו־`vfcopy_lint=pass` |
 | א2 | **Visual microcopy** | אם יש cover/first-frame/overlay/slide text: גם `visual-microcopy` gate, 3–5 candidates + `NO_TEXT`, Creative Director/Brand Guardian, והחלטת `TEXT_WINS` מנומקת או `NO_TEXT`. אם אין טקסט ויזואלי: `N/A` מתועד |
 | ב | **Canva / vfcovers** + ראיית ויזואל | `edit_url` אמיתי מ־Canva MCP **או** PNG מ־`vfcovers` / `vfcanva`. לא JPEG גולמי. ראייה: thumbnail/export path או צילום מסך מקומי — לא «נראה טוב» בעל־פה |
 | ג | **ציון עצמי מול רף סוכנות** | ביקורת עצמית כתובה. כל שורת רף = כן. לא = נכשל-סגור |
-| ד | **קומפס/ייחוד כשנדרש** | מקורות רלוונטיים ומה מאמצים/דוחים; אין חיקוי זהות ואין ספירת עוקבים מומצאת |
+| ד | **VOICE-RESEARCH / קומפס / ייחוד כשנדרש** | מקורות רלוונטיים ומה מאמצים/דוחים; אין חיקוי זהות ואין ספירת עוקבים מומצאת |
 | ה | **CONTENT-RUBRIC** | טבלת Rubric מלאה (5 צירים), ≥20/25, בלי 1 ובלי דגל אדום |
 | ו | **גרסת תוצר** | `artifact_digest` + `final_package_sha256` + `text_sha256`/copy digest תואמים לגרסאות שאושרו. שינוי קופי אחרי gate/lint מחייב gate מחדש; שינוי מהותי אחרי Rubric/PREFLIGHT מבטל approval |
 
-חסר אחד מהשערים הרלוונטיים = **נכשל-סגור**. אין «כמעט» ואין שיבוץ על תנאי.
+חסר אחד מהשערים הרלוונטיים = **נכשל-סגור**. אין «כמעט» ואין שיבוץ על תנאי. `needs_input` = חסום עד שהחסר נסגר.
 
 בדיקת מבנה (קיום קבצים) ≠ הוכחת ביצוע. CI/eval של הכלי אינו receipt לקופי ספציפי. `visible_text_gate: PASS` תקף רק אם השרשרת הופעלה על הטקסט המדויק.
 
@@ -65,9 +65,9 @@ visual_text_sha256: <64-hex | N/A>
 
 לא אחד = נכשל-סגור. מתקנים במשרד.
 
-## קומפס / ייחוד
+## VOICE-RESEARCH / קומפס / ייחוד
 
-רק מקור אמיתי שנבדק או היסטוריית feed/Visual OS. מאמצים מכניקה שמתאימה; לא משכפלים זהות חיצונית. אין ספירת עוקבים/“#1”/handle מומצא.
+רק מקור אמיתי שנבדק או היסטוריית feed/Visual OS. `VOICE-RESEARCH.md` הוא מקור ההשוואה הקנוני כשעושים קומפס קופי. מאמצים מכניקה שמתאימה; לא משכפלים זהות חיצונית. אין ספירת עוקבים/“#1”/handle מומצא.
 
 ## נכשל-סגור — לא למעלה
 
