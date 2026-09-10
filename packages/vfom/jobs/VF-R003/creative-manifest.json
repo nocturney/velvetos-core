@@ -1,0 +1,71 @@
+{
+  "jobId": "VF-R003",
+  "format": "reel",
+  "status": "storyboarded",
+  "sourceEvidence": [
+    "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5",
+    "file:IMG_0470.mov",
+    "verified-video:3840x2160@30fps:17.0s:rotation=-90:display-vertical",
+    "verified-audio:none"
+  ],
+  "concept": {
+    "coreIdea": "Use the real changing viewpoints and reflected highlights on the helmet form as a quiet visual reveal; do not explain an unverified finishing process.",
+    "emotion": "precision and visual richness",
+    "formatGenome": "VISUAL_DETAIL_ROTATION",
+    "objective": "show a distinct studio visual language through real detail and changing light while avoiding unsupported material/process claims",
+    "audience": "people drawn to detailed decorative 3D-printed forms, surface finish and close-up craft visuals"
+  },
+  "hook": {
+    "candidates": [
+      {"id": "h1", "visual": "front metallic view moving immediately toward a three-quarter angle", "text": "הגימור נראה אחרת בתנועה", "reason": "the changing reflected appearance is visible in the source and differentiates this Reel from R001"},
+      {"id": "h2", "visual": "fast change from front to side view", "text": "הצד השני משנה הכול", "reason": "strong curiosity but slightly more subjective"},
+      {"id": "h3", "visual": "close-up on embossed ornament as angle changes", "text": "פרט אחד, זווית אחרת", "reason": "precise and restrained"},
+      {"id": "h4", "visual": "front hero frame followed by rear crest view", "text": "שווה לסובב אותו", "reason": "conversational but less premium"}
+    ],
+    "selected": "h1"
+  },
+  "shots": {
+    "plan": [
+      {"assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "shotType": "hero", "orientation": "vertical", "angle": "front to three-quarter", "distance": "medium-close", "action": "start on the strongest front metallic view and move immediately into angle change", "targetDurationSec": 2.0, "proof": "real decorative helmet form and visible changing highlights"},
+      {"assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "shotType": "macro", "orientation": "vertical", "angle": "side/front detail", "distance": "close", "action": "show embossed surface ornament and dark crest from the side", "targetDurationSec": 3.0, "proof": "real visible surface and crest detail"},
+      {"assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "shotType": "proof", "orientation": "vertical", "angle": "rear to opposite side", "distance": "medium-close", "action": "complete the viewpoint change and return toward a clean hero angle", "targetDurationSec": 3.0, "proof": "same real object from multiple continuous viewpoints"}
+    ],
+    "missing": []
+  },
+  "edit": {
+    "durationTargetSec": 8.0,
+    "audioStrategy": "source contains no audio; use silence or a restrained licensed/supporting track only if it adds value, never to imply process",
+    "timeline": [
+      {"startSec": 0.0, "endSec": 2.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "respect rotation metadata; vertical 9:16 crop centered on helmet; preserve front silhouette", "speed": 1.5, "cut": "hard", "overlayRef": "ov1", "audio": "none"},
+      {"startSec": 2.0, "endSec": 5.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "tight vertical detail crop while side ornament and crest become visible", "speed": 1.5, "cut": "hard", "audio": "none"},
+      {"startSec": 5.0, "endSec": 8.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "clean medium-close crop completing rotation; avoid hand/UI obstruction", "speed": 1.5, "cut": "hard", "audio": "none"}
+    ]
+  },
+  "overlays": [
+    {"id": "ov1", "text": "הגימור נראה אחרת בתנועה", "placement": "upper safe zone on dark/quiet background area with deterministic contrast backing if needed", "accent": "בתנועה"}
+  ],
+  "cover": {
+    "candidates": [
+      {"id": "c1", "headline": "נראה אחרת", "subjectCrop": "front metallic hero angle", "textPlacement": "upper-right safe zone", "gridRationale": "bright metallic subject creates contrast with the darker R002 carousel"},
+      {"id": "c2", "headline": "זווית אחרת", "subjectCrop": "three-quarter angle showing gold/copper face and dark crest", "textPlacement": "upper-left safe zone", "gridRationale": "communicates the visual mechanic without a process claim"},
+      {"id": "c3", "headline": "הפרטים זזים", "subjectCrop": "side ornament detail", "textPlacement": "top center", "gridRationale": "detail-forward option; must be rejected if wording implies physical movement of the ornament"}
+    ],
+    "selected": "c2"
+  },
+  "qa": {
+    "brandScore": 0,
+    "hookScore": 0,
+    "realityScore": 0,
+    "originalityScore": 0,
+    "artifactScore": 0,
+    "deterministicChecks": {"state": "not_run", "reason": "no exact final render exists yet"},
+    "failures": ["Exact-final crop/contrast/readability, rights and Brand Guardian review have not run."],
+    "repairs": []
+  },
+  "feed": {
+    "continuityDecision": "provisional-pass",
+    "reasoning": "adds warm metallic surface and controlled viewpoint change after R001 movement and R002 dark-detail carousel, reducing visual repetition."
+  },
+  "derivativeRefs": [],
+  "rightsNotes": ["Possession/source location is not rights approval. Public-release rights must be documented before media_ready/publish."]
+}
