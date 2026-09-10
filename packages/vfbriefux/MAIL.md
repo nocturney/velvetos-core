@@ -196,7 +196,7 @@ PYTHONPATH=packages python3 -m vfops.gmail_brief_send \
   --html PATH --images DIR --to nocturney@gmail.com --subject TEXT
 ```
 
-במסלול connector/live מותר להשתמש בתמונת HTTPS אמיתית ב־HTML. attachment רגיל אינו נחשב inline.
+במסלול connector/live גוף המייל חייב להישלח כ־`htmlBody`/`html_body` אמיתי. מותר להשתמש בתמונת HTTPS אמיתית בתוך ה־HTML. attachment רגיל אינו נחשב inline.
 
 ## חוקי אמת
 
