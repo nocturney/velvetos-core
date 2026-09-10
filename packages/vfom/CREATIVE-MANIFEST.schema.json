@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvetos.local/schemas/creative-manifest.schema.json",
+  "title": "Velvet Creative Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["jobId", "format", "status", "sourceEvidence", "concept", "hook", "shots", "edit", "cover", "qa"],
+  "properties": {
+    "jobId": {"type": "string", "minLength": 1},
+    "format": {"enum": ["reel", "story", "carousel", "post"]},
+    "status": {"enum": ["discovered", "qualified", "contracted", "concepted", "storyboarded", "waiting_for_media", "media_ready", "rough_generated", "visually_scored", "repaired", "rendered", "ready_for_publish", "authorized_for_tool_publish", "published_verified", "performance_learned", "human_required", "archived"]},
+    "sourceEvidence": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "concept": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coreIdea", "emotion", "formatGenome"],
+      "properties": {
+        "coreIdea": {"type": "string"},
+        "emotion": {"type": "string"},
+        "formatGenome": {"type": "string"},
+        "objective": {"type": "string"},
+        "audience": {"type": "string"}
+      }
+    },
+    "hook": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidates", "selected"],
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "visual", "text"],
+            "properties": {
+              "id": {"type": "string"},
+              "visual": {"type": "string"},
+              "text": {"type": "string"},
+              "reason": {"type": "string"}
+            }
+          }
+        },
+        "selected": {"type": "string"}
+      }
+    },
+    "shots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan", "missing"],
+      "properties": {
+        "plan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["shotType", "orientation", "angle", "distance", "action", "targetDurationSec"],
+            "properties": {
+              "assetRef": {"type": "string"},
+              "shotType": {"enum": ["hero", "macro", "process", "failure", "proof", "human", "b-roll"]},
+              "orientation": {"enum": ["vertical", "horizontal", "square"]},
+              "angle": {"type": "string"},
+              "distance": {"type": "string"},
+              "action": {"type": "string"},
+              "targetDurationSec": {"type": "number", "minimum": 0},
+              "proof": {"type": "string"}
+            }
+          }
+        },
+        "missing": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["what", "orientation", "angle", "durationSec", "action", "why"],
+            "properties": {
+              "what": {"type": "string"},
+              "orientation": {"enum": ["vertical", "horizontal", "square"]},
+              "angle": {"type": "string"},
+              "durationSec": {"type": "number", "minimum": 0},
+              "action": {"type": "string"},
+              "why": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "edit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timeline", "audioStrategy"],
+      "properties": {
+        "durationTargetSec": {"type": "number", "minimum": 0},
+        "audioStrategy": {"type": "string"},
+        "timeline": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["startSec", "endSec", "assetRef", "cut"],
+            "properties": {
+              "startSec": {"type": "number", "minimum": 0},
+              "endSec": {"type": "number", "minimum": 0},
+              "assetRef": {"type": "string"},
+              "crop": {"type": "string"},
+              "speed": {"type": "number", "exclusiveMinimum": 0},
+              "cut": {"type": "string"},
+              "overlayRef": {"type": "string"},
+              "audio": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "overlays": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text", "placement"],
+        "properties": {
+          "id": {"type": "string"},
+          "text": {"type": "string"},
+          "placement": {"type": "string"},
+          "accent": {"type": "string"}
+        }
+      }
+    },
+    "cover": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidates", "selected"],
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "headline", "subjectCrop", "textPlacement"],
+            "properties": {
+              "id": {"type": "string"},
+              "headline": {"type": "string", "maxLength": 60},
+              "subjectCrop": {"type": "string"},
+              "textPlacement": {"type": "string"},
+              "gridRationale": {"type": "string"}
+            }
+          }
+        },
+        "selected": {"type": "string"}
+      }
+    },
+    "qa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["brandScore", "realityScore", "artifactScore", "deterministicChecks", "failures", "repairs"],
+      "properties": {
+        "brandScore": {"type": "number", "minimum": 0, "maximum": 100},
+        "hookScore": {"type": "number", "minimum": 0, "maximum": 100},
+        "realityScore": {"type": "number", "minimum": 0, "maximum": 100},
+        "originalityScore": {"type": "number", "minimum": 0, "maximum": 100},
+        "artifactScore": {"type": "number", "minimum": 0, "maximum": 100},
+        "deterministicChecks": {"type": "object"},
+        "failures": {"type": "array", "items": {"type": "string"}},
+        "repairs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "feed": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "continuityDecision": {"type": "string"},
+        "reasoning": {"type": "string"}
+      }
+    },
+    "derivativeRefs": {"type": "array", "items": {"type": "string"}},
+    "rightsNotes": {"type": "array", "items": {"type": "string"}}
+  }
+}
