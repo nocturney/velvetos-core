@@ -9,6 +9,8 @@
 CTA: שלחו לנו הודעה כאן באינסטגרם · איסוף שדרות. לא «שלחו DM». לא וואטסאפ. (`PUBLIC_CURRENT_CTA`)  
 קול: `VOICE.md` + `VOICE-CHART.md`. רובריקה: `CONTENT-RUBRIC.md`.
 
+> Publish contract v2: אישור תוכן כללי או Canva edit אינו אישור לפרסום. השער חייב להיות מחובר ל־**תוצר הסופי המרונדר המדויק**.
+
 ## א · VOICE.md
 
 - מצב (אחד): תהליך-קצר / סיפור-מוצר
@@ -61,18 +63,40 @@ CTA: שלחו לנו הודעה כאן באינסטגרם · איסוף שדרו
 
 **ה:** עבור / נכשל-סגור
 
-## ו · גרסת תוצר (digest)
+## ו · גרסת תוצר + QA על final render
 
 - `caption_path`:
 - `caption_sha256`:
 - `visual_id` / `edit_url`:
 - `visual_sha256` או export etag:
+- `final_package_sha256`: sha256 של החבילה הסופית לפי סדר הפריימים/נכסים
 - אושר בתאריך:
 
-שינוי מהותי בכיתוב או בוויזואל אחרי אישור → מחזירים שער א–ה.
+### שדות Publish Gate v2 — חובה לפני Instagram publish
+
+```yaml
+publish_gate_schema: 2
+publish_gate: BLOCKED
+approval_invalidated: false
+qa_scope: exact-final-render
+qa_reviewed_at: <ISO-8601>
+content_rubric_total: <NN/25>
+artifact_digest: sha256:<64-hex>
+final_package_sha256: <64-hex>
+brand_guardian: FAIL
+copy_qa: FAIL
+readability: FAIL
+contrast: FAIL
+```
+
+כל שדה `PASS` נכתב רק אחרי בדיקה של הייצוא הסופי עצמו. בסטוריז, `brand_guardian`, `copy_qa`, `readability`, `contrast` חייבים להיות `PASS` לפני `publish_story`.
+
+**אסור waiver לקריאות/ניגודיות.** ניסוח כמו «רכה אבל קריאה», «לא חוסם», «מספיק טוב» או אישור על בסיס Canva edit/thumbnail בלבד אינו `PASS`. משנים צבע/רקע/צל/overlay/מיקום, מייצאים מחדש, מחשבים `final_package_sha256` חדש ומריצים את השער מחדש.
+
+שינוי מהותי בכיתוב או בוויזואל אחרי אישור → `approval_invalidated: true` ומחזירים שער א–ה + QA final render.
 
 **ו:** עבור / נכשל-סגור
 
 ## שער
 
-**עבור** רק אם א+ב+ג+ד+ה+ו = עבור. אחרת **נכשל-סגור** — חסום שיבוץ.
+`publish_gate: PASS` רק אם א+ב+ג+ד+ה+ו = עבור, ה־Rubric ≥20/25, וה־QA של התוצר הסופי עבר. אחרת `publish_gate: BLOCKED` / **נכשל-סגור** — חסום שיבוץ ופרסום.
