@@ -37,6 +37,9 @@ jobs:
             fi
           fi
 
+      - name: README Operational Snapshot is current
+        run: python3 scripts/update-readme-snapshot.py --check
+
       - name: Run all VelvetOS sensors
         run: python3 scripts/check-all.py
 
