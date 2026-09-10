@@ -12,11 +12,12 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 
 # velvet-hebrew-copy
 
-סמכות סגנון הכתיבה העברית של Velvet Factory לכל טקסט אנושי נראה שנכתב ב־AI.  
+סמכות סגנון הכתיבה העברית של Velvet Factory **לכל טקסט אנושי נראה** שנכתב ב־AI.  
 לא פק חדש. לא runtime מקביל. חיה בתוך `packages/vfcopy` ומיישמת את `constitution/VISIBLE_TEXT.md`.
 
 מושב: סטודיו (`@content-creator` + specialist הדומיין לפי המשטח).  
-חוקה + אמת המשימה מנצחות תמיד. `VOICE.md` ו־`PUBLIC_CTA.md` חלים על public/social כשמתאים — **לא** בכוח על בריף תפעולי או שיחה פרטית.
+חוקה + אמת המשימה מנצחות תמיד. `VOICE.md` ו־`PUBLIC_CTA.md` חלים על public/social כשמתאים — **לא** בכוח על בריף תפעולי או שיחה פרטית.  
+בקופי public בלבד: דוגמאות one-shot / למידת קול מגיעות מ־`voice/approved/` בלבד; לעולם לא מ־`voice/generated/`.
 
 ## מתי — חובה
 
@@ -33,7 +34,7 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 
 | mode | קורא | סמכויות נוספות |
 |---|---|---|
-| `public-social` | קהל Instagram | `VOICE.md` + `VOICE-CHART.md` + `PUBLIC_CTA.md` + vfgrowth |
+| `public-social` | קהל Instagram | `VOICE.md` + `VOICE-CHART.md` + `voice/approved/` + `PUBLIC_CTA.md` + vfgrowth |
 | `visual-microcopy` | קהל על cover/overlay/slide | Creative Director + Brand Guardian + `NO_TEXT` baseline |
 | `customer-message` | לקוח בשיחה פרטית | `vfconvert`; `vfsales`/`vfcost`/`vlicense` כשישים; בלי public CTA בכוח |
 | `sales-proposal` | לקוח/ליד | `vfsales` + facts/price approval + `vfmskill` copywriting/copy-editing כשישים |
@@ -95,7 +96,7 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 - בדרך כלל 2–5 שורות כשמתאים.
 - CTA רק כשיש סיבה.
 - עד 5 hashtags ורק אם מועילים.
-- `VOICE.md` + `PUBLIC_CTA.md` מחייבים.
+- `VOICE.md` + `VOICE-CHART.md` + `voice/approved/` + `PUBLIC_CTA.md` מחייבים.
 
 ### Carousel / Reel
 
@@ -141,7 +142,7 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 ## QA
 
 1. `hq/reader-first-he.md` לפני ניסוח.  
-2. `python3 scripts/check-vfcopy.py lint --text '…'`.  
+2. `python3 scripts/check-vfcopy.py lint --text '…'` או `scripts/vf_visible_text.py --surface <surface>` על המועמד בפועל.  
 3. Pass ידני/agent: `hq/ai-tells-he.md`.  
 4. `vfmskill` copywriting/copy-editing כשסוג הטקסט מצדיק.  
 5. factual/domain validation אחרי style.  
@@ -179,7 +180,7 @@ notes: …
 
 - חוק רוחבי: `../../../constitution/VISIBLE_TEXT.md`
 - צינור: `PIPELINE.md`
-- קול public: `../../VOICE.md` · `../../VOICE-CHART.md`
+- קול public: `../../VOICE.md` · `../../VOICE-CHART.md` · `../../voice/approved/`
 - reader-first: `../../hq/reader-first-he.md`
 - Humanizer/AI-tells: `../../hq/ai-tells-he.md`
 - תבניות: `../../hq/templates/`
