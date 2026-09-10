@@ -106,9 +106,9 @@
     "motionPresets": "packages/vfom/MOTION-PRESETS.md",
     "formatGenomes": "packages/vfom/FORMAT-GENOMES.md",
     "specialists": {
-      "creativeDirector": ".cursor/skills/vf-creative-director/SKILL.md",
-      "brandGuardian": ".cursor/skills/vf-brand-guardian/SKILL.md",
-      "mediaLibrarian": ".cursor/skills/vf-media-librarian/SKILL.md"
+      "creativeDirector": ".cursor/skills/velvet-creative-director/SKILL.md",
+      "brandGuardian": ".cursor/skills/velvet-brand-guardian/SKILL.md",
+      "mediaLibrarian": ".cursor/skills/velvet-media-librarian/SKILL.md"
     },
     "creativeManifestRequired": true,
     "mediaCatalog": "packages/vfmedia/catalog.json",
