@@ -1,15 +1,15 @@
 {
   "name": "vfmedia-intake-runner",
   "component_state": "Idle",
-  "updatedAt": "2026-09-10T10:17:35Z",
+  "updatedAt": "2026-09-10T14:32:24Z",
   "pagination": {
     "pageToken": null,
     "pageSize": 50
   },
-  "catalogDigest": "0e97a10464a966a46cc107c28f20796148142a12abc92f8e4005559fdc37279d",
-  "inboxDigest": "474a1abc384298ae7c8c32b5ff148c0441d574852780082e01ead9819f7316c4",
-  "lastRunAt": "2026-09-10T10:15:35Z",
-  "lastSuccessAt": "2026-09-10T10:17:35Z",
+  "catalogDigest": "73ebd057d0d56fd2699c8370e875300184a1095a09ec03628b2e7010271ab24f",
+  "inboxDigest": "8dec99a8619bd812de178726b5fe055c9f832ac42c7fe94a0929d30cfcbb09d8",
+  "lastRunAt": "2026-09-10T14:29:46Z",
+  "lastSuccessAt": "2026-09-10T14:32:24Z",
   "lastError": null,
   "persistError": null,
   "auth": {
@@ -17,9 +17,9 @@
     "detail": "provider=google"
   },
   "stats": {
-    "runs": 4,
+    "runs": 5,
     "registered": 1,
-    "verified": 103,
+    "verified": 153,
     "skipped": 0,
     "failed": 0,
     "duplicates": 0,
@@ -47,7 +47,7 @@
   "activation": {
     "proven": true,
     "evidence": "provider=google; actions={'verified': 50}",
-    "provenAt": "2026-09-10T10:17:35Z",
+    "provenAt": "2026-09-10T14:32:24Z",
     "note": "Drive API live verify+move"
   }
 }
