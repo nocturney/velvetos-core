@@ -7,7 +7,8 @@
     "file:IMG_0470.mov",
     "verified-video:3840x2160@30fps:17.0s:rotation=-90:display-vertical",
     "verified-audio:none",
-    "final-package-sha256:0048f0cf533d7c1f673a541c42ca48f837b159aa1291e2f36d10f8de6811b259"
+    "final-package-sha256:0048f0cf533d7c1f673a541c42ca48f837b159aa1291e2f36d10f8de6811b259",
+    "owner-preference:2026-09-11:cover-copy=פה הזווית משנה הכול"
   ],
   "concept": {
     "coreIdea": "Use the real changing viewpoints and reflected highlights on the helmet form as a quiet visual reveal; do not explain an unverified finishing process.",
@@ -18,12 +19,13 @@
   },
   "hook": {
     "candidates": [
-      {"id": "h1", "visual": "front metallic view moving immediately toward a three-quarter angle", "text": "הגימור נראה אחרת בתנועה", "reason": "the changing reflected appearance is visible in the source and differentiates this Reel from R001"},
-      {"id": "h2", "visual": "fast change from front to side view", "text": "הצד השני משנה הכול", "reason": "strong curiosity but slightly more subjective"},
+      {"id": "h1", "visual": "front metallic view moving immediately toward a three-quarter angle", "text": "הגימור נראה אחרת בתנועה", "reason": "descriptive and more marketing-like than the owner-selected phrasing"},
+      {"id": "h2", "visual": "fast change from front to side view", "text": "הצד השני משנה הכול", "reason": "strong curiosity but less anchored to the actual visual mechanism"},
       {"id": "h3", "visual": "close-up on embossed ornament as angle changes", "text": "פרט אחד, זווית אחרת", "reason": "precise and restrained"},
-      {"id": "h4", "visual": "front hero frame followed by rear crest view", "text": "שווה לסובב אותו", "reason": "conversational but less premium"}
+      {"id": "h4", "visual": "front hero frame followed by rear crest view", "text": "שווה לסובב אותו", "reason": "conversational but less pointed"},
+      {"id": "h5-owner", "visual": "front-to-three-quarter move where highlights and details change visibly", "text": "פה הזווית משנה הכול", "reason": "owner-selected; spoken Hebrew that states the point of the visual without inventing a process claim"}
     ],
-    "selected": "h1"
+    "selected": "h5-owner"
   },
   "shots": {
     "plan": [
@@ -45,11 +47,13 @@
   "overlays": [],
   "cover": {
     "candidates": [
-      {"id": "c1", "headline": "נראה אחרת בתנועה", "subjectCrop": "front metallic hero angle", "textPlacement": "cream editorial header", "gridRationale": "connects the visible highlight change to motion without claiming a material/process"},
-      {"id": "c2", "headline": "זווית אחרת", "subjectCrop": "three-quarter angle showing gold/copper appearance and dark crest", "textPlacement": "upper-left safe zone", "gridRationale": "communicates the visual mechanic without a process claim"},
-      {"id": "c3", "headline": "הפרטים זזים", "subjectCrop": "side ornament detail", "textPlacement": "top center", "gridRationale": "rejected because wording could imply physical movement of the ornament"}
+      {"id": "c0-no-text", "headline": "", "subjectCrop": "front metallic hero angle", "textPlacement": "none", "gridRationale": "mandatory clean baseline; viable because the reflective subject is visually strong"},
+      {"id": "c1", "headline": "נראה אחרת בתנועה", "subjectCrop": "front metallic hero angle", "textPlacement": "cream editorial header", "gridRationale": "clear but generic and descriptive"},
+      {"id": "c2", "headline": "זווית אחרת", "subjectCrop": "three-quarter angle showing gold/copper appearance and dark crest", "textPlacement": "upper-left safe zone", "gridRationale": "too generic to justify covering the visual"},
+      {"id": "c3", "headline": "הפרטים זזים", "subjectCrop": "side ornament detail", "textPlacement": "top center", "gridRationale": "rejected because wording could imply physical movement of the ornament"},
+      {"id": "c4-owner", "headline": "פה הזווית משנה הכול", "subjectCrop": "front-to-three-quarter frame where reflected detail changes most clearly", "textPlacement": "minimal safe-zone placement away from crest/details", "gridRationale": "owner-selected; conversational point that explains why the rotation matters and beats the generic text options"}
     ],
-    "selected": "c1"
+    "selected": "c4-owner"
   },
   "qa": {
     "brandScore": 88,
@@ -62,31 +66,36 @@
       "exactFinalPackageSha256": "0048f0cf533d7c1f673a541c42ca48f837b159aa1291e2f36d10f8de6811b259",
       "video": "1080x1920 h264 8.5s",
       "caption": "current Drive caption uses a lead/pickup framing that should be rewritten for the new showcase intent",
-      "coverContrast": "15.48:1 ink-on-cream",
-      "visualReview": "exact-final contact sheet reviewed; rotation remains centered, readable and distinct from R001",
+      "coverContrast": "previous derivative only; stale after owner copy selection",
+      "visualReview": "previous exact-final contact sheet reviewed; rotation remains centered, readable and distinct from R001",
       "audioStream": "none",
-      "audioGate": "FAIL_NO_AUDIO"
+      "audioGate": "FAIL_NO_AUDIO",
+      "visualCopyGate": "PENDING_RERENDER",
+      "visualCopyPipeline": "reader-first -> velvet-hebrew-copy -> ai-tells/humanizer",
+      "noTextCompared": true,
+      "visualCopyDecision": "TEXT_WINS",
+      "ownerPreference": "פה הזווית משנה הכול"
     },
     "failures": [
       "Audio Gate FAIL: final Reel contains no audio stream and no intentional-silence decision was documented.",
       "Copy repair required: current public caption should be reframed as non-transactional showcase.",
+      "Cover derivative is stale: it does not contain the owner-selected copy and must be re-rendered before visual QA can pass.",
       "Skill execution receipt is not yet bound by the enforcement layer."
     ],
     "repairs": [
-      "Kept video text-free so reflected detail stays the subject.",
-      "Reframed visual claims to describe only visible light/angle change, not an unverified finishing process.",
-      "Rebuilt cover using verified vfcanva typography/color tokens and deterministic contrast.",
-      "Next: run vf-ig-music/audio repair, rewrite caption as non-transactional showcase, then re-render/re-hash/re-run exact-final QA."
+      "Keep video body text-free so reflected detail stays the subject.",
+      "Owner selected cover/hook wording: 'פה הזווית משנה הכול'; preserve this point and voice through the Hebrew-copy/Humanizer pass.",
+      "Next: re-render cover with owner-selected text, run vf-ig-music/audio repair, rewrite caption as non-transactional showcase, then re-hash/re-run exact-final QA."
     ]
   },
   "feed": {
     "continuityDecision": "pass",
-    "reasoning": "adds warm metallic surface and controlled viewpoint change after R001 movement and R002 dark-detail carousel, reducing visual repetition."
+    "reasoning": "adds warm metallic surface and controlled viewpoint change after R001 movement and R002 no-text dark-detail carousel, with an owner-selected conversational point rather than generic copy."
   },
   "derivativeRefs": [
     "drive:1gz5vjne9EegNpa3K0Ol9b50KjmCLhR5n:VF-R003-reel.mp4",
-    "drive:19KUhou5sLBWQ-MRHntl6J2F8zhmJPRty:VF-R003-cover.jpg",
-    "drive:1YTU28fQUXFF6FLB4fd5RmgA3tux-pvZ6:VF-R003-caption.txt"
+    "drive:19KUhou5sLBWQ-MRHntl6J2F8zhmJPRty:VF-R003-cover.jpg:STALE_AFTER_OWNER_COPY_SELECTION",
+    "drive:1YTU28fQUXFF6FLB4fd5RmgA3tux-pvZ6:VF-R003-caption.txt:STALE_SHOWCASE_COPY"
   ],
   "rightsNotes": [
     "Owner decision 2026-09-10: owner-captured showcase content is not blocked by a blanket model-license gate. Rights/privacy escalation remains for third-party media, UGC, identifiable-person privacy, known restrictions, or explicit commercial promotion of the depicted model."
