@@ -1,0 +1,2 @@
+Temporary GitHub access diagnostic authorized by repository owner.
+No production change. Delete test branch after verification.
