@@ -12,26 +12,50 @@ Treg לא רלוונטי. Drive יוצר מסמכים לפי צורך.
 | ערוץ | מי | כלי | לא |
 |---|---|---|---|
 | ג׳ימייל | **סוכן HQ** | `send_message` / `reply` / `forward` על `nocturney@gmail.com` | לא מחכים לגרוק. לא מחכים לאדם ללחוץ Send |
-| אינסטגרם `@velvets_cloud` | **סוכן HQ** דרך כלי מחובר | **adelaidasofia/instagram-mcp** `publish_image` / `publish_carousel` / `publish_reel` / `publish_story` אחרי שער Canva+vault (`vfigos/CONNECT-IG.md`). כשאין MCP חי / `remote_access` pending — Gmail + Drive + Canva **באותו תור** | לא LIVE-PACKET לאדם כברירת מחדל. לא «מחכים למכסת Grok». לא אוטו־DM. לא Metricool כתלות |
-| וואטסאפ לקוח | אדם `050-2517000` | Core: MCP חיפוש/טיוטה (`vfmcp/CONNECT-WHATSAPP.md`). VF `send=false` | HQ לא ממציא בוט · לא Infobip/ManyChat |
+| אינסטגרם `@velvets_cloud` | **סוכן HQ** דרך כלי מחובר | **adelaidasofia/instagram-mcp** `publish_image` / `publish_carousel` / `publish_reel` / `publish_story` אחרי שערי creative+Canva+vault+PREFLIGHT v2 | לא LIVE-PACKET לאדם כברירת מחדל. לא אוטו־DM. לא Metricool כתלות |
+| וואטסאפ לקוח | אדם `050-2517000` | Core: MCP חיפוש/טיוטה. VF `send=false` | HQ לא ממציא בוט |
 | מדפסות | רצפה | `vfprod` | HQ לא לוחץ Print |
 | בוסט / אוטו־DM | — | נעול | נעול תמיד |
 
 Grok Bot הוא **גיבוי אופציונלי**, לא השולח היחיד ולא שער חובה.
 
-## פריפלייט קל לפני שליחה
+## לפני Instagram publish — שני שערים נפרדים
 
-לפני `send_message` / Publish / קריאת API תזמורת — הרץ:
+### 1. Transport readiness
+
+אבחון חיבור בלבד:
+
+```bash
+python3 scripts/vf_send_preflight.py --gate instagram --transport-only
+```
+
+הצלחה כאן אומרת רק שהכלי/transport זמינים. **היא אינה הרשאת publish.**
+
+### 2. Exact-package creative approval
+
+לפני כל `publish_*` חובה להריץ:
+
+```bash
+python3 scripts/vf_send_preflight.py --gate instagram \
+  --content-id <GID> \
+  --format <story|reel|carousel|post> \
+  --approval-ref packages/vfgrowth/preflight/<GID>.md \
+  --package-sha256 <SHA256-OF-EXACT-FINAL-PACKAGE>
+```
+
+רק exit `0` ובפלט `publication_quality.publishAuthorized=true` מאפשרים Publish.  
+exit `1/2` = **לא מפרסמים**. מתקנים את התוצר או את ה־transport לפי הסיבה.
+
+PREFLIGHT לפרסום חדש חייב להיות schema v2. בסטורי: `brand_guardian`, `copy_qa`, `readability`, `contrast` = `PASS`; Rubric ≥20/25; `artifact_digest`; `final_package_sha256`. אין waiver ל״רכה אבל קריאה״ / ״לא חוסם״. שינוי מהותי אחרי QA מבטל approval.
+
+## פריפלייט כללי לכלי HQ
 
 ```bash
 python3 scripts/vf_send_preflight.py
-python3 scripts/vf_send_preflight.py --gate gmail        # 0=ready
-python3 scripts/vf_send_preflight.py --gate instagram    # 2=failover Canva+Drive+Gmail
+python3 scripts/vf_send_preflight.py --gate gmail
 ```
 
-בודק סטטוס שולחן + נוכחות מפתח (מקומי בלבד, בלי רשת).  
-יציאה `2` = **failover באותו תור** — לא סרק, לא המצאה.  
-לא מחליף את `vfgrowth/PREFLIGHT.md` (שער איכות תוכן לפני שיבוץ).
+בדיקות כלי אינן מחליפות `vfgrowth/PREFLIGHT.md`.
 
 ## ג׳ימייל — מותר עכשיו
 
@@ -44,41 +68,33 @@ python3 scripts/vf_send_preflight.py --gate instagram    # 2=failover Canva+Driv
 
 ## בריף 07:00 — לולאה לפני שליחה
 
-`python3 scripts/vfops_loop.py brief --write` מרכיב את החריצים מפקים חיים.  
-אחר כך `render_mail.py`. שליחה: CLI `python -m vfops.gmail_brief_send` (קובץ HTML + תיקיית CID) או פיצול MCP ב־`docs/SEND-BRIEF-MCP.md` — לא `htmlBody`+JPEG בקריאה אחת, לא `LOAD_FROM_FILE`. המעבר הזה לא מפרסם IG.
+`python3 scripts/vfops_loop.py brief --write` מרכיב את החריצים מפקים חיים. אחר כך `render_mail.py`. המעבר הזה לא מפרסם IG.
 
 ## נעילת כריסטיאן — לפני שיבוץ / חי
 
 משטח: **החלטה** · **חסם קשיח** · **פרסום חי שדורש אותו בלבד**.  
 אסור: מדדים חלשים · «רמה נמוכה» · נתיחת איכות אחרי פרסום · דוח בושה על כלי שלא נצרך.
 
-לפני שיבוץ או Publish: ארטיפקט `vfgrowth/preflight/<id>.md` לפי [`PREFLIGHT.md`](../packages/vfgrowth/PREFLIGHT.md) — VOICE + Canva/vfcovers + ציון עצמי + 2–3 קומפס.  
-נכשל-סגור → **לא משבצים**. מתקנים במשרד. אל תפנה לכריסטיאן על מדדים חלשים.
+לפני שיבוץ או Publish: ארטיפקט `vfgrowth/preflight/<id>.md` לפי [`PREFLIGHT.md`](../packages/vfgrowth/PREFLIGHT.md). נכשל-סגור → **לא משבצים ולא מפרסמים**.
 
 ## אינסטגרם — מותר דרך כלי
 
-1. **פריפלייט + שער עריכה** — ארטיפקט כתוב (`PREFLIGHT.md`) ואז Canva MCP / `vfcovers` / `vfcanva` (`studio/render.py`). **לא** טקסט על JPEG גולמי (`STUDIO.md`, `vfgrowth/EDIT-GATE.md`). Gemini browser רק על המק. בלי שער עבור = נכשל-סגור.
-2. `vfcopy` נותן כיתוב + **PUBLIC_CURRENT_CTA** (הודעת Instagram) + איסוף שדרות. לא וואטסאפ בכיתוב ציבורי (`constitution/PUBLIC_CTA.md`).
-3. אם **Instagram MCP** מחובר (`packages/vfigos/CONNECT-IG.md` · `adelaidasofia/instagram-mcp`) — HQ מפרסם ב־`publish_*`, **מאמת ב־`list_media`/`get_media`** (validate→apply→verify ב־`vfigos/SEND.md`), ורק אז מסמן `#נשלח-מ-HQ` **ו־`liveVerified`**. בלי אימות חי → `publish_pending_verification`. `uploadAccepted` / `publishRequested` / Calendar ≠ live (`vfigos/PUBLICATION-STATES.md`). סטוריז = `publish_story` על אותו MCP (אחרי Canva/vfcovers).
-4. אם אין Publish MCP חי / `remote_access: pending` בלי סשן — **failover מיד:** יוצרים מסמך Drive + שולחים ג׳ימייל עם המדיה/הכיתוב/קישור העריכה. מסמנים `#נשלח-מ-HQ` (מסלול כלים) + `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה. **NO INSTAGRAM CONNECTION ≠ NO OFFICE WORK** — ממשיכים intake / copy / Canva / preflight / queue.
-5. לא סרק. לא «תעלה ידנית». לא ממציאים שנשלח לפיד אם לא עלה (publish tool ≠ liveVerified). לא `send_message` DM. לא `INSTAGRAM_MCP_DM_ENABLED`.
+1. **קופי + creative QA + שער עריכה** — VOICE/Brand Guardian/רובריקה, Canva/vfcovers/vfcanva, ואז בדיקת final render.
+2. **PREFLIGHT v2** — קשור ל־hash של החבילה המדויקת. approval ישן/חסר digest אינו תקף לפרסום חדש.
+3. `vfcopy` נותן כיתוב + **PUBLIC_CURRENT_CTA**. לא וואטסאפ בכיתוב ציבורי.
+4. אם Instagram MCP מחובר — מריצים exact-package gate, ורק אחרי PASS מפרסמים ב־`publish_*`.
+5. אחרי publish מאמתים ב־`list_media`/`get_media`; רק אז `liveVerified`.
+6. אם אין Publish MCP חי — failover Drive+Gmail באותו תור; לא טוענים שעלה.
+7. לא סרק. לא «תעלה ידנית». לא ממציאים שנשלח לפיד אם לא עלה.
 
 ## Drive — יוצרים לפי צורך
 
-`create_file`: מסמך / גיליון / מצגת למשרד (בריף, חבילת שליחה, ספר בלי ₪ מומצא).  
-לא פותחים תיקיות אישיות/רפואיות/משפטיות. לא ממציאים שורות מחיר.
-
-## Treg
-
-לא רלוונטי למשרד. לא login, לא `call`, לא failover דרכו.  
-חיפוש חי: `WebSearch` / `WebFetch` / תזמורת. Insights: מקור מאומת או «אין ספירה». מוזיקה: `MUSIC.md` / HeyOrca.
+`create_file`: מסמך / גיליון / מצגת למשרד. לא פותחים תיקיות אישיות/רפואיות/משפטיות. לא ממציאים שורות מחיר.
 
 ## Organic Growth Control Plane — לא מפרסם
 
-[`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md): מפעל טיוטות + Decision Pack 07:00.  
-אישור אדם = `approved_for_manual_posting` — **לא** קריאת Publish ולא מעבר ל־`posted_manually`.  
-בריף 07:00 עדיין יוצא ב־Gmail דרך כלים. שליחת IG חיה נשארת משרה נפרדת לפי הטבלה למעלה, רק אחרי אישור אדם — לא מה־Control Plane.
+[`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md): מפעל טיוטות + Decision Pack 07:00. אישור אדם ≠ פרסום. שליחת IG חיה נשארת פעולה נפרדת אחרי שערי האיכות וה־publish.
 
 ## עדיין אסור
 
-אוטו־DM, בוסט בלי ראש צוות, ₪ / Insights מומצאים, גוף חסום מומצא, משלוח ארצי, סוד בגיט, `fcc-server` ב־Cloud Agent.
+אוטו־DM, בוסט בלי ראש צוות, ₪ / Insights מומצאים, גוף חסום מומצא, משלוח ארצי, סוד בגיט, `fcc-server` ב־Cloud Agent, או Publish על בסיס transport readiness בלבד.
