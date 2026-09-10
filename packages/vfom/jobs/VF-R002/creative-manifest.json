@@ -7,7 +7,8 @@
     "drive:1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi:IMG_1278.HEIC:4032x3024",
     "drive:1NW2nOJucAEEiIovlqm49uzNmNDbfn08k:IMG_1280.HEIC:4032x3024",
     "drive:1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ:IMG_1281.HEIC:4032x3024",
-    "final-package-sha256:d877d634cb9bbda54732b33bf5b4fc4215caf4539146e5d82cd223ce0fdf0c6c"
+    "final-package-sha256:d877d634cb9bbda54732b33bf5b4fc4215caf4539146e5d82cd223ce0fdf0c6c",
+    "owner-preference:2026-09-11:cover=NO_TEXT"
   ],
   "concept": {
     "coreIdea": "Use four genuinely different views of the same finished dragon sculpture so each swipe reveals a new detail instead of repeating the same catalogue angle.",
@@ -18,12 +19,13 @@
   },
   "hook": {
     "candidates": [
-      {"id": "h1", "visual": "tight three-quarter dragon view with face, wing and textured base visible", "text": "כל זווית מגלה משהו אחר", "reason": "promises a swipe payoff that the four real angles can fulfill"},
-      {"id": "h2", "visual": "close detail on head and wing", "text": "הפרטים הם כל הסיפור", "reason": "clear but more generic"},
-      {"id": "h3", "visual": "close crop on scales and face", "text": "תתקרבו רגע", "reason": "short invitation to inspect detail"},
-      {"id": "h4", "visual": "full sculpture with circular body/base", "text": "תמונה אחת לא מספיקה", "reason": "supports carousel behavior without inventing a physical claim"}
+      {"id": "h1", "visual": "tight three-quarter dragon view with face, wing and textured base visible", "text": "כל זווית מגלה משהו אחר", "reason": "reasonable swipe promise, but the owner prefers the image to carry the first frame without text"},
+      {"id": "h2", "visual": "close detail on head and wing", "text": "הפרטים הם כל הסיפור", "reason": "generic and rejected by Humanizer/AI-tells"},
+      {"id": "h3", "visual": "close crop on scales and face", "text": "תתקרבו רגע", "reason": "natural but still unnecessary against the stronger clean image"},
+      {"id": "h4", "visual": "full sculpture with circular body/base", "text": "תמונה אחת לא מספיקה", "reason": "functional carousel prompt, but not enough added value to beat the clean visual"},
+      {"id": "h5-no-text", "visual": "strongest full-bleed dragon frame with no text", "text": "", "reason": "owner-selected; the subject/detail itself is the hook and extra copy would dilute the image"}
     ],
-    "selected": "h4"
+    "selected": "h5-no-text"
   },
   "shots": {
     "plan": [
@@ -42,11 +44,12 @@
   "overlays": [],
   "cover": {
     "candidates": [
-      {"id": "c1", "headline": "כל זווית אחרת", "subjectCrop": "IMG_1277 tight 4:5 crop preserving face + wing", "textPlacement": "upper-left safe zone", "gridRationale": "strong face/wing silhouette and a clear swipe promise"},
-      {"id": "c2", "headline": "תתקרבו רגע", "subjectCrop": "IMG_1280 close crop on face and scales", "textPlacement": "upper-right safe zone", "gridRationale": "macro-first direction adds texture variety to the reset grid"},
-      {"id": "c3", "headline": "תמונה אחת לא מספיקה", "subjectCrop": "IMG_1277 full-object 4:5 crop", "textPlacement": "cream editorial header", "gridRationale": "explicit swipe promise is fulfilled by four genuinely different real angles"}
+      {"id": "c0-no-text", "headline": "", "subjectCrop": "IMG_1277 strongest full-bleed 4:5 crop preserving face, wing and silhouette", "textPlacement": "none", "gridRationale": "owner-selected; dense sculptural detail is stronger without an editorial header"},
+      {"id": "c1", "headline": "כל זווית אחרת", "subjectCrop": "IMG_1277 tight 4:5 crop preserving face + wing", "textPlacement": "upper-left safe zone", "gridRationale": "readable but generic compared with the clean subject"},
+      {"id": "c2", "headline": "תתקרבו רגע", "subjectCrop": "IMG_1280 close crop on face and scales", "textPlacement": "upper-right safe zone", "gridRationale": "natural but not enough value over the no-text baseline"},
+      {"id": "c3", "headline": "תמונה אחת לא מספיקה", "subjectCrop": "IMG_1277 full-object 4:5 crop", "textPlacement": "cream editorial header", "gridRationale": "functional but still weaker than the image-only opening according to owner preference"}
     ],
-    "selected": "c3"
+    "selected": "c0-no-text"
   },
   "qa": {
     "brandScore": 89,
@@ -59,31 +62,36 @@
       "exactFinalPackageSha256": "d877d634cb9bbda54732b33bf5b4fc4215caf4539146e5d82cd223ce0fdf0c6c",
       "slides": "4x 1080x1350 JPEG",
       "caption": "current Drive caption contains explicit sales framing ('לפרטים והזמנות') and pickup; incompatible with showcase intent until rewritten",
-      "coverContrast": "15.48:1 ink-on-cream",
-      "visualReview": "all four exact-final frames reviewed; each swipe presents a materially different view/detail",
-      "audioGate": "N/A_CAROUSEL"
+      "coverContrast": "N/A_AFTER_OWNER_NO_TEXT_DECISION",
+      "visualReview": "previous four exact-final frames reviewed; each swipe presents a materially different view/detail",
+      "audioGate": "N/A_CAROUSEL",
+      "visualCopyGate": "PENDING_RERENDER",
+      "visualCopyPipeline": "reader-first -> velvet-hebrew-copy -> ai-tells/humanizer",
+      "noTextCompared": true,
+      "visualCopyDecision": "NO_TEXT",
+      "ownerPreference": "NO_TEXT"
     },
     "failures": [
       "Copy repair required: current public caption explicitly invites orders and does not match the new showcase intent.",
+      "Slide 1 derivative is stale: it still contains the previous editorial header and must be re-rendered clean with no text.",
       "Skill execution receipt is not yet bound by the enforcement layer."
     ],
     "repairs": [
-      "Rebuilt first slide as a full-bleed product image with a clean editorial header.",
-      "Kept remaining slides text-free so surface detail remains the proof.",
-      "Removed redundant catalogue-style copy from image frames.",
-      "Next: rewrite caption as non-transactional showcase, re-hash package and re-run exact-final copy QA."
+      "Keep slides 2-4 text-free.",
+      "Owner selected NO_TEXT for the opening slide after comparing against cover copy candidates.",
+      "Next: re-render slide 1 as clean full-bleed image, rewrite caption as non-transactional showcase, re-hash package and re-run exact-final QA."
     ]
   },
   "feed": {
     "continuityDecision": "pass",
-    "reasoning": "the dark sculptural detail sequence separates the two motion-led Reels and avoids repeating the old same-subject/same-angle catalogue pattern."
+    "reasoning": "the dark sculptural detail sequence separates the two motion-led Reels, and the owner-selected no-text opening avoids decorative copy that adds no point."
   },
   "derivativeRefs": [
-    "drive:1np7Wv-4nfdgIpGzF4-jCM0oCC6qQUrPs:VF-R002-01.jpg",
+    "drive:1np7Wv-4nfdgIpGzF4-jCM0oCC6qQUrPs:VF-R002-01.jpg:STALE_AFTER_OWNER_NO_TEXT_SELECTION",
     "drive:17Ol5jNuw6O7ue8bSwlNk_GaSZjTKa8w6:VF-R002-02.jpg",
     "drive:1L4o4rgNrX5gzs93sBifSZb8amHVrbTmc:VF-R002-03.jpg",
     "drive:1NC93byIjvoV2RY7dKJMxBKb3lKu35XfV:VF-R002-04.jpg",
-    "drive:1iXtsVh66Iu9F2fQniqVydMhODVr6M7rm:VF-R002-caption.txt"
+    "drive:1iXtsVh66Iu9F2fQniqVydMhODVr6M7rm:VF-R002-caption.txt:STALE_SHOWCASE_COPY"
   ],
   "rightsNotes": [
     "Owner decision 2026-09-10: owner-captured showcase content is not blocked by a blanket model-license gate. Rights/privacy escalation remains for third-party media, UGC, identifiable-person privacy, known restrictions, or explicit commercial promotion of the depicted model."
