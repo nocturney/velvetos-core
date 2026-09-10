@@ -1,40 +1,44 @@
-# לדג׳ר צמיחה · GROWTH_LEDGER
+# לדג׳ר צמיחה · GROWTH_LEDGER · RESET ACTIVE
 
-מושב: **צמיחה**. מקור אמת למועמדי פיד/סטורי — לא ממציאים שם, מדיה, או ₪.  
-חלון חי: `CALENDAR.md`. מסירה לסטודיו: `HANDOFF-he.md`. כיתוב: `vfcopy`. כריכה: `vfcovers`. שיבוץ: `instagram.com` (לא סוויט).
+מושב: **צמיחה**. מקור אמת למועמדי Feed/Reel/Story החדשים.  
+סמכות: `CONTENT-RESET-2026-09-10.md` · לוח: `CALENDAR.md` · שלישיית פתיחה: `RESET-LAUNCH-TRIO.md`.
 
-נעול 5.9.2026 · כריסטיאן ~11:10 Asia/Jerusalem.  
-עדכון 6.9: G003 **משובץ** · G004 קטלבל-מחזיק (לא משקולת).
+## מצב הפיד הישן
 
-## חי בפיד
+כל 8 פריטי Feed/Reels החיים שנמצאו ב־10.9.2026 הם **historical learning only** ו־`ARCHIVE_PENDING_MANUAL`.
 
-| מזהה | פורמט | מועד (Asia/Jerusalem) | shortcode | הערה |
-|---|---|---|---|---|
-| VF-G001 | ריל תהליך/גילוי | ראשון 30.8.2026 16:00 | `DcqkjOLlYVX` | ריל #1 לניסוי פורמט · לא מחליפים |
-| VF-G002 | ריל תהליך/גילוי | שלישי 1.9.2026 16:00 | `DcvuJLxCJgU` | ריל #2 · לא מחליפים |
-| VF-G005 | קרוסלת פיד | חמישי 3.9.2026 12:00 | `Dc0cKegEbxd` | «5 דברים לפני הזמנה» · d12b · לא מחליפים |
+אין למחוק אותם מהראיות/Insights. הפעולה הרצויה בפלטפורמה היא **Archive, לא Delete**, ורק לאחר ש־VF-R001/R002/R003 מוכנים לפרסום. כלי Instagram המחובר אינו חושף Archive/Delete למדיה, ולכן פעולת הפלטפורמה עצמה נשארת human-only באפליקציה.
 
-Insights: «אין ספירה» עד סנאפשוט בעלים (`vfinsights`).
+| permalink | פורמט | מצב reset |
+|---|---|---|
+| `instagram.com/p/DdHidHYG4-p/` | Carousel | ARCHIVE_PENDING_MANUAL |
+| `instagram.com/reel/DdAPhozlNe2/` | Reel | ARCHIVE_PENDING_MANUAL |
+| `instagram.com/p/Dc1g1sJGzgq/` | Carousel | ARCHIVE_PENDING_MANUAL |
+| `instagram.com/p/Dc0cKegEbxd/` | Carousel | ARCHIVE_PENDING_MANUAL |
+| `instagram.com/reel/DcvuJLxCJgU/` | Reel | ARCHIVE_PENDING_MANUAL |
+| `instagram.com/reel/DcqkjOLlYVX/` | Reel | ARCHIVE_PENDING_MANUAL |
+| `instagram.com/p/Dci5EyuoWVJ/` | Image | ARCHIVE_PENDING_MANUAL |
+| `instagram.com/p/Dci0aRzIO1F/` | Image | ARCHIVE_PENDING_MANUAL |
 
-## מועמדים
+## תור חדש
 
-| מזהה | פורמט | נושא | מדיה | כיתוב | סטטוס |
+| מזהה | פורמט | תפקיד | Media evidence | Creative direction | מצב |
 |---|---|---|---|---|---|
-| VF-G003 | ריל תהליך/גילוי · ריל #3 | SoccerBall | משובץ ב־instagram.com 7.9 16:00 · מדפסת = גיבוי בלבד | נעול `vfcopy/G003.md` «מה יוצא מהמדפסת?» | **נעול · משובץ** |
-| VF-G004 | סטוריז / קרוסלה | קטלבל ורוד = מחזיק תכשיטים/טבעות לאימון (**לא** משקולת) | תיבת Grok `INSTA/media/kettlebells-pink-batch-2026-09-06-01…05.jpeg` + `…tops-print-end-2026-09-06.jpeg` | **`vfcopy/G004.md`** | **מועמד סטוריז/קרוסלה** · כרטיס `G004.md` |
-| VF-G006 | קרוסלת פיד | מועמד G004 (אם כיתוב מוכן) | אותה תיבה · **שער עריכה** לפני שיבוץ | `vfcopy/G004.md` | **מועמד** · חמישי 11.9 12:00 · חסום עד Canva/vfcovers (לא JPEG גולמי) |
-| VF-G007+ | לפי תבנית שבועית | רק אחרי הוכחת רצפה / format call | חסר | חסר | לא ממלאים שם מהאוויר |
+| **VF-R001** | Reel | Reach + product movement proof | Drive `1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3` | `כל זרוע זזה אחרת` | **evidence_selected** |
+| **VF-R002** | Carousel | Product story + detail | Drive batch IMG_1277–1281 | `כל זווית מגלה משהו אחר` | **evidence_selected** |
+| **VF-R003** | Reel | Studio visual intelligence + reveal | Drive `1V5daU2XcB0kMsDo_erzv3AkumElfmrr5` | `הגימור נראה אחרת בתנועה` | **evidence_selected** |
 
-## ניסוי פורמט (3 רילים)
+`evidence_selected` אינו approval. לפני `media_ready` יש להשלים Media Librarian classification/rights/quality evidence. לפני `ready_for_publish` נדרשים exact-render receipts מכל ה־gates הרלוונטיים.
 
-G001 + G002 עלו. G003 משובץ 7.9 16:00 — ריל #3 **באותו** סגנון תהליך/גילוי.  
-אחרי עלייה חיה + 24ש + סנאפשוט בעלים — **שיחת פורמט** (ראש צוות). עד אז לא מחליפים את צורת הריל.  
-דופק 6.9: 80 עוקבים · רילס מביאים לא-עוקבים · DM 0 · לחזק היילייטס + הודעת Instagram (`hq/FOLLOWER-GROWTH.md`).
+## ישן = STALE
 
-## חוקים
+הכרטיסים/טיוטות/כריכות/Preflight של G004/G006/G007/G008/G009/G010 וכל מועמד עתידי שנוצר לפני ה־reset אינם תור פעיל. אין להחזיר אותם ל־Calendar או Publish רק מפני שהם קיימים בריפו או ב־Canva.
 
-- בלי ₪ מומצא (`X ₪` בכרטיס Offer). בלי Insights מומצאים.
-- בלי בוסט / אוטו־DM / Meta Suite.
-- CTA: שלחו לנו הודעה כאן באינסטגרם · הזמנה לאיסוף שדרות (`PUBLIC_CURRENT_CTA`). לא וואטסאפ בכיתוב. לא אוטו־DM / «שלחו DM» ככלי.
-- קופי: הזמנה חמה לסטודיו. לא פותחים ב«מוכן» / «קיים» / «אין משלוח».
-- מועמד בלי נתיב מדיה = חסום. לא ממציאים סצנת רצפה.
+## חוקי עבודה
+
+- real evidence → Media Librarian → Creative Director → render/edit → Hebrew Copy/Voice → Brand Guardian exact-final → Content Rubric/Contract/rights/policy → package-bound receipts/preflight → publish → live verify → performance learning.
+- CTA ציבורי = Instagram message בלבד; אין WhatsApp/טלפון/wa.me.
+- אין ₪, claims, customer story, material property, deadline או Insights מומצאים.
+- שינוי copy/media/render מבטל receipts קודמים.
+- Brand Guardian בודק novelty/fatigue מול ההיסטוריה, אבל ההיסטוריה אינה template להעתקה.
+- אין slot-filling. תוכן חלש או חסום = מדלגים.
