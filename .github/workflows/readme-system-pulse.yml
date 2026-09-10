@@ -1,0 +1,57 @@
+name: README System Pulse
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 * * * *"
+  push:
+    branches: [main]
+    paths:
+      - "office/control/HANDOFF.json"
+      - "office/ledger/bindings.json"
+      - "packages/vfigos/CAPABILITIES.json"
+      - "packages/vfmedia/state/intake-runner.json"
+      - "packages/velvetos/living-studio/REGISTRY.json"
+      - "packages/manifest.json"
+      - "CHANGELOG.md"
+      - "scripts/check-*.py"
+      - "scripts/update-readme-snapshot.py"
+      - ".github/workflows/*.yml"
+      - ".github/workflows/*.yaml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: readme-system-pulse
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Render repository-backed System Pulse
+        run: python3 scripts/update-readme-snapshot.py
+
+      - name: Commit only when pulse changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- README.md; then
+            echo "System Pulse already current"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "docs: refresh README System Pulse"
+          git push
