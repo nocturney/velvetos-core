@@ -1,14 +1,14 @@
 {
   "name": "vfmedia-intake-runner",
   "component_state": "Blocked",
-  "updatedAt": "2026-09-09T23:09:17Z",
+  "updatedAt": "2026-09-10T01:02:53Z",
   "pagination": {
     "pageToken": null,
     "pageSize": 50
   },
   "catalogDigest": "2eacfabae43b6bf377edd34512500955e270f25bcb479d1053cb8ee40031bf9e",
-  "inboxDigest": "177377aa19fdf1c0d7da07e564275039be47180fc081f0b4c191d6f7eadac258",
-  "lastRunAt": "2026-09-09T23:09:17Z",
+  "inboxDigest": "8ce8882b3de16336847bc1ac33f414999ca15772cc35a79a3199e7f6f06f29e1",
+  "lastRunAt": "2026-09-10T01:02:53Z",
   "lastSuccessAt": "2026-09-08T14:50:25Z",
   "lastError": "חסר Drive auth לסביבת רקע: אין GOOGLE_APPLICATION_CREDENTIALS / VFMEDIA_DRIVE_CREDENTIALS / GOOGLE_TOKEN / VFMEDIA_DRIVE_TOKEN",
   "persistError": null,

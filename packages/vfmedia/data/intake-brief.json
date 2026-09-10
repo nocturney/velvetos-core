@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T23:09:17Z",
+  "generatedAt": "2026-09-10T01:02:53Z",
   "slot": "05",
   "title": "קליטת מדיה",
   "phases": {
@@ -10,7 +10,7 @@
   },
   "runner": {
     "component_state": "Blocked",
-    "lastRunAt": "2026-09-09T23:09:17Z",
+    "lastRunAt": "2026-09-10T01:02:53Z",
     "lastError": "חסר Drive auth לסביבת רקע: אין GOOGLE_APPLICATION_CREDENTIALS / VFMEDIA_DRIVE_CREDENTIALS / GOOGLE_TOKEN / VFMEDIA_DRIVE_TOKEN",
     "persistError": null,
     "activation_proven": true,
