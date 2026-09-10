@@ -1,64 +1,84 @@
 # פריפלייט פיד / סטוריז — לפני שיבוץ
 
 מושב: **צמיחה + סטודיו**. לא פק חדש.  
-נעילה 7.9.2026 ~09:02 (Asia/Jerusalem) — כריסטיאן:  
+נעילה 7.9.2026 ~09:02 (Asia/Jerusalem) — כריסטיאן.  
+Visible Text extension: 11.9.2026.  
 הכלים תופסים **איכות לפני** שיבוץ / פרסום חי. לא אחרי.
 
-חוקה: `constitution/STUDIO.md` · `ORCHESTRA.md` · `SEND.md`.  
-שער עריכה: `EDIT-GATE.md`. חוזה קופי חובה: `../vfcopy/SOFT-TOOLS-CONTRACT.md`. קול: `vfcopy/VOICE.md` + `vfcopy/VOICE-CHART.md`. שכנים: `vfcopy/VOICE-RESEARCH.md`.  
-רובריקת איכות (חובה לפני «מוכן»): [`CONTENT-RUBRIC.md`](CONTENT-RUBRIC.md).  
-UGC: [`UGC.md`](UGC.md). מסירה: `HANDOFF-he.md`.
+חוקה: `constitution/STUDIO.md` · `constitution/VISIBLE_TEXT.md` · `ORCHESTRA.md` · `SEND.md`.  
+שער עריכה: `EDIT-GATE.md`. חוזה קופי חובה: `../vfcopy/SOFT-TOOLS-CONTRACT.md`. קול public: `vfcopy/VOICE.md` + `vfcopy/VOICE-CHART.md`.  
+רובריקת איכות: [`CONTENT-RUBRIC.md`](CONTENT-RUBRIC.md). UGC: [`UGC.md`](UGC.md). מסירה: `HANDOFF-he.md`.
 
 **בלי ארטיפקט כתוב ב־`preflight/<id>.md` עם שער = עבור = לא משבצים.**  
 נכשל-סגור → חסום שיבוץ. מתקנים במשרד. **לא** מעבירים לכריסטיאן «רמה נמוכה».
 
-## מה חייב להיות כתוב (כל חבילת סטוריז / פיד)
+## מה חייב להיות כתוב
 
 | # | בדיקה | עובר רק אם |
 |---|---|---|
-| א | **SOFT-TOOLS-CONTRACT + VOICE** | הקופי הסופי עבר reader-first → `VOICE.md`/`VOICE-CHART.md`/`voice/approved/` → template מתאים → `velvet-hebrew-copy` → `ai-tells-he.md` → `python3 scripts/check-vfcopy.py lint` על הטקסט הסופי עם context מאומת → fact gate. חובה לשמור `copy_version`/digest + `vfcopy_lint=pass`; `needs_input` = חסום. `VOICE.md` לבדו אינו pass |
+| א | **Visible Text + SOFT-TOOLS-CONTRACT + VOICE** | כל AI-authored copy שהקהל רואה עבר `public-social` Visible Text Gate על **הגרסה הסופית**: verified context → reader-first → VOICE/VOICE-CHART/approved voice → relevant vfmskill aids → template → velvet-hebrew-copy → Humanizer/AI-tells → surface-aware lint → fact gate. חובה `visible_text_gate=PASS`, `surface`, `text_sha256`/copy digest, ו־`vfcopy_lint=PASS` |
+| א2 | **Visual microcopy** | אם יש cover/first-frame/overlay/slide text: גם `visual-microcopy` gate, 3–5 candidates + `NO_TEXT`, Creative Director/Brand Guardian, והחלטת `TEXT_WINS` מנומקת או `NO_TEXT`. אם אין טקסט ויזואלי: `N/A` מתועד |
 | ב | **Canva / vfcovers** + ראיית ויזואל | `edit_url` אמיתי מ־Canva MCP **או** PNG מ־`vfcovers` / `vfcanva`. לא JPEG גולמי. ראייה: thumbnail/export path או צילום מסך מקומי — לא «נראה טוב» בעל־פה |
-| ג | **ציון עצמי מול רף סוכנות** | ביקורת עצמית כתובה (לא Insights). כל שורת רף = כן. לא = נכשל-סגור |
-| ד | **2–3 קומפס** | שמות מעמודי `VOICE-RESEARCH.md` / שכני תלת־ממד·עיצוב·מתנה בישראל — מה מאמצים / מה דוחים. בלי ספירת עוקבים |
-| ה | **CONTENT-RUBRIC** | טבלת Rubric מלאה (5 צירים). עובר רק ב־**≥20/25**, בלי 1 בכל ציר, בלי דגל אדום. חסר ציון / סה״כ שגוי / ״עבור״ בלי טבלה = נכשל-סגור |
-| ו | **גרסת תוצר** | `artifact_digest` (sha256 של הכיתוב הסופי + מזהה ויזואל שאושרו). שינוי קופי אחרי lint מחייב lint מחדש; שינוי מהותי אחרי Rubric/PREFLIGHT מבטל את האישור ומחייב בדיקה מחודשת |
+| ג | **ציון עצמי מול רף סוכנות** | ביקורת עצמית כתובה. כל שורת רף = כן. לא = נכשל-סגור |
+| ד | **קומפס/ייחוד כשנדרש** | מקורות רלוונטיים ומה מאמצים/דוחים; אין חיקוי זהות ואין ספירת עוקבים מומצאת |
+| ה | **CONTENT-RUBRIC** | טבלת Rubric מלאה (5 צירים), ≥20/25, בלי 1 ובלי דגל אדום |
+| ו | **גרסת תוצר** | `artifact_digest` + `final_package_sha256` + `text_sha256`/copy digest תואמים לגרסאות שאושרו. שינוי קופי אחרי gate/lint מחייב gate מחדש; שינוי מהותי אחרי Rubric/PREFLIGHT מבטל approval |
 
-חסר אחד מהשערים = **נכשל-סגור**. אין «כמעט» ואין שיבוץ על תנאי.
+חסר אחד מהשערים הרלוונטיים = **נכשל-סגור**. אין «כמעט» ואין שיבוץ על תנאי.
 
-בדיקת מבנה (קיום קבצים) ≠ שיפוט איכות עיצוב. שער ב׳+ה׳ דורשים ראיות ויזואל + ציוני רובריקה — לא רק «הקובץ קיים».
+בדיקת מבנה (קיום קבצים) ≠ הוכחת ביצוע. CI/eval של הכלי אינו receipt לקופי ספציפי. `visible_text_gate: PASS` תקף רק אם השרשרת הופעלה על הטקסט המדויק.
+
+## שדות Copy / Visible Text evidence
+
+```yaml
+visible_text_gate: PASS | FAIL | UNPROVEN
+visible_text_surface: public-social
+text_sha256: <64-hex exact final public copy>
+truth_checked: PASS | FAIL
+reader_first: PASS | FAIL
+copy_authority: PASS | FAIL
+humanizer_ai_tells: PASS | FAIL
+vfcopy_lint: PASS | FAIL | NEEDS_INPUT
+vfcopy_lint_surface: public-social
+fact_gate: PASS | NEEDS_INPUT | FAIL
+marketing_aids:
+  copywriting: APPLIED | N/A
+  copy-editing: APPLIED | N/A
+  marketing-psychology: APPLIED | N/A
+visual_text_gate: PASS | N/A
+visual_copy_decision: TEXT_WINS | NO_TEXT | N/A
+visual_text_sha256: <64-hex | N/A>
+```
+
+`N/A` לכלי/שלב מותר רק כשהוא באמת לא רלוונטי למשטח, ורצוי עם סיבה קצרה. מקור הכלל: `vfcopy/SOFT-TOOLS-CONTRACT.md`.
 
 ## ציון עצמי — רף סוכנות יקרה
 
 כותבים כן/לא. לא ממציאים Insights. לא ממציאים ₪.
 
 1. סוכנות פרסום יקרה הייתה שולחת את הפריים והכיתוב כמו שהם?
-2. הקופי עבר את כל `vfcopy/SOFT-TOOLS-CONTRACT.md` על **הגרסה הסופית**; יש reader-first קצר, מצב קול, lint pass ו־fact gate pass/needs_input מתועד?
-3. הוויזואל עבר `EDIT-GATE.md` (כלי אמיתי, לא טקסט על JPEG גולמי)?
-4. שני–שלושה קומפס כתובים — מה תואם שכן ישראלי, מה נדחה (מפעל / משלוח ארצי / 14 האשטגים / אוטו־DM / וואטסאפ כ־CTA ציבורי)?
-5. אין ₪ מומצא · אין מק״ט מומצא · אין עובדות לקוח מומצאות · `versionApproval` במדיה אם רלוונטי · משבצת לוח קיימת · אין כפילות פרסום · אין claim של live בלי `liveVerified` (`PUBLICATION-STATES.md`).
-6. CTA נוכחי לפי `constitution/PUBLIC_CTA.md`; אין CTA אסור או כזה שאינו תואם לחוקה הנוכחית.
+2. `visible_text_gate: PASS` ו־`text_sha256` שייכים לקופי **הסופי** שנמצא בחבילה?
+3. אם יש טקסט על ויזואל: הוא עבר `visual-microcopy` + `NO_TEXT` comparison, והאם הוא באמת מוסיף פואנטה?
+4. הוויזואל עבר `EDIT-GATE.md` וכל בדיקות Brand Guardian הרלוונטיות?
+5. אין ₪/מק״ט/לקוח/Insights/claim מומצאים; media/version/publication states תקינים.
+6. CTA/intent תואמים `PUBLIC_CTA.md` ולסוג הפוסט; private-contact rules לא דולפים לפיד.
 
-לא אחד = נכשל-סגור. מתקנים Canva / כיתוב / פריים במשרד.
+לא אחד = נכשל-סגור. מתקנים במשרד.
 
-## קומפס — מאיפה
+## קומפס / ייחוד
 
-רק מקורות שכבר ב־`VOICE-RESEARCH.md` או עמוד IL ציבורי שנפתח ב־WebSearch/WebFetch (גוף אמיתי או «אין גוף»).  
-דוגמאות קבועות: נישה, Armadillo, REUT'S / Hili / MD4U, YoYo — **לאמץ** חום + סיפור מוצר.  
-**לדחות:** טון מפעל, משלוח לכל הארץ כשאינו נכון, מחירון בפיד בלי מקור, האשטגים באנגלית למכביר.
-
-אין ספירת עוקבים. אין «#1». אין המצאת handle.
+רק מקור אמיתי שנבדק או היסטוריית feed/Visual OS. מאמצים מכניקה שמתאימה; לא משכפלים זהות חיצונית. אין ספירת עוקבים/“#1”/handle מומצא.
 
 ## נכשל-סגור — לא למעלה
 
 | עושים במשרד | אסור על משטח כריסטיאן / ראש צוות |
 |---|---|
 | חסום שיבוץ ב־`HANDOFF-he.md` | «רמה נמוכה» |
-| שורת **פער** פנימית (לוג צמיחה / `vfinsights` פנימי) | תלונת איכות אחרי פרסום |
-| תיקון Canva + copy chain + קומפס באותו תור | דוח בושה «לא השתמשתם בכלים» |
+| תיקון copy chain / Canva / audio / evidence באותו תור | דוח בושה «לא השתמשתם בכלים» |
+| `UNPROVEN` כשאין receipt אמיתי | להפוך ידנית ל־PASS |
 | מדדים חלשים — לוג פנימי בלבד | פינג בצ׳אט על Insights חלשים |
 
-**אל תפנה לכריסטיאן על מדדים חלשים.**  
-משטח אליו: **החלטה** · **חסם קשיח** (גלם שרק הוא יכול לצלם) · **פרסום חי שדורש אותו בלבד**.
+משטח אליו: **החלטה** · **חסם קשיח** · **פרסום חי שדורש אותו בלבד**.
 
 ## ארטיפקט
 
@@ -68,9 +88,8 @@ UGC: [`UGC.md`](UGC.md). מסירה: `HANDOFF-he.md`.
 packages/vfgrowth/preflight/<G00X-or-sku>.md
 ```
 
-העתק מ־`preflight/TEMPLATE.md`.  
-`vfops_loop.py handoff` מדפיס את הנתיב. בלי נתיב + שער עבור = השורה נשארת חסומה.
+העתק מ־`preflight/TEMPLATE.md`. `vfops_loop.py handoff` מדפיס את הנתיב. בלי נתיב + שער PASS = השורה נשארת חסומה.
 
-אין Publish מכאן. אין ₪ מכירה. אין Insights מומצאים.
+אין Publish מכאן. אין ₪ מכירה מומצא. אין Insights מומצאים.
 
-מפעל אורגני (`ORGANIC_GROWTH.md`): אחרי PREFLIGHT — `policy_checked` ואז תור 07:00. אישור אדם ≠ פרסום.
+מפעל אורגני (`ORGANIC_GROWTH.md`): אחרי PREFLIGHT — `policy_checked` ואז תור. אישור אדם ≠ פרסום.
