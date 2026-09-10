@@ -20,7 +20,7 @@ Visible Text extension: 11.9.2026.
 | א2 | **Visual microcopy** | אם יש cover/first-frame/overlay/slide text: גם `visual-microcopy` gate, 3–5 candidates + `NO_TEXT`, Creative Director/Brand Guardian, והחלטת `TEXT_WINS` מנומקת או `NO_TEXT`. אם אין טקסט ויזואלי: `N/A` מתועד |
 | ב | **Canva / vfcovers** + ראיית ויזואל | `edit_url` אמיתי מ־Canva MCP **או** PNG מ־`vfcovers` / `vfcanva`. לא JPEG גולמי. ראייה: thumbnail/export path או צילום מסך מקומי — לא «נראה טוב» בעל־פה |
 | ג | **ציון עצמי מול רף סוכנות** | ביקורת עצמית כתובה. כל שורת רף = כן. לא = נכשל-סגור |
-| ד | **VOICE-RESEARCH / קומפס / ייחוד כשנדרש** | מקורות רלוונטיים ומה מאמצים/דוחים; אין חיקוי זהות ואין ספירת עוקבים מומצאת |
+| ד | **VOICE-RESEARCH / קומפס / ייחוד כשנדרש** | בודקים **2–3 קומפס/כיוונים** כשיש טעם אמיתי בהשוואה; מקורות רלוונטיים ומה מאמצים/דוחים; אין חיקוי זהות ואין ספירת עוקבים מומצאת |
 | ה | **CONTENT-RUBRIC** | טבלת Rubric מלאה (5 צירים), ≥20/25, בלי 1 ובלי דגל אדום |
 | ו | **גרסת תוצר** | `artifact_digest` + `final_package_sha256` + `text_sha256`/copy digest תואמים לגרסאות שאושרו. שינוי קופי אחרי gate/lint מחייב gate מחדש; שינוי מהותי אחרי Rubric/PREFLIGHT מבטל approval |
 
@@ -60,14 +60,15 @@ visual_text_sha256: <64-hex | N/A>
 2. `visible_text_gate: PASS` ו־`text_sha256` שייכים לקופי **הסופי** שנמצא בחבילה?
 3. אם יש טקסט על ויזואל: הוא עבר `visual-microcopy` + `NO_TEXT` comparison, והאם הוא באמת מוסיף פואנטה?
 4. הוויזואל עבר `EDIT-GATE.md` וכל בדיקות Brand Guardian הרלוונטיות?
-5. אין ₪/מק״ט/לקוח/Insights/claim מומצאים; media/version/publication states תקינים.
-6. CTA/intent תואמים `PUBLIC_CTA.md` ולסוג הפוסט; private-contact rules לא דולפים לפיד.
+5. נבחנו 2–3 קומפס/כיוונים כשזה רלוונטי, או תועד למה אין צורך?
+6. אין ₪/מק״ט/לקוח/Insights/claim מומצאים; media/version/publication states תקינים.
+7. CTA/intent תואמים `PUBLIC_CTA.md` ולסוג הפוסט; private-contact rules לא דולפים לפיד.
 
 לא אחד = נכשל-סגור. מתקנים במשרד.
 
 ## VOICE-RESEARCH / קומפס / ייחוד
 
-רק מקור אמיתי שנבדק או היסטוריית feed/Visual OS. `VOICE-RESEARCH.md` הוא מקור ההשוואה הקנוני כשעושים קומפס קופי. מאמצים מכניקה שמתאימה; לא משכפלים זהות חיצונית. אין ספירת עוקבים/“#1”/handle מומצא.
+רק מקור אמיתי שנבדק או היסטוריית feed/Visual OS. `VOICE-RESEARCH.md` הוא מקור ההשוואה הקנוני כשעושים קומפס קופי. כשנדרשת השוואה, בוחנים 2–3 קומפס/כיוונים אמיתיים ומנסחים מה מאמצים ומה דוחים; לא משכפלים זהות חיצונית. אין ספירת עוקבים/“#1”/handle מומצא.
 
 ## נכשל-סגור — לא למעלה
 
