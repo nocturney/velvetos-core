@@ -1,52 +1,41 @@
 # Scenario: content-live
 
-Huginn pattern: trigger → transform → publish (with failover webhook).  
-Crew: [`../crews/content.md`](../crews/content.md)
+Existing office orchestrator pattern only — no second runtime. Crew: [`../crews/content.md`](../crews/content.md). Creative control: `packages/vfom/CREATIVE-AUTOPILOT.md`.
 
 ## Graph
 
 ```mermaid
 flowchart LR
-  P[print.done] --> A[brief.ready]
-  A --> B[vfcopy.draft]
-  B --> C[vfcovers.brief]
-  C --> D[canva.done]
-  D --> PF[preflight.written]
-  PF --> E{publish.mcp?}
-  E -->|yes| F[ig.sent]
-  E -->|no| G[ig.failover]
-  G --> H[drive.file]
-  H --> I[gmail.packet]
-  I --> F
+  P[real opportunity / print.done / media.verified] --> A[creative.plan]
+  A --> G{critical media present?}
+  G -->|no| SR[shotRequest / waiting_for_media]
+  G -->|yes| EDL[edit.plan]
+  EDL --> C[cover + copy]
+  C --> QA[Visual OS + Rubric + policy + PREFLIGHT]
+  QA -->|fail quality| FIX[auto-fix]
+  FIX --> QA
+  QA -->|pass| AU{standing authorization?}
+  AU -->|yes| AP[authorized_for_tool_publish]
+  AU -->|no| HA[pending human authorization]
+  AP --> PUB[vfigos publish tool]
+  HA --> PUB
+  PUB --> V{receipt + live evidence?}
+  V -->|yes| DONE[published_verified]
+  V -->|no| D[Degraded + failover packet]
 ```
 
-Floor print-done is optional. Missing card/media = **חסר** — do not invent a bed scene. HQ does not poll printers. Brief 07:00 does not publish.
+## Laws
 
-## Events (checkpoint)
-
-| Step | event | payload keys |
-|---|---|---|
-| 1 | `brief.ready` | `jobId`, `format`: post \| story \| carousel |
-| 2 | `vfcopy.draft` | `captionPath`, `cta`: WhatsApp pickup |
-| 3 | `canva.done` | `editUrl` or `renderPath` |
-| 4 | `ig.sent` | `published`: bool, `tags[]` |
-| 5 | `ig.failover` | `canva`, `driveId`, `gmailSent` |
-
-## Send law
-
-- CTA: WhatsApp `050-2517000` / איסוף שדרות. Not «שלחו DM». Process-short reels use follow-CTA (`PROFILE-TO-WHATSAPP.md`).
-- `#נשלח-מ-HQ` when a tool sent.
-- Written `PREFLIGHT.md` before schedule. Fail-closed = no slot.
-- `#ממתין-ל-כלי-IG` if feed did not publish via MCP.
-- Never claim posted without publish tool or honest failover packet (`vfigos/SEND.md`).
-
-## Verify
-
-- Canva link is real or failover path on disk — not invented.
-- No invented Insights on the graphic.
+- Missing physical media = one precise shot request; no invented bed/product scene.
+- Routine hook/cover/cut/caption choices are autonomous.
+- Quality failure loops internally; it does not become an owner task.
+- Standing authorization is instance-scoped and never covers ₪, Boost/Ads, auto-DM, customer WhatsApp, Print, unclear rights or private customer/CAD material.
+- Feed cadence remains `vfgrowth/CALENDAR.md`; no invented schedule.
+- No publish claim without tool receipt and verification evidence.
 
 ## Outcomes
 
-- `worker_done` — draft + send path completed (posted or failover packet).
-- `escalation` — Canva + render.py + Superdesign all failed; Gmail packet still sent if possible.
-- `decision_gate` — boost or ₪ promo (lead only).
+- `published_verified` — tool receipt + live evidence.
+- `ready_for_publish` — gates pass but publish tool unavailable; failover packet exists.
+- `waiting_for_media` — exact shotRequest exists.
+- `human_required` — named constitutional/business gate only.

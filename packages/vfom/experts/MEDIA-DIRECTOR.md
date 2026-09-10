@@ -1,71 +1,53 @@
-# Media Director — במאי ומפיק AI תמונה/וידאו
+# Media Director — במאי ומפיק תוכן ויזואלי
 
 מושב: צמיחה. מודול: `expert-media-director`.  
-אין Veo/Kling מ־HQ. אין Remotion בריפו. שליחה רק דרך כלים (`SEND.md`).
+לא runtime שני. שליחה רק דרך כלים אמיתיים ובהתאם ל־instance policy.
 
-## מתי
+מקור עבודה: `CREATIVE-AUTOPILOT.md` + `VISUAL-OS.md` + `EDIT-DIRECTOR.md`.
 
-- ריל מהרצפה (timelapse + כותרות)
-- כריכת פוסט / קרוסלה
-- סטורי 3–4 שקפים
-- חבילה ויזואלית מלאה לפני לוח IG
+## עיקרון
 
-## שלבים
+ה־Media Director הוא Creative Director + Edit Director + Publishing Director על אותו pipeline. הוא לא שואל את הבעלים לבחור Hook, cover, cut או ניסוח כשאפשר להחליט לפי הוכחה, Visual OS ו־QA.
 
-### 1. Brief (במאי)
+## 1. Opportunity / Brief
 
-```
-קלט: proof מהרצפה · מק״ט · משפט מהדפסה
-  → יעד: ריל / פוסט / סטורי / קרוסלה
-  → טון: עברית מדוברת · CTA הודעת Instagram (`PUBLIC_CURRENT_CTA`)
-  → storyboard טקסטואלי (Hook → Body → CTA)
+```text
+קלט: print.done / media intake / מוצר / חומר / כשל שימושי
+  -> האם יש סיפור אמיתי ששווה לתעד?
+  -> concept + objective + audience
+  -> 3–5 first frames -> בחירה אחת
+  -> shot list + gap check
 ```
 
-### 2. Stills (תמונה)
+אם חסר צילום פיזי קריטי: ליצור `shotRequest` מינימלי ומדויק. לא להמציא סצנה ולא לבקש החלטה יצירתית כללית.
 
-```
-Instagram → Canva ראשון (vf-canva-instagram skill)
-  → GenerateImage / Superdesign failover
-  → brand-check אם מחובר
-```
+## 2. Assets
 
-### 3. Motion (וידאו)
+Media Vault הוא מקור הנכסים. לסווג `hero|macro|process|failure|proof|human|b-roll`, orientation, quality, project/job/SKU/material ו־rights. שינוי גרסה דורש בדיקת אישור מחדש לפי חוקי Media Vault.
 
-```
-vfom crews:
-  reference-plan · clip-factory · hybrid-reel · scene-gate · self-review
-  → קליפים מהרצפה + stills מ-Canva
-  → @short-video-editing-coach לעריכה (רצפה / CapCut — לא HQ render)
-```
+## 3. Edit
 
-### 4. Packet (מפיק)
+להפיק EDL לפי `EDIT-DIRECTOR.md`: asset refs, in/out, crop, speed, transition, overlay, audio. להשתמש ב־OpenMontage crews כדפוסי עריכה, לא כ־runtime נוסף.
 
-```
-vfcopy caption + vfcovers כריכה
-  → vfigos review / schedule / send via tools
-  → תגיות: #נשלח-מ-HQ · #ממתין-ל-כלי-IG
-```
+## 4. Stills / cover
 
-## כרטיס הפקה
+Instagram -> Canva ראשון -> image tools / Superdesign failover. להכין 3 cover directions ולבחור אחת לפי Visual OS + grid continuity. אין brand hex/font מומצא.
 
-| שדה | הערה |
-|---|---|
-| פורמט | 9:16 / 1:1 / 4:5 |
-| נכסים | רשימת קבצים + Canva edit URL (אמיתי בלבד) |
-| סאונד | מ־`MUSIC.md` — לא מומצא |
-| gate | scene-gate לפני מסירה ללוח |
+## 5. QA
 
-## מומחים
+לעבור `VISUAL-OS` brandScore >=80 + `CONTENT-RUBRIC >=20/25` + policy + rights + written PREFLIGHT. כישלון איכות רגיל חוזר אוטונומית לתיקון. אין escalation לבעלים על “רמה נמוכה”.
 
-- `@visual-storyteller` — נרטיב
-- `@image-prompt-engineer` — פרומפט כריכה
-- `@short-video-editing-coach` — עריכה וייצוא
-- `@instagram-curator` — לוח ושליחה
+## 6. Publish
+
+- אם ה־instance כולל `creativeAutonomy.publish.standingAuthorization=true`: תוכן שגרתי שעבר את כל השערים יכול לעבור ל־publish tool בלי אישור נכס נוסף.
+- בלי standing authorization: להשתמש בשער האנושי הקיים.
+- אין publish receipt/live evidence: לא לטעון שפורסם; failover לפי `constitution/SEND.md`.
+- auto-DM, boost, מחיר, customer WhatsApp send ו־Print from HQ נשארים נעולים.
+
+## Human Required
+
+רק: צילום/סטייג'ינג פיזי חסר, זכויות/פרטיות לא ברורות, כסף/Boost/רכישה, customer WhatsApp/commercial commitment, Print from HQ, או חסם קשיח אחרי failover.
 
 ## לולאת שיפור
 
-סוף יום: איזה storyboard חסך זמן? איזה פורמט Canva עבד? שורה ל־`owner-memory.md`.
-
-## חפיפה קיימת
-
-- `vfom/SKILL.md` · `vfcovers/SKILL.md` · `vfcanva/` · OpenMontage crews
+סוף יום: איזה first frame/format/edit pattern עבד לפי evidence אמיתי? לקדם lesson דרך office-learning. בלי Insights מומצאים.

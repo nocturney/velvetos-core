@@ -1,12 +1,24 @@
-# vfom — צינור ריל מהרצפה
+# vfom — צינור תוכן ויזואלי מהרצפה
 
-מושב: צמיחה. לא סטודיו וידאו שני.
+מושב: צמיחה. לא סטודיו וידאו שני ולא orchestrator שני.
 
-דפוסי [OpenMontage](https://github.com/calesthio/OpenMontage) על הפקים שכבר רצים: `vfgrowth`, `vfcopy`, `vfcovers`, `vfcanva`, `vfigos`.  
-אין Remotion בריפו. אין Veo/Kling מ-HQ. אין שליחה.
+דפוסי OpenMontage על הפקים שכבר רצים: `vfgrowth`, `vfcopy`, `vfcovers`, `vfcanva`, `vfigos`, `vfmedia`. אין Remotion בריפו. אין Veo/Kling מ־HQ.
 
-הפעלה: `@vfom` ואז שם צוות — `reference-plan` / `clip-factory` / `hybrid-reel` / `scene-gate` / `self-review`.
+## Creative Autopilot
 
-## מומחה — AI images / video director & producer
+ברירת העבודה ל־Velvet Factory כאשר ה־instance מפעיל `creativeAutonomy`:
 
-מודול: `expert-media-director` · `experts/MEDIA-DIRECTOR.md` · `@visual-storyteller` · `@short-video-editing-coach`
+- `CREATIVE-AUTOPILOT.md` — orchestration + Human Intervention Policy.
+- `VISUAL-OS.md` — Visual Constitution + first frame + cover + brand QA.
+- `EDIT-DIRECTOR.md` — EDL אופרטיבי + shot-gap handling.
+- `experts/MEDIA-DIRECTOR.md` — Creative/Edit/Publishing Director מאוחד.
+
+הפעלה ישירה ב־Cursor: `.cursor/skills/vf-content-sprint/SKILL.md`.
+
+## Crews existing
+
+`reference-plan` · `clip-factory` · `hybrid-reel` · `scene-gate` · `self-review` נשארים patterns פנימיים שה־Autopilot מפעיל לפי צורך. אין צורך שהבעלים יבחר crew או שלב.
+
+## חוק
+
+כשל איכות רגיל מתוקן אוטונומית. פנייה לבעלים רק על צילום/סטייג'ינג פיזי, זכויות/פרטיות, כסף/Boost, customer WhatsApp, Print, פעולה הרסנית או חסם קשיח אחרי failover.

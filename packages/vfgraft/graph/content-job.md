@@ -2,12 +2,17 @@
 
 ## Summary
 
-Content pack and covers come from floor proof, not invented scenes. Hebrew voice law: `vfcopy/VOICE.md` (process-short vs product-story). CTA is Instagram message (`PUBLIC_CURRENT_CTA` — שלחו לנו הודעה כאן באינסטגרם) / איסוף שדרות — not WhatsApp phone on public frames, not auto-DM / bare «שלחו DM». Canva for `@velvets_cloud` visuals. `vfigos` reviews and schedules. HQ sends via tools.
+Velvet Factory content is an exception-only autonomous pipeline over existing packs. Floor proof / verified media first; no invented scenes. `expert-media-director` runs Creative Director → media gap → Edit Director → cover/copy → Visual OS QA/PREFLIGHT → publish authorization → `vfigos` tool send/verification.
+
+Routine creative choices do **not** require owner review. Physical footage/staging, unclear rights/privacy, ₪/spend/Boost, customer WhatsApp, Print from HQ, irreversible actions or a hard blocker after failover remain human gates.
 
 ## Sources
 
 - `.cursor/skills/vf-content-sprint/SKILL.md`
 - `.cursor/skills/vf-canva-instagram/SKILL.md`
+- `packages/vfom/CREATIVE-AUTOPILOT.md`
+- `packages/vfom/VISUAL-OS.md`
+- `packages/vfom/EDIT-DIRECTOR.md`
 - `packages/vfe2b/crews/content.md`
 - `constitution/ORGANIC_GROWTH.md`
 
@@ -19,6 +24,12 @@ Content pack and covers come from floor proof, not invented scenes. Hebrew voice
 - depends_on [[laws]]
 - depends_on [[grok-bot]]
 
-## Notes
+## State
 
-No TikTok, ads, follow-back, or boost without the lead seat. Never invent Canva links, Insights, or brand hex. Organic Growth Control Plane drafts a 07:00 pack — it does not auto-post or auto-DM (`constitution/ORGANIC_GROWTH.md`).
+`opportunity → creative_plan → waiting_for_media | edit_plan → qa → authorized_for_tool_publish | human_required → published_verified | ready_for_publish`
+
+Velvet Factory instance may set `creativeAutonomy.publish.standingAuthorization=true`. This is a standing owner authorization for routine organic Instagram only; it is not permission for auto-DM, Boost/Ads, price changes, customer WhatsApp or Print.
+
+Media Vault remains the canonical asset source and `vfigos` remains the Instagram publish/verification path; those are operational notes, not new graph node types.
+
+No publish claim without a real tool receipt + verification evidence. No tool = honest failover packet. Grok remains optional backup/failover, not the primary sender.

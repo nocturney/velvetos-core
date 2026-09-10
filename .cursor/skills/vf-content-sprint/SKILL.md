@@ -1,42 +1,37 @@
 ---
 name: vf-content-sprint
-description: Draft a Velvet Factory content pack and covers from floor proof. Review/schedule only — Grok sends Instagram.
+description: Run Velvet Factory content autonomously from real production/media proof through creative direction, shot-gap detection, edit plan, cover/copy QA, slot choice and Instagram publish handoff. Use for reels, stories, carousels, covers, production-to-content followups, media intake, finished-print content, or requests to operate content without routine owner approvals. Escalate only physical footage/staging, unclear rights/privacy, money/spend, customer WhatsApp, Print from HQ, destructive actions, or a hard blocker after failover.
 ---
 
-# Content sprint
+# Content sprint — Creative Autopilot
 
-Use when the user asks for חבילת תוכן, covers, reel draft, or a post after a finished print.
+Use the existing office orchestrator only. Never install or simulate a second runtime.
 
-## Packs and specialists
+## Core flow
 
-- `vfgrowth` + `@content-creator` + `@growth-hacker`
-- `vfcovers` + `@visual-storyteller` + `@image-prompt-engineer` + `@brand-guardian`
-- `vfigos` + `@instagram-curator` — **review and schedule only**
-- `vfom` + `@visual-storyteller` — timelapse cut cards, hybrid beat list, scene gate (read `vf-openmontage`)
-- After a successful print: start from `packages/vfprod/PRINT-DONE.md` card (`print.done`) before drafting
-- Content priority (Office Control Plane): `ready_for_finished_content` → real `print.done` with media → approved waiting for slot → intake media → only then new ideas. `python3 scripts/vf_control_plane.py followups`
-- Organic Growth plane: `constitution/ORGANIC_GROWTH.md` + `python3 scripts/vf_organic_growth.py brief` — queue for 07:00 human approval. Do not auto-post. Do not invent a Reel when media is missing.
-- After publish (when a real snapshot exists): `vfinsights` + `@analytics-reporter`
-- Frameworks (optional): `vfmskill` + `.cursor/skills/vf-marketing-skills` — `social` / `video` / `image`. Desk laws win.
-- Hebrew copy authority: `.cursor/skills/vf-hebrew-copy` → `packages/vfcopy/skills/velvet-hebrew-copy/` + `VOICE.md`. Lint: `python3 scripts/check-vfcopy.py lint`. Missing facts → `needs_input`.
-- Music / reel sound (optional): `vfresearch` + `@trend-researcher` via `.cursor/skills/vf-ig-music` — live source or «חסר מקור»; never invent track names.
-- Weekly research pulse: `vfresearch/hq/PRINT-DEMAND.md` (trends + IL demand + sound) — not a DM hunter.
+1. Read `packages/vfom/CREATIVE-AUTOPILOT.md` + `VISUAL-OS.md` + `EDIT-DIRECTOR.md`.
+2. Start from real proof: `packages/vfprod/PRINT-DONE.md` / `print.done`, verified Media Vault item, named product/material/failure, or another evidenced opportunity.
+3. Act as Creative Director: choose concept, 3–5 first-frame candidates, one winner, and a complete shot plan. Do not ask the owner to choose routine creative options.
+4. Search/classify assets through the canonical Media Vault. If a critical physical shot is missing, emit the smallest exact `shotRequest` and stop only that blocked branch as `waiting_for_media`.
+5. Build the EDL using `packages/vfom/EDIT-DIRECTOR.md`; draft Hebrew through `vfcopy/VOICE.md` and build/select the cover through existing Canva/vfcovers paths.
+6. Run Visual OS brandScore >=80 + CONTENT-RUBRIC >=20/25 + policy + rights + written PREFLIGHT. Repair ordinary quality failures automatically and re-run QA.
+7. Read the active instance profile. If `creativeAutonomy.publish.standingAuthorization=true`, routine organic content that passed every gate may be sent through `vfigos` without per-asset approval.
+8. Never extend standing authorization to ₪/price, purchases/spend, Boost/Ads, auto-DM, customer WhatsApp, Print from HQ, unclear rights/privacy, user tagging without opt-in, or irreversible destructive actions.
+9. Never claim published without a real tool receipt and live verification evidence. Use the same-turn failover path when the publish tool is unavailable.
+10. End exactly as `published_verified`, `ready_for_publish`, `waiting_for_media`, or `human_required`.
 
-## Tools
+## Packs and tools
 
-1. **Drive** — `search_files` for the job/SKU/timelapse the user names. Partial pack if proof is missing (mark חסר). Do not invent a floor scene.
-2. **Superdesign** — covers, posters, social graphics. Use the graphics path (skip repo init). Follow the Superdesign skill.
-3. **Music sources (not Treg)** — HeyOrca weekly URL and/or owner IG Trending paste per `vfresearch/MUSIC.md`. Never invent Insights or song titles.
-4. **Mobbin** — only if the user is changing the brief/post layout, not for Instagram send.
+- `vfom` — Creative/Edit/Publishing direction.
+- `vfmedia` — canonical asset intake/catalog.
+- `vfcopy` — Hebrew copy/VOICE.
+- `vfcovers` + `vfcanva` — cover/visual production.
+- `vfgrowth` — calendar, rubric, policy, preflight.
+- `vfigos` — real Instagram tool send + verification/failover.
+- `vfinsights` — only verified post-publish evidence; no invented metrics.
 
-## Draft output
+## Human Required only
 
-**Reel:** Hook · on-film text · caption (תהליך-קצר או סיפור-מוצר per `VOICE.md`) · CTA = הודעת Instagram / איסוף שדרות (`PUBLIC_CURRENT_CTA`). Music line from `vfresearch/MUSIC.md` brief when present. Run `velvet-hebrew-copy` + lint before handoff.
+Physical footage/staging · rights/privacy/private CAD uncertainty · ₪/spend/Boost · customer WhatsApp/commercial commitment · Print from HQ · irreversible destructive action · hard blocker after failover.
 
-**Story (review only):** guess-the-print (no private-client spoiler) · timelapse · result · Instagram-message CTA (+ איסוף). WhatsApp phone stays BUSINESS_CONTACT_RECORD only — not on public frames.
-
-Hashtags: at most 5, relevant. Do not move a booked `vfigos` slot. No boost. No "שלחו DM".
-
-## Harness
-
-`vfigos` is review/schedule only — a finished draft is not a send. Before schedule: written `packages/vfgrowth/preflight/<id>.md` (`PREFLIGHT.md`) must pass — VOICE + `VOICE-CHART` + Canva/vfcovers with visual evidence + agency self-score + 2–3 IL comps + **CONTENT-RUBRIC ≥20/25** + artifact digest. Fail-closed = do not schedule. Never escalate «רמה נמוכה» to Christian. Missing floor proof stays חסר; do not invent a scene to pass review. Stop after two failed proof searches and escalate rather than shipping a guessed cover. UGC follows `vfgrowth/UGC.md`.
+Owner surface is exception-only. Low creative quality, weak Hook, bad crop, cover choice, caption rewrite or ordinary tool failover are internal work, not reasons to bother Christian.

@@ -1,33 +1,45 @@
-# Crew: content draft
+# Crew: content production
 
 Source patterns: Wordware, GoCharlie, Wispy, Diagram, v0 (layout only).
-Orchestrator overlay: Claudexor — if Grok quota is empty, rotate to HQ tools the same turn.
-Packs: `vfcopy`, `vfcovers`, `vfigos`, `vfgrowth`.
+Orchestrator overlay: existing `vfe2b` run desk only — **no second orchestrator**. Creative autonomy: `packages/vfom/CREATIVE-AUTOPILOT.md`.
+Packs: `vfcopy`, `vfcovers`, `vfigos`, `vfgrowth`, `vfom`, `vfmedia`.
 
 ## Roles
 
 | Role | Pack | Does | Does not |
 |---|---|---|---|
-| Homework | `vfcopy` | Voice, facts, banned claims. | Invent Insights |
-| Draft | `vfcopy` | Caption / carousel text. | Claim the feed posted |
-| Cover | `vfcovers` | Brief the cover. Superdesign/Canva if asked. | Invent a Canva URL |
-| Sender | `vfigos` | Send via tools (`vfigos/SEND.md`). | Auto-DM. Boost. Fake publish |
-| Sprint | `vfgrowth` | Batch the week. | Boost / DM |
-| Human | — | Approves ₪ or a boost. Customer WhatsApp. | — |
+| Creative Director | `vfom` | concept, first-frame ranking, shot plan, gaps | Ask owner to choose routine creative options |
+| Homework | `vfcopy` | Voice, facts, banned claims | Invent Insights |
+| Edit Director | `vfom` | EDL from real assets | Invent footage |
+| Cover | `vfcovers` | Build/select cover direction | Invent a Canva URL/brand value |
+| QA | `vfgrowth` | Visual OS + Rubric + policy + PREFLIGHT | Escalate routine low quality |
+| Publisher | `vfigos` | Publish via connected tool when authorized; verify receipt/live | Auto-DM, boost, fake publish |
+| Human | — | Physical footage, rights ambiguity, ₪/spend, customer WhatsApp, Print | Routine hook/cover/cut decisions |
 
 ## Run
 
-1. Homework first: what is true, what is not claimed. Floor proof only — invent no studio scene.
-2. If production handed a `print.done` card (`vfprod/PRINT-DONE.md` + `python3 scripts/vfprod.py print-done`): require media path. Missing → **חסר**. Then `vfom/crews/hybrid-reel.md` **and** Organic Growth queue (`constitution/ORGANIC_GROWTH.md`). HQ does not watch Bambu/Snapmaker/Elegoo. Control plane does not publish.
-3. Draft Hebrew per `vfcopy/VOICE.md`. Funnel CTA from `vfgrowth/hq/PROFILE-TO-WHATSAPP.md` (process-short = follow; product-story = WhatsApp `050-2517000`). Lint against studio voice.
-4. Cover brief: size, text on image, no fake metrics on the graphic. Canva first; failover `studio/render.py` then Superdesign. **EDIT-GATE** — no raw JPEG.
-5. Written `PREFLIGHT.md` artifact before schedule. Fail-closed = do not book. Morning brief **does not** publish Instagram.
-6. HQ **sends Instagram via tools** (`constitution/SEND.md` + `vfigos/SEND.md`):
-   - Publish MCP connected → publish and tag `#נשלח-מ-HQ`.
-   - No publish MCP → **same turn** Canva + Drive `create_file` + Gmail `send_message`. Tag `#נשלח-מ-HQ` and `#ממתין-ל-כלי-IG` if the feed itself did not go up.
-7. Do not idle on `#מוכן-ל-Grok`. Grok Bot is optional backup. Playbook: `packages/vfharness/playbooks/grok-failover.md`.
-8. Never claim the feed posted if no publish tool fired. Calendar: Sun/Tue 16:00 reels, Thu 12:00 carousel — not a reel every weekday.
+1. Start from real opportunity: `packages/vfprod/PRINT-DONE.md` / `print.done`, verified media intake, product/material/failure evidence. No invented floor scene.
+2. Run Creative Director from `vfom/CREATIVE-AUTOPILOT.md` + `VISUAL-OS.md`: choose concept + best first frame + shot list autonomously.
+3. If critical physical footage is missing, emit a minimal `shotRequest` and mark `waiting_for_media`. Do not ask broad creative questions.
+4. Classify existing assets through Media Vault vocabulary and build EDL from `EDIT-DIRECTOR.md`.
+5. Draft Hebrew through `vfcopy/VOICE.md`; funnel/CTA authority remains `packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md` + current constitution. No invented ₪/claims/Insights.
+6. Build/select cover. Canva first; failover per desk law. No raw JPEG as final branded cover.
+7. Written PREFLIGHT + Visual OS brandScore >=80 + CONTENT-RUBRIC >=20/25 + policy + rights. If quality fails, repair and re-run internally.
+8. Authorization:
+   - instance `creativeAutonomy.publish.standingAuthorization=true` + all gates pass -> `authorized_for_tool_publish`.
+   - otherwise -> existing human approval path.
+9. `vfigos` sends via a real connected Instagram publish tool. No receipt/live evidence -> honest Degraded/failover packet; never claim posted.
+10. After verified publish, ingest real performance evidence when available and feed office-learning.
+
+## Human Required only
+
+- physical reshoot/staging unavailable to office;
+- unclear customer/media rights or private identity/CAD;
+- ₪, purchase, paid boost/ads;
+- customer WhatsApp send/commercial commitment;
+- Print from HQ;
+- hard blocker after documented failover.
 
 ## Done when
 
-A reviewable draft exists on disk **and** the send path ran (tool or failover packet). Send status is honest: posted, or `#ממתין-ל-כלי-IG`.
+Exactly one outcome: `published_verified`, `ready_for_publish`, `waiting_for_media`, or `human_required`. Never stop at “waiting for owner approval” solely because a routine creative choice exists.
