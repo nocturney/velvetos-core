@@ -41,6 +41,45 @@
         "note": { "type": "string" }
       }
     },
+    "assetTruth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["truthLevel"],
+      "description": "Optional Asset Truth metadata for Visual Foundry. Missing truth metadata is treated as unverified by policy; it never proves a public factual claim.",
+      "properties": {
+        "origin": {
+          "enum": ["studio_camera", "studio_export", "customer_media", "canva", "generated_ai", "external_reference", "unknown"]
+        },
+        "truthLevel": {
+          "enum": ["verified_real", "derived_real", "illustrative_ai", "synthetic", "unverified"]
+        },
+        "rightsStatus": {
+          "enum": ["approved", "restricted", "unknown", "not_applicable"]
+        },
+        "usableFor": {
+          "type": "array",
+          "items": { "enum": ["hero", "proof", "reel", "story", "carousel", "cover", "b-roll", "reference_only"] }
+        },
+        "visualTags": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "qualityScore": {
+          "type": ["integer", "null"],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "project": { "type": ["string", "null"] },
+        "object": { "type": ["string", "null"] },
+        "material": { "type": ["string", "null"] },
+        "verifiedAt": { "type": ["string", "null"] },
+        "evidenceRefs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "note": { "type": "string" }
+      }
+    },
     "mediaItem": {
       "type": "object",
       "additionalProperties": false,
@@ -99,6 +138,7 @@
           "description": "Provenance URLs the user named (MakerWorld, Drive, print.done). No invented links."
         },
         "versionApproval": { "$ref": "#/$defs/versionApproval" },
+        "truth": { "$ref": "#/$defs/assetTruth" },
         "intake": {
           "type": "object",
           "additionalProperties": false,
