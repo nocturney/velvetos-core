@@ -1,12 +1,13 @@
 {
   "jobId": "VF-R003",
   "format": "reel",
-  "status": "storyboarded",
+  "status": "rendered",
   "sourceEvidence": [
     "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5",
     "file:IMG_0470.mov",
     "verified-video:3840x2160@30fps:17.0s:rotation=-90:display-vertical",
-    "verified-audio:none"
+    "verified-audio:none",
+    "final-package-sha256:0048f0cf533d7c1f673a541c42ca48f837b159aa1291e2f36d10f8de6811b259"
   ],
   "concept": {
     "coreIdea": "Use the real changing viewpoints and reflected highlights on the helmet form as a quiet visual reveal; do not explain an unverified finishing process.",
@@ -33,39 +34,48 @@
     "missing": []
   },
   "edit": {
-    "durationTargetSec": 8.0,
-    "audioStrategy": "source contains no audio; use silence or a restrained licensed/supporting track only if it adds value, never to imply process",
+    "durationTargetSec": 8.5,
+    "audioStrategy": "source contains no audio; keep silence unless a separately licensed supporting track is added later",
     "timeline": [
-      {"startSec": 0.0, "endSec": 2.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "respect rotation metadata; vertical 9:16 crop centered on helmet; preserve front silhouette", "speed": 1.5, "cut": "hard", "overlayRef": "ov1", "audio": "none"},
+      {"startSec": 0.0, "endSec": 2.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "respect rotation metadata; vertical 9:16 crop centered on helmet; preserve front silhouette", "speed": 1.5, "cut": "hard", "audio": "none"},
       {"startSec": 2.0, "endSec": 5.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "tight vertical detail crop while side ornament and crest become visible", "speed": 1.5, "cut": "hard", "audio": "none"},
-      {"startSec": 5.0, "endSec": 8.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "clean medium-close crop completing rotation; avoid hand/UI obstruction", "speed": 1.5, "cut": "hard", "audio": "none"}
+      {"startSec": 5.0, "endSec": 8.5, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "clean medium-close crop completing rotation; avoid hand/UI obstruction", "speed": 1.5, "cut": "hard", "audio": "none"}
     ]
   },
-  "overlays": [
-    {"id": "ov1", "text": "הגימור נראה אחרת בתנועה", "placement": "upper safe zone on dark/quiet background area with deterministic contrast backing if needed", "accent": "בתנועה"}
-  ],
+  "overlays": [],
   "cover": {
     "candidates": [
-      {"id": "c1", "headline": "נראה אחרת", "subjectCrop": "front metallic hero angle", "textPlacement": "upper-right safe zone", "gridRationale": "bright metallic subject creates contrast with the darker R002 carousel"},
-      {"id": "c2", "headline": "זווית אחרת", "subjectCrop": "three-quarter angle showing gold/copper face and dark crest", "textPlacement": "upper-left safe zone", "gridRationale": "communicates the visual mechanic without a process claim"},
-      {"id": "c3", "headline": "הפרטים זזים", "subjectCrop": "side ornament detail", "textPlacement": "top center", "gridRationale": "detail-forward option; must be rejected if wording implies physical movement of the ornament"}
+      {"id": "c1", "headline": "נראה אחרת בתנועה", "subjectCrop": "front metallic hero angle", "textPlacement": "cream editorial header", "gridRationale": "connects the visible highlight change to motion without claiming a material/process"},
+      {"id": "c2", "headline": "זווית אחרת", "subjectCrop": "three-quarter angle showing gold/copper appearance and dark crest", "textPlacement": "upper-left safe zone", "gridRationale": "communicates the visual mechanic without a process claim"},
+      {"id": "c3", "headline": "הפרטים זזים", "subjectCrop": "side ornament detail", "textPlacement": "top center", "gridRationale": "rejected because wording could imply physical movement of the ornament"}
     ],
-    "selected": "c2"
+    "selected": "c1"
   },
   "qa": {
-    "brandScore": 0,
-    "hookScore": 0,
-    "realityScore": 0,
-    "originalityScore": 0,
-    "artifactScore": 0,
-    "deterministicChecks": {"state": "not_run", "reason": "no exact final render exists yet"},
-    "failures": ["Exact-final crop/contrast/readability, rights and Brand Guardian review have not run."],
-    "repairs": []
+    "brandScore": 88,
+    "hookScore": 87,
+    "realityScore": 96,
+    "originalityScore": 84,
+    "artifactScore": 92,
+    "deterministicChecks": {
+      "state": "pass",
+      "exactFinalPackageSha256": "0048f0cf533d7c1f673a541c42ca48f837b159aa1291e2f36d10f8de6811b259",
+      "video": "1080x1920 h264 8.5s",
+      "caption": "no WhatsApp/phone/currency; Instagram-message CTA; pickup Sderot; 5 hashtags",
+      "coverContrast": "15.48:1 ink-on-cream",
+      "visualReview": "exact-final contact sheet reviewed; rotation remains centered, readable and distinct from R001"
+    },
+    "failures": ["Public-release rights evidence is not documented yet.", "Skill execution receipt is not yet bound by the enforcement layer."],
+    "repairs": ["Kept video text-free so reflected detail stays the subject.", "Reframed copy to describe only visible light/angle change, not an unverified finishing process.", "Rebuilt cover using verified vfcanva typography/color tokens and deterministic contrast."]
   },
   "feed": {
-    "continuityDecision": "provisional-pass",
+    "continuityDecision": "pass",
     "reasoning": "adds warm metallic surface and controlled viewpoint change after R001 movement and R002 dark-detail carousel, reducing visual repetition."
   },
-  "derivativeRefs": [],
+  "derivativeRefs": [
+    "drive:1gz5vjne9EegNpa3K0Ol9b50KjmCLhR5n:VF-R003-reel.mp4",
+    "drive:19KUhou5sLBWQ-MRHntl6J2F8zhmJPRty:VF-R003-cover.jpg",
+    "drive:1YTU28fQUXFF6FLB4fd5RmgA3tux-pvZ6:VF-R003-caption.txt"
+  ],
   "rightsNotes": ["Possession/source location is not rights approval. Public-release rights must be documented before media_ready/publish."]
 }
