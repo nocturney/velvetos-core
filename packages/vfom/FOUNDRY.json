@@ -4,9 +4,9 @@
   "role": "machine-readable creative orchestration policy over existing VelvetOS packs",
   "noSecondRuntime": true,
   "specialists": {
-    "creativeDirector": ".cursor/skills/vf-creative-director/SKILL.md",
-    "brandGuardian": ".cursor/skills/vf-brand-guardian/SKILL.md",
-    "mediaLibrarian": ".cursor/skills/vf-media-librarian/SKILL.md"
+    "creativeDirector": ".cursor/skills/velvet-creative-director/SKILL.md",
+    "brandGuardian": ".cursor/skills/velvet-brand-guardian/SKILL.md",
+    "mediaLibrarian": ".cursor/skills/velvet-media-librarian/SKILL.md"
   },
   "sharedAuthorities": {
     "visualConstitution": "packages/vfom/VISUAL-OS.md",
