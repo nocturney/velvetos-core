@@ -1,17 +1,22 @@
 {
-  "updatedAt": "2026-09-07",
-  "rule": "Core never sets posted_manually. Human marks after instagram.com upload.",
+  "updatedAt": "2026-09-10",
+  "rule": "Core never sets posted_manually. Human marks after instagram.com upload. pending_human_approval is NOT automatic Christian orange work — classify via vf_autonomy.classify_approval_item; ownerSurface only for instance humanRequired reasons.",
   "items": [
     {
       "content_id": "story_poll_2026-09-07_petg_nylon",
       "format": "story",
-      "gate": "pending_human_approval",
+      "gate": "stale_orphan",
+      "disposition": "stale_orphan",
+      "missing_gates": ["PREFLIGHT"],
+      "standingAuthorizationConsidered": true,
+      "ownerSurface": false,
       "slot": "20:30",
       "calendar_rule": "Sun-Thu only",
       "poll_id": "petg_vs_nylon",
       "cta": "לפרטים — שלחו הודעה כאן באינסטגרם",
       "human_marked": false,
-      "marked_by": null
+      "marked_by": null,
+      "reconcileNote": "Story slot aged out; no packages/vfgrowth/preflight/story_poll_2026-09-07_petg_nylon.md — office scrub, not Christian orange queue"
     }
   ]
 }
