@@ -93,6 +93,21 @@
     "checks": ["stream_presence", "loudness", "noise_and_clipping", "sync", "story_fit", "ducking_when_needed"],
     "rule": "A Reel or video Story cannot pass exact-final QA merely because an audio stream exists. Missing or near-silent audio routes to audio repair unless intentional silence is explicitly justified and reviewed."
   },
+  "visualCopyPolicy": {
+    "requiredForHebrewVisualText": true,
+    "skill": ".cursor/skills/vf-hebrew-copy/SKILL.md",
+    "authority": "packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md",
+    "pipeline": "packages/vfcopy/skills/velvet-hebrew-copy/PIPELINE.md",
+    "readerFirst": "packages/vfcopy/hq/reader-first-he.md",
+    "humanizer": "packages/vfcopy/hq/ai-tells-he.md",
+    "candidateMin": 3,
+    "candidateMax": 5,
+    "noTextBaselineRequired": true,
+    "defaultWhenTextAddsNoValue": "NO_TEXT",
+    "failPatterns": ["generic_slogan", "describes_visible_image_only", "bakery_test_failure", "fake_profundity", "text_added_only_to_fill_space"],
+    "ownerExplicitPreference": "strong-evidence-preserve-point-and-voice",
+    "rule": "Every Hebrew first-frame hook, cover headline or overlay must pass reader-first, velvet-hebrew-copy and Humanizer/AI-tells, and must beat a clean NO_TEXT baseline. Technical typography/contrast alone cannot make weak copy pass."
+  },
   "rightsPolicy": {
     "scope": "operational publish gating, not legal advice",
     "ownerCapturedShowcase": "Owner-captured footage/stills of a printed object do not require a separate generic media-rights approval gate when no third-party media, UGC, identifiable person/privacy issue or known restriction is present.",
@@ -111,7 +126,7 @@
   },
   "evaluation": {
     "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_stream_presence", "audio_loudness", "audio_sync", "frame_integrity"],
-    "perceptualRubrics": ["brand", "hook", "composition", "reality", "originality", "audio_story_fit"],
+    "perceptualRubrics": ["brand", "hook", "composition", "reality", "originality", "audio_story_fit", "visual_copy_specificity", "visual_copy_value_over_no_text"],
     "referenceChecks": ["subject_fidelity", "material_fidelity", "geometry_invariants"],
     "artifactChecks": ["flicker", "malformed_geometry", "unreadable_text", "temporal_jitter", "audio_clipping_or_noise"],
     "routineThresholds": {"brand": 80, "reality": 90, "artifact": 90},
