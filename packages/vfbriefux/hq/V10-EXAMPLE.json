@@ -1,72 +1,64 @@
 {
-  "date_line": "יום בדיקה · דוגמת V10",
-  "bottom_line": "המערכת תקינה. יש עבודות פעילות, פעולה אחת דורשת תשובה, ומשבצת תוכן אחת עדיין מחכה לאימות חי.",
-  "footer": "Velvet Factory · שדרות · בריף V10 · דוגמה מבנית בלבד",
-  "attention": {
-    "state": "yellow",
-    "label": "מצב העסק",
-    "text": "דורש מעקב"
-  },
-  "system_health": {
-    "state": "green",
-    "label": "בריאות מערכת",
-    "text": "תקינה"
+  "date_line": "יום בדיקה · דוגמת V10.2",
+  "bottom_line": "המידע החשוב קודם, ותמונה מופיעה רק כשהיא הוכחה אמיתית לפריט שמוצג.",
+  "footer": "Velvet Factory · שדרות · בריף V10.2 · דוגמה מבנית בלבד",
+  "attention": {"state": "yellow", "label": "מצב העסק", "text": "דורש מעקב"},
+  "system_health": {"state": "green", "label": "בריאות מערכת", "text": "תקינה"},
+  "hero_visual": {
+    "url": "https://example.com/hero.jpg",
+    "href": "https://example.com/item",
+    "eyebrow": "תמונת היום",
+    "title": "העבודה המרכזית",
+    "caption": "בפרודקשן זהו asset אמיתי בלבד"
   },
   "kpis": [
     {"value": "3", "label": "עבודות פעילות", "state": "purple"},
     {"value": "1", "label": "צריך ממך", "state": "red"},
-    {"value": "X ₪", "label": "סופק · טרם שולם", "state": "yellow"},
-    {"value": "—", "label": "עוקבים", "state": "blue", "note": "נתון חי בזמן הריצה"}
+    {"value": "X ₪", "label": "גבייה פתוחה", "state": "yellow"},
+    {"value": "—", "label": "Instagram", "state": "blue", "note": "נתון חי בזמן הריצה"}
   ],
   "changes": [
     {"text": "הזמנה לדוגמה התקדמה שלב", "state": "green"},
-    {"text": "משבצת תוכן חלפה ועדיין אין הוכחת פרסום חי", "state": "yellow"},
-    {"text": "VelvetOS ביצעה פעולה תפעולית מאומתת", "state": "purple"}
+    {"text": "משבצת תוכן חלפה ועדיין אין הוכחת פרסום חי", "state": "yellow"}
   ],
   "slots": [
     {
       "kind": "decision",
       "kicker": "צריך ממך · 1",
       "title": "החלטת בעלים לדוגמה",
-      "delta": {"text": "ללא שינוי — עדיין החסם הישיר הבא", "state": "yellow"},
       "prose": "כאן מופיע רק החסם שדורש החלטה אנושית אמיתית."
     },
     {
-      "kind": "money",
-      "kicker": "מצב הכסף",
-      "title": "גבייה פתוחה",
-      "prose": "סכומים נמשכים ממקור האמת בזמן הריצה. דוגמת fixture אינה מקור לסכום עסקי."
-    },
-    {
       "kind": "production",
-      "kicker": "עבודות חיות",
+      "layout": "split",
+      "kicker": "עבודה חיה",
       "title": "ייצור והזמנות",
-      "headers": ["לקוח", "מצב", "השלב הבא"],
-      "rows": [
-        ["לקוח א׳", "בהדפסה", "השלמה"],
-        ["לקוח ב׳", "דגם אושר", "דוגמה חדשה"],
-        ["לקוח ג׳", "ממתין לתוכן", "קלט בעלים"]
-      ]
-    },
-    {
-      "kind": "insights",
-      "kicker": "Instagram · חי",
-      "title": "מצב העמוד",
-      "prose": "הנתונים וה־thumbnail נמשכים מהחיבור החי בזמן הריצה; אין ערכי fixture קשיחים."
+      "prose": "הסטטוס, החסם והשלב הבא נמצאים לצד צילום אמיתי של העבודה.",
+      "covers": [{"cid": "job.jpg", "caption": "מצב נוכחי"}]
     },
     {
       "kind": "content",
       "kicker": "רדאר תוכן",
-      "title": "מועמד שדורש אימות",
-      "delta": {"text": "המשבצת חלפה בלי הוכחת live", "state": "yellow"},
-      "prose": "ב־V10 scheduled/uploaded לעולם לא מוצג כאילו הוא published. אם אין proof — הכרטיס משנה מצב לאימות/התאוששות."
+      "title": "מה קורה בתוכן",
+      "cards": [
+        {"cid": "c1.jpg", "kicker": "מאומת חי", "title": "Reel", "text": "thumbnail + נתון", "action": "להמשיך / ללמוד"},
+        {"url": "https://example.com/c2.jpg", "href": "https://example.com/post", "kicker": "דורש אימות", "title": "Carousel", "text": "עבר זמן בלי proof", "action": "לאמת או להתאושש"}
+      ]
+    },
+    {
+      "kind": "insights",
+      "kicker": "שולחן המחקר",
+      "title": "ממצאים שאפשר לפעול עליהם",
+      "cards": [
+        {"url": "https://example.com/r1.jpg", "href": "https://example.com/source", "kicker": "מקור", "title": "ממצא", "text": "למה זה חשוב", "action": "מה עושים עם זה"}
+      ]
     },
     {
       "kind": "office",
       "density": "compact",
       "kicker": "פעילות VelvetOS",
       "title": "מה המערכת עשתה בפועל",
-      "prose": "הבלוק מציג receipts ושינויים אמיתיים בלבד, ונכנס למצב compact כשאין פעילות משמעותית."
+      "prose": "receipts ושינויים אמיתיים בלבד."
     }
   ]
 }
