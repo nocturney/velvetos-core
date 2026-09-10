@@ -4,7 +4,7 @@
   "title": "Velvet Creative Manifest",
   "type": "object",
   "additionalProperties": false,
-  "required": ["jobId", "format", "status", "sourceEvidence", "concept", "hook", "shots", "edit", "cover", "qa"],
+  "required": ["jobId", "format", "status", "sourceEvidence", "concept", "hook", "shots", "edit", "visualCopy", "cover", "qa"],
   "properties": {
     "jobId": {"type": "string", "minLength": 1},
     "format": {"enum": ["reel", "story", "carousel", "post"]},
