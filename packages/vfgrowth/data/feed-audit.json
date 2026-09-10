@@ -1,149 +1,126 @@
 {
-  "updatedAt": "2026-09-09",
+  "updatedAt": "2026-09-10T22:21:00+03:00",
   "handle": "@velvets_cloud",
-  "qualityBaseline": {
-    "posts": ["G001", "G002"],
-    "note": "First two posts are the preferred quality reference. Do not copy 1:1."
+  "resetAuthority": "packages/vfgrowth/CONTENT-RESET-2026-09-10.md",
+  "launchAuthority": "packages/vfgrowth/RESET-LAUNCH-TRIO.md",
+  "liveMediaCountAtReset": 8,
+  "legacyPolicy": {
+    "creativeStatus": "historical_learning_only",
+    "platformAction": "ARCHIVE_PENDING_MANUAL",
+    "preferredMutation": "archive_not_delete",
+    "when": "after VF-R001/VF-R002/VF-R003 are ready_for_publish",
+    "instagramGraphArchiveDeleteAvailable": false,
+    "preserveInsights": true,
+    "doNotReuseAsApproval": true
   },
-  "g004Identity": {
-    "id": "G004",
-    "canonicalHe": "מחזיק טבעות לזמן אימון",
-    "forbiddenRelabels": ["משקולת כושר", "kettlebell workout weight"],
-    "publicationClaim": "scheduledCandidate — calendar alone is not live"
+  "performanceBaseline": {
+    "accountFollowersAtAudit": 80,
+    "accountReachDays28": 337,
+    "notes": [
+      "Reels demonstrated materially stronger discovery than static/carousel items in this small sample.",
+      "RoboLotl combined specific process detail and reveal with the healthiest verified Reel watch behavior.",
+      "Product-story images showed better interaction efficiency than generic studio/catalogue carousels.",
+      "Do not overfit the sample; use it as evidence/preferences only."
+    ]
   },
-  "access": "live-audit-2026-09-09",
-  "liveSource": "instagram MCP list_media (ChatGPT + Cursor; read-only; no publish/DM/mutate)",
-  "law": "constitution/PUBLIC_CTA.md",
-  "captionEditViaGraph": "unsupported_by_official_graph",
-  "autoMutateHistory": false,
   "items": [
     {
-      "ordinal": 1,
-      "contentId": "G001",
-      "shortcodeHint": "DcqkjOLlYVX",
-      "livePermalink": "https://www.instagram.com/reel/DcqkjOLlYVX/",
-      "liveMediaType": "REELS",
-      "type": "feed",
-      "bucket": "historical_live",
-      "classification": "QUALITY_REFERENCE",
-      "recommendedAction": "KEEP",
-      "risk": "GREEN",
-      "ctaCompliance": "baseline",
-      "whatsappLeakage": "none-in-live-caption-sample",
-      "editableInPlace": false,
-      "notes": "Quality reference — pace, simplicity, real photo feel. Confirmed live via list_media."
+      "mediaId": "18074007698761842",
+      "permalink": "https://www.instagram.com/p/DdHidHYG4-p/",
+      "mediaType": "CAROUSEL_ALBUM",
+      "publishedAt": "2026-09-10T19:00:04Z",
+      "reach": 0,
+      "views": 0,
+      "interactions": 0,
+      "resetState": "ARCHIVE_PENDING_MANUAL",
+      "qaLearning": "G004 incident class: stale/weak copy and CTA policy drift must never authorize a future package."
     },
     {
-      "ordinal": 2,
-      "contentId": "G002",
-      "shortcodeHint": "DcvuJLxCJgU",
-      "livePermalink": "https://www.instagram.com/reel/DcvuJLxCJgU/",
-      "liveMediaType": "REELS",
-      "type": "feed",
-      "bucket": "historical_live",
-      "classification": "QUALITY_REFERENCE",
-      "recommendedAction": "KEEP",
-      "risk": "GREEN",
-      "ctaCompliance": "baseline",
-      "whatsappLeakage": "none-in-live-caption-sample",
-      "editableInPlace": false,
-      "notes": "Quality reference. Confirmed live via list_media."
+      "mediaId": "17873372004572489",
+      "permalink": "https://www.instagram.com/reel/DdAPhozlNe2/",
+      "mediaType": "REELS",
+      "publishedAt": "2026-09-07T23:00:00Z",
+      "reach": 10,
+      "views": 18,
+      "interactions": 1,
+      "resetState": "ARCHIVE_PENDING_MANUAL",
+      "qaLearning": "Generic process hook underperformed; specificity/payoff required."
     },
     {
-      "ordinal": 3,
-      "contentId": "G003",
-      "shortcodeHint": "DdAPhozlNe2",
-      "livePermalink": "https://www.instagram.com/reel/DdAPhozlNe2/",
-      "liveMediaType": "REELS",
-      "type": "feed",
-      "bucket": "historical_live",
-      "classification": "REVIEW_REQUIRED",
-      "recommendedAction": "EDIT_CAPTION_CANDIDATE",
-      "risk": "ORANGE",
-      "ctaCompliance": "whatsapp-in-caption",
-      "whatsappLeakage": "phone-in-live-caption",
-      "editableInPlace": false,
-      "editableViaOfficialGraph": false,
-      "preparedReplacement": null,
-      "notes": "ChatGPT live audit: WhatsApp/phone CTA in caption. Prepare Instagram-message CTA for human edit. No auto-mutate."
-    },
-    {
-      "ordinal": 4,
-      "contentId": "G004",
-      "type": "stories-and-feed-candidates",
-      "bucket": "publish_candidate",
-      "classification": "REVIEW_REQUIRED",
-      "recommendedAction": "PREPARE_REVISED_VERSION",
-      "risk": "ORANGE",
-      "ctaCompliance": "whatsapp-on-frame-known",
-      "whatsappLeakage": "on-image-and-caption-in-repo-artifacts",
-      "editableInPlace": false,
-      "identity": "מחזיק טבעות לזמן אימון",
-      "preparedReplacement": "revised-media-ready pending — strip WhatsApp from on-frame CTA; use Instagram message CTA",
-      "notes": "Do not relabel as kettlebell weight. Calendar claims are scheduled only, not live."
-    },
-    {
-      "ordinal": 5,
-      "contentId": "G005",
-      "type": "feed-candidate",
-      "bucket": "publish_candidate",
-      "classification": "REVIEW_REQUIRED",
-      "recommendedAction": "PREPARE_REVISED_VERSION",
-      "risk": "ORANGE",
-      "ctaCompliance": "check-for-whatsapp",
-      "whatsappLeakage": "likely-in-templates",
-      "editableInPlace": false,
-      "notes": "REVIEW_REQUIRED. No live claim without verification."
-    }
-  ],
-  "historicalLiveExtra": [
-    {
-      "shortcode": "Dc1g1sJGzgq",
+      "mediaId": "18113493707052403",
       "permalink": "https://www.instagram.com/p/Dc1g1sJGzgq/",
-      "media_type": "CAROUSEL_ALBUM",
-      "bucket": "historical_live",
-      "whatsappLeakage": "phone-in-live-caption",
-      "recommendedAction": "EDIT_CAPTION_CANDIDATE",
-      "editableViaOfficialGraph": false,
-      "notes": "ChatGPT live audit finding — do not auto-delete/republish"
+      "mediaType": "CAROUSEL_ALBUM",
+      "publishedAt": "2026-09-03T19:00:03Z",
+      "reach": 13,
+      "views": 41,
+      "interactions": 0,
+      "resetState": "ARCHIVE_PENDING_MANUAL",
+      "qaLearning": "Near-duplicate studio carousel; novelty/fatigue gate should have blocked repetition."
     },
     {
-      "shortcode": "Dci5EyuoWVJ",
-      "permalink": "https://www.instagram.com/p/Dci5EyuoWVJ/",
-      "media_type": "IMAGE",
-      "bucket": "historical_live",
-      "whatsappLeakage": "phone-in-live-caption",
-      "recommendedAction": "EDIT_CAPTION_CANDIDATE",
-      "editableViaOfficialGraph": false,
-      "notes": "ChatGPT live audit finding"
-    },
-    {
-      "shortcode": "Dci0aRzIO1F",
-      "permalink": "https://www.instagram.com/p/Dci0aRzIO1F/",
-      "media_type": "IMAGE",
-      "bucket": "historical_live",
-      "whatsappLeakage": "phone-in-live-caption",
-      "alias": "welcome-image",
-      "recommendedAction": "EDIT_CAPTION_CANDIDATE",
-      "editableViaOfficialGraph": false,
-      "notes": "ChatGPT live audit finding — welcome image"
-    },
-    {
+      "mediaId": "18093897449638506",
       "permalink": "https://www.instagram.com/p/Dc0cKegEbxd/",
-      "media_type": "CAROUSEL_ALBUM",
-      "bucket": "historical_live",
-      "whatsappLeakage": "none-in-live-caption-sample"
+      "mediaType": "CAROUSEL_ALBUM",
+      "publishedAt": "2026-09-03T09:00:20Z",
+      "reach": 17,
+      "views": 43,
+      "interactions": 2,
+      "resetState": "ARCHIVE_PENDING_MANUAL",
+      "qaLearning": "Shorter generic studio version performed better than its duplicate but did not create comments."
+    },
+    {
+      "mediaId": "18113247517791419",
+      "permalink": "https://www.instagram.com/reel/DcvuJLxCJgU/",
+      "mediaType": "REELS",
+      "publishedAt": "2026-09-01T13:01:42Z",
+      "reach": 141,
+      "views": 185,
+      "interactions": 1,
+      "verifiedAvgWatchTimeMs": 8414,
+      "approxVideoDurationSec": 14,
+      "resetState": "ARCHIVE_PENDING_MANUAL",
+      "qaLearning": "Best balanced benchmark: specific detail + reveal + measurable retention; preserve mechanic, not artifact."
+    },
+    {
+      "mediaId": "18107769701162221",
+      "permalink": "https://www.instagram.com/reel/DcqkjOLlYVX/",
+      "mediaType": "REELS",
+      "publishedAt": "2026-08-30T13:01:43Z",
+      "reach": 187,
+      "views": 233,
+      "interactions": 0,
+      "resetState": "ARCHIVE_PENDING_MANUAL",
+      "qaLearning": "Highest reach, zero actions; keep discovery mechanic but improve payoff/action. Avg-watch metric returned implausible value and is intentionally excluded."
+    },
+    {
+      "mediaId": "17954932785236901",
+      "permalink": "https://www.instagram.com/p/Dci5EyuoWVJ/",
+      "mediaType": "IMAGE",
+      "publishedAt": "2026-08-27T13:27:32Z",
+      "reach": 31,
+      "views": 69,
+      "interactions": 2,
+      "resetState": "ARCHIVE_PENDING_MANUAL",
+      "qaLearning": "Product-story structure showed useful interaction efficiency; future version must use current Instagram-message CTA."
+    },
+    {
+      "mediaId": "18204725716369617",
+      "permalink": "https://www.instagram.com/p/Dci0aRzIO1F/",
+      "mediaType": "IMAGE",
+      "publishedAt": "2026-08-27T12:46:55Z",
+      "reach": 29,
+      "views": 64,
+      "interactions": 2,
+      "resetState": "ARCHIVE_PENDING_MANUAL",
+      "qaLearning": "Useful positioning anchor, not a repeatable growth format."
     }
   ],
   "profileBio": {
-    "conflictWithPublicCta": true,
-    "whatsappLeakage": "phone-in-live-bio",
-    "recommendedAction": "HUMAN_EDIT_VIA_INSTAGRAM_APP",
-    "graphWrite": "unsupported_by_official_graph",
-    "desiredRef": "packages/vfigos/PROFILE-DESIRED.json"
-  },
-  "tools": {
-    "audit": ["audit_public_cta", "audit_profile_cta"],
-    "cli": "python3 -c \"from packages.vfigos.cta_audit import audit_caption; …\""
+    "liveConflictAtReset": true,
+    "whatsappPhoneLeakage": true,
+    "desiredRef": "packages/vfigos/PROFILE-DESIRED.json",
+    "requiredPlatformAction": "HUMAN_EDIT_VIA_INSTAGRAM_APP",
+    "graphWriteAvailable": false,
+    "verifyAfterEdit": true
   }
 }
