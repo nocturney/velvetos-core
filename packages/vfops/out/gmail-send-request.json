@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "requestId": "bootstrap-disabled",
+  "html": "",
+  "images": "",
+  "to": "nocturney@gmail.com",
+  "subject": "",
+  "embedRemoteImages": true,
+  "remoteImageLimit": 12
+}
