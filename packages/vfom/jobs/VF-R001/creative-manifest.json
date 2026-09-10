@@ -44,6 +44,23 @@
     ]
   },
   "overlays": [],
+  "visualCopy": {
+    "decision": "TEXT_WINS",
+    "selectedText": "פה התנועה היא כל העניין",
+    "noTextCompared": true,
+    "pipeline": ["reader-first-he", "velvet-hebrew-copy", "ai-tells-he", "owner-preference-lock"],
+    "candidates": [
+      {"text": "", "result": "baseline", "reason": "clean visual baseline; viable because motion is visible"},
+      {"text": "הכול זז", "result": "rejected", "reason": "generic and says little beyond the frame"},
+      {"text": "כל זרוע אחרת", "result": "rejected", "reason": "specific but mostly descriptive"},
+      {"text": "בתנועה", "result": "rejected", "reason": "too generic"},
+      {"text": "פה התנועה היא כל העניין", "result": "selected", "reason": "owner-selected; natural spoken Hebrew that adds the point of the visual"}
+    ],
+    "ownerPreference": "פה התנועה היא כל העניין",
+    "readerFirstNote": "Viewer is scrolling and sees the object already flexing; the simplest useful line is the point of the motion, not an explanation of 3D printing.",
+    "humanizerNote": "Passes natural-spoken-Hebrew intent; avoids corporate phrasing, fake profundity and image-description wording.",
+    "decisionRationale": "TEXT_WINS because the selected line interprets why the movement matters, while the no-text version remains understandable but less pointed."
+  },
   "cover": {
     "candidates": [
       {"id": "c0-no-text", "headline": "", "subjectCrop": "front close-up of full object", "textPlacement": "none", "gridRationale": "mandatory clean baseline; strong moving subject can carry the cover without copy"},
