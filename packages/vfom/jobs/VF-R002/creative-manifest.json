@@ -55,15 +55,24 @@
     "originalityScore": 86,
     "artifactScore": 92,
     "deterministicChecks": {
-      "state": "pass",
+      "state": "fail",
       "exactFinalPackageSha256": "d877d634cb9bbda54732b33bf5b4fc4215caf4539146e5d82cd223ce0fdf0c6c",
       "slides": "4x 1080x1350 JPEG",
-      "caption": "no WhatsApp/phone/currency; Instagram-message CTA; pickup Sderot; 5 hashtags",
+      "caption": "current Drive caption contains explicit sales framing ('לפרטים והזמנות') and pickup; incompatible with showcase intent until rewritten",
       "coverContrast": "15.48:1 ink-on-cream",
-      "visualReview": "all four exact-final frames reviewed; each swipe presents a materially different view/detail"
+      "visualReview": "all four exact-final frames reviewed; each swipe presents a materially different view/detail",
+      "audioGate": "N/A_CAROUSEL"
     },
-    "failures": ["Public-release rights evidence is not documented yet.", "Skill execution receipt is not yet bound by the enforcement layer."],
-    "repairs": ["Rebuilt first slide as a full-bleed product image with a clean editorial header.", "Kept remaining slides text-free so surface detail remains the proof.", "Removed redundant catalogue-style copy from image frames."]
+    "failures": [
+      "Copy repair required: current public caption explicitly invites orders and does not match the new showcase intent.",
+      "Skill execution receipt is not yet bound by the enforcement layer."
+    ],
+    "repairs": [
+      "Rebuilt first slide as a full-bleed product image with a clean editorial header.",
+      "Kept remaining slides text-free so surface detail remains the proof.",
+      "Removed redundant catalogue-style copy from image frames.",
+      "Next: rewrite caption as non-transactional showcase, re-hash package and re-run exact-final copy QA."
+    ]
   },
   "feed": {
     "continuityDecision": "pass",
@@ -76,5 +85,7 @@
     "drive:1NC93byIjvoV2RY7dKJMxBKb3lKu35XfV:VF-R002-04.jpg",
     "drive:1iXtsVh66Iu9F2fQniqVydMhODVr6M7rm:VF-R002-caption.txt"
   ],
-  "rightsNotes": ["Possession/source location is not rights approval. Public-release rights must be documented before media_ready/publish."]
+  "rightsNotes": [
+    "Owner decision 2026-09-10: owner-captured showcase content is not blocked by a blanket model-license gate. Rights/privacy escalation remains for third-party media, UGC, identifiable-person privacy, known restrictions, or explicit commercial promotion of the depicted model."
+  ]
 }
