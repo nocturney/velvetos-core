@@ -20,7 +20,7 @@
 <tr>
 <td align="center"><strong>HEALTHY</strong><br><sub><span dir="ltr">System Health</span><br><span dir="rtl">בריאות מערכת</span></sub></td>
 <td align="center"><strong>4</strong><br><sub><span dir="ltr">Live / Bound Paths</span><br><span dir="rtl">נתיבים חיים / מחוברים</span></sub></td>
-<td align="center"><strong>1</strong><br><sub><span dir="ltr">Gated Actions</span><br><span dir="rtl">פעולות מבוקרות</span></sub></td>
+<td align="center"><strong>2</strong><br><sub><span dir="ltr">Gated Actions</span><br><span dir="rtl">פעולות מבוקרות</span></sub></td>
 <td align="center"><strong>0</strong><br><sub><span dir="ltr">Needs Attention</span><br><span dir="rtl">דורש טיפול</span></sub></td>
 </tr>
 <tr>
@@ -40,7 +40,7 @@
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-10T14:32:24Z` |
+| **Last verified / refreshed evidence** | `2026-09-10T17:51:03Z` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
