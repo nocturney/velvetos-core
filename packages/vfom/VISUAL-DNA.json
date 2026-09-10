@@ -1,0 +1,66 @@
+{
+  "brandName": "Velvet Factory",
+  "version": 1,
+  "authority": "packages/vfom/VISUAL-OS.md",
+  "visualArchetype": [
+    "tactile engineering lab",
+    "material intelligence",
+    "controlled experimental energy",
+    "warm practical workshop"
+  ],
+  "heroSubjects": [
+    "hands working",
+    "material texture",
+    "printed part under real force",
+    "machine in action",
+    "measured transformation",
+    "failure and repair proof"
+  ],
+  "shotVocabulary": ["hero", "macro", "process", "failure", "proof", "human", "b-roll"],
+  "lighting": {
+    "preferred": ["directional hard light", "soft daylight", "controlled shadow"],
+    "avoid": ["random mixed white balance", "flat generic product light", "overexposed plastic"]
+  },
+  "backgrounds": ["real workbench", "material texture", "clean black", "clean gray", "clean white"],
+  "motionLanguage": [
+    "hard cut",
+    "macro push-in when motivated",
+    "proof freeze",
+    "slow motion only for meaningful physical proof"
+  ],
+  "audio": {
+    "preferred": ["real studio sound", "mechanical click", "material snap", "room tone"],
+    "musicRole": "support proof, never replace it"
+  },
+  "typography": {
+    "policy": "use only verified existing brand fonts/templates",
+    "maxFonts": 2,
+    "coverWordsMin": 2,
+    "coverWordsMax": 5,
+    "inventFont": false
+  },
+  "colorPolicy": {
+    "policy": "use verified brand/template colors only; do not invent hex values",
+    "accentRule": "one dominant accent per composition when an accent exists"
+  },
+  "firstFrame": {
+    "mustContainOneOf": ["action", "result", "tension", "clear detail", "physical proof"],
+    "forbidden": ["long logo intro", "generic greeting"]
+  },
+  "proofPriority": ["load", "motion", "installation", "before_after", "measurement", "failure_fix", "real_use"],
+  "antiPatterns": [
+    "generic AI chrome",
+    "random neon gradients",
+    "floating unreadable typography",
+    "physically impossible proof",
+    "stock-looking workshop",
+    "AI-generated Hebrew text inside footage",
+    "perfect object that drifts from real product geometry"
+  ],
+  "referencePolicy": {
+    "learnable": ["lighting", "composition", "pacing", "shot structure", "transition mechanic", "sound mechanic"],
+    "mustChange": ["identity", "context", "subject", "proof", "Hebrew copy", "ending"],
+    "reject": ["trademark imitation", "distinctive identity copying", "rights ambiguity"]
+  },
+  "syntheticRole": "atmosphere, transitions and supporting visuals; real Velvet assets provide product, material, failure, measurement and proof"
+}
