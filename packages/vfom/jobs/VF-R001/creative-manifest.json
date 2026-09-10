@@ -34,11 +34,11 @@
   },
   "edit": {
     "durationTargetSec": 8.5,
-    "audioStrategy": "preserve usable real source sound at low level; no music is required to prove motion",
+    "audioStrategy": "A source AAC stream exists in the rendered Reel, but measured mean loudness is approximately -49.3 dB with max -21.1 dB. This is near-silent and FAILS the Audio Gate. Route through vf-ig-music/audio repair: choose useful source sound, music, SFX or an intentional-silence decision with documented rationale, then re-render and re-hash.",
     "timeline": [
-      {"startSec": 0.0, "endSec": 2.0, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "tight vertical subject crop; minimize lower-frame dog/background distraction", "speed": 1.0, "cut": "hard", "overlayRef": "ov1", "audio": "source"},
-      {"startSec": 2.0, "endSec": 5.0, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "detail crop on moving articulated limbs", "speed": 1.0, "cut": "hard", "audio": "source"},
-      {"startSec": 5.0, "endSec": 8.5, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "clean full-subject hand-held view", "speed": 1.0, "cut": "hard", "audio": "source"}
+      {"startSec": 0.0, "endSec": 2.0, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "tight vertical subject crop; minimize lower-frame dog/background distraction", "speed": 1.0, "cut": "hard", "audio": "source-near-silent-fail"},
+      {"startSec": 2.0, "endSec": 5.0, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "detail crop on moving articulated limbs", "speed": 1.0, "cut": "hard", "audio": "source-near-silent-fail"},
+      {"startSec": 5.0, "endSec": 8.5, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "clean full-subject hand-held view", "speed": 1.0, "cut": "hard", "audio": "source-near-silent-fail"}
     ]
   },
   "overlays": [],
@@ -57,15 +57,28 @@
     "originalityScore": 82,
     "artifactScore": 90,
     "deterministicChecks": {
-      "state": "pass",
+      "state": "fail",
       "exactFinalPackageSha256": "53b940c08437150a695077d24645418e248018898e9504665b51c13b5713348f",
       "video": "1080x1920 h264 8.521s",
-      "caption": "no WhatsApp/phone/currency; Instagram-message CTA; pickup Sderot; 5 hashtags",
+      "caption": "current Drive caption contains explicit sales framing ('רוצים אחד משלכם') and pickup; incompatible with showcase intent until rewritten",
       "coverContrast": "15.48:1 ink-on-cream",
-      "visualReview": "exact-final contact sheet reviewed; subject remains clear throughout"
+      "visualReview": "exact-final contact sheet reviewed; subject remains clear throughout",
+      "audioStream": "AAC mono 44.1kHz present",
+      "audioMeanVolumeDb": -49.3,
+      "audioMaxVolumeDb": -21.1,
+      "audioGate": "FAIL_NEAR_SILENT"
     },
-    "failures": ["Public-release rights evidence is not documented yet.", "Skill execution receipt is not yet bound by the enforcement layer."],
-    "repairs": ["Re-cropped final Reel to enlarge the real subject while preserving full movement.", "Removed in-video overlay so proof stays clean and readable.", "Rebuilt cover with verified vfcanva typography/color tokens and deterministic contrast."]
+    "failures": [
+      "Audio Gate FAIL: final Reel is effectively near-silent despite containing an AAC stream.",
+      "Copy repair required: current public caption explicitly invites purchase and does not match the new showcase intent.",
+      "Skill execution receipt is not yet bound by the enforcement layer."
+    ],
+    "repairs": [
+      "Re-cropped final Reel to enlarge the real subject while preserving full movement.",
+      "Removed in-video overlay so proof stays clean and readable.",
+      "Rebuilt cover with verified vfcanva typography/color tokens and deterministic contrast.",
+      "Next: run vf-ig-music/audio repair, rewrite caption as non-transactional showcase, then re-render/re-hash/re-run exact-final QA."
+    ]
   },
   "feed": {
     "continuityDecision": "pass",
@@ -76,5 +89,7 @@
     "drive:1OVSZF_8MQSP7zksxPVTA0RmY6ofVQtW2:VF-R001-cover.jpg",
     "drive:1_HlMjps5JlXUy2RiR04L3KvVkcor42_z:VF-R001-caption.txt"
   ],
-  "rightsNotes": ["Possession/source location is not rights approval. Public-release rights must be documented before media_ready/publish."]
+  "rightsNotes": [
+    "Owner decision 2026-09-10: owner-captured showcase content is not blocked by a blanket model-license gate. Rights/privacy escalation remains for third-party media, UGC, identifiable-person privacy, known restrictions, or explicit commercial promotion of the depicted model."
+  ]
 }
