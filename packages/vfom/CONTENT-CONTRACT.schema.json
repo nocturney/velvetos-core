@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vfom-content-contract",
+  "title": "Velvet Visual Foundry Content Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["jobId", "objective", "format", "truthClaims", "syntheticPolicy", "successDefinition"],
+  "properties": {
+    "jobId": {"type": "string", "minLength": 1},
+    "objective": {"type": "string", "minLength": 1},
+    "format": {"enum": ["reel", "story", "carousel", "post"]},
+    "targetDurationSeconds": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["min", "max"],
+      "properties": {
+        "min": {"type": "number", "minimum": 1},
+        "max": {"type": "number", "minimum": 1}
+      }
+    },
+    "requiredSubject": {"type": ["string", "null"]},
+    "truthClaims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim", "status"],
+        "properties": {
+          "claim": {"type": "string", "minLength": 1},
+          "status": {"enum": ["verified", "unsupported", "not_applicable"]},
+          "evidenceAssetIds": {"type": "array", "items": {"type": "string"}},
+          "sourceRefs": {"type": "array", "items": {"type": "string"}},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "syntheticPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowedUses", "forbiddenUses"],
+      "properties": {
+        "allowedUses": {"type": "array", "items": {"type": "string"}},
+        "forbiddenUses": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "subjectPack": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "referenceAssetIds": {"type": "array", "items": {"type": "string"}},
+        "geometryInvariants": {"type": "array", "items": {"type": "string"}},
+        "materialInvariants": {"type": "array", "items": {"type": "string"}},
+        "colorInvariants": {"type": "array", "items": {"type": "string"}},
+        "mustNotChange": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "successDefinition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["brandScore", "realityScore", "artifactScore"],
+      "properties": {
+        "brandScore": {"type": "integer", "minimum": 0, "maximum": 100},
+        "realityScore": {"type": "integer", "minimum": 0, "maximum": 100},
+        "artifactScore": {"type": "integer", "minimum": 0, "maximum": 100}
+      }
+    },
+    "novelty": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "similarJobIds": {"type": "array", "items": {"type": "string"}},
+        "similarity": {"type": "number", "minimum": 0, "maximum": 1},
+        "decision": {"enum": ["pass", "change_mechanic", "cooldown", "series_override"]}
+      }
+    }
+  }
+}

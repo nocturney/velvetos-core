@@ -1,12 +1,14 @@
 # vfom locks
 
-נעילות מ-OpenMontage. לא מתקינים את המוצר. לא שולחים. לא ממציאים סצנת מיטה.
+נעילות מ־OpenMontage + Velvet Visual Foundry. לא מתקינים את מוצר OpenMontage, לא יוצרים runtime/queue/catalog/memory DB מקביל, ולא ממציאים סצנת רצפה.
 
-## מנוע וידאו — דלג
+## מנוע וידאו — דלג כברירת מחדל
 
-Remotion, HyperFrames, `tools/`, `make setup`, `python -m backlot`, Piper TTS, רשת ספקי ענן (fal / Veo / Kling / Runway / Seedance / Atlas / HeyGen / Suno / ElevenLabs).
+Remotion, HyperFrames, `tools/`, `make setup`, `python -m backlot`, Piper TTS, ורשת ספקי ענן (fal / Veo / Kling / Runway / Seedance / Atlas / HeyGen / Suno / ElevenLabs) אינם runtime קנוני של HQ.
 
-למה: Cursor כבר המשרד. Canva כבר הכלי הוויזואלי. אין מונורפו AGPL שני ואין מפתחות API בגיט.
+למה: Office Control Plane כבר orchestrator. Media Vault הוא SoT. Canva/כלי המדיה הקיימים הם שכבת production הנוכחית. אין מונורפו שני ואין מפתחות API בגיט.
+
+ספק generation בתשלום יכול להיפתח רק דרך policy/spend gate קיים; פתיחת ספק אינה משנה את חוקי Asset Truth, Content Contract או Claim Provenance.
 
 ## VoiceStudio / TTS מקומי — דלג על Cloud · later במק בלבד
 
@@ -21,28 +23,37 @@ Remotion, HyperFrames, `tools/`, `make setup`, `python -m backlot`, Piper TTS, �
 
 Avatar Spokesperson, Talking Head, Character Animation, Localization & Dub, Podcast Repurpose, Screen Demo, `framework-smoke`.
 
-למה: אין דובר-אווטאר, אין פודקאסט, אין דמו תוכנה, אין תרגום מולטי-שפה כמוצר. הסטודיו מדפיס ומצלם מיטה.
+למה: אין דובר-אווטאר, אין פודקאסט, אין דמו תוכנה, אין תרגום מולטי-שפה כמוצר. הסטודיו מדפיס ומצלם הוכחת רצפה.
 
-## ארכיון במקום הוכחה — דלג
+## ארכיון / AI במקום הוכחה — דלג
 
-Documentary Montage מ-Archive.org / NASA / Wikimedia / Pexels כתחליף לטיימלאפס מהמדפסת.
+Documentary Montage מ־Archive.org / NASA / Wikimedia / Pexels או generation סינתטי אינם תחליף לטיימלאפס/צילום אמיתי מהסטודיו כאשר התוכן טוען טענה פיזית.
 
-למה: ריל Velvet Factory נשען על הוכחת רצפה. חומר ארכיון בלי סימון «חסר» הוא סצנה מומצאת.
+למה: Asset Truth אינו Claim Truth. `synthetic`/`illustrative_ai` יכולים להיות atmosphere/transition/supporting visual בלבד; הם אינם proof למדידה, עומס, כשל, הצלחה, תוצאת לקוח או גאומטריית מוצר.
 
-## שליחה / פרסום — נעילה קבועה
+## שליחה / פרסום — policy, לא איסור HQ גורף
 
-`publish-director` של OpenMontage, העלאה לטיקטוק/רילס, בוסט, «שלחו DM».
+- `vfigos` הוא נתיב הפרסום והאימות הקנוני.
+- LOW-risk routine organic Instagram יכול להישלח דרך כלי מחובר כאשר `creativeAutonomy.publish.standingAuthorization=true` וכל Content Contract / PREFLIGHT / policy / rights gates עברו.
+- MEDIUM משתמש בשער האישור הקיים כאשר policy דורש.
+- HIGH הופך `human_required`.
+- Grok הוא backup/failover אופציונלי, לא sender קנוני יחיד.
+- אין receipt + live verification אמיתיים -> אין claim שפורסם.
 
-למה: `vfigos` סוקר ומשבץ. Grok שולח. HQ לא לוחץ Publish.
+נעילות קבועות: auto-DM, Boost/Ads ללא שער מתאים, customer WhatsApp send, Print from HQ, unsupported claims, ופעולות בלתי הפיכות.
 
 ## מחוללי וידאו בתשלום — אחר כך בלבד
 
-Veo, Kling, MiniMax, Runway, Grok video, מוזיקה מ-Suno — רק אם ראש צוות פותח תקציב. אומרים עלות לפני קריאה. אין המרת דולר ל-₪.
+Veo, Kling, MiniMax, Runway, Grok video, מוזיקה מ־Suno — רק אם ראש צוות/Policy פותח תקציב. אומרים עלות לפני קריאה. אין המרת דולר ל־₪ מ־HQ ואין generation יקר לפני progressive ranking זול.
 
 ## מספרים — נעילה קבועה
 
-אין Insights מומצאים. אין ₪ על הפריים. אין מחיר מכירה בלי ראש צוות. כתוב `X ₪` / «אין במקור» כשחסר.
+אין Insights מומצאים. אין ₪ על הפריים. אין מחיר מכירה בלי מקור/שער מתאים. כתוב `X ₪` / «אין במקור» כשחסר.
 
 ## הוכחה — נעילה קבועה
 
-אין סצנת מיטה מומצאת. אין עולם תלת-ממד «כאילו זה ההדפס». חסר קובץ גלם → «חסר». עצור.
+אין סצנת רצפה מומצאת. אין עולם תלת־ממד «כאילו זה ההדפס». חסר קובץ גלם קריטי -> חפש קודם Media Vault; אם עדיין חסר, `shotRequest` מינימלי ו־`waiting_for_media`. אל תייצר את ההוכחה ב־AI.
+
+## איכות — לא owner gate
+
+Hook חלש, crop רע, cover חלש, subject drift, flicker, עברית משובשת או score נמוך חוזרים ל־Artifact Repair Router בתוך bounded repair loop. פנייה לבעלים רק על Human Required אמיתי לפי `CREATIVE-AUTOPILOT.md`.

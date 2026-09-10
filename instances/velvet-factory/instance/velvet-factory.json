@@ -98,8 +98,20 @@
     "autoRepairQuality": true,
     "ownerSurface": "human_required_only",
     "visualAuthority": "packages/vfom/VISUAL-OS.md",
+    "visualDNA": "packages/vfom/VISUAL-DNA.json",
     "orchestration": "packages/vfom/CREATIVE-AUTOPILOT.md",
+    "foundryPolicy": "packages/vfom/FOUNDRY.json",
+    "contentContractSchema": "packages/vfom/CONTENT-CONTRACT.schema.json",
     "mediaCatalog": "packages/vfmedia/catalog.json",
+    "assetTruthSchema": "packages/vfmedia/catalog.schema.json#/$defs/assetTruth",
+    "learningAuthority": "vfinsights+office-learning",
+    "progressiveVariants": true,
+    "noveltyFatigue": true,
+    "exceptionQueue": {
+      "low": "auto_with_standing_authorization",
+      "medium": "existing_approval_path_when_policy_requires",
+      "high": "human_required"
+    },
     "publish": {
       "standingAuthorization": true,
       "scope": ["organic-instagram-routine"],
@@ -107,12 +119,15 @@
       "calendarAuthority": "packages/vfgrowth/CALENDAR.md",
       "requirePreflight": true,
       "requireKnownRights": true,
+      "requireContentContract": true,
+      "requireSupportedClaims": true,
       "requireToolReceipt": true,
       "requireLiveVerification": true
     },
     "humanRequired": [
       "physical-footage-or-staging",
       "rights-or-privacy-unclear",
+      "unsupported-high-stakes-claim",
       "sale-ils-or-price-change",
       "purchase-or-spend",
       "boost-or-ads",
@@ -124,5 +139,5 @@
   },
   "locks": ["human-close-whatsapp", "pickup-only", "b2b-locked", "public-commercial-files-only"],
   "packPrefix": "vf",
-  "notes": "Live Velvet Factory office frontend. Pulls modules/packs from VelvetOS Core. Creative Autopilot is standing-authorized for routine organic Instagram only."
+  "notes": "Live Velvet Factory office frontend. Pulls modules/packs from VelvetOS Core. Velvet Visual Foundry is exception-only and standing-authorized for LOW-risk routine organic Instagram only."
 }

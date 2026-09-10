@@ -1,0 +1,114 @@
+{
+  "name": "velvet-visual-foundry",
+  "version": 1,
+  "role": "machine-readable creative orchestration policy over existing VelvetOS packs",
+  "noSecondRuntime": true,
+  "layers": {
+    "creativeIntelligence": [
+      "creative-director",
+      "proof-first-storyboarder",
+      "visual-evaluator",
+      "repair-planner",
+      "experiment-director"
+    ],
+    "orchestration": [
+      "content-job-state-machine",
+      "content-contract",
+      "opportunity-scoring",
+      "progressive-variants",
+      "threshold-policy",
+      "budget-governor",
+      "retry-and-escalation"
+    ],
+    "deterministicServices": [
+      "vfmedia-catalog",
+      "claim-provenance",
+      "subject-packs",
+      "ffmpeg-svg-caption-composition",
+      "render-derivatives",
+      "drive-storage",
+      "vfigos-publish-verification",
+      "vfinsights-performance-evidence"
+    ]
+  },
+  "stateMachine": [
+    "discovered",
+    "qualified",
+    "contracted",
+    "concepted",
+    "storyboarded",
+    "media_ready",
+    "rough_generated",
+    "visually_scored",
+    "repaired",
+    "rendered",
+    "authorized_for_tool_publish",
+    "published_verified",
+    "performance_learned",
+    "ready_for_publish",
+    "waiting_for_media",
+    "human_required",
+    "archived"
+  ],
+  "truth": {
+    "levels": ["verified_real", "derived_real", "illustrative_ai", "synthetic", "unverified"],
+    "defaultWhenMissing": "unverified",
+    "claimRule": "factual public claims require verified evidence; illustrative_ai and synthetic assets may never prove a physical result",
+    "syntheticDefaultAllowed": ["background", "transition", "atmosphere", "supporting_visual"],
+    "syntheticDefaultForbidden": ["measurement", "stress_test_result", "product_geometry_claim", "customer_result", "failure_or_success_claim"]
+  },
+  "progressiveVariants": {
+    "enabled": true,
+    "maxConceptCandidates": 12,
+    "maxStoryboardCandidates": 6,
+    "maxRoughCuts": 4,
+    "maxFinalRenders": 2,
+    "maxRepairCycles": 3,
+    "rule": "never spend a full-quality render on an unranked concept when a cheaper preview can reject it"
+  },
+  "evaluation": {
+    "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_loudness", "frame_integrity"],
+    "perceptualRubrics": ["brand", "hook", "composition", "reality", "originality"],
+    "referenceChecks": ["subject_fidelity", "material_fidelity", "geometry_invariants"],
+    "artifactChecks": ["flicker", "malformed_geometry", "unreadable_text", "temporal_jitter"],
+    "routineThresholds": {"brand": 80, "reality": 90, "artifact": 90},
+    "heroThresholds": {"brand": 85, "reality": 95, "artifact": 92}
+  },
+  "novelty": {
+    "enabled": true,
+    "dimensions": ["product", "first_frame", "proof_mechanic", "story_structure", "camera_angle", "reference_mechanic"],
+    "reviewSimilarity": 0.78,
+    "rejectSimilarity": 0.90,
+    "defaultCooldownDays": 14,
+    "allowSeriesOverride": true
+  },
+  "learning": {
+    "storeRecipeWithPerformanceEvidence": true,
+    "memoryAuthority": "existing office-learning + vfinsights; no second creative memory database",
+    "minimumMeasuredPostsBeforeStyleRecommendation": 3,
+    "explorationPolicy": {"exploit": 0.70, "controlledVariation": 0.20, "experimental": 0.10}
+  },
+  "budget": {
+    "mode": "bounded",
+    "noInventedMoney": true,
+    "preferRealFootage": true,
+    "reuseApprovedAssetsBeforeGeneration": true,
+    "skipWeakConceptsBeforeRender": true
+  },
+  "humanSurface": {
+    "mode": "exception-only",
+    "creativeQualityFailure": "auto-repair",
+    "routineCreativeChoice": "office",
+    "humanRequired": [
+      "physical-footage-or-staging",
+      "rights-or-privacy-unclear",
+      "sale-ils-or-price-change",
+      "purchase-or-spend",
+      "boost-or-ads",
+      "customer-whatsapp-send",
+      "print-from-hq",
+      "irreversible-destructive-action",
+      "hard-blocker-after-failover"
+    ]
+  }
+}
