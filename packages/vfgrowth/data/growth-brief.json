@@ -1,6 +1,6 @@
 {
   "date": "2026-09-10",
-  "generatedAt": "2026-09-10T12:21:28+03:00",
+  "generatedAt": "2026-09-10T12:53:31+03:00",
   "component_state": "Blocked",
   "goal": "פניות B2B בדרום עבור אב-טיפוס / חלקים מותאמים.",
   "locks": [
@@ -79,6 +79,6 @@
     "לאשר ידנית G004 ל־חמישי 2026-09-10 20:30 Asia/Jerusalem (לא מפרסם מ־HQ).",
     "לא להציג חום/חוזק בלי vfprod/CLAIMS.md."
   ],
-  "print_events": 2,
+  "print_events": 1,
   "queue_count": 1
 }

@@ -1,10 +1,7 @@
 {
-  "updatedAt": "2026-09-10T12:21:29+03:00",
+  "updatedAt": "2026-09-10T12:53:32+03:00",
   "date": "2026-09-10",
-  "active_now": [
-    "fu-prod-366dfddd2a6f",
-    "fu-intake-62da3ea9"
-  ],
+  "active_now": [],
   "waiting": [
     {
       "id": "fu-G003-soccerball",
@@ -21,7 +18,7 @@
   ],
   "changed_today": [
     "Office Control Plane מוטמע",
-    "followups=3",
+    "followups=1",
     "dead_letters=0"
   ],
   "authoritative_sources": {

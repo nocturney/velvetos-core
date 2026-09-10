@@ -1,6 +1,6 @@
 {
   "status": "pulled",
-  "at": "2026-09-10T09:21:55Z",
+  "at": "2026-09-10T09:37:13Z",
   "canonical": {
     "spreadsheetId": "13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao",
     "title": "VF HQ · jobs",
@@ -15,15 +15,13 @@
   "idempotency_key": "pull|13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao|fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc",
   "lastPullDigest": "fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc",
   "reconciliation": {
-    "only_local": [
-      "VF-20260910-001"
-    ],
+    "only_local": [],
     "only_remote": [],
     "conflicts": [],
-    "identical": false,
-    "localCount": 6,
+    "identical": true,
+    "localCount": 5,
     "remoteCount": 5,
-    "localDigest": "8a1e695c362e44dae026374ef3d8feafbecc7b71bd981ee36ec96c4ebba15784",
+    "localDigest": "fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc",
     "remoteDigest": "fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc"
   },
   "evidence": {
