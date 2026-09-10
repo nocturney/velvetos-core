@@ -121,7 +121,7 @@
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">בריף HTML עם מדיה inline ושליחה כאשר קיימים credentials תקפים.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td dir="rtl" align="right">מעבר מבוקר לכלי חלופי בלי לייצר SoT נוסף.</td></tr>
 <tr><td><strong>Agents / Skills catalog</strong></td><td><strong>AVAILABLE TOOLING</strong></td><td dir="rtl" align="right">קטלוג specialists גדול; עצם קיום prompt/rule לא נחשב הוכחת capability פעילה.</td></tr>
-<tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td dir="rtl" align="right">חיישני `check-*.py` ו־GitHub Actions כראיית חוזה executable.</td></tr>
+<tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td dir="rtl" align="right">חיישני `check-*.py` ו־GitHub Actions כראיית חוזה executable; `check-publish-handoff` רץ גם בלי Pillow (stdlib + mock).</td></tr>
 </table>
 
 ## ‏אוטומציות פעילות בריפו
@@ -240,7 +240,7 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td>HTML + inline media brief path when valid credentials exist.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td>Controlled takeover without creating another source of truth.</td></tr>
 <tr><td><strong>Agents / Skills catalog</strong></td><td><strong>AVAILABLE TOOLING</strong></td><td>Large specialist catalog; a prompt/rule file alone is not proof of active capability.</td></tr>
-<tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td>`check-*.py` sensors and GitHub Actions provide executable contract evidence.</td></tr>
+<tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td>`check-*.py` sensors and GitHub Actions provide executable contract evidence; `check-publish-handoff` runs without Pillow (stdlib PNG + mocked normalize).</td></tr>
 </table>
 
 ## Operational workflows
