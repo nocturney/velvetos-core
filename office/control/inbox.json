@@ -17,113 +17,12 @@
         },
         "note": "registered ≠ verified ≠ visually_reviewed · validate≠monitoring",
         "source": "vfmedia.intake"
-      },
-      {
-        "id": "uin-dc05aa0cf7",
-        "at": "2026-09-10T12:15:37+03:00",
-        "kind": "production_update",
-        "textHash": "366dfddd2a6fea6d",
-        "excerpt": "print.done commissioning: spool finished on bed A — work-to-story candidate",
-        "route": "production-planner",
-        "status": "dispatched",
-        "dispatch": {
-          "ok": true,
-          "action": "vfprod/production path via print-events + followups",
-          "followup_id": "fu-prod-366dfddd2a6f",
-          "canonical_state": "office/control/followups.json"
-        }
       }
     ],
     "sales": [],
     "admin": [],
     "approvals": [],
     "blocked": [],
-    "unknown": [],
-    "inquiries": [
-      {
-        "id": "uin-99ab4f1853",
-        "at": "2026-09-10T12:15:37+03:00",
-        "kind": "inquiry",
-        "textHash": "83ad2de978cd7302",
-        "excerpt": "שם: לקוח-בדיקת-commission\nרוצה להזמין מעמד לטלפון לאיסוף שדרות — commissioning fixture only",
-        "route": "client-intake-brief",
-        "status": "dispatched",
-        "dispatch": {
-          "ok": true,
-          "action": "vf_office.jobs.add",
-          "job_id": "VF-20260910-001",
-          "stage": "פנייה",
-          "canonical_state": "office/ledger/live/jobs.csv#VF-20260910-001"
-        }
-      }
-    ],
-    "media": [
-      {
-        "id": "uin-e3ac8419bd",
-        "at": "2026-09-10T12:15:37+03:00",
-        "kind": "image",
-        "textHash": "b7c28a8860775b63",
-        "excerpt": "drive fileId=media-1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj commissioning association",
-        "route": "media-ingest-operator",
-        "status": "dispatched",
-        "dispatch": {
-          "ok": true,
-          "action": "vfmedia catalog association",
-          "fileId": "media-1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj",
-          "phase": "inbox",
-          "canonical_state": "packages/vfmedia/catalog.json#media-1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj",
-          "content_opportunity": true
-        }
-      }
-    ],
-    "meetings": [
-      {
-        "id": "uin-5ba87165f6",
-        "at": "2026-09-10T12:15:37+03:00",
-        "kind": "meeting",
-        "textHash": "c274b0b4aa2919ab",
-        "excerpt": "סיכום פגישה: להמשיך מעמד נשקים אחרי הקדשה — בלי מחיר סופי",
-        "route": "meeting-to-execution",
-        "status": "dispatched",
-        "dispatch": {
-          "ok": true,
-          "action": "vfmem.who + decisions/followups",
-          "vfmem": {
-            "invoked": true,
-            "query": "סיכום פגישה: להמשיך מעמד נשקים אחרי הקדשה —",
-            "exitCode": 0,
-            "rule": "retrieval only — generated text is never fact",
-            "result": {
-              "query": "סיכום פגישה: להמשיך מעמד נשקים אחרי הקדשה —",
-              "routes": [
-                {
-                  "q": [
-                    "print.done",
-                    "print-done",
-                    "אחרי הדפסה",
-                    "טיימלאפס",
-                    "מה יוצא מהמדפסת"
-                  ],
-                  "pack": "vfprod",
-                  "slug": "studio-producer",
-                  "tool": "drive"
-                }
-              ],
-              "hits": [],
-              "lines": [
-                "who: סיכום פגישה: להמשיך מעמד נשקים אחרי הקדשה —",
-                "desk route (from vfmem catalog = desk table):",
-                "  pack=vfprod @studio-producer tool=drive",
-                "graph hits:",
-                "do not dump the 273-rule warehouse. mention only the slug above."
-              ]
-            }
-          },
-          "decision_id": "dec-20260910-ed2693",
-          "followup_id": "fu-intake-62da3ea9",
-          "canonical_state": "office/control/decisions.jsonl + followups.json"
-        }
-      }
-    ]
+    "unknown": []
   }
 }

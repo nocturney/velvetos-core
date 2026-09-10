@@ -18,13 +18,17 @@ from typing import Any
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
-LEDGER_DIR = ROOT / "office" / "ledger" / "live"
+sys.path.insert(0, str(ROOT / "scripts"))
+from vf_paths import OFFICE_ROOT, ROOT as _REPO_ROOT  # noqa: E402
+
+ROOT = _REPO_ROOT
+# Live ledger cache is sandbox-aware; templates always come from the repo.
+LEDGER_DIR = OFFICE_ROOT / "office" / "ledger" / "live"
 TEMPLATES_DIR = ROOT / "office" / "ledger" / "templates"
 STUDIO_PHONE = "050-2517000"
 STUDIO_E164 = "972502517000"
 
 # Sheet-canonical adapter (local CSV is cache only)
-sys.path.insert(0, str(ROOT / "scripts"))
 import vf_jobs_adapter as jobs_adapter  # noqa: E402
 
 JOB_FIELDS = [
