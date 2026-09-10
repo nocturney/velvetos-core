@@ -21,9 +21,8 @@ Routine creative choices do **not** require owner review. Physical footage/stagi
 - uses [[skills]]
 - uses [[packs]]
 - uses [[tools]]
-- uses [[media-vault]]
 - depends_on [[laws]]
-- depends_on [[instagram-publish-tool]]
+- depends_on [[grok-bot]]
 
 ## State
 
@@ -31,4 +30,6 @@ Routine creative choices do **not** require owner review. Physical footage/stagi
 
 Velvet Factory instance may set `creativeAutonomy.publish.standingAuthorization=true`. This is a standing owner authorization for routine organic Instagram only; it is not permission for auto-DM, Boost/Ads, price changes, customer WhatsApp or Print.
 
-No publish claim without a real tool receipt + verification evidence. No tool = honest failover packet.
+Media Vault remains the canonical asset source and `vfigos` remains the Instagram publish/verification path; those are operational notes, not new graph node types.
+
+No publish claim without a real tool receipt + verification evidence. No tool = honest failover packet. Grok remains optional backup/failover, not the primary sender.
