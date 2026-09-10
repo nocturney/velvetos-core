@@ -1,0 +1,141 @@
+{
+  "ok": true,
+  "passed": 19,
+  "failed": 0,
+  "results": [
+    {
+      "step": "A.sandbox_jobs_pull",
+      "ok": true,
+      "detail": "{\n  \"status\": \"pulled\",\n  \"at\": \"2026-09-10T09:55:14Z\",\n  \"canonical\": {\n    \"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\",\n    \"title\": \"VF HQ · jobs\",\n    \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\",\n    \"canonical\": \"goog"
+    },
+    {
+      "step": "A.sandbox_jobs_ready",
+      "ok": true,
+      "detail": "{\"canonical\": {\"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\", \"title\": \"VF HQ · jobs\", \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\", \"canonical\": \"google_sheet\", \"localCache\": \"office/ledger/live/jobs.csv\"}, \"cachePath\": \"off"
+    },
+    {
+      "step": "A.jobs_state_needs_sync_empty_cache",
+      "ok": true,
+      "detail": "{\n  \"canonical\": {\n    \"spreadsheetId\": \"13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao\",\n    \"title\": \"VF HQ · jobs\",\n    \"viewUrl\": \"https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit\",\n    \"canonical\": \"google_sheet\",\n    \"localCache\": \"office/ledger/live/jobs."
+    },
+    {
+      "step": "A.autonomy_snapshot_jobs_state",
+      "ok": true,
+      "detail": "{\n  \"name\": \"velvetos-autonomy-snapshot\",\n  \"generatedAt\": \"2026-09-10T12:55:14+03:00\",\n  \"contract\": {\n    \"requiredIds\": [\n      \"run_id\",\n      \"idempotency_key\",\n      \"correlation_id\"\n    ],\n    \"states\": [\n      \"queued\",\n      \"running\",\n     "
+    },
+    {
+      "step": "A.world_model",
+      "ok": true,
+      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:55:14+03:00\",\n  \"kind\": \"velvet-world-model-projection\",\n  \"rule\": \"projection-only — sources remain canonical SoTs; numeric ₪ redacted to X ₪ (Sheet holds verified a"
+    },
+    {
+      "step": "A.studio_pulse",
+      "ok": true,
+      "detail": "{\n  \"generatedAt\": \"2026-09-10T12:55:14+03:00\",\n  \"kind\": \"studio-pulse\",\n  \"what_happening_now\": {\n    \"jobs\": 5,\n    \"followups\": {\n      \"waiting_for_print_done\": 1\n    },\n    \"media_inbox\": 346,\n "
+    },
+    {
+      "step": "A.autonomy_next",
+      "ok": true,
+      "detail": "{\n  \"kind\": \"blocker\",\n  \"id\": \"fu-G003-soccerball\",\n  \"action\": \"wait_matching_print_done\",\n  \"reason\": \"canonical waiting item already declares a next action\",\n  \"risk\": \"\",\n  \"source\": \"office/cont"
+    },
+    {
+      "step": "A.autonomy_execute_green_dry",
+      "ok": true,
+      "detail": "{\n  \"run_id\": \"arun-ef4e66e20219\",\n  \"correlation_id\": \"corr-5f055e1eae44\",\n  \"idempotency_key\": \"exec|projection_refresh|None|33ae4eeede\",\n  \"source\": \"vf_autonomy\",\n  \"action\": \"projection_refresh\",\n  \"target_id\": null,\n  \"risk\": \"green\",\n  \"resolv"
+    },
+    {
+      "step": "A.dry_run_no_runs_file",
+      "ok": true,
+      "detail": "/tmp/vf-office-sandbox-uqoe_7ob/packages/velvetos/living-studio/data/autonomy-runs.jsonl"
+    },
+    {
+      "step": "B.inquiry_dry",
+      "ok": true,
+      "detail": "{\n  \"intakeId\": \"uin-42e8b59f6d\",\n  \"idempotency_key\": \"42e8b59f6d24d1b0\",\n  \"kind\": \"inquiry\",\n  \"route\": {\n    \"skill\": \"client-intake-brief\",\n    \"packs\": [\n      \"vfconvert\"\n    ],\n    \"writes\": [\n      \"office/control/inbox.json\",\n      \"office/ledger/live/jobs.csv\"\n    ]\n  },\n  \"skill\": \"clien"
+    },
+    {
+      "step": "C.client_notes_needs_input",
+      "ok": true,
+      "detail": "{\"intakeId\": \"uin-196b569a7b\", \"idempotency_key\": \"196b569a7b70728f\", \"kind\": \"client_notes\", \"route\": {\"skill\": \"client-intake-brief\", \"packs\": [\"vfconvert\"], \"writes\": [\"office/control/inbox.json\"]}, \"skill\": \"client-intake-brief\", \"needs_input\": [\"job_id (VF-…) or unique client_label matching an existing job\"], \"status\": \"needs_input\", \"decision_id\": null, \"followup_id\": null, \"inbox_ref\": null"
+    },
+    {
+      "step": "D.meeting_idempotent_one_decision",
+      "ok": true,
+      "detail": "dec_count=1 m1=dispatched m2=idempotent_reuse ids=dec-20260910-7e7620/dec-20260910-7e7620"
+    },
+    {
+      "step": "E.meeting_no_route_to_execution",
+      "ok": true,
+      "detail": "{\"next_safe\": \"route_document_needs_human_clarity\", \"decision_id\": null, \"status\": \"dispatched\"}"
+    },
+    {
+      "step": "F.insights_insufficient_evidence",
+      "ok": true,
+      "detail": "Recommendation:** insufficient evidence — no format/style winner yet (need ≥3 measured posts; have 1). Ranking table kept for transparency.\n"
+    },
+    {
+      "step": "F.insights_ranking_table_present",
+      "ok": true,
+      "detail": "ranking table kept for transparency"
+    },
+    {
+      "step": "F.source_column_documented",
+      "ok": true,
+      "detail": "LEARNINGS documents source column / MCP origin"
+    },
+    {
+      "step": "G.autonomy_selftest",
+      "ok": true,
+      "detail": "{\n  \"ok\": true,\n  \"nextBestAction\": {\n    \"kind\": \"blocker\",\n    \"id\": \"fu-intake-7e7620213d\",\n    \"action\": \"write_decision_journal\",\n    \"reason\": \"canonical waiting item already declares a next action\",\n    \"risk\": \"\",\n    \"source\": \"office/control/followups.json\"\n  },\n  \"execute\": \"wired\",\n  \"jo"
+    },
+    {
+      "step": "H.approval_bundle_excludes_stale_poll",
+      "ok": true,
+      "detail": "[]\n"
+    },
+    {
+      "step": "Z.canonical_sots_unchanged",
+      "ok": true,
+      "detail": "all SoTs identical"
+    }
+  ],
+  "sandboxNote": "VF_OFFICE_ROOT temp sandbox; production SoTs checksummed",
+  "checksumBefore": {
+    "office/control/decisions.jsonl": "2ad3df52339d1bd04888f7085805f82068618df3f3a2ecf9c677b9b350af9011",
+    "office/control/followups.json": "c99425eea6037722ca7242ea7d00b2ead8f9dd00fbce8c3f6b2abec34f446d19",
+    "office/control/inbox.json": "38246194d81e8f0348041e0688abc8d9aa2de3021833a34048e31abec62f5757",
+    "packages/vfprod/data/print-events.jsonl": "bf45d58e65eb532cc27b479a31436c25e2b2a8453eaf3f3e9ba6dc592d2d16ec",
+    "packages/vfmedia/catalog.json": "ba8ed3a41d7f8aea9a1394370a4d307a94ff4c5b61336f02b2f8daee2f6f7112",
+    "packages/vfops/data/owner-memory.md": "20465105305a3d1f9ce92be6ff7a7718c9e93db1331e1ffefead2ac9aa957e2d",
+    "packages/vfops/data/research.md": "2a2eda81367c5ec6ee313439b0a084811463531420f426a8142732e870286d74",
+    "packages/vfgrowth/data/approval-queue.json": "ffb430f1fa8cac3e7159fe7967e7fdc3c55ff496186932aab2d487fc0baefe7a",
+    "packages/velvetos/living-studio/data/autonomy-runs.jsonl": null,
+    "office/learning/lab/experiments.jsonl": null,
+    "office/control/HANDOFF.json": "1548ba9441c706a761465c1258082dfcc0e8a79ba70d1c6528827116c0166a2b",
+    "office/ledger/live/jobs.csv": "b604427a287359b446ea035ce227f343efb0706de595a6ec9741bcac2cf05bc0",
+    "office/ledger/live/sync-receipt.json": "28273ac82c9d566eca119975e2ed2950f4f429ff0aefa103c1b7e78331e946fe",
+    "packages/velvetos/living-studio/data/intake-receipts.jsonl": "b2d59f7bc1519a71920d898c04a6f9e44f28b76bc8ab1151350f7bdf3a44e3a7",
+    "packages/velvetos/living-studio/data/signal-room.jsonl": "9e46d75437380082c1061f0b7d195a63d128f3a9021950f1c6e4b973d4f8f4c7",
+    "packages/velvetos/living-studio/data/receipts.jsonl": "a4c92f4ab6fccb8ad34530968fc9fb73df9f6e1a88ad1065bc4b313692ecda98"
+  },
+  "checksumAfter": {
+    "office/control/decisions.jsonl": "2ad3df52339d1bd04888f7085805f82068618df3f3a2ecf9c677b9b350af9011",
+    "office/control/followups.json": "c99425eea6037722ca7242ea7d00b2ead8f9dd00fbce8c3f6b2abec34f446d19",
+    "office/control/inbox.json": "38246194d81e8f0348041e0688abc8d9aa2de3021833a34048e31abec62f5757",
+    "packages/vfprod/data/print-events.jsonl": "bf45d58e65eb532cc27b479a31436c25e2b2a8453eaf3f3e9ba6dc592d2d16ec",
+    "packages/vfmedia/catalog.json": "ba8ed3a41d7f8aea9a1394370a4d307a94ff4c5b61336f02b2f8daee2f6f7112",
+    "packages/vfops/data/owner-memory.md": "20465105305a3d1f9ce92be6ff7a7718c9e93db1331e1ffefead2ac9aa957e2d",
+    "packages/vfops/data/research.md": "2a2eda81367c5ec6ee313439b0a084811463531420f426a8142732e870286d74",
+    "packages/vfgrowth/data/approval-queue.json": "ffb430f1fa8cac3e7159fe7967e7fdc3c55ff496186932aab2d487fc0baefe7a",
+    "packages/velvetos/living-studio/data/autonomy-runs.jsonl": null,
+    "office/learning/lab/experiments.jsonl": null,
+    "office/control/HANDOFF.json": "1548ba9441c706a761465c1258082dfcc0e8a79ba70d1c6528827116c0166a2b",
+    "office/ledger/live/jobs.csv": "b604427a287359b446ea035ce227f343efb0706de595a6ec9741bcac2cf05bc0",
+    "office/ledger/live/sync-receipt.json": "28273ac82c9d566eca119975e2ed2950f4f429ff0aefa103c1b7e78331e946fe",
+    "packages/velvetos/living-studio/data/intake-receipts.jsonl": "b2d59f7bc1519a71920d898c04a6f9e44f28b76bc8ab1151350f7bdf3a44e3a7",
+    "packages/velvetos/living-studio/data/signal-room.jsonl": "9e46d75437380082c1061f0b7d195a63d128f3a9021950f1c6e4b973d4f8f4c7",
+    "packages/velvetos/living-studio/data/receipts.jsonl": "a4c92f4ab6fccb8ad34530968fc9fb73df9f6e1a88ad1065bc4b313692ecda98"
+  },
+  "drifted": [],
+  "generatedAt": "2026-09-10T09:55:15Z"
+}

@@ -2,6 +2,8 @@
 """Sensors for the office bridge: ledger, WhatsApp drafts, STL preflight. No network. No send."""
 from __future__ import annotations
 
+import csv
+import io
 import json
 import struct
 import sys
@@ -154,7 +156,7 @@ def main() -> None:
         fail("bindings.json must not invent a ₪")
 
     sheets = SHEETS.read_text(encoding="utf-8")
-    for needle in ("vf_office.py", "exportMimeType", "חסר גיליון", "לא ממציאים", jobs_id, "CONNECT-SHEETS.md"):
+    for needle in ("vf_office.py", "exportMimeType", "חסר גיליון", "לא ממציאים", jobs_id, "CONNECT-SHEETS.md", "jobs pull", "קנוני"):
         if needle not in sheets:
             fail(f"SHEETS.md must mention {needle}")
     if "X ₪" not in sheets:
@@ -174,7 +176,159 @@ def main() -> None:
     if "vf_office.py" not in fit:
         fail("MCP-FIT.md must point at the office bridge")
 
-    print("OK vf-office ledger+whatsapp-draft+stl-preflight")
+    # Sheet-canonical adapter (local cache) — behavioral, no network
+    import vf_jobs_adapter as jobs_adapter
+
+    def _fixture_csv(stage: str) -> str:
+        buf = io.StringIO()
+        w = csv.DictWriter(buf, fieldnames=jobs_adapter.JOB_FIELDS, lineterminator="\n")
+        w.writeheader()
+        w.writerow(
+            {
+                "job_id": "VF-20990101-001",
+                "opened": "2099-01-01",
+                "channel": "test",
+                "client_label": "fixture-client",
+                "phone": "",
+                "what_asked": "fixture what",
+                "stage": stage,
+            }
+        )
+        return buf.getvalue()
+
+    with tempfile.TemporaryDirectory() as raw2:
+        export = Path(raw2) / "sheet.csv"
+        export.write_text(_fixture_csv("פנייה"), encoding="utf-8")
+        old_cache, old_receipt, old_live = jobs_adapter.CACHE, jobs_adapter.RECEIPT, jobs_adapter.LIVE_DIR
+        jobs_adapter.LIVE_DIR = Path(raw2) / "live"
+        jobs_adapter.LIVE_DIR.mkdir()
+        jobs_adapter.CACHE = jobs_adapter.LIVE_DIR / "jobs.csv"
+        jobs_adapter.RECEIPT = jobs_adapter.LIVE_DIR / "sync-receipt.json"
+        try:
+            pulled = jobs_adapter.pull_from_path(export, force=True)
+            if pulled.get("status") != "pulled" or pulled.get("rowCount") != 1:
+                fail(f"jobs pull failed: {pulled}")
+            if jobs_adapter.get_job("VF-20990101-001").get("stage") != "פנייה":
+                fail(f"fixture stage not parsed: {jobs_adapter.get_job('VF-20990101-001')}")
+            idem = jobs_adapter.pull_from_path(export, force=False)
+            if idem.get("status") != "idempotent_skip":
+                fail(f"jobs pull not idempotent: {idem}")
+            jobs_adapter.mark_local_dirty("test")
+            export.write_text(_fixture_csv("בדיקה"), encoding="utf-8")
+            conflict = jobs_adapter.pull_from_path(export, force=False)
+            if conflict.get("status") != "conflict":
+                fail(f"expected conflict, got {conflict}")
+            forced = jobs_adapter.pull_from_path(export, force=True)
+            if forced.get("status") != "pulled":
+                fail(f"force pull failed: {forced}")
+            job = jobs_adapter.get_job("VF-20990101-001")
+            if not job or job.get("stage") != "בדיקה":
+                fail(f"force pull did not apply sheet stage: {job}")
+        finally:
+            jobs_adapter.CACHE, jobs_adapter.RECEIPT, jobs_adapter.LIVE_DIR = old_cache, old_receipt, old_live
+
+    # Canonical sheetName from bindings — never invent "jobs"
+    try:
+        name = jobs_adapter.resolve_jobs_sheet_name()
+    except jobs_adapter.JobsAdapterError as exc:
+        fail(f"sheetName resolve failed: {exc}")
+    if name != "Untitled":
+        fail(f"expected sheetName Untitled from bindings, got {name!r}")
+    target = jobs_adapter.write_range_a1()
+    if target != "'Untitled'!A1":
+        fail(f"write target must be Untitled tab, got {target!r}")
+    if "jobs'!A1" in target or target == "'jobs'!A1":
+        fail("must not fall back to guessed jobs tab")
+    try:
+        jobs_adapter.resolve_jobs_sheet_name({"spreadsheetId": "x"})
+        fail("missing sheetName must fail closed")
+    except jobs_adapter.JobsAdapterError:
+        pass
+
+    # Write-through: correct tab + concurrency preflight (mocked Sheets, no network)
+    with tempfile.TemporaryDirectory() as raw3:
+        live = Path(raw3) / "live"
+        live.mkdir()
+        old = (jobs_adapter.CACHE, jobs_adapter.RECEIPT, jobs_adapter.LIVE_DIR)
+        jobs_adapter.LIVE_DIR = live
+        jobs_adapter.CACHE = live / "jobs.csv"
+        jobs_adapter.RECEIPT = live / "sync-receipt.json"
+        jobs_adapter.reset_test_hooks()
+        try:
+            base_csv = _fixture_csv("פנייה")
+            # redefine helper in scope — use jobs_adapter fields
+            def fixture(stage: str) -> str:
+                buf = io.StringIO()
+                w = csv.DictWriter(buf, fieldnames=jobs_adapter.JOB_FIELDS, lineterminator="\n")
+                w.writeheader()
+                w.writerow(
+                    {
+                        "job_id": "VF-20990101-001",
+                        "opened": "2099-01-01",
+                        "channel": "test",
+                        "client_label": "fixture-client",
+                        "what_asked": "fixture what",
+                        "stage": stage,
+                    }
+                )
+                return buf.getvalue()
+
+            export = Path(raw3) / "sheet.csv"
+            export.write_text(fixture("פנייה"), encoding="utf-8")
+            pulled = jobs_adapter.pull_from_path(export, force=True)
+            base_digest = pulled["lastPullDigest"]
+            # local mutation on top of digest A
+            rows = jobs_adapter.read_cache()
+            rows[0]["stage"] = "שיחה"
+            jobs_adapter.write_cache(rows)
+            jobs_adapter.mark_local_dirty("stage_change")
+            # keep lastPullDigest = A (pull left it; dirty mark must preserve)
+            receipt = jobs_adapter.load_receipt()
+            if receipt.get("lastPullDigest") != base_digest:
+                receipt["lastPullDigest"] = base_digest
+                jobs_adapter.save_receipt(receipt)
+
+            jobs_adapter._TEST_SHEETS_SERVICE = object()  # truthy sentinel
+            jobs_adapter._TEST_TAB_TITLES = ["Untitled"]
+            jobs_adapter._TEST_WRITES.clear()
+
+            # concurrent remote change → conflict, no write
+            jobs_adapter.set_test_remote_rows(jobs_adapter.parse_jobs_csv(fixture("סופק")))
+            conflict_write = jobs_adapter.push_write_through()
+            if conflict_write.get("status") != "conflict":
+                fail(f"expected preflight conflict, got {conflict_write}")
+            if conflict_write.get("canonical_changed") is not False:
+                fail("conflict must not claim canonical changed")
+            if jobs_adapter._TEST_WRITES:
+                fail("conflict must not mutate Sheet (no write recorded)")
+
+            # remote still digest A → write succeeds on Untitled
+            jobs_adapter.set_test_remote_rows(jobs_adapter.parse_jobs_csv(fixture("פנייה")))
+            jobs_adapter._TEST_WRITES.clear()
+            # restore dirty local mutation
+            rows = jobs_adapter.parse_jobs_csv(fixture("שיחה"))
+            jobs_adapter.write_cache(rows)
+            receipt = jobs_adapter.load_receipt()
+            receipt["dirty"] = True
+            receipt["lastPullDigest"] = base_digest
+            jobs_adapter.save_receipt(receipt)
+            written = jobs_adapter.push_write_through()
+            if written.get("status") != "written":
+                fail(f"expected written, got {written}")
+            if written.get("sheetName") != "Untitled" or written.get("writeTarget") != "'Untitled'!A1":
+                fail(f"write must target Untitled binding: {written}")
+            if not jobs_adapter._TEST_WRITES:
+                fail("successful write must record values.update target")
+            w0 = jobs_adapter._TEST_WRITES[0]
+            if w0.get("range") != "'Untitled'!A1" or w0.get("sheetName") != "Untitled":
+                fail(f"recorded write target wrong: {w0}")
+            if any(t.get("range") == "'jobs'!A1" for t in jobs_adapter._TEST_WRITES):
+                fail("must never write to guessed jobs tab")
+        finally:
+            jobs_adapter.reset_test_hooks()
+            jobs_adapter.CACHE, jobs_adapter.RECEIPT, jobs_adapter.LIVE_DIR = old
+
+    print("OK vf-office ledger+whatsapp-draft+stl-preflight+jobs-adapter")
 
 
 if __name__ == "__main__":

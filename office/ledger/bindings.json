@@ -7,11 +7,12 @@
     "title": "VF HQ · משרד",
     "viewUrl": "https://drive.google.com/drive/folders/1dFvQBlwzoefZ7OZKHDbMAFjuJ_9kXw8e"
   },
-  "note": "IDs are not secrets. Local CSV is the book; these Sheets are the human view. Drive MCP cannot patch a cell — re-export from vf_office.py. Headers only; no invented ₪.",
-  "workbooks": {
+  "note": "IDs are not secrets. Google Sheet VF HQ · jobs is the canonical job SoT; local CSV is adapter cache via vf_office.py jobs pull/push. Drive MCP exports CSV; Drive API optional when GOOGLE_TOKEN exists. Headers only; no invented ₪.",
+    "workbooks": {
     "jobs": {
       "spreadsheetId": "13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao",
       "title": "VF HQ · jobs",
+      "sheetName": "Untitled",
       "viewUrl": "https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit"
     },
     "sku": {
@@ -29,5 +30,12 @@
       "title": "VF HQ · books",
       "viewUrl": "https://docs.google.com/spreadsheets/d/11eRkRT78Nzacef8PmPCk0xqtPXy0uw9ivu747bw0FIs/edit"
     }
+  },
+  "canonical": {
+    "jobs": "google_sheet",
+    "spreadsheetId": "13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao",
+    "sheetName": "Untitled",
+    "localCache": "office/ledger/live/jobs.csv",
+    "adapter": "scripts/vf_jobs_adapter.py"
   }
 }

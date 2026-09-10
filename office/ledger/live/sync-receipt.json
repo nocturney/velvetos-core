@@ -1,0 +1,44 @@
+{
+  "status": "pulled",
+  "at": "2026-09-10T09:55:01Z",
+  "canonical": {
+    "spreadsheetId": "13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao",
+    "title": "VF HQ · jobs",
+    "viewUrl": "https://docs.google.com/spreadsheets/d/13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao/edit",
+    "canonical": "google_sheet",
+    "localCache": "office/ledger/live/jobs.csv"
+  },
+  "source": "file:/tmp/vf-jobs-sheet.csv",
+  "dirty": true,
+  "dirtyReason": "write_pending_provider",
+  "rowCount": 5,
+  "idempotency_key": "pull|13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao|fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc",
+  "lastPullDigest": "fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc",
+  "reconciliation": {
+    "only_local": [],
+    "only_remote": [],
+    "conflicts": [],
+    "identical": true,
+    "localCount": 5,
+    "remoteCount": 5,
+    "localDigest": "fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc",
+    "remoteDigest": "fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc"
+  },
+  "evidence": {
+    "bytes": 2089,
+    "parser": "vf_jobs_adapter.parse_jobs_csv"
+  },
+  "sampleJobIds": [
+    "VF-20260908-001",
+    "VF-20260908-002",
+    "VF-20260908-003",
+    "VF-20260908-004",
+    "VF-20260908-005"
+  ],
+  "rule": "Google Sheet canonical; local CSV is adapter cache only",
+  "dirtyAt": "2026-09-10T09:55:01Z",
+  "lastPushDigest": "fb099a5e829556b7b9f98e1d8dc3810cad06bee2b29729f721f2b1f4f4e744fc",
+  "lastPushAt": "2026-09-10T09:55:01Z",
+  "pendingPath": "office/ledger/live/pending-push.csv",
+  "lastWriteStatus": "write_pending_provider"
+}

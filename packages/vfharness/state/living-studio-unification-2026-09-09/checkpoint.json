@@ -9,9 +9,13 @@
     "pr141_superseded": true,
     "live_publish_tested": false,
     "publication": "READY_NOT_LIVE_PUBLISH_TESTED",
-    "scheduled_drive_intake": "BLOCKED_EXTERNAL_AUTH"
+    "scheduled_drive_intake": "COMMISSIONED_OIDC",
+    "scheduled_drive_intake_note": "SUPERSEDED 2026-09-10: auth.ready=true + activation.proven=true in packages/vfmedia/state/intake-runner.json — no VFMEDIA_DRIVE_CREDENTIALS_JSON owner action"
   },
-  "latest_observation": "Living Studio connective tissue on main tip d01bc7c+#unification. Sensors green. Insights live. #138 unique intake ported. #141 superseded.",
-  "next_step": "Owner: VFMEDIA_DRIVE_CREDENTIALS_JSON for scheduled intake; optional live publish proof on approved asset only",
-  "updatedAt": "2026-09-09T23:17:40+03:00"
+  "latest_observation": "Living Studio connective tissue commissioned. Media Auto Intake OIDC proven 2026-09-10. Insights live. Jobs Sheet adapter closes cache gap.",
+  "next_step": "No owner action required for Drive intake auth. Optional: live publish proof on an already-approved asset only.",
+  "updatedAt": "2026-09-10T12:00:00+03:00",
+  "supersedes": {
+    "next_step_2026-09-09": "Owner: VFMEDIA_DRIVE_CREDENTIALS_JSON for scheduled intake — historical, no longer current"
+  }
 }

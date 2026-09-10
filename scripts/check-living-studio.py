@@ -90,6 +90,7 @@ def main() -> None:
         "media.intake.verified",
         "studio.pulse.generated",
         "intake.universal.routed",
+        "intake.universal.dispatched",
         "invisible.work.detected",
         "failure.museum.recorded",
         "lab.experiment.recorded",

@@ -18,10 +18,18 @@ from typing import Any
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[1]
-LEDGER_DIR = ROOT / "office" / "ledger" / "live"
+sys.path.insert(0, str(ROOT / "scripts"))
+from vf_paths import OFFICE_ROOT, ROOT as _REPO_ROOT  # noqa: E402
+
+ROOT = _REPO_ROOT
+# Live ledger cache is sandbox-aware; templates always come from the repo.
+LEDGER_DIR = OFFICE_ROOT / "office" / "ledger" / "live"
 TEMPLATES_DIR = ROOT / "office" / "ledger" / "templates"
 STUDIO_PHONE = "050-2517000"
 STUDIO_E164 = "972502517000"
+
+# Sheet-canonical adapter (local CSV is cache only)
+import vf_jobs_adapter as jobs_adapter  # noqa: E402
 
 JOB_FIELDS = [
     "job_id",
@@ -181,6 +189,8 @@ def add_job(fields: dict[str, str], path: Path | None = None) -> dict[str, str]:
         raise OfficeError("do not invent a sale ₪ — leave price empty until lead seat names it")
     rows.append(row)
     write_jobs(rows, path)
+    if path is None or Path(path).resolve() == (LEDGER_DIR / "jobs.csv").resolve():
+        jobs_adapter.mark_local_dirty(f"jobs_add:{row['job_id']}")
     return row
 
 
@@ -201,6 +211,8 @@ def set_stage(job_id: str, stage: str, path: Path | None = None, price: str = ""
     if stage == "הצעה" and not (found.get("price") or "").strip():
         raise OfficeError("stage הצעה needs a lead-seat price — otherwise use ממתין לסכום")
     write_jobs(rows, path)
+    if path is None or Path(path).resolve() == (LEDGER_DIR / "jobs.csv").resolve():
+        jobs_adapter.mark_local_dirty(f"jobs_stage:{job_id}:{stage}")
     return found
 
 
@@ -422,6 +434,43 @@ def cmd_jobs_csv(_args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_jobs_status(_args: argparse.Namespace) -> int:
+    print(json.dumps(jobs_adapter.status(), ensure_ascii=False, indent=2))
+    return 0
+
+
+def cmd_jobs_pull(args: argparse.Namespace) -> int:
+    try:
+        from_csv = Path(args.from_csv) if args.from_csv else None
+        result = jobs_adapter.pull(from_csv=from_csv, force=bool(args.force))
+    except jobs_adapter.JobsAdapterError as exc:
+        fail(str(exc))
+        return 1
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0 if result.get("status") in {"pulled", "idempotent_skip"} else 2
+
+
+def cmd_jobs_push(args: argparse.Namespace) -> int:
+    result = jobs_adapter.push(write_pending=not args.stdout_only)
+    if args.stdout_only:
+        sys.stdout.write(result.get("csv") or jobs_adapter.export_csv())
+        return 0
+    # omit full csv blob from JSON noise
+    payload = {k: v for k, v in result.items() if k != "csv"}
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return 0
+
+
+def cmd_jobs_reconcile(args: argparse.Namespace) -> int:
+    if not args.against:
+        fail("jobs reconcile requires --against PATH (Sheet CSV export)")
+        return 1
+    remote = jobs_adapter.parse_jobs_csv(Path(args.against).read_text(encoding="utf-8"))
+    local = jobs_adapter.read_cache()
+    print(json.dumps(jobs_adapter.reconcile(local, remote), ensure_ascii=False, indent=2))
+    return 0
+
+
 def cmd_convert_draft(args: argparse.Namespace) -> int:
     rows = {r["job_id"]: r for r in read_jobs()}
     row = rows.get(args.job_id)
@@ -461,6 +510,25 @@ def build_parser() -> argparse.ArgumentParser:
     add_p.set_defaults(func=cmd_jobs_add)
     jsub.add_parser("list").set_defaults(func=cmd_jobs_list)
     jsub.add_parser("csv").set_defaults(func=cmd_jobs_csv)
+    jsub.add_parser("status").set_defaults(func=cmd_jobs_status)
+    pull_p = jsub.add_parser("pull", help="sync cache from canonical Google Sheet export")
+    pull_p.add_argument(
+        "--from-csv",
+        default="",
+        help="Sheet CSV export path (Drive MCP download_file_content exportMimeType=text/csv)",
+    )
+    pull_p.add_argument(
+        "--force",
+        action="store_true",
+        help="overwrite dirty local cache with Sheet (Sheet wins)",
+    )
+    pull_p.set_defaults(func=cmd_jobs_pull)
+    push_p = jsub.add_parser("push", help="emit cache CSV for Drive upload back to Sheet")
+    push_p.add_argument("--stdout-only", action="store_true")
+    push_p.set_defaults(func=cmd_jobs_push)
+    rec_p = jsub.add_parser("reconcile", help="diff local cache vs a Sheet CSV export")
+    rec_p.add_argument("--against", required=True)
+    rec_p.set_defaults(func=cmd_jobs_reconcile)
     st = jsub.add_parser("stage")
     st.add_argument("job_id")
     st.add_argument("stage")

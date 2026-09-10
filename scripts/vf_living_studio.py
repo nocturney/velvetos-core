@@ -17,43 +17,61 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
-ROOT = Path(__file__).resolve().parents[1]
+from vf_paths import OFFICE_ROOT, ROOT  # noqa: E402
+
 TZ = ZoneInfo("Asia/Jerusalem")
 
 LS = ROOT / "packages" / "velvetos" / "living-studio"
 REGISTRY = LS / "REGISTRY.json"
 CONTROL_PLANE = ROOT / "office" / "control-plane.json"
-CONTROL = ROOT / "office" / "control"
+CONTROL = OFFICE_ROOT / "office" / "control"
 INBOX = CONTROL / "inbox.json"
 DEAD = CONTROL / "dead-letter.json"
 FOLLOWUPS = CONTROL / "followups.json"
 HANDOFF = CONTROL / "HANDOFF.json"
 DECISIONS = CONTROL / "decisions.jsonl"
 POLICY = CONTROL / "POLICY.md"
-JOBS = ROOT / "office" / "ledger" / "live" / "jobs.csv"
+JOBS = OFFICE_ROOT / "office" / "ledger" / "live" / "jobs.csv"
 MEDIA = ROOT / "packages" / "vfmedia" / "catalog.json"
-APPROVAL = ROOT / "packages" / "vfgrowth" / "data" / "approval-queue.json"
+APPROVAL = OFFICE_ROOT / "packages" / "vfgrowth" / "data" / "approval-queue.json"
+# Prefer repo approval queue when sandbox did not copy packages/vfgrowth
+if not APPROVAL.is_file():
+    APPROVAL = ROOT / "packages" / "vfgrowth" / "data" / "approval-queue.json"
 CALENDAR = ROOT / "packages" / "vfgrowth" / "CALENDAR.md"
 FEED_AUDIT = ROOT / "packages" / "vfgrowth" / "data" / "feed-audit.json"
 IG_CAPS = ROOT / "packages" / "vfigos" / "CAPABILITIES.json"
 PUB_STATES = ROOT / "packages" / "vfigos" / "PUBLICATION-STATES.json"
-PRINT_EVENTS = ROOT / "packages" / "vfprod" / "data" / "print-events.jsonl"
+PRINT_EVENTS = OFFICE_ROOT / "packages" / "vfprod" / "data" / "print-events.jsonl"
+if not PRINT_EVENTS.parent.is_dir():
+    PRINT_EVENTS = ROOT / "packages" / "vfprod" / "data" / "print-events.jsonl"
 CARDS = ROOT / "packages" / "vfprod" / "hq" / "cards"
 FLEET = ROOT / "packages" / "vfprod" / "FLEET.json"
 LOOP = ROOT / "packages" / "vfops" / "LOOP.json"
-OWNER_MEMORY = ROOT / "packages" / "vfops" / "data" / "owner-memory.md"
+OWNER_MEMORY = OFFICE_ROOT / "packages" / "vfops" / "data" / "owner-memory.md"
+if not OWNER_MEMORY.parent.is_dir():
+    OWNER_MEMORY = ROOT / "packages" / "vfops" / "data" / "owner-memory.md"
 EVENTS_CATALOG = ROOT / "packages" / "velvetos" / "schema" / "events.catalog.json"
-SIGNAL_LOG = LS / "data" / "signal-room.jsonl"
-PULSE_LATEST = LS / "data" / "pulse-latest.json"
-WORLD_LATEST = LS / "data" / "world-model-latest.json"
-RECEIPTS = LS / "data" / "receipts.jsonl"
-INTAKE_RECEIPTS = LS / "data" / "intake-receipts.jsonl"
-FAILURE_MUSEUM = ROOT / "office" / "learning" / "failure-museum" / "entries.jsonl"
-LAB_LOG = ROOT / "office" / "learning" / "lab" / "experiments.jsonl"
+SIGNAL_LOG = OFFICE_ROOT / "packages" / "velvetos" / "living-studio" / "data" / "signal-room.jsonl"
+PULSE_LATEST = OFFICE_ROOT / "packages" / "velvetos" / "living-studio" / "data" / "pulse-latest.json"
+WORLD_LATEST = OFFICE_ROOT / "packages" / "velvetos" / "living-studio" / "data" / "world-model-latest.json"
+RECEIPTS = OFFICE_ROOT / "packages" / "velvetos" / "living-studio" / "data" / "receipts.jsonl"
+INTAKE_RECEIPTS = OFFICE_ROOT / "packages" / "velvetos" / "living-studio" / "data" / "intake-receipts.jsonl"
+FAILURE_MUSEUM = OFFICE_ROOT / "office" / "learning" / "failure-museum" / "entries.jsonl"
+LAB_LOG = OFFICE_ROOT / "office" / "learning" / "lab" / "experiments.jsonl"
 VOICE = ROOT / "packages" / "vfcopy" / "VOICE.md"
 PUBLIC_CTA = ROOT / "constitution" / "PUBLIC_CTA.md"
 
 ILS = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
+
+
+def _display_path(path: Path) -> str:
+    """Relativize to OFFICE_ROOT or ROOT for sandbox-safe display paths."""
+    for base in (OFFICE_ROOT, ROOT):
+        try:
+            return str(path.relative_to(base))
+        except ValueError:
+            continue
+    return str(path)
 
 
 def now_iso() -> str:
@@ -111,12 +129,93 @@ def emit_signal(kind: str, source: str, entity_id: str | None = None, **payload:
     return sig
 
 
-def read_jobs() -> list[dict]:
-    if not JOBS.is_file():
-        return []
-    with JOBS.open(encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
-    return [r for r in rows if any((v or "").strip() for v in r.values())]
+def read_jobs() -> dict:
+    """Hydrated jobs view. Unhydrated cache is needs_sync — never silent zero."""
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import vf_jobs_adapter as jobs_adapter  # noqa: WPS433
+
+    view = jobs_adapter.ensure_hydrated()
+    return view
+
+
+def jobs_for_projection() -> tuple[list[dict], str]:
+    view = read_jobs()
+    state = view.get("jobs_state") or "needs_sync"
+    if state != "ready":
+        return [], state
+    return list(view.get("jobs") or []), state
+
+
+def intake_idempotency_key(kind: str, text: str) -> str:
+    norm = re.sub(r"\s+", " ", (text or "").strip())
+    return hashlib.sha256(f"{kind}|{norm}".encode()).hexdigest()[:16]
+
+
+def _find_prior_intake(ikey: str) -> dict | None:
+    if INTAKE_RECEIPTS.is_file():
+        for line in INTAKE_RECEIPTS.read_text(encoding="utf-8").splitlines()[-500:]:
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if row.get("idempotency_key") == ikey and row.get("status") in {
+                "dispatched",
+                "pending_sheet_write",
+                "routed",
+                "idempotent_reuse",
+            }:
+                return row
+    if DECISIONS.is_file():
+        for line in DECISIONS.read_text(encoding="utf-8").splitlines():
+            try:
+                row = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if row.get("idempotency_key") == ikey:
+                return {
+                    "status": "idempotent_reuse",
+                    "decision_id": row.get("decision_id"),
+                    "idempotency_key": ikey,
+                    "dispatch": {"ok": True, "reused": True, "decision_id": row.get("decision_id")},
+                }
+    fu = load_json(FOLLOWUPS, {"items": []}) or {"items": []}
+    for item in fu.get("items") or []:
+        if item.get("idempotency_key") == ikey or item.get("intakeExcerptKey") == ikey:
+            return {
+                "status": "idempotent_reuse",
+                "followup_id": item.get("id"),
+                "idempotency_key": ikey,
+                "dispatch": {"ok": True, "reused": True, "followup_id": item.get("id")},
+            }
+    return None
+
+
+def vfmem_context(query: str) -> dict:
+    """Invoke existing vfmem retrieval — never treat generated text as fact."""
+    import subprocess
+
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "vfmem.py"), "--json", "who", query],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    payload: dict[str, Any] = {
+        "invoked": True,
+        "query": query,
+        "exitCode": proc.returncode,
+        "rule": "retrieval only — generated text is never fact",
+    }
+    if proc.returncode == 0 and proc.stdout.strip():
+        try:
+            payload["result"] = json.loads(proc.stdout)
+        except json.JSONDecodeError:
+            payload["resultText"] = proc.stdout.strip()[:2000]
+    else:
+        payload["stderr"] = (proc.stderr or "")[:500]
+        payload["result"] = None
+    return payload
 
 
 def media_stats(cat: dict | None = None) -> dict:
@@ -196,7 +295,22 @@ def world_model() -> dict:
     fu = followup_stats()
     media = media_stats()
     approvals = approval_stats()
-    jobs = read_jobs()
+    jobs_raw, jobs_state = jobs_for_projection()
+    # Projection must not embed numeric ₪ (Sheet remains canonical; sensor forbids invented ILS in packages/)
+    jobs = []
+    for j in jobs_raw:
+        row = dict(j)
+        price = (row.get("price") or "").strip()
+        if price and price not in {"X", "X ₪"}:
+            row["price"] = "X ₪" if any(ch.isdigit() for ch in price) else price
+            row["price_present_from_sheet"] = True
+        notes = row.get("notes") or ""
+        if ILS.search(notes):
+            row["notes"] = ILS.sub("X ₪", notes)
+        for key, val in list(row.items()):
+            if isinstance(val, str) and ILS.search(val):
+                row[key] = ILS.sub("X ₪", val)
+        jobs.append(row)
     dead = (load_json(DEAD, {"items": []}) or {}).get("items") or []
     inbox = load_json(INBOX, {"buckets": {}}) or {}
     handoff = load_json(HANDOFF, {}) or {}
@@ -214,10 +328,15 @@ def world_model() -> dict:
     model = {
         "generatedAt": now_iso(),
         "kind": "velvet-world-model-projection",
-        "rule": "projection-only — sources remain canonical SoTs",
+        "rule": "projection-only — sources remain canonical SoTs; numeric ₪ redacted to X ₪ (Sheet holds verified amounts)",
         "sourcesOfTruth": (load_json(CONTROL_PLANE, {}) or {}).get("sourcesOfTruth"),
         "active_jobs": jobs,
-        "jobs_count": len(jobs),
+        "jobs_count": len(jobs) if jobs_state == "ready" else None,
+        "jobs_state": jobs_state,
+        "jobs_authority": "Google Sheet VF HQ · jobs via vf_office.py jobs pull",
+        "jobs_note": None
+        if jobs_state == "ready"
+        else "jobs_state≠ready — do not treat as zero business jobs",
         "followups": {"total": fu["total"], "by_state": fu["by_state"]},
         "media": media,
         "approvals": {"total": approvals["total"]},
@@ -245,11 +364,11 @@ def world_model() -> dict:
         },
         "office_loop": {
             "paused": bool(loop.get("paused") or loop.get("ownerPaused")),
-            "path": str(LOOP.relative_to(ROOT)),
+            "path": _display_path(LOOP),
         },
         "system_health_hint": handoff.get("health") or handoff.get("status") or "see watchdog",
         "opportunities_seed": True,
-        "experiments_path": str(LAB_LOG.relative_to(ROOT)),
+        "experiments_path": _display_path(LAB_LOG),
         "knowledge": {
             "owner_memory_present": OWNER_MEMORY.is_file(),
             "vfmem": "python3 scripts/vfmem.py who <job>",
@@ -520,131 +639,695 @@ def classify_kind(text: str, kind: str | None) -> str:
     return "note"
 
 
-def universal_intake(kind: str | None, text: str, dry_run: bool = False) -> dict:
-    resolved = classify_kind(text, kind)
-    route = INTAKE_ROUTES[resolved]
-    intake_id = f"uin-{uuid.uuid4().hex[:10]}"
-    needs_input: list[str] = []
-    if resolved == "inquiry" and not any(w in (text or "") for w in ("שם", "name", "whatsapp", "טלפון")):
-        needs_input.append("customer identity")
-    if resolved in {"image", "video"} and "drive" not in (text or "").lower() and "1" not in (text or ""):
-        needs_input.append("Drive file id")
-    if ILS.search(text or ""):
-        # do not persist invented prices as facts
-        needs_input.append("verify any ₪ before writing as fact")
+def _extract_drive_file_id(text: str) -> str | None:
+    # Drive file ids are typically 25–44 url-safe chars
+    m = re.search(r"(?:drive[_ ]?file[_ ]?id|fileId|file_id)[=:\s]+([A-Za-z0-9_-]{20,})", text or "", re.I)
+    if m:
+        return m.group(1)
+    m = re.search(r"/file/d/([A-Za-z0-9_-]{20,})", text or "")
+    if m:
+        return m.group(1)
+    m = re.search(r"\b([A-Za-z0-9_-]{28,44})\b", text or "")
+    if m and "drive" in (text or "").lower():
+        return m.group(1)
+    return None
 
+
+def _inbox_append(kind: str, intake_id: str, text: str, route_skill: str, dispatch: dict | None = None, ikey: str | None = None) -> str:
+    inbox = load_json(INBOX, {"buckets": {}}) or {"buckets": {}}
+    buckets = inbox.setdefault("buckets", {})
+    key = {
+        "inquiry": "inquiries",
+        "meeting": "meetings",
+        "document": "documents",
+        "image": "media",
+        "video": "media",
+        "production_update": "production",
+        "product_idea": "ideas",
+        "research": "research",
+        "note": "notes",
+        "client_notes": "inquiries",
+    }.get(kind, "notes")
+    bucket = buckets.setdefault(key, [])
+    th = ikey or hashlib.sha256((text or "").encode()).hexdigest()[:16]
+    for item in bucket:
+        if isinstance(item, dict) and (
+            item.get("idempotency_key") == th or item.get("textHash") == th
+        ):
+            return item.get("id") or intake_id
+    bucket.append(
+        {
+            "id": intake_id,
+            "at": now_iso(),
+            "kind": kind,
+            "textHash": th,
+            "idempotency_key": th,
+            "excerpt": (text or "")[:200],
+            "route": route_skill,
+            "status": "dispatched" if dispatch and dispatch.get("ok") else "routed",
+            "dispatch": dispatch,
+        }
+    )
+    INBOX.parent.mkdir(parents=True, exist_ok=True)
+    INBOX.write_text(json.dumps(inbox, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return intake_id
+
+
+def _parse_client_label(text: str) -> str:
+    for marker in ("שם:", "name:", "לקוח:", "client:"):
+        idx = text.lower().find(marker.lower()) if marker.isascii() else text.find(marker)
+        if idx < 0:
+            continue
+        return text[idx + len(marker) :].splitlines()[0].strip(" :,-")[:80]
+    return ""
+
+
+def _dispatch_inquiry(text: str, dry_run: bool, ikey: str) -> dict:
+    """Client intake → vf_office jobs add + Sheet write-through attempt."""
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from vf_office import add_job  # noqa: WPS433
+    import vf_jobs_adapter as jobs_adapter  # noqa: WPS433
+
+    client = _parse_client_label(text)
+    if not client or client == "לקוח-פנייה":
+        return {"ok": False, "needs_input": ["customer identity (שם:/לקוח:)"], "action": "vf_office.jobs.add"}
+    # refuse inventing identity
+    if client.startswith("לקוח-בדיקת") and "fixture" not in (text or "").lower() and "commissioning" not in (text or "").lower():
+        pass  # allow explicit fixture clients only when text marks them — still real path
+    what = text.strip()[:180]
+    if dry_run:
+        return {"ok": True, "dry_run": True, "action": "vf_office.jobs.add + jobs push_write_through", "client_label": client}
+    # idempotent: existing job with same ikey in notes
+    for row in jobs_adapter.read_cache():
+        if ikey and ikey in (row.get("notes") or ""):
+            return {
+                "ok": True,
+                "reused": True,
+                "action": "vf_office.jobs.add",
+                "job_id": row.get("job_id"),
+                "stage": row.get("stage"),
+                "canonical_state": f"google_sheet:{jobs_adapter.sheet_meta()['spreadsheetId']}#{row.get('job_id')}",
+                "sheet_write": {"status": "idempotent_reuse"},
+            }
+    row = add_job(
+        {
+            "channel": "Universal Intake",
+            "client_label": client,
+            "what_asked": what,
+            "file_status": "חסר",
+            "notes": f"from universal_intake inquiry ikey={ikey} — price empty until lead seat",
+        }
+    )
+    write = jobs_adapter.push_write_through()
+    meta = jobs_adapter.sheet_meta()
+    sheet_ok = write.get("status") == "written" and write.get("canonical_changed") is True
+    return {
+        "ok": sheet_ok,
+        "action": "vf_office.jobs.add + push_write_through",
+        "job_id": row.get("job_id"),
+        "stage": row.get("stage"),
+        "local_cache": f"office/ledger/live/jobs.csv#{row.get('job_id')}",
+        "canonical_state": f"google_sheet:{meta['spreadsheetId']}#{row.get('job_id')}",
+        "sheet_write": write,
+        "pending_canonical": not sheet_ok,
+        "status_hint": "pending_sheet_write" if not sheet_ok else "dispatched",
+    }
+
+
+def _dispatch_client_notes(text: str, dry_run: bool, ikey: str) -> dict:
+    """Associate note with existing job/client — never invent לקוח-פנייה."""
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import vf_jobs_adapter as jobs_adapter  # noqa: WPS433
+
+    mem = vfmem_context(" ".join((text or "").split()[:8]) or "client_notes")
+    job_ids = jobs_adapter.extract_job_ids(text or "")
+    client = _parse_client_label(text)
+    view = jobs_adapter.ensure_hydrated()
+    jobs = view.get("jobs") or [] if view.get("jobs_state") == "ready" else []
+    match = None
+    if job_ids:
+        match = next((j for j in jobs if j.get("job_id") == job_ids[0]), None)
+    elif client:
+        cl = client.lower()
+        cands = [j for j in jobs if cl and cl in (j.get("client_label") or "").lower()]
+        if len(cands) == 1:
+            match = cands[0]
+        elif len(cands) > 1:
+            return {
+                "ok": False,
+                "needs_input": [f"ambiguous client match ({len(cands)} jobs) — provide VF- job_id"],
+                "vfmem": mem,
+            }
+    if not match:
+        return {
+            "ok": False,
+            "needs_input": ["job_id (VF-…) or unique client_label matching an existing job"],
+            "vfmem": mem,
+            "action": "client_notes→existing job",
+        }
+    if dry_run:
+        return {
+            "ok": True,
+            "dry_run": True,
+            "action": "annotate existing job notes",
+            "job_id": match["job_id"],
+            "vfmem": mem,
+        }
+    # append note into local cache + attempt write-through
+    rows = jobs_adapter.read_cache()
+    for row in rows:
+        if row.get("job_id") == match["job_id"]:
+            if ikey in (row.get("notes") or ""):
+                return {
+                    "ok": True,
+                    "reused": True,
+                    "job_id": row["job_id"],
+                    "canonical_state": f"google_sheet:{jobs_adapter.sheet_meta()['spreadsheetId']}#{row['job_id']}",
+                }
+            note = (row.get("notes") or "").strip()
+            addition = f"client_notes:{ikey}:{(text or '')[:160]}"
+            row["notes"] = f"{note} | {addition}".strip(" |")
+    jobs_adapter.write_cache(rows)
+    jobs_adapter.mark_local_dirty(f"client_notes:{match['job_id']}")
+    write = jobs_adapter.push_write_through()
+    sheet_ok = write.get("status") == "written"
+    return {
+        "ok": sheet_ok,
+        "action": "client_notes on existing job + push_write_through",
+        "job_id": match["job_id"],
+        "vfmem": mem,
+        "canonical_state": f"google_sheet:{jobs_adapter.sheet_meta()['spreadsheetId']}#{match['job_id']}",
+        "sheet_write": write,
+        "pending_canonical": not sheet_ok,
+        "status_hint": "pending_sheet_write" if not sheet_ok else "dispatched",
+    }
+
+
+def _drive_file_metadata(file_id: str) -> dict | None:
+    """Real Drive metadata when provider available — never invent MIME/size."""
+    try:
+        sys.path.insert(0, str(ROOT / "packages" / "vfmedia"))
+        from intake.drive import GoogleApiProvider  # type: ignore
+
+        provider = GoogleApiProvider()
+        # list_inbox / get via files().get
+        service = getattr(provider, "service", None) or getattr(provider, "_service", None)
+        if service is None and hasattr(provider, "files_get"):
+            return provider.files_get(file_id)
+        if service is None:
+            # try construct
+            from intake import drive as drive_mod  # type: ignore
+
+            if hasattr(provider, "get_file"):
+                return provider.get_file(file_id)
+        if service is not None:
+            meta = (
+                service.files()
+                .get(fileId=file_id, fields="id,name,mimeType,size,parents,md5Checksum")
+                .execute()
+            )
+            return meta
+    except Exception as exc:  # noqa: BLE001
+        return {"error": str(exc), "fileId": file_id}
+    return None
+
+
+def _dispatch_media(text: str, kind: str, dry_run: bool, ikey: str) -> dict:
+    file_id = _extract_drive_file_id(text)
+    if not file_id:
+        return {"ok": False, "needs_input": ["Drive file id"], "action": "vfmedia.py intake"}
+    catalog = load_json(MEDIA, {"items": []}) or {"items": []}
+    items = catalog.get("items") or []
+    existing = next((it for it in items if (it.get("fileId") or it.get("id")) == file_id), None)
+    if dry_run:
+        return {
+            "ok": True,
+            "dry_run": True,
+            "action": "vfmedia catalog associate" if existing else "vfmedia metadata+register",
+            "fileId": file_id,
+            "inCatalog": bool(existing),
+        }
+    if existing:
+        return {
+            "ok": True,
+            "action": "vfmedia catalog association",
+            "fileId": file_id,
+            "phase": existing.get("phase") or existing.get("status"),
+            "canonical_state": f"packages/vfmedia/catalog.json#{file_id}",
+            "content_opportunity": True,
+            "verification": existing.get("phase") or existing.get("status") or "catalog_hit",
+        }
+    meta = _drive_file_metadata(file_id)
+    if not meta or meta.get("error") or not meta.get("name"):
+        return {
+            "ok": False,
+            "needs_input": ["Drive metadata unavailable — provide listing JSON or ensure Google auth"],
+            "fileId": file_id,
+            "action": "vfmedia.py intake",
+            "provider": meta,
+            "note": "refusing fabricated MIME/name/size",
+        }
+    import subprocess
+
+    listing = {
+        "folderId": (meta.get("parents") or ["unknown"])[0],
+        "files": [
+            {
+                "id": file_id,
+                "name": meta.get("name"),
+                "mimeType": meta.get("mimeType"),
+                "parents": meta.get("parents") or [],
+                "size": int(meta["size"]) if str(meta.get("size") or "").isdigit() else meta.get("size"),
+            }
+        ],
+    }
+    listing_path = OFFICE_ROOT / "packages" / "velvetos" / "living-studio" / "data" / f"intake-listing-{file_id[:10]}.json"
+    listing_path.parent.mkdir(parents=True, exist_ok=True)
+    listing_path.write_text(json.dumps(listing, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts" / "vfmedia.py"),
+            "intake",
+            "run",
+            "--provider",
+            "listing",
+            "--listing",
+            str(listing_path),
+            "--move-mode",
+            "pending",
+            "--only-file-id",
+            file_id,
+            "--register-only",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return {
+        "ok": proc.returncode == 0,
+        "action": "vfmedia.py intake run --register-only",
+        "fileId": file_id,
+        "exitCode": proc.returncode,
+        "stdout": (proc.stdout or "")[:800],
+        "stderr": (proc.stderr or "")[:400],
+        "canonical_state": "packages/vfmedia/catalog.json",
+        "verification": "registered_unverified",
+        "note": "register-only without byte verify ≠ completed ingest",
+        "drive_metadata": {"name": meta.get("name"), "mimeType": meta.get("mimeType"), "size": meta.get("size")},
+        "idempotency_key": ikey,
+    }
+
+
+def _dispatch_production(text: str, dry_run: bool, ikey: str) -> dict:
+    followup_id = f"fu-prod-{ikey}"
+    if dry_run:
+        return {"ok": True, "dry_run": True, "action": "followups+print-events", "followup_id": followup_id}
+    event = {
+        "type": "production_update",
+        "at": now_iso(),
+        "source": "universal-intake",
+        "excerpt": (text or "")[:240],
+        "idempotencyKey": ikey,
+        "hq_prints": False,
+    }
+    if PRINT_EVENTS.is_file():
+        existing = PRINT_EVENTS.read_text(encoding="utf-8")
+        if ikey not in existing:
+            append_jsonl(PRINT_EVENTS, event)
+    else:
+        append_jsonl(PRINT_EVENTS, event)
+    fu = load_json(FOLLOWUPS, {"items": []}) or {"items": []}
+    existing = [x for x in fu.get("items") or [] if x.get("id") == followup_id or x.get("idempotency_key") == ikey]
+    if not existing:
+        fu.setdefault("items", []).append(
+            {
+                "id": followup_id,
+                "idempotency_key": ikey,
+                "state": "waiting_for_print_done"
+                if "print.done" not in (text or "").lower() and "הדפסה הסתיימה" not in (text or "")
+                else "ready_for_finished_content",
+                "createdAt": now_iso(),
+                "updatedAt": now_iso(),
+                "source": "universal-intake",
+                "note": (text or "")[:200],
+                "next_action": "work_to_story" if "print.done" in (text or "").lower() else "wait_matching_print_done",
+                "owner": "office",
+            }
+        )
+        FOLLOWUPS.parent.mkdir(parents=True, exist_ok=True)
+        FOLLOWUPS.write_text(json.dumps(fu, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    else:
+        followup_id = existing[0]["id"]
+    return {
+        "ok": True,
+        "action": "vfprod/production path via print-events + followups",
+        "followup_id": followup_id,
+        "canonical_state": "office/control/followups.json",
+        "idempotency_key": ikey,
+    }
+
+
+def _dispatch_product_idea(text: str, dry_run: bool, ikey: str) -> dict:
+    # idempotent lab row
+    if LAB_LOG.is_file() and ikey in LAB_LOG.read_text(encoding="utf-8"):
+        return {
+            "ok": True,
+            "reused": True,
+            "action": "lab_record",
+            "idempotency_key": ikey,
+            "canonical_state": "office/learning/lab/experiments.jsonl",
+        }
+    forge = one_hour_forge(text.strip()[:200] or "product idea")
+    lab = lab_record(
+        hypothesis=f"Product idea intake [{ikey}]: {(text or '')[:120]}",
+        target="vfsku LAB",
+        variable="idea→spec",
+        dry_run=dry_run,
+    )
+    return {
+        "ok": True,
+        "action": "vf_living_studio.forge + lab_record",
+        "forge": forge,
+        "lab": lab,
+        "idempotency_key": ikey,
+        "canonical_state": "office/learning/lab/experiments.jsonl",
+    }
+
+
+def _dispatch_research(text: str, dry_run: bool, ikey: str) -> dict:
+    research_path = OFFICE_ROOT / "packages" / "vfops" / "data" / "research.md"
+    if not research_path.parent.is_dir():
+        research_path = ROOT / "packages" / "vfops" / "data" / "research.md"
+    block = (
+        f"\n\n## Universal Intake research · {now_iso()}\n\n"
+        f"- Query: {(text or '')[:300]}\n"
+        f"- Status: queued for vfresearch desk (vf-last30 / weekly links) — no invented body\n"
+        f"- Rule: write «אין גוף» if WebSearch blocked\n"
+        f"- Idempotency: `{ikey}`\n"
+    )
+    if dry_run:
+        return {"ok": True, "dry_run": True, "action": "append research.md", "path": str(research_path)}
+    research_path.parent.mkdir(parents=True, exist_ok=True)
+    existing = research_path.read_text(encoding="utf-8") if research_path.is_file() else ""
+    if ikey not in existing:
+        with research_path.open("a", encoding="utf-8") as fh:
+            fh.write(block)
+    return {
+        "ok": True,
+        "action": "vfresearch path → packages/vfops/data/research.md",
+        "idempotency_key": ikey,
+        "canonical_state": "packages/vfops/data/research.md",
+    }
+
+
+def extract_meeting_document(text: str, kind: str) -> dict:
+    """Structured extraction — Decision Journal only when source supports a decision."""
+    lines = [ln.strip() for ln in (text or "").splitlines() if ln.strip()]
+    decision_markers = ("החלטנו", "החלטה:", "הוחלט", "decided:", "decision:")
+    action_markers = ("לעשות:", "action:", "todo:", "משימה:", "follow-up:", "פעולה:")
+    owner_markers = ("אחראי:", "owner:", "assignee:", "על:")
+    date_markers = ("תאריך:", "עד:", "due:", "deadline:")
+    facts: list[str] = []
+    decisions: list[str] = []
+    actions: list[dict] = []
+    questions: list[str] = []
+    conflicts: list[str] = []
+    for ln in lines:
+        low = ln.lower()
+        if any(m in ln or m in low for m in decision_markers):
+            decisions.append(ln)
+        elif any(m in ln or m in low for m in action_markers):
+            owner = None
+            date = None
+            for om in owner_markers:
+                if om in ln or om in low:
+                    owner = ln.split(om, 1)[-1].strip()[:80]
+            for dm in date_markers:
+                if dm in ln or dm in low:
+                    date = ln.split(dm, 1)[-1].strip()[:80]
+            actions.append({"text": ln, "owner": owner, "date": date})
+        elif ln.endswith("?") or ln.startswith("שאלה"):
+            questions.append(ln)
+        else:
+            facts.append(ln)
+    # conflicts: both "בלי מחיר" and a numeric ₪ claim
+    if ILS.search(text or "") and any("בלי מחיר" in f or "ללא מחיר" in f for f in facts + decisions):
+        conflicts.append("source mentions price figure and also 'no final price'")
+    missing: list[str] = []
+    if kind == "meeting" and not decisions and not actions:
+        missing.append("no explicit decision or action item found in source")
+    supported_decision = len(decisions) > 0
+    next_safe = (
+        "write_decision_journal"
+        if supported_decision
+        else ("create_followup_for_actions" if actions else "route_document_needs_human_clarity")
+    )
+    return {
+        "kind": kind,
+        "facts": facts[:20],
+        "decisions_in_source": decisions,
+        "action_items": actions,
+        "unresolved_questions": questions,
+        "conflicts": conflicts,
+        "missing_information": missing,
+        "supported_decision": supported_decision,
+        "next_safe_action": next_safe,
+    }
+
+
+def _dispatch_knowledge(text: str, kind: str, dry_run: bool, ikey: str) -> dict:
+    """note / meeting / document → vfmem + structured extract; Decision only if supported."""
+    query = " ".join((text or "").split()[:8]) or kind
+    mem = vfmem_context(query)
+    extraction = extract_meeting_document(text, kind) if kind in {"meeting", "document"} else None
     decision_id = None
     followup_id = None
-    inbox_ref = None
-
-    if not dry_run and not needs_input:
-        if resolved in {"meeting", "document"}:
-            decision_id = f"dec-{datetime.now(TZ).strftime('%Y%m%d')}-{uuid.uuid4().hex[:6]}"
+    if kind in {"meeting", "document"} and not dry_run:
+        assert extraction is not None
+        # reuse prior decision by ikey
+        if DECISIONS.is_file():
+            for line in DECISIONS.read_text(encoding="utf-8").splitlines():
+                try:
+                    prev = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                if prev.get("idempotency_key") == ikey:
+                    decision_id = prev.get("decision_id")
+                    break
+        if extraction["supported_decision"] and not decision_id:
+            decision_id = f"dec-{datetime.now(TZ).strftime('%Y%m%d')}-{ikey[:6]}"
             decision = {
                 "decision_id": decision_id,
                 "timestamp": now_iso(),
                 "actor": "living-studio-intake",
-                "triggering_signal": f"intake.{resolved}",
+                "triggering_signal": f"intake.{kind}",
                 "options_considered": None,
-                "chosen_action": "route_to_execution",
-                "reason": f"Universal Intake classified as {resolved}",
-                "evidence": {"text_excerpt": (text or "")[:240]},
-                "confidence": 0.6,
+                "chosen_action": extraction["decisions_in_source"][0][:200],
+                "reason": "decision phrase present in source text",
+                "evidence": {
+                    "text_excerpt": (text or "")[:240],
+                    "extraction": extraction,
+                    "vfmem": {"query": query, "invoked": True, "exitCode": mem.get("exitCode")},
+                },
+                "confidence": 0.7,
                 "human_or_agent": "agent",
                 "outcome": None,
                 "status": "active",
                 "source": "universal-intake",
+                "idempotency_key": ikey,
+                "rule": "Decision Journal only when source supports a decision; vfmem is context not fact",
             }
             append_jsonl(DECISIONS, decision)
-            followup_id = f"fu-intake-{uuid.uuid4().hex[:8]}"
-            fu = load_json(FOLLOWUPS, {"items": []}) or {"items": []}
-            # idempotent: same excerpt hash
-            excerpt_key = hashlib.sha256((text or "").encode()).hexdigest()[:12]
-            existing = [
-                x
-                for x in fu.get("items") or []
-                if (x.get("intakeExcerptKey") == excerpt_key)
-            ]
-            if not existing:
-                item = {
-                    "id": followup_id,
-                    "state": "waiting_for_preflight" if resolved == "document" else "ready_for_finished_content",
-                    "createdAt": now_iso(),
-                    "updatedAt": now_iso(),
-                    "source": "universal-intake",
-                    "intakeExcerptKey": excerpt_key,
-                    "note": f"From {resolved} intake — needs human refinement",
-                    "owner": "office",
-                }
-                fu.setdefault("items", []).append(item)
-                FOLLOWUPS.write_text(json.dumps(fu, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-            else:
-                followup_id = existing[0]["id"]
-        # always leave inbox receipt bucket
-        inbox = load_json(INBOX, {"buckets": {}}) or {"buckets": {}}
-        buckets = inbox.setdefault("buckets", {})
-        key = {
-            "inquiry": "inquiries",
-            "meeting": "meetings",
-            "document": "documents",
-            "image": "media",
-            "video": "media",
-            "production_update": "production",
-            "product_idea": "ideas",
-            "research": "research",
-            "note": "notes",
-            "client_notes": "inquiries",
-        }.get(resolved, "notes")
-        bucket = buckets.setdefault(key, [])
-        inbox_ref = intake_id
-        # idempotent by text hash
-        th = hashlib.sha256((text or "").encode()).hexdigest()[:16]
-        if not any(isinstance(x, dict) and x.get("textHash") == th for x in bucket):
-            bucket.append(
-                {
-                    "id": intake_id,
-                    "at": now_iso(),
-                    "kind": resolved,
-                    "textHash": th,
-                    "excerpt": (text or "")[:200],
-                    "route": route["skill"],
-                    "status": "routed",
-                }
+        followup_id = f"fu-intake-{ikey[:10]}"
+        fu = load_json(FOLLOWUPS, {"items": []}) or {"items": []}
+        existing = [
+            x
+            for x in fu.get("items") or []
+            if x.get("idempotency_key") == ikey or x.get("intakeExcerptKey") == ikey
+        ]
+        if not existing:
+            state = (
+                "waiting_for_preflight"
+                if kind == "document" and not extraction["supported_decision"]
+                else ("ready_for_finished_content" if extraction["action_items"] or extraction["supported_decision"] else "needs_human_clarity")
             )
-            INBOX.write_text(json.dumps(inbox, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            item = {
+                "id": followup_id,
+                "state": state,
+                "createdAt": now_iso(),
+                "updatedAt": now_iso(),
+                "source": "universal-intake",
+                "intakeExcerptKey": ikey,
+                "idempotency_key": ikey,
+                "note": f"From {kind} intake — {extraction['next_safe_action']}",
+                "extraction": {
+                    "supported_decision": extraction["supported_decision"],
+                    "action_count": len(extraction["action_items"]),
+                    "missing": extraction["missing_information"],
+                },
+                "vfmemQuery": query,
+                "owner": "office",
+                "next_action": extraction["next_safe_action"],
+                "human_refinement_required": bool(extraction["missing_information"] or extraction["conflicts"] or extraction["unresolved_questions"]),
+            }
+            fu.setdefault("items", []).append(item)
+            FOLLOWUPS.parent.mkdir(parents=True, exist_ok=True)
+            FOLLOWUPS.write_text(json.dumps(fu, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        else:
+            followup_id = existing[0]["id"]
+            decision_id = decision_id or existing[0].get("decision_id")
+    elif kind == "note" and not dry_run:
+        if "למדנו:" in (text or "") or "promote:" in (text or "").lower():
+            OWNER_MEMORY.parent.mkdir(parents=True, exist_ok=True)
+            existing = OWNER_MEMORY.read_text(encoding="utf-8") if OWNER_MEMORY.is_file() else ""
+            if ikey not in existing:
+                block = (
+                    f"\n\n## {datetime.now(TZ).date().isoformat()} · Universal Intake note\n"
+                    f"- **מושב:** משרד\n"
+                    f"- **למדנו:** {(text or '')[:240]}\n"
+                    f"- **מקור:** universal_intake + vfmem who `{query}`\n"
+                    f"- **ikey:** `{ikey}`\n"
+                )
+                with OWNER_MEMORY.open("a", encoding="utf-8") as fh:
+                    fh.write(block)
+    return {
+        "ok": True,
+        "action": (
+            "vfmem.who + structured extract + optional decision/followup"
+            if kind != "note"
+            else "vfmem.who + inbox/optional owner-memory"
+        ),
+        "vfmem": mem,
+        "extraction": extraction,
+        "decision_id": decision_id,
+        "followup_id": followup_id,
+        "decision_written": bool(decision_id) and kind in {"meeting", "document"},
+        "canonical_state": (
+            "office/control/decisions.jsonl + followups.json"
+            if decision_id
+            else ("office/control/followups.json" if followup_id else "office/control/inbox.json")
+        ),
+        "idempotency_key": ikey,
+    }
+
+
+def universal_intake(kind: str | None, text: str, dry_run: bool = False) -> dict:
+    resolved = classify_kind(text, kind)
+    route = INTAKE_ROUTES[resolved]
+    ikey = intake_idempotency_key(resolved, text)
+    prior = None if dry_run else _find_prior_intake(ikey)
+    if prior and not dry_run:
+        reused = {
+            **prior,
+            "status": "idempotent_reuse",
+            "idempotency_key": ikey,
+            "kind": resolved,
+            "route": route,
+            "skill": route["skill"],
+            "rule": "identical intake reuses canonical result — no new decision/followup/job",
+        }
+        append_jsonl(INTAKE_RECEIPTS, {**reused, "timestamp": now_iso()})
+        return reused
+
+    intake_id = f"uin-{ikey[:10]}"
+    needs_input: list[str] = []
+    if resolved == "inquiry" and not any(
+        w in (text or "").lower() for w in ("שם", "name", "whatsapp", "טלפון", "לקוח:", "client:")
+    ):
+        if "שם:" not in (text or ""):
+            needs_input.append("customer identity")
+    if resolved == "client_notes":
+        # resolved in dispatcher
+        pass
+    if resolved in {"image", "video"} and not _extract_drive_file_id(text or ""):
+        needs_input.append("Drive file id")
+    if ILS.search(text or "") and resolved in {"inquiry", "client_notes"}:
+        needs_input.append("verify any ₪ before writing as fact")
+
+    dispatch: dict[str, Any] | None = None
+    decision_id = None
+    followup_id = None
+    inbox_ref = None
+    skill = route["skill"]
+
+    if not needs_input:
+        handlers = {
+            "inquiry": lambda: _dispatch_inquiry(text, dry_run, ikey),
+            "client_notes": lambda: _dispatch_client_notes(text, dry_run, ikey),
+            "image": lambda: _dispatch_media(text, "image", dry_run, ikey),
+            "video": lambda: _dispatch_media(text, "video", dry_run, ikey),
+            "production_update": lambda: _dispatch_production(text, dry_run, ikey),
+            "product_idea": lambda: _dispatch_product_idea(text, dry_run, ikey),
+            "research": lambda: _dispatch_research(text, dry_run, ikey),
+            "note": lambda: _dispatch_knowledge(text, "note", dry_run, ikey),
+            "meeting": lambda: _dispatch_knowledge(text, "meeting", dry_run, ikey),
+            "document": lambda: _dispatch_knowledge(text, "document", dry_run, ikey),
+        }
+        if resolved in handlers:
+            dispatch = handlers[resolved]()
+        if dispatch and dispatch.get("needs_input"):
+            needs_input.extend(dispatch["needs_input"])
+        if dispatch:
+            decision_id = dispatch.get("decision_id")
+            followup_id = dispatch.get("followup_id")
+        if not needs_input and not dry_run and dispatch and not dispatch.get("needs_input"):
+            inbox_ref = _inbox_append(resolved, intake_id, text, skill, dispatch, ikey=ikey)
+
+    if needs_input:
+        status = "needs_input"
+    elif dry_run:
+        status = "dry_run"
+    elif dispatch and dispatch.get("pending_canonical"):
+        status = "pending_sheet_write"
+    elif dispatch and dispatch.get("ok"):
+        status = "dispatched"
+    else:
+        status = "routed"
 
     result = {
         "intakeId": intake_id,
+        "idempotency_key": ikey,
         "kind": resolved,
         "route": route,
+        "skill": skill,
         "needs_input": needs_input,
-        "status": "needs_input" if needs_input else ("dry_run" if dry_run else "routed"),
+        "status": status,
         "decision_id": decision_id,
         "followup_id": followup_id,
         "inbox_ref": inbox_ref,
-        "rule": "classification + routing + receipt — no universal DB",
+        "dispatch": dispatch,
+        "canonical_action": (dispatch or {}).get("action"),
+        "canonical_state": (dispatch or {}).get("canonical_state"),
+        "verification": (dispatch or {}).get("verification") or status,
+        "rule": "orchestrate existing handlers — no duplicate business logic / no universal DB",
     }
-    append_jsonl(INTAKE_RECEIPTS, {**result, "timestamp": now_iso()})
-    emit_signal(
-        "intake.universal.routed",
-        "universal-intake",
-        intake_id,
-        intake_kind=resolved,
-        route=route["skill"],
-    )
-    receipt(
-        action="universal_intake",
-        source="vf_living_studio",
-        affected=intake_id,
-        resulting_state=result["status"],
-        verification="routed" if result["status"] == "routed" else result["status"],
-    )
+    if not dry_run:
+        append_jsonl(INTAKE_RECEIPTS, {**result, "timestamp": now_iso()})
+        emit_signal(
+            "intake.universal.dispatched" if status == "dispatched" else "intake.universal.routed",
+            "universal-intake",
+            intake_id,
+            intake_kind=resolved,
+            route=skill,
+            status=status,
+            idempotency_key=ikey,
+        )
+        receipt(
+            action="universal_intake",
+            source="vf_living_studio",
+            affected=intake_id,
+            resulting_state=status,
+            verification=status,
+            evidence={"skill": skill, "dispatch_ok": bool((dispatch or {}).get("ok")), "idempotency_key": ikey},
+        )
     return result
 
 
 def invisible_work(write: bool = True) -> list[dict]:
     items: list[dict] = []
-    jobs = read_jobs()
+    jobs, jobs_state = jobs_for_projection()
     for j in jobs:
         stage = (j.get("stage") or j.get("status") or "").strip()
         nxt = (j.get("next_action") or j.get("next") or "").strip()
@@ -876,7 +1559,7 @@ def opportunity_intelligence(write: bool = True) -> list[dict]:
                 "confidence": 0.7,
                 "why_now": "bytes already in vault",
                 "effort": "low",
-                "blockers": ["Drive AUTH for scheduled intake"] if media["inbox"] else [],
+                "blockers": [],
                 "suggested_next_experiment": "Content Factory on 1 verified finished item",
                 "do_nothing_option": "Leave backlog if floor capacity is zero today",
             }
@@ -895,12 +1578,12 @@ def opportunity_intelligence(write: bool = True) -> list[dict]:
                 "do_nothing_option": "Wait if no usable finished media",
             }
         )
-    jobs = read_jobs()
+    jobs, _jobs_state = jobs_for_projection()
     if not jobs and media["total"] == 0:
         opps.append(
             {
                 "opportunity": "Seed jobs.csv / intake from next real inquiry",
-                "evidence": "jobs empty",
+                "evidence": "jobs empty" if _jobs_state == "ready" else f"jobs_state={_jobs_state}",
                 "confidence": 0.5,
                 "why_now": "World Model has no active commercial loop",
                 "effort": "low",
@@ -1014,16 +1697,30 @@ def content_universe() -> dict:
         + fu["by_state"].get("waiting_publication_verification", 0),
         "closed_live": fu["by_state"].get("closed_verified", 0),
     }
+    insights_snap = load_json(
+        ROOT / "packages" / "vfinsights" / "data" / "account-insights-latest.json", {}
+    ) or {}
+    learnings_path = ROOT / "packages" / "vfinsights" / "LEARNINGS.md"
+    learnings_head = ""
+    if learnings_path.is_file():
+        learnings_head = "\n".join(learnings_path.read_text(encoding="utf-8").splitlines()[:12])
     return {
         "generatedAt": now_iso(),
         "media": media,
         "followup_phases": phases,
         "calendar_present": bool(cal),
         "feed_audit_keys": list(feed.keys())[:20] if isinstance(feed, dict) else [],
+        "insights": {
+            "account": (insights_snap.get("parsed") or {}),
+            "source": insights_snap.get("source"),
+            "learnings_excerpt": learnings_head,
+            "rule": "verified only — missing = אין ספירה",
+        },
         "guidance": [
             "do not republish the same angle without new proof",
             "prefer finished product stories when process already covered",
             "series continuity via followups + calendar",
+            "next content recommendation only from measured LEARNINGS / verified Insights",
         ],
         "sources": [
             "packages/vfmedia/catalog.json",
@@ -1031,6 +1728,8 @@ def content_universe() -> dict:
             "packages/vfgrowth/CALENDAR.md",
             "packages/vfgrowth/data/feed-audit.json",
             "packages/vfigos/PUBLICATION-STATES.json",
+            "packages/vfinsights/data/account-insights-latest.json",
+            "packages/vfinsights/LEARNINGS.md",
         ],
     }
 

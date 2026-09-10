@@ -1,77 +1,34 @@
 # פעולות בעלים — מה Cloud Agent לא יכול לסגור לבד
 
-עודכן 2026-09-01 אחרי ריצת `discover-origin-slugs.py` + `vendor-origin-packs.sh` + בדיקת הרשאות GitHub.
+עודכן 2026-09-10 אחרי תיקון חוסמי מיזוג ב־PR #160 (בידוד commission, Sheet write-through honesty, intake idempotency).
 
-## 1. Origin vendor (6 פקים `tmp-*`)
+## מצב נוכחי — אין פעולת בעלים (Christian) נדרשת
 
-**סטטוס:** `origin auth login` לא מחובר; clone ל-`origin.cursor.com` נכשל.
+| נושא | סטטוס נוכחי |
+|------|-------------|
+| Instagram MCP (`instagram`) | **ready** — Insights verified; אין צורך ב־Professional Dashboard ידני כש־MCP חי |
+| Media Auto Intake (GHA OIDC/WIF) | **commissioned** — `intake-runner.json` · `auth.ready=true` · `activation.proven=true` · **לא** דורש `VFMEDIA_DRIVE_CREDENTIALS_JSON` |
+| Jobs **read** | Google Sheet קנוני + `jobs pull` (Drive MCP CSV או API) — cache לא = אפס הזמנות |
+| Jobs **write-through** | **PARTIAL** על Cloud: `push_write_through` → `write_pending_provider` בלי Sheets API auth/libs. Cache נשאר dirty עד כתיבה אמיתית לגיליון (Desktop `mcp-gsheets` / GOOGLE_TOKEN+spreadsheets). לא ממציאים COMPLETE |
+| Approval queue | `pending_human_approval` ישן **לא** הופך אוטומטית לכתום אצל כריסטיאן תחת standing authorization; פריט 2026-09-07 → `stale_orphan` |
+| Insights learning | MCP ingest חי; מדגם קטן → «insufficient evidence» — בלי המלצת סגנון כוזבת |
 
-**אצלך (פעם אחת):**
+**No owner action required.**
 
-```bash
-origin auth login
-# או: export CURSOR_API_KEY=...   # טוקן עם scope ל-christian-velvet/tmp-*
-./scripts/vendor-origin-packs.sh
-```
-
-**לא נפתח מפומבי ב-GitHub** — זה Cursor Origin, לא GitHub.
-
----
-
-## 2. Push ל-`velvetos-velvet-factory`
-
-**סטטוס:** קריאה OK (`ls-remote`). GitHub App יכול להראות **Read and write**, אבל הריצה עלולה עדיין `403` (`Resource not accessible by integration` / `cursor[bot]`). לרוב טוקן ישן מלפני Save.
-
-**אצלך:**
-
-1. GitHub → Settings → Applications → Cursor / GitHub App של Cloud Agents  
-2. הוסף **`nocturney/velvetos-velvet-factory`** עם **Contents: Read and write** ושמור  
-3. **פתח Cloud Agent חדש** (כדי לקבל טוקן עם write)
-
-**אימות אחרי Agent חדש:**
-
-```bash
-gh api repos/nocturney/velvetos-velvet-factory --jq .permissions.push
-# צריך: true
-```
-
-**או מקומית (PAT שלך):**
-
-```bash
-PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory
-```
-
-**לפני push — מה השתנה:**
-
-```bash
-./scripts/sync-instance-scaffold.sh
-```
+(אופציונלי לולאת כתיבה מלאה לגיליון: חיבור Sheets write על Desktop או מפתח Cloud — לא חוסם קריאה/תפעול יומי ולא משטח כריסטיאן.)
 
 ---
 
-## 3. Mobbin MCP על Cloud
+## היסטורי / לא חוסם (superseded)
 
-**סטטוס:** פלאגין על הדיסק; namespace **לא** מופיע ב-Cloud Agent הזה.
+### ~~VFMEDIA_DRIVE_CREDENTIALS_JSON~~ — SUPERSEDED 2026-09-10
 
-**אצלך:** Dashboard → Cloud Agents → Environment → Integrations & MCP → הפעל Mobbin.
+~~בעלים חייב להוסיף JSON credentials~~ → **שגוי.** OIDC/WIF על GHA.
 
-**עד אז:** `vfbriefux` templates / Superdesign (`tools.mobbin.failover`).
+### ~~Instagram Publish MCP חסר~~ — SUPERSEDED 2026-09-09/10
 
----
+Namespace `instagram` מחובר. ראו `packages/vfigos/CAPABILITIES.json`.
 
-## 4. Instagram Publish MCP
+### Origin vendor / Push instance / Mobbin — אופציונלי
 
-**סטטוס:** אין namespace — לא קיים ב-Cursor MCP catalog.
-
-**משרד:** `packages/vfigos/SEND.md` — Canva + Drive + Gmail; `#ממתין-ל-כלי-IG` עד שיופיע כלי Publish.
-
----
-
-## 5. מה כבר תוקן בקוד (2026-09-01)
-
-| נושא | סטטוס |
-|------|--------|
-| 3D AI Studio על Cloud | **ready** — namespace `3DAIStudio` מאומת |
-| 11 פקים בלי Origin slug | **hq-native** — העץ חי ב-Core, לא מחכים ל-tmp |
-| ריפוז פומביים | קריאה מ-Cloud Agent |
-| `.cursor/environment.json` (Core) | `repositoryDependencies` כולל instance repo |
+לא חוסמים תפעול יומי של Core HQ.

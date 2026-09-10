@@ -1,6 +1,6 @@
 {
   "name": "velvetos-living-studio-registry",
-  "updatedAt": "2026-09-09",
+  "updatedAt": "2026-09-10",
   "rule": "Skills are routers over existing packs and SoTs. Do not create a second Control Plane, media catalog, decision journal, or publishing provider.",
   "controlPlane": "office/control-plane.json",
   "cli": "python3 scripts/vf_living_studio.py",
@@ -10,47 +10,107 @@
     {
       "id": "client-intake-brief",
       "title": "Client Intake & Brief",
-      "status": "EXISTING_PARTIAL",
-      "route": ["vfconvert", "vf-inquiry-chain"],
-      "packs": ["vfconvert", "vfsales"],
-      "reads": ["office/clients/", "office/control/inbox.json"],
-      "writes": ["office/ledger/live/jobs.csv", "office/control/inbox.json", "office/control/decisions.jsonl"],
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "vfconvert",
+        "vf-inquiry-chain",
+        "vf_living_studio.py intake --kind inquiry"
+      ],
+      "packs": [
+        "vfconvert",
+        "vfsales"
+      ],
+      "reads": [
+        "office/clients/",
+        "office/control/inbox.json"
+      ],
+      "writes": [
+        "office/ledger/live/jobs.csv",
+        "office/control/inbox.json",
+        "office/control/decisions.jsonl"
+      ],
       "risk": "yellow",
       "approval": "orange when new external reply",
       "success": "inquiry classified + job or followup receipt",
-      "needs_input": ["customer name", "requested product", "pickup constraint"]
+      "needs_input": [
+        "customer name",
+        "requested product",
+        "pickup constraint"
+      ],
+      "note": "pending_sheet_write honesty: when Sheets write auth is absent, intake may return pending_sheet_write / dirty local cache — never claim Sheet updated"
     },
     {
       "id": "order-state-manager",
       "title": "Order State Manager",
       "status": "EXISTING_PARTIAL",
-      "route": ["vf_office.py jobs", "vfsales/ORDERS.md"],
-      "packs": ["vfsales", "vfconvert"],
-      "reads": ["office/ledger/live/jobs.csv", "packages/vfsales/data/orders.json"],
-      "writes": ["office/ledger/live/jobs.csv"],
+      "route": [
+        "vf_office.py jobs",
+        "vfsales/ORDERS.md"
+      ],
+      "packs": [
+        "vfsales",
+        "vfconvert"
+      ],
+      "reads": [
+        "office/ledger/bindings.json → Sheet cache",
+        "packages/vfsales/data/orders.json"
+      ],
+      "writes": [
+        "office/ledger/live/jobs.csv cache + Sheet via push"
+      ],
       "risk": "green",
       "approval": "red for price change",
-      "success": "canonical stage advanced without invented ₪"
+      "success": "canonical stage advanced without invented ₪",
+      "note": "Sheet write-through requires Sheets API auth (write_pending_provider on Cloud); read path COMPLETE via pull"
     },
     {
       "id": "order-project-coordinator",
       "title": "Order & Project Coordinator",
       "status": "EXISTING_EQUIVALENT",
-      "route": ["vf-run", "vfe2b/crews/run.md", "followups"],
-      "packs": ["vfe2b", "vfops", "vfsales"],
-      "reads": ["office/control/followups.json", "office/ledger/live/jobs.csv"],
-      "writes": ["office/control/followups.json", "packages/vfharness/state/"],
+      "route": [
+        "vf-run",
+        "vfe2b/crews/run.md",
+        "followups"
+      ],
+      "packs": [
+        "vfe2b",
+        "vfops",
+        "vfsales"
+      ],
+      "reads": [
+        "office/control/followups.json",
+        "office/ledger/live/jobs.csv"
+      ],
+      "writes": [
+        "office/control/followups.json",
+        "packages/vfharness/state/"
+      ],
       "risk": "yellow",
       "success": "one job folder ends in worker_done|escalation|decision_gate"
     },
     {
       "id": "production-planner",
       "title": "Production Planner",
-      "status": "EXISTING_PARTIAL",
-      "route": ["vfprod.py route", "vfprod/ROUTING.md"],
-      "packs": ["vfprod", "vlicense", "vfsku"],
-      "reads": ["packages/vfprod/FLEET.json", "packages/vfprod/hq/cards/"],
-      "writes": ["packages/vfprod/hq/cards/", "packages/vfprod/data/print-events.jsonl"],
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "vfprod.py route",
+        "vfprod/ROUTING.md",
+        "intake --kind production_update"
+      ],
+      "packs": [
+        "vfprod",
+        "vlicense",
+        "vfsku"
+      ],
+      "reads": [
+        "packages/vfprod/FLEET.json",
+        "packages/vfprod/hq/cards/"
+      ],
+      "writes": [
+        "packages/vfprod/hq/cards/",
+        "packages/vfprod/data/print-events.jsonl",
+        "office/control/followups.json"
+      ],
       "risk": "orange",
       "approval": "HQ never Prints",
       "success": "bed recommendation + print.done path without G-code guessing"
@@ -59,33 +119,68 @@
       "id": "quote-pricing-guard",
       "title": "Quote & Pricing Guard",
       "status": "EXISTING_COMPLETE",
-      "route": ["vfcost.py material", "vf_quote_ladder.py"],
-      "packs": ["vfcost", "vfsales"],
-      "reads": ["packages/vfcost/", "packages/vfsales/QUOTE.md"],
-      "writes": ["quote drafts with X ₪ until verified"],
+      "route": [
+        "vfcost.py material",
+        "vf_quote_ladder.py"
+      ],
+      "packs": [
+        "vfcost",
+        "vfsales"
+      ],
+      "reads": [
+        "packages/vfcost/",
+        "packages/vfsales/QUOTE.md"
+      ],
+      "writes": [
+        "quote drafts with X ₪ until verified"
+      ],
       "risk": "red for sale ₪ change",
       "success": "material cost computed or refused; sale ₪ never invented"
     },
     {
       "id": "media-ingest-operator",
       "title": "Media Ingest Operator",
-      "status": "EXISTING_PARTIAL",
-      "route": ["vfmedia.py intake", "vfmedia/INTAKE.md"],
-      "packs": ["vfmedia"],
-      "reads": ["packages/vfmedia/catalog.json", "docs/MEDIA-VAULT.md"],
-      "writes": ["packages/vfmedia/catalog.json", "packages/vfmedia/data/intake-events.jsonl"],
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "vfmedia.py intake",
+        "vfmedia/INTAKE.md",
+        "intake --kind image|video"
+      ],
+      "packs": [
+        "vfmedia"
+      ],
+      "reads": [
+        "packages/vfmedia/catalog.json",
+        "docs/MEDIA-VAULT.md",
+        "packages/vfmedia/state/intake-runner.json"
+      ],
+      "writes": [
+        "packages/vfmedia/catalog.json",
+        "packages/vfmedia/data/intake-events.jsonl"
+      ],
       "risk": "yellow",
-      "blockedExternal": "VFMEDIA_DRIVE_CREDENTIALS_JSON for scheduled google provider",
+      "blockedExternal": null,
+      "note": "GHA OIDC commissioned 2026-09-10 — auth.ready=true; no VFMEDIA_DRIVE_CREDENTIALS_JSON owner action",
       "success": "real bytes verified → fingerprint → catalog → source move → receipt"
     },
     {
       "id": "drive-librarian",
       "title": "Drive Librarian",
-      "status": "EXISTING_PARTIAL",
-      "route": ["vfmedia", "Drive MCP search/create"],
-      "packs": ["vfmedia"],
-      "reads": ["packages/vfmedia/FOLDERS.json", "docs/MEDIA-VAULT.md"],
-      "writes": ["packages/vfmedia/catalog.json only"],
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "vfmedia",
+        "Drive MCP search/create"
+      ],
+      "packs": [
+        "vfmedia"
+      ],
+      "reads": [
+        "packages/vfmedia/FOLDERS.json",
+        "docs/MEDIA-VAULT.md"
+      ],
+      "writes": [
+        "packages/vfmedia/catalog.json only"
+      ],
       "risk": "green",
       "success": "file findable by job/SKU without share-permission changes"
     },
@@ -93,10 +188,20 @@
       "id": "finished-product-followup",
       "title": "Finished Product Follow-up",
       "status": "EXISTING_COMPLETE",
-      "route": ["vf_control_plane.py followups", "PRODUCTION-CONTENT.md"],
-      "packs": ["vfgrowth", "vfprod"],
-      "reads": ["office/control/followups.json"],
-      "writes": ["office/control/followups.json"],
+      "route": [
+        "vf_control_plane.py followups",
+        "PRODUCTION-CONTENT.md"
+      ],
+      "packs": [
+        "vfgrowth",
+        "vfprod"
+      ],
+      "reads": [
+        "office/control/followups.json"
+      ],
+      "writes": [
+        "office/control/followups.json"
+      ],
       "risk": "yellow",
       "success": "WIP→finished only closes on live_verified"
     },
@@ -104,10 +209,23 @@
       "id": "daily-ops-commander",
       "title": "Daily Ops Commander",
       "status": "EXISTING_COMPLETE",
-      "route": ["vf-morning-brief", "vf_control_plane.py", "vfops_loop.py"],
-      "packs": ["vfops", "vfbriefux"],
-      "reads": ["packages/vfops/LOOP.json", "office/control/HANDOFF.json"],
-      "writes": ["brief artifacts", "office/control/HANDOFF.json"],
+      "route": [
+        "vf-morning-brief",
+        "vf_control_plane.py",
+        "vfops_loop.py"
+      ],
+      "packs": [
+        "vfops",
+        "vfbriefux"
+      ],
+      "reads": [
+        "packages/vfops/LOOP.json",
+        "office/control/HANDOFF.json"
+      ],
+      "writes": [
+        "brief artifacts",
+        "office/control/HANDOFF.json"
+      ],
       "risk": "yellow",
       "pausedNote": "Do not send morning brief if owner paused routines",
       "success": "07:00 pack consumes Studio Pulse without inventing figures"
@@ -116,10 +234,29 @@
       "id": "content-factory",
       "title": "Content Factory Operator",
       "status": "EXISTING_COMPLETE",
-      "route": ["vf_organic_growth.py", "vf-content-sprint", "vfcanva", "vfigos"],
-      "packs": ["vfgrowth", "vfcopy", "vfcanva", "vfom", "vfigos", "vfinsights"],
-      "reads": ["packages/vfgrowth/data/approval-queue.json", "packages/vfmedia/catalog.json"],
-      "writes": ["approval-queue", "calendar plan", "publication request"],
+      "route": [
+        "vf_organic_growth.py",
+        "vf-content-sprint",
+        "vfcanva",
+        "vfigos"
+      ],
+      "packs": [
+        "vfgrowth",
+        "vfcopy",
+        "vfcanva",
+        "vfom",
+        "vfigos",
+        "vfinsights"
+      ],
+      "reads": [
+        "packages/vfgrowth/data/approval-queue.json",
+        "packages/vfmedia/catalog.json"
+      ],
+      "writes": [
+        "approval-queue",
+        "calendar plan",
+        "publication request"
+      ],
       "risk": "orange until approved_for_manual_posting",
       "success": "media→angle→copy→QA→approval→publish request→live verify→learning"
     },
@@ -127,10 +264,21 @@
       "id": "brand-voice-guardian",
       "title": "Brand Voice Guardian",
       "status": "EXISTING_COMPLETE",
-      "route": ["vf-hebrew-copy", "velvet-hebrew-copy", "VOICE.md"],
-      "packs": ["vfcopy"],
-      "reads": ["packages/vfcopy/VOICE.md", "constitution/PUBLIC_CTA.md"],
-      "writes": ["copy drafts only"],
+      "route": [
+        "vf-hebrew-copy",
+        "velvet-hebrew-copy",
+        "VOICE.md"
+      ],
+      "packs": [
+        "vfcopy"
+      ],
+      "reads": [
+        "packages/vfcopy/VOICE.md",
+        "constitution/PUBLIC_CTA.md"
+      ],
+      "writes": [
+        "copy drafts only"
+      ],
       "risk": "green",
       "success": "Hebrew naturalness + anti-AI QA + fact/price protection"
     },
@@ -138,54 +286,115 @@
       "id": "content-qa",
       "title": "Content QA",
       "status": "EXISTING_COMPLETE",
-      "route": ["PREFLIGHT.md", "EDIT-GATE.md", "CONTENT-RUBRIC.md"],
-      "packs": ["vfgrowth", "vfcopy"],
-      "reads": ["packages/vfgrowth/preflight/"],
-      "writes": ["preflight artifacts"],
+      "route": [
+        "PREFLIGHT.md",
+        "EDIT-GATE.md",
+        "CONTENT-RUBRIC.md"
+      ],
+      "packs": [
+        "vfgrowth",
+        "vfcopy"
+      ],
+      "reads": [
+        "packages/vfgrowth/preflight/"
+      ],
+      "writes": [
+        "preflight artifacts"
+      ],
       "risk": "orange on fail-closed",
       "success": "fail-closed blocks schedule; no owner shame metrics"
     },
     {
       "id": "performance-analyst",
       "title": "Performance Analyst",
-      "status": "EXISTING_PARTIAL",
-      "route": ["vfinsights", "instagram get_*_insights"],
-      "packs": ["vfinsights", "vfigos"],
-      "reads": ["packages/vfigos/CAPABILITIES.json", "verified Insights only"],
-      "writes": ["packages/vfinsights/ data when verified"],
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "vfinsights",
+        "vf_insights_ingest.py",
+        "instagram get_*_insights"
+      ],
+      "packs": [
+        "vfinsights",
+        "vfigos"
+      ],
+      "reads": [
+        "packages/vfigos/CAPABILITIES.json",
+        "verified Insights only"
+      ],
+      "writes": [
+        "packages/vfinsights/data when verified"
+      ],
       "risk": "yellow",
       "success": "verified metrics or אין ספירה — never invent"
     },
     {
       "id": "meeting-to-execution",
       "title": "Meeting-to-Execution",
-      "status": "EXISTING_PARTIAL",
-      "route": ["vf_living_studio.py intake --kind meeting"],
-      "packs": ["vfops", "vfmem"],
-      "reads": ["meeting notes/transcript"],
-      "writes": ["office/control/decisions.jsonl", "office/control/followups.json"],
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "vf_living_studio.py intake --kind meeting",
+        "vfmem.py who"
+      ],
+      "packs": [
+        "vfops",
+        "vfmem"
+      ],
+      "reads": [
+        "meeting notes/transcript",
+        "vfmem context"
+      ],
+      "writes": [
+        "office/control/decisions.jsonl",
+        "office/control/followups.json"
+      ],
       "risk": "yellow",
-      "success": "decisions+tasks in canonical SoTs; deadline only if explicit"
+      "success": "decisions+tasks in canonical SoTs; deadline only if explicit",
+      "note": "structured extract gates Decision Journal — no decision phrase ⇒ no route_to_execution"
     },
     {
       "id": "document-to-decision",
       "title": "Document-to-Decision",
-      "status": "EXISTING_PARTIAL",
-      "route": ["vf_living_studio.py intake --kind document"],
-      "packs": ["vfops", "vfmem"],
-      "reads": ["Drive doc / PDF / text"],
-      "writes": ["office/control/decisions.jsonl", "office/control/inbox.json"],
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "vf_living_studio.py intake --kind document",
+        "vfmem.py who"
+      ],
+      "packs": [
+        "vfops",
+        "vfmem"
+      ],
+      "reads": [
+        "Drive doc / PDF / text",
+        "vfmem context"
+      ],
+      "writes": [
+        "office/control/decisions.jsonl",
+        "office/control/inbox.json"
+      ],
       "risk": "yellow",
       "success": "facts+conflicts+questions; no hallucinated action items"
     },
     {
       "id": "knowledge-base-curator",
       "title": "Knowledge Base Curator",
-      "status": "EXISTING_PARTIAL",
-      "route": ["vfmem.py", "memory-hygiene", "owner-memory.md"],
-      "packs": ["vfmem", "vfops"],
-      "reads": ["packages/vfops/data/owner-memory.md", "vfgraft/MAP.md"],
-      "writes": ["owner-memory.md via MEMORY-UPDATE rules"],
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "vfmem.py",
+        "memory-hygiene",
+        "owner-memory.md",
+        "intake --kind note"
+      ],
+      "packs": [
+        "vfmem",
+        "vfops"
+      ],
+      "reads": [
+        "packages/vfops/data/owner-memory.md",
+        "vfgraft/MAP.md"
+      ],
+      "writes": [
+        "owner-memory.md via MEMORY-UPDATE rules"
+      ],
       "risk": "green",
       "success": "semantic retrieval used before skill action; no generated-text-as-fact"
     },
@@ -193,32 +402,67 @@
       "id": "research-to-brief",
       "title": "Research-to-Brief",
       "status": "EXISTING_COMPLETE",
-      "route": ["vfresearch", "vf-last30", "vf-weekly-links", "vf-best-skills"],
-      "packs": ["vfresearch", "vfops"],
-      "reads": ["packages/vfresearch/", "WebSearch"],
-      "writes": ["packages/vfops/data/research.md"],
+      "route": [
+        "vfresearch",
+        "vf-last30",
+        "vf-weekly-links",
+        "vf-best-skills",
+        "intake --kind research"
+      ],
+      "packs": [
+        "vfresearch",
+        "vfops"
+      ],
+      "reads": [
+        "packages/vfresearch/",
+        "WebSearch"
+      ],
+      "writes": [
+        "packages/vfops/data/research.md"
+      ],
       "risk": "yellow",
       "success": "research feeds brief without invented bodies"
     },
     {
       "id": "product-spec",
       "title": "Product Spec",
-      "status": "EXISTING_PARTIAL",
-      "route": ["vfsku/LAB.md", "vf_living_studio.py forge"],
-      "packs": ["vfsku", "vfprod"],
-      "reads": ["packages/vfsku/SHELF.json"],
-      "writes": ["lab/spec artifacts under office/learning or sku cards"],
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "vfsku/LAB.md",
+        "vf_living_studio.py forge",
+        "intake --kind product_idea"
+      ],
+      "packs": [
+        "vfsku",
+        "vfprod"
+      ],
+      "reads": [
+        "packages/vfsku/SHELF.json"
+      ],
+      "writes": [
+        "lab/spec artifacts under office/learning or sku cards"
+      ],
       "risk": "yellow",
       "success": "problem/user/requirements/constraints/acceptance/unknowns"
     },
     {
       "id": "implementation-planner",
       "title": "Implementation Planner",
-      "status": "EXISTING_PARTIAL",
-      "route": ["vfharness checkpoints", "writing-plans.md"],
-      "packs": ["vfharness"],
-      "reads": ["packages/vfharness/state/"],
-      "writes": ["packages/vfharness/state/<task>/"],
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "vfharness checkpoints",
+        "writing-plans.md",
+        "executing-plans.md"
+      ],
+      "packs": [
+        "vfharness"
+      ],
+      "reads": [
+        "packages/vfharness/state/"
+      ],
+      "writes": [
+        "packages/vfharness/state/<task>/"
+      ],
       "risk": "green",
       "success": "smallest safe steps + affected SoTs + tests + rollback"
     },
@@ -226,10 +470,22 @@
       "id": "qa-release-gate",
       "title": "QA Release Gate",
       "status": "EXISTING_EQUIVALENT",
-      "route": ["check-all.py", "PREFLIGHT", "vlicense"],
-      "packs": ["vfharness", "vfgrowth"],
-      "reads": ["sensor suite", "preflight"],
-      "writes": ["gate receipts"],
+      "route": [
+        "check-all.py",
+        "PREFLIGHT",
+        "vlicense"
+      ],
+      "packs": [
+        "vfharness",
+        "vfgrowth"
+      ],
+      "reads": [
+        "sensor suite",
+        "preflight"
+      ],
+      "writes": [
+        "gate receipts"
+      ],
       "risk": "orange",
       "success": "separates code_green / integration_green / live_proven / blocked_external"
     },
@@ -237,10 +493,19 @@
       "id": "system-health-watchdog",
       "title": "System Health Watchdog",
       "status": "EXISTING_COMPLETE",
-      "route": ["vf_control_plane.py watchdog"],
-      "packs": ["vfops", "vfharness"],
-      "reads": ["all control-plane SoTs"],
-      "writes": ["packages/vfops/hq/watchdog-latest.json"],
+      "route": [
+        "vf_control_plane.py watchdog"
+      ],
+      "packs": [
+        "vfops",
+        "vfharness"
+      ],
+      "reads": [
+        "all control-plane SoTs"
+      ],
+      "writes": [
+        "packages/vfops/hq/watchdog-latest.json"
+      ],
       "risk": "green",
       "success": "stale/dead-letter/auth/orphan followups surfaced without owner spam"
     },
@@ -248,10 +513,22 @@
       "id": "external-agent-handoff",
       "title": "External Agent Handoff",
       "status": "EXISTING_COMPLETE",
-      "route": ["docs/FAILOVER.md", "HANDOFF.json", "simulate failover"],
-      "packs": ["vfharness", "vfops"],
-      "reads": ["office/control/HANDOFF.json", "docs/FAILOVER.md"],
-      "writes": ["office/control/HANDOFF.json"],
+      "route": [
+        "docs/FAILOVER.md",
+        "HANDOFF.json",
+        "simulate failover"
+      ],
+      "packs": [
+        "vfharness",
+        "vfops"
+      ],
+      "reads": [
+        "office/control/HANDOFF.json",
+        "docs/FAILOVER.md"
+      ],
+      "writes": [
+        "office/control/HANDOFF.json"
+      ],
       "risk": "yellow",
       "success": "manager B continues without rebuilding; receipt on exit"
     }
@@ -260,18 +537,18 @@
     {
       "id": "velvet-world-model",
       "title": "Velvet World Model",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_COMPLETE",
       "kind": "projection",
       "cli": "world-model",
-      "note": "Read-only projection over Control Plane SoTs — never a competing DB"
+      "note": "Read-only projection over Control Plane SoTs including Sheet-backed jobs cache — never a competing DB"
     },
     {
       "id": "universal-intake",
       "title": "Universal Intake / Chaos-to-System",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_COMPLETE",
       "kind": "router",
       "cli": "intake",
-      "note": "Classification + routing + receipt into existing SoTs"
+      "note": "Classification + dispatch into existing handlers + receipt — no duplicate business logic"
     },
     {
       "id": "studio-pulse",
@@ -327,7 +604,11 @@
       "status": "EXISTING_PARTIAL",
       "kind": "qa",
       "cli": "commercial-qa",
-      "modes": ["devil", "quote-confidence", "proposal-storyteller"]
+      "modes": [
+        "devil",
+        "quote-confidence",
+        "proposal-storyteller"
+      ]
     },
     {
       "id": "opportunity-intelligence",
@@ -355,9 +636,10 @@
     {
       "id": "content-universe",
       "title": "Content Universe Mapper",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_COMPLETE",
       "kind": "projection",
-      "cli": "content-universe"
+      "cli": "content-universe",
+      "note": "Projection over media/followups/calendar + verified Insights/LEARNINGS"
     },
     {
       "id": "decision-journal",
@@ -370,7 +652,7 @@
     {
       "id": "operational-receipts",
       "title": "Operational Receipts",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_COMPLETE",
       "kind": "evidence",
       "path": "packages/vfharness/templates/run-receipt.md"
     }

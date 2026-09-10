@@ -40,8 +40,8 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-07",
-  "dataDate": "2026-09-07",
+  "lastPass": "2026-09-10",
+  "dataDate": "2026-09-09",
   "embedded": [
     {
       "id": "grill-me",
@@ -144,18 +144,40 @@
       "path": "packages/vfsales/scripts/vf_quote_ladder.py",
       "firstEmbedded": "2026-09-07",
       "note": "Graceful escalation ladder for partial quotes; never invents ₪"
+    },
+    {
+      "id": "writing-plans",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/writing-plans.md",
+      "firstEmbedded": "2026-09-09",
+      "registered": "2026-09-10",
+      "note": "File already on main; registered in BEST-SKILLS on gap-closure pass (reconcile #148/#149)"
+    },
+    {
+      "id": "executing-plans",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/executing-plans.md",
+      "firstEmbedded": "2026-09-10",
+      "note": "Reconciled from PR #148 — one task + verify; stop on blocker; no second runtime"
+    },
+    {
+      "id": "domain-glossary",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/domain-glossary.md",
+      "firstEmbedded": "2026-09-10",
+      "note": "Reconciled from PR #149 — glossary discipline for TEAM/pipeline/owner-memory"
     }
   ],
   "watchlist": [
     {
       "id": "obra-superpowers",
       "url": "https://github.com/obra/superpowers",
-      "note": "Partial+: verification + skill-first + brainstorm-gate + systematic-debugging. Still watch writing-plans / TDD / git-worktrees."
+      "note": "Partial+: verification + skill-first + brainstorm-gate + systematic-debugging + writing-plans + executing-plans. Still watch TDD / git-worktrees."
     },
     {
       "id": "mattpocock-skills",
       "url": "https://github.com/mattpocock/skills",
-      "note": "grill + handoff + teach + triage embedded 2026-09-07. Watch improve-codebase-architecture / domain-modeling / codebase-design."
+      "note": "grill + handoff + teach + triage + domain-glossary embedded 2026-09-10. Watch improve-codebase-architecture / codebase-design."
     },
     {
       "id": "anthropics-skills",

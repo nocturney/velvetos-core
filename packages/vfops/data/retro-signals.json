@@ -1,16 +1,9 @@
 {
-  "generatedAt": "2026-09-09T11:58:14+03:00",
+  "generatedAt": "2026-09-10T12:53:31+03:00",
   "timezone": "Asia/Jerusalem",
   "rule": "Operational signals for office brief only. No invented ₪/Insights. No owner shame.",
   "catalogEvent": "retro.anomaly",
   "signals": [
-    {
-      "kind": "ingest_bottleneck",
-      "evidence": "owner-memory/2026-09-03",
-      "briefSlot": "05",
-      "detail": "- **מושב:** סטודיו + ייצור",
-      "event": "retro.anomaly"
-    },
     {
       "kind": "sensor_repeat_fail",
       "evidence": "owner-memory/2026-09-06",
@@ -86,6 +79,13 @@
       "evidence": "DAILY-RETRO.md#2026-09-07",
       "briefSlot": "05",
       "detail": "מה לא: אין reach מאומת ב־CSV — לא ממלאים.",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/access-blockers-2026-09-01.json",
+      "briefSlot": "01",
+      "detail": "task=access-blockers-2026-09-01 component_state=None",
       "event": "retro.anomaly"
     }
   ],

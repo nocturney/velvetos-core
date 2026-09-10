@@ -417,6 +417,18 @@
         "result"
       ],
       "note": "Velvet Lab experiment record. No invented metrics."
+    },
+    {
+      "id": "intake.universal.dispatched",
+      "layer": "office",
+      "description": "Universal Intake classified and dispatched into an existing handler with receipt",
+      "emittedBy": [
+        "scripts/vf_living_studio.py"
+      ],
+      "consumers": [
+        "office/control",
+        "living-studio"
+      ]
     }
   ]
 }

@@ -16,7 +16,7 @@
 
 ## אחרי פרסום
 
-1. מזינים רק נתוני Instagram Professional Dashboard ל-`data/posts.csv`.
+1. מזינים רק נתוני Instagram MCP מאומתים (`scripts/vf_insights_ingest.py`) או הדבקת בעלים ל-`data/posts.csv`.
 2. מריצים `vf_insights_loop.py`; אם חסר נתון, הוא נשאר חסר.
 3. לכל פוסט: משפט ״מה קרה / למה ייתכן / מה ננסה בפעם הבאה״.
 4. תוצאה חלשה אינה אשמה ולא עולה לבעלים; היא מייצרת בדיקת שינוי אחד בפוסט הבא.
@@ -35,7 +35,7 @@
 
 | שלב | נתיב |
 |---|---|
-| מדידה | `data/posts.csv` ← הדבקת בעלים / Professional Dashboard |
+| מדידה | `data/posts.csv` ← Instagram MCP / `vf_insights_ingest.py` (גיבוי: הדבקת בעלים) |
 | לולאה | `python3 packages/vfinsights/scripts/vf_insights_loop.py --data packages/vfinsights/data/posts.csv` |
 | למידה | `LEARNINGS.md` (רק מספרים מה-CSV) |
 | החלטת תוכן | בריף חריץ 06 + מועמד הבא ב־`HANDOFF` / `CALENDAR` לפי hypothesis מתוכנית זו |

@@ -1,0 +1,40 @@
+{
+  "at": "2026-09-10T09:08:33Z",
+  "source": "vf_insights_ingest",
+  "account": {
+    "ok": true,
+    "period": "day",
+    "metrics": {
+      "reach": 0,
+      "profile_views": 0,
+      "total_interactions": 0
+    },
+    "unknown": [
+      "follower_count"
+    ],
+    "graph_compat": "v21+",
+    "raw_ok": true,
+    "rule": "unknown ≠ 0; only verified scalars stored"
+  },
+  "media": {
+    "row": {
+      "post_id": "DcqkjOLlYVX",
+      "date": "2026-08-30",
+      "type": "reel",
+      "reach": "187",
+      "likes": "0",
+      "saves": "0",
+      "comments": "0",
+      "caption_style": "",
+      "views": "233",
+      "shares": "0",
+      "source": "instagram_mcp"
+    },
+    "ok": true
+  },
+  "learnings": {
+    "ok": true,
+    "stdout": "wrote /workspace/packages/vfinsights/LEARNINGS.md\n{\n  \"n_total\": 1,\n  \"n_measured\": 1,\n  \"n_unmeasured\": 0,\n  \"unmeasured_ids\": []\n}\n",
+    "stderr": ""
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "ingestedAt": "2026-09-10T09:08:33Z",
+  "source": "instagram_mcp.get_account_insights",
+  "parsed": {
+    "ok": true,
+    "period": "day",
+    "metrics": {
+      "reach": 0,
+      "profile_views": 0,
+      "total_interactions": 0
+    },
+    "unknown": [
+      "follower_count"
+    ],
+    "graph_compat": "v21+",
+    "raw_ok": true,
+    "rule": "unknown ≠ 0; only verified scalars stored"
+  },
+  "raw_period": "day",
+  "raw_ok": true,
+  "rule": "verified only; unknown metrics listed — never invent"
+}
