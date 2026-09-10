@@ -30,6 +30,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -145,6 +146,43 @@ def api_request(token: str, method: str, url: str, payload: dict[str, Any] | Non
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")
         raise RuntimeError(f"GitHub API {exc.code}: {body[:1000]}") from exc
+
+
+def verify_public_url(
+    url: str,
+    expected_sha256: str,
+    expected_content_type: str,
+    expected_size: int,
+    attempts: int = 4,
+) -> dict[str, Any]:
+    last_error = "unknown"
+    for attempt in range(1, attempts + 1):
+        req = urllib.request.Request(url, method="GET", headers={"User-Agent": "VelvetOS-Publish-Bridge/1"})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                body = resp.read()
+                content_type = (resp.headers.get_content_type() or "").lower()
+                digest = hashlib.sha256(body).hexdigest()
+                size = len(body)
+                allowed_types = {expected_content_type.lower(), "application/octet-stream"}
+                if digest != expected_sha256:
+                    raise RuntimeError(f"public SHA-256 mismatch {digest} != {expected_sha256}")
+                if size != expected_size:
+                    raise RuntimeError(f"public size mismatch {size} != {expected_size}")
+                if content_type not in allowed_types:
+                    raise RuntimeError(f"unexpected public content-type {content_type!r}")
+                return {
+                    "ok": True,
+                    "attempt": attempt,
+                    "sha256": digest,
+                    "sizeBytes": size,
+                    "contentType": content_type,
+                }
+        except Exception as exc:
+            last_error = str(exc)
+            if attempt < attempts:
+                time.sleep(min(2 ** (attempt - 1), 4))
+    raise RuntimeError(f"public fetch verification failed after {attempts} attempts: {last_error}")
 
 
 def stage_to_github(asset: Path, metadata: dict[str, Any], cfg: dict[str, Any]) -> tuple[str, str]:
@@ -271,11 +309,17 @@ def cmd_prepare(args: argparse.Namespace, stage: bool) -> int:
             },
             "publicReleaseApproved": bool(args.public_release_approved),
             "target": {"path": metadata["path"], "publicUrl": metadata["publicUrl"]},
-            "rule": "staged != published; publish_* receipt + live verification are still required",
+            "rule": "staged/fetch_verified != published; publish_* receipt + live verification are still required",
         }
         if stage:
             public_url, commit = stage_to_github(normalized, metadata, cfg)
-            result["target"].update({"publicUrl": public_url, "commit": commit})
+            fetch_verify = verify_public_url(
+                public_url,
+                metadata["sha256"],
+                content_type,
+                int(details["sizeBytes"]),
+            )
+            result["target"].update({"publicUrl": public_url, "commit": commit, "fetchVerified": fetch_verify})
         print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 
