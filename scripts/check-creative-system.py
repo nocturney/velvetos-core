@@ -11,9 +11,9 @@ VFOM = ROOT / "packages" / "vfom"
 INSTANCE = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
 CONTENT_SPRINT = ROOT / ".cursor" / "skills" / "vf-content-sprint" / "SKILL.md"
 SPECIALISTS = {
-    "creativeDirector": ROOT / ".cursor" / "skills" / "vf-creative-director" / "SKILL.md",
-    "brandGuardian": ROOT / ".cursor" / "skills" / "vf-brand-guardian" / "SKILL.md",
-    "mediaLibrarian": ROOT / ".cursor" / "skills" / "vf-media-librarian" / "SKILL.md",
+    "creativeDirector": ROOT / ".cursor" / "skills" / "velvet-creative-director" / "SKILL.md",
+    "brandGuardian": ROOT / ".cursor" / "skills" / "velvet-brand-guardian" / "SKILL.md",
+    "mediaLibrarian": ROOT / ".cursor" / "skills" / "velvet-media-librarian" / "SKILL.md",
 }
 
 
@@ -66,7 +66,7 @@ def main() -> None:
     must_contain(VFOM / "MOTION-PRESETS.md", ("VELVET_HARD_CUT", "VELVET_PROOF_FREEZE", "VELVET_STRESS_SLOWMO"))
     must_contain(VFOM / "FORMAT-GENOMES.md", ("PROOF_UNDER_PRESSURE", "FAIL_FIX_PROVE", "PROBLEM_TO_PART"))
 
-    must_contain(CONTENT_SPRINT, ("Creative Manifest", "vf-creative-director", "vf-brand-guardian", "vf-media-librarian"))
+    must_contain(CONTENT_SPRINT, ("Creative Manifest", "velvet-creative-director", "velvet-brand-guardian", "velvet-media-librarian"))
     must_contain(SPECIALISTS["creativeDirector"], ("first-frame", "shotRequest", "EDL", "Creative Manifest"))
     must_contain(SPECIALISTS["brandGuardian"], ("Brand", "Originality", "feed", "Creative Manifest"))
     must_contain(SPECIALISTS["mediaLibrarian"], ("Media Vault", "Asset Truth", "Claim Truth", "Creative Manifest"))
@@ -92,9 +92,9 @@ def main() -> None:
     specialists = autonomy.get("specialists") or {}
     foundry_specialists = foundry.get("specialists") or {}
     expected_specialists = {
-        "creativeDirector": ".cursor/skills/vf-creative-director/SKILL.md",
-        "brandGuardian": ".cursor/skills/vf-brand-guardian/SKILL.md",
-        "mediaLibrarian": ".cursor/skills/vf-media-librarian/SKILL.md",
+        "creativeDirector": ".cursor/skills/velvet-creative-director/SKILL.md",
+        "brandGuardian": ".cursor/skills/velvet-brand-guardian/SKILL.md",
+        "mediaLibrarian": ".cursor/skills/velvet-media-librarian/SKILL.md",
     }
     for key, value in expected_specialists.items():
         if specialists.get(key) != value or foundry_specialists.get(key) != value:
