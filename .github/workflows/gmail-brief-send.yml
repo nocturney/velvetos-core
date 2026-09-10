@@ -1,0 +1,80 @@
+name: Velvet Gmail Brief Sender
+
+on:
+  workflow_dispatch:
+    inputs:
+      request_path:
+        description: Repo-relative send request JSON
+        required: true
+        default: packages/vfops/out/gmail-send-request.json
+  push:
+    branches: [main]
+    paths:
+      - packages/vfops/out/gmail-send-request.json
+
+permissions:
+  contents: read
+
+concurrency:
+  group: velvet-gmail-brief-send
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    env:
+      REQUEST_PATH: ${{ github.event.inputs.request_path || 'packages/vfops/out/gmail-send-request.json' }}
+      VFBRIEF_ALLOWED_RECIPIENT: nocturney@gmail.com
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Inspect send request
+        id: request
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ['REQUEST_PATH'])
+          data = json.loads(p.read_text(encoding='utf-8'))
+          enabled = data.get('enabled') is True
+          print('enabled=' + ('true' if enabled else 'false'))
+          print('request_id=' + str(data.get('requestId') or 'unknown'))
+          PY
+
+      - name: Disabled request
+        if: steps.request.outputs.enabled != 'true'
+        run: echo "Gmail brief send request is disabled; no email sent."
+
+      - name: Materialize Gmail OAuth secret
+        if: steps.request.outputs.enabled == 'true'
+        env:
+          GMAIL_OAUTH_JSON: ${{ secrets.GMAIL_OAUTH_JSON }}
+        run: |
+          if [ -z "$GMAIL_OAUTH_JSON" ]; then
+            echo "::error::Missing repository secret GMAIL_OAUTH_JSON. Run the one-time OAuth bootstrap and add its JSON as this secret."
+            exit 2
+          fi
+          umask 077
+          printf '%s' "$GMAIL_OAUTH_JSON" > "$RUNNER_TEMP/gmail-oauth.json"
+          python3 - <<'PY'
+          import json, os, pathlib
+          p = pathlib.Path(os.environ['RUNNER_TEMP']) / 'gmail-oauth.json'
+          data = json.loads(p.read_text())
+          required = ('client_id', 'client_secret', 'refresh_token')
+          missing = [k for k in required if not data.get(k)]
+          if missing:
+              raise SystemExit('GMAIL_OAUTH_JSON missing: ' + ', '.join(missing))
+          print('OAuth secret structure OK; refresh token present')
+          PY
+
+      - name: Send brief through Gmail API with CID images
+        if: steps.request.outputs.enabled == 'true'
+        env:
+          GOOGLE_TOKEN: ${{ runner.temp }}/gmail-oauth.json
+        run: |
+          PYTHONPATH=packages python3 -m vfops.gmail_brief_request --request "$REQUEST_PATH"
