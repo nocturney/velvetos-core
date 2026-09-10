@@ -82,6 +82,24 @@
     "syntheticDefaultAllowed": ["background", "transition", "atmosphere", "supporting_visual"],
     "syntheticDefaultForbidden": ["measurement", "stress_test_result", "product_geometry_claim", "customer_result", "failure_or_success_claim"]
   },
+  "audioPolicy": {
+    "requiredForVideo": true,
+    "skill": ".cursor/skills/vf-ig-music/SKILL.md",
+    "playbook": "packages/vfresearch/MUSIC.md",
+    "allowedModes": ["source", "music", "sfx", "source_plus_music", "source_plus_sfx", "intentional_silence"],
+    "defaultSilence": "fail",
+    "nearSilent": "fail",
+    "intentionalSilenceRequiresReason": true,
+    "checks": ["stream_presence", "loudness", "noise_and_clipping", "sync", "story_fit", "ducking_when_needed"],
+    "rule": "A Reel or video Story cannot pass exact-final QA merely because an audio stream exists. Missing or near-silent audio routes to audio repair unless intentional silence is explicitly justified and reviewed."
+  },
+  "rightsPolicy": {
+    "scope": "operational publish gating, not legal advice",
+    "ownerCapturedShowcase": "Owner-captured footage/stills of a printed object do not require a separate generic media-rights approval gate when no third-party media, UGC, identifiable person/privacy issue or known restriction is present.",
+    "modelLicenseDefault": "not-a-showcase-publish-gate",
+    "modelLicenseEscalatesWhen": ["public-content-explicitly-offers-the-depicted-model-for-sale", "paid-promotion-of-the-depicted-model", "known-license-restriction-or-dispute"],
+    "privateInbound": "Private inbound conversations are handled separately from public editorial/showcase framing."
+  },
   "progressiveVariants": {
     "enabled": true,
     "maxConceptCandidates": 12,
@@ -92,10 +110,10 @@
     "rule": "never spend a full-quality render on an unranked concept when a cheaper preview can reject it"
   },
   "evaluation": {
-    "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_loudness", "frame_integrity"],
-    "perceptualRubrics": ["brand", "hook", "composition", "reality", "originality"],
+    "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_stream_presence", "audio_loudness", "audio_sync", "frame_integrity"],
+    "perceptualRubrics": ["brand", "hook", "composition", "reality", "originality", "audio_story_fit"],
     "referenceChecks": ["subject_fidelity", "material_fidelity", "geometry_invariants"],
-    "artifactChecks": ["flicker", "malformed_geometry", "unreadable_text", "temporal_jitter"],
+    "artifactChecks": ["flicker", "malformed_geometry", "unreadable_text", "temporal_jitter", "audio_clipping_or_noise"],
     "routineThresholds": {"brand": 80, "reality": 90, "artifact": 90},
     "heroThresholds": {"brand": 85, "reality": 95, "artifact": 92}
   },
@@ -134,6 +152,7 @@
       "print-from-hq",
       "irreversible-destructive-action",
       "hard-blocker-after-failover"
-    ]
+    ],
+    "rightsOrPrivacyMeaning": "third-party media, UGC, identifiable-person/privacy issues or a known rights restriction; not a blanket model-license gate for owner-captured showcase content"
   }
 }
