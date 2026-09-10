@@ -10,6 +10,7 @@
 
 לוח **קבוע**: `CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. שיבוץ ב־instagram.com (לא סוויט).  
 שער עריכה: `EDIT-GATE.md`. פריפלייט כתוב: `PREFLIGHT.md` (VOICE + ציון עצמי + 2–3 קומפס) — בלי `preflight/<id>.md` עבור = נכשל-סגור.  
+לפני רעיון צמיחה / «האם X→Y»: `MARKETING-MINDSET.md` (דפוס axelfreeman — בלי npx).  
 אל תפנה לכריסטיאן על מדדים חלשים. לוח אוטונומי: `CALENDAR-OPS.md`. סנסור `scripts/check-vfgrowth.py`.
 
 צמיחת עוקבים → פנייה (לא מרדף מספר): `hq/FOLLOWER-GROWTH.md`.  

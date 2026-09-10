@@ -40,8 +40,8 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-07",
-  "dataDate": "2026-09-07",
+  "lastPass": "2026-09-10",
+  "dataDate": "2026-09-09",
   "embedded": [
     {
       "id": "grill-me",
@@ -144,6 +144,14 @@
       "path": "packages/vfsales/scripts/vf_quote_ladder.py",
       "firstEmbedded": "2026-09-07",
       "note": "Graceful escalation ladder for partial quotes; never invents ₪"
+    },
+    {
+      "id": "marketing-mindset",
+      "pack": "vfgrowth",
+      "path": "packages/vfgrowth/MARKETING-MINDSET.md",
+      "firstEmbedded": "2026-09-10",
+      "source": "https://github.com/axelfreeman/marketing-mindset",
+      "note": "Lite marketing OS: 3-month horizon, live competitors, testable hypothesis, Canva visual rule; PUBLIC_CURRENT_CTA; no npx"
     }
   ],
   "watchlist": [
@@ -220,6 +228,36 @@
       "id": "dietrich-ponytail",
       "url": "https://github.com/DietrichGebert/ponytail",
       "note": "Top-repos #6 2026-09-07 — agent skills collection. Watch before any embed; no npx."
+    },
+    {
+      "id": "ui-ux-pro-max-skill",
+      "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "note": "Trending top-repos 2026-09-09. Watch for briefux/design patterns only; no public marketing site."
+    },
+    {
+      "id": "understand-anything",
+      "url": "https://github.com/Egonex-AI/Understand-Anything",
+      "note": "Codebase knowledge graph. Overlaps vfmem semantic index — watch before second memory layer."
+    },
+    {
+      "id": "mempalace",
+      "url": "https://github.com/MemPalace/mempalace",
+      "note": "Memory MCP. Watch patterns only; no second runtime / npx on Cloud."
+    },
+    {
+      "id": "open-design",
+      "url": "https://github.com/nexu-io/open-design",
+      "note": "Local-first design agent. Watch; Canva-first for IG; no public site from HQ."
+    },
+    {
+      "id": "ppt-master",
+      "url": "https://github.com/hugohe3/ppt-master",
+      "note": "PPT generation skill. Watch; Superdesign/Canva for office decks — no vendor lock."
+    },
+    {
+      "id": "coreyhaines-marketingskills",
+      "url": "https://github.com/coreyhaines31/marketingskills",
+      "note": "Overlaps vfmskill curated map. Watch before duplicate embed; no npx."
     }
   ],
   "skipped": [
@@ -254,6 +292,14 @@
     {
       "id": "google-agents-cli",
       "why": "Vendor CLI scaffold/deploy outside VF Cloud mandate"
+    },
+    {
+      "id": "proactive-agent",
+      "why": "Cron / proactive second-loop vibe — second runtime locked"
+    },
+    {
+      "id": "reddit-twitter-automation-trending",
+      "why": "Auto-post growth hacks outside VF CTA + no auto-DM"
     }
   ]
 }
