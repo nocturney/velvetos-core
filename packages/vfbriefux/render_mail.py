@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Render Velvet Factory Brief V10.2 Ink & Candy.
+"""Render Velvet Factory Brief V10.3 Ink & Candy.
 
-Gmail-safe table HTML, RTL-first, Hebrew-first. Backward-compatible with the
-legacy 01–07 JSON. Adds image-first hero, split media cards, visual mini-cards,
-KPI/status/delta blocks, and fallback enrichment from the canonical Studio Pulse.
-No invented ₪. No send.
+Hybrid-responsive, Outlook-safe table HTML, RTL-first, Hebrew-first.
+Backward-compatible with the legacy 01–07 JSON. Adds image-first hero, split
+media cards, visual mini-cards, KPI/status/delta blocks, and fallback enrichment
+from the canonical Studio Pulse. No invented ₪. No send.
 """
 from __future__ import annotations
 
@@ -60,9 +60,9 @@ STATES = {
 }
 
 CHECK_BRIEF = {
-    "date_line": "יום בדיקה · V10.2 — לא 07:00",
+    "date_line": "יום בדיקה · V10.3 — לא 07:00",
     "bottom_line": "המידע החשוב קודם. לא ממציאים.",
-    "footer": "Velvet Factory · איסוף משדרות · V10.2",
+    "footer": "Velvet Factory · איסוף משדרות · V10.3",
     "attention": {"state": "yellow", "label": "מצב העסק", "text": "דורש מעקב"},
     "system_health": {"state": "green", "label": "בריאות מערכת", "text": "תקינה"},
     "hero_visual": {
@@ -269,7 +269,7 @@ def enrich_v10(brief: dict) -> dict:
     return brief
 
 
-def _image_html(item: dict, *, width: int = 560, radius: int = 14, promoted_ok: bool = False) -> str:
+def _image_html(item: dict, *, width: int = 640, radius: int = 14, promoted_ok: bool = False) -> str:
     if item.get("_promoted_to_hero") and not promoted_ok:
         return ""
     src = _visual_src(item)
@@ -287,18 +287,18 @@ def _image_html(item: dict, *, width: int = 560, radius: int = 14, promoted_ok: 
 def hero_visual_html(item: dict | None) -> str:
     if not item or not _visual_src(item):
         return ""
-    image = _image_html(item, width=636, radius=17, promoted_ok=True)
+    image = _image_html(item, width=716, radius=17, promoted_ok=True)
     eyebrow = esc(item.get("eyebrow") or "תמונת היום")
     title = esc(item.get("title") or "")
     caption = esc(item.get("caption") or "")
     return (
-        '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:14px">'
-        '<tr><td bgcolor="#0F1724" style="padding:8px;border-radius:19px;border:1px solid #303B58">'
+        '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:16px">'
+        '<tr><td bgcolor="#0F1724" style="padding:9px;border-radius:19px;border:1px solid #303B58">'
         + image
-        + '<div style="padding:10px 8px 7px">'
-        + f'<div style="font-size:9px;color:#B8F34A;font-weight:900">{eyebrow}</div>'
-        + (f'<div style="font-size:18px;line-height:23px;color:#FFFFFF;font-weight:900;margin-top:3px">{title}</div>' if title else "")
-        + (f'<div style="font-size:10px;line-height:16px;color:#AAB4CA;margin-top:4px">{caption}</div>' if caption else "")
+        + '<div style="padding:12px 10px 9px">'
+        + f'<div style="font-size:11px;line-height:17px;color:#B8F34A;font-weight:900;mso-line-height-rule:exactly">{eyebrow}</div>'
+        + (f'<div style="font-size:20px;line-height:26px;color:#FFFFFF;font-weight:900;margin-top:4px;mso-line-height-rule:exactly">{title}</div>' if title else "")
+        + (f'<div style="font-size:12px;line-height:18px;color:#AAB4CA;margin-top:5px;mso-line-height-rule:exactly">{caption}</div>' if caption else "")
         + '</div></td></tr></table>'
     )
 
@@ -311,7 +311,7 @@ def table_html(headers: list[str], rows: list[list[str]], theme: tuple[str, str,
         bg = "#FFFFFF" if i % 2 == 0 else soft
         cells = "".join(f'<td dir="rtl" bgcolor="{bg}" align="right" style="border-bottom:1px solid #E5E8EF">{cell_html(c)}</td>' for c in row)
         body.append(f"<tr>{cells}</tr>")
-    return '<table width="100%" cellpadding="9" cellspacing="0" border="0" dir="rtl" style="border-collapse:separate;border-spacing:0;font-size:13px;border-radius:12px;overflow:hidden"><tbody><tr>' + head + '</tr>' + ''.join(body) + '</tbody></table>'
+    return '<table width="100%" cellpadding="10" cellspacing="0" border="0" dir="rtl" style="border-collapse:separate;border-spacing:0;font-size:14px;line-height:20px;border-radius:12px;overflow:hidden;mso-line-height-rule:exactly"><tbody><tr>' + head + '</tr>' + ''.join(body) + '</tbody></table>'
 
 
 def covers_html(covers: list[dict], theme: tuple[str, str, str, str]) -> str:
@@ -322,7 +322,7 @@ def covers_html(covers: list[dict], theme: tuple[str, str, str, str]) -> str:
         if not image:
             continue
         caption = cover.get("caption") or cover.get("alt") or "תמונה"
-        parts.append(f'<div dir="rtl" style="margin:12px 0 5px;font-size:11px;color:{label};font-weight:900">{esc(caption)}</div>{image}')
+        parts.append(f'<div dir="rtl" style="margin:13px 0 6px;font-size:12px;line-height:18px;color:{label};font-weight:900;mso-line-height-rule:exactly">{esc(caption)}</div>{image}')
     return ''.join(parts)
 
 
@@ -334,37 +334,37 @@ def media_cards_html(cards: list[dict], theme: tuple[str, str, str, str]) -> str
     width = max(1, 100 // len(usable))
     cells = []
     for card in usable:
-        image = _image_html(card, width=180, radius=10)
+        image = _image_html(card, width=220, radius=10)
         kicker = esc(card.get("kicker") or "")
         title = esc(card.get("title") or "")
         text = esc(card.get("text") or "")
         action = esc(card.get("action") or "")
         cells.append(
-            f'<td class="vf-mini-cell" width="{width}%" valign="top" style="padding:0 3px">'
-            '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#FFFFFF" style="padding:9px;border-radius:13px;border:1px solid #E1E5EE">'
+            f'<td class="vf-mini-cell" width="{width}%" valign="top" style="padding:0 4px">'
+            '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#FFFFFF" style="padding:11px;border-radius:13px;border:1px solid #E1E5EE">'
             + image
-            + (f'<div style="font-size:9px;color:{label};font-weight:900;margin-top:8px">{kicker}</div>' if kicker else "")
-            + (f'<div style="font-size:13px;line-height:17px;color:#171D2C;font-weight:900;margin-top:3px">{title}</div>' if title else "")
-            + (f'<div style="font-size:10px;line-height:16px;color:#697287;margin-top:4px">{text}</div>' if text else "")
-            + (f'<div style="font-size:9px;line-height:15px;color:{label};font-weight:900;margin-top:7px;border-top:1px solid #EEF0F5;padding-top:6px">{action}</div>' if action else "")
+            + (f'<div style="font-size:11px;line-height:17px;color:{label};font-weight:900;margin-top:9px;mso-line-height-rule:exactly">{kicker}</div>' if kicker else "")
+            + (f'<div style="font-size:15px;line-height:20px;color:#171D2C;font-weight:900;margin-top:4px;mso-line-height-rule:exactly">{title}</div>' if title else "")
+            + (f'<div style="font-size:13px;line-height:19px;color:#697287;margin-top:5px;mso-line-height-rule:exactly">{text}</div>' if text else "")
+            + (f'<div style="font-size:11px;line-height:17px;color:{label};font-weight:900;margin-top:8px;border-top:1px solid #EEF0F5;padding-top:7px;mso-line-height-rule:exactly">{action}</div>' if action else "")
             + '</td></tr></table></td>'
         )
-    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:11px"><tr>' + ''.join(cells) + '</tr></table>'
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:12px"><tr>' + ''.join(cells) + '</tr></table>'
 
 
 def actions_html(actions: list[dict], theme: tuple[str, str, str, str]) -> str:
     accent, _soft, label_color, _dark = theme
-    parts = [f'<div dir="rtl" style="margin:12px 0 6px;font-size:11px;color:{label_color};font-weight:900">אישור בלחיצה · לא הודעת לקוח · לא Print</div>']
+    parts = [f'<div dir="rtl" style="margin:13px 0 7px;font-size:12px;line-height:18px;color:{label_color};font-weight:900;mso-line-height-rule:exactly">אישור בלחיצה · לא הודעת לקוח · לא Print</div>']
     for item in actions:
         label = esc(item.get("label") or item.get("id") or "שער")
         links = []
         if item.get("yes"):
-            links.append(f'<a class="vf-touch" href="{esc(item["yes"])}" style="color:#fff;text-decoration:none;background:{accent};border-radius:9px;padding:8px 12px;margin-left:7px;display:inline-block;font-weight:900">כן</a>')
+            links.append(f'<a class="vf-touch" href="{esc(item["yes"])}" style="color:#fff;text-decoration:none;background:{accent};border-radius:9px;padding:9px 13px;margin-left:7px;display:inline-block;font-weight:900">כן</a>')
         if item.get("no"):
-            links.append(f'<a class="vf-touch" href="{esc(item["no"])}" style="color:#9E174D;text-decoration:none;background:#FFE6F0;border-radius:9px;padding:8px 12px;margin-left:7px;display:inline-block;font-weight:900">דחה</a>')
+            links.append(f'<a class="vf-touch" href="{esc(item["no"])}" style="color:#9E174D;text-decoration:none;background:#FFE6F0;border-radius:9px;padding:9px 13px;margin-left:7px;display:inline-block;font-weight:900">דחה</a>')
         if item.get("defer"):
-            links.append(f'<a class="vf-touch" href="{esc(item["defer"])}" style="color:#596277;text-decoration:none;background:#EEF1F6;border-radius:9px;padding:8px 12px;display:inline-block;font-weight:900">דחה למועד</a>')
-        parts.append(f'<p dir="rtl" style="font-size:13px;color:#23293A;margin:9px 0">{label} {" ".join(links)}</p>')
+            links.append(f'<a class="vf-touch" href="{esc(item["defer"])}" style="color:#596277;text-decoration:none;background:#EEF1F6;border-radius:9px;padding:9px 13px;display:inline-block;font-weight:900">דחה למועד</a>')
+        parts.append(f'<p dir="rtl" style="font-size:14px;line-height:21px;color:#23293A;margin:10px 0;mso-line-height-rule:exactly">{label} {" ".join(links)}</p>')
     return ''.join(parts)
 
 
@@ -380,14 +380,14 @@ def slot_delta_html(slot: dict) -> str:
     if not text:
         return ""
     bg, fg, dot = STATES.get(state, STATES["blue"])
-    return f'<div dir="rtl" style="margin:0 0 10px;padding:9px 11px;background:{bg};color:{fg};border-radius:10px;font-size:11px;font-weight:900"><span style="color:{dot}">●</span> {esc(text)}</div>'
+    return f'<div dir="rtl" style="margin:0 0 11px;padding:10px 12px;background:{bg};color:{fg};border-radius:10px;font-size:12px;line-height:18px;font-weight:900;mso-line-height-rule:exactly"><span style="color:{dot}">●</span> {esc(text)}</div>'
 
 
 def _slot_text_body(slot: dict, theme: tuple[str, str, str, str], *, include_covers: bool = True) -> str:
     bits = []
     prose = slot.get("prose") or ""
     if prose:
-        bits.append(f'<p dir="rtl" style="font-size:14px;line-height:1.65;color:#30364D;margin:0 0 10px">{prose_html(prose)}</p>')
+        bits.append(f'<p dir="rtl" style="font-size:15px;line-height:24px;color:#30364D;margin:0 0 11px;mso-line-height-rule:exactly">{prose_html(prose)}</p>')
     headers, rows = slot.get("headers") or [], slot.get("rows") or []
     if headers and rows:
         bits.append(table_html(headers, rows, theme))
@@ -405,21 +405,21 @@ def slot_html(slot: dict) -> str:
     theme = THEMES[slot_kind(slot)]
     accent, soft, label, _dark = theme
     density = str(slot.get("density") or "normal").lower()
-    pad = "13px 18px" if density == "compact" else "17px 20px"
+    pad = "15px 20px" if density == "compact" else "19px 22px"
     header = (
-        f'<div style="color:{label};font-size:10px;font-weight:900;letter-spacing:.2px">{esc(slot.get("kicker") or "")}</div>'
-        f'<h2 style="margin:4px 0 8px;color:#171D2C;font-size:21px;line-height:26px">{esc(slot.get("title") or "")}</h2>'
+        f'<div style="color:{label};font-size:12px;line-height:18px;font-weight:900;letter-spacing:.2px;mso-line-height-rule:exactly">{esc(slot.get("kicker") or "")}</div>'
+        f'<h2 style="margin:5px 0 9px;color:#171D2C;font-size:23px;line-height:29px;mso-line-height-rule:exactly">{esc(slot.get("title") or "")}</h2>'
         + slot_delta_html(slot)
     )
     layout = str(slot.get("layout") or "").lower()
     covers = [c for c in (slot.get("covers") or []) if not c.get("_promoted_to_hero") and _visual_src(c)]
     if layout == "split" and covers:
         first = covers[0]
-        image = _image_html(first, width=210, radius=12)
+        image = _image_html(first, width=250, radius=12)
         caption = esc(first.get("caption") or first.get("alt") or "תמונה")
         body = (
             '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl"><tr>'
-            f'<td class="vf-split-cell" width="38%" valign="top" style="padding-left:12px">{image}<div style="font-size:9px;color:{label};font-weight:900;margin-top:6px">{caption}</div></td>'
+            f'<td class="vf-split-cell" width="38%" valign="top" style="padding-left:14px">{image}<div style="font-size:11px;line-height:17px;color:{label};font-weight:900;margin-top:7px;mso-line-height-rule:exactly">{caption}</div></td>'
             f'<td class="vf-split-cell" width="62%" valign="top">{_slot_text_body(slot, theme, include_covers=False)}</td>'
             '</tr></table>'
         )
@@ -428,7 +428,7 @@ def slot_html(slot: dict) -> str:
     else:
         body = _slot_text_body(slot, theme, include_covers=True)
     return (
-        '<tr><td dir="rtl" bgcolor="#F4F6FB" class="vf-slot" style="padding:6px 12px">'
+        '<tr><td dir="rtl" bgcolor="#F4F6FB" class="vf-slot" style="padding:7px 14px">'
         f'<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl"><tr><td bgcolor="{soft}" style="padding:{pad};border-radius:16px;border:1px solid #E1E5EE;border-right:4px solid {accent}">'
         + header + body + '</td></tr></table></td></tr>'
     )
@@ -443,8 +443,8 @@ def status_badges_html(brief: dict) -> str:
         bg, fg, dot = STATES.get(str(item.get("state") or "neutral").lower(), STATES["neutral"])
         label = item.get("label") or default_label
         text = item.get("text") or item.get("state") or ""
-        cells.append(f'<td valign="top" style="padding:0 0 0 6px"><div style="display:inline-block;background:{bg};color:{fg};border-radius:999px;padding:7px 10px;font-size:10px;font-weight:900;white-space:nowrap"><span style="color:{dot}">●</span> {esc(label)} · {esc(text)}</div></td>')
-    return '' if not cells else '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:14px"><tr>' + ''.join(cells) + '<td>&nbsp;</td></tr></table>'
+        cells.append(f'<td valign="top" style="padding:0 0 0 7px"><div style="display:inline-block;background:{bg};color:{fg};border-radius:999px;padding:8px 11px;font-size:12px;line-height:17px;font-weight:900;white-space:nowrap;mso-line-height-rule:exactly"><span style="color:{dot}">●</span> {esc(label)} · {esc(text)}</div></td>')
+    return '' if not cells else '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:15px"><tr>' + ''.join(cells) + '<td>&nbsp;</td></tr></table>'
 
 
 def kpi_strip_html(kpis: list[dict]) -> str:
@@ -452,8 +452,8 @@ def kpi_strip_html(kpis: list[dict]) -> str:
     for item in kpis[:4]:
         bg, fg, dot = STATES.get(str(item.get("state") or "purple").lower(), STATES["purple"])
         value, label, note = esc(item.get("value") or "—"), esc(item.get("label") or ""), esc(item.get("note") or "")
-        cells.append(f'<td class="vf-kpi-cell" width="25%" valign="top" style="padding:0 3px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="{bg}" style="padding:11px 8px;border-radius:12px;text-align:center;border:1px solid {dot}"><div style="font-size:20px;line-height:23px;color:{fg};font-weight:900">{value}</div><div style="font-size:9px;color:{fg};font-weight:900;margin-top:2px">{label}</div>' + (f'<div style="font-size:8px;color:{fg};margin-top:3px">{note}</div>' if note else '') + '</td></tr></table></td>')
-    return '' if not cells else '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:13px"><tr>' + ''.join(cells) + '</tr></table>'
+        cells.append(f'<td class="vf-kpi-cell" width="25%" valign="top" style="padding:0 4px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="{bg}" style="padding:13px 9px;border-radius:12px;text-align:center;border:1px solid {dot}"><div style="font-size:22px;line-height:26px;color:{fg};font-weight:900;mso-line-height-rule:exactly">{value}</div><div style="font-size:11px;line-height:17px;color:{fg};font-weight:900;margin-top:3px;mso-line-height-rule:exactly">{label}</div>' + (f'<div style="font-size:10px;line-height:16px;color:{fg};margin-top:4px;mso-line-height-rule:exactly">{note}</div>' if note else '') + '</td></tr></table></td>')
+    return '' if not cells else '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:14px"><tr>' + ''.join(cells) + '</tr></table>'
 
 
 def delta_strip_html(changes: list[object]) -> str:
@@ -467,8 +467,8 @@ def delta_strip_html(changes: list[object]) -> str:
         if not text:
             continue
         _bg, _fg, dot = STATES.get(state, STATES["blue"])
-        rows.append(f'<div style="padding:5px 0;color:#E5E9F3;font-size:11px;line-height:17px"><span style="color:{dot};font-weight:900">●</span> {esc(text)}</div>')
-    return '' if not rows else '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:12px"><tr><td bgcolor="#1A2438" style="padding:11px 13px;border-radius:13px;border:1px solid #303B58"><div style="font-size:9px;color:#AEB7FF;font-weight:900">מה השתנה מאז הבריף הקודם</div>' + ''.join(rows) + '</td></tr></table>'
+        rows.append(f'<div style="padding:6px 0;color:#E5E9F3;font-size:13px;line-height:20px;mso-line-height-rule:exactly"><span style="color:{dot};font-weight:900">●</span> {esc(text)}</div>')
+    return '' if not rows else '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:13px"><tr><td bgcolor="#1A2438" style="padding:13px 15px;border-radius:13px;border:1px solid #303B58"><div style="font-size:11px;line-height:17px;color:#AEB7FF;font-weight:900;mso-line-height-rule:exactly">מה השתנה מאז הבריף הקודם</div>' + ''.join(rows) + '</td></tr></table>'
 
 
 def render(brief: dict, template: str | None = None) -> str:
@@ -517,9 +517,9 @@ def render_diagram(kind: str, template: str | None = None) -> str:
 def self_check() -> None:
     html_out = render(CHECK_BRIEF)
     need = (
-        'bgcolor="#101828"', 'dir="rtl"', "V10.2 · חי", "מה השתנה מאז הבריף הקודם",
+        'bgcolor="#101828"', 'dir="rtl"', "V10.3 · חי", "מה השתנה מאז הבריף הקודם",
         "מצב העסק", "בריאות מערכת", "תמונת היום", 'src="https://example.com/hero.jpg"',
-        'src="cid:job.jpg"', 'src="cid:c1.jpg"', "#FF4F91", "#6C7CFF", "#B8F34A",
+        'src="cid:job.jpg"', 'src="cid:c1.jpg"', "#FF4F91", "#6C7CFF", "#B8F34A", 'width="780"',
     )
     missing = [token for token in need if token not in html_out]
     if missing:
@@ -533,11 +533,11 @@ def self_check() -> None:
         miss = [token for token in must if token not in diagram]
         if miss:
             raise SystemExit(f"FAIL diagram {kind} missing {miss}")
-    print("OK Brief V10.2 · Ink & Candy · image-first · Hebrew-first")
+    print("OK Brief V10.3 · hybrid responsive · Outlook-safe · Hebrew-first")
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Render Velvet Factory Brief V10.2 HTML")
+    parser = argparse.ArgumentParser(description="Render Velvet Factory Brief V10.3 HTML")
     parser.add_argument("json_path", nargs="?", help="brief JSON")
     parser.add_argument("-o", "--out", help="write HTML here")
     parser.add_argument("--check", action="store_true", help="self-check fixture")
