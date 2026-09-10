@@ -8,7 +8,8 @@ Routine creative choices do **not** require owner review. Physical footage/stagi
 
 ## Sources
 
-- `.cursor/skills/vf-creative-autopilot/SKILL.md`
+- `.cursor/skills/vf-content-sprint/SKILL.md`
+- `.cursor/skills/vf-canva-instagram/SKILL.md`
 - `packages/vfom/CREATIVE-AUTOPILOT.md`
 - `packages/vfom/VISUAL-OS.md`
 - `packages/vfom/EDIT-DIRECTOR.md`
