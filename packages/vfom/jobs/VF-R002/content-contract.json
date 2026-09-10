@@ -1,0 +1,36 @@
+{
+  "jobId": "VF-R002",
+  "objective": "Show the same real dragon sculpture from multiple verified angles so each carousel swipe reveals genuine visible detail without unsupported product claims.",
+  "format": "carousel",
+  "targetDurationSeconds": null,
+  "requiredSubject": "the dark dragon sculpture shown in the IMG_1277/1278/1280/1281 source-photo batch",
+  "truthClaims": [
+    {
+      "claim": "The source photos show the same dark dragon sculpture with visible wings, horn/scaled detail and a textured curled body/base.",
+      "status": "verified",
+      "evidenceAssetIds": ["143MrZsroIcyh4DZqYLq1-iEFAY9Bd8KD", "1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi", "1NW2nOJucAEEiIovlqm49uzNmNDbfn08k", "1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ"],
+      "sourceRefs": ["IMG_1277.HEIC", "IMG_1278.HEIC", "IMG_1280.HEIC", "IMG_1281.HEIC"],
+      "note": "Visible directly in the reviewed real source frames."
+    },
+    {
+      "claim": "Any specific dimensions, material, print duration, weight, durability, designer attribution or customer use.",
+      "status": "unsupported",
+      "evidenceAssetIds": [],
+      "sourceRefs": [],
+      "note": "Do not state or imply without separate evidence."
+    }
+  ],
+  "syntheticPolicy": {
+    "allowedUses": ["non-factual background support", "layout decoration that does not alter the photographed subject"],
+    "forbiddenUses": ["alter dragon geometry", "add or remove physical details", "invent scale or environment as proof", "replace the real sculpture", "generate Hebrew text inside synthetic imagery"]
+  },
+  "subjectPack": {
+    "referenceAssetIds": ["143MrZsroIcyh4DZqYLq1-iEFAY9Bd8KD", "1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi", "1NW2nOJucAEEiIovlqm49uzNmNDbfn08k", "1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ"],
+    "geometryInvariants": ["curled dragon body around the base", "large wing forms", "horned/scaled head and back detail", "textured circular base/body silhouette"],
+    "materialInvariants": [],
+    "colorInvariants": ["dark charcoal/black dominant appearance with photographed highlights"],
+    "mustNotChange": ["head and wing silhouette", "curl/body arrangement", "surface-detail pattern as photographed", "real source-product identity"]
+  },
+  "successDefinition": {"brandScore": 80, "realityScore": 90, "artifactScore": 90},
+  "novelty": null
+}
