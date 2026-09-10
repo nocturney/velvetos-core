@@ -7,7 +7,8 @@ Visible Text extension: 11.9.2026.
 
 חוקה: `constitution/STUDIO.md` · `constitution/VISIBLE_TEXT.md` · `ORCHESTRA.md` · `SEND.md`.  
 שער עריכה: `EDIT-GATE.md`. חוזה קופי חובה: `../vfcopy/SOFT-TOOLS-CONTRACT.md`. קול public: `vfcopy/VOICE.md` + `vfcopy/VOICE-CHART.md`. קומפס/מחקר קול: `vfcopy/VOICE-RESEARCH.md`.  
-רובריקת איכות: [`CONTENT-RUBRIC.md`](CONTENT-RUBRIC.md). UGC: [`UGC.md`](UGC.md). מסירה: `HANDOFF-he.md`.
+רובריקת איכות: [`CONTENT-RUBRIC.md`](CONTENT-RUBRIC.md). UGC: [`UGC.md`](UGC.md). מסירה: `HANDOFF-he.md`.  
+`PUBLIC_CURRENT_CTA` מוגדר ב־`constitution/PUBLIC_CTA.md`; ה־intent (`showcase`/`commercial`) קובע אם ואיזה CTA נדרש.
 
 **בלי ארטיפקט כתוב ב־`preflight/<id>.md` עם שער = עבור = לא משבצים.**  
 נכשל-סגור → חסום שיבוץ. מתקנים במשרד. **לא** מעבירים לכריסטיאן «רמה נמוכה».
@@ -62,7 +63,7 @@ visual_text_sha256: <64-hex | N/A>
 4. הוויזואל עבר `EDIT-GATE.md` וכל בדיקות Brand Guardian הרלוונטיות?
 5. נבחנו 2–3 קומפס/כיוונים כשזה רלוונטי, או תועד למה אין צורך?
 6. אין ₪/מק״ט/לקוח/Insights/claim מומצאים; media/version/publication states תקינים.
-7. CTA/intent תואמים `PUBLIC_CTA.md` ולסוג הפוסט; private-contact rules לא דולפים לפיד.
+7. CTA/intent תואמים `PUBLIC_CURRENT_CTA` / `PUBLIC_CTA.md` ולסוג הפוסט; private-contact rules לא דולפים לפיד.
 
 לא אחד = נכשל-סגור. מתקנים במשרד.
 
