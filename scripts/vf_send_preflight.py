@@ -20,8 +20,8 @@ Usage:
 
 Exit codes:
   0 — requested gate is ready and, for Instagram publish, quality approval is valid
-  2 — transport gate needs failover
-  1 — missing/invalid approval, unknown gate, or hard block
+  2 — actionable failover / publish authorization is incomplete; do not publish
+  1 — supplied approval is invalid, unknown gate, or hard block
 """
 from __future__ import annotations
 
@@ -35,14 +35,11 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DESK = ROOT / ".cursor" / "vf-desk.json"
-CONNECT_IG = ROOT / "packages" / "vfigos" / "CONNECT-IG.md"
 SEND = ROOT / "constitution" / "SEND.md"
 PREFLIGHT_ROOT = ROOT / "packages" / "vfgrowth" / "preflight"
 
-# Statuses that mean "use this tool for the primary path"
 READY = {"ready", "skill-installed", "plugin-installed", "hq-native"}
 IG_AUTH_READY = {"ready", "ready-codespace", "ready-local"}
-# Statuses that mean "primary path blocked — failover same turn"
 FAILOVER = {"needsAuth", "needs-key", "down", "not-on-this-cloud-agent"}
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$", re.IGNORECASE)
 
@@ -58,11 +55,7 @@ def _tool(desk: dict[str, Any], name: str) -> dict[str, Any]:
 
 
 def _field(text: str, name: str) -> str | None:
-    """Read a simple machine field from Markdown, including fenced YAML blocks."""
-    match = re.search(
-        rf"(?mi)^\s*(?:[-*]\s*)?`?{re.escape(name)}`?\s*:\s*(.*?)\s*$",
-        text,
-    )
+    match = re.search(rf"(?mi)^\s*(?:[-*]\s*)?`?{re.escape(name)}`?\s*:\s*(.*?)\s*$", text)
     if not match:
         return None
     value = match.group(1).strip().strip("`").strip()
@@ -84,7 +77,7 @@ def validate_publication_approval(
     format_name: str,
     package_sha256: str,
 ) -> dict[str, Any]:
-    """Validate a fail-closed PREFLIGHT v2 for an exact Instagram package."""
+    """Validate fail-closed PREFLIGHT v2 for the exact Instagram package."""
     problems: list[str] = []
     approval_path = (ROOT / approval_ref).resolve()
     try:
@@ -98,9 +91,7 @@ def validate_publication_approval(
         return {"ok": False, "problems": problems, "approvalRef": approval_ref}
 
     if approval_path.stem != content_id:
-        problems.append(
-            f"approval/content mismatch: {approval_path.stem!r} != {content_id!r}"
-        )
+        problems.append(f"approval/content mismatch: {approval_path.stem!r} != {content_id!r}")
 
     text = approval_path.read_text(encoding="utf-8")
     schema = (_field(text, "publish_gate_schema") or "").strip()
@@ -139,7 +130,7 @@ def validate_publication_approval(
                 problems.append(f"{field} must be {expected}")
 
         reviewed_at = (_field(text, "qa_reviewed_at") or "").strip()
-        if not reviewed_at or "<" in reviewed_at or "_" == reviewed_at:
+        if not reviewed_at or "<" in reviewed_at or reviewed_at == "_":
             problems.append("qa_reviewed_at must identify the final-render review")
 
         approved_package = _clean_sha(_field(text, "final_package_sha256"))
@@ -151,7 +142,6 @@ def validate_publication_approval(
         if approved_package and supplied_package and approved_package != supplied_package:
             problems.append("exact final package SHA-256 does not match the approved render")
 
-        # A known anti-pattern from G004: weak contrast cannot be waived as non-blocking.
         lowered = text.lower()
         if "ניגודיות" in text and "לא חוסם" in text:
             problems.append("contrast/readability may not be waived as non-blocking")
@@ -179,11 +169,9 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
 
     ig_status = ig.get("status") or ""
     ig_remote = ig.get("remote_access") or ""
-    ig_auth_ok = ig_status in IG_AUTH_READY or (ig.get("auth") == "ready")
+    ig_auth_ok = ig_status in IG_AUTH_READY or ig.get("auth") == "ready"
     ig_secrets = _env_present("INSTAGRAM_MCP_ACCESS_TOKEN", "INSTAGRAM_ACCESS_TOKEN")
-    ig_session_ready = ig_auth_ok and (
-        ig_remote == "ready" or (ig_secrets and ig_status in IG_AUTH_READY)
-    )
+    ig_session_ready = ig_auth_ok and (ig_remote == "ready" or (ig_secrets and ig_status in IG_AUTH_READY))
     ig_needs_failover = (
         ig_status in FAILOVER
         or ig_status == "needsAuth"
@@ -206,8 +194,7 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
             "desk_status": canva.get("status") or "unknown",
             "ready": (canva.get("status") or "") in READY,
             "action": "generate-design / export-design",
-            "failover": canva.get("failover")
-            or "Canva לא מחובר → packages/vfcanva/studio/render.py → Superdesign",
+            "failover": canva.get("failover") or "Canva לא מחובר → packages/vfcanva/studio/render.py → Superdesign",
         },
         "instagram": {
             "desk_status": ig_status or "unknown",
@@ -216,9 +203,8 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
             "remote_access": ig_remote or "unknown",
             "ready": ig_session_ready and not ig_needs_failover,
             "needs_failover": ig_needs_failover,
-            "action": "publish_image|carousel|reel|story (adelaidasofia/instagram-mcp) then list_media/get_media verify",
+            "action": "publish_image|carousel|reel|story then list_media/get_media verify",
             "failover": "Canva + Drive create_file + Gmail same turn · #ממתין-ל-כלי-IG",
-            "connect": "packages/vfigos/CONNECT-IG.md",
             "forbid": ["send_message DM", "auto-DM", "boost without lead", "INSTAGRAM_MCP_DM_ENABLED"],
         },
         "gemini": {
@@ -227,7 +213,6 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
             "ready": gemini_key,
             "action": "python3 scripts/vf_gemini.py",
             "failover": "חסר מפתח Gemini → ChatGPT API + Perplexity + WebSearch",
-            "note": "API key only. Do not open gemini.google.com from Cloud.",
         },
         "chatgpt": {
             "desk_status": chatgpt.get("status") or "unknown",
@@ -235,7 +220,6 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
             "ready": chatgpt_key,
             "action": "python3 scripts/vf_chatgpt.py",
             "failover": "חסר מפתח ChatGPT → Gemini API + Perplexity + WebSearch",
-            "note": "API key only. Do not open chatgpt.com from Cloud.",
         },
     }
     return {
@@ -264,11 +248,7 @@ def gate_channel(report: dict[str, Any], name: str) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--gate",
-        choices=("gmail", "instagram", "canva", "gemini", "chatgpt"),
-        help="Exit 0 if requested gate is ready; Instagram publish also requires quality approval",
-    )
+    parser.add_argument("--gate", choices=("gmail", "instagram", "canva", "gemini", "chatgpt"))
     parser.add_argument("--transport-only", action="store_true", help="diagnostic only; never authorizes publish")
     parser.add_argument("--approval-ref", help="repo-relative packages/vfgrowth/preflight/<ID>.md")
     parser.add_argument("--content-id", help="content correlation, e.g. G004")
@@ -282,8 +262,9 @@ def main() -> int:
 
     desk = json.loads(DESK.read_text(encoding="utf-8"))
     report = channel_report(desk)
-
     quality_failed = False
+    quality_missing = False
+
     if args.gate == "instagram":
         if args.transport_only:
             report["publication_quality"] = {
@@ -308,8 +289,9 @@ def main() -> int:
                     "ok": False,
                     "publishAuthorized": False,
                     "problems": ["missing required publish arguments: " + ", ".join(missing)],
+                    "rule": "fail closed: legacy transport-only invocation is not publish authorization",
                 }
-                quality_failed = True
+                quality_missing = True
             else:
                 approval = validate_publication_approval(
                     args.approval_ref,
@@ -326,6 +308,9 @@ def main() -> int:
     if quality_failed:
         print("FAIL instagram publication quality gate", file=sys.stderr)
         return 1
+    if quality_missing:
+        print("GATE instagram=failover (publish quality approval missing)", file=sys.stderr)
+        return 2
     if args.gate:
         return gate_channel(report, args.gate)
     return 0
