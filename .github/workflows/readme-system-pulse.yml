@@ -16,6 +16,7 @@ on:
       - "CHANGELOG.md"
       - "scripts/check-*.py"
       - "scripts/update-readme-snapshot.py"
+      - "scripts/fix-readme-bidi.py"
       - ".github/workflows/*.yml"
       - ".github/workflows/*.yaml"
 
@@ -42,12 +43,15 @@ jobs:
       - name: Render repository-backed System Pulse
         run: python3 scripts/update-readme-snapshot.py
 
-      - name: Commit only when pulse changed
+      - name: Normalize Hebrew BiDi rendering
+        run: python3 scripts/fix-readme-bidi.py
+
+      - name: Commit only when README changed
         shell: bash
         run: |
           set -euo pipefail
           if git diff --quiet -- README.md; then
-            echo "System Pulse already current"
+            echo "README already current"
             exit 0
           fi
           git config user.name "github-actions[bot]"
