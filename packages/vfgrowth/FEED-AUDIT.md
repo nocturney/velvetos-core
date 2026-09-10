@@ -1,50 +1,52 @@
-# ביקורת פיד קיים — @velvets_cloud
+# ביקורת פיד קיים — @velvets_cloud · RESET OVERRIDE
 
-נעילה 8.9.2026 — Christian.  
-מושב: צמיחה. לא מוחקים אוטומטית. לא משנים URL/live בלי כלי אמיתי.
+עדכון סמכות: 10.9.2026 · Christian.  
+מושב: צמיחה. `CONTENT-RESET-2026-09-10.md` גובר על החלטות KEEP/EDIT ישנות במסמך זה.
 
-## נקודת ייחוס איכות
+## החלטת reset
 
-| פריטים | סטטוס |
+כל **8/8** פריטי ה־Feed/Reels שהיו חיים בזמן ה־reset הם מעכשיו:
+
+**`historical_learning_only` + `ARCHIVE_PENDING_MANUAL`**
+
+הפעולה המועדפת היא **Archive, לא Delete**, ורק אחרי ש־VF-R001 / VF-R002 / VF-R003 הגיעו ל־`ready_for_publish` עם exact-final QA ו־execution receipts תקפים.
+
+אין לבצע archive/delete אוטומטי דרך מסלול לא נתמך. כלי Instagram המחובר אינו חושף כרגע Archive/Delete למדיה, ולכן פעולת הארכוב עצמה מתבצעת באפליקציית Instagram ולאחריה live verification.
+
+## מה נשמר מהביקורת הישנה
+
+הסיווגים הישנים נשמרים **כלמידה בלבד**, לא כהחלטה להשאיר פריט בפיד:
+
+| פריטים היסטוריים | סיווג למידה |
 |---|---|
-| פוסטים #1–#2 | **quality reference** (G001 / G002) — קצב, פשטות, צילום אמיתי, מיתוג |
-| פוסט #3 ואילך | **REVIEW_REQUIRED** |
+| G001 / G002 | `QUALITY_REFERENCE` למכניקת discovery/reveal בלבד; לא template ולא KEEP-live |
+| G003 והלאה | `REVIEW_REQUIRED` היסטורי |
 
-לא להעתיק את #1–#2 אחד לאחד. לא corporate cards. לא להעמיס טקסט.
+מקור הנתונים המפורט: [`data/feed-audit.json`](data/feed-audit.json).
 
-## סיווג לכל פריט מהשלישי ואילך
+## לקחים מחייבים לפיד החדש
 
-| קוד | משמעות |
-|---|---|
-| A KEEP | נשאר |
-| B EDIT_CAPTION | להכין תיקון כיתוב |
-| C REPLACE_COVER_IF_PLATFORM_ALLOWS | כיסוי בלבד אם הפלטפורמה מאפשרת |
-| D PREPARE_REVISED_VERSION | נגזרת חדשה במשרד |
-| E ARCHIVE_CANDIDATE | מועמד לארכיון — **ORANGE/RED** לפי RISK |
-| F REPUBLISH_CANDIDATE | מועמד לפרסום מחדש אחרי ארכיון |
+- Reels של proof/process/reveal הראו Reach עדיף במדגם הקיים, אבל כמעט לא המירו לפעולה.
+- Product-story קונקרטי הראה יעילות אינטראקציה טובה יותר מקרוסלות סטודיו גנריות.
+- כפילות/חזרתיות כמו שני פוסטי סטודיו דומים היא failure של novelty/fatigue.
+- WhatsApp / `050-2517000` / `wa.me` אינם CTA ציבורי. CTA נוכחי = הודעת Instagram בלבד.
+- G004 נשמר בזהות העובדתית: **מחזיק טבעות לזמן אימון** — לא משקולת / kettlebell workout weight. הקריאייטיב הישן שלו STALE ואינו approval לשימוש חדש.
+- שום cover/caption/preflight היסטורי אינו עובר בירושה לארטיפקט חדש.
 
-## כללי WhatsApp leakage
+## Launch authority
 
-- WhatsApp רק בכיתוב → `EDIT_CAPTION` (הכן תיקון).
-- WhatsApp מוטמע במדיה → לא להעמיד פנים שהמדיה הוחלפה. הכן derivative בלי WhatsApp וסמן `revised-media-ready` / `archive-or-republish-decision`.
-- אין מחיקה/ארכיון live בלי אישור לפי RISK (בדרך כלל RED/ORANGE).
-- אין לטעון שנערך עד confirmation מהפלטפורמה.
+שלישיית הפתיחה החדשה נמצאת ב־`RESET-LAUNCH-TRIO.md`:
+- VF-R001 — Reel movement proof.
+- VF-R002 — Dragon detail carousel.
+- VF-R003 — Metallic helmet reveal Reel.
 
-## מצב גישה
+כולם כרגע `evidence_selected`, **לא publish-authorized**.
 
-אם אין כלי IG חי: `awaiting-live-audit` — מכינים מתוך ראיות ריפו/מדיה.
+## Profile reset
 
-## כלים
+הביו החי עדיין מכיל WhatsApp/טלפון וסותר את `PUBLIC_CURRENT_CTA`. מצב רצוי: `packages/vfigos/PROFILE-DESIRED.json`. Graph write לביו אינו זמין בכלי המחובר, ולכן השינוי נעשה ידנית באפליקציה ואז נבדק מחדש בכלי live.
 
-אחרי חיבור MCP: `audit_public_cta` / `audit_profile_cta` (read-only).  
-עריכת כיתוב/ביו דרך Graph = `unsupported_by_official_graph` — ראו `packages/vfigos/GRAPH-MUTATIONS.md`.  
-אין מחיקה/ארכיון אוטומטי להיסטוריה בגלל CTA ישן.
+## כלל סיום
 
-## אחסון
-
-[`data/feed-audit.json`](data/feed-audit.json)
-
-## G004
-
-זהות עובדתית: **מחזיק טבעות לזמן אימון** — לא משקולת/kettlebell workout weight.  
-כל claim לוח על G004 = `scheduled` / `scheduledCandidate` — **לא** live.
+הפיד הישן אינו בסיס יצירתי להמשך. הוא Dataset.  
+הפיד החדש מתחיל רק מ־real evidence → Media Librarian → Creative Director → render/edit → Hebrew Copy/Voice → Brand Guardian exact-final → Rubric/Contract/rights/policy → digest-bound receipts → publish → live verify → performance learning.
