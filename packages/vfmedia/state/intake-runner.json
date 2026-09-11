@@ -1,15 +1,15 @@
 {
   "name": "vfmedia-intake-runner",
   "component_state": "Idle",
-  "updatedAt": "2026-09-11T05:07:16Z",
+  "updatedAt": "2026-09-11T09:37:20Z",
   "pagination": {
     "pageToken": null,
     "pageSize": 50
   },
-  "catalogDigest": "3ecc13a1c63805ee1b77eb0d0da8e9bb3d3c08328fd0d496cac8326bdfa7e289",
-  "inboxDigest": "5dea592db78b092fceed9a83676602abf1729f6ab086e6c8cb7968981f121ad5",
-  "lastRunAt": "2026-09-11T05:05:20Z",
-  "lastSuccessAt": "2026-09-11T05:07:16Z",
+  "catalogDigest": "39534c18ec570de6237483317087ee1241a309ffd43c82ce3cd891afeef8c015",
+  "inboxDigest": "a93d9306f1ec4f05c13adfd17e78892e55f628082b832ba931824b95c4d3ef5b",
+  "lastRunAt": "2026-09-11T09:35:32Z",
+  "lastSuccessAt": "2026-09-11T09:37:20Z",
   "lastError": null,
   "persistError": null,
   "auth": {
@@ -17,9 +17,9 @@
     "detail": "provider=google"
   },
   "stats": {
-    "runs": 10,
-    "registered": 7,
-    "verified": 403,
+    "runs": 11,
+    "registered": 53,
+    "verified": 451,
     "skipped": 0,
     "failed": 0,
     "duplicates": 0,
@@ -46,8 +46,8 @@
   },
   "activation": {
     "proven": true,
-    "evidence": "provider=google; actions={'verified': 50}",
-    "provenAt": "2026-09-11T05:07:16Z",
+    "evidence": "provider=google; actions={'verified': 48}",
+    "provenAt": "2026-09-11T09:37:20Z",
     "note": "Drive API live verify+move"
   }
 }

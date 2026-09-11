@@ -24,7 +24,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0645.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -32,6 +32,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:35Z",
+        "verifiedAt": "2026-09-11T09:35:37Z",
+        "downloadBytes": 1573806,
+        "movedToSourceAt": "2026-09-11T09:35:37Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:e37a08adaa0be92736e266f9aaed851004e0136812f9d245df66c0a893dd53d7",
+        "md5Checksum": "968e5caa2e505e35bf50afa1cb445681",
+        "sha256Checksum": "e37a08adaa0be92736e266f9aaed851004e0136812f9d245df66c0a893dd53d7",
+        "headRevisionId": "0B_YIZLrmyOz4V2tRRE1zU3FVNTZ5NUdNTGcxT3BEUkUrN253PQ",
+        "moveStartedAt": "2026-09-11T09:35:35Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -43,7 +62,7 @@
       "viewDescription": "תמונת HEIC מהטלפון · שם קובץ: IMG_0646.HEIC · הועלה לתיקיית נכנס · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר (לא מוסק משם הקובץ)",
       "uploadedAt": "2026-09-08",
       "productLink": null,
-      "status": "inbox",
+      "status": "source",
       "assignee": "תפעול",
       "derivativeIds": [],
       "sourceLinks": [],
@@ -51,6 +70,25 @@
         "state": "none",
         "approvedBy": null,
         "approvedAt": null
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:32Z",
+        "verifiedAt": "2026-09-11T09:35:35Z",
+        "downloadBytes": 1444120,
+        "movedToSourceAt": "2026-09-11T09:35:35Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:8a37cbb55ff41f36d938b3012740d830d9fc63061c38252648769e7070ab28c5",
+        "md5Checksum": "191aaeccb844a9edc109911ef088b204",
+        "sha256Checksum": "8a37cbb55ff41f36d938b3012740d830d9fc63061c38252648769e7070ab28c5",
+        "headRevisionId": "0B_YIZLrmyOz4TVM0b1U0R3ArZVhhc2JuRUFyVkM5VURJWE9zPQ",
+        "moveStartedAt": "2026-09-11T09:35:33Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
       }
     },
     {
@@ -15358,6 +15396,1662 @@
         "md5Checksum": "968f752478cda3aabfc1318dccfeeb66",
         "sha256Checksum": "a61f76169095a5c9cc8f526741d851b18e374ca1d2394e8b13f3f4d381a77923",
         "moveStartedAt": "2026-09-10T17:49:18Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1bjr-6vY2bl5Ce4cWU-Ckik5foOvnzD9T",
+      "sourceFile": {
+        "id": "1bjr-6vY2bl5Ce4cWU-Ckik5foOvnzD9T",
+        "url": "https://drive.google.com/file/d/1bjr-6vY2bl5Ce4cWU-Ckik5foOvnzD9T/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0644.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:37Z",
+        "verifiedAt": "2026-09-11T09:35:39Z",
+        "downloadBytes": 1474110,
+        "movedToSourceAt": "2026-09-11T09:35:39Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:174648548059dbbf95b2f3d9e036984e184687ae4d00d647669b0cc5291d6016",
+        "headRevisionId": "0B_YIZLrmyOz4TDdjYkNlQlBia1kzb1Fad2NkRU9aTmVQWUdrPQ",
+        "md5Checksum": "43af47b3e75a33c150cfa5753f674b94",
+        "sha256Checksum": "174648548059dbbf95b2f3d9e036984e184687ae4d00d647669b0cc5291d6016",
+        "moveStartedAt": "2026-09-11T09:35:38Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1MpnYiujRJ20673qm3hhGxi247uWjMukU",
+      "sourceFile": {
+        "id": "1MpnYiujRJ20673qm3hhGxi247uWjMukU",
+        "url": "https://drive.google.com/file/d/1MpnYiujRJ20673qm3hhGxi247uWjMukU/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: 81A25663-1653-46ED-BA08-CBB77E339ABC.JPG · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:39Z",
+        "verifiedAt": "2026-09-11T09:35:42Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:35:42Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:8986dcf319a66d2e04c901c54df28a6bb9b459efa23a3f3ec5e686bbe9ae1a3d",
+        "headRevisionId": "0B_YIZLrmyOz4dm94SXpNWkh2MU5WcjYvSXRlZnJ0V2pWUHBFPQ",
+        "md5Checksum": "fcbf912febfd6c5e1f9ecbd0e271a4b1",
+        "sha256Checksum": "8986dcf319a66d2e04c901c54df28a6bb9b459efa23a3f3ec5e686bbe9ae1a3d",
+        "moveStartedAt": "2026-09-11T09:35:40Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1yAfmprFCqQmlYrYnB93VYtUwrsosF4Yz",
+      "sourceFile": {
+        "id": "1yAfmprFCqQmlYrYnB93VYtUwrsosF4Yz",
+        "url": "https://drive.google.com/file/d/1yAfmprFCqQmlYrYnB93VYtUwrsosF4Yz/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0586.heic · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:42Z",
+        "verifiedAt": "2026-09-11T09:35:44Z",
+        "downloadBytes": 1137489,
+        "movedToSourceAt": "2026-09-11T09:35:44Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:06b2bd051fb5dad81375cf204bb8dc680d8309a070649e9eb75b6f49d00e3472",
+        "headRevisionId": "0B_YIZLrmyOz4VEdRR0xSVE9KdDcwT0EwRStmVlIwaWlUSzY4PQ",
+        "md5Checksum": "9d00519a0a931b18cc439422f326157d",
+        "sha256Checksum": "06b2bd051fb5dad81375cf204bb8dc680d8309a070649e9eb75b6f49d00e3472",
+        "moveStartedAt": "2026-09-11T09:35:42Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1KCzbwKbpQLzNcF0iUYg9MamWPWCaEYS6",
+      "sourceFile": {
+        "id": "1KCzbwKbpQLzNcF0iUYg9MamWPWCaEYS6",
+        "url": "https://drive.google.com/file/d/1KCzbwKbpQLzNcF0iUYg9MamWPWCaEYS6/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0643.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:44Z",
+        "verifiedAt": "2026-09-11T09:35:46Z",
+        "downloadBytes": 1447159,
+        "movedToSourceAt": "2026-09-11T09:35:46Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:05cc9bcdeac7536866ab5541f2d216fcbf7058757858a512b369115b9a65388a",
+        "headRevisionId": "0B_YIZLrmyOz4bUJuNFJhZFdyN2V3VGJwZTZLYVlvL0RRQmk4PQ",
+        "md5Checksum": "e3239ec533740f3377eb433bf3694e9d",
+        "sha256Checksum": "05cc9bcdeac7536866ab5541f2d216fcbf7058757858a512b369115b9a65388a",
+        "moveStartedAt": "2026-09-11T09:35:45Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1L2rkn2LGAuRhj2h3jAGh69CY6rfQUjjF",
+      "sourceFile": {
+        "id": "1L2rkn2LGAuRhj2h3jAGh69CY6rfQUjjF",
+        "url": "https://drive.google.com/file/d/1L2rkn2LGAuRhj2h3jAGh69CY6rfQUjjF/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0605.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:46Z",
+        "verifiedAt": "2026-09-11T09:35:48Z",
+        "downloadBytes": 1546746,
+        "movedToSourceAt": "2026-09-11T09:35:48Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:d388524cc0da6d423bbc4b7b688b2e7cbe9e78bda236683d6023cf769932c544",
+        "headRevisionId": "0B_YIZLrmyOz4cDFLL2ZaK0RLWUFZNnIrUkMzaXowRHFpbjBvPQ",
+        "md5Checksum": "3e2a84ce978fa64231a316a1d6b0426a",
+        "sha256Checksum": "d388524cc0da6d423bbc4b7b688b2e7cbe9e78bda236683d6023cf769932c544",
+        "moveStartedAt": "2026-09-11T09:35:47Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1l6ssNXuZYpxbCPLLsl6MJ9yaHx7yTncc",
+      "sourceFile": {
+        "id": "1l6ssNXuZYpxbCPLLsl6MJ9yaHx7yTncc",
+        "url": "https://drive.google.com/file/d/1l6ssNXuZYpxbCPLLsl6MJ9yaHx7yTncc/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0589.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:48Z",
+        "verifiedAt": "2026-09-11T09:35:50Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:35:50Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:89f9ad9f9f204d2d2fb9f94dabb8fdcb2eeaa23ce4a8dd869125813e6911621f",
+        "headRevisionId": "0B_YIZLrmyOz4US9Wa0xSNjlkc3llZEtKQnp4VFBBRFlsalBjPQ",
+        "md5Checksum": "34f9662bc77685c8e780d0e720da4f23",
+        "sha256Checksum": "89f9ad9f9f204d2d2fb9f94dabb8fdcb2eeaa23ce4a8dd869125813e6911621f",
+        "moveStartedAt": "2026-09-11T09:35:49Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1pwHQcOSq7cMNkdDhWadZUgE00qDcR1pY",
+      "sourceFile": {
+        "id": "1pwHQcOSq7cMNkdDhWadZUgE00qDcR1pY",
+        "url": "https://drive.google.com/file/d/1pwHQcOSq7cMNkdDhWadZUgE00qDcR1pY/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0580.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:50Z",
+        "verifiedAt": "2026-09-11T09:35:52Z",
+        "downloadBytes": 1499353,
+        "movedToSourceAt": "2026-09-11T09:35:52Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:a49e7cb62d55928ac8f6d3ffaf4bf68c5f97ba2759f25de87333db8176e196f6",
+        "headRevisionId": "0B_YIZLrmyOz4YVU1aXNGVkNvSnBmTkVOem1tRTk2MW5EV3NNPQ",
+        "md5Checksum": "91d21ca43bb8725a90dfaf98f73a2915",
+        "sha256Checksum": "a49e7cb62d55928ac8f6d3ffaf4bf68c5f97ba2759f25de87333db8176e196f6",
+        "moveStartedAt": "2026-09-11T09:35:51Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1pWNli86wzUKJBDRWbps43QEQ702c8plp",
+      "sourceFile": {
+        "id": "1pWNli86wzUKJBDRWbps43QEQ702c8plp",
+        "url": "https://drive.google.com/file/d/1pWNli86wzUKJBDRWbps43QEQ702c8plp/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0587.heic · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:52Z",
+        "verifiedAt": "2026-09-11T09:35:54Z",
+        "downloadBytes": 1282272,
+        "movedToSourceAt": "2026-09-11T09:35:54Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:72694bbfe8bc2ac3974cd14a640932b24a3b6d25e7340166d646fb33d4455676",
+        "headRevisionId": "0B_YIZLrmyOz4WmxVVVRFOENyVmdaV1A4dWxJYUpEZHdWTmkwPQ",
+        "md5Checksum": "a0b812e4f718ef711762a0d1b731ea07",
+        "sha256Checksum": "72694bbfe8bc2ac3974cd14a640932b24a3b6d25e7340166d646fb33d4455676",
+        "moveStartedAt": "2026-09-11T09:35:53Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1e48T0sjnmmEnm-ux0tG-glNYnLHhRgOm",
+      "sourceFile": {
+        "id": "1e48T0sjnmmEnm-ux0tG-glNYnLHhRgOm",
+        "url": "https://drive.google.com/file/d/1e48T0sjnmmEnm-ux0tG-glNYnLHhRgOm/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0581.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:54Z",
+        "verifiedAt": "2026-09-11T09:35:56Z",
+        "downloadBytes": 1799876,
+        "movedToSourceAt": "2026-09-11T09:35:56Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:0f51e464b32c58135e350c896120afb75834f46fa30da6482ed19243fd638a6e",
+        "headRevisionId": "0B_YIZLrmyOz4VUJTU043NklWRVErZGE2dHN6WDFUdmJzUDRjPQ",
+        "md5Checksum": "1e5937afdb9f829f10d24283c86cf742",
+        "sha256Checksum": "0f51e464b32c58135e350c896120afb75834f46fa30da6482ed19243fd638a6e",
+        "moveStartedAt": "2026-09-11T09:35:55Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1-sal1_Upxdzh_yVPxB8pS5XdGIoEAeuK",
+      "sourceFile": {
+        "id": "1-sal1_Upxdzh_yVPxB8pS5XdGIoEAeuK",
+        "url": "https://drive.google.com/file/d/1-sal1_Upxdzh_yVPxB8pS5XdGIoEAeuK/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0576.heic · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:56Z",
+        "verifiedAt": "2026-09-11T09:35:58Z",
+        "downloadBytes": 1757716,
+        "movedToSourceAt": "2026-09-11T09:35:58Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:38dbc3df69f562ab9567a8d84b8ab32b6ad3f0145c5d21979f109ad06b035e52",
+        "headRevisionId": "0B_YIZLrmyOz4UUk5VEhhbmRUeERtR3lBMnpPQVd5V0d1SW5RPQ",
+        "md5Checksum": "fbe689240b9eeaa7e53bbe6ccaa81122",
+        "sha256Checksum": "38dbc3df69f562ab9567a8d84b8ab32b6ad3f0145c5d21979f109ad06b035e52",
+        "moveStartedAt": "2026-09-11T09:35:57Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1__3f8Z9_t1xGkXpgop_NarDZwzI2pVcP",
+      "sourceFile": {
+        "id": "1__3f8Z9_t1xGkXpgop_NarDZwzI2pVcP",
+        "url": "https://drive.google.com/file/d/1__3f8Z9_t1xGkXpgop_NarDZwzI2pVcP/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0577.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:35:58Z",
+        "verifiedAt": "2026-09-11T09:36:00Z",
+        "downloadBytes": 1309763,
+        "movedToSourceAt": "2026-09-11T09:36:00Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:f7b6e4736163e75c43ad604f52c935e8669eb2948853c6f57ba29e46b1146506",
+        "headRevisionId": "0B_YIZLrmyOz4SUY5Y3EvT1lKNVFoK1dUNVZlWUdqTGNRcTJZPQ",
+        "md5Checksum": "311adf43dd75b4c14df94c53393107bd",
+        "sha256Checksum": "f7b6e4736163e75c43ad604f52c935e8669eb2948853c6f57ba29e46b1146506",
+        "moveStartedAt": "2026-09-11T09:35:59Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1J4CG-XX0f5fljp_hhAR6hBs8THpbmndJ",
+      "sourceFile": {
+        "id": "1J4CG-XX0f5fljp_hhAR6hBs8THpbmndJ",
+        "url": "https://drive.google.com/file/d/1J4CG-XX0f5fljp_hhAR6hBs8THpbmndJ/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0585.heic · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:00Z",
+        "verifiedAt": "2026-09-11T09:36:02Z",
+        "downloadBytes": 1045425,
+        "movedToSourceAt": "2026-09-11T09:36:02Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:8c643360d0210b93716dd1b651ca0d1dfc8e85949fee80968864d71c65b0ab4b",
+        "headRevisionId": "0B_YIZLrmyOz4d0c3M0ZtMjlRSEtuenVhL2sxWVozdWdhbTk4PQ",
+        "md5Checksum": "d2aa87c59ba204b149837167aebc12a7",
+        "sha256Checksum": "8c643360d0210b93716dd1b651ca0d1dfc8e85949fee80968864d71c65b0ab4b",
+        "moveStartedAt": "2026-09-11T09:36:01Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1KRQHgFkYC2P1ALDcn_NnPIOL8Xt54zKo",
+      "sourceFile": {
+        "id": "1KRQHgFkYC2P1ALDcn_NnPIOL8Xt54zKo",
+        "url": "https://drive.google.com/file/d/1KRQHgFkYC2P1ALDcn_NnPIOL8Xt54zKo/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0564.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:02Z",
+        "verifiedAt": "2026-09-11T09:36:04Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:04Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:4f0126b56128f851ae4da33dc08237984ebd512cf6f9b23a051daac27aa2ad42",
+        "headRevisionId": "0B_YIZLrmyOz4d1ZucGo3SDZXZnBMSGpiaStjdkROS0t1VWVVPQ",
+        "md5Checksum": "5c977d8e3b27b43a6b5b267037e725d0",
+        "sha256Checksum": "4f0126b56128f851ae4da33dc08237984ebd512cf6f9b23a051daac27aa2ad42",
+        "moveStartedAt": "2026-09-11T09:36:03Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1y-IHxxcYcV8KKweWBpNw9iwuOC5tmlhc",
+      "sourceFile": {
+        "id": "1y-IHxxcYcV8KKweWBpNw9iwuOC5tmlhc",
+        "url": "https://drive.google.com/file/d/1y-IHxxcYcV8KKweWBpNw9iwuOC5tmlhc/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: 3ECD0D14-5C61-4830-82A7-6D1DCD529E95.JPG · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:04Z",
+        "verifiedAt": "2026-09-11T09:36:06Z",
+        "downloadBytes": 1018387,
+        "movedToSourceAt": "2026-09-11T09:36:06Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:eef611c6a87da47f1a4c8e14c9224b3ccd64fa7afbed94c3cee56fc1c707f6c2",
+        "headRevisionId": "0B_YIZLrmyOz4UkRJbmdxcHY2WSszR0Rlcm04bWNXVkxKOWNRPQ",
+        "md5Checksum": "30d49f200ae68b3cb0e0f7408ceb2b2f",
+        "sha256Checksum": "eef611c6a87da47f1a4c8e14c9224b3ccd64fa7afbed94c3cee56fc1c707f6c2",
+        "moveStartedAt": "2026-09-11T09:36:05Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1Ji_6HkeeL-L71afzbQUaPYF2f-M2ZyxD",
+      "sourceFile": {
+        "id": "1Ji_6HkeeL-L71afzbQUaPYF2f-M2ZyxD",
+        "url": "https://drive.google.com/file/d/1Ji_6HkeeL-L71afzbQUaPYF2f-M2ZyxD/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: D28D72C6-C49D-4734-8B33-8AAC2A72234F.JPG · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:06Z",
+        "verifiedAt": "2026-09-11T09:36:09Z",
+        "downloadBytes": 1381831,
+        "movedToSourceAt": "2026-09-11T09:36:09Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:68691535ec6b30c36b1e30b25c4d94b76a00f5976a172cfc3fac6dc57b562f02",
+        "headRevisionId": "0B_YIZLrmyOz4ajJQWWIxZDlMZ3hLQjgxaHI3VC9mb0k4Vlp3PQ",
+        "md5Checksum": "60ead4254cdbe7a7e613ef18cc357595",
+        "sha256Checksum": "68691535ec6b30c36b1e30b25c4d94b76a00f5976a172cfc3fac6dc57b562f02",
+        "moveStartedAt": "2026-09-11T09:36:07Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1jFt4SIZinG3Ms5btEb9gAJBDfRMJsHwk",
+      "sourceFile": {
+        "id": "1jFt4SIZinG3Ms5btEb9gAJBDfRMJsHwk",
+        "url": "https://drive.google.com/file/d/1jFt4SIZinG3Ms5btEb9gAJBDfRMJsHwk/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: 517A9166-A7C6-4305-8C83-DAF520F9EFF6.JPG · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:09Z",
+        "verifiedAt": "2026-09-11T09:36:11Z",
+        "downloadBytes": 1157080,
+        "movedToSourceAt": "2026-09-11T09:36:11Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:bb690f638fc6d85f720d2b38e84b6e8384e8bb6cf54b64296eca4a92f2177d16",
+        "headRevisionId": "0B_YIZLrmyOz4cnJ1SUhuSWR5eEhOVzlSODRTbDRsU3UvUWc0PQ",
+        "md5Checksum": "b219746f5fb7824a69f1d2585013995d",
+        "sha256Checksum": "bb690f638fc6d85f720d2b38e84b6e8384e8bb6cf54b64296eca4a92f2177d16",
+        "moveStartedAt": "2026-09-11T09:36:09Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1kICdk4oiR2i0Y_z1rsc8U5gBgqKc4UcG",
+      "sourceFile": {
+        "id": "1kICdk4oiR2i0Y_z1rsc8U5gBgqKc4UcG",
+        "url": "https://drive.google.com/file/d/1kICdk4oiR2i0Y_z1rsc8U5gBgqKc4UcG/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0542.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:11Z",
+        "verifiedAt": "2026-09-11T09:36:13Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:13Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:98ba1de434b4ad6df82ca6b6a014a0b6985744e9f31b2a742315ec142a466900",
+        "headRevisionId": "0B_YIZLrmyOz4UUREUElBNG4xcGZMZzUvMUU3NTRCNVAycFNnPQ",
+        "md5Checksum": "291d26af1c071d4854342e34f100dd6e",
+        "sha256Checksum": "98ba1de434b4ad6df82ca6b6a014a0b6985744e9f31b2a742315ec142a466900",
+        "moveStartedAt": "2026-09-11T09:36:12Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1BOnwG2cRrPCKLY2BBVZOEqRvuZNM3Bw4",
+      "sourceFile": {
+        "id": "1BOnwG2cRrPCKLY2BBVZOEqRvuZNM3Bw4",
+        "url": "https://drive.google.com/file/d/1BOnwG2cRrPCKLY2BBVZOEqRvuZNM3Bw4/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0562.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:13Z",
+        "verifiedAt": "2026-09-11T09:36:15Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:15Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:7f0a28b2656a4bb903f5089290f1bd1693262461ec81dfe547c95d9e9bf82e37",
+        "headRevisionId": "0B_YIZLrmyOz4STRaeGZQUmw4S0l3SFhnVmFLVXdybGxqa29JPQ",
+        "md5Checksum": "81cc0cbdbf526253b8da87b7be11b959",
+        "sha256Checksum": "7f0a28b2656a4bb903f5089290f1bd1693262461ec81dfe547c95d9e9bf82e37",
+        "moveStartedAt": "2026-09-11T09:36:13Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1m4DD8gts2K7oyfwNC3nSvEBfzQD16PoK",
+      "sourceFile": {
+        "id": "1m4DD8gts2K7oyfwNC3nSvEBfzQD16PoK",
+        "url": "https://drive.google.com/file/d/1m4DD8gts2K7oyfwNC3nSvEBfzQD16PoK/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: 78611145-9BE4-48D7-B36B-C411D318C9FD.JPG · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:15Z",
+        "verifiedAt": "2026-09-11T09:36:18Z",
+        "downloadBytes": 1065558,
+        "movedToSourceAt": "2026-09-11T09:36:18Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:81802b5236c5c1ce10b5a05667ee7107ae9e84d080228f0ca2c23113e18069b9",
+        "headRevisionId": "0B_YIZLrmyOz4bnNhWTA4cTFZMGJlcTNlUDJnV0lUL1FQN3NVPQ",
+        "md5Checksum": "953136da9c541505dca6479c6558848d",
+        "sha256Checksum": "81802b5236c5c1ce10b5a05667ee7107ae9e84d080228f0ca2c23113e18069b9",
+        "moveStartedAt": "2026-09-11T09:36:15Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1_a2lzL6CBUT9dUaCT2NEEgMxefQTbFrP",
+      "sourceFile": {
+        "id": "1_a2lzL6CBUT9dUaCT2NEEgMxefQTbFrP",
+        "url": "https://drive.google.com/file/d/1_a2lzL6CBUT9dUaCT2NEEgMxefQTbFrP/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0536.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:18Z",
+        "verifiedAt": "2026-09-11T09:36:20Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:20Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:fa3393e6ea2868c228cce9f4c75c50d4c716d7d38f85609428fcfb606caf92b6",
+        "headRevisionId": "0B_YIZLrmyOz4UDBiSTIzTUgwQkxLeEpWQjhiaUJyUmpEbE9VPQ",
+        "md5Checksum": "89c21a303d994b080ba9172e4f918bfc",
+        "sha256Checksum": "fa3393e6ea2868c228cce9f4c75c50d4c716d7d38f85609428fcfb606caf92b6",
+        "moveStartedAt": "2026-09-11T09:36:19Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1ZUAS5HMzhQ0TjnyitSKUuEX3GG_eB4N_",
+      "sourceFile": {
+        "id": "1ZUAS5HMzhQ0TjnyitSKUuEX3GG_eB4N_",
+        "url": "https://drive.google.com/file/d/1ZUAS5HMzhQ0TjnyitSKUuEX3GG_eB4N_/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: 639B2FE1-6696-4FC3-84F4-1D9932ED26E3.JPG · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:20Z",
+        "verifiedAt": "2026-09-11T09:36:22Z",
+        "downloadBytes": 1059033,
+        "movedToSourceAt": "2026-09-11T09:36:22Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:f0451ad98d238b6e0b333d1f902b0c46660063cdb28b6b90ca4c199798dadbc4",
+        "headRevisionId": "0B_YIZLrmyOz4Q01WMFBTdUM4MDlHQjV5SFZsd0thcjlhMXVvPQ",
+        "md5Checksum": "0d8413b66fc8f7fad1bf9463fcacaa70",
+        "sha256Checksum": "f0451ad98d238b6e0b333d1f902b0c46660063cdb28b6b90ca4c199798dadbc4",
+        "moveStartedAt": "2026-09-11T09:36:21Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1caj9TN8Mka5KUI4GIxA8hqV9ZUtVTZ4X",
+      "sourceFile": {
+        "id": "1caj9TN8Mka5KUI4GIxA8hqV9ZUtVTZ4X",
+        "url": "https://drive.google.com/file/d/1caj9TN8Mka5KUI4GIxA8hqV9ZUtVTZ4X/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0563.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:22Z",
+        "verifiedAt": "2026-09-11T09:36:24Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:24Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:dd28c6e5e9a96d90cd4643ccf4eb218b0be7994de6b789ca1050bb27421bc662",
+        "headRevisionId": "0B_YIZLrmyOz4UldWNis2Uml5WmxxRFFiL1R2cnhXQk5mUEo4PQ",
+        "md5Checksum": "8bf714b5f26a662389b7448199752588",
+        "sha256Checksum": "dd28c6e5e9a96d90cd4643ccf4eb218b0be7994de6b789ca1050bb27421bc662",
+        "moveStartedAt": "2026-09-11T09:36:23Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1cTFvPEvaKQC2lflyD52vsxu29n7cAvyY",
+      "sourceFile": {
+        "id": "1cTFvPEvaKQC2lflyD52vsxu29n7cAvyY",
+        "url": "https://drive.google.com/file/d/1cTFvPEvaKQC2lflyD52vsxu29n7cAvyY/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0543.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:24Z",
+        "verifiedAt": "2026-09-11T09:36:26Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:26Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:7a3501964683b816f207f80cd80e74f77d702f23254ec9b9e5c2248c2ce897da",
+        "headRevisionId": "0B_YIZLrmyOz4MS94Wk9sY0wzSUw4ZFZidVlzSG96dmpwSHBFPQ",
+        "md5Checksum": "ce8f6775a5fc847d759737ecd0a33e15",
+        "sha256Checksum": "7a3501964683b816f207f80cd80e74f77d702f23254ec9b9e5c2248c2ce897da",
+        "moveStartedAt": "2026-09-11T09:36:25Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1x2zWZ5WdKD4NRVtTQSc_6eDWOIskKWua",
+      "sourceFile": {
+        "id": "1x2zWZ5WdKD4NRVtTQSc_6eDWOIskKWua",
+        "url": "https://drive.google.com/file/d/1x2zWZ5WdKD4NRVtTQSc_6eDWOIskKWua/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0560.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:26Z",
+        "verifiedAt": "2026-09-11T09:36:28Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:28Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:8c021d045764346fbbfb9f6c2c7ca4d59ace24e5f985bf9eda83cf79f7d982ce",
+        "headRevisionId": "0B_YIZLrmyOz4SEZ5Mk1wWVFWYWQxSHExc0JLSmhQWStyQk5rPQ",
+        "md5Checksum": "6cc7bec6e297783b621a03496033d109",
+        "sha256Checksum": "8c021d045764346fbbfb9f6c2c7ca4d59ace24e5f985bf9eda83cf79f7d982ce",
+        "moveStartedAt": "2026-09-11T09:36:27Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-18JqnSYaKiooAr_HKhv0zNFnh-14tlkYN",
+      "sourceFile": {
+        "id": "18JqnSYaKiooAr_HKhv0zNFnh-14tlkYN",
+        "url": "https://drive.google.com/file/d/18JqnSYaKiooAr_HKhv0zNFnh-14tlkYN/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0561.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:28Z",
+        "verifiedAt": "2026-09-11T09:36:31Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:31Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:a53a3fc31665810b94c8642d40e58974273e012798a4dac59e2040fca4f49f79",
+        "headRevisionId": "0B_YIZLrmyOz4b09xaHQ3R3M0NWVMWmdQa2hLRlFDbkh5d0U4PQ",
+        "md5Checksum": "1af1490365a62a74d0e8967a7d83b221",
+        "sha256Checksum": "a53a3fc31665810b94c8642d40e58974273e012798a4dac59e2040fca4f49f79",
+        "moveStartedAt": "2026-09-11T09:36:29Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1ZCF8ThCk6u03IazsQ5chSnkCgHIX3LRZ",
+      "sourceFile": {
+        "id": "1ZCF8ThCk6u03IazsQ5chSnkCgHIX3LRZ",
+        "url": "https://drive.google.com/file/d/1ZCF8ThCk6u03IazsQ5chSnkCgHIX3LRZ/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0535.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:31Z",
+        "verifiedAt": "2026-09-11T09:36:33Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:33Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:c19de4f1dc0051dfd34a25ac3ed603ea0676dfd6f021284f608bad17e69adb7c",
+        "headRevisionId": "0B_YIZLrmyOz4Z3JNTXJabGlJRHozeUo4UW1lN25kLy8vMnVZPQ",
+        "md5Checksum": "1c67a1106e730b2a35a7131ee68cf4dc",
+        "sha256Checksum": "c19de4f1dc0051dfd34a25ac3ed603ea0676dfd6f021284f608bad17e69adb7c",
+        "moveStartedAt": "2026-09-11T09:36:32Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1NJcY1SZsAZWSviSk0lB5zgiooLnvMLST",
+      "sourceFile": {
+        "id": "1NJcY1SZsAZWSviSk0lB5zgiooLnvMLST",
+        "url": "https://drive.google.com/file/d/1NJcY1SZsAZWSviSk0lB5zgiooLnvMLST/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0533.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:33Z",
+        "verifiedAt": "2026-09-11T09:36:35Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:35Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:e5c7d69fa3780972cfebbd9346e952e915494023e6f77cb587727483d7f56e62",
+        "headRevisionId": "0B_YIZLrmyOz4QzdMZGFrM2hvWmN0UlF2TUVNRnBqRnNoNzNFPQ",
+        "md5Checksum": "d70104f6292a437a357f4aa3a5f190e4",
+        "sha256Checksum": "e5c7d69fa3780972cfebbd9346e952e915494023e6f77cb587727483d7f56e62",
+        "moveStartedAt": "2026-09-11T09:36:34Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1b7EEjiikldwEk2JiIMK3bZTwx0oo68_m",
+      "sourceFile": {
+        "id": "1b7EEjiikldwEk2JiIMK3bZTwx0oo68_m",
+        "url": "https://drive.google.com/file/d/1b7EEjiikldwEk2JiIMK3bZTwx0oo68_m/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0530.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:35Z",
+        "verifiedAt": "2026-09-11T09:36:39Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:39Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:e9a4e1daf67c15e153eb8eb8a8976d7a6e33faa01e96a3d345b6f91c5fae21ac",
+        "headRevisionId": "0B_YIZLrmyOz4bEM1YkxPUnViUDlOTVhhQnF3UjJuU0ZBbk00PQ",
+        "md5Checksum": "87f84b9a684b2168410f553fc213ec44",
+        "sha256Checksum": "e9a4e1daf67c15e153eb8eb8a8976d7a6e33faa01e96a3d345b6f91c5fae21ac",
+        "moveStartedAt": "2026-09-11T09:36:38Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1tkPb227A6LF-QlSediHX3zyNItx9MrPl",
+      "sourceFile": {
+        "id": "1tkPb227A6LF-QlSediHX3zyNItx9MrPl",
+        "url": "https://drive.google.com/file/d/1tkPb227A6LF-QlSediHX3zyNItx9MrPl/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0489.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:39Z",
+        "verifiedAt": "2026-09-11T09:36:41Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:41Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:986e74f371667e4a6966ccafcd57e6d82d90846166ce203f7d60965004060298",
+        "headRevisionId": "0B_YIZLrmyOz4cUQrTUlTVytKOThPOWo4QkNhZjZwQkdaQzdjPQ",
+        "md5Checksum": "1b2a35267fc394b6ed4699dde928a3af",
+        "sha256Checksum": "986e74f371667e4a6966ccafcd57e6d82d90846166ce203f7d60965004060298",
+        "moveStartedAt": "2026-09-11T09:36:40Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1Ck6f3vDNzKRY0aR81rG4X8PRjGlDIyhd",
+      "sourceFile": {
+        "id": "1Ck6f3vDNzKRY0aR81rG4X8PRjGlDIyhd",
+        "url": "https://drive.google.com/file/d/1Ck6f3vDNzKRY0aR81rG4X8PRjGlDIyhd/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0483.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:41Z",
+        "verifiedAt": "2026-09-11T09:36:42Z",
+        "downloadBytes": 1534473,
+        "movedToSourceAt": "2026-09-11T09:36:42Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:ef2469fdceff52af3275861d915651e6a4bd690a7a0fd9d6e85796eaf0c7bae8",
+        "headRevisionId": "0B_YIZLrmyOz4RmIzWGpmNVp6NXhzWkVQWTFJK21tS2lPMDZzPQ",
+        "md5Checksum": "2cef889950a59c10e571e7ba501fab2f",
+        "sha256Checksum": "ef2469fdceff52af3275861d915651e6a4bd690a7a0fd9d6e85796eaf0c7bae8",
+        "moveStartedAt": "2026-09-11T09:36:41Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1NW98Nw87VVN0T2VgL9EVbtwOO6v3QNod",
+      "sourceFile": {
+        "id": "1NW98Nw87VVN0T2VgL9EVbtwOO6v3QNod",
+        "url": "https://drive.google.com/file/d/1NW98Nw87VVN0T2VgL9EVbtwOO6v3QNod/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0478.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:42Z",
+        "verifiedAt": "2026-09-11T09:36:46Z",
+        "downloadBytes": 1299991,
+        "movedToSourceAt": "2026-09-11T09:36:46Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:f4e76b335cb79d0bb2cfe5e5e271c8d002eb9f073f88013180e3dac6f9823792",
+        "headRevisionId": "0B_YIZLrmyOz4SFJEbFdkMi9NWHNTMDMwSzdZWW52bGNEMjBBPQ",
+        "md5Checksum": "73e674ff6933c0e2f693e398003a6898",
+        "sha256Checksum": "f4e76b335cb79d0bb2cfe5e5e271c8d002eb9f073f88013180e3dac6f9823792",
+        "moveStartedAt": "2026-09-11T09:36:44Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1lAwSs0bD7NLgGy_tX5Jf1RRMjMZTytCd",
+      "sourceFile": {
+        "id": "1lAwSs0bD7NLgGy_tX5Jf1RRMjMZTytCd",
+        "url": "https://drive.google.com/file/d/1lAwSs0bD7NLgGy_tX5Jf1RRMjMZTytCd/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0485.JPG · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:46Z",
+        "verifiedAt": "2026-09-11T09:36:48Z",
+        "downloadBytes": 491508,
+        "movedToSourceAt": "2026-09-11T09:36:48Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:1951817ccdf3f69f7b82a9c1ab1d1ee6e036f487456fb2350c782985ff68a5f1",
+        "headRevisionId": "0B_YIZLrmyOz4Z1k1NjVlRUFBTHRuQlFRejd0enRXMEp0ODFvPQ",
+        "md5Checksum": "34c41b1d8043978f15863baf551baf18",
+        "sha256Checksum": "1951817ccdf3f69f7b82a9c1ab1d1ee6e036f487456fb2350c782985ff68a5f1",
+        "moveStartedAt": "2026-09-11T09:36:46Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1bs_M3nZSuc1chJrZ2_ezs6AxZ7FYW5MO",
+      "sourceFile": {
+        "id": "1bs_M3nZSuc1chJrZ2_ezs6AxZ7FYW5MO",
+        "url": "https://drive.google.com/file/d/1bs_M3nZSuc1chJrZ2_ezs6AxZ7FYW5MO/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0477.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:48Z",
+        "verifiedAt": "2026-09-11T09:36:51Z",
+        "downloadBytes": 1153521,
+        "movedToSourceAt": "2026-09-11T09:36:51Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:bba6d7ef5bada84de18ce93609d2a4cb3129b7a39b6bd0f56f67f95f15ba397b",
+        "headRevisionId": "0B_YIZLrmyOz4WUM2TFQ3TlNzVlkvaFEwVlV2NCtOSjAxWExJPQ",
+        "md5Checksum": "caab3891bbbca5b8dacdaa4ec207ce5d",
+        "sha256Checksum": "bba6d7ef5bada84de18ce93609d2a4cb3129b7a39b6bd0f56f67f95f15ba397b",
+        "moveStartedAt": "2026-09-11T09:36:49Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1gsnN85p7b3ucZI4R0uqVDvQKFSSfZcla",
+      "sourceFile": {
+        "id": "1gsnN85p7b3ucZI4R0uqVDvQKFSSfZcla",
+        "url": "https://drive.google.com/file/d/1gsnN85p7b3ucZI4R0uqVDvQKFSSfZcla/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0476.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:51Z",
+        "verifiedAt": "2026-09-11T09:36:53Z",
+        "downloadBytes": 1152692,
+        "movedToSourceAt": "2026-09-11T09:36:53Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:889bda6678fde1a238221220f0732e07569826dc007500bd78636c0e0e62ae58",
+        "headRevisionId": "0B_YIZLrmyOz4WkNqdThrd3RNUlRCRkNyb0F5Q2xHdDRrQmNFPQ",
+        "md5Checksum": "783ee4f7fd28e28b348caab2b0b3a270",
+        "sha256Checksum": "889bda6678fde1a238221220f0732e07569826dc007500bd78636c0e0e62ae58",
+        "moveStartedAt": "2026-09-11T09:36:52Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1aUAYfdYIN6yyCKtFDDcokbUUD-mhCHTO",
+      "sourceFile": {
+        "id": "1aUAYfdYIN6yyCKtFDDcokbUUD-mhCHTO",
+        "url": "https://drive.google.com/file/d/1aUAYfdYIN6yyCKtFDDcokbUUD-mhCHTO/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0475.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:53Z",
+        "verifiedAt": "2026-09-11T09:36:55Z",
+        "downloadBytes": 1157200,
+        "movedToSourceAt": "2026-09-11T09:36:55Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:000dbde336be3e57492f05be22096db5167ebd9ecf059d43b52841fcdb4ac81d",
+        "headRevisionId": "0B_YIZLrmyOz4Skl6TjB6MkNtaVlSaW5yLzFtbkZWWmNzbDBBPQ",
+        "md5Checksum": "9dedb93cb2c4b00a25ac2ec018d9e4bf",
+        "sha256Checksum": "000dbde336be3e57492f05be22096db5167ebd9ecf059d43b52841fcdb4ac81d",
+        "moveStartedAt": "2026-09-11T09:36:54Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-16PIKSpaEhYmIee5l0EvarWSJKuoZ4OvL",
+      "sourceFile": {
+        "id": "16PIKSpaEhYmIee5l0EvarWSJKuoZ4OvL",
+        "url": "https://drive.google.com/file/d/16PIKSpaEhYmIee5l0EvarWSJKuoZ4OvL/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0433.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:55Z",
+        "verifiedAt": "2026-09-11T09:36:58Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:36:58Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:33a34970fd19663648a9d252dfc778ed58925b66858ff06db87936ceef0d4008",
+        "headRevisionId": "0B_YIZLrmyOz4S0p0R3BYanc5OHVXTnVaMTY1djNNbDZibENvPQ",
+        "md5Checksum": "71aaa801d6ebf5ba5b6f1175dc00fd73",
+        "sha256Checksum": "33a34970fd19663648a9d252dfc778ed58925b66858ff06db87936ceef0d4008",
+        "moveStartedAt": "2026-09-11T09:36:56Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1AnQlYDBz4ruaGb4xrNe0IbKYrqhWc2cd",
+      "sourceFile": {
+        "id": "1AnQlYDBz4ruaGb4xrNe0IbKYrqhWc2cd",
+        "url": "https://drive.google.com/file/d/1AnQlYDBz4ruaGb4xrNe0IbKYrqhWc2cd/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0474.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:36:58Z",
+        "verifiedAt": "2026-09-11T09:37:00Z",
+        "downloadBytes": 1146884,
+        "movedToSourceAt": "2026-09-11T09:37:00Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:df43b8728f34c8eda002202493c967e7984a3ce8a8cd20808d6425619e305ace",
+        "headRevisionId": "0B_YIZLrmyOz4bUZaZ1NPS3Nqb1JwaEJyRXJXZHhLMURVWVZrPQ",
+        "md5Checksum": "98e62586e758360bcc35fc2de60423a5",
+        "sha256Checksum": "df43b8728f34c8eda002202493c967e7984a3ce8a8cd20808d6425619e305ace",
+        "moveStartedAt": "2026-09-11T09:36:59Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-17SU9SBs4UqIm6fBt3cJNTHZ3Xi_cfyvc",
+      "sourceFile": {
+        "id": "17SU9SBs4UqIm6fBt3cJNTHZ3Xi_cfyvc",
+        "url": "https://drive.google.com/file/d/17SU9SBs4UqIm6fBt3cJNTHZ3Xi_cfyvc/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0419.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:37:00Z",
+        "verifiedAt": "2026-09-11T09:37:02Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:37:02Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:3c82674e349d1b618224590a48013ba5c83eb1c2276bc066cc83df65619de516",
+        "headRevisionId": "0B_YIZLrmyOz4U1VqQnp2QklTSGxvZStnbWoxS1JJWHhtQjVnPQ",
+        "md5Checksum": "dab14e513eddf54e62df724082e15a59",
+        "sha256Checksum": "3c82674e349d1b618224590a48013ba5c83eb1c2276bc066cc83df65619de516",
+        "moveStartedAt": "2026-09-11T09:37:01Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1lqNHqFsigVKG5lgjUG_x9ySz8-e08l53",
+      "sourceFile": {
+        "id": "1lqNHqFsigVKG5lgjUG_x9ySz8-e08l53",
+        "url": "https://drive.google.com/file/d/1lqNHqFsigVKG5lgjUG_x9ySz8-e08l53/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0420.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:37:02Z",
+        "verifiedAt": "2026-09-11T09:37:04Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-11T09:37:04Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:0c5cf5bd7030b49ef9420b1c8782ca9ab56c1b980231707d5059ecb4e2789ae7",
+        "headRevisionId": "0B_YIZLrmyOz4TkR6ckcrMHo5REIvSjlielNHV3hIM1d3Rm84PQ",
+        "md5Checksum": "a53c4c1a8bd9991c535fc864c2659b1a",
+        "sha256Checksum": "0c5cf5bd7030b49ef9420b1c8782ca9ab56c1b980231707d5059ecb4e2789ae7",
+        "moveStartedAt": "2026-09-11T09:37:03Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1B2-t_1hs-NHTbB-cfLW7N5fBzIwjo_Qh",
+      "sourceFile": {
+        "id": "1B2-t_1hs-NHTbB-cfLW7N5fBzIwjo_Qh",
+        "url": "https://drive.google.com/file/d/1B2-t_1hs-NHTbB-cfLW7N5fBzIwjo_Qh/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0421.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:37:04Z",
+        "verifiedAt": "2026-09-11T09:37:06Z",
+        "downloadBytes": 1602383,
+        "movedToSourceAt": "2026-09-11T09:37:06Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:e5b2dbcca61de80989698cb00fcd60d6823829fd5a966fa0bd22e24e86a8f3d8",
+        "headRevisionId": "0B_YIZLrmyOz4SnpJQ0pRa0tiNHRJN1h3RHVmcTcxZEJHN3JVPQ",
+        "md5Checksum": "3b2b9ee7a159654818747360b4aa8f60",
+        "sha256Checksum": "e5b2dbcca61de80989698cb00fcd60d6823829fd5a966fa0bd22e24e86a8f3d8",
+        "moveStartedAt": "2026-09-11T09:37:05Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1fJPd7-G3F-MZI9o-EYxGlcwEOOSrCkdg",
+      "sourceFile": {
+        "id": "1fJPd7-G3F-MZI9o-EYxGlcwEOOSrCkdg",
+        "url": "https://drive.google.com/file/d/1fJPd7-G3F-MZI9o-EYxGlcwEOOSrCkdg/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0432.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:37:06Z",
+        "verifiedAt": "2026-09-11T09:37:08Z",
+        "downloadBytes": 1884346,
+        "movedToSourceAt": "2026-09-11T09:37:08Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:a2872073b07c0f7c9921f8c335782c34b6961b77c7c8463de3702f8154e8da45",
+        "headRevisionId": "0B_YIZLrmyOz4VWVtb1paQXhGUDQ0V1dTbmxMS0VJdGx1cGJrPQ",
+        "md5Checksum": "79d6ba2fbfeb81fcbcbf7f8a8045a33c",
+        "sha256Checksum": "a2872073b07c0f7c9921f8c335782c34b6961b77c7c8463de3702f8154e8da45",
+        "moveStartedAt": "2026-09-11T09:37:07Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1H42FryTaECtHn8gakJmoTDpdnswB0E1k",
+      "sourceFile": {
+        "id": "1H42FryTaECtHn8gakJmoTDpdnswB0E1k",
+        "url": "https://drive.google.com/file/d/1H42FryTaECtHn8gakJmoTDpdnswB0E1k/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0434.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:37:08Z",
+        "verifiedAt": "2026-09-11T09:37:12Z",
+        "downloadBytes": 1697171,
+        "movedToSourceAt": "2026-09-11T09:37:12Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:0569d03cd34839ec56b9b9053808736e56a737a5bf14b4a4f5a7d8be44e983e0",
+        "headRevisionId": "0B_YIZLrmyOz4dmYwc2Q3d1RONEZBWmZhbWd6NlNRdzl2TFQwPQ",
+        "md5Checksum": "14d22d14fb24b042b2ed749267e4b495",
+        "sha256Checksum": "0569d03cd34839ec56b9b9053808736e56a737a5bf14b4a4f5a7d8be44e983e0",
+        "moveStartedAt": "2026-09-11T09:37:09Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1Ye80_uaGMsQNIQF9HaBYecp2aGdfHJHS",
+      "sourceFile": {
+        "id": "1Ye80_uaGMsQNIQF9HaBYecp2aGdfHJHS",
+        "url": "https://drive.google.com/file/d/1Ye80_uaGMsQNIQF9HaBYecp2aGdfHJHS/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0473.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:37:12Z",
+        "verifiedAt": "2026-09-11T09:37:14Z",
+        "downloadBytes": 1097914,
+        "movedToSourceAt": "2026-09-11T09:37:14Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:4f5ef321d10fbafa228e9c1426b8146c5b8805e2a4dffb7c11ece968b7c8cfc4",
+        "headRevisionId": "0B_YIZLrmyOz4ZXZUTE1zd21NOVRYWVZaSys5Q2drdk04V1prPQ",
+        "md5Checksum": "2d1f1eb0d3bb3c8c5ef860e6221cb7c7",
+        "sha256Checksum": "4f5ef321d10fbafa228e9c1426b8146c5b8805e2a4dffb7c11ece968b7c8cfc4",
+        "moveStartedAt": "2026-09-11T09:37:13Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1ZH1e4fMjkEi9QBAdx7h7Y1aF-Y8Jlg2b",
+      "sourceFile": {
+        "id": "1ZH1e4fMjkEi9QBAdx7h7Y1aF-Y8Jlg2b",
+        "url": "https://drive.google.com/file/d/1ZH1e4fMjkEi9QBAdx7h7Y1aF-Y8Jlg2b/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0422.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:37:14Z",
+        "verifiedAt": "2026-09-11T09:37:16Z",
+        "downloadBytes": 1167105,
+        "movedToSourceAt": "2026-09-11T09:37:16Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:badd873628ad28ff69310a831ebf312c76560567087063ac1af03f56d58928c4",
+        "headRevisionId": "0B_YIZLrmyOz4WG1yRlZ3eVd0MmxsQmEzUTM4Tlp0Vy9meHBjPQ",
+        "md5Checksum": "41ae53e354283a5cc53dd419ac62eba9",
+        "sha256Checksum": "badd873628ad28ff69310a831ebf312c76560567087063ac1af03f56d58928c4",
+        "moveStartedAt": "2026-09-11T09:37:15Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1c3obdAUe8l1SEAXXcjnZjJl5TVdIQIWL",
+      "sourceFile": {
+        "id": "1c3obdAUe8l1SEAXXcjnZjJl5TVdIQIWL",
+        "url": "https://drive.google.com/file/d/1c3obdAUe8l1SEAXXcjnZjJl5TVdIQIWL/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0472.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:37:16Z",
+        "verifiedAt": "2026-09-11T09:37:18Z",
+        "downloadBytes": 1086430,
+        "movedToSourceAt": "2026-09-11T09:37:18Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:86161bdde7cd91a499512dbb2719cd8ecc14bba9e1dbc92c8faa7107904971ab",
+        "headRevisionId": "0B_YIZLrmyOz4S2xTODE5bFQwbHNhU1YyZmc5dG5XZXEvN05zPQ",
+        "md5Checksum": "0ec7d33e301bacb90561fe966eac7a51",
+        "sha256Checksum": "86161bdde7cd91a499512dbb2719cd8ecc14bba9e1dbc92c8faa7107904971ab",
+        "moveStartedAt": "2026-09-11T09:37:17Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1Ja9hBGQRSvPBwChnAatGa1vIa-SbCoDG",
+      "sourceFile": {
+        "id": "1Ja9hBGQRSvPBwChnAatGa1vIa-SbCoDG",
+        "url": "https://drive.google.com/file/d/1Ja9hBGQRSvPBwChnAatGa1vIa-SbCoDG/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_0471.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-08",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-11T09:37:18Z",
+        "verifiedAt": "2026-09-11T09:37:20Z",
+        "downloadBytes": 1026164,
+        "movedToSourceAt": "2026-09-11T09:37:20Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:895b78a0ac3f2c5c111525e0776c612be7eeca6eead3706fbb05f5a3d7ebbf88",
+        "headRevisionId": "0B_YIZLrmyOz4YVhVcG5DZ0VadUt5S3RrQmtiTjJTMjBpc2VJPQ",
+        "md5Checksum": "1d730edee80a788e588c19a98fa1a7f0",
+        "sha256Checksum": "895b78a0ac3f2c5c111525e0776c612be7eeca6eead3706fbb05f5a3d7ebbf88",
+        "moveStartedAt": "2026-09-11T09:37:19Z"
       },
       "visualReview": {
         "state": "none",
