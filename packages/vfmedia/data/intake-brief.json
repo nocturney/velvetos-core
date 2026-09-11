@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-09-11T00:31:06Z",
+  "generatedAt": "2026-09-11T05:07:16Z",
   "slot": "05",
   "title": "קליטת מדיה",
   "phases": {
     "registered_in_catalog": 406,
-    "registered_only": 52,
-    "verified_and_intaken": 354,
+    "registered_only": 2,
+    "verified_and_intaken": 404,
     "visually_reviewed": 0
   },
   "runner": {
     "component_state": "Idle",
-    "lastRunAt": "2026-09-11T00:29:14Z",
+    "lastRunAt": "2026-09-11T05:05:20Z",
     "lastError": null,
     "persistError": null,
     "activation_proven": true,
