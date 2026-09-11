@@ -1,10 +1,11 @@
 {
-  "enabled": false,
-  "requestId": "e2e-smoke-2026-09-11",
-  "html": "packages/vfops/out/CID-SMOKE-TEST.html",
+  "enabled": true,
+  "requestId": "office-loop-2026-09-11-2005",
+  "html": "packages/vfops/out/office-loop-2026-09-11-2005.html",
+  "visibleText": "packages/vfops/out/office-loop-2026-09-11-2005.txt",
   "images": "",
   "to": "nocturney@gmail.com",
-  "subject": "Velvet Factory — בריף הבוקר · CID Smoke Test",
+  "subject": "VelvetOS · Office Loop · 2026-09-11 20:05",
   "embedRemoteImages": true,
   "remoteImageLimit": 12
 }
