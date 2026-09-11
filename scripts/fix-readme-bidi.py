@@ -19,6 +19,7 @@ README = ROOT / "README.md"
 RLM = "\u200f"
 HEBREW = re.compile(r"[\u0590-\u05FF]")
 TD = re.compile(r"<td(?![^>]*\bdir=)([^>]*)>(.*?)</td>", re.S | re.I)
+BIDI_MARKS = "\u200e\u200f\u202a\u202b\u202c\u202d\u202e\u2066\u2067\u2068\u2069"
 
 
 def has_hebrew(text: str) -> bool:
@@ -59,9 +60,14 @@ def add_rlm(line: str) -> str:
     return indent + RLM + stripped
 
 
+def find_h1(text: str, label: str) -> int:
+    match = re.search(rf"(?m)^# [{re.escape(BIDI_MARKS)}]*{re.escape(label)}[ \t]*$", text)
+    return -1 if match is None else match.start()
+
+
 def normalize(text: str) -> str:
-    start = text.find("# עברית")
-    end = text.find("# English")
+    start = find_h1(text, "עברית")
+    end = find_h1(text, "English")
     if start < 0 or end < 0 or end <= start:
         raise SystemExit("README Hebrew/English section markers not found")
 
