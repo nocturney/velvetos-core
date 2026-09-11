@@ -1,7 +1,7 @@
 {
   "format": "bento/slides",
   "version": 1,
-  "title": "Velvet Factory — דק שבועי 2026-09-07",
+  "title": "Velvet Factory — דק שבועי 2026-09-11",
   "size": {
     "width": 1280,
     "height": 720
@@ -34,7 +34,7 @@
           "rotation": 0,
           "opacity": 1,
           "role": "title",
-          "html": "Velvet Factory<br>דק שבועי · 2026-09-07",
+          "html": "Velvet Factory<br>דק שבועי · 2026-09-11",
           "fontSize": 64,
           "fontWeight": 800,
           "color": "#f4efe6",
