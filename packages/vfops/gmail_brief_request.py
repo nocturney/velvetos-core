@@ -8,6 +8,7 @@ Gmail API send with a repository secret that never enters the repo or chat.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import tempfile
@@ -52,9 +53,6 @@ def build_safe_mime(*, html: str, images: list[Path], to: str, subject: str) -> 
     msg = MIMEMultipart("related")
     msg["To"] = to
     msg["Subject"] = encode_subject(subject)
-    # Keep MIMEText's standard UTF-8 transfer encoding. Overriding it to raw
-    # 8bit breaks serialization under the legacy email policy when HTML
-    # contains Hebrew or punctuation such as an em dash / middle dot.
     msg.attach(MIMEText(html, "html", "utf-8"))
     for path in images:
         subtype = gmail_brief_send.IMAGE_SUFFIXES[path.suffix.lower()]
@@ -67,6 +65,31 @@ def build_safe_mime(*, html: str, images: list[Path], to: str, subject: str) -> 
     return msg
 
 
+def validate_visible_text_gate(request: dict) -> tuple[Path, str]:
+    """Bind an enabled send to the exact owner-visible text gated in this run."""
+    visible_raw = str(request.get("visibleText") or "").strip()
+    if not visible_raw:
+        raise RuntimeError("enabled send request missing visibleText")
+    visible_path = repo_path(visible_raw)
+    text = visible_path.read_text(encoding="utf-8")
+    actual_sha = hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+    receipt_raw = (os.environ.get("VF_VISIBLE_TEXT_GATE_RECEIPT") or "").strip()
+    if not receipt_raw:
+        raise RuntimeError("missing VF_VISIBLE_TEXT_GATE_RECEIPT")
+    receipt_path = Path(receipt_raw)
+    if not receipt_path.is_file():
+        raise RuntimeError("visible text gate receipt file is missing")
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    if receipt.get("visible_text_gate") != "PASS":
+        raise RuntimeError("visible text gate is not PASS")
+    if receipt.get("surface") != "owner-brief":
+        raise RuntimeError("visible text gate surface is not owner-brief")
+    if receipt.get("text_sha256") != actual_sha:
+        raise RuntimeError("visible text changed after gate or receipt does not match")
+    return visible_path, actual_sha
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Execute one VelvetOS Gmail brief send request")
     parser.add_argument("--request", type=Path, default=DEFAULT_REQUEST)
@@ -76,6 +99,8 @@ def main() -> int:
     if request.get("enabled") is not True:
         print("SKIP gmail brief request disabled")
         return 0
+
+    visible_path, text_sha = validate_visible_text_gate(request)
 
     allowed = (os.environ.get("VFBRIEF_ALLOWED_RECIPIENT") or DEFAULT_ALLOWED_RECIPIENT).strip().lower()
     to = str(request.get("to") or "").strip().lower()
@@ -100,7 +125,11 @@ def main() -> int:
     images = gmail_brief_send.iter_images(images_dir)
     remote_limit = int(request.get("remoteImageLimit", gmail_brief_send.DEFAULT_REMOTE_IMAGE_LIMIT))
 
-    print(f"SEND request={request.get('requestId', 'unknown')} to={to} html={html_path.relative_to(ROOT)}")
+    print(
+        f"SEND request={request.get('requestId', 'unknown')} to={to} "
+        f"html={html_path.relative_to(ROOT)} visibleText={visible_path.relative_to(ROOT)} "
+        f"text_sha256={text_sha}"
+    )
     try:
         with tempfile.TemporaryDirectory(prefix="vfbrief-cid-") as tmp:
             if request.get("embedRemoteImages", True):
