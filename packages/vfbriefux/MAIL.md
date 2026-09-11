@@ -160,6 +160,7 @@ V10.3 שומר על ה־V10.2 image-first וה־RTL, אבל הופך את המי
 Production renderer:
 - `packages/vfbriefux/render_mail.py`
 - `packages/vfbriefux/MAIL.html`
+- `htmlBody` הוא גוף ה־HTML הקנוני שנמסר למסלול השולח לאחר render ו־gating; אין לשנות אותו לאחר PASS בלי להריץ את ה־Visible Text Gate מחדש.
 
 CID path:
 
