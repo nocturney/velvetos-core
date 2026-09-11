@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "requestId": "e2e-smoke-2026-09-11",
   "html": "packages/vfops/out/CID-SMOKE-TEST.html",
   "images": "",
