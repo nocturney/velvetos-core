@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate HQ overlays, Brief V10.2 contract, and no invented ILS."""
+"""Validate HQ overlays, Brief V10.3 contract, and no invented ILS."""
 from __future__ import annotations
 
 import json
@@ -63,7 +63,7 @@ def main() -> None:
         "{{HERO_VISUAL}}",
         "{{KPI_STRIP}}",
         "{{DELTA_STRIP}}",
-        "V10.2",
+        "V10.3",
         "תמונת מצב עכשיו",
         "#FF4F91",
         "#6C7CFF",
@@ -84,12 +84,12 @@ def main() -> None:
         "scheduled/uploaded != verified live",
     ):
         if token not in mail_contract:
-            fail(f"MAIL.md missing V10.2 contract token {token!r}")
+            fail(f"MAIL.md missing V10.3 contract token {token!r}")
 
     design = (ROOT / "packages/vfbriefux/hq/DESIGN.md").read_text()
     for token in ("Ink & Candy", "#101828", "#FF4F91", "#6C7CFF", "#B8F34A", "hero_visual"):
         if token not in design:
-            fail(f"DESIGN.md missing V10.2 token {token!r}")
+            fail(f"DESIGN.md missing V10.3 token {token!r}")
 
     render = ROOT / "packages/vfbriefux/render_mail.py"
     proc = subprocess.run([sys.executable, str(render), "--check"], cwd=ROOT, text=True, capture_output=True)
@@ -149,7 +149,7 @@ def main() -> None:
                     continue
                 fail(f"possible invented ILS in {path.relative_to(ROOT)}: {snippet!r}")
 
-    print("OK hq overlay + Brief V10.2 Ink & Candy image-first contract")
+    print("OK hq overlay + Brief V10.3 Ink & Candy image-first contract")
 
 
 if __name__ == "__main__":
