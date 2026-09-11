@@ -42,13 +42,60 @@ jobs:
           p = Path(os.environ['REQUEST_PATH'])
           data = json.loads(p.read_text(encoding='utf-8'))
           enabled = data.get('enabled') is True
+          visible_text = str(data.get('visibleText') or '').strip()
+          if '\n' in visible_text or '\r' in visible_text:
+              raise SystemExit('visibleText path contains a newline')
           print('enabled=' + ('true' if enabled else 'false'))
           print('request_id=' + str(data.get('requestId') or 'unknown'))
+          print('visible_text=' + visible_text)
           PY
 
       - name: Disabled request
         if: steps.request.outputs.enabled != 'true'
         run: echo "Gmail brief send request is disabled; no email sent."
+
+      - name: Visible Text Gate
+        if: steps.request.outputs.enabled == 'true'
+        env:
+          VISIBLE_TEXT_PATH: ${{ steps.request.outputs.visible_text }}
+        run: |
+          if [ -z "$VISIBLE_TEXT_PATH" ]; then
+            echo "::error::Enabled owner brief send is missing visibleText."
+            exit 3
+          fi
+          case "$VISIBLE_TEXT_PATH" in
+            /*|../*|*/../*)
+              echo "::error::visibleText must be a repo-relative path."
+              exit 3
+              ;;
+          esac
+          if [ ! -f "$VISIBLE_TEXT_PATH" ]; then
+            echo "::error::visibleText file does not exist: $VISIBLE_TEXT_PATH"
+            exit 3
+          fi
+          PYTHONPATH=packages python3 scripts/vf_visible_text.py \
+            --surface owner-brief \
+            --file "$VISIBLE_TEXT_PATH" \
+            --gate \
+            --truth-checked \
+            --reader-first \
+            --copy-authority \
+            --surface-qa \
+            --domain-tool vfops \
+            > "$RUNNER_TEMP/visible-text-gate.json"
+          python3 - <<'PY'
+          import json, os, pathlib
+          p = pathlib.Path(os.environ['RUNNER_TEMP']) / 'visible-text-gate.json'
+          data = json.loads(p.read_text(encoding='utf-8'))
+          if data.get('visible_text_gate') != 'PASS':
+              raise SystemExit('Visible Text Gate did not PASS')
+          if data.get('surface') != 'owner-brief':
+              raise SystemExit('Visible Text Gate surface mismatch')
+          sha = data.get('text_sha256')
+          if not isinstance(sha, str) or len(sha) != 64:
+              raise SystemExit('Visible Text Gate missing text_sha256')
+          print('Visible Text Gate PASS text_sha256=' + sha)
+          PY
 
       - name: Materialize Gmail OAuth secret
         if: steps.request.outputs.enabled == 'true'
@@ -76,5 +123,6 @@ jobs:
         if: steps.request.outputs.enabled == 'true'
         env:
           GOOGLE_TOKEN: ${{ runner.temp }}/gmail-oauth.json
+          VF_VISIBLE_TEXT_GATE_RECEIPT: ${{ runner.temp }}/visible-text-gate.json
         run: |
           PYTHONPATH=packages python3 -m vfops.gmail_brief_request --request "$REQUEST_PATH"
