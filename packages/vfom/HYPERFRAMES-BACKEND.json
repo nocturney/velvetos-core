@@ -18,7 +18,7 @@
     "requestSchema": "packages/vfom/HYPERFRAMES-RENDER.schema.json",
     "frameContract": "packages/vfom/HYPERFRAMES-FRAME.md",
     "package": "hyperframes",
-    "packageVersion": "0.8.35",
+    "packageVersion": "0.8.34",
     "node": ">=22",
     "requires": ["hyperframes", "ffmpeg", "ffprobe"],
     "networkInstallAllowed": false,
