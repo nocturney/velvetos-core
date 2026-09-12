@@ -40,8 +40,8 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-10",
-  "dataDate": "2026-09-09",
+  "lastPass": "2026-09-12",
+  "dataDate": "2026-09-11",
   "embedded": [
     {
       "id": "grill-me",
@@ -166,6 +166,14 @@
       "path": "packages/vfharness/playbooks/domain-glossary.md",
       "firstEmbedded": "2026-09-10",
       "note": "Reconciled from PR #149 — glossary discipline for TEAM/pipeline/owner-memory"
+    },
+    {
+      "id": "to-spec",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/to-spec.md",
+      "firstEmbedded": "2026-09-12",
+      "source": "https://github.com/mattpocock/skills/tree/main/skills/engineering/to-spec",
+      "note": "Decision-record spec for multi-session work; seams before prose; no new interview; store under harness state (no GH tracker required)"
     }
   ],
   "watchlist": [
@@ -242,6 +250,41 @@
       "id": "dietrich-ponytail",
       "url": "https://github.com/DietrichGebert/ponytail",
       "note": "Top-repos #6 2026-09-07 — agent skills collection. Watch before any embed; no npx."
+    },
+    {
+      "id": "mattpocock-code-review",
+      "url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/code-review",
+      "note": "Trending 2026-09-11. Two-axis review (standards vs spec). Watch before embed; overlaps verification-before-claim."
+    },
+    {
+      "id": "mattpocock-to-tickets",
+      "url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/to-tickets",
+      "note": "Pairs with to-spec for session-sized tickets. Watch; writing/executing-plans already cover slices."
+    },
+    {
+      "id": "open-design",
+      "url": "https://github.com/nexu-io/open-design",
+      "note": "Top-repos new 2026-09-11. Local-first design agent — watch; Canva-first for IG; no public site from HQ."
+    },
+    {
+      "id": "understand-anything",
+      "url": "https://github.com/Egonex-AI/Understand-Anything",
+      "note": "Codebase knowledge graph. Watch; overlaps vfmem — no second memory runtime."
+    },
+    {
+      "id": "ui-ux-pro-max-skill",
+      "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "note": "Still watch for briefux patterns only; no public marketing site."
+    },
+    {
+      "id": "leonxlnx-taste-skill",
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "note": "Taste/design judgment skill. Watch methodology; no foreign brand tokens into VF."
+    },
+    {
+      "id": "coreyhaines-marketingskills",
+      "url": "https://github.com/coreyhaines31/marketingskills",
+      "note": "Marketing skills collection. Watch before duplicate embed into vfgrowth; no npx."
     }
   ],
   "skipped": [
@@ -276,6 +319,18 @@
     {
       "id": "google-agents-cli",
       "why": "Vendor CLI scaffold/deploy outside VF Cloud mandate"
+    },
+    {
+      "id": "proactive-agent-buzz",
+      "why": "Proactive/cron second-loop — second runtime locked"
+    },
+    {
+      "id": "reddit-twitter-automation-trending",
+      "why": "Auto-post growth hacks outside PUBLIC_CURRENT_CTA + no auto-DM"
+    },
+    {
+      "id": "genmedia-video-stack-trending",
+      "why": "Veo/Kling/Remotion-class vendors locked from HQ; Canva-first media director only"
     }
   ]
 }

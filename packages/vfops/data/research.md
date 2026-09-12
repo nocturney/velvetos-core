@@ -1,3 +1,27 @@
+# 05 · משרד · 12.9.2026 (best-skills bi-daily)
+
+חריץ 05 בבריף 07:00 כבר **לא** מדביק את הקטלוג מכאן.  
+`vfops_loop.py` רושם CLI אמיתי מ-24ש או **«אין חדש במשרד»** + שורות פער.
+
+```
+05 · משרד
+מה נבנה / יועל:
+- best-skills bi-daily — dataDate 2026-09-11 (אין data/2026-09-12 במעלה; latest≡11)
+- הוטמע to-spec → packages/vfharness/playbooks/to-spec.md (+ מצביע SKILL 13a)
+- watch: code-review · to-tickets · open-design · Understand-Anything · ui-ux-pro-max · taste-skill · coreyhaines-marketingskills
+- דולג: orca / herdr / proactive / reddit-twitter automation / genmedia video stack
+- טיימר vf-best-skills-bi-daily renewed (+172800s)
+פער: אין Insights/₪ מומצאים · CTA ציבורי = PUBLIC_CURRENT_CTA (הודעת Instagram)
+```
+
+05a · זיכרון: קרא את הבלוק האחרון מ-`owner-memory.md`.
+
+ארטיפקטים:
+- `packages/vfresearch/sources/2026-09-12-best-skills.md`
+- `packages/vfharness/playbooks/to-spec.md`
+
+---
+
 # 05 · משרד · 10.9.2026
 
 מחקר יומי חי חזר לפעולה. מקור מלא: `packages/vfresearch/sources/2026-09-10-orchestra.md`.
