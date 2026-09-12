@@ -20,7 +20,7 @@
     "@research-synthesist",
     "@trend-researcher"
   ],
-  "seat": "ייצור",
+  "seat": "מחקר/אורקסטרציה",
   "rule": "Re-read LinklyAI/best-skills rankings every ~48h. Embed useful patterns into existing packs only. Do not invent rankings, ₪, or Insights. Do not npx-install skills on Cloud Agent.",
   "locks": [
     "hq-send-via-tools",
@@ -40,8 +40,8 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-10",
-  "dataDate": "2026-09-09",
+  "lastPass": "2026-09-12",
+  "dataDate": "2026-09-11",
   "embedded": [
     {
       "id": "grill-me",
@@ -166,18 +166,26 @@
       "path": "packages/vfharness/playbooks/domain-glossary.md",
       "firstEmbedded": "2026-09-10",
       "note": "Reconciled from PR #149 — glossary discipline for TEAM/pipeline/owner-memory"
+    },
+    {
+      "id": "sensor-first-tdd",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/sensor-first-tdd.md",
+      "firstEmbedded": "2026-09-12",
+      "source": "https://github.com/obra/superpowers/tree/main/skills/test-driven-development",
+      "note": "Maps TDD red→green→refactor onto check-*.py / CLI fixtures; no second test runtime"
     }
   ],
   "watchlist": [
     {
       "id": "obra-superpowers",
       "url": "https://github.com/obra/superpowers",
-      "note": "Partial+: verification + skill-first + brainstorm-gate + systematic-debugging + writing-plans + executing-plans. Still watch TDD / git-worktrees."
+      "note": "Partial+: verification + skill-first + brainstorm + systematic-debugging + writing/executing-plans + sensor-first-tdd(2026-09-12). Still watch finishing-branch / git-worktrees / requesting-code-review subagent."
     },
     {
       "id": "mattpocock-skills",
       "url": "https://github.com/mattpocock/skills",
-      "note": "grill + handoff + teach + triage + domain-glossary embedded 2026-09-10. Watch improve-codebase-architecture / codebase-design."
+      "note": "grill + handoff + teach + triage + domain-glossary. TDD pattern covered via sensor-first-tdd. Watch improve-codebase-architecture / to-spec."
     },
     {
       "id": "anthropics-skills",
@@ -242,6 +250,21 @@
       "id": "dietrich-ponytail",
       "url": "https://github.com/DietrichGebert/ponytail",
       "note": "Top-repos #6 2026-09-07 — agent skills collection. Watch before any embed; no npx."
+    },
+    {
+      "id": "agent-reach",
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "note": "Top-repos #15 2026-09-11 — agent reachability toolkit. Watch only; no second runtime install."
+    },
+    {
+      "id": "chrome-devtools-mcp",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "note": "Top-repos #22 — browser MCP. Watch vs vfmcp GAP; no blind Cloud install."
+    },
+    {
+      "id": "requesting-code-review",
+      "url": "https://github.com/obra/superpowers/tree/main/skills/requesting-code-review",
+      "note": "obra review gate — watch; overlaps verification-before-claim; subagent review optional later."
     }
   ],
   "skipped": [
@@ -276,6 +299,14 @@
     {
       "id": "google-agents-cli",
       "why": "Vendor CLI scaffold/deploy outside VF Cloud mandate"
+    },
+    {
+      "id": "desktop-control-automation",
+      "why": "OS desktop control / RPA outside HQ Cloud mandate"
+    },
+    {
+      "id": "genmedia-vendor-video",
+      "why": "Veo/Kling/avatar video vendors locked; Canva-first + expert-media-director only"
     }
   ]
 }

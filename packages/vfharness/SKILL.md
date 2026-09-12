@@ -25,6 +25,7 @@
 13. תוכנית מימוש כתובה → `playbooks/writing-plans.md` (צעדים קטנים ובטוחים על SoT קיים; בלי ראנטיים שני).
 13b. ביצוע תוכנית → `playbooks/executing-plans.md` (משימה אחת + אימות; עצירה על חוסם; בלי ניחוש).
 13c. מילון תחום → `playbooks/domain-glossary.md` (TEAM / pipeline / owner-memory — בלי מונחים מומצאים).
+13d. לפני תיקון פק/כלל/סנסור → `playbooks/sensor-first-tdd.md` (אדום אמיתי לפני ירוק; דפוס obra TDD).
 14. Living Studio → `python3 scripts/vf_living_studio.py` (World Model / Pulse / Intake) — שכבת חיבור, לא Control Plane שני.
 
 צינור יחיד נשאר: פנייה · שיחה · הצעה · הדפסה · איסוף.

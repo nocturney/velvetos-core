@@ -1,6 +1,24 @@
-# 05 · משרד · 10.9.2026
+# 05 · משרד · 12.9.2026
 
-מחקר יומי חי חזר לפעולה. מקור מלא: `packages/vfresearch/sources/2026-09-10-orchestra.md`.
+מעבר best-skills (דופק bi-daily). מקור: `packages/vfresearch/sources/2026-09-12-best-skills.md` · dataDate דירוג **2026-09-11**.
+
+```
+05 · מחקר ורעיונות
+מה נבנה / יועל:
+- best-skills — הוטמע sensor-first-tdd ב־vfharness (TDD אדום→ירוק על check-*.py / CLI; מקורות mattpocock#35 + obra/superpowers#1 top-repos)
+- watchlist: agent-reach · chrome-devtools-mcp · requesting-code-review
+- דולג: desktop-control · genmedia/Veo/Kling · Agent-Reach install · azure block
+- timer vf-best-skills-bi-daily renewed (172800s · standing forever)
+```
+
+Freshness: **2026-09-12 · best-skills pass** (דירוג מקור 2026-09-11; אין תיקיית 2026-09-12 עדיין).  
+מחקר יומי גוף (Meta/makers) האחרון עם evidence: **2026-09-10** — ראה היסטוריה.
+
+---
+
+## היסטוריה · 10.9.2026
+
+מחקר יומי חי. מקור מלא: `packages/vfresearch/sources/2026-09-10-orchestra.md`.
 
 ```
 05 · מחקר ורעיונות
@@ -10,8 +28,7 @@
 - מועמד Quick-win לבדיקה: cable holder קטן ו־support-free; למדוד אצלנו זמן/גרמים ורישיון לפני כל החלטת קטלוג/מחיר.
 ```
 
-Freshness: **2026-09-10 · GREEN body evidence**.  
-ה־Research Cadence ב־GitHub מאמת גוף מחקר מתוארך; index/sensors לבדם אינם נחשבים ריצת מחקר.
+Freshness אז: **2026-09-10 · GREEN body evidence**.
 
 ---
 
