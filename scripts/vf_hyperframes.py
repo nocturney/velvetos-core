@@ -17,7 +17,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-HYPERFRAMES_PACKAGE = "hyperframes@0.8.35"
+HYPERFRAMES_VERSION = "0.8.35"
+HYPERFRAMES_PACKAGE = f"hyperframes@{HYPERFRAMES_VERSION}"
 SUPPORTED_STAGES = {"rough", "review", "final"}
 SUPPORTED_FORMATS = {"mp4", "webm", "mov"}
 SUPPORTED_RESOLUTIONS = {"portrait", "portrait-4k"}
@@ -130,13 +131,23 @@ def validate_request(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def hyperframes_base() -> list[str]:
-    return ["npx", "--yes", HYPERFRAMES_PACKAGE]
+def hyperframes_command() -> str:
+    path = shutil.which("hyperframes")
+    if not path:
+        fail(
+            f"HyperFrames CLI {HYPERFRAMES_VERSION} is not installed on this render host; "
+            "install/cache the pinned CLI outside the content job and rerun doctor"
+        )
+    return path
 
 
-def build_commands(req: dict[str, Any]) -> list[list[str]]:
-    check = hyperframes_base() + ["check"]
-    render = hyperframes_base() + [
+def hyperframes_base(resolve: bool = False) -> list[str]:
+    return [hyperframes_command() if resolve else "hyperframes"]
+
+
+def build_commands(req: dict[str, Any], resolve_binary: bool = False) -> list[list[str]]:
+    check = hyperframes_base(resolve_binary) + ["check"]
+    render = hyperframes_base(resolve_binary) + [
         "render",
         "--composition", req["compositionArg"],
         "--output", req["outputArg"],
@@ -170,8 +181,15 @@ def node_major(version: str | None) -> int | None:
     return int(match.group(1)) if match else None
 
 
+def exact_hyperframes_version(version: str | None) -> str | None:
+    if not version:
+        return None
+    match = re.search(r"(?:hyperframes\s*)?v?(\d+\.\d+\.\d+)", version, re.IGNORECASE)
+    return match.group(1) if match else None
+
+
 def doctor() -> int:
-    facts = {name: tool_version(name) for name in ("node", "npx", "ffmpeg", "ffprobe")}
+    facts = {name: tool_version(name) for name in ("node", "hyperframes", "ffmpeg", "ffprobe")}
     print(json.dumps(facts, ensure_ascii=False, indent=2))
     missing = [name for name, version in facts.items() if version is None]
     if missing:
@@ -180,6 +198,13 @@ def doctor() -> int:
     major = node_major(facts["node"])
     if major is None or major < 22:
         print(f"FAIL HyperFrames requires Node >=22; found {facts['node']}", file=sys.stderr)
+        return 1
+    actual = exact_hyperframes_version(facts["hyperframes"])
+    if actual != HYPERFRAMES_VERSION:
+        print(
+            f"FAIL HyperFrames version mismatch: required {HYPERFRAMES_VERSION}, found {facts['hyperframes']}",
+            file=sys.stderr,
+        )
         return 1
     print(f"OK hyperframes host prerequisites package={HYPERFRAMES_PACKAGE}")
     return 0
@@ -256,7 +281,7 @@ def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]
     if doctor() != 0:
         raise SystemExit(1)
     req["output"].parent.mkdir(parents=True, exist_ok=True)
-    commands = build_commands(req)
+    commands = build_commands(req, resolve_binary=True)
     for cmd in commands:
         run_command(cmd, req["projectDir"])
     if not req["output"].is_file() or req["output"].stat().st_size <= 0:
@@ -274,7 +299,7 @@ def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]
         "sha256": sha256_file(req["output"]),
         "verifiedAt": datetime.now(timezone.utc).isoformat(),
         "probe": verified,
-        "commands": commands,
+        "commands": [[Path(cmd[0]).name, *cmd[1:]] for cmd in commands],
     }
     target = receipt_path(req, receipt_override)
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -290,14 +315,15 @@ def plan(req: dict[str, Any]) -> None:
         "commands": build_commands(req),
         "output": str(req["output"]),
         "audioRequired": req["audioRequired"],
+        "note": "plan does not install or resolve HyperFrames; run doctor on the authorized render host before run",
     }, ensure_ascii=False, indent=2))
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="VelvetOS HyperFrames render bridge")
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("doctor", help="check local Node/FFmpeg prerequisites without network")
-    plan_parser = sub.add_parser("plan", help="validate a request and print exact commands; no render")
+    sub.add_parser("doctor", help="check local Node/HyperFrames/FFmpeg prerequisites without network")
+    plan_parser = sub.add_parser("plan", help="validate a request and print exact commands; no render/network")
     plan_parser.add_argument("request", type=Path)
     run_parser = sub.add_parser("run", help="execute check+render+ffprobe and write a receipt")
     run_parser.add_argument("request", type=Path)
