@@ -1,0 +1,59 @@
+{
+  "name": "vfom-hyperframes-render-backend",
+  "version": 1,
+  "role": "deterministic video composition and render backend for the existing Velvet Visual Foundry",
+  "noSecondRuntime": true,
+  "authority": {
+    "orchestration": "packages/vfom/CREATIVE-AUTOPILOT.md",
+    "edit": "packages/vfom/EDIT-DIRECTOR.md",
+    "visual": "packages/vfom/VISUAL-OS.md",
+    "visualDNA": "packages/vfom/VISUAL-DNA.json",
+    "contentContract": "packages/vfom/CONTENT-CONTRACT.schema.json",
+    "creativeManifest": "packages/vfom/CREATIVE-MANIFEST.schema.json",
+    "mediaCatalog": "packages/vfmedia/catalog.json"
+  },
+  "execution": {
+    "layer": "edge-or-office-host",
+    "bridge": "scripts/vf_hyperframes.py",
+    "requestSchema": "packages/vfom/HYPERFRAMES-RENDER.schema.json",
+    "frameContract": "packages/vfom/HYPERFRAMES-FRAME.md",
+    "package": "hyperframes",
+    "packageVersion": "0.8.34",
+    "node": ">=22",
+    "requires": ["hyperframes", "ffmpeg", "ffprobe"],
+    "networkInstallAllowed": false,
+    "versionMismatch": "fail",
+    "note": "Install/cache the pinned HyperFrames CLI on the authorized render host outside the content job; the bridge never downloads dependencies or turns Core into a render daemon."
+  },
+  "routing": {
+    "primary": "hyperframes",
+    "fallback": ["ffmpeg-svg-caption-composition"],
+    "useHyperframesFor": ["reel_master", "story_master", "feed_video", "kinetic_typography", "deterministic_hebrew_overlay", "motion_graphics", "multi-shot_composition"],
+    "preferFallbackFor": ["single_static_overlay", "simple_caption_burn_in", "emergency_render_when_hyperframes_unavailable"]
+  },
+  "defaults": {
+    "masterFormat": "mp4",
+    "masterResolution": "portrait",
+    "fps": 30,
+    "roughQuality": "draft",
+    "reviewQuality": "standard",
+    "finalQuality": "high",
+    "strictFinal": true,
+    "maxFinalRenders": 2,
+    "audioRequiredForSocialVideo": true
+  },
+  "pipeline": ["content_contract", "creative_manifest", "edit_decision_list", "media_truth_resolution", "hyperframes_composition", "hyperframes_check", "rough_render", "evaluation_and_repair", "final_render", "ffprobe_receipt", "derivative_factory", "publish_preflight"],
+  "guardrails": {
+    "realMediaRefsOnly": true,
+    "noInventedAssets": true,
+    "noAIHebrewInsideFootage": true,
+    "hebrewAsDeterministicOverlay": true,
+    "verifiedBrandFontsOnly": true,
+    "verifiedBrandColorsOnly": true,
+    "finalRequiresCheck": true,
+    "finalRequiresReceipt": true,
+    "finalRequiresExistingQA": true,
+    "receiptIsNotPublishReceipt": true,
+    "renderDoesNotAuthorizePublish": true
+  }
+}

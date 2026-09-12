@@ -1,6 +1,6 @@
 {
   "name": "velvet-visual-foundry",
-  "version": 2,
+  "version": 3,
   "role": "machine-readable creative orchestration policy over existing VelvetOS packs",
   "noSecondRuntime": true,
   "specialists": {
@@ -15,7 +15,10 @@
     "contentContractSchema": "packages/vfom/CONTENT-CONTRACT.schema.json",
     "motionPresets": "packages/vfom/MOTION-PRESETS.md",
     "formatGenomes": "packages/vfom/FORMAT-GENOMES.md",
-    "mediaCatalog": "packages/vfmedia/catalog.json"
+    "mediaCatalog": "packages/vfmedia/catalog.json",
+    "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
+    "renderRequestSchema": "packages/vfom/HYPERFRAMES-RENDER.schema.json",
+    "frameContract": "packages/vfom/HYPERFRAMES-FRAME.md"
   },
   "layers": {
     "creativeIntelligence": [
@@ -41,12 +44,24 @@
       "vfmedia-catalog",
       "claim-provenance",
       "subject-packs",
+      "hyperframes-video-composition",
       "ffmpeg-svg-caption-composition",
+      "render-receipt-verification",
       "render-derivatives",
       "drive-storage",
       "vfigos-publish-verification",
       "vfinsights-performance-evidence"
     ]
+  },
+  "renderBackend": {
+    "primary": "hyperframes",
+    "contract": "packages/vfom/HYPERFRAMES-BACKEND.json",
+    "bridge": "scripts/vf_hyperframes.py",
+    "executionLayer": "edge-or-office-host",
+    "fallback": "ffmpeg-svg-caption-composition",
+    "finalRequiresReceipt": true,
+    "renderReceiptIsPublishReceipt": false,
+    "rule": "HyperFrames is a deterministic backend only; Content Contract, Media Vault truth, vfcopy, Visual OS, Evaluation Engine and publish preflight remain authoritative."
   },
   "creativeManifest": {
     "enabled": true,
@@ -125,7 +140,7 @@
     "rule": "never spend a full-quality render on an unranked concept when a cheaper preview can reject it"
   },
   "evaluation": {
-    "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_stream_presence", "audio_loudness", "audio_sync", "frame_integrity"],
+    "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_stream_presence", "audio_loudness", "audio_sync", "frame_integrity", "render_receipt"],
     "perceptualRubrics": ["brand", "hook", "composition", "reality", "originality", "audio_story_fit", "visual_copy_specificity", "visual_copy_value_over_no_text"],
     "referenceChecks": ["subject_fidelity", "material_fidelity", "geometry_invariants"],
     "artifactChecks": ["flicker", "malformed_geometry", "unreadable_text", "temporal_jitter", "audio_clipping_or_noise"],
