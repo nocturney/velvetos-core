@@ -20,27 +20,16 @@
     "package": "hyperframes",
     "packageVersion": "0.8.35",
     "node": ">=22",
-    "requires": ["npx", "ffmpeg", "ffprobe"],
+    "requires": ["hyperframes", "ffmpeg", "ffprobe"],
     "networkInstallAllowed": false,
-    "note": "Install/cache the pinned package on the authorized render host; the bridge does not turn Core into a render daemon."
+    "versionMismatch": "fail",
+    "note": "Install/cache the pinned HyperFrames CLI on the authorized render host outside the content job; the bridge never downloads dependencies or turns Core into a render daemon."
   },
   "routing": {
     "primary": "hyperframes",
     "fallback": ["ffmpeg-svg-caption-composition"],
-    "useHyperframesFor": [
-      "reel_master",
-      "story_master",
-      "feed_video",
-      "kinetic_typography",
-      "deterministic_hebrew_overlay",
-      "motion_graphics",
-      "multi-shot_composition"
-    ],
-    "preferFallbackFor": [
-      "single_static_overlay",
-      "simple_caption_burn_in",
-      "emergency_render_when_hyperframes_unavailable"
-    ]
+    "useHyperframesFor": ["reel_master", "story_master", "feed_video", "kinetic_typography", "deterministic_hebrew_overlay", "motion_graphics", "multi-shot_composition"],
+    "preferFallbackFor": ["single_static_overlay", "simple_caption_burn_in", "emergency_render_when_hyperframes_unavailable"]
   },
   "defaults": {
     "masterFormat": "mp4",
@@ -53,20 +42,7 @@
     "maxFinalRenders": 2,
     "audioRequiredForSocialVideo": true
   },
-  "pipeline": [
-    "content_contract",
-    "creative_manifest",
-    "edit_decision_list",
-    "media_truth_resolution",
-    "hyperframes_composition",
-    "hyperframes_check",
-    "rough_render",
-    "evaluation_and_repair",
-    "final_render",
-    "ffprobe_receipt",
-    "derivative_factory",
-    "publish_preflight"
-  ],
+  "pipeline": ["content_contract", "creative_manifest", "edit_decision_list", "media_truth_resolution", "hyperframes_composition", "hyperframes_check", "rough_render", "evaluation_and_repair", "final_render", "ffprobe_receipt", "derivative_factory", "publish_preflight"],
   "guardrails": {
     "realMediaRefsOnly": true,
     "noInventedAssets": true,
