@@ -12,6 +12,8 @@ CONFIG = ROOT / "packages" / "vfom" / "HYPERFRAMES-BACKEND.json"
 SCHEMA = ROOT / "packages" / "vfom" / "HYPERFRAMES-RENDER.schema.json"
 POLICY = ROOT / "packages" / "vfom" / "HYPERFRAMES-BACKEND.md"
 FRAME = ROOT / "packages" / "vfom" / "HYPERFRAMES-FRAME.md"
+FOUNDRY = ROOT / "packages" / "vfom" / "FOUNDRY.json"
+EDIT = ROOT / "packages" / "vfom" / "EDIT-DIRECTOR.md"
 BRIDGE = ROOT / "scripts" / "vf_hyperframes.py"
 SKILL = ROOT / ".cursor" / "skills" / "vf-content-sprint" / "SKILL.md"
 
@@ -104,6 +106,22 @@ def main() -> None:
     if set((props.get("stage") or {}).get("enum") or []) != {"rough", "review", "final"}:
         fail("render stage enum mismatch")
 
+    foundry = load_json(FOUNDRY)
+    shared = foundry.get("sharedAuthorities") or {}
+    if shared.get("renderBackend") != "packages/vfom/HYPERFRAMES-BACKEND.json":
+        fail("FOUNDRY sharedAuthorities.renderBackend must point at HyperFrames contract")
+    render_backend = foundry.get("renderBackend") or {}
+    if render_backend.get("primary") != "hyperframes":
+        fail("FOUNDRY renderBackend.primary must be hyperframes")
+    if render_backend.get("fallback") != "ffmpeg-svg-caption-composition":
+        fail("FOUNDRY must preserve FFmpeg/SVG fallback")
+    if render_backend.get("renderReceiptIsPublishReceipt") is not False:
+        fail("FOUNDRY must distinguish render receipt from publish receipt")
+    services = set((foundry.get("layers") or {}).get("deterministicServices") or [])
+    for service in ("hyperframes-video-composition", "ffmpeg-svg-caption-composition", "render-receipt-verification"):
+        if service not in services:
+            fail(f"FOUNDRY deterministicServices missing {service}")
+
     policy = must_contain(POLICY, (
         "not a second orchestrator",
         "ffmpeg-svg-caption-composition",
@@ -118,6 +136,12 @@ def main() -> None:
         "Do not invent font",
         "Subject lock",
         "Evaluation Engine",
+    ))
+    must_contain(EDIT, (
+        "HYPERFRAMES-BACKEND.json",
+        "HYPERFRAMES-RENDER.schema.json",
+        "vf_hyperframes.py plan",
+        "ffmpeg-svg-caption-composition",
     ))
     bridge = must_contain(BRIDGE, (
         f'HYPERFRAMES_PACKAGE = "hyperframes@{version}"',
@@ -139,7 +163,7 @@ def main() -> None:
     if "A render receipt proves a file was produced" not in policy:
         fail("policy must distinguish render receipt from publish evidence")
 
-    print(f"OK hyperframes backend pinned={version} primary+fallback+rtl+receipt")
+    print(f"OK hyperframes backend pinned={version} primary+fallback+rtl+receipt+wired")
 
 
 if __name__ == "__main__":
