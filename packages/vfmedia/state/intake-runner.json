@@ -1,26 +1,15 @@
 {
   "name": "vfmedia-intake-runner",
   "component_state": "Idle",
-<<<<<<< Updated upstream
-  "updatedAt": "2026-09-12T15:42:24Z",
-=======
   "updatedAt": "2026-09-12T17:00:30Z",
->>>>>>> Stashed changes
   "pagination": {
     "pageToken": null,
     "pageSize": 50
   },
-<<<<<<< Updated upstream
-  "catalogDigest": "39534c18ec570de6237483317087ee1241a309ffd43c82ce3cd891afeef8c015",
-  "inboxDigest": "91765c024cb9b1c3212def5994b55e7495787f2a0dcfa5f3de6a0bad33765870",
-  "lastRunAt": "2026-09-12T15:42:24Z",
-  "lastSuccessAt": "2026-09-12T15:42:24Z",
-=======
   "catalogDigest": "d9996065c4db4a11866aeccdc385a433249a50d8dabee4671474131cd726d808",
   "inboxDigest": "0a350b613999e708c1b7569068e407fc9fd25c748213cab8bf8b211a57b64205",
   "lastRunAt": "2026-09-12T17:00:24Z",
   "lastSuccessAt": "2026-09-12T17:00:30Z",
->>>>>>> Stashed changes
   "lastError": null,
   "persistError": null,
   "auth": {
@@ -29,13 +18,8 @@
   },
   "stats": {
     "runs": 20,
-<<<<<<< Updated upstream
-    "registered": 53,
-    "verified": 451,
-=======
     "registered": 55,
     "verified": 453,
->>>>>>> Stashed changes
     "skipped": 0,
     "failed": 0,
     "duplicates": 0,
