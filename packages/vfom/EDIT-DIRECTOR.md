@@ -21,6 +21,17 @@
 
 לכל segment: asset/ref אמיתי, in/out, crop, speed אם נדרש, cut/transition, overlay, audio note. אין asset מומצא.
 
+## Render handoff
+
+כאשר ה־EDL דורש Reel/Story/feed video, multi-shot composition, kinetic type או motion graphics, מסור את ה־EDL ל־backend הקנוני ב־`HYPERFRAMES-BACKEND.json` ולא ל־renderer חדש. הקומפוזיציה חייבת לעמוד ב־`HYPERFRAMES-FRAME.md` ולהשתמש רק ב־asset refs אמיתיים/מאושרים מתוך Media Vault.
+
+- צור render request לפי `HYPERFRAMES-RENDER.schema.json`.
+- לפני render, הרץ `python3 scripts/vf_hyperframes.py plan <request>` כדי לוודא stage/format/resolution/paths והפקודה המדויקת.
+- rough = `draft`, review = `standard`, final = `high` + strict-all.
+- Hebrew visual text נשאר שכבת RTL דטרמיניסטית; אין טקסט עברי שנוצר כחלק מ־AI footage.
+- final חייב להסתיים ב־ffprobe render receipt; receipt זה אינו publish receipt ואינו authorizes publish.
+- אם HyperFrames נכשל אחרי retry בר־פעולה אחד, עבור ל־`ffmpeg-svg-caption-composition` כאשר הוא יכול לשמר את אותה כוונת EDL. אין להוריד QA כדי להעביר backend.
+
 ## כללי עריכה
 
 - מחק dead air. העדף jump/hard cut על fade גנרי.
