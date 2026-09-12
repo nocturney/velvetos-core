@@ -16,266 +16,62 @@
   "stoppedAt": null,
   "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-best-skills.md",
   "briefBlock": "05-משרד",
-  "mention": [
-    "@research-synthesist",
-    "@trend-researcher"
-  ],
+  "mention": ["@research-synthesist", "@trend-researcher"],
   "seat": "ייצור",
   "rule": "Re-read LinklyAI/best-skills rankings every ~48h. Embed useful patterns into existing packs only. Do not invent rankings, ₪, or Insights. Do not npx-install skills on Cloud Agent.",
-  "locks": [
-    "hq-send-via-tools",
-    "no-auto-dm",
-    "no-boost",
-    "no-invented-prices",
-    "no-invented-insights",
-    "no-new-pack-per-idea",
-    "no-invented-blocked-body",
-    "no-npx-skills-on-cloud",
-    "no-second-runtime",
-    "pickup-sderot-only"
-  ],
-  "opened": [
-    "constitution-may-update-when-durable-pattern-found",
-    "bi-daily-public-skill-leaderboard-scan",
-    "grill-before-plan-on-inquiry",
-    "verification-iron-law-before-success-claims"
-  ],
-  "lastPass": "2026-09-10",
-  "dataDate": "2026-09-09",
+  "locks": ["hq-send-via-tools", "no-auto-dm", "no-boost", "no-invented-prices", "no-invented-insights", "no-new-pack-per-idea", "no-invented-blocked-body", "no-npx-skills-on-cloud", "no-second-runtime", "pickup-sderot-only"],
+  "opened": ["constitution-may-update-when-durable-pattern-found", "bi-daily-public-skill-leaderboard-scan", "grill-before-plan-on-inquiry", "verification-iron-law-before-success-claims"],
+  "lastPass": "2026-09-12",
+  "dataDate": "2026-09-11",
+  "lastArtifact": "packages/vfresearch/sources/2026-09-12-best-skills.md",
+  "lastResult": "no-embed-new-watch",
+  "lastTimerStatus": "UNPROVEN: cursor-subscriptions namespace unavailable in current research runtime; refresh executed inside Research Seat; no separate automation created",
   "embedded": [
-    {
-      "id": "grill-me",
-      "pack": "vfconvert",
-      "path": "packages/vfconvert/hq/GRILL.md",
-      "firstEmbedded": "2026-09-03"
-    },
-    {
-      "id": "verification-before-completion",
-      "pack": "vfharness",
-      "path": "packages/vfharness/playbooks/verification-before-claim.md",
-      "firstEmbedded": "2026-09-03"
-    },
-    {
-      "id": "skill-authoring",
-      "pack": "vfharness",
-      "path": "packages/vfharness/playbooks/skill-authoring.md",
-      "firstEmbedded": "2026-09-03"
-    },
-    {
-      "id": "handoff",
-      "pack": "vfharness",
-      "path": "packages/vfharness/templates/handoff.md",
-      "firstEmbedded": "2026-09-03"
-    },
-    {
-      "id": "last30days-pattern",
-      "pack": "vfresearch",
-      "path": "packages/vfresearch/hq/LAST30.md",
-      "firstEmbedded": "2026-09-03",
-      "deepened": "2026-09-05",
-      "skill": ".cursor/skills/vf-last30/SKILL.md",
-      "note": "Full VF playbook + Cursor skill for research desk (topic/comparison/discovery, confidence floor, nothing-solid). No vendor CLI."
-    },
-    {
-      "id": "self-improving-triggers",
-      "pack": "vfops",
-      "path": "packages/vfops/hq/DAILY-RETRO.md",
-      "firstEmbedded": "2026-09-03"
-    },
-    {
-      "id": "find-skills-via-leaderboard",
-      "pack": "vfresearch",
-      "path": "packages/vfresearch/BEST-SKILLS.md",
-      "firstEmbedded": "2026-09-03"
-    },
-    {
-      "id": "skill-first",
-      "pack": "vfharness",
-      "path": "packages/vfharness/playbooks/skill-first.md",
-      "firstEmbedded": "2026-09-04"
-    },
-    {
-      "id": "teach-learning-records",
-      "pack": "vfops",
-      "path": "packages/vfops/hq/LEARNING-RECORDS.md",
-      "firstEmbedded": "2026-09-04"
-    },
-    {
-      "id": "market-research-intelligence-gates",
-      "pack": "vfresearch",
-      "path": "packages/vfresearch/hq/MARKET-INTEL.md",
-      "firstEmbedded": "2026-09-05",
-      "source": "https://mcpmarket.com/tools/skills/market-research-intelligence-1787987613965"
-    },
-    {
-      "id": "brainstorm-gate",
-      "pack": "vfharness",
-      "path": "packages/vfharness/playbooks/brainstorm-gate.md",
-      "firstEmbedded": "2026-09-06",
-      "source": "https://github.com/obra/superpowers/tree/main/skills/brainstorming"
-    },
-    {
-      "id": "systematic-debugging",
-      "pack": "vfharness",
-      "path": "packages/vfharness/playbooks/systematic-debugging.md",
-      "firstEmbedded": "2026-09-06",
-      "source": "https://github.com/obra/superpowers/tree/main/skills/systematic-debugging",
-      "note": " · 2026-09-07: feedback-loop/diagnosing-bugs from #106",
-      "deepened": "2026-09-07"
-    },
-    {
-      "id": "anti-ui-slop-brief",
-      "pack": "vfbriefux",
-      "path": "packages/vfbriefux/hq/DESIGN-EMBED.md",
-      "firstEmbedded": "2026-09-06",
-      "note": "Anti-slop checklist for HQ brief HTML only; no public site; no foreign brand tokens",
-      "source": "https://www.skills.sh/uizze.com/anti-ui-slop"
-    },
-    {
-      "id": "triage",
-      "pack": "vfconvert",
-      "path": "packages/vfconvert/hq/TRIAGE.md",
-      "firstEmbedded": "2026-09-07",
-      "source": "https://www.skills.sh/mattpocock/skills/triage"
-    },
-    {
-      "id": "quote-ladder",
-      "pack": "vfsales",
-      "path": "packages/vfsales/scripts/vf_quote_ladder.py",
-      "firstEmbedded": "2026-09-07",
-      "note": "Graceful escalation ladder for partial quotes; never invents ₪"
-    },
-    {
-      "id": "writing-plans",
-      "pack": "vfharness",
-      "path": "packages/vfharness/playbooks/writing-plans.md",
-      "firstEmbedded": "2026-09-09",
-      "registered": "2026-09-10",
-      "note": "File already on main; registered in BEST-SKILLS on gap-closure pass (reconcile #148/#149)"
-    },
-    {
-      "id": "executing-plans",
-      "pack": "vfharness",
-      "path": "packages/vfharness/playbooks/executing-plans.md",
-      "firstEmbedded": "2026-09-10",
-      "note": "Reconciled from PR #148 — one task + verify; stop on blocker; no second runtime"
-    },
-    {
-      "id": "domain-glossary",
-      "pack": "vfharness",
-      "path": "packages/vfharness/playbooks/domain-glossary.md",
-      "firstEmbedded": "2026-09-10",
-      "note": "Reconciled from PR #149 — glossary discipline for TEAM/pipeline/owner-memory"
-    }
+    {"id":"grill-me","pack":"vfconvert","path":"packages/vfconvert/hq/GRILL.md","firstEmbedded":"2026-09-03"},
+    {"id":"verification-before-completion","pack":"vfharness","path":"packages/vfharness/playbooks/verification-before-claim.md","firstEmbedded":"2026-09-03"},
+    {"id":"skill-authoring","pack":"vfharness","path":"packages/vfharness/playbooks/skill-authoring.md","firstEmbedded":"2026-09-03"},
+    {"id":"handoff","pack":"vfharness","path":"packages/vfharness/templates/handoff.md","firstEmbedded":"2026-09-03"},
+    {"id":"last30days-pattern","pack":"vfresearch","path":"packages/vfresearch/hq/LAST30.md","firstEmbedded":"2026-09-03","deepened":"2026-09-05","skill":".cursor/skills/vf-last30/SKILL.md","note":"Full VF playbook + Cursor skill for research desk (topic/comparison/discovery, confidence floor, nothing-solid). No vendor CLI."},
+    {"id":"self-improving-triggers","pack":"vfops","path":"packages/vfops/hq/DAILY-RETRO.md","firstEmbedded":"2026-09-03"},
+    {"id":"find-skills-via-leaderboard","pack":"vfresearch","path":"packages/vfresearch/BEST-SKILLS.md","firstEmbedded":"2026-09-03"},
+    {"id":"skill-first","pack":"vfharness","path":"packages/vfharness/playbooks/skill-first.md","firstEmbedded":"2026-09-04"},
+    {"id":"teach-learning-records","pack":"vfops","path":"packages/vfops/hq/LEARNING-RECORDS.md","firstEmbedded":"2026-09-04"},
+    {"id":"market-research-intelligence-gates","pack":"vfresearch","path":"packages/vfresearch/hq/MARKET-INTEL.md","firstEmbedded":"2026-09-05","source":"https://mcpmarket.com/tools/skills/market-research-intelligence-1787987613965"},
+    {"id":"brainstorm-gate","pack":"vfharness","path":"packages/vfharness/playbooks/brainstorm-gate.md","firstEmbedded":"2026-09-06","source":"https://github.com/obra/superpowers/tree/main/skills/brainstorming"},
+    {"id":"systematic-debugging","pack":"vfharness","path":"packages/vfharness/playbooks/systematic-debugging.md","firstEmbedded":"2026-09-06","source":"https://github.com/obra/superpowers/tree/main/skills/systematic-debugging","note":" · 2026-09-07: feedback-loop/diagnosing-bugs from #106","deepened":"2026-09-07"},
+    {"id":"anti-ui-slop-brief","pack":"vfbriefux","path":"packages/vfbriefux/hq/DESIGN-EMBED.md","firstEmbedded":"2026-09-06","note":"Anti-slop checklist for HQ brief HTML only; no public site; no foreign brand tokens","source":"https://www.skills.sh/uizze.com/anti-ui-slop"},
+    {"id":"triage","pack":"vfconvert","path":"packages/vfconvert/hq/TRIAGE.md","firstEmbedded":"2026-09-07","source":"https://www.skills.sh/mattpocock/skills/triage"},
+    {"id":"quote-ladder","pack":"vfsales","path":"packages/vfsales/scripts/vf_quote_ladder.py","firstEmbedded":"2026-09-07","note":"Graceful escalation ladder for partial quotes; never invents ₪"},
+    {"id":"writing-plans","pack":"vfharness","path":"packages/vfharness/playbooks/writing-plans.md","firstEmbedded":"2026-09-09","registered":"2026-09-10","note":"File already on main; registered in BEST-SKILLS on gap-closure pass (reconcile #148/#149)"},
+    {"id":"executing-plans","pack":"vfharness","path":"packages/vfharness/playbooks/executing-plans.md","firstEmbedded":"2026-09-10","note":"Reconciled from PR #148 — one task + verify; stop on blocker; no second runtime"},
+    {"id":"domain-glossary","pack":"vfharness","path":"packages/vfharness/playbooks/domain-glossary.md","firstEmbedded":"2026-09-10","note":"Reconciled from PR #149 — glossary discipline for TEAM/pipeline/owner-memory"}
   ],
   "watchlist": [
-    {
-      "id": "obra-superpowers",
-      "url": "https://github.com/obra/superpowers",
-      "note": "Partial+: verification + skill-first + brainstorm-gate + systematic-debugging + writing-plans + executing-plans. Still watch TDD / git-worktrees."
-    },
-    {
-      "id": "mattpocock-skills",
-      "url": "https://github.com/mattpocock/skills",
-      "note": "grill + handoff + teach + triage + domain-glossary embedded 2026-09-10. Watch improve-codebase-architecture / codebase-design."
-    },
-    {
-      "id": "anthropics-skills",
-      "url": "https://github.com/anthropics/skills",
-      "note": "skill-creator patterns embedded. frontend-design → vfbriefux internal only; public site still locked."
-    },
-    {
-      "id": "anti-ui-slop",
-      "url": "https://www.skills.sh/uizze.com/anti-ui-slop",
-      "note": "Partial: Anti-slop section in vfbriefux DESIGN-EMBED (HQ brief only). Still watch taste-skill before second design pass; no foreign tokens."
-    },
-    {
-      "id": "addyosmani-agent-skills",
-      "url": "https://github.com/addyosmani/agent-skills",
-      "note": "Production engineering skills — watch for harness-relevant patterns."
-    },
-    {
-      "id": "ai-video-image-gen-trending",
-      "note": "skills-101 / genmedia trending. Map only via expert-media-director + Canva-first; no Veo/Kling from HQ."
-    },
-    {
-      "id": "archify",
-      "url": "https://github.com/tt-a1i/archify",
-      "note": "Still watch. DIAGRAM-MAKER already in vfbriefux; archify = verifiable HTML diagrams candidate for graft/blast — patterns only."
-    },
-    {
-      "id": "openspec",
-      "url": "https://github.com/Fission-AI/OpenSpec",
-      "note": "Spec-driven development. Overlaps planning-with-files — watch before second SDD layer."
-    },
-    {
-      "id": "impeccable",
-      "url": "https://github.com/pbakaus/impeccable",
-      "note": "Design-language skill for harnesses. Brand-specific kinpaku tokens — do not copy palette into VF; watch methodology only."
-    },
-    {
-      "id": "social-media-publisher-socialclaw",
-      "url": "https://mcpmarket.com/tools/skills/social-media-publisher-2",
-      "note": "Pattern validate→apply→verify embedded 2026-09-05 into vfigos/SEND. Keep watching for a real IG Publish MCP (not Meta DevTools). No SocialClaw npm/API key on Cloud."
-    },
-    {
-      "id": "ponytail",
-      "url": "https://github.com/DietrichGebert/ponytail",
-      "note": "YAGNI agent skills — watch; overlaps minimal-change / harness thrift. · also listed as dietrich-ponytail on #106"
-    },
-    {
-      "id": "caveman",
-      "url": "https://github.com/JuliusBrussee/caveman",
-      "note": "Token thrift meme skill — watch; context-thrift already covers CCR."
-    },
-    {
-      "id": "diagram-design",
-      "url": "https://github.com/cathrynlavery/diagram-design",
-      "note": "Editorial diagrams — watch with archify; DIAGRAM-MAKER already in vfbriefux."
-    },
-    {
-      "id": "mattpocock-triage",
-      "url": "https://github.com/mattpocock/skills/tree/main/skills/engineering/triage",
-      "note": "Issue-tracker state machine — VF has no GH issue triage desk yet. Watch only; grill already embedded."
-    },
-    {
-      "id": "dietrich-ponytail",
-      "url": "https://github.com/DietrichGebert/ponytail",
-      "note": "Top-repos #6 2026-09-07 — agent skills collection. Watch before any embed; no npx."
-    }
+    {"id":"obra-superpowers","url":"https://github.com/obra/superpowers","note":"Partial+: verification + skill-first + brainstorm-gate + systematic-debugging + writing-plans + executing-plans. Still watch TDD / git-worktrees."},
+    {"id":"mattpocock-skills","url":"https://github.com/mattpocock/skills","note":"grill + handoff + teach + triage + domain-glossary embedded 2026-09-10. Watch improve-codebase-architecture / codebase-design."},
+    {"id":"anthropics-skills","url":"https://github.com/anthropics/skills","note":"skill-creator patterns embedded. frontend-design → vfbriefux internal only; public site still locked."},
+    {"id":"anti-ui-slop","url":"https://www.skills.sh/uizze.com/anti-ui-slop","note":"Partial: Anti-slop section in vfbriefux DESIGN-EMBED (HQ brief only). Still watch taste-skill before second design pass; no foreign tokens."},
+    {"id":"addyosmani-agent-skills","url":"https://github.com/addyosmani/agent-skills","note":"Production engineering skills — watch for harness-relevant patterns."},
+    {"id":"ai-video-image-gen-trending","note":"skills-101 / genmedia trending. Map only via expert-media-director + Canva-first; no Veo/Kling from HQ."},
+    {"id":"archify","url":"https://github.com/tt-a1i/archify","note":"Still watch. DIAGRAM-MAKER already in vfbriefux; archify = verifiable HTML diagrams candidate for graft/blast — patterns only."},
+    {"id":"openspec","url":"https://github.com/Fission-AI/OpenSpec","note":"Spec-driven development. Overlaps planning-with-files — watch before second SDD layer."},
+    {"id":"impeccable","url":"https://github.com/pbakaus/impeccable","note":"Design-language skill for harnesses. Brand-specific kinpaku tokens — do not copy palette into VF; watch methodology only."},
+    {"id":"social-media-publisher-socialclaw","url":"https://mcpmarket.com/tools/skills/social-media-publisher-2","note":"Pattern validate→apply→verify embedded 2026-09-05 into vfigos/SEND. Keep watching for a real IG Publish MCP (not Meta DevTools). No SocialClaw npm/API key on Cloud."},
+    {"id":"ponytail","url":"https://github.com/DietrichGebert/ponytail","note":"YAGNI agent skills — watch; overlaps minimal-change / harness thrift. · also listed as dietrich-ponytail on #106"},
+    {"id":"caveman","url":"https://github.com/JuliusBrussee/caveman","note":"Token thrift meme skill — watch; context-thrift already covers CCR."},
+    {"id":"diagram-design","url":"https://github.com/cathrynlavery/diagram-design","note":"Editorial diagrams — watch with archify; DIAGRAM-MAKER already in vfbriefux."},
+    {"id":"mattpocock-triage","url":"https://github.com/mattpocock/skills/tree/main/skills/engineering/triage","note":"Issue-tracker state machine — VF has no GH issue triage desk yet. Watch only; grill already embedded."},
+    {"id":"dietrich-ponytail","url":"https://github.com/DietrichGebert/ponytail","note":"Top-repos #6 2026-09-07 — agent skills collection. Watch before any embed; no npx."},
+    {"id":"earthtojake-text-to-cad","url":"https://github.com/earthtojake/text-to-cad","note":"2026-09-12 watch: top-repos #64 on dataDate 2026-09-11. Source-controlled CAD + DfAM validation pattern may fit vfprod only if a real pre-slice geometry gap is measured. No second CAD runtime."}
   ],
   "skipped": [
-    {
-      "id": "npx-skills-cli",
-      "why": "Cloud Agent does not install skills via npx; embed patterns into git packs"
-    },
-    {
-      "id": "azure-prisma-vendor-block",
-      "why": "Not VF office domain"
-    },
-    {
-      "id": "twitter-reddit-automation",
-      "why": "Auto-post / growth hacks outside VF CTA + no auto-DM"
-    },
-    {
-      "id": "openclaw-self-improving-runtime",
-      "why": "Second runtime locked; office-learning already covers reflection→memory"
-    },
-    {
-      "id": "socialclaw-vendor-install",
-      "why": "Vendor lock + API key; multi-platform blast outside VF mandate. Pattern only — see 2026-09-05-social-media-publisher.md"
-    },
-    {
-      "id": "stablyai-orca-runtime",
-      "why": "Second ADE/runtime locked — vfe2b LOCK; patterns already on crews/run.md"
-    },
-    {
-      "id": "herdr-runtime",
-      "why": "Second agent runtime — skip install"
-    },
-    {
-      "id": "google-agents-cli",
-      "why": "Vendor CLI scaffold/deploy outside VF Cloud mandate"
-    }
+    {"id":"npx-skills-cli","why":"Cloud Agent does not install skills via npx; embed patterns into git packs"},
+    {"id":"azure-prisma-vendor-block","why":"Not VF office domain"},
+    {"id":"twitter-reddit-automation","why":"Auto-post / growth hacks outside VF CTA + no auto-DM"},
+    {"id":"openclaw-self-improving-runtime","why":"Second runtime locked; office-learning already covers reflection→memory"},
+    {"id":"socialclaw-vendor-install","why":"Vendor lock + API key; multi-platform blast outside VF mandate. Pattern only — see 2026-09-05-social-media-publisher.md"},
+    {"id":"stablyai-orca-runtime","why":"Second ADE/runtime locked — vfe2b LOCK; patterns already on crews/run.md"},
+    {"id":"herdr-runtime","why":"Second agent runtime — skip install"},
+    {"id":"google-agents-cli","why":"Vendor CLI scaffold/deploy outside VF Cloud mandate"}
   ]
 }
