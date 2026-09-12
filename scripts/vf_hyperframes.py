@@ -17,7 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-HYPERFRAMES_VERSION = "0.8.35"
+HYPERFRAMES_VERSION = "0.8.34"
 HYPERFRAMES_PACKAGE = f"hyperframes@{HYPERFRAMES_VERSION}"
 SUPPORTED_STAGES = {"rough", "review", "final"}
 SUPPORTED_FORMATS = {"mp4", "webm", "mov"}
