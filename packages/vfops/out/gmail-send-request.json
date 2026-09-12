@@ -1,11 +1,11 @@
 {
-  "enabled": false,
-  "requestId": "office-loop-2026-09-11-2005",
-  "html": "packages/vfops/out/office-loop-2026-09-11-2005.html",
-  "visibleText": "packages/vfops/out/office-loop-2026-09-11-2005.txt",
+  "enabled": true,
+  "requestId": "morning-brief-recovery-2026-09-12-0757",
+  "html": "packages/vfops/out/morning-brief-recovery-2026-09-12.html",
+  "visibleText": "packages/vfops/out/morning-brief-recovery-2026-09-12.txt",
   "images": "",
   "to": "nocturney@gmail.com",
-  "subject": "VelvetOS · Office Loop · 2026-09-11 20:05",
+  "subject": "Velvet Factory — בריף הבוקר | 12.9.2026 · Recovery",
   "embedRemoteImages": true,
   "remoteImageLimit": 12
 }
