@@ -1,9 +1,5 @@
 {
-<<<<<<< Updated upstream
-  "generatedAt": "2026-09-12T15:42:24Z",
-=======
-  "generatedAt": "2026-09-12T17:00:30Z",
->>>>>>> Stashed changes
+  "generatedAt": "2026-09-12T17:51:11Z",
   "slot": "05",
   "title": "קליטת מדיה",
   "phases": {
@@ -14,11 +10,7 @@
   },
   "runner": {
     "component_state": "Idle",
-<<<<<<< Updated upstream
-    "lastRunAt": "2026-09-12T15:42:24Z",
-=======
-    "lastRunAt": "2026-09-12T17:00:24Z",
->>>>>>> Stashed changes
+    "lastRunAt": "2026-09-12T17:51:10Z",
     "lastError": null,
     "persistError": null,
     "activation_proven": true,
