@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "authority": "packages/vfmcp/HOST.md",
+  "purpose": "canonical Edge/Office execution hosts for local render capabilities",
+  "hosts": {
+    "sderot-mac": {
+      "displayName": "Mac-Office",
+      "location": "Sderot",
+      "platform": "macOS",
+      "workerName": "sderot-mac",
+      "repoPath": "~/velvetos-core",
+      "roles": ["subscription-host", "edge-worker", "video-render-host"],
+      "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
+      "bootstrap": "scripts/bootstrap-hyperframes-host-macos.sh",
+      "localState": "~/.velvetos/render-host.json",
+      "hyperframesVersion": "0.8.34",
+      "route": "cursor-agent-worker",
+      "inboundPortRequired": false,
+      "status": "host_smoke_verified",
+      "verifiedEvidence": "real local HyperFrames smoke render completed with ffprobe receipt and canonical Cursor worker running on Mac-Office on 2026-09-12",
+      "productionPromotionPending": ["approved_media_vault_asset_render_and_existing_qa", "intentional_hyperframes_failure_and_ffmpeg_failover_verification"],
+      "promotionRule": "backend live_verified only after host smoke + real approved asset render + existing QA + failover verification"
+    }
+  },
+  "defaultRenderHost": "sderot-mac"
+}
