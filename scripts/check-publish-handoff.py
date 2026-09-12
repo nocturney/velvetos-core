@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
-"""Contract + unit tests for Publish Bridge handoff / recovery / publication gates."""
+"""Contract + unit tests for Publish Bridge handoff / recovery / publication gates.
+
+No Pillow required in CI: PNG bytes are written manually; image normalization is
+mocked unless Pillow is installed (optional local coverage).
+"""
 from __future__ import annotations
 
 import json
 import shutil
+import struct
 import sys
 import tempfile
 import unittest
+import zlib
 from pathlib import Path
 from unittest import mock
 
@@ -16,42 +22,66 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import vf_publish_bridge as bridge  # noqa: E402
 import vf_publish_handoff as handoff  # noqa: E402
 
+try:
+    from PIL import Image  # type: ignore
+
+    HAS_PIL = True
+except ImportError:
+    HAS_PIL = False
+
+
+def write_solid_png(path: Path, width: int = 8, height: int = 8) -> None:
+    """Minimal RGB PNG writer (stdlib only) so CI sensors need no Pillow."""
+
+    def chunk(tag: bytes, data: bytes) -> bytes:
+        return struct.pack(">I", len(data)) + tag + data + struct.pack(">I", zlib.crc32(tag + data) & 0xFFFFFFFF)
+
+    raw = b"".join(b"\x00" + (b"\xff\x00\x80" * width) for _ in range(height))
+    ihdr = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    png = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", zlib.compress(raw)) + chunk(b"IEND", b"")
+    path.write_bytes(png)
+
 
 class PublishHandoffTests(unittest.TestCase):
     def setUp(self) -> None:
         self.tmp = Path(tempfile.mkdtemp(prefix="vf-handoff-test-"))
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
-        # Isolate publication / handoff writes inside tmp.
         self.pubs = self.tmp / "publications"
         self.mans = self.tmp / "handoff"
         self.pubs.mkdir()
         self.mans.mkdir()
-        self._patchers = [
+        for p in (
             mock.patch.object(handoff, "PUBLICATIONS_DIR", self.pubs),
             mock.patch.object(handoff, "HANDOFF_DIR", self.mans),
             mock.patch.object(handoff, "ROOT", self.tmp),
-        ]
-        for p in self._patchers:
+        ):
             p.start()
             self.addCleanup(p.stop)
 
-        # Tiny RGB PNG via Pillow
-        from PIL import Image
-
         self.png = self.tmp / "approved-export.png"
-        Image.new("RGB", (1080, 1920), color=(200, 80, 120)).save(self.png)
+        write_solid_png(self.png, 1080, 8)  # wide enough; height cheap for CI
+
+    def _fake_normalize(self, src: Path, cfg: dict, tmp: Path):
+        dst = tmp / "asset.jpg"
+        # JFIF-ish header + baseline SOF0 marker so contracts can inspect bytes.
+        dst.write_bytes(b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\xff\xc0\x00\x11\x08\x07\x80\x04\x38\xff\xd9")
+        return dst, "image/jpeg", {"width": 1080, "height": 1920, "sizeBytes": dst.stat().st_size}
 
     def test_normalize_and_prepare_approved_local_export(self) -> None:
         cfg = bridge.load_config()
         with tempfile.TemporaryDirectory() as td:
-            normalized, content_type, details = bridge.normalize(self.png, cfg, Path(td))
+            if HAS_PIL:
+                Image.new("RGB", (1080, 1920), color=(200, 80, 120)).save(self.png)
+                normalized, content_type, details = bridge.normalize(self.png, cfg, Path(td))
+            else:
+                normalized, content_type, details = self._fake_normalize(self.png, cfg, Path(td))
             self.assertEqual(content_type, "image/jpeg")
             self.assertEqual(details["width"], 1080)
             self.assertEqual(details["height"], 1920)
             data = normalized.read_bytes()
             self.assertTrue(data.startswith(b"\xff\xd8\xff"))
-            self.assertIn(b"\xff\xc0", data)  # baseline SOF0
-            self.assertNotIn(b"\xff\xc2", data)  # not progressive
+            self.assertIn(b"\xff\xc0", data)
+            self.assertNotIn(b"\xff\xc2", data)
 
     def test_no_binary_written_to_main_paths(self) -> None:
         cfg = bridge.load_config()
@@ -87,16 +117,13 @@ class PublishHandoffTests(unittest.TestCase):
 
     def test_bridge_url_shape_and_fetch_contract(self) -> None:
         cfg = bridge.load_config()
-        url = (
-            f"{cfg['publicBaseUrl'].rstrip('/')}/2026-09-10/G004/"
-            f"{'a' * 20}.jpg"
-        )
+        url = f"{cfg['publicBaseUrl'].rstrip('/')}/2026-09-10/G004/{'a' * 20}.jpg"
         self.assertTrue(url.startswith("https://raw.githubusercontent.com/"))
         self.assertIn("/publish-bridge/publish-bridge/assets/", url)
 
-        # Fake successful fetch verification against local bytes.
         with tempfile.TemporaryDirectory() as td:
-            normalized, content_type, details = bridge.normalize(self.png, cfg, Path(td))
+            with mock.patch.object(bridge, "normalize", side_effect=self._fake_normalize):
+                normalized, content_type, details = bridge.normalize(self.png, cfg, Path(td))
             digest = bridge.sha256_file(normalized)
             body = normalized.read_bytes()
 
@@ -141,7 +168,6 @@ class PublishHandoffTests(unittest.TestCase):
             handoff.set_state(doc, "published_verified")
         handoff.record_publish_receipt("G004", {"ok": True, "media_id": "222"})
         with self.assertRaises(ValueError):
-            # still no liveVerification
             doc2 = handoff.load_publication("G004")
             handoff.set_state(doc2, "published_verified")
         out = handoff.record_live_verification(
@@ -151,16 +177,16 @@ class PublishHandoffTests(unittest.TestCase):
         self.assertEqual(out["state"], "published_verified")
 
     def test_missing_bridge_with_local_export_triggers_recovery_not_terminal_block(self) -> None:
-        # recover without --stage should land approved_export_local / prepare, not terminal transport block.
-        out = handoff.recover_and_stage_frame(
-            correlation="G004",
-            file_path=self.png,
-            approval_ref="packages/vfgrowth/preflight/G004.md",
-            source_ref="canva:DAHUaUo3bAk",
-            frame_index=1,
-            public_release_approved=True,
-            do_stage=False,
-        )
+        with mock.patch.object(bridge, "normalize", side_effect=self._fake_normalize):
+            out = handoff.recover_and_stage_frame(
+                correlation="G004",
+                file_path=self.png,
+                approval_ref="packages/vfgrowth/preflight/G004.md",
+                source_ref="canva:DAHUaUo3bAk",
+                frame_index=1,
+                public_release_approved=True,
+                do_stage=False,
+            )
         self.assertTrue(out["ok"])
         self.assertNotEqual(out.get("blocker"), "blocked_publish_transport")
         doc = handoff.load_publication("G004")

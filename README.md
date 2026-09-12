@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-10 — **Jobs Sheet write-through harden:** bindings `sheetName=Untitled` (fail-closed, no guessed `jobs` tab); pre-write remote digest concurrency guard → conflict without mutation; behavioral tests in `…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-10 — **Jobs Sheet write-through harden:** bindings `sheetName=Untitled` (fail-closed, no guessed `jobs` tab); pre-write remote digest concurrency guard → conflict without mutation; behavioral tests in `…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-10 — **Publish handoff CI without Pillow:** `check-publish-handoff.py` writes minimal PNGs via stdlib and mocks `normalize` so the 12-contract suite passes on bare CI; optional Pillow path retained loca…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-10 — **Publish handoff CI without Pillow:** `check-publish-handoff.py` writes minimal PNGs via stdlib and mocks `normalize` so the 12-contract suite passes on bare CI; optional Pillow path retained loca…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -122,7 +122,7 @@
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">בריף HTML עם מדיה inline ושליחה כאשר קיימים credentials תקפים.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td dir="rtl" align="right">מעבר מבוקר לכלי חלופי בלי לייצר SoT נוסף.</td></tr>
 <tr><td><strong>Agents / Skills catalog</strong></td><td><strong>AVAILABLE TOOLING</strong></td><td dir="rtl" align="right">קטלוג specialists גדול; עצם קיום prompt/rule לא נחשב הוכחת capability פעילה.</td></tr>
-<tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td dir="rtl" align="right">חיישני `check-*.py` ו־GitHub Actions כראיית חוזה executable.</td></tr>
+<tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td dir="rtl" align="right">חיישני `check-*.py` ו־GitHub Actions כראיית חוזה executable; `check-publish-handoff` רץ גם בלי Pillow (stdlib + mock).</td></tr>
 </table>
 
 ## ‏אוטומציות פעילות בריפו
@@ -242,7 +242,7 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td>HTML + inline media brief path when valid credentials exist.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td>Controlled takeover without creating another source of truth.</td></tr>
 <tr><td><strong>Agents / Skills catalog</strong></td><td><strong>AVAILABLE TOOLING</strong></td><td>Large specialist catalog; a prompt/rule file alone is not proof of active capability.</td></tr>
-<tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td>`check-*.py` sensors and GitHub Actions provide executable contract evidence.</td></tr>
+<tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td>`check-*.py` sensors and GitHub Actions provide executable contract evidence; `check-publish-handoff` runs without Pillow (stdlib PNG + mocked normalize).</td></tr>
 </table>
 
 ## Operational workflows

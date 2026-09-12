@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-10 — **Publish handoff CI without Pillow:** `check-publish-handoff.py` writes minimal PNGs via stdlib and mocks `normalize` so the 12-contract suite passes on bare CI; optional Pillow path retained locally. Sensor suite stays fail-closed without the pip dependency.
 - 2026-09-10 — **Jobs Sheet write-through harden:** bindings `sheetName=Untitled` (fail-closed, no guessed `jobs` tab); pre-write remote digest concurrency guard → conflict without mutation; behavioral tests in `check-vf-office.py`.
 - 2026-09-10 — **PR #160 merge-blocker fixes:** scrub commissioning pollution; non-mutating commission + `check-commission-isolation`; Sheet write-through honest `write_pending_provider` + jobs_state=needs_sync; intake idempotency; meeting/document structured extract (no fake route_to_execution); client_notes identity gate; approval standing-auth reconcile; Insights min-sample; autonomy SAFE_ACTIONS + risk tighten-only. Sensors 39/39.
 - 2026-09-10 — **סגירת פערים תפעוליים (בלי ארכיטקטורה חדשה):** Google Sheet `VF HQ · jobs` קנוני + `vf_jobs_adapter`/`jobs pull|push|reconcile`; Universal Intake מפעיל handlers קיימים; `vf_autonomy.py execute` ל-green/yellow; vfmem לפני note/meeting/document; Insights MCP→`vf_insights_ingest`→LEARNINGS; ניקוי VFMEDIA_DRIVE_CREDENTIALS_JSON / Instagram MCP חסר; יישוב #148+#149 (executing-plans + domain-glossary). Commission 22/22. No owner action required.
