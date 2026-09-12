@@ -32,7 +32,7 @@ The machine-readable policy is `HYPERFRAMES-BACKEND.json`. Render requests use `
 The render host is Edge/Office, not the Core catalog runtime.
 
 - Node.js >=22
-- a locally installed `hyperframes` CLI at exactly `0.8.35`
+- a locally installed `hyperframes` CLI at exactly `0.8.34`
 - FFmpeg + ffprobe
 
 Installation/cache preparation happens outside a content job on an authorized render host. The bridge performs no dependency download, no `npx` fallback and no silent version switch. `doctor` fails closed when the binary is missing or its version differs from the configured pin. Updating the pin requires reviewing current HyperFrames release behavior, then updating the backend config, bridge constant and sensor together.
