@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvetos.local/schemas/hyperframes-render.schema.json",
+  "title": "Velvet HyperFrames Render Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["jobId", "backend", "projectDir", "output"],
+  "properties": {
+    "jobId": {"type": "string", "pattern": "^[A-Za-z0-9._-]+$", "minLength": 1},
+    "backend": {"const": "hyperframes"},
+    "projectDir": {"type": "string", "minLength": 1},
+    "composition": {"type": "string", "default": "index.html"},
+    "stage": {"enum": ["rough", "review", "final"], "default": "rough"},
+    "target": {"enum": ["reel_master", "story_master", "feed_video", "transparent_overlay", "review"]},
+    "format": {"enum": ["mp4", "webm", "mov"], "default": "mp4"},
+    "resolution": {"enum": ["portrait", "portrait-4k"], "default": "portrait"},
+    "fps": {"enum": [24, 30, 60], "default": 30},
+    "quality": {"enum": ["draft", "standard", "high"]},
+    "output": {"type": "string", "minLength": 1},
+    "variablesFile": {"type": "string", "minLength": 1},
+    "audioRequired": {"type": "boolean"},
+    "strictAll": {"type": "boolean"}
+  }
+}
