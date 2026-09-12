@@ -2,6 +2,8 @@
 
 מחקר יומי חי הושלם בריצת catch-up בעקבות ריצת 06:00 שהוחמצה. מקור מלא: `packages/vfresearch/sources/2026-09-12-orchestra.md`.
 
+## מה נבנה / יועל
+
 ```text
 05 · מחקר ורעיונות
 - SKU preflight: Sticky Note Holder מ-Printables — Public Domain, מסחרי, בלי supports ובלי hardware; לאמת רישיון ולסלייס אצלנו לפני החלטת מדף/מחיר.
