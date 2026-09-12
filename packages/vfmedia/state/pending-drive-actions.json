@@ -3609,8 +3609,24 @@
       "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
       "status": "done",
       "updatedAt": "2026-09-11T09:37:20Z"
+    },
+    {
+      "op": "move",
+      "fileId": "1CTzVb0JVyOuM7DTm66QwLCBLjWLJx74f",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-12T17:00:28Z"
+    },
+    {
+      "op": "move",
+      "fileId": "10_MELUjISvZ025q6pHQe5oi3BJALQ6E-",
+      "fromFolderId": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ",
+      "toFolderId": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
+      "status": "done",
+      "updatedAt": "2026-09-12T17:00:30Z"
     }
   ],
-  "updatedAt": "2026-09-11T09:37:20Z",
+  "updatedAt": "2026-09-12T17:00:30Z",
   "note": "pending Drive moves for MCP/API apply — not a second catalog"
 }

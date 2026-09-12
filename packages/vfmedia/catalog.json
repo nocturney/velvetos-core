@@ -2,7 +2,7 @@
   "name": "vfmedia-catalog",
   "title": "VelvetOS shared media catalog",
   "oneCatalog": true,
-  "updatedAt": "2026-09-11",
+  "updatedAt": "2026-09-12",
   "vaultRootId": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
   "locks": [
     "one-catalog",
@@ -17052,6 +17052,78 @@
         "md5Checksum": "1d730edee80a788e588c19a98fa1a7f0",
         "sha256Checksum": "895b78a0ac3f2c5c111525e0776c612be7eeca6eead3706fbb05f5a3d7ebbf88",
         "moveStartedAt": "2026-09-11T09:37:19Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1CTzVb0JVyOuM7DTm66QwLCBLjWLJx74f",
+      "sourceFile": {
+        "id": "1CTzVb0JVyOuM7DTm66QwLCBLjWLJx74f",
+        "url": "https://drive.google.com/file/d/1CTzVb0JVyOuM7DTm66QwLCBLjWLJx74f/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: IMG_1285.MOV · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-12",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-12T17:00:25Z",
+        "verifiedAt": "2026-09-12T17:00:28Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-12T17:00:28Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:1fb8d3d723aea083acb172fc275d7051f2faf167ea651daa44b7646927a09199",
+        "headRevisionId": "0B_YIZLrmyOz4TmllNTBlekFweC9STGx1WDh2YlFaQnhEak1vPQ",
+        "md5Checksum": "fe35451322341f9d2abbd9c90971699e",
+        "sha256Checksum": "1fb8d3d723aea083acb172fc275d7051f2faf167ea651daa44b7646927a09199",
+        "moveStartedAt": "2026-09-12T17:00:27Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-10_MELUjISvZ025q6pHQe5oi3BJALQ6E-",
+      "sourceFile": {
+        "id": "10_MELUjISvZ025q6pHQe5oi3BJALQ6E-",
+        "url": "https://drive.google.com/file/d/10_MELUjISvZ025q6pHQe5oi3BJALQ6E-/view?usp=drivesdk"
+      },
+      "viewDescription": "תמונה · שם קובץ: IMG_1284.HEIC · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-09-12",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-12T17:00:28Z",
+        "verifiedAt": "2026-09-12T17:00:30Z",
+        "downloadBytes": 1997002,
+        "movedToSourceAt": "2026-09-12T17:00:30Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:38f7d54129a4ceaceb72899edb1b9134a9ab6d9ad29b414efc940abf6a48436f",
+        "headRevisionId": "0B_YIZLrmyOz4Ni9UMEMyenU2NUJWWFd6Qy9BZ0R5SDlkWHFnPQ",
+        "md5Checksum": "bccc9050856bab279a43e37b86281bc5",
+        "sha256Checksum": "38f7d54129a4ceaceb72899edb1b9134a9ab6d9ad29b414efc940abf6a48436f",
+        "moveStartedAt": "2026-09-12T17:00:29Z"
       },
       "visualReview": {
         "state": "none",
