@@ -107,7 +107,6 @@ jobs:
           set -e
           git config user.name "velvetos-media-intake"
           git config user.email "noreply@velvetos.local"
-          git pull --rebase --autostash origin "${{ github.ref_name }}" || git pull --rebase --autostash origin HEAD || true
           if git diff --quiet -- packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No intake artifacts to commit"
@@ -116,7 +115,14 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
           git add packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json
           git commit -m "vfmedia intake: durable catalog/state from scheduled run (exit ${{ steps.intake.outputs.exit_code }})"
-          git push
+          branch="${{ github.ref_name }}"
+          git fetch origin "$branch"
+          if ! git rebase "origin/$branch"; then
+            git rebase --abort || true
+            echo "::error::Concurrent update conflicted with vfmedia state. Refusing to persist conflict markers; retry on a fresh checkout."
+            exit 4
+          fi
+          git push origin "HEAD:$branch"
           echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       - name: Sensor slice
