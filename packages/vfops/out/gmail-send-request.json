@@ -1,11 +1,11 @@
 {
-  "enabled": false,
-  "requestId": "office-loop-2026-09-12-1107",
-  "html": "packages/vfops/out/office-loop-2026-09-12-1107.html",
-  "visibleText": "packages/vfops/out/office-loop-2026-09-12-1107.txt",
+  "enabled": true,
+  "requestId": "office-loop-2026-09-12-2000",
+  "html": "packages/vfops/out/office-loop-2026-09-12-2000.html",
+  "visibleText": "packages/vfops/out/office-loop-2026-09-12-2000.txt",
   "images": "",
   "to": "nocturney@gmail.com",
-  "subject": "VelvetOS · Office Loop · 2026-09-12 11:07",
+  "subject": "VelvetOS · Office Loop · 2026-09-12 20:00",
   "embedRemoteImages": true,
   "remoteImageLimit": 12
 }
