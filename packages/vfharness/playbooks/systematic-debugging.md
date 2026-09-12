@@ -1,7 +1,7 @@
 # Systematic debugging — שורש לפני תיקון
 
 מקור דפוס: [obra/superpowers `systematic-debugging`](https://github.com/obra/superpowers/tree/main/skills/systematic-debugging).  
-רתמה: `vfharness` · אחרי תיקון: `verification-before-claim.md` · סוכן «נהיה גרוע»: `agent-architecture-audit.md`.
+רתמה: `vfharness` · לפני תיקון פק/סנסור: `sensor-first-tdd.md` · אחרי תיקון: `verification-before-claim.md` · סוכן «נהיה גרוע»: `agent-architecture-audit.md`.
 
 ## חוק ברזל
 
@@ -69,6 +69,8 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 ## קשר
 
 - `playbooks/brainstorm-gate.md` — לפני בנייה חדשה
+- `playbooks/sensor-first-tdd.md` — אדום לפני תיקון
 - `playbooks/verification-before-claim.md` — לפני «סיימתי»
+
 - `playbooks/skill-first.md` — לפני פעולה
 - `playbooks/agent-architecture-audit.md` — כשל מבני חוזר
