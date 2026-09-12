@@ -32,11 +32,10 @@ The machine-readable policy is `HYPERFRAMES-BACKEND.json`. Render requests use `
 The render host is Edge/Office, not the Core catalog runtime.
 
 - Node.js >=22
-- `npx`
+- a locally installed `hyperframes` CLI at exactly `0.8.35`
 - FFmpeg + ffprobe
-- pinned `hyperframes@0.8.35` available/cached on the authorized host
 
-The bridge must not silently switch package versions. Updating the pin requires reviewing current HyperFrames release behavior, then updating the backend config, bridge constant and sensor together.
+Installation/cache preparation happens outside a content job on an authorized render host. The bridge performs no dependency download, no `npx` fallback and no silent version switch. `doctor` fails closed when the binary is missing or its version differs from the configured pin. Updating the pin requires reviewing current HyperFrames release behavior, then updating the backend config, bridge constant and sensor together.
 
 ## Render stages
 
@@ -76,13 +75,13 @@ Composition source media must resolve to concrete Media Vault assets or explicit
 
 ## Bridge usage
 
-Validate a request and inspect the exact pinned commands without rendering:
+Validate a request and inspect the exact pinned commands without rendering or resolving a binary:
 
 ```bash
 python3 scripts/vf_hyperframes.py plan path/to/render-request.json
 ```
 
-Check host prerequisites without installing anything:
+Check host prerequisites and the exact HyperFrames version without installing anything:
 
 ```bash
 python3 scripts/vf_hyperframes.py doctor
