@@ -8,11 +8,7 @@
         "id": "vfmedia-auto-intake",
         "title": "קליטת מדיה אוטומטית — נכנס→מקור",
         "state": "Idle",
-<<<<<<< Updated upstream
-        "updatedAt": "2026-09-12T15:42:24Z",
-=======
         "updatedAt": "2026-09-12T17:00:30Z",
->>>>>>> Stashed changes
         "counts": {
           "registered_only": 0,
           "verified_and_intaken": 454,
