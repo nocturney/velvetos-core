@@ -2,21 +2,15 @@
 
 מחקר יומי חי הושלם בריצת catch-up בעקבות ריצת 06:00 שהוחמצה. מקור מלא: `packages/vfresearch/sources/2026-09-12-orchestra.md`.
 
-```
-05 · משרד
-מה נבנה / יועל:
-- Research Seat של 12.9 שוחזר והושלם עם body evidence חי; נוצר `packages/vfresearch/sources/2026-09-12-orchestra.md` ועודכן ה-SoT הזה.
-- מסלול Morning Brief production עבר recovery עם Visible Text Gate אמיתי, Gmail API ו-message ID מאומת; send request הוחזר למצב disabled בטוח.
-- שכבות Automation Integrity Guard ו-Morning Delivery Guard פעילות כדי לאתר ולתקן disable/delivery drift לפני ואחרי חלון הבריף.
-
-מחקר ורעיונות:
-- cable management / desk accessories עדיין מציגים אות שוק פעיל במרקטפלייסים עדכניים; זה כיוון preflight סביר, לא הוכחת ביקוש ישראלי.
-- מועמד Quick-win: cable holder / desk organizer קטן ו-support-free, בגלל פשטות ייצור, הדגמה קלה בתוכן ושימושיות ברורה.
-- customization יכול לבדל, אבל fit ורישוי הם gate: עדיף base model + מעט וריאציות מוגדרות, ורישיון מסחרי מתועד לפני קטלוג.
-- לפני קטלוג/מחיר: למדוד אצלנו זמן הדפסה, גרמים, טווח התאמה ואיכות גימור. אין המלצת מחיר מהמקורות החיצוניים.
+```text
+05 · מחקר ורעיונות
+- SKU preflight: Sticky Note Holder מ-Printables — Public Domain, מסחרי, בלי supports ובלי hardware; לאמת רישיון ולסלייס אצלנו לפני החלטת מדף/מחיר.
+- ייצור: PrusaSlicer 3.0 Preview מציע multi-bed project + parallel slicing; לבצע benchmark קטן מול workflow הנוכחי, לא מעבר production.
+- Best Skills: מעבר 48h בוצע; אין embed חדש. earthtojake/text-to-cad נכנס ל-watch בלבד כדי לא ליצור CAD runtime מקביל.
 ```
 
-Freshness: **2026-09-12 · GREEN body evidence · catch-up replay**.
+Freshness: **2026-09-12 · GREEN body evidence · catch-up replay**.  
+Best Skills: `standingForever=true`; refresh בוצע מול dataDate 2026-09-11. legacy `cursor-subscriptions` timer verification = **UNPROVEN** בכלי הריצה הנוכחי; לא נטען `timer: ok/renewed` ולא נוצרה automation כפולה.
 
 ---
 
