@@ -1,11 +1,11 @@
 {
-  "enabled": false,
-  "requestId": "weekly-research-preview-2026-09-13-corrected",
-  "html": "packages/vfops/out/weekly-research-preview-2026-09-13-v4.html",
-  "visibleText": "packages/vfops/out/weekly-research-preview-2026-09-13-v4.txt",
+  "enabled": true,
+  "requestId": "research-seat-2026-09-14",
+  "html": "packages/vfops/out/research-owner-2026-09-14.html",
+  "visibleText": "packages/vfops/out/research-owner-2026-09-14.txt",
   "images": "",
   "to": "nocturney@gmail.com",
-  "subject": "VelvetOS · Weekly Research Accountability · 2026-09-13 · תצוגת ניסיון מתוקנת",
-  "embedRemoteImages": true,
-  "remoteImageLimit": 12
+  "subject": "Velvet Factory · מחקר בוקר 14.9",
+  "embedRemoteImages": false,
+  "remoteImageLimit": 0
 }
