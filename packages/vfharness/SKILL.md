@@ -18,7 +18,7 @@
 6. **Human-visible output:** אם המשימה מייצרת prose/microcopy שנכתב או שוכתב ב־AI ושכריסטיאן/לקוח/קהל/שותף יקראו, `constitution/VISIBLE_TEXT.md` הוא gate חובה לפני `final`/send/publish/render. Route דרך `vfcopy`, surface נכון, reader-first, כלי הדומיין/כתיבה הרלוונטיים, Humanizer/AI-tells, fact/surface QA. אם אין הוכחת ביצוע על התוצר המדויק — `UNPROVEN`; completion אינו `worker_done` כ־final human output. Literal source IDs/hashes/logs/code אינם משוכתבים.
 7. מכסת Grok ריקה + צריך IG חי → `playbooks/grok-failover.md` + `vfigos/LIVE-PACKET.md` לאדם.
 8. הקשר כבד (thread, JSON, Drive dump) → `playbooks/context-thrift.md` — סיכום בשיחה, מקור ב-checkpoint.
-9. **סוף יום** — `playbooks/daily-learning.md` + `vfops/hq/DAILY-RETRO.md` (מודול `office-learning`).
+9. **סוף יום** — `playbooks/daily-learning.md` + `playbooks/learning-lifecycle.md` + `vfops/hq/DAILY-RETRO.md`; observation נשאר candidate עד שיש evidence/gate מתאים.
 10. סוכן «נהיה גרוע» / כלי נדלג / זיכרון דולף → `playbooks/agent-architecture-audit.md` (דפוס buildwithclaude; בלי ECC install).
 11. לפני בנייה / פק חדש / שינוי צינור → `playbooks/brainstorm-gate.md` (דפוס obra brainstorming; אישור אנושי לפני יישום).
 12. באג / סנסור אדום / כשל כלי → `playbooks/systematic-debugging.md` (שורש לפני תיקון; בלי ניחוש).
@@ -27,9 +27,13 @@
 13c. מילון תחום → `playbooks/domain-glossary.md` (TEAM / pipeline / owner-memory — בלי מונחים מומצאים).
 14. Living Studio → `python3 scripts/vf_living_studio.py` (World Model / Pulse / Intake) — שכבת חיבור, לא Control Plane שני.
 15. שינוי קוד מהותי → `playbooks/implementation-discipline.md` — think first, boring simplicity, surgical diff, proof-before-code (Karpathy pattern).
-16. שינוי רגיש/רחב → `playbooks/critique-review.md` — critique רב-זוויתי + evidence + repair; סנסור דטרמיניסטי נשאר שופט מחייב.
+16. שינוי רגיש/רחב → `playbooks/critique-review.md`. ב־high-risk mode נדרשים שני reviewers עצמאיים + deterministic proof; receipt תחת `state/reviews/` נבדק ע״י `check-review-convergence.py`.
 17. worker-to-worker בלבד → `playbooks/terse-worker-output.md` — פלט קצר ומבני; לעולם לא על טקסט אנושי.
 18. Agent/MCP/rules surface → `AGENT-SURFACE-SECURITY.md` + `python3 scripts/check-agent-surface-security.py` (AgentShield pattern).
+19. מעבר עבודה בין harnesses → `vfmem/HANDOFF.md` + `python3 scripts/vf_handoff.py new|ack|consume|reject|doctor`; handoff הוא context, לא authority.
+20. לפני טענה ש״הוטמע/רץ״ על worker/automation/connector → `python3 scripts/check-runtime-doctor.py --strict`. `check-all` בודק רק את חוזה ה־runtime offline; strict דורש receipts אמיתיים.
+21. סקירת בריאות מערכת → `python3 scripts/check-velvet-health.py`; הפלט דטרמיניסטי ומורכב מחיישנים, בלי ציוני LLM מומצאים.
+22. תחזוקת Skills/docs → `python3 scripts/check-skill-health.py` + `python3 scripts/check-living-docs.py`; warnings הם חומר לתיקון/קונסולידציה, לא success-rate מומצא.
 
 צינור יחיד נשאר: פנייה · שיחה · הצעה · הדפסה · איסוף.
 
