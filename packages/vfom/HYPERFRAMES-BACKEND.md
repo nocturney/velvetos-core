@@ -23,7 +23,7 @@ Use it when the edit needs multi-shot composition, kinetic type, designed overla
 
 ## Canonical routing
 
-`Content Contract -> Creative Manifest -> Edit Director -> media resolution -> HyperFrames composition -> check -> rough render -> Evaluation/Repair -> final render -> ffprobe receipt -> derivative factory -> publish preflight`
+`Content Contract -> Creative Manifest -> Edit Director -> media resolution -> render-host selection -> HyperFrames composition -> check -> rough render -> Evaluation/Repair -> final render -> ffprobe receipt -> derivative factory -> publish preflight`
 
 The machine-readable policy is `HYPERFRAMES-BACKEND.json`. Render requests use `HYPERFRAMES-RENDER.schema.json`. Host execution goes through `scripts/vf_hyperframes.py`.
 
@@ -36,6 +36,19 @@ The render host is Edge/Office, not the Core catalog runtime.
 - FFmpeg + ffprobe
 
 Installation/cache preparation happens outside a content job on an authorized render host. The bridge performs no dependency download, no `npx` fallback and no silent version switch. `doctor` fails closed when the binary is missing or its version differs from the configured pin. Updating the pin requires reviewing current HyperFrames release behavior, then updating the backend config, bridge constant and sensor together.
+
+### Host order and failover
+
+Canonical host registry: `packages/vfmcp/RENDER-HOSTS.json`.
+
+1. `sderot-mac` / `Mac-Office` remains the preferred host.
+2. `sderot-windows` / `Windows-Office` is the fallback render/terminal host.
+
+Selection policy is `first-healthy-verified-host`. A host is eligible only with `host_smoke_verified` or `live_verified` status. `configured_host_smoke_pending` is never treated as usable just because the machine exists.
+
+Automatic host failover is allowed for host-level failures such as offline/unreachable/doctor failure. It is **not** allowed for Content Contract, policy, rights or QA failures. Moving the render from Mac to Windows changes execution location only; it never changes the artifact requirements, retry budget, QA thresholds or publish authorization.
+
+Windows is deliberately **not** a subscription-browser/computer-use host. It can run the repository, terminal tools, FFmpeg, HyperFrames and a normal Cursor self-hosted worker. Browser-driving subscription workflows remain on the Mac because Cursor computer-use is not supported on native Windows.
 
 ## Render stages
 
@@ -95,8 +108,8 @@ python3 scripts/vf_hyperframes.py run path/to/render-request.json
 
 A successful run performs HyperFrames `check`, renders with the requested stage settings, verifies the result with ffprobe, requires portrait video and required audio, computes SHA-256 and writes a `.receipt.json` next to the output unless another in-project receipt path is provided.
 
-## Failover
+## Renderer failover
 
-If HyperFrames is unavailable or fails after one actionable retry, route the affected render to the existing `ffmpeg-svg-caption-composition` path when that path can preserve the intended artifact. Do not lower the Content Contract, copy, truth, rights or QA thresholds to make a backend pass.
+Host failover and renderer failover are separate decisions. First move the same HyperFrames job to another verified host when the failure is host-specific. If HyperFrames itself is unavailable or fails after one actionable retry, route the affected render to the existing `ffmpeg-svg-caption-composition` path when that path can preserve the intended artifact. Do not lower the Content Contract, copy, truth, rights or QA thresholds to make a backend pass.
 
-If neither backend can produce the required artifact, report a render blocker. This is not automatically a human creative-choice gate; escalate only under the existing Human Intervention Policy.
+If neither verified host nor the fallback backend can produce the required artifact, report a render blocker. This is not automatically a human creative-choice gate; escalate only under the existing Human Intervention Policy.
