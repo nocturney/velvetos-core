@@ -11,8 +11,9 @@
 - כרגע עדיף ניסוי של הדפסה אחת ולא מלאי: יש עבודה מוכנה/יתרות פתוחות, וחמשת סלוטי המדף עדיין ריקים. ללמוד קטן לפני שמוסיפים queue.
 ```
 
-Freshness: **2026-09-14 · GREEN body evidence**.
+Freshness: **2026-09-14 · GREEN body evidence**; `scripts/vfresearch_cadence.py freshness` עבר בפועל על checkout טרי.
 Best Skills: refresh 48h בוצע על `dataDate=2026-09-13`; תוצאה `no-embed-existing-coverage`. `timer verification=UNPROVEN` כי `cursor-subscriptions` אינו חשוף בריצה הנוכחית.
+Validation limitation: `scripts/check-all.py` לא עבר ירוק על Windows fallback בגלל case-collision קיים בין `constitution/TAGS.md` ו-`constitution/tags.md`; אין claim של PASS מלא.
 Runtime limitation: Mac-Office היה offline; Snapmaker Orca 2.3.5 הוא ה-last verified המקומי מ-13.9, לא אימות חדש להיום.
 
 ---
