@@ -1,7 +1,14 @@
 {
-  "version": 1,
+  "version": 2,
   "authority": "packages/vfmcp/HOST.md",
-  "purpose": "canonical Edge/Office execution hosts for local render capabilities",
+  "purpose": "canonical Edge/Office execution hosts for local render and content capabilities",
+  "routing": {
+    "mode": "first-healthy",
+    "preferred": "sderot-mac",
+    "fallbackOrder": ["sderot-windows"],
+    "healthRule": "host must be registered, online, repo-synced, and pass its local bootstrap/doctor before receiving work",
+    "subscriptionRule": "browser subscription sessions stay on sderot-mac; never copy cookies or subscription credentials to fallback hosts"
+  },
   "hosts": {
     "sderot-mac": {
       "displayName": "Mac-Office",
@@ -9,6 +16,7 @@
       "platform": "macOS",
       "workerName": "sderot-mac",
       "repoPath": "~/velvetos-core",
+      "priority": 10,
       "roles": ["subscription-host", "edge-worker", "video-render-host"],
       "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
       "bootstrap": "scripts/bootstrap-hyperframes-host-macos.sh",
@@ -20,6 +28,26 @@
       "verifiedEvidence": "real local HyperFrames smoke render completed with ffprobe receipt and canonical Cursor worker running on Mac-Office on 2026-09-12",
       "productionPromotionPending": ["approved_media_vault_asset_render_and_existing_qa", "intentional_hyperframes_failure_and_ffmpeg_failover_verification"],
       "promotionRule": "backend live_verified only after host smoke + real approved asset render + existing QA + failover verification"
+    },
+    "sderot-windows": {
+      "displayName": "Windows-Fallback",
+      "location": "Sderot",
+      "platform": "Windows",
+      "workerName": "sderot-windows",
+      "repoPath": "%USERPROFILE%\\velvetos-core",
+      "priority": 20,
+      "roles": ["edge-worker", "repo-worker", "content-worker", "video-render-host", "speech-render-host"],
+      "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
+      "bootstrap": "scripts/bootstrap-edge-host-windows.ps1",
+      "localState": "%USERPROFILE%\\.velvetos\\edge-host.json",
+      "hyperframesVersion": "0.8.34",
+      "route": "remote-desktop-commander",
+      "inboundPortRequired": false,
+      "subscriptionHost": false,
+      "computerUse": false,
+      "status": "configured_pending_device_registration",
+      "verifiedEvidence": null,
+      "promotionRule": "becomes eligible only after Remote Desktop Commander registration and local bootstrap/doctor pass; no browser-subscription credential migration"
     }
   },
   "defaultRenderHost": "sderot-mac"
