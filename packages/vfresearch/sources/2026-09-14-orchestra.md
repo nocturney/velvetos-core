@@ -73,6 +73,14 @@ Full maintenance note: `packages/vfresearch/sources/2026-09-14-best-skills.md`.
 - `python scripts/vfresearch_cadence.py freshness` on a fresh Windows fallback checkout: **PASS** — same-day artifact found with external research body.
 - `python scripts/check-all.py` was attempted because Best Skills state changed. The run did **not** complete green: Windows hit the repository's existing case-collision between `constitution/TAGS.md` and `constitution/tags.md`, so `check-hq-overlay.py` saw the wrong checkout variant and reported the `#צמיחה-חברתית` needle missing; the broader run was then interrupted. This is a validation/portability blocker, not a research-freshness failure, and is not claimed as PASS.
 
+## Owner summary delivery
+
+- Trigger condition met: meaningful same-day research plus a real validation/portability blocker.
+- Exact owner-summary Visible Text Gate: **PASS**; `text_sha256=ce488de57e4ef698a3bba0e64ccd9a3d9b455a56c7272a8c9a393411366f4968`.
+- Delivery used the repo-backed `.github/workflows/gmail-brief-send.yml` workaround, **not** ChatGPT's internal Gmail connector.
+- GitHub Actions run `34790259774`: success; Visible Text Gate step success; Gmail OAuth step success; send step success. Gmail API message ID: `1a09d2282f811736`.
+- `gmail-send-request.json` was returned to `enabled=false`; cleanup run `34790303423` completed successfully.
+
 ## Deliberate skips / limitations
 
 - Marketplace popularity is not treated as Sderot/Israel demand.
