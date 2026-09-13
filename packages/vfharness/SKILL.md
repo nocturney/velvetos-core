@@ -19,9 +19,9 @@
 7. מכסת Grok ריקה + צריך IG חי → `playbooks/grok-failover.md` + `vfigos/LIVE-PACKET.md` לאדם.
 8. הקשר כבד (thread, JSON, Drive dump) → `playbooks/context-thrift.md` — סיכום בשיחה, מקור ב-checkpoint.
 9. **סוף יום** — `playbooks/daily-learning.md` + `playbooks/learning-lifecycle.md` + `vfops/hq/DAILY-RETRO.md`; observation נשאר candidate עד שיש evidence/gate מתאים.
-10. סוכן «נהיה גרוע» / כלי נדלג / זיכרון דולף → `playbooks/agent-architecture-audit.md` (דפוס buildwithclaude; בלי ECC install).
+10. סוכן «נהיה גרוע» / כלי נדלג / זיכרון דולף → `playbooks/agent-architecture-audit.md` (דפוס buildwithclaude + codebase navigability; בלי ECC install).
 11. לפני בנייה / פק חדש / שינוי צינור → `playbooks/brainstorm-gate.md` (דפוס obra brainstorming; אישור אנושי לפני יישום).
-12. באג / סנסור אדום / כשל כלי → `playbooks/systematic-debugging.md` (שורש לפני תיקון; בלי ניחוש).
+12. באג / סנסור אדום / כשל כלי → `playbooks/systematic-debugging.md` (אבחון מדורג; שחזור ושורש לפני תיקון; בלי ניחוש).
 13. תוכנית מימוש כתובה → `playbooks/writing-plans.md` (צעדים קטנים ובטוחים על SoT קיים; בלי ראנטיים שני).
 13b. ביצוע תוכנית → `playbooks/executing-plans.md` (משימה אחת + אימות; עצירה על חוסם; בלי ניחוש).
 13c. מילון תחום → `playbooks/domain-glossary.md` (TEAM / pipeline / owner-memory — בלי מונחים מומצאים).
@@ -34,6 +34,9 @@
 20. לפני טענה ש״הוטמע/רץ״ על worker/automation/connector → `python3 scripts/check-runtime-doctor.py --strict`. `check-all` בודק רק את חוזה ה־runtime offline; strict דורש receipts אמיתיים.
 21. סקירת בריאות מערכת → `python3 scripts/check-velvet-health.py`; הפלט דטרמיניסטי ומורכב מחיישנים, בלי ציוני LLM מומצאים.
 22. תחזוקת Skills/docs → `python3 scripts/check-skill-health.py` + `python3 scripts/check-living-docs.py`; warnings הם חומר לתיקון/קונסולידציה, לא success-rate מומצא.
+23. שינוי קוד/אוטומציה/מדיניות/אינטגרציה מהותי → `playbooks/engineering-delivery-chain.md`: החלטה → spec → tickets אנכיים → branch → implementation+proof → review איכות **וגם** התאמה ל-spec → PR/CI → runtime verification. לא Issue tracker שני.
+24. יצירה/עריכה מהותית של `AGENTS.md` / `SKILL.md` / rules / prompts → `playbooks/agent-instruction-qa.md` + `python3 scripts/check-skill-health.py`; פחות הוראות, סמכות אחת, trigger/action/evidence מפורשים.
+25. שלב שבאמת רק אדם יכול לבצע → `playbooks/human-step-wizard.md`: השלם קודם כל מה שאפשר אוטונומית, בקש פעולה אנושית מינימלית אחת, ואז אמת והמשך בעצמך.
 
 צינור יחיד נשאר: פנייה · שיחה · הצעה · הדפסה · איסוף.
 

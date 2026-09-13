@@ -4,7 +4,7 @@ import re, sys
 from collections import defaultdict
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-SEARCH_ROOTS=[ROOT/'packages', ROOT/'.agents', ROOT/'.claude', ROOT/'.codex']
+SEARCH_ROOTS=[ROOT/'packages', ROOT/'.agents', ROOT/'.claude', ROOT/'.codex', ROOT/'.cursor'/'skills']
 
 def main():
     files=[]
@@ -12,18 +12,31 @@ def main():
         if base.exists(): files.extend(base.rglob('SKILL.md'))
     errors=[]; warnings=[]; names=defaultdict(list)
     for p in sorted(set(files)):
+        rel=p.relative_to(ROOT)
         if p.is_symlink() and not p.exists():
-            errors.append(f'broken symlink: {p.relative_to(ROOT)}'); continue
+            errors.append(f'broken symlink: {rel}'); continue
         txt=p.read_text(errors='ignore')
-        if not txt.strip(): errors.append(f'empty skill: {p.relative_to(ROOT)}'); continue
-        if len(txt.strip()) < 80: warnings.append(f'thin skill: {p.relative_to(ROOT)}')
+        if not txt.strip(): errors.append(f'empty skill: {rel}'); continue
+        lines=txt.splitlines()
+        if len(txt.strip()) < 80: warnings.append(f'thin skill: {rel}')
+        if len(lines) > 500: warnings.append(f'context-heavy skill ({len(lines)} lines): {rel}')
+
+        frontmatter=re.match(r'\A---\s*\n(.*?)\n---\s*(?:\n|$)',txt,re.S)
+        if frontmatter:
+            fm=frontmatter.group(1)
+            desc=re.search(r'(?im)^description:\s*["\']?([^"\'\n]+)',fm)
+            if not desc:
+                warnings.append(f'missing description frontmatter: {rel}')
+            elif len(desc.group(1).strip()) < 24:
+                warnings.append(f'weak/short description: {rel}')
+
         m=re.search(r'(?im)^name:\s*["\']?([^"\'\n]+)',txt)
         name=(m.group(1).strip() if m else p.parent.name).lower()
         names[name].append(p)
         if re.search(r'(?im)\b(TODO|TBD|concept only|not implemented)\b',txt):
-            warnings.append(f'concept marker: {p.relative_to(ROOT)}')
-        if 'verify' not in txt.lower() and 'test' not in txt.lower() and 'check-' not in txt.lower():
-            warnings.append(f'no verification language: {p.relative_to(ROOT)}')
+            warnings.append(f'concept marker: {rel}')
+        if 'verify' not in txt.lower() and 'test' not in txt.lower() and 'check-' not in txt.lower() and 'proof' not in txt.lower() and 'evidence' not in txt.lower():
+            warnings.append(f'no verification language: {rel}')
     duplicates={k:v for k,v in names.items() if len(v)>1}
     for name,paths in duplicates.items():
         warnings.append('possible overlap '+name+': '+', '.join(str(p.relative_to(ROOT)) for p in paths))
