@@ -1,0 +1,75 @@
+{
+  "jobId": "VF-R005",
+  "format": "post",
+  "status": "ready_for_publish",
+  "sourceEvidence": [
+    "drive:1JxMbh3CJ40Kgs8-0IOP09DGtLxOb_3wC:IMG_0655.heic",
+    "final-package-sha256:be8abe73ab0c39302e7c1578eee97be8c5131b8ad0436fd094d1307c75f4e03c",
+    "visible-text-sha256:4a349714e554414f8ed1a2172f92a60705a9f7bf045e645c08ae1cec7252ac52"
+  ],
+  "concept": {
+    "coreIdea": "Tight 4:5 detail crop of one verified symmetrical black/gray/orange winged object.",
+    "emotion": "graphic intensity",
+    "formatGenome": "SINGLE_OBJECT_DETAIL",
+    "objective": "Complete a visually varied reset-grid row with a real high-contrast object instead of another text card or another owl study.",
+    "audience": "people who notice graphic forms, symmetry and dense object detail"
+  },
+  "hook": {
+    "candidates": [
+      {"id":"tight","visual":"centered 4:5 close crop","text":"","reason":"strong symmetry and color contrast survive small grid view"},
+      {"id":"full","visual":"full landscape source fitted inside portrait frame","text":"","reason":"preserves complete wings but weakens grid impact"},
+      {"id":"text","visual":"tight crop","text":"מה תופס את העין קודם?","reason":"rejected because caption can carry the question and image is stronger clean"}
+    ],
+    "selected":"tight"
+  },
+  "shots": {
+    "plan": [
+      {"assetRef":"drive:1JxMbh3CJ40Kgs8-0IOP09DGtLxOb_3wC","shotType":"hero","orientation":"horizontal-source-to-portrait-crop","angle":"top-down/front","distance":"close","action":"centered 4:5 crop emphasizing symmetry","targetDurationSec":0,"proof":"real source geometry/color retained"}
+    ],
+    "missing": []
+  },
+  "edit": {"durationTargetSec":0,"audioStrategy":"not_applicable for post","timeline":[]},
+  "overlays": [],
+  "visualCopy": {
+    "decision":"NO_TEXT",
+    "selectedText":"",
+    "noTextCompared":true,
+    "candidates":[
+      {"text":"","result":"selected","reason":"symmetry, black/gray linework and orange accents carry the frame"},
+      {"text":"מה תופס את העין קודם?","result":"rejected","reason":"better kept in caption; overlay competes with detail"}
+    ],
+    "decisionRationale":"NO_TEXT wins on the exact 4:5 crop."
+  },
+  "cover": {"candidates":[{"id":"c0","headline":"","subjectCrop":"centered 4:5 close crop from IMG_0655","textPlacement":"none","gridRationale":"adds a graphic high-contrast tile and breaks sculpture repetition"}],"selected":"c0"},
+  "qa": {
+    "brandScore":91,
+    "hookScore":93,
+    "realityScore":98,
+    "originalityScore":88,
+    "artifactScore":95,
+    "deterministicChecks": {
+      "state":"pass",
+      "exactFinalPackageSha256":"be8abe73ab0c39302e7c1578eee97be8c5131b8ad0436fd094d1307c75f4e03c",
+      "slides":"1x 1080x1350 JPEG, exact final visually reviewed",
+      "captionSha256":"4a349714e554414f8ed1a2172f92a60705a9f7bf045e645c08ae1cec7252ac52",
+      "audioGate":"N/A_POST",
+      "visualCopyGate":"PASS_NO_TEXT",
+      "subjectPackFidelity":"PASS",
+      "frameIntegrity":"PASS",
+      "resolutionAspectRatio":"PASS",
+      "readability":"PASS: no visual text",
+      "contrast":"PASS: graphic subject/background separation on exact crop"
+    },
+    "failures": [],
+    "repairs": ["Rejected full-landscape-in-portrait treatment; selected a tighter deterministic crop after grid-impact comparison."]
+  },
+  "feed": {"continuityDecision":"pass","reasoning":"Distinct geometry and orange accent prevent the opening row from becoming three dark figurine studies; no text-card fatigue."},
+  "derivativeRefs": [
+    "drive:10N-SASPr9eRn8BvBPrKQ82VvJicfGY8c:VF-R005-final-01.jpg:sha256=d745b9a70166dbce64af9dd5b053ed252dce27ee1b8f46f4f07ec1eca01aac7e",
+    "drive:1bldYcSo3jonOFO_MsU4PVhGQRlubdNvQ:VF-R005-final-caption.txt",
+    "drive:1V3Nzdg0y-RwhbfGXLcSGLxGWH7xPkxaG:VF-R005-render-receipt.json",
+    "drive:11-QJx_sj5nUpejliXR980XXkivyo0v20:VF-R005-visible-text-receipt.json",
+    "drive:1lNLtr9ErBw3dCiS_Z9mVeOHHfah_10P4:VF-R005-package-manifest.json"
+  ],
+  "rightsNotes": ["Owner Media Vault showcase scope; no third-party media, UGC or identifiable person in the reviewed final package."]
+}
