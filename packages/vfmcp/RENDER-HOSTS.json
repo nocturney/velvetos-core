@@ -1,7 +1,7 @@
 {
-  "version": 4,
+  "version": 5,
   "authority": "packages/vfmcp/HOST.md",
-  "purpose": "canonical Edge/Office execution hosts for local render and content capabilities",
+  "purpose": "canonical Edge/Office execution hosts for local render, speech and content capabilities",
   "routing": {
     "mode": "first-healthy",
     "preferred": "sderot-mac",
@@ -12,21 +12,25 @@
       "host_smoke_verified",
       "live_verified"
     ],
-    "healthRule": "host must be registered, online, repo-synced, pass its local bootstrap/doctor, and carry a verified render-smoke receipt before receiving render work",
+    "healthRule": "host must be registered, online, repo-synced, pass its local bootstrap/doctor, and carry a verified render-smoke receipt before receiving render work; speech additionally requires its own doctor and smoke evidence",
     "failoverOn": [
       "host_offline",
       "route_unreachable",
       "host_doctor_failed",
-      "host_smoke_missing"
+      "host_smoke_missing",
+      "speech_doctor_failed",
+      "speech_smoke_missing"
     ],
     "doNotFailoverOn": [
       "content_contract_failure",
       "policy_failure",
       "rights_failure",
-      "qa_failure"
+      "qa_failure",
+      "consent_failure"
     ],
     "subscriptionRule": "browser subscription sessions stay on sderot-mac; never copy cookies or subscription credentials to fallback hosts",
-    "qualityRule": "host failover changes execution location only; it never relaxes Content Contract, Asset Truth, Claim Provenance, QA, receipt or publish gates"
+    "qualityRule": "host failover changes execution location only; it never relaxes Content Contract, Asset Truth, Claim Provenance, speech back-transcription QA, render QA, receipt or publish gates",
+    "jobAffinity": "sticky-per-job"
   },
   "hosts": {
     "sderot-mac": {
@@ -39,7 +43,8 @@
       "roles": [
         "subscription-host",
         "edge-worker",
-        "video-render-host"
+        "video-render-host",
+        "speech-render-host"
       ],
       "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
       "bootstrap": "scripts/bootstrap-hyperframes-host-macos.sh",
@@ -53,7 +58,15 @@
         "approved_media_vault_asset_render_and_existing_qa",
         "intentional_hyperframes_failure_and_ffmpeg_failover_verification"
       ],
-      "promotionRule": "backend live_verified only after host smoke + real approved asset render + existing QA + failover verification"
+      "promotionRule": "backend live_verified only after host smoke + real approved asset render + existing QA + failover verification",
+      "speechBackend": "packages/vfom/SPEECH-BACKEND.json",
+      "speechLocalState": "~/.velvetos/speech-host.json",
+      "voiceStudioVersion": "0.5.2",
+      "speechStatus": "configured_pending_runtime_verification",
+      "speechPromotionPending": [
+        "speech_first_run_and_real_hebrew_smoke"
+      ],
+      "speechPromotionRule": "speech becomes eligible only after its own doctor and real smoke evidence"
     },
     "sderot-windows": {
       "displayName": "Windows-Fallback",
@@ -83,8 +96,20 @@
         "approved_media_vault_asset_render_and_existing_qa",
         "intentional_hyperframes_failure_and_ffmpeg_failover_verification"
       ],
-      "promotionRule": "host is eligible for first-healthy fallback; full backend live_verified still requires a real approved Media Vault asset through existing QA plus intentional HyperFrames-to-FFmpeg failover verification"
+      "promotionRule": "host is eligible for first-healthy fallback; full backend live_verified still requires a real approved Media Vault asset through existing QA plus intentional HyperFrames-to-FFmpeg failover verification",
+      "speechBackend": "packages/vfom/SPEECH-BACKEND.json",
+      "mediaBootstrap": "scripts/bootstrap-media-host-windows.ps1",
+      "speechBootstrap": "scripts/bootstrap-speech-host-windows.ps1",
+      "speechLocalState": "%USERPROFILE%\\.velvetos\\speech-host.json",
+      "voiceStudioVersion": "0.5.2",
+      "speechStatus": "configured_pending_local_smoke",
+      "speechComputePolicy": "Windows NVIDIA uses CUDA automatically when available; CPU fallback remains supported",
+      "speechPromotionPending": [
+        "windows_speech_doctor_and_hebrew_tts_stt_qa_smoke"
+      ],
+      "speechPromotionRule": "speech eligibility requires local VoiceStudio doctor plus real Hebrew TTS-STT QA evidence; no browser-subscription credential migration"
     }
   },
-  "defaultRenderHost": "sderot-mac"
+  "defaultRenderHost": "sderot-mac",
+  "defaultSpeechHost": "sderot-mac"
 }

@@ -1,0 +1,85 @@
+{
+    "name":  "vfom-speech-backend",
+    "version":  1,
+    "role":  "local speech generation, transcription and back-transcription QA for Velvet Visual Foundry",
+    "providerInterface":  "speech-provider-v1",
+    "authority":  {
+                      "orchestration":  "packages/vfom/CREATIVE-AUTOPILOT.md",
+                      "edit":  "packages/vfom/EDIT-DIRECTOR.md",
+                      "copy":  "packages/vfcopy/VOICE.md",
+                      "renderBackend":  "packages/vfom/HYPERFRAMES-BACKEND.json",
+                      "hostRegistry":  "packages/vfmcp/RENDER-HOSTS.json"
+                  },
+    "provider":  {
+                     "name":  "voicestudio",
+                     "version":  "0.5.2",
+                     "commit":  "38c2405",
+                     "serviceRoot":  "http://127.0.0.1:3900",
+                     "openAIBase":  "http://127.0.0.1:3900/v1",
+                     "networkExposure":  "loopback-only",
+                     "networkInstallAllowedDuringJob":  false
+                 },
+    "routing":  {
+                    "preferredHost":  "sderot-mac",
+                    "fallbackOrder":  [
+                                          "sderot-windows"
+                                      ],
+                    "mode":  "first-healthy",
+                    "failoverOn":  [
+                                       "host_offline",
+                                       "route_unreachable",
+                                       "speech_doctor_failed"
+                                   ],
+                    "doNotFailoverOn":  [
+                                            "copy_failure",
+                                            "rights_failure",
+                                            "qa_failure",
+                                            "consent_failure"
+                                        ],
+                    "stickyPerJob":  true,
+                    "fallbackMustPassDoctor":  true,
+                    "fallbackMayNotLowerQa":  true
+                },
+    "engines":  {
+                    "language":  "he",
+                    "ttsPreferred":  [
+                                         "moss-tts-nano",
+                                         "voxcpm2",
+                                         "moss-tts-v1.5"
+                                     ],
+                    "ttsForbiddenForCommercialPublish":  [
+                                                             "omnivoice"
+                                                         ],
+                    "asrPreferredOnAppleSilicon":  [
+                                                       "mlx-whisper"
+                                                   ],
+                    "asrPreferredOnWindowsNvidia":  [
+                                                        "faster-whisper",
+                                                        "pytorch-whisper"
+                                                    ]
+                },
+    "defaults":  {
+                     "ttsModel":  "moss-tts-nano",
+                     "asrModelMac":  "mlx-whisper",
+                     "asrModelWindows":  "faster-whisper",
+                     "voice":  "default",
+                     "responseFormat":  "wav",
+                     "speed":  1.0,
+                     "timeoutSeconds":  180,
+                     "maxAttempts":  2,
+                     "qaBackTranscribe":  true,
+                     "qaMinimumSimilarity":  0.9,
+                     "subtitleFormat":  "srt"
+                 },
+    "guardrails":  {
+                       "publicSpokenCopyUsesVfcopy":  true,
+                       "noInventedClaims":  true,
+                       "commercialModelAllowlistRequired":  true,
+                       "forbidOmniVoiceForCommercialPublish":  true,
+                       "voiceCloneRequiresConsent":  true,
+                       "localByDefault":  true,
+                       "speechReceiptIsNotPublishReceipt":  true,
+                       "speechDoesNotAuthorizePublish":  true,
+                       "qaFailClosed":  true
+                   }
+}
