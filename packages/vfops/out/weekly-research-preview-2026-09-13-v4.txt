@@ -1,0 +1,113 @@
+VELVET FACTORY · RESEARCH ACCOUNTABILITY
+בריף מחקרים שבועי · תצוגת ניסיון מתוקנת
+מבוסס על המחקר המאומת הקיים עד 13.09.2026
+V10.3 · Weekly
+
+מצב המחקר
+7 פריטים במעקב · 3 יושמו · 3 טרם יושמו · 1 חסום
+
+הערת שיטה
+מנגנון ready_for_brief הפורמלי נכנס עכשיו לשגרה. לצורך התצוגה נספרו ממצאים עם גוף מחקר חיצוני מאומת שיועדו בפועל לבריף. מחקר 13.09 קיים ומאומת, ולכן הוא נכלל כאן.
+
+מדדי השבוע
+7 פריטים במעקב
+3 implemented
+3 not_implemented
+1 blocked
+50% שיעור יישום מתוך הפריטים שכרגע היו כשירים ליישום
+
+מה גילינו
+
+1. מחזיק כבלים עם 5 חריצים כמועמד ראשון למדף
+מקור המחקר: 13.09 · Printables.
+הממצא: מוצר שולחני קטן ופונקציונלי, ללא hardware במודל, עם רישיון שמוצג במקור כ־Public Domain / Commercial Use. נתוני ההדפסה שבמקור אינם נתוני Velvet, ולכן נדרש slice מקומי ו־fit-test לפני SKU או מחיר.
+
+2. Sticky Note Holder כמועמד המשך למדף
+מקור המחקר: 11/12/13.09 · Printables.
+הממצא: מוצר desk utility פשוט עם אפשרות התאמה אישית. הוא נשאר מועמד שני אחרי מחזיק הכבלים, ולא בסיס למילוי מדף שלם בלי בדיקה מקומית.
+
+3. PrusaSlicer 3.0 Preview כרעיון לייעול הכנת batches
+מקור המחקר: 11/12/13.09 · Prusa Research.
+הממצא: multi-bed projects, הגדרה נפרדת לכל bed ו־parallel slicing עשויים לצמצם context switching. Prusa מגדירה את ה־Preview כ־experimental ולא ממליצה עליו ל־production. אצלנו Snapmaker Orca 2.3.5 נשאר סביבת העבודה בפועל.
+
+4. Trial Reel כניסוי תוכן מבוקר
+מקור המחקר: 11.09 · Meta.
+הממצא: אפשר לבדוק Reel קודם מול לא־עוקבים. אצלנו הניסוי רלוונטי רק לאחר שחבילת תוכן מדויקת עוברת זכויות, Audio Gate, QA ו־preflight ומגיעה ל־ready_for_publish.
+
+מה יישמנו
+
+Triage לפני grill: implemented
+first_seen: 07.09 · last_reviewed: 13.09 · age_days: 6
+impact: high · effort: low · execution_owner: system · type: recommendation
+המלצה: לבצע triage לפני חקירת פנייה עמוקה.
+ראיית יעד: packages/vfconvert/hq/TRIAGE.md הוטמע ונרשם כתוצר מחקר.
+הפעולה הבאה: אין; ממשיכים להשתמש במסלול הקיים.
+carryover: לא.
+
+Quote ladder להצעת מחיר חלקית: implemented
+first_seen: 07.09 · last_reviewed: 13.09 · age_days: 6
+impact: high · effort: low · execution_owner: system · type: recommendation
+המלצה: לא לעצור טיוטת הצעה כשחסר מידע; להפיק partial עם `חסר:` ובלי להמציא מחיר.
+ראיית יעד: packages/vfsales/scripts/vf_quote_ladder.py הוטמע וחובר ל־QUOTE.md.
+הפעולה הבאה: אין; לשמור על חוקי האמת הקיימים.
+carryover: לא.
+
+text-to-cad כ־watch בלבד: implemented
+first_seen: 12.09 · last_reviewed: 13.09 · age_days: 1
+impact: medium · effort: low · execution_owner: system · type: recommendation
+המלצה: לעקוב אחרי דפוסי CAD-as-code ו־DfAM בלי ליצור runtime CAD נוסף.
+ראיית יעד: earthtojake/text-to-cad קיים ב־BEST-SKILLS watchlist עם נעילת no-second-runtime.
+הפעולה הבאה: לא להטמיע עד שיוכח פער geometry-validation אמיתי.
+carryover: לא כמשימת ביצוע; נשאר watch.
+
+מה נשאר פתוח ולמה
+
+מחזיק כבלים 5 חריצים preflight: not_implemented
+first_seen: 13.09 · last_reviewed: 13.09 · age_days: 0
+impact: high · effort: low · execution_owner: shared · type: recommendation
+היעד: אימות רישיון → slice מקומי → תיעוד חומר וזמן מקומי → fit-test לכבלי USB וטעינה → יחידת מבחן וצילום.
+המצב: המחקר והמקור מאומתים, אבל לא נמצאה ראיית יעד שה־preflight המקומי בוצע.
+הפעולה הבאה: המערכת יכולה לקדם אימות רישיון והכנת preflight; Print פיזי יעלה לבעלים רק כשהוא באמת נדרש.
+carryover: כן.
+
+Sticky Note Holder preflight: not_implemented
+first_seen: 11.09 · last_reviewed: 13.09 · age_days: 2
+impact: medium · effort: medium · execution_owner: shared · type: recommendation
+היעד: אימות רישיון → slice מקומי → בדיקת fit → יחידת מבחן וצילום, ורק אחרי מחזיק הכבלים אם הוא עובר את השערים.
+המצב: לא נמצאה ראיית target-state שה־preflight בוצע בפועל.
+הפעולה הבאה: להשאיר שני בסולם הבדיקה ולא לפתוח עוד SKU לפני שיש אות מקומי.
+carryover: כן.
+
+PrusaSlicer 3.0 benchmark: not_implemented
+first_seen: 11.09 · last_reviewed: 13.09 · age_days: 2
+impact: medium · effort: medium · execution_owner: system · type: experiment
+היעד: להשוות 2 עד 3 עבודות מייצגות מול workflow ה־Snapmaker Orca הנוכחי ולמדוד זמן operator וטעויות context/profile.
+המצב: לא נמצאה ראיית benchmark או החלטת rollout.
+הפעולה הבאה: benchmark בלבד אם הכנת batches היא bottleneck מדיד; אין מעבר production בגלל ה־Preview.
+carryover: כן.
+
+Trial Reel מבוקר: blocked
+first_seen: 11.09 · last_reviewed: 13.09 · age_days: 2
+impact: medium · effort: medium · execution_owner: system · type: experiment
+היעד: Trial Reel אחד עם auto-share כבוי ורק אחרי package מדויק שהוא ready_for_publish.
+החסם: Reset Launch Trio עדיין אינו publish-authorized; R001 ו־R003 דורשים סגירת Audio Gate והחבילות דורשות receipts ו־exact-final QA.
+הפעולה הבאה: לסגור קודם חבילת launch אחת; רק אחר כך להריץ את הניסוי.
+carryover: כן, אם הוא עדיין רלוונטי לאחר סגירת שערי ה־launch.
+
+שלושת הצעדים לשבוע הבא
+1. לקדם קודם את מחזיק הכבלים עד שער ה־Print: רישיון, slice ותוכנית fit-test. לא לבקש ממך הדפסה לפני שהשלבים המקדימים עברו.
+2. להשאיר את Sticky Note Holder שני בסולם ולפתוח אותו רק אם הניסוי הראשון מצדיק הרחבה של משפחת desk utility.
+3. לסגור חבילת Reel אחת עד ready_for_publish; במקביל להריץ benchmark של PrusaSlicer רק אם batch preparation מזוהה כחסם אמיתי.
+
+צריך ממך
+אין כרגע החלטת בעלים שנדרשת כדי לקדם את השלבים המקדימים. Print פיזי של יחידת מבחן יישאר human_required ויוצג לך רק אחרי שה־preflight עבר.
+
+מקורות עיקריים
+packages/vfresearch/sources/2026-09-07-orchestra.md
+packages/vfresearch/sources/2026-09-11-orchestra.md
+packages/vfresearch/sources/2026-09-12-orchestra.md
+packages/vfresearch/sources/2026-09-13-orchestra.md
+packages/vfresearch/BEST-SKILLS.json
+packages/vfgrowth/RESET-LAUNCH-TRIO.md
+
+VelvetOS · Research Accountability · corrected preview
