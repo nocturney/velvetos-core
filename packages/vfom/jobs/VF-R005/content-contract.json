@@ -1,0 +1,36 @@
+{
+  "jobId": "VF-R005",
+  "objective": "Use one verified real source image as a close 4:5 detail study that adds a high-contrast object to the reset grid without unsupported product claims.",
+  "format": "post",
+  "targetDurationSeconds": null,
+  "requiredSubject": "the symmetrical black/gray/orange moth-mask-like object shown in IMG_0655.heic",
+  "truthClaims": [
+    {
+      "claim": "The source image visibly contains a symmetrical winged/moth-like object with black, gray and orange areas and dense surface detail.",
+      "status": "verified",
+      "evidenceAssetIds": ["1JxMbh3CJ40Kgs8-0IOP09DGtLxOb_3wC"],
+      "sourceRefs": ["IMG_0655.heic"],
+      "note": "Visible directly in the reviewed Media Vault source."
+    },
+    {
+      "claim": "Any specific material, dimensions, manufacturing method, print duration, weight, durability, designer attribution, product name or customer use.",
+      "status": "unsupported",
+      "evidenceAssetIds": [],
+      "sourceRefs": [],
+      "note": "Do not state or imply without separate evidence."
+    }
+  ],
+  "syntheticPolicy": {
+    "allowedUses": ["deterministic crop/resize only"],
+    "forbiddenUses": ["alter geometry", "recolor subject", "invent missing wing detail", "replace background as proof", "generate text into the image"]
+  },
+  "subjectPack": {
+    "referenceAssetIds": ["1JxMbh3CJ40Kgs8-0IOP09DGtLxOb_3wC"],
+    "geometryInvariants": ["bilateral winged silhouette", "central face/skull-like structure", "paired curled lower forms"],
+    "materialInvariants": [],
+    "colorInvariants": ["black dominant", "gray/white linework", "orange accents"],
+    "mustNotChange": ["symmetry", "wing geometry", "central structure", "source-object identity"]
+  },
+  "successDefinition": {"brandScore": 80, "realityScore": 90, "artifactScore": 90},
+  "novelty": null
+}
