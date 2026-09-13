@@ -1,6 +1,6 @@
 {
   "name": "vfom-hyperframes-render-backend",
-  "version": 1,
+  "version": 2,
   "role": "deterministic video composition and render backend for the existing Velvet Visual Foundry",
   "noSecondRuntime": true,
   "authority": {
@@ -19,6 +19,8 @@
     "frameContract": "packages/vfom/HYPERFRAMES-FRAME.md",
     "hostRegistry": "packages/vfmcp/RENDER-HOSTS.json",
     "defaultHost": "sderot-mac",
+    "fallbackHosts": ["sderot-windows"],
+    "hostSelection": "first-healthy-verified-host",
     "hostConnectPlaybook": "packages/vfmcp/CONNECT-RENDER-HOST.md",
     "package": "hyperframes",
     "packageVersion": "0.8.34",
@@ -26,7 +28,7 @@
     "requires": ["hyperframes", "ffmpeg", "ffprobe"],
     "networkInstallAllowed": false,
     "versionMismatch": "fail",
-    "note": "Install/cache the pinned HyperFrames CLI on the authorized render host outside the content job; the bridge never downloads dependencies or turns Core into a render daemon."
+    "note": "Install/cache the pinned HyperFrames CLI on authorized render hosts outside the content job; the bridge never downloads dependencies or turns Core into a render daemon. Host failover is location-only and never weakens QA or publish gates."
   },
   "routing": {
     "primary": "hyperframes",
@@ -45,7 +47,7 @@
     "maxFinalRenders": 2,
     "audioRequiredForSocialVideo": true
   },
-  "pipeline": ["content_contract", "creative_manifest", "edit_decision_list", "media_truth_resolution", "hyperframes_composition", "hyperframes_check", "rough_render", "evaluation_and_repair", "final_render", "ffprobe_receipt", "derivative_factory", "publish_preflight"],
+  "pipeline": ["content_contract", "creative_manifest", "edit_decision_list", "media_truth_resolution", "render_host_selection", "hyperframes_composition", "hyperframes_check", "rough_render", "evaluation_and_repair", "final_render", "ffprobe_receipt", "derivative_factory", "publish_preflight"],
   "guardrails": {
     "realMediaRefsOnly": true,
     "noInventedAssets": true,
@@ -57,6 +59,7 @@
     "finalRequiresReceipt": true,
     "finalRequiresExistingQA": true,
     "receiptIsNotPublishReceipt": true,
-    "renderDoesNotAuthorizePublish": true
+    "renderDoesNotAuthorizePublish": true,
+    "hostFailoverDoesNotRelaxQA": true
   }
 }
