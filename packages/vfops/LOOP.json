@@ -1,7 +1,7 @@
 {
   "name": "vfops-loop",
   "title": "לולאת משרד — כל פק נצרך",
-  "updatedAt": "2026-09-09",
+  "updatedAt": "2026-09-13",
   "rule": "Every packages/ folder has a consume step. Catalog without consume is a fail. No invented ₪ or Insights. No live IG publish from this loop. Office Control Plane (office/control-plane.json) unifies SoT — not a second scheduler.",
   "cli": "python3 scripts/vfops_loop.py",
   "briefCli": "python3 scripts/vfops_loop.py brief",
@@ -32,6 +32,15 @@
       "consume": "packages/vfagents/playbooks/reflection-before-send.md",
       "briefSlot": "01",
       "handoff": "packages/vfagents/playbooks/caption-draft.md",
+      "blocked": null
+    },
+    {
+      "id": "vfbrand",
+      "kind": "authority",
+      "cadence": "on-content",
+      "consume": "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+      "briefSlot": "07",
+      "handoff": "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
       "blocked": null
     },
     {
