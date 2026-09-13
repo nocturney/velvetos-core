@@ -1,6 +1,6 @@
 {
-  "enabled": true,
-  "requestId": "research-seat-2026-09-14",
+  "enabled": false,
+  "requestId": "research-seat-2026-09-14-sent",
   "html": "packages/vfops/out/research-owner-2026-09-14.html",
   "visibleText": "packages/vfops/out/research-owner-2026-09-14.txt",
   "images": "",
