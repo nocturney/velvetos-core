@@ -115,7 +115,8 @@ def main() -> None:
     if shell_check.returncode != 0: fail(f"Mac render host bootstrap shell syntax invalid: {shell_check.stderr.strip()}")
 
     windows_bootstrap = contains(WINDOWS_BOOTSTRAP, f"$HYPERFRAMES_VERSION = '{version}'", "$HOST_ID = 'sderot-windows'", "HYPERFRAMES_NO_UPDATE_CHECK", "HYPERFRAMES_NO_AUTO_INSTALL", "Get-FileHash -Algorithm SHA256", "hyperframes browser ensure", "scripts/vf_hyperframes.py", "data-no-timeline", 'dir="rtl"', "render-host.json", "install?win32=true", "agent worker --name")
-    if "--computer-use" in windows_bootstrap or "--share-desktop" in windows_bootstrap: fail("Windows fallback must not claim unsupported Cursor computer-use/desktop sharing")
+    if "agent worker --computer-use" in windows_bootstrap or "agent worker --share-desktop" in windows_bootstrap:
+        fail("Windows fallback must not execute unsupported Cursor computer-use/desktop sharing")
     if "ngrok" in windows_bootstrap: fail("Windows fallback must not create inbound tunnel")
 
     contains(HOST_PLAYBOOK, "sderot-mac", "sderot-windows", "bootstrap-hyperframes-host-macos.sh --start-worker", "bootstrap-hyperframes-host-windows.ps1", "No inbound port", "first-healthy-verified-host")
