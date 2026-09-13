@@ -1,15 +1,30 @@
 {
-  "version": 3,
+  "version": 4,
   "authority": "packages/vfmcp/HOST.md",
   "purpose": "canonical Edge/Office execution hosts for local render and content capabilities",
   "routing": {
     "mode": "first-healthy",
     "preferred": "sderot-mac",
-    "fallbackOrder": ["sderot-windows"],
-    "eligibleStatuses": ["host_smoke_verified", "live_verified"],
+    "fallbackOrder": [
+      "sderot-windows"
+    ],
+    "eligibleStatuses": [
+      "host_smoke_verified",
+      "live_verified"
+    ],
     "healthRule": "host must be registered, online, repo-synced, pass its local bootstrap/doctor, and carry a verified render-smoke receipt before receiving render work",
-    "failoverOn": ["host_offline", "route_unreachable", "host_doctor_failed", "host_smoke_missing"],
-    "doNotFailoverOn": ["content_contract_failure", "policy_failure", "rights_failure", "qa_failure"],
+    "failoverOn": [
+      "host_offline",
+      "route_unreachable",
+      "host_doctor_failed",
+      "host_smoke_missing"
+    ],
+    "doNotFailoverOn": [
+      "content_contract_failure",
+      "policy_failure",
+      "rights_failure",
+      "qa_failure"
+    ],
     "subscriptionRule": "browser subscription sessions stay on sderot-mac; never copy cookies or subscription credentials to fallback hosts",
     "qualityRule": "host failover changes execution location only; it never relaxes Content Contract, Asset Truth, Claim Provenance, QA, receipt or publish gates"
   },
@@ -21,7 +36,11 @@
       "workerName": "sderot-mac",
       "repoPath": "~/velvetos-core",
       "priority": 10,
-      "roles": ["subscription-host", "edge-worker", "video-render-host"],
+      "roles": [
+        "subscription-host",
+        "edge-worker",
+        "video-render-host"
+      ],
       "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
       "bootstrap": "scripts/bootstrap-hyperframes-host-macos.sh",
       "localState": "~/.velvetos/render-host.json",
@@ -30,7 +49,10 @@
       "inboundPortRequired": false,
       "status": "host_smoke_verified",
       "verifiedEvidence": "real local HyperFrames smoke render completed with ffprobe receipt and canonical Cursor worker running on Mac-Office on 2026-09-12",
-      "productionPromotionPending": ["approved_media_vault_asset_render_and_existing_qa", "intentional_hyperframes_failure_and_ffmpeg_failover_verification"],
+      "productionPromotionPending": [
+        "approved_media_vault_asset_render_and_existing_qa",
+        "intentional_hyperframes_failure_and_ffmpeg_failover_verification"
+      ],
       "promotionRule": "backend live_verified only after host smoke + real approved asset render + existing QA + failover verification"
     },
     "sderot-windows": {
@@ -40,7 +62,13 @@
       "workerName": "sderot-windows",
       "repoPath": "%USERPROFILE%\\velvetos-core",
       "priority": 20,
-      "roles": ["edge-worker", "repo-worker", "content-worker", "video-render-host", "speech-render-host"],
+      "roles": [
+        "edge-worker",
+        "repo-worker",
+        "content-worker",
+        "video-render-host",
+        "speech-render-host"
+      ],
       "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
       "bootstrap": "scripts/bootstrap-edge-host-windows.ps1",
       "localState": "%USERPROFILE%\\.velvetos\\edge-host.json",
@@ -49,10 +77,13 @@
       "inboundPortRequired": false,
       "subscriptionHost": false,
       "computerUse": false,
-      "status": "configured_pending_device_registration",
-      "verifiedEvidence": null,
-      "productionPromotionPending": ["remote_desktop_commander_device_online", "windows_bootstrap_doctor_and_smoke_receipt", "repo_synced"],
-      "promotionRule": "becomes host_smoke_verified and eligible for first-healthy fallback only after Remote Desktop Commander reports the physical Windows device online and the local bootstrap records doctor=pass plus renderSmoke=pass with a real receipt; no browser-subscription credential migration"
+      "status": "host_smoke_verified",
+      "verifiedEvidence": "Remote Desktop Commander device Chris online and reachable; Windows bootstrap doctor=pass; HyperFrames 0.8.34 real 1080x1920 smoke render verified by ffprobe with SHA-256 87cff94c882bbeab2b8d3f0807be9ca247ba74c034d201d9a50d6fb7299f6cd7 at 2026-09-13T11:44:24Z.",
+      "productionPromotionPending": [
+        "approved_media_vault_asset_render_and_existing_qa",
+        "intentional_hyperframes_failure_and_ffmpeg_failover_verification"
+      ],
+      "promotionRule": "host is eligible for first-healthy fallback; full backend live_verified still requires a real approved Media Vault asset through existing QA plus intentional HyperFrames-to-FFmpeg failover verification"
     }
   },
   "defaultRenderHost": "sderot-mac"

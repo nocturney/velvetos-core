@@ -54,7 +54,7 @@ The Windows host is not eligible merely because it is listed in Git or because t
 - required tool for the task exists locally;
 - no task requires a Mac-only subscription/browser session.
 
-Until those facts are verified, its registry status remains `configured_pending_device_registration`. After the device is online and its local evidence is inspected, the registry may be promoted to `host_smoke_verified`.
+These facts were verified on 2026-09-13: Remote Desktop Commander reported the physical Windows device online, the bootstrap doctor passed, and a real 1080×1920 HyperFrames smoke render produced a verified receipt. The registry is therefore promoted to `host_smoke_verified`.
 
 ## Failover behavior
 
@@ -67,4 +67,4 @@ Publication authorization does not change: a render receipt proves artifact crea
 ## Current runtime truth
 
 - `sderot-mac`: previously `host_smoke_verified`; it may be physically offline at a given moment without losing its historical evidence.
-- `sderot-windows`: **configured, not yet physically verified in this commissioning step**. It is not failover-eligible until Remote Desktop Commander sees the device online and the strengthened bootstrap produces its real smoke receipt.
+- `sderot-windows`: **host_smoke_verified** on 2026-09-13. Remote Desktop Commander device `Chris` was online/reachable; HyperFrames 0.8.34 doctor passed; real 1080×1920 H.264 smoke render passed; ffprobe/SHA-256 receipt verified. It is eligible for deterministic first-healthy fallback while browser-subscription/computer-use work remains Mac-only.

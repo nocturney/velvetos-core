@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Validate HyperFrames + canonical Mac/Windows Edge render-host failover. No network/render/send."""
 from __future__ import annotations
-import json, re, subprocess, sys
+import json, re, shutil, subprocess, sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -166,11 +166,19 @@ def main() -> None:
     windows_status = windows.get("status")
     if windows_status not in {"configured_pending_device_registration", "host_smoke_verified", "live_verified"}:
         fail("Windows fallback status invalid")
-    if windows_status == "configured_pending_device_registration" and windows.get("verifiedEvidence") is not None:
-        fail("unverified Windows host must not carry verifiedEvidence")
     promotion = set(windows.get("productionPromotionPending") or [])
-    if not {"remote_desktop_commander_device_online", "windows_bootstrap_doctor_and_smoke_receipt", "repo_synced"}.issubset(promotion):
-        fail("Windows fallback promotion evidence incomplete")
+    if windows_status == "configured_pending_device_registration":
+        if windows.get("verifiedEvidence") is not None:
+            fail("unverified Windows host must not carry verifiedEvidence")
+        required = {"remote_desktop_commander_device_online", "windows_bootstrap_doctor_and_smoke_receipt", "repo_synced"}
+        if not required.issubset(promotion):
+            fail("Windows fallback promotion evidence incomplete")
+    else:
+        if not str(windows.get("verifiedEvidence") or "").strip():
+            fail("verified Windows host requires verifiedEvidence")
+        required = {"approved_media_vault_asset_render_and_existing_qa", "intentional_hyperframes_failure_and_ffmpeg_failover_verification"}
+        if promotion != required:
+            fail("verified Windows host must retain full-backend production promotion gates")
 
     policy = contains(POLICY, "not a second orchestrator", "ffmpeg-svg-caption-composition", "ffprobe receipt", "render receipt", "vfcopy", "RTL")
     contains(FRAME, "portrait 9:16", "explicit RTL", "Do not invent font", "Subject lock", "Evaluation Engine")
@@ -184,15 +192,18 @@ def main() -> None:
         fail("RTL must not be set on html root in HyperFrames smoke render")
     if "ngrok" in mac_bootstrap or "--share-desktop" in mac_bootstrap:
         fail("Mac render bootstrap must not create an extra remote route")
-    shell_check = subprocess.run(["bash", "-n", str(MAC_BOOTSTRAP)], text=True, capture_output=True)
-    if shell_check.returncode != 0:
-        fail(f"Mac render host bootstrap shell syntax invalid: {shell_check.stderr.strip()}")
+    bash = shutil.which("bash")
+    if bash:
+        shell_check = subprocess.run([bash, "-n", str(MAC_BOOTSTRAP)], text=True, capture_output=True)
+        if shell_check.returncode != 0:
+            fail(f"Mac render host bootstrap shell syntax invalid: {shell_check.stderr.strip()}")
 
     windows_bootstrap = contains(
         WINDOWS_BOOTSTRAP,
         '$HostId = "sderot-windows"',
         '$HyperFramesVersion = "0.8.34"',
         '$NodeVersionPin = "22.22.0"',
+        '$script:Python = @(Resolve-Python)',
         "Get-FileHash -Algorithm SHA256",
         'HYPERFRAMES_NO_UPDATE_CHECK = "1"',
         'HYPERFRAMES_NO_AUTO_INSTALL = "1"',
@@ -215,7 +226,7 @@ def main() -> None:
             fail(f"Windows fallback bootstrap must not contain {forbidden}")
 
     contains(MAC_PLAYBOOK, "sderot-mac", "bootstrap-hyperframes-host-macos.sh --start-worker", "No inbound port", "host_smoke_verified")
-    contains(WINDOWS_PLAYBOOK, "sderot-windows", "Remote Desktop Commander", "renderSmoke=pass", "configured_pending_device_registration", "host_smoke_verified", "render receipt")
+    contains(WINDOWS_PLAYBOOK, "sderot-windows", "Remote Desktop Commander", "renderSmoke=pass", "host_smoke_verified", "render receipt", "2026-09-13")
     contains(SKILL, "HYPERFRAMES-BACKEND.json", "vf_hyperframes.py", "HyperFrames", "ffmpeg-svg-caption-composition")
     if "A render receipt proves a file was produced" not in policy:
         fail("render/publish receipt boundary missing")
