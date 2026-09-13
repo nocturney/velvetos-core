@@ -25,7 +25,7 @@
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>55</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>56</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>8</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -118,6 +118,7 @@
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">עברית טבעית, anti-AI QA ושער FACT vs INVENTED.</td></tr>
 <tr><td><strong>Organic Growth / Content Factory</strong></td><td><strong>IMPLEMENTED / HUMAN-GATED</strong></td><td dir="rtl" align="right">עבודה אמיתית → רעיונות/טיוטות/approval queue; בלי autopost ובלי auto-DM.</td></tr>
 <tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / MAC VERIFIED / WINDOWS COMMISSIONING</strong></td><td dir="rtl" align="right">`Mac-Office` / `sderot-mac` נשאר ה־render host המועדף עם ראיית smoke היסטורית. `Windows-Fallback` / `sderot-windows` הוא נתיב הגיבוי הקנוני דרך Remote Desktop Commander; ה־bootstrap מספק toolchain מקומי ומחייב doctor + רינדור 1080×1920 עברי אמיתי + ffprobe/SHA-256 receipt. Windows ייכנס ל־first-healthy routing רק אחרי שהמכשיר עצמו מופיע online ונרשמת ראיית smoke אמיתית. אין העתקת מנויי דפדפן, אין port/tunnel נכנס ואין הורדת QA.</td></tr>
+<tr><td><strong>VoiceStudio Speech Layer</strong></td><td><strong>IMPLEMENTED / WINDOWS COMMISSIONING</strong></td><td dir="rtl" align="right">VoiceStudio 0.5.2 הוא שכבת TTS/STT המקומית. `sderot-mac` נשאר preferred ו־`sderot-windows` הוא fallback קנוני; Windows חייב לעבור doctor + בדיקת TTS עברית אמיתית + תמלול חוזר בציון 0.90 ומעלה לפני ניתוב. AMD ב־Windows רץ CPU-backed; אין הורדת QA ואין שימוש ב־OmniVoice לפרסום מסחרי.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">routing, חומר, spool/slice, maintenance signals ותכנון ייצור מבוקר.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">בריף HTML עם מדיה inline ושליחה כאשר קיימים credentials תקפים.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td dir="rtl" align="right">מעבר מבוקר לכלי חלופי בלי לייצר SoT נוסף.</td></tr>
@@ -238,6 +239,7 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>Natural Hebrew, anti-AI QA and FACT vs INVENTED gates.</td></tr>
 <tr><td><strong>Organic Growth / Content Factory</strong></td><td><strong>IMPLEMENTED / HUMAN-GATED</strong></td><td>Real work becomes drafts and approval candidates; no default autopost or auto-DM.</td></tr>
 <tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / MAC VERIFIED / WINDOWS COMMISSIONING</strong></td><td>`Mac-Office` / `sderot-mac` remains the preferred render host with historical smoke evidence. `Windows-Fallback` / `sderot-windows` is the canonical backup through Remote Desktop Commander; its bootstrap provisions a local toolchain and requires doctor + a real 1080x1920 deterministic Hebrew render + ffprobe/SHA-256 receipt. Windows only enters first-healthy routing after the physical device is online and real smoke evidence is recorded. No browser-subscription credential migration, inbound port/tunnel or QA relaxation.</td></tr>
+<tr><td><strong>VoiceStudio Speech Layer</strong></td><td><strong>IMPLEMENTED / WINDOWS COMMISSIONING</strong></td><td>VoiceStudio 0.5.2 is the local TTS/STT layer. `sderot-mac` stays preferred and `sderot-windows` is the canonical fallback; Windows must pass doctor + a real Hebrew TTS smoke + back-transcription similarity >=0.90 before routing. AMD on Windows is CPU-backed; QA is never relaxed and OmniVoice is forbidden for commercial publishing.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td>Routing, material/spool planning and maintenance signals.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td>HTML + inline media brief path when valid credentials exist.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td>Controlled takeover without creating another source of truth.</td></tr>

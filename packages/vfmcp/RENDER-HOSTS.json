@@ -1,17 +1,18 @@
 {
-  "version": 3,
+  "version": 4,
   "authority": "packages/vfmcp/HOST.md",
-  "purpose": "canonical Edge/Office execution hosts for local render and content capabilities",
+  "purpose": "canonical Edge/Office execution hosts for local render, speech and content capabilities",
   "routing": {
     "mode": "first-healthy",
     "preferred": "sderot-mac",
     "fallbackOrder": ["sderot-windows"],
     "eligibleStatuses": ["host_smoke_verified", "live_verified"],
-    "healthRule": "host must be registered, online, repo-synced, pass its local bootstrap/doctor, and carry a verified render-smoke receipt before receiving render work",
-    "failoverOn": ["host_offline", "route_unreachable", "host_doctor_failed", "host_smoke_missing"],
-    "doNotFailoverOn": ["content_contract_failure", "policy_failure", "rights_failure", "qa_failure"],
+    "healthRule": "host must be registered, online, repo-synced, pass its local bootstrap/doctor, and carry a verified render-smoke receipt before receiving render work; speech additionally requires its own doctor and smoke evidence",
+    "failoverOn": ["host_offline", "route_unreachable", "host_doctor_failed", "host_smoke_missing", "speech_doctor_failed", "speech_smoke_missing"],
+    "doNotFailoverOn": ["content_contract_failure", "policy_failure", "rights_failure", "qa_failure", "consent_failure"],
     "subscriptionRule": "browser subscription sessions stay on sderot-mac; never copy cookies or subscription credentials to fallback hosts",
-    "qualityRule": "host failover changes execution location only; it never relaxes Content Contract, Asset Truth, Claim Provenance, QA, receipt or publish gates"
+    "qualityRule": "host failover changes execution location only; it never relaxes Content Contract, Asset Truth, Claim Provenance, speech back-transcription QA, render QA, receipt or publish gates",
+    "jobAffinity": "sticky-per-job"
   },
   "hosts": {
     "sderot-mac": {
@@ -21,17 +22,22 @@
       "workerName": "sderot-mac",
       "repoPath": "~/velvetos-core",
       "priority": 10,
-      "roles": ["subscription-host", "edge-worker", "video-render-host"],
+      "roles": ["subscription-host", "edge-worker", "video-render-host", "speech-render-host"],
       "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
+      "speechBackend": "packages/vfom/SPEECH-BACKEND.json",
       "bootstrap": "scripts/bootstrap-hyperframes-host-macos.sh",
       "localState": "~/.velvetos/render-host.json",
+      "speechLocalState": "~/.velvetos/speech-host.json",
       "hyperframesVersion": "0.8.34",
+      "voiceStudioVersion": "0.5.2",
       "route": "cursor-agent-worker",
       "inboundPortRequired": false,
       "status": "host_smoke_verified",
+      "speechStatus": "configured_pending_runtime_verification",
       "verifiedEvidence": "real local HyperFrames smoke render completed with ffprobe receipt and canonical Cursor worker running on Mac-Office on 2026-09-12",
       "productionPromotionPending": ["approved_media_vault_asset_render_and_existing_qa", "intentional_hyperframes_failure_and_ffmpeg_failover_verification"],
-      "promotionRule": "backend live_verified only after host smoke + real approved asset render + existing QA + failover verification"
+      "speechPromotionPending": ["speech_first_run_and_real_hebrew_smoke"],
+      "promotionRule": "render promotion keeps the existing HyperFrames gates; speech becomes eligible only after its own doctor and real smoke evidence"
     },
     "sderot-windows": {
       "displayName": "Windows-Fallback",
@@ -42,18 +48,26 @@
       "priority": 20,
       "roles": ["edge-worker", "repo-worker", "content-worker", "video-render-host", "speech-render-host"],
       "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
+      "speechBackend": "packages/vfom/SPEECH-BACKEND.json",
       "bootstrap": "scripts/bootstrap-edge-host-windows.ps1",
+      "mediaBootstrap": "scripts/bootstrap-media-host-windows.ps1",
+      "speechBootstrap": "scripts/bootstrap-speech-host-windows.ps1",
       "localState": "%USERPROFILE%\\.velvetos\\edge-host.json",
+      "speechLocalState": "%USERPROFILE%\\.velvetos\\speech-host.json",
       "hyperframesVersion": "0.8.34",
+      "voiceStudioVersion": "0.5.2",
+      "speechComputePolicy": "Windows AMD runs VoiceStudio CPU-backed; ROCm is Linux-only",
       "route": "remote-desktop-commander",
       "inboundPortRequired": false,
       "subscriptionHost": false,
       "computerUse": false,
       "status": "configured_pending_device_registration",
+      "speechStatus": "configured_pending_local_smoke",
       "verifiedEvidence": null,
-      "productionPromotionPending": ["remote_desktop_commander_device_online", "windows_bootstrap_doctor_and_smoke_receipt", "repo_synced"],
-      "promotionRule": "becomes host_smoke_verified and eligible for first-healthy fallback only after Remote Desktop Commander reports the physical Windows device online and the local bootstrap records doctor=pass plus renderSmoke=pass with a real receipt; no browser-subscription credential migration"
+      "productionPromotionPending": ["remote_desktop_commander_device_online", "windows_bootstrap_doctor_and_smoke_receipt", "repo_synced", "windows_speech_doctor_and_hebrew_tts_stt_qa_smoke"],
+      "promotionRule": "render eligibility keeps the existing bootstrap/receipt gate; speech additionally requires local VoiceStudio doctor plus real Hebrew TTS-STT QA evidence; no browser-subscription credential migration"
     }
   },
-  "defaultRenderHost": "sderot-mac"
+  "defaultRenderHost": "sderot-mac",
+  "defaultSpeechHost": "sderot-mac"
 }
