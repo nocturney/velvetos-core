@@ -1,0 +1,62 @@
+{
+  "name": "vfom-speech-backend",
+  "version": 1,
+  "role": "local speech generation, transcription and speech QA for Velvet Visual Foundry",
+  "providerInterface": "speech-provider-v1",
+  "authority": {
+    "orchestration": "packages/vfom/CREATIVE-AUTOPILOT.md",
+    "edit": "packages/vfom/EDIT-DIRECTOR.md",
+    "copy": "packages/vfcopy/VOICE.md",
+    "contentContract": "packages/vfom/CONTENT-CONTRACT.schema.json",
+    "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json"
+  },
+  "execution": {
+    "layer": "edge-or-office-host",
+    "hostRegistry": "packages/vfmcp/RENDER-HOSTS.json",
+    "defaultHost": "sderot-mac",
+    "fallbackHosts": ["sderot-win"],
+    "adapter": "scripts/vf_speech.py",
+    "provider": "voicestudio",
+    "serviceRoot": "http://127.0.0.1:3900",
+    "networkExposure": "loopback-only",
+    "networkInstallAllowedDuringJob": false,
+    "versionAuthority": "packages/vfmcp/TOOLCHAIN-VERSIONS.json#components.voicestudio",
+    "failover": {
+      "trigger": "host_unreachable_or_provider_doctor_failure",
+      "stickyPerJob": true,
+      "retryPrimary": 1,
+      "fallbackMustPassDoctor": true,
+      "fallbackMayNotLowerQa": true
+    }
+  },
+  "engines": {
+    "ttsPreferred": ["moss-tts-nano", "voxcpm2", "moss-tts-v1.5"],
+    "ttsForbiddenForCommercialPublish": ["omnivoice"],
+    "asrPreferredOnAppleSilicon": ["mlx-whisper"],
+    "asrPreferredOnWindowsAmd": ["faster-whisper", "pytorch-whisper"],
+    "language": "he",
+    "voiceProfileEnv": "VF_SPEECH_VOICE",
+    "ttsModelEnv": "VF_SPEECH_TTS_MODEL",
+    "asrModelEnv": "VF_SPEECH_ASR_MODEL"
+  },
+  "defaults": {
+    "responseFormat": "wav",
+    "speed": 1.0,
+    "timeoutSeconds": 180,
+    "maxAttempts": 2,
+    "qaBackTranscribe": true,
+    "qaMinimumSimilarity": 0.9,
+    "subtitleFormat": "srt"
+  },
+  "guardrails": {
+    "publicSpokenCopyUsesVfcopy": true,
+    "noInventedClaims": true,
+    "commercialModelAllowlistRequired": true,
+    "forbidOmniVoiceForCommercialPublish": true,
+    "voiceCloneRequiresConsent": true,
+    "localByDefault": true,
+    "speechReceiptIsNotPublishReceipt": true,
+    "speechDoesNotAuthorizePublish": true,
+    "qaFailClosed": true
+  }
+}

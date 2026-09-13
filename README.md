@@ -25,7 +25,7 @@
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>48</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>50</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>8</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -117,7 +117,8 @@
 <tr><td><strong>Media Vault + vfmedia</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">incoming → source → WIP → approved, עם checksum ו־persist-before-move.</td></tr>
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">עברית טבעית, anti-AI QA ושער FACT vs INVENTED.</td></tr>
 <tr><td><strong>Organic Growth / Content Factory</strong></td><td><strong>IMPLEMENTED / HUMAN-GATED</strong></td><td dir="rtl" align="right">עבודה אמיתית → רעיונות/טיוטות/approval queue; בלי autopost ובלי auto-DM.</td></tr>
-<tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / HOST ROUTE CONFIGURED</strong></td><td dir="rtl" align="right">`Mac-Office` / `sderot-mac` רשום כ־render host קנוני דרך ה־Cursor Edge worker הקיים, ללא tunnel/port חדש. HyperFrames 0.8.34, bootstrap ורינדור smoke מוכנים; LIVE ייקבע רק אחרי שה־bootstrap ירוץ בהצלחה על המק האמיתי.</td></tr>
+<tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / MAC VERIFIED / WINDOWS PENDING</strong></td><td dir="rtl" align="right">`sderot-mac` הוא primary ו־`sderot-win` מוגדר כ־fallback אוטומטי. הגרסה נקראת מ־`TOOLCHAIN-VERSIONS.json`; ה־Mac עבר smoke אמיתי, וה־Windows יקודם ל־fallback-ready רק אחרי bootstrap + receipt על המחשב עצמו.</td></tr>
+<tr><td><strong>VoiceStudio Speech Layer</strong></td><td><strong>IMPLEMENTED / WINDOWS PENDING</strong></td><td dir="rtl" align="right">TTS/STT/QA מקומיים עם Mac→Windows failover, back-transcription fail-closed וללא הורדת רף QA. ב־Windows עם AMD שכבת הקול מוגדרת CPU-backed; הפעלה חיה דורשת bootstrap ואימות API מקומי.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">routing, חומר, spool/slice, maintenance signals ותכנון ייצור מבוקר.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">בריף HTML עם מדיה inline ושליחה כאשר קיימים credentials תקפים.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td dir="rtl" align="right">מעבר מבוקר לכלי חלופי בלי לייצר SoT נוסף.</td></tr>
@@ -237,7 +238,8 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>Media Vault + vfmedia</strong></td><td><strong>IMPLEMENTED</strong></td><td>Incoming → source → WIP → approved with checksums and persist-before-move.</td></tr>
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>Natural Hebrew, anti-AI QA and FACT vs INVENTED gates.</td></tr>
 <tr><td><strong>Organic Growth / Content Factory</strong></td><td><strong>IMPLEMENTED / HUMAN-GATED</strong></td><td>Real work becomes drafts and approval candidates; no default autopost or auto-DM.</td></tr>
-<tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / HOST ROUTE CONFIGURED</strong></td><td>`Mac-Office` / `sderot-mac` is registered as the canonical render host through the existing Cursor Edge worker, with no extra tunnel or inbound port. HyperFrames 0.8.34, bootstrap and smoke render are ready; LIVE requires the bootstrap to pass on the real Mac.</td></tr>
+<tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / MAC VERIFIED / WINDOWS PENDING</strong></td><td>`sderot-mac` is primary and `sderot-win` is configured as automatic fallback. The pin comes from `TOOLCHAIN-VERSIONS.json`; the Mac has a real smoke receipt, while Windows remains pending until its on-device bootstrap succeeds.</td></tr>
+<tr><td><strong>VoiceStudio Speech Layer</strong></td><td><strong>IMPLEMENTED / WINDOWS PENDING</strong></td><td>Local TTS/STT/QA with Mac→Windows failover, fail-closed back-transcription and unchanged QA thresholds. Windows AMD speech is explicitly CPU-backed until a different supported compute path is verified.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td>Routing, material/spool planning and maintenance signals.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td>HTML + inline media brief path when valid credentials exist.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td>Controlled takeover without creating another source of truth.</td></tr>

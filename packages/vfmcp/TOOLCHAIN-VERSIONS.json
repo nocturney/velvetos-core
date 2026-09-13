@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "mode": "single-source-of-truth",
+    "driftBehavior": "fail-closed",
+    "runtimeJobsMaySelfUpgrade": false,
+    "upgradeRule": "review upstream release notes and compatibility, update this manifest once, then run all sensors and host smoke checks"
+  },
+  "components": {
+    "hyperframes": {
+      "package": "hyperframes",
+      "version": "0.8.35",
+      "minimumNodeMajor": 22,
+      "releaseSource": "https://github.com/heygen-com/hyperframes/releases",
+      "dependents": [
+        "packages/vfom/HYPERFRAMES-BACKEND.json",
+        "packages/vfmcp/RENDER-HOSTS.json",
+        "scripts/vf_hyperframes.py",
+        "scripts/bootstrap-hyperframes-host-macos.sh",
+        "scripts/bootstrap-media-host-windows.ps1",
+        "scripts/check-hyperframes-backend.py",
+        "scripts/check-toolchain-versions.py"
+      ]
+    },
+    "voicestudio": {
+      "version": "0.5.2",
+      "commit": "38c2405",
+      "windowsArtifact": "VoiceStudio_Current_User_0.5.2_x64_en-US.msi",
+      "releaseSource": "https://github.com/debpalash/VoiceStudio/releases/tag/v0.5.2",
+      "dependents": [
+        "packages/vfom/SPEECH-BACKEND.json",
+        "packages/vfmcp/RENDER-HOSTS.json",
+        "scripts/vf_speech.py",
+        "scripts/bootstrap-media-host-windows.ps1",
+        "scripts/check-toolchain-versions.py"
+      ]
+    },
+    "node": {
+      "version": "22.22.0",
+      "minimumMajor": 22
+    },
+    "ffmpegStatic": {
+      "package": "ffmpeg-ffprobe-static",
+      "version": "6.1.2-rc.1"
+    }
+  }
+}

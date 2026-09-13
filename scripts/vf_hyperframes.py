@@ -17,7 +17,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-HYPERFRAMES_VERSION = "0.8.34"
+from vf_toolchain import component
+
+_HF = component("hyperframes")
+HYPERFRAMES_VERSION = str(_HF["version"])
 HYPERFRAMES_PACKAGE = f"hyperframes@{HYPERFRAMES_VERSION}"
 SUPPORTED_STAGES = {"rough", "review", "final"}
 SUPPORTED_FORMATS = {"mp4", "webm", "mov"}
@@ -64,16 +67,13 @@ def validate_request(data: dict[str, Any]) -> dict[str, Any]:
     job_id = require_text(data, "jobId")
     if not re.fullmatch(r"[A-Za-z0-9._-]+", job_id):
         fail("request.jobId contains unsupported characters")
-
     project_dir = Path(require_text(data, "projectDir")).expanduser().resolve()
     if not project_dir.is_dir():
         fail(f"projectDir is not a directory: {project_dir}")
-
     composition_raw = str(data.get("composition") or "index.html")
     composition = resolve_under(project_dir, composition_raw, "composition")
     if not composition.is_file():
         fail(f"composition not found: {composition}")
-
     stage = str(data.get("stage") or "rough")
     if stage not in SUPPORTED_STAGES:
         fail(f"stage must be one of {sorted(SUPPORTED_STAGES)}")
@@ -83,33 +83,28 @@ def validate_request(data: dict[str, Any]) -> dict[str, Any]:
     target = str(data.get("target") or "reel_master")
     if target in {"reel_master", "story_master", "feed_video"} and output_format != "mp4":
         fail(f"target {target} requires mp4")
-
     resolution = str(data.get("resolution") or "portrait")
     if resolution not in SUPPORTED_RESOLUTIONS:
         fail(f"resolution must be one of {sorted(SUPPORTED_RESOLUTIONS)}")
     fps = int(data.get("fps") or 30)
     if fps not in SUPPORTED_FPS:
         fail(f"fps must be one of {sorted(SUPPORTED_FPS)}")
-
     quality_default = "high" if stage == "final" else "draft" if stage == "rough" else "standard"
     quality = str(data.get("quality") or quality_default)
     if quality not in {"draft", "standard", "high"}:
         fail("quality must be draft, standard or high")
     if stage == "final" and quality != "high":
         fail("final stage requires quality=high")
-
     output = resolve_under(project_dir, require_text(data, "output"), "output")
     expected_suffix = ".mp4" if output_format == "mp4" else f".{output_format}"
     if output.suffix.lower() != expected_suffix:
         fail(f"output extension must be {expected_suffix}")
-
     variables_file = None
     if data.get("variablesFile"):
         variables_file = resolve_under(project_dir, str(data["variablesFile"]), "variablesFile")
         if not variables_file.is_file():
             fail(f"variablesFile not found: {variables_file}")
         read_json(variables_file)
-
     audio_required = bool(data.get("audioRequired", target in {"reel_master", "story_master", "feed_video"}))
     return {
         "jobId": job_id,
@@ -134,10 +129,7 @@ def validate_request(data: dict[str, Any]) -> dict[str, Any]:
 def hyperframes_command() -> str:
     path = shutil.which("hyperframes")
     if not path:
-        fail(
-            f"HyperFrames CLI {HYPERFRAMES_VERSION} is not installed on this render host; "
-            "install/cache the pinned CLI outside the content job and rerun doctor"
-        )
+        fail(f"HyperFrames CLI {HYPERFRAMES_VERSION} is not installed on this render host")
     return path
 
 
@@ -148,14 +140,9 @@ def hyperframes_base(resolve: bool = False) -> list[str]:
 def build_commands(req: dict[str, Any], resolve_binary: bool = False) -> list[list[str]]:
     check = hyperframes_base(resolve_binary) + ["check"]
     render = hyperframes_base(resolve_binary) + [
-        "render",
-        "--composition", req["compositionArg"],
-        "--output", req["outputArg"],
-        "--quality", req["quality"],
-        "--fps", str(req["fps"]),
-        "--resolution", req["resolution"],
-        "--format", req["format"],
-        "--strict-all" if req["strictAll"] else "--strict",
+        "render", "--composition", req["compositionArg"], "--output", req["outputArg"],
+        "--quality", req["quality"], "--fps", str(req["fps"]), "--resolution", req["resolution"],
+        "--format", req["format"], "--strict-all" if req["strictAll"] else "--strict",
     ]
     if req["variablesFileArg"]:
         render += ["--variables-file", req["variablesFileArg"], "--strict-variables"]
@@ -196,15 +183,12 @@ def doctor() -> int:
         print(f"FAIL missing tools: {', '.join(missing)}", file=sys.stderr)
         return 1
     major = node_major(facts["node"])
-    if major is None or major < 22:
+    if major is None or major < int(_HF.get("minimumNodeMajor", 22)):
         print(f"FAIL HyperFrames requires Node >=22; found {facts['node']}", file=sys.stderr)
         return 1
     actual = exact_hyperframes_version(facts["hyperframes"])
     if actual != HYPERFRAMES_VERSION:
-        print(
-            f"FAIL HyperFrames version mismatch: required {HYPERFRAMES_VERSION}, found {facts['hyperframes']}",
-            file=sys.stderr,
-        )
+        print(f"FAIL HyperFrames version mismatch: required {HYPERFRAMES_VERSION}, found {facts['hyperframes']}", file=sys.stderr)
         return 1
     print(f"OK hyperframes host prerequisites package={HYPERFRAMES_PACKAGE}")
     return 0
@@ -221,11 +205,7 @@ def probe_output(path: Path) -> dict[str, Any]:
     ffprobe = shutil.which("ffprobe")
     if not ffprobe:
         fail("ffprobe is required to verify render output")
-    proc = subprocess.run(
-        [ffprobe, "-v", "error", "-show_entries", "format=duration:stream=index,codec_type,width,height,codec_name", "-of", "json", str(path)],
-        text=True,
-        capture_output=True,
-    )
+    proc = subprocess.run([ffprobe, "-v", "error", "-show_entries", "format=duration:stream=index,codec_type,width,height,codec_name", "-of", "json", str(path)], text=True, capture_output=True)
     if proc.returncode != 0:
         fail(f"ffprobe failed: {(proc.stderr or '').strip()}")
     try:
@@ -255,20 +235,10 @@ def verify_probe(req: dict[str, Any], probe: dict[str, Any]) -> dict[str, Any]:
         fail(f"render is not portrait: {width}x{height}")
     if req["audioRequired"] and not audios:
         fail("render requires audio but ffprobe found no audio stream")
-    try:
-        duration = float((probe.get("format") or {}).get("duration") or 0)
-    except (TypeError, ValueError):
-        duration = 0
+    duration = float((probe.get("format") or {}).get("duration") or 0)
     if duration <= 0:
         fail("render duration is missing or zero")
-    return {
-        "durationSec": round(duration, 3),
-        "width": width,
-        "height": height,
-        "videoCodec": video.get("codec_name"),
-        "audioStreams": len(audios),
-        "audioRequired": req["audioRequired"],
-    }
+    return {"durationSec": round(duration, 3), "width": width, "height": height, "videoCodec": video.get("codec_name"), "audioStreams": len(audios), "audioRequired": req["audioRequired"]}
 
 
 def receipt_path(req: dict[str, Any], override: str | None) -> Path:
@@ -288,17 +258,9 @@ def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]
         fail(f"render output missing or empty: {req['output']}")
     verified = verify_probe(req, probe_output(req["output"]))
     receipt = {
-        "schemaVersion": 1,
-        "jobId": req["jobId"],
-        "backend": "hyperframes",
-        "package": HYPERFRAMES_PACKAGE,
-        "stage": req["stage"],
-        "target": req["target"],
-        "output": req["outputArg"],
-        "bytes": req["output"].stat().st_size,
-        "sha256": sha256_file(req["output"]),
-        "verifiedAt": datetime.now(timezone.utc).isoformat(),
-        "probe": verified,
+        "schemaVersion": 1, "jobId": req["jobId"], "backend": "hyperframes", "package": HYPERFRAMES_PACKAGE,
+        "stage": req["stage"], "target": req["target"], "output": req["outputArg"], "bytes": req["output"].stat().st_size,
+        "sha256": sha256_file(req["output"]), "verifiedAt": datetime.now(timezone.utc).isoformat(), "probe": verified,
         "commands": [[Path(cmd[0]).name, *cmd[1:]] for cmd in commands],
     }
     target = receipt_path(req, receipt_override)
@@ -309,25 +271,18 @@ def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]
 
 
 def plan(req: dict[str, Any]) -> None:
-    print(json.dumps({
-        "package": HYPERFRAMES_PACKAGE,
-        "cwd": str(req["projectDir"]),
-        "commands": build_commands(req),
-        "output": str(req["output"]),
-        "audioRequired": req["audioRequired"],
-        "note": "plan does not install or resolve HyperFrames; run doctor on the authorized render host before run",
-    }, ensure_ascii=False, indent=2))
+    print(json.dumps({"package": HYPERFRAMES_PACKAGE, "cwd": str(req["projectDir"]), "commands": build_commands(req), "output": str(req["output"]), "audioRequired": req["audioRequired"], "note": "plan does not install or resolve HyperFrames; run doctor on the authorized render host before run"}, ensure_ascii=False, indent=2))
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="VelvetOS HyperFrames render bridge")
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("doctor", help="check local Node/HyperFrames/FFmpeg prerequisites without network")
-    plan_parser = sub.add_parser("plan", help="validate a request and print exact commands; no render/network")
+    sub.add_parser("doctor")
+    plan_parser = sub.add_parser("plan")
     plan_parser.add_argument("request", type=Path)
-    run_parser = sub.add_parser("run", help="execute check+render+ffprobe and write a receipt")
+    run_parser = sub.add_parser("run")
     run_parser.add_argument("request", type=Path)
-    run_parser.add_argument("--receipt", help="receipt path relative to projectDir")
+    run_parser.add_argument("--receipt")
     args = parser.parse_args()
     if args.command == "doctor":
         return doctor()

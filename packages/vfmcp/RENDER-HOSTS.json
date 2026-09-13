@@ -1,13 +1,15 @@
 {
   "version": 2,
   "authority": "packages/vfmcp/HOST.md",
-  "purpose": "canonical Edge/Office execution hosts for local render and content capabilities",
+  "purpose": "canonical Edge/Office execution hosts for local render and speech capabilities",
   "routing": {
-    "mode": "first-healthy",
-    "preferred": "sderot-mac",
-    "fallbackOrder": ["sderot-windows"],
-    "healthRule": "host must be registered, online, repo-synced, and pass its local bootstrap/doctor before receiving work",
-    "subscriptionRule": "browser subscription sessions stay on sderot-mac; never copy cookies or subscription credentials to fallback hosts"
+    "strategy": "primary-then-fallback",
+    "primaryHost": "sderot-mac",
+    "fallbackHosts": ["sderot-win"],
+    "failoverTrigger": "host_unreachable_or_doctor_failure",
+    "stickyPerJob": true,
+    "noParallelExecutionForSameJob": true,
+    "qaThresholdsMayNotDegradeOnFallback": true
   },
   "hosts": {
     "sderot-mac": {
@@ -17,11 +19,14 @@
       "workerName": "sderot-mac",
       "repoPath": "~/velvetos-core",
       "priority": 10,
-      "roles": ["subscription-host", "edge-worker", "video-render-host"],
+      "roles": ["subscription-host", "edge-worker", "video-render-host", "speech-host"],
       "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
+      "speechBackend": "packages/vfom/SPEECH-BACKEND.json",
       "bootstrap": "scripts/bootstrap-hyperframes-host-macos.sh",
+      "speechBootstrap": "scripts/bootstrap-speech-host-macos.sh",
       "localState": "~/.velvetos/render-host.json",
-      "hyperframesVersion": "0.8.34",
+      "speechLocalState": "~/.velvetos/speech-host.json",
+      "toolchainManifest": "packages/vfmcp/TOOLCHAIN-VERSIONS.json",
       "route": "cursor-agent-worker",
       "inboundPortRequired": false,
       "status": "host_smoke_verified",
@@ -29,26 +34,33 @@
       "productionPromotionPending": ["approved_media_vault_asset_render_and_existing_qa", "intentional_hyperframes_failure_and_ffmpeg_failover_verification"],
       "promotionRule": "backend live_verified only after host smoke + real approved asset render + existing QA + failover verification"
     },
-    "sderot-windows": {
-      "displayName": "Windows-Fallback",
+    "sderot-win": {
+      "displayName": "Windows-Office",
       "location": "Sderot",
       "platform": "Windows",
-      "workerName": "sderot-windows",
+      "workerName": "sderot-win",
       "repoPath": "%USERPROFILE%\\velvetos-core",
       "priority": 20,
-      "roles": ["edge-worker", "repo-worker", "content-worker", "video-render-host", "speech-render-host"],
+      "roles": ["edge-worker", "video-render-host", "speech-host", "fallback-host"],
       "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
-      "bootstrap": "scripts/bootstrap-edge-host-windows.ps1",
-      "localState": "%USERPROFILE%\\.velvetos\\edge-host.json",
-      "hyperframesVersion": "0.8.34",
-      "route": "remote-desktop-commander",
+      "speechBackend": "packages/vfom/SPEECH-BACKEND.json",
+      "bootstrap": "scripts/bootstrap-media-host-windows.ps1",
+      "localState": "%USERPROFILE%\\.velvetos\\render-host.json",
+      "speechLocalState": "%USERPROFILE%\\.velvetos\\speech-host.json",
+      "toolchainManifest": "packages/vfmcp/TOOLCHAIN-VERSIONS.json",
+      "route": "cursor-agent-worker",
       "inboundPortRequired": false,
-      "subscriptionHost": false,
-      "computerUse": false,
-      "status": "configured_pending_device_registration",
+      "computePolicy": {
+        "hyperframes": "native-windows",
+        "speech": "cpu-on-windows-amd",
+        "rocm": false,
+        "note": "VoiceStudio on Windows uses CPU for AMD GPUs; ROCm remains Linux-only."
+      },
+      "status": "configured_host_smoke_pending",
       "verifiedEvidence": null,
-      "promotionRule": "becomes eligible only after Remote Desktop Commander registration and local bootstrap/doctor pass; no browser-subscription credential migration"
+      "promotionRule": "fallback_ready only after Windows bootstrap doctor + HyperFrames smoke receipt + VoiceStudio API doctor + worker registration"
     }
   },
-  "defaultRenderHost": "sderot-mac"
+  "defaultRenderHost": "sderot-mac",
+  "defaultSpeechHost": "sderot-mac"
 }

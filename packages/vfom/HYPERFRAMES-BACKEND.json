@@ -1,6 +1,6 @@
 {
   "name": "vfom-hyperframes-render-backend",
-  "version": 1,
+  "version": 2,
   "role": "deterministic video composition and render backend for the existing Velvet Visual Foundry",
   "noSecondRuntime": true,
   "authority": {
@@ -10,7 +10,8 @@
     "visualDNA": "packages/vfom/VISUAL-DNA.json",
     "contentContract": "packages/vfom/CONTENT-CONTRACT.schema.json",
     "creativeManifest": "packages/vfom/CREATIVE-MANIFEST.schema.json",
-    "mediaCatalog": "packages/vfmedia/catalog.json"
+    "mediaCatalog": "packages/vfmedia/catalog.json",
+    "speechBackend": "packages/vfom/SPEECH-BACKEND.json"
   },
   "execution": {
     "layer": "edge-or-office-host",
@@ -19,21 +20,26 @@
     "frameContract": "packages/vfom/HYPERFRAMES-FRAME.md",
     "hostRegistry": "packages/vfmcp/RENDER-HOSTS.json",
     "defaultHost": "sderot-mac",
-    "fallbackHosts": ["sderot-windows"],
-    "hostSelection": "first-healthy",
+    "fallbackHosts": ["sderot-win"],
     "hostConnectPlaybook": "packages/vfmcp/CONNECT-RENDER-HOST.md",
     "package": "hyperframes",
-    "packageVersion": "0.8.34",
+    "versionAuthority": "packages/vfmcp/TOOLCHAIN-VERSIONS.json#components.hyperframes",
     "node": ">=22",
     "requires": ["hyperframes", "ffmpeg", "ffprobe"],
     "networkInstallAllowed": false,
     "versionMismatch": "fail",
-    "note": "Install/cache the pinned HyperFrames CLI on authorized render hosts outside the content job; the bridge never downloads dependencies or turns Core into a render daemon."
+    "hostFailover": {
+      "trigger": "host_unreachable_or_doctor_failure",
+      "stickyPerJob": true,
+      "noParallelSameJob": true,
+      "fallbackMustPassDoctor": true,
+      "fallbackMayNotLowerQa": true
+    },
+    "note": "Install/cache the canonical HyperFrames version on authorized render hosts outside content jobs; the bridge never downloads dependencies or turns Core into a render daemon."
   },
   "routing": {
     "primary": "hyperframes",
     "fallback": ["ffmpeg-svg-caption-composition"],
-    "hostFailover": ["sderot-mac", "sderot-windows"],
     "useHyperframesFor": ["reel_master", "story_master", "feed_video", "kinetic_typography", "deterministic_hebrew_overlay", "motion_graphics", "multi-shot_composition"],
     "preferFallbackFor": ["single_static_overlay", "simple_caption_burn_in", "emergency_render_when_hyperframes_unavailable"]
   },
@@ -48,7 +54,7 @@
     "maxFinalRenders": 2,
     "audioRequiredForSocialVideo": true
   },
-  "pipeline": ["content_contract", "creative_manifest", "edit_decision_list", "media_truth_resolution", "hyperframes_composition", "hyperframes_check", "rough_render", "evaluation_and_repair", "final_render", "ffprobe_receipt", "derivative_factory", "publish_preflight"],
+  "pipeline": ["content_contract", "creative_manifest", "edit_decision_list", "media_truth_resolution", "speech_assets_ready", "hyperframes_composition", "hyperframes_check", "rough_render", "evaluation_and_repair", "final_render", "ffprobe_receipt", "derivative_factory", "publish_preflight"],
   "guardrails": {
     "realMediaRefsOnly": true,
     "noInventedAssets": true,
