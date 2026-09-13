@@ -1,8 +1,8 @@
 {
   "enabled": true,
-  "requestId": "weekly-research-preview-2026-09-13",
-  "html": "packages/vfops/out/weekly-research-preview-2026-09-13.html",
-  "visibleText": "packages/vfops/out/weekly-research-preview-2026-09-13.txt",
+  "requestId": "weekly-research-preview-2026-09-13-attempt2",
+  "html": "packages/vfops/out/weekly-research-preview-2026-09-13-v2.html",
+  "visibleText": "packages/vfops/out/weekly-research-preview-2026-09-13-v2.txt",
   "images": "",
   "to": "nocturney@gmail.com",
   "subject": "VelvetOS · Weekly Research Accountability · 2026-09-13 · תצוגת ניסיון",
