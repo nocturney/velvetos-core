@@ -51,6 +51,11 @@ dataDate: **2026-09-13** — זהו ה-dataset החדש ביותר שאומת ב
 - duplicate agent orchestration (`stablyai/orca`, Herdr וכדומה) — `vfe2b` lock; אין runtime שני.
 - generic image/video generators — לא עוקפים את `expert-media-director`/Canva/Hyperframes pipeline הקיים.
 
+## Validation
+
+- Daily research freshness check: **PASS** on a fresh Windows fallback checkout.
+- `scripts/check-all.py`: **BLOCKED/FAIL on fallback checkout**, not PASS. The case-insensitive Windows checkout collides `constitution/TAGS.md` with `constitution/tags.md`; `check-hq-overlay.py` therefore reports missing `#צמיחה-חברתית`, and the broader sensor run did not complete. No claim is made that this Best Skills pass made `check-all` green.
+
 ## Timer
 
 `standingForever=true`; `lastPass` הקודם היה 2026-09-12 ולכן refresh היה due ובוצע היום.
