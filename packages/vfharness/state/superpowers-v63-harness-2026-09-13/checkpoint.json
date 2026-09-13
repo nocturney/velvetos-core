@@ -15,10 +15,21 @@
   "completed_steps": [
     "review-existing-harness",
     "create-branch",
-    "write-plan"
+    "write-plan",
+    "write-preflight",
+    "safe-ruling-rung",
+    "plan-preflight",
+    "test-first-discipline",
+    "fresh-review-and-parallel-dispatch",
+    "provenance-and-changelog",
+    "focused-behavioral-verification",
+    "existing-caller-compatibility-smoke"
   ],
-  "latest_observation": "Existing harness already contains graduated escalation, high-risk dual review, proof-before-code, and Superpowers planning/brainstorming; gaps are execution semantics rather than missing architecture.",
-  "unresolved": [],
+  "latest_observation": "Focused verification PASS: check-vfharness-execution-discipline safe-ruling behavior=3; check-skill-pattern-embeds mapped=12 superpowers_v63_files=7; existing vfsales run_ladder caller reaches downgrade_scope and completes under PYTHONUTF8=1. Windows default cp1252 printing failed before UTF-8 forcing, which is an environment-console issue rather than ladder API regression. Full Linux check-all remains to be observed via PR CI.",
+  "unresolved": [
+    "PR integrated-diff fresh-context review",
+    "GitHub Actions Linux full sensor suite"
+  ],
   "outcome": "in_progress",
   "last_updated": "2026-09-13"
 }
