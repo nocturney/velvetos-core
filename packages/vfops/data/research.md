@@ -1,23 +1,24 @@
-# 05 · משרד · 13.9.2026
+# 05 · משרד · 14.9.2026
 
-מחקר יומי חי הושלם. מקור מלא: `packages/vfresearch/sources/2026-09-13-orchestra.md`.
+מחקר יומי חי הושלם. מצב cutoff: **`ready_for_brief`**. מקור מלא: `packages/vfresearch/sources/2026-09-14-orchestra.md`.
 
-## מה נבנה / יועל
+## מה שווה להעביר לבריף
 
 ```text
 05 · מחקר ורעיונות
-- ניסוי מדף ראשון: מחזיק כבלים 5 חריצים — מקור Public Domain/Commercial Use עם reference של 9g/56m; אצלנו חובה slice + fit-test לפני SKU/מחיר.
-- משפחת desk utility ממשיכה להיות אות עקבי; לבדוק קטן ומדיד, לא למלא מדף על בסיס פופולריות זרה.
-- ייצור: PrusaSlicer 3.0 Preview מעניין ל-multi-bed, אבל הוא experimental. Snapmaker Orca 2.3.5 מותקן אצלנו; אין מעבר production, רק benchmark אם הכנת batches נהיית bottleneck.
+- מועמד preflight חדש למדף: line hider דק לקריאה — 1 מ״מ, בלי תמיכות, שימוש מסחרי מותר במקור; אצלנו עדיין חובה vlicense + slice + test print לפני SKU/מחיר.
+- ייצור: Snapmaker Orca 2.3.6 ו-2.4.0-alpha מסומנות pre-release. 2.3.6 מוסיפה זיהוי spaghetti/עצם זר; אין שדרוג production, רק sandbox test אם בזבוז מהדפסות כושלות נהיה bottleneck.
+- כרגע עדיף ניסוי של הדפסה אחת ולא מלאי: יש עבודה מוכנה/יתרות פתוחות, וחמשת סלוטי המדף עדיין ריקים. ללמוד קטן לפני שמוסיפים queue.
 ```
 
-Freshness: **2026-09-13 · GREEN body evidence**.
-Best Skills: `standingForever=true`; `lastPass=2026-09-12`, לכן חלון ~48h עדיין לא הגיע ואין refresh נוסף היום.
+Freshness: **2026-09-14 · GREEN body evidence**.
+Best Skills: refresh 48h בוצע על `dataDate=2026-09-13`; תוצאה `no-embed-existing-coverage`. `timer verification=UNPROVEN` כי `cursor-subscriptions` אינו חשוף בריצה הנוכחית.
+Runtime limitation: Mac-Office היה offline; Snapmaker Orca 2.3.5 הוא ה-last verified המקומי מ-13.9, לא אימות חדש להיום.
 
 ---
 
-## היסטוריה · 12.9.2026
+## היסטוריה · 13.9.2026
 
-- Sticky Note Holder נשאר מועמד preflight שימושי; רישיון/סלייס/fit מקומיים לפני מדף.
-- PrusaSlicer 3.0 Preview נשאר benchmark בלבד.
-- Best Skills עבר רענון 12.9; `earthtojake/text-to-cad` watch-only.
+- מחזיק כבלים 5 חריצים נשאר מועמד preflight; vlicense/slice/fit-test לפני מדף.
+- desk utility הוא family signal בלבד, לא הוכחת ביקוש מקומית.
+- PrusaSlicer 3.0 Preview נשאר benchmark בלבד; אין מעבר production.
