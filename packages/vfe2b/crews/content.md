@@ -3,6 +3,7 @@
 Source patterns: Wordware, GoCharlie, Wispy, Diagram, v0 (layout only).
 Orchestrator overlay: existing `vfe2b` run desk only — **no second orchestrator**. Visual Foundry autonomy: `packages/vfom/CREATIVE-AUTOPILOT.md` + `FOUNDRY.json`. Mandatory Instagram decision policy: `packages/vfom/INSTAGRAM-CONTENT-DECISION.json`.
 Packs: `vfcopy`, `vfcovers`, `vfigos`, `vfgrowth`, `vfom`, `vfmedia`, `vfinsights`.
+Canonical public CTA funnel: `packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md` (historical filename; follow current public CTA contract).
 
 ## Roles
 
