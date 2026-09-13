@@ -3,7 +3,8 @@
 מושב: **סטודיו**. לא פק חדש.  
 חוקה: `constitution/STUDIO.md`. מסירה: `HANDOFF-he.md`.  
 פריפלייט כתוב (חובה): [`PREFLIGHT.md`](PREFLIGHT.md). חוזה קופי ציבורי חובה: `../vfcopy/SOFT-TOOLS-CONTRACT.md`. בלי ארטיפקט `preflight/<id>.md` = **נכשל-סגור**.  
-מקור אמת למותג: [`../vfbrand/BRAND-SOURCE-OF-TRUTH.md`](../vfbrand/BRAND-SOURCE-OF-TRUTH.md).
+מקור אמת למותג: [`../vfbrand/BRAND-SOURCE-OF-TRUTH.md`](../vfbrand/BRAND-SOURCE-OF-TRUTH.md).  
+ל־G004/סטוריז, מקור הקופי ההיסטורי המאושר לבדיקת התאמה נשאר [`../vfcopy/G004-STORIES-FIX.md`](../vfcopy/G004-STORIES-FIX.md); הוא אינו עוקף את חוזה הקופי או את ה־PREFLIGHT.
 
 ## חוק RAW מחייב
 
