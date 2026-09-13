@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import json, sys
+import json, os, sys
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 MANIFEST=ROOT/'packages/vfharness/runtime/expected-components.json'
 RECEIPTS=ROOT/'packages/vfharness/state/runtime'
+STRICT=os.environ.get('VF_RUNTIME_STRICT')=='1' or '--strict' in sys.argv
 
 def main():
     if not MANIFEST.exists():
@@ -15,15 +16,19 @@ def main():
         print(f'FAIL invalid manifest: {e}', file=sys.stderr); return 1
     if data.get('schema')!='vf.runtime.expected.v1':
         print('FAIL unsupported runtime manifest schema', file=sys.stderr); return 1
-    errors=[]; degraded=[]
+    errors=[]; degraded=[]; seen=set()
     RECEIPTS.mkdir(parents=True, exist_ok=True)
-    for c in data.get('components',[]):
+    components=data.get('components',[])
+    if not components: errors.append('manifest has no components')
+    for c in components:
         cid=c.get('id'); kind=c.get('kind'); required=bool(c.get('required'))
         if not cid or not kind: errors.append('component missing id/kind'); continue
+        if cid in seen: errors.append(f'duplicate component id {cid}')
+        seen.add(cid)
+        if not c.get('evidence'): errors.append(f'{cid}: missing evidence type')
         receipt=RECEIPTS/f'{cid}.json'
-        if kind=='git' and cid=='repo-main':
-            # Repository integrity is proven by source checkout itself; deployment parity needs receipts.
-            continue
+        if not STRICT: continue
+        if kind=='git' and cid=='repo-main': continue
         if not receipt.exists():
             msg=f'{cid}: missing {c.get("evidence","receipt")}'
             (errors if required else degraded).append(msg); continue
@@ -38,9 +43,11 @@ def main():
     if errors:
         for e in errors: print('FAIL '+e, file=sys.stderr)
         return 1
-    if degraded:
-        print('DEGRADED '+'; '.join(degraded))
-    else: print('OK runtime manifest/receipts healthy')
+    if STRICT:
+        if degraded: print('DEGRADED '+'; '.join(degraded))
+        else: print('OK runtime strict receipts healthy')
+    else:
+        print(f'OK runtime contract components={len(components)}; strict proof requires --strict or VF_RUNTIME_STRICT=1')
     return 0
 
 if __name__=='__main__': raise SystemExit(main())
