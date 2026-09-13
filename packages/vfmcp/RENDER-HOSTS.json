@@ -1,7 +1,16 @@
 {
-  "version": 1,
+  "version": 2,
   "authority": "packages/vfmcp/HOST.md",
   "purpose": "canonical Edge/Office execution hosts for local render capabilities",
+  "renderHostOrder": ["sderot-mac", "sderot-windows"],
+  "failoverPolicy": {
+    "mode": "first-healthy-verified-host",
+    "automatic": true,
+    "eligibleStatuses": ["host_smoke_verified", "live_verified"],
+    "triggerOn": ["host_offline", "route_unreachable", "host_doctor_failed"],
+    "doNotFallbackOn": ["content_contract_failure", "policy_failure", "qa_failure", "rights_failure"],
+    "rule": "Host failover changes execution location only; it never relaxes Content Contract, Asset Truth, Claim Provenance, QA, publish gates or receipt requirements."
+  },
   "hosts": {
     "sderot-mac": {
       "displayName": "Mac-Office",
@@ -16,11 +25,33 @@
       "hyperframesVersion": "0.8.34",
       "route": "cursor-agent-worker",
       "inboundPortRequired": false,
+      "computerUseEligible": true,
       "status": "host_smoke_verified",
       "verifiedEvidence": "real local HyperFrames smoke render completed with ffprobe receipt and canonical Cursor worker running on Mac-Office on 2026-09-12",
       "productionPromotionPending": ["approved_media_vault_asset_render_and_existing_qa", "intentional_hyperframes_failure_and_ffmpeg_failover_verification"],
       "promotionRule": "backend live_verified only after host smoke + real approved asset render + existing QA + failover verification"
+    },
+    "sderot-windows": {
+      "displayName": "Windows-Office",
+      "location": "Sderot",
+      "platform": "Windows",
+      "workerName": "sderot-windows",
+      "repoPath": "%USERPROFILE%\\velvetos-core",
+      "roles": ["edge-worker", "video-render-host", "content-production-fallback"],
+      "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
+      "bootstrap": "scripts/bootstrap-hyperframes-host-windows.ps1",
+      "localState": "%USERPROFILE%\\.velvetos\\render-host.json",
+      "hyperframesVersion": "0.8.34",
+      "route": "cursor-agent-worker",
+      "inboundPortRequired": false,
+      "computerUseEligible": false,
+      "subscriptionHost": false,
+      "status": "configured_host_smoke_pending",
+      "verifiedEvidence": "not yet verified on the physical Windows host; bootstrap and failover contract are configured in Core",
+      "productionPromotionPending": ["windows_host_smoke_and_receipt", "cursor_worker_connected", "approved_media_vault_asset_render_and_existing_qa", "intentional_hyperframes_failure_and_ffmpeg_failover_verification"],
+      "promotionRule": "eligible for automatic failover only after real Windows smoke render + receipt and the sderot-windows worker are verified"
     }
   },
-  "defaultRenderHost": "sderot-mac"
+  "defaultRenderHost": "sderot-mac",
+  "fallbackRenderHosts": ["sderot-windows"]
 }
