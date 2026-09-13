@@ -1,11 +1,11 @@
 {
-  "enabled": false,
-  "requestId": "weekly-research-preview-2026-09-13-attempt3",
-  "html": "packages/vfops/out/weekly-research-preview-2026-09-13-v3.html",
-  "visibleText": "packages/vfops/out/weekly-research-preview-2026-09-13-v3.txt",
+  "enabled": true,
+  "requestId": "weekly-research-preview-2026-09-13-corrected",
+  "html": "packages/vfops/out/weekly-research-preview-2026-09-13-v4.html",
+  "visibleText": "packages/vfops/out/weekly-research-preview-2026-09-13-v4.txt",
   "images": "",
   "to": "nocturney@gmail.com",
-  "subject": "VelvetOS · Weekly Research Accountability · 2026-09-13 · תצוגת ניסיון",
+  "subject": "VelvetOS · Weekly Research Accountability · 2026-09-13 · תצוגת ניסיון מתוקנת",
   "embedRemoteImages": true,
   "remoteImageLimit": 12
 }
