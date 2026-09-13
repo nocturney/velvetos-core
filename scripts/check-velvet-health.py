@@ -7,6 +7,7 @@ CHECKS={
   'runtime_contract':'check-runtime-doctor.py',
   'handoffs':'check-vf-handoff.py',
   'learning':'check-learning-lifecycle.py',
+  'review_convergence':'check-review-convergence.py',
   'living_docs':'check-living-docs.py',
   'skill_health':'check-skill-health.py',
   'agent_surface':'check-agent-surface-security.py',
@@ -14,11 +15,11 @@ CHECKS={
 }
 
 def main():
-    results={}; missing=[]
+    results={}
     for key,name in CHECKS.items():
         path=ROOT/'scripts'/name
         if not path.exists():
-            results[key]={'state':'missing','detail':name}; missing.append(key); continue
+            results[key]={'state':'missing','detail':name}; continue
         p=subprocess.run([sys.executable,str(path)],cwd=ROOT,text=True,capture_output=True)
         detail=((p.stdout or '')+'\n'+(p.stderr or '')).strip().splitlines()
         results[key]={'state':'pass' if p.returncode==0 else 'fail','detail':detail[-1] if detail else f'exit {p.returncode}'}
