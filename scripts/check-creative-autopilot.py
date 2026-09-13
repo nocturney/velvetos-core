@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 AUTOPILOT = ROOT / "packages" / "vfom" / "CREATIVE-AUTOPILOT.md"
 FOUNDRY = ROOT / "packages" / "vfom" / "FOUNDRY.json"
 CONTRACT = ROOT / "packages" / "vfom" / "CONTENT-CONTRACT.schema.json"
+MANIFEST = ROOT / "packages" / "vfom" / "CREATIVE-MANIFEST.schema.json"
 DNA = ROOT / "packages" / "vfom" / "VISUAL-DNA.json"
 VISUAL = ROOT / "packages" / "vfom" / "VISUAL-OS.md"
 EDIT = ROOT / "packages" / "vfom" / "EDIT-DIRECTOR.md"
@@ -18,9 +19,11 @@ MODULE = ROOT / "packages" / "velvetos" / "modules" / "expert-media-director.md"
 CREW = ROOT / "packages" / "vfe2b" / "crews" / "content.md"
 SCENARIO = ROOT / "packages" / "vfe2b" / "scenarios" / "content-live.md"
 GATE = ROOT / "packages" / "vfgrowth" / "GATE.md"
+PREFLIGHT_TEMPLATE = ROOT / "packages" / "vfgrowth" / "preflight" / "TEMPLATE.md"
 POLICY = ROOT / "constitution" / "ORGANIC_GROWTH.md"
 INSTANCE = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
 SKILL = ROOT / ".cursor" / "skills" / "vf-content-sprint" / "SKILL.md"
+BRAND_GUARDIAN = ROOT / ".cursor" / "skills" / "velvet-brand-guardian" / "SKILL.md"
 MEDIA_SKILL = ROOT / "packages" / "vfmedia" / "SKILL.md"
 MEDIA_SCHEMA = ROOT / "packages" / "vfmedia" / "catalog.schema.json"
 CONTENT_GRAPH = ROOT / "packages" / "vfgraft" / "graph" / "content-job.md"
@@ -84,15 +87,37 @@ def main() -> None:
         "Subject Lock",
         "Evaluation split",
         "Originality + fatigue guard",
+        "Visual Finishing Protocol",
+        "photo_retouch",
+        "brand_content_styling",
+        "text_layout_qa",
+        "final_visual_qa",
+        "Retouch the photo, not the product.",
+        "synthetic_subject_change",
+        "source_subject_match",
     ))
     must_contain(EDIT, ("Edit Decision List", "shotRequest", "hard cut"))
     must_contain(MEDIA_DIRECTOR, ("Creative Director", "Edit Director", "Publishing Director", "standingAuthorization"))
     must_contain(MODULE, ("FOUNDRY.json", "CONTENT-CONTRACT.schema.json", "VISUAL-DNA.json", "Asset Truth", "Claim Provenance"))
     must_contain(CREW, ("waiting_for_media", "published_verified", "performance_learned", "Content Contract", "vfigos"))
     must_contain(SCENARIO, ("standing authorization", "auto-fix", "receipt + live evidence"))
-    must_contain(GATE, ("authorized_for_tool_publish", "pending_human_approval", "published_verified", "human_marked"))
+    must_contain(GATE, (
+        "authorized_for_tool_publish", "pending_human_approval", "published_verified", "human_marked",
+        "publish_gate: PASS", "product_truth_gate: PASS", "synthetic_subject_change: NONE",
+        "source_subject_match: PASS", "Retouch the photo, not the product.",
+    ))
+    must_contain(PREFLIGHT_TEMPLATE, (
+        "publish_gate_schema: 3", "publish_gate: BLOCKED", "product_truth_gate: FAIL",
+        "subject_identity_integrity: FAIL", "synthetic_subject_change: PRESENT",
+        "source_subject_match: FAIL", "readability: FAIL", "contrast: FAIL",
+    ))
     must_contain(POLICY, ("Creative Autopilot", "standingAuthorization", "אין ריל כל יום", "posted_manually"))
     must_contain(SKILL, ("Velvet Visual Foundry", "Content Contract", "Asset Truth", "progressive variants", "published_verified"))
+    must_contain(BRAND_GUARDIAN, (
+        "photo_retouch -> brand_content_styling -> text_layout_qa -> final_visual_qa",
+        "Retouch the photo, not the product.",
+        "syntheticSubjectChange=NONE", "sourceSubjectMatch=PASS", "finishing.policyVersion",
+    ))
     must_contain(MEDIA_SKILL, ("Asset Truth", "Claim Truth", "CONTENT-CONTRACT.schema.json"))
     must_contain(CONTENT_GRAPH, ("Visual Foundry", "contracted", "visually_scored", "performance_learned", "Claim Provenance"))
 
@@ -102,6 +127,22 @@ def main() -> None:
 
     layers = foundry.get("layers") or {}
     require_subset(set(layers), {"creativeIntelligence", "orchestration", "deterministicServices"}, "Foundry layers")
+
+    finishing = foundry.get("visualFinishingPolicy") or {}
+    if finishing.get("enabled") is not True:
+        fail("visual finishing policy must be enabled")
+    if finishing.get("principle") != "Retouch the photo, not the product.":
+        fail("visual finishing principle drifted")
+    require_subset(set(finishing.get("stages") or []), {
+        "photo_retouch", "brand_content_styling", "text_layout_qa", "final_visual_qa"
+    }, "visual finishing stages")
+    for key in (
+        "productTruthFailClosed", "requireSourceSubjectMatch", "forbidSyntheticSubjectChange",
+        "mobileReadabilityRequired", "safeMarginsRequired", "autoRepairOrdinaryQualityFailures",
+        "recheckAfterRepair", "evidenceRequired",
+    ):
+        if finishing.get(key) is not True:
+            fail(f"visualFinishingPolicy.{key} must be true")
 
     states = set(foundry.get("stateMachine") or [])
     require_subset(states, {
@@ -127,8 +168,12 @@ def main() -> None:
         fail("repair loop must be bounded and non-zero")
 
     evaluation = foundry.get("evaluation") or {}
+    require_subset(set(evaluation.get("deterministic") or []), {"mobile_preview", "text_contrast", "safe_zones"}, "deterministic finishing checks")
     require_subset(set(evaluation.get("perceptualRubrics") or []), {"brand", "hook", "reality", "originality"}, "perceptual rubrics")
-    require_subset(set(evaluation.get("referenceChecks") or []), {"subject_fidelity", "material_fidelity", "geometry_invariants"}, "reference checks")
+    require_subset(set(evaluation.get("referenceChecks") or []), {
+        "subject_fidelity", "material_fidelity", "geometry_invariants", "product_identity", "source_subject_match"
+    }, "reference checks")
+    require_subset(set(evaluation.get("artifactChecks") or []), {"unreadable_text", "weak_contrast", "synthetic_subject_change"}, "artifact finishing checks")
 
     learning = foundry.get("learning") or {}
     if "office-learning" not in str(learning.get("memoryAuthority", "")) or "vfinsights" not in str(learning.get("memoryAuthority", "")):
@@ -144,6 +189,16 @@ def main() -> None:
     contract_props = contract.get("properties") or {}
     require_subset(set(contract_props), {"truthClaims", "syntheticPolicy", "subjectPack", "successDefinition", "novelty"}, "Content Contract properties")
 
+    manifest = load_json(MANIFEST)
+    manifest_props = manifest.get("properties") or {}
+    if "finishing" not in manifest_props:
+        fail("Creative Manifest must expose finishing audit")
+    finishing_schema = manifest_props.get("finishing") or {}
+    require_subset(set(finishing_schema.get("required") or []), {"policyVersion", "principle", "stages", "productTruth", "repairCycles", "evidenceRefs"}, "Manifest finishing required")
+    finishing_props = finishing_schema.get("properties") or {}
+    product_truth_schema = finishing_props.get("productTruth") or {}
+    require_subset(set(product_truth_schema.get("required") or []), {"gate", "subjectIdentityIntegrity", "syntheticSubjectChange", "sourceSubjectMatch"}, "Manifest Product Truth required")
+
     dna = load_json(DNA)
     if dna.get("brandName") != "Velvet Factory":
         fail("VISUAL-DNA brandName must be Velvet Factory")
@@ -151,6 +206,17 @@ def main() -> None:
         fail("VISUAL-DNA must defer to VISUAL-OS authority")
     if dna.get("syntheticRole") is None:
         fail("VISUAL-DNA synthetic role missing")
+    dna_finishing = dna.get("visualFinishing") or {}
+    if dna_finishing.get("alwaysOn") is not True:
+        fail("VISUAL-DNA visualFinishing.alwaysOn must be true")
+    if dna_finishing.get("principle") != "Retouch the photo, not the product.":
+        fail("VISUAL-DNA finishing principle drifted")
+    require_subset(set(dna_finishing.get("stages") or []), {
+        "photo_retouch", "brand_content_styling", "text_layout_qa", "final_visual_qa"
+    }, "VISUAL-DNA finishing stages")
+    product_fidelity = dna_finishing.get("productFidelity") or {}
+    if product_fidelity.get("required") is not True or product_fidelity.get("forbidSyntheticSubjectChange") is not True or product_fidelity.get("sourceSubjectMatchRequired") is not True:
+        fail("VISUAL-DNA product fidelity gate incomplete")
 
     media_schema = load_json(MEDIA_SCHEMA)
     defs = media_schema.get("$defs") or {}
@@ -229,7 +295,7 @@ def main() -> None:
         if compliance.get(key) is not True:
             fail(f"compliance lock {key} must remain true")
 
-    print("OK visual foundry exception-only truth-contract progressive-autonomy")
+    print("OK visual foundry finishing-product-truth exception-only progressive-autonomy")
 
 
 if __name__ == "__main__":

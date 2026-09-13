@@ -15,6 +15,32 @@ Machine-readable projection: `VISUAL-DNA.json`. אם יש סתירה, המסמך
 - סאונד: רכיב קריאייטיב מלא, לא שכבת קישוט בסוף. עדיפות לסאונד אמיתי של הסטודיו כאשר הוא שימושי; מוזיקה/SFX תומכים בסיפור ולא מחליפים הוכחה.
 - עברית: קצרה, טבעית, מדוברת ומדויקת. לא “שיווקית AI”.
 
+## Visual Finishing Protocol · always-on
+
+כל נכס סטילס/פוסט/סטורי/קרוסלה/cover שעובר עיבוד חייב לעבור את ארבעת השלבים הבאים לפני שהוא נחשב final:
+
+1. `photo_retouch` — איזון לבן, חשיפה, קונטרסט, highlights/shadows, ניקוי רעש, חידוד טבעי, ניקוי רקע, יישור פרספקטיבה, crop, subject separation ושיפור תאורה.
+2. `brand_content_styling` — התאמה לשפת Velvet, היררכיה נקייה, מוקד מוצר ברור, שימוש בצבעים/פונטים מאומתים בלבד והתאמה לפורמט היעד.
+3. `text_layout_qa` — עברית RTL, קריאות במובייל, contrast, safe margins, הימנעות מאזורים עמוסים, היררכיית כותרת/תמיכה/CTA ורק טקסט שמנצח `NO_TEXT` כאשר הוא באמת מוסיף ערך.
+4. `final_visual_qa` — exact-final review על התוצר המרונדר, כולל Product Truth, Brand Guardian, קריאות, crop, safe areas, consistency ו־artifact checks.
+
+הכלל העליון: **Retouch the photo, not the product.**
+
+### Product Truth · fail-closed
+
+במוצר פיזי אמיתי, העורך רשאי לשפר את הצילום וההצגה בלבד. אסור לשנות או להמציא:
+
+- product identity;
+- geometry / silhouette / proportions;
+- part count;
+- visible surface pattern;
+- material identity;
+- צבע מוצר מאומת, אלא אם המשימה במפורש מבקשת וריאנט עיצובי/צבעוני מסומן שאינו מוצג כצילום אמת.
+
+`synthetic_subject_change` חייב להיות `NONE`, ו־`source_subject_match` חייב לעבור. שינוי רקע, cleanup או תאורה מותר רק אם אינו משנה את המוצר, אינו מסתיר מידע מהותי ואינו יוצר claim פיזי מומצא.
+
+כשל בשלב כלשהו אינו “הערה”; הוא חוסם publish ומנותב ל־targeted repair. כשל איכות רגיל מתוקן אוטונומית ונבדק שוב. רק חסם פיזי/זכויות/עסקי אמיתי מגיע לבעלים.
+
 ## First-frame law
 
 הפריים הראשון חייב להתחיל בפעולה, תוצאה, מתח, פרט ברור או הוכחה. אין פתיח לוגו ואין “היי חברים”. לכל Reel לייצר 3–5 candidates ולבחור אוטונומית את החזק ביותר לפי בהירות, תנועה, ניגוד, קריאות וסקרנות.
@@ -67,10 +93,10 @@ Audio נבחר בזמן ה־storyboard והעריכה, לא אחרי שהווי�
 
 אל תשתמש ב־VLM יחיד לכל QA. הפרד בין:
 
-- deterministic checks: ratio/resolution/safe zones/subtitle bounds/frame integrity/**audio stream/loudness/sync**.
+- deterministic checks: ratio/resolution/safe zones/subtitle bounds/frame integrity/**audio stream/loudness/sync**/mobile preview.
 - perceptual rubrics: Brand/Hook/composition/Reality/Originality/**audio story-fit**.
-- reference checks: subject/material/geometry fidelity.
-- artifact checks: flicker, malformed geometry, unreadable text, temporal jitter/**audio clipping/noise**.
+- reference checks: subject/material/geometry fidelity + source-subject match.
+- artifact checks: flicker, malformed geometry, unreadable text, temporal jitter/**audio clipping/noise**/broken Hebrew typography/bad crop/weak contrast.
 
 כשל מקבל evidence + repair action אחת ברורה וחוזר ל־Artifact Repair Router; repair cycles bounded לפי `FOUNDRY.json`.
 

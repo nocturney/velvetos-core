@@ -1,6 +1,6 @@
 {
   "brandName": "Velvet Factory",
-  "version": 1,
+  "version": 2,
   "authority": "packages/vfom/VISUAL-OS.md",
   "visualArchetype": [
     "tactile engineering lab",
@@ -43,6 +43,38 @@
     "policy": "use verified brand/template colors only; do not invent hex values",
     "accentRule": "one dominant accent per composition when an accent exists"
   },
+  "visualFinishing": {
+    "version": 1,
+    "alwaysOn": true,
+    "principle": "Retouch the photo, not the product.",
+    "stages": ["photo_retouch", "brand_content_styling", "text_layout_qa", "final_visual_qa"],
+    "photoRetouch": {
+      "allowed": ["white_balance", "exposure", "contrast", "highlights", "shadows", "noise_reduction", "natural_sharpening", "background_cleanup", "perspective_correction", "crop", "subject_separation", "lighting_polish"],
+      "rule": "Improve capture quality and presentation without changing the physical product."
+    },
+    "productFidelity": {
+      "required": true,
+      "mustPreserve": ["product_identity", "geometry", "silhouette", "proportions", "part_count", "visible_surface_pattern", "material_identity"],
+      "colorRule": "preserve verified real product color unless the task explicitly requests a clearly-labelled design/color variant",
+      "forbidSyntheticSubjectChange": true,
+      "sourceSubjectMatchRequired": true
+    },
+    "textLayoutQa": {
+      "mobileReadability": true,
+      "hebrewRtl": true,
+      "contrast": true,
+      "safeMargins": true,
+      "avoidBusyTextZones": true,
+      "productDominance": true,
+      "noTextBaselineWhenApplicable": true
+    },
+    "finalGate": {
+      "failClosed": true,
+      "autoRepairOrdinaryQualityFailures": true,
+      "recheckAfterRepair": true,
+      "evidenceRequired": true
+    }
+  },
   "firstFrame": {
     "mustContainOneOf": ["action", "result", "tension", "clear detail", "physical proof"],
     "forbidden": ["long logo intro", "generic greeting"]
@@ -55,7 +87,8 @@
     "physically impossible proof",
     "stock-looking workshop",
     "AI-generated Hebrew text inside footage",
-    "perfect object that drifts from real product geometry"
+    "perfect object that drifts from real product geometry",
+    "retouching that redesigns the product"
   ],
   "referencePolicy": {
     "learnable": ["lighting", "composition", "pacing", "shot structure", "transition mechanic", "sound mechanic"],

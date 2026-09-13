@@ -186,6 +186,43 @@
         "selected": {"type": "string"}
       }
     },
+    "finishing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policyVersion", "principle", "stages", "productTruth", "repairCycles", "evidenceRefs"],
+      "properties": {
+        "policyVersion": {"type": "integer", "minimum": 1},
+        "principle": {"const": "Retouch the photo, not the product."},
+        "stages": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["photoRetouch", "brandContentStyling", "textLayoutQa", "finalVisualQa"],
+          "properties": {
+            "photoRetouch": {"enum": ["PASS", "FAIL", "N/A"]},
+            "brandContentStyling": {"enum": ["PASS", "FAIL"]},
+            "textLayoutQa": {"enum": ["PASS", "FAIL", "N/A"]},
+            "finalVisualQa": {"enum": ["PASS", "FAIL"]}
+          }
+        },
+        "productTruth": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["gate", "subjectIdentityIntegrity", "syntheticSubjectChange", "sourceSubjectMatch"],
+          "properties": {
+            "gate": {"enum": ["PASS", "FAIL", "N/A"]},
+            "subjectIdentityIntegrity": {"enum": ["PASS", "FAIL", "N/A"]},
+            "syntheticSubjectChange": {"enum": ["NONE", "PRESENT", "N/A"]},
+            "sourceSubjectMatch": {"enum": ["PASS", "FAIL", "N/A"]},
+            "colorPreserved": {"enum": ["PASS", "FAIL", "N/A"]},
+            "notes": {"type": "string"}
+          }
+        },
+        "repairCycles": {"type": "integer", "minimum": 0},
+        "lastRepairAction": {"type": "string"},
+        "reviewedArtifactDigest": {"type": "string"},
+        "evidenceRefs": {"type": "array", "items": {"type": "string"}}
+      }
+    },
     "qa": {
       "type": "object",
       "additionalProperties": false,
