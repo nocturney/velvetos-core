@@ -1,0 +1,26 @@
+{
+  "id": "instagram-strategy-passes-2026-09-13",
+  "component_state": "Syncing",
+  "scope": "Velvet Factory organic Instagram creative pipeline",
+  "change": "Embed strategy, anti-generic, format, hook tournament, retention, authority/voice, engagement, visual QA, fail-closed final gate and measured performance feedback into the existing Visual Foundry without a second runtime.",
+  "authorities": [
+    "packages/vfom/FOUNDRY.json",
+    "packages/vfom/INSTAGRAM-CONTENT-DECISION.json",
+    ".cursor/skills/vf-content-sprint/SKILL.md",
+    "packages/vfe2b/crews/content.md",
+    "packages/vfe2b/scenarios/content-live.md"
+  ],
+  "safety": {
+    "noSecondRuntime": true,
+    "noInventedInsights": true,
+    "engagementBaitForbidden": true,
+    "finalQualityGateFailClosed": true,
+    "standingAuthorizationUnchanged": true
+  },
+  "validation": {
+    "sensor": "scripts/check-instagram-content-decision.py",
+    "suite": "python3 scripts/check-all.py",
+    "status": "pending-ci-or-authorized-host-run"
+  },
+  "next": "Merge after repository checks pass; frontend instance consumes Core through its existing attach-core path."
+}
