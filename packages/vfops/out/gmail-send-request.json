@@ -1,12 +1,11 @@
 {
-  "enabled": false,
-  "requestId": "office-loop-fallback-2026-09-13T08-00-00+03-00-attempt3",
-  "html": "packages/vfops/out/office-loop-fallback-2026-09-13.html",
-  "visibleText": "packages/vfops/out/office-loop-fallback-2026-09-13.txt",
-  "visibleTextSha256": "4da9582e6c627dc53d89de276f3ebd82a66421059666977b06a2e35d8acc3e7b",
+  "enabled": true,
+  "requestId": "weekly-research-preview-2026-09-13",
+  "html": "packages/vfops/out/weekly-research-preview-2026-09-13.html",
+  "visibleText": "packages/vfops/out/weekly-research-preview-2026-09-13.txt",
   "images": "",
   "to": "nocturney@gmail.com",
-  "subject": "Velvet Factory: בריף הבוקר | 13.09.2026 · fallback",
+  "subject": "VelvetOS · Weekly Research Accountability · 2026-09-13 · תצוגת ניסיון",
   "embedRemoteImages": true,
   "remoteImageLimit": 12
 }
