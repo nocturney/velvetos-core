@@ -1,11 +1,12 @@
 {
-  "enabled": false,
-  "requestId": "office-loop-2026-09-12-2000",
-  "html": "packages/vfops/out/office-loop-2026-09-12-2000.html",
-  "visibleText": "packages/vfops/out/office-loop-2026-09-12-2000.txt",
+  "enabled": true,
+  "requestId": "office-loop-fallback-2026-09-13T08-00-00+03-00",
+  "html": "packages/vfops/out/office-loop-fallback-2026-09-13.html",
+  "visibleText": "packages/vfops/out/office-loop-fallback-2026-09-13.txt",
+  "visibleTextSha256": "b5abb9d7b6e2407376a6dcd3298eb4998c75a2ba630bc871fcb31f39d24c322e",
   "images": "",
   "to": "nocturney@gmail.com",
-  "subject": "VelvetOS · Office Loop · 2026-09-12 20:00",
+  "subject": "Velvet Factory — בריף הבוקר | 13.09.2026 · fallback",
   "embedRemoteImages": true,
   "remoteImageLimit": 12
 }
