@@ -11,9 +11,9 @@
 ## שרשרת
 
 1. קרא `AGENTS.md` (המדריך מנצח את השיחה).
-2. תכנן צעדים קצרים על **פק קיים**.
+2. תכנן צעדים קצרים על **פק קיים** וקשר ל־Spec/אישור קנוני כשיש שינוי מהותי.
 3. בצע. אחרי כל שינוי קטלוג/כלל — `python3 scripts/check-all.py`.
-4. כשל סנסור → תקן פעם אחת → אם נכשל שוב, הסלם עם `templates/escalation.md`.
+4. כשל/פער → ladder קנוני: retry → fallback → downgrade scope → **safe ruling רק אם מקומי+הפיך וללא gate** → escalation. Required sensor/receipt/human/constitutional gate לעולם אינם נעקפים ב־ruling.
 5. כתוב נקודת ביקורת ב-`state/<task-id>.json` לפני סגירת סשן ארוך. משימה ארוכה: כל צעד = \(P,\Sigma,O\) — `playbooks/skillstate.md` (לא replay שיחה).
 6. **Human-visible output:** אם המשימה מייצרת prose/microcopy שנכתב או שוכתב ב־AI ושכריסטיאן/לקוח/קהל/שותף יקראו, `constitution/VISIBLE_TEXT.md` הוא gate חובה לפני `final`/send/publish/render. Route דרך `vfcopy`, surface נכון, reader-first, כלי הדומיין/כתיבה הרלוונטיים, Humanizer/AI-tells, fact/surface QA. אם אין הוכחת ביצוע על התוצר המדויק — `UNPROVEN`; completion אינו `worker_done` כ־final human output. Literal source IDs/hashes/logs/code אינם משוכתבים.
 7. מכסת Grok ריקה + צריך IG חי → `playbooks/grok-failover.md` + `vfigos/LIVE-PACKET.md` לאדם.
@@ -22,12 +22,12 @@
 10. סוכן «נהיה גרוע» / כלי נדלג / זיכרון דולף → `playbooks/agent-architecture-audit.md` (דפוס buildwithclaude + codebase navigability; בלי ECC install).
 11. לפני בנייה / פק חדש / שינוי צינור → `playbooks/brainstorm-gate.md` (דפוס obra brainstorming; אישור אנושי לפני יישום).
 12. באג / סנסור אדום / כשל כלי → `playbooks/systematic-debugging.md` (אבחון מדורג; שחזור ושורש לפני תיקון; בלי ניחוש).
-13. תוכנית מימוש כתובה → `playbooks/writing-plans.md` (צעדים קטנים ובטוחים על SoT קיים; בלי ראנטיים שני).
-13b. ביצוע תוכנית → `playbooks/executing-plans.md` (משימה אחת + אימות; עצירה על חוסם; בלי ניחוש).
+13. תוכנית מימוש כתובה → `playbooks/writing-plans.md` (Spec כסמכות, steps קטנים, dependencies/producer-consumer, בלי runtime שני).
+13b. ביצוע תוכנית → `playbooks/executing-plans.md`: evidence-bearing preflight לפני Task 1; safe rulings במקום stalls כשבטוח; fan-out רק למשימות עצמאיות; fan-in עם integration proof; fresh whole-plan review לפני claim.
 13c. מילון תחום → `playbooks/domain-glossary.md` (TEAM / pipeline / owner-memory — בלי מונחים מומצאים).
 14. Living Studio → `python3 scripts/vf_living_studio.py` (World Model / Pulse / Intake) — שכבת חיבור, לא Control Plane שני.
-15. שינוי קוד מהותי → `playbooks/implementation-discipline.md` — think first, boring simplicity, surgical diff, proof-before-code (Karpathy pattern).
-16. שינוי רגיש/רחב → `playbooks/critique-review.md`. ב־high-risk mode נדרשים שני reviewers עצמאיים + deterministic proof; receipt תחת `state/reviews/` נבדק ע״י `check-review-convergence.py`.
+15. שינוי קוד/bugfix/automation מהותי → `playbooks/implementation-discipline.md` — think first, boring simplicity, surgical diff, proof-before-code; executable behavior משתמש ב־RED → GREEN → REFACTOR כשאפשר לבדוק בפועל. אין test theater ל־prose/static config.
+16. שינוי מהותי רגיל → fresh-context reviewer אחד לפי `playbooks/critique-review.md` עם Goal+Spec+diff+proof בלבד, לא כל history. שינוי רגיש/רחב → high-risk mode עם שני reviewers עצמאיים + deterministic proof; receipt תחת `state/reviews/` נבדק ע״י `check-review-convergence.py`.
 17. worker-to-worker בלבד → `playbooks/terse-worker-output.md` — פלט קצר ומבני; לעולם לא על טקסט אנושי.
 18. Agent/MCP/rules surface → `AGENT-SURFACE-SECURITY.md` + `python3 scripts/check-agent-surface-security.py` (AgentShield pattern).
 19. מעבר עבודה בין harnesses → `vfmem/HANDOFF.md` + `python3 scripts/vf_handoff.py new|ack|consume|reject|doctor`; handoff הוא context, לא authority.
@@ -58,10 +58,10 @@
 
 ראה `hq/PLAYBOOK.md`, `EMBED.md`, `constitution/VISIBLE_TEXT.md`.
 
-## סולם הסלמה הדרגתי (2026-09-07)
+## סולם הסלמה הדרגתי
 
-`scripts/vf_graceful_escalation.py` — 4 שלבים לפני הסלמה לאדם, במקום עצירה בינארית. פירוט מלא: [`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md).
+`scripts/vf_graceful_escalation.py` — ladder של retry → fallback → downgrade scope → **safe ruling אופציונלי** → escalation. `safe_ruling` הוא fail-closed: ללא `safe_to_rule=True` הוא לא רץ. פירוט מלא: [`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md).
 
-## שימוש בלולאת הסלמה (2026-09-07)
+## שימוש בלולאת הסלמה
 
-משימות ארוכות ב-`vfcopy` / `vfconvert` / `vfsales` עוברות דרך `run_ladder` מ-`scripts/vf_graceful_escalation.py` (retry → fallback → downgrade scope → escalate) במקום עצירת ניסיון שני.
+משימות ארוכות ב־`vfcopy` / `vfconvert` / `vfsales` ממשיכות להשתמש ב־`run_ladder`. callers קיימים נשארים backward-compatible; safe ruling הוא keyword-only opt-in. required sensor/receipt ו־authority gates נשארים מחוץ לסמכות ruling.
