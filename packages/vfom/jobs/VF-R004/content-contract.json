@@ -1,0 +1,36 @@
+{
+  "jobId": "VF-R004",
+  "objective": "Show the same real owl sculpture from four verified viewpoints so each swipe reveals a different visible aspect without unsupported manufacturing, material or product claims.",
+  "format": "carousel",
+  "targetDurationSeconds": null,
+  "requiredSubject": "the owl sculpture shown in the IMG_0645/0646/0647/0654 source-photo batch",
+  "truthClaims": [
+    {
+      "claim": "The source photos show the same owl sculpture from front, side, back and alternate-front viewpoints, with visible feather-like surface texture and a stump-like base.",
+      "status": "verified",
+      "evidenceAssetIds": ["1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj", "1843_PJcP_qtZwV2Xt81DhQdXaW7X4we4", "1o-4GXAAoTmMj7Ag6NOgZAhvxqZhYToUq", "1GxRwd0c5zziAYJudvoyccNlRMYxVo_zM"],
+      "sourceRefs": ["IMG_0645.HEIC", "IMG_0646.HEIC", "IMG_0647.HEIC", "IMG_0654.HEIC"],
+      "note": "Visible directly in the reviewed owner Media Vault frames."
+    },
+    {
+      "claim": "Any specific material, dimensions, print duration, weight, durability, designer attribution, customer use or manufacturing claim.",
+      "status": "unsupported",
+      "evidenceAssetIds": [],
+      "sourceRefs": [],
+      "note": "Do not state or imply without separate evidence."
+    }
+  ],
+  "syntheticPolicy": {
+    "allowedUses": ["non-factual layout support that does not alter the photographed subject"],
+    "forbiddenUses": ["alter owl geometry", "add or remove physical details", "invent scale or environment as proof", "replace the real sculpture", "generate Hebrew text inside synthetic imagery"]
+  },
+  "subjectPack": {
+    "referenceAssetIds": ["1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj", "1843_PJcP_qtZwV2Xt81DhQdXaW7X4we4", "1o-4GXAAoTmMj7Ag6NOgZAhvxqZhYToUq", "1GxRwd0c5zziAYJudvoyccNlRMYxVo_zM"],
+    "geometryInvariants": ["upright owl silhouette", "two pointed ear/tuft forms", "large round eye forms", "folded wing/body mass", "stump-like base"],
+    "materialInvariants": [],
+    "colorInvariants": ["dark brown/black and light cream photographed appearance"],
+    "mustNotChange": ["face and eye geometry", "wing/body silhouette", "base geometry", "real source-object identity"]
+  },
+  "successDefinition": {"brandScore": 80, "realityScore": 90, "artifactScore": 90},
+  "novelty": null
+}
