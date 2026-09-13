@@ -6,8 +6,14 @@ Two different checks live here and must never be confused:
 2. publication quality approval — exact content approval required before Instagram publish.
 
 For Instagram publish, the default is fail-closed and requires a machine-readable
-PREFLIGHT v2 bound to the exact final package. Use --transport-only only for health
+PREFLIGHT v3 bound to the exact final package. Use --transport-only only for health
 or diagnostics; its success is explicitly NOT publish authorization.
+
+Publish Gate v3 invariant:
+- every asset entering Velvet Media is RAW source material;
+- crop/resize/format-normalization alone is never a publishable creative treatment;
+- the exact final derivative must pass creative, brand, commercial-visual and
+  scroll-stop QA before transport can be authorized.
 
 Usage:
   python3 scripts/vf_send_preflight.py
@@ -42,6 +48,20 @@ READY = {"ready", "skill-installed", "plugin-installed", "hq-native"}
 IG_AUTH_READY = {"ready", "ready-codespace", "ready-local"}
 FAILOVER = {"needsAuth", "needs-key", "down", "not-on-this-cloud-agent"}
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$", re.IGNORECASE)
+CREATIVE_TREATMENT_CATEGORIES = {
+    "composition",
+    "cleanup",
+    "background",
+    "lighting",
+    "color_grade",
+    "subject_separation",
+    "retouch",
+    "brand_system",
+    "typography",
+    "motion",
+    "audio",
+}
+TRIVIAL_ONLY_CATEGORIES = {"crop", "resize", "format", "normalize", "normalization"}
 
 
 def _env_present(*names: str) -> bool:
@@ -71,13 +91,23 @@ def _clean_sha(value: str | None) -> str | None:
     return value if SHA256_RE.fullmatch(value) else None
 
 
+def _csv_tokens(value: str | None) -> set[str]:
+    if not value:
+        return set()
+    return {
+        token.strip().lower().replace("-", "_").replace(" ", "_")
+        for token in re.split(r"[,;|]", value)
+        if token.strip()
+    }
+
+
 def validate_publication_approval(
     approval_ref: str,
     content_id: str,
     format_name: str,
     package_sha256: str,
 ) -> dict[str, Any]:
-    """Validate fail-closed PREFLIGHT v2 for the exact Instagram package."""
+    """Validate fail-closed PREFLIGHT v3 for the exact Instagram package."""
     problems: list[str] = []
     approval_path = (ROOT / approval_ref).resolve()
     try:
@@ -98,8 +128,8 @@ def validate_publication_approval(
     gate = (_field(text, "publish_gate") or "").strip().upper()
     invalidated = (_field(text, "approval_invalidated") or "false").strip().lower()
 
-    if schema != "2":
-        problems.append("PREFLIGHT v2 required: publish_gate_schema: 2")
+    if schema != "3":
+        problems.append("PREFLIGHT v3 required: publish_gate_schema: 3")
     if gate not in {"PASS", "עבור"}:
         problems.append("publish_gate must be PASS")
     if invalidated in {"1", "true", "yes", "כן"}:
@@ -116,37 +146,81 @@ def validate_publication_approval(
     if artifact_digest is None:
         problems.append("artifact_digest must be sha256:<64 hex>")
 
-    if format_name == "story":
-        required_pass_fields = {
-            "qa_scope": "exact-final-render",
-            "brand_guardian": "PASS",
-            "copy_qa": "PASS",
-            "readability": "PASS",
-            "contrast": "PASS",
-        }
-        for field, expected in required_pass_fields.items():
-            actual = (_field(text, field) or "").strip()
-            if actual.upper() != expected.upper():
-                problems.append(f"{field} must be {expected}")
+    # v3 applies the exact-final quality checks to every Instagram format, not only Stories.
+    required_pass_fields = {
+        "qa_scope": "exact-final-render",
+        "visible_text_gate": "PASS",
+        "fact_gate": "PASS",
+        "brand_guardian": "PASS",
+        "copy_qa": "PASS",
+        "readability": "PASS",
+        "contrast": "PASS",
+        "creative_treatment": "PASS",
+        "brand_treatment": "PASS",
+        "commercial_visual_qa": "PASS",
+        "scroll_stop_qa": "PASS",
+        "derivative_is_distinct_from_source": "PASS",
+    }
+    for field, expected in required_pass_fields.items():
+        actual = (_field(text, field) or "").strip()
+        if actual.upper() != expected.upper():
+            problems.append(f"{field} must be {expected}")
 
-        reviewed_at = (_field(text, "qa_reviewed_at") or "").strip()
-        if not reviewed_at or "<" in reviewed_at or reviewed_at == "_":
-            problems.append("qa_reviewed_at must identify the final-render review")
+    source_material_state = (_field(text, "source_material_state") or "").strip().upper()
+    if source_material_state != "RAW":
+        problems.append("source_material_state must be RAW: vault uploads never imply edit/approval")
 
-        approved_package = _clean_sha(_field(text, "final_package_sha256"))
-        supplied_package = _clean_sha(package_sha256)
-        if approved_package is None:
-            problems.append("final_package_sha256 missing/invalid in PREFLIGHT")
-        if supplied_package is None:
-            problems.append("--package-sha256 must be a 64-hex SHA-256")
-        if approved_package and supplied_package and approved_package != supplied_package:
-            problems.append("exact final package SHA-256 does not match the approved render")
+    reviewed_at = (_field(text, "qa_reviewed_at") or "").strip()
+    if not reviewed_at or "<" in reviewed_at or reviewed_at == "_":
+        problems.append("qa_reviewed_at must identify the exact final-render review")
 
-        lowered = text.lower()
-        if "ניגודיות" in text and "לא חוסם" in text:
-            problems.append("contrast/readability may not be waived as non-blocking")
-        if "soft contrast" in lowered and "non-block" in lowered:
-            problems.append("soft contrast may not be waived as non-blocking")
+    approved_package = _clean_sha(_field(text, "final_package_sha256"))
+    supplied_package = _clean_sha(package_sha256)
+    if approved_package is None:
+        problems.append("final_package_sha256 missing/invalid in PREFLIGHT")
+    if supplied_package is None:
+        problems.append("--package-sha256 must be a 64-hex SHA-256")
+    if approved_package and supplied_package and approved_package != supplied_package:
+        problems.append("exact final package SHA-256 does not match the approved render")
+
+    edit_evidence = (_field(text, "creative_edit_evidence") or "").strip()
+    if not edit_evidence or edit_evidence.upper() in {"N/A", "NONE", "PENDING", "_"} or "<" in edit_evidence:
+        problems.append("creative_edit_evidence must identify the actual edited final derivative/review")
+
+    treatment_tokens = _csv_tokens(_field(text, "creative_treatment_categories"))
+    recognized = treatment_tokens & CREATIVE_TREATMENT_CATEGORIES
+    trivial = treatment_tokens & TRIVIAL_ONLY_CATEGORIES
+    if len(recognized) < 3:
+        problems.append("creative_treatment_categories must contain at least 3 real treatments")
+    if treatment_tokens and treatment_tokens <= TRIVIAL_ONLY_CATEGORIES:
+        problems.append("crop/resize/format normalization alone is never creative treatment")
+    if trivial and not recognized:
+        problems.append("technical transforms cannot substitute for art direction")
+
+    # Prevent the exact failure that triggered v3: declaring a crop-only path as edited creative.
+    lowered = text.lower()
+    crop_only_markers = (
+        "deterministic-crop",
+        "crop/order/qa",
+        "crop only",
+        "resize only",
+        "normalization only",
+    )
+    if any(marker in lowered for marker in crop_only_markers):
+        problems.append("preflight documents a crop/resize-only path; create a real creative derivative")
+
+    if "ניגודיות" in text and "לא חוסם" in text:
+        problems.append("contrast/readability may not be waived as non-blocking")
+    if "soft contrast" in lowered and "non-block" in lowered:
+        problems.append("soft contrast may not be waived as non-blocking")
+
+    audio_gate = (_field(text, "audio_gate") or "").strip().upper()
+    if format_name == "reel" and audio_gate != "PASS":
+        problems.append("reel audio_gate must be PASS")
+    if format_name in {"carousel", "post"} and audio_gate not in {"N/A", "NA", "NOT_APPLICABLE"}:
+        problems.append(f"{format_name} audio_gate must be N/A")
+    if format_name == "story" and audio_gate not in {"PASS", "N/A", "NA", "NOT_APPLICABLE"}:
+        problems.append("story audio_gate must be PASS for video or N/A for still image")
 
     return {
         "ok": not problems,
@@ -156,7 +230,7 @@ def validate_publication_approval(
         "publishGateSchema": schema or None,
         "packageSha256": _clean_sha(package_sha256),
         "problems": problems,
-        "rule": "quality approval must cover the exact final render; transport success alone never authorizes publish",
+        "rule": "vault media is RAW; publish authorization requires an exact-final branded creative derivative, not a transport-ready crop",
     }
 
 
@@ -227,7 +301,7 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
         "mode": "local-only",
         "send_law": str(SEND.relative_to(ROOT)) if SEND.is_file() else None,
         "channels": channels,
-        "rule": "Transport readiness is not creative approval. Instagram publish requires exact-package PREFLIGHT v2.",
+        "rule": "Transport readiness is not creative approval. Instagram publish requires exact-package PREFLIGHT v3.",
     }
 
 
