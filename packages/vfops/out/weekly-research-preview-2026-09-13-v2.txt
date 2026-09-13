@@ -1,0 +1,100 @@
+VELVET FACTORY · RESEARCH ACCOUNTABILITY
+בריף מחקרים שבועי · תצוגת ניסיון
+מבוסס על מחקר מאומת קיים עד 13.09.2026
+V10.3 · Weekly
+
+מצב המחקר
+6 פריטים במעקב · 3 יושמו · 2 טרם יושמו · 1 חסום
+
+הערת שיטה
+לפני המעבר ל־ready_for_brief פורמלי, נספרו כאן רק ממצאים עם גוף מחקר חיצוני מאומת שיועדו לבריף. אין כרגע artifact מחקר מאומת ל־13.09, ולכן לא נוספו ממצאים חדשים מהיום.
+
+מדדי השבוע
+6 פריטים במעקב
+3 implemented
+2 not_implemented
+1 blocked
+60% שיעור יישום מתוך הפריטים שכרגע היו כשירים ליישום
+
+מה גילינו
+
+1. Sticky Note Holder כמועמד למדף חוזר
+מקור המחקר: 11–12.09 · Printables.
+הממצא: מוצר שולחני פשוט, ללא hardware ולפי דף המקור ללא supports, עם אפשרות התאמה אישית. הרישיון סומן במקור כ־Public Domain / Commercial Use, אבל עדיין נדרש אימות רישיון מקומי לפני כל החלטת SKU.
+
+2. PrusaSlicer 3.0 Preview כבדיקת יעילות ייצור
+מקור המחקר: 11–12.09 · Prusa Research.
+הממצא: multi-bed projects, הגדרה נפרדת לכל bed ו־parallel slicing יכולים לצמצם מעבר בין פרופילים ועבודות, אבל הערך ל־Velvet עדיין לא נמדד.
+
+3. Trial Reel כניסוי תוכן מבוקר
+מקור המחקר: 11.09 · Meta.
+הממצא: אפשר לבדוק Reel קודם מול לא־עוקבים ולקבל אותות לאחר יממה בערך. אצלנו זה רלוונטי רק לאחר שהחבילה המדויקת עוברת את כל שערי האודיו, הזכויות, QA וה־preflight.
+
+מה יישמנו
+
+Triage לפני grill: implemented
+first_seen: 07.09 · last_reviewed: 13.09 · age_days: 6
+impact: high · effort: low · execution_owner: system · type: recommendation
+המלצה: לבצע triage לפני חקירת פנייה עמוקה.
+ראיית יעד: packages/vfconvert/hq/TRIAGE.md הוטמע ונרשם כתוצר מחקר.
+הפעולה הבאה: אין; ממשיכים להשתמש במסלול הקיים.
+carryover: לא.
+
+Quote ladder להצעת מחיר חלקית: implemented
+first_seen: 07.09 · last_reviewed: 13.09 · age_days: 6
+impact: high · effort: low · execution_owner: system · type: recommendation
+המלצה: לא לעצור טיוטת הצעה כשחסר מידע; להפיק partial עם `חסר:` ובלי להמציא מחיר.
+ראיית יעד: packages/vfsales/scripts/vf_quote_ladder.py הוטמע וחובר ל־QUOTE.md.
+הפעולה הבאה: אין; לשמור על חוקי האמת הקיימים.
+carryover: לא.
+
+text-to-cad כ־watch בלבד: implemented
+first_seen: 12.09 · last_reviewed: 13.09 · age_days: 1
+impact: medium · effort: low · execution_owner: system · type: recommendation
+המלצה: לעקוב אחרי דפוסי CAD-as-code ו־DfAM בלי ליצור runtime CAD נוסף.
+ראיית יעד: earthtojake/text-to-cad קיים ב־BEST-SKILLS watchlist עם נעילת no-second-runtime.
+הפעולה הבאה: לא להטמיע עד שיוכח פער geometry-validation אמיתי.
+carryover: לא כמשימת ביצוע; נשאר watch.
+
+מה נשאר פתוח ולמה
+
+Sticky Note Holder preflight: not_implemented
+first_seen: 11.09 · last_reviewed: 13.09 · age_days: 2
+impact: high · effort: medium · execution_owner: shared · type: recommendation
+היעד: vlicense → slice מקומי → גרמים/דקות → בדיקת fit → יחידת מבחן וצילום.
+המצב: המחקר והמקור קיימים, אבל לא נמצאה ראיית יעד שה־preflight בוצע בפועל.
+הפעולה הבאה: המערכת יכולה לקדם אימות רישיון והכנת preflight; Print פיזי יעלה לבעלים רק כשהוא באמת נדרש.
+carryover: כן.
+
+PrusaSlicer 3.0 benchmark: not_implemented
+first_seen: 11.09 · last_reviewed: 13.09 · age_days: 2
+impact: medium · effort: medium · execution_owner: shared · type: experiment
+היעד: להשוות 2–3 עבודות מייצגות בין workflow נוכחי לבין Preview ולמדוד זמן operator, outputs וטעויות profile/context.
+המצב: לא נמצאה ראיית benchmark או החלטת rollout.
+הפעולה הבאה: לבצע benchmark בלבד; אין מעבר production בלי חיסכון מדיד ותאימות.
+carryover: כן.
+
+Trial Reel מבוקר: blocked
+first_seen: 11.09 · last_reviewed: 13.09 · age_days: 2
+impact: medium · effort: medium · execution_owner: system · type: experiment
+היעד: Trial Reel אחד עם auto-share כבוי, ורק אחרי package מדויק שהוא ready_for_publish.
+החסם: Reset Launch Trio עדיין אינו publish-authorized; R001 ו־R003 דורשים סגירת Audio Gate והחבילות דורשות receipts ו־exact-final QA.
+הפעולה הבאה: לסגור קודם חבילת launch אחת; רק אחר כך להריץ ניסוי ולבדוק אותות אחרי חלון המדידה.
+carryover: כן, רק אם נשאר רלוונטי לאחר סגירת ה־launch gates.
+
+שלושת הצעדים לשבוע הבא
+1. לקדם את Sticky Note Holder עד שער ה־Print: אימות רישיון, slice ותוכנית בדיקה. לא לבקש ממך הדפסה לפני שהשלבים המקדימים עברו.
+2. להריץ benchmark קטן ל־PrusaSlicer 3.0 על 2–3 עבודות מייצגות ולהחליט לפי זמן וטעויות, לא לפי תחושה.
+3. לסגור Audio Gate ו־exact-final QA על Reel אחד מה־Reset Launch Trio; אם הוא מגיע ל־ready_for_publish, להריץ Trial Reel יחיד עם auto-share כבוי ולמדוד.
+
+צריך ממך
+אין כרגע החלטת בעלים שנדרשת כדי לקדם את שלושת הצעדים. אם Sticky Note Holder יגיע לשלב יחידת מבחן, Print יישאר human_required ויוצג לך בנפרד.
+
+מקורות עיקריים
+packages/vfresearch/sources/2026-09-07-orchestra.md
+packages/vfresearch/sources/2026-09-11-orchestra.md
+packages/vfresearch/sources/2026-09-12-orchestra.md
+packages/vfresearch/BEST-SKILLS.json
+packages/vfgrowth/RESET-LAUNCH-TRIO.md
+
+VelvetOS · Research Accountability · preview
