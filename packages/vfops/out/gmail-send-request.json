@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "requestId": "weekly-research-preview-2026-09-13-attempt3",
   "html": "packages/vfops/out/weekly-research-preview-2026-09-13-v3.html",
   "visibleText": "packages/vfops/out/weekly-research-preview-2026-09-13-v3.txt",
