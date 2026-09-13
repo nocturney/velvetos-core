@@ -113,6 +113,7 @@
 <tr><td><strong>Jobs + Google Sheet bridge</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td dir="rtl" align="right">pull/push/reconcile, הגנת concurrency וללא ניחוש tab.</td></tr>
 <tr><td><strong>vfmem</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">זיכרון עסקי והקשר לפני הפיכת notes/meetings/documents למצב תפעולי.</td></tr>
 <tr><td><strong>Autonomy + Risk Gates</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">הפרדה בין פעולות בסיכון נמוך לבין פעולות שדורשות gate/approval.</td></tr>
+<tr><td><strong>Engineering Delivery + Agent Instruction QA</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">החלטה→spec→tickets אנכיים→branch→אימות→review איכות והתאמה ל־spec→PR/CI; עריכת הוראות agents נבדקת מול מקור סמכות יחיד ו־context budget, וחסם אנושי אמיתי מצטמצם ל־wizard של פעולה אחת.</td></tr>
 <tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">נתיבי Insights נתמכים ו־CTA audit מאומתים; mutations לא נתמכים לא מוצגים כאילו הם עובדים.</td></tr>
 <tr><td><strong>Media Vault + vfmedia</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">incoming → source → WIP → approved, עם checksum ו־persist-before-move.</td></tr>
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">עברית טבעית, anti-AI QA ושער FACT vs INVENTED.</td></tr>
@@ -233,6 +234,7 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>Jobs + Google Sheet bridge</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td>Pull/push/reconcile with concurrency guards and no guessed tab names.</td></tr>
 <tr><td><strong>vfmem</strong></td><td><strong>IMPLEMENTED</strong></td><td>Business context before notes, meetings and documents become operational state.</td></tr>
 <tr><td><strong>Autonomy + Risk Gates</strong></td><td><strong>IMPLEMENTED</strong></td><td>Separates low-risk execution from actions that require explicit approval.</td></tr>
+<tr><td><strong>Engineering Delivery + Agent Instruction QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>Decision→spec→vertical tickets→branch→proof→quality + spec-compliance review→PR/CI; agent instructions are checked for single authority and context cost, and genuine human-only blockers become one bounded wizard step.</td></tr>
 <tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>Supported Insights reads and CTA audit are verified; unsupported mutations are not presented as working writes.</td></tr>
 <tr><td><strong>Media Vault + vfmedia</strong></td><td><strong>IMPLEMENTED</strong></td><td>Incoming → source → WIP → approved with checksums and persist-before-move.</td></tr>
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>Natural Hebrew, anti-AI QA and FACT vs INVENTED gates.</td></tr>

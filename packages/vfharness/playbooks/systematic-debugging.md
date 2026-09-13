@@ -9,7 +9,26 @@
 NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 ```
 
-בלי שלב 1 — אין להציע תיקון. תיקון סימפטום = כישלון.
+בלי שחזור/סיגנל pass-fail — אין להציע תיקון. תיקון סימפטום = כישלון.
+
+## אבחון מדורג
+
+לא כל תקלה צריכה חקירה כבדה. בחר את המסלול הקטן ביותר שמספק ראיה אמינה:
+
+### Light diagnosis
+
+מותר כשכבר יש שחזור דטרמיניסטי/סנסור אדום, הכשל מקומי, אין סיכון auth/security/data, ויש לכל היותר השערת שורש אחת סבירה:
+
+1. שחזר פעם אחת.
+2. כתוב השערה אחת.
+3. שנה את המינימום שמוכיח/מפריך אותה.
+4. הרץ את אותו שחזור + regression proof.
+
+אם התיקון הראשון לא מחזיק — **לא** ממשיכים לנחש; עוברים למסלול המלא.
+
+### Full diagnosis
+
+חובה כשאחד מאלה מתקיים: שחזור לא יציב, שורש לא ברור, כשל חוצה כמה רכיבים/ספקים, כלי production/provider, הרשאות/auth, data loss/security, התנהגות שחוזרת, או תיקון ראשון שנכשל.
 
 ## מתי חובה
 
@@ -19,7 +38,7 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 - «תיקון מהיר» שלא החזיק מעמד
 - לחץ זמן (חירום מגביר ניחושים — לא מקצר חקירה)
 
-## ארבעה שלבים (בסדר)
+## ארבעה שלבים (מסלול מלא)
 
 ### 1. חקירת שורש + לולאת משוב
 
@@ -51,6 +70,15 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 - אל תטען «תוקן» בלי פלט סנסור / לוג.
 - רשום checkpoint תחת `packages/vfharness/state/` אם המשימה ארוכה.
 
+## Sanitization לפני שיתוף evidence
+
+לוגים, HAR, dumps ו־provider traces הם ראיה — אבל לא מדביקים אותם עיוור לצ׳אט/Issue/commit. לפני שיתוף:
+
+- הסר tokens, cookies, `Authorization` headers, API keys ו־session IDs;
+- הסר/צמצם PII ונתוני לקוח שאינם נחוצים לשחזור;
+- שמור רק את החלון המינימלי שמוכיח את הכשל;
+- לעולם אל תכניס secret לגיט כדי «להראות את הבעיה».
+
 ## דגלים אדומים
 
 | מחשבה | מציאות |
@@ -58,7 +86,7 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 | «ברור מה לשנות» | בלי שחזור = ניחוש |
 | «נוסיף retry ונמשיך» | מעלים סימפטום |
 | «אין גוף / אין דירוג — נמציא» | נעול: `X ₪` / «אין ספירה» / «אין גוף» |
-| «הכלי למטה — נחכה לבעלים» | failover באותו תור |
+| «הכלי למטה — נחכה לבעלים» | failover באותו תור; wizard רק אם נשאר צעד אנושי אמיתי |
 
 ## לא
 
@@ -72,3 +100,4 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 - `playbooks/verification-before-claim.md` — לפני «סיימתי»
 - `playbooks/skill-first.md` — לפני פעולה
 - `playbooks/agent-architecture-audit.md` — כשל מבני חוזר
+- `playbooks/human-step-wizard.md` — כשנשאר חוסם אנושי אמיתי
