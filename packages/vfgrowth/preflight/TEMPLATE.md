@@ -7,9 +7,10 @@
 
 מחיר בפריים/כיתוב: `X ₪` או אין. בלי ₪ מומצא.  
 CTA public: לפי `constitution/PUBLIC_CTA.md` / `PUBLIC_CURRENT_CTA` — **הודעה באינסטגרם** כשנדרש; בלי WhatsApp/טלפון ציבורי. Showcase יכול לבחור CTA ניטרלי/ללא CTA לפי intent הפעיל.  
-חוזה טקסט: `constitution/VISIBLE_TEXT.md` + `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`. רובריקה: `CONTENT-RUBRIC.md`.
+חוזה טקסט: `constitution/VISIBLE_TEXT.md` + `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`. רובריקה: `CONTENT-RUBRIC.md`.  
+מותג: `packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md`.
 
-> Publish contract v3: כל קובץ ב־Velvet Media הוא RAW. crop/resize/format/normalization בלבד אינם creative treatment. אישור תוכן כללי או Canva edit אינו אישור לפרסום; השער חייב להיות מחובר ל־**תוצר הסופי המרונדר המדויק** ולגרסת הקופי המדויקת שעברה Visible Text Gate + lint.
+> Publish contract v3: כל קובץ ב־Velvet Media הוא RAW. crop/resize/format/normalization בלבד אינם creative treatment. מוצר אמיתי חייב לעבור Product Truth: מותר לשפר את הצילום, אסור לשנות את האובייקט. אישור תוכן כללי או Canva edit אינו אישור לפרסום; השער חייב להיות מחובר ל־**תוצר הסופי המרונדר המדויק** ולגרסת הקופי המדויקת שעברה Visible Text Gate + lint.
 
 ## א · Visible Text / Copy Gate
 
@@ -48,7 +49,7 @@ visual_text_sha256: <64-hex | N/A>
 
 **א:** עבור / נכשל-סגור
 
-## ב · RAW → Creative / ראיית ויזואל
+## ב · RAW → Creative + Product Truth
 
 ```yaml
 source_material_state: RAW
@@ -57,6 +58,11 @@ brand_treatment: FAIL
 commercial_visual_qa: FAIL
 scroll_stop_qa: FAIL
 derivative_is_distinct_from_source: FAIL
+product_truth_gate: FAIL
+subject_identity_integrity: FAIL
+synthetic_subject_change: NONE | PRESENT
+source_subject_match: FAIL
+brand_source_lock: FAIL
 creative_treatment_categories: <comma-separated; at least 3 real categories>
 creative_edit_evidence: <real edit/export/review path or id>
 ```
@@ -65,13 +71,21 @@ creative_edit_evidence: <real edit/export/review path or id>
 
 `crop`, `resize`, ratio, format conversion, metadata strip, compression, normalization וסידור שקופיות הם technical-only ואינם נספרים כטיפול קריאייטיבי.
 
+Product Truth למוצר אמיתי:
+- אותו אובייקט פיזי חייב להישאר זהה בין RAW ל־final.
+- `synthetic_subject_change: NONE` חובה.
+- אין שינוי geometry, silhouette, proportions, part count, visible surface pattern או product identity.
+- background/cleanup מותר רק אם אינו משנה את המוצר ואינו יוצר claim מומצא.
+- master brand asset בלבד; אין לוגו מומצא ואין palette משוער כשקיים SVG מאושר.
+
 - כלי: Canva MCP / vfcovers / vfcanva / Superdesign→render.py
 - `edit_url` או נתיב PNG/JPEG מורכב אמיתי:
 - ראייה של RAW:
 - ראייה של exact final:
 - מה השתנה מעבר ל־crop/resize:
-- האם final מרגיש Velvet גם ב־NO_TEXT:
-- JPEG גולמי / crop-only? כן=נכשל
+- איך נשמרה זהות המוצר:
+- האם final מרגיש Velvet לפי Brand Source of Truth:
+- JPEG גולמי / crop-only / synthetic subject? כן=נכשל
 
 **ב:** עבור / נכשל-סגור
 
@@ -83,6 +97,9 @@ creative_edit_evidence: <real edit/export/review path or id>
 | `visible_text_gate: PASS` תואם לקופי הסופי? | |
 | אם יש visual text — הוא מנצח `NO_TEXT` או שנבחר `NO_TEXT`? | |
 | הוויזואל עבר RAW→Creative EDIT-GATE? | |
+| המוצר ב־final הוא אותו מוצר פיזי שב־RAW? | |
+| אין synthetic subject change? | |
+| נעשה שימוש בלוגו/שפה מה־Brand Source of Truth? | |
 | ה־final מושך עין גם בלי לקרוא caption? | |
 | 2–3 קומפס/כיוונים כשנדרש? | |
 
@@ -146,6 +163,11 @@ brand_treatment: FAIL
 commercial_visual_qa: FAIL
 scroll_stop_qa: FAIL
 derivative_is_distinct_from_source: FAIL
+product_truth_gate: FAIL
+subject_identity_integrity: FAIL
+synthetic_subject_change: PRESENT
+source_subject_match: FAIL
+brand_source_lock: FAIL
 creative_treatment_categories: <at least 3 real categories>
 creative_edit_evidence: <real evidence>
 audio_gate: FAIL | PASS | N/A
@@ -163,4 +185,4 @@ audio_gate: FAIL | PASS | N/A
 
 ## שער
 
-`publish_gate: PASS` רק אם כל השערים הרלוונטיים = עבור, `visible_text_gate: PASS` תואם ל־`text_sha256`, `vfcopy_lint: PASS`, `fact_gate: PASS`, ה־Rubric ≥20/25, וכל חמשת שערי RAW→Creative עברו. בווידאו נדרש גם `audio_gate: PASS`. אחרת `publish_gate: BLOCKED`.
+`publish_gate: PASS` רק אם כל השערים הרלוונטיים = עבור, `visible_text_gate: PASS` תואם ל־`text_sha256`, `vfcopy_lint: PASS`, `fact_gate: PASS`, ה־Rubric ≥20/25, RAW→Creative עבר, Product Truth עבר (`product_truth_gate: PASS`, `subject_identity_integrity: PASS`, `synthetic_subject_change: NONE`, `source_subject_match: PASS`) ו־`brand_source_lock: PASS`. בווידאו נדרש גם `audio_gate: PASS`. אחרת `publish_gate: BLOCKED`.
