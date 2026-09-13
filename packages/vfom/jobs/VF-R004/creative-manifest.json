@@ -1,0 +1,86 @@
+{
+  "jobId": "VF-R004",
+  "format": "carousel",
+  "status": "ready_for_publish",
+  "sourceEvidence": [
+    "drive:1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj:IMG_0645.HEIC",
+    "drive:1843_PJcP_qtZwV2Xt81DhQdXaW7X4we4:IMG_0646.HEIC",
+    "drive:1o-4GXAAoTmMj7Ag6NOgZAhvxqZhYToUq:IMG_0647.HEIC",
+    "drive:1GxRwd0c5zziAYJudvoyccNlRMYxVo_zM:IMG_0654.HEIC",
+    "final-package-sha256:993909285c0730a0f7a3931cc813fc7da8bee1fa6890bdac56c27db9bb4206b1",
+    "visible-text-sha256:c34020b494b3a5737bff69fb8e0741ca91df73686a6101f80344239778fafd1d"
+  ],
+  "concept": {
+    "coreIdea": "One real owl sculpture, four materially different viewpoints: front, side, back, alternate front.",
+    "emotion": "tactile curiosity",
+    "formatGenome": "PRODUCT_DETAIL_SEQUENCE",
+    "objective": "Add a second real-object visual anchor to the reset grid without generic marketing copy or unsupported claims.",
+    "audience": "people drawn to sculptural detail and unusual display objects"
+  },
+  "hook": {
+    "candidates": [
+      {"id":"front","visual":"IMG_0647 clean front view","text":"","reason":"strongest eye contact and small-screen recognition"},
+      {"id":"side","visual":"IMG_0646 side view","text":"","reason":"good volume proof but weaker opener"},
+      {"id":"back","visual":"IMG_0645 back view","text":"","reason":"useful texture proof later in sequence"},
+      {"id":"text","visual":"front view","text":"ארבע זוויות. ינשוף אחד.","reason":"rejected because clean visual is stronger"}
+    ],
+    "selected":"front"
+  },
+  "shots": {
+    "plan": [
+      {"assetRef":"drive:1o-4GXAAoTmMj7Ag6NOgZAhvxqZhYToUq","shotType":"hero","orientation":"vertical","angle":"front","distance":"medium","action":"clean full-object opener","targetDurationSec":0,"proof":"real front view"},
+      {"assetRef":"drive:1843_PJcP_qtZwV2Xt81DhQdXaW7X4we4","shotType":"proof","orientation":"vertical","angle":"side","distance":"medium","action":"show side volume","targetDurationSec":0,"proof":"real side view"},
+      {"assetRef":"drive:1_Ll-8225gpTKON3XBM5OVP2ks2IRwhpj","shotType":"macro","orientation":"vertical","angle":"back","distance":"medium","action":"show rear texture","targetDurationSec":0,"proof":"real back view"},
+      {"assetRef":"drive:1GxRwd0c5zziAYJudvoyccNlRMYxVo_zM","shotType":"hero","orientation":"vertical","angle":"alternate front","distance":"medium","action":"finish on cleaner alternate front","targetDurationSec":0,"proof":"real alternate view"}
+    ],
+    "missing": []
+  },
+  "edit": {"durationTargetSec":0,"audioStrategy":"not_applicable for carousel","timeline":[]},
+  "overlays": [],
+  "visualCopy": {
+    "decision":"NO_TEXT",
+    "selectedText":"",
+    "noTextCompared":true,
+    "candidates":[
+      {"text":"","result":"selected","reason":"eye contact and object silhouette carry the hook"},
+      {"text":"ארבע זוויות. ינשוף אחד.","result":"rejected","reason":"describes the mechanic rather than adding value"},
+      {"text":"תסתכלו לו בעיניים","result":"rejected","reason":"unnecessary instruction"}
+    ],
+    "decisionRationale":"NO_TEXT wins on the exact opener."
+  },
+  "cover": {"candidates":[{"id":"c0","headline":"","subjectCrop":"IMG_0647 centered 4:5","textPlacement":"none","gridRationale":"clear subject and strongest face"}],"selected":"c0"},
+  "qa": {
+    "brandScore":89,
+    "hookScore":91,
+    "realityScore":98,
+    "originalityScore":84,
+    "artifactScore":95,
+    "deterministicChecks": {
+      "state":"pass",
+      "exactFinalPackageSha256":"993909285c0730a0f7a3931cc813fc7da8bee1fa6890bdac56c27db9bb4206b1",
+      "slides":"4x 1080x1350 JPEG, exact finals visually reviewed",
+      "captionSha256":"c34020b494b3a5737bff69fb8e0741ca91df73686a6101f80344239778fafd1d",
+      "audioGate":"N/A_CAROUSEL",
+      "visualCopyGate":"PASS_NO_TEXT",
+      "subjectPackFidelity":"PASS",
+      "frameIntegrity":"PASS",
+      "resolutionAspectRatio":"PASS",
+      "readability":"PASS: no visual text",
+      "contrast":"PASS: no visual text"
+    },
+    "failures": [],
+    "repairs": ["Selected front IMG_0647 as opener after exact-source comparison; retained NO_TEXT baseline."]
+  },
+  "feed": {"continuityDecision":"pass","reasoning":"Adds a warm natural-light object study after the darker dragon sequence; real-object variety without text-card fatigue."},
+  "derivativeRefs": [
+    "drive:1dkCfkdfNj5ctJEIY6zjYol2KNB2a-nbU:VF-R004-final-01.jpg:sha256=312a41a45723ccefd3ddcb93af9d866f6153ad21edf0082559911e176efd77dc",
+    "drive:11OIBlmUf_IWtLLQCrzDAvaf6C5ZNVH1B:VF-R004-final-02.jpg:sha256=76146cf9b5ee6fd6ba243667fb4f9a347068f0e24f6586a704b85be9b726bbcc",
+    "drive:1bfOpr4MSEJm6K6Y94jrWRnjuH3z8saj7:VF-R004-final-03.jpg:sha256=b27f2db2a8937e7c04a563fa6ad8916476d1c9d668d87fd8eff907f2032cb551",
+    "drive:1ibbaQYfrJl4EYObcP17qklk-2bV8AUUP:VF-R004-final-04.jpg:sha256=942ab1ed8d9470c36ca9ffa6616b618168f001bc66a27b31d3a8ada48010501d",
+    "drive:1lx8rjxtmbRbCILQX4PjlMKvM7BWi-1GC:VF-R004-final-caption.txt",
+    "drive:1tOka_pEesQ3reZCmG1JR0fYckCXc3tBm:VF-R004-render-receipt.json",
+    "drive:1571YJKsVLF9Eq6t4kSKtO1ArjwX3nnzD:VF-R004-visible-text-receipt.json",
+    "drive:19Jo3yJLxoHmyDm9SoBjk6D52LrI27MrG:VF-R004-package-manifest.json"
+  ],
+  "rightsNotes": ["Owner Media Vault showcase scope; no third-party media, UGC or identifiable person in the reviewed package."]
+}
