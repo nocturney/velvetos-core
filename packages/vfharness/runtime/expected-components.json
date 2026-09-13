@@ -1,0 +1,11 @@
+{
+  "schema": "vf.runtime.expected.v1",
+  "components": [
+    {"id":"repo-main","kind":"git","required":true,"evidence":"git-head"},
+    {"id":"mac-office","kind":"worker","required":true,"evidence":"runtime-receipt"},
+    {"id":"automation-steward","kind":"automation","required":true,"evidence":"automation-state"},
+    {"id":"morning-brief","kind":"automation","required":true,"evidence":"automation-state"},
+    {"id":"github","kind":"connector","required":true,"evidence":"connector-state"},
+    {"id":"google-drive","kind":"connector","required":false,"evidence":"connector-state"}
+  ]
+}
