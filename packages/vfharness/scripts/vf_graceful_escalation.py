@@ -31,6 +31,7 @@ Self-test:
 """
 import argparse
 import json
+import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -202,96 +203,103 @@ def run_ladder(
 
 
 def _self_test():
-    state = {"calls": 0}
+    global STATE_DIR
+    original_state_dir = STATE_DIR
+    with tempfile.TemporaryDirectory(prefix="vf-ladder-selftest-") as tmp:
+        STATE_DIR = Path(tmp)
+        try:
+            state = {"calls": 0}
 
-    def attempt():
-        state["calls"] += 1
-        return False, None
+            def attempt():
+                state["calls"] += 1
+                return False, None
 
-    def fallback():
-        state["calls"] += 1
-        return False, None
+            def fallback():
+                state["calls"] += 1
+                return False, None
 
-    def downgrade():
-        state["calls"] += 1
-        return True, "partial-caption-draft-only"
+            def downgrade():
+                state["calls"] += 1
+                return True, "partial-caption-draft-only"
 
-    out = run_ladder(
-        "selftest-001",
-        pack="vfcopy",
-        attempt_fn=attempt,
-        fallback_fn=fallback,
-        downgrade_fn=downgrade,
-    )
-    assert out["rung"] == Rung.DOWNGRADE
+            out = run_ladder(
+                "selftest-001",
+                pack="vfcopy",
+                attempt_fn=attempt,
+                fallback_fn=fallback,
+                downgrade_fn=downgrade,
+            )
+            assert out["rung"] == Rung.DOWNGRADE
 
-    ruling_state = {"calls": 0}
+            ruling_state = {"calls": 0}
 
-    def fail_attempt():
-        ruling_state["calls"] += 1
-        return False, None
+            def fail_attempt():
+                ruling_state["calls"] += 1
+                return False, None
 
-    def fail_fallback():
-        ruling_state["calls"] += 1
-        return False, None
+            def fail_fallback():
+                ruling_state["calls"] += 1
+                return False, None
 
-    def fail_downgrade():
-        ruling_state["calls"] += 1
-        return False, None
+            def fail_downgrade():
+                ruling_state["calls"] += 1
+                return False, None
 
-    def ruling():
-        ruling_state["calls"] += 1
-        return (
-            True,
-            "continued-with-local-default",
-            {
-                "decision": "use the existing local default",
-                "why": "the ambiguity is reversible and has no external side effect",
-                "cost_if_wrong": "redo this local step",
-            },
-        )
+            def ruling():
+                ruling_state["calls"] += 1
+                return (
+                    True,
+                    "continued-with-local-default",
+                    {
+                        "decision": "use the existing local default",
+                        "why": "the ambiguity is reversible and has no external side effect",
+                        "cost_if_wrong": "redo this local step",
+                    },
+                )
 
-    ruled = run_ladder(
-        "selftest-ruling-001",
-        pack="vfharness",
-        attempt_fn=fail_attempt,
-        fallback_fn=fail_fallback,
-        downgrade_fn=fail_downgrade,
-        max_retries=1,
-        ruling_fn=ruling,
-        safe_to_rule=True,
-    )
-    assert ruled["rung"] == Rung.SAFE_RULING
-    assert ruled["ruling_text"].startswith("Ruling: ")
+            ruled = run_ladder(
+                "selftest-ruling-001",
+                pack="vfharness",
+                attempt_fn=fail_attempt,
+                fallback_fn=fail_fallback,
+                downgrade_fn=fail_downgrade,
+                max_retries=1,
+                ruling_fn=ruling,
+                safe_to_rule=True,
+            )
+            assert ruled["rung"] == Rung.SAFE_RULING
+            assert ruled["ruling_text"].startswith("Ruling: ")
 
-    blocked_called = {"value": False}
+            blocked_called = {"value": False}
 
-    def blocked_ruling():
-        blocked_called["value"] = True
-        return True, "must-not-run", {
-            "decision": "unsafe",
-            "why": "unsafe",
-            "cost_if_wrong": "unsafe",
-        }
+            def blocked_ruling():
+                blocked_called["value"] = True
+                return True, "must-not-run", {
+                    "decision": "unsafe",
+                    "why": "unsafe",
+                    "cost_if_wrong": "unsafe",
+                }
 
-    blocked = run_ladder(
-        "selftest-ruling-guard-001",
-        pack="vfharness",
-        attempt_fn=fail_attempt,
-        fallback_fn=fail_fallback,
-        downgrade_fn=fail_downgrade,
-        max_retries=1,
-        ruling_fn=blocked_ruling,
-        safe_to_rule=False,
-    )
-    assert blocked["rung"] == Rung.ESCALATE
-    assert blocked_called["value"] is False
+            blocked = run_ladder(
+                "selftest-ruling-guard-001",
+                pack="vfharness",
+                attempt_fn=fail_attempt,
+                fallback_fn=fail_fallback,
+                downgrade_fn=fail_downgrade,
+                max_retries=1,
+                ruling_fn=blocked_ruling,
+                safe_to_rule=False,
+            )
+            assert blocked["rung"] == Rung.ESCALATE
+            assert blocked_called["value"] is False
 
-    print(json.dumps(ruled, ensure_ascii=False, indent=2))
-    print(
-        f"\nOK — downgrade preserved; safe ruling opt-in works; guard fails closed. "
-        f"calls={state['calls'] + ruling_state['calls']}"
-    )
+            print(json.dumps(ruled, ensure_ascii=False, indent=2))
+            print(
+                f"\nOK — downgrade preserved; safe ruling opt-in works; guard fails closed. "
+                f"calls={state['calls'] + ruling_state['calls']}"
+            )
+        finally:
+            STATE_DIR = original_state_dir
 
 
 if __name__ == "__main__":
