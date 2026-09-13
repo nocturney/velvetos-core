@@ -21,7 +21,7 @@ Same-day public-source research body. Cutoff state: **`ready_for_brief`**. GREEN
 | Snapmaker Orca — v2.4.0-alpha · https://github.com/Snapmaker/OrcaSlicer/releases/tag/v2.4.0-alpha | published 2026-09-10; checked 2026-09-14 | official Alpha/pre-release; new UI/model/material features and dependency upgrades; not a production-upgrade recommendation |
 | LinklyAI/best-skills · https://github.com/LinklyAI/best-skills/tree/main/data/2026-09-13/rankings | dataDate 2026-09-13; checked 2026-09-14 | newest confirmed dataset today; 2026-09-14 dataset was not yet present during the run |
 
-## Findings — Top 3 for the 09:00 brief
+## ממצאים — Top 3 for the 09:00 brief
 
 ### 1. New shelf preflight candidate: a tiny reading line-hider, not another large organizer
 
