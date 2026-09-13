@@ -32,7 +32,7 @@
 18. Agent/MCP/rules surface → `AGENT-SURFACE-SECURITY.md` + `python3 scripts/check-agent-surface-security.py` (AgentShield pattern).
 19. מעבר עבודה בין harnesses → `vfmem/HANDOFF.md` + `python3 scripts/vf_handoff.py new|ack|consume|reject|doctor`; handoff הוא context, לא authority.
 20. לפני טענה ש״הוטמע/רץ״ על worker/automation/connector → `python3 scripts/check-runtime-doctor.py --strict`. `check-all` בודק רק את חוזה ה־runtime offline; strict דורש receipts אמיתיים.
-21. סקירת בריאות מערכת → `python3 scripts/check-velvet-health.py`; הפלט דטרמיניסטי ומורכב מחיישנים, בלי ציוני LLM מומצא.
+21. סקירת בריאות מערכת → `python3 scripts/check-velvet-health.py`; הפלט דטרמיניסטי ומורכב מחיישנים, בלי ציוני LLM מומצאים.
 22. תחזוקת Skills/docs → `python3 scripts/check-skill-health.py` + `python3 scripts/check-living-docs.py`; warnings הם חומר לתיקון/קונסולידציה, לא success-rate מומצא.
 23. שינוי קוד/אוטומציה/מדיניות/אינטגרציה מהותי → `playbooks/engineering-delivery-chain.md`: החלטה → spec → tickets אנכיים → branch → implementation+proof → review איכות **וגם** התאמה ל-spec → PR/CI → runtime verification. לא Issue tracker שני.
 24. יצירה/עריכה מהותית של `AGENTS.md` / `SKILL.md` / rules / prompts → `playbooks/agent-instruction-qa.md` + `python3 scripts/check-skill-health.py`; פחות הוראות, סמכות אחת, trigger/action/evidence מפורשים.
