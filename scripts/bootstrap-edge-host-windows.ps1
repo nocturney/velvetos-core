@@ -190,7 +190,7 @@ Add-UserPath $NpmPrefix
 
 Ensure-Git
 Ensure-Node
-$script:Python = Resolve-Python
+$script:Python = @(Resolve-Python)
 Ensure-FFmpeg
 
 if (-not (Test-Path $Repo)) {
