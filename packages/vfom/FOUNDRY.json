@@ -1,6 +1,6 @@
 {
   "name": "velvet-visual-foundry",
-  "version": 3,
+  "version": 4,
   "role": "machine-readable creative orchestration policy over existing VelvetOS packs",
   "noSecondRuntime": true,
   "specialists": {
@@ -13,6 +13,7 @@
     "visualDNA": "packages/vfom/VISUAL-DNA.json",
     "creativeManifestSchema": "packages/vfom/CREATIVE-MANIFEST.schema.json",
     "contentContractSchema": "packages/vfom/CONTENT-CONTRACT.schema.json",
+    "instagramDecisionPolicy": "packages/vfom/INSTAGRAM-CONTENT-DECISION.json",
     "motionPresets": "packages/vfom/MOTION-PRESETS.md",
     "formatGenomes": "packages/vfom/FORMAT-GENOMES.md",
     "mediaCatalog": "packages/vfmedia/catalog.json",
@@ -21,37 +22,9 @@
     "frameContract": "packages/vfom/HYPERFRAMES-FRAME.md"
   },
   "layers": {
-    "creativeIntelligence": [
-      "creative-director",
-      "brand-guardian",
-      "media-librarian",
-      "proof-first-storyboarder",
-      "visual-evaluator",
-      "repair-planner",
-      "experiment-director"
-    ],
-    "orchestration": [
-      "content-job-state-machine",
-      "content-contract",
-      "creative-manifest",
-      "opportunity-scoring",
-      "progressive-variants",
-      "threshold-policy",
-      "budget-governor",
-      "retry-and-escalation"
-    ],
-    "deterministicServices": [
-      "vfmedia-catalog",
-      "claim-provenance",
-      "subject-packs",
-      "hyperframes-video-composition",
-      "ffmpeg-svg-caption-composition",
-      "render-receipt-verification",
-      "render-derivatives",
-      "drive-storage",
-      "vfigos-publish-verification",
-      "vfinsights-performance-evidence"
-    ]
+    "creativeIntelligence": ["creative-director", "brand-guardian", "media-librarian", "proof-first-storyboarder", "visual-evaluator", "repair-planner", "experiment-director"],
+    "orchestration": ["content-job-state-machine", "content-contract", "creative-manifest", "instagram-content-decision-pipeline", "opportunity-scoring", "progressive-variants", "threshold-policy", "budget-governor", "retry-and-escalation"],
+    "deterministicServices": ["vfmedia-catalog", "claim-provenance", "subject-packs", "hyperframes-video-composition", "ffmpeg-svg-caption-composition", "render-receipt-verification", "render-derivatives", "drive-storage", "vfigos-publish-verification", "vfinsights-performance-evidence"]
   },
   "renderBackend": {
     "primary": "hyperframes",
@@ -61,35 +34,24 @@
     "fallback": "ffmpeg-svg-caption-composition",
     "finalRequiresReceipt": true,
     "renderReceiptIsPublishReceipt": false,
-    "rule": "HyperFrames is a deterministic backend only; Content Contract, Media Vault truth, vfcopy, Visual OS, Evaluation Engine and publish preflight remain authoritative."
+    "rule": "HyperFrames is a deterministic backend only; Content Contract, Media Vault truth, vfcopy, Visual OS, Instagram decision policy, Evaluation Engine and publish preflight remain authoritative."
   },
   "creativeManifest": {
     "enabled": true,
     "schema": "packages/vfom/CREATIVE-MANIFEST.schema.json",
-    "role": "single per-content-job coordination artifact shared by creative direction, media selection, edit, cover, QA, feed continuity and publish handoff",
+    "role": "single per-content-job coordination artifact shared by strategy, creative direction, media selection, edit, retention, authority/voice, engagement, visual QA, cover, final gate and publish handoff",
     "notASecondStateMachine": true,
     "notAMediaCatalog": true,
     "notAClaimAuthority": true
   },
-  "stateMachine": [
-    "discovered",
-    "qualified",
-    "contracted",
-    "concepted",
-    "storyboarded",
-    "media_ready",
-    "rough_generated",
-    "visually_scored",
-    "repaired",
-    "rendered",
-    "authorized_for_tool_publish",
-    "published_verified",
-    "performance_learned",
-    "ready_for_publish",
-    "waiting_for_media",
-    "human_required",
-    "archived"
-  ],
+  "instagramDecisionPolicy": {
+    "enabled": true,
+    "policy": "packages/vfom/INSTAGRAM-CONTENT-DECISION.json",
+    "requiredBeforePublish": true,
+    "failClosed": true,
+    "mayRejectPublication": true
+  },
+  "stateMachine": ["discovered", "qualified", "contracted", "concepted", "storyboarded", "media_ready", "rough_generated", "visually_scored", "repaired", "rendered", "authorized_for_tool_publish", "published_verified", "performance_learned", "ready_for_publish", "waiting_for_media", "human_required", "archived"],
   "truth": {
     "levels": ["verified_real", "derived_real", "illustrative_ai", "synthetic", "unverified"],
     "defaultWhenMissing": "unverified",
@@ -140,10 +102,10 @@
     "rule": "never spend a full-quality render on an unranked concept when a cheaper preview can reject it"
   },
   "evaluation": {
-    "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_stream_presence", "audio_loudness", "audio_sync", "frame_integrity", "render_receipt"],
-    "perceptualRubrics": ["brand", "hook", "composition", "reality", "originality", "audio_story_fit", "visual_copy_specificity", "visual_copy_value_over_no_text"],
+    "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_stream_presence", "audio_loudness", "audio_sync", "frame_integrity", "render_receipt", "mobile_preview"],
+    "perceptualRubrics": ["brand", "hook", "composition", "reality", "originality", "retention", "authority_voice", "engagement_quality", "audio_story_fit", "visual_copy_specificity", "visual_copy_value_over_no_text"],
     "referenceChecks": ["subject_fidelity", "material_fidelity", "geometry_invariants"],
-    "artifactChecks": ["flicker", "malformed_geometry", "unreadable_text", "temporal_jitter", "audio_clipping_or_noise"],
+    "artifactChecks": ["flicker", "malformed_geometry", "unreadable_text", "temporal_jitter", "audio_clipping_or_noise", "broken_hebrew_typography", "bad_crop", "weak_contrast"],
     "routineThresholds": {"brand": 80, "reality": 90, "artifact": 90},
     "heroThresholds": {"brand": 85, "reality": 95, "artifact": 92}
   },
@@ -172,17 +134,7 @@
     "mode": "exception-only",
     "creativeQualityFailure": "auto-repair",
     "routineCreativeChoice": "office",
-    "humanRequired": [
-      "physical-footage-or-staging",
-      "rights-or-privacy-unclear",
-      "sale-ils-or-price-change",
-      "purchase-or-spend",
-      "boost-or-ads",
-      "customer-whatsapp-send",
-      "print-from-hq",
-      "irreversible-destructive-action",
-      "hard-blocker-after-failover"
-    ],
+    "humanRequired": ["physical-footage-or-staging", "rights-or-privacy-unclear", "sale-ils-or-price-change", "purchase-or-spend", "boost-or-ads", "customer-whatsapp-send", "print-from-hq", "irreversible-destructive-action", "hard-blocker-after-failover"],
     "rightsOrPrivacyMeaning": "third-party media, UGC, identifiable-person/privacy issues or a known rights restriction; not a blanket model-license gate for owner-captured showcase content"
   }
 }
