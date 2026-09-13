@@ -46,13 +46,19 @@ function Test-SpeechService {
 }
 
 function Find-VoiceStudioExe {
-    $candidates = @(
-        (Join-Path $env:LOCALAPPDATA "VoiceStudio (Current User)\VoiceStudio.exe"),
-        (Join-Path $env:ProgramFiles "VoiceStudio\VoiceStudio.exe"),
-        (Join-Path ${env:ProgramFiles(x86)} "VoiceStudio\VoiceStudio.exe")
-    )
+    $candidates = @()
+    if ($env:LOCALAPPDATA) {
+        $candidates += (Join-Path $env:LOCALAPPDATA "VoiceStudio (Current User)\VoiceStudio.exe")
+    }
+    if ($env:ProgramFiles) {
+        $candidates += (Join-Path $env:ProgramFiles "VoiceStudio\VoiceStudio.exe")
+    }
+    $programFilesX86 = [Environment]::GetEnvironmentVariable("ProgramFiles(x86)")
+    if ($programFilesX86) {
+        $candidates += (Join-Path $programFilesX86 "VoiceStudio\VoiceStudio.exe")
+    }
     foreach ($candidate in $candidates) {
-        if ($candidate -and (Test-Path $candidate)) { return $candidate }
+        if (Test-Path $candidate) { return $candidate }
     }
     return $null
 }
