@@ -19,6 +19,8 @@
     "frameContract": "packages/vfom/HYPERFRAMES-FRAME.md",
     "hostRegistry": "packages/vfmcp/RENDER-HOSTS.json",
     "defaultHost": "sderot-mac",
+    "fallbackHosts": ["sderot-windows"],
+    "hostSelection": "first-healthy",
     "hostConnectPlaybook": "packages/vfmcp/CONNECT-RENDER-HOST.md",
     "package": "hyperframes",
     "packageVersion": "0.8.34",
@@ -26,11 +28,12 @@
     "requires": ["hyperframes", "ffmpeg", "ffprobe"],
     "networkInstallAllowed": false,
     "versionMismatch": "fail",
-    "note": "Install/cache the pinned HyperFrames CLI on the authorized render host outside the content job; the bridge never downloads dependencies or turns Core into a render daemon."
+    "note": "Install/cache the pinned HyperFrames CLI on authorized render hosts outside the content job; the bridge never downloads dependencies or turns Core into a render daemon."
   },
   "routing": {
     "primary": "hyperframes",
     "fallback": ["ffmpeg-svg-caption-composition"],
+    "hostFailover": ["sderot-mac", "sderot-windows"],
     "useHyperframesFor": ["reel_master", "story_master", "feed_video", "kinetic_typography", "deterministic_hebrew_overlay", "motion_graphics", "multi-shot_composition"],
     "preferFallbackFor": ["single_static_overlay", "simple_caption_burn_in", "emergency_render_when_hyperframes_unavailable"]
   },
