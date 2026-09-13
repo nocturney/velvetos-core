@@ -1,0 +1,19 @@
+{
+  "task_id": "skill-pattern-embed-2026-09-13",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfharness",
+  "goal": "All 12 recommended external patterns are embedded or explicitly verified as already covered, with sensors/tests and a PR.",
+  "planned_steps": ["map", "implement", "wire", "verify", "pr"],
+  "completed_steps": ["map", "implement-core", "wire", "verify"],
+  "next_step": "Open PR and merge after review.",
+  "artifacts": ["packages/vfharness/AGENT-SURFACE-SECURITY.md", "packages/vfbriefux/hq/UI-SYSTEM.md", "packages/vfbriefux/hq/UI-AUDIT.md", "packages/velvetos/PRODUCTIZATION.md", "scripts/check-agent-surface-security.py", "scripts/check-skill-pattern-embeds.py"],
+  "unresolved": [],
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "remote branch archive: python3 scripts/check-all.py => 48/48 PASS; check-skill-pattern-embeds mapped=12",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-13T10:58:00+03:00",
+  "latest_observation": "Remote branch verified clean with all 48 computational sensors passing."
+}

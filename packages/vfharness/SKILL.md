@@ -26,6 +26,10 @@
 13b. ביצוע תוכנית → `playbooks/executing-plans.md` (משימה אחת + אימות; עצירה על חוסם; בלי ניחוש).
 13c. מילון תחום → `playbooks/domain-glossary.md` (TEAM / pipeline / owner-memory — בלי מונחים מומצאים).
 14. Living Studio → `python3 scripts/vf_living_studio.py` (World Model / Pulse / Intake) — שכבת חיבור, לא Control Plane שני.
+15. שינוי קוד מהותי → `playbooks/implementation-discipline.md` — think first, boring simplicity, surgical diff, proof-before-code (Karpathy pattern).
+16. שינוי רגיש/רחב → `playbooks/critique-review.md` — critique רב-זוויתי + evidence + repair; סנסור דטרמיניסטי נשאר שופט מחייב.
+17. worker-to-worker בלבד → `playbooks/terse-worker-output.md` — פלט קצר ומבני; לעולם לא על טקסט אנושי.
+18. Agent/MCP/rules surface → `AGENT-SURFACE-SECURITY.md` + `python3 scripts/check-agent-surface-security.py` (AgentShield pattern).
 
 צינור יחיד נשאר: פנייה · שיחה · הצעה · הדפסה · איסוף.
 
@@ -53,4 +57,4 @@
 
 ## שימוש בלולאת הסלמה (2026-09-07)
 
-משימות ארוכות ב-`vfcopy` / `vfconvert` / `vfsales` עוברות דרך `run_ladder` מ-`scripts/vf_graceful_escalation.py` (retry → fallback → downgrade → escalate) במקום עצירת ניסיון שני.
+משימות ארוכות ב-`vfcopy` / `vfconvert` / `vfsales` עוברות דרך `run_ladder` מ-`scripts/vf_graceful_escalation.py` (retry → fallback → downgrade scope → escalate) במקום עצירת ניסיון שני.
