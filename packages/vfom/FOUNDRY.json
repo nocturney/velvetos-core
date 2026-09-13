@@ -1,6 +1,6 @@
 {
   "name": "velvet-visual-foundry",
-  "version": 4,
+  "version": 5,
   "role": "machine-readable creative orchestration policy over existing VelvetOS packs",
   "noSecondRuntime": true,
   "specialists": {
@@ -50,6 +50,27 @@
     "requiredBeforePublish": true,
     "failClosed": true,
     "mayRejectPublication": true
+  },
+  "visualFinishingPolicy": {
+    "enabled": true,
+    "version": 1,
+    "authority": "packages/vfom/VISUAL-OS.md",
+    "projection": "packages/vfom/VISUAL-DNA.json",
+    "principle": "Retouch the photo, not the product.",
+    "stages": ["photo_retouch", "brand_content_styling", "text_layout_qa", "final_visual_qa"],
+    "requiredFor": ["post", "story", "carousel", "cover", "reel", "visual_asset"],
+    "productTruthFailClosed": true,
+    "requireSourceSubjectMatch": true,
+    "forbidSyntheticSubjectChange": true,
+    "mobileReadabilityRequired": true,
+    "hebrewRtlRequiredWhenTextPresent": true,
+    "contrastRequiredWhenTextPresent": true,
+    "safeMarginsRequired": true,
+    "autoRepairOrdinaryQualityFailures": true,
+    "recheckAfterRepair": true,
+    "evidenceRequired": true,
+    "maxRepairCyclesAuthority": "progressiveVariants.maxRepairCycles",
+    "rule": "No content may become authorized_for_tool_publish until the exact final artifact has completed all applicable finishing stages and Product Truth checks."
   },
   "stateMachine": ["discovered", "qualified", "contracted", "concepted", "storyboarded", "media_ready", "rough_generated", "visually_scored", "repaired", "rendered", "authorized_for_tool_publish", "published_verified", "performance_learned", "ready_for_publish", "waiting_for_media", "human_required", "archived"],
   "truth": {
@@ -102,10 +123,10 @@
     "rule": "never spend a full-quality render on an unranked concept when a cheaper preview can reject it"
   },
   "evaluation": {
-    "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_stream_presence", "audio_loudness", "audio_sync", "frame_integrity", "render_receipt", "mobile_preview"],
+    "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_stream_presence", "audio_loudness", "audio_sync", "frame_integrity", "render_receipt", "mobile_preview", "text_contrast"],
     "perceptualRubrics": ["brand", "hook", "composition", "reality", "originality", "retention", "authority_voice", "engagement_quality", "audio_story_fit", "visual_copy_specificity", "visual_copy_value_over_no_text"],
-    "referenceChecks": ["subject_fidelity", "material_fidelity", "geometry_invariants"],
-    "artifactChecks": ["flicker", "malformed_geometry", "unreadable_text", "temporal_jitter", "audio_clipping_or_noise", "broken_hebrew_typography", "bad_crop", "weak_contrast"],
+    "referenceChecks": ["subject_fidelity", "material_fidelity", "geometry_invariants", "product_identity", "source_subject_match"],
+    "artifactChecks": ["flicker", "malformed_geometry", "unreadable_text", "temporal_jitter", "audio_clipping_or_noise", "broken_hebrew_typography", "bad_crop", "weak_contrast", "synthetic_subject_change"],
     "routineThresholds": {"brand": 80, "reality": 90, "artifact": 90},
     "heroThresholds": {"brand": 85, "reality": 95, "artifact": 92}
   },
