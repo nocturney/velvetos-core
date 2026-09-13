@@ -68,6 +68,11 @@ Other high-motion signals were deliberately skipped: Google Agents CLI (vendor C
 
 Full maintenance note: `packages/vfresearch/sources/2026-09-14-best-skills.md`.
 
+## Validation
+
+- `python scripts/vfresearch_cadence.py freshness` on a fresh Windows fallback checkout: **PASS** — same-day artifact found with external research body.
+- `python scripts/check-all.py` was attempted because Best Skills state changed. The run did **not** complete green: Windows hit the repository's existing case-collision between `constitution/TAGS.md` and `constitution/tags.md`, so `check-hq-overlay.py` saw the wrong checkout variant and reported the `#צמיחה-חברתית` needle missing; the broader run was then interrupted. This is a validation/portability blocker, not a research-freshness failure, and is not claimed as PASS.
+
 ## Deliberate skips / limitations
 
 - Marketplace popularity is not treated as Sderot/Israel demand.
