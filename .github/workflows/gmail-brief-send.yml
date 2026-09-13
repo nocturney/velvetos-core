@@ -73,6 +73,7 @@ jobs:
             echo "::error::visibleText file does not exist: $VISIBLE_TEXT_PATH"
             exit 3
           fi
+          set +e
           PYTHONPATH=packages python3 scripts/vf_visible_text.py \
             --surface owner-brief \
             --file "$VISIBLE_TEXT_PATH" \
@@ -83,6 +84,13 @@ jobs:
             --surface-qa \
             --domain-tool vfops \
             > "$RUNNER_TEMP/visible-text-gate.json"
+          gate_rc=$?
+          set -e
+          cat "$RUNNER_TEMP/visible-text-gate.json"
+          if [ "$gate_rc" -ne 0 ]; then
+            echo "::error::Visible Text Gate command failed with exit code $gate_rc."
+            exit "$gate_rc"
+          fi
           python3 - <<'PY'
           import json, os, pathlib
           p = pathlib.Path(os.environ['RUNNER_TEMP']) / 'visible-text-gate.json'
