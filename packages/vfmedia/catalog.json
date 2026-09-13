@@ -2,7 +2,7 @@
   "name": "vfmedia-catalog",
   "title": "VelvetOS shared media catalog",
   "oneCatalog": true,
-  "updatedAt": "2026-09-12",
+  "updatedAt": "2026-09-13",
   "vaultRootId": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
   "locks": [
     "one-catalog",
@@ -17124,6 +17124,942 @@
         "md5Checksum": "bccc9050856bab279a43e37b86281bc5",
         "sha256Checksum": "38f7d54129a4ceaceb72899edb1b9134a9ab6d9ad29b414efc940abf6a48436f",
         "moveStartedAt": "2026-09-12T17:00:29Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1DAvUKZtxP50sp6Oo--7qvuku3ubivxKt",
+      "sourceFile": {
+        "id": "1DAvUKZtxP50sp6Oo--7qvuku3ubivxKt",
+        "url": "https://drive.google.com/file/d/1DAvUKZtxP50sp6Oo--7qvuku3ubivxKt/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: king_v3_PLA_22h10m_20260820151913.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-08-21",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:03Z",
+        "verifiedAt": "2026-09-13T12:01:08Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:08Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:3f669677b9b215aa7aae56ca9422b5cbf3bed6a2dd131bd6cb747f5652c07f98",
+        "headRevisionId": "0B_YIZLrmyOz4a3JCSnF2MFRRQUVpWGpscVlkajlSanZkVlgwPQ",
+        "md5Checksum": "432881df6da4733f4454612eb72a411c",
+        "sha256Checksum": "3f669677b9b215aa7aae56ca9422b5cbf3bed6a2dd131bd6cb747f5652c07f98",
+        "moveStartedAt": "2026-09-13T12:01:07Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1jiEOi6HnXtV2F0GDPo7webE4QJoTYoMK",
+      "sourceFile": {
+        "id": "1jiEOi6HnXtV2F0GDPo7webE4QJoTYoMK",
+        "url": "https://drive.google.com/file/d/1jiEOi6HnXtV2F0GDPo7webE4QJoTYoMK/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: king_v3_PLA_22h32m_20260819183759.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-08-20",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:08Z",
+        "verifiedAt": "2026-09-13T12:01:12Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:12Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:5f1d05cca671b6c6adfb281fa73b1d76cc6495e0defa6e7a93fa39bbf8da7025",
+        "headRevisionId": "0B_YIZLrmyOz4MHdZTFBKTnV1RXdqVDQ5YmJCbng1V2tCT3YwPQ",
+        "md5Checksum": "acdd1f32f9a1f52c112fbd65445b5ab4",
+        "sha256Checksum": "5f1d05cca671b6c6adfb281fa73b1d76cc6495e0defa6e7a93fa39bbf8da7025",
+        "moveStartedAt": "2026-09-13T12:01:11Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-147Cr01K1mDkysm_KTnyQvMQodMaUb66N",
+      "sourceFile": {
+        "id": "147Cr01K1mDkysm_KTnyQvMQodMaUb66N",
+        "url": "https://drive.google.com/file/d/147Cr01K1mDkysm_KTnyQvMQodMaUb66N/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: king_v3_PLA_22h10m_20260819152454.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-08-20",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:12Z",
+        "verifiedAt": "2026-09-13T12:01:16Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:16Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:1c070d950f397ca189e86a1157bfecca110af54942227f48c319a8755718fc1e",
+        "headRevisionId": "0B_YIZLrmyOz4cTJWT2cvMDBhR1JVSzR0eDI5V2lYSHBrT1dvPQ",
+        "md5Checksum": "7ee426458263839101197c071a044326",
+        "sha256Checksum": "1c070d950f397ca189e86a1157bfecca110af54942227f48c319a8755718fc1e",
+        "moveStartedAt": "2026-09-13T12:01:15Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1vudt5CiSJXA0NIuv88a7Db5yblvVZkHH",
+      "sourceFile": {
+        "id": "1vudt5CiSJXA0NIuv88a7Db5yblvVZkHH",
+        "url": "https://drive.google.com/file/d/1vudt5CiSJXA0NIuv88a7Db5yblvVZkHH/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: king_v3_PLA_22h32m_20260818203011.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-08-19",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:17Z",
+        "verifiedAt": "2026-09-13T12:01:21Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:21Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:fe5b634cbcf1fc2464e8d1a48fa5fb7e14e6812607d87f3109ba35f01aed8377",
+        "headRevisionId": "0B_YIZLrmyOz4V2ZXdHo1Zm92YUQySVMzV2c3NmEvUy9tSTFvPQ",
+        "md5Checksum": "35209a1572be19d3aa30ed3c881c7abd",
+        "sha256Checksum": "fe5b634cbcf1fc2464e8d1a48fa5fb7e14e6812607d87f3109ba35f01aed8377",
+        "moveStartedAt": "2026-09-13T12:01:20Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1T6pOCfp5s3phU1uKivzPF23pjbVglfZm",
+      "sourceFile": {
+        "id": "1T6pOCfp5s3phU1uKivzPF23pjbVglfZm",
+        "url": "https://drive.google.com/file/d/1T6pOCfp5s3phU1uKivzPF23pjbVglfZm/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: RoboLotl_Head_4Color_Clean_PLA_17h29m_20260807052758.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-08-07",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:21Z",
+        "verifiedAt": "2026-09-13T12:01:25Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:25Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:1587b12c639f33d0315e2498cd21172e22f8ff552853fe272dfa9ef0966db0e8",
+        "headRevisionId": "0B_YIZLrmyOz4N1Bhb0p6VzlaWCtXcHpyUFc3dUord3BYWFBrPQ",
+        "md5Checksum": "e1591be64181169ed0b1134f65ae6d00",
+        "sha256Checksum": "1587b12c639f33d0315e2498cd21172e22f8ff552853fe272dfa9ef0966db0e8",
+        "moveStartedAt": "2026-09-13T12:01:24Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1bgUPAZdEpjglpT8SpvSJRab-Khe_RYNz",
+      "sourceFile": {
+        "id": "1bgUPAZdEpjglpT8SpvSJRab-Khe_RYNz",
+        "url": "https://drive.google.com/file/d/1bgUPAZdEpjglpT8SpvSJRab-Khe_RYNz/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: 6ae8d139-6639-4730-a343-8401dc26862b_PLA_9h49m_20260801072938.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-08-01",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:25Z",
+        "verifiedAt": "2026-09-13T12:01:29Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:29Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:19e668510efcaceec9d9c761d5d31d96f58b90543c1a502afc81738284d53fd0",
+        "headRevisionId": "0B_YIZLrmyOz4Z3ZIU2R6NWhiMkFaTlFRY2JWSktQY1ZQS3dvPQ",
+        "md5Checksum": "62bbf88091ee44ec0ec68de67a00e30e",
+        "sha256Checksum": "19e668510efcaceec9d9c761d5d31d96f58b90543c1a502afc81738284d53fd0",
+        "moveStartedAt": "2026-09-13T12:01:27Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1Uh1xeOm73-YhRa3F1qENLgyAyo4y_Tke",
+      "sourceFile": {
+        "id": "1Uh1xeOm73-YhRa3F1qENLgyAyo4y_Tke",
+        "url": "https://drive.google.com/file/d/1Uh1xeOm73-YhRa3F1qENLgyAyo4y_Tke/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: Object_1_PLA_1d0h31m_20260726182840.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-07-27",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:29Z",
+        "verifiedAt": "2026-09-13T12:01:33Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:33Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:780a78dbb3a2fe204a361e8bb2e90b8e28a0a20f9d1727dbeb2921f93bc7d8ad",
+        "headRevisionId": "0B_YIZLrmyOz4OWt2SFJZMGIzeTlnanMzaXBKOUMrNGpWTndNPQ",
+        "md5Checksum": "c283b674ce775e318027a6d84004553a",
+        "sha256Checksum": "780a78dbb3a2fe204a361e8bb2e90b8e28a0a20f9d1727dbeb2921f93bc7d8ad",
+        "moveStartedAt": "2026-09-13T12:01:32Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1SFasgdKYW3_LograuNniF68RLEv6-dp2",
+      "sourceFile": {
+        "id": "1SFasgdKYW3_LograuNniF68RLEv6-dp2",
+        "url": "https://drive.google.com/file/d/1SFasgdKYW3_LograuNniF68RLEv6-dp2/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: SoccerBall final_PLA_9h55m_20260715143622.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-07-15",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:33Z",
+        "verifiedAt": "2026-09-13T12:01:36Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:36Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:cdcde01756bb666b06678894f9bf004cb0e6eefad398e3e9d40028fd75e74419",
+        "headRevisionId": "0B_YIZLrmyOz4Z0JuN0J4MjdRV0htV1hpS0Q2OWRHdklmMGFZPQ",
+        "md5Checksum": "0730ecbfc25a127d9ad37909c7b4759e",
+        "sha256Checksum": "cdcde01756bb666b06678894f9bf004cb0e6eefad398e3e9d40028fd75e74419",
+        "moveStartedAt": "2026-09-13T12:01:35Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1c16q49rv08lNHZ0g-iGmy4Wx00JYFtbN",
+      "sourceFile": {
+        "id": "1c16q49rv08lNHZ0g-iGmy4Wx00JYFtbN",
+        "url": "https://drive.google.com/file/d/1c16q49rv08lNHZ0g-iGmy4Wx00JYFtbN/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: MMM_RoboOctopus_Connector_PLA_1d19h49m_20260703145736.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-07-05",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:36Z",
+        "verifiedAt": "2026-09-13T12:01:40Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:40Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:9684d5dfdaf24981cc8709902b266d5dee6aafa4fa66e1d86947f900f9a13621",
+        "headRevisionId": "0B_YIZLrmyOz4T1pQZnVYcFl3MHo4alA0QktsYXdSck1BV1dvPQ",
+        "md5Checksum": "4fab15dfb63efc6a1540e246cc1777c8",
+        "sha256Checksum": "9684d5dfdaf24981cc8709902b266d5dee6aafa4fa66e1d86947f900f9a13621",
+        "moveStartedAt": "2026-09-13T12:01:39Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1a5qDJIgsSrNg9XqZrkYm9v6LSXufQpy5",
+      "sourceFile": {
+        "id": "1a5qDJIgsSrNg9XqZrkYm9v6LSXufQpy5",
+        "url": "https://drive.google.com/file/d/1a5qDJIgsSrNg9XqZrkYm9v6LSXufQpy5/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: MMM_SeaTurtle_Head_PLA_12h6m_20260624060126.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-06-24",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:40Z",
+        "verifiedAt": "2026-09-13T12:01:44Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:44Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:13e9e2ec7bda8225977fb6b791afe24ba65c4cf173d8ff28507469be1b9b6ae4",
+        "headRevisionId": "0B_YIZLrmyOz4Z3NRQThMK2pUd2xFMkFWbklXb0pERWxXTDU4PQ",
+        "md5Checksum": "d5c023f0e244b51066d18e0a401718ec",
+        "sha256Checksum": "13e9e2ec7bda8225977fb6b791afe24ba65c4cf173d8ff28507469be1b9b6ae4",
+        "moveStartedAt": "2026-09-13T12:01:43Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1FtogWCHQz7boQ9m4UYT8jbE3JkHXgjp5",
+      "sourceFile": {
+        "id": "1FtogWCHQz7boQ9m4UYT8jbE3JkHXgjp5",
+        "url": "https://drive.google.com/file/d/1FtogWCHQz7boQ9m4UYT8jbE3JkHXgjp5/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: dragon_multi2tests_PLA_2d14h47m_20260613085952.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-06-16",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:44Z",
+        "verifiedAt": "2026-09-13T12:01:50Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:50Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:dc13b489d722b75b62a8cf56e9dd9695b949715a431147248b5570b61938fcac",
+        "headRevisionId": "0B_YIZLrmyOz4cFgxT1VCWTEzVWZVM1FiMGdUVm1KN1pUdDdVPQ",
+        "md5Checksum": "d41e4155932e6b9c1821643b22664786",
+        "sha256Checksum": "dc13b489d722b75b62a8cf56e9dd9695b949715a431147248b5570b61938fcac",
+        "moveStartedAt": "2026-09-13T12:01:49Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1H2zNDvMPKO0KWqHjYCXnVDemyF5H56S8",
+      "sourceFile": {
+        "id": "1H2zNDvMPKO0KWqHjYCXnVDemyF5H56S8",
+        "url": "https://drive.google.com/file/d/1H2zNDvMPKO0KWqHjYCXnVDemyF5H56S8/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: Object_1_PLA_1d19h59m_20260514064620.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-05-16",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:50Z",
+        "verifiedAt": "2026-09-13T12:01:54Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:54Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:e477f7da7f0b8c290f1f2fed89f058c519b568d327530bfd9729227eab90e4bf",
+        "headRevisionId": "0B_YIZLrmyOz4RjNEUXcrWDF0bk5uUk5BVkYrWGc1SmxSSVZnPQ",
+        "md5Checksum": "3d1a5c051dcd04b91616e6cf8c114a24",
+        "sha256Checksum": "e477f7da7f0b8c290f1f2fed89f058c519b568d327530bfd9729227eab90e4bf",
+        "moveStartedAt": "2026-09-13T12:01:53Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1lBhmR6LN_Uzgwz5AkleUtHf3KpDlwTdG",
+      "sourceFile": {
+        "id": "1lBhmR6LN_Uzgwz5AkleUtHf3KpDlwTdG",
+        "url": "https://drive.google.com/file/d/1lBhmR6LN_Uzgwz5AkleUtHf3KpDlwTdG/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: 1774430959773-af7b68e2_plate_1_20260429201411.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-04-30",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:54Z",
+        "verifiedAt": "2026-09-13T12:01:59Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:01:59Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:6a72cdb014976346b65ec6a50aba73ebcb0922e1f5f429720121c5520c66d24c",
+        "headRevisionId": "0B_YIZLrmyOz4cjhXV3JpTzhNV2FJMGdXa3BYMFVaREhYQnBBPQ",
+        "md5Checksum": "a394de11aaa41971d3dbf31c9978ce97",
+        "sha256Checksum": "6a72cdb014976346b65ec6a50aba73ebcb0922e1f5f429720121c5520c66d24c",
+        "moveStartedAt": "2026-09-13T12:01:57Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1hIcfxUcNNotYxSq8capLP64_G31imCEK",
+      "sourceFile": {
+        "id": "1hIcfxUcNNotYxSq8capLP64_G31imCEK",
+        "url": "https://drive.google.com/file/d/1hIcfxUcNNotYxSq8capLP64_G31imCEK/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-03-18_01-36-45.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-03-18",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:01:59Z",
+        "verifiedAt": "2026-09-13T12:02:03Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:03Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:93b16aea7f9baffc1edb900141f2a6c3a223408a224bca991327fb043215e4d1",
+        "headRevisionId": "0B_YIZLrmyOz4Vnk3UG45T2VJWXgrUVRjaWU5Q1JnTVNheU93PQ",
+        "md5Checksum": "189782bf58589bd81700657b0f337ab0",
+        "sha256Checksum": "93b16aea7f9baffc1edb900141f2a6c3a223408a224bca991327fb043215e4d1",
+        "moveStartedAt": "2026-09-13T12:02:02Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1fPb3Upl-BHUugIQgeorKwR5-LWERf0rf",
+      "sourceFile": {
+        "id": "1fPb3Upl-BHUugIQgeorKwR5-LWERf0rf",
+        "url": "https://drive.google.com/file/d/1fPb3Upl-BHUugIQgeorKwR5-LWERf0rf/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-03-17_16-27-25.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-03-18",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:03Z",
+        "verifiedAt": "2026-09-13T12:02:07Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:07Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:0003ca969d5f9682b6013b8eef626d688ff18fab6c1477f9856e6cad01ce65b7",
+        "headRevisionId": "0B_YIZLrmyOz4eEdoaDIwY3JORlAwR0YwUzhDSEhMb3FwTFJRPQ",
+        "md5Checksum": "ae083dafac06eab67961d62eab72c844",
+        "sha256Checksum": "0003ca969d5f9682b6013b8eef626d688ff18fab6c1477f9856e6cad01ce65b7",
+        "moveStartedAt": "2026-09-13T12:02:06Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1S3lY24cNcf13k0CDEHuRfA-Pe2TuaKi-",
+      "sourceFile": {
+        "id": "1S3lY24cNcf13k0CDEHuRfA-Pe2TuaKi-",
+        "url": "https://drive.google.com/file/d/1S3lY24cNcf13k0CDEHuRfA-Pe2TuaKi-/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-03-15_13-47-37.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-03-17",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:07Z",
+        "verifiedAt": "2026-09-13T12:02:12Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:12Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:cb8569413c88f4ef6eeba54105faa7e7203bdc3fe6d37b0eef6ee58bee9c22aa",
+        "headRevisionId": "0B_YIZLrmyOz4NHZNVmpKaWkxcHU0MWR4KytKTldRU2J2VVlBPQ",
+        "md5Checksum": "d028563ecf233978af1d5155bd130fa8",
+        "sha256Checksum": "cb8569413c88f4ef6eeba54105faa7e7203bdc3fe6d37b0eef6ee58bee9c22aa",
+        "moveStartedAt": "2026-09-13T12:02:11Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1s4UlDCt89usNaJTiq9qf_8pq9qH4gY62",
+      "sourceFile": {
+        "id": "1s4UlDCt89usNaJTiq9qf_8pq9qH4gY62",
+        "url": "https://drive.google.com/file/d/1s4UlDCt89usNaJTiq9qf_8pq9qH4gY62/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-03-15_19-19-44.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-03-17",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:12Z",
+        "verifiedAt": "2026-09-13T12:02:15Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:15Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:a6691910029eeef3e1cac051f6cc50eb35cd64385ea868cde5cab49b686f5aee",
+        "headRevisionId": "0B_YIZLrmyOz4YldQSXBwNXZxVnlZeDRiMUltcHVJREFuTW9FPQ",
+        "md5Checksum": "ae8a725774360a03718cde12094ff714",
+        "sha256Checksum": "a6691910029eeef3e1cac051f6cc50eb35cd64385ea868cde5cab49b686f5aee",
+        "moveStartedAt": "2026-09-13T12:02:14Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1t84SZd5GK2idIUaAnHRsJu2C3LZaBNe0",
+      "sourceFile": {
+        "id": "1t84SZd5GK2idIUaAnHRsJu2C3LZaBNe0",
+        "url": "https://drive.google.com/file/d/1t84SZd5GK2idIUaAnHRsJu2C3LZaBNe0/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-03-16_00-03-32.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-03-17",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:15Z",
+        "verifiedAt": "2026-09-13T12:02:19Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:19Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:c88c784de15810e5c5d9398c28b3978bbb9ed636ad43130a3c6db9777f73d927",
+        "headRevisionId": "0B_YIZLrmyOz4UGdFT2hHZEVtM0VScnVIeTJRWDJxZm52ZEVBPQ",
+        "md5Checksum": "30ea1e8a5f194b031de199b88e2c196f",
+        "sha256Checksum": "c88c784de15810e5c5d9398c28b3978bbb9ed636ad43130a3c6db9777f73d927",
+        "moveStartedAt": "2026-09-13T12:02:18Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-19VmgLcH8q0aeBzFTylyECAQ31ho4R382",
+      "sourceFile": {
+        "id": "19VmgLcH8q0aeBzFTylyECAQ31ho4R382",
+        "url": "https://drive.google.com/file/d/19VmgLcH8q0aeBzFTylyECAQ31ho4R382/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-03-16_15-47-45.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-03-17",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:19Z",
+        "verifiedAt": "2026-09-13T12:02:23Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:23Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:14ec1cb972edba648174a5a671f3e0e93aadbfbdc3280cdbb097abc7251e8923",
+        "headRevisionId": "0B_YIZLrmyOz4YzBDUm9Oc05QaEVvSlVGVFFmTS9NVVpwQm1vPQ",
+        "md5Checksum": "f135d93aad4746ba013a2ec687d2116b",
+        "sha256Checksum": "14ec1cb972edba648174a5a671f3e0e93aadbfbdc3280cdbb097abc7251e8923",
+        "moveStartedAt": "2026-09-13T12:02:21Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1DyoOSLSCs9zsa0IwbazbgIcH9SLsHLmb",
+      "sourceFile": {
+        "id": "1DyoOSLSCs9zsa0IwbazbgIcH9SLsHLmb",
+        "url": "https://drive.google.com/file/d/1DyoOSLSCs9zsa0IwbazbgIcH9SLsHLmb/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-03-17_01-02-56.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-03-17",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:23Z",
+        "verifiedAt": "2026-09-13T12:02:27Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:27Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:1fd6a9b3c72d455b269b151890feed8d533e883744f203211705d1ef032605d3",
+        "headRevisionId": "0B_YIZLrmyOz4aFpWYkxPWVlkTGUwc2ozZmw0U2x4MzJ5ekw4PQ",
+        "md5Checksum": "18548d84301b30bcb728cde3333ae3d6",
+        "sha256Checksum": "1fd6a9b3c72d455b269b151890feed8d533e883744f203211705d1ef032605d3",
+        "moveStartedAt": "2026-09-13T12:02:26Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1so4HI05FCgi0tKqkR2tOT9-GX7ibbrli",
+      "sourceFile": {
+        "id": "1so4HI05FCgi0tKqkR2tOT9-GX7ibbrli",
+        "url": "https://drive.google.com/file/d/1so4HI05FCgi0tKqkR2tOT9-GX7ibbrli/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-03-14_21-10-55.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-03-17",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:27Z",
+        "verifiedAt": "2026-09-13T12:02:30Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:30Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:87b819b7387c4fd15cf4503c8508a4cc52d01c65231db93b87c399bdbeb6ed81",
+        "headRevisionId": "0B_YIZLrmyOz4ZnpqdFg3czhySW43c05XRGZYTXpaTXRVcGtBPQ",
+        "md5Checksum": "aadc1d87907cbca57de74a3dba7aa408",
+        "sha256Checksum": "87b819b7387c4fd15cf4503c8508a4cc52d01c65231db93b87c399bdbeb6ed81",
+        "moveStartedAt": "2026-09-13T12:02:29Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1hKJq26b7CWeeHj2HX-YfoWyx22-0x2gI",
+      "sourceFile": {
+        "id": "1hKJq26b7CWeeHj2HX-YfoWyx22-0x2gI",
+        "url": "https://drive.google.com/file/d/1hKJq26b7CWeeHj2HX-YfoWyx22-0x2gI/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-01-15_03-17-55.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-01-15",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:30Z",
+        "verifiedAt": "2026-09-13T12:02:35Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:35Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:f432e9d7e58f7be8592047469530f18b97bef5abe8c647d596e15d7b4827d034",
+        "headRevisionId": "0B_YIZLrmyOz4NXlCb2k0QlV3Y1h0MUxBS084QVc4dTc4V09vPQ",
+        "md5Checksum": "2d6cab9c266daa99a7f593fd9edfdbab",
+        "sha256Checksum": "f432e9d7e58f7be8592047469530f18b97bef5abe8c647d596e15d7b4827d034",
+        "moveStartedAt": "2026-09-13T12:02:33Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1EIyxjFEHjC8ZpclvZSijm3XQRMac-jr4",
+      "sourceFile": {
+        "id": "1EIyxjFEHjC8ZpclvZSijm3XQRMac-jr4",
+        "url": "https://drive.google.com/file/d/1EIyxjFEHjC8ZpclvZSijm3XQRMac-jr4/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-01-14_21-56-27.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-01-15",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:35Z",
+        "verifiedAt": "2026-09-13T12:02:40Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:40Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:ae7e5ec7be0a77be63fa9ce94a3ee5b4c8babc397538179472e9707d535630ef",
+        "headRevisionId": "0B_YIZLrmyOz4ZERscW1zTzBERzVPeHRteGdDVG1zcXJZVXl3PQ",
+        "md5Checksum": "9855b75b3f97a0245b952a4d9e8d8ce1",
+        "sha256Checksum": "ae7e5ec7be0a77be63fa9ce94a3ee5b4c8babc397538179472e9707d535630ef",
+        "moveStartedAt": "2026-09-13T12:02:39Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1hDsvVIDkuNzGxaYBgcrYuoWHuv2zQ4R2",
+      "sourceFile": {
+        "id": "1hDsvVIDkuNzGxaYBgcrYuoWHuv2zQ4R2",
+        "url": "https://drive.google.com/file/d/1hDsvVIDkuNzGxaYBgcrYuoWHuv2zQ4R2/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-01-13_23-04-50.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-01-14",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:40Z",
+        "verifiedAt": "2026-09-13T12:02:43Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:43Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:a395055e7695da9253b22fc50f864f3484184984fdacb96218393199877e8567",
+        "headRevisionId": "0B_YIZLrmyOz4SXNobnE4SC9aUUJRMlFlYTkvb01ZQk5sVkpjPQ",
+        "md5Checksum": "118c9196315ae48431d468105d47b0aa",
+        "sha256Checksum": "a395055e7695da9253b22fc50f864f3484184984fdacb96218393199877e8567",
+        "moveStartedAt": "2026-09-13T12:02:42Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1StShSWCK-v3lYcvroZDPRbQyEKuVmWbp",
+      "sourceFile": {
+        "id": "1StShSWCK-v3lYcvroZDPRbQyEKuVmWbp",
+        "url": "https://drive.google.com/file/d/1StShSWCK-v3lYcvroZDPRbQyEKuVmWbp/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-01-06_01-05-50.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-01-06",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:43Z",
+        "verifiedAt": "2026-09-13T12:02:47Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:47Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:f678d5cd9ed3b99291bc9609134ef9715b00596462049c6cf8b363dd8cddd9d1",
+        "headRevisionId": "0B_YIZLrmyOz4T001MjhDNXBPUVpicjFQMjErd3BKRG9jVWNBPQ",
+        "md5Checksum": "20de649828fbeff88261a3e4cc0bcd64",
+        "sha256Checksum": "f678d5cd9ed3b99291bc9609134ef9715b00596462049c6cf8b363dd8cddd9d1",
+        "moveStartedAt": "2026-09-13T12:02:46Z"
+      },
+      "visualReview": {
+        "state": "none",
+        "reviewedAt": null,
+        "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1DH-JRgEjereYMIawBvN0QjKVXeB-Phuu",
+      "sourceFile": {
+        "id": "1DH-JRgEjereYMIawBvN0QjKVXeB-Phuu",
+        "url": "https://drive.google.com/file/d/1DH-JRgEjereYMIawBvN0QjKVXeB-Phuu/view?usp=drivesdk"
+      },
+      "viewDescription": "וידאו · שם קובץ: video_2026-01-04_19-22-19.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
+      "uploadedAt": "2026-01-05",
+      "productLink": null,
+      "status": "source",
+      "assignee": "ops-intake",
+      "derivativeIds": [],
+      "sourceLinks": [],
+      "versionApproval": {
+        "state": "none"
+      },
+      "intake": {
+        "phase": "verified",
+        "registeredAt": "2026-09-13T12:02:47Z",
+        "verifiedAt": "2026-09-13T12:02:51Z",
+        "downloadBytes": 2000000,
+        "movedToSourceAt": "2026-09-13T12:02:51Z",
+        "attempts": 1,
+        "lastError": null,
+        "contentFingerprint": "sha256:d2bef3a3194b61f90014f7013ee5d47b54caafaa4d6f5521f08ade49ba5aad5a",
+        "headRevisionId": "0B_YIZLrmyOz4RDk4ZjhFYXFLbUpmdGNHUC9OSzBrOWJNQkVJPQ",
+        "md5Checksum": "4efa61be4e7ed5954620ac8950737ec1",
+        "sha256Checksum": "d2bef3a3194b61f90014f7013ee5d47b54caafaa4d6f5521f08ade49ba5aad5a",
+        "moveStartedAt": "2026-09-13T12:02:50Z"
       },
       "visualReview": {
         "state": "none",
