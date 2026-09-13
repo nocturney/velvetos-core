@@ -1,0 +1,165 @@
+{
+  "name": "instagram-content-decision-pipeline",
+  "version": 1,
+  "scope": "routine organic Instagram content inside the existing Velvet Visual Foundry",
+  "authority": "packages/vfom/FOUNDRY.json",
+  "noSecondRuntime": true,
+  "order": [
+    "saturation_scan",
+    "anti_generic_check",
+    "format_selection",
+    "hook_tournament",
+    "retention_pass",
+    "authority_voice_pass",
+    "engagement_pass",
+    "visual_qa",
+    "final_quality_gate",
+    "performance_feedback"
+  ],
+  "stages": {
+    "saturation_scan": {
+      "enabled": true,
+      "sources": [
+        "vfinsights",
+        "office-learning",
+        "vfresearch-current-evidence-when-available"
+      ],
+      "targetSaturatedPatternsWhenEvidenceExists": 7,
+      "unknownWhenEvidenceMissing": true,
+      "neverInventExternalPatterns": true,
+      "outputs": ["saturatedPatterns", "whitespaceAngles", "evidenceRefs"],
+      "rule": "Do not cosmetically improve a saturated pattern. Change the proof, story mechanic, decision, failure, iteration or point of view."
+    },
+    "anti_generic_check": {
+      "enabled": true,
+      "rejectIf": [
+        "could_fit_any_3d_print_shop",
+        "stock_or_template_feel",
+        "show_and_tell_without_reason",
+        "generic_slogan_or_fake_profundity",
+        "unsupported_generic_claim"
+      ],
+      "preferredSpecificity": [
+        "real_decision",
+        "real_failure_or_constraint",
+        "real_iteration",
+        "real_process_detail",
+        "real_before_after",
+        "real_customer_or_use_context_when_rights_allow",
+        "real_product_proof"
+      ],
+      "repair": "Inject evidenced Velvet Factory specificity or archive the idea instead of publishing filler."
+    },
+    "format_selection": {
+      "enabled": true,
+      "allowed": ["reel", "carousel", "post", "story"],
+      "chooseOnePrimary": true,
+      "doNotGenerateAllFormatsByDefault": true,
+      "heuristics": {
+        "reel": ["motion_or_process_is_the_proof", "transformation", "timed_reveal", "strong_audio_or_motion_story"],
+        "carousel": ["comparison", "steps", "explanation", "iteration_sequence", "save_worthy_detail"],
+        "post": ["single_hero_visual", "single_proof_frame", "visual_identity_moment"],
+        "story": ["small_behind_the_scenes_moment", "time_sensitive_update", "lightweight_interaction"]
+      },
+      "rule": "Choose the format that best carries the evidence and story. Derivatives are produced only when they preserve value."
+    },
+    "hook_tournament": {
+      "enabled": true,
+      "candidateMin": 8,
+      "candidateMax": 15,
+      "shortlistMin": 3,
+      "shortlistMax": 5,
+      "components": ["text", "visual", "motion"],
+      "scoreDimensions": {
+        "clarity": 0.20,
+        "curiosity": 0.20,
+        "relevance": 0.25,
+        "brandFit": 0.20,
+        "visualPotential": 0.15
+      },
+      "winnerRule": "Select the highest-ranked evidence-compatible hook unless a documented format or truth constraint overrides it.",
+      "antiClickbait": true
+    },
+    "retention_pass": {
+      "enabled": true,
+      "byFormat": {
+        "reel": ["0_to_2_second_hold", "clear_progression", "payoff", "no_dead_intro", "cut_or_motion_reason_to_continue"],
+        "carousel": ["slide_1_forward_drive", "each_slide_adds_information", "clear_sequence", "save_or_share_value", "no_filler_slides"],
+        "post": ["caption_first_lines_earn_read", "mobile_readability", "no_filler_intro", "clear_payoff"],
+        "story": ["immediate_context", "one_clear_beat_per_frame", "forward_tap_reason", "clean_exit_or_action"]
+      },
+      "rule": "Every unit must create a reason to continue. Remove filler rather than padding duration or slide count."
+    },
+    "authority_voice_pass": {
+      "enabled": true,
+      "goal": "credible expertise without arrogance or over-promotion",
+      "prefer": ["show_work", "show_decision", "show_constraint", "show_reason", "show_proof"],
+      "remove": ["guru_language", "empty_hype", "category_leader_claims_without_evidence", "cliches", "overpromotional_copy"],
+      "rule": "Authority comes from demonstrated work and reasoning, not self-awarded status."
+    },
+    "engagement_pass": {
+      "enabled": true,
+      "goal": "natural meaningful interaction",
+      "allowed": ["specific_open_question", "real_preference_tradeoff", "experience_question", "opinion_prompt_when_relevant"],
+      "forbidden": ["comment_yes_bait", "tag_friends_bait", "forced_binary_bait", "giveaway_style_bait_without_campaign", "fake_controversy"],
+      "engagementBaitMustBeFalse": true,
+      "rule": "A prompt must be worth answering even if the algorithm did not exist."
+    },
+    "visual_qa": {
+      "enabled": true,
+      "criticalChecks": [
+        "contrast",
+        "readability",
+        "crop",
+        "safe_zones",
+        "hierarchy",
+        "branding",
+        "product_visibility",
+        "hebrew_typography",
+        "mobile_preview"
+      ],
+      "allCriticalChecksRequiredForPass": true,
+      "repairBeforeEscalation": true,
+      "rule": "Unreadable, badly cropped, weakly hierarchical or broken-Hebrew creative cannot publish even when copy and concept are good."
+    },
+    "final_quality_gate": {
+      "enabled": true,
+      "failClosed": true,
+      "mayRejectPublication": true,
+      "requiredPrePublishStages": [
+        "saturation_scan",
+        "anti_generic_check",
+        "format_selection",
+        "hook_tournament",
+        "retention_pass",
+        "authority_voice_pass",
+        "engagement_pass",
+        "visual_qa"
+      ],
+      "alsoRequires": [
+        "Content Contract",
+        "vfcopy final-text pass",
+        "Visual OS",
+        "CONTENT-RUBRIC",
+        "rights",
+        "policy",
+        "publish preflight"
+      ],
+      "rule": "If a required stage has no evidence or fails after bounded repair, block publish. Never downgrade the gate to ship content."
+    },
+    "performance_feedback": {
+      "enabled": true,
+      "onlyMeasuredEvidence": true,
+      "neverInventMetrics": true,
+      "writeAuthority": ["vfinsights", "office-learning"],
+      "metricsByFormat": {
+        "reel": ["hold_rate_when_available", "average_watch_time", "completion_rate", "shares", "profile_visits", "meaningful_comments", "inquiries"],
+        "carousel": ["slide_retention_when_available", "saves", "shares", "profile_visits", "meaningful_comments", "inquiries"],
+        "post": ["saves", "shares", "profile_visits", "meaningful_comments", "inquiries"],
+        "story": ["completion_or_exit_when_available", "replies", "profile_actions", "inquiries"]
+      },
+      "minimumMeasuredPostsBeforePatternPromotion": 3,
+      "promotionRule": "Promote a creative pattern only with measured evidence and preserve controlled variation so the system does not overfit."
+    }
+  }
+}
