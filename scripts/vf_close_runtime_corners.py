@@ -7,7 +7,6 @@ scheduler, Control Plane, skill registry, or business database.
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +14,13 @@ REGISTRY = ROOT / "packages" / "velvetos" / "living-studio" / "REGISTRY.json"
 BEST = ROOT / "packages" / "vfresearch" / "BEST-SKILLS.json"
 OWNER_ACTIONS = ROOT / "docs" / "OWNER-ACTIONS-he.md"
 LEDGER_README = ROOT / "office" / "ledger" / "README.md"
+
+WRITER_MARKERS = {
+    ".github/workflows/vfmedia-intake.yml": "packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json",
+    ".github/workflows/readme-system-pulse.yml": "README.md",
+    ".github/workflows/publish-bridge-cleanup.yml": "publish-bridge/assets publish-bridge/archive",
+    ".github/workflows/velvetos-weekly-deck.yml": "docs/weekly-deck packages/vfbriefux/hq/weekly-deck.bento-doc.json",
+}
 
 
 def save_json(path: Path, data: dict) -> None:
@@ -82,7 +88,7 @@ def close_best_skills() -> None:
     data["timerName"] = "research-seat:best-skills-48h"
     data["standingNote"] = (
         "Owner standing order remains active. Research Seat is the canonical scheduler authority: "
-        "run a Best Skills pass when lastPass is about 48h old; no external subscribe_timer renewal is required."
+        "run a Best Skills pass when lastPass is about 48h old; no external timer renewal is required."
     )
     data["lastTimerStatus"] = (
         "PROVEN_BY_RESEARCH_SEAT: lastPass/data artifact is the evidence; external Cursor subscriptions are not an authority."
@@ -104,7 +110,7 @@ def add_skill_verification() -> int:
             continue
         for path in base.rglob("SKILL.md"):
             rel = path.relative_to(ROOT).as_posix()
-            if "/vendor/" in f"/{rel}" or "/third_party/" in f"/{rel}":
+            if "/vendor/" in f"/{rel}" or "/third_party/" in f"/{rel}" or "/reference/" in f"/{rel}":
                 continue
             text = path.read_text(encoding="utf-8", errors="ignore")
             low = text.lower()
@@ -118,6 +124,23 @@ def add_skill_verification() -> int:
             )
             path.write_text(text, encoding="utf-8")
             changed += 1
+    return changed
+
+
+def add_writer_contracts() -> int:
+    changed = 0
+    for rel, allowed in WRITER_MARKERS.items():
+        path = ROOT / rel
+        if not path.is_file():
+            raise RuntimeError(f"missing machine writer workflow {rel}")
+        text = path.read_text(encoding="utf-8")
+        if "VELVET_MACHINE_WRITER_ALLOW:" in text:
+            continue
+        lines = text.splitlines()
+        insert_at = 1 if lines and lines[0].startswith("name:") else 0
+        lines.insert(insert_at, f"# VELVET_MACHINE_WRITER_ALLOW: {allowed}")
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        changed += 1
     return changed
 
 
@@ -139,7 +162,7 @@ def update_docs() -> None:
         if marker not in text:
             text = text.rstrip() + (
                 "\n\n## GitHub OIDC/WIF write-through\n\n"
-                "The canonical background writer is `.github/workflows/jobs-write-through.yml`. It mints a short-lived Google token with Drive + Sheets scopes, runs `jobs pull --force` before any write, runs `jobs push`, requires post-write read-back evidence, and persists `sync-receipt.json`. No long-lived Google JSON key is stored in the repository.\n"
+                "The canonical background writer is `.github/workflows/jobs-write-through.yml`. It mints a short-lived Google token with Drive + Sheets scopes, runs `jobs pull --force` before commissioning writes, runs `jobs push`, requires post-write read-back evidence, and persists `sync-receipt.json`. No long-lived Google JSON key is stored in the repository.\n"
             )
             LEDGER_README.write_text(text, encoding="utf-8")
 
@@ -147,9 +170,10 @@ def update_docs() -> None:
 def main() -> int:
     close_registry()
     close_best_skills()
-    changed = add_skill_verification()
+    skills_changed = add_skill_verification()
+    writers_changed = add_writer_contracts()
     update_docs()
-    print(f"OK runtime closeout migration skill_verification_added={changed}")
+    print(f"OK runtime closeout migration skill_verification_added={skills_changed} writer_contracts_added={writers_changed}")
     return 0
 
 
