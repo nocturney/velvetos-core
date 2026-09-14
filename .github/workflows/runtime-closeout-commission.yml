@@ -1,0 +1,97 @@
+name: Runtime Closeout Commission
+
+# One-off branch-only commissioner. It cannot run from main and is removed before merge.
+on:
+  push:
+    branches: [fix/close-runtime-corners-20260914]
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: runtime-closeout-commission
+  cancel-in-progress: true
+
+jobs:
+  commission:
+    if: ${{ !startsWith(github.event.head_commit.message, 'runtime closeout: commissioned') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install runtime dependencies
+        run: pip install --quiet google-api-python-client google-auth Pillow
+
+      - name: Authenticate Google WIF for Jobs
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/1016876126699/locations/global/workloadIdentityPools/github-actions/providers/velvetos-core
+          service_account: velvetos-media-intake@instamcp.iam.gserviceaccount.com
+          token_format: access_token
+          access_token_scopes: |
+            https://www.googleapis.com/auth/drive
+            https://www.googleapis.com/auth/spreadsheets
+          create_credentials_file: false
+
+      - name: Prove Jobs write-through with canonical read-back
+        env:
+          GOOGLE_TOKEN: ${{ steps.auth.outputs.access_token }}
+        run: |
+          set -e
+          test -n "${GOOGLE_TOKEN:-}" || { echo "::error::WIF token missing"; exit 1; }
+          python3 scripts/vf_office.py jobs pull --force
+          python3 scripts/vf_office.py jobs push
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('office/ledger/live/sync-receipt.json').read_text(encoding='utf-8'))
+          assert r.get('status') == 'written', r
+          assert r.get('dirty') is False, r
+          assert r.get('canonical_changed') is True, r
+          assert r.get('verifiedFrom') == 'sheets_values_get', r
+          print('JOBS LIVE_PROVEN: write + read-back + dirty=false')
+          PY
+
+      - name: Apply deterministic closeout migration
+        run: python3 scripts/vf_close_runtime_corners.py
+
+      - name: Exercise Living Studio activation paths
+        run: python3 scripts/vf_living_studio_activation.py sweep --write
+
+      - name: Targeted closeout sensors
+        run: |
+          python3 scripts/check-runtime-corners.py
+          python3 scripts/check-machine-writers.py
+          python3 scripts/check-skill-health.py
+          python3 scripts/check-living-studio.py
+          python3 scripts/check-vf-office.py
+
+      - name: Full VelvetOS sensor suite
+        run: python3 scripts/check-all.py
+
+      - name: Persist verified closeout to branch
+        run: |
+          set -e
+          git config user.name "velvetos-runtime-closeout"
+          git config user.email "noreply@velvetos.local"
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "Closeout already materialized"
+            exit 0
+          fi
+          git add -A
+          git commit -m "runtime closeout: commissioned"
+          git fetch origin fix/close-runtime-corners-20260914
+          if ! git rebase origin/fix/close-runtime-corners-20260914; then
+            git rebase --abort || true
+            echo "::error::Concurrent branch update; refusing overwrite"
+            exit 1
+          fi
+          git push origin HEAD:fix/close-runtime-corners-20260914
