@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="#עברית">עברית</a> · <a href="#english">English</a> · <a href="CHANGELOG.md">Changelog</a> · <a href="docs/START-HERE-HE.md">Start Here</a>
+  <a href="#hebrew">עברית</a> · <a href="#english">English</a> · <a href="CHANGELOG.md">Changelog</a> · <a href="docs/START-HERE-HE.md">Start Here</a>
 </p>
 
 ---
@@ -57,6 +57,8 @@
 </p>
 
 ---
+
+<a id="hebrew"></a>
 
 # ‏עברית
 
@@ -180,6 +182,8 @@ python3 scripts/update-readme-snapshot.py --check
 **Definition of Done:** implementation + evidence/sensor + changelog + README capability/status update.
 
 ---
+
+<a id="english"></a>
 
 # English
 
