@@ -10,6 +10,8 @@ Scope: organic Instagram feed, Reel covers, carousels, still posts, Story stills
 - Canva asset title: `Velvet Factory · APPROVED GRID VISUAL STANDARD · 2026-09-14`
 - Approved artifact SHA-256: `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`
 - Approved artifact dimensions: `1254x1254`
+- Public reference image: `https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg`
+- Repository asset: `packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg`
 
 This reference is a **visual-language and quality-bar reference**, not a substitute for product truth. Real product/source evidence always wins over a stylized mockup. Public deliverables must still satisfy Product Truth, source-subject match and the current constitution.
 
@@ -64,6 +66,11 @@ The following are incompatible with this approved standard unless the owner expl
 - the rejected G004 Canva carousel/design `DAHUaelaug0` as layout, style, canonical edit, source or publish asset.
 
 ## Tool propagation contract
+
+## Cold-start enforcement
+
+This standard must be loaded from canonical project/runtime authority at the start of every Velvet Factory visual-content branch, including a fresh conversation with no previous chat context. It is not sufficient for the standard to exist only in memory, a previous conversation, or a QA step. Creative Director and Content Sprint must record the canonical binding in `visualStandard`; Brand Guardian and publish preflight must fail closed when that binding is missing or mismatched.
+
 
 Every tool/agent that performs any of the following must read this standard through `VISUAL-OS.md` / `VISUAL-DNA.json` before acting:
 

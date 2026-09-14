@@ -12,6 +12,10 @@
 
 ## Pipeline — Reference → Generate → Critique → Repair → Rank → Learn
 
+## Visual Standard Load Gate · before creative work
+
+Every Velvet Factory public visual job starts by loading `OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VELVET-VISUAL-SYSTEM-PROMPT.md`, `VISUAL-OS.md` and `VISUAL-DNA.json`. Verify owner-approved identity `MAHVJjCCKQA` + SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`, then persist `visualStandard.gate=PASS` in the Creative Manifest. Missing/mismatched authority stops the creative branch before concepting; generic/default style fallback is forbidden. This gate is required even in a fresh conversation with no prior chat context.
+
 ```text
 real event / opportunity
   -> discovered

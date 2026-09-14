@@ -13,6 +13,21 @@
     "package-manifest-drive:1KcRcnQfEHMstMOkSZMKrVGbg7vP6k_tB",
     "owner-preference:2026-09-11:cover-copy=פה התנועה היא כל העניין"
   ],
+  "visualStandard": {
+    "gate": "PASS",
+    "document": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+    "portablePrompt": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
+    "referenceAsset": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+    "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+    "canvaAssetId": "MAHVJjCCKQA",
+    "artifactSha256": "707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0",
+    "coldStart": true,
+    "evidenceRefs": [
+      "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+      "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+      "canva:MAHVJjCCKQA"
+    ]
+  },
   "concept": {
     "coreIdea": "Open on the real articulated object already moving in-hand; let visible limb motion be the proof.",
     "emotion": "curiosity and tactile delight",

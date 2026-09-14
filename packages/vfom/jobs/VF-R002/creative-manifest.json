@@ -15,6 +15,21 @@
     "owner-preference:2026-09-11:cover=NO_TEXT",
     "supersedes:crop-only-package:a4bc9677a7be6f3b532af671d7fb39f75d8e3adf170a97499d2371bb14f416fa"
   ],
+  "visualStandard": {
+    "gate": "PASS",
+    "document": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+    "portablePrompt": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
+    "referenceAsset": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+    "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+    "canvaAssetId": "MAHVJjCCKQA",
+    "artifactSha256": "707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0",
+    "coldStart": true,
+    "evidenceRefs": [
+      "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+      "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+      "canva:MAHVJjCCKQA"
+    ]
+  },
   "concept": {
     "coreIdea": "Four real views of the same finished dragon, art-directed as a restrained photographic sequence with the real subject kept untouched.",
     "emotion": "dark tactile curiosity",

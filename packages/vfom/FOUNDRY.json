@@ -23,6 +23,17 @@
     "videoToolchain": "packages/vfom/VIDEO-TOOLCHAIN.json",
     "editDecisionListSchema": "packages/vfom/EDIT-EDL.schema.json"
   },
+  "ownerApprovedVisualStandard": {
+    "required": true,
+    "status": "approved",
+    "document": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+    "portablePrompt": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
+    "referenceAsset": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+    "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+    "canvaAssetId": "MAHVJjCCKQA",
+    "artifactSha256": "707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0",
+    "coldStartGate": "fail_closed"
+  },
   "layers": {
     "creativeIntelligence": ["creative-director", "brand-guardian", "media-librarian", "proof-first-storyboarder", "visual-evaluator", "repair-planner", "experiment-director"],
     "orchestration": ["content-job-state-machine", "content-contract", "creative-manifest", "instagram-content-decision-pipeline", "opportunity-scoring", "progressive-variants", "threshold-policy", "budget-governor", "retry-and-escalation"],

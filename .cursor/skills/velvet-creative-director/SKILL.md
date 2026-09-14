@@ -9,9 +9,14 @@ Operate as the single creative-planning specialist inside VelvetOS. `vf-content-
 
 ## Authorities
 
-Read `packages/vfom/VISUAL-OS.md`, `VISUAL-DNA.json`, `FOUNDRY.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md`, `FORMAT-GENOMES.md`, `packages/vfcopy/VOICE.md`, `packages/vfcopy/hq/reader-first-he.md`, `packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md`, `PIPELINE.md` and `packages/vfcopy/hq/ai-tells-he.md`.
+Read `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md`, `packages/vfom/VISUAL-OS.md`, `VISUAL-DNA.json`, `FOUNDRY.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md`, `FORMAT-GENOMES.md`, `packages/vfcopy/VOICE.md`, `packages/vfcopy/hq/reader-first-he.md`, `packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md`, `PIPELINE.md` and `packages/vfcopy/hq/ai-tells-he.md`.
 
 ## Workflow
+
+## Cold-start Visual Standard Load Gate
+
+Before any concept, hook, storyboard, edit direction or cover direction, load the owner-approved visual standard and verify its identity against `VISUAL-DNA.json`: status `approved`, Canva asset `MAHVJjCCKQA`, artifact SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`. Record a `visualStandard` PASS block in the Creative Manifest before creative work begins. If any authority is missing or mismatched, fail closed before concept generation; never fall back to generic 3D-print, stock, template or model-default aesthetics. Product Truth and real source evidence always outrank the style reference.
+
 
 1. Start from real proof or a named evidenced studio opportunity. Never invent a floor scene, measurement, failure, load result, customer outcome or product geometry.
 2. Select a format genome or justify a new structure. Prefer proof-first structures over generic product montage.
@@ -28,7 +33,7 @@ Read `packages/vfom/VISUAL-OS.md`, `VISUAL-DNA.json`, `FOUNDRY.json`, `CREATIVE-
 
 ## Required manifest contribution
 
-Write or update `concept`, `hook`, `shots`, `edit`, `overlays`, `cover` and `status`. Keep factual claims linked to the Content Contract; a real asset is not universal claim proof. For Hebrew visual microcopy, record the human-copy/Humanizer pass and the `TEXT_WINS` or `NO_TEXT` decision in the existing manifest QA/decision fields until a dedicated schema field is added.
+Write or update `visualStandard`, `concept`, `hook`, `shots`, `edit`, `overlays`, `cover` and `status`. `visualStandard.gate` must be `PASS` with the canonical document, public reference, Canva asset ID and artifact SHA before concept/render/publish work can advance. Keep factual claims linked to the Content Contract; a real asset is not universal claim proof. For Hebrew visual microcopy, record the human-copy/Humanizer pass and the `TEXT_WINS` or `NO_TEXT` decision in the existing manifest QA/decision fields until a dedicated schema field is added.
 
 ## Human surface
 
