@@ -32,10 +32,10 @@ def close_registry() -> None:
     data["updatedAt"] = "2026-09-14"
     for skill in data.get("skills") or []:
         if skill.get("id") == "order-state-manager":
-            skill["status"] = "EXISTING_PARTIAL"
+            skill["status"] = "EXISTING_COMPLETE"
             skill["activation"] = ".github/workflows/jobs-write-through.yml + vf_office.py jobs pull|push"
-            skill["verification"] = "promotion requires office/ledger/live/sync-receipt.json status=written dirty=false canonical_changed=true verifiedFrom=sheets_values_get from the production WIF workflow"
-            skill["note"] = "Service account has Sheet writer permission and the WIF workflow is installed; keep PARTIAL until the first production Sheets write + canonical read-back receipt is observed. Price changes remain red/human-authorized."
+            skill["verification"] = "office/ledger/live/sync-receipt.json status=written dirty=false canonical_changed=true verifiedFrom=sheets_values_get; commissioning run 34825988532"
+            skill["note"] = "Production WIF write-through was proven on 2026-09-14 with canonical Sheets read-back; price changes remain red/human-authorized."
         if skill.get("id") == "daily-ops-commander" and "success" in skill:
             skill["success"] = "09:00 brief + Office Loop consume current Studio Pulse without inventing figures"
 
@@ -151,7 +151,7 @@ def update_docs() -> None:
         for line in lines:
             if line.startswith("| Jobs **write-through** |"):
                 out.append(
-                    "| Jobs **write-through** | **PROVIDER_CONNECTED / COMMISSIONING_PENDING** — Sheet writer permission is granted and `.github/workflows/jobs-write-through.yml` uses GitHub OIDC/WIF with Sheets+Drive scopes. Promote to LIVE_PROVEN only after `status=written`, `verifiedFrom=sheets_values_get`, `dirty=false` is observed on main. |"
+                    "| Jobs **write-through** | **LIVE_PROVEN** — production WIF write + canonical Sheets read-back is committed in `office/ledger/live/sync-receipt.json` (`status=written`, `verifiedFrom=sheets_values_get`, `dirty=false`). Price changes remain human-authorized. |"
                 )
             else:
                 out.append(line)
@@ -159,12 +159,24 @@ def update_docs() -> None:
     if LEDGER_README.is_file():
         text = LEDGER_README.read_text(encoding="utf-8")
         marker = "GitHub OIDC/WIF write-through"
+        live_sentence = (
+            "Production commissioning is LIVE_PROVEN: the committed receipt proves `status=written`, "
+            "`verifiedFrom=sheets_values_get`, `canonical_changed=true`, and `dirty=false`. Adapter CSV files remain "
+            "gitignored caches; price changes remain human-authorized."
+        )
         if marker not in text:
             text = text.rstrip() + (
                 "\n\n## GitHub OIDC/WIF write-through\n\n"
-                "The canonical background writer is `.github/workflows/jobs-write-through.yml`. It mints a short-lived Google token with Drive + Sheets scopes, runs `jobs pull --force` before commissioning writes, runs `jobs push`, requires post-write read-back evidence, and persists `sync-receipt.json`. No long-lived Google JSON key is stored in the repository. The capability remains PARTIAL until a production receipt proves `status=written`, `verifiedFrom=sheets_values_get`, and `dirty=false`.\n"
+                "The canonical background writer is `.github/workflows/jobs-write-through.yml`. It mints a short-lived Google token with Drive + Sheets scopes, runs `jobs pull --force` before commissioning writes, runs `jobs push`, requires post-write read-back evidence, and persists `sync-receipt.json`. No long-lived Google JSON key is stored in the repository. "
+                + live_sentence
+                + "\n"
             )
-            LEDGER_README.write_text(text, encoding="utf-8")
+        else:
+            text = text.replace(
+                "The capability remains PARTIAL until a production receipt proves `status=written`, `verifiedFrom=sheets_values_get`, and `dirty=false`.",
+                live_sentence,
+            )
+        LEDGER_README.write_text(text, encoding="utf-8")
 
 
 def main() -> int:

@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "packages" / "velvetos" / "living-studio" / "REGISTRY.json"
 BEST = ROOT / "packages" / "vfresearch" / "BEST-SKILLS.json"
 JOBS_WF = ROOT / ".github" / "workflows" / "jobs-write-through.yml"
+JOBS_RECEIPT = ROOT / "office" / "ledger" / "live" / "sync-receipt.json"
 OFFICE_WF = ROOT / ".github" / "workflows" / "office-control-plane.yml"
 ACTIVATION = ROOT / "scripts" / "vf_living_studio_activation.py"
 
@@ -35,12 +36,12 @@ def main() -> int:
         for item in reg.get(group) or []:
             if item.get("status") == "EXISTING_PARTIAL":
                 partial.append(item.get("id"))
-    if sorted(partial) != ["order-state-manager"]:
-        fail("phase-one partial set must be exactly order-state-manager; got: " + ", ".join(sorted(partial)))
+    if partial:
+        fail("runtime-corner PARTIAL set must be empty after commissioning; got: " + ", ".join(sorted(partial)))
 
     order = next((x for x in reg.get("skills") or [] if x.get("id") == "order-state-manager"), None)
-    if not order or order.get("status") != "EXISTING_PARTIAL":
-        fail("order-state-manager must remain PARTIAL until production WIF write/readback proof")
+    if not order or order.get("status") != "EXISTING_COMPLETE":
+        fail("order-state-manager must be COMPLETE after production WIF write/readback proof")
     for key in ("activation", "verification"):
         if not order.get(key):
             fail(f"order-state-manager missing {key}")
@@ -79,6 +80,14 @@ def main() -> int:
     )
     need_text(ACTIVATION, "failure_museum()", "lab_result", "commercial_qa", "opportunity_intelligence", "invisible_work")
 
+    receipt = json.loads(JOBS_RECEIPT.read_text(encoding="utf-8"))
+    if receipt.get("status") != "written" or receipt.get("lastWriteStatus") != "written":
+        fail("Jobs receipt must prove status=written and lastWriteStatus=written")
+    if receipt.get("dirty") is not False:
+        fail("Jobs receipt must prove dirty=false")
+    if receipt.get("canonical_changed") is not True or receipt.get("verifiedFrom") != "sheets_values_get":
+        fail("Jobs receipt must prove canonical_changed=true via sheets_values_get")
+
     best = json.loads(BEST.read_text(encoding="utf-8"))
     if best.get("schedulerAuthority") != "Velvet Research Seat":
         fail("Best Skills schedulerAuthority must be Velvet Research Seat")
@@ -88,7 +97,7 @@ def main() -> int:
     if "subscribe_timer" in str(best.get("standingNote") or ""):
         fail("Best Skills still depends on external subscribe_timer renewal")
 
-    print("OK runtime-corners partial=1(jobs commissioning) living=activated best-skills=research-seat")
+    print("OK runtime-corners partial=0 jobs=live_proven living=activated best-skills=research-seat")
     return 0
 
 

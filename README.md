@@ -36,11 +36,11 @@
 | **Instagram MCP** | LIVE / VERIFIED |
 | **Instagram Insights** | LIVE / VERIFIED |
 | **Media Intake / Drive** | LIVE / VERIFIED |
-| **Jobs source of truth** | Google Sheet bound |
+| **Jobs source of truth** | Google Sheet LIVE / VERIFIED write-through |
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-13T12:02:51Z` |
+| **Last verified / refreshed evidence** | `2026-09-14T09:05:09Z` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>

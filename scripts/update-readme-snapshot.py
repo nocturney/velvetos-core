@@ -150,6 +150,7 @@ def render() -> str:
         ig_insights.get("verifiedAt"),
         media_activation.get("provenAt"),
         handoff.get("updatedAt"),
+        jobs_sync.get("at"),
     )
 
     changes = handoff.get("changed_today") or []

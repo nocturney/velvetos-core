@@ -30,4 +30,4 @@ Playbook: `packages/vfbooks/SHEETS.md`.
 
 ## GitHub OIDC/WIF write-through
 
-The canonical background writer is `.github/workflows/jobs-write-through.yml`. It mints a short-lived Google token with Drive + Sheets scopes, runs `jobs pull --force` before commissioning writes, runs `jobs push`, requires post-write read-back evidence, and persists `sync-receipt.json`. No long-lived Google JSON key is stored in the repository. The capability remains PARTIAL until a production receipt proves `status=written`, `verifiedFrom=sheets_values_get`, and `dirty=false`.
+The canonical background writer is `.github/workflows/jobs-write-through.yml`. It mints a short-lived Google token with Drive + Sheets scopes, runs `jobs pull --force` before commissioning writes, runs `jobs push`, requires post-write read-back evidence, and persists `sync-receipt.json`. No long-lived Google JSON key is stored in the repository. Production commissioning is LIVE_PROVEN: the committed receipt proves `status=written`, `verifiedFrom=sheets_values_get`, `canonical_changed=true`, and `dirty=false`. Adapter CSV files remain gitignored caches; price changes remain human-authorized.

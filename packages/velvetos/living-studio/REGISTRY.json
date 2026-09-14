@@ -42,7 +42,7 @@
     {
       "id": "order-state-manager",
       "title": "Order State Manager",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_COMPLETE",
       "route": [
         "vf_office.py jobs",
         "vfsales/ORDERS.md"
@@ -61,9 +61,9 @@
       "risk": "green",
       "approval": "red for price change",
       "success": "canonical stage advanced without invented ₪",
-      "note": "Service account has Sheet writer permission and the WIF workflow is installed; keep PARTIAL until the first production Sheets write + canonical read-back receipt is observed. Price changes remain red/human-authorized.",
+      "note": "Production WIF write-through was proven on 2026-09-14 with canonical Sheets read-back; price changes remain red/human-authorized.",
       "activation": ".github/workflows/jobs-write-through.yml + vf_office.py jobs pull|push",
-      "verification": "promotion requires office/ledger/live/sync-receipt.json status=written dirty=false canonical_changed=true verifiedFrom=sheets_values_get from the production WIF workflow"
+      "verification": "office/ledger/live/sync-receipt.json status=written dirty=false canonical_changed=true verifiedFrom=sheets_values_get; commissioning run 34825988532"
     },
     {
       "id": "order-project-coordinator",
