@@ -7,7 +7,7 @@ Asia/Jerusalem. The **live protected ChatGPT automation inventory** is the clock
 | Time | Surface | Responsibility |
 |---|---|---|
 | **01:45** | Automation Integrity Guard | Verify/repair the protected active automation set before daily workloads. |
-| **02:00** | Velvet Research Seat | Daily live research. Finish by the **07:00 cutoff** as `ready_for_brief`, `no_meaningful_findings`, or an explicit blocker. |
+| **02:00** | Velvet Research Seat | Daily live research. Finish by the **07:00 cutoff** as `ready_for_brief`, `no_meaningful_findings`, or an explicit blocker. Consumer output is `packages/vfops/data/research.md` for the 09:00 brief. |
 | **07:15** | OpenPost Release Watch | Daily condition watch for upstream OpenPost changes; silent when unchanged. |
 | **09:00** | Velvet Morning Brief | Owner-facing V10.3 brief from current live sources. Delivery requires Gmail provider evidence, not a generated file. |
 | **10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 brief delivery; recover only if absent/unverified. |
@@ -50,12 +50,14 @@ No Instagram connection does **not** stop office work: continue intake, inspecti
 
 ## Recurring non-clock responsibilities
 
-- Weekly links / Print·Demand·Sound research: `vfresearch/WEEKLY.md`, `LINKS.json`, `vfresearch/hq/PRINT-DEMAND.md`.
-- MakerWorld/Printables candidate research runs behind license/slice/test gates; never promote directly to SKU/price.
+- **Bi-daily Best Skills:** `BEST-SKILLS.md` / `vf-best-skills` runs approximately every 48h until explicitly stopped. This is a standing lifecycle responsibility, not a second fixed-clock scheduler; timer/provider renewal evidence must remain honest.
+- **Weekly inspiration links:** `vfresearch/WEEKLY.md` + `LINKS.json`, followed by Print·Demand·Sound via `vfresearch/hq/PRINT-DEMAND.md`. The weekly cadence must emit real source/evidence or an explicit no-change/blocker state.
+- MakerWorld/Printables candidate research runs behind `MAKERWORLD-SCAN.md` + license/slice/test gates; never promote directly to SKU/price.
 - Calendar fill is readiness-driven; blocked items are skipped rather than force-filled.
 - Daily learning/retro and owner-memory are owned by the Office Loop/end-of-day learning path.
-- Best Skills pulse remains approximately every 48h until explicitly stopped; timer/provider renewal evidence must be honest.
 - LAST30/community research remains monthly/on-demand unless the protected automation set explicitly changes.
+
+The 09:00 brief consumes the daily research block from `packages/vfops/data/research.md`; if the daily body did not run, the brief must show an honest gap rather than infer completion from a green workflow.
 
 ## Truth rules
 
