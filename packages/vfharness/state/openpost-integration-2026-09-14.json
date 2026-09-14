@@ -1,0 +1,31 @@
+{
+  "task_id": "openpost-integration-2026-09-14",
+  "component_state": "Syncing",
+  "status": "integration_contract_added_runtime_pending",
+  "updatedAt": "2026-09-14T08:23:00+03:00",
+  "upstream": "getopenpost/openpost",
+  "latestReviewedVersion": "v4.31.0",
+  "latestReviewedPublishedAt": "2026-09-13T07:26:39Z",
+  "changes": [
+    "Added packages/vfigos/OPENPOST.md architecture and upgrade policy",
+    "Added packages/vfigos/OPENPOST.json pinned release/integration state",
+    "Updated packages/vfigos/SEND.md with OpenPost apply path, direct Instagram MCP verification and same-turn failover",
+    "Recorded existing Facebook/Meta connection as satisfying OpenPost Instagram login requirement"
+  ],
+  "truth": {
+    "codeIntegrated": true,
+    "runtimeDeployed": false,
+    "stagingVerified": false,
+    "productionPrimary": false,
+    "directInstagramMcpStillCanonicalForLiveVerify": true,
+    "productionLatestTagAllowed": false
+  },
+  "next": [
+    "Deploy OpenPost staging on an authorized runtime",
+    "Configure OpenPost Meta OAuth using existing Facebook/Instagram Business connection",
+    "Run post/carousel/reel/story + schedule + forced retry + analytics smoke matrix",
+    "Promote integrationMode only after PASS",
+    "Keep release watch active and review every upstream version before promotion"
+  ],
+  "branch": "integrate/openpost-publishing-v2"
+}
