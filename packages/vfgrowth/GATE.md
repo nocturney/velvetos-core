@@ -89,3 +89,8 @@ For Velvet Factory requests that mean prepare/treat/edit content for a potential
 
 
 Brand/CTA final gate also requires `brand_asset_gate: PASS`, `generated_brand_mark: NONE`, `public_phone_absent: PASS`, and source-locked logo evidence per `packages/vfom/BRAND-ASSET-LOCK.md`.
+
+## Creative transformation lock
+
+For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md` is mandatory. Preserve the real product, but do not pass through raw/source photos as the finished creative. At least one review visual — normally the hero/first slide — must show a meaningful approved Velvet treatment around the source-locked product. Default to editing the real source image, not recreating the product from text. Multiple photos do not imply a carousel; if carousel is chosen, slide 1 must be a fully treated hero. `raw_passthrough=true`, an essentially untouched source carousel, or crop/exposure-only work presented as publication-grade is FAIL. Generative edits must explicitly contain NO LOGO, NO WORDMARK, NO PHONE NUMBER, NO WHATSAPP, NO CONTACT BAR, NO GENERATED HEBREW TEXT.
+

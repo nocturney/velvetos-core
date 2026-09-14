@@ -14,7 +14,11 @@
     "run_exact_final_visual_qa",
     "resolve_public_cta_from_current_authority",
     "enforce_brand_asset_source_lock",
-    "ensure_public_phone_absent"
+    "ensure_public_phone_absent",
+    "perform_meaningful_presentation_transform",
+    "avoid_raw_passthrough",
+    "edit_real_source_image_not_recreate_product",
+    "choose_format_by_story_not_photo_count"
   ],
   "mustNotDo": [
     "finish_with_photo_ranking_only",
@@ -25,7 +29,10 @@
     "invent_or_redraw_logo_or_wordmark",
     "render_logo_with_generative_model",
     "include_business_phone_in_public_visual_or_caption",
-    "include_whatsapp_contact_bar_without_explicit_owner_request"
+    "include_whatsapp_contact_bar_without_explicit_owner_request",
+    "do_not_default_to_raw_carousel",
+    "finish_with_resize_crop_exposure_only",
+    "recreate_product_from_text_description"
   ],
   "failureState": "visual_execution_unavailable"
 }
