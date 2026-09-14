@@ -10,6 +10,21 @@
     "final-package-sha256:993909285c0730a0f7a3931cc813fc7da8bee1fa6890bdac56c27db9bb4206b1",
     "visible-text-sha256:c34020b494b3a5737bff69fb8e0741ca91df73686a6101f80344239778fafd1d"
   ],
+  "visualStandard": {
+    "gate": "PASS",
+    "document": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+    "portablePrompt": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
+    "referenceAsset": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+    "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+    "canvaAssetId": "MAHVJjCCKQA",
+    "artifactSha256": "707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0",
+    "coldStart": true,
+    "evidenceRefs": [
+      "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+      "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+      "canva:MAHVJjCCKQA"
+    ]
+  },
   "concept": {
     "coreIdea": "One real owl sculpture, four materially different viewpoints: front, side, back, alternate front.",
     "emotion": "tactile curiosity",
