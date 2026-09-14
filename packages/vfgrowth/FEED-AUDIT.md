@@ -1,52 +1,59 @@
 # ביקורת פיד קיים — @velvets_cloud · RESET OVERRIDE
 
-עדכון סמכות: 10.9.2026 · Christian.  
-מושב: צמיחה. `CONTENT-RESET-2026-09-10.md` גובר על החלטות KEEP/EDIT ישנות במסמך זה.
+עדכון סמכות: 14.9.2026 · Christian.  
+מושב: צמיחה. `CONTENT-RESET-2026-09-10.md` + owner override 2026-09-14 גוברים על החלטות Archive/KEEP ישנות במסמך זה.
 
-## החלטת reset
+## מצב חי מאומת · 2026-09-14
 
-כל **8/8** פריטי ה־Feed/Reels שהיו חיים בזמן ה־reset הם מעכשיו:
+כלי Instagram החי מדווח על **3 Reels** בלבד. Christian קבע במפורש: **לא למחוק ולא לארכב אותם**.
 
-**`historical_learning_only` + `ARCHIVE_PENDING_MANUAL`**
+| Reel | media id | החלטה |
+|---|---|---|
+| `DdAPhozlNe2` | `17873372004572489` | `KEEP_LIVE_BASELINE`; נדרש רק תיקון ידני לקפטן הקיים שמכיל WhatsApp/טלפון |
+| `DcvuJLxCJgU` | `18113247517791419` | `KEEP_LIVE_BASELINE`; ללא שינוי |
+| `DcqkjOLlYVX` | `18107769701162221` | `KEEP_LIVE_BASELINE`; ללא שינוי |
 
-הפעולה המועדפת היא **Archive, לא Delete**, ורק אחרי ש־VF-R001 / VF-R002 / VF-R003 הגיעו ל־`ready_for_publish` עם exact-final QA ו־execution receipts תקפים.
+אין archive/delete transition. אין דרישה לייצר פיד ריק לפני תוכן חדש. ה־3 הם baseline חי ללמידה, novelty/fatigue והשוואת ביצועים.
 
-אין לבצע archive/delete אוטומטי דרך מסלול לא נתמך. כלי Instagram המחובר אינו חושף כרגע Archive/Delete למדיה, ולכן פעולת הארכוב עצמה מתבצעת באפליקציית Instagram ולאחריה live verification.
+חמשת הפריטים האחרים מתוך snapshot ה־8 מ־10.9 כבר אינם live. הם נשמרים ב־audit כ־`HISTORICAL_NOT_LIVE`; אין לשחזר אותם בגלל reset ואין להתייחס אליהם כ־archive pending.
 
-## מה נשמר מהביקורת הישנה
+## Retroactive QA policy
 
-הסיווגים הישנים נשמרים **כלמידה בלבד**, לא כהחלטה להשאיר פריט בפיד:
+סטנדרטים יצירתיים חדשים חלים על תוכן חדש ועל נכס שנפתח מחדש לעריכה. הם **לא** סיבה לשכתב/לעצב מחדש את שלושת הרילים החיים בדיעבד.
 
-| פריטים היסטוריים | סיווג למידה |
-|---|---|
-| G001 / G002 | `QUALITY_REFERENCE` למכניקת discovery/reveal בלבד; לא template ולא KEEP-live |
-| G003 והלאה | `REVIEW_REQUIRED` היסטורי |
+מתקנים retained live media רק אם קיימת חריגה פעילה מהמדיניות הנוכחית, בעיית אמת/פרטיות/בטיחות או דרישת פלטפורמה. כרגע החריגה היחידה שנמצאה היא שורת WhatsApp/טלפון בקפטן `DdAPhozlNe2`. כלי Graph המחובר אינו מציע existing-caption edit, לכן זה `human_required` ממוקד — בלי archive/delete.
 
-מקור הנתונים המפורט: [`data/feed-audit.json`](data/feed-audit.json).
+## מה נשמר מהביקורת ההיסטורית
 
-## לקחים מחייבים לפיד החדש
+מקור הנתונים המפורט: [`data/feed-audit.json`](data/feed-audit.json). הוא snapshot היסטורי, לא רשימת פעולות.
 
-- Reels של proof/process/reveal הראו Reach עדיף במדגם הקיים, אבל כמעט לא המירו לפעולה.
+- Reels של proof/process/reveal הראו Reach עדיף במדגם הקטן, אבל המרה לפעולה הייתה חלשה.
 - Product-story קונקרטי הראה יעילות אינטראקציה טובה יותר מקרוסלות סטודיו גנריות.
-- כפילות/חזרתיות כמו שני פוסטי סטודיו דומים היא failure של novelty/fatigue.
-- WhatsApp / `050-2517000` / `wa.me` אינם CTA ציבורי. CTA נוכחי = הודעת Instagram בלבד.
+- כפילות/חזרתיות היא failure של novelty/fatigue.
+- WhatsApp / `050-2517000` / `wa.me` אינם CTA ציבורי לפי `PUBLIC_CTA.md`.
 - G004 נשמר בזהות העובדתית: **מחזיק טבעות לזמן אימון** — לא משקולת / kettlebell workout weight. הקריאייטיב הישן שלו STALE ואינו approval לשימוש חדש.
 - שום cover/caption/preflight היסטורי אינו עובר בירושה לארטיפקט חדש.
 
 ## Launch authority
 
-שלישיית הפתיחה החדשה נמצאת ב־`RESET-LAUNCH-TRIO.md`:
+שלישיית העבודה נמצאת ב־`RESET-LAUNCH-TRIO.md`:
 - VF-R001 — Reel movement proof.
 - VF-R002 — Dragon detail carousel.
 - VF-R003 — Metallic helmet reveal Reel.
 
-כולם כרגע `evidence_selected`, **לא publish-authorized**.
+Readiness נקבע רק לפי ה־preflight העדכני של כל פריט וה־exact-final package; אין להסתמך על label ישן ב־manifest/ledger.
 
-## Profile reset
+## Profile state · live verified 2026-09-14
 
-הביו החי עדיין מכיל WhatsApp/טלפון וסותר את `PUBLIC_CURRENT_CTA`. מצב רצוי: `packages/vfigos/PROFILE-DESIRED.json`. Graph write לביו אינו זמין בכלי המחובר, ולכן השינוי נעשה ידנית באפליקציה ואז נבדק מחדש בכלי live.
+הביו החי הוא:
+
+`הדפסות תלת־ממד בעיצוב ייחודי`  
+`מוצרים מוכנים • מודלים בהתאמה אישית`  
+`ייצור סדרות לעסקים`  
+`📍 איסוף משדרות`
+
+אין בו WhatsApp/טלפון ולכן אין כרגע profile CTA violation. הוא אינו כולל CTA מפורש להודעות Instagram; זה הבדל מה־desired profile, **לא blocker**. Graph write לביו אינו זמין בכלי המחובר.
 
 ## כלל סיום
 
-הפיד הישן אינו בסיס יצירתי להמשך. הוא Dataset.  
-הפיד החדש מתחיל רק מ־real evidence → Media Librarian → Creative Director → render/edit → Hebrew Copy/Voice → Brand Guardian exact-final → Rubric/Contract/rights/policy → digest-bound receipts → publish → live verify → performance learning.
+ה־3 live Reels הם baseline, לא template. תוכן חדש עובר: real evidence → Media Librarian → Creative Director → render/edit + audio → Visible Text/Hebrew Copy → Brand Guardian exact-final → Rubric/Contract/applicable policy → digest-bound execution receipts → publish → live verify → performance learning.
