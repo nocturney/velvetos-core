@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
-"""Normalize Hebrew/English BiDi rendering in README.md without breaking Markdown.
+"""Normalize and validate Hebrew/English BiDi rendering in README.md.
 
 GitHub chooses paragraph direction from surrounding text and mixed Hebrew/Latin
 lines can reorder punctuation, labels and inline technical terms. This script:
 - adds an RTL mark to Hebrew-dominant Markdown lines in the Hebrew section;
 - sets RTL direction on HTML table cells that contain Hebrew;
-- keeps English/status-only cells untouched (LTR by content).
-
-The transformation is idempotent and display-only.
+- keeps English/status-only cells untouched (LTR by content);
+- gives both language sections explicit stable anchors;
+- supports --check so CI can reject rendering regressions.
 """
 from __future__ import annotations
 
+import argparse
 import re
 from pathlib import Path
 
@@ -20,6 +21,8 @@ RLM = "\u200f"
 HEBREW = re.compile(r"[\u0590-\u05FF]")
 TD = re.compile(r"<td(?![^>]*\bdir=)([^>]*)>(.*?)</td>", re.S | re.I)
 BIDI_MARKS = "\u200e\u200f\u202a\u202b\u202c\u202d\u202e\u2066\u2067\u2068\u2069"
+HEBREW_ANCHOR = '<a id="hebrew"></a>'
+ENGLISH_ANCHOR = '<a id="english"></a>'
 
 
 def has_hebrew(text: str) -> bool:
@@ -42,18 +45,13 @@ def add_rlm(line: str) -> str:
     stripped = line.lstrip()
     indent = line[: len(line) - len(stripped)]
 
-    # Keep structural Markdown characters in front, put the direction mark at
-    # the beginning of the visible text.
     for prefix in ("###### ", "##### ", "#### ", "### ", "## ", "# ", "- ", "> "):
         if stripped.startswith(prefix):
             return indent + prefix + RLM + stripped[len(prefix):]
 
-    # Markdown table rows: the cells determine direction individually; adding
-    # RLM immediately after the first pipe stabilizes Hebrew-first rows.
     if stripped.startswith("|"):
         return indent + "|" + RLM + stripped[1:]
 
-    # Raw HTML gets explicit dir attributes instead of paragraph marks.
     if stripped.startswith("<"):
         return line
 
@@ -65,7 +63,27 @@ def find_h1(text: str, label: str) -> int:
     return -1 if match is None else match.start()
 
 
+def ensure_language_anchors(text: str) -> str:
+    text = text.replace('<a href="#עברית">עברית</a>', '<a href="#hebrew">עברית</a>')
+
+    he_match = re.search(rf"(?m)^# [{re.escape(BIDI_MARKS)}]*עברית[ \t]*$", text)
+    if he_match is None:
+        raise SystemExit("README Hebrew section marker not found")
+    he_prefix = text[max(0, he_match.start() - len(HEBREW_ANCHOR) - 3):he_match.start()]
+    if HEBREW_ANCHOR not in he_prefix:
+        text = text[:he_match.start()] + HEBREW_ANCHOR + "\n\n" + text[he_match.start():]
+
+    en_match = re.search(r"(?m)^# English[ \t]*$", text)
+    if en_match is None:
+        raise SystemExit("README English section marker not found")
+    en_prefix = text[max(0, en_match.start() - len(ENGLISH_ANCHOR) - 3):en_match.start()]
+    if ENGLISH_ANCHOR not in en_prefix:
+        text = text[:en_match.start()] + ENGLISH_ANCHOR + "\n\n" + text[en_match.start():]
+    return text
+
+
 def normalize(text: str) -> str:
+    text = ensure_language_anchors(text)
     start = find_h1(text, "עברית")
     end = find_h1(text, "English")
     if start < 0 or end < 0 or end <= start:
@@ -90,9 +108,58 @@ def normalize(text: str) -> str:
     return before + "".join(out) + after
 
 
+def validate(text: str) -> list[str]:
+    issues: list[str] = []
+    if text.count(HEBREW_ANCHOR) != 1:
+        issues.append("expected exactly one explicit #hebrew anchor")
+    if text.count(ENGLISH_ANCHOR) != 1:
+        issues.append("expected exactly one explicit #english anchor")
+    if '<a href="#hebrew">עברית</a>' not in text:
+        issues.append("top language navigation must link Hebrew to #hebrew")
+    if '<a href="#english">English</a>' not in text:
+        issues.append("top language navigation must link English to #english")
+    if 'href="#עברית"' in text:
+        issues.append("legacy implicit Hebrew anchor is still referenced")
+
+    start = find_h1(text, "עברית")
+    end = find_h1(text, "English")
+    if start < 0 or end < 0 or end <= start:
+        issues.append("Hebrew/English section markers are invalid")
+        return issues
+
+    hebrew = text[start:end]
+    for match in re.finditer(r"<td([^>]*)>(.*?)</td>", hebrew, re.S | re.I):
+        attrs, body = match.group(1), match.group(2)
+        if has_hebrew(body) and 'dir="rtl"' not in attrs:
+            issues.append("Hebrew HTML table cell missing dir=rtl")
+            break
+    return issues
+
+
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--check", action="store_true")
+    args = ap.parse_args()
+
     current = README.read_text(encoding="utf-8")
     fixed = normalize(current)
+    issues = validate(fixed)
+
+    if args.check:
+        if current != fixed:
+            print("FAIL README Hebrew BiDi is not normalized. Run: python3 scripts/fix-readme-bidi.py")
+            return 1
+        if issues:
+            for issue in issues:
+                print(f"FAIL {issue}")
+            return 1
+        print("OK README Hebrew BiDi and language anchors are valid")
+        return 0
+
+    if issues:
+        for issue in issues:
+            print(f"FAIL {issue}")
+        return 1
     if fixed == current:
         print("OK README BiDi already normalized")
         return 0
