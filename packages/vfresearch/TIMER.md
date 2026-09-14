@@ -1,57 +1,39 @@
-# Best Skills — טיימר לנצח (עד שהבעלים עוצר)
+# Best Skills — דופק 48 שעות דרך Research Seat
 
-**Standing order (בעלים 2026-09-03):** דופק כל ~48 שעות **לנצח**, עד הודעה מפורשת לעצור / לשנות קצב.
+**Standing order (בעלים 2026-09-03):** סקירת Best Skills כל ~48 שעות **לנצח**, עד הודעה מפורשת לעצור או לשנות קצב.
 
-שם מנוי: `vf-best-skills-bi-daily`  
-מרווח: `delaySeconds: 172800` (48 שעות)  
-כלי: `cursor-subscriptions` → `subscribe_timer` (dedupe לפי name)
+סמכות תזמון: **Velvet Research Seat**.  
+יעד רעננות: `48h` · grace: `4h`.  
+מצב קנוני: `packages/vfresearch/BEST-SKILLS.json` (`lastPass`, `lastArtifact`, `lastResult`).
+
+אין תלות ב־`cursor-subscriptions` או במנוי חיצוני. Research Seat של 02:00 בודק בכל ריצה האם `lastPass` עבר את חלון ה־48h; אם כן הוא מריץ את `vf-best-skills` כחלק מאותה ריצת מחקר. אסור לפתוח automation נוסף רק עבור Best Skills.
 
 ## חובה בכל מעבר
 
-בסוף **כל** סקירת best-skills (גם אם «אין חדש במשרד»):
+בסוף כל סקירת best-skills, גם אם התוצאה היא «אין חדש במשרד»:
 
-1. `list_subscriptions` — לוודא שהטיימר קיים.
-2. אם חסר / פג / קרוב לפקיעה → `subscribe_timer` מחדש עם אותו `name` + הפרומפט למטה.
-3. לרשום בארטיפקט: `timer: renewed` או `timer: ok`.
+1. לכתוב `packages/vfresearch/sources/YYYY-MM-DD-best-skills.md`.
+2. לעדכן `BEST-SKILLS.json`: `lastPass`, `dataDate`, `lastArtifact`, `lastResult`.
+3. לעדכן בלוק `05` ב־`packages/vfops/data/research.md` כשיש חומר לבריף.
+4. אחרי שינוי pack/rule/catalog להריץ `python3 scripts/check-all.py`.
+5. לאמת freshness דרך state/artifact — לא דרך receipt של timer חיצוני.
 
-אל תסיים מעבר בלי חידוש/אימות טיימר. מנוי Cloud Agent פג אחרי ~7 ימים — **חידוש עצמי** הוא מה שמחזיק לנצח.
+`lastPass` ישן מ־52 שעות הוא מצב stale: Research Seat חייב לבצע את המעבר הבא או לדווח blocker אמיתי. אין המצאת מעבר ואין סימון fresh ללא artifact תואם.
 
-## פרומפט ל־subscribe_timer
+## מה Research Seat מריץ
 
-```
-הרץ את סקירת LinklyAI/best-skills (דופק קבוע לנצח עד שהבעלים יעדכן אחרת) לפי skill vf-best-skills ו-packages/vfresearch/BEST-SKILLS.md + TIMER.md.
-
-1. קרא BEST-SKILLS.md + BEST-SKILLS.json + TIMER.md.
-2. משוך דירוגי היום מ-https://github.com/LinklyAI/best-skills (best-100, trending-7d, social-buzz, top-repos).
-3. השווה ל-lastPass/watchlist/embedded — הטמע דפוסים חדשים על פקים קיימים בלבד. מותר לעדכן חוקה אם דפוס עמיד משפר את המשרד (נעילות ליבה נשארות: אין אוטו-DM, אין npx על Cloud, אין runtime שני, אין ₪ מומצא).
-4. כתוב packages/vfresearch/sources/YYYY-MM-DD-best-skills.md ועדכן BEST-SKILLS.json.
-5. עדכן בלוק 05 ב-vfops/data/research.md.
-6. אחרי שינויים: python3 scripts/check-all.py, commit, push, עדכן PR אם יש.
-7. חובה: חדש את הטיימר vf-best-skills-bi-daily (delaySeconds 172800) עם הפרומפט מ-TIMER.md — דופק לנצח עד שהבעלים עוצר.
-8. אל תתקין npx skills / OpenClaw. דפוסים בגיט בלבד.
-
-קישור: https://github.com/LinklyAI/best-skills
-standing: forever-until-owner-stops
-```
-
-פרמטרים:
-
-```
-name: vf-best-skills-bi-daily
-delaySeconds: 172800
-once: false
-```
+1. קורא `BEST-SKILLS.md` + `BEST-SKILLS.json` + קובץ זה.
+2. מושך את דירוגי LinklyAI/best-skills ממקור ציבורי מאומת.
+3. משווה ל־`lastPass` / `watchlist` / `embedded`.
+4. מטמיע רק דפוסים שימושיים בתוך packs קיימים; לא `npx skills`, לא runtime שני.
+5. כותב artifact ועדכון state כאמור למעלה.
 
 ## איך הבעלים עוצר
 
-הודעה מפורשת («עצור best-skills» / «שנה קצב») →:
+הודעה מפורשת («עצור best-skills» / «שנה קצב») →
 
-1. `unsubscribe` על המנוי
-2. `BEST-SKILLS.json` → `"standingForever": false` + `"stoppedAt"` + סיבה
-3. שורה ב־`owner-memory.md`
+1. `BEST-SKILLS.json` → `"standingForever": false` + `"stoppedAt"` + סיבה.
+2. עדכון ב־owner memory לפי כללי הזיכרון.
+3. Research Seat מפסיק את בדיקת ה־48h עד הוראה חדשה.
 
-בלי זה — ממשיכים.
-
-## גיבוי
-
-אם הטיימר נעלם בין מעברים: weekly links / morning desk שרואים `standingForever: true` חייבים להפעיל מחדש באותו מעבר (`TIMER.md`).
+בלי הוראה כזו — ממשיכים.
