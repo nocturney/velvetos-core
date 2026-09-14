@@ -44,3 +44,13 @@
 `scripts/vf_insights_loop.py` — לופ מדידה→למידה סגור. פירוט: [`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md).
 
 ייחוס הסתברותי: [`ATTRIBUTION.md`](ATTRIBUTION.md) — לא ממציאים המרה מוואטסאפ.
+
+## Creative Performance Profile
+
+`packages/vfinsights/scripts/vf_insights_loop.py` also writes `CREATIVE-PERFORMANCE-PROFILE.json`.
+
+- Metrics remain canonical from Instagram MCP / verified owner paste in `data/posts.csv`.
+- Optional qualitative tags live separately in `data/creative-annotations.csv`: hook family, visual mechanic, narrative mechanic, CTA type, proof type.
+- A pattern is eligible as a creative prior only after **3 measured posts for that pattern**.
+- The profile stores reach/save/share/comment rates when the underlying metric exists. Missing stays null/«אין ספירה».
+- No composite “virality score”. The profile is a weak prior for `content_matrix` / `hook_tournament`; truth, rights, brand fit and fail-closed QA override it.

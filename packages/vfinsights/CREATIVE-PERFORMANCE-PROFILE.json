@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "1.0",
+  "source": {
+    "metrics": "packages/vfinsights/data/posts.csv",
+    "annotations": "packages/vfinsights/data/creative-annotations.csv",
+    "canonicalMetrics": "Instagram MCP verified Insights or owner-verified paste"
+  },
+  "measuredPosts": 1,
+  "minimumMeasuredPostsPerPattern": 3,
+  "dimensions": {
+    "type": [
+      {
+        "value": "reel",
+        "n_posts": 1,
+        "eligible_prior": false,
+        "avg_reach": 187.0,
+        "avg_save_rate": 0.0,
+        "avg_share_rate": 0.0,
+        "avg_comment_rate": 0.0
+      }
+    ],
+    "caption_style": [
+      {
+        "value": "תהליך-קצר",
+        "n_posts": 1,
+        "eligible_prior": false,
+        "avg_reach": 187.0,
+        "avg_save_rate": 0.0,
+        "avg_share_rate": 0.0,
+        "avg_comment_rate": 0.0
+      }
+    ],
+    "hook_family": [],
+    "visual_mechanic": [],
+    "narrative_mechanic": [],
+    "cta_type": [],
+    "proof_type": []
+  },
+  "eligiblePriors": [],
+  "rules": {
+    "measuredEvidenceOnly": true,
+    "missingMetricIsNotZero": true,
+    "noCompositeViralityScore": true,
+    "priorNeverOverridesTruthRightsBrandOrQuality": true
+  }
+}

@@ -2,6 +2,12 @@
 
 מחקר יומי חי הושלם. מצב cutoff: **`ready_for_brief`**. מקור מלא: `packages/vfresearch/sources/2026-09-14-orchestra.md`.
 
+## מה נבנה / יועל
+
+- Social Intelligence הוטמע בתוך `vfresearch`/`vfom`/`vfinsights`: `SocialResearchPacket`, ניתוח mechanics ל-Reference Reels, Content Matrix לפני saturation, ו-Creative Performance Profile מדוד.
+- שלושת מקורות המחקר מ-14.9 נרשמו ב-`vfresearch/LINKS.json` לסקירה מחזורית; אין runtime/scheduler/analytics חלופי.
+- פרופיל הביצועים נבנה מה-Instagram MCP הקנוני: כרגע 1 פוסט מדוד בלבד ולכן אין pattern מקודם עד סף 3.
+
 ## מה שווה להעביר לבריף
 
 ```text

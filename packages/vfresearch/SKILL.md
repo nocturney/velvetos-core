@@ -27,3 +27,14 @@
 ## מומחה — Trend explorer
 
 מודול: `expert-trend-explorer` · `experts/TREND-EXPLORER.md` · `@trend-researcher`
+
+## Social Intelligence · external public signals
+
+- Playbook + authority: `SOCIAL-INTELLIGENCE.md`
+- Stable packet: `social-research-packet.schema.json`
+- Reference mechanics: `reference-pattern.schema.json`
+- Deterministic normalizer: `python3 scripts/vf_social_intelligence.py`
+- Own-account Insights stay canonical in Instagram MCP / `vfinsights`; external scraping never replaces them.
+- External providers are adapters only. Public data only, no copied cookies/private auth, no engagement automation.
+- `cporter202/social-media-scraping-apis` is provider discovery, not a dependency/runtime.
+- Output feeds the existing `vfom/INSTAGRAM-CONTENT-DECISION.json` content-matrix/saturation path. It never publishes.

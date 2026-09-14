@@ -1,0 +1,28 @@
+{
+  "id": "social-intelligence-upgrade-2026-09-14",
+  "component_state": "Idle",
+  "scope": "Velvet Factory organic Instagram research-to-creative learning loop",
+  "branch": "feat/social-intelligence-upgrade-2026-09-14",
+  "embedded": {
+    "contentMatrix": "packages/vfom/INSTAGRAM-CONTENT-DECISION.json",
+    "socialIntelligence": "packages/vfresearch/SOCIAL-INTELLIGENCE.md",
+    "normalizer": "scripts/vf_social_intelligence.py",
+    "referencePattern": "packages/vfresearch/reference-pattern.schema.json",
+    "performanceProfile": "packages/vfinsights/CREATIVE-PERFORMANCE-PROFILE.json",
+    "sensor": "scripts/check-social-intelligence.py"
+  },
+  "locks": [
+    "no-second-runtime", "instagram-mcp-canonical-for-own-account",
+    "public-external-data-only", "no-cookies-private-scraping",
+    "no-auto-dm-or-engagement-automation", "no-invented-metrics",
+    "no-composite-virality-score", "minimum-3-measured-posts-per-promoted-pattern"
+  ],
+  "validation": {
+    "targetedSensors": "pass",
+    "insightsLoop": "pass; measuredPosts=1; eligiblePrior=false",
+    "githubLinuxCheckAll": "pass 59/59; VelvetOS Core Sensors #549",
+    "readmeContract": "pass",
+    "briefStaleness": "pass; canonical 2026-09-14 artifact materialized"
+  },
+  "next": "Merged system should use SocialResearchPacket/reference mechanics as research inputs and promote creative priors only after the 3-post evidence floor."
+}

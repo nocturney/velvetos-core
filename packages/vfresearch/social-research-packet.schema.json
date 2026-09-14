@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvetos.local/schema/social-research-packet.schema.json",
+  "title": "VelvetOS SocialResearchPacket",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "window",
+    "sources",
+    "signals",
+    "opportunities",
+    "risks"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "window": {
+      "type": "object",
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "url",
+          "provider"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "pattern": "^https?://"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "observed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source_url",
+          "provider",
+          "observed_at",
+          "metrics"
+        ],
+        "properties": {
+          "source_url": {
+            "type": "string",
+            "pattern": "^https?://"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "author": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observed_at": {
+            "type": "string"
+          },
+          "media_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "topic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hook_mechanic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "visual_mechanic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "narrative_mechanic": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "outlier_score": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "evidence_quality": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "metrics": {
+            "type": "object",
+            "additionalProperties": {
+              "type": [
+                "number",
+                "integer",
+                "null"
+              ]
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "opportunities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "why_now",
+          "velvet_relevance",
+          "source_refs"
+        ],
+        "properties": {
+          "why_now": {
+            "type": "string"
+          },
+          "velvet_relevance": {
+            "type": "string"
+          },
+          "recommended_format": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "usable_proof": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": true
+}

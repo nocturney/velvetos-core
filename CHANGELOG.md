@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-14 — **Social Intelligence upgrade:** embedded evidence-backed Content Matrix, public external signal/reference-Reel normalization, and measured creative-performance priors into existing `vfresearch` → `vfom` → `vfinsights` flow. No new pack/runtime/scheduler; own Instagram Insights remain canonical in Instagram MCP; provider scraping is optional public-data adapter only. Sensor: `scripts/check-social-intelligence.py`.
 - 2026-09-13 — **Superpowers v6.3 execution discipline absorbed (no Superpowers runtime):** `vfharness` now requires evidence-bearing plan preflight, fail-closed `safe_ruling` in the existing escalation ladder, RED → GREEN → REFACTOR for executable behavior without test theater, fresh-context review, and dependency-safe parallel fan-out/fan-in. Added behavioral sensor `check-vfharness-execution-discipline.py`; no plugin/runtime/worktree mandate.
 
 - 2026-09-13 — **Windows Edge render fallback verified:** `sderot-windows` / Remote Desktop Commander device `Chris` online; HyperFrames 0.8.34 doctor PASS; real 1080×1920 H.264 smoke render + ffprobe/SHA-256 receipt PASS. Windows promoted to `host_smoke_verified`; Mac remains preferred/browser-subscription host. Fixed PowerShell Python-command array handling discovered by commissioning. Full backend LIVE still requires approved Media Vault asset QA + intentional HyperFrames→FFmpeg failover verification.

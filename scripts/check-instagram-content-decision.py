@@ -46,6 +46,7 @@ def main() -> None:
         fail("policy identity/noSecondRuntime invalid")
 
     required_order = [
+        "content_matrix",
         "saturation_scan",
         "anti_generic_check",
         "format_selection",
@@ -64,6 +65,12 @@ def main() -> None:
     missing = [name for name in required_order if name not in stages]
     if missing:
         fail(f"missing stages {missing}")
+
+    matrix = stages["content_matrix"]
+    if matrix.get("enabled") is not True or matrix.get("noPublishAuthority") is not True:
+        fail("content matrix must be enabled and non-publishing")
+    if set(matrix.get("formats") or []) != {"actionable", "motivational", "analytical", "contrarian", "observation", "x_vs_y", "present_vs_future", "listicle"}:
+        fail("content matrix angle families incomplete")
 
     saturation = stages["saturation_scan"]
     if saturation.get("neverInventExternalPatterns") is not True or saturation.get("unknownWhenEvidenceMissing") is not True:
@@ -119,9 +126,9 @@ def main() -> None:
     if foundry.get("sharedAuthorities", {}).get("instagramDecisionPolicy") != "packages/vfom/INSTAGRAM-CONTENT-DECISION.json":
         fail("Foundry policy authority path mismatch")
 
-    must_contain(SKILL, ("saturation_scan", "anti_generic_check", "hook_tournament", "retention_pass", "authority_voice_pass", "engagement_pass", "visual_qa", "final_quality_gate", "performance_feedback"))
-    must_contain(CREW, ("saturation_scan", "hook_tournament", "engagementBait=false", "final_quality_gate", "performance_feedback"))
-    must_contain(SCENARIO, ("saturation scan", "hook tournament", "Visual QA", "final quality gate", "performance feedback"))
+    must_contain(SKILL, ("content_matrix", "saturation_scan", "anti_generic_check", "hook_tournament", "retention_pass", "authority_voice_pass", "engagement_pass", "visual_qa", "final_quality_gate", "performance_feedback"))
+    must_contain(CREW, ("content_matrix", "saturation_scan", "hook_tournament", "engagementBait=false", "final_quality_gate", "performance_feedback"))
+    must_contain(SCENARIO, ("content matrix", "saturation scan", "hook tournament", "Visual QA", "final quality gate", "performance feedback"))
 
     print("OK instagram content decision pipeline enforced")
 

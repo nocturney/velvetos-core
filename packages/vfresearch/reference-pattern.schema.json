@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvetos.local/schema/reference-pattern.schema.json",
+  "title": "VelvetOS ReferencePattern",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "source_url",
+    "observed",
+    "mechanics",
+    "provenance",
+    "copyingForbidden"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "source_url": {
+      "type": "string",
+      "pattern": "^https?://"
+    },
+    "observed": {
+      "type": "object",
+      "properties": {
+        "duration_seconds": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "first_spoken_at_seconds": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "first_visual_change_at_seconds": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "event_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "overlay_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reveal_at_seconds": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "mechanics": {
+      "type": "object",
+      "properties": {
+        "hook_mechanic": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "visual_mechanic": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "narrative_mechanic": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "cta_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "provider"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "captured_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "raw_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "copyingForbidden": {
+      "const": true
+    }
+  },
+  "additionalProperties": true
+}

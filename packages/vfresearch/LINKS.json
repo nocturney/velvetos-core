@@ -1299,6 +1299,51 @@
         "vfmcp"
       ],
       "note": "Package adelaidasofia-instagram-mcp. Cloud remote ready (auth+remote_access). Stories+Insights deployed live+publish_* available_not_live_tested. DM off. Failover Canva+Drive+Gmail."
+    },
+    {
+      "id": "charlie947-social-media-skills",
+      "kind": "repo",
+      "url": "https://github.com/charlie947/social-media-skills",
+      "title": "social-media-skills — content/research/analytics skill patterns",
+      "firstEmbedded": "2026-09-14",
+      "lastReviewed": "2026-09-14",
+      "sourceNote": "packages/vfresearch/sources/2026-09-14-social-intelligence-repos.md",
+      "packs": [
+        "vfresearch",
+        "vfom",
+        "vfinsights",
+        "vfcopy",
+        "vfgrowth"
+      ],
+      "note": "Patterns only: content matrix, measured scoring, reference-Reel mechanics, date-verified niche research. No second writer/runtime."
+    },
+    {
+      "id": "cporter202-automate-for-growth",
+      "kind": "repo",
+      "url": "https://github.com/cporter202/automate-for-growth",
+      "title": "automate-for-growth — batching and feedback-loop patterns",
+      "firstEmbedded": "2026-09-14",
+      "lastReviewed": "2026-09-14",
+      "sourceNote": "packages/vfresearch/sources/2026-09-14-social-intelligence-repos.md",
+      "packs": [
+        "vfresearch",
+        "vfom",
+        "vfinsights"
+      ],
+      "note": "Method patterns only. No ViralWave dependency, generic virality score, mass publishing, or second scheduler."
+    },
+    {
+      "id": "cporter202-social-media-scraping-apis",
+      "kind": "repo",
+      "url": "https://github.com/cporter202/social-media-scraping-apis",
+      "title": "social-media-scraping-apis — provider discovery catalogue",
+      "firstEmbedded": "2026-09-14",
+      "lastReviewed": "2026-09-14",
+      "sourceNote": "packages/vfresearch/sources/2026-09-14-social-intelligence-repos.md",
+      "packs": [
+        "vfresearch"
+      ],
+      "note": "Discovery catalogue only. Public external signals, bounded cost, no cookies/private scraping. Own IG metrics remain Instagram MCP."
     }
   ],
   "addLink": {

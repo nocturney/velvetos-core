@@ -6,7 +6,8 @@ Existing office orchestrator pattern only — no second runtime. Crew: [`../crew
 
 ```mermaid
 flowchart LR
-  P[real opportunity / print.done / media.verified] --> S[saturation scan + anti-generic]
+  P[real opportunity / print.done / media.verified] --> M[content matrix: cheap evidence-bound candidates]
+  M --> S[saturation scan + anti-generic]
   S --> F[format selection]
   F --> H[hook tournament: text + visual + motion]
   H --> A[creative.plan]
@@ -32,6 +33,7 @@ flowchart LR
 
 ## Laws
 
+- Content matrix expands candidates from 3â€“5 Velvet-specific pillars and current SocialResearchPacket evidence; every candidate needs proof/source refs, and the stage has no publish authority.
 - Saturation claims require evidence. If current external evidence is unavailable, record unknown rather than inventing patterns.
 - Generic/template/“look what we printed” content is repaired or archived before render.
 - One primary format is selected because it best carries the proof/story; do not generate every format by default.
