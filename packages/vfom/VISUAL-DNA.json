@@ -1,12 +1,47 @@
 {
   "brandName": "Velvet Factory",
-  "version": 2,
+  "version": 3,
   "authority": "packages/vfom/VISUAL-OS.md",
+  "ownerApprovedVisualStandard": {
+    "status": "approved",
+    "approvedAt": "2026-09-14",
+    "document": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+    "canvaAssetId": "MAHVJjCCKQA",
+    "canvaAssetTitle": "Velvet Factory · APPROVED GRID VISUAL STANDARD · 2026-09-14",
+    "artifactSha256": "707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0",
+    "artifactDimensions": "1254x1254",
+    "role": "visual-language and quality-bar reference; never a substitute for Product Truth",
+    "requiredPrinciples": [
+      "product_first",
+      "real_photography_truth_anchor",
+      "retouch_photo_not_product",
+      "minimal_mobile_readable_typography",
+      "recipe_diversity_without_visual_chaos",
+      "feed_coherence",
+      "premium_not_template_like",
+      "photo_first_service_tiles",
+      "curated_not_rigid_checkerboard",
+      "exact_final_review"
+    ],
+    "preferredFeedRecipes": ["hero", "ugc_human", "macro_detail", "minimal_studio", "bundle_flatlay", "service_editorial", "proof_process"],
+    "hardRejects": [
+      "placeholder_presented_as_final",
+      "generic_icons_instead_of_real_product_media",
+      "synthetic_replacement_of_real_product",
+      "subject_drift_from_source_geometry_material_color",
+      "fake_customer_scene_or_fake_shelf_presence",
+      "text_heavy_template_card_overpowering_product",
+      "generic_canva_template_aesthetic",
+      "decorative_stock_filler",
+      "rejected_g004_canva_DAHUaelaug0"
+    ]
+  },
   "visualArchetype": [
     "tactile engineering lab",
     "material intelligence",
     "controlled experimental energy",
-    "warm practical workshop"
+    "warm practical workshop",
+    "premium curated product editorial"
   ],
   "heroSubjects": [
     "hands working",
@@ -14,14 +49,15 @@
     "printed part under real force",
     "machine in action",
     "measured transformation",
-    "failure and repair proof"
+    "failure and repair proof",
+    "finished product as dominant subject"
   ],
-  "shotVocabulary": ["hero", "macro", "process", "failure", "proof", "human", "b-roll"],
+  "shotVocabulary": ["hero", "macro", "process", "failure", "proof", "human", "b-roll", "minimal_studio", "bundle_flatlay", "service_editorial"],
   "lighting": {
-    "preferred": ["directional hard light", "soft daylight", "controlled shadow"],
+    "preferred": ["directional hard light", "soft daylight", "controlled shadow", "warm controlled product light"],
     "avoid": ["random mixed white balance", "flat generic product light", "overexposed plastic"]
   },
-  "backgrounds": ["real workbench", "material texture", "clean black", "clean gray", "clean white"],
+  "backgrounds": ["real workbench", "material texture", "clean black", "clean gray", "clean white", "refined neutral cream when verified by approved reference/template"],
   "motionLanguage": [
     "hard cut",
     "macro push-in when motivated",
@@ -37,11 +73,19 @@
     "maxFonts": 2,
     "coverWordsMin": 2,
     "coverWordsMax": 5,
-    "inventFont": false
+    "inventFont": false,
+    "ownerApprovedDirection": "minimal, restrained, mobile-readable, product-dominant; NO_TEXT is preferred when text does not add value"
   },
   "colorPolicy": {
     "policy": "use verified brand/template colors only; do not invent hex values",
-    "accentRule": "one dominant accent per composition when an accent exists"
+    "accentRule": "one dominant accent per composition when an accent exists",
+    "ownerApprovedDirection": "warm/dark/cream/neutral visual balance with restrained orange accent behavior only when supported by verified brand/template colors"
+  },
+  "feedContinuity": {
+    "ownerApprovedBalance": ["hero", "ugc_human", "macro_detail", "minimal_studio", "bundle_flatlay", "service_editorial", "proof_process"],
+    "rule": "balance truthful available material across recipes without quotas or forced checkerboards; never invent a missing category",
+    "productFirst": true,
+    "photoFirstServiceCommunication": true
   },
   "visualFinishing": {
     "version": 1,
@@ -72,7 +116,8 @@
       "failClosed": true,
       "autoRepairOrdinaryQualityFailures": true,
       "recheckAfterRepair": true,
-      "evidenceRequired": true
+      "evidenceRequired": true,
+      "ownerApprovedGridStandardRequired": true
     }
   },
   "firstFrame": {
@@ -88,12 +133,17 @@
     "stock-looking workshop",
     "AI-generated Hebrew text inside footage",
     "perfect object that drifts from real product geometry",
-    "retouching that redesigns the product"
+    "retouching that redesigns the product",
+    "placeholder shown as intended final",
+    "generic icon replacing real product media",
+    "text-heavy template card overpowering product",
+    "generic Canva-template look"
   ],
   "referencePolicy": {
     "learnable": ["lighting", "composition", "pacing", "shot structure", "transition mechanic", "sound mechanic"],
     "mustChange": ["identity", "context", "subject", "proof", "Hebrew copy", "ending"],
-    "reject": ["trademark imitation", "distinctive identity copying", "rights ambiguity"]
+    "reject": ["trademark imitation", "distinctive identity copying", "rights ambiguity"],
+    "ownerApprovedReference": "Use the approved grid reference as style/quality guidance only; real source product evidence wins whenever there is any conflict."
   },
   "syntheticRole": "atmosphere, transitions and supporting visuals; real Velvet assets provide product, material, failure, measurement and proof"
 }
