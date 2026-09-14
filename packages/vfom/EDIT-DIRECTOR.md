@@ -44,3 +44,14 @@
 ## Gap handling
 
 אם EDL איכותי דורש shot שלא קיים, אל תבקש “עוד חומר” באופן כללי. החזר `shotRequest` מינימלי: מה לצלם, זווית, משך, פעולה, orientation ולמה הוא נדרש. זהו Human Required רק מפני שהעולם הפיזי חסר; כל שאר העריכה ממשיכה אוטונומית.
+
+## Specialized edit / animation adapters
+
+`VIDEO-TOOLCHAIN.json` defines subordinate helpers inside the existing Foundry; it is not another editor runtime or source of truth.
+
+- For an EDL that benefits from audio-first trimming, verified word-boundary cuts or deterministic base assembly, stage the approved source media inside the content job and create a request matching `EDIT-EDL.schema.json`. Run `python3 scripts/vf_video_edit.py validate|plan|run|inspect <request>`. The bridge returns a normalized base cut, ffprobe/SHA-256 receipt and cut-boundary inspection evidence.
+- `HyperFrames remains` the master compositor. Public Hebrew, RTL overlays, kinetic type, final composition and derivatives still follow `HYPERFRAMES-BACKEND.json` and its existing QA.
+- Remotion is an optional component-heavy animation slot only after `vlicense` records valid commercial eligibility/license evidence. Do not install it by default or let it become a second render authority.
+- Manim is an optional technical/explainer slot for geometry, measurements and process diagrams. Its output is illustrative unless the represented claim is independently proven; never use it as physical product/test/customer-result proof.
+- Adapter installation happens during host provisioning, never during a content job. Renderer or host changes may not lower Content Contract, Asset Truth, copy, rights, Brand/Reality/Artifact/Content QA or publish gates.
+

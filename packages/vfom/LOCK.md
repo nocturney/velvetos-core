@@ -57,3 +57,8 @@ Veo, Kling, MiniMax, Runway, Grok video, מוזיקה מ־Suno — רק אם ר�
 ## איכות — לא owner gate
 
 Hook חלש, crop רע, cover חלש, subject drift, flicker, עברית משובשת או score נמוך חוזרים ל־Artifact Repair Router בתוך bounded repair loop. פנייה לבעלים רק על Human Required אמיתי לפי `CREATIVE-AUTOPILOT.md`.
+
+## Specialized video toolchain boundary
+
+`VIDEO-TOOLCHAIN.json` may add deterministic edit intelligence and optional animation slots, but it must never create a second content runtime, job queue, media catalog, creative authority or publish path. HyperFrames remains the canonical master compositor. Remotion stays license-gated; Manim is host-smoke-verified on sderot-windows as a subordinate technical/explainer slot. Generated animation is illustrative and never proves a physical product/test/customer claim.
+

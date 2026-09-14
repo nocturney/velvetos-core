@@ -1,6 +1,6 @@
 {
   "name": "velvet-visual-foundry",
-  "version": 5,
+  "version": 6,
   "role": "machine-readable creative orchestration policy over existing VelvetOS packs",
   "noSecondRuntime": true,
   "specialists": {
@@ -19,12 +19,14 @@
     "mediaCatalog": "packages/vfmedia/catalog.json",
     "renderBackend": "packages/vfom/HYPERFRAMES-BACKEND.json",
     "renderRequestSchema": "packages/vfom/HYPERFRAMES-RENDER.schema.json",
-    "frameContract": "packages/vfom/HYPERFRAMES-FRAME.md"
+    "frameContract": "packages/vfom/HYPERFRAMES-FRAME.md",
+    "videoToolchain": "packages/vfom/VIDEO-TOOLCHAIN.json",
+    "editDecisionListSchema": "packages/vfom/EDIT-EDL.schema.json"
   },
   "layers": {
     "creativeIntelligence": ["creative-director", "brand-guardian", "media-librarian", "proof-first-storyboarder", "visual-evaluator", "repair-planner", "experiment-director"],
     "orchestration": ["content-job-state-machine", "content-contract", "creative-manifest", "instagram-content-decision-pipeline", "opportunity-scoring", "progressive-variants", "threshold-policy", "budget-governor", "retry-and-escalation"],
-    "deterministicServices": ["vfmedia-catalog", "claim-provenance", "subject-packs", "hyperframes-video-composition", "ffmpeg-svg-caption-composition", "render-receipt-verification", "render-derivatives", "drive-storage", "vfigos-publish-verification", "vfinsights-performance-evidence"]
+    "deterministicServices": ["vfmedia-catalog", "claim-provenance", "subject-packs", "hyperframes-video-composition", "ffmpeg-svg-caption-composition", "render-receipt-verification", "render-derivatives", "drive-storage", "vfigos-publish-verification", "vfinsights-performance-evidence", "deterministic-base-edit"]
   },
   "renderBackend": {
     "primary": "hyperframes",
