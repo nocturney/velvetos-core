@@ -12,7 +12,8 @@
 ```
 
 Freshness: **2026-09-14 · GREEN body evidence**; `scripts/vfresearch_cadence.py freshness` עבר בפועל על checkout טרי.
-Best Skills: refresh 48h בוצע על `dataDate=2026-09-13`; תוצאה `no-embed-existing-coverage`. `timer verification=UNPROVEN` כי `cursor-subscriptions` אינו חשוף בריצה הנוכחית.
+Best Skills: Cloud timer pass — **הוטמע `sensor-first-tdd`** (`dataDate=2026-09-13`; סוגר פער #178). `timer: renewed` על `vf-best-skills-bi-daily` (172800s). ארטיפקט: `packages/vfresearch/sources/2026-09-14-best-skills.md`.
+מה נבנה / יועל: sensor-first-tdd ב־vfharness (TDD אדום→ירוק על check-*.py); מעבר Windows מוקדם יותר ביום היה no-embed + timer UNPROVEN — הוחלף במעבר Cloud זה.
 Validation limitation: `scripts/check-all.py` לא עבר ירוק על Windows fallback בגלל case-collision קיים בין `constitution/TAGS.md` ו-`constitution/tags.md`; אין claim של PASS מלא.
 Runtime limitation: Mac-Office היה offline; Snapmaker Orca 2.3.5 הוא ה-last verified המקומי מ-13.9, לא אימות חדש להיום.
 
