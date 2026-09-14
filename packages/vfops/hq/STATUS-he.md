@@ -1,4 +1,4 @@
-# סטטוס לולאת משרד · 2026-09-09
+# סטטוס לולאת משרד · 2026-09-14
 
 רף: סוכנות פרסום+תפעול יקרה. הבעלים יושב רגוע.
 
@@ -28,7 +28,7 @@
 - Insights: MCP callable (probe) · אין ספירה מלאה לבעלים · לא ממציאים מדדים
 - מדף MakerWorld 0/5 עד GATE+רישיון+סלייס
 - מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה
-- B2B נעול · וואטסאפ לקוח = אדם 050-2517000 (BUSINESS_CONTACT_RECORD)
+- הצעה לציבור: מוצרים מוכנים + התאמה אישית · סוג לקוח/כמות אינם מסלול נפרד
 
 ## מלאי פקים
 
@@ -36,7 +36,8 @@
 |---|---|---|---|
 | `velvetos` | working-cli | on-instance | — |
 | `vfagents` | docs-playbook | on-job | — |
-| `vfbiz` | locked | daily-07:00 | B2B נעול עד בלוק 01 |
+| `vfbrand` | authority | on-content | — |
+| `vfbiz` | docs-playbook | daily-07:00 | — |
 | `vfbooks` | working-cli | daily-07:00 | אין ספירה בלי מקור מאומת |
 | `vfbriefux` | working-cli | daily-07:00 | — |
 | `vfcanva` | mcp-ready | on-content | — |

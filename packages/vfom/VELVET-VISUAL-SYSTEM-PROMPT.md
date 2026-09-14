@@ -155,7 +155,7 @@ Never recolor the product merely to make the feed match.
 Service communication must still be photo-first. Use real Velvet products to communicate concepts such as:
 - ready products;
 - custom work;
-- small production runs for businesses.
+- custom 3D-print work grounded in the specific request; quantity is a job fact, not a separate service category.
 
 Do not replace these with abstract generic icons when real product evidence is available.
 

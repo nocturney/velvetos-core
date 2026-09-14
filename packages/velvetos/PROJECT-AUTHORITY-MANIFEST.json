@@ -16,7 +16,8 @@
     "constitution/VISIBLE_TEXT.md",
     "constitution/ORCHESTRA.md",
     "office/control-plane.json",
-    "packages/manifest.json"
+    "packages/manifest.json",
+    "packages/vfbiz/OFFERING.md"
   ],
   "requiredReceiptFields": [
     "request_domain",
@@ -61,7 +62,8 @@
         "packages/vfcopy/VOICE.md",
         "packages/vfgrowth/PREFLIGHT.md",
         ".cursor/skills/velvet-brand-guardian/SKILL.md",
-        "packages/vfigos/SEND.md"
+        "packages/vfigos/SEND.md",
+        "packages/vfbiz/OFFERING.md"
       ],
       "hardGates": [
         "product_truth",
@@ -70,7 +72,8 @@
         "brand_asset",
         "public_cta",
         "visible_text",
-        "exact_final_qa"
+        "exact_final_qa",
+        "offering_shape"
       ]
     },
     "copywriting": {
@@ -89,12 +92,14 @@
         "packages/vfcopy/SKILL.md",
         "packages/vfcopy/VOICE.md",
         "constitution/VISIBLE_TEXT.md",
-        "constitution/PUBLIC_CTA.md"
+        "constitution/PUBLIC_CTA.md",
+        "packages/vfbiz/OFFERING.md"
       ],
       "hardGates": [
         "visible_text",
         "facts",
-        "public_cta"
+        "public_cta",
+        "offering_shape"
       ]
     },
     "operations": {
@@ -170,12 +175,14 @@
         "packages/vfsales/SKILL.md",
         "packages/vfconvert/SKILL.md",
         "packages/vfcost/SKILL.md",
-        "constitution/PUBLIC_CTA.md"
+        "constitution/PUBLIC_CTA.md",
+        "packages/vfbiz/OFFERING.md"
       ],
       "hardGates": [
         "price_authority",
         "customer_send_authority",
-        "facts"
+        "facts",
+        "offering_shape"
       ]
     },
     "finance": {
@@ -266,12 +273,14 @@
       "authorities": [
         "constitution/SEND.md",
         "packages/vfigos/SEND.md",
-        "packages/vfgrowth/PREFLIGHT.md"
+        "packages/vfgrowth/PREFLIGHT.md",
+        "packages/vfbiz/OFFERING.md"
       ],
       "hardGates": [
         "publish_preflight",
         "tool_receipt",
-        "live_verification"
+        "live_verification",
+        "offering_shape"
       ]
     },
     "general_business": {
@@ -280,11 +289,13 @@
         "vfops"
       ],
       "authorities": [
-        "packages/vfops/SKILL.md"
+        "packages/vfops/SKILL.md",
+        "packages/vfbiz/OFFERING.md"
       ],
       "hardGates": [
         "baseline_authority",
-        "facts"
+        "facts",
+        "offering_shape"
       ]
     }
   },

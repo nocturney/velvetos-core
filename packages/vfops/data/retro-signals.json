@@ -1,100 +1,97 @@
 {
-  "generatedAt": "2026-09-10T12:53:31+03:00",
+  "generatedAt": "2026-09-14T18:04:54+03:00",
   "timezone": "Asia/Jerusalem",
   "rule": "Operational signals for office brief only. No invented ₪/Insights. No owner shame.",
   "catalogEvent": "retro.anomaly",
   "signals": [
     {
       "kind": "sensor_repeat_fail",
-      "evidence": "owner-memory/2026-09-06",
-      "briefSlot": "01",
-      "detail": "- **מושב:** צמיחה",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "sensor_repeat_fail",
-      "evidence": "owner-memory/2026-09-07",
-      "briefSlot": "01",
-      "detail": "- **מושב:** lead + צמיחה",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "inquiry_lag",
-      "evidence": "owner-memory/2026-09-05",
-      "briefSlot": "01",
-      "detail": "- **מושב:** lead",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "model_demand",
-      "evidence": "owner-memory/2026-09-07",
-      "briefSlot": "01",
-      "detail": "- **מושב:** מחקר + ייצור + ראש צוות",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "model_demand",
-      "evidence": "owner-memory/2026-09-07",
-      "briefSlot": "01",
-      "detail": "- **מושב:** ייצור + תפעול",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "model_demand",
-      "evidence": "owner-memory/2026-09-07",
-      "briefSlot": "01",
-      "detail": "- **מושב:** lead + תפעול",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "model_demand",
-      "evidence": "DAILY-RETRO.md#2026-09-07",
-      "briefSlot": "01",
-      "detail": "מה עבד: תיקון בעלים — לוגו / QR / מפיות חזרו לדוגמאות; הנעילה היא על קו B2B, לא על שלושה מק״ט.",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "ingest_bottleneck",
-      "evidence": "DAILY-RETRO.md#2026-09-07",
-      "briefSlot": "05",
-      "detail": "מה לא: אין פתיחת B2B; אין מחירון.",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "model_demand",
-      "evidence": "DAILY-RETRO.md#2026-09-07",
-      "briefSlot": "01",
-      "detail": "מה עבד: הוטמעו `PRINT-DEMAND` / `PRINT-DONE` / לולאת פרנסה ברטרו — בלי פק חדש ובלי אוטו־DM.",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "ingest_bottleneck",
-      "evidence": "DAILY-RETRO.md#2026-09-07",
-      "briefSlot": "05",
-      "detail": "מה לא: אין גלם רצפה חי למשמרת — כרטיס print.done ממתין להדפסה אמיתית.",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "ingest_bottleneck",
-      "evidence": "DAILY-RETRO.md#2026-09-07",
-      "briefSlot": "05",
-      "detail": "מה לא: אין reach מאומת ב־CSV — לא ממלאים.",
-      "event": "retro.anomaly"
-    },
-    {
-      "kind": "sensor_repeat_fail",
       "evidence": "vfharness/state/access-blockers-2026-09-01.json",
       "briefSlot": "01",
       "detail": "task=access-blockers-2026-09-01 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/agency-quality-gap-2026-09-07.json",
+      "briefSlot": "01",
+      "detail": "task=agency-quality-gap-2026-09-07 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/embed-four-office-crews-2026-09-07.json",
+      "briefSlot": "01",
+      "detail": "task=embed-four-office-crews-2026-09-07 component_state=Idle",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/gemini-api-bridge-2026-09-05.json",
+      "briefSlot": "01",
+      "detail": "task=gemini-api-bridge-2026-09-05 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/grok-failover-2026-08-31.json",
+      "briefSlot": "01",
+      "detail": "task=grok-failover-2026-08-31 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/hq-health-2026-09-06.json",
+      "briefSlot": "01",
+      "detail": "task=hq-health-2026-09-06 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/initial-retro-2026-09-01.json",
+      "briefSlot": "01",
+      "detail": "task=initial-retro-2026-09-01 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/ops-publish-snapshot-pulse-2026-09-01.json",
+      "briefSlot": "01",
+      "detail": "task=ops-publish-snapshot-pulse-2026-09-01 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/orchestra-subscriptions-2026-09-05.json",
+      "briefSlot": "01",
+      "detail": "task=orchestra-subscriptions-2026-09-05 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/organic-growth-plane-2026-09-07.json",
+      "briefSlot": "01",
+      "detail": "task=organic-growth-plane-2026-09-07 component_state=Idle",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/public-repos-access-2026-09-01.json",
+      "briefSlot": "01",
+      "detail": "task=public-repos-access-2026-09-01 component_state=None",
+      "event": "retro.anomaly"
+    },
+    {
+      "kind": "sensor_repeat_fail",
+      "evidence": "vfharness/state/revenue-loop-embed-2026-09-01.json",
+      "briefSlot": "01",
+      "detail": "task=revenue-loop-embed-2026-09-01 component_state=None",
       "event": "retro.anomaly"
     }
   ],
   "summary": {
     "count": 12,
     "kinds": [
-      "ingest_bottleneck",
-      "inquiry_lag",
-      "model_demand",
       "sensor_repeat_fail"
     ]
   }

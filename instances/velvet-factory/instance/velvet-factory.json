@@ -76,13 +76,15 @@
     "hqSendViaTools": true,
     "denyPersonalMedicalLegalFoldersUnlessNamed": true,
     "contentAllowed": "floor proof + Hebrew product copy",
-    "extraLocks": ["pickup-sderot-only", "b2b-line-locked", "no-tiktok-without-lead", "no-ads-without-lead"]
+    "offeringAuthority": "packages/vfbiz/OFFERING.md",
+    "noCustomerTypeServicePillar": true,
+    "extraLocks": ["pickup-sderot-only", "no-customer-type-service-pillar", "no-tiktok-without-lead", "no-ads-without-lead"]
   },
   "seats": [
     {"id": "lead", "he": "ראש צוות", "roleNote": "בריף, החלטות, ₪"},
     {"id": "studio", "he": "סטודיו", "roleNote": "פנייה, הצעה, קופי"},
     {"id": "growth", "he": "צמיחה", "roleNote": "תוכן, כריכות, לוח IG"},
-    {"id": "ops", "he": "תפעול", "roleNote": "עלות, ספרים, B2B נעול"},
+    {"id": "ops", "he": "תפעול", "roleNote": "עלות, ספרים, החלטות עסקיות"},
     {"id": "production", "he": "ייצור", "roleNote": "הדפסה, מק״ט, רישיון"}
   ],
   "mcpBind": {
@@ -160,7 +162,7 @@
       "hard-blocker-after-failover"
     ]
   },
-  "locks": ["human-close-whatsapp", "pickup-only", "b2b-locked", "public-commercial-files-only"],
+  "locks": ["human-close-whatsapp", "pickup-only", "no-customer-type-service-pillar", "public-commercial-files-only"],
   "packPrefix": "vf",
   "notes": "Live Velvet Factory office frontend. Pulls modules/packs from VelvetOS Core. Velvet Visual Foundry uses one Creative Manifest plus Creative Director, Brand Guardian and Media Librarian specialists; exception-only and standing-authorized for LOW-risk routine organic Instagram only. Approved private-source derivatives route through the canonical Publish Bridge before Instagram publish."
 }

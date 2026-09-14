@@ -13,7 +13,7 @@ If the «decision» is actually a build request (new pack, pipeline change, skil
 |---|---|---|---|
 | Framer | `vfbiz` | One-sentence fork, stakes, reversibility, deadline | Invent a third option that was not on the table |
 | Questioner | `vfbiz` | 6–8 load-bearing questions | The full 38 |
-| Decider | — | Human / lead seat on ₪, B2B, ads, TikTok | Agent as closer |
+| Decider | — | Human / lead seat on ₪, commercial expansion, ads, TikTok | Agent as closer |
 | Archivist | `vfbiz` | Write `hq/decisions/` | Fill sale ₪ |
 
 ## Capture
@@ -29,7 +29,7 @@ Get, then stop if any are missing:
 ## Default questions (always)
 
 1. האם בכלל צריך להחליט עכשיו?
-2. האם האדם הנכון מחליט? (₪ / B2B / בוסט / טיקטוק = ראש צוות בלבד)
+2. האם האדם הנכון מחליט? (₪ / הרחבה מסחרית / בוסט / טיקטוק = ראש צוות בלבד)
 3. אינסטינקט ראשון — לפני ניתוח.
 4. כמה קל להפוך?
 5. מה נעקור אם נגיד כן? (עלות הזדמנות)
@@ -81,7 +81,7 @@ Write `packages/vfbiz/hq/decisions/YYYY-MM-DD-<slug>.md` and append `INDEX.md`.
 **YYYY-MM-DD** — מה לבדוק (בלי Insights בדויים)
 ```
 
-Revisit defaults: process 30 days · strategy / B2B lock 90 days · SKU / launch 30–60 days after a real floor proof.
+Revisit defaults: process 30 days · strategy / commercial-expansion decision 90 days · SKU / launch 30–60 days after a real floor proof.
 
 ## Done when
 

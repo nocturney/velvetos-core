@@ -16,7 +16,7 @@
   → איסוף משדרות + Invoice4U
 ```
 
-לקוח חדש / B2B: אחרי Intake פותחים Client Record לפי התבנית — **במקור הפרטי**, לא בריפו הציבורי (`office/clients/README.md`).
+לקוח חדש / עסקי / מוסדי: אחרי Intake פותחים Client Record לפי התבנית — **במקור הפרטי**, לא בריפו הציבורי (`office/clients/README.md`).
 תרחישי חניכה: `office/learning/SCENARIOS.md`.
 
 ## מדף קודם (זהב 30.8 + תזמורת 3.9)

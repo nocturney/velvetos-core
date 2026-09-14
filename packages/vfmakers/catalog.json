@@ -37,7 +37,7 @@
         "vfops"
       ],
       "crew": "crews/decide.md",
-      "note": "Lead seat on ₪ / B2B / ads. Archive in vfbiz/hq/decisions/."
+      "note": "Lead seat on ₪ / commercial expansion / ads. Archive in vfbiz/hq/decisions/."
     },
     {
       "name": "unstuck",
@@ -182,7 +182,7 @@
         "vfsku"
       ],
       "crew": "crews/decide.md",
-      "note": "B2B as a line stays locked until lead seat opens it. Logo/QR/napkins were examples, not a closed catalog."
+      "note": "Customer type and quantity do not create a service line. New commercial expansion requires the lead seat."
     },
     {
       "name": "toolify",

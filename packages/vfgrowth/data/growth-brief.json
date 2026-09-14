@@ -1,8 +1,8 @@
 {
-  "date": "2026-09-10",
-  "generatedAt": "2026-09-10T12:53:31+03:00",
+  "date": "2026-09-14",
+  "generatedAt": "2026-09-14T18:04:55+03:00",
   "component_state": "Blocked",
-  "goal": "פניות B2B בדרום עבור אב-טיפוס / חלקים מותאמים.",
+  "goal": "פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.",
   "locks": [
     "no-autopost",
     "no-auto-dm",
@@ -11,16 +11,16 @@
     "no-invented-ils",
     "no-schedule-from-hq"
   ],
-  "weekdayNote": "2026-09-10 = חמישי (Asia/Jerusalem)",
+  "weekdayNote": "2026-09-14 = שני (Asia/Jerusalem)",
   "slotRecommendation": {
-    "choice": "G004",
-    "when": "2026-09-10T20:30+03:00",
-    "whenHe": "חמישי 2026-09-10 20:30 Asia/Jerusalem",
-    "reasonShort": "מוצר מוכן לעריכה+פריפלייט · פרנסה מסיפור-מוצר",
-    "reason": "G004 מחזיק-טבעות עבר EDIT-GATE/Canva + preflight עבור; משרת הצעת מוצר/פנייה. סקר PETG/Nylon נדחה למשבצת סטוריז פנויה אחרת — לא שני שיבוצים על 20:30. בלי Calendar create · G003 הנעול לא זז.",
+    "choice": "poll",
+    "when": "2026-09-14T20:30+03:00",
+    "whenHe": "שני 2026-09-14 20:30 Asia/Jerusalem",
+    "reasonShort": "G004 עדיין חסום עריכה/preflight · סקר קל יותר הערב",
+    "reason": "G004 עדיין לא עבור בשערי עריכה — לא ממליצים לשבץ מוצר לא מוכן. סקר organic `petg_vs_nylon` למשבצת שני 2026-09-14 20:30 Asia/Jerusalem. בלי Calendar create.",
     "deferred": {
-      "id": "poll-petg_vs_nylon",
-      "to": "משבצת סטוריז פנויה אחרת"
+      "id": "G004-stories",
+      "to": "אחרי EDIT-GATE+PREFLIGHT עבור"
     }
   },
   "reel": {
@@ -31,7 +31,7 @@
     "hook": "חסר",
     "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
     "geotag": "חסר",
-    "hashtag_set_id": "local_b2b_v1",
+    "hashtag_set_id": "local_custom_v1",
     "actions": [
       "אישור",
       "עריכה",
@@ -41,17 +41,17 @@
   },
   "story": {
     "slot": "היום 20:30 · סטוריז א׳–ה׳",
-    "gate": "recommended_g004_pending_human_post",
-    "slotStatus": "המלצה יחידה · G004 · חמישי 2026-09-10 20:30 Asia/Jerusalem",
+    "gate": "recommended_poll_pending_human_post",
+    "slotStatus": "המלצה יחידה · סקר · שני 2026-09-14 20:30 Asia/Jerusalem",
     "recommendation": {
-      "choice": "G004",
-      "when": "2026-09-10T20:30+03:00",
-      "whenHe": "חמישי 2026-09-10 20:30 Asia/Jerusalem",
-      "reasonShort": "מוצר מוכן לעריכה+פריפלייט · פרנסה מסיפור-מוצר",
-      "reason": "G004 מחזיק-טבעות עבר EDIT-GATE/Canva + preflight עבור; משרת הצעת מוצר/פנייה. סקר PETG/Nylon נדחה למשבצת סטוריז פנויה אחרת — לא שני שיבוצים על 20:30. בלי Calendar create · G003 הנעול לא זז.",
+      "choice": "poll",
+      "when": "2026-09-14T20:30+03:00",
+      "whenHe": "שני 2026-09-14 20:30 Asia/Jerusalem",
+      "reasonShort": "G004 עדיין חסום עריכה/preflight · סקר קל יותר הערב",
+      "reason": "G004 עדיין לא עבור בשערי עריכה — לא ממליצים לשבץ מוצר לא מוכן. סקר organic `petg_vs_nylon` למשבצת שני 2026-09-14 20:30 Asia/Jerusalem. בלי Calendar create.",
       "deferred": {
-        "id": "poll-petg_vs_nylon",
-        "to": "משבצת סטוריז פנויה אחרת"
+        "id": "G004-stories",
+        "to": "אחרי EDIT-GATE+PREFLIGHT עבור"
       }
     },
     "poll_id": "petg_vs_nylon",
@@ -66,7 +66,7 @@
       "עריכה",
       "דחייה"
     ],
-    "note": "בחירה אחת: G004. סקר לא משובץ במקביל. אישור ≠ פרסום · בלי תזמון מ־HQ."
+    "note": "בחירה אחת: סקר. G004 נדחה עד שער עבור. אישור ≠ פרסום."
   },
   "yesterday": {
     "insights": "אין ספירה",
@@ -76,7 +76,7 @@
   },
   "studio_tasks": [
     "למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.",
-    "לאשר ידנית G004 ל־חמישי 2026-09-10 20:30 Asia/Jerusalem (לא מפרסם מ־HQ).",
+    "לאשר או לדחות סקר ל־שני 2026-09-14 20:30 Asia/Jerusalem (לא מפרסם).",
     "לא להציג חום/חוזק בלי vfprod/CLAIMS.md."
   ],
   "print_events": 1,

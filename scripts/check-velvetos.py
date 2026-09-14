@@ -135,31 +135,26 @@ def check_reference_vf(profile: dict, desk: dict, studio_text: str) -> None:
         fail("VF mcpBind.instagram.connect must point at CONNECT-IG.md")
 
 
-def check_b2b_examples_not_catalog(sample: dict, front: dict, studio_text: str) -> None:
-    """Owner correction 2026-09-07: logo/QR/napkins were examples, not a closed three-SKU B2B catalog."""
-    lock = (ROOT / "packages" / "vfbiz" / "LOCK.md").read_text(encoding="utf-8")
-    skill = (ROOT / "packages" / "vfbiz" / "SKILL.md").read_text(encoding="utf-8")
-    local = (ROOT / "packages" / "vfbiz" / "LOCAL-B2B.md").read_text(encoding="utf-8")
+def check_offering_shape(sample: dict, front: dict, studio_text: str) -> None:
+    """Owner correction 2026-09-14: two public tracks; quantity/customer type are job facts."""
+    offering = (ROOT / "packages" / "vfbiz" / "OFFERING.md").read_text(encoding="utf-8")
     inst_studio = (INSTANCES / "velvet-factory" / "constitution" / "STUDIO.md").read_text(encoding="utf-8")
-    for label, text in (
-        ("packages/vfbiz/LOCK.md", lock),
-        ("packages/vfbiz/SKILL.md", skill),
-        ("packages/vfbiz/LOCAL-B2B.md", local),
-        ("constitution/STUDIO.md", studio_text),
-        ("instances/velvet-factory/constitution/STUDIO.md", inst_studio),
-    ):
-        if "B2B" not in text:
-            fail(f"{label} must keep the B2B lock")
-        if "דוגמאות" not in text:
-            fail(f"{label} must say logo/QR/napkins are examples, not a closed catalog")
-        if "נעול" not in text:
-            fail(f"{label} must keep B2B locked until lead opens it")
+    for label, text in (("OFFERING.md", offering), ("STUDIO.md", studio_text), ("instance STUDIO.md", inst_studio)):
+        for needle in ("מוצרים מוכנים", "התאמה אישית"):
+            if needle not in text:
+                fail(f"{label} must keep clear two-track offering: missing {needle}")
     for label, profile in (("sample", sample), ("frontend-profile", front)):
-        extra = (profile.get("compliance") or {}).get("extraLocks") or []
-        if "b2b-logo-qr-napkins-locked" in extra:
-            fail(f"{label} extraLocks must not treat logo/QR/napkins as the closed B2B catalog")
-        if "b2b-line-locked" not in extra:
-            fail(f"{label} extraLocks must include b2b-line-locked")
+        compliance = profile.get("compliance") or {}
+        if compliance.get("noCustomerTypeServicePillar") is not True:
+            fail(f"{label} must lock noCustomerTypeServicePillar")
+        if compliance.get("offeringAuthority") != "packages/vfbiz/OFFERING.md":
+            fail(f"{label} offeringAuthority mismatch")
+    old_paths = [
+        ROOT / "packages" / "vfbiz" / ("LOCAL-" + "B2" + "B.md"),
+        ROOT / "packages" / "vfsales" / "hq" / ("B2" + "B-QUOTE.md"),
+    ]
+    if any(x.exists() for x in old_paths):
+        fail("retired customer-type service-line artifact still exists")
 
 
 def main() -> None:
@@ -245,7 +240,7 @@ def main() -> None:
     studio_text = STUDIO.read_text(encoding="utf-8")
     check_reference_vf(sample, desk, studio_text)
     check_reference_vf(front, desk, studio_text)
-    check_b2b_examples_not_catalog(sample, front, studio_text)
+    check_offering_shape(sample, front, studio_text)
 
     # desk should identify as core hosting reference front
     if desk.get("product") != "VelvetOS":

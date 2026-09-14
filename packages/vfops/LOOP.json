@@ -45,12 +45,12 @@
     },
     {
       "id": "vfbiz",
-      "kind": "locked",
+      "kind": "docs-playbook",
       "cadence": "daily-07:00",
-      "consume": "packages/vfbiz/LOCAL-B2B.md",
+      "consume": "packages/vfbiz/hq/PLAYBOOK.md",
       "briefSlot": "04",
-      "handoff": "packages/vfbiz/LOCK.md",
-      "blocked": "B2B נעול עד בלוק 01"
+      "handoff": "packages/vfbiz/OFFERING.md",
+      "blocked": null
     },
     {
       "id": "vfbooks",

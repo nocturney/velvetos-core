@@ -34,12 +34,12 @@
 | `second-brain` / כספת שנייה | הזיכרון הוא הריפו |
 | `domain` / `slide-deck` | לא עבודת הדפסה; אתר נעול ב־`vfbiz` |
 | `maker-council` | ממציא אסטרטגיה בשם סלבס |
-| B2B מ־`business-brainstorm` | הקו נעול עד ראש צוות; לוגו / QR / מפיות = דוגמאות, לא קטלוג סגור |
+| הרחבה מסחרית מ־`business-brainstorm` | דורשת החלטת ראש צוות; לא יוצרים קטגוריית שירות לפי סוג לקוח או כמות |
 
 ## איך עובדים מחר
 
 ```
-@vfmakers decide האם לפתוח קו B2B
+@vfmakers decide האם לפתוח הרחבה מסחרית חדשה
 @vfmakers unstuck הסלייסר לא נותן זמן
 @vfmakers cash
 @vfmakers rotation
