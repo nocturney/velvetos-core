@@ -93,7 +93,7 @@ def main() -> None:
     if "0.93617" not in str(win.get("speechVerifiedEvidence") or ""):
         fail("Windows speech verified evidence missing certified Hebrew QA similarity")
 
-    adapter = require_text(ADAPTER, "/v1/audio/speech", "/v1/audio/transcriptions", "back-transcription-qa", "SELECTION_POLICY")
+    adapter = require_text(ADAPTER, "/v1/audio/speech", "/v1/audio/transcriptions", "back-transcription-qa", "SELECTION_POLICY", 'sys.stdout.reconfigure(encoding="utf-8"', 'encoding="utf-8-sig"')
     require_text(WIN, "sderot-windows", "VoiceStudio_Current_User_", "vf_speech.py", "windows-speech-smoke", "speechSmoke", "/engines/select", "commercialPublish = $false")
     require_text(WRAPPER, "bootstrap-edge-host-windows.ps1", "bootstrap-speech-host-windows.ps1", "Remote Desktop Commander")
     if "shell=True" in adapter:

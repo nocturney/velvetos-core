@@ -19,6 +19,11 @@ from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "packages" / "vfom" / "SPEECH-BACKEND.json"
 CONFIG = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
@@ -54,7 +59,7 @@ def now_iso() -> str:
 
 def read_json(path: Path) -> dict[str, Any]:
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(path.read_text(encoding="utf-8-sig"))
     except FileNotFoundError:
         fail(f"request not found: {path}")
     except json.JSONDecodeError as exc:
