@@ -42,6 +42,7 @@ required=(
   "packages/vfom/MOTION-PRESETS.md"
   "scripts/check-visual-standard-bootstrap.py"
   "scripts/check-visual-surface-enforcement.py"
+  "scripts/check-publication-prep-execution.py"
   "scripts/check-creative-system.py"
   "scripts/check-creative-autopilot.py"
 )
@@ -53,6 +54,7 @@ done
 "$PYTHON_BIN" "$ROOT/scripts/check-instance-visual-bootstrap.py"
 "$PYTHON_BIN" "$DEST/scripts/check-visual-standard-bootstrap.py"
 "$PYTHON_BIN" "$DEST/scripts/check-visual-surface-enforcement.py"
+"$PYTHON_BIN" "$DEST/scripts/check-publication-prep-execution.py"
 "$PYTHON_BIN" "$DEST/scripts/check-creative-system.py"
 "$PYTHON_BIN" "$DEST/scripts/check-creative-autopilot.py"
 

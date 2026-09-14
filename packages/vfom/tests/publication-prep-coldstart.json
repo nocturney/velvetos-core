@@ -1,0 +1,25 @@
+{
+  "id": "vf-publication-prep-coldstart-001",
+  "intent": "potential-publication-prep",
+  "input": {
+    "media": "multiple real product photos",
+    "ownerPromptHe": "פרסום פוטנציאלי, תכין את זה לפרסום בבקשה כדי שנבחן"
+  },
+  "mustDo": [
+    "load_owner_approved_visual_standard",
+    "select_real_source_media",
+    "lock_product_truth",
+    "perform_real_visual_edit",
+    "produce_visual_artifact_for_review",
+    "run_exact_final_visual_qa",
+    "resolve_public_cta_from_current_authority"
+  ],
+  "mustNotDo": [
+    "finish_with_photo_ranking_only",
+    "finish_with_caption_only",
+    "present_raw_photos_as_final_visual_treatment",
+    "promise_to_edit_later_as_completion",
+    "hardcode_business_whatsapp_as_public_cta"
+  ],
+  "failureState": "visual_execution_unavailable"
+}

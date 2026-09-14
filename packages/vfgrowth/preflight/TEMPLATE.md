@@ -175,6 +175,10 @@ source_subject_match: FAIL
 brand_source_lock: FAIL
 creative_treatment_categories: <at least 3 real categories>
 creative_edit_evidence: <real evidence>
+visual_edit_performed: FAIL
+visual_output_evidence: <real edited artifact ref>
+exact_final_visual_qa: FAIL
+public_cta_gate: FAIL
 audio_gate: FAIL | PASS | N/A
 ```
 

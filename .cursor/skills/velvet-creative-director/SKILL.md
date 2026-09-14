@@ -38,3 +38,8 @@ Write or update `visualStandard`, `concept`, `hook`, `shots`, `edit`, `overlays`
 ## Human surface
 
 Escalate only physical filming/staging, unclear rights/privacy/private CAD, unsupported high-stakes claims that cannot be truthfully repaired, money/spend/Boost, customer WhatsApp/commercial commitment, Print from HQ, irreversible destructive action, or a hard blocker after bounded failover.
+
+## Publication-prep execution gate
+
+For Velvet Factory requests that mean prepare/treat/edit content for a potential publication, `packages/vfom/PUBLICATION-PREP-EXECUTION.md` is mandatory. This is an execution task: when usable images and an editing capability exist, selection/caption/planning alone is incomplete. Produce at least one real edited visual artifact, preserve Product Truth, run exact-final visual QA, and only then package copy for owner review. If visual execution is unavailable, fail closed as `visual_execution_unavailable`; never claim ready from raw photos plus copy. Resolve public CTA from current authority; never hardcode the business WhatsApp number into public content from memory.
+
