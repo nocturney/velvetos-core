@@ -4,6 +4,7 @@
 
 פרוטוקול מלא: `constitution/SEND.md`.  
 MCP קנוני: [`CONNECT-IG.md`](CONNECT-IG.md) (`adelaidasofia/instagram-mcp`).  
+Publishing control-plane: [`OPENPOST.md`](OPENPOST.md) + [`OPENPOST.json`](OPENPOST.json) — כרגע `shadow_pending_runtime_deploy`; אינו עוקף את ה־MCP הקנוני או את שערי האיכות.  
 Transport קנוני למדיה פרטית: [`PUBLISH-BRIDGE.md`](PUBLISH-BRIDGE.md) + [`PUBLISH-BRIDGE.json`](PUBLISH-BRIDGE.json).
 
 ## סדר
@@ -16,7 +17,7 @@ Transport קנוני למדיה פרטית: [`PUBLISH-BRIDGE.md`](PUBLISH-BRIDGE
    ```bash
    python3 scripts/vf_send_preflight.py --gate instagram --transport-only
    ```
-   אבל היא **לעולם אינה הרשאת publish**. לפני `publish_*` חובה:
+   אבל היא **לעולם אינה הרשאת publish**. לפני כל apply — בין אם OpenPost ובין אם `publish_*` ישיר — חובה:
    ```bash
    python3 scripts/vf_send_preflight.py --gate instagram \
      --content-id <GID> --format <story|reel|carousel|post> \
@@ -24,16 +25,22 @@ Transport קנוני למדיה פרטית: [`PUBLISH-BRIDGE.md`](PUBLISH-BRIDGE
      --package-sha256 <SHA256-OF-EXACT-FINAL-PACKAGE>
    ```
    רק exit `0` + `publication_quality.publishAuthorized=true` מאפשרים מעבר ל־apply. exit `1/2` = **לא מפרסמים**; מתקנים איכות או מבצעים failover transport לפי הסיבה.
-6. **Instagram MCP מחובר** → HQ מפרסם לפי פורמט: תמונה `publish_image`; קרוסלה `publish_carousel`; ריל/וידאו `publish_reel`/`publish_video`; סטורי `publish_story`.
-7. **אימות אחרי שליחה** — `list_media` / `get_media` מאשרים שהמדיה חיה. רק אז `#נשלח-מ-HQ` ו־`liveVerified`. success בלי אימות חי → `publish_pending_verification`.
-8. **אין Publish MCP חי** → failover באותו תור: Drive create_file + Gmail עם אותה חבילה; `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה.
-9. אסור לכתוב שעלה לפיד אם לא עלה. Calendar / upload / bridge staging / publishRequested ≠ live. אסור בוסט. אסור אוטו־DM.
+6. **בחירת נתיב apply** — office logic נשאר capability-based:
+   - אם `OPENPOST.json.integrationMode` הוא `staging` או `primary-control-plane`, ה־runtime מאומת ובריא, וה־artifact הוא אותו hash שאושר — מותר להעביר ל־OpenPost לצורך queue/schedule/publish. תשובת OpenPost מסמנת לכל היותר `publishRequested`/delivery status, לא `liveVerified`.
+   - אם OpenPost במצב `shadow_pending_runtime_deploy`, `shadow`, `degraded`, לא מאומת או נכשל — מפרסמים ישירות דרך Instagram MCP: תמונה `publish_image`; קרוסלה `publish_carousel`; ריל/וידאו `publish_reel`/`publish_video`; סטורי `publish_story`.
+7. **אימות אחרי שליחה נשאר עצמאי** — `list_media` / `get_media` מה־Instagram MCP הקנוני מאשרים שהמדיה חיה. רק אז `#נשלח-מ-HQ` ו־`liveVerified`. success מ־OpenPost או `publish_*` בלי אימות חי → `publish_pending_verification`.
+8. **Failover** — כשל OpenPost מחזיר ל־Instagram MCP באותו תור. אם גם Publish MCP אינו חי → Drive `create_file` + Gmail עם אותה חבילה; `#ממתין-ל-כלי-IG` אם הפיד עצמו עוד לא עלה. אין idle.
+9. אסור לכתוב שעלה לפיד אם לא עלה. Calendar / upload / bridge staging / OpenPost scheduled / delivery accepted / publishRequested ≠ live. אסור בוסט. אסור אוטו־DM.
+
+## OpenPost — גבולות סמכות
+
+OpenPost הוא שכבת publication operations בלבד: scheduler, queue, retry/delivery status, multi-channel control ו־analytics collection. כלי AI writing/image/video שלו אינם מקור סמכות ל־creative approved ואינם רשאים לעקוף את `vfcopy`, Media Vault, Brand Guardian, PREFLIGHT, rights/privacy או exact-hash binding. מדיניות גרסאות ו־upgrade: `OPENPOST.md`/`OPENPOST.json` — production נעוץ לגרסה מדויקת, לא `latest`.
 
 ## חוזה איכות → פרסום
 
 `transport-ready` ≠ `creative-approved` ≠ `published_verified`.
 
-האישור חייב להתייחס **לאותו hash** שמגיע ל־Publish Bridge/Instagram. אסור למחזר PREFLIGHT ישן אחרי שינוי תוצר או אחרי שינוי במדיניות האיכות. PREFLIGHT ללא `publish_gate_schema: 2` אינו מקור הרשאה לפרסום חדש.
+האישור חייב להתייחס **לאותו hash** שמגיע ל־Publish Bridge/OpenPost/Instagram. אסור למחזר PREFLIGHT ישן אחרי שינוי תוצר או אחרי שינוי במדיניות האיכות. PREFLIGHT ללא `publish_gate_schema: 2` אינו מקור הרשאה לפרסום חדש.
 
 ## Publish Bridge — כללי בטיחות
 
@@ -50,18 +57,20 @@ Transport קנוני למדיה פרטית: [`PUBLISH-BRIDGE.md`](PUBLISH-BRIDGE
 |---|---|
 | validate | PREFLIGHT v2 + exact final-package hash + Brand/Copy/Readability/Contrast + rights/privacy |
 | transport | Publish Bridge רק לנגזרת המאושרת; HTTPS fetch verified |
-| apply | `publish_*` **או** Drive+Gmail באותו תור |
-| verify | `list_media` / `get_media` · לא «פורסם» בלי ראיה |
+| apply | OpenPost כשהוא מאומת ומורשה **או** `publish_*` ישיר; כשל OpenPost → direct MCP |
+| verify | `list_media` / `get_media` מה־MCP הקנוני · לא «פורסם» בלי ראיה |
 
 ## אסור
 
 - לפרסם על בסיס `--transport-only`
 - למחזר approval ישן שלא קשור ל־final package המדויק
 - waiver לניגודיות/קריאות חלשות
+- לתת ל־OpenPost AI/editor להפוך תוכן ל־approved בלי ה־pipeline הקנוני
+- להריץ production על image/tag `latest` של OpenPost
 - סרק / «תעלה ידנית» כברירת מחדל
 - להפוך מקור/תיקיית Drive לציבוריים כדי לפתור transport
 - לשים publish binaries על `main`
 - להכניס ל־`publish-bridge` חומר שלא עבר `approved_for_public_release`
 - להמציא Insights אחרי «שליחה»
-- לטעון live מ־publish tool בלי verify
+- לטעון live מ־OpenPost או publish tool בלי verify
 - Treg · אוטו־DM · `INSTAGRAM_MCP_DM_ENABLED`
