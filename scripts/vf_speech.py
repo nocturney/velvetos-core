@@ -28,14 +28,18 @@ ENGINES = CONFIG["engines"]
 PROVIDER_VERSION = str(PROVIDER["version"])
 PROVIDER_COMMIT = str(PROVIDER["commit"])
 DEFAULT_ROOT = os.environ.get("VF_SPEECH_URL", str(PROVIDER["serviceRoot"])).rstrip("/")
-DEFAULT_TTS_MODEL = os.environ.get("VF_SPEECH_TTS_MODEL", str(DEFAULTS["ttsModel"]))
+PLATFORM_DEFAULT_TTS = DEFAULTS.get("ttsModelWindows") if os.name == "nt" else DEFAULTS.get("ttsModelMac")
+DEFAULT_TTS_MODEL = os.environ.get(
+    "VF_SPEECH_TTS_MODEL",
+    str(PLATFORM_DEFAULT_TTS or DEFAULTS["ttsModel"]),
+)
 DEFAULT_ASR_MODEL = os.environ.get(
     "VF_SPEECH_ASR_MODEL",
     str(DEFAULTS["asrModelWindows"] if os.name == "nt" else DEFAULTS["asrModelMac"]),
 )
 DEFAULT_VOICE = os.environ.get("VF_SPEECH_VOICE", str(DEFAULTS["voice"]))
 API_KEY = os.environ.get("VF_SPEECH_API_KEY", "")
-FORBIDDEN_COMMERCIAL_MODELS = {str(v).lower() for v in ENGINES["ttsForbiddenForCommercialPublish"]}
+SELECTION_POLICY = ENGINES.get("selectionPolicy") or {}
 ALLOWED_OPERATIONS = {"synthesize", "transcribe", "qa"}
 
 
@@ -184,8 +188,6 @@ def synthesize(req: dict[str, Any]) -> Path:
     output.parent.mkdir(parents=True, exist_ok=True)
     model = str(req.get("ttsModel") or DEFAULT_TTS_MODEL)
     commercial = bool(req.get("commercialPublish", True))
-    if commercial and model.lower() in FORBIDDEN_COMMERCIAL_MODELS:
-        fail(f"model '{model}' is forbidden for commercial publishing by VelvetOS policy")
     payload = {
         "model": model,
         "voice": str(req.get("voice") or DEFAULT_VOICE),
@@ -213,6 +215,9 @@ def synthesize(req: dict[str, Any]) -> Path:
         "voice": payload["voice"],
         "language": str(req.get("language") or ENGINES["language"]),
         "commercialPublish": commercial,
+        "toolCostPolicy": "free-tools-allowed",
+        "commercialSuitabilityRuntimeBlocked": False,
+        "licenseMetadataTracked": bool(SELECTION_POLICY.get("licenseMetadataMustBeTracked", True)),
         "output": str(output),
         "bytes": len(audio),
         "sha256": sha256_file(output),
