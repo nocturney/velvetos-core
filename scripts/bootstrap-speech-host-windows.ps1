@@ -18,24 +18,25 @@ function Fail([string]$Message) {
 function Resolve-Python {
     if (Get-Command python -ErrorAction SilentlyContinue) {
         & python --version *> $null
-        if ($LASTEXITCODE -eq 0) { return @("python") }
+        if ($LASTEXITCODE -eq 0) {
+            return [pscustomobject]@{ Command = "python"; PrefixArgs = @() }
+        }
     }
     if (Get-Command py -ErrorAction SilentlyContinue) {
         & py -3 --version *> $null
-        if ($LASTEXITCODE -eq 0) { return @("py", "-3") }
+        if ($LASTEXITCODE -eq 0) {
+            return [pscustomobject]@{ Command = "py"; PrefixArgs = @("-3") }
+        }
     }
     Fail "Python 3 is required; run scripts/bootstrap-edge-host-windows.ps1 first"
 }
 
 function Invoke-Python([Parameter(ValueFromRemainingArguments=$true)][string[]]$Args) {
-    if ($script:Python.Count -eq 1) {
-        & $script:Python[0] @Args
-    } else {
-        & $script:Python[0] $script:Python[1] @Args
-    }
+    $command = [string]$script:Python.Command
+    $prefixArgs = @($script:Python.PrefixArgs)
+    & $command @prefixArgs @Args
     if ($LASTEXITCODE -ne 0) { Fail "Python command failed: $($Args -join ' ')" }
 }
-
 function Test-SpeechService {
     try {
         $result = Invoke-RestMethod -Uri "http://127.0.0.1:3900/.well-known/voicestudio-speech" -TimeoutSec 3
@@ -48,14 +49,20 @@ function Test-SpeechService {
 function Find-VoiceStudioExe {
     $candidates = @()
     if ($env:LOCALAPPDATA) {
-        $candidates += (Join-Path $env:LOCALAPPDATA "VoiceStudio (Current User)\VoiceStudio.exe")
+        $currentUserRoot = Join-Path $env:LOCALAPPDATA "VoiceStudio (Current User)"
+        $candidates += (Join-Path $currentUserRoot "omnivoice-studio.exe")
+        $candidates += (Join-Path $currentUserRoot "VoiceStudio.exe")
     }
     if ($env:ProgramFiles) {
-        $candidates += (Join-Path $env:ProgramFiles "VoiceStudio\VoiceStudio.exe")
+        $programRoot = Join-Path $env:ProgramFiles "VoiceStudio"
+        $candidates += (Join-Path $programRoot "omnivoice-studio.exe")
+        $candidates += (Join-Path $programRoot "VoiceStudio.exe")
     }
     $programFilesX86 = [Environment]::GetEnvironmentVariable("ProgramFiles(x86)")
     if ($programFilesX86) {
-        $candidates += (Join-Path $programFilesX86 "VoiceStudio\VoiceStudio.exe")
+        $programRootX86 = Join-Path $programFilesX86 "VoiceStudio"
+        $candidates += (Join-Path $programRootX86 "omnivoice-studio.exe")
+        $candidates += (Join-Path $programRootX86 "VoiceStudio.exe")
     }
     foreach ($candidate in $candidates) {
         if (Test-Path $candidate) { return $candidate }
@@ -75,7 +82,7 @@ $ConfigPath = Join-Path $Repo "packages\vfom\SPEECH-BACKEND.json"
 if (-not (Test-Path $ConfigPath)) { Fail "speech backend config missing: $ConfigPath" }
 $config = Get-Content -Raw -Encoding UTF8 $ConfigPath | ConvertFrom-Json
 $VoiceStudioVersion = [string]$config.provider.version
-$TtsModel = [string]$config.defaults.ttsModel
+$TtsModel = if ($config.defaults.ttsModelWindows) { [string]$config.defaults.ttsModelWindows } else { [string]$config.defaults.ttsModel }
 $AsrModel = [string]$config.defaults.asrModelWindows
 $MinSimilarity = [double]$config.defaults.qaMinimumSimilarity
 $artifact = "VoiceStudio_Current_User_${VoiceStudioVersion}_x64_en-US.msi"
@@ -130,6 +137,14 @@ if ($reported -and $reported -ne $VoiceStudioVersion) {
 }
 
 $script:Python = Resolve-Python
+Write-Host "Selecting VoiceStudio TTS engine: $TtsModel"
+try {
+    $selectBody = @{ family = "tts"; backend_id = $TtsModel } | ConvertTo-Json
+    $selected = Invoke-RestMethod -Uri "http://127.0.0.1:3900/engines/select" -Method Post -ContentType "application/json" -Body $selectBody -TimeoutSec 10
+    if ([string]$selected.active -ne $TtsModel) { Fail "VoiceStudio selected TTS engine '$($selected.active)' instead of '$TtsModel'" }
+} catch {
+    Fail "VoiceStudio could not select TTS engine '$TtsModel': $($_.Exception.Message)"
+}
 Write-Host "Running VelvetOS speech doctor..."
 Invoke-Python "scripts/vf_speech.py" "doctor"
 
@@ -148,7 +163,7 @@ $request = [ordered]@{
     language = "he"
     ttsModel = $TtsModel
     asrModel = $AsrModel
-    commercialPublish = $true
+    commercialPublish = $false
     qaBackTranscribe = $true
     minimumSimilarity = $MinSimilarity
 }
@@ -159,7 +174,7 @@ Write-Host "Running real Hebrew TTS + back-transcription smoke..."
 try {
     Invoke-Python "scripts/vf_speech.py" "run" $requestPath
 } catch {
-    Fail "VoiceStudio service is healthy but the required commercial Hebrew speech stack is not ready. In VoiceStudio Model Catalogue install/enable '$TtsModel' plus '$AsrModel', then rerun. Details: $($_.Exception.Message)"
+    Fail "VoiceStudio service is healthy but the required Hebrew speech stack is not ready. In VoiceStudio Model Catalogue install/enable '$TtsModel' plus '$AsrModel', then rerun. Details: $($_.Exception.Message)"
 }
 
 $receiptPath = "$audio.speech.receipt.json"
@@ -181,6 +196,7 @@ $state = [ordered]@{
     speechSmoke = "pass"
     qaStatus = [string]$qaData.status
     qaSimilarity = [double]$qaData.similarity
+    toolPolicy = "free-tools-allowed-commercial-positioning-not-runtime-blocker"
     speechReceipt = $receiptPath
     qaReceipt = $qa
     repoHead = (& git rev-parse HEAD).Trim()

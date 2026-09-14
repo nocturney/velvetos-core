@@ -43,6 +43,8 @@ def main() -> None:
     provider = cfg.get("provider") or {}
     routing = cfg.get("routing") or {}
     defaults = cfg.get("defaults") or {}
+    engines = cfg.get("engines") or {}
+    selection = engines.get("selectionPolicy") or {}
     guards = cfg.get("guardrails") or {}
     if provider.get("name") != "voicestudio" or provider.get("version") != "0.5.2":
         fail("VoiceStudio 0.5.2 exact provider pin required")
@@ -54,7 +56,16 @@ def main() -> None:
         fail("speech host failover must be sticky and preserve QA")
     if float(defaults.get("qaMinimumSimilarity", 0)) < 0.9 or defaults.get("qaBackTranscribe") is not True:
         fail("back-transcription QA must remain fail-closed at >=0.9")
-    for key in ("forbidOmniVoiceForCommercialPublish", "voiceCloneRequiresConsent", "speechReceiptIsNotPublishReceipt", "speechDoesNotAuthorizePublish", "qaFailClosed"):
+    if defaults.get("ttsModelWindows") != "omnivoice":
+        fail("Windows speech default must be OmniVoice after Hebrew QA certification")
+    if engines.get("ttsForbiddenForCommercialPublish") != []:
+        fail("speech routing must not hard-block free tools by commercial positioning")
+    for key in ("freeToolsMayBeUsedRegardlessOfCommercialPositioning", "commercialSuitabilityIsNotRuntimeBlocker", "licenseMetadataMustBeTracked"):
+        if selection.get(key) is not True:
+            fail(f"selection policy {key} must be true")
+    if guards.get("commercialModelAllowlistRequired") is not False or guards.get("forbidOmniVoiceForCommercialPublish") is not False:
+        fail("commercial-positioning model blockers must stay disabled")
+    for key in ("licenseMetadataTracked", "voiceCloneRequiresConsent", "speechReceiptIsNotPublishReceipt", "speechDoesNotAuthorizePublish", "qaFailClosed"):
         if guards.get(key) is not True:
             fail(f"guardrail {key} must be true")
 
@@ -75,15 +86,19 @@ def main() -> None:
         fail("Windows must reuse Remote Desktop Commander and stay non-browser-subscription")
     if win.get("voiceStudioVersion") != provider.get("version"):
         fail("Windows VoiceStudio pin must match speech backend")
+    if win.get("speechStatus") != "speech_smoke_verified":
+        fail("Windows speech capability must carry verified Hebrew smoke evidence")
+    if win.get("speechPromotionPending") != []:
+        fail("Windows speech promotion pending list must be empty after verified smoke")
+    if "0.93617" not in str(win.get("speechVerifiedEvidence") or ""):
+        fail("Windows speech verified evidence missing certified Hebrew QA similarity")
 
-    adapter = require_text(ADAPTER, "/v1/audio/speech", "/v1/audio/transcriptions", "back-transcription-qa", "FORBIDDEN_COMMERCIAL_MODELS")
-    if "omnivoice" not in CFG.read_text(encoding="utf-8").lower():
-        fail("commercial OmniVoice ban missing")
-    require_text(WIN, "sderot-windows", "VoiceStudio_Current_User_", "vf_speech.py", "windows-speech-smoke", "speechSmoke")
+    adapter = require_text(ADAPTER, "/v1/audio/speech", "/v1/audio/transcriptions", "back-transcription-qa", "SELECTION_POLICY")
+    require_text(WIN, "sderot-windows", "VoiceStudio_Current_User_", "vf_speech.py", "windows-speech-smoke", "speechSmoke", "/engines/select", "commercialPublish = $false")
     require_text(WRAPPER, "bootstrap-edge-host-windows.ps1", "bootstrap-speech-host-windows.ps1", "Remote Desktop Commander")
     if "shell=True" in adapter:
         fail("speech adapter must not shell out through shell=True")
-    print("OK speech layer hosts=sderot-mac>sderot-windows voicestudio=0.5.2 qa=fail-closed")
+    print("OK speech layer hosts=sderot-mac>sderot-windows voicestudio=0.5.2 windows_tts=omnivoice qa=fail-closed")
 
 
 if __name__ == "__main__":
