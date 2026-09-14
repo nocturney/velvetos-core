@@ -1,4 +1,5 @@
 name: Publish bridge archive
+# VELVET_MACHINE_WRITER_ALLOW: publish-bridge/assets publish-bridge/archive
 
 on:
   schedule:

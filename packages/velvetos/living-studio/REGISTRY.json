@@ -1,6 +1,6 @@
 {
   "name": "velvetos-living-studio-registry",
-  "updatedAt": "2026-09-10",
+  "updatedAt": "2026-09-14",
   "rule": "Skills are routers over existing packs and SoTs. Do not create a second Control Plane, media catalog, decision journal, or publishing provider.",
   "controlPlane": "office/control-plane.json",
   "cli": "python3 scripts/vf_living_studio.py",
@@ -61,7 +61,9 @@
       "risk": "green",
       "approval": "red for price change",
       "success": "canonical stage advanced without invented ₪",
-      "note": "Sheet write-through requires Sheets API auth (write_pending_provider on Cloud); read path COMPLETE via pull"
+      "note": "Service account has Sheet writer permission and the WIF workflow is installed; keep PARTIAL until the first production Sheets write + canonical read-back receipt is observed. Price changes remain red/human-authorized.",
+      "activation": ".github/workflows/jobs-write-through.yml + vf_office.py jobs pull|push",
+      "verification": "promotion requires office/ledger/live/sync-receipt.json status=written dirty=false canonical_changed=true verifiedFrom=sheets_values_get from the production WIF workflow"
     },
     {
       "id": "order-project-coordinator",
@@ -228,7 +230,7 @@
       ],
       "risk": "yellow",
       "pausedNote": "Do not send morning brief if owner paused routines",
-      "success": "07:00 pack consumes Studio Pulse without inventing figures"
+      "success": "09:00 brief + Office Loop consume current Studio Pulse without inventing figures"
     },
     {
       "id": "content-factory",
@@ -577,46 +579,61 @@
     {
       "id": "print-engineering",
       "title": "Print Engineering",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_EQUIVALENT",
       "kind": "router",
       "cli": "print-engineering",
-      "note": "Over vfprod — Material Matchmaker / failure learning; HQ never Prints"
+      "note": "Over vfprod — Material Matchmaker / failure learning; HQ never Prints",
+      "activation": "python3 scripts/vf_living_studio_activation.py sweep --write",
+      "verification": "vfprod router resolves; HQ Print remains false; activation receipt state=equivalent",
+      "evidencePath": "packages/velvetos/living-studio/data/activation-latest.json"
     },
     {
       "id": "failure-museum",
       "title": "Failure Museum / Project Autopsy",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_COMPLETE",
       "kind": "learning",
       "cli": "failure-museum",
-      "note": "Uses dead-letter + retro + checkpoints"
+      "note": "Uses dead-letter + retro + checkpoints",
+      "activation": "Office Control Plane activation sweep",
+      "verification": "dead-letter projection executes and activation receipt records count/sources",
+      "evidencePath": "packages/velvetos/living-studio/data/activation-latest.json"
     },
     {
       "id": "velvet-lab",
       "title": "Velvet Lab / Experiment Engine",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_COMPLETE",
       "kind": "learning",
       "cli": "lab",
-      "note": "vfharness + vfgrowth + vfsku LAB — no invented metrics"
+      "note": "vfharness + vfgrowth + vfsku LAB — no invented metrics",
+      "activation": "product_idea intake + vf_living_studio_activation.py lab-result",
+      "verification": "canonical experiments.jsonl event stream; result requires explicit evidence",
+      "evidencePath": "packages/velvetos/living-studio/data/activation-latest.json"
     },
     {
       "id": "commercial-qa",
       "title": "Commercial QA",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_EQUIVALENT",
       "kind": "qa",
       "cli": "commercial-qa",
       "modes": [
         "devil",
         "quote-confidence",
         "proposal-storyteller"
-      ]
+      ],
+      "activation": "production gates vfcost/vfcopy/PREFLIGHT + Living Studio behavioral probe",
+      "verification": "fail-closed probe blocks bare DM/unverified ILS and requires quote inputs",
+      "evidencePath": "packages/velvetos/living-studio/data/activation-latest.json"
     },
     {
       "id": "opportunity-intelligence",
       "title": "Opportunity Intelligence",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_COMPLETE",
       "kind": "projection",
       "cli": "opportunity",
-      "note": "Extends existing Opportunity Radar — not a second radar"
+      "note": "Extends existing Opportunity Radar — not a second radar",
+      "activation": "Office Control Plane activation sweep + Studio Pulse",
+      "verification": "canonical radar executes against current jobs/media/followups and writes signal evidence",
+      "evidencePath": "packages/velvetos/living-studio/data/activation-latest.json"
     },
     {
       "id": "one-hour-product-forge",
@@ -629,9 +646,12 @@
     {
       "id": "invisible-work-detector",
       "title": "Invisible Work Detector",
-      "status": "EXISTING_PARTIAL",
+      "status": "EXISTING_COMPLETE",
       "kind": "detector",
-      "cli": "invisible-work"
+      "cli": "invisible-work",
+      "activation": "Studio Pulse + Office Control Plane activation sweep",
+      "verification": "current jobs/followups/media/dead-letter/decisions scanned; signal evidence emitted",
+      "evidencePath": "packages/velvetos/living-studio/data/activation-latest.json"
     },
     {
       "id": "content-universe",

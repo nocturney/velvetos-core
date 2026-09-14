@@ -27,3 +27,7 @@ See `office/control-plane.json` sourcesOfTruth.jobs for the Sheet-canonical decl
 
 Bindings (seeded 2026-08-31): folder [VF HQ · משרד](https://drive.google.com/drive/folders/1dFvQBlwzoefZ7OZKHDbMAFjuJ_9kXw8e).
 Playbook: `packages/vfbooks/SHEETS.md`.
+
+## GitHub OIDC/WIF write-through
+
+The canonical background writer is `.github/workflows/jobs-write-through.yml`. It mints a short-lived Google token with Drive + Sheets scopes, runs `jobs pull --force` before commissioning writes, runs `jobs push`, requires post-write read-back evidence, and persists `sync-receipt.json`. No long-lived Google JSON key is stored in the repository. The capability remains PARTIAL until a production receipt proves `status=written`, `verifiedFrom=sheets_values_get`, and `dirty=false`.

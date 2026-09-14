@@ -26,3 +26,7 @@ Use when the user asks about [free-claude-code](https://github.com/Alishahryar1/
 - מה כן חוסך עכשיו: שלושת כללי ה־thrift הרלוונטיים לשאלה
 - אם רוצים מק: NIM → Groq → Gemini → OpenRouter, מפתחות ב־`~/.fcc/`
 - CTA אם צריך אדם: וואטסאפ `050-2517000` — לא «שלחו DM»
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

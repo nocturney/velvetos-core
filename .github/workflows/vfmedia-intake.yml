@@ -1,4 +1,5 @@
 name: VF Media Auto Intake
+# VELVET_MACHINE_WRITER_ALLOW: packages/vfmedia/catalog.json packages/vfmedia/state packages/vfmedia/data office/control/inbox.json
 
 # Scheduled background intake for Drive inbox -> canonical vfmedia catalog.
 # Target cadence: every 5 minutes (GitHub Actions minimum schedule interval).

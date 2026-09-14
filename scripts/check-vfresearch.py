@@ -156,8 +156,13 @@ def main() -> None:
         fail("BEST-SKILLS.json rule must say embed into existing packs")
     if best_json.get("standingForever") is not True:
         fail("BEST-SKILLS.json standingForever must be true until owner stops")
-    if best_json.get("timerName") != "vf-best-skills-bi-daily":
-        fail("BEST-SKILLS.json timerName must be vf-best-skills-bi-daily")
+    if best_json.get("schedulerAuthority") != "Velvet Research Seat":
+        fail("BEST-SKILLS.json schedulerAuthority must be Velvet Research Seat")
+    if best_json.get("timerName") != "research-seat:best-skills-48h":
+        fail("BEST-SKILLS.json timerName must route through Research Seat")
+    freshness = best_json.get("freshnessContract") or {}
+    if freshness.get("targetHours") != 48 or freshness.get("graceHours") != 4:
+        fail("BEST-SKILLS.json freshness must be 48h + 4h grace")
     if "TIMER.md" not in (best_json.get("timerPlaybook") or ""):
         fail("BEST-SKILLS.json must point timerPlaybook at TIMER.md")
     best_locks = set(best_json.get("locks") or [])
@@ -168,14 +173,14 @@ def main() -> None:
         fail("BEST-SKILLS.json must set lastPass")
 
     timer = BEST_SKILLS_TIMER.read_text()
-    if "vf-best-skills-bi-daily" not in timer:
-        fail("TIMER.md must name vf-best-skills-bi-daily")
-    if "172800" not in timer:
-        fail("TIMER.md must set delaySeconds 172800")
-    if "לנצח" not in timer and "forever" not in timer.lower():
+    if "Velvet Research Seat" not in timer:
+        fail("TIMER.md must name Velvet Research Seat as cadence authority")
+    if "48" not in timer or "52" not in timer:
+        fail("TIMER.md must state 48h cadence and 52h stale threshold")
+    if "forever" not in timer.lower() and "standing order" not in timer:
         fail("TIMER.md must state forever-until-owner-stops standing order")
-    if "subscribe_timer" not in timer:
-        fail("TIMER.md must instruct subscribe_timer renew")
+    if "subscribe_timer" in timer:
+        fail("TIMER.md must not depend on external subscribe_timer")
 
     best_skill = BEST_SKILLS_SKILL.read_text()
     if "BEST-SKILLS.md" not in best_skill:
@@ -188,8 +193,10 @@ def main() -> None:
         fail("vf-best-skills skill must forbid npx install")
     if "standing" not in best_skill.lower() and "לנצח" not in best_skill:
         fail("vf-best-skills skill must mention standing forever order")
-    if "renew" not in best_skill.lower() and "חדש" not in best_skill:
-        fail("vf-best-skills skill must require timer renew")
+    if "Research Seat" not in best_skill:
+        fail("vf-best-skills skill must route cadence through Research Seat")
+    if "lastPass" not in best_skill or "52h" not in best_skill:
+        fail("vf-best-skills skill must verify freshness from lastPass/artifact")
 
     link_ids = {item["id"] for item in links}
     if "linklyai-best-skills" not in link_ids:

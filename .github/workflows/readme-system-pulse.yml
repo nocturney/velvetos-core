@@ -1,4 +1,5 @@
 name: README System Pulse
+# VELVET_MACHINE_WRITER_ALLOW: README.md
 
 on:
   workflow_dispatch:

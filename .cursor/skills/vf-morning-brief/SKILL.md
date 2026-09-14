@@ -64,3 +64,7 @@ Production mail: only after the owner-brief text gate passes, `render_mail.py` +
 ## Harness
 
 Read `AGENTS.md` if this is a new session. Do not invent queue hours to pass the brief. Do not claim `visible_text_gate: PASS` without actually running the required stages. If Calendar read fails twice, escalate with `packages/vfharness/templates/escalation.md`. If Gmail **send** fails twice, use Drive failover for the brief body. Long brief work: optional checkpoint in `packages/vfharness/state/`.
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

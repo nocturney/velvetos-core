@@ -13,25 +13,26 @@
 הדירוגים זזים כל יום (WIS, trending, social buzz, top repos). מעבר שבועי בלבד מפספס קפיצות.  
 **כל ~48 שעות** (Asia/Jerusalem) — **דופק קבוע לנצח** עד שהבעלים מעדכן אחרת (standing order 2026-09-03).
 
-טיימר: `packages/vfresearch/TIMER.md` · שם `vf-best-skills-bi-daily` · חידוש חובה בסוף כל מעבר.
+סמכות cadence: **Velvet Research Seat** לפי `packages/vfresearch/TIMER.md`. `lastPass` + artifact הם הראיה; אין תלות במנוי timer חיצוני. חלון grace הוא 4 שעות, כלומר מעל 52h המצב stale.
 
 אירוע Calendar: רק אם ראש צוות מבקש יצירה.
 
-## צעדים (Cursor)
+## צעדים (Cursor / Research Seat)
 
 1. לפתוח את הריפו / `data/latest` / README של היום (`gh api` או WebFetch).
 2. לקרוא לפחות: `best-100.csv`, `trending-7d.csv`, `social-buzz.csv`, `top-repos.csv`.
 3. לסנן ל־**VF-relevant** (משרד סוכנים, מחקר, עיצוב/בריף, למידה, אימות, תוכן/מדיה, גילוי סקילים) — לדלג על Azure/Prisma/SaaS שלא נוגע.
 4. להשוות ל־`BEST-SKILLS.json` (`lastPass`, `watchlist`, `embedded`).
 5. לכל מועמד חדש / שעלה חזק:
-   - **שימושי מיד** → להטמיע **דפוס** על פק קיים (טבלת מיפוי למטה). לעדכן `lastReviewed`.
+   - **שימושי מיד** → להטמיע **דפוס** על פק קיים. לעדכן `lastReviewed`.
    - **מעניין אבל לא עכשיו** → `watchlist` + שורה בארטיפקט.
    - **מנדט נעול / runtime שני / אוטו־DM / בוסט / Print מ־HQ** → דולג עם סיבה.
-6. לכתוב ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-best-skills.md`
-7. לעדכן `BEST-SKILLS.json` (`lastPass`, `dataDate`, movers).
+6. לכתוב ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-best-skills.md`.
+7. לעדכן `BEST-SKILLS.json` (`lastPass`, `dataDate`, `lastArtifact`, `lastResult`).
 8. שורת בלוק `05-משרד`: «best-skills — הוטמע X» או «best-skills — אין חדש במשרד».
-9. אחרי שינוי קטלוג/כלל/פק: `python3 scripts/check-all.py`
-10. **חובה:** לחדש/לאמת את הטיימר לפי `TIMER.md` (דופק לנצח). לרשום `timer: renewed|ok` בארטיפקט.
+9. אחרי שינוי קטלוג/כלל/פק: `python3 scripts/check-all.py`.
+10. לאמת שה־artifact וה־state תואמים. אם `lastPass` ישן מ־52 שעות, Research Seat חייב לבצע מעבר או לרשום blocker אמיתי. אין timer receipt מומצא.
+
 ## מיפוי — לא פק כפול
 
 | סוג סקיל / ריפו | נופל ל־ | לא |
@@ -58,10 +59,10 @@
 
 הבעלים אישר: אפשר **לעדכן חוקה** ולפתוח מגבלות כשהדירוג חושף דפוס עמיד שמשפר את המשרד — כל עוד:
 
-- אין אוטו־DM / בוסט בלי ראש צוות / Print מ־HQ / ₪ או Insights מומצאים
-- אין התקנת runtime שני / `npx skills` על Cloud Agent (דפוס + הטמעה בגיט)
-- CTA נשאר וואטסאפ `050-2517000` / איסוף שדרות
-- אתר שיווקי ציבורי נשאר נעול; קונסולה פנימית מותרת
+- אין אוטו־DM / בוסט בלי ראש צוות / Print מ־HQ / ₪ או Insights מומצאים.
+- אין התקנת runtime שני / `npx skills` על Cloud Agent; מטמיעים דפוס בגיט.
+- CTA ציבורי תמיד נגזר מהסמכות הנוכחית `constitution/PUBLIC_CTA.md`; אין להעתיק CTA היסטורי מארטיפקטים ישנים.
+- אתר שיווקי ציבורי נשאר נעול; קונסולה פנימית מותרת.
 
 ## חומות
 
@@ -106,6 +107,6 @@
 
 ## לא כאן
 
-- סקירת `LINKS.json` השבועית (`WEEKLY.md`) — נשארת; זה מעבר **נוסף** לדירוג החי
-- תזמורת 06:15 — צ'אטים חדשים, לא דירוג
-- שליחת IG/Gmail/WhatsApp (חוץ מבריף/failover כרגיל)
+- סקירת `LINKS.json` השבועית (`WEEKLY.md`) — נשארת; זה מעבר נוסף לדירוג החי.
+- Research Seat הוא הסמכות הקבועה; אין automation/timer שני עבור Best Skills.
+- שליחת IG/Gmail/WhatsApp אינה חלק מהמעבר, למעט delivery paths שכבר מורשים בנפרד.

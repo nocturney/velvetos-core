@@ -31,3 +31,7 @@ Orchestrator overlay (pattern only): `packages/vfe2b/ORCHESTRATORS.md`. DeerFlow
 - Do not invent ₪ or Insights. Missing → **חסר** / **אין במקור**.
 - Fan-out (max 3) only for `vfcopy` / `vfcovers`. Never for price or send.
 - Three misses on the same fact → circuit break. Do not guess.
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

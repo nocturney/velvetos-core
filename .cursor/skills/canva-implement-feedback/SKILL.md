@@ -110,3 +110,7 @@ Include the slide number, what to change, who requested it, and step-by-step ins
 - NEVER ask "shall I commit?", "ready to save?", or any variation — the user's initial approval covers the entire edit-and-commit flow
 - Manual changes are normal and expected — don't over-explain or apologise for API limitations, just include them in the checklist
 - Batch operations: use a single `perform-editing-operations` call with multiple operations rather than one call per change
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.
