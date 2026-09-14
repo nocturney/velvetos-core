@@ -65,12 +65,21 @@ def main() -> None:
 
     jobs = load(JOBS_RECEIPT)
     jobs_dirty = bool(jobs.get("dirty"))
-    jobs_write = str(jobs.get("lastWriteStatus") or "not_recorded")
-    jobs_write_proven = (not jobs_dirty) and jobs_write in {
-        "written_verified",
-        "write_verified",
-        "pushed_verified",
-    }
+    jobs_write = str(jobs.get("lastWriteStatus") or jobs.get("status") or "not_recorded")
+    jobs_readback_proven = bool(
+        jobs.get("status") == "written"
+        and jobs.get("lastWriteStatus") == "written"
+        and jobs.get("canonical_changed") is True
+        and jobs.get("verifiedFrom") == "sheets_values_get"
+    )
+    jobs_write_proven = (not jobs_dirty) and (
+        jobs_readback_proven
+        or jobs_write in {
+            "written_verified",
+            "write_verified",
+            "pushed_verified",
+        }
+    )
     if jobs_dirty or jobs_write in {"write_pending_provider", "conflict", "write_verify_failed"}:
         jobs_activation = "read_proven_write_pending"
     elif jobs_write_proven:
