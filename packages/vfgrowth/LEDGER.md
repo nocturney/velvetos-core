@@ -23,7 +23,7 @@ Live Instagram verification: **3 Reels**. Christian קבע שהם נשארים �
 |---|---|---|
 | **G001** | `DcqkjOLlYVX` | `KEEP_LIVE_BASELINE` |
 | **G002** | `DcvuJLxCJgU` | `KEEP_LIVE_BASELINE` |
-| **G003** | `DdAPhozlNe2` · **SoccerBall** | `KEEP_LIVE_BASELINE` · reuse חדש דורש qualification חדש |
+| **G003** | `DdAPhozlNe2` · **SoccerBall** | היה `משובץ` היסטורית; כיום `KEEP_LIVE_BASELINE` · reuse חדש דורש qualification חדש |
 | **G004** | מחזיק טבעות לזמן אימון | stale · חסום מכל reuse אוטומטי |
 | **G005** | `Dc0cKegEbxd` | `HISTORICAL_NOT_LIVE` |
 
