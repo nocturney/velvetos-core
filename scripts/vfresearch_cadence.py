@@ -34,8 +34,8 @@ INDEX_PKL = ROOT / "packages" / "vfmem" / "semantic_index.pkl"
 ROUTINES = (
     {
         "id": "daily-orchestra",
-        "title": "מחקר יומי / תזמורת 06:15",
-        "trigger": "ChatGPT automation Velvet Research Seat 06:15 + packages/vfresearch/DAILY.md",
+        "title": "מחקר יומי / תזמורת 02:00",
+        "trigger": "ChatGPT automation Velvet Research Seat 02:00 + packages/vfresearch/DAILY.md",
         "environment": "ChatGPT WebSearch/connectors; Cloud Agent/Cursor may supplement — not GH Actions body fetch",
         "permissions": "read packs; web research; write sources/ + research.md; no subscription UI scraping",
         "input": "yesterday brief, CALENDAR, vfsku/production, live office context",
@@ -57,13 +57,13 @@ ROUTINES = (
     {
         "id": "best-skills",
         "title": "LinklyAI best-skills (~48h forever)",
-        "trigger": "subscribe_timer vf-best-skills-bi-daily · TIMER.md · skill vf-best-skills",
-        "environment": "Cloud Agent (timer + WebFetch to github.com/LinklyAI/best-skills)",
-        "permissions": "embed into existing packs; renew timer; no npx skills",
+        "trigger": "Velvet Research Seat due check (~48h) ? TIMER.md ? skill vf-best-skills",
+        "environment": "Velvet Research Seat + public WebFetch/gh api to github.com/LinklyAI/best-skills",
+        "permissions": "embed into existing packs; update freshness evidence; no npx skills",
         "input": "BEST-SKILLS.json + LinklyAI rankings",
         "artifact_glob": "*-*-best-skills.md",
         "consumer": "BEST-SKILLS.json dataDate + research.md block 05",
-        "owner": "Cursor (standingForever) — not GrokBot cron",
+        "owner": "Velvet Research Seat (standingForever) ? no second timer/cron",
     },
     {
         "id": "last30",
@@ -122,7 +122,7 @@ def dst_note() -> str:
     return (
         f"עכשיו {now.isoformat(timespec='minutes')} · {season} · "
         f"cron '30 4 * * *' UTC ≈ {local_from_cron_hour:02d}:30 Asia/Jerusalem · "
-        f"Research Seat exact 06:15 Asia/Jerusalem; CI runs after it in both DST seasons"
+        f"Research Seat exact 02:00 Asia/Jerusalem; CI runs after it in both DST seasons"
     )
 
 
@@ -156,7 +156,7 @@ def cmd_status(_args: argparse.Namespace) -> int:
         activated = "evidence" if art else "not-run-here"
         print(f"| {row['id']} | {last} | {due if due != '—' else (when or '—')} | {row['environment'][:40]}… | {activated} |")
     print()
-    print("Daily research body owner: Velvet Research Seat at 06:15 Asia/Jerusalem.")
+    print("Daily research body owner: Velvet Research Seat at 02:00 Asia/Jerusalem.")
     print("CI velvetos-research.yml proves freshness+index+sensors; it does NOT fetch research bodies itself.")
     return 0
 
