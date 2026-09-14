@@ -65,11 +65,11 @@ No real-product asset may pass when any of these are false or unproven: product 
 
 ## Required manifest contribution
 
-Require `visualStandard.gate=PASS` and verify its canonical document, public reference, Canva asset ID `MAHVJjCCKQA` and artifact SHA before approving a public visual. Update `finishing.policyVersion`, `finishing.principle`, all `finishing.stages` fields, `finishing.productTruth`, `finishing.repairCycles`, `finishing.reviewedArtifactDigest`, `finishing.evidenceRefs`, plus `qa.brandScore`, `qa.hookScore`, `qa.realityScore`, `qa.originalityScore`, `qa.artifactScore`, `qa.deterministicChecks`, `qa.failures`, `qa.repairs`, `feed.continuityDecision`, `feed.reasoning` and `status`.
+Require `visualStandard.gate=PASS` and verify its canonical document, public reference, Canva asset ID `MAHVL7PKpvE` and artifact SHA before approving a public visual. Update `finishing.policyVersion`, `finishing.principle`, all `finishing.stages` fields, `finishing.productTruth`, `finishing.repairCycles`, `finishing.reviewedArtifactDigest`, `finishing.evidenceRefs`, plus `qa.brandScore`, `qa.hookScore`, `qa.realityScore`, `qa.originalityScore`, `qa.artifactScore`, `qa.deterministicChecks`, `qa.failures`, `qa.repairs`, `feed.continuityDecision`, `feed.reasoning` and `status`.
 
 For visual microcopy, record `TEXT_WINS`/`NO_TEXT`, Humanizer/AI-tells result, no-text comparison rationale and any owner wording preference in the existing visual-copy fields.
 
-For public feed visuals, include the owner-approved reference document and/or Canva asset ID `MAHVJjCCKQA` in `finishing.evidenceRefs` or equivalent evidence when the schema permits it.
+For public feed visuals, include the owner-approved reference document and/or Canva asset ID `MAHVL7PKpvE` in `finishing.evidenceRefs` or equivalent evidence when the schema permits it.
 
 Do not ask the owner to choose routine creative options. Human escalation is exception-only under the active instance policy.
 

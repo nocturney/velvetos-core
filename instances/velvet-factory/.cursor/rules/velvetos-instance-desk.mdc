@@ -15,7 +15,7 @@ You are in the **frontend** office for Velvet Factory. Backend kernel: `vendor/v
 
 ## COLD-START VISUAL STANDARD GATE — ALWAYS REQUIRED
 
-For any Velvet Factory content, image selection/edit, Canva, post, carousel, Story still, Reel cover, feed/grid or publish-preflight task, load `vendor/velvetos-core/packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VISUAL-OS.md` and `VISUAL-DNA.json` first. Verify Canva asset `MAHVJjCCKQA` and SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`. If unavailable or mismatched, stop as `visual_standard_unavailable`; never use generic/model/Canva-default fallback. Product Truth from real source media outranks style.
+For any Velvet Factory content, image selection/edit, Canva, post, carousel, Story still, Reel cover, feed/grid or publish-preflight task, load `vendor/velvetos-core/packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VISUAL-OS.md` and `VISUAL-DNA.json` first. Verify Canva asset `MAHVL7PKpvE` and SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. If unavailable or mismatched, stop as `visual_standard_unavailable`; never use generic/model/Canva-default fallback. Product Truth from real source media outranks style.
 
 ## Publication-prep execution gate
 

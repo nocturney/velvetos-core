@@ -23,8 +23,8 @@
         "portablePrompt": {"const": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md"},
         "referenceAsset": {"const": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"},
         "publicReferenceUrl": {"const": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"},
-        "canvaAssetId": {"const": "MAHVJjCCKQA"},
-        "artifactSha256": {"const": "707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0"},
+        "canvaAssetId": {"const": "MAHVL7PKpvE"},
+        "artifactSha256": {"const": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897"},
         "coldStart": {"const": true},
         "evidenceRefs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
       }
