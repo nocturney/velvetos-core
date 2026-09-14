@@ -1,6 +1,6 @@
 # GRAPH-MUTATIONS · Instagram official Graph support matrix
 
-Updated: 2026-09-09. Research against Meta Instagram Graph API docs (IG User / IG Media).  
+Updated: 2026-09-14. Research against Meta Instagram Graph API docs (IG User / IG Media).  
 VelvetOS law: if Meta does **not** expose an operation, status stays `unsupported_by_official_graph` and we do **not** register an MCP write tool.  
 Capability discovery SoT: MCP tool `graph_mutation_matrix` (and this file).  
 No browser automation, private APIs, credential scraping, or unofficial workarounds.
@@ -14,28 +14,34 @@ No browser automation, private APIs, credential scraping, or unofficial workarou
 | Update display name (`update_name`) | **No** | `false` | — | — | — | same | **No** |
 | Update profile bundle (`update_profile`) | **No** | `false` | — | — | — | same | **No** (removed — was misleading) |
 | Update caption feed/Reel (`update_media_caption`) | **No** | `false` | `POST /{ig-media-id}` | (comments only) | `comment_enabled` only | Caption ignored | **No** (removed — was misleading) |
-| Delete media (`delete_media`) | **Yes** | `true` (gated) | `DELETE /{ig-media-id}` | `instagram_manage_contents` | — | Irreversible | **Yes** — `delete_media` requires `confirm_irreversible` + explicit account; **no live delete in hardening** |
+| Delete media (`delete_media`) | **Yes** | `true` (gated) | `DELETE /{ig-media-id}` | `instagram_manage_contents` | — | Irreversible | **Yes** — requires `confirm_irreversible` + explicit account |
 | Archive media (`archive_media`) | **No** | `false` | — | — | — | No archive API ≠ delete | **No** |
 
-App `1748471159829574` (אינסטה מנג'ר) is in **dev_mode** / not live (Meta DevTools `basic_settings` 2026-09-09). Production MCP tokens remain server-side only — do not paste into docs.
+App `1748471159829574` (אינסטה מנג'ר) was recorded as **dev_mode** in the 2026-09-09 hardening snapshot. Production MCP tokens remain server-side only — do not paste into docs.
 
 ## MCP tools (VelvetOS remote overlay)
 
 | Tool | Behavior |
 |---|---|
 | `graph_mutation_matrix` | **Source of truth** — read-only matrix with `supported` bool per op |
-| `delete_media` | Official delete when `confirm_irreversible=true` + explicit account |
+| `delete_media` | Official irreversible delete only with explicit confirmation |
 
-**Not exposed** (agents must not see these as write capabilities): `update_profile`, `update_media_caption`, `update_biography`, `update_website`, `update_name`, `archive_media`.
+**Not exposed**: `update_profile`, `update_media_caption`, `update_biography`, `update_website`, `update_name`, `archive_media`.
 
-## Bio discrepancy (live vs law)
-
-Live Graph profile (ChatGPT verify 2026-09-09):
+## Live profile status · verified 2026-09-14
 
 - Name: `Velvet Factory | הדפסות תלת־ממד`
-- Bio includes `WhatsApp 050-2517000` → conflicts with `PUBLIC_CURRENT_CTA`
+- Live bio:
+  - `הדפסות תלת־ממד בעיצוב ייחודי`
+  - `מוצרים מוכנים • מודלים בהתאמה אישית`
+  - `ייצור סדרות לעסקים`
+  - `📍 איסוף משדרות`
+- **No WhatsApp / phone / wa.me is exposed in the current live bio.** The old 2026-09-09 profile discrepancy is closed.
+- [`PROFILE-DESIRED.json`](PROFILE-DESIRED.json) still contains a prepared optional Instagram-message CTA wording. Because Graph cannot write profiles, any future owner-requested wording change remains a human Instagram-app edit + live verification; it is not a current publication blocker.
 
-Compliant replacement: [`PROFILE-DESIRED.json`](PROFILE-DESIRED.json) — human / Instagram-app edit (Graph cannot write profile).
+## Existing-caption limitation
+
+Official Graph does not expose editing an existing Reel/feed caption. Therefore the retained Reel `DdAPhozlNe2` can stay live under owner lock, but removing its historical public WhatsApp/phone line is `human_required` in the Instagram app. Do not substitute delete/archive for a missing caption-edit API.
 
 ## Related
 
