@@ -116,7 +116,10 @@ jobs:
           fi
           git config user.name "velvetos-jobs-sync"
           git config user.email "noreply@velvetos.local"
-          git add -A -- office/ledger/live/jobs.csv office/ledger/live/sync-receipt.json office/ledger/live/pending-push.csv
+          git add -A -- office/ledger/live/jobs.csv office/ledger/live/sync-receipt.json
+          if [ -e office/ledger/live/pending-push.csv ] || git ls-files --error-unmatch office/ledger/live/pending-push.csv >/dev/null 2>&1; then
+            git add -A -- office/ledger/live/pending-push.csv
+          fi
           git commit -m "jobs: persist verified Sheet sync receipt"
           branch="${GITHUB_REF_NAME}"
           git fetch origin "$branch"

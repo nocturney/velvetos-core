@@ -36,7 +36,7 @@
 | **Instagram MCP** | LIVE / VERIFIED |
 | **Instagram Insights** | LIVE / VERIFIED |
 | **Media Intake / Drive** | LIVE / VERIFIED |
-| **Jobs source of truth** | Google Sheet bound |
+| **Jobs source of truth** | Google Sheet bound ? WIF write/readback proven 2026-09-14 |
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
