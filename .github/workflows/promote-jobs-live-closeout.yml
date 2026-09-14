@@ -1,0 +1,80 @@
+name: Finalize Jobs Live Closeout
+# VELVET_MACHINE_WRITER_ALLOW: README.md docs/OWNER-ACTIONS-he.md office/ledger/README.md packages/velvetos/living-studio/REGISTRY.json packages/vfresearch/BEST-SKILLS.json .github/workflows/promote-jobs-live-closeout.yml
+
+on:
+  push:
+    branches: [close/jobs-live-proven-20260914]
+    paths:
+      - ".github/workflows/promote-jobs-live-closeout.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install sensor runtime dependencies
+        run: python3 -m pip install --disable-pip-version-check Pillow
+
+      - name: Re-prove promotion before finalization
+        run: |
+          set -euo pipefail
+          python3 scripts/vf_close_runtime_corners.py
+          python3 scripts/update-readme-snapshot.py
+          python3 scripts/check-all.py
+
+      - name: Drop test-only mutations and self-delete
+        run: |
+          set -euo pipefail
+          git restore -- \
+            office/control/HANDOFF-he.md \
+            office/control/HANDOFF.json \
+            packages/vfgrowth/data/growth-brief.json \
+            packages/vfops/data/retro-signals.json
+          rm -f packages/vfharness/state/operational-gaps-commission-2026-09-14.json
+          rm -f .github/workflows/promote-jobs-live-closeout.yml
+
+      - name: Render final pulse without temporary workflow
+        run: |
+          set -euo pipefail
+          python3 scripts/update-readme-snapshot.py
+          python3 scripts/update-readme-snapshot.py --check
+          python3 scripts/check-runtime-activation.py
+          python3 scripts/check-runtime-corners.py
+          python3 scripts/check-machine-writers.py
+          python3 scripts/check-skill-health.py
+
+      - name: Enforce final mutation scope
+        run: |
+          set -euo pipefail
+          allowed='^(README.md|docs/OWNER-ACTIONS-he.md|office/ledger/README.md|packages/velvetos/living-studio/REGISTRY.json|packages/vfresearch/BEST-SKILLS.json|\.github/workflows/promote-jobs-live-closeout.yml)$'
+          bad="$(git status --short | sed -E 's/^.. //' | grep -Ev "$allowed" || true)"
+          if [ -n "$bad" ]; then
+            echo "::error::Unexpected closeout mutations:"
+            printf '%s\n' "$bad"
+            exit 1
+          fi
+
+      - name: Persist final closeout
+        run: |
+          set -euo pipefail
+          git config user.name "velvetos-closeout"
+          git config user.email "noreply@velvetos.local"
+          git add -A -- \
+            README.md \
+            docs/OWNER-ACTIONS-he.md \
+            office/ledger/README.md \
+            packages/velvetos/living-studio/REGISTRY.json \
+            packages/vfresearch/BEST-SKILLS.json \
+            .github/workflows/promote-jobs-live-closeout.yml
+          git commit -m "runtime: finalize Jobs live-proven closeout"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
