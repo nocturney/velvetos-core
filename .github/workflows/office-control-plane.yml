@@ -1,19 +1,28 @@
 name: Office Control Plane
 
+# VELVET_MACHINE_WRITER_ALLOW: packages/velvetos/living-studio/data/activation-latest.json packages/velvetos/living-studio/data/activation-history.jsonl office/learning/failure-museum/entries.jsonl packages/velvetos/living-studio/data/signal-room.jsonl packages/velvetos/living-studio/data/receipts.jsonl
+
 on:
   schedule:
     - cron: "0 */6 * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   control-plane:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      - name: Living Studio activation sweep
+        run: python3 scripts/vf_living_studio_activation.py sweep --write
       - name: Watchdog
         run: python3 scripts/vf_control_plane.py watchdog
       - name: Memory hygiene
@@ -23,7 +32,37 @@ jobs:
       - name: Handoff validate
         run: python3 scripts/vf_control_plane.py handoff
       - name: Sensor
-        run: python3 scripts/check-office-control-plane.py
+        run: |
+          python3 scripts/check-office-control-plane.py
+          python3 scripts/check-runtime-corners.py
+      - name: Persist activation evidence only when materially changed
+        run: |
+          set -e
+          paths=(
+            packages/velvetos/living-studio/data/activation-latest.json
+            packages/velvetos/living-studio/data/activation-history.jsonl
+            office/learning/failure-museum/entries.jsonl
+            packages/velvetos/living-studio/data/signal-room.jsonl
+            packages/velvetos/living-studio/data/receipts.jsonl
+          )
+          existing=()
+          for p in "${paths[@]}"; do [ -e "$p" ] && existing+=("$p"); done
+          if [ ${#existing[@]} -eq 0 ] || git diff --quiet -- "${existing[@]}"; then
+            echo "No material Living Studio evidence change"
+            exit 0
+          fi
+          git config user.name "velvetos-office-control-plane"
+          git config user.email "noreply@velvetos.local"
+          git add -- "${existing[@]}"
+          git commit -m "office: persist Living Studio activation evidence"
+          branch="${GITHUB_REF_NAME}"
+          git fetch origin "$branch"
+          if ! git rebase "origin/$branch"; then
+            git rebase --abort || true
+            echo "::error::Concurrent Office state changed; refusing overwrite"
+            exit 1
+          fi
+          git push origin "HEAD:$branch"
       - name: Fail on control-plane error
         if: failure()
         run: echo "::error::Office Control Plane watchdog/sensor failed. See log above." && exit 1
