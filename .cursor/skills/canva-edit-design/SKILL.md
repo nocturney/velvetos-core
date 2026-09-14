@@ -74,3 +74,7 @@ Show the resulting thumbnail and a plain-language list of what changed. Ask for 
 - Never leave a transaction uncommitted without telling the user their draft was discarded.
 - For destructive ops (`delete_element`, large `find_and_replace_text`), confirm scope before performing.
 - Prefer one batched `perform-editing-operations` call over many small ones.
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

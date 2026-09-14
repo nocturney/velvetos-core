@@ -8,3 +8,7 @@ Activate with `@vffcc` or when the user asks about Free Claude Code, FCC, «קל
 4. If the job is «install it on my Mac» → follow `playbooks/local-offload.md` only after the lead seat says yes. Keys stay off git.
 
 Do not invent remaining free-token quotas. Do not send. Do not invent ₪.
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

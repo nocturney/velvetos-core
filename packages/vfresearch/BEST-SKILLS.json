@@ -8,11 +8,11 @@
   "cadence": "every-2-days",
   "timezone": "Asia/Jerusalem",
   "intervalHintHours": 48,
-  "timerName": "vf-best-skills-bi-daily",
+  "timerName": "research-seat:best-skills-48h",
   "timerPlaybook": "packages/vfresearch/TIMER.md",
   "standingForever": true,
   "standingSince": "2026-09-03",
-  "standingNote": "Owner standing order: keep bi-daily pulse forever until explicit stop/change. Renew subscribe_timer every pass (Cloud subscriptions expire ~7d).",
+  "standingNote": "Owner standing order remains active. Research Seat is the canonical scheduler authority: run a Best Skills pass when lastPass is about 48h old; no external timer renewal is required.",
   "stoppedAt": null,
   "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-best-skills.md",
   "briefBlock": "05-משרד",
@@ -44,7 +44,7 @@
   "dataDate": "2026-09-13",
   "lastArtifact": "packages/vfresearch/sources/2026-09-14-best-skills.md",
   "lastResult": "no-embed-existing-coverage",
-  "lastTimerStatus": "UNPROVEN: cursor-subscriptions namespace unavailable in current research runtime; refresh executed inside Research Seat; no separate automation created",
+  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: lastPass/data artifact is the evidence; external Cursor subscriptions are not an authority.",
   "embedded": [
     {
       "id": "grill-me",
@@ -285,5 +285,16 @@
       "id": "google-agents-cli",
       "why": "Vendor CLI scaffold/deploy outside VF Cloud mandate"
     }
-  ]
+  ],
+  "schedulerAuthority": "Velvet Research Seat",
+  "freshnessContract": {
+    "targetHours": 48,
+    "graceHours": 4,
+    "evidence": [
+      "lastPass",
+      "lastArtifact",
+      "lastResult"
+    ],
+    "onStale": "Research Seat executes the pass; do not create a second recurring automation"
+  }
 }

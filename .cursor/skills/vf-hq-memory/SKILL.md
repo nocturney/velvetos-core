@@ -27,3 +27,7 @@ Other queries: `architecture`, `impact <pack>`, `impact --git`, `route <stage>`,
 3. Keep HQ laws: no send, no invented ₪, no invented Insights, pickup Sderot only.
 
 Do not dump `.cursor/rules/` or the 273-agent warehouse after a graph hit.
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

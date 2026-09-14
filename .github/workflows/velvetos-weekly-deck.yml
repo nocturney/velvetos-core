@@ -1,4 +1,5 @@
 name: VelvetOS Weekly Deck
+# VELVET_MACHINE_WRITER_ALLOW: docs/weekly-deck packages/vfbriefux/hq/weekly-deck.bento-doc.json
 
 # Builds a bento/slides recap deck from real repo data (LEARNINGS/LAST30/retro)
 # and publishes it to GitHub Pages under /weekly-deck. Runs on weekends so a

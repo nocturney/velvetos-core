@@ -9,7 +9,7 @@
 | Instagram MCP (`instagram`) | **ready** — Insights verified; אין צורך ב־Professional Dashboard ידני כש־MCP חי |
 | Media Auto Intake (GHA OIDC/WIF) | **commissioned** — `intake-runner.json` · `auth.ready=true` · `activation.proven=true` · **לא** דורש `VFMEDIA_DRIVE_CREDENTIALS_JSON` |
 | Jobs **read** | Google Sheet קנוני + `jobs pull` (Drive MCP CSV או API) — cache לא = אפס הזמנות |
-| Jobs **write-through** | **PARTIAL** על Cloud: `push_write_through` → `write_pending_provider` בלי Sheets API auth/libs. Cache נשאר dirty עד כתיבה אמיתית לגיליון (Desktop `mcp-gsheets` / GOOGLE_TOKEN+spreadsheets). לא ממציאים COMPLETE |
+| Jobs **write-through** | **PROVIDER_CONNECTED / COMMISSIONING_PENDING** — Sheet writer permission is granted and `.github/workflows/jobs-write-through.yml` uses GitHub OIDC/WIF with Sheets+Drive scopes. Promote to LIVE_PROVEN only after `status=written`, `verifiedFrom=sheets_values_get`, `dirty=false` is observed on main. |
 | Approval queue | `pending_human_approval` ישן **לא** הופך אוטומטית לכתום אצל כריסטיאן תחת standing authorization; פריט 2026-09-07 → `stale_orphan` |
 | Insights learning | MCP ingest חי; מדגם קטן → «insufficient evidence» — בלי המלצת סגנון כוזבת |
 

@@ -66,3 +66,7 @@ End by offering to implement the API-fixable items via **`canva-edit-design`**, 
 - Ground every point in something you actually observed in the thumbnail or content — no generic advice.
 - Prioritise. A ranked shortlist beats an exhaustive list the user won't read.
 - Be candid but constructive; always pair a problem with a specific fix.
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.
