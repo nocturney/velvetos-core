@@ -151,3 +151,8 @@ For Velvet Factory requests that mean prepare/treat/edit content for a potential
 
 For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md` is mandatory. Preserve the real product, but do not pass through raw/source photos as the finished creative. At least one review visual — normally the hero/first slide — must show a meaningful approved Velvet treatment around the source-locked product. Default to editing the real source image, not recreating the product from text. Multiple photos do not imply a carousel; if carousel is chosen, slide 1 must be a fully treated hero. `raw_passthrough=true`, an essentially untouched source carousel, or crop/exposure-only work presented as publication-grade is FAIL. Generative edits must explicitly contain NO LOGO, NO WORDMARK, NO PHONE NUMBER, NO WHATSAPP, NO CONTACT BAR, NO GENERATED HEBREW TEXT.
 
+
+
+## UNIVERSAL PROJECT REQUEST GATE — ALWAYS REQUIRED
+
+Before substantive work on **any** VelvetOS / Velvet Factory request, load `packages/velvetos/PROJECT-REQUEST-GATE.md` and resolve `packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json`. Classify the request, load only the routed authorities/skills/Sources of Truth, resolve hard gates, and require `project_preflight: PASS` before execution. Missing/stale/contradictory mandatory authority is fail-closed; do not fall back to model defaults or memory of an older chat. After execution, run the routed domain postflight on the exact final artifact/provider result before claiming completion. Use `scripts/vf_project_preflight.py` as the deterministic authority-path resolver when operating in the repo.
