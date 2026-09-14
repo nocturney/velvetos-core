@@ -6,15 +6,16 @@
 
 ```text
 05 · מחקר ורעיונות
-- מועמד preflight חדש למדף: line hider דק לקריאה — 1 מ״מ, בלי תמיכות, שימוש מסחרי מותר במקור; אצלנו עדיין חובה vlicense + slice + test print לפני SKU/מחיר.
-- ייצור: Snapmaker Orca 2.3.6 ו-2.4.0-alpha מסומנות pre-release. 2.3.6 מוסיפה זיהוי spaghetti/עצם זר; אין שדרוג production, רק sandbox test אם בזבוז מהדפסות כושלות נהיה bottleneck.
-- כרגע עדיף ניסוי של הדפסה אחת ולא מלאי: יש עבודה מוכנה/יתרות פתוחות, וחמשת סלוטי המדף עדיין ריקים. ללמוד קטן לפני שמוסיפים queue.
+- מועמד preflight ראשון נשאר קטן: line hider דק לקריאה; vlicense + slice + test print לפני SKU/מחיר. חיפוש הבוקר גם פסל מארגנים אטרקטיביים עם רישיון NonCommercial.
+- ייצור: אין שדרוג production. לבנצ'מרק הבא עדיף OrcaSlicer 2.4.2 היציב על Windows fallback; 2.4.1 כבר הוסיף פרופילי Snapmaker U1. להשוות פרויקט U1 ידוע בלבד לפני כל שינוי מקומי.
+- כרגע עדיף ניסוי של הדפסה אחת ולא מלאי: יש עבודה מוכנה/יתרות פתוחות, וחמשת סלוטי המדף עדיין ריקים.
 ```
 
-Freshness: **2026-09-14 · GREEN body evidence**; `scripts/vfresearch_cadence.py freshness` עבר בפועל על checkout טרי.
-Best Skills: refresh 48h בוצע על `dataDate=2026-09-13`; תוצאה `no-embed-existing-coverage`. `timer verification=UNPROVEN` כי `cursor-subscriptions` אינו חשוף בריצה הנוכחית.
-Validation limitation: `scripts/check-all.py` לא עבר ירוק על Windows fallback בגלל case-collision קיים בין `constitution/TAGS.md` ו-`constitution/tags.md`; אין claim של PASS מלא.
-Runtime limitation: Mac-Office היה offline; Snapmaker Orca 2.3.5 הוא ה-last verified המקומי מ-13.9, לא אימות חדש להיום.
+Freshness: **2026-09-14 · GREEN body evidence**; ריצת 06:00 ביצעה גוף Web ציבורי חדש ועדכנה את הארטיפקט הקנוני.
+Best Skills: `lastPass=2026-09-14`, `dataDate=2026-09-13`, תוצאה `no-embed-existing-coverage`; לא הגיע refresh נוסף בחלון 48h ולכן לא הורץ שוב. `timer verification=UNPROVEN` כי `cursor-subscriptions` אינו חשוף בריצה הנוכחית.
+Validation limitation: Windows fallback עדיין חושף case-collision קיים בין `constitution/TAGS.md` ו-`constitution/tags.md`; אין claim של `check-all.py` PASS מלא.
+Runtime limitation: Mac-Office offline; Snapmaker Orca 2.3.5 הוא ה-last verified המקומי מ-13.9, לא אימות חדש להיום. OrcaSlicer 2.4.2 הוא benchmark בלבד, לא הוראת מעבר production.
+Email: לא נשלח מייל שני בריצת 06:00; סיכום אחד כבר נשלח היום דרך המעקף בריפו, והחיבור הפנימי של Gmail לא שימש.
 
 ---
 
