@@ -1,6 +1,6 @@
 {
   "id": "social-intelligence-upgrade-2026-09-14",
-  "component_state": "Syncing",
+  "component_state": "Idle",
   "scope": "Velvet Factory organic Instagram research-to-creative learning loop",
   "branch": "feat/social-intelligence-upgrade-2026-09-14",
   "embedded": {
@@ -18,12 +18,11 @@
     "no-composite-virality-score", "minimum-3-measured-posts-per-promoted-pattern"
   ],
   "validation": {
-    "targetedSensor": "pass",
-    "instagramDecisionSensor": "pass",
-    "vfresearchSensor": "pass",
-    "vfomCreativeHarnessSensors": "pass",
+    "targetedSensors": "pass",
     "insightsLoop": "pass; measuredPosts=1; eligiblePrior=false",
-    "checkAllWindows": "not green: case-collision TAGS.md/tags.md; later suite interruption"
+    "githubLinuxCheckAll": "pass 59/59; VelvetOS Core Sensors #549",
+    "readmeContract": "pass",
+    "briefStaleness": "pass; canonical 2026-09-14 artifact materialized"
   },
-  "next": "Push branch and use GitHub/Linux CI for full-suite verification before merge."
+  "next": "Merged system should use SocialResearchPacket/reference mechanics as research inputs and promote creative priors only after the 3-post evidence floor."
 }
