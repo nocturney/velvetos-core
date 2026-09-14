@@ -1,46 +1,48 @@
 {
   "jobId": "VF-R001",
   "format": "reel",
-  "status": "rendered",
+  "status": "ready_for_publish",
   "sourceEvidence": [
-    "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3",
-    "file:14957BFD-A1BC-45CB-BC24-92BDEC4E4B21.MP4",
-    "verified-video:1080x1920@30fps:11.366667s",
-    "final-package-sha256:53b940c08437150a695077d24645418e248018898e9504665b51c13b5713348f",
+    "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3:14957BFD-A1BC-45CB-BC24-92BDEC4E4B21.MP4",
+    "source-sha256:d15e59cddb4ead09c17e206dc981b0f858f1f88a0ced9116b5270abf0334c204",
+    "final-package-sha256:68d79b3384b7428a946d6b85c3d66d1d02883eb8c03d93b0ebb3c152fe42d1ab",
+    "caption-sha256:612951bcb74cac044483ff3798fc5f6327c2414dcb93239a576cf93024b8f0ac",
+    "audio-receipt-drive:1P95MDVN_HjpO97Yq_J5rCRp5dnuVbYdm",
+    "render-receipt-drive:11rH_qAx1YKxsxxL9ucyZ4JjRoUePYDmS",
+    "visible-text-receipt-drive:1r1DkgVRF6d6BfoEh323I_udOhHe9JLeV",
+    "package-manifest-drive:1KcRcnQfEHMstMOkSZMKrVGbg7vP6k_tB",
     "owner-preference:2026-09-11:cover-copy=פה התנועה היא כל העניין"
   ],
   "concept": {
-    "coreIdea": "Open on the real articulated object already moving in-hand; let the visible limb motion be the proof instead of explaining the print.",
+    "coreIdea": "Open on the real articulated object already moving in-hand; let visible limb motion be the proof.",
     "emotion": "curiosity and tactile delight",
     "formatGenome": "CUSTOM_PRODUCT_MOTION_PROOF",
-    "objective": "earn discovery with immediate real motion, then create product curiosity without unsupported claims",
-    "audience": "people drawn to articulated 3D-printed objects and visually unusual printed pieces"
+    "objective": "show real movement immediately without transactional or unsupported claims",
+    "audience": "people drawn to articulated 3D-printed objects and unusual printed pieces"
   },
   "hook": {
     "candidates": [
-      {"id": "h1", "visual": "tight crop on moving front limbs in the hand", "text": "כל זרוע זזה אחרת", "reason": "specific visible proof, but reads more like description than the owner-selected point"},
-      {"id": "h2", "visual": "front view while the object flexes", "text": "ככה הוא נראה בתנועה", "reason": "clear but less distinctive"},
-      {"id": "h3", "visual": "side movement showing articulated segments", "text": "הפרטים מתחילים לזוז", "reason": "connects detail to motion"},
-      {"id": "h4", "visual": "hand rotates the object into the strongest motion moment", "text": "רגע אחד ביד — והכול זז", "reason": "adds curiosity but is longer"},
-      {"id": "h5-owner", "visual": "strongest movement frame, object already flexing in hand", "text": "פה התנועה היא כל העניין", "reason": "owner-selected; conversational Hebrew that interprets why the movement matters instead of merely describing the frame"}
+      {"id": "h1-no-text", "visual": "strongest movement frame, object already flexing in hand", "text": "", "reason": "clean baseline; motion is legible without copy"},
+      {"id": "h2", "visual": "tight crop on moving front limbs", "text": "כל זרוע אחרת", "reason": "specific but mostly descriptive"},
+      {"id": "h3-owner", "visual": "strongest movement frame, object already flexing in hand", "text": "פה התנועה היא כל העניין", "reason": "owner-selected; adds the point rather than restating the frame"}
     ],
-    "selected": "h5-owner"
+    "selected": "h3-owner"
   },
   "shots": {
     "plan": [
-      {"assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "shotType": "proof", "orientation": "vertical", "angle": "front three-quarter", "distance": "close", "action": "show multiple articulated limbs moving while held", "targetDurationSec": 2.0, "proof": "the visible limbs articulate during handling"},
-      {"assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "shotType": "macro", "orientation": "vertical", "angle": "side/detail", "distance": "close", "action": "show segmented limb construction during movement", "targetDurationSec": 2.5, "proof": "visible segmented geometry and movement"},
-      {"assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "shotType": "hero", "orientation": "vertical", "angle": "front", "distance": "medium-close", "action": "settle on the full object in the hand", "targetDurationSec": 2.0, "proof": "real finished object and overall appearance"}
+      {"assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "shotType": "proof", "orientation": "vertical", "angle": "front three-quarter", "distance": "close", "action": "show multiple articulated limbs moving while held", "targetDurationSec": 2.2, "proof": "real visible articulation during handling"},
+      {"assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "shotType": "macro", "orientation": "vertical", "angle": "side/detail", "distance": "close", "action": "hold detail on segmented moving limbs", "targetDurationSec": 2.8, "proof": "real segmented geometry and motion"},
+      {"assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "shotType": "hero", "orientation": "vertical", "angle": "front", "distance": "medium-close", "action": "finish on a clean full-subject hand-held view", "targetDurationSec": 3.166, "proof": "real finished object and overall appearance"}
     ],
     "missing": []
   },
   "edit": {
-    "durationTargetSec": 8.5,
-    "audioStrategy": "A source AAC stream exists in the rendered Reel, but measured mean loudness is approximately -49.3 dB with max -21.1 dB. This is near-silent and FAILS the Audio Gate. Route through vf-ig-music/audio repair: choose useful source sound, music, SFX or an intentional-silence decision with documented rationale, then re-render and re-hash.",
+    "durationTargetSec": 8.166,
+    "audioStrategy": "Source audio was measured near-silent and was not boosted. Exact final uses original procedural non-diegetic tactile SFX authored for the motion, normalized and muxed as AAC mono 48kHz; mean -19.3 dB, max -1.5 dB. Not claimed as source sound or trending music.",
     "timeline": [
-      {"startSec": 0.0, "endSec": 2.0, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "tight vertical subject crop; minimize lower-frame dog/background distraction", "speed": 1.0, "cut": "hard", "audio": "source-near-silent-fail"},
-      {"startSec": 2.0, "endSec": 5.0, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "detail crop on moving articulated limbs", "speed": 1.0, "cut": "hard", "audio": "source-near-silent-fail"},
-      {"startSec": 5.0, "endSec": 8.5, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "clean full-subject hand-held view", "speed": 1.0, "cut": "hard", "audio": "source-near-silent-fail"}
+      {"startSec": 0.0, "endSec": 2.2, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "tight vertical subject crop", "speed": 1.0, "cut": "hard", "audio": "original-procedural-tactile-sfx"},
+      {"startSec": 2.2, "endSec": 5.0, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "detail crop on articulated limbs", "speed": 1.0, "cut": "hard", "audio": "original-procedural-tactile-sfx"},
+      {"startSec": 5.0, "endSec": 8.166, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "clean full-subject view", "speed": 1.0, "cut": "hard", "audio": "original-procedural-tactile-sfx"}
     ]
   },
   "overlays": [],
@@ -48,75 +50,78 @@
     "decision": "TEXT_WINS",
     "selectedText": "פה התנועה היא כל העניין",
     "noTextCompared": true,
-    "pipeline": ["reader-first-he", "velvet-hebrew-copy", "ai-tells-he", "owner-preference-lock"],
+    "pipeline": ["reader-first-he", "velvet-hebrew-copy", "ai-tells-he", "owner-preference-lock", "brand-guardian-final-review"],
     "candidates": [
-      {"text": "", "result": "baseline", "reason": "clean visual baseline; viable because motion is visible"},
-      {"text": "הכול זז", "result": "rejected", "reason": "generic and says little beyond the frame"},
-      {"text": "כל זרוע אחרת", "result": "rejected", "reason": "specific but mostly descriptive"},
-      {"text": "בתנועה", "result": "rejected", "reason": "too generic"},
-      {"text": "פה התנועה היא כל העניין", "result": "selected", "reason": "owner-selected; natural spoken Hebrew that adds the point of the visual"}
+      {"text": "", "result": "baseline", "reason": "clean visual remains viable"},
+      {"text": "הכול זז", "result": "rejected", "reason": "generic and redundant"},
+      {"text": "פה התנועה היא כל העניין", "result": "selected", "reason": "owner-selected and passes current visual-microcopy gate"}
     ],
     "ownerPreference": "פה התנועה היא כל העניין",
-    "readerFirstNote": "Viewer is scrolling and sees the object already flexing; the simplest useful line is the point of the motion, not an explanation of 3D printing.",
-    "humanizerNote": "Passes natural-spoken-Hebrew intent; avoids corporate phrasing, fake profundity and image-description wording.",
-    "decisionRationale": "TEXT_WINS because the selected line interprets why the movement matters, while the no-text version remains understandable but less pointed."
+    "readerFirstNote": "The movement is already visible; copy only earns its place by stating the point of watching it.",
+    "humanizerNote": "Current-main visible-text gate passed the exact visual microcopy.",
+    "decisionRationale": "TEXT_WINS over the no-text baseline on the reviewed cover."
   },
   "cover": {
     "candidates": [
-      {"id": "c0-no-text", "headline": "", "subjectCrop": "front close-up of full object", "textPlacement": "none", "gridRationale": "mandatory clean baseline; strong moving subject can carry the cover without copy"},
-      {"id": "c1", "headline": "הכול זז", "subjectCrop": "front close-up of full object", "textPlacement": "cream editorial header", "gridRationale": "short but generic; rejected by the visual-copy gate"},
-      {"id": "c2", "headline": "כל זרוע אחרת", "subjectCrop": "close crop emphasizing articulated limbs", "textPlacement": "upper-right safe zone", "gridRationale": "specific but descriptive rather than interpretive"},
-      {"id": "c3", "headline": "בתנועה", "subjectCrop": "three-quarter hand-held view", "textPlacement": "top center", "gridRationale": "too generic; rejected"},
-      {"id": "c4-owner", "headline": "פה התנועה היא כל העניין", "subjectCrop": "strongest hand-held movement frame", "textPlacement": "minimal safe-zone placement; do not cover moving limbs", "gridRationale": "owner-selected; natural spoken Hebrew, adds the point of the visual and beats the generic text variants"}
+      {"id": "c0-no-text", "headline": "", "subjectCrop": "real source movement frame", "textPlacement": "none", "gridRationale": "clean baseline"},
+      {"id": "c1", "headline": "כל זרוע אחרת", "subjectCrop": "real source close crop", "textPlacement": "upper safe zone", "gridRationale": "specific but descriptive"},
+      {"id": "c2-owner", "headline": "פה התנועה היא כל העניין", "subjectCrop": "real source movement frame", "textPlacement": "upper safe zone with readability scrim", "gridRationale": "owner-selected; exact final reviewed"}
     ],
-    "selected": "c4-owner"
+    "selected": "c2-owner"
+  },
+  "finishing": {
+    "policyVersion": 1,
+    "principle": "Retouch the photo, not the product.",
+    "stages": {"photoRetouch": "PASS", "brandContentStyling": "PASS", "textLayoutQa": "PASS", "finalVisualQa": "PASS"},
+    "productTruth": {"gate": "PASS", "subjectIdentityIntegrity": "PASS", "syntheticSubjectChange": "NONE", "sourceSubjectMatch": "PASS", "colorPreserved": "PASS", "notes": "Real source object only; crop/timing/cover treatment does not alter the product."},
+    "repairCycles": 1,
+    "lastRepairAction": "Re-rendered video with intentional original SFX, showcase caption and owner-selected cover; rebound exact hashes.",
+    "reviewedArtifactDigest": "sha256:68d79b3384b7428a946d6b85c3d66d1d02883eb8c03d93b0ebb3c152fe42d1ab",
+    "evidenceRefs": ["drive:1_YozA-MOfv1TEeFH0xIsNLBv91Lp1yGz", "drive:19kdDtM-EM9SxXezXINIa045NG73z-Bvw", "drive:11rH_qAx1YKxsxxL9ucyZ4JjRoUePYDmS"]
   },
   "qa": {
     "brandScore": 86,
     "hookScore": 88,
-    "realityScore": 96,
-    "originalityScore": 82,
-    "artifactScore": 90,
+    "realityScore": 98,
+    "originalityScore": 84,
+    "artifactScore": 94,
     "deterministicChecks": {
-      "state": "fail",
-      "exactFinalPackageSha256": "53b940c08437150a695077d24645418e248018898e9504665b51c13b5713348f",
-      "video": "1080x1920 h264 8.521s",
-      "caption": "current Drive caption contains explicit sales framing ('רוצים אחד משלכם') and pickup; incompatible with showcase intent until rewritten",
-      "coverContrast": "previous derivative only; stale after owner copy selection",
-      "visualReview": "previous exact-final contact sheet reviewed; subject remains clear throughout",
-      "audioStream": "AAC mono 44.1kHz present",
-      "audioMeanVolumeDb": -49.3,
-      "audioMaxVolumeDb": -21.1,
-      "audioGate": "FAIL_NEAR_SILENT",
-      "visualCopyGate": "PENDING_RERENDER",
-      "visualCopyPipeline": "reader-first -> velvet-hebrew-copy -> ai-tells/humanizer",
-      "noTextCompared": true,
-      "visualCopyDecision": "TEXT_WINS",
-      "ownerPreference": "פה התנועה היא כל העניין"
+      "state": "pass",
+      "validatorHead": "8f171ee8fa103f49dc929fa0dc8af98b799e3b86",
+      "exactFinalPackageSha256": "68d79b3384b7428a946d6b85c3d66d1d02883eb8c03d93b0ebb3c152fe42d1ab",
+      "video": "1080x1920 H.264 8.166s",
+      "videoSha256": "3dce5e20e672209e06fbb3d1f12a011a35ef7be74066c041772f6f519ca57fa6",
+      "coverSha256": "b051ea2e83e741a9d494538548d94baa6ad8da17b160dda0af4718a5157a297c",
+      "captionSha256": "612951bcb74cac044483ff3798fc5f6327c2414dcb93239a576cf93024b8f0ac",
+      "caption": "PASS_SHOWCASE_NON_TRANSACTIONAL",
+      "audioStream": "AAC mono 48kHz",
+      "audioMeanVolumeDb": -19.3,
+      "audioMaxVolumeDb": -1.5,
+      "audioGate": "PASS",
+      "visualCopyGate": "PASS_TEXT_WINS",
+      "productTruthGate": "PASS",
+      "readability": "PASS",
+      "contrast": "PASS",
+      "executionReceipt": "PASS_CURRENT_MAIN"
     },
-    "failures": [
-      "Audio Gate FAIL: final Reel is effectively near-silent despite containing an AAC stream.",
-      "Copy repair required: current public caption explicitly invites purchase and does not match the new showcase intent.",
-      "Cover derivative is stale: it does not contain the owner-selected copy and must be re-rendered before visual QA can pass.",
-      "Skill execution receipt is not yet bound by the enforcement layer."
-    ],
-    "repairs": [
-      "Re-cropped final Reel to enlarge the real subject while preserving full movement.",
-      "Removed in-video overlay so proof stays clean and readable.",
-      "Owner selected cover/hook wording: 'פה התנועה היא כל העניין'; preserve this point and voice through the Hebrew-copy/Humanizer pass.",
-      "Next: re-render cover with owner-selected text, run vf-ig-music/audio repair, rewrite caption as non-transactional showcase, then re-hash/re-run exact-final QA."
-    ]
+    "failures": [],
+    "repairs": ["Rejected near-silent source audio instead of boosting noise.", "Added original non-diegetic tactile SFX and reran audio measurements.", "Rewrote caption as showcase copy and reran current-main Visible Text Gate.", "Rendered owner-selected cover and rebound exact hashes/receipts."]
   },
   "feed": {
     "continuityDecision": "pass",
-    "reasoning": "opens the reset with real hand-held movement proof and a conversational owner-selected point rather than generic catalogue copy."
+    "reasoning": "Real hand-held movement proof adds motion beside the retained three live Reels without copying their old copy or visual approvals."
   },
   "derivativeRefs": [
-    "drive:1pHS6-rBuQ-bEhLrwkPRU9eoTvL3D7FiJ:VF-R001-reel.mp4",
-    "drive:1OVSZF_8MQSP7zksxPVTA0RmY6ofVQtW2:VF-R001-cover.jpg:STALE_AFTER_OWNER_COPY_SELECTION",
-    "drive:1_HlMjps5JlXUy2RiR04L3KvVkcor42_z:VF-R001-caption.txt:STALE_SHOWCASE_COPY"
+    "drive:1_YozA-MOfv1TEeFH0xIsNLBv91Lp1yGz:VF-R001-final.mp4:sha256=3dce5e20e672209e06fbb3d1f12a011a35ef7be74066c041772f6f519ca57fa6",
+    "drive:19kdDtM-EM9SxXezXINIa045NG73z-Bvw:VF-R001-cover-final.jpg:sha256=b051ea2e83e741a9d494538548d94baa6ad8da17b160dda0af4718a5157a297c",
+    "drive:1jRYBiu4pMF2ZXnm1MJnUiF5zghRBhRH1:VF-R001-final-caption.txt:sha256=612951bcb74cac044483ff3798fc5f6327c2414dcb93239a576cf93024b8f0ac",
+    "drive:1P95MDVN_HjpO97Yq_J5rCRp5dnuVbYdm:VF-R001-audio-receipt.json",
+    "drive:11rH_qAx1YKxsxxL9ucyZ4JjRoUePYDmS:VF-R001-render-receipt.json",
+    "drive:1r1DkgVRF6d6BfoEh323I_udOhHe9JLeV:VF-R001-visible-text-receipt.json",
+    "drive:1KcRcnQfEHMstMOkSZMKrVGbg7vP6k_tB:VF-R001-package-manifest.json"
   ],
   "rightsNotes": [
-    "Owner decision 2026-09-10: owner-captured showcase content is not blocked by a blanket model-license gate. Rights/privacy escalation remains for third-party media, UGC, identifiable-person privacy, known restrictions, or explicit commercial promotion of the depicted model."
+    "Owner-captured showcase content; no third-party media, UGC, identifiable-person privacy issue or known restriction in the reviewed package.",
+    "No explicit public sale offer or paid promotion of the depicted model; model-license commercial escalation is not triggered."
   ]
 }
