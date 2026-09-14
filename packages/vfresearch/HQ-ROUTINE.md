@@ -60,7 +60,7 @@ python3 scripts/vfresearch_cadence.py freshness
 2. לכל קישור: מקור / PDF / `sourceNote` · השוואה ל־`sources/`/`docs` · הטמעה או «ללא שינוי» / «דולג — חומה».
 3. ארטיפקט: `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md`.
 4. `hq/PRINT-DEMAND.md` → `sources/YYYY-MM-DD-print-demand.md`; אין Insights מומצאים ואין קפיצה מרעיון ל־SKU/מחיר.
-5. MakerWorld/Printables candidates עוברים רישיון → slice → test לפני promotion.
+5. MakerWorld/Printables candidates עוברים לפי `hq/MAKERWORLD-SCAN.md`: מקור אמיתי → רישיון → slice → test לפני promotion. אין SKU/מחיר רק כי נמצא דגם.
 6. Social Intelligence כשנדרש: `SOCIAL-INTELLIGENCE.md` → `SocialResearchPacket` / `ReferencePattern` → `INSTAGRAM-CONTENT-DECISION.json`. נתוני החשבון שלנו נשארים בספק Instagram המאומת.
 7. קישור חדש באמצע השבוע → `LINKS.json` באותו יום.
 
