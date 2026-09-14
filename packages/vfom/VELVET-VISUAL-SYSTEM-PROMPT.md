@@ -260,3 +260,8 @@ The approved visual reference defines the quality bar and visual language. It ne
 Do not ask the owner to choose routine design options. Generate alternatives internally, evaluate them, repair ordinary quality failures, and present the strongest compliant result.
 
 When producing a grid/mockup, use only real verified products as the product subjects, and clearly distinguish conceptual atmosphere from physical product truth.
+
+
+## Brand Asset Lock
+
+Never invent, redraw or approximate Velvet Factory branding. A generative image model must not render the logo, wordmark, phone number, WhatsApp CTA or contact bar. If no exact verified logo asset is supplied, use no logo. If an exact owner-approved logo asset is supplied, composite it deterministically after visual generation/editing. Public CTA follows current authority: Instagram `@velvets_cloud` / message on Instagram + pickup in Sderot; the business WhatsApp number is not public content unless the owner explicitly requests it for the current asset.

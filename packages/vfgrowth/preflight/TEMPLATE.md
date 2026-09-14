@@ -179,6 +179,12 @@ visual_edit_performed: FAIL
 visual_output_evidence: <real edited artifact ref>
 exact_final_visual_qa: FAIL
 public_cta_gate: FAIL
+brand_asset_gate: FAIL
+generated_brand_mark: PRESENT
+logo_usage: NONE
+logo_source_ref: NONE
+logo_render_method: NONE
+public_phone_absent: FAIL
 audio_gate: FAIL | PASS | N/A
 ```
 

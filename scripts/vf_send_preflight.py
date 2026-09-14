@@ -136,6 +136,12 @@ def validate_publication_approval(
     visual_standard_sha = (_field(text, "visual_standard_artifact_sha256") or "").strip().lower()
     visual_standard_document = (_field(text, "visual_standard_document") or "").strip()
     product_truth_source_refs = (_field(text, "product_truth_source_refs") or "").strip()
+    brand_asset_gate = (_field(text, "brand_asset_gate") or "").strip().upper()
+    generated_brand_mark = (_field(text, "generated_brand_mark") or "").strip().upper()
+    logo_usage = (_field(text, "logo_usage") or "").strip().upper()
+    logo_source_ref = (_field(text, "logo_source_ref") or "").strip()
+    logo_render_method = (_field(text, "logo_render_method") or "").strip().upper()
+    public_phone_absent = (_field(text, "public_phone_absent") or "").strip().upper()
 
 
     if schema != "3":
@@ -154,6 +160,22 @@ def validate_publication_approval(
         problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: visual_standard_document does not match canonical owner-approved standard")
     if not product_truth_source_refs or "<" in product_truth_source_refs or product_truth_source_refs.upper() in {"N/A","NONE","PENDING","_"}:
         problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: product_truth_source_refs must identify real source-product evidence")
+    if brand_asset_gate != "PASS":
+        problems.append("brand_asset_gate must be PASS")
+    if generated_brand_mark != "NONE":
+        problems.append("generated_brand_mark must be NONE: generated/invented logos are forbidden")
+    if public_phone_absent != "PASS":
+        problems.append("public_phone_absent must be PASS")
+    if logo_usage not in {"NONE", "VERIFIED_ASSET"}:
+        problems.append("logo_usage must be NONE or VERIFIED_ASSET")
+    elif logo_usage == "NONE":
+        if logo_source_ref.upper() not in {"NONE", ""} or logo_render_method not in {"NONE", ""}:
+            problems.append("logo_usage NONE requires logo_source_ref/render_method NONE")
+    else:
+        if not logo_source_ref or logo_source_ref.upper() in {"NONE", "N/A", "PENDING", "_"} or "<" in logo_source_ref:
+            problems.append("VERIFIED_ASSET logo requires exact logo_source_ref")
+        if logo_render_method != "DETERMINISTIC_OVERLAY":
+            problems.append("verified logo must use DETERMINISTIC_OVERLAY, never generative rendering")
 
     rubric = _field(text, "content_rubric_total")
     rubric_match = re.fullmatch(r"\s*(\d{1,2})\s*/\s*25\s*", rubric or "")
@@ -183,6 +205,8 @@ def validate_publication_approval(
         "visual_edit_performed": "PASS",
         "exact_final_visual_qa": "PASS",
         "public_cta_gate": "PASS",
+        "brand_asset_gate": "PASS",
+        "public_phone_absent": "PASS",
     }
     for field, expected in required_pass_fields.items():
         actual = (_field(text, field) or "").strip()

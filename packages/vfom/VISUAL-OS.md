@@ -117,3 +117,8 @@ Reference הוא מכניקה, לא זהות. אפשר לקחת מבנה, קצב
 ## Synthetic role
 
 AI מייצרת atmosphere, transitions ו־supporting visuals. המציאות של Velvet מספקת מוצר, חומר, כשל, מדידה והוכחה. טקסט עברי רגיש לעיוות נבנה כ־overlay deterministic דרך הכלים הקיימים במקום בתוך generation כשנדרש.
+
+
+## Brand identity asset lock
+
+For Velvet Factory public visuals, branding is source-locked. Never invent, redraw or approximate a logo/wordmark/emblem. If no exact owner-approved logo asset is available to the job, omit the logo. If one is available, overlay that exact asset deterministically after image generation/editing. Generative base frames must contain no logo, no wordmark, no phone number, no WhatsApp and no contact bar. See `packages/vfom/BRAND-ASSET-LOCK.md`.
