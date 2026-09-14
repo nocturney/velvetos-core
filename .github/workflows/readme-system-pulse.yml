@@ -46,6 +46,9 @@ jobs:
       - name: Normalize Hebrew BiDi rendering
         run: python3 scripts/fix-readme-bidi.py
 
+      - name: Validate Hebrew BiDi contract
+        run: python3 scripts/fix-readme-bidi.py --check
+
       - name: Commit only when README changed
         shell: bash
         run: |
