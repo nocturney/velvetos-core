@@ -8,13 +8,14 @@
     "multi_channel_publishing_control",
     "analytics_collection"
   ],
-  "integrationMode": "shadow_pending_runtime_deploy",
+  "integrationMode": "shadow",
   "creativeAuthority": false,
   "qualityGateAuthority": false,
   "instagram": {
     "target": "@velvets_cloud",
     "facebookMetaConnection": "verified_existing",
     "metaLoginRequirement": "satisfied",
+    "openpostProviderConfigured": false,
     "canonicalLiveVerifyProvider": "adelaidasofia/instagram-mcp",
     "fallbackPublishProvider": "adelaidasofia/instagram-mcp",
     "autoDm": false,
@@ -44,8 +45,17 @@
   },
   "runtime": {
     "productionDeployed": false,
-    "stagingDeployed": false,
-    "blockedBy": "runtime deployment and Meta/OpenPost OAuth configuration not executed yet",
+    "stagingDeployed": true,
+    "stagingHost": "windows-backup-worker",
+    "stagingMethod": "pinned-single-binary",
+    "stagingVersion": "v4.31.0",
+    "stagingBinarySha256": "680acc374acf277e3b2fe185488f9a5ab8878ec953b94e0254355131fb3cf508",
+    "stagingLocalUrl": "http://127.0.0.1:18080",
+    "stagingHealth": "pass",
+    "stagingReadiness": "pass_database_ok",
+    "publicHttpsReady": false,
+    "providerOAuthReady": false,
+    "blockedBy": "public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are still required before Instagram provider connection and publish smoke",
     "containerImagePolicy": "pin version or immutable digest; never production latest"
   },
   "truth": {
