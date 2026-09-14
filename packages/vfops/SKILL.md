@@ -41,3 +41,7 @@
 בריף גדול (HTML+CID): `PYTHONPATH=packages python3 -m vfops.gmail_brief_send --html PATH --images DIR --to EMAIL --subject TEXT`. בלי טוקן → `no token` / יציאה 2. עקיפת MCP: `docs/SEND-BRIEF-MCP.md`.
 
 רתמה: אחרי שרשרת — מה אומת / מה פתוח. סנסור אדום או «אין ספירה» לא הופכים לירוק. הסלמה: `packages/vfharness/templates/escalation.md`. מדריך: `AGENTS.md`.
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

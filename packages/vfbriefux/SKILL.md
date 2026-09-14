@@ -19,3 +19,7 @@
 בפיילאובר Grok HQ שולח `htmlBody` תצוגה 3 אל `nocturney@gmail.com`. כש־Grok חי — הוא שולח. אין שליחה ללקוח.
 
 **BENTO (דק שבועי, לא אימייל):** `hq/BENTO.md` + `scripts/vf_weekly_deck.py` — בונה JSON `bento/slides` מנתונים אמיתיים (LEARNINGS/LAST30/רטרו). נפתח ידנית פעם בשבוע בדפדפן, לא נכנס לצינור השליחה היומי.
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

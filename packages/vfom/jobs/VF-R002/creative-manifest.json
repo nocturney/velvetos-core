@@ -3,40 +3,40 @@
   "format": "carousel",
   "status": "ready_for_publish",
   "sourceEvidence": [
-    "drive:143MrZsroIcyh4DZqYLq1-iEFAY9Bd8KD:IMG_1277.HEIC:4032x3024",
-    "drive:1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi:IMG_1278.HEIC:4032x3024",
-    "drive:1NW2nOJucAEEiIovlqm49uzNmNDbfn08k:IMG_1280.HEIC:4032x3024",
-    "drive:1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ:IMG_1281.HEIC:4032x3024",
-    "final-package-sha256:a4bc9677a7be6f3b532af671d7fb39f75d8e3adf170a97499d2371bb14f416fa",
-    "visible-text-sha256:e97e4238a3a2bd03a7bc929cbac38493b93c3f2c73ee9f751c5b431c5c6801a2",
-    "render-receipt-drive:1CNSeBSQNhvzdyAUha3633MoO46DEe8iG",
-    "visible-text-receipt-drive:1e3dZNXcC4sQgKtqlQwnMb7b-A2lB2_9_",
-    "package-manifest-drive:1FwpTC9KE8cK1P1VOaDqIqF0aV7V1eaTO",
-    "owner-preference:2026-09-11:cover=NO_TEXT"
+    "drive:1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ:IMG_1281.HEIC:sha256=12e25d3934ae8804ded80b83ee585e4b77049a3a42e4d6a27025888568dcad5d",
+    "drive:1E6NWXJqvnyYeHP46KLvDA_rUZHyW2C09:IMG_1279.HEIC:sha256=f254d84a9534b71a4916d8a7495725eaae004dd04e89620bd61c5939c7f0b4fe",
+    "drive:143MrZsroIcyh4DZqYLq1-iEFAY9Bd8KD:IMG_1277.HEIC:sha256=1647762cf42e3a0777c3455e866890d578f03f716b45ad660decbe64f5189f7d",
+    "drive:1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi:IMG_1278.HEIC:sha256=3229cc2e42626ae0232e60ce0760b4a64231ac02884550bc1e24556eec7c4432",
+    "final-package-sha256:3be0c2fdb0c6fc80f8c678a2d808814f35f7986eaa14f9a3c5684abd47d4a40f",
+    "caption-sha256:8c9eea226eaf6ef0d3f7c6694cdff905e056a7af22c81843aa186e697f05457d",
+    "render-receipt-drive:1r3jAtbnKDg1bCBtAAnPozfwbrwG_e8po",
+    "visible-text-receipt-drive:1DQbPAE9wtLK4wX4VEqHLwzghHbkEKoz8",
+    "package-manifest-drive:12YrHQNH_hfBQ_XH7F9zqoXUBLleXcPDe",
+    "owner-preference:2026-09-11:cover=NO_TEXT",
+    "supersedes:crop-only-package:a4bc9677a7be6f3b532af671d7fb39f75d8e3adf170a97499d2371bb14f416fa"
   ],
   "concept": {
-    "coreIdea": "Four materially different verified views of the same finished dragon sculpture, ordered from clean hero view into closer detail and back to alternate geometry.",
+    "coreIdea": "Four real views of the same finished dragon, art-directed as a restrained photographic sequence with the real subject kept untouched.",
     "emotion": "dark tactile curiosity",
     "formatGenome": "PRODUCT_DETAIL_SEQUENCE",
-    "objective": "Give the empty/reset grid one real product-story anchor based on actual studio output, without transactional or unsupported claims.",
+    "objective": "create a real product-story anchor with genuine photographic treatment, not a crop-only RAW export and not a synthetic dragon",
     "audience": "people who notice sculptural detail, fantasy forms and unusual 3D-printed display pieces"
   },
   "hook": {
     "candidates": [
-      {"id": "h1", "visual": "IMG_1281 full-object hero, clean 4:5 crop", "text": "", "reason": "strongest small-screen silhouette and full subject read"},
-      {"id": "h2", "visual": "IMG_1277 tighter face/wing/body detail", "text": "", "reason": "strong detail but weaker full-object read"},
-      {"id": "h3", "visual": "IMG_1278 wider alternate geometry", "text": "", "reason": "clear geometry but less immediate than h1"},
-      {"id": "h4", "visual": "IMG_1280 close alternate surface detail", "text": "", "reason": "useful later swipe, weaker opener"},
-      {"id": "h5-text", "visual": "clean hero with headline candidate", "text": "תמונה אחת לא מספיקה", "reason": "rejected because text adds less value than the clean subject"}
+      {"id": "h1", "visual": "IMG_1281 hero treatment with sharp real subject window and same-source softened field", "text": "", "reason": "strongest complete silhouette and cleanest opener"},
+      {"id": "h2", "visual": "IMG_1279 closer alternate view", "text": "", "reason": "strong detail but less complete opener"},
+      {"id": "h3", "visual": "IMG_1277 tighter detail", "text": "", "reason": "useful mid-sequence detail"},
+      {"id": "h4-text", "visual": "hero treatment with headline", "text": "תמונה אחת לא מספיקה", "reason": "rejected; decorative copy loses against the clean image"}
     ],
     "selected": "h1"
   },
   "shots": {
     "plan": [
-      {"assetRef": "drive:1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ", "shotType": "hero", "orientation": "horizontal", "angle": "wider side/front", "distance": "medium", "action": "clean 4:5 full-object opener", "targetDurationSec": 0, "proof": "same real finished sculpture; complete silhouette and detail"},
-      {"assetRef": "drive:143MrZsroIcyh4DZqYLq1-iEFAY9Bd8KD", "shotType": "macro", "orientation": "horizontal", "angle": "front three-quarter", "distance": "close", "action": "closer crop on face, wing and curled body", "targetDurationSec": 0, "proof": "real visible head, wing and surface detail"},
-      {"assetRef": "drive:1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi", "shotType": "proof", "orientation": "horizontal", "angle": "wider front three-quarter", "distance": "medium", "action": "alternate full geometry", "targetDurationSec": 0, "proof": "same subject from a materially different real angle"},
-      {"assetRef": "drive:1NW2nOJucAEEiIovlqm49uzNmNDbfn08k", "shotType": "macro", "orientation": "horizontal", "angle": "left/front detail", "distance": "close", "action": "finish on alternate surface detail", "targetDurationSec": 0, "proof": "real visible detail from another source frame"}
+      {"assetRef": "drive:1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ", "shotType": "hero", "orientation": "horizontal", "angle": "wider side/front", "distance": "medium", "action": "portrait composition with real source subject preserved sharply", "targetDurationSec": 0, "proof": "same real dragon geometry and appearance"},
+      {"assetRef": "drive:1E6NWXJqvnyYeHP46KLvDA_rUZHyW2C09", "shotType": "macro", "orientation": "horizontal", "angle": "alternate three-quarter", "distance": "close", "action": "detail-focused second frame", "targetDurationSec": 0, "proof": "same real subject from a distinct source view"},
+      {"assetRef": "drive:143MrZsroIcyh4DZqYLq1-iEFAY9Bd8KD", "shotType": "macro", "orientation": "horizontal", "angle": "front three-quarter", "distance": "close", "action": "surface and head/wing detail", "targetDurationSec": 0, "proof": "real source surface detail retained"},
+      {"assetRef": "drive:1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi", "shotType": "proof", "orientation": "horizontal", "angle": "wider front three-quarter", "distance": "medium", "action": "finish on alternate full geometry", "targetDurationSec": 0, "proof": "same subject from another verified angle"}
     ],
     "missing": []
   },
@@ -52,70 +52,78 @@
     "noTextCompared": true,
     "pipeline": ["reader-first-he", "velvet-hebrew-copy", "ai-tells-he", "owner-preference-lock", "brand-guardian-final-review"],
     "candidates": [
-      {"text": "", "result": "selected", "reason": "clean image wins on subject hierarchy and avoids decorative copy"},
-      {"text": "תמונה אחת לא מספיקה", "result": "rejected", "reason": "functional but explains carousel behavior rather than adding meaning"},
-      {"text": "תתקרבו רגע", "result": "rejected", "reason": "natural but unnecessary"},
-      {"text": "כל זווית אחרת", "result": "rejected", "reason": "generic compared with the actual visual sequence"}
+      {"text": "", "result": "selected", "reason": "clean photographed object wins and respects owner NO_TEXT lock"},
+      {"text": "תמונה אחת לא מספיקה", "result": "rejected", "reason": "describes carousel behavior rather than adding meaning"},
+      {"text": "כל זווית אחרת", "result": "rejected", "reason": "generic and unnecessary"}
     ],
     "ownerPreference": "NO_TEXT",
-    "readerFirstNote": "The viewer meets a dense sculptural object; immediate recognition and curiosity are easier without headline processing.",
-    "humanizerNote": "NO_TEXT remains the stronger baseline; proposed text either becomes generic or describes what the carousel already demonstrates.",
-    "decisionRationale": "NO_TEXT wins on the exact final opener."
+    "readerFirstNote": "The subject already provides the scroll-stop; no extra headline is needed.",
+    "humanizerNote": "Exact caption passed current-main public-social gate; visual microcopy is N/A because NO_TEXT won.",
+    "decisionRationale": "NO_TEXT remains the stronger exact-final decision."
   },
   "cover": {
     "candidates": [
-      {"id": "c0-no-text", "headline": "", "subjectCrop": "IMG_1281 full-bleed 4:5 preserving full dragon silhouette", "textPlacement": "none", "gridRationale": "strongest clean hero and owner-selected no-text direction"},
-      {"id": "c1-no-text", "headline": "", "subjectCrop": "IMG_1277 tighter 4:5 face/wing crop", "textPlacement": "none", "gridRationale": "strong detail alternate but less complete subject read"},
-      {"id": "c2", "headline": "תמונה אחת לא מספיקה", "subjectCrop": "IMG_1281 full-object 4:5 crop", "textPlacement": "safe upper area", "gridRationale": "rejected because it loses against the clean version"}
+      {"id": "c0-no-text", "headline": "", "subjectCrop": "IMG_1281 art-directed portrait composition", "textPlacement": "none", "gridRationale": "strongest clean hero"},
+      {"id": "c1-no-text", "headline": "", "subjectCrop": "IMG_1279 closer art-directed composition", "textPlacement": "none", "gridRationale": "detail alternate"},
+      {"id": "c2", "headline": "תמונה אחת לא מספיקה", "subjectCrop": "IMG_1281 treatment", "textPlacement": "upper safe zone", "gridRationale": "rejected by no-text comparison"}
     ],
     "selected": "c0-no-text"
   },
+  "finishing": {
+    "policyVersion": 1,
+    "principle": "Retouch the photo, not the product.",
+    "stages": {"photoRetouch": "PASS", "brandContentStyling": "PASS", "textLayoutQa": "N/A", "finalVisualQa": "PASS"},
+    "productTruth": {"gate": "PASS", "subjectIdentityIntegrity": "PASS", "syntheticSubjectChange": "NONE", "sourceSubjectMatch": "PASS", "colorPreserved": "PASS", "notes": "The sharp subject window is the real RAW photograph. Background treatment is derived only from the same frame; dragon geometry/silhouette/detail are unchanged."},
+    "repairCycles": 1,
+    "lastRepairAction": "Rebuilt all four slides from RAW with composition, restrained grade, same-source subject separation/background treatment and sequence art direction; old crop-only finals invalidated.",
+    "reviewedArtifactDigest": "sha256:3be0c2fdb0c6fc80f8c678a2d808814f35f7986eaa14f9a3c5684abd47d4a40f",
+    "evidenceRefs": ["drive:1To8y4YTaQ_ocym68DuPOTIwx1WyJnU3x", "drive:1GC7U3G_xUoV9CcOCCwGjuSExfMif7m3r", "drive:1FSerVkl_ZInA3Qd5v6t0W87ZQgN3EseQ", "drive:1XNmdbklSBS4yXvIC4W6EZ-rOhjcLU9LS", "drive:1r3jAtbnKDg1bCBtAAnPozfwbrwG_e8po"]
+  },
   "qa": {
     "brandScore": 90,
-    "hookScore": 90,
-    "realityScore": 98,
-    "originalityScore": 86,
+    "hookScore": 91,
+    "realityScore": 99,
+    "originalityScore": 88,
     "artifactScore": 96,
     "deterministicChecks": {
       "state": "pass",
-      "exactFinalPackageSha256": "a4bc9677a7be6f3b532af671d7fb39f75d8e3adf170a97499d2371bb14f416fa",
-      "slides": "4x 1080x1350 JPEG, visually reviewed exact finals",
-      "captionSha256": "e97e4238a3a2bd03a7bc929cbac38493b93c3f2c73ee9f751c5b431c5c6801a2",
-      "caption": "non-transactional showcase; no price, order, shipping, pickup or unsupported material/durability claims",
+      "validatorHead": "8f171ee8fa103f49dc929fa0dc8af98b799e3b86",
+      "exactFinalPackageSha256": "3be0c2fdb0c6fc80f8c678a2d808814f35f7986eaa14f9a3c5684abd47d4a40f",
+      "slides": "4x 1080x1350 JPEG, exact finals reviewed as a contact sheet",
+      "captionSha256": "8c9eea226eaf6ef0d3f7c6694cdff905e056a7af22c81843aa186e697f05457d",
+      "caption": "PASS_SHOWCASE_NON_TRANSACTIONAL",
       "audioGate": "N/A_CAROUSEL",
       "visualCopyGate": "PASS_NO_TEXT",
-      "noTextCompared": true,
-      "visualCopyDecision": "NO_TEXT",
-      "subjectPackFidelity": "PASS: same dragon geometry/material appearance preserved across all four real source crops",
-      "frameIntegrity": "PASS",
-      "resolutionAspectRatio": "PASS: 1080x1350 4:5 each",
-      "readability": "PASS: no visual text",
-      "contrast": "PASS: no visual text; subject hierarchy reviewed on exact frames",
-      "executionReceipt": "PASS: render receipt + visible-text receipt + package manifest stored in Media Vault"
+      "productTruthGate": "PASS",
+      "syntheticSubjectChange": "NONE",
+      "sourceSubjectMatch": "PASS",
+      "creativeTreatment": "PASS_COMPOSITION_GRADE_SUBJECT_SEPARATION_SAME_SOURCE_BACKGROUND_SEQUENCE",
+      "brandTreatment": "PASS_RESTRAINED_PHOTO_LED",
+      "commercialVisualQa": "PASS",
+      "scrollStopQa": "PASS_HERO_PLUS_DISTINCT_DETAIL_SEQUENCE",
+      "readability": "PASS_NO_VISUAL_TEXT",
+      "contrast": "PASS",
+      "executionReceipt": "PASS_CURRENT_MAIN"
     },
     "failures": [],
-    "repairs": [
-      "Replaced stale text-bearing opening derivative with a clean NO_TEXT render from verified source imagery.",
-      "Reordered first frame to IMG_1281 after exact-final visual comparison for clearer full-object read.",
-      "Rewrote caption to showcase-only copy and bound its exact SHA to the final package."
-    ]
+    "repairs": ["Invalidated the earlier crop-only package and four Drive finals.", "Rebuilt from verified RAW only; no synthetic dragon generation or subject replacement.", "Applied real photographic art direction around the untouched subject.", "Rewrote caption and reran the current-main Visible Text Gate."]
   },
   "feed": {
     "continuityDecision": "pass",
-    "reasoning": "After the owner archived the old feed, this real product-detail carousel provides a strong non-generic visual anchor; it does not force a checkerboard or text-card aesthetic."
+    "reasoning": "A dark, detail-led no-text carousel adds a still-image anchor beside the retained live Reel baseline without creating a text-card or checkerboard aesthetic."
   },
   "derivativeRefs": [
-    "drive:1UeOHZiXD9riJeiMfE7peUIn3n6GJLCZc:VF-R002-final-01.jpg:sha256=f6d07784d762772b8c16e625edefc696bfab6d3f86c4c6ba176ab4c03d748eaf",
-    "drive:1OzLgn1TxMarFZBagbU9FtptjQcNXnySO:VF-R002-final-02.jpg:sha256=173b619707ea38a60fd2bcc6e022c381bd2ce917a20959e583a1c3aa65fd1d78",
-    "drive:1q-aniAniO9lK1kBA_NTRgSt4z8nd0gUK:VF-R002-final-03.jpg:sha256=d5227c2cc1710eef6889cb187881eac1fa6a45595a9af43aa63e150ae2555b25",
-    "drive:1kZcrGgjDtlfLzyFUetk0LyHTe31PtWDF:VF-R002-final-04.jpg:sha256=a228a5348414db584f3f96661998618ceeb7c3c9dbaf2a02394d7c80783a9183",
-    "drive:1oRK-5FvRHDk9Bg1yEFF_fkpQrz3cToXB:VF-R002-final-caption.txt:sha256=e97e4238a3a2bd03a7bc929cbac38493b93c3f2c73ee9f751c5b431c5c6801a2",
-    "drive:1CNSeBSQNhvzdyAUha3633MoO46DEe8iG:VF-R002-render-receipt.json",
-    "drive:1e3dZNXcC4sQgKtqlQwnMb7b-A2lB2_9_:VF-R002-visible-text-receipt.json",
-    "drive:1FwpTC9KE8cK1P1VOaDqIqF0aV7V1eaTO:VF-R002-package-manifest.json"
+    "drive:1To8y4YTaQ_ocym68DuPOTIwx1WyJnU3x:VF-R002-final-01.jpg:sha256=e0911a23b3439b45eabbca2d6ba6edfb3451cdc2bafbb14d806acc27eb93f4bb",
+    "drive:1GC7U3G_xUoV9CcOCCwGjuSExfMif7m3r:VF-R002-final-02.jpg:sha256=068fa144d0accb3ac8c819899ce9a142500a221db4fe89eb87e512e745332151",
+    "drive:1FSerVkl_ZInA3Qd5v6t0W87ZQgN3EseQ:VF-R002-final-03.jpg:sha256=8bed1124e280a939b88da97037d545850c1ad5103d67bfb6ede226bd6741fd2f",
+    "drive:1XNmdbklSBS4yXvIC4W6EZ-rOhjcLU9LS:VF-R002-final-04.jpg:sha256=e9daae347ce212efda6e830e9a4ea90001fa59bc2bb17cd0a75864b2a9040825",
+    "drive:1ucfj061O_6AuXG7O5REPzTZgUbMQVX29:VF-R002-final-caption.txt:sha256=8c9eea226eaf6ef0d3f7c6694cdff905e056a7af22c81843aa186e697f05457d",
+    "drive:1r3jAtbnKDg1bCBtAAnPozfwbrwG_e8po:VF-R002-render-receipt.json",
+    "drive:1DQbPAE9wtLK4wX4VEqHLwzghHbkEKoz8:VF-R002-visible-text-receipt.json",
+    "drive:12YrHQNH_hfBQ_XH7F9zqoXUBLleXcPDe:VF-R002-package-manifest.json"
   ],
   "rightsNotes": [
-    "Owner-captured showcase/editorial content. No third-party media, UGC, identifiable-person privacy issue or known restriction is present in the reviewed final package.",
-    "The post does not explicitly offer the depicted model for sale and is not paid promotion; model-license commercial escalation is therefore not triggered by current workflow policy."
+    "Owner-captured showcase/editorial content. No third-party media, UGC, identifiable-person privacy issue or known restriction in the reviewed final package.",
+    "The public post does not explicitly offer the depicted model for sale and is not paid promotion; model-license commercial escalation is not triggered."
   ]
 }

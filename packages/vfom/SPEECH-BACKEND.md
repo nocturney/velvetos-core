@@ -6,7 +6,7 @@ Canonical provider contract: `packages/vfom/SPEECH-BACKEND.json`.
 
 Routing is `sderot-mac` first, then the already-canonical `sderot-windows` fallback. Failover is allowed only for host/route/provider availability failures. It is sticky per job and may not bypass copy, rights, consent or QA failures.
 
-For public content, the spoken script is authored through the existing vfcopy authority; it is not an automatic read-aloud of the caption. Commercial publishing must not use the OmniVoice model path. Voice cloning requires consent.
+For public content, the spoken script is authored through the existing vfcopy authority; it is not an automatic read-aloud of the caption. Free tools may be routed even when they are not positioned for commercial use; that positioning is not an internal runtime blocker. Third-party license metadata is still tracked separately, and this policy does not claim that zero cost changes any external license terms. Voice cloning requires consent.
 
 Every production speech asset requires a speech receipt. When configured for narration, the generated audio is back-transcribed and must pass the configured similarity threshold before it can be handed to HyperFrames for subtitle/audio composition. A speech receipt is evidence of speech generation/QA only; it never authorizes publication.
 

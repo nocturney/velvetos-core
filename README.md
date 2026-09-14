@@ -25,8 +25,8 @@
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>60</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
-<td align="center"><strong>8</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
+<td align="center"><strong>62</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>9</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
 </table>
@@ -36,11 +36,11 @@
 | **Instagram MCP** | LIVE / VERIFIED |
 | **Instagram Insights** | LIVE / VERIFIED |
 | **Media Intake / Drive** | LIVE / VERIFIED |
-| **Jobs source of truth** | Google Sheet bound |
+| **Jobs source of truth** | Google Sheet LIVE / VERIFIED write-through |
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-13T12:02:51Z` |
+| **Last verified / refreshed evidence** | `2026-09-14T09:05:09Z` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
@@ -79,7 +79,7 @@
 ### ‏למה היא בנויה כך
 
 - ‏**מקור אמת אחד לכל תחום** — כדי שאותו לקוח, job או asset לא יקבל כמה גרסאות סותרות.
-- ‏**Evidence before confidence** — יכולת נחשבת חיה רק כשהיא מגובה בראיה, sensor או אימות provider.
+- ‏**Evidence before confidence** — יכולת נחשבת חיה רק כשהיא מגובה בראיה, sensor או אימות provider. ב־Jobs, כתיבה נחשבת חיה רק אחרי WIF write + Sheets read-back receipt - לא רק binding. Repository persistence: only sync-receipt.json; adapter CSV files stay gitignored.
 - ‏**Fail-closed במקום ניחוש** — כשלא יודעים, עוצרים או מסמנים `needs_sync` / `needs_input`; לא ממציאים.
 - ‏**Human-in-the-loop איפה שיש משמעות אמיתית** — מערכת טובה חוסכת החלטות קטנות, לא גונבת החלטות גדולות.
 - ‏**למידה מהעבודה עצמה** — אירועים, תוצאות, תוכן, failures ו־Insights חוזרים למערכת ומשפרים את ההחלטה הבאה.
@@ -124,6 +124,7 @@
 <tr><td><strong>Organic Growth / Content Factory</strong></td><td><strong>IMPLEMENTED / HUMAN-GATED</strong></td><td dir="rtl" align="right">עבודה אמיתית → רעיונות/טיוטות/approval queue; בלי autopost ובלי auto-DM.</td></tr>
 <tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / MAC VERIFIED / WINDOWS HOST VERIFIED</strong></td><td dir="rtl" align="right">`Mac-Office` / `sderot-mac` נשאר ה־render host המועדף עם ראיית smoke היסטורית. `Windows-Fallback` / `sderot-windows` הוא נתיב הגיבוי הקנוני דרך Remote Desktop Commander; ה־bootstrap מספק toolchain מקומי ומחייב doctor + רינדור 1080×1920 עברי אמיתי + ffprobe/SHA-256 receipt. Windows מאומת כעת כ־host_smoke_verified: המכשיר online, doctor עבר ורינדור smoke אמיתי עם receipt אומת; לכן הוא כשיר ל־first-healthy routing כאשר המק אינו זמין. אין העתקת מנויי דפדפן, אין port/tunnel נכנס ואין הורדת QA.</td></tr>
 <tr><td><strong>Video Toolchain Adapters</strong></td><td><strong>IMPLEMENTED / WINDOWS VERIFIED / REMOTION LICENSE-GATED</strong></td><td dir="rtl" align="right">שכבת Edit Intelligence בהשראת video-use עברה smoke אמיתי ב־Windows עם EDL, חיתוך דטרמיניסטי, אודיו ו־receipt; Manim 0.21.0 מאומת כ־technical/explainer slot; Remotion 4.0.523 נשאר אופציונלי ומוגן בשער רישוי. HyperFrames נשאר ה־master compositor הקנוני.</td></tr>
+<tr><td><strong>Windows Speech Backend</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">VoiceStudio 0.5.2 על `sderot-windows` משתמש ב־`omnivoice` ל־TTS עברי וב־`faster-whisper` ל־QA חוזר; smoke אמיתי עבר ב־0.93617 מול סף fail-closed של 0.90. ה־adapter מקבל גם UTF-8 BOM מ־PowerShell ומקבע stdout/stderr ל־UTF-8 כדי שעברית לא תכשיל receipt תקין. MOSS-TTS-v1.5 עבר smoke יחיד ב־0.923077 אך נשאר ניסיוני לאחר sidecar crash חוזר, ולכן אינו ברירת המחדל. מיקום/כלי לא מוריד QA, וקבלות speech אינן אישור פרסום.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">routing, חומר, spool/slice, maintenance signals ותכנון ייצור מבוקר.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">בריף HTML עם מדיה inline ושליחה כאשר קיימים credentials תקפים.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td dir="rtl" align="right">מעבר מבוקר לכלי חלופי בלי לייצר SoT נוסף.</td></tr>
@@ -205,7 +206,7 @@ The system deliberately separates **automation from authority**. Reading, classi
 ### Why it is designed this way
 
 - **One canonical source per domain** — customers, jobs and assets should not develop competing versions of truth.
-- **Evidence before confidence** — a capability is treated as live only when backed by a sensor, receipt or provider verification.
+- **Evidence before confidence** — a capability is treated as live only when backed by a sensor, receipt or provider verification. For Jobs, write-through is live only after WIF write + Sheets read-back receipt - not merely a Sheet binding. Repository persistence: only sync-receipt.json; adapter CSV files stay gitignored.
 - **Fail closed instead of guessing** — unknown state becomes `needs_sync` / `needs_input`, not fabricated certainty.
 - **Human-in-the-loop where consequences matter** — remove repetitive decisions without stealing important ones.
 - **Learn from real work** — outcomes, failures, content performance and operational signals feed the next decision.
@@ -248,8 +249,9 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>Media Vault + vfmedia</strong></td><td><strong>IMPLEMENTED</strong></td><td>Incoming → source → WIP → approved with checksums and persist-before-move.</td></tr>
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>Natural Hebrew, anti-AI QA and FACT vs INVENTED gates.</td></tr>
 <tr><td><strong>Organic Growth / Content Factory</strong></td><td><strong>IMPLEMENTED / HUMAN-GATED</strong></td><td>Real work becomes drafts and approval candidates; no default autopost or auto-DM.</td></tr>
-<tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / MAC VERIFIED / WINDOWS COMMISSIONING</strong></td><td>`Mac-Office` / `sderot-mac` remains the preferred render host with historical smoke evidence. `Windows-Fallback` / `sderot-windows` is the canonical backup through Remote Desktop Commander; its bootstrap provisions a local toolchain and requires doctor + a real 1080x1920 deterministic Hebrew render + ffprobe/SHA-256 receipt. Windows is now host_smoke_verified: the physical device is online, doctor passed and a real smoke render with receipt was verified, so it is eligible for first-healthy routing when the Mac is unavailable. No browser-subscription credential migration, inbound port/tunnel or QA relaxation.</td></tr>
+<tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / MAC VERIFIED / WINDOWS HOST VERIFIED</strong></td><td>`Mac-Office` / `sderot-mac` remains the preferred render host with historical smoke evidence. `Windows-Fallback` / `sderot-windows` is the canonical backup through Remote Desktop Commander; its bootstrap provisions a local toolchain and requires doctor + a real 1080x1920 deterministic Hebrew render + ffprobe/SHA-256 receipt. Windows is now host_smoke_verified: the physical device is online, doctor passed and a real smoke render with receipt was verified, so it is eligible for first-healthy routing when the Mac is unavailable. No browser-subscription credential migration, inbound port/tunnel or QA relaxation.</td></tr>
 <tr><td><strong>Video Toolchain Adapters</strong></td><td><strong>IMPLEMENTED / WINDOWS VERIFIED / REMOTION LICENSE-GATED</strong></td><td>video-use patterns power deterministic Edit Intelligence with a real Windows EDL/base-cut/audio/receipt smoke; Manim 0.21.0 is host-smoke-verified as a technical/explainer slot; Remotion 4.0.523 remains optional and license-gated. HyperFrames remains the canonical master compositor.</td></tr>
+<tr><td><strong>Windows Speech Backend</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>VoiceStudio 0.5.2 on `sderot-windows` uses `omnivoice` for Hebrew TTS and `faster-whisper` for back-transcription QA; a real smoke passed at 0.93617 similarity against the fail-closed 0.90 threshold. Host/tool routing does not lower QA, and speech receipts do not authorize publishing.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td>Routing, material/spool planning and maintenance signals.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td>HTML + inline media brief path when valid credentials exist.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td>Controlled takeover without creating another source of truth.</td></tr>

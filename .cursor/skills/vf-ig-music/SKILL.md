@@ -35,3 +35,7 @@ Output style-only guidance (tempo, ducking, IG search terms for Grok) and mark e
 ## Forbidden
 
 Treg for this job, Instagram/Gmail/WhatsApp send, boost, auto-DM, new pack per idea, invented ₪ / Insights / blocked bodies, TikTok-first strategy without lead seat, copyrighted tracks outside the platform library without lead approval.
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

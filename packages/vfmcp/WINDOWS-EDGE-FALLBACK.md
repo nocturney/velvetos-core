@@ -73,7 +73,7 @@ The Windows host is not eligible merely because it is listed in Git or because t
 - required tool for the task exists locally;
 - no task requires a Mac-only subscription/browser session.
 
-Render eligibility was verified on 2026-09-13: Remote Desktop Commander device `Chris` was online/reachable, the render doctor passed, and a real 1080x1920 HyperFrames smoke render produced a verified render receipt. The render host therefore remains `host_smoke_verified`. Speech is capability-gated separately and remains `configured_pending_local_smoke` until its own doctor and Hebrew TTS/STT back-transcription QA smoke pass.
+Render eligibility was verified on 2026-09-13: Remote Desktop Commander device `Chris` was online/reachable, the render doctor passed, and a real 1080x1920 HyperFrames smoke render produced a verified render receipt. The render host therefore remains `host_smoke_verified`. Speech was verified separately on 2026-09-14: VoiceStudio 0.5.2 selected `omnivoice`, generated real Hebrew TTS on the Windows NVIDIA/CUDA route, and `faster-whisper` back-transcription passed at 0.93617 similarity against the 0.90 threshold. Speech is therefore `speech_smoke_verified`.
 
 ## Failover behavior
 
@@ -87,4 +87,4 @@ Publication authorization does not change: render and speech receipts prove arti
 
 - `sderot-mac`: historical HyperFrames smoke is verified; it may be physically offline at a given moment without losing that evidence. Speech still requires its own runtime evidence.
 - `sderot-windows` render/repo/content: **`host_smoke_verified`** on 2026-09-13 and eligible for deterministic first-healthy fallback. Remote Desktop Commander device `Chris` was online/reachable; HyperFrames 0.8.34 doctor passed; real 1080x1920 smoke render plus ffprobe/SHA-256 receipt passed.
-- `sderot-windows` speech: **`configured_pending_local_smoke`** until VoiceStudio doctor plus real Hebrew TTS/STT back-transcription QA evidence pass.
+- `sderot-windows` speech: **`speech_smoke_verified`** on 2026-09-14. VoiceStudio 0.5.2 + `omnivoice` + `faster-whisper` passed real Hebrew TTS/STT back-transcription QA at 0.93617 similarity (threshold 0.90).

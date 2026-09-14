@@ -122,3 +122,7 @@ Offer to save a summary CSV with columns: `row`, `status`, `design_url`, `error`
 - Template field names are case-sensitive in the API — use the exact keys from `get-brand-template-dataset`.
 - There is no "undo bulk create" — warn the user before starting large runs.
 - Designs created this way are full Canva designs the user can further edit in their account.
+
+## Verification
+
+Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

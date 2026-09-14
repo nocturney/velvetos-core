@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "authority": "packages/vfmcp/HOST.md",
   "purpose": "canonical Edge/Office execution hosts for local render, speech and content capabilities",
   "routing": {
@@ -102,12 +102,11 @@
       "speechBootstrap": "scripts/bootstrap-speech-host-windows.ps1",
       "speechLocalState": "%USERPROFILE%\\.velvetos\\speech-host.json",
       "voiceStudioVersion": "0.5.2",
-      "speechStatus": "configured_pending_local_smoke",
+      "speechStatus": "speech_smoke_verified",
       "speechComputePolicy": "Windows NVIDIA uses CUDA automatically when available; CPU fallback remains supported",
-      "speechPromotionPending": [
-        "windows_speech_doctor_and_hebrew_tts_stt_qa_smoke"
-      ],
-      "speechPromotionRule": "speech eligibility requires local VoiceStudio doctor plus real Hebrew TTS-STT QA evidence; no browser-subscription credential migration"
+      "speechPromotionPending": [],
+      "speechPromotionRule": "speech is eligible for first-healthy fallback after local VoiceStudio doctor plus real Hebrew TTS-STT QA evidence; browser-subscription credential migration remains forbidden",
+      "speechVerifiedEvidence": "VoiceStudio 0.5.2 selected OmniVoice on Windows fallback; CUDA route verified on RTX 4080 SUPER; real Hebrew TTS plus faster-whisper back-transcription QA passed at similarity 0.93617 (threshold 0.90) on 2026-09-14T08:11:13Z."
     }
   },
   "defaultRenderHost": "sderot-mac",
