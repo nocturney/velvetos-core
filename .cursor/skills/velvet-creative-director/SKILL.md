@@ -15,7 +15,7 @@ Read `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/
 
 ## Cold-start Visual Standard Load Gate
 
-Before any concept, hook, storyboard, edit direction or cover direction, load the owner-approved visual standard and verify its identity against `VISUAL-DNA.json`: status `approved`, Canva asset `MAHVJjCCKQA`, artifact SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`. Record a `visualStandard` PASS block in the Creative Manifest before creative work begins. If any authority is missing or mismatched, fail closed before concept generation; never fall back to generic 3D-print, stock, template or model-default aesthetics. Product Truth and real source evidence always outrank the style reference.
+Before any concept, hook, storyboard, edit direction or cover direction, load the owner-approved visual standard and verify its identity against `VISUAL-DNA.json`: status `approved`, Canva asset `MAHVL7PKpvE`, artifact SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. Record a `visualStandard` PASS block in the Creative Manifest before creative work begins. If any authority is missing or mismatched, fail closed before concept generation; never fall back to generic 3D-print, stock, template or model-default aesthetics. Product Truth and real source evidence always outrank the style reference.
 
 
 1. Start from real proof or a named evidenced studio opportunity. Never invent a floor scene, measurement, failure, load result, customer outcome or product geometry.

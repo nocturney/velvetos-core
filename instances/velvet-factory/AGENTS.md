@@ -44,7 +44,7 @@ Enabled set is in `instance/velvet-factory.json` → `modulesEnabled` (preset `m
 
 ## COLD-START VISUAL STANDARD — mandatory
 
-For any Velvet Factory content/image/Canva/feed/cover/carousel/Story/Reel visual task, load `vendor/velvetos-core/packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VISUAL-OS.md` and `VISUAL-DNA.json` before creative work. Canonical Canva asset: `MAHVJjCCKQA`; artifact SHA-256: `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`. A fresh conversation must inherit this without relying on chat history. Missing or mismatched binding stops the creative branch as `visual_standard_unavailable`; generic/default creative fallback is forbidden. Real product source media remains Product Truth.
+For any Velvet Factory content/image/Canva/feed/cover/carousel/Story/Reel visual task, load `vendor/velvetos-core/packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VISUAL-OS.md` and `VISUAL-DNA.json` before creative work. Canonical Canva asset: `MAHVL7PKpvE`; artifact SHA-256: `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. A fresh conversation must inherit this without relying on chat history. Missing or mismatched binding stops the creative branch as `visual_standard_unavailable`; generic/default creative fallback is forbidden. Real product source media remains Product Truth.
 
 ## Publication-prep execution gate
 

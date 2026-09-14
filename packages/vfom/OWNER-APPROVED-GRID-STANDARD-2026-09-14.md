@@ -6,9 +6,9 @@ Scope: organic Instagram feed, Reel covers, carousels, still posts, Story stills
 
 ## Canonical visual reference
 
-- Canva asset: `MAHVJjCCKQA`
+- Canva asset: `MAHVL7PKpvE`
 - Canva asset title: `Velvet Factory · APPROVED GRID VISUAL STANDARD · 2026-09-14`
-- Approved artifact SHA-256: `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`
+- Approved artifact SHA-256: `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`
 - Approved artifact dimensions: `1254x1254`
 - Public reference image: `https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg`
 - Repository asset: `packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg`

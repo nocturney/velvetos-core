@@ -122,9 +122,9 @@ def main() -> None:
     must_contain(READER_FIRST, ("שתי שאלות לפני מילה", "מה האדם מרגיש", "הדרך הכי פשוטה"))
     must_contain(AI_TELLS, ("כל משפט מרוויח מקום", "מבחן מאפייה", "תיאור תמונה"))
 
-    must_contain(CONTENT_SPRINT, ("Creative Manifest", "velvet-creative-director", "velvet-brand-guardian", "velvet-media-librarian", "OWNER-APPROVED-GRID-STANDARD-2026-09-14.md", "MAHVJjCCKQA", "visualStandard.gate=PASS"))
-    must_contain(SPECIALISTS["creativeDirector"], ("first-frame", "shotRequest", "EDL", "Creative Manifest", "NO_TEXT", "velvet-hebrew-copy", "reader-first-he.md", "OWNER-APPROVED-GRID-STANDARD-2026-09-14.md", "MAHVJjCCKQA", "visualStandard"))
-    must_contain(SPECIALISTS["brandGuardian"], ("Brand", "Originality", "feed", "Creative Manifest", "NO_TEXT", "velvet-hebrew-copy", "ai-tells-he.md", "MAHVJjCCKQA", "visualStandard.gate=PASS"))
+    must_contain(CONTENT_SPRINT, ("Creative Manifest", "velvet-creative-director", "velvet-brand-guardian", "velvet-media-librarian", "OWNER-APPROVED-GRID-STANDARD-2026-09-14.md", "MAHVL7PKpvE", "visualStandard.gate=PASS"))
+    must_contain(SPECIALISTS["creativeDirector"], ("first-frame", "shotRequest", "EDL", "Creative Manifest", "NO_TEXT", "velvet-hebrew-copy", "reader-first-he.md", "OWNER-APPROVED-GRID-STANDARD-2026-09-14.md", "MAHVL7PKpvE", "visualStandard"))
+    must_contain(SPECIALISTS["brandGuardian"], ("Brand", "Originality", "feed", "Creative Manifest", "NO_TEXT", "velvet-hebrew-copy", "ai-tells-he.md", "MAHVL7PKpvE", "visualStandard.gate=PASS"))
     must_contain(SPECIALISTS["mediaLibrarian"], ("Media Vault", "Asset Truth", "Claim Truth", "Creative Manifest"))
 
     for path in SPECIALISTS.values():
@@ -146,7 +146,7 @@ def main() -> None:
         fail("creativeAutonomy.creativeManifestRequired must be true")
 
     visual_standard = autonomy.get("ownerApprovedVisualStandard") or {}
-    if visual_standard.get("required") is not True or visual_standard.get("document") != "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md" or visual_standard.get("canvaAssetId") != "MAHVJjCCKQA":
+    if visual_standard.get("required") is not True or visual_standard.get("document") != "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md" or visual_standard.get("canvaAssetId") != "MAHVL7PKpvE":
         fail("creativeAutonomy owner-approved visual standard binding missing/mismatched")
     if (autonomy.get("publish") or {}).get("requireOwnerApprovedVisualStandard") is not True:
         fail("publish must require owner-approved visual standard")

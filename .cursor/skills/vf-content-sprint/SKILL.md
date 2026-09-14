@@ -11,7 +11,7 @@ Use the existing office orchestrator only. Never install or simulate a second ru
 
 ## Core flow
 
-**Cold-start invariant:** before candidate expansion or creative generation, validate the owner-approved visual-standard identity against `VISUAL-DNA.json` and the active Velvet Factory instance. Require Canva asset `MAHVJjCCKQA`, artifact SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`, and the canonical public/reference paths. Write `visualStandard.gate=PASS` into the Creative Manifest. Missing/mismatched authority is fail-closed: do not invent a generic substitute style.
+**Cold-start invariant:** before candidate expansion or creative generation, validate the owner-approved visual-standard identity against `VISUAL-DNA.json` and the active Velvet Factory instance. Require Canva asset `MAHVL7PKpvE`, artifact SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, and the canonical public/reference paths. Write `visualStandard.gate=PASS` into the Creative Manifest. Missing/mismatched authority is fail-closed: do not invent a generic substitute style.
 
 
 1. Read `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md`, `packages/vfom/FOUNDRY.json`, `CREATIVE-AUTOPILOT.md`, `INSTAGRAM-CONTENT-DECISION.json`, `VISUAL-OS.md`, `VISUAL-DNA.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md`, `FORMAT-GENOMES.md`, `HYPERFRAMES-BACKEND.json`, `HYPERFRAMES-FRAME.md` and the mandatory public-copy invariant `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`.
