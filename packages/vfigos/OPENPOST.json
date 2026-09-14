@@ -1,0 +1,59 @@
+{
+  "id": "openpost-publishing-control-plane",
+  "upstream": "https://github.com/getopenpost/openpost",
+  "role": [
+    "scheduler",
+    "publication_queue",
+    "retry_delivery_status",
+    "multi_channel_publishing_control",
+    "analytics_collection"
+  ],
+  "integrationMode": "shadow_pending_runtime_deploy",
+  "creativeAuthority": false,
+  "qualityGateAuthority": false,
+  "instagram": {
+    "target": "@velvets_cloud",
+    "facebookMetaConnection": "verified_existing",
+    "metaLoginRequirement": "satisfied",
+    "canonicalLiveVerifyProvider": "adelaidasofia/instagram-mcp",
+    "fallbackPublishProvider": "adelaidasofia/instagram-mcp",
+    "autoDm": false,
+    "boostAds": false
+  },
+  "releasePolicy": {
+    "productionUsesLatestTag": false,
+    "pinExactVersion": true,
+    "currentBaseline": "v4.31.0",
+    "latestReviewedVersion": "v4.31.0",
+    "latestReviewedPublishedAt": "2026-09-13T07:26:39Z",
+    "reviewedAt": "2026-09-14T08:23:00+03:00",
+    "autoPromoteWithoutTests": false,
+    "backupBeforeMigrationUpgrade": true,
+    "requiredChecks": [
+      "release_notes_and_breaking_changes",
+      "meta_instagram_auth",
+      "api_mcp_contract",
+      "media_limits",
+      "scheduler_queue_retry",
+      "database_schema_migrations",
+      "security",
+      "staging_smoke",
+      "instagram_live_verify",
+      "analytics_read"
+    ]
+  },
+  "runtime": {
+    "productionDeployed": false,
+    "stagingDeployed": false,
+    "blockedBy": "runtime deployment and Meta/OpenPost OAuth configuration not executed yet",
+    "containerImagePolicy": "pin version or immutable digest; never production latest"
+  },
+  "truth": {
+    "publishResponseMeansLiveVerified": false,
+    "instagramLiveEvidence": [
+      "list_media",
+      "get_media"
+    ]
+  },
+  "playbook": "packages/vfigos/OPENPOST.md"
+}

@@ -1,0 +1,47 @@
+{
+  "task_id": "openpost-integration-2026-09-14",
+  "component_state": "Syncing",
+  "status": "integration_contract_validated_runtime_pending",
+  "updatedAt": "2026-09-14T08:36:00+03:00",
+  "upstream": "getopenpost/openpost",
+  "latestReviewedVersion": "v4.31.0",
+  "latestReviewedPublishedAt": "2026-09-13T07:26:39Z",
+  "changes": [
+    "Added packages/vfigos/OPENPOST.md architecture and upgrade policy",
+    "Added packages/vfigos/OPENPOST.json pinned release/integration state",
+    "Updated packages/vfigos/SEND.md with OpenPost apply path, direct Instagram MCP verification and same-turn failover",
+    "Recorded existing Facebook/Meta connection as satisfying OpenPost Instagram login requirement"
+  ],
+  "validation": {
+    "worker": "Chris Windows backup worker",
+    "cleanClone": true,
+    "pythonUtf8Forced": true,
+    "targetedSensors": {
+      "check-instagram-content-decision.py": "PASS",
+      "check-organic-growth.py": "PASS",
+      "check-publication-states.py": "PASS",
+      "check-vf-desk.py": "PASS",
+      "check-vfgrowth.py": "PASS",
+      "check-vfharness-execution-discipline.py": "PASS",
+      "check-vfharness.py": "PASS"
+    },
+    "checkAll": "ATTEMPTED_NOT_CLEAN",
+    "checkAllNote": "Initial Windows run exposed cp1252 encoding failures; UTF-8 rerun passed the OpenPost-adjacent sensors before check-all stopped on unrelated existing HQ overlay/baseline runner issues. Do not claim global check-all PASS."
+  },
+  "truth": {
+    "codeIntegrated": true,
+    "runtimeDeployed": false,
+    "stagingVerified": false,
+    "productionPrimary": false,
+    "directInstagramMcpStillCanonicalForLiveVerify": true,
+    "productionLatestTagAllowed": false
+  },
+  "next": [
+    "Deploy OpenPost staging on an authorized runtime",
+    "Configure OpenPost Meta OAuth using existing Facebook/Instagram Business connection",
+    "Run post/carousel/reel/story + schedule + forced retry + analytics smoke matrix",
+    "Promote integrationMode only after PASS",
+    "Keep release watch active and review every upstream version before promotion"
+  ],
+  "branch": "integrate/openpost-publishing-v2"
+}
