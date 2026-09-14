@@ -1,9 +1,11 @@
 name: VelvetOS Research Cadence
 
 # The actual research body is produced by the owner-facing Velvet Research Seat at
-# 06:15 Asia/Jerusalem. GitHub Actions does not pretend to replace WebSearch/body research;
-# it verifies freshness, builds the semantic index, and runs sensors after the body window.
-# 04:30 UTC is 07:30 IDT (summer) / 06:30 IST (winter), always after the 06:15 seat.
+# 02:00 Asia/Jerusalem, with a 07:00 readiness cutoff for the 09:00 Morning Brief.
+# GitHub Actions does not pretend to replace WebSearch/body research; it verifies
+# freshness, builds the semantic index, and runs sensors after the live seat has had
+# several hours to complete. 04:30 UTC is 07:30 IDT (summer) / 06:30 IST (winter),
+# always after the 02:00 seat. Freshness failure remains honest evidence of a missing body.
 on:
   schedule:
     - cron: '30 4 * * *'
