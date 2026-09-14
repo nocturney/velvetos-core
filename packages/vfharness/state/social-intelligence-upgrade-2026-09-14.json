@@ -1,0 +1,29 @@
+{
+  "id": "social-intelligence-upgrade-2026-09-14",
+  "component_state": "Syncing",
+  "scope": "Velvet Factory organic Instagram research-to-creative learning loop",
+  "branch": "feat/social-intelligence-upgrade-2026-09-14",
+  "embedded": {
+    "contentMatrix": "packages/vfom/INSTAGRAM-CONTENT-DECISION.json",
+    "socialIntelligence": "packages/vfresearch/SOCIAL-INTELLIGENCE.md",
+    "normalizer": "scripts/vf_social_intelligence.py",
+    "referencePattern": "packages/vfresearch/reference-pattern.schema.json",
+    "performanceProfile": "packages/vfinsights/CREATIVE-PERFORMANCE-PROFILE.json",
+    "sensor": "scripts/check-social-intelligence.py"
+  },
+  "locks": [
+    "no-second-runtime", "instagram-mcp-canonical-for-own-account",
+    "public-external-data-only", "no-cookies-private-scraping",
+    "no-auto-dm-or-engagement-automation", "no-invented-metrics",
+    "no-composite-virality-score", "minimum-3-measured-posts-per-promoted-pattern"
+  ],
+  "validation": {
+    "targetedSensor": "pass",
+    "instagramDecisionSensor": "pass",
+    "vfresearchSensor": "pass",
+    "vfomCreativeHarnessSensors": "pass",
+    "insightsLoop": "pass; measuredPosts=1; eligiblePrior=false",
+    "checkAllWindows": "not green: case-collision TAGS.md/tags.md; later suite interruption"
+  },
+  "next": "Push branch and use GitHub/Linux CI for full-suite verification before merge."
+}

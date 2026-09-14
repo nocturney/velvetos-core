@@ -71,6 +71,7 @@ GrokBot `weekday-ops` 07:00 = בריף/תפעול — **לא** יוצרים cron
 6. שורת בלוק 05 בבריף הבא (קישורים + print-demand).
 7. קישור חדש באמצע השבוע → `LINKS.json` **באותו יום**.
 8. אם `standingForever: true` והטיימר חסר → לחדש לפי `TIMER.md` באותו מעבר.
+9. **Social Intelligence:** כשיש צורך בטרנדים/מתחרים/Reference Reels, לפעול לפי `SOCIAL-INTELLIGENCE.md`: מקור ציבורי → `SocialResearchPacket` / `ReferencePattern` → `INSTAGRAM-CONTENT-DECISION.json`. נתוני החשבון שלנו נשארים ב־Instagram MCP; scraping חיצוני לא מחליף Insights.
 
 ## 4 · פעם בחודש (vf-last30)
 

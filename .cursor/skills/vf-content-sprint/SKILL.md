@@ -13,7 +13,7 @@ Use the existing office orchestrator only. Never install or simulate a second ru
 
 1. Read `packages/vfom/FOUNDRY.json`, `CREATIVE-AUTOPILOT.md`, `INSTAGRAM-CONTENT-DECISION.json`, `VISUAL-OS.md`, `VISUAL-DNA.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md`, `FORMAT-GENOMES.md`, `HYPERFRAMES-BACKEND.json`, `HYPERFRAMES-FRAME.md` and the mandatory public-copy invariant `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`.
 2. Start from real proof: `packages/vfprod/PRINT-DONE.md` / `print.done`, verified Media Vault item, named product/material/failure, or another evidenced opportunity. No invented floor scene.
-3. Run the decision policy `saturation_scan` before committing to a concept. Use `vfinsights`, office-learning and current `vfresearch` evidence when available. Name up to the configured seven saturated patterns only when evidence exists; otherwise record external saturation as unknown. Never invent trends. Produce evidence refs plus whitespace angles.
+3. Run decision-policy `content_matrix` candidate expansion before `saturation_scan`. Start from 3–5 Velvet-specific pillars and the eight configured angle families, bind every candidate to real proof/source refs, and use a current `SocialResearchPacket` from `packages/vfresearch/SOCIAL-INTELLIGENCE.md` when available. A single strong evidenced opportunity may record `not_applicable_single_evidence`; never silently skip. Generate many cheap candidates, not many final renders. Then run `saturation_scan` using `vfinsights`, office-learning and current `vfresearch` evidence. Name up to the configured seven saturated patterns only when evidence exists; otherwise record external saturation as unknown. Never invent trends. Produce evidence refs plus whitespace angles.
 4. Run `anti_generic_check`. Reject, repair or archive anything that could belong to any 3D-print shop, feels stock/template-driven, merely says “look what came off the printer”, uses generic slogans, or lacks a real reason to exist. Prefer real decisions, failures, constraints, iterations, process details, before/after evidence and product proof.
 5. Read Asset Truth from the canonical Media Vault. Missing `truth` means `unverified` for public factual claims. Build Claim Provenance separately: a real asset does not automatically prove every claim.
 6. Choose one primary format through `format_selection` before storyboard/render. Pick Reel, carousel, post or Story according to how the evidence/story works; do not force every idea into all formats. Derivatives are allowed only when they preserve value.
@@ -51,6 +51,7 @@ Use the existing office orchestrator only. Never install or simulate a second ru
 
 Before `authorized_for_tool_publish`, the Manifest must contain evidence for:
 
+- content-matrix candidate pool + proof/source refs, or explicit `not_applicable_single_evidence`;
 - saturation scan + whitespace angle;
 - anti-generic result and specificity proof;
 - one chosen format with rejected alternatives/reason;
@@ -73,7 +74,8 @@ Post-publish performance feedback is appended only when real evidence exists.
 - `vfcovers` + `vfcanva` — cover/visual production.
 - `vfgrowth` — calendar, rubric, policy, preflight.
 - `vfigos` — real Instagram tool send + verification/failover.
-- `vfinsights` + office-learning — verified post-publish evidence and learning only.
+- `vfresearch` — public Social Intelligence / reference mechanics via `SOCIAL-INTELLIGENCE.md`; research only, never publish authority.
+- `vfinsights` + office-learning — verified post-publish evidence and learning only; `CREATIVE-PERFORMANCE-PROFILE.json` is a measured prior, never a truth override.
 
 ## Human Required only
 

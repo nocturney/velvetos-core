@@ -25,30 +25,31 @@ Canonical public CTA funnel: `packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md` (hist
 ## Run
 
 1. Start from real opportunity: `packages/vfprod/PRINT-DONE.md` / `print.done`, verified media intake, product/material/failure evidence. No invented floor scene.
-2. Run `saturation_scan` from `INSTAGRAM-CONTENT-DECISION.json`: use existing measured/history/research evidence; mark unknown when external evidence is unavailable. Find whitespace instead of merely polishing saturated patterns.
-3. Run `anti_generic_check`. Archive or repair ideas that could fit any 3D-print shop, feel stock/template-like, or are empty “look what we printed” content.
-4. Read Media Vault Asset Truth and build Claim Provenance.
-5. Run `format_selection` and choose one primary Reel/carousel/post/Story based on how the evidence and story work. Do not generate every format by default.
-6. Build `CONTENT-CONTRACT.schema.json` contract with evidence-linked `truthClaims`, chosen format, synthetic policy and Subject Pack if fidelity matters.
-7. Run `hook_tournament`: 8–15 cheap text+visual+motion candidates, score clarity/curiosity/relevance/brand fit/visual potential, shortlist 3–5 and select one evidence-compatible winner without clickbait.
-8. Run Creative Director from `vfom/CREATIVE-AUTOPILOT.md` + `VISUAL-OS.md` + `VISUAL-DNA.json`: proof-first concept + selected hook + shot list autonomously.
-9. If critical physical footage is missing, emit a minimal `shotRequest` and mark `waiting_for_media`. Do not ask broad creative questions.
-10. Use progressive variants from `FOUNDRY.json`: storyboard/mock first, then rough cuts, then at most two final renders by default.
-11. Classify existing assets through Media Vault vocabulary and build EDL from `EDIT-DIRECTOR.md`.
-12. Draft final Hebrew through the full `vfcopy/SOFT-TOOLS-CONTRACT.md` chain. Then run `retention_pass` on the actual draft; remove filler rather than extending duration or slide count.
-13. Run `authority_voice_pass`: show decisions, constraints, reasons and proof; remove guru language, hype, clichés and unsupported superiority claims.
-14. Run `engagement_pass`: any CTA/question must be naturally worth answering; `engagementBait=false` is mandatory.
-15. Build/select cover. Canva first; failover per desk law. No raw JPEG as final branded cover.
-16. Evaluation Engine + written PREFLIGHT + Visual OS brandScore >=80 + CONTENT-RUBRIC >=20/25 + Content Contract + policy + rights. Repair the smallest affected component and re-run internally within bounded cycles.
-17. Run `visual_qa` on the actual mobile-ready artifact: contrast, readability, crop, safe zones, hierarchy, branding, product visibility, Hebrew typography and mobile preview are critical checks.
-18. Run `final_quality_gate` fail-closed. It may reject publication. Missing evidence for any mandatory decision pass is a failure, not an implied PASS.
-19. Render required derivatives through existing tools; save real derivative refs back to Media Vault. No second render catalog.
-20. Authorization / Exception Queue:
+2. Run `content_matrix` from `INSTAGRAM-CONTENT-DECISION.json`: expand 3â€“5 Velvet-specific pillars across the configured eight angle families, bind every candidate to real proof/source refs, and use `SocialResearchPacket` evidence when available. A single strong evidenced opportunity may record `not_applicable_single_evidence`; this is candidate expansion only and has no publish authority.
+3. Run `saturation_scan`: use existing measured/history/research evidence; mark unknown when external evidence is unavailable. Find whitespace instead of merely polishing saturated patterns.
+4. Run `anti_generic_check`. Archive or repair ideas that could fit any 3D-print shop, feel stock/template-like, or are empty “look what we printed” content.
+5. Read Media Vault Asset Truth and build Claim Provenance.
+6. Run `format_selection` and choose one primary Reel/carousel/post/Story based on how the evidence and story work. Do not generate every format by default.
+7. Build `CONTENT-CONTRACT.schema.json` contract with evidence-linked `truthClaims`, chosen format, synthetic policy and Subject Pack if fidelity matters.
+8. Run `hook_tournament`: 8–15 cheap text+visual+motion candidates, score clarity/curiosity/relevance/brand fit/visual potential, shortlist 3–5 and select one evidence-compatible winner without clickbait.
+9. Run Creative Director from `vfom/CREATIVE-AUTOPILOT.md` + `VISUAL-OS.md` + `VISUAL-DNA.json`: proof-first concept + selected hook + shot list autonomously.
+10. If critical physical footage is missing, emit a minimal `shotRequest` and mark `waiting_for_media`. Do not ask broad creative questions.
+11. Use progressive variants from `FOUNDRY.json`: storyboard/mock first, then rough cuts, then at most two final renders by default.
+12. Classify existing assets through Media Vault vocabulary and build EDL from `EDIT-DIRECTOR.md`.
+13. Draft final Hebrew through the full `vfcopy/SOFT-TOOLS-CONTRACT.md` chain. Then run `retention_pass` on the actual draft; remove filler rather than extending duration or slide count.
+14. Run `authority_voice_pass`: show decisions, constraints, reasons and proof; remove guru language, hype, clichés and unsupported superiority claims.
+15. Run `engagement_pass`: any CTA/question must be naturally worth answering; `engagementBait=false` is mandatory.
+16. Build/select cover. Canva first; failover per desk law. No raw JPEG as final branded cover.
+17. Evaluation Engine + written PREFLIGHT + Visual OS brandScore >=80 + CONTENT-RUBRIC >=20/25 + Content Contract + policy + rights. Repair the smallest affected component and re-run internally within bounded cycles.
+18. Run `visual_qa` on the actual mobile-ready artifact: contrast, readability, crop, safe zones, hierarchy, branding, product visibility, Hebrew typography and mobile preview are critical checks.
+19. Run `final_quality_gate` fail-closed. It may reject publication. Missing evidence for any mandatory decision pass is a failure, not an implied PASS.
+20. Render required derivatives through existing tools; save real derivative refs back to Media Vault. No second render catalog.
+21. Authorization / Exception Queue:
    - LOW + instance `creativeAutonomy.publish.standingAuthorization=true` + final quality gate PASS -> `authorized_for_tool_publish`.
    - MEDIUM -> existing human approval path only when policy requires it.
    - HIGH -> `human_required`.
-21. `vfigos` sends via a real connected Instagram publish tool. No receipt/live evidence -> honest Degraded/failover packet; never claim posted.
-22. After verified publish, run `performance_feedback` from measured evidence only. Feed format-relevant watch/retention/saves/shares/profile actions/meaningful comments/inquiries into existing `vfinsights` + office-learning. No style-pattern promotion before the configured measured sample; preserve controlled variation.
+22. `vfigos` sends via a real connected Instagram publish tool. No receipt/live evidence -> honest Degraded/failover packet; never claim posted.
+23. After verified publish, run `performance_feedback` from measured evidence only. Feed format-relevant watch/retention/saves/shares/profile actions/meaningful comments/inquiries into existing `vfinsights` + office-learning. No style-pattern promotion before the configured measured sample; preserve controlled variation.
 
 ## Human Required only
 
