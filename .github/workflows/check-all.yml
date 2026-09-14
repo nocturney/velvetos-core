@@ -44,6 +44,10 @@ jobs:
         if: github.event_name == 'pull_request'
         run: python3 scripts/update-readme-snapshot.py --check
 
+      - name: README Hebrew BiDi and language anchors are valid
+        if: github.event_name == 'pull_request'
+        run: python3 scripts/fix-readme-bidi.py --check
+
       - name: Run all VelvetOS sensors
         run: python3 scripts/check-all.py
 
