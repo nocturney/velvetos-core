@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-14 — **Social Intelligence upgrade:** embedded evidence-backed Content Matrix, public external signal/reference-Reel normalization, and measured creative-performance priors into existing `vfresearch` → …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-14 — **Social Intelligence upgrade:** embedded evidence-backed Content Matrix, public external signal/reference-Reel normalization, and measured creative-performance priors into existing `vfresearch` → …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-14 — **Living README / System Pulse closeout:** bilingual product-first README with a repository-backed System Pulse; automatic hourly/on-change refresh; GitHub-safe Hebrew BiDi normalization; explicit …</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-14 — **Living README / System Pulse closeout:** bilingual product-first README with a repository-backed System Pulse; automatic hourly/on-change refresh; GitHub-safe Hebrew BiDi normalization; explicit …</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-14 — **Living README / System Pulse closeout:** bilingual product-first README with a repository-backed System Pulse; automatic hourly/on-change refresh; GitHub-safe Hebrew BiDi normalization; explicit stable language anchors; and CI-checkable rendering invariants. Pulse claims remain evidence-bound and never promote configured provider paths to verified without committed proof.
 - 2026-09-14 — **Social Intelligence upgrade:** embedded evidence-backed Content Matrix, public external signal/reference-Reel normalization, and measured creative-performance priors into existing `vfresearch` → `vfom` → `vfinsights` flow. No new pack/runtime/scheduler; own Instagram Insights remain canonical in Instagram MCP; provider scraping is optional public-data adapter only. Sensor: `scripts/check-social-intelligence.py`.
 - 2026-09-13 — **Superpowers v6.3 execution discipline absorbed (no Superpowers runtime):** `vfharness` now requires evidence-bearing plan preflight, fail-closed `safe_ruling` in the existing escalation ladder, RED → GREEN → REFACTOR for executable behavior without test theater, fresh-context review, and dependency-safe parallel fan-out/fan-in. Added behavioral sensor `check-vfharness-execution-discipline.py`; no plugin/runtime/worktree mandate.
 
