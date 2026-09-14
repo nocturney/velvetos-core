@@ -1,4 +1,5 @@
 name: Promote Jobs Live Closeout
+# VELVET_MACHINE_WRITER_ALLOW: README.md docs/OWNER-ACTIONS-he.md office/ledger/README.md packages/velvetos/living-studio/REGISTRY.json packages/vfresearch/BEST-SKILLS.json .github/workflows/promote-jobs-live-closeout.yml
 
 on:
   push:
