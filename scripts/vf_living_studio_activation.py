@@ -110,8 +110,17 @@ def sweep(*, write: bool = False) -> dict:
     }
     if write:
         LATEST.parent.mkdir(parents=True, exist_ok=True)
-        LATEST.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        _append_jsonl(HISTORY, receipt)
+        previous = {}
+        if LATEST.is_file():
+            try:
+                previous = json.loads(LATEST.read_text(encoding="utf-8"))
+            except json.JSONDecodeError:
+                previous = {}
+        material_changed = previous.get("status") != receipt["status"] or previous.get("capabilities") != caps
+        receipt["changed"] = material_changed
+        if material_changed:
+            LATEST.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            _append_jsonl(HISTORY, receipt)
     return receipt
 
 
