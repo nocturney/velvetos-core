@@ -26,5 +26,5 @@ Best Skills נבדק מול dataDate 13.9, ללא embed חדש. timer verificati
 main הנוכחי עבר Core Sensors: 59 מתוך 59.
 Media Auto Intake ו-Office Control Plane רצו היום בהצלחה.
 הערת המחקר שלפיה check-all לא היה ירוק על Windows כבר התיישנה. ה-CI הנוכחי ירוק.
-בריף 09:00 של היום לא נמסר כי סט האוטומציות החדש נכתב אחרי חלון הריצה. Recovery זה נשלח דרך נתיב ה-Gmail הקנוני.
+בריף 09:00 של היום לא נמסר כי סט האוטומציות החדש נכתב אחרי חלון הריצה. Recovery זה מופעל דרך נתיב ה-Gmail הקנוני ונחשב נמסר רק אחרי provider receipt ואימות ב-Gmail.
 Office Loop הוגדר כך שחלון 10:30 של היום נשמר.
