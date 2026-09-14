@@ -30,6 +30,11 @@ For Velvet Factory public visual work, `OWNER-APPROVED-GRID-STANDARD-2026-09-14.
 
 הכלל העליון: **Retouch the photo, not the product.**
 
+### Creative transformation floor · fail-closed
+
+`Retouch the photo, not the product` does **not** mean `do almost nothing`. For publication-prep, preserve the physical product while deliberately transforming its presentation. Default to source-image edit/reference mode, not text-to-image recreation of the product. At least the hero/first slide must visibly improve two or more presentation dimensions such as environment/background, lighting/depth, composition/perspective, subject separation or atmosphere. A raw-photo carousel, resize-only sequence, or crop+exposure-only pass is not a finished Velvet creative unless the source was already at the owner-approved reference bar and that exception is explicitly documented. See `CREATIVE-TRANSFORMATION-LOCK.md`.
+
+
 ### Product Truth · fail-closed
 
 במוצר פיזי אמיתי, העורך רשאי לשפר את הצילום וההצגה בלבד. אסור לשנות או להמציא:

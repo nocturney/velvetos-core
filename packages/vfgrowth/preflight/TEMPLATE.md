@@ -176,6 +176,10 @@ brand_source_lock: FAIL
 creative_treatment_categories: <at least 3 real categories>
 creative_edit_evidence: <real evidence>
 visual_edit_performed: FAIL
+creative_delta_gate: FAIL
+raw_passthrough: true
+source_edit_mode: <SOURCE_IMAGE_EDIT | DETERMINISTIC_COMPOSITE | VIDEO_EDIT | N/A>
+hero_transformation_evidence: <final artifact ref + visible presentation changes>
 visual_output_evidence: <real edited artifact ref>
 exact_final_visual_qa: FAIL
 public_cta_gate: FAIL

@@ -203,6 +203,7 @@ def validate_publication_approval(
         "scroll_stop_qa": "PASS",
         "derivative_is_distinct_from_source": "PASS",
         "visual_edit_performed": "PASS",
+        "creative_delta_gate": "PASS",
         "exact_final_visual_qa": "PASS",
         "public_cta_gate": "PASS",
         "brand_asset_gate": "PASS",
@@ -229,6 +230,16 @@ def validate_publication_approval(
         problems.append("--package-sha256 must be a 64-hex SHA-256")
     if approved_package and supplied_package and approved_package != supplied_package:
         problems.append("exact final package SHA-256 does not match the approved render")
+
+    raw_passthrough = (_field(text, "raw_passthrough") or "").strip().lower()
+    if raw_passthrough not in {"false", "0", "no"}:
+        problems.append("raw_passthrough must be false: untreated source-photo delivery is not publication prep")
+    source_edit_mode = (_field(text, "source_edit_mode") or "").strip().upper()
+    if source_edit_mode not in {"SOURCE_IMAGE_EDIT", "DETERMINISTIC_COMPOSITE", "VIDEO_EDIT", "N/A_VIDEO"}:
+        problems.append("source_edit_mode must prove source-grounded edit/composite; text-to-image product recreation is forbidden")
+    hero_transform = (_field(text, "hero_transformation_evidence") or "").strip()
+    if not hero_transform or hero_transform.upper() in {"N/A", "NONE", "PENDING", "_"} or "<" in hero_transform:
+        problems.append("hero_transformation_evidence must identify the final hero and visible presentation changes")
 
     visual_output_evidence = (_field(text, "visual_output_evidence") or "").strip()
     if not visual_output_evidence or visual_output_evidence.upper() in {"N/A", "NONE", "PENDING", "_"} or "<" in visual_output_evidence:

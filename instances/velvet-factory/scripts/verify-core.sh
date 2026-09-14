@@ -44,6 +44,7 @@ required=(
   "scripts/check-visual-surface-enforcement.py"
   "scripts/check-publication-prep-execution.py"
   "scripts/check-brand-asset-cta-lock.py"
+  "scripts/check-creative-transformation-lock.py"
   "scripts/check-creative-system.py"
   "scripts/check-creative-autopilot.py"
 )
@@ -57,6 +58,7 @@ done
 "$PYTHON_BIN" "$DEST/scripts/check-visual-surface-enforcement.py"
 "$PYTHON_BIN" "$DEST/scripts/check-publication-prep-execution.py"
 "$PYTHON_BIN" "$DEST/scripts/check-brand-asset-cta-lock.py"
+"$PYTHON_BIN" "$DEST/scripts/check-creative-transformation-lock.py"
 "$PYTHON_BIN" "$DEST/scripts/check-creative-system.py"
 "$PYTHON_BIN" "$DEST/scripts/check-creative-autopilot.py"
 
