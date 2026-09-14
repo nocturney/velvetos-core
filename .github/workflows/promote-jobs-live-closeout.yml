@@ -37,6 +37,16 @@ jobs:
           python3 scripts/check-skill-health.py
           python3 scripts/check-all.py
 
+      - name: Drop test-only sensor mutations
+        run: |
+          set -euo pipefail
+          git restore -- \
+            office/control/HANDOFF-he.md \
+            office/control/HANDOFF.json \
+            packages/vfgrowth/data/growth-brief.json \
+            packages/vfops/data/retro-signals.json \
+            packages/vfharness/state/operational-gaps-commission-2026-09-14.json
+
       - name: Enforce closeout mutation scope
         run: |
           set -euo pipefail
