@@ -3,10 +3,20 @@
   "title": "VelvetOS — Velvet Factory (frontend instance)",
   "updatedAt": "2026-08-31",
   "sourceAgency": ".cursor/agency-agents.json",
-  "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
+  "alwaysOnRule": ".cursor/rules/velvetos-instance-desk.mdc",
   "product": "VelvetOS",
   "instanceId": "velvet-factory",
   "displayName": "VelvetOS — Velvet Factory",
+  "ownerApprovedVisualStandard": {
+    "required": true,
+    "document": "vendor/velvetos-core/packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+    "portablePrompt": "vendor/velvetos-core/packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
+    "referenceAsset": "vendor/velvetos-core/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+    "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+    "canvaAssetId": "MAHVJjCCKQA",
+    "artifactSha256": "707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0",
+    "coldStartGate": "fail_closed"
+  },
   "velvetos": {
     "core": "vendor/velvetos-core",
     "instance": "INSTANCE.json",

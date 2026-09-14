@@ -55,3 +55,7 @@ Use progressive commitment instead of many expensive final renders: concepts →
 Novelty/fatigue checks use existing office-learning/vfinsights history, not a second creative memory store. Similarity can trigger a mechanic change, cooldown or explicit series override.
 
 Media Vault remains canonical and `vfigos` remains the Instagram publish/verification path. No publish claim without a real tool receipt + verification evidence. No tool = honest failover packet. Grok remains optional backup/failover, not the primary sender.
+
+## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
+
+This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVJjCCKQA` and SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.

@@ -126,3 +126,7 @@ Offer to save a summary CSV with columns: `row`, `status`, `design_url`, `error`
 ## Verification
 
 Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.
+
+## Velvet Factory instance override — mandatory (`VF_VISUAL_STANDARD_GATE`)
+
+When the active job/instance is Velvet Factory or `@velvets_cloud`, do not operate this Canva skill in isolation. Before any create/edit/resize/feedback/brand-check/bulk action, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`, verify `MAHVJjCCKQA` / `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`, and require `visual_standard_gate=PASS`. If the binding cannot be verified, return `visual_standard_unavailable` instead of using generic Canva/template defaults. Product source media remains the sole authority for the physical product.

@@ -151,6 +151,11 @@ qa_scope: exact-final-render
 qa_reviewed_at: <ISO-8601>
 content_rubric_total: <NN/25>
 artifact_digest: sha256:<64-hex>
+visual_standard_gate: FAIL
+visual_standard_document: packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md
+visual_standard_canva_asset_id: MAHVJjCCKQA
+visual_standard_artifact_sha256: 707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0
+product_truth_source_refs: <real source refs>
 final_package_sha256: <64-hex>
 visible_text_gate: FAIL
 fact_gate: FAIL
@@ -186,3 +191,7 @@ audio_gate: FAIL | PASS | N/A
 ## שער
 
 `publish_gate: PASS` רק אם כל השערים הרלוונטיים = עבור, `visible_text_gate: PASS` תואם ל־`text_sha256`, `vfcopy_lint: PASS`, `fact_gate: PASS`, ה־Rubric ≥20/25, RAW→Creative עבר, Product Truth עבר (`product_truth_gate: PASS`, `subject_identity_integrity: PASS`, `synthetic_subject_change: NONE`, `source_subject_match: PASS`) ו־`brand_source_lock: PASS`. בווידאו נדרש גם `audio_gate: PASS`. אחרת `publish_gate: BLOCKED`.
+
+## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
+
+This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVJjCCKQA` and SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.

@@ -39,3 +39,9 @@ Specialists on the desk: `@content-creator` `@brand-guardian` `@instagram-curato
 - Floor scenes only from a named Drive job/SKU. Partial pack if proof is missing.
 
 If Canva MCP is `needsAuth`, say `Canva לא מחובר` and use Superdesign / `packages/vfcanva/studio/render.py`.
+
+## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
+
+Before any Velvet Factory concept, image selection/edit, Canva operation, cover, carousel, Story still, Reel cover, feed/grid plan, render or publish handoff, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`. Verify Canva asset `MAHVJjCCKQA` and artifact SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`. Record a PASS binding in the job/manifest/preflight before creative work continues.
+
+This gate is **fail-closed**: if the standard is unavailable, mismatched or unverified, stop the creative branch as `visual_standard_unavailable`; never fall back to a generic 3D-print, stock, template, Canva-default or model-default aesthetic. Real source product media remains Product Truth and outranks style; preserve product identity/geometry/material/color and apply the approved reference to composition, surroundings, light, crop, typography and finish.

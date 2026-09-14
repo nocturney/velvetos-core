@@ -76,3 +76,7 @@ Offer to correct the API-fixable issues via **`canva-edit-design`** — note tha
 - Never fabricate brand values — use the kit's real data or what the user provides, otherwise mark **Can't verify**.
 - Always name the specific page/element and the offending value vs. the brand value.
 - Distinguish hard violations (wrong logo, off-palette color) from soft ones (slightly inconsistent spacing).
+
+## Velvet Factory instance override — mandatory (`VF_VISUAL_STANDARD_GATE`)
+
+When the active job/instance is Velvet Factory or `@velvets_cloud`, do not operate this Canva skill in isolation. Before any create/edit/resize/feedback/brand-check/bulk action, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`, verify `MAHVJjCCKQA` / `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`, and require `visual_standard_gate=PASS`. If the binding cannot be verified, return `visual_standard_unavailable` instead of using generic Canva/template defaults. Product source media remains the sole authority for the physical product.

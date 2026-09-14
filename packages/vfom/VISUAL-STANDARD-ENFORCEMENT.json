@@ -1,0 +1,58 @@
+{
+  "name": "velvet-factory-visual-standard-enforcement",
+  "version": 1,
+  "mode": "fail_closed",
+  "standard": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+  "visualAuthority": "packages/vfom/VISUAL-OS.md",
+  "visualDNA": "packages/vfom/VISUAL-DNA.json",
+  "canvaAssetId": "MAHVJjCCKQA",
+  "artifactSha256": "707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0",
+  "requiredEvidence": [
+    "visual_standard_gate=PASS",
+    "visual_standard_canva_asset_id",
+    "visual_standard_artifact_sha256",
+    "product_truth_source_refs",
+    "exact_final_artifact_digest"
+  ],
+  "vfCreativeSurfaces": [
+    ".cursor/skills/vf-canva-instagram/SKILL.md",
+    ".cursor/skills/vf-organic-growth/SKILL.md",
+    ".cursor/skills/vf-marketing-skills/SKILL.md",
+    ".cursor/skills/vf-openmontage/SKILL.md",
+    "packages/vfgrowth/SKILL.md",
+    "packages/vfgrowth/GATE.md",
+    "packages/vfgrowth/PREFLIGHT.md",
+    "packages/vfcovers/SKILL.md",
+    "packages/vfcovers/hq/PLAYBOOK.md",
+    "packages/vfcanva/WORKFLOW.md",
+    "packages/vfcanva/README.md",
+    "packages/vfcanva/jobs/TEMPLATE.md",
+    "packages/vfom/SKILL.md",
+    "packages/vfom/experts/MEDIA-DIRECTOR.md",
+    "packages/velvetos/modules/expert-media-director.md",
+    "packages/vfe2b/crews/content.md",
+    "packages/vfgraft/graph/content-job.md",
+    "packages/vfom/EDIT-DIRECTOR.md",
+    "packages/vfom/HYPERFRAMES-FRAME.md",
+    "constitution/ORGANIC_GROWTH.md",
+    "packages/vfigos/SEND.md",
+    "packages/vfgrowth/preflight/TEMPLATE.md"
+  ],
+  "conditionalCanvaSurfaces": [
+    ".cursor/skills/canva-brand-check/SKILL.md",
+    ".cursor/skills/canva-bulk-create/SKILL.md",
+    ".cursor/skills/canva-edit-design/SKILL.md",
+    ".cursor/skills/canva-get-design-feedback/SKILL.md",
+    ".cursor/skills/canva-implement-feedback/SKILL.md",
+    ".cursor/skills/canva-resize-for-social-media/SKILL.md"
+  ],
+  "hardFailure": "visual_standard_unavailable",
+  "genericFallbackAllowed": false,
+  "productTruthOverridesStyle": true,
+  "runtimeGates": [
+    "scripts/vf_send_preflight.py",
+    "packages/vfgrowth/preflight/TEMPLATE.md",
+    "packages/vfgrowth/GATE.md",
+    "packages/vfigos/SEND.md"
+  ]
+}
