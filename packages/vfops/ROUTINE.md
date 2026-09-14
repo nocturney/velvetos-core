@@ -14,7 +14,7 @@ Asia/Jerusalem. The **live protected ChatGPT automation inventory** is the clock
 | **10:30** | VelvetOS Office Loop | Post-brief operations: blockers, production→content, readiness/publishing and system drift. |
 | **18:30** | VelvetOS Office Loop | Second sweep: changes since morning, autonomous completion, learning/state persistence and end-of-day handoff. |
 
-Weekly: `Weekly Research Accountability` runs Friday at 12:00. Repository-owned GitHub workflows keep their own schedules; Office Loop consumes their evidence rather than duplicating their cron.
+Weekly / קאדנס שבועי: `Weekly Research Accountability` runs Friday at 12:00. Repository-owned GitHub workflows keep their own schedules; Office Loop consumes their evidence rather than duplicating their cron.
 
 ## Canonical ownership
 
@@ -51,7 +51,7 @@ No Instagram connection does **not** stop office work: continue intake, inspecti
 ## Recurring non-clock responsibilities
 
 - **Bi-daily Best Skills:** `BEST-SKILLS.md` / `vf-best-skills` runs approximately every 48h until explicitly stopped. This is a standing lifecycle responsibility, not a second fixed-clock scheduler; timer/provider renewal evidence must remain honest.
-- **Weekly inspiration links:** `vfresearch/WEEKLY.md` + `LINKS.json`, followed by Print·Demand·Sound via `vfresearch/hq/PRINT-DEMAND.md`. The weekly cadence must emit real source/evidence or an explicit no-change/blocker state.
+- **Weekly inspiration links / קישורי השראה שבועיים:** `vfresearch/WEEKLY.md` + `LINKS.json`, followed by Print·Demand·Sound via `vfresearch/hq/PRINT-DEMAND.md`. The weekly cadence must emit real source/evidence or an explicit no-change/blocker state.
 - MakerWorld/Printables candidate research runs behind `MAKERWORLD-SCAN.md` + license/slice/test gates; never promote directly to SKU/price.
 - Calendar fill is readiness-driven; blocked items are skipped rather than force-filled.
 - Daily learning/retro and owner-memory are owned by the Office Loop/end-of-day learning path.
