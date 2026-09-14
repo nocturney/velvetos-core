@@ -180,6 +180,9 @@ def validate_publication_approval(
         "commercial_visual_qa": "PASS",
         "scroll_stop_qa": "PASS",
         "derivative_is_distinct_from_source": "PASS",
+        "visual_edit_performed": "PASS",
+        "exact_final_visual_qa": "PASS",
+        "public_cta_gate": "PASS",
     }
     for field, expected in required_pass_fields.items():
         actual = (_field(text, field) or "").strip()
@@ -202,6 +205,10 @@ def validate_publication_approval(
         problems.append("--package-sha256 must be a 64-hex SHA-256")
     if approved_package and supplied_package and approved_package != supplied_package:
         problems.append("exact final package SHA-256 does not match the approved render")
+
+    visual_output_evidence = (_field(text, "visual_output_evidence") or "").strip()
+    if not visual_output_evidence or visual_output_evidence.upper() in {"N/A", "NONE", "PENDING", "_"} or "<" in visual_output_evidence:
+        problems.append("visual_output_evidence must identify the real edited visual artifact")
 
     edit_evidence = (_field(text, "creative_edit_evidence") or "").strip()
     if not edit_evidence or edit_evidence.upper() in {"N/A", "NONE", "PENDING", "_"} or "<" in edit_evidence:

@@ -105,3 +105,8 @@ This gate is **fail-closed**: if the standard is unavailable, mismatched or unve
 ### Visual-standard evidence contract
 
 A Velvet Factory creative job cannot advance to design handoff, quality_checked, authorized_for_tool_publish, export or publish unless the same job records all of: `visual_standard_gate=PASS`, `visual_standard_canva_asset_id=MAHVJjCCKQA`, `visual_standard_artifact_sha256=707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`, concrete `product_truth_source_refs`, and the exact-final artifact digest. Missing or mismatched evidence is `visual_standard_unavailable` and blocks the branch.
+
+## Publication-prep execution gate
+
+For Velvet Factory requests that mean prepare/treat/edit content for a potential publication, `packages/vfom/PUBLICATION-PREP-EXECUTION.md` is mandatory. This is an execution task: when usable images and an editing capability exist, selection/caption/planning alone is incomplete. Produce at least one real edited visual artifact, preserve Product Truth, run exact-final visual QA, and only then package copy for owner review. If visual execution is unavailable, fail closed as `visual_execution_unavailable`; never claim ready from raw photos plus copy. Resolve public CTA from current authority; never hardcode the business WhatsApp number into public content from memory.
+
