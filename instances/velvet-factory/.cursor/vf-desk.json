@@ -336,7 +336,7 @@
         "drive",
         "mcp-gsheets"
       ],
-      "decides": "cost factors, ledger reads, locked B2B. No invented prices."
+      "decides": "cost factors, ledger reads, business decisions. No invented prices."
     },
     {
       "id": "production",
@@ -621,7 +621,7 @@
         "vfbiz"
       ],
       "tools": [],
-      "job": "Studio strategy. B2B as a line stays locked until lead seat opens it. Logo/QR/napkins were examples, not a closed three-SKU catalog."
+      "job": "Studio strategy and commercial decisions. Customer type and quantity are job attributes, not a service category."
     },
     {
       "slug": "studio-producer",

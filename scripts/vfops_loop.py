@@ -433,7 +433,7 @@ def growth_line() -> str:
     else:
         parts.append(
             "היילייטס + וואטסאפ 050-2517000 — לא DM\n"
-            "B2B נעול · איסוף שדרות"
+            "הצעה לציבור: מוצרים מוכנים + התאמה אישית · איסוף שדרות"
         )
     if funnel:
         parts.append(funnel)
@@ -451,7 +451,7 @@ def biz_week_line() -> str:
     block = fence_after_heading(BIZ_WEEK, ("בלוק לבריף",))
     if block:
         return block
-    return "B2B נעול (`vfbiz`). סגירה: וואטסאפ 050-2517000 · איסוף שדרות."
+    return "הצעה לציבור: מוצרים מוכנים + התאמה אישית (`vfbiz/OFFERING.md`). כמות וסוג לקוח הם מאפייני הזמנה."
 
 
 def captions_rows() -> list[list[str]]:
@@ -1105,7 +1105,7 @@ def write_status(today: str) -> None:
             f"- {insights_status_evidence()['line']}",
             "- מדף MakerWorld 0/5 עד GATE+רישיון+סלייס",
             "- מדיית G004 בתיבת Grok (Cloud לא רואה) + שער עריכה",
-            "- B2B נעול · וואטסאפ לקוח = אדם 050-2517000 (BUSINESS_CONTACT_RECORD)",
+            "- הצעה לציבור: מוצרים מוכנים + התאמה אישית · סוג לקוח/כמות אינם מסלול נפרד",
         ]
     )
     running = [
@@ -1235,8 +1235,6 @@ def cmd_gate(args: argparse.Namespace) -> int:
         nxt = "yes לquote: תור רצפה רק אם יש סכום מראש צוות — אחרת ממתין לסכום. לא וואטסאפ."
     elif decision == "yes" and kind == "content":
         nxt = "yes לcontent: PREFLIGHT.md ואז vfigos. לא Publish מכאן."
-    elif decision == "yes" and kind == "b2b-line":
-        nxt = "yes לb2b-line: לרשום ב-vfbiz/hq/decisions. LOCK.md נשאר עד פתיחה מפורשת. לוגו/QR/מפיות=דוגמאות."
     payload = {
         "id": args.id,
         "decision": decision,

@@ -40,4 +40,4 @@ Search by the job or filename the user gives. `create_file` an office doc when t
 
 ## Forbidden
 
-Invented ₪, `visible_text_gate: PASS` by declaration, auto-DM, boost, copying an Israeli brand file, opening a B2B line without the lead seat. Instagram send goes through `vfigos/SEND.md`.
+Invented ₪, `visible_text_gate: PASS` by declaration, auto-DM, boost, copying an Israeli brand file, opening a new commercial service/category without the lead seat. Instagram send goes through `vfigos/SEND.md`.

@@ -18,7 +18,6 @@ python3 scripts/vfops_loop.py gate --id G-001 --decision defer
 3. אחרי `yes`:
    - `quote` — עובר לתור רצפה **רק** אם יש סכום מראש צוות. אחרת נשאר `ממתין לסכום`.
    - `content` — עובר ל־`vfigos` **אחרי** `PREFLIGHT.md` עבור. לא Publish מכאן.
-   - `b2b-line` — לא פותח את הקו. רק רושם החלטה ל־`vfbiz/hq/decisions/`. הנעילה ב־`LOCK.md`.
 
 ## מה זה לא
 

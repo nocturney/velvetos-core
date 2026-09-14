@@ -11,6 +11,7 @@
 תבנית עבודה: `hq/templates/ig-caption.md`. לינט: `hq/PLAYBOOK.md` + `hq/ai-tells-he.md` + `python3 scripts/check-vfcopy.py lint`.  
 תגובות קהילה: `hq/community-replies.md`. שער איכות לפני שיבוץ: `vfgrowth/CONTENT-RUBRIC.md` + `PREFLIGHT.md`.  
 CTA ציבורי: `constitution/PUBLIC_CTA.md` — **showcase מול commercial לפני ניסוח CTA**.
+מבנה ההצעה לציבור: `packages/vfbiz/OFFERING.md` — מוצרים מוכנים + הדפסה / מודל בהתאמה אישית. סוג לקוח וכמות אינם קטגוריית שירות, ואין להמציא להם שם מסלול בקופי.
 
 חיים בפיד (לדג׳ר, בלי לשייך shortcode לכיתוב בלי צילום בעלים): G001 `DcqkjOLlYVX` · G002 `DcvuJLxCJgU`.  
 G003 SoccerBall כבר נעול בנפרד (`G003.md`) — לא דורסים. ריל תהליך **חדש** הולך לפי מצב **תהליך-קצר** למטה.  

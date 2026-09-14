@@ -250,7 +250,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
         "date": today,
         "generatedAt": now.isoformat(timespec="seconds"),
         "component_state": "Idle" if gate != "blocked_no_media" else "Blocked",
-        "goal": "פניות B2B בדרום עבור אב-טיפוס / חלקים מותאמים.",
+        "goal": "פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.",
         "locks": [
             "no-autopost",
             "no-auto-dm",
@@ -269,7 +269,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
             "hook": "חסר",
             "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
             "geotag": "שדרות" if gate != "blocked_no_media" else "חסר",
-            "hashtag_set_id": tag_set.get("hashtag_set_id") or "local_b2b_v1",
+            "hashtag_set_id": tag_set.get("hashtag_set_id") or "local_custom_v1",
             "actions": ["אישור", "עריכה", "דחייה"],
             "no_media_line": media_line,
         },

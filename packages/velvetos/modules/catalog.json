@@ -76,7 +76,7 @@
     {
       "id": "compliance-maker",
       "group": "compliance",
-      "summary": "Pickup-only, B2B locks, public commercial files",
+      "summary": "Pickup-only, verified offering language, public commercial files",
       "file": "modules/compliance-maker.md",
       "packs": ["vfbiz", "vlicense"]
     },

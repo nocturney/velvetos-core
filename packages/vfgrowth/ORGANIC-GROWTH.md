@@ -29,7 +29,7 @@ print.done (Edge / מפעיל)
 
 | סוג | מקור | מטרה |
 |---|---|---|
-| Proof of Build | `print.done` / מוצר B2B | אמון |
+| Proof of Build | `print.done` / עבודה אמיתית | אמון |
 | Material Lab | מבחן חומר מאושר | סמכות |
 | Problem → Solution | צורך מתועד | לידים |
 | Design Process | CAD/סלייס אמיתי | סטודיו לא «מדפסת ביתית» |

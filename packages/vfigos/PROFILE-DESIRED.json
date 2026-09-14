@@ -2,24 +2,26 @@
   "handle": "@velvets_cloud",
   "updatedAt": "2026-09-14",
   "status": "prepared",
-  "liveStatus": "pending-live-tool",
-  "note": "Live read verified 2026-09-14: current biography no longer exposes WhatsApp/phone and is compliant with the active no-public-phone rule. The prepared desired bio adds an Instagram-message CTA, but that wording difference is not a publication blocker. Official Graph still does NOT support biography/website/name updates; any future wording change is a human Instagram-app edit followed by live verification.",
+  "liveStatus": "pending-human-profile-edit",
+  "note": "Owner 2026-09-14 removed the former customer-type/quantity service pillar. Live Instagram read still contains the retired line. Official Graph profile write is unsupported, so a human Instagram-app bio edit is required and must be followed by live verification.",
   "liveSnapshot": {
     "sourcedAt": "2026-09-14",
     "source": "VelvetOS Instagram get_profile",
     "name": "Velvet Factory | הדפסות תלת־ממד",
-    "biography": "הדפסות תלת־ממד בעיצוב ייחודי\nמוצרים מוכנים • מודלים בהתאמה אישית\nייצור סדרות לעסקים\n📍 איסוף משדרות",
+    "biography": null,
+    "retiredOfferingPhrasePresent": true,
+    "offeringCleanupStatus": "pending-human-profile-edit",
     "followersCount": 80,
     "followsCount": 125,
     "mediaCount": 3,
     "conflictWithPublicCta": false,
     "conflictDetail": null,
-    "desiredDifference": "Prepared desired bio includes an Instagram-message CTA; current live bio has no explicit CTA. This is non-blocking under current policy because no WhatsApp/phone/wa.me is exposed."
+    "desiredDifference": "Human bio edit required to remove the retired service-line wording; then re-run live verification."
   },
   "desired": {
     "name": "Velvet Factory | הדפסות תלת־ממד",
     "categoryHint": "3D print studio",
-    "bioHe": "הדפסות תלת־ממד בעיצוב ייחודי\nמוצרים מוכנים • מודלים בהתאמה אישית\nייצור סדרות לעסקים\n📍 איסוף משדרות\nלפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+    "bioHe": "הדפסות תלת־ממד בעיצוב ייחודי\nמוצרים מוכנים • מודלים בהתאמה אישית\n📍 איסוף משדרות\nלפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
     "mustInclude": [
       "הדפסות תלת־ממד",
       "שדרות",
@@ -52,7 +54,7 @@
   },
   "watchdog": {
     "whenToolReady": "instagram.profile.update then instagram.live.verify",
-    "currentRisk": "GREEN_NO_PUBLIC_PHONE",
-    "desiredCopyStatus": "OPTIONAL_NOT_BLOCKING"
+    "currentRisk": "AMBER_RETIRED_OFFERING_COPY",
+    "desiredCopyStatus": "REQUIRED_HUMAN_EDIT"
   }
 }

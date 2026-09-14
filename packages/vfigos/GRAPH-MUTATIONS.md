@@ -34,7 +34,7 @@ App `1748471159829574` (אינסטה מנג'ר) was recorded as **dev_mode** in 
 - Live bio:
   - `הדפסות תלת־ממד בעיצוב ייחודי`
   - `מוצרים מוכנים • מודלים בהתאמה אישית`
-  - `ייצור סדרות לעסקים`
+  - `הדפסה בהתאמה אישית`
   - `📍 איסוף משדרות`
 - **No WhatsApp / phone / wa.me is exposed in the current live bio.** The old 2026-09-09 profile discrepancy is closed.
 - [`PROFILE-DESIRED.json`](PROFILE-DESIRED.json) still contains a prepared optional Instagram-message CTA wording. Because Graph cannot write profiles, any future owner-requested wording change remains a human Instagram-app edit + live verification; it is not a current publication blocker.

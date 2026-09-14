@@ -83,7 +83,7 @@ Live biography:
 
 `הדפסות תלת־ממד בעיצוב ייחודי`  
 `מוצרים מוכנים • מודלים בהתאמה אישית`  
-`ייצור סדרות לעסקים`  
+`[שורה ישנה להסרה ידנית]`  
 `📍 איסוף משדרות`
 
 The live bio **does not expose WhatsApp/phone/wa.me**, so the active no-public-phone rule is satisfied. It currently has no explicit Instagram-message CTA; that difference from the prepared desired profile is **not a publication blocker**. Official Graph still does not expose the required profile-write mutation, so any future bio wording change remains human-app-only plus live re-verification.

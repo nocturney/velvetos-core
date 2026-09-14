@@ -139,7 +139,7 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 | לוח תוכן מהעבודה (טיימלאפס / לפני־אחרי / הדרכה) | `vfgrowth` + `vfcovers` (`CALENDAR.md` + `LEDGER.md`) | בוסט, הזזת לוח משובץ, Meta Suite |
 | סלייס, תמיכות, סיכון כשל | `vfcost` + `vfprod` | ווידג׳ט תשלום |
 | מודל AI (3D AI Studio / Meshy / Tripo) | `vfprod/3DAISTUDIO.md` + `vlicense` | קטלוג / באצ׳ / מחיר מקרדיטים |
-| B2B / אתר / מנוי חדש | `vfbiz` נעול עד בלוק `01` | קנייה מ־HQ |
+| הרחבה מסחרית / אתר / מנוי חדש | `vfbiz` + החלטת ראש צוות | קנייה מ־HQ |
 | מספר עמוד אחרי פרסום | `vfinsights` | Insights מהאוויר |
 | מקור גולמי של השאלה | `vfresearch/sources/` | שכפול כ־PR נפרד לכל כלי |
 
