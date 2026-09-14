@@ -22,6 +22,7 @@
 10. סוכן «נהיה גרוע» / כלי נדלג / זיכרון דולף → `playbooks/agent-architecture-audit.md` (דפוס buildwithclaude + codebase navigability; בלי ECC install).
 11. לפני בנייה / פק חדש / שינוי צינור → `playbooks/brainstorm-gate.md` (דפוס obra brainstorming; אישור אנושי לפני יישום).
 12. באג / סנסור אדום / כשל כלי → `playbooks/systematic-debugging.md` (אבחון מדורג; שחזור ושורש לפני תיקון; בלי ניחוש).
+12b. לפני תיקון פק/כלל/סנסור → `playbooks/sensor-first-tdd.md` (אדום אמיתי לפני ירוק; דפוס obra/mattpocock TDD על `check-*.py`).
 13. תוכנית מימוש כתובה → `playbooks/writing-plans.md` (צעדים קטנים ובטוחים על SoT קיים; בלי ראנטיים שני).
 13b. ביצוע תוכנית → `playbooks/executing-plans.md` (משימה אחת + אימות; עצירה על חוסם; בלי ניחוש).
 13c. מילון תחום → `playbooks/domain-glossary.md` (TEAM / pipeline / owner-memory — בלי מונחים מומצאים).

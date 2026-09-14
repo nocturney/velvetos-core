@@ -20,7 +20,7 @@
     "@research-synthesist",
     "@trend-researcher"
   ],
-  "seat": "ייצור",
+  "seat": "מחקר/אורקסטרציה",
   "rule": "Re-read LinklyAI/best-skills rankings every ~48h. Embed useful patterns into existing packs only. Do not invent rankings, ₪, or Insights. Do not npx-install skills on Cloud Agent.",
   "locks": [
     "hq-send-via-tools",
@@ -169,18 +169,26 @@
       "path": "packages/vfharness/playbooks/domain-glossary.md",
       "firstEmbedded": "2026-09-10",
       "note": "Reconciled from PR #149 — glossary discipline for TEAM/pipeline/owner-memory"
+    },
+    {
+      "id": "sensor-first-tdd",
+      "pack": "vfharness",
+      "path": "packages/vfharness/playbooks/sensor-first-tdd.md",
+      "firstEmbedded": "2026-09-14",
+      "source": "https://github.com/obra/superpowers/tree/main/skills/test-driven-development",
+      "note": "Maps TDD red→green→refactor onto check-*.py / CLI fixtures; closes open gap from #178; tdd still #33 best-100 / #40 trending-7d on 2026-09-13"
     }
   ],
   "watchlist": [
     {
       "id": "obra-superpowers",
       "url": "https://github.com/obra/superpowers",
-      "note": "Partial+: verification + skill-first + brainstorm-gate + systematic-debugging + writing-plans + executing-plans. Still watch TDD / git-worktrees."
+      "note": "Partial+: verification + skill-first + brainstorm + systematic-debugging + writing/executing-plans + sensor-first-tdd(2026-09-14). Still watch finishing-branch / git-worktrees / requesting-code-review."
     },
     {
       "id": "mattpocock-skills",
       "url": "https://github.com/mattpocock/skills",
-      "note": "grill + handoff + teach + triage + domain-glossary embedded. 2026-09-14 durable architecture/design signal rechecked; improve-codebase-architecture is already covered by vfharness/agent-architecture-audit, so codebase-design/domain-modeling remain watch-only unless a measured gap appears."
+      "note": "grill + handoff + teach + triage + domain-glossary. TDD covered via sensor-first-tdd. improve-codebase-architecture covered by agent-architecture-audit — watch codebase-design/domain-modeling only if measured gap."
     },
     {
       "id": "anthropics-skills",
@@ -250,6 +258,21 @@
       "id": "earthtojake-text-to-cad",
       "url": "https://github.com/earthtojake/text-to-cad",
       "note": "2026-09-14: remains watch-only. Source-controlled CAD + DfAM validation may fit vfprod only if a real pre-slice geometry gap is measured. No second CAD runtime."
+    },
+    {
+      "id": "agent-reach",
+      "url": "https://github.com/Panniantong/Agent-Reach",
+      "note": "Top-repos signal — watch only; no second runtime install."
+    },
+    {
+      "id": "chrome-devtools-mcp",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "note": "Browser MCP — watch vs vfmcp GAP; no blind Cloud install."
+    },
+    {
+      "id": "requesting-code-review",
+      "url": "https://github.com/obra/superpowers/tree/main/skills/requesting-code-review",
+      "note": "obra review gate — watch; overlaps verification-before-claim."
     }
   ],
   "skipped": [
@@ -284,6 +307,14 @@
     {
       "id": "google-agents-cli",
       "why": "Vendor CLI scaffold/deploy outside VF Cloud mandate"
+    },
+    {
+      "id": "desktop-control-automation",
+      "why": "OS desktop control / RPA outside HQ Cloud mandate"
+    },
+    {
+      "id": "genmedia-vendor-video",
+      "why": "Veo/Kling/avatar video vendors locked; Canva-first + expert-media-director only"
     }
   ]
 }
