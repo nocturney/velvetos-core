@@ -25,7 +25,7 @@
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>57</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>58</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>8</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-13 — **Windows Edge render fallback verified:** `sderot-windows` / Remote Desktop Commander device `Chris` online; HyperFrames 0.8.34 doctor PASS; real 1080×1920 H.264 smoke render + ffprobe/SHA-256 rec…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-13 — **Windows Edge render fallback verified:** `sderot-windows` / Remote Desktop Commander device `Chris` online; HyperFrames 0.8.34 doctor PASS; real 1080×1920 H.264 smoke render + ffprobe/SHA-256 rec…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-13 — **Superpowers v6.3 execution discipline absorbed (no Superpowers runtime):** `vfharness` now requires evidence-bearing plan preflight, fail-closed `safe_ruling` in the existing escalation ladder, R…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-13 — **Superpowers v6.3 execution discipline absorbed (no Superpowers runtime):** `vfharness` now requires evidence-bearing plan preflight, fail-closed `safe_ruling` in the existing escalation ladder, R…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -114,6 +114,7 @@
 <tr><td><strong>vfmem</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">זיכרון עסקי והקשר לפני הפיכת notes/meetings/documents למצב תפעולי.</td></tr>
 <tr><td><strong>Autonomy + Risk Gates</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">הפרדה בין פעולות בסיכון נמוך לבין פעולות שדורשות gate/approval.</td></tr>
 <tr><td><strong>Engineering Delivery + Agent Instruction QA</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">החלטה→spec→tickets אנכיים→branch→אימות→review איכות והתאמה ל־spec→PR/CI; עריכת הוראות agents נבדקת מול מקור סמכות יחיד ו־context budget, וחסם אנושי אמיתי מצטמצם ל־wizard של פעולה אחת.</td></tr>
+<tr><td><strong>Harness Execution Discipline</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td dir="rtl" align="right">תוכניות עוברות preflight עם ראיות; שינויי behavior עוברים RED→GREEN→REFACTOR; ambiguity מקומי והפיך יכול safe ruling מתועד; fan-out רק בלי shared state, ו־gates/receipts לעולם לא נעקפים.</td></tr>
 <tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">נתיבי Insights נתמכים ו־CTA audit מאומתים; mutations לא נתמכים לא מוצגים כאילו הם עובדים.</td></tr>
 <tr><td><strong>Media Vault + vfmedia</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">incoming → source → WIP → approved, עם checksum ו־persist-before-move.</td></tr>
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">עברית טבעית, anti-AI QA ושער FACT vs INVENTED.</td></tr>
@@ -235,6 +236,7 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>vfmem</strong></td><td><strong>IMPLEMENTED</strong></td><td>Business context before notes, meetings and documents become operational state.</td></tr>
 <tr><td><strong>Autonomy + Risk Gates</strong></td><td><strong>IMPLEMENTED</strong></td><td>Separates low-risk execution from actions that require explicit approval.</td></tr>
 <tr><td><strong>Engineering Delivery + Agent Instruction QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>Decision→spec→vertical tickets→branch→proof→quality + spec-compliance review→PR/CI; agent instructions are checked for single authority and context cost, and genuine human-only blockers become one bounded wizard step.</td></tr>
+<tr><td><strong>Harness Execution Discipline</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td>Plans use evidence-bearing preflight; executable behavior follows RED→GREEN→REFACTOR; local reversible ambiguity may use a recorded safe ruling; fan-out requires independent state, and gates/receipts are never overridden.</td></tr>
 <tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>Supported Insights reads and CTA audit are verified; unsupported mutations are not presented as working writes.</td></tr>
 <tr><td><strong>Media Vault + vfmedia</strong></td><td><strong>IMPLEMENTED</strong></td><td>Incoming → source → WIP → approved with checksums and persist-before-move.</td></tr>
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>Natural Hebrew, anti-AI QA and FACT vs INVENTED gates.</td></tr>
