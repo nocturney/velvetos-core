@@ -1,0 +1,292 @@
+{
+  "schemaVersion": 1,
+  "id": "velvetos-project-authority-manifest",
+  "status": "mandatory",
+  "preflightMode": "fail_closed",
+  "gateDocument": "packages/velvetos/PROJECT-REQUEST-GATE.md",
+  "routers": [
+    "scripts/vfmem.py",
+    "packages/velvetos/living-studio/REGISTRY.json"
+  ],
+  "baselineAuthorities": [
+    "constitution/CONSTITUTION.md",
+    "constitution/STUDIO.md",
+    "constitution/RISK.md",
+    "constitution/PUBLIC_CTA.md",
+    "constitution/VISIBLE_TEXT.md",
+    "constitution/ORCHESTRA.md",
+    "office/control-plane.json",
+    "packages/manifest.json"
+  ],
+  "requiredReceiptFields": [
+    "request_domain",
+    "authority_manifest_version",
+    "baseline_authority",
+    "routed_packs",
+    "required_skills",
+    "required_sources",
+    "required_tools",
+    "hard_gates",
+    "current_evidence_state",
+    "project_preflight"
+  ],
+  "domains": {
+    "creative_publication": {
+      "hints": [
+        "פרסום",
+        "פוסט",
+        "קרוסלה",
+        "סטורי",
+        "reel",
+        "cover",
+        "גריד",
+        "תמונה",
+        "creative",
+        "publication"
+      ],
+      "packs": [
+        "vfom",
+        "vfgrowth",
+        "vfcopy",
+        "vfcovers",
+        "vfcanva",
+        "vfigos"
+      ],
+      "authorities": [
+        "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
+        "packages/vfom/VISUAL-OS.md",
+        "packages/vfom/PUBLICATION-PREP-EXECUTION.md",
+        "packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md",
+        "packages/vfom/BRAND-ASSET-LOCK.md",
+        "packages/vfcopy/VOICE.md",
+        "packages/vfgrowth/PREFLIGHT.md",
+        ".cursor/skills/velvet-brand-guardian/SKILL.md",
+        "packages/vfigos/SEND.md"
+      ],
+      "hardGates": [
+        "product_truth",
+        "visual_standard",
+        "creative_transformation",
+        "brand_asset",
+        "public_cta",
+        "visible_text",
+        "exact_final_qa"
+      ]
+    },
+    "copywriting": {
+      "hints": [
+        "קופי",
+        "כיתוב",
+        "caption",
+        "טקסט",
+        "ניסוח",
+        "copy"
+      ],
+      "packs": [
+        "vfcopy"
+      ],
+      "authorities": [
+        "packages/vfcopy/SKILL.md",
+        "packages/vfcopy/VOICE.md",
+        "constitution/VISIBLE_TEXT.md",
+        "constitution/PUBLIC_CTA.md"
+      ],
+      "hardGates": [
+        "visible_text",
+        "facts",
+        "public_cta"
+      ]
+    },
+    "operations": {
+      "hints": [
+        "הזמנה",
+        "סטטוס",
+        "בריף",
+        "משימה",
+        "סנכרון",
+        "תזכורת",
+        "office",
+        "operations"
+      ],
+      "packs": [
+        "vfops",
+        "vfharness"
+      ],
+      "authorities": [
+        "packages/vfops/SKILL.md",
+        "office/control-plane.json",
+        "packages/vfharness/SKILL.md"
+      ],
+      "hardGates": [
+        "canonical_source",
+        "sync_evidence",
+        "authority_boundary"
+      ]
+    },
+    "production": {
+      "hints": [
+        "הדפסה",
+        "סלייס",
+        "תמיכות",
+        "חומר",
+        "מק״ט",
+        "production",
+        "print"
+      ],
+      "packs": [
+        "vfprod",
+        "vfcost",
+        "vfsku",
+        "vlicense"
+      ],
+      "authorities": [
+        "packages/vfprod/SKILL.md",
+        "packages/vfcost/SKILL.md",
+        "packages/vfsku/SKILL.md"
+      ],
+      "hardGates": [
+        "verified_specs",
+        "no_invented_price",
+        "print_authority"
+      ]
+    },
+    "sales_conversion": {
+      "hints": [
+        "לקוח",
+        "מכירה",
+        "הצעה",
+        "ליד",
+        "מחיר",
+        "sales",
+        "quote",
+        "conversion"
+      ],
+      "packs": [
+        "vfsales",
+        "vfconvert",
+        "vfcost"
+      ],
+      "authorities": [
+        "packages/vfsales/SKILL.md",
+        "packages/vfconvert/SKILL.md",
+        "packages/vfcost/SKILL.md",
+        "constitution/PUBLIC_CTA.md"
+      ],
+      "hardGates": [
+        "price_authority",
+        "customer_send_authority",
+        "facts"
+      ]
+    },
+    "finance": {
+      "hints": [
+        "תשלום",
+        "חוב",
+        "חשבונית",
+        "עלות",
+        "books",
+        "finance"
+      ],
+      "packs": [
+        "vfbooks",
+        "vfcost"
+      ],
+      "authorities": [
+        "packages/vfbooks/SKILL.md",
+        "packages/vfcost/SKILL.md"
+      ],
+      "hardGates": [
+        "verified_amount",
+        "canonical_ledger"
+      ]
+    },
+    "research": {
+      "hints": [
+        "מחקר",
+        "קישורים",
+        "בדיקה",
+        "עדכון",
+        "research",
+        "latest"
+      ],
+      "packs": [
+        "vfresearch"
+      ],
+      "authorities": [
+        "packages/vfresearch/SKILL.md",
+        "constitution/ORCHESTRA.md"
+      ],
+      "hardGates": [
+        "source_evidence",
+        "no_invented_body",
+        "freshness"
+      ]
+    },
+    "system_engineering": {
+      "hints": [
+        "מערכת",
+        "פייפליין",
+        "חוקה",
+        "סקיל",
+        "agent",
+        "repo",
+        "github",
+        "architecture"
+      ],
+      "packs": [
+        "velvetos",
+        "vfharness",
+        "vfmem"
+      ],
+      "authorities": [
+        "AGENTS.md",
+        "packages/velvetos/LAYERS.md",
+        "packages/velvetos/living-studio/README.md",
+        "packages/vfharness/SKILL.md",
+        "packages/vfmem/SKILL.md"
+      ],
+      "hardGates": [
+        "single_source_of_truth",
+        "no_parallel_runtime",
+        "sensor_evidence"
+      ]
+    },
+    "instagram_action": {
+      "hints": [
+        "פרסם",
+        "העלה לאינסטגרם",
+        "schedule",
+        "publish",
+        "instagram"
+      ],
+      "packs": [
+        "vfigos",
+        "vfgrowth"
+      ],
+      "authorities": [
+        "constitution/SEND.md",
+        "packages/vfigos/SEND.md",
+        "packages/vfgrowth/PREFLIGHT.md"
+      ],
+      "hardGates": [
+        "publish_preflight",
+        "tool_receipt",
+        "live_verification"
+      ]
+    },
+    "general_business": {
+      "hints": [],
+      "packs": [
+        "vfops"
+      ],
+      "authorities": [
+        "packages/vfops/SKILL.md"
+      ],
+      "hardGates": [
+        "baseline_authority",
+        "facts"
+      ]
+    }
+  },
+  "completionLaw": "No done/ready/published/synced claim without domain postflight evidence on the exact final artifact or provider result."
+}
