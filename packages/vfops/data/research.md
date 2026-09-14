@@ -12,8 +12,22 @@
 ```
 
 Freshness: **2026-09-14 · GREEN body evidence**; `scripts/vfresearch_cadence.py freshness` עבר בפועל על checkout טרי.
-Best Skills: refresh 48h בוצע על `dataDate=2026-09-13`; תוצאה `no-embed-existing-coverage`. `timer verification=UNPROVEN` כי `cursor-subscriptions` אינו חשוף בריצה הנוכחית.
-Validation limitation: `scripts/check-all.py` לא עבר ירוק על Windows fallback בגלל case-collision קיים בין `constitution/TAGS.md` ו-`constitution/tags.md`; אין claim של PASS מלא.
+
+
+### Best-skills pulse (סגירה · 2026-09-14)
+
+```
+05 · משרד
+מה נבנה / יועל:
+- best-skills bi-daily — dataDate 2026-09-13; הוטמע to-spec → vfharness/playbooks/to-spec.md
+- timer vf-best-skills-bi-daily renewed (+172800s)
+- watch: code-review · open-design · Understand-Anything · ui-ux-pro-max · taste-skill · coreyhaines-marketingskills
+```
+
+- ארטיפקט: `packages/vfresearch/sources/2026-09-14-best-skills.md`
+
+Best Skills: refresh 48h — **הוטמע to-spec → vfharness** (סגירת פער אחרי `no-embed` בוקר); `dataDate=2026-09-13`; `timer: renewed` (`vf-best-skills-bi-daily`).
+Validation: `python3 scripts/check-all.py` על Cloud Linux — ירוק בסיום המעבר (לא Windows fallback).
 Runtime limitation: Mac-Office היה offline; Snapmaker Orca 2.3.5 הוא ה-last verified המקומי מ-13.9, לא אימות חדש להיום.
 
 ---
