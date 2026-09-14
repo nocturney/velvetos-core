@@ -1,8 +1,8 @@
 {
   "task_id": "openpost-integration-2026-09-14",
   "component_state": "Syncing",
-  "status": "integration_contract_validated_runtime_pending",
-  "updatedAt": "2026-09-14T08:36:00+03:00",
+  "status": "staging_runtime_ready_provider_pending",
+  "updatedAt": "2026-09-14T08:47:00+03:00",
   "upstream": "getopenpost/openpost",
   "latestReviewedVersion": "v4.31.0",
   "latestReviewedPublishedAt": "2026-09-13T07:26:39Z",
@@ -10,7 +10,11 @@
     "Added packages/vfigos/OPENPOST.md architecture and upgrade policy",
     "Added packages/vfigos/OPENPOST.json pinned release/integration state",
     "Updated packages/vfigos/SEND.md with OpenPost apply path, direct Instagram MCP verification and same-turn failover",
-    "Recorded existing Facebook/Meta connection as satisfying OpenPost Instagram login requirement"
+    "Recorded existing Facebook/Meta connection as satisfying OpenPost Instagram login requirement",
+    "Installed exact OpenPost v4.31.0 Windows server binary on the Windows backup worker staging path",
+    "Verified upstream SHA-256 before execution",
+    "Created local SQLite/media staging paths and fresh runtime-only JWT/encryption secrets",
+    "Started staging on localhost:18080 and verified liveness + readiness/database"
   ],
   "validation": {
     "worker": "Chris Windows backup worker",
@@ -26,22 +30,28 @@
       "check-vfharness.py": "PASS"
     },
     "checkAll": "ATTEMPTED_NOT_CLEAN",
-    "checkAllNote": "Initial Windows run exposed cp1252 encoding failures; UTF-8 rerun passed the OpenPost-adjacent sensors before check-all stopped on unrelated existing HQ overlay/baseline runner issues. Do not claim global check-all PASS."
+    "checkAllNote": "Initial Windows run exposed cp1252 encoding failures; UTF-8 rerun passed the OpenPost-adjacent sensors before check-all stopped on unrelated existing HQ overlay/baseline runner issues. Do not claim global check-all PASS.",
+    "stagingBinarySha256": "680acc374acf277e3b2fe185488f9a5ab8878ec953b94e0254355131fb3cf508",
+    "health": "PASS_status_ok",
+    "readiness": "PASS_status_ready_database_ok"
   },
   "truth": {
     "codeIntegrated": true,
-    "runtimeDeployed": false,
-    "stagingVerified": false,
+    "runtimeDeployed": true,
+    "stagingVerified": true,
+    "providerOAuthConfigured": false,
+    "publicHttpsConfigured": false,
     "productionPrimary": false,
     "directInstagramMcpStillCanonicalForLiveVerify": true,
     "productionLatestTagAllowed": false
   },
   "next": [
-    "Deploy OpenPost staging on an authorized runtime",
-    "Configure OpenPost Meta OAuth using existing Facebook/Instagram Business connection",
+    "Expose staging through a controlled public HTTPS origin/media URL before Meta OAuth/media tests",
+    "Configure OpenPost Meta provider app credentials and exact Instagram callback using the existing Meta app or an approved dedicated app",
+    "Connect @velvets_cloud through OpenPost",
     "Run post/carousel/reel/story + schedule + forced retry + analytics smoke matrix",
     "Promote integrationMode only after PASS",
-    "Keep release watch active and review every upstream version before promotion"
+    "Keep OpenPost Release Watch active and review every upstream version before promotion"
   ],
-  "branch": "integrate/openpost-publishing-v2"
+  "branch": "chore/openpost-staging-runtime"
 }
