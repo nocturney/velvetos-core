@@ -42,3 +42,7 @@ Preserve real studio sound when it strengthens proof (machine, click, snap, hand
 ## Output QA hooks
 
 A rendered frame is not accepted because it is technically valid. Existing Evaluation Engine gates remain mandatory: aspect ratio, resolution, safe zones, subtitle bounds, audio, frame integrity, Brand, Hook, composition, Reality, Originality, subject/material/geometry fidelity and artifact checks.
+
+## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
+
+This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVJjCCKQA` and SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.

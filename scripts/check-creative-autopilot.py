@@ -104,12 +104,12 @@ def main() -> None:
     must_contain(GATE, (
         "authorized_for_tool_publish", "pending_human_approval", "published_verified", "human_marked",
         "publish_gate: PASS", "product_truth_gate: PASS", "synthetic_subject_change: NONE",
-        "source_subject_match: PASS", "Retouch the photo, not the product.",
+        "source_subject_match: PASS", "Retouch the photo, not the product.", "visual_standard_gate=PASS",
     ))
     must_contain(PREFLIGHT_TEMPLATE, (
         "publish_gate_schema: 3", "publish_gate: BLOCKED", "product_truth_gate: FAIL",
         "subject_identity_integrity: FAIL", "synthetic_subject_change: PRESENT",
-        "source_subject_match: FAIL", "readability: FAIL", "contrast: FAIL",
+        "source_subject_match: FAIL", "readability: FAIL", "contrast: FAIL", "visual_standard_gate: FAIL", "visual_standard_canva_asset_id:", "visual_standard_artifact_sha256:",
     ))
     must_contain(POLICY, ("Creative Autopilot", "standingAuthorization", "אין ריל כל יום", "posted_manually"))
     must_contain(SKILL, ("Velvet Visual Foundry", "Content Contract", "Asset Truth", "progressive variants", "published_verified"))

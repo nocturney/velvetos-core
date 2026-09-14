@@ -41,3 +41,7 @@ Revenue loop: `vendor/velvetos-core/.cursor/skills/vf-revenue-loop/SKILL.md` · 
 ## MODULES
 
 Enabled set is in `instance/velvet-factory.json` → `modulesEnabled` (preset `maker-print`).
+
+## COLD-START VISUAL STANDARD — mandatory
+
+For any Velvet Factory content/image/Canva/feed/cover/carousel/Story/Reel visual task, load `vendor/velvetos-core/packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VISUAL-OS.md` and `VISUAL-DNA.json` before creative work. Canonical Canva asset: `MAHVJjCCKQA`; artifact SHA-256: `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`. A fresh conversation must inherit this without relying on chat history. Missing or mismatched binding stops the creative branch as `visual_standard_unavailable`; generic/default creative fallback is forbidden. Real product source media remains Product Truth.

@@ -67,3 +67,13 @@
 
 כאשר אין standing authorization או שיש `human_required`: **אישור** · **עריכה** · **דחייה**.  
 כשלי Hook/cover/crop/caption/contrast/readability/retouch/QA רגילים אינם פעולת בעלים — מתקנים אוטונומית.
+
+## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
+
+Before any Velvet Factory concept, image selection/edit, Canva operation, cover, carousel, Story still, Reel cover, feed/grid plan, render or publish handoff, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`. Verify Canva asset `MAHVJjCCKQA` and artifact SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`. Record a PASS binding in the job/manifest/preflight before creative work continues.
+
+This gate is **fail-closed**: if the standard is unavailable, mismatched or unverified, stop the creative branch as `visual_standard_unavailable`; never fall back to a generic 3D-print, stock, template, Canva-default or model-default aesthetic. Real source product media remains Product Truth and outranks style; preserve product identity/geometry/material/color and apply the approved reference to composition, surroundings, light, crop, typography and finish.
+
+### Visual-standard evidence contract
+
+A Velvet Factory creative job cannot advance to design handoff, quality_checked, authorized_for_tool_publish, export or publish unless the same job records all of: `visual_standard_gate=PASS`, `visual_standard_canva_asset_id=MAHVJjCCKQA`, `visual_standard_artifact_sha256=707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`, concrete `product_truth_source_refs`, and the exact-final artifact digest. Missing or mismatched evidence is `visual_standard_unavailable` and blocks the branch.

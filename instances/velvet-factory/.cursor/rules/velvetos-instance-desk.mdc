@@ -12,3 +12,7 @@ You are in the **frontend** office for Velvet Factory. Backend kernel: `vendor/v
 - Profile: `instance/velvet-factory.json`
 - HQ sends Gmail/IG via tools (`vendor/velvetos-core/constitution/SEND.md`)
 - No invented ₪ / Insights. No auto-DM. **PUBLIC_CURRENT_CTA** = Instagram message / איסוף שדרות. WhatsApp `050-2517000` = BUSINESS_CONTACT_RECORD only.
+
+## COLD-START VISUAL STANDARD GATE — ALWAYS REQUIRED
+
+For any Velvet Factory content, image selection/edit, Canva, post, carousel, Story still, Reel cover, feed/grid or publish-preflight task, load `vendor/velvetos-core/packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VISUAL-OS.md` and `VISUAL-DNA.json` first. Verify Canva asset `MAHVJjCCKQA` and SHA-256 `707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0`. If unavailable or mismatched, stop as `visual_standard_unavailable`; never use generic/model/Canva-default fallback. Product Truth from real source media outranks style.

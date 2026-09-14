@@ -48,6 +48,10 @@ READY = {"ready", "skill-installed", "plugin-installed", "hq-native"}
 IG_AUTH_READY = {"ready", "ready-codespace", "ready-local"}
 FAILOVER = {"needsAuth", "needs-key", "down", "not-on-this-cloud-agent"}
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$", re.IGNORECASE)
+VELVET_VISUAL_STANDARD_ASSET = "MAHVJjCCKQA"
+VELVET_VISUAL_STANDARD_SHA256 = "707edde3f4d43cffea090bf90ed2418c160db2f8d90d104e4920b44697a014c0"
+VELVET_VISUAL_STANDARD_DOCUMENT = "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md"
+VELVET_VISUAL_STANDARD_FAILURE = "visual_standard_unavailable"
 CREATIVE_TREATMENT_CATEGORIES = {
     "composition",
     "cleanup",
@@ -127,6 +131,12 @@ def validate_publication_approval(
     schema = (_field(text, "publish_gate_schema") or "").strip()
     gate = (_field(text, "publish_gate") or "").strip().upper()
     invalidated = (_field(text, "approval_invalidated") or "false").strip().lower()
+    visual_standard_gate = (_field(text, "visual_standard_gate") or "").strip().upper()
+    visual_standard_asset = (_field(text, "visual_standard_canva_asset_id") or "").strip()
+    visual_standard_sha = (_field(text, "visual_standard_artifact_sha256") or "").strip().lower()
+    visual_standard_document = (_field(text, "visual_standard_document") or "").strip()
+    product_truth_source_refs = (_field(text, "product_truth_source_refs") or "").strip()
+
 
     if schema != "3":
         problems.append("PREFLIGHT v3 required: publish_gate_schema: 3")
@@ -134,6 +144,16 @@ def validate_publication_approval(
         problems.append("publish_gate must be PASS")
     if invalidated in {"1", "true", "yes", "כן"}:
         problems.append("approval is explicitly invalidated")
+    if visual_standard_gate != "PASS":
+        problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: visual_standard_gate must be PASS")
+    if visual_standard_asset != VELVET_VISUAL_STANDARD_ASSET:
+        problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: visual_standard_canva_asset_id does not match canonical owner-approved standard")
+    if visual_standard_sha != VELVET_VISUAL_STANDARD_SHA256:
+        problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: visual_standard_artifact_sha256 does not match canonical owner-approved standard")
+    if visual_standard_document != VELVET_VISUAL_STANDARD_DOCUMENT:
+        problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: visual_standard_document does not match canonical owner-approved standard")
+    if not product_truth_source_refs or "<" in product_truth_source_refs or product_truth_source_refs.upper() in {"N/A","NONE","PENDING","_"}:
+        problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: product_truth_source_refs must identify real source-product evidence")
 
     rubric = _field(text, "content_rubric_total")
     rubric_match = re.fullmatch(r"\s*(\d{1,2})\s*/\s*25\s*", rubric or "")

@@ -32,7 +32,7 @@ def text(rel: str) -> str:
 
 
 def main() -> None:
-    for rel in (STD, PROMPT, REF):
+    for rel in (STD, PROMPT, REF, "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json", "scripts/check-visual-surface-enforcement.py"):
         if not (ROOT / rel).is_file(): fail(f"missing {rel}")
     dna = load("packages/vfom/VISUAL-DNA.json").get("ownerApprovedVisualStandard") or {}
     for key, expected in {"status":"approved", "document":STD, "portablePrompt":PROMPT, "referenceAsset":REF, "publicReferenceUrl":PUBLIC, "canvaAssetId":ASSET, "artifactSha256":SHA, "coldStartGate":"fail_closed"}.items():

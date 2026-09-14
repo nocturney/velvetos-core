@@ -164,6 +164,13 @@
     "reuseApprovedAssetsBeforeGeneration": true,
     "skipWeakConceptsBeforeRender": true
   },
+  "visualStandardEnforcement": {
+    "policy": "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
+    "required": true,
+    "mode": "fail_closed",
+    "failureState": "visual_standard_unavailable",
+    "genericFallbackAllowed": false
+  },
   "humanSurface": {
     "mode": "exception-only",
     "creativeQualityFailure": "auto-repair",
