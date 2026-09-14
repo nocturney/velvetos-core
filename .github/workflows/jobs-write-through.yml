@@ -1,7 +1,7 @@
 name: Jobs Sheet Write-Through
 
 # Canonical Google Sheet writer/reader for VF HQ · jobs.
-# VELVET_MACHINE_WRITER_ALLOW: office/ledger/live/jobs.csv office/ledger/live/sync-receipt.json office/ledger/live/pending-push.csv
+# VELVET_MACHINE_WRITER_ALLOW: office/ledger/live/sync-receipt.json
 # Short-lived GitHub OIDC/WIF credentials only; no long-lived Google key.
 
 on:
@@ -17,7 +17,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "office/ledger/live/jobs.csv"
+      - "office/ledger/live/sync-receipt.json"
 
 concurrency:
   group: jobs-write-through-${{ github.repository }}
@@ -107,19 +107,16 @@ jobs:
       - name: Jobs adapter sensor
         run: python3 scripts/check-vf-office.py
 
-      - name: Persist canonical cache/receipt only when changed
+      - name: Persist canonical receipt only when changed
         run: |
           set -e
-          if git diff --quiet -- office/ledger/live/jobs.csv office/ledger/live/sync-receipt.json office/ledger/live/pending-push.csv; then
-            echo "No durable Jobs sync changes"
+          if git diff --quiet -- office/ledger/live/sync-receipt.json; then
+            echo "No durable Jobs receipt change"
             exit 0
           fi
           git config user.name "velvetos-jobs-sync"
           git config user.email "noreply@velvetos.local"
-          git add -A -- office/ledger/live/jobs.csv office/ledger/live/sync-receipt.json
-          if [ -e office/ledger/live/pending-push.csv ] || git ls-files --error-unmatch office/ledger/live/pending-push.csv >/dev/null 2>&1; then
-            git add -A -- office/ledger/live/pending-push.csv
-          fi
+          git add -- office/ledger/live/sync-receipt.json
           git commit -m "jobs: persist verified Sheet sync receipt"
           branch="${GITHUB_REF_NAME}"
           git fetch origin "$branch"
@@ -129,3 +126,4 @@ jobs:
             exit 1
           fi
           git push origin "HEAD:$branch"
+
