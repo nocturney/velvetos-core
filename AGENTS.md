@@ -157,3 +157,7 @@ For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK
 ## UNIVERSAL PROJECT REQUEST GATE — ALWAYS REQUIRED
 
 Before substantive work on **any** VelvetOS / Velvet Factory request, load `packages/velvetos/PROJECT-REQUEST-GATE.md` and resolve `packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json`. Classify the request, load only the routed authorities/skills/Sources of Truth, resolve hard gates, and require `project_preflight: PASS` before execution. Missing/stale/contradictory mandatory authority is fail-closed; do not fall back to model defaults or memory of an older chat. After execution, run the routed domain postflight on the exact final artifact/provider result before claiming completion. Use `scripts/vf_project_preflight.py` as the deterministic authority-path resolver when operating in the repo.
+
+## CHATGPT PROJECT CONTRACT v6 — fail closed
+
+For ChatGPT Project cold starts, the canonical bootstrap package is `packages/velvetos/chatgpt-project/PROJECT-CONTRACT-v6.json` + `PROJECT-INSTRUCTIONS-v6.txt` + `PROJECT-AUTHORITY-v6.txt`. The Project Source authority must be named `Velvet-Factory-Project-Authority-v6.txt`; visual work must resolve `Velvet-Factory-APPROVED-Visual-Reference-v2.jpg`, Canva asset `MAHVL7PKpvE`, SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. Missing/mismatched/stale Project Sources are `needs_sync`; never blend v5 and v6 or continue from chat memory. Behavioral cold-start validation is defined in `packages/velvetos/chatgpt-project/COLD-START-CANARY.md`.

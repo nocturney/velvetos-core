@@ -87,9 +87,11 @@ When authorities disagree, resolve in this order:
 Never use memory of an old chat to override a newer canonical authority.
 ## ChatGPT Project binding
 
-For a ChatGPT Project, this gate must be named directly in **Project Instructions** and stored as a Project Source (or otherwise supplied in project context). Project Instructions must say that every request first performs this preflight and that missing authority fails closed.
+For the Velvet Factory ChatGPT Project, resolve `packages/velvetos/chatgpt-project/PROJECT-CONTRACT-v6.json` before substantive work. The always-on Project Instructions must be the v6 bootstrap and Project Sources must contain `Velvet-Factory-Project-Authority-v6.txt`. Visual branches must also resolve `Velvet-Factory-APPROVED-Visual-Reference-v2.jpg` and match Canva asset `MAHVL7PKpvE` / SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`.
 
-Project memory is helpful context, not governance. Do not rely on a previous chat to remember the pipeline. The always-on Project Instructions are the bootstrap; this gate + manifest are the router; domain files/skills are the authority.
+A missing/mismatched version, stale source set, unresolved visual reference, or ambiguous authority version is `needs_sync` / BLOCKED. Do not merge old and new project-source rules. v6 is the current contract.
+
+Project memory is helpful context, not governance. Do not rely on a previous chat to remember the pipeline. The always-on Project Instructions are the bootstrap; v6 authority + this gate + manifest are the router; domain files/skills are the authority.
 
 ## What this gate is not
 

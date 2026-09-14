@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "id": "velvetos-project-authority-manifest",
   "status": "mandatory",
   "preflightMode": "fail_closed",
@@ -17,7 +17,9 @@
     "constitution/ORCHESTRA.md",
     "office/control-plane.json",
     "packages/manifest.json",
-    "packages/vfbiz/OFFERING.md"
+    "packages/vfbiz/OFFERING.md",
+    "packages/velvetos/chatgpt-project/PROJECT-CONTRACT-v6.json",
+    "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.txt"
   ],
   "requiredReceiptFields": [
     "request_domain",
@@ -29,7 +31,9 @@
     "required_tools",
     "hard_gates",
     "current_evidence_state",
-    "project_preflight"
+    "project_preflight",
+    "project_contract_version",
+    "project_source_sync"
   ],
   "domains": {
     "creative_publication": {
@@ -54,6 +58,7 @@
         "vfigos"
       ],
       "authorities": [
+        "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.txt",
         "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
         "packages/vfom/VISUAL-OS.md",
         "packages/vfom/PUBLICATION-PREP-EXECUTION.md",
@@ -73,7 +78,9 @@
         "public_cta",
         "visible_text",
         "exact_final_qa",
-        "offering_shape"
+        "offering_shape",
+        "project_source_sync",
+        "visual_reference_v2"
       ]
     },
     "copywriting": {
@@ -299,5 +306,15 @@
       ]
     }
   },
-  "completionLaw": "No done/ready/published/synced claim without domain postflight evidence on the exact final artifact or provider result."
+  "completionLaw": "No done/ready/published/synced claim without domain postflight evidence on the exact final artifact or provider result.",
+  "chatgptProjectContract": {
+    "version": 6,
+    "contract": "packages/velvetos/chatgpt-project/PROJECT-CONTRACT-v6.json",
+    "authority": "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.txt",
+    "instructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.txt",
+    "visualReferenceSourceName": "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
+    "visualReferenceCanvaAssetId": "MAHVL7PKpvE",
+    "visualReferenceSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
+    "mode": "fail_closed"
+  }
 }

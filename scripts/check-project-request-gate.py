@@ -10,17 +10,24 @@ ROOT = Path(__file__).resolve().parents[1]
 GATE = ROOT / "packages/velvetos/PROJECT-REQUEST-GATE.md"
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
 CLI = ROOT / "scripts/vf_project_preflight.py"
+CONTRACT = ROOT / "packages/velvetos/chatgpt-project/PROJECT-CONTRACT-v6.json"
 
 
 def fail(msg: str) -> None:
     print(f"FAIL project-request-gate: {msg}", file=sys.stderr)
     raise SystemExit(1)
 
-for path in (GATE, MANIFEST, CLI):
+for path in (GATE, MANIFEST, CLI, CONTRACT):
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
 
 manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+project_contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
+if project_contract.get("contractVersion") != 6 or project_contract.get("mode") != "fail_closed":
+    fail("ChatGPT Project contract v6 is not mandatory fail-closed")
+binding = manifest.get("chatgptProjectContract") or {}
+if binding.get("version") != 6 or binding.get("contract") != "packages/velvetos/chatgpt-project/PROJECT-CONTRACT-v6.json":
+    fail("manifest ChatGPT Project v6 binding mismatch")
 if manifest.get("status") != "mandatory" or manifest.get("preflightMode") != "fail_closed":
     fail("manifest is not mandatory fail-closed")
 if manifest.get("gateDocument") != "packages/velvetos/PROJECT-REQUEST-GATE.md":

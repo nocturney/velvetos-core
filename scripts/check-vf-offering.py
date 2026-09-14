@@ -111,9 +111,11 @@ def main() -> None:
     for needle in ("מוצרים מוכנים", "מודלים בהתאמה אישית"):
         if needle not in desired:
             fail(f"desired Instagram bio missing {needle!r}")
-    if (profile.get("liveSnapshot") or {}).get("retiredOfferingPhrasePresent") is True:
-        if profile.get("liveStatus") != "pending-human-profile-edit":
-            fail("live profile debt must stay pending-human-profile-edit until re-verified")
+    live = profile.get("liveSnapshot") or {}
+    if live.get("retiredOfferingPhrasePresent") is not False:
+        fail("live profile must be verified clean of retired offering wording")
+    if profile.get("liveStatus") != "verified" or live.get("offeringCleanupStatus") != "verified-clean":
+        fail("live profile cleanup must remain verified")
 
     for rel in (
         "instances/velvet-factory/instance/velvet-factory.json",

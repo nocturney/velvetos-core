@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": 6,
+  "status": "mandatory",
+  "mode": "fail_closed",
+  "projectName": "משרד",
+  "projectInstructionsFile": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.txt",
+  "projectAuthorityFile": "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.txt",
+  "projectAuthoritySourceName": "Velvet-Factory-Project-Authority-v6.txt",
+  "visualReferenceSourceName": "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
+  "visualReferenceCanvaAssetId": "MAHVL7PKpvE",
+  "visualReferenceSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
+  "offeringAuthority": "packages/vfbiz/OFFERING.md",
+  "projectRequestGate": "packages/velvetos/PROJECT-REQUEST-GATE.md",
+  "projectAuthorityManifest": "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+  "staleProjectSources": [
+    "Velvet-Factory-Project-Authority-v5.txt",
+    "Velvet-Factory-Project-Authority-v5(1).txt",
+    "Velvet-Factory-Project-Authority-v5.md",
+    "Velvet-Factory-APPROVED-Visual-Reference.jpg"
+  ],
+  "requiredPreflight": [
+    "authority_v6_resolved",
+    "domain_classified",
+    "canonical_authority_loaded",
+    "routed_pipeline_loaded",
+    "hard_gates_resolved"
+  ],
+  "failureState": "needs_sync"
+}
