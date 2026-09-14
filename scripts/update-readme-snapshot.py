@@ -23,6 +23,7 @@ HANDOFF = ROOT / "office" / "control" / "HANDOFF.json"
 IG_CAPS = ROOT / "packages" / "vfigos" / "CAPABILITIES.json"
 MEDIA_RUNNER = ROOT / "packages" / "vfmedia" / "state" / "intake-runner.json"
 BINDINGS = ROOT / "office" / "ledger" / "bindings.json"
+JOBS_SYNC_RECEIPT = ROOT / "office" / "ledger" / "live" / "sync-receipt.json"
 CHANGELOG = ROOT / "CHANGELOG.md"
 
 START = "<!-- OPERATIONAL-SNAPSHOT:START -->"
@@ -94,6 +95,7 @@ def render() -> str:
     ig_caps = load_json(IG_CAPS)
     media = load_json(MEDIA_RUNNER)
     bindings = load_json(BINDINGS)
+    jobs_sync = load_json(JOBS_SYNC_RECEIPT)
 
     skills = len(registry.get("skills") or [])
     packs = len(manifest.get("packs") or [])
@@ -124,6 +126,17 @@ def render() -> str:
         and not media.get("persistError")
     )
     jobs_bound = bool((bindings.get("canonical") or {}).get("jobs") == "google_sheet")
+    jobs_write_verified = bool(
+        jobs_sync.get("status") == "written"
+        and jobs_sync.get("dirty") is False
+        and jobs_sync.get("canonical_changed") is True
+        and jobs_sync.get("verifiedFrom") == "sheets_values_get"
+    )
+    jobs_pulse = (
+        "Google Sheet LIVE / VERIFIED write-through"
+        if jobs_bound and jobs_write_verified
+        else "Google Sheet bound" if jobs_bound else "Not bound"
+    )
 
     live_integrations = sum([ig_live, insights_live, media_live, jobs_bound])
     gated = 0
@@ -163,7 +176,7 @@ def render() -> str:
 | **Instagram MCP** | {'LIVE / VERIFIED' if ig_live else 'NOT VERIFIED'} |
 | **Instagram Insights** | {'LIVE / VERIFIED' if insights_live else 'NOT VERIFIED'} |
 | **Media Intake / Drive** | {'LIVE / VERIFIED' if media_live else 'NOT VERIFIED'} |
-| **Jobs source of truth** | {'Google Sheet bound' if jobs_bound else 'Not bound'} |
+| **Jobs source of truth** | {jobs_pulse} |
 | **Waiting work** | {waiting} |
 | **Owner blocked** | {owner_blocked} |
 | **Degraded tools** | {degraded} |

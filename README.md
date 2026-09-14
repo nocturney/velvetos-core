@@ -36,7 +36,7 @@
 | **Instagram MCP** | LIVE / VERIFIED |
 | **Instagram Insights** | LIVE / VERIFIED |
 | **Media Intake / Drive** | LIVE / VERIFIED |
-| **Jobs source of truth** | Google Sheet bound; WIF write/readback proven 2026-09-14 |
+| **Jobs source of truth** | Google Sheet bound |
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
@@ -79,7 +79,7 @@
 ### ‏למה היא בנויה כך
 
 - ‏**מקור אמת אחד לכל תחום** — כדי שאותו לקוח, job או asset לא יקבל כמה גרסאות סותרות.
-- ‏**Evidence before confidence** — יכולת נחשבת חיה רק כשהיא מגובה בראיה, sensor או אימות provider.
+- ‏**Evidence before confidence** — יכולת נחשבת חיה רק כשהיא מגובה בראיה, sensor או אימות provider. ב־Jobs, כתיבה נחשבת חיה רק אחרי WIF write + Sheets read-back receipt - לא רק binding.
 - ‏**Fail-closed במקום ניחוש** — כשלא יודעים, עוצרים או מסמנים `needs_sync` / `needs_input`; לא ממציאים.
 - ‏**Human-in-the-loop איפה שיש משמעות אמיתית** — מערכת טובה חוסכת החלטות קטנות, לא גונבת החלטות גדולות.
 - ‏**למידה מהעבודה עצמה** — אירועים, תוצאות, תוכן, failures ו־Insights חוזרים למערכת ומשפרים את ההחלטה הבאה.
@@ -204,7 +204,7 @@ The system deliberately separates **automation from authority**. Reading, classi
 ### Why it is designed this way
 
 - **One canonical source per domain** — customers, jobs and assets should not develop competing versions of truth.
-- **Evidence before confidence** — a capability is treated as live only when backed by a sensor, receipt or provider verification.
+- **Evidence before confidence** — a capability is treated as live only when backed by a sensor, receipt or provider verification. For Jobs, write-through is live only after WIF write + Sheets read-back receipt - not merely a Sheet binding.
 - **Fail closed instead of guessing** — unknown state becomes `needs_sync` / `needs_input`, not fabricated certainty.
 - **Human-in-the-loop where consequences matter** — remove repetitive decisions without stealing important ones.
 - **Learn from real work** — outcomes, failures, content performance and operational signals feed the next decision.
