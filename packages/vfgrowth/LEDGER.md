@@ -3,46 +3,53 @@
 מושב: **צמיחה**. מקור אמת למועמדי Feed/Reel/Story החדשים.  
 סמכות: `CONTENT-RESET-2026-09-10.md` · לוח: `CALENDAR.md` · שלישיית פתיחה: `RESET-LAUNCH-TRIO.md`.
 
-## מצב הפיד הישן
+## מצב הפיד החי · owner lock 2026-09-14
 
-כל 8 פריטי Feed/Reels החיים שנמצאו ב־10.9.2026 הם **historical learning only** ו־`ARCHIVE_PENDING_MANUAL`.
+Live Instagram verification: **3 Reels**. Christian קבע שהם נשארים בעמוד.
 
-אין למחוק אותם מהראיות/Insights. הפעולה הרצויה בפלטפורמה היא **Archive, לא Delete**, ורק לאחר ש־VF-R001/R002/R003 מגיעים ל־`ready_for_publish`. כלי Instagram המחובר אינו חושף Archive/Delete למדיה, ולכן פעולת הפלטפורמה עצמה נשארת human-only באפליקציה.
+| permalink / media | פורמט | מצב פעיל | טיפול |
+|---|---|---|---|
+| `instagram.com/reel/DdAPhozlNe2/` · `17873372004572489` | Reel | `KEEP_LIVE_BASELINE` | להשאיר live. הקפטן החי עדיין מכיל WhatsApp/טלפון ולכן `CAPTION_POLICY_DEBT_MANUAL`; אין archive/delete |
+| `instagram.com/reel/DcvuJLxCJgU/` · `18113247517791419` | Reel | `KEEP_LIVE_BASELINE` | להשאיר ללא שינוי |
+| `instagram.com/reel/DcqkjOLlYVX/` · `18107769701162221` | Reel | `KEEP_LIVE_BASELINE` | להשאיר ללא שינוי |
 
-| permalink | פורמט | מצב reset |
+**אין הוראת Archive/Delete לשלושת הרילים.** כלי Instagram המחובר אינו תומך בעריכת caption קיים; לכן תיקון ה־WhatsApp בריל `DdAPhozlNe2` הוא פעולה ידנית ממוקדת באפליקציה בלבד. הוא אינו תנאי למחיקת/ארכוב הריל.
+
+חמשת הפריטים הנוספים שהיו live בזמן audit ב־10.9 אינם חיים כיום. הם נשמרים כ־`HISTORICAL_NOT_LIVE` בלבד:
+
+| permalink | פורמט | מצב |
 |---|---|---|
-| `instagram.com/p/DdHidHYG4-p/` | Carousel | ARCHIVE_PENDING_MANUAL |
-| `instagram.com/reel/DdAPhozlNe2/` | Reel | ARCHIVE_PENDING_MANUAL |
-| `instagram.com/p/Dc1g1sJGzgq/` | Carousel | ARCHIVE_PENDING_MANUAL |
-| `instagram.com/p/Dc0cKegEbxd/` | Carousel | ARCHIVE_PENDING_MANUAL |
-| `instagram.com/reel/DcvuJLxCJgU/` | Reel | ARCHIVE_PENDING_MANUAL |
-| `instagram.com/reel/DcqkjOLlYVX/` | Reel | ARCHIVE_PENDING_MANUAL |
-| `instagram.com/p/Dci5EyuoWVJ/` | Image | ARCHIVE_PENDING_MANUAL |
-| `instagram.com/p/Dci0aRzIO1F/` | Image | ARCHIVE_PENDING_MANUAL |
+| `instagram.com/p/DdHidHYG4-p/` | Carousel | HISTORICAL_NOT_LIVE |
+| `instagram.com/p/Dc1g1sJGzgq/` | Carousel | HISTORICAL_NOT_LIVE |
+| `instagram.com/p/Dc0cKegEbxd/` | Carousel | HISTORICAL_NOT_LIVE |
+| `instagram.com/p/Dci5EyuoWVJ/` | Image | HISTORICAL_NOT_LIVE |
+| `instagram.com/p/Dci0aRzIO1F/` | Image | HISTORICAL_NOT_LIVE |
+
+אין לשחזר או לפרסם אותם מחדש בגלל ה־reset.
 
 ## Historical identity map — audit only
 
-הטבלה נשמרת כדי לשמר lineage עבור sensors/Insights. היא **לא** תור פרסום פעיל.
+הטבלה נשמרת עבור lineage/sensors/Insights. היא **לא** תור פרסום פעיל.
 
-| מזהה היסטורי | ראיה/shortcode | מצב היסטורי | מצב reset |
+| מזהה היסטורי | ראיה/shortcode | מצב היסטורי | מצב נוכחי |
 |---|---|---|---|
-| **G001** | `DcqkjOLlYVX` | Reel #1 | historical learning · archive pending |
-| **G002** | `DcvuJLxCJgU` | Reel #2 | historical learning · archive pending |
-| **G005** | `Dc0cKegEbxd` | Carousel | historical learning · archive pending |
-| **G003** | `DdAPhozlNe2` · **SoccerBall** | היה `משובץ` היסטורית | **חסום** מכל reuse ללא qualification חדש |
-| **G004** | מחזיק טבעות לזמן אימון | מועמד/פרסום היסטורי | stale · **חסום** מכל reuse אוטומטי |
+| **G001** | `DcqkjOLlYVX` | Reel #1 | `KEEP_LIVE_BASELINE` |
+| **G002** | `DcvuJLxCJgU` | Reel #2 | `KEEP_LIVE_BASELINE` |
+| **G005** | `Dc0cKegEbxd` | Carousel | `HISTORICAL_NOT_LIVE` |
+| **G003** | `DdAPhozlNe2` · **SoccerBall** | היה `משובץ` היסטורית | `KEEP_LIVE_BASELINE` · reuse חדש עדיין **חסום** ללא qualification חדש |
+| **G004** | **מחזיק** טבעות לזמן אימון | מועמד/פרסום היסטורי | stale · **חסום** מכל reuse אוטומטי |
 
-## תור חדש
+## תור חדש · preflight הוא הסמכות ל־readiness
 
-| מזהה | פורמט | תפקיד | Final media | Creative direction | מצב |
-|---|---|---|---|---|---|
-| **VF-R001** | Reel | Reach + product movement proof | Drive Reel `1pHS6-rBuQ-bEhLrwkPRU9eoTvL3D7FiJ` · Cover `1OVSZF_8MQSP7zksxPVTA0RmY6ofVQtW2` | `כל זרוע זזה אחרת` / cover `הכול זז` | **rendered · QA pass · BLOCKED rights+receipt** |
-| **VF-R002** | Carousel | Product story + detail | 4× Drive `1np7Wv…` / `17Ol5…` / `1L4o4…` / `1NC93…` | `תמונה אחת לא מספיקה` | **rendered · QA pass · BLOCKED rights+receipt** |
-| **VF-R003** | Reel | Studio visual intelligence + reveal | Drive Reel `1gz5vjne9EegNpa3K0Ol9b50KjmCLhR5n` · Cover `19KUhou5sLBWQ-MRHntl6J2F8zhmJPRty` | `נראה אחרת בתנועה` | **rendered · QA pass · BLOCKED rights+receipt** |
+| מזהה | פורמט | Creative direction | מצב אמיתי |
+|---|---|---|---|
+| **VF-R001** | Reel | cover owner lock: `פה התנועה היא כל העניין` | **BLOCKED** — old final near-silent; stale showcase caption/cover; exact-final QA + execution receipts rerun required |
+| **VF-R002** | Carousel | owner lock: `NO_TEXT` | **BLOCKED / REBUILD REQUIRED** — later Publish Gate v3 invalidated crop/resize-only derivative; needs real art direction from RAW while preserving exact dragon/Product Truth, then new hashes/receipts/QA |
+| **VF-R003** | Reel | cover owner lock: `פה הזווית משנה הכול` | **BLOCKED** — old final has no audio stream; stale showcase caption/cover; exact-final QA + execution receipts rerun required |
 
-ה־preflights המחייבים: `preflight/VF-R001.md`, `preflight/VF-R002.md`, `preflight/VF-R003.md`.
+ה־preflights המחייבים: `preflight/VF-R001.md`, `preflight/VF-R002.md`, `preflight/VF-R003.md`. אם manifest ישן סותר preflight מאוחר יותר — ה־preflight המאוחר וה־exact-final evidence גוברים עד reconciliation.
 
-`rendered · QA pass` אינו `ready_for_publish`: exact-final media/copy/readability/contrast עברו, אבל זכויות פרסום עדיין אינן מתועדות וה־Skill Enforcement Layer עדיין אינו מספק execution receipt מחייב. לכן אין שיבוץ ואין publish.
+Blanket model-license/right-to-publish metadata **אינם blocker** ל־owner-captured showcase. Rights/privacy gate נשאר פעיל רק למדיה צד ג׳/UGC/פרטיות/מגבלה ידועה או מסלול commercial רלוונטי.
 
 ## ישן = STALE
 
@@ -50,9 +57,9 @@
 
 ## חוקי עבודה
 
-- real evidence → Media Librarian → Creative Director → render/edit → Hebrew Copy/Voice → Brand Guardian exact-final → Content Rubric/Contract/rights/policy → package-bound receipts/preflight → publish → live verify → performance learning.
-- CTA ציבורי = Instagram message בלבד; אין WhatsApp/טלפון/wa.me.
+- real evidence → Media Librarian → Creative Director → render/edit + audio strategy → Visible Text/Hebrew Copy → Brand Guardian exact-final → Content Rubric/Contract/applicable policy → package-bound execution receipts/preflight → publish → live verify → performance learning.
+- Public CTA לפי `PUBLIC_CTA.md`; אין WhatsApp/טלפון/wa.me בקופי ציבורי חדש.
 - אין ₪, claims, customer story, material property, deadline או Insights מומצאים.
-- שינוי copy/media/render מבטל receipts קודמים.
-- Brand Guardian בודק novelty/fatigue מול ההיסטוריה, אבל ההיסטוריה אינה template להעתקה.
+- שינוי copy/media/render/audio מבטל receipts קודמים.
+- Brand Guardian בודק novelty/fatigue מול ההיסטוריה וה־3 live baseline, אבל ההיסטוריה אינה template להעתקה.
 - אין slot-filling. תוכן חלש או חסום = מדלגים.
