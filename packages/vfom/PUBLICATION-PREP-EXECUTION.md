@@ -38,3 +38,8 @@ Never hardcode WhatsApp into public creative/caption from memory. Resolve CTA fr
 ## Hard failure patterns
 
 Reject as incomplete: caption-only delivery; photo-ranking-only delivery; raw photos presented as finished visual treatment; generic "clean it later" promises; public WhatsApp CTA when current CTA authority forbids it; or claiming the package is publication-ready without a produced visual artifact.
+
+
+## Brand asset lock
+
+`packages/vfom/BRAND-ASSET-LOCK.md` is mandatory. No generative model may invent or approximate the Velvet Factory logo/wordmark. If no exact verified logo asset is available, omit the logo. If one is available, add that exact asset deterministically after generation/editing. Base generation must contain no phone number, WhatsApp, contact bar, logo or wordmark.

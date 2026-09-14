@@ -89,3 +89,8 @@ A conflict resolves in this order:
 `constitution / Product Truth / rights / factual evidence` → `VISUAL-OS.md` → this owner-approved reference → local creative preference.
 
 The owner-approved reference is a strong style preference and quality floor. It never authorizes false product representation.
+
+
+## Brand identity asset lock
+
+For Velvet Factory public visuals, branding is source-locked. Never invent, redraw or approximate a logo/wordmark/emblem. If no exact owner-approved logo asset is available to the job, omit the logo. If one is available, overlay that exact asset deterministically after image generation/editing. Generative base frames must contain no logo, no wordmark, no phone number, no WhatsApp and no contact bar. See `packages/vfom/BRAND-ASSET-LOCK.md`.
