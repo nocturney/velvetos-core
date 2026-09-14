@@ -44,8 +44,8 @@ jobs:
             office/control/HANDOFF-he.md \
             office/control/HANDOFF.json \
             packages/vfgrowth/data/growth-brief.json \
-            packages/vfops/data/retro-signals.json \
-            packages/vfharness/state/operational-gaps-commission-2026-09-14.json
+            packages/vfops/data/retro-signals.json
+          rm -f packages/vfharness/state/operational-gaps-commission-2026-09-14.json
 
       - name: Enforce closeout mutation scope
         run: |
