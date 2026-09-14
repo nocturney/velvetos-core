@@ -1,0 +1,102 @@
+{
+  "name": "velvet-video-toolchain-adapters",
+  "version": 2,
+  "role": "specialized editing and animation adapters inside the existing Velvet Visual Foundry",
+  "noSecondRuntime": true,
+  "masterComposer": "hyperframes",
+  "finalAuthority": "packages/vfom/HYPERFRAMES-BACKEND.json",
+  "editIntelligence": {
+    "origin": "https://github.com/browser-use/video-use",
+    "integration": "pattern-adapted-not-vendored",
+    "status": "implemented",
+    "bridge": "scripts/vf_video_edit.py",
+    "requestSchema": "packages/vfom/EDIT-EDL.schema.json",
+    "features": [
+      "audio-first-edl",
+      "word-boundary-cut-contract",
+      "cut-boundary-inspection-padding",
+      "30ms-audio-fades",
+      "deterministic-base-cut",
+      "render-receipt",
+      "boundary-inspection"
+    ],
+    "transcription": {
+      "hardDependencyOnElevenLabs": false,
+      "rule": "consume word-timestamp evidence from an approved ASR source when available; do not introduce a new paid transcription authority merely to use editing patterns"
+    },
+    "selfEvaluation": {
+      "maxPasses": 3,
+      "inspectRenderedOutput": true,
+      "inspectCutBoundaries": true,
+      "alsoInspect": [
+        "first-2s",
+        "last-2s",
+        "representative-midpoints"
+      ]
+    }
+  },
+  "animationSlots": {
+    "hyperframes": {
+      "status": "canonical",
+      "useFor": [
+        "deterministic-hebrew-overlay",
+        "kinetic-typography",
+        "ui-motion",
+        "social-master-composition",
+        "multi-shot-composition"
+      ]
+    },
+    "remotion": {
+      "origin": "https://github.com/remotion-dev/remotion",
+      "version": "4.0.523",
+      "status": "license-gated",
+      "installByDefault": false,
+      "masterRenderer": false,
+      "useFor": [
+        "react-native-animation-slot",
+        "component-heavy-animation",
+        "specialized-react-visual"
+      ],
+      "rule": "use only after license eligibility or company-license evidence is recorded; output returns to Foundry QA as an asset, never as a second orchestration path"
+    },
+    "manim": {
+      "origin": "https://github.com/ManimCommunity/manim",
+      "version": "0.21.0",
+      "license": "MIT",
+      "python": ">=3.11",
+      "status": "host-smoke-verified",
+      "installByDefault": false,
+      "masterRenderer": false,
+      "useFor": [
+        "technical-diagram-animation",
+        "measurement-explainer",
+        "geometry-explainer",
+        "process-diagram"
+      ],
+      "forbiddenAs": [
+        "physical-product-proof",
+        "customer-result-proof",
+        "stress-test-proof"
+      ],
+      "rule": "render explanatory slot media only; the output is illustrative unless its claims are separately proven",
+      "bootstrap": "scripts/bootstrap-manim-host-windows.ps1",
+      "hostEvidence": {
+        "host": "sderot-windows",
+        "python": "3.12",
+        "toolchain": "%USERPROFILE%\\.velvetos\\toolchain\\manim-0.21.0-py312",
+        "smoke": "1080x1920 technical slot rendered and ffprobe verified",
+        "sha256": "8334a878cfa63aaee28e16e74c0e081dd12f1db7096ad6a8e78e3f26690e176a",
+        "verifiedAt": "2026-09-14T08:59:22Z"
+      }
+    }
+  },
+  "guardrails": {
+    "mediaVaultRemainsSourceOfTruth": true,
+    "contentContractRemainsAuthority": true,
+    "claimProvenanceRemainsAuthority": true,
+    "noGeneratedAssetProvesPhysicalClaim": true,
+    "hebrewVisualTextUsesDeterministicOverlay": true,
+    "renderReceiptIsNotPublishReceipt": true,
+    "noRuntimeAutoInstallDuringContentJob": true
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvetos.local/schemas/edit-edl.schema.json",
+  "title": "Velvet deterministic base edit request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["jobId", "projectDir", "output", "segments"],
+  "properties": {
+    "jobId": {"type": "string", "minLength": 1},
+    "projectDir": {"type": "string", "minLength": 1},
+    "output": {"type": "string", "minLength": 1},
+    "resolution": {"enum": ["portrait", "landscape"], "default": "portrait"},
+    "fps": {"enum": [24, 25, 30, 50, 60], "default": 30},
+    "cutPolicy": {"enum": ["word-boundary", "visual-only"], "default": "visual-only"},
+    "cutPaddingMs": {"type": "integer", "minimum": 30, "maximum": 200, "default": 80},
+    "audioFadeSeconds": {"type": "number", "minimum": 0.01, "maximum": 0.10, "default": 0.03},
+    "audioRequired": {"type": "boolean", "default": true},
+    "segments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "start", "end"],
+        "properties": {          "source": {"type": "string", "minLength": 1},
+          "start": {"type": "number", "minimum": 0},
+          "end": {"type": "number", "exclusiveMinimum": 0},
+          "wordBoundaryStart": {"type": "boolean"},
+          "wordBoundaryEnd": {"type": "boolean"},
+          "beat": {"type": "string"},
+          "reason": {"type": "string"}
+        }
+      }
+    }
+  }
+}

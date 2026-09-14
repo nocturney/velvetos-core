@@ -25,7 +25,7 @@
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>59</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>60</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>8</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-14 — **Living README / System Pulse closeout:** bilingual product-first README with a repository-backed System Pulse; automatic hourly/on-change refresh; GitHub-safe Hebrew BiDi normalization; explicit …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-14 — **Living README / System Pulse closeout:** bilingual product-first README with a repository-backed System Pulse; automatic hourly/on-change refresh; GitHub-safe Hebrew BiDi normalization; explicit …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-14 — **Video toolchain adapters commissioned:** adapted video-use editing patterns into `vf_video_edit.py` with EDL validation, word-boundary contracts, 30ms audio fades, deterministic base cuts, ffprob…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-14 — **Video toolchain adapters commissioned:** adapted video-use editing patterns into `vf_video_edit.py` with EDL validation, word-boundary contracts, 30ms audio fades, deterministic base cuts, ffprob…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -123,6 +123,7 @@
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">עברית טבעית, anti-AI QA ושער FACT vs INVENTED.</td></tr>
 <tr><td><strong>Organic Growth / Content Factory</strong></td><td><strong>IMPLEMENTED / HUMAN-GATED</strong></td><td dir="rtl" align="right">עבודה אמיתית → רעיונות/טיוטות/approval queue; בלי autopost ובלי auto-DM.</td></tr>
 <tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / MAC VERIFIED / WINDOWS HOST VERIFIED</strong></td><td dir="rtl" align="right">`Mac-Office` / `sderot-mac` נשאר ה־render host המועדף עם ראיית smoke היסטורית. `Windows-Fallback` / `sderot-windows` הוא נתיב הגיבוי הקנוני דרך Remote Desktop Commander; ה־bootstrap מספק toolchain מקומי ומחייב doctor + רינדור 1080×1920 עברי אמיתי + ffprobe/SHA-256 receipt. Windows מאומת כעת כ־host_smoke_verified: המכשיר online, doctor עבר ורינדור smoke אמיתי עם receipt אומת; לכן הוא כשיר ל־first-healthy routing כאשר המק אינו זמין. אין העתקת מנויי דפדפן, אין port/tunnel נכנס ואין הורדת QA.</td></tr>
+<tr><td><strong>Video Toolchain Adapters</strong></td><td><strong>IMPLEMENTED / WINDOWS VERIFIED / REMOTION LICENSE-GATED</strong></td><td dir="rtl" align="right">שכבת Edit Intelligence בהשראת video-use עברה smoke אמיתי ב־Windows עם EDL, חיתוך דטרמיניסטי, אודיו ו־receipt; Manim 0.21.0 מאומת כ־technical/explainer slot; Remotion 4.0.523 נשאר אופציונלי ומוגן בשער רישוי. HyperFrames נשאר ה־master compositor הקנוני.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">routing, חומר, spool/slice, maintenance signals ותכנון ייצור מבוקר.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">בריף HTML עם מדיה inline ושליחה כאשר קיימים credentials תקפים.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td dir="rtl" align="right">מעבר מבוקר לכלי חלופי בלי לייצר SoT נוסף.</td></tr>
@@ -248,6 +249,7 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>Hebrew Copy QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>Natural Hebrew, anti-AI QA and FACT vs INVENTED gates.</td></tr>
 <tr><td><strong>Organic Growth / Content Factory</strong></td><td><strong>IMPLEMENTED / HUMAN-GATED</strong></td><td>Real work becomes drafts and approval candidates; no default autopost or auto-DM.</td></tr>
 <tr><td><strong>HyperFrames Video Backend</strong></td><td><strong>IMPLEMENTED / MAC VERIFIED / WINDOWS COMMISSIONING</strong></td><td>`Mac-Office` / `sderot-mac` remains the preferred render host with historical smoke evidence. `Windows-Fallback` / `sderot-windows` is the canonical backup through Remote Desktop Commander; its bootstrap provisions a local toolchain and requires doctor + a real 1080x1920 deterministic Hebrew render + ffprobe/SHA-256 receipt. Windows is now host_smoke_verified: the physical device is online, doctor passed and a real smoke render with receipt was verified, so it is eligible for first-healthy routing when the Mac is unavailable. No browser-subscription credential migration, inbound port/tunnel or QA relaxation.</td></tr>
+<tr><td><strong>Video Toolchain Adapters</strong></td><td><strong>IMPLEMENTED / WINDOWS VERIFIED / REMOTION LICENSE-GATED</strong></td><td>video-use patterns power deterministic Edit Intelligence with a real Windows EDL/base-cut/audio/receipt smoke; Manim 0.21.0 is host-smoke-verified as a technical/explainer slot; Remotion 4.0.523 remains optional and license-gated. HyperFrames remains the canonical master compositor.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td>Routing, material/spool planning and maintenance signals.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED</strong></td><td>HTML + inline media brief path when valid credentials exist.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td>Controlled takeover without creating another source of truth.</td></tr>
