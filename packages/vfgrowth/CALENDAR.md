@@ -10,6 +10,8 @@
 
 G004/G006/G007/G008/G009/G010 וכל נגזרת עתידית שנוצרה לפני 10.9.2026 22:21 Asia/Jerusalem = **STALE** עד qualification מלא מחדש מול הארטיפקט הסופי.
 
+Live read ב־14.9.2026: חשבון `@velvets_cloud` מדווח על **3 פריטי מדיה** והביו החי כבר מפנה להודעות Instagram ואיסוף שדרות. לכן הוראת reset היסטורית של "Archive 8/8 + update bio" **אינה פעולה תקפה לביצוע אוטומטי כיום**. לפני פעולה הרסנית חייבים לקרוא מחדש את הפיד החי ולזהות במפורש איזה פריט, אם בכלל, עדיין stale.
+
 ## חוק שיבוץ חדש
 
 **לוח הוא תוצאה של readiness, לא טריגר ליצירת תוכן.**
@@ -39,9 +41,10 @@ G004/G006/G007/G008/G009/G010 וכל נגזרת עתידית שנוצרה לפנ
 
 1. לסגור זכויות + execution receipts על אותה חבילה מדויקת.
 2. להביא את VF-R001/R002/R003 ל־`ready_for_publish` בלי לשנות media/copy אחרי האישור.
-3. רק אז Christian מבצע באפליקציית Instagram: **Archive ל־8/8 הפריטים הישנים** + עדכון bio לפי `packages/vfigos/PROFILE-DESIRED.json`.
-4. לבצע live verification שהפיד הישן הוסר מהתצוגה והביו תואם `PUBLIC_CURRENT_CTA`.
+3. לבצע live read מחדש של הפיד והפרופיל. מצב שנצפה ב־14.9: 3 media + bio תואם CTA; אין להניח שה־8/8 ההיסטורי עדיין קיים.
+4. אם פריט חי מסוים מזוהה כ־stale ודורש Archive — זו פעולה הרסנית/בלתי הפיכה מבחינת ה־workflow ולכן `human_required`; מציגים exact media id/permalink וסיבה, לא "archive all".
 5. לשבץ/לפרסם את שלישיית הפתיחה לפי readiness ומרווח סביר; לא חייבים למלא תאריך אם אחד מהם חלש או חסום.
+6. אחרי כל publish: provider receipt + live verification לפני `published_verified`.
 
 ## cadence לאחר ההשקה
 
@@ -51,17 +54,18 @@ G004/G006/G007/G008/G009/G010 וכל נגזרת עתידית שנוצרה לפנ
 - Stories רק כאשר יש חומר אמיתי שמצדיק אותם.
 - אין פיד רק כדי “לשמור על קצב”.
 
-ה־portfolio הרצוי: רובו proof/process/use Reels, לצד product stories ו־human/studio intelligence. Novelty/fatigue נבדקים מול 6–9 הפריטים האחרונים.
+ה־portfolio הרצוי: רובו proof/process/use Reels, לצד product stories ו־human/studio intelligence. Novelty/fatigue נבדקים מול 6–9 הפריטים האחרונים הזמינים בפיד/learning, לא מול ספירה היסטורית מומצאת.
 
 ## Historical contract lock — לא לוח פעיל
 
-הסעיף הזה נשמר רק כדי שה־sensors וה־audit יוכלו לזהות את ההיסטוריה הקנונית. **אף שורה כאן אינה אירוע עתידי ואסור ליצור ממנה Calendar event.**
+הסעיף הזה נשמר רק כדי שה־sensors וה־audit יוכלו לזהות את ההיסטוריה הקנונית. **אף שורה כאן אינה אירוע עתידי ואסור ליצור ממנה Calendar event או פעולה הרסנית.**
 
 - G003 / SoccerBall היה `משובץ` היסטורית ב־7.9.2026 בשעה **16:00**.
 - חלונות הקצב הישנים שנבדקו: Reel ב־**16:00**, Carousel ב־**12:00**, Stories ב־**20:30**, ומרווח יעד של **36** שעות בין פריטי Feed כשאפשר.
 - שישי ושבת: **אין פיד** לפי הקצב ההיסטורי.
 - G004 נשמר בזהות העובדתית ההיסטורית: **מחזיק טבעות לזמן אימון**; אין בכך הרשאה למחזר את הקריאייטיב הישן.
 - נתיב השיבוץ ההיסטורי היה `instagram.com`; **לא Meta Suite**.
+- "Archive 8/8" הוא snapshot היסטורי בלבד; הוא לא instruction חי.
 
 ## חוקים
 
