@@ -35,12 +35,12 @@ def main() -> int:
         for item in reg.get(group) or []:
             if item.get("status") == "EXISTING_PARTIAL":
                 partial.append(item.get("id"))
-    if partial:
-        fail("runtime registry still has EXISTING_PARTIAL: " + ", ".join(partial))
+    if sorted(partial) != ["order-state-manager"]:
+        fail("phase-one partial set must be exactly order-state-manager; got: " + ", ".join(sorted(partial)))
 
     order = next((x for x in reg.get("skills") or [] if x.get("id") == "order-state-manager"), None)
-    if not order or order.get("status") != "EXISTING_COMPLETE":
-        fail("order-state-manager is not COMPLETE")
+    if not order or order.get("status") != "EXISTING_PARTIAL":
+        fail("order-state-manager must remain PARTIAL until production WIF write/readback proof")
     for key in ("activation", "verification"):
         if not order.get(key):
             fail(f"order-state-manager missing {key}")
@@ -88,7 +88,7 @@ def main() -> int:
     if "subscribe_timer" in str(best.get("standingNote") or ""):
         fail("Best Skills still depends on external subscribe_timer renewal")
 
-    print("OK runtime-corners partial=0 jobs=WIF+readback living=activated best-skills=research-seat")
+    print("OK runtime-corners partial=1(jobs commissioning) living=activated best-skills=research-seat")
     return 0
 
 
