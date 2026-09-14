@@ -1,0 +1,128 @@
+name: Jobs Sheet Write-Through
+
+# Canonical Google Sheet writer/reader for VF HQ · jobs.
+# VELVET_MACHINE_WRITER_ALLOW: office/ledger/live/jobs.csv office/ledger/live/sync-receipt.json office/ledger/live/pending-push.csv
+# Short-lived GitHub OIDC/WIF credentials only; no long-lived Google key.
+
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+    inputs:
+      commission_smoke:
+        description: "Force pull then idempotent write/read-back to prove provider write access"
+        type: boolean
+        required: false
+        default: false
+  push:
+    branches: [main]
+    paths:
+      - "office/ledger/live/jobs.csv"
+
+concurrency:
+  group: jobs-write-through-${{ github.repository }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Google clients
+        run: pip install --quiet google-api-python-client google-auth
+
+      - name: Authenticate with Google via GitHub OIDC/WIF
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/1016876126699/locations/global/workloadIdentityPools/github-actions/providers/velvetos-core
+          service_account: velvetos-media-intake@instamcp.iam.gserviceaccount.com
+          token_format: access_token
+          access_token_scopes: |
+            https://www.googleapis.com/auth/drive
+            https://www.googleapis.com/auth/spreadsheets
+          create_credentials_file: false
+
+      - name: Verify token
+        env:
+          GOOGLE_TOKEN: ${{ steps.auth.outputs.access_token }}
+        run: |
+          test -n "${GOOGLE_TOKEN:-}" || { echo "::error::WIF token missing"; exit 1; }
+
+      - name: Reconcile canonical jobs Sheet
+        env:
+          GOOGLE_TOKEN: ${{ steps.auth.outputs.access_token }}
+          COMMISSION_SMOKE: ${{ github.event.inputs.commission_smoke || 'false' }}
+        run: |
+          set -e
+          if [ "$COMMISSION_SMOKE" = "true" ]; then
+            python3 scripts/vf_office.py jobs pull --force
+            python3 scripts/vf_office.py jobs push
+          else
+            dirty="$(python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('office/ledger/live/sync-receipt.json')
+          d=json.loads(p.read_text(encoding='utf-8')) if p.is_file() else {}
+          print('true' if d.get('dirty') else 'false')
+          PY
+          )"
+            if [ "$dirty" = "true" ]; then
+              python3 scripts/vf_office.py jobs push
+            else
+              python3 scripts/vf_office.py jobs pull
+            fi
+          fi
+
+      - name: Assert truthful provider result
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('office/ledger/live/sync-receipt.json')
+          if not p.is_file():
+              raise SystemExit('sync receipt missing')
+          r=json.loads(p.read_text(encoding='utf-8'))
+          status=r.get('status') or r.get('lastWriteStatus')
+          if r.get('dirty'):
+              raise SystemExit(f"jobs remains dirty: {r.get('dirtyReason')} status={status}")
+          if status not in {'written','pulled','idempotent_skip'}:
+              raise SystemExit(f"unexpected jobs provider state: {status}")
+          if status == 'written' and r.get('verifiedFrom') != 'sheets_values_get':
+              raise SystemExit(f"write not read-back verified: {r.get('verifiedFrom')}")
+          print(f"OK jobs provider status={status} dirty=false rows={r.get('rowCount')}")
+          PY
+
+      - name: Jobs adapter sensor
+        run: python3 scripts/check-vf-office.py
+
+      - name: Persist canonical cache/receipt only when changed
+        run: |
+          set -e
+          if git diff --quiet -- office/ledger/live/jobs.csv office/ledger/live/sync-receipt.json office/ledger/live/pending-push.csv; then
+            echo "No durable Jobs sync changes"
+            exit 0
+          fi
+          git config user.name "velvetos-jobs-sync"
+          git config user.email "noreply@velvetos.local"
+          git add -A -- office/ledger/live/jobs.csv office/ledger/live/sync-receipt.json office/ledger/live/pending-push.csv
+          git commit -m "jobs: persist verified Sheet sync receipt"
+          branch="${GITHUB_REF_NAME}"
+          git fetch origin "$branch"
+          if ! git rebase "origin/$branch"; then
+            git rebase --abort || true
+            echo "::error::Concurrent Jobs state changed; refusing overwrite"
+            exit 1
+          fi
+          git push origin "HEAD:$branch"
