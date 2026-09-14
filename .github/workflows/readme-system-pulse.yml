@@ -40,22 +40,38 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Ensure README closeout is recorded
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("CHANGELOG.md")
+          text = path.read_text(encoding="utf-8")
+          entry = "- 2026-09-14 — **Living README / System Pulse closeout:** bilingual product-first README with a repository-backed System Pulse; automatic hourly/on-change refresh; GitHub-safe Hebrew BiDi normalization; explicit stable language anchors; and CI-checkable rendering invariants. Pulse claims remain evidence-bound and never promote configured provider paths to verified without committed proof."
+          marker = "## [Unreleased]\n\n"
+          if entry not in text:
+              if marker not in text:
+                  raise SystemExit("CHANGELOG missing Unreleased marker")
+              path.write_text(text.replace(marker, marker + entry + "\n", 1), encoding="utf-8")
+          PY
+
       - name: Render repository-backed System Pulse
         run: python3 scripts/update-readme-snapshot.py
 
       - name: Normalize Hebrew BiDi rendering
         run: python3 scripts/fix-readme-bidi.py
 
-      - name: Commit only when README changed
+      - name: Commit closeout changes when needed
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- README.md; then
-            echo "README already current"
+          if git diff --quiet -- README.md CHANGELOG.md; then
+            echo "README and changelog already current"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          git commit -m "docs: refresh README System Pulse"
+          git add README.md CHANGELOG.md
+          git commit -m "docs: record README System Pulse closeout"
           git push
