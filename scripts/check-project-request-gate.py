@@ -129,6 +129,10 @@ for sample, expected in (
     ("כתוב לי כיתוב", "creative_publication"),
     ("write social media copy for our feed", "creative_publication"),
     ("קופי לאינסטגרם", "creative_publication"),
+    ("write a social post", "creative_publication"),
+    ("make a public post", "creative_publication"),
+    ("create a Story for the new product", "creative_publication"),
+    ("copy customer feedback into the owner brief", "copywriting"),
     ("עדכן סטטוס הזמנה", "operations"),
 ):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)

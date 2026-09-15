@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 import argparse
-import json
 import hashlib
+import json
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -64,27 +65,52 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     return problems
 
 
+def _phrase_in(probe: str, phrase: str) -> bool:
+    """Substring match for multi-word / non-ASCII phrases."""
+    return phrase.casefold() in probe
+
+
+def _token_in(probe: str, token: str) -> bool:
+    """Word-boundary match so 'feed' does not hit 'feedback' / 'story'≠'history'."""
+    return re.search(rf"(?<!\w){re.escape(token.casefold())}(?!\w)", probe) is not None
+
+
+def _hint_matches(probe: str, hint: str) -> bool:
+    """ASCII single-token hints use word boundaries; phrases/Hebrew stay substring."""
+    h = str(hint).casefold()
+    if " " in h or any(ord(c) > 127 for c in h):
+        return h in probe
+    return _token_in(probe, h)
+
+
 def classify(text: str, manifest: dict) -> list[str]:
     probe = text.casefold()
     hits: list[str] = []
     for name, cfg in manifest["domains"].items():
-        if any(str(hint).casefold() in probe for hint in cfg.get("hints", [])):
+        if any(_hint_matches(probe, hint) for hint in cfg.get("hints", [])):
             hits.append(name)
     # Caption / public-social copy requests are creative by default in VF. Co-route
     # them through the Creative Manifest gate instead of allowing copywriting alone.
-    public_copy_hints = (
+    public_copy_phrases = (
         "caption",
         "כיתוב",
         "public-social",
         "visual-copy",
         "social media",
         "social-media",
-        "feed",
         "instagram",
         "אינסטגרם",
         "לפיד",
     )
-    if "copywriting" in hits and "creative_publication" not in hits and any(h in probe for h in public_copy_hints):
+    public_copy_tokens = ("feed",)
+    if (
+        "copywriting" in hits
+        and "creative_publication" not in hits
+        and (
+            any(_phrase_in(probe, h) for h in public_copy_phrases)
+            or any(_token_in(probe, t) for t in public_copy_tokens)
+        )
+    ):
         hits.append("creative_publication")
     return hits or ["general_business"]
 
