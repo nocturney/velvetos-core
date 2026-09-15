@@ -286,11 +286,53 @@ def build_metadata(
     }
 
 
+def _check_reviewed_jpeg(src: Path, max_bytes: int) -> None:
+    """Accept normalized single-scan JPEG structure, never opaque APP payloads."""
+    with src.open('rb') as handle:
+        data = handle.read(max_bytes + 1)
+    if len(data) > max_bytes or data[:2] != b'\xff\xd8':
+        raise ValueError('invalid or oversized reviewed JPEG')
+    position = 2
+    allowed = {0xc0, 0xc4, 0xdb, 0xdd, 0xda, 0xe0}
+    while position + 4 <= len(data):
+        if data[position] != 0xff:
+            raise ValueError('normalize malformed JPEG structure before review')
+        marker = data[position+1]
+        if marker not in allowed:
+            raise ValueError('JPEG contains non-structural metadata or unsupported markers; normalize before review')
+        length = int.from_bytes(data[position+2:position+4], 'big')
+        end = position + 2 + length
+        if length < 2 or end > len(data):
+            raise ValueError('invalid JPEG segment length')
+        payload = data[position+4:end]
+        if marker == 0xe0 and not (len(payload) == 14 and payload[:5] == b'JFIF\0' and payload[-2:] == b'\0\0'):
+            raise ValueError('non-structural JPEG APP0/thumbnail metadata; normalize before review')
+        position = end
+        if marker != 0xda:
+            continue
+        # The canonical normalizer writes one baseline scan. Stuffed bytes and
+        # restart markers are structural; no metadata or payload may follow EOI.
+        while position < len(data):
+            boundary = data.find(b'\xff', position)
+            if boundary < 0 or boundary+1 >= len(data):
+                raise ValueError('JPEG is missing end-of-image')
+            code = data[boundary+1]
+            position = boundary+2
+            if code == 0 or 0xd0 <= code <= 0xd7:
+                continue
+            if code == 0xd9 and position == len(data):
+                return
+            raise ValueError('JPEG contains trailing payload/metadata or multiple scans; normalize before review')
+        break
+    raise ValueError('invalid normalized JPEG container')
+
+
 def inspect_reviewed_asset(src: Path, cfg: dict[str, Any]) -> tuple[str, dict[str, Any]]:
     """Read-only transport validation; never re-encode an approved artifact."""
     ext = src.suffix.lower()
     details: dict[str, Any] = {"sizeBytes": src.stat().st_size}
     if ext in {".jpg", ".jpeg"}:
+        _check_reviewed_jpeg(src, int(cfg["imageNormalization"]["maxBytes"]))
         from PIL import Image
         with Image.open(src) as image:
             if image.format != "JPEG" or image.mode not in {"RGB", "L"}:

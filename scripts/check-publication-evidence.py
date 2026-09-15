@@ -282,6 +282,26 @@ class EvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             run_bounded([sys.executable,'-c','import time; time.sleep(20)'],timeout=1)
 
+    def _assert_private_jpeg_metadata_blocked(self, payload, marker=None):
+        original=(self.root/'final.jpg').read_bytes()
+        data=original+payload if marker is None else original[:2]+b'\xff'+bytes([marker])+(len(payload)+2).to_bytes(2,'big')+payload+original[2:]
+        self._rebind_test_visual('private.jpg',data)
+        self._write_bound_approval()
+        self.assertTrue(self.result()['ok'], 'Private owner review can inspect the image')
+        self.assertFalse(self._approved_result()['ok'], 'Private JPEG metadata must never be published')
+
+    def test_xmp_metadata_blocks_publication(self):
+        self._assert_private_jpeg_metadata_blocked(b'http://ns.adobe.com/xap/1.0/\0<fixture>private-test</fixture>',0xe1)
+
+    def test_iptc_metadata_blocks_publication(self):
+        self._assert_private_jpeg_metadata_blocked(b'Photoshop 3.0\0'+b'8BIM\x04\x04\0\0\0\0\0\x0cprivate-test',0xed)
+
+    def test_unknown_app_metadata_blocks_publication(self):
+        self._assert_private_jpeg_metadata_blocked(b'private-test',0xec)
+
+    def test_trailing_jpeg_payload_blocks_publication(self):
+        self._assert_private_jpeg_metadata_blocked(b'private-test')
+
     def _write_bound_approval(self, include_digest=True):
         self.write('manifest.json', self.manifest)
         folder = self.root / 'packages/vfgrowth/preflight'
