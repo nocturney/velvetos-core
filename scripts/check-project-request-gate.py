@@ -59,8 +59,8 @@ if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deni
 # Behavioral regression: even a hash-consistent stale Project Authority must fail closed.
 sys.path.insert(0, str(ROOT / "scripts"))
 import vf_project_preflight as project_preflight
-if project_preflight.project_binding_problems():
-    fail("current Project binding is inconsistent: " + "; ".join(project_preflight.project_binding_problems()))
+if project_preflight.project_binding_problems(creative=True):
+    fail("current Project binding is inconsistent: " + "; ".join(project_preflight.project_binding_problems(creative=True)))
 with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
     tmp = Path(tmp_name)
     for rel in (project_preflight.PROJECT_AUTHORITY, project_preflight.PROJECT_ASSET_MANIFEST,
@@ -77,18 +77,28 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
             row["sha256"] = stale_sha
             row["bytes"] = stale.stat().st_size
     (tmp / project_preflight.PROJECT_ASSET_MANIFEST).write_text(json.dumps(am, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    problems = project_preflight.project_binding_problems(tmp)
+    problems = project_preflight.project_binding_problems(tmp, creative=True)
     if not any("no-Canva" in problem for problem in problems):
         fail("hash-consistent stale Project Authority did not fail closed")
     (tmp / project_preflight.PROJECT_ASSET_MANIFEST).write_text("{broken", encoding="utf-8")
-    problems = project_preflight.project_binding_problems(tmp)
+    problems = project_preflight.project_binding_problems(tmp, creative=True)
     if not problems or not any("cannot be decoded" in problem for problem in problems):
         fail("malformed Project asset manifest did not fail closed")
+    shutil.copyfile(ROOT / project_preflight.PROJECT_AUTHORITY, tmp / project_preflight.PROJECT_AUTHORITY)
     shutil.copyfile(ROOT / project_preflight.PROJECT_ASSET_MANIFEST, tmp / project_preflight.PROJECT_ASSET_MANIFEST)
     (tmp / project_preflight.VISUAL_ENFORCEMENT).write_text("[]", encoding="utf-8")
-    problems = project_preflight.project_binding_problems(tmp)
+    problems = project_preflight.project_binding_problems(tmp, creative=True)
     if not problems or not any("top-level objects" in problem for problem in problems):
         fail("wrong-shape visual enforcement JSON did not fail closed")
+    if project_preflight.project_binding_problems(tmp, creative=False):
+        fail("creative visual enforcement drift must not block non-creative domains")
+    shutil.copyfile(ROOT / project_preflight.VISUAL_ENFORCEMENT, tmp / project_preflight.VISUAL_ENFORCEMENT)
+    am = json.loads((tmp / project_preflight.PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
+    am["assets"] = None
+    (tmp / project_preflight.PROJECT_ASSET_MANIFEST).write_text(json.dumps(am), encoding="utf-8")
+    problems = project_preflight.project_binding_problems(tmp, creative=False)
+    if not problems or not any("array of objects" in problem for problem in problems):
+        fail("nested malformed asset list did not fail closed")
 
 all_paths = list(manifest.get("baselineAuthorities", []))
 for cfg in manifest["domains"].values():

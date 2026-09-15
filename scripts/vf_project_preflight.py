@@ -17,9 +17,11 @@ PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 def load_manifest() -> dict:
     return json.loads(MANIFEST.read_text(encoding="utf-8"))
 
-def project_binding_problems(root: Path = ROOT) -> list[str]:
+def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> list[str]:
     problems: list[str] = []
-    paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, VISUAL_ENFORCEMENT, PROJECT_GATE]
+    paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, PROJECT_GATE]
+    if creative:
+        paths.append(VISUAL_ENFORCEMENT)
     if any(not (root / rel).is_file() for rel in paths):
         return ["project binding file missing"]
     authority_path = root / PROJECT_AUTHORITY
@@ -27,29 +29,34 @@ def project_binding_problems(root: Path = ROOT) -> list[str]:
         authority = authority_path.read_text(encoding="utf-8")
         gate = (root / PROJECT_GATE).read_text(encoding="utf-8")
         assets = json.loads((root / PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
-        policy = json.loads((root / VISUAL_ENFORCEMENT).read_text(encoding="utf-8"))
+        policy = json.loads((root / VISUAL_ENFORCEMENT).read_text(encoding="utf-8")) if creative else None
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         return [f"project binding cannot be decoded: {type(exc).__name__}"]
-    if not isinstance(assets, dict) or not isinstance(policy, dict):
+    if not isinstance(assets, dict) or (creative and not isinstance(policy, dict)):
         return ["project binding JSON must contain top-level objects"]
-    route = policy.get("publicationRoute", {})
-    if not isinstance(route, dict):
-        return ["publicationRoute must be an object"]
+    asset_rows = assets.get("assets")
+    if not isinstance(asset_rows, list) or not all(isinstance(row, dict) for row in asset_rows):
+        return ["Project asset manifest assets must be an array of objects"]
     if not all(x in authority for x in ("Contract version: 6", "Revision: 6.2", "Bundle: VF-PROJECT-6.2-DETAIL-TRUTH")):
         problems.append("Project Authority identity mismatch")
-    rows = [x for x in assets.get("assets", []) if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
+    rows = [x for x in asset_rows if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
     digest = hashlib.sha256(authority_path.read_bytes()).hexdigest()
     if len(rows) != 1 or rows[0].get("sha256") != digest:
         problems.append("Project Authority hash does not match ASSET-MANIFEST-v6.2.json")
-    if "vfcovers/vfcanva composition route" in authority:
-        problems.append("stale vfcanva publication route remains active in Project Authority")
-    if "Canva/vfcanva are forbidden" not in authority:
-        problems.append("Project Authority lacks the current no-Canva publication override")
-    if "creative_execution_authorized: true" not in authority or "creative_execution_authorized: true" not in gate:
-        problems.append("pre-tool creative execution receipt is not bound into Project Authority/Gate")
-    denied = {str(x).casefold() for x in route.get("deniedTools", [])}
-    if not {"canva", "vfcanva"}.issubset(denied):
-        problems.append("publicationRoute does not deny Canva/vfcanva")
+    if creative:
+        route = policy.get("publicationRoute", {})
+        if not isinstance(route, dict):
+            problems.append("publicationRoute must be an object")
+            return problems
+        if "vfcovers/vfcanva composition route" in authority:
+            problems.append("stale vfcanva publication route remains active in Project Authority")
+        if "Canva/vfcanva are forbidden" not in authority:
+            problems.append("Project Authority lacks the current no-Canva publication override")
+        if "creative_execution_authorized: true" not in authority or "creative_execution_authorized: true" not in gate:
+            problems.append("pre-tool creative execution receipt is not bound into Project Authority/Gate")
+        denied = {str(x).casefold() for x in route.get("deniedTools", [])}
+        if not {"canva", "vfcanva"}.issubset(denied):
+            problems.append("publicationRoute does not deny Canva/vfcanva")
     return problems
 
 
@@ -86,7 +93,8 @@ def main() -> int:
         hard_gates.extend(cfg.get("hardGates", []))
     authorities = list(dict.fromkeys(authorities))
     missing = [path for path in authorities if not (ROOT / path).is_file()]
-    binding_problems = project_binding_problems()
+    creative = bool(set(domains) & {"creative_publication", "instagram_action"})
+    binding_problems = project_binding_problems(creative=creative)
     receipt = {
         "request_domain": domains,
         "authority_manifest_version": manifest["schemaVersion"],
@@ -103,7 +111,6 @@ def main() -> int:
         "creative_execution_authorized": False,
     }
     receipt["route_resolution"] = "BLOCKED" if (missing or binding_problems) else "PASS"
-    creative = bool(set(domains) & {"creative_publication", "instagram_action"})
     if creative:
         from vf_publication_evidence import validate
         phase = args.phase or ("delivery" if "instagram_action" in domains else "production")
