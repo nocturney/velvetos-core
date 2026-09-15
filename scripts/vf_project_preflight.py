@@ -23,10 +23,18 @@ def project_binding_problems(root: Path = ROOT) -> list[str]:
     if any(not (root / rel).is_file() for rel in paths):
         return ["project binding file missing"]
     authority_path = root / PROJECT_AUTHORITY
-    authority = authority_path.read_text(encoding="utf-8")
-    assets = json.loads((root / PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
-    route = json.loads((root / VISUAL_ENFORCEMENT).read_text(encoding="utf-8")).get("publicationRoute", {})
-    gate = (root / PROJECT_GATE).read_text(encoding="utf-8")
+    try:
+        authority = authority_path.read_text(encoding="utf-8")
+        gate = (root / PROJECT_GATE).read_text(encoding="utf-8")
+        assets = json.loads((root / PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
+        policy = json.loads((root / VISUAL_ENFORCEMENT).read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        return [f"project binding cannot be decoded: {type(exc).__name__}"]
+    if not isinstance(assets, dict) or not isinstance(policy, dict):
+        return ["project binding JSON must contain top-level objects"]
+    route = policy.get("publicationRoute", {})
+    if not isinstance(route, dict):
+        return ["publicationRoute must be an object"]
     if not all(x in authority for x in ("Contract version: 6", "Revision: 6.2", "Bundle: VF-PROJECT-6.2-DETAIL-TRUTH")):
         problems.append("Project Authority identity mismatch")
     rows = [x for x in assets.get("assets", []) if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]

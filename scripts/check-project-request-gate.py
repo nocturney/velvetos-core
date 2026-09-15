@@ -80,6 +80,15 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
     problems = project_preflight.project_binding_problems(tmp)
     if not any("no-Canva" in problem for problem in problems):
         fail("hash-consistent stale Project Authority did not fail closed")
+    (tmp / project_preflight.PROJECT_ASSET_MANIFEST).write_text("{broken", encoding="utf-8")
+    problems = project_preflight.project_binding_problems(tmp)
+    if not problems or not any("cannot be decoded" in problem for problem in problems):
+        fail("malformed Project asset manifest did not fail closed")
+    shutil.copyfile(ROOT / project_preflight.PROJECT_ASSET_MANIFEST, tmp / project_preflight.PROJECT_ASSET_MANIFEST)
+    (tmp / project_preflight.VISUAL_ENFORCEMENT).write_text("[]", encoding="utf-8")
+    problems = project_preflight.project_binding_problems(tmp)
+    if not problems or not any("top-level objects" in problem for problem in problems):
+        fail("wrong-shape visual enforcement JSON did not fail closed")
 
 all_paths = list(manifest.get("baselineAuthorities", []))
 for cfg in manifest["domains"].values():
