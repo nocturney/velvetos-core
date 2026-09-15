@@ -83,6 +83,20 @@ def _hint_matches(probe: str, hint: str) -> bool:
     return _token_in(probe, h)
 
 
+def _instagram_publish_request(probe: str) -> bool:
+    """True when an Instagram destination appears with a publish/post/upload verb.
+
+    Verbs and destination need not be adjacent (`post this on Instagram`).
+    Pure drafting (`write an Instagram caption`) has destination but no publish verb.
+    """
+    has_ig = _phrase_in(probe, "instagram") or _phrase_in(probe, "אינסטגרם")
+    if not has_ig:
+        return False
+    if any(_token_in(probe, v) for v in ("post", "upload", "publish", "schedule")):
+        return True
+    return any(_phrase_in(probe, h) for h in ("פרסם", "העלה לאינסטגרם", "העלה"))
+
+
 def classify(text: str, manifest: dict) -> list[str]:
     probe = text.casefold()
     hits: list[str] = []
@@ -124,11 +138,13 @@ def classify(text: str, manifest: dict) -> list[str]:
         )
         if social_story and not narrative:
             hits.append("creative_publication")
-    # Drafting mentions of Instagram must not become publish/delivery actions.
-    if "instagram_action" in hits:
-        publish_verbs = ("publish", "schedule", "פרסם", "העלה לאינסטגרם", "העלה", "post to instagram", "post on instagram", "upload to instagram")
-        if not any(_phrase_in(probe, p) for p in publish_verbs):
-            hits = [h for h in hits if h != "instagram_action"]
+    # Structural Instagram publish detection (verb + destination, intervening words OK).
+    if _instagram_publish_request(probe):
+        if "instagram_action" not in hits:
+            hits.append("instagram_action")
+    elif "instagram_action" in hits:
+        # Drop false publish routing from bare destination / drafting phrasing.
+        hits = [h for h in hits if h != "instagram_action"]
     return hits or ["general_business"]
 
 def main() -> int:
