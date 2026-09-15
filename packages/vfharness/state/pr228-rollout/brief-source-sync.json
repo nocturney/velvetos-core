@@ -1,0 +1,12 @@
+{
+  "observed_at": "2026-09-15T08:27:55.138140+00:00",
+  "source_ref": "packages/vfops/out/morning-brief-recovery-v10.3-2026-09-15.txt",
+  "source_sha256": "2850d9487b201a54f9c598a16cd90c7ef1877552340be4993bb67e5297ae0737",
+  "canonical_ref": "packages/vfops/BRIEF-2026-09-15.md",
+  "canonical_sha256": "2850d9487b201a54f9c598a16cd90c7ef1877552340be4993bb67e5297ae0737",
+  "method": "byte-for-byte copy of the actual dated recovery brief from main",
+  "content_generated": false,
+  "email_sent_by_this_task": false,
+  "delivery_verified": false,
+  "scope": "Artifact synchronization only; no transport or factual refresh."
+}

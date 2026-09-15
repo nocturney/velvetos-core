@@ -27,7 +27,7 @@
   ],
   "unresolved": [],
   "pulse": "working",
-  "last_updated": "2026-09-07",
+  "last_updated": "2026-09-15T08:27:55.138140+00:00",
   "execution_state": {
     "base_sha": "ebfbe2714f38d9eda8579d8651cac4df24659c8f",
     "branch": "codex/swc-001-task-state",
@@ -69,7 +69,7 @@
         "sha256": "174cfd5593366141b76cc25d20fb948628a59b66115d09e529673e0cd0485e0a"
       },
       "scripts/check-vf-task-state.py": {
-        "sha256": "f492abe30b0d6023f670f1bed25fd7bb5c7b95a9eba84448ae07730f73f6298e"
+        "sha256": "924af15f9607026e279ff05d4a8bf66c078097c8a0c3485231b04fbe8c6fa7b7"
       },
       "packages/vfharness/playbooks/skillstate.md": {
         "sha256": "12f3f2e8dc63de16e775af147bf33c31b0677eea12e443a6677e080055321a83"
@@ -85,9 +85,42 @@
       "pr": 108,
       "coordination_pr": 105,
       "note": "phase B (live brief / consumers) tracked under Cursor PRs, not this task"
-    }
+    },
+    "artifact_revalidations": [
+      {
+        "reviewed_at": "2026-09-15T08:27:55.138140+00:00",
+        "scope": "Artifact integrity and existing TaskStateTests only; original task outcome not rerun.",
+        "reason": "PR228 changes the path assertion to POSIX; LF attributes make byte validation portable.",
+        "previous_checkpoint_sha256": "99a95b827d9014360a8a6e8cad23b26d3fa67173666883fddaa66673c1c1b8ab",
+        "previous_artifact_evidence": {
+          "scripts/vf_task_state.py": {
+            "sha256": "174cfd5593366141b76cc25d20fb948628a59b66115d09e529673e0cd0485e0a"
+          },
+          "scripts/check-vf-task-state.py": {
+            "sha256": "f492abe30b0d6023f670f1bed25fd7bb5c7b95a9eba84448ae07730f73f6298e"
+          },
+          "packages/vfharness/playbooks/skillstate.md": {
+            "sha256": "12f3f2e8dc63de16e775af147bf33c31b0677eea12e443a6677e080055321a83"
+          }
+        },
+        "current_artifact_evidence": {
+          "scripts/vf_task_state.py": {
+            "sha256": "174cfd5593366141b76cc25d20fb948628a59b66115d09e529673e0cd0485e0a"
+          },
+          "scripts/check-vf-task-state.py": {
+            "sha256": "924af15f9607026e279ff05d4a8bf66c078097c8a0c3485231b04fbe8c6fa7b7"
+          },
+          "packages/vfharness/playbooks/skillstate.md": {
+            "sha256": "12f3f2e8dc63de16e775af147bf33c31b0677eea12e443a6677e080055321a83"
+          }
+        },
+        "proof_path": "packages/vfharness/state/pr228-rollout/task-state-behavior.log",
+        "proof_sha256": "e626bfeac7bbf4cefa7eb0ecd5e749e852ac84b09d8f5cea7ebb637b47e4c732",
+        "exit_code": 0
+      }
+    ]
   },
   "latest_observation": "Phase A merged on main via #108. Owned reader/sensor digests verified. skillstate.md digest refreshed 2026-09-07 after component_state / Degraded embed (ADR-THREE-LAYERS). Historical audit of other checkpoints remains separate. Follow-ups: Cursor PRs #109–#114.",
   "outcome": "worker_done",
-  "verification": "merged to main via PR #108 (06f9854); phase A artifacts digest-verified; phase B is separate SWC-CURSOR work"
+  "verification": "Existing TaskStateTests executed successfully; current LF artifact bytes revalidated for PR228. Prior evidence retained in execution_state.artifact_revalidations."
 }

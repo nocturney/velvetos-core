@@ -1,0 +1,24 @@
+test_bad_and_orphaned_digest_evidence_is_not_accepted (<run_path>.TaskStateTests.test_bad_and_orphaned_digest_evidence_is_not_accepted) ... ok
+test_blocked_and_running_are_not_completed_even_with_matching_artifacts (<run_path>.TaskStateTests.test_blocked_and_running_are_not_completed_even_with_matching_artifacts) ... ok
+test_changed_artifact_invalidates_previous_evidence (<run_path>.TaskStateTests.test_changed_artifact_invalidates_previous_evidence) ... ok
+test_cli_selection_exit_codes_and_read_only_operation (<run_path>.TaskStateTests.test_cli_selection_exit_codes_and_read_only_operation) ... ok
+test_done_with_blocker_or_unresolved_work_is_inconsistent (<run_path>.TaskStateTests.test_done_with_blocker_or_unresolved_work_is_inconsistent) ... ok
+test_duplicate_task_ids_and_nested_checkpoints_are_reported (<run_path>.TaskStateTests.test_duplicate_task_ids_and_nested_checkpoints_are_reported) ... ok
+test_existence_or_free_text_does_not_prove_completion (<run_path>.TaskStateTests.test_existence_or_free_text_does_not_prove_completion) ... ok
+test_invalid_json_and_nonobject_records_fail_without_traceback (<run_path>.TaskStateTests.test_invalid_json_and_nonobject_records_fail_without_traceback) ... ok
+test_ladder_logs_are_observed_separately_and_never_complete_tasks (<run_path>.TaskStateTests.test_ladder_logs_are_observed_separately_and_never_complete_tasks) ... ok
+test_malformed_ladder_log_is_reported_instead_of_ignored (<run_path>.TaskStateTests.test_malformed_ladder_log_is_reported_instead_of_ignored) ... ok
+test_matching_digest_verifies_bytes_with_source_provenance (<run_path>.TaskStateTests.test_matching_digest_verifies_bytes_with_source_provenance) ... ok
+test_missing_local_artifact_is_explicit_failure (<run_path>.TaskStateTests.test_missing_local_artifact_is_explicit_failure) ... ok
+test_no_artifacts_or_verification_record_does_not_verify (<run_path>.TaskStateTests.test_no_artifacts_or_verification_record_does_not_verify) ... ok
+test_opaque_ids_commands_and_patterns_are_not_missing_local_files (<run_path>.TaskStateTests.test_opaque_ids_commands_and_patterns_are_not_missing_local_files) ... ok
+test_remote_and_other_machine_paths_are_unverified_not_missing (<run_path>.TaskStateTests.test_remote_and_other_machine_paths_are_unverified_not_missing) ... ok
+test_schema_nested_requirements_lengths_and_additional_properties (<run_path>.TaskStateTests.test_schema_nested_requirements_lengths_and_additional_properties) ... ok
+test_schema_rejects_legacy_aliases_null_crew_and_unknown_fields (<run_path>.TaskStateTests.test_schema_rejects_legacy_aliases_null_crew_and_unknown_fields) ... ok
+test_symlink_outside_checkout_and_directory_do_not_verify (<run_path>.TaskStateTests.test_symlink_outside_checkout_and_directory_do_not_verify) ... ok
+test_unknown_schema_keywords_fail_closed (<run_path>.TaskStateTests.test_unknown_schema_keywords_fail_closed) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 1.377s
+
+OK

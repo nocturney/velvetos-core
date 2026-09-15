@@ -1,0 +1,11 @@
+{
+  "started_at": "2026-09-15T08:30:11.501528+00:00",
+  "head": "569d2d5f495db5c2798f9acd4654764e1673d659",
+  "state": "PASS",
+  "exit_code": 0,
+  "elapsed_seconds": 15.64,
+  "completed_at": "2026-09-15T08:30:27.143776+00:00",
+  "log_sha256": "d079b3265e7e14baad5ab05b7c59eb11cd6fb99275b975148ef694c94e210ca7",
+  "scope": "70 local sensors; review, CI and main deployment remain separate gates",
+  "log_encoding": "stdout field in check-all.json; sha256 refers to original UTF-8 stdout bytes"
+}

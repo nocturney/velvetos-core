@@ -20,27 +20,26 @@
     "Implemented actual-file evidence on production, delivery, shared bridge writes and recovery registration",
     "Synchronized 40 scoped entrypoints and existing templates/schema",
     "Observed 24 publication regressions and 12 handoff tests pass",
-    "Full suite executed: 68/70 pass; two failures retained and not waived"
+    "Full suite executed: 68/70 pass; two failures retained and not waived",
+    "Revalidated changed task-state test with preserved prior hashes; synchronized actual recovery brief; all 70 sensors passed"
   ],
-  "next_step": "Independent change/spec review, resolve the two repository operational verification blockers without fabricated receipts, then merge and separately synchronize worker/Project copies.",
+  "next_step": "Complete independent reviews and hosted CI; merge with the recorded owner authorization and rollback checkpoint",
   "artifacts": [
     "scripts/vf_publication_evidence.py",
     "scripts/check-publication-evidence.py",
     "packages/vfharness/state/publication-provider-migration.json"
   ],
   "unresolved": [
-    "check-staleness.py: actual current-day brief missing in this checkout; reproduced on unchanged base",
-    "check-vf-task-state.py: historical checkpoint artifact hashes are stale; not re-stamped",
-    "Independent review/merge not performed",
-    "Separate workers/frontend and ChatGPT Project settings not synchronized or proven",
-    "No live creative cold-start or aesthetic acceptance test performed"
+    "Independent review and hosted CI on the final commit pending",
+    "Main merge and Project activation not performed",
+    "App fresh-session creative test not run"
   ],
-  "last_updated": "2026-09-15T06:10:04.058715+00:00",
+  "last_updated": "2026-09-15T08:31:46.722006+00:00",
   "execution_state": {
     "authority_revision": "6.2",
     "bundle_id": "VF-PROJECT-6.2-DETAIL-TRUTH",
     "authority_sha256": "590c97c0fb7e7b7669ac6fd30c91a62b324400f08b769bc715498cd4837ff6e1",
-    "owner_authorization": "Current conversation: implement the required changes, then handle remaining synchronization and tests.",
+    "owner_authorization": "Owner explicitly approved checkpoint, review, main merge, verification and Project cold-start preparation; no publishing",
     "branch": "fix/publication-evidence-sync-20260915",
     "worktree": "C:/Users/Chris/vf-publication-evidence-sync",
     "previous_worktree": "C:/Users/Chris/vf-project-contract-v6",
@@ -57,11 +56,11 @@
     "proof": {
       "publication_tests": 24,
       "handoff_tests": 12,
-      "suite_pass": 68,
+      "suite_pass": 70,
       "suite_total": 70,
       "false_positive_before": true,
       "false_positive_after": false,
-      "review": "NOT_INDEPENDENTLY_REVIEWED",
+      "review": "REQUESTED_NOT_RECEIVED",
       "deployment": "NOT_PERFORMED"
     }
   }
