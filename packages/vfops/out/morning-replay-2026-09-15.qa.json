@@ -1,0 +1,165 @@
+{
+  "date": "2026-09-15",
+  "renderer": "packages/vfbriefux/render_mail.py",
+  "renderer_sha256": "be43d124f4423a3649ccc166c25b81d8065e863caf06995ecc96896da7c3a31b",
+  "canonical_template_sha256": "92da362ca1c1f00b7b94f713dc9c66d3ffc3de042790a9c47de707f0899cd1b3",
+  "composition_repairs": [
+    "valid nested table for canonical slot rows",
+    "mobile status badges stack; desktop and MSO unchanged"
+  ],
+  "source_image": {
+    "sha256": "4a3ec12338d707f27cda64e06b4d6f7007f995425ddc1533454b423309acdf84",
+    "origin_gmail_message_id": "1a09ef209667a523",
+    "origin_filename": "remote-01.jpg",
+    "live_media_id": "17873372004572489"
+  },
+  "outputs": {
+    "morning": {
+      "html": "packages/vfops/out/morning-replay-v10.3-2026-09-15.html",
+      "visibleText": "packages/vfops/out/morning-replay-v10.3-2026-09-15.txt",
+      "html_sha256": "32fab19bfa76a2c6ba57d10f0bf0e754f140f6c9e5415ddee58b6f7b8f2d644f",
+      "text_sha256": "8a294a69260d6df5e93b158565d0d95b8de837b96db162c521a7417689bcaaf1",
+      "viewport_checks": {
+        "desktop": {
+          "viewport": 1100,
+          "scroll": 1100,
+          "height": 4016
+        },
+        "mobile": {
+          "viewport": 390,
+          "scroll": 390,
+          "height": 5350
+        }
+      },
+      "screenshots": [
+        "/mnt/data/vf-recovery-20260915/morning-desktop.png",
+        "/mnt/data/vf-recovery-20260915/morning-mobile.png"
+      ],
+      "image_count": 1,
+      "visible_text_gate": {
+        "schema": 1,
+        "surface": "owner-brief",
+        "language": "he",
+        "text_sha256": "8a294a69260d6df5e93b158565d0d95b8de837b96db162c521a7417689bcaaf1",
+        "lint": {
+          "status": "pass",
+          "problems": [],
+          "raw_status": "fail_style"
+        },
+        "stages": {
+          "truth_checked": true,
+          "reader_first": true,
+          "copy_authority": true,
+          "humanizer_ai_tells": true,
+          "domain_tools_recorded": true,
+          "surface_qa": true
+        },
+        "domain_tools": [
+          "vfops",
+          "vfbriefux",
+          "vfresearch"
+        ],
+        "marketing_aids": null,
+        "no_text_compared": null,
+        "missing_evidence": [],
+        "visible_text_gate": "PASS",
+        "rule": "PASS requires the relevant chain on this exact text; lint/eval existence alone is not execution proof."
+      }
+    },
+    "research": {
+      "html": "packages/vfops/out/research-replay-v10.3-2026-09-15.html",
+      "visibleText": "packages/vfops/out/research-replay-v10.3-2026-09-15.txt",
+      "html_sha256": "6dafc29512d568f45860b69dd7767cd2f2811aa3fa85c1216a19ecc0f8c34a4c",
+      "text_sha256": "69ea8606062f26b44a2ece63c6d151b04cb4379d1e26fc2b7252391c237dfaff",
+      "viewport_checks": {
+        "desktop": {
+          "viewport": 1100,
+          "scroll": 1100,
+          "height": 2350
+        },
+        "mobile": {
+          "viewport": 390,
+          "scroll": 390,
+          "height": 3738
+        }
+      },
+      "screenshots": [
+        "/mnt/data/vf-recovery-20260915/research-desktop.png",
+        "/mnt/data/vf-recovery-20260915/research-mobile.png"
+      ],
+      "image_count": 0,
+      "visible_text_gate": {
+        "schema": 1,
+        "surface": "owner-brief",
+        "language": "he",
+        "text_sha256": "69ea8606062f26b44a2ece63c6d151b04cb4379d1e26fc2b7252391c237dfaff",
+        "lint": {
+          "status": "pass",
+          "problems": [],
+          "raw_status": "fail_style"
+        },
+        "stages": {
+          "truth_checked": true,
+          "reader_first": true,
+          "copy_authority": true,
+          "humanizer_ai_tells": true,
+          "domain_tools_recorded": true,
+          "surface_qa": true
+        },
+        "domain_tools": [
+          "vfops",
+          "vfbriefux",
+          "vfresearch"
+        ],
+        "marketing_aids": null,
+        "no_text_compared": null,
+        "missing_evidence": [],
+        "visible_text_gate": "PASS",
+        "rule": "PASS requires the relevant chain on this exact text; lint/eval existence alone is not execution proof."
+      }
+    }
+  },
+  "task": "morning-replay-20260915",
+  "generated_at": "2026-09-15T11:14:45.562861+00:00",
+  "project_authority": {
+    "contract": 6,
+    "revision": "6.2",
+    "bundle": "VF-PROJECT-6.2-DETAIL-TRUTH"
+  },
+  "request_domains": [
+    "operations",
+    "research"
+  ],
+  "repo_base": "e7c78d8627170fa3de485d0a63dca2ff062317bf",
+  "qa": {
+    "artifact_exists": true,
+    "source_match": true,
+    "copy_checked": true,
+    "brand_checked": true,
+    "final_qa": true,
+    "desktop_mobile_screenshots_inspected": true,
+    "outlook_mso_present": true,
+    "real_outlook_client_render_test": "not_performed"
+  },
+  "delivery_state": "not_sent_yet",
+  "automation_reactivation": {
+    "modified_ids": [
+      "6aa24c3b184881918e09f2656c9f7f57",
+      "Automation_2641744ce0808191a4349d115208179e",
+      "6aa788b7e6a481918f87919d53105ef0",
+      "6aa248095fc88191bc7f1fc75b62f1a2"
+    ],
+    "enabled_set_post_write_count": 7,
+    "schedules_changed": false,
+    "root_cause": "UNPROVEN"
+  },
+  "live_sources": {
+    "jobs": "13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao",
+    "books": "11eRkRT78Nzacef8PmPCk0xqtPXy0uw9ivu747bw0FIs",
+    "quotes": "13-kaFD8OpQ0ozMB0UuBNnpfYsvQZ1NVBWg05WrmIn1w",
+    "calendar": "primary; 2026-09-15 Asia/Jerusalem; empty",
+    "instagram_account": "17841407772120429",
+    "instagram_media": "17873372004572489",
+    "media_inbox": "1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ; empty"
+  }
+}
