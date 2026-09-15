@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-15 — **Chief of Staff system map (docs-only):** operating map of VelvetOS Core for a later CoS agent — `docs/chief-of-staff/` (`SYSTEM-MAP.md`, `SOT-INDEX.md`, `GATES-AND-ESCALATION.md`, `PACKS-CATALOG.md`, `LOOPS.md`). Reads existing authorities; does not add a parallel SoT, sensor, or runtime. Unclear items marked UNKNOWN/UNPROVEN. מפת הפעלה לראש צוות מעל מקורות קיימים; בלי שינוי התנהגות.
+
 - 2026-09-14 — **Video toolchain adapters commissioned:** adapted video-use editing patterns into `vf_video_edit.py` with EDL validation, word-boundary contracts, 30ms audio fades, deterministic base cuts, ffprobe/SHA-256 receipts and boundary inspection; Windows smoke PASS (1080x1920 + audio, SHA-256 `20016024a1942c3a51a1cd923b29a6f1998759acede63b64998b7e1256614061`). Manim 0.21.0 isolated Windows slot smoke PASS (1080x1920, SHA-256 `8334a878cfa63aaee28e16e74c0e081dd12f1db7096ad6a8e78e3f26690e176a`). Remotion 4.0.523 remains license-gated and uninstalled by default; HyperFrames remains canonical master compositor.
 
 - 2026-09-14 — **Living README / System Pulse closeout:** bilingual product-first README with a repository-backed System Pulse; automatic hourly/on-change refresh; GitHub-safe Hebrew BiDi normalization; explicit stable language anchors; and CI-checkable rendering invariants. Pulse claims remain evidence-bound and never promote configured provider paths to verified without committed proof.

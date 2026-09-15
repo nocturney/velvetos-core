@@ -159,6 +159,7 @@
 | Workflows | `.github/workflows/` |
 |‏ היסטוריית שינויים | [`CHANGELOG.md`](CHANGELOG.md) |
 |‏ הנחיות agents | [`AGENTS.md`](AGENTS.md) |
+|‏ מפת ראש צוות (קריאה בלבד) | [`docs/chief-of-staff/`](docs/chief-of-staff/) |
 
 ## ‏חוקי אמת עסקית
 
@@ -280,6 +281,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Workflows | `.github/workflows/` |
 | Change history | [`CHANGELOG.md`](CHANGELOG.md) |
 | Agent guidance | [`AGENTS.md`](AGENTS.md) |
+| Chief of Staff map (read-only) | [`docs/chief-of-staff/`](docs/chief-of-staff/) |
 
 ## Living README contract
 
@@ -309,7 +311,7 @@ python3 scripts/update-readme-snapshot.py --check
 
 ## Read next · המשך קריאה
 
-[`CHANGELOG.md`](CHANGELOG.md) · [`AGENTS.md`](AGENTS.md) · [`docs/HARNESS.md`](docs/HARNESS.md) · [`docs/FAILOVER.md`](docs/FAILOVER.md) · [`docs/MEDIA-VAULT.md`](docs/MEDIA-VAULT.md) · [`constitution/`](constitution/) · [`packages/velvetos/`](packages/velvetos/)
+[`CHANGELOG.md`](CHANGELOG.md) · [`AGENTS.md`](AGENTS.md) · [`docs/chief-of-staff/`](docs/chief-of-staff/) · [`docs/HARNESS.md`](docs/HARNESS.md) · [`docs/FAILOVER.md`](docs/FAILOVER.md) · [`docs/MEDIA-VAULT.md`](docs/MEDIA-VAULT.md) · [`constitution/`](constitution/) · [`packages/velvetos/`](packages/velvetos/)
 
 ---
 
