@@ -166,13 +166,29 @@ ig_pub = subprocess.run(
 )
 if "instagram_action" not in json.loads(ig_pub.stdout).get("request_domain", []):
     fail("explicit Instagram publish must still route as instagram_action")
-for sample in ("post this on Instagram", "upload this to Instagram", "share this on Instagram", "put this on Instagram"):
+for sample in (
+    "post this on Instagram",
+    "upload this to Instagram",
+    "share this on Instagram",
+    "put this on Instagram",
+    "send this to Instagram",
+    "push this live on Instagram",
+    "add this to Instagram",
+):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)
     if "instagram_action" not in receipt.get("request_domain", []):
         fail(f"Instagram publish-intent must route as instagram_action: {sample}")
     if receipt.get("publication_evidence_phase") != "delivery":
         fail(f"Instagram action must require delivery evidence: {sample}")
+for sample in (
+    "analyze this Instagram post",
+    "share the Instagram analytics with the owner",
+):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "instagram_action" in receipt.get("request_domain", []):
+        fail(f"research/office Instagram reference must not route as instagram_action: {sample}")
 for sample in ("publish this post",):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)

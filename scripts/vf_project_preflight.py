@@ -86,16 +86,38 @@ def _hint_matches(probe: str, hint: str) -> bool:
 def _instagram_publish_request(probe: str) -> bool:
     """True when an Instagram destination appears with a publish-intent verb.
 
-    Verbs and destination need not be adjacent (`post this on Instagram`,
-    `share this on Instagram`). Pure drafting (`write an Instagram caption`)
-    has destination but no publish-intent verb.
+    Clear delivery verbs (`send`/`push`/`upload`/…) may sit anywhere beside an
+    Instagram destination (`send this to Instagram`, `push this live on
+    Instagram`). Ambiguous tokens (`post`, `share`) must govern content being
+    sent *to* Instagram (`share this on Instagram`) — noun references such as
+    `analyze this Instagram post` or office `share the Instagram analytics`
+    are not publication. Pure drafting (`write an Instagram caption`) has
+    destination but no publish-intent verb.
     """
     has_ig = _phrase_in(probe, "instagram") or _phrase_in(probe, "אינסטגרם")
     if not has_ig:
         return False
-    if any(_token_in(probe, v) for v in ("post", "upload", "publish", "schedule", "share", "put")):
+    if any(
+        _phrase_in(probe, h)
+        for h in ("פרסם", "העלה לאינסטגרם", "העלה", "שתף לאינסטגרם", "שלח לאינסטגרם")
+    ):
         return True
-    return any(_phrase_in(probe, h) for h in ("פרסם", "העלה לאינסטגרם", "העלה", "שתף"))
+    # Unambiguous publish/delivery verbs co-occurring with Instagram.
+    # `send` is the repo-canonical Instagram delivery verb (constitution/SEND.md).
+    if any(
+        _token_in(probe, v)
+        for v in ("upload", "publish", "schedule", "put", "send")
+    ):
+        return True
+    # Ambiguous verbs: require an Instagram destination preposition so noun
+    # "post", office "share … analytics", or "add Instagram to the report"
+    # do not trip delivery. Covers post/share/push/add … on|to Instagram.
+    if re.search(
+        r"(?<!\w)(?:post|share|push|add)\b(?:\W+\w+){0,8}\W+(?:on|to|onto|in)\s+instagram",
+        probe,
+    ):
+        return True
+    return False
 
 
 def _bare_publication_request(probe: str) -> bool:
