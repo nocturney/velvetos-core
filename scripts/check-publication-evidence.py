@@ -153,6 +153,65 @@ class EvidenceTests(unittest.TestCase):
         self.assertFalse(self.result()['ok'])
 
 
+    def _rebind_test_visual(self, path, payload, full_alias=None):
+        visual = dict(self.write(path, payload), role='FINAL_VISUAL')
+        self.ev['outputs'][0] = visual
+        self.ev['package_sha256'] = evidence.package_digest(self.ev['outputs'])
+        review = json.loads((self.root / 'review.json').read_text())
+        review['package_sha256'] = self.ev['package_sha256']
+        full = self.write(full_alias, payload) if full_alias else visual
+        review['views'][0].update(artifact_sha256=visual['sha256'], full=full)
+        self.ev['review'] = self.write('review.json', review)
+
+    def test_text_is_not_product_source(self):
+        self.ev['sources'] = [dict(self.write('source.txt', b'not pixels'), role='PRODUCT_SOURCE')]
+        self.ev['stages'] = self.ev['stages'][:5]
+        self.assertFalse(self.result('production')['ok'])
+
+    def test_corrupt_image_is_not_product_source(self):
+        self.ev['sources'] = [dict(self.write('source.png', b'not pixels'), role='PRODUCT_SOURCE')]
+        self.ev['stages'] = self.ev['stages'][:5]
+        self.assertFalse(self.result('production')['ok'])
+
+    def test_corrupt_final_with_full_alias_is_blocked(self):
+        self._rebind_test_visual('final.png', b'not pixels', 'full.bin')
+        self._write_bound_approval()
+        self.assertFalse(self.result()['ok'])
+        self.assertFalse(self._approved_result()['ok'])
+
+    def test_corrupt_video_with_valid_hash_is_blocked(self):
+        self._rebind_test_visual('final.mp4', b'not video')
+        self.assertFalse(self.result()['ok'])
+
+    def test_valid_image_full_alias_cannot_skip_mobile_decode(self):
+        self._rebind_test_visual('final.png', (self.root/'final.png').read_bytes(), 'full.bin')
+        self.assertTrue(self.result()['ok'])
+        review = json.loads((self.root/'review.json').read_text())
+        review['views'][0]['mobile'] = self.write('mobile.png', b'not pixels')
+        self.ev['review'] = self.write('review.json', review)
+        self.assertFalse(self.result()['ok'])
+
+    def test_png_cannot_be_final_mp4(self):
+        self._rebind_test_visual('final.mp4', (self.root/'final.png').read_bytes())
+        self.assertFalse(self.result()['ok'])
+
+    def test_production_video_requires_real_decode(self):
+        self.ev['sources'] = [dict(self.write('source.mp4', b'not video'), role='PRODUCT_SOURCE')]
+        self.ev['stages'] = self.ev['stages'][:5]
+        self.assertFalse(self.result('production')['ok'])
+
+    def test_valid_mp4_delivery_decodes(self):
+        import shutil, subprocess
+        if not shutil.which('ffmpeg') or not shutil.which('ffprobe'):
+            self.skipTest('real video smoke needs ffmpeg/ffprobe; runtime blocks without them')
+        video = self.root/'smoke.mp4'
+        subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i',
+                        'color=s=120x150:d=0.1:r=10', '-c:v', 'mpeg4',
+                        '-pix_fmt', 'yuv420p', str(video)], check=True, timeout=20)
+        self._rebind_test_visual('final.mp4', video.read_bytes())
+        self.manifest['format'] = 'reel'
+        self.assertTrue(self.result()['ok'])
+
     def _write_bound_approval(self, include_digest=True):
         self.write('manifest.json', self.manifest)
         folder = self.root / 'packages/vfgrowth/preflight'
