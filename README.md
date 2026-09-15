@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-15 — **Mixed-prompt IG action gates:** advisory/howto clauses no longer strip a later publish/delete/archive follow-through; strictest clause wins (`instagram_action` + delivery fail-closed). Pure advis…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-15 — **Mixed-prompt IG action gates:** advisory/howto clauses no longer strip a later publish/delete/archive follow-through; strictest clause wins (`instagram_action` + delivery fail-closed). Pure advis…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-15 — **Canonical IG mutation-tool gates:** execution intent for write tool ids from `packages/vfigos/CAPABILITIES.json` + `packages/vfmcp/core-mcp.json` (`publish_image` / `publish_story` / `delete_medi…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-15 — **Canonical IG mutation-tool gates:** execution intent for write tool ids from `packages/vfigos/CAPABILITIES.json` + `packages/vfmcp/core-mcp.json` (`publish_image` / `publish_story` / `delete_medi…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
