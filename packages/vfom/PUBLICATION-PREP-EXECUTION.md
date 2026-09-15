@@ -65,7 +65,7 @@ Never hardcode WhatsApp into public creative/caption from memory. Resolve CTA fr
 
 ## Hard failure patterns
 
-Reject as incomplete: caption-only delivery; photo-ranking-only delivery; raw photos presented as finished visual treatment; a carousel that is essentially untreated source photos; crop/exposure-only work presented as the creative result; generic "clean it later" promises; public WhatsApp CTA when current CTA authority forbids it; or claiming the package is publication-ready without a produced visual artifact.
+Reject as incomplete: caption-only delivery; photo-ranking-only delivery; raw photos presented as finished visual treatment; a carousel that is essentially untreated source photos; crop/exposure-only work presented as the creative result; generic "clean it later" promises; public WhatsApp CTA when current CTA authority forbids it; a third public service pillar based on customer type or quantity; an unverified/generated logo or wordmark; generic callouts without a concrete source-region map; source/reference match left UNPROVEN; or claiming the package is publication-ready without a produced visual artifact.
 
 
 ## Brand asset lock

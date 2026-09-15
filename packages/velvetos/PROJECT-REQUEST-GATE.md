@@ -60,6 +60,8 @@ Do not expose this receipt to the owner unless useful or requested. But do not p
 
 Execution must use the routed skills/tools rather than reproducing their intended behavior from memory. When a matching specialist, lint, editor, source or provider exists, actually use it when the task requires it.
 
+For creative_publication, no image-generation, image-editing, design/composition or public-copy production tool may be called until the executable preflight receipt for the exact Creative Manifest/content ID says both project_preflight: PASS and creative_execution_authorized: true. File existence, CI, remembered rules or a planned future QA do not authorize the call. If the receipt cannot be produced or is BLOCKED, stop before tool invocation; diagnostics may repair the evidence, but no creative preview is a valid fallback.
+
 ### 6. Postflight
 
 Before claiming `done`, `ready`, `prepared`, `published`, `synced`, `sent`, or equivalent, run the domain's output/action gates on the exact final artifact or provider result. Evidence beats intention.
