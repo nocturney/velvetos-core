@@ -15,6 +15,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from vf_media_integrity import inspect_media
+
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
 AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt"
 ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json"
@@ -179,9 +181,10 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     sources = _rows(ev.get("sources"), "sources")
     source_shas = set()
     for src in sources:
-        verify_ref(root, src, "source", denied)
+        source_path = verify_ref(root, src, "source", denied)
         if src.get("role") != "PRODUCT_SOURCE" or src["sha256"] in required_refs:
             raise ValueError("STYLE_ONLY/generated references cannot be product sources")
+        inspect_media(source_path, "product source", source=True)
         source_shas.add(src["sha256"])
     refs = _rows(ev.get("references"), "references")
     ref_shas = set()
@@ -225,10 +228,11 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     outputs = _rows(ev.get("outputs"), "outputs")
     if not any(x.get("role") == "FINAL_VISUAL" for x in outputs):
         raise ValueError("no final visual artifact")
+    visual_info = {}
     for out in outputs:
         output_path = verify_ref(root, out, "final output", denied)
-        if out.get("role") == "FINAL_VISUAL" and output_path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".mp4"}:
-            raise ValueError("final visual must be an actual supported image or video file")
+        if out.get("role") == "FINAL_VISUAL":
+            visual_info[out["sha256"]] = inspect_media(output_path, "final visual")
         if out.get("role") not in {"FINAL_VISUAL", "FINAL_TEXT"}:
             raise ValueError("invalid final output role")
         if out["sha256"] in source_shas | ref_shas:
@@ -270,21 +274,13 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     for view in views:
         full = verify_ref(root, view.get("full"), "full review view", denied)
         mobile = verify_ref(root, view.get("mobile"), "mobile review view", denied)
-        if full.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}:
-            try:
-                from PIL import Image
-                with Image.open(full) as image:
-                    image.verify()
-                with Image.open(full) as image:
-                    fw, fh = image.size
-                with Image.open(mobile) as image:
-                    image.verify()
-                with Image.open(mobile) as image:
-                    mw, mh = image.size
-                if not (0 < mw < fw and 0 < mh < fh and abs(mw / mh - fw / fh) < 0.02):
-                    raise ValueError("mobile preview must be smaller and preserve the full image aspect ratio")
-            except ImportError as exc:
-                raise ValueError("Pillow required to validate final/mobile image dimensions") from exc
+        # The delivered artifact determines validation, not an aliased full-view suffix.
+        media = visual_info[view["artifact_sha256"]]
+        preview = inspect_media(mobile, "mobile review view")
+        fw, fh = media["width"], media["height"]
+        mw, mh = preview["width"], preview["height"]
+        if not (0 < mw < fw and 0 < mh < fh and abs(mw / mh - fw / fh) < 0.02):
+            raise ValueError("mobile preview must be smaller and preserve the full image aspect ratio")
         if view["full"]["sha256"] != view["artifact_sha256"]:
             raise ValueError("full review view is not the exact delivered visual")
         if view["mobile"]["sha256"] == view["full"]["sha256"]:
