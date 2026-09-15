@@ -284,7 +284,10 @@ def validate_publication_approval(
 
     # Mandatory actual-file evidence extension. Bare PASS strings cannot authorize delivery.
     manifest_ref = _field(text, "creative_manifest_ref") or ""
-    evidence_result = validate_evidence(ROOT, manifest_ref, content_id, "delivery", supplied_package, format_name)
+    manifest_sha = _clean_sha(_field(text, "creative_manifest_sha256"))
+    if manifest_sha is None:
+        problems.append("creative_manifest_sha256 is required to bind the approved evidence")
+    evidence_result = validate_evidence(ROOT, manifest_ref, content_id, "delivery", supplied_package, format_name, expected_manifest_sha256=manifest_sha)
     if not evidence_result.get("ok"):
         problems.extend("publication evidence: " + p for p in evidence_result.get("problems", []))
     elif artifact_digest not in evidence_result.get("visualHashes", []):
@@ -386,9 +389,7 @@ def gate_channel(report: dict[str, Any], name: str) -> int:
     if not ch:
         print(f"FAIL unknown gate channel {name!r}", file=sys.stderr)
         return 1
-    if name == "canva":
-        print("GATE canva=blocked for Velvet Factory publication")
-        return 1
+    # This is transport diagnostics only. VF publication rejects Canva in its evidence gate.
     if ch.get("ready"):
         print(f"GATE {name}=ready")
         return 0

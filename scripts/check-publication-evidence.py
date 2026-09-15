@@ -153,12 +153,108 @@ class EvidenceTests(unittest.TestCase):
         self.assertFalse(self.result()['ok'])
 
 
+    def _write_bound_approval(self, include_digest=True):
+        self.write('manifest.json', self.manifest)
+        folder = self.root / 'packages/vfgrowth/preflight'
+        folder.mkdir(parents=True, exist_ok=True)
+        body = legacy_text().replace('a' * 64, self.ev['outputs'][0]['sha256']).replace('b' * 64, self.ev['package_sha256'])
+        body = body.replace(': FAIL', ': PASS').replace('synthetic_subject_change: PRESENT', 'synthetic_subject_change: NONE')
+        body += '\ncreative_manifest_ref: manifest.json\nreference_match_gate: PASS\ncreative_director_lock: PASS'
+        if include_digest:
+            body += '\ncreative_manifest_sha256: ' + evidence.digest(self.root / 'manifest.json')
+        (folder / 'TEST.md').write_text(body, encoding='utf-8')
+        return folder
+
+    def _approved_result(self):
+        folder = self.root / 'packages/vfgrowth/preflight'
+        with patch.object(send, 'ROOT', self.root), patch.object(send, 'PREFLIGHT_ROOT', folder):
+            return send.validate_publication_approval('packages/vfgrowth/preflight/TEST.md', 'TEST', 'post', self.ev['package_sha256'])
+
+    def test_approval_requires_manifest_digest(self):
+        self._write_bound_approval(include_digest=False)
+        result = self._approved_result()
+        self.assertFalse(result['ok'], result)
+        self.assertIn('creative_manifest_sha256', ' '.join(result['problems']))
+
+    def test_rebound_evidence_invalidates_old_approval(self):
+        self._write_bound_approval()
+        self.assertTrue(self._approved_result()['ok'])
+        decomposition = json.loads((self.root / 'decomposition.json').read_text())
+        decomposition['light'] = 'A different lighting judgment after approval'
+        self.ev['reference_decomposition'] = self.write('decomposition.json', decomposition)
+        self.write('manifest.json', self.manifest)
+        self.assertTrue(self.result()['ok'], 'Changed evidence remains internally consistent')
+        changed = self._approved_result()
+        self.assertFalse(changed['ok'], 'Old approval must not authorize rebound evidence')
+        self.assertIn('manifest', ' '.join(changed['problems']).lower())
+        self._write_bound_approval()
+        self.assertTrue(self._approved_result()['ok'], 'Explicit fresh binding must work')
+
+    def _project_result(self, domain, *extra):
+        import io
+        from contextlib import redirect_stdout
+        import vf_project_preflight as project
+        self.write('manifest.json', self.manifest)
+        route = {'schemaVersion': 1, 'baselineAuthorities': [], 'domains': {
+            'creative_publication': {'packs': ['vfom']},
+            'instagram_action': {'packs': ['vfigos']}}}
+        args = ['vf_project_preflight.py', '--domain', domain, '--manifest', 'manifest.json', '--content-id', 'TEST', *extra]
+        out = io.StringIO()
+        with patch.object(project, 'ROOT', self.root), patch.object(project, 'load_manifest', return_value=route), patch.object(sys, 'argv', args), redirect_stdout(out):
+            code = project.main()
+        return code, json.loads(out.getvalue())
+
+    def test_instagram_action_uses_delivery_evidence(self):
+        code, result = self._project_result('instagram_action')
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['publication_evidence_phase'], 'delivery')
+
+    def test_explicit_review_delivery_accepts_complete_manifest(self):
+        code, result = self._project_result('creative_publication', '--phase', 'delivery')
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['publication_evidence_phase'], 'delivery')
+
+    def test_instagram_action_cannot_downgrade_to_production(self):
+        self.ev['stages'] = self.ev['stages'][:5]
+        code, result = self._project_result('instagram_action', '--phase', 'production')
+        self.assertNotEqual(code, 0, result)
+        self.assertEqual(result['project_preflight'], 'BLOCKED')
+
+    def test_creation_retains_production_phase(self):
+        self.ev['stages'] = self.ev['stages'][:5]
+        code, result = self._project_result('creative_publication')
+        self.assertEqual(code, 0, result)
+        self.assertEqual(result['publication_evidence_phase'], 'production')
+        self.assertFalse(result['production_evidence']['publishAuthorized'])
+
+    def test_generic_canva_transport_diagnostic_unchanged(self):
+        report = {'channels': {'canva': {'ready': True}}}
+        self.assertEqual(send.gate_channel(report, 'canva'), 0)
+
+    def test_final_mov_requires_normalization(self):
+        (self.root / 'final.png').rename(self.root / 'final.mov')
+        self.ev['outputs'][0]['path'] = 'final.mov'
+        review = json.loads((self.root / 'review.json').read_text())
+        review['views'][0]['full']['path'] = 'final.mov'
+        self.ev['review'] = self.write('review.json', review)
+        self.assertFalse(self.result()['ok'], 'MOV cannot be labeled as reviewed MP4')
+
+    def test_staging_mov_rejected_before_probe_or_network(self):
+        import vf_publish_bridge as bridge
+        path = self.root / 'reviewed.mov'
+        path.write_bytes(b'Unnormalized MOV fixture')
+        with patch.object(bridge.shutil, 'which', side_effect=AssertionError('MOV must be rejected before probing')):
+            with self.assertRaisesRegex(ValueError, 'MOV.*MP4'):
+                bridge.inspect_reviewed_asset(path, bridge.load_config())
+
+
     def test_actual_package_passes_combined_gate(self):
         folder = self.root / 'packages/vfgrowth/preflight'
         folder.mkdir(parents=True)
         text = legacy_text().replace('a' * 64, self.ev['outputs'][0]['sha256']).replace('b' * 64, self.ev['package_sha256'])
         text = text.replace(': FAIL', ': PASS').replace('synthetic_subject_change: PRESENT', 'synthetic_subject_change: NONE')
         text += '\ncreative_manifest_ref: manifest.json\nreference_match_gate: PASS\ncreative_director_lock: PASS'
+        text += '\ncreative_manifest_sha256: ' + evidence.digest(self.root / 'manifest.json')
         (folder / 'TEST.md').write_text(text, encoding='utf-8')
         with patch.object(send, 'ROOT', self.root), patch.object(send, 'PREFLIGHT_ROOT', folder):
             result = send.validate_publication_approval('packages/vfgrowth/preflight/TEST.md', 'TEST', 'post', self.ev['package_sha256'])

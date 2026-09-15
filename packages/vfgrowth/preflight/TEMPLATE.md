@@ -219,6 +219,7 @@ audio_gate: FAIL | PASS | N/A
 
 ```yaml
 creative_manifest_ref: <workspace-relative Creative Manifest JSON>
+creative_manifest_sha256: <64-hex SHA-256 of the exact approved Creative Manifest bytes>
 reference_match_gate: UNPROVEN
 creative_director_lock: UNPROVEN
 ```

@@ -79,8 +79,12 @@ def local_path(root: Path, value: Any) -> Path:
     return path
 
 
-def load_json(path: Path) -> dict:
-    if path.stat().st_size > 2 * 1024 * 1024:
+def load_json(path: Path, expected_sha256: str | None = None) -> dict:
+    with path.open("rb") as stream:
+        raw = stream.read(2 * 1024 * 1024 + 1)
+    if expected_sha256 is not None and hashlib.sha256(raw).hexdigest() != expected_sha256:
+        raise ValueError("creative manifest bytes differ from the approval-bound SHA-256")
+    if len(raw) > 2 * 1024 * 1024:
         raise ValueError("JSON evidence exceeds 2 MiB")
     def unique(pairs):
         result = {}
@@ -89,7 +93,7 @@ def load_json(path: Path) -> dict:
                 raise ValueError(f"duplicate JSON field: {key}")
             result[key] = value
         return result
-    return _object(json.loads(path.read_text(encoding="utf-8-sig"), object_pairs_hook=unique), str(path))
+    return _object(json.loads(raw.decode("utf-8-sig"), object_pairs_hook=unique), str(path))
 
 
 def verify_ref(root: Path, ref: Any, label: str, denied: set[str]) -> Path:
@@ -115,16 +119,16 @@ def timestamp(value: Any) -> datetime:
 
 
 def validate(root: Path, manifest_ref: str, content_id: str,
-             phase: str = "delivery", expected_package: str | None = None, expected_format: str | None = None) -> dict:
+             phase: str = "delivery", expected_package: str | None = None, expected_format: str | None = None, expected_manifest_sha256: str | None = None) -> dict:
     """Fail closed, including malformed input; never update state or send content."""
     try:
-        return _validate(root.resolve(), manifest_ref, content_id, phase, expected_package, expected_format)
+        return _validate(root.resolve(), manifest_ref, content_id, phase, expected_package, expected_format, expected_manifest_sha256)
     except (OSError, ValueError, KeyError, TypeError, AttributeError, OverflowError) as exc:
         return {"ok": False, "phase": phase, "problems": [str(exc)],
                 "evidence_state": "BLOCKED", "publishAuthorized": False}
 
 
-def _validate(root, manifest_ref, content_id, phase, expected_package, expected_format):
+def _validate(root, manifest_ref, content_id, phase, expected_package, expected_format, expected_manifest_sha256):
     if phase not in {"production", "delivery"}:
         raise ValueError("unknown evidence phase")
     policy = load_json(local_path(root, POLICY))
@@ -144,7 +148,7 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     if len(required_refs) != 3:
         raise ValueError("all three canonical visual reference identities required")
     denied = set(route.get("rejectedArtifactSha256", []))
-    manifest = load_json(local_path(root, manifest_ref))
+    manifest = load_json(local_path(root, manifest_ref), expected_manifest_sha256)
     if manifest.get("jobId") != content_id:
         raise ValueError("manifest/content ID mismatch")
     if manifest.get("format") not in {"post", "carousel", "story", "reel"}:
@@ -223,7 +227,7 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
         raise ValueError("no final visual artifact")
     for out in outputs:
         output_path = verify_ref(root, out, "final output", denied)
-        if out.get("role") == "FINAL_VISUAL" and output_path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".mp4", ".mov"}:
+        if out.get("role") == "FINAL_VISUAL" and output_path.suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".mp4"}:
             raise ValueError("final visual must be an actual supported image or video file")
         if out.get("role") not in {"FINAL_VISUAL", "FINAL_TEXT"}:
             raise ValueError("invalid final output role")

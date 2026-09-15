@@ -89,3 +89,9 @@ A direction rejected for language mismatch cannot be used as a parent/source; re
 
 This code verifies files, digests, ordering and the consistency of submitted review evidence. It does NOT independently authenticate an unsigned reviewer statement, prove aesthetic taste, perform a cold-start model test or intercept tools invoked outside the canonical repository flow. Human/perceptual review remains required. Missing evidence stays BLOCKED. Code/CI success is not deployment, Project-settings synchronization or publication.
 The exact 6.2 Project source snapshot is retained unchanged; the current scoped owner correction is in this contract and the existing machine policy. Actual ChatGPT Project settings and separate worker/frontend copies require their own synchronization receipts.
+
+## Approval evidence binding
+
+The written approval must record `creative_manifest_ref` and `creative_manifest_sha256` for the exact reviewed manifest. The manifest binds every nested source, stage, copy and review file by hash. Any change to that evidence graph invalidates the earlier approval even if output pixels and the final package hash are unchanged. Re-run the affected checks before issuing a fresh bound approval.
+
+MOV source footage must be normalized to MP4 before exact-final review. A MOV container is not an MP4 merely because its declared MIME type says so.

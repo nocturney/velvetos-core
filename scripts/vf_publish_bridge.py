@@ -300,7 +300,9 @@ def inspect_reviewed_asset(src: Path, cfg: dict[str, Any]) -> tuple[str, dict[st
             details.update(width=image.width, height=image.height)
             image.verify()
         rule = cfg["imageNormalization"]
-    elif ext in {".mp4", ".mov"}:
+    elif ext == ".mov":
+        raise ValueError("Normalize MOV to MP4 before exact-final review and staging")
+    elif ext == ".mp4":
         probe = shutil.which("ffprobe")
         if not probe:
             raise ValueError("ffprobe required to inspect reviewed video without mutation")
