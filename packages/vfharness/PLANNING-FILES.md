@@ -35,6 +35,7 @@ packages/vfharness/state/<task-id>/
 
 ## צעדים
 
+0. **Inventory לפני יצירה** — רשום/בדוק את `state/*/task_plan.md` הקיימים וחפש `task_id` מתאים. אם אותה עבודה כבר קיימת, ממשיכים אותה במקום לפתוח state כפול. זה read-only discovery; אין pointer/runtime חדש. דפוס זה רוענן מול planning-with-files v3.18.0 (2026-09-13): https://github.com/OthmanAdi/planning-with-files/releases/tag/v3.18.0
 1. צור `state/<task-id>/` והעתק שלוש תבניות; החלף `{{JOB_NAME}}`, `{{TASK_ID}}`, `{{PACK}}`, `{{DATE}}`.
 2. בתחילת כל turn (או אחרי `/clear`): קרא שלושת הקבצים לפני החלטות.
 3. גילוי → `findings.md`. פעולה → `progress.md`. שלב הושלם → סמן ב-`task_plan.md`.

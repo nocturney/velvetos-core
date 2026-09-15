@@ -1,0 +1,42 @@
+{
+  "task_id": "research-seat-2026-09-15",
+  "status": "running",
+  "component_state": "Processing",
+  "pack": "vfresearch",
+  "goal": "Same-day research body validated, canonical artifacts merged, and owner delivery closed honestly.",
+  "crew": "research",
+  "planned_steps": [
+    "Read current authority and live office state",
+    "Run public same-day product/conversion/social research",
+    "Run due weekly links maintenance without private UI scraping",
+    "Implement authorized low-risk existing-pack refinements",
+    "Validate freshness and package sensors",
+    "Merge through branch/PR",
+    "Gate and send owner research brief only through production repo path if warranted"
+  ],
+  "completed_steps": [
+    "authority_read",
+    "same_day_public_research",
+    "weekly_links_review",
+    "artifacts_written",
+    "low_risk_refinements",
+    "targeted_sensors"
+  ],
+  "next_step": "Rebase/PR against current main, then owner-brief gate and production send path.",
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-15-orchestra.md",
+    "packages/vfresearch/sources/2026-09-15-weekly-links.md",
+    "packages/vfresearch/sources/2026-09-15-weekly-links-scan.json",
+    "packages/vfresearch/sources/2026-09-15-print-demand.md",
+    "packages/vfops/data/research.md"
+  ],
+  "unresolved": [
+    "Full check-all did not finish on Windows because check-living-studio selftest hung; targeted vfresearch/vfharness/gmail/render checks passed."
+  ],
+  "outcome": null,
+  "pulse": "working",
+  "verification": "vfresearch_cadence freshness PASS; check-vfresearch PASS; check-vfharness PASS; check-vfharness-execution-discipline PASS; Gmail sender check PASS; Brief V10.3 render self-check PASS",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-15T02:25:00+03:00"
+}

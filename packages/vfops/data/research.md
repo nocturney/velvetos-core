@@ -1,32 +1,38 @@
-# 05 · משרד · 14.9.2026
+# 05 · משרד · 15.9.2026
 
-מחקר יומי חי הושלם. מצב cutoff: **`ready_for_brief`**. מקור מלא: `packages/vfresearch/sources/2026-09-14-orchestra.md`.
+מחקר יומי חי הושלם. מצב cutoff: **`ready_for_brief`**. מקור מלא: `packages/vfresearch/sources/2026-09-15-orchestra.md`.
 
 ## מה נבנה / יועל
 
-- Social Intelligence הוטמע בתוך `vfresearch`/`vfom`/`vfinsights`: `SocialResearchPacket`, ניתוח mechanics ל-Reference Reels, Content Matrix לפני saturation, ו-Creative Performance Profile מדוד.
-- שלושת מקורות המחקר מ-14.9 נרשמו ב-`vfresearch/LINKS.json` לסקירה מחזורית; אין runtime/scheduler/analytics חלופי.
-- פרופיל הביצועים נבנה מה-Instagram MCP הקנוני: כרגע 1 פוסט מדוד בלבד ולכן אין pattern מקודם עד סף 3.
+- `vfconvert/hq/PLAYBOOK.md`: נוספה חלוקת כניסה ראשונה ל־`יש קובץ` / `יש תמונה או רעיון` / `צריך מידול`; אחריה שואלים רק את השדות החסרים. אין auto-DM.
+- weekly links overdue טופל: 74 רשומות due נבדקו; דפוס אחד מ־planning-with-files v3.18.0 הוטמע בתוך `vfharness` כ־inventory read-only לפני פתיחת state חדש.
+- נעילת הבעלים לרישוי הובהרה במחקר: רישיון של יוצר זר אינו מסנן מועמד; יוצר/מותג ישראלי נשאר stop/`vlicense` לפני שימוש. זה כלל triage מחקרי ולא אישור משפטי.
 
 ## מה שווה להעביר לבריף
 
 ```text
 05 · מחקר ורעיונות
-- מועמד preflight ראשון נשאר קטן: line hider דק לקריאה; vlicense + slice + test print לפני SKU/מחיר. חיפוש הבוקר גם פסל מארגנים אטרקטיביים עם רישיון NonCommercial.
-- ייצור: אין שדרוג production. לבנצ'מרק הבא עדיף OrcaSlicer 2.4.2 היציב על Windows fallback; 2.4.1 כבר הוסיף פרופילי Snapmaker U1. להשוות פרויקט U1 ידוע בלבד לפני כל שינוי מקומי.
-- כרגע עדיף ניסוי של הדפסה אחת ולא מלאי: יש עבודה מוכנה/יתרות פתוחות, וחמשת סלוטי המדף עדיין ריקים.
+- פניות: לפתוח ב־route פשוט — יש קובץ / יש תמונה או רעיון / צריך מידול — ורק אז להשלים שדות. pattern שחזר במספר ספקי 3D ישראליים; הוטמע ב־vfconvert, בלי להבטיח uplift שטרם נמדד.
+- מדף: Fidget Spiral הוא מועמד חדש ל־test אחד בגלל no-support + תנועה ברורה; לא stock ולא SKU לפני slice, חומר מאומת, grams/minutes, tolerance ותמונה אמיתית. מלאי החומר כרגע לא ספוּר.
+- תוכן: mechanic עדכני של "שאלה בסיסית → הסבר/proof" מתאים לעבודות אמיתיות שלנו. להשתמש רק בשאלה אמיתית וב־proof אמיתי; לא להעתיק wording/audio/creator ולא לשבץ בזמן RESET.
 ```
 
-Freshness: **2026-09-14 · GREEN body evidence**; ריצת 06:00 ביצעה גוף Web ציבורי חדש ועדכנה את הארטיפקט הקנוני.
-Best Skills: `lastPass=2026-09-14`, `dataDate=2026-09-13`, תוצאה `no-embed-existing-coverage`; לא הגיע refresh נוסף בחלון 48h ולכן לא הורץ שוב. `timer verification=UNPROVEN` כי `cursor-subscriptions` אינו חשוף בריצה הנוכחית.
-Validation limitation: Windows fallback עדיין חושף case-collision קיים בין `constitution/TAGS.md` ו-`constitution/tags.md`; אין claim של `check-all.py` PASS מלא.
-Runtime limitation: Mac-Office offline; Snapmaker Orca 2.3.5 הוא ה-last verified המקומי מ-13.9, לא אימות חדש להיום. OrcaSlicer 2.4.2 הוא benchmark בלבד, לא הוראת מעבר production.
-Email: לא נשלח מייל שני בריצת 06:00; סיכום אחד כבר נשלח היום דרך המעקף בריפו, והחיבור הפנימי של Gmail לא שימש.
+Freshness: **2026-09-15 · GREEN body evidence**.
+Best Skills: `lastPass=2026-09-14`; לא due היום ולכן לא הורץ שוב.
+Weekly links: review overdue repaired; 6 מקורות נשארו מאחורי 403/429 ותועדו בלי claim.
+OpenPost: consumed current state only; no duplicate upstream check.
+Social: own `@velvets_cloud` metrics לא נסרקו ולא הומצאו.
+Runtime: Mac-Office offline; אין claim של אימות Mac/slicer חדש.
 
 ---
 
+## היסטוריה · 14.9.2026
+
+- shelf testing נשאר test-first, לא inventory speculative.
+- production slicer pre-release נשאר benchmark בלבד, לא production switch.
+- Social Intelligence הוטמע בתוך הפקים הקיימים; no second analytics/runtime.
+
 ## היסטוריה · 13.9.2026
 
-- מחזיק כבלים 5 חריצים נשאר מועמד preflight; vlicense/slice/fit-test לפני מדף.
-- desk utility הוא family signal בלבד, לא הוכחת ביקוש מקומית.
-- PrusaSlicer 3.0 Preview נשאר benchmark בלבד; אין מעבר production.
+- desk utility נשאר family signal בלבד, לא הוכחת ביקוש מקומית.
+- PrusaSlicer multi-bed נשאר benchmark בלבד; אין production switch.

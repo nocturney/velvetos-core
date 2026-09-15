@@ -1,0 +1,48 @@
+{
+  "date_line": "מחקר הבוקר · 15.9.2026",
+  "bottom_line": "מחקר חי · מקורות ישירים · בלי להמציא ביקוש מקומי",
+  "footer": "Velvet Factory · מחקר בוקר · 15.9.2026",
+  "attention": {"state": "green", "label": "מחקר", "text": "ready_for_brief"},
+  "system_health": {"state": "green", "label": "freshness", "text": "GREEN"},
+  "changes": [
+    {"text": "3 ממצאים חדשים לשימוש בבריף", "state": "blue"},
+    {"text": "סקירת הקישורים השבועית שהייתה באיחור הושלמה", "state": "green"}
+  ],
+  "slots": [
+    {
+      "kind": "office",
+      "kicker": "01 · פניות",
+      "title": "מתחילים במסלול קצר, לא בשאלון מלא",
+      "prose": "פניות: כדאי לפתוח כל פנייה במסלול קצר — יש קובץ, יש תמונה או רעיון, או צריך מידול — ורק אחר כך להשלים את הפרטים החסרים. הדפוס חזר בכמה אתרי סטודיו ישראליים, והוטמע ב־vfconvert בלי מערכת חדשה ובלי auto-DM.",
+      "links": [
+        {"label": "PLAY3D", "href": "https://www.play3d.co.il/"},
+        {"label": "Sunny3D", "href": "https://sunny3d.co.il/"},
+        {"label": "NSF 3D", "href": "https://nsf3d.co.il/"},
+        {"label": "3D Factory", "href": "https://www.3dfactory.co.il/"},
+        {"label": "Adi3D", "href": "https://adi3d.co.il/"}
+      ]
+    },
+    {
+      "kind": "production",
+      "kicker": "02 · מדף",
+      "title": "Fidget Spiral לניסוי יחיד",
+      "prose": "מדף: Fidget Spiral הוא מועמד חדש לניסוי יחיד כי היוצר מתאר הדפסה ללא תמיכות, PLA, שכבה 0.2 מ״מ ומרווח 0.900 מ״מ. הוא לא הופך למלאי או ל־SKU לפני סלייס מקומי, ספירת חומר, זמן וגרמים בפועל, בדיקת טולרנס ותמונה אמיתית. לפי נעילת הבעלים, רישיון של יוצר זר לא שימש כאן כקריטריון פסילה.",
+      "links": [{"label": "Printables · Fidget Spiral", "href": "https://www.printables.com/model/1699407-fidget-spiral"}]
+    },
+    {
+      "kind": "content",
+      "kicker": "03 · תוכן",
+      "title": "שאלה אמיתית ואז proof",
+      "prose": "תוכן: מכניקה עדכנית שמתאימה לנו היא שאלה אמיתית של מתחיל ואז מעבר מהיר להוכחה מהמודל או מההדפסה. משתמשים רק בשאלה שבאמת התקבלה ובעבודה שלנו; לא מעתיקים ניסוח, יוצר, צילום או מיתוג, ולא משבצים תוכן חדש בזמן RESET.",
+      "links": [{"label": "HeyOrca · 11.9.2026", "href": "https://www.heyorca.com/blog/trending-audio-for-reels-tiktok"}]
+    },
+    {
+      "kind": "neutral",
+      "density": "compact",
+      "kicker": "תחזוקת מחקר",
+      "title": "הסקירה השבועית נסגרה",
+      "prose": "תחזוקת מחקר: סקירת הקישורים השבועית שהייתה באיחור הושלמה. דפוס שימושי אחד מ־planning-with-files v3.18.0 הוטמע ב־vfharness: בודקים state קיים לפני שפותחים state חדש. Best Skills לא הגיע עדיין לחלון הרענון שלו ולכן לא הורץ שוב.",
+      "links": [{"label": "planning-with-files v3.18.0", "href": "https://github.com/OthmanAdi/planning-with-files/releases/tag/v3.18.0"}]
+    }
+  ]
+}
