@@ -174,16 +174,21 @@ for sample in (
     "send this to Instagram",
     "push this live on Instagram",
     "add this to Instagram",
+    "delete this from Instagram",
+    "delete Instagram media 123; set confirm_irreversible=true for account velvets_cloud",
+    "remove this from Instagram",
 ):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)
     if "instagram_action" not in receipt.get("request_domain", []):
-        fail(f"Instagram publish-intent must route as instagram_action: {sample}")
+        fail(f"Instagram publish/destructive intent must route as instagram_action: {sample}")
     if receipt.get("publication_evidence_phase") != "delivery":
         fail(f"Instagram action must require delivery evidence: {sample}")
 for sample in (
     "analyze this Instagram post",
     "share the Instagram analytics with the owner",
+    "send the Instagram analytics to the owner",
+    "schedule a meeting about Instagram",
 ):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)

@@ -272,14 +272,18 @@
         "פרסם",
         "העלה לאינסטגרם",
         "שלח לאינסטגרם",
-        "schedule",
-        "publish",
         "post to instagram",
         "post on instagram",
         "upload to instagram",
         "send to instagram",
         "push to instagram",
-        "add to instagram"
+        "add to instagram",
+        "delete from instagram",
+        "remove from instagram",
+        "delete instagram media",
+        "schedule on instagram",
+        "publish to instagram",
+        "push live on instagram"
       ],
       "packs": [
         "vfigos",

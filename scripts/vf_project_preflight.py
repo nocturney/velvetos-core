@@ -84,36 +84,48 @@ def _hint_matches(probe: str, hint: str) -> bool:
 
 
 def _instagram_publish_request(probe: str) -> bool:
-    """True when an Instagram destination appears with a publish-intent verb.
+    """True for Instagram publish/delivery or destructive mutation intents.
 
-    Clear delivery verbs (`send`/`push`/`upload`/…) may sit anywhere beside an
-    Instagram destination (`send this to Instagram`, `push this live on
-    Instagram`). Ambiguous tokens (`post`, `share`) must govern content being
-    sent *to* Instagram (`share this on Instagram`) — noun references such as
-    `analyze this Instagram post` or office `share the Instagram analytics`
-    are not publication. Pure drafting (`write an Instagram caption`) has
-    destination but no publish-intent verb.
+    Delivery verbs must target Instagram as the destination
+    (`send this to Instagram`, `push this live on Instagram`). Mere
+    co-occurrence is not enough: `send the Instagram analytics to the owner`
+    or `schedule a meeting about Instagram` stay ordinary office work.
+    Destructive verbs against Instagram media
+    (`delete Instagram media …`, `remove this from Instagram`) also require
+    Instagram action preflight. Pure drafting has destination but no action
+    verb.
     """
     has_ig = _phrase_in(probe, "instagram") or _phrase_in(probe, "אינסטגרם")
     if not has_ig:
         return False
     if any(
         _phrase_in(probe, h)
-        for h in ("פרסם", "העלה לאינסטגרם", "העלה", "שתף לאינסטגרם", "שלח לאינסטגרם")
+        for h in (
+            "פרסם",
+            "העלה לאינסטגרם",
+            "העלה",
+            "שתף לאינסטגרם",
+            "שלח לאינסטגרם",
+            "מחק מאינסטגרם",
+            "הסר מאינסטגרם",
+        )
     ):
         return True
-    # Unambiguous publish/delivery verbs co-occurring with Instagram.
-    # `send` is the repo-canonical Instagram delivery verb (constitution/SEND.md).
-    if any(
-        _token_in(probe, v)
-        for v in ("upload", "publish", "schedule", "put", "send")
-    ):
-        return True
-    # Ambiguous verbs: require an Instagram destination preposition so noun
-    # "post", office "share … analytics", or "add Instagram to the report"
-    # do not trip delivery. Covers post/share/push/add … on|to Instagram.
+    # Publish/delivery: verb must govern content sent *to/on/from* Instagram.
+    # Keeps `push this live on Instagram` / `send this to Instagram` on the
+    # delivery path while excluding office co-occurrence false positives.
     if re.search(
-        r"(?<!\w)(?:post|share|push|add)\b(?:\W+\w+){0,8}\W+(?:on|to|onto|in)\s+instagram",
+        r"(?<!\w)(?:upload|publish|schedule|put|send|post|share|push|add)\b"
+        r"(?:\W+\w+){0,8}\W+(?:on|to|onto|in|from)\s+instagram",
+        probe,
+    ):
+        return True
+    # Destructive Graph mutations (delete_media etc.) against Instagram content.
+    if re.search(
+        r"(?<!\w)(?:delete|remove|unpublish)\b(?:\W+\w+){0,12}\W+instagram"
+        r"|(?<!\w)(?:delete|remove|unpublish)\b\W+instagram"
+        r"|\binstagram\b(?:\W+\w+){0,6}\W+(?:delete|remove|unpublish)\b"
+        r"|(?<!\w)take\s+down\b(?:\W+\w+){0,8}\W+instagram",
         probe,
     ):
         return True
