@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-15 — **Canonical IG mutation-tool gates:** execution intent for write tool ids from `packages/vfigos/CAPABILITIES.json` + `packages/vfmcp/core-mcp.json` (`publish_image` / `publish_story` / `delete_media` / …) routes `instagram_action` + delivery fail-closed. Read-only tool ids and pure tool docs/advisory stay non-action.
 - 2026-09-15 — **Mixed-prompt IG action gates:** advisory/howto clauses no longer strip a later publish/delete/archive follow-through; strictest clause wins (`instagram_action` + delivery fail-closed). Pure advisory remains non-action.
 - 2026-09-15 — **Instagram-post draft creative preflight:** `create/draft/design/make/prepare an Instagram post` (and Hebrew equivalents) route `creative_publication` with production fail-closed; advisory/info discussion stays non-creative; live/destructive intents remain `instagram_action`.
 - 2026-09-15 — **IG push-live + destructive action routing:** go-live family (`push it live`, `לאוויר`, publish-now) and destructive family (delete/remove/archive/take-down Reel/Story/post + Hebrew) route `instagram_action`/delivery fail-closed; prep (`תכין פוסט`) and advisory (`should we delete`, `how do I delete`) stay non-action.

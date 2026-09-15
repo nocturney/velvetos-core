@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import re
+from functools import lru_cache
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -13,6 +14,9 @@ PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6
 PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json")
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
+# Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
+IG_CAPABILITIES = ROOT / "packages/vfigos/CAPABILITIES.json"
+CORE_MCP = ROOT / "packages/vfmcp/core-mcp.json"
 
 
 def load_manifest() -> dict:
@@ -216,15 +220,187 @@ def _followthrough_mutation_clause(clause: str) -> bool:
     return False
 
 
+@lru_cache(maxsize=1)
+def _instagram_tool_classes() -> tuple[frozenset[str], frozenset[str]]:
+    """Return (mutation_tool_ids, read_only_tool_ids) from canonical IG SoT.
+
+    Mutation ids come from supported write capabilities in
+    ``packages/vfigos/CAPABILITIES.json`` (publish.* / media.delete) plus
+    ``allowedWriteAfterGates`` on the Instagram server in
+    ``packages/vfmcp/core-mcp.json`` (comment moderation writes).
+
+    Read-only ids come from supported read capabilities in CAPABILITIES plus
+    ``allowedRead`` in core-mcp. ``graph_mutation_matrix`` is always read-only
+    even when listed beside delete.
+    """
+    mutation: set[str] = set()
+    read_only: set[str] = set()
+    if IG_CAPABILITIES.is_file():
+        caps = json.loads(IG_CAPABILITIES.read_text(encoding="utf-8"))
+        for row in caps.get("capabilities") or []:
+            if not isinstance(row, dict):
+                continue
+            tools = [t for t in (row.get("tools") or []) if isinstance(t, str) and t]
+            if not tools:
+                continue
+            cap_id = str(row.get("id") or "")
+            supported = row.get("supported", True)
+            # graph_mutation_matrix is capability discovery SoT — never a mutation.
+            if "graph_mutation_matrix" in tools:
+                read_only.add("graph_mutation_matrix")
+            write_tools = [t for t in tools if t != "graph_mutation_matrix"]
+            if supported is False:
+                continue
+            if cap_id.startswith("instagram.publish.") or cap_id == "instagram.media.delete":
+                mutation.update(write_tools)
+            elif write_tools:
+                read_only.update(write_tools)
+    if CORE_MCP.is_file():
+        core = json.loads(CORE_MCP.read_text(encoding="utf-8"))
+        for server in core.get("servers") or []:
+            if not isinstance(server, dict) or server.get("id") != "instagram":
+                continue
+            for t in server.get("allowedWriteAfterGates") or []:
+                if isinstance(t, str) and t:
+                    mutation.add(t)
+            for t in server.get("allowedRead") or []:
+                if isinstance(t, str) and t:
+                    read_only.add(t)
+            break
+    # Never treat a write id as read-only if it also appears on a write surface.
+    read_only -= mutation
+    return frozenset(mutation), frozenset(read_only)
+
+
+def _tool_id_in(probe: str, tool_id: str) -> bool:
+    """Token-aware match for snake_case MCP tool ids (no substring false hits)."""
+    return re.search(rf"(?<!\w){re.escape(tool_id)}(?!\w)", probe, flags=re.IGNORECASE) is not None
+
+
+def _tool_documentation_or_advisory(probe: str) -> bool:
+    """True when the ask is about a tool (docs/compare/advice), not executing it."""
+    return any(
+        _phrase_in(probe, p)
+        for p in (
+            "what does",
+            "what is",
+            "what's",
+            "how does",
+            "how do",
+            "how to use",
+            "explain",
+            "tell me how",
+            "tell me what",
+            "compare",
+            "difference between",
+            "should we use",
+            "should i use",
+            "documentation",
+            "docs for",
+            "meaning of",
+            "מה זה",
+            "מה עושה",
+            "איך עובד",
+            "הסבר",
+            "האם כדאי להשתמש",
+            "השווה",
+        )
+    )
+
+
+def _generic_instagram_publish_tool_execution(probe: str) -> bool:
+    """True for 'call/use the Instagram publish tool' without a specific tool id."""
+    if _tool_documentation_or_advisory(probe):
+        return False
+    if not (_phrase_in(probe, "instagram") or _phrase_in(probe, "אינסטגרם")):
+        return False
+    return (
+        re.search(
+            r"(?<!\w)(?:use|run|call|invoke|execute|trigger)\b"
+            r"(?:\W+\w+){0,6}\W+publish(?:_\w+)?\s+tools?\b",
+            probe,
+            flags=re.IGNORECASE,
+        )
+        is not None
+        or re.search(
+            r"(?<!\w)(?:תשתמש|השתמש|תריץ|הרץ|תפעיל|הפעל|בצע)\b"
+            r"(?:\W+\w+){0,6}\W+(?:ב)?כלי\s+ה?פרסום",
+            probe,
+        )
+        is not None
+    )
+
+
+def _mutation_tool_execution_intent(probe: str, tool_id: str) -> bool:
+    """True when probe asks to execute a specific mutation tool id."""
+    if not _tool_id_in(probe, tool_id):
+        return False
+    if _tool_documentation_or_advisory(probe):
+        return False
+    # Explicit execution verbs around the tool id.
+    if re.search(
+        rf"(?<!\w)(?:use|run|call|invoke|execute|trigger|apply|perform)\b"
+        rf"(?:\W+\w+){{0,6}}\W+{re.escape(tool_id)}\b",
+        probe,
+        flags=re.IGNORECASE,
+    ):
+        return True
+    if re.search(
+        rf"(?<!\w)(?:תשתמש|השתמש|תריץ|הרץ|תפעיל|הפעל|בצע|תקרא\s+ל)\b"
+        rf"(?:\W+\w+){{0,6}}\W+{re.escape(tool_id)}\b",
+        probe,
+    ):
+        return True
+    # Instagram-scoped tool invocation: "Instagram delete_media 123"
+    if re.search(
+        rf"(?i)(?<!\w)(?:instagram|אינסטגרם)\b(?:\W+\w+){{0,4}}\W+{re.escape(tool_id)}\b",
+        probe,
+    ):
+        return True
+    # Imperative tool command with args / target: "publish_image with …", "delete_media 123"
+    if re.search(
+        rf"(?<!\w){re.escape(tool_id)}\b(?:\W+(?:now|with|on|using|for|this|that|\d))",
+        probe,
+        flags=re.IGNORECASE,
+    ):
+        return True
+    # "Delete this with delete_media" / Hebrew equivalent already covered by verbs.
+    if re.search(
+        rf"(?<!\w)(?:delete|remove|publish|post|share)\b(?:\W+\w+){{0,6}}\W+{re.escape(tool_id)}\b",
+        probe,
+        flags=re.IGNORECASE,
+    ):
+        return True
+    # Bare tool id as the whole command (or leading command token).
+    stripped = probe.strip(" \t,.;:!?\"'`")
+    if re.fullmatch(rf"{re.escape(tool_id)}(?:\W+\S+)*", stripped, flags=re.IGNORECASE):
+        return True
+    return False
+
+
+def _instagram_mutation_tool_request(probe: str) -> bool:
+    """True when a canonical IG mutation MCP tool is being invoked/executed."""
+    if _generic_instagram_publish_tool_execution(probe):
+        return True
+    mutation_ids, _read_ids = _instagram_tool_classes()
+    return any(_mutation_tool_execution_intent(probe, tool_id) for tool_id in mutation_ids)
+
+
 def _clause_instagram_action(clause: str, *, allow_followthrough: bool = False) -> bool:
     """Action intent inside one clause (ignores advisory language elsewhere).
 
     Follow-through mutations (`publish it`, `תמחק את הפוסט`) only count when the
     prompt was split into multiple clauses. Otherwise bare prep like
     `publish this post` would be mis-routed as Instagram delivery.
+
+    Canonical Instagram mutation tool identifiers (from CAPABILITIES / core-mcp
+    write binding) with execution intent are always action — including mixed
+    advisory+tool clauses.
     """
     if not clause or _hypothetical_or_howto_clause(clause):
         return False
+    if _instagram_mutation_tool_request(clause):
+        return True
     if _instagram_delivery_request(clause) or _instagram_destructive_request(clause):
         return True
     if allow_followthrough:
@@ -379,7 +555,7 @@ def _instagram_destructive_request(probe: str) -> bool:
 
 
 def _instagram_publish_request(probe: str) -> bool:
-    """True for Instagram delivery or destructive mutation intents.
+    """True for Instagram delivery, destructive, or mutation-tool intents.
 
     Delivery: destination-scoped publish/send (`send this to Instagram`) and
     go-live commands (`push this live`, `תעלה את זה לאוויר`). Preparation
@@ -388,9 +564,14 @@ def _instagram_publish_request(probe: str) -> bool:
     Destructive: delete/remove/archive/take-down of Instagram media/posts/
     reels/stories.
 
+    Mutation tools: canonical write tool ids from CAPABILITIES.json /
+    core-mcp.json (`publish_image`, `publish_story`, `delete_media`, …)
+    with execution intent. Read-only ids (`list_media`, `get_profile`, …)
+    stay non-action. Docs/advisory about a tool stay non-action.
+
     Mixed prompts keep the strictest clause: advisory language in one clause
-    must not erase a real publish/delete clause later (`explain …, then
-    publish it to Instagram`). Pure howto/hypothetical discussion with no
+    must not erase a real publish/delete/tool clause later (`explain …, then
+    use publish_image`). Pure howto/hypothetical discussion with no
     action clause stays non-action.
     """
     clauses = _split_intent_clauses(probe)

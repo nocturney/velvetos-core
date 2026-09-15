@@ -338,4 +338,67 @@ for sample in ("publish this post",):
     if receipt.get("project_preflight") != "BLOCKED":
         fail(f"bare publish/post must BLOCK without Creative Manifest: {sample}")
 
+# Canonical Instagram mutation MCP tool ids (from CAPABILITIES + core-mcp write binding)
+# with execution intent must route instagram_action + delivery fail-closed.
+for sample in (
+    "Use Instagram publish_image with this asset",
+    "Run publish_story",
+    "Instagram delete_media 12345",
+    "Call the Instagram publish tool",
+    "use delete_media on this post",
+    "Use publish_carousel now",
+    "Run publish_reel",
+    "Use reply_to_comment on this thread",
+    "השתמש ב-publish_image עם הנכס הזה",
+    "תריץ publish_story",
+):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "instagram_action" not in receipt.get("request_domain", []):
+        fail(f"mutation-tool execution must route instagram_action: {sample}")
+    if receipt.get("publication_evidence_phase") != "delivery":
+        fail(f"mutation-tool execution must require delivery evidence: {sample}")
+    if receipt.get("project_preflight") != "BLOCKED":
+        fail(f"mutation-tool execution without delivery evidence must BLOCK: {sample}")
+# Mixed advisory + mutation-tool execution keeps strictest action route.
+for sample in (
+    "Explain this image and then use publish_image",
+    "Review the caption, then run publish_story",
+    "תסביר את התמונה ואז תשתמש ב-publish_image",
+):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "instagram_action" not in receipt.get("request_domain", []):
+        fail(f"mixed advisory+mutation-tool must keep instagram_action: {sample}")
+    if receipt.get("publication_evidence_phase") != "delivery":
+        fail(f"mixed advisory+mutation-tool must require delivery evidence: {sample}")
+    if receipt.get("project_preflight") != "BLOCKED":
+        fail(f"mixed advisory+mutation-tool without delivery evidence must BLOCK: {sample}")
+# Pure informational / docs about mutation tool ids stay non-action.
+for sample in (
+    "Tell me how publish_image works",
+    "Should we use publish_story?",
+    "Explain delete_media",
+    "what does publish_image do?",
+    "compare publish_image and publish_story",
+    "documentation for publish_carousel",
+):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "instagram_action" in receipt.get("request_domain", []):
+        fail(f"tool documentation/advisory must not route instagram_action: {sample}")
+# Read-only Instagram tool ids must not action-gate merely by being Instagram tools.
+for sample in (
+    "Use list_media",
+    "Run get_profile",
+    "Use Instagram get_account_insights",
+    "Call healthcheck",
+    "Run graph_mutation_matrix",
+    "Use get_media on this id",
+):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "instagram_action" in receipt.get("request_domain", []):
+        fail(f"read-only Instagram tool must not route instagram_action: {sample}")
+
 print(f"OK project-request-gate domains={len(manifest['domains'])} authority_paths={len(set(all_paths))} creative_without_evidence=BLOCKED creative_tool_authorization=fail_closed")
