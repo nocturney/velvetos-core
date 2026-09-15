@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "requestId": "research-replay-2026-09-15-1",
   "html": "packages/vfops/out/research-replay-v10.3-2026-09-15.html",
   "visibleText": "packages/vfops/out/research-replay-v10.3-2026-09-15.txt",
