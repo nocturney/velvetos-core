@@ -84,17 +84,29 @@ def _hint_matches(probe: str, hint: str) -> bool:
 
 
 def _instagram_publish_request(probe: str) -> bool:
-    """True when an Instagram destination appears with a publish/post/upload verb.
+    """True when an Instagram destination appears with a publish-intent verb.
 
-    Verbs and destination need not be adjacent (`post this on Instagram`).
-    Pure drafting (`write an Instagram caption`) has destination but no publish verb.
+    Verbs and destination need not be adjacent (`post this on Instagram`,
+    `share this on Instagram`). Pure drafting (`write an Instagram caption`)
+    has destination but no publish-intent verb.
     """
     has_ig = _phrase_in(probe, "instagram") or _phrase_in(probe, "אינסטגרם")
     if not has_ig:
         return False
-    if any(_token_in(probe, v) for v in ("post", "upload", "publish", "schedule")):
+    if any(_token_in(probe, v) for v in ("post", "upload", "publish", "schedule", "share", "put")):
         return True
-    return any(_phrase_in(probe, h) for h in ("פרסם", "העלה לאינסטגרם", "העלה"))
+    return any(_phrase_in(probe, h) for h in ("פרסם", "העלה לאינסטגרם", "העלה", "שתף"))
+
+
+def _bare_publication_request(probe: str) -> bool:
+    """Public publication prep without an Instagram destination (not IG delivery)."""
+    if _token_in(probe, "publish") or _phrase_in(probe, "פרסם"):
+        return True
+    if _token_in(probe, "post") and any(
+        _phrase_in(probe, p) for p in ("this post", "a post", "the post", "new post", "publish this")
+    ):
+        return True
+    return False
 
 
 def classify(text: str, manifest: dict) -> list[str]:
@@ -143,8 +155,13 @@ def classify(text: str, manifest: dict) -> list[str]:
         if "instagram_action" not in hits:
             hits.append("instagram_action")
     elif "instagram_action" in hits:
-        # Drop false publish routing from bare destination / drafting phrasing.
+        # No IG destination: drop Instagram delivery route, but keep publication prep.
         hits = [h for h in hits if h != "instagram_action"]
+        if "creative_publication" not in hits and _bare_publication_request(probe):
+            hits.append("creative_publication")
+    elif "creative_publication" not in hits and _bare_publication_request(probe):
+        # e.g. "publish this post" never entered instagram_action but is still public prep.
+        hits.append("creative_publication")
     return hits or ["general_business"]
 
 def main() -> int:

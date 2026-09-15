@@ -166,12 +166,21 @@ ig_pub = subprocess.run(
 )
 if "instagram_action" not in json.loads(ig_pub.stdout).get("request_domain", []):
     fail("explicit Instagram publish must still route as instagram_action")
-for sample in ("post this on Instagram", "upload this to Instagram"):
+for sample in ("post this on Instagram", "upload this to Instagram", "share this on Instagram", "put this on Instagram"):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)
     if "instagram_action" not in receipt.get("request_domain", []):
-        fail(f"intervening-word Instagram action must route as instagram_action: {sample}")
+        fail(f"Instagram publish-intent must route as instagram_action: {sample}")
     if receipt.get("publication_evidence_phase") != "delivery":
         fail(f"Instagram action must require delivery evidence: {sample}")
+for sample in ("publish this post",):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "creative_publication" not in receipt.get("request_domain", []):
+        fail(f"bare English publish/post must route creative_publication: {sample}")
+    if "instagram_action" in receipt.get("request_domain", []):
+        fail(f"bare publish/post without IG destination must not be instagram_action: {sample}")
+    if receipt.get("project_preflight") != "BLOCKED":
+        fail(f"bare publish/post must BLOCK without Creative Manifest: {sample}")
 
 print(f"OK project-request-gate domains={len(manifest['domains'])} authority_paths={len(set(all_paths))} creative_without_evidence=BLOCKED creative_tool_authorization=fail_closed")
