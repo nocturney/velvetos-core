@@ -1,5 +1,10 @@
 # תזמורת הכלים החיצוניים
 
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
 פלייבוק משרד. לא פק חדש. לא סוכן חדש.
 
 ## רף סוכנות (כוכב צפון)
@@ -14,7 +19,7 @@ Failover מיידי. בלי חצי-עבודה. בלי גוף/₪/Insights מומ
 נעול 7.9.2026 ~09:01–09:02 (Asia/Jerusalem) — **נעילת כריסטיאן**:  
 משטח אליו / לראש צוות: **החלטה** · **חסם קשיח** · **פרסום חי שדורש אותו בלבד**.  
 אסור להעלות: מדדים חלשים · «רמה נמוכה» · תלונת איכות אחרי פרסום · דוח בושה «לא השתמשתם בכלים».  
-איכות נתפסת **לפני** שיבוץ: ארטיפקט `vfgrowth/PREFLIGHT.md` (VOICE + Canva/vfcovers + ציון עצמי + 2–3 קומפס מ־`VOICE-RESEARCH`).  
+> LEGACY / provenance only for VF publication; not a provider route: איכות נתפסת **לפני** שיבוץ: ארטיפקט `vfgrowth/PREFLIGHT.md` (VOICE + Canva/vfcovers + ציון עצמי + 2–3 קומפס מ־`VOICE-RESEARCH`).  
 נכשל-סגור → חסום שיבוץ. מתקנים במשרד. אל תפנה לכריסטיאן על מדדים חלשים.
 
 ## שלושה שולחנות, בית אחד
@@ -54,20 +59,20 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 
 | כלי שנפל | מעבירים מיד ל־ | לא עושים |
 |---|---|---|
-| **Canva** (`needsAuth` / אין כלים) | `packages/vfcanva/studio/render.py` → אם גם זה נכשל: Superdesign | לא ממציאים קישור Canva |
-| **Superdesign** | Canva אם מחובר · אחרת `studio/render.py` | לא עוצרים את חבילת התוכן |
+> LEGACY / provenance only for VF publication; not a provider route: | **Canva** (`needsAuth` / אין כלים) | `packages/vfcanva/studio/render.py` → אם גם זה נכשל: Superdesign | לא ממציאים קישור Canva |
+> LEGACY / provenance only for VF publication; not a provider route: | **Superdesign** | Canva אם מחובר · אחרת `studio/render.py` | לא עוצרים את חבילת התוכן |
 | **Mobbin** (אין namespace) | `vfbriefux/MAIL.html` · `hq/brief-email.html` (effective-html) · `render_mail.py --diagram` (diagram-maker) · Superdesign | לא ממציאים מסכי אפליקציה |
 | **Treg** | **לא בשימוש.** WebSearch / תזמורת / «אין ספירה» | לא login · לא `call` |
 | **WebSearch / WebFetch** (`tools.web`) | תזמורת ChatGPT+Gemini+Perplexity | לא ממציאים גוף חסום |
 | **Gemini API** (`vf_gemini.py`) | ChatGPT API + Perplexity + WebSearch | לא ממציאים גוף. בלי מפתח: «חסר מפתח Gemini». **לא** דפדפן `gemini.google.com` |
 | **ChatGPT API** (`vf_chatgpt.py`) | Gemini API + Perplexity + WebSearch | לא ממציאים גוף. בלי מפתח: «חסר מפתח ChatGPT». **לא** דפדפן `chatgpt.com` |
-| **GenerateImage** (`tools.image`) | Canva `generate-design` → Superdesign → `studio/render.py` | לא ממציאים קישור Canva |
+> LEGACY / provenance only for VF publication; not a provider route: | **GenerateImage** (`tools.image`) | Canva `generate-design` → Superdesign → `studio/render.py` | לא ממציאים קישור Canva |
 | **Gmail** MCP | Drive `create_file` את הגוף · ממשיכים · **send_message מותר** | לא ממציאים פנייה · לא דיוור המוני |
 | **Calendar** MCP | שואלים חלון איסוף / «חסר לוח» וממשיכים בריף מג׳ימייל | לא ממציאים שעות תור |
 | **Drive** MCP | קובץ/שם שהמשתמש נתן בצ׳אט | לא פותחים תיקיות אישיות |
 | **FCC** (לא על Cloud Agent) | תזמורת ChatGPT+Gemini+Perplexity + thrift ב־`vffcc` | לא מתקינים `fcc-server` כאן |
 | **3D AI Studio** (MCP לא מחובר / אין קרדיט) | אתר [3daistudio.com](https://www.3daistudio.com) + Drive + `vfprod/3DAISTUDIO.md` | לא ממציאים מפתח / URL / ₪ · לא מדפיסים מ־HQ |
-| **Instagram MCP** (down / no live session / `remote_access` pending) | Canva export + Drive `create_file` + Gmail `send_message` אותו תור (`vfigos/CONNECT-IG.md`) | לא טוענים שעלה לפיד · לא DM · לא `INSTAGRAM_MCP_DM_ENABLED` |
+> LEGACY / provenance only for VF publication; not a provider route: | **Instagram MCP** (down / no live session / `remote_access` pending) | Canva export + Drive `create_file` + Gmail `send_message` אותו תור (`vfigos/CONNECT-IG.md`) | לא טוענים שעלה לפיד · לא DM · לא `INSTAGRAM_MCP_DM_ENABLED` |
 | **iCloud** (Cloud Agent / Mac כבוי) | Drive `Velvet Factory/iCloud mirror` · «הרץ sync על Mac» · קובץ בצ׳אט | לא טוענים גישה ישירה ל-iCloud מהענן |
 | **iCloud MCP** (Desktop, אין הרשאה) | העתקה ל-Drive · `sync-icloud-to-drive.sh` | לא פותחים תיקיות אישיות |
 
@@ -77,7 +82,7 @@ Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights �
 |---|---|---|
 | **Grok Bot** — טיוטות / מחקר / בריף | Cursor HQ + תזמורת + **Gmail send** (בריף = `htmlBody` תצוגה 3) | לא סרק · לא המצאה |
 | **Grok Bot** — פרסום | `vfigos/SEND.md` · `#נשלח-מ-HQ` | לא מחכים לגרוק · לא בוסט · לא אוטו־DM |
-| **Grok Bot** — **פרסום חי** | `LIVE-PACKET` + כלים (Canva+Gmail+Drive) | אדם רק אם הכלים נפלו |
+> LEGACY / provenance only for VF publication; not a provider route: | **Grok Bot** — **פרסום חי** | `LIVE-PACKET` + כלים (Canva+Gmail+Drive) | אדם רק אם הכלים נפלו |
 | דחוף ללקוח (שיחה) | אדם וואטסאפ `050-2517000` (טיוטה: MCP חיפוש או `vf_office.py`) | אין שליחה מ־HQ |
 
 נוהל מלא: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md`.  
@@ -121,7 +126,7 @@ python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-YYYY-MM-DD.jso
 חריץ 07 = כיתובי `vfcopy` מוכנים + שער עריכה + ארטיפקט `PREFLIGHT.md` לפני שיבוץ. פער סוכנות = שורת **פער** למשרד, לא אשמת בעלים.
 
 שליחת המייל לפי [`SEND.md`](SEND.md). המעבר הזה לא מפרסם IG.  
-לפני שיבוץ: [`STUDIO.md`](STUDIO.md) שער עריכה **קשיח** — **אין סטוריז ואין פיד** בלי Canva MCP (`edit_url`) או מעבר vfcovers / vfcanva **ו** בלי ארטיפקט `vfgrowth/PREFLIGHT.md` (VOICE + ציון עצמי + 2–3 קומפס). JPEG גולמי = אסור. נכשל-סגור = לא משבצים.  
+> LEGACY / provenance only for VF publication; not a provider route: לפני שיבוץ: [`STUDIO.md`](STUDIO.md) שער עריכה **קשיח** — **אין סטוריז ואין פיד** בלי Canva MCP (`edit_url`) או מעבר vfcovers / vfcanva **ו** בלי ארטיפקט `vfgrowth/PREFLIGHT.md` (VOICE + ציון עצמי + 2–3 קומפס). JPEG גולמי = אסור. נכשל-סגור = לא משבצים.  
 סטוריז מוצר: `vfgrowth/STORIES.md` + `vfcopy/VOICE.md` סיפור-מוצר. תהליך-קצר רק לריל חשיפה.  
 חריץ 05: CLI אמיתי מ-24ש (`vfops_loop` רושם) או **«אין חדש במשרד»**. בלי פעילות קטלוג מזויפת. פק שלא הורץ = שורת **פער**, לא שקט.  
 משבצות: לא שואלים — `vfgrowth/CALENDAR-OPS.md` שם כל פוסט מתוכנן על Google Calendar.

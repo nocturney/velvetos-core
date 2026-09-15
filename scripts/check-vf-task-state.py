@@ -86,7 +86,7 @@ class TaskStateTests(unittest.TestCase):
     def test_matching_digest_verifies_bytes_with_source_provenance(self) -> None:
         row = self.inspect()
         self.assertEqual(row["completion"], "local_artifacts_verified")
-        self.assertEqual(row["source"], str(state.STATE_PATH / "task.json"))
+        self.assertEqual(row["source"], (state.STATE_PATH / "task.json").as_posix())
         self.assertEqual(row["source_sha256"], hashlib.sha256(self.path.read_bytes()).hexdigest())
         self.assertEqual(row["artifacts"][0]["status"], "digest_verified")
         self.assertEqual(row["reported_status"], "done")

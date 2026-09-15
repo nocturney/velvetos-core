@@ -50,7 +50,6 @@
         "vfgrowth",
         "vfcopy",
         "vfcovers",
-        "vfcanva",
         "vfigos"
       ],
       "authorities": [
@@ -63,7 +62,9 @@
         "packages/vfgrowth/PREFLIGHT.md",
         ".cursor/skills/velvet-brand-guardian/SKILL.md",
         "packages/vfigos/SEND.md",
-        "packages/vfbiz/OFFERING.md"
+        "packages/vfbiz/OFFERING.md",
+        "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt",
+        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json"
       ],
       "hardGates": [
         "product_truth",
@@ -73,7 +74,11 @@
         "public_cta",
         "visible_text",
         "exact_final_qa",
-        "offering_shape"
+        "offering_shape",
+        "reference_match",
+        "actual_file_evidence",
+        "rejected_direction",
+        "no_canva_route"
       ]
     },
     "copywriting": {
@@ -274,13 +279,20 @@
         "constitution/SEND.md",
         "packages/vfigos/SEND.md",
         "packages/vfgrowth/PREFLIGHT.md",
-        "packages/vfbiz/OFFERING.md"
+        "packages/vfbiz/OFFERING.md",
+        "packages/vfom/PUBLICATION-PREP-EXECUTION.md",
+        "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt",
+        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json"
       ],
       "hardGates": [
         "publish_preflight",
         "tool_receipt",
         "live_verification",
-        "offering_shape"
+        "offering_shape",
+        "reference_match",
+        "actual_file_evidence",
+        "rejected_direction",
+        "no_canva_route"
       ]
     },
     "general_business": {

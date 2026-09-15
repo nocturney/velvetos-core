@@ -1,5 +1,10 @@
 # עובדות סטודיו
 
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
 ## רף סוכנות (כוכב צפון)
 
 המשרד רץ כמו **סוכנות פרסום+תפעול יקרה**. כריסטיאן יושב רגוע: העבודה נעשית עד הסוף — ומעבר.  
@@ -34,7 +39,7 @@
 ## שער עריכה — לפני שיבוץ (קשיח)
 
 **אסור** לשבץ / לפרסם JPEG גולמי עם טקסט עליו בלבד.  
-**אסור** סטוריז או פיד בלי מעבר **Canva MCP** (`edit_url` אמיתי) **או** **vfcovers / vfcanva** (`compose_slides.py` / `studio/render.py`).  
+> LEGACY / provenance only for VF publication; not a provider route: **אסור** סטוריז או פיד בלי מעבר **Canva MCP** (`edit_url` אמיתי) **או** **vfcovers / vfcanva** (`compose_slides.py` / `studio/render.py`).  
 Gemini browser רק על מק בשדרות (`vfmcp/HOST.md` — Cloud לא פותח `gemini.google.com`).  
 Failover: Superdesign → `render.py`. בלי `edit_url` / PNG מורכב = **לא משבצים**.  
 סטוריז מוצר = סיפור-מוצר (`VOICE.md`) + נייבי-זהב (`vfgrowth/STORIES.md`). תהליך-קצר רק לריל חשיפה.  
@@ -54,7 +59,7 @@ G004 סטוריז: [`packages/vfcopy/G004-STORIES-FIX.md`](../packages/vfcopy/G0
 כל סטוריז / פיד חייב ארטיפקט כתוב `packages/vfgrowth/preflight/<id>.md` לפני שיבוץ:
 
 1. התאמת `VOICE.md`
-2. Canva MCP או PNG מ־vfcovers / vfcanva — לא JPEG גולמי (`EDIT-GATE.md`)
+> LEGACY / provenance only for VF publication; not a provider route: 2. Canva MCP או PNG מ־vfcovers / vfcanva — לא JPEG גולמי (`EDIT-GATE.md`)
 3. ציון עצמי מול רף סוכנות יקרה (ביקורת עצמית — לא Insights)
 4. 2–3 קומפס מ־`VOICE-RESEARCH.md` / שכני תלת־ממד·עיצוב·מתנה בישראל — מה מאמצים / מה דוחים
 

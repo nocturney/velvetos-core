@@ -1,5 +1,10 @@
 # AGENTS.md — VelvetOS — Velvet Factory (frontend instance)
 
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
 PRODUCT: VelvetOS
 ROLE: instance (frontend office)
 INSTANCE: VelvetOS — Velvet Factory
@@ -44,7 +49,7 @@ Enabled set is in `instance/velvet-factory.json` → `modulesEnabled` (preset `m
 
 ## COLD-START VISUAL STANDARD — mandatory
 
-For any Velvet Factory content/image/Canva/feed/cover/carousel/Story/Reel visual task, load `vendor/velvetos-core/packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VISUAL-OS.md` and `VISUAL-DNA.json` before creative work. Canonical Canva asset: `MAHVL7PKpvE`; artifact SHA-256: `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. A fresh conversation must inherit this without relying on chat history. Missing or mismatched binding stops the creative branch as `visual_standard_unavailable`; generic/default creative fallback is forbidden. Real product source media remains Product Truth.
+> LEGACY / provenance only for VF publication; not a provider route: For any Velvet Factory content/image/Canva/feed/cover/carousel/Story/Reel visual task, load `vendor/velvetos-core/packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VISUAL-OS.md` and `VISUAL-DNA.json` before creative work. Canonical Canva asset: `MAHVL7PKpvE`; artifact SHA-256: `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. A fresh conversation must inherit this without relying on chat history. Missing or mismatched binding stops the creative branch as `visual_standard_unavailable`; generic/default creative fallback is forbidden. Real product source media remains Product Truth.
 
 ## Publication-prep execution gate
 

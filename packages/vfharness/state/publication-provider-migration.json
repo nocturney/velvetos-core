@@ -1,0 +1,167 @@
+{
+  "scope": "VF publication only",
+  "entrypoints": [
+    {
+      "path": ".cursor/skills/vf-canva-instagram/SKILL.md",
+      "legacy_lines_marked": 20
+    },
+    {
+      "path": ".cursor/skills/vf-organic-growth/SKILL.md",
+      "legacy_lines_marked": 2
+    },
+    {
+      "path": ".cursor/skills/vf-marketing-skills/SKILL.md",
+      "legacy_lines_marked": 4
+    },
+    {
+      "path": ".cursor/skills/vf-openmontage/SKILL.md",
+      "legacy_lines_marked": 3
+    },
+    {
+      "path": "packages/vfgrowth/SKILL.md",
+      "legacy_lines_marked": 2
+    },
+    {
+      "path": "packages/vfgrowth/GATE.md",
+      "legacy_lines_marked": 3
+    },
+    {
+      "path": "packages/vfgrowth/PREFLIGHT.md",
+      "legacy_lines_marked": 5
+    },
+    {
+      "path": "packages/vfcovers/SKILL.md",
+      "legacy_lines_marked": 2
+    },
+    {
+      "path": "packages/vfcovers/hq/PLAYBOOK.md",
+      "legacy_lines_marked": 10
+    },
+    {
+      "path": "packages/vfcanva/WORKFLOW.md",
+      "legacy_lines_marked": 17
+    },
+    {
+      "path": "packages/vfcanva/README.md",
+      "legacy_lines_marked": 13
+    },
+    {
+      "path": "packages/vfcanva/jobs/TEMPLATE.md",
+      "legacy_lines_marked": 5
+    },
+    {
+      "path": "packages/vfom/SKILL.md",
+      "legacy_lines_marked": 2
+    },
+    {
+      "path": "packages/vfom/experts/MEDIA-DIRECTOR.md",
+      "legacy_lines_marked": 2
+    },
+    {
+      "path": "packages/velvetos/modules/expert-media-director.md",
+      "legacy_lines_marked": 4
+    },
+    {
+      "path": "packages/vfe2b/crews/content.md",
+      "legacy_lines_marked": 3
+    },
+    {
+      "path": "packages/vfgraft/graph/content-job.md",
+      "legacy_lines_marked": 2
+    },
+    {
+      "path": "packages/vfom/EDIT-DIRECTOR.md",
+      "legacy_lines_marked": 1
+    },
+    {
+      "path": "packages/vfom/HYPERFRAMES-FRAME.md",
+      "legacy_lines_marked": 2
+    },
+    {
+      "path": "constitution/ORGANIC_GROWTH.md",
+      "legacy_lines_marked": 2
+    },
+    {
+      "path": "packages/vfigos/SEND.md",
+      "legacy_lines_marked": 3
+    },
+    {
+      "path": "packages/vfgrowth/preflight/TEMPLATE.md",
+      "legacy_lines_marked": 4
+    },
+    {
+      "path": ".cursor/skills/canva-brand-check/SKILL.md",
+      "legacy_lines_marked": 11
+    },
+    {
+      "path": ".cursor/skills/canva-bulk-create/SKILL.md",
+      "legacy_lines_marked": 13
+    },
+    {
+      "path": ".cursor/skills/canva-edit-design/SKILL.md",
+      "legacy_lines_marked": 13
+    },
+    {
+      "path": ".cursor/skills/canva-get-design-feedback/SKILL.md",
+      "legacy_lines_marked": 10
+    },
+    {
+      "path": ".cursor/skills/canva-implement-feedback/SKILL.md",
+      "legacy_lines_marked": 14
+    },
+    {
+      "path": ".cursor/skills/canva-resize-for-social-media/SKILL.md",
+      "legacy_lines_marked": 15
+    },
+    {
+      "path": "AGENTS.md",
+      "legacy_lines_marked": 4
+    },
+    {
+      "path": "constitution/CONSTITUTION.md",
+      "legacy_lines_marked": 1
+    },
+    {
+      "path": "constitution/STUDIO.md",
+      "legacy_lines_marked": 2
+    },
+    {
+      "path": "constitution/ORCHESTRA.md",
+      "legacy_lines_marked": 7
+    },
+    {
+      "path": "constitution/SEND.md",
+      "legacy_lines_marked": 3
+    },
+    {
+      "path": "packages/vfgrowth/EDIT-GATE.md",
+      "legacy_lines_marked": 6
+    },
+    {
+      "path": "packages/vfigos/CONNECT-IG.md",
+      "legacy_lines_marked": 3
+    },
+    {
+      "path": ".cursor/skills/velvet-creative-director/SKILL.md",
+      "legacy_lines_marked": 2
+    },
+    {
+      "path": ".cursor/skills/velvet-brand-guardian/SKILL.md",
+      "legacy_lines_marked": 3
+    },
+    {
+      "path": ".cursor/skills/vf-content-sprint/SKILL.md",
+      "legacy_lines_marked": 3
+    },
+    {
+      "path": "instances/velvet-factory/AGENTS.md",
+      "legacy_lines_marked": 1
+    },
+    {
+      "path": "instances/velvet-factory/.cursor/rules/velvetos-instance-desk.mdc",
+      "legacy_lines_marked": 1
+    }
+  ],
+  "historical_archives": "unchanged",
+  "provider_capabilities_other_scopes": "unchanged"
+}

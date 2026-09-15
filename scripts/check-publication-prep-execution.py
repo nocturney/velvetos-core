@@ -57,7 +57,7 @@ for needle in ('visual_edit_performed: FAIL', 'visual_output_evidence:', 'exact_
     if needle not in template:
         fail(f"preflight template missing {needle}")
 
-print(f"OK publication-prep execution enforced surfaces={len(SURFACES)}")
+print(f"OK publication-prep structural wiring verified surfaces={len(SURFACES)}")
 fixture = text('packages/vfom/tests/publication-prep-coldstart.json')
 for needle in (
     'פרסום פוטנציאלי, תכין את זה לפרסום בבקשה כדי שנבחן',

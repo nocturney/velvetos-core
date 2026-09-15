@@ -188,6 +188,16 @@ def verify_public_url(
 
 
 def stage_to_github(asset: Path, metadata: dict[str, Any], cfg: dict[str, Any]) -> tuple[str, str]:
+    # Shared write boundary: all callers, including recovery, must present exact evidence.
+    args = argparse.Namespace(approval_ref=metadata.get("approvalRef", ""), correlation=metadata.get("correlation", ""), format=metadata.get("publicationFormat"), package_sha256=metadata.get("publicationPackageSha256"))
+    verdict = require_staging_approval(args, asset)
+    content_type, details = inspect_reviewed_asset(asset, cfg)
+    asset_bytes = asset.read_bytes()
+    frozen_sha = hashlib.sha256(asset_bytes).hexdigest()
+    if frozen_sha not in verdict["evidenceValidation"].get("visualHashes", []) or frozen_sha != metadata.get("sha256"):
+        raise ValueError("staging bytes differ from the exact reviewed artifact")
+    if content_type != metadata.get("contentType") or len(asset_bytes) != metadata.get("sizeBytes"):
+        raise ValueError("staging metadata differs from the reviewed bytes")
     token = (os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN") or "").strip()
     if not token:
         raise RuntimeError("GH_TOKEN or GITHUB_TOKEN is required for CLI staging")
@@ -200,7 +210,6 @@ def stage_to_github(asset: Path, metadata: dict[str, Any], cfg: dict[str, Any]) 
     parent_sha = branch_state["commit"]["sha"]
     base_tree = branch_state["commit"]["commit"]["tree"]["sha"]
 
-    asset_bytes = asset.read_bytes()
     asset_blob = api_request(
         token,
         "POST",
@@ -277,6 +286,52 @@ def build_metadata(
     }
 
 
+def inspect_reviewed_asset(src: Path, cfg: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+    """Read-only transport validation; never re-encode an approved artifact."""
+    ext = src.suffix.lower()
+    details: dict[str, Any] = {"sizeBytes": src.stat().st_size}
+    if ext in {".jpg", ".jpeg"}:
+        from PIL import Image
+        with Image.open(src) as image:
+            if image.format != "JPEG" or image.mode not in {"RGB", "L"}:
+                raise ValueError("stage requires normalized RGB baseline JPEG")
+            if any(image.info.get(k) for k in ("exif", "icc_profile", "comment", "progressive", "progression")):
+                raise ValueError("normalize metadata/progressive JPEG before exact-final review")
+            details.update(width=image.width, height=image.height)
+            image.verify()
+        rule = cfg["imageNormalization"]
+    elif ext in {".mp4", ".mov"}:
+        probe = shutil.which("ffprobe")
+        if not probe:
+            raise ValueError("ffprobe required to inspect reviewed video without mutation")
+        run = subprocess.run([probe, "-v", "error", "-show_format", "-show_streams", "-of", "json", str(src)], capture_output=True, text=True, check=True, timeout=20)
+        data = json.loads(run.stdout)
+        if not any(s.get("codec_type") == "video" for s in data.get("streams", [])):
+            raise ValueError("reviewed video has no video stream")
+        tags = [data.get("format", {}).get("tags", {})] + [s.get("tags", {}) for s in data.get("streams", [])]
+        allowed = {"major_brand", "minor_version", "compatible_brands", "encoder", "language", "handler_name", "vendor_id"}
+        if any(set(t) - allowed for t in tags):
+            raise ValueError("remove private video metadata before review")
+        rule = cfg["videoNormalization"]
+    else:
+        raise ValueError("prepare/normalize this format before exact-final review and staging")
+    if details["sizeBytes"] > int(rule["maxBytes"]):
+        raise ValueError("reviewed asset exceeds transport limit")
+    return rule["contentType"], details
+
+
+def require_staging_approval(args: argparse.Namespace, src: Path) -> dict[str, Any]:
+    from vf_send_preflight import validate_publication_approval
+    if not getattr(args, "format", None) or not getattr(args, "package_sha256", None):
+        raise ValueError("stage requires --format and --package-sha256 plus actual evidence; a boolean is not approval")
+    verdict = validate_publication_approval(args.approval_ref, args.correlation, args.format, args.package_sha256)
+    if not verdict["ok"]:
+        raise ValueError("publication approval blocked: " + "; ".join(verdict["problems"]))
+    if sha256_file(src) not in verdict["evidenceValidation"].get("visualHashes", []):
+        raise ValueError("bridge file is not an exact reviewed final artifact")
+    return verdict
+
+
 def cmd_prepare(args: argparse.Namespace, stage: bool) -> int:
     cfg = load_config()
     src = Path(args.file).expanduser().resolve()
@@ -290,7 +345,20 @@ def cmd_prepare(args: argparse.Namespace, stage: bool) -> int:
 
     with tempfile.TemporaryDirectory(prefix="vf-publish-bridge-") as tmp_name:
         tmp = Path(tmp_name)
-        normalized, content_type, details = normalize(src, cfg, tmp)
+        if stage:
+            approval = require_staging_approval(args, src)
+            normalized = tmp / src.name
+            shutil.copyfile(src, normalized)
+            if sha256_file(normalized) not in approval["evidenceValidation"].get("visualHashes", []):
+                raise ValueError("asset changed while freezing staged bytes")
+            content_type, details = inspect_reviewed_asset(normalized, cfg)
+        else:
+            normalized, content_type, details = normalize(src, cfg, tmp)
+            if getattr(args, "output", None):
+                target = Path(args.output).expanduser().resolve()
+                target.parent.mkdir(parents=True, exist_ok=True)
+                with target.open("xb") as output:
+                    output.write(normalized.read_bytes())
         metadata = build_metadata(
             normalized,
             content_type,
@@ -316,6 +384,7 @@ def cmd_prepare(args: argparse.Namespace, stage: bool) -> int:
             "rule": "staged/fetch_verified != published; publish_* receipt + live verification are still required",
         }
         if stage:
+            metadata.update(publicationFormat=args.format, publicationPackageSha256=args.package_sha256)
             public_url, commit = stage_to_github(normalized, metadata, cfg)
             fetch_verify = verify_public_url(
                 public_url,
@@ -338,6 +407,9 @@ def main() -> int:
         p.add_argument("--approval-ref", required=True, help="canonical approval/preflight reference")
         p.add_argument("--source-ref", required=True, help="private provenance; only a SHA-256 hash is published")
         p.add_argument("--public-release-approved", action="store_true")
+        p.add_argument("--format", choices=("post", "carousel", "story", "reel"))
+        p.add_argument("--package-sha256")
+        p.add_argument("--output", help="Private normalized draft for review; prepare only, refuses overwrite")
     args = parser.parse_args()
     try:
         return cmd_prepare(args, stage=args.command == "stage")

@@ -5,9 +5,14 @@ description: Implement reviewer feedback on a Canva design. Reads all comment th
 
 # Feedback to Finished
 
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
 A deck has been out for review — stakeholders have left comments scattered across slides. This skill reads every thread, summarises what reviewers actually want, makes the clear-cut changes directly, and flags anything ambiguous for a human decision.
 
-## Canva Editing API — What You Can and Cannot Do
+> LEGACY / provenance only for VF publication; not a provider route: ## Canva Editing API — What You Can and Cannot Do
 
 Before triaging feedback, you MUST know these constraints. This avoids wasted back-and-forth with the user on changes that are impossible via the API.
 
@@ -38,16 +43,16 @@ When a comment requests something in the "CANNOT do" list, classify it as **Requ
 
 ### Step 1: Resolve the Design
 
-- If the user provides a short link (`canva.link`), call `Canva:resolve-shortlink` to get the design URL
-- If the user provides a full Canva URL, extract the design ID from the URL
-- If the user provides a **design ID** directly (typically starts with `D`, e.g. `DABcd1234ef`), use it as `design_id`; **do not** use `Canva:search-designs` for a raw ID
+> LEGACY / provenance only for VF publication; not a provider route: - If the user provides a short link (`canva.link`), call `Canva:resolve-shortlink` to get the design URL
+> LEGACY / provenance only for VF publication; not a provider route: - If the user provides a full Canva URL, extract the design ID from the URL
+> LEGACY / provenance only for VF publication; not a provider route: - If the user provides a **design ID** directly (typically starts with `D`, e.g. `DABcd1234ef`), use it as `design_id`; **do not** use `Canva:search-designs` for a raw ID
 - Otherwise ask for the design ID or link
 
 ### Step 2: Read All Feedback
 
-- Call `Canva:list-comments` with the design ID to get every comment thread
-- For each thread with replies, call `Canva:list-replies` to capture the full conversation
-- Call `Canva:get-design-content` to read the current text on every page
+> LEGACY / provenance only for VF publication; not a provider route: - Call `Canva:list-comments` with the design ID to get every comment thread
+> LEGACY / provenance only for VF publication; not a provider route: - For each thread with replies, call `Canva:list-replies` to capture the full conversation
+> LEGACY / provenance only for VF publication; not a provider route: - Call `Canva:get-design-content` to read the current text on every page
 
 ### Step 3: Triage the Feedback
 
@@ -70,17 +75,17 @@ Present a summary to the user organised by category: what you plan to change, wh
 
 **Do NOT ask the user again.** They already approved. Execute all of these in sequence immediately:
 
-- Call `Canva:start-editing-transaction` to begin an editing session
-- Call `Canva:perform-editing-operations` to make each approved change (batch all operations in a single call where possible)
-- Call `Canva:commit-editing-transaction` to save — do NOT ask "shall I commit?" or "ready to save?"
+> LEGACY / provenance only for VF publication; not a provider route: - Call `Canva:start-editing-transaction` to begin an editing session
+> LEGACY / provenance only for VF publication; not a provider route: - Call `Canva:perform-editing-operations` to make each approved change (batch all operations in a single call where possible)
+> LEGACY / provenance only for VF publication; not a provider route: - Call `Canva:commit-editing-transaction` to save — do NOT ask "shall I commit?" or "ready to save?"
 - Show the thumbnail from the editing response to the user as confirmation
 
 ### Step 7: Present Remaining Manual Changes
 
-After committing (or if no API-supported changes were possible), present a clear checklist of everything that still needs to be done manually in the Canva editor:
+> LEGACY / provenance only for VF publication; not a provider route: After committing (or if no API-supported changes were possible), present a clear checklist of everything that still needs to be done manually in the Canva editor:
 
 ```
-## Changes to make manually in Canva
+> LEGACY / provenance only for VF publication; not a provider route: ## Changes to make manually in Canva
 
 1. **Slide 3 — Change heading font to Montserrat**
    Reviewer: @Sarah | Why: API cannot change font family
@@ -97,7 +102,7 @@ Include the slide number, what to change, who requested it, and step-by-step ins
 
 ### Step 8: Resolve Comment Threads
 
-- After committing, call `Canva:reply-to-comment` on each actionable thread to note what was changed
+> LEGACY / provenance only for VF publication; not a provider route: - After committing, call `Canva:reply-to-comment` on each actionable thread to note what was changed
 - For "Requires manual action" threads, reply noting what was done as the closest alternative and what still needs manual attention
 - This closes the feedback loop so reviewers can see their comments were addressed
 
@@ -117,4 +122,4 @@ Before claiming completion, verify the routed target state or run the existing p
 
 ## Velvet Factory instance override — mandatory (`VF_VISUAL_STANDARD_GATE`)
 
-When the active job/instance is Velvet Factory or `@velvets_cloud`, do not operate this Canva skill in isolation. Before any create/edit/resize/feedback/brand-check/bulk action, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`, verify `MAHVL7PKpvE` / `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, and require `visual_standard_gate=PASS`. If the binding cannot be verified, return `visual_standard_unavailable` instead of using generic Canva/template defaults. Product source media remains the sole authority for the physical product.
+> LEGACY / provenance only for VF publication; not a provider route: When the active job/instance is Velvet Factory or `@velvets_cloud`, do not operate this Canva skill in isolation. Before any create/edit/resize/feedback/brand-check/bulk action, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`, verify `MAHVL7PKpvE` / `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, and require `visual_standard_gate=PASS`. If the binding cannot be verified, return `visual_standard_unavailable` instead of using generic Canva/template defaults. Product source media remains the sole authority for the physical product.

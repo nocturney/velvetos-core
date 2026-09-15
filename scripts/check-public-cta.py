@@ -94,12 +94,12 @@ def main() -> None:
         fail("PROFILE-DESIRED bio must not contain WhatsApp CTA")
     if "הודעה" not in bio:
         fail("PROFILE-DESIRED bio must contain Instagram-message CTA")
-    if profile.get("liveStatus") != "pending-live-tool" and profile.get("status") == "prepared":
-        # prepared + pending is required until tool ready
-        if profile.get("status") not in {"prepared", "live"}:
-            fail("PROFILE-DESIRED status invalid")
-    if profile.get("status") == "prepared" and profile.get("liveStatus") != "pending-live-tool":
-        fail("PROFILE-DESIRED must stay pending-live-tool until tool updates")
+    if profile.get("status") == "prepared":
+        pending = profile.get("liveStatus")
+        if pending not in {"pending-live-tool", "pending-human-profile-edit"}:
+            fail("prepared profile must remain pending; it is not live verification")
+        if pending == "pending-human-profile-edit" and (profile.get("execution") or {}).get("graphWrite") != "unsupported_by_official_graph":
+            fail("human profile-edit state requires the recorded unsupported Graph-write constraint")
 
     # Organic growth policy must not require WA as public CTA
     org = (ROOT / "constitution" / "ORGANIC_GROWTH.md").read_text(encoding="utf-8")

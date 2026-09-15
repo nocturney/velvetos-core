@@ -23,6 +23,7 @@ import datetime as dt
 import hashlib
 import json
 import re
+import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -90,7 +91,7 @@ def package_fingerprint(correlation: str, source_refs: list[str], sha256_list: l
 
 
 def reject_source_path(path_or_url: str) -> None:
-    text = path_or_url.strip()
+    text = path_or_url.strip().replace(chr(92), "/")
     for pat in FORBIDDEN_SOURCE_PATTERNS:
         if pat.search(text):
             raise ValueError(f"rejected delivery source ({pat.pattern}): {text}")
@@ -100,8 +101,8 @@ def reject_source_path(path_or_url: str) -> None:
         resolved = resolved.resolve()
     except Exception:
         resolved = Path(text)
-    rel = str(resolved)
-    if "/publish-bridge/" not in rel and str(ROOT) in rel:
+    rel = resolved.as_posix()
+    if "/publish-bridge/" not in rel and ROOT.as_posix() in rel:
         # Repo-local historical assets are forbidden as current source.
         if any(seg in rel for seg in ("/jobs/", "/vfcovers/", "/out/story-")):
             raise ValueError(f"historical repo asset rejected as current source: {rel}")
@@ -174,6 +175,8 @@ def register_local_export(
     frame_index: int,
     public_release_approved: bool,
     cta_text: str | None = None,
+    format_name: str | None = None,
+    package_sha256: str | None = None,
 ) -> dict[str, Any]:
     reject_source_path(str(file_path))
     reject_source_path(source_ref)
@@ -184,6 +187,8 @@ def register_local_export(
     if cta_text is not None:
         validate_public_cta_text(cta_text, frame_role="cta")
 
+    proof = argparse.Namespace(approval_ref=approval_ref, correlation=correlation, format=format_name, package_sha256=package_sha256)
+    bridge.require_staging_approval(proof, file_path)
     digest = bridge.sha256_file(file_path)
     frame = {
         "frameIndex": frame_index,
@@ -228,6 +233,8 @@ def recover_and_stage_frame(
     frame_index: int,
     public_release_approved: bool,
     do_stage: bool,
+    format_name: str | None = None,
+    package_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Recovery path: local approved export exists → stage → fetch verify.
 
@@ -257,24 +264,28 @@ def recover_and_stage_frame(
             "ok": False,
             "blocker": "blocked_artifact_retrieval",
             "error": f"missing {file_path}",
-            "recoveryHint": "re-export from sourceRef via Canva MCP, then re-run handoff",
+            "recoveryHint": "rebuild from protected product source using the allowed route, obtain exact-final evidence, then re-run handoff",
         }
 
-    register_local_export(
-        correlation=correlation,
-        file_path=file_path,
-        approval_ref=approval_ref,
-        source_ref=source_ref,
-        frame_index=frame_index,
-        public_release_approved=True,
-    )
+    try:
+        proof = argparse.Namespace(approval_ref=approval_ref, correlation=correlation, format=format_name, package_sha256=package_sha256)
+        approval = bridge.require_staging_approval(proof, file_path)
+        register_local_export(correlation=correlation, file_path=file_path, approval_ref=approval_ref, source_ref=source_ref, frame_index=frame_index, public_release_approved=True, format_name=format_name, package_sha256=package_sha256)
+    except (ValueError, OSError) as exc:
+        set_state(doc, "blocked_creative_preflight", note=str(exc))
+        save_publication(doc)
+        return {"ok": False, "blocker": "blocked_creative_preflight", "error": str(exc)}
     attempts.append({"step": "approved_export_local", "ok": True})
 
     cfg = bridge.load_config()
     with tempfile.TemporaryDirectory(prefix="vf-handoff-") as tmp_name:
         tmp = Path(tmp_name)
         try:
-            normalized, content_type, details = bridge.normalize(file_path, cfg, tmp)
+            normalized = tmp / file_path.name
+            shutil.copyfile(file_path, normalized)
+            if bridge.sha256_file(normalized) not in approval["evidenceValidation"].get("visualHashes", []):
+                raise ValueError("recovery bytes changed after approval")
+            content_type, details = bridge.inspect_reviewed_asset(normalized, cfg)
         except Exception as exc:
             set_state(doc, "blocked_bridge_staging", note=str(exc))
             save_publication(doc)
@@ -289,6 +300,7 @@ def recover_and_stage_frame(
             approval_ref,
             source_ref,
         )
+        metadata.update(publicationFormat=format_name, publicationPackageSha256=package_sha256)
         # Idempotency: if this exact sha20 object is already the recorded staged asset, skip restage.
         existing = next(
             (f for f in doc.get("frames", []) if f.get("frameIndex") == frame_index),
@@ -422,6 +434,8 @@ def cmd_register(args: argparse.Namespace) -> int:
         frame_index=int(args.frame_index),
         public_release_approved=bool(args.public_release_approved),
         cta_text=args.cta_text,
+        format_name=args.format,
+        package_sha256=args.package_sha256,
     )
     print(json.dumps(out, ensure_ascii=False, indent=2))
     return 0
@@ -436,6 +450,8 @@ def cmd_recover(args: argparse.Namespace) -> int:
         frame_index=int(args.frame_index),
         public_release_approved=bool(args.public_release_approved),
         do_stage=bool(args.stage),
+        format_name=args.format,
+        package_sha256=args.package_sha256,
     )
     print(json.dumps(out, ensure_ascii=False, indent=2))
     return 0 if out.get("ok") else 2
@@ -466,6 +482,8 @@ def main() -> int:
     p.add_argument("--source-ref", required=True)
     p.add_argument("--frame-index", required=True, type=int)
     p.add_argument("--public-release-approved", action="store_true")
+    p.add_argument("--format", choices=("post", "carousel", "story", "reel"))
+    p.add_argument("--package-sha256")
     p.add_argument("--cta-text", default=None)
 
     p = sub.add_parser("recover", help="recover: local approved export → bridge stage → fetch verify")
@@ -475,6 +493,8 @@ def main() -> int:
     p.add_argument("--source-ref", required=True)
     p.add_argument("--frame-index", required=True, type=int)
     p.add_argument("--public-release-approved", action="store_true")
+    p.add_argument("--format", choices=("post", "carousel", "story", "reel"))
+    p.add_argument("--package-sha256")
     p.add_argument("--stage", action="store_true", help="actually stage to publish-bridge (needs GH_TOKEN)")
 
     p = sub.add_parser("receipt", help="record a publish_* receipt")

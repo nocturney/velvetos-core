@@ -6,6 +6,27 @@
   "additionalProperties": false,
   "required": ["jobId", "format", "status", "sourceEvidence", "visualStandard", "concept", "hook", "shots", "edit", "visualCopy", "cover", "qa"],
   "properties": {
+    "publicationEvidence": {
+      "type": "object",
+      "required": [
+        "version",
+        "policy_sha256",
+        "public_intent",
+        "direction",
+        "tools",
+        "sources",
+        "references",
+        "reference_decomposition",
+        "product_protection",
+        "stages"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        }
+      },
+      "description": "Required by runtime production/delivery gates. Detailed integrity contract: PUBLICATION-PREP-EXECUTION.md; validated against actual files by vf_publication_evidence.py. Legacy manifests are archival, not new approvals."
+    },
     "jobId": {"type": "string", "minLength": 1},
     "format": {"enum": ["reel", "story", "carousel", "post"]},
     "status": {"enum": ["discovered", "qualified", "contracted", "concepted", "storyboarded", "waiting_for_media", "media_ready", "rough_generated", "visually_scored", "repaired", "rendered", "ready_for_publish", "authorized_for_tool_publish", "published_verified", "performance_learned", "human_required", "archived"]},
@@ -16,7 +37,7 @@
     "visualStandard": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["gate", "document", "portablePrompt", "referenceAsset", "publicReferenceUrl", "canvaAssetId", "artifactSha256", "coldStart", "evidenceRefs"],
+      "required": ["gate", "document", "portablePrompt", "referenceAsset", "publicReferenceUrl", "artifactSha256", "coldStart", "evidenceRefs"],
       "properties": {
         "gate": {"const": "PASS"},
         "document": {"const": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md"},

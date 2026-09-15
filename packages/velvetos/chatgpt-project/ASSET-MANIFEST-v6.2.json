@@ -1,0 +1,112 @@
+{
+  "contract_version": 6,
+  "revision": "6.2",
+  "bundle_id": "VF-PROJECT-6.2-DETAIL-TRUTH",
+  "created_for": "owner-requested local configuration and reference package",
+  "instructions": {
+    "filename": "Velvet-Factory-Project-Instructions-v6.2.txt",
+    "sha256": "75fdb026f1c22f5de21758762a1c8d492aa9841f5b7bc8f176e8ca2e8e663fa7",
+    "characters": 7802,
+    "limit_supplied_by_owner": 8000
+  },
+  "assets": [
+    {
+      "filename": "Velvet-Factory-Project-Authority-v6.txt",
+      "role": "authority",
+      "required_for": "all_requests",
+      "sha256": "590c97c0fb7e7b7669ac6fd30c91a62b324400f08b769bc715498cd4837ff6e1",
+      "bytes": 16271
+    },
+    {
+      "filename": "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
+      "role": "broad_style_only",
+      "required_for": "visual_work",
+      "sha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
+      "bytes": 862200,
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-EDITORIAL-STYLE-REFERENCE-v2.png",
+      "role": "editorial_layout_and_annotation_style_only",
+      "required_for": "visual_work",
+      "sha256": "f7f1d04dd1fd08e70da03627d9042a1b716a3793768c0db8408304413219c2ae",
+      "bytes": 1971573,
+      "dimensions": [
+        2048,
+        2110
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v1.png",
+      "role": "source_fidelity_teaching_sheet_not_general_product_source",
+      "required_for": "visual_work",
+      "sha256": "8feedfaeefb400be41e0a34290d486fa788aead5d4924238f1fbc0ab5be421cd",
+      "bytes": 2218696,
+      "dimensions": [
+        2200,
+        1700
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-APPROVED-LOGO-GOLD-LIGHT-v1.jpg",
+      "role": "exact_owner_logo_light_background",
+      "required_for": "only_when_this_logo_is_used",
+      "sha256": "b7bad605e976ad8ad3cd94dce7e32e0831677ae85939d9e6f45f5de41dfeed0c",
+      "bytes": 114289,
+      "dimensions": [
+        1456,
+        1600
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-APPROVED-LOGO-GOLD-DARK-v1.jpg",
+      "role": "exact_owner_logo_dark_background",
+      "required_for": "only_when_this_logo_is_used",
+      "sha256": "2a0c7f720341335e9727ec11f32161f5c9b7af9f30b20dcec2d207e0c0601b87",
+      "bytes": 83112,
+      "dimensions": [
+        1280,
+        698
+      ]
+    }
+  ],
+  "primary_reference": {
+    "canva_asset_id": "MAHVL7PKpvE",
+    "expected_sha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
+    "role": "style only; no logo, fact or product-geometry authority"
+  },
+  "optional_originals": [
+    {
+      "path": "Original-Brand-Assets/VF-R004-source-photo-as-supplied.jpg",
+      "sha256": "312a41a45723ccefd3ddcb93af9d866f6153ad21edf0082559911e176efd77dc",
+      "bytes": 460070
+    },
+    {
+      "path": "Original-Brand-Assets/Velvet-Factory-APPROVED-LOGO-GOLD-v1.svg",
+      "sha256": "13795c5c101a0fc5a681956e5709bf0a13cd43c39ed05826aa88f331f5e4ab3a",
+      "bytes": 2532386
+    },
+    {
+      "path": "Original-Brand-Assets/logo-vector-original-font-dependent.svg",
+      "sha256": "50f85c01b1690df5790c395a1bf420eb83429ad1cb36ce008c865f4a48e752f3",
+      "bytes": 11814
+    }
+  ],
+  "source_provenance": {
+    "owl_photo": "VF-R004-final-01.jpg from conversation; photographic source, not a generated ad",
+    "owl_photo_sha256": "312a41a45723ccefd3ddcb93af9d866f6153ad21edf0082559911e176efd77dc",
+    "editorial_v2": "Recovered exact PNG from interrupted task and visually re-inspected; two style-only examples. Not endorsed as physical product truth.",
+    "logos": "Copies of owner-uploaded assets, byte-for-byte; not generatively recreated."
+  },
+  "asset_resolution": "Match exact filename and hash. A filename alias may be accepted only after hash match; duplicate conflicting revisions are needs_sync.",
+  "scope_status": {
+    "configuration_files": "LOCAL_VERIFIED",
+    "project_installation": "NOT_VERIFIED",
+    "repository_write": "NOT_PERFORMED",
+    "cold_start_behavioral_test": "NOT_RUN",
+    "publication": "NOT_REQUESTED"
+  }
+}

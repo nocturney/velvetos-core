@@ -1,5 +1,10 @@
 # Crew: content production
 
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
 Source patterns: Wordware, GoCharlie, Wispy, Diagram, v0 (layout only).
 Orchestrator overlay: existing `vfe2b` run desk only — **no second orchestrator**. Visual Foundry autonomy: `packages/vfom/CREATIVE-AUTOPILOT.md` + `FOUNDRY.json`. Mandatory Instagram decision policy: `packages/vfom/INSTAGRAM-CONTENT-DECISION.json`.
 Packs: `vfcopy`, `vfcovers`, `vfigos`, `vfgrowth`, `vfom`, `vfmedia`, `vfinsights`.
@@ -16,7 +21,7 @@ Canonical public CTA funnel: `packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md` (hist
 | Variant Director | `vfom` | cheap concepts/storyboards → rough cuts → max 2 final renders | Render every idea at full quality |
 | Edit Director | `vfom` | EDL from real assets + retention pass | Invent footage or pad weak content |
 | Engagement | `vfom` | natural discussion prompt when relevant | Engagement bait or fake controversy |
-| Cover | `vfcovers` | Build/select cover direction | Invent a Canva URL/brand value |
+> LEGACY / provenance only for VF publication; not a provider route: | Cover | `vfcovers` | Build/select cover direction | Invent a Canva URL/brand value |
 | QA/Repair | `vfom` + `vfgrowth` | deterministic + perceptual + reference + artifact + mobile Visual QA; targeted repair | Escalate routine low quality or lower gates to ship |
 | Publisher | `vfigos` | Publish via connected tool when authorized and final quality gate PASS; verify receipt/live | Auto-DM, boost, fake publish |
 | Learning | `vfinsights` + office-learning | Store recipe with verified performance evidence | Create a parallel creative-memory DB or invent metrics |
@@ -39,7 +44,7 @@ Canonical public CTA funnel: `packages/vfgrowth/hq/PROFILE-TO-WHATSAPP.md` (hist
 13. Draft final Hebrew through the full `vfcopy/SOFT-TOOLS-CONTRACT.md` chain. Then run `retention_pass` on the actual draft; remove filler rather than extending duration or slide count.
 14. Run `authority_voice_pass`: show decisions, constraints, reasons and proof; remove guru language, hype, clichés and unsupported superiority claims.
 15. Run `engagement_pass`: any CTA/question must be naturally worth answering; `engagementBait=false` is mandatory.
-16. Build/select cover. Canva first; failover per desk law. No raw JPEG as final branded cover.
+> LEGACY / provenance only for VF publication; not a provider route: 16. Build/select cover. Canva first; failover per desk law. No raw JPEG as final branded cover.
 17. Evaluation Engine + written PREFLIGHT + Visual OS brandScore >=80 + CONTENT-RUBRIC >=20/25 + Content Contract + policy + rights. Repair the smallest affected component and re-run internally within bounded cycles.
 18. Run `visual_qa` on the actual mobile-ready artifact: contrast, readability, crop, safe zones, hierarchy, branding, product visibility, Hebrew typography and mobile preview are critical checks.
 19. Run `final_quality_gate` fail-closed. It may reject publication. Missing evidence for any mandatory decision pass is a failure, not an implied PASS.
@@ -67,4 +72,4 @@ Exactly one outcome: `published_verified`, `performance_learned`, `ready_for_pub
 
 ## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
 
-This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVL7PKpvE` and SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.
+> LEGACY / provenance only for VF publication; not a provider route: This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVL7PKpvE` and SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.

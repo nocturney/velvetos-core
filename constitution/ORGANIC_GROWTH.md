@@ -1,6 +1,11 @@
 # Organic Growth Control Plane
 
-מושב: **צמיחה** על פקים קיימים (`vfgrowth` · `vfprod` · `vfcopy` · `vfcanva` · `vfbriefux` · `vfinsights` · `vfsales` · `vfops` · `vfom` · `vfigos`).  
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
+> LEGACY / provenance only for VF publication; not a provider route: מושב: **צמיחה** על פקים קיימים (`vfgrowth` · `vfprod` · `vfcopy` · `vfcanva` · `vfbriefux` · `vfinsights` · `vfsales` · `vfops` · `vfom` · `vfigos`).  
 לא פק חדש. לא בוט אינסטגרם. לא runtime שני.
 
 ה־Control Plane מייצר **הזדמנויות תוכן, תוכן, QA, ניסויים, מדידה והמלצות**. הוא אינו Publish API בעצמו. שליחה בפועל שייכת ל־`vfigos` דרך כלי מחובר ובהתאם להרשאת ה־instance.
@@ -108,4 +113,4 @@ python3 scripts/vf_organic_growth.py score
 
 ## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
 
-This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVL7PKpvE` and SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.
+> LEGACY / provenance only for VF publication; not a provider route: This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVL7PKpvE` and SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.
