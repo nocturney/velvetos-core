@@ -132,7 +132,9 @@ for sample, expected in (
     ("write a social post", "creative_publication"),
     ("make a public post", "creative_publication"),
     ("create a Story for the new product", "creative_publication"),
+    ("write an Instagram caption", "creative_publication"),
     ("copy customer feedback into the owner brief", "copywriting"),
+    ("create a customer success story for the owner brief", "general_business"),
     ("עדכן סטטוס הזמנה", "operations"),
 ):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
@@ -147,5 +149,22 @@ for sample, expected in (
         fail("creative request without exact production evidence must not authorize creative tools")
     if expected != "creative_publication" and receipt.get("creative_execution_authorized") is not False:
         fail("non-creative request must not accidentally authorize creative tools")
+
+# Instagram drafting stays on production evidence; publish verbs alone own instagram_action.
+ig_draft = subprocess.run(
+    [sys.executable, str(CLI), "--text", "write an Instagram caption"],
+    cwd=ROOT, text=True, capture_output=True,
+)
+ig_receipt = json.loads(ig_draft.stdout)
+if "instagram_action" in ig_receipt.get("request_domain", []):
+    fail("Instagram caption drafting must not route as instagram_action/delivery")
+if ig_receipt.get("publication_evidence_phase") != "production":
+    fail("Instagram caption drafting must stay on production evidence phase")
+ig_pub = subprocess.run(
+    [sys.executable, str(CLI), "--text", "publish to Instagram"],
+    cwd=ROOT, text=True, capture_output=True,
+)
+if "instagram_action" not in json.loads(ig_pub.stdout).get("request_domain", []):
+    fail("explicit Instagram publish must still route as instagram_action")
 
 print(f"OK project-request-gate domains={len(manifest['domains'])} authority_paths={len(set(all_paths))} creative_without_evidence=BLOCKED creative_tool_authorization=fail_closed")

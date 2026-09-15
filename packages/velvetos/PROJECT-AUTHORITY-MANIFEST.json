@@ -40,7 +40,8 @@
         "public post",
         "קרוסלה",
         "סטורי",
-        "story",
+        "instagram story",
+        "ig story",
         "reel",
         "cover",
         "גריד",
@@ -272,7 +273,9 @@
         "העלה לאינסטגרם",
         "schedule",
         "publish",
-        "instagram"
+        "post to instagram",
+        "post on instagram",
+        "upload to instagram"
       ],
       "packs": [
         "vfigos",

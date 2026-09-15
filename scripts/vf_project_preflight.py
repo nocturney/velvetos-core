@@ -112,8 +112,24 @@ def classify(text: str, manifest: dict) -> list[str]:
         )
     ):
         hits.append("creative_publication")
+    # Instagram Story / create-a-Story production — not narrative "success/customer/user story".
+    if "creative_publication" not in hits and _token_in(probe, "story"):
+        narrative = any(
+            _phrase_in(probe, p)
+            for p in ("success story", "customer story", "user story", "case study")
+        )
+        social_story = any(
+            _phrase_in(probe, p)
+            for p in ("instagram story", "ig story", "create a story", "make a story", "write a story", "story for the")
+        )
+        if social_story and not narrative:
+            hits.append("creative_publication")
+    # Drafting mentions of Instagram must not become publish/delivery actions.
+    if "instagram_action" in hits:
+        publish_verbs = ("publish", "schedule", "פרסם", "העלה לאינסטגרם", "העלה", "post to instagram", "post on instagram", "upload to instagram")
+        if not any(_phrase_in(probe, p) for p in publish_verbs):
+            hits = [h for h in hits if h != "instagram_action"]
     return hits or ["general_business"]
-
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Resolve VelvetOS project request authority preflight")
