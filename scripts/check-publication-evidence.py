@@ -40,7 +40,10 @@ def fixture(root):
         'bundle_id': 'VF-PROJECT-6.2-DETAIL-TRUTH',
         'assets': [{'sha256': x['sha256'], 'required_for': 'visual_work'} for x in refs]})
     source = dict(image('source.png', (60, 75), (100, 80, 25)), role='PRODUCT_SOURCE')
-    output = dict(image('final.jpg', (120, 150), (40, 80, 25)), role='FINAL_VISUAL')
+    import vf_publish_bridge as bridge
+    master = image('master.png', (120, 150), (40, 80, 25))
+    bridge.normalize_image(root/'master.png', root/'final.jpg', int(bridge.load_config()['imageNormalization']['quality']))
+    output = dict(path='final.jpg', sha256=evidence.digest(root/'final.jpg'), role='FINAL_VISUAL', normalization_source=master)
     mobile = image('mobile.png', (40, 50), (40, 80, 25))
     text = dict(write('caption.txt', b'Test caption.'), role='FINAL_TEXT')
     lint = write('lint.json', {'visible_text_gate': 'PASS', 'lint': {'status': 'pass'},
@@ -155,6 +158,8 @@ class EvidenceTests(unittest.TestCase):
 
     def _rebind_test_visual(self, path, payload, full_alias=None):
         visual = dict(self.write(path, payload), role='FINAL_VISUAL')
+        if 'normalization_source' in self.ev['outputs'][0]:
+            visual['normalization_source'] = self.ev['outputs'][0]['normalization_source']
         self.ev['outputs'][0] = visual
         self.ev['package_sha256'] = evidence.package_digest(self.ev['outputs'])
         review = json.loads((self.root / 'review.json').read_text())
@@ -301,6 +306,42 @@ class EvidenceTests(unittest.TestCase):
 
     def test_trailing_jpeg_payload_blocks_publication(self):
         self._assert_private_jpeg_metadata_blocked(b'private-test')
+
+    def test_hidden_entropy_payload_cannot_receive_publication_approval(self):
+        original=(self.root/'final.jpg').read_bytes()
+        self._rebind_test_visual('hidden.jpg',original[:-2]+b'XMP_PRIVATE_payload_without_ff'+original[-2:])
+        self._write_bound_approval()
+        self.assertTrue(self.result()['ok'])
+        self.assertFalse(self._approved_result()['ok'], 'Entropy padding must not be published')
+
+    def test_duplicate_jfif_cannot_receive_publication_approval(self):
+        original=(self.root/'final.jpg').read_bytes()
+        self.assertEqual(original[2:4],b'\xff\xe0')
+        end=4+int.from_bytes(original[4:6],'big')
+        self._rebind_test_visual('duplicates.jpg',original[:end]+original[2:end]*100+original[end:])
+        self._write_bound_approval()
+        self.assertTrue(self.result()['ok'])
+        self.assertFalse(self._approved_result()['ok'], 'Duplicate JFIF payload must not be published')
+
+    def test_public_jpeg_requires_normalization_source(self):
+        self.ev['outputs'][0].pop('normalization_source')
+        self._write_bound_approval()
+        self.assertTrue(self.result()['ok'])
+        self.assertFalse(self._approved_result()['ok'])
+
+    def test_normalization_source_hash_is_checked(self):
+        self.ev['outputs'][0]['normalization_source']['sha256']='0'*64
+        self._write_bound_approval()
+        self.assertFalse(self._approved_result()['ok'])
+
+    def test_tampered_final_cannot_self_certify_normalization(self):
+        original=(self.root/'final.jpg').read_bytes()
+        payload=original[:-2]+b'XMP_PRIVATE_payload_without_ff'+original[-2:]
+        self._rebind_test_visual('self.jpg',payload)
+        out=self.ev['outputs'][0]
+        out['normalization_source']={'path':'self.jpg','sha256':out['sha256']}
+        self._write_bound_approval()
+        self.assertFalse(self._approved_result()['ok'])
 
     def _write_bound_approval(self, include_digest=True):
         self.write('manifest.json', self.manifest)

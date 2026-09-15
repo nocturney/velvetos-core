@@ -95,3 +95,9 @@ The exact 6.2 Project source snapshot is retained unchanged; the current scoped 
 The written approval must record `creative_manifest_ref` and `creative_manifest_sha256` for the exact reviewed manifest. The manifest binds every nested source, stage, copy and review file by hash. Any change to that evidence graph invalidates the earlier approval even if output pixels and the final package hash are unchanged. Re-run the affected checks before issuing a fresh bound approval.
 
 MOV source footage must be normalized to MP4 before exact-final review. A MOV container is not an MP4 merely because its declared MIME type says so.
+
+## Public JPEG normalization evidence
+
+Private owner-review PNG/WebP artifacts remain valid review outputs. Before public JPEG approval, normalize the final composited master with `vf_publish_bridge.py prepare --output <new-file.jpg>`, then inspect and approve those exact normalized bytes. Each JPEG `FINAL_VISUAL` in `publicationEvidence.outputs` must include `normalization_source: {path, sha256}` referencing that preserved pre-normalization master. This master is a render/export input, not a substitute Product Truth photograph.
+
+The public gate verifies and freezes the master, decodes it, reproduces the existing canonical JPEG encoder output from fresh RGB pixels, and requires its SHA-256 to equal the reviewed final JPEG. Merely claiming normalization, changing an approval flag, inserting metadata before EOI, or repeating APP headers cannot establish this equality. Missing or changed normalization evidence blocks public approval. Encoder differences across hosts also block approval until the normalized artifact is reproduced and reviewed with the active toolchain; no silent mutation after QA is allowed.
