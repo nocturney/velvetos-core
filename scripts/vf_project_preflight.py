@@ -83,53 +83,149 @@ def _hint_matches(probe: str, hint: str) -> bool:
     return _token_in(probe, h)
 
 
-def _instagram_publish_request(probe: str) -> bool:
-    """True for Instagram publish/delivery or destructive mutation intents.
+def _advisory_only_request(probe: str) -> bool:
+    """True for discussion/howto about actions — not authorization to execute."""
+    return any(
+        _phrase_in(probe, p)
+        for p in (
+            "should we",
+            "should i",
+            "do we delete",
+            "do i delete",
+            "how do i",
+            "how to delete",
+            "how to remove",
+            "how can i",
+            "write instructions",
+            "instructions for deleting",
+            "instructions for remove",
+            "explain how",
+            "האם כדאי",
+            "האם למחוק",
+            "איך מוחקים",
+            "איך למחוק",
+            "תכתוב הוראות",
+        )
+    )
 
-    Delivery verbs must target Instagram as the destination
-    (`send this to Instagram`, `push this live on Instagram`). Mere
-    co-occurrence is not enough: `send the Instagram analytics to the owner`
-    or `schedule a meeting about Instagram` stay ordinary office work.
-    Destructive verbs against Instagram media
-    (`delete Instagram media …`, `remove this from Instagram`) also require
-    Instagram action preflight. Pure drafting has destination but no action
-    verb.
-    """
+
+def _go_live_request(probe: str) -> bool:
+    """Push/make content live — VF delivery channel is Instagram."""
+    if re.search(
+        r"(?<!\w)(?:push|make|take|put)\b(?:\W+\w+){0,5}\W+live\b",
+        probe,
+    ):
+        return True
+    if re.search(r"(?<!\w)publish\b(?:\W+\w+){0,5}\W+live\b", probe):
+        return True
+    return any(
+        _phrase_in(probe, p)
+        for p in (
+            "לאוויר",
+            "תפרסם את זה עכשיו",
+            "פרסם עכשיו",
+            "תעלה את זה לאוויר",
+            "העלה את זה לאוויר",
+        )
+    )
+
+
+def _instagram_delivery_request(probe: str) -> bool:
+    """True when the ask is to publish/send content onto Instagram (delivery)."""
     has_ig = _phrase_in(probe, "instagram") or _phrase_in(probe, "אינסטגרם")
-    if not has_ig:
-        return False
     if any(
         _phrase_in(probe, h)
         for h in (
-            "פרסם",
             "העלה לאינסטגרם",
-            "העלה",
-            "שתף לאינסטגרם",
             "שלח לאינסטגרם",
-            "מחק מאינסטגרם",
-            "הסר מאינסטגרם",
+            "שתף לאינסטגרם",
+            "שתף את זה באינסטגרם",
+            "תשתף באינסטגרם",
+            "תעלה את הפוסט לאינסטגרם",
+            "תעלה לאינסטגרם",
+            "תפרסם את זה באינסטגרם",
+            "פרסם באינסטגרם",
+            "העלה את זה לאוויר באינסטגרם",
         )
     ):
         return True
-    # Publish/delivery: verb must govern content sent *to/on/from* Instagram.
-    # Keeps `push this live on Instagram` / `send this to Instagram` on the
-    # delivery path while excluding office co-occurrence false positives.
-    if re.search(
+    # Destination-scoped English delivery (excludes office co-occurrence).
+    if has_ig and re.search(
         r"(?<!\w)(?:upload|publish|schedule|put|send|post|share|push|add)\b"
         r"(?:\W+\w+){0,8}\W+(?:on|to|onto|in|from)\s+instagram",
         probe,
     ):
         return True
-    # Destructive Graph mutations (delete_media etc.) against Instagram content.
-    if re.search(
-        r"(?<!\w)(?:delete|remove|unpublish)\b(?:\W+\w+){0,12}\W+instagram"
-        r"|(?<!\w)(?:delete|remove|unpublish)\b\W+instagram"
-        r"|\binstagram\b(?:\W+\w+){0,6}\W+(?:delete|remove|unpublish)\b"
-        r"|(?<!\w)take\s+down\b(?:\W+\w+){0,8}\W+instagram",
+    # Go-live / push-live family (Instagram is the VF publication channel).
+    if _go_live_request(probe):
+        return True
+    # Hebrew upload token with explicit Instagram destination.
+    if has_ig and any(_phrase_in(probe, h) for h in ("העלה", "תעלה", "פרסם", "תפרסם", "שתף")):
+        return True
+    return False
+
+
+def _instagram_destructive_request(probe: str) -> bool:
+    """True for mutating/deleting Instagram content (Graph DELETE / take-down)."""
+    if any(
+        _phrase_in(probe, h)
+        for h in (
+            "מחק מאינסטגרם",
+            "הסר מאינסטגרם",
+            "תוריד את זה מהאינסטגרם",
+            "מחק את הפוסט באינסטגרם",
+            "תמחק את הריל",
+            "תמחק את הפוסט",
+            "הסר את הסטורי",
+            "תוריד את הפוסט",
+        )
+    ):
+        return True
+    has_ig = _phrase_in(probe, "instagram") or _phrase_in(probe, "אינסטגרם")
+    if has_ig and re.search(
+        r"(?<!\w)(?:delete|remove|unpublish|archive)\b(?:\W+\w+){0,12}\W+instagram"
+        r"|(?<!\w)(?:delete|remove|unpublish|archive)\b\W+instagram"
+        r"|\binstagram\b(?:\W+\w+){0,6}\W+(?:delete|remove|unpublish|archive)\b",
         probe,
     ):
         return True
+    # take down + social object
+    if re.search(
+        r"(?<!\w)take\s+down\b(?:\W+\w+){0,6}\W+(?:post|reel|story|media)\b"
+        r"|(?<!\w)take\s+(?:this|that|the)\s+(?:post|reel|story|media)\s+down\b",
+        probe,
+    ):
+        return True
+    # Reel is Instagram-native
+    if re.search(r"(?<!\w)(?:delete|remove|archive)\b(?:\W+\w+){0,5}\W+reels?\b", probe):
+        return True
+    # Story take-down / remove (not narrative success/customer/user story)
+    if re.search(r"(?<!\w)(?:delete|remove|archive)\b(?:\W+\w+){0,5}\W+story\b", probe):
+        if not any(
+            _phrase_in(probe, p)
+            for p in ("success story", "customer story", "user story", "case study")
+        ):
+            return True
     return False
+
+
+def _instagram_publish_request(probe: str) -> bool:
+    """True for Instagram delivery or destructive mutation intents.
+
+    Delivery: destination-scoped publish/send (`send this to Instagram`) and
+    go-live commands (`push this live`, `תעלה את זה לאוויר`). Preparation
+    (`prepare a post`, `תכין פוסט`) is not delivery.
+
+    Destructive: delete/remove/archive/take-down of Instagram media/posts/
+    reels/stories. Advisory discussion (`should we delete…`, `how do I
+    delete…`) is not an authorized action.
+
+    Office co-occurrence without destination (`send the Instagram analytics
+    to the owner`, `schedule a meeting about Instagram`) stays non-action.
+    """
+    if _advisory_only_request(probe):
+        return False
+    return _instagram_delivery_request(probe) or _instagram_destructive_request(probe)
 
 
 def _bare_publication_request(probe: str) -> bool:

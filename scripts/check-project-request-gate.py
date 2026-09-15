@@ -173,15 +173,37 @@ for sample in (
     "put this on Instagram",
     "send this to Instagram",
     "push this live on Instagram",
+    "push it live",
+    "make this live on Instagram",
+    "take this live",
+    "put this live on Instagram",
+    "publish this live",
     "add this to Instagram",
+    "העלה את זה לאוויר באינסטגרם",
+    "תעלה את זה לאוויר",
+    "תפרסם את זה עכשיו",
+    "תעלה את הפוסט לאינסטגרם",
+    "תפרסם את זה באינסטגרם",
+    "שתף את זה באינסטגרם",
     "delete this from Instagram",
     "delete Instagram media 123; set confirm_irreversible=true for account velvets_cloud",
     "remove this from Instagram",
+    "delete the Instagram post",
+    "remove that post from Instagram",
+    "delete this Reel",
+    "remove this Story",
+    "take this post down",
+    "archive this Instagram post",
+    "מחק את הפוסט באינסטגרם",
+    "תוריד את הפוסט",
+    "תמחק את הריל",
+    "הסר את הסטורי",
+    "תוריד את זה מהאינסטגרם",
 ):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)
     if "instagram_action" not in receipt.get("request_domain", []):
-        fail(f"Instagram publish/destructive intent must route as instagram_action: {sample}")
+        fail(f"Instagram delivery/destructive intent must route as instagram_action: {sample}")
     if receipt.get("publication_evidence_phase") != "delivery":
         fail(f"Instagram action must require delivery evidence: {sample}")
 for sample in (
@@ -189,11 +211,19 @@ for sample in (
     "share the Instagram analytics with the owner",
     "send the Instagram analytics to the owner",
     "schedule a meeting about Instagram",
+    "prepare a post",
+    "תכין פוסט",
+    "תכין לפרסום",
+    "write an Instagram caption",
+    "should we delete this post?",
+    "האם כדאי למחוק את הפוסט?",
+    "write instructions for deleting a post",
+    "how do I delete an Instagram post",
 ):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)
     if "instagram_action" in receipt.get("request_domain", []):
-        fail(f"research/office Instagram reference must not route as instagram_action: {sample}")
+        fail(f"prep/advisory/office Instagram text must not route as instagram_action: {sample}")
 for sample in ("publish this post",):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)

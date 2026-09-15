@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-15 — **IG action preflight:** destination-scoped delivery verbs (keeps `push live`/`send to`) and destructive `delete`/`remove` Instagram media routing through `instagram_action`; office co-occurrence (…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-15 — **IG action preflight:** destination-scoped delivery verbs (keeps `push live`/`send to`) and destructive `delete`/`remove` Instagram media routing through `instagram_action`; office co-occurrence (…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-15 — **IG push-live + destructive action routing:** go-live family (`push it live`, `לאוויר`, publish-now) and destructive family (delete/remove/archive/take-down Reel/Story/post + Hebrew) route `instag…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-15 — **IG push-live + destructive action routing:** go-live family (`push it live`, `לאוויר`, publish-now) and destructive family (delete/remove/archive/take-down Reel/Story/post + Hebrew) route `instag…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
