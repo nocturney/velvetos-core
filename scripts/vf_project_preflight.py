@@ -54,9 +54,13 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             problems.append("Project Authority lacks the current no-Canva publication override")
         if "creative_execution_authorized: true" not in authority or "creative_execution_authorized: true" not in gate:
             problems.append("pre-tool creative execution receipt is not bound into Project Authority/Gate")
-        denied = {str(x).casefold() for x in route.get("deniedTools", [])}
-        if not {"canva", "vfcanva"}.issubset(denied):
-            problems.append("publicationRoute does not deny Canva/vfcanva")
+        denied_tools = route.get("deniedTools")
+        if not isinstance(denied_tools, list) or not all(isinstance(x, str) for x in denied_tools):
+            problems.append("publicationRoute deniedTools must be an array of strings")
+        else:
+            denied = {x.casefold() for x in denied_tools}
+            if not {"canva", "vfcanva"}.issubset(denied):
+                problems.append("publicationRoute does not deny Canva/vfcanva")
     return problems
 
 
@@ -66,6 +70,11 @@ def classify(text: str, manifest: dict) -> list[str]:
     for name, cfg in manifest["domains"].items():
         if any(str(hint).casefold() in probe for hint in cfg.get("hints", [])):
             hits.append(name)
+    # Caption/visual-copy requests are public-creative by default in VF. Co-route
+    # them through the Creative Manifest gate instead of allowing copywriting alone.
+    public_copy_hints = ("caption", "כיתוב", "public-social", "visual-copy")
+    if "copywriting" in hits and "creative_publication" not in hits and any(h in probe for h in public_copy_hints):
+        hits.append("creative_publication")
     return hits or ["general_business"]
 
 

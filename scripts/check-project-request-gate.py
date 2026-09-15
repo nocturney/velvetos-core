@@ -99,6 +99,13 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
     problems = project_preflight.project_binding_problems(tmp, creative=False)
     if not problems or not any("array of objects" in problem for problem in problems):
         fail("nested malformed asset list did not fail closed")
+    shutil.copyfile(ROOT / project_preflight.PROJECT_ASSET_MANIFEST, tmp / project_preflight.PROJECT_ASSET_MANIFEST)
+    policy = json.loads((tmp / project_preflight.VISUAL_ENFORCEMENT).read_text(encoding="utf-8"))
+    policy["publicationRoute"]["deniedTools"] = None
+    (tmp / project_preflight.VISUAL_ENFORCEMENT).write_text(json.dumps(policy), encoding="utf-8")
+    problems = project_preflight.project_binding_problems(tmp, creative=True)
+    if not problems or not any("deniedTools must be an array" in problem for problem in problems):
+        fail("malformed deniedTools did not fail closed")
 
 all_paths = list(manifest.get("baselineAuthorities", []))
 for cfg in manifest["domains"].values():
@@ -116,7 +123,7 @@ for rel in ("AGENTS.md", "instances/velvet-factory/AGENTS.md", "instances/velvet
     body = (ROOT / rel).read_text(encoding="utf-8")
     if "PROJECT-REQUEST-GATE.md" not in body or "PROJECT-AUTHORITY-MANIFEST.json" not in body:
         fail(f"{rel} not bound to project request gate")
-for sample, expected in (("תכין פוסט לפרסום", "creative_publication"), ("עדכן סטטוס הזמנה", "operations")):
+for sample, expected in (("תכין פוסט לפרסום", "creative_publication"), ("caption", "creative_publication"), ("כתוב לי כיתוב", "creative_publication"), ("עדכן סטטוס הזמנה", "operations")):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     expected_code = 2 if expected == "creative_publication" else 0
     if proc.returncode != expected_code:
