@@ -84,7 +84,11 @@ def _hint_matches(probe: str, hint: str) -> bool:
 
 
 def _advisory_only_request(probe: str) -> bool:
-    """True for discussion/howto — not authorization to create or execute."""
+    """True for discussion/howto — not authorization to create or execute.
+
+    This flags advisory *language* in a prompt. It must NOT alone erase an
+    Instagram action found in another clause of a mixed request.
+    """
     return any(
         _phrase_in(probe, p)
         for p in (
@@ -101,18 +105,131 @@ def _advisory_only_request(probe: str) -> bool:
             "what is a",
             "what's an",
             "what's a",
+            "what happens if",
+            "what if i",
+            "whether i should",
+            "whether we should",
+            "tell me whether",
             "write instructions",
             "instructions for deleting",
             "instructions for remove",
             "explain how",
+            "explain how to",
             "האם כדאי",
             "האם למחוק",
             "איך מוחקים",
             "איך למחוק",
             "מה זה",
+            "מה קורה אם",
             "תכתוב הוראות",
         )
     )
+
+
+def _split_intent_clauses(probe: str) -> list[str]:
+    """Split mixed prompts so later action clauses stay visible to gates."""
+    parts = re.split(
+        r"(?:\b(?:and\s+then|then)\b|,?\s*ואז|,?\s*ואחר כך|,?\s*לאחר מכן)",
+        probe,
+        flags=re.IGNORECASE,
+    )
+    return [p.strip(" \t,.;:") for p in parts if p and p.strip(" \t,.;:")]
+
+
+def _hypothetical_or_howto_clause(clause: str) -> bool:
+    """True when a clause itself is advice/howto, not an imperative mutation."""
+    return any(
+        _phrase_in(clause, p)
+        for p in (
+            "should we",
+            "should i",
+            "whether i should",
+            "whether we should",
+            "how do i",
+            "how to",
+            "how can i",
+            "how should",
+            "what happens if",
+            "what if i",
+            "explain how to",
+            "explain how publishing",
+            "explain how deleting",
+            "write instructions",
+            "האם כדאי",
+            "איך מוחקים",
+            "איך למחוק",
+            "מה קורה אם",
+            "מה זה",
+        )
+    )
+
+
+def _followthrough_mutation_clause(clause: str) -> bool:
+    """True for short follow-through publish/delete clauses after 'then' / 'ואז'."""
+    if _hypothetical_or_howto_clause(clause):
+        return False
+    # publish/post/share/push/upload it|this [to Instagram] [live]
+    if re.search(
+        r"(?<!\w)(?:publish|post|share|push|upload|send)\b"
+        r"(?:\W+\w+){0,6}\W+(?:it|this|that|them)\b",
+        clause,
+    ):
+        return True
+    if re.search(
+        r"(?<!\w)(?:publish|post|share|push|upload|send)\b"
+        r"(?:\W+\w+){0,6}\W+(?:to|on)\s+instagram",
+        clause,
+    ):
+        return True
+    if _go_live_request(clause):
+        return True
+    # delete/remove/archive/unpublish + object
+    if re.search(
+        r"(?<!\w)(?:delete|remove|archive|unpublish)\b"
+        r"(?:\W+\w+){0,6}\W+(?:it|this|that|post|reel|story|media)\b",
+        clause,
+    ):
+        return True
+    # Hebrew follow-through publish / take-down
+    if any(
+        _phrase_in(clause, v)
+        for v in (
+            "תפרסם",
+            "תעלה אותו",
+            "תעלה אותה",
+            "תעלה את זה",
+            "תעלה",
+            "שתף",
+            "פרסם",
+            "תמחק",
+            "תוריד אותו",
+            "תוריד אותה",
+            "תוריד את זה",
+            "תוריד",
+            "תארכב",
+            "ארכב",
+            "מחק את הפוסט",
+            "הסר",
+        )
+    ):
+        return True
+    return False
+
+
+def _clause_instagram_action(clause: str, *, allow_followthrough: bool = False) -> bool:
+    """Action intent inside one clause (ignores advisory language elsewhere).
+
+    Follow-through mutations (`publish it`, `תמחק את הפוסט`) only count when the
+    prompt was split into multiple clauses. Otherwise bare prep like
+    `publish this post` would be mis-routed as Instagram delivery.
+    """
+    if not clause or _hypothetical_or_howto_clause(clause):
+        return False
+    if _instagram_delivery_request(clause) or _instagram_destructive_request(clause):
+        return True
+    if allow_followthrough:
+        return _followthrough_mutation_clause(clause)
+    return False
 
 
 def _instagram_post_prep_request(probe: str) -> bool:
@@ -269,13 +386,23 @@ def _instagram_publish_request(probe: str) -> bool:
     (`prepare a post`, `תכין פוסט`) is not delivery.
 
     Destructive: delete/remove/archive/take-down of Instagram media/posts/
-    reels/stories. Advisory discussion (`should we delete…`, `how do I
-    delete…`) is not an authorized action.
+    reels/stories.
 
-    Office co-occurrence without destination (`send the Instagram analytics
-    to the owner`, `schedule a meeting about Instagram`) stays non-action.
+    Mixed prompts keep the strictest clause: advisory language in one clause
+    must not erase a real publish/delete clause later (`explain …, then
+    publish it to Instagram`). Pure howto/hypothetical discussion with no
+    action clause stays non-action.
     """
-    if _advisory_only_request(probe):
+    clauses = _split_intent_clauses(probe)
+    multi = len(clauses) > 1
+    # Mixed prompts: keep the strictest clause. Follow-through publish/delete
+    # after then/ואז is action even when an earlier clause is advisory.
+    if any(_clause_instagram_action(c, allow_followthrough=multi) for c in clauses):
+        return True
+    # Single-clause destination/destructive patterns (no advisory short-circuit).
+    if len(clauses) == 1 and _hypothetical_or_howto_clause(clauses[0]):
+        return False
+    if _advisory_only_request(probe) and len(clauses) == 1:
         return False
     return _instagram_delivery_request(probe) or _instagram_destructive_request(probe)
 
@@ -347,9 +474,11 @@ def classify(text: str, manifest: dict) -> list[str]:
     elif "creative_publication" not in hits and _bare_publication_request(probe):
         # e.g. "publish this post" never entered instagram_action but is still public prep.
         hits.append("creative_publication")
-    # Advisory/howto discussion must not authorize creative production or IG actions.
-    if _advisory_only_request(probe):
-        hits = [h for h in hits if h not in ("creative_publication", "instagram_action")]
+    # Pure advisory/howto (no action clause) must not authorize creative production
+    # or IG actions. Mixed prompts that already carry instagram_action keep it —
+    # never strip the strictest action route with a global advisory override.
+    if _advisory_only_request(probe) and "instagram_action" not in hits:
+        hits = [h for h in hits if h != "creative_publication"]
     return hits or ["general_business"]
 
 def main() -> int:

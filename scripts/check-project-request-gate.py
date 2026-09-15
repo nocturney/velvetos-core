@@ -269,6 +269,65 @@ for sample in (
         fail(f"informational Instagram-post discussion must not route creative_publication: {sample}")
     if "instagram_action" in receipt.get("request_domain", []):
         fail(f"informational Instagram-post discussion must not route instagram_action: {sample}")
+# Mixed advisory + real Instagram mutation: keep strictest action route (delivery).
+for sample in (
+    "Explain how you chose the image, then publish it to Instagram",
+    "Tell me why this caption works, then post it",
+    "Review this design and then push it live",
+    "Explain the layout, then share it on Instagram",
+    "Tell me whether the post is good, then publish it",
+    "Summarize the caption and then delete the post",
+    "Explain what happened, then remove the Reel",
+    "Review the Story, then archive it",
+    "תסביר למה בחרת בתמונה ואז תפרסם אותה באינסטגרם",
+    "תעבור על העיצוב ואז תעלה אותו",
+    "תסביר את הכיתוב ואז תפרסם",
+    "תסכם לי ואז תמחק את הפוסט",
+    "תבדוק את הסטורי ואז תוריד אותו",
+    "תסביר ואז תארכב את הפוסט",
+):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "instagram_action" not in receipt.get("request_domain", []):
+        fail(f"mixed advisory+action must keep instagram_action: {sample}")
+    if receipt.get("publication_evidence_phase") != "delivery":
+        fail(f"mixed advisory+action must require delivery evidence: {sample}")
+    if receipt.get("project_preflight") != "BLOCKED":
+        fail(f"mixed advisory+action without delivery evidence must BLOCK: {sample}")
+# Pure advisory / howto with mutation vocabulary but no imperative action clause.
+for sample in (
+    "Explain how publishing to Instagram works",
+    "Should we publish this?",
+    "Tell me whether I should delete this post",
+    "Explain how to delete an Instagram post",
+    "What happens if I archive a Reel?",
+    "האם כדאי לפרסם את זה?",
+    "איך מוחקים פוסט באינסטגרם?",
+    "האם כדאי למחוק את הסטורי?",
+):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "instagram_action" in receipt.get("request_domain", []):
+        fail(f"pure advisory must not route instagram_action: {sample}")
+
+# Creative prep + advisory but no live action: creative_publication where applicable, never instagram_action.
+for sample, expect_creative in (
+    ("design an Instagram post for the launch", True),
+    ("Help me refine this Instagram caption draft", True),
+    ("Explain how to design an Instagram post", False),
+    ("Should we create an Instagram post for the launch?", False),
+    ("תכין פוסט לאינסטגרם לאירוע", True),
+    ("האם כדאי להכין פוסט לאינסטגרם?", False),
+):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "instagram_action" in receipt.get("request_domain", []):
+        fail(f"creative-prep/advisory without live action must not route instagram_action: {sample}")
+    has_creative = "creative_publication" in receipt.get("request_domain", [])
+    if expect_creative and not has_creative:
+        fail(f"creative prep without live action must route creative_publication: {sample}")
+    if not expect_creative and has_creative:
+        fail(f"advisory without live action must not route creative_publication: {sample}")
 for sample in ("publish this post",):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)
