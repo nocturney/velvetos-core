@@ -3,14 +3,46 @@ from __future__ import annotations
 
 import argparse
 import json
+import hashlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
+PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt")
+PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json")
+VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
+PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 
 
 def load_manifest() -> dict:
     return json.loads(MANIFEST.read_text(encoding="utf-8"))
+
+def project_binding_problems(root: Path = ROOT) -> list[str]:
+    problems: list[str] = []
+    paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, VISUAL_ENFORCEMENT, PROJECT_GATE]
+    if any(not (root / rel).is_file() for rel in paths):
+        return ["project binding file missing"]
+    authority_path = root / PROJECT_AUTHORITY
+    authority = authority_path.read_text(encoding="utf-8")
+    assets = json.loads((root / PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
+    route = json.loads((root / VISUAL_ENFORCEMENT).read_text(encoding="utf-8")).get("publicationRoute", {})
+    gate = (root / PROJECT_GATE).read_text(encoding="utf-8")
+    if not all(x in authority for x in ("Contract version: 6", "Revision: 6.2", "Bundle: VF-PROJECT-6.2-DETAIL-TRUTH")):
+        problems.append("Project Authority identity mismatch")
+    rows = [x for x in assets.get("assets", []) if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
+    digest = hashlib.sha256(authority_path.read_bytes()).hexdigest()
+    if len(rows) != 1 or rows[0].get("sha256") != digest:
+        problems.append("Project Authority hash does not match ASSET-MANIFEST-v6.2.json")
+    if "vfcovers/vfcanva composition route" in authority:
+        problems.append("stale vfcanva publication route remains active in Project Authority")
+    if "Canva/vfcanva are forbidden" not in authority:
+        problems.append("Project Authority lacks the current no-Canva publication override")
+    if "creative_execution_authorized: true" not in authority or "creative_execution_authorized: true" not in gate:
+        problems.append("pre-tool creative execution receipt is not bound into Project Authority/Gate")
+    denied = {str(x).casefold() for x in route.get("deniedTools", [])}
+    if not {"canva", "vfcanva"}.issubset(denied):
+        problems.append("publicationRoute does not deny Canva/vfcanva")
+    return problems
 
 
 def classify(text: str, manifest: dict) -> list[str]:
@@ -46,20 +78,23 @@ def main() -> int:
         hard_gates.extend(cfg.get("hardGates", []))
     authorities = list(dict.fromkeys(authorities))
     missing = [path for path in authorities if not (ROOT / path).is_file()]
+    binding_problems = project_binding_problems()
     receipt = {
         "request_domain": domains,
         "authority_manifest_version": manifest["schemaVersion"],
-        "baseline_authority": "FAIL" if missing else "PASS",
+        "baseline_authority": "FAIL" if (missing or binding_problems) else "PASS",
         "routed_packs": list(dict.fromkeys(packs)),
         "required_skills": [],
         "required_sources": authorities,
         "required_tools": [],
         "hard_gates": list(dict.fromkeys(hard_gates)),
         "current_evidence_state": "authority_paths_resolved",
-        "project_preflight": "BLOCKED" if missing else "PASS",
+        "project_preflight": "BLOCKED" if (missing or binding_problems) else "PASS",
         "missing_authority_paths": missing,
+        "authority_conflicts": binding_problems,
+        "creative_execution_authorized": False,
     }
-    receipt["route_resolution"] = "BLOCKED" if missing else "PASS"
+    receipt["route_resolution"] = "BLOCKED" if (missing or binding_problems) else "PASS"
     creative = bool(set(domains) & {"creative_publication", "instagram_action"})
     if creative:
         from vf_publication_evidence import validate
@@ -73,7 +108,9 @@ def main() -> int:
         receipt["production_evidence"] = evidence
         receipt["required_skills"] = ["velvet-creative-director", "velvet-brand-guardian", "velvet-hebrew-copy"]
         receipt["current_evidence_state"] = evidence["evidence_state"]
-        receipt["project_preflight"] = "PASS" if evidence["ok"] and not missing else "BLOCKED"
+        receipt["project_preflight"] = "PASS" if evidence["ok"] and not missing and not binding_problems else "BLOCKED"
+        receipt["creative_execution_authorized"] = bool(phase == "production" and receipt["project_preflight"] == "PASS")
+        receipt["delivery_authorized"] = bool(phase == "delivery" and receipt["project_preflight"] == "PASS")
     else:
         receipt["evidence_scope"] = "authority path resolution only; no action authorization"
     print(json.dumps(receipt, ensure_ascii=False, indent=2))
