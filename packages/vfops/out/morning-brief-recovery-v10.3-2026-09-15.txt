@@ -25,15 +25,15 @@ VELVET FACTORY · מודיעין יומי
 
 צריך ממך
 שתי פעולות גבייה:
-ודים — העבודה סופקה; 320 ש״ח עדיין פתוחים לגבייה.
-אלה — סדרת 20 היחידות סופקה; 120 ש״ח עדיין פתוחים לפי 6 ש״ח ליחידה.
+ודים: העבודה סופקה; 320 ש״ח עדיין פתוחים לגבייה.
+אלה: סדרת 20 היחידות סופקה; 120 ש״ח עדיין פתוחים לפי 6 ש״ח ליחידה.
 אין כרגע החלטת תוכן שמחכה לך; תיקון והשלמת R001/R002/R003 הם עבודת מערכת כל עוד אין חסם זכויות או פרטיות אמיתי.
 
 מצב הכסף
-סינקופה — סופק; יתרה פתוחה 4,350 ש״ח; מועד התשלום הרשום הוא 15.10.2026.
-ודים — סופק; 320 ש״ח פתוחים.
-אלה — 20 יחידות סופקו; 120 ש״ח פתוחים.
-לינה — סופק כמתנה; אין גבייה.
+סינקופה: סופק; יתרה פתוחה 4,350 ש״ח; מועד התשלום הרשום הוא 15.10.2026.
+ודים: סופק; 320 ש״ח פתוחים.
+אלה: 20 יחידות סופקו; 120 ש״ח פתוחים.
+לינה: סופק כמתנה; אין גבייה.
 סה״כ יתרה פתוחה ידועה: 4,790 ש״ח.
 
 עבודות חיות
@@ -55,9 +55,9 @@ Instagram · מצב העמוד
 
 רדאר תוכן
 אין כרגע אף פריט עתידי משובץ לפרסום.
-VF-R001 — BLOCKED: נגזרת ישנה כמעט שקטה; נדרש repair עם receipts ו־QA חדשים.
-VF-R002 — BLOCKED / REBUILD REQUIRED: נגזרת crop/resize ישנה נפסלה; נדרש rebuild מתוך RAW תוך שמירת Product Truth ו־QA חדש.
-VF-R003 — BLOCKED: לנגזרת הישנה אין audio stream; נדרש repair עם receipts ו־QA חדשים.
+VF-R001: BLOCKED. נגזרת ישנה כמעט שקטה; נדרש repair עם receipts ו־QA חדשים.
+VF-R002: BLOCKED / REBUILD REQUIRED. נגזרת crop/resize ישנה נפסלה; נדרש rebuild מתוך RAW תוך שמירת Product Truth ו־QA חדש.
+VF-R003: BLOCKED. לנגזרת הישנה אין audio stream; נדרש repair עם receipts ו־QA חדשים.
 הפריטים האלה אינם owner approval כרגע; הם נשארים עבודת מערכת עד שיופיע חסם אנושי אמיתי.
 
 שולחן המחקר
@@ -71,11 +71,11 @@ Google Drive Jobs, Google Calendar, תיקיית 01 - נכנס ו־Instagram MCP
 מסלול השליחה שנדרש למייל הזה הוא production Gmail OAuth/GitHub sender בלבד; אין שימוש ב־Gmail plugin כ־fallback.
 
 בריאות המערכת
-Instagram MCP — חי.
-Google Drive Jobs — קריאה חיה תקינה.
-Google Calendar — קריאה חיה תקינה; אין אירועים היום.
-Media Intake — תיקיית 01 - נכנס ריקה.
-Research — אין artifact קנוני חדש ל־15.9 עד הקאט־אוף.
-OpenPost — v4.31.0 ב־staging עם health תקין; production עדיין לא נפרס וחסרים public HTTPS ו־provider OAuth.
-GitHub Core Sensors — לא נמצא בריצה הזאת receipt ירוק עדכני ל־main הנוכחי, ולכן אין כאן טענה ל־GREEN.
-Morning Brief delivery — recovery פעיל; delivery_verified ייקבע רק אחרי sender success, message ID אמיתי, אימות Gmail ו־safe reset של בקשת השליחה.
+Instagram MCP: חי.
+Google Drive Jobs: קריאה חיה תקינה.
+Google Calendar: קריאה חיה תקינה; אין אירועים היום.
+Media Intake: תיקיית 01 - נכנס ריקה.
+Research: אין artifact קנוני חדש ל־15.9 עד הקאט־אוף.
+OpenPost: v4.31.0 ב־staging עם health תקין; production עדיין לא נפרס וחסרים public HTTPS ו־provider OAuth.
+GitHub Core Sensors: לא נמצא בריצה הזאת receipt ירוק עדכני ל־main הנוכחי, ולכן אין כאן טענה ל־GREEN.
+Morning Brief delivery: recovery פעיל; delivery_verified ייקבע רק אחרי sender success, message ID אמיתי, אימות Gmail ו־safe reset של בקשת השליחה.
