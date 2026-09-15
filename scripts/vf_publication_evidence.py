@@ -121,16 +121,16 @@ def timestamp(value: Any) -> datetime:
 
 
 def validate(root: Path, manifest_ref: str, content_id: str,
-             phase: str = "delivery", expected_package: str | None = None, expected_format: str | None = None, expected_manifest_sha256: str | None = None) -> dict:
+             phase: str = "delivery", expected_package: str | None = None, expected_format: str | None = None, expected_manifest_sha256: str | None = None, require_staging: bool = False) -> dict:
     """Fail closed, including malformed input; never update state or send content."""
     try:
-        return _validate(root.resolve(), manifest_ref, content_id, phase, expected_package, expected_format, expected_manifest_sha256)
+        return _validate(root.resolve(), manifest_ref, content_id, phase, expected_package, expected_format, expected_manifest_sha256, require_staging)
     except (OSError, ValueError, KeyError, TypeError, AttributeError, OverflowError) as exc:
         return {"ok": False, "phase": phase, "problems": [str(exc)],
                 "evidence_state": "BLOCKED", "publishAuthorized": False}
 
 
-def _validate(root, manifest_ref, content_id, phase, expected_package, expected_format, expected_manifest_sha256):
+def _validate(root, manifest_ref, content_id, phase, expected_package, expected_format, expected_manifest_sha256, require_staging):
     if phase not in {"production", "delivery"}:
         raise ValueError("unknown evidence phase")
     policy = load_json(local_path(root, POLICY))
@@ -233,6 +233,9 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
         output_path = verify_ref(root, out, "final output", denied)
         if out.get("role") == "FINAL_VISUAL":
             visual_info[out["sha256"]] = inspect_media(output_path, "final visual")
+            if require_staging:
+                from vf_publish_bridge import inspect_reviewed_asset, load_config
+                inspect_reviewed_asset(output_path, load_config())
         if out.get("role") not in {"FINAL_VISUAL", "FINAL_TEXT"}:
             raise ValueError("invalid final output role")
         if out["sha256"] in source_shas | ref_shas:

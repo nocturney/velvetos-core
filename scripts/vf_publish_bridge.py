@@ -306,8 +306,9 @@ def inspect_reviewed_asset(src: Path, cfg: dict[str, Any]) -> tuple[str, dict[st
         probe = shutil.which("ffprobe")
         if not probe:
             raise ValueError("ffprobe required to inspect reviewed video without mutation")
-        run = subprocess.run([probe, "-v", "error", "-show_format", "-show_streams", "-of", "json", str(src)], capture_output=True, text=True, check=True, timeout=20)
-        data = json.loads(run.stdout)
+        from vf_media_limits import run_bounded
+        raw = run_bounded([probe, "-v", "error", "-protocol_whitelist", "file,pipe", "-format_whitelist", "mov", "-show_format", "-show_streams", "-of", "json", str(src)], capture=True, timeout=20)
+        data = json.loads(raw)
         if not any(s.get("codec_type") == "video" for s in data.get("streams", [])):
             raise ValueError("reviewed video has no video stream")
         tags = [data.get("format", {}).get("tags", {})] + [s.get("tags", {}) for s in data.get("streams", [])]

@@ -287,7 +287,7 @@ def validate_publication_approval(
     manifest_sha = _clean_sha(_field(text, "creative_manifest_sha256"))
     if manifest_sha is None:
         problems.append("creative_manifest_sha256 is required to bind the approved evidence")
-    evidence_result = validate_evidence(ROOT, manifest_ref, content_id, "delivery", supplied_package, format_name, expected_manifest_sha256=manifest_sha)
+    evidence_result = validate_evidence(ROOT, manifest_ref, content_id, "delivery", supplied_package, format_name, expected_manifest_sha256=manifest_sha, require_staging=True)
     if not evidence_result.get("ok"):
         problems.extend("publication evidence: " + p for p in evidence_result.get("problems", []))
     elif artifact_digest not in evidence_result.get("visualHashes", []):

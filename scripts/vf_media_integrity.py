@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 import json
+import math
+from fractions import Fraction
+from vf_media_limits import run_bounded
 import shutil
 import subprocess
 import warnings
@@ -13,6 +16,28 @@ SOURCE_IMAGES = {**FINAL_IMAGES, '.tif': {'TIFF'}, '.tiff': {'TIFF'}, '.bmp': {'
                  '.avif': {'AVIF'}}
 SOURCE_VIDEO = {'.mp4': 'mov', '.mov': 'mov', '.m4v': 'mov', '.avi': 'avi',
                 '.mkv': 'matroska,webm', '.webm': 'matroska,webm'}
+
+
+def _video_budget(data: dict) -> None:
+    streams = data.get('streams', [])
+    duration = float(data.get('format', {}).get('duration', 0))
+    if not math.isfinite(duration) or not (0 < duration <= 600) or not (1 <= len(streams) <= 8):
+        raise ValueError('video duration/stream budget exceeded or unproven')
+    pixels = 0
+    for stream in streams:
+        if stream.get('codec_type') == 'video':
+            width, height = int(stream.get('width', 0)), int(stream.get('height', 0))
+            rate = float(Fraction(stream.get('avg_frame_rate', '0/1')))
+            if not (0 < width <= 8192 and 0 < height <= 8192 and width*height <= 16_777_216):
+                raise ValueError('video pixel budget exceeded')
+            if not math.isfinite(rate) or not (0 < rate <= 240) or rate*duration > 36_000:
+                raise ValueError('video frame budget exceeded or unproven')
+            pixels += width*height
+        elif stream.get('codec_type') == 'audio':
+            if not (0 < int(stream.get('channels', 0)) <= 8 and 0 < int(stream.get('sample_rate', 0)) <= 192_000):
+                raise ValueError('audio resource budget exceeded or unproven')
+    if pixels > 33_554_432:
+        raise ValueError('combined video pixel budget exceeded')
 
 
 def inspect_media(path: Path, label: str, *, source: bool = False) -> dict:
@@ -48,16 +73,18 @@ def inspect_media(path: Path, label: str, *, source: bool = False) -> dict:
             return {'kind': 'image', 'width': width, 'height': height, 'format': actual}
         if suffix not in videos:
             raise ValueError('unsupported media extension')
+        if path.stat().st_size > 1024*1024*1024:
+            raise ValueError('video input exceeds 1 GiB budget')
         probe, decoder = shutil.which('ffprobe'), shutil.which('ffmpeg')
         if not probe or not decoder:
             raise ValueError('video decoding requires ffprobe and ffmpeg')
         # Restrict demuxers/protocols: disguised playlists must not fetch external media.
         restrictions = ['-protocol_whitelist', 'file,pipe', '-format_whitelist', videos[suffix]]
-        run = subprocess.run([probe, '-v', 'error', *restrictions, '-show_entries',
-                              'format=format_name:format_tags=major_brand:stream=index,codec_type,width,height',
-                              '-of', 'json', str(path)], capture_output=True, text=True,
-                             check=True, timeout=20)
-        data = json.loads(run.stdout)
+        raw = run_bounded([probe, '-v', 'error', '-max_alloc', '67108864', *restrictions,
+                           '-show_entries', 'format=format_name,duration:format_tags=major_brand:stream=index,codec_type,width,height,avg_frame_rate,channels,sample_rate',
+                           '-of', 'json', str(path)], capture=True, timeout=20)
+        data = json.loads(raw)
+        _video_budget(data)
         streams = [s for s in data.get('streams', []) if s.get('codec_type') == 'video']
         if not streams or any(int(s.get('width', 0)) <= 0 or int(s.get('height', 0)) <= 0 for s in streams):
             raise ValueError('no valid video stream')
@@ -69,9 +96,9 @@ def inspect_media(path: Path, label: str, *, source: bool = False) -> dict:
         if not source and str(fmt.get('tags', {}).get('major_brand', '')).strip() == 'qt':
             raise ValueError('QuickTime must be normalized to MP4 before final review')
         # Probe success alone is insufficient: fully decode video and optional audio.
-        subprocess.run([decoder, '-v', 'error', '-xerror', '-nostdin', '-threads', '1',
-                        *restrictions, '-i', str(path), '-map', '0:v', '-map', '0:a?',
-                        '-f', 'null', '-'], capture_output=True, check=True, timeout=90)
+        run_bounded([decoder, '-v', 'error', '-xerror', '-nostdin', '-threads', '1',
+                     '-max_alloc', '67108864', *restrictions, '-i', str(path),
+                     '-map', '0:v', '-map', '0:a?', '-f', 'null', '-'], timeout=90)
         return {'kind': 'video', 'width': width, 'height': height, 'format': fmt['format_name']}
     except Exception as exc:
         # Decoder/parser failures must return a blocked verdict, never escape the gate.

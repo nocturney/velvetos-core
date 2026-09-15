@@ -40,7 +40,7 @@ def fixture(root):
         'bundle_id': 'VF-PROJECT-6.2-DETAIL-TRUTH',
         'assets': [{'sha256': x['sha256'], 'required_for': 'visual_work'} for x in refs]})
     source = dict(image('source.png', (60, 75), (100, 80, 25)), role='PRODUCT_SOURCE')
-    output = dict(image('final.png', (120, 150), (40, 80, 25)), role='FINAL_VISUAL')
+    output = dict(image('final.jpg', (120, 150), (40, 80, 25)), role='FINAL_VISUAL')
     mobile = image('mobile.png', (40, 50), (40, 80, 25))
     text = dict(write('caption.txt', b'Test caption.'), role='FINAL_TEXT')
     lint = write('lint.json', {'visible_text_gate': 'PASS', 'lint': {'status': 'pass'},
@@ -91,10 +91,10 @@ class EvidenceTests(unittest.TestCase):
             self.ev['tools'] = [tool]
             self.assertFalse(self.result()['ok'])
     def test_missing_output(self):
-        (self.root / 'final.png').unlink()
+        (self.root / 'final.jpg').unlink()
         self.assertFalse(self.result()['ok'])
     def test_changed_bytes(self):
-        (self.root / 'final.png').write_bytes(b'changed')
+        (self.root / 'final.jpg').write_bytes(b'changed')
         self.assertFalse(self.result()['ok'])
     def test_stale_policy(self):
         self.ev['policy_sha256'] = '0' * 64
@@ -174,7 +174,7 @@ class EvidenceTests(unittest.TestCase):
         self.assertFalse(self.result('production')['ok'])
 
     def test_corrupt_final_with_full_alias_is_blocked(self):
-        self._rebind_test_visual('final.png', b'not pixels', 'full.bin')
+        self._rebind_test_visual('final.jpg', b'not pixels', 'full.bin')
         self._write_bound_approval()
         self.assertFalse(self.result()['ok'])
         self.assertFalse(self._approved_result()['ok'])
@@ -184,15 +184,15 @@ class EvidenceTests(unittest.TestCase):
         self.assertFalse(self.result()['ok'])
 
     def test_valid_image_full_alias_cannot_skip_mobile_decode(self):
-        self._rebind_test_visual('final.png', (self.root/'final.png').read_bytes(), 'full.bin')
+        self._rebind_test_visual('final.jpg', (self.root/'final.jpg').read_bytes(), 'full.bin')
         self.assertTrue(self.result()['ok'])
         review = json.loads((self.root/'review.json').read_text())
         review['views'][0]['mobile'] = self.write('mobile.png', b'not pixels')
         self.ev['review'] = self.write('review.json', review)
         self.assertFalse(self.result()['ok'])
 
-    def test_png_cannot_be_final_mp4(self):
-        self._rebind_test_visual('final.mp4', (self.root/'final.png').read_bytes())
+    def test_image_cannot_be_final_mp4(self):
+        self._rebind_test_visual('final.mp4', (self.root/'final.jpg').read_bytes())
         self.assertFalse(self.result()['ok'])
 
     def test_production_video_requires_real_decode(self):
@@ -211,6 +211,76 @@ class EvidenceTests(unittest.TestCase):
         self._rebind_test_visual('final.mp4', video.read_bytes())
         self.manifest['format'] = 'reel'
         self.assertTrue(self.result()['ok'])
+
+    def test_review_png_requires_normalization_before_publication(self):
+        path = self.root/'review.png'
+        Image.new('RGB',(120,150),(4,90,20)).save(path)
+        self._rebind_test_visual('review.png',path.read_bytes())
+        self._write_bound_approval()
+        self.assertTrue(self.result()['ok'], 'PNG remains valid for owner review')
+        self.assertFalse(self._approved_result()['ok'], 'Publication must use reviewed normalized bytes')
+
+    def test_review_webp_requires_normalization_before_publication(self):
+        path = self.root/'review.webp'
+        Image.new('RGB',(120,150),(4,90,20)).save(path)
+        self._rebind_test_visual('review.webp',path.read_bytes())
+        self._write_bound_approval()
+        self.assertTrue(self.result()['ok'])
+        self.assertFalse(self._approved_result()['ok'])
+
+    def test_progressive_jpeg_is_not_publication_ready(self):
+        path = self.root/'progressive.jpg'
+        Image.new('RGB',(120,150),(4,90,20)).save(path,progressive=True)
+        self._rebind_test_visual('progressive.jpg',path.read_bytes())
+        self._write_bound_approval()
+        self.assertTrue(self.result()['ok'])
+        self.assertFalse(self._approved_result()['ok'])
+
+    def test_huge_video_rejected_before_decoder(self):
+        import vf_media_integrity as media
+        path=self.root/'oversized.mp4'; path.write_bytes(b'Test fixture')
+        data={'format':{'format_name':'mov','duration':'1'},'streams':[
+            {'codec_type':'video','width':1000000,'height':1000000,'avg_frame_rate':'30/1'}]}
+        with patch.object(media.shutil,'which',side_effect=lambda x:x), patch.object(media,'run_bounded',return_value=json.dumps(data).encode()) as runner:
+            with self.assertRaisesRegex(ValueError,'pixel budget'):
+                media.inspect_media(path,'test')
+            self.assertEqual(runner.call_count,1, 'Decode must not start')
+
+    def test_long_video_rejected_before_decoder(self):
+        import vf_media_integrity as media
+        path=self.root/'too-long.mp4'; path.write_bytes(b'Test fixture')
+        data={'format':{'format_name':'mov','duration':'86400'},'streams':[
+            {'codec_type':'video','width':120,'height':150,'avg_frame_rate':'30/1'}]}
+        with patch.object(media.shutil,'which',side_effect=lambda x:x), patch.object(media,'run_bounded',return_value=json.dumps(data).encode()) as runner:
+            with self.assertRaisesRegex(ValueError,'duration/stream budget'):
+                media.inspect_media(path,'test')
+            self.assertEqual(runner.call_count,1)
+
+    def test_nonfinite_video_budget_rejected(self):
+        import vf_media_integrity as media
+        for duration in ('NaN','inf','0'):
+            with self.assertRaises(ValueError):
+                media._video_budget({'format':{'duration':duration},'streams':[{}]})
+
+    def test_decoder_memory_limit_is_real(self):
+        from vf_media_limits import run_bounded
+        with self.assertRaises(ValueError):
+            run_bounded([sys.executable,'-c','x=bytearray(512*1024*1024)'],memory_bytes=128*1024*1024)
+
+    def test_decoder_stdout_is_bounded(self):
+        from vf_media_limits import run_bounded, OUTPUT_BYTES
+        with self.assertRaises(ValueError):
+            run_bounded([sys.executable,'-c',f'print("x"*{OUTPUT_BYTES+100})'],capture=True)
+
+    def test_decoder_stderr_is_not_buffered(self):
+        from vf_media_limits import run_bounded
+        result=run_bounded([sys.executable,'-c','import sys; sys.stderr.write("x"*1000000); print("ok")'],capture=True)
+        self.assertEqual(result.strip(),b'ok')
+
+    def test_decoder_time_is_bounded(self):
+        from vf_media_limits import run_bounded
+        with self.assertRaises(ValueError):
+            run_bounded([sys.executable,'-c','import time; time.sleep(20)'],timeout=1)
 
     def _write_bound_approval(self, include_digest=True):
         self.write('manifest.json', self.manifest)
@@ -291,7 +361,7 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(send.gate_channel(report, 'canva'), 0)
 
     def test_final_mov_requires_normalization(self):
-        (self.root / 'final.png').rename(self.root / 'final.mov')
+        (self.root / 'final.jpg').rename(self.root / 'final.mov')
         self.ev['outputs'][0]['path'] = 'final.mov'
         review = json.loads((self.root / 'review.json').read_text())
         review['views'][0]['full']['path'] = 'final.mov'
@@ -362,8 +432,8 @@ def legacy_text():
        'qa_scope': 'exact-final-render', 'source_material_state': 'RAW',
        'qa_reviewed_at': '2026-01-01T00:00:00Z', 'final_package_sha256': 'b' * 64,
        'raw_passthrough': 'false', 'source_edit_mode': 'DETERMINISTIC_COMPOSITE',
-       'hero_transformation_evidence': 'missing-final.png', 'visual_output_evidence': 'missing-final.png',
-       'creative_edit_evidence': 'missing-final.png', 'creative_treatment_categories': 'composition,lighting,background',
+       'hero_transformation_evidence': 'missing-final.jpg', 'visual_output_evidence': 'missing-final.jpg',
+       'creative_edit_evidence': 'missing-final.jpg', 'creative_treatment_categories': 'composition,lighting,background',
        'audio_gate': 'N/A', 'product_truth_gate': 'FAIL', 'source_subject_match': 'FAIL',
        'subject_identity_integrity': 'FAIL', 'synthetic_subject_change': 'PRESENT'}
     keys = ('visual_standard_gate visible_text_gate fact_gate brand_guardian copy_qa readability contrast '
