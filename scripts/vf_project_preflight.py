@@ -84,7 +84,7 @@ def _hint_matches(probe: str, hint: str) -> bool:
 
 
 def _advisory_only_request(probe: str) -> bool:
-    """True for discussion/howto about actions — not authorization to execute."""
+    """True for discussion/howto — not authorization to create or execute."""
     return any(
         _phrase_in(probe, p)
         for p in (
@@ -96,6 +96,11 @@ def _advisory_only_request(probe: str) -> bool:
             "how to delete",
             "how to remove",
             "how can i",
+            "how should",
+            "what is an",
+            "what is a",
+            "what's an",
+            "what's a",
             "write instructions",
             "instructions for deleting",
             "instructions for remove",
@@ -104,9 +109,56 @@ def _advisory_only_request(probe: str) -> bool:
             "האם למחוק",
             "איך מוחקים",
             "איך למחוק",
+            "מה זה",
             "תכתוב הוראות",
         )
     )
+
+
+def _instagram_post_prep_request(probe: str) -> bool:
+    """True for creating/drafting/designing an Instagram post (creative prep).
+
+    Not delivery/action: preparation only. Advisory discussion about whether
+    to create a post is excluded.
+    """
+    if _advisory_only_request(probe):
+        return False
+    if any(
+        _phrase_in(probe, h)
+        for h in (
+            "תכין פוסט לאינסטגרם",
+            "תיצור פוסט לאינסטגרם",
+            "תעצב פוסט לאינסטגרם",
+            "תכין לי פוסט באינסטגרם",
+            "תכין פרסום לאינסטגרם",
+            "צור פוסט לאינסטגרם",
+            "עצב פוסט לאינסטגרם",
+        )
+    ):
+        return True
+    has_ig = _phrase_in(probe, "instagram") or _phrase_in(probe, "אינסטגרם")
+    if not has_ig:
+        return False
+    # create/draft/design/make/prepare + Instagram + post
+    if re.search(
+        r"(?<!\w)(?:create|draft|design|make|prepare)\b(?:\W+\w+){0,6}\W+"
+        r"instagram\b(?:\W+\w+){0,4}\W+posts?\b",
+        probe,
+    ):
+        return True
+    # create/draft/... + post + for/on Instagram
+    if re.search(
+        r"(?<!\w)(?:create|draft|design|make|prepare)\b(?:\W+\w+){0,4}\W+"
+        r"posts?\b(?:\W+\w+){0,6}\W+(?:for|on)\s+instagram",
+        probe,
+    ):
+        return True
+    # Hebrew prep verb + פוסט/פרסום with Instagram already present
+    if any(_phrase_in(probe, v) for v in ("תכין", "תיצור", "תעצב", "צור", "עצב", "הכן")) and any(
+        _phrase_in(probe, o) for o in ("פוסט", "פרסום")
+    ):
+        return True
+    return False
 
 
 def _go_live_request(probe: str) -> bool:
@@ -280,6 +332,9 @@ def classify(text: str, manifest: dict) -> list[str]:
         )
         if social_story and not narrative:
             hits.append("creative_publication")
+    # Instagram post create/draft/design/prepare → creative prep (not delivery).
+    if "creative_publication" not in hits and _instagram_post_prep_request(probe):
+        hits.append("creative_publication")
     # Structural Instagram publish detection (verb + destination, intervening words OK).
     if _instagram_publish_request(probe):
         if "instagram_action" not in hits:
@@ -292,6 +347,9 @@ def classify(text: str, manifest: dict) -> list[str]:
     elif "creative_publication" not in hits and _bare_publication_request(probe):
         # e.g. "publish this post" never entered instagram_action but is still public prep.
         hits.append("creative_publication")
+    # Advisory/howto discussion must not authorize creative production or IG actions.
+    if _advisory_only_request(probe):
+        hits = [h for h in hits if h not in ("creative_publication", "instagram_action")]
     return hits or ["general_business"]
 
 def main() -> int:

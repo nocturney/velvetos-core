@@ -219,11 +219,56 @@ for sample in (
     "האם כדאי למחוק את הפוסט?",
     "write instructions for deleting a post",
     "how do I delete an Instagram post",
+    "what is an Instagram post?",
+    "how should an Instagram post be structured?",
+    "should we create an Instagram post?",
+    "מה זה פוסט באינסטגרם?",
+    "האם כדאי להכין פוסט לאינסטגרם?",
 ):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)
     if "instagram_action" in receipt.get("request_domain", []):
         fail(f"prep/advisory/office Instagram text must not route as instagram_action: {sample}")
+for sample in (
+    "create an Instagram post",
+    "draft an Instagram post",
+    "design an Instagram post",
+    "make an Instagram post",
+    "prepare an Instagram post",
+    "create a post for Instagram",
+    "draft a post for Instagram",
+    "design a post for Instagram",
+    "תכין פוסט לאינסטגרם",
+    "תיצור פוסט לאינסטגרם",
+    "תעצב פוסט לאינסטגרם",
+    "תכין לי פוסט באינסטגרם",
+    "תכין פרסום לאינסטגרם",
+):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "creative_publication" not in receipt.get("request_domain", []):
+        fail(f"Instagram-post draft/prep must route creative_publication: {sample}")
+    if "instagram_action" in receipt.get("request_domain", []):
+        fail(f"Instagram-post draft/prep must not route as instagram_action: {sample}")
+    if receipt.get("project_preflight") != "BLOCKED":
+        fail(f"Instagram-post draft without Creative Manifest must BLOCK: {sample}")
+    if receipt.get("publication_evidence_phase") != "production":
+        fail(f"Instagram-post draft must stay on production evidence (not delivery): {sample}")
+    if receipt.get("creative_execution_authorized") is not False:
+        fail(f"Instagram-post draft without evidence must keep creative_execution_authorized=false: {sample}")
+for sample in (
+    "what is an Instagram post?",
+    "how should an Instagram post be structured?",
+    "should we create an Instagram post?",
+    "מה זה פוסט באינסטגרם?",
+    "האם כדאי להכין פוסט לאינסטגרם?",
+):
+    proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
+    receipt = json.loads(proc.stdout)
+    if "creative_publication" in receipt.get("request_domain", []):
+        fail(f"informational Instagram-post discussion must not route creative_publication: {sample}")
+    if "instagram_action" in receipt.get("request_domain", []):
+        fail(f"informational Instagram-post discussion must not route instagram_action: {sample}")
 for sample in ("publish this post",):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     receipt = json.loads(proc.stdout)
