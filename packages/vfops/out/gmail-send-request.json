@@ -1,11 +1,11 @@
 {
-  "enabled": false,
-  "requestId": "morning-brief-recovery-v10-3-2026-09-14-sent",
-  "html": "packages/vfops/out/morning-brief-recovery-v10.3-2026-09-14.html",
-  "visibleText": "packages/vfops/out/morning-brief-recovery-v10.3-2026-09-14.txt",
+  "enabled": true,
+  "requestId": "morning-brief-recovery-v10-3-2026-09-15",
+  "html": "packages/vfops/out/morning-brief-recovery-v10.3-2026-09-15.html",
+  "visibleText": "packages/vfops/out/morning-brief-recovery-v10.3-2026-09-15.txt",
   "images": "",
   "to": "nocturney@gmail.com",
-  "subject": "Velvet Factory — בריף הבוקר | 14.9.2026",
+  "subject": "Velvet Factory — בריף הבוקר | 15.9.2026",
   "embedRemoteImages": true,
   "remoteImageLimit": 4
 }
