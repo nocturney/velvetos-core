@@ -234,13 +234,16 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
         if out.get("role") == "FINAL_VISUAL":
             visual_info[out["sha256"]] = inspect_media(output_path, "final visual")
             if require_staging:
-                from vf_publish_bridge import inspect_reviewed_asset, load_config, verify_image_normalization
+                from vf_publish_bridge import (inspect_reviewed_asset, load_config,
+                                               verify_image_normalization, verify_video_normalization)
                 cfg = load_config()
                 inspect_reviewed_asset(output_path, cfg)
+                master_ref = out.get("normalization_source")
+                master = verify_ref(root, master_ref, "normalization source", denied)
                 if visual_info[out["sha256"]]["kind"] == "image":
-                    master_ref = out.get("normalization_source")
-                    master = verify_ref(root, master_ref, "normalization source", denied)
                     verify_image_normalization(master, master_ref["sha256"], out["sha256"], cfg)
+                else:
+                    verify_video_normalization(master, master_ref["sha256"], out["sha256"], cfg)
         if out.get("role") not in {"FINAL_VISUAL", "FINAL_TEXT"}:
             raise ValueError("invalid final output role")
         if out["sha256"] in source_shas | ref_shas:

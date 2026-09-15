@@ -217,6 +217,37 @@ class EvidenceTests(unittest.TestCase):
         self.manifest['format'] = 'reel'
         self.assertTrue(self.result()['ok'])
 
+    def test_public_mp4_requires_hash_bound_normalization(self):
+        import shutil, subprocess, struct
+        import vf_publish_bridge as bridge
+        if not shutil.which('ffmpeg') or not shutil.which('ffprobe'):
+            self.fail('Public video proof requires real ffmpeg and ffprobe')
+        master = self.root/'edited-master.mp4'
+        subprocess.run(['ffmpeg', '-v', 'error', '-f', 'lavfi', '-i',
+                        'color=s=120x150:d=0.1:r=10', '-c:v', 'mpeg4',
+                        '-pix_fmt', 'yuv420p', str(master)], check=True, timeout=20)
+        normalized = self.root/'normalized.mp4'
+        bridge.normalize_video(master, normalized)
+        self._rebind_test_visual('final.mp4', normalized.read_bytes())
+        self.manifest['format'] = 'reel'
+        out = self.ev['outputs'][0]
+        out.pop('normalization_source', None)
+        def public_result():
+            self.write('manifest.json', self.manifest)
+            return evidence.validate(self.root, 'manifest.json', 'TEST', require_staging=True)
+        self.assertTrue(self.result()['ok'], 'Private review remains possible')
+        self.assertFalse(public_result()['ok'], 'Public MP4 requires normalization source')
+        out['normalization_source'] = {'path': 'edited-master.mp4', 'sha256': '0'*64}
+        self.assertFalse(public_result()['ok'], 'Master hash must match')
+        out['normalization_source']['sha256'] = evidence.digest(master)
+        verdict = public_result()
+        self.assertTrue(verdict['ok'], verdict)
+        payload = bytes(range(16)) + b'PRIVATE_TEST_METADATA'
+        altered = normalized.read_bytes() + struct.pack('>I4s', len(payload)+8, b'uuid') + payload
+        self._rebind_test_visual('final.mp4', altered)
+        self.assertTrue(self.result()['ok'], 'Metadata is invisible to image review')
+        self.assertFalse(public_result()['ok'], 'Rebinding QA cannot approve a tampered container')
+
     def test_review_png_requires_normalization_before_publication(self):
         path = self.root/'review.png'
         Image.new('RGB',(120,150),(4,90,20)).save(path)

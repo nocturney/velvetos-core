@@ -88,24 +88,14 @@ def normalize_image(src: Path, dst: Path, quality: int) -> tuple[int, int]:
 
 
 def normalize_video(src: Path, dst: Path) -> None:
-    ffmpeg = shutil.which("ffmpeg")
-    if not ffmpeg:
-        raise RuntimeError("ffmpeg is required to strip metadata from video bridge assets")
-    cmd = [
-        ffmpeg,
-        "-hide_banner",
-        "-loglevel",
-        "error",
-        "-y",
-        "-i",
-        str(src),
-        "-map_metadata",
-        "-1",
-        "-c",
-        "copy",
-        str(dst),
-    ]
-    subprocess.run(cmd, check=True)
+    from vf_video_normalization import normalize_video as canonical_normalize
+    canonical_normalize(src, dst)
+
+
+def verify_video_normalization(master: Path, master_sha256: str,
+                               output_sha256: str, cfg: dict[str, Any]) -> None:
+    from vf_video_normalization import verify_video_normalization as verify
+    verify(master, master_sha256, output_sha256, cfg)
 
 
 def normalize(src: Path, cfg: dict[str, Any], tmp: Path) -> tuple[Path, str, dict[str, Any]]:
