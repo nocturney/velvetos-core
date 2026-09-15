@@ -1,11 +1,11 @@
 {
-  "enabled": false,
-  "requestId": "morning-brief-recovery-v10-3-2026-09-15-attempt2-failed",
-  "html": "packages/vfops/out/morning-brief-recovery-v10.3-2026-09-15.html",
-  "visibleText": "packages/vfops/out/morning-brief-recovery-v10.3-2026-09-15.txt",
-  "images": "",
+  "enabled": true,
+  "requestId": "morning-replay-2026-09-15-local-cid-1",
+  "html": "packages/vfops/out/morning-replay-v10.3-2026-09-15.html",
+  "visibleText": "packages/vfops/out/morning-replay-v10.3-2026-09-15.txt",
+  "images": "packages/vfops/out/morning-replay-2026-09-15-images",
   "to": "nocturney@gmail.com",
   "subject": "Velvet Factory — בריף הבוקר | 15.9.2026",
-  "embedRemoteImages": true,
-  "remoteImageLimit": 4
+  "embedRemoteImages": false,
+  "remoteImageLimit": 0
 }
