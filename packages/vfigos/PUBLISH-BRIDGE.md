@@ -129,3 +129,11 @@ Rules:
 - never automatically delete archived publish assets;
 - never overwrite an archive collision;
 - never auto-DM, boost, change price, send customer WhatsApp, or trigger Print from this bridge.
+
+## Public MP4 normalization proof (PR228)
+
+Before final review, normalize the edited master through `vf_publish_bridge.py prepare --output <new-private.mp4>`. The canonical encoder decodes and re-encodes the primary video and optional primary audio; it discards source metadata, chapters, subtitles, other tracks, frame side data and H.264 SEI. It uses fixed output metadata and bounded decoding/encoding. Source files are never overwritten.
+
+Each public `FINAL_VISUAL`, including MP4, must include `normalization_source: {path, sha256}` referring to that edited master. The publication gate reproduces the encoder result and compares its SHA-256 to the exact reviewed output. A clean-looking tag list, valid decode or updated review hash is not normalization proof. A changed master, metadata payload, or different encoder result requires new normalization and exact-final QA.
+
+Review the normalized picture, sound and framing before approval; normalization may change encoding, color representation and ancillary tracks. It must not run after approval to modify a reviewed export. Staging copies only the approved bytes. Private review remains distinct from public release, and this integrity proof is not visual or provenance approval.

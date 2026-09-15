@@ -50,10 +50,12 @@ for rel in ("AGENTS.md", "instances/velvet-factory/AGENTS.md", "instances/velvet
         fail(f"{rel} not bound to project request gate")
 for sample, expected in (("תכין פוסט לפרסום", "creative_publication"), ("עדכן סטטוס הזמנה", "operations")):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
-    if proc.returncode != 0:
+    expected_code = 2 if expected == "creative_publication" else 0
+    if proc.returncode != expected_code:
         fail(f"preflight CLI failed for sample {sample}: {proc.stderr or proc.stdout}")
     receipt = json.loads(proc.stdout)
-    if receipt.get("project_preflight") != "PASS" or expected not in receipt.get("request_domain", []):
+    expected_state = "BLOCKED" if expected == "creative_publication" else "PASS"
+    if receipt.get("project_preflight") != expected_state or expected not in receipt.get("request_domain", []):
         fail(f"preflight CLI did not route {sample} to {expected}")
 
-print(f"OK project-request-gate domains={len(manifest['domains'])} authority_paths={len(set(all_paths))} fail_closed")
+print(f"OK project-request-gate domains={len(manifest['domains'])} authority_paths={len(set(all_paths))} creative_without_evidence=BLOCKED")

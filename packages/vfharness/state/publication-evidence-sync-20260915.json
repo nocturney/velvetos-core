@@ -1,0 +1,67 @@
+{
+  "task_id": "publication-evidence-sync-20260915",
+  "status": "blocked",
+  "component_state": "Blocked",
+  "pack": "vfharness",
+  "goal": "Complete the owner-authorized publication gate repair with behavioral proof and an auditable branch; no creative production or publishing.",
+  "planned_steps": [
+    "Preserve prior changes and inspect current main",
+    "Reproduce false-positive approval",
+    "Implement evidence validation in existing preflight",
+    "Synchronize active policy and templates",
+    "Run regression and complete sensor suite",
+    "Commit and submit for independent review"
+  ],
+  "completed_steps": [
+    "Verified interrupted work remained uncommitted in four files",
+    "Created isolated worktree from origin/main dfff444a0dab82610b8dc2d915597c700ba61354",
+    "Read Project Contract 6 revision 6.2 and current office authorities",
+    "Reproduced false positive: missing artifacts and failed Product Truth accepted by legacy gate",
+    "Implemented actual-file evidence on production, delivery, shared bridge writes and recovery registration",
+    "Synchronized 40 scoped entrypoints and existing templates/schema",
+    "Observed 24 publication regressions and 12 handoff tests pass",
+    "Full suite executed: 68/70 pass; two failures retained and not waived",
+    "Revalidated changed task-state test with preserved prior hashes; synchronized actual recovery brief; all 70 sensors passed"
+  ],
+  "next_step": "Complete independent reviews and hosted CI; merge with the recorded owner authorization and rollback checkpoint",
+  "artifacts": [
+    "scripts/vf_publication_evidence.py",
+    "scripts/check-publication-evidence.py",
+    "packages/vfharness/state/publication-provider-migration.json"
+  ],
+  "unresolved": [
+    "Independent review and hosted CI on the final commit pending",
+    "Main merge and Project activation not performed",
+    "App fresh-session creative test not run"
+  ],
+  "last_updated": "2026-09-15T08:31:46.722006+00:00",
+  "execution_state": {
+    "authority_revision": "6.2",
+    "bundle_id": "VF-PROJECT-6.2-DETAIL-TRUTH",
+    "authority_sha256": "590c97c0fb7e7b7669ac6fd30c91a62b324400f08b769bc715498cd4837ff6e1",
+    "owner_authorization": "Owner explicitly approved checkpoint, review, main merge, verification and Project cold-start preparation; no publishing",
+    "branch": "fix/publication-evidence-sync-20260915",
+    "worktree": "C:/Users/Chris/vf-publication-evidence-sync",
+    "previous_worktree": "C:/Users/Chris/vf-project-contract-v6",
+    "preserve_untouched": [
+      "constitution/TAGS.md",
+      "other worktrees",
+      "operational data and automations"
+    ],
+    "scope": "VF publication preparation, evidence, policy routing and validators only",
+    "creative_production": "BLOCKED_PENDING_REPAIR",
+    "stop_cause": "UNKNOWN_NO_PLATFORM_TELEMETRY",
+    "container_network": "UNAVAILABLE; remote authorized filesystem remains available",
+    "merge_authority": "Independent review and existing merge policy required",
+    "proof": {
+      "publication_tests": 24,
+      "handoff_tests": 12,
+      "suite_pass": 70,
+      "suite_total": 70,
+      "false_positive_before": true,
+      "false_positive_after": false,
+      "review": "REQUESTED_NOT_RECEIVED",
+      "deployment": "NOT_PERFORMED"
+    }
+  }
+}

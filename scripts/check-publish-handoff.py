@@ -150,7 +150,7 @@ class PublishHandoffTests(unittest.TestCase):
         )
         self.assertEqual(out["state"], "published_verified")
 
-    def test_missing_bridge_with_local_export_triggers_recovery_not_terminal_block(self) -> None:
+    def test_unverified_local_export_requires_creative_proof_not_transport(self) -> None:
         # recover without --stage should land approved_export_local / prepare, not terminal transport block.
         out = handoff.recover_and_stage_frame(
             correlation="G004",
@@ -161,10 +161,11 @@ class PublishHandoffTests(unittest.TestCase):
             public_release_approved=True,
             do_stage=False,
         )
-        self.assertTrue(out["ok"])
+        self.assertFalse(out["ok"])
+        self.assertEqual(out.get("blocker"), "blocked_creative_preflight")
         self.assertNotEqual(out.get("blocker"), "blocked_publish_transport")
         doc = handoff.load_publication("G004")
-        self.assertEqual(doc["state"], "approved_export_local")
+        self.assertEqual(doc["state"], "blocked_creative_preflight")
 
     def test_frame4_whatsapp_fails_cta_validation(self) -> None:
         with self.assertRaises(ValueError):

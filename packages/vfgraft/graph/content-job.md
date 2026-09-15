@@ -1,5 +1,10 @@
 # content-job
 
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
 ## Summary
 
 Velvet Factory content is an exception-only autonomous Visual Foundry pipeline over existing packs. Floor proof / verified media first; no invented scenes. `expert-media-director` runs opportunity qualification → Asset Truth/Claim Provenance → Content Contract → proof-first Creative Director → progressive variants → Evaluation Engine → targeted repair → render/derivatives → Exception Queue → publish authorization → `vfigos` tool send/verification → evidence-backed learning.
@@ -9,7 +14,7 @@ Routine creative choices do **not** require owner review. Physical footage/stagi
 ## Sources
 
 - `.cursor/skills/vf-content-sprint/SKILL.md`
-- `.cursor/skills/vf-canva-instagram/SKILL.md`
+> LEGACY / provenance only for VF publication; not a provider route: - `.cursor/skills/vf-canva-instagram/SKILL.md`
 - `packages/vfom/FOUNDRY.json`
 - `packages/vfom/CONTENT-CONTRACT.schema.json`
 - `packages/vfom/VISUAL-DNA.json`
@@ -58,4 +63,4 @@ Media Vault remains canonical and `vfigos` remains the Instagram publish/verific
 
 ## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
 
-This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVL7PKpvE` and SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.
+> LEGACY / provenance only for VF publication; not a provider route: This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVL7PKpvE` and SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.

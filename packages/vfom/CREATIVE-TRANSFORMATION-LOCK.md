@@ -1,3 +1,5 @@
+> VF publication route: read `packages/vfom/PUBLICATION-PREP-EXECUTION.md`; require reference decomposition and exact-final reference_match_gate. Rejected directions are not repaired by repeating the same layout family.
+
 # Velvet Factory — Creative Transformation Lock
 
 Status: **MANDATORY · FAIL-CLOSED**

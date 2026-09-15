@@ -38,6 +38,7 @@ import re
 import sys
 from pathlib import Path
 from typing import Any
+from vf_publication_evidence import validate as validate_evidence
 
 ROOT = Path(__file__).resolve().parents[1]
 DESK = ROOT / ".cursor" / "vf-desk.json"
@@ -152,8 +153,7 @@ def validate_publication_approval(
         problems.append("approval is explicitly invalidated")
     if visual_standard_gate != "PASS":
         problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: visual_standard_gate must be PASS")
-    if visual_standard_asset != VELVET_VISUAL_STANDARD_ASSET:
-        problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: visual_standard_canva_asset_id does not match canonical owner-approved standard")
+    # Canva asset ID is archival provenance, never a required execution provider.
     if visual_standard_sha != VELVET_VISUAL_STANDARD_SHA256:
         problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: visual_standard_artifact_sha256 does not match canonical owner-approved standard")
     if visual_standard_document != VELVET_VISUAL_STANDARD_DOCUMENT:
@@ -190,6 +190,12 @@ def validate_publication_approval(
 
     # v3 applies the exact-final quality checks to every Instagram format, not only Stories.
     required_pass_fields = {
+        "product_truth_gate": "PASS",
+        "subject_identity_integrity": "PASS",
+        "source_subject_match": "PASS",
+        "synthetic_subject_change": "NONE",
+        "reference_match_gate": "PASS",
+        "creative_director_lock": "PASS",
         "qa_scope": "exact-final-render",
         "visible_text_gate": "PASS",
         "fact_gate": "PASS",
@@ -276,6 +282,16 @@ def validate_publication_approval(
     if "soft contrast" in lowered and "non-block" in lowered:
         problems.append("soft contrast may not be waived as non-blocking")
 
+    # Mandatory actual-file evidence extension. Bare PASS strings cannot authorize delivery.
+    manifest_ref = _field(text, "creative_manifest_ref") or ""
+    manifest_sha = _clean_sha(_field(text, "creative_manifest_sha256"))
+    if manifest_sha is None:
+        problems.append("creative_manifest_sha256 is required to bind the approved evidence")
+    evidence_result = validate_evidence(ROOT, manifest_ref, content_id, "delivery", supplied_package, format_name, expected_manifest_sha256=manifest_sha, require_staging=True)
+    if not evidence_result.get("ok"):
+        problems.extend("publication evidence: " + p for p in evidence_result.get("problems", []))
+    elif artifact_digest not in evidence_result.get("visualHashes", []):
+        problems.append("artifact_digest is not an exact final visual in the reviewed package")
     audio_gate = (_field(text, "audio_gate") or "").strip().upper()
     if format_name == "reel" and audio_gate != "PASS":
         problems.append("reel audio_gate must be PASS")
@@ -290,6 +306,7 @@ def validate_publication_approval(
         "contentId": content_id,
         "format": format_name,
         "publishGateSchema": schema or None,
+        "evidenceValidation": evidence_result,
         "packageSha256": _clean_sha(package_sha256),
         "problems": problems,
         "rule": "vault media is RAW; publish authorization requires an exact-final branded creative derivative, not a transport-ready crop",
@@ -340,7 +357,7 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
             "ready": ig_session_ready and not ig_needs_failover,
             "needs_failover": ig_needs_failover,
             "action": "publish_image|carousel|reel|story then list_media/get_media verify",
-            "failover": "Canva + Drive create_file + Gmail same turn · #ממתין-ל-כלי-IG",
+            "failover": "Approved source-grounded derivative + Drive create_file + Gmail same turn · #ממתין-ל-כלי-IG",
             "forbid": ["send_message DM", "auto-DM", "boost without lead", "INSTAGRAM_MCP_DM_ENABLED"],
         },
         "gemini": {
@@ -372,6 +389,7 @@ def gate_channel(report: dict[str, Any], name: str) -> int:
     if not ch:
         print(f"FAIL unknown gate channel {name!r}", file=sys.stderr)
         return 1
+    # This is transport diagnostics only. VF publication rejects Canva in its evidence gate.
     if ch.get("ready"):
         print(f"GATE {name}=ready")
         return 0

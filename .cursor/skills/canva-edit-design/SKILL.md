@@ -5,14 +5,19 @@ description: Make edits to an existing Canva design — change or fix text, repl
 
 # Canva Design Editing
 
-The canonical, safe way to apply edits to an existing Canva design. Every Canva skill that mutates a design should follow this exact protocol: **start a transaction → perform operations → commit (with approval)**. Changes are draft-only until committed and are PERMANENTLY LOST if not committed.
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
+> LEGACY / provenance only for VF publication; not a provider route: The canonical, safe way to apply edits to an existing Canva design. Every Canva skill that mutates a design should follow this exact protocol: **start a transaction → perform operations → commit (with approval)**. Changes are draft-only until committed and are PERMANENTLY LOST if not committed.
 
 ## The Transaction Protocol (always these steps, in order)
 
-1. **`Canva:start-editing-transaction`** — pass the `design_id`. Remember the returned `transaction_id` and the `pages` array; both are required by later calls. ALWAYS show the user the thumbnail(s) returned here.
-2. **`Canva:perform-editing-operations`** — apply edits. Pass the `transaction_id`, the `pages` array from the previous response, the `page_index` of the first page being changed, and an `operations` array. Batch multiple operations into a single call wherever possible.
-3. **`Canva:commit-editing-transaction`** — save. See the approval gate below. After committing, the `transaction_id` is invalid; a new edit needs a new transaction.
-4. **`Canva:cancel-editing-transaction`** — discard the draft instead of saving (e.g. the user rejects the preview, or you opened a transaction only to inspect the design).
+> LEGACY / provenance only for VF publication; not a provider route: 1. **`Canva:start-editing-transaction`** — pass the `design_id`. Remember the returned `transaction_id` and the `pages` array; both are required by later calls. ALWAYS show the user the thumbnail(s) returned here.
+> LEGACY / provenance only for VF publication; not a provider route: 2. **`Canva:perform-editing-operations`** — apply edits. Pass the `transaction_id`, the `pages` array from the previous response, the `page_index` of the first page being changed, and an `operations` array. Batch multiple operations into a single call wherever possible.
+> LEGACY / provenance only for VF publication; not a provider route: 3. **`Canva:commit-editing-transaction`** — save. See the approval gate below. After committing, the `transaction_id` is invalid; a new edit needs a new transaction.
+> LEGACY / provenance only for VF publication; not a provider route: 4. **`Canva:cancel-editing-transaction`** — discard the draft instead of saving (e.g. the user rejects the preview, or you opened a transaction only to inspect the design).
 
 ## Capabilities — what the API CAN and CANNOT do
 
@@ -32,7 +37,7 @@ The canonical, safe way to apply edits to an existing Canva design. Every Canva 
 - Modify animations, transitions, or element opacity (except on newly inserted fills)
 - Group/ungroup elements, or restyle shapes (only text inside shapes is editable)
 
-When a requested change is in the CANNOT list, tell the user it must be done manually in the Canva editor — don't attempt a workaround.
+> LEGACY / provenance only for VF publication; not a provider route: When a requested change is in the CANNOT list, tell the user it must be done manually in the Canva editor — don't attempt a workaround.
 
 ## Responsive pages — restricted operation set
 
@@ -47,21 +52,21 @@ Before calling `perform-editing-operations`, check the `pages` array. If any ope
 
 - Do NOT commit without approval.
 - Do NOT tell the user changes are saved before the commit call has succeeded.
-- After a successful commit, give the user a direct link to open the design in Canva.
+> LEGACY / provenance only for VF publication; not a provider route: - After a successful commit, give the user a direct link to open the design in Canva.
 - If a commit fails, all changes are lost — start a new transaction to retry.
 
-> Note for composing skills: a skill that already collects a single up-front approval for a batch of changes (e.g. `canva-implement-feedback`) should treat that approval as covering the commit and NOT ask again. Follow that skill's own confirmation rules; the gate above is the default for direct, ad-hoc edits.
+> LEGACY / provenance only for VF publication; not a provider route: > Note for composing skills: a skill that already collects a single up-front approval for a batch of changes (e.g. `canva-implement-feedback`) should treat that approval as covering the commit and NOT ask again. Follow that skill's own confirmation rules; the gate above is the default for direct, ad-hoc edits.
 
 ## Workflow
 
 ### Step 1: Resolve the design
-- Short link (`canva.link/...`) → `Canva:resolve-shortlink` to get the URL.
-- Full Canva URL → extract the design ID (the segment after `/design/`).
+> LEGACY / provenance only for VF publication; not a provider route: - Short link (`canva.link/...`) → `Canva:resolve-shortlink` to get the URL.
+> LEGACY / provenance only for VF publication; not a provider route: - Full Canva URL → extract the design ID (the segment after `/design/`).
 - Raw design ID (starts with `D`) → use directly; do NOT search.
 - Nothing provided → ask for the design ID or link.
 
 ### Step 2: Start the transaction and inspect
-Call `Canva:start-editing-transaction`. Show the thumbnail(s). Use the returned content to locate the exact `element_id`s you need to target. (If you only needed to look, call `cancel-editing-transaction` and stop.)
+> LEGACY / provenance only for VF publication; not a provider route: Call `Canva:start-editing-transaction`. Show the thumbnail(s). Use the returned content to locate the exact `element_id`s you need to target. (If you only needed to look, call `cancel-editing-transaction` and stop.)
 
 ### Step 3: Build and perform operations
 Translate the user's request into concrete operations. Confirm scope first when a `find_and_replace_text` string could match in multiple places or contexts — ask which instances they mean. Batch all operations into one `perform-editing-operations` call when you can.
@@ -81,4 +86,4 @@ Before claiming completion, verify the routed target state or run the existing p
 
 ## Velvet Factory instance override — mandatory (`VF_VISUAL_STANDARD_GATE`)
 
-When the active job/instance is Velvet Factory or `@velvets_cloud`, do not operate this Canva skill in isolation. Before any create/edit/resize/feedback/brand-check/bulk action, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`, verify `MAHVL7PKpvE` / `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, and require `visual_standard_gate=PASS`. If the binding cannot be verified, return `visual_standard_unavailable` instead of using generic Canva/template defaults. Product source media remains the sole authority for the physical product.
+> LEGACY / provenance only for VF publication; not a provider route: When the active job/instance is Velvet Factory or `@velvets_cloud`, do not operate this Canva skill in isolation. Before any create/edit/resize/feedback/brand-check/bulk action, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`, verify `MAHVL7PKpvE` / `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, and require `visual_standard_gate=PASS`. If the binding cannot be verified, return `visual_standard_unavailable` instead of using generic Canva/template defaults. Product source media remains the sole authority for the physical product.

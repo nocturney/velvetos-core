@@ -100,3 +100,6 @@ Project memory is helpful context, not governance. Do not rely on a previous cha
 - not a promise that a tool exists when the current environment does not expose it.
 
 The desired behavior is simple: **route first, verify authority, execute, verify the exact result.**
+## Creative evidence phase
+
+`vf_project_preflight.py --domain creative_publication` defaults to pre-production evidence. For review delivery, specify `--phase delivery`. The `instagram_action` domain always requires delivery evidence and rejects `--phase production`; a completed nine-stage manifest must not be checked as a five-stage production manifest. Transport diagnostics never authorize creative production or publication.

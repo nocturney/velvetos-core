@@ -1,0 +1,28 @@
+{
+  "task": "pr228-video-metadata-closeout",
+  "base_head": "14600a1aa745cc1cded12b7fdb48e87c608b7428",
+  "finding": 4014575037,
+  "scope": "Canonical public MP4 normalization and approval binding; no publication or messages.",
+  "red": {
+    "tested": "Previous stream-copy normalization",
+    "cases_failed_as_expected": 2,
+    "causes": ["Private H.264 SEI survived", "Private chapter metadata survived"],
+    "log_sha256": "1bc00b15434a6a32cb9b14dd5769fce3cc3fdf1d4473e7ddcbe6d8713566e9b9"
+  },
+  "green_windows": {
+    "video_privacy_tests": 10,
+    "publication_evidence_tests": 61,
+    "skipped": 0,
+    "result": "PASS",
+    "tool_process_id": 18108
+  },
+  "full_suite_windows": "INTERRUPTED during check-living-studio.py; not counted as PASS",
+  "hosted_ci": "PENDING",
+  "independent_review": "PENDING",
+  "main_merge": "NOT_PERFORMED",
+  "files": {
+    "check-video-normalization.py": "f9358ba2ac93554b1a6ac24f383e0f0b24501e082ac006f1b2d0ec5ce5d4e8cc",
+    "vf_video_normalization.py": "e05baf445d7e14577ba8c6f9f09a496fd91698868bf19d630ed3926719160b62"
+  },
+  "limits": "Normalization removes ancillary metadata/tracks before review; source provenance and aesthetics remain separately reviewed. Byte reproduction is tied to encoder environment."
+}

@@ -5,24 +5,29 @@ description: Read a Canva design and return structured, actionable design feedba
 
 # Get Design Feedback
 
-Act as a design reviewer: read the design as it actually appears, then return concrete, prioritised feedback the user can act on. This skill is **read-only** — it never edits the design. When the user wants the changes made, hand off to `canva-edit-design` or `canva-implement-feedback`.
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
+> LEGACY / provenance only for VF publication; not a provider route: Act as a design reviewer: read the design as it actually appears, then return concrete, prioritised feedback the user can act on. This skill is **read-only** — it never edits the design. When the user wants the changes made, hand off to `canva-edit-design` or `canva-implement-feedback`.
 
 ## What you can actually read (and the gap to know about)
 
-- **`Canva:get-design-content`** returns text (`richtexts`) only — good for copy, headings, and wording, but it does NOT include colors, fonts, sizes, or element positions.
-- **`Canva:get-design-thumbnail`** gives you the rendered image — this is how you "see" layout, hierarchy, balance, color, and contrast. Always pull this; visual critique depends on it.
-- **Element positions, sizes, and text** are reliably available from a **read-only** editing transaction: `Canva:start-editing-transaction`, inspect the returned `richtexts`/`fills`, then `Canva:cancel-editing-transaction` (never commit — you are not changing anything). Use this for layout/spacing/alignment detail.
+> LEGACY / provenance only for VF publication; not a provider route: - **`Canva:get-design-content`** returns text (`richtexts`) only — good for copy, headings, and wording, but it does NOT include colors, fonts, sizes, or element positions.
+> LEGACY / provenance only for VF publication; not a provider route: - **`Canva:get-design-thumbnail`** gives you the rendered image — this is how you "see" layout, hierarchy, balance, color, and contrast. Always pull this; visual critique depends on it.
+> LEGACY / provenance only for VF publication; not a provider route: - **Element positions, sizes, and text** are reliably available from a **read-only** editing transaction: `Canva:start-editing-transaction`, inspect the returned `richtexts`/`fills`, then `Canva:cancel-editing-transaction` (never commit — you are not changing anything). Use this for layout/spacing/alignment detail.
 - **Colors and fonts are NOT reliably exposed.** Tested: the transaction payload often returns only text + position + dimension per element, with no color or font attributes. So treat the **thumbnail as the primary source** for any color, contrast, or typography judgement, and treat transaction style data as best-effort (use it when present, don't depend on it). Never report a specific hex/font as fact unless the payload actually contained it.
 
 ## Workflow
 
 ### Step 1: Resolve the design
-Short link → `Canva:resolve-shortlink`; full URL → extract the ID; raw `D...` ID → use directly; otherwise ask.
+> LEGACY / provenance only for VF publication; not a provider route: Short link → `Canva:resolve-shortlink`; full URL → extract the ID; raw `D...` ID → use directly; otherwise ask.
 
 ### Step 2: Read the design
-- `Canva:get-design` for title and page count.
-- `Canva:get-design-thumbnail` (and/or `Canva:get-design-pages`) to see each page.
-- `Canva:get-design-content` for the text.
+> LEGACY / provenance only for VF publication; not a provider route: - `Canva:get-design` for title and page count.
+> LEGACY / provenance only for VF publication; not a provider route: - `Canva:get-design-thumbnail` (and/or `Canva:get-design-pages`) to see each page.
+> LEGACY / provenance only for VF publication; not a provider route: - `Canva:get-design-content` for the text.
 - Optional (typography/color detail): read-only transaction as described above, then cancel it.
 
 ### Step 3: Evaluate across dimensions
@@ -59,7 +64,7 @@ Organise findings by **page**, each with a **severity** and a **concrete fix**:
 Use severities **High / Med / Low**. Lead with the few highest-impact items, then the per-page detail. Be specific and located (page + element), not generic ("make it pop").
 
 ### Step 5: Offer to act
-End by offering to implement the API-fixable items via **`canva-edit-design`**, and note which items need manual work in Canva (e.g. font-family or background changes the API can't touch — see `canva-edit-design` for the full CANNOT list).
+> LEGACY / provenance only for VF publication; not a provider route: End by offering to implement the API-fixable items via **`canva-edit-design`**, and note which items need manual work in Canva (e.g. font-family or background changes the API can't touch — see `canva-edit-design` for the full CANNOT list).
 
 ## Rules
 - Never edit or commit anything — this skill is strictly read-only. If you open a transaction to inspect, always `cancel-editing-transaction`.
@@ -73,4 +78,4 @@ Before claiming completion, verify the routed target state or run the existing p
 
 ## Velvet Factory instance override — mandatory (`VF_VISUAL_STANDARD_GATE`)
 
-When the active job/instance is Velvet Factory or `@velvets_cloud`, do not operate this Canva skill in isolation. Before any create/edit/resize/feedback/brand-check/bulk action, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`, verify `MAHVL7PKpvE` / `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, and require `visual_standard_gate=PASS`. If the binding cannot be verified, return `visual_standard_unavailable` instead of using generic Canva/template defaults. Product source media remains the sole authority for the physical product.
+> LEGACY / provenance only for VF publication; not a provider route: When the active job/instance is Velvet Factory or `@velvets_cloud`, do not operate this Canva skill in isolation. Before any create/edit/resize/feedback/brand-check/bulk action, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`, verify `MAHVL7PKpvE` / `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, and require `visual_standard_gate=PASS`. If the binding cannot be verified, return `visual_standard_unavailable` instead of using generic Canva/template defaults. Product source media remains the sole authority for the physical product.

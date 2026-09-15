@@ -5,31 +5,36 @@ description: Resize a Canva design into multiple social media formats (Facebook 
 
 # Canva Resize for Social Media
 
-Automatically resize a single Canva design into multiple social media formats.
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
+> LEGACY / provenance only for VF publication; not a provider route: Automatically resize a single Canva design into multiple social media formats.
 
 ## Overview
 
-This skill enables rapid multi-platform content distribution by taking a single Canva design and creating optimized versions for:
+> LEGACY / provenance only for VF publication; not a provider route: This skill enables rapid multi-platform content distribution by taking a single Canva design and creating optimized versions for:
 - Facebook post
 - Facebook story
 - Instagram post
 - Instagram story
 - LinkedIn post
 
-All resized versions are provided with Canva edit links so users can further edit or download them directly from Canva.
+> LEGACY / provenance only for VF publication; not a provider route: All resized versions are provided with Canva edit links so users can further edit or download them directly from Canva.
 
 ## Workflow
 
 ### Step 1: Identify the Source Design
 
-Determine which Canva design the user wants to resize. This can be provided in three ways:
+> LEGACY / provenance only for VF publication; not a provider route: Determine which Canva design the user wants to resize. This can be provided in three ways:
 
 1. **Direct design ID**: User provides a design ID (starts with "D")
    - Example: "resize design DABcd1234ef for all social media"
    - Use the design ID directly with `get-design` tool to retrieve design information
    
-2. **Direct design URL**: User provides a Canva design link
-   - Example: "resize https://www.canva.com/design/DABcd1234ef/... for all social media"
+> LEGACY / provenance only for VF publication; not a provider route: 2. **Direct design URL**: User provides a Canva design link
+> LEGACY / provenance only for VF publication; not a provider route:    - Example: "resize https://www.canva.com/design/DABcd1234ef/... for all social media"
    - Extract the design ID from the URL (the part after `/design/` and before the next `/` or query parameter)
    - Use the extracted design ID with `get-design` tool
    
@@ -107,7 +112,7 @@ Execute the resize operations **in parallel** by calling the `resize-design` too
 Provide the user with a summary including:
 
 1. **Summary**: Confirm which formats were created successfully
-2. **Design edit links**: Canva editor URLs for each resized design so users can make further edits or download directly from Canva
+> LEGACY / provenance only for VF publication; not a provider route: 2. **Design edit links**: Canva editor URLs for each resized design so users can make further edits or download directly from Canva
 3. **Note about duplicates**: Mention that Facebook Story and Instagram Story have identical dimensions
 
 **Presentation format example:**
@@ -117,19 +122,19 @@ Provide the user with a summary including:
 Edit Links:
 
 **Facebook Post** (1200×630)
-- [Edit in Canva](edit_url)
+> LEGACY / provenance only for VF publication; not a provider route: - [Edit in Canva](edit_url)
 
 **Facebook Story** (1080×1920)
-- [Edit in Canva](edit_url)
+> LEGACY / provenance only for VF publication; not a provider route: - [Edit in Canva](edit_url)
 
 **Instagram Post** (1080×1080)
-- [Edit in Canva](edit_url)
+> LEGACY / provenance only for VF publication; not a provider route: - [Edit in Canva](edit_url)
 
 **Instagram Story** (1080×1920)
-- [Edit in Canva](edit_url)
+> LEGACY / provenance only for VF publication; not a provider route: - [Edit in Canva](edit_url)
 
 **LinkedIn Post** (1200×627)
-- [Edit in Canva](edit_url)
+> LEGACY / provenance only for VF publication; not a provider route: - [Edit in Canva](edit_url)
 
 Note: Facebook Story and Instagram Story use the same dimensions (1080×1920).
 ```
@@ -141,7 +146,7 @@ Note: Facebook Story and Instagram Story use the same dimensions (1080×1920).
 
 ## Key Implementation Notes
 
-- **Compatibility**: Check if `resize-design` is available in the current MCP tools. If not, inform the user that this skill requires the Canva MCP resize tool in the current host
+> LEGACY / provenance only for VF publication; not a provider route: - **Compatibility**: Check if `resize-design` is available in the current MCP tools. If not, inform the user that this skill requires the Canva MCP resize tool in the current host
 - **Parallel execution**: Resize operations should be performed in parallel for efficiency
 - **Consistent naming**: Use the source design title with platform suffix for resized designs
 - **Error resilience**: If any operation fails, complete the remaining operations and clearly report what succeeded/failed
@@ -150,4 +155,4 @@ Note: Facebook Story and Instagram Story use the same dimensions (1080×1920).
 
 ## Velvet Factory instance override — mandatory (`VF_VISUAL_STANDARD_GATE`)
 
-When the active job/instance is Velvet Factory or `@velvets_cloud`, do not operate this Canva skill in isolation. Before any create/edit/resize/feedback/brand-check/bulk action, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`, verify `MAHVL7PKpvE` / `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, and require `visual_standard_gate=PASS`. If the binding cannot be verified, return `visual_standard_unavailable` instead of using generic Canva/template defaults. Product source media remains the sole authority for the physical product.
+> LEGACY / provenance only for VF publication; not a provider route: When the active job/instance is Velvet Factory or `@velvets_cloud`, do not operate this Canva skill in isolation. Before any create/edit/resize/feedback/brand-check/bulk action, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`, verify `MAHVL7PKpvE` / `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, and require `visual_standard_gate=PASS`. If the binding cannot be verified, return `visual_standard_unavailable` instead of using generic Canva/template defaults. Product source media remains the sole authority for the physical product.

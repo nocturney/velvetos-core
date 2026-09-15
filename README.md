@@ -25,7 +25,7 @@
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>69</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>71</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>9</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -314,3 +314,10 @@ python3 scripts/update-readme-snapshot.py --check
 ---
 
 <p align="center"><strong>If VelvetOS can really do it, the README should say so.<br>אם VelvetOS באמת יודע לעשות את זה — ה־README צריך להגיד את זה.</strong></p>
+
+
+## VF publication evidence repair (review candidate)
+
+The existing publication preflight now checks actual source/output/reference bytes and exact review/copy bindings via `scripts/vf_publication_evidence.py`. The scoped VF route excludes Canva/vfcanva, rejects known discarded directions and blocks bare-flag approvals. Production, owner-review delivery and bridge staging have separate checks; approved bytes are not normalized again after review.
+
+Proof: `python3 scripts/check-publication-evidence.py`; scope and trust boundary: `packages/vfom/PUBLICATION-PREP-EXECUTION.md`. These are repository checks, not a guarantee of visual taste or evidence that other ChatGPT/worker copies are deployed. Independent review, complete CI and runtime synchronization remain separate release gates.

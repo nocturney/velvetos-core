@@ -1,0 +1,7 @@
+/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt -text
+/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json -text
+scripts/vf_task_state.py text eol=lf
+scripts/check-vf-task-state.py text eol=lf
+packages/vfharness/playbooks/skillstate.md text eol=lf
+packages/vfharness/state/swc-codex-001.json text eol=lf
+packages/vfharness/state/pr228-rollout/* text eol=lf

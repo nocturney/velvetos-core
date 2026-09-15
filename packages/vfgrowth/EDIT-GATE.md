@@ -1,5 +1,10 @@
 # שער עריכה — לפני שיבוץ / Publish
 
+## VF_PUBLICATION_ROUTE_V1 - current publication scope
+
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+
 מושב: **סטודיו**. לא פק חדש.  
 חוקה: `constitution/STUDIO.md`. מסירה: `HANDOFF-he.md`.  
 פריפלייט כתוב (חובה): [`PREFLIGHT.md`](PREFLIGHT.md). חוזה קופי ציבורי חובה: `../vfcopy/SOFT-TOOLS-CONTRACT.md`. בלי ארטיפקט `preflight/<id>.md` = **נכשל-סגור**.  
@@ -62,8 +67,8 @@ brand_source_lock: FAIL
 
 | סדר | כלי | איפה | מה נחשב עבר שער |
 |---|---|---|---|
-| 1 | **Canva MCP** | Cloud + Desktop | `edit_url` אמיתי + exact-final visual review + subject integrity |
-| 2 | **vfcovers / vfcanva** | Cloud | PNG/JPEG + evidence לטיפול מעבר ל-crop + source/final comparison |
+> LEGACY / provenance only for VF publication; not a provider route: | 1 | **Canva MCP** | Cloud + Desktop | `edit_url` אמיתי + exact-final visual review + subject integrity |
+> LEGACY / provenance only for VF publication; not a provider route: | 2 | **vfcovers / vfcanva** | Cloud | PNG/JPEG + evidence לטיפול מעבר ל-crop + source/final comparison |
 | 3 | **Gemini browser** (עריכת תמונה) | **מק בשדרות בלבד** — `vfmcp/HOST.md` | קובץ ערוך מהמק + exact-final QA + no subject mutation |
 | 4 | Failover | Cloud | Superdesign → אם נפל: `studio/render.py` + exact-final QA |
 
@@ -79,7 +84,7 @@ brand_source_lock: FAIL
 
 `verified context → reader-first → VOICE + VOICE-CHART + voice/approved → template → velvet-hebrew-copy → ai-tells-he → check-vfcopy.py lint(actual final copy) → factual gate → TEXT_WINS/NO_TEXT (אם רלוונטי)`.
 
-Brand Guardian, Rubric, Canva, אישור אדם או CI/eval אינם תחליף לשער זה. שינוי טקסט אחרי lint מבטל את ה־pass ומחייב lint מחדש; שינוי מהותי אחרי PREFLIGHT/Rubric מחייב גם אותם מחדש.
+> LEGACY / provenance only for VF publication; not a provider route: Brand Guardian, Rubric, Canva, אישור אדם או CI/eval אינם תחליף לשער זה. שינוי טקסט אחרי lint מבטל את ה־pass ומחייב lint מחדש; שינוי מהותי אחרי PREFLIGHT/Rubric מחייב גם אותם מחדש.
 
 ## מה לא עובר
 
@@ -90,13 +95,13 @@ Brand Guardian, Rubric, Canva, אישור אדם או CI/eval אינם תחלי�
 - לוגו VF מומצא/מחודש במקום master asset
 - orange כ־brand default בניגוד ל־Brand Source of Truth
 - JPEG מהמיטה / מתיבת Grok עם כיתוב רק בפריים האינסטגרם
-- טקסט מודבק על הקובץ הגולמי בלי Canva / compose / render
-- קישור Canva מומצא
+> LEGACY / provenance only for VF publication; not a provider route: - טקסט מודבק על הקובץ הגולמי בלי Canva / compose / render
+> LEGACY / provenance only for VF publication; not a provider route: - קישור Canva מומצא
 - סצנת רצפה שלא נמסרה
 - קופי שלא עבר `SOFT-TOOLS-CONTRACT.md` על הגרסה הנוכחית
 - `needs_input`/fact gate לא פתור
 - ₪ בפריים · וואטסאפ / `050-2517000` / `wa.me` כ־CTA ציבורי כשאסור לפי החוקה · אוטו־DM
-- **סטוריז או פיד** בלי `edit_url` מ-Canva MCP או PNG/JPEG מורכב מ-`vfcovers` / `vfcanva`
+> LEGACY / provenance only for VF publication; not a provider route: - **סטוריז או פיד** בלי `edit_url` מ-Canva MCP או PNG/JPEG מורכב מ-`vfcovers` / `vfcanva`
 - מדיה AI / נגזרת מהותית בלי metadata להצהרת פלטפורמה כשנדרש
 - שיבוץ בלי `versionApproval` כשיש פריט כספת · או claim live בלי אימות
 - `brand_guardian: PASS` שמבוסס על sharpness/crop/reality בלבד בלי commercial/scroll-stop/product-truth review

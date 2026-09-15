@@ -38,7 +38,7 @@ def main() -> None:
             fail(f"policy {key} mismatch")
     required_evidence = set(policy.get("requiredEvidence") or [])
     expected_evidence = {
-        "visual_standard_gate=PASS", "visual_standard_canva_asset_id",
+        "visual_standard_gate=PASS", "creative_manifest_ref",
         "visual_standard_artifact_sha256", "product_truth_source_refs",
         "exact_final_artifact_digest",
     }

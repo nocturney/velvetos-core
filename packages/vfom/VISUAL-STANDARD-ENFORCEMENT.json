@@ -1,6 +1,6 @@
 {
   "name": "velvet-factory-visual-standard-enforcement",
-  "version": 1,
+  "version": 2,
   "mode": "fail_closed",
   "standard": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
   "visualAuthority": "packages/vfom/VISUAL-OS.md",
@@ -9,10 +9,12 @@
   "artifactSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
   "requiredEvidence": [
     "visual_standard_gate=PASS",
-    "visual_standard_canva_asset_id",
     "visual_standard_artifact_sha256",
     "product_truth_source_refs",
-    "exact_final_artifact_digest"
+    "exact_final_artifact_digest",
+    "creative_manifest_ref",
+    "reference_match_gate=PASS",
+    "publicationEvidence.version=1"
   ],
   "vfCreativeSurfaces": [
     ".cursor/skills/vf-canva-instagram/SKILL.md",
@@ -54,5 +56,82 @@
     "packages/vfgrowth/preflight/TEMPLATE.md",
     "packages/vfgrowth/GATE.md",
     "packages/vfigos/SEND.md"
-  ]
+  ],
+  "publicationRoute": {
+    "version": 1,
+    "mode": "fail_closed",
+    "scope": "velvet-factory-publication",
+    "authority": "packages/vfom/PUBLICATION-PREP-EXECUTION.md",
+    "evidenceValidator": "scripts/vf_publication_evidence.py",
+    "deniedTools": [
+      "Canva",
+      "vfcanva"
+    ],
+    "rejectedDirectionFamilies": [
+      "vf-20260915-synthetic-grid",
+      "vf-20260915-raw-contact-sheet",
+      "vf-20260915-generic-detail-rail",
+      "vf-20260915-octopus-v3-v4"
+    ],
+    "rejectedArtifactSha256": [
+      "f3e9a96aaa5fcb5fb9b8ac810cfceec9fc8e73e921a7061d16c58580350b3ae9",
+      "c7fa6b4cbb52f7348c038b867832bb766f1068c9d44a893c828f37b8536c959c",
+      "b1669eac942f0c59f5ba8ebd480cb6db05559433baf241e71ffe8f6defbd2a3a",
+      "7442bcd8526e84f4af5e8d0c48c15ba5b398bfa04cba93db449b9d937f7d9c89",
+      "9011284ac89dde80cbdd17115c03a878dc5171327fef8987366cddde3a28fc87",
+      "c70e41bfe2a7b353b47367db2c5b40477cc885ed55d99d6f0db086e43fd3b173",
+      "1dfc742d30ee481ba62dc3c88b4d406032393180b1c7e54cc3ab004169f63788",
+      "3ed5547af8a1e0796bba0ff6ac41a448b2ea258d0e2a4869755fa02769fba0ed",
+      "0618beb42d0d847ffa13136e3c25647cbeb97c5b0304d928f95e10e81277ef87",
+      "be9e8a278bbe58ee2f98e0af476233c6b987219b5f0203c59593301a59869b53",
+      "7faca1fe55d52d02bb3f2f381fa4020ca9ca40f76c600fab477a24f2a83fd3f6",
+      "0730d97cd0293c0e0c7efc6cbaf06dd5ba027868a6486ef6da6f144d1c61f7df",
+      "1ac821398986c421935449b71a07c9b4b6accddb244ebd616a7e98afd28bf8a4",
+      "e8d0461cb3fbf32313a4e725c2145090d058c523a449d951d55bce1359041527",
+      "66804183712c22a83cf2b94cc9c6ec1f6aec33eb0d3f066f92738b0197b79cab"
+    ],
+    "entrypoints": [
+      ".cursor/skills/vf-canva-instagram/SKILL.md",
+      ".cursor/skills/vf-organic-growth/SKILL.md",
+      ".cursor/skills/vf-marketing-skills/SKILL.md",
+      ".cursor/skills/vf-openmontage/SKILL.md",
+      "packages/vfgrowth/SKILL.md",
+      "packages/vfgrowth/GATE.md",
+      "packages/vfgrowth/PREFLIGHT.md",
+      "packages/vfcovers/SKILL.md",
+      "packages/vfcovers/hq/PLAYBOOK.md",
+      "packages/vfcanva/WORKFLOW.md",
+      "packages/vfcanva/README.md",
+      "packages/vfcanva/jobs/TEMPLATE.md",
+      "packages/vfom/SKILL.md",
+      "packages/vfom/experts/MEDIA-DIRECTOR.md",
+      "packages/velvetos/modules/expert-media-director.md",
+      "packages/vfe2b/crews/content.md",
+      "packages/vfgraft/graph/content-job.md",
+      "packages/vfom/EDIT-DIRECTOR.md",
+      "packages/vfom/HYPERFRAMES-FRAME.md",
+      "constitution/ORGANIC_GROWTH.md",
+      "packages/vfigos/SEND.md",
+      "packages/vfgrowth/preflight/TEMPLATE.md",
+      ".cursor/skills/canva-brand-check/SKILL.md",
+      ".cursor/skills/canva-bulk-create/SKILL.md",
+      ".cursor/skills/canva-edit-design/SKILL.md",
+      ".cursor/skills/canva-get-design-feedback/SKILL.md",
+      ".cursor/skills/canva-implement-feedback/SKILL.md",
+      ".cursor/skills/canva-resize-for-social-media/SKILL.md",
+      "AGENTS.md",
+      "constitution/CONSTITUTION.md",
+      "constitution/STUDIO.md",
+      "constitution/ORCHESTRA.md",
+      "constitution/SEND.md",
+      "packages/vfgrowth/EDIT-GATE.md",
+      "packages/vfigos/CONNECT-IG.md",
+      ".cursor/skills/velvet-creative-director/SKILL.md",
+      ".cursor/skills/velvet-brand-guardian/SKILL.md",
+      ".cursor/skills/vf-content-sprint/SKILL.md",
+      "instances/velvet-factory/AGENTS.md",
+      "instances/velvet-factory/.cursor/rules/velvetos-instance-desk.mdc"
+    ]
+  },
+  "canvaAssetIdRole": "ARCHIVAL_PROVENANCE_ONLY_NOT_A_PROVIDER_DEPENDENCY"
 }

@@ -26,6 +26,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Resolve VelvetOS project request authority preflight")
     parser.add_argument("--domain", action="append", choices=None)
     parser.add_argument("--text")
+    parser.add_argument("--manifest", help="Exact Creative Manifest for creative production evidence")
+    parser.add_argument("--content-id")
+    parser.add_argument("--phase", choices=("production", "delivery"), help="Use delivery for review handoff; Instagram actions require delivery")
     args = parser.parse_args()
     manifest = load_manifest()
     domains = args.domain or classify(args.text or "", manifest)
@@ -56,8 +59,25 @@ def main() -> int:
         "project_preflight": "BLOCKED" if missing else "PASS",
         "missing_authority_paths": missing,
     }
+    receipt["route_resolution"] = "BLOCKED" if missing else "PASS"
+    creative = bool(set(domains) & {"creative_publication", "instagram_action"})
+    if creative:
+        from vf_publication_evidence import validate
+        phase = args.phase or ("delivery" if "instagram_action" in domains else "production")
+        if "instagram_action" in domains and phase != "delivery":
+            evidence = {"ok": False, "evidence_state": "BLOCKED", "publishAuthorized": False,
+                        "problems": ["Instagram actions require delivery evidence"]}
+        else:
+            evidence = validate(ROOT, args.manifest or "", args.content_id or "", phase)
+        receipt["publication_evidence_phase"] = phase
+        receipt["production_evidence"] = evidence
+        receipt["required_skills"] = ["velvet-creative-director", "velvet-brand-guardian", "velvet-hebrew-copy"]
+        receipt["current_evidence_state"] = evidence["evidence_state"]
+        receipt["project_preflight"] = "PASS" if evidence["ok"] and not missing else "BLOCKED"
+    else:
+        receipt["evidence_scope"] = "authority path resolution only; no action authorization"
     print(json.dumps(receipt, ensure_ascii=False, indent=2))
-    return 1 if missing else 0
+    return 2 if receipt["project_preflight"] == "BLOCKED" else 0
 
 
 if __name__ == "__main__":

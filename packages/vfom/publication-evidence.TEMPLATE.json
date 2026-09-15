@@ -1,0 +1,74 @@
+{
+  "jobId": "PENDING",
+  "format": "post",
+  "publicationEvidence": {
+    "version": 1,
+    "policy_sha256": "PENDING",
+    "public_intent": "showcase",
+    "direction": {
+      "family_id": "PENDING",
+      "status": "UNPROVEN",
+      "derived_from_families": []
+    },
+    "direction_history": [],
+    "tools": [],
+    "sources": [],
+    "references": [],
+    "reference_decomposition": {
+      "path": "PENDING",
+      "sha256": "PENDING"
+    },
+    "product_protection": {
+      "method": "PENDING",
+      "protected_regions": [],
+      "evidence": {
+        "path": "PENDING",
+        "sha256": "PENDING"
+      }
+    },
+    "stages": [
+      {
+        "name": "authority",
+        "status": "UNPROVEN",
+        "started_at": null,
+        "completed_at": null,
+        "evidence": []
+      },
+      {
+        "name": "source_lock",
+        "status": "UNPROVEN",
+        "started_at": null,
+        "completed_at": null,
+        "evidence": []
+      },
+      {
+        "name": "product_truth_lock",
+        "status": "UNPROVEN",
+        "started_at": null,
+        "completed_at": null,
+        "evidence": []
+      },
+      {
+        "name": "reference_decomposition",
+        "status": "UNPROVEN",
+        "started_at": null,
+        "completed_at": null,
+        "evidence": []
+      },
+      {
+        "name": "creative_director",
+        "status": "UNPROVEN",
+        "started_at": null,
+        "completed_at": null,
+        "evidence": []
+      }
+    ],
+    "outputs": [],
+    "copy_receipts": [],
+    "package_sha256": "PENDING",
+    "review": {
+      "path": "PENDING",
+      "sha256": "PENDING"
+    }
+  }
+}
