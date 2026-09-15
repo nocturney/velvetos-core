@@ -123,7 +123,14 @@ for rel in ("AGENTS.md", "instances/velvet-factory/AGENTS.md", "instances/velvet
     body = (ROOT / rel).read_text(encoding="utf-8")
     if "PROJECT-REQUEST-GATE.md" not in body or "PROJECT-AUTHORITY-MANIFEST.json" not in body:
         fail(f"{rel} not bound to project request gate")
-for sample, expected in (("תכין פוסט לפרסום", "creative_publication"), ("caption", "creative_publication"), ("כתוב לי כיתוב", "creative_publication"), ("עדכן סטטוס הזמנה", "operations")):
+for sample, expected in (
+    ("תכין פוסט לפרסום", "creative_publication"),
+    ("caption", "creative_publication"),
+    ("כתוב לי כיתוב", "creative_publication"),
+    ("write social media copy for our feed", "creative_publication"),
+    ("קופי לאינסטגרם", "creative_publication"),
+    ("עדכן סטטוס הזמנה", "operations"),
+):
     proc = subprocess.run([sys.executable, str(CLI), "--text", sample], cwd=ROOT, text=True, capture_output=True)
     expected_code = 2 if expected == "creative_publication" else 0
     if proc.returncode != expected_code:

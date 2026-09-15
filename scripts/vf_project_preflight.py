@@ -70,9 +70,20 @@ def classify(text: str, manifest: dict) -> list[str]:
     for name, cfg in manifest["domains"].items():
         if any(str(hint).casefold() in probe for hint in cfg.get("hints", [])):
             hits.append(name)
-    # Caption/visual-copy requests are public-creative by default in VF. Co-route
+    # Caption / public-social copy requests are creative by default in VF. Co-route
     # them through the Creative Manifest gate instead of allowing copywriting alone.
-    public_copy_hints = ("caption", "כיתוב", "public-social", "visual-copy")
+    public_copy_hints = (
+        "caption",
+        "כיתוב",
+        "public-social",
+        "visual-copy",
+        "social media",
+        "social-media",
+        "feed",
+        "instagram",
+        "אינסטגרם",
+        "לפיד",
+    )
     if "copywriting" in hits and "creative_publication" not in hits and any(h in probe for h in public_copy_hints):
         hits.append("creative_publication")
     return hits or ["general_business"]
