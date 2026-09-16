@@ -4,6 +4,7 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -411,7 +412,7 @@ class EvidenceTests(unittest.TestCase):
         self._write_bound_approval()
         self.assertTrue(self._approved_result()['ok'], 'Explicit fresh binding must work')
 
-    def _project_result(self, domain, *extra):
+    def _project_result(self, domain, *extra, env_extra=None):
         import io
         from contextlib import redirect_stdout
         import vf_project_preflight as project
@@ -421,19 +422,101 @@ class EvidenceTests(unittest.TestCase):
             'instagram_action': {'packs': ['vfigos']}}}
         args = ['vf_project_preflight.py', '--domain', domain, '--manifest', 'manifest.json', '--content-id', 'TEST', *extra]
         out = io.StringIO()
+        env_patch = {}
+        if env_extra:
+            env_patch = env_extra
         with patch.object(project, 'ROOT', self.root), patch.object(project, 'load_manifest', return_value=route), patch.object(sys, 'argv', args), redirect_stdout(out):
-            code = project.main()
+            if env_patch:
+                with patch.dict(os.environ, env_patch, clear=False):
+                    code = project.main()
+            else:
+                code = project.main()
         return code, json.loads(out.getvalue())
 
+    def _mint_delivery_approval(self, *, mutation_tool='publish_image'):
+        """Ephemeral Ed25519 receipt for tests — never production keys."""
+        import base64
+        import hashlib
+        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'packages'))
+        from vfigos.approval.issuer.signing import issue_approval
+        from vfigos.approval.keys_registry import KeyRegistry
+        priv = Ed25519PrivateKey.generate()
+        key_id = 'test-pub-evidence'
+        registry = KeyRegistry.from_ephemeral(key_id, priv.public_key())
+        digest = self.ev['package_sha256']
+        media_bytes = b'publication-evidence-fixture-bytes'
+        media_dig = hashlib.sha256(media_bytes).hexdigest()
+        media_url = f'https://cas.example.test/sha256/{media_dig}/fixture.jpg'
+        issued = issue_approval(
+            private_key=priv,
+            key_id=key_id,
+            content_id='TEST',
+            package_sha256=digest,
+            mutation_tool=mutation_tool,
+            mutation_payload={
+                'image_url': media_url,
+                'caption': 'fixture',
+                'account': 'velvets_cloud',
+            } if mutation_tool == 'publish_image' else {},
+            media_artifacts=[{'bytes_b64': base64.b64encode(media_bytes).decode('ascii')}]
+            if mutation_tool == 'publish_image'
+            else None,
+            media_byte_fetcher={media_url: media_bytes}.get,
+            ttl_seconds=600,
+        )
+        self.assertTrue(issued['ok'], issued)
+        receipt_path = self.root / 'delivery-approval.json'
+        receipt_path.write_text(json.dumps(issued['receipt']), encoding='utf-8')
+        reg_path = self.root / 'approval-registry.json'
+        reg_path.write_text(json.dumps({
+            'keys': [{
+                'key_id': key_id,
+                'algorithm': 'Ed25519',
+                'public_key_b64': base64.b64encode(priv.public_key().public_bytes_raw()).decode('ascii'),
+            }]
+        }), encoding='utf-8')
+        return receipt_path, reg_path, digest
+
     def test_instagram_action_uses_delivery_evidence(self):
+        # Evidence alone is necessary but not sufficient — missing signed approval ⇒ BLOCKED.
         code, result = self._project_result('instagram_action')
-        self.assertEqual(code, 0, result)
+        self.assertNotEqual(code, 0, result)
         self.assertEqual(result['publication_evidence_phase'], 'delivery')
+        self.assertTrue(result['production_evidence']['ok'], result)
+        self.assertFalse(result.get('delivery_authorized'))
+        self.assertEqual(result['project_preflight'], 'BLOCKED')
+        # With ephemeral signed approval bound to the package ⇒ PASS (advisory).
+        receipt_path, reg_path, digest = self._mint_delivery_approval()
+        code2, result2 = self._project_result(
+            'instagram_action',
+            '--delivery-approval', str(receipt_path),
+            '--mutation-tool', 'publish_image',
+            '--package-sha256', digest,
+            env_extra={'VELVET_DELIVERY_APPROVAL_REGISTRY': str(reg_path)},
+        )
+        self.assertEqual(code2, 0, result2)
+        self.assertTrue(result2.get('delivery_authorized'), result2)
+        self.assertEqual(result2['publication_evidence_phase'], 'delivery')
 
     def test_explicit_review_delivery_accepts_complete_manifest(self):
+        # Explicit --phase delivery also requires signed approval now.
         code, result = self._project_result('creative_publication', '--phase', 'delivery')
-        self.assertEqual(code, 0, result)
+        self.assertNotEqual(code, 0, result)
         self.assertEqual(result['publication_evidence_phase'], 'delivery')
+        self.assertTrue(result['production_evidence']['ok'], result)
+        receipt_path, reg_path, digest = self._mint_delivery_approval()
+        code2, result2 = self._project_result(
+            'creative_publication',
+            '--phase', 'delivery',
+            '--delivery-approval', str(receipt_path),
+            '--mutation-tool', 'publish_image',
+            '--package-sha256', digest,
+            env_extra={'VELVET_DELIVERY_APPROVAL_REGISTRY': str(reg_path)},
+        )
+        self.assertEqual(code2, 0, result2)
+        self.assertEqual(result2['publication_evidence_phase'], 'delivery')
+        self.assertTrue(result2.get('delivery_authorized'), result2)
 
     def test_instagram_action_cannot_downgrade_to_production(self):
         self.ev['stages'] = self.ev['stages'][:5]

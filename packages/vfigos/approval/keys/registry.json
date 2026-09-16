@@ -1,0 +1,7 @@
+{
+  "schema": "velvet.delivery_approval.keys.v1",
+  "algorithm": "Ed25519",
+  "note": "Canonical public verification registry. Private keys NEVER live here or in git. active_signing_key_id is informational for operators; verifiers accept any registered key_id. Populate public keys via owner deploy-issuer.sh keygen + commit of .pub material only.",
+  "active_signing_key_id": null,
+  "keys": []
+}

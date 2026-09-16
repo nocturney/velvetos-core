@@ -1,0 +1,13 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - $_IMAGE
+      - -f
+      - packages/vfigos/remote/Dockerfile
+      - .
+images:
+  - $_IMAGE
+substitutions:
+  _IMAGE: gcr.io/instamcp/velvet-instagram-mcp:delivery-approval-gate

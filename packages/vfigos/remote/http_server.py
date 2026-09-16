@@ -9,7 +9,11 @@ Env:
   INSTAGRAM_MCP_IG_USER_ID          — Meta IG user id
   INSTAGRAM_MCP_APP_SECRET          — optional
   PORT / MCP_PATH                   — Cloud Run bind (default 8080 / /mcp)
+  VELVET_DELIVERY_APPROVAL_SPEND_BUCKET — GCS spend bucket (fail-closed if unset)
+  VELVET_DELIVERY_APPROVAL_REGISTRY — optional path override for public key registry
 
+Write mutations require a signed velvet.delivery_approval.v1 receipt. This service
+must NEVER mount the Ed25519 private key or issuer credential.
 No secrets in source. Do not enable INSTAGRAM_MCP_DM_ENABLED for VelvetOS HQ.
 """
 
@@ -58,6 +62,19 @@ def _build_mcp():
 
     # Import after env checks so missing Meta token fails closed before binding tools.
     from instagram_mcp.server import mcp as ig_mcp
+
+    # Install delivery-approval guard BEFORE overlays register write tools that
+    # close over ``_guard``. Tools must resolve ``instagram_mcp.server._guard``
+    # dynamically; this order is defense-in-depth for that contract.
+    from delivery_approval_gate import apply_delivery_approval_gate
+
+    apply_delivery_approval_gate(ig_mcp)
+
+    # Upstream omits carousel image_urls / reel cover_url from ``_guard`` summaries.
+    # Re-register so media-byte binding sees the exact Graph media set.
+    from media_guard_params import apply_complete_media_guard_params
+
+    apply_complete_media_guard_params(ig_mcp)
 
     # Graph v21 Insights hardening (does not rebuild the MCP — patches insights tools only).
     from insights_v21 import apply_insights_patch
@@ -108,6 +125,8 @@ async def healthz(_request: Request) -> Response:
             "chatgpt_auth": "API key",
             "mcp_path": os.environ.get("MCP_PATH", "/mcp"),
             "insights_compat": "graph_v21",
+            "delivery_approval": "required_for_writes",
+            "mutation_service_has_private_key": False,
         }
     )
 
@@ -191,6 +210,8 @@ def create_app() -> Starlette:
         allow_credentials=False,
     )
 
+    from delivery_approval_gate import DeliveryApprovalCaptureMiddleware
+
     app = Starlette(
         routes=[
             Route("/healthz", healthz, methods=["GET"]),
@@ -201,6 +222,7 @@ def create_app() -> Starlette:
             cors,
             Middleware(NormalizeMcpPathMiddleware, mcp_path=path),
             Middleware(ApiKeyHeaderMiddleware),
+            Middleware(DeliveryApprovalCaptureMiddleware),
         ],
         lifespan=mcp_app.lifespan,
     )

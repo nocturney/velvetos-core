@@ -20,9 +20,12 @@ except ImportError:  # pragma: no cover — repo layout
 
 
 def apply_cta_audit_tools(mcp: Any) -> None:
+    import instagram_mcp.server as ig_server
     from instagram_mcp import auth
     from instagram_mcp import validators as V
-    from instagram_mcp.server import MEDIA_FIELDS, PROFILE_FIELDS, _guard
+
+    MEDIA_FIELDS = ig_server.MEDIA_FIELDS
+    PROFILE_FIELDS = ig_server.PROFILE_FIELDS
 
     @mcp.tool()
     def audit_public_cta(account: str | None = None, *, limit: int = 25) -> dict[str, Any]:
@@ -48,7 +51,7 @@ def apply_cta_audit_tools(mcp: Any) -> None:
             report["account"] = acct.label
             return report
 
-        return _guard("audit_public_cta", {"account": account, "limit": limit}, _impl)
+        return ig_server._guard("audit_public_cta", {"account": account, "limit": limit}, _impl)
 
     @mcp.tool()
     def audit_profile_cta(account: str | None = None) -> dict[str, Any]:
@@ -62,4 +65,4 @@ def apply_cta_audit_tools(mcp: Any) -> None:
             out["account"] = acct.label
             return out
 
-        return _guard("audit_profile_cta", {"account": account}, _impl)
+        return ig_server._guard("audit_profile_cta", {"account": account}, _impl)

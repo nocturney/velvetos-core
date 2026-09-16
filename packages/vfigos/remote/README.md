@@ -9,6 +9,12 @@ Overlays applied at boot (`http_server.py`):
 - `story_publish.py` — image Stories wait for `FINISHED` before `media_publish` (upstream skips → 9007)
 - `mutations.py` — honest Graph mutation matrix
 - `cta_tools.py` — public CTA audit
+- `delivery_approval_gate.py` — signed `velvet.delivery_approval.v1` verify + atomic GCS spend before writes
+
+**Write mutations** require a receipt from the separate issuer
+(`velvet-delivery-approval-issuer`, Cloud Run IAM). This mutation service must
+**never** mount the Ed25519 private key or issuer credential.
+See [`../approval/OPERATOR-SETUP.md`](../approval/OPERATOR-SETUP.md).
 
 ## Why this exists
 
@@ -30,10 +36,12 @@ Cloud Run **env** names (left) map to GSM **secret** names on project `instamcp`
 | `INSTAGRAM_MCP_APP_SECRET` | (optional) | Meta appsecret_proof |
 | `PORT` | — | Cloud Run port (default 8080) |
 | `MCP_PATH` | — | default `/mcp` |
+| `VELVET_DELIVERY_APPROVAL_SPEND_BUCKET` | bucket `velvet-ig-approval-spend` | Atomic approval spend (create-only) |
 
 `deploy.sh` defaults to those kebab GSM names. Override with `GSM_BEARER_SECRET` / `GSM_ACCESS_SECRET` / `GSM_IG_USER_SECRET` if needed.
 
 Never set `INSTAGRAM_MCP_DM_ENABLED` for VelvetOS HQ.
+Never mount `VELVET_DELIVERY_APPROVAL_PRIVATE_KEY_B64` or issuer tokens on this service.
 
 ## Overlays (VelvetOS — not a second Instagram MCP)
 
@@ -42,6 +50,7 @@ Never set `INSTAGRAM_MCP_DM_ENABLED` for VelvetOS HQ.
 | `insights_v21.py` | Fix Graph v21 Insights: media-type defaults (`saved`≠`saves`), `metric_type` split, period partitioning (no fabricated days_28) |
 | `mutations.py` | `graph_mutation_matrix` SoT + gated `delete_media`; profile/caption writes **not exposed** |
 | `cta_tools.py` / `cta_audit.py` | Read-only PUBLIC_CURRENT_CTA audit of live captions/bio |
+| `delivery_approval_gate.py` | Verify signed owner approval + atomic spend before any write tool |
 | `test_insights_v21.py` | Regression tests for the two ChatGPT Insights failures |
 
 ## Local run

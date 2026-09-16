@@ -60,9 +60,11 @@ If the UI only offers OAuth and No Auth (no API key), stop and escalate — do n
 - Connector auth ≠ Meta Graph token. Two secrets:
   - `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` — ChatGPT / Cursor → Cloud Run MCP
   - `INSTAGRAM_MCP_ACCESS_TOKEN` — MCP → Meta Graph (never leave the Cloud Run runtime / Secret Manager)
+- Write mutations additionally require a signed `velvet.delivery_approval.v1` receipt from the **separate** issuer (`velvet-delivery-approval-issuer`, Cloud Run IAM). The mutation service never holds the Ed25519 private key or issuer credential. See [`approval/OPERATOR-SETUP.md`](approval/OPERATOR-SETUP.md).
+- Never install the issuer as a ChatGPT/Cursor MCP server.
 - No secrets in git.
 - No auto-DM. No boost. No inventing ₪ / Insights.
-- Publish still requires vault + Canva/vfcovers + PREFLIGHT + live verify (`CONNECT-IG.md`).
+- Publish still requires vault + PREFLIGHT + live verify (`CONNECT-IG.md`).
 
 ## Remote package (deploy source of truth)
 
@@ -75,6 +77,7 @@ Overlays (do not fork the whole Instagram MCP):
 | `remote/insights_v21.py` | Graph v21 Insights metric_type split + sane defaults |
 | `remote/mutations.py` | `graph_mutation_matrix` SoT + gated `delete_media` (no misleading update_profile/caption tools) |
 | `remote/cta_tools.py` | Read-only `audit_public_cta` / `audit_profile_cta` |
+| `remote/delivery_approval_gate.py` | Verify + atomic spend before write tools |
 
 Redeploy with owner `gcloud` (`./packages/vfigos/remote/deploy.sh`) after Insights/CTA/mutation overlays change. This Cloud Agent has **no GCP credentials** — report `CODE READY / DEPLOYMENT PENDING OWNER GCP` when deploy is blocked.
 
