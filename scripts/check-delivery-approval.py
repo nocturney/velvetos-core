@@ -604,8 +604,11 @@ def main() -> int:
     if passthrough != {"ok": True, "read": True}:
         fail("read-only tools must remain unaffected by delivery approval guard")
 
-    # --- Finding 3: issuer body cap / auth-before-buffer ---
-    from starlette.testclient import TestClient
+    # --- Finding 3: issuer body cap / auth-before-buffer (pure ASGI; no TestClient) ---
+    import asyncio
+    import base64
+
+    from cryptography.hazmat.primitives import serialization
 
     from vfigos.approval.issuer import http_issuer
     from vfigos.approval.schema import ISSUER_MAX_BODY_BYTES
@@ -622,8 +625,6 @@ def main() -> int:
     }
     os.environ["VELVET_DELIVERY_APPROVAL_ISSUER_TOKEN"] = "test-issuer-bearer"
     os.environ["VELVET_DELIVERY_APPROVAL_KEY_ID"] = key_id
-    import base64
-    from cryptography.hazmat.primitives import serialization
 
     seed = priv.private_bytes(
         encoding=serialization.Encoding.Raw,
@@ -636,15 +637,15 @@ def main() -> int:
 
     try:
         app = http_issuer.create_app()
-        client = TestClient(app)
 
-        import asyncio
-
-        async def _asgi_call(headers: list[tuple[bytes, bytes]], bodies: list[bytes]) -> int:
+        async def _asgi_call(
+            headers: list[tuple[bytes, bytes]], bodies: list[bytes]
+        ) -> tuple[int, bytes, int]:
             sent: list[dict] = []
-            state = {"i": 0}
+            state = {"i": 0, "reads": 0}
 
             async def receive():
+                state["reads"] += 1
                 i = state["i"]
                 if i < len(bodies):
                     state["i"] = i + 1
@@ -673,9 +674,12 @@ def main() -> int:
             }
             await app(scope, receive, send)
             start = next(m for m in sent if m["type"] == "http.response.start")
-            return int(start["status"])
+            body = b"".join(
+                m.get("body", b"") for m in sent if m["type"] == "http.response.body"
+            )
+            return int(start["status"]), body, state["reads"]
 
-        oversize_status = asyncio.run(
+        oversize_status, _, _ = asyncio.run(
             _asgi_call(
                 [
                     (b"authorization", b"Bearer test-issuer-bearer"),
@@ -688,7 +692,7 @@ def main() -> int:
         if oversize_status != 413:
             fail(f"oversized Content-Length must return 413, got {oversize_status}")
 
-        chunk_status = asyncio.run(
+        chunk_status, _, _ = asyncio.run(
             _asgi_call(
                 [
                     (b"authorization", b"Bearer test-issuer-bearer"),
@@ -700,41 +704,59 @@ def main() -> int:
         if chunk_status != 413:
             fail(f"chunked body over cap must return 413, got {chunk_status}")
 
-        bad_auth = client.post(
-            "/v1/delivery-approvals",
-            content=b'{"content_id":"x"}',
-            headers={"authorization": "Bearer wrong", "content-type": "application/json"},
+        # Auth failure before body buffering: wrong bearer + declared huge body → 401, not 413.
+        auth_status, _, auth_reads = asyncio.run(
+            _asgi_call(
+                [
+                    (b"authorization", b"Bearer wrong"),
+                    (b"content-length", str(ISSUER_MAX_BODY_BYTES + 50).encode()),
+                    (b"content-type", b"application/json"),
+                ],
+                [b"x" * (ISSUER_MAX_BODY_BYTES + 50)],
+            )
         )
-        if bad_auth.status_code != 401:
-            fail(f"auth failure must return 401, got {bad_auth.status_code}")
+        if auth_status != 401:
+            fail(f"auth failure must return 401 before body cap, got {auth_status}")
+        if auth_reads > 1:
+            fail("auth failure must not fully buffer oversized body")
 
-        bad_json = client.post(
-            "/v1/delivery-approvals",
-            content=b"{not-json",
-            headers={
-                "authorization": "Bearer test-issuer-bearer",
-                "content-type": "application/json",
-            },
+        bad_json_status, _, _ = asyncio.run(
+            _asgi_call(
+                [
+                    (b"authorization", b"Bearer test-issuer-bearer"),
+                    (b"content-type", b"application/json"),
+                ],
+                [b"{not-json"],
+            )
         )
-        if bad_json.status_code != 400:
-            fail(f"malformed JSON must return 400, got {bad_json.status_code}")
+        if bad_json_status != 400:
+            fail(f"malformed JSON must return 400, got {bad_json_status}")
 
-        good = client.post(
-            "/v1/delivery-approvals",
-            json={
+        good_body = json.dumps(
+            {
                 "content_id": CONTENT,
                 "package_sha256": DIGEST,
                 "mutation_tool": "publish_image",
                 "mutation_payload": base_payload,
                 "mutation_payload_sha256": "f" * 64,
-            },
-            headers={"authorization": "Bearer test-issuer-bearer"},
+            }
+        ).encode("utf-8")
+        good_status, good_raw, _ = asyncio.run(
+            _asgi_call(
+                [
+                    (b"authorization", b"Bearer test-issuer-bearer"),
+                    (b"content-type", b"application/json"),
+                    (b"content-length", str(len(good_body)).encode()),
+                ],
+                [good_body],
+            )
         )
-        if good.status_code != 200 or not good.json().get("ok"):
-            fail(f"valid small issue request must succeed: {good.status_code} {good.text}")
-        if good.json()["receipt"]["mutation_payload_sha256"] == "f" * 64:
+        good_json = json.loads(good_raw.decode("utf-8"))
+        if good_status != 200 or not good_json.get("ok"):
+            fail(f"valid small issue request must succeed: {good_status} {good_raw!r}")
+        if good_json["receipt"]["mutation_payload_sha256"] == "f" * 64:
             fail("issuer must not blind-sign client mutation_payload_sha256")
-        if good.json()["receipt"]["mutation_payload_sha256"] != expected_digest:
+        if good_json["receipt"]["mutation_payload_sha256"] != expected_digest:
             fail("issuer receipt digest must match server-computed payload")
     finally:
         for name, value in saved_iso.items():
