@@ -669,6 +669,18 @@ def main() -> int:
     parser.add_argument("--manifest", help="Exact Creative Manifest for creative production evidence")
     parser.add_argument("--content-id")
     parser.add_argument("--phase", choices=("production", "delivery"), help="Use delivery for review handoff; Instagram actions require delivery")
+    parser.add_argument(
+        "--delivery-approval",
+        help="Path to signed velvet.delivery_approval.v1 JSON receipt (or inline JSON)",
+    )
+    parser.add_argument(
+        "--mutation-tool",
+        help="Exact Instagram mutation tool id the approval must bind to",
+    )
+    parser.add_argument(
+        "--package-sha256",
+        help="Exact package digest the approval must bind to",
+    )
     args = parser.parse_args()
     manifest = load_manifest()
     domains = args.domain or classify(args.text or "", manifest)
@@ -702,6 +714,7 @@ def main() -> int:
         "missing_authority_paths": missing,
         "authority_conflicts": binding_problems,
         "creative_execution_authorized": False,
+        "delivery_authorized": False,
     }
     receipt["route_resolution"] = "BLOCKED" if (missing or binding_problems) else "PASS"
     if creative:
@@ -716,13 +729,76 @@ def main() -> int:
         receipt["production_evidence"] = evidence
         receipt["required_skills"] = ["velvet-creative-director", "velvet-brand-guardian", "velvet-hebrew-copy"]
         receipt["current_evidence_state"] = evidence["evidence_state"]
-        receipt["project_preflight"] = "PASS" if evidence["ok"] and not missing and not binding_problems else "BLOCKED"
-        receipt["creative_execution_authorized"] = bool(phase == "production" and receipt["project_preflight"] == "PASS")
-        receipt["delivery_authorized"] = bool(phase == "delivery" and receipt["project_preflight"] == "PASS")
+        evidence_ok = bool(evidence.get("ok")) and not missing and not binding_problems
+        receipt["creative_execution_authorized"] = bool(phase == "production" and evidence_ok)
+        # Publication evidence is NECESSARY but NOT SUFFICIENT for delivery.
+        if phase == "delivery":
+            approval_problems, delivery_auth = _evaluate_delivery_approval(
+                args,
+                evidence_ok=evidence_ok,
+            )
+            receipt["delivery_approval"] = {
+                "required": True,
+                "ok": delivery_auth,
+                "problems": approval_problems,
+                "advisory_only": True,
+                "note": "preflight PASS is not mutation capability; mutation endpoint re-verifies + claims",
+            }
+            receipt["delivery_authorized"] = bool(delivery_auth)
+            receipt["project_preflight"] = "PASS" if delivery_auth else "BLOCKED"
+        else:
+            receipt["project_preflight"] = "PASS" if evidence_ok else "BLOCKED"
+            receipt["delivery_authorized"] = False
     else:
         receipt["evidence_scope"] = "authority path resolution only; no action authorization"
     print(json.dumps(receipt, ensure_ascii=False, indent=2))
     return 2 if receipt["project_preflight"] == "BLOCKED" else 0
+
+
+def _evaluate_delivery_approval(args: argparse.Namespace, *, evidence_ok: bool) -> tuple[list[str], bool]:
+    """Advisory delivery-approval check. Never grants mutation capability by itself."""
+    problems: list[str] = []
+    if not evidence_ok:
+        problems.append("publication evidence invalid")
+    raw = (args.delivery_approval or "").strip()
+    if not raw:
+        problems.append("signed delivery approval missing")
+        return problems, False
+
+    import sys
+
+    packages = ROOT / "packages"
+    if str(packages) not in sys.path:
+        sys.path.insert(0, str(packages))
+    from vfigos.approval.keys_registry import KeyRegistry
+    from vfigos.approval.verify import verify_receipt
+
+    try:
+        if raw.startswith("{"):
+            envelope = json.loads(raw)
+        else:
+            path = Path(raw)
+            envelope = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        problems.append(f"delivery approval unreadable: {exc}")
+        return problems, False
+
+    import os
+    reg_path = (os.environ.get("VELVET_DELIVERY_APPROVAL_REGISTRY") or "").strip()
+    registry = KeyRegistry.from_path(Path(reg_path)) if reg_path else KeyRegistry.from_path()
+    vr = verify_receipt(
+        envelope,
+        registry=registry,
+        expected_mutation_tool=(args.mutation_tool or None),
+        expected_content_id=(args.content_id or None),
+        expected_package_sha256=(args.package_sha256 or None),
+    )
+    if not vr.ok:
+        problems.extend(vr.problems)
+        return problems, False
+    if problems:
+        return problems, False
+    return [], True
 
 
 if __name__ == "__main__":

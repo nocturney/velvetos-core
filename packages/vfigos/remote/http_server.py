@@ -9,7 +9,11 @@ Env:
   INSTAGRAM_MCP_IG_USER_ID          — Meta IG user id
   INSTAGRAM_MCP_APP_SECRET          — optional
   PORT / MCP_PATH                   — Cloud Run bind (default 8080 / /mcp)
+  VELVET_DELIVERY_APPROVAL_SPEND_BUCKET — GCS spend bucket (fail-closed if unset)
+  VELVET_DELIVERY_APPROVAL_REGISTRY — optional path override for public key registry
 
+Write mutations require a signed velvet.delivery_approval.v1 receipt. This service
+must NEVER mount the Ed25519 private key or issuer credential.
 No secrets in source. Do not enable INSTAGRAM_MCP_DM_ENABLED for VelvetOS HQ.
 """
 
@@ -79,6 +83,12 @@ def _build_mcp():
 
     apply_cta_audit_tools(ig_mcp)
 
+    # Authenticated delivery approval — verify + atomic claim before Graph writes.
+    # Private signing key must NEVER be mounted on this service.
+    from delivery_approval_gate import apply_delivery_approval_gate
+
+    apply_delivery_approval_gate(ig_mcp)
+
     bearer = _require_bearer()
     ig_mcp.auth = StaticTokenVerifier(
         tokens={
@@ -108,6 +118,8 @@ async def healthz(_request: Request) -> Response:
             "chatgpt_auth": "API key",
             "mcp_path": os.environ.get("MCP_PATH", "/mcp"),
             "insights_compat": "graph_v21",
+            "delivery_approval": "required_for_writes",
+            "mutation_service_has_private_key": False,
         }
     )
 
@@ -191,6 +203,8 @@ def create_app() -> Starlette:
         allow_credentials=False,
     )
 
+    from delivery_approval_gate import DeliveryApprovalCaptureMiddleware
+
     app = Starlette(
         routes=[
             Route("/healthz", healthz, methods=["GET"]),
@@ -201,6 +215,7 @@ def create_app() -> Starlette:
             cors,
             Middleware(NormalizeMcpPathMiddleware, mcp_path=path),
             Middleware(ApiKeyHeaderMiddleware),
+            Middleware(DeliveryApprovalCaptureMiddleware),
         ],
         lifespan=mcp_app.lifespan,
     )

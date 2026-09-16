@@ -25,7 +25,7 @@
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>71</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>72</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>9</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-15 — **Canonical IG mutation-tool gates:** execution intent for write tool ids from `packages/vfigos/CAPABILITIES.json` + `packages/vfmcp/core-mcp.json` (`publish_image` / `publish_story` / `delete_medi…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-15 — **Canonical IG mutation-tool gates:** execution intent for write tool ids from `packages/vfigos/CAPABILITIES.json` + `packages/vfmcp/core-mcp.json` (`publish_image` / `publish_story` / `delete_medi…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-16 — **Authenticated delivery approval (signer isolation):** dedicated Cloud Run issuer `velvet-delivery-approval-issuer` (Cloud Run IAM; Ed25519; no `/mcp` / no Meta token / no MCP bearer) signs `velve…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-16 — **Authenticated delivery approval (signer isolation):** dedicated Cloud Run issuer `velvet-delivery-approval-issuer` (Cloud Run IAM; Ed25519; no `/mcp` / no Meta token / no MCP bearer) signs `velve…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

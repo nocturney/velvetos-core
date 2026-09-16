@@ -175,6 +175,9 @@ def apply_mutation_tools(mcp: Any) -> None:
         account: str | None = None,
         *,
         confirm_irreversible: bool = False,
+        delivery_approval: dict | str | None = None,
+        content_id: str | None = None,
+        package_sha256: str | None = None,
     ) -> dict[str, Any]:
         """Delete published IG media via official DELETE /{ig-media-id}.
 
@@ -182,6 +185,9 @@ def apply_mutation_tools(mcp: Any) -> None:
         explicit account label. Requires Meta permission instagram_manage_contents.
         VelvetOS HQ must not call this for routine CTA cleanup — prefer human gate.
         Profile/caption edits are NOT available — see graph_mutation_matrix.
+
+        Requires a signed velvet.delivery_approval.v1 receipt (delivery_approval)
+        claimed atomically before Graph DELETE.
         """
 
         def _impl() -> dict[str, Any]:
@@ -222,6 +228,9 @@ def apply_mutation_tools(mcp: Any) -> None:
                 "media_id": media_id,
                 "account": account,
                 "confirm_irreversible": confirm_irreversible,
+                "delivery_approval": delivery_approval,
+                "content_id": content_id,
+                "package_sha256": package_sha256,
             },
             _impl,
         )

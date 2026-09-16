@@ -36,11 +36,16 @@ def apply_story_publish_patch(mcp: Any) -> None:
         image_url: str | None = None,
         video_url: str | None = None,
         account: str | None = None,
+        delivery_approval: dict | str | None = None,
+        content_id: str | None = None,
+        package_sha256: str | None = None,
     ) -> dict[str, Any]:
         """Publish a Story (image OR video). Exactly one of image_url / video_url, PUBLIC https.
 
         VelvetOS overlay: always poll container status_code=FINISHED before media_publish
         (image Stories included). Upstream image path skipped that wait and hit 9007.
+
+        Requires signed velvet.delivery_approval.v1 receipt before Graph publish.
         """
 
         def _impl() -> dict[str, Any]:
@@ -63,6 +68,13 @@ def apply_story_publish_patch(mcp: Any) -> None:
 
         return ig_server._guard(
             "publish_story",
-            {"image_url": image_url, "video_url": video_url, "account": account},
+            {
+                "image_url": image_url,
+                "video_url": video_url,
+                "account": account,
+                "delivery_approval": delivery_approval,
+                "content_id": content_id,
+                "package_sha256": package_sha256,
+            },
             _impl,
         )
