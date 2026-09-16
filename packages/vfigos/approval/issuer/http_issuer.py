@@ -178,10 +178,17 @@ async def issue(request: Request) -> Response:
         )
 
     # mutation_payload is hashed server-side; ignore any client mutation_payload_sha256.
+    # media_sha256s are computed from media_artifacts bytes or CAS URL fetch — never trusted.
     mutation_payload = body.get("mutation_payload")
     if mutation_payload is not None and not isinstance(mutation_payload, dict):
         return JSONResponse(
             {"ok": False, "problems": ["mutation_payload must be an object"]},
+            status_code=400,
+        )
+    media_artifacts = body.get("media_artifacts")
+    if media_artifacts is not None and not isinstance(media_artifacts, list):
+        return JSONResponse(
+            {"ok": False, "problems": ["media_artifacts must be a list"]},
             status_code=400,
         )
 
@@ -192,6 +199,7 @@ async def issue(request: Request) -> Response:
         package_sha256=str(body.get("package_sha256") or ""),
         mutation_tool=str(body.get("mutation_tool") or ""),
         mutation_payload=mutation_payload if isinstance(mutation_payload, dict) else {},
+        media_artifacts=media_artifacts if isinstance(media_artifacts, list) else None,
         ttl_seconds=body.get("ttl_seconds"),
         # Server-controlled account identity — ignore caller tenant/ig overrides.
         ig_user_id=None,

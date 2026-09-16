@@ -44,6 +44,7 @@ def authorize_mutation(
     content_id: str | None = None,
     package_sha256: str | None = None,
     mutation_payload_sha256: str | None = None,
+    media_sha256s: list[str] | None = None,
     ig_user_id: str | None = None,
     now: datetime | None = None,
 ) -> GateResult:
@@ -62,6 +63,7 @@ def authorize_mutation(
         expected_content_id=content_id,
         expected_package_sha256=package_sha256,
         expected_mutation_payload_sha256=mutation_payload_sha256,
+        expected_media_sha256s=media_sha256s,
         expected_ig_user_id=ig_user_id,
         now=now,
     )
@@ -76,6 +78,7 @@ def authorize_mutation(
             "content_id": vr.claims.get("content_id"),
             "package_sha256": vr.claims.get("package_sha256"),
             "mutation_payload_sha256": vr.claims.get("mutation_payload_sha256"),
+            "media_sha256s": vr.claims.get("media_sha256s"),
         },
     )
     if not claim.ok:

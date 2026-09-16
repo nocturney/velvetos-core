@@ -27,6 +27,12 @@ from vfigos.approval.canonical import canonical_payload_bytes
 from vfigos.approval.gate import authorize_mutation
 from vfigos.approval.issuer.signing import issue_approval
 from vfigos.approval.keys_registry import KeyRegistry
+from vfigos.approval.media_bytes import (
+    encode_media_sha256s_claim,
+    inject_media_sha256s,
+    set_media_byte_fetcher_override,
+    sha256_hex,
+)
 from vfigos.approval.mutation_payload import mutation_payload_sha256
 from vfigos.approval.schema import CLAIM_FIELDS, DEFAULT_IG_USER_ID, SCHEMA_ID
 from vfigos.approval.spend import MemorySpendStore, UnavailableSpendStore
@@ -51,11 +57,38 @@ def _ephemeral():
 
 DIGEST = "a" * 64
 CONTENT = "VF-TEST-CONTENT"
+
+# Immutable media fixtures — CAS URLs embed sha256; fetcher returns exact bytes.
+_BYTES_A = b"velvet-image-bytes-AAAA"
+_BYTES_B = b"velvet-image-bytes-BBBB"
+_BYTES_C = b"velvet-image-bytes-CCCC"
+_DIG_A = sha256_hex(_BYTES_A)
+_DIG_B = sha256_hex(_BYTES_B)
+_DIG_C = sha256_hex(_BYTES_C)
+
+
+def _cas_url(digest: str, name: str = "a.jpg") -> str:
+    return f"https://cas.example.test/sha256/{digest}/{name}"
+
+
+_URL_A = _cas_url(_DIG_A, "a.jpg")
+_URL_B = _cas_url(_DIG_B, "b.jpg")
+_URL_C = _cas_url(_DIG_C, "c.jpg")
+_MEDIA_STORE = {_URL_A: _BYTES_A, _URL_B: _BYTES_B, _URL_C: _BYTES_C}
+
+
+def _fetcher(url: str) -> bytes:
+    if url not in _MEDIA_STORE:
+        raise ValueError(f"unknown media URL in test store: {url}")
+    return _MEDIA_STORE[url]
+
+
 DEFAULT_IMAGE_PAYLOAD = {
-    "image_url": "https://example.com/a.jpg",
+    "image_url": _URL_A,
     "caption": "hello",
     "account": "velvets_cloud",
 }
+DEFAULT_MEDIA_ARTIFACTS = [{"bytes_b64": __import__("base64").b64encode(_BYTES_A).decode()}]
 
 
 def _issue(priv, key_id, **overrides):
@@ -66,6 +99,8 @@ def _issue(priv, key_id, **overrides):
         package_sha256=DIGEST,
         mutation_tool="publish_image",
         mutation_payload=DEFAULT_IMAGE_PAYLOAD,
+        media_artifacts=DEFAULT_MEDIA_ARTIFACTS,
+        media_byte_fetcher=_fetcher,
         ttl_seconds=600,
         now=_now(),
     )
@@ -76,8 +111,12 @@ def _issue(priv, key_id, **overrides):
     return result["receipt"]
 
 
+def _payload_with_media(tool: str, params: dict, digests: list[str]) -> dict:
+    return inject_media_sha256s(tool, params, digests)
+
 def main() -> int:
     priv, key_id, registry = _ephemeral()
+    set_media_byte_fetcher_override(_fetcher)
     tools = mutation_tool_ids()
     reads = read_only_tool_ids()
     for required in (
@@ -358,14 +397,20 @@ def main() -> int:
         fail("schema mismatch")
     if "mutation_payload_sha256" not in receipt:
         fail("receipt must include mutation_payload_sha256")
+    if "media_sha256s" not in receipt:
+        fail("receipt must include media_sha256s")
 
     # --- Finding 2: exact mutation payload binding ---
     store = MemorySpendStore()
     base_payload = dict(DEFAULT_IMAGE_PAYLOAD)
     receipt_bind = _issue(priv, key_id, mutation_payload=base_payload)
-    expected_digest = mutation_payload_sha256("publish_image", base_payload)
+    expected_digest = mutation_payload_sha256(
+        "publish_image", _payload_with_media("publish_image", base_payload, [_DIG_A])
+    )
     if receipt_bind["mutation_payload_sha256"] != expected_digest:
-        fail("issuer must compute mutation_payload_sha256 from mutation_payload")
+        fail("issuer must compute mutation_payload_sha256 from mutation_payload+media digests")
+    if receipt_bind.get("media_sha256s") != encode_media_sha256s_claim([_DIG_A]):
+        fail("issuer must bind media_sha256s from trusted bytes")
 
     ok_exact = authorize_mutation(
         receipt=receipt_bind,
@@ -375,20 +420,34 @@ def main() -> int:
         content_id=CONTENT,
         package_sha256=DIGEST,
         mutation_payload_sha256=expected_digest,
+        media_sha256s=[_DIG_A],
         now=_now(),
     )
     if not ok_exact.ok:
         fail(f"exact payload must authorize: {ok_exact.problems}")
 
-    def _block_mismatch(label: str, tool: str, issued_payload: dict, actual_payload: dict):
+    def _block_mismatch(
+        label: str,
+        tool: str,
+        issued_payload: dict,
+        actual_payload: dict,
+        *,
+        artifacts=None,
+    ):
         st = MemorySpendStore()
         rec = _issue(
             priv,
             key_id,
             mutation_tool=tool,
             mutation_payload=issued_payload,
+            media_artifacts=artifacts,
         )
-        actual = mutation_payload_sha256(tool, actual_payload)
+        from vfigos.approval.media_bytes import decode_media_sha256s_claim
+
+        issued_digests = decode_media_sha256s_claim(rec["media_sha256s"])
+        actual = mutation_payload_sha256(
+            tool, _payload_with_media(tool, actual_payload, issued_digests)
+        )
         if actual == rec["mutation_payload_sha256"]:
             fail(f"test setup error for {label}: digests unexpectedly equal")
         blocked = authorize_mutation(
@@ -399,6 +458,7 @@ def main() -> int:
             content_id=CONTENT,
             package_sha256=DIGEST,
             mutation_payload_sha256=actual,
+            media_sha256s=issued_digests,
             now=_now(),
         )
         if blocked.ok:
@@ -410,52 +470,292 @@ def main() -> int:
         "publish_image",
         base_payload,
         {**base_payload, "caption": "DIFFERENT"},
+        artifacts=DEFAULT_MEDIA_ARTIFACTS,
     )
-    # different media asset
+    # different media asset URL
+    other_payload = {
+        "image_url": _URL_B,
+        "caption": "hello",
+        "account": "velvets_cloud",
+    }
     _block_mismatch(
         "different media",
         "publish_image",
         base_payload,
-        {**base_payload, "image_url": "https://example.com/b.jpg"},
+        other_payload,
+        artifacts=DEFAULT_MEDIA_ARTIFACTS,
     )
-    # carousel reorder
+    # carousel reorder (URL order)
     car_a = {
-        "image_urls": ["https://example.com/1.jpg", "https://example.com/2.jpg"],
+        "image_urls": [_URL_A, _URL_B],
         "caption": "c",
         "account": "velvets_cloud",
     }
     car_b = {
-        "image_urls": ["https://example.com/2.jpg", "https://example.com/1.jpg"],
+        "image_urls": [_URL_B, _URL_A],
         "caption": "c",
         "account": "velvets_cloud",
     }
-    _block_mismatch("carousel reorder", "publish_carousel", car_a, car_b)
+    _block_mismatch(
+        "carousel reorder",
+        "publish_carousel",
+        car_a,
+        car_b,
+        artifacts=[
+            {"bytes_b64": __import__("base64").b64encode(_BYTES_A).decode()},
+            {"bytes_b64": __import__("base64").b64encode(_BYTES_B).decode()},
+        ],
+    )
     # delete media_id mismatch
     del_a = {"media_id": "1789001", "account": "velvets_cloud"}
     del_b = {"media_id": "1789002", "account": "velvets_cloud"}
-    _block_mismatch("delete media_id", "delete_media", del_a, del_b)
+    st = MemorySpendStore()
+    rec_del = _issue(
+        priv,
+        key_id,
+        mutation_tool="delete_media",
+        mutation_payload=del_a,
+        media_artifacts=None,
+    )
+    actual_del = mutation_payload_sha256("delete_media", del_b)
+    blocked_del = authorize_mutation(
+        receipt=rec_del,
+        mutation_tool="delete_media",
+        spend_store=st,
+        registry=registry,
+        content_id=CONTENT,
+        package_sha256=DIGEST,
+        mutation_payload_sha256=actual_del,
+        media_sha256s=[],
+        now=_now(),
+    )
+    if blocked_del.ok:
+        fail("delete media_id must be blocked by mutation_payload_sha256")
     # reply text mismatch
     rep_a = {"comment_id": "1791", "message": "thanks", "account": "velvets_cloud"}
     rep_b = {"comment_id": "1791", "message": "CHANGED", "account": "velvets_cloud"}
-    _block_mismatch("reply text", "reply_to_comment", rep_a, rep_b)
+    st = MemorySpendStore()
+    rec_rep = _issue(
+        priv,
+        key_id,
+        mutation_tool="reply_to_comment",
+        mutation_payload=rep_a,
+        media_artifacts=None,
+    )
+    blocked_rep = authorize_mutation(
+        receipt=rec_rep,
+        mutation_tool="reply_to_comment",
+        spend_store=st,
+        registry=registry,
+        content_id=CONTENT,
+        package_sha256=DIGEST,
+        mutation_payload_sha256=mutation_payload_sha256("reply_to_comment", rep_b),
+        media_sha256s=[],
+        now=_now(),
+    )
+    if blocked_rep.ok:
+        fail("reply text must be blocked")
     # comment_id mismatch
     hid_a = {"comment_id": "1791", "hide": True, "account": "velvets_cloud"}
     hid_b = {"comment_id": "1799", "hide": True, "account": "velvets_cloud"}
-    _block_mismatch("comment_id", "hide_comment", hid_a, hid_b)
+    st = MemorySpendStore()
+    rec_hid = _issue(
+        priv,
+        key_id,
+        mutation_tool="hide_comment",
+        mutation_payload=hid_a,
+        media_artifacts=None,
+    )
+    blocked_hid = authorize_mutation(
+        receipt=rec_hid,
+        mutation_tool="hide_comment",
+        spend_store=st,
+        registry=registry,
+        content_id=CONTENT,
+        package_sha256=DIGEST,
+        mutation_payload_sha256=mutation_payload_sha256("hide_comment", hid_b),
+        media_sha256s=[],
+        now=_now(),
+    )
+    if blocked_hid.ok:
+        fail("comment_id must be blocked")
 
-    # Client-supplied mutation_payload_sha256 must not be trusted by issuer
+    # Client-supplied mutation_payload_sha256 / media_sha256s must not be trusted by issuer
     forged = issue_approval(
         private_key=priv,
         key_id=key_id,
         content_id=CONTENT,
         package_sha256=DIGEST,
         mutation_tool="publish_image",
-        mutation_payload=base_payload,
+        mutation_payload={
+            **base_payload,
+            "media_sha256s": ["f" * 64],
+            "media_sha256": "f" * 64,
+        },
+        media_artifacts=DEFAULT_MEDIA_ARTIFACTS,
+        media_byte_fetcher=_fetcher,
         now=_now(),
     )
     if not forged["ok"]:
         fail("baseline issue for forge check failed")
-    # recompute proves issuer ignored any external digest field (signing API has no such param)
+    if forged["receipt"]["media_sha256s"] != encode_media_sha256s_claim([_DIG_A]):
+        fail("issuer must ignore caller media_sha256s and recompute from bytes")
+    if forged["receipt"]["mutation_payload_sha256"] != expected_digest:
+        fail("issuer must not blind-sign client mutation_payload_sha256")
+
+    # --- Immutable media-byte binding regressions ---
+    import base64 as _b64
+
+    # Non-CAS mutable URL must be refused at issue
+    bad_url = issue_approval(
+        private_key=priv,
+        key_id=key_id,
+        content_id=CONTENT,
+        package_sha256=DIGEST,
+        mutation_tool="publish_image",
+        mutation_payload={
+            "image_url": "https://example.com/mutable.jpg",
+            "caption": "x",
+            "account": "velvets_cloud",
+        },
+        media_artifacts=DEFAULT_MEDIA_ARTIFACTS,
+        media_byte_fetcher=_fetcher,
+        now=_now(),
+    )
+    if bad_url["ok"]:
+        fail("issuer must refuse non-content-addressed media URL")
+
+    # Caller supplies only fake digest without bytes → refuse
+    fake_only = issue_approval(
+        private_key=priv,
+        key_id=key_id,
+        content_id=CONTENT,
+        package_sha256=DIGEST,
+        mutation_tool="publish_image",
+        mutation_payload=base_payload,
+        media_artifacts=[{"sha256": _DIG_A}],
+        media_byte_fetcher=_fetcher,
+        now=_now(),
+    )
+    if fake_only["ok"]:
+        fail("issuer must refuse caller-supplied digest without bytes_b64")
+
+    # G: tampered media_sha256s in receipt → signature/verify blocked
+    media_tampered = dict(receipt_bind)
+    media_tampered["media_sha256s"] = encode_media_sha256s_claim([_DIG_B])
+    if verify_receipt(media_tampered, registry=registry, now=_now()).ok:
+        fail("tampered media_sha256s must invalidate signature")
+
+    # C: exact original bytes allowed
+    store_ok = MemorySpendStore()
+    rec_ok = _issue(priv, key_id)
+    ok_media = authorize_mutation(
+        receipt=rec_ok,
+        mutation_tool="publish_image",
+        spend_store=store_ok,
+        registry=registry,
+        content_id=CONTENT,
+        package_sha256=DIGEST,
+        mutation_payload_sha256=rec_ok["mutation_payload_sha256"],
+        media_sha256s=[_DIG_A],
+        now=_now(),
+    )
+    if not ok_media.ok:
+        fail(f"exact original media bytes must allow: {ok_media.problems}")
+
+    # E: carousel byte/order bindings
+    car_art = [
+        {"bytes_b64": _b64.b64encode(_BYTES_A).decode()},
+        {"bytes_b64": _b64.b64encode(_BYTES_B).decode()},
+    ]
+    car_rec = _issue(
+        priv,
+        key_id,
+        mutation_tool="publish_carousel",
+        mutation_payload=car_a,
+        media_artifacts=car_art,
+    )
+    if car_rec["media_sha256s"] != encode_media_sha256s_claim([_DIG_A, _DIG_B]):
+        fail("carousel issue must bind ordered media_sha256s")
+    wrong_order = authorize_mutation(
+        receipt=car_rec,
+        mutation_tool="publish_carousel",
+        spend_store=MemorySpendStore(),
+        registry=registry,
+        content_id=CONTENT,
+        package_sha256=DIGEST,
+        mutation_payload_sha256=car_rec["mutation_payload_sha256"],
+        media_sha256s=[_DIG_B, _DIG_A],
+        now=_now(),
+    )
+    if wrong_order.ok:
+        fail("carousel digest order mismatch must be blocked")
+    car_exact = authorize_mutation(
+        receipt=car_rec,
+        mutation_tool="publish_carousel",
+        spend_store=MemorySpendStore(),
+        registry=registry,
+        content_id=CONTENT,
+        package_sha256=DIGEST,
+        mutation_payload_sha256=car_rec["mutation_payload_sha256"],
+        media_sha256s=[_DIG_A, _DIG_B],
+        now=_now(),
+    )
+    if not car_exact.ok:
+        fail(f"exact carousel bytes+order must allow: {car_exact.problems}")
+
+    # F: reel/story bind media digests
+    reel_bytes = b"velvet-reel-bytes-XXXX"
+    reel_dig = sha256_hex(reel_bytes)
+    reel_url = _cas_url(reel_dig, "r.mp4")
+    _MEDIA_STORE[reel_url] = reel_bytes
+    reel_payload = {
+        "video_url": reel_url,
+        "caption": "reel",
+        "account": "velvets_cloud",
+        "share_to_feed": True,
+    }
+    reel_rec = _issue(
+        priv,
+        key_id,
+        mutation_tool="publish_reel",
+        mutation_payload=reel_payload,
+        media_artifacts=[{"bytes_b64": _b64.b64encode(reel_bytes).decode()}],
+    )
+    if reel_rec["media_sha256s"] != encode_media_sha256s_claim([reel_dig]):
+        fail("publish_reel must bind media_sha256s")
+    if authorize_mutation(
+        receipt=reel_rec,
+        mutation_tool="publish_reel",
+        spend_store=MemorySpendStore(),
+        registry=registry,
+        content_id=CONTENT,
+        package_sha256=DIGEST,
+        mutation_payload_sha256=reel_rec["mutation_payload_sha256"],
+        media_sha256s=[_DIG_A],
+        now=_now(),
+    ).ok:
+        fail("reel wrong media digest must be blocked")
+
+    story_bytes = b"velvet-story-bytes-YYYY"
+    story_dig = sha256_hex(story_bytes)
+    story_url = _cas_url(story_dig, "s.jpg")
+    _MEDIA_STORE[story_url] = story_bytes
+    story_rec = _issue(
+        priv,
+        key_id,
+        mutation_tool="publish_story",
+        mutation_payload={"image_url": story_url, "account": "velvets_cloud"},
+        media_artifacts=[{"bytes_b64": _b64.b64encode(story_bytes).decode()}],
+    )
+    if story_rec["media_sha256s"] != encode_media_sha256s_claim([story_dig]):
+        fail("publish_story must bind media_sha256s")
+
+    # J: non-media mutations unchanged — empty media_sha256s
+    if rec_del.get("media_sha256s") != "[]":
+        fail("non-media delete_media must have media_sha256s=[]")
+    if rec_rep.get("media_sha256s") != "[]":
+        fail("non-media reply_to_comment must have media_sha256s=[]")
 
     # --- Finding 1: guard install order / dynamic resolve (CI-safe stub) ---
     # Do not require adelaidasofia-instagram-mcp in sensor CI. Install a minimal
@@ -604,6 +904,80 @@ def main() -> int:
     if passthrough != {"ok": True, "read": True}:
         fail("read-only tools must remain unaffected by delivery approval guard")
 
+    # I/A/D: direct mutation path — same URL, different bytes → BLOCKED before claim
+    rec_direct = _issue(priv, key_id)
+    os.environ.pop("VELVET_DELIVERY_APPROVAL_SPEND_BUCKET", None)
+
+    tampered_store = dict(_MEDIA_STORE)
+    tampered_store[_URL_A] = _BYTES_A[:-1] + bytes([_BYTES_A[-1] ^ 0x01])
+
+    def _tampered_fetcher(url: str) -> bytes:
+        if url not in tampered_store:
+            raise ValueError(url)
+        return tampered_store[url]
+
+    set_media_byte_fetcher_override(_tampered_fetcher)
+    blocked_tamper = authorize_or_block(
+        "publish_image",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_direct,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if blocked_tamper is None or not blocked_tamper.get("blocked"):
+        fail("one-byte media tamper must block before Graph/claim")
+    set_media_byte_fetcher_override(_fetcher)
+
+    # Same approval + different media bytes (URL_B bytes behind approval for URL_A)
+    rec_wrong = _issue(priv, key_id)
+    blocked_wrong = authorize_or_block(
+        "publish_image",
+        {
+            "image_url": _URL_B,
+            "caption": "hello",
+            "account": "velvets_cloud",
+            "delivery_approval": rec_wrong,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if blocked_wrong is None or not blocked_wrong.get("blocked"):
+        fail("direct tool wrong-media must be blocked")
+
+    # Carousel: one item's bytes changed behind same URL list
+    car_art2 = [
+        {"bytes_b64": __import__("base64").b64encode(_BYTES_A).decode()},
+        {"bytes_b64": __import__("base64").b64encode(_BYTES_B).decode()},
+    ]
+    car_rec2 = _issue(
+        priv,
+        key_id,
+        mutation_tool="publish_carousel",
+        mutation_payload=car_a,
+        media_artifacts=car_art2,
+    )
+    car_tamper_store = dict(_MEDIA_STORE)
+    car_tamper_store[_URL_B] = _BYTES_C  # different bytes; CAS URL still says DIG_B → resolve fails
+
+    def _car_tamper(url: str) -> bytes:
+        return car_tamper_store[url]
+
+    set_media_byte_fetcher_override(_car_tamper)
+    blocked_car = authorize_or_block(
+        "publish_carousel",
+        {
+            **car_a,
+            "delivery_approval": car_rec2,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if blocked_car is None or not blocked_car.get("blocked"):
+        fail("carousel item byte change must be blocked")
+    set_media_byte_fetcher_override(_fetcher)
+
     # --- Finding 3: issuer body cap / auth-before-buffer (pure ASGI; no TestClient) ---
     import asyncio
     import base64
@@ -739,8 +1113,12 @@ def main() -> int:
                 "mutation_tool": "publish_image",
                 "mutation_payload": base_payload,
                 "mutation_payload_sha256": "f" * 64,
+                "media_sha256s": ["f" * 64],
+                "media_artifacts": DEFAULT_MEDIA_ARTIFACTS,
             }
         ).encode("utf-8")
+        # HTTP issuer uses real fetch unless override is set — keep override.
+        set_media_byte_fetcher_override(_fetcher)
         good_status, good_raw, _ = asyncio.run(
             _asgi_call(
                 [
@@ -756,8 +1134,12 @@ def main() -> int:
             fail(f"valid small issue request must succeed: {good_status} {good_raw!r}")
         if good_json["receipt"]["mutation_payload_sha256"] == "f" * 64:
             fail("issuer must not blind-sign client mutation_payload_sha256")
+        if good_json["receipt"]["media_sha256s"] == '["' + ("f" * 64) + '"]':
+            fail("issuer must not blind-sign client media_sha256s")
         if good_json["receipt"]["mutation_payload_sha256"] != expected_digest:
             fail("issuer receipt digest must match server-computed payload")
+        if good_json["receipt"]["media_sha256s"] != encode_media_sha256s_claim([_DIG_A]):
+            fail("issuer receipt media_sha256s must match trusted bytes")
     finally:
         for name, value in saved_iso.items():
             if value is None:
@@ -786,6 +1168,7 @@ def main() -> int:
         "mutation_private_key=NO "
         "guard_order=PASS "
         "payload_binding=PASS "
+        "media_bytes=PASS "
         "body_cap=PASS"
     )
     return 0

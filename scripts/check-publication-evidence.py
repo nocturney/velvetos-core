@@ -436,7 +436,7 @@ class EvidenceTests(unittest.TestCase):
     def _mint_delivery_approval(self, *, mutation_tool='publish_image'):
         """Ephemeral Ed25519 receipt for tests — never production keys."""
         import base64
-        import tempfile
+        import hashlib
         from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
         sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'packages'))
         from vfigos.approval.issuer.signing import issue_approval
@@ -445,12 +445,24 @@ class EvidenceTests(unittest.TestCase):
         key_id = 'test-pub-evidence'
         registry = KeyRegistry.from_ephemeral(key_id, priv.public_key())
         digest = self.ev['package_sha256']
+        media_bytes = b'publication-evidence-fixture-bytes'
+        media_dig = hashlib.sha256(media_bytes).hexdigest()
+        media_url = f'https://cas.example.test/sha256/{media_dig}/fixture.jpg'
         issued = issue_approval(
             private_key=priv,
             key_id=key_id,
             content_id='TEST',
             package_sha256=digest,
             mutation_tool=mutation_tool,
+            mutation_payload={
+                'image_url': media_url,
+                'caption': 'fixture',
+                'account': 'velvets_cloud',
+            } if mutation_tool == 'publish_image' else {},
+            media_artifacts=[{'bytes_b64': base64.b64encode(media_bytes).decode('ascii')}]
+            if mutation_tool == 'publish_image'
+            else None,
+            media_byte_fetcher={media_url: media_bytes}.get,
             ttl_seconds=600,
         )
         self.assertTrue(issued['ok'], issued)

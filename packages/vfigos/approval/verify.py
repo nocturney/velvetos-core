@@ -86,6 +86,7 @@ def verify_receipt(
     expected_content_id: str | None = None,
     expected_package_sha256: str | None = None,
     expected_mutation_payload_sha256: str | None = None,
+    expected_media_sha256s: list[str] | None = None,
     expected_ig_user_id: str | None = None,
     expected_tenant: str = TENANT,
     expected_account_label: str = ACCOUNT_LABEL,
@@ -121,9 +122,21 @@ def verify_receipt(
     if not re.fullmatch(SHA256_RE, claims["mutation_payload_sha256"]):
         problems.append("invalid mutation_payload_sha256")
 
+    from .media_bytes import MEDIA_BEARING_TOOLS, decode_media_sha256s_claim
+
+    try:
+        claimed_media = decode_media_sha256s_claim(claims.get("media_sha256s", "[]"))
+    except (ValueError, TypeError, json.JSONDecodeError) as exc:
+        problems.append(f"invalid media_sha256s: {exc}")
+        claimed_media = []
+
     tools = allowed_mutation_tools if allowed_mutation_tools is not None else mutation_tool_ids()
     if claims["mutation_tool"] not in tools:
         problems.append("unsupported mutation_tool")
+    if claims["mutation_tool"] in MEDIA_BEARING_TOOLS and not claimed_media:
+        problems.append("media-bearing approval missing media_sha256s")
+    if claims["mutation_tool"] not in MEDIA_BEARING_TOOLS and claimed_media:
+        problems.append("non-media approval must not bind media_sha256s")
 
     if expected_mutation_tool is not None and claims["mutation_tool"] != expected_mutation_tool:
         problems.append("wrong mutation_tool")
@@ -136,6 +149,9 @@ def verify_receipt(
         and claims["mutation_payload_sha256"] != expected_mutation_payload_sha256
     ):
         problems.append("wrong mutation_payload_sha256")
+    if expected_media_sha256s is not None:
+        if list(expected_media_sha256s) != claimed_media:
+            problems.append("wrong media_sha256s")
 
     key_id = claims["key_id"]
     record = registry.get(key_id)

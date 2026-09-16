@@ -56,14 +56,16 @@ gcloud run services add-iam-policy-binding velvet-delivery-approval-issuer \
 # 6) Redeploy mutation service (spend bucket env; no private key)
 ./packages/vfigos/remote/deploy.sh
 
-# 7) Smoke issue (issuer computes mutation_payload_sha256 — do not trust a client digest)
+# 7) Smoke issue (issuer computes media_sha256s + mutation_payload_sha256 — never trust client digests)
 TOKEN=$(gcloud auth print-identity-token)
+# Media URLs must be content-addressed: .../sha256/<64-hex>/...
+# Prefer media_artifacts bytes (issuer hashes) or let issuer fetch the CAS URL body.
 curl -sS -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
-  -d '{"content_id":"JOB","package_sha256":"<64hex>","mutation_tool":"publish_image","mutation_payload":{"image_url":"https://example.com/a.jpg","caption":"…","account":"velvets_cloud"}}' \
+  -d '{"content_id":"JOB","package_sha256":"<64hex>","mutation_tool":"publish_image","mutation_payload":{"image_url":"https://cdn.example/sha256/<mediahex>/a.jpg","caption":"…","account":"velvets_cloud"},"media_artifacts":[{"bytes_b64":"<base64 media bytes>"}]}' \
   "$ISSUER_URL/v1/delivery-approvals"
 ```
 
-Body size for `/v1/delivery-approvals` is capped at 16 KiB (`ISSUER_MAX_BODY_BYTES`). Auth (optional app bearer) is checked before body buffering.
+Body size for `/v1/delivery-approvals` is capped at 16 KiB (`ISSUER_MAX_BODY_BYTES`). Auth (optional app bearer) is checked before body buffering. Mutable non-CAS URLs are refused — Graph URL fetch is not byte identity.
 
 ## ChatGPT / Cursor
 

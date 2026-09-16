@@ -11,12 +11,21 @@ import re
 import secrets
 import uuid
 from datetime import datetime, timedelta, timezone
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from ..canonical import canonical_payload_bytes
 from ..capabilities import mutation_tool_ids
+from ..media_bytes import (
+    MEDIA_BEARING_TOOLS,
+    MediaByteFetcher,
+    digests_from_artifact_bytes,
+    encode_media_sha256s_claim,
+    inject_media_sha256s,
+    resolve_media_sha256s,
+    strip_untrusted_media_digest_fields,
+)
 from ..mutation_payload import mutation_payload_sha256
 from ..schema import (
     ACCOUNT_LABEL,
@@ -73,6 +82,8 @@ def issue_approval(
     package_sha256: str,
     mutation_tool: str,
     mutation_payload: Mapping[str, Any] | None = None,
+    media_artifacts: Sequence[Mapping[str, Any]] | None = None,
+    media_byte_fetcher: MediaByteFetcher | None = None,
     ttl_seconds: int | None = None,
     ig_user_id: str | None = None,
     now: datetime | None = None,
@@ -81,9 +92,12 @@ def issue_approval(
     """Validate caller fields, mint server-controlled claims, sign.
 
     Caller-supplied tenant/account/schema/issuer/key_id/approval_id/nonce/times
-    and any client-supplied mutation_payload_sha256 are ignored — server controls
-    those fields. ``mutation_payload_sha256`` is computed here from
-    ``mutation_payload`` (exact tool args), never blindly trusted from the caller.
+    and any client-supplied mutation_payload_sha256 / media_sha256(s) are ignored
+    — server controls those fields.
+
+    For media-bearing tools, ``media_sha256s`` is computed from trusted artifact
+    bytes (``media_artifacts[].bytes_b64``) or by fetching content-addressed
+    media URLs — never from a caller-supplied digest string.
     """
     problems: list[str] = []
     cid = (content_id or "").strip()
@@ -106,12 +120,25 @@ def issue_approval(
         problems.append("key_id required (server-configured)")
 
     payload_digest = ""
+    media_claim = "[]"
+    clean_payload = strip_untrusted_media_digest_fields(mutation_payload)
     if not problems:
         try:
-            # Issuer computes the digest; ignore any caller-supplied digest field.
-            payload_digest = mutation_payload_sha256(tool, mutation_payload or {})
+            if tool in MEDIA_BEARING_TOOLS:
+                artifact_bytes = digests_from_artifact_bytes(media_artifacts)
+                media_digests = resolve_media_sha256s(
+                    tool,
+                    clean_payload,
+                    artifact_bytes=artifact_bytes,
+                    fetcher=media_byte_fetcher,
+                )
+                media_claim = encode_media_sha256s_claim(media_digests)
+                payload_for_digest = inject_media_sha256s(tool, clean_payload, media_digests)
+            else:
+                payload_for_digest = clean_payload
+            payload_digest = mutation_payload_sha256(tool, payload_for_digest)
         except (KeyError, TypeError, ValueError) as exc:
-            problems.append(f"invalid mutation_payload: {exc}")
+            problems.append(f"invalid mutation_payload/media bytes: {exc}")
 
     if problems:
         return {"ok": False, "problems": problems, "receipt": None}
@@ -128,6 +155,7 @@ def issue_approval(
         "package_sha256": digest,
         "mutation_tool": tool,
         "mutation_payload_sha256": payload_digest,
+        "media_sha256s": media_claim,
         "issued_at": _rfc3339(now_utc),
         "expires_at": _rfc3339(expires),
         "nonce": secrets.token_hex(16),

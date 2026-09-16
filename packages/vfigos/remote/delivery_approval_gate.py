@@ -70,6 +70,12 @@ def _mutation_tools() -> frozenset[str]:
 def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None) -> dict[str, Any] | None:
     """Return a BLOCKED MCP dict, or None if mutation may proceed."""
     from vfigos.approval.gate import authorize_mutation
+    from vfigos.approval.media_bytes import (
+        MEDIA_BEARING_TOOLS,
+        inject_media_sha256s,
+        resolve_media_sha256s,
+        strip_untrusted_media_digest_fields,
+    )
     from vfigos.approval.mutation_payload import merge_tool_params, mutation_payload_sha256
 
     for forbidden in (
@@ -113,7 +119,24 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
         package_sha256 = None
 
     # Authoritative payload = actual tool args (MCP args preferred over guard summary).
-    merged = merge_tool_params(params, mcp_args)
+    merged = strip_untrusted_media_digest_fields(merge_tool_params(params, mcp_args))
+    media_digests: list[str] = []
+    if mutation_tool in MEDIA_BEARING_TOOLS:
+        # Hash exact bytes that will back Graph's URL fetch — BEFORE claim.
+        try:
+            media_digests = resolve_media_sha256s(mutation_tool, merged)
+        except (KeyError, TypeError, ValueError) as exc:
+            return {
+                "ok": False,
+                "blocked": True,
+                "error": "delivery approval required",
+                "error_class": "delivery_approval",
+                "problems": [f"media byte digest failed: {exc}"],
+                "mutated": False,
+                "mutation_tool": mutation_tool,
+            }
+        merged = inject_media_sha256s(mutation_tool, merged, media_digests)
+
     try:
         payload_digest = mutation_payload_sha256(mutation_tool, merged)
     except (KeyError, TypeError, ValueError) as exc:
@@ -135,6 +158,7 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
         content_id=content_id,
         package_sha256=package_sha256,
         mutation_payload_sha256=payload_digest,
+        media_sha256s=media_digests if mutation_tool in MEDIA_BEARING_TOOLS else [],
         ig_user_id=(os.environ.get("INSTAGRAM_MCP_IG_USER_ID") or "").strip() or None,
     )
     if result.ok:

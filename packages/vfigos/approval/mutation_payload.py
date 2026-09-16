@@ -15,11 +15,19 @@ from .schema import SHA256_RE
 # Exact public mutation-relevant fields per write tool (ordered for docs only;
 # JSON serialization always sorts keys). List order inside list values is significant.
 MUTATION_PAYLOAD_FIELDS: dict[str, tuple[str, ...]] = {
-    "publish_image": ("image_url", "caption", "account"),
-    "publish_video": ("video_url", "caption", "account"),
-    "publish_reel": ("video_url", "caption", "account", "share_to_feed", "cover_url"),
-    "publish_carousel": ("image_urls", "caption", "account"),
-    "publish_story": ("image_url", "video_url", "account"),
+    # media_sha256s = ordered digests of exact bytes behind each media URL (CAS).
+    "publish_image": ("image_url", "caption", "account", "media_sha256s"),
+    "publish_video": ("video_url", "caption", "account", "media_sha256s"),
+    "publish_reel": (
+        "video_url",
+        "caption",
+        "account",
+        "share_to_feed",
+        "cover_url",
+        "media_sha256s",
+    ),
+    "publish_carousel": ("image_urls", "caption", "account", "media_sha256s"),
+    "publish_story": ("image_url", "video_url", "account", "media_sha256s"),
     "delete_media": ("media_id", "account"),
     "reply_to_comment": ("comment_id", "message", "account"),
     "hide_comment": ("comment_id", "hide", "account"),
@@ -34,6 +42,7 @@ _EXCLUDED_ARG_KEYS = frozenset(
         "package_sha256",
         "mutation_payload_sha256",
         "confirm_irreversible",
+        "media_artifacts",
     }
 )
 
@@ -50,6 +59,7 @@ def _normalize_value(value: Any) -> Any:
     if isinstance(value, str):
         return value
     if isinstance(value, list):
+        # Order-significant lists (image_urls, media_sha256s).
         return [_normalize_value(v) for v in value]
     if isinstance(value, Mapping):
         raise TypeError("mutation payload must not contain nested objects")

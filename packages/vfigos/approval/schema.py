@@ -24,6 +24,8 @@ CLAIM_FIELDS = (
     "package_sha256",
     "mutation_tool",
     "mutation_payload_sha256",
+    # Compact JSON array string of ordered media digests; "[]" for non-media tools.
+    "media_sha256s",
     "issued_at",
     "expires_at",
     "nonce",
