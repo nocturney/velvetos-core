@@ -4,14 +4,15 @@
   "component_state": "Idle",
   "execution_state": {
     "pr": 229,
-    "head": "e6f07c3b6828e00aa9f1f762ed8510234bc2dfa1",
+    "head": "ed55cab4897abe30e98d3a330800089797e50558",
     "previous_head": "ffbf020de3be61426f0ef07e3a4bc670c22b06bb",
     "main_observed": "345f906fd03eb866c2c553cc8c74034f9622ed84",
     "authenticated_approval_implementation": "PASS",
     "gcp_live_deployment": "NEEDS_OPERATOR_SETUP",
     "mutation_service_has_private_key": false,
     "issuer_auth": "cloud-run-iam",
-    "project_authority_canva_mirror": "needs_sync"
+    "project_authority_canva_mirror": "needs_sync",
+    "ci_note": "cryptography added to check-all.yml for Ed25519 sensors; unrelated LINKS.json staleness may still fail check-staleness"
   },
-  "latest_observation": "Code landed on PR #229. Issuer + mutation gate + preflight + sensors PASS. Owner must run packages/vfigos/approval/OPERATOR-SETUP.md before LIVE claims. check-all: only unrelated LINKS.json staleness failed. No merge / no Codex."
+  "latest_observation": "Implementation complete on PR #229 head ed55cab. GCP NEEDS_OPERATOR_SETUP. Waiting CI after cryptography install fix."
 }
