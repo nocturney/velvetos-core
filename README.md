@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-16 — **Delivery-approval security closure:** re-register publish_* so `_guard` receives full media args (carousel `image_urls`, reel `cover_url`); dual-fetch rejects flapping media; optional `VELVET_MED…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-16 — **Delivery-approval security closure:** re-register publish_* so `_guard` receives full media args (carousel `image_urls`, reel `cover_url`); dual-fetch rejects flapping media; optional `VELVET_MED…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-16 — **Delivery-approval prefetch order:** mutation boundary verifies signed receipt (schema/signature/key/tenant/account/tool/expiry/content/package) **before** any CAS/media fetch; media digests + `mu…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-16 — **Delivery-approval prefetch order:** mutation boundary verifies signed receipt (schema/signature/key/tenant/account/tool/expiry/content/package) **before** any CAS/media fetch; media digests + `mu…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
