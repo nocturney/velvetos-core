@@ -44,7 +44,8 @@
 
 1. **HeyOrca — מדריך שבועי (חינם, URL פתוח)**  
    https://www.heyorca.com/blog/trending-audio-for-reels-tiktok  
-   מתעדכן בימי שישי. לקרוא את בלוק **Trending Instagram sounds this week** קודם. בלוק TikTok = סיגנל מוקדם בלבד (לא אסטרטגיית TikTok בלי ראש צוות). לרשום שם סאונד + התאמה לסטודיו + URL המאמר.
+   מתעדכן בימי שישי. לקרוא את בלוק **Trending Instagram sounds this week** קודם. בלוק TikTok = סיגנל מוקדם בלבד (לא אסטרטגיית TikTok בלי ראש צוות). לרשום שם סאונד + התאמה לסטודיו + URL המאמר.  
+   **דפוס 2026-09-16:** כשרשימת ה־IG השבועית היא בעיקר meme / original-audio (חיות, מילוי־ריק, בדיחות שירות) ולא סאונד קצבי להדפסה — לא כופים טרנד מהרשימה על טיימלאפס. ברירת מחדל = סגנון אנרגיה + הדבקת Trending / Professional dashboard מהבעלים. ארטיפקט: `sources/2026-09-16-ig-music.md`.
 
 2. **אינסטגרם עצמה (העתקה מהבעלים / Grok)**  
    - Reels → אייקון תווים → לשונית **Trending**  
