@@ -87,11 +87,17 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
 
     Trust order (media-bearing writes):
       Phase A — verify delivery approval (sig/schema/tenant/account/tool/expiry/
-                content/package) with **zero** media fetches
-      Phase B — resolve/fetch immutable media bytes, recompute digests + payload,
-                verify bindings, atomic claim, then Graph
+                content/package) with **zero** media fetches and **zero** claims
+      Phase B — atomic claim approval_id (still zero media fetches)
+      Phase C — resolve/fetch immutable media bytes, recompute digests + payload,
+                verify bindings (approval stays spent on failure — no unclaim)
+      Phase D — Graph mutation
     """
-    from vfigos.approval.gate import authorize_mutation, verify_authorization_pre_media
+    from vfigos.approval.gate import (
+        claim_authorization,
+        verify_authorization_pre_media,
+        verify_post_claim_bindings,
+    )
     from vfigos.approval.media_bytes import (
         MEDIA_BEARING_TOOLS,
         inject_media_sha256s,
@@ -143,7 +149,7 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
     ig_user_id = (os.environ.get("INSTAGRAM_MCP_IG_USER_ID") or "").strip() or None
     registry = _registry()
 
-    # --- Phase A: authenticate + non-media bindings BEFORE any media fetch ---
+    # --- Phase A: authenticate + non-media bindings (no fetch, no claim) ---
     pre = verify_authorization_pre_media(
         receipt=receipt,
         mutation_tool=mutation_tool,
@@ -155,11 +161,9 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
     if not pre.ok:
         return _blocked(mutation_tool, pre.problems, gate=pre.as_dict())
 
-    # Authoritative payload = actual tool args (MCP args preferred over guard summary).
+    # Structural media-field presence (no byte download) before claim.
     merged = strip_untrusted_media_digest_fields(merge_tool_params(params, mcp_args))
-    media_digests: list[str] = []
     if mutation_tool in MEDIA_BEARING_TOOLS:
-        # Fail closed if upstream/guard omitted the media identity fields.
         if mutation_tool == "publish_carousel" and "image_urls" not in merged:
             return _blocked(
                 mutation_tool,
@@ -175,7 +179,19 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
                 mutation_tool,
                 [f"{mutation_tool} requires video_url for media-byte binding"],
             )
-        # Phase B media resolve — only after Phase A passed.
+
+    # --- Phase B: atomic claim BEFORE any media fetch ---
+    claimed = claim_authorization(
+        pre=pre,
+        spend_store=_spend_store(),
+        mutation_tool=mutation_tool,
+    )
+    if not claimed.ok:
+        return _blocked(mutation_tool, claimed.problems, gate=claimed.as_dict())
+
+    # --- Phase C: fetch/hash media + verify bindings (approval already spent) ---
+    media_digests: list[str] = []
+    if mutation_tool in MEDIA_BEARING_TOOLS:
         try:
             media_digests = resolve_media_sha256s(mutation_tool, merged)
         except (KeyError, TypeError, ValueError) as exc:
@@ -187,11 +203,9 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
     except (KeyError, TypeError, ValueError) as exc:
         return _blocked(mutation_tool, [f"mutation payload digest failed: {exc}"])
 
-    # Phase B binding verify + atomic claim (no Graph until this returns ok).
-    result = authorize_mutation(
+    post = verify_post_claim_bindings(
         receipt=receipt,
         mutation_tool=mutation_tool,
-        spend_store=_spend_store(),
         registry=registry,
         content_id=content_id,
         package_sha256=package_sha256,
@@ -199,9 +213,11 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
         media_sha256s=media_digests if mutation_tool in MEDIA_BEARING_TOOLS else [],
         ig_user_id=ig_user_id,
     )
-    if result.ok:
-        return None
-    return _blocked(mutation_tool, result.problems, gate=result.as_dict())
+    if not post.ok:
+        return _blocked(mutation_tool, post.problems, gate=post.as_dict())
+
+    # Phase D — caller proceeds to Graph.
+    return None
 
 
 def apply_delivery_approval_gate(mcp: Any = None) -> None:

@@ -1109,7 +1109,8 @@ def main() -> int:
         expect_substr="wrong package_sha256",
     )
 
-    # H. Valid receipt but wrong actual media bytes → fetch occurs, then BLOCKED before claim
+    # D. Valid receipt, claim succeeds, wrong media bytes → claim=1, fetch, BLOCKED, Graph=0
+    #    same receipt retry => BLOCKED before fetch
     rec_wrong_media = _fresh_image_receipt()
     reset_media_fetch_count()
     claim_before = claim_counter["n"]
@@ -1126,11 +1127,11 @@ def main() -> int:
         },
     )
     if blocked_wrong is None or not blocked_wrong.get("blocked"):
-        fail("H wrong media: must be BLOCKED")
+        fail("D wrong media: must be BLOCKED")
+    if claim_counter["n"] != claim_before + 1:
+        fail("D wrong media: must claim before fetch")
     if media_fetch_count() < 1:
-        fail("H wrong media: media fetch must occur after valid Phase A")
-    if claim_counter["n"] != claim_before:
-        fail("H wrong media: must not claim after binding failure")
+        fail("D wrong media: media fetch must occur after claim")
 
     def _graph_wrong():
         graph_counter["n"] += 1
@@ -1149,11 +1150,28 @@ def main() -> int:
         _graph_wrong,
     )
     if not isinstance(out_wrong, dict) or not out_wrong.get("blocked"):
-        fail("H wrong media: guard must block before Graph")
+        fail("D wrong media: guard must block before Graph")
     if graph_counter["n"] != graph_before:
-        fail("H wrong media: Graph must not run")
+        fail("D wrong media: Graph must not run")
 
-    # one-byte tamper behind same CAS URL
+    reset_media_fetch_count()
+    retry_wrong = authorize_or_block(
+        "publish_image",
+        {
+            "image_url": _URL_B,
+            "caption": "hello",
+            "account": "velvets_cloud",
+            "delivery_approval": rec_wrong_media,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if retry_wrong is None or not retry_wrong.get("blocked"):
+        fail("D wrong-media retry: must stay BLOCKED")
+    if media_fetch_count() != 0:
+        fail("D wrong-media retry: must block before fetch")
+
+    # one-byte tamper — claim then fetch then block; stays spent
     rec_tamper = _fresh_image_receipt()
     tampered_store = dict(_MEDIA_STORE)
     tampered_store[_URL_A] = _BYTES_A[:-1] + bytes([_BYTES_A[-1] ^ 0x01])
@@ -1176,14 +1194,68 @@ def main() -> int:
         },
     )
     if blocked_tamper is None or not blocked_tamper.get("blocked"):
-        fail("H one-byte tamper: must block before Graph/claim")
+        fail("D one-byte tamper: must block before Graph")
+    if claim_counter["n"] != claim_before + 1:
+        fail("D one-byte tamper: must claim before fetch")
     if media_fetch_count() < 1:
-        fail("H one-byte tamper: fetch must occur after valid Phase A")
-    if claim_counter["n"] != claim_before:
-        fail("H one-byte tamper: must not claim")
+        fail("D one-byte tamper: fetch must occur after claim")
     set_media_byte_fetcher_override(_fetcher)
+    reset_media_fetch_count()
+    retry_tamper = authorize_or_block(
+        "publish_image",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_tamper,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if retry_tamper is None or not retry_tamper.get("blocked"):
+        fail("D tamper retry: must stay BLOCKED")
+    if media_fetch_count() != 0:
+        fail("D tamper retry: must block before fetch")
 
-    # I. Valid receipt + exact media + exact payload → fetch → claim → Graph allowed
+    # E. Valid approval, media fetch fails → claim spent; retry BLOCKED before fetch
+    rec_fetch_fail = _fresh_image_receipt()
+
+    def _fail_fetcher(url: str) -> bytes:
+        raise ValueError("simulated media fetch failure")
+
+    set_media_byte_fetcher_override(_fail_fetcher)
+    reset_media_fetch_count()
+    claim_before = claim_counter["n"]
+    blocked_fetch = authorize_or_block(
+        "publish_image",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_fetch_fail,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if blocked_fetch is None or not blocked_fetch.get("blocked"):
+        fail("E media fetch failure: must BLOCK")
+    if claim_counter["n"] != claim_before + 1:
+        fail("E media fetch failure: must claim before fetch attempt")
+    if media_fetch_count() < 1:
+        fail("E media fetch failure: fetch attempt must occur after claim")
+    set_media_byte_fetcher_override(_fetcher)
+    reset_media_fetch_count()
+    retry_fetch = authorize_or_block(
+        "publish_image",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_fetch_fail,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if retry_fetch is None or not retry_fetch.get("blocked"):
+        fail("E fetch-fail retry: must stay BLOCKED")
+    if media_fetch_count() != 0:
+        fail("E fetch-fail retry: must block before fetch")
+
+    # F. Valid approval, exact media → claim → fetch/hash → binding → Graph
     rec_ok = _fresh_image_receipt()
     reset_media_fetch_count()
     claim_before = claim_counter["n"]
@@ -1198,17 +1270,17 @@ def main() -> int:
         },
     )
     if allowed is not None:
-        fail(f"I exact approval: must ALLOW (None), got {allowed}")
-    if media_fetch_count() < 1:
-        fail("I exact approval: media fetch must occur")
+        fail(f"F exact approval: must ALLOW (None), got {allowed}")
     if claim_counter["n"] != claim_before + 1:
-        fail("I exact approval: exactly one replay claim expected")
+        fail("F exact approval: exactly one claim expected")
+    if media_fetch_count() < 1:
+        fail("F exact approval: media fetch must occur after claim")
 
     def _graph_ok():
         graph_counter["n"] += 1
         return {"ok": True, "mutated": True}
 
-    # second use of same approval must block (already spent) — Graph not called
+    reset_media_fetch_count()
     out_replay = stub_server._guard(
         "publish_image",
         {
@@ -1220,11 +1292,12 @@ def main() -> int:
         _graph_ok,
     )
     if not isinstance(out_replay, dict) or not out_replay.get("blocked"):
-        fail("I replay of spent approval must block")
+        fail("F replay of spent approval must block")
+    if media_fetch_count() != 0:
+        fail("F spent replay must block before fetch")
     if graph_counter["n"] != graph_before:
-        fail("I spent replay must not call Graph")
+        fail("F spent replay must not call Graph")
 
-    # Fresh approval through guard reaches Graph
     rec_ok2 = _fresh_image_receipt()
     out_ok = stub_server._guard(
         "publish_image",
@@ -1237,11 +1310,81 @@ def main() -> int:
         _graph_ok,
     )
     if out_ok != {"ok": True, "mutated": True}:
-        fail(f"I exact approval via guard must reach Graph, got {out_ok}")
+        fail(f"F exact approval via guard must reach Graph, got {out_ok}")
     if graph_counter["n"] != graph_before + 1:
-        fail("I exact approval: Graph must run exactly once")
+        fail("F exact approval: Graph must run exactly once")
 
-    # K. Non-media mutations — existing protection, no media fetch
+    # G. Concurrent identical valid approvals — exactly one claim; loser fetch=0
+    rec_conc = _fresh_image_receipt()
+    conc_results: list = []
+    conc_lock = threading.Lock()
+    fetch_log: list[int] = []
+
+    def _conc_fetcher(url: str) -> bytes:
+        with conc_lock:
+            fetch_log.append(threading.get_ident())
+        return _fetcher(url)
+
+    set_media_byte_fetcher_override(_conc_fetcher)
+
+    def _conc_attempt():
+        res = authorize_or_block(
+            "publish_image",
+            {
+                **DEFAULT_IMAGE_PAYLOAD,
+                "delivery_approval": rec_conc,
+                "content_id": CONTENT,
+                "package_sha256": DIGEST,
+            },
+        )
+        with conc_lock:
+            conc_results.append(res)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:
+        futs = [pool.submit(_conc_attempt) for _ in range(8)]
+        for f in futs:
+            f.result()
+    set_media_byte_fetcher_override(_fetcher)
+    winners = [r for r in conc_results if r is None]
+    losers = [r for r in conc_results if r is not None]
+    if len(winners) != 1:
+        fail(f"G concurrent: exactly one winner expected, got {len(winners)}")
+    if len(losers) != 7:
+        fail(f"G concurrent: expected 7 losers, got {len(losers)}")
+    for r in losers:
+        if not isinstance(r, dict) or not r.get("blocked"):
+            fail("G concurrent loser must be BLOCKED")
+    # Dual-fetch ⇒ winner performs exactly 2 media fetches; losers perform none.
+    if len(fetch_log) != 2:
+        fail(f"G concurrent: expected exactly 2 media fetches from winner, got {len(fetch_log)}")
+    if len(set(fetch_log)) != 1:
+        fail("G concurrent: all media fetches must come from the single winner thread")
+
+    # H. Spend store unavailable → BLOCKED before media fetch
+    class _Unavailable:
+        def claim(self, approval_id: str, *, meta=None):
+            claim_counter["n"] += 1
+            return UnavailableSpendStore().claim(approval_id, meta=meta)
+
+    _dag._spend_store = lambda: _Unavailable()  # type: ignore[assignment]
+    rec_unavail = _fresh_image_receipt()
+    reset_media_fetch_count()
+    blocked_unavail = authorize_or_block(
+        "publish_image",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_unavail,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if blocked_unavail is None or not blocked_unavail.get("blocked"):
+        fail("H spend unavailable: must BLOCK")
+    if media_fetch_count() != 0:
+        fail("H spend unavailable: must block before media fetch")
+    _dag._spend_store = lambda: _CountingSpend()  # type: ignore[assignment]
+
+    # I. Non-media mutations — existing protection, no media fetch
     del_payload = {
         "media_id": "1789",
         "account": "velvets_cloud",
@@ -1268,19 +1411,19 @@ def main() -> int:
         },
     )
     if del_allowed is not None:
-        fail(f"K non-media delete must ALLOW with valid receipt, got {del_allowed}")
+        fail(f"I non-media delete must ALLOW with valid receipt, got {del_allowed}")
     if media_fetch_count() != 0:
-        fail("K non-media must not fetch media")
+        fail("I non-media must not fetch media")
     if claim_counter["n"] != claim_before + 1:
-        fail("K non-media must claim once")
+        fail("I non-media must claim once")
     reset_media_fetch_count()
     del_blocked = authorize_or_block("delete_media", dict(del_payload))
     if del_blocked is None or not del_blocked.get("blocked"):
-        fail("K non-media without approval must block")
+        fail("I non-media without approval must block")
     if media_fetch_count() != 0:
-        fail("K non-media invalid auth must not fetch media")
+        fail("I non-media invalid auth must not fetch media")
 
-    # Carousel: one item's bytes changed behind same URL list
+    # Carousel: one item's bytes changed — claim then fetch then block
     car_art2 = [
         {"bytes_b64": __import__("base64").b64encode(_BYTES_A).decode()},
         {"bytes_b64": __import__("base64").b64encode(_BYTES_B).decode()},
@@ -1314,15 +1457,15 @@ def main() -> int:
     )
     if blocked_car is None or not blocked_car.get("blocked"):
         fail("carousel item byte change must be blocked")
+    if claim_counter["n"] != claim_before + 1:
+        fail("carousel tamper: must claim before fetch")
     if media_fetch_count() < 1:
-        fail("carousel tamper: fetch must occur after valid Phase A")
-    if claim_counter["n"] != claim_before:
-        fail("carousel tamper: must not claim")
+        fail("carousel tamper: fetch must occur after claim")
     set_media_byte_fetcher_override(_fetcher)
 
-    # Upstream incomplete guard summary: carousel without image_urls must fail closed
-    # (Phase A passed; missing URLs block before fetch)
+    # Upstream incomplete guard summary: missing URLs block BEFORE claim
     reset_media_fetch_count()
+    claim_before = claim_counter["n"]
     blocked_incomplete = authorize_or_block(
         "publish_carousel",
         {
@@ -1338,6 +1481,8 @@ def main() -> int:
         fail("carousel missing image_urls must be blocked")
     if media_fetch_count() != 0:
         fail("carousel missing image_urls must not fetch media")
+    if claim_counter["n"] != claim_before:
+        fail("carousel missing image_urls must not claim")
 
     # Flapping mutable object: two fetches disagree → BLOCKED
     flip = {"n": 0}
@@ -1421,10 +1566,12 @@ def main() -> int:
     )
     if blocked_cover is None or not blocked_cover.get("blocked"):
         fail("reel cover_url added after approval must be blocked")
+    if claim_counter["n"] != claim_before + 1:
+        fail("reel cover mismatch: must claim before fetch")
     if media_fetch_count() < 1:
-        fail("reel cover mismatch: fetch must occur after valid Phase A")
-    if claim_counter["n"] != claim_before:
-        fail("reel cover mismatch: must not claim")
+        fail("reel cover mismatch: fetch must occur after claim")
+    if claim_counter["n"] != claim_before + 1:
+        fail("reel cover mismatch: must not unclaim")
 
     # --- Finding 3: issuer body cap / auth-before-buffer (pure ASGI; no TestClient) ---
     import asyncio
@@ -1618,6 +1765,7 @@ def main() -> int:
         "payload_binding=PASS "
         "media_bytes=PASS "
         "prefetch_order=PASS "
+        "claim_before_fetch=PASS "
         "body_cap=PASS"
     )
     return 0
