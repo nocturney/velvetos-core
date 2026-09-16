@@ -67,6 +67,8 @@ curl -sS -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
 
 Body size for `/v1/delivery-approvals` is capped at 16 KiB (`ISSUER_MAX_BODY_BYTES`). Auth (optional app bearer) is checked before body buffering. Mutable non-CAS URLs are refused — Graph URL fetch is not byte identity.
 
+Production CAS hosts: set `VELVET_MEDIA_CAS_HOST_SUFFIXES=cdn.example,storage.googleapis.com` on issuer + mutation service so only allowlisted content-addressed hosts may back Graph media. Objects at `/sha256/<digest>/` must be immutable (never overwrite bytes for a digest path).
+
 ## ChatGPT / Cursor
 
 Never install the issuer URL as an MCP server.

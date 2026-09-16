@@ -122,6 +122,37 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
     merged = strip_untrusted_media_digest_fields(merge_tool_params(params, mcp_args))
     media_digests: list[str] = []
     if mutation_tool in MEDIA_BEARING_TOOLS:
+        # Fail closed if upstream/guard omitted the media identity fields.
+        if mutation_tool == "publish_carousel" and "image_urls" not in merged:
+            return {
+                "ok": False,
+                "blocked": True,
+                "error": "delivery approval required",
+                "error_class": "delivery_approval",
+                "problems": ["publish_carousel requires image_urls for media-byte binding"],
+                "mutated": False,
+                "mutation_tool": mutation_tool,
+            }
+        if mutation_tool == "publish_image" and "image_url" not in merged:
+            return {
+                "ok": False,
+                "blocked": True,
+                "error": "delivery approval required",
+                "error_class": "delivery_approval",
+                "problems": ["publish_image requires image_url for media-byte binding"],
+                "mutated": False,
+                "mutation_tool": mutation_tool,
+            }
+        if mutation_tool in ("publish_video", "publish_reel") and "video_url" not in merged:
+            return {
+                "ok": False,
+                "blocked": True,
+                "error": "delivery approval required",
+                "error_class": "delivery_approval",
+                "problems": [f"{mutation_tool} requires video_url for media-byte binding"],
+                "mutated": False,
+                "mutation_tool": mutation_tool,
+            }
         # Hash exact bytes that will back Graph's URL fetch — BEFORE claim.
         try:
             media_digests = resolve_media_sha256s(mutation_tool, merged)
@@ -184,12 +215,23 @@ def apply_delivery_approval_gate(mcp: Any = None) -> None:
     import instagram_mcp.server as ig_server
 
     mutation_names = _mutation_tools()
+    # Capability-forbidden writes: never allow even if DM env is flipped.
+    always_block = frozenset({"send_message", "send_dm"})
     if getattr(ig_server, "_velvet_delivery_approval_guard_patched", False):
         return
 
     _orig_guard = ig_server._guard
 
     def _guard(tool_name: str, params: dict[str, Any], impl: Callable[[], Any]):
+        if tool_name in always_block:
+            return {
+                "ok": False,
+                "blocked": True,
+                "error": f"{tool_name} forbidden by VelvetOS capability policy",
+                "error_class": "delivery_approval",
+                "mutated": False,
+                "mutation_tool": tool_name,
+            }
         if tool_name in mutation_names:
             blocked = authorize_or_block(tool_name, dict(params or {}))
             if blocked is not None:

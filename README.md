@@ -40,13 +40,13 @@
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-16T08:26:22+03:00` |
+| **Last verified / refreshed evidence** | `2026-09-16T09:08:02+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-16 — **Delivery-approval Codex mediums:** (1) install approval `_guard` before write tools bind — dynamic `instagram_mcp.server._guard` resolve + gate-before-overlays in `http_server._build_mcp`; (2) bi…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-16 — **Delivery-approval Codex mediums:** (1) install approval `_guard` before write tools bind — dynamic `instagram_mcp.server._guard` resolve + gate-before-overlays in `http_server._build_mcp`; (2) bi…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-16 — **Delivery-approval security closure:** re-register publish_* so `_guard` receives full media args (carousel `image_urls`, reel `cover_url`); dual-fetch rejects flapping media; optional `VELVET_MED…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-16 — **Delivery-approval security closure:** re-register publish_* so `_guard` receives full media args (carousel `image_urls`, reel `cover_url`); dual-fetch rejects flapping media; optional `VELVET_MED…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

@@ -77,8 +77,28 @@ def require_cas_url(url: str) -> str:
             "media URL must be content-addressed (/sha256/<64-hex>/); "
             "mutable URL/path/filename is not byte identity"
         )
+    _require_cas_host(url)
     return digest
 
+
+def _require_cas_host(url: str) -> None:
+    """Optional production host allowlist (VELVET_MEDIA_CAS_HOST_SUFFIXES).
+
+    When set (comma-separated suffixes), only those hosts may back Graph media.
+    Content-addressed path alone is insufficient if a non-CAS host can flip bytes.
+    """
+    import os
+    from urllib.parse import urlparse
+
+    raw = (os.environ.get("VELVET_MEDIA_CAS_HOST_SUFFIXES") or "").strip()
+    if not raw:
+        return
+    host = (urlparse(url).hostname or "").lower()
+    suffixes = [s.strip().lower().lstrip(".") for s in raw.split(",") if s.strip()]
+    if not host or not any(host == s or host.endswith("." + s) for s in suffixes):
+        raise ValueError(
+            f"media URL host {host!r} not in VELVET_MEDIA_CAS_HOST_SUFFIXES allowlist"
+        )
 
 def encode_media_sha256s_claim(digests: Sequence[str]) -> str:
     """Flat claim encoding (claims are strings only): compact JSON array."""
@@ -251,6 +271,8 @@ def resolve_media_sha256s(
     - URL must embed ``/sha256/<digest>/`` (content-addressed)
     - Exact body bytes are hashed
     - Body digest must equal the embedded CAS digest
+    - When fetching (not artifacts), fetch twice and require identical digests
+      (rejects flapping/mutable objects before claim)
     """
     tool = (mutation_tool or "").strip()
     if tool not in MEDIA_BEARING_TOOLS:
@@ -267,9 +289,18 @@ def resolve_media_sha256s(
             body = artifact_bytes[idx]
             if len(body) > max_bytes:
                 raise ValueError("media body exceeds fetch size cap")
+            digest = sha256_hex(body)
         else:
-            body = fetch_media_bytes(url, fetcher=fetcher, max_bytes=max_bytes)
-        digest = sha256_hex(body)
+            body1 = fetch_media_bytes(url, fetcher=fetcher, max_bytes=max_bytes)
+            digest1 = sha256_hex(body1)
+            body2 = fetch_media_bytes(url, fetcher=fetcher, max_bytes=max_bytes)
+            digest2 = sha256_hex(body2)
+            if digest1 != digest2:
+                raise ValueError(
+                    "media URL served different bytes across verification fetches "
+                    "(mutable/non-CAS object — refuse)"
+                )
+            digest = digest1
         if digest != embedded:
             raise ValueError(
                 "media bytes do not match content-addressed URL digest "

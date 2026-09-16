@@ -769,12 +769,13 @@ def main() -> int:
     # Source contracts: gate before overlays; no stale ``from … import _guard``.
     http_src = (remote_dir / "http_server.py").read_text(encoding="utf-8")
     gate_pos = http_src.find("apply_delivery_approval_gate")
+    media_params_pos = http_src.find("apply_complete_media_guard_params")
     mut_pos = http_src.find("apply_mutation_tools")
     story_pos = http_src.find("apply_story_publish_patch")
-    if gate_pos < 0 or mut_pos < 0 or story_pos < 0:
-        fail("http_server._build_mcp must wire delivery gate + mutation/story overlays")
-    if not (gate_pos < story_pos and gate_pos < mut_pos):
-        fail("apply_delivery_approval_gate must appear before mutation/story overlays")
+    if gate_pos < 0 or mut_pos < 0 or story_pos < 0 or media_params_pos < 0:
+        fail("http_server._build_mcp must wire delivery gate + media guard params + overlays")
+    if not (gate_pos < media_params_pos < story_pos and gate_pos < mut_pos):
+        fail("delivery approval gate must appear before media-param overlays and write tools")
     for rel in ("mutations.py", "story_publish.py", "cta_tools.py", "insights_v21.py"):
         src = (remote_dir / rel).read_text(encoding="utf-8")
         if "from instagram_mcp.server import _guard" in src:
@@ -977,6 +978,91 @@ def main() -> int:
     if blocked_car is None or not blocked_car.get("blocked"):
         fail("carousel item byte change must be blocked")
     set_media_byte_fetcher_override(_fetcher)
+
+    # Upstream incomplete guard summary: carousel without image_urls must fail closed
+    blocked_incomplete = authorize_or_block(
+        "publish_carousel",
+        {
+            "image_count": 2,
+            "caption": "c",
+            "account": "velvets_cloud",
+            "delivery_approval": car_rec2,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if blocked_incomplete is None or not blocked_incomplete.get("blocked"):
+        fail("carousel missing image_urls must be blocked")
+
+    # Flapping mutable object: two fetches disagree → BLOCKED
+    flip = {"n": 0}
+
+    def _flip_fetcher(url: str) -> bytes:
+        flip["n"] += 1
+        return _BYTES_A if flip["n"] % 2 else _BYTES_B
+
+    set_media_byte_fetcher_override(_flip_fetcher)
+    # Use a CAS URL for DIG_A but fetcher alternates — resolve must refuse
+    from vfigos.approval.media_bytes import resolve_media_sha256s as _resolve
+
+    try:
+        _resolve(
+            "publish_image",
+            {"image_url": _URL_A, "caption": "x", "account": "velvets_cloud"},
+            artifact_bytes=None,
+        )
+        fail("flapping media URL must raise")
+    except ValueError as exc:
+        if "different bytes" not in str(exc) and "match" not in str(exc):
+            # either flapping detection or CAS mismatch is acceptable fail-closed
+            pass
+    set_media_byte_fetcher_override(_fetcher)
+
+    # send_message forbidden even if somehow invoked through patched guard
+    dm = stub_server._guard(
+        "send_message",
+        {"recipient_id": "1", "text": "hi", "account": "velvets_cloud"},
+        lambda: {"ok": True, "mutated": True},
+    )
+    if not isinstance(dm, dict) or not dm.get("blocked"):
+        fail("send_message must be blocked by delivery approval policy")
+
+    # reel cover_url must affect media_sha256s binding
+    cover_bytes = b"velvet-cover-bytes-ZZZZ"
+    cover_dig = sha256_hex(cover_bytes)
+    cover_url = _cas_url(cover_dig, "cover.jpg")
+    _MEDIA_STORE[cover_url] = cover_bytes
+    reel_with_cover = {
+        "video_url": reel_url,
+        "caption": "reel",
+        "account": "velvets_cloud",
+        "share_to_feed": True,
+        "cover_url": cover_url,
+    }
+    reel_cover_rec = _issue(
+        priv,
+        key_id,
+        mutation_tool="publish_reel",
+        mutation_payload=reel_with_cover,
+        media_artifacts=[
+            {"bytes_b64": __import__("base64").b64encode(reel_bytes).decode()},
+            {"bytes_b64": __import__("base64").b64encode(cover_bytes).decode()},
+        ],
+    )
+    if reel_cover_rec["media_sha256s"] != encode_media_sha256s_claim([reel_dig, cover_dig]):
+        fail("publish_reel with cover_url must bind both media digests")
+    # approval without cover used with cover present → blocked
+    blocked_cover = authorize_or_block(
+        "publish_reel",
+        {
+            **reel_with_cover,
+            "delivery_approval": reel_rec,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if blocked_cover is None or not blocked_cover.get("blocked"):
+        fail("reel cover_url added after approval must be blocked")
 
     # --- Finding 3: issuer body cap / auth-before-buffer (pure ASGI; no TestClient) ---
     import asyncio

@@ -70,6 +70,12 @@ def _build_mcp():
 
     apply_delivery_approval_gate(ig_mcp)
 
+    # Upstream omits carousel image_urls / reel cover_url from ``_guard`` summaries.
+    # Re-register so media-byte binding sees the exact Graph media set.
+    from media_guard_params import apply_complete_media_guard_params
+
+    apply_complete_media_guard_params(ig_mcp)
+
     # Graph v21 Insights hardening (does not rebuild the MCP — patches insights tools only).
     from insights_v21 import apply_insights_patch
 
