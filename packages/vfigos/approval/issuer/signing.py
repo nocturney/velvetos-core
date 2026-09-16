@@ -17,6 +17,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from ..canonical import canonical_payload_bytes
 from ..capabilities import mutation_tool_ids
+from ..mutation_payload import mutation_payload_sha256
 from ..schema import (
     ACCOUNT_LABEL,
     ALGORITHM,
@@ -71,6 +72,7 @@ def issue_approval(
     content_id: str,
     package_sha256: str,
     mutation_tool: str,
+    mutation_payload: Mapping[str, Any] | None = None,
     ttl_seconds: int | None = None,
     ig_user_id: str | None = None,
     now: datetime | None = None,
@@ -79,7 +81,9 @@ def issue_approval(
     """Validate caller fields, mint server-controlled claims, sign.
 
     Caller-supplied tenant/account/schema/issuer/key_id/approval_id/nonce/times
-    are ignored — server controls those fields.
+    and any client-supplied mutation_payload_sha256 are ignored — server controls
+    those fields. ``mutation_payload_sha256`` is computed here from
+    ``mutation_payload`` (exact tool args), never blindly trusted from the caller.
     """
     problems: list[str] = []
     cid = (content_id or "").strip()
@@ -101,6 +105,14 @@ def issue_approval(
     if not kid:
         problems.append("key_id required (server-configured)")
 
+    payload_digest = ""
+    if not problems:
+        try:
+            # Issuer computes the digest; ignore any caller-supplied digest field.
+            payload_digest = mutation_payload_sha256(tool, mutation_payload or {})
+        except (KeyError, TypeError, ValueError) as exc:
+            problems.append(f"invalid mutation_payload: {exc}")
+
     if problems:
         return {"ok": False, "problems": problems, "receipt": None}
 
@@ -115,6 +127,7 @@ def issue_approval(
         "content_id": cid,
         "package_sha256": digest,
         "mutation_tool": tool,
+        "mutation_payload_sha256": payload_digest,
         "issued_at": _rfc3339(now_utc),
         "expires_at": _rfc3339(expires),
         "nonce": secrets.token_hex(16),

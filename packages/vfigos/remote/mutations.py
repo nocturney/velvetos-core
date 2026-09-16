@@ -136,10 +136,13 @@ def apply_mutation_tools(mcp: Any) -> None:
 
     Intentionally does NOT register update_profile / update_media_caption so
     agents cannot treat them as available write capabilities.
+
+    ``_guard`` is resolved dynamically from ``instagram_mcp.server`` at call
+    time so delivery-approval patches always apply (never capture a stale import).
     """
+    import instagram_mcp.server as ig_server
     from instagram_mcp import auth
     from instagram_mcp import validators as V
-    from instagram_mcp.server import _guard
 
     # Defense: if an older overlay registered misleading write stubs, remove them.
     for name in NEVER_EXPOSE_AS_WRITE_TOOLS:
@@ -222,7 +225,7 @@ def apply_mutation_tools(mcp: Any) -> None:
                 "matrix": MATRIX["delete_media"],
             }
 
-        return _guard(
+        return ig_server._guard(
             "delete_media",
             {
                 "media_id": media_id,

@@ -63,6 +63,13 @@ def _build_mcp():
     # Import after env checks so missing Meta token fails closed before binding tools.
     from instagram_mcp.server import mcp as ig_mcp
 
+    # Install delivery-approval guard BEFORE overlays register write tools that
+    # close over ``_guard``. Tools must resolve ``instagram_mcp.server._guard``
+    # dynamically; this order is defense-in-depth for that contract.
+    from delivery_approval_gate import apply_delivery_approval_gate
+
+    apply_delivery_approval_gate(ig_mcp)
+
     # Graph v21 Insights hardening (does not rebuild the MCP — patches insights tools only).
     from insights_v21 import apply_insights_patch
 
@@ -82,12 +89,6 @@ def _build_mcp():
     from cta_tools import apply_cta_audit_tools
 
     apply_cta_audit_tools(ig_mcp)
-
-    # Authenticated delivery approval — verify + atomic claim before Graph writes.
-    # Private signing key must NEVER be mounted on this service.
-    from delivery_approval_gate import apply_delivery_approval_gate
-
-    apply_delivery_approval_gate(ig_mcp)
 
     bearer = _require_bearer()
     ig_mcp.auth = StaticTokenVerifier(

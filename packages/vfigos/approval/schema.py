@@ -23,11 +23,17 @@ CLAIM_FIELDS = (
     "content_id",
     "package_sha256",
     "mutation_tool",
+    "mutation_payload_sha256",
     "issued_at",
     "expires_at",
     "nonce",
     "issuer",
     "key_id",
 )
+
+# Issuer HTTP body hard cap (approval issuance JSON only).
+ISSUER_MAX_BODY_BYTES = 16 * 1024
+# Mutation MCP capture middleware cap (JSON-RPC tools/call before FastMCP auth).
+MUTATION_CAPTURE_MAX_BODY_BYTES = 256 * 1024
 
 SHA256_RE = r"^[0-9a-f]{64}$"

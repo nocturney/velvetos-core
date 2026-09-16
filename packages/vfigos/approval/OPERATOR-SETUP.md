@@ -56,12 +56,14 @@ gcloud run services add-iam-policy-binding velvet-delivery-approval-issuer \
 # 6) Redeploy mutation service (spend bucket env; no private key)
 ./packages/vfigos/remote/deploy.sh
 
-# 7) Smoke issue
+# 7) Smoke issue (issuer computes mutation_payload_sha256 — do not trust a client digest)
 TOKEN=$(gcloud auth print-identity-token)
 curl -sS -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
-  -d '{"content_id":"JOB","package_sha256":"<64hex>","mutation_tool":"publish_image"}' \
+  -d '{"content_id":"JOB","package_sha256":"<64hex>","mutation_tool":"publish_image","mutation_payload":{"image_url":"https://example.com/a.jpg","caption":"…","account":"velvets_cloud"}}' \
   "$ISSUER_URL/v1/delivery-approvals"
 ```
+
+Body size for `/v1/delivery-approvals` is capped at 16 KiB (`ISSUER_MAX_BODY_BYTES`). Auth (optional app bearer) is checked before body buffering.
 
 ## ChatGPT / Cursor
 

@@ -85,6 +85,7 @@ def verify_receipt(
     expected_mutation_tool: str | None = None,
     expected_content_id: str | None = None,
     expected_package_sha256: str | None = None,
+    expected_mutation_payload_sha256: str | None = None,
     expected_ig_user_id: str | None = None,
     expected_tenant: str = TENANT,
     expected_account_label: str = ACCOUNT_LABEL,
@@ -117,6 +118,8 @@ def verify_receipt(
         problems.append("missing content_id")
     if not re.fullmatch(SHA256_RE, claims["package_sha256"]):
         problems.append("invalid package_sha256")
+    if not re.fullmatch(SHA256_RE, claims["mutation_payload_sha256"]):
+        problems.append("invalid mutation_payload_sha256")
 
     tools = allowed_mutation_tools if allowed_mutation_tools is not None else mutation_tool_ids()
     if claims["mutation_tool"] not in tools:
@@ -128,6 +131,11 @@ def verify_receipt(
         problems.append("wrong content_id")
     if expected_package_sha256 is not None and claims["package_sha256"] != expected_package_sha256:
         problems.append("wrong package_sha256")
+    if (
+        expected_mutation_payload_sha256 is not None
+        and claims["mutation_payload_sha256"] != expected_mutation_payload_sha256
+    ):
+        problems.append("wrong mutation_payload_sha256")
 
     key_id = claims["key_id"]
     record = registry.get(key_id)

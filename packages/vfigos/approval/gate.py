@@ -43,6 +43,7 @@ def authorize_mutation(
     registry: KeyRegistry,
     content_id: str | None = None,
     package_sha256: str | None = None,
+    mutation_payload_sha256: str | None = None,
     ig_user_id: str | None = None,
     now: datetime | None = None,
 ) -> GateResult:
@@ -60,6 +61,7 @@ def authorize_mutation(
         expected_mutation_tool=mutation_tool,
         expected_content_id=content_id,
         expected_package_sha256=package_sha256,
+        expected_mutation_payload_sha256=mutation_payload_sha256,
         expected_ig_user_id=ig_user_id,
         now=now,
     )
@@ -73,6 +75,7 @@ def authorize_mutation(
             "mutation_tool": mutation_tool,
             "content_id": vr.claims.get("content_id"),
             "package_sha256": vr.claims.get("package_sha256"),
+            "mutation_payload_sha256": vr.claims.get("mutation_payload_sha256"),
         },
     )
     if not claim.ok:

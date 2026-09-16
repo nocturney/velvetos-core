@@ -391,9 +391,9 @@ def fetch_media_insights(
 
 def apply_insights_patch(mcp: Any) -> None:
     """Replace get_account_insights / get_media_insights on the FastMCP instance."""
+    import instagram_mcp.server as ig_server
     from instagram_mcp import auth
     from instagram_mcp import validators as V
-    from instagram_mcp.server import _guard
 
     # Remove upstream broken tools (same names — ChatGPT keeps calling them).
     for name in ("get_account_insights", "get_media_insights"):
@@ -440,7 +440,7 @@ def apply_insights_patch(mcp: Any) -> None:
             result["account"] = acct.label
             return result
 
-        return _guard(
+        return ig_server._guard(
             "get_account_insights",
             {"account": account, "metrics": metrics, "period": period},
             _impl,
@@ -467,7 +467,7 @@ def apply_insights_patch(mcp: Any) -> None:
                 client, mid, metrics=metrics, account_label=acct.label
             )
 
-        return _guard(
+        return ig_server._guard(
             "get_media_insights",
             {"media_id": media_id, "account": account, "metrics": metrics},
             _impl,
