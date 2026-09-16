@@ -25,9 +25,24 @@
     "productionUsesLatestTag": false,
     "pinExactVersion": true,
     "currentBaseline": "v4.31.0",
-    "latestReviewedVersion": "v4.31.0",
-    "latestReviewedPublishedAt": "2026-09-13T07:26:39Z",
-    "reviewedAt": "2026-09-14T08:23:00+03:00",
+    "latestReviewedVersion": "v4.34.0",
+    "latestReviewedPublishedAt": "2026-09-15T21:18:14Z",
+    "reviewedAt": "2026-09-16T07:08:00+03:00",
+    "reviewEvidence": {
+      "release": "https://github.com/getopenpost/openpost/releases/tag/v4.34.0",
+      "changelog": "getopenpost/openpost@v4.34.0:CHANGELOG.md",
+      "reviewedRange": "v4.31.0..v4.34.0",
+      "windowsServerAssetSha256": "66e366c1de8c16a6c73fc489c698c933c3eaa7c2307c65ae40782c924b05e6fc"
+    },
+    "impact": {
+      "metaInstagramAuth": "relevant: v4.30.3 reconnect flow re-requests declined Facebook/Instagram permissions; v4.34.0 has no new Meta/Instagram auth break",
+      "apiMcpContract": "relevant: v4.32.0/v4.32.1 OAuth scope handling fixes for mcp:read and mcp:full; v4.34.0 prevents duplicate one-time authorization-code consumption",
+      "mediaLimits": "reviewed: v4.32.0 adds Fediverse formats; existing Instagram feed/carousel/story/reel catalogue remains unchanged in reviewed docs",
+      "schedulerQueueRetry": "relevant: v4.30.3 preserves provider result and resumes retry without republishing completed prefixes; v4.32.0 adds bounded non-blocking diagnostics queue separate from application DB",
+      "analytics": "relevant: diagnostics/telemetry expanded; Discord analytics fixes are unrelated to VF Instagram analytics authority",
+      "databaseSchemaStorage": "migration present: 135_fediverse_instance_provider adds provider column to mastodon_instances; backup plus staging smoke required before runtime upgrade",
+      "security": "privacy-impacting default: self-hosted maintainer diagnostics become enabled by default in v4.32.0; VF staging must explicitly opt out unless separately approved"
+    },
     "autoPromoteWithoutTests": false,
     "backupBeforeMigrationUpgrade": true,
     "requiredChecks": [
@@ -53,9 +68,15 @@
     "stagingLocalUrl": "http://127.0.0.1:18080",
     "stagingHealth": "pass",
     "stagingReadiness": "pass_database_ok",
+    "upgradeCandidate": "v4.34.0",
+    "upgradeCandidateWindowsServerSha256": "66e366c1de8c16a6c73fc489c698c933c3eaa7c2307c65ae40782c924b05e6fc",
+    "upgradeStatus": "blocked_pending_backup_and_staging_migration_smoke",
+    "requiredCandidateEnv": {
+      "OPENPOST_DIAGNOSTICS_ENABLED": "false"
+    },
     "publicHttpsReady": false,
     "providerOAuthReady": false,
-    "blockedBy": "public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are still required before Instagram provider connection and publish smoke",
+    "blockedBy": "v4.34.0 runtime upgrade requires backup plus staging migration smoke; public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are still required before Instagram provider connection and publish smoke",
     "containerImagePolicy": "pin version or immutable digest; never production latest"
   },
   "truth": {
