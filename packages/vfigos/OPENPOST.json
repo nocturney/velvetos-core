@@ -25,9 +25,9 @@
     "productionUsesLatestTag": false,
     "pinExactVersion": true,
     "currentBaseline": "v4.31.0",
-    "latestReviewedVersion": "v4.31.0",
-    "latestReviewedPublishedAt": "2026-09-13T07:26:39Z",
-    "reviewedAt": "2026-09-14T08:23:00+03:00",
+    "latestReviewedVersion": "v4.34.0",
+    "latestReviewedPublishedAt": "2026-09-15T21:18:14Z",
+    "reviewedAt": "2026-09-16T07:08:00+03:00",
     "autoPromoteWithoutTests": false,
     "backupBeforeMigrationUpgrade": true,
     "requiredChecks": [
@@ -41,7 +41,20 @@
       "staging_smoke",
       "instagram_live_verify",
       "analytics_read"
-    ]
+    ],
+    "latestReview": {
+      "fromVersion": "v4.31.0",
+      "toVersion": "v4.34.0",
+      "upstreamWindowsServerSha256": "66e366c1de8c16a6c73fc489c698c933c3eaa7c2307c65ae40782c924b05e6fc",
+      "metaInstagramAuth": "no direct Meta/Instagram breaking change found in v4.31.1-v4.34.0 release notes; existing public HTTPS/provider OAuth prerequisites remain",
+      "apiMcpContract": "relevant fixes: mcp:read/mcp:full scope handling and MCP OAuth one-time authorization callback locking",
+      "mediaLimits": "Instagram limits unchanged in reviewed release notes; new Fediverse provider catalogue entries are unrelated to VF Instagram path",
+      "schedulerQueueRetry": "diagnostic reporting adds a bounded non-blocking queue; no VF publication queue/retry breaking change identified",
+      "analytics": "no Instagram analytics contract change identified; Discord analytics readiness fix is unrelated",
+      "databaseSchemaStorage": "migration 135 adds mastodon_instances.provider for Fediverse instance identity; requires backup plus staging migration smoke before runtime upgrade",
+      "security": "self-hosted maintainer diagnostics become enabled by default in v4.32.0 and send privacy-limited failure reports externally unless OPENPOST_DIAGNOSTICS_ENABLED=false; treat as config/privacy change before upgrade",
+      "runtimeDecision": "review state updated only; keep staging pinned at v4.31.0 until backup, diagnostics policy, migration smoke and required staging gates are executed"
+    }
   },
   "runtime": {
     "productionDeployed": false,
@@ -55,7 +68,7 @@
     "stagingReadiness": "pass_database_ok",
     "publicHttpsReady": false,
     "providerOAuthReady": false,
-    "blockedBy": "public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are still required before Instagram provider connection and publish smoke",
+    "blockedBy": "public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are still required before Instagram provider connection and publish smoke; v4.34.0 staging upgrade additionally requires database backup, explicit diagnostics privacy setting, migration smoke and required staging verification",
     "containerImagePolicy": "pin version or immutable digest; never production latest"
   },
   "truth": {
