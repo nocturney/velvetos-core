@@ -23,6 +23,7 @@
 11. לפני בנייה / פק חדש / שינוי צינור → `playbooks/brainstorm-gate.md` (דפוס obra brainstorming; אישור אנושי לפני יישום).
 12. באג / סנסור אדום / כשל כלי → `playbooks/systematic-debugging.md` (אבחון מדורג; שחזור ושורש לפני תיקון; בלי ניחוש).
 13. תוכנית מימוש כתובה → `playbooks/writing-plans.md` (Spec כסמכות, steps קטנים, dependencies/producer-consumer, בלי runtime שני).
+13a. רב־סשן אחרי החלטות → `playbooks/to-spec.md` (סינתזת החלטות + seams; בלי ראיון חדש; בלי npx; שמירה ב־`state/`).
 13b. ביצוע תוכנית → `playbooks/executing-plans.md`: evidence-bearing preflight לפני Task 1; safe rulings במקום stalls כשבטוח; fan-out רק למשימות עצמאיות; fan-in עם integration proof; fresh whole-plan review לפני claim.
 13c. מילון תחום → `playbooks/domain-glossary.md` (TEAM / pipeline / owner-memory — בלי מונחים מומצאים).
 14. Living Studio → `python3 scripts/vf_living_studio.py` (World Model / Pulse / Intake) — שכבת חיבור, לא Control Plane שני.

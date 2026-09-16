@@ -1,3 +1,18 @@
+# 05 · משרד · 16.9.2026 (best-skills bi-daily)
+
+```
+05 · משרד
+מה נבנה / יועל:
+- best-skills 48h — dataDate 2026-09-15; הוטמע to-spec → packages/vfharness/playbooks/to-spec.md
+- cadence: Research Seat (`lastPass`/`lastArtifact`/`lastResult`); אין חידוש timer Cursor חיצוני לפי TIMER.md
+- watch: code-review · to-tickets · open-design · Understand-Anything · ui-ux-pro-max · taste · marketingskills · MemPalace
+- דולג: ECC / orca / google-agents-cli / genmedia / proactive / reddit-twitter automation
+```
+
+ארטיפקט: `packages/vfresearch/sources/2026-09-16-best-skills.md`
+
+---
+
 # 05 · משרד · 14.9.2026
 
 מחקר יומי חי הושלם. מצב cutoff: **`ready_for_brief`**. מקור מלא: `packages/vfresearch/sources/2026-09-14-orchestra.md`.
