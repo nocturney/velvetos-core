@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-14 — **Video toolchain adapters commissioned:** adapted video-use editing patterns into `vf_video_edit.py` with EDL validation, word-boundary contracts, 30ms audio fades, deterministic base cuts, ffprob…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-14 — **Video toolchain adapters commissioned:** adapted video-use editing patterns into `vf_video_edit.py` with EDL validation, word-boundary contracts, 30ms audio fades, deterministic base cuts, ffprob…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-16 — **Weekly inspiration links freshness:** re-read all 82 `LINKS.json` entries (1 embed HeyOrca→ig-music + meme-week note in `MUSIC.md`, 77 unchanged, 4 auth-wall skips); Wednesday MakerWorld scan (Cl…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-16 — **Weekly inspiration links freshness:** re-read all 82 `LINKS.json` entries (1 embed HeyOrca→ig-music + meme-week note in `MUSIC.md`, 77 unchanged, 4 auth-wall skips); Wednesday MakerWorld scan (Cl…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
