@@ -21,7 +21,7 @@ jobs:
 
       - name: Install sensor runtime dependencies
         run: |
-          python3 -m pip install --disable-pip-version-check Pillow
+          python3 -m pip install --disable-pip-version-check Pillow cryptography
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
 
