@@ -1,14 +1,35 @@
-# 05 · משרד · 14.9.2026
+# 05 · משרד · 16.9.2026
+
+מעבר best-skills (Research Seat cadence ~48h). מקור: `packages/vfresearch/sources/2026-09-16-best-skills.md` · dataDate דירוג **2026-09-15**.
+
+## מה נבנה / יועל
+
+- best-skills — הוטמע `sensor-first-tdd` ב־vfharness (TDD אדום→ירוק על `check-*.py`; סוגר פער #178/#204)
+- cadence: Research Seat authority; מנוי חיצוני ישן `vf-best-skills-bi-daily` בוטל (אין automation שני)
+- watch: requesting-code-review · openai-codex; דולג MemPalace / genmedia / google-agents-cli
+
+## מה שווה להעביר לבריף
+
+```text
+05 · מחקר ורעיונות
+- best-skills: sensor-first-tdd על הרתמה — אדום אמיתי לפני תיקון סנסור/פק (mattpocock tdd + obra).
+```
+
+Freshness best-skills: **2026-09-16 · embedded-sensor-first-tdd** (דירוג מקור 2026-09-15).
+
+---
+
+## היסטוריה · 14.9.2026
 
 מחקר יומי חי הושלם. מצב cutoff: **`ready_for_brief`**. מקור מלא: `packages/vfresearch/sources/2026-09-14-orchestra.md`.
 
-## מה נבנה / יועל
+## מה נבנה / יועל (14.9)
 
 - Social Intelligence הוטמע בתוך `vfresearch`/`vfom`/`vfinsights`: `SocialResearchPacket`, ניתוח mechanics ל-Reference Reels, Content Matrix לפני saturation, ו-Creative Performance Profile מדוד.
 - שלושת מקורות המחקר מ-14.9 נרשמו ב-`vfresearch/LINKS.json` לסקירה מחזורית; אין runtime/scheduler/analytics חלופי.
 - פרופיל הביצועים נבנה מה-Instagram MCP הקנוני: כרגע 1 פוסט מדוד בלבד ולכן אין pattern מקודם עד סף 3.
 
-## מה שווה להעביר לבריף
+## מה שווה להעביר לבריף (14.9)
 
 ```text
 05 · מחקר ורעיונות
@@ -18,7 +39,6 @@
 ```
 
 Freshness: **2026-09-14 · GREEN body evidence**; ריצת 06:00 ביצעה גוף Web ציבורי חדש ועדכנה את הארטיפקט הקנוני.
-Best Skills: `lastPass=2026-09-14`, `dataDate=2026-09-13`, תוצאה `no-embed-existing-coverage`; לא הגיע refresh נוסף בחלון 48h ולכן לא הורץ שוב. `timer verification=UNPROVEN` כי `cursor-subscriptions` אינו חשוף בריצה הנוכחית.
 Validation limitation: Windows fallback עדיין חושף case-collision קיים בין `constitution/TAGS.md` ו-`constitution/tags.md`; אין claim של `check-all.py` PASS מלא.
 Runtime limitation: Mac-Office offline; Snapmaker Orca 2.3.5 הוא ה-last verified המקומי מ-13.9, לא אימות חדש להיום. OrcaSlicer 2.4.2 הוא benchmark בלבד, לא הוראת מעבר production.
 Email: לא נשלח מייל שני בריצת 06:00; סיכום אחד כבר נשלח היום דרך המעקף בריפו, והחיבור הפנימי של Gmail לא שימש.
