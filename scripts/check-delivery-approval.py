@@ -457,28 +457,105 @@ def main() -> int:
         fail("baseline issue for forge check failed")
     # recompute proves issuer ignored any external digest field (signing API has no such param)
 
-    # --- Finding 1: guard install order / dynamic resolve ---
-    sys.path.insert(0, str(ROOT / "packages" / "vfigos" / "remote"))
-    import instagram_mcp.server as ig_server
+    # --- Finding 1: guard install order / dynamic resolve (CI-safe stub) ---
+    # Do not require adelaidasofia-instagram-mcp in sensor CI. Install a minimal
+    # stub that mirrors upstream module-global ``_guard`` lookup + overlay
+    # ``ig_server._guard`` dynamic resolve, then patch in production order.
+    import types
+
+    remote_dir = ROOT / "packages" / "vfigos" / "remote"
+    sys.path.insert(0, str(remote_dir))
+
+    # Source contracts: gate before overlays; no stale ``from … import _guard``.
+    http_src = (remote_dir / "http_server.py").read_text(encoding="utf-8")
+    gate_pos = http_src.find("apply_delivery_approval_gate")
+    mut_pos = http_src.find("apply_mutation_tools")
+    story_pos = http_src.find("apply_story_publish_patch")
+    if gate_pos < 0 or mut_pos < 0 or story_pos < 0:
+        fail("http_server._build_mcp must wire delivery gate + mutation/story overlays")
+    if not (gate_pos < story_pos and gate_pos < mut_pos):
+        fail("apply_delivery_approval_gate must appear before mutation/story overlays")
+    for rel in ("mutations.py", "story_publish.py", "cta_tools.py", "insights_v21.py"):
+        src = (remote_dir / rel).read_text(encoding="utf-8")
+        if "from instagram_mcp.server import _guard" in src:
+            fail(f"{rel} must not capture _guard via from-import")
+        if "ig_server._guard" not in src and rel != "insights_v21.py":
+            fail(f"{rel} must resolve ig_server._guard dynamically")
+        if rel == "insights_v21.py" and "ig_server._guard" not in src:
+            fail("insights_v21.py must resolve ig_server._guard dynamically")
+
+    # Stub package: original _guard + upstream-style tools that look up globals.
+    stub_pkg = types.ModuleType("instagram_mcp")
+    stub_server = types.ModuleType("instagram_mcp.server")
+    stub_auth = types.ModuleType("instagram_mcp.auth")
+    stub_validators = types.ModuleType("instagram_mcp.validators")
+
+    def _orig_guard(tool_name: str, params: dict, impl):
+        return impl()
+
+    stub_server._guard = _orig_guard
+    stub_server.__dict__["_guard"] = _orig_guard
+
+    # Upstream-style: bare ``_guard`` name resolves in module globals at call time.
+    exec(
+        "def publish_image(image_url, caption=None, account=None):\n"
+        "    return _guard('publish_image',"
+        " {'image_url': image_url, 'caption': caption, 'account': account},"
+        " lambda: {'ok': True, 'tool': 'publish_image'})\n"
+        "def publish_story(image_url=None, video_url=None, account=None):\n"
+        "    return _guard('publish_story',"
+        " {'image_url': image_url, 'video_url': video_url, 'account': account},"
+        " lambda: {'ok': True, 'tool': 'publish_story'})\n"
+        "def reply_to_comment(comment_id, message, account=None):\n"
+        "    return _guard('reply_to_comment',"
+        " {'comment_id': comment_id, 'message': message, 'account': account},"
+        " lambda: {'ok': True, 'tool': 'reply_to_comment'})\n"
+        "def hide_comment(comment_id, hide=True, account=None):\n"
+        "    return _guard('hide_comment',"
+        " {'comment_id': comment_id, 'hide': hide, 'account': account},"
+        " lambda: {'ok': True, 'tool': 'hide_comment'})\n"
+        "def delete_comment(comment_id, account=None):\n"
+        "    return _guard('delete_comment',"
+        " {'comment_id': comment_id, 'account': account},"
+        " lambda: {'ok': True, 'tool': 'delete_comment'})\n",
+        stub_server.__dict__,
+    )
+
+    sys.modules["instagram_mcp"] = stub_pkg
+    sys.modules["instagram_mcp.server"] = stub_server
+    sys.modules["instagram_mcp.auth"] = stub_auth
+    sys.modules["instagram_mcp.validators"] = stub_validators
+    stub_pkg.server = stub_server
+    stub_pkg.auth = stub_auth
+    stub_pkg.validators = stub_validators
+
     from delivery_approval_gate import apply_delivery_approval_gate, authorize_or_block
     from mutations import apply_mutation_tools
 
-    # Simulate production order: gate first, then mutation tools.
-    # Reset patch flag if re-running in same process.
-    if hasattr(ig_server, "_velvet_delivery_approval_guard_patched"):
-        delattr(ig_server, "_velvet_delivery_approval_guard_patched")
-    # Restore a sentinel original then re-apply
+    # Stale capture BEFORE gate install — must not be used by write tools.
+    captured_before = stub_server._guard
+
+    # Production order: install approval guard, THEN register write overlays.
+    if hasattr(stub_server, "_velvet_delivery_approval_guard_patched"):
+        delattr(stub_server, "_velvet_delivery_approval_guard_patched")
     apply_delivery_approval_gate(None)
+    if not getattr(stub_server, "_velvet_delivery_approval_guard_patched", False):
+        fail("delivery approval guard must be marked installed")
+    if stub_server._guard is captured_before:
+        fail("gate install must replace module _guard (not leave stale reference)")
 
     class _FakeMcp:
+        tools: dict = {}
+
         class local_provider:
             @staticmethod
             def remove_tool(_name):
                 return None
 
-        @staticmethod
-        def tool():
+        @classmethod
+        def tool(cls):
             def deco(fn):
+                cls.tools[fn.__name__] = fn
                 return fn
 
             return deco
@@ -487,43 +564,43 @@ def main() -> int:
         def remove_tool(_name):
             return None
 
-    # Register delete_media after gate patch — must see approval guard.
     apply_mutation_tools(_FakeMcp)
-    # Direct authorize_or_block path
-    blocked_direct = authorize_or_block(
+    if "delete_media" not in _FakeMcp.tools:
+        fail("delete_media must register after gate install")
+
+    # Overlay path: dynamic ig_server._guard — must block without receipt.
+    del_result = _FakeMcp.tools["delete_media"]("1789", account="velvets_cloud", confirm_irreversible=True)
+    if not isinstance(del_result, dict) or not del_result.get("blocked"):
+        fail("delete_media registered after gate must hit approval guard")
+
+    # Upstream-style globals lookup after patch — must also block.
+    for name, call in (
+        ("publish_image", lambda: stub_server.publish_image("https://example.com/a.jpg", "x", "velvets_cloud")),
+        ("publish_story", lambda: stub_server.publish_story(image_url="https://example.com/s.jpg", account="velvets_cloud")),
+        ("reply_to_comment", lambda: stub_server.reply_to_comment("1", "hi", "velvets_cloud")),
+        ("hide_comment", lambda: stub_server.hide_comment("1", True, "velvets_cloud")),
+        ("delete_comment", lambda: stub_server.delete_comment("1", "velvets_cloud")),
+    ):
+        out = call()
+        if not isinstance(out, dict) or not out.get("blocked"):
+            fail(f"{name} must execute through live approval guard")
+
+    # Stale captured reference bypasses approval — proves why from-import is forbidden.
+    stale_out = captured_before(
         "publish_image",
-        {
-            "image_url": base_payload["image_url"],
-            "caption": base_payload["caption"],
-            "account": base_payload["account"],
-        },
+        dict(base_payload),
+        lambda: {"ok": True, "stale": True},
     )
+    if stale_out != {"ok": True, "stale": True}:
+        fail("stale captured _guard must retain unwrapped behavior (negative control)")
+
+    # authorize_or_block direct path
+    blocked_direct = authorize_or_block("publish_image", dict(base_payload))
     if blocked_direct is None:
         fail("publish_image without receipt must be blocked by approval guard")
-    for tool in ("publish_story", "delete_media", "reply_to_comment", "hide_comment"):
-        b = authorize_or_block(tool, {})
-        if b is None:
-            fail(f"{tool} without receipt must be blocked")
-    # Stale capture simulation: importing _guard then patching must not matter when
-    # call sites use ig_server._guard dynamically.
-    from instagram_mcp.server import _guard as captured_before  # noqa: F401
 
-    # After patch, module attribute must be the wrapper.
-    if not getattr(ig_server, "_velvet_delivery_approval_guard_patched", False):
-        fail("delivery approval guard must be marked installed")
-    if ig_server._guard is captured_before:
-        # If somehow equal, still ensure wrapper behavior via authorize path above.
-        pass
-    # delete_media path uses ig_server._guard — prove wrapper runs
-    wrapped = ig_server._guard(
-        "delete_media",
-        {"media_id": "1", "account": "velvets_cloud"},
-        lambda: {"ok": True, "mutated": True},
-    )
-    if not isinstance(wrapped, dict) or not wrapped.get("blocked"):
-        fail("delete_media via live _guard must block without approval")
-    # read-only tool name must pass through without delivery_approval class
-    passthrough = ig_server._guard("list_media", {}, lambda: {"ok": True, "read": True})
+    # read-only tools remain unaffected
+    passthrough = stub_server._guard("list_media", {}, lambda: {"ok": True, "read": True})
     if passthrough != {"ok": True, "read": True}:
         fail("read-only tools must remain unaffected by delivery approval guard")
 
