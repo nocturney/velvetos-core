@@ -78,6 +78,45 @@ def parse_receipt_envelope(receipt: str | Mapping[str, Any]) -> tuple[dict[str, 
     return claims, sig.strip()
 
 
+def verify_receipt_pre_media(
+    receipt: str | Mapping[str, Any],
+    *,
+    registry: KeyRegistry,
+    expected_mutation_tool: str | None = None,
+    expected_content_id: str | None = None,
+    expected_package_sha256: str | None = None,
+    expected_ig_user_id: str | None = None,
+    expected_tenant: str = TENANT,
+    expected_account_label: str = ACCOUNT_LABEL,
+    now: datetime | None = None,
+    clock_skew_seconds: int = CLOCK_SKEW_SECONDS,
+    allowed_mutation_tools: frozenset[str] | None = None,
+) -> VerifyResult:
+    """Phase A: authenticate receipt + non-media bindings without media I/O.
+
+    Verifies envelope, signature, schema/issuer/key_id, tenant, account,
+    mutation_tool, time bounds, content_id, and package_sha256.
+
+    Does NOT compare ``media_sha256s`` or ``mutation_payload_sha256`` against
+    runtime digests — those require resolved media bytes (Phase B).
+    """
+    return verify_receipt(
+        receipt,
+        registry=registry,
+        expected_mutation_tool=expected_mutation_tool,
+        expected_content_id=expected_content_id,
+        expected_package_sha256=expected_package_sha256,
+        expected_mutation_payload_sha256=None,
+        expected_media_sha256s=None,
+        expected_ig_user_id=expected_ig_user_id,
+        expected_tenant=expected_tenant,
+        expected_account_label=expected_account_label,
+        now=now,
+        clock_skew_seconds=clock_skew_seconds,
+        allowed_mutation_tools=allowed_mutation_tools,
+    )
+
+
 def verify_receipt(
     receipt: str | Mapping[str, Any],
     *,

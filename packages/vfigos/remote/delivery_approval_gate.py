@@ -67,9 +67,31 @@ def _mutation_tools() -> frozenset[str]:
     return frozenset(names)
 
 
+def _blocked(mutation_tool: str, problems: list[str], *, gate: dict[str, Any] | None = None) -> dict[str, Any]:
+    out: dict[str, Any] = {
+        "ok": False,
+        "blocked": True,
+        "error": "delivery approval required",
+        "error_class": "delivery_approval",
+        "problems": list(problems),
+        "mutated": False,
+        "mutation_tool": mutation_tool,
+    }
+    if gate is not None:
+        out["gate"] = gate
+    return out
+
+
 def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None) -> dict[str, Any] | None:
-    """Return a BLOCKED MCP dict, or None if mutation may proceed."""
-    from vfigos.approval.gate import authorize_mutation
+    """Return a BLOCKED MCP dict, or None if mutation may proceed.
+
+    Trust order (media-bearing writes):
+      Phase A — verify delivery approval (sig/schema/tenant/account/tool/expiry/
+                content/package) with **zero** media fetches
+      Phase B — resolve/fetch immutable media bytes, recompute digests + payload,
+                verify bindings, atomic claim, then Graph
+    """
+    from vfigos.approval.gate import authorize_mutation, verify_authorization_pre_media
     from vfigos.approval.media_bytes import (
         MEDIA_BEARING_TOOLS,
         inject_media_sha256s,
@@ -118,92 +140,68 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
     else:
         package_sha256 = None
 
+    ig_user_id = (os.environ.get("INSTAGRAM_MCP_IG_USER_ID") or "").strip() or None
+    registry = _registry()
+
+    # --- Phase A: authenticate + non-media bindings BEFORE any media fetch ---
+    pre = verify_authorization_pre_media(
+        receipt=receipt,
+        mutation_tool=mutation_tool,
+        registry=registry,
+        content_id=content_id,
+        package_sha256=package_sha256,
+        ig_user_id=ig_user_id,
+    )
+    if not pre.ok:
+        return _blocked(mutation_tool, pre.problems, gate=pre.as_dict())
+
     # Authoritative payload = actual tool args (MCP args preferred over guard summary).
     merged = strip_untrusted_media_digest_fields(merge_tool_params(params, mcp_args))
     media_digests: list[str] = []
     if mutation_tool in MEDIA_BEARING_TOOLS:
         # Fail closed if upstream/guard omitted the media identity fields.
         if mutation_tool == "publish_carousel" and "image_urls" not in merged:
-            return {
-                "ok": False,
-                "blocked": True,
-                "error": "delivery approval required",
-                "error_class": "delivery_approval",
-                "problems": ["publish_carousel requires image_urls for media-byte binding"],
-                "mutated": False,
-                "mutation_tool": mutation_tool,
-            }
+            return _blocked(
+                mutation_tool,
+                ["publish_carousel requires image_urls for media-byte binding"],
+            )
         if mutation_tool == "publish_image" and "image_url" not in merged:
-            return {
-                "ok": False,
-                "blocked": True,
-                "error": "delivery approval required",
-                "error_class": "delivery_approval",
-                "problems": ["publish_image requires image_url for media-byte binding"],
-                "mutated": False,
-                "mutation_tool": mutation_tool,
-            }
+            return _blocked(
+                mutation_tool,
+                ["publish_image requires image_url for media-byte binding"],
+            )
         if mutation_tool in ("publish_video", "publish_reel") and "video_url" not in merged:
-            return {
-                "ok": False,
-                "blocked": True,
-                "error": "delivery approval required",
-                "error_class": "delivery_approval",
-                "problems": [f"{mutation_tool} requires video_url for media-byte binding"],
-                "mutated": False,
-                "mutation_tool": mutation_tool,
-            }
-        # Hash exact bytes that will back Graph's URL fetch — BEFORE claim.
+            return _blocked(
+                mutation_tool,
+                [f"{mutation_tool} requires video_url for media-byte binding"],
+            )
+        # Phase B media resolve — only after Phase A passed.
         try:
             media_digests = resolve_media_sha256s(mutation_tool, merged)
         except (KeyError, TypeError, ValueError) as exc:
-            return {
-                "ok": False,
-                "blocked": True,
-                "error": "delivery approval required",
-                "error_class": "delivery_approval",
-                "problems": [f"media byte digest failed: {exc}"],
-                "mutated": False,
-                "mutation_tool": mutation_tool,
-            }
+            return _blocked(mutation_tool, [f"media byte digest failed: {exc}"])
         merged = inject_media_sha256s(mutation_tool, merged, media_digests)
 
     try:
         payload_digest = mutation_payload_sha256(mutation_tool, merged)
     except (KeyError, TypeError, ValueError) as exc:
-        return {
-            "ok": False,
-            "blocked": True,
-            "error": "delivery approval required",
-            "error_class": "delivery_approval",
-            "problems": [f"mutation payload digest failed: {exc}"],
-            "mutated": False,
-            "mutation_tool": mutation_tool,
-        }
+        return _blocked(mutation_tool, [f"mutation payload digest failed: {exc}"])
 
+    # Phase B binding verify + atomic claim (no Graph until this returns ok).
     result = authorize_mutation(
         receipt=receipt,
         mutation_tool=mutation_tool,
         spend_store=_spend_store(),
-        registry=_registry(),
+        registry=registry,
         content_id=content_id,
         package_sha256=package_sha256,
         mutation_payload_sha256=payload_digest,
         media_sha256s=media_digests if mutation_tool in MEDIA_BEARING_TOOLS else [],
-        ig_user_id=(os.environ.get("INSTAGRAM_MCP_IG_USER_ID") or "").strip() or None,
+        ig_user_id=ig_user_id,
     )
     if result.ok:
         return None
-    return {
-        "ok": False,
-        "blocked": True,
-        "error": "delivery approval required",
-        "error_class": "delivery_approval",
-        "problems": result.problems,
-        "gate": result.as_dict(),
-        "mutated": False,
-        "mutation_tool": mutation_tool,
-    }
+    return _blocked(mutation_tool, result.problems, gate=result.as_dict())
 
 
 def apply_delivery_approval_gate(mcp: Any = None) -> None:

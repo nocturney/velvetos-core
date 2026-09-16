@@ -12,13 +12,13 @@ from typing import Any, Mapping
 
 from .keys_registry import KeyRegistry
 from .spend import ClaimResult, SpendStore
-from .verify import VerifyResult, verify_receipt
+from .verify import VerifyResult, verify_receipt, verify_receipt_pre_media
 
 
 @dataclass
 class GateResult:
     ok: bool
-    stage: str  # verified | claimed | blocked
+    stage: str  # verified_pre_media | verified | claimed | blocked
     problems: list[str] = field(default_factory=list)
     verify: VerifyResult | None = None
     claim: ClaimResult | None = None
@@ -35,6 +35,42 @@ class GateResult:
         }
 
 
+def verify_authorization_pre_media(
+    *,
+    receipt: str | Mapping[str, Any] | None,
+    mutation_tool: str,
+    registry: KeyRegistry,
+    content_id: str | None = None,
+    package_sha256: str | None = None,
+    ig_user_id: str | None = None,
+    now: datetime | None = None,
+) -> GateResult:
+    """Phase A — authenticate + non-media bindings before any media fetch.
+
+    Invalid / missing / forged receipts fail here with no CAS/HTTP media I/O
+    and no replay spend.
+    """
+    if receipt is None or receipt == "":
+        return GateResult(
+            ok=False,
+            stage="blocked",
+            problems=["no delivery approval receipt"],
+        )
+
+    vr = verify_receipt_pre_media(
+        receipt,
+        registry=registry,
+        expected_mutation_tool=mutation_tool,
+        expected_content_id=content_id,
+        expected_package_sha256=package_sha256,
+        expected_ig_user_id=ig_user_id,
+        now=now,
+    )
+    if not vr.ok:
+        return GateResult(ok=False, stage="blocked", problems=list(vr.problems), verify=vr)
+    return GateResult(ok=True, stage="verified_pre_media", verify=vr)
+
+
 def authorize_mutation(
     *,
     receipt: str | Mapping[str, Any] | None,
@@ -48,7 +84,11 @@ def authorize_mutation(
     ig_user_id: str | None = None,
     now: datetime | None = None,
 ) -> GateResult:
-    """Verify receipt bindings then atomically claim approval_id before Graph I/O."""
+    """Phase B — verify media/payload bindings then atomic claim before Graph I/O.
+
+    For media-bearing tools, callers must run ``verify_authorization_pre_media``
+    first, resolve immutable media bytes, then call this with the computed digests.
+    """
     if receipt is None or receipt == "":
         return GateResult(
             ok=False,

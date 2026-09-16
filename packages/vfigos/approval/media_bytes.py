@@ -44,11 +44,26 @@ MediaByteFetcher = Callable[[str], bytes]
 # Test/injection override (None = use HTTPS fetch).
 _FETCHER_OVERRIDE: MediaByteFetcher | None = None
 
+# Monotonic media-fetch counter (CAS/HTTP/override). Sensors assert invalid
+# approvals never increment this before Phase A rejection.
+_MEDIA_FETCH_COUNT = 0
+
 
 def set_media_byte_fetcher_override(fetcher: MediaByteFetcher | None) -> None:
     """Sensor/tests only — inject URL→bytes without network."""
     global _FETCHER_OVERRIDE
     _FETCHER_OVERRIDE = fetcher
+
+
+def reset_media_fetch_count() -> None:
+    """Sensor/tests only — zero the media-fetch counter."""
+    global _MEDIA_FETCH_COUNT
+    _MEDIA_FETCH_COUNT = 0
+
+
+def media_fetch_count() -> int:
+    """Number of media byte fetches since last reset (incl. dual-fetch)."""
+    return int(_MEDIA_FETCH_COUNT)
 
 
 def sha256_hex(data: bytes) -> str:
@@ -207,6 +222,8 @@ def fetch_media_bytes(
     fetcher: MediaByteFetcher | None = None,
     max_bytes: int = DEFAULT_MEDIA_FETCH_MAX_BYTES,
 ) -> bytes:
+    global _MEDIA_FETCH_COUNT
+    _MEDIA_FETCH_COUNT += 1
     active = fetcher if fetcher is not None else _FETCHER_OVERRIDE
     if active is not None:
         data = active(url)

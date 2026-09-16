@@ -30,11 +30,13 @@ from vfigos.approval.keys_registry import KeyRegistry
 from vfigos.approval.media_bytes import (
     encode_media_sha256s_claim,
     inject_media_sha256s,
+    media_fetch_count,
+    reset_media_fetch_count,
     set_media_byte_fetcher_override,
     sha256_hex,
 )
 from vfigos.approval.mutation_payload import mutation_payload_sha256
-from vfigos.approval.schema import CLAIM_FIELDS, DEFAULT_IG_USER_ID, SCHEMA_ID
+from vfigos.approval.schema import ALGORITHM, CLAIM_FIELDS, DEFAULT_IG_USER_ID, SCHEMA_ID
 from vfigos.approval.spend import MemorySpendStore, UnavailableSpendStore
 from vfigos.approval.verify import verify_receipt
 
@@ -905,10 +907,254 @@ def main() -> int:
     if passthrough != {"ok": True, "read": True}:
         fail("read-only tools must remain unaffected by delivery approval guard")
 
-    # I/A/D: direct mutation path — same URL, different bytes → BLOCKED before claim
-    rec_direct = _issue(priv, key_id)
+    # --- Finding: verify approval BEFORE media fetch (Phase A → Phase B) ---
+    import base64 as _b64sig
+    import delivery_approval_gate as _dag
+
+    real_now = datetime.now(timezone.utc)
+    pub_raw = priv.public_key().public_bytes_raw()
+    reg_path = Path(tempfile.mkdtemp()) / "ephemeral-registry.json"
+    reg_path.write_text(
+        json.dumps(
+            {
+                "keys": [
+                    {
+                        "key_id": key_id,
+                        "algorithm": ALGORITHM,
+                        "public_key_b64": _b64sig.b64encode(pub_raw).decode("ascii"),
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    os.environ["VELVET_DELIVERY_APPROVAL_REGISTRY"] = str(reg_path)
+    os.environ["INSTAGRAM_MCP_IG_USER_ID"] = DEFAULT_IG_USER_ID
     os.environ.pop("VELVET_DELIVERY_APPROVAL_SPEND_BUCKET", None)
 
+    claim_counter = {"n": 0}
+    graph_counter = {"n": 0}
+    mem_spend = MemorySpendStore()
+
+    class _CountingSpend:
+        def claim(self, approval_id: str, *, meta=None):
+            claim_counter["n"] += 1
+            return mem_spend.claim(approval_id, meta=meta)
+
+    _dag._spend_store = lambda: _CountingSpend()  # type: ignore[assignment]
+
+    def _fresh_image_receipt(**overrides):
+        kwargs = dict(now=real_now, ttl_seconds=600)
+        kwargs.update(overrides)
+        return _issue(priv, key_id, **kwargs)
+
+    def _assert_prefetch_blocked(label: str, params: dict, *, expect_substr: str):
+        reset_media_fetch_count()
+        claim_before = claim_counter["n"]
+        graph_before = graph_counter["n"]
+        blocked = authorize_or_block("publish_image", params)
+        if blocked is None or not blocked.get("blocked"):
+            fail(f"{label}: must be BLOCKED")
+        if media_fetch_count() != 0:
+            fail(f"{label}: media fetch count must be 0, got {media_fetch_count()}")
+        if claim_counter["n"] != claim_before:
+            fail(f"{label}: replay claim must not run on invalid auth")
+        blob = " ".join(str(p) for p in (blocked.get("problems") or []))
+        if expect_substr not in blob:
+            fail(f"{label}: expected {expect_substr!r} in problems, got {blob!r}")
+        reset_media_fetch_count()
+
+        def _graph_impl():
+            graph_counter["n"] += 1
+            return {"ok": True, "mutated": True}
+
+        out = stub_server._guard("publish_image", dict(params), _graph_impl)
+        if not isinstance(out, dict) or not out.get("blocked"):
+            fail(f"{label}: guard must block before Graph")
+        if media_fetch_count() != 0:
+            fail(f"{label}: guard path media fetch count must be 0")
+        if graph_counter["n"] != graph_before:
+            fail(f"{label}: Graph impl must not run on invalid auth")
+
+    # A. Missing approval
+    _assert_prefetch_blocked(
+        "A missing approval",
+        {**DEFAULT_IMAGE_PAYLOAD, "content_id": CONTENT, "package_sha256": DIGEST},
+        expect_substr="no delivery approval",
+    )
+
+    # B. Invalid signature
+    rec_sig = _fresh_image_receipt()
+    bad_sig = dict(rec_sig)
+    bad_sig["signature"] = "AAAA" + rec_sig["signature"][4:]
+    _assert_prefetch_blocked(
+        "B invalid signature",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": bad_sig,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+        expect_substr="invalid signature",
+    )
+
+    # C. Unknown key_id
+    rec_unk = _fresh_image_receipt()
+    bad_key = dict(rec_unk)
+    bad_key["key_id"] = "no-such-key"
+    _assert_prefetch_blocked(
+        "C unknown key_id",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": bad_key,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+        expect_substr="unknown key_id",
+    )
+
+    # D. Expired approval
+    expired_rec = _issue(
+        priv,
+        key_id,
+        now=real_now - timedelta(hours=2),
+        ttl_seconds=60,
+    )
+    _assert_prefetch_blocked(
+        "D expired approval",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": expired_rec,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+        expect_substr="expired",
+    )
+
+    # E. Wrong account / tenant
+    rec_acct = _fresh_image_receipt()
+    os.environ["INSTAGRAM_MCP_IG_USER_ID"] = "00000000000000000"
+    _assert_prefetch_blocked(
+        "E wrong account",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_acct,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+        expect_substr="wrong ig_user_id",
+    )
+    os.environ["INSTAGRAM_MCP_IG_USER_ID"] = DEFAULT_IG_USER_ID
+
+    wrong_tenant = dict(rec_acct)
+    wrong_tenant["tenant"] = "other-tenant"
+    tenant_payload = canonical_payload_bytes({k: wrong_tenant[k] for k in CLAIM_FIELDS})
+    wrong_tenant["signature"] = (
+        _b64sig.urlsafe_b64encode(priv.sign(tenant_payload)).decode("ascii").rstrip("=")
+    )
+    _assert_prefetch_blocked(
+        "E wrong tenant",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": wrong_tenant,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+        expect_substr="wrong tenant",
+    )
+
+    # F. Wrong mutation_tool (publish_image receipt used for publish_story)
+    rec_tool = _fresh_image_receipt()
+    reset_media_fetch_count()
+    claim_before = claim_counter["n"]
+    blocked_tool = authorize_or_block(
+        "publish_story",
+        {
+            "image_url": _URL_A,
+            "account": "velvets_cloud",
+            "delivery_approval": rec_tool,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if blocked_tool is None or not blocked_tool.get("blocked"):
+        fail("F wrong mutation_tool: must be BLOCKED")
+    if media_fetch_count() != 0:
+        fail("F wrong mutation_tool: media fetch count must be 0")
+    if claim_counter["n"] != claim_before:
+        fail("F wrong mutation_tool: must not claim")
+    if "wrong mutation_tool" not in " ".join(str(p) for p in (blocked_tool.get("problems") or [])):
+        fail("F wrong mutation_tool: expected wrong mutation_tool problem")
+
+    # G. Wrong content / package binding
+    rec_content = _fresh_image_receipt()
+    _assert_prefetch_blocked(
+        "G wrong content_id",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_content,
+            "content_id": "WRONG-CONTENT",
+            "package_sha256": DIGEST,
+        },
+        expect_substr="wrong content_id",
+    )
+    _assert_prefetch_blocked(
+        "G wrong package_sha256",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_content,
+            "content_id": CONTENT,
+            "package_sha256": "b" * 64,
+        },
+        expect_substr="wrong package_sha256",
+    )
+
+    # H. Valid receipt but wrong actual media bytes → fetch occurs, then BLOCKED before claim
+    rec_wrong_media = _fresh_image_receipt()
+    reset_media_fetch_count()
+    claim_before = claim_counter["n"]
+    graph_before = graph_counter["n"]
+    blocked_wrong = authorize_or_block(
+        "publish_image",
+        {
+            "image_url": _URL_B,
+            "caption": "hello",
+            "account": "velvets_cloud",
+            "delivery_approval": rec_wrong_media,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if blocked_wrong is None or not blocked_wrong.get("blocked"):
+        fail("H wrong media: must be BLOCKED")
+    if media_fetch_count() < 1:
+        fail("H wrong media: media fetch must occur after valid Phase A")
+    if claim_counter["n"] != claim_before:
+        fail("H wrong media: must not claim after binding failure")
+
+    def _graph_wrong():
+        graph_counter["n"] += 1
+        return {"ok": True}
+
+    out_wrong = stub_server._guard(
+        "publish_image",
+        {
+            "image_url": _URL_B,
+            "caption": "hello",
+            "account": "velvets_cloud",
+            "delivery_approval": rec_wrong_media,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+        _graph_wrong,
+    )
+    if not isinstance(out_wrong, dict) or not out_wrong.get("blocked"):
+        fail("H wrong media: guard must block before Graph")
+    if graph_counter["n"] != graph_before:
+        fail("H wrong media: Graph must not run")
+
+    # one-byte tamper behind same CAS URL
+    rec_tamper = _fresh_image_receipt()
     tampered_store = dict(_MEDIA_STORE)
     tampered_store[_URL_A] = _BYTES_A[:-1] + bytes([_BYTES_A[-1] ^ 0x01])
 
@@ -918,34 +1164,121 @@ def main() -> int:
         return tampered_store[url]
 
     set_media_byte_fetcher_override(_tampered_fetcher)
+    reset_media_fetch_count()
+    claim_before = claim_counter["n"]
     blocked_tamper = authorize_or_block(
         "publish_image",
         {
             **DEFAULT_IMAGE_PAYLOAD,
-            "delivery_approval": rec_direct,
+            "delivery_approval": rec_tamper,
             "content_id": CONTENT,
             "package_sha256": DIGEST,
         },
     )
     if blocked_tamper is None or not blocked_tamper.get("blocked"):
-        fail("one-byte media tamper must block before Graph/claim")
+        fail("H one-byte tamper: must block before Graph/claim")
+    if media_fetch_count() < 1:
+        fail("H one-byte tamper: fetch must occur after valid Phase A")
+    if claim_counter["n"] != claim_before:
+        fail("H one-byte tamper: must not claim")
     set_media_byte_fetcher_override(_fetcher)
 
-    # Same approval + different media bytes (URL_B bytes behind approval for URL_A)
-    rec_wrong = _issue(priv, key_id)
-    blocked_wrong = authorize_or_block(
+    # I. Valid receipt + exact media + exact payload → fetch → claim → Graph allowed
+    rec_ok = _fresh_image_receipt()
+    reset_media_fetch_count()
+    claim_before = claim_counter["n"]
+    graph_before = graph_counter["n"]
+    allowed = authorize_or_block(
         "publish_image",
         {
-            "image_url": _URL_B,
-            "caption": "hello",
-            "account": "velvets_cloud",
-            "delivery_approval": rec_wrong,
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_ok,
             "content_id": CONTENT,
             "package_sha256": DIGEST,
         },
     )
-    if blocked_wrong is None or not blocked_wrong.get("blocked"):
-        fail("direct tool wrong-media must be blocked")
+    if allowed is not None:
+        fail(f"I exact approval: must ALLOW (None), got {allowed}")
+    if media_fetch_count() < 1:
+        fail("I exact approval: media fetch must occur")
+    if claim_counter["n"] != claim_before + 1:
+        fail("I exact approval: exactly one replay claim expected")
+
+    def _graph_ok():
+        graph_counter["n"] += 1
+        return {"ok": True, "mutated": True}
+
+    # second use of same approval must block (already spent) — Graph not called
+    out_replay = stub_server._guard(
+        "publish_image",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_ok,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+        _graph_ok,
+    )
+    if not isinstance(out_replay, dict) or not out_replay.get("blocked"):
+        fail("I replay of spent approval must block")
+    if graph_counter["n"] != graph_before:
+        fail("I spent replay must not call Graph")
+
+    # Fresh approval through guard reaches Graph
+    rec_ok2 = _fresh_image_receipt()
+    out_ok = stub_server._guard(
+        "publish_image",
+        {
+            **DEFAULT_IMAGE_PAYLOAD,
+            "delivery_approval": rec_ok2,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+        _graph_ok,
+    )
+    if out_ok != {"ok": True, "mutated": True}:
+        fail(f"I exact approval via guard must reach Graph, got {out_ok}")
+    if graph_counter["n"] != graph_before + 1:
+        fail("I exact approval: Graph must run exactly once")
+
+    # K. Non-media mutations — existing protection, no media fetch
+    del_payload = {
+        "media_id": "1789",
+        "account": "velvets_cloud",
+        "confirm_irreversible": True,
+    }
+    del_rec = _issue(
+        priv,
+        key_id,
+        mutation_tool="delete_media",
+        mutation_payload=del_payload,
+        media_artifacts=None,
+        now=real_now,
+        ttl_seconds=600,
+    )
+    reset_media_fetch_count()
+    claim_before = claim_counter["n"]
+    del_allowed = authorize_or_block(
+        "delete_media",
+        {
+            **del_payload,
+            "delivery_approval": del_rec,
+            "content_id": CONTENT,
+            "package_sha256": DIGEST,
+        },
+    )
+    if del_allowed is not None:
+        fail(f"K non-media delete must ALLOW with valid receipt, got {del_allowed}")
+    if media_fetch_count() != 0:
+        fail("K non-media must not fetch media")
+    if claim_counter["n"] != claim_before + 1:
+        fail("K non-media must claim once")
+    reset_media_fetch_count()
+    del_blocked = authorize_or_block("delete_media", dict(del_payload))
+    if del_blocked is None or not del_blocked.get("blocked"):
+        fail("K non-media without approval must block")
+    if media_fetch_count() != 0:
+        fail("K non-media invalid auth must not fetch media")
 
     # Carousel: one item's bytes changed behind same URL list
     car_art2 = [
@@ -958,14 +1291,18 @@ def main() -> int:
         mutation_tool="publish_carousel",
         mutation_payload=car_a,
         media_artifacts=car_art2,
+        now=real_now,
+        ttl_seconds=600,
     )
     car_tamper_store = dict(_MEDIA_STORE)
-    car_tamper_store[_URL_B] = _BYTES_C  # different bytes; CAS URL still says DIG_B → resolve fails
+    car_tamper_store[_URL_B] = _BYTES_C
 
     def _car_tamper(url: str) -> bytes:
         return car_tamper_store[url]
 
     set_media_byte_fetcher_override(_car_tamper)
+    reset_media_fetch_count()
+    claim_before = claim_counter["n"]
     blocked_car = authorize_or_block(
         "publish_carousel",
         {
@@ -977,9 +1314,15 @@ def main() -> int:
     )
     if blocked_car is None or not blocked_car.get("blocked"):
         fail("carousel item byte change must be blocked")
+    if media_fetch_count() < 1:
+        fail("carousel tamper: fetch must occur after valid Phase A")
+    if claim_counter["n"] != claim_before:
+        fail("carousel tamper: must not claim")
     set_media_byte_fetcher_override(_fetcher)
 
     # Upstream incomplete guard summary: carousel without image_urls must fail closed
+    # (Phase A passed; missing URLs block before fetch)
+    reset_media_fetch_count()
     blocked_incomplete = authorize_or_block(
         "publish_carousel",
         {
@@ -993,6 +1336,8 @@ def main() -> int:
     )
     if blocked_incomplete is None or not blocked_incomplete.get("blocked"):
         fail("carousel missing image_urls must be blocked")
+    if media_fetch_count() != 0:
+        fail("carousel missing image_urls must not fetch media")
 
     # Flapping mutable object: two fetches disagree → BLOCKED
     flip = {"n": 0}
@@ -1048,21 +1393,38 @@ def main() -> int:
             {"bytes_b64": __import__("base64").b64encode(reel_bytes).decode()},
             {"bytes_b64": __import__("base64").b64encode(cover_bytes).decode()},
         ],
+        now=real_now,
+        ttl_seconds=600,
     )
     if reel_cover_rec["media_sha256s"] != encode_media_sha256s_claim([reel_dig, cover_dig]):
         fail("publish_reel with cover_url must bind both media digests")
-    # approval without cover used with cover present → blocked
+    # approval without cover used with cover present → blocked (after Phase A + media resolve)
+    reel_no_cover = _issue(
+        priv,
+        key_id,
+        mutation_tool="publish_reel",
+        mutation_payload=reel_payload,
+        media_artifacts=[{"bytes_b64": __import__("base64").b64encode(reel_bytes).decode()}],
+        now=real_now,
+        ttl_seconds=600,
+    )
+    reset_media_fetch_count()
+    claim_before = claim_counter["n"]
     blocked_cover = authorize_or_block(
         "publish_reel",
         {
             **reel_with_cover,
-            "delivery_approval": reel_rec,
+            "delivery_approval": reel_no_cover,
             "content_id": CONTENT,
             "package_sha256": DIGEST,
         },
     )
     if blocked_cover is None or not blocked_cover.get("blocked"):
         fail("reel cover_url added after approval must be blocked")
+    if media_fetch_count() < 1:
+        fail("reel cover mismatch: fetch must occur after valid Phase A")
+    if claim_counter["n"] != claim_before:
+        fail("reel cover mismatch: must not claim")
 
     # --- Finding 3: issuer body cap / auth-before-buffer (pure ASGI; no TestClient) ---
     import asyncio
@@ -1255,6 +1617,7 @@ def main() -> int:
         "guard_order=PASS "
         "payload_binding=PASS "
         "media_bytes=PASS "
+        "prefetch_order=PASS "
         "body_cap=PASS"
     )
     return 0
