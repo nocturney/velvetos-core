@@ -2,6 +2,8 @@
 
 מצב Research Seat: `no_meaningful_findings` — גוף מחקר ציבורי חדש רץ ונשמר ב־`packages/vfresearch/sources/2026-09-17-orchestra.md`.
 
+אין חדש במשרד.
+
 ## מה שווה להעביר לבריף
 
 05 · מחקר ורעיונות
