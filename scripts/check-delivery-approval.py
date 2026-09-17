@@ -729,6 +729,8 @@ def main() -> int:
     }
     if {
         "storage.buckets.setIamPolicy",
+        "storage.buckets.update",
+        "storage.buckets.delete",
         "storage.objects.delete",
         "storage.objects.update",
     } - spend_runtime_permissions:
