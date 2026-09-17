@@ -19,15 +19,23 @@
     "canonicalLiveVerifyProvider": "adelaidasofia/instagram-mcp",
     "fallbackPublishProvider": "adelaidasofia/instagram-mcp",
     "autoDm": false,
-    "boostAds": false
+    "boostAds": false,
+    "openpostProviderProbe": {
+      "observedAt": "2026-09-17T19:46:04+03:00",
+      "providerApps": 0,
+      "providerInstallations": 0,
+      "socialAccounts": 0,
+      "providerAccountBindings": 0,
+      "status": "NOT_CONFIGURED"
+    }
   },
   "releasePolicy": {
     "productionUsesLatestTag": false,
     "pinExactVersion": true,
-    "currentBaseline": "v4.31.0",
-    "latestReviewedVersion": "v4.31.0",
-    "latestReviewedPublishedAt": "2026-09-13T07:26:39Z",
-    "reviewedAt": "2026-09-14T08:23:00+03:00",
+    "currentBaseline": "v4.34.2",
+    "latestReviewedVersion": "v4.34.2",
+    "latestReviewedPublishedAt": "2026-09-16T17:57:34Z",
+    "reviewedAt": "2026-09-17T19:46:04+03:00",
     "autoPromoteWithoutTests": false,
     "backupBeforeMigrationUpgrade": true,
     "requiredChecks": [
@@ -40,23 +48,102 @@
       "security",
       "staging_smoke",
       "instagram_live_verify",
-      "analytics_read"
-    ]
+      "analytics_read",
+      "signed_delivery_approval_live"
+    ],
+    "latestReview": {
+      "fromVersion": "v4.31.0",
+      "toVersion": "v4.34.2",
+      "upstreamWindowsServerSha256": "43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442",
+      "metaInstagramAuth": "No direct Meta/Instagram breaking auth change identified in v4.31.1-v4.34.2 release notes; existing public HTTPS/media-origin and provider OAuth prerequisites remain.",
+      "apiMcpContract": "Relevant changes: mcp:read/mcp:full scope handling fixes, MCP OAuth one-time authorization callback locking, and maximum-lifetime API token clock-skew tolerance.",
+      "mediaLimits": "No Instagram media-limit change identified; media-limit documentation changes add Fediverse destinations and leave the VF Instagram limits unchanged.",
+      "schedulerQueueRetry": "No VF publication scheduler/queue/retry breaking change identified; v4.32 adds a bounded non-blocking maintainer-diagnostics reporting queue.",
+      "analytics": "No Instagram analytics contract change identified; reviewed analytics fixes are for Discord/Lemmy/PieFed paths.",
+      "databaseSchemaStorage": "Migrations 135 and 136 alter mastodon_instances and billing_webhook_events. They are unrelated to the VF Instagram path but require backup plus staging migration smoke before runtime upgrade.",
+      "security": "Self-hosted maintainer diagnostics become enabled by default in v4.32.0 and send privacy-limited failure reports externally unless OPENPOST_DIAGNOSTICS_ENABLED=false; VF policy is fail-closed: keep diagnostics disabled until explicitly approved.",
+      "runtimeDecision": "Windows staging upgraded to exact v4.34.2 after a hashed pre-migration backup and isolated migration smoke. SQLite schema advanced 134 -> 136 with integrity_check=ok and zero foreign-key violations; OPENPOST_DIAGNOSTICS_ENABLED=false is enforced. Production remains blocked by public HTTPS/provider OAuth and signed delivery-approval live gates."
+    }
+  },
+  "securityPolicy": {
+    "maintainerDiagnostics": {
+      "policy": "disabled_until_explicit_approval",
+      "requiredEnv": "OPENPOST_DIAGNOSTICS_ENABLED=false",
+      "reason": "v4.32+ enables external self-hosted failure reporting by default; rights/privacy stays fail-closed until owner approval"
+    }
   },
   "runtime": {
     "productionDeployed": false,
     "stagingDeployed": true,
     "stagingHost": "windows-backup-worker",
     "stagingMethod": "pinned-single-binary",
-    "stagingVersion": "v4.31.0",
-    "stagingBinarySha256": "680acc374acf277e3b2fe185488f9a5ab8878ec953b94e0254355131fb3cf508",
+    "stagingVersion": "v4.34.2",
+    "stagingBinarySha256": "43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442",
     "stagingLocalUrl": "http://127.0.0.1:18080",
-    "stagingHealth": "pass",
-    "stagingReadiness": "pass_database_ok",
+    "stagingHealth": "pass_openapi_http_200",
+    "stagingReadiness": "pass_schema_136_integrity_ok",
+    "freshProbe": {
+      "observedAt": "2026-09-17T19:46:04+03:00",
+      "status": "PASS",
+      "detail": "Windows staging listener on 127.0.0.1:18080 is running exact v4.34.2; binary SHA-256 matches the pinned upstream asset; OpenAPI HTTP 200; schema_migrations max=136; integrity_check=ok; foreign_key_check=0; persistence task is Running; inbound TCP/18080 firewall block is enabled."
+    },
     "publicHttpsReady": false,
     "providerOAuthReady": false,
-    "blockedBy": "public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are still required before Instagram provider connection and publish smoke",
-    "containerImagePolicy": "pin version or immutable digest; never production latest"
+    "blockedBy": "Production remains blocked: OpenPost public HTTPS/media origin and Meta provider OAuth are not ready; delivery-approval remains NEEDS_OPERATOR_SETUP until the dedicated issuer passes the required owner-auth /healthz verification and full issue -> authorized Instagram mutation -> replay-block proof. OpenPost/direct MCP cannot bypass this boundary.",
+    "containerImagePolicy": "pin version or immutable digest; never production latest",
+    "diagnosticsEnabled": false,
+    "backup": {
+      "createdAt": "2026-09-17T19:16:53+03:00",
+      "path": "C:\\OpenPost\\backups\\pre-v4.34.2-20260917-191652",
+      "databaseSha256": "0936fce2ae90c8d4caeb914f324656d5a647273acbbd4b5a68a05d07757fa4ef",
+      "preMigrationSchemaVersion": 134,
+      "mediaFiles": 0,
+      "mediaBytes": 0
+    },
+    "migrationSmoke": {
+      "status": "PASS",
+      "isolatedPort": 18081,
+      "fromSchemaVersion": 134,
+      "toSchemaVersion": 136,
+      "integrityCheck": "ok",
+      "foreignKeyViolations": 0,
+      "originalDatabaseUnchangedBeforePromotion": true
+    },
+    "persistence": {
+      "status": "PASS",
+      "taskName": "VelvetOS-OpenPost-Staging",
+      "trigger": "at_logon_current_user",
+      "startScript": "C:\\OpenPost\\staging\\start-openpost-staging.ps1",
+      "startScriptSha256": "e25fc0875500edab68f5dabbb6a1a9927be02fa053cd26d9b2942442a2ab37d3",
+      "restartTested": true,
+      "restartObservedAt": "2026-09-17T19:25:36+03:00",
+      "postRestartOpenApiHttpStatus": 200,
+      "postRestartBinarySha256": "43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442"
+    },
+    "networkHardening": {
+      "observedAt": "2026-09-17T19:34:28+03:00",
+      "listenerAddress": "::",
+      "localPort": 18080,
+      "publicUrlsConfigured": false,
+      "firewallRule": "VelvetOS-OpenPost-Staging-LocalOnly",
+      "inboundAction": "Block",
+      "profile": "Any",
+      "loopbackOpenApiHttpStatus": 200,
+      "localOnlyEnforced": true
+    }
+  },
+  "deliveryApproval": {
+    "schema": "velvet.delivery_approval.v1",
+    "requiredForInstagramWrites": true,
+    "dedicatedIssuerRequired": true,
+    "currentLiveEvidence": "NEEDS_OPERATOR_SETUP",
+    "operatorSetup": "packages/vfigos/approval/OPERATOR-SETUP.md",
+    "directInstagramMcpIsNotApprovalBypass": true,
+    "productionPromotionBlockedUntilLive": true,
+    "ownerInvokerNarrowIamVerified": true,
+    "ownerAuthVerified": false,
+    "liveEndToEndVerified": false,
+    "liveBlocker": "Owner-only OpenIdTokenCreator -> dedicated owner-invoker token mint works and direct user issuer invoke was removed, but the currently deployed issuer revision returns application 404 for /healthz; full signed issue -> mutation -> replay-block is not yet proven."
   },
   "truth": {
     "publishResponseMeansLiveVerified": false,
