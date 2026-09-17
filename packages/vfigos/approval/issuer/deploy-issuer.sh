@@ -19,6 +19,7 @@ REPO_ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
 BUILD_CONFIG="${REPO_ROOT}/packages/vfigos/approval/issuer/cloudbuild.json"
 
 EXPECTED_PRIVATE_SECRET="velvet-delivery-approval-ed25519-private"
+EXPECTED_KEY_ID_SECRET="velvet-delivery-approval-key-id"
 PRIVATE_SECRET="${GSM_DELIVERY_APPROVAL_PRIVATE_SECRET:-velvet-delivery-approval-ed25519-private}"
 KEY_ID_SECRET="${GSM_DELIVERY_APPROVAL_KEY_ID_SECRET:-velvet-delivery-approval-key-id}"
 OPTIONAL_BEARER_SECRET="${GSM_DELIVERY_APPROVAL_ISSUER_BEARER_SECRET:-}"
@@ -43,6 +44,10 @@ if [[ "${SERVICE}" != "${EXPECTED_ISSUER_SERVICE}" ]]; then
 fi
 if [[ "${PRIVATE_SECRET}" != "${EXPECTED_PRIVATE_SECRET}" ]]; then
   echo "Refusing deploy: signing secret must remain ${EXPECTED_PRIVATE_SECRET}." >&2
+  exit 1
+fi
+if [[ "${KEY_ID_SECRET}" != "${EXPECTED_KEY_ID_SECRET}" ]]; then
+  echo "Refusing deploy: key-id secret must remain ${EXPECTED_KEY_ID_SECRET}." >&2
   exit 1
 fi
 if [[ ! "${CAS_HOST_SUFFIXES}" =~ ^[A-Za-z0-9.-]+(,[A-Za-z0-9.-]+)*$ ]]; then

@@ -482,6 +482,7 @@ def main() -> int:
         if rejected == dedicated:
             fail(f"exact mutation service account comparison accepted {rejected!r}")
     mutation_resource_guards = (
+        ('EXPECTED_MUTATION_SERVICE="velvet-instagram-mcp"', '[[ "${SERVICE}" != "${EXPECTED_MUTATION_SERVICE}" ]]', "mutation service"),
         ('EXPECTED_BEARER_SECRET="velvet-instagram-mcp-bearer"', '[[ "${BEARER_SECRET}" != "${EXPECTED_BEARER_SECRET}" ]]', "Instagram bearer secret"),
         ('EXPECTED_ACCESS_SECRET="velvet-instagram-mcp-access"', '[[ "${ACCESS_SECRET}" != "${EXPECTED_ACCESS_SECRET}" ]]', "Instagram access secret"),
         ('EXPECTED_IG_USER_SECRET="velvet-instagram-mcp-ig-user"', '[[ "${IG_USER_SECRET}" != "${EXPECTED_IG_USER_SECRET}" ]]', "Instagram user secret"),
@@ -526,6 +527,7 @@ def main() -> int:
     issuer_resource_guards = (
         ('EXPECTED_ISSUER_SERVICE="velvet-delivery-approval-issuer"', '[[ "${SERVICE}" != "${EXPECTED_ISSUER_SERVICE}" ]]', "issuer service"),
         ('EXPECTED_PRIVATE_SECRET="velvet-delivery-approval-ed25519-private"', '[[ "${PRIVATE_SECRET}" != "${EXPECTED_PRIVATE_SECRET}" ]]', "signing secret"),
+        ('EXPECTED_KEY_ID_SECRET="velvet-delivery-approval-key-id"', '[[ "${KEY_ID_SECRET}" != "${EXPECTED_KEY_ID_SECRET}" ]]', "key-id secret"),
     )
     for expected_decl, guard, label in issuer_resource_guards:
         if expected_decl not in issuer_deploy:

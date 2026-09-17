@@ -11,6 +11,7 @@ if [[ "$PROJECT" =~ ^[0-9]+$ ]]; then
   exit 1
 fi
 REGION="${GCP_REGION:-me-west1}"
+EXPECTED_MUTATION_SERVICE="velvet-instagram-mcp"
 SERVICE="${CLOUD_RUN_SERVICE:-velvet-instagram-mcp}"
 EXPECTED_MUTATION_SERVICE_ACCOUNT="velvet-instagram-mcp-runtime@${PROJECT}.iam.gserviceaccount.com"
 MUTATION_SERVICE_ACCOUNT="${MUTATION_SERVICE_ACCOUNT:-velvet-instagram-mcp-runtime@${PROJECT}.iam.gserviceaccount.com}"
@@ -39,6 +40,10 @@ fi
 # Fail closed before any build: production identity is not operator-selectable.
 if [[ "${MUTATION_SERVICE_ACCOUNT}" != "${EXPECTED_MUTATION_SERVICE_ACCOUNT}" ]]; then
   echo "Refusing deploy: mutation service must use ${EXPECTED_MUTATION_SERVICE_ACCOUNT}." >&2
+  exit 1
+fi
+if [[ "${SERVICE}" != "${EXPECTED_MUTATION_SERVICE}" ]]; then
+  echo "Refusing deploy: mutation service name must remain ${EXPECTED_MUTATION_SERVICE}." >&2
   exit 1
 fi
 if [[ -n "${GSM_DELIVERY_APPROVAL_PRIVATE_SECRET:-}" ]]; then
