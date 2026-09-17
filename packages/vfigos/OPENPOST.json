@@ -89,7 +89,7 @@
     },
     "publicHttpsReady": false,
     "providerOAuthReady": false,
-    "blockedBy": "Production remains blocked: OpenPost public HTTPS/media origin and Meta provider OAuth are not ready; delivery-approval remains NEEDS_OPERATOR_SETUP until the dedicated issuer passes the required owner-auth /healthz verification and full issue -> authorized Instagram mutation -> replay-block proof. OpenPost/direct MCP cannot bypass this boundary.",
+    "blockedBy": "Production remains blocked: OpenPost public HTTPS/media origin and Meta provider OAuth are not ready, and delivery approval is BOUNDARY_SMOKE_VERIFIED but not LIVE because no real authorized Instagram Graph write has been performed and canonically verified. OpenPost/direct MCP cannot bypass this boundary.",
     "containerImagePolicy": "pin version or immutable digest; never production latest",
     "diagnosticsEnabled": false,
     "backup": {
@@ -136,14 +136,31 @@
     "schema": "velvet.delivery_approval.v1",
     "requiredForInstagramWrites": true,
     "dedicatedIssuerRequired": true,
-    "currentLiveEvidence": "NEEDS_OPERATOR_SETUP",
+    "currentLiveEvidence": "BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED",
     "operatorSetup": "packages/vfigos/approval/OPERATOR-SETUP.md",
     "directInstagramMcpIsNotApprovalBypass": true,
     "productionPromotionBlockedUntilLive": true,
     "ownerInvokerNarrowIamVerified": true,
-    "ownerAuthVerified": false,
+    "ownerAuthVerified": true,
     "liveEndToEndVerified": false,
-    "liveBlocker": "Owner-only OpenIdTokenCreator -> dedicated owner-invoker token mint works and direct user issuer invoke was removed, but the currently deployed issuer revision returns application 404 for /healthz; full signed issue -> mutation -> replay-block is not yet proven."
+    "liveBlocker": "Owner-auth and production boundary/replay smoke are verified. LIVE remains false because no real Instagram Graph write was performed or canonically verified; OpenPost provider OAuth/public HTTPS prerequisites are also not ready.",
+    "replayStoreVerified": true,
+    "boundarySmokeVerified": true,
+    "publicInstagramWritePerformedInBoundarySmoke": false,
+    "issuerRevision": "velvet-delivery-approval-issuer-00007-wgl",
+    "mutationRevision": "velvet-instagram-mcp-00013-mcj",
+    "mutationImageDigest": "sha256:8f889ac70ef38289a52be430da7ad587bf5006346153ba0e8472132e10f91642",
+    "boundarySmokeEvidence": {
+      "observedAt": "2026-09-17T19:05:48.042714Z",
+      "approvalId": "ba790fc7-38e1-4df3-bcf1-51ae678c6037",
+      "path": "C:\\OpenPost\\evidence\\delivery-boundary-smoke-2bee9ab86adf479b9c0f1c153343c957.json",
+      "sha256": "c538a4efa40ade48debe047889ee93722efdc00ccafc201ebff50ec307eda554",
+      "issuerHttp": 200,
+      "mutationMcpInitializeHttp": 200,
+      "firstCall": "BLOCKED pre-Graph media fetch after atomic spend",
+      "replayClaimStatus": "already_spent",
+      "canonicalMediaUnchanged": true
+    }
   },
   "truth": {
     "publishResponseMeansLiveVerified": false,

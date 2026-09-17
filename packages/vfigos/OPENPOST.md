@@ -80,6 +80,6 @@ OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום �
 
 ## Current runtime decision
 
-Windows staging is now pinned to **v4.34.2** after a hashed backup and isolated migration smoke (schema 134 -> 136, `integrity_check=ok`, zero foreign-key violations). `OPENPOST_DIAGNOSTICS_ENABLED=false` is enforced. Production remains blocked on public HTTPS/provider OAuth and `NEEDS_OPERATOR_SETUP` delivery-approval live evidence. The Windows binary listens on `::`, so staging is explicitly protected by inbound firewall block `VelvetOS-OpenPost-Staging-LocalOnly` on TCP/18080; loopback `127.0.0.1` OpenAPI remains HTTP 200.
+Windows staging is now pinned to **v4.34.2** after a hashed backup and isolated migration smoke (schema 134 -> 136, `integrity_check=ok`, zero foreign-key violations). `OPENPOST_DIAGNOSTICS_ENABLED=false` is enforced. Delivery approval is now **BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED**: the narrow owner-invoker `/health` call passes, a real signed approval is atomically spent on the production mutation boundary, and replay is rejected as `already_spent`, while the canonical Instagram media snapshot remains unchanged. No public Instagram Graph write was performed, so `LIVE` remains false. OpenPost production also remains blocked on public HTTPS/media origin and provider OAuth. The Windows binary listens on `::`, so staging is explicitly protected by inbound firewall block `VelvetOS-OpenPost-Staging-LocalOnly` on TCP/18080; loopback `127.0.0.1` OpenAPI remains HTTP 200.
 
 Version state: [`OPENPOST.json`](OPENPOST.json).

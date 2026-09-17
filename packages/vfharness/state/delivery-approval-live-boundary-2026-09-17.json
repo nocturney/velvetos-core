@@ -1,0 +1,96 @@
+{
+  "schema": "velvet.vfigos_delivery_boundary_live_state.v1",
+  "task_id": "delivery-approval-owner-auth-boundary-2026-09-17",
+  "domain": "system_engineering",
+  "authority": {
+    "contract": 6,
+    "revision": "6.2",
+    "bundle": "VF-PROJECT-6.2-DETAIL-TRUTH"
+  },
+  "repo": {
+    "branch": "fix/delivery-approval-owner-auth-boundary",
+    "base_main": "1dd23b89c5038332a327ab5da78a0a393d6d76b5",
+    "deployed_vfigos_source": "a2dd57fb3376ec46277a054b4ea533b950d81338",
+    "post_deploy_main_drift": [
+      "office/control/inbox.json",
+      "packages/vfmedia/data/intake-brief.json",
+      "packages/vfmedia/state/intake-runner.json"
+    ],
+    "vfigos_path_drift_since_deploy": false,
+    "project_preflight_on_base": "PASS"
+  },
+  "gcp": {
+    "project": "instamcp",
+    "region": "me-west1",
+    "effective_iam": {
+      "status": "PASS",
+      "probes": 108,
+      "principal": "1016876126699-compute@developer.gserviceaccount.com"
+    },
+    "issuer": {
+      "revision": "velvet-delivery-approval-issuer-00007-wgl",
+      "image_digest": "sha256:8882bc604cfa2859df3c9f688b755265280e60867255c78075f1d8b722432a96",
+      "build_id": "10d5d532-df65-40a1-bb3b-3e264b8b1764",
+      "service_account": "velvet-delivery-issuer@instamcp.iam.gserviceaccount.com"
+    },
+    "mutation": {
+      "revision": "velvet-instagram-mcp-00013-mcj",
+      "image_digest": "sha256:8f889ac70ef38289a52be430da7ad587bf5006346153ba0e8472132e10f91642",
+      "build_id": "89207e52-582c-4381-b015-15cf4194e528",
+      "service_account": "velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com",
+      "traffic_percent": 100
+    }
+  },
+  "owner_auth": {
+    "OWNER_AUTH_VERIFIED": true,
+    "owner_invoker": "velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com",
+    "human_role": "roles/iam.serviceAccountOpenIdTokenCreator",
+    "token_method": "IAMCredentials generateIdToken",
+    "canonical_health_path": "/health",
+    "health_http": 200,
+    "schema": "velvet.delivery_approval.v1",
+    "key_id_configured": true,
+    "mutation_service_has_private_key": false,
+    "serviceAccountTokenCreator_granted": false,
+    "note": "gcloud 585 print-identity-token impersonation requests getAccessToken; narrow helper uses generateIdToken directly instead."
+  },
+  "boundary_smoke": {
+    "BOUNDARY_SMOKE_VERIFIED": true,
+    "REPLAY_STORE_VERIFIED": true,
+    "observed_at": "2026-09-17T19:05:48.042714Z",
+    "evidence_path": "C:\\OpenPost\\evidence\\delivery-boundary-smoke-2bee9ab86adf479b9c0f1c153343c957.json",
+    "evidence_sha256": "c538a4efa40ade48debe047889ee93722efdc00ccafc201ebff50ec307eda554",
+    "approval_id": "ba790fc7-38e1-4df3-bcf1-51ae678c6037",
+    "issuer_http": 200,
+    "mcp_initialize_http": 200,
+    "first_call": "blocked after atomic spend on deliberate private/missing media fetch; mutated=false",
+    "replay_call": "blocked already_spent; mutated=false",
+    "spend_object_exists": true,
+    "canonical_media_unchanged": true,
+    "media_count_before": 3,
+    "media_count_after": 3,
+    "public_instagram_write_performed": false
+  },
+  "canonical_instagram_readback": {
+    "healthcheck_ok": true,
+    "username": "velvets_cloud",
+    "ig_user_id": "17841407772120429",
+    "list_media_ok": true,
+    "list_media_count": 3
+  },
+  "claims": {
+    "DEPLOYED": true,
+    "OWNER_AUTH_VERIFIED": true,
+    "REPLAY_STORE_VERIFIED": true,
+    "BOUNDARY_SMOKE_VERIFIED": true,
+    "LIVE": false
+  },
+  "production": {
+    "status": "BLOCKED",
+    "blockers": [
+      "No actually authorized Instagram Graph write has been performed and canonically verified.",
+      "OpenPost provider OAuth/public HTTPS/media-origin prerequisites are not ready."
+    ],
+    "openpost_promotion_allowed": false
+  }
+}
