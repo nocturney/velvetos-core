@@ -459,6 +459,8 @@ def main() -> int:
         ('DENIED_ALLOW_STATE = "ALLOW_ACCESS_STATE_NOT_GRANTED"', "require the denied allow state"),
         ('DENIED_OVERALL_STATE = "CANNOT_ACCESS"', "require overall access denial"),
         ('"get-default-service-account"', "resolve the actual default Cloud Build identity"),
+        ('"--resource-type=storage.googleapis.com/Object"', "supply Cloud Storage object condition context"),
+        ('TROUBLESHOOT_MIN_INTERVAL_SECONDS = 4.25', "pace Policy Troubleshooter below the project request quota"),
     ):
         if needle not in isolation_source:
             fail(f"build isolation helper must {reason}")
@@ -554,6 +556,12 @@ def main() -> int:
         fail("OPERATOR-SETUP must document velvet-delivery-issuer@instamcp.iam.gserviceaccount.com")
     if "velvet-delivery-approval-issuer@" in operator_setup:
         fail("OPERATOR-SETUP must not document the rejected 31-character issuer SA ID")
+    documented_builder_sa = "velvet-vfigos-builder@instamcp.iam.gserviceaccount.com"
+    if documented_builder_sa not in operator_setup:
+        fail("OPERATOR-SETUP must document the dedicated vfigos build service account")
+    for forbidden_build_role in ("roles/cloudbuild.builds.builder", "roles/storage.admin"):
+        if forbidden_build_role not in operator_setup:
+            fail(f"OPERATOR-SETUP must document removal/non-grant of {forbidden_build_role} from the vfigos build boundary")
     documented_mutation_sa = "velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com"
     if documented_mutation_sa not in operator_setup:
         fail("OPERATOR-SETUP must document the dedicated mutation runtime service account")
@@ -672,6 +680,21 @@ def main() -> int:
         pass
     else:
         fail("build isolation must reject a non-concrete Cloud Build serviceAccount override")
+    expected_builder = "velvet-vfigos-builder@instamcp.iam.gserviceaccount.com"
+    expected_builder_resource = f"projects/instamcp/serviceAccounts/{expected_builder}"
+    for build_config_rel in (
+        "packages/vfigos/remote/cloudbuild.json",
+        "packages/vfigos/approval/issuer/cloudbuild.json",
+    ):
+        build_config_text = (ROOT / build_config_rel).read_text(encoding="utf-8")
+        build_config = json.loads(build_config_text)
+        if build_config.get("serviceAccount") != expected_builder_resource:
+            fail(f"{build_config_rel} must pin the dedicated vfigos build service account")
+        if (build_config.get("options") or {}).get("logging") != "CLOUD_LOGGING_ONLY":
+            fail(f"{build_config_rel} must use CLOUD_LOGGING_ONLY with the user-specified build account")
+        if isolation.cloudbuild_service_accounts(build_config_text) != [expected_builder]:
+            fail(f"{build_config_rel} build identity must be structurally parseable")
+
     plan = isolation.build_probe_plan("instamcp", "me-west1", "123456789")
     required_permissions = {
         "run.routes.invoke",
@@ -687,7 +710,6 @@ def main() -> int:
         "iam.serviceAccounts.signBlob",
         "iam.serviceAccounts.signJwt",
         "iam.serviceAccountKeys.create",
-        "iam.serviceAccountKeys.upload",
         "storage.buckets.setIamPolicy",
         "storage.buckets.update",
         "storage.buckets.delete",
@@ -697,6 +719,21 @@ def main() -> int:
     }
     if required_permissions - {item[1] for item in plan}:
         fail("build isolation probe plan is missing a required permission")
+    replay_bucket_resource = "//storage.googleapis.com/projects/_/buckets/velvet-ig-approval-spend"
+    replay_object_name = "projects/_/buckets/velvet-ig-approval-spend/objects/spent/__isolation_probe__"
+    expected_object_context = (
+        f"--resource-name={replay_object_name}",
+        "--resource-service=storage.googleapis.com",
+        "--resource-type=storage.googleapis.com/Object",
+    )
+    for object_permission in ("storage.objects.create", "storage.objects.delete", "storage.objects.update"):
+        matching_resources = [item[0] for item in plan if item[1] == object_permission]
+        if matching_resources != [replay_bucket_resource]:
+            fail("Policy Troubleshooter object permissions must use the IAM-supported bucket full resource name")
+        if isolation.troubleshoot_condition_args(replay_bucket_resource, object_permission) != expected_object_context:
+            fail("Cloud Storage object probes must provide exact object condition context")
+    if isolation.troubleshoot_condition_args(replay_bucket_resource, "storage.buckets.update"):
+        fail("bucket permission probes must not receive object condition context")
     if not any("projects/123456789/secrets/velvet-delivery-approval-ed25519-private/versions/latest" in item[0] for item in plan):
         fail("build isolation must use the Secret Manager version full resource name")
     if not any(
@@ -718,10 +755,13 @@ def main() -> int:
         "iam.serviceAccounts.signBlob",
         "iam.serviceAccounts.signJwt",
         "iam.serviceAccountKeys.create",
-        "iam.serviceAccountKeys.upload",
     }
     if protected_sa_permissions - {item[1] for item in plan}:
         fail("build isolation must cover all protected service-account credential paths")
+    if "iam.serviceAccountKeys.create" not in protected_sa_permissions:
+        fail("service-account key create permission must remain covered; IAM keys:upload is authorized by create")
+    if any(item[1] == "iam.serviceAccountKeys.upload" for item in plan):
+        fail("iam.serviceAccountKeys.upload is not a valid IAM permission; keys:upload is authorized by iam.serviceAccountKeys.create")
     spend_build_permissions = {
         item[1]
         for item in plan
@@ -737,6 +777,8 @@ def main() -> int:
     } - spend_build_permissions:
         fail("build isolation must deny replay-store mutation and IAM changes")
     mutation_plan = isolation.mutation_runtime_probe_plan("instamcp", "me-west1", "123456789")
+    if any(item[1] == "iam.serviceAccountKeys.upload" for item in mutation_plan):
+        fail("mutation runtime probe must use iam.serviceAccountKeys.create for the keys:upload authorization path")
     mutation_principal = "velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com"
     if not any(item[1] == "run.routes.invoke" for item in mutation_plan):
         fail("mutation runtime must be probed for issuer invocation denial")

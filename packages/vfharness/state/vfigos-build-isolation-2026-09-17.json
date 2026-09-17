@@ -1,0 +1,101 @@
+{
+  "schema": "velvet.vfigos_build_isolation_evidence.v1",
+  "observed_at": "2026-09-17T20:28:24+03:00",
+  "authority": {
+    "contract": 6,
+    "revision": "6.2",
+    "bundle": "VF-PROJECT-6.2-DETAIL-TRUTH",
+    "velvetos_main_sha": "04e551c1cb15bb02c11710c2a7e8777ebf205aa0"
+  },
+  "scope": "vfigos delivery-approval Cloud Build isolation and effective-IAM preflight",
+  "gcp": {
+    "project": "instamcp",
+    "region": "me-west1",
+    "default_build_identity": "1016876126699-compute@developer.gserviceaccount.com",
+    "dedicated_build_identity": "velvet-vfigos-builder@instamcp.iam.gserviceaccount.com",
+    "live_changes": [
+      "removed roles/storage.admin from default compute build identity",
+      "removed roles/cloudbuild.builds.builder from default compute build identity",
+      "created dedicated velvet-vfigos-builder service account",
+      "granted dedicated builder roles/artifactregistry.writer only on Artifact Registry repository gcr.io",
+      "granted dedicated builder roles/logging.logWriter at project scope",
+      "granted dedicated builder roles/storage.objectViewer only on gs://instamcp_cloudbuild"
+    ],
+    "dedicated_builder_project_roles": [
+      "roles/logging.logWriter"
+    ],
+    "dedicated_builder_repository_roles": {
+      "gcr.io": [
+        "roles/artifactregistry.writer"
+      ]
+    },
+    "dedicated_builder_source_bucket_roles": {
+      "gs://instamcp_cloudbuild": [
+        "roles/storage.objectViewer"
+      ]
+    },
+    "dedicated_builder_replay_bucket_bindings": [],
+    "default_compute_project_roles_after": [
+      "roles/artifactregistry.admin",
+      "roles/artifactregistry.writer",
+      "roles/logging.logWriter",
+      "roles/storage.objectViewer"
+    ]
+  },
+  "repo_candidate": {
+    "branch": "fix/vfigos-dedicated-build-isolation",
+    "base_sha": "04e551c1cb15bb02c11710c2a7e8777ebf205aa0",
+    "cloudbuild_service_account": "projects/instamcp/serviceAccounts/velvet-vfigos-builder@instamcp.iam.gserviceaccount.com",
+    "cloudbuild_logging": "CLOUD_LOGGING_ONLY",
+    "policy_troubleshooter_min_interval_seconds": 4.25,
+    "storage_object_probe_context": {
+      "full_resource_name": "//storage.googleapis.com/projects/_/buckets/velvet-ig-approval-spend",
+      "resource_name": "projects/_/buckets/velvet-ig-approval-spend/objects/spent/__isolation_probe__",
+      "resource_service": "storage.googleapis.com",
+      "resource_type": "storage.googleapis.com/Object"
+    },
+    "service_account_key_upload_authorization_permission": "iam.serviceAccountKeys.create"
+  },
+  "validation": {
+    "delivery_approval_sensor": "PASS",
+    "project_request_gate": "PASS",
+    "vfharness": "PASS",
+    "publication_evidence": "61/61 PASS",
+    "bash_syntax_mutation_deploy": "PASS",
+    "bash_syntax_issuer_deploy": "PASS",
+    "readme_system_pulse": "PASS",
+    "readme_bidi": "PASS",
+    "git_diff_check": "PASS",
+    "live_effective_iam": {
+      "status": "PASS",
+      "principal_reported": "1016876126699-compute@developer.gserviceaccount.com",
+      "probe_count": 108,
+      "command": "build_isolation.py --project instamcp --region me-west1 --cloudbuild-config packages/vfigos/remote/cloudbuild.json",
+      "fail_closed": true
+    },
+    "precommit_cursor_security_review": {
+      "status": "PASS",
+      "model": "gpt-5.3-codex-high-fast",
+      "reviewed_security_patch_sha256": "58e0da391f58f190edc3aa002149f62312c35a225c668bb3c41fe4756ce020b5",
+      "scope": "behavior/config/docs candidate before this evidence record was added; this is not an exact-commit hash",
+      "evidence_record_excluded_from_reviewed_patch": true,
+      "mode": "strict read-only static security/correctness review"
+    },
+    "exact_commit_review": {
+      "status": "REQUIRED_EXTERNAL_POST_COMMIT",
+      "binding": "Git commit SHA + PR review/comment; intentionally not self-referential inside this commit"
+    }
+  },
+  "production": {
+    "openpost_promoted": false,
+    "instagram_write_performed": false,
+    "delivery_approval_live_end_to_end": false,
+    "owner_auth_verified": false,
+    "status": "BLOCKED",
+    "blockers": [
+      "OpenPost Meta/Instagram provider OAuth is not configured",
+      "OpenPost public HTTPS/media origin is not ready",
+      "issuer deployment/healthz and full signed issue -> authorized mutation -> replay-block proof still require post-merge deployment verification"
+    ]
+  }
+}
