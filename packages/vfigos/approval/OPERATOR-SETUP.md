@@ -29,14 +29,14 @@ Until then report: **`NEEDS_OPERATOR_SETUP`**.
 ## Resources (project `instamcp`, region `me-west1`)
 
 1. Issuer service account: `velvet-delivery-issuer@instamcp.iam.gserviceaccount.com` (account ID `velvet-delivery-issuer`; IAM 6-30 characters; not the Cloud Run service name)
-2. Mutation runtime service account: `velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com`. It must have **no project-level roles**; grant only Secret Manager accessor on the three Instagram MCP runtime secrets and `roles/storage.objectCreator` on `velvet-ig-approval-spend`. Never attach the default Compute service account to the mutation service.
-   The project default Compute/Cloud Build service account must not retain `roles/run.admin` or project-wide `roles/secretmanager.secretAccessor`; either permission would pierce signer isolation by allowing the build identity to invoke the issuer or read its signing secret.
+2. Mutation runtime service account: `velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com`. It must have **no project-level roles**; grant only Secret Manager accessor on the three Instagram MCP runtime secrets and `roles/storage.objectCreator` on `velvet-ig-approval-spend`. Production deploy accepts this exact identity only; never attach the default Compute service account or another override.
+   The Cloud Build identity (project default, plus any concrete `serviceAccount` in the Cloud Build config) must be effectively denied issuer invocation, issuer `setIamPolicy`, signing-secret and Instagram-secret reads, and `actAs` / access-token / OIDC-token minting for the signer, owner-invoker and mutation runtime. `deploy.sh` and `deploy-issuer.sh` run `gcloud policy-intelligence troubleshoot-policy iam` **before** Cloud Build starts. The gate resolves the actual default build service account, the numeric project number used in Secret Manager version resource names, and any concrete build-config override. Only the exact pair `ALLOW_ACCESS_STATE_NOT_GRANTED` + `CANNOT_ACCESS` passes; command errors, malformed/unknown output or granted access fail closed. Remove broad project grants such as `roles/run.admin`, project-wide `roles/secretmanager.secretAccessor` and `roles/iam.serviceAccountUser`; a role-name check alone is not sufficient proof. A passing repo sensor is not a live IAM proof and does not set `OWNER_AUTH_VERIFIED` or `LIVE`.
 3. Owner invocation service account: `velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com`. It has **no project-level roles** and only `roles/run.invoker` on the issuer service. The human owner gets only `roles/iam.serviceAccountOpenIdTokenCreator` on this service account, so an audience-bound ID token can be minted without granting service-account access tokens. Never grant that impersonation role to ChatGPT/Cursor/MCP identities.
 4. GSM secrets (issuer SA accessor only):
    - `velvet-delivery-approval-ed25519-private` → `VELVET_DELIVERY_APPROVAL_PRIVATE_KEY_B64`
    - `velvet-delivery-approval-key-id` → `VELVET_DELIVERY_APPROVAL_KEY_ID`
    - optional defense-in-depth: issuer bearer (never MCP / mutation)
-5. GCS bucket: `velvet-ig-approval-spend` (mutation SA: object create only; no delete)
+5. GCS bucket: `velvet-ig-approval-spend` (mutation SA: object create only; no delete).
 6. Public keys: commit to `packages/vfigos/approval/keys/registry.json` (canonical verify source)
 
 ## Commands
@@ -66,12 +66,14 @@ unset TOKEN
 ./packages/vfigos/remote/deploy.sh
 
 # 7) Smoke issue (issuer computes media_sha256s + mutation_payload_sha256 — never trust client digests)
-TOKEN=$(gcloud auth print-identity-token)
+# Re-mint the same delegated, audience-bound owner-invoker identity used for healthz.
+TOKEN="$(gcloud auth print-identity-token --impersonate-service-account="${OWNER_INVOKER_SA}" --audiences="${ISSUER_URL}")"
 # Media URLs must be content-addressed: .../sha256/<64-hex>/...
 # Prefer media_artifacts bytes (issuer hashes) or let issuer fetch the CAS URL body.
 curl -sS -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
   -d '{"content_id":"JOB","package_sha256":"<64hex>","mutation_tool":"publish_image","mutation_payload":{"image_url":"https://cdn.example/sha256/<mediahex>/a.jpg","caption":"…","account":"velvets_cloud"},"media_artifacts":[{"bytes_b64":"<base64 media bytes>"}]}' \
   "$ISSUER_URL/v1/delivery-approvals"
+unset TOKEN
 ```
 
 Body size for `/v1/delivery-approvals` is capped at 16 KiB (`ISSUER_MAX_BODY_BYTES`). Auth (optional app bearer) is checked before body buffering. Mutable non-CAS URLs are refused — Graph URL fetch is not byte identity.

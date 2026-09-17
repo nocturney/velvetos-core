@@ -8,8 +8,10 @@ Also asserts mutation service isolation markers in source.
 from __future__ import annotations
 
 import concurrent.futures
+import importlib
 import json
 import os
+import re
 import sys
 import tempfile
 import threading
@@ -27,6 +29,7 @@ from vfigos.approval.canonical import canonical_payload_bytes
 from vfigos.approval.gate import authorize_mutation
 from vfigos.approval.issuer.signing import issue_approval
 from vfigos.approval.keys_registry import KeyRegistry
+import vfigos.approval.media_bytes as media_bytes_module
 from vfigos.approval.media_bytes import (
     encode_media_sha256s_claim,
     inject_media_sha256s,
@@ -56,6 +59,54 @@ def _default_issuer_sa_local(deploy_src: str) -> str:
     if not sep or not local:
         fail("issuer SA default must be an email")
     return local
+
+
+def _split_gcloud_env(flag_value: str) -> dict[str, str]:
+    """Apply gcloud's `^DELIM^` env-var rule. Default delimiter is comma."""
+    if flag_value.startswith("^") and len(flag_value) >= 3 and flag_value[2] == "^":
+        delim = flag_value[1]
+        body = flag_value[3:]
+    else:
+        delim = ","
+        body = flag_value
+    items: dict[str, str] = {}
+    for part in body.split(delim):
+        if "=" not in part:
+            raise ValueError(f"env assignment missing '=': {part!r}")
+        key, value = part.split("=", 1)
+        if key in items:
+            raise ValueError(f"env key repeated after delimiter split: {key}")
+        items[key] = value
+    return items
+
+
+def _cas_env_keeps_commas(deploy_src: str) -> bool:
+    match = re.search(r'--set-env-vars="(\^.\^[^"]+)"', deploy_src)
+    if not match:
+        return False
+    sample = (
+        match.group(1)
+        .replace("${CAS_HOST_SUFFIXES}", "cdn.example,storage.googleapis.com")
+        .replace("${SPEND_BUCKET}", "velvet-ig-approval-spend")
+    )
+    items = _split_gcloud_env(sample)
+    if items.get("VELVET_MEDIA_CAS_HOST_SUFFIXES") != "cdn.example,storage.googleapis.com":
+        return False
+    old_comma_form = (
+        "MCP_PATH=/mcp,HOST=0.0.0.0,"
+        "VELVET_DELIVERY_APPROVAL_SPEND_BUCKET=velvet-ig-approval-spend,"
+        "VELVET_MEDIA_CAS_HOST_SUFFIXES=cdn.example,storage.googleapis.com"
+    )
+    try:
+        broken = _split_gcloud_env(old_comma_form)
+    except ValueError:
+        return True
+    return broken.get("VELVET_MEDIA_CAS_HOST_SUFFIXES") != "cdn.example,storage.googleapis.com"
+
+
+def _pre_submit_has(src: str, needle: str) -> bool:
+    at = src.find("gcloud builds submit")
+    return at >= 0 and needle in src[:at]
 
 
 def _now() -> datetime:
@@ -381,10 +432,55 @@ def main() -> int:
         fail("mutation deploy must default to dedicated velvet-instagram-mcp-runtime service account")
     if '--service-account="${MUTATION_SERVICE_ACCOUNT}"' not in deploy:
         fail("mutation deploy must attach the dedicated mutation runtime service account")
+    exact_mutation_guard = '[[ "${MUTATION_SERVICE_ACCOUNT}" != "${EXPECTED_MUTATION_SERVICE_ACCOUNT}" ]]'
+    if exact_mutation_guard not in deploy:
+        fail("mutation deploy must refuse every runtime identity except the exact dedicated service account")
+    build_submit_at = deploy.find('gcloud builds submit')
+    if deploy.find(exact_mutation_guard) > build_submit_at:
+        fail("mutation identity guard must run before Cloud Build starts")
+    isolation_call = 'build_isolation.py'
+    if isolation_call not in deploy or deploy.find(isolation_call) > build_submit_at:
+        fail("mutation deploy must run effective-IAM isolation proof before Cloud Build")
     if 'VELVET_MEDIA_CAS_HOST_SUFFIXES:-storage.googleapis.com' not in deploy:
         fail("mutation deploy must default production media CAS host allowlist")
-    if 'VELVET_MEDIA_CAS_HOST_SUFFIXES=${CAS_HOST_SUFFIXES}' not in deploy:
-        fail("mutation deploy must pass the CAS host allowlist to Cloud Run")
+    pre_submit = deploy[:build_submit_at]
+    if "|| true" in pre_submit:
+        fail("mutation deploy must not bypass the pre-submit isolation gate")
+    late_comment = (
+        "gcloud builds submit\n"
+        "# https://policytroubleshooter.googleapis.com/v1/iam:troubleshoot NOT_GRANTED\n"
+    )
+    if _pre_submit_has(late_comment, "policytroubleshooter.googleapis.com"):
+        fail("a troubleshoot mention after Cloud Build submit must not satisfy the gate")
+    isolation_source = (ROOT / "packages/vfigos/approval/build_isolation.py").read_text(encoding="utf-8")
+    for needle, reason in (
+        ('"policy-intelligence"', "use gcloud Policy Troubleshooter"),
+        ('"troubleshoot-policy"', "use the IAM troubleshoot command"),
+        ('DENIED_ALLOW_STATE = "ALLOW_ACCESS_STATE_NOT_GRANTED"', "require the denied allow state"),
+        ('DENIED_OVERALL_STATE = "CANNOT_ACCESS"', "require overall access denial"),
+        ('"get-default-service-account"', "resolve the actual default Cloud Build identity"),
+    ):
+        if needle not in isolation_source:
+            fail(f"build isolation helper must {reason}")
+    if "velvet-delivery-issuer@*" in deploy:
+        fail("mutation deploy must not use a prefix denylist in place of exact service-account equality")
+    submit_block = deploy[build_submit_at:deploy.find("gcloud run deploy", build_submit_at)]
+    if "--service-account" in submit_block:
+        fail("mutation Cloud Build submit must not override the identity that isolation just proved")
+    if deploy.find("Refusing deploy: do not mount delivery-approval private key") > build_submit_at:
+        fail("private-key refusal must run before Cloud Build")
+    if not _cas_env_keeps_commas(deploy):
+        fail("mutation deploy must keep comma-separated CAS hosts as one env value")
+    dedicated = "velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com"
+    for rejected in (
+        "",
+        "123456789-compute@developer.gserviceaccount.com",
+        "velvet-delivery-issuer@instamcp.iam.gserviceaccount.com",
+        "velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com",
+        "velvet-instagram-mcp-runtime@other.iam.gserviceaccount.com",
+    ):
+        if rejected == dedicated:
+            fail(f"exact mutation service account comparison accepted {rejected!r}")
     if "VELVET_DELIVERY_APPROVAL_PRIVATE" in deploy and "Refusing deploy" not in deploy:
         # private secret name may appear in refuse check — ensure refuse exists
         fail("mutation deploy.sh must refuse private key mount")
@@ -409,6 +505,21 @@ def main() -> int:
         fail("issuer SA account ID must be lowercase letters, digits, and hyphens")
     if "velvet-delivery-approval-issuer@" in issuer_deploy:
         fail("issuer deploy must not default the 31-character SA account ID")
+    exact_issuer_guard = '[[ "${SA_EMAIL}" != "${EXPECTED_ISSUER_SA}" ]]'
+    if exact_issuer_guard not in issuer_deploy:
+        fail("issuer deploy must refuse every runtime identity except the exact signer service account")
+    issuer_build_at = issuer_deploy.find('gcloud builds submit')
+    if issuer_deploy.find(exact_issuer_guard) > issuer_build_at:
+        fail("issuer identity guard must run before Cloud Build starts")
+    if 'build_isolation.py' not in issuer_deploy or issuer_deploy.find('build_isolation.py') > issuer_build_at:
+        fail("issuer deploy must prove build-identity isolation before Cloud Build")
+    issuer_pre_submit = issuer_deploy[:issuer_build_at]
+    if "|| true" in issuer_pre_submit:
+        fail("issuer deploy must not bypass the pre-submit isolation gate")
+    if issuer_deploy.find('build_isolation.py') > issuer_build_at:
+        fail("issuer deploy must run the effective-IAM helper before Cloud Build")
+    if not _cas_env_keeps_commas(issuer_deploy):
+        fail("issuer deploy must keep comma-separated CAS hosts as one env value")
     operator_setup = (ROOT / "packages/vfigos/approval/OPERATOR-SETUP.md").read_text(encoding="utf-8")
     documented_sa = "velvet-delivery-issuer@instamcp.iam.gserviceaccount.com"
     if documented_sa not in operator_setup:
@@ -423,9 +534,30 @@ def main() -> int:
         fail("OPERATOR-SETUP must document the dedicated owner invocation service account")
     if "roles/iam.serviceAccountOpenIdTokenCreator" not in operator_setup:
         fail("OPERATOR-SETUP must keep owner impersonation scoped to OpenID token creation")
+    if operator_setup.count('--impersonate-service-account="${OWNER_INVOKER_SA}"') < 2:
+        fail("owner health and approval issuance must both use the delegated owner-invoker identity")
+    if operator_setup.count('--audiences="${ISSUER_URL}"') < 2:
+        fail("owner health and approval issuance tokens must both be audience-bound to the issuer")
+    if 'TOKEN=$(gcloud auth print-identity-token)' in operator_setup:
+        fail("OPERATOR-SETUP must not mint a bare owner identity token for approval issuance")
+    token_lines = re.findall(r"gcloud auth print-identity-token[^\n]*", operator_setup)
+    if len(token_lines) < 2:
+        fail("owner health and approval issuance must both mint an identity token")
+    for line in token_lines:
+        if '--impersonate-service-account="${OWNER_INVOKER_SA}"' not in line or '--audiences="${ISSUER_URL}"' not in line:
+            fail("every owner identity token must be delegated and audience-bound")
+    if "roles/iam.serviceAccountTokenCreator" in operator_setup + deploy + issuer_deploy:
+        fail("do not grant roles/iam.serviceAccountTokenCreator")
     for forbidden_role in ("roles/run.admin", "roles/secretmanager.secretAccessor"):
         if forbidden_role not in operator_setup:
             fail(f"OPERATOR-SETUP must document removal of {forbidden_role} from default build identity")
+    for needle in (
+        "gcloud policy-intelligence troubleshoot-policy iam",
+        "ALLOW_ACCESS_STATE_NOT_GRANTED",
+        "CANNOT_ACCESS",
+    ):
+        if needle not in operator_setup:
+            fail("OPERATOR-SETUP must document the live effective-IAM denial gate")
     http_issuer = (ROOT / "packages/vfigos/approval/issuer/http_issuer.py").read_text(encoding="utf-8")
     for needle in ("fastmcp", "INSTAGRAM_MCP_ACCESS_TOKEN", "/mcp"):
         # isolation check references ACCESS_TOKEN as forbidden — OK
@@ -434,6 +566,135 @@ def main() -> int:
         fail("issuer must not import fastmcp")
     if 'Mount("/mcp"' in http_issuer or "MCP_PATH" in http_issuer:
         fail("issuer must not expose /mcp")
+
+    try:
+        isolation = importlib.import_module("vfigos.approval.build_isolation")
+    except ModuleNotFoundError:
+        fail("effective-IAM build isolation helper is missing")
+    denied = ("ALLOW_ACCESS_STATE_NOT_GRANTED", "CANNOT_ACCESS")
+    isolation.require_denied(denied, "sensor-probe")
+    for states in (
+        ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO"),
+        ("ALLOW_ACCESS_STATE_NOT_GRANTED", "UNKNOWN_INFO"),
+        ("ALLOW_ACCESS_STATE_UNKNOWN", "UNKNOWN_INFO"),
+        ("", ""),
+    ):
+        try:
+            isolation.require_denied(states, "sensor-probe")
+        except isolation.IsolationError:
+            pass
+        else:
+            fail(f"build isolation must fail closed for access states {states!r}")
+    if isolation.parse_troubleshoot_output("ALLOW_ACCESS_STATE_NOT_GRANTED\tCANNOT_ACCESS\n") != denied:
+        fail("Policy Troubleshooter parser must preserve both denied access states")
+    for malformed in ("", "ALLOW_ACCESS_STATE_NOT_GRANTED", "A B C", "A B\nC D"):
+        try:
+            isolation.parse_troubleshoot_output(malformed)
+        except isolation.IsolationError:
+            pass
+        else:
+            fail(f"Policy Troubleshooter parser accepted malformed output {malformed!r}")
+    if "ya29.secret" in isolation.redact("failed ya29.secret tail"):
+        fail("build isolation errors must redact access tokens")
+    parsed = isolation.parse_build_identity(
+        "projects/instamcp/serviceAccounts/123456789@cloudbuild.gserviceaccount.com\n"
+    )
+    if parsed != "123456789@cloudbuild.gserviceaccount.com":
+        fail("build identity parser must extract the default service-account email")
+    if isolation.parse_project_number("123456789\n") != "123456789":
+        fail("project-number parser must preserve the numeric project number")
+    for bad_number in ("", "instamcp", "123x"):
+        try:
+            isolation.parse_project_number(bad_number)
+        except isolation.IsolationError:
+            pass
+        else:
+            fail(f"project-number parser accepted {bad_number!r}")
+    override = "privileged@example.iam.gserviceaccount.com"
+    if isolation.cloudbuild_service_accounts(f"steps: []\nserviceAccount: {override}\n") != [override]:
+        fail("build isolation must extract a concrete Cloud Build serviceAccount override")
+    full_override = f"projects/instamcp/serviceAccounts/{override}"
+    if isolation.cloudbuild_service_accounts(f"serviceAccount: {full_override}\n") != [override]:
+        fail("build isolation must normalize a full Cloud Build serviceAccount resource")
+    for evasive in (
+        f"{{serviceAccount: {override}}}\n",
+        f"options: {{serviceAccount: {override}}}\n",
+    ):
+        try:
+            isolation.cloudbuild_service_accounts(evasive)
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("build isolation must fail closed on unparsed serviceAccount syntax")
+    try:
+        isolation.cloudbuild_service_accounts("serviceAccount: ${_BUILD_SA}\n")
+    except isolation.IsolationError:
+        pass
+    else:
+        fail("build isolation must reject a non-concrete Cloud Build serviceAccount override")
+    plan = isolation.build_probe_plan("instamcp", "me-west1", "123456789")
+    required_permissions = {
+        "run.routes.invoke",
+        "run.services.setIamPolicy",
+        "secretmanager.versions.access",
+        "iam.serviceAccounts.actAs",
+        "iam.serviceAccounts.getAccessToken",
+        "iam.serviceAccounts.getOpenIdToken",
+    }
+    if required_permissions - {item[1] for item in plan}:
+        fail("build isolation probe plan is missing a required permission")
+    if not any("projects/123456789/secrets/velvet-delivery-approval-ed25519-private/versions/latest" in item[0] for item in plan):
+        fail("build isolation must use the Secret Manager version full resource name")
+    calls: list[tuple[str, str, str]] = []
+    def _fake_troubleshoot(resource: str, principal_email: str, permission: str):
+        calls.append((resource, principal_email, permission))
+        return denied
+    with tempfile.TemporaryDirectory() as tmp:
+        config = Path(tmp) / "cloudbuild.yaml"
+        config.write_text("steps:\n  - name: safe\n", encoding="utf-8")
+        build_identity = "123456789@cloudbuild.gserviceaccount.com"
+        _principal, probe_count = isolation.assert_build_identity_isolated(
+            "instamcp", "me-west1", config,
+            principal=build_identity, project_number="123456789",
+            troubleshoot=_fake_troubleshoot,
+        )
+        if _principal != build_identity or probe_count != len(plan) or len(calls) != len(plan):
+            fail("injected isolation proof did not cover the full probe plan")
+        calls.clear()
+        config.write_text(f"steps: []\nserviceAccount: {override}\n", encoding="utf-8")
+        isolation.assert_build_identity_isolated(
+            "instamcp", "me-west1", config,
+            principal=build_identity, project_number="123456789",
+            troubleshoot=_fake_troubleshoot,
+        )
+        probed = {item[1] for item in calls}
+        if build_identity not in probed or override not in probed:
+            fail("Cloud Build serviceAccount override must be proven denied too")
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp", "me-west1", config,
+                principal="velvet-delivery-issuer@instamcp.iam.gserviceaccount.com",
+                project_number="123456789", troubleshoot=_fake_troubleshoot,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("signer identity must not be accepted as the Cloud Build identity")
+        def _granted(resource: str, principal_email: str, permission: str):
+            if permission == "run.services.setIamPolicy":
+                return ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO")
+            return denied
+        config.write_text("steps:\n  - name: safe\n", encoding="utf-8")
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp", "me-west1", config,
+                principal=build_identity, project_number="123456789",
+                troubleshoot=_granted,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("granted setIamPolicy must fail the isolation proof closed")
 
     remote_http = (ROOT / "packages/vfigos/remote/http_server.py").read_text(encoding="utf-8")
     if "apply_delivery_approval_gate" not in remote_http:
