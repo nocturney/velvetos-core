@@ -25,7 +25,7 @@ Content decision / creative pipeline
   -> Insights / learning loop
 ```
 
-OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום הקנוני וקיבל את הראיות הנדרשות. הוא **לא** יוצר bypass ל־VISIBLE_TEXT, `packages/vfom/PUBLICATION-PREP-EXECUTION.md`, Product Truth, Media Vault/versionApproval, Owner-Approved Grid Standard, Brand Guardian, PREFLIGHT/publicationEvidence, rights/privacy או exact-hash binding.
+OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום הקנוני וקיבל את הראיות הנדרשות. הוא **לא** יוצר bypass ל־VISIBLE_TEXT, `packages/vfom/PUBLICATION-PREP-EXECUTION.md`, Product Truth, Media Vault/versionApproval, Owner-Approved Grid Standard, Brand Guardian, PREFLIGHT/publicationEvidence, rights/privacy, exact-hash binding או signed `velvet.delivery_approval.v1`.
 
 ## Instagram / Meta
 
@@ -62,9 +62,10 @@ OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום �
 3. לעדכן `latestReviewedVersion` רק עם ראיית upstream אמיתית.
 4. אם יש migration/schema change — לבצע backup אמיתי לפני upgrade ולבצע staging migration smoke.
 5. staging מקבל גרסה מדויקת / immutable digest, לא `latest`.
-6. smoke: health/auth + queue/schedule + post/carousel/reel/story contract + retry + analytics read; publish smoke דורש גם provider prerequisites וגם signed delivery approval.
-7. Instagram live verification נשאר `list_media` / `get_media`.
-8. רק אם אין regression וכל gates הדרושים PASS — ניתן לשקול production pin.
+6. לפני v4.32+ חובה להציב במפורש `OPENPOST_DIAGNOSTICS_ENABLED=false` כל עוד אין אישור מפורש לשיתוף maintainer diagnostics חיצוני.
+7. smoke: health/auth + queue/schedule + post/carousel/reel/story contract + retry + analytics read; publish smoke דורש גם provider prerequisites וגם signed delivery approval.
+8. Instagram live verification נשאר `list_media` / `get_media`.
+9. רק אם אין regression וכל gates הדרושים PASS — ניתן לשקול production pin.
 
 ## Review v4.31.0 -> v4.34.2
 
@@ -74,11 +75,11 @@ OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום �
 - **Scheduler/queue/retry:** לא זוהה שינוי breaking בנתיב VF; v4.32 מוסיפה bounded non-blocking diagnostics queue.
 - **Analytics:** השינויים הרלוונטיים הם Discord/Lemmy/PieFed, לא Instagram.
 - **Database/schema/storage:** migrations `135_fediverse_instance_provider.sql` ו־`136_billing_discord_notifications.sql` משנות סכימה; נדרש backup + staging migration smoke לפני runtime upgrade.
-- **Security/privacy:** החל מ־v4.32 maintainer diagnostics מופעלים כברירת מחדל ב־self-hosted ושולחים failure reports מצומצמים החוצה. לפני upgrade יש לקבוע במפורש את `OPENPOST_DIAGNOSTICS_ENABLED` בהתאם למדיניות שלנו.
+- **Security/privacy:** החל מ־v4.32 maintainer diagnostics מופעלים כברירת מחדל ב־self-hosted ושולחים failure reports מצומצמים החוצה. מדיניות VF היא fail-closed: `OPENPOST_DIAGNOSTICS_ENABLED=false` עד אישור מפורש אחר.
 - **Pinned artifact reviewed:** Windows server v4.34.2 SHA-256 `43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442`.
 
 ## Current runtime decision
 
-ה־review התקדם ל־v4.34.2, אבל runtime staging נשאר pinned ל־v4.31.0 עד שניתן לבצע backup + Windows staging migration/smoke אמיתיים. Production נשאר חסום גם על public HTTPS/provider OAuth וגם על delivery-approval live evidence שמוגדר כרגע `NEEDS_OPERATOR_SETUP`.
+ה־review התקדם ל־v4.34.2, אבל runtime staging נשאר pinned ל־v4.31.0 עד שניתן לבצע backup + Windows staging migration/smoke אמיתיים עם diagnostics כבוי במפורש. Production נשאר חסום גם על public HTTPS/provider OAuth וגם על delivery-approval live evidence שמוגדר כרגע `NEEDS_OPERATOR_SETUP`.
 
 Version state: [`OPENPOST.json`](OPENPOST.json).
