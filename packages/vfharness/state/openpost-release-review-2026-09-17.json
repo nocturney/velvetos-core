@@ -43,6 +43,7 @@
     "openpost_md_updated": true,
     "send_route_updated": true,
     "readme_capability_status_updated": true,
+    "diagnostics_fail_closed_policy_added": true,
     "stale_pr_232_closed_as_superseded": true,
     "production_promoted": false
   },
