@@ -352,16 +352,6 @@ def media_cards_html(cards: list[dict], theme: tuple[str, str, str, str]) -> str
     return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" dir="rtl" style="margin-top:12px"><tr>' + ''.join(cells) + '</tr></table>'
 
 
-def source_links_html(links: list[dict], theme: tuple[str, str, str, str]) -> str:
-    accent, _soft, label_color, _dark = theme
-    rows=[]
-    for item in links[:6]:
-        href=str(item.get("href") or item.get("url") or "").strip()
-        if not href.startswith(("https://","http://")): continue
-        label=esc(item.get("label") or href)
-        rows.append(f'<a class="vf-touch" href="{esc(href)}" style="display:inline-block;color:{label_color};text-decoration:none;background:#FFFFFF;border:1px solid {accent};border-radius:10px;padding:10px 13px;font-size:12px;line-height:18px;font-weight:900;margin:0 0 7px 7px;mso-line-height-rule:exactly">{label}</a>')
-    return '' if not rows else '<div dir="rtl" style="margin-top:12px">'+''.join(rows)+'</div>'
-
 def actions_html(actions: list[dict], theme: tuple[str, str, str, str]) -> str:
     accent, _soft, label_color, _dark = theme
     parts = [f'<div dir="rtl" style="margin:13px 0 7px;font-size:12px;line-height:18px;color:{label_color};font-weight:900;mso-line-height-rule:exactly">אישור בלחיצה · לא הודעת לקוח · לא Print</div>']
@@ -406,8 +396,6 @@ def _slot_text_body(slot: dict, theme: tuple[str, str, str, str], *, include_cov
         bits.append(media_cards_html(cards, theme))
     if include_covers and slot.get("covers"):
         bits.append(covers_html(slot.get("covers") or [], theme))
-    if slot.get("links"):
-        bits.append(source_links_html(slot.get("links") or [], theme))
     if slot.get("actions"):
         bits.append(actions_html(slot.get("actions") or [], theme))
     return ''.join(bits)
