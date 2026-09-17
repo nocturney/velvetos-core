@@ -25,9 +25,9 @@
     "productionUsesLatestTag": false,
     "pinExactVersion": true,
     "currentBaseline": "v4.31.0",
-    "latestReviewedVersion": "v4.31.0",
-    "latestReviewedPublishedAt": "2026-09-13T07:26:39Z",
-    "reviewedAt": "2026-09-14T08:23:00+03:00",
+    "latestReviewedVersion": "v4.34.2",
+    "latestReviewedPublishedAt": "2026-09-16T17:57:34Z",
+    "reviewedAt": "2026-09-17T07:37:39+03:00",
     "autoPromoteWithoutTests": false,
     "backupBeforeMigrationUpgrade": true,
     "requiredChecks": [
@@ -40,8 +40,22 @@
       "security",
       "staging_smoke",
       "instagram_live_verify",
-      "analytics_read"
-    ]
+      "analytics_read",
+      "signed_delivery_approval_live"
+    ],
+    "latestReview": {
+      "fromVersion": "v4.31.0",
+      "toVersion": "v4.34.2",
+      "upstreamWindowsServerSha256": "43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442",
+      "metaInstagramAuth": "No direct Meta/Instagram breaking auth change identified in v4.31.1-v4.34.2 release notes; existing public HTTPS/media-origin and provider OAuth prerequisites remain.",
+      "apiMcpContract": "Relevant changes: mcp:read/mcp:full scope handling fixes, MCP OAuth one-time authorization callback locking, and maximum-lifetime API token clock-skew tolerance.",
+      "mediaLimits": "No Instagram media-limit change identified; media-limit documentation changes add Fediverse destinations and leave the VF Instagram limits unchanged.",
+      "schedulerQueueRetry": "No VF publication scheduler/queue/retry breaking change identified; v4.32 adds a bounded non-blocking maintainer-diagnostics reporting queue.",
+      "analytics": "No Instagram analytics contract change identified; reviewed analytics fixes are for Discord/Lemmy/PieFed paths.",
+      "databaseSchemaStorage": "Migrations 135 and 136 alter mastodon_instances and billing_webhook_events. They are unrelated to the VF Instagram path but require backup plus staging migration smoke before runtime upgrade.",
+      "security": "Self-hosted maintainer diagnostics become enabled by default in v4.32.0 and send privacy-limited failure reports externally unless OPENPOST_DIAGNOSTICS_ENABLED=false; set an explicit diagnostics policy before upgrade.",
+      "runtimeDecision": "Review state advanced to v4.34.2 only. Keep staging pinned at v4.31.0 until a real backup and Windows staging migration/smoke run are completed; production remains blocked by provider OAuth/public HTTPS and the signed delivery-approval boundary."
+    }
   },
   "runtime": {
     "productionDeployed": false,
@@ -55,8 +69,17 @@
     "stagingReadiness": "pass_database_ok",
     "publicHttpsReady": false,
     "providerOAuthReady": false,
-    "blockedBy": "public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are still required before Instagram provider connection and publish smoke",
+    "blockedBy": "public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are required before Instagram provider connection and publish smoke; v4.34.2 staging upgrade requires backup plus migration/smoke; authenticated Instagram writes remain blocked while delivery-approval live evidence is NEEDS_OPERATOR_SETUP",
     "containerImagePolicy": "pin version or immutable digest; never production latest"
+  },
+  "deliveryApproval": {
+    "schema": "velvet.delivery_approval.v1",
+    "requiredForInstagramWrites": true,
+    "dedicatedIssuerRequired": true,
+    "currentLiveEvidence": "NEEDS_OPERATOR_SETUP",
+    "operatorSetup": "packages/vfigos/approval/OPERATOR-SETUP.md",
+    "directInstagramMcpIsNotApprovalBypass": true,
+    "productionPromotionBlockedUntilLive": true
   },
   "truth": {
     "publishResponseMeansLiveVerified": false,
