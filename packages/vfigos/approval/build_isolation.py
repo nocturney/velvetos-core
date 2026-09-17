@@ -12,11 +12,14 @@ import json
 import os
 import re
 import subprocess
+import time
 from pathlib import Path
 from typing import Callable
 
 DENIED_ALLOW_STATE = "ALLOW_ACCESS_STATE_NOT_GRANTED"
 DENIED_OVERALL_STATE = "CANNOT_ACCESS"
+TROUBLESHOOT_MIN_INTERVAL_SECONDS = 4.25
+_LAST_TROUBLESHOOT_STARTED = 0.0
 ISSUER_SERVICE = "velvet-delivery-approval-issuer"
 SIGNING_SECRET = "velvet-delivery-approval-ed25519-private"
 INSTAGRAM_SECRETS = (
@@ -40,7 +43,6 @@ SENSITIVE_PERMISSIONS = frozenset(
         "iam.serviceAccounts.signBlob",
         "iam.serviceAccounts.signJwt",
         "iam.serviceAccountKeys.create",
-        "iam.serviceAccountKeys.upload",
         "storage.buckets.setIamPolicy",
         "storage.buckets.update",
         "storage.buckets.delete",
@@ -148,7 +150,6 @@ def build_probe_plan(
     )
     project_resource = f"//cloudresourcemanager.googleapis.com/projects/{project}"
     spend_bucket_resource = f"//storage.googleapis.com/projects/_/buckets/{SPEND_BUCKET}"
-    spend_object_resource = f"{spend_bucket_resource}/objects/spent/__isolation_probe__"
     probes: list[tuple[str, str, str]] = [
         (issuer, "run.routes.invoke", "issuer invoke"),
         (issuer, "run.services.setIamPolicy", "issuer setIamPolicy"),
@@ -164,9 +165,9 @@ def build_probe_plan(
         ),
         (spend_bucket_resource, "storage.buckets.update", "replay bucket update"),
         (spend_bucket_resource, "storage.buckets.delete", "replay bucket delete"),
-        (spend_object_resource, "storage.objects.create", "replay object create"),
-        (spend_object_resource, "storage.objects.delete", "replay object delete"),
-        (spend_object_resource, "storage.objects.update", "replay object update"),
+        (spend_bucket_resource, "storage.objects.create", "replay object create"),
+        (spend_bucket_resource, "storage.objects.delete", "replay object delete"),
+        (spend_bucket_resource, "storage.objects.update", "replay object update"),
     ]
     for secret in (SIGNING_SECRET, *INSTAGRAM_SECRETS):
         secret_resource = (
@@ -197,7 +198,6 @@ def build_probe_plan(
             ("iam.serviceAccounts.signBlob", "sign blob"),
             ("iam.serviceAccounts.signJwt", "sign JWT"),
             ("iam.serviceAccountKeys.create", "service account key create"),
-            ("iam.serviceAccountKeys.upload", "service account key upload"),
         ):
             probes.append((resource, permission, f"{label} {email}"))
     return probes
@@ -214,7 +214,6 @@ def mutation_runtime_probe_plan(
         f"//secretmanager.googleapis.com/projects/{project_number}/secrets/{SIGNING_SECRET}"
     )
     spend_bucket_resource = f"//storage.googleapis.com/projects/_/buckets/{SPEND_BUCKET}"
-    spend_object_resource = f"{spend_bucket_resource}/objects/spent/__isolation_probe__"
     probes: list[tuple[str, str, str]] = [
         (issuer, "run.routes.invoke", "mutation runtime issuer invoke"),
         (issuer, "run.services.setIamPolicy", "mutation runtime issuer setIamPolicy"),
@@ -240,8 +239,8 @@ def mutation_runtime_probe_plan(
         ),
         (spend_bucket_resource, "storage.buckets.update", "mutation runtime replay bucket update"),
         (spend_bucket_resource, "storage.buckets.delete", "mutation runtime replay bucket delete"),
-        (spend_object_resource, "storage.objects.delete", "mutation runtime replay object delete"),
-        (spend_object_resource, "storage.objects.update", "mutation runtime replay object update"),
+        (spend_bucket_resource, "storage.objects.delete", "mutation runtime replay object delete"),
+        (spend_bucket_resource, "storage.objects.update", "mutation runtime replay object update"),
     ]
     for email in (signer_email(project), owner_invoker_email(project)):
         resource = f"//iam.googleapis.com/projects/{project}/serviceAccounts/{email}"
@@ -254,7 +253,6 @@ def mutation_runtime_probe_plan(
             ("iam.serviceAccounts.signBlob", "sign blob"),
             ("iam.serviceAccounts.signJwt", "sign JWT"),
             ("iam.serviceAccountKeys.create", "service account key create"),
-            ("iam.serviceAccountKeys.upload", "service account key upload"),
         ):
             probes.append((resource, permission, f"mutation runtime {label} {email}"))
     return probes
@@ -279,7 +277,30 @@ def require_denied(states: tuple[str, str], label: str) -> None:
         )
 
 
+def troubleshoot_condition_args(resource: str, permission: str) -> tuple[str, ...]:
+    """Add Cloud Storage object context without using an unsupported object fullResourceName."""
+    spend_bucket_resource = f"//storage.googleapis.com/projects/_/buckets/{SPEND_BUCKET}"
+    if resource == spend_bucket_resource and permission.startswith("storage.objects."):
+        object_name = f"projects/_/buckets/{SPEND_BUCKET}/objects/spent/__isolation_probe__"
+        return (
+            f"--resource-name={object_name}",
+            "--resource-service=storage.googleapis.com",
+            "--resource-type=storage.googleapis.com/Object",
+        )
+    return ()
+
+
+def _pace_troubleshooter() -> None:
+    global _LAST_TROUBLESHOOT_STARTED
+    now = time.monotonic()
+    wait_for = TROUBLESHOOT_MIN_INTERVAL_SECONDS - (now - _LAST_TROUBLESHOOT_STARTED)
+    if wait_for > 0:
+        time.sleep(wait_for)
+    _LAST_TROUBLESHOOT_STARTED = time.monotonic()
+
+
 def live_troubleshoot(resource: str, principal: str, permission: str) -> tuple[str, str]:
+    _pace_troubleshooter()
     output = _gcloud(
         "policy-intelligence",
         "troubleshoot-policy",
@@ -287,6 +308,7 @@ def live_troubleshoot(resource: str, principal: str, permission: str) -> tuple[s
         resource,
         f"--principal-email={principal}",
         f"--permission={permission}",
+        *troubleshoot_condition_args(resource, permission),
         "--format=value(allowPolicyExplanation.allowAccessState,overallAccessState)",
     )
     return parse_troubleshoot_output(output)

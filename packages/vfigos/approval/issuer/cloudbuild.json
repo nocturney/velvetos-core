@@ -12,8 +12,14 @@
       ]
     }
   ],
-  "images": ["$_IMAGE"],
+  "images": [
+    "$_IMAGE"
+  ],
   "substitutions": {
     "_IMAGE": "gcr.io/instamcp/velvet-delivery-approval-issuer:v1"
+  },
+  "serviceAccount": "projects/instamcp/serviceAccounts/velvet-vfigos-builder@instamcp.iam.gserviceaccount.com",
+  "options": {
+    "logging": "CLOUD_LOGGING_ONLY"
   }
 }
