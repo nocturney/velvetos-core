@@ -1,0 +1,34 @@
+{
+  "task_id": "dedicated-instagram-mutation-runtime-sa",
+  "status": "blocked",
+  "component_state": "Blocked",
+  "pack": "vfigos",
+  "branch": "fix/dedicated-instagram-mutation-runtime-sa",
+  "base_main": "552fd415ef58de23fe9ca5add9ec0b6dfc0d654b",
+  "implementation_head": "187c9e2a31ed23728e46fcfd2366fbc4d6a4668f",
+  "claims": {
+    "LIVE": false,
+    "OWNER_AUTH_VERIFIED": false,
+    "candidate_deployed": false,
+    "existing_runtime_deployed_before_candidate": true,
+    "gcp_changed_by_candidate": false
+  },
+  "evidence": {
+    "targeted_local_postflight": "PASS",
+    "resource_override_smoke": "PASS 8/8 canonical selectors fail closed before build",
+    "check_all": "PASS GitHub Actions run 35233486531 on 187c9e2a31ed23728e46fcfd2366fbc4d6a4668f",
+    "exact_head_codex_review": "BLOCKED Codex code-review usage limit"
+  },
+  "completed_steps": [
+    "Pinned mutation and issuer deploys to exact dedicated service accounts before Cloud Build",
+    "Added fail-closed Policy Troubleshooter effective-IAM preflight",
+    "Probed default build identity plus concrete Cloud Build serviceAccount overrides",
+    "Pinned mutation/issuer service names, signer/key-id secrets, Instagram runtime secrets, and replay bucket to canonical production resources",
+    "Used a non-comma gcloud delimiter for comma-separated CAS hosts",
+    "Re-minted the delegated audience-bound owner-invoker token for issuance smoke",
+    "Passed exact implementation-head Linux check-all and commission isolation"
+  ],
+  "next_step": "Obtain an independent code/security review on the exact final PR head after Codex review capacity is available; if clean, rerun final CI as needed and merge with expected-head protection. Deploy and owner-auth verification remain separate.",
+  "latest_observation": "Implementation head 187c9e2 passed Linux check-all and targeted fail-closed override tests. Exact-head Codex review could not start because the code-review usage limit was reached; merge remains blocked. No owner-auth or full issue-to-mutate-to-replay proof exists yet.",
+  "last_updated": "2026-09-17"
+}
