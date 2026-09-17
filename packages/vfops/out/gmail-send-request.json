@@ -1,11 +1,11 @@
 {
-  "enabled": false,
-  "requestId": "morning-brief-recovery-v10-3-2026-09-15-attempt2-failed",
-  "html": "packages/vfops/out/morning-brief-recovery-v10.3-2026-09-15.html",
-  "visibleText": "packages/vfops/out/morning-brief-recovery-v10.3-2026-09-15.txt",
-  "images": "",
+  "enabled": true,
+  "requestId": "research-seat-2026-09-17",
   "to": "nocturney@gmail.com",
-  "subject": "Velvet Factory — בריף הבוקר | 15.9.2026",
+  "subject": "Velvet Factory · בריף מחקר 17.9",
+  "html": "packages/vfops/out/research-owner-2026-09-17.html",
+  "visibleText": "packages/vfops/out/research-owner-2026-09-17.txt",
+  "images": "",
   "embedRemoteImages": true,
   "remoteImageLimit": 4
 }
