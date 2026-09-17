@@ -53,8 +53,15 @@
       "schedulerQueueRetry": "No VF publication scheduler/queue/retry breaking change identified; v4.32 adds a bounded non-blocking maintainer-diagnostics reporting queue.",
       "analytics": "No Instagram analytics contract change identified; reviewed analytics fixes are for Discord/Lemmy/PieFed paths.",
       "databaseSchemaStorage": "Migrations 135 and 136 alter mastodon_instances and billing_webhook_events. They are unrelated to the VF Instagram path but require backup plus staging migration smoke before runtime upgrade.",
-      "security": "Self-hosted maintainer diagnostics become enabled by default in v4.32.0 and send privacy-limited failure reports externally unless OPENPOST_DIAGNOSTICS_ENABLED=false; set an explicit diagnostics policy before upgrade.",
+      "security": "Self-hosted maintainer diagnostics become enabled by default in v4.32.0 and send privacy-limited failure reports externally unless OPENPOST_DIAGNOSTICS_ENABLED=false; VF policy is fail-closed: keep diagnostics disabled until explicitly approved.",
       "runtimeDecision": "Review state advanced to v4.34.2 only. Keep staging pinned at v4.31.0 until a real backup and Windows staging migration/smoke run are completed; production remains blocked by provider OAuth/public HTTPS and the signed delivery-approval boundary."
+    }
+  },
+  "securityPolicy": {
+    "maintainerDiagnostics": {
+      "policy": "disabled_until_explicit_approval",
+      "requiredEnv": "OPENPOST_DIAGNOSTICS_ENABLED=false",
+      "reason": "v4.32+ enables external self-hosted failure reporting by default; rights/privacy stays fail-closed until owner approval"
     }
   },
   "runtime": {
@@ -74,7 +81,7 @@
     },
     "publicHttpsReady": false,
     "providerOAuthReady": false,
-    "blockedBy": "public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are required before Instagram provider connection and publish smoke; v4.34.2 staging upgrade requires backup plus migration/smoke; authenticated Instagram writes remain blocked while delivery-approval live evidence is NEEDS_OPERATOR_SETUP",
+    "blockedBy": "public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are required before Instagram provider connection and publish smoke; v4.34.2 staging upgrade requires backup plus migration/smoke and explicit OPENPOST_DIAGNOSTICS_ENABLED=false; authenticated Instagram writes remain blocked while delivery-approval live evidence is NEEDS_OPERATOR_SETUP",
     "containerImagePolicy": "pin version or immutable digest; never production latest"
   },
   "deliveryApproval": {
