@@ -21,7 +21,7 @@
     "autoDm": false,
     "boostAds": false,
     "openpostProviderProbe": {
-      "observedAt": "2026-09-17T19:26:44+03:00",
+      "observedAt": "2026-09-17T19:46:04+03:00",
       "providerApps": 0,
       "providerInstallations": 0,
       "socialAccounts": 0,
@@ -35,7 +35,7 @@
     "currentBaseline": "v4.34.2",
     "latestReviewedVersion": "v4.34.2",
     "latestReviewedPublishedAt": "2026-09-16T17:57:34Z",
-    "reviewedAt": "2026-09-17T19:26:44+03:00",
+    "reviewedAt": "2026-09-17T19:46:04+03:00",
     "autoPromoteWithoutTests": false,
     "backupBeforeMigrationUpgrade": true,
     "requiredChecks": [
@@ -83,9 +83,9 @@
     "stagingHealth": "pass_openapi_http_200",
     "stagingReadiness": "pass_schema_136_integrity_ok",
     "freshProbe": {
-      "observedAt": "2026-09-17T19:22:14+03:00",
+      "observedAt": "2026-09-17T19:46:04+03:00",
       "status": "PASS",
-      "detail": "Windows staging listener on 127.0.0.1:18080 is running the exact v4.34.2 binary; OpenAPI returned HTTP 200; schema_migrations max=136; integrity_check=ok; foreign_key_check=0."
+      "detail": "Windows staging listener on 127.0.0.1:18080 is running exact v4.34.2; binary SHA-256 matches the pinned upstream asset; OpenAPI HTTP 200; schema_migrations max=136; integrity_check=ok; foreign_key_check=0; persistence task is Running; inbound TCP/18080 firewall block is enabled."
     },
     "publicHttpsReady": false,
     "providerOAuthReady": false,

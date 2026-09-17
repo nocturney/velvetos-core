@@ -9,7 +9,7 @@
     "contract_version": 6,
     "revision": "6.2",
     "bundle_id": "VF-PROJECT-6.2-DETAIL-TRUTH",
-    "velvetos_main_sha": "e8a4189d779d7b32bd062bb5c76fe617129a3005"
+    "velvetos_main_sha": "f754e8fad03787c1ae95de44ad447bc177abcdcd"
   },
   "upstream": {
     "repository": "getopenpost/openpost",
@@ -55,7 +55,7 @@
       "post_restart_binary_sha256": "43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442"
     },
     "provider_probe": {
-      "observed_at": "2026-09-17T19:26:44+03:00",
+      "observed_at": "2026-09-17T19:46:04+03:00",
       "provider_apps": 0,
       "provider_installations": 0,
       "social_accounts": 0,
@@ -74,7 +74,8 @@
       "local_only_enforced": true
     },
     "backup_media_files": 0,
-    "backup_media_bytes": 0
+    "backup_media_bytes": 0,
+    "fresh_probe_observed_at": "2026-09-17T19:46:04+03:00"
   },
   "delivery_approval": {
     "required_schema": "velvet.delivery_approval.v1",
@@ -97,24 +98,35 @@
     "runtime_staging_upgraded": true,
     "readme_capability_status_updated": true
   },
-  "reviewed_at": "2026-09-17T19:36:02+03:00",
+  "reviewed_at": "2026-09-17T19:46:04+03:00",
   "ci": {
-    "observed_at": "2026-09-17T19:36:02+03:00",
-    "workflow": "VelvetOS Core Sensors",
-    "run_id": 35247070592,
-    "head_sha": "068b168c70e569cdc351e6807c373d995514b7ee",
-    "living_readme_contract": "PASS",
-    "readme_system_pulse": "PASS",
-    "readme_bidi": "PASS",
-    "sensors_passed": 70,
-    "sensors_total": 72,
-    "status": "BLOCKED_BASELINE_RESEARCH_STATE",
-    "failures": [
-      "check-hq-overlay.py: vfops/data/research.md missing office brief state",
-      "check-vfresearch.py: vfops/data/research.md missing required build/improve or exact empty-state marker"
-    ],
-    "research_blob_sha": "42b4bd87dc35b003def8625bce90e074c8695731",
-    "research_blob_same_as_main": true,
-    "note": "OpenPost/delivery/publication sensors passed; do not repair Research state inside this overlapping OpenPost PR."
+    "previous_openpost_run": {
+      "observed_at": "2026-09-17T19:36:02+03:00",
+      "workflow": "VelvetOS Core Sensors",
+      "run_id": 35247070592,
+      "head_sha": "068b168c70e569cdc351e6807c373d995514b7ee",
+      "living_readme_contract": "PASS",
+      "readme_system_pulse": "PASS",
+      "readme_bidi": "PASS",
+      "sensors_passed": 70,
+      "sensors_total": 72,
+      "status": "BLOCKED_BASELINE_RESEARCH_STATE",
+      "failures": [
+        "check-hq-overlay.py: vfops/data/research.md missing office brief state",
+        "check-vfresearch.py: vfops/data/research.md missing required build/improve or exact empty-state marker"
+      ],
+      "research_blob_sha": "42b4bd87dc35b003def8625bce90e074c8695731",
+      "research_blob_same_as_main": true,
+      "note": "OpenPost/delivery/publication sensors passed; do not repair Research state inside this overlapping OpenPost PR."
+    },
+    "baseline_repair": {
+      "pr": 241,
+      "merge_commit": "f754e8fad03787c1ae95de44ad447bc177abcdcd",
+      "workflow_run_id": 35248329596,
+      "result": "PASS",
+      "detail": "Research no_meaningful_findings now carries the exact governed empty-state marker; Living README, System Pulse, BiDi, all sensors and commission isolation passed on Linux."
+    },
+    "final_head_check_required": true,
+    "note": "After rebase onto the repaired baseline, GitHub/Linux CI on the exact OpenPost PR head remains the authoritative merge gate."
   }
 }
