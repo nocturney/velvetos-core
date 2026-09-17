@@ -1,0 +1,33 @@
+{
+  "task_id": "dedicated-instagram-mutation-runtime-sa",
+  "status": "candidate_ready_for_review",
+  "component_state": "Idle",
+  "pack": "vfigos",
+  "branch": "fix/dedicated-instagram-mutation-runtime-sa",
+  "base_main": "3f0a63f41851cc57c28bf68dee52657e79f782f7",
+  "implementation_head": "b74414b3b4bb7db30b91323ef75c6ef83e042094",
+  "claims": {
+    "LIVE": false,
+    "OWNER_AUTH_VERIFIED": false,
+    "candidate_deployed": false,
+    "existing_runtime_deployed_before_candidate": true,
+    "gcp_changed_by_candidate": false
+  },
+  "evidence": {
+    "targeted_local_postflight": "PASS",
+    "mutation_build_iam_preflight": "PASS 15/15 deny",
+    "issuer_build_iam_preflight": "PASS 15/15 deny",
+    "check_all": "BLOCKED on existing Windows Living Studio nested subprocess hang"
+  },
+  "completed_steps": [
+    "Pinned mutation and issuer deploys to exact dedicated service accounts before Cloud Build",
+    "Added fail-closed Policy Troubleshooter effective-IAM preflight",
+    "Probed default build identity plus concrete Cloud Build serviceAccount overrides",
+    "Used a non-comma gcloud delimiter for comma-separated CAS hosts",
+    "Re-minted the delegated audience-bound owner-invoker token for issuance smoke",
+    "Rebased candidate onto current main and reran targeted postflight plus live IAM probes"
+  ],
+  "next_step": "Push rebased branch, obtain fresh code and security reviews on the exact final PR head, then decide merge/deploy separately.",
+  "latest_observation": "Repo sensors and live Policy Troubleshooter agree on build-identity isolation; no owner-auth or full issue-to-mutate-to-replay proof exists yet.",
+  "last_updated": "2026-09-17"
+}
