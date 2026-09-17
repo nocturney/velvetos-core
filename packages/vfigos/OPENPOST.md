@@ -80,6 +80,6 @@ OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום �
 
 ## Current runtime decision
 
-Windows staging is now pinned to **v4.34.2** after a hashed backup and isolated migration smoke (schema 134 -> 136, `integrity_check=ok`, zero foreign-key violations). `OPENPOST_DIAGNOSTICS_ENABLED=false` is enforced. Production remains blocked on public HTTPS/provider OAuth and `NEEDS_OPERATOR_SETUP` delivery-approval live evidence.
+Windows staging is now pinned to **v4.34.2** after a hashed backup and isolated migration smoke (schema 134 -> 136, `integrity_check=ok`, zero foreign-key violations). `OPENPOST_DIAGNOSTICS_ENABLED=false` is enforced. Production remains blocked on public HTTPS/provider OAuth and `NEEDS_OPERATOR_SETUP` delivery-approval live evidence. The Windows binary listens on `::`, so staging is explicitly protected by inbound firewall block `VelvetOS-OpenPost-Staging-LocalOnly` on TCP/18080; loopback `127.0.0.1` OpenAPI remains HTTP 200.
 
 Version state: [`OPENPOST.json`](OPENPOST.json).

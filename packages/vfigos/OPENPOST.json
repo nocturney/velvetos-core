@@ -96,7 +96,9 @@
       "createdAt": "2026-09-17T19:16:53+03:00",
       "path": "C:\\OpenPost\\backups\\pre-v4.34.2-20260917-191652",
       "databaseSha256": "0936fce2ae90c8d4caeb914f324656d5a647273acbbd4b5a68a05d07757fa4ef",
-      "preMigrationSchemaVersion": 134
+      "preMigrationSchemaVersion": 134,
+      "mediaFiles": 0,
+      "mediaBytes": 0
     },
     "migrationSmoke": {
       "status": "PASS",
@@ -117,6 +119,17 @@
       "restartObservedAt": "2026-09-17T19:25:36+03:00",
       "postRestartOpenApiHttpStatus": 200,
       "postRestartBinarySha256": "43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442"
+    },
+    "networkHardening": {
+      "observedAt": "2026-09-17T19:34:28+03:00",
+      "listenerAddress": "::",
+      "localPort": 18080,
+      "publicUrlsConfigured": false,
+      "firewallRule": "VelvetOS-OpenPost-Staging-LocalOnly",
+      "inboundAction": "Block",
+      "profile": "Any",
+      "loopbackOpenApiHttpStatus": 200,
+      "localOnlyEnforced": true
     }
   },
   "deliveryApproval": {
