@@ -25,6 +25,16 @@ Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא ש
 
 בלי ₪. בלי Insights מומצאים. בלי שמות לקוח מיותרים. בלי אוטו־DM. בלי Meta Business Suite. בלי משלוח ארצי.
 
+## מייל מחקר לבעלים
+
+מייל נשלח רק אם יש מחקר חדש משמעותי, תיקון מסלול מחקר/כלים stale, או blocker אמיתי. אחרת לא שולחים.
+
+- רינדור: Morning Brief V10.3 — `packages/vfbriefux/MAIL.html` + `render_mail.py`; לא plain text/Markdown ולא HTML נחות.
+- כל ממצא במייל כולל קישור חיצוני ישיר ולחיץ למקור הרלוונטי.
+- prose לבעלים עובר `constitution/VISIBLE_TEXT.md` עם `scripts/vf_visible_text.py --surface owner-brief --gate` על הטקסט המדויק; שינוי טקסט מבטל PASS.
+- שליחה רק בנתיב production: `packages/vfops/out/gmail-send-request.json` → `.github/workflows/gmail-brief-send.yml` → `vfops.gmail_brief_send`; לא דרך Gmail connector אינטראקטיבי.
+- אין claim של delivery בלי workflow success + Gmail message ID. אחרי one-shot מחזירים `enabled:false`.
+
 ## תבנית שאלה
 
 ```text
@@ -63,7 +73,7 @@ Velvet Factory — סטודיו קטן להדפסות תלת־ממד בשדרו�
 לקוח אומר «אני צריך מעמד ל…»:
 
 1. לתרגם את התיאור לעברית קצרה (`vfcopy`).
-2. לחפש דגם במאגר פתוח עם רישיון מתאים (`vlicense`). מותג ישראלי — לא מעתיקים קובץ.
+2. לחפש דגם במאגר פתוח. **נעילת בעלים למחקר:** מגבלת רישיון של יוצר זר אינה קריטריון פסילה/דירוג ב־Research Seat; יוצר/מותג ישראלי → `vlicense` / stop לפני שימוש בקובץ. זהו כלל triage מחקרי, לא קביעה משפטית לגבי שימוש בפועל.
 3. אם אין דגם: הדמיה דו־ממדית לאישור. מידול או 3D AI Studio / Meshy/Tripo — רק אחרי אישור ראש צוות (`vfprod/3DAISTUDIO.md`).
-4. מודל שנוצר ב־AI עדיין עובר `vlicense` + סלייס; לא נכנס לקטלוג לבד (`vfsku`).
+4. מודל שנוצר ב־AI עדיין עובר סלייס; אם הוא מבוסס על יוצר/מותג ישראלי → `vlicense` / stop. לא נכנס לקטלוג לבד (`vfsku`).
 5. סגירה מסחרית נשארת במסלול האנושי/המורשה; אין auto-DM.

@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "surface": "owner-brief",
+  "language": "he",
+  "text_sha256": "d914520d63cd16415093c94d7a4460a1310a4522d1610b442e82de68bafd4087",
+  "lint": {
+    "status": "pass",
+    "problems": [],
+    "raw_status": "pass"
+  },
+  "stages": {
+    "truth_checked": true,
+    "reader_first": true,
+    "copy_authority": true,
+    "humanizer_ai_tells": true,
+    "domain_tools_recorded": true,
+    "surface_qa": true
+  },
+  "domain_tools": [
+    "vfresearch",
+    "vfsku",
+    "vfprod",
+    "vfops"
+  ],
+  "marketing_aids": null,
+  "no_text_compared": null,
+  "missing_evidence": [],
+  "visible_text_gate": "PASS",
+  "rule": "PASS requires the relevant chain on this exact text; lint/eval existence alone is not execution proof."
+}
