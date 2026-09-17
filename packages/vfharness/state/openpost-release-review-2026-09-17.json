@@ -81,7 +81,8 @@
     "send_route_updated": true,
     "diagnostics_fail_closed_policy_added": true,
     "production_promoted": false,
-    "runtime_staging_upgraded": true
+    "runtime_staging_upgraded": true,
+    "readme_capability_status_updated": true
   },
   "reviewed_at": "2026-09-17T19:26:44+03:00"
 }
