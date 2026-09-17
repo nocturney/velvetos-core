@@ -48,6 +48,7 @@ VFPROD = ROOT / "scripts" / "vfprod.py"
 ORGANIC_CLI = ROOT / "scripts" / "vf_organic_growth.py"
 CONTROL_CLI = ROOT / "scripts" / "vf_control_plane.py"
 GROWTH_BRIEF = ROOT / "packages" / "vfgrowth" / "data" / "growth-brief.json"
+GROWTH_LEDGER = ROOT / "packages" / "vfgrowth" / "LEDGER.md"
 GATES = ROOT / "packages" / "vfops" / "hq" / "GATES.json"
 ORDERS = ROOT / "packages" / "vfbooks" / "data" / "orders.json"
 INVOICE4U = ROOT / "packages" / "vfbooks" / "data" / "invoice4u-snapshot.json"
@@ -447,16 +448,42 @@ def growth_line() -> str:
 
 
 def biz_week_line(today: str) -> str:
+    fallback = "הצעה לציבור נשארת מוצרים מוכנים + הדפסה / מודל בהתאמה אישית; כמות וסוג לקוח הם מאפייני הזמנה."
     text = BIZ_WEEK.read_text(encoding="utf-8") if BIZ_WEEK.is_file() else ""
     match = re.search(r"עודכן:\s*\*\*(\d{4}-\d{2}-\d{2})\*\*", text)
-    if match:
-        age = (datetime.fromisoformat(today).date() - datetime.fromisoformat(match.group(1)).date()).days
-        if age > 7:
-            return f"מקור vfbiz/out/week.md מיושן ({match.group(1)}, {age} ימים) — לא החלטה להיום. הצעה לציבור נשארת מוצרים מוכנים + הדפסה / מודל בהתאמה אישית; כמות וסוג לקוח הם מאפייני הזמנה."
+    if not match:
+        return f"מקור vfbiz/out/week.md ללא תאריך עדכון תקין — לא החלטה להיום. {fallback}"
+    try:
+        source_date = datetime.fromisoformat(match.group(1)).date()
+        today_date = datetime.fromisoformat(today).date()
+    except ValueError:
+        return f"מקור vfbiz/out/week.md עם תאריך עדכון לא תקין ({match.group(1)}) — לא החלטה להיום. {fallback}"
+    age = (today_date - source_date).days
+    if age < 0:
+        return f"מקור vfbiz/out/week.md מתוארך לעתיד ({match.group(1)}) — לא החלטה להיום. {fallback}"
+    if age > 7:
+        return f"מקור vfbiz/out/week.md מיושן ({match.group(1)}, {age} ימים) — לא החלטה להיום. {fallback}"
     block = fence_after_heading(BIZ_WEEK, ("בלוק לבריף",))
     if block:
         return block
     return "הצעה לציבור: מוצרים מוכנים + הדפסה / מודל בהתאמה אישית (`vfbiz/OFFERING.md`). כמות וסוג לקוח הם מאפייני הזמנה."
+
+
+def ledger_caption_status(stem: str) -> str | None:
+    match = re.match(r"^(G\d{3})", stem)
+    if not match or not GROWTH_LEDGER.is_file():
+        return None
+    content_id = match.group(1)
+    for line in GROWTH_LEDGER.read_text(encoding="utf-8").splitlines():
+        if f"**{content_id}**" not in line:
+            continue
+        if "KEEP_LIVE_BASELINE" in line:
+            return "חי · KEEP_LIVE_BASELINE"
+        if "HISTORICAL_NOT_LIVE" in line:
+            return "היסטורי · לא חי"
+        if "stale" in line.casefold():
+            return "STALE · חסום reuse"
+    return None
 
 
 def captions_rows() -> list[list[str]]:
@@ -472,10 +499,10 @@ def captions_rows() -> list[list[str]]:
         text = path.read_text()
         hook = fence_after_heading(path, ("להדבקה", "ארבעה פריימים"))
         first = hook.splitlines()[0] if hook else path.stem
-        status = "מוכן להדבקה"
-        if "משובץ" in text:
-            status = "נעול · משובץ"
-        if "לא מאושר" in text:
+        status = ledger_caption_status(stem) or "מוכן להדבקה"
+        if status == "מוכן להדבקה" and "משובץ" in text:
+            status = "היסטורי · היה משובץ"
+        if "לא מאושר" in text and not ledger_caption_status(stem):
             status = "טיוטה"
         rows.append([stem, first[:48], status])
     if not rows:

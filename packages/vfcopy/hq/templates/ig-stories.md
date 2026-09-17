@@ -1,5 +1,8 @@
 # תבנית: סטוריז 20:30
 
+## VF_PUBLICATION_ROUTE_V1 — current
+לפרסום Velvet Factory: מקור מוצר מאומת → Product Truth → Creative Director → source-grounded edit → `vfcopy`/Visible Text → Brand Guardian → publication evidence → exact-final QA. Canva/vfcanva אסורים במסלול זה.
+
 ## תפקיד
 סדרת סטורי יומית `@velvets_cloud` — רק מקליפ/תמונה מאותו יום על המיטה.  
 פלייבוק סטודיו: `vfgrowth/STORIES.md`. שער עריכה: `vfgrowth/EDIT-GATE.md`.
@@ -7,14 +10,14 @@
 ## הקשר
 - מה רואים: `{קליפ_היום}` (חובה — בלי זה לא משבצים)
 - שעה קבועה: 20:30 Asia/Jerusalem · ראשון–חמישי בלבד
-- פלט: נייבי `#0B1D36` + זהב `#C9A86C` (בריף בעלים G004) על הפריים. כיתוב מלא כאן.
+- פלט: שפה חזותית נגזרת מהרפרנסים המאושרים של העבודה המדויקת; אין palette/provider preset מ־G004 legacy. כיתוב מלא עובר `vfcopy` ורק microcopy שמוסיף מידע נכנס לפריים.
 
 ## משימה
 ארבעה פריימים. עברית חמה, משרד יקר. לא פותחים ב«מוכן» / «קיים» / «אין משלוח» / מגבלה.  
 **פריט גמור = סיפור-מוצר** (`VOICE.md`) — לא תהליך-קצר, לא קופי דק.  
 **תהליך-קצר** רק לריל חשיפה / טיימלאפס — לא לסטוריז מוצר.
 
-בלי Canva MCP או מעבר `vfcovers` / `vfcanva` = **לא משבצים**. JPEG גולמי אסור.
+בלי source-grounded edit + publication evidence + exact-final QA = **לא משבצים**. JPEG גולמי אסור; Canva/vfcanva אינם failover לפרסום VF.
 
 ## פורמט פלט — סיפור-מוצר (ברירת מחדל למוצר גמור)
 
@@ -30,7 +33,7 @@
    היילייטס בפרופיל · איסוף שדרות
 ```
 
-G004 חי: מדביקים `packages/vfcopy/G004-STORIES-FIX.md` כמו שהוא אחרי תיקון CTA (הסרת וואטסאפ) — ראו `FEED-AUDIT.md`.
+> LEGACY / provenance only — G004: `packages/vfcopy/G004-STORIES-FIX.md` נשמר כהיסטוריה בלבד. reuse דורש qualification חדש מול ה־LEDGER ו־VF_PUBLICATION_ROUTE_V1.
 
 ## פורמט פלט — תהליך-קצר (רק ריל/טיימלאפס)
 
@@ -48,4 +51,4 @@ G004 חי: מדביקים `packages/vfcopy/G004-STORIES-FIX.md` כמו שהוא 
 - בלי קליפ אותו יום = **לא משבצים** (חסום).
 - CTA מוצר: הודעת Instagram + היילייטס + איסוף שדרות. אסור וואטסאפ / `050-2517000` בתוכן ציבורי. לא אוטו־DM. לא ₪. לא Insights.
 - אין סטורי פיד בשישי–שבת מהלוח הקבוע.
-- בלי `edit_url` / PNG מורכב = חסום עריכה.
+- בלי edited review artifact + source/final evidence + publication evidence = חסום עריכה.

@@ -83,13 +83,13 @@ Product Truth למוצר אמיתי:
 - background/cleanup מותר רק אם אינו משנה את המוצר ואינו יוצר claim מומצא.
 - master brand asset בלבד; אין לוגו מומצא ואין palette משוער כשקיים SVG מאושר.
 
-> LEGACY / provenance only for VF publication; not a provider route: - כלי: Canva MCP / vfcovers / vfcanva / Superdesign→render.py
-- `edit_url` או נתיב PNG/JPEG מורכב אמיתי:
-- ראייה של RAW:
+- כלי/יכולת עריכה: <capability actually used; no provider shortcut>
+- `creative_edit_evidence`: <real artifact/review/export reference>
+- ראייה של RAW / source refs:
 - ראייה של exact final:
 - מה השתנה מעבר ל־crop/resize:
 - איך נשמרה זהות המוצר:
-- האם final מרגיש Velvet לפי Brand Source of Truth:
+- האם final תואם את הרפרנסים המאושרים ואת Brand Source of Truth:
 - JPEG גולמי / crop-only / synthetic subject? כן=נכשל
 
 **ב:** עבור / נכשל-סגור
@@ -136,7 +136,7 @@ Product Truth למוצר אמיתי:
 
 - `caption_path`:
 - `text_sha256` / `caption_sha256`:
-- `visual_id` / `edit_url`:
+- `visual_id` / `creative_edit_evidence`:
 - `visual_sha256` או export etag:
 - `final_package_sha256`: sha256 של החבילה הסופית לפי סדר הפריימים/נכסים
 - אושר בתאריך:

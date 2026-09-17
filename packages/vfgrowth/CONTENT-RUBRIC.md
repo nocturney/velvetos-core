@@ -21,7 +21,7 @@
 - פתיחה ב״לא/בלי/אין״ שמקטינה את המוצר.
 - מחיר, משלוח, דדליין, claim או Insight מומצאים.
 - וואטסאפ / `050-2517000` / `wa.me` כ-CTA ציבורי; אוטו־DM / «שלחו DM» ככלי. CTA מותר = הודעת Instagram בעברית (`PUBLIC_CURRENT_CTA`).
-- JPEG גלם או טקסט על צילום רצפה בלי Canva/vfcovers/vfcanva.
+- JPEG גלם, crop/resize בלבד, או טקסט שמודבק על צילום רצפה בלי source-grounded edit, source/final evidence ו־exact-final QA.
 - UGC בלי רשות מתועדת/קרדיט.
 
 ## ארטיפקט חובה

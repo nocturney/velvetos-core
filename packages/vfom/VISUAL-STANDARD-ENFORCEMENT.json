@@ -24,6 +24,7 @@
     "packages/vfgrowth/SKILL.md",
     "packages/vfgrowth/GATE.md",
     "packages/vfgrowth/PREFLIGHT.md",
+    "packages/vfgrowth/STORIES.md",
     "packages/vfcovers/SKILL.md",
     "packages/vfcovers/hq/PLAYBOOK.md",
     "packages/vfcanva/WORKFLOW.md",
@@ -38,7 +39,8 @@
     "packages/vfom/HYPERFRAMES-FRAME.md",
     "constitution/ORGANIC_GROWTH.md",
     "packages/vfigos/SEND.md",
-    "packages/vfgrowth/preflight/TEMPLATE.md"
+    "packages/vfgrowth/preflight/TEMPLATE.md",
+    "packages/vfcopy/hq/templates/ig-stories.md"
   ],
   "conditionalCanvaSurfaces": [
     ".cursor/skills/canva-brand-check/SKILL.md",
@@ -92,18 +94,15 @@
       "66804183712c22a83cf2b94cc9c6ec1f6aec33eb0d3f066f92738b0197b79cab"
     ],
     "entrypoints": [
-      ".cursor/skills/vf-canva-instagram/SKILL.md",
       ".cursor/skills/vf-organic-growth/SKILL.md",
       ".cursor/skills/vf-marketing-skills/SKILL.md",
       ".cursor/skills/vf-openmontage/SKILL.md",
       "packages/vfgrowth/SKILL.md",
       "packages/vfgrowth/GATE.md",
       "packages/vfgrowth/PREFLIGHT.md",
+      "packages/vfgrowth/STORIES.md",
       "packages/vfcovers/SKILL.md",
       "packages/vfcovers/hq/PLAYBOOK.md",
-      "packages/vfcanva/WORKFLOW.md",
-      "packages/vfcanva/README.md",
-      "packages/vfcanva/jobs/TEMPLATE.md",
       "packages/vfom/SKILL.md",
       "packages/vfom/experts/MEDIA-DIRECTOR.md",
       "packages/velvetos/modules/expert-media-director.md",
@@ -114,12 +113,6 @@
       "constitution/ORGANIC_GROWTH.md",
       "packages/vfigos/SEND.md",
       "packages/vfgrowth/preflight/TEMPLATE.md",
-      ".cursor/skills/canva-brand-check/SKILL.md",
-      ".cursor/skills/canva-bulk-create/SKILL.md",
-      ".cursor/skills/canva-edit-design/SKILL.md",
-      ".cursor/skills/canva-get-design-feedback/SKILL.md",
-      ".cursor/skills/canva-implement-feedback/SKILL.md",
-      ".cursor/skills/canva-resize-for-social-media/SKILL.md",
       "AGENTS.md",
       "constitution/CONSTITUTION.md",
       "constitution/STUDIO.md",
@@ -131,7 +124,31 @@
       ".cursor/skills/velvet-brand-guardian/SKILL.md",
       ".cursor/skills/vf-content-sprint/SKILL.md",
       "instances/velvet-factory/AGENTS.md",
-      "instances/velvet-factory/.cursor/rules/velvetos-instance-desk.mdc"
+      "instances/velvet-factory/.cursor/rules/velvetos-instance-desk.mdc",
+      "packages/vfcopy/hq/templates/ig-stories.md"
+    ],
+    "deniedDirectivePatterns": [
+      "edit_url",
+      "compose_slides.py",
+      "studio/render.py",
+      "failover Canva",
+      "Canva+Drive+Gmail",
+      "נגזרת Canva/vfcovers",
+      "אחרי Canva/vfcovers",
+      "עד Canva/vfcovers",
+      "בלי Canva MCP"
+    ],
+    "legacyDeniedToolSurfaces": [
+      ".cursor/skills/canva-brand-check/SKILL.md",
+      ".cursor/skills/canva-bulk-create/SKILL.md",
+      ".cursor/skills/canva-edit-design/SKILL.md",
+      ".cursor/skills/canva-get-design-feedback/SKILL.md",
+      ".cursor/skills/canva-implement-feedback/SKILL.md",
+      ".cursor/skills/canva-resize-for-social-media/SKILL.md",
+      ".cursor/skills/vf-canva-instagram/SKILL.md",
+      "packages/vfcanva/README.md",
+      "packages/vfcanva/WORKFLOW.md",
+      "packages/vfcanva/jobs/TEMPLATE.md"
     ]
   },
   "canvaAssetIdRole": "ARCHIVAL_PROVENANCE_ONLY_NOT_A_PROVIDER_DEPENDENCY"

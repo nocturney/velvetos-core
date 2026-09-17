@@ -49,9 +49,9 @@
           "vf_organic_growth.py"
         ],
         [
-          "סטורי 20:30",
-          "growth-brief מיושן",
-          "2026-09-14 · לא החלטה להיום"
+          "סטורי 2026-09-17T20:30+03:00",
+          "המלצה: poll",
+          "G004 מסומן STALE ב־LEDGER · אין reuse אוטומטי · סקר הוא חלופה בלבד"
         ]
       ],
       "actions": []
@@ -91,12 +91,12 @@
     {
       "kicker": "04",
       "title": "איך הסטודיו מרוויח",
-      "prose": "היילייטס: הזמנה · איסוף שדרות · איך מזמינים\nCTA: שלחו לנו הודעה כאן באינסטגרם — לא אוטו־DM\nסנאפשוט 6.9: 80 עוקבים · DM 0 · המרת פרופיל חלשה\nInsights מעבר לזה: אין ספירה\nBUSINESS_CONTACT_RECORD: 050-2517000 (disabled for public CTA)\nמשפך: פרופיל → הודעת Instagram · לא אוטו־DM\nCTA לפי VOICE / PUBLIC_CTA · Offer על פיד · Insights: אין ספירה עד סנאפשוט\nBUSINESS_CONTACT_RECORD: 050-2517000 (disabled for public CTA)\nVELVET ORGANIC GROWTH BRIEF — 07:00\nיום: 2026-09-17 = חמישי (Asia/Jerusalem)\nיעד היום: פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.\n1. REEL · אין משבצת ריל היום (לוח: א׳/ג׳ 16:00 בלבד) · gate=blocked_no_media\nאין Reel איכותי אוטומטי להיום. נדרשים 15 שניות צילום ידני: קלוז־אפ של המוצר ביד + בדיקת התאמה.\nCTA: לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\nסט האשטגים: local_custom_v1\nפעולה: [אישור] [עריכה] [דחייה] — אישור ≠ פרסום\n2. STORY · המלצה יחידה · סקר · חמישי 2026-09-17 20:30 Asia/Jerusalem · gate=recommended_poll_pending_human_post\nהמלצה יחידה: poll · חמישי 2026-09-17 20:30 Asia/Jerusalem\nנימוק: G004 עדיין לא עבור בשערי עריכה — לא ממליצים לשבץ מוצר לא מוכן. סקר organic `petg_vs_nylon` למשבצת חמישי 2026-09-17 20:30 Asia/Jerusalem. בלי Calendar create.\nסקר (לא שיבוץ מקביל): מה לבדוק מחר במעבדה? · PETG מול Nylon / חוזק מול עמידות חום\nבחירה אחת: סקר. G004 נדחה עד שער עבור. אישור ≠ פרסום.\nפעולה: [אישור] [עריכה] [דחייה]\n3. אתמול: Insights אין ספירה · הזמנות פער סנכרון · orders.json ריק ≠ הוכחה שאין הזמנות\n4. סטודיו: למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.; לאשר או לדחות סקר ל־חמישי 2026-09-17 20:30 Asia/Jerusalem (לא מפרסם).; לא להציג חום/חוזק בלי vfprod/CLAIMS.md.\nאין Publish / אין אוטו-DM / אין ₪ מומצא.\nמקור vfbiz/out/week.md מיושן (2026-09-07, 10 ימים) — לא החלטה להיום. הצעה לציבור נשארת מוצרים מוכנים + הדפסה / מודל בהתאמה אישית; כמות וסוג לקוח הם מאפייני הזמנה."
+      "prose": "היילייטס: הזמנה · איסוף שדרות · איך מזמינים\nCTA: שלחו לנו הודעה כאן באינסטגרם — לא אוטו־DM\nסנאפשוט 6.9: 80 עוקבים · DM 0 · המרת פרופיל חלשה\nInsights מעבר לזה: אין ספירה\nBUSINESS_CONTACT_RECORD: 050-2517000 (disabled for public CTA)\nמשפך: פרופיל → הודעת Instagram · לא אוטו־DM\nCTA לפי VOICE / PUBLIC_CTA · Offer על פיד · Insights: אין ספירה עד סנאפשוט\nBUSINESS_CONTACT_RECORD: 050-2517000 (disabled for public CTA)\nVELVET ORGANIC GROWTH BRIEF — 07:00\nיום: 2026-09-17 = חמישי (Asia/Jerusalem)\nיעד היום: פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.\n1. REEL · אין משבצת ריל היום (לוח: א׳/ג׳ 16:00 בלבד) · gate=blocked_no_media\nאין Reel איכותי אוטומטי להיום. נדרשים 15 שניות צילום ידני: קלוז־אפ של המוצר ביד + בדיקת התאמה.\nCTA: לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם\nסט האשטגים: local_custom_v1\nפעולה: [אישור] [עריכה] [דחייה] — אישור ≠ פרסום\n2. STORY · המלצה יחידה · סקר · חמישי 2026-09-17 20:30 Asia/Jerusalem · gate=recommended_poll_pending_human_post\nהמלצה יחידה: poll · חמישי 2026-09-17 20:30 Asia/Jerusalem\nנימוק: G004 אינו מועמד נוכחי: ה־LEDGER מסמן אותו STALE וחוסם reuse אוטומטי עד qualification חדש. סקר organic `petg_vs_nylon` למשבצת חמישי 2026-09-17 20:30 Asia/Jerusalem הוא חלופה שאינה פרסום אוטומטי. בלי Calendar create.\nסקר (לא שיבוץ מקביל): מה לבדוק מחר במעבדה? · PETG מול Nylon / חוזק מול עמידות חום\nבחירה אחת: סקר. G004 נשאר STALE עד qualification חדש ב־LEDGER. אישור ≠ פרסום.\nפעולה: [אישור] [עריכה] [דחייה]\n3. אתמול: Insights אין ספירה · הזמנות פער סנכרון · orders.json ריק ≠ הוכחה שאין הזמנות\n4. סטודיו: למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.; לאשר או לדחות סקר ל־חמישי 2026-09-17 20:30 Asia/Jerusalem (לא מפרסם).; לא להציג חום/חוזק בלי vfprod/CLAIMS.md.\nאין Publish / אין אוטו-DM / אין ₪ מומצא.\nמקור vfbiz/out/week.md מיושן (2026-09-07, 10 ימים) — לא החלטה להיום. הצעה לציבור נשארת מוצרים מוכנים + הדפסה / מודל בהתאמה אישית; כמות וסוג לקוח הם מאפייני הזמנה."
     },
     {
       "kicker": "05 · משרד",
       "title": "מה נבנה / יועל",
-      "prose": "05 · משרד\nמה נבנה / יועל:\nCLI 15:22 · C:\\Users\\Chris\\.velvetos-deploy-venv\\Scripts\\python.exe C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\scripts\\vf_control_plane.py brief-summary\nCLI 15:25 · C:\\Users\\Chris\\.velvetos-deploy-venv\\Scripts\\python.exe C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\scripts\\velvetos.py modules\nCLI 15:25 · C:\\Users\\Chris\\.velvetos-deploy-venv\\Scripts\\python.exe C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\packages\\vfinsights\\scripts\\vf_insights_loop.py --data C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\packages\\vfinsights\\data\\posts.csv\nCLI 15:25 · verify vfresearch-daily\nצרכנים: אין הרצה היום\nפערים (לא הורץ הבוקר)\nפער: vfbriefux לא הורץ · python3 packages/vfbriefux/render_mail.py --check\nפער: vfigos לא הורץ · packages/vfigos/CONNECT-IG.md · חיבור לפי desk/CAPABILITIES · publish_story מוצהר · פרסום חי לא נבדק · Team scope לא מאומת\nפער: vfresearch לא הורץ · packages/vfresearch/DAILY.md\nפער: vfseason לא הורץ · packages/vfseason/hq/PLAYBOOK.md · אין חלון עונה בלי תאריך סטודיו"
+      "prose": "05 · משרד\nמה נבנה / יועל:\nCLI 15:22 · C:\\Users\\Chris\\.velvetos-deploy-venv\\Scripts\\python.exe C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\scripts\\vf_control_plane.py brief-summary\nCLI 15:25 · C:\\Users\\Chris\\.velvetos-deploy-venv\\Scripts\\python.exe C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\scripts\\velvetos.py modules\nCLI 15:25 · C:\\Users\\Chris\\.velvetos-deploy-venv\\Scripts\\python.exe C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\packages\\vfinsights\\scripts\\vf_insights_loop.py --data C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\packages\\vfinsights\\data\\posts.csv\nCLI 15:25 · verify vfresearch-daily\nCLI 15:42 · C:\\Python314\\python.exe C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\scripts\\vf_control_plane.py brief-summary\nCLI 15:42 · C:\\Python314\\python.exe C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\scripts\\velvetos.py modules\nCLI 15:42 · C:\\Python314\\python.exe C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\packages\\vfinsights\\scripts\\vf_insights_loop.py --data C:\\Users\\Chris\\velvetos-brief-repair-20260917-cs\\packages\\vfinsights\\data\\posts.csv\nצרכנים: אין הרצה היום\nפערים (לא הורץ הבוקר)\nפער: vfbriefux לא הורץ · python3 packages/vfbriefux/render_mail.py --check\nפער: vfigos לא הורץ · packages/vfigos/CONNECT-IG.md · חיבור לפי desk/CAPABILITIES · publish_story מוצהר · פרסום חי לא נבדק · Team scope לא מאומת\nפער: vfresearch לא הורץ · packages/vfresearch/DAILY.md\nפער: vfseason לא הורץ · packages/vfseason/hq/PLAYBOOK.md · אין חלון עונה בלי תאריך סטודיו"
     },
     {
       "kicker": "06",
@@ -116,22 +116,22 @@
         [
           "G004-STORIES-FIX",
           "ורוד על השידה — והטבעות כבר במקום 💍",
-          "מוכן להדבקה"
+          "STALE · חסום reuse"
         ],
         [
           "G004",
           "ורוד על השידה — והטבעות כבר במקום 💍",
-          "מוכן להדבקה"
+          "STALE · חסום reuse"
         ],
         [
           "G003",
           "מה יוצא מהמדפסת?",
-          "נעול · משובץ"
+          "חי · KEEP_LIVE_BASELINE"
         ],
         [
           "G005-d12b",
           "5 דברים שכדאי לדעת לפני שמזמינים הדפסת תלת־ממד",
-          "מוכן להדבקה"
+          "היסטורי · לא חי"
         ]
       ]
     }

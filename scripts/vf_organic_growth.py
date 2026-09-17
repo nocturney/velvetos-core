@@ -17,6 +17,7 @@ EVENTS = GROWTH / "data" / "content_events.jsonl"
 HASHTAGS = GROWTH / "data" / "hashtag-library.json"
 POLLS = GROWTH / "data" / "poll-library.json"
 BRIEF_OUT = GROWTH / "data" / "growth-brief.json"
+LEDGER = GROWTH / "LEDGER.md"
 PRINT_EVENTS = ROOT / "packages" / "vfprod" / "data" / "print-events.jsonl"
 CARDS = ROOT / "packages" / "vfprod" / "hq" / "cards"
 ORDERS = ROOT / "packages" / "vfsales" / "data" / "orders.json"
@@ -145,8 +146,22 @@ def g004_stories_draft_contests_slot(today: date) -> bool:
     return False
 
 
+def g004_currently_qualified() -> bool:
+    """Fail closed unless the current growth ledger explicitly re-qualifies G004."""
+    if not LEDGER.is_file():
+        return False
+    for line in LEDGER.read_text(encoding="utf-8").splitlines():
+        if "**G004**" not in line:
+            continue
+        state = line.upper()
+        return "READY_FOR_PUBLISH" in state or "REQUALIFIED_CURRENT" in state
+    return False
+
+
 def g004_ready_for_slot() -> bool:
-    """True only when G004 preflight gate section is עבור (not נכשל-סגור)."""
+    """True only for a current-ledger G004 plus a passing preflight gate."""
+    if not g004_currently_qualified():
+        return False
     path = GROWTH / "preflight" / "G004.md"
     if not path.is_file():
         return False
@@ -157,8 +172,6 @@ def g004_ready_for_slot() -> bool:
             return False
         if "**עבור**" in gate or "\nעבור\n" in f"\n{gate}\n":
             return True
-        return False
-    # No gate section → not ready
     return False
 
 
@@ -195,7 +208,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
     g004_ready = g004_ready_for_slot()
     contested = g004_stories_draft_contests_slot(today_d) and not g004_ready
     slot_meta = next_stories_slot_after(now)
-    # Single recommendation: prefer G004 when edit/preflight ready; else poll if still before slot
+    # Single recommendation: G004 is eligible only after explicit current-ledger re-qualification; otherwise poll.
     if g004_ready:
         slot_rec = {
             "choice": "G004",
@@ -203,9 +216,9 @@ def cmd_brief(args: argparse.Namespace) -> int:
             "whenHe": slot_meta["whenHe"],
             "reasonShort": "מוצר מוכן לעריכה+פריפלייט · פרנסה מסיפור-מוצר",
             "reason": (
-                "G004 מחזיק-טבעות עבר EDIT-GATE/Canva + preflight עבור; "
-                "משרת הצעת מוצר/פנייה. סקר PETG/Nylon נדחה למשבצת סטוריז פנויה אחרת — "
-                "לא שני שיבוצים על 20:30. בלי Calendar create · G003 הנעול לא זז."
+                "G004 מחזיק-טבעות הוסמך מחדש במפורש ב־LEDGER הנוכחי ועבר preflight נוכחי; "
+                "כל יצירה/מסירה כפופה ל־VF_PUBLICATION_ROUTE_V1 ול־publication evidence. "
+                "סקר PETG/Nylon נדחה למשבצת סטוריז פנויה אחרת — לא שני שיבוצים על 20:30. בלי Calendar create."
             ),
             "deferred": {"id": f"poll-{poll.get('poll_id') or 'petg_vs_nylon'}", "to": "משבצת סטוריז פנויה אחרת"},
         }
@@ -220,17 +233,17 @@ def cmd_brief(args: argparse.Namespace) -> int:
             "choice": "poll",
             "when": slot_meta["when"],
             "whenHe": slot_meta["whenHe"],
-            "reasonShort": "G004 עדיין חסום עריכה/preflight · סקר קל יותר הערב",
+            "reasonShort": "G004 מסומן STALE ב־LEDGER · אין reuse אוטומטי · סקר הוא חלופה בלבד",
             "reason": (
-                "G004 עדיין לא עבור בשערי עריכה — לא ממליצים לשבץ מוצר לא מוכן. "
-                f"סקר organic `{poll.get('poll_id') or 'petg_vs_nylon'}` למשבצת {slot_meta['whenHe']}. "
+                "G004 אינו מועמד נוכחי: ה־LEDGER מסמן אותו STALE וחוסם reuse אוטומטי עד qualification חדש. "
+                f"סקר organic `{poll.get('poll_id') or 'petg_vs_nylon'}` למשבצת {slot_meta['whenHe']} הוא חלופה שאינה פרסום אוטומטי. "
                 "בלי Calendar create."
             ),
-            "deferred": {"id": "G004-stories", "to": "אחרי EDIT-GATE+PREFLIGHT עבור"},
+            "deferred": {"id": "G004-stories", "to": "qualification חדש מול LEDGER + VF_PUBLICATION_ROUTE_V1"},
         }
         story_gate = "recommended_poll_pending_human_post"
         slot_status = f"המלצה יחידה · סקר · {slot_meta['whenHe']}"
-        story_note = "בחירה אחת: סקר. G004 נדחה עד שער עבור. אישור ≠ פרסום."
+        story_note = "בחירה אחת: סקר. G004 נשאר STALE עד qualification חדש ב־LEDGER. אישור ≠ פרסום."
         studio_story_task = f"לאשר או לדחות סקר ל־{slot_meta['whenHe']} (לא מפרסם)."
     else:
         slot_rec = {

@@ -3,15 +3,16 @@
 מושב: **סטודיו + צמיחה**. לא פק חדש.  
 חוקה: `constitution/STUDIO.md`. קול: `vfcopy/VOICE.md`. תבנית: `vfcopy/hq/templates/ig-stories.md`.
 
-**שער:** בלי Canva MCP (`edit_url`) או מעבר `vfcovers` / `vfcanva` (`compose_slides.py` / `studio/render.py`) = **לא משבצים**. JPEG גולמי מהמיטה / מתיבת Grok = חומר גלם בלבד — **אסור** ל־`publish_story`.  
+**VF_PUBLICATION_ROUTE_V1 — current:** לפרסום Velvet Factory משתמשים ב־`packages/vfom/PUBLICATION-PREP-EXECUTION.md` וב־`publicationRoute` מתוך `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`; Canva/vfcanva אסורים במסלול זה.
+**שער:** בלי source lock + Product Truth + Creative Director + source-grounded edit + `vfcopy`/Visible Text + Brand Guardian + publication evidence + exact-final QA = **לא משבצים**. JPEG גולמי הוא חומר גלם בלבד — **אסור** ל־`publish_story`.
 **פריפלייט:** ארטיפקט `preflight/<id>.md` (`PREFLIGHT.md`) — VOICE + ציון עצמי + 2–3 קומפס. נכשל-סגור = חסום שיבוץ. אל תפנה לכריסטיאן על מדדים חלשים.
 
 ## פרסום סטורי (אותו MCP)
 
 MCP קנוני: `adelaidasofia/instagram-mcp` · כלי `publish_story` ([`CONNECT-IG.md`](../vfigos/CONNECT-IG.md)).  
 **אין** מערכת סטוריז נפרדת. אין תלות Metricool.  
-זרימה: מאגר → נגזרת Canva/vfcovers → אישור → URL HTTPS ציבורי לנגזרת בלבד → `publish_story` → אימות `list_media`/`get_media` → `liveVerified`.  
-בלי MCP חי / `remote_access` pending → failover Canva+Drive+Gmail (`vfigos/SEND.md`) — לא לטעון שסטורי עלתה.
+זרימה: מקור מאומת → Product Truth → Creative Director → source-grounded edit → Visible Text/graphics → Brand Guardian → exact-final QA + publication evidence → URL HTTPS ציבורי לנגזרת המאושרת בלבד → `publish_story` → אימות `list_media`/`get_media` → `liveVerified`.
+בלי MCP חי / `remote_access` pending → אין פרסום. `vfigos/SEND.md` משמש למסירת owner/human failover בלבד; אין מעבר לספק יצירה שנאסר ואין לטעון שסטורי עלתה.
 
 ## שני מצבים — לא מערבבים
 
@@ -24,14 +25,13 @@ MCP קנוני: `adelaidasofia/instagram-mcp` · כלי `publish_story` ([`CONNE
 
 ## פרימיום על הפריים
 
-- נייבי `#0B1D36` + זהב `#C9A86C` (בריף בעלים ב-`vfcanva/jobs/G004.md` — לא ממציאים hex אחר).
-- טקסט קצר. כיתוב מלא ב-`vfcopy`, לא על התמונה.
+- שפה חזותית נגזרת מה־approved visual/editorial references ומ־reference decomposition של העבודה המדויקת; אין צבעי מותג או provider presets שמגיעים מבריף legacy.
+- טקסט קצר ורק כשהוא מוסיף מידע; כיתוב מלא ב־`vfcopy`, לא כחלק מה־base image.
 - בלי ₪. בלי «שלחו DM». בלי וואטסאפ / `050-2517000` על הפריים. בלי פתיחה ב«מוכנים» / «בלי משלוח» / «לא משקולת» כהוק.
 
-## G004 חי
+## LEGACY / provenance only — G004 · 7.9.2026
 
-הדבקה: `packages/vfcopy/G004-STORIES-FIX.md`.  
-Canva: `DAHUaUo3bAk` + `DAHUacDGv9U`. בלי ייצוא = חסום עריכה, לא המצאת PNG.
+`packages/vfcopy/G004-STORIES-FIX.md` ומזהי Canva ההיסטוריים נשמרים כראיית עבר בלבד. הם אינם מועמד נוכחי, אינם נתיב ביצוע ואינם סמכות לשימוש ב־Canva/vfcanva; reuse דורש qualification חדש מול `VF_PUBLICATION_ROUTE_V1`.
 
 ## נעול
 

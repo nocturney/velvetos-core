@@ -63,14 +63,16 @@ brand_source_lock: FAIL
 
 `NO_TEXT` הוא החלטת visual-copy לגיטימית, אבל **לא** פוטר מטיפול מותגי. גם תמונה נקייה ללא טקסט חייבת להרגיש מכוונת, עקבית ומוכנה מסחרית.
 
-## כלים מותרים (לפי סדר)
+## נתיב ביצוע נוכחי — capability + evidence, לא provider
 
-| סדר | כלי | איפה | מה נחשב עבר שער |
-|---|---|---|---|
-> LEGACY / provenance only for VF publication; not a provider route: | 1 | **Canva MCP** | Cloud + Desktop | `edit_url` אמיתי + exact-final visual review + subject integrity |
-> LEGACY / provenance only for VF publication; not a provider route: | 2 | **vfcovers / vfcanva** | Cloud | PNG/JPEG + evidence לטיפול מעבר ל-crop + source/final comparison |
-| 3 | **Gemini browser** (עריכת תמונה) | **מק בשדרות בלבד** — `vfmcp/HOST.md` | קובץ ערוך מהמק + exact-final QA + no subject mutation |
-| 4 | Failover | Cloud | Superdesign → אם נפל: `studio/render.py` + exact-final QA |
+1. נועלים את מקור המוצר והאזורים המוגנים.
+2. Creative Director מגדיר treatment מול הרפרנסים המאושרים בלי לשנות את המוצר.
+3. מבצעים source-grounded edit/composite בכלי שמסוגל לשמור על פיקסלי המוצר; כלי שאינו עומד בכך נפסל.
+4. מוסיפים טיפוגרפיה/גרפיקה/לוגו מאושר דטרמיניסטית אחרי עריכת הבסיס.
+5. Brand Guardian + Product Truth + copy/facts gates בודקים את ה־exact final.
+6. `scripts/vf_publication_evidence.py` חייב לעבור על החבילה המדויקת לפני מסירת review/פרסום.
+
+`Canva` ו־`vfcanva` נמצאים ב־`publicationRoute.deniedTools` ואינם failover לפרסום Velvet Factory. `vfcovers` או כלי עריכה אחר אינם PASS בפני עצמם: הם מותרים רק כחלק מהמסלול הנוכחי, בלי provider shortcut ועם source/final evidence מלא.
 
 ### שימוש ב־AI בתמונות מוצר
 
@@ -84,7 +86,7 @@ brand_source_lock: FAIL
 
 `verified context → reader-first → VOICE + VOICE-CHART + voice/approved → template → velvet-hebrew-copy → ai-tells-he → check-vfcopy.py lint(actual final copy) → factual gate → TEXT_WINS/NO_TEXT (אם רלוונטי)`.
 
-> LEGACY / provenance only for VF publication; not a provider route: Brand Guardian, Rubric, Canva, אישור אדם או CI/eval אינם תחליף לשער זה. שינוי טקסט אחרי lint מבטל את ה־pass ומחייב lint מחדש; שינוי מהותי אחרי PREFLIGHT/Rubric מחייב גם אותם מחדש.
+Brand Guardian, Rubric, provider output, אישור אדם או CI/eval אינם תחליף לשער הקופי. שינוי טקסט אחרי lint מבטל את ה־pass ומחייב lint מחדש; שינוי מהותי אחרי PREFLIGHT/Rubric מחייב גם אותם מחדש.
 
 ## מה לא עובר
 
@@ -95,13 +97,13 @@ brand_source_lock: FAIL
 - לוגו VF מומצא/מחודש במקום master asset
 - orange כ־brand default בניגוד ל־Brand Source of Truth
 - JPEG מהמיטה / מתיבת Grok עם כיתוב רק בפריים האינסטגרם
-> LEGACY / provenance only for VF publication; not a provider route: - טקסט מודבק על הקובץ הגולמי בלי Canva / compose / render
-> LEGACY / provenance only for VF publication; not a provider route: - קישור Canva מומצא
+- טקסט שמודבק על קובץ גולמי בלי source-grounded edit ובלי evidence לנגזרת
+- קישור/receipt/provider reference מומצא במקום artifact אמיתי
 - סצנת רצפה שלא נמסרה
 - קופי שלא עבר `SOFT-TOOLS-CONTRACT.md` על הגרסה הנוכחית
 - `needs_input`/fact gate לא פתור
 - ₪ בפריים · וואטסאפ / `050-2517000` / `wa.me` כ־CTA ציבורי כשאסור לפי החוקה · אוטו־DM
-> LEGACY / provenance only for VF publication; not a provider route: - **סטוריז או פיד** בלי `edit_url` מ-Canva MCP או PNG/JPEG מורכב מ-`vfcovers` / `vfcanva`
+- **סטוריז או פיד** בלי artifact ערוך, source/final evidence, publication evidence ו־exact-final QA
 - מדיה AI / נגזרת מהותית בלי metadata להצהרת פלטפורמה כשנדרש
 - שיבוץ בלי `versionApproval` כשיש פריט כספת · או claim live בלי אימות
 - `brand_guardian: PASS` שמבוסס על sharpness/crop/reality בלבד בלי commercial/scroll-stop/product-truth review
