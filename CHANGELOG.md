@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-17 — **Morning brief authority sync:** active VF brief/HANDOFF/INSTANCE surfaces now bind to `VF_PUBLICATION_ROUTE_V1`; Canva/vfcanva are forbidden for VF publication, legacy G003/G004 Canva material is provenance-only, stale `vfbiz/out/week.md` / growth-brief inputs are labelled not-current instead of reused as today's decision, and the factual raw 2026-09-17 brief artifact is present. No Gmail send or Instagram publish.
 - 2026-09-16 — **Delivery-approval claim-before-fetch:** after Phase A pre-media verify, atomically claim `approval_id` **before** any CAS/media download; post-claim media/binding failures leave the approval spent (no unclaim). Sensor: `claim_before_fetch` in `check-delivery-approval.py`.
 - 2026-09-16 — **Delivery-approval prefetch order:** mutation boundary verifies signed receipt (schema/signature/key/tenant/account/tool/expiry/content/package) **before** any CAS/media fetch; media digests + `mutation_payload_sha256` binding run only after Phase A passes. Sensor: `prefetch_order` in `check-delivery-approval.py`.
 - 2026-09-16 — **Delivery-approval security closure:** re-register publish_* so `_guard` receives full media args (carousel `image_urls`, reel `cover_url`); dual-fetch rejects flapping media; optional `VELVET_MEDIA_CAS_HOST_SUFFIXES` allowlist; hard-block `send_message` at mutation guard. Sensor regressions extended.
