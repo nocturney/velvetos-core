@@ -418,6 +418,11 @@ def main() -> int:
     documented_mutation_sa = "velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com"
     if documented_mutation_sa not in operator_setup:
         fail("OPERATOR-SETUP must document the dedicated mutation runtime service account")
+    documented_owner_invoker = "velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com"
+    if documented_owner_invoker not in operator_setup:
+        fail("OPERATOR-SETUP must document the dedicated owner invocation service account")
+    if "roles/iam.serviceAccountOpenIdTokenCreator" not in operator_setup:
+        fail("OPERATOR-SETUP must keep owner impersonation scoped to OpenID token creation")
     for forbidden_role in ("roles/run.admin", "roles/secretmanager.secretAccessor"):
         if forbidden_role not in operator_setup:
             fail(f"OPERATOR-SETUP must document removal of {forbidden_role} from default build identity")

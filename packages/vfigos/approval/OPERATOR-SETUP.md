@@ -11,7 +11,7 @@ Do **not** claim these until the named step actually happened:
 |---|---|
 | `DEPLOYED` | Issuer Cloud Run revision serving |
 | `LIVE` | End-to-end issue → mutate → replay-block on production |
-| `OWNER_AUTH_VERIFIED` | `gcloud` identity token invoke succeeded |
+| `OWNER_AUTH_VERIFIED` | Owner-delegated, audience-bound identity-token invoke succeeded |
 | `REPLAY_STORE_VERIFIED` | GCS `ifGenerationMatch=0` concurrent claim proven |
 | `COLD_START_PASS` | Owner cold-start acceptance (separate from repo sensors) |
 
@@ -31,12 +31,13 @@ Until then report: **`NEEDS_OPERATOR_SETUP`**.
 1. Issuer service account: `velvet-delivery-issuer@instamcp.iam.gserviceaccount.com` (account ID `velvet-delivery-issuer`; IAM 6-30 characters; not the Cloud Run service name)
 2. Mutation runtime service account: `velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com`. It must have **no project-level roles**; grant only Secret Manager accessor on the three Instagram MCP runtime secrets and `roles/storage.objectCreator` on `velvet-ig-approval-spend`. Never attach the default Compute service account to the mutation service.
    The project default Compute/Cloud Build service account must not retain `roles/run.admin` or project-wide `roles/secretmanager.secretAccessor`; either permission would pierce signer isolation by allowing the build identity to invoke the issuer or read its signing secret.
-3. GSM secrets (issuer SA accessor only):
+3. Owner invocation service account: `velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com`. It has **no project-level roles** and only `roles/run.invoker` on the issuer service. The human owner gets only `roles/iam.serviceAccountOpenIdTokenCreator` on this service account, so an audience-bound ID token can be minted without granting service-account access tokens. Never grant that impersonation role to ChatGPT/Cursor/MCP identities.
+4. GSM secrets (issuer SA accessor only):
    - `velvet-delivery-approval-ed25519-private` → `VELVET_DELIVERY_APPROVAL_PRIVATE_KEY_B64`
    - `velvet-delivery-approval-key-id` → `VELVET_DELIVERY_APPROVAL_KEY_ID`
    - optional defense-in-depth: issuer bearer (never MCP / mutation)
-4. GCS bucket: `velvet-ig-approval-spend` (mutation SA: object create only; no delete)
-5. Public keys: commit to `packages/vfigos/approval/keys/registry.json` (canonical verify source)
+5. GCS bucket: `velvet-ig-approval-spend` (mutation SA: object create only; no delete)
+6. Public keys: commit to `packages/vfigos/approval/keys/registry.json` (canonical verify source)
 
 ## Commands
 
@@ -50,10 +51,14 @@ Until then report: **`NEEDS_OPERATOR_SETUP`**.
 # 4) Deploy issuer (IAM required — no --allow-unauthenticated)
 ./packages/vfigos/approval/issuer/deploy-issuer.sh
 
-# 5) Grant yourself run.invoker; do NOT grant ChatGPT/Cursor MCP identities
-gcloud run services add-iam-policy-binding velvet-delivery-approval-issuer \
-  --member="user:OWNER@example.com" --role="roles/run.invoker" \
-  --region=me-west1 --project=instamcp
+# 5) Owner invocation: use a dedicated audience-bound caller identity.
+# Grant ONLY the human owner OpenID-token creation on velvet-delivery-owner-invoker,
+# and grant that SA ONLY run.invoker on the issuer. Do not grant ChatGPT/Cursor/MCP identities.
+OWNER_INVOKER_SA="velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com"
+ISSUER_URL="$(gcloud run services describe velvet-delivery-approval-issuer --region=me-west1 --project=instamcp --format='value(status.url)')"
+TOKEN="$(gcloud auth print-identity-token --impersonate-service-account="${OWNER_INVOKER_SA}" --audiences="${ISSUER_URL}")"
+curl -sS -H "Authorization: Bearer ${TOKEN}" "${ISSUER_URL}/healthz"
+unset TOKEN
 
 # 6) Redeploy mutation service (dedicated least-privilege runtime SA; spend bucket env; no private key)
 # One-time IAM setup: create velvet-instagram-mcp-runtime with no project roles; grant only
