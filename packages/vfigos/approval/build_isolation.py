@@ -24,6 +24,7 @@ INSTAGRAM_SECRETS = (
     "velvet-instagram-mcp-bearer",
     "velvet-instagram-mcp-ig-user",
 )
+SPEND_BUCKET = "velvet-ig-approval-spend"
 SENSITIVE_PERMISSIONS = frozenset(
     {
         "run.routes.invoke",
@@ -35,6 +36,17 @@ SENSITIVE_PERMISSIONS = frozenset(
         "iam.serviceAccounts.actAs",
         "iam.serviceAccounts.getAccessToken",
         "iam.serviceAccounts.getOpenIdToken",
+        "iam.serviceAccounts.implicitDelegation",
+        "iam.serviceAccounts.signBlob",
+        "iam.serviceAccounts.signJwt",
+        "iam.serviceAccountKeys.create",
+        "iam.serviceAccountKeys.upload",
+        "storage.buckets.setIamPolicy",
+        "storage.buckets.update",
+        "storage.buckets.delete",
+        "storage.objects.create",
+        "storage.objects.delete",
+        "storage.objects.update",
     }
 )
 _EMAIL_RE = re.compile(r"[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+\.gserviceaccount\.com")
@@ -135,6 +147,8 @@ def build_probe_plan(
         f"{ISSUER_SERVICE}"
     )
     project_resource = f"//cloudresourcemanager.googleapis.com/projects/{project}"
+    spend_bucket_resource = f"//storage.googleapis.com/projects/_/buckets/{SPEND_BUCKET}"
+    spend_object_resource = f"{spend_bucket_resource}/objects/spent/__isolation_probe__"
     probes: list[tuple[str, str, str]] = [
         (issuer, "run.routes.invoke", "issuer invoke"),
         (issuer, "run.services.setIamPolicy", "issuer setIamPolicy"),
@@ -143,6 +157,16 @@ def build_probe_plan(
             "resourcemanager.projects.setIamPolicy",
             "project setIamPolicy",
         ),
+        (
+            spend_bucket_resource,
+            "storage.buckets.setIamPolicy",
+            "replay bucket setIamPolicy",
+        ),
+        (spend_bucket_resource, "storage.buckets.update", "replay bucket update"),
+        (spend_bucket_resource, "storage.buckets.delete", "replay bucket delete"),
+        (spend_object_resource, "storage.objects.create", "replay object create"),
+        (spend_object_resource, "storage.objects.delete", "replay object delete"),
+        (spend_object_resource, "storage.objects.update", "replay object update"),
     ]
     for secret in (SIGNING_SECRET, *INSTAGRAM_SECRETS):
         secret_resource = (
@@ -169,6 +193,11 @@ def build_probe_plan(
             ("iam.serviceAccounts.actAs", "actAs"),
             ("iam.serviceAccounts.getAccessToken", "access token"),
             ("iam.serviceAccounts.getOpenIdToken", "OIDC token"),
+            ("iam.serviceAccounts.implicitDelegation", "implicit delegation"),
+            ("iam.serviceAccounts.signBlob", "sign blob"),
+            ("iam.serviceAccounts.signJwt", "sign JWT"),
+            ("iam.serviceAccountKeys.create", "service account key create"),
+            ("iam.serviceAccountKeys.upload", "service account key upload"),
         ):
             probes.append((resource, permission, f"{label} {email}"))
     return probes
@@ -184,6 +213,8 @@ def mutation_runtime_probe_plan(
     signing_secret_resource = (
         f"//secretmanager.googleapis.com/projects/{project_number}/secrets/{SIGNING_SECRET}"
     )
+    spend_bucket_resource = f"//storage.googleapis.com/projects/_/buckets/{SPEND_BUCKET}"
+    spend_object_resource = f"{spend_bucket_resource}/objects/spent/__isolation_probe__"
     probes: list[tuple[str, str, str]] = [
         (issuer, "run.routes.invoke", "mutation runtime issuer invoke"),
         (issuer, "run.services.setIamPolicy", "mutation runtime issuer setIamPolicy"),
@@ -202,6 +233,15 @@ def mutation_runtime_probe_plan(
             "secretmanager.secrets.setIamPolicy",
             "mutation runtime signing secret setIamPolicy",
         ),
+        (
+            spend_bucket_resource,
+            "storage.buckets.setIamPolicy",
+            "mutation runtime replay bucket setIamPolicy",
+        ),
+        (spend_bucket_resource, "storage.buckets.update", "mutation runtime replay bucket update"),
+        (spend_bucket_resource, "storage.buckets.delete", "mutation runtime replay bucket delete"),
+        (spend_object_resource, "storage.objects.delete", "mutation runtime replay object delete"),
+        (spend_object_resource, "storage.objects.update", "mutation runtime replay object update"),
     ]
     for email in (signer_email(project), owner_invoker_email(project)):
         resource = f"//iam.googleapis.com/projects/{project}/serviceAccounts/{email}"
@@ -210,6 +250,11 @@ def mutation_runtime_probe_plan(
             ("iam.serviceAccounts.actAs", "actAs"),
             ("iam.serviceAccounts.getAccessToken", "access token"),
             ("iam.serviceAccounts.getOpenIdToken", "OIDC token"),
+            ("iam.serviceAccounts.implicitDelegation", "implicit delegation"),
+            ("iam.serviceAccounts.signBlob", "sign blob"),
+            ("iam.serviceAccounts.signJwt", "sign JWT"),
+            ("iam.serviceAccountKeys.create", "service account key create"),
+            ("iam.serviceAccountKeys.upload", "service account key upload"),
         ):
             probes.append((resource, permission, f"mutation runtime {label} {email}"))
     return probes

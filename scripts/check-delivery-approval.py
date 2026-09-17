@@ -655,6 +655,17 @@ def main() -> int:
         "iam.serviceAccounts.actAs",
         "iam.serviceAccounts.getAccessToken",
         "iam.serviceAccounts.getOpenIdToken",
+        "iam.serviceAccounts.implicitDelegation",
+        "iam.serviceAccounts.signBlob",
+        "iam.serviceAccounts.signJwt",
+        "iam.serviceAccountKeys.create",
+        "iam.serviceAccountKeys.upload",
+        "storage.buckets.setIamPolicy",
+        "storage.buckets.update",
+        "storage.buckets.delete",
+        "storage.objects.create",
+        "storage.objects.delete",
+        "storage.objects.update",
     }
     if required_permissions - {item[1] for item in plan}:
         fail("build isolation probe plan is missing a required permission")
@@ -670,6 +681,33 @@ def main() -> int:
         fail("build isolation must deny secret IAM policy mutation")
     if not any(item[1] == "iam.serviceAccounts.setIamPolicy" for item in plan):
         fail("build isolation must deny protected service-account IAM mutation")
+    protected_sa_permissions = {
+        "iam.serviceAccounts.setIamPolicy",
+        "iam.serviceAccounts.actAs",
+        "iam.serviceAccounts.getAccessToken",
+        "iam.serviceAccounts.getOpenIdToken",
+        "iam.serviceAccounts.implicitDelegation",
+        "iam.serviceAccounts.signBlob",
+        "iam.serviceAccounts.signJwt",
+        "iam.serviceAccountKeys.create",
+        "iam.serviceAccountKeys.upload",
+    }
+    if protected_sa_permissions - {item[1] for item in plan}:
+        fail("build isolation must cover all protected service-account credential paths")
+    spend_build_permissions = {
+        item[1]
+        for item in plan
+        if "velvet-ig-approval-spend" in item[0]
+    }
+    if {
+        "storage.buckets.setIamPolicy",
+        "storage.buckets.update",
+        "storage.buckets.delete",
+        "storage.objects.create",
+        "storage.objects.delete",
+        "storage.objects.update",
+    } - spend_build_permissions:
+        fail("build isolation must deny replay-store mutation and IAM changes")
     mutation_plan = isolation.mutation_runtime_probe_plan("instamcp", "me-west1", "123456789")
     mutation_principal = "velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com"
     if not any(item[1] == "run.routes.invoke" for item in mutation_plan):
@@ -682,6 +720,21 @@ def main() -> int:
         fail("mutation runtime must be denied signing-secret IAM mutation")
     if not any(item[1] == "iam.serviceAccounts.setIamPolicy" for item in mutation_plan):
         fail("mutation runtime must be denied signer/owner-invoker IAM mutation")
+    if protected_sa_permissions - {item[1] for item in mutation_plan}:
+        fail("mutation runtime service-account probe coverage is incomplete")
+    spend_runtime_permissions = {
+        item[1]
+        for item in mutation_plan
+        if "velvet-ig-approval-spend" in item[0]
+    }
+    if {
+        "storage.buckets.setIamPolicy",
+        "storage.objects.delete",
+        "storage.objects.update",
+    } - spend_runtime_permissions:
+        fail("mutation runtime replay-store probe coverage is incomplete")
+    if "storage.objects.create" in spend_runtime_permissions:
+        fail("mutation runtime isolation probe must preserve intended replay object create")
     if any(any(secret in item[0] for secret in isolation.INSTAGRAM_SECRETS) for item in mutation_plan):
         fail("mutation runtime isolation probe must not deny its intended Instagram secret reads")
     calls: list[tuple[str, str, str]] = []
@@ -786,6 +839,66 @@ def main() -> int:
             pass
         else:
             fail("service-account setIamPolicy grant must fail the isolation proof closed")
+
+        def _sign_jwt_granted(resource: str, principal_email: str, permission: str):
+            if permission == "iam.serviceAccounts.signJwt":
+                return ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO")
+            return denied
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp", "me-west1", config,
+                principal=build_identity, project_number="123456789",
+                troubleshoot=_sign_jwt_granted,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("service-account signJwt grant must fail the isolation proof closed")
+
+        def _key_create_granted(resource: str, principal_email: str, permission: str):
+            if permission == "iam.serviceAccountKeys.create":
+                return ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO")
+            return denied
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp", "me-west1", config,
+                principal=build_identity, project_number="123456789",
+                troubleshoot=_key_create_granted,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("protected service-account key creation grant must fail the isolation proof closed")
+
+        def _replay_delete_granted(resource: str, principal_email: str, permission: str):
+            if principal_email == mutation_principal and permission == "storage.objects.delete":
+                return ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO")
+            return denied
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp", "me-west1", config,
+                principal=build_identity, project_number="123456789",
+                troubleshoot=_replay_delete_granted,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("mutation runtime replay delete grant must fail the isolation proof closed")
+
+        def _replay_bucket_iam_granted(resource: str, principal_email: str, permission: str):
+            if principal_email == mutation_principal and permission == "storage.buckets.setIamPolicy":
+                return ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO")
+            return denied
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp", "me-west1", config,
+                principal=build_identity, project_number="123456789",
+                troubleshoot=_replay_bucket_iam_granted,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("mutation runtime replay-bucket IAM grant must fail the isolation proof closed")
 
         def _runtime_granted(resource: str, principal_email: str, permission: str):
             if principal_email == mutation_principal and permission == "run.routes.invoke":
