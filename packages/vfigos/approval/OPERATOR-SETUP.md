@@ -28,13 +28,15 @@ Until then report: **`NEEDS_OPERATOR_SETUP`**.
 
 ## Resources (project `instamcp`, region `me-west1`)
 
-1. Service account: `velvet-delivery-issuer@instamcp.iam.gserviceaccount.com` (account ID `velvet-delivery-issuer`; IAM 6-30 characters; not the Cloud Run service name)
-2. GSM secrets (issuer SA accessor only):
+1. Issuer service account: `velvet-delivery-issuer@instamcp.iam.gserviceaccount.com` (account ID `velvet-delivery-issuer`; IAM 6-30 characters; not the Cloud Run service name)
+2. Mutation runtime service account: `velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com`. It must have **no project-level roles**; grant only Secret Manager accessor on the three Instagram MCP runtime secrets and `roles/storage.objectCreator` on `velvet-ig-approval-spend`. Never attach the default Compute service account to the mutation service.
+   The project default Compute/Cloud Build service account must not retain `roles/run.admin` or project-wide `roles/secretmanager.secretAccessor`; either permission would pierce signer isolation by allowing the build identity to invoke the issuer or read its signing secret.
+3. GSM secrets (issuer SA accessor only):
    - `velvet-delivery-approval-ed25519-private` → `VELVET_DELIVERY_APPROVAL_PRIVATE_KEY_B64`
    - `velvet-delivery-approval-key-id` → `VELVET_DELIVERY_APPROVAL_KEY_ID`
    - optional defense-in-depth: issuer bearer (never MCP / mutation)
-3. GCS bucket: `velvet-ig-approval-spend` (mutation SA: object create only; no delete)
-4. Public keys: commit to `packages/vfigos/approval/keys/registry.json` (canonical verify source)
+4. GCS bucket: `velvet-ig-approval-spend` (mutation SA: object create only; no delete)
+5. Public keys: commit to `packages/vfigos/approval/keys/registry.json` (canonical verify source)
 
 ## Commands
 
@@ -53,7 +55,9 @@ gcloud run services add-iam-policy-binding velvet-delivery-approval-issuer \
   --member="user:OWNER@example.com" --role="roles/run.invoker" \
   --region=me-west1 --project=instamcp
 
-# 6) Redeploy mutation service (spend bucket env; no private key)
+# 6) Redeploy mutation service (dedicated least-privilege runtime SA; spend bucket env; no private key)
+# One-time IAM setup: create velvet-instagram-mcp-runtime with no project roles; grant only
+# the three MCP secret accessors + bucket objectCreator described above.
 ./packages/vfigos/remote/deploy.sh
 
 # 7) Smoke issue (issuer computes media_sha256s + mutation_payload_sha256 — never trust client digests)

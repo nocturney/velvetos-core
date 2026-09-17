@@ -376,6 +376,15 @@ def main() -> int:
     # 1. forged workspace PASS is not enough — no signature ⇒ blocked (above covers)
     # Isolation markers in mutation deploy / remote sources
     deploy = (ROOT / "packages/vfigos/remote/deploy.sh").read_text(encoding="utf-8")
+    expected_mutation_sa = "velvet-instagram-mcp-runtime@${PROJECT}.iam.gserviceaccount.com"
+    if f"MUTATION_SERVICE_ACCOUNT:-{expected_mutation_sa}" not in deploy:
+        fail("mutation deploy must default to dedicated velvet-instagram-mcp-runtime service account")
+    if '--service-account="${MUTATION_SERVICE_ACCOUNT}"' not in deploy:
+        fail("mutation deploy must attach the dedicated mutation runtime service account")
+    if 'VELVET_MEDIA_CAS_HOST_SUFFIXES:-storage.googleapis.com' not in deploy:
+        fail("mutation deploy must default production media CAS host allowlist")
+    if 'VELVET_MEDIA_CAS_HOST_SUFFIXES=${CAS_HOST_SUFFIXES}' not in deploy:
+        fail("mutation deploy must pass the CAS host allowlist to Cloud Run")
     if "VELVET_DELIVERY_APPROVAL_PRIVATE" in deploy and "Refusing deploy" not in deploy:
         # private secret name may appear in refuse check — ensure refuse exists
         fail("mutation deploy.sh must refuse private key mount")
@@ -406,6 +415,12 @@ def main() -> int:
         fail("OPERATOR-SETUP must document velvet-delivery-issuer@instamcp.iam.gserviceaccount.com")
     if "velvet-delivery-approval-issuer@" in operator_setup:
         fail("OPERATOR-SETUP must not document the rejected 31-character issuer SA ID")
+    documented_mutation_sa = "velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com"
+    if documented_mutation_sa not in operator_setup:
+        fail("OPERATOR-SETUP must document the dedicated mutation runtime service account")
+    for forbidden_role in ("roles/run.admin", "roles/secretmanager.secretAccessor"):
+        if forbidden_role not in operator_setup:
+            fail(f"OPERATOR-SETUP must document removal of {forbidden_role} from default build identity")
     http_issuer = (ROOT / "packages/vfigos/approval/issuer/http_issuer.py").read_text(encoding="utf-8")
     for needle in ("fastmcp", "INSTAGRAM_MCP_ACCESS_TOKEN", "/mcp"):
         # isolation check references ACCESS_TOKEN as forbidden — OK

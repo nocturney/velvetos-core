@@ -13,6 +13,7 @@ if [[ "$PROJECT" =~ ^[0-9]+$ ]]; then
 fi
 REGION="${GCP_REGION:-me-west1}"
 SERVICE="${CLOUD_RUN_SERVICE:-velvet-instagram-mcp}"
+MUTATION_SERVICE_ACCOUNT="${MUTATION_SERVICE_ACCOUNT:-velvet-instagram-mcp-runtime@${PROJECT}.iam.gserviceaccount.com}"
 IMAGE="${CLOUD_RUN_IMAGE:-gcr.io/${PROJECT}/${SERVICE}:delivery-approval-gate}"
 REMOTE_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "${REMOTE_DIR}/../../.." && pwd)"
@@ -41,10 +42,15 @@ BEARER_SECRET="${GSM_BEARER_SECRET:-velvet-instagram-mcp-bearer}"
 ACCESS_SECRET="${GSM_ACCESS_SECRET:-velvet-instagram-mcp-access}"
 IG_USER_SECRET="${GSM_IG_USER_SECRET:-velvet-instagram-mcp-ig-user}"
 SPEND_BUCKET="${VELVET_DELIVERY_APPROVAL_SPEND_BUCKET:-velvet-ig-approval-spend}"
+CAS_HOST_SUFFIXES="${VELVET_MEDIA_CAS_HOST_SUFFIXES:-storage.googleapis.com}"
 
 # Refuse to attach issuer private key / issuer bearer if an operator mis-sets them.
 if [[ -n "${GSM_DELIVERY_APPROVAL_PRIVATE_SECRET:-}" ]]; then
   echo "Refusing deploy: do not mount delivery-approval private key on the mutation service." >&2
+  exit 1
+fi
+if [[ "${MUTATION_SERVICE_ACCOUNT}" == velvet-delivery-issuer@* ]]; then
+  echo "Refusing deploy: mutation service must not run as the delivery-approval issuer signer." >&2
   exit 1
 fi
 
@@ -52,9 +58,10 @@ gcloud run deploy "${SERVICE}" \
   --project="${PROJECT}" \
   --region="${REGION}" \
   --image="${IMAGE}" \
+  --service-account="${MUTATION_SERVICE_ACCOUNT}" \
   --allow-unauthenticated \
   --port=8080 \
-  --set-env-vars="MCP_PATH=/mcp,HOST=0.0.0.0,VELVET_DELIVERY_APPROVAL_SPEND_BUCKET=${SPEND_BUCKET}" \
+  --set-env-vars="MCP_PATH=/mcp,HOST=0.0.0.0,VELVET_DELIVERY_APPROVAL_SPEND_BUCKET=${SPEND_BUCKET},VELVET_MEDIA_CAS_HOST_SUFFIXES=${CAS_HOST_SUFFIXES}" \
   --set-secrets="VELVET_INSTAGRAM_MCP_BEARER_TOKEN=${BEARER_SECRET}:latest,INSTAGRAM_MCP_ACCESS_TOKEN=${ACCESS_SECRET}:latest,INSTAGRAM_MCP_IG_USER_ID=${IG_USER_SECRET}:latest" \
   --quiet
 
@@ -62,5 +69,6 @@ URL="$(gcloud run services describe "${SERVICE}" --project="${PROJECT}" --region
 echo "Deployed: ${URL}/mcp"
 echo "ChatGPT Authentication: API key (Bearer = VELVET_INSTAGRAM_MCP_BEARER_TOKEN)"
 echo "Write mutations require signed delivery approval + GCS spend claim (${SPEND_BUCKET})."
+echo "Mutation runtime service account: ${MUTATION_SERVICE_ACCOUNT}"
 echo "mutation_service_has_private_key=NO"
 echo "Smoke: python3 packages/vfigos/remote/smoke_public.py"
