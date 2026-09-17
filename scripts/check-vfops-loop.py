@@ -65,15 +65,15 @@ def main() -> None:
     for needle in ("vfops_loop.py", "07:00", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער", "PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור"):
         if needle not in orch:
             fail(f"ORCHESTRA.md must mention {needle}")
-    if "אין סטוריז" not in orch and "אין סטוריז ואין פיד" not in orch:
-        fail("ORCHESTRA.md must hard-gate Stories without Canva/vfcovers")
+    if "VF_PUBLICATION_ROUTE_V1" not in orch or "Canva/vfcanva are forbidden" not in orch:
+        fail("ORCHESTRA.md must bind current VF publication route and forbid Canva/vfcanva")
     send = (ROOT / "constitution" / "SEND.md").read_text()
     for needle in ("PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור", "החלטה"):
         if needle not in send:
             fail(f"SEND.md must mention Christian-lock needle {needle}")
     for path, needles in (
         (INSTANCE, ("רף סוכנות", "חצי-פק", "עברית", "PREFLIGHT.md")),
-        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "Canva MCP", "G004-STORIES-FIX", "PREFLIGHT.md", "רמה נמוכה")),
+        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "VF_PUBLICATION_ROUTE_V1", "Canva/vfcanva are forbidden", "G004-STORIES-FIX", "PREFLIGHT.md", "רמה נמוכה")),
         (EDIT, ("JPEG גולמי", "Canva", "vfcovers", "G004-STORIES-FIX", "PREFLIGHT.md", "VOICE.md")),
         (PREFLIGHT, ("VOICE.md", "VOICE-RESEARCH", "VOICE-CHART", "ציון עצמי", "נכשל-סגור", "2–3", "CONTENT-RUBRIC")),
         (CAL_OPS, ("לא שואלים", "Google Calendar", "Instagram")),
@@ -102,8 +102,8 @@ def main() -> None:
         fail("HANDOFF-he.md must open G004 pack")
     if "G004-STORIES-FIX.md" not in handoff:
         fail("HANDOFF-he.md must point Stories at G004-STORIES-FIX.md")
-    if "אין סטוריז בלי מעבר" not in handoff:
-        fail("HANDOFF-he.md must hard-gate Stories without Canva/vfcovers")
+    if "VF_PUBLICATION_ROUTE_V1" not in handoff or "Canva/vfcanva אסורים" not in handoff:
+        fail("HANDOFF-he.md must bind current VF publication route and forbid Canva/vfcanva")
     if "אל תפנה לכריסטיאן על מדדים חלשים" not in handoff:
         fail("HANDOFF-he.md must lock אל תפנה לכריסטיאן על מדדים חלשים")
     if "PREFLIGHT.md" not in handoff or "preflight/G004.md" not in handoff:
@@ -303,6 +303,14 @@ def main() -> None:
         blob = json.dumps(brief, ensure_ascii=False)
         if "velvetos-modules" not in blob and "צרכנים" not in blob:
             fail("assemble brief must surface consumer results")
+        if "VOICE + Canva/vfcovers" in blob or "Canva MCP או vfcovers/vfcanva" in blob:
+            fail("assemble brief must not emit legacy Canva/vfcanva publication route")
+        if "Canva/vfcanva אסורים בפרסום VF" not in blob:
+            fail("assemble brief must surface current no-Canva VF publication route")
+        if "מקור vfbiz/out/week.md מיושן" not in blob:
+            fail("assemble brief must label stale weekly business source instead of presenting it as current")
+        if "growth-brief מיושן" not in blob:
+            fail("assemble brief must label stale growth-brief source instead of presenting it as current")
         # check path must not call run_daily_consumers — ensure state line count stable across check
         before = fake_state.read_text(encoding="utf-8") if fake_state.is_file() else ""
         proc2 = subprocess.run(

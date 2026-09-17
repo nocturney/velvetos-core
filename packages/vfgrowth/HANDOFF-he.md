@@ -1,18 +1,24 @@
 # מסירה לסטודיו · פתח כל בוקר
 
+## VF_PUBLICATION_ROUTE_V1 — current
+
+לפרסום Velvet Factory: `packages/vfom/PUBLICATION-PREP-EXECUTION.md` + `publicationRoute` ב־`packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva אסורים במסלול זה. מקור מוצר אמיתי → Product Truth → Creative Director → source-grounded edit → Visible Text → Brand Guardian → exact-final QA.
+
 **לא לפרסם מכאן. לא בוסט. לא אוטו־DM. לא לפתוח Instagram או Gmail מהסוכן.**  
 שיבוץ: **instagram.com** על `@velvets_cloud` או Instagram MCP אחרי שערי אישור. לא Meta Suite. לא Buffer/Later בלי ראש צוות.  
-סטוריז = `publish_story` על MCP הקנוני אחרי Canva/vfcovers (לא JPEG גולמי).
+סטוריז = `publish_story` על MCP הקנוני רק אחרי publication evidence על החבילה המדויקת; Canva/vfcanva אסורים בפרסום VF. JPEG גולמי אינו תוצר סופי.
 
 לולאה: `python3 scripts/vfops_loop.py handoff` · בריף: `python3 scripts/vfops_loop.py brief`.
 
 ## שער עריכה + פריפלייט — חובה לפני שיבוץ
 
 **לא** משבצים JPEG גולמי עם טקסט עליו. גלם מתיבת Grok = חומר בלבד.  
-עברו קודם: Canva MCP · `vfcovers` / `vfcanva` · או Gemini browser על המק (`EDIT-GATE.md`).  
+עברו קודם: Product Truth lock → Creative Director → source-grounded edit → `vfcopy`/Visible Text → deterministic typography/logo → Brand Guardian → exact-final QA (`EDIT-GATE.md`).
 **חובה נתיב ארטיפקט:** `packages/vfgrowth/preflight/<id>.md` לפי `PREFLIGHT.md` (VOICE + ציון עצמי + 2–3 קומפס). בלי נתיב + שער עבור = **נכשל-סגור**.  
-בלי `edit_url` / PNG מורכב = השורה נשארת **חסום עריכה**. לא שואלים משבצת — הרשת ב־`CALENDAR.md`. כל מועמד עם תאריך → אירוע Google Calendar (`CALENDAR-OPS.md`).  
+בלי edited review artifact + source/final evidence + exact-final QA = השורה נשארת **חסום עריכה**. לא שואלים משבצת — הרשת ב־`CALENDAR.md`. כל מועמד עם תאריך → אירוע Google Calendar (`CALENDAR-OPS.md`).
 **אל תפנה לכריסטיאן על מדדים חלשים.** אין «רמה נמוכה» לצ׳אט. משטח: החלטה / חסם קשיח / פרסום חי שדורש אותו.
+
+> LEGACY / provenance only — פרטי G003/G004 וה־Canva שמתחת נשמרים מארכיון 7.9.2026 ואינם נתיב ביצוע או תוכנית פרסום נוכחית.
 
 ## חבילת היום — G004 קטלבל-מחזיק
 
