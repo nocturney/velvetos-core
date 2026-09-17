@@ -4,6 +4,10 @@
 חוקה: `constitution/STUDIO.md`. קול: `vfcopy/VOICE.md`. תבנית: `vfcopy/hq/templates/ig-stories.md`.
 
 **VF_PUBLICATION_ROUTE_V1 — current:** לפרסום Velvet Factory משתמשים ב־`packages/vfom/PUBLICATION-PREP-EXECUTION.md` וב־`publicationRoute` מתוך `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`; Canva/vfcanva אסורים במסלול זה.
+
+## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
+לפני עבודה חזותית טוענים ומאמתים את `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` ו־`packages/vfom/VISUAL-DNA.json`. זהות רפרנס מאושרת: `MAHVL7PKpvE`, SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; אלה ראיות רפרנס בלבד, לא הרשאת Canva. חוסר/אי־התאמה = `visual_standard_unavailable` והענף החזותי נחסם.
+
 **שער:** בלי source lock + Product Truth + Creative Director + source-grounded edit + `vfcopy`/Visible Text + Brand Guardian + publication evidence + exact-final QA = **לא משבצים**. JPEG גולמי הוא חומר גלם בלבד — **אסור** ל־`publish_story`.
 **פריפלייט:** ארטיפקט `preflight/<id>.md` (`PREFLIGHT.md`) — VOICE + ציון עצמי + 2–3 קומפס. נכשל-סגור = חסום שיבוץ. אל תפנה לכריסטיאן על מדדים חלשים.
 

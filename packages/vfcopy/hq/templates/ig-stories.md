@@ -3,6 +3,9 @@
 ## VF_PUBLICATION_ROUTE_V1 — current
 לפרסום Velvet Factory: מקור מוצר מאומת → Product Truth → Creative Director → source-grounded edit → `vfcopy`/Visible Text → Brand Guardian → publication evidence → exact-final QA. Canva/vfcanva אסורים במסלול זה.
 
+## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
+לפני מילוי התבנית מאמתים את `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` ו־`packages/vfom/VISUAL-DNA.json`. זהות הרפרנס: `MAHVL7PKpvE`, SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; זו ראיית רפרנס בלבד ואינה נתיב Canva. חוסר/אי־התאמה = `visual_standard_unavailable` וחוסם את העבודה החזותית.
+
 ## תפקיד
 סדרת סטורי יומית `@velvets_cloud` — רק מקליפ/תמונה מאותו יום על המיטה.  
 פלייבוק סטודיו: `vfgrowth/STORIES.md`. שער עריכה: `vfgrowth/EDIT-GATE.md`.
