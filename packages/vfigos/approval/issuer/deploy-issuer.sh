@@ -10,6 +10,7 @@ if [[ "$PROJECT" =~ ^[0-9]+$ ]]; then
   exit 1
 fi
 REGION="${GCP_REGION:-me-west1}"
+EXPECTED_ISSUER_SERVICE="velvet-delivery-approval-issuer"
 SERVICE="${DELIVERY_APPROVAL_ISSUER_SERVICE:-velvet-delivery-approval-issuer}"
 IMAGE="${DELIVERY_APPROVAL_ISSUER_IMAGE:-gcr.io/${PROJECT}/${SERVICE}:v1}"
 EXPECTED_ISSUER_SA="velvet-delivery-issuer@${PROJECT}.iam.gserviceaccount.com"
@@ -17,6 +18,7 @@ SA_EMAIL="${DELIVERY_APPROVAL_ISSUER_SA:-velvet-delivery-issuer@${PROJECT}.iam.g
 REPO_ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
 BUILD_CONFIG="${REPO_ROOT}/packages/vfigos/approval/issuer/cloudbuild.json"
 
+EXPECTED_PRIVATE_SECRET="velvet-delivery-approval-ed25519-private"
 PRIVATE_SECRET="${GSM_DELIVERY_APPROVAL_PRIVATE_SECRET:-velvet-delivery-approval-ed25519-private}"
 KEY_ID_SECRET="${GSM_DELIVERY_APPROVAL_KEY_ID_SECRET:-velvet-delivery-approval-key-id}"
 OPTIONAL_BEARER_SECRET="${GSM_DELIVERY_APPROVAL_ISSUER_BEARER_SECRET:-}"
@@ -33,6 +35,14 @@ fi
 
 if [[ "${SA_EMAIL}" != "${EXPECTED_ISSUER_SA}" ]]; then
   echo "Refusing deploy: issuer must use ${EXPECTED_ISSUER_SA}." >&2
+  exit 1
+fi
+if [[ "${SERVICE}" != "${EXPECTED_ISSUER_SERVICE}" ]]; then
+  echo "Refusing deploy: issuer service must remain ${EXPECTED_ISSUER_SERVICE}." >&2
+  exit 1
+fi
+if [[ "${PRIVATE_SECRET}" != "${EXPECTED_PRIVATE_SECRET}" ]]; then
+  echo "Refusing deploy: signing secret must remain ${EXPECTED_PRIVATE_SECRET}." >&2
   exit 1
 fi
 if [[ ! "${CAS_HOST_SUFFIXES}" =~ ^[A-Za-z0-9.-]+(,[A-Za-z0-9.-]+)*$ ]]; then

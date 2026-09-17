@@ -18,6 +18,14 @@ IMAGE="${CLOUD_RUN_IMAGE:-gcr.io/${PROJECT}/${SERVICE}:delivery-approval-gate}"
 REMOTE_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "${REMOTE_DIR}/../../.." && pwd)"
 BUILD_CONFIG="${REPO_ROOT}/packages/vfigos/remote/cloudbuild.json"
+EXPECTED_BEARER_SECRET="velvet-instagram-mcp-bearer"
+EXPECTED_ACCESS_SECRET="velvet-instagram-mcp-access"
+EXPECTED_IG_USER_SECRET="velvet-instagram-mcp-ig-user"
+EXPECTED_SPEND_BUCKET="velvet-ig-approval-spend"
+BEARER_SECRET="${GSM_BEARER_SECRET:-velvet-instagram-mcp-bearer}"
+ACCESS_SECRET="${GSM_ACCESS_SECRET:-velvet-instagram-mcp-access}"
+IG_USER_SECRET="${GSM_IG_USER_SECRET:-velvet-instagram-mcp-ig-user}"
+SPEND_BUCKET="${VELVET_DELIVERY_APPROVAL_SPEND_BUCKET:-velvet-ig-approval-spend}"
 
 if ! command -v gcloud >/dev/null 2>&1; then
   echo "gcloud not found. Install Google Cloud SDK and authenticate first." >&2
@@ -37,16 +45,28 @@ if [[ -n "${GSM_DELIVERY_APPROVAL_PRIVATE_SECRET:-}" ]]; then
   echo "Refusing deploy: do not mount delivery-approval private key on mutation service." >&2
   exit 1
 fi
+if [[ "${BEARER_SECRET}" != "${EXPECTED_BEARER_SECRET}" ]]; then
+  echo "Refusing deploy: bearer secret must remain ${EXPECTED_BEARER_SECRET}." >&2
+  exit 1
+fi
+if [[ "${ACCESS_SECRET}" != "${EXPECTED_ACCESS_SECRET}" ]]; then
+  echo "Refusing deploy: access secret must remain ${EXPECTED_ACCESS_SECRET}." >&2
+  exit 1
+fi
+if [[ "${IG_USER_SECRET}" != "${EXPECTED_IG_USER_SECRET}" ]]; then
+  echo "Refusing deploy: IG user secret must remain ${EXPECTED_IG_USER_SECRET}." >&2
+  exit 1
+fi
+if [[ "${SPEND_BUCKET}" != "${EXPECTED_SPEND_BUCKET}" ]]; then
+  echo "Refusing deploy: replay bucket must remain ${EXPECTED_SPEND_BUCKET}." >&2
+  exit 1
+fi
 
 python3 "${REPO_ROOT}/packages/vfigos/approval/build_isolation.py" \
   --project "${PROJECT}" \
   --region "${REGION}" \
   --cloudbuild-config "${BUILD_CONFIG}"
 
-BEARER_SECRET="${GSM_BEARER_SECRET:-velvet-instagram-mcp-bearer}"
-ACCESS_SECRET="${GSM_ACCESS_SECRET:-velvet-instagram-mcp-access}"
-IG_USER_SECRET="${GSM_IG_USER_SECRET:-velvet-instagram-mcp-ig-user}"
-SPEND_BUCKET="${VELVET_DELIVERY_APPROVAL_SPEND_BUCKET:-velvet-ig-approval-spend}"
 CAS_HOST_SUFFIXES="${VELVET_MEDIA_CAS_HOST_SUFFIXES:-storage.googleapis.com}"
 
 if [[ ! "${CAS_HOST_SUFFIXES}" =~ ^[A-Za-z0-9.-]+(,[A-Za-z0-9.-]+)*$ ]]; then

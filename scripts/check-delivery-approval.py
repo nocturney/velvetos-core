@@ -481,6 +481,20 @@ def main() -> int:
     ):
         if rejected == dedicated:
             fail(f"exact mutation service account comparison accepted {rejected!r}")
+    mutation_resource_guards = (
+        ('EXPECTED_BEARER_SECRET="velvet-instagram-mcp-bearer"', '[[ "${BEARER_SECRET}" != "${EXPECTED_BEARER_SECRET}" ]]', "Instagram bearer secret"),
+        ('EXPECTED_ACCESS_SECRET="velvet-instagram-mcp-access"', '[[ "${ACCESS_SECRET}" != "${EXPECTED_ACCESS_SECRET}" ]]', "Instagram access secret"),
+        ('EXPECTED_IG_USER_SECRET="velvet-instagram-mcp-ig-user"', '[[ "${IG_USER_SECRET}" != "${EXPECTED_IG_USER_SECRET}" ]]', "Instagram user secret"),
+        ('EXPECTED_SPEND_BUCKET="velvet-ig-approval-spend"', '[[ "${SPEND_BUCKET}" != "${EXPECTED_SPEND_BUCKET}" ]]', "replay bucket"),
+    )
+    for expected_decl, guard, label in mutation_resource_guards:
+        if expected_decl not in deploy:
+            fail(f"mutation deploy must pin canonical {label}")
+        guard_at = deploy.find(guard)
+        if guard_at < 0:
+            fail(f"mutation deploy must reject non-canonical {label}")
+        if guard_at > build_submit_at:
+            fail(f"mutation {label} guard must run before Cloud Build")
     if "VELVET_DELIVERY_APPROVAL_PRIVATE" in deploy and "Refusing deploy" not in deploy:
         # private secret name may appear in refuse check — ensure refuse exists
         fail("mutation deploy.sh must refuse private key mount")
@@ -509,6 +523,18 @@ def main() -> int:
     if exact_issuer_guard not in issuer_deploy:
         fail("issuer deploy must refuse every runtime identity except the exact signer service account")
     issuer_build_at = issuer_deploy.find('gcloud builds submit')
+    issuer_resource_guards = (
+        ('EXPECTED_ISSUER_SERVICE="velvet-delivery-approval-issuer"', '[[ "${SERVICE}" != "${EXPECTED_ISSUER_SERVICE}" ]]', "issuer service"),
+        ('EXPECTED_PRIVATE_SECRET="velvet-delivery-approval-ed25519-private"', '[[ "${PRIVATE_SECRET}" != "${EXPECTED_PRIVATE_SECRET}" ]]', "signing secret"),
+    )
+    for expected_decl, guard, label in issuer_resource_guards:
+        if expected_decl not in issuer_deploy:
+            fail(f"issuer deploy must pin canonical {label}")
+        guard_at = issuer_deploy.find(guard)
+        if guard_at < 0:
+            fail(f"issuer deploy must reject non-canonical {label}")
+        if guard_at > issuer_build_at:
+            fail(f"issuer {label} guard must run before Cloud Build")
     if issuer_deploy.find(exact_issuer_guard) > issuer_build_at:
         fail("issuer identity guard must run before Cloud Build starts")
     if 'build_isolation.py' not in issuer_deploy or issuer_deploy.find('build_isolation.py') > issuer_build_at:
