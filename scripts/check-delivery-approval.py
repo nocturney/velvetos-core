@@ -570,19 +570,39 @@ def main() -> int:
         fail("OPERATOR-SETUP must document the dedicated owner invocation service account")
     if "roles/iam.serviceAccountOpenIdTokenCreator" not in operator_setup:
         fail("OPERATOR-SETUP must keep owner impersonation scoped to OpenID token creation")
-    if operator_setup.count('--impersonate-service-account="${OWNER_INVOKER_SA}"') < 2:
-        fail("owner health and approval issuance must both use the delegated owner-invoker identity")
-    if operator_setup.count('--audiences="${ISSUER_URL}"') < 2:
-        fail("owner health and approval issuance tokens must both be audience-bound to the issuer")
-    if 'TOKEN=$(gcloud auth print-identity-token)' in operator_setup:
-        fail("OPERATOR-SETUP must not mint a bare owner identity token for approval issuance")
-    token_lines = re.findall(r"gcloud auth print-identity-token[^\n]*", operator_setup)
-    if len(token_lines) < 2:
-        fail("owner health and approval issuance must both mint an identity token")
-    for line in token_lines:
-        if '--impersonate-service-account="${OWNER_INVOKER_SA}"' not in line or '--audiences="${ISSUER_URL}"' not in line:
-            fail("every owner identity token must be delegated and audience-bound")
-    if "roles/iam.serviceAccountTokenCreator" in operator_setup + deploy + issuer_deploy:
+    owner_helper_path = ROOT / "packages/vfigos/approval/owner_call.py"
+    if not owner_helper_path.exists():
+        fail("narrow owner-invoker helper is missing")
+    owner_helper = owner_helper_path.read_text(encoding="utf-8")
+    for needle, reason in (
+        ("iamcredentials.googleapis.com", "call IAM Credentials directly"),
+        (":generateIdToken", "mint an audience-bound ID token without access-token impersonation"),
+        ("includeEmail", "bind the delegated owner service-account identity into the token"),
+        ('issuer_url + "/health"', "use the live canonical /health endpoint"),
+        ('issuer_url + "/v1/delivery-approvals"', "support signed approval issuance"),
+    ):
+        if needle not in owner_helper:
+            fail(f"owner_call.py must {reason}")
+    if "print-identity-token" in owner_helper:
+        fail("owner_call.py must not use gcloud print-identity-token impersonation")
+    for forbidden_override in (
+        'parser.add_argument("--project"',
+        'parser.add_argument("--region"',
+        'parser.add_argument("--issuer-service"',
+        'parser.add_argument("--owner-invoker"',
+        'parser.add_argument("--issuer-url"',
+    ):
+        if forbidden_override in owner_helper:
+            fail("owner_call.py must keep production project/service/owner identity canonical")
+    if "owner_call.py health" not in operator_setup:
+        fail("OPERATOR-SETUP owner health must use the narrow owner_call helper")
+    if "owner_call.py issue" not in operator_setup:
+        fail("OPERATOR-SETUP approval issuance must use the narrow owner_call helper")
+    if "IAM Credentials `generateIdToken`" not in operator_setup:
+        fail("OPERATOR-SETUP must document narrow IAMCredentials generateIdToken owner auth")
+    if "`/health`" not in operator_setup:
+        fail("OPERATOR-SETUP must document /health as the live owner-auth health path")
+    if "roles/iam.serviceAccountTokenCreator" in operator_setup + deploy + issuer_deploy + owner_helper:
         fail("do not grant roles/iam.serviceAccountTokenCreator")
     for forbidden_role in ("roles/run.admin", "roles/secretmanager.secretAccessor"):
         if forbidden_role not in operator_setup:

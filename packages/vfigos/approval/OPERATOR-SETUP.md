@@ -12,10 +12,13 @@ Do **not** claim these until the named step actually happened:
 | `DEPLOYED` | Issuer Cloud Run revision serving |
 | `LIVE` | End-to-end issue → mutate → replay-block on production |
 | `OWNER_AUTH_VERIFIED` | Owner-delegated, audience-bound identity-token invoke succeeded |
-| `REPLAY_STORE_VERIFIED` | GCS `ifGenerationMatch=0` concurrent claim proven |
+| `REPLAY_STORE_VERIFIED` | GCS `ifGenerationMatch=0` claim + replay denial proven on production |
+| `BOUNDARY_SMOKE_VERIFIED` | Real signed issue -> production mutation boundary -> atomic spend -> pre-Graph failure -> replay block; no public Instagram write |
 | `COLD_START_PASS` | Owner cold-start acceptance (separate from repo sensors) |
 
-Until then report: **`NEEDS_OPERATOR_SETUP`**.
+If issuer/owner/replay setup is incomplete, report **`NEEDS_OPERATOR_SETUP`**. A no-public-write boundary smoke may be **`BOUNDARY_SMOKE_VERIFIED`**, but it is never `LIVE`. `LIVE` still requires an actually authorized Instagram Graph write plus canonical `list_media` / `get_media` verification.
+
+Operational note (live project `instamcp`, 2026-09-17): use `/health` for the owner-authenticated health gate. `/healthz` is defined as an application alias but Google Frontend returns 404 for that path in the live service. The narrow owner path uses IAM Credentials `generateIdToken`; `gcloud auth print-identity-token --impersonate-service-account` requests `iam.serviceAccounts.getAccessToken` in gcloud 585.0.0 and therefore does not satisfy the OpenIdTokenCreator-only boundary.
 
 ## Trust boundary
 
@@ -60,29 +63,30 @@ DEFAULT_BUILD_SA="$(gcloud builds get-default-service-account --project=instamcp
 # 5) Deploy issuer (IAM required — no --allow-unauthenticated)
 ./packages/vfigos/approval/issuer/deploy-issuer.sh
 
-# 6) Owner invocation: use a dedicated audience-bound caller identity.
+# 6) Owner invocation: use the dedicated audience-bound caller identity.
 # Grant ONLY the human owner OpenID-token creation on velvet-delivery-owner-invoker,
 # and grant that SA ONLY run.invoker on the issuer. Do not grant ChatGPT/Cursor/MCP identities.
-OWNER_INVOKER_SA="velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com"
-ISSUER_URL="$(gcloud run services describe velvet-delivery-approval-issuer --region=me-west1 --project=instamcp --format='value(status.url)')"
-TOKEN="$(gcloud auth print-identity-token --impersonate-service-account="${OWNER_INVOKER_SA}" --audiences="${ISSUER_URL}")"
-curl -sS -H "Authorization: Bearer ${TOKEN}" "${ISSUER_URL}/healthz"
-unset TOKEN
+# owner_call.py uses IAMCredentials generateIdToken directly; tokens stay in memory and are never printed.
+# This preserves the narrow OpenIdTokenCreator boundary. Do NOT restore serviceAccountTokenCreator.
+# Canonical live health path is /health. In project instamcp, /healthz is intercepted by Google Frontend with 404.
+python3 packages/vfigos/approval/owner_call.py health
 
 # 7) Redeploy mutation service (dedicated least-privilege runtime SA; spend bucket env; no private key)
 # One-time IAM setup: create velvet-instagram-mcp-runtime with no project roles; grant only
 # the three MCP secret accessors + bucket objectCreator described above.
 ./packages/vfigos/remote/deploy.sh
 
-# 8) Smoke issue (issuer computes media_sha256s + mutation_payload_sha256 — never trust client digests)
-# Re-mint the same delegated, audience-bound owner-invoker identity used for healthz.
-TOKEN="$(gcloud auth print-identity-token --impersonate-service-account="${OWNER_INVOKER_SA}" --audiences="${ISSUER_URL}")"
+# 8) Smoke issue (issuer computes media_sha256s + mutation_payload_sha256 - never trust client digests)
+# owner_call.py reuses the same delegated, audience-bound owner-invoker path used for health.
 # Media URLs must be content-addressed: .../sha256/<64-hex>/...
 # Prefer media_artifacts bytes (issuer hashes) or let issuer fetch the CAS URL body.
-curl -sS -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
-  -d '{"content_id":"JOB","package_sha256":"<64hex>","mutation_tool":"publish_image","mutation_payload":{"image_url":"https://cdn.example/sha256/<mediahex>/a.jpg","caption":"…","account":"velvets_cloud"},"media_artifacts":[{"bytes_b64":"<base64 media bytes>"}]}' \
-  "$ISSUER_URL/v1/delivery-approvals"
-unset TOKEN
+cat > /tmp/vf-delivery-approval-request.json <<'JSON'
+{"content_id":"JOB","package_sha256":"<64hex>","mutation_tool":"publish_image","mutation_payload":{"image_url":"https://storage.googleapis.com/<bucket>/sha256/<mediahex>/a.jpg","caption":"...","account":"velvets_cloud"},"media_artifacts":[{"bytes_b64":"<base64 media bytes>"}]}
+JSON
+python3 packages/vfigos/approval/owner_call.py issue \
+  --body-file /tmp/vf-delivery-approval-request.json \
+  --output /tmp/vf-delivery-approval.json
+# The signed receipt is written to the output file instead of stdout; treat it as sensitive one-time authorization. Access/identity tokens are never printed.
 ```
 
 Body size for `/v1/delivery-approvals` is capped at 16 KiB (`ISSUER_MAX_BODY_BYTES`). Auth (optional app bearer) is checked before body buffering. Mutable non-CAS URLs are refused — Graph URL fetch is not byte identity.
