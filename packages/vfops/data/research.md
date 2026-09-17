@@ -1,18 +1,12 @@
-# 05 · משרד · 16.9.2026
+# 05 · משרד · 17.9.2026
 
-מעבר שבועי קישורים הושלם. מקור מלא: `packages/vfresearch/sources/2026-09-16-weekly-links.md`.
-
-## מה נבנה / יועל
-
-- שבועי קישורים — הוטמע HeyOrca (11.9) → `vfresearch` ig-music + דפוס meme-week ב־`MUSIC.md`.
-- print-demand — 3 אותות (`sources/2026-09-16-print-demand.md`).
-- MakerWorld רביעי — Cloudflare על explore; `vfsku.py scan` = 0/5 אין שם להציע (`sources/2026-09-16-makerworld-scan.md`).
+מצב Research Seat: `no_meaningful_findings` — גוף מחקר ציבורי חדש רץ ונשמר ב־`packages/vfresearch/sources/2026-09-17-orchestra.md`.
 
 ## מה שווה להעביר לבריף
 
-```text
-05 · משרד
-שבועי קישורים — הוטמע HeyOrca→ig-music ב־vfresearch · print-demand — 3 אותות · makerworld-scan — אין שם למדף
-```
+05 · מחקר ורעיונות
+- Best Skills היה due/stale ורוענן על dataDate 2026-09-16; אין embed חדש — הכיסוי הקיים מספיק.
+- לא נמצא היום מועמד מדף חדש שמצדיק קידום מעל הניסויים הקטנים שכבר זוהו; לא ממחזרים ממצאי 12–16.9 כחדשים.
+- Social Intelligence: `nothing-solid`; אין מכניקת תוכן חיצונית שמצדיקה שינוי של reset/preflight הנוכחי.
 
-Freshness: **2026-09-16 · GREEN** — 82 קישורי `LINKS.json` נסקרו מחדש (`lastReviewed=2026-09-16`); 4 חומות מנוי/CF; 77 ללא שינוי דפוס; 1 הטמעה.
+מקור מלא: `packages/vfresearch/sources/2026-09-17-orchestra.md`.

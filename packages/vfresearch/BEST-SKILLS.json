@@ -40,11 +40,11 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-14",
-  "dataDate": "2026-09-13",
-  "lastArtifact": "packages/vfresearch/sources/2026-09-14-best-skills.md",
+  "lastPass": "2026-09-17",
+  "dataDate": "2026-09-16",
+  "lastArtifact": "packages/vfresearch/sources/2026-09-17-best-skills.md",
   "lastResult": "no-embed-existing-coverage",
-  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: lastPass/data artifact is the evidence; external Cursor subscriptions are not an authority.",
+  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due/stale pulse refreshed inside 2026-09-17 Research Seat; no separate automation created",
   "embedded": [
     {
       "id": "grill-me",

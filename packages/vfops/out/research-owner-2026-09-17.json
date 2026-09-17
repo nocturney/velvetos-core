@@ -1,0 +1,12 @@
+{
+  "date_line": "מחקר יומי · 17.9.2026",
+  "bottom_line": "אין חדש משמעותי היום · תחזוקת Best Skills הושלמה",
+  "footer": "Velvet Factory · Research Seat · איסוף משדרות",
+  "attention": {"state":"green","label":"מצב מחקר","text":"no_meaningful_findings"},
+  "system_health": {"state":"green","label":"תחזוקת מחקר","text":"Best Skills רוענן"},
+  "slots": [
+    {"kind":"office","kicker":"01 · תחזוקה","title":"Best Skills חזר לחלון התקין","prose":"דופק ~48 השעות היה due. נתוני 16.9 נבדקו; לא נמצא דפוס חדש שמצדיק פק, runtime או שכבה נוספת.","links":[{"label":"LinklyAI · Best Skills","href":"https://github.com/LinklyAI/best-skills"}]},
+    {"kind":"production","kicker":"02 · מדף","title":"אין מועמד חדש שקיבל קידום היום","prose":"החיפוש היומי בדק שוב מועמדי desk/cable. מועמד MacBook עדכני יחסית מצהיר בעצמו ש־physical fit לא נבדק, ולכן אין בסיס לקדם אותו בלי fit-test מקומי.","links":[{"label":"Printables · MacBook cable organizer","href":"https://www.printables.com/model/1834543-macbook-air-usb-c-cable-organizer"}]},
+    {"kind":"content","kicker":"03 · Social Intelligence","title":"nothing-solid","prose":"לא נמצא אות חיצוני מספיק חזק כדי לשנות את reset/preflight הנוכחיים. נתוני @velvets_cloud לא נסרקו ולא הומצאו.","links":[{"label":"Extruder Report · maker signal","href":"https://www.extruderreport.com/"}]}
+  ]
+}
