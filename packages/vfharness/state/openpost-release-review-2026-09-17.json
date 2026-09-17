@@ -1,0 +1,47 @@
+{
+  "task_id": "openpost-release-review-2026-09-17",
+  "domain": ["research", "system_engineering", "instagram_action_boundary_review"],
+  "authority": {
+    "contract_version": 6,
+    "revision": "6.2",
+    "bundle_id": "VF-PROJECT-6.2-DETAIL-TRUTH",
+    "velvetos_main_sha": "8cf679113190c438393821fa8cebe6fca9da1c63"
+  },
+  "upstream": {
+    "repository": "getopenpost/openpost",
+    "from_reviewed_version": "v4.31.0",
+    "latest_release": "v4.34.2",
+    "published_at": "2026-09-16T17:57:34Z",
+    "windows_server_sha256": "43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442"
+  },
+  "classification": {
+    "meta_instagram_auth": "no_direct_breaking_change_identified",
+    "api_mcp_contract": "relevant_fixes",
+    "media_limits": "instagram_unchanged_in_reviewed_notes",
+    "scheduler_queue_retry": "no_vf_breaking_change_identified",
+    "analytics": "no_instagram_contract_change_identified",
+    "database_schema_storage": "migrations_135_and_136_require_backup_and_staging_smoke",
+    "security_privacy": "maintainer_diagnostics_default_on_from_v4_32_requires_explicit_policy"
+  },
+  "runtime": {
+    "repo_recorded_baseline": "v4.31.0",
+    "fresh_probe": "BLOCKED_NO_DEVICE",
+    "runtime_mutated": false,
+    "staging_upgrade_performed": false,
+    "reason": "Windows staging worker unavailable to authorized remote tool; no backup or migration smoke could be executed"
+  },
+  "delivery_approval": {
+    "required_schema": "velvet.delivery_approval.v1",
+    "live_evidence": "NEEDS_OPERATOR_SETUP",
+    "source": "packages/vfigos/approval/OPERATOR-SETUP.md",
+    "direct_instagram_mcp_bypass_allowed": false,
+    "production_promotion_blocked": true
+  },
+  "changes": {
+    "branch": "chore/openpost-v4.34.2-review",
+    "openpost_json_updated": true,
+    "openpost_md_updated": true,
+    "production_promoted": false
+  },
+  "reviewed_at": "2026-09-17T07:37:39+03:00"
+}
