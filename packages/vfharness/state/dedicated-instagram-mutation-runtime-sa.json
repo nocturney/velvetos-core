@@ -4,8 +4,8 @@
   "component_state": "Idle",
   "pack": "vfigos",
   "branch": "fix/dedicated-instagram-mutation-runtime-sa",
-  "base_main": "3f0a63f41851cc57c28bf68dee52657e79f782f7",
-  "implementation_head": "b74414b3b4bb7db30b91323ef75c6ef83e042094",
+  "base_main": "552fd415ef58de23fe9ca5add9ec0b6dfc0d654b",
+  "implementation_head": "5360e289972c209e81459379a0e074738b76660f",
   "claims": {
     "LIVE": false,
     "OWNER_AUTH_VERIFIED": false,
@@ -17,7 +17,7 @@
     "targeted_local_postflight": "PASS",
     "mutation_build_iam_preflight": "PASS 15/15 deny",
     "issuer_build_iam_preflight": "PASS 15/15 deny",
-    "check_all": "BLOCKED on existing Windows Living Studio nested subprocess hang"
+    "check_all": "PASS GitHub Actions run 35227720690 on 5360e289972c209e81459379a0e074738b76660f"
   },
   "completed_steps": [
     "Pinned mutation and issuer deploys to exact dedicated service accounts before Cloud Build",
@@ -27,7 +27,7 @@
     "Re-minted the delegated audience-bound owner-invoker token for issuance smoke",
     "Rebased candidate onto current main and reran targeted postflight plus live IAM probes"
   ],
-  "next_step": "Push rebased branch, obtain fresh code and security reviews on the exact final PR head, then decide merge/deploy separately.",
-  "latest_observation": "Repo sensors and live Policy Troubleshooter agree on build-identity isolation; no owner-auth or full issue-to-mutate-to-replay proof exists yet.",
+  "next_step": "Obtain fresh code and security reviews on the exact final PR head; if clean, merge with expected-head protection. Deploy and owner-auth verification remain separate.",
+  "latest_observation": "Linux check-all and commission isolation passed on rebased implementation head 5360e289; no owner-auth or full issue-to-mutate-to-replay proof exists yet.",
   "last_updated": "2026-09-17"
 }
