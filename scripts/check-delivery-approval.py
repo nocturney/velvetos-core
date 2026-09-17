@@ -46,6 +46,18 @@ def fail(msg: str) -> None:
     raise SystemExit(1)
 
 
+def _default_issuer_sa_local(deploy_src: str) -> str:
+    """Local-part of the issuer deploy script's default service-account email."""
+    key = "DELIVERY_APPROVAL_ISSUER_SA:-"
+    start = deploy_src.find(key)
+    if start < 0:
+        fail("issuer deploy must set DELIVERY_APPROVAL_ISSUER_SA default")
+    local, sep, _domain = deploy_src[start + len(key):].partition("@")
+    if not sep or not local:
+        fail("issuer SA default must be an email")
+    return local
+
+
 def _now() -> datetime:
     return datetime(2026, 9, 16, 12, 0, 0, tzinfo=timezone.utc)
 
@@ -374,6 +386,26 @@ def main() -> int:
         fail("issuer must deploy with Cloud Run IAM (no allow-unauthenticated)")
     if "VELVET_INSTAGRAM_MCP_BEARER_TOKEN" in issuer_deploy and "Do NOT mount" not in issuer_deploy:
         fail("issuer deploy must not mount MCP bearer")
+    if "DELIVERY_APPROVAL_ISSUER_SERVICE:-velvet-delivery-approval-issuer}" not in issuer_deploy:
+        fail("Cloud Run SERVICE name must remain velvet-delivery-approval-issuer")
+    expected_sa = "velvet-delivery-issuer@${PROJECT}.iam.gserviceaccount.com"
+    if f"DELIVERY_APPROVAL_ISSUER_SA:-{expected_sa}" not in issuer_deploy:
+        fail("issuer SA default must be velvet-delivery-issuer@PROJECT.iam.gserviceaccount.com")
+    sa_id = _default_issuer_sa_local(issuer_deploy)
+    if sa_id != "velvet-delivery-issuer":
+        fail(f"issuer SA default account ID must be velvet-delivery-issuer, got {sa_id}")
+    if not (6 <= len(sa_id) <= 30):
+        fail(f"issuer SA account ID length {len(sa_id)} is outside IAM 6-30")
+    if not sa_id[0].isalpha() or not all(ch.islower() or ch.isdigit() or ch == "-" for ch in sa_id):
+        fail("issuer SA account ID must be lowercase letters, digits, and hyphens")
+    if "velvet-delivery-approval-issuer@" in issuer_deploy:
+        fail("issuer deploy must not default the 31-character SA account ID")
+    operator_setup = (ROOT / "packages/vfigos/approval/OPERATOR-SETUP.md").read_text(encoding="utf-8")
+    documented_sa = "velvet-delivery-issuer@instamcp.iam.gserviceaccount.com"
+    if documented_sa not in operator_setup:
+        fail("OPERATOR-SETUP must document velvet-delivery-issuer@instamcp.iam.gserviceaccount.com")
+    if "velvet-delivery-approval-issuer@" in operator_setup:
+        fail("OPERATOR-SETUP must not document the rejected 31-character issuer SA ID")
     http_issuer = (ROOT / "packages/vfigos/approval/issuer/http_issuer.py").read_text(encoding="utf-8")
     for needle in ("fastmcp", "INSTAGRAM_MCP_ACCESS_TOKEN", "/mcp"):
         # isolation check references ACCESS_TOKEN as forbidden — OK

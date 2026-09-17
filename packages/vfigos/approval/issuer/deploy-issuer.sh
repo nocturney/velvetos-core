@@ -12,7 +12,9 @@ fi
 REGION="${GCP_REGION:-me-west1}"
 SERVICE="${DELIVERY_APPROVAL_ISSUER_SERVICE:-velvet-delivery-approval-issuer}"
 IMAGE="${DELIVERY_APPROVAL_ISSUER_IMAGE:-gcr.io/${PROJECT}/${SERVICE}:v1}"
-SA_EMAIL="${DELIVERY_APPROVAL_ISSUER_SA:-velvet-delivery-approval-issuer@${PROJECT}.iam.gserviceaccount.com}"
+# IAM account IDs must be 6-30 characters. Cloud Run SERVICE stays
+# velvet-delivery-approval-issuer; the SA account ID is shorter.
+SA_EMAIL="${DELIVERY_APPROVAL_ISSUER_SA:-velvet-delivery-issuer@${PROJECT}.iam.gserviceaccount.com}"
 REPO_ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
 
 PRIVATE_SECRET="${GSM_DELIVERY_APPROVAL_PRIVATE_SECRET:-velvet-delivery-approval-ed25519-private}"

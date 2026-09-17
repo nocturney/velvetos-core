@@ -28,7 +28,7 @@ Until then report: **`NEEDS_OPERATOR_SETUP`**.
 
 ## Resources (project `instamcp`, region `me-west1`)
 
-1. Service account: `velvet-delivery-approval-issuer@instamcp.iam.gserviceaccount.com`
+1. Service account: `velvet-delivery-issuer@instamcp.iam.gserviceaccount.com` (account ID `velvet-delivery-issuer`; IAM 6-30 characters; not the Cloud Run service name)
 2. GSM secrets (issuer SA accessor only):
    - `velvet-delivery-approval-ed25519-private` → `VELVET_DELIVERY_APPROVAL_PRIVATE_KEY_B64`
    - `velvet-delivery-approval-key-id` → `VELVET_DELIVERY_APPROVAL_KEY_ID`
