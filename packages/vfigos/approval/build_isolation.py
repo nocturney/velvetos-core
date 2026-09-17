@@ -8,6 +8,7 @@ never reads secret values or prints identity/access tokens.
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import subprocess
@@ -27,16 +28,16 @@ SENSITIVE_PERMISSIONS = frozenset(
     {
         "run.routes.invoke",
         "run.services.setIamPolicy",
+        "resourcemanager.projects.setIamPolicy",
+        "secretmanager.secrets.setIamPolicy",
         "secretmanager.versions.access",
+        "iam.serviceAccounts.setIamPolicy",
         "iam.serviceAccounts.actAs",
         "iam.serviceAccounts.getAccessToken",
         "iam.serviceAccounts.getOpenIdToken",
     }
 )
 _EMAIL_RE = re.compile(r"[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+\.gserviceaccount\.com")
-_SA_KEY = r'(?:serviceAccount|"serviceAccount"|\'serviceAccount\')'
-_SA_LINE_RE = re.compile(rf"^\s*{_SA_KEY}\s*:\s*(\S+)\s*$")
-_SA_ANY_RE = re.compile(rf"(?<![A-Za-z0-9_-]){_SA_KEY}\s*:")
 Troubleshoot = Callable[[str, str, str], tuple[str, str]]
 
 
@@ -77,25 +78,39 @@ def parse_project_number(text: str) -> str:
     if not value.isdigit():
         raise IsolationError("GCP project number could not be resolved")
     return value
+def _unique_json_object(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    result: dict[str, object] = {}
+    for key, value in pairs:
+        if key in result:
+            raise IsolationError(f"Cloud Build JSON contains duplicate key {key!r}")
+        result[key] = value
+    return result
+
+
 def cloudbuild_service_accounts(text: str) -> list[str]:
-    found: list[str] = []
-    for raw in (text or "").splitlines():
-        line = raw.split("#", 1)[0]
-        match = _SA_LINE_RE.match(line)
-        if not match:
-            if _SA_ANY_RE.search(line):
-                raise IsolationError(
-                    "Cloud Build serviceAccount syntax is not a supported concrete field"
-                )
-            continue
-        value = match.group(1).strip("\"'")
-        if "/serviceAccounts/" in value:
-            value = value.rsplit("/serviceAccounts/", 1)[1]
-        if not _EMAIL_RE.fullmatch(value):
-            raise IsolationError("Cloud Build serviceAccount override is not a concrete email")
-        if value not in found:
-            found.append(value)
-    return found
+    """Parse the Cloud Build config structurally; deploy configs are strict JSON."""
+    try:
+        config = json.loads(text or "", object_pairs_hook=_unique_json_object)
+    except IsolationError:
+        raise
+    except (json.JSONDecodeError, TypeError) as exc:
+        raise IsolationError("Cloud Build config must be valid strict JSON") from exc
+    if not isinstance(config, dict):
+        raise IsolationError("Cloud Build config root must be a JSON object")
+
+    value = config.get("serviceAccount")
+    if value is None:
+        return []
+    if not isinstance(value, str):
+        raise IsolationError("Cloud Build serviceAccount override must be a string")
+    concrete = value.strip()
+    if "/serviceAccounts/" in concrete:
+        prefix, concrete = concrete.rsplit("/serviceAccounts/", 1)
+        if not prefix.startswith("projects/"):
+            raise IsolationError("Cloud Build serviceAccount resource is malformed")
+    if not _EMAIL_RE.fullmatch(concrete):
+        raise IsolationError("Cloud Build serviceAccount override is not a concrete email")
+    return [concrete]
 
 
 def signer_email(project: str) -> str:
@@ -119,22 +134,38 @@ def build_probe_plan(
         f"//run.googleapis.com/projects/{project}/locations/{region}/services/"
         f"{ISSUER_SERVICE}"
     )
+    project_resource = f"//cloudresourcemanager.googleapis.com/projects/{project}"
     probes: list[tuple[str, str, str]] = [
         (issuer, "run.routes.invoke", "issuer invoke"),
         (issuer, "run.services.setIamPolicy", "issuer setIamPolicy"),
+        (
+            project_resource,
+            "resourcemanager.projects.setIamPolicy",
+            "project setIamPolicy",
+        ),
     ]
     for secret in (SIGNING_SECRET, *INSTAGRAM_SECRETS):
-        probes.append(
-            (
-                f"//secretmanager.googleapis.com/projects/{project_number}/secrets/"
-                f"{secret}/versions/latest",
-                "secretmanager.versions.access",
-                f"secret access {secret}",
-            )
+        secret_resource = (
+            f"//secretmanager.googleapis.com/projects/{project_number}/secrets/{secret}"
+        )
+        probes.extend(
+            [
+                (
+                    f"{secret_resource}/versions/latest",
+                    "secretmanager.versions.access",
+                    f"secret access {secret}",
+                ),
+                (
+                    secret_resource,
+                    "secretmanager.secrets.setIamPolicy",
+                    f"secret setIamPolicy {secret}",
+                ),
+            ]
         )
     for email in protected_identities(project):
         resource = f"//iam.googleapis.com/projects/{project}/serviceAccounts/{email}"
         for permission, label in (
+            ("iam.serviceAccounts.setIamPolicy", "service account setIamPolicy"),
             ("iam.serviceAccounts.actAs", "actAs"),
             ("iam.serviceAccounts.getAccessToken", "access token"),
             ("iam.serviceAccounts.getOpenIdToken", "OIDC token"),
@@ -149,19 +180,33 @@ def mutation_runtime_probe_plan(
         f"//run.googleapis.com/projects/{project}/locations/{region}/services/"
         f"{ISSUER_SERVICE}"
     )
+    project_resource = f"//cloudresourcemanager.googleapis.com/projects/{project}"
+    signing_secret_resource = (
+        f"//secretmanager.googleapis.com/projects/{project_number}/secrets/{SIGNING_SECRET}"
+    )
     probes: list[tuple[str, str, str]] = [
         (issuer, "run.routes.invoke", "mutation runtime issuer invoke"),
         (issuer, "run.services.setIamPolicy", "mutation runtime issuer setIamPolicy"),
         (
-            f"//secretmanager.googleapis.com/projects/{project_number}/secrets/"
-            f"{SIGNING_SECRET}/versions/latest",
+            project_resource,
+            "resourcemanager.projects.setIamPolicy",
+            "mutation runtime project setIamPolicy",
+        ),
+        (
+            f"{signing_secret_resource}/versions/latest",
             "secretmanager.versions.access",
             "mutation runtime signing secret access",
+        ),
+        (
+            signing_secret_resource,
+            "secretmanager.secrets.setIamPolicy",
+            "mutation runtime signing secret setIamPolicy",
         ),
     ]
     for email in (signer_email(project), owner_invoker_email(project)):
         resource = f"//iam.googleapis.com/projects/{project}/serviceAccounts/{email}"
         for permission, label in (
+            ("iam.serviceAccounts.setIamPolicy", "service account setIamPolicy"),
             ("iam.serviceAccounts.actAs", "actAs"),
             ("iam.serviceAccounts.getAccessToken", "access token"),
             ("iam.serviceAccounts.getOpenIdToken", "OIDC token"),

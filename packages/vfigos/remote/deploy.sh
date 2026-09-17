@@ -17,7 +17,7 @@ MUTATION_SERVICE_ACCOUNT="${MUTATION_SERVICE_ACCOUNT:-velvet-instagram-mcp-runti
 IMAGE="${CLOUD_RUN_IMAGE:-gcr.io/${PROJECT}/${SERVICE}:delivery-approval-gate}"
 REMOTE_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "${REMOTE_DIR}/../../.." && pwd)"
-BUILD_CONFIG="${REPO_ROOT}/packages/vfigos/remote/cloudbuild.yaml"
+BUILD_CONFIG="${REPO_ROOT}/packages/vfigos/remote/cloudbuild.json"
 
 if ! command -v gcloud >/dev/null 2>&1; then
   echo "gcloud not found. Install Google Cloud SDK and authenticate first." >&2

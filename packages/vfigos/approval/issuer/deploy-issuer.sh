@@ -15,7 +15,7 @@ IMAGE="${DELIVERY_APPROVAL_ISSUER_IMAGE:-gcr.io/${PROJECT}/${SERVICE}:v1}"
 EXPECTED_ISSUER_SA="velvet-delivery-issuer@${PROJECT}.iam.gserviceaccount.com"
 SA_EMAIL="${DELIVERY_APPROVAL_ISSUER_SA:-velvet-delivery-issuer@${PROJECT}.iam.gserviceaccount.com}"
 REPO_ROOT="$(cd "$(dirname "$0")/../../../.." && pwd)"
-BUILD_CONFIG="${REPO_ROOT}/packages/vfigos/approval/issuer/cloudbuild.yaml"
+BUILD_CONFIG="${REPO_ROOT}/packages/vfigos/approval/issuer/cloudbuild.json"
 
 PRIVATE_SECRET="${GSM_DELIVERY_APPROVAL_PRIVATE_SECRET:-velvet-delivery-approval-ed25519-private}"
 KEY_ID_SECRET="${GSM_DELIVERY_APPROVAL_KEY_ID_SECRET:-velvet-delivery-approval-key-id}"

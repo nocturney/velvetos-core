@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # Build context MUST be the repository root:
-#   gcloud builds submit . --config packages/vfigos/approval/issuer/cloudbuild.yaml
+#   gcloud builds submit . --config packages/vfigos/approval/issuer/cloudbuild.json
 #   or: docker build -f packages/vfigos/approval/issuer/Dockerfile .
 FROM python:3.12-slim
 

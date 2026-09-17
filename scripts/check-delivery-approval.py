@@ -611,30 +611,35 @@ def main() -> int:
         else:
             fail(f"project-number parser accepted {bad_number!r}")
     override = "privileged@example.iam.gserviceaccount.com"
-    if isolation.cloudbuild_service_accounts(f"steps: []\nserviceAccount: {override}\n") != [override]:
-        fail("build isolation must extract a concrete Cloud Build serviceAccount override")
     full_override = f"projects/instamcp/serviceAccounts/{override}"
-    if isolation.cloudbuild_service_accounts(f"serviceAccount: {full_override}\n") != [override]:
+    direct_json = json.dumps({"steps": [], "serviceAccount": override})
+    if isolation.cloudbuild_service_accounts(direct_json) != [override]:
+        fail("build isolation must extract a concrete Cloud Build serviceAccount override")
+    resource_json = json.dumps({"serviceAccount": full_override})
+    if isolation.cloudbuild_service_accounts(resource_json) != [override]:
         fail("build isolation must normalize a full Cloud Build serviceAccount resource")
-    for quoted in (
-        f'"serviceAccount": {full_override}\n',
-        f"'serviceAccount': '{full_override}'\n",
-    ):
-        if isolation.cloudbuild_service_accounts(quoted) != [override]:
-            fail("build isolation must parse quoted Cloud Build serviceAccount keys")
-    for evasive in (
+    escaped_key_json = (
+        '{"steps": [], "service\\u0041ccount": '
+        + json.dumps(full_override)
+        + "}"
+    )
+    if isolation.cloudbuild_service_accounts(escaped_key_json) != [override]:
+        fail("build isolation must structurally decode escaped JSON serviceAccount keys")
+    for invalid_config in (
+        f"steps: []\nserviceAccount: {override}\n",
         f"{{serviceAccount: {override}}}\n",
         f"options: {{serviceAccount: {override}}}\n",
-        f'{{"serviceAccount": "{full_override}"}}\n',
+        '{"serviceAccount": "one@example.iam.gserviceaccount.com", '
+        '"service\\u0041ccount": "two@example.iam.gserviceaccount.com"}',
     ):
         try:
-            isolation.cloudbuild_service_accounts(evasive)
+            isolation.cloudbuild_service_accounts(invalid_config)
         except isolation.IsolationError:
             pass
         else:
-            fail("build isolation must fail closed on unparsed serviceAccount syntax")
+            fail("build isolation must reject non-JSON or duplicate Cloud Build config keys")
     try:
-        isolation.cloudbuild_service_accounts("serviceAccount: ${_BUILD_SA}\n")
+        isolation.cloudbuild_service_accounts(json.dumps({"serviceAccount": "${_BUILD_SA}"}))
     except isolation.IsolationError:
         pass
     else:
@@ -643,7 +648,10 @@ def main() -> int:
     required_permissions = {
         "run.routes.invoke",
         "run.services.setIamPolicy",
+        "resourcemanager.projects.setIamPolicy",
+        "secretmanager.secrets.setIamPolicy",
         "secretmanager.versions.access",
+        "iam.serviceAccounts.setIamPolicy",
         "iam.serviceAccounts.actAs",
         "iam.serviceAccounts.getAccessToken",
         "iam.serviceAccounts.getOpenIdToken",
@@ -652,12 +660,28 @@ def main() -> int:
         fail("build isolation probe plan is missing a required permission")
     if not any("projects/123456789/secrets/velvet-delivery-approval-ed25519-private/versions/latest" in item[0] for item in plan):
         fail("build isolation must use the Secret Manager version full resource name")
+    if not any(
+        item[0] == "//cloudresourcemanager.googleapis.com/projects/instamcp"
+        and item[1] == "resourcemanager.projects.setIamPolicy"
+        for item in plan
+    ):
+        fail("build isolation must deny project IAM policy mutation")
+    if not any(item[1] == "secretmanager.secrets.setIamPolicy" for item in plan):
+        fail("build isolation must deny secret IAM policy mutation")
+    if not any(item[1] == "iam.serviceAccounts.setIamPolicy" for item in plan):
+        fail("build isolation must deny protected service-account IAM mutation")
     mutation_plan = isolation.mutation_runtime_probe_plan("instamcp", "me-west1", "123456789")
     mutation_principal = "velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com"
     if not any(item[1] == "run.routes.invoke" for item in mutation_plan):
         fail("mutation runtime must be probed for issuer invocation denial")
     if not any("velvet-delivery-approval-ed25519-private" in item[0] for item in mutation_plan):
         fail("mutation runtime must be probed for signing-secret denial")
+    if not any(item[1] == "resourcemanager.projects.setIamPolicy" for item in mutation_plan):
+        fail("mutation runtime must be denied project IAM policy mutation")
+    if not any(item[1] == "secretmanager.secrets.setIamPolicy" for item in mutation_plan):
+        fail("mutation runtime must be denied signing-secret IAM mutation")
+    if not any(item[1] == "iam.serviceAccounts.setIamPolicy" for item in mutation_plan):
+        fail("mutation runtime must be denied signer/owner-invoker IAM mutation")
     if any(any(secret in item[0] for secret in isolation.INSTAGRAM_SECRETS) for item in mutation_plan):
         fail("mutation runtime isolation probe must not deny its intended Instagram secret reads")
     calls: list[tuple[str, str, str]] = []
@@ -665,8 +689,8 @@ def main() -> int:
         calls.append((resource, principal_email, permission))
         return denied
     with tempfile.TemporaryDirectory() as tmp:
-        config = Path(tmp) / "cloudbuild.yaml"
-        config.write_text("steps:\n  - name: safe\n", encoding="utf-8")
+        config = Path(tmp) / "cloudbuild.json"
+        config.write_text(json.dumps({"steps": [{"name": "safe"}]}), encoding="utf-8")
         build_identity = "123456789@cloudbuild.gserviceaccount.com"
         _principal, probe_count = isolation.assert_build_identity_isolated(
             "instamcp", "me-west1", config,
@@ -680,7 +704,7 @@ def main() -> int:
         if mutation_principal not in probed_principals:
             fail("dedicated mutation runtime must be probed as an effective-IAM principal")
         calls.clear()
-        config.write_text(f"steps: []\nserviceAccount: {override}\n", encoding="utf-8")
+        config.write_text(json.dumps({"steps": [], "serviceAccount": override}), encoding="utf-8")
         isolation.assert_build_identity_isolated(
             "instamcp", "me-west1", config,
             principal=build_identity, project_number="123456789",
@@ -706,7 +730,7 @@ def main() -> int:
             if permission == "run.services.setIamPolicy":
                 return ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO")
             return denied
-        config.write_text("steps:\n  - name: safe\n", encoding="utf-8")
+        config.write_text(json.dumps({"steps": [{"name": "safe"}]}), encoding="utf-8")
         try:
             isolation.assert_build_identity_isolated(
                 "instamcp", "me-west1", config,
@@ -716,7 +740,52 @@ def main() -> int:
         except isolation.IsolationError:
             pass
         else:
-            fail("granted setIamPolicy must fail the isolation proof closed")
+            fail("granted issuer setIamPolicy must fail the isolation proof closed")
+
+        def _project_iam_granted(resource: str, principal_email: str, permission: str):
+            if permission == "resourcemanager.projects.setIamPolicy":
+                return ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO")
+            return denied
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp", "me-west1", config,
+                principal=build_identity, project_number="123456789",
+                troubleshoot=_project_iam_granted,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("project setIamPolicy grant must fail the isolation proof closed")
+
+        def _secret_policy_granted(resource: str, principal_email: str, permission: str):
+            if permission == "secretmanager.secrets.setIamPolicy":
+                return ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO")
+            return denied
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp", "me-west1", config,
+                principal=build_identity, project_number="123456789",
+                troubleshoot=_secret_policy_granted,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("secret setIamPolicy grant must fail the isolation proof closed")
+
+        def _service_account_policy_granted(resource: str, principal_email: str, permission: str):
+            if permission == "iam.serviceAccounts.setIamPolicy":
+                return ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO")
+            return denied
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp", "me-west1", config,
+                principal=build_identity, project_number="123456789",
+                troubleshoot=_service_account_policy_granted,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("service-account setIamPolicy grant must fail the isolation proof closed")
 
         def _runtime_granted(resource: str, principal_email: str, permission: str):
             if principal_email == mutation_principal and permission == "run.routes.invoke":
