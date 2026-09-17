@@ -65,8 +65,13 @@
     "stagingVersion": "v4.31.0",
     "stagingBinarySha256": "680acc374acf277e3b2fe185488f9a5ab8878ec953b94e0254355131fb3cf508",
     "stagingLocalUrl": "http://127.0.0.1:18080",
-    "stagingHealth": "pass",
-    "stagingReadiness": "pass_database_ok",
+    "stagingHealth": "last_known_pass",
+    "stagingReadiness": "last_known_pass_database_ok",
+    "freshProbe": {
+      "observedAt": "2026-09-17T07:37:39+03:00",
+      "status": "BLOCKED_NO_DEVICE",
+      "detail": "Windows staging worker was unavailable to the authorized remote tool during this review; runtime was not mutated or freshly smoke-tested."
+    },
     "publicHttpsReady": false,
     "providerOAuthReady": false,
     "blockedBy": "public HTTPS origin/media URL and OpenPost Meta provider app credentials/callback are required before Instagram provider connection and publish smoke; v4.34.2 staging upgrade requires backup plus migration/smoke; authenticated Instagram writes remain blocked while delivery-approval live evidence is NEEDS_OPERATOR_SETUP",
