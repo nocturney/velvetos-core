@@ -1,11 +1,11 @@
 {
   "task_id": "dedicated-instagram-mutation-runtime-sa",
-  "status": "candidate_ready_for_review",
-  "component_state": "Idle",
+  "status": "blocked",
+  "component_state": "Blocked",
   "pack": "vfigos",
   "branch": "fix/dedicated-instagram-mutation-runtime-sa",
   "base_main": "552fd415ef58de23fe9ca5add9ec0b6dfc0d654b",
-  "implementation_head": "5360e289972c209e81459379a0e074738b76660f",
+  "implementation_head": "187c9e2a31ed23728e46fcfd2366fbc4d6a4668f",
   "claims": {
     "LIVE": false,
     "OWNER_AUTH_VERIFIED": false,
@@ -15,19 +15,20 @@
   },
   "evidence": {
     "targeted_local_postflight": "PASS",
-    "mutation_build_iam_preflight": "PASS 15/15 deny",
-    "issuer_build_iam_preflight": "PASS 15/15 deny",
-    "check_all": "PASS GitHub Actions run 35227720690 on 5360e289972c209e81459379a0e074738b76660f"
+    "resource_override_smoke": "PASS 8/8 canonical selectors fail closed before build",
+    "check_all": "PASS GitHub Actions run 35233486531 on 187c9e2a31ed23728e46fcfd2366fbc4d6a4668f",
+    "exact_head_codex_review": "BLOCKED Codex code-review usage limit"
   },
   "completed_steps": [
     "Pinned mutation and issuer deploys to exact dedicated service accounts before Cloud Build",
     "Added fail-closed Policy Troubleshooter effective-IAM preflight",
     "Probed default build identity plus concrete Cloud Build serviceAccount overrides",
+    "Pinned mutation/issuer service names, signer/key-id secrets, Instagram runtime secrets, and replay bucket to canonical production resources",
     "Used a non-comma gcloud delimiter for comma-separated CAS hosts",
     "Re-minted the delegated audience-bound owner-invoker token for issuance smoke",
-    "Rebased candidate onto current main and reran targeted postflight plus live IAM probes"
+    "Passed exact implementation-head Linux check-all and commission isolation"
   ],
-  "next_step": "Obtain fresh code and security reviews on the exact final PR head; if clean, merge with expected-head protection. Deploy and owner-auth verification remain separate.",
-  "latest_observation": "Linux check-all and commission isolation passed on rebased implementation head 5360e289; no owner-auth or full issue-to-mutate-to-replay proof exists yet.",
+  "next_step": "Obtain an independent code/security review on the exact final PR head after Codex review capacity is available; if clean, rerun final CI as needed and merge with expected-head protection. Deploy and owner-auth verification remain separate.",
+  "latest_observation": "Implementation head 187c9e2 passed Linux check-all and targeted fail-closed override tests. Exact-head Codex review could not start because the code-review usage limit was reached; merge remains blocked. No owner-auth or full issue-to-mutate-to-replay proof exists yet.",
   "last_updated": "2026-09-17"
 }
