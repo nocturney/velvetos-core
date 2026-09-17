@@ -19,7 +19,7 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 
 צמיחת עוקבים → פנייה (לא מרדף מספר): `hq/FOLLOWER-GROWTH.md`.  
 משפך פרופיל→הודעת Instagram: `hq/PROFILE-TO-WHATSAPP.md` (שם היסטורי; תוכן = PUBLIC_CURRENT_CTA). תהליך-קצר = עקבו; סיפור-מוצר = הודעה.  
-לולאת בוקר: `python3 scripts/vfops_loop.py brief` · מסירה: `HANDOFF-he.md` (G004).
+לולאת בוקר: `python3 scripts/vfops_loop.py brief` · מסירה: `HANDOFF-he.md` לפי `LEDGER.md` וה־current publication route; G003/G004 ישנים הם provenance בלבד עד qualification חדש.
 
 ## מומחה — Social Booster
 

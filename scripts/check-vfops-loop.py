@@ -65,20 +65,20 @@ def main() -> None:
     for needle in ("vfops_loop.py", "07:00", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער", "PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור"):
         if needle not in orch:
             fail(f"ORCHESTRA.md must mention {needle}")
-    if "אין סטוריז" not in orch and "אין סטוריז ואין פיד" not in orch:
-        fail("ORCHESTRA.md must hard-gate Stories without Canva/vfcovers")
+    if "VF_PUBLICATION_ROUTE_V1" not in orch or "Canva/vfcanva are forbidden" not in orch:
+        fail("ORCHESTRA.md must bind current VF publication route and forbid Canva/vfcanva")
     send = (ROOT / "constitution" / "SEND.md").read_text()
     for needle in ("PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור", "החלטה"):
         if needle not in send:
             fail(f"SEND.md must mention Christian-lock needle {needle}")
     for path, needles in (
         (INSTANCE, ("רף סוכנות", "חצי-פק", "עברית", "PREFLIGHT.md")),
-        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "Canva MCP", "G004-STORIES-FIX", "PREFLIGHT.md", "רמה נמוכה")),
-        (EDIT, ("JPEG גולמי", "Canva", "vfcovers", "G004-STORIES-FIX", "PREFLIGHT.md", "VOICE.md")),
+        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "VF_PUBLICATION_ROUTE_V1", "Canva/vfcanva are forbidden", "G004-STORIES-FIX", "PREFLIGHT.md", "רמה נמוכה")),
+        (EDIT, ("JPEG גולמי", "VF_PUBLICATION_ROUTE_V1", "publicationRoute.deniedTools", "source-grounded", "publication evidence", "G004-STORIES-FIX", "PREFLIGHT.md", "VOICE.md")),
         (PREFLIGHT, ("VOICE.md", "VOICE-RESEARCH", "VOICE-CHART", "ציון עצמי", "נכשל-סגור", "2–3", "CONTENT-RUBRIC")),
         (CAL_OPS, ("לא שואלים", "Google Calendar", "Instagram")),
-        (STORIES, ("נייבי", "סיפור-מוצר", "הודעה", "Canva MCP")),
-        (STORIES_FIX, ("סיפור-מוצר", "הודעה", "DAHUaUo3bAk", "X ₪")),
+        (STORIES, ("VF_PUBLICATION_ROUTE_V1", "Canva/vfcanva אסורים", "source-grounded", "publication evidence", "סיפור-מוצר", "הודעה")),
+        (STORIES_FIX, ("LEGACY / STALE", "audit only", "VF_PUBLICATION_ROUTE_V1", "סיפור-מוצר", "הודעה")),
         (GAP, ("vfcopy", "vfcanva", "vfcovers", "פער", "7.9")),
     ):
         text = path.read_text()
@@ -93,6 +93,16 @@ def main() -> None:
                 if not any(n in text for n in ("הודעה", "הודעת", "אינסטגרם", "Instagram")):
                     fail(f"{path.name} still requires WhatsApp phone as public CTA")
 
+    stories_active = STORIES.read_text(encoding="utf-8").split("## LEGACY / provenance only", 1)[0]
+    for forbidden in ("edit_url", "compose_slides.py", "studio/render.py", "נגזרת Canva/vfcovers", "failover Canva"):
+        if forbidden in stories_active:
+            fail(f"STORIES.md active route still contains denied provider directive {forbidden!r}")
+
+    handoff_active = HANDOFF.read_text(encoding="utf-8").split("> LEGACY / provenance only", 1)[0]
+    for forbidden in ("Canva MCP או vfcovers/vfcanva", "אחרי Canva/vfcovers", "עד Canva/vfcovers"):
+        if forbidden in handoff_active:
+            fail(f"HANDOFF-he.md active route still contains legacy provider directive {forbidden!r}")
+
     if "vfops_loop.py" not in ROUTINE.read_text():
         fail("ROUTINE.md must run vfops_loop.py at 07:00")
     if "vfops_loop.py" not in HANDOFF.read_text():
@@ -102,8 +112,8 @@ def main() -> None:
         fail("HANDOFF-he.md must open G004 pack")
     if "G004-STORIES-FIX.md" not in handoff:
         fail("HANDOFF-he.md must point Stories at G004-STORIES-FIX.md")
-    if "אין סטוריז בלי מעבר" not in handoff:
-        fail("HANDOFF-he.md must hard-gate Stories without Canva/vfcovers")
+    if "VF_PUBLICATION_ROUTE_V1" not in handoff or "Canva/vfcanva אסורים" not in handoff:
+        fail("HANDOFF-he.md must bind current VF publication route and forbid Canva/vfcanva")
     if "אל תפנה לכריסטיאן על מדדים חלשים" not in handoff:
         fail("HANDOFF-he.md must lock אל תפנה לכריסטיאן על מדדים חלשים")
     if "PREFLIGHT.md" not in handoff or "preflight/G004.md" not in handoff:
@@ -282,6 +292,43 @@ def main() -> None:
     # Fixture isolation: do not pollute live consumer-runs during sensor
     import tempfile
     from pathlib import Path as P
+
+    with tempfile.TemporaryDirectory(prefix="vfops-freshness-") as fixture_name:
+        fixture = P(fixture_name)
+        week = fixture / "week.md"
+        old_week = loop.BIZ_WEEK
+        loop.BIZ_WEEK = week
+        try:
+            block = "## בלוק לבריף\n```\nSHOULD_NOT_SURFACE\n```\n"
+            week.write_text(block, encoding="utf-8")
+            if "ללא תאריך עדכון תקין" not in loop.biz_week_line("2026-09-17"):
+                fail("biz_week_line must fail closed when update date is missing")
+            week.write_text("עודכן: **2026-09-18**\n" + block, encoding="utf-8")
+            if "מתוארך לעתיד" not in loop.biz_week_line("2026-09-17"):
+                fail("biz_week_line must fail closed on future update date")
+            week.write_text("עודכן: **2026-13-40**\n" + block, encoding="utf-8")
+            if "תאריך עדכון לא תקין" not in loop.biz_week_line("2026-09-17"):
+                fail("biz_week_line must fail closed on invalid update date")
+            week.write_text("עודכן: **2026-09-17**\n" + block.replace("SHOULD_NOT_SURFACE", "FRESH_WEEK"), encoding="utf-8")
+            if loop.biz_week_line("2026-09-17") != "FRESH_WEEK":
+                fail("biz_week_line must allow a valid current dated block")
+        finally:
+            loop.BIZ_WEEK = old_week
+
+    with tempfile.TemporaryDirectory(prefix="vfops-ledger-") as fixture_name:
+        ledger = P(fixture_name) / "LEDGER.md"
+        ledger.write_text("| **G003** | x | KEEP_LIVE_BASELINE |\n| **G004** | x | stale |\n| **G005** | x | HISTORICAL_NOT_LIVE |\n", encoding="utf-8")
+        old_ledger = loop.GROWTH_LEDGER
+        loop.GROWTH_LEDGER = ledger
+        try:
+            statuses = {row[0]: row[2] for row in loop.captions_rows()}
+            if statuses.get("G003") != "חי · KEEP_LIVE_BASELINE":
+                fail("captions_rows must derive G003 live state from current growth ledger")
+            if not statuses.get("G004-STORIES-FIX", "").startswith("STALE"):
+                fail("captions_rows must derive G004 stale state from current growth ledger")
+        finally:
+            loop.GROWTH_LEDGER = old_ledger
+
     tmp = tempfile.TemporaryDirectory()
     fake_state = P(tmp.name) / "consumer-runs.jsonl"
     old_state = loop.CONSUMER_STATE
@@ -303,6 +350,14 @@ def main() -> None:
         blob = json.dumps(brief, ensure_ascii=False)
         if "velvetos-modules" not in blob and "צרכנים" not in blob:
             fail("assemble brief must surface consumer results")
+        if "VOICE + Canva/vfcovers" in blob or "Canva MCP או vfcovers/vfcanva" in blob:
+            fail("assemble brief must not emit legacy Canva/vfcanva publication route")
+        if "Canva/vfcanva אסורים בפרסום VF" not in blob:
+            fail("assemble brief must surface current no-Canva VF publication route")
+        if "מקור vfbiz/out/week.md מיושן" not in blob:
+            fail("assemble brief must label stale weekly business source instead of presenting it as current")
+        if "growth-brief מיושן" not in blob:
+            fail("assemble brief must label stale growth-brief source instead of presenting it as current")
         # check path must not call run_daily_consumers — ensure state line count stable across check
         before = fake_state.read_text(encoding="utf-8") if fake_state.is_file() else ""
         proc2 = subprocess.run(

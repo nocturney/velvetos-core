@@ -99,53 +99,61 @@ def main() -> None:
     ):
         if needle not in ledger:
             fail(f"LEDGER.md missing {needle!r}")
+    g003_ledger = next((line for line in ledger.splitlines() if "**G003**" in line), "")
+    g004_ledger = next((line for line in ledger.splitlines() if "**G004**" in line), "")
+    g005_ledger = next((line for line in ledger.splitlines() if "**G005**" in line), "")
+    if "KEEP_LIVE_BASELINE" not in g003_ledger:
+        fail("LEDGER.md must make G003 current KEEP_LIVE_BASELINE")
+    if "stale" not in g004_ledger.casefold() or "reuse" not in g004_ledger.casefold():
+        fail("LEDGER.md must keep G004 stale and blocked from automatic reuse")
+    if "HISTORICAL_NOT_LIVE" not in g005_ledger:
+        fail("LEDGER.md must mark G005 HISTORICAL_NOT_LIVE")
 
     handoff = HANDOFF.read_text()
+    if "> LEGACY / provenance only" not in handoff:
+        fail("HANDOFF-he.md must explicitly fence historical G003/G004 instructions")
+    handoff_active = handoff.split("> LEGACY / provenance only", 1)[0]
     for needle in (
+        "VF_PUBLICATION_ROUTE_V1",
+        "PUBLICATION-PREP-EXECUTION.md",
+        "publicationRoute",
+        "Product Truth",
+        "Creative Director",
+        "source-grounded edit",
+        "publication evidence",
+        "exact-final QA",
         "instagram.com",
-        "חסום",
-        "16:00",
-        "12:00",
-        "20:30",
-        "לא סוויט",
-        "שער עריכה",
         "JPEG גולמי",
-        "לא שואלים משבצת",
         "Google Calendar",
-        "G004-STORIES-FIX",
         "PREFLIGHT.md",
-        "preflight/G004.md",
         "אל תפנה לכריסטיאן על מדדים חלשים",
     ):
-        if needle not in handoff:
-            fail(f"HANDOFF-he.md missing {needle!r}")
-    if not any(n in handoff for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA", "שלחו לנו הודעה")):
-        fail("HANDOFF-he.md must include Instagram-message CTA (not WhatsApp phone)")
-    if "CTA" in handoff and "050-2517000" in handoff:
-        # phone may appear as BUSINESS_CONTACT_RECORD / disabled — not as required public CTA line
-        cta_lines = [ln for ln in handoff.splitlines() if "CTA" in ln]
-        if any("050-2517000" in ln and "BUSINESS" not in ln and "רשומת" not in ln and "disabled" not in ln.lower() for ln in cta_lines):
-            if not any("הודעה" in ln or "אינסטגרם" in ln for ln in cta_lines):
-                fail("HANDOFF-he.md public CTA must be Instagram-message, not WhatsApp phone")
-    if "שלחו DM" in handoff and "לא «שלחו DM»" not in handoff and "בלי «שלחו DM»" not in handoff:
-        fail("HANDOFF-he.md must forbid bare שלחו DM (auto-dm tooling)")
+        if needle not in handoff_active:
+            fail(f"HANDOFF-he.md active route missing {needle!r}")
+    for forbidden in ("Canva MCP או vfcovers / vfcanva", "עד Canva/vfcovers", "Canva `DAHU"):
+        if forbidden in handoff_active:
+            fail(f"HANDOFF-he.md active route still contains legacy provider directive {forbidden!r}")
+    if not any(n in handoff_active for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA", "שלחו לנו הודעה")):
+        fail("HANDOFF-he.md active route must include Instagram-message CTA (not WhatsApp phone)")
+    if "שלחו DM" in handoff_active and "לא «שלחו DM»" not in handoff_active and "בלי «שלחו DM»" not in handoff_active:
+        fail("HANDOFF-he.md active route must forbid bare שלחו DM (auto-dm tooling)")
 
     g003 = G003.read_text()
-    for needle in ("SoccerBall", "נעול", "משובץ", "7.9.2026", "16:00", "גיבוי"):
+    for needle in ("SoccerBall", "LEGACY", "KEEP_LIVE_BASELINE", "HISTORICAL_NOT_LIVE", "LEDGER.md"):
         if needle not in g003:
-            fail(f"G003.md missing lock needle {needle!r}")
+            fail(f"G003.md missing current-status/history needle {needle!r}")
     if "חסום מדיה" in g003:
-        fail("G003.md must not stay media-blocked after the 6.9 lock")
+        fail("G003.md must not stay media-blocked after the historical lock")
 
     g004 = G004.read_text()
-    for needle in ("קטלבל", "מחזיק", "לא משקולת", "סטוריז", "קרוסלה", "kettlebells-pink", "vfcopy/G004.md"):
+    for needle in ("קטלבל", "מחזיק", "LEGACY", "STALE", "provenance only", "VF_PUBLICATION_ROUTE_V1", "LEDGER.md"):
         if needle not in g004:
-            fail(f"G004.md missing {needle!r}")
+            fail(f"G004.md missing stale/history needle {needle!r}")
 
     copy4 = COPY_G004.read_text()
-    for needle in ("מחזיק", "לא משקולת", "kettlebells-pink", "היילייטס", "הכירו", "מתאים", "VOICE.md"):
+    for needle in ("LEGACY / STALE", "audit only", "VF_PUBLICATION_ROUTE_V1", "מחזיק", "kettlebells-pink"):
         if needle not in copy4:
-            fail(f"vfcopy/G004.md missing {needle!r}")
+            fail(f"vfcopy/G004.md missing stale/history needle {needle!r}")
     if not any(n in copy4 for n in ("הודעה", "אינסטגרם", "שלחו לנו הודעה")):
         fail("vfcopy/G004.md must include Instagram-message CTA")
     if "שלחו DM" in copy4 and "לא «שלחו DM»" not in copy4 and "בלי «שלחו DM»" not in copy4:
@@ -199,7 +207,8 @@ def main() -> None:
         "נכשל-סגור",
         "רמה נמוכה",
         "אל תפנה לכריסטיאן על מדדים חלשים",
-        "Canva",
+        "VF_PUBLICATION_ROUTE_V1",
+        "Canva/vfcanva are forbidden",
         "CONTENT-RUBRIC",
         "artifact_digest",
         "PUBLIC_CURRENT_CTA",
@@ -218,25 +227,18 @@ def main() -> None:
     if not any(n in template_pf for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):
         fail("preflight/TEMPLATE.md must use Instagram-message CTA (not WhatsApp phone)")
     g004p = PREFLIGHT_G004.read_text()
-    gate_closed = "נכשל-סגור" in g004p
-    gate_open = "## שער" in g004p and "**עבור**" in g004p.split("## שער", 1)[1][:600]
-    if gate_open:
-        # Open gate requires written Canva/edit evidence — never a bare עבור.
-        for needle in (
-            "DAHUaUo3bAk",
-            "DAHUfRQMH60",
-            "g004-stories-final",
-            "EDIT-GATE",
-            "G004-STORIES-FIX",
-        ):
-            if needle not in g004p:
-                fail(f"preflight/G004.md עבור requires evidence needle {needle!r}")
-        if "נכשל-סגור" in g004p.split("## שער", 1)[1][:600]:
-            fail("preflight/G004.md gate section cannot be both עבור and נכשל-סגור")
-    elif not gate_closed:
-        fail("preflight/G004.md must stay fail-closed until the written gate passes")
+    for needle in (
+        "INCIDENT 2026-09-10",
+        "APPROVAL INVALIDATED",
+        "publish_gate: BLOCKED",
+        "approval_invalidated: true",
+        "historical-preflight-not-final-render-v2",
+        "אסור להשתמש ב־G004 כ־approvalRef לפרסום חדש",
+    ):
+        if needle not in g004p:
+            fail(f"preflight/G004.md must remain invalidated historical evidence; missing {needle!r}")
     if not any(n in g004p for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):
-        fail("preflight/G004.md must use Instagram-message CTA")
+        fail("preflight/G004.md historical record must preserve its CTA evidence")
 
     copy = COPY.read_text()
     if "מה יוצא מהמדפסת" not in copy:
@@ -258,16 +260,16 @@ def main() -> None:
         fail("ig-stories.md must lock Instagram-message CTA (not WhatsApp phone)")
     if "היילייטס" not in stories:
         fail("ig-stories.md must point CTA to Highlights")
-    for needle in ("סיפור-מוצר", "נייבי", "Canva MCP", "G004-STORIES-FIX"):
+    for needle in ("סיפור-מוצר", "VF_PUBLICATION_ROUTE_V1", "Canva/vfcanva אסורים", "publication evidence"):
         if needle not in stories:
             fail(f"ig-stories.md must mention {needle!r}")
 
     fix = STORIES_FIX.read_text()
-    for needle in ("סיפור-מוצר", "DAHUaUo3bAk", "X ₪", "הכירו", "מחזיק"):
+    for needle in ("LEGACY / STALE", "audit only", "VF_PUBLICATION_ROUTE_V1", "סיפור-מוצר", "מחזיק"):
         if needle not in fix:
-            fail(f"G004-STORIES-FIX.md missing {needle!r}")
+            fail(f"G004-STORIES-FIX.md missing stale/history needle {needle!r}")
     if not any(n in fix for n in ("הודעה", "אינסטגרם", "שלחו לנו הודעה")):
-        fail("G004-STORIES-FIX.md must include Instagram-message CTA")
+        fail("G004-STORIES-FIX.md historical record must preserve Instagram-message CTA evidence")
     if "שלחו DM" in fix and "לא «שלחו DM»" not in fix and "בלי «שלחו DM»" not in fix:
         fail("G004-STORIES-FIX.md must forbid bare שלחו DM")
     if "חמש ורודות" in fix or "איפה הטבעת" in fix:
@@ -282,7 +284,7 @@ def main() -> None:
         pass  # allow mention in notes if marked elsewhere; fence check above is hard
 
     play = STORIES_PLAY.read_text()
-    for needle in ("סיפור-מוצר", "תהליך-קצר", "Canva MCP"):
+    for needle in ("סיפור-מוצר", "תהליך-קצר", "VF_PUBLICATION_ROUTE_V1", "Canva/vfcanva אסורים"):
         if needle not in play:
             fail(f"STORIES.md missing {needle!r}")
     if not any(n in play for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):

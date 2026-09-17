@@ -17,6 +17,7 @@ EVENTS = ROOT / "packages" / "velvetos" / "schema" / "events.catalog.json"
 QUEUE = ROOT / "packages" / "vfgrowth" / "data" / "approval-queue.json"
 ORDERS = ROOT / "packages" / "vfsales" / "data" / "orders.json"
 LOOP = ROOT / "packages" / "vfops" / "LOOP.json"
+LEDGER = ROOT / "packages" / "vfgrowth" / "LEDGER.md"
 
 
 def fail(msg: str) -> None:
@@ -39,6 +40,7 @@ def main() -> None:
         ROOT / ".cursor" / "skills" / "vf-organic-growth" / "SKILL.md",
         QUEUE,
         ORDERS,
+        LEDGER,
     ):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
@@ -134,6 +136,15 @@ def main() -> None:
     if "constitution/ORGANIC_GROWTH.md" not in guide_paths:
         fail("LOOP.json guides must include constitution/ORGANIC_GROWTH.md")
 
+    cli_text = CLI.read_text(encoding="utf-8")
+    for stale in ("EDIT-GATE/Canva", "G004 עדיין חסום עריכה/preflight", "G003 הנעול לא זז"):
+        if stale in cli_text:
+            fail(f"vf_organic_growth.py still contains stale pre-reset execution text {stale!r}")
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import vf_organic_growth as organic
+    if organic.g004_currently_qualified() or organic.g004_ready_for_slot():
+        fail("current LEDGER marks G004 stale; organic growth must fail closed on automatic reuse")
+
     proc = subprocess.run(
         [sys.executable, str(CLI), "policy"],
         cwd=ROOT,
@@ -155,10 +166,18 @@ def main() -> None:
     if not out.is_file():
         fail("brief --write did not create growth-brief.json")
     brief = json.loads(out.read_text(encoding="utf-8"))
-    if "אין ספירה" not in json.dumps(brief, ensure_ascii=False):
+    brief_blob = json.dumps(brief, ensure_ascii=False)
+    if "אין ספירה" not in brief_blob:
         fail("growth-brief.json must keep אין ספירה when metrics are missing")
     if brief.get("reel", {}).get("gate") == "posted_manually":
         fail("brief must not mark reel posted_manually")
+    if brief.get("slotRecommendation", {}).get("choice") == "G004":
+        fail("current stale G004 must not be recommended by growth brief")
+    if brief.get("story", {}).get("recommendation", {}).get("choice") == "G004":
+        fail("current stale G004 must not be recommended in story decision")
+    for stale in ("G004 עדיין חסום עריכה/preflight", "EDIT-GATE/Canva", "G003 הנעול לא זז"):
+        if stale in brief_blob:
+            fail(f"growth brief still emits stale pre-reset execution text {stale!r}")
 
     proc_s = subprocess.run(
         [sys.executable, str(CLI), "score"],

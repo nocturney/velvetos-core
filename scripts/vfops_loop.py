@@ -48,6 +48,7 @@ VFPROD = ROOT / "scripts" / "vfprod.py"
 ORGANIC_CLI = ROOT / "scripts" / "vf_organic_growth.py"
 CONTROL_CLI = ROOT / "scripts" / "vf_control_plane.py"
 GROWTH_BRIEF = ROOT / "packages" / "vfgrowth" / "data" / "growth-brief.json"
+GROWTH_LEDGER = ROOT / "packages" / "vfgrowth" / "LEDGER.md"
 GATES = ROOT / "packages" / "vfops" / "hq" / "GATES.json"
 ORDERS = ROOT / "packages" / "vfbooks" / "data" / "orders.json"
 INVOICE4U = ROOT / "packages" / "vfbooks" / "data" / "invoice4u-snapshot.json"
@@ -384,15 +385,14 @@ def gates_packet() -> tuple[str, list[list[str]], list[dict]]:
     )
     rows = [
         ["מחיר מכירה", "דחה", "X ₪"],
-        ["כיתוב G004 סטוריז", "כן", "vfcopy/G004-STORIES-FIX.md"],
         publish_row,
         token_watch_gate_row(),
         ["סטורי MCP", "מוצהר" if ig["stories_declared"] else "לא מוצהר", story_cap],
         ["Team MCP scope", "לא מאומת", str(ig["team_scope"])],
     ]
     default_prose = (
-        "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 סטוריז = G004-STORIES-FIX.md. "
-        "שיבוץ בלי לשאול משבצת — אחרי שער עריכה (Canva/vfcovers). "
+        "מחיר מכירה דחה עד סכום מראש צוות. "
+        "שיבוץ בלי לשאול משבצת — רק אחרי publication evidence + exact-final QA; Canva/vfcanva אסורים בפרסום VF. "
         "לחיצת כן/דחה לא שולחת וואטסאפ ולא מדפיסה מ-HQ."
     )
     if not GATES.is_file():
@@ -419,7 +419,7 @@ def gates_packet() -> tuple[str, list[list[str]], list[dict]]:
         )
     prose = (
         "שער אדם בלחיצה (mailto או vfops_loop.py gate). לא וואטסאפ לקוח. לא Print. "
-        "לא ₪ מומצא. שיבוץ בלי לשאול משבצת — אחרי שער עריכה (Canva/vfcovers). G004-STORIES-FIX.md."
+        "לא ₪ מומצא. שיבוץ בלי לשאול משבצת — רק אחרי publication evidence + exact-final QA; Canva/vfcanva אסורים בפרסום VF."
     )
     return prose, extra + rows, actions
 
@@ -447,11 +447,43 @@ def growth_line() -> str:
     return "\n".join(parts)
 
 
-def biz_week_line() -> str:
+def biz_week_line(today: str) -> str:
+    fallback = "הצעה לציבור נשארת מוצרים מוכנים + הדפסה / מודל בהתאמה אישית; כמות וסוג לקוח הם מאפייני הזמנה."
+    text = BIZ_WEEK.read_text(encoding="utf-8") if BIZ_WEEK.is_file() else ""
+    match = re.search(r"עודכן:\s*\*\*(\d{4}-\d{2}-\d{2})\*\*", text)
+    if not match:
+        return f"מקור vfbiz/out/week.md ללא תאריך עדכון תקין — לא החלטה להיום. {fallback}"
+    try:
+        source_date = datetime.fromisoformat(match.group(1)).date()
+        today_date = datetime.fromisoformat(today).date()
+    except ValueError:
+        return f"מקור vfbiz/out/week.md עם תאריך עדכון לא תקין ({match.group(1)}) — לא החלטה להיום. {fallback}"
+    age = (today_date - source_date).days
+    if age < 0:
+        return f"מקור vfbiz/out/week.md מתוארך לעתיד ({match.group(1)}) — לא החלטה להיום. {fallback}"
+    if age > 7:
+        return f"מקור vfbiz/out/week.md מיושן ({match.group(1)}, {age} ימים) — לא החלטה להיום. {fallback}"
     block = fence_after_heading(BIZ_WEEK, ("בלוק לבריף",))
     if block:
         return block
-    return "הצעה לציבור: מוצרים מוכנים + התאמה אישית (`vfbiz/OFFERING.md`). כמות וסוג לקוח הם מאפייני הזמנה."
+    return "הצעה לציבור: מוצרים מוכנים + הדפסה / מודל בהתאמה אישית (`vfbiz/OFFERING.md`). כמות וסוג לקוח הם מאפייני הזמנה."
+
+
+def ledger_caption_status(stem: str) -> str | None:
+    match = re.match(r"^(G\d{3})", stem)
+    if not match or not GROWTH_LEDGER.is_file():
+        return None
+    content_id = match.group(1)
+    for line in GROWTH_LEDGER.read_text(encoding="utf-8").splitlines():
+        if f"**{content_id}**" not in line:
+            continue
+        if "KEEP_LIVE_BASELINE" in line:
+            return "חי · KEEP_LIVE_BASELINE"
+        if "HISTORICAL_NOT_LIVE" in line:
+            return "היסטורי · לא חי"
+        if "stale" in line.casefold():
+            return "STALE · חסום reuse"
+    return None
 
 
 def captions_rows() -> list[list[str]]:
@@ -467,10 +499,10 @@ def captions_rows() -> list[list[str]]:
         text = path.read_text()
         hook = fence_after_heading(path, ("להדבקה", "ארבעה פריימים"))
         first = hook.splitlines()[0] if hook else path.stem
-        status = "מוכן להדבקה"
-        if "משובץ" in text:
-            status = "נעול · משובץ"
-        if "לא מאושר" in text:
+        status = ledger_caption_status(stem) or "מוכן להדבקה"
+        if status == "מוכן להדבקה" and "משובץ" in text:
+            status = "היסטורי · היה משובץ"
+        if "לא מאושר" in text and not ledger_caption_status(stem):
             status = "טיוטה"
         rows.append([stem, first[:48], status])
     if not rows:
@@ -902,7 +934,7 @@ def assemble(today: str) -> dict:
     cp_prose, cp_rows = control_plane_brief_rows()
     growth = growth_line()
     invoked.add("vfgrowth")
-    biz = biz_week_line()
+    biz = biz_week_line(today)
     invoked.add("vfbiz")
     insights = insights_line()
     invoked.add("vfinsights")
@@ -931,7 +963,9 @@ def assemble(today: str) -> dict:
             gb = json.loads(growth_brief_path.read_text(encoding="utf-8"))
             st = gb.get("story") or {}
             rec = gb.get("slotRecommendation") or st.get("recommendation") or {}
-            if rec.get("choice"):
+            if gb.get("date") != today:
+                story_20_row = ["סטורי 20:30", "growth-brief מיושן", f"{gb.get('date') or 'תאריך חסר'} · לא החלטה להיום"]
+            elif rec.get("choice"):
                 story_20_row = [
                     f"סטורי {rec.get('when') or '20:30'}",
                     f"המלצה: {rec.get('choice')}",
@@ -1000,12 +1034,11 @@ def assemble(today: str) -> dict:
             },
             {
                 "kicker": "07 · פיד בסוף",
-                "title": "מה עולה בפיד",
+                "title": "מלאי קופי · לא תוכנית פרסום",
                 "prose": (
-                    "מסירה: vfgrowth/HANDOFF-he.md · PREFLIGHT.md חובה לפני שיבוץ "
-                    "(VOICE + Canva/vfcovers + ציון עצמי + קומפס) · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · "
-                    f"שער עריכה קשיח: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · נכשל-סגור = חסום · "
-                    f"פער סוכנות = שורת פער למשרד, לא אשמת בעלים · {feed_stories} · לוח אוטונומי · "
+                    "מסירה: vfgrowth/HANDOFF-he.md · VF_PUBLICATION_ROUTE_V1 = PUBLICATION-PREP-EXECUTION + publicationRoute · "
+                    "Canva/vfcanva אסורים בפרסום VF · מוצר אמיתי + source-grounded edit + Visible Text + Brand Guardian + exact-final QA · "
+                    f"PREFLIGHT.md/evidence נכשל-סגור = חסום · השורות למטה הן מלאי קופי קיים, לא החלטת פרסום להיום · {feed_stories} · "
                     "Organic Growth Decision Pack: vf_organic_growth.py · אישור ≠ פרסום."
                 ),
                 "headers": ["מזהה", "פתיחה", "מצב"],
@@ -1122,8 +1155,8 @@ def write_status(today: str) -> None:
         "- FOLLOWER-GROWTH · היילייטס + CTA הודעת Instagram",
         "- כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)",
         "- חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ",
-        "- מסירת סטודיו + שער עריכה קשיח (אין סטוריז בלי Canva/vfcovers) + לוח אוטונומי",
-        "- Canva MCP ready · Gmail/Calendar/Drive ready",
+        "- מסירת סטודיו + publication evidence fail-closed + Product Truth + exact-final QA · Canva/vfcanva אסורים בפרסום VF",
+        "- Gmail/Calendar/Drive ready · Canva capability אינה נתיב פרסום VF",
     ]
     lines = [
         f"# סטטוס לולאת משרד · {today}",
@@ -1188,7 +1221,7 @@ def cmd_handoff(_args: argparse.Namespace) -> int:
     print("רף: סוכנות יקרה · לא חצי-עבודה")
     print("קובץ: packages/vfgrowth/HANDOFF-he.md")
     print("חבילה: G004 קטלבל-מחזיק · vfcopy/G004-STORIES-FIX.md")
-    print("שער עריכה: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · אין סטוריז בלי מעבר")
+    print("שער עריכה: PUBLICATION-PREP-EXECUTION + source-grounded edit + exact-final QA · Canva/vfcanva אסורים בפרסום VF")
     print("פריפלייט חובה: packages/vfgrowth/PREFLIGHT.md + preflight/<id>.md")
     print("בלי ארטיפקט עבור = נכשל-סגור · לא משבצים")
     print("אל תפנה לכריסטיאן על מדדים חלשים")
@@ -1284,7 +1317,8 @@ def cmd_check(_args: argparse.Namespace) -> int:
         "X ₪",
         "G004",
         "סוכנות",
-        "שער עריכה",
+        "publication evidence",
+        "Canva/vfcanva אסורים בפרסום VF",
         "עלות חומר",
         "פער",
         "G004-STORIES-FIX",

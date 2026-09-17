@@ -55,6 +55,41 @@ if len(authority_rows) != 1 or authority_rows[0].get("sha256") != authority_sha:
 route = json.loads(visual_enforcement.read_text(encoding="utf-8")).get("publicationRoute", {})
 if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deniedTools", [])}):
     fail("publicationRoute must deny Canva/vfcanva")
+entrypoints = route.get("entrypoints", [])
+required_entrypoints = {"packages/vfgrowth/STORIES.md", "packages/vfcopy/hq/templates/ig-stories.md"}
+if not required_entrypoints.issubset(set(entrypoints)):
+    fail("publicationRoute must govern Stories playbook + active story template")
+patterns = route.get("deniedDirectivePatterns", [])
+if not patterns:
+    fail("publicationRoute must declare deniedDirectivePatterns")
+legacy_denied = set(route.get("legacyDeniedToolSurfaces", []))
+if not legacy_denied:
+    fail("publicationRoute must quarantine denied-tool surfaces outside active entrypoints")
+if set(entrypoints) & legacy_denied:
+    fail("publicationRoute active entrypoints overlap legacy denied-tool surfaces")
+
+def active_publication_text(text: str) -> str:
+    out: list[str] = []
+    skip_legacy_section = False
+    for line in text.splitlines():
+        if line.startswith("## LEGACY / provenance only"):
+            skip_legacy_section = True
+            continue
+        if skip_legacy_section and line.startswith("## "):
+            skip_legacy_section = False
+        if skip_legacy_section or "LEGACY / provenance only" in line:
+            continue
+        out.append(line)
+    return "\n".join(out)
+
+for rel in entrypoints:
+    path = ROOT / rel
+    if not path.is_file():
+        fail(f"publicationRoute entrypoint missing: {rel}")
+    active = active_publication_text(path.read_text(encoding="utf-8"))
+    for forbidden in patterns:
+        if forbidden in active:
+            fail(f"active publication entrypoint {rel} bypasses deniedTools via {forbidden!r}")
 
 # Behavioral regression: even a hash-consistent stale Project Authority must fail closed.
 sys.path.insert(0, str(ROOT / "scripts"))

@@ -39,10 +39,9 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 ## שער עריכה — לפני שיבוץ (קשיח)
 
 **אסור** לשבץ / לפרסם JPEG גולמי עם טקסט עליו בלבד.  
-> LEGACY / provenance only for VF publication; not a provider route: **אסור** סטוריז או פיד בלי מעבר **Canva MCP** (`edit_url` אמיתי) **או** **vfcovers / vfcanva** (`compose_slides.py` / `studio/render.py`).  
-Gemini browser רק על מק בשדרות (`vfmcp/HOST.md` — Cloud לא פותח `gemini.google.com`).  
-Failover: Superdesign → `render.py`. בלי `edit_url` / PNG מורכב = **לא משבצים**.  
-סטוריז מוצר = סיפור-מוצר (`VOICE.md`) + נייבי-זהב (`vfgrowth/STORIES.md`). תהליך-קצר רק לריל חשיפה.  
+> LEGACY / provenance only for VF publication; not a provider route: מסלולי Canva/vfcanva/Superdesign הישנים נשמרים כהיסטוריה בלבד.
+הנתיב הנוכחי: source lock → Product Truth → Creative Director → source-grounded edit → `vfcopy`/Visible Text → deterministic graphics/logo → Brand Guardian → publication evidence → exact-final QA. Canva/vfcanva אסורים בפרסום VF ואין provider-specific failover.
+סטוריז מוצר = סיפור-מוצר (`VOICE.md`) דרך `vfgrowth/STORIES.md`; השפה החזותית נגזרת מהרפרנסים המאושרים של העבודה המדויקת, לא מ־G004 legacy.
 פלייבוק: [`packages/vfgrowth/EDIT-GATE.md`](../packages/vfgrowth/EDIT-GATE.md).  
 G004 סטוריז: [`packages/vfcopy/G004-STORIES-FIX.md`](../packages/vfcopy/G004-STORIES-FIX.md).
 

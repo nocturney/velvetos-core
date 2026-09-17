@@ -1,4 +1,4 @@
-# סטטוס לולאת משרד · 2026-09-14
+# סטטוס לולאת משרד · 2026-09-17
 
 רף: סוכנות פרסום+תפעול יקרה. הבעלים יושב רגוע.
 
@@ -17,8 +17,8 @@
 - FOLLOWER-GROWTH · היילייטס + CTA הודעת Instagram
 - כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)
 - חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ
-- מסירת סטודיו + שער עריכה קשיח (אין סטוריז בלי Canva/vfcovers) + לוח אוטונומי
-- Canva MCP ready · Gmail/Calendar/Drive ready
+- מסירת סטודיו + publication evidence fail-closed + Product Truth + exact-final QA · Canva/vfcanva אסורים בפרסום VF
+- Gmail/Calendar/Drive ready · Canva capability אינה נתיב פרסום VF
 
 ## חסום על אדם / לוגין / מצב חיבור
 

@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-14",
-  "generatedAt": "2026-09-14T18:04:55+03:00",
+  "date": "2026-09-17",
+  "generatedAt": "2026-09-17T16:12:57+03:00",
   "component_state": "Blocked",
   "goal": "פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.",
   "locks": [
@@ -11,16 +11,16 @@
     "no-invented-ils",
     "no-schedule-from-hq"
   ],
-  "weekdayNote": "2026-09-14 = שני (Asia/Jerusalem)",
+  "weekdayNote": "2026-09-17 = חמישי (Asia/Jerusalem)",
   "slotRecommendation": {
     "choice": "poll",
-    "when": "2026-09-14T20:30+03:00",
-    "whenHe": "שני 2026-09-14 20:30 Asia/Jerusalem",
-    "reasonShort": "G004 עדיין חסום עריכה/preflight · סקר קל יותר הערב",
-    "reason": "G004 עדיין לא עבור בשערי עריכה — לא ממליצים לשבץ מוצר לא מוכן. סקר organic `petg_vs_nylon` למשבצת שני 2026-09-14 20:30 Asia/Jerusalem. בלי Calendar create.",
+    "when": "2026-09-17T20:30+03:00",
+    "whenHe": "חמישי 2026-09-17 20:30 Asia/Jerusalem",
+    "reasonShort": "G004 מסומן STALE ב־LEDGER · אין reuse אוטומטי · סקר הוא חלופה בלבד",
+    "reason": "G004 אינו מועמד נוכחי: ה־LEDGER מסמן אותו STALE וחוסם reuse אוטומטי עד qualification חדש. סקר organic `petg_vs_nylon` למשבצת חמישי 2026-09-17 20:30 Asia/Jerusalem הוא חלופה שאינה פרסום אוטומטי. בלי Calendar create.",
     "deferred": {
       "id": "G004-stories",
-      "to": "אחרי EDIT-GATE+PREFLIGHT עבור"
+      "to": "qualification חדש מול LEDGER + VF_PUBLICATION_ROUTE_V1"
     }
   },
   "reel": {
@@ -42,16 +42,16 @@
   "story": {
     "slot": "היום 20:30 · סטוריז א׳–ה׳",
     "gate": "recommended_poll_pending_human_post",
-    "slotStatus": "המלצה יחידה · סקר · שני 2026-09-14 20:30 Asia/Jerusalem",
+    "slotStatus": "המלצה יחידה · סקר · חמישי 2026-09-17 20:30 Asia/Jerusalem",
     "recommendation": {
       "choice": "poll",
-      "when": "2026-09-14T20:30+03:00",
-      "whenHe": "שני 2026-09-14 20:30 Asia/Jerusalem",
-      "reasonShort": "G004 עדיין חסום עריכה/preflight · סקר קל יותר הערב",
-      "reason": "G004 עדיין לא עבור בשערי עריכה — לא ממליצים לשבץ מוצר לא מוכן. סקר organic `petg_vs_nylon` למשבצת שני 2026-09-14 20:30 Asia/Jerusalem. בלי Calendar create.",
+      "when": "2026-09-17T20:30+03:00",
+      "whenHe": "חמישי 2026-09-17 20:30 Asia/Jerusalem",
+      "reasonShort": "G004 מסומן STALE ב־LEDGER · אין reuse אוטומטי · סקר הוא חלופה בלבד",
+      "reason": "G004 אינו מועמד נוכחי: ה־LEDGER מסמן אותו STALE וחוסם reuse אוטומטי עד qualification חדש. סקר organic `petg_vs_nylon` למשבצת חמישי 2026-09-17 20:30 Asia/Jerusalem הוא חלופה שאינה פרסום אוטומטי. בלי Calendar create.",
       "deferred": {
         "id": "G004-stories",
-        "to": "אחרי EDIT-GATE+PREFLIGHT עבור"
+        "to": "qualification חדש מול LEDGER + VF_PUBLICATION_ROUTE_V1"
       }
     },
     "poll_id": "petg_vs_nylon",
@@ -66,7 +66,7 @@
       "עריכה",
       "דחייה"
     ],
-    "note": "בחירה אחת: סקר. G004 נדחה עד שער עבור. אישור ≠ פרסום."
+    "note": "בחירה אחת: סקר. G004 נשאר STALE עד qualification חדש ב־LEDGER. אישור ≠ פרסום."
   },
   "yesterday": {
     "insights": "אין ספירה",
@@ -76,7 +76,7 @@
   },
   "studio_tasks": [
     "למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.",
-    "לאשר או לדחות סקר ל־שני 2026-09-14 20:30 Asia/Jerusalem (לא מפרסם).",
+    "לאשר או לדחות סקר ל־חמישי 2026-09-17 20:30 Asia/Jerusalem (לא מפרסם).",
     "לא להציג חום/חוזק בלי vfprod/CLAIMS.md."
   ],
   "print_events": 1,

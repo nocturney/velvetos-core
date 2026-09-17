@@ -1,5 +1,7 @@
 # G004 · תיקון סטוריז — סיפור-מוצר
 
+> **LEGACY / STALE · audit only. כל התוכן מתחת הוא snapshot מ־7–9.9.2026 ואינו קופי מאושר, נתיב עריכה או publication authority נוכחי.** לפי `../vfgrowth/LEDGER.md`, G004 חסום מכל reuse אוטומטי; כל שימוש חדש דורש qualification חדש מול `VF_PUBLICATION_ROUTE_V1`, קופי חדש/מאומת ו־exact-final חדש.
+
 סטוריז `@velvets_cloud` · מחזיק טבעות בצורת קטלבל ורוד  
 קול: **סיפור-מוצר** (`VOICE.md` כיתוב ב׳). לא תהליך-קצר. לא קופי דק. לא פתיחה במגבלה.
 
@@ -55,7 +57,7 @@ BUSINESS_CONTACT_RECORD (`050-2517000`) נשאר ברשומת עסק בלבד �
 
 בלי סטיל מאותו יום = **לא משבצים**.
 
-## מסירת Canva / vfcovers — בלי פיקסלים מומצאים
+## LEGACY · מסירת Canva / vfcovers שתועדה אז — audit בלבד
 
 עיצובים קיימים (MCP `edit_url` בלבד — לא ממציאים קישור):
 
@@ -65,7 +67,7 @@ BUSINESS_CONTACT_RECORD (`050-2517000`) נשאר ברשומת עסק בלבד �
 | סטורי 4 CTA | `DAHUacDGv9U` | https://www.canva.com/d/njntcYD-kdHr4VR |
 | סט חלופי 4 עמודים | `DAHUacAsoNU` | https://www.canva.com/d/Kt13n_xcEcOBK6i |
 
-**סטודיו עכשיו**
+**LEGACY · צעדי הסטודיו שתועדו אז — לא לביצוע**
 
 1. Canva MCP: `start-editing-transaction` → החלפת הטקסט בטבלת «על הפריים» (הסרת וואטסאפ אם עדיין על הפריים) → `commit`.
 2. `export-design` type `png` · 1080×1920 · `export_quality=pro`.
@@ -76,7 +78,7 @@ Cloud HQ לא כותב PNG לגיט. נתיב ייצוא קודם (6.9, פג): `
 
 קרוסלה פיד (אם עדיין המועמד ה׳ 12:00): נשארת `DAHUaelaug0` + כיתוב `G004.md` סיפור-מוצר. הסטוריז חייבות את התיקון הזה קודם.
 
-## בדיקה לפני `#vfigos`
+## LEGACY · checklist שתועד לפני `#vfigos` — לא לביצוע
 
 - [ ] מצב אחד: סיפור-מוצר (לא תהליך-קצר)
 - [ ] ההוק חם — לא כותרת מדף, לא מגבלה
