@@ -1,0 +1,87 @@
+{
+  "task_id": "openpost-release-review-2026-09-17",
+  "domain": [
+    "research",
+    "system_engineering",
+    "instagram_action_boundary_review"
+  ],
+  "authority": {
+    "contract_version": 6,
+    "revision": "6.2",
+    "bundle_id": "VF-PROJECT-6.2-DETAIL-TRUTH",
+    "velvetos_main_sha": "e8a4189d779d7b32bd062bb5c76fe617129a3005"
+  },
+  "upstream": {
+    "repository": "getopenpost/openpost",
+    "from_reviewed_version": "v4.31.0",
+    "latest_release": "v4.34.2",
+    "published_at": "2026-09-16T17:57:34Z",
+    "windows_server_sha256": "43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442"
+  },
+  "classification": {
+    "meta_instagram_auth": "no_direct_breaking_change_identified",
+    "api_mcp_contract": "relevant_fixes",
+    "media_limits": "instagram_unchanged_in_reviewed_notes",
+    "scheduler_queue_retry": "no_vf_breaking_change_identified",
+    "analytics": "no_instagram_contract_change_identified",
+    "database_schema_storage": "migrations_135_and_136_require_backup_and_staging_smoke",
+    "security_privacy": "maintainer_diagnostics_default_on_from_v4_32_requires_explicit_policy"
+  },
+  "runtime": {
+    "repo_recorded_baseline": "v4.34.2",
+    "fresh_probe": "PASS",
+    "runtime_mutated": true,
+    "staging_upgrade_performed": true,
+    "staging_version": "v4.34.2",
+    "binary_sha256": "43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442",
+    "backup_path": "C:\\OpenPost\\backups\\pre-v4.34.2-20260917-191652",
+    "backup_database_sha256": "0936fce2ae90c8d4caeb914f324656d5a647273acbbd4b5a68a05d07757fa4ef",
+    "schema_before": 134,
+    "schema_after": 136,
+    "migration_smoke": "PASS",
+    "integrity_check": "ok",
+    "foreign_key_violations": 0,
+    "diagnostics_enabled": false,
+    "local_url": "http://127.0.0.1:18080",
+    "openapi_http_status": 200,
+    "persistence": {
+      "status": "PASS",
+      "task_name": "VelvetOS-OpenPost-Staging",
+      "trigger": "at_logon_current_user",
+      "start_script": "C:\\OpenPost\\staging\\start-openpost-staging.ps1",
+      "start_script_sha256": "e25fc0875500edab68f5dabbb6a1a9927be02fa053cd26d9b2942442a2ab37d3",
+      "restart_tested": true,
+      "post_restart_openapi_http_status": 200,
+      "post_restart_binary_sha256": "43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442"
+    },
+    "provider_probe": {
+      "observed_at": "2026-09-17T19:26:44+03:00",
+      "provider_apps": 0,
+      "provider_installations": 0,
+      "social_accounts": 0,
+      "provider_account_bindings": 0,
+      "status": "NOT_CONFIGURED"
+    }
+  },
+  "delivery_approval": {
+    "required_schema": "velvet.delivery_approval.v1",
+    "live_evidence": "NEEDS_OPERATOR_SETUP",
+    "source": "packages/vfigos/approval/OPERATOR-SETUP.md",
+    "direct_instagram_mcp_bypass_allowed": false,
+    "production_promotion_blocked": true,
+    "owner_invoker_narrow_iam_verified": true,
+    "owner_auth_verified": false,
+    "live_end_to_end_verified": false,
+    "blocker": "Current issuer revision returns application 404 at required /healthz; no full signed issue -> authorized Instagram mutation -> replay-block proof yet."
+  },
+  "changes": {
+    "branch": "integrate/openpost-v4.34.2-staging",
+    "openpost_json_updated": true,
+    "openpost_md_updated": true,
+    "send_route_updated": true,
+    "diagnostics_fail_closed_policy_added": true,
+    "production_promoted": false,
+    "runtime_staging_upgraded": true
+  },
+  "reviewed_at": "2026-09-17T19:26:44+03:00"
+}
