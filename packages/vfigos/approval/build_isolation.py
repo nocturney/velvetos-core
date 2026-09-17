@@ -34,7 +34,9 @@ SENSITIVE_PERMISSIONS = frozenset(
     }
 )
 _EMAIL_RE = re.compile(r"[A-Za-z0-9._+-]+@[A-Za-z0-9.-]+\.gserviceaccount\.com")
-_SA_LINE_RE = re.compile(r"^\s*serviceAccount\s*:\s*(\S+)\s*$")
+_SA_KEY = r'(?:serviceAccount|"serviceAccount"|\'serviceAccount\')'
+_SA_LINE_RE = re.compile(rf"^\s*{_SA_KEY}\s*:\s*(\S+)\s*$")
+_SA_ANY_RE = re.compile(rf"(?<![A-Za-z0-9_-]){_SA_KEY}\s*:")
 Troubleshoot = Callable[[str, str, str], tuple[str, str]]
 
 
@@ -81,7 +83,7 @@ def cloudbuild_service_accounts(text: str) -> list[str]:
         line = raw.split("#", 1)[0]
         match = _SA_LINE_RE.match(line)
         if not match:
-            if re.search(r"(?<![A-Za-z0-9_-])serviceAccount\s*:", line):
+            if _SA_ANY_RE.search(line):
                 raise IsolationError(
                     "Cloud Build serviceAccount syntax is not a supported concrete field"
                 )
@@ -139,6 +141,35 @@ def build_probe_plan(
         ):
             probes.append((resource, permission, f"{label} {email}"))
     return probes
+def mutation_runtime_probe_plan(
+    project: str, region: str, project_number: str
+) -> list[tuple[str, str, str]]:
+    """Deny signer/issuer privilege escalation from the mutation runtime itself."""
+    issuer = (
+        f"//run.googleapis.com/projects/{project}/locations/{region}/services/"
+        f"{ISSUER_SERVICE}"
+    )
+    probes: list[tuple[str, str, str]] = [
+        (issuer, "run.routes.invoke", "mutation runtime issuer invoke"),
+        (issuer, "run.services.setIamPolicy", "mutation runtime issuer setIamPolicy"),
+        (
+            f"//secretmanager.googleapis.com/projects/{project_number}/secrets/"
+            f"{SIGNING_SECRET}/versions/latest",
+            "secretmanager.versions.access",
+            "mutation runtime signing secret access",
+        ),
+    ]
+    for email in (signer_email(project), owner_invoker_email(project)):
+        resource = f"//iam.googleapis.com/projects/{project}/serviceAccounts/{email}"
+        for permission, label in (
+            ("iam.serviceAccounts.actAs", "actAs"),
+            ("iam.serviceAccounts.getAccessToken", "access token"),
+            ("iam.serviceAccounts.getOpenIdToken", "OIDC token"),
+        ):
+            probes.append((resource, permission, f"mutation runtime {label} {email}"))
+    return probes
+
+
 def parse_troubleshoot_output(text: str) -> tuple[str, str]:
     lines = [line.strip() for line in (text or "").splitlines() if line.strip()]
     if len(lines) != 1:
@@ -196,7 +227,15 @@ def assert_build_identity_isolated(
             )
         for resource, permission, label in plan:
             require_denied(probe(resource, identity, permission), f"{identity} {label}")
-    return resolved, len(plan) * len(identities)
+
+    mutation_principal = mutation_runtime_email(project)
+    mutation_plan = mutation_runtime_probe_plan(project, region, number)
+    for resource, permission, label in mutation_plan:
+        require_denied(
+            probe(resource, mutation_principal, permission),
+            f"{mutation_principal} {label}",
+        )
+    return resolved, len(plan) * len(identities) + len(mutation_plan)
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Fail-closed vfigos Cloud Build identity isolation preflight"

@@ -616,9 +616,16 @@ def main() -> int:
     full_override = f"projects/instamcp/serviceAccounts/{override}"
     if isolation.cloudbuild_service_accounts(f"serviceAccount: {full_override}\n") != [override]:
         fail("build isolation must normalize a full Cloud Build serviceAccount resource")
+    for quoted in (
+        f'"serviceAccount": {full_override}\n',
+        f"'serviceAccount': '{full_override}'\n",
+    ):
+        if isolation.cloudbuild_service_accounts(quoted) != [override]:
+            fail("build isolation must parse quoted Cloud Build serviceAccount keys")
     for evasive in (
         f"{{serviceAccount: {override}}}\n",
         f"options: {{serviceAccount: {override}}}\n",
+        f'{{"serviceAccount": "{full_override}"}}\n',
     ):
         try:
             isolation.cloudbuild_service_accounts(evasive)
@@ -645,6 +652,14 @@ def main() -> int:
         fail("build isolation probe plan is missing a required permission")
     if not any("projects/123456789/secrets/velvet-delivery-approval-ed25519-private/versions/latest" in item[0] for item in plan):
         fail("build isolation must use the Secret Manager version full resource name")
+    mutation_plan = isolation.mutation_runtime_probe_plan("instamcp", "me-west1", "123456789")
+    mutation_principal = "velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com"
+    if not any(item[1] == "run.routes.invoke" for item in mutation_plan):
+        fail("mutation runtime must be probed for issuer invocation denial")
+    if not any("velvet-delivery-approval-ed25519-private" in item[0] for item in mutation_plan):
+        fail("mutation runtime must be probed for signing-secret denial")
+    if any(any(secret in item[0] for secret in isolation.INSTAGRAM_SECRETS) for item in mutation_plan):
+        fail("mutation runtime isolation probe must not deny its intended Instagram secret reads")
     calls: list[tuple[str, str, str]] = []
     def _fake_troubleshoot(resource: str, principal_email: str, permission: str):
         calls.append((resource, principal_email, permission))
@@ -658,8 +673,12 @@ def main() -> int:
             principal=build_identity, project_number="123456789",
             troubleshoot=_fake_troubleshoot,
         )
-        if _principal != build_identity or probe_count != len(plan) or len(calls) != len(plan):
-            fail("injected isolation proof did not cover the full probe plan")
+        expected_probe_count = len(plan) + len(mutation_plan)
+        if _principal != build_identity or probe_count != expected_probe_count or len(calls) != expected_probe_count:
+            fail("injected isolation proof did not cover build + mutation-runtime probe plans")
+        probed_principals = {item[1] for item in calls}
+        if mutation_principal not in probed_principals:
+            fail("dedicated mutation runtime must be probed as an effective-IAM principal")
         calls.clear()
         config.write_text(f"steps: []\nserviceAccount: {override}\n", encoding="utf-8")
         isolation.assert_build_identity_isolated(
@@ -668,8 +687,11 @@ def main() -> int:
             troubleshoot=_fake_troubleshoot,
         )
         probed = {item[1] for item in calls}
-        if build_identity not in probed or override not in probed:
-            fail("Cloud Build serviceAccount override must be proven denied too")
+        expected_override_count = (2 * len(plan)) + len(mutation_plan)
+        if len(calls) != expected_override_count:
+            fail("override isolation proof must cover both build identities plus mutation runtime")
+        if build_identity not in probed or override not in probed or mutation_principal not in probed:
+            fail("Cloud Build override and mutation runtime must both be proven denied")
         try:
             isolation.assert_build_identity_isolated(
                 "instamcp", "me-west1", config,
@@ -695,6 +717,21 @@ def main() -> int:
             pass
         else:
             fail("granted setIamPolicy must fail the isolation proof closed")
+
+        def _runtime_granted(resource: str, principal_email: str, permission: str):
+            if principal_email == mutation_principal and permission == "run.routes.invoke":
+                return ("ALLOW_ACCESS_STATE_GRANTED", "UNKNOWN_INFO")
+            return denied
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp", "me-west1", config,
+                principal=build_identity, project_number="123456789",
+                troubleshoot=_runtime_granted,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("mutation runtime issuer invoke grant must fail isolation proof closed")
 
     remote_http = (ROOT / "packages/vfigos/remote/http_server.py").read_text(encoding="utf-8")
     if "apply_delivery_approval_gate" not in remote_http:
