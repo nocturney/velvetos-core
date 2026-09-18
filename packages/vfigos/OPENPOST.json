@@ -62,7 +62,7 @@
       "analytics": "PieFed analytics fixes only; no Instagram analytics contract change identified.",
       "databaseSchemaStorage": "No migration files were added between v4.34.2 and v4.35.0. Isolated smoke and promoted staging both remain at schema 136 with integrity_check=ok and zero foreign-key violations.",
       "security": "No VF provider-security boundary change identified. Current v4.35.0 runtime explicitly sets OPENPOST_DIAGNOSTICS_ENABLED=false. A pre-upgrade backup captured the same setting, but continuous enforcement before that snapshot is not inferred from the backup alone.",
-      "runtimeDecision": "Windows staging upgraded to exact v4.35.0 after a hashed schema-136 backup and isolated schema-136 smoke. Exact binary digest, post-restart readiness, integrity, firewall isolation, and diagnostics=false are verified. Production remains blocked by stable public HTTPS/media origin, OpenPost owner/workspace bootstrap, Meta app secret/provider OAuth, and a real authorized Instagram write plus canonical live verification."
+      "runtimeDecision": "v4.35.0 was accepted after exact-artifact review and staging smoke. Subsequent runtime work has since established the stable public HTTPS/media origin and verified the first OpenPost owner/workspace bootstrap with self-registration disabled. Current remaining blockers are Meta App Secret/provider OAuth and one real authorized Instagram write followed by canonical live verification."
     }
   },
   "securityPolicy": {
