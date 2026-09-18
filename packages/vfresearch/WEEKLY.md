@@ -80,3 +80,7 @@
 - גיבוי GitHub (`docs/BACKUP.md`) — אותו יום לכל פק; לא מחליף את הסקירה השבועית.
 - שליחת אינסטגרם / ג׳ימייל / וואטסאפ מ־HQ.
 - **כן גיבוי לטיימר:** אם `BEST-SKILLS.json` → `standingForever: true` והטיימר חסר — לחדש לפי `vfresearch/TIMER.md` באותו מעבר שבועי.
+
+## Discovery catalogue rule — API mega lists
+
+`cporter202/API-mega-list` and `cporter202/social-growth-apis-for-creators` are reviewed as discovery catalogues only. Catalogue presence, featured placement, sponsored placement, or provider copy is not approval. Weekly review should look for a concrete VelvetOS capability gap, independently verify the strongest provider candidate, and embed only through an existing pack/contract. Never vendor/import the catalogue or create an API-mega runtime.

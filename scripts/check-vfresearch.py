@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -17,6 +18,10 @@ BEST_SKILLS_SKILL = ROOT / ".cursor" / "skills" / "vf-best-skills" / "SKILL.md"
 LAST30 = ROOT / "packages" / "vfresearch" / "hq" / "LAST30.md"
 LAST30_SKILL = ROOT / ".cursor" / "skills" / "vf-last30" / "SKILL.md"
 PRINT_DEMAND = ROOT / "packages" / "vfresearch" / "hq" / "PRINT-DEMAND.md"
+DEMAND_SIGNALS = ROOT / "packages" / "vfresearch" / "DEMAND-SIGNALS.md"
+DEMAND_SCHEMA = ROOT / "packages" / "vfresearch" / "demand-signal-packet.schema.json"
+DEMAND_HELPER = ROOT / "scripts" / "vf_demand_signals.py"
+DEMAND_TEST = ROOT / "scripts" / "test_vf_demand_signals.py"
 MAKERWORLD_SCAN = ROOT / "packages" / "vfresearch" / "hq" / "MAKERWORLD-SCAN.md"
 DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
 MUSIC = ROOT / "packages" / "vfresearch" / "MUSIC.md"
@@ -46,11 +51,11 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, LAST30, LAST30_SKILL, PRINT_DEMAND, MAKERWORLD_SCAN, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK, HQ_ROUTINE):
+    for path in (LINKS, WEEKLY, BEST_SKILLS, BEST_SKILLS_JSON, BEST_SKILLS_TIMER, BEST_SKILLS_SKILL, LAST30, LAST30_SKILL, PRINT_DEMAND, DEMAND_SIGNALS, DEMAND_SCHEMA, DEMAND_HELPER, DEMAND_TEST, MAKERWORLD_SCAN, DAILY, MUSIC, MUSIC_SOURCES, MUSIC_SKILL, ROUTINE, ORCHESTRA, MANIFEST, DESK, RESEARCH_BLOCK, HQ_ROUTINE):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
-    hq_routine = HQ_ROUTINE.read_text()
+    hq_routine = HQ_ROUTINE.read_text(encoding="utf-8")
     for needle in ("vf-best-skills", "vf-weekly-links", "vf-last30", "vf-daily-learning", "HQ-ROUTINE"):
         if needle == "HQ-ROUTINE":
             continue
@@ -65,7 +70,7 @@ def main() -> None:
     if "CTA נשאר וואטסאפ" in hq_routine:
         fail("HQ-ROUTINE.md must not require WhatsApp as public CTA")
 
-    data = json.loads(LINKS.read_text())
+    data = json.loads(LINKS.read_text(encoding="utf-8"))
     if data.get("name") != "vfresearch-inspiration-links":
         fail("LINKS.json name must be vfresearch-inspiration-links")
     if data.get("cadence") != "weekly":
@@ -95,7 +100,7 @@ def main() -> None:
         if not (url.startswith("https://") or url.startswith("http://")):
             fail(f"link {lid} url must be http(s)")
 
-    weekly = WEEKLY.read_text()
+    weekly = WEEKLY.read_text(encoding="utf-8")
     if "LINKS.json" not in weekly:
         fail("WEEKLY.md must reference LINKS.json")
     if "YYYY-MM-DD-weekly-links.md" not in weekly:
@@ -107,25 +112,36 @@ def main() -> None:
     if "YYYY-MM-DD-print-demand.md" not in weekly:
         fail("WEEKLY.md must name print-demand artifact pattern")
 
-    print_demand = PRINT_DEMAND.read_text()
+    print_demand = PRINT_DEMAND.read_text(encoding="utf-8")
     for needle in ("אוטו־DM", "MUSIC.md", "YYYY-MM-DD-print-demand.md", "MATERIAL.md", "nothing-solid"):
         if needle not in print_demand:
             fail(f"PRINT-DEMAND.md must mention {needle}")
+    for needle in ("DEMAND-SIGNALS.md", "vf_demand_signals.py", "demand_score"):
+        if needle not in print_demand:
+            fail(f"PRINT-DEMAND.md structured demand wiring must mention {needle}")
 
-    hq_routine_txt = HQ_ROUTINE.read_text()
+    demand_doc = DEMAND_SIGNALS.read_text(encoding="utf-8")
+    for needle in ("DemandSignalPacket", "WebSearch/WebFetch", "noAutomaticSkuPromotion", "UNPROVEN"):
+        if needle not in demand_doc:
+            fail(f"DEMAND-SIGNALS.md must mention {needle}")
+    schema = json.loads(DEMAND_SCHEMA.read_text(encoding="utf-8"))
+    if schema.get("title") != "VelvetOS DemandSignalPacket":
+        fail("demand-signal-packet.schema.json title mismatch")
+
+    hq_routine_txt = HQ_ROUTINE.read_text(encoding="utf-8")
     if "PRINT-DEMAND.md" not in hq_routine_txt:
         fail("HQ-ROUTINE.md must mention PRINT-DEMAND.md in weekly cadence")
     if "MAKERWORLD-SCAN.md" not in hq_routine_txt:
         fail("HQ-ROUTINE.md must mention MAKERWORLD-SCAN.md")
 
-    scan = MAKERWORLD_SCAN.read_text()
+    scan = MAKERWORLD_SCAN.read_text(encoding="utf-8")
     for needle in ("ראשון", "רביעי", "NC", "אין שם", "סלייסר", "vfsku.py scan"):
         if needle not in scan:
             fail(f"MAKERWORLD-SCAN.md must mention {needle}")
     if "מתעלמים מ־NC" in scan and "לא «מתעלמים" not in scan:
         fail("MAKERWORLD-SCAN.md must not ignore international NC")
 
-    orchestra = ORCHESTRA.read_text()
+    orchestra = ORCHESTRA.read_text(encoding="utf-8")
     if "WEEKLY.md" not in orchestra and "קישורי השראה" not in orchestra:
         fail("constitution/ORCHESTRA.md must mention weekly link review")
     if "BEST-SKILLS.md" not in orchestra and "best-skills" not in orchestra.lower():
@@ -136,7 +152,7 @@ def main() -> None:
     if "מחכים לבעלים" in orchestra and "לא «מחכים לבעלים»" not in orchestra:
         fail("ORCHESTRA.md must not idle-wait on auth; use immediate failover")
 
-    best = BEST_SKILLS.read_text()
+    best = BEST_SKILLS.read_text(encoding="utf-8")
     if "LinklyAI/best-skills" not in best and "linklyai/best-skills" not in best.lower():
         fail("BEST-SKILLS.md must name LinklyAI/best-skills")
     if "YYYY-MM-DD-best-skills.md" not in best:
@@ -147,7 +163,7 @@ def main() -> None:
     if "כל יומיים" not in best and "48" not in best:
         fail("BEST-SKILLS.md must state every-2-days cadence")
 
-    best_json = json.loads(BEST_SKILLS_JSON.read_text())
+    best_json = json.loads(BEST_SKILLS_JSON.read_text(encoding="utf-8"))
     if best_json.get("name") != "vfresearch-best-skills":
         fail("BEST-SKILLS.json name must be vfresearch-best-skills")
     if best_json.get("cadence") != "every-2-days":
@@ -172,7 +188,7 @@ def main() -> None:
     if not best_json.get("lastPass"):
         fail("BEST-SKILLS.json must set lastPass")
 
-    timer = BEST_SKILLS_TIMER.read_text()
+    timer = BEST_SKILLS_TIMER.read_text(encoding="utf-8")
     if "Velvet Research Seat" not in timer:
         fail("TIMER.md must name Velvet Research Seat as cadence authority")
     if "48" not in timer or "52" not in timer:
@@ -182,7 +198,7 @@ def main() -> None:
     if "subscribe_timer" in timer:
         fail("TIMER.md must not depend on external subscribe_timer")
 
-    best_skill = BEST_SKILLS_SKILL.read_text()
+    best_skill = BEST_SKILLS_SKILL.read_text(encoding="utf-8")
     if "BEST-SKILLS.md" not in best_skill:
         fail("vf-best-skills skill must point at BEST-SKILLS.md")
     if "TIMER.md" not in best_skill:
@@ -203,15 +219,19 @@ def main() -> None:
         fail("LINKS.json must register linklyai-best-skills")
     if "mvanhorn-last30days-skill" not in link_ids:
         fail("LINKS.json must register mvanhorn-last30days-skill")
+    if "cporter202-api-mega-list" not in link_ids:
+        fail("LINKS.json must register cporter202-api-mega-list")
+    if "cporter202-social-growth-apis-for-creators" not in link_ids:
+        fail("LINKS.json must register cporter202-social-growth-apis-for-creators")
 
-    last30 = LAST30.read_text()
+    last30 = LAST30.read_text(encoding="utf-8")
     for needle in ("mvanhorn/last30days-skill", "nothing-solid", "WebSearch", "vf-last30", "npx skills"):
         if needle not in last30 and needle.lower() not in last30.lower():
             fail(f"LAST30.md must mention {needle}")
     if "YYYY-MM-DD-<topic" not in last30 and "YYYY-MM-DD-<topic-slug>-last30.md" not in last30:
         fail("LAST30.md must name last30 artifact pattern")
 
-    last30_skill = LAST30_SKILL.read_text()
+    last30_skill = LAST30_SKILL.read_text(encoding="utf-8")
     if "LAST30.md" not in last30_skill:
         fail("vf-last30 skill must point at LAST30.md")
     if "research-synthesist" not in last30_skill:
@@ -221,7 +241,7 @@ def main() -> None:
     if "npx" not in last30_skill.lower():
         fail("vf-last30 skill must forbid npx install")
 
-    routine = ROUTINE.read_text()
+    routine = ROUTINE.read_text(encoding="utf-8")
     if "BEST-SKILLS" not in routine and "best-skills" not in routine.lower():
         fail("vfops/ROUTINE.md must mention bi-daily best-skills")
     if "WEEKLY.md" not in routine and "קישורי השראה" not in routine:
@@ -231,7 +251,7 @@ def main() -> None:
     if "data/research.md" not in routine:
         fail("vfops/ROUTINE.md must point brief block 05 at data/research.md")
 
-    daily = DAILY.read_text()
+    daily = DAILY.read_text(encoding="utf-8")
     if "failover" not in daily.lower() and "Failover" not in daily:
         fail("vfresearch/DAILY.md must mention failover")
     if "מחכים לבעלים" in daily:
@@ -239,11 +259,11 @@ def main() -> None:
     if "data/research.md" not in daily:
         fail("vfresearch/DAILY.md must write block 05 to vfops/data/research.md")
 
-    block = RESEARCH_BLOCK.read_text()
+    block = RESEARCH_BLOCK.read_text(encoding="utf-8")
     if "מה נבנה / יועל" not in block and "אין חדש במשרד" not in block:
         fail("vfops/data/research.md must carry «מה נבנה / יועל» or exact empty-state אין חדש במשרד")
 
-    desk = json.loads(DESK.read_text())
+    desk = json.loads(DESK.read_text(encoding="utf-8"))
     tools = desk.get("tools") or {}
     for key in ("gmail", "calendar", "drive", "canva", "superdesign", "treg", "mobbin", "fcc", "web", "image", "gemini", "chatgpt"):
         if key not in tools:
@@ -256,7 +276,7 @@ def main() -> None:
     if "best-skills" not in notes.lower() and "BEST-SKILLS" not in notes:
         fail("vf-desk.json notes must mention bi-daily best-skills")
 
-    music = MUSIC.read_text()
+    music = MUSIC.read_text(encoding="utf-8")
     for needle in ("@trend-researcher", "vfigos", "חסר מקור", "HeyOrca", "@velvets_cloud", "לא בשימוש"):
         if needle not in music:
             fail(f"MUSIC.md must mention {needle}")
@@ -270,7 +290,7 @@ def main() -> None:
     if "Treg" in music and "עזבו את Treg" not in music and "אין Treg" not in music and "לא בשימוש" not in music:
         fail("MUSIC.md must explicitly skip Treg for music")
 
-    music_src = json.loads(MUSIC_SOURCES.read_text())
+    music_src = json.loads(MUSIC_SOURCES.read_text(encoding="utf-8"))
     if music_src.get("name") != "vfresearch-ig-music-sources":
         fail("SOURCES-MUSIC.json name mismatch")
     if "treg" not in (music_src.get("skip") or []):
@@ -279,7 +299,7 @@ def main() -> None:
     if not primary or "heyorca" not in primary[0].get("id", ""):
         fail("SOURCES-MUSIC.json primary must be HeyOrca")
 
-    skill = MUSIC_SKILL.read_text()
+    skill = MUSIC_SKILL.read_text(encoding="utf-8")
     if "trend-researcher" not in skill:
         fail("vf-ig-music skill must mention trend-researcher")
     if "MUSIC.md" not in skill:
@@ -327,9 +347,14 @@ def main() -> None:
     if "vfresearch_cadence.py" not in HQ_ROUTINE.read_text(encoding="utf-8"):
         fail("HQ-ROUTINE.md must point at vfresearch_cadence.py")
 
+    for cmd, label in (([sys.executable, str(DEMAND_TEST)], "demand test"), ([sys.executable, str(DEMAND_HELPER), "--self-test"], "demand self-test")):
+        proc = subprocess.run(cmd, capture_output=True, text=True)
+        if proc.returncode != 0:
+            fail(f"{label} failed: {proc.stdout} {proc.stderr}")
+
     print(
         f"OK vfresearch weekly-links links={len(links)} "
-        f"best-skills=1 last30=1 print-demand=1 music=1 "
+        f"best-skills=1 last30=1 print-demand=1 demand-signals=1 music=1 "
         f"sources={len(music_src.get('sources') or [])} failover=1"
     )
 
