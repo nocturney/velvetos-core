@@ -37,17 +37,16 @@
 | **Instagram Insights** | LIVE / VERIFIED |
 | **Media Intake / Drive** | LIVE / VERIFIED |
 | **Jobs source of truth** | Google Sheet LIVE / VERIFIED write-through |
-| **Morning Brief Windows UTF-8** | VERIFIED render path ? 2026-09-18 artifact regenerated on `Chris` with 7 slots, no encoding corruption/tracebacks; Gmail delivery remains separate provider evidence |
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-14T18:04:56+03:00` |
+| **Last verified / refreshed evidence** | `2026-09-18T10:31:37+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-18 — **Morning Brief staleness cadence repair:** `check-staleness.py` now enforces the canonical 09:00 Asia/Jerusalem Morning Brief after its existing 15-minute grace instead of the retired 07:00 cadenc…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-18 — **Morning Brief staleness cadence repair:** `check-staleness.py` now enforces the canonical 09:00 Asia/Jerusalem Morning Brief after its existing 15-minute grace instead of the retired 07:00 cadenc…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-18 ? **Morning Brief Windows UTF-8 repair:** `vfops_loop.py` now reads/writes repo text explicitly as UTF-8, configures its own stdout/stderr for UTF-8, and forces child Python consumers to inherit `PYT…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-18 ? **Morning Brief Windows UTF-8 repair:** `vfops_loop.py` now reads/writes repo text explicitly as UTF-8, configures its own stdout/stderr for UTF-8, and forces child Python consumers to inherit `PYT…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
