@@ -1,0 +1,84 @@
+{
+  "schema": "velvet.openpost_production_origin.v1",
+  "task_id": "openpost-production-origin-2026-09-18",
+  "domain": "system_engineering",
+  "authority": {
+    "contract": 6,
+    "revision": "6.2",
+    "bundle": "VF-PROJECT-6.2-DETAIL-TRUTH",
+    "project_preflight": "PASS"
+  },
+  "repo": {
+    "base_main": "2e617dea7a5fc013fd310ac96f9589d7915d6a92",
+    "branch": "chore/openpost-prod-origin-2026-09-18"
+  },
+  "visible_text": {
+    "status": "PASS",
+    "surface": "human-document",
+    "text_sha256": "c3f95d08fc094b2f378e7b68cf946426b55486046a06d2fa6a6fdffae992b15e"
+  },
+  "gcp": {
+    "project": "instamcp",
+    "billingEnabled": true,
+    "zone": "us-central1-a",
+    "instance": "openpost-prod",
+    "machineType": "e2-micro",
+    "bootDiskGb": 30,
+    "bootDiskType": "pd-standard",
+    "staticIpv4": "34.9.7.22",
+    "serviceAccountAttached": false
+  },
+  "runtime": {
+    "version": "v4.35.0",
+    "linuxServerSha256": "157abefc2810dde09e914b78915f79c0160fcf60047856a30a1261c1721d2856",
+    "publicOrigin": "https://openpost.34.9.7.22.sslip.io",
+    "publicMediaOrigin": "https://openpost.34.9.7.22.sslip.io/media",
+    "httpsReadyHttpStatus": 200,
+    "readyStatus": "ready",
+    "readyDatabase": "ok",
+    "httpRedirectStatus": 308,
+    "tlsVerifyResult": 0,
+    "directTcp18080External": "blocked_timeout",
+    "diagnosticsEnabled": false,
+    "preRestartServices": {
+      "openpost": "active",
+      "caddy": "active"
+    },
+    "restartVerified": true,
+    "postRestartVmStatus": "RUNNING",
+    "postRestartReadyHttpStatus": 200,
+    "postRestartReadyStatus": "ready",
+    "postRestartReadyDatabase": "ok",
+    "swapBytes": 1073737728,
+    "envDirectoryPermissions": "0700 root:root",
+    "envFilePermissions": "0600 root:root",
+    "directSqliteSchemaCheck": "UNPROVEN",
+    "directSqliteIntegrityCheck": "UNPROVEN"
+  },
+  "provider": {
+    "metaAppId": "1748471159829574",
+    "metaAppSecretAvailableToOpenPost": false,
+    "ownerWorkspaceBootstrapCompleted": false,
+    "providerOAuthReady": false
+  },
+  "deliveryApproval": {
+    "status": "BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED",
+    "live": false,
+    "publicWritePerformed": false
+  },
+  "production": {
+    "hostStatus": "HOST_READY_PROVIDER_BLOCKED",
+    "productionDeployed": false,
+    "promotionAllowed": false,
+    "remainingBlockers": [
+      "OpenPost owner/workspace bootstrap",
+      "Meta App Secret entry and provider OAuth",
+      "real authorized Instagram Graph write plus canonical list_media/get_media verification"
+    ]
+  },
+  "notes": [
+    "No Instagram write was performed.",
+    "No direct post-reboot SQLite schema/integrity claim is made; post-reboot /api/v1/ready proved database=ok.",
+    "The project-wide default VPC SSH/RDP rules were not modified because they are shared/global; no RDP service runs on this Linux VM."
+  ]
+}
