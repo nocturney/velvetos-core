@@ -18,6 +18,10 @@ Read `packages/vfom/VISUAL-OS.md`, `VISUAL-DNA.json`, `packages/vfom/OWNER-APPRO
 
 The owner-approved grid reference is a strong visual-language and quality-floor authority. It does **not** override Product Truth, rights, the constitution, or factual source evidence. When a stylized reference conflicts with the actual physical product, the real source product always wins.
 
+## Reference-role separation
+
+During review, distinguish **aesthetic references** from **Product Truth evidence**. The former may judge composition, atmosphere, hierarchy and styling; the latter may judge fidelity only. A Product Truth QA/teaching board must never be treated as a style target or supplied to a generative reference stack. `Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png` is rejected for creative conditioning by owner correction and may not be used to justify a technical/QA-board aesthetic.
+
 ## Owner-approved grid standard · mandatory checks
 
 Before approving any feed visual, cover, carousel page, Story still or grid plan, verify all of the following where applicable:
