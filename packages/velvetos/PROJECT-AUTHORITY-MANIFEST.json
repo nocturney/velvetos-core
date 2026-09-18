@@ -331,5 +331,15 @@
       ]
     }
   },
-  "completionLaw": "No done/ready/published/synced claim without domain postflight evidence on the exact final artifact or provider result."
+  "completionLaw": "No done/ready/published/synced claim without domain postflight evidence on the exact final artifact or provider result.",
+  "chatgptProjectBundle": {
+    "contractVersion": 6,
+    "revision": "6.3",
+    "bundleId": "VF-PROJECT-6.3-EDITORIAL-RETOUCH-TRUTH",
+    "authority": "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.3.txt",
+    "assetManifest": "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.3.json",
+    "instructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.3.txt",
+    "offlineCreativePublicationFallback": true,
+    "offlineRepoStateLabel": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK"
+  }
 }
