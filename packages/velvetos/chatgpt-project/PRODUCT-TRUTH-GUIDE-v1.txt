@@ -1,0 +1,29 @@
+VELVET FACTORY — PRODUCT TRUTH GUIDE v1
+Status: QA / FIDELITY LAW ONLY · NOT A STYLE REFERENCE
+
+PURPOSE
+Protect the real photographed product without contaminating the aesthetic direction. This file may guide source locking, masks, crop provenance and final QA. It must not be used as a moodboard, style image, generation reference or composition template.
+
+SOURCE OF PHYSICAL TRUTH
+The actual verified photograph(s) of the current product are the only source for geometry, silhouette, proportions, parts, openings, surface markings, color, material appearance, construction and identifying details.
+
+ALLOWED PHOTO RETOUCH
+Brightness/exposure; mild contrast; white balance/color temperature; highlights/shadows; light sharpening; gentle cleanup/noise reduction; crop/straighten; subtle subject-separation or lighting improvement. These are photo retouch, not synthetic subject change, only while the physical product remains materially unchanged.
+
+FORBIDDEN PRODUCT CHANGE
+Do not alter or invent texture/material identity, parts/elements, geometry, silhouette, proportions, identifying details, visible surface pattern, protected face/eyes or true product color.
+
+PROTECTED DETAILS
+Identity-critical details must match source exactly. For the owl example this includes eye shape/size/spacing, iris/pupil pattern and color, gaze, eyelids, surrounding pattern/highlights, beak, ear tufts, feather markings, claws and base geometry/texture. Apply the same principle to analogous details on other products.
+
+DETAIL CARDS
+If a detail card is presented as a zoom/magnification of the hero, it is a literal deterministic crop of that exact hero/source frame. No independently generated subject/background, relighting, recoloring or separate retouch inside the crop.
+
+GENERATION SEPARATION
+Do not feed Product Truth QA boards or teaching sheets into image generation/style conditioning. Use the approved aesthetic references for look and feel; use source pixels + this text for truth.
+
+FAILURE RESPONSE
+If a generative edit changes the product, discard that subject and return to source pixels with a protected mask/cutout or deterministic composite. Do not repeatedly regenerate defective eyes/identity details.
+
+FINAL QA
+Compare exact final vs source at full and mobile size. Verify source match, protected details, allowed-retouch bounds, same-frame crop provenance, safe margins, truthful color/material, and absence of invented parts/claims.
