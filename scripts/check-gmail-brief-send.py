@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "packages"))
 
 from vfops import gmail_brief_send as sender  # noqa: E402
 from vfops.gmail_brief_request import build_safe_mime, encode_subject  # noqa: E402
+from vfops.gmail_oauth_bootstrap import load_client  # noqa: E402
 
 
 def fail(msg: str) -> None:
@@ -51,6 +52,45 @@ def main() -> None:
         fail("UTF-8 subject was not converted to ASCII-safe RFC 2047")
     if "=?utf-8?" not in encoded_subject.lower():
         fail("UTF-8 subject is missing RFC 2047 encoding")
+
+    # Authorized-user JSON may be reused as client metadata for an explicit
+    # consent re-bootstrap; no new plaintext client-secret file is required.
+    with tempfile.TemporaryDirectory() as tmp:
+        client_path = Path(tmp) / "authorized-user.json"
+        client_path.write_text(
+            json.dumps({
+                "type": "authorized_user",
+                "client_id": "client-id-test",
+                "client_secret": "client-secret-test",
+                "refresh_token": "revoked-refresh-test",
+            }),
+            encoding="utf-8",
+        )
+        client = load_client(client_path)
+        if client != {"client_id": "client-id-test", "client_secret": "client-secret-test"}:
+            fail("authorized_user client metadata is not accepted by OAuth bootstrap")
+
+    # If refresh metadata exists, refresh failure must fail closed. Never fall
+    # back to a cached/stale access token after invalid_grant or revocation.
+    original_refresh = sender._refresh_authorized_user
+    def forced_refresh_failure(data: dict) -> str:
+        raise RuntimeError("forced refresh failure")
+    sender._refresh_authorized_user = forced_refresh_failure
+    try:
+        try:
+            sender._token_from_mapping({
+                "token": "stale-access-token",
+                "refresh_token": "revoked-refresh-test",
+                "client_id": "client-id-test",
+                "client_secret": "client-secret-test",
+            })
+        except RuntimeError as exc:
+            if "forced refresh failure" not in str(exc):
+                fail(f"unexpected refresh failure: {exc}")
+        else:
+            fail("refresh failure fell back to a stale access token")
+    finally:
+        sender._refresh_authorized_user = original_refresh
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp_path = Path(tmp)

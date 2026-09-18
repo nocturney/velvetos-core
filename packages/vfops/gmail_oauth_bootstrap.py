@@ -36,7 +36,10 @@ def load_client(path: Path) -> dict:
     data = json.loads(path.read_text(encoding="utf-8"))
     block = data.get("installed") or data.get("web")
     if not isinstance(block, dict):
-        raise RuntimeError("OAuth client JSON must contain installed{} or web{}")
+        if data.get("type") == "authorized_user" or data.get("refresh_token"):
+            block = data
+        else:
+            raise RuntimeError("OAuth client JSON must contain installed{}, web{}, or authorized_user client metadata")
     client_id = (block.get("client_id") or "").strip()
     client_secret = (block.get("client_secret") or "").strip()
     if not client_id or not client_secret:

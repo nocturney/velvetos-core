@@ -329,10 +329,7 @@ def _token_from_mapping(data: dict) -> str:
         value = data.get(key)
         if isinstance(value, str) and value.strip() and not value.strip().startswith("{"):
             if data.get("refresh_token") and data.get("client_id"):
-                try:
-                    return _refresh_authorized_user(data)
-                except Exception:
-                    return value.strip()
+                return _refresh_authorized_user(data)
             return value.strip()
     kind = (data.get("type") or "").strip()
     if kind == "authorized_user" or data.get("refresh_token"):
