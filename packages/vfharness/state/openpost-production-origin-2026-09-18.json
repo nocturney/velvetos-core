@@ -15,7 +15,9 @@
   "visible_text": {
     "status": "PASS",
     "surface": "human-document",
-    "text_sha256": "c3f95d08fc094b2f378e7b68cf946426b55486046a06d2fa6a6fdffae992b15e"
+    "text_sha256": "5f59f5a0ce8139c5671aae1291c992f08b06a54c233af89de115b2bf5238bb4d",
+    "lint": "python scripts/check-vfcopy.py lint --text <exact owner-bootstrap summary> => status=pass",
+    "checkedAt": "2026-09-18T11:21:39+03:00"
   },
   "gcp": {
     "project": "instamcp",
