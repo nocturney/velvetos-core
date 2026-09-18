@@ -12,16 +12,92 @@
     "base_main": "75fa03e3928e81d4fc64b4b737aa9b2d974a0167",
     "branch": "chore/openpost-owner-bootstrap-final-20260918",
     "provenance_branch": "chore/openpost-prod-origin-2026-09-18",
-    "source_review_branch": "chore/openpost-owner-bootstrap-2026-09-18"
+    "source_review_branch": "chore/openpost-owner-bootstrap-2026-09-18",
+    "evidence_repair_base_main": "8c7b873235486c8e41dde913c32f3b2ec99ab960",
+    "evidence_repair_branch": "fix/openpost-evidence-replay-20260918"
   },
   "visible_text": {
     "status": "PASS",
     "surface": "human-document",
     "text_sha256": "a584c9b1086ffec72180c79db644fe4e9fc1def9615006664378db87f9dbb305",
-    "lint": "PASS: python scripts/check-vfcopy.py lint --text <visible_text.input_text>",
     "checkedAt": "2026-09-18T13:41:33+03:00",
     "input_text": "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace מאומתים, המשתמש הראשון instance-admin והרשמות חדשות כבויות. Meta App Secret/provider OAuth ו־write חי מאומת עדיין חסרים.",
-    "lint_command": "python scripts/check-vfcopy.py lint --text <visible_text.input_text>"
+    "lint_execution": {
+      "tool": "scripts/check-vfcopy.py",
+      "argv": [
+        "lint",
+        "--text",
+        "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace מאומתים, המשתמש הראשון instance-admin והרשמות חדשות כבויות. Meta App Secret/provider OAuth ו־write חי מאומת עדיין חסרים."
+      ],
+      "exit_code": 0,
+      "status": "pass",
+      "problems": []
+    },
+    "gate_execution": {
+      "tool": "scripts/vf_visible_text.py",
+      "argv": [
+        "--surface",
+        "human-document",
+        "--text",
+        "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace מאומתים, המשתמש הראשון instance-admin והרשמות חדשות כבויות. Meta App Secret/provider OAuth ו־write חי מאומת עדיין חסרים.",
+        "--gate",
+        "--truth-checked",
+        "--reader-first",
+        "--copy-authority",
+        "--surface-qa",
+        "--domain-tool",
+        "vfigos",
+        "--domain-tool",
+        "vfharness",
+        "--domain-tool",
+        "velvetos"
+      ],
+      "exit_code": 0,
+      "visible_text_gate": "PASS",
+      "text_sha256": "a584c9b1086ffec72180c79db644fe4e9fc1def9615006664378db87f9dbb305"
+    },
+    "stage_evidence": {
+      "truth_checked": {
+        "status": "PASS",
+        "sources": [
+          "bootstrapEvidence.sqlite.output",
+          "bootstrapEvidence.authConfig.response",
+          "bootstrapEvidence.ready.response",
+          "provider.providerOAuthReady",
+          "deliveryApproval.live"
+        ]
+      },
+      "reader_first": {
+        "status": "PASS",
+        "surface": "human-document",
+        "reader": "owner/operator",
+        "purpose": "concise evidence checkpoint; no public CTA"
+      },
+      "copy_authority": {
+        "status": "PASS",
+        "tool": "scripts/check-vfcopy.py",
+        "exit_code": 0
+      },
+      "humanizer_ai_tells": {
+        "status": "PASS",
+        "tool": "scripts/check-vfcopy.py lint",
+        "problems": []
+      },
+      "surface_qa": {
+        "status": "PASS",
+        "checks": [
+          "no LIVE claim",
+          "no productionDeployed claim",
+          "no Instagram write claim",
+          "no secret or user identity field in bootstrap evidence"
+        ]
+      },
+      "domain_tools_recorded": [
+        "vfigos",
+        "vfharness",
+        "velvetos"
+      ]
+    }
   },
   "gcp": {
     "project": "instamcp",
@@ -104,7 +180,7 @@
     "openpostWorkspaces": 1,
     "openpostWorkspaceMembers": 1,
     "registrationEnabled": false,
-    "bootstrapObservedAt": "2026-09-18T11:21:39+03:00",
+    "bootstrapObservedAt": "2026-09-18T12:32:42+03:00",
     "providerApps": 0,
     "providerInstallations": 0,
     "socialAccounts": 0,
@@ -129,5 +205,69 @@
     "No direct post-reboot SQLite schema/integrity claim is made; post-reboot /api/v1/ready proved database=ok.",
     "Project-wide default VPC SSH/RDP rules remain unchanged, but higher-priority target-specific rules restrict this VM: SSH is allowed only from Google IAP and SSH/RDP are denied from all other IPv4 sources.",
     "First OpenPost user exists, is instance admin, and one workspace with one member exists. New registrations are disabled via OPENPOST_DISABLE_REGISTRATIONS=true and /api/v1/auth/config reports registration_enabled=false after restart."
-  ]
+  ],
+  "bootstrapEvidence": {
+    "sqlite": {
+      "observedAt": "2026-09-18T12:32:42+03:00",
+      "connection_uri": "file:/var/lib/openpost/db/openpost.db?mode=ro",
+      "pragma_query_only": true,
+      "queries": {
+        "owner_admin_rows": "SELECT count(*) FROM users WHERE is_admin=1",
+        "provider_account_bindings": "SELECT count(*) FROM provider_account_bindings",
+        "provider_apps": "SELECT count(*) FROM provider_apps",
+        "provider_installations": "SELECT count(*) FROM provider_installations",
+        "social_accounts": "SELECT count(*) FROM social_accounts",
+        "users": "SELECT count(*) FROM users",
+        "workspace_members": "SELECT count(*) FROM workspace_members",
+        "workspaces": "SELECT count(*) FROM workspaces"
+      },
+      "canonicalization": "json.dumps(output, sort_keys=True, separators=(',', ':')) encoded as UTF-8",
+      "output_sha256": "66917fb772ef41b45a9928f20f7fe7fa67489992b185810a947bcf5a567d4cf1",
+      "output": {
+        "owner_admin_rows": 1,
+        "provider_account_bindings": 0,
+        "provider_apps": 0,
+        "provider_installations": 0,
+        "social_accounts": 0,
+        "users": 1,
+        "workspace_members": 1,
+        "workspaces": 1
+      },
+      "derivations": {
+        "sole_user_is_instance_admin": {
+          "formula": "users == 1 and owner_admin_rows == 1",
+          "result": true
+        }
+      },
+      "identity_fields_emitted": false
+    },
+    "authConfig": {
+      "observedAt": "2026-09-18T13:37:46+03:00",
+      "method": "public HTTPS GET /api/v1/auth/config",
+      "http_status": 200,
+      "canonicalization": "json.dumps(response, ensure_ascii=False, sort_keys=True, separators=(',', ':')) encoded as UTF-8",
+      "canonical_json_sha256": "e7133957cf8d4ed529d0445cf741e8c9360a7637f8f0daf27cdfdb9b29e61e13",
+      "response": {
+        "$schema": "https://openpost.34.9.7.22.sslip.io/api/v1/schemas/AuthConfigurationOutputBody.json",
+        "email_verification_required": false,
+        "legal_acceptance_required": false,
+        "password_reset_enabled": false,
+        "public_profiles_enabled": true,
+        "purchase_choice_required": false,
+        "registration_enabled": false
+      }
+    },
+    "ready": {
+      "observedAt": "2026-09-18T13:37:46+03:00",
+      "method": "public HTTPS GET /api/v1/ready",
+      "http_status": 200,
+      "canonicalization": "json.dumps(response, ensure_ascii=False, sort_keys=True, separators=(',', ':')) encoded as UTF-8",
+      "canonical_json_sha256": "fa2f4976b66277e279c55e7352cbf31d6061323c6a39b8337825e7711ed2339d",
+      "response": {
+        "$schema": "https://openpost.34.9.7.22.sslip.io/api/v1/schemas/Readiness-checkResponse.json",
+        "database": "ok",
+        "status": "ready"
+      }
+    }
+  }
 }
