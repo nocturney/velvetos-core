@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-09-18 ? **Morning Brief Windows UTF-8 repair:** `vfops_loop.py` now reads/writes repo text explicitly as UTF-8, configures its own stdout/stderr for UTF-8, and forces child Python consumers to inherit `PYTHONUTF8=1` / `PYTHONIOENCODING=utf-8`. This prevents Hebrew corruption/CP1252 crashes on the Windows worker; the 2026-09-18 brief artifact was regenerated with 7 slots, no traceback/missing-output markers, and no fabricated delivery claim.
+- 2026-09-18 — **Morning Brief Windows UTF-8 repair:** `vfops_loop.py` now reads/writes repo text explicitly as UTF-8, configures its own stdout/stderr for UTF-8, and forces child Python consumers to inherit `PYTHONUTF8=1` / `PYTHONIOENCODING=utf-8`. This prevents Hebrew corruption/CP1252 crashes on the Windows worker; the 2026-09-18 brief artifact was regenerated with 7 slots, no traceback/missing-output markers, and no fabricated delivery claim.
 
 - 2026-09-18 — **Morning Brief staleness cadence repair:** `check-staleness.py` now enforces the canonical 09:00 Asia/Jerusalem Morning Brief after its existing 15-minute grace instead of the retired 07:00 cadence. This aligns the repository gate with `packages/vfops/ROUTINE.md` and the protected automation schedule; no brief artifact is fabricated to satisfy CI.
 
