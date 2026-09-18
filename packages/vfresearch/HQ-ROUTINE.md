@@ -96,3 +96,7 @@ python3 scripts/vfresearch_cadence.py freshness
 | סוף יום | `vf-daily-learning` | `vfops` |
 | ניתוב | `vf-hq-memory` | `vfmem` |
 | דוח מנתונים קיימים | `python3 scripts/vf_office_report.py` | `CLIENT-REPORT-TEMPLATE.md` · `--fixture` לנתוני דמה |
+
+## Structured demand adapter note
+
+The weekly Print-Demand pass may use `DEMAND-SIGNALS.md` when structured search/marketplace evidence adds value. It is not a new cadence: acquisition happens inside the existing research run, normalized by `vf_demand_signals.py`, and the resulting evidence is consumed by the existing Print-Demand artifact. No provider scheduler is added.

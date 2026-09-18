@@ -1344,6 +1344,30 @@
         "vfresearch"
       ],
       "note": "Discovery catalogue only. Public external signals, bounded cost, no cookies/private scraping. Own IG metrics remain Instagram MCP."
+    },
+    {
+      "id": "cporter202-social-growth-apis-for-creators",
+      "kind": "repo",
+      "url": "https://github.com/cporter202/social-growth-apis-for-creators",
+      "title": "social-growth-apis-for-creators — public provider discovery catalogue",
+      "firstEmbedded": "2026-09-18",
+      "lastReviewed": "2026-09-18",
+      "packs": [
+        "vfresearch"
+      ],
+      "note": "Discovery catalogue only. Prefer narrow public adapters for social/reference research; normalize into existing SocialResearchPacket. No engagement automation, cookies, second runtime, scheduler, or analytics SoT."
+    },
+    {
+      "id": "cporter202-api-mega-list",
+      "kind": "repo",
+      "url": "https://github.com/cporter202/API-mega-list",
+      "title": "API-mega-list — broad provider discovery index",
+      "firstEmbedded": "2026-09-18",
+      "lastReviewed": "2026-09-18",
+      "packs": [
+        "vfresearch"
+      ],
+      "note": "Discovery index only, including sponsored/featured listings. Filter by real capability gaps, independently validate providers, and integrate only through existing VelvetOS modules/contracts. No wholesale import or parallel runtime."
     }
   ],
   "addLink": {

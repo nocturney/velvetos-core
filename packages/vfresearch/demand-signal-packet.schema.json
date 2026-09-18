@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvetos.local/schema/demand-signal-packet.schema.json",
+  "title": "VelvetOS DemandSignalPacket",
+  "type": "object",
+  "required": ["schemaVersion", "window", "sources", "signals", "rules"],
+  "properties": {
+    "schemaVersion": {"const": "1.0"},
+    "window": {
+      "type": "object",
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"type": "string"},
+        "end": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "geo": {"type": ["string", "null"]},
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["url", "provider", "observed_at"],
+        "properties": {
+          "url": {"type": "string", "pattern": "^https?://"},
+          "provider": {"type": "string"},
+          "observed_at": {"type": "string"}
+        },
+        "additionalProperties": true
+      }
+    },    "signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_url", "provider", "kind", "query", "observed_at", "metrics", "series", "related_terms"],
+        "properties": {
+          "source_url": {"type": "string", "pattern": "^https?://"},
+          "provider": {"type": "string"},
+          "kind": {
+            "enum": ["search_interest", "search_suggestion", "marketplace_observation", "serp_observation"]
+          },
+          "query": {"type": "string", "minLength": 1},
+          "geo": {"type": ["string", "null"]},
+          "observed_at": {"type": "string"},
+          "metrics": {
+            "type": "object",
+            "additionalProperties": {"type": ["number", "integer", "null"]}
+          },
+          "series": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["date", "value"],
+              "properties": {
+                "date": {"type": "string"},
+                "value": {"type": ["number", "integer", "null"]}
+              },
+              "additionalProperties": false
+            }
+          },          "related_terms": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "note": {"type": ["string", "null"]}
+        },
+        "not": {
+          "anyOf": [
+            {"required": ["demand_score"]},
+            {"required": ["virality_score"]}
+          ]
+        },
+        "additionalProperties": true
+      }
+    },
+    "rules": {
+      "type": "object",
+      "required": [
+        "publicExternalOnly",
+        "missingMetricIsNotZero",
+        "syntheticDemandScoreForbidden",
+        "noAutomaticSkuPromotion",
+        "licenseGateRequiredBeforePrintCandidate"
+      ],
+      "properties": {
+        "publicExternalOnly": {"const": true},
+        "missingMetricIsNotZero": {"const": true},
+        "syntheticDemandScoreForbidden": {"const": true},
+        "noAutomaticSkuPromotion": {"const": true},
+        "licenseGateRequiredBeforePrintCandidate": {"const": true}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

@@ -123,3 +123,9 @@ The profile is a **prior**, never a truth override:
 - `cporter202/social-media-scraping-apis`: provider discovery only; no clone/runtime dependency.
 
 All three stay registered in `LINKS.json` for recurring review.
+
+## Preferred adapter selection
+
+Provider catalogues are discovery indexes, never trusted integration lists. Select an adapter only for a named evidence gap: WebSearch/WebFetch first; then a narrow public provider if repeatability, transcript depth, structured metrics, or monitoring materially helps. Prefer bounded queries, explicit source URLs, observation timestamps, provider health/current docs, cached evidence, and normalization into the existing packet contracts. Never add a provider-specific scheduler or analytics source of truth.
+
+`cporter202/social-growth-apis-for-creators` and `cporter202/API-mega-list` are discovery catalogues. Social signals continue to normalize into `SocialResearchPacket`; non-social search/marketplace demand observations use `DemandSignalPacket` from `DEMAND-SIGNALS.md`.
