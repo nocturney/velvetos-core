@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-18 — Social Growth provider discovery נוסף ל־vfresearch: קטלוג חיצוני נשאר discovery בלבד, עם shortlist למחקר ציבורי ו־watch-delta דטרמיניסטי; בלי runtime/scheduler/engagement automation חדש.</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-18 — Social Growth provider discovery added to vfresearch: the external catalogue remains discovery-only, with a public-research shortlist and deterministic watch-delta; no new runtime, scheduler, or engagement automation.</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-18 — **Social Growth provider discovery:** reviewed `cporter202/social-growth-apis-for-creators` at `807993fcd3b1c14efab3a8912c9d6c08c571374e` (2,786 Apify catalogue rows / 6 sections), registered it in…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-18 — **Social Growth provider discovery:** reviewed `cporter202/social-growth-apis-for-creators` at `807993fcd3b1c14efab3a8912c9d6c08c571374e` (2,786 Apify catalogue rows / 6 sections), registered it in…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
