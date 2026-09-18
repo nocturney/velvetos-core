@@ -17,7 +17,7 @@ SCENARIOS = ROOT / "packages" / "vfe2b" / "scenarios.json"
 LINKS_MAX_STALE_DAYS = 8
 CHECKPOINT_MAX_STALE_DAYS = 2
 TZ = ZoneInfo("Asia/Jerusalem")
-BRIEF_DUE = time(7, 0)
+BRIEF_DUE = time(9, 0)
 BRIEF_GRACE = timedelta(minutes=15)
 
 
