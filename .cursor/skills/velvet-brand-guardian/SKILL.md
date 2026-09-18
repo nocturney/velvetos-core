@@ -47,6 +47,8 @@ Use `N/A` only where a stage genuinely does not apply. The governing principle i
 
 Product Truth fails closed if the final changes product identity, geometry, silhouette, proportions, part count, visible surface pattern or material identity, or changes verified real product color without an explicit clearly-labelled variant brief. A real-product final requires `syntheticSubjectChange=NONE` and `sourceSubjectMatch=PASS`.
 
+Owner correction (2026-09-18): do not classify ordinary source-photo correction as Product Truth drift. Brightness/exposure, mild contrast, white balance/color temperature, highlight/shadow balancing, light sharpening, gentle cleanup/noise reduction, crop/straighten and subtle subject-separation/lighting improvement are allowed when they preserve the actual product. They are `photoRetouch`, not `syntheticSubjectChange`. Fail only if the edit materially changes or misrepresents texture/material identity, elements, geometry, silhouette, proportions, identifying details, visible pattern, protected eye/face details or true product color. This does not waive the separate creative-delta requirement.
+
 ## QA pass
 
 1. Run deterministic checks first: aspect ratio, resolution, safe zones, subtitle bounds, frame integrity, mobile-sized preview, text contrast and audio loudness when applicable.
