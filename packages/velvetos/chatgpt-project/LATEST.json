@@ -1,0 +1,11 @@
+{
+  "contractVersion": 6,
+  "revision": "6.3",
+  "bundleId": "VF-PROJECT-6.3-EDITORIAL-RETOUCH-TRUTH",
+  "authority": "PROJECT-AUTHORITY-v6.3.txt",
+  "assetManifest": "ASSET-MANIFEST-v6.3.json",
+  "instructions": "PROJECT-INSTRUCTIONS-v6.3.txt",
+  "projectCanonicalAuthorityFilename": "Velvet-Factory-Project-Authority-v6.txt",
+  "projectAssetManifestFilename": "Velvet-Factory-ASSET-MANIFEST-v6.3.json",
+  "status": "CURRENT"
+}
