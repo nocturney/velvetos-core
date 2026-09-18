@@ -9,13 +9,19 @@
     "project_preflight": "PASS"
   },
   "repo": {
-    "base_main": "dda12dd11bad44e43aaec83641ecea186e0badd2",
-    "branch": "chore/openpost-prod-origin-2026-09-18"
+    "base_main": "75fa03e3928e81d4fc64b4b737aa9b2d974a0167",
+    "branch": "chore/openpost-owner-bootstrap-final-20260918",
+    "provenance_branch": "chore/openpost-prod-origin-2026-09-18",
+    "source_review_branch": "chore/openpost-owner-bootstrap-2026-09-18"
   },
   "visible_text": {
     "status": "PASS",
     "surface": "human-document",
-    "text_sha256": "c3f95d08fc094b2f378e7b68cf946426b55486046a06d2fa6a6fdffae992b15e"
+    "text_sha256": "a584c9b1086ffec72180c79db644fe4e9fc1def9615006664378db87f9dbb305",
+    "lint": "PASS: python scripts/check-vfcopy.py lint --text <visible_text.input_text>",
+    "checkedAt": "2026-09-18T13:41:33+03:00",
+    "input_text": "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace מאומתים, המשתמש הראשון instance-admin והרשמות חדשות כבויות. Meta App Secret/provider OAuth ו־write חי מאומת עדיין חסרים.",
+    "lint_command": "python scripts/check-vfcopy.py lint --text <visible_text.input_text>"
   },
   "gcp": {
     "project": "instamcp",
@@ -91,8 +97,18 @@
   "provider": {
     "metaAppId": "1748471159829574",
     "metaAppSecretAvailableToOpenPost": false,
-    "ownerWorkspaceBootstrapCompleted": false,
-    "providerOAuthReady": false
+    "ownerWorkspaceBootstrapCompleted": true,
+    "providerOAuthReady": false,
+    "ownerIsInstanceAdmin": true,
+    "openpostUsers": 1,
+    "openpostWorkspaces": 1,
+    "openpostWorkspaceMembers": 1,
+    "registrationEnabled": false,
+    "bootstrapObservedAt": "2026-09-18T11:21:39+03:00",
+    "providerApps": 0,
+    "providerInstallations": 0,
+    "socialAccounts": 0,
+    "providerAccountBindings": 0
   },
   "deliveryApproval": {
     "status": "BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED",
@@ -104,7 +120,6 @@
     "productionDeployed": false,
     "promotionAllowed": false,
     "remainingBlockers": [
-      "OpenPost owner/workspace bootstrap",
       "Meta App Secret entry and provider OAuth",
       "real authorized Instagram Graph write plus canonical list_media/get_media verification"
     ]
@@ -112,6 +127,7 @@
   "notes": [
     "No Instagram write was performed.",
     "No direct post-reboot SQLite schema/integrity claim is made; post-reboot /api/v1/ready proved database=ok.",
-    "Project-wide default VPC SSH/RDP rules remain unchanged, but higher-priority target-specific rules restrict this VM: SSH is allowed only from Google IAP and SSH/RDP are denied from all other IPv4 sources."
+    "Project-wide default VPC SSH/RDP rules remain unchanged, but higher-priority target-specific rules restrict this VM: SSH is allowed only from Google IAP and SSH/RDP are denied from all other IPv4 sources.",
+    "First OpenPost user exists, is instance admin, and one workspace with one member exists. New registrations are disabled via OPENPOST_DISABLE_REGISTRATIONS=true and /api/v1/auth/config reports registration_enabled=false after restart."
   ]
 }
