@@ -9,12 +9,14 @@
     "project_preflight": "PASS"
   },
   "repo": {
-    "base_main": "75fa03e3928e81d4fc64b4b737aa9b2d974a0167",
-    "branch": "chore/openpost-owner-bootstrap-final-20260918",
+    "base_main": "25b851e57a5a23bd0093fcf1cee07f79d96a1a19",
+    "branch": "chore/openpost-provider-oauth-20260918",
     "provenance_branch": "chore/openpost-prod-origin-2026-09-18",
     "source_review_branch": "chore/openpost-owner-bootstrap-2026-09-18",
     "evidence_repair_base_main": "8c7b873235486c8e41dde913c32f3b2ec99ab960",
-    "evidence_repair_branch": "fix/openpost-evidence-replay-20260918"
+    "evidence_repair_branch": "fix/openpost-evidence-replay-20260918",
+    "owner_bootstrap_base_main": "75fa03e3928e81d4fc64b4b737aa9b2d974a0167",
+    "oauth_evidence_commit_parent_main": "25b851e57a5a23bd0093fcf1cee07f79d96a1a19"
   },
   "visible_text": {
     "status": "PASS",
