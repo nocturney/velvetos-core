@@ -11,6 +11,8 @@ if [[ "$PROJECT" =~ ^[0-9]+$ ]]; then
   exit 1
 fi
 REGION="${GCP_REGION:-me-west1}"
+EXPECTED_PROJECT="instamcp"
+EXPECTED_REGION="me-west1"
 EXPECTED_MUTATION_SERVICE="velvet-instagram-mcp"
 SERVICE="${CLOUD_RUN_SERVICE:-velvet-instagram-mcp}"
 EXPECTED_MUTATION_SERVICE_ACCOUNT="velvet-instagram-mcp-runtime@${PROJECT}.iam.gserviceaccount.com"
@@ -27,6 +29,15 @@ BEARER_SECRET="${GSM_BEARER_SECRET:-velvet-instagram-mcp-bearer}"
 ACCESS_SECRET="${GSM_ACCESS_SECRET:-velvet-instagram-mcp-access}"
 IG_USER_SECRET="${GSM_IG_USER_SECRET:-velvet-instagram-mcp-ig-user}"
 SPEND_BUCKET="${VELVET_DELIVERY_APPROVAL_SPEND_BUCKET:-velvet-ig-approval-spend}"
+
+if [[ "${PROJECT}" != "${EXPECTED_PROJECT}" ]]; then
+  echo "Refusing deploy: project must remain ${EXPECTED_PROJECT}." >&2
+  exit 1
+fi
+if [[ "${REGION}" != "${EXPECTED_REGION}" ]]; then
+  echo "Refusing deploy: region must remain ${EXPECTED_REGION}." >&2
+  exit 1
+fi
 
 if ! command -v gcloud >/dev/null 2>&1; then
   echo "gcloud not found. Install Google Cloud SDK and authenticate first." >&2
@@ -70,7 +81,8 @@ fi
 python3 "${REPO_ROOT}/packages/vfigos/approval/build_isolation.py" \
   --project "${PROJECT}" \
   --region "${REGION}" \
-  --cloudbuild-config "${BUILD_CONFIG}"
+  --cloudbuild-config "${BUILD_CONFIG}" \
+  --require-issuer-policy
 
 CAS_HOST_SUFFIXES="${VELVET_MEDIA_CAS_HOST_SUFFIXES:-storage.googleapis.com}"
 
