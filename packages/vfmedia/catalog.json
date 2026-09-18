@@ -2,7 +2,7 @@
   "name": "vfmedia-catalog",
   "title": "VelvetOS shared media catalog",
   "oneCatalog": true,
-  "updatedAt": "2026-09-13",
+  "updatedAt": "2026-09-18",
   "vaultRootId": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
   "locks": [
     "one-catalog",
@@ -18065,6 +18065,76 @@
         "state": "none",
         "reviewedAt": null,
         "note": "visual review does not block intake"
+      }
+    },
+    {
+      "id": "media-1dkCfkdfNj5ctJEIY6zjYol2KNB2a-nbU-v11",
+      "sourceFile": {
+        "id": "1dkCfkdfNj5ctJEIY6zjYol2KNB2a-nbU",
+        "url": "https://drive.google.com/file/d/1dkCfkdfNj5ctJEIY6zjYol2KNB2a-nbU/view?usp=drivesdk"
+      },
+      "viewDescription": "צילום מקור של ינשוף דקורטיבי מודפס בתלת־ממד על בסיס דמוי גזע. נגזרת v11: פוסט editorial חם עם גיבור מוצר מקורקע בפיקסלי המקור ושלושה תקריבי מקור מעוגלים לעיניים, שכבות הנוצות ומרקם הבסיס.",
+      "uploadedAt": "2026-09-18",
+      "productLink": null,
+      "status": "approved",
+      "assignee": "צמיחה / סטודיו",
+      "derivativeIds": [
+        {
+          "id": "1kK497496Dq_TaWg_dr8wX7s9uz1ElT-5",
+          "url": "https://drive.google.com/file/d/1kK497496Dq_TaWg_dr8wX7s9uz1ElT-5/view?usp=drivesdk"
+        },
+        {
+          "id": "1zJ--mdsQAwXo64yw8kjtO2HS0xFX6Qkv",
+          "url": "https://drive.google.com/file/d/1zJ--mdsQAwXo64yw8kjtO2HS0xFX6Qkv/view?usp=drivesdk"
+        },
+        {
+          "id": "1d6yBnLNiCenzoxok3_MblaaLd5yOO5WL",
+          "url": "https://drive.google.com/file/d/1d6yBnLNiCenzoxok3_MblaaLd5yOO5WL/view?usp=drivesdk"
+        },
+        {
+          "id": "1gq37p-0OrhX8Z7bDhWApfwuDLYLK5lli",
+          "url": "https://drive.google.com/file/d/1gq37p-0OrhX8Z7bDhWApfwuDLYLK5lli/view?usp=drivesdk"
+        }
+      ],
+      "sourceLinks": [
+        "https://drive.google.com/file/d/1dkCfkdfNj5ctJEIY6zjYol2KNB2a-nbU/view?usp=drivesdk"
+      ],
+      "versionApproval": {
+        "state": "approved",
+        "approvedBy": "Christian",
+        "approvedAt": "2026-09-18T15:58:00Z",
+        "note": "Owner explicitly instructed this task to prepare the full publication package and place it in the ready-media folder after QA. This is package/version approval only, not live Instagram publication authorization."
+      },
+      "truth": {
+        "origin": "studio_camera",
+        "truthLevel": "derived_real",
+        "rightsStatus": "unknown",
+        "usableFor": [
+          "hero"
+        ],
+        "visualTags": [
+          "owl",
+          "decorative",
+          "editorial",
+          "rounded-detail-cards",
+          "source-grounded"
+        ],
+        "qualityScore": null,
+        "project": "Velvet Factory",
+        "object": "owl decorative object",
+        "material": null,
+        "verifiedAt": "2026-09-18T15:58:00Z",
+        "evidenceRefs": [
+          "https://drive.google.com/file/d/1d6yBnLNiCenzoxok3_MblaaLd5yOO5WL/view?usp=drivesdk",
+          "https://drive.google.com/file/d/1SuwZFSZUbeWqLLQyDkrVlQftzker2t_k/view?usp=drivesdk",
+          "https://drive.google.com/file/d/1ajZb5ra73zuUnOlyfTOUXQ0lE4Qbt92S/view?usp=drivesdk"
+        ],
+        "note": "SOURCE_MASK_COMPOSITE; hero RGB and detail crops derive from verified source photo with only basic owner-permitted photographic retouching. No synthetic subject change recorded."
+      },
+      "visualReview": {
+        "state": "done",
+        "reviewedAt": "2026-09-18T15:58:00Z",
+        "note": "Exact final 1080x1350 and 432x540 mobile preview reviewed; Product Truth, reference match, copy, brand and final QA passed."
       }
     }
   ]
