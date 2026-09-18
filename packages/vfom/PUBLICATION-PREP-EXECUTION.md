@@ -51,6 +51,12 @@ Before production, decompose the approved visual/editorial references into concr
 
 Before delivery require `reference_match_gate: PASS`. Generic catalogue cards, contact sheets, template rails, spec-sheet layouts, or decorative annotation systems invented by the operator are FAIL unless directly justified by the approved reference grammar. Style references are `STYLE_ONLY`; they never supply product pixels or facts.
 
+### Reference-role separation
+
+Aesthetic conditioning and Product Truth are separate inputs. The approved broad visual, editorial and current-creative references may guide atmosphere, composition, hierarchy and graphic language. Product Truth comes from the verified source photographs plus the text fidelity guide. Product Truth QA/teaching images MUST NOT be supplied to image-generation, style-transfer, moodboard or aesthetic-conditioning tools. They may be retained only as historical/diagnostic evidence.
+
+Owner correction (2026-09-18): `Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png` is rejected for creative conditioning because it biased outputs toward a flat technical/QA-board look. Its factual lessons survive in the text-only Product Truth guide; the visual itself is not part of the creative reference stack.
+
 ### Direction rejection
 
 Owner feedback that a candidate is not aligned with the approved visual language sets `direction_status: REJECTED`. All candidates in that layout/treatment family become `REJECTED_FOR_REUSE` and MUST NOT be used as a source, reference, starting point or incremental revision. Restart from authority + approved references + verified product source.
