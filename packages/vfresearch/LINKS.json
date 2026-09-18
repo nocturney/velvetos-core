@@ -1344,6 +1344,19 @@
         "vfresearch"
       ],
       "note": "Discovery catalogue only. Public external signals, bounded cost, no cookies/private scraping. Own IG metrics remain Instagram MCP."
+    },
+    {
+      "id": "cporter202-social-growth-apis-for-creators",
+      "kind": "repo",
+      "url": "https://github.com/cporter202/social-growth-apis-for-creators",
+      "title": "social-growth-apis-for-creators — social provider discovery catalogue",
+      "firstEmbedded": "2026-09-18",
+      "lastReviewed": "2026-09-18",
+      "sourceNote": "packages/vfresearch/sources/2026-09-18-social-growth-apis-for-creators.md",
+      "packs": [
+        "vfresearch"
+      ],
+      "note": "Discovery catalogue only. Reviewed at 807993f: 2,786 Apify Actor links across 6 sections. Shortlist for public Reel/hashtag/Meta Ads/competitor research only; no DM/follow/comment automation, no private auth, no second runtime, no publish authority."
     }
   ],
   "addLink": {
