@@ -48,6 +48,8 @@ For Velvet Factory public visual work, `OWNER-APPROVED-GRID-STANDARD-2026-09-14.
 
 `synthetic_subject_change` חייב להיות `NONE`, ו־`source_subject_match` חייב לעבור. שינוי רקע, cleanup או תאורה מותר רק אם אינו משנה את המוצר, אינו מסתיר מידע מהותי ואינו יוצר claim פיזי מומצא.
 
+**Owner correction · 2026-09-18:** עריכת צילום בסיסית של מקור מאומת אינה הפרת Product Truth בפני עצמה. מותר לבצע brightness/exposure, קונטרסט מתון, white balance/טמפרטורת צבע, איזון highlights/shadows, חידוד קל, ניקוי/הפחתת רעש עדינים, crop/יישור ושיפור מתון של הפרדת הנושא/התאורה. אין לסמן פעולות אלה כ־`synthetic_subject_change` כל עוד המוצר נשאר אותו אובייקט פיזי ואין שינוי מהותי בטקסטורה/חומר, אלמנטים, גיאומטריה, סילואט, פרופורציות, פרטים מזהים, pattern נראה, עיניים/פנים מוגנים או צבע המוצר האמיתי. ההיתר הזה אינו הופך crop/exposure/contrast-only ל־creative treatment מספיק בפני עצמו.
+
 כשל בשלב כלשהו אינו “הערה”; הוא חוסם publish ומנותב ל־targeted repair. כשל איכות רגיל מתוקן אוטונומית ונבדק שוב. רק חסם פיזי/זכויות/עסקי אמיתי מגיע לבעלים.
 
 ## First-frame law
