@@ -151,5 +151,32 @@
       "packages/vfcanva/jobs/TEMPLATE.md"
     ]
   },
-  "canvaAssetIdRole": "ARCHIVAL_PROVENANCE_ONLY_NOT_A_PROVIDER_DEPENDENCY"
+  "canvaAssetIdRole": "ARCHIVAL_PROVENANCE_ONLY_NOT_A_PROVIDER_DEPENDENCY",
+  "productTruthPhotoRetouchPolicy": {
+    "ownerCorrectionDate": "2026-09-18",
+    "principle": "basic photographic correction is not Product Truth drift when the physical product remains materially unchanged",
+    "allowed": [
+      "brightness_exposure",
+      "mild_contrast",
+      "white_balance_color_temperature",
+      "highlights_shadows_balance",
+      "light_sharpening",
+      "gentle_cleanup_noise_reduction",
+      "crop_straighten",
+      "subtle_subject_separation_lighting_improvement"
+    ],
+    "forbiddenMaterialChanges": [
+      "texture_or_material_identity",
+      "elements_or_parts",
+      "geometry",
+      "silhouette",
+      "proportions",
+      "identifying_details",
+      "visible_surface_pattern",
+      "protected_eye_face_details",
+      "true_product_color"
+    ],
+    "syntheticSubjectChangeForAllowedRetouch": "NONE",
+    "creativeDeltaSeparateGate": true
+  }
 }
