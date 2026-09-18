@@ -15,18 +15,18 @@
     "target": "@velvets_cloud",
     "facebookMetaConnection": "verified_existing",
     "metaLoginRequirement": "satisfied",
-    "openpostProviderConfigured": false,
+    "openpostProviderConfigured": true,
     "canonicalLiveVerifyProvider": "adelaidasofia/instagram-mcp",
     "fallbackPublishProvider": "adelaidasofia/instagram-mcp",
     "autoDm": false,
     "boostAds": false,
     "openpostProviderProbe": {
-      "observedAt": "2026-09-18T11:21:39+03:00",
-      "providerApps": 0,
+      "observedAt": "2026-09-18T14:28:27.010293+03:00",
+      "providerApps": 1,
       "providerInstallations": 0,
-      "socialAccounts": 0,
+      "socialAccounts": 1,
       "providerAccountBindings": 0,
-      "status": "NOT_CONFIGURED"
+      "status": "OAUTH_CONNECTED"
     }
   },
   "releasePolicy": {
@@ -62,7 +62,7 @@
       "analytics": "PieFed analytics fixes only; no Instagram analytics contract change identified.",
       "databaseSchemaStorage": "No migration files were added between v4.34.2 and v4.35.0. Isolated smoke and promoted staging both remain at schema 136 with integrity_check=ok and zero foreign-key violations.",
       "security": "No VF provider-security boundary change identified. Current v4.35.0 runtime explicitly sets OPENPOST_DIAGNOSTICS_ENABLED=false. A pre-upgrade backup captured the same setting, but continuous enforcement before that snapshot is not inferred from the backup alone.",
-      "runtimeDecision": "v4.35.0 was accepted after exact-artifact review and staging smoke. Subsequent runtime work has since established the stable public HTTPS/media origin and verified the first OpenPost owner/workspace bootstrap with self-registration disabled. Current remaining blockers are Meta App Secret/provider OAuth and one real authorized Instagram write followed by canonical live verification."
+      "runtimeDecision": "v4.35.0 was accepted after exact-artifact review and staging smoke. The stable public HTTPS/media origin, owner/workspace bootstrap, Meta provider app, and OAuth for @velvets_cloud are now verified. The remaining blocker is one real authorized Instagram write followed by canonical live verification."
     }
   },
   "securityPolicy": {
@@ -88,8 +88,8 @@
       "detail": "Windows staging listener on 127.0.0.1:18080 is running exact v4.35.0; binary SHA-256 matches the upstream release asset; /api/v1/ready returns ready; schema_migrations max=136; integrity_check=ok; foreign_key_check=0; persistence restart passed; OPENPOST_DIAGNOSTICS_ENABLED=false is explicit; inbound TCP/18080 firewall block is enabled."
     },
     "publicHttpsReady": true,
-    "providerOAuthReady": false,
-    "blockedBy": "Stable public HTTPS/media origin and OpenPost owner/workspace bootstrap are verified. Remaining blockers: Meta App Secret/provider OAuth and a real authorized Instagram Graph write plus canonical live verification. OpenPost/direct MCP cannot bypass the signed delivery boundary.",
+    "providerOAuthReady": true,
+    "blockedBy": "Stable public HTTPS/media origin, owner/workspace bootstrap, Meta provider app, and OAuth are verified. Remaining blocker: a real authorized Instagram Graph write plus canonical live verification. OpenPost/direct MCP cannot bypass the signed delivery boundary.",
     "containerImagePolicy": "pin version or immutable digest; never production latest",
     "diagnosticsEnabled": false,
     "backup": {
@@ -150,23 +150,24 @@
       "metaAppId": "1748471159829574",
       "existingMetaAccessTokenValid": true,
       "requiredOpenPostScopesPresent": true,
-      "metaAppSecretAvailableToOpenPost": false,
+      "metaAppSecretAvailableToOpenPost": true,
       "openpostEncryptionKeyConfigured": true,
       "openpostUsers": 1,
       "openpostWorkspaces": 1,
-      "providerApps": 0,
+      "providerApps": 1,
       "providerInstallations": 0,
-      "socialAccounts": 0,
+      "socialAccounts": 1,
       "providerAccountBindings": 0,
       "stablePublicOriginReady": true,
       "openpostOwnerWorkspaceBootstrapCompleted": true,
       "openpostWorkspaceMembers": 1,
       "ownerIsInstanceAdmin": true,
       "registrationEnabled": false,
-      "bootstrapObservedAt": "2026-09-18T11:21:39+03:00"
+      "bootstrapObservedAt": "2026-09-18T11:21:39+03:00",
+      "providerOAuthObservedAt": "2026-09-18T14:28:27.010293+03:00"
     },
     "productionHost": {
-      "status": "HOST_READY_PROVIDER_BLOCKED",
+      "status": "HOST_READY_LIVE_WRITE_BLOCKED",
       "observedAt": "2026-09-18T08:53:11.7961312+03:00",
       "gcpProject": "instamcp",
       "zone": "us-central1-a",
@@ -248,7 +249,7 @@
     "ownerInvokerNarrowIamVerified": true,
     "ownerAuthVerified": true,
     "liveEndToEndVerified": false,
-    "liveBlocker": "Owner-auth, production boundary/replay smoke, stable public HTTPS origin, and OpenPost owner/workspace bootstrap are verified. LIVE remains false because Meta provider OAuth is incomplete and no real Instagram Graph write was performed or canonically verified.",
+    "liveBlocker": "Owner-auth, production boundary/replay smoke, stable public HTTPS origin, owner/workspace bootstrap, and OpenPost provider OAuth are verified. LIVE remains false because no real Instagram Graph write was performed or canonically verified.",
     "replayStoreVerified": true,
     "boundarySmokeVerified": true,
     "publicInstagramWritePerformedInBoundarySmoke": false,
@@ -274,5 +275,6 @@
       "get_media"
     ]
   },
-  "playbook": "packages/vfigos/OPENPOST.md"
+  "playbook": "packages/vfigos/OPENPOST.md",
+  "providerOAuthEvidenceRef": "packages/vfharness/state/openpost-production-origin-2026-09-18.json#providerOAuthEvidence"
 }

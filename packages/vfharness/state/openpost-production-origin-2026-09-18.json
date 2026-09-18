@@ -19,15 +19,15 @@
   "visible_text": {
     "status": "PASS",
     "surface": "human-document",
-    "text_sha256": "a584c9b1086ffec72180c79db644fe4e9fc1def9615006664378db87f9dbb305",
-    "checkedAt": "2026-09-18T13:41:33+03:00",
-    "input_text": "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace מאומתים, המשתמש הראשון instance-admin והרשמות חדשות כבויות. Meta App Secret/provider OAuth ו־write חי מאומת עדיין חסרים.",
+    "text_sha256": "44b675f1e763febee7c1884dea3c94275e6af1e2d224fa59cd25b6b009122a54",
+    "checkedAt": "2026-09-18T14:28:27.010293+03:00",
+    "input_text": "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace, provider app ו־OAuth ל־@velvets_cloud מאומתים, והרשמות חדשות כבויות. write חי מאומת עדיין חסר; LIVE=false.",
     "lint_execution": {
       "tool": "scripts/check-vfcopy.py",
       "argv": [
         "lint",
         "--text",
-        "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace מאומתים, המשתמש הראשון instance-admin והרשמות חדשות כבויות. Meta App Secret/provider OAuth ו־write חי מאומת עדיין חסרים."
+        "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace, provider app ו־OAuth ל־@velvets_cloud מאומתים, והרשמות חדשות כבויות. write חי מאומת עדיין חסר; LIVE=false."
       ],
       "exit_code": 0,
       "status": "pass",
@@ -39,7 +39,7 @@
         "--surface",
         "human-document",
         "--text",
-        "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace מאומתים, המשתמש הראשון instance-admin והרשמות חדשות כבויות. Meta App Secret/provider OAuth ו־write חי מאומת עדיין חסרים.",
+        "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace, provider app ו־OAuth ל־@velvets_cloud מאומתים, והרשמות חדשות כבויות. write חי מאומת עדיין חסר; LIVE=false.",
         "--gate",
         "--truth-checked",
         "--reader-first",
@@ -54,7 +54,7 @@
       ],
       "exit_code": 0,
       "visible_text_gate": "PASS",
-      "text_sha256": "a584c9b1086ffec72180c79db644fe4e9fc1def9615006664378db87f9dbb305"
+      "text_sha256": "44b675f1e763febee7c1884dea3c94275e6af1e2d224fa59cd25b6b009122a54"
     },
     "stage_evidence": {
       "truth_checked": {
@@ -63,6 +63,7 @@
           "bootstrapEvidence.sqlite.output",
           "bootstrapEvidence.authConfig.response",
           "bootstrapEvidence.ready.response",
+          "providerOAuthEvidence.output",
           "provider.providerOAuthReady",
           "deliveryApproval.live"
         ]
@@ -71,7 +72,7 @@
         "status": "PASS",
         "surface": "human-document",
         "reader": "owner/operator",
-        "purpose": "concise evidence checkpoint; no public CTA"
+        "purpose": "current provider OAuth evidence checkpoint; no public CTA"
       },
       "copy_authority": {
         "status": "PASS",
@@ -86,10 +87,11 @@
       "surface_qa": {
         "status": "PASS",
         "checks": [
+          "provider OAuth claim bound to read-only evidence",
           "no LIVE claim",
           "no productionDeployed claim",
           "no Instagram write claim",
-          "no secret or user identity field in bootstrap evidence"
+          "no secret or token plaintext stored"
         ]
       },
       "domain_tools_recorded": [
@@ -172,19 +174,20 @@
   },
   "provider": {
     "metaAppId": "1748471159829574",
-    "metaAppSecretAvailableToOpenPost": false,
+    "metaAppSecretAvailableToOpenPost": true,
     "ownerWorkspaceBootstrapCompleted": true,
-    "providerOAuthReady": false,
+    "providerOAuthReady": true,
     "ownerIsInstanceAdmin": true,
     "openpostUsers": 1,
     "openpostWorkspaces": 1,
     "openpostWorkspaceMembers": 1,
     "registrationEnabled": false,
     "bootstrapObservedAt": "2026-09-18T12:32:42+03:00",
-    "providerApps": 0,
+    "providerApps": 1,
     "providerInstallations": 0,
-    "socialAccounts": 0,
-    "providerAccountBindings": 0
+    "socialAccounts": 1,
+    "providerAccountBindings": 0,
+    "providerOAuthObservedAt": "2026-09-18T14:28:27.010293+03:00"
   },
   "deliveryApproval": {
     "status": "BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED",
@@ -192,11 +195,10 @@
     "publicWritePerformed": false
   },
   "production": {
-    "hostStatus": "HOST_READY_PROVIDER_BLOCKED",
+    "hostStatus": "HOST_READY_LIVE_WRITE_BLOCKED",
     "productionDeployed": false,
     "promotionAllowed": false,
     "remainingBlockers": [
-      "Meta App Secret entry and provider OAuth",
       "real authorized Instagram Graph write plus canonical list_media/get_media verification"
     ]
   },
@@ -204,7 +206,8 @@
     "No Instagram write was performed.",
     "No direct post-reboot SQLite schema/integrity claim is made; post-reboot /api/v1/ready proved database=ok.",
     "Project-wide default VPC SSH/RDP rules remain unchanged, but higher-priority target-specific rules restrict this VM: SSH is allowed only from Google IAP and SSH/RDP are denied from all other IPv4 sources.",
-    "First OpenPost user exists, is instance admin, and one workspace with one member exists. New registrations are disabled via OPENPOST_DISABLE_REGISTRATIONS=true and /api/v1/auth/config reports registration_enabled=false after restart."
+    "First OpenPost user exists, is instance admin, and one workspace with one member exists. New registrations are disabled via OPENPOST_DISABLE_REGISTRATIONS=true and /api/v1/auth/config reports registration_enabled=false after restart.",
+    "Instagram provider app and OAuth for @velvets_cloud were verified after service restart; LIVE remains false and no Instagram write was performed."
   ],
   "bootstrapEvidence": {
     "sqlite": {
@@ -268,6 +271,128 @@
         "database": "ok",
         "status": "ready"
       }
+    }
+  },
+  "providerOAuthEvidence": {
+    "observedAt": "2026-09-18T14:28:27.010293+03:00",
+    "oauthConsentedAt": "2026-09-18T14:23:53.085858+03:00",
+    "method": "production SQLite read-only inspection after interactive Meta OAuth",
+    "canonicalization": "json.dumps(output, ensure_ascii=False, sort_keys=True, separators=(',', ':')) encoded as UTF-8",
+    "output_sha256": "31aebf5c197d184d0c4c919662d6493e2c4fe1f5469500000bb5eab178b9bb26",
+    "output": {
+      "provider_app": {
+        "provider": "instagram",
+        "client_id": "1748471159829574",
+        "redirect_uri": "https://openpost.34.9.7.22.sslip.io/api/v1/accounts/instagram/callback",
+        "is_active": true
+      },
+      "social_account": {
+        "platform": "instagram",
+        "username": "velvets_cloud",
+        "is_active": true,
+        "oauth_grant_present": true,
+        "access_token_present": true,
+        "refresh_token_present": true,
+        "error_message": "",
+        "preflight_failure": "",
+        "granted_scopes": "business_management instagram_basic instagram_branded_content_ads_brand instagram_branded_content_brand instagram_branded_content_creator instagram_content_publish instagram_creator_marketplace_discovery instagram_manage_comments instagram_manage_contents instagram_manage_engagement instagram_manage_insights instagram_manage_messages instagram_manage_upcoming_events instagram_shopping_tag_products pages_manage_ads pages_manage_metadata pages_messaging pages_read_engagement pages_show_list public_profile whatsapp_business_management"
+      },
+      "oauth_grant": {
+        "provider": "instagram",
+        "execution_mode": "oauth2",
+        "validation_status": "valid",
+        "access_token_present": true,
+        "refresh_token_present": false,
+        "revoked": false,
+        "consented_at": "2026-09-18 11:23:53.085858+00:00",
+        "validated_at": "2026-09-18 11:23:53.085858+00:00"
+      },
+      "connector_counts": {
+        "provider_installations": 0,
+        "provider_account_bindings": 0
+      }
+    },
+    "connectorCountNote": "provider_installations/provider_account_bindings are custom-connector state and are not required for the built-in Instagram adapter"
+  },
+  "visible_text_english": {
+    "status": "PASS",
+    "surface": "human-document",
+    "text_sha256": "5cfc9303da6671a38e6ff12ab65fd746d5c6f14cdc776914e16c46dad8902e4c",
+    "checkedAt": "2026-09-18T14:37:31.7214458+03:00",
+    "input_text": "OpenPost v4.35.0 runs on the dedicated GCP origin with verified HTTPS. Owner/workspace bootstrap, the encrypted Meta provider app, and OAuth for @velvets_cloud are verified. The OAuth grant is valid and unrevoked. No Instagram Graph write has been performed, so LIVE remains false and production promotion stays blocked on one authorized write plus canonical list_media/get_media verification.",
+    "lint_execution": {
+      "tool": "scripts/check-vfcopy.py",
+      "argv": [
+        "lint",
+        "--text",
+        "OpenPost v4.35.0 runs on the dedicated GCP origin with verified HTTPS. Owner/workspace bootstrap, the encrypted Meta provider app, and OAuth for @velvets_cloud are verified. The OAuth grant is valid and unrevoked. No Instagram Graph write has been performed, so LIVE remains false and production promotion stays blocked on one authorized write plus canonical list_media/get_media verification."
+      ],
+      "exit_code": 0,
+      "status": "pass",
+      "problems": []
+    },
+    "gate_execution": {
+      "tool": "scripts/vf_visible_text.py",
+      "argv": [
+        "--surface",
+        "human-document",
+        "--text",
+        "OpenPost v4.35.0 runs on the dedicated GCP origin with verified HTTPS. Owner/workspace bootstrap, the encrypted Meta provider app, and OAuth for @velvets_cloud are verified. The OAuth grant is valid and unrevoked. No Instagram Graph write has been performed, so LIVE remains false and production promotion stays blocked on one authorized write plus canonical list_media/get_media verification.",
+        "--gate",
+        "--truth-checked",
+        "--reader-first",
+        "--copy-authority",
+        "--surface-qa",
+        "--domain-tool",
+        "vfigos",
+        "--domain-tool",
+        "vfharness",
+        "--domain-tool",
+        "velvetos"
+      ],
+      "exit_code": 0,
+      "visible_text_gate": "PASS",
+      "text_sha256": "5cfc9303da6671a38e6ff12ab65fd746d5c6f14cdc776914e16c46dad8902e4c"
+    },
+    "stage_evidence": {
+      "truth_checked": {
+        "status": "PASS",
+        "sources": [
+          "providerOAuthEvidence.output",
+          "provider.providerOAuthReady",
+          "deliveryApproval.live"
+        ]
+      },
+      "reader_first": {
+        "status": "PASS",
+        "surface": "human-document",
+        "reader": "owner/operator",
+        "purpose": "English README provider OAuth status"
+      },
+      "copy_authority": {
+        "status": "PASS",
+        "tool": "scripts/check-vfcopy.py",
+        "exit_code": 0
+      },
+      "humanizer_ai_tells": {
+        "status": "PASS",
+        "tool": "scripts/check-vfcopy.py lint",
+        "problems": []
+      },
+      "surface_qa": {
+        "status": "PASS",
+        "checks": [
+          "exact README English cell bound",
+          "no LIVE claim",
+          "no productionDeployed claim",
+          "no Instagram write claim"
+        ]
+      },
+      "domain_tools_recorded": [
+        "vfigos",
+        "vfharness",
+        "velvetos"
+      ]
     }
   }
 }
