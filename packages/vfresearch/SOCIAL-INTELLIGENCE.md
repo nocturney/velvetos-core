@@ -15,9 +15,39 @@ The flow is:
 1. **Our own account and posts:** Instagram MCP remains canonical for profile/media/Insights. Never scrape our own metrics when the Graph/MCP can return them.
 2. **External public research:** use `WebSearch` / `WebFetch` first when they provide enough evidence. Browser/manual public-page inspection is allowed when authorized by the tool surface.
 3. **Optional scraping provider:** Apify or another provider may be used only for public material when a normal web source is insufficient. Provider choice is an adapter detail, not a system dependency.
-4. `cporter202/social-media-scraping-apis` is a **provider-discovery catalogue only**. Do not vendor, clone, or treat its thousands of listings as trusted integrations.
+4. `cporter202/social-media-scraping-apis` and `cporter202/social-growth-apis-for-creators` are **provider-discovery catalogues only**. Do not vendor, clone, or treat their listings as trusted integrations. The 2026-09-18 review of `social-growth-apis-for-creators` is locked in `sources/2026-09-18-social-growth-apis-for-creators.md`.
 5. No cookies copied from owner sessions. No private/auth-only scraping. No login bypass. No automated likes, follows, comments, DMs, or engagement manipulation.
 6. Costed scraping must be bounded and visible. Prefer cached public evidence and narrow watchlists over broad crawling.
+7. Provider selection must revalidate the exact actor/provider at use time. A catalogue listing is discovery evidence, not proof that a provider is currently available, safe, correctly priced, or appropriate.
+
+## Provider shortlist and selection gate
+
+The catalogue review does **not** create a blanket allowlist. It identifies candidate families that may be revalidated for a specific public-research job:
+
+- public Instagram Reel/reference extraction — prefer a currently verified official/provider actor such as `apify/instagram-reel-scraper` when normal web evidence is insufficient;
+- Instagram hashtag research — `apify/instagram-hashtag-analytics-scraper` is a candidate for structured public hashtag evidence;
+- public Meta Ad Library research — `apify/facebook-ads-scraper` is a candidate for creative/category intelligence only;
+- narrow public competitor/reference monitoring — a current provider such as `instaprism/instagram-post-monitor` may transport new-post evidence, but VelvetOS computes its own delta and never delegates truth or publishing authority to the provider.
+
+Before any provider run:
+1. prove ordinary `WebSearch` / `WebFetch` is insufficient for the evidence need;
+2. revalidate the exact provider and public-data behavior;
+3. name the watchlist/query and cap result volume/cost;
+4. reject any path requiring copied cookies, private auth, login bypass, mass outreach, DM/follow/comment/like automation, or automatic posting;
+5. preserve row-level provenance and null semantics;
+6. keep own-account data canonical in Instagram MCP / `vfinsights`.
+
+TikTok, YouTube, autocomplete and cross-platform actors are secondary research inputs only. Their presence in a discovery catalogue does not enable a publishing channel or create a new runtime.
+
+## Competitor/reference watch delta
+
+There is no new scheduler. Acquisition may produce bounded snapshots through existing authorized tools; comparison stays deterministic inside this pack.
+
+```bash
+python3 scripts/vf_social_intelligence.py watch-delta --previous previous-packet.json --current current-packet.json --output watch-delta.json
+```
+
+The delta reports new public URLs and metric changes only when the same `source_url + provider` exists in both snapshots. Missing metrics remain absent/null rather than becoming zero. Author counts are descriptive only; there is no cross-account ranking or global virality score.
 
 ## SocialResearchPacket
 
@@ -121,5 +151,6 @@ The profile is a **prior**, never a truth override:
 - `charlie947/social-media-skills`: content matrix, data-backed post scoring, reference-Reel mechanics, date-verified niche research.
 - `cporter202/automate-for-growth`: batching as cheap candidate expansion + feedback-loop discipline only; no ViralWave dependency.
 - `cporter202/social-media-scraping-apis`: provider discovery only; no clone/runtime dependency.
+- `cporter202/social-growth-apis-for-creators`: provider discovery only; 2026-09-18 review narrows useful candidates to public Reel/reference, hashtag, Meta Ads Library and bounded competitor monitoring. No engagement automation or second runtime.
 
-All three stay registered in `LINKS.json` for recurring review.
+All four stay registered in `LINKS.json` for recurring review.
