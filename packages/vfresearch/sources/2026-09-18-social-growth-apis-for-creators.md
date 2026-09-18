@@ -1,6 +1,6 @@
 # social-growth-apis-for-creators — VelvetOS review · 2026-09-18
 
-Status: **embedded as provider discovery only**. No provider runtime, scheduler, analytics source of truth, publishing path, or engagement automation is added.
+Status: **embedded as provider discovery only**. No provider runtime, second runtime, scheduler, analytics source of truth, publishing path, or engagement automation is added.
 
 ## Source lock
 
