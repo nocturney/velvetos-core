@@ -8,12 +8,17 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
+
+for _stream in (sys.stdout, sys.stderr):
+    if hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parents[1]
 LOOP_JSON = ROOT / "packages" / "vfops" / "LOOP.json"
@@ -87,7 +92,7 @@ def fail(msg: str) -> None:
 
 
 def load_loop() -> dict:
-    return json.loads(LOOP_JSON.read_text())
+    return json.loads(LOOP_JSON.read_text(encoding="utf-8"))
 
 
 def first_fence(text: str) -> str:
@@ -103,7 +108,7 @@ def first_fence(text: str) -> str:
 def fence_after_heading(path: Path, needles: tuple[str, ...]) -> str:
     if not path.is_file():
         return ""
-    text = path.read_text()
+    text = path.read_text(encoding="utf-8")
     lines = text.splitlines()
     for i, line in enumerate(lines):
         if any(n in line for n in needles) and line.startswith("#"):
@@ -127,11 +132,15 @@ def append_cli_run(name: str, argv: list[str], ok: bool) -> None:
 
 
 def run_cmd(args: list[str], *, name: str | None = None) -> str:
+    child_env = os.environ.copy()
+    child_env["PYTHONUTF8"] = "1"
+    child_env["PYTHONIOENCODING"] = "utf-8"
     proc = subprocess.run(
         args,
         cwd=ROOT,
         text=True,
         capture_output=True,
+        env=child_env,
     )
     out = (proc.stdout or "").strip()
     ok = proc.returncode == 0
@@ -496,7 +505,7 @@ def captions_rows() -> list[list[str]]:
         if stem in seen:
             continue
         seen.add(stem)
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8")
         hook = fence_after_heading(path, ("להדבקה", "ארבעה פריימים"))
         first = hook.splitlines()[0] if hook else path.stem
         status = ledger_caption_status(stem) or "מוכן להדבקה"
@@ -1062,7 +1071,7 @@ def assemble(today: str) -> dict:
 def cmd_inventory(_args: argparse.Namespace) -> int:
     data = load_loop()
     packs = {p["id"] for p in data.get("packs") or []}
-    manifest = {p["name"] for p in json.loads(MANIFEST.read_text()).get("packs") or []}
+    manifest = {p["name"] for p in json.loads(MANIFEST.read_text(encoding="utf-8")).get("packs") or []}
     dirs = {p.name for p in (ROOT / "packages").iterdir() if p.is_dir()}
     missing = sorted(dirs - packs)
     extra = sorted(packs - dirs)
@@ -1105,7 +1114,7 @@ def cmd_brief(args: argparse.Namespace) -> int:
             print(" · ".join(row))
     if args.write:
         out = ROOT / "packages" / "vfops" / "hq" / f"brief-{today}.json"
-        out.write_text(json.dumps(brief, ensure_ascii=False, indent=2) + "\n")
+        out.write_text(json.dumps(brief, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         print(f"\nנכתב {out.relative_to(ROOT)}")
         write_status(today)
         print(f"נכתב {STATUS.relative_to(ROOT)}")
@@ -1192,13 +1201,13 @@ def write_status(today: str) -> None:
         else:
             lines.append(f"| `{row['id']}` | {row['kind']} | {row['cadence']} | {blocked} |")
     lines.append("")
-    STATUS.write_text("\n".join(lines) + "\n")
+    STATUS.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def cmd_status(_args: argparse.Namespace) -> int:
     today = datetime.now(TZ).date().isoformat()
     write_status(today)
-    print(STATUS.read_text())
+    print(STATUS.read_text(encoding="utf-8"))
     return 0
 
 
@@ -1241,7 +1250,7 @@ def cmd_handoff(_args: argparse.Namespace) -> int:
         print(f"IG: status={ig['status']} · remote={ig['remote']}")
     print()
     if HANDOFF.is_file():
-        print(HANDOFF.read_text().split("## קופי")[0].strip()[:1400])
+        print(HANDOFF.read_text(encoding="utf-8").split("## קופי")[0].strip()[:1400])
     return 0
 
 
@@ -1261,7 +1270,7 @@ def cmd_gate(args: argparse.Namespace) -> int:
         fail(f"unknown gate {args.id} — לא ממציאים שער")
     found["status"] = decision
     found["decidedAt"] = datetime.now(TZ).date().isoformat()
-    GATES.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n")
+    GATES.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     kind = found.get("kind") or ""
     nxt = "נרשם. לא נשלח וואטסאפ. לא Print מ-HQ. לא ₪ מומצא."
     if decision == "yes" and kind == "quote":
@@ -1361,18 +1370,18 @@ def cmd_check(_args: argparse.Namespace) -> int:
     for path in (EDIT_GATE, PREFLIGHT, CAL_OPS, STUDIO, INSTANCE, HANDOFF):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8")
         if "רף סוכנות" not in text and path in (STUDIO, INSTANCE):
             fail(f"{path.relative_to(ROOT)} missing רף סוכנות")
         if path == EDIT_GATE and "JPEG גולמי" not in text:
             fail("EDIT-GATE.md must forbid JPEG גולמי")
         if path == CAL_OPS and "לא שואלים" not in text:
             fail("CALENDAR-OPS.md must lock autonomous slots")
-    preflight = PREFLIGHT.read_text()
+    preflight = PREFLIGHT.read_text(encoding="utf-8")
     for needle in ("VOICE.md", "VOICE-RESEARCH", "VOICE-CHART", "נכשל-סגור", "רמה נמוכה", "ציון עצמי", "2–3", "CONTENT-RUBRIC"):
         if needle not in preflight:
             fail(f"PREFLIGHT.md must mention {needle}")
-    if "אל תפנה לכריסטיאן על מדדים חלשים" not in HANDOFF.read_text():
+    if "אל תפנה לכריסטיאן על מדדים חלשים" not in HANDOFF.read_text(encoding="utf-8"):
         fail("HANDOFF-he.md must lock אל תפנה לכריסטיאן על מדדים חלשים")
     guide_paths = {g["path"] for g in data.get("guides") or []}
     if SKILLS.is_dir():
