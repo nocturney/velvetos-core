@@ -17,10 +17,10 @@
   "visible_text": {
     "status": "PASS",
     "surface": "human-document",
-    "text_sha256": "5f59f5a0ce8139c5671aae1291c992f08b06a54c233af89de115b2bf5238bb4d",
+    "text_sha256": "a584c9b1086ffec72180c79db644fe4e9fc1def9615006664378db87f9dbb305",
     "lint": "PASS: python scripts/check-vfcopy.py lint --text <visible_text.input_text>",
-    "checkedAt": "2026-09-18T13:33:05+03:00",
-    "input_text": "OpenPost owner bootstrap verified: user=1, workspace=1, instance-admin=true, registrations disabled; Meta provider OAuth remains blocked. OpenPost v4.35.0 רץ על host ייעודי ב-GCP עם HTTPS מאומת. owner/workspace מאומתים, המשתמש הראשון instance-admin והרשמות חדשות כבויות. Meta App Secret/provider OAuth ו-write חי מאומת עדיין חסרים.",
+    "checkedAt": "2026-09-18T13:41:33+03:00",
+    "input_text": "OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace מאומתים, המשתמש הראשון instance-admin והרשמות חדשות כבויות. Meta App Secret/provider OAuth ו־write חי מאומת עדיין חסרים.",
     "lint_command": "python scripts/check-vfcopy.py lint --text <visible_text.input_text>"
   },
   "gcp": {
