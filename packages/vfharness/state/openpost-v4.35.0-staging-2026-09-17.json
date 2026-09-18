@@ -1,0 +1,94 @@
+{
+  "schema": "velvet.openpost_staging_review.v1",
+  "task_id": "openpost-v4.35.0-staging-2026-09-17",
+  "domain": "system_engineering",
+  "authority": {
+    "contract": 6,
+    "revision": "6.2",
+    "bundle": "VF-PROJECT-6.2-DETAIL-TRUTH",
+    "project_preflight": "PASS"
+  },
+  "repo": {
+    "base_main": "4578d33972ce4195ace6c32d9c598f9c5c3c4d50",
+    "branch": "chore/openpost-v4.35.0-review"
+  },
+  "upstream": {
+    "version": "v4.35.0",
+    "published_at": "2026-09-17T19:05:01Z",
+    "windows_server_sha256": "be6520f495def72b1b466a69c9a223954b4403c3c7c40881b52ce0f030334cc8",
+    "vf_relevant_breaking_change": false,
+    "schema_migration": false
+  },
+  "backup": {
+    "createdAt": "2026-09-17T22:42:35+03:00",
+    "path": "C:\\OpenPost\\backups\\pre-v4.35.0-20260917-224235",
+    "databaseSha256": "a7b3d4d575c8d64de310e0eec43eaf3905e9255f4cc3243b3ad41ac76431e5e8",
+    "preMigrationSchemaVersion": 136,
+    "mediaFiles": 0,
+    "mediaBytes": 0
+  },
+  "smoke": {
+    "status": "PASS",
+    "isolatedPort": 18081,
+    "fromSchemaVersion": 136,
+    "toSchemaVersion": 136,
+    "integrityCheck": "ok",
+    "foreignKeyViolations": 0,
+    "originalDatabaseUnchangedBeforePromotion": true
+  },
+  "runtime": {
+    "version": "v4.35.0",
+    "binary_sha256": "be6520f495def72b1b466a69c9a223954b4403c3c7c40881b52ce0f030334cc8",
+    "ready": "ready",
+    "schema": 136,
+    "integrity": "ok",
+    "foreign_key_violations": 0,
+    "diagnostics_enabled": false,
+    "restart_verified": true,
+    "firewall_local_only": true,
+    "start_script_sha256": "bbb834a541085290a0f46d3aac62c6832c94035ee90ec92eb8594122e263a75a"
+  },
+  "public_https_trial": {
+    "status": "PASS_TRIAL_ONLY",
+    "observedAt": "2026-09-17T22:53:00+03:00",
+    "method": "ephemeral Cloudflare Quick Tunnel through a loopback-only restricted proxy",
+    "publicReadyHttpStatus": 200,
+    "publicAuthPathHttpStatus": 404,
+    "providerCallbackHttpStatusBeforeProviderConfig": 404,
+    "providerCallbackInterpretation": "not registered until a provider app exists",
+    "mediaFetchVerified": false,
+    "mediaFetchReason": "no canonical OpenPost media record exists; a raw file placed in the media directory correctly returned media not found",
+    "stableOriginReady": false,
+    "productionSuitable": false,
+    "tunnelStopped": true,
+    "cloudflaredRemovedAfterTrial": true
+  },
+  "provider": {
+    "app_id": "1748471159829574",
+    "existing_token_valid": true,
+    "required_scopes_present": true,
+    "app_secret_available_to_openpost": false,
+    "encryption_key_configured": true,
+    "users": 0,
+    "workspaces": 0,
+    "provider_apps": 0,
+    "provider_installations": 0,
+    "social_accounts": 0,
+    "provider_account_bindings": 0
+  },
+  "delivery_approval": {
+    "status": "BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED",
+    "live": false,
+    "public_write_performed": false
+  },
+  "production": {
+    "status": "BLOCKED",
+    "blockers": [
+      "stable public HTTPS/media origin not configured",
+      "OpenPost owner/workspace bootstrap not completed",
+      "Meta app secret not available to OpenPost; provider OAuth not run",
+      "no real authorized Instagram Graph write + canonical live verification"
+    ],
+    "promotion_allowed": false
+  }
+}

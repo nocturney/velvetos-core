@@ -3,8 +3,8 @@
 מושב: **צמיחה / vfigos**. OpenPost אינו מנוע קריאייטיב, אינו pack/runtime שני ואינו מחליף שום שער איכות או הרשאת מסירה של VelvetOS.
 
 Upstream: `getopenpost/openpost`  
-Runtime baseline: **v4.34.2**
-Latest reviewed upstream: **v4.34.2** (2026-09-16)
+Runtime baseline: **v4.35.0**
+Latest reviewed upstream: **v4.35.0** (2026-09-17)
 Role: **scheduler + queue + retry/delivery status + multi-channel publication control + analytics collector**.
 
 ## החלטת ארכיטקטורה
@@ -67,19 +67,19 @@ OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום �
 8. Instagram live verification נשאר `list_media` / `get_media`.
 9. רק אם אין regression וכל gates הדרושים PASS — ניתן לשקול production pin.
 
-## Review v4.31.0 -> v4.34.2
+## Review v4.34.2 -> v4.35.0
 
-- **Meta/Instagram auth:** לא זוהה breaking change ישיר ל־VF; public HTTPS/media origin ו־Meta provider OAuth עדיין prerequisites.
-- **API/MCP:** תוקנו scope combinations של `mcp:read`/`mcp:full`, נעילת OAuth authorization callback נגד צריכת code כפולה, ו־API token clock-skew סמוך לאורך החיים המקסימלי.
-- **Media limits:** לא זוהה שינוי במגבלות Instagram; השינויים המתועדים מוסיפים יעדי Fediverse.
-- **Scheduler/queue/retry:** לא זוהה שינוי breaking בנתיב VF; v4.32 מוסיפה bounded non-blocking diagnostics queue.
-- **Analytics:** השינויים הרלוונטיים הם Discord/Lemmy/PieFed, לא Instagram.
-- **Database/schema/storage:** migrations `135_fediverse_instance_provider.sql` ו־`136_billing_discord_notifications.sql` משנות סכימה; נדרש backup + staging migration smoke לפני runtime upgrade.
-- **Security/privacy:** החל מ־v4.32 maintainer diagnostics מופעלים כברירת מחדל ב־self-hosted ושולחים failure reports מצומצמים החוצה. מדיניות VF היא fail-closed: `OPENPOST_DIAGNOSTICS_ENABLED=false` עד אישור מפורש אחר.
-- **Pinned artifact reviewed:** Windows server v4.34.2 SHA-256 `43a2696d0c7bafdba064b84df414ff0c1c0ccfaf99215a999291b67e447e7442`.
+- **Meta/Instagram auth:** no Instagram/Facebook/OAuth provider code changed; the same Meta app, callback and public-media prerequisites remain.
+- **API/MCP:** no VF-relevant contract change identified.
+- **Media limits:** no Instagram media-limit change identified.
+- **Scheduler/queue/retry:** no VF publication scheduler/queue/retry change identified.
+- **Analytics:** PieFed analytics fixes only; no Instagram analytics contract change identified.
+- **Database/schema/storage:** no new migrations; isolated smoke and promoted staging remain on schema `136` with `integrity_check=ok` and zero foreign-key violations.
+- **Security/privacy:** no VF provider-security boundary change identified. The current runtime explicitly sets `OPENPOST_DIAGNOSTICS_ENABLED=false`; the pre-upgrade backup also captured `false`, but that snapshot is not treated as proof of uninterrupted historical enforcement.
+- **Pinned artifact reviewed:** Windows server v4.35.0 SHA-256 `be6520f495def72b1b466a69c9a223954b4403c3c7c40881b52ce0f030334cc8`.
 
 ## Current runtime decision
 
-Windows staging is now pinned to **v4.34.2** after a hashed backup and isolated migration smoke (schema 134 -> 136, `integrity_check=ok`, zero foreign-key violations). `OPENPOST_DIAGNOSTICS_ENABLED=false` is enforced. Delivery approval is now **BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED**: the narrow owner-invoker `/health` call passes, a real signed approval is atomically spent on the production mutation boundary, and replay is rejected as `already_spent`, while the canonical Instagram media snapshot remains unchanged. No public Instagram Graph write was performed, so `LIVE` remains false. OpenPost production also remains blocked on public HTTPS/media origin and provider OAuth. The Windows binary listens on `::`, so staging is explicitly protected by inbound firewall block `VelvetOS-OpenPost-Staging-LocalOnly` on TCP/18080; loopback `127.0.0.1` OpenAPI remains HTTP 200.
+Windows staging is now pinned to **v4.35.0** after a hashed schema-136 backup and isolated schema-136 smoke (`integrity_check=ok`, zero foreign-key violations). The exact upstream binary digest is verified, the scheduled-task restart returns `ready`, `OPENPOST_DIAGNOSTICS_ENABLED=false` is explicit, and inbound TCP/18080 remains blocked by `VelvetOS-OpenPost-Staging-LocalOnly`. A temporary restricted HTTPS tunnel proved `/api/v1/ready` publicly reachable with HTTP 200 while auth paths remained hidden; the tunnel was stopped and removed after the trial, so it is **not** a production origin. OpenPost still has zero users/workspaces/provider apps/accounts. The existing Meta token is valid and carries the OpenPost-required scopes, but the Meta app secret is not available to OpenPost and provider OAuth has not run. Delivery approval remains **BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED** until a real authorized Instagram Graph write is canonically verified.
 
 Version state: [`OPENPOST.json`](OPENPOST.json).
