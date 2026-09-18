@@ -195,7 +195,40 @@
       "postRestartReadyDatabase": "ok",
       "directSqliteSchemaCheck": "UNPROVEN",
       "directSqliteIntegrityCheck": "UNPROVEN",
-      "directSqliteCheckNote": "A direct post-reboot SQLite inspection was not completed because the temporary checker was removed by reboot and its re-upload was blocked by the remote-tool safety layer. /api/v1/ready=200 with database=ok is proven after reboot."
+      "directSqliteCheckNote": "A direct post-reboot SQLite inspection was not completed because the temporary checker was removed by reboot and its re-upload was blocked by the remote-tool safety layer. /api/v1/ready=200 with database=ok is proven after reboot.",
+      "publicSsh22": false,
+      "publicRdp3389": false,
+      "adminAccess": "IAP_ONLY_VERIFIED",
+      "firewall": {
+        "web": {
+          "name": "openpost-prod-web",
+          "priority": 1000,
+          "source": "0.0.0.0/0",
+          "allow": [
+            "tcp:80",
+            "tcp:443"
+          ]
+        },
+        "sshIap": {
+          "name": "openpost-prod-ssh-iap",
+          "priority": 800,
+          "source": "35.235.240.0/20",
+          "allow": [
+            "tcp:22"
+          ]
+        },
+        "denyAdmin": {
+          "name": "openpost-prod-deny-admin",
+          "priority": 900,
+          "source": "0.0.0.0/0",
+          "deny": [
+            "tcp:22",
+            "tcp:3389"
+          ]
+        }
+      },
+      "iapSshEvidence": "PASS via local IAP TCP tunnel to port 22; exact host key pinned",
+      "securityObservedAt": "2026-09-18T09:26:06+03:00"
     }
   },
   "deliveryApproval": {
