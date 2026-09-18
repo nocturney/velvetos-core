@@ -9,6 +9,7 @@ Examples:
   python3 scripts/vf_social_intelligence.py normalize-signals --input raw.json --output packet.json --window-start 2026-09-07 --window-end 2026-09-14
   python3 scripts/vf_social_intelligence.py validate-packet packet.json
   python3 scripts/vf_social_intelligence.py reference-pattern --input reference-observations.json --output reference-pattern.json
+  python3 scripts/vf_social_intelligence.py watch-delta --previous previous-packet.json --current current-packet.json --output watch-delta.json
   python3 scripts/vf_social_intelligence.py --self-test
 """
 from __future__ import annotations
@@ -268,6 +269,98 @@ def build_reference_pattern(raw: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _signal_key(signal: Any) -> tuple[str, str] | None:
+    if not isinstance(signal, dict):
+        return None
+    url = signal.get("source_url")
+    provider = signal.get("provider")
+    if not is_public_http_url(url) or not isinstance(provider, str) or not provider.strip():
+        return None
+    return (str(url).strip(), provider.strip())
+
+
+def build_watch_delta(previous: Any, current: Any) -> dict[str, Any]:
+    previous_errors = validate_packet(previous)
+    current_errors = validate_packet(current)
+    if previous_errors:
+        fail("previous packet invalid: " + "; ".join(previous_errors))
+    if current_errors:
+        fail("current packet invalid: " + "; ".join(current_errors))
+
+    prev_map = {
+        key: signal
+        for signal in (previous.get("signals") or [])
+        if (key := _signal_key(signal)) is not None
+    }
+    curr_map = {
+        key: signal
+        for signal in (current.get("signals") or [])
+        if (key := _signal_key(signal)) is not None
+    }
+
+    new_signals = []
+    metric_deltas = []
+    author_counts: dict[str, int] = {}
+
+    for key, signal in curr_map.items():
+        author = signal.get("author")
+        if isinstance(author, str) and author.strip():
+            author_counts[author.strip()] = author_counts.get(author.strip(), 0) + 1
+
+        if key not in prev_map:
+            new_signals.append({
+                "source_url": key[0],
+                "provider": key[1],
+                "author": signal.get("author"),
+                "published_at": signal.get("published_at"),
+                "observed_at": signal.get("observed_at"),
+            })
+            continue
+
+        before_metrics = prev_map[key].get("metrics") if isinstance(prev_map[key].get("metrics"), dict) else {}
+        after_metrics = signal.get("metrics") if isinstance(signal.get("metrics"), dict) else {}
+        deltas = {}
+        for metric in sorted(set(before_metrics) | set(after_metrics)):
+            before = before_metrics.get(metric)
+            after = after_metrics.get(metric)
+            before_num = finite_number(before)
+            after_num = finite_number(after)
+            if before_num is None or after_num is None:
+                continue
+            delta = after_num - before_num
+            if delta != 0:
+                deltas[metric] = {
+                    "previous": before_num,
+                    "current": after_num,
+                    "delta": delta,
+                }
+        if deltas:
+            metric_deltas.append({
+                "source_url": key[0],
+                "provider": key[1],
+                "author": signal.get("author"),
+                "metrics": deltas,
+            })
+
+    return {
+        "schemaVersion": "1.0",
+        "previousWindow": previous.get("window"),
+        "currentWindow": current.get("window"),
+        "newSignals": sorted(new_signals, key=lambda x: (x.get("provider") or "", x.get("source_url") or "")),
+        "metricDeltas": sorted(metric_deltas, key=lambda x: (x.get("provider") or "", x.get("source_url") or "")),
+        "currentAuthorCounts": [
+            {"author": author, "signal_count": count}
+            for author, count in sorted(author_counts.items())
+        ],
+        "rules": {
+            "sameSourceProviderOnly": True,
+            "missingMetricIsNotZero": True,
+            "crossAccountRankingForbidden": True,
+            "globalViralityScoreForbidden": True,
+        },
+    }
+
+
 def save_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -298,6 +391,36 @@ def self_test() -> int:
     if ref["observed"]["first_visual_change_at_seconds"] != 0.8 or ref["observed"]["overlay_count"] != 1:
         print("FAIL self-test reference pattern", file=sys.stderr)
         return 1
+    previous = packet_from_raw([{
+        "url": "https://example.com/reel/1",
+        "provider": "fixture",
+        "author": "maker_a",
+        "metrics": {"views": 100, "likes": None},
+    }], "2026-09-01", "2026-09-07", "fixture")
+    current = packet_from_raw([{
+        "url": "https://example.com/reel/1",
+        "provider": "fixture",
+        "author": "maker_a",
+        "metrics": {"views": 150, "likes": 10},
+    }, {
+        "url": "https://example.com/reel/2",
+        "provider": "fixture",
+        "author": "maker_a",
+        "metrics": {"views": 20},
+    }], "2026-09-08", "2026-09-14", "fixture")
+    delta = build_watch_delta(previous, current)
+    if len(delta["newSignals"]) != 1:
+        print("FAIL self-test watch delta newSignals", file=sys.stderr)
+        return 1
+    if delta["metricDeltas"][0]["metrics"]["views"]["delta"] != 50:
+        print("FAIL self-test watch delta metric", file=sys.stderr)
+        return 1
+    if "likes" in delta["metricDeltas"][0]["metrics"]:
+        print("FAIL self-test watch delta null semantics", file=sys.stderr)
+        return 1
+    if delta["currentAuthorCounts"] != [{"author": "maker_a", "signal_count": 2}]:
+        print("FAIL self-test watch delta author counts", file=sys.stderr)
+        return 1
     print("OK social-intelligence self-test")
     return 0
 
@@ -320,6 +443,11 @@ def main(argv: list[str] | None = None) -> int:
     r = sub.add_parser("reference-pattern")
     r.add_argument("--input", required=True)
     r.add_argument("--output", required=True)
+
+    w = sub.add_parser("watch-delta")
+    w.add_argument("--previous", required=True)
+    w.add_argument("--current", required=True)
+    w.add_argument("--output", required=True)
 
     args = p.parse_args(argv)
     if args.self_test:
@@ -347,6 +475,13 @@ def main(argv: list[str] | None = None) -> int:
         payload = build_reference_pattern(raw)
         save_json(Path(args.output), payload)
         print(f"OK wrote {args.output}")
+        return 0
+    if args.cmd == "watch-delta":
+        previous = json.loads(Path(args.previous).read_text(encoding="utf-8"))
+        current = json.loads(Path(args.current).read_text(encoding="utf-8"))
+        payload = build_watch_delta(previous, current)
+        save_json(Path(args.output), payload)
+        print(f"OK wrote {args.output} new={len(payload['newSignals'])} changed={len(payload['metricDeltas'])}")
         return 0
     p.print_help()
     return 2
