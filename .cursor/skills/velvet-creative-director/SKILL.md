@@ -16,6 +16,10 @@ Operate as the single creative-planning specialist inside VelvetOS. `vf-content-
 
 Read `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md`, `packages/vfom/VISUAL-OS.md`, `VISUAL-DNA.json`, `FOUNDRY.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md`, `FORMAT-GENOMES.md`, `packages/vfcopy/VOICE.md`, `packages/vfcopy/hq/reader-first-he.md`, `packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md`, `PIPELINE.md` and `packages/vfcopy/hq/ai-tells-he.md`.
 
+## Reference-role separation
+
+Aesthetic direction comes only from the approved broad visual, editorial and current-creative references. Product Truth comes from current verified product source pixels plus the text Product Truth guide. Never send a Product Truth QA/teaching image into a generative or style-conditioning reference set. In particular, `Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png` is rejected for creative conditioning and must not influence layout, color, atmosphere, typography or composition.
+
 ## Workflow
 
 ## Cold-start Visual Standard Load Gate
