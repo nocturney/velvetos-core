@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-18 — **OpenPost production origin:** הוקם host קבוע ב־GCP עם OpenPost v4.35.0, HTTPS תקין ו־media origin ציבורי; provider OAuth ו־LIVE עדיין חסומים עד owner/workspace bootstrap, Meta App Secret ו־write מאומת.</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-18 — **OpenPost production origin:** stable GCP host on OpenPost v4.35.0 with verified HTTPS and public media origin; provider OAuth and LIVE remain blocked pending owner/workspace bootstrap, Meta App Secret, and a verified write.</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-18 — **OpenPost stable HTTPS origin:** provisioned `openpost-prod` on GCP (`instamcp`, `us-central1-a`, `e2-micro`, 30 GB `pd-standard`) with static IPv4 `34.9.7.22` and public origin `https://openpost.…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-18 — **OpenPost stable HTTPS origin:** provisioned `openpost-prod` on GCP (`instamcp`, `us-central1-a`, `e2-micro`, 30 GB `pd-standard`) with static IPv4 `34.9.7.22` and public origin `https://openpost.…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
