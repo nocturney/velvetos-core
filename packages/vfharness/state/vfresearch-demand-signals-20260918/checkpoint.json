@@ -1,37 +1,45 @@
-﻿{
-    "task_id":  "vfresearch-demand-signals-20260918",
-    "status":  "implementation_verified_with_preexisting_suite_blockers",
-    "component_state":  "Idle",
-    "base_sha":  "3499506ed9663fdfe742bef023f86921f6b42230",
-    "branch":  "feat/vfresearch-demand-signals-20260918",
-    "completed_steps":  [
-                            "authority_preflight",
-                            "catalogue_review",
-                            "demand_contract",
-                            "red_test",
-                            "green_normalizer",
-                            "research_docs_wiring",
-                            "links_registry",
-                            "vfresearch_sensor",
-                            "windows_utf8_sensor_fix",
-                            "targeted_tests"
-                        ],
-    "evidence":  {
-                     "test_vf_demand_signals":  "PASS",
-                     "vf_demand_signals_self_test":  "PASS",
-                     "check_vfresearch":  "PASS",
-                     "py_compile":  "PASS",
-                     "diff_check":  "PASS",
-                     "check_all":  "PARTIAL_70_OF_72_PASS_2_PREEXISTING_HANGS"
-                 },
-    "provider_runtime":  "UNPROVEN_NO_APIFY_TOKEN",
-    "unresolved":  [
-                       "provider runtime UNPROVEN until a real credentialed provider run",
-                       "push/PR under repository push gate"
-                   ],
-    "last_updated":  "2026-09-18T11:10:53.6997130+03:00",
-    "preexisting_blockers":  [
-                                 "check-living-studio.py selftest hangs on base 3499506 and candidate 6e9bab6",
-                                 "check-vfmedia.py intake selftest hangs on base 3499506 and candidate 6e9bab6"
-                             ]
+{
+  "task_id": "vfresearch-demand-signals-20260918",
+  "status": "implementation_merged_verified",
+  "component_state": "Idle",
+  "base_sha": "3499506ed9663fdfe742bef023f86921f6b42230",
+  "branch": "feat/vfresearch-demand-signals-20260918",
+  "completed_steps": [
+    "authority_preflight",
+    "catalogue_review",
+    "demand_contract",
+    "red_test",
+    "green_normalizer",
+    "research_docs_wiring",
+    "links_registry",
+    "vfresearch_sensor",
+    "windows_utf8_sensor_fix",
+    "targeted_tests",
+    "readme_contract",
+    "github_actions_run_786",
+    "pr_251_merged",
+    "post_merge_main_verification"
+  ],
+  "evidence": {
+    "test_vf_demand_signals": "PASS",
+    "vf_demand_signals_self_test": "PASS",
+    "check_vfresearch": "PASS",
+    "py_compile": "PASS",
+    "diff_check": "PASS",
+    "check_all": "PASS_GITHUB_ACTIONS_RUN_786",
+    "github_actions_run_id": 35323592602,
+    "github_actions_job_id": 105531421887,
+    "merge_sha": "3e649ed22d8866e4eb3156293384cc869894d8d2",
+    "merged_pr": 251,
+    "post_merge_main_verified": true
+  },
+  "provider_runtime": "UNPROVEN_NO_APIFY_TOKEN",
+  "unresolved": [
+    "provider runtime UNPROVEN until a real credentialed provider run"
+  ],
+  "windows_local_notes": [
+    "check-living-studio.py selftest hung on Windows on both base 3499506 and candidate; Linux GitHub Actions run #786 passed the full sensor suite",
+    "check-vfmedia.py intake selftest hung on Windows on both base 3499506 and candidate; Linux GitHub Actions run #786 passed the full sensor suite"
+  ],
+  "last_updated": "2026-09-18T11:19:00+03:00"
 }
