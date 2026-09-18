@@ -19,6 +19,7 @@ INSIGHTS_SKILL = ROOT / "packages" / "vfinsights" / "SKILL.md"
 RESEARCH_SKILL = ROOT / "packages" / "vfresearch" / "SKILL.md"
 CONTENT_SKILL = ROOT / ".cursor" / "skills" / "vf-content-sprint" / "SKILL.md"
 LINKS = ROOT / "packages" / "vfresearch" / "LINKS.json"
+CATALOG_REVIEW = ROOT / "packages" / "vfresearch" / "sources" / "2026-09-18-social-growth-apis-for-creators.md"
 
 EXPECTED_ANGLES = {
     "actionable", "motivational", "analytical", "contrarian",
@@ -32,7 +33,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (DOC, PACKET_SCHEMA, REFERENCE_SCHEMA, SCRIPT, DECISION, INSIGHTS, ANNOTATIONS, INSIGHTS_SKILL, RESEARCH_SKILL, CONTENT_SKILL, LINKS):
+    for path in (DOC, PACKET_SCHEMA, REFERENCE_SCHEMA, SCRIPT, DECISION, INSIGHTS, ANNOTATIONS, INSIGHTS_SKILL, RESEARCH_SKILL, CONTENT_SKILL, LINKS, CATALOG_REVIEW):
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -50,6 +51,9 @@ def main() -> None:
         "outlier_score: null",
         "CREATIVE-PERFORMANCE-PROFILE.json",
         "no composite virality score",
+        "Provider shortlist and selection gate",
+        "Competitor/reference watch delta",
+        "watch-delta",
     ):
         if needle.lower() not in doc.lower():
             fail(f"SOCIAL-INTELLIGENCE.md missing {needle}")
@@ -86,9 +90,28 @@ def main() -> None:
 
     links = json.loads(LINKS.read_text(encoding="utf-8"))
     ids = {x.get("id") for x in links.get("links") or []}
-    for need in ("charlie947-social-media-skills", "cporter202-automate-for-growth", "cporter202-social-media-scraping-apis"):
+    for need in ("charlie947-social-media-skills", "cporter202-automate-for-growth", "cporter202-social-media-scraping-apis", "cporter202-social-growth-apis-for-creators"):
         if need not in ids:
             fail(f"LINKS.json missing {need}")
+
+    review = CATALOG_REVIEW.read_text(encoding="utf-8")
+    for needle in (
+        "807993fcd3b1c14efab3a8912c9d6c08c571374e",
+        "2,786 / 2,786",
+        "apify/instagram-reel-scraper",
+        "apify/instagram-hashtag-analytics-scraper",
+        "apify/facebook-ads-scraper",
+        "instaprism/instagram-post-monitor",
+        "bulk DM",
+        "second runtime",
+    ):
+        if needle.lower() not in review.lower():
+            fail(f"catalog review missing {needle}")
+
+    script_text = SCRIPT.read_text(encoding="utf-8")
+    for needle in ("build_watch_delta", "sameSourceProviderOnly", "missingMetricIsNotZero", "watch-delta"):
+        if needle not in script_text:
+            fail(f"vf_social_intelligence missing {needle}")
 
     proc = subprocess.run([sys.executable, str(SCRIPT), "--self-test"], cwd=ROOT, text=True, capture_output=True)
     if proc.returncode != 0:

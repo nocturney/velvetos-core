@@ -36,7 +36,9 @@
 - Deterministic normalizer: `python3 scripts/vf_social_intelligence.py`
 - Own-account Insights stay canonical in Instagram MCP / `vfinsights`; external scraping never replaces them.
 - External providers are adapters only. Public data only, no copied cookies/private auth, no engagement automation.
-- `cporter202/social-media-scraping-apis` is provider discovery, not a dependency/runtime.
+- `cporter202/social-media-scraping-apis` and `cporter202/social-growth-apis-for-creators` are provider discovery, not dependencies/runtimes.
+- Provider shortlist + exact-use revalidation live in `SOCIAL-INTELLIGENCE.md`; Reel/reference, hashtag, Meta Ads Library and narrow competitor monitoring remain public-research adapters only.
+- `watch-delta` compares bounded public snapshots deterministically; it does not scrape, schedule, rank accounts, or publish.
 - Output feeds the existing `vfom/INSTAGRAM-CONTENT-DECISION.json` content-matrix/saturation path. It never publishes.
 
 ## Verification

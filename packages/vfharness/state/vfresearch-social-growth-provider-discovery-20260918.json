@@ -1,0 +1,61 @@
+{
+  "task_id": "vfresearch-social-growth-provider-discovery-20260918",
+  "status": "blocked",
+  "component_state": "Blocked",
+  "pack": "vfresearch",
+  "goal": "Embed social-growth-apis-for-creators as bounded provider discovery inside existing Social Intelligence with deterministic competitor/reference deltas and sensor coverage.",
+  "planned_steps": [
+    "Lock current core and upstream SHAs",
+    "Review catalogue fit and rejects",
+    "Register recurring discovery source",
+    "Add provider-selection and watch-delta policy",
+    "Add deterministic watch-delta helper",
+    "Extend social-intelligence sensor",
+    "Run repository verification",
+    "Open reviewed PR"
+  ],
+  "completed_steps": [
+    "Locked velvetos-core main at dda12dd11bad44e43aaec83641ecea186e0badd2",
+    "Locked upstream catalogue at 807993fcd3b1c14efab3a8912c9d6c08c571374e",
+    "Recorded catalogue review and candidate/reject families",
+    "Registered catalogue in vfresearch LINKS.json",
+    "Added provider-selection and competitor/reference watch-delta policy",
+    "Added deterministic watch-delta command and self-test",
+    "Extended check-social-intelligence.py coverage",
+    "Updated vfresearch routing and CHANGELOG",
+    "Focused Windows verification PASS: scripts/check-social-intelligence.py -> OK social-intelligence integration",
+    "GitHub Actions run 772 reached full suite: check-social-intelligence PASS; suite failed only check-staleness because 2026-09-18 Morning Brief artifact is absent"
+  ],
+  "next_step": "After the canonical 2026-09-18 Morning Brief artifact is produced by its owning workflow, rerun PR #247 CI; do not fabricate the brief from this research change.",
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-18-social-growth-apis-for-creators.md",
+    "packages/vfresearch/LINKS.json",
+    "packages/vfresearch/SOCIAL-INTELLIGENCE.md",
+    "packages/vfresearch/SKILL.md",
+    "scripts/vf_social_intelligence.py",
+    "scripts/check-social-intelligence.py",
+    "CHANGELOG.md"
+  ],
+  "unresolved": [
+    "Global merge gate is blocked by independent check-staleness: no BRIEF-2026-09-18.md or hq/brief-2026-09-18.json after 09:15 Asia/Jerusalem."
+  ],
+  "outcome": "escalation",
+  "pulse": "blocked",
+  "verification": "Implementation sensor PASS locally and in GitHub Actions run 772. Full suite: 71/72 PASS; only independent Morning Brief staleness gate failed.",
+  "gate": null,
+  "escalation": "Morning Brief owner workflow must produce the canonical 2026-09-18 artifact; this research integration must not invent it.",
+  "last_updated": "2026-09-18",
+  "execution_state": {
+    "authority_contract": "6",
+    "authority_revision": "6.2",
+    "bundle": "VF-PROJECT-6.2-DETAIL-TRUTH",
+    "core_base_sha": "dda12dd11bad44e43aaec83641ecea186e0badd2",
+    "upstream_sha": "807993fcd3b1c14efab3a8912c9d6c08c571374e",
+    "branch": "feat/social-growth-provider-discovery-20260918",
+    "pr": 247,
+    "implementation_sensor": "PASS",
+    "full_suite": "BLOCKED_BY_MORNING_BRIEF_STALENESS"
+  },
+  "latest_observation": "GitHub Actions run 772: PASS check-social-intelligence.py; FAIL check-staleness.py only (missing 2026-09-18 Morning Brief artifact).",
+  "events": []
+}
