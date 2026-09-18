@@ -19,6 +19,12 @@ For Velvet Factory public visual work, `OWNER-APPROVED-GRID-STANDARD-2026-09-14.
 - סאונד: רכיב קריאייטיב מלא, לא שכבת קישוט בסוף. עדיפות לסאונד אמיתי של הסטודיו כאשר הוא שימושי; מוזיקה/SFX תומכים בסיפור ולא מחליפים הוכחה.
 - עברית: קצרה, טבעית, מדוברת ומדויקת. לא “שיווקית AI”.
 
+## Reference-role separation · owner correction 2026-09-18
+
+Product Truth is a **fidelity constraint, not an aesthetic reference**. Resolve look/feel only from the approved broad visual reference, editorial reference and current-creative reference. Resolve physical truth from the actual product source pixels plus the text Product Truth guide.
+
+Do **not** pass Product Truth QA boards/teaching sheets into image-generation, style-transfer, moodboard or aesthetic-conditioning inputs. `Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png` is explicitly rejected for creative conditioning because it pushed results toward an unaesthetic technical-board look. Keep its lessons as text/QA rules only.
+
 ## Visual Finishing Protocol · always-on
 
 כל נכס סטילס/פוסט/סטורי/קרוסלה/cover שעובר עיבוד חייב לעבור את ארבעת השלבים הבאים לפני שהוא נחשב final:
