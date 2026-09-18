@@ -1,10 +1,10 @@
 {
-  "enabled": false,
-  "requestId": "research-seat-2026-09-17",
+  "enabled": true,
+  "requestId": "morning-brief-recovery-2026-09-18",
   "to": "nocturney@gmail.com",
-  "subject": "Velvet Factory · בריף מחקר 17.9",
-  "html": "packages/vfops/out/research-owner-2026-09-17.html",
-  "visibleText": "packages/vfops/out/research-owner-2026-09-17.txt",
+  "subject": "Velvet Factory ? ???? ????? | 2026-09-18",
+  "html": "packages/vfops/out/BRIEF-2026-09-18.html",
+  "visibleText": "packages/vfops/out/BRIEF-2026-09-18-visible.txt",
   "images": "",
   "embedRemoteImages": true,
   "remoteImageLimit": 4
