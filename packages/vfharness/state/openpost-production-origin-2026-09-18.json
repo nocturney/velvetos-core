@@ -9,7 +9,7 @@
     "project_preflight": "PASS"
   },
   "repo": {
-    "base_main": "2e617dea7a5fc013fd310ac96f9589d7915d6a92",
+    "base_main": "dda12dd11bad44e43aaec83641ecea186e0badd2",
     "branch": "chore/openpost-prod-origin-2026-09-18"
   },
   "visible_text": {
@@ -53,7 +53,40 @@
     "envDirectoryPermissions": "0700 root:root",
     "envFilePermissions": "0600 root:root",
     "directSqliteSchemaCheck": "UNPROVEN",
-    "directSqliteIntegrityCheck": "UNPROVEN"
+    "directSqliteIntegrityCheck": "UNPROVEN",
+    "publicSsh22": false,
+    "publicRdp3389": false,
+    "adminAccess": "IAP_ONLY_VERIFIED",
+    "firewall": [
+      {
+        "name": "openpost-prod-web",
+        "priority": 1000,
+        "source": "0.0.0.0/0",
+        "allow": [
+          "tcp:80",
+          "tcp:443"
+        ]
+      },
+      {
+        "name": "openpost-prod-ssh-iap",
+        "priority": 800,
+        "source": "35.235.240.0/20",
+        "allow": [
+          "tcp:22"
+        ]
+      },
+      {
+        "name": "openpost-prod-deny-admin",
+        "priority": 900,
+        "source": "0.0.0.0/0",
+        "deny": [
+          "tcp:22",
+          "tcp:3389"
+        ]
+      }
+    ],
+    "iapSshEvidence": "PASS via local IAP TCP tunnel to port 22 with exact host-key pin",
+    "securityObservedAt": "2026-09-18T09:26:06+03:00"
   },
   "provider": {
     "metaAppId": "1748471159829574",
@@ -79,6 +112,6 @@
   "notes": [
     "No Instagram write was performed.",
     "No direct post-reboot SQLite schema/integrity claim is made; post-reboot /api/v1/ready proved database=ok.",
-    "The project-wide default VPC SSH/RDP rules were not modified because they are shared/global; no RDP service runs on this Linux VM."
+    "Project-wide default VPC SSH/RDP rules remain unchanged, but higher-priority target-specific rules restrict this VM: SSH is allowed only from Google IAP and SSH/RDP are denied from all other IPv4 sources."
   ]
 }
