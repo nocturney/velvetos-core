@@ -18136,6 +18136,75 @@
         "reviewedAt": "2026-09-18T15:58:00Z",
         "note": "Exact final 1080x1350 and 432x540 mobile preview reviewed; Product Truth, reference match, copy, brand and final QA passed."
       }
+    },
+    {
+      "id": "media-1dkCfkdfNj5ctJEIY6zjYol2KNB2a-nbU-v13",
+      "sourceFile": {
+        "id": "1dkCfkdfNj5ctJEIY6zjYol2KNB2a-nbU",
+        "url": "https://drive.google.com/file/d/1dkCfkdfNj5ctJEIY6zjYol2KNB2a-nbU/view?usp=drivesdk"
+      },
+      "viewDescription": "גרסת v13 של פוסט הינשוף: כיוון editorial חם עם שלוש כרטיסיות detail מעוגלות בתוך המסגרת. חבילת הפרסום עודכנה לפי התמונה העדכנית והועלתה ל־04 - מאושר לפרסום.",
+      "uploadedAt": "2026-09-18",
+      "productLink": null,
+      "status": "approved",
+      "assignee": "צמיחה / סטודיו",
+      "derivativeIds": [
+        {
+          "id": "1LuuQew6FARvdfH1X2ogQRaJiIOuMq42E",
+          "url": "https://drive.google.com/file/d/1LuuQew6FARvdfH1X2ogQRaJiIOuMq42E/view?usp=drivesdk"
+        },
+        {
+          "id": "18wfmOHkjL2IozOgbMD06pf1o2GVfNxia",
+          "url": "https://drive.google.com/file/d/18wfmOHkjL2IozOgbMD06pf1o2GVfNxia/view?usp=drivesdk"
+        },
+        {
+          "id": "1FHyXtmZEoMnbDPs4Sed5p07LvBB3JUl8",
+          "url": "https://drive.google.com/file/d/1FHyXtmZEoMnbDPs4Sed5p07LvBB3JUl8/view?usp=drivesdk"
+        },
+        {
+          "id": "1i8GYgLEhPhGKEdHrFmyN8COHujzOdLYr",
+          "url": "https://drive.google.com/file/d/1i8GYgLEhPhGKEdHrFmyN8COHujzOdLYr/view?usp=drivesdk"
+        }
+      ],
+      "sourceLinks": [
+        "https://drive.google.com/file/d/1dkCfkdfNj5ctJEIY6zjYol2KNB2a-nbU/view?usp=drivesdk"
+      ],
+      "versionApproval": {
+        "state": "approved",
+        "approvedBy": "Christian",
+        "approvedAt": "2026-09-18",
+        "note": "Owner explicitly requested updating the publication package in the ready-media folder to the latest image. This is package/version approval only; no live Instagram publication was requested."
+      },
+      "truth": {
+        "origin": "studio_camera",
+        "truthLevel": "derived_real",
+        "rightsStatus": "unknown",
+        "usableFor": [
+          "hero"
+        ],
+        "visualTags": [
+          "owl",
+          "decorative",
+          "editorial",
+          "rounded-detail-cards",
+          "latest-package"
+        ],
+        "qualityScore": null,
+        "project": "Velvet Factory",
+        "object": "owl decorative object",
+        "material": null,
+        "verifiedAt": "2026-09-18",
+        "evidenceRefs": [
+          "https://drive.google.com/file/d/1QaN3H4CEjC9k8Drq0lG5TL7jJBbbPNIp/view?usp=drivesdk",
+          "https://drive.google.com/file/d/1FHyXtmZEoMnbDPs4Sed5p07LvBB3JUl8/view?usp=drivesdk"
+        ],
+        "note": "Latest package version in approved-media folder. Publication itself not performed."
+      },
+      "visualReview": {
+        "state": "done",
+        "reviewedAt": "2026-09-18",
+        "note": "Latest current image packaged as v13; rounded detail cards fully inside canvas."
+      }
     }
   ]
 }
