@@ -7,11 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-<<<<<<< HEAD
 - 2026-09-18 — **Morning Brief staleness cadence repair:** `check-staleness.py` now enforces the canonical 09:00 Asia/Jerusalem Morning Brief after its existing 15-minute grace instead of the retired 07:00 cadence. This aligns the repository gate with `packages/vfops/ROUTINE.md` and the protected automation schedule; no brief artifact is fabricated to satisfy CI.
-=======
+
 - 2026-09-18 — **OpenPost stable HTTPS origin:** provisioned `openpost-prod` on GCP (`instamcp`, `us-central1-a`, `e2-micro`, 30 GB `pd-standard`) with static IPv4 `34.9.7.22` and public origin `https://openpost.34.9.7.22.sslip.io`. The production host runs exact OpenPost `v4.35.0` Linux artifact `sha256:157abefc2810dde09e914b78915f79c0160fcf60047856a30a1261c1721d2856` behind Caddy; `/api/v1/ready` returns HTTP 200 with `status=ready` and `database=ok`, TLS verification passes, HTTP redirects to HTTPS, direct external TCP/18080 times out, diagnostics are disabled, and a full VM reset returned the same ready response. This establishes a stable public app/media origin only; `productionDeployed=false`, provider OAuth remains unconfigured because the Meta App Secret has not been entered, and no Instagram write occurred.
->>>>>>> 40d9b53 (changelog: record OpenPost stable HTTPS origin)
 
 - 2026-09-17 — **OpenPost v4.35.0 staging + provider preflight:** reviewed upstream v4.35.0 against v4.34.2 (no VF-relevant Instagram/Meta OAuth, API/MCP, media-limit, scheduler/retry, schema or security-boundary change), backed up schema 136, and promoted the exact Windows server artifact `sha256:be6520f495def72b1b466a69c9a223954b4403c3c7c40881b52ce0f030334cc8` after isolated smoke. Post-restart `/api/v1/ready=ready`, `integrity_check=ok`, FK=0, diagnostics are explicitly disabled, and the inbound 18080 firewall block remains active. A restricted ephemeral HTTPS tunnel proved public readiness HTTP 200 without exposing auth, then was stopped and `cloudflared` removed. OpenPost remains `shadow`: users/workspaces/provider apps/social accounts are all zero; the existing Meta token is valid and has the required scopes, but the Meta app secret/stable public origin/provider OAuth are not configured and no real Instagram write was performed.
 
