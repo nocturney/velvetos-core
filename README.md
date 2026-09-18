@@ -37,6 +37,7 @@
 | **Instagram Insights** | LIVE / VERIFIED |
 | **Media Intake / Drive** | LIVE / VERIFIED |
 | **Jobs source of truth** | Google Sheet LIVE / VERIFIED write-through |
+| **Morning Brief Windows UTF-8** | VERIFIED render path ? 2026-09-18 artifact regenerated on `Chris` with 7 slots, no encoding corruption/tracebacks; Gmail delivery remains separate provider evidence |
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
