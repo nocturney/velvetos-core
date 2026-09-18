@@ -21,7 +21,7 @@
     "autoDm": false,
     "boostAds": false,
     "openpostProviderProbe": {
-      "observedAt": "2026-09-17T22:55:18+03:00",
+      "observedAt": "2026-09-18T11:21:39+03:00",
       "providerApps": 0,
       "providerInstallations": 0,
       "socialAccounts": 0,
@@ -89,7 +89,7 @@
     },
     "publicHttpsReady": true,
     "providerOAuthReady": false,
-    "blockedBy": "Stable public HTTPS/media origin is deployed and survives a full VM reset. Remaining blockers: OpenPost owner/workspace bootstrap, Meta App Secret/provider OAuth, and a real authorized Instagram Graph write plus canonical live verification. OpenPost/direct MCP cannot bypass the signed delivery boundary.",
+    "blockedBy": "Stable public HTTPS/media origin and OpenPost owner/workspace bootstrap are verified. Remaining blockers: Meta App Secret/provider OAuth and a real authorized Instagram Graph write plus canonical live verification. OpenPost/direct MCP cannot bypass the signed delivery boundary.",
     "containerImagePolicy": "pin version or immutable digest; never production latest",
     "diagnosticsEnabled": false,
     "backup": {
@@ -152,14 +152,18 @@
       "requiredOpenPostScopesPresent": true,
       "metaAppSecretAvailableToOpenPost": false,
       "openpostEncryptionKeyConfigured": true,
-      "openpostUsers": 0,
-      "openpostWorkspaces": 0,
+      "openpostUsers": 1,
+      "openpostWorkspaces": 1,
       "providerApps": 0,
       "providerInstallations": 0,
       "socialAccounts": 0,
       "providerAccountBindings": 0,
       "stablePublicOriginReady": true,
-      "openpostOwnerWorkspaceBootstrapCompleted": false
+      "openpostOwnerWorkspaceBootstrapCompleted": true,
+      "openpostWorkspaceMembers": 1,
+      "ownerIsInstanceAdmin": true,
+      "registrationEnabled": false,
+      "bootstrapObservedAt": "2026-09-18T11:21:39+03:00"
     },
     "productionHost": {
       "status": "HOST_READY_PROVIDER_BLOCKED",
@@ -228,7 +232,9 @@
         }
       },
       "iapSshEvidence": "PASS via local IAP TCP tunnel to port 22; exact host key pinned",
-      "securityObservedAt": "2026-09-18T09:26:06+03:00"
+      "securityObservedAt": "2026-09-18T09:26:06+03:00",
+      "registrationEnabled": false,
+      "registrationDisabledObservedAt": "2026-09-18T11:21:39+03:00"
     }
   },
   "deliveryApproval": {
@@ -242,7 +248,7 @@
     "ownerInvokerNarrowIamVerified": true,
     "ownerAuthVerified": true,
     "liveEndToEndVerified": false,
-    "liveBlocker": "Owner-auth and production boundary/replay smoke are verified. LIVE remains false because no real Instagram Graph write was performed or canonically verified; the stable public HTTPS origin is ready, but OpenPost owner/workspace bootstrap and Meta provider OAuth are still incomplete.",
+    "liveBlocker": "Owner-auth, production boundary/replay smoke, stable public HTTPS origin, and OpenPost owner/workspace bootstrap are verified. LIVE remains false because Meta provider OAuth is incomplete and no real Instagram Graph write was performed or canonically verified.",
     "replayStoreVerified": true,
     "boundarySmokeVerified": true,
     "publicInstagramWritePerformedInBoundarySmoke": false,
