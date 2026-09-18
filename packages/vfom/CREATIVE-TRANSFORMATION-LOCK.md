@@ -19,6 +19,17 @@ Use the real uploaded photograph as the edit target. Do **not** recreate the pro
 Lock the product identity, silhouette, proportions, parts, openings, texture/material and verified color. Creative change belongs around the product: background/environment, lighting, shadow/depth, crop/perspective, negative space, atmosphere and editorial composition.
 
 If generative editing cannot keep the product faithful, simplify the treatment or use deterministic compositing/retouching. Never solve fidelity by falling back to an untreated raw carousel and calling it finished.
+
+## Owner correction — ordinary photo retouch does not violate Product Truth
+
+For a verified real-product source, ordinary photographic corrections are allowed: brightness/exposure, mild contrast, white balance/color temperature, highlight/shadow balancing, light sharpening, gentle cleanup/noise reduction, crop/straighten and subtle subject-separation or lighting improvement.
+
+These adjustments are source-grounded retouch, not product redesign, provided they do not materially change texture/material identity, elements/parts, geometry, silhouette, proportions, identifying details, surface pattern, protected eye/face details or the product's real color.
+
+Do not fail Product Truth merely because such basic corrections were applied. Fail only when the product itself was materially altered or misrepresented.
+
+This allowance is separate from the creative-delta requirement: a safe brightness/contrast/crop pass can preserve Product Truth while still being too weak to qualify as the finished Velvet publication treatment.
+
 ## Minimum creative delta
 
 Before `ready for review`, require all of:
