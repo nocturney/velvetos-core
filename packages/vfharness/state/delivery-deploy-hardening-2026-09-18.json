@@ -1,0 +1,142 @@
+{
+  "schema": "velvet.vfigos_delivery_deploy_hardening_evidence.v1",
+  "observed_at": "2026-09-18",
+  "domain": "system_engineering",
+  "authority": {
+    "contract": 6,
+    "revision": "6.2",
+    "bundle": "VF-PROJECT-6.2-DETAIL-TRUTH"
+  },
+  "repo": {
+    "branch": "fix/delivery-deploy-hardening-20260918",
+    "base_sha_at_preflight": "ecd31d1a2410039e99b984949ad41810a40f75da",
+    "base_sha_after_rebase": "89fae898a3bab752920a27f752aa1b40b9824a09",
+    "current_main_observed_before_commit": "89fae898a3bab752920a27f752aa1b40b9824a09",
+    "rebase_required_before_commit": false
+  },
+  "scope": {
+    "project_region_pinning": "implemented",
+    "optional_issuer_bearer_pinning": "implemented",
+    "cross_project_builder_rejection": "implemented",
+    "exact_issuer_service_iam": "implemented",
+    "secret_write_admin_denials": "implemented",
+    "mutation_credential_target_coverage": "implemented"
+  },
+  "verification": {
+    "delivery_approval_sensor": "PASS",
+    "project_request_gate": "PASS",
+    "vfharness": "PASS",
+    "python_compile": "PASS",
+    "bash_syntax_both_deploy_scripts": "PASS",
+    "git_diff_check": "PASS",
+    "negative_deploy_guard_smokes": "PASS",
+    "red_green_regressions": {
+      "build_key_id_removed": "EXPECTED_FAIL",
+      "mutation_key_id_removed": "EXPECTED_FAIL",
+      "bootstrap_live_policy_added": "EXPECTED_FAIL",
+      "bootstrap_absent_issuer_resource_unhandled": "EXPECTED_FAIL",
+      "bootstrap_absent_issuer_resource_repaired": "PASS",
+      "restored_candidate": "PASS"
+    },
+    "local_full_check_all": {
+      "status": "INTERRUPTED",
+      "detail": "Windows check-all received KeyboardInterrupt after 13 passing sensors; not claimed as PASS or FAIL."
+    },
+    "visible_text": {
+      "surface": "human-document",
+      "extraction": "raw git diff --unified=0 HEAD bytes decoded as UTF-8; keep added lines except +++; strip leading +; join with LF; encode UTF-8 without BOM",
+      "gate_flags": "--gate --truth-checked --reader-first --copy-authority --surface-qa --domain-tool vfigos --domain-tool vfharness --domain-tool velvetos",
+      "receipts": [
+        {
+          "source_path": "CHANGELOG.md",
+          "text_sha256": "178bf713b2e3497e0552250844ac2b25e5f6e080866ab06a2378baf43d884f29",
+          "gate": "PASS"
+        },
+        {
+          "source_path": "README.md",
+          "text_sha256": "3a20d6cb63e613ff3597d46518263315c653128d72dd5a2f154f88a870a0044a",
+          "gate": "PASS"
+        },
+        {
+          "source_path": "packages/vfigos/approval/OPERATOR-SETUP.md",
+          "text_sha256": "45c8a3c6b10c7eae401c9747d321ee5e0c02946aa907cbaa60fb68250a9aa88b",
+          "gate": "PASS"
+        }
+      ]
+    },
+    "initial_precommit_review_a": {
+      "model": "composer-2.5-fast",
+      "status": "CLEAN",
+      "scope": "pre-rebase code/prose candidate"
+    },
+    "initial_precommit_review_b": {
+      "model": "cursor-grok-4.5-medium-fast",
+      "status": "REPAIR_APPLIED_PENDING_REREVIEW",
+      "finding": "Visible Text receipt was not bound inside the candidate.",
+      "repair": "Exact current prose was re-gated after rebase and its receipt is bound in this evidence record."
+    },
+    "live_expanded_iam_preflight": {
+      "status": "PASS",
+      "principal": "1016876126699-compute@developer.gserviceaccount.com",
+      "probes": 223,
+      "mode": "read_only_policy_troubleshooter"
+    },
+    "live_bootstrap_iam_preflight": {
+      "status": "PASS",
+      "principal": "1016876126699-compute@developer.gserviceaccount.com",
+      "probes": 217,
+      "mode": "read_only_policy_troubleshooter",
+      "issuer_resource_absent": true
+    },
+    "bootstrap_repair_review_a": {
+      "model": "composer-2.5-fast",
+      "status": "CLEAN"
+    },
+    "bootstrap_repair_review_b": {
+      "model": "cursor-grok-4.6-low-fast",
+      "status": "CLEAN"
+    },
+    "post_rebase": {
+      "base_sha": "89fae898a3bab752920a27f752aa1b40b9824a09",
+      "openpost_evidence_from_main_preserved": true,
+      "visible_text_rebound": true,
+      "delivery_approval_sensor": "PASS",
+      "project_request_gate": "PASS",
+      "vfharness": "PASS",
+      "readme_snapshot": "PASS",
+      "readme_bidi": "PASS",
+      "python_compile": "PASS",
+      "bash_syntax_both_deploy_scripts": "PASS",
+      "git_diff_check": "PASS",
+      "negative_guard_smokes": "PASS",
+      "negative_guard_smoke_exit_codes": [1, 1, 1],
+      "negative_guard_smokes_prior_candidate": "PASS",
+      "live_proof_reuse_basis": "main drift did not touch build_isolation.py, deploy-issuer.sh, remote/deploy.sh, check-delivery-approval.py, or OPERATOR-SETUP.md; post-rebase deterministic proof is rerun separately",
+      "main_drift_files": [
+        "CHANGELOG.md",
+        "README.md",
+        "packages/vfbriefux/hq/weekly-deck.bento-doc.json",
+        "packages/vfharness/state/openpost-production-origin-2026-09-18.json",
+        "packages/vfigos/OPENPOST.json",
+        "packages/vfigos/OPENPOST.md"
+      ],
+      "runtime_hardening_file_overlap_with_main_drift": [],
+      "overlapping_prose_files_reapplied_without_conflict": [
+        "CHANGELOG.md",
+        "README.md"
+      ]
+    }
+  },
+  "claims": {
+    "implemented_candidate": true,
+    "deployed_by_this_change": false,
+    "instagram_write_performed": false,
+    "LIVE": false,
+    "commit_push_merge_state": "bound externally after this evidence record to avoid self-referential claims"
+  },
+  "next": [
+    "run deterministic proof and two clean fresh-context reviews on the rebased final candidate",
+    "commit and push",
+    "require Linux CI and two exact-head clean reviews before merge"
+  ]
+}

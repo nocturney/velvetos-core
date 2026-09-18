@@ -1,0 +1,48 @@
+{
+  "schema": "vf.review.v1",
+  "review_id": "delivery-deploy-hardening-2026-09-18-precommit",
+  "risk": "high",
+  "rounds": 1,
+  "reviewer_a": {
+    "model": "composer-2.5-fast",
+    "independent": true,
+    "state": "pass",
+    "verdict": "CLEAN",
+    "blockers": 0,
+    "important": 0
+  },
+  "reviewer_b": {
+    "model": "cursor-grok-4.6-low-fast",
+    "independent": true,
+    "state": "pass",
+    "verdict": "CLEAN",
+    "blockers": 0,
+    "important": 0
+  },
+  "deterministic_proof": {
+    "state": "pass",
+    "scope": "precommit exact working-tree candidate on base 89fae898a3bab752920a27f752aa1b40b9824a09",
+    "checks": [
+      "check-delivery-approval PASS",
+      "check-project-request-gate PASS",
+      "check-vfharness PASS",
+      "check-visible-text-gate PASS",
+      "README System Pulse current",
+      "py_compile PASS",
+      "bash -n both deploy scripts PASS",
+      "git diff --check PASS",
+      "wrong project/region/optional bearer guards exit 1 before gcloud",
+      "RED->GREEN bootstrap absent-resource regression PASS",
+      "live normal IAM preflight PASS probes=223",
+      "live bootstrap absent-resource IAM preflight PASS probes=217"
+    ],
+    "local_full_check_all": "INTERRUPTED after 13 passing sensors; not claimed PASS",
+    "linux_ci": "PENDING_POST_PUSH"
+  },
+  "state": "precommit_pass_ci_pending",
+  "limitations": [
+    "Linux CI is required after push before merge.",
+    "Two fresh exact-head reviews are required after commit/push before merge.",
+    "No deploy or Instagram write is authorized by this receipt; LIVE remains false."
+  ]
+}

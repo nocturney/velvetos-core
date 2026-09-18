@@ -550,6 +550,79 @@ def main() -> int:
         fail("issuer deploy must run the effective-IAM helper before Cloud Build")
     if not _cas_env_keeps_commas(issuer_deploy):
         fail("issuer deploy must keep comma-separated CAS hosts as one env value")
+    for script, build_at, label in (
+        (deploy, build_submit_at, "mutation"),
+        (issuer_deploy, issuer_build_at, "issuer"),
+    ):
+        for declaration, guard, resource_label in (
+            ('EXPECTED_PROJECT="instamcp"', '[[ "${PROJECT}" != "${EXPECTED_PROJECT}" ]]', "project"),
+            ('EXPECTED_REGION="me-west1"', '[[ "${REGION}" != "${EXPECTED_REGION}" ]]', "region"),
+        ):
+            if declaration not in script:
+                fail(f"{label} deploy must pin canonical {resource_label}")
+            guard_at = script.find(guard)
+            if guard_at < 0 or guard_at > build_at:
+                fail(f"{label} deploy must reject non-canonical {resource_label} before Cloud Build")
+    if 'EXPECTED_OPTIONAL_BEARER_SECRET="velvet-delivery-approval-issuer-bearer"' not in issuer_deploy:
+        fail("issuer deploy must pin the optional bearer secret name")
+    bearer_guard = '[[ -n "${OPTIONAL_BEARER_SECRET}" && "${OPTIONAL_BEARER_SECRET}" != "${EXPECTED_OPTIONAL_BEARER_SECRET}" ]]'
+    if bearer_guard not in issuer_deploy or issuer_deploy.find(bearer_guard) > issuer_build_at:
+        fail("issuer deploy must reject non-canonical optional bearer before Cloud Build")
+    if "--require-issuer-policy" not in deploy[:build_submit_at]:
+        fail("mutation deploy must require exact live issuer IAM policy before Cloud Build")
+    bootstrap_marker = 'if [[ "${BOOTSTRAP}" == "1" ]]; then'
+    bootstrap_at = issuer_pre_submit.find(bootstrap_marker)
+    routine_at = issuer_pre_submit.find("\nelse\n", bootstrap_at)
+    routine_end = issuer_pre_submit.find("\nfi\n", routine_at)
+    if bootstrap_at < 0 or routine_at < 0 or routine_end < 0:
+        fail("issuer deploy must keep explicit bootstrap and routine branches")
+    bootstrap_block = issuer_pre_submit[bootstrap_at:routine_at]
+    routine_block = issuer_pre_submit[routine_at:routine_end]
+    if "--require-issuer-policy" in bootstrap_block:
+        fail("first issuer bootstrap must not require a live policy before service creation")
+    if "--issuer-resource-absent" not in bootstrap_block:
+        fail("first issuer bootstrap must skip only issuer-resource probes while the service is absent")
+    if "--require-issuer-policy" not in routine_block:
+        fail("routine issuer deploy must require exact live issuer IAM policy before Cloud Build")
+    for bootstrap_needle in (
+        "VELVET_DELIVERY_APPROVAL_BOOTSTRAP",
+        "gcloud run services list",
+        'grep -Fxq "${SERVICE}"',
+        "Refusing bootstrap: issuer service already exists",
+    ):
+        if bootstrap_needle not in bootstrap_block and bootstrap_needle != "VELVET_DELIVERY_APPROVAL_BOOTSTRAP":
+            fail("issuer bootstrap must prove the service is absent and refuse overwrite")
+    issuer_run_deploy_at = issuer_deploy.find("gcloud run deploy")
+    issuer_set_policy_at = issuer_deploy.find("gcloud run services set-iam-policy")
+    post_bootstrap_at = issuer_deploy.find(bootstrap_marker, issuer_set_policy_at)
+    post_else_at = issuer_deploy.find("\nelse\n", post_bootstrap_at)
+    post_fi_at = issuer_deploy.find("\nfi\n", post_else_at)
+    if not (0 <= issuer_run_deploy_at < issuer_set_policy_at < post_bootstrap_at < post_else_at < post_fi_at):
+        fail("issuer deploy must branch post-deploy verification by bootstrap mode")
+    post_bootstrap_block = issuer_deploy[post_bootstrap_at:post_else_at]
+    post_routine_block = issuer_deploy[post_else_at:post_fi_at]
+    if "--require-issuer-policy" not in post_bootstrap_block:
+        fail("bootstrap must run the full effective-IAM proof after issuer creation")
+    if "--issuer-policy-only" not in post_routine_block:
+        fail("routine issuer deploy must re-verify exact service IAM after replacement")
+    if "BOOTSTRAP_DEPLOY_FLAGS=(--no-traffic)" not in bootstrap_block:
+        fail("bootstrap must create the issuer revision with zero traffic")
+    if '"${BOOTSTRAP_DEPLOY_FLAGS[@]}"' not in issuer_deploy[issuer_run_deploy_at:issuer_set_policy_at]:
+        fail("issuer deploy must apply bootstrap zero-traffic flags to gcloud run deploy")
+    issuer_promote_at = issuer_deploy.find("gcloud run services update-traffic")
+    full_bootstrap_proof_at = issuer_deploy.find("--require-issuer-policy", post_bootstrap_at)
+    if not (
+        issuer_set_policy_at < full_bootstrap_proof_at < issuer_promote_at < post_else_at
+    ):
+        fail("bootstrap must prove full issuer isolation before promoting traffic")
+    if "--to-latest" not in issuer_deploy[issuer_promote_at:post_else_at]:
+        fail("bootstrap traffic promotion must target the proven latest revision")
+    if "BOOTSTRAP_SERVICE_PENDING=1" not in issuer_deploy[:issuer_run_deploy_at]:
+        fail("bootstrap must arm cleanup before creating the zero-traffic issuer")
+    if "gcloud run services delete" not in issuer_deploy[:issuer_run_deploy_at]:
+        fail("bootstrap must define fail-closed cleanup for an unpromoted issuer")
+    if "BOOTSTRAP_SERVICE_PENDING=0" not in post_bootstrap_block[post_bootstrap_block.find("--to-latest"):]:
+        fail("bootstrap cleanup must disarm only after successful traffic promotion")
     operator_setup = (ROOT / "packages/vfigos/approval/OPERATOR-SETUP.md").read_text(encoding="utf-8")
     documented_sa = "velvet-delivery-issuer@instamcp.iam.gserviceaccount.com"
     if documented_sa not in operator_setup:
@@ -700,6 +773,47 @@ def main() -> int:
         pass
     else:
         fail("build isolation must reject a non-concrete Cloud Build serviceAccount override")
+    for foreign_override in (
+        "builder@evil.iam.gserviceaccount.com",
+        "projects/evil/serviceAccounts/builder@evil.iam.gserviceaccount.com",
+    ):
+        try:
+            isolation.cloudbuild_service_accounts(
+                json.dumps({"serviceAccount": foreign_override}), project="instamcp"
+            )
+        except (isolation.IsolationError, TypeError):
+            if isinstance(sys.exc_info()[1], TypeError):
+                fail("Cloud Build parser must validate overrides against the canonical project")
+        else:
+            fail("Cloud Build parser must reject cross-project serviceAccount overrides")
+    if not hasattr(isolation, "assert_issuer_invoker_policy"):
+        fail("build isolation must expose exact issuer IAM policy validation")
+    owner_policy = json.dumps({
+        "bindings": [{
+            "role": "roles/run.invoker",
+            "members": ["serviceAccount:velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com"],
+        }]
+    })
+    isolation.assert_issuer_invoker_policy(owner_policy, "instamcp")
+    for bad_policy in (
+        json.dumps({"bindings": []}),
+        json.dumps({"bindings": [{"role": "roles/run.invoker", "members": ["allUsers"]}]}),
+        json.dumps({"bindings": [{
+            "role": "roles/run.invoker",
+            "members": ["serviceAccount:velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com"],
+            "condition": {"title": "temporary", "expression": "true"},
+        }]}),
+        json.dumps({"bindings": [
+            {"role": "roles/run.invoker", "members": ["serviceAccount:velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com"]},
+            {"role": "roles/run.admin", "members": ["allUsers"]},
+        ]}),
+    ):
+        try:
+            isolation.assert_issuer_invoker_policy(bad_policy, "instamcp")
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("issuer IAM validator must reject non-exact owner-only policy")
     expected_builder = "velvet-vfigos-builder@instamcp.iam.gserviceaccount.com"
     expected_builder_resource = f"projects/instamcp/serviceAccounts/{expected_builder}"
     for build_config_rel in (
@@ -721,7 +835,13 @@ def main() -> int:
         "run.services.setIamPolicy",
         "resourcemanager.projects.setIamPolicy",
         "secretmanager.secrets.setIamPolicy",
+        "secretmanager.secrets.update",
+        "secretmanager.secrets.delete",
         "secretmanager.versions.access",
+        "secretmanager.versions.add",
+        "secretmanager.versions.enable",
+        "secretmanager.versions.disable",
+        "secretmanager.versions.destroy",
         "iam.serviceAccounts.setIamPolicy",
         "iam.serviceAccounts.actAs",
         "iam.serviceAccounts.getAccessToken",
@@ -739,6 +859,23 @@ def main() -> int:
     }
     if required_permissions - {item[1] for item in plan}:
         fail("build isolation probe plan is missing a required permission")
+    try:
+        bootstrap_plan = isolation.build_probe_plan(
+            "instamcp", "me-west1", "123456789", include_issuer_resource=False
+        )
+    except TypeError:
+        fail("build isolation must support an issuer-resource-absent bootstrap plan")
+    if any(item[1] in {"run.routes.invoke", "run.services.setIamPolicy"} for item in bootstrap_plan):
+        fail("bootstrap build plan must not troubleshoot the issuer before it exists")
+    for required_bootstrap_permission in (
+        "resourcemanager.projects.setIamPolicy",
+        "secretmanager.versions.access",
+        "secretmanager.versions.add",
+        "iam.serviceAccounts.getAccessToken",
+        "storage.objects.create",
+    ):
+        if not any(item[1] == required_bootstrap_permission for item in bootstrap_plan):
+            fail("bootstrap build plan must preserve all non-issuer isolation checks")
     replay_bucket_resource = "//storage.googleapis.com/projects/_/buckets/velvet-ig-approval-spend"
     replay_object_name = "projects/_/buckets/velvet-ig-approval-spend/objects/spent/__isolation_probe__"
     expected_object_context = (
@@ -754,8 +891,33 @@ def main() -> int:
             fail("Cloud Storage object probes must provide exact object condition context")
     if isolation.troubleshoot_condition_args(replay_bucket_resource, "storage.buckets.update"):
         fail("bucket permission probes must not receive object condition context")
-    if not any("projects/123456789/secrets/velvet-delivery-approval-ed25519-private/versions/latest" in item[0] for item in plan):
-        fail("build isolation must use the Secret Manager version full resource name")
+    signing_secret_resource = (
+        "//secretmanager.googleapis.com/projects/123456789/secrets/"
+        "velvet-delivery-approval-ed25519-private"
+    )
+    if not any(
+        item[0] == signing_secret_resource
+        and item[1] == "secretmanager.versions.access"
+        for item in plan
+    ):
+        fail("Secret Manager version permissions must be evaluated on the secret IAM resource")
+    if any("/versions/latest" in item[0] for item in plan):
+        fail("build isolation must not use the versions/latest alias as an IAM policy resource")
+    key_id_items = [
+        item for item in plan if "velvet-delivery-approval-key-id" in item[0]
+    ]
+    required_secret_denials = {
+        "secretmanager.versions.access",
+        "secretmanager.versions.add",
+        "secretmanager.versions.enable",
+        "secretmanager.versions.disable",
+        "secretmanager.versions.destroy",
+        "secretmanager.secrets.update",
+        "secretmanager.secrets.delete",
+        "secretmanager.secrets.setIamPolicy",
+    }
+    if required_secret_denials - {item[1] for item in key_id_items}:
+        fail("build isolation must explicitly protect key-id secret read/write/admin paths")
     if not any(
         item[0] == "//cloudresourcemanager.googleapis.com/projects/instamcp"
         and item[1] == "resourcemanager.projects.setIamPolicy"
@@ -796,7 +958,34 @@ def main() -> int:
         "storage.objects.update",
     } - spend_build_permissions:
         fail("build isolation must deny replay-store mutation and IAM changes")
-    mutation_plan = isolation.mutation_runtime_probe_plan("instamcp", "me-west1", "123456789")
+    mutation_build_targets = (
+        "123456789@cloudbuild.gserviceaccount.com",
+        expected_builder,
+    )
+    mutation_plan = isolation.mutation_runtime_probe_plan(
+        "instamcp", "me-west1", "123456789", mutation_build_targets
+    )
+    try:
+        bootstrap_mutation_plan = isolation.mutation_runtime_probe_plan(
+            "instamcp",
+            "me-west1",
+            "123456789",
+            mutation_build_targets,
+            include_issuer_resource=False,
+        )
+    except TypeError:
+        fail("mutation isolation must support an issuer-resource-absent bootstrap plan")
+    if any(item[1] in {"run.routes.invoke", "run.services.setIamPolicy"} for item in bootstrap_mutation_plan):
+        fail("bootstrap mutation plan must not troubleshoot the issuer before it exists")
+    for required_bootstrap_permission in (
+        "resourcemanager.projects.setIamPolicy",
+        "secretmanager.versions.access",
+        "secretmanager.versions.add",
+        "iam.serviceAccounts.getAccessToken",
+        "storage.objects.delete",
+    ):
+        if not any(item[1] == required_bootstrap_permission for item in bootstrap_mutation_plan):
+            fail("bootstrap mutation plan must preserve all non-issuer isolation checks")
     if any(item[1] == "iam.serviceAccountKeys.upload" for item in mutation_plan):
         fail("mutation runtime probe must use iam.serviceAccountKeys.create for the keys:upload authorization path")
     mutation_principal = "velvet-instagram-mcp-runtime@instamcp.iam.gserviceaccount.com"
@@ -804,6 +993,11 @@ def main() -> int:
         fail("mutation runtime must be probed for issuer invocation denial")
     if not any("velvet-delivery-approval-ed25519-private" in item[0] for item in mutation_plan):
         fail("mutation runtime must be probed for signing-secret denial")
+    mutation_key_id_items = [
+        item for item in mutation_plan if "velvet-delivery-approval-key-id" in item[0]
+    ]
+    if required_secret_denials - {item[1] for item in mutation_key_id_items}:
+        fail("mutation runtime must explicitly deny key-id secret read/write/admin paths")
     if not any(item[1] == "resourcemanager.projects.setIamPolicy" for item in mutation_plan):
         fail("mutation runtime must be denied project IAM policy mutation")
     if not any(item[1] == "secretmanager.secrets.setIamPolicy" for item in mutation_plan):
@@ -827,8 +1021,37 @@ def main() -> int:
         fail("mutation runtime replay-store probe coverage is incomplete")
     if "storage.objects.create" in spend_runtime_permissions:
         fail("mutation runtime isolation probe must preserve intended replay object create")
-    if any(any(secret in item[0] for secret in isolation.INSTAGRAM_SECRETS) for item in mutation_plan):
-        fail("mutation runtime isolation probe must not deny its intended Instagram secret reads")
+    for secret in isolation.INSTAGRAM_SECRETS:
+        secret_items = [item for item in mutation_plan if secret in item[0]]
+        if any(item[1] == "secretmanager.versions.access" for item in secret_items):
+            fail("mutation runtime isolation probe must preserve intended Instagram secret reads")
+        for required_write_denial in (
+            "secretmanager.versions.add",
+            "secretmanager.versions.enable",
+            "secretmanager.versions.disable",
+            "secretmanager.versions.destroy",
+            "secretmanager.secrets.update",
+            "secretmanager.secrets.delete",
+            "secretmanager.secrets.setIamPolicy",
+        ):
+            if not any(item[1] == required_write_denial for item in secret_items):
+                fail("mutation runtime must deny destructive Instagram-secret permissions")
+    credential_resources = {
+        item[0]
+        for item in mutation_plan
+        if item[1] == "iam.serviceAccounts.getAccessToken"
+    }
+    for expected_target in (
+        "velvet-delivery-issuer@instamcp.iam.gserviceaccount.com",
+        "velvet-delivery-owner-invoker@instamcp.iam.gserviceaccount.com",
+        "123456789-compute@developer.gserviceaccount.com",
+        *mutation_build_targets,
+    ):
+        expected_resource = (
+            f"//iam.googleapis.com/projects/instamcp/serviceAccounts/{expected_target}"
+        )
+        if expected_resource not in credential_resources:
+            fail("mutation runtime credential probes must cover signer, owner, Compute and build identities")
     calls: list[tuple[str, str, str]] = []
     def _fake_troubleshoot(resource: str, principal_email: str, permission: str):
         calls.append((resource, principal_email, permission))
@@ -842,24 +1065,73 @@ def main() -> int:
             principal=build_identity, project_number="123456789",
             troubleshoot=_fake_troubleshoot,
         )
-        expected_probe_count = len(plan) + len(mutation_plan)
+        base_mutation_plan = isolation.mutation_runtime_probe_plan(
+            "instamcp", "me-west1", "123456789", (build_identity,)
+        )
+        expected_probe_count = len(plan) + len(base_mutation_plan)
         if _principal != build_identity or probe_count != expected_probe_count or len(calls) != expected_probe_count:
             fail("injected isolation proof did not cover build + mutation-runtime probe plans")
         probed_principals = {item[1] for item in calls}
         if mutation_principal not in probed_principals:
             fail("dedicated mutation runtime must be probed as an effective-IAM principal")
+        policy_reads: list[tuple[str, str]] = []
+        def _policy_reader(project: str, region: str) -> str:
+            policy_reads.append((project, region))
+            return owner_policy
         calls.clear()
-        config.write_text(json.dumps({"steps": [], "serviceAccount": override}), encoding="utf-8")
+        isolation.assert_build_identity_isolated(
+            "instamcp",
+            "me-west1",
+            config,
+            principal=build_identity,
+            project_number="123456789",
+            troubleshoot=_fake_troubleshoot,
+            require_issuer_policy=True,
+            issuer_policy_reader=_policy_reader,
+        )
+        if policy_reads != [("instamcp", "me-west1")] or not calls:
+            fail("--require-issuer-policy must execute the live-policy reader before isolation proof")
+        def _bad_policy_reader(project: str, region: str) -> str:
+            return json.dumps({
+                "bindings": [{"role": "roles/run.invoker", "members": ["allUsers"]}]
+            })
+        try:
+            isolation.assert_build_identity_isolated(
+                "instamcp",
+                "me-west1",
+                config,
+                principal=build_identity,
+                project_number="123456789",
+                troubleshoot=_fake_troubleshoot,
+                require_issuer_policy=True,
+                issuer_policy_reader=_bad_policy_reader,
+            )
+        except isolation.IsolationError:
+            pass
+        else:
+            fail("live issuer-policy wiring must fail closed on non-owner-only policy")
+        calls.clear()
+        canonical_override = "extra-builder@instamcp.iam.gserviceaccount.com"
+        config.write_text(
+            json.dumps({"steps": [], "serviceAccount": canonical_override}),
+            encoding="utf-8",
+        )
         isolation.assert_build_identity_isolated(
             "instamcp", "me-west1", config,
             principal=build_identity, project_number="123456789",
             troubleshoot=_fake_troubleshoot,
         )
         probed = {item[1] for item in calls}
-        expected_override_count = (2 * len(plan)) + len(mutation_plan)
+        override_mutation_plan = isolation.mutation_runtime_probe_plan(
+            "instamcp",
+            "me-west1",
+            "123456789",
+            (build_identity, canonical_override),
+        )
+        expected_override_count = (2 * len(plan)) + len(override_mutation_plan)
         if len(calls) != expected_override_count:
             fail("override isolation proof must cover both build identities plus mutation runtime")
-        if build_identity not in probed or override not in probed or mutation_principal not in probed:
+        if build_identity not in probed or canonical_override not in probed or mutation_principal not in probed:
             fail("Cloud Build override and mutation runtime must both be proven denied")
         try:
             isolation.assert_build_identity_isolated(
