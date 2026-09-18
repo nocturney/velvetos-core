@@ -59,6 +59,16 @@ Owner feedback that a candidate is not aligned with the approved visual language
 
 If a generative attempt alters/recreates the product, discard it. Do not regenerate the defective subject. Return to protected source pixels and deterministic masking/compositing or another source-grounded method.
 
+### Owner correction — basic photographic retouch is Product-Truth safe (2026-09-18)
+
+Normal photographic correction of the verified product source is allowed and MUST NOT be treated as Product Truth drift by itself. Allowed examples include brightness/exposure, mild contrast, white balance/color temperature, highlight/shadow balancing, light sharpening, gentle noise/cleanup, crop/straighten and subtle subject-separation/lighting improvement.
+
+These edits remain valid only while the product is materially the same physical object. They MUST NOT alter or invent product texture/material identity, parts/elements, geometry, silhouette, proportions, identifying details, surface pattern, eye/face identity-critical details, or the product's real color.
+
+Record compliant work as photo retouch / source-grounded correction, not as `synthetic_subject_change`. Product Truth fails only when the edit materially changes the product itself or makes its appearance misleading.
+
+This correction does not lower the creative-transformation floor: crop/exposure/contrast-only work may be Product-Truth safe yet still be insufficient as the finished publication creative. Presentation treatment and Product Truth are separate gates.
+
 ## Public CTA
 
 Never hardcode WhatsApp into public creative/caption from memory. Resolve CTA from current Velvet Factory authority (`constitution/PUBLIC_CTA.md` / instance policy). A business-contact phone record is not automatically a public CTA.
