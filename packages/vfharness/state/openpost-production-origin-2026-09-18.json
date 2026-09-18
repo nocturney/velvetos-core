@@ -9,7 +9,7 @@
     "project_preflight": "PASS"
   },
   "repo": {
-    "base_main": "dda12dd11bad44e43aaec83641ecea186e0badd2",
+    "base_main": "3e649ed22d8866e4eb3156293384cc869894d8d2",
     "branch": "chore/openpost-prod-origin-2026-09-18"
   },
   "visible_text": {
@@ -91,8 +91,18 @@
   "provider": {
     "metaAppId": "1748471159829574",
     "metaAppSecretAvailableToOpenPost": false,
-    "ownerWorkspaceBootstrapCompleted": false,
-    "providerOAuthReady": false
+    "ownerWorkspaceBootstrapCompleted": true,
+    "providerOAuthReady": false,
+    "ownerIsInstanceAdmin": true,
+    "openpostUsers": 1,
+    "openpostWorkspaces": 1,
+    "openpostWorkspaceMembers": 1,
+    "registrationEnabled": false,
+    "bootstrapObservedAt": "2026-09-18T11:21:39+03:00",
+    "providerApps": 0,
+    "providerInstallations": 0,
+    "socialAccounts": 0,
+    "providerAccountBindings": 0
   },
   "deliveryApproval": {
     "status": "BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED",
@@ -104,7 +114,6 @@
     "productionDeployed": false,
     "promotionAllowed": false,
     "remainingBlockers": [
-      "OpenPost owner/workspace bootstrap",
       "Meta App Secret entry and provider OAuth",
       "real authorized Instagram Graph write plus canonical list_media/get_media verification"
     ]
@@ -112,6 +121,7 @@
   "notes": [
     "No Instagram write was performed.",
     "No direct post-reboot SQLite schema/integrity claim is made; post-reboot /api/v1/ready proved database=ok.",
-    "Project-wide default VPC SSH/RDP rules remain unchanged, but higher-priority target-specific rules restrict this VM: SSH is allowed only from Google IAP and SSH/RDP are denied from all other IPv4 sources."
+    "Project-wide default VPC SSH/RDP rules remain unchanged, but higher-priority target-specific rules restrict this VM: SSH is allowed only from Google IAP and SSH/RDP are denied from all other IPv4 sources.",
+    "First OpenPost user exists, is instance admin, and one workspace with one member exists. New registrations are disabled via OPENPOST_DISABLE_REGISTRATIONS=true and /api/v1/auth/config reports registration_enabled=false after restart."
   ]
 }
