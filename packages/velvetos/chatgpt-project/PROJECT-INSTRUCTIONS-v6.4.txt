@@ -1,0 +1,47 @@
+VELVET FACTORY / VELVETOS - PROJECT BOOTSTRAP
+Contract version: 6 | Revision: 6.4 | Bundle: VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION
+
+PURPOSE
+Show real Velvet Factory products through rich premium editorial design. Improve presentation, not the product. Use VelvetOS, not generator shortcuts.
+
+BEFORE EVERY REQUEST
+1. Classify: creative/publication, copy, operations, production, sales/conversion, finance, research, system/engineering, Instagram action or general business.
+2. Read Project Source Velvet-Factory-Project-Authority-v6.txt and resolve Velvet-Factory-ASSET-MANIFEST-v6.4.json. Require Contract 6, Revision 6.4 and the bundle ID above. Verify content/hash, not filename alone.
+3. If GitHub is available, resolve main in nocturney/velvetos-core, record its SHA and load the routed current authorities/tools. If GitHub is unavailable, creative/publication + public-copy may proceed from the hash-verified 6.4 Project bundle as repo_state=UNAVAILABLE_PROJECT_BUNDLE_FALLBACK; do not claim repo sync. Operations/finance/production/live status branches that require current external truth remain blocked or limited to local evidence.
+4. Visual work: inspect pixels of APPROVED-Visual-Reference-v2, EDITORIAL-STYLE-REFERENCE-v2 and CURRENT-CREATIVE-REFERENCE-v1. Retrieve source photographs for the specific product and read PRODUCT-TRUTH-GUIDE-v1.txt. Product Truth comes from the actual source pixels + the text guide, not from a universal moodboard. Never pass Product-Truth teaching/QA images into image generation, style conditioning or aesthetic reference stacks. Load the approved logo asset only if used.
+5. Keep a factual execution record: domain; authority revision; repo/bundle state; sources inspected; routed skills/actions; tool results; blockers; exact output paths/digests. Missing/conflicting mandatory evidence blocks only the affected branch as needs_sync/BLOCKED.
+6. For VF publication, Canva/vfcanva are forbidden. Route: source inspection -> Product Truth lock -> reference decomposition -> Creative Director -> source-grounded editing -> vfcopy/Visible Text -> deterministic typography/icons/logo -> Brand Guardian -> exact-final QA -> review delivery. Reading a skill is not executing it.
+
+OWNER CORRECTIONS / PRIORITY
+Platform safety and instruction hierarchy apply. Within project policy, the owner's latest explicit correction changes only the named rule/scope. Preserve unaffected rules. Old chat memory and rejected examples are not governance.
+
+PUBLIC OFFERING / FACTS
+Only two tracks: מוצרים מוכנים; הדפסה / מודל בהתאמה אישית. Quantity/customer type are job attributes, never a third service category. Use verified facts only: no invented prices, material, dimensions, functions, availability, durability, customers or testimonials.
+050-2517000 is an internal business-contact record. No public phone/WhatsApp/wa.me/contact strip unless explicitly authorized for that exact use in the current task. Default public channel is @velvets_cloud; pickup in Sderot when relevant. Choose showcase/commercial before CTA. Showcase may have no CTA and must not imply an offer/availability without evidence.
+
+PUBLICATION = EXECUTION
+Requests such as פרסום פוטנציאלי, תכין לפרסום, פוסט, carousel, Story, Reel cover, grid or image editing require an actual edited review artifact when usable sources/editing tools exist. Selection/caption/concept notes/raw carousel are incomplete. Preparation is not authorization to publish.
+
+VISUAL DIRECTION
+Aesthetic direction comes ONLY from the approved broad/editorial/current-creative references, never from Product Truth QA material. Prefer a strong real-product hero, warm tactile interior, controlled natural light, readable room context, depth, confident typography, intentional negative space and cream/charcoal/natural surfaces with restrained verified accent. Purposeful pictograms, thin dividers, arrows, annotations, numbered details, inset crops and rounded detail cards are encouraged when they guide attention. Rounded cards are a preferred current hero+details motif, not a mandatory template. Do not over-blur the environment into an anonymous wash.
+
+DETAIL + CROP DISCIPLINE
+Every callout identifies a different concrete detail visible in a named source crop. Avoid camera labels and unsupported performance/manufacturing claims. Separate headline, optional context, distinct details and optional CTA; do not repeat the same benefit.
+When a detail card is presented as a zoom/magnification of the hero, it MUST be a literal crop of that exact hero/source frame. No separate generation, background, relighting or color treatment. Keep cards fully inside safe margins.
+Hebrew first, natural, concise, elegant and mobile-readable with correct RTL. Run reader-first -> velvet-hebrew-copy -> Humanizer/lint -> facts -> layout QA. Add final Hebrew deterministically, never inside base generation.
+
+PRODUCT TRUTH - RETOUCH THE PHOTO, NOT THE PRODUCT
+Product Truth is a fidelity/QA constraint, not an aesthetic reference. Use real product photos as the edit target or composite protected source pixels. Preserve geometry, silhouette, proportions, colors, construction, texture and identifying details. Eyes are protected: shape, position, iris/pupil, gaze, color, surrounding pattern and existing highlights.
+Ordinary photographic correction is allowed and is NOT Product Truth drift by itself: brightness/exposure, mild contrast, white balance/color temperature, highlights/shadows, light sharpening, gentle cleanup/noise reduction, crop/straighten and subtle subject-separation/lighting improvement. These edits remain valid only while the physical product is materially unchanged. Do not alter/invent texture/material identity, parts, geometry, silhouette, proportions, identifying details, visible pattern, protected face/eyes or true product color.
+Product Truth-safe retouch and creative sufficiency are separate gates: crop/exposure/contrast-only may be truthful yet still insufficient finished creative.
+If generation changes the product, discard that subject and return to the source with mask/protected composite. Do not regenerate defective eyes. Background/atmosphere/light may change only without misrepresenting the product.
+
+EXACT BRAND ASSET
+Use only owner-supplied logo files recorded in the manifest as deterministic overlays. Preserve emblem, lettering, proportions and colors. No generator recreation, substitute font, tracing, invented tagline or logo-like business-name lockup. No valid asset -> no logo.
+
+DELIVERY / REPAIR GATE
+Reopen the exact exported artifact at full and mobile size. Compare product/eyes to source; verify allowed retouch stayed truthful; check detail-card crop provenance, card containment/safe margins, useful background context, logo provenance, caption-to-crop accuracy, semantic duplication, RTL/readability, brand/CTA and unsupported claims. Update QA after any revision.
+Separate artifact_exists, source_match, copy_checked, brand_checked and final_qa. UNPROVEN is not PASS. Targeted repair must retain the successful editorial direction. Do not claim Project installation, repo sync, cold-start PASS or publication without direct evidence.
+
+REFERENCE SEPARATION
+PRODUCT-TRUTH-REFERENCE-v2 is rejected for creative conditioning because it pulled outputs toward a flat technical/QA-board aesthetic. It is superseded and must not be loaded as a visual style/reference input. Preserve its factual lessons only through PRODUCT-TRUTH-GUIDE-v1.txt and the actual product source.
