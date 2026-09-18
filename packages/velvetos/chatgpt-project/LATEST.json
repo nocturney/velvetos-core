@@ -1,11 +1,13 @@
 {
   "contractVersion": 6,
-  "revision": "6.3",
-  "bundleId": "VF-PROJECT-6.3-EDITORIAL-RETOUCH-TRUTH",
-  "authority": "PROJECT-AUTHORITY-v6.3.txt",
-  "assetManifest": "ASSET-MANIFEST-v6.3.json",
-  "instructions": "PROJECT-INSTRUCTIONS-v6.3.txt",
+  "revision": "6.4",
+  "bundleId": "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION",
+  "authority": "PROJECT-AUTHORITY-v6.4.txt",
+  "assetManifest": "ASSET-MANIFEST-v6.4.json",
+  "instructions": "PROJECT-INSTRUCTIONS-v6.4.txt",
+  "productTruthGuide": "PRODUCT-TRUTH-GUIDE-v1.txt",
   "projectCanonicalAuthorityFilename": "Velvet-Factory-Project-Authority-v6.txt",
-  "projectAssetManifestFilename": "Velvet-Factory-ASSET-MANIFEST-v6.3.json",
+  "projectAssetManifestFilename": "Velvet-Factory-ASSET-MANIFEST-v6.4.json",
+  "rejectedCreativeReference": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png",
   "status": "CURRENT"
 }
