@@ -1,0 +1,56 @@
+{
+  "task_id": "vfresearch-social-growth-provider-discovery-20260918",
+  "status": "running",
+  "component_state": "Processing",
+  "pack": "vfresearch",
+  "goal": "Embed social-growth-apis-for-creators as bounded provider discovery inside existing Social Intelligence with deterministic competitor/reference deltas and sensor coverage.",
+  "planned_steps": [
+    "Lock current core and upstream SHAs",
+    "Review catalogue fit and rejects",
+    "Register recurring discovery source",
+    "Add provider-selection and watch-delta policy",
+    "Add deterministic watch-delta helper",
+    "Extend social-intelligence sensor",
+    "Run repository verification",
+    "Open reviewed PR"
+  ],
+  "completed_steps": [
+    "Locked velvetos-core main at dda12dd11bad44e43aaec83641ecea186e0badd2",
+    "Locked upstream catalogue at 807993fcd3b1c14efab3a8912c9d6c08c571374e",
+    "Recorded catalogue review and candidate/reject families",
+    "Registered catalogue in vfresearch LINKS.json",
+    "Added provider-selection and competitor/reference watch-delta policy",
+    "Added deterministic watch-delta command and self-test",
+    "Extended check-social-intelligence.py coverage",
+    "Updated vfresearch routing and CHANGELOG"
+  ],
+  "next_step": "Run CI/repository verification on the exact branch head; repair any failures before marking done.",
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-18-social-growth-apis-for-creators.md",
+    "packages/vfresearch/LINKS.json",
+    "packages/vfresearch/SOCIAL-INTELLIGENCE.md",
+    "packages/vfresearch/SKILL.md",
+    "scripts/vf_social_intelligence.py",
+    "scripts/check-social-intelligence.py",
+    "CHANGELOG.md"
+  ],
+  "unresolved": [
+    "Exact branch verification is pending."
+  ],
+  "outcome": null,
+  "pulse": "working",
+  "verification": "Pending GitHub CI / exact-branch sensor evidence.",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-18",
+  "execution_state": {
+    "authority_contract": "6",
+    "authority_revision": "6.2",
+    "bundle": "VF-PROJECT-6.2-DETAIL-TRUTH",
+    "core_base_sha": "dda12dd11bad44e43aaec83641ecea186e0badd2",
+    "upstream_sha": "807993fcd3b1c14efab3a8912c9d6c08c571374e",
+    "branch": "feat/social-growth-provider-discovery-20260918"
+  },
+  "latest_observation": "Implementation commits are present on the feature branch; verification has not yet run.",
+  "events": []
+}
