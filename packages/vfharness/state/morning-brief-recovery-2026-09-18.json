@@ -1,0 +1,64 @@
+{
+  "schema": "velvet.morning_brief_recovery.v1",
+  "date": "2026-09-18",
+  "domain": "operations",
+  "authority": {
+    "contract": 6,
+    "revision": "6.2",
+    "bundle": "VF-PROJECT-6.2-DETAIL-TRUTH",
+    "project_preflight": "PASS"
+  },
+  "repo": {
+    "base_main": "dda12dd11bad44e43aaec83641ecea186e0badd2",
+    "branch": "recovery/morning-brief-2026-09-18"
+  },
+  "trigger": {
+    "canonicalAutomationEnabled": true,
+    "canonicalAutomationLastRun": null,
+    "gmailCurrentDayBriefFound": false,
+    "deliveryGuardReEnabled": true
+  },
+  "live_sources": {
+    "jobs": {
+      "sheet": "VF HQ ? jobs",
+      "spreadsheetId": "13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao",
+      "rows": 5,
+      "deliveredUnpaid": 3
+    },
+    "calendar": {
+      "date": "2026-09-18",
+      "events": 0
+    },
+    "instagram": {
+      "username": "velvets_cloud",
+      "followers": 81,
+      "follows": 125,
+      "mediaCount": 3,
+      "reachDay": 0,
+      "profileViewsDay": 0,
+      "totalInteractionsDay": 0
+    },
+    "research": {
+      "automationRan": true,
+      "sameDayRepoArtifactFound": false,
+      "canonicalResearchMdDate": "2026-09-17",
+      "briefTreatment": "persistence_gap_no_fresh_finding_claim"
+    }
+  },
+  "artifacts": {
+    "briefJson": "packages/vfops/hq/brief-2026-09-18.json",
+    "html": "packages/vfops/out/BRIEF-2026-09-18.html",
+    "htmlSha256": "3ade53a30de92c0d3ba37b0e159039490fd6a5c46c1044c2252ddbff0924c648",
+    "visibleText": "packages/vfops/out/BRIEF-2026-09-18-visible.txt",
+    "visibleTextNormalizedSha256": "52f4d627fbafecf4b9c56c4beaa9660e41cd0b23cad6a823f92c86a67d6ea7e6",
+    "visibleTextGateLocal": "PASS"
+  },
+  "delivery": {
+    "status": "PREPARED_NOT_SENT",
+    "canonicalPath": "gmail-send-request -> gmail-brief-send workflow -> Gmail API",
+    "pluginFallbackUsed": false,
+    "requestPath": "packages/vfops/out/requests/morning-brief-recovery-2026-09-18.json",
+    "bootstrapRequestRemainsDisabled": true
+  },
+  "instagramWritePerformed": false
+}
