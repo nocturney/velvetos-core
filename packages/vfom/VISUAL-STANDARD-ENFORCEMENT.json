@@ -178,5 +178,24 @@
     ],
     "syntheticSubjectChangeForAllowedRetouch": "NONE",
     "creativeDeltaSeparateGate": true
+  },
+  "referenceRoleSeparationPolicy": {
+    "ownerCorrectionDate": "2026-09-18",
+    "aestheticReferences": [
+      "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
+      "Velvet-Factory-EDITORIAL-STYLE-REFERENCE-v2.png",
+      "Velvet-Factory-CURRENT-CREATIVE-REFERENCE-v1.png"
+    ],
+    "productTruth": {
+      "source": "actual verified product source pixels",
+      "guide": "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt",
+      "visualConditioning": "FORBIDDEN"
+    },
+    "rejectedCreativeConditioningAssets": [
+      {
+        "filename": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png",
+        "reason": "owner reports technical QA-board visual biases results toward unaesthetic output"
+      }
+    ]
   }
 }
