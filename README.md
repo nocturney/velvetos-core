@@ -42,11 +42,11 @@
 | **Degraded tools** | 0 |
 | **Last verified / refreshed evidence** | `2026-09-19T16:16:00+03:00` |
 
-<div dir="rtl"><strong>מה השתנה:</strong> Media Vault קיבל שלב חמישי `05 - פורסם`: אחרי פרסום ואימות חי הנגזרת המדויקת עוברת מ־04 ל־05 ונשמרת כהיסטוריית published_verified · Protected owner-facing scheduler cut over to Grok Bot and ChatGPT scheduler copies retired · Publish Bridge retention is archive-preserving: active → archive, no automatic delete</div>
-<div dir="ltr"><strong>What changed:</strong> Media Vault now has a fifth `05 - Published` stage: after publish + live verification, the exact derivative moves from 04 to 05 and remains as published_verified history · Protected owner-facing scheduler cut over to Grok Bot and ChatGPT scheduler copies retired · Publish Bridge retention remains archive-preserving with no automatic delete</div>
+<div dir="rtl"><strong>מה השתנה:</strong> Protected owner-facing scheduler cut over to Grok Bot and ChatGPT scheduler copies retired · Publish Bridge retention is archive-preserving: active → archive, no automatic delete · Live Instagram profile rechecked; retired offering line is gone, desired CTA line is still absent</div>
+<div dir="ltr"><strong>What changed:</strong> Protected owner-facing scheduler cut over to Grok Bot and ChatGPT scheduler copies retired · Publish Bridge retention is archive-preserving: active → archive, no automatic delete · Live Instagram profile rechecked; retired offering line is gone, desired CTA line is still absent</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-19 — **Media Vault published-stage closeout:** נוסף שלב `published` / `05 - פורסם` עם evidence fail-closed; `04→05` מתרחש רק אחרי provider receipt + live Instagram verification של אותה נגזרת. תיקיית 05 לבדה אינה הוכחת פרסום.</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-19 — **Media Vault published-stage closeout:** added the `published` / `05 - Published` stage with fail-closed evidence; `04→05` occurs only after provider receipt plus live Instagram verification of that exact derivative. Folder placement alone is not publication proof.</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-19 — **Grok Bot automation cutover:** the seven owner-approved VelvetOS office routines moved from the ChatGPT scheduler to Grok Bot after 7/7 read-only shadow verification. The live Grok routine invent…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-19 — **Grok Bot automation cutover:** the seven owner-approved VelvetOS office routines moved from the ChatGPT scheduler to Grok Bot after 7/7 read-only shadow verification. The live Grok routine invent…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
