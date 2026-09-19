@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-19 ? **Office Loop Windows subprocess decode hardening:** `vfops_loop.py` now captures child stdout/stderr as bytes, decodes UTF-8 first with a Windows-compatible fallback, and uses the same safe path f…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-19 ? **Office Loop Windows subprocess decode hardening:** `vfops_loop.py` now captures child stdout/stderr as bytes, decodes UTF-8 first with a Windows-compatible fallback, and uses the same safe path f…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-19 ? **Project Authority 6.4 runtime binding:** removed active 6.2 hard-codes from Project preflight/publication-evidence gates and their regression sensor; active bundle paths, identity and canonical L…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-19 ? **Project Authority 6.4 runtime binding:** removed active 6.2 hard-codes from Project preflight/publication-evidence gates and their regression sensor; active bundle paths, identity and canonical L…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
