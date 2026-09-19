@@ -2,7 +2,7 @@
   "name": "vfmedia-catalog",
   "title": "VelvetOS shared media catalog",
   "oneCatalog": true,
-  "updatedAt": "2026-09-18",
+  "updatedAt": "2026-09-19",
   "vaultRootId": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
   "locks": [
     "one-catalog",
@@ -17140,12 +17140,20 @@
       "viewDescription": "וידאו · שם קובץ: king_v3_PLA_22h10m_20260820151913.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
       "uploadedAt": "2026-08-21",
       "productLink": null,
-      "status": "source",
+      "status": "published",
       "assignee": "ops-intake",
-      "derivativeIds": [],
+      "derivativeIds": [
+        {
+          "id": "1WIHa1Cd1ekJ6lA4QWbB2A8sUNqEvDoVi",
+          "url": "https://drive.google.com/file/d/1WIHa1Cd1ekJ6lA4QWbB2A8sUNqEvDoVi/view?usp=drivesdk"
+        }
+      ],
       "sourceLinks": [],
       "versionApproval": {
-        "state": "none"
+        "state": "approved",
+        "approvedBy": null,
+        "approvedAt": null,
+        "note": "Historical publication predates the Media Vault workflow. The exact artifact is proven to have been published; approver identity and pre-publication approval timestamp were not recorded in vfmedia."
       },
       "intake": {
         "phase": "verified",
@@ -17162,9 +17170,22 @@
         "moveStartedAt": "2026-09-13T12:01:07Z"
       },
       "visualReview": {
-        "state": "none",
-        "reviewedAt": null,
-        "note": "visual review does not block intake"
+        "state": "done",
+        "reviewedAt": "2026-09-19T16:13:29.5749256Z",
+        "note": "Historical publication identity review done 2026-09-19. Exact source-to-live Reel match proven by 113 aligned frame samples (mean correlation 0.9999689; min 0.9999419)."
+      },
+      "publication": {
+        "state": "published_verified",
+        "provider": "instagram",
+        "mediaId": "18107769701162221",
+        "permalink": "https://www.instagram.com/reel/DcqkjOLlYVX/",
+        "publishedAt": "2026-08-30T13:01:43Z",
+        "verifiedAt": "2026-09-19T16:13:29.5749256Z",
+        "publishedDerivative": {
+          "id": "1WIHa1Cd1ekJ6lA4QWbB2A8sUNqEvDoVi",
+          "url": "https://drive.google.com/file/d/1WIHa1Cd1ekJ6lA4QWbB2A8sUNqEvDoVi/view?usp=drivesdk"
+        },
+        "note": "Historical backfill after owner added 05 - פורסם. Exact identity proven against the live Instagram Reel: source 37.967692s/904 frames vs Instagram 38.00924s/905 frames; 113 sampled frame comparisons after alignment mean=0.9999689, min=0.9999419."
       }
     },
     {
@@ -17284,12 +17305,20 @@
       "viewDescription": "וידאו · שם קובץ: RoboLotl_Head_4Color_Clean_PLA_17h29m_20260807052758.mp4 · נרשם אוטומטית מקליטת נכנס · טרם ניתוח חזותי · אין קישור מוצר",
       "uploadedAt": "2026-08-07",
       "productLink": null,
-      "status": "source",
+      "status": "published",
       "assignee": "ops-intake",
-      "derivativeIds": [],
+      "derivativeIds": [
+        {
+          "id": "1fLM7d4M3Tqv9K89Vg4Jt6B3qLN2oHF3C",
+          "url": "https://drive.google.com/file/d/1fLM7d4M3Tqv9K89Vg4Jt6B3qLN2oHF3C/view?usp=drivesdk"
+        }
+      ],
       "sourceLinks": [],
       "versionApproval": {
-        "state": "none"
+        "state": "approved",
+        "approvedBy": null,
+        "approvedAt": null,
+        "note": "Historical publication predates the Media Vault workflow. The exact artifact is proven to have been published; approver identity and pre-publication approval timestamp were not recorded in vfmedia."
       },
       "intake": {
         "phase": "verified",
@@ -17306,9 +17335,22 @@
         "moveStartedAt": "2026-09-13T12:01:24Z"
       },
       "visualReview": {
-        "state": "none",
-        "reviewedAt": null,
-        "note": "visual review does not block intake"
+        "state": "done",
+        "reviewedAt": "2026-09-19T16:13:29.5749256Z",
+        "note": "Historical publication identity review done 2026-09-19. Exact source-to-live Reel match proven by duration/frame count and five sampled correlations (min 0.9998069; max 0.9999204)."
+      },
+      "publication": {
+        "state": "published_verified",
+        "provider": "instagram",
+        "mediaId": "18113247517791419",
+        "permalink": "https://www.instagram.com/reel/DcvuJLxCJgU/",
+        "publishedAt": "2026-09-01T13:01:42Z",
+        "verifiedAt": "2026-09-19T16:13:29.5749256Z",
+        "publishedDerivative": {
+          "id": "1fLM7d4M3Tqv9K89Vg4Jt6B3qLN2oHF3C",
+          "url": "https://drive.google.com/file/d/1fLM7d4M3Tqv9K89Vg4Jt6B3qLN2oHF3C/view?usp=drivesdk"
+        },
+        "note": "Historical backfill after owner added 05 - פורסם. Exact identity proven against the live Instagram Reel: both 352 frames; source 14.783691s vs Instagram 14.783704s; five normalized frame correlations 0.9998069–0.9999204."
       }
     },
     {
