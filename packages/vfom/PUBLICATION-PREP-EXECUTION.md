@@ -104,7 +104,7 @@ A direction rejected for language mismatch cannot be used as a parent/source; re
 ### Trust boundary and rollout
 
 This code verifies files, digests, ordering and the consistency of submitted review evidence. It does NOT independently authenticate an unsigned reviewer statement, prove aesthetic taste, perform a cold-start model test or intercept tools invoked outside the canonical repository flow. Human/perceptual review remains required. Missing evidence stays BLOCKED. Code/CI success is not deployment, Project-settings synchronization or publication.
-The exact 6.2 Project source snapshot is retained unchanged; the current scoped owner correction is in this contract and the existing machine policy. Actual ChatGPT Project settings and separate worker/frontend copies require their own synchronization receipts.
+The hash-verified Revision 6.4 Project source is the current canonical cold-start bundle. Older snapshots remain historical provenance only. Actual ChatGPT Project settings and separate worker/frontend copies require their own synchronization receipts.
 
 ## Approval evidence binding
 

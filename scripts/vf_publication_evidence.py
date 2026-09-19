@@ -18,10 +18,23 @@ from typing import Any
 from vf_media_integrity import inspect_media
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json"
-ASSETS_SHA = "2d0b735732d77b8df1c844a1188e92a8db0cb6edb183e67781a23ce4da46fcff"
-AUTHORITY_SHA = "ce0138b5b1513741fc47e0c9ff00e5359c842e937862efc99e13dea8cf6b0fea"
+PROJECT_MANIFEST = "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
+_PROJECT_MANIFEST_DATA = json.loads((Path(__file__).resolve().parents[1] / PROJECT_MANIFEST).read_text(encoding="utf-8"))
+_PROJECT_BUNDLE = _PROJECT_MANIFEST_DATA.get("chatgptProjectBundle") or {}
+AUTHORITY = str(_PROJECT_BUNDLE["authority"])
+ASSETS = str(_PROJECT_BUNDLE["assetManifest"])
+PRODUCT_TRUTH_GUIDE = str(_PROJECT_BUNDLE["productTruthGuide"])
+ASSETS_SHA = str(_PROJECT_BUNDLE["assetManifestSha256"]).lower()
+AUTHORITY_SHA = str(_PROJECT_BUNDLE["authoritySha256"]).lower()
+PRODUCT_TRUTH_GUIDE_SHA = str(_PROJECT_BUNDLE["productTruthGuideSha256"]).lower()
+PROJECT_CONTRACT_VERSION = int(_PROJECT_BUNDLE["contractVersion"])
+PROJECT_REVISION = str(_PROJECT_BUNDLE["revision"])
+PROJECT_BUNDLE_ID = str(_PROJECT_BUNDLE["bundleId"])
+STYLE_REFERENCE_ROLES = {
+    "broad_style_only",
+    "editorial_layout_and_annotation_style_only",
+    "current_owner_approved_direction_style_only_not_product_source",
+}
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
           "creative_director", "source_grounded_production", "visible_text",
           "brand_guardian", "exact_final_qa")
@@ -38,6 +51,10 @@ def digest(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             h.update(chunk)
     return h.hexdigest()
+
+def canonical_text_digest(path: Path) -> str:
+    """Canonical Project-bundle text identity uses LF bytes across host checkouts."""
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def package_digest(assets: list[dict[str, Any]]) -> str:
@@ -138,17 +155,32 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     if route.get("version") != 1 or route.get("mode") != "fail_closed":
         raise ValueError("publication route policy missing or unsupported")
     authority = local_path(root, AUTHORITY)
-    if digest(authority) != AUTHORITY_SHA:
-        raise ValueError("Project Authority is not verified revision 6.2")
+    if canonical_text_digest(authority) != AUTHORITY_SHA:
+        raise ValueError(f"Project Authority is not verified revision {PROJECT_REVISION}")
     assets_path = local_path(root, ASSETS)
-    if digest(assets_path) != ASSETS_SHA:
-        raise ValueError("Project asset manifest bytes do not match verified revision 6.2")
+    if canonical_text_digest(assets_path) != ASSETS_SHA:
+        raise ValueError(f"Project asset manifest bytes do not match verified revision {PROJECT_REVISION}")
+    guide_path = local_path(root, PRODUCT_TRUTH_GUIDE)
+    if canonical_text_digest(guide_path) != PRODUCT_TRUTH_GUIDE_SHA:
+        raise ValueError("Product Truth guide bytes do not match current Project bundle")
     asset_manifest = load_json(assets_path)
-    if (asset_manifest.get("contract_version"), asset_manifest.get("revision"), asset_manifest.get("bundle_id")) != (6, "6.2", "VF-PROJECT-6.2-DETAIL-TRUTH"):
+    if (asset_manifest.get("contract_version"), str(asset_manifest.get("revision")), asset_manifest.get("bundle_id")) != (
+        PROJECT_CONTRACT_VERSION, PROJECT_REVISION, PROJECT_BUNDLE_ID
+    ):
         raise ValueError("Project asset manifest revision mismatch")
-    required_refs = {x["sha256"] for x in asset_manifest["assets"] if x.get("required_for") == "visual_work"}
+    assets_rows = _rows(asset_manifest.get("assets"), "Project asset manifest assets")
+    authority_rows = [x for x in assets_rows if x.get("role") == "authority"]
+    if len(authority_rows) != 1 or str(authority_rows[0].get("sha256", "")).lower() != canonical_text_digest(authority):
+        raise ValueError("Project Authority hash does not match current asset manifest")
+    guide_rows = [x for x in assets_rows if x.get("filename") == "Velvet-Factory-PRODUCT-TRUTH-GUIDE-v1.txt"]
+    if len(guide_rows) != 1 or str(guide_rows[0].get("sha256", "")).lower() != canonical_text_digest(guide_path):
+        raise ValueError("Product Truth guide hash does not match current asset manifest")
+    required_refs = {
+        str(x["sha256"]).lower() for x in assets_rows
+        if x.get("required_for") == "visual_work" and x.get("role") in STYLE_REFERENCE_ROLES
+    }
     if len(required_refs) != 3:
-        raise ValueError("all three canonical visual reference identities required")
+        raise ValueError("all three canonical aesthetic reference identities required")
     denied = set(route.get("rejectedArtifactSha256", []))
     manifest = load_json(local_path(root, manifest_ref), expected_manifest_sha256)
     if manifest.get("jobId") != content_id:

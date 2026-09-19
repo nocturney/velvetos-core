@@ -36,10 +36,20 @@ def fixture(root):
                'rejectedArtifactSha256': [], 'rejectedDirectionFamilies': ['rejected-family']}}
     write(evidence.POLICY, policy)
     authority = write(evidence.AUTHORITY, b'Test-only authority; not deployment or real creative evidence.')
+    guide = write(evidence.PRODUCT_TRUTH_GUIDE, b'Test-only Product Truth guide.')
     refs = [dict(image(f'refs/{i}.png', (12, 12), (i * 50, 15, 20)), role='STYLE_ONLY') for i in range(1, 4)]
-    assets = write(evidence.ASSETS, {'contract_version': 6, 'revision': '6.2',
-        'bundle_id': 'VF-PROJECT-6.2-DETAIL-TRUTH',
-        'assets': [{'sha256': x['sha256'], 'required_for': 'visual_work'} for x in refs]})
+    style_roles = sorted(evidence.STYLE_REFERENCE_ROLES)
+    asset_rows = [
+        {'filename': 'Velvet-Factory-Project-Authority-v6.txt', 'sha256': authority['sha256'],
+         'required_for': 'all_requests', 'role': 'authority'},
+        *[{'sha256': x['sha256'], 'required_for': 'visual_work', 'role': style_roles[i]}
+          for i, x in enumerate(refs)],
+        {'filename': 'Velvet-Factory-PRODUCT-TRUTH-GUIDE-v1.txt', 'sha256': guide['sha256'],
+         'required_for': 'visual_work', 'role': 'text_only_product_truth_fidelity_qa_not_style'},
+    ]
+    assets = write(evidence.ASSETS, {'contract_version': evidence.PROJECT_CONTRACT_VERSION,
+        'revision': evidence.PROJECT_REVISION, 'bundle_id': evidence.PROJECT_BUNDLE_ID,
+        'assets': asset_rows})
     source = dict(image('source.png', (60, 75), (100, 80, 25)), role='PRODUCT_SOURCE')
     import vf_publish_bridge as bridge
     master = image('master.png', (120, 150), (40, 80, 25))
@@ -80,7 +90,9 @@ class EvidenceTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.manifest, self.write, authority, assets = fixture(self.root)
         self.ev = self.manifest['publicationEvidence']
-        for name, value in [('AUTHORITY_SHA', authority), ('ASSETS_SHA', assets)]:
+        guide = evidence.canonical_text_digest(self.root / evidence.PRODUCT_TRUTH_GUIDE)
+        for name, value in [('AUTHORITY_SHA', authority), ('ASSETS_SHA', assets),
+                            ('PRODUCT_TRUTH_GUIDE_SHA', guide)]:
             p = patch.object(evidence, name, value)
             p.start(); self.addCleanup(p.stop)
     def result(self, phase='delivery'):
