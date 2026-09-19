@@ -158,6 +158,23 @@ class EvidenceTests(unittest.TestCase):
     def test_unknown_reference_identity(self):
         self.ev['references'][0] = dict(self.ev['sources'][0], role='STYLE_ONLY')
         self.assertFalse(self.result()['ok'])
+    def test_aesthetic_reference_role_mismatch_fails_closed(self):
+        path = self.root / evidence.ASSETS
+        data = json.loads(path.read_text(encoding='utf-8'))
+        broad = data['current_references']['broad_visual']
+        for row in data['assets']:
+            if row.get('filename') == broad:
+                row['role'] = 'text_only_product_truth_fidelity_qa_not_style'
+        path.write_text(json.dumps(data), encoding='utf-8')
+        self.ev['stages'] = self.ev['stages'][:5]
+        self.assertFalse(self.result('production')['ok'])
+    def test_product_truth_visual_conditioning_must_stay_forbidden(self):
+        path = self.root / evidence.ASSETS
+        data = json.loads(path.read_text(encoding='utf-8'))
+        data['product_truth']['visual_conditioning'] = 'ALLOWED'
+        path.write_text(json.dumps(data), encoding='utf-8')
+        self.ev['stages'] = self.ev['stages'][:5]
+        self.assertFalse(self.result('production')['ok'])
     def test_rejected_family_and_parent(self):
         self.ev['direction']['family_id'] = 'rejected-family'
         self.assertFalse(self.result()['ok'])

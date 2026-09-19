@@ -13,6 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 GATE = ROOT / "packages/velvetos/PROJECT-REQUEST-GATE.md"
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
 CLI = ROOT / "scripts/vf_project_preflight.py"
+sys.path.insert(0, str(ROOT / "scripts"))
+import vf_project_preflight as project_preflight
 
 
 def fail(msg: str) -> None:
@@ -35,15 +37,13 @@ required_domains = {
 if not required_domains.issubset(set(manifest.get("domains", {}))):
     fail("required domain coverage missing")
 
-bundle_cfg = manifest.get("chatgptProjectBundle")
-if not isinstance(bundle_cfg, dict):
-    fail("chatgptProjectBundle missing from Project Authority Manifest")
 try:
-    project_authority = ROOT / Path(bundle_cfg["authority"])
-    asset_manifest = ROOT / Path(bundle_cfg["assetManifest"])
-    product_truth_guide = ROOT / Path(bundle_cfg["productTruthGuide"])
-except (KeyError, TypeError):
-    fail("chatgptProjectBundle paths are incomplete")
+    active_bundle = project_preflight.resolve_project_bundle(ROOT)
+except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+    fail(f"active Project bundle cannot be resolved: {exc}")
+project_authority = ROOT / active_bundle["authority_path"]
+asset_manifest = ROOT / active_bundle["asset_manifest_path"]
+product_truth_guide = ROOT / active_bundle["product_truth_guide_path"]
 visual_enforcement = ROOT / "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
 for path in (project_authority, asset_manifest, product_truth_guide, visual_enforcement):
     if not path.is_file():
@@ -56,7 +56,7 @@ for needle in ("Canva/vfcanva are forbidden", "creative_execution_authorized: tr
         fail(f"Project Authority missing {needle}")
 asset_data = json.loads(asset_manifest.read_text(encoding="utf-8"))
 identity = (asset_data.get("contract_version"), asset_data.get("revision"), asset_data.get("bundle_id"))
-expected_identity = (bundle_cfg.get("contractVersion"), bundle_cfg.get("revision"), bundle_cfg.get("bundleId"))
+expected_identity = (active_bundle["contract"], active_bundle["revision"], active_bundle["bundle_id"])
 if identity != expected_identity:
     fail("active asset manifest identity does not match chatgptProjectBundle")
 authority_rows = [x for x in asset_data.get("assets", []) if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
@@ -104,7 +104,6 @@ for rel in entrypoints:
 
 # Behavioral regression: even a hash-consistent stale Project Authority must fail closed.
 sys.path.insert(0, str(ROOT / "scripts"))
-import vf_project_preflight as project_preflight
 if project_preflight.project_binding_problems(creative=True):
     fail("current Project binding is inconsistent: " + "; ".join(project_preflight.project_binding_problems(creative=True)))
 with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:

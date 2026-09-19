@@ -16,6 +16,12 @@ ROOT = Path(__file__).resolve().parents[1]
 PROJECT_AUTHORITY_MANIFEST = Path("packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json")
 CANONICAL_AUTHORITY_FILENAME = "Velvet-Factory-Project-Authority-v6.txt"
 AESTHETIC_REFERENCE_KEYS = ("broad_visual", "editorial_layout", "current_direction")
+EXPECTED_AESTHETIC_ROLES = {
+    "broad_visual": "broad_style_only",
+    "editorial_layout": "editorial_layout_and_annotation_style_only",
+    "current_direction": "current_owner_approved_direction_style_only_not_product_source",
+}
+EXPECTED_PRODUCT_TRUTH_GUIDE_ROLE = "text_only_product_truth_fidelity_qa_not_style"
 
 
 def _json_object(path: Path, label: str) -> dict[str, Any]:
@@ -117,6 +123,8 @@ def resolve_project_bundle(root: Path = ROOT) -> dict[str, Any]:
         row = by_filename.get(filename)
         if not isinstance(row, dict):
             raise ValueError(f"active aesthetic reference missing from asset rows: {filename}")
+        if row.get("role") != EXPECTED_AESTHETIC_ROLES[key]:
+            raise ValueError(f"active aesthetic reference has wrong role: {filename}")
         sha = row.get("sha256")
         if not isinstance(sha, str) or len(sha) != 64:
             raise ValueError(f"active aesthetic reference has invalid SHA-256: {filename}")
@@ -133,10 +141,14 @@ def resolve_project_bundle(root: Path = ROOT) -> dict[str, Any]:
     if not isinstance(guide_filename, str) or not isinstance(guide_row, dict):
         raise ValueError("Product Truth guide is not bound by the active asset manifest")
     guide_sha = guide_row.get("sha256")
+    if guide_row.get("role") != EXPECTED_PRODUCT_TRUTH_GUIDE_ROLE:
+        raise ValueError("Product Truth guide role must remain fidelity-QA-only, not style")
     if not isinstance(guide_sha, str) or guide_sha != _sha256(guide_path):
         raise ValueError("Product Truth guide bytes do not match the active asset manifest")
     if guide_sha in aesthetic_hashes:
         raise ValueError("Product Truth guide must remain separate from aesthetic references")
+    if truth.get("visual_conditioning") != "FORBIDDEN":
+        raise ValueError("Product Truth visual conditioning must remain FORBIDDEN")
 
     return {
         "manifest_path": manifest_rel,
