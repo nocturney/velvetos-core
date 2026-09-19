@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-09-14T18:04:56+03:00",
-  "date": "2026-09-14",
+  "updatedAt": "2026-09-19T16:16:00+03:00",
+  "date": "2026-09-19",
   "active_now": [],
   "waiting": [
     {
@@ -12,14 +12,14 @@
   "failed": [],
   "owner_blocked": [],
   "next": [
-    "הרץ watchdog",
-    "סגור followups ready_for_finished_content דרך EDIT-GATE+PREFLIGHT",
-    "אל תטריד את כריסטיאן על מדדים חלשים"
+    "Use Grok Bot live routine inventory as clock authority",
+    "Run/consume watchdog and machine workflow evidence per current ROUTINE.md",
+    "Do not revive historical G004/G006 calendar slots; readiness-driven publication only"
   ],
   "changed_today": [
-    "Office Control Plane מוטמע",
-    "followups=1",
-    "dead_letters=0"
+    "Protected owner-facing scheduler cut over to Grok Bot and ChatGPT scheduler copies retired",
+    "Publish Bridge retention is archive-preserving: active → archive, no automatic delete",
+    "Live Instagram profile rechecked; retired offering line is gone, desired CTA line is still absent"
   ],
   "authoritative_sources": {
     "policy": "constitution/CONSTITUTION.md + constitution/ORCHESTRA.md",
@@ -66,25 +66,16 @@
     "office/control-plane.json"
   ],
   "chatgpt_tasks_safe_to_disable_after_proof": [
-    "Media Intake",
-    "Content Sprint",
-    "Insights/Office Review",
-    "Memory Hygiene",
-    "Opportunity Radar",
-    "WIP→Finished watcher",
-    "Dead-letter monitoring",
-    "routine watchdog",
-    "source-of-truth validation",
-    "Studio Pulse",
-    "Universal Intake",
-    "Invisible Work Detector",
-    "Failure Museum",
-    "Velvet Lab",
-    "Living Studio Skills Registry"
+    "all former protected ChatGPT scheduler copies after verified Grok Bot cutover",
+    "legacy Creative Autopilot / Evening Summary / Automation Steward / Media Intake / Publish Watch / Content Sprint / Insights Review",
+    "one-time recovery/publish jobs after their terminal run"
   ],
-  "chatgpt_tasks_keep": [
-    "Velvet Morning Brief",
-    "Velvet Research Seat — 06:15 live web research body; non-mechanical intelligence task",
-    "optional Velvet Publish Watch / hard-blocker alert"
-  ]
+  "chatgpt_tasks_keep": [],
+  "scheduler": {
+    "authority": "Grok Bot live protected routine inventory",
+    "manifest": "automation/grok/manifest.json",
+    "cadence": "packages/vfops/ROUTINE.md",
+    "chatgptSchedulerCopies": "retired-disabled",
+    "rule": "Do not re-enable a second scheduler unless Christian explicitly changes the architecture."
+  }
 }

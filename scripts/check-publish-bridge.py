@@ -106,6 +106,10 @@ def main() -> int:
     send = SEND.read_text(encoding="utf-8")
     if "PUBLISH-BRIDGE.md" not in send or "publish-bridge" not in send:
         fail("SEND.md must route private-source derivatives through publish bridge")
+    if "publish-bridge/archive" not in send or "archiveRetention=unlimited" not in send or "deleteArchived=false" not in send:
+        fail("SEND.md must preserve archive-retention semantics")
+    if "cleanup יומי מסיר נכסים ישנים מראש הענף" in send:
+        fail("SEND.md contains stale deletion-oriented retention wording")
 
     instance = json.loads(INSTANCE.read_text(encoding="utf-8"))
     ig = ((instance.get("mcpBind") or {}).get("instagram") or {})
