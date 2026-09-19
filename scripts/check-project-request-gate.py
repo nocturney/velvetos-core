@@ -34,9 +34,20 @@ required_domains = {
 }
 if not required_domains.issubset(set(manifest.get("domains", {}))):
     fail("required domain coverage missing")
+stale_tokens = ("VF-PROJECT-" + "6.2-DETAIL-TRUTH", "PROJECT-AUTHORITY-v" + "6.2", "ASSET-MANIFEST-v" + "6.2")
+for rel in ("scripts/vf_project_preflight.py", "scripts/vf_publication_evidence.py",
+            "scripts/check-project-request-gate.py", "scripts/check-publication-evidence.py"):
+    body = (ROOT / rel).read_text(encoding="utf-8")
+    if any(token in body for token in stale_tokens):
+        fail(f"active validator still hardcodes superseded authority: {rel}")
 
-project_authority = ROOT / "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt"
-asset_manifest = ROOT / "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json"
+bundle = manifest.get("chatgptProjectBundle")
+if not isinstance(bundle, dict):
+    fail("chatgptProjectBundle missing")
+if bundle.get("contractVersion") != 6 or not bundle.get("revision") or not bundle.get("bundleId"):
+    fail("chatgptProjectBundle identity is incomplete")
+project_authority = ROOT / bundle["authority"]
+asset_manifest = ROOT / bundle["assetManifest"]
 visual_enforcement = ROOT / "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
 for path in (project_authority, asset_manifest, visual_enforcement):
     if not path.is_file():
@@ -49,9 +60,13 @@ for needle in ("Canva/vfcanva are forbidden", "creative_execution_authorized: tr
         fail(f"Project Authority missing {needle}")
 asset_data = json.loads(asset_manifest.read_text(encoding="utf-8"))
 authority_rows = [x for x in asset_data.get("assets", []) if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
-authority_sha = hashlib.sha256(project_authority.read_bytes()).hexdigest()
+authority_sha = hashlib.sha256(authority_text.encode("utf-8")).hexdigest()
 if len(authority_rows) != 1 or authority_rows[0].get("sha256") != authority_sha:
-    fail("Project Authority bytes are not bound to the 6.2 asset manifest")
+    fail("Project Authority bytes are not bound to the current asset manifest")
+if (asset_data.get("contract_version"), str(asset_data.get("revision")), asset_data.get("bundle_id")) != (
+    bundle["contractVersion"], str(bundle["revision"]), bundle["bundleId"]
+):
+    fail("Project asset manifest identity differs from chatgptProjectBundle")
 route = json.loads(visual_enforcement.read_text(encoding="utf-8")).get("publicationRoute", {})
 if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deniedTools", [])}):
     fail("publicationRoute must deny Canva/vfcanva")
@@ -105,7 +120,8 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
         shutil.copyfile(ROOT / rel, target)
     stale = tmp / project_preflight.PROJECT_AUTHORITY
     stale.write_text(stale.read_text(encoding="utf-8").replace("Canva/vfcanva are forbidden", "Canva/vfcanva may be used"), encoding="utf-8")
-    stale_sha = hashlib.sha256(stale.read_bytes()).hexdigest()
+    stale_text = stale.read_text(encoding="utf-8")
+    stale_sha = hashlib.sha256(stale_text.encode("utf-8")).hexdigest()
     am = json.loads((tmp / project_preflight.PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
     for row in am["assets"]:
         if row.get("filename") == "Velvet-Factory-Project-Authority-v6.txt":

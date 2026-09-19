@@ -18,10 +18,22 @@ from typing import Any
 from vf_media_integrity import inspect_media
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json"
-ASSETS_SHA = "2d0b735732d77b8df1c844a1188e92a8db0cb6edb183e67781a23ce4da46fcff"
-AUTHORITY_SHA = "ce0138b5b1513741fc47e0c9ff00e5359c842e937862efc99e13dea8cf6b0fea"
+ROOT = Path(__file__).resolve().parents[1]
+AUTHORITY_MANIFEST = "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
+
+def _current_bundle_config() -> dict:
+    manifest = json.loads((ROOT / AUTHORITY_MANIFEST).read_text(encoding="utf-8"))
+    bundle = manifest.get("chatgptProjectBundle")
+    if not isinstance(bundle, dict):
+        raise RuntimeError("chatgptProjectBundle missing from authority manifest")
+    return bundle
+
+_PROJECT_BUNDLE = _current_bundle_config()
+AUTHORITY = _PROJECT_BUNDLE["authority"]
+ASSETS = _PROJECT_BUNDLE["assetManifest"]
+CONTRACT_VERSION = int(_PROJECT_BUNDLE["contractVersion"])
+REVISION = str(_PROJECT_BUNDLE["revision"])
+BUNDLE_ID = str(_PROJECT_BUNDLE["bundleId"])
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
           "creative_director", "source_grounded_production", "visible_text",
           "brand_guardian", "exact_final_qa")
@@ -138,17 +150,23 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     if route.get("version") != 1 or route.get("mode") != "fail_closed":
         raise ValueError("publication route policy missing or unsupported")
     authority = local_path(root, AUTHORITY)
-    if digest(authority) != AUTHORITY_SHA:
-        raise ValueError("Project Authority is not verified revision 6.2")
     assets_path = local_path(root, ASSETS)
-    if digest(assets_path) != ASSETS_SHA:
-        raise ValueError("Project asset manifest bytes do not match verified revision 6.2")
     asset_manifest = load_json(assets_path)
-    if (asset_manifest.get("contract_version"), asset_manifest.get("revision"), asset_manifest.get("bundle_id")) != (6, "6.2", "VF-PROJECT-6.2-DETAIL-TRUTH"):
-        raise ValueError("Project asset manifest revision mismatch")
-    required_refs = {x["sha256"] for x in asset_manifest["assets"] if x.get("required_for") == "visual_work"}
+    identity = (asset_manifest.get("contract_version"), str(asset_manifest.get("revision")), asset_manifest.get("bundle_id"))
+    if identity != (CONTRACT_VERSION, REVISION, BUNDLE_ID):
+        raise ValueError("Project asset manifest identity differs from current chatgptProjectBundle")
+    authority_rows = [x for x in asset_manifest.get("assets", []) if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
+    canonical_authority = authority.read_text(encoding="utf-8").encode("utf-8")
+    if len(authority_rows) != 1 or authority_rows[0].get("sha256") != hashlib.sha256(canonical_authority).hexdigest():
+        raise ValueError("Project Authority hash does not match current asset manifest")
+    aesthetic_roles = {
+        "broad_style_only",
+        "editorial_layout_and_annotation_style_only",
+        "current_owner_approved_direction_style_only_not_product_source",
+    }
+    required_refs = {x["sha256"] for x in asset_manifest.get("assets", []) if x.get("role") in aesthetic_roles}
     if len(required_refs) != 3:
-        raise ValueError("all three canonical visual reference identities required")
+        raise ValueError("all three canonical aesthetic reference identities required")
     denied = set(route.get("rejectedArtifactSha256", []))
     manifest = load_json(local_path(root, manifest_ref), expected_manifest_sha256)
     if manifest.get("jobId") != content_id:

@@ -37,9 +37,22 @@ def fixture(root):
     write(evidence.POLICY, policy)
     authority = write(evidence.AUTHORITY, b'Test-only authority; not deployment or real creative evidence.')
     refs = [dict(image(f'refs/{i}.png', (12, 12), (i * 50, 15, 20)), role='STYLE_ONLY') for i in range(1, 4)]
-    assets = write(evidence.ASSETS, {'contract_version': 6, 'revision': '6.2',
-        'bundle_id': 'VF-PROJECT-6.2-DETAIL-TRUTH',
-        'assets': [{'sha256': x['sha256'], 'required_for': 'visual_work'} for x in refs]})
+    style_roles = [
+        'broad_style_only',
+        'editorial_layout_and_annotation_style_only',
+        'current_owner_approved_direction_style_only_not_product_source',
+    ]
+    assets = write(evidence.ASSETS, {
+        'contract_version': evidence.CONTRACT_VERSION,
+        'revision': evidence.REVISION,
+        'bundle_id': evidence.BUNDLE_ID,
+        'assets': [
+            {'filename': 'Velvet-Factory-Project-Authority-v6.txt', 'role': 'authority',
+             'sha256': authority['sha256'], 'required_for': 'all_requests'},
+            *[{'sha256': x['sha256'], 'role': role, 'required_for': 'visual_work'}
+              for x, role in zip(refs, style_roles)],
+        ],
+    })
     source = dict(image('source.png', (60, 75), (100, 80, 25)), role='PRODUCT_SOURCE')
     import vf_publish_bridge as bridge
     master = image('master.png', (120, 150), (40, 80, 25))
@@ -80,9 +93,8 @@ class EvidenceTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.manifest, self.write, authority, assets = fixture(self.root)
         self.ev = self.manifest['publicationEvidence']
-        for name, value in [('AUTHORITY_SHA', authority), ('ASSETS_SHA', assets)]:
-            p = patch.object(evidence, name, value)
-            p.start(); self.addCleanup(p.stop)
+        self.assertEqual(authority, evidence.digest(self.root / evidence.AUTHORITY))
+        self.assertEqual(assets, evidence.digest(self.root / evidence.ASSETS))
     def result(self, phase='delivery'):
         self.write('manifest.json', self.manifest)
         return evidence.validate(self.root, 'manifest.json', 'TEST', phase)

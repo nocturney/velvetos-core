@@ -10,8 +10,23 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json")
+
+def _current_bundle_config() -> dict:
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    bundle = manifest.get("chatgptProjectBundle")
+    if not isinstance(bundle, dict):
+        raise RuntimeError("chatgptProjectBundle missing from authority manifest")
+    required = ("contractVersion", "revision", "bundleId", "authority", "assetManifest")
+    if any(not bundle.get(k) for k in required):
+        raise RuntimeError("chatgptProjectBundle is incomplete")
+    return bundle
+
+_PROJECT_BUNDLE = _current_bundle_config()
+PROJECT_AUTHORITY = Path(_PROJECT_BUNDLE["authority"])
+PROJECT_ASSET_MANIFEST = Path(_PROJECT_BUNDLE["assetManifest"])
+PROJECT_CONTRACT_VERSION = int(_PROJECT_BUNDLE["contractVersion"])
+PROJECT_REVISION = str(_PROJECT_BUNDLE["revision"])
+PROJECT_BUNDLE_ID = str(_PROJECT_BUNDLE["bundleId"])
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
@@ -42,12 +57,22 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     asset_rows = assets.get("assets")
     if not isinstance(asset_rows, list) or not all(isinstance(row, dict) for row in asset_rows):
         return ["Project asset manifest assets must be an array of objects"]
-    if not all(x in authority for x in ("Contract version: 6", "Revision: 6.2", "Bundle: VF-PROJECT-6.2-DETAIL-TRUTH")):
+    identity = (assets.get("contract_version"), str(assets.get("revision")), assets.get("bundle_id"))
+    expected = (PROJECT_CONTRACT_VERSION, PROJECT_REVISION, PROJECT_BUNDLE_ID)
+    if identity != expected:
+        problems.append("Project asset manifest identity does not match current chatgptProjectBundle")
+    markers = (
+        f"Contract version: {PROJECT_CONTRACT_VERSION}",
+        f"Revision: {PROJECT_REVISION}",
+        f"Bundle: {PROJECT_BUNDLE_ID}",
+    )
+    if not all(x in authority for x in markers):
         problems.append("Project Authority identity mismatch")
     rows = [x for x in asset_rows if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
-    digest = hashlib.sha256(authority_path.read_bytes()).hexdigest()
+    canonical = authority.encode("utf-8")
+    digest = hashlib.sha256(canonical).hexdigest()
     if len(rows) != 1 or rows[0].get("sha256") != digest:
-        problems.append("Project Authority hash does not match ASSET-MANIFEST-v6.2.json")
+        problems.append("Project Authority hash does not match current asset manifest")
     if creative:
         route = policy.get("publicationRoute", {})
         if not isinstance(route, dict):
