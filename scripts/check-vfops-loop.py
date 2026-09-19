@@ -25,6 +25,10 @@ STORIES_FIX = ROOT / "packages" / "vfcopy" / "G004-STORIES-FIX.md"
 GAP = ROOT / "packages" / "vfops" / "hq" / "TOOL-USE-GAP-2026-09-07.md"
 AGENTS = ROOT / "AGENTS.md"
 
+# Child Python tools emit UTF-8; decode them explicitly even on cp1252 Windows.
+os.environ["PYTHONUTF8"] = "1"
+os.environ["PYTHONIOENCODING"] = "utf-8"
+
 
 def fail(msg: str) -> None:
     print(f"FAIL {msg}", file=sys.stderr)
@@ -36,7 +40,7 @@ def main() -> None:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
-    data = json.loads(LOOP.read_text())
+    data = json.loads(LOOP.read_text(encoding="utf-8"))
     if data.get("name") != "vfops-loop":
         fail("LOOP.json name must be vfops-loop")
     ids = [p["id"] for p in data.get("packs") or []]
@@ -61,13 +65,13 @@ def main() -> None:
     if not (ROOT / "scripts" / "vfcost.py").is_file():
         fail("scripts/vfcost.py missing after rebase onto main")
 
-    orch = ORCHESTRA.read_text()
+    orch = ORCHESTRA.read_text(encoding="utf-8")
     for needle in ("vfops_loop.py", "07:00", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער", "PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור"):
         if needle not in orch:
             fail(f"ORCHESTRA.md must mention {needle}")
     if "VF_PUBLICATION_ROUTE_V1" not in orch or "Canva/vfcanva are forbidden" not in orch:
         fail("ORCHESTRA.md must bind current VF publication route and forbid Canva/vfcanva")
-    send = (ROOT / "constitution" / "SEND.md").read_text()
+    send = (ROOT / "constitution" / "SEND.md").read_text(encoding="utf-8")
     for needle in ("PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור", "החלטה"):
         if needle not in send:
             fail(f"SEND.md must mention Christian-lock needle {needle}")
@@ -81,7 +85,7 @@ def main() -> None:
         (STORIES_FIX, ("LEGACY / STALE", "audit only", "VF_PUBLICATION_ROUTE_V1", "סיפור-מוצר", "הודעה")),
         (GAP, ("vfcopy", "vfcanva", "vfcovers", "פער", "7.9")),
     ):
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8")
         for needle in needles:
             if needle not in text:
                 if needle == "הודעה" and ("הודעת" in text or "אינסטגרם" in text or "Instagram" in text):
@@ -103,11 +107,17 @@ def main() -> None:
         if forbidden in handoff_active:
             fail(f"HANDOFF-he.md active route still contains legacy provider directive {forbidden!r}")
 
-    if "vfops_loop.py" not in ROUTINE.read_text():
-        fail("ROUTINE.md must run vfops_loop.py at 07:00")
-    if "vfops_loop.py" not in HANDOFF.read_text():
+    routine = ROUTINE.read_text(encoding="utf-8")
+    if "vfops_loop.py" not in routine:
+        fail("ROUTINE.md must bind the canonical vfops_loop.py brief producer")
+    brief_persist_cmd = "python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>"
+    if routine.count(brief_persist_cmd) < 2:
+        fail("ROUTINE.md must bind both Morning Brief and Delivery Guard recovery to the canonical same-day brief artifact producer")
+    if "backfill artifact is not a delivery receipt" not in routine:
+        fail("ROUTINE.md must keep brief artifact persistence separate from Gmail delivery proof")
+    if "vfops_loop.py" not in HANDOFF.read_text(encoding="utf-8"):
         fail("HANDOFF-he.md must point at vfops_loop.py")
-    handoff = HANDOFF.read_text()
+    handoff = HANDOFF.read_text(encoding="utf-8")
     if "G004" not in handoff or "vfcopy/G004.md" not in handoff:
         fail("HANDOFF-he.md must open G004 pack")
     if "G004-STORIES-FIX.md" not in handoff:
@@ -119,7 +129,7 @@ def main() -> None:
     if "PREFLIGHT.md" not in handoff or "preflight/G004.md" not in handoff:
         fail("HANDOFF-he.md must require PREFLIGHT artifact path")
 
-    if "check-vfops-loop.py" not in AGENTS.read_text():
+    if "check-vfops-loop.py" not in AGENTS.read_text(encoding="utf-8"):
         fail("AGENTS.md sensor table must list check-vfops-loop.py")
 
     # --- owner-memory day-block contract (Markdown, no Pydantic) ---
@@ -242,6 +252,7 @@ def main() -> None:
         [sys.executable, str(signals_cli), "--write"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
         capture_output=True,
     )
     if proc_sig.returncode != 0:
@@ -270,6 +281,7 @@ def main() -> None:
         [sys.executable, str(CLI), "check"],
         cwd=ROOT,
         text=True,
+        encoding="utf-8",
         capture_output=True,
     )
     if proc.returncode != 0:
@@ -278,6 +290,22 @@ def main() -> None:
 
     # --- behavioral consumers: run ≠ brief ≠ check ---
     import vfops_loop as loop
+
+    # Windows regression: parent locale may be cp1252 while Python children emit UTF-8.
+    utf8_proc, utf8_stdout, utf8_stderr = loop._run_captured(
+        [sys.executable, "-c", "print('\\u05e2\\u05d1\\u05e8\\u05d9\\u05ea \\U0001f600')"]
+    )
+    if (
+        utf8_proc.returncode != 0
+        or utf8_stderr
+        or utf8_stdout.strip() != "\u05e2\u05d1\u05e8\u05d9\u05ea \U0001f600"
+    ):
+        fail(f"UTF-8 subprocess capture corrupted output: {utf8_stdout!r} {utf8_stderr!r}")
+    legacy_proc, legacy_stdout, legacy_stderr = loop._run_captured(
+        [sys.executable, "-c", "import sys; sys.stdout.buffer.write(bytes([99,97,102,233]))"]
+    )
+    if legacy_proc.returncode != 0 or legacy_stderr or legacy_stdout != "caf\u00e9":
+        fail(f"legacy-codepage subprocess fallback corrupted output: {legacy_stdout!r} {legacy_stderr!r}")
 
     specs = {s.id: s for s in loop.consumer_registry()}
     if "sensor-suite" not in specs:
@@ -364,6 +392,7 @@ def main() -> None:
             [sys.executable, str(CLI), "check"],
             cwd=ROOT,
             text=True,
+            encoding="utf-8",
             capture_output=True,
         )
         if proc2.returncode != 0:
@@ -410,6 +439,7 @@ def main() -> None:
         cwd=ROOT,
         env=env,
         text=True,
+        encoding="utf-8",
         capture_output=True,
     )
     if help_proc.returncode != 0:
@@ -454,6 +484,7 @@ def main() -> None:
             cwd=ROOT,
             env=isolated,
             text=True,
+            encoding="utf-8",
             capture_output=True,
         )
         if no_token.returncode != 2:

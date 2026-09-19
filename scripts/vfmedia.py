@@ -38,7 +38,7 @@ ITEM_FIELDS = (
     "sourceLinks",
     "versionApproval",
 )
-OPTIONAL_ITEM_FIELDS = ("intake", "visualReview")
+OPTIONAL_ITEM_FIELDS = ("truth", "intake", "visualReview")
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
 SKU_KEY = re.compile(r"(?i)^(sku|skus|מק״ט|מק\"ט)$")
 
@@ -74,6 +74,50 @@ def validate_drive_ref(label: str, ref: object) -> None:
         fail(f"{label} invented Drive id")
 
 
+def validate_truth_block(item: dict, index: int, schema: dict) -> None:
+    truth = item.get("truth")
+    if truth is None:
+        return
+    if not isinstance(truth, dict):
+        fail(f"items[{index}].truth must be an object")
+    spec = ((schema.get("$defs") or {}).get("assetTruth") or {})
+    props = spec.get("properties") or {}
+    required = set(spec.get("required") or [])
+    missing = sorted(required - set(truth))
+    if missing:
+        fail(f"items[{index}].truth missing fields {missing}")
+    extra = sorted(set(truth) - set(props))
+    if extra:
+        fail(f"items[{index}].truth unknown fields {extra}")
+    for key, value in truth.items():
+        field = props.get(key) or {}
+        if "enum" in field and value not in field["enum"]:
+            fail(f"items[{index}].truth.{key} invalid: {value!r}")
+        field_type = field.get("type")
+        allowed_types = field_type if isinstance(field_type, list) else [field_type]
+        if field_type is not None:
+            type_ok = (
+                ("null" in allowed_types and value is None)
+                or ("string" in allowed_types and isinstance(value, str))
+                or ("integer" in allowed_types and isinstance(value, int) and not isinstance(value, bool))
+                or ("array" in allowed_types and isinstance(value, list))
+            )
+            if not type_ok:
+                fail(f"items[{index}].truth.{key} has invalid type")
+        if isinstance(value, int) and not isinstance(value, bool):
+            if "minimum" in field and value < field["minimum"]:
+                fail(f"items[{index}].truth.{key} below minimum")
+            if "maximum" in field and value > field["maximum"]:
+                fail(f"items[{index}].truth.{key} above maximum")
+        if isinstance(value, list):
+            item_spec = field.get("items") or {}
+            for pos, entry in enumerate(value):
+                if "enum" in item_spec and entry not in item_spec["enum"]:
+                    fail(f"items[{index}].truth.{key}[{pos}] invalid: {entry!r}")
+                if item_spec.get("type") == "string" and not isinstance(entry, str):
+                    fail(f"items[{index}].truth.{key}[{pos}] must be a string")
+
+
 def validate_intake_block(item: dict, index: int) -> None:
     intake = item.get("intake")
     if intake is None:
@@ -93,7 +137,7 @@ def validate_intake_block(item: dict, index: int) -> None:
         fail(f"items[{index}].visualReview.state invalid")
 
 
-def validate_item(item: dict, index: int) -> None:
+def validate_item(item: dict, index: int, schema: dict) -> None:
     missing = [k for k in ITEM_FIELDS if k not in item]
     if missing:
         fail(f"items[{index}] missing fields {missing}")
@@ -132,6 +176,7 @@ def validate_item(item: dict, index: int) -> None:
             f"items[{index}] status=approved but versionApproval is not approved "
             "(approved folder alone is not proof)"
         )
+    validate_truth_block(item, index, schema)
     validate_intake_block(item, index)
 
 
@@ -175,7 +220,7 @@ def cmd_validate(_args: argparse.Namespace) -> int:
         if rid in seen:
             fail(f"duplicate catalog id {rid!r}")
         seen.add(rid)
-        validate_item(item, i)
+        validate_item(item, i, schema)
     print(f"OK vfmedia catalog items={len(items)} oneCatalog=true (validate≠monitor)")
     return 0
 

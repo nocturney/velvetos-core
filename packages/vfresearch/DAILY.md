@@ -12,7 +12,7 @@ Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא ש
 2. להריץ מחקר Web אמיתי על אותות רלוונטיים לסטודיו: מוצרים חוזרים קלים להדפסה/מכירה, המרה מפנייה להזמנה, יעילות ייצור/משרד, תוכן מהעבודה עצמה, ומגמות maker/3D-print שימושיות.
 3. להעדיף מקור ראשוני/עדכני; לשמור URL + תאריך מקור. לא להעתיק buzz ולא להציג אות כללי כאילו הוא Insight של `@velvets_cloud`.
 4. להטמיע רק מה ששימושי בפק קיים (`constitution/ORCHESTRA.md`). בלי פק חדש רק כי נמצא רעיון.
-5. לכתוב את התמצית הצרכנית ל־`packages/vfops/data/research.md` עבור בריף 09:00. אם אין משהו מוצק: **«אין חדש במשרד»** בדיוק.
+5. לכתוב את התמצית הצרכנית ל־`packages/vfops/data/research.md` עבור בריף 09:00. כאשר המצב הוא `ready_for_brief`, גוף התמצית חייב להשתמש בכותרת הקנונית **`## מה נבנה / יועל`** לפני הממצאים. אם אין משהו מוצק: **«אין חדש במשרד»** בדיוק.
 6. לשמור גוף מלא ב־`sources/YYYY-MM-DD-orchestra.md` עם מקורות, ממצאים, מגבלות, מה עושים עם זה, ומה דולג.
 
 ## חוזה freshness
@@ -32,7 +32,7 @@ Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא ש
 - רינדור: Morning Brief V10.3 — `packages/vfbriefux/MAIL.html` + `render_mail.py`; לא plain text/Markdown ולא HTML נחות.
 - כל ממצא במייל כולל קישור חיצוני ישיר ולחיץ למקור הרלוונטי.
 - prose לבעלים עובר `constitution/VISIBLE_TEXT.md` עם `scripts/vf_visible_text.py --surface owner-brief --gate` על הטקסט המדויק; שינוי טקסט מבטל PASS.
-- שליחה רק בנתיב production: `packages/vfops/out/gmail-send-request.json` → `.github/workflows/gmail-brief-send.yml` → `vfops.gmail_brief_send`; לא דרך Gmail connector אינטראקטיבי.
+- שליחה רק בנתיב production: `packages/vfops/out/gmail-send-request.json` → `.github/workflows/gmail-brief-send.yml` → `vfops.gmail_apps_script_request` → owner Apps Script bridge → Gmail API; לא דרך Gmail connector אינטראקטיבי.
 - אין claim של delivery בלי workflow success + Gmail message ID. אחרי one-shot מחזירים `enabled:false`.
 
 ## תבנית שאלה
