@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "scheduler": "grok-bot",
+  "timezone": "Asia/Jerusalem",
+  "status": "production",
+  "cutoverDate": "2026-09-19",
+  "repo": "nocturney/velvetos-core",
+  "bot": "Chief of Staff",
+  "routines": [
+    {
+      "id": "velvetos-integrity-guard",
+      "name": "VelvetOS Integrity Guard",
+      "schedule": "daily 01:45",
+      "enabled": true
+    },
+    {
+      "id": "velvet-research-seat",
+      "name": "Velvet Research Seat",
+      "schedule": "daily 02:00",
+      "enabled": true
+    },
+    {
+      "id": "openpost-release-watch",
+      "name": "OpenPost Release Watch",
+      "schedule": "daily 07:15",
+      "enabled": true
+    },
+    {
+      "id": "velvet-morning-brief",
+      "name": "Velvet Morning Brief",
+      "schedule": "daily 09:00",
+      "enabled": true
+    },
+    {
+      "id": "morning-delivery-guard",
+      "name": "Morning Delivery Guard",
+      "schedule": "daily 10:00",
+      "enabled": true
+    },
+    {
+      "id": "velvetos-office-loop",
+      "name": "VelvetOS Office Loop",
+      "schedule": "daily 10:30 and 18:30",
+      "enabled": true
+    },
+    {
+      "id": "weekly-research-accountability",
+      "name": "Weekly Research Accountability",
+      "schedule": "Friday 12:00",
+      "enabled": true
+    }
+  ],
+  "disabledSchedulers": {
+    "chatgpt": "protected production copies disabled after cutover",
+    "antigravity": "all VelvetOS shadow sidecars disabled"
+  },
+  "evidence": {
+    "shadowVerification": "7/7 SHADOW_PASS in Grok Bot cloud environment",
+    "productionPromptUpdate": "7/7 updated without manual execution"
+  }
+}
