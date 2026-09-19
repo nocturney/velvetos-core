@@ -22,6 +22,10 @@ While `migrationMode=shadow`, do not send owner email, publish to Instagram, mut
 
 Do not claim a connector/integration is ready unless it is actually available in the Antigravity runtime. If a required live source is unavailable, fail closed and name the missing capability.
 
+For Google Workspace data on this Windows host, a fresh ephemeral live-context export produced by scripts/antigravity/fetch-live-context.ps1 is valid provider evidence. It uses the owner-authorized Antigravity OAuth credentials with direct Google APIs first and the GitHub OIDC/WIF export as fallback. The OAuth token store is local-only and must never be printed or committed. Google Sheets remains canonical; the ephemeral context is not a second source of truth.
+
 ### Shadow execution discipline
 
 Shadow runs are capability probes, not implementation runs. Do not invoke shell/terminal commands in shadow mode. Use repository file/search tools, web/search tools, configured MCP reads, and other read-only agent tools only. Do not work around a denied tool by weakening permissions. A missing read capability is a migration blocker to report, not a reason to mutate the host.
+
+Every shadow run must finish with a final explicit marker: SHADOW_PASS only when equivalent production execution is feasible, otherwise SHADOW_BLOCKED followed by the exact blocker. Do not stop on an intermediate tool error without emitting one of these final markers. Prefer direct file-view tools for known canonical paths; a terminal directory listing is not required to prove file existence.

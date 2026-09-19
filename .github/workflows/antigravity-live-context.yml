@@ -1,0 +1,52 @@
+name: Antigravity Live Context
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: antigravity-live-context-${{ github.repository }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Google clients
+        run: pip install --quiet google-api-python-client google-auth
+
+      - name: Authenticate with Google via GitHub OIDC/WIF
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/1016876126699/locations/global/workloadIdentityPools/github-actions/providers/velvetos-core
+          service_account: velvetos-media-intake@instamcp.iam.gserviceaccount.com
+          token_format: access_token
+          access_token_scopes: |
+            https://www.googleapis.com/auth/drive.readonly
+            https://www.googleapis.com/auth/spreadsheets.readonly
+          create_credentials_file: false
+
+      - name: Export current office context
+        env:
+          GOOGLE_TOKEN: ${{ steps.auth.outputs.access_token }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: python3 scripts/antigravity/export-live-context.py
+
+      - name: Upload private live-context artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: antigravity-live-context
+          path: out/antigravity-live-context.json
+          if-no-files-found: error
+          retention-days: 1

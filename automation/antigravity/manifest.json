@@ -16,7 +16,8 @@
                          "timing":  "exact",
                          "protected":  true,
                          "emailCapable":  false,
-                         "promptFile":  "automation/antigravity/prompts/integrity-guard.md"
+                         "promptFile":  "automation/antigravity/prompts/integrity-guard.md",
+                         "requiresLiveSheets":  false
                      },
                      {
                          "id":  "research-seat",
@@ -25,7 +26,8 @@
                          "timing":  "exact",
                          "protected":  true,
                          "emailCapable":  true,
-                         "promptFile":  "automation/antigravity/prompts/research-seat.md"
+                         "promptFile":  "automation/antigravity/prompts/research-seat.md",
+                         "requiresLiveSheets":  false
                      },
                      {
                          "id":  "openpost-watch",
@@ -34,7 +36,8 @@
                          "timing":  "condition-watch",
                          "protected":  true,
                          "emailCapable":  false,
-                         "promptFile":  "automation/antigravity/prompts/openpost-watch.md"
+                         "promptFile":  "automation/antigravity/prompts/openpost-watch.md",
+                         "requiresLiveSheets":  false
                      },
                      {
                          "id":  "morning-brief",
@@ -43,7 +46,8 @@
                          "timing":  "exact",
                          "protected":  true,
                          "emailCapable":  true,
-                         "promptFile":  "automation/antigravity/prompts/morning-brief.md"
+                         "promptFile":  "automation/antigravity/prompts/morning-brief.md",
+                         "requiresLiveSheets":  true
                      },
                      {
                          "id":  "delivery-guard",
@@ -52,7 +56,8 @@
                          "timing":  "exact",
                          "protected":  true,
                          "emailCapable":  true,
-                         "promptFile":  "automation/antigravity/prompts/delivery-guard.md"
+                         "promptFile":  "automation/antigravity/prompts/delivery-guard.md",
+                         "requiresLiveSheets":  true
                      },
                      {
                          "id":  "office-loop",
@@ -61,7 +66,8 @@
                          "timing":  "exact",
                          "protected":  true,
                          "emailCapable":  true,
-                         "promptFile":  "automation/antigravity/prompts/office-loop.md"
+                         "promptFile":  "automation/antigravity/prompts/office-loop.md",
+                         "requiresLiveSheets":  true
                      },
                      {
                          "id":  "weekly-research",
@@ -70,7 +76,8 @@
                          "timing":  "exact",
                          "protected":  true,
                          "emailCapable":  true,
-                         "promptFile":  "automation/antigravity/prompts/weekly-research.md"
+                         "promptFile":  "automation/antigravity/prompts/weekly-research.md",
+                         "requiresLiveSheets":  true
                      }
                  ],
     "legacyDoNotRevive":  [
@@ -85,5 +92,15 @@
                               "one-time recovery/publish jobs",
                               "historical content reminders"
                           ],
-    "antigravityProjectId":  "64e26f07-e7e7-4a1e-82b8-f9021c983975"
+    "antigravityProjectId":  "64e26f07-e7e7-4a1e-82b8-f9021c983975",
+    "modelPolicy":  {
+                        "models":  [
+                                       "gemini-3.8-flash-medium"
+                                   ]
+                    },
+    "enginePolicy":  {
+                         "primary":  "antigravity-cli",
+                         "fallback":  "cursor-agent-auto",
+                         "reason":  "capacity/quota failover only"
+                     }
 }
