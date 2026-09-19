@@ -187,6 +187,8 @@ python3 scripts/update-readme-snapshot.py --check
 
 **Definition of Done:** implementation + evidence/sensor + changelog + README capability/status update.
 
+**Project Authority binding:** חבילת ChatGPT Project הפעילה נפתרת מתוך `packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json`. ה־validators אינם מקבעים Revision היסטורי; הם מאמתים את ה־Authority, ה־Asset Manifest, ה־Project Instructions ואת מדריך Product Truth של החבילה הפעילה, כולל hashes והפרדה בין רפרנסים אסתטיים לבין Product Truth.
+
 ---
 
 <a id="english"></a>
@@ -301,6 +303,8 @@ python3 scripts/update-readme-snapshot.py --check
 ```
 
 **Definition of Done:** implementation + evidence/sensor + changelog + README capability/status update.
+
+**Project Authority binding:** the active ChatGPT Project bundle is resolved from `packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json`. Validators do not hard-code a historical revision; they verify the active Authority, Asset Manifest, Project Instructions and Product Truth guide, including their hashes and the separation between aesthetic references and Product Truth.
 
 ---
 
