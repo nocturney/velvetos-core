@@ -22,6 +22,12 @@ Status: production scheduler as of 2026-09-19.
 
 Timezone: Asia/Jerusalem.
 
+### Integrity Guard execution semantics
+
+The 01:45 Integrity Guard is a **finite single-pass audit**, not a continuous monitor. Each run must inspect the current inventory once, perform any immediate authorized repair, verify the resulting state once, notify only when required, and then terminate. It must not loop, poll, sleep, wait for future drift, or intentionally remain active after the pass is complete.
+
+The protected set is **positive protection**, not deletion authority. The Guard may repair enabled-state, schedule, or prompt drift on the seven protected routines. Known legacy/deleted routines stay disabled, but an unknown or newly added routine that is outside the protected set must not be deleted, disabled, paused, or rewritten merely for being unlisted. Leave it untouched and surface the conflict unless Christian has explicitly authorized its removal or retirement.
+
 ## Owner email
 
 Any owner email must use the current Morning Brief V10.3 rich RTL responsive/Outlook-safe system, the exact Visible Text gate where required, and only the canonical production path:
