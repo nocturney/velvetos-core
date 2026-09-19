@@ -92,7 +92,7 @@
                               "one-time recovery/publish jobs",
                               "historical content reminders"
                           ],
-    "antigravityProjectId":  "64e26f07-e7e7-4a1e-82b8-f9021c983975",
+    "antigravityProjectId":  "2047e004-ed34-417f-bdd4-4729a8155fb4",
     "modelPolicy":  {
                         "models":  [
                                        "gemini-3.8-flash-medium"
@@ -102,5 +102,6 @@
                          "primary":  "antigravity-cli",
                          "fallback":  "cursor-agent-auto",
                          "reason":  "capacity/quota failover only"
-                     }
+                     },
+    "cutoverStatus":  "blocked_model_quota"
 }
