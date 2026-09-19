@@ -26,6 +26,12 @@ for path in (GATE, MANIFEST, CLI):
 manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 if manifest.get("status") != "mandatory" or manifest.get("preflightMode") != "fail_closed":
     fail("manifest is not mandatory fail-closed")
+bundle = manifest.get("chatgptProjectBundle")
+if not isinstance(bundle, dict):
+    fail("chatgptProjectBundle binding missing")
+for key in ("contractVersion", "revision", "bundleId", "authority", "assetManifest"):
+    if not bundle.get(key):
+        fail(f"chatgptProjectBundle missing {key}")
 if manifest.get("gateDocument") != "packages/velvetos/PROJECT-REQUEST-GATE.md":
     fail("gateDocument mismatch")
 required_domains = {
@@ -35,8 +41,8 @@ required_domains = {
 if not required_domains.issubset(set(manifest.get("domains", {}))):
     fail("required domain coverage missing")
 
-project_authority = ROOT / "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt"
-asset_manifest = ROOT / "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json"
+project_authority = ROOT / bundle["authority"]
+asset_manifest = ROOT / bundle["assetManifest"]
 visual_enforcement = ROOT / "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
 for path in (project_authority, asset_manifest, visual_enforcement):
     if not path.is_file():
@@ -48,10 +54,16 @@ for needle in ("Canva/vfcanva are forbidden", "creative_execution_authorized: tr
     if needle not in authority_text:
         fail(f"Project Authority missing {needle}")
 asset_data = json.loads(asset_manifest.read_text(encoding="utf-8"))
+expected_identity = (bundle["contractVersion"], str(bundle["revision"]), bundle["bundleId"])
+actual_identity = (asset_data.get("contract_version"), str(asset_data.get("revision")), asset_data.get("bundle_id"))
+if actual_identity != expected_identity:
+    fail(f"Project asset manifest identity mismatch: expected {expected_identity}, got {actual_identity}")
 authority_rows = [x for x in asset_data.get("assets", []) if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
-authority_sha = hashlib.sha256(project_authority.read_bytes()).hexdigest()
-if len(authority_rows) != 1 or authority_rows[0].get("sha256") != authority_sha:
-    fail("Project Authority bytes are not bound to the 6.2 asset manifest")
+authority_bytes = project_authority.read_bytes()
+authority_sha = hashlib.sha256(authority_bytes).hexdigest()
+authority_lf_sha = hashlib.sha256(authority_bytes.replace(b"\r\n", b"\n")).hexdigest()
+if len(authority_rows) != 1 or authority_rows[0].get("sha256") not in {authority_sha, authority_lf_sha}:
+    fail(f"Project Authority bytes are not bound to the current asset manifest ({bundle['revision']})")
 route = json.loads(visual_enforcement.read_text(encoding="utf-8")).get("publicationRoute", {})
 if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deniedTools", [])}):
     fail("publicationRoute must deny Canva/vfcanva")
@@ -94,6 +106,26 @@ for rel in entrypoints:
 # Behavioral regression: even a hash-consistent stale Project Authority must fail closed.
 sys.path.insert(0, str(ROOT / "scripts"))
 import vf_project_preflight as project_preflight
+import vf_publication_evidence as publication_evidence
+if publication_evidence.REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 not in set(route.get("rejectedArtifactSha256", [])):
+    fail("publicationRoute must deny the superseded Product Truth teaching-sheet identity")
+if project_preflight.PROJECT_AUTHORITY != Path(bundle["authority"]):
+    fail("active preflight Project Authority does not match chatgptProjectBundle")
+if project_preflight.PROJECT_ASSET_MANIFEST != Path(bundle["assetManifest"]):
+    fail("active preflight asset manifest does not match chatgptProjectBundle")
+if Path(publication_evidence.AUTHORITY) != Path(bundle["authority"]):
+    fail("publication evidence Project Authority does not match chatgptProjectBundle")
+if Path(publication_evidence.ASSETS) != Path(bundle["assetManifest"]):
+    fail("publication evidence asset manifest does not match chatgptProjectBundle")
+expected_bundle_identity = (bundle["contractVersion"], str(bundle["revision"]), bundle["bundleId"])
+if (project_preflight.PROJECT_CONTRACT_VERSION, project_preflight.PROJECT_REVISION,
+        project_preflight.PROJECT_BUNDLE_ID) != expected_bundle_identity:
+    fail("active preflight bundle identity does not match chatgptProjectBundle")
+if (publication_evidence.PROJECT_CONTRACT_VERSION, publication_evidence.PROJECT_REVISION,
+        publication_evidence.PROJECT_BUNDLE_ID) != expected_bundle_identity:
+    fail("publication evidence bundle identity does not match chatgptProjectBundle")
+if project_preflight.PROJECT_ASSET_MANIFEST_SHA256 != publication_evidence.ASSETS_SHA:
+    fail("active preflight asset-manifest hash does not match publication evidence binding")
 if project_preflight.project_binding_problems(creative=True):
     fail("current Project binding is inconsistent: " + "; ".join(project_preflight.project_binding_problems(creative=True)))
 with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
@@ -120,6 +152,14 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
     if not problems or not any("cannot be decoded" in problem for problem in problems):
         fail("malformed Project asset manifest did not fail closed")
     shutil.copyfile(ROOT / project_preflight.PROJECT_AUTHORITY, tmp / project_preflight.PROJECT_AUTHORITY)
+    shutil.copyfile(ROOT / project_preflight.PROJECT_ASSET_MANIFEST, tmp / project_preflight.PROJECT_ASSET_MANIFEST)
+    am = json.loads((tmp / project_preflight.PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
+    am["current_references"]["current_direction"] = am["product_truth"]["guide"]
+    (tmp / project_preflight.PROJECT_ASSET_MANIFEST).write_text(
+        json.dumps(am, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    problems = project_preflight.project_binding_problems(tmp, creative=True)
+    if not problems or not any("asset manifest hash" in problem for problem in problems):
+        fail("tampered v6.4 asset manifest did not fail closed before creative execution")
     shutil.copyfile(ROOT / project_preflight.PROJECT_ASSET_MANIFEST, tmp / project_preflight.PROJECT_ASSET_MANIFEST)
     (tmp / project_preflight.VISUAL_ENFORCEMENT).write_text("[]", encoding="utf-8")
     problems = project_preflight.project_binding_problems(tmp, creative=True)

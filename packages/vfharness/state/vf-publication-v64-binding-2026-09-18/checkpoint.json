@@ -1,0 +1,65 @@
+{
+  "task_id": "vf-publication-v64-binding-2026-09-18",
+  "component_state": "Review",
+  "domain": "system_engineering",
+  "authority": {
+    "contract": 6,
+    "revision": "6.4",
+    "bundle": "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
+  },
+  "repo": {
+    "base_sha": "1a8b9dca6964997286b8a43f784629c769b1a082",
+    "branch": "fix/vf-publication-v64-binding",
+    "push_authorized": true,
+    "previous_remote_head_sha": "c985281b0b9e09c2e706692d265ef74fec7e7485",
+    "pull_request": 258,
+    "merge_authorized": false
+  },
+  "root_cause": [
+    "active publication validators were pinned to Project bundle v6.2",
+    "v6.4 adds a text-only Product Truth guide under visual_work, so selecting every visual_work asset incorrectly produced four style references",
+    "v6.4 hash-bound text files lacked -text attributes on Windows, allowing CRLF checkout drift",
+    "fresh adversarial review found the superseded Product Truth teaching-sheet SHA was not explicitly denied and the product_truth_lock stage was not bound to the exact v6.4 guide identity",
+    "final pre-merge review reproduced a pre-tool bypass: vf_project_preflight accepted a same-identity but byte-modified v6.4 asset manifest because it verified the Authority hash row but did not independently pin the canonical asset-manifest bytes"
+  ],
+  "proof": {
+    "original_red": "check-project-request-gate failed because active preflight Project Authority did not match chatgptProjectBundle",
+    "prior_targeted_green": "PASS: project request gate; 66 publication-evidence tests; publication-prep; creative-transformation; visual-standard bootstrap; visual-surface enforcement; py_compile",
+    "green_main": {
+      "commit": "1a8b9dca6964997286b8a43f784629c769b1a082",
+      "workflow": "VelvetOS Core Sensors",
+      "run_id": 35432898520,
+      "run_number": 914,
+      "conclusion": "success",
+      "sensors": "72/72",
+      "commission_exit": 0
+    },
+    "pre_repair_branch_ci": {
+      "commit": "c985281b0b9e09c2e706692d265ef74fec7e7485",
+      "workflow": "VelvetOS Core Sensors",
+      "run_id": 35432984990,
+      "run_number": 915,
+      "conclusion": "success",
+      "sensors": "72/72",
+      "commission_exit": 0
+    },
+    "fresh_review": {
+      "codex_code_review": "PASS on c985281b0b9e09c2e706692d265ef74fec7e7485: no major issues reported",
+      "manual_reviewer_red": "After changing only current_references.current_direction in ASSET-MANIFEST-v6.4.json to the Product Truth guide while retaining Contract/Revision/Bundle identity, project_binding_problems(creative=True) returned []",
+      "repair": "vf_project_preflight now pins PROJECT_ASSET_MANIFEST_SHA256 to the same canonical digest as publication evidence; check-project-request-gate asserts both bindings match and has a regression that the same-identity tampered manifest fails closed before creative execution",
+      "local_repair_green": [
+        "check-project-request-gate.py PASS",
+        "check-publication-evidence.py 66/66 PASS",
+        "tampered-manifest reproduction now returns Project asset manifest hash does not match verified revision 6.4"
+      ],
+      "security_review": "Must be re-run on the repaired remote head; the c985 request did not complete before the repair"
+    },
+    "branch_hygiene": {
+      "unrelated_blockers": "vfmedia, daily brief persistence and Research Seat drift were repaired and merged independently via PRs 264, 265 and 268",
+      "resync_rule": "preserve current main versions of unrelated files including vfmedia and Gmail transport state"
+    },
+    "final_branch_ci": "PENDING_AFTER_ASSET_MANIFEST_PIN_REPAIR",
+    "final_independent_review": "PENDING_AFTER_ASSET_MANIFEST_PIN_REPAIR"
+  },
+  "next_action": "Push the repaired head, require green Core Sensors and fresh independent code/security review on that exact head. Do not merge without explicit owner authorization."
+}
