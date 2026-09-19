@@ -24,7 +24,7 @@
       "title": "VelvetOS Integrity Guard",
       "cadence": "daily 01:45",
       "enabled": true,
-      "responsibility": "protect live Grok routine inventory; repair drift; notify only on repair/blocker"
+      "responsibility": "finite single-pass protection of live Grok routine inventory; repair protected drift; never delete unknown unlisted routines; notify only on repair/blocker"
     },
     {
       "id": "velvet-research-seat",
