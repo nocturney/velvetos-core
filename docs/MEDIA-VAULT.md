@@ -1,6 +1,6 @@
 # כספת מדיה משותפת — VelvetOS
 
-**נעול על ידי Christian · 8.9.2026**  
+**נעול על ידי Christian · 8.9.2026 · תיקון בעלים: 19.9.2026 — נוסף שלב 05 פורסם**  
 ריפו: `nocturney/velvetos-core` בלבד. אין ריפו מדיה שני. אין שינוי הרשאות שיתוף ב־Drive מ־HQ.
 
 שורש Drive (נקרא בפועל `Velvet Media`):  
@@ -20,9 +20,10 @@ https://drive.google.com/drive/folders/1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv
 | נכנס | `01 - נכנס` | `1IG4zNTOuGgvPyhEbKQEKwjRjFD6BuUDJ` | העלאה ראשונה בלבד. עדיין לא מקור |
 | מקור | `02 - מקור` | `1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6` | אחרי קליטת תפעול. הקובץ המקורי החי |
 | בעבודה | `03 - בעבודה` | `13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a` | נגזרות / עריכה / Canva / ריל. לא מאשר פרסום |
-| מאושר לפרסום | `04 - מאושר לפרסום` | `1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib` | מיקום קובץ אחרי אישור גרסה. **לא** הוכחת אישור לבד |
+| מאושר לפרסום | `04 - מאושר לפרסום` | `1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib` | תור הנגזרות שאושרו לפרסום. **לא** הוכחת פרסום |
+| פורסם | `05 - פורסם` | `19A-_QOSvII-CvxjRMpQ2j5Z46UAjeNep` | הנגזרת המדויקת שפורסמה, ורק אחרי live verification |
 
-מזהים אלה חיים גם ב־[`packages/vfmedia/FOLDERS.json`](../packages/vfmedia/FOLDERS.json). לא ממציאים תיקייה חמישית. לא מוחקים קבצים.
+מזהים אלה חיים גם ב־[`packages/vfmedia/FOLDERS.json`](../packages/vfmedia/FOLDERS.json). לא מוסיפים תיקיות שלב נוספות מעבר לחמש ללא החלטת בעלים. לא מוחקים קבצים.
 
 ---
 
@@ -32,22 +33,23 @@ https://drive.google.com/drive/folders/1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv
 |---|---|
 | **תפעול** | קליטה: נכנס → מקור. בעל ה־intake. לא מאשר פרסום מההעלאה |
 | **Cursor** | סכמת הקטלוג היחיד + חיישן. לא ממציא שורות / מק״ט / ₪ |
-| **GrokBot (משרד)** | עובד על הקבצים דרך **Drive MCP** (העברה בין ארבע התיקיות, תיאור לפי צפייה). לא פותח קטלוג שני |
+| **GrokBot (משרד)** | עובד על הקבצים דרך **Drive MCP** (העברה בין חמש התיקיות, תיאור לפי צפייה). לא פותח קטלוג שני |
 | **צמיחה / סטודיו** | נגזרות ב־בעבודה. שיבוץ רק אחרי `versionApproval` בקטלוג + `PREFLIGHT.md` |
 | **ראש צוות** | אישור גרסה לפרסום. תיקיית «מאושר לפרסום» לבד לא מספיקה |
+| **vfigos / צמיחה** | אחרי provider receipt + live Instagram verification: מעביר את הנגזרת המדויקת מ־04 ל־05 ומעדכן את אותה שורת קטלוג כ־`published` |
 
 לוח תיאום: [`docs/SHARED-WORK-COORDINATION.md`](SHARED-WORK-COORDINATION.md).
 
 ---
 
-## נוהל (קליטה → מקור → עבודה → אישור)
+## נוהל (קליטה → מקור → עבודה → אישור → פרסום מאומת)
 
 1. **העלאה** לקובץ נכנס (`01 - נכנס`) בלבד. ההעלאה ≠ אישור. אין שורת קטלוג בלי `sourceFileId` אמיתי.
 2. **קליטה אוטומטית (תפעול):** `python3 scripts/vfmedia.py intake run` — סורק את נכנס, רושם בקטלוג (`registered`), מאמת הורדה ומעביר ל־`02 - מקור` (`verified`). ניתוח חזותי **לא** חוסם קליטת קובץ נגיש. `vfmedia.py validate` הוא validator בלבד — **לא** מנגנון ניטור.
 3. **תפעול / GrokBot:** השלמת תיאור לפי צפייה (`visualReview`) כשאפשר; לא מחכים לזה כדי להעביר נכנס→מקור אם הקובץ נגיש.
 4. **עבודה:** עותק / נגזרת ב־`03 - בעבודה`. רושמים `derivativeIds` + `sourceLinks`. המקור נשאר ב־מקור. סטטוס `in_progress`.
 5. **אישור גרסה:** ראש צוות ממלא `versionApproval` בקטלוג (`approved` + מי + מתי). רק אז מעבירים את הנגזרת המאושרת ל־`04 - מאושר לפרסום`. שיבוץ IG עדיין עובר `vfgrowth/PREFLIGHT.md` + `vfigos/SEND.md`.
-6. **פרסום** הוא צעד נפרד. מיזוג קוד ≠ אישור פרסום. תיקיית מאושר ≠ הוכחת אישור.
+6. **פרסום** הוא צעד נפרד. מיזוג קוד ≠ אישור פרסום. תיקיית מאושר ≠ הוכחת פרסום. אחרי `publish_*` / provider receipt חייבים `list_media` / `get_media` ולאמת media ID + permalink. רק אחרי `liveVerified` מעבירים את **הנגזרת המדויקת שפורסמה** מ־`04 - מאושר לפרסום` אל `05 - פורסם`, מעדכנים `status: published` ומוסיפים `publication.state: published_verified` עם הראיות החיות. אם האימות החי חסר או נכשל — הקובץ נשאר ב־04.
 7. **URL HTTPS ציבורי לפרסום (Instagram Graph):** ה־MCP (`publish_*`) דורש ש־Instagram ישלוף מדיה מ־**HTTPS ציבורי**. רק **נגזרת שאושרה לפרסום** רשאית לקבל URL כזה (למשל Canva export CDN, או העתק זמני מארח ציבורי). מקור / בעבודה נשארים פרטיים. **אין** לפתוח את כל הכספת או תיקיות מקור ל־`anyone with the link`. אין שינוי הרשאות שיתוף גלובלי מ־HQ. אחרי פרסום+אימות — אפשר להסיר את ה־URL הזמני; הקטלוג והמקור נשארים.
 
 פאזות דיווח (נפרדות): **רשום בקטלוג** · **אומת ונקלט** · **נבדק חזותית**. פרטים: [`packages/vfmedia/INTAKE.md`](../packages/vfmedia/INTAKE.md).
@@ -64,9 +66,10 @@ https://drive.google.com/drive/folders/1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv
 6. **לא ממציאים ₪** ולא Insights. כותבים `X ₪` / «אין ספירה» כשחסר מקור.
 7. **לא ממציאים מק״ט.** קישור מוצר רק אם כבר ידוע (שם עבודה / כרטיס `vfsku` קיים). אחרת `productLink: null`.
 8. **אין שינוי הרשאות שיתוף ציבורי** מ־HQ על מקור/נכנס/בעבודה. לא `anyone with the link` על הכספת. URL ציבורי זמני — **רק** לנגזרת מאושרת לפרסום (ראה סעיף 7 בנוהל).
-9. **לא מוחקים קבצים** מהכספת. העברה בין ארבע התיקיות בלבד.
+9. **לא מוחקים קבצים** מהכספת. העברה בין חמש התיקיות בלבד. מעבר 04→05 מתבצע רק אחרי אימות חי של אותו פרסום.
 10. **PUBLIC_CURRENT_CTA** = הודעת Instagram בלבד («לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם»). אסור וואטסאפ / `050-2517000` / `wa.me` בתוכן ציבורי. רשומת עסק פנימית נשארת ב־`BUSINESS_CONTACT_RECORD`. אוטו־DM נעול. מקור: `constitution/PUBLIC_CTA.md`.
 11. **publish_* ≠ live.** אחרי Instagram MCP חייבים `list_media`/`get_media` לפני `liveVerified`.
+12. **תיקיית «05 - פורסם» לבד ≠ הוכחת פרסום.** הוכחה מחייבת `publication.state=published_verified`, media ID, permalink וזמן אימות חי באותה שורת קטלוג.
 
 ---
 
@@ -101,4 +104,4 @@ python3 scripts/vfmedia.py validate
 python3 scripts/vfmem.py who "כספת מדיה"
 ```
 
-GrokBot / משרד: Drive MCP על ארבע התיקיות למעלה. Cursor: סכמה + חיישן `scripts/check-vfmedia.py`. לא משנים sharing.
+GrokBot / משרד: Drive MCP על חמש התיקיות למעלה. Cursor: סכמה + חיישן `scripts/check-vfmedia.py`. לא משנים sharing.
