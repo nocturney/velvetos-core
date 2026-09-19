@@ -38,6 +38,7 @@ FOLDER_IDS = {
     "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
     "13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a",
     "1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib",
+    "19A-_QOSvII-CvxjRMpQ2j5Z46UAjeNep",
 }
 NEEDLES_DOCS = (
     ROOT_ID,
@@ -45,6 +46,8 @@ NEEDLES_DOCS = (
     "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
     "13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a",
     "1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib",
+    "19A-_QOSvII-CvxjRMpQ2j5Z46UAjeNep",
+    "05 - פורסם",
     "קטלוג אחד",
     "תפעול",
     "העלאה ≠ אישור",
@@ -151,6 +154,11 @@ def main() -> None:
     item_props = ((schema.get("$defs") or {}).get("mediaItem") or {}).get("properties") or {}
     if "truth" not in item_props:
         fail("catalog.schema.json mediaItem must expose optional truth metadata")
+    if "publication" not in item_props:
+        fail("catalog.schema.json mediaItem must expose publication evidence")
+    status_enum = ((item_props.get("status") or {}).get("enum") or [])
+    if "published" not in status_enum:
+        fail("catalog.schema.json status must include published")
     truth_spec = ((schema.get("$defs") or {}).get("assetTruth") or {})
     if "truthLevel" not in (truth_spec.get("required") or []):
         fail("catalog.schema.json assetTruth must require truthLevel")
