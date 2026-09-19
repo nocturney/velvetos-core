@@ -193,6 +193,61 @@ def main() -> None:
         else:
             fail(f"vfmedia Asset Truth regression accepted invalid metadata: {invalid_truth}")
 
+    class PublicationValidationError(Exception):
+        pass
+
+    vfmedia_module.fail = lambda message: (_ for _ in ()).throw(PublicationValidationError(message))
+    canonical_derivative = {
+        "id": "drive-published-derivative",
+        "url": "https://drive.google.com/file/d/drive-published-derivative/view",
+    }
+    canonical_published = {
+        "status": "published",
+        "derivativeIds": [canonical_derivative],
+        "publication": {
+            "state": "published_verified",
+            "provider": "instagram",
+            "mediaId": "17841400000000000",
+            "permalink": "https://www.instagram.com/p/EXAMPLE/",
+            "publishedAt": "2026-09-19T12:00:00Z",
+            "verifiedAt": "2026-09-19T12:00:10Z",
+            "publishedDerivative": canonical_derivative,
+        },
+    }
+    try:
+        vfmedia_module.validate_publication_block(canonical_published, 0)
+    except PublicationValidationError as exc:
+        fail(f"vfmedia published regression rejected canonical evidence: {exc}")
+
+    invalid_publication_items = (
+        {"status": "published", "derivativeIds": [], "publication": None},
+        {
+            "status": "published",
+            "derivativeIds": [canonical_derivative],
+            "publication": {
+                **canonical_published["publication"],
+                "state": "publish_pending_verification",
+            },
+        },
+        {
+            "status": "approved",
+            "derivativeIds": [canonical_derivative],
+            "publication": canonical_published["publication"],
+        },
+        {
+            "status": "published",
+            "derivativeIds": [],
+            "publication": canonical_published["publication"],
+        },
+    )
+    for invalid_item in invalid_publication_items:
+        try:
+            vfmedia_module.validate_publication_block(invalid_item, 0)
+        except PublicationValidationError:
+            pass
+        else:
+            fail(f"vfmedia published regression accepted invalid evidence: {invalid_item}")
+
     folders = json.loads(FOLDERS.read_text(encoding="utf-8"))
     if folders.get("sharePermissionChanges") != "forbidden":
         fail("FOLDERS.json must forbid share permission changes")
