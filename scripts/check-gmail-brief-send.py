@@ -43,6 +43,31 @@ def main() -> None:
     if request.get("to") != "nocturney@gmail.com":
         fail("send request owner recipient lock changed")
 
+    original_refresh = sender._refresh_authorized_user
+
+    def synthetic_refresh_failure(data: dict) -> str:
+        raise RuntimeError("synthetic refresh failure")
+
+    sender._refresh_authorized_user = synthetic_refresh_failure
+    try:
+        try:
+            sender._token_from_mapping(
+                {
+                    "type": "authorized_user",
+                    "client_id": "client",
+                    "client_secret": "secret",
+                    "refresh_token": "refresh",
+                    "token": "stale-access-token",
+                }
+            )
+        except RuntimeError as exc:
+            if "synthetic refresh failure" not in str(exc):
+                fail(f"unexpected OAuth refresh failure: {exc}")
+        else:
+            fail("authorized_user refresh failure fell back to stale access token")
+    finally:
+        sender._refresh_authorized_user = original_refresh
+
     utf8_subject = "Velvet Factory — בריף הבוקר · בדיקה"
     encoded_subject = encode_subject(utf8_subject)
     try:
