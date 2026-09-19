@@ -32,7 +32,7 @@ Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא ש
 - רינדור: Morning Brief V10.3 — `packages/vfbriefux/MAIL.html` + `render_mail.py`; לא plain text/Markdown ולא HTML נחות.
 - כל ממצא במייל כולל קישור חיצוני ישיר ולחיץ למקור הרלוונטי.
 - prose לבעלים עובר `constitution/VISIBLE_TEXT.md` עם `scripts/vf_visible_text.py --surface owner-brief --gate` על הטקסט המדויק; שינוי טקסט מבטל PASS.
-- שליחה רק בנתיב production: `packages/vfops/out/gmail-send-request.json` → `.github/workflows/gmail-brief-send.yml` → `vfops.gmail_brief_send`; לא דרך Gmail connector אינטראקטיבי.
+- שליחה רק בנתיב production: `packages/vfops/out/gmail-send-request.json` → `.github/workflows/gmail-brief-send.yml` → `vfops.gmail_apps_script_request` → owner Apps Script bridge → Gmail API; לא דרך Gmail connector אינטראקטיבי.
 - אין claim של delivery בלי workflow success + Gmail message ID. אחרי one-shot מחזירים `enabled:false`.
 
 ## תבנית שאלה
