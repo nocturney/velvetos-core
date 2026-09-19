@@ -48,3 +48,11 @@ Confidence: low-to-medium external mechanic signal; no local/account performance
 `ready_for_brief` because a same-day external body ran and produced one meaningful new production/tool signal.
 Timing limitation: execution occurred after the intended 07:00 cutoff; this artifact records that fact instead of backdating completion.
 
+
+## Owner email delivery blocker
+- Visible Text Gate: PASS; exact text SHA-256: `ecace511e800550f7bb90d2283a2e2991e5444687d66d90d06c72c4c92caea8c`.
+- V10.3 renderer self-check: PASS after UTF-8 read repair; rendered HTML contains clickable source links.
+- Canonical Gmail workflow run `35429918588`: FAILED at Gmail API send with HTTP 401 `Invalid Credentials` / `UNAUTHENTICATED`.
+- No Gmail plugin fallback used; email is UNSENT. One-shot request restored to `enabled:false`.
+- Required repair: refresh/replace the repository `GMAIL_OAUTH_JSON` OAuth credential before the next production owner-email send.
+
