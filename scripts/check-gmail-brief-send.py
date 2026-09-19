@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "packages"))
 
 from vfops import gmail_brief_send as sender  # noqa: E402
+from vfops import gmail_apps_script_request as bridge  # noqa: E402
 from vfops.gmail_brief_request import build_safe_mime, encode_subject  # noqa: E402
 
 
@@ -25,6 +26,9 @@ def main() -> None:
         ROOT / "packages" / "vfops" / "gmail_brief_send.py",
         ROOT / "packages" / "vfops" / "gmail_oauth_bootstrap.py",
         ROOT / "packages" / "vfops" / "gmail_brief_request.py",
+        ROOT / "packages" / "vfops" / "gmail_apps_script_request.py",
+        ROOT / "packages" / "vfops" / "apps_script_gmail_bridge" / "Code.gs",
+        ROOT / "packages" / "vfops" / "apps_script_gmail_bridge" / "appsscript.json",
         ROOT / ".github" / "workflows" / "gmail-brief-send.yml",
         ROOT / "packages" / "vfops" / "out" / "gmail-send-request.json",
     ]
@@ -33,9 +37,17 @@ def main() -> None:
             fail(f"missing {path.relative_to(ROOT)}")
 
     workflow = (ROOT / ".github" / "workflows" / "gmail-brief-send.yml").read_text(encoding="utf-8")
-    for needle in ("GMAIL_OAUTH_JSON", "gmail_brief_request", "VFBRIEF_ALLOWED_RECIPIENT", "contents: read"):
+    for needle in (
+        "GMAIL_APPS_SCRIPT_URL",
+        "GMAIL_APPS_SCRIPT_SECRET",
+        "gmail_apps_script_request",
+        "VFBRIEF_ALLOWED_RECIPIENT",
+        "contents: read",
+    ):
         if needle not in workflow:
             fail(f"workflow missing {needle}")
+    if "GMAIL_OAUTH_JSON" in workflow:
+        fail("workflow still references retired GMAIL_OAUTH_JSON transport")
 
     request = json.loads((ROOT / "packages" / "vfops" / "out" / "gmail-send-request.json").read_text())
     if request.get("enabled") is not False:
@@ -67,6 +79,49 @@ def main() -> None:
             fail("authorized_user refresh failure fell back to stale access token")
     finally:
         sender._refresh_authorized_user = original_refresh
+
+    raw = "ZmFrZS1yZmM4MjI"
+    sig1 = bridge._signature(
+        "test-secret",
+        request_id="req-1",
+        issued_at=1234567890,
+        to="nocturney@gmail.com",
+        raw=raw,
+    )
+    sig2 = bridge._signature(
+        "test-secret",
+        request_id="req-1",
+        issued_at=1234567890,
+        to="nocturney@gmail.com",
+        raw=raw,
+    )
+    if sig1 != sig2 or len(sig1) != 64:
+        fail("Apps Script HMAC signature is not deterministic SHA-256 hex")
+
+    bridge_source = (
+        ROOT / "packages" / "vfops" / "apps_script_gmail_bridge" / "Code.gs"
+    ).read_text(encoding="utf-8")
+    for needle in (
+        "ALLOWED_RECIPIENT = 'nocturney@gmail.com'",
+        "VF_GMAIL_BRIEF_SHARED_SECRET",
+        "MAX_SKEW_SECONDS = 300",
+        "LAST_SUCCESS_REQUEST_ID",
+        "gmail.googleapis.com/gmail/v1/users/me/messages/send",
+        "ScriptApp.getOAuthToken()",
+    ):
+        if needle not in bridge_source:
+            fail(f"Apps Script bridge missing {needle}")
+
+    manifest = json.loads(
+        (ROOT / "packages" / "vfops" / "apps_script_gmail_bridge" / "appsscript.json").read_text()
+    )
+    scopes = set(manifest.get("oauthScopes") or [])
+    expected_scopes = {
+        "https://www.googleapis.com/auth/gmail.send",
+        "https://www.googleapis.com/auth/script.external_request",
+    }
+    if scopes != expected_scopes:
+        fail(f"Apps Script scopes changed: {sorted(scopes)}")
 
     utf8_subject = "Velvet Factory — בריף הבוקר · בדיקה"
     encoded_subject = encode_subject(utf8_subject)
