@@ -119,32 +119,7 @@ function doPost(e) {
         throw new Error('duplicate requestId');
       }
 
-      const response = UrlFetchApp.fetch(
-        'https://gmail.googleapis.com/gmail/v1/users/me/messages/send',
-        {
-          method: 'post',
-          contentType: 'application/json',
-          headers: {Authorization: 'Bearer ' + ScriptApp.getOAuthToken()},
-          payload: JSON.stringify({raw: raw}),
-          muteHttpExceptions: true
-        }
-      );
-
-      const code = response.getResponseCode();
-      const text = response.getContentText();
-      let result = {};
-      try {
-        result = JSON.parse(text);
-      } catch (parseErr) {
-        throw new Error('Gmail API returned non-JSON HTTP ' + code);
-      }
-
-      if (code < 200 || code >= 300) {
-        const message = result && result.error && result.error.message
-          ? result.error.message
-          : 'Gmail API error';
-        throw new Error('Gmail API HTTP ' + code + ': ' + message);
-      }
+      const result = Gmail.Users.Messages.send({raw: raw}, 'me');
 
       const messageId = String(result.id || '').trim();
       if (!messageId) {

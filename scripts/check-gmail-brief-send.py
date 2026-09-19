@@ -106,8 +106,7 @@ def main() -> None:
         "VF_GMAIL_BRIEF_SHARED_SECRET",
         "MAX_SKEW_SECONDS = 300",
         "LAST_SUCCESS_REQUEST_ID",
-        "gmail.googleapis.com/gmail/v1/users/me/messages/send",
-        "ScriptApp.getOAuthToken()",
+        "Gmail.Users.Messages.send({raw: raw}, 'me')",
     ):
         if needle not in bridge_source:
             fail(f"Apps Script bridge missing {needle}")
@@ -116,12 +115,18 @@ def main() -> None:
         (ROOT / "packages" / "vfops" / "apps_script_gmail_bridge" / "appsscript.json").read_text()
     )
     scopes = set(manifest.get("oauthScopes") or [])
-    expected_scopes = {
-        "https://www.googleapis.com/auth/gmail.send",
-        "https://www.googleapis.com/auth/script.external_request",
-    }
+    expected_scopes = {"https://www.googleapis.com/auth/gmail.send"}
     if scopes != expected_scopes:
         fail(f"Apps Script scopes changed: {sorted(scopes)}")
+    services = (manifest.get("dependencies") or {}).get("enabledAdvancedServices") or []
+    gmail_services = [
+        item for item in services
+        if item.get("serviceId") == "gmail"
+        and item.get("userSymbol") == "Gmail"
+        and item.get("version") == "v1"
+    ]
+    if len(gmail_services) != 1:
+        fail("Apps Script advanced Gmail service is not pinned to Gmail v1")
 
     utf8_subject = "Velvet Factory — בריף הבוקר · בדיקה"
     encoded_subject = encode_subject(utf8_subject)
@@ -189,7 +194,7 @@ def main() -> None:
         if "refresh_token\": \"1//" in text or "client_secret\": \"GOCSPX" in text:
             fail(f"credential-looking material committed in {rel}")
 
-    print("OK Gmail brief sender: OAuth bootstrap + owner lock + UTF-8 MIME + remote-image CID rewrite")
+    print("OK Gmail brief sender: Apps Script advanced Gmail + owner lock + UTF-8 MIME + remote-image CID rewrite")
 
 
 if __name__ == "__main__":
