@@ -1,6 +1,6 @@
 {
   "task_id": "vf-publication-v64-binding-2026-09-18",
-  "component_state": "Blocked",
+  "component_state": "Syncing",
   "domain": "system_engineering",
   "authority": {
     "contract": 6,
@@ -8,9 +8,11 @@
     "bundle": "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
   },
   "repo": {
-    "base_sha": "f4fbbf8832575da0bf68f1a6c26a1e56f85ada6b",
+    "base_sha": "3c21b0577148977ca0d0f6d4b4a31d6617765ac6",
     "branch": "fix/vf-publication-v64-binding",
-    "push_authorized": false
+    "push_authorized": true,
+    "remote_head_sha": "7995d0dc27ab622da8000b737983fe6489413801",
+    "pull_request": 258
   },
   "root_cause": [
     "active publication validators were pinned to Project bundle v6.2",
@@ -20,7 +22,10 @@
   "proof": {
     "red": "check-project-request-gate failed because active preflight Project Authority did not match chatgptProjectBundle",
     "targeted_green": "PASS: project request gate; 62 publication-evidence tests; publication-prep; creative-transformation; visual-standard bootstrap; py_compile; git diff --check",
-    "full_suite": "UNPROVEN on this Windows host: baseline and candidate both hang in check-living-studio selftest under UTF-8; non-UTF8 run fails unrelated sensors on cp1252 decoding"
+    "full_suite": "UNPROVEN on this Windows host: baseline and candidate both hang in check-living-studio selftest under UTF-8; non-UTF8 run fails unrelated sensors on cp1252 decoding",
+    "remote_branch": "PASS: branch is one commit ahead of current main and zero behind at PR creation",
+    "pr_mergeable": true,
+    "ci": "IN_PROGRESS at last check"
   },
-  "next_action": "Owner approval for git push; then remote CI/fresh independent review before merge."
+  "next_action": "Wait for CI and fresh review. Do not merge without explicit owner authorization."
 }
