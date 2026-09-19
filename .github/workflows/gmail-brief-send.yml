@@ -108,7 +108,7 @@ jobs:
       - name: Validate Apps Script bridge configuration
         if: steps.request.outputs.enabled == 'true'
         env:
-          GMAIL_APPS_SCRIPT_URL: ${{ secrets.GMAIL_APPS_SCRIPT_URL }}
+          GMAIL_APPS_SCRIPT_URL: https://script.google.com/macros/s/AKfycbyabkraMQOELNDwBYxpRx6Mdzo_cT2Wwcn4_vJOtxhL4so-rgkrQ4BT0uIYD3t9yWxG/exec
           GMAIL_APPS_SCRIPT_SECRET: ${{ secrets.GMAIL_APPS_SCRIPT_SECRET }}
         run: |
           if [ -z "$GMAIL_APPS_SCRIPT_URL" ]; then
@@ -131,7 +131,7 @@ jobs:
       - name: Send brief through owner Apps Script Gmail bridge
         if: steps.request.outputs.enabled == 'true'
         env:
-          GMAIL_APPS_SCRIPT_URL: ${{ secrets.GMAIL_APPS_SCRIPT_URL }}
+          GMAIL_APPS_SCRIPT_URL: https://script.google.com/macros/s/AKfycbyabkraMQOELNDwBYxpRx6Mdzo_cT2Wwcn4_vJOtxhL4so-rgkrQ4BT0uIYD3t9yWxG/exec
           GMAIL_APPS_SCRIPT_SECRET: ${{ secrets.GMAIL_APPS_SCRIPT_SECRET }}
           VF_VISIBLE_TEXT_GATE_RECEIPT: ${{ runner.temp }}/visible-text-gate.json
         run: |
