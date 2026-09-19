@@ -4,80 +4,190 @@
   "title": "VelvetOS shared media catalog — one catalog",
   "type": "object",
   "additionalProperties": false,
-  "required": ["name", "oneCatalog", "vaultRootId", "items"],
+  "required": [
+    "name",
+    "oneCatalog",
+    "vaultRootId",
+    "items"
+  ],
   "properties": {
-    "name": { "const": "vfmedia-catalog" },
-    "title": { "type": "string" },
-    "oneCatalog": { "const": true },
-    "updatedAt": { "type": "string" },
-    "vaultRootId": { "const": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv" },
+    "name": {
+      "const": "vfmedia-catalog"
+    },
+    "title": {
+      "type": "string"
+    },
+    "oneCatalog": {
+      "const": true
+    },
+    "updatedAt": {
+      "type": "string"
+    },
+    "vaultRootId": {
+      "const": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv"
+    },
     "locks": {
       "type": "array",
-      "items": { "type": "string" }
+      "items": {
+        "type": "string"
+      }
     },
     "items": {
       "type": "array",
-      "items": { "$ref": "#/$defs/mediaItem" }
+      "items": {
+        "$ref": "#/$defs/mediaItem"
+      }
     }
   },
   "$defs": {
     "driveRef": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "url"],
+      "required": [
+        "id",
+        "url"
+      ],
       "properties": {
-        "id": { "type": "string", "minLength": 1 },
-        "url": { "type": "string", "minLength": 8 }
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "url": {
+          "type": "string",
+          "minLength": 8
+        }
       }
     },
     "versionApproval": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["state"],
+      "required": [
+        "state"
+      ],
       "properties": {
-        "state": { "enum": ["none", "pending", "approved", "rejected"] },
-        "approvedBy": { "type": ["string", "null"] },
-        "approvedAt": { "type": ["string", "null"] },
-        "note": { "type": "string" }
+        "state": {
+          "enum": [
+            "none",
+            "pending",
+            "approved",
+            "rejected"
+          ]
+        },
+        "approvedBy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "approvedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
       }
     },
     "assetTruth": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["truthLevel"],
+      "required": [
+        "truthLevel"
+      ],
       "description": "Optional Asset Truth metadata for Visual Foundry. Missing truth metadata is treated as unverified by policy; it never proves a public factual claim.",
       "properties": {
         "origin": {
-          "enum": ["studio_camera", "studio_export", "customer_media", "canva", "generated_ai", "external_reference", "unknown"]
+          "enum": [
+            "studio_camera",
+            "studio_export",
+            "customer_media",
+            "canva",
+            "generated_ai",
+            "external_reference",
+            "unknown"
+          ]
         },
         "truthLevel": {
-          "enum": ["verified_real", "derived_real", "illustrative_ai", "synthetic", "unverified"]
+          "enum": [
+            "verified_real",
+            "derived_real",
+            "illustrative_ai",
+            "synthetic",
+            "unverified"
+          ]
         },
         "rightsStatus": {
-          "enum": ["approved", "restricted", "unknown", "not_applicable"]
+          "enum": [
+            "approved",
+            "restricted",
+            "unknown",
+            "not_applicable"
+          ]
         },
         "usableFor": {
           "type": "array",
-          "items": { "enum": ["hero", "proof", "reel", "story", "carousel", "cover", "b-roll", "reference_only"] }
+          "items": {
+            "enum": [
+              "hero",
+              "proof",
+              "reel",
+              "story",
+              "carousel",
+              "cover",
+              "b-roll",
+              "reference_only"
+            ]
+          }
         },
         "visualTags": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
         "qualityScore": {
-          "type": ["integer", "null"],
+          "type": [
+            "integer",
+            "null"
+          ],
           "minimum": 0,
           "maximum": 100
         },
-        "project": { "type": ["string", "null"] },
-        "object": { "type": ["string", "null"] },
-        "material": { "type": ["string", "null"] },
-        "verifiedAt": { "type": ["string", "null"] },
+        "project": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "object": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "material": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "verifiedAt": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "evidenceRefs": {
           "type": "array",
-          "items": { "type": "string" }
+          "items": {
+            "type": "string"
+          }
         },
-        "note": { "type": "string" }
+        "note": {
+          "type": "string"
+        }
       }
     },
     "mediaItem": {
@@ -116,61 +226,209 @@
           "description": "Upload date (ISO date or datetime)."
         },
         "productLink": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Known product / job link only. Null if unknown. Not a new SKU."
         },
         "status": {
-          "enum": ["inbox", "source", "in_progress", "approved"],
-          "description": "Matches vault folder stage. approved folder ≠ versionApproval."
+          "enum": [
+            "inbox",
+            "source",
+            "in_progress",
+            "approved",
+            "published"
+          ],
+          "description": "Matches vault workflow stage. approved requires version approval; published requires live provider verification."
         },
         "assignee": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "description": "Seat or named owner. Null if unassigned."
         },
         "derivativeIds": {
           "type": "array",
-          "items": { "$ref": "#/$defs/driveRef" },
+          "items": {
+            "$ref": "#/$defs/driveRef"
+          },
           "description": "Edited / Canva / reel file ids. Empty until they exist."
         },
         "sourceLinks": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Provenance URLs the user named (MakerWorld, Drive, print.done). No invented links."
         },
-        "versionApproval": { "$ref": "#/$defs/versionApproval" },
-        "truth": { "$ref": "#/$defs/assetTruth" },
+        "versionApproval": {
+          "$ref": "#/$defs/versionApproval"
+        },
+        "truth": {
+          "$ref": "#/$defs/assetTruth"
+        },
         "intake": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["phase"],
+          "required": [
+            "phase"
+          ],
           "description": "Auto-intake phases. registered ≠ verified. Visual review is separate and never blocks intake.",
           "properties": {
-            "phase": { "enum": ["registered", "verified"] },
-            "registeredAt": { "type": ["string", "null"] },
-            "verifiedAt": { "type": ["string", "null"] },
-            "downloadBytes": { "type": ["integer", "null"] },
-            "movedToSourceAt": { "type": ["string", "null"] },
-            "attempts": { "type": "integer", "minimum": 0 },
-            "lastError": { "type": ["string", "null"] },
-            "contentFingerprint": { "type": ["string", "null"] },
-            "headRevisionId": { "type": ["string", "null"] },
-            "md5Checksum": { "type": ["string", "null"] },
-            "sha256Checksum": { "type": ["string", "null"] },
-            "moveStartedAt": { "type": ["string", "null"] },
-            "contentChangedAt": { "type": ["string", "null"] },
-            "recoveredAfterMove": { "type": "boolean" }
+            "phase": {
+              "enum": [
+                "registered",
+                "verified"
+              ]
+            },
+            "registeredAt": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "verifiedAt": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "downloadBytes": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "movedToSourceAt": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "attempts": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "lastError": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "contentFingerprint": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "headRevisionId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "md5Checksum": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "sha256Checksum": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "moveStartedAt": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "contentChangedAt": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "recoveredAfterMove": {
+              "type": "boolean"
+            }
           }
         },
         "visualReview": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["state"],
+          "required": [
+            "state"
+          ],
           "description": "Optional visual analysis. Does not block intake of an accessible file.",
           "properties": {
-            "state": { "enum": ["none", "pending", "done"] },
-            "reviewedAt": { "type": ["string", "null"] },
-            "note": { "type": "string" }
+            "state": {
+              "enum": [
+                "none",
+                "pending",
+                "done"
+              ]
+            },
+            "reviewedAt": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "note": {
+              "type": "string"
+            }
           }
+        },
+        "publication": {
+          "$ref": "#/$defs/publicationEvidence"
+        }
+      }
+    },
+    "publicationEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "provider",
+        "mediaId",
+        "permalink",
+        "publishedAt",
+        "verifiedAt",
+        "publishedDerivative"
+      ],
+      "properties": {
+        "state": {
+          "const": "published_verified"
+        },
+        "provider": {
+          "const": "instagram"
+        },
+        "mediaId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "permalink": {
+          "type": "string",
+          "minLength": 8
+        },
+        "publishedAt": {
+          "type": "string",
+          "minLength": 8
+        },
+        "verifiedAt": {
+          "type": "string",
+          "minLength": 8
+        },
+        "publishedDerivative": {
+          "$ref": "#/$defs/driveRef"
+        },
+        "note": {
+          "type": "string"
         }
       }
     }
