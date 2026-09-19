@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "provider": "grok-bot",
+  "bot": "Chief of Staff",
+  "timezone": "Asia/Jerusalem",
+  "migrationState": "cutover",
+  "cutoverDate": "2026-09-19",
+  "productionScheduler": "grok-bot-routines",
+  "previousSchedulers": {
+    "chatgpt": "disabled_after_verified_cutover",
+    "antigravity": "shadow_sidecars_disabled"
+  },
+  "ownerEmailAuthority": {
+    "design": "Morning Brief V10.3 rich RTL responsive Outlook-safe",
+    "visibleText": "constitution/VISIBLE_TEXT.md",
+    "request": "packages/vfops/out/gmail-send-request.json",
+    "workflow": ".github/workflows/gmail-brief-send.yml",
+    "sender": "packages/vfops/gmail_brief_request.py",
+    "interactiveGmailFallback": false
+  },
+  "routines": [
+    {
+      "id": "velvetos-integrity-guard",
+      "title": "VelvetOS Integrity Guard",
+      "cadence": "daily 01:45",
+      "enabled": true,
+      "responsibility": "protect live Grok routine inventory; repair drift; notify only on repair/blocker"
+    },
+    {
+      "id": "velvet-research-seat",
+      "title": "Velvet Research Seat",
+      "cadence": "daily 02:00",
+      "enabled": true,
+      "responsibility": "daily research and canonical artifact before 07:00 cutoff"
+    },
+    {
+      "id": "openpost-release-watch",
+      "title": "OpenPost Release Watch",
+      "cadence": "daily 07:15",
+      "enabled": true,
+      "responsibility": "condition watch; silent when no meaningful change"
+    },
+    {
+      "id": "velvet-morning-brief",
+      "title": "Velvet Morning Brief",
+      "cadence": "daily 09:00",
+      "enabled": true,
+      "responsibility": "V10.3 owner brief via canonical GitHub/Gmail sender"
+    },
+    {
+      "id": "morning-delivery-guard",
+      "title": "Morning Delivery Guard",
+      "cadence": "daily 10:00",
+      "enabled": true,
+      "responsibility": "verify 09:00 delivery; one full-fidelity recovery if needed"
+    },
+    {
+      "id": "velvetos-office-loop",
+      "title": "VelvetOS Office Loop",
+      "cadence": "daily 10:30 and 18:30",
+      "enabled": true,
+      "responsibility": "consolidated office operations, readiness, publishing gates, learning and handoff"
+    },
+    {
+      "id": "weekly-research-accountability",
+      "title": "Weekly Research Accountability",
+      "cadence": "Friday 12:00",
+      "enabled": true,
+      "responsibility": "canonical weekly research accountability workflow"
+    }
+  ]
+}
