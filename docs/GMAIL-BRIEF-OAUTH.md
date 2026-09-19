@@ -1,3 +1,5 @@
+> **Legacy / retired production path (2026-09-19):** the canonical sender now uses the owner Apps Script bridge documented in `docs/GMAIL-BRIEF-APPS-SCRIPT.md`. `GMAIL_OAUTH_JSON` is no longer used by `.github/workflows/gmail-brief-send.yml`. Keep this file only as historical/bootstrap reference.
+
 # Gmail Brief OAuth · one-time owner setup
 
 מטרה: בריף הבוקר נשלח דרך Gmail API של `nocturney@gmail.com` ללא אישור ChatGPT לכל הודעה, עם תמונות CID אמיתיות בתוך הכרטיסים.
