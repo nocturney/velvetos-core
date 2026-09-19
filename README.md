@@ -40,13 +40,13 @@
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-14T18:04:56+03:00` |
+| **Last verified / refreshed evidence** | `2026-09-19T13:06:17+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-19 — **VF publication v6.4 authority binding:** active preflight/evidence validators now bind to Contract 6 / Revision 6.4; style identity is limited to the three current aesthetic references, Product T…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-19 — **VF publication v6.4 authority binding:** active preflight/evidence validators now bind to Contract 6 / Revision 6.4; style identity is limited to the three current aesthetic references, Product T…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-19 — **Grok Bot automation cutover:** the seven owner-approved VelvetOS office routines moved from the ChatGPT scheduler to Grok Bot after 7/7 read-only shadow verification. The live Grok routine invent…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-19 — **Grok Bot automation cutover:** the seven owner-approved VelvetOS office routines moved from the ChatGPT scheduler to Grok Bot after 7/7 read-only shadow verification. The live Grok routine invent…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
