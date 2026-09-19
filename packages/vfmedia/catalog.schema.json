@@ -41,6 +41,21 @@
         "note": { "type": "string" }
       }
     },
+    "publicationEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "provider", "mediaId", "permalink", "publishedAt", "verifiedAt", "publishedDerivative"],
+      "properties": {
+        "state": { "const": "published_verified" },
+        "provider": { "const": "instagram" },
+        "mediaId": { "type": "string", "minLength": 1 },
+        "permalink": { "type": "string", "minLength": 8 },
+        "publishedAt": { "type": "string", "minLength": 8 },
+        "verifiedAt": { "type": "string", "minLength": 8 },
+        "publishedDerivative": { "$ref": "#/$defs/driveRef" },
+        "note": { "type": "string" }
+      }
+    },
     "assetTruth": {
       "type": "object",
       "additionalProperties": false,
@@ -120,8 +135,8 @@
           "description": "Known product / job link only. Null if unknown. Not a new SKU."
         },
         "status": {
-          "enum": ["inbox", "source", "in_progress", "approved"],
-          "description": "Matches vault folder stage. approved folder ≠ versionApproval."
+          "enum": ["inbox", "source", "in_progress", "approved", "published"],
+          "description": "Matches vault workflow stage. approved requires version approval; published requires live provider verification."
         },
         "assignee": {
           "type": ["string", "null"],
@@ -139,6 +154,7 @@
         },
         "versionApproval": { "$ref": "#/$defs/versionApproval" },
         "truth": { "$ref": "#/$defs/assetTruth" },
+        "publication": { "$ref": "#/$defs/publicationEvidence" },
         "intake": {
           "type": "object",
           "additionalProperties": false,

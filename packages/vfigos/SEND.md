@@ -36,6 +36,7 @@ Authenticated write boundary: [`approval/OPERATOR-SETUP.md`](approval/OPERATOR-S
    - אם `integrationMode` הוא `staging` או `primary-control-plane`, ה־runtime מאומת ובריא, provider prerequisites הושלמו, ה־artifact הוא אותו hash שאושר, ו־delivery approval תקף עבר את ה־mutation boundary — מותר להעביר ל־OpenPost לצורך queue/schedule/publish. תשובת OpenPost מסמנת לכל היותר `publishRequested`/delivery status, לא `liveVerified`.
    - אם OpenPost הוא `shadow`, `degraded`, לא מאומת או נכשל — direct Instagram MCP הוא same-turn transport failover בלבד: תמונה `publish_image`; קרוסלה `publish_carousel`; ריל/וידאו `publish_reel`/`publish_video`; סטורי `publish_story`. גם בנתיב זה אותו `velvet.delivery_approval.v1` תקף הוא תנאי write.
 8. **אימות אחרי שליחה נשאר עצמאי** — `list_media` / `get_media` מה־Instagram MCP הקנוני מאשרים שהמדיה חיה. רק אז `#נשלח-מ-HQ` ו־`liveVerified`. success מ־OpenPost או `publish_*` בלי אימות חי → `publish_pending_verification`.
+8a. **Media Vault closeout** — רק אחרי `liveVerified`, מזיזים ב־Drive את **הנגזרת המדויקת שפורסמה** מ־`04 - מאושר לפרסום` ל־`05 - פורסם` (Folder ID `19A-_QOSvII-CvxjRMpQ2j5Z46UAjeNep`). באותה פעולה לוגית מעדכנים את שורת `packages/vfmedia/catalog.json`: `status=published` + `publication.state=published_verified` + provider/mediaId/permalink/publishedAt/verifiedAt + `publishedDerivative`. אם ה־live match חסר/שגוי, לא מזיזים את הקובץ מ־04. המקור נשאר ב־02.
 9. **Failover** — כשל OpenPost מחזיר ל־Instagram MCP באותו תור **רק אם אותה הרשאת delivery תקפה מאפשרת את ה־write**. אם Publish MCP אינו חי או write authorization אינו תקף → אין mutation; משתמשים רק בנתיב handoff המאושר הקיים בלי להעמיד פנים שהפיד עלה. אין idle ואין bypass.
 10. אסור לכתוב שעלה לפיד אם לא עלה. Calendar / upload / bridge staging / OpenPost scheduled / delivery accepted / publishRequested ≠ live. אסור בוסט. אסור אוטו־DM.
 
@@ -66,7 +67,7 @@ OpenPost הוא שכבת publication operations בלבד: scheduler, queue, retr
 | transport | Publish Bridge רק לנגזרת המאושרת; HTTPS fetch verified |
 | authorize | signed `velvet.delivery_approval.v1` מה־dedicated issuer; exact action/package binding; mutation boundary PASS |
 | apply | OpenPost כשהוא מאומת ומורשה **או** `publish_*` ישיר; direct MCP דורש אותה הרשאת delivery ואינו bypass |
-| verify | `list_media` / `get_media` מה־MCP הקנוני · לא «פורסם» בלי ראיה |
+| verify | `list_media` / `get_media` מה־MCP הקנוני · לא «פורסם» בלי ראיה · אחרי live match סוגרים 04→05 + catalog publication evidence |
 
 ## אסור
 

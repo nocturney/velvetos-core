@@ -38,6 +38,7 @@ FOLDER_IDS = {
     "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
     "13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a",
     "1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib",
+    "19A-_QOSvII-CvxjRMpQ2j5Z46UAjeNep",
 }
 NEEDLES_DOCS = (
     ROOT_ID,
@@ -45,6 +46,8 @@ NEEDLES_DOCS = (
     "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
     "13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a",
     "1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib",
+    "19A-_QOSvII-CvxjRMpQ2j5Z46UAjeNep",
+    "05 - פורסם",
     "קטלוג אחד",
     "תפעול",
     "העלאה ≠ אישור",
@@ -151,6 +154,11 @@ def main() -> None:
     item_props = ((schema.get("$defs") or {}).get("mediaItem") or {}).get("properties") or {}
     if "truth" not in item_props:
         fail("catalog.schema.json mediaItem must expose optional truth metadata")
+    if "publication" not in item_props:
+        fail("catalog.schema.json mediaItem must expose publication evidence")
+    status_enum = ((item_props.get("status") or {}).get("enum") or [])
+    if "published" not in status_enum:
+        fail("catalog.schema.json status must include published")
     truth_spec = ((schema.get("$defs") or {}).get("assetTruth") or {})
     if "truthLevel" not in (truth_spec.get("required") or []):
         fail("catalog.schema.json assetTruth must require truthLevel")
@@ -184,6 +192,61 @@ def main() -> None:
             pass
         else:
             fail(f"vfmedia Asset Truth regression accepted invalid metadata: {invalid_truth}")
+
+    class PublicationValidationError(Exception):
+        pass
+
+    vfmedia_module.fail = lambda message: (_ for _ in ()).throw(PublicationValidationError(message))
+    canonical_derivative = {
+        "id": "drive-published-derivative",
+        "url": "https://drive.google.com/file/d/drive-published-derivative/view",
+    }
+    canonical_published = {
+        "status": "published",
+        "derivativeIds": [canonical_derivative],
+        "publication": {
+            "state": "published_verified",
+            "provider": "instagram",
+            "mediaId": "17841400000000000",
+            "permalink": "https://www.instagram.com/p/EXAMPLE/",
+            "publishedAt": "2026-09-19T12:00:00Z",
+            "verifiedAt": "2026-09-19T12:00:10Z",
+            "publishedDerivative": canonical_derivative,
+        },
+    }
+    try:
+        vfmedia_module.validate_publication_block(canonical_published, 0)
+    except PublicationValidationError as exc:
+        fail(f"vfmedia published regression rejected canonical evidence: {exc}")
+
+    invalid_publication_items = (
+        {"status": "published", "derivativeIds": [], "publication": None},
+        {
+            "status": "published",
+            "derivativeIds": [canonical_derivative],
+            "publication": {
+                **canonical_published["publication"],
+                "state": "publish_pending_verification",
+            },
+        },
+        {
+            "status": "approved",
+            "derivativeIds": [canonical_derivative],
+            "publication": canonical_published["publication"],
+        },
+        {
+            "status": "published",
+            "derivativeIds": [],
+            "publication": canonical_published["publication"],
+        },
+    )
+    for invalid_item in invalid_publication_items:
+        try:
+            vfmedia_module.validate_publication_block(invalid_item, 0)
+        except PublicationValidationError:
+            pass
+        else:
+            fail(f"vfmedia published regression accepted invalid evidence: {invalid_item}")
 
     folders = json.loads(FOLDERS.read_text(encoding="utf-8"))
     if folders.get("sharePermissionChanges") != "forbidden":

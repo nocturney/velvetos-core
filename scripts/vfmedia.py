@@ -25,6 +25,7 @@ STAGE_IDS = {
     "source": "1M0WY3iIKYOlqMPcBx5xctx8sr8xidnY6",
     "in_progress": "13H42Kpif3GPNaHlnI24YiHn-m1IS1k5a",
     "approved": "1LitaCUDgVk7njkWAvC-MX-noQOkyr-ib",
+    "published": "19A-_QOSvII-CvxjRMpQ2j5Z46UAjeNep",
 }
 ITEM_FIELDS = (
     "id",
@@ -38,7 +39,7 @@ ITEM_FIELDS = (
     "sourceLinks",
     "versionApproval",
 )
-OPTIONAL_ITEM_FIELDS = ("truth", "intake", "visualReview")
+OPTIONAL_ITEM_FIELDS = ("truth", "intake", "visualReview", "publication")
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
 SKU_KEY = re.compile(r"(?i)^(sku|skus|מק״ט|מק\"ט)$")
 
@@ -137,6 +138,52 @@ def validate_intake_block(item: dict, index: int) -> None:
         fail(f"items[{index}].visualReview.state invalid")
 
 
+
+def validate_publication_block(item: dict, index: int) -> None:
+    publication = item.get("publication")
+    status = item.get("status")
+    if status != "published":
+        if publication is not None:
+            fail(f"items[{index}].publication requires status=published")
+        return
+    if not isinstance(publication, dict):
+        fail(f"items[{index}] status=published requires publication evidence")
+    required = {
+        "state",
+        "provider",
+        "mediaId",
+        "permalink",
+        "publishedAt",
+        "verifiedAt",
+        "publishedDerivative",
+    }
+    missing = sorted(required - set(publication))
+    if missing:
+        fail(f"items[{index}].publication missing fields {missing}")
+    if publication.get("state") != "published_verified":
+        fail(f"items[{index}].publication.state must be published_verified")
+    if publication.get("provider") != "instagram":
+        fail(f"items[{index}].publication.provider must be instagram")
+    for key in ("mediaId", "permalink", "publishedAt", "verifiedAt"):
+        if not str(publication.get(key) or "").strip():
+            fail(f"items[{index}].publication.{key} missing")
+    published_derivative = publication.get("publishedDerivative")
+    validate_drive_ref(
+        f"items[{index}].publication.publishedDerivative",
+        published_derivative,
+    )
+    derivative_ids = {
+        ref.get("id")
+        for ref in (item.get("derivativeIds") or [])
+        if isinstance(ref, dict)
+    }
+    if published_derivative.get("id") not in derivative_ids:
+        fail(
+            f"items[{index}].publication.publishedDerivative must also appear "
+            "in derivativeIds"
+        )
+
+
 def validate_item(item: dict, index: int, schema: dict) -> None:
     missing = [k for k in ITEM_FIELDS if k not in item]
     if missing:
@@ -171,11 +218,12 @@ def validate_item(item: dict, index: int, schema: dict) -> None:
         "rejected",
     }:
         fail(f"items[{index}].versionApproval.state invalid")
-    if item["status"] == "approved" and approval.get("state") != "approved":
+    if item["status"] in {"approved", "published"} and approval.get("state") != "approved":
         fail(
             f"items[{index}] status=approved but versionApproval is not approved "
             "(approved folder alone is not proof)"
         )
+    validate_publication_block(item, index)
     validate_truth_block(item, index, schema)
     validate_intake_block(item, index)
 

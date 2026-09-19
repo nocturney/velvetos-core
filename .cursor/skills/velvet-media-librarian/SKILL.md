@@ -37,6 +37,11 @@ Return concrete media IDs/refs, not vague descriptions. If no suitable real asse
 
 Update `sourceEvidence`, asset refs inside `shots.plan[]`, `shots.missing[]`, rights notes and derivative refs. Keep the canonical Media Vault as the source of truth and the Creative Manifest as the per-content-job coordination artifact.
 
+
+## Published-stage closeout
+
+`05 - פורסם` is the terminal Media Vault stage for the exact derivative that is **actually live**. It is not a second catalog and it is not inferred from folder placement. After `vfigos` obtains provider receipt and live Instagram verification (`mediaId` + `permalink`), move that exact derivative from `04 - מאושר לפרסום` to `05 - פורסם`, set the existing catalog row to `status: published`, and record `publication.state: published_verified` with the exact derivative reference and verification timestamps. If live verification is missing or mismatched, leave the file in 04.
+
 ## Boundaries
 
 Asset Truth is provenance, not Claim Truth. Factual public claims still require evidence links in `CONTENT-CONTRACT.schema.json`. Rights/privacy uncertainty, private CAD uncertainty and missing physical filming are human-surface exceptions; routine tagging, search and quality classification are autonomous.
