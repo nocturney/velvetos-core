@@ -8,10 +8,17 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
+from vf_project_bundle import PROJECT_AUTHORITY_MANIFEST, resolve_project_bundle
+
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json")
+MANIFEST = ROOT / PROJECT_AUTHORITY_MANIFEST
+_ACTIVE_BUNDLE = resolve_project_bundle(ROOT)
+# Compatibility aliases for tests/callers; authoritative resolution is dynamic via
+# resolve_project_bundle(root), not these import-time paths.
+PROJECT_AUTHORITY = _ACTIVE_BUNDLE["authority_path"]
+PROJECT_ASSET_MANIFEST = _ACTIVE_BUNDLE["asset_manifest_path"]
+PROJECT_INSTRUCTIONS = _ACTIVE_BUNDLE["instructions_path"]
+PRODUCT_TRUTH_GUIDE = _ACTIVE_BUNDLE["product_truth_guide_path"]
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
@@ -24,31 +31,39 @@ def load_manifest() -> dict:
 
 def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> list[str]:
     problems: list[str] = []
-    paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, PROJECT_GATE]
+    try:
+        bundle = resolve_project_bundle(root)
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError) as exc:
+        return [f"project binding cannot be resolved: {exc}"]
+
+    authority_rel = bundle["authority_path"]
+    assets_rel = bundle["asset_manifest_path"]
+    guide_rel = bundle["product_truth_guide_path"]
+    paths = [PROJECT_AUTHORITY_MANIFEST, authority_rel, assets_rel, guide_rel, PROJECT_GATE]
     if creative:
         paths.append(VISUAL_ENFORCEMENT)
     if any(not (root / rel).is_file() for rel in paths):
         return ["project binding file missing"]
-    authority_path = root / PROJECT_AUTHORITY
+
+    authority_path = root / authority_rel
     try:
         authority = authority_path.read_text(encoding="utf-8")
         gate = (root / PROJECT_GATE).read_text(encoding="utf-8")
-        assets = json.loads((root / PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
         policy = json.loads((root / VISUAL_ENFORCEMENT).read_text(encoding="utf-8")) if creative else None
     except (OSError, UnicodeError, json.JSONDecodeError) as exc:
         return [f"project binding cannot be decoded: {type(exc).__name__}"]
-    if not isinstance(assets, dict) or (creative and not isinstance(policy, dict)):
-        return ["project binding JSON must contain top-level objects"]
-    asset_rows = assets.get("assets")
-    if not isinstance(asset_rows, list) or not all(isinstance(row, dict) for row in asset_rows):
-        return ["Project asset manifest assets must be an array of objects"]
-    if not all(x in authority for x in ("Contract version: 6", "Revision: 6.2", "Bundle: VF-PROJECT-6.2-DETAIL-TRUTH")):
+
+    expected_identity = (
+        f"Contract version: {bundle['contract']}",
+        f"Revision: {bundle['revision']}",
+        f"Bundle: {bundle['bundle_id']}",
+    )
+    if not all(x in authority for x in expected_identity):
         problems.append("Project Authority identity mismatch")
-    rows = [x for x in asset_rows if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
-    digest = hashlib.sha256(authority_path.read_bytes()).hexdigest()
-    if len(rows) != 1 or rows[0].get("sha256") != digest:
-        problems.append("Project Authority hash does not match ASSET-MANIFEST-v6.2.json")
+
     if creative:
+        if not isinstance(policy, dict):
+            return ["project binding JSON must contain top-level objects"]
         route = policy.get("publicationRoute", {})
         if not isinstance(route, dict):
             problems.append("publicationRoute must be an object")
