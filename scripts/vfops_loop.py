@@ -8,6 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 import argparse
 import json
+import locale
 import os
 import re
 import subprocess
@@ -131,24 +132,59 @@ def append_cli_run(name: str, argv: list[str], ok: bool) -> None:
         fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
 
-def run_cmd(args: list[str], *, name: str | None = None) -> str:
-    child_env = os.environ.copy()
-    child_env["PYTHONUTF8"] = "1"
-    child_env["PYTHONIOENCODING"] = "utf-8"
+def _child_env() -> dict[str, str]:
+    env = os.environ.copy()
+    env["PYTHONUTF8"] = "1"
+    env["PYTHONIOENCODING"] = "utf-8"
+    return env
+
+
+def _decode_subprocess_stream(raw: bytes | str | None) -> str:
+    """Decode captured child output without relying on the Windows ANSI code page."""
+    if raw is None:
+        return ""
+    if isinstance(raw, str):
+        return raw
+
+    encodings: list[str] = ["utf-8"]
+    preferred = locale.getpreferredencoding(False)
+    if preferred and preferred.lower().replace("_", "-") != "utf-8":
+        encodings.append(preferred)
+    if "cp1252" not in {enc.lower().replace("_", "") for enc in encodings}:
+        encodings.append("cp1252")
+
+    for encoding in encodings:
+        try:
+            return raw.decode(encoding)
+        except (UnicodeDecodeError, LookupError):
+            continue
+    return raw.decode("utf-8", errors="replace")
+
+
+def _run_captured(
+    args: list[str], *, timeout: int | None = None
+) -> tuple[subprocess.CompletedProcess[bytes], str, str]:
+    # Capture bytes first. text=True makes subprocess decode with the parent
+    # locale (often cp1252 on Windows) before we can decode UTF-8 ourselves.
     proc = subprocess.run(
         args,
         cwd=ROOT,
-        text=True,
         capture_output=True,
-        env=child_env,
+        env=_child_env(),
+        timeout=timeout,
     )
-    out = (proc.stdout or "").strip()
+    return proc, _decode_subprocess_stream(proc.stdout), _decode_subprocess_stream(proc.stderr)
+
+
+def run_cmd(args: list[str], *, name: str | None = None) -> str:
+    proc, stdout, stderr = _run_captured(args)
+    out = stdout.strip()
     ok = proc.returncode == 0
     label = name or (Path(args[1]).name if len(args) > 1 else args[0])
     append_cli_run(label, [str(a) for a in args], ok)
     if not ok:
-        err = (proc.stderr or "").strip()
-        return f"חסר פלט · {(err or out)[:160]}"
+        err = stderr.strip()
+        return f"\u05d7\u05e1\u05e8 \u05e4\u05dc\u05d8 \u00b7 {(err or out)[:160]}"
     return out
 
 
@@ -833,13 +869,7 @@ def run_consumer(spec: ConsumerSpec, *, today: str, force: bool = False) -> dict
         return {"id": spec.id, "status": "failed", "reason": detail}
 
     try:
-        proc = subprocess.run(
-            spec.argv,
-            cwd=ROOT,
-            text=True,
-            capture_output=True,
-            timeout=spec.timeout_s,
-        )
+        proc, stdout, stderr = _run_captured(spec.argv, timeout=spec.timeout_s)
     except subprocess.TimeoutExpired:
         detail = f"timeout after {spec.timeout_s}s"
         append_consumer_run(today, spec, ok=False, detail=detail)
@@ -849,7 +879,7 @@ def run_consumer(spec: ConsumerSpec, *, today: str, force: bool = False) -> dict
         append_consumer_run(today, spec, ok=False, detail=detail)
         return {"id": spec.id, "status": "failed", "reason": detail}
 
-    out = ((proc.stdout or "") + "\n" + (proc.stderr or "")).strip()
+    out = (stdout + "\n" + stderr).strip()
     if proc.returncode != 0:
         detail = (out.splitlines() or ["nonzero exit"])[0][:200]
         append_consumer_run(today, spec, ok=False, detail=detail)
