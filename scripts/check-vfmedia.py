@@ -2,6 +2,7 @@
 """Validate the locked VelvetOS shared media vault. No network. No Drive writes."""
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 import subprocess
@@ -146,6 +147,43 @@ def main() -> None:
     ):
         if field not in item_req:
             fail(f"catalog.schema.json mediaItem missing {field}")
+
+    item_props = ((schema.get("$defs") or {}).get("mediaItem") or {}).get("properties") or {}
+    if "truth" not in item_props:
+        fail("catalog.schema.json mediaItem must expose optional truth metadata")
+    truth_spec = ((schema.get("$defs") or {}).get("assetTruth") or {})
+    if "truthLevel" not in (truth_spec.get("required") or []):
+        fail("catalog.schema.json assetTruth must require truthLevel")
+
+    vfmedia_spec = importlib.util.spec_from_file_location("vfmedia_sensor_target", CLI)
+    if vfmedia_spec is None or vfmedia_spec.loader is None:
+        fail("cannot load scripts/vfmedia.py for Asset Truth regression")
+    vfmedia_module = importlib.util.module_from_spec(vfmedia_spec)
+    vfmedia_spec.loader.exec_module(vfmedia_module)
+
+    class TruthValidationError(Exception):
+        pass
+
+    vfmedia_module.fail = lambda message: (_ for _ in ()).throw(TruthValidationError(message))
+    try:
+        vfmedia_module.validate_truth_block(
+            {"truth": {"truthLevel": "verified_real", "rightsStatus": "approved", "usableFor": ["hero"]}},
+            0,
+            schema,
+        )
+    except TruthValidationError as exc:
+        fail(f"vfmedia Asset Truth regression rejected canonical metadata: {exc}")
+
+    for invalid_truth in (
+        {"truthLevel": "verified_real", "inventedField": "nope"},
+        {"truthLevel": "not-a-canonical-level"},
+    ):
+        try:
+            vfmedia_module.validate_truth_block({"truth": invalid_truth}, 0, schema)
+        except TruthValidationError:
+            pass
+        else:
+            fail(f"vfmedia Asset Truth regression accepted invalid metadata: {invalid_truth}")
 
     folders = json.loads(FOLDERS.read_text(encoding="utf-8"))
     if folders.get("sharePermissionChanges") != "forbidden":
