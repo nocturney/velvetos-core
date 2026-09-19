@@ -344,6 +344,10 @@
     "productTruthGuide": "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt",
     "offlineCreativePublicationFallback": true,
     "offlineRepoStateLabel": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK",
-    "referenceSeparation": "AESTHETIC_REFERENCES_ONLY_FOR_STYLE; PRODUCT_TRUTH=SOURCE_PIXELS_PLUS_TEXT_GUIDE"
+    "referenceSeparation": "AESTHETIC_REFERENCES_ONLY_FOR_STYLE; PRODUCT_TRUTH=SOURCE_PIXELS_PLUS_TEXT_GUIDE",
+    "authoritySha256": "b3c2b5a66c395a7e1d60b6cddb532443876e4144f189c4835512ff3283c5112a",
+    "assetManifestSha256": "2d0d91cf94215e107fc0ccb1a4bb9d4e1a479dceb6c7f25dcf8901e6e5749091",
+    "instructionsSha256": "5b530d1a9ab312f83a546a7ef5aa5ad5376da964874254870a27390f9eb8973c",
+    "productTruthGuideSha256": "2f306f9932c24939a368429e4720327b527360eb2a6369ef647893e9ff41ddb3"
   }
 }

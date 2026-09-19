@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-19 ? **Project Authority 6.4 runtime binding:** removed active 6.2 hard-codes from Project preflight/publication-evidence gates and their regression sensor; active bundle paths, identity and canonical LF hashes now resolve from `PROJECT-AUTHORITY-MANIFEST.json`. Publication evidence now requires the three aesthetic references only for style and validates the text-only Product Truth guide separately, matching `VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION`. Historical 6.2 evidence remains provenance-only.
+
 - 2026-09-19 ? **Office Loop Windows subprocess decode hardening:** `vfops_loop.py` now captures child stdout/stderr as bytes, decodes UTF-8 first with a Windows-compatible fallback, and uses the same safe path for both `run_cmd` and `run_consumer`. `check-vfops-loop.py` now reads repository text explicitly as UTF-8, decodes child Python output explicitly, and covers Hebrew/emoji UTF-8 plus cp1252 fallback. Verified on the Windows worker with `parent_encoding=cp1252`: `check-vfops-loop.py` PASS and `vfops_loop.py brief` PASS without `UnicodeDecodeError`.
 
 - 2026-09-18 — **OpenPost Instagram provider OAuth:** saved the Meta provider app in production OpenPost, restarted the service, and verified startup loaded one database provider app and registered the Instagram adapter. Completed OAuth for `@velvets_cloud`; read-only SQLite evidence shows one active Instagram account and one valid, unrevoked OAuth grant. `providerOAuthReady=true`; `LIVE=false` and `productionDeployed=false` because no Instagram Graph write has been performed or canonically verified.
