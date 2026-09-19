@@ -23,6 +23,7 @@
 | `derivativeIds` | מזהי נגזרות (id+url) שכבר קיימות | רשימת עיצובים שלא נוצרו |
 | `sourceLinks` | קישורי מקור שהמשתמש נקב | MakerWorld / טרנד מומצא |
 | `versionApproval` | `none` / `pending` / `approved` / `rejected` + מי ומתי | להסיק אישור מתיקיית «מאושר לפרסום» |
+| `publication` | רק אחרי אימות חי: `published_verified` + Instagram media ID/permalink + זמנים + `publishedDerivative` | להסיק פרסום מ־publish receipt, תזמון או תיקיית 05 בלבד |
 
 `id` של שורה הוא מזהה קטלוג, **לא** מק״ט. אין שדה SKU. כשיש כרטיס מדף אמיתי — `productLink` מצביע אליו; לא יוצרים שם.
 
@@ -46,8 +47,13 @@
 | `source` | `02 - מקור` | **תפעול** אחרי קליטה |
 | `in_progress` | `03 - בעבודה` | סטודיו / צמיחה |
 | `approved` | `04 - מאושר לפרסום` | רק אחרי `versionApproval.state=approved` |
+| `published` | `05 - פורסם` | **vfigos / צמיחה**, ורק אחרי live Instagram verification של הנגזרת המדויקת |
 
-העלאה ≠ אישור. תיקיית מאושר לבד ≠ הוכחת אישור.
+העלאה ≠ אישור. תיקיית מאושר לבד ≠ הוכחת אישור. תיקיית פורסם לבד ≠ הוכחת פרסום.
+
+### Publication evidence
+
+מעבר `approved → published` הוא postflight, לא publish request. הוא מותר רק לאחר קריאה חיה חזרה מ־Instagram שמאמתת את אותו תוכן. השדה `publication` קושר את הרשומה ל־`publishedDerivative` שכבר קיים ב־`derivativeIds`, ל־Instagram `mediaId` + `permalink`, ול־`publishedAt` / `verifiedAt`. אחרי האימות מזיזים את הנגזרת המדויקת מ־04 ל־05; המקור נשאר ב־02.
 
 ## איך מוסיפים שורה
 
