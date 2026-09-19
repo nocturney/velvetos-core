@@ -325,18 +325,21 @@ def _service_account_token(data: dict) -> str:
 
 
 def _token_from_mapping(data: dict) -> str:
-    for key in ("access_token", "token"):
-        value = data.get(key)
-        if isinstance(value, str) and value.strip() and not value.strip().startswith("{"):
-            if data.get("refresh_token") and data.get("client_id"):
-                try:
-                    return _refresh_authorized_user(data)
-                except Exception:
-                    return value.strip()
-            return value.strip()
+    """Resolve credential JSON without silently falling back to stale OAuth tokens.
+
+    Authorized-user credentials with a refresh token must refresh successfully.
+    A failed refresh is an authentication failure, not permission to reuse the
+    cached access token stored in the JSON.
+    """
     kind = (data.get("type") or "").strip()
     if kind == "authorized_user" or data.get("refresh_token"):
         return _refresh_authorized_user(data)
+
+    for key in ("access_token", "token"):
+        value = data.get(key)
+        if isinstance(value, str) and value.strip() and not value.strip().startswith("{"):
+            return value.strip()
+
     if kind == "service_account" or data.get("private_key"):
         return _service_account_token(data)
     raise RuntimeError("credential JSON has no access_token/refresh_token/service_account")

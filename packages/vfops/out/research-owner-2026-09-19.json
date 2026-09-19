@@ -1,0 +1,12 @@
+{
+  "date_line": "מחקר יומי · 19.9.2026",
+  "bottom_line": "אות production חדש · בלי שינוי production לפני QA",
+  "footer": "Velvet Factory · Research Seat · איסוף משדרות",
+  "attention": {"state":"green","label":"מצב מחקר","text":"ready_for_brief"},
+  "system_health": {"state":"green","label":"תחזוקת מחקר","text":"Best Skills לא due"},
+  "slots": [
+    {"kind":"production","kicker":"01 · ייצור","title":"Snapmaker Orca 2.4.0 נכנסה ל־public beta","prose":"השדרוג נוגע גם ל־OpenSSL, התחברות, הורדת נכסים, שליחה מרחוק וחיבור למדפסת. אצלנו זה watch/sandbox בלבד: אין שינוי production לפני stable + QA מקומי.","links":[{"label":"Snapmaker · Orca 2.4.0 Beta","href":"https://forum.snapmaker.com/t/snapmaker-orca-v2-4-0-beta-test-join-in/43417"}]},
+    {"kind":"office","kicker":"02 · מדף","title":"desk/cable נשאר משפחת ניסוי, לא SKU אוטומטי","prose":"כמה מקורות עדכניים ממשיכים להדגיש cable management ואביזרי שולחן. זה לא מוכיח ביקוש בשדרות, ולכן לא ממלאים slot בלי slice, fit-test, צילום ואות פנייה אמיתי.","links":[{"label":"Pygma3D · Desk setup trends","href":"https://www.pygma3d.com/blog/desk-setup-trends-2026-3d-printed-accessories-guide"},{"label":"Creality · useful desk prints","href":"https://www.creality.com/blog/24-cool-things-to-print"}]},
+    {"kind":"content","kicker":"03 · Social Intelligence","title":"nothing-solid","prose":"לא נמצא היום בסיס חיצוני מספיק חזק לשנות את reset/preflight או את כללי התוכן. נתוני @velvets_cloud נשארים בסמכות Instagram MCP.","links":[{"label":"VelocitySpy · 3D printing snapshot","href":"https://velocityspy.com/trending/3d-printing/"}]}
+  ]
+}
