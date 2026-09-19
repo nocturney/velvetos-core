@@ -16,6 +16,9 @@ Asia/Jerusalem. The **live protected Grok Bot routine inventory** is the clock a
 
 Weekly / קאדנס שבועי: `Weekly Research Accountability` runs Friday at 12:00. Repository-owned GitHub workflows keep their own schedules; Office Loop consumes their evidence rather than duplicating their cron.
 
+`VelvetOS Integrity Guard` is a finite single-pass 01:45 audit. It repairs only the protected routines, verifies once, then exits; it is not a continuous monitor. The protected-set contract does not authorize deleting, pausing, or rewriting a new unlisted routine merely because it is outside the seven protected entries. Known legacy routines remain disabled; an unknown extra routine is left untouched and surfaced as a conflict unless Christian explicitly authorizes removal.
+
+
 ## Canonical ownership
 
 `VelvetOS Office Loop` is the active scheduled office manager. It intentionally owns responsibilities that were previously split across separate Creative Autopilot, Evening Summary, Automation Steward, Media Intake desk checks, Publish Watch, Content Sprint and Insights Review automations. Those legacy recurring ChatGPT automations stay disabled. The former protected ChatGPT scheduler copies were retired at the verified 2026-09-19 Grok Bot cutover and must not be re-enabled as a second scheduler unless Christian explicitly changes the architecture.
