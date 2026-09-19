@@ -35,8 +35,8 @@ required_domains = {
 if not required_domains.issubset(set(manifest.get("domains", {}))):
     fail("required domain coverage missing")
 
-project_authority = ROOT / "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt"
-asset_manifest = ROOT / "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json"
+project_authority = ROOT / "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.4.txt"
+asset_manifest = ROOT / "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.4.json"
 visual_enforcement = ROOT / "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
 for path in (project_authority, asset_manifest, visual_enforcement):
     if not path.is_file():
@@ -49,9 +49,9 @@ for needle in ("Canva/vfcanva are forbidden", "creative_execution_authorized: tr
         fail(f"Project Authority missing {needle}")
 asset_data = json.loads(asset_manifest.read_text(encoding="utf-8"))
 authority_rows = [x for x in asset_data.get("assets", []) if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
-authority_sha = hashlib.sha256(project_authority.read_bytes()).hexdigest()
+authority_sha = hashlib.sha256(project_authority.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 if len(authority_rows) != 1 or authority_rows[0].get("sha256") != authority_sha:
-    fail("Project Authority bytes are not bound to the 6.2 asset manifest")
+    fail("Project Authority bytes are not bound to the 6.4 asset manifest")
 route = json.loads(visual_enforcement.read_text(encoding="utf-8")).get("publicationRoute", {})
 if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deniedTools", [])}):
     fail("publicationRoute must deny Canva/vfcanva")
@@ -105,7 +105,7 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
         shutil.copyfile(ROOT / rel, target)
     stale = tmp / project_preflight.PROJECT_AUTHORITY
     stale.write_text(stale.read_text(encoding="utf-8").replace("Canva/vfcanva are forbidden", "Canva/vfcanva may be used"), encoding="utf-8")
-    stale_sha = hashlib.sha256(stale.read_bytes()).hexdigest()
+    stale_sha = hashlib.sha256(stale.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
     am = json.loads((tmp / project_preflight.PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
     for row in am["assets"]:
         if row.get("filename") == "Velvet-Factory-Project-Authority-v6.txt":

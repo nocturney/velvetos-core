@@ -10,8 +10,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json")
+PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.4.txt")
+PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.4.json")
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
@@ -21,6 +21,10 @@ CORE_MCP = ROOT / "packages/vfmcp/core-mcp.json"
 
 def load_manifest() -> dict:
     return json.loads(MANIFEST.read_text(encoding="utf-8"))
+
+def canonical_text_sha256(path: Path) -> str:
+    raw = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(raw).hexdigest()
 
 def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> list[str]:
     problems: list[str] = []
@@ -42,12 +46,12 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     asset_rows = assets.get("assets")
     if not isinstance(asset_rows, list) or not all(isinstance(row, dict) for row in asset_rows):
         return ["Project asset manifest assets must be an array of objects"]
-    if not all(x in authority for x in ("Contract version: 6", "Revision: 6.2", "Bundle: VF-PROJECT-6.2-DETAIL-TRUTH")):
+    if not all(x in authority for x in ("Contract version: 6", "Revision: 6.4", "Bundle: VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION")):
         problems.append("Project Authority identity mismatch")
     rows = [x for x in asset_rows if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
-    digest = hashlib.sha256(authority_path.read_bytes()).hexdigest()
+    digest = canonical_text_sha256(authority_path)
     if len(rows) != 1 or rows[0].get("sha256") != digest:
-        problems.append("Project Authority hash does not match ASSET-MANIFEST-v6.2.json")
+        problems.append("Project Authority hash does not match ASSET-MANIFEST-v6.4.json")
     if creative:
         route = policy.get("publicationRoute", {})
         if not isinstance(route, dict):

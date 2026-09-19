@@ -37,9 +37,11 @@ def fixture(root):
     write(evidence.POLICY, policy)
     authority = write(evidence.AUTHORITY, b'Test-only authority; not deployment or real creative evidence.')
     refs = [dict(image(f'refs/{i}.png', (12, 12), (i * 50, 15, 20)), role='STYLE_ONLY') for i in range(1, 4)]
-    assets = write(evidence.ASSETS, {'contract_version': 6, 'revision': '6.2',
-        'bundle_id': 'VF-PROJECT-6.2-DETAIL-TRUTH',
-        'assets': [{'sha256': x['sha256'], 'required_for': 'visual_work'} for x in refs]})
+    assets = write(evidence.ASSETS, {'contract_version': 6, 'revision': '6.4',
+        'bundle_id': 'VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION',
+        'assets': [{'filename': 'Velvet-Factory-Project-Authority-v6.txt', 'sha256': authority['sha256'], 'required_for': 'all_requests'}, *([{'filename': f'ref-{i}.png', 'sha256': x['sha256'], 'required_for': 'visual_work'} for i, x in enumerate(refs, 1)]), {'filename': 'PRODUCT-TRUTH-GUIDE.txt', 'sha256': '0'*64, 'required_for': 'visual_work'}],
+        'current_references': {'broad_visual':'ref-1.png','editorial_layout':'ref-2.png','current_direction':'ref-3.png'},
+        'product_truth': {'guide':'PRODUCT-TRUTH-GUIDE.txt'}})
     source = dict(image('source.png', (60, 75), (100, 80, 25)), role='PRODUCT_SOURCE')
     import vf_publish_bridge as bridge
     master = image('master.png', (120, 150), (40, 80, 25))

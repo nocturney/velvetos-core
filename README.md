@@ -326,6 +326,6 @@ python3 scripts/update-readme-snapshot.py --check
 
 ## VF publication evidence repair (review candidate)
 
-The existing publication preflight now checks actual source/output/reference bytes and exact review/copy bindings via `scripts/vf_publication_evidence.py`. The scoped VF route excludes Canva/vfcanva, rejects known discarded directions and blocks bare-flag approvals. Production, owner-review delivery and bridge staging have separate checks; approved bytes are not normalized again after review.
+The existing publication preflight now checks actual source/output/reference bytes and exact review/copy bindings via `scripts/vf_publication_evidence.py`. The active binding is Contract 6 / Revision 6.4 (`VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION`): the three approved aesthetic references drive style, while Product Truth comes from verified product source pixels plus the text-only guide. Historical 6.2 evidence remains provenance only. The scoped VF route excludes Canva/vfcanva, rejects known discarded directions and blocks bare-flag approvals. Production, owner-review delivery and bridge staging have separate checks; approved bytes are not normalized again after review.
 
 Proof: `python3 scripts/check-publication-evidence.py`; scope and trust boundary: `packages/vfom/PUBLICATION-PREP-EXECUTION.md`. These are repository checks, not a guarantee of visual taste or evidence that other ChatGPT/worker copies are deployed. Independent review, complete CI and runtime synchronization remain separate release gates.
