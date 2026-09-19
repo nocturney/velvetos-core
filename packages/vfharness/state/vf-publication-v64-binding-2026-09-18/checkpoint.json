@@ -11,7 +11,7 @@
     "base_sha": "a118ae5703755e31b2ceee0aae365c1cfffb8242",
     "branch": "fix/vf-publication-v64-binding",
     "push_authorized": true,
-    "previous_remote_head_sha": "8c9bad4443f8b3b1f0bc05cc6958cd85b1aa7aad",
+    "previous_remote_head_sha": "4b24a92eee3ccb138776ef4d4025f8999c91eaa1",
     "pull_request": 258
   },
   "root_cause": [
@@ -23,13 +23,11 @@
   "proof": {
     "red": "check-project-request-gate originally failed because active preflight Project Authority did not match chatgptProjectBundle",
     "targeted_green": "PASS: project request gate; 66 publication-evidence tests; publication-prep; creative-transformation; visual-standard bootstrap; visual-surface enforcement; py_compile",
-    "prior_full_ci": {
+    "full_ci_after_hardening": {
       "workflow": "VelvetOS Core Sensors",
-      "run_id": 35428214063,
-      "commit": "8c9bad4443f8b3b1f0bc05cc6958cd85b1aa7aad",
-      "conclusion": "success",
-      "suite": "72/72",
-      "commission_isolation": "PASS"
+      "run_id": 35429067837,
+      "commit": "4b24a92eee3ccb138776ef4d4025f8999c91eaa1",
+      "conclusion": "success"
     },
     "review": {
       "composer_initial": "PASS",
@@ -40,22 +38,15 @@
       ],
       "post_fix_review": "PENDING"
     },
-    "visible_text": [
-      {
-        "scope": "README capability row hardening",
-        "surface": "human-document",
-        "text_sha256": "15b3ab1cc58c51f149a94087a2aa53128b2161e5da108b42241728b530b88a31",
-        "visible_text_gate": "PASS"
-      },
-      {
-        "scope": "CHANGELOG hardening entry",
-        "surface": "human-document",
-        "text_sha256": "e719471489681c8e6655170665b7cd6f6587369c5704429bec0d44fd9222e7aa",
-        "visible_text_gate": "PASS"
-      }
-    ],
+    "branch_hygiene": {
+      "unrelated_commits_detected": [
+        "82e267506d8d65dc617a725c20ddef5c00039f42 vfmedia: validate canonical Asset Truth metadata",
+        "8c9bad4443f8b3b1f0bc05cc6958cd85b1aa7aad vfops: record canonical 2026-09-19 brief artifact"
+      ],
+      "remediation": "restore scripts/vfmedia.py to main and delete the unrelated brief from the PR diff without rewriting history"
+    },
     "local_environment_limit": "check-vfmedia intake selftest can hang under the Windows host; GitHub CI is the authoritative cross-platform full-suite proof",
-    "final_ci": "PENDING_AFTER_REVIEW_HARDENING"
+    "final_ci": "PENDING_AFTER_BRANCH_HYGIENE_CLEANUP"
   },
-  "next_action": "Push review hardening, require fresh green CI and fresh independent review. Do not merge without explicit owner authorization."
+  "next_action": "Require green CI after branch-hygiene cleanup and fresh independent review. Do not merge without explicit owner authorization."
 }
