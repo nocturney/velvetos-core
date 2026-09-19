@@ -9,8 +9,8 @@ Asia/Jerusalem. The **live protected ChatGPT automation inventory** is the clock
 | **01:45** | Automation Integrity Guard | Verify/repair the protected active automation set before daily workloads. |
 | **02:00** | Velvet Research Seat | Daily live research. Finish by the **07:00 cutoff** as `ready_for_brief`, `no_meaningful_findings`, or an explicit blocker. Consumer output is `packages/vfops/data/research.md` for the 09:00 brief. |
 | **07:15** | OpenPost Release Watch | Daily condition watch for upstream OpenPost changes; silent when unchanged. |
-| **09:00** | Velvet Morning Brief | Owner-facing V10.3 brief from current live sources. Delivery requires Gmail provider evidence, not a generated file. |
-| **10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 brief delivery; recover only if absent/unverified. |
+| **09:00** | Velvet Morning Brief | Owner-facing V10.3 brief from current live sources. Persist the same-day canonical repo artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>` before delivery; delivery still requires Gmail provider evidence, not merely the generated file. |
+| **10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 brief delivery; recover only if absent/unverified. Recovery must also create the same-day canonical repo artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>` when it is missing; a backfill artifact is not a delivery receipt. |
 | **10:30** | VelvetOS Office Loop | Post-brief operations: blockers, production→content, readiness/publishing and system drift. |
 | **18:30** | VelvetOS Office Loop | Second sweep: changes since morning, autonomous completion, learning/state persistence and end-of-day handoff. |
 
