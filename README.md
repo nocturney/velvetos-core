@@ -131,6 +131,7 @@
 <tr><td><strong>Windows Speech Backend</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">VoiceStudio 0.5.2 על `sderot-windows` משתמש ב־`omnivoice` ל־TTS עברי וב־`faster-whisper` ל־QA חוזר; smoke אמיתי עבר ב־0.93617 מול סף fail-closed של 0.90. ה־adapter מקבל גם UTF-8 BOM מ־PowerShell ומקבע stdout/stderr ל־UTF-8 כדי שעברית לא תכשיל receipt תקין. MOSS-TTS-v1.5 עבר smoke יחיד ב־0.923077 אך נשאר ניסיוני לאחר sidecar crash חוזר, ולכן אינו ברירת המחדל. מיקום/כלי לא מוריד QA, וקבלות speech אינן אישור פרסום.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">routing, חומר, spool/slice, maintenance signals ותכנון ייצור מבוקר.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED / EVIDENCE-GATED</strong></td><td dir="rtl" align="right">בריף 09:00 וה־10:00 Delivery Guard מקבעים artifact יומי קנוני דרך `vfops_loop.py brief --write --date`; backfill אינו receipt למסירת Gmail. Research Seat ב־`ready_for_brief` כותב את בלוק 05 תחת `מה נבנה / יועל`, וב־`no_meaningful_findings` משתמש ב־`אין חדש במשרד` בדיוק; HTML/שליחה נשארים שלבים נפרדים ורק עם credentials ו־Visible Text evidence תקפים.</td></tr>
+<tr><td><strong>Protected Office Scheduler</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">Grok Bot is the protected clock for seven owner-approved office routines in Asia/Jerusalem. The cutover passed 7/7 read-only shadow verification; former protected ChatGPT scheduler copies and Antigravity shadow sidecars are disabled. Contract: <code>automation/grok/CONTRACT.md</code> + <code>automation/grok/manifest.json</code>.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td dir="rtl" align="right">מעבר מבוקר לכלי חלופי בלי לייצר SoT נוסף.</td></tr>
 <tr><td><strong>Agents / Skills catalog</strong></td><td><strong>AVAILABLE TOOLING</strong></td><td dir="rtl" align="right">קטלוג specialists גדול; עצם קיום prompt/rule לא נחשב הוכחת capability פעילה.</td></tr>
 <tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td dir="rtl" align="right">חיישני `check-*.py` ו־GitHub Actions כראיית חוזה executable.</td></tr>
@@ -145,6 +146,8 @@
 - VelvetOS research
 - weekly deck generation
 - vfmedia intake
+
+External scheduled office clock: **Grok Bot protected routines** (`automation/grok/manifest.json`); GitHub workflows above remain the deterministic machine execution layer.
 
 ‏קובץ workflow מוכיח שהאוטומציה קיימת; פעולה חיצונית נחשבת **LIVE** רק אחרי אימות אמיתי מול provider/runtime.
 
@@ -262,6 +265,7 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>Windows Speech Backend</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>VoiceStudio 0.5.2 on `sderot-windows` uses `omnivoice` for Hebrew TTS and `faster-whisper` for back-transcription QA; a real smoke passed at 0.93617 similarity against the fail-closed 0.90 threshold. Host/tool routing does not lower QA, and speech receipts do not authorize publishing.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td>Routing, material/spool planning and maintenance signals.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>IMPLEMENTED / EVIDENCE-GATED</strong></td><td>The 09:00 brief and 10:00 Delivery Guard persist the canonical same-day artifact through `vfops_loop.py brief --write --date`; a backfill is not a Gmail delivery receipt. `ready_for_brief` Research Seat output writes block 05 under `מה נבנה / יועל`, while `no_meaningful_findings` uses the exact `אין חדש במשרד` empty state; rendering/sending remain separate stages requiring valid credentials and Visible Text evidence.</td></tr>
+<tr><td><strong>Protected Office Scheduler</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">Grok Bot is the protected clock for seven owner-approved office routines in Asia/Jerusalem. The cutover passed 7/7 read-only shadow verification; former protected ChatGPT scheduler copies and Antigravity shadow sidecars are disabled. Contract: <code>automation/grok/CONTRACT.md</code> + <code>automation/grok/manifest.json</code>.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td>Controlled takeover without creating another source of truth.</td></tr>
 <tr><td><strong>Agents / Skills catalog</strong></td><td><strong>AVAILABLE TOOLING</strong></td><td>Large specialist catalog; a prompt/rule file alone is not proof of active capability.</td></tr>
 <tr><td><strong>Sensors + CI</strong></td><td><strong>ACTIVE</strong></td><td>`check-*.py` sensors and GitHub Actions provide executable contract evidence.</td></tr>
