@@ -55,7 +55,7 @@ OpenPost הוא שכבת publication operations בלבד: scheduler, queue, retr
 - `approved_for_public_release` הוא שער קשיח. upload או folder placement לא מספיקים.
 - correlation בנתיב חייב להיות non-PII; לא שם לקוח.
 > LEGACY / provenance only for VF publication; not a provider route: - metadata ציבורי שומר hash של source reference, לא URL פרטי של Drive/Canva.
-- cleanup יומי מסיר נכסים ישנים מראש הענף אחרי חלון retention; הוא **לא** secure erase מהיסטוריית Git.
+- archive יומי מעביר נכסים שיצאו מחלון ה־active מ־`publish-bridge/assets` אל `publish-bridge/archive`; `archiveRetention=unlimited` ו־`deleteArchived=false`. אין מחיקה אוטומטית ואין overwrite על collision.
 - לכן בענף מותרת רק נגזרת שממילא מותר לפרסם לציבור.
 
 ## דפוס validate → transport → authorize → apply → verify
