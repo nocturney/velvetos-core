@@ -258,6 +258,8 @@ def main() -> None:
         fail("DAILY.md must not say מחכים לבעלים without failover")
     if "data/research.md" not in daily:
         fail("vfresearch/DAILY.md must write block 05 to vfops/data/research.md")
+    if "ready_for_brief" not in daily or "## מה נבנה / יועל" not in daily:
+        fail("vfresearch/DAILY.md must lock ready_for_brief to the canonical ## מה נבנה / יועל heading")
 
     block = RESEARCH_BLOCK.read_text(encoding="utf-8")
     if "מה נבנה / יועל" not in block and "אין חדש במשרד" not in block:
