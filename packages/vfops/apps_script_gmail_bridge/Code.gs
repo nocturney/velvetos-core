@@ -52,6 +52,18 @@ function extractTo_(mime) {
   return match ? match[1].trim().toLowerCase() : '';
 }
 
+function authorizeGmailSend() {
+  ScriptApp.requireScopes(ScriptApp.AuthMode.FULL, [
+    'https://www.googleapis.com/auth/gmail.send'
+  ]);
+  const info = ScriptApp.getAuthorizationInfo(
+    ScriptApp.AuthMode.FULL,
+    ['https://www.googleapis.com/auth/gmail.send']
+  );
+  console.log('gmail.send authorization status: ' + info.getAuthorizationStatus());
+  return 'gmail.send authorized';
+}
+
 function doGet() {
   return jsonResponse_(200, {ok: true, service: 'velvet-gmail-brief-bridge', version: 1});
 }
