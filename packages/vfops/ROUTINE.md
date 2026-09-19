@@ -1,12 +1,12 @@
 # ROUTINE — Velvet Factory office schedule
 
-Asia/Jerusalem. The **live protected ChatGPT automation inventory** is the clock authority for owner-facing office work. This document describes responsibilities and cadence; it must not create or revive a second scheduler.
+Asia/Jerusalem. The **live protected Grok Bot routine inventory** is the clock authority for owner-facing scheduled office work. `automation/grok/manifest.json` records the provider binding; this document describes responsibilities and cadence and must not create or revive a second scheduler.
 
 ## Current protected daily cadence
 
 | Time | Surface | Responsibility |
 |---|---|---|
-| **01:45** | Automation Integrity Guard | Verify/repair the protected active automation set before daily workloads. |
+| **01:45** | VelvetOS Integrity Guard | Verify/repair the protected active automation set before daily workloads. |
 | **02:00** | Velvet Research Seat | Daily live research. Finish by the **07:00 cutoff** as `ready_for_brief`, `no_meaningful_findings`, or an explicit blocker. Consumer output is `packages/vfops/data/research.md` for the 09:00 brief. |
 | **07:15** | OpenPost Release Watch | Daily condition watch for upstream OpenPost changes; silent when unchanged. |
 | **09:00** | Velvet Morning Brief | Owner-facing V10.3 brief from current live sources. Persist the same-day canonical repo artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>` before delivery; delivery still requires Gmail provider evidence, not merely the generated file. |
@@ -18,7 +18,7 @@ Weekly / קאדנס שבועי: `Weekly Research Accountability` runs Friday at 
 
 ## Canonical ownership
 
-`VelvetOS Office Loop` is the active office manager. It intentionally owns responsibilities that were previously split across separate Creative Autopilot, Evening Summary, Automation Steward, Media Intake desk checks, Publish Watch, Content Sprint and Insights Review automations. Those legacy recurring ChatGPT automations stay disabled unless Christian explicitly changes the architecture.
+`VelvetOS Office Loop` is the active scheduled office manager. It intentionally owns responsibilities that were previously split across separate Creative Autopilot, Evening Summary, Automation Steward, Media Intake desk checks, Publish Watch, Content Sprint and Insights Review automations. Those legacy recurring ChatGPT automations stay disabled. The former protected ChatGPT scheduler copies were retired at the verified 2026-09-19 Grok Bot cutover and must not be re-enabled as a second scheduler unless Christian explicitly changes the architecture.
 
 `packages/vfops/LOOP.json` is a **consume/lifecycle map, not a clock source**. Historical labels such as `daily-07:00` or `daily-06:15` do not override the protected live automation set above.
 
