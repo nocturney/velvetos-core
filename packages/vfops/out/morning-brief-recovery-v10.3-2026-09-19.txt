@@ -37,10 +37,11 @@ Instagram MCP: חי וזמין.
 אין בבריף הזה טענה על ספירת עוקבים, reach או ביצועים שלא נקראו מחדש היום.
 
 שולחן המחקר
-מצב המחקר של היום אינו מאומת.
-הקובץ הקנוני packages/vfops/data/research.md עדיין מתוארך 17.9.2026 ומסומן no_meaningful_findings.
-לא נמצא artifact מחקר קנוני חדש ל-19.9.2026, ולכן ממצאי 17.9 אינם מוצגים כחדשים של היום.
-הפער נשאר גלוי: Research Seat של היום לא סיפק תוצר מאומת לבריף הזה.
+Research Seat רץ היום באיחור, אחרי cutoff 07:00, ונשמר כ-ready_for_brief; אין הצגה כאילו הושלם בזמן.
+אות ה-production החדש: Snapmaker Orca 2.4.0 נכנסה ל-public beta. עבור Velvet Factory זה watch/sandbox בלבד; אין שינוי production לפני stable + QA מקומי.
+אביזרי desk/cable נשארים אות קטגוריה בלבד ולא SKU אוטומטי בלי slice, fit-test, צילום ואות ביקוש מקומי.
+Social Intelligence: nothing-solid; אין בסיס לשינוי reset/preflight או כללי התוכן.
+Best Skills לא היה due ולכן לא הורץ שוב.
 
 פעילות VelvetOS
 Recovery אימת תחילה שאין Morning Brief מהיום ב-Gmail.
@@ -53,7 +54,7 @@ Gmail preflight: אין בריף קנוני מהיום בזמן בדיקת הה�
 Google Drive Jobs: קריאה חיה תקינה.
 Google Calendar: קריאה חיה תקינה; 0 אירועים היום.
 Instagram MCP: health חי ותקין.
-Research: אין artifact קנוני חדש ל-19.9; המקור הצרכני האחרון הוא 17.9.
+Research: artifact קנוני חדש ל-19.9 קיים ומסומן ready_for_brief, אך נוצר אחרי cutoff 07:00; research.md הצרכני עדיין לא עודכן וממשיך להציג 17.9.
 Morning Brief delivery: recovery פעיל; delivery_verified ייקבע רק אחרי workflow success, Gmail message ID אמיתי, נוכחות ב-Gmail כשקריאה זמינה, והחזרת one-shot request ל-enabled:false.
 
 Velvet Factory · Morning Brief V10.3
