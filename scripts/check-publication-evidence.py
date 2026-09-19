@@ -35,11 +35,21 @@ def fixture(root):
     policy = {'publicationRoute': {'version': 1, 'mode': 'fail_closed',
                'rejectedArtifactSha256': [], 'rejectedDirectionFamilies': ['rejected-family']}}
     write(evidence.POLICY, policy)
-    authority = write(evidence.AUTHORITY, b'Test-only authority; not deployment or real creative evidence.')
+    authority = write(evidence.AUTHORITY, b'Test-only authority;\nnot deployment or real creative evidence.')
     refs = [dict(image(f'refs/{i}.png', (12, 12), (i * 50, 15, 20)), role='STYLE_ONLY') for i in range(1, 4)]
-    assets = write(evidence.ASSETS, {'contract_version': 6, 'revision': '6.2',
-        'bundle_id': 'VF-PROJECT-6.2-DETAIL-TRUTH',
-        'assets': [{'sha256': x['sha256'], 'required_for': 'visual_work'} for x in refs]})
+    style_assets = [
+        {'filename': f'style-{i}.png', 'sha256': ref['sha256'], 'required_for': 'visual_work',
+         'role': ('broad_style_only', 'editorial_layout_and_annotation_style_only',
+                  'current_owner_approved_direction_style_only_not_product_source')[i - 1]}
+        for i, ref in enumerate(refs, 1)
+    ]
+    guide = write('product-truth-guide.txt', b'QA only, not style.')
+    assets = write(evidence.ASSETS, {'contract_version': evidence.PROJECT_CONTRACT_VERSION,
+        'revision': evidence.PROJECT_REVISION, 'bundle_id': evidence.PROJECT_BUNDLE_ID,
+        'assets': style_assets + [{'filename': 'product-truth-guide.txt', 'sha256': guide['sha256'],
+                                   'required_for': 'visual_work', 'role': 'text_only_product_truth_fidelity_qa_not_style'}],
+        'current_references': {'broad_visual': 'style-1.png', 'editorial_layout': 'style-2.png',
+                               'current_direction': 'style-3.png'}})
     source = dict(image('source.png', (60, 75), (100, 80, 25)), role='PRODUCT_SOURCE')
     import vf_publish_bridge as bridge
     master = image('master.png', (120, 150), (40, 80, 25))
@@ -90,6 +100,12 @@ class EvidenceTests(unittest.TestCase):
         result = self.result()
         self.assertTrue(result['ok'], result)
         self.assertFalse(result['publishAuthorized'])
+
+    def test_crlf_checkout_of_bound_text_authority_is_equivalent(self):
+        authority = self.root / evidence.AUTHORITY
+        authority.write_bytes(authority.read_bytes().replace(b'\n', b'\r\n'))
+        result = self.result()
+        self.assertTrue(result['ok'], result)
     def test_canva_blocked(self):
         for tool in ['Canva.generate-design', 'vfcanva', 'CANVA.export']:
             self.ev['tools'] = [tool]

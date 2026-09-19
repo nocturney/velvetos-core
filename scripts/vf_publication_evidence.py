@@ -18,10 +18,13 @@ from typing import Any
 from vf_media_integrity import inspect_media
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json"
-ASSETS_SHA = "2d0b735732d77b8df1c844a1188e92a8db0cb6edb183e67781a23ce4da46fcff"
-AUTHORITY_SHA = "ce0138b5b1513741fc47e0c9ff00e5359c842e937862efc99e13dea8cf6b0fea"
+AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.4.txt"
+ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.4.json"
+ASSETS_SHA = "2d0d91cf94215e107fc0ccb1a4bb9d4e1a479dceb6c7f25dcf8901e6e5749091"
+AUTHORITY_SHA = "b3c2b5a66c395a7e1d60b6cddb532443876e4144f189c4835512ff3283c5112a"
+PROJECT_CONTRACT_VERSION = 6
+PROJECT_REVISION = "6.4"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
           "creative_director", "source_grounded_production", "visible_text",
           "brand_guardian", "exact_final_qa")
@@ -38,6 +41,15 @@ def digest(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             h.update(chunk)
     return h.hexdigest()
+
+
+def text_digest_candidates(path: Path) -> set[str]:
+    """Canonical text identity plus Git CRLF checkout equivalent."""
+    raw = path.read_bytes()
+    return {
+        hashlib.sha256(raw).hexdigest(),
+        hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest(),
+    }
 
 
 def package_digest(assets: list[dict[str, Any]]) -> str:
@@ -138,17 +150,33 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     if route.get("version") != 1 or route.get("mode") != "fail_closed":
         raise ValueError("publication route policy missing or unsupported")
     authority = local_path(root, AUTHORITY)
-    if digest(authority) != AUTHORITY_SHA:
-        raise ValueError("Project Authority is not verified revision 6.2")
+    if AUTHORITY_SHA not in text_digest_candidates(authority):
+        raise ValueError(f"Project Authority is not verified revision {PROJECT_REVISION}")
     assets_path = local_path(root, ASSETS)
-    if digest(assets_path) != ASSETS_SHA:
-        raise ValueError("Project asset manifest bytes do not match verified revision 6.2")
+    if ASSETS_SHA not in text_digest_candidates(assets_path):
+        raise ValueError(f"Project asset manifest bytes do not match verified revision {PROJECT_REVISION}")
     asset_manifest = load_json(assets_path)
-    if (asset_manifest.get("contract_version"), asset_manifest.get("revision"), asset_manifest.get("bundle_id")) != (6, "6.2", "VF-PROJECT-6.2-DETAIL-TRUTH"):
+    expected_identity = (PROJECT_CONTRACT_VERSION, PROJECT_REVISION, PROJECT_BUNDLE_ID)
+    actual_identity = (
+        asset_manifest.get("contract_version"),
+        str(asset_manifest.get("revision")),
+        asset_manifest.get("bundle_id"),
+    )
+    if actual_identity != expected_identity:
         raise ValueError("Project asset manifest revision mismatch")
-    required_refs = {x["sha256"] for x in asset_manifest["assets"] if x.get("required_for") == "visual_work"}
-    if len(required_refs) != 3:
-        raise ValueError("all three canonical visual reference identities required")
+    current_refs = _object(asset_manifest.get("current_references"), "current_references")
+    style_names = {name for name in current_refs.values() if meaningful(name)}
+    if len(style_names) != 3:
+        raise ValueError("exactly three current aesthetic reference filenames required")
+    style_rows = [
+        row for row in _rows(asset_manifest.get("assets"), "asset manifest assets")
+        if row.get("filename") in style_names and row.get("required_for") == "visual_work"
+    ]
+    if {row.get("filename") for row in style_rows} != style_names:
+        raise ValueError("current aesthetic reference files are not fully bound in asset manifest")
+    required_refs = {row.get("sha256") for row in style_rows}
+    if len(required_refs) != 3 or any(not isinstance(sha, str) or not HEX.fullmatch(sha) for sha in required_refs):
+        raise ValueError("all three canonical aesthetic reference identities required")
     denied = set(route.get("rejectedArtifactSha256", []))
     manifest = load_json(local_path(root, manifest_ref), expected_manifest_sha256)
     if manifest.get("jobId") != content_id:

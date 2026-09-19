@@ -1,0 +1,26 @@
+{
+  "task_id": "vf-publication-v64-binding-2026-09-18",
+  "component_state": "Blocked",
+  "domain": "system_engineering",
+  "authority": {
+    "contract": 6,
+    "revision": "6.4",
+    "bundle": "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
+  },
+  "repo": {
+    "base_sha": "f4fbbf8832575da0bf68f1a6c26a1e56f85ada6b",
+    "branch": "fix/vf-publication-v64-binding",
+    "push_authorized": false
+  },
+  "root_cause": [
+    "active publication validators were pinned to Project bundle v6.2",
+    "v6.4 adds a text-only Product Truth guide under visual_work, so selecting every visual_work asset incorrectly produced four style references",
+    "v6.4 hash-bound text files lacked -text attributes on Windows, allowing CRLF checkout drift"
+  ],
+  "proof": {
+    "red": "check-project-request-gate failed because active preflight Project Authority did not match chatgptProjectBundle",
+    "targeted_green": "PASS: project request gate; 62 publication-evidence tests; publication-prep; creative-transformation; visual-standard bootstrap; py_compile; git diff --check",
+    "full_suite": "UNPROVEN on this Windows host: baseline and candidate both hang in check-living-studio selftest under UTF-8; non-UTF8 run fails unrelated sensors on cp1252 decoding"
+  },
+  "next_action": "Owner approval for git push; then remote CI/fresh independent review before merge."
+}

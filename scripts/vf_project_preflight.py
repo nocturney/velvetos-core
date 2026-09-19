@@ -10,8 +10,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json")
+PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.4.txt")
+PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.4.json")
+PROJECT_CONTRACT_VERSION = 6
+PROJECT_REVISION = "6.4"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
@@ -21,6 +24,16 @@ CORE_MCP = ROOT / "packages/vfmcp/core-mcp.json"
 
 def load_manifest() -> dict:
     return json.loads(MANIFEST.read_text(encoding="utf-8"))
+
+
+def _text_sha256_candidates(path: Path) -> set[str]:
+    """Accept canonical bytes or Git CRLF checkout of the same text."""
+    raw = path.read_bytes()
+    return {
+        hashlib.sha256(raw).hexdigest(),
+        hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest(),
+    }
+
 
 def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> list[str]:
     problems: list[str] = []
@@ -42,12 +55,23 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     asset_rows = assets.get("assets")
     if not isinstance(asset_rows, list) or not all(isinstance(row, dict) for row in asset_rows):
         return ["Project asset manifest assets must be an array of objects"]
-    if not all(x in authority for x in ("Contract version: 6", "Revision: 6.2", "Bundle: VF-PROJECT-6.2-DETAIL-TRUTH")):
+    authority_identity = (
+        f"Contract version: {PROJECT_CONTRACT_VERSION}",
+        f"Revision: {PROJECT_REVISION}",
+        f"Bundle: {PROJECT_BUNDLE_ID}",
+    )
+    if not all(x in authority for x in authority_identity):
         problems.append("Project Authority identity mismatch")
+    asset_identity = (
+        assets.get("contract_version"),
+        str(assets.get("revision")),
+        assets.get("bundle_id"),
+    )
+    if asset_identity != (PROJECT_CONTRACT_VERSION, PROJECT_REVISION, PROJECT_BUNDLE_ID):
+        problems.append("Project asset manifest identity mismatch")
     rows = [x for x in asset_rows if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
-    digest = hashlib.sha256(authority_path.read_bytes()).hexdigest()
-    if len(rows) != 1 or rows[0].get("sha256") != digest:
-        problems.append("Project Authority hash does not match ASSET-MANIFEST-v6.2.json")
+    if len(rows) != 1 or rows[0].get("sha256") not in _text_sha256_candidates(authority_path):
+        problems.append(f"Project Authority hash does not match ASSET-MANIFEST-v{PROJECT_REVISION}.json")
     if creative:
         route = policy.get("publicationRoute", {})
         if not isinstance(route, dict):
