@@ -103,8 +103,14 @@ def main() -> None:
         if forbidden in handoff_active:
             fail(f"HANDOFF-he.md active route still contains legacy provider directive {forbidden!r}")
 
-    if "vfops_loop.py" not in ROUTINE.read_text():
-        fail("ROUTINE.md must run vfops_loop.py at 07:00")
+    routine = ROUTINE.read_text(encoding="utf-8")
+    if "vfops_loop.py" not in routine:
+        fail("ROUTINE.md must bind the canonical vfops_loop.py brief producer")
+    brief_persist_cmd = "python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>"
+    if routine.count(brief_persist_cmd) < 2:
+        fail("ROUTINE.md must bind both Morning Brief and Delivery Guard recovery to the canonical same-day brief artifact producer")
+    if "backfill artifact is not a delivery receipt" not in routine:
+        fail("ROUTINE.md must keep brief artifact persistence separate from Gmail delivery proof")
     if "vfops_loop.py" not in HANDOFF.read_text():
         fail("HANDOFF-he.md must point at vfops_loop.py")
     handoff = HANDOFF.read_text()
