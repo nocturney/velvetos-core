@@ -1,11 +1,11 @@
-﻿{
-    "enabled":  false,
-    "requestId":  "research-seat-2026-09-19",
-    "to":  "nocturney@gmail.com",
-    "subject":  "Velvet Factory · בריף מחקר 19.9",
-    "html":  "packages/vfops/out/research-owner-2026-09-19.html",
-    "visibleText":  "packages/vfops/out/research-owner-2026-09-19.txt",
-    "images":  "",
-    "embedRemoteImages":  true,
-    "remoteImageLimit":  4
+{
+  "enabled": false,
+  "requestId": "research-seat-2026-09-19",
+  "to": "nocturney@gmail.com",
+  "subject": "Velvet Factory · בריף מחקר 19.9",
+  "html": "packages/vfops/out/research-owner-2026-09-19.html",
+  "visibleText": "packages/vfops/out/research-owner-2026-09-19.txt",
+  "images": "",
+  "embedRemoteImages": true,
+  "remoteImageLimit": 4
 }
