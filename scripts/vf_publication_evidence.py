@@ -25,6 +25,8 @@ AUTHORITY_SHA = "b3c2b5a66c395a7e1d60b6cddb532443876e4144f189c4835512ff3283c5112
 PROJECT_CONTRACT_VERSION = 6
 PROJECT_REVISION = "6.4"
 PROJECT_BUNDLE_ID = "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
+PRODUCT_TRUTH_GUIDE = "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
+REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 = "17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9"
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
           "creative_director", "source_grounded_production", "visible_text",
           "brand_guardian", "exact_final_qa")
@@ -164,12 +166,33 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     )
     if actual_identity != expected_identity:
         raise ValueError("Project asset manifest revision mismatch")
+    asset_rows = _rows(asset_manifest.get("assets"), "asset manifest assets")
+    product_truth = _object(asset_manifest.get("product_truth"), "product_truth")
+    if product_truth.get("visual_conditioning") != "FORBIDDEN":
+        raise ValueError("Product Truth visual conditioning must remain FORBIDDEN")
+    guide_filename = product_truth.get("guide")
+    if not meaningful(guide_filename):
+        raise ValueError("Product Truth guide filename missing")
+    guide_rows = [
+        row for row in asset_rows
+        if row.get("filename") == guide_filename
+        and row.get("role") == "text_only_product_truth_fidelity_qa_not_style"
+        and row.get("required_for") == "visual_work"
+    ]
+    if len(guide_rows) != 1:
+        raise ValueError("exactly one text-only Product Truth guide identity required")
+    guide_sha = guide_rows[0].get("sha256")
+    if not isinstance(guide_sha, str) or not HEX.fullmatch(guide_sha):
+        raise ValueError("Product Truth guide has invalid SHA-256")
+    guide_path = local_path(root, PRODUCT_TRUTH_GUIDE)
+    if guide_sha not in text_digest_candidates(guide_path):
+        raise ValueError("Product Truth guide bytes do not match the v6.4 asset manifest")
     current_refs = _object(asset_manifest.get("current_references"), "current_references")
     style_names = {name for name in current_refs.values() if meaningful(name)}
     if len(style_names) != 3:
         raise ValueError("exactly three current aesthetic reference filenames required")
     style_rows = [
-        row for row in _rows(asset_manifest.get("assets"), "asset manifest assets")
+        row for row in asset_rows
         if row.get("filename") in style_names and row.get("required_for") == "visual_work"
     ]
     if {row.get("filename") for row in style_rows} != style_names:
@@ -177,7 +200,9 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     required_refs = {row.get("sha256") for row in style_rows}
     if len(required_refs) != 3 or any(not isinstance(sha, str) or not HEX.fullmatch(sha) for sha in required_refs):
         raise ValueError("all three canonical aesthetic reference identities required")
-    denied = set(route.get("rejectedArtifactSha256", []))
+    denied = set(_rows(route.get("rejectedArtifactSha256"), "rejectedArtifactSha256"))
+    if REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 not in denied:
+        raise ValueError("rejected Product Truth teaching-sheet identity is not denied by publication policy")
     manifest = load_json(local_path(root, manifest_ref), expected_manifest_sha256)
     if manifest.get("jobId") != content_id:
         raise ValueError("manifest/content ID mismatch")
@@ -248,8 +273,12 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
         if end < start or (prior and start < prior):
             raise ValueError("stage chronology invalid; later checks cannot excuse earlier omissions")
         prior = end
+        stage_shas = set()
         for ref in _rows(step.get("evidence"), "stage evidence"):
             verify_ref(root, ref, f"stage {step['name']}", denied)
+            stage_shas.add(ref.get("sha256"))
+        if step.get("name") == "product_truth_lock" and guide_sha not in stage_shas:
+            raise ValueError("product_truth_lock is not bound to the exact v6.4 Product Truth guide")
     if phase == "production":
         return {"ok": True, "phase": phase, "evidence_state": "INPUT_EVIDENCE_VALIDATED",
                 "problems": [], "publishAuthorized": False}

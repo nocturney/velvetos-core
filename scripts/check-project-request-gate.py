@@ -107,6 +107,8 @@ for rel in entrypoints:
 sys.path.insert(0, str(ROOT / "scripts"))
 import vf_project_preflight as project_preflight
 import vf_publication_evidence as publication_evidence
+if publication_evidence.REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 not in set(route.get("rejectedArtifactSha256", [])):
+    fail("publicationRoute must deny the superseded Product Truth teaching-sheet identity")
 if project_preflight.PROJECT_AUTHORITY != Path(bundle["authority"]):
     fail("active preflight Project Authority does not match chatgptProjectBundle")
 if project_preflight.PROJECT_ASSET_MANIFEST != Path(bundle["assetManifest"]):

@@ -1,6 +1,6 @@
 {
   "task_id": "vf-publication-v64-binding-2026-09-18",
-  "component_state": "Syncing",
+  "component_state": "Review",
   "domain": "system_engineering",
   "authority": {
     "contract": 6,
@@ -11,41 +11,51 @@
     "base_sha": "a118ae5703755e31b2ceee0aae365c1cfffb8242",
     "branch": "fix/vf-publication-v64-binding",
     "push_authorized": true,
-    "previous_remote_head_sha": "c3b535cc850d56a402094947535cde34d06a3b45",
+    "previous_remote_head_sha": "8c9bad4443f8b3b1f0bc05cc6958cd85b1aa7aad",
     "pull_request": 258
   },
   "root_cause": [
     "active publication validators were pinned to Project bundle v6.2",
     "v6.4 adds a text-only Product Truth guide under visual_work, so selecting every visual_work asset incorrectly produced four style references",
-    "v6.4 hash-bound text files lacked -text attributes on Windows, allowing CRLF checkout drift"
+    "v6.4 hash-bound text files lacked -text attributes on Windows, allowing CRLF checkout drift",
+    "fresh adversarial review found the superseded Product Truth teaching-sheet SHA was not explicitly denied and the product_truth_lock stage was not bound to the exact v6.4 guide identity"
   ],
   "proof": {
-    "red": "check-project-request-gate failed because active preflight Project Authority did not match chatgptProjectBundle",
-    "targeted_green": "PASS: project request gate; 62 publication-evidence tests; publication-prep; creative-transformation; visual-standard bootstrap; py_compile; git diff --check",
-    "full_suite_local": "UNPROVEN on this Windows host: baseline and candidate both hang in check-living-studio selftest under UTF-8; non-UTF8 run fails unrelated sensors on cp1252 decoding",
-    "previous_ci": {
+    "red": "check-project-request-gate originally failed because active preflight Project Authority did not match chatgptProjectBundle",
+    "targeted_green": "PASS: project request gate; 66 publication-evidence tests; publication-prep; creative-transformation; visual-standard bootstrap; visual-surface enforcement; py_compile",
+    "prior_full_ci": {
       "workflow": "VelvetOS Core Sensors",
-      "run_id": 35426580713,
-      "conclusion": "failure",
-      "failed_step": "Living README contract",
-      "cause": "capability/runtime files changed without README.md"
+      "run_id": 35428214063,
+      "commit": "8c9bad4443f8b3b1f0bc05cc6958cd85b1aa7aad",
+      "conclusion": "success",
+      "suite": "72/72",
+      "commission_isolation": "PASS"
+    },
+    "review": {
+      "composer_initial": "PASS",
+      "grok_adversarial": "FAIL: rejected Product Truth teaching-sheet identity and guide binding gaps",
+      "remediation": [
+        "publication policy now denies SHA 17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9",
+        "publication evidence requires the exact manifest-bound Product Truth guide bytes and requires product_truth_lock stage evidence to include that guide SHA"
+      ],
+      "post_fix_review": "PENDING"
     },
     "visible_text": [
       {
-        "scope": "README capability row",
+        "scope": "README capability row hardening",
         "surface": "human-document",
-        "text_sha256": "0a9753172f8c66781e0a16bcd2ac4e4fda86b58f1965eb9dbb1a6aa86feca869",
+        "text_sha256": "15b3ab1cc58c51f149a94087a2aa53128b2161e5da108b42241728b530b88a31",
         "visible_text_gate": "PASS"
       },
       {
-        "scope": "CHANGELOG entry",
+        "scope": "CHANGELOG hardening entry",
         "surface": "human-document",
-        "text_sha256": "f740efbfbf5ac66bedd372051472cb392118ec1113fe3ed043b6e749458fe64d",
+        "text_sha256": "e719471489681c8e6655170665b7cd6f6587369c5704429bec0d44fd9222e7aa",
         "visible_text_gate": "PASS"
       }
     ],
-    "main_sync": "INCLUDED_IN_THIS_CHANGESET",
-    "ci_retry": "EXPECTED_AFTER_BRANCH_UPDATE"
+    "local_environment_limit": "check-vfmedia intake selftest can hang under the Windows host; GitHub CI is the authoritative cross-platform full-suite proof",
+    "final_ci": "PENDING_AFTER_REVIEW_HARDENING"
   },
-  "next_action": "Run PR CI on the synced branch and perform fresh review. Do not merge without explicit owner authorization."
+  "next_action": "Push review hardening, require fresh green CI and fresh independent review. Do not merge without explicit owner authorization."
 }

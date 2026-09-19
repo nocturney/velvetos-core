@@ -33,7 +33,8 @@ def fixture(root):
         Image.new('RGB', size, value).save(target)
         return {'path': path, 'sha256': evidence.digest(target)}
     policy = {'publicationRoute': {'version': 1, 'mode': 'fail_closed',
-               'rejectedArtifactSha256': [], 'rejectedDirectionFamilies': ['rejected-family']}}
+               'rejectedArtifactSha256': [evidence.REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256],
+               'rejectedDirectionFamilies': ['rejected-family']}}
     write(evidence.POLICY, policy)
     authority = write(evidence.AUTHORITY, b'Test-only authority;\nnot deployment or real creative evidence.')
     refs = [dict(image(f'refs/{i}.png', (12, 12), (i * 50, 15, 20)), role='STYLE_ONLY') for i in range(1, 4)]
@@ -43,13 +44,17 @@ def fixture(root):
                   'current_owner_approved_direction_style_only_not_product_source')[i - 1]}
         for i, ref in enumerate(refs, 1)
     ]
-    guide = write('product-truth-guide.txt', b'QA only, not style.')
+    guide = write(evidence.PRODUCT_TRUTH_GUIDE, b'QA only, not style.')
+    guide_filename = 'Velvet-Factory-PRODUCT-TRUTH-GUIDE-v1.txt'
     assets = write(evidence.ASSETS, {'contract_version': evidence.PROJECT_CONTRACT_VERSION,
         'revision': evidence.PROJECT_REVISION, 'bundle_id': evidence.PROJECT_BUNDLE_ID,
-        'assets': style_assets + [{'filename': 'product-truth-guide.txt', 'sha256': guide['sha256'],
+        'assets': style_assets + [{'filename': guide_filename, 'sha256': guide['sha256'],
                                    'required_for': 'visual_work', 'role': 'text_only_product_truth_fidelity_qa_not_style'}],
         'current_references': {'broad_visual': 'style-1.png', 'editorial_layout': 'style-2.png',
-                               'current_direction': 'style-3.png'}})
+                               'current_direction': 'style-3.png'},
+        'product_truth': {'guide': guide_filename, 'truth_source': 'test product source',
+                          'visual_conditioning': 'FORBIDDEN',
+                          'qa_only_visual_teaching_assets': 'DO_NOT_LOAD_AS_STYLE_OR_GENERATION_REFERENCES'}})
     source = dict(image('source.png', (60, 75), (100, 80, 25)), role='PRODUCT_SOURCE')
     import vf_publish_bridge as bridge
     master = image('master.png', (120, 150), (40, 80, 25))
@@ -76,7 +81,9 @@ def fixture(root):
         'reference_decomposition': decomposition, 'product_protection': {'method': 'SOURCE_MASK_COMPOSITE',
             'evidence': report, 'protected_regions': ['whole-product', 'eyes']},
         'stages': [{'name': n, 'status': 'PASS', 'started_at': '2026-01-01T00:00:00Z',
-                    'completed_at': '2026-01-01T00:00:00Z', 'evidence': [report]} for n in evidence.STAGES],
+                    'completed_at': '2026-01-01T00:00:00Z',
+                    'evidence': [report, guide] if n == 'product_truth_lock' else [report]}
+                   for n in evidence.STAGES],
         'outputs': outputs, 'copy_receipts': [lint], 'package_sha256': package, 'review': review}
     manifest = {'jobId': 'TEST', 'format': 'post', 'publicationEvidence': ev}
     write('manifest.json', manifest)
@@ -122,6 +129,37 @@ class EvidenceTests(unittest.TestCase):
     def test_style_cannot_supply_product(self):
         self.ev['sources'] = [dict(self.ev['references'][0], role='PRODUCT_SOURCE')]
         self.assertFalse(self.result()['ok'])
+
+    def test_rejected_product_truth_teaching_sheet_cannot_be_source(self):
+        self.ev['sources'][0]['sha256'] = evidence.REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('REJECTED_FOR_REUSE', ' '.join(result['problems']))
+
+    def test_policy_must_deny_rejected_product_truth_teaching_sheet(self):
+        policy_path = self.root / evidence.POLICY
+        policy = json.loads(policy_path.read_text())
+        policy['publicationRoute']['rejectedArtifactSha256'] = ['0' * 64]
+        self.write(evidence.POLICY, policy)
+        self.ev['policy_sha256'] = evidence.digest(policy_path)
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('teaching-sheet identity', ' '.join(result['problems']))
+
+    def test_product_truth_lock_requires_exact_guide(self):
+        lock = next(x for x in self.ev['stages'] if x['name'] == 'product_truth_lock')
+        lock['evidence'] = [x for x in lock['evidence']
+                            if x['sha256'] != evidence.digest(self.root / evidence.PRODUCT_TRUTH_GUIDE)]
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('exact v6.4 Product Truth guide', ' '.join(result['problems']))
+
+    def test_product_truth_guide_bytes_are_bound(self):
+        (self.root / evidence.PRODUCT_TRUTH_GUIDE).write_text('tampered guide', encoding='utf-8')
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('guide bytes', ' '.join(result['problems']))
+
     def test_unknown_reference_identity(self):
         self.ev['references'][0] = dict(self.ev['sources'][0], role='STYLE_ONLY')
         self.assertFalse(self.result()['ok'])
