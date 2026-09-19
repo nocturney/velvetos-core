@@ -8,10 +8,10 @@
     "bundle": "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
   },
   "repo": {
-    "base_sha": "464625a60df714e8d5116ef7cfc5390ca98153bd",
+    "base_sha": "09667a17c89407a6530eca14a972102a05e47470",
     "branch": "fix/vf-publication-v64-binding",
     "push_authorized": true,
-    "previous_remote_head_sha": "54b93a8c6e7fb173512d32c9f44ee35c7c3cd11b",
+    "previous_remote_head_sha": "0a9568abcc1c437f694e26dd63a6f4038d2993f0",
     "pull_request": 258
   },
   "root_cause": [
@@ -38,7 +38,14 @@
       "sensors": "72/72",
       "commission_exit": 0
     },
-    "current_base_delta": "464625a6 changes only packages/vfops/out/gmail-send-request.json relative to the green main ancestor",
+    "first_current_main_resync_ci": {
+      "commit": "0a9568abcc1c437f694e26dd63a6f4038d2993f0",
+      "run_id": 35431821081,
+      "run_number": 902,
+      "conclusion": "failure",
+      "cause": "README System Pulse stale; sensors were not executed"
+    },
+    "readme_pulse_remediation": "Ran scripts/update-readme-snapshot.py on the PR candidate after merging current main; --check returned current.",
     "review": {
       "composer_initial": "PASS",
       "grok_adversarial": "FAIL: rejected Product Truth teaching-sheet identity and guide binding gaps",
@@ -50,9 +57,9 @@
     },
     "branch_hygiene": {
       "unrelated_blockers": "vfmedia, daily brief persistence and Research Seat drift were repaired and merged independently via PRs 264, 265 and 268",
-      "resync_rule": "preserve current main versions of unrelated files including scripts/vfmedia.py"
+      "resync_rule": "preserve current main versions of unrelated files including scripts/vfmedia.py and live Gmail request state"
     },
-    "final_branch_ci": "PENDING_AFTER_CURRENT_MAIN_RESYNC"
+    "final_branch_ci": "PENDING_AFTER_README_PULSE_REPAIR"
   },
   "next_action": "Run PR 258 CI on the current-main resync and fresh independent review. Do not merge without explicit owner authorization."
 }
