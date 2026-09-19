@@ -1,0 +1,89 @@
+{
+    "version":  1,
+    "timezone":  "Asia/Jerusalem",
+    "windowsTimezone":  "Israel Standard Time",
+    "scheduler":  "antigravity-2.0-sidecars",
+    "nativeSidecarStatus":  "shadow_configured",
+    "migrationMode":  "shadow",
+    "sourceAuthority":  "packages/vfops/ROUTINE.md",
+    "repoRootShadow":  "C:\\Users\\Chris\\velvetos-antigravity-migration",
+    "repoRootProduction":  "C:\\Users\\Chris\\velvetos-core",
+    "routines":  [
+                     {
+                         "id":  "integrity-guard",
+                         "title":  "Automation Integrity Guard",
+                         "cron":  "45 1 * * *",
+                         "timing":  "exact",
+                         "protected":  true,
+                         "emailCapable":  false,
+                         "promptFile":  "automation/antigravity/prompts/integrity-guard.md"
+                     },
+                     {
+                         "id":  "research-seat",
+                         "title":  "Velvet Research Seat",
+                         "cron":  "0 2 * * *",
+                         "timing":  "exact",
+                         "protected":  true,
+                         "emailCapable":  true,
+                         "promptFile":  "automation/antigravity/prompts/research-seat.md"
+                     },
+                     {
+                         "id":  "openpost-watch",
+                         "title":  "OpenPost Release Watch",
+                         "cron":  "15 7 * * *",
+                         "timing":  "condition-watch",
+                         "protected":  true,
+                         "emailCapable":  false,
+                         "promptFile":  "automation/antigravity/prompts/openpost-watch.md"
+                     },
+                     {
+                         "id":  "morning-brief",
+                         "title":  "Velvet Morning Brief",
+                         "cron":  "0 9 * * *",
+                         "timing":  "exact",
+                         "protected":  true,
+                         "emailCapable":  true,
+                         "promptFile":  "automation/antigravity/prompts/morning-brief.md"
+                     },
+                     {
+                         "id":  "delivery-guard",
+                         "title":  "Morning Delivery Guard",
+                         "cron":  "0 10 * * *",
+                         "timing":  "exact",
+                         "protected":  true,
+                         "emailCapable":  true,
+                         "promptFile":  "automation/antigravity/prompts/delivery-guard.md"
+                     },
+                     {
+                         "id":  "office-loop",
+                         "title":  "VelvetOS Office Loop",
+                         "cron":  "30 10,18 * * *",
+                         "timing":  "exact",
+                         "protected":  true,
+                         "emailCapable":  true,
+                         "promptFile":  "automation/antigravity/prompts/office-loop.md"
+                     },
+                     {
+                         "id":  "weekly-research",
+                         "title":  "Weekly Research Accountability",
+                         "cron":  "0 12 * * 5",
+                         "timing":  "exact",
+                         "protected":  true,
+                         "emailCapable":  true,
+                         "promptFile":  "automation/antigravity/prompts/weekly-research.md"
+                     }
+                 ],
+    "legacyDoNotRevive":  [
+                              "Creative Autopilot",
+                              "Morning Brief Fallback",
+                              "Evening Summary",
+                              "Automation Steward",
+                              "Media Intake",
+                              "Publish Watch",
+                              "Content Sprint",
+                              "Insights Review",
+                              "one-time recovery/publish jobs",
+                              "historical content reminders"
+                          ],
+    "antigravityProjectId":  "64e26f07-e7e7-4a1e-82b8-f9021c983975"
+}
