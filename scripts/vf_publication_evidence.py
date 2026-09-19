@@ -16,12 +16,16 @@ from pathlib import Path
 from typing import Any
 
 from vf_media_integrity import inspect_media
+from vf_project_bundle import resolve_project_bundle
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.2.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.2.json"
-ASSETS_SHA = "2d0b735732d77b8df1c844a1188e92a8db0cb6edb183e67781a23ce4da46fcff"
-AUTHORITY_SHA = "ce0138b5b1513741fc47e0c9ff00e5359c842e937862efc99e13dea8cf6b0fea"
+_ACTIVE_BUNDLE = resolve_project_bundle(Path(__file__).resolve().parents[1])
+# Compatibility aliases for fixture builders. Validation resolves the active
+# bundle again against the supplied workspace root.
+AUTHORITY = _ACTIVE_BUNDLE["authority_path"].as_posix()
+ASSETS = _ACTIVE_BUNDLE["asset_manifest_path"].as_posix()
+PROJECT_INSTRUCTIONS = _ACTIVE_BUNDLE["instructions_path"].as_posix()
+PRODUCT_TRUTH_GUIDE = _ACTIVE_BUNDLE["product_truth_guide_path"].as_posix()
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
           "creative_director", "source_grounded_production", "visible_text",
           "brand_guardian", "exact_final_qa")
@@ -137,18 +141,16 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     route = _object(policy.get("publicationRoute"), "publicationRoute")
     if route.get("version") != 1 or route.get("mode") != "fail_closed":
         raise ValueError("publication route policy missing or unsupported")
-    authority = local_path(root, AUTHORITY)
-    if digest(authority) != AUTHORITY_SHA:
-        raise ValueError("Project Authority is not verified revision 6.2")
-    assets_path = local_path(root, ASSETS)
-    if digest(assets_path) != ASSETS_SHA:
-        raise ValueError("Project asset manifest bytes do not match verified revision 6.2")
-    asset_manifest = load_json(assets_path)
-    if (asset_manifest.get("contract_version"), asset_manifest.get("revision"), asset_manifest.get("bundle_id")) != (6, "6.2", "VF-PROJECT-6.2-DETAIL-TRUTH"):
-        raise ValueError("Project asset manifest revision mismatch")
-    required_refs = {x["sha256"] for x in asset_manifest["assets"] if x.get("required_for") == "visual_work"}
+    bundle = resolve_project_bundle(root)
+    authority = local_path(root, bundle["authority_path"].as_posix())
+    assets_path = local_path(root, bundle["asset_manifest_path"].as_posix())
+    # resolve_project_bundle verifies contract/revision/bundle identity, authority
+    # hash binding, Product Truth guide binding and aesthetic/Product-Truth role
+    # separation. Publication evidence consumes only the three aesthetic hashes.
+    asset_manifest = bundle["asset_manifest"]
+    required_refs = set(bundle["aesthetic_reference_sha256s"])
     if len(required_refs) != 3:
-        raise ValueError("all three canonical visual reference identities required")
+        raise ValueError("all three canonical aesthetic reference identities required")
     denied = set(route.get("rejectedArtifactSha256", []))
     manifest = load_json(local_path(root, manifest_ref), expected_manifest_sha256)
     if manifest.get("jobId") != content_id:

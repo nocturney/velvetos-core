@@ -35,11 +35,63 @@ def fixture(root):
     policy = {'publicationRoute': {'version': 1, 'mode': 'fail_closed',
                'rejectedArtifactSha256': [], 'rejectedDirectionFamilies': ['rejected-family']}}
     write(evidence.POLICY, policy)
-    authority = write(evidence.AUTHORITY, b'Test-only authority; not deployment or real creative evidence.')
+    authority_body = (
+        b'VELVET FACTORY / VELVETOS - CHATGPT PROJECT AUTHORITY\n'
+        b'Contract version: 6\nRevision: 6.4\n'
+        b'Bundle: VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION\n'
+        b'Test-only authority; not deployment or real creative evidence.\n'
+    )
+    authority = write(evidence.AUTHORITY, authority_body)
     refs = [dict(image(f'refs/{i}.png', (12, 12), (i * 50, 15, 20)), role='STYLE_ONLY') for i in range(1, 4)]
-    assets = write(evidence.ASSETS, {'contract_version': 6, 'revision': '6.2',
-        'bundle_id': 'VF-PROJECT-6.2-DETAIL-TRUTH',
-        'assets': [{'sha256': x['sha256'], 'required_for': 'visual_work'} for x in refs]})
+    instructions = write(evidence.PROJECT_INSTRUCTIONS, b'Test-only Project Instructions.')
+    guide = write(evidence.PRODUCT_TRUTH_GUIDE, b'Test-only Product Truth guide.')
+    ref_names = ['REF-BROAD.png', 'REF-EDITORIAL.png', 'REF-CURRENT.png']
+    asset_rows = [
+        {'filename': 'Velvet-Factory-Project-Authority-v6.txt', 'role': 'authority',
+         'required_for': 'all_requests', 'sha256': authority['sha256']},
+        *[
+            {'filename': name, 'role': role, 'required_for': 'visual_work', 'sha256': ref['sha256']}
+            for name, role, ref in zip(
+                ref_names,
+                ['broad_style_only', 'editorial_layout_and_annotation_style_only',
+                 'current_owner_approved_direction_style_only_not_product_source'],
+                refs,
+            )
+        ],
+        {'filename': 'Velvet-Factory-PRODUCT-TRUTH-GUIDE-v1.txt',
+         'role': 'text_only_product_truth_fidelity_qa_not_style',
+         'required_for': 'visual_work', 'sha256': guide['sha256']},
+    ]
+    assets = write(evidence.ASSETS, {
+        'contract_version': 6, 'revision': '6.4',
+        'bundle_id': 'VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION',
+        'instructions': {
+            'filename': 'Velvet-Factory-Project-Instructions-v6.4.txt',
+            'sha256': instructions['sha256'],
+        },
+        'assets': asset_rows,
+        'current_references': {
+            'broad_visual': ref_names[0],
+            'editorial_layout': ref_names[1],
+            'current_direction': ref_names[2],
+        },
+        'product_truth': {
+            'guide': 'Velvet-Factory-PRODUCT-TRUTH-GUIDE-v1.txt',
+            'truth_source': 'test source pixels',
+            'visual_conditioning': 'FORBIDDEN',
+        },
+    })
+    write('packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json', {
+        'chatgptProjectBundle': {
+            'contractVersion': 6,
+            'revision': '6.4',
+            'bundleId': 'VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION',
+            'authority': evidence.AUTHORITY,
+            'assetManifest': evidence.ASSETS,
+            'instructions': evidence.PROJECT_INSTRUCTIONS,
+            'productTruthGuide': evidence.PRODUCT_TRUTH_GUIDE,
+        }
+    })
     source = dict(image('source.png', (60, 75), (100, 80, 25)), role='PRODUCT_SOURCE')
     import vf_publish_bridge as bridge
     master = image('master.png', (120, 150), (40, 80, 25))
@@ -80,9 +132,6 @@ class EvidenceTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.manifest, self.write, authority, assets = fixture(self.root)
         self.ev = self.manifest['publicationEvidence']
-        for name, value in [('AUTHORITY_SHA', authority), ('ASSETS_SHA', assets)]:
-            p = patch.object(evidence, name, value)
-            p.start(); self.addCleanup(p.stop)
     def result(self, phase='delivery'):
         self.write('manifest.json', self.manifest)
         return evidence.validate(self.root, 'manifest.json', 'TEST', phase)
@@ -109,6 +158,23 @@ class EvidenceTests(unittest.TestCase):
     def test_unknown_reference_identity(self):
         self.ev['references'][0] = dict(self.ev['sources'][0], role='STYLE_ONLY')
         self.assertFalse(self.result()['ok'])
+    def test_aesthetic_reference_role_mismatch_fails_closed(self):
+        path = self.root / evidence.ASSETS
+        data = json.loads(path.read_text(encoding='utf-8'))
+        broad = data['current_references']['broad_visual']
+        for row in data['assets']:
+            if row.get('filename') == broad:
+                row['role'] = 'text_only_product_truth_fidelity_qa_not_style'
+        path.write_text(json.dumps(data), encoding='utf-8')
+        self.ev['stages'] = self.ev['stages'][:5]
+        self.assertFalse(self.result('production')['ok'])
+    def test_product_truth_visual_conditioning_must_stay_forbidden(self):
+        path = self.root / evidence.ASSETS
+        data = json.loads(path.read_text(encoding='utf-8'))
+        data['product_truth']['visual_conditioning'] = 'ALLOWED'
+        path.write_text(json.dumps(data), encoding='utf-8')
+        self.ev['stages'] = self.ev['stages'][:5]
+        self.assertFalse(self.result('production')['ok'])
     def test_rejected_family_and_parent(self):
         self.ev['direction']['family_id'] = 'rejected-family'
         self.assertFalse(self.result()['ok'])
