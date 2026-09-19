@@ -1,22 +1,22 @@
 {
   "handle": "@velvets_cloud",
-  "updatedAt": "2026-09-14",
+  "updatedAt": "2026-09-19",
   "status": "prepared",
   "liveStatus": "pending-human-profile-edit",
-  "note": "Owner 2026-09-14 removed the former customer-type/quantity service pillar. Live Instagram read still contains the retired line. Official Graph profile write is unsupported, so a human Instagram-app bio edit is required and must be followed by live verification.",
+  "note": "Live Instagram was rechecked on 2026-09-19. The retired offering/service line is gone and no forbidden WhatsApp CTA is present. The remaining mismatch is that the desired Instagram-message CTA line is absent from the live bio; official Graph profile write is unsupported, so only a human Instagram-app edit can close that optional desired-state gap.",
   "liveSnapshot": {
-    "sourcedAt": "2026-09-14",
+    "sourcedAt": "2026-09-19",
     "source": "VelvetOS Instagram get_profile",
     "name": "Velvet Factory | הדפסות תלת־ממד",
-    "biography": null,
-    "retiredOfferingPhrasePresent": true,
-    "offeringCleanupStatus": "pending-human-profile-edit",
-    "followersCount": 80,
+    "biography": "הדפסות תלת־ממד בעיצוב ייחודי\nמוצרים מוכנים • מודלים בהתאמה אישית\n📍 איסוף משדרות",
+    "retiredOfferingPhrasePresent": false,
+    "offeringCleanupStatus": "verified-clean",
+    "followersCount": 81,
     "followsCount": 125,
     "mediaCount": 3,
     "conflictWithPublicCta": false,
     "conflictDetail": null,
-    "desiredDifference": "Human bio edit required to remove the retired service-line wording; then re-run live verification."
+    "desiredDifference": "Desired bio still includes the Instagram-message CTA line; live bio currently omits it."
   },
   "desired": {
     "name": "Velvet Factory | הדפסות תלת־ממד",
@@ -45,7 +45,7 @@
   "execution": {
     "graphWrite": "unsupported_by_official_graph",
     "mcpTool": "none — graph profile write not exposed",
-    "humanPath": "Only if owner chooses a future bio wording change: Instagram app → Edit profile → save → re-run get_profile / audit_profile_cta",
+    "humanPath": "If Christian wants the desired CTA line present: Instagram app → Edit profile → add `לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם` → save → re-run get_profile.",
     "doNot": [
       "browser automation",
       "private API",
@@ -54,7 +54,7 @@
   },
   "watchdog": {
     "whenToolReady": "instagram.profile.update then instagram.live.verify",
-    "currentRisk": "AMBER_RETIRED_OFFERING_COPY",
-    "desiredCopyStatus": "REQUIRED_HUMAN_EDIT"
+    "currentRisk": "AMBER_DESIRED_CTA_OMITTED",
+    "desiredCopyStatus": "OPTIONAL_HUMAN_EDIT_TO_MATCH_DESIRED"
   }
 }
