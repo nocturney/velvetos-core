@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-19 — **VF publication v6.4 authority binding:** active preflight/evidence validators now bind to Contract 6 / Revision 6.4; style identity is limited to the three current aesthetic references, Product Truth guide stays QA-only, and CRLF-normalized text hashes no longer create false authority drift.
+
 - 2026-09-18 — **OpenPost Instagram provider OAuth:** saved the Meta provider app in production OpenPost, restarted the service, and verified startup loaded one database provider app and registered the Instagram adapter. Completed OAuth for `@velvets_cloud`; read-only SQLite evidence shows one active Instagram account and one valid, unrevoked OAuth grant. `providerOAuthReady=true`; `LIVE=false` and `productionDeployed=false` because no Instagram Graph write has been performed or canonically verified.
 
 - 2026-09-18: **Instagram delivery deploy hardening:** production deploy paths now fail closed unless project/region remain `instamcp` / `me-west1`, the optional issuer bearer is empty or canonical, Cloud Build overrides stay in the canonical project, and routine deploys see the exact owner-only issuer service IAM policy. Effective-IAM probes now cover destructive/write paths on signer, key-id and Instagram secrets plus mutation-runtime credential paths to Compute/Build identities; first issuer bootstrap is explicit, refuses an existing service, stays at 0% traffic until exact IAM + full isolation proof pass, and deletes the unpromoted service on bootstrap failure. This change does not deploy a revision or perform an Instagram write; `LIVE` remains false.

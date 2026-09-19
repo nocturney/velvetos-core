@@ -8,10 +8,10 @@
     "bundle": "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
   },
   "repo": {
-    "base_sha": "3c21b0577148977ca0d0f6d4b4a31d6617765ac6",
+    "base_sha": "a118ae5703755e31b2ceee0aae365c1cfffb8242",
     "branch": "fix/vf-publication-v64-binding",
     "push_authorized": true,
-    "remote_head_sha": "7995d0dc27ab622da8000b737983fe6489413801",
+    "previous_remote_head_sha": "c3b535cc850d56a402094947535cde34d06a3b45",
     "pull_request": 258
   },
   "root_cause": [
@@ -22,10 +22,30 @@
   "proof": {
     "red": "check-project-request-gate failed because active preflight Project Authority did not match chatgptProjectBundle",
     "targeted_green": "PASS: project request gate; 62 publication-evidence tests; publication-prep; creative-transformation; visual-standard bootstrap; py_compile; git diff --check",
-    "full_suite": "UNPROVEN on this Windows host: baseline and candidate both hang in check-living-studio selftest under UTF-8; non-UTF8 run fails unrelated sensors on cp1252 decoding",
-    "remote_branch": "PASS: branch is one commit ahead of current main and zero behind at PR creation",
-    "pr_mergeable": true,
-    "ci": "IN_PROGRESS at last check"
+    "full_suite_local": "UNPROVEN on this Windows host: baseline and candidate both hang in check-living-studio selftest under UTF-8; non-UTF8 run fails unrelated sensors on cp1252 decoding",
+    "previous_ci": {
+      "workflow": "VelvetOS Core Sensors",
+      "run_id": 35426580713,
+      "conclusion": "failure",
+      "failed_step": "Living README contract",
+      "cause": "capability/runtime files changed without README.md"
+    },
+    "visible_text": [
+      {
+        "scope": "README capability row",
+        "surface": "human-document",
+        "text_sha256": "0a9753172f8c66781e0a16bcd2ac4e4fda86b58f1965eb9dbb1a6aa86feca869",
+        "visible_text_gate": "PASS"
+      },
+      {
+        "scope": "CHANGELOG entry",
+        "surface": "human-document",
+        "text_sha256": "f740efbfbf5ac66bedd372051472cb392118ec1113fe3ed043b6e749458fe64d",
+        "visible_text_gate": "PASS"
+      }
+    ],
+    "main_sync": "INCLUDED_IN_THIS_CHANGESET",
+    "ci_retry": "EXPECTED_AFTER_BRANCH_UPDATE"
   },
-  "next_action": "Wait for CI and fresh review. Do not merge without explicit owner authorization."
+  "next_action": "Run PR CI on the synced branch and perform fresh review. Do not merge without explicit owner authorization."
 }
