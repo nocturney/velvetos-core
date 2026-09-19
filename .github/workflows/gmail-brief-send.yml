@@ -105,32 +105,34 @@ jobs:
           print('Visible Text Gate PASS text_sha256=' + sha)
           PY
 
-      - name: Materialize Gmail OAuth secret
+      - name: Validate Apps Script bridge configuration
         if: steps.request.outputs.enabled == 'true'
         env:
-          GMAIL_OAUTH_JSON: ${{ secrets.GMAIL_OAUTH_JSON }}
+          GMAIL_APPS_SCRIPT_URL: ${{ secrets.GMAIL_APPS_SCRIPT_URL }}
+          GMAIL_APPS_SCRIPT_SECRET: ${{ secrets.GMAIL_APPS_SCRIPT_SECRET }}
         run: |
-          if [ -z "$GMAIL_OAUTH_JSON" ]; then
-            echo "::error::Missing repository secret GMAIL_OAUTH_JSON. Run the one-time OAuth bootstrap and add its JSON as this secret."
+          if [ -z "$GMAIL_APPS_SCRIPT_URL" ]; then
+            echo "::error::Missing repository secret GMAIL_APPS_SCRIPT_URL."
             exit 2
           fi
-          umask 077
-          printf '%s' "$GMAIL_OAUTH_JSON" > "$RUNNER_TEMP/gmail-oauth.json"
-          python3 - <<'PY'
-          import json, os, pathlib
-          p = pathlib.Path(os.environ['RUNNER_TEMP']) / 'gmail-oauth.json'
-          data = json.loads(p.read_text())
-          required = ('client_id', 'client_secret', 'refresh_token')
-          missing = [k for k in required if not data.get(k)]
-          if missing:
-              raise SystemExit('GMAIL_OAUTH_JSON missing: ' + ', '.join(missing))
-          print('OAuth secret structure OK; refresh token present')
-          PY
+          if [ -z "$GMAIL_APPS_SCRIPT_SECRET" ]; then
+            echo "::error::Missing repository secret GMAIL_APPS_SCRIPT_SECRET."
+            exit 2
+          fi
+          case "$GMAIL_APPS_SCRIPT_URL" in
+            https://script.google.com/*) ;;
+            *)
+              echo "::error::GMAIL_APPS_SCRIPT_URL must be a script.google.com HTTPS deployment URL."
+              exit 2
+              ;;
+          esac
+          echo "Apps Script bridge configuration present."
 
-      - name: Send brief through Gmail API with CID images
+      - name: Send brief through owner Apps Script Gmail bridge
         if: steps.request.outputs.enabled == 'true'
         env:
-          GOOGLE_TOKEN: ${{ runner.temp }}/gmail-oauth.json
+          GMAIL_APPS_SCRIPT_URL: ${{ secrets.GMAIL_APPS_SCRIPT_URL }}
+          GMAIL_APPS_SCRIPT_SECRET: ${{ secrets.GMAIL_APPS_SCRIPT_SECRET }}
           VF_VISIBLE_TEXT_GATE_RECEIPT: ${{ runner.temp }}/visible-text-gate.json
         run: |
-          PYTHONPATH=packages python3 -m vfops.gmail_brief_request --request "$REQUEST_PATH"
+          PYTHONPATH=packages python3 -m vfops.gmail_apps_script_request --request "$REQUEST_PATH"

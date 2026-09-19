@@ -30,7 +30,7 @@ Weekly / קאדנס שבועי: `Weekly Research Accountability` runs Friday at 
 - `office-control-plane.yml` — watchdog/control-plane health, memory hygiene, gaps and handoff; not a replacement scheduler for every office capability.
 - `velvetos-research.yml` — research freshness/index/sensor verification around artifacts; the live Research Seat performs the owner-facing web research body.
 - `readme-system-pulse.yml` — README/System Pulse refresh.
-- `gmail-brief-send.yml` — one-shot production Gmail transport when `packages/vfops/out/gmail-send-request.json` is explicitly enabled.
+- `gmail-brief-send.yml` — one-shot production Gmail transport through the owner Apps Script bridge when `packages/vfops/out/gmail-send-request.json` is explicitly enabled.
 - `velvetos-weekly-deck.yml` — weekly deck build path.
 - publish-bridge cleanup — transport hygiene only.
 
