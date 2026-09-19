@@ -124,6 +124,8 @@ if (project_preflight.PROJECT_CONTRACT_VERSION, project_preflight.PROJECT_REVISI
 if (publication_evidence.PROJECT_CONTRACT_VERSION, publication_evidence.PROJECT_REVISION,
         publication_evidence.PROJECT_BUNDLE_ID) != expected_bundle_identity:
     fail("publication evidence bundle identity does not match chatgptProjectBundle")
+if project_preflight.PROJECT_ASSET_MANIFEST_SHA256 != publication_evidence.ASSETS_SHA:
+    fail("active preflight asset-manifest hash does not match publication evidence binding")
 if project_preflight.project_binding_problems(creative=True):
     fail("current Project binding is inconsistent: " + "; ".join(project_preflight.project_binding_problems(creative=True)))
 with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
@@ -150,6 +152,14 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
     if not problems or not any("cannot be decoded" in problem for problem in problems):
         fail("malformed Project asset manifest did not fail closed")
     shutil.copyfile(ROOT / project_preflight.PROJECT_AUTHORITY, tmp / project_preflight.PROJECT_AUTHORITY)
+    shutil.copyfile(ROOT / project_preflight.PROJECT_ASSET_MANIFEST, tmp / project_preflight.PROJECT_ASSET_MANIFEST)
+    am = json.loads((tmp / project_preflight.PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
+    am["current_references"]["current_direction"] = am["product_truth"]["guide"]
+    (tmp / project_preflight.PROJECT_ASSET_MANIFEST).write_text(
+        json.dumps(am, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    problems = project_preflight.project_binding_problems(tmp, creative=True)
+    if not problems or not any("asset manifest hash" in problem for problem in problems):
+        fail("tampered v6.4 asset manifest did not fail closed before creative execution")
     shutil.copyfile(ROOT / project_preflight.PROJECT_ASSET_MANIFEST, tmp / project_preflight.PROJECT_ASSET_MANIFEST)
     (tmp / project_preflight.VISUAL_ENFORCEMENT).write_text("[]", encoding="utf-8")
     problems = project_preflight.project_binding_problems(tmp, creative=True)

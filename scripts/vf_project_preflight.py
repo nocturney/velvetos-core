@@ -15,6 +15,7 @@ PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-
 PROJECT_CONTRACT_VERSION = 6
 PROJECT_REVISION = "6.4"
 PROJECT_BUNDLE_ID = "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
+PROJECT_ASSET_MANIFEST_SHA256 = "2d0d91cf94215e107fc0ccb1a4bb9d4e1a479dceb6c7f25dcf8901e6e5749091"
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
@@ -55,6 +56,9 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     asset_rows = assets.get("assets")
     if not isinstance(asset_rows, list) or not all(isinstance(row, dict) for row in asset_rows):
         return ["Project asset manifest assets must be an array of objects"]
+    asset_manifest_path = root / PROJECT_ASSET_MANIFEST
+    if PROJECT_ASSET_MANIFEST_SHA256 not in _text_sha256_candidates(asset_manifest_path):
+        problems.append(f"Project asset manifest hash does not match verified revision {PROJECT_REVISION}")
     authority_identity = (
         f"Contract version: {PROJECT_CONTRACT_VERSION}",
         f"Revision: {PROJECT_REVISION}",

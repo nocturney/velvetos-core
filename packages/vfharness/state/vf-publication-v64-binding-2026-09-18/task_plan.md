@@ -22,6 +22,7 @@ Current creative/publication validators resolve Contract 6 / Revision 6.4 / VF-P
 - Targeted request-gate sensor proves active binding is v6.4.
 - Publication evidence tests pass with v6.4 fixtures.
 - A CRLF checkout of canonical text authority files does not create a false hash failure.
+- The pre-tool preflight pins the exact v6.4 asset-manifest bytes, so a same-identity manifest that changes current aesthetic references fails closed before creative execution.
 - v6.2 remains historical only and is not referenced by active publication validator/preflight code.
 - python scripts/check-all.py passes.
 
@@ -29,4 +30,4 @@ Current creative/publication validators resolve Contract 6 / Revision 6.4 / VF-P
 No publication, no Instagram action, no creative generation, no business-fact changes, no historical checkpoint rewrite.
 
 ## Base
-origin/main f4fbbf8832575da0bf68f1a6c26a1e56f85ada6b
+origin/main 1a8b9dca6964997286b8a43f784629c769b1a082 (current target at final repair review)
