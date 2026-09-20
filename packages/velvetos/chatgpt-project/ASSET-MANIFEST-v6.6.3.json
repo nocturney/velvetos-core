@@ -5,8 +5,8 @@
   "created_for": "owner-requested cold-start repair: ingest current-chat attachment bytes into a hash-bound local PRODUCT_SOURCE workspace before creative preflight while preserving 6.6.2 master materialization",
   "instructions": {
     "filename": "Velvet-Factory-Project-Instructions-v6.6.3.txt",
-    "sha256": "b64d194307d437b29758d2608681782522b19d8f24ad7ab0299fc1a151c0c0bd",
-    "characters": 6196,
+    "sha256": "efcd4394db6a012c7c4f63bdb415ac20538b899122dffd20f5059c3c66d96a6e",
+    "characters": 6205,
     "limit_supplied_by_owner": 8000
   },
   "assets": [
