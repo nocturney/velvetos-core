@@ -54,7 +54,7 @@ Once Product Truth + reference match pass and the strongest direction is selecte
 
 ## Required manifest contribution
 
-> LEGACY / provenance only for VF publication; not a provider route: Write or update `visualStandard`, `concept`, `hook`, `shots`, `edit`, `overlays`, `cover` and `status`. `visualStandard.gate` must be `PASS` with the canonical document, public reference, Canva asset ID and artifact SHA before concept/render/publish work can advance. Keep factual claims linked to the Content Contract; a real asset is not universal claim proof. For Hebrew visual microcopy, record the human-copy/Humanizer pass and the `TEXT_WINS` or `NO_TEXT` decision in the existing manifest QA/decision fields until a dedicated schema field is added.
+> LEGACY / provenance only for VF publication; not a provider route: Write or update `visualStandard`, `concept`, `hook`, `shots`, `edit`, `overlays`, `cover` and `status`. For publication delivery, also bind the selected `publicationEvidence.creative_master` and ensure exact-final review records `creative_continuity=PASS`; a replacement must carry an allowed recorded cause. `visualStandard.gate` must be `PASS` with the canonical document, public reference, Canva asset ID and artifact SHA before concept/render/publish work can advance. Keep factual claims linked to the Content Contract; a real asset is not universal claim proof. For Hebrew visual microcopy, record the human-copy/Humanizer pass and the `TEXT_WINS` or `NO_TEXT` decision in the existing manifest QA/decision fields until a dedicated schema field is added.
 
 ## Human surface
 
