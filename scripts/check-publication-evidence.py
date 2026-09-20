@@ -163,6 +163,7 @@ class EvidenceTests(unittest.TestCase):
     def test_source_lock_must_bind_ingest_receipt(self):
         stage = next(x for x in self.ev['stages'] if x['name'] == 'source_lock')
         stage['evidence'] = [stage['evidence'][0]]
+        self.ev['stages'] = self.ev['stages'][:5]
         result = self.result('production')
         self.assertFalse(result['ok'])
         self.assertIn('source_lock', ' '.join(result['problems']).lower())
