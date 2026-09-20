@@ -84,7 +84,7 @@ if instructions_row.get("sha256") not in {instructions_sha, instructions_lf_sha}
     fail(f"Project Instructions bytes are not bound to the current asset manifest ({bundle['revision']})")
 for needle in (f"Revision: {bundle['revision']}", bundle["bundleId"],
                f"Velvet-Factory-ASSET-MANIFEST-v{bundle['revision']}.json",
-               "orientation itself adds useful information", "creative_master", "materialized to local path + SHA-256"):
+               "orientation itself adds useful information", "creative_master", "materialized to local path + SHA-256", "current-chat attachment ingest"):
     if needle not in instructions_text:
         fail(f"Project Instructions missing current binding/rule: {needle}")
 route_doc = json.loads(visual_enforcement.read_text(encoding="utf-8"))
@@ -94,7 +94,7 @@ if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deni
 current_refs = asset_data.get("current_references")
 if not isinstance(current_refs, dict) or set(current_refs) != {
         "broad_visual", "editorial_layout", "current_direction", "multi_source_composition"}:
-    fail("Revision 6.6.2 must bind exactly four current aesthetic references")
+    fail("Revision 6.6.3 must bind exactly four current aesthetic references")
 policy_refs = (route_doc.get("referenceRoleSeparationPolicy") or {}).get("aestheticReferences")
 if not isinstance(policy_refs, list) or set(policy_refs) != set(current_refs.values()):
     fail("visual enforcement aesthetic references do not match Project asset manifest")
@@ -140,6 +140,23 @@ if materialization.get("silentRawFallbackForbidden") is not True:
     fail("unmaterializable master must not silently fall back to raw source")
 if materialization.get("bridge") != "scripts/vf_creative_master_bridge.py":
     fail("creative-master bridge binding mismatch")
+ingest = route_doc.get("sourceIngestPolicy") or {}
+if ingest.get("bridge") != "scripts/vf_source_ingest.py":
+    fail("source-ingest bridge binding mismatch")
+if ingest.get("currentChatAttachmentLocalIngestBeforeCreativePreflight") is not True:
+    fail("chat attachment source ingest rule missing")
+if ingest.get("externalInputRequiresExplicitCurrentRequestIntakeRoot") is not True:
+    fail("source ingest must require current-request intake root")
+if ingest.get("arbitraryFolderScanForbidden") is not True:
+    fail("source ingest arbitrary-folder scan must be forbidden")
+if ingest.get("unhashedFallbackForbidden") is not True:
+    fail("source ingest unhashed fallback must be forbidden")
+if ingest.get("chatLocalPreflight") != "scripts/vf_chat_cold_start_preflight.py":
+    fail("chat-local preflight policy binding mismatch")
+if ingest.get("remoteRepoPreflightMustNotReceiveChatLocalPaths") is not True:
+    fail("remote preflight must not receive chat-local paths")
+if ingest.get("chatLocalPreflightAuthorizesCreativeOnly") is not True or ingest.get("chatLocalPreflightNeverAuthorizesPublication") is not True:
+    fail("chat-local preflight scope mismatch")
 entrypoints = route.get("entrypoints", [])
 required_entrypoints = {"packages/vfgrowth/STORIES.md", "packages/vfcopy/hq/templates/ig-stories.md"}
 if not required_entrypoints.issubset(set(entrypoints)):
@@ -190,6 +207,19 @@ if project_preflight.PROJECT_INSTRUCTIONS != Path(bundle["instructions"]):
     fail("active preflight Project Instructions do not match chatgptProjectBundle")
 if project_preflight.CREATIVE_MASTER_BRIDGE != Path("scripts/vf_creative_master_bridge.py"):
     fail("active preflight creative-master bridge binding mismatch")
+if project_preflight.SOURCE_INGEST_BRIDGE != Path("scripts/vf_source_ingest.py"):
+    fail("active preflight source-ingest bridge binding mismatch")
+if project_preflight.CHAT_LOCAL_PREFLIGHT != Path("scripts/vf_chat_cold_start_preflight.py"):
+    fail("active preflight chat-local gate binding mismatch")
+if not (ROOT / project_preflight.CHAT_LOCAL_PREFLIGHT).is_file():
+    fail("chat-local preflight implementation missing")
+runtime_rows = asset_data.get("chat_runtime")
+if not isinstance(runtime_rows, list) or {x.get("repo_path") for x in runtime_rows if isinstance(x, dict)} != {
+        "scripts/vf_source_ingest.py", "scripts/vf_chat_cold_start_preflight.py",
+        "scripts/vf_media_integrity.py", "scripts/vf_creative_master_bridge.py"}:
+    fail("Project chat_runtime manifest binding mismatch")
+if not (ROOT / project_preflight.SOURCE_INGEST_BRIDGE).is_file():
+    fail("source-ingest bridge implementation missing")
 if not (ROOT / project_preflight.CREATIVE_MASTER_BRIDGE).is_file():
     fail("creative-master bridge implementation missing")
 if Path(publication_evidence.AUTHORITY) != Path(bundle["authority"]):
@@ -211,7 +241,8 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
     tmp = Path(tmp_name)
     for rel in (project_preflight.PROJECT_AUTHORITY, project_preflight.PROJECT_ASSET_MANIFEST,
                 project_preflight.PROJECT_INSTRUCTIONS, project_preflight.VISUAL_ENFORCEMENT,
-                project_preflight.CREATIVE_MASTER_BRIDGE, project_preflight.PROJECT_GATE):
+                project_preflight.CREATIVE_MASTER_BRIDGE, project_preflight.SOURCE_INGEST_BRIDGE,
+                project_preflight.CHAT_LOCAL_PREFLIGHT, project_preflight.PROJECT_GATE):
         target = tmp / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / rel, target)

@@ -25,7 +25,7 @@
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>73</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>75</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>9</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-20 — **VF Project v6.6.2 creative-master materialization:** the winning styled visual must now become a local, SHA-256-bound file with a verified materialization receipt before deterministic Hebrew/grap…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-20 — **VF Project v6.6.2 creative-master materialization:** the winning styled visual must now become a local, SHA-256-bound file with a verified materialization receipt before deterministic Hebrew/grap…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-20 — **VF Project v6.6.3 chat-attachment source ingest:** cold-start publication prep now has an exact-byte source bridge plus a chat-local preflight for cases where the repo executor and attachment byt…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-20 — **VF Project v6.6.3 chat-attachment source ingest:** cold-start publication prep now has an exact-byte source bridge plus a chat-local preflight for cases where the repo executor and attachment byt…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

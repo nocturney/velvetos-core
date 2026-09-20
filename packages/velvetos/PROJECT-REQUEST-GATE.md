@@ -21,7 +21,7 @@ If a mandatory authority is unavailable, stale, contradictory or cannot be verif
 
 ## ChatGPT Project bundle fallback
 
-When live GitHub/repository access or the repository executable preflight is unavailable inside a ChatGPT Project, a hash-verified Project bundle at **Contract 6 / Revision 6.6.2 or newer** may satisfy the baseline authority and creative/public-copy routing for `creative_publication` only. Record `repo_state=UNAVAILABLE_PROJECT_BUNDLE_FALLBACK` and the exact bundle ID/hashes. Do not claim repository synchronization, deployment or a repository preflight PASS.
+When live GitHub/repository access or the repository executable preflight is unavailable inside a ChatGPT Project, a hash-verified Project bundle at **Contract 6 / Revision 6.6.3 or newer** may satisfy the baseline authority and creative/public-copy routing for `creative_publication` only. Record `repo_state=UNAVAILABLE_PROJECT_BUNDLE_FALLBACK` and the exact bundle ID/hashes. Do not claim repository synchronization, deployment or a repository preflight PASS.
 
 This fallback does **not** authorize stale operational truth. Operations, finance, production status, catalog status, Instagram action and any branch that depends on live external state remain fail-closed or limited to the evidence actually available. If GitHub becomes available, resolve current `main` and apply newer scoped owner corrections before continuing.
 
@@ -67,7 +67,7 @@ Do not expose this receipt to the owner unless useful or requested. But do not p
 
 Execution must use the routed skills/tools rather than reproducing their intended behavior from memory. When a matching specialist, lint, editor, source or provider exists, actually use it when the task requires it.
 
-For creative_publication, no image-generation, image-editing, design/composition or public-copy production tool may be called until the executable preflight receipt for the exact Creative Manifest/content ID says both project_preflight: PASS and creative_execution_authorized: true. File existence, CI, remembered rules or a planned future QA do not authorize the call. If the receipt cannot be produced or is BLOCKED, stop before tool invocation; diagnostics may repair the evidence, but no creative preview is a valid fallback.
+Source-ingest evidence preparation for current-chat attachments is allowed before creative authorization; it may only copy/hash/inspect source bytes and must not create a preview. In `CHAT_LOCAL_ATTACHMENT` mode, when the repo executor and attachment bytes live on different filesystems, `scripts/vf_chat_cold_start_preflight.py` is the canonical pre-tool creative gate: it validates the hash-verified current Project bundle, exact source-ingest receipts and inspected creative plan, may return `creative_execution_authorized: true`, and can never authorize publication. Do not send chat-local source paths to a remote repo preflight that cannot read them. For other creative_publication execution, no image-generation, image-editing, design/composition or public-copy production tool may be called until the executable preflight receipt for the exact Creative Manifest/content ID says both project_preflight: PASS and creative_execution_authorized: true. File existence, CI, remembered rules or a planned future QA do not authorize the call. If the receipt cannot be produced or is BLOCKED, stop before tool invocation; diagnostics may repair the evidence, but no creative preview is a valid fallback.
 
 ### 6. Postflight
 

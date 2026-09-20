@@ -1,6 +1,6 @@
 {
   "name": "velvet-factory-visual-standard-enforcement",
-  "version": 5,
+  "version": 6,
   "mode": "fail_closed",
   "standard": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
   "visualAuthority": "packages/vfom/VISUAL-OS.md",
@@ -18,7 +18,9 @@
     "creative_master_ref",
     "creative_continuity_gate=PASS",
     "creative_master_materialization_ref",
-    "creative_master_materialized=PASS"
+    "creative_master_materialized=PASS",
+    "source_ingest_ref",
+    "source_ingest=PASS"
   ],
   "vfCreativeSurfaces": [
     ".cursor/skills/vf-canva-instagram/SKILL.md",
@@ -297,5 +299,24 @@
       ],
       "silentRawFallbackForbidden": true
     }
+  },
+  "sourceIngestPolicy": {
+    "ownerCorrectionDate": "2026-09-20",
+    "bridge": "scripts/vf_source_ingest.py",
+    "currentChatAttachmentLocalIngestBeforeCreativePreflight": true,
+    "exactBytesAndSha256Required": true,
+    "receiptRequired": true,
+    "sourceRole": "PRODUCT_SOURCE",
+    "externalInputRequiresExplicitCurrentRequestIntakeRoot": true,
+    "arbitraryFolderScanForbidden": true,
+    "networkDownloadByBridge": false,
+    "creativeOutputByBridge": false,
+    "visibleAttachmentMustAttemptPlatformLocalPathFirst": true,
+    "boundedUnavailableCode": "ATTACHMENT_BYTES_UNAVAILABLE",
+    "unhashedFallbackForbidden": true,
+    "chatLocalPreflight": "scripts/vf_chat_cold_start_preflight.py",
+    "remoteRepoPreflightMustNotReceiveChatLocalPaths": true,
+    "chatLocalPreflightAuthorizesCreativeOnly": true,
+    "chatLocalPreflightNeverAuthorizesPublication": true
   }
 }

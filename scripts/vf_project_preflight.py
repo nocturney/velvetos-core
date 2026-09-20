@@ -10,15 +10,17 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.2.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.2.json")
-PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.2.txt")
+PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.3.txt")
+PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.3.json")
+PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.3.txt")
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.6.2"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.2-CREATIVE-MASTER-MATERIALIZATION"
-PROJECT_ASSET_MANIFEST_SHA256 = "53b21e153d4ba018e750df1a366f27349c136de2c2090cb9ca12591ee8dff3bd"
+PROJECT_REVISION = "6.6.3"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.3-CHAT-ATTACHMENT-SOURCE-INGEST"
+PROJECT_ASSET_MANIFEST_SHA256 = "05ef77ff3b96c91e3f81b84e5d3caddbf3e01a5e8b0e67288ae37926427ca1ba"
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 CREATIVE_MASTER_BRIDGE = Path("scripts/vf_creative_master_bridge.py")
+SOURCE_INGEST_BRIDGE = Path("scripts/vf_source_ingest.py")
+CHAT_LOCAL_PREFLIGHT = Path("scripts/vf_chat_cold_start_preflight.py")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
 IG_CAPABILITIES = ROOT / "packages/vfigos/CAPABILITIES.json"
@@ -42,7 +44,7 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     problems: list[str] = []
     paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, PROJECT_INSTRUCTIONS, PROJECT_GATE]
     if creative:
-        paths.extend([VISUAL_ENFORCEMENT, CREATIVE_MASTER_BRIDGE])
+        paths.extend([VISUAL_ENFORCEMENT, CREATIVE_MASTER_BRIDGE, SOURCE_INGEST_BRIDGE, CHAT_LOCAL_PREFLIGHT])
     if any(not (root / rel).is_file() for rel in paths):
         return ["project binding file missing"]
     authority_path = root / PROJECT_AUTHORITY
@@ -77,6 +79,7 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
         "orientation itself adds useful information",
         "creative_master",
         "materialized to local path + SHA-256",
+        "current-chat attachment ingest",
     )
     if not all(x in instructions for x in instructions_identity):
         problems.append("Project Instructions identity/reference-alignment mismatch")
@@ -99,6 +102,20 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
         if instructions_row.get("sha256") not in _text_sha256_candidates(instructions_path):
             problems.append(f"Project Instructions hash does not match ASSET-MANIFEST-v{PROJECT_REVISION}.json")
     if creative:
+        runtime_rows = assets.get("chat_runtime")
+        required_runtime = {
+            "scripts/vf_source_ingest.py",
+            "scripts/vf_chat_cold_start_preflight.py",
+            "scripts/vf_media_integrity.py",
+            "scripts/vf_creative_master_bridge.py",
+        }
+        if not isinstance(runtime_rows, list) or {x.get("repo_path") for x in runtime_rows if isinstance(x, dict)} != required_runtime:
+            problems.append("Project chat_runtime binding must contain the exact four runtime files")
+        else:
+            for row in runtime_rows:
+                rp = root / row["repo_path"]
+                if not rp.is_file() or row.get("sha256") not in _text_sha256_candidates(rp):
+                    problems.append(f"Project chat runtime hash mismatch: {row.get('repo_path')}")
         route = policy.get("publicationRoute", {})
         if not isinstance(route, dict):
             problems.append("publicationRoute must be an object")
@@ -185,6 +202,28 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
                     problems.append("unmaterializable master must fail closed against raw fallback")
                 if materialization.get("bridge") != CREATIVE_MASTER_BRIDGE.as_posix():
                     problems.append("creative-master materialization bridge binding mismatch")
+        ingest = policy.get("sourceIngestPolicy")
+        if not isinstance(ingest, dict):
+            problems.append("source ingest policy missing")
+        else:
+            if ingest.get("bridge") != SOURCE_INGEST_BRIDGE.as_posix():
+                problems.append("source ingest bridge binding mismatch")
+            if ingest.get("currentChatAttachmentLocalIngestBeforeCreativePreflight") is not True:
+                problems.append("current-chat attachment ingest rule missing")
+            if ingest.get("exactBytesAndSha256Required") is not True or ingest.get("receiptRequired") is not True:
+                problems.append("source ingest exact-byte identity/receipt rule missing")
+            if ingest.get("externalInputRequiresExplicitCurrentRequestIntakeRoot") is not True:
+                problems.append("source ingest intake-root boundary missing")
+            if ingest.get("arbitraryFolderScanForbidden") is not True:
+                problems.append("arbitrary source folder scanning must be forbidden")
+            if ingest.get("unhashedFallbackForbidden") is not True:
+                problems.append("unhashed attachment fallback must be forbidden")
+            if ingest.get("chatLocalPreflight") != CHAT_LOCAL_PREFLIGHT.as_posix():
+                problems.append("chat-local preflight binding mismatch")
+            if ingest.get("remoteRepoPreflightMustNotReceiveChatLocalPaths") is not True:
+                problems.append("chat-local paths must not be sent to remote repo preflight")
+            if ingest.get("chatLocalPreflightAuthorizesCreativeOnly") is not True or ingest.get("chatLocalPreflightNeverAuthorizesPublication") is not True:
+                problems.append("chat-local preflight scope must be creative-only")
         reference_rules = assets.get("reference_rules")
         if not isinstance(reference_rules, dict):
             problems.append("Project reference_rules must be an object")
@@ -206,7 +245,19 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
                     "conversation_or_ui_only_image_is_not_file_backed_master",
                     "provider_task_or_remote_url_is_not_file_backed_master_until_exact_bytes_are_materialized",
                     "raw_source_recreation_is_not_creative_master_materialization",
-                    "unmaterializable_master_must_not_fall_back_silently_to_raw_source"):
+                    "unmaterializable_master_must_not_fall_back_silently_to_raw_source",
+                    "current_chat_attachment_local_ingest_required_before_creative_preflight",
+                    "source_ingest_exact_bytes_and_sha256_required",
+                    "source_ingest_receipt_required",
+                    "current_request_intake_root_must_be_explicit",
+                    "arbitrary_user_folder_scan_for_sources_forbidden",
+                    "visible_attachment_must_not_be_declared_unusable_before_platform_local_ingest_attempt",
+                    "attachment_bytes_unavailable_is_bounded_blocker",
+                    "unhashed_attachment_source_fallback_forbidden",
+                    "chat_local_preflight_required_when_repo_and_attachment_filesystems_differ",
+                    "remote_repo_preflight_must_not_receive_chat_local_paths",
+                    "chat_local_preflight_creative_only_never_publication",
+                    "chat_runtime_files_hash_bound_in_manifest"):
                 if reference_rules.get(key) is not True:
                     problems.append(f"Project reference rule missing or false: {key}")
     return problems
