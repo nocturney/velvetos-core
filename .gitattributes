@@ -15,3 +15,6 @@ packages/vfharness/state/pr228-rollout/* text eol=lf
 /packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.txt -text
 /packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.json -text
 /packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.txt -text
+/packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.1.txt -text
+/packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.1.json -text
+/packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.1.txt -text
