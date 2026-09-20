@@ -20,6 +20,7 @@ PROJECT_ASSET_MANIFEST_SHA256 = "0e3f081cef6288cc1764f950113f54dcc3711f17739ab61
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 CREATIVE_MASTER_BRIDGE = Path("scripts/vf_creative_master_bridge.py")
 SOURCE_INGEST_BRIDGE = Path("scripts/vf_source_ingest.py")
+CHAT_LOCAL_PREFLIGHT = Path("scripts/vf_chat_cold_start_preflight.py")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
 IG_CAPABILITIES = ROOT / "packages/vfigos/CAPABILITIES.json"
@@ -43,7 +44,7 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     problems: list[str] = []
     paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, PROJECT_INSTRUCTIONS, PROJECT_GATE]
     if creative:
-        paths.extend([VISUAL_ENFORCEMENT, CREATIVE_MASTER_BRIDGE, SOURCE_INGEST_BRIDGE])
+        paths.extend([VISUAL_ENFORCEMENT, CREATIVE_MASTER_BRIDGE, SOURCE_INGEST_BRIDGE, CHAT_LOCAL_PREFLIGHT])
     if any(not (root / rel).is_file() for rel in paths):
         return ["project binding file missing"]
     authority_path = root / PROJECT_AUTHORITY
@@ -203,6 +204,12 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
                 problems.append("arbitrary source folder scanning must be forbidden")
             if ingest.get("unhashedFallbackForbidden") is not True:
                 problems.append("unhashed attachment fallback must be forbidden")
+            if ingest.get("chatLocalPreflight") != CHAT_LOCAL_PREFLIGHT.as_posix():
+                problems.append("chat-local preflight binding mismatch")
+            if ingest.get("remoteRepoPreflightMustNotReceiveChatLocalPaths") is not True:
+                problems.append("chat-local paths must not be sent to remote repo preflight")
+            if ingest.get("chatLocalPreflightAuthorizesCreativeOnly") is not True or ingest.get("chatLocalPreflightNeverAuthorizesPublication") is not True:
+                problems.append("chat-local preflight scope must be creative-only")
         reference_rules = assets.get("reference_rules")
         if not isinstance(reference_rules, dict):
             problems.append("Project reference_rules must be an object")
@@ -232,7 +239,10 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
                     "arbitrary_user_folder_scan_for_sources_forbidden",
                     "visible_attachment_must_not_be_declared_unusable_before_platform_local_ingest_attempt",
                     "attachment_bytes_unavailable_is_bounded_blocker",
-                    "unhashed_attachment_source_fallback_forbidden"):
+                    "unhashed_attachment_source_fallback_forbidden",
+                    "chat_local_preflight_required_when_repo_and_attachment_filesystems_differ",
+                    "remote_repo_preflight_must_not_receive_chat_local_paths",
+                    "chat_local_preflight_creative_only_never_publication"):
                 if reference_rules.get(key) is not True:
                     problems.append(f"Project reference rule missing or false: {key}")
     return problems
