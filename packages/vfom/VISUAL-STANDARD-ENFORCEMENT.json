@@ -1,6 +1,6 @@
 {
   "name": "velvet-factory-visual-standard-enforcement",
-  "version": 6,
+  "version": 7,
   "mode": "fail_closed",
   "standard": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
   "visualAuthority": "packages/vfom/VISUAL-OS.md",
@@ -317,6 +317,14 @@
     "chatLocalPreflight": "scripts/vf_chat_cold_start_preflight.py",
     "remoteRepoPreflightMustNotReceiveChatLocalPaths": true,
     "chatLocalPreflightAuthorizesCreativeOnly": true,
-    "chatLocalPreflightNeverAuthorizesPublication": true
+    "chatLocalPreflightNeverAuthorizesPublication": true,
+    "dependencyClosedRuntimeRequired": true,
+    "runtimeFiles": [
+      "scripts/vf_source_ingest.py",
+      "scripts/vf_chat_cold_start_preflight.py",
+      "scripts/vf_media_integrity.py",
+      "scripts/vf_media_limits.py",
+      "scripts/vf_creative_master_bridge.py"
+    ]
   }
 }
