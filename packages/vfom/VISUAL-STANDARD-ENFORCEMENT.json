@@ -313,6 +313,10 @@
     "creativeOutputByBridge": false,
     "visibleAttachmentMustAttemptPlatformLocalPathFirst": true,
     "boundedUnavailableCode": "ATTACHMENT_BYTES_UNAVAILABLE",
-    "unhashedFallbackForbidden": true
+    "unhashedFallbackForbidden": true,
+    "chatLocalPreflight": "scripts/vf_chat_cold_start_preflight.py",
+    "remoteRepoPreflightMustNotReceiveChatLocalPaths": true,
+    "chatLocalPreflightAuthorizesCreativeOnly": true,
+    "chatLocalPreflightNeverAuthorizesPublication": true
   }
 }
