@@ -1,6 +1,6 @@
 {
   "brandName": "Velvet Factory",
-  "version": 3,
+  "version": 4,
   "authority": "packages/vfom/VISUAL-OS.md",
   "ownerApprovedVisualStandard": {
     "status": "approved",
@@ -27,7 +27,15 @@
       "curated_not_rigid_checkerboard",
       "exact_final_review"
     ],
-    "preferredFeedRecipes": ["hero", "ugc_human", "macro_detail", "minimal_studio", "bundle_flatlay", "service_editorial", "proof_process"],
+    "preferredFeedRecipes": [
+      "hero",
+      "ugc_human",
+      "macro_detail",
+      "minimal_studio",
+      "bundle_flatlay",
+      "service_editorial",
+      "proof_process"
+    ],
     "hardRejects": [
       "placeholder_presented_as_final",
       "generic_icons_instead_of_real_product_media",
@@ -56,12 +64,39 @@
     "failure and repair proof",
     "finished product as dominant subject"
   ],
-  "shotVocabulary": ["hero", "macro", "process", "failure", "proof", "human", "b-roll", "minimal_studio", "bundle_flatlay", "service_editorial"],
+  "shotVocabulary": [
+    "hero",
+    "macro",
+    "process",
+    "failure",
+    "proof",
+    "human",
+    "b-roll",
+    "minimal_studio",
+    "bundle_flatlay",
+    "service_editorial"
+  ],
   "lighting": {
-    "preferred": ["directional hard light", "soft daylight", "controlled shadow", "warm controlled product light"],
-    "avoid": ["random mixed white balance", "flat generic product light", "overexposed plastic"]
+    "preferred": [
+      "directional hard light",
+      "soft daylight",
+      "controlled shadow",
+      "warm controlled product light"
+    ],
+    "avoid": [
+      "random mixed white balance",
+      "flat generic product light",
+      "overexposed plastic"
+    ]
   },
-  "backgrounds": ["real workbench", "material texture", "clean black", "clean gray", "clean white", "refined neutral cream when verified by approved reference/template"],
+  "backgrounds": [
+    "real workbench",
+    "material texture",
+    "clean black",
+    "clean gray",
+    "clean white",
+    "refined neutral cream when verified by approved reference/template"
+  ],
   "motionLanguage": [
     "hard cut",
     "macro push-in when motivated",
@@ -69,7 +104,12 @@
     "slow motion only for meaningful physical proof"
   ],
   "audio": {
-    "preferred": ["real studio sound", "mechanical click", "material snap", "room tone"],
+    "preferred": [
+      "real studio sound",
+      "mechanical click",
+      "material snap",
+      "room tone"
+    ],
     "musicRole": "support proof, never replace it"
   },
   "typography": {
@@ -86,23 +126,67 @@
     "ownerApprovedDirection": "warm/dark/cream/neutral visual balance with restrained orange accent behavior only when supported by verified brand/template colors"
   },
   "feedContinuity": {
-    "ownerApprovedBalance": ["hero", "ugc_human", "macro_detail", "minimal_studio", "bundle_flatlay", "service_editorial", "proof_process"],
-    "rule": "balance truthful available material across recipes without quotas or forced checkerboards; never invent a missing category",
+    "ownerApprovedBalance": [
+      "hero",
+      "ugc_human",
+      "macro_detail",
+      "minimal_studio",
+      "bundle_flatlay",
+      "service_editorial",
+      "proof_process"
+    ],
+    "rule": "balance truthful available material across recipes without quotas or forced checkerboards; never invent a missing category; preserve family resemblance without repeating one fixed layout",
     "productFirst": true,
-    "photoFirstServiceCommunication": true
+    "photoFirstServiceCommunication": true,
+    "layoutDiversity": {
+      "required": true,
+      "vary": [
+        "hero_side",
+        "text_zone",
+        "inset_geometry",
+        "detail_density"
+      ],
+      "repairTarget": "template-like repetition across unrelated products"
+    }
   },
   "visualFinishing": {
     "version": 1,
     "alwaysOn": true,
     "principle": "Retouch the photo, not the product.",
-    "stages": ["photo_retouch", "brand_content_styling", "text_layout_qa", "final_visual_qa"],
+    "stages": [
+      "photo_retouch",
+      "brand_content_styling",
+      "text_layout_qa",
+      "final_visual_qa"
+    ],
     "photoRetouch": {
-      "allowed": ["white_balance", "exposure", "contrast", "highlights", "shadows", "noise_reduction", "natural_sharpening", "background_cleanup", "perspective_correction", "crop", "subject_separation", "lighting_polish"],
+      "allowed": [
+        "white_balance",
+        "exposure",
+        "contrast",
+        "highlights",
+        "shadows",
+        "noise_reduction",
+        "natural_sharpening",
+        "background_cleanup",
+        "perspective_correction",
+        "crop",
+        "subject_separation",
+        "lighting_polish"
+      ],
       "rule": "Improve capture quality and presentation without changing the physical product."
     },
     "productFidelity": {
       "required": true,
-      "mustPreserve": ["product_identity", "geometry", "silhouette", "proportions", "part_count", "visible_surface_pattern", "material_identity"],
+      "mustPreserve": [
+        "product_identity",
+        "geometry",
+        "silhouette",
+        "proportions",
+        "part_count",
+        "visible_surface_pattern",
+        "material_identity"
+      ],
       "colorRule": "preserve verified real product color unless the task explicitly requests a clearly-labelled design/color variant",
       "forbidSyntheticSubjectChange": true,
       "sourceSubjectMatchRequired": true
@@ -125,10 +209,27 @@
     }
   },
   "firstFrame": {
-    "mustContainOneOf": ["action", "result", "tension", "clear detail", "physical proof"],
-    "forbidden": ["long logo intro", "generic greeting"]
+    "mustContainOneOf": [
+      "action",
+      "result",
+      "tension",
+      "clear detail",
+      "physical proof"
+    ],
+    "forbidden": [
+      "long logo intro",
+      "generic greeting"
+    ]
   },
-  "proofPriority": ["load", "motion", "installation", "before_after", "measurement", "failure_fix", "real_use"],
+  "proofPriority": [
+    "load",
+    "motion",
+    "installation",
+    "before_after",
+    "measurement",
+    "failure_fix",
+    "real_use"
+  ],
   "antiPatterns": [
     "generic AI chrome",
     "random neon gradients",
@@ -144,10 +245,58 @@
     "generic Canva-template look"
   ],
   "referencePolicy": {
-    "learnable": ["lighting", "composition", "pacing", "shot structure", "transition mechanic", "sound mechanic"],
-    "mustChange": ["identity", "context", "subject", "proof", "Hebrew copy", "ending"],
-    "reject": ["trademark imitation", "distinctive identity copying", "rights ambiguity"],
-    "ownerApprovedReference": "Use the approved grid reference as style/quality guidance only; real source product evidence wins whenever there is any conflict."
+    "learnable": [
+      "lighting",
+      "composition",
+      "pacing",
+      "shot structure",
+      "transition mechanic",
+      "sound mechanic"
+    ],
+    "mustChange": [
+      "identity",
+      "context",
+      "subject",
+      "proof",
+      "Hebrew copy",
+      "ending"
+    ],
+    "reject": [
+      "trademark imitation",
+      "distinctive identity copying",
+      "rights ambiguity"
+    ],
+    "ownerApprovedReference": "Use all four approved aesthetic references as style/quality guidance only; the multi-source composition reference supplies layout vocabulary, never product facts. Real source product evidence wins whenever there is any conflict."
   },
-  "syntheticRole": "atmosphere, transitions and supporting visuals; real Velvet assets provide product, material, failure, measurement and proof"
+  "syntheticRole": "atmosphere, transitions and supporting visuals; real Velvet assets provide product, material, failure, measurement and proof",
+  "multiSourceComposition": {
+    "ownerCorrectionDate": "2026-09-20",
+    "samePhysicalProductSourceSet": true,
+    "reference": {
+      "filename": "Velvet-Factory-MULTI-SOURCE-COMPOSITION-REFERENCE-v1.jpg",
+      "sha256": "78fc8b13593d8bb5806d29e41ea9785625392e00f85e391d864eabc503f14793",
+      "role": "style_layout_only_not_product_source"
+    },
+    "heroRule": "choose the strongest verified frame as hero; use additional verified frames only when they reveal distinct useful information",
+    "provenance": {
+      "required": true,
+      "SAME_FRAME_CROP": "literal crop from exact hero/source frame; may be shown as zoom",
+      "ALTERNATE_VERIFIED_SOURCE": "different verified photo of same physical product; never presented as hero zoom"
+    },
+    "forbid": [
+      "synthetic_missing_angle",
+      "synthetic_missing_detail",
+      "alternate_product_substitution",
+      "repetitive_views_without_distinct_information"
+    ],
+    "compositionVocabulary": [
+      "hero_vertical_rail",
+      "hero_circular_crops",
+      "hero_rounded_cards",
+      "asymmetric_text_block",
+      "restrained_handwritten_annotation",
+      "editorial_footer"
+    ],
+    "fixedTemplate": false
+  }
 }
