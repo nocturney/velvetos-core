@@ -1,0 +1,38 @@
+{
+  "task_id": "morning-brief-2026-09-20",
+  "title": "PRODUCTION Velvet Morning Brief 20.9.2026",
+  "status": "processing",
+  "component_state": "Processing",
+  "date": "2026-09-20",
+  "timezone": "Asia/Jerusalem",
+  "branch": "cursor/morning-brief-2026-09-20-6aca",
+  "research": {
+    "source": "https://github.com/nocturney/velvetos-core/pull/278",
+    "state": "ready_for_brief",
+    "landed": true,
+    "consumer": "packages/vfops/data/research.md"
+  },
+  "cli": [
+    "python3 scripts/vfops_loop.py brief --write --date 2026-09-20",
+    "python3 scripts/vf_organic_growth.py brief --write",
+    "python3 packages/vfbriefux/render_mail.py packages/vfops/hq/brief-2026-09-20-v10.3.json -o packages/vfops/out/morning-brief-2026-09-20.html",
+    "python3 scripts/vf_visible_text.py --surface owner-brief --file packages/vfops/out/morning-brief-2026-09-20.txt --gate"
+  ],
+  "artifacts": {
+    "loop_json": "packages/vfops/hq/brief-2026-09-20.json",
+    "v103_json": "packages/vfops/hq/brief-2026-09-20-v10.3.json",
+    "html": "packages/vfops/out/morning-brief-2026-09-20.html",
+    "visibleText": "packages/vfops/out/morning-brief-2026-09-20.txt",
+    "request": "packages/vfops/out/gmail-send-request.json"
+  },
+  "locks": [
+    "no invented sale ILS",
+    "Insights אין ספירה",
+    "queue hours אין ספירה",
+    "no Gmail MCP send",
+    "no auto-DM",
+    "no HQ Print",
+    "no live IG publish"
+  ],
+  "next": "Push enabled request via PR merge to main; require gmail-brief-send.yml SUCCESS + message id; then disarm enabled:false"
+}
