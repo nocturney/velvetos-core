@@ -20,7 +20,7 @@ from vf_media_integrity import inspect_media
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
 AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.5.txt"
 ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.5.json"
-ASSETS_SHA = "e85c5174fd0afee1b3fe4ffad4eb21ef55fb92da686a275b92913b5d4632e4c5"
+ASSETS_SHA = "2a2c4942b840d6f68f14567a003a4b56a5f245cf2d7077ac363376dcb3181fa4"
 AUTHORITY_SHA = "6fe8d0ef4d96bcce66662145301a33e9f8ebff7fd20430ae77d90dbd4492ae2a"
 PROJECT_CONTRACT_VERSION = 6
 PROJECT_REVISION = "6.5"
