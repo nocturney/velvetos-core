@@ -1,12 +1,13 @@
-# 05 · משרד · 19.9.2026
+# 05 · משרד · 20.9.2026
 
 מצב Research Seat: `ready_for_brief`.
-הריצה בוצעה היום אך אחרי cutoff 07:00; לא מוצג כאילו הושלמה ב־02:00.
+הריצה הושלמה לפני cutoff 07:00 Asia/Jerusalem.
 
 ## מה נבנה / יועל
-- Snapmaker Orca 2.4.0 נכנסה ל־public beta ב־18.9. השינוי נוגע גם ל־OpenSSL, login, asset download, remote print ו־device connection. אצלנו: watch/sandbox בלבד; אין שינוי production בלי stable + QA מקומי.
-- desk/cable utility ממשיך לקבל חיזוק ממקורות עדכניים, אבל אין הוכחת ביקוש מקומית ולכן לא ממלאים slot במדף בלי slice/fit/photo/inquiry evidence.
+- PrusaSlicer 3.0 נכנסה ל־public preview רשמי (1.9). UI חדש, פרויקט רב־מיטות, פלאגינים ב־sandbox ומצב offline אמיתי. אצלנו: watch/sandbox בלבד; אין שינוי production בלי stable + QA מקומי.
+- תהליך הזמנה מותאמת (intake → fit check → הצעה → proof → מקדמה → ייצור → מסירה/איסוף) מתחזק ממקור maker עדכני. למפות מול סולם convert/sales הקיים; בלי auto-DM; איסוף שדרות נשאר ב־intake.
+- יעילות ייצור קטנה: First-Pass Yield + batch לפי חומר/צבע ופיזור סיום — הרגל מדדי, בלי תוכנת farm חדשה.
 - Social Intelligence: `nothing-solid`; אין שינוי ל־reset/preflight.
+- Best Skills due: refresh על dataDate 19.9; `no-embed-existing-coverage`; בלי timer שני.
 
-Best Skills לא due בריצה: lastPass=2026-09-17. לא נוצר timer/automation נוסף.
-מקור מלא: `packages/vfresearch/sources/2026-09-19-orchestra.md`.
+מקור מלא: `packages/vfresearch/sources/2026-09-20-orchestra.md`.
