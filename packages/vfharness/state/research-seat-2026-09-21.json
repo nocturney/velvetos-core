@@ -1,0 +1,16 @@
+{
+  "taskId": "research-seat-2026-09-21",
+  "status": "done",
+  "component_state": "Idle",
+  "summary": "Daily Research Seat 2026-09-21 ready_for_brief before 07:00 Asia/Jerusalem. Material + wet-area + pickup-habit + Bambu price-watch. Best Skills skipped-not-due. No owner email.",
+  "resolution": "ready_for_brief",
+  "owner_email": "NO",
+  "best_skills": "skipped-not-due",
+  "best_skills_lastPass": "2026-09-20",
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-21-orchestra.md",
+    "packages/vfops/data/research.md"
+  ],
+  "latest_observation": "Jerusalem Monday 2026-09-21 ~02:18 IDT; vfsku scan = לא יום סריקה; MakerWorld HTML Cloudflare אין גוף; gmail-send-request enabled=false",
+  "ts": "2026-09-21T02:18:00+03:00"
+}

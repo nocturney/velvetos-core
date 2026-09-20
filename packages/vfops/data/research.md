@@ -1,13 +1,14 @@
-# 05 · משרד · 20.9.2026
+# 05 · משרד · 21.9.2026
 
 מצב Research Seat: `ready_for_brief`.
 הריצה הושלמה לפני cutoff 07:00 Asia/Jerusalem.
 
 ## מה נבנה / יועל
-- PrusaSlicer 3.0 נכנסה ל־public preview רשמי (1.9). UI חדש, פרויקט רב־מיטות, פלאגינים ב־sandbox ומצב offline אמיתי. אצלנו: watch/sandbox בלבד; אין שינוי production בלי stable + QA מקומי.
-- תהליך הזמנה מותאמת (intake → fit check → הצעה → proof → מקדמה → ייצור → מסירה/איסוף) מתחזק ממקור maker עדכני. למפות מול סולם convert/sales הקיים; בלי auto-DM; איסוף שדרות נשאר ב־intake.
-- יעילות ייצור קטנה: First-Pass Yield + batch לפי חומר/צבע ופיזור סיום — הרגל מדדי, בלי תוכנת farm חדשה.
+- Prusament PLA Lightweight יצאה רשמית (17.9) — PLA מקציף, עד 65% קל יותר, דורש ייבוש וכיול. אצלנו: watch/lab בלבד; לא חומר יומיומי ולא שינוי מדף.
+- משפחת מוצרים רטובה (כיור/ניקוז עצמי) עולה ב־MakerWorld/Printables כדפוס נפרד ממארגני שולחן. רישיונות לרוב בלי מכירה בלי רישיון יוצר — אין שם למדף בלי GATE+סלייס. סריקת א׳/ד׳ הרשמית: לא יום סריקה.
+- איסוף: הרגל פיזי «מוכן לאיסוף» (וי על השורות + מדף) לפני שמזמינים את הלקוח — על TIMELINE/print.done הקיימים; בלי תוכנת חנות ובלי משלוח.
+- Bambu הודיעה על הורדת מחירי פילמנט בכל האזורים (16.9). מעקב רכש בלבד; ₪ בישראל = אין ספירה.
 - Social Intelligence: `nothing-solid`; אין שינוי ל־reset/preflight.
-- Best Skills due: refresh על dataDate 19.9; `no-embed-existing-coverage`; בלי timer שני.
+- Best Skills: skipped-not-due (`lastPass` 2026-09-20 עדיין בתוך 48ש+4ש).
 
-מקור מלא: `packages/vfresearch/sources/2026-09-20-orchestra.md`.
+מקור מלא: `packages/vfresearch/sources/2026-09-21-orchestra.md`.
