@@ -304,6 +304,8 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     inspect_media(materialized_path, "creative master materialization target")
     if origin.get("sha256") != materialized.get("sha256"):
         raise ValueError("creative master materialization is not an exact-byte handoff")
+    if materialized.get("bytes") != materialized_path.stat().st_size:
+        raise ValueError("creative master materialization byte count mismatch")
     if materialized.get("path") != creative_master.get("path") or materialized.get("sha256") != creative_master.get("sha256"):
         raise ValueError("creative master does not match materialization receipt target")
     if materialized_path.resolve() != creative_master_path.resolve():
