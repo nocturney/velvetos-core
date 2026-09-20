@@ -10,12 +10,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.5.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.5.json")
+PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.txt")
+PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.json")
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.5"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.5-MULTI-SOURCE-COMPOSITION"
-PROJECT_ASSET_MANIFEST_SHA256 = "2a2c4942b840d6f68f14567a003a4b56a5f245cf2d7077ac363376dcb3181fa4"
+PROJECT_REVISION = "6.6"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6-REFERENCE-ALIGNED-MULTI-SOURCE"
+PROJECT_ASSET_MANIFEST_SHA256 = "98600bd655786f19d0f9b113cf8fa8ab15a90af031f318c31e2e997a12dfb814"
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
