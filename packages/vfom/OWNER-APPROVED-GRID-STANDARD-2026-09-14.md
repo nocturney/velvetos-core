@@ -65,6 +65,14 @@ The following are incompatible with this approved standard unless the owner expl
 - decorative filler stock imagery;
 - the rejected G004 Canva carousel/design `DAHUaelaug0` as layout, style, canonical edit, source or publish asset.
 
+## Owner extension · multi-source composition · 2026-09-20
+
+This standard is extended, not replaced, by the owner-approved aesthetic reference `Velvet-Factory-MULTI-SOURCE-COMPOSITION-REFERENCE-v1.jpg` (SHA-256 `78fc8b13593d8bb5806d29e41ea9785625392e00f85e391d864eabc503f14793`). Its role is **STYLE/LAYOUT ONLY**. Products, Hebrew copy, logos, claims, materials, CTA or contact details visible inside the board do not become verified Velvet facts or permissions.
+
+For one exact physical product, multiple verified source photographs may be treated as a single source set. Select one hero and use additional real frames when they reveal different concrete information. A panel shown as a zoom uses `SAME_FRAME_CROP` and is a literal crop of the hero/source frame. A panel from another real frame uses `ALTERNATE_VERIFIED_SOURCE` and must not masquerade as a zoom. Never synthesize a missing angle or detail.
+
+The approved composition vocabulary now includes vertical source rails, circular or rectangular detail crops, rounded cards, asymmetric copy zones, restrained handwritten annotations and editorial footers. These are not mandatory templates. Feed coherence means a shared visual language with deliberate layout variation; repeated identical hero/text/card placement across unrelated products is a repair target.
+
 ## Tool propagation contract
 
 ## Cold-start enforcement
