@@ -188,6 +188,10 @@ if project_preflight.PROJECT_ASSET_MANIFEST != Path(bundle["assetManifest"]):
     fail("active preflight asset manifest does not match chatgptProjectBundle")
 if project_preflight.PROJECT_INSTRUCTIONS != Path(bundle["instructions"]):
     fail("active preflight Project Instructions do not match chatgptProjectBundle")
+if project_preflight.CREATIVE_MASTER_BRIDGE != Path("scripts/vf_creative_master_bridge.py"):
+    fail("active preflight creative-master bridge binding mismatch")
+if not (ROOT / project_preflight.CREATIVE_MASTER_BRIDGE).is_file():
+    fail("creative-master bridge implementation missing")
 if Path(publication_evidence.AUTHORITY) != Path(bundle["authority"]):
     fail("publication evidence Project Authority does not match chatgptProjectBundle")
 if Path(publication_evidence.ASSETS) != Path(bundle["assetManifest"]):
@@ -207,7 +211,7 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
     tmp = Path(tmp_name)
     for rel in (project_preflight.PROJECT_AUTHORITY, project_preflight.PROJECT_ASSET_MANIFEST,
                 project_preflight.PROJECT_INSTRUCTIONS, project_preflight.VISUAL_ENFORCEMENT,
-                project_preflight.PROJECT_GATE):
+                project_preflight.CREATIVE_MASTER_BRIDGE, project_preflight.PROJECT_GATE):
         target = tmp / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / rel, target)
