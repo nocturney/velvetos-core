@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-20 — **OpenPost release watch (hold):** recorded upstream head `v5.1.2` (published `2026-09-20T00:27:03Z`) against the current merged pin `v4.35.0`. Gap: `v5.1.2`, `v5.0.0`, `v4.36.3`, `v4.35.3`. Decision `PIN_HOLD_REVIEW_REQUIRED`; `currentBaseline` / `latestReviewedVersion` / staging / production host stay `v4.35.0`. No staging or production promotion. `ownerNotify=false`. Next review target is at least `v4.36.3` (Meta/IG auth + MCP) before any 5.x consideration. Remaining LIVE blocker unchanged: authorized Instagram write + `list_media` / `get_media`.
+
 - 2026-09-19 — **Grok Bot automation cutover:** the seven owner-approved VelvetOS office routines moved from the ChatGPT scheduler to Grok Bot after 7/7 read-only shadow verification. The live Grok routine inventory is now the clock authority in Asia/Jerusalem; former protected ChatGPT scheduler copies and Antigravity shadow sidecars are disabled. GitHub Actions remains the deterministic execution layer, including the canonical V10.3 owner-email sender. See automation/grok/CONTRACT.md and automation/grok/manifest.json.
 
 - 2026-09-19 — **VF publication v6.4 authority binding:** active preflight/evidence validators now bind to Contract 6 / Revision 6.4; style identity is limited to the three current aesthetic references, Product Truth guide stays QA-only, and CRLF-normalized text hashes no longer create false authority drift. Hardening also denies the superseded Product Truth teaching-sheet SHA across publication evidence and requires `product_truth_lock` to carry the exact v6.4 Product Truth guide identity.

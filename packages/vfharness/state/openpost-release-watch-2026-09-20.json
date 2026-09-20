@@ -1,0 +1,45 @@
+{
+  "task_id": "openpost-release-watch-2026-09-20",
+  "status": "blocked",
+  "component_state": "Blocked",
+  "pack": "vfigos",
+  "goal": "Record upstream OpenPost head vs current pin without promoting staging/production or bumping latestReviewedVersion.",
+  "completed_steps": [
+    "read-openpost-authority",
+    "verify-github-releases-gap",
+    "classify-required-checks-no-pass",
+    "record-upstream-watch-hold"
+  ],
+  "next_step": "Staging review of at least v4.36.3 (Meta/Instagram auth + MCP contract, plus backup/migration smoke if files exist) before any 5.x consideration.",
+  "artifacts": [
+    "packages/vfigos/OPENPOST.md",
+    "packages/vfigos/OPENPOST.json",
+    "CHANGELOG.md"
+  ],
+  "unresolved": [
+    "requiredChecks not evidenced on any tag newer than v4.35.0",
+    "LIVE blocker unchanged: authorized Instagram Graph write + list_media/get_media",
+    "v4.36.3 Meta OAuth dependency scopes and MCP tool-per-operation default need staging proof",
+    "v5.0.0 breaking-change completeness UNPROVEN"
+  ],
+  "outcome": "decision_gate",
+  "pulse": "blocked",
+  "verification": "GitHub Releases API: latest v5.1.2 published 2026-09-20T00:27:03Z; gap v5.1.2, v5.0.0, v4.36.3, v4.35.3 vs pin v4.35.0. No staging_smoke. No liveVerified.",
+  "gate": {
+    "kind": "decision_gate",
+    "waiting_for": "staging review of at least OpenPost v4.36.3 with real requiredChecks evidence",
+    "reason": "Watch-only hold. Pin stays v4.35.0. Do not bump latestReviewedVersion or promote."
+  },
+  "escalation": null,
+  "last_updated": "2026-09-20T07:20:00+03:00",
+  "execution_state": {
+    "currentBaseline": "v4.35.0",
+    "latestReviewedVersion": "v4.35.0",
+    "upstreamLatestTag": "v5.1.2",
+    "decision": "PIN_HOLD_REVIEW_REQUIRED",
+    "ownerNotify": false,
+    "stagingPromoted": false,
+    "productionPromoted": false
+  },
+  "latest_observation": "Upstream head is v5.1.2. Highest VF-relevant hop in release notes is v4.36.3 (Meta/IG OAuth scopes + MCP default). Pin remains v4.35.0."
+}

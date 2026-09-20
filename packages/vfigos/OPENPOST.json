@@ -63,6 +63,95 @@
       "databaseSchemaStorage": "No migration files were added between v4.34.2 and v4.35.0. Isolated smoke and promoted staging both remain at schema 136 with integrity_check=ok and zero foreign-key violations.",
       "security": "No VF provider-security boundary change identified. Current v4.35.0 runtime explicitly sets OPENPOST_DIAGNOSTICS_ENABLED=false. A pre-upgrade backup captured the same setting, but continuous enforcement before that snapshot is not inferred from the backup alone.",
       "runtimeDecision": "v4.35.0 was accepted after exact-artifact review and staging smoke. The stable public HTTPS/media origin, owner/workspace bootstrap, Meta provider app, and OAuth for @velvets_cloud are now verified. The remaining blocker is one real authorized Instagram write followed by canonical live verification."
+    },
+    "upstreamWatch": {
+      "observedAt": "2026-09-20T07:16:00+03:00",
+      "reverifiedAt": "2026-09-20T07:20:00+03:00",
+      "source": "https://github.com/getopenpost/openpost/releases",
+      "evidenceMethod": "GitHub Releases API (get_latest_release + list_releases + get_release_by_tag for gap tags)",
+      "upstreamLatestTag": "v5.1.2",
+      "upstreamLatestPublishedAt": "2026-09-20T00:27:03Z",
+      "upstreamLatestUrl": "https://github.com/getopenpost/openpost/releases/tag/v5.1.2",
+      "pinUnchanged": true,
+      "currentBaselineHeld": "v4.35.0",
+      "latestReviewedVersionHeld": "v4.35.0",
+      "stagingVersionHeld": "v4.35.0",
+      "productionHostVersionHeld": "v4.35.0",
+      "gapTags": [
+        "v5.1.2",
+        "v5.0.0",
+        "v4.36.3",
+        "v4.35.3"
+      ],
+      "gapPublishedAt": {
+        "v5.1.2": "2026-09-20T00:27:03Z",
+        "v5.0.0": "2026-09-19T20:12:32Z",
+        "v4.36.3": "2026-09-19T11:44:55Z",
+        "v4.35.3": "2026-09-18T16:34:16Z"
+      },
+      "gapUrls": {
+        "v5.1.2": "https://github.com/getopenpost/openpost/releases/tag/v5.1.2",
+        "v5.0.0": "https://github.com/getopenpost/openpost/releases/tag/v5.0.0",
+        "v4.36.3": "https://github.com/getopenpost/openpost/releases/tag/v4.36.3",
+        "v4.35.3": "https://github.com/getopenpost/openpost/releases/tag/v4.35.3"
+      },
+      "preliminaryImpact": {
+        "highestVfImpactTag": "v4.36.3",
+        "summary": "Release-body review only. v4.36.3 is the highest VF-relevant hop: Meta/Instagram OAuth now requests pages_read_user_content and pages_manage_metadata; Facebook video Stories/Reels hosted-file upload+poll; Facebook analytics metric families; Threads UTF-8 byte limit; MCP lists every operation as its own tool by default (OPENPOST_MCP_MODE=search restores search-first; both combines); Meta analytics + TikTok reconciliation validation fixes; archive-reader DoS fix for local AI models. v5.0.0 is editor UX + public docs reorg (Guides/Self-hosting/AI/Automate/editors/API). v5.1.2 is server-only release CI no longer waiting for a skipped Android package. v4.35.3 is Android APK release-promotion race (low VF impact). Source/changelog/migration files were not reviewed; none of these notes are requiredChecks PASS.",
+        "nextReviewTarget": "v4.36.3",
+        "consider5xOnlyAfter": "completed requiredChecks on at least v4.36.3 with real staging evidence"
+      },
+      "requiredChecks": {
+        "release_notes_and_breaking_changes": {
+          "status": "NOTES_READ_PRELIMINARY",
+          "evidence": "GitHub release bodies for v4.35.3, v4.36.3, v5.0.0, v5.1.2 were read. Full upstream changelog, source diff, and migration tree were not reviewed. v5.0.0 is a major tag; breaking-change completeness is UNPROVEN."
+        },
+        "meta_instagram_auth": {
+          "status": "REVIEW_REQUIRED",
+          "evidence": "v4.36.3 release body: Facebook/Instagram OAuth now requests Meta dependency scopes pages_read_user_content and pages_manage_metadata (fixes Invalid Scopes). Current pin OAuth was verified on v4.35.0 only. No staging re-OAuth or scope proof on a newer artifact."
+        },
+        "api_mcp_contract": {
+          "status": "REVIEW_REQUIRED",
+          "evidence": "v4.36.3 release body: MCP lists every operation as its own tool by default; OPENPOST_MCP_MODE=search restores search-first; both combines. Also added a full default MCP endpoint, compact code-mode endpoint, secure local-file uploads, and RFC 9207 OAuth issuer metadata. v5.0.0 reorganized public docs including MCP/API guides. No VF contract test was run."
+        },
+        "media_limits": {
+          "status": "NOTES_ONLY_UNPROVEN",
+          "evidence": "v4.36.3 notes a Threads UTF-8 byte-limit vs character-check fix and Facebook video Stories/Reels hosted-file upload session+polling. No Instagram media-limit change is named in the release bodies. Source not verified."
+        },
+        "scheduler_queue_retry": {
+          "status": "NOTES_ONLY_UNPROVEN",
+          "evidence": "v4.36.3 notes TikTok reconciliation when publish completes without a public post ID, Facebook comment pagination, and publication-source tracking. No VF Instagram scheduler/queue/retry change is named. Source not verified."
+        },
+        "database_schema_migrations": {
+          "status": "UNPROVEN",
+          "evidence": "Release bodies do not name schema/migration files. Absence from notes is not proof. Isolated/staging smoke was not run on any gap tag. Current pin remains schema 136 on v4.35.0 only."
+        },
+        "security": {
+          "status": "NOTES_ONLY_UNPROVEN",
+          "evidence": "v4.36.3 notes an archive-reader decompression DoS fix for local AI models and stops retaining credential-bearing request URLs in stored/logged provider network errors. OPENPOST_DIAGNOSTICS_ENABLED=false policy text is unchanged and still required. No security review of a newer artifact."
+        },
+        "staging_smoke": {
+          "status": "NOT_RUN",
+          "evidence": "No staging upgrade, isolated migration smoke, or health/queue/publish-contract smoke was performed for any tag newer than v4.35.0."
+        },
+        "instagram_live_verify": {
+          "status": "BLOCKED_UNCHANGED",
+          "evidence": "Remaining LIVE blocker is unchanged: one real authorized Instagram Graph write plus canonical Instagram MCP list_media/get_media. No write was performed. Do not treat transport success as liveVerified."
+        },
+        "analytics_read": {
+          "status": "NOTES_ONLY_UNPROVEN",
+          "evidence": "v4.36.3 notes Facebook analytics metric families per Graph object type and Meta analytics + TikTok reconciliation release-validation fixes. Instagram analytics contract was not verified. No Insights numbers were recorded."
+        },
+        "signed_delivery_approval_live": {
+          "status": "BLOCKED_UNCHANGED",
+          "evidence": "deliveryApproval remains BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED. liveEndToEndVerified=false. No real Instagram Graph write. OpenPost/direct MCP cannot bypass the signed delivery boundary."
+        }
+      },
+      "decision": "PIN_HOLD_REVIEW_REQUIRED",
+      "ownerNotify": false,
+      "stagingPromoted": false,
+      "productionPromoted": false,
+      "latestReviewedVersionBumped": false
     }
   },
   "securityPolicy": {
