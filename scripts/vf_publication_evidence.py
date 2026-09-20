@@ -18,13 +18,13 @@ from typing import Any
 from vf_media_integrity import inspect_media
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.2.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.2.json"
-ASSETS_SHA = "53b21e153d4ba018e750df1a366f27349c136de2c2090cb9ca12591ee8dff3bd"
-AUTHORITY_SHA = "5170d15876169662058107f1f34081c8126ac2026efa5179ede1831012afde1b"
+AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.3.txt"
+ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.3.json"
+ASSETS_SHA = "4640794ed4852bdc3485789478a55a60d66e668c9f01abd851210119ca2edc1d"
+AUTHORITY_SHA = "6b87b9ee28343df95bf215c41000676ba9d68d7ca4980ce2f987305fd66253a5"
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.6.2"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.2-CREATIVE-MASTER-MATERIALIZATION"
+PROJECT_REVISION = "6.6.3"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.3-CHAT-ATTACHMENT-SOURCE-INGEST"
 PRODUCT_TRUTH_GUIDE = "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
 REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 = "17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9"
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
@@ -239,6 +239,33 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
             raise ValueError("STYLE_ONLY/generated references cannot be product sources")
         inspect_media(source_path, "product source", source=True)
         source_shas.add(src["sha256"])
+    ingest_refs = _rows(ev.get("source_ingest"), "source_ingest")
+    if len(ingest_refs) != len(sources):
+        raise ValueError("every PRODUCT_SOURCE must have one source_ingest receipt")
+    ingest_by_target = {}
+    for ingest_ref in ingest_refs:
+        ingest_path = verify_ref(root, ingest_ref, "source ingest receipt", denied)
+        receipt = load_json(ingest_path)
+        if receipt.get("version") != 1 or receipt.get("ingest_method") != "LOCAL_EXACT_COPY" or receipt.get("exact_bytes_copied") is not True:
+            raise ValueError("source ingest receipt does not prove exact-byte local ingest")
+        origin = _object(receipt.get("origin"), "source ingest origin")
+        materialized = _object(receipt.get("materialized"), "source ingest target")
+        if origin.get("kind") not in {"CHAT_ATTACHMENT_FILE", "LOCAL_USER_FILE", "WORKSPACE_EXISTING"}:
+            raise ValueError("source ingest origin kind unsupported")
+        if materialized.get("sha256") != origin.get("sha256"):
+            raise ValueError("source ingest is not an exact-byte handoff")
+        target_path = verify_ref(root, materialized, "source ingest target", denied)
+        inspect_media(target_path, "source ingest target", source=True)
+        if target_path.stat().st_size != materialized.get("bytes"):
+            raise ValueError("source ingest target byte count mismatch")
+        key = (materialized.get("path"), materialized.get("sha256"))
+        if key in ingest_by_target:
+            raise ValueError("duplicate source ingest target")
+        ingest_by_target[key] = ingest_ref.get("sha256")
+    for src in sources:
+        key = (src.get("path"), src.get("sha256"))
+        if key not in ingest_by_target:
+            raise ValueError("PRODUCT_SOURCE is not backed by matching source_ingest receipt")
     refs = _rows(ev.get("references"), "references")
     ref_shas = set()
     for ref in refs:
@@ -279,6 +306,10 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
             stage_shas.add(ref.get("sha256"))
         if step.get("name") == "product_truth_lock" and guide_sha not in stage_shas:
             raise ValueError(f"product_truth_lock is not bound to the exact v{PROJECT_REVISION} Product Truth guide")
+        if step.get("name") == "source_lock":
+            required_ingest_shas = set(ingest_by_target.values())
+            if not required_ingest_shas.issubset(stage_shas):
+                raise ValueError("source_lock is not bound to all exact source_ingest receipts")
     if phase == "production":
         return {"ok": True, "phase": phase, "evidence_state": "INPUT_EVIDENCE_VALIDATED",
                 "problems": [], "publishAuthorized": False}
