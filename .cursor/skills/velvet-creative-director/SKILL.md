@@ -40,7 +40,7 @@ Use `scripts/vf_creative_master_bridge.py` for local exact-byte registration whe
 
 ## Current-chat source ingest
 
-Before creative preflight, materialize each current-chat product attachment through `scripts/vf_source_ingest.py` when the platform exposes a local attachment path. Bind its `PRODUCT_SOURCE` ref and `source_ingest` receipt; the `source_lock` stage must include the receipt. Do not search arbitrary user folders. If no attachment bytes are exposed, use one supported explicit upload/materialization handoff when available; otherwise return `ATTACHMENT_BYTES_UNAVAILABLE` without attempting creative tools.
+Before creative preflight, materialize each current-chat product attachment through `scripts/vf_source_ingest.py` when the platform exposes a local attachment path. If repo execution is on another filesystem, use `scripts/vf_chat_cold_start_preflight.py` locally; do not send chat-local paths to remote preflight. Bind its `PRODUCT_SOURCE` ref and `source_ingest` receipt; the `source_lock` stage must include the receipt. Do not search arbitrary user folders. If no attachment bytes are exposed, use one supported explicit upload/materialization handoff when available; otherwise return `ATTACHMENT_BYTES_UNAVAILABLE` without attempting creative tools.
 
 ## Workflow
 
