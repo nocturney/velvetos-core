@@ -1,18 +1,43 @@
-# Grok Bot — failover כשמכסה שבועית נגמרת
+# Grok Bot failover
 
-**Date:** 2026-08-31 (עודכן — HQ שולח דרך כלים)  
-**From:** Christian (בקשת בעלים: פיילאובר אוטונומי, לא אדם ולא Grok כשער)
+**Date:** 2026-09-20  
+**Owner intent:** HQ remains the primary publisher; Grok Bot is an emergency
+delivery executor, never a separate approval authority.
 
-תת־מקרה של **ניהול משרד**: כשצריך מעבר מנהל מלא (ChatGPT / Perplexity / Gemini / Grok / Cursor) — התחל ב־[`docs/FAILOVER.md`](FAILOVER.md). מסמך זה נשאר נוהל מכסת **Grok Bot** בלבד.
+For full management failover see [`docs/FAILOVER.md`](FAILOVER.md).
 
-כשמכסת השימוש השבועית של **Grok Bot** נגמרת (או שהבוט לא זמין):
+## Instagram delivery failover
 
-1. **מייצרים תוצרים** על הפקים הקיימים.
-2. **שולחים מ־HQ דרך כלים** — ג׳ימייל `send_message` / `reply` · אינסטגרם לפי `vfigos/SEND.md`. בריף 07:00 = `htmlBody` תצוגה 3 (`vfbriefux/MAIL.html`).
-3. Drive `create_file` למסמך משרד כשצריך.
-4. תזמורת ChatGPT + Gemini + Perplexity. **Treg לא רלוונטי.**
-5. תגיות: `#נשלח-מ-HQ` · `#ממתין-ל-כלי-IG` · `#מוכן-ל-Grok` רק כגיבוי אופציונלי.
-6. אין בוסט. אין אוטו־DM. אין Print מ־HQ. שיחת לקוח → אדם `050-2517000`.
-7. לא ממציאים שעלה לפיד אם לא עלה.
+Grok Bot may preserve a scheduled Instagram delivery window when OpenPost is
+failed, missed, or cannot be repaired quickly. It must use the canonical
+VelvetOS failover runner described in
+[`packages/vfigos/failover/README.md`](../packages/vfigos/failover/README.md).
 
-נוהל: [`packages/vfharness/playbooks/grok-failover.md`](../packages/vfharness/playbooks/grok-failover.md) · [`constitution/SEND.md`](../constitution/SEND.md).
+The Grok path is not a second unrestricted Instagram credential:
+
+- the exact package must already pass Instagram PREFLIGHT;
+- a duplicate/live-media check happens before any fresh approval;
+- the same signed delivery-approval gate applies;
+- the Instagram MCP bearer remains on `openpost-prod`;
+- `publish_image` still waits for Meta container `FINISHED`;
+- the resulting media id is verified live with `get_media`;
+- ambiguous media-publish timeout/network outcomes require reconciliation and
+  are never blindly retried.
+
+Grok Bot's local shell is the execution transport. It does not need a Meta token
+or Team Bot Secret.
+
+## Other Grok outage behavior
+
+If Grok Bot itself is unavailable or out of quota:
+
+1. generate outputs on the existing packs;
+2. send from HQ through canonical tools — Gmail send/reply and Instagram per
+   `packages/vfigos/SEND.md`;
+3. use Drive for office documents as needed;
+4. ChatGPT + Gemini + Perplexity remain the backup research/orchestration set;
+5. no boost, no auto-DM, no invented "published" state;
+6. customer conversation remains human-routed.
+
+Related: [`packages/vfharness/playbooks/grok-failover.md`](../packages/vfharness/playbooks/grok-failover.md) ·
+[`constitution/SEND.md`](../constitution/SEND.md).
