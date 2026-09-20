@@ -26,6 +26,12 @@ For still/post/carousel composition, follow `VISUAL-OS.md` and `PUBLICATION-PREP
 
 Do not treat camera-angle labels as categorically forbidden. Avoid generic side/back/front labels when they add nothing; allow an orientation label when orientation itself is useful information, and otherwise label the concrete source-backed feature revealed by the view.
 
+## Creative-master continuity
+
+For publication-prep, do not stop after the first good-looking hero/base visual. Unless a deliberate `NO_TEXT` final wins and passes exact-final QA, that image is an internal stage. Continue through the review-ready artifact in the same response when tools/sources permit.
+
+Once Product Truth + reference match pass and the strongest direction is selected, record it as `creative_master`. Final Hebrew, deterministic typography/icons/logo, dividers and source-backed insets must preserve that master. Do not silently restart from raw source media, swap to a weaker scene or regenerate the hero during finalization. Replace the master only for a recorded Product Truth, blocking artifact/readability, unsupported asset/claim or explicit owner-change reason. A weaker final is repair work, not an acceptable simplification.
+
 ## Workflow
 
 ## Cold-start Visual Standard Load Gate
