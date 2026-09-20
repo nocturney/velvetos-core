@@ -81,9 +81,12 @@ def _build_mcp():
 
     apply_insights_patch(ig_mcp)
 
-    # Image Stories must poll FINISHED before media_publish (upstream skips wait → 9007).
+    # Feed images and image Stories must poll FINISHED before media_publish.
+    # Upstream skips that wait on image paths, which can hit Graph 9007.
+    from image_publish import apply_image_publish_patch
     from story_publish import apply_story_publish_patch
 
+    apply_image_publish_patch(ig_mcp)
     apply_story_publish_patch(ig_mcp)
 
     # Official Graph mutation matrix tools (honest unsupported + gated delete).
