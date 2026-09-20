@@ -1,0 +1,216 @@
+diff --git a/apps/server/cmd/openpost/main.go b/apps/server/cmd/openpost/main.go
+index 1cf0c22..f423e49 100644
+--- a/apps/server/cmd/openpost/main.go
++++ b/apps/server/cmd/openpost/main.go
+@@ -1007,7 +1007,9 @@ func main() {
+ 	})
+ 	apiroutes.FinalizeOpenAPIContract(api)
+ 
+-	RegisterSpaRoutes(e, db, cfg.PublicURL, cfg.Edition == config.EditionCloud, cfg.PublicProfilesEnabled)
++	if command.role.runsWeb() {
++		RegisterSpaRoutes(e, db, cfg.PublicURL, cfg.Edition == config.EditionCloud, cfg.PublicProfilesEnabled)
++	}
+ 
+ 	workerCtx, cancelWorker := context.WithCancel(context.Background())
+ 	defer cancelWorker()
+diff --git a/apps/server/internal/platform/errors.go b/apps/server/internal/platform/errors.go
+index 7450ca5..762dd23 100644
+--- a/apps/server/internal/platform/errors.go
++++ b/apps/server/internal/platform/errors.go
+@@ -83,6 +83,14 @@ func ProviderErrorDiagnostic(err error) string {
+ 	return strings.Join(parts, " ")
+ }
+ 
++func ProviderSafeMessage(err error) string {
++	var safe interface{ SafeProviderMessage() string }
++	if !errors.As(err, &safe) {
++		return ""
++	}
++	return strings.TrimSpace(safe.SafeProviderMessage())
++}
++
+ func firstSafeProviderCode(candidates []any) string {
+ 	for _, candidate := range candidates {
+ 		var code string
+diff --git a/apps/server/internal/platform/instagram.go b/apps/server/internal/platform/instagram.go
+index f44fd61..4ddcf9c 100644
+--- a/apps/server/internal/platform/instagram.go
++++ b/apps/server/internal/platform/instagram.go
+@@ -289,6 +289,18 @@ func (i *InstagramAdapter) UploadMedia(_ context.Context, _ string, _ string, _
+ }
+ 
+ func (i *InstagramAdapter) Publish(ctx context.Context, accessToken, instagramUserID string, req *PublishRequest) (PublishResult, error) {
++	if velvetMCPConfigured() {
++		result, err := executePublishWrite(req, "publish_media", func() (string, error) {
++			bridged, bridgeErr := publishInstagramViaVelvetMCP(ctx, req)
++			return bridged.ExternalID, bridgeErr
++		})
++		if err != nil && velvetDefinitelyRejected(err) {
++			result.SubmissionState = PublishSubmissionRejected
++			result.ProviderState = "velvet_mcp_blocked"
++			result.RetrySafety = PublishRetrySafe
++		}
++		return result, err
++	}
+ 	result, err := executePublishWrite(req, "publish_media", func() (string, error) {
+ 		return i.publish(ctx, accessToken, instagramUserID, req)
+ 	})
+diff --git a/apps/server/internal/services/publisher/failures.go b/apps/server/internal/services/publisher/failures.go
+index 61302c8..f2ff03e 100644
+--- a/apps/server/internal/services/publisher/failures.go
++++ b/apps/server/internal/services/publisher/failures.go
+@@ -73,6 +73,24 @@ func ClassifyFailure(err error) Failure {
+ 			failure.Message = "The provider result was interrupted. OpenPost will retry with the same provider idempotency key."
+ 			return failure
+ 		}
++		if failure, ok := classifyProviderHTTPFailure(err); ok {
++			failure.Retryable = false
++			failure.Action = FailureActionProvider
++			if safe := platform.ProviderSafeMessage(err); safe != "" {
++				failure.Message = "The provider write outcome is ambiguous after the write fence: " + safe
++			} else {
++				failure.Message = "The provider may have accepted this publish. OpenPost did not send it again. Check the provider before retrying manually."
++			}
++			return failure
++		}
++		var networkErr net.Error
++		if errors.As(err, &networkErr) || errors.Is(err, context.DeadlineExceeded) {
++			failure := failureForKind(FailureNetwork, "ambiguous_transport", 0, 0)
++			failure.Retryable = false
++			failure.Action = FailureActionProvider
++			failure.Message = "The provider connection was interrupted after the write fence. Check the provider before retrying manually."
++			return failure
++		}
+ 		failure := failureForKind(FailureUnknown, "ambiguous_provider_write", 0, 0)
+ 		failure.Message = "The provider may have accepted this publish. OpenPost did not send it again. Check the provider before retrying manually."
+ 		failure.Action = FailureActionProvider
+@@ -120,6 +138,8 @@ func classifyProviderHTTPFailure(err error) (Failure, bool) {
+ 		kind = FailureDuplicateContent
+ 	case strings.Contains(code, "expired"):
+ 		kind = FailureAuthExpired
++	case providerErr.StatusCode == http.StatusRequestTimeout:
++		kind = FailureNetwork
+ 	case providerErr.StatusCode == http.StatusUnauthorized:
+ 		kind = FailureReconnectRequired
+ 	case providerErr.StatusCode == http.StatusForbidden:
+@@ -138,6 +158,9 @@ func classifyProviderHTTPFailure(err error) (Failure, bool) {
+ 		return Failure{}, false
+ 	}
+ 	failure := failureForKind(kind, providerErr.Code, providerErr.StatusCode, providerErr.RetryAfter)
++	if safe := platform.ProviderSafeMessage(err); safe != "" {
++		failure.Message = safe
++	}
+ 	if kind == FailurePermission && code == "discord_attach_files_permission_lost" {
+ 		failure.Message = "Allow Attach Files for the bot in this Discord channel, or remove the attachments."
+ 	}
+diff --git a/apps/server/internal/services/publisher/failures_test.go b/apps/server/internal/services/publisher/failures_test.go
+index 3a55a79..859714c 100644
+--- a/apps/server/internal/services/publisher/failures_test.go
++++ b/apps/server/internal/services/publisher/failures_test.go
+@@ -8,6 +8,7 @@ import (
+ 	"time"
+ 
+ 	"github.com/openpost/backend/internal/platform"
++	"github.com/openpost/backend/internal/services/providerwrite"
+ 	"github.com/stretchr/testify/require"
+ )
+ 
+@@ -63,3 +64,22 @@ func TestDiscordAttachmentPermissionFailureExplainsHowToPublish(t *testing.T) {
+ 	require.Contains(t, failure.Message, "Attach Files")
+ 	require.Contains(t, failure.Message, "remove the attachments")
+ }
++
++func TestAmbiguousVelvetTimeoutPreservesKindWithoutAutoRetry(t *testing.T) {
++	err := &providerwrite.OutcomeError{
++		Kind: providerwrite.StatusAmbiguous,
++		Err: &platform.HTTPError{StatusCode: http.StatusRequestTimeout, Code: "velvet:timeout"},
++	}
++	failure := ClassifyFailure(err)
++	require.Equal(t, FailureNetwork, failure.Kind)
++	require.Equal(t, "velvet:timeout", failure.Code)
++	require.False(t, failure.Retryable)
++	require.Equal(t, FailureActionProvider, failure.Action)
++}
++
++func TestVelvetRateLimitRemainsRetryable(t *testing.T) {
++	failure := ClassifyFailure(&platform.HTTPError{StatusCode: http.StatusTooManyRequests, Code: "velvet:rate_limited"})
++	require.Equal(t, FailureRateLimited, failure.Kind)
++	require.True(t, failure.Retryable)
++	require.Equal(t, FailureActionRetry, failure.Action)
++}
+\ No newline at end of file
+diff --git a/apps/server/internal/services/publisher/publisher.go b/apps/server/internal/services/publisher/publisher.go
+index 3dbea4d..efe437f 100644
+--- a/apps/server/internal/services/publisher/publisher.go
++++ b/apps/server/internal/services/publisher/publisher.go
+@@ -260,6 +260,7 @@ func (s *Service) HandlePublishPublicationJob(ctx context.Context, jobPayload st
+ 	}
+ 	var retryFailure *RetryableError
+ 	var terminalWriteFailure error
++	var terminalRenditionFailure error
+ 	readinessIntent := publisherReadinessIntent(receipts[0].ExecutionIntent)
+ 	for i := range renditions {
+ 		rendition := renditions[i]
+@@ -284,13 +285,16 @@ func (s *Service) HandlePublishPublicationJob(ctx context.Context, jobPayload st
+ 			log.Printf("[Publisher] Failed to mark rendition %s as publishing: %v", rendition.ID, err)
+ 		}
+ 		if err := s.publishRendition(ctx, publication, &rendition, receiptByRendition[rendition.ID], readinessIntent); err != nil {
+-			if providerwrite.IsAmbiguous(err) {
++			ambiguous := providerwrite.IsAmbiguous(err)
++			if ambiguous {
+ 				terminalWriteFailure = err
+ 			}
+ 			failure := ClassifyFailure(err)
+ 			if failure.Retryable &&
+ 				(retryFailure == nil || failure.RetryAfter > retryFailure.Failure.RetryAfter) {
+ 				retryFailure = &RetryableError{Failure: failure, Provider: rendition.Platform, RenditionID: rendition.ID}
++			} else if !failure.Retryable && !ambiguous && terminalRenditionFailure == nil {
++				terminalRenditionFailure = err
+ 			}
+ 			log.Printf(
+ 				"[Publisher] Rendition %s failed (%s, status=%d, code=%s)",
+@@ -331,6 +335,9 @@ func (s *Service) HandlePublishPublicationJob(ctx context.Context, jobPayload st
+ 	if terminalWriteFailure != nil {
+ 		return terminalWriteFailure
+ 	}
++	if terminalRenditionFailure != nil {
++		return terminalRenditionFailure
++	}
+ 	return nil
+ }
+ 
+diff --git a/apps/server/internal/services/publisher/publisher_lifecycle_test.go b/apps/server/internal/services/publisher/publisher_lifecycle_test.go
+index 7c52fd8..dc9c37b 100644
+--- a/apps/server/internal/services/publisher/publisher_lifecycle_test.go
++++ b/apps/server/internal/services/publisher/publisher_lifecycle_test.go
+@@ -40,12 +40,28 @@ func TestHandlePublishPublicationJobRecordsAmbiguousFailureWithoutRetry(t *testi
+ 	require.Error(t, err)
+ 	events := srv.lifecycleEvents(t)
+ 	requireLifecycleTypes(t, events, lifecycle.EventRetried, lifecycle.EventProviderProcessing, lifecycle.EventFailed)
+-	require.Contains(t, events[len(events)-1].MetadataJSON, string(FailureUnknown))
+-	require.Contains(t, events[len(events)-1].MetadataJSON, "ambiguous_provider_write")
++	require.Contains(t, events[len(events)-1].MetadataJSON, string(FailureProviderServer))
++	require.Contains(t, events[len(events)-1].MetadataJSON, "temporarily_unavailable")
+ 	require.Contains(t, events[len(events)-1].MetadataJSON, `"retryable":false`)
+ 	require.NotContains(t, events[len(events)-1].MetadataJSON, "provider rejected post")
+ }
+ 
++func TestHandlePublishPublicationJobReturnsTerminalRenditionFailure(t *testing.T) {
++	t.Parallel()
++
++	srv := newPublisherLifecycleTestServer(t, &fakePublisherAdapter{
++		publishErr: &platform.HTTPError{StatusCode: 400, Code: "invalid_param"},
++	})
++
++	err := srv.publishPublication(t)
++
++	require.Error(t, err)
++	var rendition models.Rendition
++	require.NoError(t, srv.db.NewSelect().Model(&rendition).Where("id = ?", "rendition-1").Scan(t.Context()))
++	require.Equal(t, models.RenditionStatusFailed, rendition.Status)
++	require.False(t, rendition.ErrorRetryable)
++}
++
+ func TestSuccessfulFinalPublicationEnqueuesQueueEmptiedReminder(t *testing.T) {
+ 	t.Parallel()
+ 

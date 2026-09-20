@@ -27,6 +27,8 @@ PROJECT = "instamcp"
 ZONE = "us-central1-a"
 INSTANCE = "openpost-prod"
 REMOTE_HELPER = "/opt/velvetos/instagram-failover-mcp.py"
+REMOTE_STATE = "/opt/velvetos/openpost-failover-state.py"
+SSH_KEY = r"C:\Users\Chris\.ssh\google_compute_engine"
 SHA_RE = re.compile(r"/sha256/([0-9a-f]{64})/", re.I)
 
 
@@ -49,7 +51,14 @@ def _gcloud() -> str:
 
 
 def _run(argv: list[str], *, timeout: int = 180, check: bool = True) -> subprocess.CompletedProcess[str]:
-    proc = subprocess.run(argv, text=True, capture_output=True, timeout=timeout, check=False)
+    env = os.environ.copy()
+    if os.name == "nt":
+        env.setdefault("CLOUDSDK_CONFIG", r"C:\Users\Chris\AppData\Roaming\gcloud")
+        env["USERPROFILE"] = r"C:\Users\Chris"
+        env["HOME"] = r"C:\Users\Chris"
+        env["HOMEDRIVE"] = "C:"
+        env["HOMEPATH"] = r"\Users\Chris"
+    proc = subprocess.run(argv, text=True, capture_output=True, timeout=timeout, check=False, env=env)
     if check and proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "").strip().splitlines()
         tail = detail[-1] if detail else "command failed"
@@ -81,6 +90,7 @@ def _remote_command(gcloud: str, command: str, *, timeout: int = 180) -> dict[st
             f"--project={PROJECT}",
             f"--zone={ZONE}",
             "--tunnel-through-iap",
+            f"--ssh-key-file={SSH_KEY}",
             "--quiet",
             f"--command={command}",
         ],
@@ -97,6 +107,22 @@ def _remote_list_media(gcloud: str, limit: int = 25) -> dict[str, Any]:
         gcloud,
         f"sudo python3 {REMOTE_HELPER} list-media --limit {max(1, min(limit, 100))}",
     )
+
+
+def _primary_failover_state(gcloud: str, manifest: dict[str, Any]) -> dict[str, Any]:
+    publication_id = manifest.get("publication_id")
+    rendition_id = manifest.get("rendition_id")
+    if not isinstance(publication_id, str) or not publication_id.strip():
+        raise Blocked("failover manifest missing publication_id")
+    if not isinstance(rendition_id, str) or not rendition_id.strip():
+        raise Blocked("failover manifest missing rendition_id")
+    state = _remote_command(
+        gcloud,
+        f"sudo python3 {REMOTE_STATE} --publication-id {publication_id.strip()} --rendition-id {rendition_id.strip()}",
+    )
+    if state.get("ok") is not True:
+        raise Blocked("OpenPost failover-state check failed")
+    return state
 
 
 def _extract_media_sha(payload: dict[str, Any]) -> str:
@@ -263,6 +289,7 @@ def main() -> int:
         ), ensure_ascii=False))
         return 0
 
+    primary = _primary_failover_state(gcloud, manifest)
     if not args.execute:
         print(json.dumps(_safe_summary(
             manifest=manifest,
@@ -272,9 +299,29 @@ def main() -> int:
                 "publish_authorized": True,
                 "duplicate_found": False,
                 "media_sha256": media_sha,
+                "primary_safe_to_failover": primary.get("safe_to_failover") is True,
+                "primary_reason": primary.get("reason"),
             },
         ), ensure_ascii=False))
         return 0
+
+    if primary.get("safe_to_failover") is not True:
+        print(json.dumps(_safe_summary(
+            manifest=manifest,
+            mode="primary-blocked",
+            extra={
+                "ok": False,
+                "blocked": True,
+                "error": "OpenPost primary outcome is not proven safe for failover",
+                "primary_reason": primary.get("reason"),
+                "primary_publication_status": (primary.get("publication") or {}).get("status"),
+                "primary_rendition_status": (primary.get("rendition") or {}).get("status"),
+                "primary_job_status": (primary.get("job") or {}).get("status"),
+                "primary_delivery_state": (primary.get("delivery") or {}).get("state"),
+                "primary_retry_safety": (primary.get("delivery") or {}).get("retry_safety"),
+            },
+        ), ensure_ascii=False))
+        return 2
 
     token = uuid.uuid4().hex
     remote_call = f"/tmp/velvet-instagram-failover-{token}.json"
@@ -315,6 +362,7 @@ def main() -> int:
                     f"--project={PROJECT}",
                     f"--zone={ZONE}",
                     "--tunnel-through-iap",
+                    f"--ssh-key-file={SSH_KEY}",
                     "--quiet",
                 ],
                 timeout=120,
@@ -334,6 +382,7 @@ def main() -> int:
                     f"--project={PROJECT}",
                     f"--zone={ZONE}",
                     "--tunnel-through-iap",
+                    f"--ssh-key-file={SSH_KEY}",
                     "--quiet",
                     f"--command=sudo rm -f {remote_call}",
                 ],
