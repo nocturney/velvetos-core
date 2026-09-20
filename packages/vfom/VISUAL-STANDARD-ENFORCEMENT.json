@@ -1,6 +1,6 @@
 {
   "name": "velvet-factory-visual-standard-enforcement",
-  "version": 2,
+  "version": 3,
   "mode": "fail_closed",
   "standard": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
   "visualAuthority": "packages/vfom/VISUAL-OS.md",
@@ -228,6 +228,15 @@
       "editorial_footer"
     ],
     "fixedTemplateRequirement": false,
-    "layoutDiversityRule": "preserve coherent visual language while varying hero side, text zone, inset geometry and density across unrelated products"
+    "layoutDiversityRule": "preserve coherent visual language while varying hero side, text zone, inset geometry and density across unrelated products",
+    "orientationLabelRule": "generic camera-angle labels are not default; allow an orientation label when orientation itself adds useful information, otherwise name the concrete feature revealed"
+  },
+  "cameraAngleLabelPolicy": {
+    "ownerCorrectionDate": "2026-09-20",
+    "blanketBan": false,
+    "genericLabelsDefault": "AVOID",
+    "orientationLabelsAllowedWhen": "orientation_itself_adds_useful_information",
+    "otherwise": "describe_the_concrete_feature_the_view_reveals",
+    "finalQa": "when an orientation label is used, verify informational value and no semantic duplication"
   }
 }
