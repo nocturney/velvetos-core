@@ -1,0 +1,42 @@
+{
+  "task": "vf-project-v661-first-pass-continuity-2026-09-20",
+  "status": "ready_to_merge_after_final_ci",
+  "base_sha": "92cfe77f517264d24de0319a0ebb2b3f8f50bfa9",
+  "pr": 284,
+  "current_head": "7c36a15f69a3945b1c7b0ce509f5d001a82ddd62",
+  "bundle": {
+    "contract": 6,
+    "revision": "6.6.1",
+    "id": "VF-PROJECT-6.6.1-FIRST-PASS-CREATIVE-CONTINUITY",
+    "asset_manifest_sha256": "5c96f546189356558a619f0cc041fe23a6366240017d4331849ed721d5935175",
+    "authority_sha256": "7ca2eb5d9187abfb5db9852830db94d76b4fa0bce810b51240c94ac76dacb209",
+    "instructions_sha256": "7bbb60571053ea80d49048ae06734f8377969e1e7d698b764aece50e889f209e",
+    "instructions_characters": 7912
+  },
+  "behavioral_trigger": {
+    "observed": "cold-start produced a strong styled base visual, stopped early, then finalization regressed to a weaker raw-source composition",
+    "correction": [
+      "intermediate visual is not automatic completion",
+      "freeze selected creative_master",
+      "finalization preserves/improves master",
+      "replacement requires recorded cause",
+      "delivery evidence binds creative_continuity"
+    ]
+  },
+  "proof": {
+    "github_actions_run_964": "PASS full VelvetOS Core Sensors",
+    "package_payload_hashes": "LOCAL_RECONSTRUCTION_MATCHES_REPO_HASHES",
+    "active_pointer_scan": "known active Project/runtime files contain no active v6.6 bindings; historical files remain archival"
+  },
+  "next": [
+    "run CI on checkpoint head",
+    "merge PR #284 if green",
+    "verify main active pointers",
+    "finalize complete Project install bundle"
+  ],
+  "non_claims": [
+    "ChatGPT Project installation not updated to 6.6.1 yet",
+    "post-patch cold-start test not run",
+    "publication not requested"
+  ]
+}
