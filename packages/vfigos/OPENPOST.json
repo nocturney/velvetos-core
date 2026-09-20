@@ -8,7 +8,7 @@
     "multi_channel_publishing_control",
     "analytics_collection"
   ],
-  "integrationMode": "shadow",
+  "integrationMode": "primary-control-plane",
   "creativeAuthority": false,
   "qualityGateAuthority": false,
   "instagram": {
@@ -62,7 +62,7 @@
       "analytics": "PieFed analytics fixes only; no Instagram analytics contract change identified.",
       "databaseSchemaStorage": "No migration files were added between v4.34.2 and v4.35.0. Isolated smoke and promoted staging both remain at schema 136 with integrity_check=ok and zero foreign-key violations.",
       "security": "No VF provider-security boundary change identified. Current v4.35.0 runtime explicitly sets OPENPOST_DIAGNOSTICS_ENABLED=false. A pre-upgrade backup captured the same setting, but continuous enforcement before that snapshot is not inferred from the backup alone.",
-      "runtimeDecision": "v4.35.0 was accepted after exact-artifact review and staging smoke. The stable public HTTPS/media origin, owner/workspace bootstrap, Meta provider app, and OAuth for @velvets_cloud are now verified. The remaining blocker is one real authorized Instagram write followed by canonical live verification."
+      "runtimeDecision": "Production control-plane is active on OpenPost v4.35.0 + vfbridge6. A real owner-approved Instagram write is LIVE_VERIFIED through the canonical Instagram MCP. GrokBot failover is armed only for exact scheduled manifests and only when the OpenPost provider outcome is proven safe for failover."
     }
   },
   "securityPolicy": {
@@ -73,7 +73,7 @@
     }
   },
   "runtime": {
-    "productionDeployed": false,
+    "productionDeployed": true,
     "stagingDeployed": true,
     "stagingHost": "windows-backup-worker",
     "stagingMethod": "pinned-single-binary",
@@ -89,7 +89,7 @@
     },
     "publicHttpsReady": true,
     "providerOAuthReady": true,
-    "blockedBy": "Stable public HTTPS/media origin, owner/workspace bootstrap, Meta provider app, and OAuth are verified. Remaining blocker: a real authorized Instagram Graph write plus canonical live verification. OpenPost/direct MCP cannot bypass the signed delivery boundary.",
+    "blockedBy": "",
     "containerImagePolicy": "pin version or immutable digest; never production latest",
     "diagnosticsEnabled": false,
     "backup": {
@@ -167,8 +167,8 @@
       "providerOAuthObservedAt": "2026-09-18T14:28:27.010293+03:00"
     },
     "productionHost": {
-      "status": "HOST_READY_LIVE_WRITE_BLOCKED",
-      "observedAt": "2026-09-18T08:53:11.7961312+03:00",
+      "status": "HOST_READY_LIVE_VERIFIED",
+      "observedAt": "2026-09-20T18:23:02.196272+03:00",
       "gcpProject": "instamcp",
       "zone": "us-central1-a",
       "instance": "openpost-prod",
@@ -179,8 +179,8 @@
       "staticIpv4": "34.9.7.22",
       "publicOrigin": "https://openpost.34.9.7.22.sslip.io",
       "publicMediaOrigin": "https://openpost.34.9.7.22.sslip.io/media",
-      "version": "v4.35.0",
-      "linuxServerSha256": "157abefc2810dde09e914b78915f79c0160fcf60047856a30a1261c1721d2856",
+      "version": "v4.35.0-vfbridge6",
+      "linuxServerSha256": "7680c802ddb9de55e51b5fc68ef7dafae659a2798b9ba2fd07cfeab907100293",
       "openpostServicePreRestart": "active",
       "caddyServicePreRestart": "active",
       "envDirectoryPermissions": "0700 root:root",
@@ -235,27 +235,42 @@
       "iapSshEvidence": "PASS via local IAP TCP tunnel to port 22; exact host key pinned",
       "securityObservedAt": "2026-09-18T09:26:06+03:00",
       "registrationEnabled": false,
-      "registrationDisabledObservedAt": "2026-09-18T11:21:39+03:00"
+      "registrationDisabledObservedAt": "2026-09-18T11:21:39+03:00",
+      "tokenHelperSha256": "a31030d4bb9c8234266e168f9aa6435970a44f9cbc6923a5a60ba5735cf1dc31",
+      "currentOpenPostService": "active",
+      "currentOpenPostWorkerService": "active"
+    },
+    "liveVerified": true,
+    "liveVerifiedAt": "2026-09-20T18:23:02.196272+03:00",
+    "grokInstagramFailover": {
+      "status": "READY_DUPLICATE_SAFE_VERIFIED",
+      "manifestSchema": "velvet.instagram_failover.v1",
+      "client": "packages/vfigos/failover/grok_client.py",
+      "trustedRunner": "packages/vfigos/failover/grok_instagram_failover.py",
+      "stateGate": "packages/vfigos/failover/openpost_failover_state.py",
+      "requiresPreparedManifest": true,
+      "requiresSafeToFailover": true,
+      "blocksAmbiguousOrActivePrimary": true
     }
   },
   "deliveryApproval": {
     "schema": "velvet.delivery_approval.v1",
     "requiredForInstagramWrites": true,
     "dedicatedIssuerRequired": true,
-    "currentLiveEvidence": "BOUNDARY_SMOKE_VERIFIED / LIVE_BLOCKED",
+    "currentLiveEvidence": "LIVE_VERIFIED",
     "operatorSetup": "packages/vfigos/approval/OPERATOR-SETUP.md",
     "directInstagramMcpIsNotApprovalBypass": true,
-    "productionPromotionBlockedUntilLive": true,
+    "productionPromotionBlockedUntilLive": false,
     "ownerInvokerNarrowIamVerified": true,
     "ownerAuthVerified": true,
-    "liveEndToEndVerified": false,
-    "liveBlocker": "Owner-auth, production boundary/replay smoke, stable public HTTPS origin, owner/workspace bootstrap, and OpenPost provider OAuth are verified. LIVE remains false because no real Instagram Graph write was performed or canonically verified.",
+    "liveEndToEndVerified": true,
+    "liveBlocker": "",
     "replayStoreVerified": true,
     "boundarySmokeVerified": true,
     "publicInstagramWritePerformedInBoundarySmoke": false,
     "issuerRevision": "velvet-delivery-approval-issuer-00007-wgl",
-    "mutationRevision": "velvet-instagram-mcp-00013-mcj",
-    "mutationImageDigest": "sha256:8f889ac70ef38289a52be430da7ad587bf5006346153ba0e8472132e10f91642",
+    "mutationRevision": "velvet-instagram-mcp-00017-pxc",
+    "mutationImageDigest": "sha256:495a12b4b529404008f00112ec80a524ce57d1824a8d5a419107095fff2abe5b",
     "boundarySmokeEvidence": {
       "observedAt": "2026-09-17T19:05:48.042714Z",
       "approvalId": "ba790fc7-38e1-4df3-bcf1-51ae678c6037",
@@ -266,6 +281,19 @@
       "firstCall": "BLOCKED pre-Graph media fetch after atomic spend",
       "replayClaimStatus": "already_spent",
       "canonicalMediaUnchanged": true
+    },
+    "liveEvidence": {
+      "observedAt": "2026-09-20T18:23:02.196272+03:00",
+      "contentId": "VF-DRAGON-OWNER-APPROVED-20260920-V2",
+      "packageSha256": "ee7a68db81d66c5bc92457b532d72c9756a7ca5991424514b5bbbb446626ce41",
+      "mediaSha256": "ea986d39531f635d3e818286cac5b6e714ee12e01e161704ef07a26fabcc234f",
+      "instagramMediaId": "17899807347597720",
+      "permalink": "https://www.instagram.com/p/DdgkjZGG7mw/",
+      "verifiedBy": [
+        "publish_image",
+        "get_media"
+      ],
+      "liveVerified": true
     }
   },
   "truth": {
