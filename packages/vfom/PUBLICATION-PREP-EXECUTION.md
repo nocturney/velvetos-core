@@ -53,9 +53,23 @@ Before delivery require `reference_match_gate: PASS`. Generic catalogue cards, c
 
 ### Reference-role separation
 
-Aesthetic conditioning and Product Truth are separate inputs. The approved broad visual, editorial and current-creative references may guide atmosphere, composition, hierarchy and graphic language. Product Truth comes from the verified source photographs plus the text fidelity guide. Product Truth QA/teaching images MUST NOT be supplied to image-generation, style-transfer, moodboard or aesthetic-conditioning tools. They may be retained only as historical/diagnostic evidence.
+Aesthetic conditioning and Product Truth are separate inputs. The approved broad visual, editorial, current-creative and multi-source composition references may guide atmosphere, composition, hierarchy and graphic language. Product Truth comes from the verified source photographs plus the text fidelity guide. Product Truth QA/teaching images MUST NOT be supplied to image-generation, style-transfer, moodboard or aesthetic-conditioning tools. They may be retained only as historical/diagnostic evidence.
 
 Owner correction (2026-09-18): `Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png` is rejected for creative conditioning because it biased outputs toward a flat technical/QA-board look. Its factual lessons survive in the text-only Product Truth guide; the visual itself is not part of the creative reference stack.
+
+### Verified source-set composition · owner correction 2026-09-20
+
+Multiple verified photographs of the **exact same physical product** form one source set. They are not merely alternatives from which one hero must be chosen and the rest discarded. Choose the strongest hero; additional verified frames may appear in the same composition when they reveal a distinct real detail or angle that adds information.
+
+Before composition, bind every detail/inset to `source file + crop/region -> visible detail -> wording -> graphic role -> provenance`.
+
+Allowed provenance values:
+- `SAME_FRAME_CROP` — literal crop of the exact hero/source frame. This is the only provenance that may be presented as a zoom/magnification of that frame. No independent generation, background replacement, relighting, recoloring or separate retouch inside the crop.
+- `ALTERNATE_VERIFIED_SOURCE` — a different verified photograph of the exact same physical product. It may reveal another real angle/detail, but it must not be presented as a magnification/crop of the hero.
+
+Never synthesize a missing angle/detail, substitute another product/model, or use repetitive alternate frames that reveal no new concrete information. Product Truth applies independently to every source frame.
+
+The approved composition reference adds layout vocabulary including hero + vertical rail, circular/rectangular detail insets, rounded cards, asymmetrical text blocks, restrained handwritten annotations and editorial footers. These are options, not templates. Feed coherence requires shared visual language **and** deliberate variation in hero side, text zone, inset geometry and density; repeated identical layout across unrelated products is a repair target.
 
 ### Direction rejection
 
@@ -81,7 +95,7 @@ Never hardcode WhatsApp into public creative/caption from memory. Resolve CTA fr
 
 ## Hard failure patterns
 
-Reject as incomplete: caption-only delivery; photo-ranking-only delivery; raw photos presented as finished visual treatment; a carousel that is essentially untreated source photos; crop/exposure-only work presented as the creative result; generic "clean it later" promises; public WhatsApp CTA when current CTA authority forbids it; a third public service pillar based on customer type or quantity; an unverified/generated logo or wordmark; generic callouts without a concrete source-region map; source/reference match left UNPROVEN; or claiming the package is publication-ready without a produced visual artifact.
+Reject as incomplete: caption-only delivery; photo-ranking-only delivery; raw photos presented as finished visual treatment; a carousel that is essentially untreated source photos; crop/exposure-only work presented as the creative result; generic "clean it later" promises; public WhatsApp CTA when current CTA authority forbids it; a third public service pillar based on customer type or quantity; an unverified/generated logo or wordmark; generic callouts without a concrete source-region map; a different source frame presented as a fake hero zoom; a synthesized missing angle/detail; template-like repeated layout without justification; source/reference match left UNPROVEN; or claiming the package is publication-ready without a produced visual artifact.
 
 
 ## Brand asset lock
@@ -94,9 +108,9 @@ Reject as incomplete: caption-only delivery; photo-ranking-only delivery; raw ph
 
 ## Evidence extension v1 - executable contract
 
-Use the existing Creative Manifest field `publicationEvidence`; the initial form is `packages/vfom/publication-evidence.TEMPLATE.json`. All file references are workspace-relative `{path, sha256}` objects. Product sources use `PRODUCT_SOURCE`; the three exact style/teaching references use `STYLE_ONLY` to mark them non-product inputs. Do not place private files in public Git to satisfy this contract.
+Use the existing Creative Manifest field `publicationEvidence`; the initial form is `packages/vfom/publication-evidence.TEMPLATE.json`. All file references are workspace-relative `{path, sha256}` objects. Product sources use `PRODUCT_SOURCE`; the four exact aesthetic references use `STYLE_ONLY` to mark them non-product inputs. Do not place private files in public Git to satisfy this contract.
 Before production run `python3 scripts/vf_publication_evidence.py --manifest <manifest.json> --content-id <ID> --phase production`. Before review delivery run the same command with `--phase delivery`. Only the production phase permits production; it never authorizes delivery or publication.
-`stages` records ordered names, PASS/UNPROVEN, timezone-aware start/completion timestamps and digest-bound evidence. `reference_decomposition` contains the ten concrete axes required by the validator. `product_protection` records the source-pixel method, protected regions and evidence. `tools` records actual tool IDs, not desired future calls.
+`stages` records ordered names, PASS/UNPROVEN, timezone-aware start/completion timestamps and digest-bound evidence. `reference_decomposition` contains the ten concrete axes required by the validator. When a composition uses insets/detail panels, its creative plan/review must preserve the source file/region and provenance (`SAME_FRAME_CROP` or `ALTERNATE_VERIFIED_SOURCE`). `product_protection` records the source-pixel method, protected regions and evidence. `tools` records actual tool IDs, not desired future calls.
 `outputs` is an ordered list of exact `FINAL_VISUAL`/`FINAL_TEXT` files. The package digest is SHA-256 of compact sorted-key JSON containing ordered `{role,sha256}` rows. `copy_receipts` must bind the actual final text to vfcopy results. `review` binds job/package/source/reference hashes, reviewer, observations and separate source/reference/copy/brand/final checks; every final visual has full and distinct mobile-view evidence.
 Set `creative_manifest_ref` in the existing PREFLIGHT. `vf_send_preflight.py`, `vf_project_preflight.py`, shared `vf_publish_bridge.stage_to_github` and recovery registration consume the evidence. Bare PASS flags or public-release booleans are not sufficient. Normalize/strip metadata BEFORE final review; staging preserves approved bytes. Bridge/recovery additionally require `--format` and `--package-sha256`.
 A direction rejected for language mismatch cannot be used as a parent/source; record new rejection families in the existing `publicationRoute` policy. Rejecting a specific layout family does not ban purposeful detail panels, pictograms or editorial richness generally.
