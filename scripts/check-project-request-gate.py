@@ -94,7 +94,7 @@ if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deni
 current_refs = asset_data.get("current_references")
 if not isinstance(current_refs, dict) or set(current_refs) != {
         "broad_visual", "editorial_layout", "current_direction", "multi_source_composition"}:
-    fail("Revision 6.6.3 must bind exactly four current aesthetic references")
+    fail("Revision 6.6.4 must bind exactly four current aesthetic references")
 policy_refs = (route_doc.get("referenceRoleSeparationPolicy") or {}).get("aestheticReferences")
 if not isinstance(policy_refs, list) or set(policy_refs) != set(current_refs.values()):
     fail("visual enforcement aesthetic references do not match Project asset manifest")
@@ -216,8 +216,8 @@ if not (ROOT / project_preflight.CHAT_LOCAL_PREFLIGHT).is_file():
 runtime_rows = asset_data.get("chat_runtime")
 if not isinstance(runtime_rows, list) or {x.get("repo_path") for x in runtime_rows if isinstance(x, dict)} != {
         "scripts/vf_source_ingest.py", "scripts/vf_chat_cold_start_preflight.py",
-        "scripts/vf_media_integrity.py", "scripts/vf_creative_master_bridge.py"}:
-    fail("Project chat_runtime manifest binding mismatch")
+        "scripts/vf_media_integrity.py", "scripts/vf_media_limits.py", "scripts/vf_creative_master_bridge.py"}:
+    fail("Project dependency-closed chat_runtime manifest binding mismatch")
 if not (ROOT / project_preflight.SOURCE_INGEST_BRIDGE).is_file():
     fail("source-ingest bridge implementation missing")
 if not (ROOT / project_preflight.CREATIVE_MASTER_BRIDGE).is_file():

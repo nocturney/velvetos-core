@@ -11,11 +11,11 @@ from pathlib import Path
 from vf_media_integrity import inspect_media
 
 CONTRACT=6
-REVISION="6.6.3"
-BUNDLE="VF-PROJECT-6.6.3-CHAT-ATTACHMENT-SOURCE-INGEST"
-MANIFEST_NAME="Velvet-Factory-ASSET-MANIFEST-v6.6.3.json"
-AUTHORITY_NAMES=("Velvet-Factory-Project-Authority-v6.txt","PROJECT-AUTHORITY-v6.6.3.txt")
-INSTRUCTION_NAMES=("Velvet-Factory-Project-Instructions-v6.6.3.txt","PROJECT-INSTRUCTIONS-v6.6.3.txt")
+REVISION="6.6.4"
+BUNDLE="VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE"
+MANIFEST_NAME="Velvet-Factory-ASSET-MANIFEST-v6.6.4.json"
+AUTHORITY_NAMES=("Velvet-Factory-Project-Authority-v6.txt","PROJECT-AUTHORITY-v6.6.4.txt")
+INSTRUCTION_NAMES=("Velvet-Factory-Project-Instructions-v6.6.4.txt","PROJECT-INSTRUCTIONS-v6.6.4.txt")
 GUIDE_NAMES=("Velvet-Factory-PRODUCT-TRUTH-GUIDE-v1.txt","PRODUCT-TRUTH-GUIDE-v1.txt")
 AXES=("product_to_frame","environment","light","depth","negative_space","hierarchy","typography","details","surfaces","accent")
 PROVENANCE={"SAME_FRAME_CROP","ALTERNATE_VERIFIED_SOURCE"}
@@ -51,7 +51,7 @@ def main()->int:
     a=ap.parse_args()
     try:
         bundle=Path(a.bundle_dir).resolve(); ws=Path(a.workspace).resolve()
-        manifest_path=find(bundle,(MANIFEST_NAME,"ASSET-MANIFEST-v6.6.3.json"))
+        manifest_path=find(bundle,(MANIFEST_NAME,"ASSET-MANIFEST-v6.6.4.json"))
         manifest=load(manifest_path)
         if (manifest.get("contract_version"),str(manifest.get("revision")),manifest.get("bundle_id"))!=(CONTRACT,REVISION,BUNDLE):
             raise ValueError("bundle identity mismatch")
