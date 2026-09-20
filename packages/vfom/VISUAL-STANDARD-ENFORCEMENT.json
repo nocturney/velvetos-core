@@ -1,6 +1,6 @@
 {
   "name": "velvet-factory-visual-standard-enforcement",
-  "version": 4,
+  "version": 5,
   "mode": "fail_closed",
   "standard": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
   "visualAuthority": "packages/vfom/VISUAL-OS.md",
@@ -16,7 +16,9 @@
     "reference_match_gate=PASS",
     "publicationEvidence.version=1",
     "creative_master_ref",
-    "creative_continuity_gate=PASS"
+    "creative_continuity_gate=PASS",
+    "creative_master_materialization_ref",
+    "creative_master_materialized=PASS"
   ],
   "vfCreativeSurfaces": [
     ".cursor/skills/vf-canva-instagram/SKILL.md",
@@ -278,6 +280,22 @@
         "product_fidelity"
       ],
       "weakerFinal": "FAIL_TARGETED_REPAIR"
+    },
+    "materialization": {
+      "planBeforeCreativeToolSelectionWhenDeterministicOverlayExpected": true,
+      "requiredBeforeDeterministicOverlay": true,
+      "localPathAndSha256Required": true,
+      "receiptRequired": true,
+      "bridge": "scripts/vf_creative_master_bridge.py",
+      "providerOrUiOnlyResultIsFileBacked": false,
+      "exactProviderBytesMustBeMaterializedWhenFetchable": true,
+      "rawSourceRecreationCountsAsMaterialization": false,
+      "unmaterializableMasterOutcomes": [
+        "preserve_direction_via_file_backed_route",
+        "deliberate_same_provider_no_text_final",
+        "block_deterministic_overlay_branch"
+      ],
+      "silentRawFallbackForbidden": true
     }
   }
 }

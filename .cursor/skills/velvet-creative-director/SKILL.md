@@ -32,6 +32,12 @@ For publication-prep, do not stop after the first good-looking hero/base visual.
 
 Once Product Truth + reference match pass and the strongest direction is selected, record it as `creative_master`. Final Hebrew, deterministic typography/icons/logo, dividers and source-backed insets must preserve that master. Do not silently restart from raw source media, swap to a weaker scene or regenerate the hero during finalization. Replace the master only for a recorded Product Truth, blocking artifact/readability, unsupported asset/claim or explicit owner-change reason. A weaker final is repair work, not an acceptable simplification.
 
+## Creative-master materialization
+
+When the planned final needs deterministic Hebrew/graphics/logo/insets, choose a creative route whose selected result can become a local file. After selecting the strongest Product-Truth/reference-matched direction, materialize those exact bytes before final overlay. Bind both `publicationEvidence.creative_master` and `publicationEvidence.creative_master_materialization`.
+
+Use `scripts/vf_creative_master_bridge.py` for local exact-byte registration when available. A chat/UI image, task id or URL is not sufficient by itself. Do not reconstruct the scene from raw product media to manufacture a file-backed master. If materialization is unavailable, preserve the same direction through a file-backed route, choose the same provider result as a deliberate NO_TEXT final when appropriate, or block the overlay branch.
+
 ## Workflow
 
 ## Cold-start Visual Standard Load Gate
@@ -54,7 +60,7 @@ Once Product Truth + reference match pass and the strongest direction is selecte
 
 ## Required manifest contribution
 
-> LEGACY / provenance only for VF publication; not a provider route: Write or update `visualStandard`, `concept`, `hook`, `shots`, `edit`, `overlays`, `cover` and `status`. For publication delivery, also bind the selected `publicationEvidence.creative_master` and ensure exact-final review records `creative_continuity=PASS`; a replacement must carry an allowed recorded cause. `visualStandard.gate` must be `PASS` with the canonical document, public reference, Canva asset ID and artifact SHA before concept/render/publish work can advance. Keep factual claims linked to the Content Contract; a real asset is not universal claim proof. For Hebrew visual microcopy, record the human-copy/Humanizer pass and the `TEXT_WINS` or `NO_TEXT` decision in the existing manifest QA/decision fields until a dedicated schema field is added.
+> LEGACY / provenance only for VF publication; not a provider route: Write or update `visualStandard`, `concept`, `hook`, `shots`, `edit`, `overlays`, `cover` and `status`. For publication delivery, also bind `publicationEvidence.creative_master` + `publicationEvidence.creative_master_materialization`, and ensure exact-final review records `creative_continuity=PASS` + `creative_master_materialized=PASS`; a replacement must carry an allowed recorded cause. `visualStandard.gate` must be `PASS` with the canonical document, public reference, Canva asset ID and artifact SHA before concept/render/publish work can advance. Keep factual claims linked to the Content Contract; a real asset is not universal claim proof. For Hebrew visual microcopy, record the human-copy/Humanizer pass and the `TEXT_WINS` or `NO_TEXT` decision in the existing manifest QA/decision fields until a dedicated schema field is added.
 
 ## Human surface
 

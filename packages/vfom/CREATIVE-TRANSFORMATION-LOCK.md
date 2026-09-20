@@ -38,12 +38,22 @@ When a source-faithful styled visual passes Product Truth + reference match and 
 
 A weaker final than the selected `creative_master` is not "safer"; it is a creative regression. Replacement is allowed only for a recorded cause: Product Truth failure, blocking artifact/readability issue, unsupported asset/claim or explicit owner change. Otherwise repair the overlay/composition while retaining the successful master.
 
+## Owner correction — materialize the winning master before overlay
+
+A selected `creative_master` is not ready for deterministic finalization merely because it is visible in the chat UI or exists as a provider task/URL. If final Hebrew, icons, logo, dividers or deterministic insets are expected, plan a materializable route before generation/editing. The finalizer needs the **exact selected bytes**, not a visual description of them.
+
+Before overlay, register a local image with `scripts/vf_creative_master_bridge.py register` (or an equivalent verified exact-byte route). The resulting local path, SHA-256 and materialization receipt are the handoff contract. A fetchable provider result may be downloaded first through an authorized route; the downloaded bytes are then registered. The bridge itself never downloads or chooses providers.
+
+Do not recreate the styled scene from the raw product source and call that materialization. If the selected master cannot become file-backed, preserve the direction through a file-backed route, deliberately use the same provider result as a NO_TEXT final where appropriate, or block only the overlay branch. Silent raw-source fallback is a FAIL.
+
 ## Minimum creative delta
 
 Before `ready for review`, require all of:
 
 - `creative_delta_gate: PASS`
 - `creative_master_ref: <path + sha256>`
+- `creative_master_materialization_ref: <receipt path + sha256>`
+- `creative_master_materialized: PASS`
 - `creative_continuity_gate: PASS`
 - `raw_passthrough: false`
 - `source_edit_mode: SOURCE_IMAGE_EDIT` or a documented deterministic equivalent

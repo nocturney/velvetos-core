@@ -59,7 +59,16 @@ def fixture(root):
                           'qa_only_visual_teaching_assets': 'DO_NOT_LOAD_AS_STYLE_OR_GENERATION_REFERENCES'}})
     source = dict(image('source.png', (60, 75), (100, 80, 25)), role='PRODUCT_SOURCE')
     import vf_publish_bridge as bridge
-    master = image('master.png', (120, 150), (40, 80, 25))
+    origin_master = image('provider-result.png', (120, 150), (40, 80, 25))
+    master = write('master.png', (root/'provider-result.png').read_bytes())
+    materialization = write('materialization.json', {
+        'version': 1, 'materialization_method': 'LOCAL_EXACT_COPY', 'exact_bytes_copied': True,
+        'origin': {'kind': 'PROVIDER_FETCHED_FILE', 'provider': 'TEST', 'id': 'task-123',
+                   'path': origin_master['path'], 'sha256': origin_master['sha256']},
+        'materialized': {'path': master['path'], 'sha256': master['sha256'],
+                         'bytes': (root/'master.png').stat().st_size,
+                         'media': {'kind': 'image', 'width': 120, 'height': 150, 'format': 'PNG'}}
+    })
     bridge.normalize_image(root/'master.png', root/'final.jpg', int(bridge.load_config()['imageNormalization']['quality']))
     output = dict(path='final.jpg', sha256=evidence.digest(root/'final.jpg'), role='FINAL_VISUAL', normalization_source=master)
     mobile = image('mobile.png', (40, 50), (40, 80, 25))
@@ -76,16 +85,22 @@ def fixture(root):
         'checks': {x: 'PASS' for x in evidence.CHECKS}, 'synthetic_subject_change': 'NONE',
         'reviewer': 'TEST-ONLY', 'reference_match_observations': 'Test observations, not aesthetic validation.',
         'reviewed_at': '2026-01-01T00:00:00Z',
-        'creative_master_sha256': master['sha256'], 'creative_master_replaced': False,
+        'creative_master_sha256': master['sha256'],
+        'creative_master_materialization_sha256': materialization['sha256'],
+        'final_compositor_input_sha256': master['sha256'],
+        'creative_master_replaced': False,
         'views': [{'artifact_sha256': output['sha256'], 'full': output, 'mobile': mobile}]})
     ev = {'version': 1, 'policy_sha256': evidence.digest(root / evidence.POLICY),
         'public_intent': 'showcase', 'direction': {'family_id': 'valid-family', 'status': 'LOCKED'},
         'direction_history': [], 'tools': ['source-compositor'], 'sources': [source], 'references': refs,
-        'reference_decomposition': decomposition, 'creative_master': master, 'product_protection': {'method': 'SOURCE_MASK_COMPOSITE',
+        'reference_decomposition': decomposition, 'creative_master': master,
+        'creative_master_materialization': materialization, 'product_protection': {'method': 'SOURCE_MASK_COMPOSITE',
             'evidence': report, 'protected_regions': ['whole-product', 'eyes']},
         'stages': [{'name': n, 'status': 'PASS', 'started_at': '2026-01-01T00:00:00Z',
                     'completed_at': '2026-01-01T00:00:00Z',
-                    'evidence': [report, guide] if n == 'product_truth_lock' else [report]}
+                    'evidence': ([report, guide] if n == 'product_truth_lock'
+                                 else [materialization] if n == 'creative_master_materialization'
+                                 else [report])}
                    for n in evidence.STAGES],
         'outputs': outputs, 'copy_receipts': [lint], 'package_sha256': package, 'review': review}
     manifest = {'jobId': 'TEST', 'format': 'post', 'publicationEvidence': ev}
@@ -133,6 +148,63 @@ class EvidenceTests(unittest.TestCase):
         result = self.result()
         self.assertFalse(result['ok'])
         self.assertIn('review gates', ' '.join(result['problems']).lower())
+
+    def test_creative_master_materialization_must_pass(self):
+        review = json.loads((self.root / 'review.json').read_text())
+        review['checks']['creative_master_materialized'] = 'FAIL'
+        self.ev['review'] = self.write('review.json', review)
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('review gates', ' '.join(result['problems']).lower())
+
+    def test_missing_creative_master_materialization_receipt(self):
+        self.ev.pop('creative_master_materialization')
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('materialization', ' '.join(result['problems']).lower())
+
+    def test_final_compositor_must_use_materialized_master(self):
+        review = json.loads((self.root / 'review.json').read_text())
+        review['final_compositor_input_sha256'] = self.ev['sources'][0]['sha256']
+        self.ev['review'] = self.write('review.json', review)
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('final compositor input', ' '.join(result['problems']).lower())
+
+    def test_materialization_stage_must_bind_exact_receipt(self):
+        stage = next(x for x in self.ev['stages'] if x['name'] == 'creative_master_materialization')
+        stage['evidence'] = [self.ev['creative_master']]
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('materialization stage', ' '.join(result['problems']).lower())
+
+    def test_materialization_receipt_must_target_exact_master(self):
+        receipt_path = self.root / self.ev['creative_master_materialization']['path']
+        receipt = json.loads(receipt_path.read_text())
+        receipt['materialized']['sha256'] = '0' * 64
+        self.ev['creative_master_materialization'] = self.write('materialization.json', receipt)
+        stage = next(x for x in self.ev['stages'] if x['name'] == 'creative_master_materialization')
+        stage['evidence'] = [self.ev['creative_master_materialization']]
+        review = json.loads((self.root / 'review.json').read_text())
+        review['creative_master_materialization_sha256'] = self.ev['creative_master_materialization']['sha256']
+        self.ev['review'] = self.write('review.json', review)
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('materialization', ' '.join(result['problems']).lower())
+
+    def test_raw_source_recreation_cannot_count_as_materialization(self):
+        receipt_path = self.root / self.ev['creative_master_materialization']['path']
+        receipt = json.loads(receipt_path.read_text())
+        receipt['origin'] = dict(self.ev['sources'][0], kind='LOCAL_RENDER')
+        self.ev['creative_master_materialization'] = self.write('materialization.json', receipt)
+        stage = next(x for x in self.ev['stages'] if x['name'] == 'creative_master_materialization')
+        stage['evidence'] = [self.ev['creative_master_materialization']]
+        review = json.loads((self.root / 'review.json').read_text())
+        review['creative_master_materialization_sha256'] = self.ev['creative_master_materialization']['sha256']
+        self.ev['review'] = self.write('review.json', review)
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('exact-byte handoff', ' '.join(result['problems']).lower())
 
     def test_master_replacement_requires_supported_reason(self):
         review = json.loads((self.root / 'review.json').read_text())

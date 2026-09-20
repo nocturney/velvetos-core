@@ -49,6 +49,14 @@ Once a source-faithful styled visual passes Product Truth and reference match an
 
 Do not silently return to a raw source photo, swap to a weaker scene or regenerate the hero after a successful master. Replacing the master requires a recorded cause: Product Truth failure, blocking artifact/readability defect, unsupported asset/claim, or explicit owner change. Exact-final QA compares the final artifact to both source truth and the selected master; regression in atmosphere, hierarchy, depth, reference match, editorial richness or product fidelity is FAIL -> targeted repair.
 
+## Creative-master materialization · owner correction 2026-09-20
+
+The `creative_master` must be a real handoff artifact, not merely a good image visible in the conversation. When deterministic Hebrew/graphics/logo/insets are expected, plan the handoff **before** choosing the creative tool: prefer a route that returns a local file or a provider result whose exact bytes can be fetched and materialized.
+
+Before deterministic overlay, require `creative_master_materialized=PASS`: local path + SHA-256 + a verified materialization receipt. Use `scripts/vf_creative_master_bridge.py` after the selected provider/tool result exists as a local file. The bridge is local-only; if a provider returns a URL, fetch those exact bytes through the authorized download route first, then register them. A chat/UI image, task id or URL by itself is not file-backed.
+
+Recreating the scene from the raw product source is **not** materialization of the selected master. If the selected visual cannot be materialized, do not silently fall back to raw media. Either preserve the same direction through a file-backed route, deliberately finish the same provider result as a `NO_TEXT` final when that is genuinely the selected composition, or block only the deterministic-overlay branch. Final compositor input must match the registered master SHA.
+
 ## Visual Finishing Protocol · always-on
 
 כל נכס סטילס/פוסט/סטורי/קרוסלה/cover שעובר עיבוד חייב לעבור את ארבעת השלבים הבאים לפני שהוא נחשב final:

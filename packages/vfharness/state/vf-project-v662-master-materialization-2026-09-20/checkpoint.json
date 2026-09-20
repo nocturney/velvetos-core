@@ -1,0 +1,43 @@
+{
+  "task": "vf-project-v662-master-materialization-2026-09-20",
+  "status": "ready_to_merge_after_final_ci",
+  "base_sha": "20b494becbd1e9f11e68028024add16998ce11b6",
+  "pr": 285,
+  "current_head": "900eed1c95e431da4edea2e5b2d81cad33b70503",
+  "bundle": {
+    "contract": 6,
+    "revision": "6.6.2",
+    "id": "VF-PROJECT-6.6.2-CREATIVE-MASTER-MATERIALIZATION",
+    "asset_manifest_sha256": "53b21e153d4ba018e750df1a366f27349c136de2c2090cb9ca12591ee8dff3bd",
+    "authority_sha256": "5170d15876169662058107f1f34081c8126ac2026efa5179ede1831012afde1b",
+    "instructions_sha256": "9a55f28e9e8f09fa3468ee2fe35f398e6b48e1b037f50276b23592aa440e593b",
+    "instructions_characters": 7836
+  },
+  "behavioral_trigger": {
+    "observed": "6.6.1 completed the post but the strongest styled visual remained conversation/provider-only; deterministic finalization regressed to a weaker raw-source-like composition.",
+    "correction": [
+      "plan materializable creative route before generation when overlay is expected",
+      "materialize selected creative_master to local path + SHA-256 + receipt",
+      "bind final compositor input to materialized master SHA",
+      "raw-source recreation is not materialization",
+      "fail closed against silent raw fallback"
+    ]
+  },
+  "proof": {
+    "github_actions_run_979": "PASS full VelvetOS Core Sensors including bridge sensor and publication-evidence regressions",
+    "bridge_sensor": "exact-byte register/verify + forbidden source/reference SHA + tamper detection",
+    "active_pointer_scan": "known active Project/runtime files contain no active v6.6.1 bindings; old revisions remain historical only",
+    "review": "PR diff checked against implementation spec; no blocking issue found before checkpoint"
+  },
+  "next": [
+    "run CI on checkpoint head",
+    "merge PR #285 if green",
+    "verify main active pointers",
+    "build and hash-verify complete Project install bundle"
+  ],
+  "non_claims": [
+    "ChatGPT Project installation not updated to 6.6.2 yet",
+    "post-patch cold-start test not run",
+    "publication not requested"
+  ]
+}
