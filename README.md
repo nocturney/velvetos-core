@@ -45,8 +45,8 @@
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-20 — <strong>VF Project v6.6.4 chat-runtime dependency closure:</strong> חבילת ה־Project כוללת כעת את כל חמשת קבצי ה־runtime המקומיים, כולל vf_media_limits.py, ונבדקת בבידוד מהריפו.</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-20 — <strong>VF Project v6.6.4 chat-runtime dependency closure:</strong> the Project bundle now includes all five local runtime files, including vf_media_limits.py, and is tested in isolation from the repo.</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-20 — **VF Project v6.6.4 chat-runtime dependency closure:** the cold-start Project bundle now ships every local Python dependency required by attachment ingest and creative-master materialization, inclu…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-20 — **VF Project v6.6.4 chat-runtime dependency closure:** the cold-start Project bundle now ships every local Python dependency required by attachment ingest and creative-master materialization, inclu…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
