@@ -121,6 +121,26 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             problems.append("multi-source composition policy missing")
         elif set(multi.get("insetProvenanceValues") or []) != {"SAME_FRAME_CROP", "ALTERNATE_VERIFIED_SOURCE"}:
             problems.append("multi-source inset provenance policy mismatch")
+        camera_labels = policy.get("cameraAngleLabelPolicy")
+        if not isinstance(camera_labels, dict):
+            problems.append("cameraAngleLabelPolicy missing")
+        else:
+            if camera_labels.get("blanketBan") is not False:
+                problems.append("camera-angle labels must not be blanket-banned")
+            if camera_labels.get("orientationLabelsAllowedWhen") != "orientation_itself_adds_useful_information":
+                problems.append("camera-angle label allowance does not match owner reference clarification")
+            if camera_labels.get("otherwise") != "describe_the_concrete_feature_the_view_reveals":
+                problems.append("camera-angle label fallback must be feature-first copy")
+        reference_rules = assets.get("reference_rules")
+        if not isinstance(reference_rules, dict):
+            problems.append("Project reference_rules must be an object")
+        else:
+            for key in (
+                    "generic_camera_angle_labels_avoided_by_default",
+                    "orientation_labels_allowed_when_orientation_adds_useful_information",
+                    "feature_first_copy_preferred_when_orientation_not_informative"):
+                if reference_rules.get(key) is not True:
+                    problems.append(f"Project reference rule missing or false: {key}")
     return problems
 
 
