@@ -138,7 +138,7 @@
     },
     {
       "filename": "Velvet-Factory-ASSET-MANIFEST-v6.3.json",
-      "reason": "superseded by Revision 6.4 bundle"
+      "reason": "historical only; current asset manifest is Revision 6.5"
     },
     {
       "filename": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v1.png",
@@ -151,6 +151,10 @@
     {
       "filename": "Velvet-Factory-Project-Instructions-v6.4.txt",
       "reason": "superseded by Revision 6.5 bundle"
+    },
+    {
+      "filename": "PROJECT-AUTHORITY-v6.4.txt",
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.5"
     }
   ],
   "asset_resolution": "Match exact filename and hash. A filename alias may be accepted only after hash match; duplicate conflicting revisions are needs_sync.",
