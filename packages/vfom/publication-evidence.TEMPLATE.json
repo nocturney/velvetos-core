@@ -77,6 +77,12 @@
     "creative_master_materialization": {
       "path": "PENDING",
       "sha256": "PENDING"
-    }
+    },
+    "source_ingest": [
+      {
+        "path": "PENDING",
+        "sha256": "PENDING"
+      }
+    ]
   }
 }
