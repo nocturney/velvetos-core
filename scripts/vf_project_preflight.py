@@ -18,6 +18,7 @@ PROJECT_REVISION = "6.6.2"
 PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.2-CREATIVE-MASTER-MATERIALIZATION"
 PROJECT_ASSET_MANIFEST_SHA256 = "d0cfcbd202f1db051b5ae80ac2ea7912ea06b21550baa34636aea031784ad65d"
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
+CREATIVE_MASTER_BRIDGE = Path("scripts/vf_creative_master_bridge.py")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
 IG_CAPABILITIES = ROOT / "packages/vfigos/CAPABILITIES.json"
@@ -41,7 +42,7 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     problems: list[str] = []
     paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, PROJECT_INSTRUCTIONS, PROJECT_GATE]
     if creative:
-        paths.append(VISUAL_ENFORCEMENT)
+        paths.extend([VISUAL_ENFORCEMENT, CREATIVE_MASTER_BRIDGE])
     if any(not (root / rel).is_file() for rel in paths):
         return ["project binding file missing"]
     authority_path = root / PROJECT_AUTHORITY
@@ -182,6 +183,8 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
                     problems.append("raw-source recreation must not count as materialization")
                 if materialization.get("silentRawFallbackForbidden") is not True:
                     problems.append("unmaterializable master must fail closed against raw fallback")
+                if materialization.get("bridge") != CREATIVE_MASTER_BRIDGE.as_posix():
+                    problems.append("creative-master materialization bridge binding mismatch")
         reference_rules = assets.get("reference_rules")
         if not isinstance(reference_rules, dict):
             problems.append("Project reference_rules must be an object")
