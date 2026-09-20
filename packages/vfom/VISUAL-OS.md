@@ -37,6 +37,10 @@ Never synthesize a missing angle/detail, substitute another model, or add repeti
 
 The new composition reference `Velvet-Factory-MULTI-SOURCE-COMPOSITION-REFERENCE-v1.jpg` adds vocabulary such as hero + vertical rail, circular crops, rounded cards, asymmetrical text blocks, restrained handwritten accents and editorial footers. These are **options, not templates**. Keep the visual family coherent while varying hero side, text zone, inset geometry and density so unrelated posts do not collapse into the same layout.
 
+## Orientation-label copy rule · owner clarification 2026-09-20
+
+The approved references do **not** imply a blanket ban on side/back/front labels. Generic camera-angle labels are not default editorial copy, but an orientation label is valid when the orientation itself adds useful information for the viewer. When orientation is not the point, use the copy to name the concrete product feature that the alternate view reveals. A useful orientation label is not a failure; a redundant or information-free one is a repair target.
+
 ## Visual Finishing Protocol · always-on
 
 כל נכס סטילס/פוסט/סטורי/קרוסלה/cover שעובר עיבוד חייב לעבור את ארבעת השלבים הבאים לפני שהוא נחשב final:
