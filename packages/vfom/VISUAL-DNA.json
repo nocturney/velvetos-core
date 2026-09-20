@@ -1,6 +1,6 @@
 {
   "brandName": "Velvet Factory",
-  "version": 6,
+  "version": 7,
   "authority": "packages/vfom/VISUAL-OS.md",
   "ownerApprovedVisualStandard": {
     "status": "approved",
@@ -244,7 +244,9 @@
     "text-heavy template card overpowering product",
     "generic Canva-template look",
     "intermediate hero handed off as completed post",
-    "final artifact weaker than selected creative master without recorded cause"
+    "final artifact weaker than selected creative master without recorded cause",
+    "conversation-only image treated as deterministic compositor input",
+    "raw source recreation mislabeled as creative-master materialization"
   ],
   "referencePolicy": {
     "learnable": [
@@ -339,6 +341,23 @@
       "reference_match",
       "editorial_richness",
       "product_fidelity"
-    ]
+    ],
+    "materialization": {
+      "planBeforeToolSelection": true,
+      "deterministicOverlayRequiresFileBackedMaster": true,
+      "requiredIdentity": [
+        "local_path",
+        "sha256",
+        "materialization_receipt"
+      ],
+      "uiOnlyOrProviderHandleAlone": "NOT_FILE_BACKED",
+      "rawSourceRecreation": "NOT_MATERIALIZATION",
+      "bridge": "scripts/vf_creative_master_bridge.py",
+      "ifUnavailable": [
+        "preserve_direction_via_file_backed_route",
+        "same_provider_no_text_final_if_deliberate",
+        "block_overlay_branch"
+      ]
+    }
   }
 }
