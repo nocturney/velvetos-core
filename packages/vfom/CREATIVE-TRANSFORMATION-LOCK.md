@@ -46,6 +46,12 @@ Before overlay, register a local image with `scripts/vf_creative_master_bridge.p
 
 Do not recreate the styled scene from the raw product source and call that materialization. If the selected master cannot become file-backed, preserve the direction through a file-backed route, deliberately use the same provider result as a NO_TEXT final where appropriate, or block only the overlay branch. Silent raw-source fallback is a FAIL.
 
+## Owner correction — source bytes before creative execution
+
+Current-chat attachments must enter the local execution workspace through exact-byte source ingest before creative generation/editing. Use the platform-provided current-chat file path when available; register it with `scripts/vf_source_ingest.py`. This step may inspect/hash/copy only and does not require creative authorization. It must not generate a preview or transform pixels.
+
+A source visible in chat is not grounds for a blocker until platform-local materialization has been attempted. Conversely, visual access alone is not permission to fabricate a workspace path or SHA. If exact bytes are unavailable, use a single supported explicit upload handoff or stop with `ATTACHMENT_BYTES_UNAVAILABLE`.
+
 ## Minimum creative delta
 
 Before `ready for review`, require all of:
