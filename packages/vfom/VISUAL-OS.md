@@ -21,9 +21,21 @@ For Velvet Factory public visual work, `OWNER-APPROVED-GRID-STANDARD-2026-09-14.
 
 ## Reference-role separation · owner correction 2026-09-18
 
-Product Truth is a **fidelity constraint, not an aesthetic reference**. Resolve look/feel only from the approved broad visual reference, editorial reference and current-creative reference. Resolve physical truth from the actual product source pixels plus the text Product Truth guide.
+Product Truth is a **fidelity constraint, not an aesthetic reference**. Resolve look/feel only from the approved broad visual reference, editorial reference, current-creative reference and multi-source composition reference. Resolve physical truth from the actual product source pixels plus the text Product Truth guide. The multi-source composition board is STYLE/LAYOUT ONLY: its visible products, text, logos, claims and CTA do not transfer factual or brand permission.
 
 Do **not** pass Product Truth QA boards/teaching sheets into image-generation, style-transfer, moodboard or aesthetic-conditioning inputs. `Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png` is explicitly rejected for creative conditioning because it pushed results toward an unaesthetic technical-board look. Keep its lessons as text/QA rules only.
+
+## Multi-source composition · owner correction 2026-09-20
+
+Verified photographs of the **exact same physical product** form one source set. They are not merely competing hero candidates. Select the strongest frame as the hero, then use other verified frames when they reveal a distinct detail or angle that materially improves the editorial composition.
+
+Every inset/detail panel must carry provenance in the creative plan:
+- `SAME_FRAME_CROP` — a literal crop of the exact hero/source frame. It may be presented as a zoom/magnification. Do not independently generate, relight, recolor, replace the background or separately retouch the crop.
+- `ALTERNATE_VERIFIED_SOURCE` — a different verified photograph of that same physical product. It may show another real angle/detail, but must not be presented as if it were a magnification of the hero.
+
+Never synthesize a missing angle/detail, substitute another model, or add repetitive views that reveal nothing new. Before composition map each inset as `source file -> region/crop -> visible detail -> wording -> graphic role -> provenance`.
+
+The new composition reference `Velvet-Factory-MULTI-SOURCE-COMPOSITION-REFERENCE-v1.jpg` adds vocabulary such as hero + vertical rail, circular crops, rounded cards, asymmetrical text blocks, restrained handwritten accents and editorial footers. These are **options, not templates**. Keep the visual family coherent while varying hero side, text zone, inset geometry and density so unrelated posts do not collapse into the same layout.
 
 ## Visual Finishing Protocol · always-on
 
