@@ -67,8 +67,8 @@
         ".cursor/skills/velvet-brand-guardian/SKILL.md",
         "packages/vfigos/SEND.md",
         "packages/vfbiz/OFFERING.md",
-        "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.2.txt",
-        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.2.json",
+        "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.3.txt",
+        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.3.json",
         "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
       ],
       "hardGates": [
@@ -302,8 +302,8 @@
         "packages/vfgrowth/PREFLIGHT.md",
         "packages/vfbiz/OFFERING.md",
         "packages/vfom/PUBLICATION-PREP-EXECUTION.md",
-        "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.2.txt",
-        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.2.json",
+        "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.3.txt",
+        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.3.json",
         "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
       ],
       "hardGates": [
@@ -336,11 +336,11 @@
   "completionLaw": "No done/ready/published/synced claim without domain postflight evidence on the exact final artifact or provider result.",
   "chatgptProjectBundle": {
     "contractVersion": 6,
-    "revision": "6.6.2",
-    "bundleId": "VF-PROJECT-6.6.2-CREATIVE-MASTER-MATERIALIZATION",
-    "authority": "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.2.txt",
-    "assetManifest": "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.2.json",
-    "instructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.2.txt",
+    "revision": "6.6.3",
+    "bundleId": "VF-PROJECT-6.6.3-CHAT-ATTACHMENT-SOURCE-INGEST",
+    "authority": "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.3.txt",
+    "assetManifest": "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.3.json",
+    "instructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.3.txt",
     "productTruthGuide": "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt",
     "offlineCreativePublicationFallback": true,
     "offlineRepoStateLabel": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK",
