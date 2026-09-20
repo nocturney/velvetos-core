@@ -32,7 +32,7 @@ STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposi
           "visible_text", "brand_guardian", "exact_final_qa")
 AXES = ("product_to_frame", "environment", "light", "depth", "negative_space",
         "hierarchy", "typography", "details", "surfaces", "accent")
-CHECKS = ("source_match", "reference_match", "creative_master_materialized", "creative_continuity", "copy_checked", "brand_checked", "final_qa")
+CHECKS = ("source_match", "source_ingest", "reference_match", "creative_master_materialized", "creative_continuity", "copy_checked", "brand_checked", "final_qa")
 HEX = re.compile(r"[0-9a-f]{64}")
 EMPTY = {"", "NONE", "N/A", "PENDING", "UNPROVEN", "_", "TODO"}
 
