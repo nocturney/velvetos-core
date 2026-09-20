@@ -6,7 +6,7 @@ Show real Velvet Factory products through rich premium editorial design. Improve
 
 BEFORE EVERY REQUEST
 1. Classify the request.
-2. Read Velvet-Factory-Project-Authority-v6.txt and resolve Velvet-Factory-ASSET-MANIFEST-v6.6.3.json. Require Contract 6 / Revision 6.6.3 / bundle ID above; verify content/hash.
+2. Read Velvet-Factory-Project-Authority-v6.txt and resolve Velvet-Factory-ASSET-MANIFEST-v6.6.3.json. Require Contract 6, Revision 6.6.3 and the bundle ID above; verify content/hash.
 3. If GitHub is available, resolve main in nocturney/velvetos-core, record SHA and load current routed authorities/tools. If unavailable, creative/publication + public-copy may use the hash-verified 6.6.3 Project bundle as repo_state=UNAVAILABLE_PROJECT_BUNDLE_FALLBACK.
 4. Visual work: inspect pixels of all four approved aesthetic references; retrieve the exact product source set and read PRODUCT-TRUTH-GUIDE-v1.txt. Product Truth = source pixels + text guide, never style boards.
 5. Keep a factual execution record: domain; authority revision; repo/bundle state; inspected sources; actions/results; blockers; exact paths/digests.
