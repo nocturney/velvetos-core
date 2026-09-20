@@ -58,6 +58,13 @@ def fixture(root):
                           'visual_conditioning': 'FORBIDDEN',
                           'qa_only_visual_teaching_assets': 'DO_NOT_LOAD_AS_STYLE_OR_GENERATION_REFERENCES'}})
     source = dict(image('source.png', (60, 75), (100, 80, 25)), role='PRODUCT_SOURCE')
+    source_ingest = write('source.ingest.json', {
+        'version': 1, 'ingest_method': 'LOCAL_EXACT_COPY', 'exact_bytes_copied': True,
+        'origin': {'kind': 'CHAT_ATTACHMENT_FILE', 'locator': '/mnt/data/source.png', 'sha256': source['sha256']},
+        'materialized': {'path': source['path'], 'sha256': source['sha256'],
+                         'bytes': (root/'source.png').stat().st_size,
+                         'media': {'kind': 'image', 'width': 60, 'height': 75, 'format': 'PNG'}}
+    })
     import vf_publish_bridge as bridge
     origin_master = image('provider-result.png', (120, 150), (40, 80, 25))
     master = write('master.png', (root/'provider-result.png').read_bytes())
@@ -92,13 +99,14 @@ def fixture(root):
         'views': [{'artifact_sha256': output['sha256'], 'full': output, 'mobile': mobile}]})
     ev = {'version': 1, 'policy_sha256': evidence.digest(root / evidence.POLICY),
         'public_intent': 'showcase', 'direction': {'family_id': 'valid-family', 'status': 'LOCKED'},
-        'direction_history': [], 'tools': ['source-compositor'], 'sources': [source], 'references': refs,
+        'direction_history': [], 'tools': ['source-compositor'], 'sources': [source], 'source_ingest': [source_ingest], 'references': refs,
         'reference_decomposition': decomposition, 'creative_master': master,
         'creative_master_materialization': materialization, 'product_protection': {'method': 'SOURCE_MASK_COMPOSITE',
             'evidence': report, 'protected_regions': ['whole-product', 'eyes']},
         'stages': [{'name': n, 'status': 'PASS', 'started_at': '2026-01-01T00:00:00Z',
                     'completed_at': '2026-01-01T00:00:00Z',
                     'evidence': ([report, guide] if n == 'product_truth_lock'
+                                 else [report, source_ingest] if n == 'source_lock'
                                  else [materialization] if n == 'creative_master_materialization'
                                  else [report])}
                    for n in evidence.STAGES],
@@ -135,6 +143,30 @@ class EvidenceTests(unittest.TestCase):
         for tool in ['Canva.generate-design', 'vfcanva', 'CANVA.export']:
             self.ev['tools'] = [tool]
             self.assertFalse(self.result()['ok'])
+    def test_missing_source_ingest_receipt(self):
+        self.ev.pop('source_ingest')
+        result = self.result('production')
+        self.assertFalse(result['ok'])
+        self.assertIn('source_ingest', ' '.join(result['problems']).lower())
+
+    def test_source_ingest_must_match_product_source(self):
+        receipt_path = self.root / self.ev['source_ingest'][0]['path']
+        receipt = json.loads(receipt_path.read_text())
+        receipt['materialized']['sha256'] = '0' * 64
+        self.ev['source_ingest'][0] = self.write('source.ingest.json', receipt)
+        stage = next(x for x in self.ev['stages'] if x['name'] == 'source_lock')
+        stage['evidence'] = [stage['evidence'][0], self.ev['source_ingest'][0]]
+        result = self.result('production')
+        self.assertFalse(result['ok'])
+        self.assertIn('source ingest', ' '.join(result['problems']).lower())
+
+    def test_source_lock_must_bind_ingest_receipt(self):
+        stage = next(x for x in self.ev['stages'] if x['name'] == 'source_lock')
+        stage['evidence'] = [stage['evidence'][0]]
+        result = self.result('production')
+        self.assertFalse(result['ok'])
+        self.assertIn('source_lock', ' '.join(result['problems']).lower())
+
     def test_missing_creative_master(self):
         self.ev.pop('creative_master')
         result = self.result()
