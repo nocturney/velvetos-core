@@ -10,13 +10,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.1.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.1.json")
-PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.1.txt")
+PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.2.txt")
+PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.2.json")
+PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.2.txt")
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.6.1"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.1-FIRST-PASS-CREATIVE-CONTINUITY"
-PROJECT_ASSET_MANIFEST_SHA256 = "5c96f546189356558a619f0cc041fe23a6366240017d4331849ed721d5935175"
+PROJECT_REVISION = "6.6.2"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.2-CREATIVE-MASTER-MATERIALIZATION"
+PROJECT_ASSET_MANIFEST_SHA256 = "d0cfcbd202f1db051b5ae80ac2ea7912ea06b21550baa34636aea031784ad65d"
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
@@ -75,6 +75,7 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
         f"Require Contract {PROJECT_CONTRACT_VERSION}, Revision {PROJECT_REVISION}",
         "orientation itself adds useful information",
         "creative_master",
+        "materialized to local path + SHA-256",
     )
     if not all(x in instructions for x in instructions_identity):
         problems.append("Project Instructions identity/reference-alignment mismatch")
@@ -167,6 +168,20 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             no_regression = continuity.get("noRegression")
             if not isinstance(no_regression, dict) or no_regression.get("required") is not True:
                 problems.append("final-vs-master no-regression rule missing")
+            materialization = continuity.get("materialization")
+            if not isinstance(materialization, dict):
+                problems.append("creative-master materialization policy missing")
+            else:
+                if materialization.get("planBeforeCreativeToolSelectionWhenDeterministicOverlayExpected") is not True:
+                    problems.append("materialization capability planning rule missing")
+                if materialization.get("requiredBeforeDeterministicOverlay") is not True:
+                    problems.append("creative-master materialization gate missing")
+                if materialization.get("localPathAndSha256Required") is not True or materialization.get("receiptRequired") is not True:
+                    problems.append("materialized master local identity/receipt rule missing")
+                if materialization.get("rawSourceRecreationCountsAsMaterialization") is not False:
+                    problems.append("raw-source recreation must not count as materialization")
+                if materialization.get("silentRawFallbackForbidden") is not True:
+                    problems.append("unmaterializable master must fail closed against raw fallback")
         reference_rules = assets.get("reference_rules")
         if not isinstance(reference_rules, dict):
             problems.append("Project reference_rules must be an object")
@@ -180,7 +195,15 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
                     "creative_master_freeze_after_product_truth_and_reference_match",
                     "finalization_must_preserve_or_improve_creative_master",
                     "silent_raw_source_restart_after_successful_master_forbidden",
-                    "creative_master_replacement_requires_recorded_cause"):
+                    "creative_master_replacement_requires_recorded_cause",
+                    "creative_master_materialization_required_before_deterministic_overlay",
+                    "creative_master_must_be_local_path_plus_sha256",
+                    "creative_master_materialization_receipt_required",
+                    "creative_tool_materialization_capability_planned_before_generation_when_overlay_expected",
+                    "conversation_or_ui_only_image_is_not_file_backed_master",
+                    "provider_task_or_remote_url_is_not_file_backed_master_until_exact_bytes_are_materialized",
+                    "raw_source_recreation_is_not_creative_master_materialization",
+                    "unmaterializable_master_must_not_fall_back_silently_to_raw_source"):
                 if reference_rules.get(key) is not True:
                     problems.append(f"Project reference rule missing or false: {key}")
     return problems
