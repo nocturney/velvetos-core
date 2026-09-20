@@ -95,6 +95,7 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             if not {"canva", "vfcanva"}.issubset(denied):
                 problems.append("publicationRoute does not deny Canva/vfcanva")
         current_refs = assets.get("current_references")
+        current_names: set[str] = set()
         if not isinstance(current_refs, dict):
             problems.append("Project current_references must be an object")
         else:
@@ -113,7 +114,7 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             problems.append("referenceRoleSeparationPolicy must be an object")
         else:
             policy_refs = separation.get("aestheticReferences")
-            if not isinstance(policy_refs, list) or set(policy_refs) != {x for x in current_refs.values()}:
+            if not isinstance(policy_refs, list) or set(policy_refs) != current_names:
                 problems.append("visual enforcement aesthetic references do not match Project asset manifest")
         multi = policy.get("multiSourceCompositionPolicy")
         if not isinstance(multi, dict) or multi.get("samePhysicalProductSourceSet") is not True:
