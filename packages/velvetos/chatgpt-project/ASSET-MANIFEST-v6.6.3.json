@@ -163,7 +163,8 @@
     "chat_local_preflight": "scripts/vf_chat_cold_start_preflight.py",
     "chat_local_preflight_required_when_repo_and_attachment_filesystems_differ": true,
     "remote_repo_preflight_must_not_receive_chat_local_paths": true,
-    "chat_local_preflight_creative_only_never_publication": true
+    "chat_local_preflight_creative_only_never_publication": true,
+    "chat_runtime_files_hash_bound_in_manifest": true
   },
   "optional_originals": [
     {
@@ -267,5 +268,31 @@
     "repository_write": "VERIFIED_AFTER_REPO_COMMIT",
     "cold_start_behavioral_test": "NOT_RUN_AFTER_PATCH",
     "publication": "NOT_REQUESTED"
-  }
+  },
+  "chat_runtime": [
+    {
+      "filename": "vf_source_ingest.py",
+      "repo_path": "scripts/vf_source_ingest.py",
+      "role": "exact_byte_current_chat_source_ingest",
+      "sha256": "852926d2e44556229a6912a34a773c83b7ca9d4587bd78852e068e92d7f53ad5"
+    },
+    {
+      "filename": "vf_chat_cold_start_preflight.py",
+      "repo_path": "scripts/vf_chat_cold_start_preflight.py",
+      "role": "chat_local_creative_preflight_never_publication",
+      "sha256": "65766222c3cb4426b8b753e98a1cdd1f59d403fa954775363bc5a03b88cccbbe"
+    },
+    {
+      "filename": "vf_media_integrity.py",
+      "repo_path": "scripts/vf_media_integrity.py",
+      "role": "media_decode_integrity_dependency",
+      "sha256": "533cb25510c6feecddcd55f9cd343da22f6bd9cae953fee3fa6d63384650f78c"
+    },
+    {
+      "filename": "vf_creative_master_bridge.py",
+      "repo_path": "scripts/vf_creative_master_bridge.py",
+      "role": "exact_byte_creative_master_materialization",
+      "sha256": "9299de229beb8a7a53b4a4f604960de3ccf2bf113ea0f8bea7459292c88cae95"
+    }
+  ]
 }
