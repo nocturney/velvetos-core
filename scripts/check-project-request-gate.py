@@ -213,6 +213,11 @@ if project_preflight.CHAT_LOCAL_PREFLIGHT != Path("scripts/vf_chat_cold_start_pr
     fail("active preflight chat-local gate binding mismatch")
 if not (ROOT / project_preflight.CHAT_LOCAL_PREFLIGHT).is_file():
     fail("chat-local preflight implementation missing")
+runtime_rows = asset_data.get("chat_runtime")
+if not isinstance(runtime_rows, list) or {x.get("repo_path") for x in runtime_rows if isinstance(x, dict)} != {
+        "scripts/vf_source_ingest.py", "scripts/vf_chat_cold_start_preflight.py",
+        "scripts/vf_media_integrity.py", "scripts/vf_creative_master_bridge.py"}:
+    fail("Project chat_runtime manifest binding mismatch")
 if not (ROOT / project_preflight.SOURCE_INGEST_BRIDGE).is_file():
     fail("source-ingest bridge implementation missing")
 if not (ROOT / project_preflight.CREATIVE_MASTER_BRIDGE).is_file():
