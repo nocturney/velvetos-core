@@ -5,8 +5,8 @@
   "created_for": "owner-requested cold-start repair: ingest current-chat attachment bytes into a hash-bound local PRODUCT_SOURCE workspace before creative preflight while preserving 6.6.2 master materialization",
   "instructions": {
     "filename": "Velvet-Factory-Project-Instructions-v6.6.3.txt",
-    "sha256": "efcd4394db6a012c7c4f63bdb415ac20538b899122dffd20f5059c3c66d96a6e",
-    "characters": 6205,
+    "sha256": "b05d3a3161892789eade54d8f5543ceecd8da63d63e659eeb64a5ed4aa1768a0",
+    "characters": 6564,
     "limit_supplied_by_owner": 8000
   },
   "assets": [
@@ -14,8 +14,8 @@
       "filename": "Velvet-Factory-Project-Authority-v6.txt",
       "role": "authority",
       "required_for": "all_requests",
-      "sha256": "6b87b9ee28343df95bf215c41000676ba9d68d7ca4980ce2f987305fd66253a5",
-      "bytes": 30679
+      "sha256": "7e2d4b3ff4013241736f7b23b9ccc15da0cfead992165ec253ddeb607d62dbe7",
+      "bytes": 31117
     },
     {
       "filename": "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
@@ -159,7 +159,11 @@
     "arbitrary_user_folder_scan_for_sources_forbidden": true,
     "visible_attachment_must_not_be_declared_unusable_before_platform_local_ingest_attempt": true,
     "attachment_bytes_unavailable_is_bounded_blocker": true,
-    "unhashed_attachment_source_fallback_forbidden": true
+    "unhashed_attachment_source_fallback_forbidden": true,
+    "chat_local_preflight": "scripts/vf_chat_cold_start_preflight.py",
+    "chat_local_preflight_required_when_repo_and_attachment_filesystems_differ": true,
+    "remote_repo_preflight_must_not_receive_chat_local_paths": true,
+    "chat_local_preflight_creative_only_never_publication": true
   },
   "optional_originals": [
     {
