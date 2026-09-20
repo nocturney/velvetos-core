@@ -10,12 +10,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.5.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.5.json")
+PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.txt")
+PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.json")
+PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.txt")
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.5"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.5-MULTI-SOURCE-COMPOSITION"
-PROJECT_ASSET_MANIFEST_SHA256 = "2a2c4942b840d6f68f14567a003a4b56a5f245cf2d7077ac363376dcb3181fa4"
+PROJECT_REVISION = "6.6"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6-REFERENCE-ALIGNED-MULTI-SOURCE"
+PROJECT_ASSET_MANIFEST_SHA256 = "cfd61724ea7918fdd26b97ceb0010675bbb7e6d3ada3c857f5a32ebe508813a5"
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
@@ -38,14 +39,16 @@ def _text_sha256_candidates(path: Path) -> set[str]:
 
 def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> list[str]:
     problems: list[str] = []
-    paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, PROJECT_GATE]
+    paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, PROJECT_INSTRUCTIONS, PROJECT_GATE]
     if creative:
         paths.append(VISUAL_ENFORCEMENT)
     if any(not (root / rel).is_file() for rel in paths):
         return ["project binding file missing"]
     authority_path = root / PROJECT_AUTHORITY
+    instructions_path = root / PROJECT_INSTRUCTIONS
     try:
         authority = authority_path.read_text(encoding="utf-8")
+        instructions = instructions_path.read_text(encoding="utf-8")
         gate = (root / PROJECT_GATE).read_text(encoding="utf-8")
         assets = json.loads((root / PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
         policy = json.loads((root / VISUAL_ENFORCEMENT).read_text(encoding="utf-8")) if creative else None
@@ -66,6 +69,14 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     )
     if not all(x in authority for x in authority_identity):
         problems.append("Project Authority identity mismatch")
+    instructions_identity = (
+        f"Contract version: {PROJECT_CONTRACT_VERSION} | Revision: {PROJECT_REVISION} | Bundle: {PROJECT_BUNDLE_ID}",
+        f"Velvet-Factory-ASSET-MANIFEST-v{PROJECT_REVISION}.json",
+        f"Require Contract {PROJECT_CONTRACT_VERSION}, Revision {PROJECT_REVISION}",
+        "orientation itself adds useful information",
+    )
+    if not all(x in instructions for x in instructions_identity):
+        problems.append("Project Instructions identity/reference-alignment mismatch")
     asset_identity = (
         assets.get("contract_version"),
         str(assets.get("revision")),
@@ -76,6 +87,14 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     rows = [x for x in asset_rows if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
     if len(rows) != 1 or rows[0].get("sha256") not in _text_sha256_candidates(authority_path):
         problems.append(f"Project Authority hash does not match ASSET-MANIFEST-v{PROJECT_REVISION}.json")
+    instructions_row = assets.get("instructions")
+    if not isinstance(instructions_row, dict):
+        problems.append("Project Instructions binding missing from asset manifest")
+    else:
+        if instructions_row.get("filename") != f"Velvet-Factory-Project-Instructions-v{PROJECT_REVISION}.txt":
+            problems.append("Project Instructions filename binding mismatch")
+        if instructions_row.get("sha256") not in _text_sha256_candidates(instructions_path):
+            problems.append(f"Project Instructions hash does not match ASSET-MANIFEST-v{PROJECT_REVISION}.json")
     if creative:
         route = policy.get("publicationRoute", {})
         if not isinstance(route, dict):
@@ -121,6 +140,26 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             problems.append("multi-source composition policy missing")
         elif set(multi.get("insetProvenanceValues") or []) != {"SAME_FRAME_CROP", "ALTERNATE_VERIFIED_SOURCE"}:
             problems.append("multi-source inset provenance policy mismatch")
+        camera_labels = policy.get("cameraAngleLabelPolicy")
+        if not isinstance(camera_labels, dict):
+            problems.append("cameraAngleLabelPolicy missing")
+        else:
+            if camera_labels.get("blanketBan") is not False:
+                problems.append("camera-angle labels must not be blanket-banned")
+            if camera_labels.get("orientationLabelsAllowedWhen") != "orientation_itself_adds_useful_information":
+                problems.append("camera-angle label allowance does not match owner reference clarification")
+            if camera_labels.get("otherwise") != "describe_the_concrete_feature_the_view_reveals":
+                problems.append("camera-angle label fallback must be feature-first copy")
+        reference_rules = assets.get("reference_rules")
+        if not isinstance(reference_rules, dict):
+            problems.append("Project reference_rules must be an object")
+        else:
+            for key in (
+                    "generic_camera_angle_labels_avoided_by_default",
+                    "orientation_labels_allowed_when_orientation_adds_useful_information",
+                    "feature_first_copy_preferred_when_orientation_not_informative"):
+                if reference_rules.get(key) is not True:
+                    problems.append(f"Project reference rule missing or false: {key}")
     return problems
 
 

@@ -24,6 +24,8 @@ Aesthetic direction comes only from the approved broad visual, editorial, curren
 
 For still/post/carousel composition, follow `VISUAL-OS.md` and `PUBLICATION-PREP-EXECUTION.md`: verified photos of the exact same physical product may form one source set. Record every inset as `SAME_FRAME_CROP` or `ALTERNATE_VERIFIED_SOURCE`; only the former may be presented as a hero zoom. Never synthesize a missing view/detail. Use the approved composition vocabulary without forcing the same layout on unrelated products.
 
+Do not treat camera-angle labels as categorically forbidden. Avoid generic side/back/front labels when they add nothing; allow an orientation label when orientation itself is useful information, and otherwise label the concrete source-backed feature revealed by the view.
+
 ## Workflow
 
 ## Cold-start Visual Standard Load Gate

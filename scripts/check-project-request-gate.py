@@ -29,7 +29,7 @@ if manifest.get("status") != "mandatory" or manifest.get("preflightMode") != "fa
 bundle = manifest.get("chatgptProjectBundle")
 if not isinstance(bundle, dict):
     fail("chatgptProjectBundle binding missing")
-for key in ("contractVersion", "revision", "bundleId", "authority", "assetManifest"):
+for key in ("contractVersion", "revision", "bundleId", "authority", "assetManifest", "instructions"):
     if not bundle.get(key):
         fail(f"chatgptProjectBundle missing {key}")
 if manifest.get("gateDocument") != "packages/velvetos/PROJECT-REQUEST-GATE.md":
@@ -43,8 +43,9 @@ if not required_domains.issubset(set(manifest.get("domains", {}))):
 
 project_authority = ROOT / bundle["authority"]
 asset_manifest = ROOT / bundle["assetManifest"]
+project_instructions = ROOT / bundle["instructions"]
 visual_enforcement = ROOT / "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-for path in (project_authority, asset_manifest, visual_enforcement):
+for path in (project_authority, asset_manifest, project_instructions, visual_enforcement):
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
 authority_text = project_authority.read_text(encoding="utf-8")
@@ -53,6 +54,9 @@ if "vfcovers/vfcanva composition route" in authority_text:
 for needle in ("Canva/vfcanva are forbidden", "creative_execution_authorized: true"):
     if needle not in authority_text:
         fail(f"Project Authority missing {needle}")
+for needle in ("orientation label is allowed", "orientation itself adds useful information"):
+    if needle not in authority_text:
+        fail(f"Project Authority missing reference-aligned camera-label rule: {needle}")
 asset_data = json.loads(asset_manifest.read_text(encoding="utf-8"))
 expected_identity = (bundle["contractVersion"], str(bundle["revision"]), bundle["bundleId"])
 actual_identity = (asset_data.get("contract_version"), str(asset_data.get("revision")), asset_data.get("bundle_id"))
@@ -64,6 +68,19 @@ authority_sha = hashlib.sha256(authority_bytes).hexdigest()
 authority_lf_sha = hashlib.sha256(authority_bytes.replace(b"\r\n", b"\n")).hexdigest()
 if len(authority_rows) != 1 or authority_rows[0].get("sha256") not in {authority_sha, authority_lf_sha}:
     fail(f"Project Authority bytes are not bound to the current asset manifest ({bundle['revision']})")
+instructions_text = project_instructions.read_text(encoding="utf-8")
+instructions_sha = hashlib.sha256(project_instructions.read_bytes()).hexdigest()
+instructions_lf_sha = hashlib.sha256(project_instructions.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+instructions_row = asset_data.get("instructions")
+if not isinstance(instructions_row, dict):
+    fail("Project Instructions binding missing from asset manifest")
+if instructions_row.get("sha256") not in {instructions_sha, instructions_lf_sha}:
+    fail(f"Project Instructions bytes are not bound to the current asset manifest ({bundle['revision']})")
+for needle in (f"Revision: {bundle['revision']}", bundle["bundleId"],
+               f"Velvet-Factory-ASSET-MANIFEST-v{bundle['revision']}.json",
+               "orientation itself adds useful information"):
+    if needle not in instructions_text:
+        fail(f"Project Instructions missing current binding/rule: {needle}")
 route_doc = json.loads(visual_enforcement.read_text(encoding="utf-8"))
 route = route_doc.get("publicationRoute", {})
 if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deniedTools", [])}):
@@ -71,7 +88,7 @@ if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deni
 current_refs = asset_data.get("current_references")
 if not isinstance(current_refs, dict) or set(current_refs) != {
         "broad_visual", "editorial_layout", "current_direction", "multi_source_composition"}:
-    fail("Revision 6.5 must bind exactly four current aesthetic references")
+    fail("Revision 6.6 must bind exactly four current aesthetic references")
 policy_refs = (route_doc.get("referenceRoleSeparationPolicy") or {}).get("aestheticReferences")
 if not isinstance(policy_refs, list) or set(policy_refs) != set(current_refs.values()):
     fail("visual enforcement aesthetic references do not match Project asset manifest")
@@ -80,6 +97,15 @@ if not isinstance(multi_policy, dict) or multi_policy.get("samePhysicalProductSo
     fail("multi-source composition policy missing")
 if set(multi_policy.get("insetProvenanceValues") or []) != {"SAME_FRAME_CROP", "ALTERNATE_VERIFIED_SOURCE"}:
     fail("multi-source inset provenance policy mismatch")
+camera_labels = route_doc.get("cameraAngleLabelPolicy")
+if not isinstance(camera_labels, dict):
+    fail("cameraAngleLabelPolicy missing")
+if camera_labels.get("blanketBan") is not False:
+    fail("camera-angle labels must not be blanket-banned")
+if camera_labels.get("orientationLabelsAllowedWhen") != "orientation_itself_adds_useful_information":
+    fail("camera-angle label allowance does not match owner reference clarification")
+if camera_labels.get("otherwise") != "describe_the_concrete_feature_the_view_reveals":
+    fail("camera-angle label fallback must be feature-first copy")
 entrypoints = route.get("entrypoints", [])
 required_entrypoints = {"packages/vfgrowth/STORIES.md", "packages/vfcopy/hq/templates/ig-stories.md"}
 if not required_entrypoints.issubset(set(entrypoints)):
@@ -126,6 +152,8 @@ if project_preflight.PROJECT_AUTHORITY != Path(bundle["authority"]):
     fail("active preflight Project Authority does not match chatgptProjectBundle")
 if project_preflight.PROJECT_ASSET_MANIFEST != Path(bundle["assetManifest"]):
     fail("active preflight asset manifest does not match chatgptProjectBundle")
+if project_preflight.PROJECT_INSTRUCTIONS != Path(bundle["instructions"]):
+    fail("active preflight Project Instructions do not match chatgptProjectBundle")
 if Path(publication_evidence.AUTHORITY) != Path(bundle["authority"]):
     fail("publication evidence Project Authority does not match chatgptProjectBundle")
 if Path(publication_evidence.ASSETS) != Path(bundle["assetManifest"]):
@@ -144,7 +172,8 @@ if project_preflight.project_binding_problems(creative=True):
 with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
     tmp = Path(tmp_name)
     for rel in (project_preflight.PROJECT_AUTHORITY, project_preflight.PROJECT_ASSET_MANIFEST,
-                project_preflight.VISUAL_ENFORCEMENT, project_preflight.PROJECT_GATE):
+                project_preflight.PROJECT_INSTRUCTIONS, project_preflight.VISUAL_ENFORCEMENT,
+                project_preflight.PROJECT_GATE):
         target = tmp / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / rel, target)

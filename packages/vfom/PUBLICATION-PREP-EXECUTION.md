@@ -69,6 +69,8 @@ Allowed provenance values:
 
 Never synthesize a missing angle/detail, substitute another product/model, or use repetitive alternate frames that reveal no new concrete information. Product Truth applies independently to every source frame.
 
+Generic camera-angle labels are not mandatory and should not be added mechanically. They are allowed when the orientation itself is useful information; otherwise the annotation should identify the concrete source-backed feature that the alternate frame reveals. Do not reject an otherwise valid composition merely because a useful orientation label is present.
+
 The approved composition reference adds layout vocabulary including hero + vertical rail, circular/rectangular detail insets, rounded cards, asymmetrical text blocks, restrained handwritten annotations and editorial footers. These are options, not templates. Feed coherence requires shared visual language **and** deliberate variation in hero side, text zone, inset geometry and density; repeated identical layout across unrelated products is a repair target.
 
 ### Direction rejection
@@ -95,7 +97,7 @@ Never hardcode WhatsApp into public creative/caption from memory. Resolve CTA fr
 
 ## Hard failure patterns
 
-Reject as incomplete: caption-only delivery; photo-ranking-only delivery; raw photos presented as finished visual treatment; a carousel that is essentially untreated source photos; crop/exposure-only work presented as the creative result; generic "clean it later" promises; public WhatsApp CTA when current CTA authority forbids it; a third public service pillar based on customer type or quantity; an unverified/generated logo or wordmark; generic callouts without a concrete source-region map; a different source frame presented as a fake hero zoom; a synthesized missing angle/detail; template-like repeated layout without justification; source/reference match left UNPROVEN; or claiming the package is publication-ready without a produced visual artifact.
+Reject as incomplete: caption-only delivery; photo-ranking-only delivery; raw photos presented as finished visual treatment; a carousel that is essentially untreated source photos; crop/exposure-only work presented as the creative result; generic "clean it later" promises; public WhatsApp CTA when current CTA authority forbids it; a third public service pillar based on customer type or quantity; an unverified/generated logo or wordmark; generic callouts without a concrete source-region map; generic/redundant camera-angle labels that add no information; a different source frame presented as a fake hero zoom; a synthesized missing angle/detail; template-like repeated layout without justification; source/reference match left UNPROVEN; or claiming the package is publication-ready without a produced visual artifact.
 
 
 ## Brand asset lock

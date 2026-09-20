@@ -73,6 +73,8 @@ For one exact physical product, multiple verified source photographs may be trea
 
 The approved composition vocabulary now includes vertical source rails, circular or rectangular detail crops, rounded cards, asymmetric copy zones, restrained handwritten annotations and editorial footers. These are not mandatory templates. Feed coherence means a shared visual language with deliberate layout variation; repeated identical hero/text/card placement across unrelated products is a repair target.
 
+Copy interpretation follows the same principle: generic camera-angle labels are not a required motif, but side/back/front orientation labels are allowed when the orientation itself adds useful information. When it does not, prefer a concise label for the concrete feature that the view reveals. This is not a blanket prohibition on orientation labels.
+
 ## Tool propagation contract
 
 ## Cold-start enforcement

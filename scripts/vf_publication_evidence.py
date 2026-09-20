@@ -18,13 +18,13 @@ from typing import Any
 from vf_media_integrity import inspect_media
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.5.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.5.json"
-ASSETS_SHA = "2a2c4942b840d6f68f14567a003a4b56a5f245cf2d7077ac363376dcb3181fa4"
-AUTHORITY_SHA = "6fe8d0ef4d96bcce66662145301a33e9f8ebff7fd20430ae77d90dbd4492ae2a"
+AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.txt"
+ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.json"
+ASSETS_SHA = "cfd61724ea7918fdd26b97ceb0010675bbb7e6d3ada3c857f5a32ebe508813a5"
+AUTHORITY_SHA = "25dd89bda6c7359d40f346fcb225d19276c9f87e74d039f8bb95a836f4b4f052"
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.5"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.5-MULTI-SOURCE-COMPOSITION"
+PROJECT_REVISION = "6.6"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6-REFERENCE-ALIGNED-MULTI-SOURCE"
 PRODUCT_TRUTH_GUIDE = "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
 REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 = "17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9"
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
