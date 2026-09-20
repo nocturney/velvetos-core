@@ -195,7 +195,7 @@ class EvidenceTests(unittest.TestCase):
     def test_raw_source_recreation_cannot_count_as_materialization(self):
         receipt_path = self.root / self.ev['creative_master_materialization']['path']
         receipt = json.loads(receipt_path.read_text())
-        receipt['origin'] = dict(self.ev['sources'][0])
+        receipt['origin'] = dict(self.ev['sources'][0], kind='LOCAL_RENDER')
         self.ev['creative_master_materialization'] = self.write('materialization.json', receipt)
         stage = next(x for x in self.ev['stages'] if x['name'] == 'creative_master_materialization')
         stage['evidence'] = [self.ev['creative_master_materialization']]
