@@ -55,4 +55,19 @@ with tempfile.TemporaryDirectory() as t:
     plan["source_sha256"]=["0"*64, source_shas[1]]; (ws/"plan.json").write_text(json.dumps(plan),encoding="utf-8")
     q=run(cmd)
     if q.returncode==0: fail("source identity drift passed")
-print("OK chat-local cold-start preflight + exact source ingest + creative-only scope")
+
+    # A style reference may be readable image bytes, but must never cross into PRODUCT_SOURCE.
+    ref_name=next(iter(mf["current_references"].values())); ref_path=bundle/ref_name
+    p=run([sys.executable,str(ING),"register","--root",str(ws),"--input",str(ref_path),"--workspace","work/style-as-source","--index","1",
+           "--origin-kind","LOCAL_USER_FILE","--intake-root",str(bundle)])
+    if p.returncode: fail("fixture could not stage style bytes for negative test: "+p.stderr)
+    bad_ing=json.loads(p.stdout)
+    bad_plan=dict(plan); bad_plan["source_sha256"]=[bad_ing["source"]["sha256"]]
+    bad_plan["source_set_detail_map"]=[{"source_sha256":bad_ing["source"]["sha256"],"crop_region":"whole frame",
+        "visible_detail":"should be rejected","graphic_role":"hero","provenance":"SAME_FRAME_CROP"}]
+    (ws/"bad-plan.json").write_text(json.dumps(bad_plan),encoding="utf-8")
+    q=run([sys.executable,str(PREF),"--bundle-dir",str(bundle),"--workspace",str(ws),"--plan","bad-plan.json",
+           "--source-ingest",bad_ing["source_ingest"]["path"]])
+    if q.returncode==0 or "STYLE_ONLY reference bytes cannot be PRODUCT_SOURCE" not in q.stdout:
+        fail("style reference bytes crossed into PRODUCT_SOURCE")
+print("OK chat-local cold-start preflight + two-image source set + source-role separation + creative-only scope")
