@@ -10,13 +10,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.json")
-PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.txt")
+PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.1.txt")
+PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.1.json")
+PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.1.txt")
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.6"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.6-REFERENCE-ALIGNED-MULTI-SOURCE"
-PROJECT_ASSET_MANIFEST_SHA256 = "cfd61724ea7918fdd26b97ceb0010675bbb7e6d3ada3c857f5a32ebe508813a5"
+PROJECT_REVISION = "6.6.1"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.1-FIRST-PASS-CREATIVE-CONTINUITY"
+PROJECT_ASSET_MANIFEST_SHA256 = "cd283142bdc67fbd9845913e0f96260c5a32f7e16a083eb2aec93c4120089ff6"
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
@@ -74,6 +74,7 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
         f"Velvet-Factory-ASSET-MANIFEST-v{PROJECT_REVISION}.json",
         f"Require Contract {PROJECT_CONTRACT_VERSION}, Revision {PROJECT_REVISION}",
         "orientation itself adds useful information",
+        "creative_master",
     )
     if not all(x in instructions for x in instructions_identity):
         problems.append("Project Instructions identity/reference-alignment mismatch")
@@ -150,6 +151,22 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
                 problems.append("camera-angle label allowance does not match owner reference clarification")
             if camera_labels.get("otherwise") != "describe_the_concrete_feature_the_view_reveals":
                 problems.append("camera-angle label fallback must be feature-first copy")
+        continuity = policy.get("creativeContinuityPolicy")
+        if not isinstance(continuity, dict):
+            problems.append("creativeContinuityPolicy missing")
+        else:
+            if continuity.get("intermediateBaseVisualIsCompletion") is not False:
+                problems.append("intermediate base visual must not count as publication completion")
+            if continuity.get("completeFirstResponseWhenToolsAndSourcesPermit") is not True:
+                problems.append("first-response publication completion rule missing")
+            master = continuity.get("creativeMaster")
+            if not isinstance(master, dict) or master.get("freezeSelectedMaster") is not True:
+                problems.append("creative master freeze rule missing")
+            elif master.get("silentRawSourceRestartForbidden") is not True:
+                problems.append("silent raw-source restart must be forbidden")
+            no_regression = continuity.get("noRegression")
+            if not isinstance(no_regression, dict) or no_regression.get("required") is not True:
+                problems.append("final-vs-master no-regression rule missing")
         reference_rules = assets.get("reference_rules")
         if not isinstance(reference_rules, dict):
             problems.append("Project reference_rules must be an object")
@@ -157,7 +174,13 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             for key in (
                     "generic_camera_angle_labels_avoided_by_default",
                     "orientation_labels_allowed_when_orientation_adds_useful_information",
-                    "feature_first_copy_preferred_when_orientation_not_informative"):
+                    "feature_first_copy_preferred_when_orientation_not_informative",
+                    "publication_prep_intermediate_visual_is_not_completion",
+                    "first_response_completion_required_when_tools_and_sources_permit",
+                    "creative_master_freeze_after_product_truth_and_reference_match",
+                    "finalization_must_preserve_or_improve_creative_master",
+                    "silent_raw_source_restart_after_successful_master_forbidden",
+                    "creative_master_replacement_requires_recorded_cause"):
                 if reference_rules.get(key) is not True:
                     problems.append(f"Project reference rule missing or false: {key}")
     return problems
