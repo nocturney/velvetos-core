@@ -181,11 +181,12 @@
     "creativeDeltaSeparateGate": true
   },
   "referenceRoleSeparationPolicy": {
-    "ownerCorrectionDate": "2026-09-18",
+    "ownerCorrectionDate": "2026-09-20",
     "aestheticReferences": [
       "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
       "Velvet-Factory-EDITORIAL-STYLE-REFERENCE-v2.png",
-      "Velvet-Factory-CURRENT-CREATIVE-REFERENCE-v1.png"
+      "Velvet-Factory-CURRENT-CREATIVE-REFERENCE-v1.png",
+      "Velvet-Factory-MULTI-SOURCE-COMPOSITION-REFERENCE-v1.jpg"
     ],
     "productTruth": {
       "source": "actual verified product source pixels",
@@ -197,6 +198,36 @@
         "filename": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png",
         "reason": "owner reports technical QA-board visual biases results toward unaesthetic output"
       }
-    ]
+    ],
+    "aestheticReferenceCount": 4,
+    "multiSourceCompositionReference": {
+      "filename": "Velvet-Factory-MULTI-SOURCE-COMPOSITION-REFERENCE-v1.jpg",
+      "sha256": "78fc8b13593d8bb5806d29e41ea9785625392e00f85e391d864eabc503f14793",
+      "role": "STYLE_LAYOUT_ONLY_NOT_PRODUCT_SOURCE"
+    }
+  },
+  "multiSourceCompositionPolicy": {
+    "ownerCorrectionDate": "2026-09-20",
+    "samePhysicalProductSourceSet": true,
+    "heroSelection": "select strongest verified source frame as hero; other verified frames may supplement when they reveal distinct useful information",
+    "insetProvenanceRequired": true,
+    "insetProvenanceValues": [
+      "SAME_FRAME_CROP",
+      "ALTERNATE_VERIFIED_SOURCE"
+    ],
+    "SAME_FRAME_CROP": "literal crop of the exact hero/source frame; may be presented as zoom/magnification; no independent generation, background, relighting, recoloring or separate retouch",
+    "ALTERNATE_VERIFIED_SOURCE": "different verified photograph of the exact same physical product; may reveal another angle/detail; must not be presented as a hero magnification",
+    "syntheticMissingAngleOrDetail": "FORBIDDEN",
+    "repetitiveViewsWithoutNewInformation": "REPAIR_TARGET",
+    "compositionVocabulary": [
+      "hero_vertical_rail",
+      "hero_circular_crops",
+      "hero_rounded_cards",
+      "asymmetric_text_block",
+      "restrained_handwritten_annotation",
+      "editorial_footer"
+    ],
+    "fixedTemplateRequirement": false,
+    "layoutDiversityRule": "preserve coherent visual language while varying hero side, text zone, inset geometry and density across unrelated products"
   }
 }
