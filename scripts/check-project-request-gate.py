@@ -53,6 +53,9 @@ if "vfcovers/vfcanva composition route" in authority_text:
 for needle in ("Canva/vfcanva are forbidden", "creative_execution_authorized: true"):
     if needle not in authority_text:
         fail(f"Project Authority missing {needle}")
+for needle in ("orientation label is allowed", "orientation itself adds useful information"):
+    if needle not in authority_text:
+        fail(f"Project Authority missing reference-aligned camera-label rule: {needle}")
 asset_data = json.loads(asset_manifest.read_text(encoding="utf-8"))
 expected_identity = (bundle["contractVersion"], str(bundle["revision"]), bundle["bundleId"])
 actual_identity = (asset_data.get("contract_version"), str(asset_data.get("revision")), asset_data.get("bundle_id"))
@@ -71,7 +74,7 @@ if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deni
 current_refs = asset_data.get("current_references")
 if not isinstance(current_refs, dict) or set(current_refs) != {
         "broad_visual", "editorial_layout", "current_direction", "multi_source_composition"}:
-    fail("Revision 6.5 must bind exactly four current aesthetic references")
+    fail("Revision 6.6 must bind exactly four current aesthetic references")
 policy_refs = (route_doc.get("referenceRoleSeparationPolicy") or {}).get("aestheticReferences")
 if not isinstance(policy_refs, list) or set(policy_refs) != set(current_refs.values()):
     fail("visual enforcement aesthetic references do not match Project asset manifest")
@@ -80,6 +83,15 @@ if not isinstance(multi_policy, dict) or multi_policy.get("samePhysicalProductSo
     fail("multi-source composition policy missing")
 if set(multi_policy.get("insetProvenanceValues") or []) != {"SAME_FRAME_CROP", "ALTERNATE_VERIFIED_SOURCE"}:
     fail("multi-source inset provenance policy mismatch")
+camera_labels = route_doc.get("cameraAngleLabelPolicy")
+if not isinstance(camera_labels, dict):
+    fail("cameraAngleLabelPolicy missing")
+if camera_labels.get("blanketBan") is not False:
+    fail("camera-angle labels must not be blanket-banned")
+if camera_labels.get("orientationLabelsAllowedWhen") != "orientation_itself_adds_useful_information":
+    fail("camera-angle label allowance does not match owner reference clarification")
+if camera_labels.get("otherwise") != "describe_the_concrete_feature_the_view_reveals":
+    fail("camera-angle label fallback must be feature-first copy")
 entrypoints = route.get("entrypoints", [])
 required_entrypoints = {"packages/vfgrowth/STORIES.md", "packages/vfcopy/hq/templates/ig-stories.md"}
 if not required_entrypoints.issubset(set(entrypoints)):
