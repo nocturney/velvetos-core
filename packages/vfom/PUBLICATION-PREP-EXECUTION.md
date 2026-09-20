@@ -123,7 +123,7 @@ A current-chat image attachment is valid Product Truth input even when it is not
 
 Do not scan arbitrary user folders looking for a matching photo. An external source path is accepted only when the caller supplies an explicit intake root scoped to the current request. If the platform exposes no attachment bytes locally, use one supported explicit upload/materialization handoff if available; otherwise report `ATTACHMENT_BYTES_UNAVAILABLE`. Never replace a visible attachment with an unhashed visual-memory approximation.
 
-At production evidence time every PRODUCT_SOURCE created from a chat attachment must have a matching exact-byte ingest receipt bound into the `source_lock` stage.
+At production evidence time every PRODUCT_SOURCE created from a chat attachment must have a matching exact-byte ingest receipt bound into the `source_lock` stage. If the repo executor is on another filesystem, run `scripts/vf_chat_cold_start_preflight.py` in the chat-local execution workspace using the hash-verified Project bundle and inspected plan. A remote repo preflight must never be given chat-local paths it cannot read.
 
 ## Hard failure patterns
 
