@@ -29,7 +29,7 @@ if manifest.get("status") != "mandatory" or manifest.get("preflightMode") != "fa
 bundle = manifest.get("chatgptProjectBundle")
 if not isinstance(bundle, dict):
     fail("chatgptProjectBundle binding missing")
-for key in ("contractVersion", "revision", "bundleId", "authority", "assetManifest"):
+for key in ("contractVersion", "revision", "bundleId", "authority", "assetManifest", "instructions"):
     if not bundle.get(key):
         fail(f"chatgptProjectBundle missing {key}")
 if manifest.get("gateDocument") != "packages/velvetos/PROJECT-REQUEST-GATE.md":
@@ -43,8 +43,9 @@ if not required_domains.issubset(set(manifest.get("domains", {}))):
 
 project_authority = ROOT / bundle["authority"]
 asset_manifest = ROOT / bundle["assetManifest"]
+project_instructions = ROOT / bundle["instructions"]
 visual_enforcement = ROOT / "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-for path in (project_authority, asset_manifest, visual_enforcement):
+for path in (project_authority, asset_manifest, project_instructions, visual_enforcement):
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
 authority_text = project_authority.read_text(encoding="utf-8")
@@ -67,6 +68,19 @@ authority_sha = hashlib.sha256(authority_bytes).hexdigest()
 authority_lf_sha = hashlib.sha256(authority_bytes.replace(b"\r\n", b"\n")).hexdigest()
 if len(authority_rows) != 1 or authority_rows[0].get("sha256") not in {authority_sha, authority_lf_sha}:
     fail(f"Project Authority bytes are not bound to the current asset manifest ({bundle['revision']})")
+instructions_text = project_instructions.read_text(encoding="utf-8")
+instructions_sha = hashlib.sha256(project_instructions.read_bytes()).hexdigest()
+instructions_lf_sha = hashlib.sha256(project_instructions.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+instructions_row = asset_data.get("instructions")
+if not isinstance(instructions_row, dict):
+    fail("Project Instructions binding missing from asset manifest")
+if instructions_row.get("sha256") not in {instructions_sha, instructions_lf_sha}:
+    fail(f"Project Instructions bytes are not bound to the current asset manifest ({bundle['revision']})")
+for needle in (f"Revision: {bundle['revision']}", bundle["bundleId"],
+               f"Velvet-Factory-ASSET-MANIFEST-v{bundle['revision']}.json",
+               "orientation itself adds useful information"):
+    if needle not in instructions_text:
+        fail(f"Project Instructions missing current binding/rule: {needle}")
 route_doc = json.loads(visual_enforcement.read_text(encoding="utf-8"))
 route = route_doc.get("publicationRoute", {})
 if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deniedTools", [])}):
@@ -138,6 +152,8 @@ if project_preflight.PROJECT_AUTHORITY != Path(bundle["authority"]):
     fail("active preflight Project Authority does not match chatgptProjectBundle")
 if project_preflight.PROJECT_ASSET_MANIFEST != Path(bundle["assetManifest"]):
     fail("active preflight asset manifest does not match chatgptProjectBundle")
+if project_preflight.PROJECT_INSTRUCTIONS != Path(bundle["instructions"]):
+    fail("active preflight Project Instructions do not match chatgptProjectBundle")
 if Path(publication_evidence.AUTHORITY) != Path(bundle["authority"]):
     fail("publication evidence Project Authority does not match chatgptProjectBundle")
 if Path(publication_evidence.ASSETS) != Path(bundle["assetManifest"]):
