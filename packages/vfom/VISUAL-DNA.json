@@ -1,6 +1,6 @@
 {
   "brandName": "Velvet Factory",
-  "version": 5,
+  "version": 6,
   "authority": "packages/vfom/VISUAL-OS.md",
   "ownerApprovedVisualStandard": {
     "status": "approved",
@@ -242,7 +242,9 @@
     "placeholder shown as intended final",
     "generic icon replacing real product media",
     "text-heavy template card overpowering product",
-    "generic Canva-template look"
+    "generic Canva-template look",
+    "intermediate hero handed off as completed post",
+    "final artifact weaker than selected creative master without recorded cause"
   ],
   "referencePolicy": {
     "learnable": [
@@ -308,5 +310,35 @@
       "preferredOtherwise": "describe_concrete_feature_revealed",
       "qa": "if used, the orientation label must add information and must not duplicate nearby copy"
     }
+  },
+  "creativeContinuity": {
+    "ownerCorrectionDate": "2026-09-20",
+    "firstResponseCompletion": true,
+    "intermediateBaseVisual": "internal_stage_not_completion",
+    "noTextException": "allowed only when deliberately selected and exact-final QA passes",
+    "creativeMaster": {
+      "freezeAfter": [
+        "product_truth_pass",
+        "reference_match_pass",
+        "direction_selected"
+      ],
+      "preserveThroughFinalization": true,
+      "restartFromRawMedia": false,
+      "regenerateHeroDuringFinalization": false
+    },
+    "replacementRequiresCause": [
+      "product_truth_failure",
+      "blocking_artifact_or_readability_issue",
+      "unsupported_asset_or_claim",
+      "explicit_owner_change"
+    ],
+    "finalVsMasterNoRegression": [
+      "atmosphere",
+      "hierarchy",
+      "depth",
+      "reference_match",
+      "editorial_richness",
+      "product_fidelity"
+    ]
   }
 }

@@ -76,11 +76,12 @@ def fixture(root):
         'checks': {x: 'PASS' for x in evidence.CHECKS}, 'synthetic_subject_change': 'NONE',
         'reviewer': 'TEST-ONLY', 'reference_match_observations': 'Test observations, not aesthetic validation.',
         'reviewed_at': '2026-01-01T00:00:00Z',
+        'creative_master_sha256': master['sha256'], 'creative_master_replaced': False,
         'views': [{'artifact_sha256': output['sha256'], 'full': output, 'mobile': mobile}]})
     ev = {'version': 1, 'policy_sha256': evidence.digest(root / evidence.POLICY),
         'public_intent': 'showcase', 'direction': {'family_id': 'valid-family', 'status': 'LOCKED'},
         'direction_history': [], 'tools': ['source-compositor'], 'sources': [source], 'references': refs,
-        'reference_decomposition': decomposition, 'product_protection': {'method': 'SOURCE_MASK_COMPOSITE',
+        'reference_decomposition': decomposition, 'creative_master': master, 'product_protection': {'method': 'SOURCE_MASK_COMPOSITE',
             'evidence': report, 'protected_regions': ['whole-product', 'eyes']},
         'stages': [{'name': n, 'status': 'PASS', 'started_at': '2026-01-01T00:00:00Z',
                     'completed_at': '2026-01-01T00:00:00Z',
@@ -119,6 +120,29 @@ class EvidenceTests(unittest.TestCase):
         for tool in ['Canva.generate-design', 'vfcanva', 'CANVA.export']:
             self.ev['tools'] = [tool]
             self.assertFalse(self.result()['ok'])
+    def test_missing_creative_master(self):
+        self.ev.pop('creative_master')
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('creative master', ' '.join(result['problems']).lower())
+
+    def test_creative_continuity_must_pass(self):
+        review = json.loads((self.root / 'review.json').read_text())
+        review['checks']['creative_continuity'] = 'FAIL'
+        self.ev['review'] = self.write('review.json', review)
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('review gates', ' '.join(result['problems']).lower())
+
+    def test_master_replacement_requires_supported_reason(self):
+        review = json.loads((self.root / 'review.json').read_text())
+        review['creative_master_replaced'] = True
+        review['creative_master_replacement_reason'] = 'because_it_looked_safer'
+        self.ev['review'] = self.write('review.json', review)
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('replacement reason', ' '.join(result['problems']).lower())
+
     def test_missing_output(self):
         (self.root / 'final.jpg').unlink()
         self.assertFalse(self.result()['ok'])

@@ -21,7 +21,7 @@ If a mandatory authority is unavailable, stale, contradictory or cannot be verif
 
 ## ChatGPT Project bundle fallback
 
-When live GitHub/repository access or the repository executable preflight is unavailable inside a ChatGPT Project, a hash-verified Project bundle at **Contract 6 / Revision 6.6 or newer** may satisfy the baseline authority and creative/public-copy routing for `creative_publication` only. Record `repo_state=UNAVAILABLE_PROJECT_BUNDLE_FALLBACK` and the exact bundle ID/hashes. Do not claim repository synchronization, deployment or a repository preflight PASS.
+When live GitHub/repository access or the repository executable preflight is unavailable inside a ChatGPT Project, a hash-verified Project bundle at **Contract 6 / Revision 6.6.1 or newer** may satisfy the baseline authority and creative/public-copy routing for `creative_publication` only. Record `repo_state=UNAVAILABLE_PROJECT_BUNDLE_FALLBACK` and the exact bundle ID/hashes. Do not claim repository synchronization, deployment or a repository preflight PASS.
 
 This fallback does **not** authorize stale operational truth. Operations, finance, production status, catalog status, Instagram action and any branch that depends on live external state remain fail-closed or limited to the evidence actually available. If GitHub becomes available, resolve current `main` and apply newer scoped owner corrections before continuing.
 

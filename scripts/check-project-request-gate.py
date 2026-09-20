@@ -57,6 +57,9 @@ for needle in ("Canva/vfcanva are forbidden", "creative_execution_authorized: tr
 for needle in ("orientation label is allowed", "orientation itself adds useful information"):
     if needle not in authority_text:
         fail(f"Project Authority missing reference-aligned camera-label rule: {needle}")
+for needle in ("intermediate base/staging visual handed off as if the requested post were complete", "creative_master"):
+    if needle not in authority_text:
+        fail(f"Project Authority missing first-pass continuity rule: {needle}")
 asset_data = json.loads(asset_manifest.read_text(encoding="utf-8"))
 expected_identity = (bundle["contractVersion"], str(bundle["revision"]), bundle["bundleId"])
 actual_identity = (asset_data.get("contract_version"), str(asset_data.get("revision")), asset_data.get("bundle_id"))
@@ -78,7 +81,7 @@ if instructions_row.get("sha256") not in {instructions_sha, instructions_lf_sha}
     fail(f"Project Instructions bytes are not bound to the current asset manifest ({bundle['revision']})")
 for needle in (f"Revision: {bundle['revision']}", bundle["bundleId"],
                f"Velvet-Factory-ASSET-MANIFEST-v{bundle['revision']}.json",
-               "orientation itself adds useful information"):
+               "orientation itself adds useful information", "creative_master"):
     if needle not in instructions_text:
         fail(f"Project Instructions missing current binding/rule: {needle}")
 route_doc = json.loads(visual_enforcement.read_text(encoding="utf-8"))
@@ -88,7 +91,7 @@ if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deni
 current_refs = asset_data.get("current_references")
 if not isinstance(current_refs, dict) or set(current_refs) != {
         "broad_visual", "editorial_layout", "current_direction", "multi_source_composition"}:
-    fail("Revision 6.6 must bind exactly four current aesthetic references")
+    fail("Revision 6.6.1 must bind exactly four current aesthetic references")
 policy_refs = (route_doc.get("referenceRoleSeparationPolicy") or {}).get("aestheticReferences")
 if not isinstance(policy_refs, list) or set(policy_refs) != set(current_refs.values()):
     fail("visual enforcement aesthetic references do not match Project asset manifest")
@@ -106,6 +109,21 @@ if camera_labels.get("orientationLabelsAllowedWhen") != "orientation_itself_adds
     fail("camera-angle label allowance does not match owner reference clarification")
 if camera_labels.get("otherwise") != "describe_the_concrete_feature_the_view_reveals":
     fail("camera-angle label fallback must be feature-first copy")
+continuity = route_doc.get("creativeContinuityPolicy")
+if not isinstance(continuity, dict):
+    fail("creativeContinuityPolicy missing")
+if continuity.get("intermediateBaseVisualIsCompletion") is not False:
+    fail("intermediate base visual must not count as publication completion")
+if continuity.get("completeFirstResponseWhenToolsAndSourcesPermit") is not True:
+    fail("first-response completion rule missing")
+master_policy = continuity.get("creativeMaster") or {}
+if master_policy.get("freezeSelectedMaster") is not True:
+    fail("creative master freeze rule missing")
+if master_policy.get("silentRawSourceRestartForbidden") is not True:
+    fail("silent raw-source restart must be forbidden")
+no_regression = continuity.get("noRegression") or {}
+if no_regression.get("required") is not True or no_regression.get("weakerFinal") != "FAIL_TARGETED_REPAIR":
+    fail("final-vs-master no-regression policy missing")
 entrypoints = route.get("entrypoints", [])
 required_entrypoints = {"packages/vfgrowth/STORIES.md", "packages/vfcopy/hq/templates/ig-stories.md"}
 if not required_entrypoints.issubset(set(entrypoints)):

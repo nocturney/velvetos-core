@@ -18,13 +18,13 @@ from typing import Any
 from vf_media_integrity import inspect_media
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.json"
-ASSETS_SHA = "cfd61724ea7918fdd26b97ceb0010675bbb7e6d3ada3c857f5a32ebe508813a5"
-AUTHORITY_SHA = "25dd89bda6c7359d40f346fcb225d19276c9f87e74d039f8bb95a836f4b4f052"
+AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.1.txt"
+ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.1.json"
+ASSETS_SHA = "5c96f546189356558a619f0cc041fe23a6366240017d4331849ed721d5935175"
+AUTHORITY_SHA = "7ca2eb5d9187abfb5db9852830db94d76b4fa0bce810b51240c94ac76dacb209"
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.6"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.6-REFERENCE-ALIGNED-MULTI-SOURCE"
+PROJECT_REVISION = "6.6.1"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.1-FIRST-PASS-CREATIVE-CONTINUITY"
 PRODUCT_TRUTH_GUIDE = "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
 REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 = "17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9"
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
@@ -32,7 +32,7 @@ STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposi
           "brand_guardian", "exact_final_qa")
 AXES = ("product_to_frame", "environment", "light", "depth", "negative_space",
         "hierarchy", "typography", "details", "surfaces", "accent")
-CHECKS = ("source_match", "reference_match", "copy_checked", "brand_checked", "final_qa")
+CHECKS = ("source_match", "reference_match", "creative_continuity", "copy_checked", "brand_checked", "final_qa")
 HEX = re.compile(r"[0-9a-f]{64}")
 EMPTY = {"", "NONE", "N/A", "PENDING", "UNPROVEN", "_", "TODO"}
 
@@ -282,6 +282,11 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     if phase == "production":
         return {"ok": True, "phase": phase, "evidence_state": "INPUT_EVIDENCE_VALIDATED",
                 "problems": [], "publishAuthorized": False}
+    creative_master = ev.get("creative_master")
+    creative_master_path = verify_ref(root, creative_master, "creative master", denied)
+    inspect_media(creative_master_path, "creative master")
+    if creative_master.get("sha256") in source_shas | ref_shas:
+        raise ValueError("creative master cannot be a raw product source or style reference")
     outputs = _rows(ev.get("outputs"), "outputs")
     if not any(x.get("role") == "FINAL_VISUAL" for x in outputs):
         raise ValueError("no final visual artifact")
@@ -323,6 +328,16 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     review = load_json(verify_ref(root, ev.get("review"), "exact-final review", denied))
     if review.get("job_id") != content_id or review.get("package_sha256") != computed:
         raise ValueError("review is not bound to this exact job/package")
+    if review.get("creative_master_sha256") != creative_master.get("sha256"):
+        raise ValueError("review is not bound to the selected creative master")
+    replaced = review.get("creative_master_replaced")
+    if not isinstance(replaced, bool):
+        raise ValueError("creative_master_replaced must be explicit boolean")
+    if replaced:
+        allowed = {"product_truth_failure", "blocking_artifact_or_readability_issue",
+                   "unsupported_asset_or_claim", "explicit_owner_change"}
+        if review.get("creative_master_replacement_reason") not in allowed:
+            raise ValueError("creative master replacement reason missing or unsupported")
     if set(review.get("source_sha256", [])) != source_shas or set(review.get("reference_sha256", [])) != ref_shas:
         raise ValueError("review source/reference identities mismatch")
     checks = _object(review.get("checks"), "review checks")
@@ -356,6 +371,7 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     return {"ok": True, "phase": phase, "problems": [], "packageSha256": computed,
             "artifact_exists": True, "evidence_state": "FILES_AND_REVIEW_BINDINGS_VALIDATED",
             "visualHashes": [x["sha256"] for x in visuals],
+            "creativeMasterHash": creative_master["sha256"],
             "textHashes": sorted(text_hashes),
             "limitation": "Integrity of submitted evidence is verified; visual judgment and tool/receipt authorship are not independently attested.",
             "publishAuthorized": False}

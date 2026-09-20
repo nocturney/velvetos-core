@@ -41,6 +41,14 @@ The new composition reference `Velvet-Factory-MULTI-SOURCE-COMPOSITION-REFERENCE
 
 The approved references do **not** imply a blanket ban on side/back/front labels. Generic camera-angle labels are not default editorial copy, but an orientation label is valid when the orientation itself adds useful information for the viewer. When orientation is not the point, use the copy to name the concrete product feature that the alternate view reveals. A useful orientation label is not a failure; a redundant or information-free one is a repair target.
 
+## Creative-master continuity · owner correction 2026-09-20
+
+For publication-prep, a strong base/hero/staging visual is an **internal stage**, not the completed handoff, unless `NO_TEXT` is deliberately selected as the final composition and exact-final QA passes. When usable sources and editing tools exist, continue in the same response through the requested review artifact rather than stopping after the first promising visual.
+
+Once a source-faithful styled visual passes Product Truth and reference match and is selected as the strongest direction, freeze it as the `creative_master`. Final Hebrew, deterministic typography, icons/logo, dividers and source-backed insets are built on that master. Finalization is additive refinement, not a second creative restart.
+
+Do not silently return to a raw source photo, swap to a weaker scene or regenerate the hero after a successful master. Replacing the master requires a recorded cause: Product Truth failure, blocking artifact/readability defect, unsupported asset/claim, or explicit owner change. Exact-final QA compares the final artifact to both source truth and the selected master; regression in atmosphere, hierarchy, depth, reference match, editorial richness or product fidelity is FAIL -> targeted repair.
+
 ## Visual Finishing Protocol · always-on
 
 כל נכס סטילס/פוסט/סטורי/קרוסלה/cover שעובר עיבוד חייב לעבור את ארבעת השלבים הבאים לפני שהוא נחשב final:
