@@ -174,11 +174,11 @@
     },
     {
       "filename": "Velvet-Factory-ASSET-MANIFEST-v6.5.json",
-      "reason": "superseded by Revision 6.6 bundle"
+      "reason": "historical only; current asset manifest is Revision 6.6.1"
     },
     {
       "filename": "Velvet-Factory-Project-Instructions-v6.5.txt",
-      "reason": "superseded by Revision 6.6 bundle"
+      "reason": "historical only; current Project Instructions are Revision 6.6.1"
     },
     {
       "filename": "PROJECT-AUTHORITY-v6.5.txt",
