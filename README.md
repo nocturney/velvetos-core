@@ -40,10 +40,10 @@
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-19T16:16:00+03:00` |
+| **Last verified / refreshed evidence** | `2026-09-20T09:05:46+03:00` |
 
-<div dir="rtl"><strong>מה השתנה:</strong> Protected owner-facing scheduler cut over to Grok Bot and ChatGPT scheduler copies retired · Publish Bridge retention is archive-preserving: active → archive, no automatic delete · Live Instagram profile rechecked; retired offering line is gone, desired CTA line is still absent</div>
-<div dir="ltr"><strong>What changed:</strong> Protected owner-facing scheduler cut over to Grok Bot and ChatGPT scheduler copies retired · Publish Bridge retention is archive-preserving: active → archive, no automatic delete · Live Instagram profile rechecked; retired offering line is gone, desired CTA line is still absent</div>
+<div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
+<div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
 <div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-19 — **Grok Bot automation cutover:** the seven owner-approved VelvetOS office routines moved from the ChatGPT scheduler to Grok Bot after 7/7 read-only shadow verification. The live Grok routine invent…</div>
 <div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-19 — **Grok Bot automation cutover:** the seven owner-approved VelvetOS office routines moved from the ChatGPT scheduler to Grok Bot after 7/7 read-only shadow verification. The live Grok routine invent…</div>
