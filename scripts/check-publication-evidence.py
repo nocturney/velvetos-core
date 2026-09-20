@@ -183,6 +183,8 @@ class EvidenceTests(unittest.TestCase):
         receipt = json.loads(receipt_path.read_text())
         receipt['materialized']['sha256'] = '0' * 64
         self.ev['creative_master_materialization'] = self.write('materialization.json', receipt)
+        stage = next(x for x in self.ev['stages'] if x['name'] == 'creative_master_materialization')
+        stage['evidence'] = [self.ev['creative_master_materialization']]
         review = json.loads((self.root / 'review.json').read_text())
         review['creative_master_materialization_sha256'] = self.ev['creative_master_materialization']['sha256']
         self.ev['review'] = self.write('review.json', review)
@@ -195,6 +197,8 @@ class EvidenceTests(unittest.TestCase):
         receipt = json.loads(receipt_path.read_text())
         receipt['origin'] = dict(self.ev['sources'][0])
         self.ev['creative_master_materialization'] = self.write('materialization.json', receipt)
+        stage = next(x for x in self.ev['stages'] if x['name'] == 'creative_master_materialization')
+        stage['evidence'] = [self.ev['creative_master_materialization']]
         review = json.loads((self.root / 'review.json').read_text())
         review['creative_master_materialization_sha256'] = self.ev['creative_master_materialization']['sha256']
         self.ev['review'] = self.write('review.json', review)
