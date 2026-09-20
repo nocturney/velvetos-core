@@ -30,6 +30,14 @@ Do not fail Product Truth merely because such basic corrections were applied. Fa
 
 This allowance is separate from the creative-delta requirement: a safe brightness/contrast/crop pass can preserve Product Truth while still being too weak to qualify as the finished Velvet publication treatment.
 
+## Owner correction — complete the post and preserve the winning master
+
+A generated/edited hero may be an excellent creative step and still be incomplete for a request such as "תכין פוסט". Do not hand off a base/staging/hero image as completion merely because it looks good. Continue through the selected final composition, deterministic text/graphics decision and exact-final QA in the same response when tools and sources permit. A deliberately selected `NO_TEXT` final is valid only after it is treated as the final artifact and passes the same gates.
+
+When a source-faithful styled visual passes Product Truth + reference match and is selected as the best direction, record it as `creative_master`. Subsequent finalization must preserve that visual direction. Add deterministic typography, icons/logo, dividers and source-backed insets to the master rather than restarting from the raw source or regenerating a different hero.
+
+A weaker final than the selected `creative_master` is not "safer"; it is a creative regression. Replacement is allowed only for a recorded cause: Product Truth failure, blocking artifact/readability issue, unsupported asset/claim or explicit owner change. Otherwise repair the overlay/composition while retaining the successful master.
+
 ## Minimum creative delta
 
 Before `ready for review`, require all of:
