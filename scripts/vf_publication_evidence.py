@@ -18,13 +18,13 @@ from typing import Any
 from vf_media_integrity import inspect_media
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.3.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.3.json"
+AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt"
+ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json"
 ASSETS_SHA = "0f0c452f936dd5559bc69666f0a000ca2ecaa53044c5fd9c900eb85e3b9d87fb"
 AUTHORITY_SHA = "7e2d4b3ff4013241736f7b23b9ccc15da0cfead992165ec253ddeb607d62dbe7"
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.6.3"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.3-CHAT-ATTACHMENT-SOURCE-INGEST"
+PROJECT_REVISION = "6.6.4"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE"
 PRODUCT_TRUTH_GUIDE = "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
 REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 = "17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9"
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
