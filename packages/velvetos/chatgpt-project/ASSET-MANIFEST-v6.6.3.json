@@ -280,7 +280,7 @@
       "filename": "vf_chat_cold_start_preflight.py",
       "repo_path": "scripts/vf_chat_cold_start_preflight.py",
       "role": "chat_local_creative_preflight_never_publication",
-      "sha256": "65766222c3cb4426b8b753e98a1cdd1f59d403fa954775363bc5a03b88cccbbe"
+      "sha256": "2ebf0526b7c1d8131187de5135a619770ec549633e9d62906c5ad0e0d1278297"
     },
     {
       "filename": "vf_media_integrity.py",
