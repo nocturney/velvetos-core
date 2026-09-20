@@ -172,7 +172,8 @@ if project_preflight.project_binding_problems(creative=True):
 with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
     tmp = Path(tmp_name)
     for rel in (project_preflight.PROJECT_AUTHORITY, project_preflight.PROJECT_ASSET_MANIFEST,
-                project_preflight.VISUAL_ENFORCEMENT, project_preflight.PROJECT_GATE):
+                project_preflight.PROJECT_INSTRUCTIONS, project_preflight.VISUAL_ENFORCEMENT,
+                project_preflight.PROJECT_GATE):
         target = tmp / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / rel, target)
