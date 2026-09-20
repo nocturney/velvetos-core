@@ -60,6 +60,9 @@ for needle in ("orientation label is allowed", "orientation itself adds useful i
 for needle in ("intermediate base/staging visual handed off as if the requested post were complete", "creative_master"):
     if needle not in authority_text:
         fail(f"Project Authority missing first-pass continuity rule: {needle}")
+for needle in ("creative_master_materialized=PASS", "Recreating the scene from the raw product source is not materialization"):
+    if needle not in authority_text:
+        fail(f"Project Authority missing creative-master materialization rule: {needle}")
 asset_data = json.loads(asset_manifest.read_text(encoding="utf-8"))
 expected_identity = (bundle["contractVersion"], str(bundle["revision"]), bundle["bundleId"])
 actual_identity = (asset_data.get("contract_version"), str(asset_data.get("revision")), asset_data.get("bundle_id"))
@@ -81,7 +84,7 @@ if instructions_row.get("sha256") not in {instructions_sha, instructions_lf_sha}
     fail(f"Project Instructions bytes are not bound to the current asset manifest ({bundle['revision']})")
 for needle in (f"Revision: {bundle['revision']}", bundle["bundleId"],
                f"Velvet-Factory-ASSET-MANIFEST-v{bundle['revision']}.json",
-               "orientation itself adds useful information", "creative_master"):
+               "orientation itself adds useful information", "creative_master", "materialized to local path + SHA-256"):
     if needle not in instructions_text:
         fail(f"Project Instructions missing current binding/rule: {needle}")
 route_doc = json.loads(visual_enforcement.read_text(encoding="utf-8"))
@@ -91,7 +94,7 @@ if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deni
 current_refs = asset_data.get("current_references")
 if not isinstance(current_refs, dict) or set(current_refs) != {
         "broad_visual", "editorial_layout", "current_direction", "multi_source_composition"}:
-    fail("Revision 6.6.1 must bind exactly four current aesthetic references")
+    fail("Revision 6.6.2 must bind exactly four current aesthetic references")
 policy_refs = (route_doc.get("referenceRoleSeparationPolicy") or {}).get("aestheticReferences")
 if not isinstance(policy_refs, list) or set(policy_refs) != set(current_refs.values()):
     fail("visual enforcement aesthetic references do not match Project asset manifest")
@@ -124,6 +127,19 @@ if master_policy.get("silentRawSourceRestartForbidden") is not True:
 no_regression = continuity.get("noRegression") or {}
 if no_regression.get("required") is not True or no_regression.get("weakerFinal") != "FAIL_TARGETED_REPAIR":
     fail("final-vs-master no-regression policy missing")
+materialization = continuity.get("materialization") or {}
+if materialization.get("planBeforeCreativeToolSelectionWhenDeterministicOverlayExpected") is not True:
+    fail("creative-master materialization planning rule missing")
+if materialization.get("requiredBeforeDeterministicOverlay") is not True:
+    fail("creative-master materialization gate missing")
+if materialization.get("localPathAndSha256Required") is not True or materialization.get("receiptRequired") is not True:
+    fail("creative-master local identity/receipt rule missing")
+if materialization.get("rawSourceRecreationCountsAsMaterialization") is not False:
+    fail("raw-source recreation must not count as creative-master materialization")
+if materialization.get("silentRawFallbackForbidden") is not True:
+    fail("unmaterializable master must not silently fall back to raw source")
+if materialization.get("bridge") != "scripts/vf_creative_master_bridge.py":
+    fail("creative-master bridge binding mismatch")
 entrypoints = route.get("entrypoints", [])
 required_entrypoints = {"packages/vfgrowth/STORIES.md", "packages/vfcopy/hq/templates/ig-stories.md"}
 if not required_entrypoints.issubset(set(entrypoints)):
