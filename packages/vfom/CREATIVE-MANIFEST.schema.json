@@ -4,20 +4,7 @@
   "title": "Velvet Creative Manifest",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "jobId",
-    "format",
-    "status",
-    "sourceEvidence",
-    "visualStandard",
-    "concept",
-    "hook",
-    "shots",
-    "edit",
-    "visualCopy",
-    "cover",
-    "qa"
-  ],
+  "required": ["jobId", "format", "status", "sourceEvidence", "visualStandard", "concept", "hook", "shots", "edit", "visualCopy", "cover", "qa"],
   "properties": {
     "publicationEvidence": {
       "type": "object",
@@ -36,149 +23,49 @@
       "properties": {
         "version": {
           "const": 1
-        },
-        "creative_master": {
-          "type": "object",
-          "required": [
-            "path",
-            "sha256"
-          ],
-          "properties": {
-            "path": {
-              "type": "string",
-              "minLength": 1
-            },
-            "sha256": {
-              "type": "string",
-              "pattern": "^[0-9a-f]{64}$"
-            }
-          },
-          "description": "Delivery-phase binding to the selected strongest styled visual before final overlay. Required by vf_publication_evidence.py for delivery; may be absent during pre-production."
         }
       },
-      "description": "Required by runtime production/delivery gates. Detailed integrity contract: PUBLICATION-PREP-EXECUTION.md; validated against actual files by vf_publication_evidence.py. Delivery additionally requires a hash-bound creative_master and creative_continuity PASS. Legacy manifests are archival, not new approvals."
+      "description": "Required by runtime production/delivery gates. Detailed integrity contract: PUBLICATION-PREP-EXECUTION.md; validated against actual files by vf_publication_evidence.py. Legacy manifests are archival, not new approvals."
     },
-    "jobId": {
-      "type": "string",
-      "minLength": 1
-    },
-    "format": {
-      "enum": [
-        "reel",
-        "story",
-        "carousel",
-        "post"
-      ]
-    },
-    "status": {
-      "enum": [
-        "discovered",
-        "qualified",
-        "contracted",
-        "concepted",
-        "storyboarded",
-        "waiting_for_media",
-        "media_ready",
-        "rough_generated",
-        "visually_scored",
-        "repaired",
-        "rendered",
-        "ready_for_publish",
-        "authorized_for_tool_publish",
-        "published_verified",
-        "performance_learned",
-        "human_required",
-        "archived"
-      ]
-    },
+    "jobId": {"type": "string", "minLength": 1},
+    "format": {"enum": ["reel", "story", "carousel", "post"]},
+    "status": {"enum": ["discovered", "qualified", "contracted", "concepted", "storyboarded", "waiting_for_media", "media_ready", "rough_generated", "visually_scored", "repaired", "rendered", "ready_for_publish", "authorized_for_tool_publish", "published_verified", "performance_learned", "human_required", "archived"]},
     "sourceEvidence": {
       "type": "array",
-      "items": {
-        "type": "string",
-        "minLength": 1
-      }
+      "items": {"type": "string", "minLength": 1}
     },
     "visualStandard": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "gate",
-        "document",
-        "portablePrompt",
-        "referenceAsset",
-        "publicReferenceUrl",
-        "artifactSha256",
-        "coldStart",
-        "evidenceRefs"
-      ],
+      "required": ["gate", "document", "portablePrompt", "referenceAsset", "publicReferenceUrl", "artifactSha256", "coldStart", "evidenceRefs"],
       "properties": {
-        "gate": {
-          "const": "PASS"
-        },
-        "document": {
-          "const": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md"
-        },
-        "portablePrompt": {
-          "const": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md"
-        },
-        "referenceAsset": {
-          "const": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"
-        },
-        "publicReferenceUrl": {
-          "const": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"
-        },
-        "canvaAssetId": {
-          "const": "MAHVL7PKpvE"
-        },
-        "artifactSha256": {
-          "const": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897"
-        },
-        "coldStart": {
-          "const": true
-        },
-        "evidenceRefs": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
-        }
+        "gate": {"const": "PASS"},
+        "document": {"const": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md"},
+        "portablePrompt": {"const": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md"},
+        "referenceAsset": {"const": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"},
+        "publicReferenceUrl": {"const": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"},
+        "canvaAssetId": {"const": "MAHVL7PKpvE"},
+        "artifactSha256": {"const": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897"},
+        "coldStart": {"const": true},
+        "evidenceRefs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
       }
     },
     "concept": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "coreIdea",
-        "emotion",
-        "formatGenome"
-      ],
+      "required": ["coreIdea", "emotion", "formatGenome"],
       "properties": {
-        "coreIdea": {
-          "type": "string"
-        },
-        "emotion": {
-          "type": "string"
-        },
-        "formatGenome": {
-          "type": "string"
-        },
-        "objective": {
-          "type": "string"
-        },
-        "audience": {
-          "type": "string"
-        }
+        "coreIdea": {"type": "string"},
+        "emotion": {"type": "string"},
+        "formatGenome": {"type": "string"},
+        "objective": {"type": "string"},
+        "audience": {"type": "string"}
       }
     },
     "hook": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "candidates",
-        "selected"
-      ],
+      "required": ["candidates", "selected"],
       "properties": {
         "candidates": {
           "type": "array",
@@ -187,91 +74,38 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "id",
-              "visual",
-              "text"
-            ],
+            "required": ["id", "visual", "text"],
             "properties": {
-              "id": {
-                "type": "string"
-              },
-              "visual": {
-                "type": "string"
-              },
-              "text": {
-                "type": "string"
-              },
-              "reason": {
-                "type": "string"
-              }
+              "id": {"type": "string"},
+              "visual": {"type": "string"},
+              "text": {"type": "string"},
+              "reason": {"type": "string"}
             }
           }
         },
-        "selected": {
-          "type": "string"
-        }
+        "selected": {"type": "string"}
       }
     },
     "shots": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "plan",
-        "missing"
-      ],
+      "required": ["plan", "missing"],
       "properties": {
         "plan": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "shotType",
-              "orientation",
-              "angle",
-              "distance",
-              "action",
-              "targetDurationSec"
-            ],
+            "required": ["shotType", "orientation", "angle", "distance", "action", "targetDurationSec"],
             "properties": {
-              "assetRef": {
-                "type": "string"
-              },
-              "shotType": {
-                "enum": [
-                  "hero",
-                  "macro",
-                  "process",
-                  "failure",
-                  "proof",
-                  "human",
-                  "b-roll"
-                ]
-              },
-              "orientation": {
-                "enum": [
-                  "vertical",
-                  "horizontal",
-                  "square"
-                ]
-              },
-              "angle": {
-                "type": "string"
-              },
-              "distance": {
-                "type": "string"
-              },
-              "action": {
-                "type": "string"
-              },
-              "targetDurationSec": {
-                "type": "number",
-                "minimum": 0
-              },
-              "proof": {
-                "type": "string"
-              }
+              "assetRef": {"type": "string"},
+              "shotType": {"enum": ["hero", "macro", "process", "failure", "proof", "human", "b-roll"]},
+              "orientation": {"enum": ["vertical", "horizontal", "square"]},
+              "angle": {"type": "string"},
+              "distance": {"type": "string"},
+              "action": {"type": "string"},
+              "targetDurationSec": {"type": "number", "minimum": 0},
+              "proof": {"type": "string"}
             }
           }
         },
@@ -280,38 +114,14 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "what",
-              "orientation",
-              "angle",
-              "durationSec",
-              "action",
-              "why"
-            ],
+            "required": ["what", "orientation", "angle", "durationSec", "action", "why"],
             "properties": {
-              "what": {
-                "type": "string"
-              },
-              "orientation": {
-                "enum": [
-                  "vertical",
-                  "horizontal",
-                  "square"
-                ]
-              },
-              "angle": {
-                "type": "string"
-              },
-              "durationSec": {
-                "type": "number",
-                "minimum": 0
-              },
-              "action": {
-                "type": "string"
-              },
-              "why": {
-                "type": "string"
-              }
+              "what": {"type": "string"},
+              "orientation": {"enum": ["vertical", "horizontal", "square"]},
+              "angle": {"type": "string"},
+              "durationSec": {"type": "number", "minimum": 0},
+              "action": {"type": "string"},
+              "why": {"type": "string"}
             }
           }
         }
@@ -320,57 +130,25 @@
     "edit": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "timeline",
-        "audioStrategy"
-      ],
+      "required": ["timeline", "audioStrategy"],
       "properties": {
-        "durationTargetSec": {
-          "type": "number",
-          "minimum": 0
-        },
-        "audioStrategy": {
-          "type": "string"
-        },
+        "durationTargetSec": {"type": "number", "minimum": 0},
+        "audioStrategy": {"type": "string"},
         "timeline": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "startSec",
-              "endSec",
-              "assetRef",
-              "cut"
-            ],
+            "required": ["startSec", "endSec", "assetRef", "cut"],
             "properties": {
-              "startSec": {
-                "type": "number",
-                "minimum": 0
-              },
-              "endSec": {
-                "type": "number",
-                "minimum": 0
-              },
-              "assetRef": {
-                "type": "string"
-              },
-              "crop": {
-                "type": "string"
-              },
-              "speed": {
-                "type": "number",
-                "exclusiveMinimum": 0
-              },
-              "cut": {
-                "type": "string"
-              },
-              "overlayRef": {
-                "type": "string"
-              },
-              "audio": {
-                "type": "string"
-              }
+              "startSec": {"type": "number", "minimum": 0},
+              "endSec": {"type": "number", "minimum": 0},
+              "assetRef": {"type": "string"},
+              "crop": {"type": "string"},
+              "speed": {"type": "number", "exclusiveMinimum": 0},
+              "cut": {"type": "string"},
+              "overlayRef": {"type": "string"},
+              "audio": {"type": "string"}
             }
           }
         }
@@ -381,103 +159,50 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "id",
-          "text",
-          "placement"
-        ],
+        "required": ["id", "text", "placement"],
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          },
-          "placement": {
-            "type": "string"
-          },
-          "accent": {
-            "type": "string"
-          }
+          "id": {"type": "string"},
+          "text": {"type": "string"},
+          "placement": {"type": "string"},
+          "accent": {"type": "string"}
         }
       }
     },
     "visualCopy": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "decision",
-        "noTextCompared",
-        "pipeline",
-        "candidates"
-      ],
+      "required": ["decision", "noTextCompared", "pipeline", "candidates"],
       "properties": {
-        "decision": {
-          "enum": [
-            "TEXT_WINS",
-            "NO_TEXT",
-            "NOT_APPLICABLE"
-          ]
-        },
-        "selectedText": {
-          "type": "string"
-        },
-        "noTextCompared": {
-          "type": "boolean"
-        },
+        "decision": {"enum": ["TEXT_WINS", "NO_TEXT", "NOT_APPLICABLE"]},
+        "selectedText": {"type": "string"},
+        "noTextCompared": {"type": "boolean"},
         "pipeline": {
           "type": "array",
-          "items": {
-            "type": "string"
-          }
+          "items": {"type": "string"}
         },
         "candidates": {
           "type": "array",
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "text",
-              "result"
-            ],
+            "required": ["text", "result"],
             "properties": {
-              "text": {
-                "type": "string"
-              },
-              "result": {
-                "enum": [
-                  "selected",
-                  "rejected",
-                  "baseline"
-                ]
-              },
-              "reason": {
-                "type": "string"
-              }
+              "text": {"type": "string"},
+              "result": {"enum": ["selected", "rejected", "baseline"]},
+              "reason": {"type": "string"}
             }
           }
         },
-        "ownerPreference": {
-          "type": "string"
-        },
-        "readerFirstNote": {
-          "type": "string"
-        },
-        "humanizerNote": {
-          "type": "string"
-        },
-        "decisionRationale": {
-          "type": "string"
-        }
+        "ownerPreference": {"type": "string"},
+        "readerFirstNote": {"type": "string"},
+        "humanizerNote": {"type": "string"},
+        "decisionRationale": {"type": "string"}
       }
     },
     "cover": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "candidates",
-        "selected"
-      ],
+      "required": ["candidates", "selected"],
       "properties": {
         "candidates": {
           "type": "array",
@@ -485,239 +210,80 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "id",
-              "headline",
-              "subjectCrop",
-              "textPlacement"
-            ],
+            "required": ["id", "headline", "subjectCrop", "textPlacement"],
             "properties": {
-              "id": {
-                "type": "string"
-              },
-              "headline": {
-                "type": "string",
-                "maxLength": 60
-              },
-              "subjectCrop": {
-                "type": "string"
-              },
-              "textPlacement": {
-                "type": "string"
-              },
-              "gridRationale": {
-                "type": "string"
-              }
+              "id": {"type": "string"},
+              "headline": {"type": "string", "maxLength": 60},
+              "subjectCrop": {"type": "string"},
+              "textPlacement": {"type": "string"},
+              "gridRationale": {"type": "string"}
             }
           }
         },
-        "selected": {
-          "type": "string"
-        }
+        "selected": {"type": "string"}
       }
     },
     "finishing": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "policyVersion",
-        "principle",
-        "stages",
-        "productTruth",
-        "repairCycles",
-        "evidenceRefs"
-      ],
+      "required": ["policyVersion", "principle", "stages", "productTruth", "repairCycles", "evidenceRefs"],
       "properties": {
-        "policyVersion": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "principle": {
-          "const": "Retouch the photo, not the product."
-        },
+        "policyVersion": {"type": "integer", "minimum": 1},
+        "principle": {"const": "Retouch the photo, not the product."},
         "stages": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "photoRetouch",
-            "brandContentStyling",
-            "textLayoutQa",
-            "finalVisualQa"
-          ],
+          "required": ["photoRetouch", "brandContentStyling", "textLayoutQa", "finalVisualQa"],
           "properties": {
-            "photoRetouch": {
-              "enum": [
-                "PASS",
-                "FAIL",
-                "N/A"
-              ]
-            },
-            "brandContentStyling": {
-              "enum": [
-                "PASS",
-                "FAIL"
-              ]
-            },
-            "textLayoutQa": {
-              "enum": [
-                "PASS",
-                "FAIL",
-                "N/A"
-              ]
-            },
-            "finalVisualQa": {
-              "enum": [
-                "PASS",
-                "FAIL"
-              ]
-            }
+            "photoRetouch": {"enum": ["PASS", "FAIL", "N/A"]},
+            "brandContentStyling": {"enum": ["PASS", "FAIL"]},
+            "textLayoutQa": {"enum": ["PASS", "FAIL", "N/A"]},
+            "finalVisualQa": {"enum": ["PASS", "FAIL"]}
           }
         },
         "productTruth": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "gate",
-            "subjectIdentityIntegrity",
-            "syntheticSubjectChange",
-            "sourceSubjectMatch"
-          ],
+          "required": ["gate", "subjectIdentityIntegrity", "syntheticSubjectChange", "sourceSubjectMatch"],
           "properties": {
-            "gate": {
-              "enum": [
-                "PASS",
-                "FAIL",
-                "N/A"
-              ]
-            },
-            "subjectIdentityIntegrity": {
-              "enum": [
-                "PASS",
-                "FAIL",
-                "N/A"
-              ]
-            },
-            "syntheticSubjectChange": {
-              "enum": [
-                "NONE",
-                "PRESENT",
-                "N/A"
-              ]
-            },
-            "sourceSubjectMatch": {
-              "enum": [
-                "PASS",
-                "FAIL",
-                "N/A"
-              ]
-            },
-            "colorPreserved": {
-              "enum": [
-                "PASS",
-                "FAIL",
-                "N/A"
-              ]
-            },
-            "notes": {
-              "type": "string"
-            }
+            "gate": {"enum": ["PASS", "FAIL", "N/A"]},
+            "subjectIdentityIntegrity": {"enum": ["PASS", "FAIL", "N/A"]},
+            "syntheticSubjectChange": {"enum": ["NONE", "PRESENT", "N/A"]},
+            "sourceSubjectMatch": {"enum": ["PASS", "FAIL", "N/A"]},
+            "colorPreserved": {"enum": ["PASS", "FAIL", "N/A"]},
+            "notes": {"type": "string"}
           }
         },
-        "repairCycles": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "lastRepairAction": {
-          "type": "string"
-        },
-        "reviewedArtifactDigest": {
-          "type": "string"
-        },
-        "evidenceRefs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
+        "repairCycles": {"type": "integer", "minimum": 0},
+        "lastRepairAction": {"type": "string"},
+        "reviewedArtifactDigest": {"type": "string"},
+        "evidenceRefs": {"type": "array", "items": {"type": "string"}}
       }
     },
     "qa": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "brandScore",
-        "realityScore",
-        "artifactScore",
-        "deterministicChecks",
-        "failures",
-        "repairs"
-      ],
+      "required": ["brandScore", "realityScore", "artifactScore", "deterministicChecks", "failures", "repairs"],
       "properties": {
-        "brandScore": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 100
-        },
-        "hookScore": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 100
-        },
-        "realityScore": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 100
-        },
-        "originalityScore": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 100
-        },
-        "artifactScore": {
-          "type": "number",
-          "minimum": 0,
-          "maximum": 100
-        },
-        "deterministicChecks": {
-          "type": "object"
-        },
-        "failures": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "repairs": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
+        "brandScore": {"type": "number", "minimum": 0, "maximum": 100},
+        "hookScore": {"type": "number", "minimum": 0, "maximum": 100},
+        "realityScore": {"type": "number", "minimum": 0, "maximum": 100},
+        "originalityScore": {"type": "number", "minimum": 0, "maximum": 100},
+        "artifactScore": {"type": "number", "minimum": 0, "maximum": 100},
+        "deterministicChecks": {"type": "object"},
+        "failures": {"type": "array", "items": {"type": "string"}},
+        "repairs": {"type": "array", "items": {"type": "string"}}
       }
     },
     "feed": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "continuityDecision": {
-          "type": "string"
-        },
-        "reasoning": {
-          "type": "string"
-        }
+        "continuityDecision": {"type": "string"},
+        "reasoning": {"type": "string"}
       }
     },
-    "derivativeRefs": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
-    "rightsNotes": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    }
+    "derivativeRefs": {"type": "array", "items": {"type": "string"}},
+    "rightsNotes": {"type": "array", "items": {"type": "string"}}
   }
 }
