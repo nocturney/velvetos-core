@@ -151,6 +151,12 @@ if ingest.get("arbitraryFolderScanForbidden") is not True:
     fail("source ingest arbitrary-folder scan must be forbidden")
 if ingest.get("unhashedFallbackForbidden") is not True:
     fail("source ingest unhashed fallback must be forbidden")
+if ingest.get("chatLocalPreflight") != "scripts/vf_chat_cold_start_preflight.py":
+    fail("chat-local preflight policy binding mismatch")
+if ingest.get("remoteRepoPreflightMustNotReceiveChatLocalPaths") is not True:
+    fail("remote preflight must not receive chat-local paths")
+if ingest.get("chatLocalPreflightAuthorizesCreativeOnly") is not True or ingest.get("chatLocalPreflightNeverAuthorizesPublication") is not True:
+    fail("chat-local preflight scope mismatch")
 entrypoints = route.get("entrypoints", [])
 required_entrypoints = {"packages/vfgrowth/STORIES.md", "packages/vfcopy/hq/templates/ig-stories.md"}
 if not required_entrypoints.issubset(set(entrypoints)):
@@ -203,6 +209,10 @@ if project_preflight.CREATIVE_MASTER_BRIDGE != Path("scripts/vf_creative_master_
     fail("active preflight creative-master bridge binding mismatch")
 if project_preflight.SOURCE_INGEST_BRIDGE != Path("scripts/vf_source_ingest.py"):
     fail("active preflight source-ingest bridge binding mismatch")
+if project_preflight.CHAT_LOCAL_PREFLIGHT != Path("scripts/vf_chat_cold_start_preflight.py"):
+    fail("active preflight chat-local gate binding mismatch")
+if not (ROOT / project_preflight.CHAT_LOCAL_PREFLIGHT).is_file():
+    fail("chat-local preflight implementation missing")
 if not (ROOT / project_preflight.SOURCE_INGEST_BRIDGE).is_file():
     fail("source-ingest bridge implementation missing")
 if not (ROOT / project_preflight.CREATIVE_MASTER_BRIDGE).is_file():
@@ -227,7 +237,7 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
     for rel in (project_preflight.PROJECT_AUTHORITY, project_preflight.PROJECT_ASSET_MANIFEST,
                 project_preflight.PROJECT_INSTRUCTIONS, project_preflight.VISUAL_ENFORCEMENT,
                 project_preflight.CREATIVE_MASTER_BRIDGE, project_preflight.SOURCE_INGEST_BRIDGE,
-                project_preflight.PROJECT_GATE):
+                project_preflight.CHAT_LOCAL_PREFLIGHT, project_preflight.PROJECT_GATE):
         target = tmp / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / rel, target)
