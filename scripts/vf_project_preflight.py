@@ -10,12 +10,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.3.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.3.json")
-PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.3.txt")
+PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt")
+PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json")
+PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt")
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.6.3"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.3-CHAT-ATTACHMENT-SOURCE-INGEST"
+PROJECT_REVISION = "6.6.4"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE"
 PROJECT_ASSET_MANIFEST_SHA256 = "0f0c452f936dd5559bc69666f0a000ca2ecaa53044c5fd9c900eb85e3b9d87fb"
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 CREATIVE_MASTER_BRIDGE = Path("scripts/vf_creative_master_bridge.py")
@@ -107,10 +107,11 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             "scripts/vf_source_ingest.py",
             "scripts/vf_chat_cold_start_preflight.py",
             "scripts/vf_media_integrity.py",
+            "scripts/vf_media_limits.py",
             "scripts/vf_creative_master_bridge.py",
         }
         if not isinstance(runtime_rows, list) or {x.get("repo_path") for x in runtime_rows if isinstance(x, dict)} != required_runtime:
-            problems.append("Project chat_runtime binding must contain the exact four runtime files")
+            problems.append("Project chat_runtime binding must contain the exact dependency-closed runtime files")
         else:
             for row in runtime_rows:
                 rp = root / row["repo_path"]
