@@ -58,6 +58,25 @@ Required fields:
 
 Create it during scheduling with `prepare_manifest.py`; do not fabricate one during an incident.
 
+For an owner-approved production schedule that should recover automatically inside its delivery window, bind the schedule explicitly:
+
+```text
+python -X utf8 packages/vfigos/failover/prepare_manifest.py ... \
+  --scheduled-at-utc 2026-09-20T10:30:00Z \
+  --auto-failover \
+  --failover-window-minutes 30
+```
+
+`auto_failover` is valid only for an already owner-approved exact package. It never changes media, caption, account, package hash or schedule; it only authorizes the watcher to invoke the already-fenced recovery path after OpenPost proves `safe_to_failover=true`.
+
+## Automatic delivery-window recovery
+
+`failover_watch.py` scans prepared manifests only. Before any automatic write it calls the Grok-facing client in dry-run mode. It proceeds only when the dry-run proves both `duplicate_found=false` and `primary_safe_to_failover=true`.
+
+The watcher writes `execute_attempted=true` atomically **before** the one permitted execute attempt. A process crash or timeout therefore cannot cause a second automatic write after restart. Any unverified execute result becomes `manual_reconcile_required`; it is never automatically replayed.
+
+On the Chris machine the watcher is supervised by the existing S4U `GrokBot Boot Supervisor`, so it starts at boot without login and is restarted if it exits. A singleton file lock prevents two watcher processes from running concurrently. The canonical supervisor copy is `windows/grok_boot_supervisor.py`.
+
 ## GrokBot command
 
 Dry-run first:

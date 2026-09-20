@@ -1,5 +1,5 @@
 from __future__ import annotations
-import argparse, json, re
+import argparse, datetime, json, re
 from pathlib import Path
 
 SCHEMA='velvet.instagram_failover.v1'
@@ -13,8 +13,25 @@ def main()->int:
     p.add_argument('--repo-root',required=True)
     p.add_argument('--publication-id',required=True)
     p.add_argument('--rendition-id',required=True)
+    p.add_argument('--scheduled-at-utc')
+    p.add_argument('--auto-failover',action='store_true')
+    p.add_argument('--failover-window-minutes',type=int,default=30)
     p.add_argument('--output',required=True)
     args=p.parse_args()
+    if args.failover_window_minutes < 1 or args.failover_window_minutes > 180:
+        raise SystemExit('failover window must be 1..180 minutes')
+    scheduled_at=None
+    if args.scheduled_at_utc:
+        raw=args.scheduled_at_utc.strip().replace('Z','+00:00')
+        try:
+            dt=datetime.datetime.fromisoformat(raw)
+        except ValueError as exc:
+            raise SystemExit('invalid --scheduled-at-utc') from exc
+        if dt.tzinfo is None:
+            raise SystemExit('--scheduled-at-utc must include timezone')
+        scheduled_at=dt.astimezone(datetime.timezone.utc).isoformat().replace('+00:00','Z')
+    if args.auto_failover and scheduled_at is None:
+        raise SystemExit('--auto-failover requires --scheduled-at-utc')
     req_path=Path(args.approval_request).resolve()
     preflight=Path(args.preflight).resolve()
     repo=Path(args.repo_root).resolve()
@@ -44,6 +61,9 @@ def main()->int:
       'expected_media_sha256':m.group(1).lower(),
       'publication_id':args.publication_id.strip(),
       'rendition_id':args.rendition_id.strip(),
+      'scheduled_at_utc':scheduled_at,
+      'auto_failover':bool(args.auto_failover),
+      'failover_window_minutes':args.failover_window_minutes,
     }
     if not manifest['publication_id'] or not manifest['rendition_id']: raise SystemExit('publication/rendition id missing')
     out=Path(args.output).resolve(); out.parent.mkdir(parents=True,exist_ok=True)
