@@ -258,7 +258,8 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
                     "chat_local_preflight_required_when_repo_and_attachment_filesystems_differ",
                     "remote_repo_preflight_must_not_receive_chat_local_paths",
                     "chat_local_preflight_creative_only_never_publication",
-                    "chat_runtime_files_hash_bound_in_manifest"):
+                    "chat_runtime_files_hash_bound_in_manifest",
+                    "chat_runtime_dependency_closed"):
                 if reference_rules.get(key) is not True:
                     problems.append(f"Project reference rule missing or false: {key}")
     return problems
