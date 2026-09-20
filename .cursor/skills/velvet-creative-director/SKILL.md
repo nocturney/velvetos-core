@@ -38,6 +38,10 @@ When the planned final needs deterministic Hebrew/graphics/logo/insets, choose a
 
 Use `scripts/vf_creative_master_bridge.py` for local exact-byte registration when available. A chat/UI image, task id or URL is not sufficient by itself. Do not reconstruct the scene from raw product media to manufacture a file-backed master. If materialization is unavailable, preserve the same direction through a file-backed route, choose the same provider result as a deliberate NO_TEXT final when appropriate, or block the overlay branch.
 
+## Current-chat source ingest
+
+Before creative preflight, materialize each current-chat product attachment through `scripts/vf_source_ingest.py` when the platform exposes a local attachment path. Bind its `PRODUCT_SOURCE` ref and `source_ingest` receipt; the `source_lock` stage must include the receipt. Do not search arbitrary user folders. If no attachment bytes are exposed, use one supported explicit upload/materialization handoff when available; otherwise return `ATTACHMENT_BYTES_UNAVAILABLE` without attempting creative tools.
+
 ## Workflow
 
 ## Cold-start Visual Standard Load Gate
