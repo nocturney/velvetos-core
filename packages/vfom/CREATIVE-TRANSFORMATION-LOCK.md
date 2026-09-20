@@ -43,6 +43,8 @@ A weaker final than the selected `creative_master` is not "safer"; it is a creat
 Before `ready for review`, require all of:
 
 - `creative_delta_gate: PASS`
+- `creative_master_ref: <path + sha256>`
+- `creative_continuity_gate: PASS`
 - `raw_passthrough: false`
 - `source_edit_mode: SOURCE_IMAGE_EDIT` or a documented deterministic equivalent
 - `hero_transformation_evidence: <final artifact ref + what visibly changed around the product>`
