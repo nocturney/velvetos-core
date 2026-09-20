@@ -1,6 +1,6 @@
 {
   "brandName": "Velvet Factory",
-  "version": 4,
+  "version": 5,
   "authority": "packages/vfom/VISUAL-OS.md",
   "ownerApprovedVisualStandard": {
     "status": "approved",
@@ -297,6 +297,16 @@
       "restrained_handwritten_annotation",
       "editorial_footer"
     ],
-    "fixedTemplate": false
+    "fixedTemplate": false,
+    "orientationLabelRule": "orientation labels are optional and valid when orientation itself is informative; otherwise use feature-first copy"
+  },
+  "copyOverlayPolicy": {
+    "cameraAngleLabels": {
+      "blanketBan": false,
+      "default": "avoid_generic_labels",
+      "allowedWhen": "orientation_itself_adds_useful_information",
+      "preferredOtherwise": "describe_concrete_feature_revealed",
+      "qa": "if used, the orientation label must add information and must not duplicate nearby copy"
+    }
   }
 }
