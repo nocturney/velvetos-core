@@ -243,14 +243,20 @@
     "liveVerified": true,
     "liveVerifiedAt": "2026-09-20T18:23:02.196272+03:00",
     "grokInstagramFailover": {
-      "status": "READY_DUPLICATE_SAFE_VERIFIED",
+      "status": "READY_AUTO_FAILOVER_WATCH_VERIFIED",
       "manifestSchema": "velvet.instagram_failover.v1",
       "client": "packages/vfigos/failover/grok_client.py",
       "trustedRunner": "packages/vfigos/failover/grok_instagram_failover.py",
       "stateGate": "packages/vfigos/failover/openpost_failover_state.py",
+      "watcher": "packages/vfigos/failover/failover_watch.py",
       "requiresPreparedManifest": true,
+      "autoFailoverDefaultForOwnerApprovedScheduledImage": true,
+      "defaultFailoverWindowMinutes": 30,
+      "coverageAuditSeconds": 60,
+      "coverageState": "C:\\ProgramData\\VelvetOS\\instagram-failover\\coverage-state.json",
       "requiresSafeToFailover": true,
-      "blocksAmbiguousOrActivePrimary": true
+      "blocksAmbiguousOrActivePrimary": true,
+      "singleAutomaticExecuteAttempt": true
     }
   },
   "deliveryApproval": {
@@ -269,8 +275,8 @@
     "boundarySmokeVerified": true,
     "publicInstagramWritePerformedInBoundarySmoke": false,
     "issuerRevision": "velvet-delivery-approval-issuer-00007-wgl",
-    "mutationRevision": "velvet-instagram-mcp-00017-pxc",
-    "mutationImageDigest": "sha256:495a12b4b529404008f00112ec80a524ce57d1824a8d5a419107095fff2abe5b",
+    "mutationRevision": "velvet-instagram-mcp-00018-8mk",
+    "mutationImageDigest": "sha256:5336f9b4ae3db34bb954e31522f07d4e6f85462a1e416964be516704c08569c2",
     "boundarySmokeEvidence": {
       "observedAt": "2026-09-17T19:05:48.042714Z",
       "approvalId": "ba790fc7-38e1-4df3-bcf1-51ae678c6037",
