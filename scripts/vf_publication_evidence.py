@@ -28,8 +28,8 @@ PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.2-CREATIVE-MASTER-MATERIALIZATION"
 PRODUCT_TRUTH_GUIDE = "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
 REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 = "17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9"
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
-          "creative_director", "source_grounded_production", "visible_text",
-          "brand_guardian", "exact_final_qa")
+          "creative_director", "source_grounded_production", "creative_master_materialization",
+          "visible_text", "brand_guardian", "exact_final_qa")
 AXES = ("product_to_frame", "environment", "light", "depth", "negative_space",
         "hierarchy", "typography", "details", "surfaces", "accent")
 CHECKS = ("source_match", "reference_match", "creative_master_materialized", "creative_continuity", "copy_checked", "brand_checked", "final_qa")
@@ -310,6 +310,12 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
         raise ValueError("creative master does not match materialization receipt target")
     if materialized_path.resolve() != creative_master_path.resolve():
         raise ValueError("creative master path differs from materialized target path")
+    materialization_stage = next((x for x in steps if x.get("name") == "creative_master_materialization"), None)
+    if not materialization_stage:
+        raise ValueError("creative master materialization stage missing")
+    materialization_stage_shas = {x.get("sha256") for x in _rows(materialization_stage.get("evidence"), "creative master materialization stage evidence")}
+    if materialization_ref.get("sha256") not in materialization_stage_shas:
+        raise ValueError("creative master materialization stage is not bound to the exact receipt")
     outputs = _rows(ev.get("outputs"), "outputs")
     if not any(x.get("role") == "FINAL_VISUAL" for x in outputs):
         raise ValueError("no final visual artifact")
@@ -355,6 +361,8 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
         raise ValueError("review is not bound to the selected creative master")
     if review.get("creative_master_materialization_sha256") != materialization_ref.get("sha256"):
         raise ValueError("review is not bound to the creative master materialization receipt")
+    if review.get("final_compositor_input_sha256") != creative_master.get("sha256"):
+        raise ValueError("final compositor input is not the exact materialized creative master")
     replaced = review.get("creative_master_replaced")
     if not isinstance(replaced, bool):
         raise ValueError("creative_master_replaced must be explicit boolean")
@@ -367,7 +375,7 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
         raise ValueError("review source/reference identities mismatch")
     checks = _object(review.get("checks"), "review checks")
     if any(checks.get(k) != "PASS" for k in CHECKS):
-        raise ValueError("source/reference/copy/brand/final review gates must independently pass")
+        raise ValueError("source/reference/materialization/continuity/copy/brand/final review gates must independently pass")
     if review.get("synthetic_subject_change") != "NONE":
         raise ValueError("synthetic product change forbidden")
     if not meaningful(review.get("reviewer")) or not meaningful(review.get("reference_match_observations")):
