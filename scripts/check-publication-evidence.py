@@ -37,11 +37,12 @@ def fixture(root):
                'rejectedDirectionFamilies': ['rejected-family']}}
     write(evidence.POLICY, policy)
     authority = write(evidence.AUTHORITY, b'Test-only authority;\nnot deployment or real creative evidence.')
-    refs = [dict(image(f'refs/{i}.png', (12, 12), (i * 50, 15, 20)), role='STYLE_ONLY') for i in range(1, 4)]
+    refs = [dict(image(f'refs/{i}.png', (12, 12), (i * 50, 15, 20)), role='STYLE_ONLY') for i in range(1, 5)]
     style_assets = [
         {'filename': f'style-{i}.png', 'sha256': ref['sha256'], 'required_for': 'visual_work',
          'role': ('broad_style_only', 'editorial_layout_and_annotation_style_only',
-                  'current_owner_approved_direction_style_only_not_product_source')[i - 1]}
+                  'current_owner_approved_direction_style_only_not_product_source',
+                  'multi_source_composition_and_layout_vocabulary_style_only')[i - 1]}
         for i, ref in enumerate(refs, 1)
     ]
     guide = write(evidence.PRODUCT_TRUTH_GUIDE, b'QA only, not style.')
@@ -51,7 +52,8 @@ def fixture(root):
         'assets': style_assets + [{'filename': guide_filename, 'sha256': guide['sha256'],
                                    'required_for': 'visual_work', 'role': 'text_only_product_truth_fidelity_qa_not_style'}],
         'current_references': {'broad_visual': 'style-1.png', 'editorial_layout': 'style-2.png',
-                               'current_direction': 'style-3.png'},
+                               'current_direction': 'style-3.png',
+                               'multi_source_composition': 'style-4.png'},
         'product_truth': {'guide': guide_filename, 'truth_source': 'test product source',
                           'visual_conditioning': 'FORBIDDEN',
                           'qa_only_visual_teaching_assets': 'DO_NOT_LOAD_AS_STYLE_OR_GENERATION_REFERENCES'}})
@@ -152,13 +154,19 @@ class EvidenceTests(unittest.TestCase):
                             if x['sha256'] != evidence.digest(self.root / evidence.PRODUCT_TRUTH_GUIDE)]
         result = self.result()
         self.assertFalse(result['ok'])
-        self.assertIn('exact v6.4 Product Truth guide', ' '.join(result['problems']))
+        self.assertIn(f'exact v{evidence.PROJECT_REVISION} Product Truth guide', ' '.join(result['problems']))
 
     def test_product_truth_guide_bytes_are_bound(self):
         (self.root / evidence.PRODUCT_TRUTH_GUIDE).write_text('tampered guide', encoding='utf-8')
         result = self.result()
         self.assertFalse(result['ok'])
         self.assertIn('guide bytes', ' '.join(result['problems']))
+
+    def test_all_four_current_aesthetic_references_are_required(self):
+        self.ev['references'] = self.ev['references'][:3]
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('all four canonical aesthetic sources', ' '.join(result['problems']))
 
     def test_unknown_reference_identity(self):
         self.ev['references'][0] = dict(self.ev['sources'][0], role='STYLE_ONLY')

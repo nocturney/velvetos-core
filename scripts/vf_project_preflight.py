@@ -10,12 +10,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.4.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.4.json")
+PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.5.txt")
+PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.5.json")
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.4"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
-PROJECT_ASSET_MANIFEST_SHA256 = "2d0d91cf94215e107fc0ccb1a4bb9d4e1a479dceb6c7f25dcf8901e6e5749091"
+PROJECT_REVISION = "6.5"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.5-MULTI-SOURCE-COMPOSITION"
+PROJECT_ASSET_MANIFEST_SHA256 = "2a2c4942b840d6f68f14567a003a4b56a5f245cf2d7077ac363376dcb3181fa4"
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 PROJECT_GATE = Path("packages/velvetos/PROJECT-REQUEST-GATE.md")
 # Canonical Instagram tool capability SoT + MCP write/read binding (no parallel registry).
@@ -94,6 +94,33 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             denied = {x.casefold() for x in denied_tools}
             if not {"canva", "vfcanva"}.issubset(denied):
                 problems.append("publicationRoute does not deny Canva/vfcanva")
+        current_refs = assets.get("current_references")
+        current_names: set[str] = set()
+        if not isinstance(current_refs, dict):
+            problems.append("Project current_references must be an object")
+        else:
+            required_ref_keys = {"broad_visual", "editorial_layout", "current_direction", "multi_source_composition"}
+            if set(current_refs) != required_ref_keys:
+                problems.append("Project must bind exactly four current aesthetic references including multi_source_composition")
+            current_names = {x for x in current_refs.values() if isinstance(x, str) and x}
+            bound_names = {
+                row.get("filename") for row in asset_rows
+                if row.get("required_for") == "visual_work"
+            }
+            if not current_names.issubset(bound_names):
+                problems.append("Project current aesthetic references are not fully bound in asset manifest")
+        separation = policy.get("referenceRoleSeparationPolicy")
+        if not isinstance(separation, dict):
+            problems.append("referenceRoleSeparationPolicy must be an object")
+        else:
+            policy_refs = separation.get("aestheticReferences")
+            if not isinstance(policy_refs, list) or set(policy_refs) != current_names:
+                problems.append("visual enforcement aesthetic references do not match Project asset manifest")
+        multi = policy.get("multiSourceCompositionPolicy")
+        if not isinstance(multi, dict) or multi.get("samePhysicalProductSourceSet") is not True:
+            problems.append("multi-source composition policy missing")
+        elif set(multi.get("insetProvenanceValues") or []) != {"SAME_FRAME_CROP", "ALTERNATE_VERIFIED_SOURCE"}:
+            problems.append("multi-source inset provenance policy mismatch")
     return problems
 
 

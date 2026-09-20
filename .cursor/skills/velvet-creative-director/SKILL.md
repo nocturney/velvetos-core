@@ -18,7 +18,11 @@ Read `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/
 
 ## Reference-role separation
 
-Aesthetic direction comes only from the approved broad visual, editorial and current-creative references. Product Truth comes from current verified product source pixels plus the text Product Truth guide. Never send a Product Truth QA/teaching image into a generative or style-conditioning reference set. In particular, `Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png` is rejected for creative conditioning and must not influence layout, color, atmosphere, typography or composition.
+Aesthetic direction comes only from the approved broad visual, editorial, current-creative and multi-source composition references. Product Truth comes from current verified product source pixels plus the text Product Truth guide. Never send a Product Truth QA/teaching image into a generative or style-conditioning reference set. In particular, `Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png` is rejected for creative conditioning and must not influence layout, color, atmosphere, typography or composition.
+
+## Multi-source source-set rule
+
+For still/post/carousel composition, follow `VISUAL-OS.md` and `PUBLICATION-PREP-EXECUTION.md`: verified photos of the exact same physical product may form one source set. Record every inset as `SAME_FRAME_CROP` or `ALTERNATE_VERIFIED_SOURCE`; only the former may be presented as a hero zoom. Never synthesize a missing view/detail. Use the approved composition vocabulary without forcing the same layout on unrelated products.
 
 ## Workflow
 

@@ -64,9 +64,22 @@ authority_sha = hashlib.sha256(authority_bytes).hexdigest()
 authority_lf_sha = hashlib.sha256(authority_bytes.replace(b"\r\n", b"\n")).hexdigest()
 if len(authority_rows) != 1 or authority_rows[0].get("sha256") not in {authority_sha, authority_lf_sha}:
     fail(f"Project Authority bytes are not bound to the current asset manifest ({bundle['revision']})")
-route = json.loads(visual_enforcement.read_text(encoding="utf-8")).get("publicationRoute", {})
+route_doc = json.loads(visual_enforcement.read_text(encoding="utf-8"))
+route = route_doc.get("publicationRoute", {})
 if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deniedTools", [])}):
     fail("publicationRoute must deny Canva/vfcanva")
+current_refs = asset_data.get("current_references")
+if not isinstance(current_refs, dict) or set(current_refs) != {
+        "broad_visual", "editorial_layout", "current_direction", "multi_source_composition"}:
+    fail("Revision 6.5 must bind exactly four current aesthetic references")
+policy_refs = (route_doc.get("referenceRoleSeparationPolicy") or {}).get("aestheticReferences")
+if not isinstance(policy_refs, list) or set(policy_refs) != set(current_refs.values()):
+    fail("visual enforcement aesthetic references do not match Project asset manifest")
+multi_policy = route_doc.get("multiSourceCompositionPolicy")
+if not isinstance(multi_policy, dict) or multi_policy.get("samePhysicalProductSourceSet") is not True:
+    fail("multi-source composition policy missing")
+if set(multi_policy.get("insetProvenanceValues") or []) != {"SAME_FRAME_CROP", "ALTERNATE_VERIFIED_SOURCE"}:
+    fail("multi-source inset provenance policy mismatch")
 entrypoints = route.get("entrypoints", [])
 required_entrypoints = {"packages/vfgrowth/STORIES.md", "packages/vfcopy/hq/templates/ig-stories.md"}
 if not required_entrypoints.issubset(set(entrypoints)):
@@ -159,7 +172,7 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
         json.dumps(am, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     problems = project_preflight.project_binding_problems(tmp, creative=True)
     if not problems or not any("asset manifest hash" in problem for problem in problems):
-        fail("tampered v6.4 asset manifest did not fail closed before creative execution")
+        fail(f"tampered v{bundle['revision']} asset manifest did not fail closed before creative execution")
     shutil.copyfile(ROOT / project_preflight.PROJECT_ASSET_MANIFEST, tmp / project_preflight.PROJECT_ASSET_MANIFEST)
     (tmp / project_preflight.VISUAL_ENFORCEMENT).write_text("[]", encoding="utf-8")
     problems = project_preflight.project_binding_problems(tmp, creative=True)

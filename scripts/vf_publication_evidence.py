@@ -18,13 +18,13 @@ from typing import Any
 from vf_media_integrity import inspect_media
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.4.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.4.json"
-ASSETS_SHA = "2d0d91cf94215e107fc0ccb1a4bb9d4e1a479dceb6c7f25dcf8901e6e5749091"
-AUTHORITY_SHA = "b3c2b5a66c395a7e1d60b6cddb532443876e4144f189c4835512ff3283c5112a"
+AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.5.txt"
+ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.5.json"
+ASSETS_SHA = "2a2c4942b840d6f68f14567a003a4b56a5f245cf2d7077ac363376dcb3181fa4"
+AUTHORITY_SHA = "6fe8d0ef4d96bcce66662145301a33e9f8ebff7fd20430ae77d90dbd4492ae2a"
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.4"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.4-AESTHETIC-TRUTH-SEPARATION"
+PROJECT_REVISION = "6.5"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.5-MULTI-SOURCE-COMPOSITION"
 PRODUCT_TRUTH_GUIDE = "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
 REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 = "17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9"
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
@@ -186,11 +186,11 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
         raise ValueError("Product Truth guide has invalid SHA-256")
     guide_path = local_path(root, PRODUCT_TRUTH_GUIDE)
     if guide_sha not in text_digest_candidates(guide_path):
-        raise ValueError("Product Truth guide bytes do not match the v6.4 asset manifest")
+        raise ValueError(f"Product Truth guide bytes do not match the v{PROJECT_REVISION} asset manifest")
     current_refs = _object(asset_manifest.get("current_references"), "current_references")
     style_names = {name for name in current_refs.values() if meaningful(name)}
-    if len(style_names) != 3:
-        raise ValueError("exactly three current aesthetic reference filenames required")
+    if len(style_names) != 4:
+        raise ValueError("exactly four current aesthetic reference filenames required")
     style_rows = [
         row for row in asset_rows
         if row.get("filename") in style_names and row.get("required_for") == "visual_work"
@@ -198,8 +198,8 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     if {row.get("filename") for row in style_rows} != style_names:
         raise ValueError("current aesthetic reference files are not fully bound in asset manifest")
     required_refs = {row.get("sha256") for row in style_rows}
-    if len(required_refs) != 3 or any(not isinstance(sha, str) or not HEX.fullmatch(sha) for sha in required_refs):
-        raise ValueError("all three canonical aesthetic reference identities required")
+    if len(required_refs) != 4 or any(not isinstance(sha, str) or not HEX.fullmatch(sha) for sha in required_refs):
+        raise ValueError("all four canonical aesthetic reference identities required")
     denied = set(_rows(route.get("rejectedArtifactSha256"), "rejectedArtifactSha256"))
     if REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 not in denied:
         raise ValueError("rejected Product Truth teaching-sheet identity is not denied by publication policy")
@@ -247,7 +247,7 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
             raise ValueError("reference role must remain STYLE_ONLY")
         ref_shas.add(ref["sha256"])
     if ref_shas != required_refs:
-        raise ValueError("reference identities do not match all three canonical sources")
+        raise ValueError("reference identities do not match all four canonical aesthetic sources")
     decomposition = load_json(verify_ref(root, ev.get("reference_decomposition"), "reference decomposition", denied))
     if set(decomposition.get("reference_sha256", [])) != required_refs:
         raise ValueError("reference decomposition is not bound to current references")
@@ -278,7 +278,7 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
             verify_ref(root, ref, f"stage {step['name']}", denied)
             stage_shas.add(ref.get("sha256"))
         if step.get("name") == "product_truth_lock" and guide_sha not in stage_shas:
-            raise ValueError("product_truth_lock is not bound to the exact v6.4 Product Truth guide")
+            raise ValueError(f"product_truth_lock is not bound to the exact v{PROJECT_REVISION} Product Truth guide")
     if phase == "production":
         return {"ok": True, "phase": phase, "evidence_state": "INPUT_EVIDENCE_VALIDATED",
                 "problems": [], "publishAuthorized": False}
