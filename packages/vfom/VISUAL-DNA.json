@@ -371,6 +371,10 @@
     "externalIntakeRoot": "explicit_current_request_only",
     "arbitraryScan": false,
     "unhashedFallback": false,
-    "unavailable": "ATTACHMENT_BYTES_UNAVAILABLE"
+    "unavailable": "ATTACHMENT_BYTES_UNAVAILABLE",
+    "chatLocalPreflight": "scripts/vf_chat_cold_start_preflight.py",
+    "whenRepoFilesystemDiffers": "run chat-local preflight beside exact attachment bytes and hash-verified Project bundle",
+    "remoteRepoPreflightReceivesChatLocalPaths": false,
+    "chatLocalPreflightScope": "CREATIVE_ONLY_NEVER_PUBLICATION"
   }
 }
