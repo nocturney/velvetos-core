@@ -18,13 +18,13 @@ from typing import Any
 from vf_media_integrity import inspect_media
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.1.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.1.json"
-ASSETS_SHA = "5c96f546189356558a619f0cc041fe23a6366240017d4331849ed721d5935175"
-AUTHORITY_SHA = "7ca2eb5d9187abfb5db9852830db94d76b4fa0bce810b51240c94ac76dacb209"
+AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.2.txt"
+ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.2.json"
+ASSETS_SHA = "d0cfcbd202f1db051b5ae80ac2ea7912ea06b21550baa34636aea031784ad65d"
+AUTHORITY_SHA = "5170d15876169662058107f1f34081c8126ac2026efa5179ede1831012afde1b"
 PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.6.1"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.1-FIRST-PASS-CREATIVE-CONTINUITY"
+PROJECT_REVISION = "6.6.2"
+PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.2-CREATIVE-MASTER-MATERIALIZATION"
 PRODUCT_TRUTH_GUIDE = "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
 REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 = "17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9"
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
@@ -32,7 +32,7 @@ STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposi
           "brand_guardian", "exact_final_qa")
 AXES = ("product_to_frame", "environment", "light", "depth", "negative_space",
         "hierarchy", "typography", "details", "surfaces", "accent")
-CHECKS = ("source_match", "reference_match", "creative_continuity", "copy_checked", "brand_checked", "final_qa")
+CHECKS = ("source_match", "reference_match", "creative_master_materialized", "creative_continuity", "copy_checked", "brand_checked", "final_qa")
 HEX = re.compile(r"[0-9a-f]{64}")
 EMPTY = {"", "NONE", "N/A", "PENDING", "UNPROVEN", "_", "TODO"}
 
@@ -287,6 +287,27 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
     inspect_media(creative_master_path, "creative master")
     if creative_master.get("sha256") in source_shas | ref_shas:
         raise ValueError("creative master cannot be a raw product source or style reference")
+    materialization_ref = ev.get("creative_master_materialization")
+    materialization_path = verify_ref(root, materialization_ref, "creative master materialization", denied)
+    materialization = load_json(materialization_path)
+    if materialization.get("version") != 1:
+        raise ValueError("unsupported creative master materialization receipt version")
+    if materialization.get("materialization_method") != "LOCAL_EXACT_COPY" or materialization.get("exact_bytes_copied") is not True:
+        raise ValueError("creative master materialization does not prove exact-byte local handoff")
+    origin = _object(materialization.get("origin"), "creative master materialization origin")
+    materialized = _object(materialization.get("materialized"), "creative master materialization target")
+    if origin.get("kind") not in {"LOCAL_RENDER", "PROVIDER_FETCHED_FILE", "TOOL_EXPORT"}:
+        raise ValueError("creative master materialization origin kind unsupported")
+    origin_path = verify_ref(root, origin, "creative master materialization origin", denied)
+    materialized_path = verify_ref(root, materialized, "creative master materialization target", denied)
+    inspect_media(origin_path, "creative master materialization origin")
+    inspect_media(materialized_path, "creative master materialization target")
+    if origin.get("sha256") != materialized.get("sha256"):
+        raise ValueError("creative master materialization is not an exact-byte handoff")
+    if materialized.get("path") != creative_master.get("path") or materialized.get("sha256") != creative_master.get("sha256"):
+        raise ValueError("creative master does not match materialization receipt target")
+    if materialized_path.resolve() != creative_master_path.resolve():
+        raise ValueError("creative master path differs from materialized target path")
     outputs = _rows(ev.get("outputs"), "outputs")
     if not any(x.get("role") == "FINAL_VISUAL" for x in outputs):
         raise ValueError("no final visual artifact")
@@ -330,6 +351,8 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
         raise ValueError("review is not bound to this exact job/package")
     if review.get("creative_master_sha256") != creative_master.get("sha256"):
         raise ValueError("review is not bound to the selected creative master")
+    if review.get("creative_master_materialization_sha256") != materialization_ref.get("sha256"):
+        raise ValueError("review is not bound to the creative master materialization receipt")
     replaced = review.get("creative_master_replaced")
     if not isinstance(replaced, bool):
         raise ValueError("creative_master_replaced must be explicit boolean")
@@ -372,6 +395,7 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
             "artifact_exists": True, "evidence_state": "FILES_AND_REVIEW_BINDINGS_VALIDATED",
             "visualHashes": [x["sha256"] for x in visuals],
             "creativeMasterHash": creative_master["sha256"],
+            "creativeMasterMaterializationHash": materialization_ref["sha256"],
             "textHashes": sorted(text_hashes),
             "limitation": "Integrity of submitted evidence is verified; visual judgment and tool/receipt authorship are not independently attested.",
             "publishAuthorized": False}
