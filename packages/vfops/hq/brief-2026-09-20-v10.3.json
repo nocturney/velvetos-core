@@ -1,0 +1,141 @@
+{
+  "date_line": "20.9.2026 · V10.3 · Asia/Jerusalem",
+  "bottom_line": "כל העבודות בגיליון VF HQ · jobs כבר סופקו. נשארו שלוש יתרות פתוחות לפי הגיליון: סינקופה 4350, ודים 320, אלה+לוגו 120. סה״כ 4790. אין אירועי יומן היום. Instagram חי: 81 עוקבים, 4 פריטים, הפיד האחרון מ-19.9.",
+  "footer": "Velvet Factory · Morning Brief V10.3 · איסוף משדרות · חסר נשאר חסר",
+  "attention": {
+    "state": "yellow",
+    "label": "מצב העסק",
+    "text": "גבייה פתוחה"
+  },
+  "system_health": {
+    "state": "green",
+    "label": "בריאות מערכת",
+    "text": "תקינה"
+  },
+  "hero_visual": {
+    "url": "https://scontent-sof1-2.cdninstagram.com/v/t51.82787-15/818358737_18342777211259071_6113898997622391243_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=111&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiRkVFRC5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=yYAVu_jLh1oQ7kNvwFxHyUp&_nc_oc=AdqGujMvBbZ5mt9rITp_Nd6tsGij8iJiMJOO1Ax6nPScw65VFgQITxlwL9bJdU_xY-TBsa4QSBzL0V521Pi-RlBo&_nc_zt=23&_nc_ht=scontent-sof1-2.cdninstagram.com&edm=AM6HXa8EAAAA&_nc_gid=q4vC05zZA7i6tXvD0npjNA&oh=00_AQKZzRkLkYTAHXM5xbW2Ze3n_OfxbxJE9Ynx0rlaD1ZVgw&oe=6AB54601",
+    "href": "https://www.instagram.com/p/DdeyJiviTjm/",
+    "eyebrow": "תמונת היום",
+    "title": "פיד 19.9 · עין ונוצות",
+    "caption": "הפריט האחרון בפיד @velvets_cloud. לייקים ב-list_media: 0. Insights: אין ספירה.",
+    "alt": "פיד 19.9 עין ונוצות @velvets_cloud"
+  },
+  "kpis": [
+    {"value": "4790", "label": "גבייה פתוחה לפי Jobs", "state": "yellow"},
+    {"value": "0", "label": "אירועי יומן היום", "state": "green"},
+    {"value": "81", "label": "עוקבי Instagram", "state": "purple"},
+    {"value": "אין ספירה", "label": "שעות תור / Insights", "state": "neutral"}
+  ],
+  "changes": [
+    {"text": "מחקר 20.9 נחתם ready_for_brief לפני cutoff 07:00", "state": "green"},
+    {"text": "פיד חדש עלה ב-19.9: עין ונוצות", "state": "blue"},
+    {"text": "עוקבים חיים 81 מול סנאפשוט ישן 80 מ-6.9", "state": "blue"},
+    {"text": "Calendar 20.9 ריק; גבייה פתוחה בגיליון נשארה 4790", "state": "yellow"}
+  ],
+  "slots": [
+    {
+      "kind": "decision",
+      "kicker": "צריך ממך · 1",
+      "title": "גבייה פתוחה",
+      "prose": "גבייה פתוחה אצל סינקופה, ודים ואלה+לוגו.\nסינקופה VF-20260908-001: סופק, טרם שולם, 4350, מועד בגיליון 15.10.2026.\nודים VF-20260908-003: סופק, לגבייה, 320.\nאלה+לוגו VF-20260908-004: סופק, טרם שולם, 120.\nאין החלטת פרסום להיום. אין שדרוג סלייסר."
+    },
+    {
+      "kind": "money",
+      "kicker": "מצב הכסף",
+      "title": "שלוש יתרות פתוחות לפי הגיליון",
+      "prose": "גבייה פתוחה לפי VF HQ · jobs: 4350 + 320 + 120 = 4790.\nאלה קטלבלס 35 VF-20260908-002: סופק ושולם, 175. סגורה.\nלינה VF-20260908-005: מתנה, 0. אין גבייה.\nספר דיסק / Invoice4U: אין ספירה. בלי מייל גבייה מ-HQ.",
+      "headers": ["קוד", "לקוח", "שלב"],
+      "rows": [
+        ["VF-20260908-001", "סינקופה", "סופק — טרם שולם · 4350"],
+        ["VF-20260908-003", "ודים", "סופק — לגבייה · 320"],
+        ["VF-20260908-004", "אלה+לוגו", "סופק — טרם שולם · 120"],
+        ["VF-20260908-002", "אלה", "סופק ושולם · 175"],
+        ["VF-20260908-005", "לינה", "מתנה · 0"]
+      ]
+    },
+    {
+      "kind": "production",
+      "kicker": "עבודות חיות",
+      "title": "אין ייצור פעיל מאומת",
+      "prose": "אין ייצור פעיל בגיליון. חמש העבודות הרשומות מסומנות כסופקו.\nשעות תור: אין ספירה. אין כרטיס סלייסר.\nצי: 4 מיטות. אין Print מ-HQ.\nמדף: 0/5. אין שם להציע."
+    },
+    {
+      "kind": "revenue",
+      "kicker": "היום / בהמשך",
+      "title": "אין אירועי יומן להיום",
+      "prose": "Google Calendar ל-20.9.2026 Asia/Jerusalem: אין אירועים.\nריל לפי לוח ראשון 16:00: חסום, אין מדיה (blocked_no_media).\nסטורי לפי לוח ראשון–חמישי 20:30 עדיין פתוח היום. organic-growth המליץ סקר למשבצת שני 21.9.2026 20:30. אישור ≠ פרסום. בלי תזמון מ-HQ."
+    },
+    {
+      "kind": "insights",
+      "kicker": "מצב העמוד",
+      "title": "@velvets_cloud חי",
+      "prose": "@velvets_cloud חי.\nעוקבים 81, עוקב 125, מדיה 4.\nInsights: אין ספירה.\nהפיד האחרון: 19.9.2026, תמונת עין/נוצות, https://www.instagram.com/p/DdeyJiviTjm/\nלייקים שנמדדו ב-list_media: 0. זה לא Insights.",
+      "links": [
+        {"label": "פיד 19.9 · עין ונוצות", "href": "https://www.instagram.com/p/DdeyJiviTjm/"}
+      ]
+    },
+    {
+      "kind": "content",
+      "kicker": "רדאר תוכן",
+      "title": "אין Reel אוטומטי להיום",
+      "prose": "אין Reel אוטומטי להיום בלי צילום ידני.\nמלאי קופי: G003 חי; G004 מסומן STALE וחסום reuse.\nאין Publish מהבריף.",
+      "cards": [
+        {
+          "url": "https://scontent-sof1-2.cdninstagram.com/v/t51.82787-15/818358737_18342777211259071_6113898997622391243_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=111&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiRkVFRC5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&_nc_ohc=yYAVu_jLh1oQ7kNvwFxHyUp&_nc_oc=AdqGujMvBbZ5mt9rITp_Nd6tsGij8iJiMJOO1Ax6nPScw65VFgQITxlwL9bJdU_xY-TBsa4QSBzL0V521Pi-RlBo&_nc_zt=23&_nc_ht=scontent-sof1-2.cdninstagram.com&edm=AM6HXa8EAAAA&_nc_gid=q4vC05zZA7i6tXvD0npjNA&oh=00_AQKZzRkLkYTAHXM5xbW2Ze3n_OfxbxJE9Ynx0rlaD1ZVgw&oe=6AB54601",
+          "href": "https://www.instagram.com/p/DdeyJiviTjm/",
+          "kicker": "מאומת חי",
+          "title": "פיד 19.9",
+          "text": "עין ונוצות. לייקים ב-list_media: 0. Insights: אין ספירה.",
+          "action": "לפוסט ↗"
+        },
+        {
+          "url": "https://scontent-sof1-1.cdninstagram.com/v/t51.82787-15/798017693_18340721332259071_8806787213442975594_n.jpg?stp=dst-jpg_e35_tt6&_nc_cat=101&ccb=7-5&_nc_sid=18de74&efg=eyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%3D%3D&_nc_ohc=ic4tKq2u7qsQ7kNvwHXkBq4&_nc_oc=AdoDiMhnCiwA8hvL2_Lmj5l_Nu9W3Tz6aKrHAJyNYYk8K4pPWkzMy9pt5CYfMzh1C7b0-Bnhmj5-MFuhM3M3A5GD&_nc_zt=23&_nc_ht=scontent-sof1-1.cdninstagram.com&edm=AM6HXa8EAAAA&_nc_gid=q4vC05zZA7i6tXvD0npjNA&_nc_tpa=Q5bMBQJ68chguBmvks1GcJcbpPJ4CAaLD6UjPmhO_nVHjcMfbHUlK5C1FJFq-EGLk0cMmZmnGdDsAneYRg&oh=00_AQKygKgIaGFhypx7pGVJLXiPCUZYlREtkpNnmTSctNA8Cw&oe=6AB54CBB",
+          "href": "https://www.instagram.com/reel/DdAPhozlNe2/",
+          "kicker": "Reel היסטורי",
+          "title": "7.9 תהליך",
+          "text": "פריט קיים בחשבון. לא מועמד פרסום להיום.",
+          "action": "לריל ↗"
+        }
+      ]
+    },
+    {
+      "kind": "office",
+      "kicker": "שולחן המחקר",
+      "title": "ready_for_brief · 20.9",
+      "prose": "Research Seat 20.9.2026: ready_for_brief, לפני cutoff 07:00.\nSocial Intelligence: nothing-solid.\nBest Skills: no-embed-existing-coverage, dataDate 19.9.2026.",
+      "cards": [
+        {
+          "url": "https://storage.googleapis.com/prusa3d-content-prod-14e8-wordpress-blog-prod/2026/08/6c8898d7-prusaslicer_30_launch_blog.jpg",
+          "href": "https://blog.prusa3d.com/prusaslicer-3-0-preview-built-for-the-future-of-3d-printing_137672/",
+          "kicker": "ייצור · watch",
+          "title": "PrusaSlicer 3.0 preview",
+          "text": "UI חדש, רב-מיטות, פלאגינים ב-sandbox. אצלנו watch/sandbox בלבד.",
+          "action": "למקור ↗"
+        },
+        {
+          "url": "https://laticy.com/wp-content/uploads/2026/06/repeatable-custom-order-workflow-1024x683.png",
+          "href": "https://laticy.com/repeatable-custom-order-workflow/",
+          "kicker": "convert/sales",
+          "title": "צ׳קליסט הזמנה מותאמת",
+          "text": "למפות ל-vfconvert/vfsales. בלי auto-DM. איסוף שדרות ב-intake.",
+          "action": "למקור ↗"
+        },
+        {
+          "url": "https://www.sovol3d.com/cdn/shop/articles/3D_Print_Farm_Management_-blog.jpg?v=1783066543&width=1200",
+          "href": "https://www.sovol3d.com/blogs/news/3d-print-farm-management-swarm-printing-for-small-batch-production",
+          "kicker": "רצפה",
+          "title": "FPY + batch",
+          "text": "הרגל מדדי לפי חומר/צבע. בלי תוכנת farm חדשה.",
+          "action": "למקור ↗"
+        }
+      ]
+    },
+    {
+      "kind": "office",
+      "density": "compact",
+      "kicker": "פעילות VelvetOS",
+      "title": "מה בוצע בפועל",
+      "prose": "נחתם מחקר 20.9 מ-PR 278 אל עץ הבריף.\nנכתב python3 scripts/vfops_loop.py brief --write --date 2026-09-20.\nInstagram MCP, Calendar ו-Jobs נקראו חי.\nהשליחה רק דרך gmail-send-request.json אל gmail-brief-send.yml. אין Gmail plugin.\n05a · זיכרון: ההצעה לציבור נשארת מוצרים מוכנים והדפסה / מודל בהתאמה אישית. סוג לקוח וכמות הם מאפיין הזמנה, לא מסלול שירות."
+    }
+  ]
+}
