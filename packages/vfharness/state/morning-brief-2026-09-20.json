@@ -1,8 +1,8 @@
 {
   "task_id": "morning-brief-2026-09-20",
   "title": "PRODUCTION Velvet Morning Brief 20.9.2026",
-  "status": "processing",
-  "component_state": "Processing",
+  "status": "done",
+  "component_state": "Idle",
   "date": "2026-09-20",
   "timezone": "Asia/Jerusalem",
   "branch": "cursor/morning-brief-2026-09-20-6aca",
@@ -34,5 +34,12 @@
     "no HQ Print",
     "no live IG publish"
   ],
-  "next": "Push enabled request via PR merge to main; require gmail-brief-send.yml SUCCESS + message id; then disarm enabled:false"
+  "next": "Disarm enabled:false after proven send",
+  "gmail": {
+    "workflow": "https://github.com/nocturney/velvetos-core/actions/runs/35493437427",
+    "messageId": "1a0bd6e0a090d713",
+    "threadId": "1a0bd6e0a090d713",
+    "to": "nocturney@gmail.com",
+    "subject": "Velvet Factory · Morning Brief · 20.9.2026"
+  }
 }
