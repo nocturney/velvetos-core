@@ -1,6 +1,6 @@
 {
   "brandName": "Velvet Factory",
-  "version": 7,
+  "version": 8,
   "authority": "packages/vfom/VISUAL-OS.md",
   "ownerApprovedVisualStandard": {
     "status": "approved",
@@ -359,5 +359,18 @@
         "block_overlay_branch"
       ]
     }
+  },
+  "sourceIngest": {
+    "bridge": "scripts/vf_source_ingest.py",
+    "chatAttachment": "exact-byte local materialization before creative preflight",
+    "required": [
+      "local_path",
+      "sha256",
+      "receipt"
+    ],
+    "externalIntakeRoot": "explicit_current_request_only",
+    "arbitraryScan": false,
+    "unhashedFallback": false,
+    "unavailable": "ATTACHMENT_BYTES_UNAVAILABLE"
   }
 }
