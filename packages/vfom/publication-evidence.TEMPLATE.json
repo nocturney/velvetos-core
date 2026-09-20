@@ -69,6 +69,10 @@
     "review": {
       "path": "PENDING",
       "sha256": "PENDING"
+    },
+    "creative_master": {
+      "path": "PENDING",
+      "sha256": "PENDING"
     }
   }
 }
