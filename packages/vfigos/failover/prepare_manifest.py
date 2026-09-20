@@ -14,7 +14,10 @@ def main()->int:
     p.add_argument('--publication-id',required=True)
     p.add_argument('--rendition-id',required=True)
     p.add_argument('--scheduled-at-utc')
-    p.add_argument('--auto-failover',action='store_true')
+    g=p.add_mutually_exclusive_group()
+    g.add_argument('--auto-failover',dest='auto_failover',action='store_true')
+    g.add_argument('--no-auto-failover',dest='auto_failover',action='store_false')
+    p.set_defaults(auto_failover=None)
     p.add_argument('--failover-window-minutes',type=int,default=30)
     p.add_argument('--output',required=True)
     args=p.parse_args()
@@ -30,7 +33,8 @@ def main()->int:
         if dt.tzinfo is None:
             raise SystemExit('--scheduled-at-utc must include timezone')
         scheduled_at=dt.astimezone(datetime.timezone.utc).isoformat().replace('+00:00','Z')
-    if args.auto_failover and scheduled_at is None:
+    auto_failover=(scheduled_at is not None) if args.auto_failover is None else bool(args.auto_failover)
+    if auto_failover and scheduled_at is None:
         raise SystemExit('--auto-failover requires --scheduled-at-utc')
     req_path=Path(args.approval_request).resolve()
     preflight=Path(args.preflight).resolve()
@@ -62,7 +66,7 @@ def main()->int:
       'publication_id':args.publication_id.strip(),
       'rendition_id':args.rendition_id.strip(),
       'scheduled_at_utc':scheduled_at,
-      'auto_failover':bool(args.auto_failover),
+      'auto_failover':auto_failover,
       'failover_window_minutes':args.failover_window_minutes,
     }
     if not manifest['publication_id'] or not manifest['rendition_id']: raise SystemExit('publication/rendition id missing')

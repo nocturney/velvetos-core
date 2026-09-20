@@ -1,14 +1,30 @@
 from __future__ import annotations
-import argparse, datetime, json, subprocess, sys, time
-from pathlib import Path
+
+import argparse
+import datetime
+import json
 import msvcrt
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
 
 ROOT=Path(r'C:\ProgramData\VelvetOS\instagram-failover')
 MANIFESTS=ROOT/'manifests'
 STATE=ROOT/'watch-state'
+COVERAGE=ROOT/'coverage-state.json'
 LOG=ROOT/'watch.log'
 CLIENT=ROOT/'grok-instagram-failover.py'
 LOCK=ROOT/'watch.lock'
+GCLOUD=Path(r'C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin\gcloud.cmd')
+PROJECT='instamcp'
+ZONE='us-central1-a'
+INSTANCE='openpost-prod'
+SSH_KEY=r'C:\Users\Chris\.ssh\google_compute_engine'
+REMOTE_STATE='/opt/velvetos/openpost-failover-state.py'
+COVERAGE_INTERVAL_SECONDS=60
+_last_coverage_monotonic=0.0
 
 def acquire_singleton():
     LOCK.parent.mkdir(parents=True,exist_ok=True)
@@ -25,22 +41,28 @@ def acquire_singleton():
 
 def now_utc(): return datetime.datetime.now(datetime.timezone.utc)
 def iso(dt=None): return (dt or now_utc()).isoformat().replace('+00:00','Z')
+
 def atomic_json(path,payload):
     path.parent.mkdir(parents=True,exist_ok=True)
     tmp=path.with_name('.'+path.name+'.tmp')
     tmp.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     tmp.replace(path)
+
 def log(event):
     event={'ts':iso(),**event}
     LOG.parent.mkdir(parents=True,exist_ok=True)
-    with LOG.open('a',encoding='utf-8') as f: f.write(json.dumps(event,ensure_ascii=False)+'\n')
+    with LOG.open('a',encoding='utf-8') as f:
+        f.write(json.dumps(event,ensure_ascii=False)+'\n')
+
 def parse_time(value):
     if not isinstance(value,str) or not value.strip(): return None
     try:
         dt=datetime.datetime.fromisoformat(value.strip().replace('Z','+00:00'))
-    except ValueError: return None
+    except ValueError:
+        return None
     if dt.tzinfo is None: return None
     return dt.astimezone(datetime.timezone.utc)
+
 def last_json(text):
     for line in reversed((text or '').splitlines()):
         line=line.strip()
@@ -48,20 +70,118 @@ def last_json(text):
         try:
             x=json.loads(line)
             if isinstance(x,dict): return x
-        except json.JSONDecodeError: pass
+        except json.JSONDecodeError:
+            pass
     return None
+
 def run_client(manifest,execute=False):
     cmd=[sys.executable,'-X','utf8',str(CLIENT),'--manifest',str(manifest)]
     if execute: cmd.append('--execute')
     p=subprocess.run(cmd,text=True,capture_output=True,timeout=360,check=False)
     return p.returncode,last_json(p.stdout),((p.stderr or '').strip()[-500:])
+
 def load_state(path):
     try:
         x=json.loads(path.read_text(encoding='utf-8-sig'))
         return x if isinstance(x,dict) else {}
-    except Exception: return {}
+    except Exception:
+        return {}
+
+def _gcloud_env():
+    env=os.environ.copy()
+    env.setdefault('CLOUDSDK_CONFIG',r'C:\Users\Chris\AppData\Roaming\gcloud')
+    env['USERPROFILE']=r'C:\Users\Chris'
+    env['HOME']=r'C:\Users\Chris'
+    env['HOMEDRIVE']='C:'
+    env['HOMEPATH']=r'\Users\Chris'
+    return env
+
+def openpost_inventory():
+    if not GCLOUD.is_file():
+        return None,'gcloud_missing'
+    cmd=[
+      str(GCLOUD),'compute','ssh',INSTANCE,
+      f'--project={PROJECT}',f'--zone={ZONE}','--tunnel-through-iap',
+      f'--ssh-key-file={SSH_KEY}','--quiet',
+      f'--command=sudo python3 {REMOTE_STATE} --inventory',
+    ]
+    try:
+        p=subprocess.run(cmd,text=True,capture_output=True,timeout=90,check=False,env=_gcloud_env())
+    except subprocess.TimeoutExpired:
+        return None,'inventory_timeout'
+    if p.returncode!=0:
+        return None,'inventory_remote_failed'
+    data=last_json(p.stdout)
+    if not isinstance(data,dict) or data.get('ok') is not True or not isinstance(data.get('inventory'),list):
+        return None,'inventory_invalid_json'
+    return data,None
+
+def manifest_index():
+    out={}
+    for path in sorted(MANIFESTS.glob('*.json')):
+        try:
+            m=json.loads(path.read_text(encoding='utf-8-sig'))
+        except Exception:
+            continue
+        if m.get('schema')!='velvet.instagram_failover.v1':
+            continue
+        pub=str(m.get('publication_id') or '')
+        rid=str(m.get('rendition_id') or '')
+        if not pub or not rid:
+            continue
+        out[(pub,rid)]={
+          'path':str(path),
+          'auto_failover':m.get('auto_failover') is True,
+          'scheduled_at_utc':m.get('scheduled_at_utc'),
+          'failover_window_minutes':m.get('failover_window_minutes'),
+        }
+    return out
+
+def _coverage_signature(payload):
+    missing=tuple(sorted((x.get('publication_id'),x.get('rendition_id')) for x in payload.get('unprotected',[])))
+    unarmed=tuple(sorted((x.get('publication_id'),x.get('rendition_id')) for x in payload.get('unarmed',[])))
+    return missing,unarmed
+
+def coverage_cycle():
+    data,error=openpost_inventory()
+    previous=load_state(COVERAGE)
+    if error:
+        payload={'ok':False,'status':'COVERAGE_CHECK_FAILED','checked_at':iso(),'error':error}
+        atomic_json(COVERAGE,payload)
+        if previous.get('status')!='COVERAGE_CHECK_FAILED' or previous.get('error')!=error:
+            log({'event':'coverage_check_failed','error':error})
+        return
+    idx=manifest_index()
+    relevant=[x for x in data.get('inventory',[]) if isinstance(x,dict) and x.get('is_instagram_image') is True]
+    protected=[]; unprotected=[]; unarmed=[]
+    for item in relevant:
+        key=(str(item.get('publication_id') or ''),str(item.get('rendition_id') or ''))
+        manifest=idx.get(key)
+        safe={k:item.get(k) for k in ('job_id','job_status','run_at','publication_id','publication_status','scheduled_at','rendition_id','rendition_status','platform','profile','output_profile')}
+        if manifest is None:
+            unprotected.append(safe); continue
+        if manifest.get('auto_failover') is not True or parse_time(manifest.get('scheduled_at_utc')) is None:
+            safe['manifest_path']=manifest.get('path')
+            safe['auto_failover']=manifest.get('auto_failover')
+            unarmed.append(safe); continue
+        safe['manifest_path']=manifest.get('path')
+        protected.append(safe)
+    status='PROTECTED' if not unprotected and not unarmed else 'UNPROTECTED_SCHEDULE'
+    payload={
+      'ok':True,'status':status,'checked_at':iso(),
+      'scheduled_instagram_images':len(relevant),
+      'protected_count':len(protected),
+      'unprotected_count':len(unprotected),
+      'unarmed_count':len(unarmed),
+      'protected':protected,'unprotected':unprotected,'unarmed':unarmed,
+    }
+    atomic_json(COVERAGE,payload)
+    if _coverage_signature(previous)!=_coverage_signature(payload) or previous.get('status')!=status:
+        log({'event':'coverage_changed','status':status,'protected_count':len(protected),'unprotected_count':len(unprotected),'unarmed_count':len(unarmed),'unprotected_publications':[x.get('publication_id') for x in unprotected],'unarmed_publications':[x.get('publication_id') for x in unarmed]})
+
 def process_manifest(path):
-    try: m=json.loads(path.read_text(encoding='utf-8-sig'))
+    try:
+        m=json.loads(path.read_text(encoding='utf-8-sig'))
     except Exception as exc:
         log({'event':'manifest_invalid','manifest':str(path),'error':str(exc)[:200]}); return
     if m.get('schema')!='velvet.instagram_failover.v1' or m.get('auto_failover') is not True: return
@@ -108,18 +228,35 @@ def process_manifest(path):
         atomic_json(state_path,st); log({'event':'failover_resolved','publication_id':pub,'mode':out.get('mode'),'media_id':out.get('media_id')}); return
     st.update({'status':'manual_reconcile_required','updated_at':iso(),'reason':'execute_not_verified','result':{k:(out or {}).get(k) for k in ('mode','error','error_class','stage','write_outcome','retry_safety')},'stderr':stderr})
     atomic_json(state_path,st); log({'event':'reconcile_required','publication_id':pub,'reason':'execute_not_verified'})
-def cycle():
+
+def cycle(*,force_coverage=False):
+    global _last_coverage_monotonic
     MANIFESTS.mkdir(parents=True,exist_ok=True); STATE.mkdir(parents=True,exist_ok=True)
     for p in sorted(MANIFESTS.glob('*.json')):
-        try: process_manifest(p)
-        except Exception as exc: log({'event':'watch_error','manifest':str(p),'error':str(exc)[:300]})
+        try:
+            process_manifest(p)
+        except Exception as exc:
+            log({'event':'watch_error','manifest':str(p),'error':str(exc)[:300]})
+    now_mono=time.monotonic()
+    if force_coverage or now_mono-_last_coverage_monotonic>=COVERAGE_INTERVAL_SECONDS:
+        try:
+            coverage_cycle()
+        except Exception as exc:
+            log({'event':'coverage_error','error':str(exc)[:300]})
+        _last_coverage_monotonic=now_mono
+
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument('--once',action='store_true'); ap.add_argument('--interval',type=int,default=30); a=ap.parse_args()
+    ap=argparse.ArgumentParser()
+    ap.add_argument('--once',action='store_true')
+    ap.add_argument('--interval',type=int,default=30)
+    a=ap.parse_args()
     lock=acquire_singleton()
     if lock is None: return 0
-    if a.once: cycle(); return 0
+    if a.once:
+        cycle(force_coverage=True); return 0
     interval=max(10,min(a.interval,300))
     log({'event':'watch_start','interval_seconds':interval})
     while True:
         cycle(); time.sleep(interval)
+
 if __name__=='__main__': raise SystemExit(main())
