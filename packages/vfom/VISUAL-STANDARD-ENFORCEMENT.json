@@ -1,6 +1,6 @@
 {
   "name": "velvet-factory-visual-standard-enforcement",
-  "version": 3,
+  "version": 4,
   "mode": "fail_closed",
   "standard": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
   "visualAuthority": "packages/vfom/VISUAL-OS.md",
@@ -14,7 +14,9 @@
     "exact_final_artifact_digest",
     "creative_manifest_ref",
     "reference_match_gate=PASS",
-    "publicationEvidence.version=1"
+    "publicationEvidence.version=1",
+    "creative_master_ref",
+    "creative_continuity_gate=PASS"
   ],
   "vfCreativeSurfaces": [
     ".cursor/skills/vf-canva-instagram/SKILL.md",
@@ -238,5 +240,44 @@
     "orientationLabelsAllowedWhen": "orientation_itself_adds_useful_information",
     "otherwise": "describe_the_concrete_feature_the_view_reveals",
     "finalQa": "when an orientation label is used, verify informational value and no semantic duplication"
+  },
+  "creativeContinuityPolicy": {
+    "ownerCorrectionDate": "2026-09-20",
+    "scope": "velvet-factory-publication-prep",
+    "intermediateBaseVisualIsCompletion": false,
+    "completeFirstResponseWhenToolsAndSourcesPermit": true,
+    "noTextFinalAllowedWhenDeliberateAndQaPasses": true,
+    "creativeMaster": {
+      "selectAfter": [
+        "product_truth_gate=PASS",
+        "reference_match_gate=PASS",
+        "direction_selected"
+      ],
+      "freezeSelectedMaster": true,
+      "finalOverlayMustBuildOnSelectedMaster": true,
+      "silentRawSourceRestartForbidden": true,
+      "silentHeroRegenerationForbidden": true
+    },
+    "replacement": {
+      "requiresRecordedCause": true,
+      "allowedCauses": [
+        "product_truth_failure",
+        "blocking_artifact_or_readability_issue",
+        "unsupported_asset_or_claim",
+        "explicit_owner_change"
+      ]
+    },
+    "noRegression": {
+      "required": true,
+      "compare": [
+        "atmosphere",
+        "hierarchy",
+        "depth",
+        "reference_match",
+        "editorial_richness",
+        "product_fidelity"
+      ],
+      "weakerFinal": "FAIL_TARGETED_REPAIR"
+    }
   }
 }
