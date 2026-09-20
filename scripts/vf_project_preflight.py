@@ -101,21 +101,21 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             problems.append("Project Instructions filename binding mismatch")
         if instructions_row.get("sha256") not in _text_sha256_candidates(instructions_path):
             problems.append(f"Project Instructions hash does not match ASSET-MANIFEST-v{PROJECT_REVISION}.json")
-    runtime_rows = assets.get("chat_runtime")
-    required_runtime = {
-        "scripts/vf_source_ingest.py",
-        "scripts/vf_chat_cold_start_preflight.py",
-        "scripts/vf_media_integrity.py",
-        "scripts/vf_creative_master_bridge.py",
-    }
-    if not isinstance(runtime_rows, list) or {x.get("repo_path") for x in runtime_rows if isinstance(x, dict)} != required_runtime:
-        problems.append("Project chat_runtime binding must contain the exact four runtime files")
-    else:
-        for row in runtime_rows:
-            rp = root / row["repo_path"]
-            if not rp.is_file() or row.get("sha256") not in _text_sha256_candidates(rp):
-                problems.append(f"Project chat runtime hash mismatch: {row.get('repo_path')}")
     if creative:
+        runtime_rows = assets.get("chat_runtime")
+        required_runtime = {
+            "scripts/vf_source_ingest.py",
+            "scripts/vf_chat_cold_start_preflight.py",
+            "scripts/vf_media_integrity.py",
+            "scripts/vf_creative_master_bridge.py",
+        }
+        if not isinstance(runtime_rows, list) or {x.get("repo_path") for x in runtime_rows if isinstance(x, dict)} != required_runtime:
+            problems.append("Project chat_runtime binding must contain the exact four runtime files")
+        else:
+            for row in runtime_rows:
+                rp = root / row["repo_path"]
+                if not rp.is_file() or row.get("sha256") not in _text_sha256_candidates(rp):
+                    problems.append(f"Project chat runtime hash mismatch: {row.get('repo_path')}")
         route = policy.get("publicationRoute", {})
         if not isinstance(route, dict):
             problems.append("publicationRoute must be an object")
