@@ -1,14 +1,14 @@
 {
   "task": "vf-project-v663-chat-source-ingest-2026-09-20",
-  "status": "ready_for_final_ci",
+  "status": "source_role_closure_ready_for_ci",
   "pr": 287,
   "base_sha": "0583533c98ba09aeb1806b15daac0b95b58d3186",
-  "current_head": "a2bbb39376741995a87e2658a6267454fe7fc230",
+  "current_head": "507c217f00ec466033a64df60b14d6ed05200424",
   "bundle": {
     "contract": 6,
     "revision": "6.6.3",
     "id": "VF-PROJECT-6.6.3-CHAT-ATTACHMENT-SOURCE-INGEST",
-    "asset_manifest_sha256": "05ef77ff3b96c91e3f81b84e5d3caddbf3e01a5e8b0e67288ae37926427ca1ba",
+    "asset_manifest_sha256": "0f0c452f936dd5559bc69666f0a000ca2ecaa53044c5fd9c900eb85e3b9d87fb",
     "authority_sha256": "7e2d4b3ff4013241736f7b23b9ccc15da0cfead992165ec253ddeb607d62dbe7",
     "instructions_sha256": "b05d3a3161892789eade54d8f5543ceecd8da63d63e659eeb64a5ed4aa1768a0",
     "instructions_characters": 6564
@@ -27,7 +27,8 @@
     "publication_evidence": "all relevant tests PASS; one pre-existing MP4 normalization smoke requires ffmpeg/ffprobe absent on local Windows clone and is covered by CI runtime",
     "active_pointer_scan": "no active v6.6.2 pointers in current Project/runtime files",
     "chat_runtime_hash_bound": "PASS: manifest binds vf_source_ingest.py, vf_chat_cold_start_preflight.py, vf_media_integrity.py, vf_creative_master_bridge.py",
-    "two_image_multi_source": "PASS: chat-local fixture uses hero SAME_FRAME_CROP + alternate ALTERNATE_VERIFIED_SOURCE"
+    "two_image_multi_source": "PASS: chat-local fixture uses hero SAME_FRAME_CROP + alternate ALTERNATE_VERIFIED_SOURCE",
+    "source_role_separation": "PASS: chat-local preflight rejects any PRODUCT_SOURCE SHA that matches a STYLE_ONLY reference SHA"
   },
   "non_claims": [
     "ChatGPT Project installation not updated to 6.6.3 yet",
@@ -35,9 +36,9 @@
     "publication not requested"
   ],
   "next": [
-    "final CI on PR head",
+    "follow-up CI on source-role closure",
     "merge only if green",
-    "verify main pointers",
-    "build full hash-verified Project bundle with runtime scripts"
+    "verify main",
+    "build final package"
   ]
 }

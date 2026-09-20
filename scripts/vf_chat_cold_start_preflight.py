@@ -93,10 +93,12 @@ def main()->int:
             source_refs.append({"role":"PRODUCT_SOURCE","path":m["path"],"sha256":m["sha256"]})
             ingest_refs.append({"path":str(rp.relative_to(ws)).replace("\\","/"),"sha256":digest(rp)})
             source_shas.add(m["sha256"])
+        ref_shas={x["sha256"] for x in refs}
+        if source_shas & ref_shas:
+            raise ValueError("STYLE_ONLY reference bytes cannot be PRODUCT_SOURCE")
         planp=Path(a.plan); planp=planp if planp.is_absolute() else ws/planp; plan=load(planp.resolve())
         if plan.get("public_intent") not in {"showcase","commercial"}: raise ValueError("public_intent missing")
         if set(plan.get("source_sha256") or [])!=source_shas: raise ValueError("plan source identities mismatch")
-        ref_shas={x["sha256"] for x in refs}
         if set(plan.get("reference_sha256") or [])!=ref_shas: raise ValueError("plan reference identities mismatch")
         truth=plan.get("product_truth") or {}
         if not truth.get("protected_regions") or not meaningful(truth.get("observations")): raise ValueError("Product Truth plan incomplete")
