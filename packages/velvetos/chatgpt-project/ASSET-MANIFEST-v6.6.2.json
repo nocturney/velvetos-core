@@ -199,11 +199,11 @@
     },
     {
       "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.json",
-      "reason": "superseded by Revision 6.6.1 bundle"
+      "reason": "historical only; current asset manifest is Revision 6.6.2"
     },
     {
       "filename": "Velvet-Factory-Project-Instructions-v6.6.txt",
-      "reason": "superseded by Revision 6.6.1 bundle"
+      "reason": "historical only; current Project Instructions are Revision 6.6.2"
     },
     {
       "filename": "PROJECT-AUTHORITY-v6.6.txt",
@@ -211,11 +211,11 @@
     },
     {
       "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.1.json",
-      "reason": "superseded by Revision 6.6.2 bundle"
+      "reason": "historical only; current asset manifest is Revision 6.6.2"
     },
     {
       "filename": "Velvet-Factory-Project-Instructions-v6.6.1.txt",
-      "reason": "superseded by Revision 6.6.2 bundle"
+      "reason": "historical only; current Project Instructions are Revision 6.6.2"
     },
     {
       "filename": "PROJECT-AUTHORITY-v6.6.1.txt",
