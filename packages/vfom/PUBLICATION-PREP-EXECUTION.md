@@ -95,9 +95,17 @@ This correction does not lower the creative-transformation floor: crop/exposure/
 
 Never hardcode WhatsApp into public creative/caption from memory. Resolve CTA from current Velvet Factory authority (`constitution/PUBLIC_CTA.md` / instance policy). A business-contact phone record is not automatically a public CTA.
 
+## First-response completion + creative continuity · owner correction 2026-09-20
+
+A publication-prep request is not complete when the system has merely produced a promising base visual. If usable sources and editing tools exist, continue through the final review artifact in the same response. A base/hero/staging visual is internal unless `NO_TEXT` deliberately wins and that exact clean visual passes final QA.
+
+After Product Truth + reference match, select and record the strongest successful styled artifact as `creative_master`. Final copy, deterministic typography/icons/logo, dividers and verified insets must build on that master. Do not silently restart from raw source media or regenerate a different hero during finalization.
+
+If the master must change, record `creative_master_replaced=true`, the exact cause and replacement evidence. Allowed causes are Product Truth failure, blocking artifact/readability issue, unsupported asset/claim or explicit owner change. Before review delivery compare final vs master for atmosphere, hierarchy, depth, reference match, editorial richness and product fidelity. A materially weaker final is FAIL -> targeted repair while retaining the successful direction.
+
 ## Hard failure patterns
 
-Reject as incomplete: caption-only delivery; photo-ranking-only delivery; raw photos presented as finished visual treatment; a carousel that is essentially untreated source photos; crop/exposure-only work presented as the creative result; generic "clean it later" promises; public WhatsApp CTA when current CTA authority forbids it; a third public service pillar based on customer type or quantity; an unverified/generated logo or wordmark; generic callouts without a concrete source-region map; generic/redundant camera-angle labels that add no information; a different source frame presented as a fake hero zoom; a synthesized missing angle/detail; template-like repeated layout without justification; source/reference match left UNPROVEN; or claiming the package is publication-ready without a produced visual artifact.
+Reject as incomplete: caption-only delivery; photo-ranking-only delivery; an intermediate base/hero/staging visual handed off as if the requested post were complete; a final artifact that regresses from the selected creative_master without recorded cause; raw photos presented as finished visual treatment; a carousel that is essentially untreated source photos; crop/exposure-only work presented as the creative result; generic "clean it later" promises; public WhatsApp CTA when current CTA authority forbids it; a third public service pillar based on customer type or quantity; an unverified/generated logo or wordmark; generic callouts without a concrete source-region map; generic/redundant camera-angle labels that add no information; a different source frame presented as a fake hero zoom; a synthesized missing angle/detail; template-like repeated layout without justification; source/reference match left UNPROVEN; or claiming the package is publication-ready without a produced visual artifact.
 
 
 ## Brand asset lock
