@@ -1,0 +1,37 @@
+steps:
+- name: 'node:24-bookworm'
+  entrypoint: 'bash'
+  args:
+  - '-ceu'
+  - |
+    apt-get update >/dev/null
+    apt-get install -y --no-install-recommends unzip ca-certificates curl >/dev/null
+    curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.11"
+    install -m 0755 ~/.bun/bin/bun /usr/local/bin/bun
+    ln -sf /usr/local/bin/bun /usr/local/bin/bunx
+    bun install --frozen-lockfile
+    bun run build -- frontend
+- name: 'golang:1.26.6-bookworm'
+  entrypoint: 'bash'
+  args:
+  - '-ceu'
+  - |
+    apt-get update >/dev/null
+    apt-get install -y --no-install-recommends gcc libc6-dev libsqlite3-dev >/dev/null
+    cd apps/server
+    gofmt -w internal/platform/velvet_mcp.go internal/platform/velvet_mcp_test.go internal/platform/errors.go internal/services/publisher/failures.go internal/services/publisher/failures_test.go internal/services/publisher/publisher.go internal/services/publisher/publisher_lifecycle_test.go
+    go test ./internal/platform ./internal/services/publisher ./internal/queue ./internal/services/apitokens
+    test -f cmd/openpost/public/index.html
+    CGO_ENABLED=1 GOOS=linux go build -buildvcs=false -ldflags="-s -w -X main.version=4.35.0-vfbridge6" -o /workspace/openpost-server ./cmd/openpost
+    CGO_ENABLED=1 GOOS=linux go build -buildvcs=false -ldflags="-s -w" -o /workspace/vf-openpost-token ./cmd/vf-openpost-token
+    sha256sum /workspace/openpost-server /workspace/vf-openpost-token > /workspace/SHA256SUMS
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+  entrypoint: 'bash'
+  args:
+  - '-ceu'
+  - |
+    gcloud storage cp /workspace/openpost-server /workspace/vf-openpost-token /workspace/SHA256SUMS gs://velvet-openpost-builds-instamcp/velvet6-20260920/
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+timeout: '2400s'
