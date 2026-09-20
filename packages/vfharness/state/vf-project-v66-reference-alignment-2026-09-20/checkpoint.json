@@ -1,0 +1,38 @@
+{
+  "task": "vf-project-v66-reference-alignment-2026-09-20",
+  "status": "ready_to_merge_after_final_ci",
+  "base_sha": "74c22377eb297c40bb97a5a60b882ae149ead636",
+  "pr": 283,
+  "current_head": "5af7bf8578ab9df0985ed0336481fec4db472940",
+  "bundle": {
+    "contract": 6,
+    "revision": "6.6",
+    "id": "VF-PROJECT-6.6-REFERENCE-ALIGNED-MULTI-SOURCE",
+    "asset_manifest_sha256": "cfd61724ea7918fdd26b97ceb0010675bbb7e6d3ada3c857f5a32ebe508813a5",
+    "authority_sha256": "25dd89bda6c7359d40f346fcb225d19276c9f87e74d039f8bb95a836f4b4f052",
+    "instructions_sha256": "5ff035ecfa44e8847bc5c015882f26cbd34ec50144525c035dfd5269c2ee5c05",
+    "aesthetic_reference_count": 4
+  },
+  "clarification": {
+    "blanket_camera_angle_label_ban": false,
+    "default": "avoid generic camera-angle labels",
+    "allow_when": "orientation itself adds useful information",
+    "otherwise": "describe the concrete source-backed feature revealed"
+  },
+  "proof": {
+    "github_actions_run_957": "PASS on pre-checkpoint head; full VelvetOS Core Sensors including living README, System Pulse, BiDi, all sensors and commission isolation.",
+    "manifest_payload_hashes": "LOCAL_VERIFIED",
+    "active_pointer_review": "Known active Project/creative files contain no active v6.5 binding; v6.5 remains historical only."
+  },
+  "next": [
+    "run CI on checkpoint head",
+    "merge PR #283 if green",
+    "verify main active pointers",
+    "finish and hash the install bundle"
+  ],
+  "non_claims": [
+    "ChatGPT Project installation not verified",
+    "behavioral cold-start test not run",
+    "publication not requested"
+  ]
+}
