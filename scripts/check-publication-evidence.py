@@ -87,6 +87,7 @@ def fixture(root):
         'reviewed_at': '2026-01-01T00:00:00Z',
         'creative_master_sha256': master['sha256'],
         'creative_master_materialization_sha256': materialization['sha256'],
+        'final_compositor_input_sha256': master['sha256'],
         'creative_master_replaced': False,
         'views': [{'artifact_sha256': output['sha256'], 'full': output, 'mobile': mobile}]})
     ev = {'version': 1, 'policy_sha256': evidence.digest(root / evidence.POLICY),
@@ -97,7 +98,9 @@ def fixture(root):
             'evidence': report, 'protected_regions': ['whole-product', 'eyes']},
         'stages': [{'name': n, 'status': 'PASS', 'started_at': '2026-01-01T00:00:00Z',
                     'completed_at': '2026-01-01T00:00:00Z',
-                    'evidence': [report, guide] if n == 'product_truth_lock' else [report]}
+                    'evidence': ([report, guide] if n == 'product_truth_lock'
+                                 else [materialization] if n == 'creative_master_materialization'
+                                 else [report])}
                    for n in evidence.STAGES],
         'outputs': outputs, 'copy_receipts': [lint], 'package_sha256': package, 'review': review}
     manifest = {'jobId': 'TEST', 'format': 'post', 'publicationEvidence': ev}
@@ -159,6 +162,21 @@ class EvidenceTests(unittest.TestCase):
         result = self.result()
         self.assertFalse(result['ok'])
         self.assertIn('materialization', ' '.join(result['problems']).lower())
+
+    def test_final_compositor_must_use_materialized_master(self):
+        review = json.loads((self.root / 'review.json').read_text())
+        review['final_compositor_input_sha256'] = self.ev['sources'][0]['sha256']
+        self.ev['review'] = self.write('review.json', review)
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('final compositor input', ' '.join(result['problems']).lower())
+
+    def test_materialization_stage_must_bind_exact_receipt(self):
+        stage = next(x for x in self.ev['stages'] if x['name'] == 'creative_master_materialization')
+        stage['evidence'] = [self.ev['creative_master']]
+        result = self.result()
+        self.assertFalse(result['ok'])
+        self.assertIn('materialization stage', ' '.join(result['problems']).lower())
 
     def test_materialization_receipt_must_target_exact_master(self):
         receipt_path = self.root / self.ev['creative_master_materialization']['path']
