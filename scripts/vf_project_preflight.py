@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
 PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.txt")
 PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.json")
+PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.txt")
 PROJECT_CONTRACT_VERSION = 6
 PROJECT_REVISION = "6.6"
 PROJECT_BUNDLE_ID = "VF-PROJECT-6.6-REFERENCE-ALIGNED-MULTI-SOURCE"
@@ -38,14 +39,16 @@ def _text_sha256_candidates(path: Path) -> set[str]:
 
 def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> list[str]:
     problems: list[str] = []
-    paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, PROJECT_GATE]
+    paths = [PROJECT_AUTHORITY, PROJECT_ASSET_MANIFEST, PROJECT_INSTRUCTIONS, PROJECT_GATE]
     if creative:
         paths.append(VISUAL_ENFORCEMENT)
     if any(not (root / rel).is_file() for rel in paths):
         return ["project binding file missing"]
     authority_path = root / PROJECT_AUTHORITY
+    instructions_path = root / PROJECT_INSTRUCTIONS
     try:
         authority = authority_path.read_text(encoding="utf-8")
+        instructions = instructions_path.read_text(encoding="utf-8")
         gate = (root / PROJECT_GATE).read_text(encoding="utf-8")
         assets = json.loads((root / PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
         policy = json.loads((root / VISUAL_ENFORCEMENT).read_text(encoding="utf-8")) if creative else None
@@ -66,6 +69,14 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     )
     if not all(x in authority for x in authority_identity):
         problems.append("Project Authority identity mismatch")
+    instructions_identity = (
+        f"Contract version: {PROJECT_CONTRACT_VERSION} | Revision: {PROJECT_REVISION} | Bundle: {PROJECT_BUNDLE_ID}",
+        f"Velvet-Factory-ASSET-MANIFEST-v{PROJECT_REVISION}.json",
+        f"Require Contract {PROJECT_CONTRACT_VERSION}, Revision {PROJECT_REVISION}",
+        "orientation itself adds useful information",
+    )
+    if not all(x in instructions for x in instructions_identity):
+        problems.append("Project Instructions identity/reference-alignment mismatch")
     asset_identity = (
         assets.get("contract_version"),
         str(assets.get("revision")),
@@ -76,6 +87,14 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
     rows = [x for x in asset_rows if x.get("filename") == "Velvet-Factory-Project-Authority-v6.txt"]
     if len(rows) != 1 or rows[0].get("sha256") not in _text_sha256_candidates(authority_path):
         problems.append(f"Project Authority hash does not match ASSET-MANIFEST-v{PROJECT_REVISION}.json")
+    instructions_row = assets.get("instructions")
+    if not isinstance(instructions_row, dict):
+        problems.append("Project Instructions binding missing from asset manifest")
+    else:
+        if instructions_row.get("filename") != f"Velvet-Factory-Project-Instructions-v{PROJECT_REVISION}.txt":
+            problems.append("Project Instructions filename binding mismatch")
+        if instructions_row.get("sha256") not in _text_sha256_candidates(instructions_path):
+            problems.append(f"Project Instructions hash does not match ASSET-MANIFEST-v{PROJECT_REVISION}.json")
     if creative:
         route = policy.get("publicationRoute", {})
         if not isinstance(route, dict):
