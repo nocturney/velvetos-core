@@ -1,0 +1,88 @@
+{
+  "task_id": "openpost-release-watch-2026-09-21",
+  "status": "blocked",
+  "component_state": "Blocked",
+  "pack": "vfigos",
+  "goal": "Record upstream OpenPost tip v5.2.2 vs current merged pin v4.35.0 without promoting staging/production or bumping latestReviewedVersion.",
+  "planned_steps": [
+    "read-openpost-authority-on-main",
+    "reverify-github-releases-tip-v5.2.2",
+    "classify-required-checks-no-pass",
+    "record-hold-watch-state",
+    "run-relevant-sensors"
+  ],
+  "completed_steps": [
+    "read-openpost-authority-on-main",
+    "reverify-github-releases-tip-v5.2.2",
+    "classify-required-checks-no-pass",
+    "record-hold-watch-state"
+  ],
+  "next_step": "Staging review of at least v4.36.3 (Meta/Instagram auth + MCP contract, plus backup/migration smoke for 137_mcp_media_upload_tickets.sql and 138_publication_creation_source.sql) before any 5.x consideration.",
+  "artifacts": [
+    "packages/vfigos/OPENPOST.md",
+    "packages/vfigos/OPENPOST.json",
+    "CHANGELOG.md",
+    "packages/vfharness/state/openpost-release-watch-2026-09-21.json"
+  ],
+  "unresolved": [
+    "requiredChecks not evidenced on any tag newer than v4.35.0",
+    "v4.36.3 Meta OAuth dependency scopes and MCP tool-per-operation default need staging proof",
+    "migrations 137 and 138 are present on the compare range; staging_smoke NOT_RUN",
+    "v5.0.0 breaking-change completeness UNPROVEN",
+    "v5.2.2 is incremental vs v5.1.2 and does not change HOLD"
+  ],
+  "outcome": "decision_gate",
+  "pulse": "blocked",
+  "verification": "GitHub Releases API get_latest_release: tip v5.2.2 published 2026-09-20T20:49:34Z. Linux server asset openpost-server-linux-amd64 digest sha256:cd4fae925584564214da0b40d94676b20ae4a8a0f406a48d8644620866c54d2d recorded only, not deployed. Compare v4.35.0...v5.2.2 ahead_by=304 with migrations 137/138 present. Pin fields remain v4.35.0. No staging_smoke. No new liveVerified.",
+  "gate": {
+    "kind": "decision_gate",
+    "waiting_for": "staging review of at least OpenPost v4.36.3 with real requiredChecks evidence",
+    "reason": "Watch-only hold. Tip moved to v5.2.2. Pin stays v4.35.0. Do not bump latestReviewedVersion or promote. ownerNotify=false."
+  },
+  "escalation": null,
+  "last_updated": "2026-09-21T07:20:00+03:00",
+  "execution_state": {
+    "currentBaseline": "v4.35.0",
+    "latestReviewedVersion": "v4.35.0",
+    "stagingVersion": "v4.35.0",
+    "productionHostVersion": "v4.35.0-vfbridge6",
+    "upstreamLatestTag": "v5.2.2",
+    "upstreamLatestPublishedAt": "2026-09-20T20:49:34Z",
+    "previousWatchTip": "v5.1.2",
+    "previousWatchPr": 279,
+    "decision": "PIN_HOLD_REVIEW_REQUIRED",
+    "ownerNotify": false,
+    "stagingPromoted": false,
+    "productionPromoted": false,
+    "latestReviewedVersionBumped": false,
+    "newLiveVerifiedInvented": false,
+    "linuxServerAssetRecordOnly": {
+      "name": "openpost-server-linux-amd64",
+      "digest": "sha256:cd4fae925584564214da0b40d94676b20ae4a8a0f406a48d8644620866c54d2d",
+      "deployed": false
+    },
+    "compare": {
+      "base": "v4.35.0",
+      "head": "v5.2.2",
+      "ahead_by": 304,
+      "migrationsPresent": [
+        "137_mcp_media_upload_tickets.sql",
+        "138_publication_creation_source.sql"
+      ]
+    },
+    "requiredChecks": {
+      "release_notes_and_breaking_changes": "NOTES_READ_PRELIMINARY",
+      "meta_instagram_auth": "REVIEW_REQUIRED",
+      "api_mcp_contract": "REVIEW_REQUIRED",
+      "media_limits": "NOTES_ONLY_UNPROVEN",
+      "scheduler_queue_retry": "NOTES_ONLY_UNPROVEN",
+      "database_schema_migrations": "MIGRATIONS_PRESENT_UNPROVEN",
+      "security": "NOTES_ONLY_UNPROVEN",
+      "staging_smoke": "NOT_RUN",
+      "instagram_live_verify": "PIN_RECORDED_UNCHANGED",
+      "analytics_read": "NOTES_ONLY_UNPROVEN",
+      "signed_delivery_approval_live": "PIN_RECORDED_UNCHANGED"
+    }
+  },
+  "latest_observation": "Upstream tip is v5.2.2. Highest VF-relevant hop remains v4.36.3. Pin remains v4.35.0 / productionHost v4.35.0-vfbridge6. Existing deliveryApproval LIVE_VERIFIED is unchanged and not newly invented. ownerNotify=false."
+}
