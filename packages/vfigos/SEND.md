@@ -31,6 +31,7 @@ Authenticated write boundary: [`approval/OPERATOR-SETUP.md`](approval/OPERATOR-S
      --package-sha256 <SHA256-OF-EXACT-FINAL-PACKAGE>
    ```
    exit `0` + `publication_quality.publishAuthorized=true` מוכיחים publication/preflight eligibility בלבד. exit `1/2` = **לא מפרסמים**; מתקנים איכות או מבצעים failover transport לפי הסיבה.
+   עבור תוצר שנוצר ב־VF Project Revision `6.6.9`, PREFLIGHT schema `4` רשאי לצרוך ישירות את `.vf-run.json` + `release.json` + reviews + transport-QA + caption receipt דרך `scripts/vf_project669_publication.py`. אסור לתרגם את הריצה בדיעבד לראיות legacy מומצאות. ה־runner נשאר `publication_authorized=false`; רק owner approval + שער השליחה נותנים publication eligibility.
 6. **הרשאת מסירה חתומה — חובה לפני mutation** — לפני כל write ל־Instagram, גם דרך OpenPost וגם דרך direct Instagram MCP, ה־mutation boundary חייב לקבל receipt תקף וחתום מסוג `velvet.delivery_approval.v1` מה־dedicated issuer, קשור ל־action ול־final package המדויק. `publicationEvidence`, PREFLIGHT, standing authorization, transport readiness או תשובת provider אינם תחליף. אם `approval/OPERATOR-SETUP.md` / live evidence הוא `NEEDS_OPERATOR_SETUP`, או שה־receipt חסר/לא תקף/לא תואם — **אין write**. Direct Instagram MCP אינו approval bypass.
 7. **בחירת נתיב apply** — office logic נשאר capability-based וקורא את `OPENPOST.json` בזמן אמת:
    - אם `integrationMode` הוא `staging` או `primary-control-plane`, ה־runtime מאומת ובריא, provider prerequisites הושלמו, ה־artifact הוא אותו hash שאושר, ו־delivery approval תקף עבר את ה־mutation boundary — מותר להעביר ל־OpenPost לצורך queue/schedule/publish. תשובת OpenPost מסמנת לכל היותר `publishRequested`/delivery status, לא `liveVerified`.
@@ -49,7 +50,7 @@ OpenPost הוא שכבת publication operations בלבד: scheduler, queue, retr
 
 `transport-ready` ≠ `creative-approved` ≠ `publication-authorized` ≠ `delivery-authorized` ≠ `published_verified`.
 
-האישור חייב להתייחס **לאותו hash** שמגיע ל־Publish Bridge/OpenPost/Instagram. אסור למחזר PREFLIGHT ישן אחרי שינוי תוצר או אחרי שינוי במדיניות האיכות. PREFLIGHT ללא `publish_gate_schema: 2` אינו מקור הרשאה לפרסום חדש. גם PREFLIGHT תקף אינו הרשאת write בלי receipt חתום `velvet.delivery_approval.v1` שעובר את ה־mutation boundary.
+האישור חייב להתייחס **לאותו hash** שמגיע ל־Publish Bridge/OpenPost/Instagram. אסור למחזר PREFLIGHT ישן אחרי שינוי תוצר או אחרי שינוי במדיניות האיכות. PREFLIGHT חדש חייב להיות schema `3` במסלול legacy publicationEvidence או schema `4` במסלול VF Project 6.6.9 הישיר. גם PREFLIGHT תקף אינו הרשאת write בלי receipt חתום `velvet.delivery_approval.v1` שעובר את ה־mutation boundary.
 
 ## Publish Bridge — כללי בטיחות
 

@@ -6,7 +6,7 @@ Two different checks live here and must never be confused:
 2. publication quality approval — exact content approval required before Instagram publish.
 
 For Instagram publish, the default is fail-closed and requires a machine-readable
-PREFLIGHT v3 bound to the exact final package. Use --transport-only only for health
+PREFLIGHT v3 (legacy publicationEvidence) or v4 (VF Project 6.6.9) bound to the exact final package. Use --transport-only only for health
 or diagnostics; its success is explicitly NOT publish authorization.
 
 Publish Gate v3 invariant:
@@ -39,6 +39,7 @@ import sys
 from pathlib import Path
 from typing import Any
 from vf_publication_evidence import validate as validate_evidence
+from vf_project669_publication import validate as validate_project669
 
 ROOT = Path(__file__).resolve().parents[1]
 DESK = ROOT / ".cursor" / "vf-desk.json"
@@ -112,7 +113,7 @@ def validate_publication_approval(
     format_name: str,
     package_sha256: str,
 ) -> dict[str, Any]:
-    """Validate fail-closed PREFLIGHT v3 for the exact Instagram package."""
+    """Validate fail-closed PREFLIGHT v3/v4 for the exact Instagram package."""
     problems: list[str] = []
     approval_path = (ROOT / approval_ref).resolve()
     try:
@@ -132,6 +133,61 @@ def validate_publication_approval(
     schema = (_field(text, "publish_gate_schema") or "").strip()
     gate = (_field(text, "publish_gate") or "").strip().upper()
     invalidated = (_field(text, "approval_invalidated") or "false").strip().lower()
+
+    # PREFLIGHT v4 is the native publication adapter for completed VF Project 6.6.9
+    # review releases. It does not translate them into fabricated legacy evidence.
+    if schema == "4":
+        if gate not in {"PASS", "עבור"}:
+            problems.append("publish_gate must be PASS")
+        if invalidated in {"1", "true", "yes", "כן"}:
+            problems.append("approval is explicitly invalidated")
+        if (_field(text, "owner_approved") or "").strip().upper() != "PASS":
+            problems.append("owner_approved must be PASS")
+        if (_field(text, "qa_scope") or "").strip() != "exact-final-render":
+            problems.append("qa_scope must be exact-final-render")
+        approved_package = _clean_sha(_field(text, "final_package_sha256"))
+        supplied_package = _clean_sha(package_sha256)
+        if approved_package is None or supplied_package is None or approved_package != supplied_package:
+            problems.append("exact final package SHA-256 does not match the approved package")
+        if (_field(text, "brand_asset_gate") or "").strip().upper() != "PASS":
+            problems.append("brand_asset_gate must be PASS")
+        if (_field(text, "generated_brand_mark") or "").strip().upper() != "NONE":
+            problems.append("generated_brand_mark must be NONE")
+        if (_field(text, "public_phone_absent") or "").strip().upper() != "PASS":
+            problems.append("public_phone_absent must be PASS")
+        if problems:
+            return {
+                "ok": False, "problems": problems, "approvalRef": approval_ref,
+                "contentId": content_id, "format": format_name, "publishGateSchema": schema,
+            }
+        evidence_result = validate_project669(
+            ROOT,
+            (_field(text, "project_run_ref") or "").strip(),
+            content_id,
+            format_name,
+            supplied_package or "",
+            (_field(text, "transport_artifact_ref") or "").strip() or None,
+            (_field(text, "transport_qa_ref") or "").strip() or None,
+            (_field(text, "caption_ref") or "").strip() or None,
+            (_field(text, "caption_receipt_ref") or "").strip() or None,
+        )
+        if not evidence_result.get("ok"):
+            problems.extend("project669 evidence: " + p for p in evidence_result.get("problems", []))
+        artifact_digest = _clean_sha(_field(text, "artifact_digest"))
+        if evidence_result.get("ok") and artifact_digest not in evidence_result.get("visualHashes", []):
+            problems.append("artifact_digest is not the reviewed project/transport visual")
+        return {
+            "ok": not problems,
+            "approvalRef": approval_ref,
+            "contentId": content_id,
+            "format": format_name,
+            "publishGateSchema": schema,
+            "evidenceValidation": evidence_result,
+            "packageSha256": supplied_package,
+            "problems": problems,
+            "rule": "PREFLIGHT v4 consumes exact VF Project 6.6.9 release evidence without legacy evidence fabrication",
+        }
+
     visual_standard_gate = (_field(text, "visual_standard_gate") or "").strip().upper()
     visual_standard_asset = (_field(text, "visual_standard_canva_asset_id") or "").strip()
     visual_standard_sha = (_field(text, "visual_standard_artifact_sha256") or "").strip().lower()
@@ -380,7 +436,7 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
         "mode": "local-only",
         "send_law": str(SEND.relative_to(ROOT)) if SEND.is_file() else None,
         "channels": channels,
-        "rule": "Transport readiness is not creative approval. Instagram publish requires exact-package PREFLIGHT v3.",
+        "rule": "Transport readiness is not creative approval. Instagram publish requires exact-package PREFLIGHT v3 or VF Project 6.6.9 PREFLIGHT v4.",
     }
 
 
