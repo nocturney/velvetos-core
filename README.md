@@ -15,6 +15,10 @@
 
 ## System Pulse · דופק המערכת
 
+<!-- morning-brief-2026-09-21 -->
+Latest owner Morning Brief artifact path: `packages/vfops/out/morning-brief-2026-09-21.html` (V10.3 · Research Seat 21.9 `ready_for_brief` · Jobs open collection 4790 from VF HQ · jobs).
+
+
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
 <tr>

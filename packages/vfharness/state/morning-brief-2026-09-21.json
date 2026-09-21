@@ -1,0 +1,22 @@
+{
+  "date": "2026-09-21",
+  "timezone": "Asia/Jerusalem",
+  "mode": "PRODUCTION",
+  "format": "V10.3",
+  "research": "ready_for_brief",
+  "researchPr": 297,
+  "openCollectionIls": 4790,
+  "instagram": {
+    "followers": 81,
+    "media": 5,
+    "latest": "DdgkjZGG7mw"
+  },
+  "calendarEvents": 0,
+  "artifacts": {
+    "html": "packages/vfops/out/morning-brief-2026-09-21.html",
+    "txt": "packages/vfops/out/morning-brief-2026-09-21.txt",
+    "sendRequest": "packages/vfops/out/gmail-send-request.json"
+  },
+  "sendPath": "gmail-brief-send.yml",
+  "builtAt": "2026-09-21T09:50:00+03:00"
+}
