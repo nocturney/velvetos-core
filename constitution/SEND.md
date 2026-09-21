@@ -72,7 +72,7 @@ python3 scripts/vf_send_preflight.py --gate instagram \
 רק exit `0` ובפלט `publication_quality.publishAuthorized=true` מאפשרים Publish.  
 exit `1/2` = **לא מפרסמים**. מתקנים את התוצר או את ה־transport לפי הסיבה.
 
-PREFLIGHT לפרסום חדש חייב להיות schema v2. `brand_guardian`, `copy_qa`, `readability`, `contrast` + Visible Text Gate חייבים להתאים לפורמט ולגרסה הסופית; Rubric ≥20/25; `artifact_digest`; `final_package_sha256`. אין waiver ל״רכה אבל קריאה״ / ״לא חוסם״. שינוי מהותי אחרי QA מבטל approval.
+PREFLIGHT לפרסום חדש חייב להיות schema `3` במסלול legacy publicationEvidence או schema `4` במסלול VF Project Revision `6.6.9`. במסלול 6.6.9 צורכים ישירות את `.vf-run.json`, `release.json`, ביקורות ה־route/final, transport-QA ו־caption receipt דרך `scripts/vf_project669_publication.py`; לא מייצרים ראיות legacy בדיעבד. בכל מסלול `artifact_digest` ו־`final_package_sha256` חייבים להיות קשורים לגרסה הסופית המדויקת, ושינוי מהותי אחרי QA מבטל approval.
 
 ## פריפלייט כללי לכלי HQ
 
