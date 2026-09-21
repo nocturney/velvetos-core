@@ -15,9 +15,9 @@ Watch-only record that upstream OpenPost tip is **v5.2.2** while the merged pin 
 
 - [x] **1. תכנון** — vfmem + graft + harness; existing PR #279 inspected.
 - [x] **2. מקור** — current main OPENPOST authority + GitHub Releases API tip v5.2.2.
-- [x] **3. ביצוע** — new 2026-09-21 hold-watch on current main; #279 superseded for tip currency only.
-- [ ] **4. אימות** — relevant sensors + pin-hold proof.
-- [ ] **5. סגירה** — checkpoint + PR.
+- [x] **3. ביצוע** — new 2026-09-21 hold-watch on current main; #279 superseded for tip currency only. Draft PR #298.
+- [x] **4. אימות** — relevant sensors PASS; pin-hold proof PASS; check-all 70/76 local PIL/starlette import gaps.
+- [x] **5. סגירה** — checkpoint + draft PR #298.
 
 ## החלטות
 

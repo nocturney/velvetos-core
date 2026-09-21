@@ -15,7 +15,8 @@
     "read-openpost-authority-on-main",
     "reverify-github-releases-tip-v5.2.2",
     "classify-required-checks-no-pass",
-    "record-hold-watch-state"
+    "record-hold-watch-state",
+    "run-relevant-sensors"
   ],
   "next_step": "Staging review of at least v4.36.3 (Meta/Instagram auth + MCP contract, plus backup/migration smoke for 137_mcp_media_upload_tickets.sql and 138_publication_creation_source.sql) before any 5.x consideration.",
   "artifacts": [
@@ -33,7 +34,7 @@
   ],
   "outcome": "decision_gate",
   "pulse": "blocked",
-  "verification": "GitHub Releases API get_latest_release: tip v5.2.2 published 2026-09-20T20:49:34Z. Linux server asset openpost-server-linux-amd64 digest sha256:cd4fae925584564214da0b40d94676b20ae4a8a0f406a48d8644620866c54d2d recorded only, not deployed. Compare v4.35.0...v5.2.2 ahead_by=304 with migrations 137/138 present. Pin fields remain v4.35.0. No staging_smoke. No new liveVerified.",
+  "verification": "GitHub Releases API get_latest_release: tip v5.2.2 published 2026-09-20T20:49:34Z. Linux server asset openpost-server-linux-amd64 digest sha256:cd4fae925584564214da0b40d94676b20ae4a8a0f406a48d8644620866c54d2d recorded only, not deployed. Compare v4.35.0...v5.2.2 ahead_by=304 with migrations 137/138 present. Pin-hold proof OK. Relevant sensors PASS: check-hq-overlay, check-vf-desk, check-vfharness, check-vfmcp, check-velvetos, check-publication-states. check-all.py 70/76; 6 failures are local ModuleNotFoundError (starlette, PIL) at import time, unrelated to OPENPOST watch. No staging_smoke. No new liveVerified.",
   "gate": {
     "kind": "decision_gate",
     "waiting_for": "staging review of at least OpenPost v4.36.3 with real requiredChecks evidence",
@@ -84,5 +85,5 @@
       "signed_delivery_approval_live": "PIN_RECORDED_UNCHANGED"
     }
   },
-  "latest_observation": "Upstream tip is v5.2.2. Highest VF-relevant hop remains v4.36.3. Pin remains v4.35.0 / productionHost v4.35.0-vfbridge6. Existing deliveryApproval LIVE_VERIFIED is unchanged and not newly invented. ownerNotify=false."
+  "latest_observation": "Upstream tip is v5.2.2. Highest VF-relevant hop remains v4.36.3. Pin remains v4.35.0 / productionHost v4.35.0-vfbridge6. Existing deliveryApproval LIVE_VERIFIED is unchanged and not newly invented. ownerNotify=false. Local check-all failed 6/76 on missing starlette/PIL; OPENPOST/vfigos-relevant sensors passed."
 }
