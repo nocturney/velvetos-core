@@ -4,7 +4,8 @@
 
 הבריף הקיים (01–07) הוא החבילה. `hq/PACKET.md` מתאר את החריצים אחרי שתילת השיתוף.
 
-**HTML:** תבנית חיה `MAIL.html` + `render_mail.py` (תצוגה 3, `htmlBody`, `cid:`).  
+**MORNING GREEN:** בריף הבוקר הקנוני: `MORNING-GREEN.html` + `render_morning_green.py` + `MORNING-GREEN.md`, עם נכסי CID ב־`assets/morning-green/`. `מתוזמן` דורש ראיית schedule חיה; `מאושר` אינו תזמון.
+**HTML LEGACY/OTHER OWNER SURFACES:** `MAIL.html` + `render_mail.py` נשארים זמינים ל־research/weekly/legacy (`htmlBody`, `cid:`).
 **DESIGN:** `hq/DESIGN.md` + `DESIGN-EMBED.md` — how the brief should look (tokens from MAIL.html).  
 **DIAGRAM:** `hq/DIAGRAM-MAKER.md` + `hq/diagram-svg-template.html` — דיאגרמות לווין (openclaw diagram-maker). `render_mail.py --diagram pipeline|slots`. לא מחליף את המייל.  
 **CHARTS:** `hq/CHARTS.md` — מספרים שנמדדו (lieflat-charts pattern · Glance לבריף). לא מחליף טבלאות במייל.  
