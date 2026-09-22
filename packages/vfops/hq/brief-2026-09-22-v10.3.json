@@ -1,0 +1,47 @@
+{
+  "date_line": "22.9.2026 · V10.3 · Asia/Jerusalem",
+  "bottom_line": "כל העבודות בגיליון VF HQ · jobs כבר סופקו. נשארו שלוש יתרות פתוחות לפי הגיליון: סינקופה 4350, ודים 320, אלה+לוגו 120. סה״כ 4790. אין אירועי יומן היום. Instagram חי: 81 עוקבים, 5 פריטים, הפיד האחרון מגש דרקון מ-20.9.",
+  "footer": "Velvet Factory · Morning Brief V10.3 · איסוף משדרות · חסר נשאר חסר",
+  "attention": {
+    "state": "yellow",
+    "label": "מצב העסק",
+    "text": "גבייה פתוחה"
+  },
+  "system_health": {
+    "state": "green",
+    "label": "בריאות מערכת",
+    "text": "תקינה"
+  },
+  "hero_visual": {
+    "href": "https://www.instagram.com/p/DdgkjZGG7mw/",
+    "eyebrow": "תמונת היום",
+    "title": "פיד 20.9 · מגש דרקון",
+    "caption": "הפריט האחרון בפיד @velvets_cloud. לייקים ב-list_media: 1. Insights: אין ספירה.",
+    "alt": "פיד 20.9 מגש דרקון @velvets_cloud"
+  },
+  "kpis": [
+    {
+      "value": "4790",
+      "label": "גבייה פתוחה לפי Jobs",
+      "state": "yellow"
+    },
+    {
+      "value": "0",
+      "label": "אירועי יומן היום",
+      "state": "green"
+    },
+    {
+      "value": "81",
+      "label": "עוקבי Instagram",
+      "state": "purple"
+    },
+    {
+      "value": "אין ספירה",
+      "label": "שעות תור / Insights",
+      "state": "neutral"
+    }
+  ],
+  "research_status": "ready_for_brief",
+  "source_html": "packages/vfops/out/morning-brief-2026-09-22.html",
+  "source_txt": "packages/vfops/out/morning-brief-2026-09-22.txt"
+}
