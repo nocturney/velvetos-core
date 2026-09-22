@@ -95,7 +95,7 @@ def item_list(items: object, accent: str) -> str:
 def stat_cells(stats: object) -> str:
     rows = list(stats or [])[:3]
     while len(rows) < 3:
-        rows.append({"value":"—","label":""})
+        rows.append({"value":"אין נתון","label":""})
     cells: list[str] = []
     for idx, stat in enumerate(rows):
         cls = "vf-stat vf-stat-last" if idx == 2 else "vf-stat"

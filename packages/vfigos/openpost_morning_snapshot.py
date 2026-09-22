@@ -22,15 +22,26 @@ def get_json(base: str, path: str, token: str, query: dict | None = None):
     with urllib.request.urlopen(req, timeout=20) as resp:
         return json.loads(resp.read().decode('utf-8'))
 
-def public_thumb(media: object) -> str | None:
+def media_origin(base: str) -> str:
+    parsed=urllib.parse.urlparse(base)
+    if parsed.scheme!='https' or not parsed.netloc:
+        raise ValueError('OpenPost base must be HTTPS')
+    return f'{parsed.scheme}://{parsed.netloc}'
+
+def absolute_media_url(raw: object, origin: str) -> str | None:
+    value=str(raw or '').strip()
+    if value.startswith('https://'): return value
+    if value.startswith('/media/'): return origin+value
+    return None
+
+def public_thumb(media: object, origin: str) -> str | None:
     rows = sorted(list(media or []), key=lambda m: int(m.get('display_order') or 0))
     for item in rows:
         if item.get('public_url_ready') is not True:
             continue
         for key in ('poster_thumbnail_url','url'):
-            raw = str(item.get(key) or '').strip()
-            if raw.startswith('https://'):
-                return raw
+            ready=absolute_media_url(item.get(key),origin)
+            if ready: return ready
     return None
 
 def main() -> int:
@@ -59,11 +70,21 @@ def main() -> int:
         'limit':50,
     })
     rows=[]; missing=[]
+    origin=media_origin(args.base)
     for pub in publications or []:
         scheduled=str(pub.get('scheduled_at') or '').strip()
         if not scheduled:
             continue
-        thumb=public_thumb(pub.get('media'))
+        thumb=public_thumb(pub.get('media'),origin)
+        media_safe=[]
+        for item in sorted(list(pub.get('media') or []), key=lambda m:int(m.get('display_order') or 0)):
+            media_safe.append({
+                'id':str(item.get('id') or ''),
+                'filename':str(item.get('filename') or ''),
+                'public_url_ready':item.get('public_url_ready') is True,
+                'url':absolute_media_url(item.get('url'),origin),
+                'poster_thumbnail_url':absolute_media_url(item.get('poster_thumbnail_url'),origin),
+            })
         record={
             'publication_id':str(pub.get('id') or ''),
             'title':str(pub.get('title') or '').strip(),
@@ -71,9 +92,11 @@ def main() -> int:
             'status':str(pub.get('status') or '').strip(),
             'content_profile':str(pub.get('content_profile') or '').strip(),
             'thumbnail_url':thumb,
+            'media':media_safe,
         }
-        if thumb: rows.append(record)
-        else: missing.append({k:record[k] for k in ('publication_id','title','scheduled_at','status')})
+        rows.append(record)
+        if not thumb:
+            missing.append({k:record[k] for k in ('publication_id','title','scheduled_at','status','media')})
     rows.sort(key=lambda r:r['scheduled_at'])
     payload={
         'schema':'velvet.morning_brief.openpost_snapshot.v1',

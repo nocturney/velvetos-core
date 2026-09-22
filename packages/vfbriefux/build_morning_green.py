@@ -50,6 +50,7 @@ def reader_friendly(s: str) -> str:
     )
     for old,new in replacements:
         out=out.replace(old,new)
+    out=out.replace('—','-').replace('–','-')
     out=re.sub(r'\s*\(PR\s+\d+\)', '', out)
     out=out.replace('לפני  07:00','לפני 07:00')
     out=out.replace('fu-G003','G003')
@@ -105,9 +106,9 @@ def main() -> int:
     radar_text=' '.join(radar_lines) if radar_lines else 'אין פריט רדאר מאומת נוסף.'
     story_source=attention[0]['title'] if attention else (progress[0]['title'] if progress else reader_friendly(factual.get('bottom_line','')))
     story_items=attention[1:4] if len(attention)>1 else attention[:3]
-    story_body=' '.join((x.get('title','')+(' — '+x.get('detail','') if x.get('detail') else '')).strip() for x in story_items).strip()
+    story_body=' '.join((x.get('title','')+(' - '+x.get('detail','') if x.get('detail') else '')).strip() for x in story_items).strip()
     kpis=factual.get('kpis') or []
-    stats=[{'value':str(x.get('value','—')),'label':reader_friendly(str(x.get('label',''))).replace(' לפי Jobs','')} for x in kpis[:3]]
+    stats=[{'value':str(x.get('value','אין נתון')),'label':reader_friendly(str(x.get('label',''))).replace(' לפי Jobs','')} for x in kpis[:3]]
 
     data={
       'email_title':'Velvet Factory - Morning Brief',
@@ -132,9 +133,9 @@ def main() -> int:
     a.output.write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')
     if a.visible_text:
         lines=[data['greeting'],data['date_label'],data['daily_summary'],'', 'דורש תשומת לב']
-        for item in attention: lines.append('• '+item['title']+(' — '+item['detail'] if item['detail'] else ''))
+        for item in attention: lines.append('• '+item['title']+(' - '+item['detail'] if item['detail'] else ''))
         lines += ['', 'מה מתקדם']
-        for item in progress: lines.append('• '+item['title']+(' — '+item['detail'] if item['detail'] else ''))
+        for item in progress: lines.append('• '+item['title']+(' - '+item['detail'] if item['detail'] else ''))
         lines += ['', 'על הרדאר',data['radar']['text']]
         a.visible_text.parent.mkdir(parents=True,exist_ok=True)
         a.visible_text.write_text('\n'.join(lines).strip()+'\n',encoding='utf-8')
