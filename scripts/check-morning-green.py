@@ -19,6 +19,7 @@ def main() -> None:
         PACK / "MORNING-GREEN.md",
         PACK / "render_morning_green.py",
         PACK / "build_morning_green.py",
+        PACK / "prepare_morning_green.py",
         ASSETS / "morning-top.jpg",
         ASSETS / "morning-story.jpg",
         ASSETS / "morning-radar.jpg",
@@ -64,6 +65,10 @@ def main() -> None:
             fail(f"Gmail sender missing CID capability {token!r}")
 
     builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
+    preparer = (PACK / "prepare_morning_green.py").read_text(encoding="utf-8")
+    for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "assets/morning-green"):
+        if token not in preparer:
+            fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
     for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod"):
         if token not in builder:
             fail(f"Morning Green builder missing reader-friendly mapping {token!r}")
