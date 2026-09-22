@@ -12,8 +12,13 @@ def extract_date(brief_json: Path) -> tuple[str,str]:
     data=json.loads(brief_json.read_text(encoding='utf-8'))
     line=str(data.get('date_line') or '')
     m=re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{4})',line)
-    if not m: raise ValueError('brief date_line has no DD.MM.YYYY date')
-    dd,mm,yyyy=(int(m.group(1)),int(m.group(2)),int(m.group(3)))
+    if m:
+        dd,mm,yyyy=(int(m.group(1)),int(m.group(2)),int(m.group(3)))
+        return f'{yyyy:04d}-{mm:02d}-{dd:02d}', f'{dd}.{mm}.{yyyy}'
+    iso=str(data.get('date') or '').strip()
+    m=re.fullmatch(r'(\d{4})-(\d{2})-(\d{2})',iso)
+    if not m: raise ValueError('brief has neither DD.MM.YYYY date_line nor YYYY-MM-DD date')
+    yyyy,mm,dd=(int(m.group(1)),int(m.group(2)),int(m.group(3)))
     return f'{yyyy:04d}-{mm:02d}-{dd:02d}', f'{dd}.{mm}.{yyyy}'
 
 def run(cmd: list[str]) -> None:

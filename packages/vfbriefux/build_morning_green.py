@@ -17,7 +17,7 @@ HE_DAYS=['יום שני','יום שלישי','יום רביעי','יום חמי�
 HE_MONTHS={1:'בינואר',2:'בפברואר',3:'במרץ',4:'באפריל',5:'במאי',6:'ביוני',7:'ביולי',8:'באוגוסט',9:'בספטמבר',10:'באוקטובר',11:'בנובמבר',12:'בדצמבר'}
 
 HEADINGS=[
- 'מה השתנה מאז הבריף הקודם','צריך ממך','מצב הכסף','עבודות חיות','היום / בהמשך',
+ 'תמונת מצב עכשיו','מה השתנה מאז הבריף הקודם','צריך ממך','מצב הכסף','עבודות חיות','היום / בהמשך',
  'Instagram · מצב העמוד','רדאר תוכן','שולחן המחקר','פעילות VelvetOS','05a · זיכרון'
 ]
 
@@ -69,6 +69,30 @@ def date_label(date_line: str) -> str:
     d=datetime(int(m.group(3)),int(m.group(2)),int(m.group(1)),tzinfo=TZ)
     return f"{HE_DAYS[d.weekday()]} · {d.day} {HE_MONTHS[d.month]}"
 
+def factual_date_label(factual: dict) -> str:
+    label=date_label(str(factual.get('date_line') or ''))
+    if label: return label
+    raw=str(factual.get('date') or '').strip()
+    m=re.fullmatch(r'(\d{4})-(\d{2})-(\d{2})',raw)
+    if not m: return raw
+    d=datetime(int(m.group(1)),int(m.group(2)),int(m.group(3)),tzinfo=TZ)
+    return f"{HE_DAYS[d.weekday()]} · {d.day} {HE_MONTHS[d.month]}"
+
+def fallback_stats(factual: dict, sec: dict[str,list[str]]) -> list[dict[str,str]]:
+    stats=[]
+    if factual.get('open_collection') is not None:
+        stats.append({'value':str(factual['open_collection']),'label':'גבייה פתוחה'})
+    cal=' '.join(sec.get('היום / בהמשך') or [])
+    if re.search(r'אין אירועים',cal):
+        stats.append({'value':'0','label':'אירועי יומן היום'})
+    else:
+        m=re.search(r'(\d+)\s+אירועים',cal)
+        if m: stats.append({'value':m.group(1),'label':'אירועי יומן היום'})
+    insta=' '.join(sec.get('Instagram · מצב העמוד') or [])
+    m=re.search(r'עוקבים\s+(\d+)',insta)
+    if m: stats.append({'value':m.group(1),'label':'עוקבי Instagram'})
+    return stats[:3]
+
 def post_cards(snapshot: dict | None) -> list[dict]:
     cards=[]
     for row in (snapshot or {}).get('scheduled',[])[:4]:
@@ -109,22 +133,24 @@ def main() -> int:
     progress=[split_title_detail(x) for x in sec['מה השתנה מאז הבריף הקודם'][:4]]
     radar_lines=[clean_bullet(reader_friendly(x)) for x in sec['רדאר תוכן'][:3]]
     radar_text=' '.join(radar_lines) if radar_lines else 'אין פריט רדאר מאומת נוסף.'
-    story_source=attention[0]['title'] if attention else (progress[0]['title'] if progress else reader_friendly(factual.get('bottom_line','')))
+    overview=reader_friendly(sec['תמונת מצב עכשיו'][0]) if sec.get('תמונת מצב עכשיו') else reader_friendly(str(factual.get('bottom_line') or '').strip())
+    story_source=attention[0]['title'] if attention else (progress[0]['title'] if progress else overview)
     story_items=attention[1:4] if len(attention)>1 else attention[:3]
     story_body=' '.join((x.get('title','')+(' - '+x.get('detail','') if x.get('detail') else '')).strip() for x in story_items).strip()
     kpis=factual.get('kpis') or []
     stats=[{'value':str(x.get('value','אין נתון')),'label':reader_friendly(str(x.get('label',''))).replace(' לפי Jobs','')} for x in kpis[:3]]
+    if not stats: stats=fallback_stats(factual,sec)
 
     data={
       'email_title':'Velvet Factory - Morning Brief',
       'preheader':'מה חשוב היום, מה מתקדם ומה באמת מתוזמן לפרסום.',
-      'date_label':date_label(str(factual.get('date_line') or '')),
+      'date_label':factual_date_label(factual),
       'greeting':'בוקר טוב, כריסטיאן',
-      'daily_summary':reader_friendly(str(factual.get('bottom_line') or '').strip()),
+      'daily_summary':overview,
       'scheduled_posts':post_cards(op),
       'story':{
         'title':story_source or 'תמונת היום',
-        'body':story_body or reader_friendly(str(factual.get('bottom_line') or '')),
+        'body':story_body or overview,
         'image':{}
       },
       'morning_line':{'text':'המידע החשוב קודם. המערכת נשארת מאחור.','note':'מהדורת הבוקר של Velvet Factory'},

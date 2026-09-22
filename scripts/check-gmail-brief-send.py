@@ -106,6 +106,8 @@ def main() -> None:
         "VF_GMAIL_BRIEF_SHARED_SECRET",
         "MAX_SKEW_SECONDS = 300",
         "LAST_SUCCESS_REQUEST_ID",
+        "LAST_SUCCESS_MESSAGE_ID",
+        "deduplicated: true",
         "Gmail.Users.Messages.send({raw: raw}, 'me')",
     ):
         if needle not in bridge_source:
