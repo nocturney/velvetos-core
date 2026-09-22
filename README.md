@@ -44,13 +44,13 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-20T09:05:46+03:00` |
+| **Last verified / refreshed evidence** | `2026-09-23T02:54:13+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-23 — <strong>Morning Green v3.1 production cutover:</strong> בריף 09:00 עבר למסלול המגזיני הירוק לאחר OpenPost schedule read, Apps Script v5 health, canonical Gmail send ו־Gmail readback מלא. V10.3 נשאר legacy/recovery בלבד.</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-23 — <strong>Morning Green v3.1 production cutover:</strong> the 09:00 owner brief now uses the green editorial route after OpenPost schedule read, Apps Script v5 health, canonical Gmail send and full Gmail readback. V10.3 remains legacy/recovery only.</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-23 — **Morning Green v3.1 production cutover:** promoted the editorial green RTL/Desktop-first route to the canonical 09:00 owner brief after the full production path passed: live OpenPost schedule read…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-23 — **Morning Green v3.1 production cutover:** promoted the editorial green RTL/Desktop-first route to the canonical 09:00 owner brief after the full production path passed: live OpenPost schedule read…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
