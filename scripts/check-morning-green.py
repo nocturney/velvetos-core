@@ -18,6 +18,7 @@ def main() -> None:
         PACK / "MORNING-GREEN.html",
         PACK / "MORNING-GREEN.md",
         PACK / "render_morning_green.py",
+        PACK / "build_morning_green.py",
         ASSETS / "morning-top.jpg",
         ASSETS / "morning-story.jpg",
         ASSETS / "morning-radar.jpg",
@@ -61,6 +62,11 @@ def main() -> None:
     for token in ("multipart/related", "Content-ID", "embed_remote_images"):
         if token not in sender:
             fail(f"Gmail sender missing CID capability {token!r}")
+
+    builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
+    for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod"):
+        if token not in builder:
+            fail(f"Morning Green builder missing reader-friendly mapping {token!r}")
 
     proc = subprocess.run([sys.executable, str(PACK / "render_morning_green.py"), "--check"], cwd=ROOT, text=True, capture_output=True)
     if proc.returncode != 0:
