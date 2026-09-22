@@ -15,7 +15,7 @@ function Invoke-Gcloud([string[]]$CommandArgs){
   }
   throw "gcloud failed after 2 attempts: $($CommandArgs -join ' ')"
 }
-$data=Get-Content -Raw $Snapshot | ConvertFrom-Json
+$data=Get-Content -Raw -Encoding UTF8 $Snapshot | ConvertFrom-Json
 if($data.schema -ne 'velvet.morning_brief.openpost_snapshot.v1'){ throw 'unexpected snapshot schema' }
 if(Test-Path $OutputDir){ Remove-Item -Recurse -Force $OutputDir }
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
