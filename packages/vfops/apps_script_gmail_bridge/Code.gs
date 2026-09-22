@@ -116,7 +116,16 @@ function doPost(e) {
       const props = PropertiesService.getScriptProperties();
       const lastId = props.getProperty('LAST_SUCCESS_REQUEST_ID');
       if (lastId === requestId) {
-        throw new Error('duplicate requestId');
+        const lastMessageId = String(props.getProperty('LAST_SUCCESS_MESSAGE_ID') || '').trim();
+        if (!lastMessageId) {
+          throw new Error('duplicate requestId without stored Gmail message id');
+        }
+        return jsonResponse_(200, {
+          ok: true,
+          deduplicated: true,
+          messageId: lastMessageId,
+          threadId: ''
+        });
       }
 
       const result = Gmail.Users.Messages.send({raw: raw}, 'me');

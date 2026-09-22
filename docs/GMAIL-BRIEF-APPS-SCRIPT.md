@@ -12,7 +12,7 @@ exact RFC822 message through the Apps Script Advanced Gmail Service.
 - Enabled sends require the exact `owner-brief` Visible Text Gate receipt/hash.
 - GitHub signs every bridge request with HMAC-SHA256 using a shared secret.
 - The bridge rejects requests older than 5 minutes.
-- Successful `requestId` values are deduplicated.
+- Successful `requestId` values are deduplicated. A replay of the same successful `requestId` returns the stored Gmail `messageId` instead of sending again, so transport-response failures can be recovered without duplicate mail.
 - Apps Script requests only `https://www.googleapis.com/auth/gmail.send`.
 - Gmail API access is provided by the Apps Script Advanced Gmail Service (`Gmail` v1);
   no raw `UrlFetchApp` call or external-request scope is used in the production sender.
