@@ -1,14 +1,13 @@
-# 05 · משרד · 21.9.2026
+# 05 · משרד · 22.9.2026
 
 מצב Research Seat: `ready_for_brief`.
 הריצה הושלמה לפני cutoff 07:00 Asia/Jerusalem.
 
 ## מה נבנה / יועל
-- Prusament PLA Lightweight יצאה רשמית (17.9) — PLA מקציף, עד 65% קל יותר, דורש ייבוש וכיול. אצלנו: watch/lab בלבד; לא חומר יומיומי ולא שינוי מדף.
-- משפחת מוצרים רטובה (כיור/ניקוז עצמי) עולה ב־MakerWorld/Printables כדפוס נפרד ממארגני שולחן. רישיונות לרוב בלי מכירה בלי רישיון יוצר — אין שם למדף בלי GATE+סלייס. סריקת א׳/ד׳ הרשמית: לא יום סריקה.
-- איסוף: הרגל פיזי «מוכן לאיסוף» (וי על השורות + מדף) לפני שמזמינים את הלקוח — על TIMELINE/print.done הקיימים; בלי תוכנת חנות ובלי משלוח.
-- Bambu הודיעה על הורדת מחירי פילמנט בכל האזורים (16.9). מעקב רכש בלבד; ₪ בישראל = אין ספירה.
-- Social Intelligence: `nothing-solid`; אין שינוי ל־reset/preflight.
-- Best Skills: skipped-not-due (`lastPass` 2026-09-20 עדיין בתוך 48ש+4ש).
+- MakerWorld «Make for Good» (PR 16.9) — אתגר נגישות עם 24 בריפים עד ~15.11; זוכים אמורים להיכנס לספריות פתוחות אחרי בדיקה. אצלנו: מעקב בלבד; בלי כניסה לתחרות מ-HQ ובלי מק״ט מדף.
+- Prusament PLA ColorMix (8.9) — מערכת צבעים CMYWK לסלייסר/רב-חומרים (עד ~45 גוונים). אצלנו: watch בלבד; לא מחסן יומיומי; ₪ בישראל = אין ספירה. נפרד מ־PLA Lightweight של 21.9.
+- QC מוקדם לפני ניקיון/הרכבה — go/no-go ויזואלי לפני שורפים זמן פוסט־פרוסס; על PRINT-DONE הקיים, בלי תוכנת חווה.
+- Social Intelligence: `nothing-solid`; בלי שינוי ל־CTA/reset/preflight.
+- Best Skills: due (~48ש מ־20.9) → `no-embed-existing-coverage` (`lastPass`→2026-09-22).
 
-מקור מלא: `packages/vfresearch/sources/2026-09-21-orchestra.md`.
+מקור מלא: `packages/vfresearch/sources/2026-09-22-orchestra.md`.

@@ -1,10 +1,10 @@
 {
-  "enabled": false,
-  "requestId": "morning-brief-2026-09-21",
+  "enabled": true,
+  "requestId": "morning-brief-2026-09-22",
   "to": "nocturney@gmail.com",
-  "subject": "Velvet Factory · Morning Brief · 21.9.2026",
-  "html": "packages/vfops/out/morning-brief-2026-09-21.html",
-  "visibleText": "packages/vfops/out/morning-brief-2026-09-21.txt",
+  "subject": "Velvet Factory · Morning Brief · 22.9.2026",
+  "html": "packages/vfops/out/morning-brief-2026-09-22.html",
+  "visibleText": "packages/vfops/out/morning-brief-2026-09-22.txt",
   "images": "",
   "embedRemoteImages": true,
   "remoteImageLimit": 8
