@@ -30,7 +30,7 @@ The protected set is **positive protection**, not deletion authority. The Guard 
 
 ## Owner email
 
-Any owner email must use the current Morning Brief V10.3 rich RTL responsive/Outlook-safe system, the exact Visible Text gate where required, and only the canonical production path:
+The 09:00 owner brief must use Morning Green v3.1, the current canonical RTL/Desktop-first responsive owner-email design. V10.3 remains available only for legacy/recovery surfaces that explicitly require it. Owner-visible prose still passes the exact Visible Text gate where required, and delivery uses only the canonical production path:
 
 `packages/vfops/out/gmail-send-request.json`
 → `.github/workflows/gmail-brief-send.yml`
@@ -40,4 +40,6 @@ Interactive/connected Gmail is not a normal or fallback owner-delivery path. Req
 
 ## Migration evidence
 
-Before cutover, Grok Bot completed a read-only shadow verification for all seven routines and reported 7/7 SHADOW_PASS against current repository authority, web research, live business-source reads, Instagram read evidence, V10.3 assets, and the canonical Gmail/GitHub path. The routines were then updated in place to production mode without manual execution, preserving identity, schedule, timezone, and enabled state.
+Before the scheduler cutover, Grok Bot completed a read-only shadow verification for all seven routines and reported 7/7 SHADOW_PASS against current repository authority, web research, live business-source reads, Instagram read evidence, the then-current V10.3 assets, and the canonical Gmail/GitHub path. The routines were then updated in place to production mode without manual execution, preserving identity, schedule, timezone, and enabled state.
+
+On 2026-09-23, owner-email authority moved from V10.3 to Morning Green v3.1 after OpenPost schedule read, thumbnail materialization, renderer/sensor checks, Apps Script bridge v5 health, canonical GitHub/Gmail send success, Gmail message ID, and Gmail readback with six CID images all passed. The schedule, routine identity, timezone and seven-routine protected set did not change.

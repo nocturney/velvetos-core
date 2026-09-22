@@ -1,8 +1,8 @@
 # Morning Green v3.1
 
-המסלול הקנוני החדש לבריף הבוקר של Velvet Factory. זהו מייל owner-only, RTL, Desktop-first ורספונסיבי, בעיצוב מגזיני ירוק/שמנת/זהב.
+המסלול הקנוני לבריף 09:00 של Velvet Factory. זהו מייל owner-only, RTL, Desktop-first ורספונסיבי, בעיצוב מגזיני ירוק/שמנת/זהב. החל מ־2026-09-23 הסטטוס הוא `LIVE / VERIFIED` עבור בריף הבוקר.
 
-`MAIL.html` / `render_mail.py` נשארים זמינים ל־legacy owner/research surfaces; Morning Green מיועד לבריף הבוקר בלבד כדי לא לשבור משטחים אחרים.
+`MAIL.html` / `render_mail.py` נשארים זמינים ל־legacy/recovery owner surfaces בלבד; Morning Green הוא ברירת המחדל של בריף הבוקר.
 
 ## עקרונות תצוגה
 
@@ -65,18 +65,23 @@ Self-check: `python packages/vfbriefux/render_morning_green.py --check`
 
 ## Send
 
-השליחה ממשיכה במסלול Gmail הקנוני בלבד, עם owner-visible-text gate:
+השליחה ב־production עוברת רק במסלול Gmail הקנוני עם owner-visible-text gate:
 
-`PYTHONPATH=packages python -m vfops.gmail_brief_send --html OUT.html --images packages/vfbriefux/assets/morning-green --to nocturney@gmail.com --subject TEXT --embed-remote-images`
+`prepare_morning_green.py ... --request packages/vfops/out/gmail-send-request.json`
+→ `.github/workflows/gmail-brief-send.yml`
+→ `packages/vfops/gmail_apps_script_request.py`
+→ Apps Script Gmail bridge
 
-במסלול repo-backed production ניתן להשתמש ב־`gmail_brief_request.py` וב־GitHub Actions הקיימים. אין plugin fallback אוטומטי.
+הצלחה דורשת workflow success, Gmail `messageId`, readback כשמחבר Gmail זמין, והחזרת בקשת ה־one-shot ל־`enabled:false`. אין plugin fallback אוטומטי. `gmail_brief_send` המקומי נשאר כלי manual/diagnostic בלבד ואינו סמכות production.
 
 ## Done
 
-Morning Green נחשב production-ready רק אחרי:
+שערי production של Morning Green:
 1. renderer check;
 2. sensor/check-all;
 3. OpenPost read עובד ומחזיר schedule אמיתי או empty אמת;
 4. email E2E נשלח לבעלים עם CID + thumbnails;
 5. Gmail readback מאמת את ההודעה;
-6. רק אז האוטומציה היומית הקיימת יכולה לעבור ל־Morning Green ולהיות enabled.
+6. Apps Script bridge health תקין וה־one-shot חוזר ל־disabled.
+
+כל ששת השערים עברו ב־2026-09-23. Apps Script deployment הקנוני עודכן לגרסה 5 והחזיר HTTP 200; QA production-path החזיר Gmail message ID `1a0ca4521ef56af0`; readback אימת 6 CID images, את התזמונים 09:00 ו־12:00 ואת היעדרם של template tokens פתוחים. לכן בריף 09:00 רשאי להשתמש ב־Morning Green כברירת המחדל.
