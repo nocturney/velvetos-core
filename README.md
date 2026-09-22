@@ -44,7 +44,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-23T02:54:13+03:00` |
+| **Last verified / refreshed evidence** | `2026-09-20T09:05:46+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
