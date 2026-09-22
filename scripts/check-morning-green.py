@@ -52,9 +52,11 @@ def main() -> None:
             fail(f"Morning Green contract missing {token!r}")
 
     openpost = (ROOT / "packages" / "vfigos" / "openpost_morning_snapshot.py").read_text(encoding="utf-8")
-    for token in ("activity_bucket':'scheduled'", "scheduled_at", "public_url_ready", "OPENPOST_TOKEN"):
+    for token in ("activity_bucket':'scheduled'", "scheduled_at", "public_url_ready", "thumbnail_media_id", "thumbnail_cid", "OPENPOST_TOKEN"):
         if token not in openpost:
             fail(f"OpenPost Morning adapter missing {token!r}")
+    if "value.startswith('/media/')" in openpost or "origin+value" in openpost:
+        fail("OpenPost Morning adapter must not treat authenticated relative /media paths as public")
     for forbidden in ("method='POST'", 'method="POST"', "method='PUT'", 'method="PUT"', "method='DELETE'", 'method="DELETE"'):
         if forbidden in openpost:
             fail(f"OpenPost Morning adapter contains write HTTP method: {forbidden}")
@@ -66,10 +68,10 @@ def main() -> None:
 
     builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
     preparer = (PACK / "prepare_morning_green.py").read_text(encoding="utf-8")
-    for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "assets/morning-green"):
+    for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--thumbnail-dir", "morning-green-assets-"):
         if token not in preparer:
             fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
-    for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod"):
+    for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail"):
         if token not in builder:
             fail(f"Morning Green builder missing reader-friendly mapping {token!r}")
 

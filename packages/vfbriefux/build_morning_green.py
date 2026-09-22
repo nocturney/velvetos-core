@@ -80,8 +80,13 @@ def post_cards(snapshot: dict | None) -> list[dict]:
             day='מתוזמן'; clock=raw
         profile=str(row.get('content_profile') or '').lower()
         kind='ריל' if 'reel' in profile else ('קרוסלה' if 'carousel' in profile else 'פוסט')
+        cid=str(row.get('thumbnail_cid') or '').strip()
+        public=str(row.get('thumbnail_url') or '').strip()
+        image_url=('cid:'+cid) if cid else public
+        if not image_url:
+            raise ValueError(f"scheduled publication {row.get('publication_id') or row.get('title') or '?'} has no materialized/public thumbnail")
         cards.append({
-            'image_url':row['thumbnail_url'],
+            'image_url':image_url,
             'image_alt':row.get('title') or 'פוסט מתוזמן',
             'date_label':day,'time_label':clock,'type_label':kind,'status_label':'מתוזמן'
         })

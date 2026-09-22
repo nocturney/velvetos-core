@@ -22,26 +22,21 @@ def get_json(base: str, path: str, token: str, query: dict | None = None):
     with urllib.request.urlopen(req, timeout=20) as resp:
         return json.loads(resp.read().decode('utf-8'))
 
-def media_origin(base: str) -> str:
-    parsed=urllib.parse.urlparse(base)
-    if parsed.scheme!='https' or not parsed.netloc:
-        raise ValueError('OpenPost base must be HTTPS')
-    return f'{parsed.scheme}://{parsed.netloc}'
+def public_thumb(media: object) -> str | None:
+    """Return only an already-absolute HTTPS thumbnail.
 
-def absolute_media_url(raw: object, origin: str) -> str | None:
-    value=str(raw or '').strip()
-    if value.startswith('https://'): return value
-    if value.startswith('/media/'): return origin+value
-    return None
-
-def public_thumb(media: object, origin: str) -> str | None:
+    OpenPost local-storage rows can expose relative /media/<id> paths while the
+    route is still authenticated. Those are NOT public-email URLs and must be
+    materialized separately through the deployment-safe CID cache.
+    """
     rows = sorted(list(media or []), key=lambda m: int(m.get('display_order') or 0))
     for item in rows:
         if item.get('public_url_ready') is not True:
             continue
         for key in ('poster_thumbnail_url','url'):
-            ready=absolute_media_url(item.get(key),origin)
-            if ready: return ready
+            raw=str(item.get(key) or '').strip()
+            if raw.startswith('https://'):
+                return raw
     return None
 
 def main() -> int:
@@ -70,20 +65,19 @@ def main() -> int:
         'limit':50,
     })
     rows=[]; missing=[]
-    origin=media_origin(args.base)
     for pub in publications or []:
         scheduled=str(pub.get('scheduled_at') or '').strip()
         if not scheduled:
             continue
-        thumb=public_thumb(pub.get('media'),origin)
+        thumb=public_thumb(pub.get('media'))
         media_safe=[]
         for item in sorted(list(pub.get('media') or []), key=lambda m:int(m.get('display_order') or 0)):
             media_safe.append({
                 'id':str(item.get('id') or ''),
                 'filename':str(item.get('filename') or ''),
                 'public_url_ready':item.get('public_url_ready') is True,
-                'url':absolute_media_url(item.get('url'),origin),
-                'poster_thumbnail_url':absolute_media_url(item.get('poster_thumbnail_url'),origin),
+                'url':str(item.get('url') or ''),
+                'poster_thumbnail_url':str(item.get('poster_thumbnail_url') or ''),
             })
         record={
             'publication_id':str(pub.get('id') or ''),
@@ -92,6 +86,8 @@ def main() -> int:
             'status':str(pub.get('status') or '').strip(),
             'content_profile':str(pub.get('content_profile') or '').strip(),
             'thumbnail_url':thumb,
+            'thumbnail_media_id':str(media_safe[0].get('id') or '') if media_safe else '',
+            'thumbnail_cid':None,
             'media':media_safe,
         }
         rows.append(record)
