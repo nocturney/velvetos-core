@@ -25,6 +25,8 @@ def main() -> None:
         ASSETS / "morning-radar.jpg",
         ASSETS / "morning-footer.jpg",
         ROOT / "packages" / "vfigos" / "openpost_morning_snapshot.py",
+        ROOT / "packages" / "vfigos" / "run_openpost_morning_snapshot.ps1",
+        ROOT / "packages" / "vfigos" / "materialize_openpost_morning_thumbnails.ps1",
     ]
     for path in required:
         if not path.is_file():
@@ -60,6 +62,14 @@ def main() -> None:
     for forbidden in ("method='POST'", 'method="POST"', "method='PUT'", 'method="PUT"', "method='DELETE'", 'method="DELETE"'):
         if forbidden in openpost:
             fail(f"OpenPost Morning adapter contains write HTTP method: {forbidden}")
+    snapshot_runner=(ROOT / "packages" / "vfigos" / "run_openpost_morning_snapshot.ps1").read_text(encoding="utf-8")
+    materializer=(ROOT / "packages" / "vfigos" / "materialize_openpost_morning_thumbnails.ps1").read_text(encoding="utf-8")
+    for token in ("openpost-morning-brief.token.dpapi", "OPENPOST_TOKEN", "ZeroFreeBSTR"):
+        if token not in snapshot_runner:
+            fail(f"OpenPost DPAPI runner missing {token!r}")
+    for token in ("sm_$media.jpg", "--tunnel-through-iap", "thumbnail_cid", "sudo rm -f"):
+        if token not in materializer:
+            fail(f"OpenPost thumbnail materializer missing {token!r}")
 
     sender = (ROOT / "packages" / "vfops" / "gmail_brief_send.py").read_text(encoding="utf-8")
     for token in ("multipart/related", "Content-ID", "embed_remote_images"):

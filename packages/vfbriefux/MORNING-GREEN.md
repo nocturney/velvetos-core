@@ -26,7 +26,7 @@
 
 - נכסי אווירה קבועים מגיעים כ־CID מתוך `assets/morning-green/`: `morning-top.jpg`, `morning-story.jpg`, `morning-radar.jpg`, `morning-footer.jpg`.
 - thumbnail של פוסט עתידי אינו נחשף לציבור רק בשביל המייל. ב־OpenPost local-storage, `public_url_ready` עם `/media/<id>` אינו נחשב URL ציבורי עד בדיקה אנונימית אמיתית.
-- מסלול production המועדף: OpenPost `api:read` מוכיח `scheduled_at` + media ID; `Chris` materializes רק את thumbnail ה־`sm_<media-id>.jpg` דרך GCP IAP; `prepare_morning_green.py --thumbnail-dir ...` מאחד אותו עם נכסי האווירה ל־CID bundle.
+- מסלול production המועדף: OpenPost `api:read` מוכיח `scheduled_at` + media ID; `packages/vfigos/run_openpost_morning_snapshot.ps1` קורא את ה־credential מ־DPAPI בלי להדפיס אותו; `packages/vfigos/materialize_openpost_morning_thumbnails.ps1` materializes רק את thumbnail ה־`sm_<media-id>.jpg` דרך GCP IAP; `prepare_morning_green.py --thumbnail-dir ...` מאחד אותו עם נכסי האווירה ל־CID bundle.
 - HTTPS ציבורי אמיתי עדיין מותר, אבל production renderer דוחה HTTP, נתיב מקומי או reference שאינו `cid:`/HTTPS.
 - local preview מותר רק עם `--allow-local-images`.
 
