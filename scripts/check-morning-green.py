@@ -103,7 +103,7 @@ def main() -> None:
     for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--thumbnail-dir", "morning-green-assets-"):
         if token not in preparer:
             fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
-    for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights"):
+    for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights", "Instagram has its own dedicated analytics section"):
         if token not in builder:
             fail(f"Morning Green builder missing reader-friendly/week-strip/Instagram mapping {token!r}")
     if "WEEK_DAYS = 7" not in (PACK / "render_morning_green.py").read_text(encoding="utf-8"):
