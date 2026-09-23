@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "requestId": "morning-green-mobile-qa-b809615",
+  "to": "nocturney@gmail.com",
+  "subject": "[QA] Velvet Factory · Morning Green mobile · 23.9.2026",
+  "html": "packages/vfops/out/morning-green-mobile-qa-2026-09-23.html",
+  "visibleText": "packages/vfops/out/morning-green-2026-09-23.txt",
+  "images": "packages/vfops/out/morning-green-assets-2026-09-23",
+  "embedRemoteImages": true,
+  "remoteImageLimit": 8
+}
