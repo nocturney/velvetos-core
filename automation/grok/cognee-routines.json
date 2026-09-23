@@ -1,0 +1,28 @@
+{
+  "schema": "vf.grok.cognee-cutover.v1",
+  "requestedByOwnerOn": "2026-09-23",
+  "timezone": "Asia/Jerusalem",
+  "provider": "grok-bot",
+  "providerActivation": "pending_live_grok_readback",
+  "cutoverRule": "Keep ChatGPT copies enabled until both Grok routines exist, are enabled, and their cadence/prompt read back correctly. Then disable only the two matching ChatGPT automations.",
+  "chatgptCopies": {
+    "cognee-memory-sync": "6ab3734b12b0819199033ef833efc7f4",
+    "cognee-stable-updates": "6ab3734c95b081919188941903f4ec2c"
+  },
+  "routines": [
+    {
+      "id": "cognee-memory-sync",
+      "title": "Cognee Memory Sync",
+      "cadence": "daily 06:30",
+      "desiredEnabled": true,
+      "prompt": "Refresh the local Cognee-derived vfmem semantic index on the authorized Chris computer using the dedicated runtime clone at C:\\Users\\Chris\\.velvetos\\cognee-core and canonical nocturney/velvetos-core main only. Treat constitution/TAGS.md as the known Windows case-collision artifact only when it is the sole dirty path; any other dirty path is a blocker. Refresh only this dedicated clone from origin/main; never reset the separate operational working tree. Run packages\\vfmem\\scripts\\vf_cognee.py doctor with the live C:\\Users\\Chris\\.velvetos\\cognee-venv Python and require installedVersion == pinnedVersion, remoteProvidersAllowed=false, sourceCount=66, knowledgeProfile=velvetos-durable-v1, local FastEmbed sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2, and retrievalMode=chunks-with-canonical-provenance-v1. Run sync and require C:\\Users\\Chris\\.velvetos\\cognee\\active-state.json to become current only after added=true and cognified=true; retain legacy state.json as rollback evidence and never weaken atomic cutover. Run one bounded Hebrew scripts\\vfmem.py --json recall and require backend=cognee-local-derived, requiresCanonicalVerification=true, and canonicalSource provenance. Cognee remains derived context only: never write recalled content back into canonical memory, never ingest secrets/raw transcripts/customer-sensitive/live finance-production-publication-inventory-schedule state, and never enable a remote model provider implicitly. Stay silent when CURRENT and healthy; notify Christian only on a meaningful anomaly/blocker with exact evidence."
+    },
+    {
+      "id": "cognee-stable-updates",
+      "title": "Cognee Stable Updates",
+      "cadence": "Monday 10:00",
+      "desiredEnabled": true,
+      "prompt": "Check official topoteretes/cognee GitHub releases and PyPI for a newer stable release than packages/vfmem/cognee.json:pinnedVersion on current nocturney/velvetos-core main. Ignore dev, rc, beta and prerelease builds. Use only the dedicated runtime clone C:\\Users\\Chris\\.velvetos\\cognee-core; treat constitution/TAGS.md as the known Windows case-collision artifact only when it is the sole dirty path. If there is no newer stable release, verify runtime status/doctor and stay silent when healthy. For a newer stable release, read official compatibility notes first and stop on architectural/manual migration requirements, implicit remote/cloud model requirements, or unsupported host Python. Stage the exact candidate with packages\\vfmem\\scripts\\vf_cognee_runtime.py stage --version X.Y.Z in a separate venv and require the local/keyless smoke to pass. Never upgrade the live venv in place. If staging passes, create a narrow GitHub branch from current main updating the exact pin plus required docs/README/CHANGELOG, run check-cognee-integration.py and check-vfmem.py, open a PR, and require VelvetOS Core Sensors success on the exact PR head before merge. After merge refresh cognee-core from main, promote the exact staging receipt, preserve the previous live venv as rollback, run post-promotion doctor, sync the canonical 66-source durable allowlist with multilingual FastEmbed and provenance-mapped CHUNKS, require active-state.json current only after added=true and cognified=true, and verify bounded Hebrew recall returns cognee-local-derived with requiresCanonicalVerification=true and canonicalSource provenance. Roll back immediately on promotion/post-promotion failure. Notify Christian only when an update installs successfully, rollback occurs, or owner action is genuinely required."
+    }
+  ]
+}
