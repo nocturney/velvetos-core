@@ -80,6 +80,12 @@ def compact_attention(items: list[dict[str,str]]) -> list[dict[str,str]]:
     if out and out[0].get('title','').startswith('גבייה פתוחה אצל '):
         people=out[0]['title'].removeprefix('גבייה פתוחה אצל ').rstrip('.')
         out[0]={'title':'גבייה פתוחה','detail':people}
+    for item in out[1:]:
+        detail=str(item.get('detail') or '').strip().rstrip('.')
+        detail=re.sub(r'^סופק,\s*','',detail)
+        detail=detail.replace('טרם שולם, ','').replace('לגבייה, ','')
+        detail=detail.replace('מועד בגיליון ','מועד ')
+        item['detail']=detail
     return out
 
 def compact_progress(items: list[dict[str,str]]) -> list[dict[str,str]]:
@@ -91,7 +97,7 @@ def compact_progress(items: list[dict[str,str]]) -> list[dict[str,str]]:
             title='אירוע אחד היום - דיאנה ושון, 16:00-17:00 בבארי'
             detail=''
         elif title.startswith('הגבייה הפתוחה נשארה 4790'):
-            title='הגבייה הפתוחה נשארה 4790'
+            title='גבייה פתוחה: 4790'
             detail=''
         out.append({'title':title,'detail':detail})
     return out
@@ -133,7 +139,7 @@ def factual_datetime(factual: dict) -> datetime:
 
 def factual_date_label(factual: dict) -> str:
     d=factual_datetime(factual)
-    return f"{HE_DAYS[d.weekday()]} · {d.day} {HE_MONTHS[d.month]} {d.year}"
+    return f"{d.day} {HE_MONTHS[d.month]} {d.year}"
 
 def fallback_stats(factual: dict, sec: dict[str,list[str]]) -> list[dict[str,str]]:
     stats=[]

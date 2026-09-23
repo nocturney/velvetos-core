@@ -141,18 +141,20 @@ def instagram_metrics(data: object) -> tuple[str,str]:
         note_parts.append('Insights: '+str(row['insights_note']))
     return ''.join(cells), esc(' · '.join(note_parts))
 
-def item_grid(items: object, accent: str) -> str:
+def item_grid(items: object, accent: str, widths: list[float] | None = None) -> str:
     rows = list(items or [])[:4]
     if not rows:
         return '<td class="vf-item-cell" width="100%" dir="rtl" align="right" style="padding:12px 4px 2px;color:#7f847f;font-size:13px;line-height:19px;text-align:right">אין פריטים להצגה.</td>'
-    width = f"{100/len(rows):.3f}%"
+    if widths is None or len(widths) != len(rows):
+        widths = [100/len(rows)] * len(rows)
     cells: list[str] = []
     for idx, item in enumerate(rows):
         title = mixed_text(item.get("title") if isinstance(item, dict) else item)
         detail = mixed_text(item.get("detail") if isinstance(item, dict) else "")
         border = "" if idx == len(rows)-1 else "border-left:1px solid #e1d9cb;"
         detail_html = f'<div class="vf-item-detail" dir="rtl" style="font-size:10px;line-height:15px;color:#7f847f;margin-top:4px;text-align:right;overflow-wrap:anywhere">{detail}</div>' if detail else ""
-        cells.append(f'<td class="vf-item-cell" width="{width}" valign="top" dir="rtl" align="right" style="padding:13px 10px 4px;color:#17372d;text-align:right;overflow-wrap:anywhere;{border}"><div class="vf-item-title" style="font-size:12px;line-height:18px;font-weight:700"><span style="color:{accent}">&#9679;</span>&nbsp;{title}</div>{detail_html}</td>')
+        width = f"{widths[idx]:.3f}%"
+        cells.append(f'<td class="vf-item-cell" width="{width}" valign="top" dir="rtl" align="right" style="padding:11px 7px 3px;color:#17372d;text-align:right;overflow-wrap:anywhere;{border}"><div class="vf-item-title" style="font-size:11px;line-height:16px;font-weight:700"><span style="color:{accent}">&#9679;</span>&nbsp;{title}</div>{detail_html}</td>')
     return "".join(cells)
 
 def stat_cells(stats: object) -> str:
@@ -195,7 +197,7 @@ def render(data: dict, *, allow_local: bool = False, template: str | None = None
         "story_image_url": story_url, "story_image_alt": story_alt,
         "morning_line": esc(data["morning_line"]["text"]),
         "morning_line_note": esc(data["morning_line"].get("note") or ""),
-        "attention_html": item_grid(data.get("attention"), "#a85c44"),
+        "attention_html": item_grid(data.get("attention"), "#a85c44", [18.0, 27.333, 27.333, 27.334]),
         "progress_html": item_grid(data.get("progress"), "#4b8a64"),
         "radar_image_url": radar_url, "radar_image_alt": radar_alt,
         "radar_title": esc(data["radar"]["title"]), "radar_text": esc(data["radar"]["text"]),

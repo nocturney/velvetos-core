@@ -41,7 +41,7 @@ def main() -> None:
         "#15352b", "#f8f3e9", "#eee8dc", "MORNING EDITION", "בקרוב בפיד", "7 הימים הקרובים", "Instagram", "מצב החשבון",
         "{{scheduled_posts_html}}", "{{instagram_metrics_html}}", "{{instagram_note}}", "{{attention_html}}", "{{progress_html}}",
         "{{stats_html}}", "max-width:680px", "@media only screen and (max-width:680px)", "vf-hero-copy", "vf-hero-photo",
-        "vf-feed-thumb", "vf-insta-value", "vf-stat-value", "vf-item-cell", "vf-hero-img", "vf-story-img", "vf-radar-img", "ימים טובים עושים יותר", "{{radar_title}}", "max-width:420px", "max-width:460px", "{{footer_image_url}}",
+        "vf-feed-thumb", "vf-insta-value", "vf-stat-value", "vf-item-cell", "vf-hero-img", "vf-story-img", "vf-radar-img", "vf-brand", "vf-edition", "vf-date", "vf-hero-tag", "64%!important", "36%!important", "ימים טובים עושים יותר", "{{radar_title}}", "max-width:420px", "max-width:460px", "{{footer_image_url}}",
     ):
         if token not in template:
             fail(f"MORNING-GREEN.html missing {token!r}")
@@ -122,6 +122,8 @@ def main() -> None:
         fail("Morning Green renderer must isolate VF IDs for RTL mobile clients")
     if "rows.reverse()" not in renderer:
         fail("Morning Green KPI order must match the approved mockup visual order")
+    if "[18.0, 27.333, 27.333, 27.334]" not in renderer:
+        fail("Morning Green attention widths must protect VF IDs while matching the approved mockup")
 
     proc = subprocess.run([sys.executable, str(PACK / "render_morning_green.py"), "--check"], cwd=ROOT, text=True, capture_output=True)
     if proc.returncode != 0:
