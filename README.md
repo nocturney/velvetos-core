@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-23 — **Morning Green approved-concept visual correction:** replaced flat illustrative/generic decorative placeholders with the approved green concept vocabulary: a warm photographic morning still-life, …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-23 — **Morning Green approved-concept visual correction:** replaced flat illustrative/generic decorative placeholders with the approved green concept vocabulary: a warm photographic morning still-life, …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-23 — **Morning Green Gmail iPhone mobile QA repair:** replaced the legacy 920px email shell with a 680px fluid layout, hardened RTL/card alignment and compact feed/Instagram/KPI rows, constrained editor…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-23 — **Morning Green Gmail iPhone mobile QA repair:** replaced the legacy 920px email shell with a 680px fluid layout, hardened RTL/card alignment and compact feed/Instagram/KPI rows, constrained editor…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
