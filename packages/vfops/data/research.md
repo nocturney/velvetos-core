@@ -1,13 +1,13 @@
-# 05 · משרד · 22.9.2026
+# 05 · משרד · 23.9.2026
 
 מצב Research Seat: `ready_for_brief`.
 הריצה הושלמה לפני cutoff 07:00 Asia/Jerusalem.
 
 ## מה נבנה / יועל
-- MakerWorld «Make for Good» (PR 16.9) — אתגר נגישות עם 24 בריפים עד ~15.11; זוכים אמורים להיכנס לספריות פתוחות אחרי בדיקה. אצלנו: מעקב בלבד; בלי כניסה לתחרות מ-HQ ובלי מק״ט מדף.
-- Prusament PLA ColorMix (8.9) — מערכת צבעים CMYWK לסלייסר/רב-חומרים (עד ~45 גוונים). אצלנו: watch בלבד; לא מחסן יומיומי; ₪ בישראל = אין ספירה. נפרד מ־PLA Lightweight של 21.9.
-- QC מוקדם לפני ניקיון/הרכבה — go/no-go ויזואלי לפני שורפים זמן פוסט־פרוסס; על PRINT-DONE הקיים, בלי תוכנת חווה.
-- Social Intelligence: `nothing-solid`; בלי שינוי ל־CTA/reset/preflight.
-- Best Skills: due (~48ש מ־20.9) → `no-embed-existing-coverage` (`lastPass`→2026-09-22).
+- Bambu Studio 2.8.4 Public Beta (GitHub 22.9, `v02.08.04.57`) — אופטימיזציית נתיב מילוי monotonic במשטח העליון (פחות נסיעות) + שיפורי UX; אצלנו: watch / ניסוי ליד פרופיל יציב בלבד; ערוץ ייצור נשאר 2.8.2.x עד Public Release.
+- אישור הצעה בכתב לפני ייצור — שער המרה על `vfsales`/`vfconvert`: אין הדפסה עד אישור כתוב (שרשור אינסטגרם נחשב); מגבלת תיקונים בהצעה; בלי auto-DM ובלי ₪ מומצא.
+- ייבוש חוט לפי TDS (Prusa KB) — PLA ~45°C/6ש, PETG ~55°C/6ש; הרגל רצפה ב־`vfprod`, לא קניית מייבש מ-HQ.
+- סריקת MakerWorld (ד׳): Cloudflare חסם גוף רישיון — מועמדים ב־URL בלבד, `UNPROVEN`, **אין שם להציע** למדף.
+- Best Skills: לא due (`lastPass` 22.9, ~24ש).
 
-מקור מלא: `packages/vfresearch/sources/2026-09-22-orchestra.md`.
+מקור מלא: `packages/vfresearch/sources/2026-09-23-orchestra.md`.

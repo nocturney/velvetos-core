@@ -2,7 +2,7 @@
   "schema": 1,
   "surface": "owner-brief",
   "language": "he",
-  "text_sha256": "aed1344aa4a82e81ea459ef45854d02d0e636fce4ae6775fa1d6d3bf0d424743",
+  "text_sha256": "a12cc1b6feaec5f603fe43774c8fb60c69c976b62641f6749aeee4768f860ba3",
   "lint": {
     "status": "pass",
     "problems": [],

@@ -15,8 +15,8 @@
 
 ## System Pulse · דופק המערכת
 
-<!-- morning-green-production-cutover-2026-09-23 -->
-Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-green-2026-09-22.html` (Morning Green v3.1 · canonical GitHub/Apps Script/Gmail production-path QA verified 23.9.2026 · Gmail message `1a0ca4521ef56af0` · 6 CID images · OpenPost schedule truth).
+<!-- morning-green-2026-09-23 -->
+Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-green-2026-09-23.html` (Morning Green v3.1 · Research Seat 23.9 `ready_for_brief` · Jobs open collection 4790 · Calendar דיאנה/שון 16:00 · OpenPost Snake 24.9 09:00 + Octopus 27.9 12:00 · GitHub failover).
 
 
 <!-- OPERATIONAL-SNAPSHOT:START -->
