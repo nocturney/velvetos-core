@@ -121,7 +121,10 @@ def source_manifest(cfg: dict[str, Any]) -> tuple[str, list[dict[str, Any]]]:
 
 
 def state_path(root: Path) -> Path:
-    return root / "state.json"
+    # state.json is retained as legacy rollback evidence. On the Windows host it can
+    # be held open without delete-sharing, which prevents atomic replacement. The v2
+    # pointer uses a fresh filename so every cutover still goes through os.replace.
+    return root / "active-state.json"
 
 
 def read_state(root: Path) -> dict[str, Any] | None:

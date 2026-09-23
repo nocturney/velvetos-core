@@ -53,9 +53,11 @@ build can resume without moving the active state pointer to a partial dataset.
 Recall uses explicit `CHUNKS` retrieval. Each returned chunk is mapped through the
 active state's `documentMap` to its canonical source path, SHA-256, category,
 authority and freshness. Missing provenance fails closed and `vfmem.py recall` falls
-back to the built-in local graph/search path. The local state pointer is written with a
-unique same-directory temp file, `fsync`, bounded Windows replace retries and JSON
-readback verification before the cutover is accepted.
+back to the built-in local graph/search path. The live pointer is
+`~/.velvetos/cognee/active-state.json`; the legacy `state.json` is retained as rollback
+evidence because the Windows host can hold that filename open without delete-sharing.
+The active pointer is written with a unique same-directory temp file, `fsync`, bounded
+Windows replace retries and JSON readback verification before the cutover is accepted.
 
 ## Durable knowledge profile
 

@@ -120,6 +120,7 @@ def main() -> None:
         "PermissionError", "atomic JSON readback mismatch",
         "materialize_ingest_files", "documentMap", "SearchType.CHUNKS",
         "canonicalSource", "chunks-with-canonical-provenance-v1",
+        "active-state.json", "legacy rollback evidence",
     ):
         if needle not in adapter and needle not in CFG.read_text(encoding="utf-8"):
             fail(f"adapter/config missing safety marker {needle}")
