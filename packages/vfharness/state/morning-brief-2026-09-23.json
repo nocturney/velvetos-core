@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-23",
+  "surface": "morning-brief",
+  "mode": "PRODUCTION",
+  "route": "Morning Green v3.1",
+  "research": "ready_for_brief",
+  "research_pr": 308,
+  "jobs_open_collection": 4790,
+  "instagram_followers": 81,
+  "instagram_media": 5,
+  "latest_feed": "DdgkjZGG7mw",
+  "calendar_events": 1,
+  "openpost_scheduled": 2,
+  "failover": "cloud-agent-usage-exhausted-github-api",
+  "visible_text_sha256": "a12cc1b6feaec5f603fe43774c8fb60c69c976b62641f6749aeee4768f860ba3",
+  "visible_text_gate": "PASS",
+  "send_request_id": "morning-green-2026-09-23"
+}

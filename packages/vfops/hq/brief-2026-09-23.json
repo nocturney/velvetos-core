@@ -1,9 +1,11 @@
 {
   "date": "2026-09-23",
-  "version": "V10.3",
+  "date_line": "23.9.2026 · Morning Green v3.1 · Asia/Jerusalem",
+  "version": "Morning-Green-v3.1",
   "timezone": "Asia/Jerusalem",
-  "research_status": "missing_2026-09-23; last_verified_ready_for_brief_2026-09-22",
+  "research_status": "ready_for_brief",
   "open_collection": 4790,
+  "bottom_line": "כל חמש העבודות בגיליון VF HQ · jobs מסומנות כסופקו. שלוש יתרות פתוחות מאומתות גם ב-VF HQ · books: סינקופה 4350, ודים 320, אלה+לוגו 120. סך הגבייה הפתוחה 4790. ביומן יש אירוע אחד היום, דיאנה, שון, 16:00 עד 17:00 בבארי. Instagram חי: 81 עוקבים, 5 פריטים, והפיד האחרון הוא מגש הדרקון מ-20.9.",
   "kpis": [
     {"value": 4790, "label": "גבייה פתוחה"},
     {"value": 1, "label": "אירועי יומן היום"},
@@ -16,6 +18,7 @@
     "books": "VF HQ · books live read 2026-09-23",
     "calendar": "Google Calendar primary, 2026-09-23 Asia/Jerusalem",
     "instagram": "@velvets_cloud live read 2026-09-23",
-    "openpost": "openpost-morning-snapshot observed 2026-09-23T06:06:37.023077Z"
+    "openpost": "openpost-morning-snapshot observed 2026-09-23T06:06:37.023077Z",
+    "research": "packages/vfops/data/research.md 23.9.2026 ready_for_brief (PR 308)"
   }
 }
