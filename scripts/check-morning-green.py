@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Offline contract sensor for the Morning Green owner brief."""
 from __future__ import annotations
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -27,6 +28,9 @@ def main() -> None:
         ROOT / "packages" / "vfigos" / "openpost_morning_snapshot.py",
         ROOT / "packages" / "vfigos" / "run_openpost_morning_snapshot.ps1",
         ROOT / "packages" / "vfigos" / "materialize_openpost_morning_thumbnails.ps1",
+        ROOT / "automation" / "grok" / "CONTRACT.md",
+        ROOT / "automation" / "grok" / "manifest.json",
+        ROOT / "packages" / "vfops" / "ROUTINE.md",
     ]
     for path in required:
         if not path.is_file():
@@ -75,6 +79,24 @@ def main() -> None:
     for token in ("multipart/related", "Content-ID", "embed_remote_images"):
         if token not in sender:
             fail(f"Gmail sender missing CID capability {token!r}")
+
+    grok_contract = (ROOT / "automation" / "grok" / "CONTRACT.md").read_text(encoding="utf-8")
+    for token in ("09:00 owner brief must use Morning Green v3.1", "V10.3 remains available only for legacy/recovery", "Apps Script bridge v5 health"):
+        if token not in grok_contract:
+            fail(f"Grok owner-email authority missing Morning Green cutover token {token!r}")
+    grok_manifest = json.loads((ROOT / "automation" / "grok" / "manifest.json").read_text(encoding="utf-8"))
+    if int(grok_manifest.get("version", 0)) < 2 or grok_manifest.get("morningGreenCutoverDate") != "2026-09-23":
+        fail("Grok manifest missing Morning Green production cutover version/date")
+    authority = grok_manifest.get("ownerEmailAuthority") or {}
+    if not str(authority.get("design") or "").startswith("Morning Green v3.1"):
+        fail("Grok ownerEmailAuthority is not Morning Green v3.1")
+    morning = next((x for x in grok_manifest.get("routines", []) if x.get("id") == "velvet-morning-brief"), None)
+    if not morning or "Morning Green v3.1" not in str(morning.get("responsibility") or ""):
+        fail("protected 09:00 routine is not bound to Morning Green v3.1")
+    routine = (ROOT / "packages" / "vfops" / "ROUTINE.md").read_text(encoding="utf-8")
+    for token in ("09:00** | Velvet Morning Brief | Owner-facing Morning Green v3.1", "10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 Morning Green delivery", "must not silently downgrade to V10.3"):
+        if token not in routine:
+            fail(f"vfops ROUTINE missing Morning Green production rule {token!r}")
 
     builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
     preparer = (PACK / "prepare_morning_green.py").read_text(encoding="utf-8")
