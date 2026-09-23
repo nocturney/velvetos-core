@@ -165,7 +165,7 @@ def render(data: dict, *, allow_local: bool = False, template: str | None = None
     radar_url = safe_image((data.get("radar") or {}).get("image", {}).get("url") or DECOR["radar"][0], allow_local)
     radar_alt = esc((data.get("radar") or {}).get("image", {}).get("alt") or DECOR["radar"][1])
     footer_url = safe_image((data.get("footer") or {}).get("image", {}).get("url") or DECOR["footer"][0], allow_local)
-    footer_alt = esc((data.get("footer") or {}).get("image", {}).get("alt") or DECOR["footer"][1])
+    footer_alt = esc((data.get("footer") or {}).get("image", {}).get("alt") or (data.get("footer") or {}).get("quote") or DECOR["footer"][1])
     instagram_html, instagram_note = instagram_metrics(data.get('instagram'))
     values = {
         "email_title": esc(data.get("email_title") or "Velvet Factory - Morning Brief"),
