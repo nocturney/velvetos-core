@@ -141,20 +141,50 @@ def main() -> None:
 
     grok_manifest = json.loads(GROK_MANIFEST.read_text(encoding="utf-8"))
     cutover = grok_manifest.get("cogneeCutover") or {}
-    if int(grok_manifest.get("version", 0)) < 3:
-        fail("Grok manifest must include Cognee cutover contract v3+")
+    if int(grok_manifest.get("version", 0)) < 4:
+        fail("Grok manifest must include verified Cognee cutover contract v4+")
     if cutover.get("packet") != "automation/grok/cognee-routines.json":
         fail("Grok manifest is not bound to Cognee cutover packet")
-    if cutover.get("providerActivation") != "pending_live_grok_readback":
-        fail("Cognee Grok provider state must fail closed until live readback")
-    if cutover.get("chatgptCopies") != "remain_enabled_until_verified_grok_readback":
-        fail("ChatGPT Cognee copies must remain enabled until verified Grok readback")
+    if cutover.get("providerActivation") != "live_verified":
+        fail("Cognee Grok provider state must remain live_verified after cutover")
+    if cutover.get("chatgptCopies") != "disabled_after_verified_grok_readback":
+        fail("ChatGPT Cognee copies must stay disabled after verified Grok cutover")
+    if cutover.get("verifiedDate") != "2026-09-23":
+        fail("Cognee Grok cutover verification date missing")
+    if cutover.get("providerRoutineIds") != {
+        "cognee-memory-sync": "cognee-memory-sync",
+        "cognee-stable-updates": "cognee-stable-updates",
+    }:
+        fail("unexpected live Grok Cognee provider routine IDs")
+    guard_binding = cutover.get("integrityGuard") or {}
+    if guard_binding.get("providerRoutineId") != "velvetos-integrity-guard":
+        fail("Integrity Guard provider binding missing after Cognee cutover")
+    if guard_binding.get("enabled") is not True or guard_binding.get("cadence") != "daily 01:45":
+        fail("Integrity Guard enabled/cadence drift after Cognee cutover")
+    if guard_binding.get("protectedRoutineCount") != 9:
+        fail("Integrity Guard must protect nine routines after Cognee cutover")
+
+    manifest_routines = {row.get("id"): row for row in (grok_manifest.get("routines") or [])}
+    expected_manifest = {
+        "cognee-memory-sync": "daily 06:30",
+        "cognee-stable-updates": "Monday 10:00",
+    }
+    if len(manifest_routines) != 9:
+        fail("Grok manifest must contain the nine protected routines")
+    for routine_id, cadence in expected_manifest.items():
+        row = manifest_routines.get(routine_id) or {}
+        if row.get("cadence") != cadence or row.get("enabled") is not True:
+            fail(f"verified Grok manifest drift for {routine_id}")
 
     grok_packet = json.loads(GROK_COGNEE.read_text(encoding="utf-8"))
     if grok_packet.get("schema") != "vf.grok.cognee-cutover.v1":
         fail("unexpected Cognee Grok cutover packet schema")
-    if grok_packet.get("providerActivation") != "pending_live_grok_readback":
-        fail("Cognee Grok packet must not claim provider activation without readback")
+    if grok_packet.get("providerActivation") != "live_verified":
+        fail("Cognee Grok packet must preserve verified provider activation")
+    if grok_packet.get("verifiedReadbackOn") != "2026-09-23":
+        fail("Cognee Grok packet missing verified readback date")
+    if grok_packet.get("chatgptCopiesState") != "disabled_after_verified_grok_readback":
+        fail("Cognee Grok packet must record disabled ChatGPT copies")
     copies = grok_packet.get("chatgptCopies") or {}
     expected_copies = {
         "cognee-memory-sync": "6ab3734b12b0819199033ef833efc7f4",
@@ -175,8 +205,39 @@ def main() -> None:
         for needle in ("66", "active-state.json", "canonicalSource", "requiresCanonicalVerification=true"):
             if needle not in prompt:
                 fail(f"Grok Cognee prompt {routine_id} missing {needle}")
-    if "Keep ChatGPT copies enabled until both Grok routines exist" not in str(grok_packet.get("cutoverRule") or ""):
-        fail("Cognee Grok cutover must preserve ChatGPT copies until provider proof")
+
+    verified = grok_packet.get("verifiedReadback") or {}
+    expected_readback = {
+        "cognee-memory-sync": "CRON_TZ=Asia/Jerusalem 30 6 * * *",
+        "cognee-stable-updates": "CRON_TZ=Asia/Jerusalem 0 10 * * 1",
+    }
+    for routine_id, schedule in expected_readback.items():
+        row = verified.get(routine_id) or {}
+        if row.get("providerRoutineId") != routine_id:
+            fail(f"verified Grok provider ID drift for {routine_id}")
+        if row.get("active") is not True or row.get("timezone") != "Asia/Jerusalem":
+            fail(f"verified Grok active/timezone drift for {routine_id}")
+        if row.get("schedule") != schedule or row.get("instructionMatchesCanonicalPacket") is not True:
+            fail(f"verified Grok schedule/instruction drift for {routine_id}")
+
+    guard = verified.get("integrityGuard") or {}
+    if guard.get("providerRoutineId") != "velvetos-integrity-guard":
+        fail("verified Integrity Guard provider ID missing")
+    if guard.get("active") is not True or guard.get("timezone") != "Asia/Jerusalem":
+        fail("verified Integrity Guard active/timezone drift")
+    if guard.get("schedule") != "CRON_TZ=Asia/Jerusalem 45 1 * * *":
+        fail("verified Integrity Guard schedule drift")
+    if guard.get("protectedRoutineCount") != 9:
+        fail("verified Integrity Guard must protect nine routines")
+    expected_titles = {
+        "VelvetOS Integrity Guard", "Velvet Research Seat", "OpenPost Release Watch",
+        "Velvet Morning Brief", "Morning Delivery Guard", "VelvetOS Office Loop",
+        "Weekly Research Accountability", "Cognee Memory Sync", "Cognee Stable Updates",
+    }
+    if set(guard.get("protectedRoutineTitles") or []) != expected_titles:
+        fail("verified Integrity Guard protected-title set drift")
+    if "sole scheduler" not in str(grok_packet.get("cutoverRule") or ""):
+        fail("Cognee Grok cutover packet must record Grok as sole scheduler")
 
     print(f"OK cognee pin={version} role=derived fallback=vfmem sources={len(sync.get('sources', []))}")
 
