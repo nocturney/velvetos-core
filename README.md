@@ -18,6 +18,8 @@
 <!-- morning-green-2026-09-23 -->
 Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-green-2026-09-23.html` (Morning Green v3.1 · Research Seat 23.9 `ready_for_brief` · Jobs open collection 4790 · Calendar דיאנה/שון 16:00 · OpenPost Snake 24.9 09:00 + Octopus 27.9 12:00 · GitHub failover).
 
+**Memory backend:** `vfmem` remains canonical; Cognee `1.6.0` is integrated as an optional local/keyless derived semantic index with content-hash datasets, canonical-source verification, deterministic vfmem fallback, and staged smoke-tested rollback updates. See `packages/vfmem/COGNEE.md`.
+
 
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>
@@ -29,7 +31,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>78</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>79</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>9</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -49,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-23 — **Morning Green v3.1 production cutover:** promoted the editorial green RTL/Desktop-first route to the canonical 09:00 owner brief after the full production path passed: live OpenPost schedule read…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-23 — **Morning Green v3.1 production cutover:** promoted the editorial green RTL/Desktop-first route to the canonical 09:00 owner brief after the full production path passed: live OpenPost schedule read…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-23 — **Cognee semantic memory backend:** integrated Cognee 1.6.0 behind canonical `vfmem` as an optional local/keyless derived index. Sync uses content-hash versioned datasets over an explicit canonical…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-23 — **Cognee semantic memory backend:** integrated Cognee 1.6.0 behind canonical `vfmem` as an optional local/keyless derived index. Sync uses content-hash versioned datasets over an explicit canonical…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
