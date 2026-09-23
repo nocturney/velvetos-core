@@ -209,6 +209,8 @@ def main() -> int:
     ][:3]
     radar_text=' '.join(radar_lines) if radar_lines else 'אין פריט רדאר מאומת נוסף.'
     overview=reader_friendly(sec['תמונת מצב עכשיו'][0]) if sec.get('תמונת מצב עכשיו') else reader_friendly(str(factual.get('bottom_line') or '').strip())
+    # Instagram has its own dedicated analytics section; keep the hero summary free of duplicate account metrics.
+    overview=re.sub(r'\s*Instagram חי:.*$', '', overview).strip()
     story_source=attention[0]['title'] if attention else (progress[0]['title'] if progress else overview)
     story_items=attention[1:4] if len(attention)>1 else attention[:3]
     story_body=' '.join((x.get('title','')+(' - '+x.get('detail','') if x.get('detail') else '')).strip() for x in story_items).strip()

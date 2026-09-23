@@ -7,8 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-09-23 — **Morning Green approved editorial visual language:** replaced the generic atmosphere images with crops from the approved green concept language: warm still-life hero, olive-leaf story detail, muted landscape radar and handwritten closing signature. The hero is now a true editorial split composition instead of a full-width stock banner, and the closing quote is carried visually by the approved signature asset rather than duplicated as a second large text block.
-
 - 2026-09-23 — **Morning Green editorial atmosphere alignment:** replaced the generic decorative-image set with one cohesive vocabulary matching the approved green concept: warm morning still-life, dark olive detail, muted olive-grove landscape and a handwritten closing signature. The hero is now a true two-column editorial opening with live copy beside the still-life; the handwritten footer line is no longer duplicated as a second large HTML quote. Added sensor checks for the split hero, footer non-duplication and non-placeholder asset sizes. No schedule, Instagram analytics, Gmail transport or publication semantics changed.
 
 - 2026-09-23 — **Cognee semantic memory backend:** integrated Cognee 1.6.0 behind canonical `vfmem` as an optional local/keyless derived index. Sync uses content-hash versioned datasets over an explicit canonical allowlist; recall is context-only and requires canonical verification, with automatic fallback to the existing vfmem search. Added a static CI sensor, operator runbook, exact version pin, remote-provider deny-by-default policy, and staged smoke/rollback update gates.
