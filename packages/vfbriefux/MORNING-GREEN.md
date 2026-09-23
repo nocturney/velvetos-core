@@ -9,8 +9,9 @@
 - canvas דסקטופ עד 920px; מובייל נערם לטור אחד מתחת ל־680px.
 - פתיחה מצולמת, hero ירוק, כרטיסים מעוגלים, הרבה whitespace, תמונות בתוך המדורים וחתימת סוף.
 - אין navigation, menu, ellipsis, controls או כפתורים מדומים.
-- אזור `בקרוב באינסטגרם` נמצא בראש המייל.
-- עד 4 כרטיסי תוכן: thumbnail, תאריך/סטטוס, שעה וסוג.
+- אזור `בקרוב בפיד` נמצא בראש המייל כרצועת שבוע אחת.
+- הרצועה מציגה תמיד את 7 הימים הקרובים, עמודה לכל יום, עם thumbnail קטן + שעה/סוג רק כשיש schedule חי; יום ללא פרסום נשאר תא שקט ולא מומצא.
+- `Instagram` הוא מדור נפרד ללא thumbnails: עוקבים, מעורבות מאומתת בפוסט האחרון, שינוי מאז הבריף הקודם, והערת Insights/Reach רק אם המקור מספק אותם.
 
 ## אמת בפרסום
 
@@ -45,7 +46,8 @@
 
 ה־JSON ל־`render_morning_green.py` כולל:
 - `date_label, greeting, daily_summary, preheader`
-- `scheduled_posts[]`: `image_url, image_alt, date_label, time_label, type_label, status_label`
+- `scheduled_posts[]`: בדיוק 7 תאי יום עם `day_label, date_label, has_post, time_label, type_label, extra_count`; בימים מתוזמנים נוספים גם `image_url, image_alt`.
+- `instagram`: `followers, following, media_count, latest{likes,comments,date_label}, previous{likes,comments,date_label}, change_text, insights_available, insights_note`.
 - `story{title,body,image}`
 - `morning_line{text,note}`
 - `attention[]`, `progress[]`
