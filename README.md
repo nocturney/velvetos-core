@@ -16,7 +16,7 @@
 ## System Pulse · דופק המערכת
 
 <!-- morning-green-2026-09-23 -->
-Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-green-2026-09-23.html` (Morning Green v3.1 · Research Seat 23.9 `ready_for_brief` · Jobs open collection 4790 · Calendar דיאנה/שון 16:00 · OpenPost Snake 24.9 09:00 + Octopus 27.9 12:00 · GitHub failover).
+Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-green-2026-09-23.html` (Morning Green v3.1 · Research Seat 23.9 `ready_for_brief` · Jobs open collection 4790 · Calendar דיאנה/שון 16:00 · OpenPost Snake 24.9 09:00 + Octopus 27.9 12:00 · GitHub failover). Mobile layout hardening removes the legacy 920px shell and is locally verified at 320-680px; real Gmail iPhone visual QA remains pending.
 
 **Memory backend:** `vfmem` remains canonical; Cognee `1.6.0` is integrated as an optional local/keyless derived semantic index with content-hash datasets, canonical-source verification, deterministic vfmem fallback, and staged smoke-tested rollback updates. See `packages/vfmem/COGNEE.md`.
 
