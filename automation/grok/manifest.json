@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "provider": "grok-bot",
   "bot": "Chief of Staff",
   "timezone": "Asia/Jerusalem",
@@ -9,8 +9,19 @@
   "cogneeCutover": {
     "requestedDate": "2026-09-23",
     "packet": "automation/grok/cognee-routines.json",
-    "providerActivation": "pending_live_grok_readback",
-    "chatgptCopies": "remain_enabled_until_verified_grok_readback"
+    "providerActivation": "live_verified",
+    "chatgptCopies": "disabled_after_verified_grok_readback",
+    "verifiedDate": "2026-09-23",
+    "providerRoutineIds": {
+      "cognee-memory-sync": "cognee-memory-sync",
+      "cognee-stable-updates": "cognee-stable-updates"
+    },
+    "integrityGuard": {
+      "providerRoutineId": "velvetos-integrity-guard",
+      "enabled": true,
+      "cadence": "daily 01:45",
+      "protectedRoutineCount": 9
+    }
   },
   "productionScheduler": "grok-bot-routines",
   "previousSchedulers": {
@@ -41,6 +52,13 @@
       "responsibility": "daily research and canonical artifact before 07:00 cutoff"
     },
     {
+      "id": "cognee-memory-sync",
+      "title": "Cognee Memory Sync",
+      "cadence": "daily 06:30",
+      "enabled": true,
+      "responsibility": "refresh and verify the local derived Cognee/vfmem index; silent when current and healthy"
+    },
+    {
       "id": "openpost-release-watch",
       "title": "OpenPost Release Watch",
       "cadence": "daily 07:15",
@@ -60,6 +78,13 @@
       "cadence": "daily 10:00",
       "enabled": true,
       "responsibility": "verify 09:00 delivery; one full-fidelity recovery if needed"
+    },
+    {
+      "id": "cognee-stable-updates",
+      "title": "Cognee Stable Updates",
+      "cadence": "Monday 10:00",
+      "enabled": true,
+      "responsibility": "watch stable Cognee releases; staged smoke/PR/CI/promotion with rollback and action-only notification"
     },
     {
       "id": "velvetos-office-loop",

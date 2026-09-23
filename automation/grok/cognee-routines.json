@@ -3,8 +3,8 @@
   "requestedByOwnerOn": "2026-09-23",
   "timezone": "Asia/Jerusalem",
   "provider": "grok-bot",
-  "providerActivation": "pending_live_grok_readback",
-  "cutoverRule": "Keep ChatGPT copies enabled until both Grok routines exist, are enabled, and their cadence/prompt read back correctly. Then disable only the two matching ChatGPT automations.",
+  "providerActivation": "live_verified",
+  "cutoverRule": "Live Grok readback verified both routines before the two matching ChatGPT copies were disabled. Grok is now the sole scheduler for these two Cognee routines.",
   "chatgptCopies": {
     "cognee-memory-sync": "6ab3734b12b0819199033ef833efc7f4",
     "cognee-stable-updates": "6ab3734c95b081919188941903f4ec2c"
@@ -24,5 +24,46 @@
       "desiredEnabled": true,
       "prompt": "Check official topoteretes/cognee GitHub releases and PyPI for a newer stable release than packages/vfmem/cognee.json:pinnedVersion on current nocturney/velvetos-core main. Ignore dev, rc, beta and prerelease builds. Use only the dedicated runtime clone C:\\Users\\Chris\\.velvetos\\cognee-core; treat constitution/TAGS.md as the known Windows case-collision artifact only when it is the sole dirty path. If there is no newer stable release, verify runtime status/doctor and stay silent when healthy. For a newer stable release, read official compatibility notes first and stop on architectural/manual migration requirements, implicit remote/cloud model requirements, or unsupported host Python. Stage the exact candidate with packages\\vfmem\\scripts\\vf_cognee_runtime.py stage --version X.Y.Z in a separate venv and require the local/keyless smoke to pass. Never upgrade the live venv in place. If staging passes, create a narrow GitHub branch from current main updating the exact pin plus required docs/README/CHANGELOG, run check-cognee-integration.py and check-vfmem.py, open a PR, and require VelvetOS Core Sensors success on the exact PR head before merge. After merge refresh cognee-core from main, promote the exact staging receipt, preserve the previous live venv as rollback, run post-promotion doctor, sync the canonical 66-source durable allowlist with multilingual FastEmbed and provenance-mapped CHUNKS, require active-state.json current only after added=true and cognified=true, and verify bounded Hebrew recall returns cognee-local-derived with requiresCanonicalVerification=true and canonicalSource provenance. Roll back immediately on promotion/post-promotion failure. Notify Christian only when an update installs successfully, rollback occurs, or owner action is genuinely required."
     }
-  ]
+  ],
+  "verifiedReadbackOn": "2026-09-23",
+  "chatgptCopiesState": "disabled_after_verified_grok_readback",
+  "verifiedReadback": {
+    "cognee-memory-sync": {
+      "providerRoutineId": "cognee-memory-sync",
+      "active": true,
+      "timezone": "Asia/Jerusalem",
+      "schedule": "CRON_TZ=Asia/Jerusalem 30 6 * * *",
+      "instructionMatchesCanonicalPacket": true
+    },
+    "cognee-stable-updates": {
+      "providerRoutineId": "cognee-stable-updates",
+      "active": true,
+      "timezone": "Asia/Jerusalem",
+      "schedule": "CRON_TZ=Asia/Jerusalem 0 10 * * 1",
+      "instructionMatchesCanonicalPacket": true
+    },
+    "integrityGuard": {
+      "providerRoutineId": "velvetos-integrity-guard",
+      "active": true,
+      "timezone": "Asia/Jerusalem",
+      "schedule": "CRON_TZ=Asia/Jerusalem 45 1 * * *",
+      "protectedRoutineCount": 9,
+      "protectedRoutineTitles": [
+        "VelvetOS Integrity Guard",
+        "Velvet Research Seat",
+        "OpenPost Release Watch",
+        "Velvet Morning Brief",
+        "Morning Delivery Guard",
+        "VelvetOS Office Loop",
+        "Weekly Research Accountability",
+        "Cognee Memory Sync",
+        "Cognee Stable Updates"
+      ],
+      "preservedSemantics": [
+        "finite single-pass",
+        "positive protection",
+        "never delete or disable unknown unlisted routines"
+      ]
+    }
+  }
 }

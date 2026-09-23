@@ -8,19 +8,20 @@ Asia/Jerusalem. The **live protected Grok Bot routine inventory** is the clock a
 |---|---|---|
 | **01:45** | VelvetOS Integrity Guard | Verify/repair the protected active automation set before daily workloads. |
 | **02:00** | Velvet Research Seat | Daily live research. Finish by the **07:00 cutoff** as `ready_for_brief`, `no_meaningful_findings`, or an explicit blocker. Consumer output is `packages/vfops/data/research.md` for the 09:00 brief. |
+| **06:30** | Cognee Memory Sync | Refresh/verify the local derived Cognee/vfmem index; stay silent when current and healthy, report exact blockers/anomalies only. |
 | **07:15** | OpenPost Release Watch | Daily condition watch for upstream OpenPost changes; silent when unchanged. |
 | **09:00** | Velvet Morning Brief | Owner-facing Morning Green v3.1 brief from current live sources. Persist the same-day canonical factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`, refresh OpenPost schedule truth and materialized thumbnails, project through `prepare_morning_green.py`, then deliver only through the canonical GitHub/Gmail path. Delivery still requires Gmail provider evidence, not merely generated files. |
 | **10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 Morning Green delivery; recover only if absent/unverified. Recovery must persist/rebuild the same-day factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`, refresh current OpenPost evidence, rebuild the same Morning Green route and use the canonical Gmail path. `backfill artifact is not a delivery receipt`, and recovery must not silently downgrade to V10.3. |
 | **10:30** | VelvetOS Office Loop | Post-brief operations: blockers, production→content, readiness/publishing and system drift. |
 | **18:30** | VelvetOS Office Loop | Second sweep: changes since morning, autonomous completion, learning/state persistence and end-of-day handoff. |
 
-Weekly / קאדנס שבועי: `Weekly Research Accountability` runs Friday at 12:00. Repository-owned GitHub workflows keep their own schedules; Office Loop consumes their evidence rather than duplicating their cron.
+Weekly / קאדנס שבועי: `Cognee Stable Updates` runs Monday at 10:00 and `Weekly Research Accountability` runs Friday at 12:00. Repository-owned GitHub workflows keep their own schedules; Office Loop consumes their evidence rather than duplicating their cron.
 
-## Pending Grok cutover: Cognee routines
+## Live Grok Cognee routines
 
-Owner request 2026-09-23: move `Cognee Memory Sync` (daily 06:30) and `Cognee Stable Updates` (Monday 10:00) from ChatGPT scheduling to Grok Bot. The locked provider packet is `automation/grok/cognee-routines.json`. Until live Grok readback verifies both routines exist, are enabled, and match cadence/prompt intent, the two ChatGPT copies remain enabled and these routines are not part of the live protected Grok set. After verified readback, disable only ChatGPT automation IDs `6ab3734b12b0819199033ef833efc7f4` and `6ab3734c95b081919188941903f4ec2c`.
+`Cognee Memory Sync` (`cognee-memory-sync`) and `Cognee Stable Updates` (`cognee-stable-updates`) are live, enabled Grok Bot routines in `Asia/Jerusalem`, verified by provider readback on 2026-09-23. Their exact prompts, schedules and readback evidence are recorded in `automation/grok/cognee-routines.json`. The two matching ChatGPT automation copies were disabled only after that verification, so Grok Bot is now the sole scheduler for these two jobs.
 
-`VelvetOS Integrity Guard` is a finite single-pass 01:45 audit. It repairs only the protected routines, verifies once, then exits; it is not a continuous monitor. The protected-set contract does not authorize deleting, pausing, or rewriting a new unlisted routine merely because it is outside the seven protected entries. Known legacy routines remain disabled; an unknown extra routine is left untouched and surfaced as a conflict unless Christian explicitly authorizes removal.
+`VelvetOS Integrity Guard` is a finite single-pass 01:45 audit. It repairs only the protected routines, verifies once, then exits; it is not a continuous monitor. The protected-set contract does not authorize deleting, pausing, or rewriting a new unlisted routine merely because it is outside the nine protected entries. Known legacy routines remain disabled; an unknown extra routine is left untouched and surfaced as a conflict unless Christian explicitly authorizes removal.
 
 
 ## Canonical ownership
