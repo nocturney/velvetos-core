@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 
 PACK = Path(__file__).resolve().parent
 TEMPLATE = PACK / "MORNING-GREEN.html"
-MAX_POSTS = 4
+WEEK_DAYS = 7
 MAX_LIST_ITEMS = 6
 DECOR = {
     "top": ("cid:morning-top.jpg", "אווירת בוקר ירוקה"),
@@ -58,30 +58,34 @@ def replace_tokens(template: str, values: dict[str, str]) -> str:
     return out
 
 def post_cards(posts: object, allow_local: bool) -> str:
-    rows = list(posts or [])[:MAX_POSTS]
-    if not rows:
-        return '<td style="padding:16px 10px;color:#6d746e;font-size:14px">אין כרגע פרסום מתוזמן או מדיה מאושרת להצגה.</td>'
-    width = {1:"100%",2:"50%",3:"33.333%",4:"25%"}[len(rows)]
-    image_width = {1:820,2:410,3:274,4:205}[len(rows)]
+    rows = list(posts or [])
+    if len(rows) != WEEK_DAYS:
+        raise ValueError(f"7-day feed strip requires exactly {WEEK_DAYS} calendar cells, got {len(rows)}")
     cells: list[str] = []
     for post in rows:
-        img = safe_image(post.get("image_url"), allow_local)
-        alt = esc(post.get("image_alt") or "תצוגה מקדימה של פוסט")
+        day = esc(post.get("day_label") or "")
         date = esc(post.get("date_label") or "")
+        has_post = bool(post.get("has_post"))
         time_raw = str(post.get("time_label") or "").strip()
         time = esc(time_raw)
         kind = esc(post.get("type_label") or "")
-        status = esc(post.get("status_label") or "")
-        is_clock = bool(re.fullmatch(r"[0-2]?\d:[0-5]\d", time_raw))
-        direction, align = ("ltr","left") if is_clock else ("rtl","right")
-        badge = (f'<span style="display:inline-block;background:#e8dfcb;color:#725b35;border-radius:999px;padding:4px 8px;font-size:10px;line-height:14px;font-weight:700">{status}</span>') if status else ""
-        cells.append(f'''<td class="vf-post" width="{width}" valign="top" style="padding:0 6px 8px">
-<table role="presentation" width="100%" bgcolor="#fffdf8" style="background:#fffdf8;border-radius:17px;overflow:hidden">
-<tr><td><img src="{img}" alt="{alt}" width="{image_width}" style="width:100%;height:auto"></td></tr>
-<tr><td style="padding:11px 12px 4px;color:#9b7840;font-size:12px;line-height:17px;font-weight:700">{date}</td></tr>
-<tr><td dir="{direction}" align="{align}" style="padding:0 12px;color:#17372d;font-size:21px;line-height:26px;font-weight:700">{time}</td></tr>
-<tr><td style="padding:4px 12px 12px;color:#6f766f;font-size:12px;line-height:18px">{kind}{('&nbsp;&nbsp;'+badge) if badge else ''}</td></tr>
-</table></td>''')
+        extra = int(post.get("extra_count") or 0)
+        if has_post:
+            img = safe_image(post.get("image_url"), allow_local)
+            alt = esc(post.get("image_alt") or "תצוגה מקדימה של פוסט מתוזמן")
+            thumb = f'<img src="{img}" alt="{alt}" width="82" style="width:100%;max-width:82px;height:74px;object-fit:cover;border-radius:11px;margin:0 auto">'
+            meta = kind + (f' +{extra}' if extra else '')
+            time_html = f'<div dir="ltr" style="font-size:13px;line-height:17px;font-weight:700;color:#17372d;margin-top:6px">{time}</div>'
+            meta_html = f'<div style="font-size:9px;line-height:13px;color:#6f766f;margin-top:1px;white-space:nowrap">{meta}</div>'
+        else:
+            thumb = '<table role="presentation" width="100%" bgcolor="#eef0e8" style="background:#eef0e8;border-radius:11px"><tr><td align="center" height="74" style="height:74px;color:#a3aaa4;font-size:16px">–</td></tr></table>'
+            time_html = '<div style="font-size:13px;line-height:17px;color:#a3aaa4;margin-top:6px">&nbsp;</div>'
+            meta_html = '<div style="font-size:9px;line-height:13px;color:#a3aaa4;margin-top:1px">&nbsp;</div>'
+        cells.append(f'''<td class="vf-week-day" width="14.285%" valign="top" align="center" style="padding:0 4px 2px;color:#17372d">
+<div style="font-size:11px;line-height:15px;font-weight:700;color:#80683f">{day}</div>
+<div style="font-size:10px;line-height:14px;color:#7f847f;margin:1px 0 7px">{date}</div>
+{thumb}{time_html}{meta_html}
+</td>''')
     return "".join(cells)
 def item_list(items: object, accent: str) -> str:
     rows: list[str] = []
@@ -143,7 +147,15 @@ def self_check() -> None:
         "date_label":"יום בדיקה · Asia/Jerusalem",
         "greeting":"בוקר טוב, כריסטיאן",
         "daily_summary":"המידע החשוב קודם.",
-        "scheduled_posts":[{"image_url":"https://example.com/post.jpg","date_label":"היום","time_label":"19:30","type_label":"פוסט","status_label":"מתוזמן"}],
+        "scheduled_posts":[
+            {"day_label":"ד׳","date_label":"23.9","has_post":False,"time_label":"","type_label":"","extra_count":0},
+            {"day_label":"ה׳","date_label":"24.9","has_post":True,"image_url":"https://example.com/post.jpg","image_alt":"פוסט מתוזמן","time_label":"09:00","type_label":"פוסט","extra_count":0},
+            {"day_label":"ו׳","date_label":"25.9","has_post":False,"time_label":"","type_label":"","extra_count":0},
+            {"day_label":"שבת","date_label":"26.9","has_post":False,"time_label":"","type_label":"","extra_count":0},
+            {"day_label":"א׳","date_label":"27.9","has_post":True,"image_url":"https://example.com/post2.jpg","image_alt":"קרוסלה מתוזמנת","time_label":"12:00","type_label":"קרוסלה","extra_count":1},
+            {"day_label":"ב׳","date_label":"28.9","has_post":False,"time_label":"","type_label":"","extra_count":0},
+            {"day_label":"ג׳","date_label":"29.9","has_post":False,"time_label":"","type_label":"","extra_count":0}
+        ],
         "story":{"title":"הסיפור של היום","body":"פרטים נוחים לקריאה","image":{}},
         "morning_line":{"text":"פחות ז׳רגון, יותר הקשר.","note":"בדיקה"},
         "attention":[{"title":"החלטה אחת","detail":"פירוט"}],
@@ -153,9 +165,11 @@ def self_check() -> None:
         "footer":{"quote":"Same, brighter tomorrow.","note":"Velvet Factory","image":{}},
     }
     out = render(fixture)
-    for token in ("MORNING EDITION","בקרוב באינסטגרם",'src="cid:morning-top.jpg"','dir="ltr"',"19:30","#15352b"):
+    for token in ("MORNING EDITION","בקרוב בפיד",'src="cid:morning-top.jpg"','class="vf-week-day"',"09:00","12:00","#15352b"):
         if token not in out:
             raise SystemExit(f"FAIL Morning Green missing {token!r}")
+    if out.count('class="vf-week-day"') != 7:
+        raise SystemExit("FAIL Morning Green feed strip is not exactly seven days")
     if "{{" in out:
         raise SystemExit("FAIL Morning Green unresolved template token")
     try:

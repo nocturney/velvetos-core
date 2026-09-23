@@ -8,12 +8,13 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 TZ=ZoneInfo('Asia/Jerusalem')
 HE_DAYS=['יום שני','יום שלישי','יום רביעי','יום חמישי','יום שישי','שבת','יום ראשון']
+HE_DAY_SHORT=['ב׳','ג׳','ד׳','ה׳','ו׳','שבת','א׳']
 HE_MONTHS={1:'בינואר',2:'בפברואר',3:'במרץ',4:'באפריל',5:'במאי',6:'ביוני',7:'ביולי',8:'באוגוסט',9:'בספטמבר',10:'באוקטובר',11:'בנובמבר',12:'בדצמבר'}
 
 HEADINGS=[
@@ -69,13 +70,19 @@ def date_label(date_line: str) -> str:
     d=datetime(int(m.group(3)),int(m.group(2)),int(m.group(1)),tzinfo=TZ)
     return f"{HE_DAYS[d.weekday()]} · {d.day} {HE_MONTHS[d.month]}"
 
-def factual_date_label(factual: dict) -> str:
-    label=date_label(str(factual.get('date_line') or ''))
-    if label: return label
+def factual_datetime(factual: dict) -> datetime:
+    line=str(factual.get('date_line') or '')
+    m=re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{4})',line)
+    if m:
+        return datetime(int(m.group(3)),int(m.group(2)),int(m.group(1)),tzinfo=TZ)
     raw=str(factual.get('date') or '').strip()
     m=re.fullmatch(r'(\d{4})-(\d{2})-(\d{2})',raw)
-    if not m: return raw
-    d=datetime(int(m.group(1)),int(m.group(2)),int(m.group(3)),tzinfo=TZ)
+    if not m:
+        raise ValueError('brief has no factual date for the 7-day feed strip')
+    return datetime(int(m.group(1)),int(m.group(2)),int(m.group(3)),tzinfo=TZ)
+
+def factual_date_label(factual: dict) -> str:
+    d=factual_datetime(factual)
     return f"{HE_DAYS[d.weekday()]} · {d.day} {HE_MONTHS[d.month]}"
 
 def fallback_stats(factual: dict, sec: dict[str,list[str]]) -> list[dict[str,str]]:
@@ -93,27 +100,49 @@ def fallback_stats(factual: dict, sec: dict[str,list[str]]) -> list[dict[str,str
     if m: stats.append({'value':m.group(1),'label':'עוקבי Instagram'})
     return stats[:3]
 
-def post_cards(snapshot: dict | None) -> list[dict]:
-    cards=[]
-    for row in (snapshot or {}).get('scheduled',[])[:4]:
-        raw=str(row.get('scheduled_at') or '')
+def post_cards(snapshot: dict | None, start: datetime) -> list[dict]:
+    """Build exactly seven calendar cells, one for each day starting at the brief date."""
+    by_date: dict[object,list[tuple[datetime,dict]]] = {}
+    end_date=(start+timedelta(days=7)).date()
+    for row in (snapshot or {}).get('scheduled',[]):
+        raw=str(row.get('scheduled_at') or '').strip()
+        if not raw:
+            raise ValueError(f"scheduled publication {row.get('publication_id') or row.get('title') or '?'} is missing scheduled_at")
         try:
             d=datetime.fromisoformat(raw.replace('Z','+00:00')).astimezone(TZ)
-            day=f"{d.day}.{d.month}"; clock=d.strftime('%H:%M')
-        except Exception:
-            day='מתוזמן'; clock=raw
-        profile=str(row.get('content_profile') or '').lower()
-        kind='ריל' if 'reel' in profile else ('קרוסלה' if 'carousel' in profile else 'פוסט')
-        cid=str(row.get('thumbnail_cid') or '').strip()
-        public=str(row.get('thumbnail_url') or '').strip()
-        image_url=('cid:'+cid) if cid else public
-        if not image_url:
-            raise ValueError(f"scheduled publication {row.get('publication_id') or row.get('title') or '?'} has no materialized/public thumbnail")
-        cards.append({
-            'image_url':image_url,
-            'image_alt':row.get('title') or 'פוסט מתוזמן',
-            'date_label':day,'time_label':clock,'type_label':kind,'status_label':'מתוזמן'
-        })
+        except Exception as exc:
+            raise ValueError(f"invalid scheduled_at for {row.get('publication_id') or row.get('title') or '?'}: {raw}") from exc
+        if start.date() <= d.date() < end_date:
+            by_date.setdefault(d.date(),[]).append((d,row))
+
+    cards=[]
+    for offset in range(7):
+        day_dt=start+timedelta(days=offset)
+        scheduled=sorted(by_date.get(day_dt.date(),[]),key=lambda item:item[0])
+        cell={
+            'day_label':HE_DAY_SHORT[day_dt.weekday()],
+            'date_label':f"{day_dt.day}.{day_dt.month}",
+            'has_post':bool(scheduled),
+            'time_label':'',
+            'type_label':'',
+            'extra_count':max(0,len(scheduled)-1),
+        }
+        if scheduled:
+            d,row=scheduled[0]
+            profile=str(row.get('content_profile') or '').lower()
+            kind='ריל' if 'reel' in profile else ('קרוסלה' if 'carousel' in profile else 'פוסט')
+            cid=str(row.get('thumbnail_cid') or '').strip()
+            public=str(row.get('thumbnail_url') or '').strip()
+            image_url=('cid:'+cid) if cid else public
+            if not image_url:
+                raise ValueError(f"scheduled publication {row.get('publication_id') or row.get('title') or '?'} has no materialized/public thumbnail")
+            cell.update({
+                'image_url':image_url,
+                'image_alt':row.get('title') or 'פוסט מתוזמן',
+                'time_label':d.strftime('%H:%M'),
+                'type_label':kind,
+            })
+        cards.append(cell)
     return cards
 
 def main() -> int:
@@ -147,7 +176,7 @@ def main() -> int:
       'date_label':factual_date_label(factual),
       'greeting':'בוקר טוב, כריסטיאן',
       'daily_summary':overview,
-      'scheduled_posts':post_cards(op),
+      'scheduled_posts':post_cards(op,factual_datetime(factual)),
       'story':{
         'title':story_source or 'תמונת היום',
         'body':story_body or overview,

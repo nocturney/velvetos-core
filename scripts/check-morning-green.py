@@ -38,7 +38,7 @@ def main() -> None:
 
     template = (PACK / "MORNING-GREEN.html").read_text(encoding="utf-8")
     for token in (
-        "#15352b", "#f8f3e9", "MORNING EDITION", "בקרוב באינסטגרם",
+        "#15352b", "#f8f3e9", "MORNING EDITION", "בקרוב בפיד", "7 הימים הקרובים",
         "{{scheduled_posts_html}}", "{{attention_html}}", "{{progress_html}}",
         "{{stats_html}}", "max-width:920px", "@media only screen and (max-width:680px)",
     ):
@@ -103,9 +103,11 @@ def main() -> None:
     for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--thumbnail-dir", "morning-green-assets-"):
         if token not in preparer:
             fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
-    for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail"):
+    for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count"):
         if token not in builder:
-            fail(f"Morning Green builder missing reader-friendly mapping {token!r}")
+            fail(f"Morning Green builder missing reader-friendly/week-strip mapping {token!r}")
+    if "WEEK_DAYS = 7" not in (PACK / "render_morning_green.py").read_text(encoding="utf-8"):
+        fail("Morning Green renderer must enforce an exact seven-day feed strip")
 
     proc = subprocess.run([sys.executable, str(PACK / "render_morning_green.py"), "--check"], cwd=ROOT, text=True, capture_output=True)
     if proc.returncode != 0:
