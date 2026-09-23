@@ -73,16 +73,16 @@ def post_cards(posts: object, allow_local: bool) -> str:
         if has_post:
             img = safe_image(post.get("image_url"), allow_local)
             alt = esc(post.get("image_alt") or "תצוגה מקדימה של פוסט מתוזמן")
-            thumb = f'<img src="{img}" alt="{alt}" width="82" style="width:100%;max-width:82px;height:74px;object-fit:cover;border-radius:11px;margin:0 auto">'
+            thumb = f'<img class="vf-feed-thumb" src="{img}" alt="{alt}" width="62" style="width:100%;max-width:62px;height:58px;object-fit:cover;border-radius:10px;margin:0 auto">'
             meta = kind + (f' +{extra}' if extra else '')
             time_html = f'<div dir="ltr" style="font-size:13px;line-height:17px;font-weight:700;color:#17372d;margin-top:6px">{time}</div>'
             meta_html = f'<div style="font-size:9px;line-height:13px;color:#6f766f;margin-top:1px;white-space:nowrap">{meta}</div>'
         else:
-            thumb = '<table role="presentation" width="100%" bgcolor="#eef0e8" style="background:#eef0e8;border-radius:11px"><tr><td align="center" height="74" style="height:74px;color:#a3aaa4;font-size:16px">–</td></tr></table>'
+            thumb = '<table role="presentation" class="vf-feed-thumb" width="62" align="center" bgcolor="#eef0e8" style="width:100%;max-width:62px;background:#eef0e8;border-radius:10px"><tr><td align="center" height="58" style="height:58px;color:#a3aaa4;font-size:16px">–</td></tr></table>'
             time_html = '<div style="font-size:13px;line-height:17px;color:#a3aaa4;margin-top:6px">&nbsp;</div>'
             meta_html = '<div style="font-size:9px;line-height:13px;color:#a3aaa4;margin-top:1px">&nbsp;</div>'
-        cells.append(f'''<td class="vf-week-day" width="14.285%" valign="top" align="center" style="padding:0 4px 2px;color:#17372d">
-<div style="font-size:11px;line-height:15px;font-weight:700;color:#80683f">{day}</div>
+        cells.append(f'''<td class="vf-week-day" width="14.285%" valign="top" align="center" dir="rtl" style="padding:0 3px 2px;color:#17372d">
+<div style="font-size:10px;line-height:14px;font-weight:700;color:#80683f">{day}</div>
 <div style="font-size:10px;line-height:14px;color:#7f847f;margin:1px 0 7px">{date}</div>
 {thumb}{time_html}{meta_html}
 </td>''')
@@ -116,7 +116,7 @@ def instagram_metrics(data: object) -> tuple[str,str]:
         cls='vf-insta-metric vf-insta-last' if idx==2 else 'vf-insta-metric'
         border='' if idx==2 else 'border-left:1px solid #ddd5c7;'
         size='24px' if idx!=1 else '18px'
-        cells.append(f'<td class="{cls}" width="33.333%" align="center" valign="middle" style="padding:16px 12px;color:#17372d;{border}"><div style="font-size:{size};line-height:29px;font-weight:700">{value}</div><div style="font-size:11px;line-height:17px;color:#6f766f;margin-top:3px">{label}</div></td>')
+        cells.append(f'<td class="{cls}" width="33.333%" align="center" valign="middle" dir="rtl" style="padding:15px 8px;color:#17372d;{border}"><div class="vf-insta-value" style="font-size:{size};line-height:28px;font-weight:700;overflow-wrap:anywhere">{value}</div><div class="vf-insta-label" style="font-size:10px;line-height:15px;color:#6f766f;margin-top:3px">{label}</div></td>')
 
     note_parts=[]
     if row.get('following') is not None: note_parts.append(f"עוקב אחרי {int(row['following'])}")
@@ -138,8 +138,8 @@ def item_list(items: object, accent: str) -> str:
     for item in list(items or [])[:MAX_LIST_ITEMS]:
         title = esc(item.get("title") if isinstance(item, dict) else item)
         detail = esc(item.get("detail") if isinstance(item, dict) else "")
-        detail_html = f'<div style="font-size:12px;line-height:18px;color:#7f847f;margin-top:3px">{detail}</div>' if detail else ""
-        rows.append(f'<div style="border-top:1px solid #e1d9cb;margin-top:14px;padding-top:14px"><div style="font-size:15px;line-height:22px;font-weight:700;color:#17372d"><span style="color:{accent}">&#9679;</span>&nbsp;&nbsp;{title}</div>{detail_html}</div>')
+        detail_html = f'<div dir="rtl" style="font-size:12px;line-height:18px;color:#7f847f;margin-top:3px;text-align:right;overflow-wrap:anywhere">{detail}</div>' if detail else ""
+        rows.append(f'<div dir="rtl" style="border-top:1px solid #e1d9cb;margin-top:13px;padding-top:13px;text-align:right;overflow-wrap:anywhere"><div style="font-size:15px;line-height:22px;font-weight:700;color:#17372d"><span style="color:{accent}">&#9679;</span>&nbsp;&nbsp;{title}</div>{detail_html}</div>')
     return "".join(rows) if rows else '<div style="border-top:1px solid #e1d9cb;margin-top:14px;padding-top:14px;font-size:14px;line-height:21px;color:#7f847f">אין פריטים להצגה.</div>'
 
 def stat_cells(stats: object) -> str:
@@ -150,7 +150,7 @@ def stat_cells(stats: object) -> str:
     for idx, stat in enumerate(rows):
         cls = "vf-stat vf-stat-last" if idx == 2 else "vf-stat"
         border = "" if idx == 2 else "border-left:1px solid #ddd5c7;"
-        cells.append(f'<td class="{cls}" width="33.333%" align="center" style="padding:23px 10px;color:#17372d;{border}"><div style="font-size:34px;line-height:39px;font-weight:700">{esc(stat.get("value",""))}</div><div style="font-size:13px;line-height:20px;color:#6f766f;margin-top:4px">{esc(stat.get("label",""))}</div></td>')
+        cells.append(f'<td class="{cls}" width="33.333%" align="center" dir="rtl" style="padding:20px 8px;color:#17372d;{border}"><div class="vf-stat-value" style="font-size:30px;line-height:36px;font-weight:700">{esc(stat.get("value",""))}</div><div class="vf-stat-label" style="font-size:11px;line-height:17px;color:#6f766f;margin-top:3px">{esc(stat.get("label",""))}</div></td>')
     return "".join(cells)
 
 def decor_image(data: dict, key: str, allow_local: bool) -> tuple[str, str]:
@@ -228,7 +228,7 @@ def self_check() -> None:
         pass
     else:
         raise SystemExit("FAIL Morning Green accepted non-HTTPS production image")
-    print("OK Morning Green v3.1 · RTL · responsive · Outlook-safe · cid/https")
+    print("OK Morning Green v3.1 · RTL · Gmail-mobile-safe · Outlook-safe · cid/https")
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Render Velvet Factory Morning Green email")
