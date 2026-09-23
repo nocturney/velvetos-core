@@ -23,8 +23,11 @@ $env:VFMEM_COGNEE_PYTHON="$HOME\.velvetos\cognee-venv\Scripts\python.exe"
 
 The adapter forces local/keyless extraction by default, isolates Cognee storage below
 `~/.velvetos/cognee`, and ignores ambient provider credentials in its child process.
-Remote providers require the explicit process-scoped opt-in
-`VFMEM_COGNEE_ALLOW_REMOTE=1`; this is not a standing authorization.
+The durable index pins local FastEmbed to
+`sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384 dimensions) so
+Hebrew and English queries share the same local semantic space. Remote providers
+require the explicit process-scoped opt-in `VFMEM_COGNEE_ALLOW_REMOTE=1`; this is
+not a standing authorization.
 
 ## Sync and recall
 
@@ -39,8 +42,40 @@ memory. A new source digest creates a new dataset and atomically moves only the 
 state pointer after all configured sources complete. Old datasets are retained for
 rollback/audit until an explicit maintenance policy is added.
 
-If Cognee is missing, unsynced, unhealthy, or returns invalid output,
-`vfmem.py recall` falls back to the built-in local graph/search path.
+The durable profile uses granular local ingestion. Every allowlisted canonical source
+is materialized as a deterministic derived text file with a unique document name,
+then added as its own Cognee document. One local `cognify` pass builds 384-token
+chunks and graph relationships with GLiNER. The index contract (ingestion revision,
+embedding model/dimensions, chunking and retrieval mode) participates in the dataset
+digest. Phase receipts record `added` and `cognified` separately, so an interrupted
+build can resume without moving the active state pointer to a partial dataset.
+
+Recall uses explicit `CHUNKS` retrieval. Each returned chunk is mapped through the
+active state's `documentMap` to its canonical source path, SHA-256, category,
+authority and freshness. Missing provenance fails closed and `vfmem.py recall` falls
+back to the built-in local graph/search path. The live pointer is
+`~/.velvetos/cognee/active-state.json`; the legacy `state.json` is retained as rollback
+evidence because the Windows host can hold that filename open without delete-sharing.
+The active pointer is written with a unique same-directory temp file, `fsync`, bounded
+Windows replace retries and JSON readback verification before the cutover is accepted.
+
+## Durable knowledge profile
+
+The configured `velvetos-durable-v1` profile indexes a curated allowlist of
+durable VelvetOS knowledge rather than the entire repository. Each source is tagged
+with `category`, `authority`, and `freshness`; those tags are embedded into the
+Cognee payload and also participate in the content-hash dataset digest.
+
+The profile covers memory governance, architecture, operations, production, media,
+publication, growth, brand/copy, creative workflows, sales process, research process,
+tooling/capabilities, and selected derived learnings. Live/ephemeral paths such as
+jobs, live state, output folders, and dead-letter queues are rejected by the static
+integration sensor.
+
+The source list is intentionally process-heavy and state-light. Live orders, money,
+inventory, production state, publication state, schedules, customer-sensitive data,
+credentials, raw transcripts, and ephemeral job output stay outside Cognee and must
+be read from their canonical live sources when needed.
 
 ## Trust boundary
 
