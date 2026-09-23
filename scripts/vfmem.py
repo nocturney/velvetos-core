@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """HQ knowledge graph — CBM-style queries over Velvet Factory maps.
 
-Builds the graph each run from packages/manifest.json, .cursor/vf-desk.json,
-.cursor/agency-agents.json, and .cursor/skills. No SQLite. No network. No send.
+Builds the canonical graph each run from repository maps. Cognee may augment recall
+as an optional local derived backend; its failure never blocks the built-in graph.
+No send. No authority is granted to recalled context.
 
 Pattern source: https://github.com/DeusData/codebase-memory-mcp
 Do not install their binary from this repo.
@@ -11,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -18,6 +20,13 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable
+
+# Windows terminals may default to cp1252; vfmem is Hebrew-first and machine JSON
+# must round-trip Unicode consistently across harnesses.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages" / "manifest.json"
@@ -626,6 +635,66 @@ def cmd_dump(graph: Graph) -> dict[str, Any]:
     }
 
 
+
+def _cognee_python() -> Path | None:
+    override = os.environ.get("VFMEM_COGNEE_PYTHON")
+    candidates = [Path(override).expanduser()] if override else []
+    home = Path.home() / ".velvetos" / "cognee-venv"
+    candidates += [home / "Scripts" / "python.exe", home / "bin" / "python"]
+    return next((p for p in candidates if p and p.is_file()), None)
+
+
+def cmd_recall(graph: Graph, query: str, top_k: int = 8) -> dict[str, Any]:
+    script = ROOT / "packages" / "vfmem" / "scripts" / "vf_cognee.py"
+    python = _cognee_python()
+    fallback = cmd_search(graph, query)
+    if python is None or not script.is_file():
+        return {
+            "backend": "vfmem-fallback",
+            "reason": "cognee-runtime-unavailable",
+            "requiresCanonicalVerification": True,
+            "fallback": fallback,
+        }
+    env = os.environ.copy()
+    env["VFMEM_COGNEE_MACHINE"] = "1"
+    env["PYTHONUTF8"] = "1"
+    proc = subprocess.run(
+        [str(python), str(script), "recall", query, "--top-k", str(top_k)],
+        cwd=ROOT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        timeout=60,
+        env=env,
+    )
+    if proc.returncode != 0:
+        return {
+            "backend": "vfmem-fallback",
+            "reason": "cognee-recall-failed",
+            "requiresCanonicalVerification": True,
+            "detail": (proc.stderr or proc.stdout or "")[-800:],
+            "fallback": fallback,
+        }
+    marker = "VFMEM_COGNEE_JSON:"
+    framed = next(
+        (line[len(marker):] for line in reversed(proc.stdout.splitlines()) if line.startswith(marker)),
+        None,
+    )
+    try:
+        result = json.loads(framed) if framed else None
+    except json.JSONDecodeError:
+        result = None
+    if not isinstance(result, dict):
+        return {
+            "backend": "vfmem-fallback",
+            "reason": "cognee-output-invalid",
+            "requiresCanonicalVerification": True,
+            "fallback": fallback,
+        }
+    result["fallbackAvailable"] = True
+    return result
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="vfmem",
@@ -639,6 +708,9 @@ def main(argv: list[str] | None = None) -> int:
     p_who.add_argument("query", nargs="+")
     p_search = sub.add_parser("search")
     p_search.add_argument("query", nargs="+")
+    p_recall = sub.add_parser("recall")
+    p_recall.add_argument("query", nargs="+")
+    p_recall.add_argument("--top-k", type=int, default=8)
     p_impact = sub.add_parser("impact")
     p_impact.add_argument("target", nargs="?", default="")
     p_impact.add_argument("--git", action="store_true")
@@ -666,6 +738,11 @@ def main(argv: list[str] | None = None) -> int:
         emit(cmd_who(graph, catalog, " ".join(args.query)), as_json=as_json)
     elif args.cmd == "search":
         emit(cmd_search(graph, " ".join(args.query)), as_json=as_json)
+    elif args.cmd == "recall":
+        if not 1 <= args.top_k <= 50:
+            print("top-k must be 1..50", file=sys.stderr)
+            return 2
+        emit(cmd_recall(graph, " ".join(args.query), args.top_k), as_json=as_json)
     elif args.cmd == "impact":
         if args.git:
             emit(cmd_impact_git(graph, ROOT), as_json=as_json)
