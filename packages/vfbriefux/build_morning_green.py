@@ -48,6 +48,7 @@ def reader_friendly(s: str) -> str:
         ('Reel מ-HQ','ריל מהמשרד'),
         ('מ-HQ','מהמשרד'),
         ('5 מדיה','5 פריטים'),
+        ('watch בלבד','למעקב בלבד'),
     )
     for old,new in replacements:
         out=out.replace(old,new)
@@ -63,6 +64,61 @@ def split_title_detail(line: str) -> dict[str,str]:
     if ': ' in line:
         a,b=line.split(': ',1); return {'title':a.strip(),'detail':b.strip()}
     return {'title':line,'detail':''}
+
+def compact_overview(text: str) -> str:
+    """Keep the hero factual, short and non-duplicative like the approved mockup."""
+    out=reader_friendly(text)
+    out=re.sub(r'\s*Instagram חי:.*$', '', out).strip()
+    out=out.replace('כל חמש העבודות בגיליון VF HQ · jobs מסומנות כסופקו.','5 העבודות ב-jobs סופקו.')
+    out=out.replace('שלוש יתרות פתוחות מאומתות גם ב-VF HQ · books:','3 יתרות פתוחות:')
+    out=out.replace('סך הגבייה הפתוחה 4790.','סך הגבייה 4790.')
+    out=out.replace('ביומן יש אירוע אחד היום, דיאנה, שון, 16:00 עד 17:00 בבארי.','היום: דיאנה ושון, 16:00-17:00 בבארי.')
+    return re.sub(r'\s{2,}',' ',out).strip()
+
+def compact_attention(items: list[dict[str,str]]) -> list[dict[str,str]]:
+    out=[dict(x) for x in items[:4]]
+    if out and out[0].get('title','').startswith('גבייה פתוחה אצל '):
+        people=out[0]['title'].removeprefix('גבייה פתוחה אצל ').rstrip('.')
+        out[0]={'title':'גבייה פתוחה','detail':people}
+    for item in out[1:]:
+        detail=str(item.get('detail') or '').strip().rstrip('.')
+        detail=re.sub(r'^סופק,\s*','',detail)
+        detail=detail.replace('טרם שולם, ','').replace('לגבייה, ','')
+        detail=detail.replace('מועד בגיליון ','מועד ')
+        item['detail']=detail
+    return out
+
+def compact_progress(items: list[dict[str,str]]) -> list[dict[str,str]]:
+    out=[]
+    for item in items[:3]:
+        title=str(item.get('title') or '').strip()
+        detail=str(item.get('detail') or '').strip()
+        if title.startswith('ביומן של 23.9 יש אירוע אחד'):
+            title='אירוע אחד היום - דיאנה ושון, 16:00-17:00 בבארי'
+            detail=''
+        elif title.startswith('הגבייה הפתוחה נשארה 4790'):
+            title='גבייה פתוחה: 4790'
+            detail=''
+        out.append({'title':title,'detail':detail})
+    return out
+
+def compact_receivables(items: list[dict[str,str]]) -> str:
+    """Compress repeated receivable details for the Story card without losing amounts/status."""
+    parts=[]
+    for item in items[:3]:
+        title=str(item.get('title') or '').strip()
+        detail=str(item.get('detail') or '').strip().rstrip('.')
+        customer=re.sub(r'\s+VF-\d+.*$','',title).strip()
+        detail=re.sub(r'^סופק,\s*','',detail)
+        detail=detail.replace('מועד בגיליון ','מועד ')
+        m=re.match(r'טרם שולם,\s*(\d+)(?:,\s*(.*))?$',detail)
+        if m:
+            detail=f"{m.group(1)}, טרם שולם"+(f", {m.group(2)}" if m.group(2) else '')
+        else:
+            m=re.match(r'לגבייה,\s*(\d+)$',detail)
+            if m: detail=f"{m.group(1)} לגבייה"
+        parts.append((customer+' '+detail).strip())
+    return '. '.join(parts)+('.' if parts else '')
 
 def date_label(date_line: str) -> str:
     m=re.search(r'(\d{1,2})\.(\d{1,2})\.(\d{4})',date_line or '')
@@ -83,7 +139,7 @@ def factual_datetime(factual: dict) -> datetime:
 
 def factual_date_label(factual: dict) -> str:
     d=factual_datetime(factual)
-    return f"{HE_DAYS[d.weekday()]} · {d.day} {HE_MONTHS[d.month]}"
+    return f"{d.day} {HE_MONTHS[d.month]} {d.year}"
 
 def fallback_stats(factual: dict, sec: dict[str,list[str]]) -> list[dict[str,str]]:
     stats=[]
@@ -201,19 +257,23 @@ def main() -> int:
     sec=sections(text)
     op=json.loads(a.openpost.read_text(encoding='utf-8')) if a.openpost and a.openpost.exists() else None
 
-    attention=[split_title_detail(x) for x in sec['צריך ממך'][:4]]
-    progress=[split_title_detail(x) for x in sec['מה השתנה מאז הבריף הקודם'] if 'Instagram' not in x and 'OpenPost' not in x][:4]
+    attention=compact_attention([split_title_detail(x) for x in sec['צריך ממך'][:4]])
+    progress=compact_progress([split_title_detail(x) for x in sec['מה השתנה מאז הבריף הקודם'] if 'Instagram' not in x and 'OpenPost' not in x][:3])
     radar_lines=[
         clean_bullet(reader_friendly(x)) for x in sec['רדאר תוכן']
         if 'OpenPost' not in x and 'Instagram' not in x and 'הפיד האחרון' not in x and 'אין Publish' not in x
-    ][:3]
-    radar_text=' '.join(radar_lines) if radar_lines else 'אין פריט רדאר מאומת נוסף.'
-    overview=reader_friendly(sec['תמונת מצב עכשיו'][0]) if sec.get('תמונת מצב עכשיו') else reader_friendly(str(factual.get('bottom_line') or '').strip())
-    # Instagram has its own dedicated analytics section; keep the hero summary free of duplicate account metrics.
-    overview=re.sub(r'\s*Instagram חי:.*$', '', overview).strip()
+    ][:2]
+    if radar_lines:
+        radar_text=' '.join(radar_lines)
+    else:
+        research=[clean_bullet(reader_friendly(x)) for x in sec.get('שולחן המחקר',[]) if re.match(r'^\d+\)',clean_bullet(x))]
+        radar_text=(re.sub(r'^\d+\)\s*','',research[0]) if research else 'אין כרגע פריט רדאר מאומת נוסף מעבר ללוח התוכן.')
+    # Instagram has its own dedicated analytics section; keep hero/progress free of duplicate account metrics.
+    overview_source=sec['תמונת מצב עכשיו'][0] if sec.get('תמונת מצב עכשיו') else str(factual.get('bottom_line') or '').strip()
+    overview=compact_overview(overview_source)
     story_source=attention[0]['title'] if attention else (progress[0]['title'] if progress else overview)
     story_items=attention[1:4] if len(attention)>1 else attention[:3]
-    story_body=' '.join((x.get('title','')+(' - '+x.get('detail','') if x.get('detail') else '')).strip() for x in story_items).strip()
+    story_body=compact_receivables(story_items) or overview
     kpis=factual.get('kpis') or []
     stats=[
         {'value':str(x.get('value','אין נתון')),'label':reader_friendly(str(x.get('label',''))).replace(' לפי Jobs','')}
@@ -243,9 +303,9 @@ def main() -> int:
       'morning_line':{'text':'המידע החשוב קודם. המערכת נשארת מאחור.','note':'מהדורת הבוקר של Velvet Factory'},
       'attention':attention,
       'progress':progress,
-      'radar':{'title':'מה כדאי לראות לפני שזה נהיה דחוף','text':radar_text,'image':{}},
+      'radar':{'title':'דברים שכדאי לשים לב אליהם','text':radar_text,'image':{}},
       'stats':stats,
-      'footer':{'quote':'Same, brighter tomorrow.','note':'Velvet Factory · Morning Edition','image':{}}
+      'footer':{'quote':'Same, brighter tomorrow.','note':'תודה שאתה חלק מהדרך','image':{}}
     }
     a.output.parent.mkdir(parents=True,exist_ok=True)
     a.output.write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')

@@ -18,14 +18,38 @@ TEMPLATE = PACK / "MORNING-GREEN.html"
 WEEK_DAYS = 7
 MAX_LIST_ITEMS = 6
 DECOR = {
-    "top": ("cid:morning-top.jpg", "אווירת בוקר ירוקה"),
-    "story": ("cid:morning-story.jpg", "סצנת בוקר רגועה"),
-    "radar": ("cid:morning-radar.jpg", "פרט ירוק"),
-    "footer": ("cid:morning-footer.jpg", "סצנת סיום ירוקה"),
+    "top": ("cid:morning-top.jpg", "כוס בוקר וענף זית מהקונספט המאושר"),
+    "story": ("cid:morning-story.jpg", "ענפי זית באור בוקר"),
+    "radar": ("cid:morning-radar.jpg", "מחברת וקפה באור בוקר"),
+    "footer": ("cid:morning-footer.jpg", "נוף חם וחתימת Velvet Factory"),
 }
 
 def esc(value: object) -> str:
     return html.escape(str(value if value is not None else ""), quote=True)
+
+def mixed_text(value: object) -> str:
+    """Escape text, then isolate machine IDs so Gmail RTL keeps each ID intact."""
+    out=esc(value)
+    def repl(match: re.Match[str]) -> str:
+        safe_id=match.group(1).replace('-', '&#8209;')
+        return f'<span class="vf-id" dir="ltr" style="display:inline-block;direction:ltr;unicode-bidi:isolate;white-space:nowrap;overflow-wrap:normal;word-break:normal;font-size:8px;line-height:12px;letter-spacing:-.35px">{safe_id}</span>'
+    return re.sub(r'(VF-\d{8}-\d{3})', repl, out)
+
+def mixed_radar_text(value: object) -> str:
+    """Keep Latin product/version fragments readable inside an RTL radar sentence."""
+    out=esc(value)
+
+    def phrase_repl(match: re.Match[str]) -> str:
+        return f'<span dir="ltr" style="direction:ltr;unicode-bidi:isolate">{match.group(1)}</span>'
+
+    # Long Latin product names may wrap, but must keep their LTR ordering.
+    out = re.sub(r'([A-Za-z][A-Za-z0-9. ]*[A-Za-z0-9])', phrase_repl, out)
+
+    # Keep dotted version tokens together so Gmail cannot reverse or split them.
+    def version_repl(match: re.Match[str]) -> str:
+        return f'<span class="vf-version" dir="ltr" style="display:inline-block;direction:ltr;unicode-bidi:isolate;white-space:nowrap">{match.group(1)}</span>'
+
+    return re.sub(r'(?<![A-Za-z0-9.])(\d+(?:\.\d+)+(?:\.x)?)(?![A-Za-z0-9])', version_repl, out)
 
 def safe_image(value: object, allow_local: bool = False) -> str:
     raw = str(value or "").strip()
@@ -133,24 +157,32 @@ def instagram_metrics(data: object) -> tuple[str,str]:
         note_parts.append('Insights: '+str(row['insights_note']))
     return ''.join(cells), esc(' · '.join(note_parts))
 
-def item_list(items: object, accent: str) -> str:
-    rows: list[str] = []
-    for item in list(items or [])[:MAX_LIST_ITEMS]:
-        title = esc(item.get("title") if isinstance(item, dict) else item)
-        detail = esc(item.get("detail") if isinstance(item, dict) else "")
-        detail_html = f'<div dir="rtl" style="font-size:12px;line-height:18px;color:#7f847f;margin-top:3px;text-align:right;overflow-wrap:anywhere">{detail}</div>' if detail else ""
-        rows.append(f'<div dir="rtl" style="border-top:1px solid #e1d9cb;margin-top:13px;padding-top:13px;text-align:right;overflow-wrap:anywhere"><div style="font-size:15px;line-height:22px;font-weight:700;color:#17372d"><span style="color:{accent}">&#9679;</span>&nbsp;&nbsp;{title}</div>{detail_html}</div>')
-    return "".join(rows) if rows else '<div style="border-top:1px solid #e1d9cb;margin-top:14px;padding-top:14px;font-size:14px;line-height:21px;color:#7f847f">אין פריטים להצגה.</div>'
+def item_grid(items: object, accent: str, widths: list[float] | None = None) -> str:
+    rows = list(items or [])[:4]
+    if not rows:
+        return '<td class="vf-item-cell" width="100%" dir="rtl" align="right" style="padding:12px 4px 2px;color:#7f847f;font-size:13px;line-height:19px;text-align:right">אין פריטים להצגה.</td>'
+    if widths is None or len(widths) != len(rows):
+        widths = [100/len(rows)] * len(rows)
+    cells: list[str] = []
+    for idx, item in enumerate(rows):
+        title = mixed_text(item.get("title") if isinstance(item, dict) else item)
+        detail = mixed_text(item.get("detail") if isinstance(item, dict) else "")
+        border = "" if idx == len(rows)-1 else "border-left:1px solid #e1d9cb;"
+        detail_html = f'<div class="vf-item-detail" dir="rtl" style="font-size:10px;line-height:15px;color:#7f847f;margin-top:4px;text-align:right;overflow-wrap:anywhere">{detail}</div>' if detail else ""
+        width = f"{widths[idx]:.3f}%"
+        cells.append(f'<td class="vf-item-cell" width="{width}" valign="top" dir="rtl" align="right" style="padding:11px 7px 3px;color:#17372d;text-align:right;overflow-wrap:anywhere;{border}"><div class="vf-item-title" style="font-size:11px;line-height:16px;font-weight:700"><span style="color:{accent}">&#9679;</span>&nbsp;{title}</div>{detail_html}</td>')
+    return "".join(cells)
 
 def stat_cells(stats: object) -> str:
     rows = list(stats or [])[:3]
     while len(rows) < 3:
         rows.append({"value":"אין נתון","label":""})
+    rows.reverse()
     cells: list[str] = []
     for idx, stat in enumerate(rows):
         cls = "vf-stat vf-stat-last" if idx == 2 else "vf-stat"
-        border = "" if idx == 2 else "border-left:1px solid #ddd5c7;"
-        cells.append(f'<td class="{cls}" width="33.333%" align="center" dir="rtl" style="padding:20px 8px;color:#17372d;{border}"><div class="vf-stat-value" style="font-size:30px;line-height:36px;font-weight:700">{esc(stat.get("value",""))}</div><div class="vf-stat-label" style="font-size:11px;line-height:17px;color:#6f766f;margin-top:3px">{esc(stat.get("label",""))}</div></td>')
+        border = "" if idx == 2 else "border-left:1px solid #718a7d;"
+        cells.append(f'<td class="{cls}" width="33.333%" align="center" dir="rtl" style="padding:20px 8px;color:#fff8ec;{border}"><div class="vf-stat-value" style="font-size:30px;line-height:36px;font-weight:700">{esc(stat.get("value",""))}</div><div class="vf-stat-label" style="font-size:11px;line-height:17px;color:#d8d0bf;margin-top:3px">{esc(stat.get("label",""))}</div></td>')
     return "".join(cells)
 
 def decor_image(data: dict, key: str, allow_local: bool) -> tuple[str, str]:
@@ -181,10 +213,10 @@ def render(data: dict, *, allow_local: bool = False, template: str | None = None
         "story_image_url": story_url, "story_image_alt": story_alt,
         "morning_line": esc(data["morning_line"]["text"]),
         "morning_line_note": esc(data["morning_line"].get("note") or ""),
-        "attention_html": item_list(data.get("attention"), "#a85c44"),
-        "progress_html": item_list(data.get("progress"), "#4b8a64"),
+        "attention_html": item_grid(data.get("attention"), "#a85c44", [18.0, 27.333, 27.333, 27.334]),
+        "progress_html": item_grid(data.get("progress"), "#4b8a64"),
         "radar_image_url": radar_url, "radar_image_alt": radar_alt,
-        "radar_title": esc(data["radar"]["title"]), "radar_text": esc(data["radar"]["text"]),
+        "radar_title": esc(data["radar"]["title"]), "radar_text": mixed_radar_text(data["radar"]["text"]),
         "stats_html": stat_cells(data.get("stats")),
         "footer_image_url": footer_url, "footer_image_alt": footer_alt,
         "closing_quote": esc(data["footer"]["quote"]),
@@ -208,14 +240,14 @@ def self_check() -> None:
         "instagram":{"followers":81,"following":125,"media_count":5,"latest":{"likes":1,"comments":0,"date_label":"20.9.2026"},"previous":{"likes":2,"comments":1,"date_label":"19.9.2026"},"change_text":"אין שינוי מאומת","insights_available":False,"insights_note":"אין ספירה"},
         "story":{"title":"הסיפור של היום","body":"פרטים נוחים לקריאה","image":{}},
         "morning_line":{"text":"פחות ז׳רגון, יותר הקשר.","note":"בדיקה"},
-        "attention":[{"title":"החלטה אחת","detail":"פירוט"}],
+        "attention":[{"title":"סינקופה VF-20260908-001","detail":"4350"}],
         "progress":[{"title":"משהו התקדם","detail":"פירוט"}],
-        "radar":{"title":"על הרדאר","text":"משהו מתקרב","image":{}},
+        "radar":{"title":"על הרדאר","text":"Bambu Studio 2.8.4 Public Beta - למעקב בלבד; ייצור נשאר 2.8.2.x.","image":{}},
         "stats":[{"value":"1","label":"מתוזמן"},{"value":"2","label":"פעיל"},{"value":"3","label":"פתוח"}],
         "footer":{"quote":"Same, brighter tomorrow.","note":"Velvet Factory","image":{}},
     }
     out = render(fixture)
-    for token in ("MORNING EDITION","בקרוב בפיד","Instagram","81","מעורבות בפוסט האחרון","Reach / חשיפות: אין נתון Insights מאומת",'src="cid:morning-top.jpg"','class="vf-week-day"',"09:00","12:00","#15352b"):
+    for token in ("MORNING EDITION","בקרוב בפיד","Instagram","81","מעורבות בפוסט האחרון","Reach / חשיפות: אין נתון Insights מאומת",'src="cid:morning-top.jpg"','class="vf-week-day"',"09:00","12:00","#15352b",'class="vf-id"','class="vf-version"','dir="ltr"'):
         if token not in out:
             raise SystemExit(f"FAIL Morning Green missing {token!r}")
     if out.count('class="vf-week-day"') != 7:

@@ -38,19 +38,19 @@ def main() -> None:
 
     template = (PACK / "MORNING-GREEN.html").read_text(encoding="utf-8")
     for token in (
-        "#15352b", "#f8f3e9", "MORNING EDITION", "בקרוב בפיד", "7 הימים הקרובים", "Instagram", "מצב החשבון",
+        "#15352b", "#f8f3e9", "#eee8dc", "MORNING EDITION", "בקרוב בפיד", "7 הימים הקרובים", "Instagram", "מצב החשבון",
         "{{scheduled_posts_html}}", "{{instagram_metrics_html}}", "{{instagram_note}}", "{{attention_html}}", "{{progress_html}}",
         "{{stats_html}}", "max-width:680px", "@media only screen and (max-width:680px)", "vf-hero-copy", "vf-hero-photo",
-        "vf-feed-thumb", "vf-insta-value", "vf-stat-value", "max-width:420px", "max-width:460px", "{{footer_image_url}}",
+        "vf-feed-thumb", "vf-insta-value", "vf-stat-value", "vf-item-cell", "vf-hero-img", "vf-story-img", "vf-radar-img", "vf-brand", "vf-edition", "vf-date", "vf-hero-tag", "64%!important", "36%!important", "ימים טובים עושים יותר", "{{radar_title}}", "max-width:420px", "max-width:460px", "{{footer_image_url}}",
     ):
         if token not in template:
             fail(f"MORNING-GREEN.html missing {token!r}")
     for forbidden in ("<button", "<form", "...", "ellipsis"):
         if forbidden in template.lower():
             fail(f"fake-interactive token in Morning Green: {forbidden}")
-    for forbidden in ('width="920"', "max-width:920px"):
+    for forbidden in ('width="920"', "max-width:920px", "display:block!important;width:100%!important"):
         if forbidden in template:
-            fail(f"legacy fixed-width mobile overflow risk in Morning Green: {forbidden}")
+            fail(f"legacy/mobile-layout regression risk in Morning Green: {forbidden}")
     if "vf-footer-quote" in template or "{{closing_quote}}" in template:
         fail("Morning Green must not duplicate the handwritten footer quote as a large HTML quote")
     for name,min_bytes in (("morning-top.jpg",5000),("morning-story.jpg",10000),("morning-radar.jpg",8000),("morning-footer.jpg",2500)):
@@ -60,7 +60,7 @@ def main() -> None:
     contract = (PACK / "MORNING-GREEN.md").read_text(encoding="utf-8")
     for token in (
         "scheduled != approved != published_verified",
-        "מתוזמן", "טרם שובץ", "OpenPost", "CID",
+        "מתוזמן", "טרם שובץ", "OpenPost", "CID", "TARGET-CONCEPT", "QA חזותי", "VF-YYYYMMDD-NNN",
         "list_media/get_media", "owner-visible-text",
     ):
         if token not in contract:
@@ -112,11 +112,20 @@ def main() -> None:
     for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--thumbnail-dir", "morning-green-assets-"):
         if token not in preparer:
             fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
-    for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights", "Instagram has its own dedicated analytics section"):
+    for token in ("reader_friendly", "compact_overview", "compact_attention", "compact_progress", "compact_receivables", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights", "Instagram has its own dedicated analytics section", "דברים שכדאי לשים לב אליהם", "תודה שאתה חלק מהדרך"):
         if token not in builder:
             fail(f"Morning Green builder missing reader-friendly/week-strip/Instagram mapping {token!r}")
-    if "WEEK_DAYS = 7" not in (PACK / "render_morning_green.py").read_text(encoding="utf-8"):
+    renderer=(PACK / "render_morning_green.py").read_text(encoding="utf-8")
+    if "WEEK_DAYS = 7" not in renderer:
         fail("Morning Green renderer must enforce an exact seven-day feed strip")
+    if "mixed_text" not in renderer or "vf-id" not in renderer or "display:inline-block" not in renderer or "unicode-bidi:isolate" not in renderer or "&#8209;" not in renderer:
+        fail("Morning Green renderer must isolate VF IDs for RTL mobile clients")
+    if "mixed_radar_text" not in renderer or "vf-version" not in renderer:
+        fail("Morning Green radar must isolate Latin product/version fragments inside RTL copy")
+    if "rows.reverse()" not in renderer:
+        fail("Morning Green KPI order must match the approved mockup visual order")
+    if "[18.0, 27.333, 27.333, 27.334]" not in renderer:
+        fail("Morning Green attention widths must protect VF IDs while matching the approved mockup")
 
     proc = subprocess.run([sys.executable, str(PACK / "render_morning_green.py"), "--check"], cwd=ROOT, text=True, capture_output=True)
     if proc.returncode != 0:

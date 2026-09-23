@@ -1,0 +1,152 @@
+{
+  "email_title": "Velvet Factory - Morning Brief",
+  "preheader": "מה חשוב היום, מה מתקדם ומה באמת מתוזמן לפרסום.",
+  "date_label": "יום רביעי · 23 בספטמבר 2026",
+  "greeting": "בוקר טוב, כריסטיאן",
+  "daily_summary": "5 העבודות ב-jobs סופקו. 3 יתרות פתוחות: סינקופה 4350, ודים 320, אלה+לוגו 120. סך הגבייה 4790. היום: דיאנה ושון, 16:00-17:00 בבארי.",
+  "scheduled_posts": [
+    {
+      "day_label": "ד׳",
+      "date_label": "23.9",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    },
+    {
+      "day_label": "ה׳",
+      "date_label": "24.9",
+      "has_post": true,
+      "time_label": "09:00",
+      "type_label": "פוסט",
+      "extra_count": 0,
+      "image_url": "cid:scheduled-6295632e-0a43-47cc-9850-b1db6f0959a1.jpg",
+      "image_alt": "הוא לא בדיוק מנסה להשתלב ברקע. 🐍"
+    },
+    {
+      "day_label": "ו׳",
+      "date_label": "25.9",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    },
+    {
+      "day_label": "שבת",
+      "date_label": "26.9",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    },
+    {
+      "day_label": "א׳",
+      "date_label": "27.9",
+      "has_post": true,
+      "time_label": "12:00",
+      "type_label": "קרוסלה",
+      "extra_count": 0,
+      "image_url": "cid:scheduled-d1a55aa8-a851-499f-99b3-6ebc95c037e2.jpg",
+      "image_alt": "VF-OCTOPUS-OWNER-APPROVED-20260927-CAROUSEL"
+    },
+    {
+      "day_label": "ב׳",
+      "date_label": "28.9",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    },
+    {
+      "day_label": "ג׳",
+      "date_label": "29.9",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    }
+  ],
+  "instagram": {
+    "followers": 81,
+    "following": 125,
+    "media_count": 5,
+    "latest": {
+      "likes": 1,
+      "comments": 0,
+      "date_label": "20.9.2026"
+    },
+    "previous": {
+      "likes": 2,
+      "comments": 1,
+      "date_label": "19.9.2026"
+    },
+    "change_text": "אין שינוי מאומת",
+    "insights_available": false,
+    "insights_note": "אין ספירה."
+  },
+  "story": {
+    "title": "גבייה פתוחה",
+    "body": "סינקופה 4350, טרם שולם, מועד 15.10.2026. ודים 320 לגבייה. אלה+לוגו 120, טרם שולם.",
+    "image": {}
+  },
+  "morning_line": {
+    "text": "המידע החשוב קודם. המערכת נשארת מאחור.",
+    "note": "מהדורת הבוקר של Velvet Factory"
+  },
+  "attention": [
+    {
+      "title": "גבייה פתוחה",
+      "detail": "סינקופה, ודים ואלה+לוגו"
+    },
+    {
+      "title": "סינקופה VF-20260908-001",
+      "detail": "סופק, טרם שולם, 4350, מועד בגיליון 15.10.2026."
+    },
+    {
+      "title": "ודים VF-20260908-003",
+      "detail": "סופק, לגבייה, 320."
+    },
+    {
+      "title": "אלה+לוגו VF-20260908-004",
+      "detail": "סופק, טרם שולם, 120."
+    }
+  ],
+  "progress": [
+    {
+      "title": "מחקר 23.9 נחתם מוכן לבריף לפני 07:00",
+      "detail": ""
+    },
+    {
+      "title": "אירוע אחד היום - דיאנה ושון, 16:00-17:00 בבארי",
+      "detail": ""
+    },
+    {
+      "title": "הגבייה הפתוחה נשארה 4790",
+      "detail": ""
+    }
+  ],
+  "radar": {
+    "title": "דברים שכדאי לשים לב אליהם",
+    "text": "Bambu Studio 2.8.4 Public Beta - למעקב בלבד; ייצור נשאר 2.8.2.x.",
+    "image": {}
+  },
+  "stats": [
+    {
+      "value": "4790",
+      "label": "גבייה פתוחה"
+    },
+    {
+      "value": "1",
+      "label": "אירועי יומן היום"
+    },
+    {
+      "value": "0",
+      "label": "עבודות ייצור פעילות"
+    }
+  ],
+  "footer": {
+    "quote": "Same, brighter tomorrow.",
+    "note": "תודה שאתה חלק מהדרך",
+    "image": {}
+  }
+}
