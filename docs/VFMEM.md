@@ -55,10 +55,13 @@ derived index** behind it, defined by `packages/vfmem/cognee.json` and
 The integration deliberately does not create a second authority layer:
 
 - canonical files and live systems remain sources of truth;
-- sync is one-way from an allowlist of canonical files into a content-hash dataset;
-- recall is context only and requires canonical verification before action;
+- sync is one-way from a curated 66-source / 13-category durable allowlist into a content-hash dataset;
+- every source carries category, authority and freshness metadata;
+- ingestion keeps each canonical source as its own deterministic derived Cognee document, then runs local granular `cognify` chunking;
+- the local embedding contract is multilingual FastEmbed (`paraphrase-multilingual-MiniLM-L12-v2`, 384d) with 384-token chunks;
+- recall returns explicit chunks with a fail-closed mapping back to canonical source path/SHA/category/authority/freshness, and still requires canonical verification before action;
 - cloud model credentials are ignored by default; the reference mode is keyless/local;
 - an unavailable or unhealthy Cognee runtime falls back to the original vfmem search;
-- secrets, raw transcripts and live finance/production/publication state are denied.
+- secrets, credentials, raw transcripts, customer-sensitive data and live finance/production/publication/inventory/schedule state are denied.
 
 Operator details and the staged update/rollback procedure: [`packages/vfmem/COGNEE.md`](../packages/vfmem/COGNEE.md).

@@ -14,6 +14,8 @@ import json
 import os
 import re
 import sys
+import tempfile
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -33,13 +35,27 @@ def load_config() -> dict[str, Any]:
     return json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
 
 
+def index_contract(cfg: dict[str, Any]) -> dict[str, Any]:
+    sync = cfg["sync"]
+    return {
+        "ingestionRevision": sync.get("ingestionRevision"),
+        "embeddingProvider": sync.get("embeddingProvider"),
+        "embeddingModel": sync.get("embeddingModel"),
+        "embeddingDimensions": int(sync.get("embeddingDimensions", 0)),
+        "chunkSize": int(sync.get("chunkSize", 0)),
+        "chunksPerBatch": int(sync.get("chunksPerBatch", 0)),
+        "retrievalMode": sync.get("retrievalMode"),
+    }
+
+
 def runtime_root(cfg: dict[str, Any]) -> Path:
     override = os.environ.get("VFMEM_COGNEE_ROOT")
     return Path(override).expanduser() if override else Path(cfg["runtimeRoot"]).expanduser()
 
 
-def apply_runtime_env(root: Path) -> None:
+def apply_runtime_env(root: Path, cfg: dict[str, Any] | None = None) -> None:
     root.mkdir(parents=True, exist_ok=True)
+    cfg = cfg or load_config()
     os.environ["PYTHON_DOTENV_DISABLED"] = "1"
     os.environ["GRAPH_EXTRACTOR"] = "gliner_demo"
     os.environ["CACHING"] = "false"
@@ -57,6 +73,14 @@ def apply_runtime_env(root: Path) -> None:
     if os.environ.get("VFMEM_COGNEE_ALLOW_REMOTE") != "1":
         for key in REMOTE_ENV:
             os.environ.pop(key, None)
+    contract = index_contract(cfg)
+    if contract["embeddingProvider"] != "fastembed":
+        raise RuntimeError("Cognee derived memory requires local fastembed embeddings")
+    if not str(contract["embeddingModel"] or "").strip() or contract["embeddingDimensions"] <= 0:
+        raise RuntimeError("Cognee local embedding model contract is incomplete")
+    os.environ["EMBEDDING_PROVIDER"] = contract["embeddingProvider"]
+    os.environ["EMBEDDING_MODEL"] = contract["embeddingModel"]
+    os.environ["EMBEDDING_DIMENSIONS"] = str(contract["embeddingDimensions"])
 
 
 def installed_version() -> str | None:
@@ -70,17 +94,29 @@ def source_manifest(cfg: dict[str, Any]) -> tuple[str, list[dict[str, Any]]]:
     rows: list[dict[str, Any]] = []
     limit = int(cfg["sync"]["maxSourceBytes"])
     h = hashlib.sha256()
+    profile = str(cfg["sync"].get("knowledgeProfile", ""))
+    contract_json = json.dumps(index_contract(cfg), sort_keys=True, separators=(",", ":"))
+    h.update(profile.encode("utf-8") + b"\0" + contract_json.encode("utf-8") + b"\n")
+    metadata = cfg["sync"].get("sourceMetadata") or {}
     for rel in cfg["sync"]["sources"]:
         path = (ROOT / rel).resolve()
         if not path.is_relative_to(ROOT.resolve()) or not path.is_file():
             raise RuntimeError(f"missing canonical memory source: {rel}")
+        meta = metadata.get(rel)
+        if not isinstance(meta, dict):
+            raise RuntimeError(f"missing Cognee source metadata: {rel}")
+        for key in ("category", "authority", "freshness"):
+            if not str(meta.get(key, "")).strip():
+                raise RuntimeError(f"missing Cognee source metadata field {key}: {rel}")
         size = path.stat().st_size
         if size > limit:
             raise RuntimeError(f"source exceeds configured size cap: {rel}")
         raw = path.read_bytes()
         digest = hashlib.sha256(raw).hexdigest()
-        rows.append({"path": rel, "sha256": digest, "bytes": size})
-        h.update(rel.encode("utf-8") + b"\0" + digest.encode("ascii") + b"\n")
+        row = {"path": rel, "sha256": digest, "bytes": size, **meta}
+        rows.append(row)
+        meta_hash = json.dumps(meta, sort_keys=True, separators=(",", ":"))
+        h.update(rel.encode("utf-8") + b"\0" + digest.encode("ascii") + b"\0" + meta_hash.encode("utf-8") + b"\n")
     return h.hexdigest(), rows
 
 
@@ -97,9 +133,63 @@ def read_state(root: Path) -> dict[str, Any] | None:
 
 def atomic_json(path: Path, body: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    os.replace(tmp, path)
+    payload = json.dumps(body, ensure_ascii=False, indent=2) + "\n"
+    fd, tmp_name = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=path.parent)
+    tmp = Path(tmp_name)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        for attempt in range(8):
+            try:
+                os.replace(tmp, path)
+                break
+            except PermissionError:
+                if os.name != "nt" or attempt == 7:
+                    raise
+                time.sleep(0.05 * (attempt + 1))
+        observed = json.loads(path.read_text(encoding="utf-8"))
+        if observed != body:
+            raise RuntimeError(f"atomic JSON readback mismatch: {path}")
+    finally:
+        try:
+            tmp.unlink()
+        except FileNotFoundError:
+            pass
+
+
+def materialize_ingest_files(root: Path, digest: str, sources: list[dict[str, Any]]) -> tuple[list[str], dict[str, str]]:
+    folder = root / "ingest" / digest[:16]
+    folder.mkdir(parents=True, exist_ok=True)
+    paths: list[str] = []
+    document_map: dict[str, str] = {}
+    for index, row in enumerate(sources, 1):
+        rel = row["path"]
+        token = hashlib.sha256(rel.encode("utf-8")).hexdigest()[:12]
+        document_name = f"{index:03d}-{token}"
+        path = folder / f"{document_name}.txt"
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        payload = (
+            f"VELVETOS_CANONICAL_SOURCE: {rel}\n"
+            f"VELVETOS_KNOWLEDGE_CATEGORY: {row['category']}\n"
+            f"VELVETOS_SOURCE_AUTHORITY: {row['authority']}\n"
+            f"VELVETOS_FRESHNESS: {row['freshness']}\n"
+            "COGNEE_ROLE: derived context only; verify canonical source before action.\n\n"
+            + text
+        )
+        if path.is_file():
+            if path.read_text(encoding="utf-8") != payload:
+                raise RuntimeError(f"derived Cognee ingest file mismatch: {path}")
+        else:
+            path.write_text(payload, encoding="utf-8", newline="\n")
+            if path.read_text(encoding="utf-8") != payload:
+                raise RuntimeError(f"derived Cognee ingest file readback mismatch: {path}")
+        paths.append(str(path))
+        document_map[document_name] = rel
+    if len(document_map) != len(sources):
+        raise RuntimeError("Cognee derived document names are not unique")
+    return paths, document_map
 
 
 def emit(body: Any, code: int = 0) -> int:
@@ -127,42 +217,85 @@ async def sync_memory(cfg: dict[str, Any], root: Path) -> dict[str, Any]:
     digest, sources = source_manifest(cfg)
     dataset = dataset_for(cfg, digest)
     current = read_state(root)
+    contract = index_contract(cfg)
     if current and current.get("sourceDigest") == digest and current.get("dataset") == dataset:
-        return {"status": "CURRENT", "dataset": dataset, "sources": sources}
+        document_map = current.get("documentMap")
+        if current.get("indexContract") != contract or not isinstance(document_map, dict) or len(document_map) != len(sources):
+            raise RuntimeError("current Cognee state lacks the canonical provenance/index contract")
+        return {
+            "status": "CURRENT",
+            "dataset": dataset,
+            "knowledgeProfile": cfg["sync"].get("knowledgeProfile"),
+            "sourceCount": len(sources),
+            "indexContract": contract,
+            "sources": sources,
+        }
 
-    apply_runtime_env(root)
+    if contract["retrievalMode"] != "chunks-with-canonical-provenance-v1":
+        raise RuntimeError("unsupported Cognee retrieval contract")
+    apply_runtime_env(root, cfg)
     import cognee
 
     progress_path = root / f"sync-{digest[:16]}.json"
-    progress = {"dataset": dataset, "completed": []}
+    progress = {
+        "dataset": dataset,
+        "ingestionRevision": cfg["sync"].get("ingestionRevision"),
+        "indexContract": contract,
+        "sourceCount": len(sources),
+        "added": False,
+        "cognified": False,
+    }
     if progress_path.is_file():
-        progress = json.loads(progress_path.read_text(encoding="utf-8"))
-    completed = set(progress.get("completed", []))
+        loaded = json.loads(progress_path.read_text(encoding="utf-8"))
+        if loaded.get("dataset") == dataset:
+            progress.update(loaded)
 
-    for row in sources:
-        rel = row["path"]
-        if rel in completed:
-            continue
-        text = (ROOT / rel).read_text(encoding="utf-8")
-        payload = (
-            f"VELVETOS_CANONICAL_SOURCE: {rel}\n"
-            "COGNEE_ROLE: derived context only; verify canonical source before action.\n\n"
-            + text
-        )
-        await cognee.remember(
-            payload,
+    add_data_per_batch = int(cfg["sync"].get("addDataPerBatch", 1))
+    chunk_size = int(cfg["sync"].get("chunkSize", 384))
+    chunks_per_batch = int(cfg["sync"].get("chunksPerBatch", 1))
+    cognify_data_per_batch = int(cfg["sync"].get("cognifyDataPerBatch", 1))
+    if not 1 <= add_data_per_batch <= 32:
+        raise RuntimeError("Cognee addDataPerBatch must be 1..32")
+    if not 128 <= chunk_size <= 512:
+        raise RuntimeError("Cognee chunkSize must be 128..512 for the configured local multilingual model")
+    if not 1 <= chunks_per_batch <= 32:
+        raise RuntimeError("Cognee chunksPerBatch must be 1..32")
+    if not 1 <= cognify_data_per_batch <= 32:
+        raise RuntimeError("Cognee cognifyDataPerBatch must be 1..32")
+
+    ingest_paths, document_map = materialize_ingest_files(root, digest, sources)
+
+    if not progress.get("added"):
+        await cognee.add(
+            ingest_paths,
             dataset_name=dataset,
-            self_improvement=False,
-            extractor="gliner_demo",
+            data_per_batch=add_data_per_batch,
         )
-        completed.add(rel)
-        atomic_json(progress_path, {"dataset": dataset, "completed": sorted(completed)})
+        progress["added"] = True
+        atomic_json(progress_path, progress)
+
+    if not progress.get("cognified"):
+        await cognee.cognify(
+            datasets=dataset,
+            extractor="gliner_demo",
+            chunk_size=chunk_size,
+            chunks_per_batch=chunks_per_batch,
+            data_per_batch=cognify_data_per_batch,
+            raise_on_error=True,
+        )
+        progress["cognified"] = True
+        atomic_json(progress_path, progress)
 
     state = {
         "schema": "vf.cognee.state.v1",
         "dataset": dataset,
         "sourceDigest": digest,
+        "knowledgeProfile": cfg["sync"].get("knowledgeProfile"),
+        "sourceCount": len(sources),
+        "categories": sorted({row["category"] for row in sources}),
         "sources": sources,
+        "indexContract": contract,
+        "documentMap": document_map,
         "cogneeVersion": installed_version(),
         "syncedAt": datetime.now(timezone.utc).isoformat(),
         "authority": cfg["authority"],
@@ -175,34 +308,78 @@ async def recall_memory(cfg: dict[str, Any], root: Path, query: str, top_k: int)
     state = read_state(root)
     if not state:
         raise RuntimeError("Cognee index is not synced")
-    digest, _ = source_manifest(cfg)
+    digest, sources = source_manifest(cfg)
     if state.get("sourceDigest") != digest:
         raise RuntimeError("Cognee index is stale; run sync before semantic recall")
-    apply_runtime_env(root)
+    contract = index_contract(cfg)
+    if state.get("indexContract") != contract:
+        raise RuntimeError("Cognee index contract does not match current configuration")
+    document_map = state.get("documentMap")
+    if not isinstance(document_map, dict) or len(document_map) != len(sources):
+        raise RuntimeError("Cognee canonical document provenance map is missing or incomplete")
+    source_by_path = {row["path"]: row for row in sources}
+    apply_runtime_env(root, cfg)
     import cognee
+    from cognee.modules.search.types import SearchType
 
     rows = await cognee.recall(
         query,
+        query_type=SearchType.CHUNKS,
+        auto_route=False,
         datasets=[state["dataset"]],
         top_k=top_k,
-        only_context=True,
+        only_context=False,
     )
+    results = []
+    for row in rows:
+        item = serialize_entry(row)
+        if not isinstance(item, dict):
+            raise RuntimeError("Cognee chunk result is not structured")
+        metadata = item.get("metadata") or {}
+        document_name = metadata.get("document_name")
+        canonical_path = document_map.get(document_name)
+        source = source_by_path.get(canonical_path)
+        if not source:
+            raise RuntimeError("Cognee chunk result is missing canonical provenance")
+        results.append({
+            "kind": item.get("kind"),
+            "search_type": item.get("search_type"),
+            "text": item.get("text"),
+            "score": item.get("score"),
+            "chunk": {
+                "documentName": document_name,
+                "chunkIndex": metadata.get("chunk_index"),
+                "chunkId": metadata.get("chunk_id"),
+            },
+            "canonicalSource": {
+                "path": source["path"],
+                "sha256": source["sha256"],
+                "category": source["category"],
+                "authority": source["authority"],
+                "freshness": source["freshness"],
+            },
+            "requiresCanonicalVerification": True,
+        })
     return {
         "status": "OK",
         "backend": "cognee-local-derived",
         "dataset": state["dataset"],
         "authority": cfg["authority"],
         "requiresCanonicalVerification": cfg["sync"]["requiresCanonicalVerification"],
-        "results": [serialize_entry(x) for x in rows],
+        "results": results,
     }
 
 
 async def smoke(cfg: dict[str, Any], root: Path) -> dict[str, Any]:
-    apply_runtime_env(root / "smoke")
+    apply_runtime_env(root / "smoke", cfg)
     import cognee
+    from cognee.modules.search.types import SearchType
 
     token = "cobalt-sparrow-7319"
-    dataset = f"vf_cognee_smoke_{cfg['pinnedVersion'].replace('.', '_')}"
+    contract_hash = hashlib.sha256(
+        json.dumps(index_contract(cfg), sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()[:8]
+    dataset = f"vf_cognee_smoke_{cfg['pinnedVersion'].replace('.', '_')}_{contract_hash}"
     await cognee.remember(
         f"VelvetOS synthetic smoke sentinel is {token}.",
         dataset_name=dataset,
@@ -211,23 +388,41 @@ async def smoke(cfg: dict[str, Any], root: Path) -> dict[str, Any]:
     )
     rows = await cognee.recall(
         "What is the VelvetOS synthetic smoke sentinel?",
+        query_type=SearchType.CHUNKS,
+        auto_route=False,
         datasets=[dataset],
         top_k=5,
-        only_context=True,
+        only_context=False,
     )
     rendered = json.dumps([serialize_entry(x) for x in rows], ensure_ascii=False, default=str)
     if token not in rendered:
         raise RuntimeError("Cognee smoke recall missed synthetic sentinel")
-    return {"status": "PASS", "version": installed_version(), "dataset": dataset}
+    return {
+        "status": "PASS",
+        "version": installed_version(),
+        "dataset": dataset,
+        "indexContract": index_contract(cfg),
+    }
 
 
 def doctor(cfg: dict[str, Any], root: Path) -> dict[str, Any]:
     digest, sources = source_manifest(cfg)
+    contract = index_contract(cfg)
     version = installed_version()
     root.mkdir(parents=True, exist_ok=True)
     probe = root / ".write-probe"
     probe.write_text("ok", encoding="utf-8")
     probe.unlink()
+    state = read_state(root)
+    document_map = state.get("documentMap") if isinstance(state, dict) else None
+    state_current = bool(
+        isinstance(state, dict)
+        and state.get("sourceDigest") == digest
+        and state.get("dataset") == dataset_for(cfg, digest)
+        and state.get("indexContract") == contract
+        and isinstance(document_map, dict)
+        and len(document_map) == len(sources)
+    )
     return {
         "status": "PASS" if version == cfg["pinnedVersion"] else "BLOCKED",
         "installedVersion": version,
@@ -235,7 +430,14 @@ def doctor(cfg: dict[str, Any], root: Path) -> dict[str, Any]:
         "versionMatch": version == cfg["pinnedVersion"],
         "runtimeRoot": str(root),
         "sourceDigest": digest,
+        "knowledgeProfile": cfg["sync"].get("knowledgeProfile"),
+        "sourceCount": len(sources),
+        "categories": sorted({row["category"] for row in sources}),
         "sources": sources,
+        "indexContract": contract,
+        "stateCurrent": state_current,
+        "activeDataset": state.get("dataset") if isinstance(state, dict) else None,
+        "activeSourceDigest": state.get("sourceDigest") if isinstance(state, dict) else None,
         "remoteProvidersAllowed": os.environ.get("VFMEM_COGNEE_ALLOW_REMOTE") == "1",
         "authority": cfg["authority"],
     }

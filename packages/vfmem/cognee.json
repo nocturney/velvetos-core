@@ -14,24 +14,430 @@
   "remoteProvidersAllowedByDefault": false,
   "sync": {
     "strategy": "content-hash-versioned-dataset",
+    "knowledgeProfile": "velvetos-durable-v1",
+    "ingestionRevision": "granular-file-multilingual-v2",
+    "addDataPerBatch": 1,
+    "chunkSize": 384,
+    "chunksPerBatch": 1,
+    "cognifyDataPerBatch": 1,
     "sources": [
       "docs/VFMEM.md",
       "packages/vfmem/MEMORY-UPDATE.md",
       "packages/vfmem/HANDOFF.md",
       "constitution/CONSTITUTION.md",
       "packages/vfmem/catalog.json",
-      "packages/vfops/data/owner-memory.md"
+      "packages/vfops/data/owner-memory.md",
+      "packages/velvetos/KERNEL.md",
+      "packages/velvetos/LAYERS.md",
+      "packages/velvetos/PIPELINE.md",
+      "packages/velvetos/REPOS.md",
+      "packages/velvetos/CHANNELS.md",
+      "packages/vfharness/LAYERS.md",
+      "packages/vfharness/PERMISSIONS.md",
+      "packages/vfharness/LOOP.md",
+      "packages/vfharness/PLANNING-FILES.md",
+      "packages/vfops/ROUTINE.md",
+      "packages/vfops/risk-policy.json",
+      "packages/vfops/LOOP.json",
+      "packages/vfprod/ROUTING.md",
+      "packages/vfprod/PREFLIGHT.md",
+      "packages/vfprod/PRINT-DONE.md",
+      "packages/vfprod/MATERIAL.md",
+      "packages/vfprod/MAINTENANCE.md",
+      "packages/vfprod/CLAIMS.md",
+      "packages/vfprod/SKILL.md",
+      "packages/vfmedia/INTAKE.md",
+      "packages/vfmedia/CATALOG.md",
+      "packages/vfmedia/FOLDERS.json",
+      "packages/vfmedia/LOCK.md",
+      "packages/vfmedia/SKILL.md",
+      "packages/vfigos/PUBLICATION-STATES.md",
+      "packages/vfigos/OPENPOST.md",
+      "packages/vfigos/PUBLISH-BRIDGE.md",
+      "packages/vfigos/GRAPH-MUTATIONS.md",
+      "packages/vfigos/CAPABILITIES.json",
+      "packages/vfigos/SKILL.md",
+      "packages/vfgrowth/EDIT-GATE.md",
+      "packages/vfgrowth/PREFLIGHT.md",
+      "packages/vfgrowth/PRODUCTION-CONTENT.md",
+      "packages/vfgrowth/CONTENT-RUBRIC.md",
+      "packages/vfgrowth/RHYTHM.md",
+      "packages/vfgrowth/SKILL.md",
+      "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+      "packages/vfcopy/VOICE.md",
+      "packages/vfcopy/VOICE-CHART.md",
+      "packages/vfcopy/SOFT-TOOLS-CONTRACT.md",
+      "packages/vfcopy/SKILL.md",
+      "packages/vfom/VISUAL-OS.md",
+      "packages/vfom/EDIT-DIRECTOR.md",
+      "packages/vfom/BRAND-ASSET-LOCK.md",
+      "packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md",
+      "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
+      "packages/vfom/SKILL.md",
+      "packages/vfsales/ORDERS.md",
+      "packages/vfsales/QUOTE.md",
+      "packages/vfsales/SLA.md",
+      "packages/vfsales/SKILL.md",
+      "packages/vfresearch/HQ-ROUTINE.md",
+      "packages/vfresearch/DAILY.md",
+      "packages/vfresearch/WEEKLY.md",
+      "packages/vfresearch/SKILL.md",
+      "packages/vfmcp/CORE-MCP.md",
+      "packages/vfmcp/HOST.md",
+      "packages/vfagents/fit.json",
+      "packages/vfmskill/CONTEXT.md",
+      "packages/vfinsights/LEARNINGS.md"
     ],
+    "sourceMetadata": {
+      "docs/VFMEM.md": {
+        "category": "memory-governance",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfmem/MEMORY-UPDATE.md": {
+        "category": "memory-governance",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfmem/HANDOFF.md": {
+        "category": "memory-governance",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "constitution/CONSTITUTION.md": {
+        "category": "memory-governance",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfmem/catalog.json": {
+        "category": "memory-governance",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfops/data/owner-memory.md": {
+        "category": "memory-governance",
+        "authority": "canonical-memory",
+        "freshness": "rolling"
+      },
+      "packages/velvetos/KERNEL.md": {
+        "category": "architecture",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/velvetos/LAYERS.md": {
+        "category": "architecture",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/velvetos/PIPELINE.md": {
+        "category": "architecture",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/velvetos/REPOS.md": {
+        "category": "architecture",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/velvetos/CHANNELS.md": {
+        "category": "architecture",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfharness/LAYERS.md": {
+        "category": "architecture",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfharness/PERMISSIONS.md": {
+        "category": "architecture",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfharness/LOOP.md": {
+        "category": "architecture",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfharness/PLANNING-FILES.md": {
+        "category": "architecture",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfops/ROUTINE.md": {
+        "category": "operations",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfops/risk-policy.json": {
+        "category": "operations",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfops/LOOP.json": {
+        "category": "operations",
+        "authority": "canonical-policy",
+        "freshness": "durable"
+      },
+      "packages/vfprod/ROUTING.md": {
+        "category": "production",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfprod/PREFLIGHT.md": {
+        "category": "production",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfprod/PRINT-DONE.md": {
+        "category": "production",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfprod/MATERIAL.md": {
+        "category": "production",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfprod/MAINTENANCE.md": {
+        "category": "production",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfprod/CLAIMS.md": {
+        "category": "production",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfprod/SKILL.md": {
+        "category": "production",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfmedia/INTAKE.md": {
+        "category": "media",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfmedia/CATALOG.md": {
+        "category": "media",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfmedia/FOLDERS.json": {
+        "category": "media",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfmedia/LOCK.md": {
+        "category": "media",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfmedia/SKILL.md": {
+        "category": "media",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfigos/PUBLICATION-STATES.md": {
+        "category": "publication",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfigos/OPENPOST.md": {
+        "category": "publication",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfigos/PUBLISH-BRIDGE.md": {
+        "category": "publication",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfigos/GRAPH-MUTATIONS.md": {
+        "category": "publication",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfigos/CAPABILITIES.json": {
+        "category": "publication",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfigos/SKILL.md": {
+        "category": "publication",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfgrowth/EDIT-GATE.md": {
+        "category": "growth",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfgrowth/PREFLIGHT.md": {
+        "category": "growth",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfgrowth/PRODUCTION-CONTENT.md": {
+        "category": "growth",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfgrowth/CONTENT-RUBRIC.md": {
+        "category": "growth",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfgrowth/RHYTHM.md": {
+        "category": "growth",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfgrowth/SKILL.md": {
+        "category": "growth",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md": {
+        "category": "brand-copy",
+        "authority": "canonical-brand",
+        "freshness": "durable"
+      },
+      "packages/vfcopy/VOICE.md": {
+        "category": "brand-copy",
+        "authority": "canonical-brand",
+        "freshness": "durable"
+      },
+      "packages/vfcopy/VOICE-CHART.md": {
+        "category": "brand-copy",
+        "authority": "canonical-brand",
+        "freshness": "durable"
+      },
+      "packages/vfcopy/SOFT-TOOLS-CONTRACT.md": {
+        "category": "brand-copy",
+        "authority": "canonical-brand",
+        "freshness": "durable"
+      },
+      "packages/vfcopy/SKILL.md": {
+        "category": "brand-copy",
+        "authority": "canonical-brand",
+        "freshness": "durable"
+      },
+      "packages/vfom/VISUAL-OS.md": {
+        "category": "creative",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfom/EDIT-DIRECTOR.md": {
+        "category": "creative",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfom/BRAND-ASSET-LOCK.md": {
+        "category": "creative",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md": {
+        "category": "creative",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json": {
+        "category": "creative",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfom/SKILL.md": {
+        "category": "creative",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfsales/ORDERS.md": {
+        "category": "sales",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfsales/QUOTE.md": {
+        "category": "sales",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfsales/SLA.md": {
+        "category": "sales",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfsales/SKILL.md": {
+        "category": "sales",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfresearch/HQ-ROUTINE.md": {
+        "category": "research",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfresearch/DAILY.md": {
+        "category": "research",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfresearch/WEEKLY.md": {
+        "category": "research",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfresearch/SKILL.md": {
+        "category": "research",
+        "authority": "canonical-process",
+        "freshness": "durable"
+      },
+      "packages/vfmcp/CORE-MCP.md": {
+        "category": "tooling-capability",
+        "authority": "canonical-capability",
+        "freshness": "durable"
+      },
+      "packages/vfmcp/HOST.md": {
+        "category": "tooling-capability",
+        "authority": "canonical-capability",
+        "freshness": "durable"
+      },
+      "packages/vfagents/fit.json": {
+        "category": "tooling-capability",
+        "authority": "canonical-capability",
+        "freshness": "durable"
+      },
+      "packages/vfmskill/CONTEXT.md": {
+        "category": "tooling-capability",
+        "authority": "canonical-capability",
+        "freshness": "durable"
+      },
+      "packages/vfinsights/LEARNINGS.md": {
+        "category": "insights-learning",
+        "authority": "derived-learning",
+        "freshness": "rolling"
+      }
+    },
     "maxSourceBytes": 2097152,
-    "requiresCanonicalVerification": true
+    "requiresCanonicalVerification": true,
+    "embeddingProvider": "fastembed",
+    "embeddingModel": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "embeddingDimensions": 384,
+    "retrievalMode": "chunks-with-canonical-provenance-v1"
   },
   "deny": [
     "secrets",
+    "credentials",
     "raw-transcripts",
     "customer-sensitive-records",
     "live-finance-state",
     "live-production-state",
-    "live-publication-state"
+    "live-publication-state",
+    "live-inventory-state",
+    "live-schedule-state",
+    "ephemeral-job-output"
   ],
   "updates": {
     "channel": "stable",
