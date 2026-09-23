@@ -27,6 +27,11 @@ DECOR = {
 def esc(value: object) -> str:
     return html.escape(str(value if value is not None else ""), quote=True)
 
+def mixed_text(value: object) -> str:
+    """Escape text, then isolate machine IDs so RTL clients never break them mid-token."""
+    out=esc(value)
+    return re.sub(r'(VF-\d{9,})', r'<span dir="ltr" style="white-space:nowrap;unicode-bidi:isolate;overflow-wrap:normal;word-break:keep-all;font-size:9px;letter-spacing:-.2px">\1</span>', out)
+
 def safe_image(value: object, allow_local: bool = False) -> str:
     raw = str(value or "").strip()
     if not raw:
@@ -140,8 +145,8 @@ def item_grid(items: object, accent: str) -> str:
     width = f"{100/len(rows):.3f}%"
     cells: list[str] = []
     for idx, item in enumerate(rows):
-        title = esc(item.get("title") if isinstance(item, dict) else item)
-        detail = esc(item.get("detail") if isinstance(item, dict) else "")
+        title = mixed_text(item.get("title") if isinstance(item, dict) else item)
+        detail = mixed_text(item.get("detail") if isinstance(item, dict) else "")
         border = "" if idx == len(rows)-1 else "border-left:1px solid #e1d9cb;"
         detail_html = f'<div class="vf-item-detail" dir="rtl" style="font-size:10px;line-height:15px;color:#7f847f;margin-top:4px;text-align:right;overflow-wrap:anywhere">{detail}</div>' if detail else ""
         cells.append(f'<td class="vf-item-cell" width="{width}" valign="top" dir="rtl" align="right" style="padding:13px 10px 4px;color:#17372d;text-align:right;overflow-wrap:anywhere;{border}"><div class="vf-item-title" style="font-size:12px;line-height:18px;font-weight:700"><span style="color:{accent}">&#9679;</span>&nbsp;{title}</div>{detail_html}</td>')
