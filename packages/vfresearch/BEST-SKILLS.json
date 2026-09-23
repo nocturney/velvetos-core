@@ -40,11 +40,11 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-22",
-  "dataDate": "2026-09-22",
-  "lastArtifact": "packages/vfresearch/sources/2026-09-22-best-skills.md",
+  "lastPass": "2026-09-24",
+  "dataDate": "2026-09-24",
+  "lastArtifact": "packages/vfresearch/sources/2026-09-24-best-skills.md",
   "lastResult": "no-embed-existing-coverage",
-  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due pulse executed inside 2026-09-22 Research Seat; no separate automation created",
+  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due pulse executed inside 2026-09-24 Research Seat; no separate automation created",
   "embedded": [
     {
       "id": "grill-me",
