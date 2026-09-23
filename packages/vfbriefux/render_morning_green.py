@@ -30,7 +30,10 @@ def esc(value: object) -> str:
 def mixed_text(value: object) -> str:
     """Escape text, then isolate machine IDs so RTL clients never break them mid-token."""
     out=esc(value)
-    return re.sub(r'(VF-\d{9,})', r'<span dir="ltr" style="white-space:nowrap;unicode-bidi:isolate;overflow-wrap:normal;word-break:keep-all;font-size:9px;letter-spacing:-.2px">\1</span>', out)
+    def repl(match: re.Match[str]) -> str:
+        safe_id=match.group(1).replace('-', '&#8209;')
+        return f'<nobr dir="ltr" style="white-space:nowrap;unicode-bidi:isolate;overflow-wrap:normal;word-break:keep-all;font-size:9px;letter-spacing:-.2px">{safe_id}</nobr>'
+    return re.sub(r'(VF-\d{8}-\d{3})', repl, out)
 
 def safe_image(value: object, allow_local: bool = False) -> str:
     raw = str(value or "").strip()
@@ -156,6 +159,7 @@ def stat_cells(stats: object) -> str:
     rows = list(stats or [])[:3]
     while len(rows) < 3:
         rows.append({"value":"אין נתון","label":""})
+    rows.reverse()
     cells: list[str] = []
     for idx, stat in enumerate(rows):
         cls = "vf-stat vf-stat-last" if idx == 2 else "vf-stat"

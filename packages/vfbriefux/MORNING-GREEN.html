@@ -17,15 +17,15 @@ td{mso-line-height-rule:exactly;word-break:normal;box-sizing:border-box} img{bor
  .vf-outer{padding-left:0!important;padding-right:0!important}.vf-gap{padding-left:10px!important;padding-right:10px!important}
  .vf-hero-copy{width:58%!important;padding:20px 18px 20px 14px!important}.vf-hero-photo{width:42%!important;padding:0!important}
  .vf-hero{font-size:31px!important;line-height:36px!important;letter-spacing:-.2px!important}.vf-hero-summary{font-size:13px!important;line-height:20px!important}
- .vf-hero-photo img{width:100%!important;max-width:420px!important;margin:0 auto!important;border-radius:22px 0 0 22px!important}
- .vf-story-copy{width:56%!important;padding:20px 18px 20px 14px!important}.vf-story-photo{width:44%!important;padding:10px 0 10px 10px!important}
- .vf-story-photo img{width:100%!important;max-width:460px!important;margin:0 auto!important;border-radius:16px!important}
+ .vf-hero-photo img{width:100%!important;max-width:420px!important;margin:0 auto!important;border-radius:22px 0 0 22px!important}.vf-hero-img{height:320px!important;object-fit:cover!important;object-position:center!important}
+ .vf-story-copy{width:56%!important;padding:20px 18px 20px 14px!important}.vf-story-photo{width:44%!important;padding:0 0 0 10px!important}
+ .vf-story-photo img{width:100%!important;max-width:460px!important;margin:0 auto!important;border-radius:18px!important}.vf-story-img{height:190px!important;object-fit:cover!important;object-position:left center!important}
  .vf-section{font-size:22px!important;line-height:28px!important}.vf-card-pad{padding-left:18px!important;padding-right:18px!important}
  .vf-week-day{padding-left:1px!important;padding-right:1px!important}.vf-feed-thumb{max-width:48px!important;height:52px!important}
  .vf-insta-metric{padding:14px 5px!important}.vf-insta-value{font-size:18px!important;line-height:23px!important}.vf-insta-label{font-size:9px!important;line-height:13px!important}
  .vf-stat{padding:17px 5px!important}.vf-stat-value{font-size:25px!important;line-height:31px!important}.vf-stat-label{font-size:10px!important;line-height:15px!important}
  .vf-item-cell{padding:11px 6px 3px!important}.vf-item-title{font-size:11px!important;line-height:16px!important}.vf-item-detail{font-size:9px!important;line-height:13px!important}
- .vf-radar-copy{width:48%!important;padding:18px 16px!important}.vf-radar-photo{width:52%!important}.vf-footer-pad{padding-left:10px!important;padding-right:10px!important}
+ .vf-radar-copy{width:48%!important;padding:18px 16px!important}.vf-radar-photo{width:52%!important}.vf-radar-img{height:132px!important;object-fit:cover!important;object-position:center!important}.vf-footer-pad{padding-left:10px!important;padding-right:10px!important}
 }
 </style>
 </head><body><div class="preheader">{{preheader}}</div>
@@ -44,7 +44,7 @@ td{mso-line-height-rule:exactly;word-break:normal;box-sizing:border-box} img{bor
 <div style="width:50px;border-top:2px solid #c7a566;margin-top:14px"></div>
 <div style="font-size:10px;line-height:15px;letter-spacing:1.5px;color:#d0aa65;font-weight:700;margin-top:7px">ימים טובים עושים יותר</div>
 </td>
-<td class="vf-hero-photo" width="42%" valign="middle" align="center" bgcolor="#15352b" style="padding:0"><img src="{{top_image_url}}" alt="{{top_image_alt}}" width="420" style="width:100%;max-width:420px;height:auto;border-radius:26px 0 0 26px"></td>
+<td class="vf-hero-photo" width="42%" valign="middle" align="center" bgcolor="#15352b" style="padding:0"><img class="vf-hero-img" src="{{top_image_url}}" alt="{{top_image_alt}}" width="420" style="width:100%;max-width:420px;height:auto;border-radius:26px 0 0 26px"></td>
 </tr></table>
 </td></tr><tr><td class="vf-gap" style="padding:0 10px 10px">
 <table role="presentation" width="100%" dir="rtl" bgcolor="#f8f3e9" style="width:100%;background:#f8f3e9;border-radius:22px;overflow:hidden;box-shadow:0 5px 18px rgba(55,43,21,.06)">
@@ -65,7 +65,7 @@ td{mso-line-height-rule:exactly;word-break:normal;box-sizing:border-box} img{bor
 <div class="vf-section" style="font-size:29px;line-height:35px;font-weight:700;color:#fff8ec;margin-top:8px;overflow-wrap:anywhere">{{story_title}}</div>
 <div style="font-size:14px;line-height:23px;color:#dfd7c6;margin-top:10px;overflow-wrap:anywhere">{{story_body}}</div>
 </td>
-<td class="vf-story-photo" width="44%" valign="middle" align="center" style="padding:10px 0 10px 10px"><img src="{{story_image_url}}" alt="{{story_image_alt}}" width="460" style="width:100%;max-width:460px;height:auto;border-radius:16px"></td>
+<td class="vf-story-photo" width="44%" valign="middle" align="center" style="padding:0 0 0 10px"><img class="vf-story-img" src="{{story_image_url}}" alt="{{story_image_alt}}" width="460" style="width:100%;max-width:460px;height:auto;border-radius:18px"></td>
 </tr></table></td></tr>
 <tr><td class="vf-gap" style="padding:0 10px 10px">
 <table role="presentation" width="100%" dir="rtl" bgcolor="#f3ebda" style="width:100%;background:#f3ebda;border-radius:22px"><tr><td class="vf-card-pad" dir="rtl" align="center" style="padding:18px 22px;color:#17372d;text-align:center">
@@ -88,7 +88,7 @@ td{mso-line-height-rule:exactly;word-break:normal;box-sizing:border-box} img{bor
 <div style="font-size:11px;line-height:17px;color:#8b8272;margin-top:3px">{{radar_title}}</div>
 <div style="font-size:13px;line-height:21px;color:#6d746e;margin-top:8px;overflow-wrap:anywhere">{{radar_text}}</div>
 </td>
-<td class="vf-radar-photo" width="52%" valign="middle" align="center" style="padding:8px 0 8px 8px"><img src="{{radar_image_url}}" alt="{{radar_image_alt}}" width="520" style="width:100%;max-width:520px;height:auto;border-radius:16px"></td>
+<td class="vf-radar-photo" width="52%" valign="middle" align="center" style="padding:8px 0 8px 8px"><img class="vf-radar-img" src="{{radar_image_url}}" alt="{{radar_image_alt}}" width="520" style="width:100%;max-width:520px;height:auto;border-radius:16px"></td>
 </tr></table></td></tr><tr><td class="vf-gap" style="padding:0 10px 10px">
 <table role="presentation" width="100%" dir="rtl" bgcolor="#15352b" style="width:100%;background:#15352b;border-radius:20px;overflow:hidden"><tr>{{stats_html}}</tr></table>
 </td></tr>

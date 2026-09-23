@@ -41,7 +41,7 @@ def main() -> None:
         "#15352b", "#f8f3e9", "#eee8dc", "MORNING EDITION", "בקרוב בפיד", "7 הימים הקרובים", "Instagram", "מצב החשבון",
         "{{scheduled_posts_html}}", "{{instagram_metrics_html}}", "{{instagram_note}}", "{{attention_html}}", "{{progress_html}}",
         "{{stats_html}}", "max-width:680px", "@media only screen and (max-width:680px)", "vf-hero-copy", "vf-hero-photo",
-        "vf-feed-thumb", "vf-insta-value", "vf-stat-value", "vf-item-cell", "ימים טובים עושים יותר", "{{radar_title}}", "max-width:420px", "max-width:460px", "{{footer_image_url}}",
+        "vf-feed-thumb", "vf-insta-value", "vf-stat-value", "vf-item-cell", "vf-hero-img", "vf-story-img", "vf-radar-img", "ימים טובים עושים יותר", "{{radar_title}}", "max-width:420px", "max-width:460px", "{{footer_image_url}}",
     ):
         if token not in template:
             fail(f"MORNING-GREEN.html missing {token!r}")
@@ -60,7 +60,7 @@ def main() -> None:
     contract = (PACK / "MORNING-GREEN.md").read_text(encoding="utf-8")
     for token in (
         "scheduled != approved != published_verified",
-        "מתוזמן", "טרם שובץ", "OpenPost", "CID", "TARGET-CONCEPT", "QA חזותי",
+        "מתוזמן", "טרם שובץ", "OpenPost", "CID", "TARGET-CONCEPT", "QA חזותי", "VF-YYYYMMDD-NNN",
         "list_media/get_media", "owner-visible-text",
     ):
         if token not in contract:
@@ -112,14 +112,16 @@ def main() -> None:
     for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--thumbnail-dir", "morning-green-assets-"):
         if token not in preparer:
             fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
-    for token in ("reader_friendly", "compact_overview", "compact_receivables", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights", "Instagram has its own dedicated analytics section", "דברים שכדאי לשים לב אליהם", "תודה שאתה חלק מהדרך"):
+    for token in ("reader_friendly", "compact_overview", "compact_attention", "compact_progress", "compact_receivables", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights", "Instagram has its own dedicated analytics section", "דברים שכדאי לשים לב אליהם", "תודה שאתה חלק מהדרך"):
         if token not in builder:
             fail(f"Morning Green builder missing reader-friendly/week-strip/Instagram mapping {token!r}")
     renderer=(PACK / "render_morning_green.py").read_text(encoding="utf-8")
     if "WEEK_DAYS = 7" not in renderer:
         fail("Morning Green renderer must enforce an exact seven-day feed strip")
-    if "mixed_text" not in renderer or "unicode-bidi:isolate" not in renderer:
+    if "mixed_text" not in renderer or "unicode-bidi:isolate" not in renderer or "<nobr" not in renderer or "&#8209;" not in renderer:
         fail("Morning Green renderer must isolate VF IDs for RTL mobile clients")
+    if "rows.reverse()" not in renderer:
+        fail("Morning Green KPI order must match the approved mockup visual order")
 
     proc = subprocess.run([sys.executable, str(PACK / "render_morning_green.py"), "--check"], cwd=ROOT, text=True, capture_output=True)
     if proc.returncode != 0:

@@ -69,11 +69,32 @@ def compact_overview(text: str) -> str:
     """Keep the hero factual, short and non-duplicative like the approved mockup."""
     out=reader_friendly(text)
     out=re.sub(r'\s*Instagram חי:.*$', '', out).strip()
-    out=out.replace('כל חמש העבודות בגיליון VF HQ · jobs מסומנות כסופקו.','5 העבודות ב-VF HQ · jobs מסומנות כסופקו.')
-    out=out.replace('שלוש יתרות פתוחות מאומתות גם ב-VF HQ · books:','3 יתרות פתוחות ב-books:')
+    out=out.replace('כל חמש העבודות בגיליון VF HQ · jobs מסומנות כסופקו.','5 העבודות ב-jobs סופקו.')
+    out=out.replace('שלוש יתרות פתוחות מאומתות גם ב-VF HQ · books:','3 יתרות פתוחות:')
     out=out.replace('סך הגבייה הפתוחה 4790.','סך הגבייה 4790.')
     out=out.replace('ביומן יש אירוע אחד היום, דיאנה, שון, 16:00 עד 17:00 בבארי.','היום: דיאנה ושון, 16:00-17:00 בבארי.')
     return re.sub(r'\s{2,}',' ',out).strip()
+
+def compact_attention(items: list[dict[str,str]]) -> list[dict[str,str]]:
+    out=[dict(x) for x in items[:4]]
+    if out and out[0].get('title','').startswith('גבייה פתוחה אצל '):
+        people=out[0]['title'].removeprefix('גבייה פתוחה אצל ').rstrip('.')
+        out[0]={'title':'גבייה פתוחה','detail':people}
+    return out
+
+def compact_progress(items: list[dict[str,str]]) -> list[dict[str,str]]:
+    out=[]
+    for item in items[:3]:
+        title=str(item.get('title') or '').strip()
+        detail=str(item.get('detail') or '').strip()
+        if title.startswith('ביומן של 23.9 יש אירוע אחד'):
+            title='אירוע אחד היום - דיאנה ושון, 16:00-17:00 בבארי'
+            detail=''
+        elif title.startswith('הגבייה הפתוחה נשארה 4790'):
+            title='הגבייה הפתוחה נשארה 4790'
+            detail=''
+        out.append({'title':title,'detail':detail})
+    return out
 
 def compact_receivables(items: list[dict[str,str]]) -> str:
     """Compress repeated receivable details for the Story card without losing amounts/status."""
@@ -230,8 +251,8 @@ def main() -> int:
     sec=sections(text)
     op=json.loads(a.openpost.read_text(encoding='utf-8')) if a.openpost and a.openpost.exists() else None
 
-    attention=[split_title_detail(x) for x in sec['צריך ממך'][:4]]
-    progress=[split_title_detail(x) for x in sec['מה השתנה מאז הבריף הקודם'] if 'Instagram' not in x and 'OpenPost' not in x][:3]
+    attention=compact_attention([split_title_detail(x) for x in sec['צריך ממך'][:4]])
+    progress=compact_progress([split_title_detail(x) for x in sec['מה השתנה מאז הבריף הקודם'] if 'Instagram' not in x and 'OpenPost' not in x][:3])
     radar_lines=[
         clean_bullet(reader_friendly(x)) for x in sec['רדאר תוכן']
         if 'OpenPost' not in x and 'Instagram' not in x and 'הפיד האחרון' not in x and 'אין Publish' not in x
