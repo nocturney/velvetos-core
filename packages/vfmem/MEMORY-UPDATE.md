@@ -34,7 +34,7 @@ Mastery gate לפני «למדנו / סיימנו»: אימות טרי (`verific
 
 ## משמעת זיכרון (recall / save / close)
 
-דפוס מ־[agent-memory-discipline](https://buildwithclaude.com/skill/agent-memory-discipline) (buildwithclaude, 2026-09-03). בלי MCP זיכרון חיצוני — הקבצים למעלה הם ה־backend.
+דפוס מ־[agent-memory-discipline](https://buildwithclaude.com/skill/agent-memory-discipline) (buildwithclaude, 2026-09-03). הקבצים למעלה נשארים ה־backend הקנוני. Cognee המקומי יכול לשמש אינדקס סמנטי נגזר בלבד לפי `COGNEE.md`; הוא אינו מקור אמת ואינו כותב חזרה לחוקים/owner-memory.
 
 ### Recall לפני פעולה
 
@@ -58,6 +58,13 @@ Mastery gate לפני «למדנו / סיימנו»: אימות טרי (`verific
 - העדפה או עובדת סביבה שהתגלתה בקושי (פורט, דגל, שירות שחייב לרוץ)
 
 לא לשמור: תוכן קבצים שאפשר לקרוא שוב, מצב זמני, secrets, שיחה שלמה. **שורה אחת = עובדה אחת.**
+
+### Semantic sync אחרי שינוי קנוני
+
+אם runtime מקומי של Cognee זמין, אחרי commit/checkout שמעדכן אחד ממקורות ה־allowlist
+מריצים `python packages/vfmem/scripts/vf_cognee.py sync`. עד שהסנכרון מצליח,
+`vfmem recall` מזהה digest ישן ונופל אוטומטית לחיפוש הקנוני המקומי; אסור להשתמש
+באינדקס סמנטי stale.
 
 ### Close במקום delete
 
@@ -127,4 +134,4 @@ python3 scripts/vfmem.py architecture
 - secrets בגיט
 - ₪ / Insights מומצאים
 - העתקת שיחה שלמה — רק תמצית
-- התקנת MCP זיכרון hosted / binary במקום הקבצים האלה (context-memory, DeusData C binary, וכו׳)
+- החלפת הקבצים הקנוניים ב־MCP/DB זיכרון hosted או binary. Cognee המקומי המאושר הוא cache/index נגזר בלבד, עם fallback ל־vfmem ובלי ספק ענן כברירת מחדל.

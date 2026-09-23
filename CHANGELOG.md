@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-23 — **Cognee semantic memory backend:** integrated Cognee 1.6.0 behind canonical `vfmem` as an optional local/keyless derived index. Sync uses content-hash versioned datasets over an explicit canonical allowlist; recall is context-only and requires canonical verification, with automatic fallback to the existing vfmem search. Added a static CI sensor, operator runbook, exact version pin, remote-provider deny-by-default policy, and staged smoke/rollback update gates.
+
 - 2026-09-23 — **Morning Green content/analytics split:** kept `בקרוב בפיד` as the single seven-day publication strip and converted `Instagram` into a separate no-thumbnail analytics block. The block shows follower count, verified latest-post likes/comments, change since the previous brief, and explicitly marks missing Insights/Reach instead of inventing an engagement metric. Instagram/OpenPost lines are removed from `מה מתקדם`/`על הרדאר` when those facts are already represented by their dedicated sections, and Instagram followers no longer repeat in the general snapshot KPIs.
 
 - 2026-09-23 — **Morning Green seven-day feed strip:** redesigned `בקרוב בפיד` as one compact horizontal row covering the brief date plus the next six days. Every day is visible; only live OpenPost `scheduled_at` entries receive a small thumbnail, time and content type, while unscheduled days remain empty. Multiple items on one day keep the earliest thumbnail and show a `+N` count. The renderer enforces exactly seven cells and the Morning Green sensor protects the contract.

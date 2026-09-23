@@ -1,0 +1,46 @@
+{
+  "schema": "vf.cognee.v1",
+  "name": "cognee",
+  "role": "optional-local-derived-semantic-backend",
+  "canonicalMemory": "vfmem",
+  "sourceOfTruth": "git-and-live-canonical-sources",
+  "authority": "context-only-never-authority",
+  "package": "cognee[gliner]",
+  "pinnedVersion": "1.6.0",
+  "python": ">=3.10,<3.15",
+  "datasetPrefix": "velvetos_shared",
+  "runtimeRoot": "~/.velvetos/cognee",
+  "failover": "vfmem-local-search",
+  "remoteProvidersAllowedByDefault": false,
+  "sync": {
+    "strategy": "content-hash-versioned-dataset",
+    "sources": [
+      "docs/VFMEM.md",
+      "packages/vfmem/MEMORY-UPDATE.md",
+      "packages/vfmem/HANDOFF.md",
+      "constitution/CONSTITUTION.md",
+      "packages/vfmem/catalog.json",
+      "packages/vfops/data/owner-memory.md"
+    ],
+    "maxSourceBytes": 2097152,
+    "requiresCanonicalVerification": true
+  },
+  "deny": [
+    "secrets",
+    "raw-transcripts",
+    "customer-sensitive-records",
+    "live-finance-state",
+    "live-production-state",
+    "live-publication-state"
+  ],
+  "updates": {
+    "channel": "stable",
+    "checkCadence": "weekly",
+    "autoInstall": true,
+    "stagingVenv": true,
+    "requireSmoke": true,
+    "requireVfmemSensor": true,
+    "rollbackOnFailure": true,
+    "updatePinOnlyAfterGreen": true
+  }
+}
