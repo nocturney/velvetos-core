@@ -40,13 +40,18 @@ def main() -> None:
     for token in (
         "#15352b", "#f8f3e9", "MORNING EDITION", "בקרוב בפיד", "7 הימים הקרובים", "Instagram", "מצב החשבון",
         "{{scheduled_posts_html}}", "{{instagram_metrics_html}}", "{{instagram_note}}", "{{attention_html}}", "{{progress_html}}",
-        "{{stats_html}}", "max-width:920px", "@media only screen and (max-width:680px)",
+        "{{stats_html}}", "max-width:920px", "@media only screen and (max-width:680px)", "vf-hero-copy", "vf-hero-photo", "{{footer_image_url}}",
     ):
         if token not in template:
             fail(f"MORNING-GREEN.html missing {token!r}")
     for forbidden in ("<button", "<form", "...", "ellipsis"):
         if forbidden in template.lower():
             fail(f"fake-interactive token in Morning Green: {forbidden}")
+    if "vf-footer-quote" in template or "{{closing_quote}}" in template:
+        fail("Morning Green must not duplicate the handwritten footer quote as a large HTML quote")
+    for name,min_bytes in (("morning-top.jpg",5000),("morning-story.jpg",10000),("morning-radar.jpg",8000),("morning-footer.jpg",2500)):
+        if (ASSETS / name).stat().st_size < min_bytes:
+            fail(f"Morning Green editorial asset {name} is unexpectedly small")
 
     contract = (PACK / "MORNING-GREEN.md").read_text(encoding="utf-8")
     for token in (

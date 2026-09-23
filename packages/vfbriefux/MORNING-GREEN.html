@@ -12,14 +12,14 @@ html,body{margin:0!important;padding:0!important;width:100%!important;background
 table{border-collapse:separate;border-spacing:0;mso-table-lspace:0pt;mso-table-rspace:0pt}
 td{mso-line-height-rule:exactly} img{border:0;outline:none;text-decoration:none;display:block;max-width:100%;height:auto}
 .preheader{display:none!important;visibility:hidden;opacity:0;color:transparent;height:0;width:0;overflow:hidden;mso-hide:all}
-.vf-green-shell{width:100%;max-width:920px}.vf-week-day{width:14.285%}.vf-stack{width:50%}.vf-stat{width:33.333%}.vf-insta-metric{width:33.333%}.vf-hide-mobile{display:table-cell}
+.vf-green-shell{width:100%;max-width:920px}.vf-week-day{width:14.285%}.vf-stack{width:50%}.vf-stat{width:33.333%}.vf-insta-metric{width:33.333%}.vf-hero-copy{width:58%}.vf-hero-photo{width:42%}.vf-hide-mobile{display:table-cell}
 @media only screen and (max-width:680px){
  .vf-green-shell{width:100%!important;max-width:100%!important}.vf-outer{padding-left:8px!important;padding-right:8px!important}
  .vf-pad{padding-left:16px!important;padding-right:16px!important}.vf-hero{font-size:38px!important;line-height:44px!important}
- .vf-stack,.vf-stat,.vf-insta-metric{display:block!important;width:100%!important;max-width:100%!important}.vf-week-day{display:table-cell!important;width:14.285%!important;padding-left:2px!important;padding-right:2px!important}
+ .vf-stack,.vf-stat,.vf-insta-metric,.vf-hero-copy,.vf-hero-photo{display:block!important;width:100%!important;max-width:100%!important}.vf-week-day{display:table-cell!important;width:14.285%!important;padding-left:2px!important;padding-right:2px!important}
  .vf-insta-metric{border-left:0!important;border-bottom:1px solid #ddd5c7!important}.vf-insta-last{border-bottom:0!important}
  .vf-hide-mobile{display:none!important}.vf-story-copy{padding:26px 22px!important}.vf-section{font-size:24px!important;line-height:30px!important}
- .vf-footer-quote{font-size:26px!important;line-height:33px!important}.vf-stat{border-left:0!important;border-bottom:1px solid #ddd5c7}.vf-stat-last{border-bottom:0!important}
+ .vf-stat{border-left:0!important;border-bottom:1px solid #ddd5c7}.vf-stat-last{border-bottom:0!important}
 }
 </style>
 </head>
@@ -27,17 +27,20 @@ td{mso-line-height-rule:exactly} img{border:0;outline:none;text-decoration:none;
 <table role="presentation" width="100%" bgcolor="#e8e4da"><tr><td class="vf-outer" align="center" style="padding:24px 10px 44px">
 <!--[if mso]><table role="presentation" width="920"><tr><td><![endif]-->
 <table role="presentation" class="vf-green-shell" width="920" bgcolor="#15352b" style="width:100%;max-width:920px;background:#15352b;border-radius:30px;overflow:hidden">
-<tr><td bgcolor="#15352b"><img src="{{top_image_url}}" alt="{{top_image_alt}}" width="920" style="width:100%;height:auto"></td></tr>
-<tr><td class="vf-pad" bgcolor="#15352b" style="padding:30px 40px 34px;background:#15352b">
-<table role="presentation" width="100%"><tr>
-<td align="left" valign="top" style="font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:28px;color:#fff8ec">Velvet Factory</td>
-<td align="right" valign="top" style="font-size:14px;line-height:20px;color:#d7cfbc">{{date_label}}</td>
-</tr></table>
-<div style="height:28px;line-height:28px;font-size:1px">&nbsp;</div>
-<div style="font-size:11px;line-height:16px;letter-spacing:2.2px;color:#c7a566;font-weight:700">MORNING EDITION</div>
-<div class="vf-hero" style="font-size:52px;line-height:58px;font-weight:700;color:#fff8ec;letter-spacing:-1px;margin-top:8px">{{greeting}}</div>
-<div style="font-size:19px;line-height:30px;color:#d9d0bc;max-width:700px;margin-top:10px">{{daily_summary}}</div>
-<div style="width:54px;border-top:2px solid #c7a566;margin-top:24px"></div>
+<tr><td bgcolor="#15352b">
+<table role="presentation" width="100%" dir="ltr" bgcolor="#15352b" style="background:#15352b">
+<tr>
+<td class="vf-hero-copy" width="58%" valign="middle" dir="rtl" style="padding:30px 34px 32px 38px;background:#15352b">
+<div style="font-family:Georgia,'Times New Roman',serif;font-size:19px;line-height:23px;color:#fff8ec">Velvet Factory</div>
+<div style="font-size:11px;line-height:16px;letter-spacing:2.1px;color:#c7a566;font-weight:700;margin-top:7px">MORNING EDITION</div>
+<div style="font-size:13px;line-height:19px;color:#cfc5b2;margin-top:16px">{{date_label}}</div>
+<div class="vf-hero" style="font-size:45px;line-height:51px;font-weight:700;color:#fff8ec;letter-spacing:-.7px;margin-top:12px">{{greeting}}</div>
+<div style="font-size:17px;line-height:27px;color:#d9d0bc;margin-top:9px">{{daily_summary}}</div>
+<div style="width:50px;border-top:2px solid #c7a566;margin-top:20px"></div>
+</td>
+<td class="vf-hero-photo" width="42%" valign="middle" bgcolor="#15352b"><img src="{{top_image_url}}" alt="{{top_image_alt}}" width="420" style="width:100%;height:auto"></td>
+</tr>
+</table>
 </td></tr><tr><td class="vf-pad" bgcolor="#15352b" style="padding:0 26px 18px;background:#15352b">
 <table role="presentation" width="100%" bgcolor="#f8f3e9" style="background:#f8f3e9;border-radius:24px;overflow:hidden">
 <tr><td style="padding:22px 24px 4px;color:#17372d;font-size:25px;line-height:31px;font-weight:700">בקרוב בפיד</td></tr>
@@ -85,14 +88,12 @@ td{mso-line-height-rule:exactly} img{border:0;outline:none;text-decoration:none;
 <table role="presentation" width="100%" bgcolor="#f8f3e9" style="background:#f8f3e9;border-radius:22px;overflow:hidden"><tr>{{stats_html}}</tr></table>
 </td></tr>
 <tr><td class="vf-pad" bgcolor="#15352b" style="padding:0 26px;background:#15352b">
-<img src="{{footer_image_url}}" alt="{{footer_image_alt}}" width="868" style="width:100%;height:auto;border-radius:22px"></td></tr><tr><td class="vf-pad" bgcolor="#15352b" style="padding:26px 40px 34px;background:#15352b">
+<img src="{{footer_image_url}}" alt="{{footer_image_alt}}" width="868" style="width:100%;height:auto;border-radius:22px"></td></tr>
+<tr><td class="vf-pad" bgcolor="#15352b" style="padding:20px 40px 30px;background:#15352b">
 <table role="presentation" width="100%"><tr>
-<td width="58%" valign="bottom" style="color:#fff8ec">
-<div class="vf-footer-quote" style="font-size:31px;line-height:38px;font-style:italic">{{closing_quote}}</div>
-<div style="font-size:13px;line-height:20px;color:#c9bea8;margin-top:9px">{{closing_note}}</div>
-</td>
+<td width="58%" valign="bottom" style="font-size:12px;line-height:19px;color:#c9bea8">{{closing_note}}</td>
 <td width="42%" align="right" valign="bottom">
-<div style="font-family:Georgia,'Times New Roman',serif;font-size:20px;line-height:24px;color:#fff8ec">Velvet Factory</div>
+<div style="font-family:Georgia,'Times New Roman',serif;font-size:18px;line-height:22px;color:#fff8ec">Velvet Factory</div>
 <div style="font-size:9px;line-height:14px;letter-spacing:1.8px;color:#c7a566;margin-top:4px">BEAUTIFUL THINGS · BRIGHTER DAYS</div>
 </td></tr></table></td></tr>
 </table>
