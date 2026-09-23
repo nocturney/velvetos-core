@@ -87,6 +87,52 @@ def post_cards(posts: object, allow_local: bool) -> str:
 {thumb}{time_html}{meta_html}
 </td>''')
     return "".join(cells)
+def instagram_metrics(data: object) -> tuple[str,str]:
+    row = data if isinstance(data, dict) else {}
+    followers = row.get('followers')
+    followers_value = esc(followers if followers is not None else 'אין נתון')
+
+    latest = row.get('latest') if isinstance(row.get('latest'), dict) else {}
+    likes = latest.get('likes')
+    comments = latest.get('comments')
+    if likes is None and comments is None:
+        engagement_value = 'אין נתון'
+    else:
+        parts=[]
+        if likes is not None: parts.append(f"{likes} לייק" if int(likes)==1 else f"{likes} לייקים")
+        if comments is not None: parts.append(f"{comments} תגובות" if int(comments)!=1 else 'תגובה 1')
+        engagement_value = ' · '.join(parts)
+
+    change_raw = str(row.get('change_text') or 'אין נתון שינוי מאומת')
+    change_value = 'ללא שינוי' if 'ללא שינוי' in change_raw else change_raw
+
+    metrics = [
+        (followers_value, 'עוקבים'),
+        (esc(engagement_value), 'מעורבות בפוסט האחרון'),
+        (esc(change_value), 'מאז הבריף הקודם'),
+    ]
+    cells=[]
+    for idx,(value,label) in enumerate(metrics):
+        cls='vf-insta-metric vf-insta-last' if idx==2 else 'vf-insta-metric'
+        border='' if idx==2 else 'border-left:1px solid #ddd5c7;'
+        size='24px' if idx!=1 else '18px'
+        cells.append(f'<td class="{cls}" width="33.333%" align="center" valign="middle" style="padding:16px 12px;color:#17372d;{border}"><div style="font-size:{size};line-height:29px;font-weight:700">{value}</div><div style="font-size:11px;line-height:17px;color:#6f766f;margin-top:3px">{label}</div></td>')
+
+    note_parts=[]
+    if row.get('following') is not None: note_parts.append(f"עוקב אחרי {int(row['following'])}")
+    if row.get('media_count') is not None: note_parts.append(f"{int(row['media_count'])} פריטי מדיה")
+    previous = row.get('previous') if isinstance(row.get('previous'), dict) else {}
+    if previous.get('likes') is not None or previous.get('comments') is not None:
+        prev=[]
+        if previous.get('likes') is not None: prev.append(f"{int(previous['likes'])} לייקים")
+        if previous.get('comments') is not None: prev.append(f"{int(previous['comments'])} תגובות")
+        note_parts.append('פוסט קודם: ' + ' · '.join(prev))
+    if not row.get('insights_available'):
+        note_parts.append('Reach / חשיפות: אין נתון Insights מאומת')
+    elif row.get('insights_note'):
+        note_parts.append('Insights: '+str(row['insights_note']))
+    return ''.join(cells), esc(' · '.join(note_parts))
+
 def item_list(items: object, accent: str) -> str:
     rows: list[str] = []
     for item in list(items or [])[:MAX_LIST_ITEMS]:
@@ -120,6 +166,7 @@ def render(data: dict, *, allow_local: bool = False, template: str | None = None
     radar_alt = esc((data.get("radar") or {}).get("image", {}).get("alt") or DECOR["radar"][1])
     footer_url = safe_image((data.get("footer") or {}).get("image", {}).get("url") or DECOR["footer"][0], allow_local)
     footer_alt = esc((data.get("footer") or {}).get("image", {}).get("alt") or DECOR["footer"][1])
+    instagram_html, instagram_note = instagram_metrics(data.get('instagram'))
     values = {
         "email_title": esc(data.get("email_title") or "Velvet Factory - Morning Brief"),
         "preheader": esc(data.get("preheader") or ""),
@@ -128,6 +175,8 @@ def render(data: dict, *, allow_local: bool = False, template: str | None = None
         "daily_summary": esc(data["daily_summary"]),
         "top_image_url": top_url, "top_image_alt": top_alt,
         "scheduled_posts_html": post_cards(data.get("scheduled_posts"), allow_local),
+        "instagram_metrics_html": instagram_html,
+        "instagram_note": instagram_note,
         "story_title": esc(data["story"]["title"]), "story_body": esc(data["story"]["body"]),
         "story_image_url": story_url, "story_image_alt": story_alt,
         "morning_line": esc(data["morning_line"]["text"]),
@@ -156,6 +205,7 @@ def self_check() -> None:
             {"day_label":"ב׳","date_label":"28.9","has_post":False,"time_label":"","type_label":"","extra_count":0},
             {"day_label":"ג׳","date_label":"29.9","has_post":False,"time_label":"","type_label":"","extra_count":0}
         ],
+        "instagram":{"followers":81,"following":125,"media_count":5,"latest":{"likes":1,"comments":0,"date_label":"20.9.2026"},"previous":{"likes":2,"comments":1,"date_label":"19.9.2026"},"change_text":"אין שינוי מאומת","insights_available":False,"insights_note":"אין ספירה"},
         "story":{"title":"הסיפור של היום","body":"פרטים נוחים לקריאה","image":{}},
         "morning_line":{"text":"פחות ז׳רגון, יותר הקשר.","note":"בדיקה"},
         "attention":[{"title":"החלטה אחת","detail":"פירוט"}],
@@ -165,7 +215,7 @@ def self_check() -> None:
         "footer":{"quote":"Same, brighter tomorrow.","note":"Velvet Factory","image":{}},
     }
     out = render(fixture)
-    for token in ("MORNING EDITION","בקרוב בפיד",'src="cid:morning-top.jpg"','class="vf-week-day"',"09:00","12:00","#15352b"):
+    for token in ("MORNING EDITION","בקרוב בפיד","Instagram","81","מעורבות בפוסט האחרון","Reach / חשיפות: אין נתון Insights מאומת",'src="cid:morning-top.jpg"','class="vf-week-day"',"09:00","12:00","#15352b"):
         if token not in out:
             raise SystemExit(f"FAIL Morning Green missing {token!r}")
     if out.count('class="vf-week-day"') != 7:

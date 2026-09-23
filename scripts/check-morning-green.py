@@ -38,8 +38,8 @@ def main() -> None:
 
     template = (PACK / "MORNING-GREEN.html").read_text(encoding="utf-8")
     for token in (
-        "#15352b", "#f8f3e9", "MORNING EDITION", "בקרוב בפיד", "7 הימים הקרובים",
-        "{{scheduled_posts_html}}", "{{attention_html}}", "{{progress_html}}",
+        "#15352b", "#f8f3e9", "MORNING EDITION", "בקרוב בפיד", "7 הימים הקרובים", "Instagram", "מצב החשבון",
+        "{{scheduled_posts_html}}", "{{instagram_metrics_html}}", "{{instagram_note}}", "{{attention_html}}", "{{progress_html}}",
         "{{stats_html}}", "max-width:920px", "@media only screen and (max-width:680px)",
     ):
         if token not in template:
@@ -103,9 +103,9 @@ def main() -> None:
     for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--thumbnail-dir", "morning-green-assets-"):
         if token not in preparer:
             fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
-    for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count"):
+    for token in ("reader_friendly", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights"):
         if token not in builder:
-            fail(f"Morning Green builder missing reader-friendly/week-strip mapping {token!r}")
+            fail(f"Morning Green builder missing reader-friendly/week-strip/Instagram mapping {token!r}")
     if "WEEK_DAYS = 7" not in (PACK / "render_morning_green.py").read_text(encoding="utf-8"):
         fail("Morning Green renderer must enforce an exact seven-day feed strip")
 

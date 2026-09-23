@@ -95,10 +95,53 @@ def fallback_stats(factual: dict, sec: dict[str,list[str]]) -> list[dict[str,str
     else:
         m=re.search(r'(\d+)\s+אירועים',cal)
         if m: stats.append({'value':m.group(1),'label':'אירועי יומן היום'})
-    insta=' '.join(sec.get('Instagram · מצב העמוד') or [])
-    m=re.search(r'עוקבים\s+(\d+)',insta)
-    if m: stats.append({'value':m.group(1),'label':'עוקבי Instagram'})
+    live=' '.join(sec.get('עבודות חיות') or [])
+    if re.search(r'אין ייצור פעיל',live):
+        stats.append({'value':'0','label':'עבודות ייצור פעילות'})
+    else:
+        m=re.search(r'(\d+)\s+עבודות?\s+פעילות?',live)
+        if m: stats.append({'value':m.group(1),'label':'עבודות ייצור פעילות'})
     return stats[:3]
+
+def instagram_snapshot(sec: dict[str,list[str]]) -> dict[str,object]:
+    lines=[clean_bullet(reader_friendly(x)) for x in (sec.get('Instagram · מצב העמוד') or [])]
+    joined=' '.join(lines)
+    def number(pattern: str):
+        m=re.search(pattern,joined)
+        return int(m.group(1)) if m else None
+    followers=number(r'עוקבים\s+(\d+)')
+    following=number(r'עוקב\s+(\d+)')
+    media_count=number(r'מדיה\s+(\d+)')
+
+    latest=next((x for x in lines if x.startswith('הפיד האחרון:')), '')
+    previous=next((x for x in lines if x.startswith('הפיד הקודם:')), '')
+    def engagement(line: str) -> dict[str,object]:
+        likes=re.search(r'לייק(?:ים)?\s+(\d+)',line)
+        comments=re.search(r'(?:תגובה|תגובות)\s+(\d+)',line)
+        date=re.search(r'(\d{1,2}\.\d{1,2}\.\d{4})',line)
+        return {
+            'likes':int(likes.group(1)) if likes else None,
+            'comments':int(comments.group(1)) if comments else None,
+            'date_label':date.group(1) if date else '',
+        }
+    latest_eng=engagement(latest)
+    previous_eng=engagement(previous)
+
+    changes=[clean_bullet(reader_friendly(x)) for x in (sec.get('מה השתנה מאז הבריף הקודם') or []) if 'Instagram' in x]
+    change_text='אין שינוי מאומת' if any('ללא שינוי' in x for x in changes) else (changes[0] if changes else 'אין נתון שינוי מאומת')
+    insights_line=next((x for x in lines if x.startswith('Insights:')), '')
+    insights_available=bool(insights_line and 'אין ספירה' not in insights_line)
+
+    return {
+        'followers':followers,
+        'following':following,
+        'media_count':media_count,
+        'latest':latest_eng,
+        'previous':previous_eng,
+        'change_text':change_text,
+        'insights_available':insights_available,
+        'insights_note':reader_friendly(insights_line.replace('Insights:','').strip()) if insights_line else 'אין נתון Insights מאומת',
+    }
 
 def post_cards(snapshot: dict | None, start: datetime) -> list[dict]:
     """Build exactly seven calendar cells, one for each day starting at the brief date."""
@@ -159,16 +202,28 @@ def main() -> int:
     op=json.loads(a.openpost.read_text(encoding='utf-8')) if a.openpost and a.openpost.exists() else None
 
     attention=[split_title_detail(x) for x in sec['צריך ממך'][:4]]
-    progress=[split_title_detail(x) for x in sec['מה השתנה מאז הבריף הקודם'][:4]]
-    radar_lines=[clean_bullet(reader_friendly(x)) for x in sec['רדאר תוכן'][:3]]
+    progress=[split_title_detail(x) for x in sec['מה השתנה מאז הבריף הקודם'] if 'Instagram' not in x and 'OpenPost' not in x][:4]
+    radar_lines=[
+        clean_bullet(reader_friendly(x)) for x in sec['רדאר תוכן']
+        if 'OpenPost' not in x and 'Instagram' not in x and 'הפיד האחרון' not in x and 'אין Publish' not in x
+    ][:3]
     radar_text=' '.join(radar_lines) if radar_lines else 'אין פריט רדאר מאומת נוסף.'
     overview=reader_friendly(sec['תמונת מצב עכשיו'][0]) if sec.get('תמונת מצב עכשיו') else reader_friendly(str(factual.get('bottom_line') or '').strip())
     story_source=attention[0]['title'] if attention else (progress[0]['title'] if progress else overview)
     story_items=attention[1:4] if len(attention)>1 else attention[:3]
     story_body=' '.join((x.get('title','')+(' - '+x.get('detail','') if x.get('detail') else '')).strip() for x in story_items).strip()
     kpis=factual.get('kpis') or []
-    stats=[{'value':str(x.get('value','אין נתון')),'label':reader_friendly(str(x.get('label',''))).replace(' לפי Jobs','')} for x in kpis[:3]]
-    if not stats: stats=fallback_stats(factual,sec)
+    stats=[
+        {'value':str(x.get('value','אין נתון')),'label':reader_friendly(str(x.get('label',''))).replace(' לפי Jobs','')}
+        for x in kpis if 'Instagram' not in str(x.get('label','')) and 'עוקב' not in str(x.get('label',''))
+    ][:3]
+    if len(stats) < 3:
+        existing={x['label'] for x in stats}
+        for item in fallback_stats(factual,sec):
+            if item['label'] not in existing:
+                stats.append(item); existing.add(item['label'])
+            if len(stats) >= 3: break
+    insta=instagram_snapshot(sec)
 
     data={
       'email_title':'Velvet Factory - Morning Brief',
@@ -177,6 +232,7 @@ def main() -> int:
       'greeting':'בוקר טוב, כריסטיאן',
       'daily_summary':overview,
       'scheduled_posts':post_cards(op,factual_datetime(factual)),
+      'instagram':insta,
       'story':{
         'title':story_source or 'תמונת היום',
         'body':story_body or overview,
@@ -196,6 +252,15 @@ def main() -> int:
         for item in attention: lines.append('• '+item['title']+(' - '+item['detail'] if item['detail'] else ''))
         lines += ['', 'מה מתקדם']
         for item in progress: lines.append('• '+item['title']+(' - '+item['detail'] if item['detail'] else ''))
+        lines += ['', 'Instagram']
+        if insta.get('followers') is not None: lines.append(f"• עוקבים: {insta['followers']}")
+        latest=insta.get('latest') or {}
+        if latest.get('likes') is not None or latest.get('comments') is not None:
+            likes=latest.get('likes'); comments=latest.get('comments')
+            likes_text=('לייק 1' if likes == 1 else f'{likes} לייקים') if likes is not None else 'לייקים: אין נתון'
+            comments_text=('תגובה 1' if comments == 1 else f'{comments} תגובות') if comments is not None else 'תגובות: אין נתון'
+            lines.append(f"• מעורבות בפוסט האחרון: {likes_text} · {comments_text}")
+        lines.append('• שינוי: '+str(insta.get('change_text') or 'אין נתון'))
         lines += ['', 'על הרדאר',data['radar']['text']]
         a.visible_text.parent.mkdir(parents=True,exist_ok=True)
         a.visible_text.write_text('\n'.join(lines).strip()+'\n',encoding='utf-8')
