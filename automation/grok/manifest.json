@@ -1,11 +1,17 @@
 {
-  "version": 2,
+  "version": 3,
   "provider": "grok-bot",
   "bot": "Chief of Staff",
   "timezone": "Asia/Jerusalem",
   "migrationState": "cutover",
   "cutoverDate": "2026-09-19",
   "morningGreenCutoverDate": "2026-09-23",
+  "cogneeCutover": {
+    "requestedDate": "2026-09-23",
+    "packet": "automation/grok/cognee-routines.json",
+    "providerActivation": "pending_live_grok_readback",
+    "chatgptCopies": "remain_enabled_until_verified_grok_readback"
+  },
   "productionScheduler": "grok-bot-routines",
   "previousSchedulers": {
     "chatgpt": "disabled_after_verified_cutover",

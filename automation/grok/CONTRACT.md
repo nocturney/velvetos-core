@@ -22,6 +22,12 @@ Status: production scheduler as of 2026-09-19.
 
 Timezone: Asia/Jerusalem.
 
+## Pending owner-requested Cognee cutover
+
+Christian requested on 2026-09-23 that `Cognee Memory Sync` (daily 06:30) and `Cognee Stable Updates` (Monday 10:00) move from ChatGPT scheduling to Grok Bot. The exact prompts, cadence, timezone and ChatGPT automation IDs are locked in `automation/grok/cognee-routines.json`.
+
+This is a fail-closed provider cutover: the two ChatGPT copies remain enabled until the live Grok Bot inventory is read back and proves that both routines exist, are enabled, and match the locked cadence/prompt intent. Only then may those two ChatGPT automation IDs be disabled. Until that readback exists, these two entries are pending provider activation and are **not** counted as live protected Grok routines. Do not infer live Grok creation from Git/manifest changes alone.
+
 ### Integrity Guard execution semantics
 
 The 01:45 Integrity Guard is a **finite single-pass audit**, not a continuous monitor. Each run must inspect the current inventory once, perform any immediate authorized repair, verify the resulting state once, notify only when required, and then terminate. It must not loop, poll, sleep, wait for future drift, or intentionally remain active after the pass is complete.

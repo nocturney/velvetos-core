@@ -16,6 +16,10 @@ Asia/Jerusalem. The **live protected Grok Bot routine inventory** is the clock a
 
 Weekly / קאדנס שבועי: `Weekly Research Accountability` runs Friday at 12:00. Repository-owned GitHub workflows keep their own schedules; Office Loop consumes their evidence rather than duplicating their cron.
 
+## Pending Grok cutover: Cognee routines
+
+Owner request 2026-09-23: move `Cognee Memory Sync` (daily 06:30) and `Cognee Stable Updates` (Monday 10:00) from ChatGPT scheduling to Grok Bot. The locked provider packet is `automation/grok/cognee-routines.json`. Until live Grok readback verifies both routines exist, are enabled, and match cadence/prompt intent, the two ChatGPT copies remain enabled and these routines are not part of the live protected Grok set. After verified readback, disable only ChatGPT automation IDs `6ab3734b12b0819199033ef833efc7f4` and `6ab3734c95b081919188941903f4ec2c`.
+
 `VelvetOS Integrity Guard` is a finite single-pass 01:45 audit. It repairs only the protected routines, verifies once, then exits; it is not a continuous monitor. The protected-set contract does not authorize deleting, pausing, or rewriting a new unlisted routine merely because it is outside the seven protected entries. Known legacy routines remain disabled; an unknown extra routine is left untouched and surfaced as a conflict unless Christian explicitly authorizes removal.
 
 
