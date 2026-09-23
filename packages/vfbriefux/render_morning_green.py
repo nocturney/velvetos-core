@@ -28,12 +28,28 @@ def esc(value: object) -> str:
     return html.escape(str(value if value is not None else ""), quote=True)
 
 def mixed_text(value: object) -> str:
-    """Escape text, then isolate machine IDs so RTL clients never break them mid-token."""
+    """Escape text, then isolate machine IDs so Gmail RTL keeps each ID intact."""
     out=esc(value)
     def repl(match: re.Match[str]) -> str:
         safe_id=match.group(1).replace('-', '&#8209;')
-        return f'<nobr dir="ltr" style="white-space:nowrap;unicode-bidi:isolate;overflow-wrap:normal;word-break:keep-all;font-size:9px;letter-spacing:-.2px">{safe_id}</nobr>'
+        return f'<span class="vf-id" dir="ltr" style="display:inline-block;direction:ltr;unicode-bidi:isolate;white-space:nowrap;overflow-wrap:normal;word-break:normal;font-size:8px;line-height:12px;letter-spacing:-.35px">{safe_id}</span>'
     return re.sub(r'(VF-\d{8}-\d{3})', repl, out)
+
+def mixed_radar_text(value: object) -> str:
+    """Keep Latin product/version fragments readable inside an RTL radar sentence."""
+    out=esc(value)
+
+    def phrase_repl(match: re.Match[str]) -> str:
+        return f'<span dir="ltr" style="direction:ltr;unicode-bidi:isolate">{match.group(1)}</span>'
+
+    # Long Latin product names may wrap, but must keep their LTR ordering.
+    out = re.sub(r'([A-Za-z][A-Za-z0-9. ]*[A-Za-z0-9])', phrase_repl, out)
+
+    # Keep dotted version tokens together so Gmail cannot reverse or split them.
+    def version_repl(match: re.Match[str]) -> str:
+        return f'<span class="vf-version" dir="ltr" style="display:inline-block;direction:ltr;unicode-bidi:isolate;white-space:nowrap">{match.group(1)}</span>'
+
+    return re.sub(r'(?<![A-Za-z0-9.])(\d+(?:\.\d+)+(?:\.x)?)(?![A-Za-z0-9])', version_repl, out)
 
 def safe_image(value: object, allow_local: bool = False) -> str:
     raw = str(value or "").strip()
@@ -200,7 +216,7 @@ def render(data: dict, *, allow_local: bool = False, template: str | None = None
         "attention_html": item_grid(data.get("attention"), "#a85c44", [18.0, 27.333, 27.333, 27.334]),
         "progress_html": item_grid(data.get("progress"), "#4b8a64"),
         "radar_image_url": radar_url, "radar_image_alt": radar_alt,
-        "radar_title": esc(data["radar"]["title"]), "radar_text": esc(data["radar"]["text"]),
+        "radar_title": esc(data["radar"]["title"]), "radar_text": mixed_radar_text(data["radar"]["text"]),
         "stats_html": stat_cells(data.get("stats")),
         "footer_image_url": footer_url, "footer_image_alt": footer_alt,
         "closing_quote": esc(data["footer"]["quote"]),
@@ -224,14 +240,14 @@ def self_check() -> None:
         "instagram":{"followers":81,"following":125,"media_count":5,"latest":{"likes":1,"comments":0,"date_label":"20.9.2026"},"previous":{"likes":2,"comments":1,"date_label":"19.9.2026"},"change_text":"אין שינוי מאומת","insights_available":False,"insights_note":"אין ספירה"},
         "story":{"title":"הסיפור של היום","body":"פרטים נוחים לקריאה","image":{}},
         "morning_line":{"text":"פחות ז׳רגון, יותר הקשר.","note":"בדיקה"},
-        "attention":[{"title":"החלטה אחת","detail":"פירוט"}],
+        "attention":[{"title":"סינקופה VF-20260908-001","detail":"4350"}],
         "progress":[{"title":"משהו התקדם","detail":"פירוט"}],
-        "radar":{"title":"על הרדאר","text":"משהו מתקרב","image":{}},
+        "radar":{"title":"על הרדאר","text":"Bambu Studio 2.8.4 Public Beta - למעקב בלבד; ייצור נשאר 2.8.2.x.","image":{}},
         "stats":[{"value":"1","label":"מתוזמן"},{"value":"2","label":"פעיל"},{"value":"3","label":"פתוח"}],
         "footer":{"quote":"Same, brighter tomorrow.","note":"Velvet Factory","image":{}},
     }
     out = render(fixture)
-    for token in ("MORNING EDITION","בקרוב בפיד","Instagram","81","מעורבות בפוסט האחרון","Reach / חשיפות: אין נתון Insights מאומת",'src="cid:morning-top.jpg"','class="vf-week-day"',"09:00","12:00","#15352b"):
+    for token in ("MORNING EDITION","בקרוב בפיד","Instagram","81","מעורבות בפוסט האחרון","Reach / חשיפות: אין נתון Insights מאומת",'src="cid:morning-top.jpg"','class="vf-week-day"',"09:00","12:00","#15352b",'class="vf-id"','class="vf-version"','dir="ltr"'):
         if token not in out:
             raise SystemExit(f"FAIL Morning Green missing {token!r}")
     if out.count('class="vf-week-day"') != 7:

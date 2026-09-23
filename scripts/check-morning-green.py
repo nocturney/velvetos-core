@@ -118,8 +118,10 @@ def main() -> None:
     renderer=(PACK / "render_morning_green.py").read_text(encoding="utf-8")
     if "WEEK_DAYS = 7" not in renderer:
         fail("Morning Green renderer must enforce an exact seven-day feed strip")
-    if "mixed_text" not in renderer or "unicode-bidi:isolate" not in renderer or "<nobr" not in renderer or "&#8209;" not in renderer:
+    if "mixed_text" not in renderer or "vf-id" not in renderer or "display:inline-block" not in renderer or "unicode-bidi:isolate" not in renderer or "&#8209;" not in renderer:
         fail("Morning Green renderer must isolate VF IDs for RTL mobile clients")
+    if "mixed_radar_text" not in renderer or "vf-version" not in renderer:
+        fail("Morning Green radar must isolate Latin product/version fragments inside RTL copy")
     if "rows.reverse()" not in renderer:
         fail("Morning Green KPI order must match the approved mockup visual order")
     if "[18.0, 27.333, 27.333, 27.334]" not in renderer:
