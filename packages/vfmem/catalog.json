@@ -23,7 +23,9 @@
     "no-cbm-binary-from-hq",
     "no-secrets-in-git",
     "pickup-sderot-only",
-    "no-invented-origin-slug"
+    "no-invented-origin-slug",
+    "cognee-derived-only",
+    "cognee-no-remote-provider-default"
   ],
   "sourcesOfTruth": [
     "packages/manifest.json",
@@ -628,5 +630,15 @@
       "text": "Do not invent Origin slugs. Keep unknown. HQ overlay is the office until a scoped tmp list or agent-page copy.",
       "source": "docs/ORIGIN-SLUGS.md"
     }
-  ]
+  ],
+  "semanticBackend": {
+    "name": "cognee",
+    "contract": "packages/vfmem/cognee.json",
+    "status": "optional-local-derived",
+    "canonical": "vfmem",
+    "command": "python3 packages/vfmem/scripts/vf_cognee.py",
+    "recall": "python3 scripts/vfmem.py recall <text>",
+    "failover": "vfmem-local-search",
+    "authority": "context-only-never-authority"
+  }
 }
