@@ -121,7 +121,7 @@
       "postRestartBinarySha256": "be6520f495def72b1b466a69c9a223954b4403c3c7c40881b52ce0f030334cc8"
     },
     "networkHardening": {
-      "observedAt": "2026-09-17T22:54:46+03:00",
+      "observedAt": "2026-09-24T10:26:00+03:00",
       "listenerAddress": "::",
       "localPort": 18080,
       "publicUrlsConfigured": false,
