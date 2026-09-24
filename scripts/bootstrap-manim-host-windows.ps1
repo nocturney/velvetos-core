@@ -15,6 +15,9 @@ $HOST_ID = 'sderot-windows'
 $LegacyRoot = Join-Path $env:USERPROFILE '.velvetos'
 $RuntimeRoot = Resolve-VelvetPath 'VELVETOS_RUNTIME_ROOT' $LegacyRoot
 $StateDir = Resolve-VelvetPath 'VELVETOS_STATE_ROOT' $LegacyRoot
+$VelvetRoot = Resolve-VelvetPath 'VELVET_ROOT' ''
+$TmpRoot = if ([string]::IsNullOrWhiteSpace($VelvetRoot)) { [IO.Path]::GetTempPath() } else { Join-Path $VelvetRoot 'Tmp' }
+New-Item -ItemType Directory -Force -Path $TmpRoot | Out-Null
 $Toolchain = Join-Path $RuntimeRoot "Toolchains\manim-$MANIM_VERSION-py312"
 $StateFile = Join-Path $StateDir 'manim-host.json'
 
@@ -60,7 +63,7 @@ if ($current -notmatch [regex]::Escape($MANIM_VERSION)) {
 }
 Say "OK Manim version $MANIM_VERSION"
 
-$SmokeRoot = Join-Path ([IO.Path]::GetTempPath()) 'velvet-manim-windows-smoke'
+$SmokeRoot = Join-Path $TmpRoot 'velvet-manim-windows-smoke'
 if (Test-Path $SmokeRoot) { Remove-Item -Recurse -Force $SmokeRoot }
 New-Item -ItemType Directory -Force -Path $SmokeRoot | Out-Null
 $Scene = @'

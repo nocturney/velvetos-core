@@ -43,13 +43,13 @@ for needle in (
 
 for rel, needles in {
     "scripts/bootstrap-edge-host-windows.ps1": (
-        "VELVETOS_REPO_ROOT", "VELVETOS_RUNTIME_ROOT", "VELVETOS_STATE_ROOT", "$LegacyRoot"
+        "VELVET_ROOT", "VELVETOS_REPO_ROOT", "VELVETOS_RUNTIME_ROOT", "VELVETOS_STATE_ROOT", "$TmpRoot", "$LegacyRoot"
     ),
     "scripts/bootstrap-speech-host-windows.ps1": (
-        "VELVETOS_REPO_ROOT", "VELVETOS_STATE_ROOT", "$LegacyRoot"
+        "VELVET_ROOT", "VELVETOS_REPO_ROOT", "VELVETOS_STATE_ROOT", "$TmpRoot", "$LegacyRoot"
     ),
     "scripts/bootstrap-manim-host-windows.ps1": (
-        "VELVETOS_RUNTIME_ROOT", "VELVETOS_STATE_ROOT", "$LegacyRoot"
+        "VELVET_ROOT", "VELVETOS_RUNTIME_ROOT", "VELVETOS_STATE_ROOT", "$TmpRoot", "$LegacyRoot"
     ),
     "packages/vfmem/scripts/vf_cognee_runtime.py": ("VELVETOS_RUNTIME_ROOT",),
     "packages/vfmem/scripts/vf_cognee.py": ("VELVETOS_RUNTIME_ROOT",),
@@ -60,6 +60,15 @@ for rel, needles in {
         require(blob, needle, rel)
     if r"C:\Users\Chris" in blob:
         fail(f"Chris-specific absolute path in {rel}")
+
+for rel in (
+    "scripts/bootstrap-edge-host-windows.ps1",
+    "scripts/bootstrap-speech-host-windows.ps1",
+    "scripts/bootstrap-manim-host-windows.ps1",
+):
+    blob = read(rel)
+    if blob.count("GetTempPath()") != 1:
+        fail(f"{rel} must use GetTempPath only as the single legacy fallback")
 
 hosts = json.loads(read("packages/vfmcp/RENDER-HOSTS.json"))
 windows = hosts["hosts"]["sderot-windows"]

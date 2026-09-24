@@ -15,6 +15,9 @@ $LegacyRoot = Join-Path $env:USERPROFILE ".velvetos"
 $HostId = "sderot-windows"
 $Repo = Resolve-VelvetPath "VELVETOS_REPO_ROOT" (Join-Path $env:USERPROFILE "velvetos-core")
 $StateDir = Resolve-VelvetPath "VELVETOS_STATE_ROOT" $LegacyRoot
+$VelvetRoot = Resolve-VelvetPath "VELVET_ROOT" ""
+$TmpRoot = if ([string]::IsNullOrWhiteSpace($VelvetRoot)) { [IO.Path]::GetTempPath() } else { Join-Path $VelvetRoot "Tmp" }
+New-Item -ItemType Directory -Force -Path $TmpRoot | Out-Null
 $SpeechState = Join-Path $StateDir "speech-host.json"
 $EdgeState = Join-Path $StateDir "edge-host.json"
 
@@ -100,7 +103,7 @@ Write-Host "host=$HostId provider=VoiceStudio/$VoiceStudioVersion tts=$TtsModel 
 
 $exe = Find-VoiceStudioExe
 if (-not $exe -and -not $SkipVoiceStudioInstall) {
-    $tmp = Join-Path ([IO.Path]::GetTempPath()) ("velvet-voicestudio-" + [Guid]::NewGuid().ToString("N"))
+    $tmp = Join-Path $TmpRoot ("velvet-voicestudio-" + [Guid]::NewGuid().ToString("N"))
     New-Item -ItemType Directory -Force -Path $tmp | Out-Null
     try {
         $msi = Join-Path $tmp $artifact
@@ -155,7 +158,7 @@ try {
 Write-Host "Running VelvetOS speech doctor..."
 Invoke-Python "scripts/vf_speech.py" "doctor"
 
-$SmokeRoot = Join-Path ([IO.Path]::GetTempPath()) "velvet-speech-windows-smoke"
+$SmokeRoot = Join-Path $TmpRoot "velvet-speech-windows-smoke"
 if (Test-Path $SmokeRoot) { Remove-Item -Recurse -Force $SmokeRoot }
 New-Item -ItemType Directory -Force -Path $SmokeRoot | Out-Null
 $audio = Join-Path $SmokeRoot "hebrew-smoke.wav"
