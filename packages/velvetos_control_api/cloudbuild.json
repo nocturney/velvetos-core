@@ -1,0 +1,24 @@
+{
+  "steps": [
+    {
+      "name": "gcr.io/cloud-builders/docker",
+      "args": [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/velvetos-control-api:$COMMIT_SHA",
+        "-t",
+        "gcr.io/$PROJECT_ID/velvetos-control-api:latest",
+        "-f",
+        "packages/velvetos_control_api/Dockerfile",
+        "."
+      ]
+    }
+  ],
+  "images": [
+    "gcr.io/$PROJECT_ID/velvetos-control-api:$COMMIT_SHA",
+    "gcr.io/$PROJECT_ID/velvetos-control-api:latest"
+  ],
+  "options": {
+    "logging": "CLOUD_LOGGING_ONLY"
+  }
+}

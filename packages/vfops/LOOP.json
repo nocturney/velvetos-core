@@ -1,7 +1,7 @@
 {
   "name": "vfops-loop",
   "title": "לולאת משרד — כל פק נצרך",
-  "updatedAt": "2026-09-13",
+  "updatedAt": "2026-09-24",
   "rule": "Every packages/ folder has a consume step. Catalog without consume is a fail. No invented ₪ or Insights. No live IG publish from this loop. Office Control Plane (office/control-plane.json) unifies SoT — not a second scheduler.",
   "cli": "python3 scripts/vfops_loop.py",
   "briefCli": "python3 scripts/vfops_loop.py brief",
@@ -24,6 +24,16 @@
       "briefSlot": "05",
       "handoff": "packages/velvetos/REPOS.md",
       "blocked": null
+    },
+    {
+      "id": "velvetos_control_api",
+      "kind": "working-cli",
+      "cadence": "on-job",
+      "consume": "python3 scripts/vf_control_api.py selftest",
+      "briefSlot": "05",
+      "handoff": "packages/velvetos_control_api/README.md",
+      "blocked": null,
+      "notes": "HTTP projection gateway for Control Center — not a SoT/runtime. Sensor: check-control-api.py"
     },
     {
       "id": "vfagents",

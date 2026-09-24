@@ -413,7 +413,7 @@
     },
     {
       "name": "velvetos",
-      "summary": "VelvetOS Core — backend kernel; three-layer SoC; Office Control Plane (office/control-plane.json, vf_control_plane.py). Frontend scaffolds under instances/.",
+      "summary": "VelvetOS Core — backend kernel; three-layer SoC; Office Control Plane (office/control-plane.json, vf_control_plane.py); Control API projection gateway (packages/velvetos_control_api). Frontend scaffolds under instances/.",
       "bcId": "bc-f7a22589",
       "bcIdFull": "bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
       "agentUrl": "https://cursor.com/agents/bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
@@ -423,6 +423,15 @@
       "vendorStatus": "hq-native",
       "writeup": "docs/VELVETOS.md",
       "skill": ".cursor/skills/vf-velvetos/SKILL.md"
+    },
+    {
+      "name": "velvetos_control_api",
+      "summary": "HTTP projection gateway (velvetos.control.v1) for Control Center UI — read-first snapshot/search/capabilities; fail-closed actions; not a SoT/runtime/queue.",
+      "bcId": null,
+      "originSlug": null,
+      "vendorStatus": "hq-native",
+      "writeup": "packages/velvetos_control_api/README.md",
+      "sensor": "scripts/check-control-api.py"
     }
   ]
 }
