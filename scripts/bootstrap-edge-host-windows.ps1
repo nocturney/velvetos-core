@@ -17,6 +17,9 @@ $HostId = "sderot-windows"
 $Repo = Resolve-VelvetPath "VELVETOS_REPO_ROOT" (Join-Path $env:USERPROFILE "velvetos-core")
 $RuntimeRoot = Resolve-VelvetPath "VELVETOS_RUNTIME_ROOT" $LegacyRoot
 $StateDir = Resolve-VelvetPath "VELVETOS_STATE_ROOT" $LegacyRoot
+$VelvetRoot = Resolve-VelvetPath "VELVET_ROOT" ""
+$TmpRoot = if ([string]::IsNullOrWhiteSpace($VelvetRoot)) { [IO.Path]::GetTempPath() } else { Join-Path $VelvetRoot "Tmp" }
+New-Item -ItemType Directory -Force -Path $TmpRoot | Out-Null
 $StateFile = Join-Path $StateDir "edge-host.json"
 $ToolchainDir = Join-Path $RuntimeRoot "Toolchains"
 $NpmPrefix = Join-Path $RuntimeRoot "npm"
@@ -90,7 +93,7 @@ function Install-UserNode {
 
     $artifact = "node-v$NodeVersionPin-win-x64.zip"
     $base = "https://nodejs.org/dist/v$NodeVersionPin"
-    $tmp = Join-Path ([IO.Path]::GetTempPath()) ("velvet-node-" + [Guid]::NewGuid().ToString("N"))
+    $tmp = Join-Path $TmpRoot ("velvet-node-" + [Guid]::NewGuid().ToString("N"))
     New-Item -ItemType Directory -Force -Path $tmp | Out-Null
     try {
         Write-Host "Installing Node v$NodeVersionPin user-locally (no admin)..."
@@ -241,7 +244,7 @@ if ($LASTEXITCODE -ne 0) { Fail "hyperframes browser ensure failed" }
 Write-Host "Running VelvetOS HyperFrames doctor..."
 Invoke-Python "scripts/vf_hyperframes.py" "doctor"
 
-$SmokeRoot = Join-Path ([IO.Path]::GetTempPath()) "velvet-hyperframes-windows-smoke"
+$SmokeRoot = Join-Path $TmpRoot "velvet-hyperframes-windows-smoke"
 if (Test-Path $SmokeRoot) { Remove-Item -Recurse -Force $SmokeRoot }
 New-Item -ItemType Directory -Force -Path (Join-Path $SmokeRoot "renders") | Out-Null
 

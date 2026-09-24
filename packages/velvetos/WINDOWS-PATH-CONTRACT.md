@@ -25,7 +25,7 @@ These variables are machine-scoped on the office Windows host so boot-time SYSTE
 - generated exports, handoffs and deliverables live under `D:\Velvet\Artifacts`;
 - operational logs live under `D:\Velvet\Logs`;
 - disposable project caches live under `D:\Velvet\Cache`;
-- Velvet-specific temporary files live under `D:\Velvet\Tmp`;
+- Velvet-specific temporary files live under `D:\Velvet\Tmp`; Edge/Speech/Manim bootstrap scratch and smoke output must resolve through `VELVET_ROOT\Tmp` after migration, with the Windows temp directory allowed only as a legacy fallback;
 - shared portable tooling lives under `D:\Velvet\Tools`;
 - long-lived local services that are not repositories live under `D:\Velvet\Services` (for example OpenPost staging);
 - migration evidence and rollback manifests live under `D:\Velvet\Migration`;
