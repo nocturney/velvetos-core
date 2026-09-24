@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-24 — **Windows Manim Python provisioning hardening:** the Manim bootstrap now treats a missing pinned Python 3.12 runtime as an expected provisioning condition instead of a terminating native-command error under PowerShell. It verifies the runtime after the existing user-scoped winget install before creating the D-drive Manim venv.
+
 - 2026-09-24 — **VelvetOS Windows temp cutover:** Edge, Speech and Manim host bootstraps now route bootstrap scratch and smoke artifacts through `VELVET_ROOT\Tmp` on migrated Windows hosts. `GetTempPath()` remains only as a single legacy fallback per bootstrap, and the Windows path-contract sensor enforces that boundary.
 
 - 2026-09-24 — **Windows workspace-root hardening:** expanded the D-drive contract so all new assistant/dev worktrees and task scratch live under `D:\Velvet\Workspaces`, with explicit `Data`, `Artifacts`, `Logs`, `Cache`, `Tmp` and `Backups` lanes under `D:\Velvet`. New project clones/review folders/patch staging/generated artifacts are forbidden directly under `%USERPROFILE%`; profile-bound application/auth state remains on C:.

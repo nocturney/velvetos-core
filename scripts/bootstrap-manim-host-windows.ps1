@@ -31,12 +31,25 @@ if ([System.Environment]::OSVersion.Platform -ne [System.PlatformID]::Win32NT) {
 if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) { Fail 'ffmpeg is required' }
 if (-not (Get-Command ffprobe -ErrorAction SilentlyContinue)) { Fail 'ffprobe is required' }
 
-$pyCheck = & py -3.12 --version 2>$null
-if ($LASTEXITCODE -ne 0) {
+function Test-Python312 {
+  if (-not (Get-Command py -ErrorAction SilentlyContinue)) { return $false }
+  $previous = $ErrorActionPreference
+  try {
+    $ErrorActionPreference = 'SilentlyContinue'
+    & py -3.12 --version *> $null
+    return ($LASTEXITCODE -eq 0)
+  }
+  finally {
+    $ErrorActionPreference = $previous
+  }
+}
+
+if (-not (Test-Python312)) {
   if (-not (Get-Command winget -ErrorAction SilentlyContinue)) { Fail 'Python 3.12 is required and winget is unavailable' }
   Say 'Installing Python 3.12 for current user...'
   & winget install --id Python.Python.3.12 -e --scope user --silent --accept-package-agreements --accept-source-agreements
   if ($LASTEXITCODE -ne 0) { Fail 'Python 3.12 installation failed' }
+  if (-not (Test-Python312)) { Fail 'Python 3.12 is still unavailable after winget provisioning' }
 }
 New-Item -ItemType Directory -Force -Path (Split-Path $Toolchain -Parent) | Out-Null
 if (-not (Test-Path (Join-Path $Toolchain 'Scripts\python.exe'))) {
