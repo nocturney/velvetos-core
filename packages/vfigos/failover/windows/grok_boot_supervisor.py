@@ -1,11 +1,11 @@
 import os,time,subprocess
 
-ROOT=r'C:\\ProgramData\\GrokBotBoot'
+ROOT=r'C:\ProgramData\GrokBotBoot'
 LOG=os.path.join(ROOT,'supervisor.log')
-PYTHON=r'C:\\Python314\\python.exe'
-FAILOVER_DISPATCH=r'C:\\ProgramData\\VelvetOS\\instagram-failover\\trusted-dispatch.py'
-FAILOVER_REQUESTS=r'C:\\ProgramData\\VelvetOS\\instagram-failover\\requests'
-FAILOVER_WATCH=r'C:\\ProgramData\\VelvetOS\\instagram-failover\\failover-watch.py'
+PYTHON=r'C:\Python314\python.exe'
+FAILOVER_DISPATCH=r'C:\ProgramData\VelvetOS\instagram-failover\trusted-dispatch.py'
+FAILOVER_REQUESTS=r'C:\ProgramData\VelvetOS\instagram-failover\requests'
+FAILOVER_WATCH=r'C:\ProgramData\VelvetOS\instagram-failover\failover-watch.py'
 dispatch_proc=None
 watch_proc=None
 
