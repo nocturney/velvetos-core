@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-24T01:19:27Z",
+  "generatedAt": "2026-09-24T06:15:28Z",
   "slot": "05",
   "title": "קליטת מדיה",
   "phases": {
@@ -10,7 +10,7 @@
   },
   "runner": {
     "component_state": "Idle",
-    "lastRunAt": "2026-09-24T01:19:27Z",
+    "lastRunAt": "2026-09-24T06:15:28Z",
     "lastError": null,
     "persistError": null,
     "activation_proven": true,
