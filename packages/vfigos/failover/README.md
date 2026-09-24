@@ -76,7 +76,7 @@ The watcher writes `execute_attempted=true` atomically **before** the one permit
 
 Every 60 seconds the same watcher performs a read-only coverage audit against OpenPost. Active Instagram `image_post` schedules are compared with prepared manifests. `coverage-state.json` is `PROTECTED` only when every active scheduled image rendition has an armed exact manifest; missing or unarmed coverage becomes `UNPROTECTED_SCHEDULE` and is recorded in `watch.log`. The audit never publishes or mutates OpenPost.
 
-On the Chris machine the watcher is supervised by the existing S4U `GrokBot Boot Supervisor`, so it starts at boot without login and is restarted if it exits. A singleton file lock prevents two watcher processes from running concurrently. The canonical supervisor copy is `windows/grok_boot_supervisor.py`.
+On the Chris machine the watcher is supervised at boot by `GrokBot Boot Supervisor` running as **SYSTEM / ServiceAccount**. The boot supervisor is failover-only: it never launches the Grok desktop, never reads Grok desktop auth/status, and does not depend on an interactive user session. Desktop launch belongs only to the Interactive Handoff/Watchdog after a real Chris logon. A singleton file lock prevents two watcher processes from running concurrently. The canonical supervisor and installer are `windows/grok_boot_supervisor.py` and `windows/install_grok_boot.ps1`.
 
 ## GrokBot command
 
