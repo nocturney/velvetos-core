@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-24 — **Windows-safe Constitution tags:** renamed the legacy brief-order tag document from constitution/TAGS.md to constitution/BRIEF-TAGS.md while keeping constitution/tags.md as the active office-tag authority. This removes the repository's only case-insensitive path collision, so clean Windows clones no longer appear dirty by construction. Live Cognee routines now require a genuinely clean runtime clone; historical evidence that records the old collision remains unchanged.
+
 
 - 2026-09-23 — **Cognee → Grok Bot scheduler cutover live-verified:** live Grok provider readback verified `Cognee Memory Sync` (`cognee-memory-sync`, daily 06:30) and `Cognee Stable Updates` (`cognee-stable-updates`, Monday 10:00) enabled in `Asia/Jerusalem` with the locked instruction intent. Only after that proof were the two matching ChatGPT automations disabled. `VelvetOS Integrity Guard` (`velvetos-integrity-guard`) was then updated in place and read back enabled at daily 01:45 with the expanded nine-routine protected inventory while preserving finite single-pass and positive-protection semantics. Temporary Windows interactive bridge tasks used for the provider exchange were removed after verification.
 
