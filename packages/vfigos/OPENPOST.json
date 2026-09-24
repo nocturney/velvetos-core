@@ -113,10 +113,10 @@
       "status": "PASS",
       "taskName": "VelvetOS-OpenPost-Staging",
       "trigger": "at_logon_current_user",
-      "startScript": "C:\\OpenPost\\staging\\start-openpost-staging.ps1",
-      "startScriptSha256": "bbb834a541085290a0f46d3aac62c6832c94035ee90ec92eb8594122e263a75a",
+      "startScript": "D:\\Velvet\\Services\\OpenPost\\staging\\start-openpost-staging.ps1",
+      "startScriptSha256": "2d5541e4c2b7017c9d34212e78e53c02ee6f144f0e54cf1b1f68defbfed03bd0",
       "restartTested": true,
-      "restartObservedAt": "2026-09-17T22:54:46+03:00",
+      "restartObservedAt": "2026-09-24T10:27:18.3835116+03:00",
       "postRestartReadyStatus": "ready",
       "postRestartBinarySha256": "be6520f495def72b1b466a69c9a223954b4403c3c7c40881b52ce0f030334cc8"
     },
