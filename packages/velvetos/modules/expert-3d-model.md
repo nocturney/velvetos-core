@@ -18,7 +18,7 @@ Extends `production-print`. Playbook: `packages/vfprod/experts/3D-MODEL.md`.
 
 ## Tools
 
-Drive (job files) · 3D AI Studio MCP (`3DAISTUDIO.md`) · site UI failover
+Drive (job files) · local text-to-cad/CAD/DfAM/G-code bridge (`packages/vfprod/TEXT-TO-CAD.md`) · 3D AI Studio MCP (`3DAISTUDIO.md`) for organic/generative work
 
 ## Laws
 

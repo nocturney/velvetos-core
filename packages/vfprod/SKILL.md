@@ -11,6 +11,7 @@
 תחזוקה מונעת: `MAINTENANCE.md` · `python3 scripts/vfprod.py maintain`.
 דשבורד חווה עתידי (Watchtower): `WATCHTOWER.md` — Edge על LAN שדרות, לא daemon בליבה.  
 3D AI Studio (מנוי): `3DAISTUDIO.md` · חיבור MCP: `CONNECT-3DAI.md`.  
+CAD/DfAM/slicing מקומי: `TEXT-TO-CAD.md` · `python scripts/vf_cad.py doctor`.
 אחרי אישור: תור על הצינור `הדפסה`.  
 רישיון קובץ: `#vlicense`.  
 מנוי 3D AI Studio (טקסט/תמונה → STL): `3DAISTUDIO.md`.  
