@@ -2,6 +2,7 @@ name = "velvetos-instagram-publisher"
 main = "src/index.js"
 compatibility_date = "2026-09-24"
 workers_dev = true
+preview_urls = false
 
 [triggers]
 crons = ["* * * * *"]
@@ -9,11 +10,11 @@ crons = ["* * * * *"]
 [[d1_databases]]
 binding = "DB"
 database_name = "velvetos-instagram-publisher"
-database_id = "REPLACE_AFTER_D1_CREATE"
+database_id = "0ff84516-8b91-44a2-bdd6-6349c3bb3bc7"
 
 [[kv_namespaces]]
 binding = "MEDIA"
-id = "REPLACE_AFTER_KV_CREATE"
+id = "31e0c6fd4c084cc4a0c5fecddfa179c3"
 
 [vars]
 GRAPH_VERSION = "v21.0"
