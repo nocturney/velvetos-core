@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-23 — **Cognee → Grok Bot scheduler cutover live-verified:** live Grok provider readback verified `Cognee Memory Sync` (`cognee-memory-sync`, daily 06:30) and `Cognee Stable Updates` (`cognee-stable-upda…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-23 — **Cognee → Grok Bot scheduler cutover live-verified:** live Grok provider readback verified `Cognee Memory Sync` (`cognee-memory-sync`, daily 06:30) and `Cognee Stable Updates` (`cognee-stable-upda…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-24 — **Windows-safe Constitution tags:** renamed the legacy brief-order tag document from constitution/TAGS.md to constitution/BRIEF-TAGS.md while keeping constitution/tags.md as the active office-tag a…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-24 — **Windows-safe Constitution tags:** renamed the legacy brief-order tag document from constitution/TAGS.md to constitution/BRIEF-TAGS.md while keeping constitution/tags.md as the active office-tag a…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
