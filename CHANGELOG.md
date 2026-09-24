@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-24 — **VelvetOS Control API v1:** read-first HTTP projection gateway (`packages/velvetos_control_api`, schema `velvetos.control.v1`) for the Control Center UI. Reuses control-plane / jobs adapter / capability registries / autonomy blockers — not a new SoT, runtime, queue, or database. Endpoints: `/health`, `/v1/snapshot`, `/v1/search`, `/v1/capabilities`, fail-closed `POST /v1/actions`. Server-to-server auth + Cloud Run deploy docs; unavailable domains stay `items:null`. Sensor: `scripts/check-control-api.py`.
+
 - 2026-09-24 — **GrokBot boot architecture hardening:** separated boot-time Instagram failover supervision from the Grok desktop lifecycle. The canonical boot supervisor no longer references or launches the Grok desktop, the Windows installer registers it as `SYSTEM / ServiceAccount`, Interactive Handoff remains `Chris / Interactive`, and a new sensor blocks regressions back to S4U/Session-0 desktop launch.
 
 - 2026-09-24 — **Windows Manim Python provisioning hardening:** the Manim bootstrap now treats a missing pinned Python 3.12 runtime as an expected provisioning condition instead of a terminating native-command error under PowerShell. It verifies the runtime after the existing user-scoped winget install before creating the D-drive Manim venv.

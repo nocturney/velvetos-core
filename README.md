@@ -31,9 +31,9 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>81</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>82</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>9</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
-<td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
+<td align="center"><strong>32</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
 </table>
 
@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-24 — **GrokBot boot architecture hardening:** separated boot-time Instagram failover supervision from the Grok desktop lifecycle. The canonical boot supervisor no longer references or launches the Grok …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-24 — **GrokBot boot architecture hardening:** separated boot-time Instagram failover supervision from the Grok desktop lifecycle. The canonical boot supervisor no longer references or launches the Grok …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-24 — **VelvetOS Control API v1:** read-first HTTP projection gateway (`packages/velvetos_control_api`, schema `velvetos.control.v1`) for the Control Center UI. Reuses control-plane / jobs adapter / capa…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-24 — **VelvetOS Control API v1:** read-first HTTP projection gateway (`packages/velvetos_control_api`, schema `velvetos.control.v1`) for the Control Center UI. Reuses control-plane / jobs adapter / capa…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -116,6 +116,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 
 <table>
 <tr><td><strong>Office Control Plane</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">סטטוס משרד, watchdog, gaps, follow-ups, dead-letter, handoff, review, memory hygiene ו־WIP→finished.</td></tr>
+<tr><td><strong>VelvetOS Control API v1</strong></td><td><strong>IMPLEMENTED / NOT LIVE-VERIFIED</strong></td><td dir="rtl" align="right"><code>packages/velvetos_control_api/</code> — שער HTTP לקריאה ראשונה (<code>velvetos.control.v1</code>) ל־Control Center: <code>/health</code>, <code>/v1/snapshot</code>, <code>/v1/search</code>, <code>/v1/capabilities</code>, <code>/v1/actions</code>. לא SoT / runtime / queue / Control Plane חדש. דומיינים חיים: Control Plane/system, capabilities, attention/activity ו־jobs adapter; production/content/files/agents/models נשארים unavailable במפורש. Actions fail-closed בלי ביצוע כתיבה. Cloud Run ו־Site roundtrip עדיין לא אומתו חי.</td></tr>
 <tr><td><strong>Living Studio</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">שכבת חיבור על מקורות האמת הקיימים עם 22 Skills תפעוליים.</td></tr>
 <tr><td><strong>Universal Intake</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">נרמול וניתוב פניות/מסמכים/פגישות/מדיה ל־handlers קיימים, בלי Inbox מקביל.</td></tr>
 <tr><td><strong>Jobs + Google Sheet bridge</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td dir="rtl" align="right">pull/push/reconcile, הגנת concurrency וללא ניחוש tab.</td></tr>
@@ -167,6 +168,7 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 |‏ שכבות | `packages/velvetos/LAYERS.md` |
 | Event contracts | `packages/velvetos/schema/events.catalog.json` |
 | Office control | `office/control-plane.json` + `office/control/` |
+| Control API (projection) | `packages/velvetos_control_api/` — HTTP projection gateway, not a SoT |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
 |‏ חוקי מערכת | `constitution/` |
@@ -252,6 +254,7 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 
 <table>
 <tr><td><strong>Office Control Plane</strong></td><td><strong>IMPLEMENTED</strong></td><td>Status, watchdog, gaps, follow-ups, dead-letter, handoff, review, memory hygiene and WIP→finished.</td></tr>
+<tr><td><strong>VelvetOS Control API v1</strong></td><td><strong>IMPLEMENTED / NOT LIVE-VERIFIED</strong></td><td><code>packages/velvetos_control_api/</code> — read-first HTTP projection gateway (<code>velvetos.control.v1</code>) for the VelvetOS Control Center: <code>/health</code>, <code>/v1/snapshot</code>, <code>/v1/search</code>, <code>/v1/capabilities</code>, <code>/v1/actions</code>. Not a new SoT, runtime, queue, or Control Plane. Live projected domains: Control Plane/system, capabilities, attention/activity projections, and the jobs adapter; production/content/files/agents/models remain explicitly unavailable in v1. Actions stay fail-closed with no write execution claimed. Cloud Run deployment and Site roundtrip are not live-verified.</td></tr>
 <tr><td><strong>Living Studio</strong></td><td><strong>IMPLEMENTED</strong></td><td>Connective layer over canonical SoTs with 22 operational skills.</td></tr>
 <tr><td><strong>Universal Intake</strong></td><td><strong>IMPLEMENTED</strong></td><td>Normalizes and routes inquiries, documents, meetings and media into existing handlers.</td></tr>
 <tr><td><strong>Jobs + Google Sheet bridge</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td>Pull/push/reconcile with concurrency guards and no guessed tab names.</td></tr>
@@ -295,6 +298,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Layer model | `packages/velvetos/LAYERS.md` |
 | Event contracts | `packages/velvetos/schema/events.catalog.json` |
 | Office control | `office/control-plane.json` + `office/control/` |
+| Control API (projection) | `packages/velvetos_control_api/` — HTTP projection gateway, not a SoT |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
 | Constitution | `constitution/` |

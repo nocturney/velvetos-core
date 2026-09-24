@@ -132,5 +132,21 @@
     "studio_pulse": "packages/velvetos/living-studio/data/pulse-latest.json",
     "signal_room": "packages/velvetos/living-studio/data/signal-room.jsonl",
     "autonomy_snapshot": "packages/velvetos/living-studio/data/autonomy-latest.json"
+  },
+  "controlApi": {
+    "layer": "packages/velvetos_control_api",
+    "schema": "velvetos.control.v1",
+    "cli": "python3 scripts/vf_control_api.py",
+    "sensor": "scripts/check-control-api.py",
+    "http": "python3 -m velvetos_control_api",
+    "deploy": "packages/velvetos_control_api/DEPLOY.md",
+    "rule": "HTTP projection gateway for Control Center UI — not a Control Plane, not a runtime, not a queue, not a database, not a source of truth. Reuses existing adapters; extend via CONTRIBUTIONS.json.",
+    "endpoints": [
+      "GET /health",
+      "GET /v1/snapshot",
+      "GET /v1/search?q=",
+      "GET /v1/capabilities",
+      "POST /v1/actions"
+    ]
   }
 }

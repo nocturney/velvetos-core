@@ -1,0 +1,20 @@
+{
+  "task_id": "velvetos-control-api-v1",
+  "component_state": "Idle",
+  "updatedAt": "2026-09-24T13:05:00Z",
+  "summary": "Control API v1 projection gateway implemented under packages/velvetos_control_api",
+  "latest_observation": {
+    "schema": "velvetos.control.v1",
+    "sensor": "scripts/check-control-api.py PASS",
+    "unit_tests": "23 PASS",
+    "http_evidence": "/opt/cursor/artifacts/control-api-http-evidence.json",
+    "cloud_run_deployed": false,
+    "note": "No live Cloud Run or Site roundtrip claimed"
+  },
+  "artifacts": [
+    "packages/velvetos_control_api/",
+    "scripts/vf_control_api.py",
+    "scripts/check-control-api.py",
+    "office/control-plane.json#controlApi"
+  ]
+}

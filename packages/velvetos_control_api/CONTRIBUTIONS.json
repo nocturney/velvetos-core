@@ -1,0 +1,72 @@
+{
+  "name": "velvetos-control-api-contributions",
+  "schema": "velvetos.control.v1",
+  "rule": "New VelvetOS modules extend the Control API by registering a contribution here — do not grow a central switch. Each contribution projects an existing SoT/adapter; never invent a second store.",
+  "contributions": [
+    {
+      "id": "control_plane",
+      "module": "velvetos_control_api.contributions.control_plane",
+      "class": "ControlPlaneContribution",
+      "domains": ["system", "health", "modules", "flags"],
+      "authoritativeSources": [
+        "office/control-plane.json",
+        "office/control/POLICY.md",
+        "scripts/vf_control_plane.py"
+      ]
+    },
+    {
+      "id": "capabilities",
+      "module": "velvetos_control_api.contributions.capabilities",
+      "class": "CapabilitiesContribution",
+      "domains": ["capabilities"],
+      "authoritativeSources": [
+        "packages/vfops/hq/capabilities.json",
+        "packages/vfigos/CAPABILITIES.json",
+        "office/control/POLICY.md"
+      ]
+    },
+    {
+      "id": "attention",
+      "module": "velvetos_control_api.contributions.attention",
+      "class": "AttentionContribution",
+      "domains": ["attention"],
+      "authoritativeSources": [
+        "office/control/inbox.json",
+        "office/control/dead-letter.json",
+        "office/control/followups.json",
+        "scripts/vf_autonomy.py blockers",
+        "scripts/vf_control_plane.py owner_surface_items"
+      ]
+    },
+    {
+      "id": "activity",
+      "module": "velvetos_control_api.contributions.activity",
+      "class": "ActivityContribution",
+      "domains": ["activity"],
+      "authoritativeSources": [
+        "office/control/HANDOFF.json",
+        "office/control/decisions.jsonl",
+        "packages/velvetos/living-studio/data/pulse-latest.json",
+        "packages/velvetos/living-studio/data/autonomy-latest.json"
+      ]
+    },
+    {
+      "id": "jobs",
+      "module": "velvetos_control_api.contributions.jobs",
+      "class": "JobsContribution",
+      "domains": ["jobs"],
+      "authoritativeSources": [
+        "office/ledger/bindings.json",
+        "scripts/vf_jobs_adapter.py consumer_view"
+      ]
+    },
+    {
+      "id": "unavailable_domains",
+      "module": "velvetos_control_api.contributions.unavailable",
+      "class": "UnavailableDomainsContribution",
+      "domains": ["production", "content", "files", "agents", "models"],
+      "authoritativeSources": [],
+      "note": "v1 honest unavailable — not fake empty arrays"
+    }
+  ]
+}
