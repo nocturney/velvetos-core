@@ -27,6 +27,13 @@ def require(blob: str, needle: str, label: str) -> None:
 
 contract = CONTRACT.read_text(encoding="utf-8")
 for needle in (
+    r"D:\Velvet\Workspaces",
+    r"D:\Velvet\Data",
+    r"D:\Velvet\Artifacts",
+    r"D:\Velvet\Logs",
+    r"D:\Velvet\Cache",
+    r"D:\Velvet\Tmp",
+    r"D:\Velvet\Backups",
     r"VELVET_ROOT=D:\Velvet",
     r"VELVETOS_REPO_ROOT=D:\Velvet\Repos\velvetos-core",
     r"VELVETOS_RUNTIME_ROOT=D:\Velvet\Runtime\VelvetOS",
@@ -90,4 +97,4 @@ fallback = read("packages/vfmcp/WINDOWS-EDGE-FALLBACK.md")
 require(fallback, "WINDOWS-PATH-CONTRACT.md", "Windows fallback playbook")
 require(fallback, r"%VELVETOS_STATE_ROOT%\edge-host.json", "Windows fallback playbook")
 
-print("OK windows-path-contract vars=4 services=openpost legacy-fallback=yes chris-absolute=0")
+print("OK windows-path-contract vars=4 workspaces+datalanes+services legacy-fallback=yes chris-absolute=0")
