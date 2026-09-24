@@ -21,6 +21,7 @@ These variables are machine-scoped on the office Windows host so boot-time SYSTE
 - VelvetOS rebuildable/runtime material lives under `%VELVETOS_RUNTIME_ROOT%`;
 - VelvetOS persistent host state lives under `%VELVETOS_STATE_ROOT%`;
 - shared portable tooling lives under `D:\Velvet\Tools`;
+- long-lived local services that are not repositories live under `D:\Velvet\Services` (for example OpenPost staging);
 - migration evidence and rollback manifests live under `D:\Velvet\Migration`;
 - archives and retained handoffs live under `D:\Velvet\Archive`.
 
