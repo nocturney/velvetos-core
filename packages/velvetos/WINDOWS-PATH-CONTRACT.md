@@ -18,11 +18,18 @@ These variables are machine-scoped on the office Windows host so boot-time SYSTE
 ## Ownership
 
 - source repositories live under `D:\Velvet\Repos`;
+- transient assistant/dev worktrees and task scratch roots live under `D:\Velvet\Workspaces`;
 - VelvetOS rebuildable/runtime material lives under `%VELVETOS_RUNTIME_ROOT%`;
 - VelvetOS persistent host state lives under `%VELVETOS_STATE_ROOT%`;
+- persistent project/application data lives under `D:\Velvet\Data`;
+- generated exports, handoffs and deliverables live under `D:\Velvet\Artifacts`;
+- operational logs live under `D:\Velvet\Logs`;
+- disposable project caches live under `D:\Velvet\Cache`;
+- Velvet-specific temporary files live under `D:\Velvet\Tmp`;
 - shared portable tooling lives under `D:\Velvet\Tools`;
 - long-lived local services that are not repositories live under `D:\Velvet\Services` (for example OpenPost staging);
 - migration evidence and rollback manifests live under `D:\Velvet\Migration`;
+- retained rollback copies live under `D:\Velvet\Backups`;
 - archives and retained handoffs live under `D:\Velvet\Archive`.
 
 ## Profile-bound state that stays on C:
@@ -35,7 +42,7 @@ Installed applications remain in their installer-supported locations unless thei
 
 Windows bootstraps must prefer the `VELVETOS_*` variables. During migration only, they may fall back to the legacy `%USERPROFILE%\velvetos-core` and `%USERPROFILE%\.velvetos` locations when the variables are absent.
 
-The fallback is a rollback/commissioning safety net, not the target architecture. New code must not add Chris-specific absolute paths.
+The fallback is a rollback/commissioning safety net, not the target architecture. New code must not add Chris-specific absolute paths. New assistant/dev work must not create project clones, worktrees, review folders, patch staging, generated artifacts, or task scratch directly under `%USERPROFILE%`; derive those locations from `VELVET_ROOT` and use the ownership map above.
 
 ## Cutover rule
 
