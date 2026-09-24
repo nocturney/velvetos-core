@@ -1,0 +1,14 @@
+.dev.vars
+.wrangler/
+.wrangler-dry-run/
+migration-media/
+migration-openpost-publication.json
+migration-caption.txt
+migration-media-manifest.json
+recover_caption.py
+verify_bridge_urls.py
+build_migration_manifest.py
+materialize_migration_media.ps1
+read_openpost_publication.ps1
+local_smoke.py
+local-test-job.json

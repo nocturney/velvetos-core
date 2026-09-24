@@ -1,0 +1,21 @@
+name = "velvetos-instagram-publisher"
+main = "src/index.js"
+compatibility_date = "2026-09-24"
+workers_dev = true
+
+[triggers]
+crons = ["* * * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "velvetos-instagram-publisher"
+database_id = "REPLACE_AFTER_D1_CREATE"
+
+[[kv_namespaces]]
+binding = "MEDIA"
+id = "REPLACE_AFTER_KV_CREATE"
+
+[vars]
+GRAPH_VERSION = "v21.0"
+ACCOUNT_LABEL = "velvets_cloud"
+MAX_ATTEMPTS = "3"
