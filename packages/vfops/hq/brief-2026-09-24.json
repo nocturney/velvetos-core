@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-24",
+  "date_line": "24.9.2026 · Morning Green v3.1 · Asia/Jerusalem",
+  "version": "Morning-Green-v3.1",
+  "timezone": "Asia/Jerusalem",
+  "research_status": "ready_for_brief",
+  "open_collection": 4790,
+  "bottom_line": "כל חמש העבודות בגיליון VF HQ · jobs מסומנות כסופקו. שלוש יתרות פתוחות מאומתות גם ב-VF HQ · books: סינקופה 4350, ודים 320, אלה+לוגו 120. סך הגבייה הפתוחה 4790. ביומן היום וגם מחר אין אירועים. Instagram חי: 81 עוקבים, 6 פריטים, והפיד האחרון הוא האייל מ-23.9.",
+  "kpis": [
+    {
+      "value": 4790,
+      "label": "גבייה פתוחה"
+    },
+    {
+      "value": 0,
+      "label": "אירועי יומן היום"
+    },
+    {
+      "value": 0,
+      "label": "עבודות ייצור פעילות"
+    }
+  ],
+  "html": "packages/vfops/out/morning-green-2026-09-24.html",
+  "txt": "packages/vfops/out/morning-brief-2026-09-24.txt",
+  "sources": {
+    "jobs": "VF HQ · jobs live Drive read 2026-09-24 (lastMod 2026-09-14T09:05:09.663Z)",
+    "books": "VF HQ · books live Drive read 2026-09-24 (lastMod 2026-09-14T07:37:00.062Z)",
+    "calendar": "Google Calendar nocturney@gmail.com 2026-09-24..2026-09-25 Asia/Jerusalem empty",
+    "instagram": "@velvets_cloud live account_info+list_media 2026-09-24: 81/125/6 latest DdosGbRia0T",
+    "openpost": "gap: DPAPI decrypt failed in remote Shell; honest empty scheduled[]",
+    "research": "packages/vfops/data/research.md 24.9.2026 ready_for_brief (PR 323 merged)"
+  }
+}
