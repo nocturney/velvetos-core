@@ -1,15 +1,24 @@
 {
   "task_id": "velvetos-control-api-v1",
   "component_state": "Idle",
-  "updatedAt": "2026-09-24T13:05:00Z",
-  "summary": "Control API v1 projection gateway implemented under packages/velvetos_control_api",
+  "updatedAt": "2026-09-24T13:26:12Z",
+  "summary": "Control API v1 deployed to Cloud Run; service health and unauthenticated auth gate live-verified",
   "latest_observation": {
     "schema": "velvetos.control.v1",
     "sensor": "scripts/check-control-api.py PASS",
     "unit_tests": "23 PASS",
-    "http_evidence": "/opt/cursor/artifacts/control-api-http-evidence.json",
-    "cloud_run_deployed": false,
-    "note": "No live Cloud Run or Site roundtrip claimed"
+    "github_check_all": "PASS",
+    "cloud_run_deployed": true,
+    "cloud_run_service": "velvetos-control-api",
+    "cloud_run_region": "me-west1",
+    "cloud_run_revision": "velvetos-control-api-00001-h6n",
+    "cloud_run_url": "https://velvetos-control-api-3sz7smh74a-zf.a.run.app",
+    "image_digest": "sha256:4f20c2289bea85bb3bab146bdc284e98018b0b2863e08c0cc8ffb62595aa7e14",
+    "health_http_200": true,
+    "unauthenticated_snapshot_http_401": true,
+    "authenticated_snapshot_verified": false,
+    "site_roundtrip_verified": false,
+    "note": "Cloud Run service/auth gate live-verified. Authenticated snapshot and ChatGPT Site roundtrip remain pending; no write actions enabled."
   },
   "artifacts": [
     "packages/velvetos_control_api/",
