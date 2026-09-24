@@ -1,6 +1,6 @@
 # Windows Edge Fallback
 
-Purpose: keep VelvetOS content/repo/render/speech execution available when `Mac-Office` is offline, without creating a second orchestrator or moving browser subscription credentials.
+Purpose: keep VelvetOS content/repo/render/speech execution available when `Mac-Office` is offline, without creating a second orchestrator or moving browser subscription credentials. Windows paths follow `packages/velvetos/WINDOWS-PATH-CONTRACT.md`.
 
 ## Roles
 
@@ -25,7 +25,8 @@ Windows fallback must NOT receive copied Chrome profiles, cookies, ChatGPT/Gemin
 3. Run the canonical media bootstrap:
 
 ```powershell
-cd $HOME\velvetos-core
+$repo = if ($env:VELVETOS_REPO_ROOT) { $env:VELVETOS_REPO_ROOT } else { Join-Path $HOME 'velvetos-core' }
+Set-Location $repo
 git switch main
 git pull --ff-only origin main
 powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap-media-host-windows.ps1
@@ -43,7 +44,7 @@ The media bootstrap is fail-closed. It first runs `bootstrap-edge-host-windows.p
 - runs `hyperframes browser ensure` and `vf_hyperframes.py doctor`;
 - performs a **real 1080Ãƒâ€”1920 Hebrew RTL HyperFrames smoke render** using `data-no-timeline`;
 - runs the normal VelvetOS render bridge so ffprobe validation and SHA-256 receipt generation are exercised;
-- writes render evidence to `%USERPROFILE%\.velvetos\edge-host.json`, including `doctor=pass`, `renderSmoke=pass`, receipt path/SHA and repo head.
+- writes render evidence to `%VELVETOS_STATE_ROOT%\edge-host.json` after cutover (legacy fallback: `%USERPROFILE%\.velvetos\edge-host.json`), including `doctor=pass`, `renderSmoke=pass`, receipt path/SHA and repo head.
 
 It then runs `bootstrap-speech-host-windows.ps1`, which:
 
@@ -52,7 +53,7 @@ It then runs `bootstrap-speech-host-windows.ps1`, which:
 - runs `vf_speech.py doctor`;
 - performs a real Hebrew TTS smoke using the commercial-safe preferred `moss-tts-nano` path plus Windows ASR and back-transcription QA;
 - requires similarity >= `0.90` and writes speech/QA receipts;
-- writes `%USERPROFILE%\.velvetos\speech-host.json` and annotates the common Edge state.
+- writes `%VELVETOS_STATE_ROOT%\speech-host.json` after cutover (legacy fallback: `%USERPROFILE%\.velvetos\speech-host.json`) and annotates the common Edge state.
 
 On this Windows host (`NVIDIA GeForce RTX 4080 SUPER`), VoiceStudio uses the Windows NVIDIA/CUDA path automatically when available; CPU fallback remains supported. The VoiceStudio Windows bundle does not require a separate CUDA Toolkit install. HyperFrames remains available as the deterministic render layer.
 

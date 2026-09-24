@@ -31,7 +31,13 @@ def cfg() -> dict[str, Any]:
 
 
 def home() -> Path:
-    return Path(os.environ.get("VFMEM_COGNEE_HOME", "~/.velvetos")).expanduser().resolve()
+    override = os.environ.get("VFMEM_COGNEE_HOME")
+    if override:
+        return Path(override).expanduser().resolve()
+    runtime = os.environ.get("VELVETOS_RUNTIME_ROOT")
+    if runtime:
+        return (Path(runtime).expanduser() / "Cognee").resolve()
+    return Path("~/.velvetos").expanduser().resolve()
 
 
 def live_venv() -> Path:

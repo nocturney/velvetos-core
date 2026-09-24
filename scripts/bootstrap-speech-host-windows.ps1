@@ -5,9 +5,16 @@ param(
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
+function Resolve-VelvetPath([string]$Name, [string]$Fallback) {
+    $value = [Environment]::GetEnvironmentVariable($Name)
+    if ([string]::IsNullOrWhiteSpace($value)) { return $Fallback }
+    return [Environment]::ExpandEnvironmentVariables($value)
+}
+
+$LegacyRoot = Join-Path $env:USERPROFILE ".velvetos"
 $HostId = "sderot-windows"
-$Repo = Join-Path $env:USERPROFILE "velvetos-core"
-$StateDir = Join-Path $env:USERPROFILE ".velvetos"
+$Repo = Resolve-VelvetPath "VELVETOS_REPO_ROOT" (Join-Path $env:USERPROFILE "velvetos-core")
+$StateDir = Resolve-VelvetPath "VELVETOS_STATE_ROOT" $LegacyRoot
 $SpeechState = Join-Path $StateDir "speech-host.json"
 $EdgeState = Join-Path $StateDir "edge-host.json"
 

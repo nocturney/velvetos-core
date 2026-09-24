@@ -639,8 +639,16 @@ def cmd_dump(graph: Graph) -> dict[str, Any]:
 def _cognee_python() -> Path | None:
     override = os.environ.get("VFMEM_COGNEE_PYTHON")
     candidates = [Path(override).expanduser()] if override else []
-    home = Path.home() / ".velvetos" / "cognee-venv"
-    candidates += [home / "Scripts" / "python.exe", home / "bin" / "python"]
+    live_venv = os.environ.get("VFMEM_COGNEE_LIVE_VENV")
+    if live_venv:
+        home = Path(live_venv).expanduser()
+        candidates += [home / "Scripts" / "python.exe", home / "bin" / "python"]
+    velvet_runtime = os.environ.get("VELVETOS_RUNTIME_ROOT")
+    if velvet_runtime:
+        home = Path(velvet_runtime).expanduser() / "Cognee" / "cognee-venv"
+        candidates += [home / "Scripts" / "python.exe", home / "bin" / "python"]
+    legacy = Path.home() / ".velvetos" / "cognee-venv"
+    candidates += [legacy / "Scripts" / "python.exe", legacy / "bin" / "python"]
     return next((p for p in candidates if p and p.is_file()), None)
 
 
