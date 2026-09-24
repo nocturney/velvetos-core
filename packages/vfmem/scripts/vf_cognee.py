@@ -50,7 +50,12 @@ def index_contract(cfg: dict[str, Any]) -> dict[str, Any]:
 
 def runtime_root(cfg: dict[str, Any]) -> Path:
     override = os.environ.get("VFMEM_COGNEE_ROOT")
-    return Path(override).expanduser() if override else Path(cfg["runtimeRoot"]).expanduser()
+    if override:
+        return Path(override).expanduser()
+    velvet_runtime = os.environ.get("VELVETOS_RUNTIME_ROOT")
+    if velvet_runtime:
+        return Path(velvet_runtime).expanduser() / "Cognee" / "cognee"
+    return Path(cfg["runtimeRoot"]).expanduser()
 
 
 def apply_runtime_env(root: Path, cfg: dict[str, Any] | None = None) -> None:

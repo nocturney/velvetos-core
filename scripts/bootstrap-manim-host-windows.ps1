@@ -3,12 +3,20 @@ param()
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
+function Resolve-VelvetPath([string]$Name, [string]$Fallback) {
+  $value = [Environment]::GetEnvironmentVariable($Name)
+  if ([string]::IsNullOrWhiteSpace($value)) { return $Fallback }
+  return [Environment]::ExpandEnvironmentVariables($value)
+}
+
 $MANIM_VERSION = '0.21.0'
 $PYTHON_VERSION = '3.12'
 $HOST_ID = 'sderot-windows'
-$VelvetDir = Join-Path $env:USERPROFILE '.velvetos'
-$Toolchain = Join-Path $VelvetDir "toolchain\manim-$MANIM_VERSION-py312"
-$StateFile = Join-Path $VelvetDir 'manim-host.json'
+$LegacyRoot = Join-Path $env:USERPROFILE '.velvetos'
+$RuntimeRoot = Resolve-VelvetPath 'VELVETOS_RUNTIME_ROOT' $LegacyRoot
+$StateDir = Resolve-VelvetPath 'VELVETOS_STATE_ROOT' $LegacyRoot
+$Toolchain = Join-Path $RuntimeRoot "Toolchains\manim-$MANIM_VERSION-py312"
+$StateFile = Join-Path $StateDir 'manim-host.json'
 
 function Say([string]$Message) { Write-Host $Message }
 function Fail([string]$Message) { throw "FAIL $Message" }
@@ -104,7 +112,7 @@ $State = [ordered]@{
   sha256 = $Sha
   verifiedAt = [DateTimeOffset]::UtcNow.ToString('o')
 }
-New-Item -ItemType Directory -Force -Path $VelvetDir | Out-Null
+New-Item -ItemType Directory -Force -Path $StateDir | Out-Null
 [IO.File]::WriteAllText($StateFile, ($State | ConvertTo-Json -Depth 5), (New-Object Text.UTF8Encoding($false)))
 
 Say 'OK Manim Windows host smoke verified'

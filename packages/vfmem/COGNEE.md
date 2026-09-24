@@ -16,13 +16,14 @@ Pinned contract: `packages/vfmem/cognee.json`.
 Windows reference host:
 
 ```powershell
-py -3 -m venv "$HOME\.velvetos\cognee-venv"
-& "$HOME\.velvetos\cognee-venv\Scripts\python.exe" -m pip install "cognee[gliner]==1.6.0"
-$env:VFMEM_COGNEE_PYTHON="$HOME\.velvetos\cognee-venv\Scripts\python.exe"
+$CogneeHome = if ($env:VELVETOS_RUNTIME_ROOT) { Join-Path $env:VELVETOS_RUNTIME_ROOT 'Cognee' } else { Join-Path $HOME '.velvetos' }
+py -3 -m venv (Join-Path $CogneeHome 'cognee-venv')
+& (Join-Path $CogneeHome 'cognee-venv\Scripts\python.exe') -m pip install "cognee[gliner]==1.6.0"
+$env:VFMEM_COGNEE_PYTHON = Join-Path $CogneeHome 'cognee-venv\Scripts\python.exe'
 ```
 
-The adapter forces local/keyless extraction by default, isolates Cognee storage below
-`~/.velvetos/cognee`, and ignores ambient provider credentials in its child process.
+The adapter forces local/keyless extraction by default. On migrated Windows hosts it isolates Cognee storage below
+`%VELVETOS_RUNTIME_ROOT%\Cognee\cognee`; without the path contract it retains the legacy `~/.velvetos/cognee` fallback. It ignores ambient provider credentials in its child process.
 The durable index pins local FastEmbed to
 `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384 dimensions) so
 Hebrew and English queries share the same local semantic space. Remote providers
@@ -53,8 +54,7 @@ build can resume without moving the active state pointer to a partial dataset.
 Recall uses explicit `CHUNKS` retrieval. Each returned chunk is mapped through the
 active state's `documentMap` to its canonical source path, SHA-256, category,
 authority and freshness. Missing provenance fails closed and `vfmem.py recall` falls
-back to the built-in local graph/search path. The live pointer is
-`~/.velvetos/cognee/active-state.json`; the legacy `state.json` is retained as rollback
+back to the built-in local graph/search path. The live pointer is `%VELVETOS_RUNTIME_ROOT%\Cognee\cognee\active-state.json` on migrated Windows hosts (legacy fallback: `~/.velvetos/cognee/active-state.json`); the legacy `state.json` is retained as rollback
 evidence because the Windows host can hold that filename open without delete-sharing.
 The active pointer is written with a unique same-directory temp file, `fsync`, bounded
 Windows replace retries and JSON readback verification before the cutover is accepted.

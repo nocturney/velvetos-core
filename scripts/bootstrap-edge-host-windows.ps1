@@ -6,12 +6,20 @@ param(
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
+function Resolve-VelvetPath([string]$Name, [string]$Fallback) {
+    $value = [Environment]::GetEnvironmentVariable($Name)
+    if ([string]::IsNullOrWhiteSpace($value)) { return $Fallback }
+    return [Environment]::ExpandEnvironmentVariables($value)
+}
+
+$LegacyRoot = Join-Path $env:USERPROFILE ".velvetos"
 $HostId = "sderot-windows"
-$Repo = Join-Path $env:USERPROFILE "velvetos-core"
-$StateDir = Join-Path $env:USERPROFILE ".velvetos"
+$Repo = Resolve-VelvetPath "VELVETOS_REPO_ROOT" (Join-Path $env:USERPROFILE "velvetos-core")
+$RuntimeRoot = Resolve-VelvetPath "VELVETOS_RUNTIME_ROOT" $LegacyRoot
+$StateDir = Resolve-VelvetPath "VELVETOS_STATE_ROOT" $LegacyRoot
 $StateFile = Join-Path $StateDir "edge-host.json"
-$ToolchainDir = Join-Path $StateDir "toolchain"
-$NpmPrefix = Join-Path $StateDir "npm"
+$ToolchainDir = Join-Path $RuntimeRoot "Toolchains"
+$NpmPrefix = Join-Path $RuntimeRoot "npm"
 $HyperFramesVersion = "0.8.34"
 $NodeVersionPin = "22.22.0"
 $FfmpegStaticPackage = "ffmpeg-ffprobe-static@6.1.2-rc.1"

@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-24 — **Windows D-drive path contract:** introduced machine-level `VELVET_ROOT`, `VELVETOS_REPO_ROOT`, `VELVETOS_RUNTIME_ROOT` and `VELVETOS_STATE_ROOT` as the canonical Windows host path contract. Edge/Speech/Manim bootstraps, Windows host metadata, Cognee runtime/recall, Grok Cognee routines and operator docs now resolve the contract first while retaining a bounded `%USERPROFILE%` legacy fallback for commissioning/rollback. Added `check-windows-path-contract.py` to block Chris-specific absolute-path regressions without moving profile-bound AppData, credentials, `.codex`, `.agents` or `.ssh`.
+
 - 2026-09-24 — **Windows-safe Constitution tags:** renamed the legacy brief-order tag document from constitution/TAGS.md to constitution/BRIEF-TAGS.md while keeping constitution/tags.md as the active office-tag authority. This removes the repository's only case-insensitive path collision, so clean Windows clones no longer appear dirty by construction. Live Cognee routines now require a genuinely clean runtime clone; historical evidence that records the old collision remains unchanged.
 
 

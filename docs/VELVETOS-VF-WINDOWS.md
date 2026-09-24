@@ -1,5 +1,7 @@
 # VelvetOS — Velvet Factory: הגדרה ב-Windows (בלי `gh`)
 
+> נתיבי ה-host הנוכחיים מוגדרים ב-`packages/velvetos/WINDOWS-PATH-CONTRACT.md`. דוגמאות legacy במסמך הזה עשויות עדיין להראות clone תחת פרופיל המשתמש; deployments חדשים משתמשים ב-`VELVETOS_REPO_ROOT` וב-`D:\Velvet`.
+
 אם `git push` מחזיר **Repository not found** — זו כמעט תמיד **הרשאה / התחברות**, לא שגיאת כתיב.
 
 ## למה זה קורה
