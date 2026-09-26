@@ -4,7 +4,9 @@ name: Office Control Plane
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    # 02/08/14/20 UTC = 05:00/11:00/17:00/23:00 Asia/Jerusalem (IDT): >=30 min clear of the
+    # Office Loop at 10:30/18:30 IDT even with GitHub schedule delays up to ~40 min.
+    - cron: "0 2,8,14,20 * * *"
   workflow_dispatch:
 
 permissions:
