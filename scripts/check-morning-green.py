@@ -2,8 +2,10 @@
 """Offline contract sensor for the Morning Green owner brief."""
 from __future__ import annotations
 import json
+import importlib.util
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -130,7 +132,49 @@ def main() -> None:
     proc = subprocess.run([sys.executable, str(PACK / "render_morning_green.py"), "--check"], cwd=ROOT, text=True, capture_output=True)
     if proc.returncode != 0:
         fail(proc.stderr or proc.stdout or "Morning Green renderer self-check failed")
+    check_feed_status()
     print("OK Morning Green v3.1 editorial email + truth semantics + CID transport contract")
+
+def check_feed_status() -> None:
+    """OpenPost paused must read as paused, never as an empty/failed schedule."""
+    cfg_path = PACK / "FEED-SOURCE.json"
+    try:
+        cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        fail(f"FEED-SOURCE.json unreadable: {exc}")
+    if cfg.get("schema") != "vf.morning-green.feed-source.v1":
+        fail("FEED-SOURCE.json schema drifted")
+    template = (PACK / "MORNING-GREEN.html").read_text(encoding="utf-8")
+    if template.count("{{feed_status_html}}") != 1:
+        fail("MORNING-GREEN.html must carry exactly one {{feed_status_html}} slot")
+    spec = importlib.util.spec_from_file_location("vf_mg_build", PACK / "build_morning_green.py")
+    build = importlib.util.module_from_spec(spec); spec.loader.exec_module(build)  # type: ignore[union-attr]
+    rspec = importlib.util.spec_from_file_location("vf_mg_render", PACK / "render_morning_green.py")
+    render = importlib.util.module_from_spec(rspec); rspec.loader.exec_module(render)  # type: ignore[union-attr]
+    with tempfile.TemporaryDirectory() as tmp:
+        t = Path(tmp)
+        paused = t / "paused.json"; paused.write_text(json.dumps({"openpost": {"state": "paused", "label": "P", "visibleText": "V"}}), encoding="utf-8")
+        active = t / "active.json"; active.write_text(json.dumps({"openpost": {"state": "active"}}), encoding="utf-8")
+        broken = t / "broken.json"; broken.write_text("{not json", encoding="utf-8")
+        cases = [
+            (build.feed_status({"scheduled": []}, paused), "live", ""),
+            (build.feed_status(None, paused), "paused", "P"),
+            (build.feed_status(None, active), "unavailable", None),
+            (build.feed_status(None, broken), "unavailable", None),
+            (build.feed_status(None, t / "missing.json"), "unavailable", None),
+        ]
+        for got, state, label in cases:
+            if got.get("state") != state or (label is not None and got.get("label") != label):
+                fail(f"feed_status contract drifted: {got!r} expected {state}/{label}")
+            if state != "live" and not (got.get("label") and got.get("visible_text")):
+                fail(f"feed_status {state} must carry both an email label and a visible-text line")
+    if build.feed_status(None).get("state") not in {"paused", "unavailable"}:
+        fail("feed_status without a snapshot must be paused or unavailable")
+    if render.feed_status_html({"state": "live", "label": "x"}) != "" or render.feed_status_html(None) != "":
+        fail("feed_status_html must be empty for live/missing status (backward compatible)")
+    html = render.feed_status_html({"state": "paused", "label": "OpenPost <paused>"})
+    if 'data-state="paused"' not in html or "&lt;paused&gt;" not in html or not html.startswith("<tr>"):
+        fail("feed_status_html must render an escaped full-row paused note")
 
 if __name__ == "__main__":
     main()

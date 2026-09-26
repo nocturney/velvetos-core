@@ -111,6 +111,17 @@ def post_cards(posts: object, allow_local: bool) -> str:
 {thumb}{time_html}{meta_html}
 </td>''')
     return "".join(cells)
+def feed_status_html(status: object) -> str:
+    """Paused/unavailable note under the feed heading; empty for a live schedule."""
+    row = status if isinstance(status, dict) else {}
+    state = str(row.get('state') or 'live').strip().lower()
+    label = str(row.get('label') or '').strip()
+    if state == 'live' or not label:
+        return ''
+    color = '#80683f' if state == 'paused' else '#a85c44'
+    return (f'<tr><td class="vf-card-pad vf-feed-status" data-state="{esc(state)}" dir="rtl" align="right" '
+            f'style="padding:0 20px 10px;color:{color};font-size:12px;line-height:18px;font-weight:700;text-align:right">{esc(label)}</td></tr>\n')
+
 def instagram_metrics(data: object) -> tuple[str,str]:
     row = data if isinstance(data, dict) else {}
     followers = row.get('followers')
@@ -207,6 +218,7 @@ def render(data: dict, *, allow_local: bool = False, template: str | None = None
         "daily_summary": esc(data["daily_summary"]),
         "top_image_url": top_url, "top_image_alt": top_alt,
         "scheduled_posts_html": post_cards(data.get("scheduled_posts"), allow_local),
+        "feed_status_html": feed_status_html(data.get("feed_status")),
         "instagram_metrics_html": instagram_html,
         "instagram_note": instagram_note,
         "story_title": esc(data["story"]["title"]), "story_body": esc(data["story"]["body"]),
