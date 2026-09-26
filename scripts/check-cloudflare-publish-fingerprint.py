@@ -81,6 +81,16 @@ def main() -> int:
         if token not in schema:
             fail(f"schema missing {token}")
 
+    migration = WORKER / "migrations" / "d1" / "0001_publish_fingerprints.sql"
+    if not migration.is_file():
+        fail("missing D1 migration migrations/d1/0001_publish_fingerprints.sql")
+    block = schema[schema.index("CREATE TABLE IF NOT EXISTS publish_fingerprints"):].strip()
+    if block not in migration.read_text(encoding="utf-8"):
+        fail("D1 migration differs from schema.sql publish_fingerprints block")
+    readme = (WORKER / "README.md").read_text(encoding="utf-8")
+    if "0001_publish_fingerprints.sql" not in readme or "not live until the Worker is redeployed" not in readme:
+        fail("README must document migration-before-deploy order and not-live status")
+
     print(
         "OK cloudflare-publish-fingerprint "
         "incident=2026-09-13 repeats_blocked=5 extra_publishes=0 "

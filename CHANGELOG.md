@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Cloudflare fingerprint guard D1 migration:** adds idempotent `packages/vfigos/cloudflare-publisher/migrations/d1/0001_publish_fingerprints.sql` and a README deploy order (migration → verify table → `wrangler deploy`). Without it, the existing D1 lacks `publish_fingerprints` and a redeployed Worker would fail closed on every due job. The guard is still not live; no deploy was performed. `check-cloudflare-publish-fingerprint.py` now requires the migration to match `schema.sql`.
+
 - 2026-09-26 — **Visual identity restored after Canva removal:** #362 deleted every line mentioning Canva, which also dropped the approved-reference SHA line and cold-start trigger from the instance desk rule (frontend `verify-attached-core` failed: `always-on rule missing df41281b…`), item 7 "Premium but not template-like" from the owner-approved grid standard, and the rejected G004 design `DAHUaelaug0` hard-reject everywhere. Restored as reference identity / reject-list entries only (never a provider route; the Canva asset ID stays removed). New sensor `scripts/check-visual-reject-identity.py` pins them and runs the instance template's own bootstrap check against Core.
 
 - 2026-09-26 — **Office Control Plane schedule offset:** `office-control-plane.yml` cron `0 */6 * * *` → `0 2,8,14,20 * * *` (05:00/11:00/17:00/23:00 IDT), so it no longer collides with the Office Loop at 10:30/18:30 IDT even with ~40 min GitHub delays. The chief-of-staff README/LOOPS/SYSTEM-MAP, learning-lifecycle playbook and `vfops/LOOP.json` cadence are updated. Approved by Christian 19:15 IDT.
