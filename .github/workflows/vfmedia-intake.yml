@@ -19,7 +19,10 @@ name: VF Media Auto Intake
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    # Every 3h at :23 UTC (8/day). GitHub delivered only ~6-8/day of the old */5
+    # (median gap 3.7h); sparse schedules here are honoured 100%. Off the top of
+    # the hour and 1.5h apart from jobs-write-through. Manual: workflow_dispatch.
+    - cron: "23 */3 * * *"
   workflow_dispatch:
     inputs:
       max_files:
