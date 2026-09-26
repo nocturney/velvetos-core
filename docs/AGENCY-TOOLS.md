@@ -1,3 +1,5 @@
+> **CURRENT ROUTING AUTHORITY:** `packages/velvetos/TOOL-STATUS.json` (2026-09-26). Canva/vfcanva are removed/forbidden; OpenPost is frozen; Instagram scheduling is Cloudflare Publisher -> Meta Graph. Older availability rows are historical only if they conflict.
+
 # Agency desk + tools
 
 The Agency dump installed **273** Cursor specialists (`docs/AGENCY-AGENTS.md`). Velvet Factory uses a **desk** of 28, wired to the office packs and the live tools on this HQ.
@@ -26,9 +28,8 @@ Checked 2026-08-30 on this HQ:
 | Treg | **Not relevant** | Do not login or `call`. Live web = WebSearch / orchestra. Insights = verified snapshot or «אין ספירה». |
 | vfmem | HQ-native (`scripts/vfmem.py`) | Office graph: pack / `@slug` / tool. Pattern from codebase-memory-mcp; no binary. |
 | FCC (Free Claude Code) | Not on this Cloud Agent | Local BYOK proxy on the owner Mac only (`vffcc`). Does not cut Cursor usage. |
-| Canva | **Ready** (verified 2026-08-31, design `DAGoYmCu4c4`) | Instagram visuals. If `needsAuth`: `vfcanva/studio/render.py` → Superdesign. |
 | WebSearch / WebFetch | Ready (native Cursor) | Live web (Treg not used). ChatGPT/Gemini/Perplexity/Grok browse equivalent. Never invent a blocked body. |
-| GenerateImage | Ready (native Cursor) | User-asked stills. Instagram still Canva-first. Failover: Canva `generate-design` → Superdesign → `studio/render.py`. |
+| GenerateImage | Ready (native Cursor) | User-asked stills under current vfom/Product Truth gates. No Canva route. |
 | 3D AI Studio | Owner subscription; **not on this Cloud Agent** | Text/image → mesh → STL. Playbook `vfprod/3DAISTUDIO.md`. Official MCP is OAuth from their Settings. Failover: site UI + Drive. No key in git. |
 
 **Failover law:** tool down / no access → hand the job to the backup **in the same turn**. Never end empty-handed. Never invent ₪, Insights, or a blocked body to fill the gap. Matrix: [`constitution/ORCHESTRA.md`](../constitution/ORCHESTRA.md).
@@ -43,7 +44,7 @@ Tool-gap map (Grok / ChatGPT / Gemini / Perplexity vs this HQ): [`packages/vfmcp
 |---|---|---|---|
 | ראש צוות | `vfops` `vfbriefux` `vfharness` `vfmem` | `@studio-operations` `@chief-of-staff` `@meeting-notes-specialist` `@workflow-architect` `@ux-architect` | Calendar, Gmail read, Mobbin, WebSearch, `check-all.py`, vfmem |
 | סטודיו | `vfconvert` `vfsales` `vfcopy` `vfmskill` | `@email-intelligence-engineer` `@discovery-coach` `@sales-engineer` `@proposal-strategist` `@content-creator` `@brand-guardian` | Gmail read, Drive by job |
-| צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` `vfmskill` `vfom` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Superdesign, Treg, Drive, Canva, GenerateImage, WebSearch |
+| צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` `vfmskill` `vfom` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Drive, GenerateImage; Superdesign only for internal packet graphics, WebSearch |
 | תפעול | `vfcost` `vfbooks` `vfbiz` | `@pricing-analyst` `@bookkeeper-controller` `@finance-tracker` `@business-strategist` | Gmail חשבונות, Drive, Sheets-via-Drive (`SHEETS.md`) |
 | ייצור | `vfprod` `vfsku` `vlicense` `vfresearch` | `@studio-producer` `@operations-manager` `@legal-compliance-checker` `@research-synthesist` `@trend-researcher` | Drive, Calendar, WebSearch, 3D AI Studio (site / MCP after connect) |
 

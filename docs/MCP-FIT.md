@@ -1,3 +1,5 @@
+> **CURRENT TOOL AUTHORITY — 2026-09-26:** `packages/velvetos/TOOL-STATUS.json`. Cloudflare Publisher owns Instagram scheduling; official Meta Instagram Graph API is provider authority; OpenPost is frozen; Canva/vfcanva are removed. Older catalogue rows below are research/history when they conflict with this authority.
+
 # MCP fit for Velvet Factory
 
 Source: [punkpeye/awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) (reviewed 2026-08-30).  

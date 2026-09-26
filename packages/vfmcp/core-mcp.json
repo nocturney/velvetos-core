@@ -1,6 +1,6 @@
 {
   "role": "core",
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-26",
   "rule": "VelvetOS Core registers office MCPs. An instance binds a subset via mcpBind. No secrets in git. HTTP servers live in .cursor/mcp.json. Desktop-only / stdio servers stay in ~/.cursor/mcp.json or Codespace secrets (see mcp.desktop.example.json).",
   "projectMcpJson": ".cursor/mcp.json",
   "connect": "packages/vfmcp/CORE-MCP.md",
@@ -85,7 +85,7 @@
     {
       "id": "instagram",
       "inProjectMcpJson": false,
-      "canonical": true,
+      "canonical": false,
       "package": "adelaidasofia-instagram-mcp",
       "whyNotProject": "adelaidasofia/instagram-mcp is stdio Python + Meta long-lived token (INSTAGRAM_MCP_*). Project mcp.json must not hold secrets. Desktop ~/.cursor/mcp.json, Codespace secrets, or future remote Team MCP.",
       "source": "https://github.com/adelaidasofia/instagram-mcp",
@@ -98,7 +98,7 @@
       "remote_access": "ready",
       "igUserId": "17841407772120429",
       "accountLabel": "velvets_cloud",
-      "failover": "Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)",
+      "failover": "No OpenPost/Canva fallback. Publication incidents follow packages/vfigos/SEND.md and fail closed on ambiguous outcomes.",
       "allowedRead": [
         "healthcheck",
         "list_accounts",
@@ -114,16 +114,7 @@
         "publishing_limit",
         "business_discovery"
       ],
-      "allowedWriteAfterGates": [
-        "publish_image",
-        "publish_video",
-        "publish_reel",
-        "publish_carousel",
-        "publish_story",
-        "reply_to_comment",
-        "hide_comment",
-        "delete_comment"
-      ],
+      "allowedWriteAfterGates": [],
       "locks": [
         "no-secrets-in-git",
         "no-autodm",
@@ -133,7 +124,11 @@
         "INSTAGRAM_MCP_DM_ENABLED-must-stay-off",
         "liveVerified-requires-list_media-or-get_media",
         "public-https-url-for-approved-derivative-only"
-      ]
+      ],
+      "role": "read-verify-capability-bridge",
+      "metaOwned": false,
+      "schedulerAuthority": "packages/vfigos/PUBLISHER.json",
+      "writeSchedulingAuthority": false
     }
   ]
 }

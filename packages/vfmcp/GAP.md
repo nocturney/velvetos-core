@@ -1,3 +1,5 @@
+> **CURRENT TOOL AUTHORITY — 2026-09-26:** `packages/velvetos/TOOL-STATUS.json`. Instagram scheduling/publish = Cloudflare Publisher -> official Meta Instagram Graph API. OpenPost is frozen. Canva/vfcanva are removed/forbidden. This file contains dated capability snapshots; contradictory older rows are historical, not routing authority.
+
 # פערי כלים · Grok / ChatGPT / Gemini / Perplexity מול HQ
 
 לא פק חדש. הטמעה על `vfmcp` + השולחן הקיים.  
