@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **One-shot script triage:**
+  - `scripts/vf_close_runtime_corners.py` (unreferenced 2026-09-14 migration) moved to `scripts/archive/`. It now refuses to run, with an ARCHIVED header and an `archive/README.md` explaining why: re-running it would overwrite current REGISTRY/BEST-SKILLS/OWNER-ACTIONS authorities.
+  - `scripts/vf_project669_transport.py` stays. It is the only producer of the `velvet.project669.transport_qa.v1` receipts that `vf_project669_publication.py` requires, so it is a live tool. It is now referenced from that script's docstring and from `vfigos/SEND.md`.
+
 - 2026-09-26 — **Realistic crons for vfmedia intake and jobs write-through:**
   - `vfmedia-intake.yml` moved from `*/5 * * * *` to `23 */3 * * *`, and `jobs-write-through.yml` from `7,22,37,52 * * * *` to `53 1-23/3 * * *`: 8 runs/day each, 1.5h apart, off the top of the hour.
   - Why: run history for 2026-09-17..25 shows GitHub delivered only 5–8 scheduled runs/day of either (median gap 3.7h / 3.4h, max ~7h). On this repo the 6-hourly and daily schedules are honoured 4/4 and 1/1. The new cadence equals or beats real delivery with even spacing.

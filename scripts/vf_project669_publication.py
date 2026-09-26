@@ -4,7 +4,8 @@
 This is an adapter, not a second creative gate. It accepts only a completed
 Revision 6.6.9 project workspace whose exact release/reviews remain bound to
 the final visual, then optionally binds a deterministic transport derivative
-through an explicit transport-QA receipt.
+through an explicit transport-QA receipt (schema velvet.project669.transport_qa.v1,
+produced only by scripts/vf_project669_transport.py).
 """
 from __future__ import annotations
 
