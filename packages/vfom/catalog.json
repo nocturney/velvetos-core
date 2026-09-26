@@ -133,8 +133,11 @@
       "source": [
         "README.md#platform-output-profiles"
       ],
-      "packs": [],
-      "crew": "crews/hybrid-reel.md"
+      "packs": [
+        "vfcovers"
+      ],
+      "crew": "crews/hybrid-reel.md",
+      "note": "1080×1920 Instagram story/reel-cover output remains part of the current visual/export stack without a separate provider dependency."
     },
     {
       "id": "content-sprint-existing",

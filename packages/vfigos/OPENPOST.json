@@ -12,7 +12,7 @@
     "note": "Historical/runtime record only. Owner froze OpenPost after unreliable scheduled publication and insufficient alerting. No active VelvetOS component may route new work, scheduling, failover, monitoring or publication through it."
   },
   "upstream": "https://github.com/getopenpost/openpost",
-  "integrationMode": "frozen-historical-only",
+  "integrationMode": "paused",
   "creativeAuthority": false,
   "qualityGateAuthority": false,
   "instagram": {

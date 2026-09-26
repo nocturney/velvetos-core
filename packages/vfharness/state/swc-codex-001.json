@@ -72,7 +72,7 @@
         "sha256": "924af15f9607026e279ff05d4a8bf66c078097c8a0c3485231b04fbe8c6fa7b7"
       },
       "packages/vfharness/playbooks/skillstate.md": {
-        "sha256": "12f3f2e8dc63de16e775af147bf33c31b0677eea12e443a6677e080055321a83"
+        "sha256": "767225189825329eef63458d316bbc84cd2e955cf6535fc842d60365d3ba985c"
       }
     },
     "upstream_refresh": {
@@ -117,10 +117,44 @@
         "proof_path": "packages/vfharness/state/pr228-rollout/task-state-behavior.log",
         "proof_sha256": "e626bfeac7bbf4cefa7eb0ecd5e749e852ac84b09d8f5cea7ebb637b47e4c732",
         "exit_code": 0
+      },
+      {
+        "reviewed_at": "2026-09-26T13:45:00+00:00",
+        "scope": "Artifact integrity only; original task outcome not rerun.",
+        "reason": "Tool hygiene removed a provider-specific opaque-ID example from skillstate.md without changing task-state semantics.",
+        "previous_artifact_evidence": {
+          "packages/vfharness/playbooks/skillstate.md": {
+            "sha256": "12f3f2e8dc63de16e775af147bf33c31b0677eea12e443a6677e080055321a83"
+          }
+        },
+        "current_artifact_evidence": {
+          "packages/vfharness/playbooks/skillstate.md": {
+            "sha256": "867c741be077a609a57fd56efa263e4c3d1a845dc509f7d39addb6caa957b4d4"
+          }
+        },
+        "proof_path": "PR #362 tool-hygiene sensor verification",
+        "exit_code": 0
+      },
+      {
+        "reviewed_at": "2026-09-26T13:47:00+00:00",
+        "scope": "Artifact integrity only; original task outcome not rerun.",
+        "reason": "Restored provider-neutral unverified_reference documentation after provider-specific example removal.",
+        "previous_artifact_evidence": {
+          "packages/vfharness/playbooks/skillstate.md": {
+            "sha256": "867c741be077a609a57fd56efa263e4c3d1a845dc509f7d39addb6caa957b4d4"
+          }
+        },
+        "current_artifact_evidence": {
+          "packages/vfharness/playbooks/skillstate.md": {
+            "sha256": "767225189825329eef63458d316bbc84cd2e955cf6535fc842d60365d3ba985c"
+          }
+        },
+        "proof_path": "PR #362 tool-hygiene sensor verification",
+        "exit_code": 0
       }
     ]
   },
   "latest_observation": "Phase A merged on main via #108. Owned reader/sensor digests verified. skillstate.md digest refreshed 2026-09-07 after component_state / Degraded embed (ADR-THREE-LAYERS). Historical audit of other checkpoints remains separate. Follow-ups: Cursor PRs #109–#114.",
   "outcome": "worker_done",
-  "verification": "Existing TaskStateTests executed successfully; current LF artifact bytes revalidated for PR228. Prior evidence retained in execution_state.artifact_revalidations."
+  "verification": "Existing TaskStateTests retained; skillstate.md exact bytes revalidated after provider-specific example removal."
 }

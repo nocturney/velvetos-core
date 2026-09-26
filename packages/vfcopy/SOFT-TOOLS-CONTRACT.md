@@ -2,7 +2,7 @@
 
 Canonical authority: `constitution/VISIBLE_TEXT.md`.
 
-This contract is the `vfcopy` implementation invariant for **every prose or microcopy artifact created/rephrased by AI and intended for a human reader** — public, customer-facing, or owner-facing. It is channel-aware: the relevant tools depend on the surface; public Instagram rules are not forced onto private customer or owner text.
+This contract is the `vfcopy` implementation invariant for **every prose or microcopy artifact created/rephrased by AI and intended for a human reader** — public, customer-facing, or owner-facing. It is channel-aware: the relevant tools depend on the surface; public Instagram rules are not forced onto private customer or owner text. **Origin grants no exemption:** agent/tool/human-originated public copy must pass the same relevant final-copy gates before it can be treated as ready.
 
 ## Universal baseline
 

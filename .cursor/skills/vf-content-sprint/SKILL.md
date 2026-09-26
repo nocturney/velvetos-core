@@ -15,7 +15,7 @@ Use the existing office orchestrator only. Never install or simulate a second ru
 
 ## Core flow
 
-
+Public copy is fail-closed under `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`. For every final copy, use `reader-first-he.md` → `VOICE.md` / `VOICE-CHART.md` / `voice/approved/` → relevant copywriting/copy-editing/marketing-psychology aids → `velvet-hebrew-copy` → Humanizer / `ai-tells-he.md` → `check-vfcopy.py lint` on the exact final copy → fact gate → CONTENT-RUBRIC → PREFLIGHT. This applies equally to agent/tool/human-originated public copy; a rewrite after lint must be linted again.
 
 1. Read `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md`, `packages/vfom/FOUNDRY.json`, `CREATIVE-AUTOPILOT.md`, `INSTAGRAM-CONTENT-DECISION.json`, `VISUAL-OS.md`, `VISUAL-DNA.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md`, `FORMAT-GENOMES.md`, `HYPERFRAMES-BACKEND.json`, `HYPERFRAMES-FRAME.md` and the mandatory public-copy invariant `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`.
 2. Start from real proof: `packages/vfprod/PRINT-DONE.md` / `print.done`, verified Media Vault item, named product/material/failure, or another evidenced opportunity. No invented floor scene.

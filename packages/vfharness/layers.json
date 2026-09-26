@@ -124,7 +124,8 @@
     },
     {
       "id": "check-tool-authority",
-      "script": "scripts/check-tool-authority.py"
+      "script": "scripts/check-tool-authority.py",
+      "type": "computational"
     },
     {
       "id": "check-vfgrowth",

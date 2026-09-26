@@ -1,5 +1,6 @@
 ---
 name: vf-openmontage
+description: Plan and review source-grounded Velvet Factory reels and visual content using the existing vfom crews, publication evidence, visual standard, and verified media without creating a second runtime.
 ---
 
 # OpenMontage crews (`vfom`)

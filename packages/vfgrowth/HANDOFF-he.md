@@ -2,9 +2,11 @@
 
 ## VF_PUBLICATION_ROUTE_V1 — current
 
+לפרסום Velvet Factory: `packages/vfom/PUBLICATION-PREP-EXECUTION.md` + `publicationRoute` ב־`packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. מקור מוצר אמיתי → Product Truth → Creative Director → source-grounded edit → Visible Text → Brand Guardian → exact-final QA.
 
 **לא לפרסם מכאן. לא בוסט. לא אוטו־DM. לא לפתוח Instagram או Gmail מהסוכן.**  
 שיבוץ: **instagram.com** על `@velvets_cloud` או Instagram MCP אחרי שערי אישור. לא Meta Suite. לא Buffer/Later בלי ראש צוות.  
+סטוריז = `publish_story` על MCP הקנוני רק אחרי publication evidence על החבילה המדויקת; JPEG גולמי אינו תוצר סופי.
 **PUBLIC_CURRENT_CTA:** אם נדרש CTA, ברירת המחדל היא הודעת Instagram ל־`@velvets_cloud`; אין טלפון/WhatsApp ציבורי בלי הרשאה מפורשת למשימה.
 
 לולאה: `python3 scripts/vfops_loop.py handoff` · בריף: `python3 scripts/vfops_loop.py brief`.
@@ -17,6 +19,7 @@
 בלי edited review artifact + source/final evidence + exact-final QA = השורה נשארת **חסום עריכה**. לא שואלים משבצת — הרשת ב־`CALENDAR.md`. כל מועמד עם תאריך → אירוע Google Calendar (`CALENDAR-OPS.md`).
 **אל תפנה לכריסטיאן על מדדים חלשים.** אין «רמה נמוכה» לצ׳אט. משטח: החלטה / חסם קשיח / פרסום חי שדורש אותו.
 
+> LEGACY / provenance only — **כל שאר המסמך מתחת לנקודה זו הוא ארכיון 7.9.2026 ואסור לביצוע.** `LEDGER.md` והמסלול הנוכחי למעלה מנצחים. פרטי G003/G004 נשמרים לצורכי lineage בלבד.
 
 ## LEGACY · חבילת 7.9 — G004 קטלבל-מחזיק · לא לביצוע
 

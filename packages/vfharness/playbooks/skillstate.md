@@ -131,6 +131,7 @@ such as `worker_done` are not silently converted to `done`.
 | `digest_verified` | Current regular-file bytes match the expected SHA-256 in this checkpoint |
 | `digest_mismatch` | File changed or the recorded digest is incorrect |
 | `unverified_external` | URI, not accessed or verified by this reader |
+| `unverified_reference` | Opaque ID, command, or pattern; not resolved, executed, or expanded |
 | `unverified_other_environment` | Absolute/Windows/home/escaping path outside the selected checkout; not opened |
 | `invalid_reference` / `invalid_evidence` / `unreadable` | Explicit input or local inspection failure |
 

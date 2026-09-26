@@ -220,7 +220,8 @@
         "vfcovers",
         "vfbriefux"
       ],
-      "crew": "crews/content.md"
+      "crew": "crews/content.md",
+      "note": "Use the existing approved design-assist capability on the desk. Not a new site."
     },
     {
       "name": "v0 by Vercel",

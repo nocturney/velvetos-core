@@ -116,7 +116,8 @@
       "verdict": "embed",
       "packs": [
         "vfcovers"
-      ]
+      ],
+      "note": "Cover briefs use an approved image/edit capability. No invented floor scenes."
     },
     {
       "name": "video",
