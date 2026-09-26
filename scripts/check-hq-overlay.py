@@ -152,5 +152,18 @@ def main() -> None:
     print("OK hq overlay + Brief V10.3 Ink & Candy image-first contract")
 
 
+# Sensors only read: undo writes made by the office CLIs this sensor smoke-tests
+# (see scripts/sensor_isolation.py).
+SIDE_EFFECT_PATHS = (
+    "office/control",
+    "packages/vfops/data",
+    "packages/vfinsights",
+)
+
+
 if __name__ == "__main__":
-    main()
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from sensor_isolation import preserve_repo_files  # noqa: E402
+
+    with preserve_repo_files(ROOT, SIDE_EFFECT_PATHS):
+        main()
