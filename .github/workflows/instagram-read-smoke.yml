@@ -34,7 +34,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install pinned sensor deps
-        run: python3 -m pip install -r requirements-sensors.txt
+        run: python3 -m pip install --disable-pip-version-check --require-hashes -r requirements-sensors.py311.lock
 
       - name: Offline Instagram MCP unit tests
         working-directory: packages/vfigos/remote
