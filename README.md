@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **`vf_handoff.py` deprecated:** the typed `vf.handoff.v1` records (#189) were never adopted (zero records in 13 days; `packages/vfharness/state/handoffs/` never existed), while `office/control/HAND…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **`vf_handoff.py` deprecated:** the typed `vf.handoff.v1` records (#189) were never adopted (zero records in 13 days; `packages/vfharness/state/handoffs/` never existed), while `office/control/HAND…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Instance scaffold drift check hardened:** `scripts/sync-instance-scaffold.sh` is explicitly check-only (ls-remote + shallow temp clone + diff; never commits or pushes). It gains `--check` (exit 3…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Instance scaffold drift check hardened:** `scripts/sync-instance-scaffold.sh` is explicitly check-only (ls-remote + shallow temp clone + diff; never commits or pushes). It gains `--check` (exit 3…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -343,7 +343,12 @@ python3 scripts/velvetos.py instances
 python3 scripts/check-all.py
 python3 scripts/check-commission-isolation.py
 python3 scripts/update-readme-snapshot.py --check
+./scripts/sync-instance-scaffold.sh --check   # frontend drift, check-only; the frontend repo is private
 ```
+
+Frontend drift: `nocturney/velvetos-velvet-factory` is **private**. `sync-instance-scaffold.sh` only reads and diffs, never pushes. CI runs it report-only and SKIPs without access.
+
+פער חזית: ריפו החזית פרטי; הבדיקה רק קוראת ומשווה, לא דוחפת, וב־CI מדלגת כשאין גישה.
 
 Sensors are read-only: a `check-all.py` run must leave repository files unchanged and ends with `OK sensor run left repository files unchanged` (or a `WARN sensor side effects …` list). Sensors that smoke-test writer CLIs restore those outputs through `scripts/sensor_isolation.py`. Canonical artifacts are written only by the explicit commands (`vfops_loop.py brief --write`, `vf_control_plane.py handoff`, `vf_organic_growth.py brief --write`, `vf_retro_signals.py --write`).
 

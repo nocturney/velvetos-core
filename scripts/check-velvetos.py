@@ -287,6 +287,23 @@ def main() -> None:
     for needle in ("VELVETOS_CORE_OFFLINE", "VELVETOS_CORE_PATH", ".attach-stamp"):
         if needle not in tmpl_attach:
             fail(f"instances/_template/scripts/attach-core.sh must support {needle}")
+    sync_sh = (ROOT / "scripts" / "sync-instance-scaffold.sh").read_text(encoding="utf-8")
+    for needle in ("CHECK-ONLY", "--skip-if-inaccessible", "--check", "GIT_TERMINAL_PROMPT=0", "-x .git"):
+        if needle not in sync_sh:
+            fail(f"sync-instance-scaffold.sh must keep {needle}")
+    for line in sync_sh.splitlines():
+        code = line.split("#", 1)[0].strip()
+        if not code or code.startswith("echo "):
+            continue
+        if "git push" in code or "publish-instance.sh" in code or "git commit" in code:
+            fail(f"sync-instance-scaffold.sh must stay check-only: {code}")
+    check_all_wf = (ROOT / ".github" / "workflows" / "check-all.yml").read_text(encoding="utf-8")
+    if "sync-instance-scaffold.sh --skip-if-inaccessible" not in check_all_wf:
+        fail("check-all.yml must run sync-instance-scaffold.sh --skip-if-inaccessible")
+    inst_readme = (INSTANCES / "README.md").read_text(encoding="utf-8")
+    if "velvetos-velvet-factory` are **public**" in inst_readme or "`nocturney/velvetos-velvet-factory` is **private**" not in inst_readme:
+        fail("instances/README.md must state the frontend repo is private")
+
     inst_env = (PACK / "INSTANCE-ENV.md").read_text(encoding="utf-8")
     for needle in ("Offline", "VELVETOS_CORE_OFFLINE", "VELVETOS_CORE_PATH", ".attach-stamp"):
         if needle not in inst_env:
