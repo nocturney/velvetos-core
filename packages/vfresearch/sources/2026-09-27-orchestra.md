@@ -1,7 +1,7 @@
 # Research Seat · 2026-09-27
 
 State: `ready_for_brief`
-Observed run: 2026-09-27 ~02:05–02:25 Asia/Jerusalem (before 07:00 cutoff).
+Observed run: 2026-09-27 ~02:05–02:25 Asia/Jerusalem (before 07:00 cutoff). Executor EXTRA findings appended ~02:10–02:20 Asia/Jerusalem (same branch / same ready_for_brief).
 Seat: Velvet Research Seat
 Path: live WebSearch/WebFetch + GitHub CLI shallow clone / `gh` failover (Cloud Agent launch blocked: Cursor usage exhausted / on-demand required). No chatgpt.com / gemini.google.com / perplexity.ai browser.
 
@@ -12,7 +12,7 @@ Path: live WebSearch/WebFetch + GitHub CLI shallow clone / `gh` failover (Cloud 
 - Social Intelligence: no policy-change signal; PUBLIC_CURRENT_CTA = Instagram message / איסוף שדרות. WhatsApp 050-2517000 desk-only. Auto-DM / keyword automation sources skipped.
 - Owner email: default NO. Do not enable `packages/vfops/out/gmail-send-request.json`.
 
-Anti-recycle: 20.9–26.9 already covered intake spine; acceptance/first-article; filament lot/label; quote-speed; written quote approval; deposit-after-quote; three-reel week; production handoff packet; pre-pickup automatic-fail QC; staffed hours+bed-clear; workflow-before-printers; PrusaSlicer 3.0 alpha; Bambu 2.8.4 Public Beta; drying temps; ColorMix/Lightweight; QC-before-cleanup; FPY/batching metrics; SUNLU; revision-delta after quote; prototype/pilot/production freeze; lead-time phases+buffer; 10-unit FPY gate; supports-on process frames; Best Skills 24.9 no-embed. Those are **not** re-sold today.
+Anti-recycle: 20.9–26.9 already covered intake spine; acceptance/first-article; filament lot/label; quote-speed; written quote approval; deposit-after-quote; three-reel week; production handoff packet; pre-pickup automatic-fail QC; staffed hours+bed-clear; workflow-before-printers; PrusaSlicer 3.0 alpha; Bambu 2.8.4 Public Beta; drying temps; ColorMix/Lightweight; QC-before-cleanup; FPY/batching metrics; SUNLU; revision-delta after quote; prototype/pilot/production freeze; lead-time phases+buffer; 10-unit FPY gate; supports-on process frames; Best Skills 24.9 no-embed. Those are **not** re-sold today. **Extras skip (anti-recycle):** Versely weekly content engine + 25.9 three-reel Mon/Wed/Fri cadence — not re-opened as an EXTRA finding.
 
 ## Same-day public research body
 
@@ -65,20 +65,44 @@ Confidence: high for the auto-fail + packing-priority pattern; medium for exact 
 
 Limitation: Printie is a fulfillment vendor publishing SOPs for trust. Take the inspection/pack rules, not outsourcing or ship-from-warehouse framing. Adapt “ship” → איסוף מוכן.
 
-### 5. Social Intelligence
+### 5. Batchable organizer SKUs + full cost stack (EXTRA)
+Sources:
+- https://layermath.com/blog/uk-etsy-seller-2400-per-month — LayerMath case study, published March 2026, fetched live 2026-09-27 (executor EXTRA).
+
+Evidence: A lean UK Etsy seller (~£2,400/mo snapshot in the source) specialises in functional home organisers / desk accessories / small storage — not novelty one-offs. Nearly every SKU is flat-bed printable (low overhang risk), colour-batched on the same filament runs, and reuses the same G-code across orders. Pricing is built bottom-up: material + electricity + labour (setup/post/pack) + machine depreciation + marketplace fees — then sanity-checked against the market. Volume stays sane by grouping orders by colour/material, packing in blocks, and treating the farm as a batch machine rather than a project shop. Source quotes their own UK/Etsy £ figures; those are **not** VF prices.
+
+Action: map onto `vfsku` (3–5 repeatable PLA/PETG organizer-class SKUs that share flat-bed / same-G-code habits) / `vfprod` (colour-run batch days + pack blocks) / `vfconvert` (full cost-stack fields: material, power, labour, depreciation, fees — structure only). **No invented ₪ amounts** and no invented SKU marketing names. Distinct from earlier FPY/batching metric notes — this is **catalog design + cost-stack discipline for repeatable organizers**.
+
+Confidence: medium — pattern is clear; UK/Etsy fee and letterbox-mail framing do not transfer.
+
+Limitation: Source is a UK Etsy marketplace case with LayerMath calculator CTA. VF is pickup/IG only (PUBLIC_CURRENT_CTA = Instagram message / איסוף שדרות). Strip Etsy fees, national shipping, and £ revenue claims; keep batchable-SKU + full cost-stack habits.
+
+### 6. Tiny local pickup “desk reset” recurring SKU (EXTRA)
+Sources:
+- https://printie.com/blog/2025-10-29-3d-print-subscription-products — Printie, published 2025-10-29, fetched live 2026-09-27 (executor EXTRA).
+
+Evidence: Subscriptions only work when the product is naturally recurring (replacement parts, consumable accessories, monthly theme packs). Cadence must be realistic and visible; deep discounts hurt margin; skip/pause/easy-cancel reduce chargebacks. Production foundation = repeatable SKUs, stable materials, clear lead times. Demand planning tip in source: keep ~two cycles of material buffer and pre-print a small next-cycle cushion when designs are stable. Fulfillment calendar should name freeze → print → QA → pack → ship as one moved unit. Example framing in source: a small “Monthly Desk Reset Pack” (cable clip / pen holder / desk hook class) that stays batchable. Start small; inconsistent fulfillment kills the model.
+
+Action: map onto `vfsku` / `vfsales` as a **tiny local pickup club** (not a national shipping subscription) — one small desk-accessory cadence for איסוף שדרות, skip/pause friendly, no invented SKU name as LIVE. Map production rhythm onto `vfops`: freeze → print → QA → ready-for-pickup calendar (adapt “ship” → איסוף מוכן). Material buffer + small pre-print cushion when the design is frozen. Distinct from 25.9 three-reel content cadence (skipped as anti-recycle) — this is **physical recurring SKU ops**, not IG posting rhythm.
+
+Confidence: medium-low — pattern is useful; Printie is a fulfillment SaaS selling outsourcing.
+
+Limitation: Take the recurring-product + cadence + skip/pause + freeze→QA calendar habits. Do **not** adopt Printie outsourcing, national ship-from-warehouse, or invented ₪/subscriber metrics. Adapt fully to Sderot pickup + Instagram CTA.
+
+### 7. Social Intelligence
 Result: `nothing-solid` for @velvets_cloud policy change.
 
 Observed 2026-09-27: Instagram auto-DM / keyword funnels continue to conflict with PUBLIC_CURRENT_CTA and no-auto-DM — **skipped**. No Insights invented.
 
-### 6. MakerWorld / Printables scan (Sunday)
+### 8. MakerWorld / Printables scan (Sunday)
 Ran. Primary MakerWorld + Printables model pages returned Cloudflare interstitials («אין גוף»). Search-index candidates recorded with **UNPROVEN** license in `2026-09-27-makerworld-scan.md`. SHELF: אין שם להציע. No invented model names as cleared commercial candidates.
 
-### 7. Slicer watch (continuity only — not headline)
+### 9. Slicer watch (continuity only — not headline)
 - Bambu Studio `v02.08.04.57` (2.8.4 Public Beta) published 2026-09-22T11:56:36Z — already briefed → **no re-sell**.
 - PrusaSlicer `version_3.0.0-alpha12` published 2026-09-21T14:34:20Z — continuity only.
 - OrcaSlicer latest official remains **v2.4.2** (2026-07-07). No new September 2026 official release observed via `gh api` 2026-09-27.
 
-### 8. Best Skills (stale → executed)
+### 10. Best Skills (stale → executed)
 `lastPass` 2026-09-24 → ~72h stale. Ranking snapshot dataDate **2026-09-26** (UTC README). Result: `no-embed-existing-coverage`. Details in `2026-09-27-best-skills.md`. BEST-SKILLS.json updated.
 
 ## ממצאים — Top for the 09:00 brief
@@ -86,8 +110,11 @@ Ran. Primary MakerWorld + Printables model pages returned Cloudflare interstitia
 2. Minimum quote packet + one controlling revision → vfconvert/vfsales.
 3. Three surface-finish lanes before approval → vfsales/vfconvert/vfprod.
 4. Automatic-fail QC list + breakage-first packing for pickup → vfprod.
-5. Best Skills: due/stale pulse executed; no-embed-existing-coverage (dataDate 26.9).
-6. MakerWorld Sunday: Cloudflare; licenses UNPROVEN; אין שם להציע.
+5. Batchable organizer SKUs + full cost stack (no invented ₪; pickup/IG only) → vfsku/vfprod/vfconvert. **EXTRA**
+6. Tiny local pickup “desk reset” recurring SKU (skip/pause; freeze→print→QA→ready) → vfsku/vfsales/vfops. **EXTRA**
+7. Best Skills: due/stale pulse executed; no-embed-existing-coverage (dataDate 26.9).
+8. MakerWorld Sunday: Cloudflare; licenses UNPROVEN; אין שם להציע.
+9. Skipped EXTRA: Versely weekly content engine / 25.9 three-reel Mon/Wed/Fri — anti-recycle.
 
 ## Searches performed (same-day)
 - `small 3D printing business order intake checklist customer file requirements 2026`
@@ -96,14 +123,18 @@ Ran. Primary MakerWorld + Printables model pages returned Cloudflare interstitia
 - `Printables.com commercial license desk organizer tray free model September 2026`
 - `site:github.com LinklyAI best-skills trending skills September 2026`
 - WebFetch: GP3D Asset 01 intake · GP3D what-to-send · GP3D surface finish · Printie QC/packing 2026-07-06 · PrintCal briefing checklist · MakerWorld model 2064110 · Printables 1316736 / 996199 / 1639591 (all three Cloudflare)
+- WebFetch EXTRA: LayerMath UK Etsy seller £2,400/mo case (Mar 2026) · Printie 3D print subscription products (2025-10-29)
+- Search EXTRA: `3D print shop batchable organizer SKU full cost stack material electricity labour depreciation fees 2026` · `3D print subscription desk accessories local pickup recurring SKU cadence skip pause 2025 2026`
 - gh api: bambulab/BambuStudio, prusa3d/PrusaSlicer, SoftFever/OrcaSlicer|OrcaSlicer/OrcaSlicer releases
 - LinklyAI/best-skills README rankings Last updated 2026-09-26
 
 ## Skips
 - Revision-delta / prototype-pilot-production / lead-time phases / 10-unit FPY / supports-on frames — anti-recycle from 26.9.
+- **Versely weekly content engine EXTRA + 25.9 three-reel Mon/Wed/Fri** — skipped as anti-recycle (not re-sold as EXTRA).
+- 26.9 themes — not recycled into EXTRA findings.
 - Bambu 2.8.4 Public Beta + PrusaSlicer 3.0 alpha — continuity watch only.
 - Instagram auto-DM / ManyChat — CTA + no-auto-DM locks.
-- National shipping / Printie outsourcing pitch / invented ₪.
+- National shipping / Printie outsourcing pitch / invented ₪ / invented SKU marketing names / UK Etsy £ as VF prices.
 - Clearing MakerWorld/Printables candidates without readable license — fail-closed.
 - Inventing ₪, Insights, customers, Origin slugs, LIVE, shelf SKU names.
 - Owner research email — not sent.
@@ -118,4 +149,4 @@ Due=**true** / stale (~72h since `lastPass` 2026-09-24). Pass executed. `lastRes
 Default **NO**. Findings are Morning Brief consumer material only — not a research-path/tool stale fix and not a hard blocker.
 
 ## Cutoff / freshness
-`ready_for_brief` — same-day external body with primary URLs + 4 actionable findings + Best Skills due pulse + MakerWorld Sunday scan with honest Cloudflare/UNPROVEN licenses, finished before 07:00 Asia/Jerusalem.
+`ready_for_brief` — same-day external body with primary URLs + 6 actionable findings (4 base + 2 executor EXTRA: batchable organizer cost-stack; local pickup desk-reset club) + Best Skills due pulse + MakerWorld Sunday scan with honest Cloudflare/UNPROVEN licenses. Versely/three-reel EXTRA skipped (anti-recycle). Base body + EXTRA amend finished before 07:00 Asia/Jerusalem.
