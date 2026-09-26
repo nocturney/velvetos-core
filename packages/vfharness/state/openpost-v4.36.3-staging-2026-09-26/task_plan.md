@@ -8,6 +8,7 @@
 **Owner approval (scope):** "prepare a v4.36.3 test in a staging environment, without touching production"
 **Owner approval (staging run):** "Run the test from my computer, staging environment only." (2026-09-26)
 **Staging result:** PASS 2026-09-26 10:16 Asia/Jerusalem; see findings.md §6 and progress.md
+**Follow-up (owner, 10:36):** staging upgraded to latest upstream **v6.2.0**, PASS 10:40 (findings.md §7). Christian has temporarily stopped using OpenPost for publishing because scheduled posts were failing/unreliable; the v6.2.0 upgrade is a staging evaluation only (no publishing, no accounts connected, production unchanged).
 
 ## Goal
 

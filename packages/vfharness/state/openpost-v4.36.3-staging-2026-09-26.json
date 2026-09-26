@@ -135,7 +135,8 @@
       "schema": 138,
       "start_script_sha256": "9ca6072fc8789ffd846a72bea2e73951446c824bb9532797ef6accaedb73460a",
       "firewall": "VelvetOS-OpenPost-Staging-LocalOnly enabled Inbound Block Any",
-      "listener": "::18080 (all interfaces; firewall-enforced local-only)"
+      "listener": "::18080 (all interfaces; firewall-enforced local-only)",
+      "superseded_by": "staging_v6_2_0"
     },
     "rollback": "not needed",
     "residue": "one synthetic smoke user + workspace in staging DB",
@@ -159,7 +160,8 @@
     "staging_smoke": "PASS",
     "instagram_live_verify": "UNCHANGED_NOT_APPLICABLE",
     "analytics_read": "REVIEWED",
-    "signed_delivery_approval_live": "UNCHANGED"
+    "signed_delivery_approval_live": "UNCHANGED",
+    "staging_smoke_v6_2_0": "PASS"
   },
   "hard_stops_honored": [
     "no pin change",
@@ -172,9 +174,99 @@
     "Instagram failover watcher and GrokBot tasks untouched",
     "staging firewall kept Block"
   ],
-  "reviewed_at": "2026-09-26T10:30:00+03:00",
+  "reviewed_at": "2026-09-26T10:50:00+03:00",
   "owner_approval_staging_run": {
     "text": "Run the test from my computer, staging environment only.",
     "date": "2026-09-26"
+  },
+  "owner_context": {
+    "openpost_publishing_paused": true,
+    "note": "Christian has temporarily stopped using OpenPost for publishing because scheduled posts were failing/unreliable; the v6.2.0 upgrade is a staging evaluation only (no publishing, no accounts connected, production unchanged).",
+    "quote": "Maybe update to the latest version? Keep it in the test environment, because we're temporarily not using OpenPost for publishing due to failures and unreliability in scheduled posts.",
+    "date": "2026-09-26"
+  },
+  "staging_v6_2_0": {
+    "status": "PASS",
+    "scope": "staging evaluation only; publishing paused by owner",
+    "latest_release_confirmed": {
+      "tag": "v6.2.0",
+      "published_at": "2026-09-25T21:58:48Z",
+      "source": "gh release list -R getopenpost/openpost"
+    },
+    "windows_server_sha256": "b0b35293102a38d5f21dfd2153f0502fbb828eb5336d0ab8d748082bce2cdb7d",
+    "windows_server_sha_source": "GitHub release asset digest (no .sha256 file for server assets)",
+    "linux_server_sha256": "fbe66d1baa465d03e363192c12bea6c9f10dddcef4e88e14782885aba14b050c",
+    "breaking_changes": {
+      "migrations": [
+        "139_remove_account_content_discovery.sql (drops account_content_observations, analytics_account_content_snapshots, account_content_discovery_leases, account_content_discovery_states, account_contents)"
+      ],
+      "cli": "unchanged (no args = all)",
+      "env_added": [
+        "OPENPOST_MCP_MODE (default direct)"
+      ],
+      "env_removed": [
+        "OPENPOST_ANALYTICS_SOURCES",
+        "OPENPOST_ANALYTICS_SOURCES_FILE",
+        "OPENPOST_X_ACCOUNT_HISTORY_READ_REQUESTS_PER_DAY"
+      ],
+      "start_script_change": "path only v4.36.3 -> v6.2.0"
+    },
+    "runner_sha256": "e3e474824628a528b95bd4203d0d67c6adb86e64ad6cf8ca8953f3d080dca880",
+    "ran_at": "2026-09-26T10:39:05+03:00",
+    "finished_at": "2026-09-26T10:40:05+03:00",
+    "box_precheck": "PASS (138->139 on copy, smoke + restart)",
+    "backup": {
+      "path": "D:\\Velvet\\Backups\\OpenPost\\pre-v6.2.0-20260926-103903",
+      "raw_copy_matches_original": true,
+      "consolidated_db_sha256": "d10b7f2f07e928597d3a30d11ccdfc08747f88baae86c609a547a28c41a4b55b",
+      "schema": 138,
+      "integrity": "ok",
+      "fk_violations": 0,
+      "start_script_sha256": "9ca6072fc8789ffd846a72bea2e73951446c824bb9532797ef6accaedb73460a"
+    },
+    "migration_smoke": {
+      "port": 18081,
+      "target": "copy of backup",
+      "status": "PASS",
+      "fromSchemaVersion": 138,
+      "toSchemaVersion": 139,
+      "discovery_tables_after": 0,
+      "integrityCheck": "ok",
+      "foreignKeyViolations": 0,
+      "staging_db_unchanged": true
+    },
+    "smoke": {
+      "status": "PASS",
+      "health": 200,
+      "ready": "ready",
+      "version": "v6.2.0",
+      "unauth_publications": 401,
+      "unauth_mcp_media_upload": 401,
+      "draft_create": 200,
+      "draft_delete": 200,
+      "schedule_no_destination": 503,
+      "retry_failed_contract": 409,
+      "analytics_read": 200,
+      "analytics_refresh_queue": 200
+    },
+    "restart_persistence": "PASS",
+    "final": {
+      "version": "v6.2.0",
+      "binary_sha256": "b0b35293102a38d5f21dfd2153f0502fbb828eb5336d0ab8d748082bce2cdb7d",
+      "running": true,
+      "schema": 139,
+      "start_script_sha256": "d4e94ba22e8a60129e8dbea793ecdac55394fa87949962d2f72787f6dca61e98",
+      "firewall": "VelvetOS-OpenPost-Staging-LocalOnly enabled Inbound Block Any",
+      "listener": "::18080 (firewall-enforced local-only)",
+      "rollback_folder_kept": "D:\\Velvet\\Services\\OpenPost\\staging\\v4.36.3"
+    },
+    "rollback": "not needed",
+    "reliability_relevant_upstream_fixes_cited": [
+      "v6.1.0 acceptance without native id stays pending/reconcile-only",
+      "v6.1.0 pre-dispatch validation (YouTube, TikTok, X, Bluesky, LinkedIn id, media MIME)",
+      "v6.1.8 X media STATUS poll min 1s",
+      "v6.0.2 instance-based adapters resolve without restart"
+    ],
+    "not_exercised": "provider OAuth / Instagram publish / scheduled delivery (no accounts on staging)"
   }
 }

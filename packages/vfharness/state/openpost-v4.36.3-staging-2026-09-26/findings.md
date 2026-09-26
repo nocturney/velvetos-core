@@ -182,3 +182,75 @@ auto-created for the new exe.
 - `OPENPOST.json` `runtime.staging*` and `persistence.startScriptSha256` (pinned in `scripts/check-windows-path-contract.py`) still describe v4.35.0.
   Recording the new staging state is a separate owner decision/PR; this PR does not edit `OPENPOST.json`.
 - Rollback path: stop the task, restore `start-openpost-staging.ps1` and `data\*` from the backup dir, start the task (v4.35.0 on schema 136).
+
+## 7. Follow-up: staging evaluation of v6.2.0 (latest upstream), 2026-09-26
+
+> **Context:** Christian has temporarily stopped using OpenPost for publishing because scheduled posts were failing/unreliable; the v6.2.0 upgrade is a staging evaluation only (no publishing, no accounts connected, production unchanged).
+
+Owner approval (10:36 Asia/Jerusalem): "Maybe update to the latest version? Keep it in the test environment, because we're temporarily
+not using OpenPost for publishing due to failures and unreliability in scheduled posts."
+
+### 7.1 Upstream evidence
+
+- `gh release list -R getopenpost/openpost`: **v6.2.0 is Latest** (published 2026-09-25T21:58:48Z = 2026-09-26 00:58 Asia/Jerusalem). Releases after
+  v4.36.3: v5.0.0, v5.1.2, v5.2.2, v6.0.1–v6.0.4, v6.1.0, v6.1.1, v6.1.3, v6.1.8, v6.2.0 (CHANGELOG also lists an unreleased-tag 5.1.0 section).
+- Windows server asset `openpost-server-windows-amd64.exe` (450,763,264 bytes; the v6 server binaries are ~450 MB): GitHub asset digest
+  `sha256:b0b35293102a38d5f21dfd2153f0502fbb828eb5336d0ab8d748082bce2cdb7d`; the downloaded file matched. (The server assets have no separate
+  `.sha256` file; the CLI/MCP assets do. Verification used the API `digest`.) Linux server digest `fbe66d1b…050c` matched on the box.
+
+### 7.2 Breaking changes checked (release notes + source `v4.36.3` → `v6.2.0`)
+
+| Area | Finding | Staging impact |
+|---|---|---|
+| DB | Only new migration: `139_remove_account_content_discovery.sql` drops `account_content_observations`, `analytics_account_content_snapshots`, `account_content_discovery_leases`, `account_content_discovery_states`, `account_contents` (v6.0.2 "Removed": analytics/engagement cover only content published through OpenPost) | Destructive for discovery data; staging had no provider accounts. Backup taken first |
+| CLI | `parseProcessCommand` identical; no args = `all` | Start script unchanged except the version folder |
+| `.env` loading | `godotenv.Load()` from the working directory, unchanged | `.env` copied unchanged from `v4.36.3\` |
+| Env vars | Added `OPENPOST_MCP_MODE` (`direct`\|`search`\|`both`, default `direct` = the v4.36.3 behavior). Removed `OPENPOST_ANALYTICS_SOURCES`, `OPENPOST_ANALYTICS_SOURCES_FILE`, `OPENPOST_X_ACCOUNT_HISTORY_READ_REQUESTS_PER_DAY` | None used by staging; `OPENPOST_MCP_MODE` left unset |
+| Listener | Still `e.Start(":"+port)` (all interfaces) | Local-only stays firewall-enforced (rule Block) |
+| Release notes | No declared server config/API breaking change in 5.x/6.x; 5.x is mostly editor/tools work | — |
+
+**Start script adaptation:** only the path `staging\v4.36.3` → `staging\v6.2.0` (SHA `2d5541e4…` → `9ca6072f…` (v4.36.3) → `d4e94ba2…61e98` (v6.2.0)). No flags or env changes were needed.
+
+### 7.3 Run (`run-openpost-v6.2.0-staging.ps1`, sha256 `e3e47482…a880`, non-admin), 10:39–10:40 Asia/Jerusalem
+
+| Step | Result |
+|---|---|
+| Box pre-check (loopback 18096, copy of the box schema-138 DB) | 138→139, integrity ok, FK 0, full API smoke pass, restart ready |
+| Pre-probe (read-only) | ready; v4.36.3 exe `8d799a0d…`; start script `9ca6072f…`; firewall Block; schema 138; discovery tables 5; providers 0 |
+| Backup | `D:\Velvet\Backups\OpenPost\pre-v6.2.0-20260926-103903`: raw `data\` copy hash-matched; start script copied; `openpost.consolidated.db` sha `d10b7f2f…4b55b` schema 138, integrity ok, FK 0 |
+| Download | sha `b0b35293…cdb7d` = release digest; `.env` copied from `v4.36.3\` |
+| Migration smoke 127.0.0.1:18081 (copy) | **PASS**: 138→139, discovery tables 0, `mcp_media_upload_tickets` + `creation_source` present, integrity ok, FK 0, jobs preserved (4006 completed/7 pending), API smoke pass, staging DB unchanged |
+| Promote 18080 | ready; listener sha = v6.2.0; firewall Block |
+| Staging smoke 18080 | **PASS**: health 200, ready, version `v6.2.0`, unauth 401 (publications, MCP media upload), draft create (`creation_source=web`)/validate/get/delete, schedule without destination 503 (no job), retry-failed 409, publications/jobs list 200, analytics read + refresh queue 200 |
+| Restart/persistence | **PASS**: ready, v6.2.0 sha, schema 139, integrity ok, firewall Block |
+| Result | `PASS`, no rollback needed. `v4.36.3\` folder kept for rollback |
+
+Post-run read-only check: task Running; `::18080` = v6.2.0 ready; no 18081 listener; rule Block; no auto-created firewall rules for the v6.2.0 exe.
+Rollback path to v4.36.3: stop the task, restore `start-openpost-staging.ps1` and `data\*` from the backup dir, start the task.
+(Box probe only: v4.36.3 also started ready on a schema-139 copy, but restoring the backup remains the canonical rollback.)
+
+### 7.4 Upstream fixes relevant to scheduled-post reliability (cited, not verified on staging)
+
+Staging has no connected accounts, so none of these were exercised. Sources are the upstream release notes / `CHANGELOG.md` at v6.2.0:
+
+- **v6.1.0 (Fixed):** "A provider acceptance without a native post id or a reference to reconcile with no longer reports published. It stays
+  pending with reconcile-only safety so it reconciles instead of retrying. Acceptances carrying a reconciliation reference (for example Instagram
+  container flows) are unchanged."
+- **v6.1.0 (Fixed):** pre-dispatch validation so posts fail before upload/dispatch instead of at publish time: YouTube (title `<>`, description
+  > 5000 bytes), TikTok media URL rules, X unsupported characters, Bluesky facet/length rules; LinkedIn rejects malformed post ids in publish
+  responses. Media uploads with empty filename/malformed MIME or contradicting sniffed type now fail at reserve/validation.
+- **v6.1.8 (Fixed):** X video/GIF STATUS polls wait at least one second when the provider omits `check_after_secs`, "so uploads do not busy-loop
+  the media endpoint and fail as rate-limited."
+- **v6.0.2 (Fixed):** newly connected instance-based accounts (Lemmy, PeerTube, PieFed, Bluesky PDS, Mastodon, Pixelfed) resolve adapters
+  immediately instead of after a server restart. Instagram: clearer connection-failure message only.
+- **v6.1.0 (Added, SDK):** TypeScript SDK retry dispositions (`never`, `after-delay`, `after-reconnect`, `reconcile-first`) and an `ambiguous` code.
+
+No 5.x/6.x note names a scheduler/queue timing fix or an Instagram publish-path fix. The notes do not show that the scheduled-post failures
+Christian saw are fixed; that would need a controlled test with a connected (non-production) account, which is out of scope here.
+
+### 7.5 VF-specific notes
+
+- v6.0.2 removed native provider history/discovery analytics; OpenPost analytics now cover only content published through OpenPost.
+- vfbridge6 was only rebased/tested against v4.36.3 (§4). Its applicability to v6.x is **not assessed**; `*platform.TransportError` still exists in
+  v6.2.0 (`internal/platform/http.go`), so the §4.3 classification follow-up still applies to any v6-based vfbridge build.
+- Production (`v4.35.0-vfbridge6`), the `OPENPOST.json` pin, prod tag and `liveVerified` are unchanged.

@@ -18,3 +18,12 @@
 | 2026-09-26 10:15 | Promote staging 18080 → v4.36.3 | Ready; firewall Block |
 | 2026-09-26 10:15 | Staging smoke 18080 | PASS (health, ready, queue, retry contract, analytics) |
 | 2026-09-26 10:16 | Restart/persistence | PASS; final: v4.36.3 running, schema 138, firewall Block |
+| 2026-09-26 10:36 | Owner follow-up: "Maybe update to the latest version? Keep it in the test environment, because we're temporarily not using OpenPost for publishing due to failures and unreliability in scheduled posts." | Staging-only evaluation of latest upstream |
+| 2026-09-26 10:37 | GitHub releases + 5.x/6.x notes + v6.2.0 source diff | v6.2.0 is latest; migration 139 only; CLI/.env unchanged; `OPENPOST_MCP_MODE` default `direct` |
+| 2026-09-26 10:38 | Box pre-check v6.2.0 on a copy (loopback 18096) | 138→139, integrity ok, FK 0, smoke + restart pass |
+| 2026-09-26 10:39 | Staging run v6.2.0: pre-probe + backup | v4.36.3/138/Block confirmed; backup `D:\Velvet\Backups\OpenPost\pre-v6.2.0-20260926-103903` verified |
+| 2026-09-26 10:39 | Download + SHA | `b0b35293…cdb7d` = release asset digest |
+| 2026-09-26 10:39 | Migration smoke 18081 on copy | PASS: 138→139, discovery tables dropped, integrity ok, FK 0, staging DB unchanged |
+| 2026-09-26 10:39 | Promote 18080 → v6.2.0 | Ready; firewall Block; start script path-only change |
+| 2026-09-26 10:39 | Staging smoke 18080 | PASS (health, ready, 401, draft create/delete, schedule refusal 503, retry 409, analytics) |
+| 2026-09-26 10:40 | Restart/persistence | PASS; final: v6.2.0 running, schema 139, firewall Block |
