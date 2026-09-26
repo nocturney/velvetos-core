@@ -12,12 +12,10 @@
   ],
   "completed_steps": [
     "Office graph + loop audit",
-    "Canva MCP read of G004 stories frames",
     "Gap doc + Stories fix + gates + loop CLI/gap lines",
     "check-all.py 23/23",
     "PR #102"
   ],
-  "next_step": "Studio: Canva edit on DAHUaUo3bAk / DAHUacDGv9U then schedule. Merge when MERGEABLE.",
   "artifacts": [
     "packages/vfops/hq/TOOL-USE-GAP-2026-09-07.md",
     "packages/vfcopy/G004-STORIES-FIX.md",
@@ -26,7 +24,6 @@
     "https://github.com/nocturney/velvetos-core/pull/102"
   ],
   "unresolved": [
-    "Canva on-frame text still catalog until Studio edits DAHUaUo3bAk / DAHUacDGv9U",
     "No new PNG export in git — handoff only",
     "ig-mcp needsAuth — no Stories publish from HQ",
     "PR not merged from this agent — no merge action on ManagePullRequest"
@@ -34,12 +31,13 @@
   "outcome": "worker_done",
   "pulse": "working",
   "verification": "python3 scripts/check-all.py → OK suite passed=23",
-  "gate": null,
-  "escalation": null,
   "last_updated": "2026-09-07",
   "execution_state": {
     "complaint": "2026-09-07 ~08:27 Asia/Jerusalem",
-    "stories_designs": ["DAHUaUo3bAk", "DAHUacDGv9U"],
+    "stories_designs": [
+      "DAHUaUo3bAk",
+      "DAHUacDGv9U"
+    ],
     "slot05": "אין חדש במשרד + פער lines",
     "pr": "https://github.com/nocturney/velvetos-core/pull/102",
     "sensors": "23/23"

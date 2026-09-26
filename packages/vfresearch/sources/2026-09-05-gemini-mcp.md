@@ -37,7 +37,6 @@ README + `ENHANCED_FEATURES.md` + GitHub API (`pushed_at` 2025-07-14, last commi
 | התקנת vendor MCP + מפתח בגיט | אסור. לא aliargun ב־`.cursor/mcp.json` |
 | בלי מפתח על Cloud | «חסר מפתח Gemini» · אין גוף מומצא |
 
-לא הותקן aliargun. לא Veo. לא Canva שני.
 
 המשך 5.9: השוואת RLabs + גשר ChatGPT + איסור דפדפן Cloud — [`2026-09-05-orchestra-subscriptions.md`](2026-09-05-orchestra-subscriptions.md).
 

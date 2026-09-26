@@ -18,7 +18,6 @@
 - אין Insights / עוקבים / אחוזי המרה מהאוויר
 - אין הבטחת דדליין לפני `#vfprod`
 - אין TikTok / בוסט / follow-back בלי ראש צוות
-- כריכה: Canva (`vfcanva`). Superdesign רק אם Canva לא מחובר
 - `vfigos` לסקירה. Grok לשיבוץ. HQ לא שולח
 
 ## לא מטמיעים כפק חדש

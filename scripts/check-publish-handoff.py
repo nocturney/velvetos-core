@@ -65,19 +65,19 @@ class PublishHandoffTests(unittest.TestCase):
                 correlation="G004",
                 file_path=self.png,
                 approval_ref="packages/vfgrowth/preflight/G004.md",
-                source_ref="canva:DAHUaUo3bAk",
+                source_ref="approved-export:test-fixture",
                 frame_index=1,
                 public_release_approved=False,
             )
 
     def test_historical_g004_job_assets_rejected(self) -> None:
-        bad = self.tmp / "packages" / "vfcanva" / "jobs" / "g004-stories-fix" / "story-1.png"
+        bad = self.tmp / "packages" / "vfcovers" / "g004" / "out" / "story-1.png"
         bad.parent.mkdir(parents=True)
         shutil.copy(self.png, bad)
         with self.assertRaises(ValueError):
             handoff.reject_source_path(str(bad))
 
-    def test_canva_thumbnail_urls_rejected(self) -> None:
+    def test_thumbnail_urls_rejected(self) -> None:
         with self.assertRaises(ValueError):
             handoff.reject_source_path("https://example.com/design/thumbnail/xyz.png")
 
@@ -156,7 +156,7 @@ class PublishHandoffTests(unittest.TestCase):
             correlation="G004",
             file_path=self.png,
             approval_ref="packages/vfgrowth/preflight/G004.md",
-            source_ref="canva:DAHUaUo3bAk",
+            source_ref="approved-export:test-fixture",
             frame_index=1,
             public_release_approved=True,
             do_stage=False,

@@ -68,7 +68,7 @@
 | לוח תוכן | `packages/vfgrowth/CALENDAR.md` | `CALENDAR-OPS.md` | שיבוץ ≠ פרסום |
 | תור אישור תוכן | `packages/vfgrowth/data/approval-queue.json` | `vf_organic_growth.py queue` | תור קנוני יחיד |
 | PREFLIGHT | `packages/vfgrowth/PREFLIGHT.md` | `preflight/<id>.md` | נכשל-סגור חוסם שיבוץ |
-| EDIT-GATE | `packages/vfgrowth/EDIT-GATE.md` | Canva / vfcovers / vfcanva | אין JPEG גולמי |
+| EDIT-GATE | `packages/vfgrowth/EDIT-GATE.md` | vfom / vfcovers | אין JPEG גולמי |
 | קול כיתוב | `packages/vfcopy/VOICE.md` | `VOICE-CHART.md` · `VOICE-RESEARCH.md` | תהליך-קצר / סיפור-מוצר |
 | מצבי פרסום | `packages/vfigos/PUBLICATION-STATES.json` | `check-publication-states.py` | `liveVerified` רק אחרי אימות |
 | יכולות Instagram | `packages/vfigos/CAPABILITIES.json` | `CONNECT-IG.md` | MCP קנוני: `adelaidasofia/instagram-mcp` |
@@ -111,7 +111,6 @@
 | Degraded Mode | `vfharness/playbooks/degraded-mode.md` | שם רשמי ל־failover רכיב |
 | MCP / מנויים | `packages/vfmcp/` · `docs/MCP-FIT.md` · `SUBSCRIPTIONS.md` · `HOST.md` | Cloud לא פותח `gemini.google.com` / `chatgpt.com` |
 | שולחן כלי | `.cursor/vf-desk.json` | מצבי `ready` הם רשומת desk — לא smoke חי בסשן |
-| Canva | `docs/CANVA.md` · `packages/vfcanva/` | `needsAuth` → `studio/render.py` |
 | קונסולת משרד פנימית | `docs/OFFICE-OS-EMBED-he.md` · `vfops/hq/COMMAND-SURFACE.md` | אתר שיווקי ציבורי נעול |
 
 ## מה לעולם לא SoT

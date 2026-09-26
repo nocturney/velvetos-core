@@ -61,7 +61,6 @@ Push ל-main של קובץ הבקשה מפעיל `.github/workflows/gmail-brief-
 5. מרענן access token דרך refresh token.
 6. שולח דרך Gmail API.
 
-המקבל אינו תלוי ב-Canva/Instagram CDN אחרי השליחה; התמונה כבר חלק מהודעת MIME.
 
 ## הגנות
 

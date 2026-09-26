@@ -61,21 +61,6 @@ def main() -> None:
             if need not in blob:
                 fail(f"{path.relative_to(ROOT)}: forbiddenPublic must list {need!r}")
 
-    formats = json.loads((ROOT / "packages" / "vfcanva" / "FORMATS.json").read_text(encoding="utf-8"))
-    fcta = formats.get("cta") or {}
-    if fcta.get("whatsapp") == WA_PHONE and not fcta.get("public"):
-        fail("FORMATS.json still treats whatsapp as public CTA — need cta.public")
-    public = fcta.get("public") or ""
-    if WA_PHONE in public or "וואטסאפ" in public:
-        fail("FORMATS.json cta.public must not be WhatsApp")
-    if "הודעה" not in public and "אינסטגרם" not in public:
-        fail("FORMATS.json cta.public must be Instagram-message")
-    if (fcta.get("businessContact") or {}).get("whatsapp") != WA_PHONE and fcta.get("businessWhatsapp") != WA_PHONE:
-        # accept nested businessContact.whatsapp
-        bc = fcta.get("businessContact")
-        if not (isinstance(bc, dict) and bc.get("whatsapp") == WA_PHONE):
-            fail("FORMATS.json must keep business WhatsApp record")
-
     desk = json.loads((ROOT / ".cursor" / "vf-desk.json").read_text(encoding="utf-8"))
     studio = desk.get("studio") or {}
     if studio.get("whatsapp") != WA_PHONE:

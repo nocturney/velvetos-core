@@ -13,7 +13,6 @@ Read `packages/vfdsh/EMBED.md` and run one crew from `packages/vfdsh/crews/`:
 - invoice / PDF / named thread → `inbox-docs.md`
 - SKU / catalog recall → `catalog-memory.md`
 - pipeline board → `pipeline-board.md`
-- cover / Canva → `design-assets.md`
 
 ## Locks (do not break)
 
@@ -25,6 +24,5 @@ Read `packages/vfdsh/EMBED.md` and run one crew from `packages/vfdsh/crews/`:
 
 ## Packs you may write notes into
 
-Existing VF packs only (`vfigos`, `vfcost`, `vfconvert`, `vfgrowth`, `vfprod`, `vfsales`, `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, `vfbriefux`, `vfcanva`, `vfdsh`). Do not create a new product pack unless asked.
 
 Cursor is already the office. Do not vendor `dsh`, OpenViking, TongFlow, or a second design host.

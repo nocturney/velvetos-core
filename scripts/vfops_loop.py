@@ -66,7 +66,6 @@ DAILY_CADENCE = {"daily-07:00", "daily-06:15", "daily-03", "daily-growth"}
 AUDIT_PACKS = {
     "vfcopy",
     "vfcovers",
-    "vfcanva",
     "vfgrowth",
     "vfcost",
     "vfops",
@@ -437,7 +436,6 @@ def gates_packet() -> tuple[str, list[list[str]], list[dict]]:
     ]
     default_prose = (
         "מחיר מכירה דחה עד סכום מראש צוות. "
-        "שיבוץ בלי לשאול משבצת — רק אחרי publication evidence + exact-final QA; Canva/vfcanva אסורים בפרסום VF. "
         "לחיצת כן/דחה לא שולחת וואטסאפ ולא מדפיסה מ-HQ."
     )
     if not GATES.is_file():
@@ -464,7 +462,6 @@ def gates_packet() -> tuple[str, list[list[str]], list[dict]]:
         )
     prose = (
         "שער אדם בלחיצה (mailto או vfops_loop.py gate). לא וואטסאפ לקוח. לא Print. "
-        "לא ₪ מומצא. שיבוץ בלי לשאול משבצת — רק אחרי publication evidence + exact-final QA; Canva/vfcanva אסורים בפרסום VF."
     )
     return prose, extra + rows, actions
 
@@ -727,16 +724,6 @@ def consumer_registry() -> list[ConsumerSpec]:
             pack="vfsales",
             auto_daily=False,
             skip_reason="on-inquiry only — no automatic quote without known fields / lead ILS",
-        ),
-        ConsumerSpec(
-            id="vfcanva-render",
-            title="vfcanva studio render",
-            cadence="on-content",
-            kind="skip",
-            requires=(ROOT / "packages" / "vfcanva" / "studio" / "render.py",),
-            pack="vfcanva",
-            auto_daily=False,
-            skip_reason="on-content only — do not auto-render a standing pack (e.g. G005)",
         ),
         ConsumerSpec(
             id="vfcovers-compose",
@@ -1076,8 +1063,7 @@ def assemble(today: str) -> dict:
                 "title": "מלאי קופי · לא תוכנית פרסום",
                 "prose": (
                     "מסירה: vfgrowth/HANDOFF-he.md · VF_PUBLICATION_ROUTE_V1 = PUBLICATION-PREP-EXECUTION + publicationRoute · "
-                    "Canva/vfcanva אסורים בפרסום VF · מוצר אמיתי + source-grounded edit + Visible Text + Brand Guardian + exact-final QA · "
-                    f"PREFLIGHT.md/evidence נכשל-סגור = חסום · השורות למטה הן מלאי קופי קיים, לא החלטת פרסום להיום · {feed_stories} · "
+                    f"PREFLIGHT.md/publication evidence נכשל-סגור = חסום · השורות למטה הן מלאי קופי קיים, לא החלטת פרסום להיום · {feed_stories} · "
                     "Organic Growth Decision Pack: vf_organic_growth.py · אישור ≠ פרסום."
                 ),
                 "headers": ["מזהה", "פתיחה", "מצב"],
@@ -1194,8 +1180,6 @@ def write_status(today: str) -> None:
         "- FOLLOWER-GROWTH · היילייטס + CTA הודעת Instagram",
         "- כיתובי vfcopy (G003/G004 + G004-STORIES-FIX / G005)",
         "- חריץ 05 = CLI מ-24ש או אין חדש · פער לפק שלא הורץ",
-        "- מסירת סטודיו + publication evidence fail-closed + Product Truth + exact-final QA · Canva/vfcanva אסורים בפרסום VF",
-        "- Gmail/Calendar/Drive ready · Canva capability אינה נתיב פרסום VF",
     ]
     lines = [
         f"# סטטוס לולאת משרד · {today}",
@@ -1260,7 +1244,6 @@ def cmd_handoff(_args: argparse.Namespace) -> int:
     print("רף: סוכנות יקרה · לא חצי-עבודה")
     print("קובץ: packages/vfgrowth/HANDOFF-he.md")
     print("חבילה: G004 קטלבל-מחזיק · vfcopy/G004-STORIES-FIX.md")
-    print("שער עריכה: PUBLICATION-PREP-EXECUTION + source-grounded edit + exact-final QA · Canva/vfcanva אסורים בפרסום VF")
     print("פריפלייט חובה: packages/vfgrowth/PREFLIGHT.md + preflight/<id>.md")
     print("בלי ארטיפקט עבור = נכשל-סגור · לא משבצים")
     print("אל תפנה לכריסטיאן על מדדים חלשים")
@@ -1357,7 +1340,6 @@ def cmd_check(_args: argparse.Namespace) -> int:
         "G004",
         "סוכנות",
         "publication evidence",
-        "Canva/vfcanva אסורים בפרסום VF",
         "עלות חומר",
         "פער",
         "G004-STORIES-FIX",

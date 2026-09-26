@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Project the canonical factual Morning Brief into Morning Green.
 
-Consumes the existing V10.x factual JSON/TXT plus an optional read-only OpenPost
-snapshot. It does not fetch providers and does not create a parallel source of truth.
+Consumes the existing V10.x factual JSON/TXT plus an optional read-only current-publisher
+schedule snapshot. It does not fetch providers and does not create a parallel source of truth.
 """
 from __future__ import annotations
 import argparse
@@ -246,7 +246,7 @@ def post_cards(snapshot: dict | None, start: datetime) -> list[dict]:
     return cards
 
 def feed_status(op: dict | None, config_path: Path = FEED_SOURCE) -> dict[str,str]:
-    """Explain the 7-day strip: live schedule, owner-paused OpenPost, or unread.
+    """Explain the 7-day strip from current publisher evidence or an honest unread state.
 
     Never raises: a missing/invalid config degrades to the neutral 'unavailable'
     label so the 09:00 brief still renders.
@@ -257,12 +257,12 @@ def feed_status(op: dict | None, config_path: Path = FEED_SOURCE) -> dict[str,st
         cfg=json.loads(config_path.read_text(encoding='utf-8'))
     except Exception:
         cfg={}
-    source=cfg.get('openpost') if isinstance(cfg.get('openpost'),dict) else {}
+    source=cfg.get('cloudflare_publisher') if isinstance(cfg.get('cloudflare_publisher'),dict) else {}
     if str(source.get('state') or '').strip().lower()=='paused':
         return {
             'state':'paused',
-            'label':str(source.get('label') or 'OpenPost מושהה כרגע · לוח הפרסום לא נקרא עד חידוש.'),
-            'visible_text':str(source.get('visibleText') or 'בקרוב בפיד: OpenPost מושהה כרגע'),
+            'label':str(source.get('label') or 'לוח Cloudflare Publisher לא נקרא כרגע.'),
+            'visible_text':str(source.get('visibleText') or 'בקרוב בפיד: לוח Cloudflare Publisher לא נקרא כרגע'),
         }
     return {
         'state':'unavailable',
@@ -274,14 +274,15 @@ def main() -> int:
     ap=argparse.ArgumentParser()
     ap.add_argument('--brief-json',type=Path,required=True)
     ap.add_argument('--brief-txt',type=Path,required=True)
-    ap.add_argument('--openpost',type=Path)
+    ap.add_argument('--schedule-snapshot',type=Path)
     ap.add_argument('--output',type=Path,required=True)
     ap.add_argument('--visible-text',type=Path)
     a=ap.parse_args()
     factual=json.loads(a.brief_json.read_text(encoding='utf-8'))
     text=a.brief_txt.read_text(encoding='utf-8')
     sec=sections(text)
-    op=json.loads(a.openpost.read_text(encoding='utf-8')) if a.openpost and a.openpost.exists() else None
+    snapshot_path=a.schedule_snapshot
+    op=json.loads(snapshot_path.read_text(encoding='utf-8')) if snapshot_path and snapshot_path.exists() else None
 
     attention=compact_attention([split_title_detail(x) for x in sec['צריך ממך'][:4]])
     progress=compact_progress([split_title_detail(x) for x in sec['מה השתנה מאז הבריף הקודם'] if 'Instagram' not in x and 'OpenPost' not in x][:3])

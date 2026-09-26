@@ -2,7 +2,6 @@
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 מוצר: **VelvetOS Core** (backend).  
@@ -15,7 +14,6 @@ Bind ייחוס (תאימות): Velvet Factory — שדרות · איסוף · �
 
 **Visible Text Gate:** כל prose/microcopy שנוצר או שוכתב ב־AI ושאדם עתיד לקרוא — כריסטיאן, לקוח, קהל או שותף — עובר את כלי הכתיבה והאימות הרלוונטיים לפני final/send/publish/render. סמכות: [`VISIBLE_TEXT.md`](VISIBLE_TEXT.md); יישום קנוני: `packages/vfcopy`. טקסט תפעולי לבעלים אינו מקבל קול Instagram בכוח, וטקסט מקור/ID/hash/log נשאר literal. אין `PASS` בלי ביצוע בפועל.
 
-> LEGACY / provenance only for VF publication; not a provider route: לולאת משרד: כל פק נצרך (`vfops/LOOP.json` + `vfops_loop.py`). לפני שיבוץ IG — **שער עריכה** (Canva / vfcovers / vfcanva; לא JPEG גולמי) **ו** ארטיפקט `vfgrowth/PREFLIGHT.md` (VOICE + ציון עצמי + קומפס). נכשל-סגור = לא משבצים. משטח כריסטיאן = החלטה / חסם קשיח / פרסום חי שדורש אותו — לא «רמה נמוכה». משבצות לוח **אוטונומיות** — לא שואלים מתי; כל פוסט מתוכנן על Google Calendar.
 
 מפעל צמיחה אורגני: [`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) — טיוטות + בריף 07:00. לא בוט פרסום. לא אוטו־DM.
 

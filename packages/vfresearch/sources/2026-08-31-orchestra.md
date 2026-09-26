@@ -64,31 +64,25 @@
 | כלי | גוף |
 |---|---|
 | Gmail / Calendar / Drive MCP | ready |
-| Canva MCP | ready. `search-designs` → `DAGoYmCu4c4` |
 | WebSearch / WebFetch / GenerateImage | native Cursor, לא היו על השולחן |
 | Treg CLI | אין ב־PATH |
 | Mobbin | פלאגין; אין namespace |
 | Drive Sheets בשם VF | אין. גיליונות אישיים דולגו |
-| Gmail אחרון על כלים | Canva Sign-in with Google 30.8 |
 
 ### מה נבדק אצלם
 
 | שולחן | גוף |
 |---|---|
 | Grok Connectors (רשמי, מאי 2026) | Workspace (כולל Sheets + **שליחת** מייל), Outlook, SharePoint, Notion, Linear, GitHub, BYO-MCP. Grok Bot HQ: IG send / Gmail send / מדפסות |
-| ChatGPT Apps (עזרה רשמית) | Gmail/Drive/Calendar/Canva + חיפוש + תמונה. Gmail send אחרי אישור — **דולג** |
 | Gemini Connected Apps (עזרה רשמית) | Workspace + WhatsApp/Phone **שליחה** — **דולג** |
 | Perplexity | חיפוש+ציטוטים. חומת מנוי/Cloudflare ב־30.8. אין גוף שני |
 
-דפדפן חי 31.8 (`bc-0d7c7cd6`): ChatGPT = Gmail קריאה בלבד; Gemini = Workspace+Search+YouTube ON, Canva OFF; Perplexity = Connectors ריק; Grok = חומת X — **אין גוף**. לא ממציאים מחברי Grok.
 
 ### מה הוטמע מפערי כלים
 
 | ממצא | פק | לא |
 |---|---|---|
-| Canva ready על Cloud Agent | `vf-desk.json` `canva.status=ready` | שליחת IG |
 | WebSearch/WebFetch על השולחן | `tools.web` · `vfresearch` | גוף חסום מומצא |
-| GenerateImage + Canva generate | `tools.image` | כריכת IG בלי Canva-first |
 | גיליון דרך Drive כשייש שם | `vfbooks/SHEETS.md` | Sheets MCP בלי ID |
 | מפת פער | `vfmcp/GAP.md` | פק כלים חדש |
 

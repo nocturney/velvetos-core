@@ -57,5 +57,4 @@ Asia/Jerusalem · לא פק חדש · לא התקנת מוצר חי
 ## מה לבנות בהמשך (לא היום)
 
 1. UI ווב שקורא `capabilities.json` + checkpoints + לוח צינור.
-2. MCP/API דק מעל Gmail/Canva/Drive (כבר קיימים ככלים) — לא מחליף את Cursor.
 3. בחירת stack (Twenty schema / NocoBase plugins / custom) — רק אחרי שהבעלים מאשר מוצר.

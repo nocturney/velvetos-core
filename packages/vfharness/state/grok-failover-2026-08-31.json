@@ -19,10 +19,8 @@
     "packages/vfops/human-send/MAIL-PACK.md"
   ],
   "unresolved": [
-    "No Instagram Publish MCP — feed posts use Canva+Drive+Gmail failover",
     "Treg not relevant; Mobbin may be absent on Cloud"
   ],
-  "escalation": null,
   "last_updated": "2026-09-03",
   "note": "Closed running checkpoint (stale>2d) during buildwithclaude embed — law already shipped."
 }

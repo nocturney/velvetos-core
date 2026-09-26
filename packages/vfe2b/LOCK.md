@@ -18,7 +18,6 @@ AskToSell ("close deals"), ChatHelp כצ'אטבוט אתר/אינסטגרם, Fin
 
 Self-operating computer, Taxy AI, MultiOn, UFO, Sentius, Cykel, iMean.AI, Hyperwrite כמפעיל UI.
 
-למה: מדפסות נשארות ברצפה. אינסטגרם יוצא רק דרך כלי Publish או failover Canva+Drive+Gmail — לא דפדפן אוטונומי.
 
 ## קידוד כמשרד שני — דלג
 

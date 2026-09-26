@@ -46,7 +46,7 @@ OWNER_MEMORY = ROOT / "packages" / "vfops" / "data" / "owner-memory.md"
 FORBIDDEN_COPY = ("שלחו DM", "send_dm", "Meta Business Suite", "משלוח ארצי", "nationwide shipping")
 ILS_INVENTED = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
 OWNER_SURFACE_RISKS = {"red", "orange"}
-INTERNAL_ONLY_KINDS = {"routine_quality", "weak_metric", "canva_polish", "internal_schedule"}
+INTERNAL_ONLY_KINDS = {"routine_quality", "weak_metric", "internal_schedule"}
 
 FOLLOWUP_STATES = {
     "waiting_for_print_done",

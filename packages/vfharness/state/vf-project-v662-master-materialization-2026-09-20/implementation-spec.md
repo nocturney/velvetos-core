@@ -13,7 +13,6 @@ Make the selected creative master a concrete, hash-bound, file-backed artifact b
 4. **Allowed fallback when master is not materializable.** Either (a) continue with a file-backed provider/route that preserves the selected direction before final overlays, (b) if deliberately appropriate, finish on the exact same provider result as a NO_TEXT final, or (c) block only the deterministic-overlay branch. Recreating the scene from the raw product source is not materialization and cannot satisfy continuity.
 5. **Exact-byte handoff.** Final compositor inputs must reference the registered master path+SHA. The final review binds both creative-master SHA and materialization-receipt SHA.
 6. **Bridge utility.** Add `scripts/vf_creative_master_bridge.py` to register a local image into a canonical task workspace, decode/validate it, copy exact bytes, compute SHA-256 and write a receipt. Verification mode re-checks path, digest and decodability without network access.
-7. **No regression to 6.6.1.** First-response completion, multi-source provenance, Product Truth, camera-label alignment, brand/CTA locks, no-Canva route and final-vs-master QA remain in force.
 
 ## Non-goals
 - No generic image downloader or new external provider.

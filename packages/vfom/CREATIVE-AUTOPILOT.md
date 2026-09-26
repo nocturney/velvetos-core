@@ -14,7 +14,7 @@
 
 ## Visual Standard Load Gate · before creative work
 
-Every Velvet Factory public visual job starts by loading `OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VELVET-VISUAL-SYSTEM-PROMPT.md`, `VISUAL-OS.md` and `VISUAL-DNA.json`. Verify owner-approved identity `MAHVL7PKpvE` + SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, then persist `visualStandard.gate=PASS` in the Creative Manifest. Missing/mismatched authority stops the creative branch before concepting; generic/default style fallback is forbidden. This gate is required even in a fresh conversation with no prior chat context.
+Every Velvet Factory public visual job starts by loading `OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VELVET-VISUAL-SYSTEM-PROMPT.md`, `VISUAL-OS.md` and `VISUAL-DNA.json`. Verify the owner-approved local reference + SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, then persist `visualStandard.gate=PASS` in the Creative Manifest. Missing/mismatched authority stops the creative branch before concepting; generic/default style fallback is forbidden. This gate is required even in a fresh conversation with no prior chat context.
 
 ```text
 real event / opportunity
@@ -121,7 +121,6 @@ Media Vault הוא מקור הנכסים הקנוני. סיווג תוכן מש�
 
 כשל איכות רגיל הוא עבודה פנימית. נתח ואבחן את סוג הכשל ורק אז תקן:
 
-- עברית משובשת בתוך AI video -> הסר text מהוידאו ובנה overlay deterministic (SVG/HTML/FFmpeg/Canva path קיים).
 - malformed hands/object -> החלף shot או חזור ל־real footage; אל תסתיר proof פגום.
 - flicker/jitter -> regenerate segment / camera lock / replace segment.
 - subject drift -> tighten Subject Pack/reference lock או השתמש בנכס אמיתי.
@@ -237,4 +236,3 @@ For Velvet Factory requests that mean prepare/treat/edit content for a potential
 ## Creative transformation lock
 
 For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md` is mandatory. Preserve the real product, but do not pass through raw/source photos as the finished creative. At least one review visual — normally the hero/first slide — must show a meaningful approved Velvet treatment around the source-locked product. Default to editing the real source image, not recreating the product from text. Multiple photos do not imply a carousel; if carousel is chosen, slide 1 must be a fully treated hero. `raw_passthrough=true`, an essentially untouched source carousel, or crop/exposure-only work presented as publication-grade is FAIL. Generative edits must explicitly contain NO LOGO, NO WORDMARK, NO PHONE NUMBER, NO WHATSAPP, NO CONTACT BAR, NO GENERATED HEBREW TEXT.
-

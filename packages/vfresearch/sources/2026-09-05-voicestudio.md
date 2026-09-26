@@ -27,7 +27,6 @@
 | Voice cloning / design | אין מוצר קול | **skip** — סטודיו מדפיס ומצלם מיטה |
 | Video dubbing / localization | `vfom` `localization-dub` = skip | כבר נעול — «Hebrew-first; not a dub shop» |
 | Piper / ElevenLabs / cloud TTS | `vfom/LOCK.md` | כבר דולג |
-| MCP `generate_speech` / `transcribe` / `clone_voice` | Canva + גלם רצפה לרילים | **skip על Cloud**; Desktop רק אחרי ראש צוות |
 | Audiobook / stories / podcast | אין | **skip** |
 | Engine catalogue + hot-switch | בחירת כלי לפי משימה | דפוס — לא התקנה |
 | Local-first + opt-in network | חוקת failover / בלי סוד בגיט | דפוס מיושר |
@@ -54,7 +53,6 @@
 
 ## סדר עדיפות (בלי התקנה עיוורת)
 
-1. **רילים** — נשארים Canva + טיימלאפס (`vfom` crews). אין VoiceStudio בצינור.
 2. **אם ראש צוות רוצה VO מקומי** — Mac Desktop בלבד; MCP `files` mode (לא base64 בקונטקסט); נתיב בסיס מוגבל; רישיון מודל לפני שימוש מסחרי.
 3. **תמלול פניות** — לא עכשיו; Gmail/וואטסאפ אנושיים מספיקים.
 

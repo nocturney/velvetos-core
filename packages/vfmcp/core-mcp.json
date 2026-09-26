@@ -1,7 +1,7 @@
 {
   "role": "core",
-  "updatedAt": "2026-09-08",
-  "rule": "VelvetOS Core registers office MCPs. An instance binds a subset via mcpBind. No secrets in git. HTTP servers live in .cursor/mcp.json. Desktop-only / stdio servers stay in ~/.cursor/mcp.json or Codespace secrets (see mcp.desktop.example.json).",
+  "updatedAt": "2026-09-26",
+  "rule": "Tool routing is governed by packages/velvetos/TOOL-STATUS.json. No secrets in git.",
   "projectMcpJson": ".cursor/mcp.json",
   "connect": "packages/vfmcp/CORE-MCP.md",
   "servers": [
@@ -98,7 +98,6 @@
       "remote_access": "ready",
       "igUserId": "17841407772120429",
       "accountLabel": "velvets_cloud",
-      "failover": "Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)",
       "allowedRead": [
         "healthcheck",
         "list_accounts",
@@ -133,7 +132,10 @@
         "INSTAGRAM_MCP_DM_ENABLED-must-stay-off",
         "liveVerified-requires-list_media-or-get_media",
         "public-https-url-for-approved-derivative-only"
-      ]
+      ],
+      "role": "read/live-verification and explicitly gated direct operations; not scheduler",
+      "scheduler": "packages/vfigos/cloudflare-publisher/",
+      "organicPublicationTarget": "Meta Instagram Graph API"
     }
   ]
 }

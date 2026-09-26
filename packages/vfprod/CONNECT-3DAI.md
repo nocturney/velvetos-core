@@ -13,7 +13,6 @@
 | **Cursor Desktop** (Agent מקומי) | `.cursor/mcp.json` בפרויקט + Customize → MCPs | Connect ב-IDE |
 | **Cloud Agent** (`cursor.com/agents`) | **Dashboard → Integrations & MCP** (Team MCP) | Connect בדף Agents |
 
-**חיבור Desktop לא מעביר אוטומטית ל-Cloud.** Canva עובד בענן כי נרשם ב-Team MCP — 3DAI צריך אותו תהליך.
 
 ---
 
@@ -56,9 +55,7 @@
 ```json
 {
   "mcpServers": {
-    "canva": {
       "type": "http",
-      "url": "https://mcp.canva.com/mcp"
     },
     "threedaistudio": {
       "url": "https://mcp.3daistudio.com/mcp"
@@ -88,7 +85,6 @@
 4. שמור.
 5. (אופציונלי) **Add to Team Marketplace** — כדי שגם IDE יראה את אותו שרת מהדשבורד.
 
-Canva הוגדר כך — 3DAI באותו מסלול.
 
 ### 2. כל משתמש: OAuth לענן (נפרד מ-Desktop)
 
@@ -121,7 +117,6 @@ Canva הוגדר כך — 3DAI באותו מסלול.
 
 אם הלשונית באתר חסרה אחרי Login + מנוי בתשלום: `support@3daistudio.com`.
 
-## רואים רק Canva? / Cloud לא רואה 3DAI?
 
 | סיבה | תיקון |
 |---|---|
@@ -129,7 +124,6 @@ Canva הוגדר כך — 3DAI באותו מסלול.
 | Desktop Connect = Cloud מוכן | OAuth נפרד לכל ממשק |
 | לא עשית pull / Reload | `git pull` + Reload Window |
 | שם ישן `3daistudio` | שנה ל-`threedaistudio` |
-| Canva מ-global, פרויקט לא נטען | פתח שורש הריפו או deeplink |
 | deeplink שבור (Cursor ישן) | עדכן Cursor או הוסף ידנית |
 | Marketplace / Plugins | אין תוסף חנות. זה HTTP ב-`mcp.json` (Desktop) או Team MCP (Cloud) |
 | API key ב-git / ב-Team MCP | OAuth בלבד |

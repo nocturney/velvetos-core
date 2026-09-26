@@ -9,7 +9,6 @@ Godot / GIS / healthcare / סין-סושיאל נשארים במחסן. כל `@s
 
 ## 2. אין MCP כפול
 
-`docs/MCP-FIT.md`: Gmail, Drive, Calendar, Canva, Treg, Mobbin כבר מחוברים. שרת שני לאותה עבודה שורף טוקנים ולא חוסך.
 
 ## 3. אל תפתח Cloud Agent לשאלת קטלוג
 

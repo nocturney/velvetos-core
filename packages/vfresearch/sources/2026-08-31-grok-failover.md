@@ -31,21 +31,18 @@ G005 משובץ לחמישי 3.9 (לפני החידוש) → `#פרסום-חי-�
 | Grok Bot — פרסום G005 (לפני חידוש) | LIVE-PACKET → **אדם** מעלה |
 | Grok Bot — שליחת בריף 07:00 | MAIL-PACK → **אדם** מדביק ב־Gmail · אין send מ־HQ |
 | תזמורת ChatGPT / Gemini / Perplexity (אין MCP כאן) | דולג גוף · «אין חדש במשרד» מתזמורת · `2026-08-31-orchestra.md` |
-| Canva — חיפוש G005 ריק | שקפי `vfcovers/g005/slides/` שכבר על הדיסק · אין קישור Canva מומצא |
 
 ## מקורות שנקראו (לא הומצאו)
 
 - לוח `nocturney@gmail.com` 31.8.2026 Asia/Jerusalem: **אין אירוע / אין חלון איסוף**.
 - תיבה `in:inbox newer_than:1d`: אין פניית הדפסה מלקוח. מיילי ספק/אבטחה/בריפי אתמול בלבד.
 - G001 עלה 30.8 (`HANDOFF-he.md`) — Insights: **אין ספירה**.
-- Canva MCP `ready` · `search-designs` «G005» → `items: []`.
 - תווית `[Gmail]/חשבונות` `newer_than:7d`: ריק · **אין ספירה**.
 
 ## מה דולג
 
 - Publish / Gmail send / וואטסאפ / בוסט / אוטו־DM מ־HQ.
 - פוסט פיד שני בלי הוכחת רצפה.
-- ₪ / Insights / קישור Canva / סצנת רצפה / גוף תזמורת.
 - אירוע אישי בלוח — לא משרד, לא בבריף בשם.
 
 ## בלוק 05
@@ -56,7 +53,6 @@ G005 משובץ לחמישי 3.9 (לפני החידוש) → `#פרסום-חי-�
 
 - Gmail `create_draft` בריף 31.8 → `r-6454661077961545246` (לא send).
 - Calendar `create_event` G005 חמישי 12:00 → `kppd0t8mf1a07li78e4hssker8`.
-- Canva MCP `ready`. מפה: `vfharness/playbooks/grok-outage-tools.md`.
 - Instagram Publish / `send_message` — נשארו נעולים (אין MCP העלאה).
 
 ## יציאה

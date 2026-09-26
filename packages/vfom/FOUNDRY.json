@@ -30,14 +30,43 @@
     "portablePrompt": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
     "referenceAsset": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
     "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
-    "canvaAssetId": "MAHVL7PKpvE",
     "artifactSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
     "coldStartGate": "fail_closed"
   },
   "layers": {
-    "creativeIntelligence": ["creative-director", "brand-guardian", "media-librarian", "proof-first-storyboarder", "visual-evaluator", "repair-planner", "experiment-director"],
-    "orchestration": ["content-job-state-machine", "content-contract", "creative-manifest", "instagram-content-decision-pipeline", "opportunity-scoring", "progressive-variants", "threshold-policy", "budget-governor", "retry-and-escalation"],
-    "deterministicServices": ["vfmedia-catalog", "claim-provenance", "subject-packs", "hyperframes-video-composition", "ffmpeg-svg-caption-composition", "render-receipt-verification", "render-derivatives", "drive-storage", "vfigos-publish-verification", "vfinsights-performance-evidence", "deterministic-base-edit"]
+    "creativeIntelligence": [
+      "creative-director",
+      "brand-guardian",
+      "media-librarian",
+      "proof-first-storyboarder",
+      "visual-evaluator",
+      "repair-planner",
+      "experiment-director"
+    ],
+    "orchestration": [
+      "content-job-state-machine",
+      "content-contract",
+      "creative-manifest",
+      "instagram-content-decision-pipeline",
+      "opportunity-scoring",
+      "progressive-variants",
+      "threshold-policy",
+      "budget-governor",
+      "retry-and-escalation"
+    ],
+    "deterministicServices": [
+      "vfmedia-catalog",
+      "claim-provenance",
+      "subject-packs",
+      "hyperframes-video-composition",
+      "ffmpeg-svg-caption-composition",
+      "render-receipt-verification",
+      "render-derivatives",
+      "drive-storage",
+      "vfigos-publish-verification",
+      "vfinsights-performance-evidence",
+      "deterministic-base-edit"
+    ]
   },
   "renderBackend": {
     "primary": "hyperframes",
@@ -70,8 +99,20 @@
     "authority": "packages/vfom/VISUAL-OS.md",
     "projection": "packages/vfom/VISUAL-DNA.json",
     "principle": "Retouch the photo, not the product.",
-    "stages": ["photo_retouch", "brand_content_styling", "text_layout_qa", "final_visual_qa"],
-    "requiredFor": ["post", "story", "carousel", "cover", "reel", "visual_asset"],
+    "stages": [
+      "photo_retouch",
+      "brand_content_styling",
+      "text_layout_qa",
+      "final_visual_qa"
+    ],
+    "requiredFor": [
+      "post",
+      "story",
+      "carousel",
+      "cover",
+      "reel",
+      "visual_asset"
+    ],
     "productTruthFailClosed": true,
     "requireSourceSubjectMatch": true,
     "forbidSyntheticSubjectChange": true,
@@ -85,23 +126,72 @@
     "maxRepairCyclesAuthority": "progressiveVariants.maxRepairCycles",
     "rule": "No content may become authorized_for_tool_publish until the exact final artifact has completed all applicable finishing stages and Product Truth checks."
   },
-  "stateMachine": ["discovered", "qualified", "contracted", "concepted", "storyboarded", "media_ready", "rough_generated", "visually_scored", "repaired", "rendered", "authorized_for_tool_publish", "published_verified", "performance_learned", "ready_for_publish", "waiting_for_media", "human_required", "archived"],
+  "stateMachine": [
+    "discovered",
+    "qualified",
+    "contracted",
+    "concepted",
+    "storyboarded",
+    "media_ready",
+    "rough_generated",
+    "visually_scored",
+    "repaired",
+    "rendered",
+    "authorized_for_tool_publish",
+    "published_verified",
+    "performance_learned",
+    "ready_for_publish",
+    "waiting_for_media",
+    "human_required",
+    "archived"
+  ],
   "truth": {
-    "levels": ["verified_real", "derived_real", "illustrative_ai", "synthetic", "unverified"],
+    "levels": [
+      "verified_real",
+      "derived_real",
+      "illustrative_ai",
+      "synthetic",
+      "unverified"
+    ],
     "defaultWhenMissing": "unverified",
     "claimRule": "factual public claims require verified evidence; illustrative_ai and synthetic assets may never prove a physical result",
-    "syntheticDefaultAllowed": ["background", "transition", "atmosphere", "supporting_visual"],
-    "syntheticDefaultForbidden": ["measurement", "stress_test_result", "product_geometry_claim", "customer_result", "failure_or_success_claim"]
+    "syntheticDefaultAllowed": [
+      "background",
+      "transition",
+      "atmosphere",
+      "supporting_visual"
+    ],
+    "syntheticDefaultForbidden": [
+      "measurement",
+      "stress_test_result",
+      "product_geometry_claim",
+      "customer_result",
+      "failure_or_success_claim"
+    ]
   },
   "audioPolicy": {
     "requiredForVideo": true,
     "skill": ".cursor/skills/vf-ig-music/SKILL.md",
     "playbook": "packages/vfresearch/MUSIC.md",
-    "allowedModes": ["source", "music", "sfx", "source_plus_music", "source_plus_sfx", "intentional_silence"],
+    "allowedModes": [
+      "source",
+      "music",
+      "sfx",
+      "source_plus_music",
+      "source_plus_sfx",
+      "intentional_silence"
+    ],
     "defaultSilence": "fail",
     "nearSilent": "fail",
     "intentionalSilenceRequiresReason": true,
-    "checks": ["stream_presence", "loudness", "noise_and_clipping", "sync", "story_fit", "ducking_when_needed"],
+    "checks": [
+      "stream_presence",
+      "loudness",
+      "noise_and_clipping",
+      "sync",
+      "story_fit",
+      "ducking_when_needed"
+    ],
     "rule": "A Reel or video Story cannot pass exact-final QA merely because an audio stream exists. Missing or near-silent audio routes to audio repair unless intentional silence is explicitly justified and reviewed."
   },
   "visualCopyPolicy": {
@@ -115,7 +205,13 @@
     "candidateMax": 5,
     "noTextBaselineRequired": true,
     "defaultWhenTextAddsNoValue": "NO_TEXT",
-    "failPatterns": ["generic_slogan", "describes_visible_image_only", "bakery_test_failure", "fake_profundity", "text_added_only_to_fill_space"],
+    "failPatterns": [
+      "generic_slogan",
+      "describes_visible_image_only",
+      "bakery_test_failure",
+      "fake_profundity",
+      "text_added_only_to_fill_space"
+    ],
     "ownerExplicitPreference": "strong-evidence-preserve-point-and-voice",
     "rule": "Every Hebrew first-frame hook, cover headline or overlay must pass reader-first, velvet-hebrew-copy and Humanizer/AI-tells, and must beat a clean NO_TEXT baseline. Technical typography/contrast alone cannot make weak copy pass."
   },
@@ -123,7 +219,11 @@
     "scope": "operational publish gating, not legal advice",
     "ownerCapturedShowcase": "Owner-captured footage/stills of a printed object do not require a separate generic media-rights approval gate when no third-party media, UGC, identifiable person/privacy issue or known restriction is present.",
     "modelLicenseDefault": "not-a-showcase-publish-gate",
-    "modelLicenseEscalatesWhen": ["public-content-explicitly-offers-the-depicted-model-for-sale", "paid-promotion-of-the-depicted-model", "known-license-restriction-or-dispute"],
+    "modelLicenseEscalatesWhen": [
+      "public-content-explicitly-offers-the-depicted-model-for-sale",
+      "paid-promotion-of-the-depicted-model",
+      "known-license-restriction-or-dispute"
+    ],
     "privateInbound": "Private inbound conversations are handled separately from public editorial/showcase framing."
   },
   "progressiveVariants": {
@@ -136,18 +236,73 @@
     "rule": "never spend a full-quality render on an unranked concept when a cheaper preview can reject it"
   },
   "evaluation": {
-    "deterministic": ["aspect_ratio", "resolution", "safe_zones", "subtitle_bounds", "audio_stream_presence", "audio_loudness", "audio_sync", "frame_integrity", "render_receipt", "mobile_preview", "text_contrast"],
-    "perceptualRubrics": ["brand", "hook", "composition", "reality", "originality", "retention", "authority_voice", "engagement_quality", "audio_story_fit", "visual_copy_specificity", "visual_copy_value_over_no_text"],
-    "referenceChecks": ["subject_fidelity", "material_fidelity", "geometry_invariants", "product_identity", "source_subject_match"],
-    "artifactChecks": ["flicker", "malformed_geometry", "unreadable_text", "temporal_jitter", "audio_clipping_or_noise", "broken_hebrew_typography", "bad_crop", "weak_contrast", "synthetic_subject_change"],
-    "routineThresholds": {"brand": 80, "reality": 90, "artifact": 90},
-    "heroThresholds": {"brand": 85, "reality": 95, "artifact": 92}
+    "deterministic": [
+      "aspect_ratio",
+      "resolution",
+      "safe_zones",
+      "subtitle_bounds",
+      "audio_stream_presence",
+      "audio_loudness",
+      "audio_sync",
+      "frame_integrity",
+      "render_receipt",
+      "mobile_preview",
+      "text_contrast"
+    ],
+    "perceptualRubrics": [
+      "brand",
+      "hook",
+      "composition",
+      "reality",
+      "originality",
+      "retention",
+      "authority_voice",
+      "engagement_quality",
+      "audio_story_fit",
+      "visual_copy_specificity",
+      "visual_copy_value_over_no_text"
+    ],
+    "referenceChecks": [
+      "subject_fidelity",
+      "material_fidelity",
+      "geometry_invariants",
+      "product_identity",
+      "source_subject_match"
+    ],
+    "artifactChecks": [
+      "flicker",
+      "malformed_geometry",
+      "unreadable_text",
+      "temporal_jitter",
+      "audio_clipping_or_noise",
+      "broken_hebrew_typography",
+      "bad_crop",
+      "weak_contrast",
+      "synthetic_subject_change"
+    ],
+    "routineThresholds": {
+      "brand": 80,
+      "reality": 90,
+      "artifact": 90
+    },
+    "heroThresholds": {
+      "brand": 85,
+      "reality": 95,
+      "artifact": 92
+    }
   },
   "novelty": {
     "enabled": true,
-    "dimensions": ["product", "first_frame", "proof_mechanic", "story_structure", "camera_angle", "reference_mechanic"],
+    "dimensions": [
+      "product",
+      "first_frame",
+      "proof_mechanic",
+      "story_structure",
+      "camera_angle",
+      "reference_mechanic"
+    ],
     "reviewSimilarity": 0.78,
-    "rejectSimilarity": 0.90,
+    "rejectSimilarity": 0.9,
     "defaultCooldownDays": 14,
     "allowSeriesOverride": true
   },
@@ -155,7 +310,11 @@
     "storeRecipeWithPerformanceEvidence": true,
     "memoryAuthority": "existing office-learning + vfinsights; no second creative memory database",
     "minimumMeasuredPostsBeforeStyleRecommendation": 3,
-    "explorationPolicy": {"exploit": 0.70, "controlledVariation": 0.20, "experimental": 0.10}
+    "explorationPolicy": {
+      "exploit": 0.7,
+      "controlledVariation": 0.2,
+      "experimental": 0.1
+    }
   },
   "budget": {
     "mode": "bounded",
@@ -175,7 +334,17 @@
     "mode": "exception-only",
     "creativeQualityFailure": "auto-repair",
     "routineCreativeChoice": "office",
-    "humanRequired": ["physical-footage-or-staging", "rights-or-privacy-unclear", "sale-ils-or-price-change", "purchase-or-spend", "boost-or-ads", "customer-whatsapp-send", "print-from-hq", "irreversible-destructive-action", "hard-blocker-after-failover"],
+    "humanRequired": [
+      "physical-footage-or-staging",
+      "rights-or-privacy-unclear",
+      "sale-ils-or-price-change",
+      "purchase-or-spend",
+      "boost-or-ads",
+      "customer-whatsapp-send",
+      "print-from-hq",
+      "irreversible-destructive-action",
+      "hard-blocker-after-failover"
+    ],
     "rightsOrPrivacyMeaning": "third-party media, UGC, identifiable-person/privacy issues or a known rights restriction; not a blanket model-license gate for owner-captured showcase content"
   }
 }

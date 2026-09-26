@@ -22,8 +22,7 @@
       "cadence": "on-instance",
       "consume": "python3 scripts/velvetos.py modules",
       "briefSlot": "05",
-      "handoff": "packages/velvetos/REPOS.md",
-      "blocked": null
+      "handoff": "packages/velvetos/REPOS.md"
     },
     {
       "id": "velvetos_control_api",
@@ -32,7 +31,6 @@
       "consume": "python3 scripts/vf_control_api.py selftest",
       "briefSlot": "05",
       "handoff": "packages/velvetos_control_api/README.md",
-      "blocked": null,
       "notes": "HTTP projection gateway for Control Center — not a SoT/runtime. Sensor: check-control-api.py"
     },
     {
@@ -41,8 +39,7 @@
       "cadence": "on-job",
       "consume": "packages/vfagents/playbooks/reflection-before-send.md",
       "briefSlot": "01",
-      "handoff": "packages/vfagents/playbooks/caption-draft.md",
-      "blocked": null
+      "handoff": "packages/vfagents/playbooks/caption-draft.md"
     },
     {
       "id": "vfbrand",
@@ -50,8 +47,7 @@
       "cadence": "on-content",
       "consume": "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
       "briefSlot": "07",
-      "handoff": "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
-      "blocked": null
+      "handoff": "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md"
     },
     {
       "id": "vfbiz",
@@ -59,8 +55,7 @@
       "cadence": "daily-07:00",
       "consume": "packages/vfbiz/hq/PLAYBOOK.md",
       "briefSlot": "04",
-      "handoff": "packages/vfbiz/OFFERING.md",
-      "blocked": null
+      "handoff": "packages/vfbiz/OFFERING.md"
     },
     {
       "id": "vfbooks",
@@ -77,17 +72,7 @@
       "cadence": "daily-07:00",
       "consume": "python3 packages/vfbriefux/render_mail.py --check",
       "briefSlot": "all",
-      "handoff": "packages/vfbriefux/hq/PACKET.md",
-      "blocked": null
-    },
-    {
-      "id": "vfcanva",
-      "kind": "mcp-ready",
-      "cadence": "on-content",
-      "consume": "packages/vfcanva/studio/render.py",
-      "briefSlot": "07",
-      "handoff": "packages/vfcanva/WORKFLOW.md",
-      "blocked": null
+      "handoff": "packages/vfbriefux/hq/PACKET.md"
     },
     {
       "id": "vfconvert",
@@ -104,8 +89,7 @@
       "cadence": "daily-07:00",
       "consume": "packages/vfcopy/G004-STORIES-FIX.md",
       "briefSlot": "07",
-      "handoff": "packages/vfcopy/G004-STORIES-FIX.md",
-      "blocked": null
+      "handoff": "packages/vfcopy/G004-STORIES-FIX.md"
     },
     {
       "id": "vfcost",
@@ -113,8 +97,7 @@
       "cadence": "daily-07:00",
       "consume": "python3 scripts/vfcost.py brief",
       "briefSlot": "02",
-      "handoff": "packages/vfcost/CLI.md",
-      "blocked": null
+      "handoff": "packages/vfcost/CLI.md"
     },
     {
       "id": "vfcovers",
@@ -122,8 +105,7 @@
       "cadence": "on-content",
       "consume": "packages/vfcovers/g005/compose_slides.py",
       "briefSlot": "07",
-      "handoff": "packages/vfcovers/g005/HANDOFF-he.md",
-      "blocked": null
+      "handoff": "packages/vfcovers/g005/HANDOFF-he.md"
     },
     {
       "id": "vfdsh",
@@ -158,8 +140,7 @@
       "cadence": "session-start",
       "consume": "packages/vfgraft/MAP.md",
       "briefSlot": "05",
-      "handoff": "packages/vfgraft/graph/morning-job.md",
-      "blocked": null
+      "handoff": "packages/vfgraft/graph/morning-job.md"
     },
     {
       "id": "vfgrowth",
@@ -168,7 +149,6 @@
       "consume": "packages/vfgrowth/hq/FOLLOWER-GROWTH.md",
       "briefSlot": "04",
       "handoff": "packages/vfgrowth/HANDOFF-he.md",
-      "blocked": null,
       "gates": [
         "packages/vfgrowth/EDIT-GATE.md",
         "packages/vfgrowth/PREFLIGHT.md",
@@ -184,8 +164,7 @@
       "cadence": "after-edit",
       "consume": "python3 scripts/check-all.py",
       "briefSlot": "05",
-      "handoff": "packages/vfharness/EMBED.md",
-      "blocked": null
+      "handoff": "packages/vfharness/EMBED.md"
     },
     {
       "id": "vfigos",
@@ -213,8 +192,7 @@
       "cadence": "weekly",
       "consume": "packages/vfmakers/crews/content-rotation.md",
       "briefSlot": "07",
-      "handoff": "packages/vfmakers/crews/cash-pulse.md",
-      "blocked": null
+      "handoff": "packages/vfmakers/crews/cash-pulse.md"
     },
     {
       "id": "vfmedia",
@@ -240,8 +218,7 @@
       "cadence": "session-start",
       "consume": "python3 scripts/vfmem.py who morning-brief",
       "briefSlot": "05",
-      "handoff": "packages/vfmem/SKILL.md",
-      "blocked": null
+      "handoff": "packages/vfmem/SKILL.md"
     },
     {
       "id": "vfmskill",
@@ -249,8 +226,7 @@
       "cadence": "on-content",
       "consume": "packages/vfmskill/SKILL.md",
       "briefSlot": "07",
-      "handoff": "packages/vfmskill/hq/PLAYBOOK.md",
-      "blocked": null
+      "handoff": "packages/vfmskill/hq/PLAYBOOK.md"
     },
     {
       "id": "vfom",
@@ -267,8 +243,7 @@
       "cadence": "daily-07:00",
       "consume": "python3 scripts/vfops_loop.py brief",
       "briefSlot": "all",
-      "handoff": "packages/vfops/ROUTINE.md",
-      "blocked": null
+      "handoff": "packages/vfops/ROUTINE.md"
     },
     {
       "id": "vfprod",
@@ -285,8 +260,7 @@
       "cadence": "daily-06:15",
       "consume": "packages/vfresearch/DAILY.md",
       "briefSlot": "05",
-      "handoff": "packages/vfresearch/WEEKLY.md",
-      "blocked": null
+      "handoff": "packages/vfresearch/WEEKLY.md"
     },
     {
       "id": "vfsales",
@@ -312,8 +286,7 @@
       "cadence": "daily-07:00",
       "consume": "python3 scripts/vfsku.py scan",
       "briefSlot": "03",
-      "handoff": "packages/vfresearch/hq/MAKERWORLD-SCAN.md",
-      "blocked": null
+      "handoff": "packages/vfresearch/hq/MAKERWORLD-SCAN.md"
     },
     {
       "id": "vlicense",
@@ -403,12 +376,6 @@
       "path": ".cursor/skills/vf-best-skills/SKILL.md",
       "cadence": "bi-daily",
       "consume": ".cursor/skills/vf-best-skills/SKILL.md"
-    },
-    {
-      "id": "skill-canva-ig",
-      "path": ".cursor/skills/vf-canva-instagram/SKILL.md",
-      "cadence": "on-content",
-      "consume": "packages/vfgrowth/EDIT-GATE.md"
     },
     {
       "id": "skill-daily-learning",

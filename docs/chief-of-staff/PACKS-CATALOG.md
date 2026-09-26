@@ -47,7 +47,6 @@ HQ **ממליץ** מיטה; לא מדפיס. Watchtower = Edge.
 | `vfgrowth` | לוח, PREFLIGHT, מפעל תוכן אורגני | `CALENDAR.md` · `PREFLIGHT.md` · `EDIT-GATE.md` · `ORGANIC-GROWTH.md` · `HANDOFF-he.md` | `vf_organic_growth.py` · `check-vfgrowth.py` · `check-organic-growth.py` |
 | `vfcopy` | כיתוב + Visible Text + עברית טבעית | `VOICE.md` · `skills/velvet-hebrew-copy/` | `check-vfcopy.py` · `vf_visible_text.py` |
 | `vfcovers` | כריכות בריף/פיד | `DRAFT.md` · `g005/` | |
-| `vfcanva` | ויזואל Instagram ב־Canva | `WORKFLOW.md` · `FORMATS.json` · `CONNECT.md` · `docs/CANVA.md` | `studio/render.py` · `check-vf-canva.py` |
 | `vfigos` | סקירה / שיבוץ / שליחה דרך כלים | `SEND.md` · `CAPABILITIES.json` · `PUBLICATION-STATES.json` · `CONNECT-IG.md` | `vf_send_preflight.py` · `vf_publish_bridge.py` |
 | `vfom` | Visual Foundry / ריל / toolchain וידאו | `VISUAL-OS.md` · `CREATIVE-AUTOPILOT.md` · `VIDEO-TOOLCHAIN.md` · `HYPERFRAMES-BACKEND.json` | `vf_hyperframes.py` · `vf_video_edit.py` · `vf_speech.py` |
 | `vfinsights` | מדידה אחרי פרסום — בלי המצאה | `data/` · loop scripts | `vf_insights_ingest.py` · `vf_insights_loop.py` |
@@ -75,7 +74,6 @@ HQ **ממליץ** מיטה; לא מדפיס. Watchtower = Edge.
 |---|---|
 | `vf-morning-brief` | בריף בוקר |
 | `vf-inquiry-chain` | פנייה → convert/prod/cost/sales |
-| `vf-canva-instagram` | ויזואל IG ב־Canva |
 | `vf-hebrew-copy` | כיתוב עברי |
 | `vf-organic-growth` | Decision Pack / מפעל תוכן |
 | `vf-content-sprint` | ספרינט תוכן מוצדק |
@@ -89,7 +87,6 @@ HQ **ממליץ** מיטה; לא מדפיס. Watchtower = Edge.
 | `vf-openmontage` / `velvet-creative-director` / `velvet-brand-guardian` / `velvet-media-librarian` | יצירה/QA/מדיה |
 | `vf-run` / `vf-makers` / `vf-marketing-skills` / `vf-fcc-offload` | משמרת / makers / שיווק / FCC |
 
-Canva plugin skills (`canva-*`) הם כלי עריכה; מסלול VF נשאר `vf-canva-instagram`.
 
 ## מחסן Agency
 

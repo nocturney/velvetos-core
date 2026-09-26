@@ -26,5 +26,3 @@ Read `packages/vfmakers/EMBED.md` and run **one** crew from `packages/vfmakers/c
 - Customer «no» and `#vlicense` are load-bearing. Do not crowbar them.
 
 ## Packs you may write notes into
-
-Existing VF packs only (`vfigos`, `vfcost`, `vfconvert`, `vfgrowth`, `vfprod`, `vfsales`, `vfops`, `vfcovers`, `vfinsights`, `vfbooks`, `vfresearch`, `vfbiz`, `vfcopy`, `vlicense`, `vfseason`, `vfsku`, `vfbriefux`, `vfcanva`, `vfe2b`, `vfmakers`, `vfharness`, `vfom`, `vfgraft`, `vfmem`, `vffcc`). Do not create a new product pack unless asked.

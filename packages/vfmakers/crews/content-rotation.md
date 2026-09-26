@@ -1,7 +1,6 @@
 # Crew: content rotation
 
 Source pattern: [makerskills `jab-hook`](https://github.com/coreyhaines31/makerskills/blob/main/skills/jab-hook/SKILL.md) — jab-jab-jab-right-hook. **No Typefully. No X. No send.**
-Packs: `vfgrowth`, `vfcopy`, `vfcovers`, `vfigos`, `vfcanva`. Seat: צמיחה.
 
 ## Roles
 
@@ -9,7 +8,6 @@ Packs: `vfgrowth`, `vfcopy`, `vfcovers`, `vfigos`, `vfcanva`. Seat: צמיחה.
 |---|---|---|---|
 | Planner | `vfgrowth` | Week table: jab vs hook | Boost, move a booked slot |
 | Copy | `vfcopy` | Hebrew spoken voice | «שלחו DM» |
-| Cover | `vfcovers` / `vfcanva` | Brief or Canva edit URL | Fake Insights on the graphic |
 | Board | `vfigos` | Review / schedule note | Send, auto-DM |
 | Human + Grok | — | Approve · Grok sends | — |
 
@@ -40,7 +38,6 @@ Rules:
 
 1. Homework first (`vfcopy`): what is true, what is not claimed.
 2. Floor proof or mark **חסר**. No invented bed scene.
-3. Canva if the visual is Instagram (`packages/vfcanva/`). Superdesign only if Canva MCP is `needsAuth`.
 4. Hand the approved draft to `vfigos`. HQ sends via tools (`constitution/SEND.md`).
 5. Write `packages/vfgrowth/hq/rotation/YYYY-MM-DD-week.md` + `INDEX.md`.
 

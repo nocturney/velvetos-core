@@ -18,7 +18,6 @@
 | נפל | עבר ל־ |
 |---|---|
 | Perplexity Cloudflare (30.8) | ChatGPT + Gemini — גוף אמיתי בלבד |
-| Canva `needsAuth` על Cloud | `studio/render.py` / Superdesign |
 | Treg למוזיקה IG | HeyOrca weekly (`MUSIC.md`) |
 
 ## מה דולג

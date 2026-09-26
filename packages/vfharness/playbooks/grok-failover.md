@@ -14,7 +14,6 @@
 | מסלול | מתי | מי שולח |
 |---|---|---|
 | `#נשלח-מ-HQ` | יש כלי (Gmail תמיד; IG Publish אם מחובר) | סוכן HQ |
-| `#ממתין-ל-כלי-IG` | אין MCP Publish לפיד — אחרי Gmail+Drive+Canva | סוכן HQ (failover) |
 | `#מוכן-ל-Grok` | רק אם ראש צוות מבקש גיבוי Grok | Grok אחרי חידוש |
 | `#פרסום-חי-דחוף` | דחוף לפיד עכשיו | HQ שולח לפי `SEND.md` / `LIVE-PACKET` |
 
@@ -25,7 +24,6 @@
 | עבודה | פק | כלי |
 |---|---|---|
 | כיתוב | `vfcopy` + `vfgrowth` | Cursor · תזמורת |
-| כריכה | `vfcanva` · `vfcovers` | Canva → `studio/render.py` → Superdesign |
 | שליחת IG | `vfigos/SEND.md` | Publish אם יש · אחרת Drive+Gmail |
 | בריף 07:00 | `vfops` + `vfbriefux` | **Gmail send_message** + `htmlBody` תצוגה 3 (`MAIL.html`) |
 | פנייה / הצעה | `vfconvert` → `vfsales` | Gmail **reply** / send (בלי ₪ מומצא) |
@@ -51,7 +49,6 @@
 
 ## Failover ≠ המצאה
 
-אין ₪ מכירה בלי ראש צוות. אין Insights. אין גוף Perplexity חסום. אין קישור Canva מומצא. אין «שלחו DM». אין «עלה לפיד» בלי כלי Publish.
 
 ## קישורים
 

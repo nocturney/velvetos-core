@@ -6,7 +6,6 @@
 
 - HQ בונה או מעדכן HTML לבריף (`MAIL.html`, `brief-email.html`, `render_mail.py`).
 - Wireframe כש-Mobbin חסום.
-- **לא** מחליף Canva brand kit לפיד — `@velvets_cloud` נשאר ב-`vfcanva`.
 
 ## skill → קובץ
 
@@ -34,7 +33,6 @@
 | RTL + מרווח מ־tokens | Inter/Roboto כ־display; glow סגול |
 | תרשים רק כש־`DIAGRAM-MAKER` נדרש | הדבקת SVG דקורטיבי בלי נתון |
 
-צלב־בדיקה עם Canva לפיד: `vfcanva` — לא מחליפים brand kit.
 
 ## סנסור
 

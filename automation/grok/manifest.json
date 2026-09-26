@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "provider": "grok-bot",
   "bot": "Chief of Staff",
   "timezone": "Asia/Jerusalem",
@@ -20,7 +20,7 @@
       "providerRoutineId": "velvetos-integrity-guard",
       "enabled": true,
       "cadence": "daily 01:45",
-      "protectedRoutineCount": 9
+      "protectedRoutineCount": 8
     }
   },
   "productionScheduler": "grok-bot-routines",
@@ -59,13 +59,6 @@
       "responsibility": "refresh and verify the local derived Cognee/vfmem index; silent when current and healthy"
     },
     {
-      "id": "openpost-release-watch",
-      "title": "OpenPost Release Watch",
-      "cadence": "daily 07:15",
-      "enabled": true,
-      "responsibility": "condition watch; silent when no meaningful change"
-    },
-    {
       "id": "velvet-morning-brief",
       "title": "Velvet Morning Brief",
       "cadence": "daily 09:00",
@@ -99,6 +92,23 @@
       "cadence": "Friday 12:00",
       "enabled": true,
       "responsibility": "canonical weekly research accountability workflow"
+    }
+  ],
+  "publisherAuthority": {
+    "updatedDate": "2026-09-26",
+    "scheduler": "cloudflare-instagram-publisher",
+    "source": "packages/vfigos/cloudflare-publisher/",
+    "openpost": "frozen",
+    "openpostReleaseWatch": "retire_and_disable",
+    "providerReadbackRequired": true
+  },
+  "retiredRoutines": [
+    {
+      "id": "openpost-release-watch",
+      "title": "OpenPost Release Watch",
+      "desiredEnabled": false,
+      "reason": "OpenPost frozen by owner on 2026-09-26",
+      "providerReadback": "required_before_claiming_disabled"
     }
   ]
 }

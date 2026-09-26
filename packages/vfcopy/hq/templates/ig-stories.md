@@ -1,10 +1,8 @@
 # תבנית: סטוריז 20:30
 
 ## VF_PUBLICATION_ROUTE_V1 — current
-לפרסום Velvet Factory: מקור מוצר מאומת → Product Truth → Creative Director → source-grounded edit → `vfcopy`/Visible Text → Brand Guardian → publication evidence → exact-final QA. Canva/vfcanva אסורים במסלול זה.
 
 ## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
-לפני מילוי התבנית מאמתים את `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` ו־`packages/vfom/VISUAL-DNA.json`. זהות הרפרנס: `MAHVL7PKpvE`, SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; זו ראיית רפרנס בלבד ואינה נתיב Canva. חוסר/אי־התאמה = `visual_standard_unavailable` וחוסם את העבודה החזותית.
 
 ## תפקיד
 סדרת סטורי יומית `@velvets_cloud` — רק מקליפ/תמונה מאותו יום על המיטה.  
@@ -20,7 +18,6 @@
 **פריט גמור = סיפור-מוצר** (`VOICE.md`) — לא תהליך-קצר, לא קופי דק.  
 **תהליך-קצר** רק לריל חשיפה / טיימלאפס — לא לסטוריז מוצר.
 
-בלי source-grounded edit + publication evidence + exact-final QA = **לא משבצים**. JPEG גולמי אסור; Canva/vfcanva אינם failover לפרסום VF.
 
 ## פורמט פלט — סיפור-מוצר (ברירת מחדל למוצר גמור)
 
@@ -55,3 +52,7 @@
 - CTA מוצר: הודעת Instagram + היילייטס + איסוף שדרות. אסור וואטסאפ / `050-2517000` בתוכן ציבורי. לא אוטו־DM. לא ₪. לא Insights.
 - אין סטורי פיד בשישי–שבת מהלוח הקבוע.
 - בלי edited review artifact + source/final evidence + publication evidence = חסום עריכה.
+
+## VF_VISUAL_STANDARD_GATE
+
+Before public creative execution, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`. Bind SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897` and require `visualStandard.gate=PASS`. Missing/mismatched authority is `visual_standard_unavailable`; generic visual fallback is forbidden.

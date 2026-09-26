@@ -18,7 +18,6 @@ Rules:
 
 - Unknown fact stays unknown. `needs_input` blocks progression.
 - No invented price, turnaround, print duration, customer/testimonial, shipping, SKU or Insights claim.
-- Copy from ChatGPT, Cursor, Gemini, Perplexity, Canva, Grok, scripts or humans receives the same gate.
 - Any rewrite after lint invalidates the lint pass. Material changes after Rubric/PREFLIGHT invalidate those passes too.
 - Copy produced outside `packages/vfcopy` is raw input until it passes the canonical chain.
 - `vfmskill` and upstream inspirations supply methods only; Velvet constitution/current CTA/voice/truth rules always win.

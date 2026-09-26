@@ -2,7 +2,7 @@
 
 Canonical authority: `constitution/VISIBLE_TEXT.md`.
 
-This contract is the `vfcopy` implementation invariant for **every prose or microcopy artifact created/rephrased by AI and intended for a human reader** — public, customer-facing, or owner-facing. It is channel-aware: the relevant tools depend on the surface; public Instagram rules are not forced onto private customer or owner text.
+This contract is the `vfcopy` implementation invariant for **every prose or microcopy artifact created/rephrased by AI and intended for a human reader** — public, customer-facing, or owner-facing. It is channel-aware: the relevant tools depend on the surface; public Instagram rules are not forced onto private customer or owner text. **Origin grants no exemption:** agent/tool/human-originated public copy must pass the same relevant final-copy gates before it can be treated as ready.
 
 ## Universal baseline
 
@@ -57,7 +57,6 @@ Humanizer may remove filler; it may **not** soften a blocker, alter an ID/hash/n
 
 ## Human documents / UI
 
-AI-authored prose in DOC/PDF/slide/HTML/Canva or dashboard UI passes the same baseline before layout is treated as final. Format/render QA is downstream of text QA. Literal technical labels and source payloads are not rewritten.
 
 ## Fail-closed rules
 
@@ -65,7 +64,6 @@ AI-authored prose in DOC/PDF/slide/HTML/Canva or dashboard UI passes the same ba
 - Brand Guardian does not replace copy lint; copy lint does not replace Brand Guardian on visual/public work.
 - Successful CI/evals do not prove a specific candidate passed.
 - `vfmskill`, prompts.chat methodology, reader-first, `write-better`, Humanizer and AI-tells are working methods, not reference shelves; when relevant they must affect/review the candidate.
-- Text created by ChatGPT, Cursor, Gemini, Perplexity, Grok, Canva, scripts, templates, **or a human** is treated identically once it enters a gated public/customer/owner artifact. **Origin grants no exemption.**
 - Copy written outside `packages/vfcopy` is raw input until it passes the relevant chain.
 - **Any rewrite after lint requires lint again.** Material rewrite after rubric/PREFLIGHT/render QA invalidates those approvals where applicable.
 - Missing proof produces `needs_input` / `חסר` / blocked state — never an invented completion claim.

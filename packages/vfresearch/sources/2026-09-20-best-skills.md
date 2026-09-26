@@ -14,7 +14,6 @@ Cadence: due (lastPass 2026-09-17 → ~72h > 48h+4h grace). Executed inside Velv
 | self-improving / self-improving-agent | social-buzz #1/#7 | office-learning + vfops retro; **second self-improving runtime locked** |
 | obra/superpowers, mattpocock/skills, anthropics/skills | top-repos | partial+ already; TDD/git-worktrees remain watch |
 | addyosmani/agent-skills, archify, OpenSpec, impeccable, ponytail, caveman | top-repos | remain on watchlist; no measured gap for new embed |
-| hyperframes / remotion / genmedia video stack | trending heavy | map only via expert-media-director + Canva-first; no Veo/Kling from HQ |
 | stablyai/orca, herdr, google-agents-cli | top-repos / trending | **דולג** — second ADE/runtime / vendor CLI |
 
 ## מה הוטמע

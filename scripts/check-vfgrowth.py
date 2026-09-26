@@ -130,9 +130,7 @@ def main() -> None:
     ):
         if needle not in handoff_active:
             fail(f"HANDOFF-he.md active route missing {needle!r}")
-    for forbidden in ("Canva MCP או vfcovers / vfcanva", "עד Canva/vfcovers", "Canva `DAHU"):
-        if forbidden in handoff_active:
-            fail(f"HANDOFF-he.md active route still contains legacy provider directive {forbidden!r}")
+
     if not any(n in handoff_active for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA", "שלחו לנו הודעה")):
         fail("HANDOFF-he.md active route must include Instagram-message CTA (not WhatsApp phone)")
     if "שלחו DM" in handoff_active and "לא «שלחו DM»" not in handoff_active and "בלי «שלחו DM»" not in handoff_active:
@@ -208,7 +206,6 @@ def main() -> None:
         "רמה נמוכה",
         "אל תפנה לכריסטיאן על מדדים חלשים",
         "VF_PUBLICATION_ROUTE_V1",
-        "Canva/vfcanva are forbidden",
         "CONTENT-RUBRIC",
         "artifact_digest",
         "PUBLIC_CURRENT_CTA",
@@ -260,7 +257,7 @@ def main() -> None:
         fail("ig-stories.md must lock Instagram-message CTA (not WhatsApp phone)")
     if "היילייטס" not in stories:
         fail("ig-stories.md must point CTA to Highlights")
-    for needle in ("סיפור-מוצר", "VF_PUBLICATION_ROUTE_V1", "Canva/vfcanva אסורים", "publication evidence"):
+    for needle in ("סיפור-מוצר", "VF_PUBLICATION_ROUTE_V1", "publication evidence"):
         if needle not in stories:
             fail(f"ig-stories.md must mention {needle!r}")
 
@@ -284,7 +281,7 @@ def main() -> None:
         pass  # allow mention in notes if marked elsewhere; fence check above is hard
 
     play = STORIES_PLAY.read_text()
-    for needle in ("סיפור-מוצר", "תהליך-קצר", "VF_PUBLICATION_ROUTE_V1", "Canva/vfcanva אסורים"):
+    for needle in ("סיפור-מוצר", "תהליך-קצר", "VF_PUBLICATION_ROUTE_V1"):
         if needle not in play:
             fail(f"STORIES.md missing {needle!r}")
     if not any(n in play for n in ("הודעה", "אינסטגרם", "PUBLIC_CURRENT_CTA")):

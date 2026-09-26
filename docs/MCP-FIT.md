@@ -18,19 +18,16 @@ These are already in the Cursor / Cloud Agent tool surface. Adding a second MCP 
 | **Gmail** | Search, read, draft, labels, **send / reply / forward** | `vfsales`, `vfconvert`, `vfops` |
 | **Google Drive** | Files and folders; **`create_file`**; Sheets **export** when a workbook is named (`vfbooks/SHEETS.md`) | `vfprod`, `vfcovers`, `vfsku`, `vfresearch`, `vfbooks` |
 | **Google Calendar** | Events | `vfseason`, `vfops`, `vfsales` |
-| **Canva** | Edit designs, brand-check, bulk-create, resize, `generate-design`. **Ready** on this Cloud Agent (2026-08-31, `DAGoYmCu4c4`) | `vfcovers`, `vfigos`, `vfsku`, `vfcopy` |
 | **Instagram (canonical)** | Publish image/carousel/reel/**story**, Insights, feed read via Graph API. **ready-codespace** (stdio verified). `remote_access: pending`. [`packages/vfigos/CONNECT-IG.md`](../packages/vfigos/CONNECT-IG.md). Package `adelaidasofia-instagram-mcp`. Not in project `mcp.json` (secrets) | `vfigos`, `vfinsights`, `vfgrowth` |
 | **3D AI Studio** | Text/image → 3D mesh, STL/3MF export. **HTTP** `https://mcp.3daistudio.com/mcp` — OAuth **Desktop** (`.cursor/mcp.json`) **+ Cloud** (Dashboard → Integrations & MCP). See `packages/vfprod/CONNECT-3DAI.md` | `vfprod`, `vfsku`, `vlicense` |
 | **Studio MCP Hub** | HTTP `https://studiomcphub.com/mcp`. Free mockup/bg/resize; CMYK/`print_ready` for paper instances. VF skips CMYK. `packages/vfmcp/CONNECT-STUDIOHUB.md` | `vfprod`, `vfcovers`, `vfsku` |
 | **WebSearch / WebFetch** | Live web + URL fetch (ChatGPT/Gemini/Perplexity/Grok browse equivalent) | `vfresearch`, `vfgrowth` |
-| **GenerateImage** | User-asked stills. Instagram still Canva-first | `vfcovers`, `vfbriefux` |
 | **Treg** | **Not relevant** — do not login or `call` | — |
 | **Mobbin** | Real-app UI patterns | `vfbriefux` |
 | **Superdesign** | Canvas / graphics | `vfcovers`, `vfbriefux` |
 | **Grok Bot** | Optional backup only. HQ sends via tools | `vfigos/SEND.md` |
 | **iCloud Drive** | **Mac Desktop only** — local MCP (`icloud-drive-mcp-server`). Cloud Agent uses **Google Drive mirror** | `vfmcp/CONNECT-ICLOUD.md`, `vfmcp/ICLOUD-DRIVE-SYNC.md` |
 
-Skip extra Gmail, extra Canva, extra SEO crawlers, and extra “AI visibility” servers unless Treg is missing a specific account.
 
 **iCloud:** no Apple HTTP OAuth for agents. Do not add iCloud to Cloud Team MCP. Mirror `Velvet Factory/` to Drive on the Mac instead.
 
@@ -50,7 +47,6 @@ Not in project `mcp.json` (secrets). Desktop / Codespace stdio verified. Cloud a
 
 Legacy (do not use as primary): [jlbadano/ig-mcp](https://github.com/jlbadano/ig-mcp) — [`LEGACY-IG-MCP.md`](../packages/vfigos/LEGACY-IG-MCP.md).
 
-Failover until live MCP session: Canva export → Drive `create_file` → Gmail `send_message` same turn. Live claim requires `list_media`/`get_media` verify.
 
 ### 1. WhatsApp — inquiry-to-order · **in Core (draft/search)**
 
@@ -117,7 +113,6 @@ Cloud Agent **must not** open `gemini.google.com` or `chatgpt.com` (Google/OpenA
 | [aliargun/mcp-server-gemini](https://github.com/aliargun/mcp-server-gemini) | Stale community MCP (last push 2025-07-14, hardcoded Gemini 2.5) | **Do not install.** API key only. |
 | [RLabs-Inc/gemini-mcp](https://github.com/rlabs-inc/gemini-mcp) | Newer API MCP (Gemini 3, July 2026, 37 tools incl. Veo) | **Do not install.** Still `GEMINI_API_KEY`. Does not attach Plus. |
 
-**Packs:** `vfresearch`, `vfops`, `vfmcp`. No Veo from HQ. Instagram still Canva-first. Plus ≠ API.
 
 ## Do this next (read-only growth)
 
@@ -127,7 +122,6 @@ Cloud Agent **must not** open `gemini.google.com` or `chatgpt.com` (Google/OpenA
 |---|---|
 | [farukkolip/instapdown-mcp](https://github.com/farukkolip/instapdown-mcp) | Public toolkit: Reels/Story download, hashtags, engagement health, best-time tables. **No auth.** |
 
-Use for `vfigos` review, `vfgrowth` sprints, `vfinsights` reads. Schedule and copy stay in the pack. **HQ sends via adelaidasofia Instagram MCP or Canva+Drive+Gmail** (`CONNECT-IG.md`). Grok is optional backup. Metricool is not required.
 
 ### Inbox triage on top of Gmail
 
@@ -179,11 +173,9 @@ Do not add these “because they exist on the list.” Add them when Christian c
 - **Blender MCP on Cloud Agent** — needs local Blender + addon. Optional Desktop only (`vfprod/BLENDER-MCP.md`). Concept/STL from HQ stays 3DAI. Sibling market listings (`blender-open`, `blender-ai`, `blender-vxai`) stay one-family — do not stack parallel installs without lead seat.
 - **VoiceStudio / OmniVoice MCP on Cloud Agent** — needs local GPU/CPU backend on `localhost:3900`. AGPL app + upstream model terms (some NC). Floor reels stay camera proof (`vfom` LOCK). Do not clone owner voice into IG without lead + consent. Optional Mac only after lead seat.
 - **multiCAD / SketchUp MCP** — Windows COM / SketchUp app; not VF print floor unless the Mac already runs that DCC.
-- **SVGMaker MCP** — vendor API key; Canva first for brand. No key in git.
 - **Archon** ([coleam00/Archon](https://github.com/coleam00/Archon)) — second harness/orchestrator. Embed workflow-gate patterns on `vfe2b` only; do not `curl | bash` / Docker Archon here.
 - **Jeffallan fullstack-dev-skills plugin** — Claude Code marketplace skills. Common Ground tiers → `vfmem/MEMORY-UPDATE.md`. No `/plugin install` / `npx skills` on Cloud Agent.
 - **Second SEO / GEO / AI-visibility stacks** — Treg is not relevant. Public marketing site from HQ stays locked; AEO skills (e.g. buildwithclaude `ai-search-visibility-audit`) stay **watch** until a public site exists under `vfbiz`. Warehouse `@aeo-foundations-architect` stays off-desk unless named.
-- **Second Canva or image-gen farms** — Canva + Superdesign are enough for brand work.
 - **Anything that posts, boosts, or DMs Instagram from this HQ.**
 - **DeusData/codebase-memory-mcp binary** — coding-agent indexer that writes client config. The office-graph pattern is already `scripts/vfmem.py`. Local AST install only if the lead seat asks, and never by rewriting this repo's `.cursor/mcp.json`.
 - **Hosted agent-memory plugins** (context-memory / Slova, memstack install, `basic-memory` Docker) — use `vfmem` + `owner-memory.md` + checkpoints. See `packages/vfmem/MEMORY-UPDATE.md`.

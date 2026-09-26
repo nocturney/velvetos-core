@@ -11,13 +11,18 @@
   },
   "publicCta": {
     "text": "שלחו הודעה כאן באינסטגרם\nאיסוף שדרות",
-    "forbiddenAbsent": ["price", "₪", "WhatsApp", "phone", "wa.me", "auto-DM"]
+    "forbiddenAbsent": [
+      "price",
+      "₪",
+      "WhatsApp",
+      "phone",
+      "wa.me",
+      "auto-DM"
+    ]
   },
-  "transportNote": "Image publish_story on current Cloud Run MCP races FINISHED (9007). G004 went live as 3s still-as-video Stories via the polled video path; visual content is the approved Canva exports. story_publish.py overlay waits for image Stories after Cloud Run redeploy.",
   "frames": [
     {
       "frameIndex": 1,
-      "sourceRef": "canva:DAHUaUo3bAk",
       "approvalRef": "packages/vfgrowth/preflight/G004.md",
       "exportPngSha256": "ca6fbef7d87dd393c92d151fa89811078a7bbac27bb26256162eb76d3250621c",
       "sha256": "06e9226a155bd3e5f4674e53330ba7b99aa8f33159ed3af2ba9e1d2ced4340b3",
@@ -39,7 +44,6 @@
     },
     {
       "frameIndex": 2,
-      "sourceRef": "canva:DAHUaUo3bAk",
       "approvalRef": "packages/vfgrowth/preflight/G004.md",
       "exportPngSha256": "4cf41fe24d4adc480e537263a3cdc1c9c0838b41dd5bc3d18ddfd6d57a159eb4",
       "sha256": "b684633900da766f8ff5f3b40b0f2f5aec286f8965347b4ec703fde562fcfd2a",
@@ -61,7 +65,6 @@
     },
     {
       "frameIndex": 3,
-      "sourceRef": "canva:DAHUaUo3bAk",
       "approvalRef": "packages/vfgrowth/preflight/G004.md",
       "exportPngSha256": "09ed96ad5675ab42d3add14586620ee3d77e3a0812bc8324e4c59faa3e1e027c",
       "sha256": "a9433ce659e3d54595114a908a23716ab2922cfd62dde3cdf5421bd76c58f90b",
@@ -84,7 +87,6 @@
     },
     {
       "frameIndex": 4,
-      "sourceRef": "canva:DAHUfRQMH60",
       "approvalRef": "packages/vfgrowth/preflight/G004.md",
       "exportPngSha256": "ef37a0c593f0133ddf74a3ef1b58c85977a2ea7341e9ee26cecd1091d486ef55",
       "sha256": "12b6284ea6ebf6fb865cdf43f38dbf7298d8b69527d670551ca9493a5b926b6c",
@@ -189,8 +191,7 @@
   "history": [
     {
       "at": "2026-09-10T17:41:00Z",
-      "to": "approved_export_local",
-      "note": "Canva re-export recovered after missing /opt/cursor/artifacts path"
+      "to": "approved_export_local"
     },
     {
       "at": "2026-09-10T17:46:00Z",

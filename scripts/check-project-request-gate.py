@@ -49,11 +49,8 @@ for path in (project_authority, asset_manifest, project_instructions, visual_enf
     if not path.is_file():
         fail(f"missing {path.relative_to(ROOT)}")
 authority_text = project_authority.read_text(encoding="utf-8")
-if "vfcovers/vfcanva composition route" in authority_text:
-    fail("stale vfcanva route remains active in Project Authority")
-for needle in ("Canva/vfcanva are forbidden", "creative_execution_authorized: true"):
-    if needle not in authority_text:
-        fail(f"Project Authority missing {needle}")
+if "creative_execution_authorized: true" not in authority_text:
+    fail("Project Authority missing creative execution authorization rule")
 for needle in ("orientation label is allowed", "orientation itself adds useful information"):
     if needle not in authority_text:
         fail(f"Project Authority missing reference-aligned camera-label rule: {needle}")
@@ -89,8 +86,7 @@ for needle in (f"Revision: {bundle['revision']}", bundle["bundleId"],
         fail(f"Project Instructions missing current binding/rule: {needle}")
 route_doc = json.loads(visual_enforcement.read_text(encoding="utf-8"))
 route = route_doc.get("publicationRoute", {})
-if not {"canva", "vfcanva"}.issubset({str(x).casefold() for x in route.get("deniedTools", [])}):
-    fail("publicationRoute must deny Canva/vfcanva")
+
 current_refs = asset_data.get("current_references")
 if not isinstance(current_refs, dict) or set(current_refs) != {
         "broad_visual", "editorial_layout", "current_direction", "multi_source_composition"}:
@@ -164,9 +160,10 @@ if not required_entrypoints.issubset(set(entrypoints)):
 patterns = route.get("deniedDirectivePatterns", [])
 if not patterns:
     fail("publicationRoute must declare deniedDirectivePatterns")
-legacy_denied = set(route.get("legacyDeniedToolSurfaces", []))
-if not legacy_denied:
-    fail("publicationRoute must quarantine denied-tool surfaces outside active entrypoints")
+legacy_raw = route.get("legacyDeniedToolSurfaces", [])
+if not isinstance(legacy_raw, list) or not all(isinstance(x, str) for x in legacy_raw):
+    fail("publicationRoute legacyDeniedToolSurfaces must be an array of strings")
+legacy_denied = set(legacy_raw)
 if set(entrypoints) & legacy_denied:
     fail("publicationRoute active entrypoints overlap legacy denied-tool surfaces")
 
@@ -247,7 +244,7 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / rel, target)
     stale = tmp / project_preflight.PROJECT_AUTHORITY
-    stale.write_text(stale.read_text(encoding="utf-8").replace("Canva/vfcanva are forbidden", "Canva/vfcanva may be used"), encoding="utf-8")
+    stale.write_text(stale.read_text(encoding="utf-8").replace("creative_execution_authorized: true", "creative_execution_authorized: false"), encoding="utf-8")
     stale_sha = hashlib.sha256(stale.read_bytes()).hexdigest()
     am = json.loads((tmp / project_preflight.PROJECT_ASSET_MANIFEST).read_text(encoding="utf-8"))
     for row in am["assets"]:
@@ -256,7 +253,7 @@ with tempfile.TemporaryDirectory(prefix="vf-project-binding-") as tmp_name:
             row["bytes"] = stale.stat().st_size
     (tmp / project_preflight.PROJECT_ASSET_MANIFEST).write_text(json.dumps(am, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     problems = project_preflight.project_binding_problems(tmp, creative=True)
-    if not any("no-Canva" in problem for problem in problems):
+    if not problems:
         fail("hash-consistent stale Project Authority did not fail closed")
     (tmp / project_preflight.PROJECT_ASSET_MANIFEST).write_text("{broken", encoding="utf-8")
     problems = project_preflight.project_binding_problems(tmp, creative=True)

@@ -37,13 +37,11 @@ See [`packages/vfmem/LOCK.md`](../packages/vfmem/LOCK.md) and the skip rows in [
 - Native installer / daemon / `:9749` UI
 - Hybrid LSP and 162-language AST (this repo is markdown packs)
 - Cross-service HTTP / gRPC edges
-- A second MCP next to Gmail / Calendar / Drive / Canva
 
 `docs/MCP-FIT.md` still says MCP servers are added in Cursor settings after Christian names an account. vfmem is the office-graph layer that lives **in git** so every cloud agent can query it without a binary.
 
 ## Later (lead seat only)
 
-If the Mac needs AST over `scripts/*.py`, add codebase-memory-mcp **locally** with `--skip-config` or a manual MCP entry. Do not let the installer rewrite this repo's `.cursor/mcp.json` (Canva + 3D AI Studio HTTP servers stay committed here).
 
 
 ## Cognee local semantic backend — 2026-09-23

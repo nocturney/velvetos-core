@@ -21,13 +21,11 @@
     "portablePrompt": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
     "referenceAsset": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
     "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
-    "canvaAssetId": "MAHVL7PKpvE",
     "artifactSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
     "coldStart": true,
     "evidenceRefs": [
       "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
-      "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
-      "canva:MAHVL7PKpvE"
+      "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"
     ]
   },
   "concept": {
@@ -39,19 +37,75 @@
   },
   "hook": {
     "candidates": [
-      {"id": "h1", "visual": "IMG_1281 hero treatment with sharp real subject window and same-source softened field", "text": "", "reason": "strongest complete silhouette and cleanest opener"},
-      {"id": "h2", "visual": "IMG_1279 closer alternate view", "text": "", "reason": "strong detail but less complete opener"},
-      {"id": "h3", "visual": "IMG_1277 tighter detail", "text": "", "reason": "useful mid-sequence detail"},
-      {"id": "h4-text", "visual": "hero treatment with headline", "text": "תמונה אחת לא מספיקה", "reason": "rejected; decorative copy loses against the clean image"}
+      {
+        "id": "h1",
+        "visual": "IMG_1281 hero treatment with sharp real subject window and same-source softened field",
+        "text": "",
+        "reason": "strongest complete silhouette and cleanest opener"
+      },
+      {
+        "id": "h2",
+        "visual": "IMG_1279 closer alternate view",
+        "text": "",
+        "reason": "strong detail but less complete opener"
+      },
+      {
+        "id": "h3",
+        "visual": "IMG_1277 tighter detail",
+        "text": "",
+        "reason": "useful mid-sequence detail"
+      },
+      {
+        "id": "h4-text",
+        "visual": "hero treatment with headline",
+        "text": "תמונה אחת לא מספיקה",
+        "reason": "rejected; decorative copy loses against the clean image"
+      }
     ],
     "selected": "h1"
   },
   "shots": {
     "plan": [
-      {"assetRef": "drive:1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ", "shotType": "hero", "orientation": "horizontal", "angle": "wider side/front", "distance": "medium", "action": "portrait composition with real source subject preserved sharply", "targetDurationSec": 0, "proof": "same real dragon geometry and appearance"},
-      {"assetRef": "drive:1E6NWXJqvnyYeHP46KLvDA_rUZHyW2C09", "shotType": "macro", "orientation": "horizontal", "angle": "alternate three-quarter", "distance": "close", "action": "detail-focused second frame", "targetDurationSec": 0, "proof": "same real subject from a distinct source view"},
-      {"assetRef": "drive:143MrZsroIcyh4DZqYLq1-iEFAY9Bd8KD", "shotType": "macro", "orientation": "horizontal", "angle": "front three-quarter", "distance": "close", "action": "surface and head/wing detail", "targetDurationSec": 0, "proof": "real source surface detail retained"},
-      {"assetRef": "drive:1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi", "shotType": "proof", "orientation": "horizontal", "angle": "wider front three-quarter", "distance": "medium", "action": "finish on alternate full geometry", "targetDurationSec": 0, "proof": "same subject from another verified angle"}
+      {
+        "assetRef": "drive:1qRMPwhB42_Ty6xOQwc2HMYbVH7zX_dvZ",
+        "shotType": "hero",
+        "orientation": "horizontal",
+        "angle": "wider side/front",
+        "distance": "medium",
+        "action": "portrait composition with real source subject preserved sharply",
+        "targetDurationSec": 0,
+        "proof": "same real dragon geometry and appearance"
+      },
+      {
+        "assetRef": "drive:1E6NWXJqvnyYeHP46KLvDA_rUZHyW2C09",
+        "shotType": "macro",
+        "orientation": "horizontal",
+        "angle": "alternate three-quarter",
+        "distance": "close",
+        "action": "detail-focused second frame",
+        "targetDurationSec": 0,
+        "proof": "same real subject from a distinct source view"
+      },
+      {
+        "assetRef": "drive:143MrZsroIcyh4DZqYLq1-iEFAY9Bd8KD",
+        "shotType": "macro",
+        "orientation": "horizontal",
+        "angle": "front three-quarter",
+        "distance": "close",
+        "action": "surface and head/wing detail",
+        "targetDurationSec": 0,
+        "proof": "real source surface detail retained"
+      },
+      {
+        "assetRef": "drive:1zumrEC9e5I2NxwXyj4U_dX-6VM8g6Bxi",
+        "shotType": "proof",
+        "orientation": "horizontal",
+        "angle": "wider front three-quarter",
+        "distance": "medium",
+        "action": "finish on alternate full geometry",
+        "targetDurationSec": 0,
+        "proof": "same subject from another verified angle"
+      }
     ],
     "missing": []
   },
@@ -65,11 +119,29 @@
     "decision": "NO_TEXT",
     "selectedText": "",
     "noTextCompared": true,
-    "pipeline": ["reader-first-he", "velvet-hebrew-copy", "ai-tells-he", "owner-preference-lock", "brand-guardian-final-review"],
+    "pipeline": [
+      "reader-first-he",
+      "velvet-hebrew-copy",
+      "ai-tells-he",
+      "owner-preference-lock",
+      "brand-guardian-final-review"
+    ],
     "candidates": [
-      {"text": "", "result": "selected", "reason": "clean photographed object wins and respects owner NO_TEXT lock"},
-      {"text": "תמונה אחת לא מספיקה", "result": "rejected", "reason": "describes carousel behavior rather than adding meaning"},
-      {"text": "כל זווית אחרת", "result": "rejected", "reason": "generic and unnecessary"}
+      {
+        "text": "",
+        "result": "selected",
+        "reason": "clean photographed object wins and respects owner NO_TEXT lock"
+      },
+      {
+        "text": "תמונה אחת לא מספיקה",
+        "result": "rejected",
+        "reason": "describes carousel behavior rather than adding meaning"
+      },
+      {
+        "text": "כל זווית אחרת",
+        "result": "rejected",
+        "reason": "generic and unnecessary"
+      }
     ],
     "ownerPreference": "NO_TEXT",
     "readerFirstNote": "The subject already provides the scroll-stop; no extra headline is needed.",
@@ -78,21 +150,57 @@
   },
   "cover": {
     "candidates": [
-      {"id": "c0-no-text", "headline": "", "subjectCrop": "IMG_1281 art-directed portrait composition", "textPlacement": "none", "gridRationale": "strongest clean hero"},
-      {"id": "c1-no-text", "headline": "", "subjectCrop": "IMG_1279 closer art-directed composition", "textPlacement": "none", "gridRationale": "detail alternate"},
-      {"id": "c2", "headline": "תמונה אחת לא מספיקה", "subjectCrop": "IMG_1281 treatment", "textPlacement": "upper safe zone", "gridRationale": "rejected by no-text comparison"}
+      {
+        "id": "c0-no-text",
+        "headline": "",
+        "subjectCrop": "IMG_1281 art-directed portrait composition",
+        "textPlacement": "none",
+        "gridRationale": "strongest clean hero"
+      },
+      {
+        "id": "c1-no-text",
+        "headline": "",
+        "subjectCrop": "IMG_1279 closer art-directed composition",
+        "textPlacement": "none",
+        "gridRationale": "detail alternate"
+      },
+      {
+        "id": "c2",
+        "headline": "תמונה אחת לא מספיקה",
+        "subjectCrop": "IMG_1281 treatment",
+        "textPlacement": "upper safe zone",
+        "gridRationale": "rejected by no-text comparison"
+      }
     ],
     "selected": "c0-no-text"
   },
   "finishing": {
     "policyVersion": 1,
     "principle": "Retouch the photo, not the product.",
-    "stages": {"photoRetouch": "PASS", "brandContentStyling": "PASS", "textLayoutQa": "N/A", "finalVisualQa": "PASS"},
-    "productTruth": {"gate": "PASS", "subjectIdentityIntegrity": "PASS", "syntheticSubjectChange": "NONE", "sourceSubjectMatch": "PASS", "colorPreserved": "PASS", "notes": "The sharp subject window is the real RAW photograph. Background treatment is derived only from the same frame; dragon geometry/silhouette/detail are unchanged."},
+    "stages": {
+      "photoRetouch": "PASS",
+      "brandContentStyling": "PASS",
+      "textLayoutQa": "N/A",
+      "finalVisualQa": "PASS"
+    },
+    "productTruth": {
+      "gate": "PASS",
+      "subjectIdentityIntegrity": "PASS",
+      "syntheticSubjectChange": "NONE",
+      "sourceSubjectMatch": "PASS",
+      "colorPreserved": "PASS",
+      "notes": "The sharp subject window is the real RAW photograph. Background treatment is derived only from the same frame; dragon geometry/silhouette/detail are unchanged."
+    },
     "repairCycles": 1,
     "lastRepairAction": "Rebuilt all four slides from RAW with composition, restrained grade, same-source subject separation/background treatment and sequence art direction; old crop-only finals invalidated.",
     "reviewedArtifactDigest": "sha256:3be0c2fdb0c6fc80f8c678a2d808814f35f7986eaa14f9a3c5684abd47d4a40f",
-    "evidenceRefs": ["drive:1To8y4YTaQ_ocym68DuPOTIwx1WyJnU3x", "drive:1GC7U3G_xUoV9CcOCCwGjuSExfMif7m3r", "drive:1FSerVkl_ZInA3Qd5v6t0W87ZQgN3EseQ", "drive:1XNmdbklSBS4yXvIC4W6EZ-rOhjcLU9LS", "drive:1r3jAtbnKDg1bCBtAAnPozfwbrwG_e8po"]
+    "evidenceRefs": [
+      "drive:1To8y4YTaQ_ocym68DuPOTIwx1WyJnU3x",
+      "drive:1GC7U3G_xUoV9CcOCCwGjuSExfMif7m3r",
+      "drive:1FSerVkl_ZInA3Qd5v6t0W87ZQgN3EseQ",
+      "drive:1XNmdbklSBS4yXvIC4W6EZ-rOhjcLU9LS",
+      "drive:1r3jAtbnKDg1bCBtAAnPozfwbrwG_e8po"
+    ]
   },
   "qa": {
     "brandScore": 90,
@@ -121,7 +229,12 @@
       "executionReceipt": "PASS_CURRENT_MAIN"
     },
     "failures": [],
-    "repairs": ["Invalidated the earlier crop-only package and four Drive finals.", "Rebuilt from verified RAW only; no synthetic dragon generation or subject replacement.", "Applied real photographic art direction around the untouched subject.", "Rewrote caption and reran the current-main Visible Text Gate."]
+    "repairs": [
+      "Invalidated the earlier crop-only package and four Drive finals.",
+      "Rebuilt from verified RAW only; no synthetic dragon generation or subject replacement.",
+      "Applied real photographic art direction around the untouched subject.",
+      "Rewrote caption and reran the current-main Visible Text Gate."
+    ]
   },
   "feed": {
     "continuityDecision": "pass",

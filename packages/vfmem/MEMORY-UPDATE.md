@@ -83,7 +83,6 @@ Mastery gate לפני «למדנו / סיימנו»: אימות טרי (`verific
 | שכבה | דין | דוגמה אצלנו |
 |---|---|---|
 | **ESTABLISHED** | הנחה מאושרת — לא לערער בלי סתירה מפורשת | איסוף שדרות · וואטסאפ `050-2517000` · אין Print מ־HQ |
-| **WORKING** | ברירת מחדל — לציין כשמסתמכים | Canva קודם ל־IG · 3DAI לקונספט לפני Blender מקומי |
 | **OPEN** | לשאול לפני שממשיכים | ₪ חסר · Insights חסר · מודל בלי `vlicense` |
 
 מפה לשכבות הזיכרון: ESTABLISHED → חוקים/`owner-memory` · WORKING → checkpoint / brief · OPEN → `decision_gate` או שאלה לראש צוות. לא קובץ `~/.claude/common-ground/` נפרד.

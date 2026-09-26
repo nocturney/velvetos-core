@@ -6,7 +6,6 @@
 קול: **סיפור-מוצר** (`VOICE.md` כיתוב ב׳). לא תהליך-קצר. לא קופי דק. לא פתיחה במגבלה.
 
 תלונת כריסטיאן 7.9 ~08:27: הסטוריז החיות נראו מתחת לרף סוכנות.  
-Canva שנקרא היום (`DAHUaUo3bAk`): חידה + מגבלה על הפריים — קטלוג, לא סיפור.
 
 מחיר: `X ₪` עד ראש צוות. **בלי ₪ בפריים ובכיתוב.**  
 CTA: **PUBLIC_CURRENT_CTA** — «לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם» · איסוף שדרות.  
@@ -16,7 +15,6 @@ BUSINESS_CONTACT_RECORD (`050-2517000`) נשאר ברשומת עסק בלבד �
 
 `#vfigos` לסקירה. שיבוץ ב-instagram.com. **Cursor לא מפרסם.**
 
-## פלטת פריים (מבריף בעלים ב-`vfcanva/jobs/G004.md`)
 
 נייבי `#0B1D36` · זהב `#C9A86C` · קרם על כהה.  
 טקסט על הפריים קצר. כיתוב ארוך נשאר כאן, לא על התמונה.
@@ -57,21 +55,15 @@ BUSINESS_CONTACT_RECORD (`050-2517000`) נשאר ברשומת עסק בלבד �
 
 בלי סטיל מאותו יום = **לא משבצים**.
 
-## LEGACY · מסירת Canva / vfcovers שתועדה אז — audit בלבד
 
 עיצובים קיימים (MCP `edit_url` בלבד — לא ממציאים קישור):
 
 | פריים | id | עריכה |
 |---|---|---|
-| סטוריז 1–3 | `DAHUaUo3bAk` | https://www.canva.com/d/q03ula-BfH7vDn6 |
-| סטורי 4 CTA | `DAHUacDGv9U` | https://www.canva.com/d/njntcYD-kdHr4VR |
-| סט חלופי 4 עמודים | `DAHUacAsoNU` | https://www.canva.com/d/Kt13n_xcEcOBK6i |
 
 **LEGACY · צעדי הסטודיו שתועדו אז — לא לביצוע**
 
-1. Canva MCP: `start-editing-transaction` → החלפת הטקסט בטבלת «על הפריים» (הסרת וואטסאפ אם עדיין על הפריים) → `commit`.
 2. `export-design` type `png` · 1080×1920 · `export_quality=pro`.
-3. אם Canva `needsAuth`: `python3 packages/vfcanva/studio/render.py --format ig_story` עם ההוק למעלה — או `vfcovers` compose אם יש גלם מקומי.
 4. בלי `edit_url` / בלי PNG מורכב = השורה נשארת **חסום עריכה**. לא JPEG גולמי מהתיבה.
 
 Cloud HQ לא כותב PNG לגיט. נתיב ייצוא קודם (6.9, פג): `/opt/cursor/artifacts/g004/`. לייצוא חוזר — MCP או File → Download בעורך.
@@ -84,6 +76,5 @@ Cloud HQ לא כותב PNG לגיט. נתיב ייצוא קודם (6.9, פג): `
 - [ ] ההוק חם — לא כותרת מדף, לא מגבלה
 - [ ] אין ₪ / אין «שלחו DM» / אין וואטסאפ / אין «מוכנים» / אין «בלי משלוח» בשורה 1
 - [ ] CTA הודעת Instagram + איסוף שדרות בפריים 4 (לא טלפון)
-- [ ] עבר שער עריכה (Canva או vfcovers/vfcanva)
 - [ ] ארטיפקט `vfgrowth/preflight/G004.md` עבור (VOICE + ציון עצמי + 2–3 קומפס)
 - [ ] pass: `hq/ai-tells-he.md`

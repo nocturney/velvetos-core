@@ -19,7 +19,11 @@
       "id": "memory.owner",
       "label": "זיכרון בעלים משותף",
       "tool": "read-file",
-      "packs": ["vfops", "vfmem", "vfharness"],
+      "packs": [
+        "vfops",
+        "vfmem",
+        "vfharness"
+      ],
       "gate": "none",
       "path": "packages/vfops/data/owner-memory.md",
       "notes": "Morning brief 05a + all seats. Updated by daily retro."
@@ -28,7 +32,10 @@
       "id": "memory.artifacts",
       "label": "אינדקס תוצרים",
       "tool": "read-file",
-      "packs": ["vfops", "vfmem"],
+      "packs": [
+        "vfops",
+        "vfmem"
+      ],
       "gate": "none",
       "path": "packages/vfops/data/ARTIFACT-INDEX.md",
       "notes": "How VF aggregates outputs from all expert modules."
@@ -37,7 +44,11 @@
       "id": "gmail.send",
       "label": "שליחת ג׳ימייל",
       "tool": "Gmail.send_message",
-      "packs": ["vfops", "vfsales", "vfconvert"],
+      "packs": [
+        "vfops",
+        "vfsales",
+        "vfconvert"
+      ],
       "gate": "none",
       "notes": "Office mail and named inquiry threads. No blast list. No invented ₪."
     },
@@ -45,21 +56,30 @@
       "id": "gmail.reply",
       "label": "תשובה בשרשור",
       "tool": "Gmail.reply",
-      "packs": ["vfconvert", "vfsales"],
+      "packs": [
+        "vfconvert",
+        "vfsales"
+      ],
       "gate": "none"
     },
     {
       "id": "gmail.read",
       "label": "קריאת תיבה / שרשור",
       "tool": "Gmail.search_threads",
-      "packs": ["vfops", "vfconvert", "vfbooks"],
+      "packs": [
+        "vfops",
+        "vfconvert",
+        "vfbooks"
+      ],
       "gate": "none"
     },
     {
       "id": "calendar.list",
       "label": "רשימת אירועים",
       "tool": "Google-calendar.list_events",
-      "packs": ["vfops"],
+      "packs": [
+        "vfops"
+      ],
       "gate": "none",
       "timezone": "Asia/Jerusalem"
     },
@@ -67,7 +87,9 @@
       "id": "calendar.create",
       "label": "יצירת אירוע",
       "tool": "Google-calendar.create_event",
-      "packs": ["vfops"],
+      "packs": [
+        "vfops"
+      ],
       "gate": "lead",
       "notes": "Only when lead seat asks."
     },
@@ -75,7 +97,11 @@
       "id": "drive.create",
       "label": "יצירת מסמך משרד",
       "tool": "Google-drive.create_file",
-      "packs": ["vfops", "vfbooks", "vfprod"],
+      "packs": [
+        "vfops",
+        "vfbooks",
+        "vfprod"
+      ],
       "gate": "none",
       "notes": "No personal/medical/legal folders unless named."
     },
@@ -83,14 +109,24 @@
       "id": "drive.search",
       "label": "חיפוש לפי עבודה/מק״ט",
       "tool": "Google-drive.search_files",
-      "packs": ["vfprod", "vfsku"],
+      "packs": [
+        "vfprod",
+        "vfsku"
+      ],
       "gate": "none"
     },
     {
       "id": "office.loop",
       "label": "לולאת משרד — משיכת פקים לבריף",
       "tool": "scripts/vfops_loop.py brief",
-      "packs": ["vfops", "vfgrowth", "vfcopy", "vfsku", "vfcost", "vfigos"],
+      "packs": [
+        "vfops",
+        "vfgrowth",
+        "vfcopy",
+        "vfsku",
+        "vfcost",
+        "vfigos"
+      ],
       "gate": "none",
       "path": "packages/vfops/LOOP.json",
       "notes": "07:00 assemble. Agency-grade brief. No invented ₪/Insights. No live IG publish. vfcost.py brief is live in slot 02. Slot 01 gates are human click (GATES.json). Slot 03 includes vfprod.py brief."
@@ -98,8 +134,10 @@
     {
       "id": "studio.edit-gate",
       "label": "שער עריכה לפני שיבוץ",
-      "tool": "Canva / vfcovers / vfcanva",
-      "packs": ["vfcanva", "vfcovers", "vfgrowth"],
+      "packs": [
+        "vfcovers",
+        "vfgrowth"
+      ],
       "gate": "none",
       "path": "packages/vfgrowth/EDIT-GATE.md",
       "notes": "No text-on-raw-JPEG. Gemini browser only on Mac HOST.md."
@@ -108,7 +146,10 @@
       "id": "calendar.ig-ops",
       "label": "לוח IG אוטונומי",
       "tool": "Google-calendar.create_event",
-      "packs": ["vfgrowth", "vfops"],
+      "packs": [
+        "vfgrowth",
+        "vfops"
+      ],
       "gate": "none",
       "path": "packages/vfgrowth/CALENDAR-OPS.md",
       "notes": "Do not ask Christian for slots. Standing grid only."
@@ -117,7 +158,10 @@
       "id": "sku.shelf",
       "label": "מדף מק״ט חוזר",
       "tool": "scripts/vfsku.py shelf",
-      "packs": ["vfsku", "vfops"],
+      "packs": [
+        "vfsku",
+        "vfops"
+      ],
       "gate": "none",
       "path": "packages/vfsku/SHELF.json",
       "notes": "Five slots. Empty until GATE + vlicense + slice. No invented names or ₪. Brief 03: vfsku.py brief. Tomorrow shop: vfsku.py shop + vfprod/SHOP-CLOSE.md."
@@ -126,31 +170,39 @@
       "id": "sku.shop",
       "label": "חנות מחר — מדף ready בלבד",
       "tool": "scripts/vfsku.py shop",
-      "packs": ["vfsku", "vfprod", "vfconvert", "vfops"],
+      "packs": [
+        "vfsku",
+        "vfprod",
+        "vfconvert",
+        "vfops"
+      ],
       "gate": "none",
       "path": "packages/vfprod/SHOP-CLOSE.md",
       "notes": "Ready slots only. Empty shelf = אין שם להציע. No invented names or ₪. Bag+label before pickup."
     },
     {
-      "id": "canva.design",
-      "label": "עיצוב אינסטגרם ב־Canva",
-      "tool": "Canva.generate-design",
-      "packs": ["vfcovers", "vfcanva", "vfigos"],
+      "packs": [
+        "vfcovers",
+        "vfigos"
+      ],
       "gate": "none"
     },
     {
       "id": "ig.send",
       "label": "פרסום / failover אינסטגרם",
       "tool": "vfigos/SEND.md",
-      "packs": ["vfigos"],
-      "gate": "none",
-      "notes": "Publish tool if connected; else Canva+Drive+Gmail same turn. Never claim feed posted without tool."
+      "packs": [
+        "vfigos"
+      ],
+      "gate": "none"
     },
     {
       "id": "web.research",
       "label": "מחקר ווב",
       "tool": "WebSearch",
-      "packs": ["vfresearch"],
+      "packs": [
+        "vfresearch"
+      ],
       "gate": "none",
       "notes": "Never invent blocked body. Not Treg."
     },
@@ -158,7 +210,12 @@
       "id": "pipeline.advance",
       "label": "התקדמות בשלב צינור",
       "tool": "vfops/hq/PIPELINE-BOARD.md",
-      "packs": ["vfops", "vfconvert", "vfsales", "vfprod"],
+      "packs": [
+        "vfops",
+        "vfconvert",
+        "vfsales",
+        "vfprod"
+      ],
       "gate": "none",
       "notes": "Stages fixed: פנייה→שיחה→הצעה→הדפסה→איסוף. Sale ₪ needs lead."
     },
@@ -166,7 +223,11 @@
       "id": "quote.draft",
       "label": "טיוטת הצעה",
       "tool": "vfsales + vfcopy",
-      "packs": ["vfsales", "vfcopy", "vfcost"],
+      "packs": [
+        "vfsales",
+        "vfcopy",
+        "vfcost"
+      ],
       "gate": "none",
       "notes": "Price stays X ₪ until verified."
     },
@@ -174,7 +235,10 @@
       "id": "cost.material",
       "label": "עלות חומר (גרם × ILS/kg)",
       "tool": "scripts/vfcost.py material",
-      "packs": ["vfcost", "vfops"],
+      "packs": [
+        "vfcost",
+        "vfops"
+      ],
       "gate": "none",
       "path": "packages/vfcost/FILAMENTS.json",
       "notes": "Material only. Missing grams = refuse. No sale ILS. Brief 02: vfcost.py brief."
@@ -183,7 +247,10 @@
       "id": "price.set",
       "label": "קביעת מחיר מכירה",
       "tool": "vfcost + lead",
-      "packs": ["vfcost", "vfsales"],
+      "packs": [
+        "vfcost",
+        "vfsales"
+      ],
       "gate": "lead",
       "notes": "Never invent ₪. Material line is cost.material — not a sale price."
     },
@@ -191,7 +258,9 @@
       "id": "books.pulse",
       "label": "דופק כסף / חשבונות",
       "tool": "vfbooks",
-      "packs": ["vfbooks"],
+      "packs": [
+        "vfbooks"
+      ],
       "gate": "none",
       "notes": "Verified numbers only."
     },
@@ -199,14 +268,22 @@
       "id": "content.pack",
       "label": "חבילת תוכן + כריכות",
       "tool": "vfgrowth + vfcovers",
-      "packs": ["vfgrowth", "vfcovers", "vfigos"],
+      "packs": [
+        "vfgrowth",
+        "vfcovers",
+        "vfigos"
+      ],
       "gate": "none"
     },
     {
       "id": "content.calendar",
       "label": "לוח פרסום קבוע IG",
       "tool": "read-file",
-      "packs": ["vfgrowth", "vfcopy", "vfigos"],
+      "packs": [
+        "vfgrowth",
+        "vfcopy",
+        "vfigos"
+      ],
       "gate": "none",
       "path": "packages/vfgrowth/CALENDAR.md",
       "notes": "Standing Sun/Tue 16:00 reels, Thu 12:00 carousel, Stories 20:30. Schedule on instagram.com. No Meta Suite. No publish from Cursor."
@@ -215,14 +292,15 @@
       "id": "boost.request",
       "label": "בקשת בוסט",
       "tool": "vfigos",
-      "packs": ["vfigos"],
+      "packs": [
+        "vfigos"
+      ],
       "gate": "lead",
       "notes": "Forbidden without lead seat."
     },
     {
       "id": "auto.dm",
       "label": "אוטו־DM",
-      "tool": null,
       "packs": [],
       "gate": "deny",
       "notes": "Always forbidden."
@@ -230,15 +308,15 @@
     {
       "id": "print.job",
       "label": "הדפסה ממשרד",
-      "tool": null,
-      "packs": ["vfprod"],
+      "packs": [
+        "vfprod"
+      ],
       "gate": "deny",
       "notes": "Printers stay on the floor."
     },
     {
       "id": "public.site",
       "label": "אתר שיווקי ציבורי",
-      "tool": null,
       "packs": [],
       "gate": "deny",
       "notes": "Public marketing site / price widget still locked. Internal console is separate (allowed)."
@@ -247,7 +325,10 @@
       "id": "console.internal",
       "label": "קונסולת משרד פנימית",
       "tool": "vfops/hq/COMMAND-SURFACE.md",
-      "packs": ["vfops", "vfbriefux"],
+      "packs": [
+        "vfops",
+        "vfbriefux"
+      ],
       "gate": "lead",
       "notes": "Owner/lead view over packs + capabilities. Not a sixth seat."
     },
@@ -255,21 +336,30 @@
       "id": "mem.who",
       "label": "מי מטפל בעבודה",
       "tool": "scripts/vfmem.py who",
-      "packs": ["vfmem"],
+      "packs": [
+        "vfmem"
+      ],
       "gate": "none"
     },
     {
       "id": "harness.checkpoint",
       "label": "כתיבת checkpoint",
       "tool": "vfharness/state",
-      "packs": ["vfharness"],
+      "packs": [
+        "vfharness"
+      ],
       "gate": "none"
     },
     {
       "id": "revenue.loop",
       "label": "לולאת הכנסה IG",
       "tool": "vfgrowth/experts/REVENUE-LOOP.md",
-      "packs": ["vfgrowth", "vfsales", "vfconvert", "vfinsights"],
+      "packs": [
+        "vfgrowth",
+        "vfsales",
+        "vfconvert",
+        "vfinsights"
+      ],
       "gate": "none",
       "notes": "Offer card per post; pipeline ig_post_ref; TIMELINE-AUTO."
     },
@@ -277,7 +367,9 @@
       "id": "insights.snapshot",
       "label": "הדבקת Insights מאומת",
       "tool": "vfinsights/templates/snapshot-ingest.md",
-      "packs": ["vfinsights"],
+      "packs": [
+        "vfinsights"
+      ],
       "gate": "none",
       "notes": "Owner paste only. No invented metrics."
     },
@@ -285,21 +377,30 @@
       "id": "revenue.weekly",
       "label": "דופק הכנסה שבועי",
       "tool": "vfops/playbooks/WEEKLY-REVENUE-PULSE.md",
-      "packs": ["vfops", "vfinsights", "vfgrowth"],
+      "packs": [
+        "vfops",
+        "vfinsights",
+        "vfgrowth"
+      ],
       "gate": "none"
     },
     {
       "id": "timeline.append",
       "label": "אירוע בציר לקוח",
       "tool": "vfsales/hq/TIMELINE-AUTO.md",
-      "packs": ["vfsales", "vfconvert"],
+      "packs": [
+        "vfsales",
+        "vfconvert"
+      ],
       "gate": "none"
     },
     {
       "id": "instance.onboard",
       "label": "הקמת פרונט חדש",
       "tool": "velvetos/experts/INSTANCE-ONBOARD.md",
-      "packs": ["velvetos"],
+      "packs": [
+        "velvetos"
+      ],
       "gate": "lead",
       "notes": "publish-instance.sh; per-instance owner-memory."
     },
@@ -307,7 +408,10 @@
       "id": "paid.boost.plan",
       "label": "תכנית בוסט בתשלום",
       "tool": "vfigos",
-      "packs": ["vfgrowth", "vfigos"],
+      "packs": [
+        "vfgrowth",
+        "vfigos"
+      ],
       "gate": "lead",
       "notes": "Only after proven organic offer. No auto-DM."
     }

@@ -139,10 +139,6 @@ class EvidenceTests(unittest.TestCase):
         authority.write_bytes(authority.read_bytes().replace(b'\n', b'\r\n'))
         result = self.result()
         self.assertTrue(result['ok'], result)
-    def test_canva_blocked(self):
-        for tool in ['Canva.generate-design', 'vfcanva', 'CANVA.export']:
-            self.ev['tools'] = [tool]
-            self.assertFalse(self.result()['ok'])
     def test_missing_source_ingest_receipt(self):
         self.ev.pop('source_ingest')
         result = self.result('production')
@@ -722,10 +718,6 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(result['publication_evidence_phase'], 'production')
         self.assertFalse(result['production_evidence']['publishAuthorized'])
 
-    def test_generic_canva_transport_diagnostic_unchanged(self):
-        report = {'channels': {'canva': {'ready': True}}}
-        self.assertEqual(send.gate_channel(report, 'canva'), 0)
-
     def test_final_mov_requires_normalization(self):
         (self.root / 'final.jpg').rename(self.root / 'final.mov')
         self.ev['outputs'][0]['path'] = 'final.mov'
@@ -789,7 +781,6 @@ class EvidenceTests(unittest.TestCase):
 def legacy_text():
     """An apparently approved v3 record with nonexistent files and failed truth."""
     fields = {'publish_gate_schema': '3', 'publish_gate': 'PASS', 'approval_invalidated': 'false',
-       'visual_standard_canva_asset_id': send.VELVET_VISUAL_STANDARD_ASSET,
        'visual_standard_artifact_sha256': send.VELVET_VISUAL_STANDARD_SHA256,
        'visual_standard_document': send.VELVET_VISUAL_STANDARD_DOCUMENT,
        'product_truth_source_refs': 'missing-source.jpg', 'generated_brand_mark': 'NONE',

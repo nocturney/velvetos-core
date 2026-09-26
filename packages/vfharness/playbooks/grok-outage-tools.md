@@ -15,9 +15,7 @@
 | Gmail MCP | `ready` | קריאה + **`send_message`** בריף משרד אל `nocturney@gmail.com` | reply / forward / שליחה ללקוח — נעול |
 | Calendar MCP | `ready` | קריאה + **`create_event`** למשבצת חיה שכבר בלוח התוכן | לא נעול לקריאה / אירוע משובץ |
 | Drive MCP | `ready` | חיפוש לפי שם עבודה | לא (בלי תיקיות אישיות) |
-| Canva MCP | `ready` | עיצוב / export · `.cursor/mcp.json` → `https://mcp.canva.com/mcp` | Publish ל־IG — אין כלי |
-| `vfcanva/studio/render.py` | על הדיסק | PNG אם Canva נופל | לא |
-| Superdesign | skill, אין namespace כאן | גרפיקה אם Canva נופל | failover ל־render.py |
+| Superdesign | non-publication graphics only when separately authorized | not a VF publication fallback |
 | Treg | אין namespace | חי web / Insights | דולג · אין ספירה / HeyOrca למוזיקה |
 | Mobbin | אין namespace | UX בריף | תבניות `vfbriefux` |
 | ChatGPT / Gemini / Perplexity | אין MCP | מחקר 06:15 | דיסק + «אין חדש במשרד» |
@@ -29,7 +27,6 @@
 1. קריאת תיבה / לוח / דרייב־לפי־שם.
 2. `render_mail.py` ואז שליחה — בריף 07:00 אל `nocturney@gmail.com` בלבד (`htmlBody` תצוגה 3 מ־`vfbriefux/MAIL.html` + כריכות `cid`). מועדף `python -m vfops.gmail_brief_send`. MCP גדול מדי: `create_draft` → `update_draft` מצורפים → `send_message(draftId)` (`docs/SEND-BRIEF-MCP.md`). אין `LOAD_FROM_FILE`. MAIL-PACK הוא חלופת טקסט אם MCP נופל. בלי לחיצת בעלים.
 3. `create_event` — משבצת חיה שכבר קיימת ב־`vfgrowth` (למשל G005 חמישי 12:00).
-4. Canva + `render.py` + שקפים ב־`vfcovers`.
 5. תור `#מוכן-ל-Grok` / `#פרסום-חי-דחוף` + LIVE-PACKET.
 
 ## מה נשאר נעול (אין כלי, לא רק מדיניות)
@@ -45,9 +42,10 @@
 | נפל | מעבירים ל־ |
 |---|---|
 | Grok מכסה | הכלים בטבלה למעלה |
-| Canva `needsAuth` | `packages/vfcanva/studio/render.py` → Superdesign |
 | Treg / Mobbin / תזמורת בלי MCP | פקים על הדיסק · «אין ספירה» / «אין חדש במשרד» |
 | Gmail MCP down | MAIL-PACK להדבקה ידנית · לא ממציאים פנייה |
 
 נוהל פרסום: `playbooks/grok-failover.md`.  
 מסמך קבע: `docs/GROK-FAILOVER.md`.
+
+Current publisher: Cloudflare Instagram Publisher -> Meta Instagram Graph. OpenPost frozen. Tool authority: `packages/velvetos/TOOL-STATUS.json`.

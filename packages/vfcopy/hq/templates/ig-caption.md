@@ -36,7 +36,6 @@
 - בלי פתיחה ב«מוכנים» / «בלי משלוח» / «קיים במלאי».
 - בלי קופי דק כמו G004 המוקדם.
 - בלי TikTok / בוסט / follow-back / אאוטבאונד.
-- Canva לוויזואל — לא טקסט מומצא על הרצפה.
 - אחרי שלד: `skills/velvet-hebrew-copy/` + `python3 scripts/check-vfcopy.py lint`. חסר עובדה → `needs_input`.
 
 ## פורmat פלט — תהליך-קצר

@@ -8,7 +8,6 @@ FAILURE = "visual_execution_unavailable"
 
 SURFACES = [
     'AGENTS.md',
-    '.cursor/skills/vf-canva-instagram/SKILL.md',
     '.cursor/skills/vf-content-sprint/SKILL.md',
     '.cursor/skills/velvet-creative-director/SKILL.md',
     '.cursor/skills/velvet-brand-guardian/SKILL.md',
@@ -18,7 +17,6 @@ SURFACES = [
     'packages/vfgrowth/PREFLIGHT.md',
     'packages/vfgrowth/GATE.md',
     'packages/vfcovers/SKILL.md',
-    'packages/vfcanva/WORKFLOW.md',
     'packages/vfom/CREATIVE-AUTOPILOT.md',
     'packages/vfom/SKILL.md',
     'packages/vfigos/SEND.md',

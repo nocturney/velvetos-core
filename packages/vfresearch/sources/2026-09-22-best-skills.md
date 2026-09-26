@@ -12,7 +12,6 @@ Cadence: due (lastPass 2026-09-20 → ~48h at Research Seat wake; inside 48h+4h 
 | grill-me / grill-with-docs / handoff / teach / triage | Best 100 | already embedded `vfconvert` / `vfharness` |
 | diagnosing-bugs / improve-codebase-architecture / codebase-design / domain-modeling / research / to-spec / wayfinder | Best 100 | already embedded or watch (mattpocock); no new embed |
 | self-improving / self-improving-agent | Best 100 | office-learning + vfops retro; **second self-improving runtime locked** |
-| hyperframes / remotion / genmedia (video-edit, ai-video, image-to-video, ai-music, ai-image) | Best 100 mid | map only via expert-media-director + Canva-first; no Veo/Kling from HQ |
 | reddit-automation | Best 100 | **דולג** — growth / auto-post outside VF CTA + no auto-DM |
 | Azure / Prisma / Neon / Supabase blocks | Best 100 heavy | not VF office domain |
 | obra/superpowers, mattpocock/skills, anthropics/skills | known top-repos | partial+ already; TDD/git-worktrees remain watch |

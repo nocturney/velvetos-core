@@ -1,105 +1,73 @@
 # שליחת אינסטגרם מ־HQ
 
-## VF_PUBLICATION_ROUTE_V1 - current publication scope
+## Canonical publication route — 2026-09-26
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
-Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
-מושב: **צמיחה**. לא מחכים לגרוק. לא מחכים לכריסטיאן.
+### Active transport
 
-פרוטוקול מלא: `constitution/SEND.md`.  
-MCP קנוני: [`CONNECT-IG.md`](CONNECT-IG.md) (`adelaidasofia/instagram-mcp`).  
-Publishing control-plane: [`OPENPOST.md`](OPENPOST.md) + [`OPENPOST.json`](OPENPOST.json) — את `integrationMode` וסטטוס ה־runtime קוראים **טרי מ־OPENPOST.json** בכל ריצה; OpenPost אינו עוקף את ה־MCP הקנוני, שערי האיכות או הרשאת המסירה החתומה.
-Transport קנוני למדיה פרטית: [`PUBLISH-BRIDGE.md`](PUBLISH-BRIDGE.md) + [`PUBLISH-BRIDGE.json`](PUBLISH-BRIDGE.json).
-Authenticated write boundary: [`approval/OPERATOR-SETUP.md`](approval/OPERATOR-SETUP.md) — כל Instagram write mutation דורש receipt חתום `velvet.delivery_approval.v1` מה־dedicated issuer.
+1. **Scheduled publication:** `packages/vfigos/cloudflare-publisher/` — Cloudflare Worker + D1 + KV + cron every minute.
+2. **Publication target:** official Meta Instagram Graph API.
+3. **Read/live verification:** the existing Instagram Graph/MCP verification surface (`list_media` / `get_media` or equivalent canonical read-back).
+4. **OpenPost:** **FROZEN**. No new schedule, queue, retry, release watch, health dependency or failover may be routed to OpenPost. Historical OpenPost evidence is provenance only.
+5. **Meta Ads MCP:** Ads/Marketing scope only. It is not the organic Instagram publisher and must not be used as one.
 
-## סדר
+Machine-readable authority: `packages/velvetos/TOOL-STATUS.json`.
 
-1. כיתוב סופי ב־`vfcopy` — **PUBLIC_CURRENT_CTA** = הודעת Instagram / «הזמנות» / איסוף שדרות (`constitution/PUBLIC_CTA.md`). לא «שלחו DM». לא וואטסאפ בכיתוב. מקסימום 5 האשטגים. לא אוטו־DM. לא ₪ מומצא.
-> LEGACY / provenance only for VF publication; not a provider route: 2. מדיה: גרסה מאושרת במאגר (`docs/MEDIA-VAULT.md` · `packages/vfmedia/catalog.json`) עם `versionApproval` לגרסה המדויקת; תיקיית מאושר לבד אינה הוכחה. יצירה/עריכה ב־Canva או `studio/render.py` חוזרת למסלול נגזרת→אישור.
-3. **QA final render + PREFLIGHT v2** — לפני transport/publish, בודקים את הייצוא הסופי עצמו. לסטורי: Brand Guardian + copy QA + readability + contrast = `PASS`; Rubric ≥20/25; `artifact_digest`; ו־`final_package_sha256` של חבילת הפריימים המדויקת. אין waiver ל״ניגודיות רכה״. שינוי ויזואל/קופי אחרי אישור מבטל את האישור.
-4. **Publish Bridge** — כאשר הנגזרת אינה כבר ב־HTTPS ציבורי מתאים, מעבירים **רק את הנגזרת שאושרה לפרסום** דרך `PUBLISH-BRIDGE.md`: normalize → strip metadata → content hash → stage בענף `publish-bridge` → external fetch verify. אסור לשנות שיתוף של המקור ב־Drive. `staged`/`fetch_verified` ≠ published.
-5. **פריפלייט שליחה** — בדיקת transport בלבד מותרת לאבחון:
-   ```bash
-   python3 scripts/vf_send_preflight.py --gate instagram --transport-only
-   ```
-   אבל היא **לעולם אינה הרשאת publish**. לפני כל apply — בין אם OpenPost ובין אם `publish_*` ישיר — חובה:
-   ```bash
-   python3 scripts/vf_send_preflight.py --gate instagram \
-     --content-id <GID> --format <story|reel|carousel|post> \
-     --approval-ref packages/vfgrowth/preflight/<GID>.md \
-     --package-sha256 <SHA256-OF-EXACT-FINAL-PACKAGE>
-   ```
-   exit `0` + `publication_quality.publishAuthorized=true` מוכיחים publication/preflight eligibility בלבד. exit `1/2` = **לא מפרסמים**; מתקנים איכות או מבצעים failover transport לפי הסיבה.
-   עבור תוצר שנוצר ב־VF Project Revision `6.6.9`, PREFLIGHT schema `4` רשאי לצרוך ישירות את `.vf-run.json` + `release.json` + reviews + transport-QA (נוצר רק ע״י `scripts/vf_project669_transport.py`) + caption receipt דרך `scripts/vf_project669_publication.py`. אסור לתרגם את הריצה בדיעבד לראיות legacy מומצאות. ה־runner נשאר `publication_authorized=false`; רק owner approval + שער השליחה נותנים publication eligibility.
-6. **הרשאת מסירה חתומה — חובה לפני mutation** — לפני כל write ל־Instagram, גם דרך OpenPost וגם דרך direct Instagram MCP, ה־mutation boundary חייב לקבל receipt תקף וחתום מסוג `velvet.delivery_approval.v1` מה־dedicated issuer, קשור ל־action ול־final package המדויק. `publicationEvidence`, PREFLIGHT, standing authorization, transport readiness או תשובת provider אינם תחליף. אם `approval/OPERATOR-SETUP.md` / live evidence הוא `NEEDS_OPERATOR_SETUP`, או שה־receipt חסר/לא תקף/לא תואם — **אין write**. Direct Instagram MCP אינו approval bypass.
-7. **בחירת נתיב apply** — office logic נשאר capability-based וקורא את `OPENPOST.json` בזמן אמת:
-   - אם `integrationMode` הוא `staging` או `primary-control-plane`, ה־runtime מאומת ובריא, provider prerequisites הושלמו, ה־artifact הוא אותו hash שאושר, ו־delivery approval תקף עבר את ה־mutation boundary — מותר להעביר ל־OpenPost לצורך queue/schedule/publish. תשובת OpenPost מסמנת לכל היותר `publishRequested`/delivery status, לא `liveVerified`.
-   - לכל `publish_image` מתוזמן ב־production חובה להכין בזמן staging גם `velvet.instagram_failover.v1` דרך `packages/vfigos/failover/prepare_manifest.py`, קשור לאותו `content_id`, package SHA, media SHA, `publication_id` ו־`rendition_id`. עבור package שכבר owner-approved ומתוזמן, עצם העברת `--scheduled-at-utc` מארימה auto-failover כברירת מחדל עם חלון recovery של 30 דקות; `--no-auto-failover` הוא opt-out מפורש בלבד. ה־manifest הוא recovery evidence ואינו authorization בפני עצמו; ה־watcher עדיין דורש duplicate check, PREFLIGHT חדש ו־`safe_to_failover=true` לפני write, ובמקביל coverage audit מסמן `UNPROTECTED_SCHEDULE` לכל image schedule פעיל שאין לו manifest חמוש.
-   - אם OpenPost הוא `paused` (המצב הנוכחי: הפרסום מוקפא), `shadow`, `degraded`, לא מאומת או נכשל — direct Instagram MCP הוא same-turn transport failover בלבד: תמונה `publish_image`; קרוסלה `publish_carousel`; ריל/וידאו `publish_reel`/`publish_video`; סטורי `publish_story`. גם בנתיב זה אותו `velvet.delivery_approval.v1` תקף הוא תנאי write.
-8. **אימות אחרי שליחה נשאר עצמאי** — `list_media` / `get_media` מה־Instagram MCP הקנוני מאשרים שהמדיה חיה. רק אז `#נשלח-מ-HQ` ו־`liveVerified`. success מ־OpenPost או `publish_*` בלי אימות חי → `publish_pending_verification`.
-8a. **Media Vault closeout** — רק אחרי `liveVerified`, מזיזים ב־Drive את **הנגזרת המדויקת שפורסמה** מ־`04 - מאושר לפרסום` ל־`05 - פורסם` (Folder ID `19A-_QOSvII-CvxjRMpQ2j5Z46UAjeNep`). באותה פעולה לוגית מעדכנים את שורת `packages/vfmedia/catalog.json`: `status=published` + `publication.state=published_verified` + provider/mediaId/permalink/publishedAt/verifiedAt + `publishedDerivative`. אם ה־live match חסר/שגוי, לא מזיזים את הקובץ מ־04. המקור נשאר ב־02.
-9. **Failover** — כשל OpenPost מחזיר ל־Instagram MCP באותו תור **רק אם אותה הרשאת delivery תקפה מאפשרת את ה־write**. ל־`publish_image` owner-approved ומתוזמן, GrokBot רשאי להפעיל רק את `packages/vfigos/failover/grok_client.py`/ה־trusted runner. לפני `--execute` ה־runner חייב להריץ duplicate check, PREFLIGHT חדש ו־OpenPost state check; write נוסף מותר רק כאשר `safe_to_failover=true` (אין job פעיל, ה־publication/rendition נכשלו, ותוצאת ה־provider מוכחת כ־definite + retry-safe/idempotent). `processing`, `ambiguous`, `reconcile_only`, `manual_resolution`, outcome לא ידוע או live duplicate חוסמים write נוסף. ה־runner מנפיק receipt חדש לאותו payload ומאמת `get_media` אחרי publish. אם Publish MCP אינו חי או write authorization אינו תקף → אין mutation; משתמשים רק בנתיב handoff המאושר הקיים בלי להעמיד פנים שהפיד עלה. אין idle ואין bypass.
-10. אסור לכתוב שעלה לפיד אם לא עלה. Calendar / upload / bridge staging / OpenPost scheduled / delivery accepted / publishRequested ≠ live. אסור בוסט. אסור אוטו־DM.
+## Creative and media safety bindings
 
-## OpenPost — גבולות סמכות
+- Canonical media authority: `docs/MEDIA-VAULT.md` + `packages/vfmedia/catalog.json`.
+- Publication preparation must follow `packages/vfom/PUBLICATION-PREP-EXECUTION.md`: selection/caption/planning alone is incomplete; if a required visual cannot be executed, fail closed as `visual_execution_unavailable`.
+- Brand handling must follow `packages/vfom/BRAND-ASSET-LOCK.md`; generated or invented brand marks are prohibited.
+- Transformation must follow `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md`: `raw_passthrough: false` and at least one fully treated hero before publication review.
+- Private-source derivatives route through `packages/vfigos/PUBLISH-BRIDGE.md` / `publish-bridge`; archived transport evidence lives under `publish-bridge/archive`, with `archiveRetention=unlimited` and `deleteArchived=false`.
+- A publish request is not live proof. Require publish receipt and then verify through `list_media` / `get_media` or equivalent Meta Graph read-back before any live claim. Only that verified state may be called `liveVerified`.
 
-OpenPost הוא שכבת publication operations בלבד: scheduler, queue, retry/delivery status, multi-channel control ו־analytics collection. כלי AI writing/image/video שלו אינם מקור סמכות ל־creative approved ואינם רשאים לעקוף את `vfcopy`, `packages/vfom/PUBLICATION-PREP-EXECUTION.md`, Product Truth, Media Vault/versionApproval, Owner-Approved Grid Standard, Brand Guardian, PREFLIGHT/publicationEvidence, rights/privacy, exact-hash binding או `velvet.delivery_approval.v1`. מדיניות גרסאות ו־upgrade: `OPENPOST.md`/`OPENPOST.json` — production נעוץ לגרסה מדויקת, לא `latest`.
+## Preconditions
 
-## חוזה איכות → הרשאה → פרסום
+- Run `scripts/vf_send_preflight.py` against the exact current package and respect its fail-closed result.
+- Use the exact approved final package/hash.
+- Pass the current creative/publication preflight and all rights/privacy/brand/copy gates.
+- A scheduled/accepted job is not proof of publication.
+- Media bytes uploaded to the Worker are SHA-256 bound; the job is HMAC-bound.
+- Any failure at or after the `media_publish` boundary becomes `reconcile_required`; never blind-retry an ambiguous write.
+- Only a Meta Graph media id plus live read-back/permalink may become `published_verified`.
+- No auto-DM. No boost/Ads without the separate lead gate. No invented metrics or publication success.
 
-`transport-ready` ≠ `creative-approved` ≠ `publication-authorized` ≠ `delivery-authorized` ≠ `published_verified`.
+## Scheduling
 
-האישור חייב להתייחס **לאותו hash** שמגיע ל־Publish Bridge/OpenPost/Instagram. אסור למחזר PREFLIGHT ישן אחרי שינוי תוצר או אחרי שינוי במדיניות האיכות. PREFLIGHT חדש חייב להיות schema `3` במסלול legacy publicationEvidence או schema `4` במסלול VF Project 6.6.9 הישיר. גם PREFLIGHT תקף אינו הרשאת write בלי receipt חתום `velvet.delivery_approval.v1` שעובר את ה־mutation boundary.
+For a scheduled image/carousel:
 
-## Publish Bridge — כללי בטיחות
+- upload only the approved derivative bytes to the Cloudflare publisher;
+- verify returned SHA-256 matches the exact source bytes;
+- create the job with exact `content_id`, `package_sha256`, caption, ordered media list and authorization evidence;
+- read the job back and verify `scheduled_at`, media count/order and `status=scheduled`;
+- after due time require `published_verified` and independent Instagram read-back.
 
-- source of truth למדיה נשאר Drive/Media Vault; ה־bridge הוא transport בלבד ואינו קטלוג שני.
-- `approved_for_public_release` הוא שער קשיח. upload או folder placement לא מספיקים.
-- correlation בנתיב חייב להיות non-PII; לא שם לקוח.
-> LEGACY / provenance only for VF publication; not a provider route: - metadata ציבורי שומר hash של source reference, לא URL פרטי של Drive/Canva.
-- archive יומי מעביר נכסים שיצאו מחלון ה־active מ־`publish-bridge/assets` אל `publish-bridge/archive`; `archiveRetention=unlimited` ו־`deleteArchived=false`. אין מחיקה אוטומטית ואין overwrite על collision.
-- לכן בענף מותרת רק נגזרת שממילא מותר לפרסם לציבור.
+The migrated production job `VF-OCTOPUS-20260927-CAROUSEL` is recorded under `cloudflare-publisher/migrations/2026-09-24-openpost/`. The old OpenPost record was cleared from active scheduling during migration.
 
-## דפוס validate → transport → authorize → apply → verify
+## Immediate publication
 
-| שלב | כאן |
-|---|---|
-| validate | PREFLIGHT v2 + publicationEvidence + exact final-package hash + Brand/Copy/Readability/Contrast + rights/privacy |
-| transport | Publish Bridge רק לנגזרת המאושרת; HTTPS fetch verified |
-| authorize | signed `velvet.delivery_approval.v1` מה־dedicated issuer; exact action/package binding; mutation boundary PASS |
-| apply | OpenPost כשהוא מאומת ומורשה **או** `publish_*` ישיר; direct MCP דורש אותה הרשאת delivery ואינו bypass |
-| verify | `list_media` / `get_media` מה־MCP הקנוני · לא «פורסם» בלי ראיה · אחרי live match סוגרים 04→05 + catalog publication evidence |
+For explicitly authorized immediate operations, canonical direct write tools may include `publish_image` / carousel/reel/story equivalents. They are never scheduler evidence and still require live read-back.
 
-## אסור
+When an explicitly authorized immediate publish uses the existing Instagram write boundary directly, it must still use the same exact approved package and live verification discipline. Direct mutation is not an approval bypass and is not the scheduler of record.
 
-- לפרסם על בסיס `--transport-only`
-- למחזר approval ישן שלא קשור ל־final package המדויק
-- לבצע Instagram write בלי `velvet.delivery_approval.v1` חתום ותקף
-- להשתמש ב־direct Instagram MCP כדי לעקוף delivery approval
-- waiver לניגודיות/קריאות חלשות
-- לתת ל־OpenPost AI/editor להפוך תוכן ל־approved בלי ה־pipeline הקנוני
-- להריץ production על image/tag `latest` של OpenPost
-- סרק / «תעלה ידנית» כברירת מחדל
-- להפוך מקור/תיקיית Drive לציבוריים כדי לפתור transport
-- לשים publish binaries על `main`
-- להכניס ל־`publish-bridge` חומר שלא עבר `approved_for_public_release`
-- להמציא Insights אחרי «שליחה»
-- לטעון live מ־OpenPost או publish tool בלי verify
-- Treg · אוטו־DM · `INSTAGRAM_MCP_DM_ENABLED`
+## Truth states
 
-## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
+`prepared != scheduled != publishing != published_verified`
 
-> LEGACY / provenance only for VF publication; not a provider route: This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVL7PKpvE` and SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.
+`retry` is allowed only for failures proven to be pre-publish.
 
-## Publication-prep execution gate
+`reconcile_required` means the system cannot safely infer whether the write happened; no second write until reconciled.
 
-For Velvet Factory requests that mean prepare/treat/edit content for a potential publication, `packages/vfom/PUBLICATION-PREP-EXECUTION.md` is mandatory. This is an execution task: when usable images and an editing capability exist, selection/caption/planning alone is incomplete. Produce at least one real edited visual artifact, preserve Product Truth, run exact-final visual QA, and only then package copy for owner review. If visual execution is unavailable, fail closed as `visual_execution_unavailable`; never claim ready from raw photos plus copy. Resolve public CTA from current authority; never hardcode the business WhatsApp number into public content from memory.
+## Forbidden
 
-## Brand asset + public CTA lock
+- OpenPost as active scheduler, queue, retry engine, release watch, fallback or source of schedule truth
+- treating Meta Ads MCP as organic Instagram publishing
+- blind retry after `media_publish`
+- claiming live from an accepted job without Graph read-back
+- auto-DM
+- Treg
 
-`packages/vfom/BRAND-ASSET-LOCK.md` is mandatory for Velvet Factory public creative. Never ask a generative image model to invent/render a Velvet Factory logo, wordmark or logo-like brand lockup. If an exact owner-approved logo asset is not available to the job, use no logo. If it is available, composite that exact asset deterministically after generation/editing. Base generative prompts must explicitly say `NO LOGO · NO WORDMARK · NO PHONE NUMBER · NO WHATSAPP · NO CONTACT BAR`. Public CTA must resolve from `constitution/PUBLIC_CTA.md`; `050-2517000` is forbidden in public creative/caption unless the owner explicitly requests that exact public use in the current task.
+## VF_VISUAL_STANDARD_GATE
 
-## Creative transformation lock
-
-For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md` is mandatory. Preserve the real product, but do not pass through raw/source photos as the finished creative. At least one review visual — normally the hero/first slide — must show a meaningful approved Velvet treatment around the source-locked product. Default to editing the real source image, not recreating the product from text. Multiple photos do not imply a carousel; if carousel is chosen, slide 1 must be a fully treated hero. `raw_passthrough=true`, an essentially untouched source carousel, or crop/exposure-only work presented as publication-grade is FAIL. Generative edits must explicitly contain NO LOGO, NO WORDMARK, NO PHONE NUMBER, NO WHATSAPP, NO CONTACT BAR, NO GENERATED HEBREW TEXT.
+Before public creative execution, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`. Bind SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897` and require `visualStandard.gate=PASS`. Missing/mismatched authority is `visual_standard_unavailable`; generic visual fallback is forbidden.

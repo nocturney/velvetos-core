@@ -15,7 +15,6 @@ Make publication-prep complete on the first response when tools/sources permit, 
 6. **TEXT_WINS / NO_TEXT:** text is not mandatory. If NO_TEXT wins, the selected clean visual may itself be the final artifact, but that is a deliberate final decision, not an accidental stop after the generation/edit stage.
 
 ## Non-goals
-No change to Product Truth, multi-source provenance, camera-angle label policy, logo/CTA rules, four aesthetic references, Canva prohibition or publication authorization.
 
 ## Acceptance
 - Contract 6 / Revision 6.6.1 / `VF-PROJECT-6.6.1-FIRST-PASS-CREATIVE-CONTINUITY`.

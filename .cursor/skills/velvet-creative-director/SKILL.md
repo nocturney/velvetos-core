@@ -7,7 +7,6 @@ description: Direct Velvet Factory organic social creative from real studio proo
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 Operate as the single creative-planning specialist inside VelvetOS. `vf-content-sprint` remains the orchestrator.
@@ -46,8 +45,7 @@ Before creative preflight, materialize each current-chat product attachment thro
 
 ## Cold-start Visual Standard Load Gate
 
-> LEGACY / provenance only for VF publication; not a provider route: Before any concept, hook, storyboard, edit direction or cover direction, load the owner-approved visual standard and verify its identity against `VISUAL-DNA.json`: status `approved`, Canva asset `MAHVL7PKpvE`, artifact SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. Record a `visualStandard` PASS block in the Creative Manifest before creative work begins. If any authority is missing or mismatched, fail closed before concept generation; never fall back to generic 3D-print, stock, template or model-default aesthetics. Product Truth and real source evidence always outrank the style reference.
-
+Before concepting, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md`, `packages/vfom/VISUAL-DNA.json` and the approved local reference image. Verify the bound SHA-256 and persist `visualStandard.gate=PASS` in the Creative Manifest. Missing/mismatched authority is `visual_standard_unavailable` and blocks generic fallback.
 
 1. Start from real proof or a named evidenced studio opportunity. Never invent a floor scene, measurement, failure, load result, customer outcome or product geometry.
 2. Select a format genome or justify a new structure. Prefer proof-first structures over generic product montage.
@@ -64,7 +62,6 @@ Before creative preflight, materialize each current-chat product attachment thro
 
 ## Required manifest contribution
 
-> LEGACY / provenance only for VF publication; not a provider route: Write or update `visualStandard`, `concept`, `hook`, `shots`, `edit`, `overlays`, `cover` and `status`. For publication delivery, also bind `publicationEvidence.creative_master` + `publicationEvidence.creative_master_materialization`, and ensure exact-final review records `creative_continuity=PASS` + `creative_master_materialized=PASS`; a replacement must carry an allowed recorded cause. `visualStandard.gate` must be `PASS` with the canonical document, public reference, Canva asset ID and artifact SHA before concept/render/publish work can advance. Keep factual claims linked to the Content Contract; a real asset is not universal claim proof. For Hebrew visual microcopy, record the human-copy/Humanizer pass and the `TEXT_WINS` or `NO_TEXT` decision in the existing manifest QA/decision fields until a dedicated schema field is added.
 
 ## Human surface
 
@@ -81,4 +78,3 @@ For Velvet Factory requests that mean prepare/treat/edit content for a potential
 ## Creative transformation lock
 
 For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md` is mandatory. Preserve the real product, but do not pass through raw/source photos as the finished creative. At least one review visual — normally the hero/first slide — must show a meaningful approved Velvet treatment around the source-locked product. Default to editing the real source image, not recreating the product from text. Multiple photos do not imply a carousel; if carousel is chosen, slide 1 must be a fully treated hero. `raw_passthrough=true`, an essentially untouched source carousel, or crop/exposure-only work presented as publication-grade is FAIL. Generative edits must explicitly contain NO LOGO, NO WORDMARK, NO PHONE NUMBER, NO WHATSAPP, NO CONTACT BAR, NO GENERATED HEBREW TEXT.
-

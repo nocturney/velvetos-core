@@ -25,7 +25,6 @@
 - שלב: פנייה|שיחה|הצעה|הדפסה|איסוף
 - מקור: Gmail thread id / WhatsApp (אדם) / IG …
 - ig_source: post|reel|story|carousel
-- ig_post_ref: YYYY-MM-DD / Canva id / hook
 - offer_sku: מק״ט או שירות
 - חסרים: …
 - מחיר: X ₪ | <סכום מאומת + מקור>

@@ -7,7 +7,6 @@
 
 אם יש **סיכוי** שסקיל HQ רלוונטי למשימה — **קוראים אותו לפני** תשובה / חיפוש / עריכה.
 
-תהליך לפני יישום. סקיל תהליך (harness / inquiry / morning / best-skills) לפני סקיל ביצוע (Canva / content).
 
 ## במשרד
 
@@ -15,7 +14,6 @@
 |---|---|
 | בריף בוקר | `vf-morning-brief` |
 | פנייה / הצעה | `vf-inquiry-chain` |
-| תוכן / IG | `vf-content-sprint` / `vf-canva-instagram` |
 | דירוג סקילים / קישור השראה | `vf-best-skills` / `vf-weekly-links` |
 | רתמה / סנסור / checkpoint | `vf-harness` |
 | סוף יום | `vf-daily-learning` |

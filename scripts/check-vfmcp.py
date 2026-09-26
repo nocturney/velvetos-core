@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+TOOL_STATUS = ROOT / "packages" / "velvetos" / "TOOL-STATUS.json"
 GAP = ROOT / "packages" / "vfmcp" / "GAP.md"
 FIT = ROOT / "docs" / "MCP-FIT.md"
 SHEETS = ROOT / "packages" / "vfbooks" / "SHEETS.md"
@@ -19,7 +20,6 @@ CONNECT_3DAI = ROOT / "packages" / "vfprod" / "CONNECT-3DAI.md"
 PLAYBOOK_3DAI = ROOT / "packages" / "vfprod" / "3DAISTUDIO.md"
 
 REQUIRED_MCP = {
-    "canva": "https://mcp.canva.com/mcp",
     "threedaistudio": "https://mcp.3daistudio.com/mcp",
     "studiomcphub": "https://studiomcphub.com/mcp",
 }
@@ -41,7 +41,7 @@ VF_CHATGPT = ROOT / "scripts" / "vf_chatgpt.py"
 NEEDLES_GAP = (
     "WebSearch",
     "GenerateImage",
-    "Canva",
+    "Cloudflare",
     "skip",
     "אין בכוונה",
     "SHEETS.md",
@@ -141,13 +141,11 @@ def main() -> None:
 
     desk = json.loads(DESK.read_text())
     tools = desk.get("tools") or {}
-    for key in ("web", "image", "canva"):
+    for key in ("web", "image"):
         if key not in tools:
             fail(f"vf-desk.json tools missing {key}")
         if not (tools[key].get("failover") or ""):
             fail(f"vf-desk.json tools.{key} must declare failover")
-    if (tools.get("canva") or {}).get("status") != "ready":
-        fail("vf-desk.json canva.status must be ready after Cloud Agent verify")
 
     threed = tools.get("threedaistudio") or {}
     if not threed:
@@ -590,7 +588,7 @@ def main() -> None:
         fail(f"vf_send_preflight.py must print JSON: {exc}")
     if not report.get("ok") or "channels" not in report:
         fail("vf_send_preflight.py report missing ok/channels")
-    for need in ("gmail", "instagram", "canva", "gemini", "chatgpt"):
+    for need in ("gmail", "instagram", "gemini", "chatgpt"):
         if need not in report["channels"]:
             fail(f"vf_send_preflight.py missing channel {need}")
     proc4 = subprocess.run(
@@ -655,7 +653,7 @@ def main() -> None:
     if "contents: write" in ig_wf_text or "git push" in ig_wf_text:
         fail("instagram-read-smoke.yml must stay read-only (no write/push)")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api+chatgpt-api+instagram-mcp+icloud+send-preflight+ig-read-smoke")
+    print("OK vfmcp gap+sheets+desk web/image+3daistudio+office-mcp+gemini-api+chatgpt-api+instagram-mcp+icloud+send-preflight+ig-read-smoke")
 
 
 if __name__ == "__main__":

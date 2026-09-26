@@ -9,9 +9,8 @@ Asia/Jerusalem. The **live protected Grok Bot routine inventory** is the clock a
 | **01:45** | VelvetOS Integrity Guard | Verify/repair the protected active automation set before daily workloads. |
 | **02:00** | Velvet Research Seat | Daily live research. Finish by the **07:00 cutoff** as `ready_for_brief`, `no_meaningful_findings`, or an explicit blocker. Consumer output is `packages/vfops/data/research.md` for the 09:00 brief. |
 | **06:30** | Cognee Memory Sync | Refresh/verify the local derived Cognee/vfmem index; stay silent when current and healthy, report exact blockers/anomalies only. |
-| **07:15** | OpenPost Release Watch | Daily condition watch for upstream OpenPost changes; silent when unchanged. |
-| **09:00** | Velvet Morning Brief | Owner-facing Morning Green v3.1 brief from current live sources. Persist the same-day canonical factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`, refresh OpenPost schedule truth and materialized thumbnails, project through `prepare_morning_green.py`, then deliver only through the canonical GitHub/Gmail path. Delivery still requires Gmail provider evidence, not merely generated files. |
-| **10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 Morning Green delivery; recover only if absent/unverified. Recovery must persist/rebuild the same-day factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`, refresh current OpenPost evidence, rebuild the same Morning Green route and use the canonical Gmail path. `backfill artifact is not a delivery receipt`, and recovery must not silently downgrade to V10.3. |
+| **09:00** | Velvet Morning Brief | Owner-facing Morning Green v3.1 brief from current live sources. Persist the same-day canonical factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`, refresh Cloudflare Instagram Publisher queue truth and approved publication media evidence, project through `prepare_morning_green.py`, then deliver only through the canonical GitHub/Gmail path. Delivery still requires Gmail provider evidence, not merely generated files. |
+| **10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 Morning Green delivery; recover only if absent/unverified. Recovery must persist/rebuild the same-day factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`, refresh current Cloudflare Instagram Publisher evidence, rebuild the same Morning Green route and use the canonical Gmail path. `backfill artifact is not a delivery receipt`, and recovery must not silently downgrade to V10.3. |
 | **10:30** | VelvetOS Office Loop | Post-brief operations: blockers, production→content, readiness/publishing and system drift. |
 | **18:30** | VelvetOS Office Loop | Second sweep: changes since morning, autonomous completion, learning/state persistence and end-of-day handoff. |
 
@@ -21,7 +20,7 @@ Weekly / קאדנס שבועי: `Cognee Stable Updates` runs Monday at 10:00 and
 
 `Cognee Memory Sync` (`cognee-memory-sync`) and `Cognee Stable Updates` (`cognee-stable-updates`) are live, enabled Grok Bot routines in `Asia/Jerusalem`, verified by provider readback on 2026-09-23. Their exact prompts, schedules and readback evidence are recorded in `automation/grok/cognee-routines.json`. The two matching ChatGPT automation copies were disabled only after that verification, so Grok Bot is now the sole scheduler for these two jobs.
 
-`VelvetOS Integrity Guard` is a finite single-pass 01:45 audit. It repairs only the protected routines, verifies once, then exits; it is not a continuous monitor. The protected-set contract does not authorize deleting, pausing, or rewriting a new unlisted routine merely because it is outside the nine protected entries. Known legacy routines remain disabled; an unknown extra routine is left untouched and surfaced as a conflict unless Christian explicitly authorizes removal.
+`VelvetOS Integrity Guard` is a finite single-pass 01:45 audit. It repairs only the protected routines, verifies once, then exits; it is not a continuous monitor. The protected-set contract does not authorize deleting, pausing, or rewriting a new unlisted routine merely because it is outside the eight protected entries. Known legacy routines remain disabled; an unknown extra routine is left untouched and surfaced as a conflict unless Christian explicitly authorizes removal.
 
 
 ## Canonical ownership
@@ -82,3 +81,8 @@ The 09:00 brief consumes the daily research block from `packages/vfops/data/rese
 Genuinely missing physical footage/staging after real search · unclear rights/privacy/private CAD/customer identity · unsupported high-stakes claim that cannot be repaired · price/spend/Ads/Boost/purchase · customer WhatsApp/commercial commitment · Print from HQ · irreversible destructive action · hard blocker after documented failover.
 
 For routing/search before opening packs manually: `python3 scripts/vfmem.py who "<job>"` then `python3 packages/vfmem/scripts/vf_semantic_search.py "<question>"`.
+
+
+## Publisher authority update — 2026-09-26
+
+OpenPost is frozen and has no recurring office responsibility. The former `OpenPost Release Watch` must remain disabled/retired. Scheduled Instagram truth comes from the Cloudflare Instagram Publisher; live publication truth still requires Meta/Instagram read-back. See `packages/velvetos/TOOL-STATUS.json`.

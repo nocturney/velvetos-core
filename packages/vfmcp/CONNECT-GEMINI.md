@@ -26,7 +26,6 @@
 
 ## למה לא [RLabs-Inc/gemini-mcp](https://github.com/rlabs-inc/gemini-mcp)
 
-נבדק 5.9.2026 (last push `2026-07-08`). **עדיף מ־aliargun** כעטיפת API (Gemini 3, 37 כלים, Deep Research). **לא** מחבר מנוי דפדפן — עדיין `GEMINI_API_KEY`. כולל **Veo** (נעול ב־HQ), image-gen שכפול Canva, ו־npx שלא רץ בענן. לא מתקינים. ראו [`SUBSCRIPTIONS.md`](SUBSCRIPTIONS.md).
 
 MCP רשמי של Google Cloud (`aiplatform.googleapis.com/mcp/…`) הוא **Gemini Enterprise / GCP** — לא מנוי הצרכן, לא על השולחן הזה.
 
@@ -65,4 +64,3 @@ Cloud Agent **לא** פותח `gemini.google.com` (התראות אבטחה). `vf
 ## VF
 
 לא `mcpBind` חדש. לא שרת ב־`.cursor/mcp.json`.  
-אינסטגרם עדיין Canva קודם. אין Veo/Kling מ־HQ.

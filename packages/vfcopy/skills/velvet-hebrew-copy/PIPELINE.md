@@ -83,7 +83,6 @@ reader-first + vfcopy/Humanizer. labels טכניים קנוניים/נתוני s
 
 ## אחרי candidate
 
-- social visual → `vfcanva`/`vfcovers` → exact render → Brand Guardian → `vfigos`.
 - customer/quote → send/human handoff לפי `constitution/SEND.md` רק אחרי text gate.
 - owner brief → HTML/layout רק אחרי text gate; transport אחריו.
 - human document → format QA אחרי text QA.

@@ -146,7 +146,7 @@ def main() -> None:
         fail("constitution/ORCHESTRA.md must mention weekly link review")
     if "BEST-SKILLS.md" not in orchestra and "best-skills" not in orchestra.lower():
         fail("constitution/ORCHESTRA.md must mention bi-daily best-skills review")
-    for needle in ("Failover", "באותו רגע", "אסור להישאר בלי תוצאה", "studio/render.py"):
+    for needle in ("Failover", "באותו רגע", "אסור להישאר בלי תוצאה"):
         if needle not in orchestra:
             fail(f"constitution/ORCHESTRA.md must mention failover needle: {needle}")
     if "מחכים לבעלים" in orchestra and "לא «מחכים לבעלים»" not in orchestra:
@@ -275,7 +275,7 @@ def main() -> None:
 
     desk = json.loads(DESK.read_text(encoding="utf-8"))
     tools = desk.get("tools") or {}
-    for key in ("gmail", "calendar", "drive", "canva", "superdesign", "treg", "mobbin", "fcc", "web", "image", "gemini", "chatgpt"):
+    for key in ("gmail", "calendar", "drive", "superdesign", "treg", "mobbin", "fcc", "web", "image", "gemini", "chatgpt"):
         if key not in tools:
             fail(f"vf-desk.json tools missing {key}")
         if not (tools[key].get("failover") or ""):

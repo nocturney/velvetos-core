@@ -6,7 +6,6 @@
     {
       "kicker": "01 · קודם החלטה",
       "title": "החלטות",
-      "prose": "מחיר מכירה דחה עד סכום מראש צוות. שיבוץ בלי לשאול משבצת — רק אחרי publication evidence + exact-final QA; Canva/vfcanva אסורים בפרסום VF. לחיצת כן/דחה לא שולחת וואטסאפ ולא מדפיסה מ-HQ. Organic Growth: אישור = approved_for_manual_posting — לא Publish. Control Plane: בריאות משרד: ok · מה המשרד עשה/מתכנן: followups=1 (waiting=1) · Office Control Plane מוטמע · dead_letters=0.",
       "headers": [
         "החלטה",
         "כן/לא/דחה",
@@ -106,7 +105,6 @@
     {
       "kicker": "07 · פיד בסוף",
       "title": "מלאי קופי · לא תוכנית פרסום",
-      "prose": "מסירה: vfgrowth/HANDOFF-he.md · VF_PUBLICATION_ROUTE_V1 = PUBLICATION-PREP-EXECUTION + publicationRoute · Canva/vfcanva אסורים בפרסום VF · מוצר אמיתי + source-grounded edit + Visible Text + Brand Guardian + exact-final QA · PREFLIGHT.md/evidence נכשל-סגור = חסום · השורות למטה הן מלאי קופי קיים, לא החלטת פרסום להיום · publish_story מוצהר באותו MCP · פרסום חי לא נבדק בעבודה זו · Organic Growth Decision Pack: vf_organic_growth.py · אישור ≠ פרסום.",
       "headers": [
         "מזהה",
         "פתיחה",

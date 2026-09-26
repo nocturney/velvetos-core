@@ -10,7 +10,6 @@ STD = "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md"
 PROMPT = "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md"
 REF = "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"
 PUBLIC = "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"
-ASSET = "MAHVL7PKpvE"
 SHA = "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897"
 
 def fail(message: str) -> None:
@@ -35,12 +34,12 @@ def main() -> None:
     for rel in (STD, PROMPT, REF, "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json", "scripts/check-visual-surface-enforcement.py"):
         if not (ROOT / rel).is_file(): fail(f"missing {rel}")
     dna = load("packages/vfom/VISUAL-DNA.json").get("ownerApprovedVisualStandard") or {}
-    for key, expected in {"status":"approved", "document":STD, "portablePrompt":PROMPT, "referenceAsset":REF, "publicReferenceUrl":PUBLIC, "canvaAssetId":ASSET, "artifactSha256":SHA, "coldStartGate":"fail_closed"}.items():
+    for key, expected in {"status":"approved", "document":STD, "portablePrompt":PROMPT, "referenceAsset":REF, "publicReferenceUrl":PUBLIC, "artifactSha256":SHA, "coldStartGate":"fail_closed"}.items():
         if dna.get(key) != expected: fail(f"VISUAL-DNA ownerApprovedVisualStandard.{key} mismatch")
     instance = load("instances/velvet-factory/instance/velvet-factory.json")
     autonomy = instance.get("creativeAutonomy") or {}
     bound = autonomy.get("ownerApprovedVisualStandard") or {}
-    for key, expected in {"required":True, "status":"approved", "document":STD, "portablePrompt":PROMPT, "referenceAsset":REF, "publicReferenceUrl":PUBLIC, "canvaAssetId":ASSET, "artifactSha256":SHA, "coldStartGate":"fail_closed"}.items():
+    for key, expected in {"required":True, "status":"approved", "document":STD, "portablePrompt":PROMPT, "referenceAsset":REF, "publicReferenceUrl":PUBLIC, "artifactSha256":SHA, "coldStartGate":"fail_closed"}.items():
         if bound.get(key) != expected: fail(f"instance ownerApprovedVisualStandard.{key} mismatch")
     if (autonomy.get("publish") or {}).get("requireOwnerApprovedVisualStandard") is not True:
         fail("publish.requireOwnerApprovedVisualStandard must be true")
@@ -51,7 +50,7 @@ def main() -> None:
     if "visualStandard" not in (schema.get("required") or []): fail("Creative Manifest must require visualStandard")
     vs = (schema.get("properties") or {}).get("visualStandard") or {}
     props = vs.get("properties") or {}
-    for key, expected in {"document":STD, "portablePrompt":PROMPT, "referenceAsset":REF, "publicReferenceUrl":PUBLIC, "canvaAssetId":ASSET, "artifactSha256":SHA}.items():
+    for key, expected in {"document":STD, "portablePrompt":PROMPT, "referenceAsset":REF, "publicReferenceUrl":PUBLIC, "artifactSha256":SHA}.items():
         if (props.get(key) or {}).get("const") != expected: fail(f"Creative Manifest visualStandard.{key} const mismatch")
     surfaces = [
         ".cursor/skills/velvet-creative-director/SKILL.md",
@@ -62,13 +61,13 @@ def main() -> None:
     ]
     for rel in surfaces:
         body = text(rel)
-        for needle in ("OWNER-APPROVED-GRID-STANDARD-2026-09-14.md", ASSET):
+        for needle in ("OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",):
             if needle not in body: fail(f"{rel} missing {needle}")
     if PUBLIC not in text(STD) or PUBLIC not in text(PROMPT): fail("public visual reference URL missing from canonical docs")
     for path in (ROOT / "packages/vfom/jobs").glob("*/creative-manifest.json"):
         data = json.loads(path.read_text(encoding="utf-8"))
         vsb = data.get("visualStandard") or {}
-        if vsb.get("gate") != "PASS" or vsb.get("canvaAssetId") != ASSET or vsb.get("artifactSha256") != SHA or vsb.get("coldStart") is not True:
+        if vsb.get("gate") != "PASS" or vsb.get("artifactSha256") != SHA or vsb.get("coldStart") is not True:
             fail(f"{path.relative_to(ROOT)} missing canonical visualStandard PASS binding")
     print("OK owner-approved visual standard cold-start bootstrap is fail-closed and propagated")
 

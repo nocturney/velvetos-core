@@ -331,8 +331,7 @@
       "report": "docs/AGENT-REPOS-EMBED-he.md",
       "packs": [
         "vfbriefux"
-      ],
-      "note": "VF office tokens at vfbriefux/hq/DESIGN.md. Not community brand extracts. Canva stays authoritative for IG."
+      ]
     },
     {
       "id": "planning-with-files",
@@ -919,8 +918,7 @@
         "vfprod",
         "vfops",
         "vfmcp"
-      ],
-      "note": "mcpmarket Cloudflare/429 — body from GitHub. Later for internal diagrams; not IG/Canva."
+      ]
     },
     {
       "id": "mcpmarket-blender-open",
@@ -968,8 +966,7 @@
         "vfcovers",
         "vfmcp",
         "vfprod"
-      ],
-      "note": "Needs SVGMAKER_API_KEY. Skip until lead; Canva first. No key in git."
+      ]
     },
     {
       "id": "mcpmarket-multicad",
@@ -1067,8 +1064,7 @@
         "vfcovers",
         "vfcopy",
         "vfresearch"
-      ],
-      "note": "Pattern only: browse-by-media/model + adapt subject to floor proof; Image→Prompt on delivered photos only. No library import. Canva first for IG. Skip action/fantasy stock scenes."
+      ]
     },
     {
       "id": "mcpmarket-market-research-intelligence",
@@ -1100,10 +1096,8 @@
       "playbook": "packages/vfcovers/hq/PLAYBOOK.md",
       "packs": [
         "vfcovers",
-        "vfcanva",
         "vfresearch"
-      ],
-      "note": "Human opens in browser for floor-proof prep (HEIC→JPG, background remove, compress) before Canva. No MCP install. Not a Canva/brand replacement. No invented ₪ or Insights from third-party traffic claims."
+      ]
     },
     {
       "id": "mikiarlo3-ai-copywriter",
@@ -1297,8 +1291,7 @@
         "vfinsights",
         "vfgrowth",
         "vfmcp"
-      ],
-      "note": "Package adelaidasofia-instagram-mcp. Cloud remote ready (auth+remote_access). Stories+Insights deployed live+publish_* available_not_live_tested. DM off. Failover Canva+Drive+Gmail."
+      ]
     },
     {
       "id": "charlie947-social-media-skills",
