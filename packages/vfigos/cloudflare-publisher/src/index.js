@@ -1,3 +1,8 @@
+import {
+  checkRecentFingerprint,
+  publishFingerprint,
+  recordFingerprint,
+} from "./fingerprint.js";
 const te=new TextEncoder();
 const json=(v,s=200)=>new Response(JSON.stringify(v),{status:s,headers:{"content-type":"application/json; charset=utf-8","cache-control":"no-store"}});
 const now=()=>Math.floor(Date.now()/1000), sleep=(ms)=>new Promise(r=>setTimeout(r,ms));
@@ -16,7 +21,89 @@ async function publishJob(env,j){await verifyMedia(env,j.media);const ids=[];if(
 async function mediaPublish(env,creationId){let out;try{out=await graph(env,env.IG_USER_ID+"/media_publish",{creation_id:creationId})}catch(e){e.afterPublishBoundary=true;throw e}if(!out.id){const e=new Error("publish_missing_media_id");e.afterPublishBoundary=true;throw e}let v;try{v=await graph(env,out.id,{fields:"id,media_type,permalink,timestamp"},"GET")}catch(e){e.afterPublishBoundary=true;throw e}if(v.id!==out.id||!v.permalink){const e=new Error("live_verification_failed");e.afterPublishBoundary=true;throw e}return v}
 async function readJob(env,id){const r=await env.DB.prepare("SELECT * FROM jobs WHERE id=?").bind(id).first();if(!r)return null;return {...r,media:JSON.parse(r.media_json),authorization:JSON.parse(r.authorization_json)}}
 async function claim(env,id,t){const lease=t+180;const q=await env.DB.prepare("UPDATE jobs SET status='publishing',lease_until=?,attempt_count=attempt_count+1,updated_at=? WHERE id=? AND status IN ('scheduled','retry') AND scheduled_at<=? AND COALESCE(next_attempt_at,scheduled_at)<=?").bind(lease,t,id,t,t).run();return (q.meta?.changes||0)===1}
-async function handleOne(env,id){const t=now();if(!await claim(env,id,t))return;let j=await readJob(env,id);await event(env,id,"lease_acquired",{attempt:j.attempt_count});const expected=await hmac(env.SCHEDULE_HMAC_KEY,canonicalJob(j));if(!secureEq(expected,j.job_auth)){await env.DB.prepare("UPDATE jobs SET status='dead_letter',last_error_class='authorization',last_error='job_auth_mismatch',updated_at=? WHERE id=?").bind(now(),id).run();await event(env,id,"dead_letter",{reason:"job_auth_mismatch"});return}try{const live=await publishJob(env,j);await env.DB.prepare("UPDATE jobs SET status='published_verified',meta_media_id=?,permalink=?,published_at=?,lease_until=NULL,updated_at=? WHERE id=?").bind(live.id,live.permalink,now(),now(),id).run();await event(env,id,"published_verified",{media_id:live.id,permalink:live.permalink})}catch(e){const msg=String(e?.message||e).slice(0,500);if(e?.afterPublishBoundary===true){await env.DB.prepare("UPDATE jobs SET status='reconcile_required',last_error_class='ambiguous_after_publish_boundary',last_error=?,lease_until=NULL,updated_at=? WHERE id=?").bind(msg,now(),id).run();await event(env,id,"reconcile_required",{error:msg})}else{j=await readJob(env,id);if(j.attempt_count>=Number(env.MAX_ATTEMPTS||3)){await env.DB.prepare("UPDATE jobs SET status='dead_letter',last_error_class='pre_publish',last_error=?,lease_until=NULL,updated_at=? WHERE id=?").bind(msg,now(),id).run();await event(env,id,"dead_letter",{error:msg})}else{const retry=now()+Math.min(900,60*Math.pow(3,j.attempt_count-1));await env.DB.prepare("UPDATE jobs SET status='retry',next_attempt_at=?,last_error_class='pre_publish',last_error=?,lease_until=NULL,updated_at=? WHERE id=?").bind(retry,msg,now(),id).run();await event(env,id,"retry_scheduled",{retry_at:retry,error:msg})}}}}
+
+async function handleOne(env,id){
+  const t=now();
+  if(!await claim(env,id,t))return;
+  let j=await readJob(env,id);
+  await event(env,id,"lease_acquired",{attempt:j.attempt_count});
+  const expected=await hmac(env.SCHEDULE_HMAC_KEY,canonicalJob(j));
+  if(!secureEq(expected,j.job_auth)){
+    await env.DB.prepare("UPDATE jobs SET status='dead_letter',last_error_class='authorization',last_error='job_auth_mismatch',updated_at=? WHERE id=?").bind(now(),id).run();
+    await event(env,id,"dead_letter",{reason:"job_auth_mismatch"});
+    return;
+  }
+  let fingerprint=null;
+  try{
+    fingerprint=await publishFingerprint({
+      igUserId:env.IG_USER_ID,
+      mediaSha256s:j.media.map((m)=>m.sha256),
+      caption:j.caption,
+    });
+    const fpCheck=await checkRecentFingerprint(env.DB,fingerprint,t);
+    if(!fpCheck.ok){
+      await env.DB.prepare("UPDATE jobs SET status='dead_letter',last_error_class='duplicate_publish',last_error=?,lease_until=NULL,updated_at=? WHERE id=?")
+        .bind(fpCheck.status,now(),id).run();
+      await event(env,id,"publish_fingerprint_blocked",{
+        fingerprint,
+        status:fpCheck.status,
+        last_recorded_at:fpCheck.last_recorded_at??null,
+      });
+      return;
+    }
+    const live=await publishJob(env,j);
+    const recordedAt=now();
+    try{
+      await recordFingerprint(env.DB,{
+        fingerprint,
+        jobId:id,
+        recordedAt,
+        outcome:"published_verified",
+      });
+      await event(env,id,"publish_fingerprint_recorded",{fingerprint,outcome:"published_verified",recorded_at:recordedAt});
+      await env.DB.prepare("UPDATE jobs SET status='published_verified',meta_media_id=?,permalink=?,published_at=?,lease_until=NULL,updated_at=? WHERE id=?")
+        .bind(live.id,live.permalink,recordedAt,recordedAt,id).run();
+      await event(env,id,"published_verified",{media_id:live.id,permalink:live.permalink});
+    }catch(e){
+      e.afterPublishBoundary=true;
+      throw e;
+    }
+  }catch(e){
+    let msg=String(e?.message||e).slice(0,500);
+    if(e?.afterPublishBoundary===true){
+      if(fingerprint){
+        try{
+          const recordedAt=now();
+          await recordFingerprint(env.DB,{
+            fingerprint,
+            jobId:id,
+            recordedAt,
+            outcome:"reconcile_required",
+          });
+          await event(env,id,"publish_fingerprint_recorded",{fingerprint,outcome:"reconcile_required",recorded_at:recordedAt});
+        }catch(recordErr){
+          msg=(msg+"; fingerprint_record_error="+String(recordErr?.message||recordErr)).slice(0,500);
+        }
+      }
+      await env.DB.prepare("UPDATE jobs SET status='reconcile_required',last_error_class='ambiguous_after_publish_boundary',last_error=?,lease_until=NULL,updated_at=? WHERE id=?")
+        .bind(msg,now(),id).run();
+      await event(env,id,"reconcile_required",{error:msg});
+    }else{
+      j=await readJob(env,id);
+      if(j.attempt_count>=Number(env.MAX_ATTEMPTS||3)){
+        await env.DB.prepare("UPDATE jobs SET status='dead_letter',last_error_class='pre_publish',last_error=?,lease_until=NULL,updated_at=? WHERE id=?")
+          .bind(msg,now(),id).run();
+        await event(env,id,"dead_letter",{error:msg});
+      }else{
+        const retry=now()+Math.min(900,60*Math.pow(3,j.attempt_count-1));
+        await env.DB.prepare("UPDATE jobs SET status='retry',next_attempt_at=?,last_error_class='pre_publish',last_error=?,lease_until=NULL,updated_at=? WHERE id=?")
+          .bind(retry,msg,now(),id).run();
+        await event(env,id,"retry_scheduled",{retry_at:retry,error:msg});
+      }
+    }
+  }
+}
+
 async function runDue(env){const t=now();const q=await env.DB.prepare("SELECT id FROM jobs WHERE status IN ('scheduled','retry') AND scheduled_at<=? AND COALESCE(next_attempt_at,scheduled_at)<=? ORDER BY scheduled_at LIMIT 10").bind(t,t).all();for(const r of q.results||[])await handleOne(env,r.id);return (q.results||[]).length}
 async function metaHealth(env){const d=await graph(env,env.IG_USER_ID,{fields:"id,username"},"GET");return {ok:true,id:d.id,username:d.username}}
 async function createJob(req,env){const b=await req.json();const ts=validateJob(b);const id=b.id||crypto.randomUUID();const exists=await readJob(env,id);if(exists)return json({ok:false,error:"job_exists"},409);const origin=new URL(req.url).origin;const j={id,content_id:b.content_id,package_sha256:b.package_sha256,kind:b.kind,scheduled_at:ts,caption:b.caption,media:b.media.map(x=>({key:x.key,url:origin+"/media/"+x.key,sha256:x.sha256})),authorization:b.authorization};const auth=await hmac(env.SCHEDULE_HMAC_KEY,canonicalJob(j));const t=now();await env.DB.prepare("INSERT INTO jobs(id,content_id,package_sha256,kind,scheduled_at,status,caption,media_json,authorization_json,job_auth,created_at,updated_at) VALUES(?,?,?,?,?,'scheduled',?,?,?,?,?,?)").bind(id,j.content_id,j.package_sha256,j.kind,j.scheduled_at,j.caption,JSON.stringify(j.media),JSON.stringify(j.authorization),auth,t,t).run();await event(env,id,"scheduled",{scheduled_at:ts,authorization:j.authorization});return json({ok:true,id,status:"scheduled",scheduled_at:ts},201)}
