@@ -58,7 +58,24 @@ DIFF="$(diff -rq -x .git "$SRC" "$TMP/remote" 2>/dev/null || true)"
 set -o pipefail
 DIFFER="$(printf '%s\n' "$DIFF" | grep '^Files ' || true)"
 SCAFFOLD_ONLY="$(printf '%s\n' "$DIFF" | grep "^Only in $SRC" || true)"
-REMOTE_ONLY="$(printf '%s\n' "$DIFF" | grep "^Only in $TMP/remote" || true)"
+REMOTE_ONLY_ALL="$(printf '%s\n' "$DIFF" | grep "^Only in $TMP/remote" || true)"
+# Instance-only paths that legitimately live only in the published frontend repo
+# (its own CI, desk MCP config, access-gap pointer). Reported, never counted as drift.
+INSTANCE_ONLY_ALLOWED=(".github" "docs" ".cursor/mcp.json")
+is_allowed_remote_only() {
+  local line="$1" rel dir name a
+  dir="${line#Only in $TMP/remote}"; dir="${dir%%: *}"; dir="${dir#/}"
+  name="${line##*: }"
+  rel="${dir:+$dir/}$name"
+  for a in "${INSTANCE_ONLY_ALLOWED[@]}"; do [[ "$rel" == "$a" ]] && return 0; done
+  return 1
+}
+REMOTE_ONLY=""; INSTANCE_ONLY=""
+while IFS= read -r line; do
+  [[ -z "$line" ]] && continue
+  if is_allowed_remote_only "$line"; then INSTANCE_ONLY+="$line"$'\n'; else REMOTE_ONLY+="$line"$'\n'; fi
+done <<< "$REMOTE_ONLY_ALL"
+REMOTE_ONLY="${REMOTE_ONLY%$'\n'}"; INSTANCE_ONLY="${INSTANCE_ONLY%$'\n'}"
 count() { if [[ -z "$1" ]]; then echo 0; else printf '%s\n' "$1" | wc -l | tr -d ' '; fi; }
 N_DIFF="$(count "$DIFFER")"; N_SRC="$(count "$SCAFFOLD_ONLY")"; N_REM="$(count "$REMOTE_ONLY")"
 
@@ -66,6 +83,7 @@ show() { if [[ -z "$1" ]]; then echo "(none)"; else printf '%s\n' "$1" | sed -e 
 echo "--- files that differ (scaffold vs remote $REMOTE_HEAD) ---"; show "$DIFFER"; echo
 echo "--- only in scaffold ---"; show "$SCAFFOLD_ONLY"; echo
 echo "--- only on remote ---"; show "$REMOTE_ONLY"; echo
+echo "--- instance-only on remote (allowed, not drift) ---"; show "$INSTANCE_ONLY"; echo
 
 if [[ "$N_DIFF$N_SRC$N_REM" == "000" ]]; then
   echo "OK scaffold in sync with $REMOTE_SLUG@$REMOTE_HEAD"
