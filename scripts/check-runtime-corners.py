@@ -65,7 +65,7 @@ def main() -> int:
 
     need_text(
         JOBS_WF,
-        "google-github-actions/auth@v2",
+        "google-github-actions/auth@v3",
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive",
         "velvetos-media-intake@instamcp.iam.gserviceaccount.com",

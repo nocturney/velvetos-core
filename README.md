@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Legacy handoff CLI frozen:** the typed-record handoff script (#189, deprecated earlier today) is now FROZEN / UNUSED: its header is the freeze note, `new`/`ack`/`consume`/`reject` refuse with exi…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Legacy handoff CLI frozen:** the typed-record handoff script (#189, deprecated earlier today) is now FROZEN / UNUSED: its header is the freeze note, `new`/`ack`/`consume`/`reject` refuse with exi…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Pinned Docker images and current Actions:** all three Dockerfiles now use `python:3.12.14-slim-trixie@sha256:f77ac9e4…` (what `python:3.12-slim` resolves to today, checked against the Docker Hub …</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Pinned Docker images and current Actions:** all three Dockerfiles now use `python:3.12.14-slim-trixie@sha256:f77ac9e4…` (what `python:3.12-slim` resolves to today, checked against the Docker Hub …</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -353,6 +353,10 @@ Frontend drift: `nocturney/velvetos-velvet-factory` is **private**. `sync-instan
 Sensors are read-only: a `check-all.py` run must leave repository files unchanged and ends with `OK sensor run left repository files unchanged` (or a `WARN sensor side effects …` list). Sensors that smoke-test writer CLIs restore those outputs through `scripts/sensor_isolation.py`. Canonical artifacts are written only by the explicit commands (`vfops_loop.py brief --write`, `vf_control_plane.py handoff`, `vf_organic_growth.py brief --write`, `vf_retro_signals.py --write`).
 
 חיישנים רק קוראים: הרצת `check-all.py` לא משאירה שינויים בקבצי הריפו. ארטיפקט קנוני נכתב רק דרך הפקודה המפורשת.
+
+Pinned runtime: the three Cloud Run Dockerfiles (`vfigos/remote`, `vfigos/approval/issuer`, `velvetos_control_api`) use `python:3.12.14-slim-trixie` by digest plus exact pip versions, with starlette/cryptography matching `requirements-sensors.txt`. Workflows use `actions/checkout@v7`, `actions/setup-python@v7`, `actions/upload-artifact@v7` and `google-github-actions/auth@v3` (Node 24). A redeploy is still a manual owner step.
+
+סביבת ריצה נעולה: שלושת ה־Dockerfiles נעולים ל־digest ולגרסאות מדויקות; ה־Actions עודכנו לגרסאות הראשיות הנוכחיות.
 
 ## Read next · המשך קריאה
 
