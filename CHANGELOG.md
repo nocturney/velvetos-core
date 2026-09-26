@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Morning Green marks OpenPost as paused:**
+  - New `packages/vfbriefux/FEED-SOURCE.json` (`openpost.state=paused` since 2026-09-26, owner freeze).
+  - When no OpenPost snapshot is given, `build_morning_green.py` emits `feed_status`. The renderer's new `{{feed_status_html}}` slot adds one row under the "בקרוב בפיד" heading ("OpenPost מושהה כרגע…"), and the Visible Text gets a matching line, so the seven quiet cells no longer read as "nothing scheduled". Any other state shows a neutral "not read this morning" label.
+  - With a live snapshot, the HTML/TXT output is byte-identical to before. A missing or broken config degrades to the neutral label and never fails the brief.
+  - `check-morning-green.py` covers the live/paused/active/broken/missing cases and the template slot.
+  - Builder data sources are unchanged: the 09:00 Grok routine still performs the live reads.
+
 - 2026-09-26 — **One-shot script triage:**
   - `scripts/vf_close_runtime_corners.py` (unreferenced 2026-09-14 migration) moved to `scripts/archive/`. It now refuses to run, with an ARCHIVED header and an `archive/README.md` explaining why: re-running it would overwrite current REGISTRY/BEST-SKILLS/OWNER-ACTIONS authorities.
   - `scripts/vf_project669_transport.py` stays. It is the only producer of the `velvet.project669.transport_qa.v1` receipts that `vf_project669_publication.py` requires, so it is a live tool. It is now referenced from that script's docstring and from `vfigos/SEND.md`.
