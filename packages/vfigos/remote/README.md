@@ -56,7 +56,7 @@ Never mount `VELVET_DELIVERY_APPROVAL_PRIVATE_KEY_B64` or issuer tokens on this 
 ## Local run
 
 ```bash
-pip install 'adelaidasofia-instagram-mcp>=0.1.2' 'fastmcp>=3.4.2,<4' uvicorn starlette
+pip install 'adelaidasofia-instagram-mcp==0.1.2' 'fastmcp==3.4.7' 'uvicorn[standard]==0.54.0' 'starlette==1.7.0'   # same pins as Dockerfile
 export VELVET_INSTAGRAM_MCP_BEARER_TOKEN=…  # from Secret Manager
 export INSTAGRAM_MCP_ACCESS_TOKEN=…         # from Secret Manager
 export INSTAGRAM_MCP_IG_USER_ID=17841407772120429

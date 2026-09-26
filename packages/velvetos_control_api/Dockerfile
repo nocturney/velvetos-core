@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 # VelvetOS Control API — Cloud Run image
 # Build context MUST be the repository root:
 #   gcloud builds submit . --config packages/velvetos_control_api/cloudbuild.json
@@ -7,8 +8,8 @@
 # keys, or unrelated high-privilege credentials onto this service.
 # Least privilege: read projection of repo checkout + optional bearer from GSM.
 
-# syntax=docker/dockerfile:1
-FROM python:3.12-slim
+# Base pinned 2026-09-26: python:3.12-slim resolved to 3.12.14-slim-trixie (index digest, multi-arch).
+FROM python:3.12.14-slim-trixie@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \

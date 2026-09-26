@@ -18,13 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout core policy/scripts
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: main
           path: core
 
       - name: Checkout publish bridge branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: publish-bridge
           fetch-depth: 0
