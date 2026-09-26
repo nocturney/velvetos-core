@@ -36,7 +36,7 @@ Cloud Run **env** names (left) map to GSM **secret** names on project `instamcp`
 | `INSTAGRAM_MCP_APP_SECRET` | (optional) | Meta appsecret_proof |
 | `PORT` | — | Cloud Run port (default 8080) |
 | `MCP_PATH` | — | default `/mcp` |
-| `VELVET_DELIVERY_APPROVAL_SPEND_BUCKET` | bucket `velvet-ig-approval-spend` | Atomic approval spend (create-only) |
+| `VELVET_DELIVERY_APPROVAL_SPEND_BUCKET` | bucket `velvet-ig-approval-spend` | Atomic approval spend + publish-fingerprint store (runtime SA: create + get/list only; no update/delete) |
 | `VELVET_PUBLISH_FINGERPRINT_WINDOW_SECONDS` | — | Repeat-publish window (default `259200` = 72h; `0` = operator override, disables) |
 | `VELVET_PUBLISH_FINGERPRINT_PREFIX` | — | Fingerprint object prefix in the spend bucket (default `publish-fingerprints/`; mutation SA needs objects list/get/create) |
 
