@@ -1,0 +1,73 @@
+{
+  "id": "no-new-recurring-cost",
+  "version": 1,
+  "sourceOfTruth": "constitution/NO_NEW_RECURRING_COST.md",
+  "defaultRecurringCostIls": 0,
+  "failClosed": true,
+  "blockedStatus": "BLOCKED_BY_NO_NEW_RECURRING_COST",
+  "classifications": [
+    "FREE_LOCAL",
+    "FREE_SELF_HOSTED",
+    "EXISTING_PAID_CAPABILITY",
+    "FREE_TIER_LIMITED",
+    "PAID_OPTIONAL",
+    "PAID_REQUIRED",
+    "COST_UNKNOWN"
+  ],
+  "blockedWithoutExplicitApproval": [
+    "PAID_REQUIRED",
+    "COST_UNKNOWN"
+  ],
+  "conditionalRules": {
+    "EXISTING_PAID_CAPABILITY": "incremental_cost_possible must be explicitly false; otherwise explicit owner approval is required",
+    "FREE_TIER_LIMITED": "automatic paid overage requires a meaningful enforced hard cap; otherwise explicit owner approval is required",
+    "PAID_OPTIONAL": "paid_features_enabled must be false"
+  },
+  "approval": {
+    "requiredFields": [
+      "approved",
+      "approved_by",
+      "provider",
+      "product_or_plan",
+      "billing_model",
+      "expected_recurring_cost",
+      "cost_period_or_usage_basis",
+      "scope",
+      "hard_cap_or_limit",
+      "note"
+    ]
+  },
+  "preflight": {
+    "requiredFields": [
+      "component",
+      "action",
+      "classification",
+      "evidence",
+      "checked_at",
+      "incremental_cost_possible",
+      "automatic_paid_overage_possible",
+      "hard_cap_enforced",
+      "paid_features_enabled"
+    ],
+    "requiredBefore": [
+      "install",
+      "connect",
+      "credentials",
+      "first_paid_capable_call",
+      "production",
+      "schedule",
+      "provision",
+      "billing_relevant_change"
+    ]
+  },
+  "driftReview": {
+    "externalOrCloudConnected": "MONTHLY",
+    "verify": [
+      "plan",
+      "free_tier_rules",
+      "overage_behavior",
+      "workload",
+      "incremental_cost_assumption"
+    ]
+  }
+}

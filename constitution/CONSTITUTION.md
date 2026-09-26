@@ -15,6 +15,8 @@ Bind ייחוס (תאימות): Velvet Factory — שדרות · איסוף · �
 **Visible Text Gate:** כל prose/microcopy שנוצר או שוכתב ב־AI ושאדם עתיד לקרוא — כריסטיאן, לקוח, קהל או שותף — עובר את כלי הכתיבה והאימות הרלוונטיים לפני final/send/publish/render. סמכות: [`VISIBLE_TEXT.md`](VISIBLE_TEXT.md); יישום קנוני: `packages/vfcopy`. טקסט תפעולי לבעלים אינו מקבל קול Instagram בכוח, וטקסט מקור/ID/hash/log נשאר literal. אין `PASS` בלי ביצוע בפועל.
 
 
+**NO_NEW_RECURRING_COST:** יעד ברירת המחדל הוא אפס עלות חדשה חוזרת. לפני התקנה, חיבור, credentials, קריאה ראשונה שעלולה להיות מחויבת או production, מפעילים cost preflight ונכשלים-סגור כשהעלות בתשלום או לא ידועה. סמכות קנונית: [`NO_NEW_RECURRING_COST.md`](NO_NEW_RECURRING_COST.md).
+
 מפעל צמיחה אורגני: [`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) — טיוטות + בריף 07:00. לא בוט פרסום. לא אוטו־DM.
 
 מאגר מדיה משותף: [`docs/MEDIA-VAULT.md`](../docs/MEDIA-VAULT.md) · קטלוג אחד `packages/vfmedia/catalog.json`. תפעול קולט נכנס→מקור; העלאה ומיקום בתיקייה אינם אישור לפרסום.

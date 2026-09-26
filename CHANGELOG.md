@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+- 2026-09-26 — **NO_NEW_RECURRING_COST:** adds canonical zero-new-recurring-cost authority, fail-closed cost classifications/preflight, RED billing gates, and no-silent-paid-failover enforcement.
 - 2026-09-26 — **Cloudflare fingerprint guard D1 migration:** adds idempotent `packages/vfigos/cloudflare-publisher/migrations/d1/0001_publish_fingerprints.sql` and a README deploy order (migration → verify table → `wrangler deploy`). Without it, the existing D1 lacks `publish_fingerprints` and a redeployed Worker would fail closed on every due job. The guard is still not live; no deploy was performed. `check-cloudflare-publish-fingerprint.py` now requires the migration to match `schema.sql`.
 
 - 2026-09-26 — **Visual identity restored after Canva removal:** #362 deleted every line mentioning Canva, which also dropped the approved-reference SHA line and cold-start trigger from the instance desk rule (frontend `verify-attached-core` failed: `always-on rule missing df41281b…`), item 7 "Premium but not template-like" from the owner-approved grid standard, and the rejected G004 design `DAHUaelaug0` hard-reject everywhere. Restored as reference identity / reject-list entries only (never a provider route; the Canva asset ID stays removed). New sensor `scripts/check-visual-reject-identity.py` pins them and runs the instance template's own bootstrap check against Core.

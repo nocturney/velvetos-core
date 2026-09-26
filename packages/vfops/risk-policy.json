@@ -1,6 +1,6 @@
 {
   "id": "office-risk-policy-mirror",
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-26",
   "sourceOfTruth": "office/control/POLICY.md",
   "mirrorOf": "office/control-plane.json#dontBotherChristian",
   "note": "Read-only color mirror. Sensors must treat office/control/POLICY.md as canonical — not this file.",
@@ -39,7 +39,10 @@
         "malformed-missing-source-of-truth",
         "sensitive-ambiguity",
         "unresolved-after-failover",
-        "owner-reserved-action"
+        "owner-reserved-action",
+        "new-recurring-cost",
+        "paid-api-call",
+        "billing-capable-resource"
       ],
       "neverFor": [
         "weak-metrics",
