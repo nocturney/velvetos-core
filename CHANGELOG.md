@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **vfmedia: historical G001/G002 backfill (replaces #277):**
+  - Re-applied onto current `packages/vfmedia/catalog.json` as a key-based patch on the two exact source rows. Nothing else changed; all 482 items, including the scheduled intake's entries, are kept.
+  - **G001** `DcqkjOLlYVX` (media 18107769701162221): exact source-to-live match (904/905 frames, 113 aligned samples, mean 0.9999689).
+  - **G002** `DcvuJLxCJgU` (media 18113247517791419): 352/352 frames, correlations 0.9998069–0.9999204.
+  - Both rows now have `status=published` and `publication.state=published_verified`, with the Drive `05 - פורסם` archive copies as the published derivative.
+  - The historical approver and approval time stay `null` rather than being invented. G003 is intentionally not backfilled (the duration doesn't match).
+  - The intake runner doesn't reset `verified` rows. `vfmedia.py validate` passes.
+
 - 2026-09-26 — **Dynamic Project bundle resolver (replaces #270):**
   - New `scripts/vf_project_bundle.py` resolves the active ChatGPT Project bundle from `PROJECT-AUTHORITY-MANIFEST.json` → `chatgptProjectBundle`. It currently resolves to revision 6.6.4, `VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE`.
   - The two SHA-256 trust pins (`authoritySha256`, `assetManifestSha256`) moved from code into that manifest entry.
