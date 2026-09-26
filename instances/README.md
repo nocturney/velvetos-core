@@ -20,6 +20,8 @@ Drift check (check-only, never pushes): `./scripts/sync-instance-scaffold.sh [--
 
 Core lock: `velvet-factory/core.lock.yml` is intentionally **not** a SHA pin (`ref: main`, `refPolicy: track-main`). `attach-core.sh`/`verify-core.sh` default to `main`, and `verify-core.sh` fails on a stale vendor copy. `check-velvetos.py` fails if the lock and the scripts' default ref disagree.
 
+Template = union of both sides (2026-09-26 two-way merge). Every fail-closed gate from the published frontend (the brand-asset, creative-transformation and project-request-gate blocks in `vf-desk.json` and the profile, `requiredFor`/`hardRejects`, the `require*` publish flags, OFFERING SHAPE, `check-vf-offering.py` in `verify-core.sh`, verify-on-attach) now lives here alongside core's newer work (VF_PUBLICATION_ROUTE_V1, ORCHESTRA/SEND, offline attach, publication-prep check). `check-velvetos.py` fails if the template loses any of them.
+
 `velvet-factory` is already published on GitHub. Re-run `publish-instance.sh` only when the scaffold changed; merge locally if the remote has diverged.
 
 Later: copy a scaffold from `velvet-factory/` or build from `packages/velvetos/presets/`.

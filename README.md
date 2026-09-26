@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Frontend core lock and drift allowlist:**</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Frontend core lock and drift allowlist:**</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Velvet Factory template: two-way merge with the published frontend:**</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Velvet Factory template: two-way merge with the published frontend:**</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -346,7 +346,7 @@ python3 scripts/update-readme-snapshot.py --check
 ./scripts/sync-instance-scaffold.sh --check   # frontend drift, check-only; the frontend repo is private
 ```
 
-Frontend drift: `nocturney/velvetos-velvet-factory` is **private**. `sync-instance-scaffold.sh` only reads and diffs, never pushes. CI runs it report-only and SKIPs without access. The frontend-only `.github/`, `docs/` and `.cursor/mcp.json` are an allowlist, not drift. `instances/velvet-factory/core.lock.yml` intentionally tracks core `main` (`refPolicy: track-main`, not a SHA pin), matching `attach-core.sh`/`verify-core.sh`.
+Frontend drift: `nocturney/velvetos-velvet-factory` is **private**. `sync-instance-scaffold.sh` only reads and diffs, never pushes. CI runs it report-only and SKIPs without access. The frontend-only `.github/`, `docs/` and `.cursor/mcp.json` are an allowlist, not drift. `instances/velvet-factory/core.lock.yml` intentionally tracks core `main` (`refPolicy: track-main`, not a SHA pin), matching `attach-core.sh`/`verify-core.sh`. The template is now the union of core and frontend gates (`check-velvetos.py` guards it).
 
 פער חזית: ריפו החזית פרטי; הבדיקה רק קוראת ומשווה, לא דוחפת, וב־CI מדלגת כשאין גישה.
 

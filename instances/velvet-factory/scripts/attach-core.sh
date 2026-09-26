@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-# Attach VelvetOS Core into vendor/velvetos-core (subtree or clone).
-# Offline-stable: if network fails but vendor already has packs, keep going.
+# Attach VelvetOS Core into vendor/velvetos-core (subtree or clone) and verify it.
+# Online attach (update/clone) runs scripts/verify-core.sh focused and fails closed.
+# Offline-stable: if network fails but vendor already has packs, keep going
+# (stale/offline/local copies are NOT verified; the WARN says so).
 #
 # Env:
 #   VELVETOS_CORE_REMOTE   git URL (default: https://github.com/nocturney/velvetos-core.git)
@@ -24,7 +26,7 @@ for arg in "$@"; do
   case "$arg" in
     --offline) OFFLINE=1 ;;
     --help|-h)
-      sed -n '2,16p' "$0"
+      sed -n '2,15p' "$0"
       exit 0
       ;;
   esac
@@ -44,6 +46,15 @@ stamp() {
     echo "detail=$detail"
     echo "at=$(date -u +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date)"
   } >"$STAMP"
+}
+
+verify_attached() {
+  # Fail-closed runtime verification after a fresh online attach.
+  bash "$ROOT/scripts/verify-core.sh" focused
+}
+
+warn_unverified() {
+  echo "WARN attached Core not runtime-verified ($1); run scripts/verify-core.sh when online" >&2
 }
 
 vendor_usable() {
@@ -74,6 +85,7 @@ copy_from_path() {
   fi
   echo "OK attached local core → $DEST (from $src)"
   stamp "ok-local" "$src"
+  warn_unverified "local copy from $src"
   return 0
 }
 
@@ -85,6 +97,7 @@ attach_offline() {
   if vendor_usable; then
     echo "OK offline — using existing vendor $DEST (stale OK)"
     stamp "ok-stale-offline" "existing vendor"
+    warn_unverified "offline"
     return 0
   fi
   echo "FAIL offline: no VELVETOS_CORE_PATH and no usable vendor at $DEST" >&2
@@ -111,12 +124,14 @@ if [[ -d "$DEST/.git" ]]; then
     if vendor_usable; then
       echo "OK updated $DEST @ $CORE_REF"
       stamp "ok-updated" "$CORE_REF"
-      exit 0
+      verify_attached
+      exit $?
     fi
   fi
   if vendor_usable; then
     echo "WARN fetch/checkout failed — keeping existing vendor $DEST" >&2
     stamp "ok-stale-network" "fetch failed"
+    warn_unverified "fetch failed"
     exit 0
   fi
   echo "FAIL existing vendor unusable after network error" >&2
@@ -128,7 +143,8 @@ if git clone --depth 1 --branch "$CORE_REF" "$CORE_REMOTE" "$DEST" 2>/dev/null; 
   echo "OK cloned VelvetOS Core → $DEST"
   echo "Next: point Cursor skills/desk pack paths at vendor/velvetos-core/packages/"
   stamp "ok-cloned" "$CORE_REF"
-  exit 0
+  verify_attached
+  exit $?
 fi
 
 # Clone failed — last resorts
@@ -139,6 +155,7 @@ fi
 if vendor_usable; then
   echo "WARN clone failed — keeping existing vendor $DEST" >&2
   stamp "ok-stale-network" "clone failed"
+  warn_unverified "clone failed"
   exit 0
 fi
 
