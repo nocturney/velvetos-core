@@ -1,18 +1,17 @@
-# 05 · משרד · 26.9.2026
+# 05 · משרד · 27.9.2026
 
 מצב Research Seat: `ready_for_brief`.
 הריצה הושלמה לפני cutoff 07:00 Asia/Jerusalem.
 
 ## מה נבנה / יועל
-- שער עדכון קובץ אחרי הצעה/דגימה — חבילת delta + אישור מחיר/לו״ז/הוכחה בכתב לפני שיריון מיטה; מיפוי ל־`vfconvert`/`vfsales` (דפוס בלבד; בלי ₪ מומצא).
-- הפרדת אב־טיפוס / פיילוט / ייצור + שחרור ייצור כתוב מול baseline קפוא — `vfconvert`/`vfprod`.
-- שפת זמן ללקוח: שלבי ייצור מול מוכנות לאיסוף שדרות + מרווח בטיחות + עדכון לפני שהלקוח שואל — `vfsales`/`vfops` (בלי ימי SLA מומצאים).
-- שער 10 יחידות רצופות (FPY) + קיבולת לפי צוואר בקבוק לפני הרחבת מק״ט — `vfsku`/`vfprod`.
-- פריימי תהליך עם תומכים עדיין עליהם מתוך עבודות אמיתיות — `vfgrowth`; CTA = הודעת אינסטגרם / איסוף שדרות.
-- Best Skills: לא due (~47ש מ־24.9; יעד ~48ש).
-- MakerWorld: דולג (שבת; קאדנס א׳+ד׳).
+- טופס קליטה לפני מחיר (8 בלוקים / 6 שאלות קצרות) שמחליט quote / hold / discovery / sample-first לפני שפת ₪ — מיפוי ל־`vfconvert`.
+- חבילת הצעה מינימלית: קובץ שולט אחד + מספר גרסה + כמות/שלב + שימוש + גימור + קריטי למידה — `vfconvert`/`vfsales` (בלי ₪ מומצא).
+- שלוש מדרגות גימור לפני אישור הצעה (פונקציונלי / פונה-ללקוח / דגימת מצגת) + פנים מוגנים — `vfsales`/`vfconvert`/`vfprod`.
+- רשימת automatic-fail ל־QC + אריזת איסוף שמעדיפה מניעת שבירה על מהירות — `vfprod` (דפוס בלבד).
+- Best Skills: due/stale (~72ש מ־24.9) — בוצע על דירוג 26.9; `no-embed-existing-coverage`.
+- MakerWorld/Printables א׳: Cloudflare; רישיונות UNPROVEN; אין שם להציע למדף.
 
-מקור מלא: `packages/vfresearch/sources/2026-09-26-orchestra.md`.
+מקור מלא: `packages/vfresearch/sources/2026-09-27-orchestra.md` · `2026-09-27-best-skills.md` · `2026-09-27-makerworld-scan.md`.
 
 ## שבועי קישורים · 25.9.2026 (Weekly Research Accountability · gh-failover)
 

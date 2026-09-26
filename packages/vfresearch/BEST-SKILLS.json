@@ -39,11 +39,11 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-24",
-  "dataDate": "2026-09-24",
-  "lastArtifact": "packages/vfresearch/sources/2026-09-24-best-skills.md",
+  "lastPass": "2026-09-27",
+  "dataDate": "2026-09-26",
+  "lastArtifact": "packages/vfresearch/sources/2026-09-27-best-skills.md",
   "lastResult": "no-embed-existing-coverage",
-  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due pulse executed inside 2026-09-24 Research Seat; no separate automation created",
+  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due/stale pulse (~72h since 2026-09-24) executed inside 2026-09-27 Research Seat; ranking snapshot dataDate 2026-09-26; no separate automation created",
   "embedded": [
     {
       "id": "grill-me",
@@ -248,6 +248,16 @@
       "id": "earthtojake-text-to-cad",
       "url": "https://github.com/earthtojake/text-to-cad",
       "note": "2026-09-14: remains watch-only. Source-controlled CAD + DfAM validation may fit vfprod only if a real pre-slice geometry gap is measured. No second CAD runtime."
+    },
+    {
+      "id": "ui-taste",
+      "url": "https://www.skills.sh/uizze.sh/ui-taste",
+      "note": "2026-09-27: trending-7d #1 on LinklyAI dataDate 2026-09-26. Watch with anti-ui-slop / taste-skill; vfbriefux internal only; no foreign tokens; no public site."
+    },
+    {
+      "id": "affaan-m-ecc",
+      "url": "https://github.com/affaan-m/ECC",
+      "note": "2026-09-27: top-repos #3 on 26.9 snapshot. Watch only; no second architecture runtime / no npx."
     }
   ],
   "skipped": [
