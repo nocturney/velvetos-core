@@ -1,7 +1,7 @@
 {
   "task_id": "openpost-v4.36.3-staging-2026-09-26",
-  "status": "blocked",
-  "component_state": "Blocked",
+  "status": "done",
+  "component_state": "Idle",
   "pack": "vfigos",
   "goal": "Exact upstream v4.36.3 passes backup + migration smoke 136->138 + staging smoke on the existing Windows staging (loopback 18080) without touching production",
   "planned_steps": [
@@ -9,7 +9,7 @@
     "Upstream review v4.35.0...v4.36.3 (release notes, compare, source at exact tags)",
     "vfbridge6 rebase check on v4.36.3 (apply, go test, compile probe)",
     "Box-isolated migration smoke 136->138 (not repo staging)",
-    "Windows staging run per task_plan.md runbook (owner/host operator)",
+    "Windows staging run per task_plan.md runbook on the staging host (owner-approved, staging only)",
     "Record staging results; owner decision on vfbridge7 build and production"
   ],
   "completed_steps": [
@@ -17,9 +17,16 @@
     "project_preflight PASS (scripts/vf_project_preflight.py --domain system_engineering)",
     "Upstream review written to findings.md (migrations 137/138, Meta scopes, MCP default, security, vfbridge impact)",
     "vfbridge6 tracked.patch applies cleanly to v4.36.3 (1 offset); overlay copies; go test platform/publisher/queue/apitokens ok; compile probe ok",
-    "Box-isolated smoke: v4.35.0 schema 136 -> v4.36.3 schema 138, ready 200, integrity ok, FK 0, restart ok, rollback-by-restore ok"
+    "Box-isolated smoke: v4.35.0 schema 136 -> v4.36.3 schema 138, ready 200, integrity ok, FK 0, restart ok, rollback-by-restore ok",
+    "Step 0 read-only host verification on owner PC 'Chris' (COMPUTERNAME CHRIS): staging dir, task VelvetOS-OpenPost-Staging Running, v4.35.0 exe sha be6520f4..., start script sha 2d5541e4..., firewall VelvetOS-OpenPost-Staging-LocalOnly Inbound Block Any, schema 136; no prod OpenPost on the PC; staging DB/port/secrets not shared with prod",
+    "Attempt 1 (10:13) FAIL_BEFORE_ANY_CHANGE: preprobe firewall read returned null (runbook helper named Fw collided with the PowerShell alias fw=Format-Wide); nothing changed, staging kept running v4.35.0",
+    "Attempt 2 (10:14-10:16) PASS: real backup D:\\Velvet\\Backups\\OpenPost\\pre-v4.36.3-20260926-101455 (raw data copy hash-matched + consolidated sqlite backup schema 136 integrity ok FK 0)",
+    "Downloaded v4.36.3 Windows exe, sha256 8d799a0d... matched",
+    "Migration smoke on 127.0.0.1:18081 against a copy of the backup: schema 136->138, integrity ok, FK 0, mcp_media_upload_tickets + publications.creation_source present, API smoke pass, real staging DB unchanged",
+    "Promoted staging 18080 to v4.36.3 (start script path v4.35.0->v4.36.3, new sha 9ca6072f...); staging smoke pass (health, ready, version, 401 unauth, draft create/validate/delete, schedule-without-destination 503, retry-failed 409 contract, publications/jobs list, analytics read + refresh queue 200)",
+    "Restart/persistence via scheduled task: ready, v4.36.3 sha, schema 138, firewall still Block"
   ],
-  "next_step": "Owner or office host operator runs task_plan.md staging runbook on windows-backup-worker (staging only), or grants an explicit way to reach it; then record staging_smoke",
+  "next_step": "Owner decisions: (1) record staging v4.36.3 in OPENPOST.json runtime.staging* + startScriptSha256 (and scripts/check-windows-path-contract.py) in a separate PR; (2) Meta app permission check before any reconnect; (3) vfbridge7 build (with TransportError fix) and production are separate decisions",
   "artifacts": [
     "packages/vfharness/state/openpost-v4.36.3-staging-2026-09-26/findings.md",
     "packages/vfharness/state/openpost-v4.36.3-staging-2026-09-26/task_plan.md",
@@ -27,19 +34,17 @@
     "packages/vfharness/state/openpost-v4.36.3-staging-2026-09-26.json"
   ],
   "unresolved": [
-    "staging_smoke NOT_RUN: Windows staging (127.0.0.1:18080, inbound firewall Block) is not reachable from the agent box",
+    "OPENPOST.json runtime.stagingVersion/stagingBinarySha256/stagingReadiness and persistence.startScriptSha256 (pinned by scripts/check-windows-path-contract.py) still describe v4.35.0; the host now runs v4.36.3 (start script sha 9ca6072fc8789ffd846a72bea2e73951446c824bb9532797ef6accaedb73460a). Not edited here (owner decision, separate PR)",
     "Meta app 1748471159829574: whether pages_read_user_content + pages_manage_metadata are added and whether the connecting user holds an app role is UNPROVEN (owner-only Meta dashboard check); required before any post-upgrade reconnect",
     "vfbridge7 candidate should classify upstream *platform.TransportError (pre-fence timeouts lose auto-retry on upstream-client paths)",
-    "OPENPOST_MCP_MODE is documented but not wired in v4.36.3 server (wired from v5.0.0); direct MCP tool mode is forced"
+    "OPENPOST_MCP_MODE is documented but not wired in v4.36.3 server (wired from v5.0.0); direct MCP tool mode is forced",
+    "Staging now holds one synthetic smoke user/workspace (staging-smoke-staging-20260926101531@example.invalid); the draft publication was deleted",
+    "Upstream binds all interfaces (listener ::18080 / ::18081); local-only relies on the Windows firewall (18080 Block rule; the ~5 s 18081 migration smoke ran non-admin with no temp rule, profiles DefaultInboundAction NotConfigured = Windows default Block)"
   ],
-  "outcome": "decision_gate",
-  "pulse": "blocked",
-  "verification": "Box commands: git apply --check, go test (4 pkgs ok), go build probe exit 0, isolated smoke readiness/schema/integrity reads; GitHub release asset digests. No repo staging or production reads/writes.",
-  "gate": {
-    "kind": "decision_gate",
-    "waiting_for": "Christian (owner) / office Windows host operator",
-    "reason": "Repo staging lives on the loopback-only Windows host that also runs the Instagram failover watcher; running it is outside the agent box and the task stop rule applies"
-  },
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "Owner PC runbook run-openpost-v4.36.3-staging.ps1 (sha256 963a176b0a0223397e8784de0f124d9a4965fe84c9c495a3c452c7f2d5890d39), RUN-RESULT.json result PASS at D:\\Velvet\\Tmp\\openpost-v4.36.3-staging and in the backup dir; post-run read-only check: task Running, ::18080 v4.36.3 ready, no 18081 listener, firewall rule Block, no auto-created firewall rules for the new exe. Box: git apply --check, go test, compile probe, isolated smoke.",
+  "gate": null,
   "escalation": null,
   "last_updated": "2026-09-26",
   "execution_state": {
@@ -50,13 +55,22 @@
     "linux_server_sha256": "de478b024d751135620f707fa6c84f34b5fc679b4310490e2dee5c8c3a38c286",
     "schema_from": 136,
     "schema_to": 138,
-    "staging_smoke": "NOT_RUN",
+    "staging_smoke": "PASS",
     "box_isolated_smoke": "PASS",
     "vfbridge_rebase_apply": "CLEAN_WITH_OFFSET",
     "production_touched": false,
     "pin_changed": false,
     "live_verified_changed": false,
-    "instagram_write_performed": false
+    "instagram_write_performed": false,
+    "staging_host": "CHRIS (owner PC 'Chris', repo role windows-backup-worker)",
+    "staging_version_now": "v4.36.3",
+    "staging_binary_sha256_now": "8d799a0de2a2a0cf286c02c479343187a75b21d8329e1d9e0bb410fe81f3f35f",
+    "staging_start_script_sha256_now": "9ca6072fc8789ffd846a72bea2e73951446c824bb9532797ef6accaedb73460a",
+    "staging_schema_now": 138,
+    "staging_firewall": "VelvetOS-OpenPost-Staging-LocalOnly Inbound Block Any (unchanged)",
+    "staging_backup": "D:\\Velvet\\Backups\\OpenPost\\pre-v4.36.3-20260926-101455",
+    "migration_smoke_18081": "PASS",
+    "rollback_needed": false
   },
-  "latest_observation": "Box-isolated upgrade 136->138 PASS with synthetic data; vfbridge6 rebases cleanly; repo staging not run (unreachable/owner-gated)."
+  "latest_observation": "Repo staging PASS on 2026-09-26 10:16 Asia/Jerusalem: backup, 18081 migration smoke 136->138, staging 18080 on v4.36.3 ready, smoke + restart pass, firewall Block; production untouched."
 }

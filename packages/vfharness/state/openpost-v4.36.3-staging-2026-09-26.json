@@ -68,11 +68,79 @@
   },
   "staging": {
     "host": "windows-backup-worker",
+    "host_observed": "CHRIS (owner PC 'Chris')",
     "method": "pinned-single-binary",
     "local_url": "http://127.0.0.1:18080",
-    "status": "NOT_RUN",
-    "reason": "loopback-only Windows host not reachable from agent box; host also runs Instagram failover watcher; owner/operator step",
-    "runbook": "packages/vfharness/state/openpost-v4.36.3-staging-2026-09-26/task_plan.md"
+    "status": "PASS",
+    "ran_at": "2026-09-26T10:14:58+03:00",
+    "finished_at": "2026-09-26T10:16:00+03:00",
+    "runbook": "packages/vfharness/state/openpost-v4.36.3-staging-2026-09-26/task_plan.md",
+    "runner_sha256": "963a176b0a0223397e8784de0f124d9a4965fe84c9c495a3c452c7f2d5890d39",
+    "attempts": [
+      {
+        "at": "2026-09-26T10:13:19+03:00",
+        "result": "FAIL_BEFORE_ANY_CHANGE",
+        "reason": "preprobe firewall read null (helper Fw shadowed by alias fw=Format-Wide)"
+      },
+      {
+        "at": "2026-09-26T10:14:55+03:00",
+        "result": "PASS"
+      }
+    ],
+    "isolation": {
+      "shared_with_prod": false,
+      "prod_on_host": false
+    },
+    "backup": {
+      "path": "D:\\Velvet\\Backups\\OpenPost\\pre-v4.36.3-20260926-101455",
+      "raw_copy_matches_original": true,
+      "consolidated_db_sha256": "3bdffb8dfbb09577c7796673e4543f8a864b341ec572c2fe912ba2a17720cb28",
+      "schema": 136,
+      "integrity": "ok",
+      "fk_violations": 0,
+      "start_script_sha256": "2d5541e4c2b7017c9d34212e78e53c02ee6f144f0e54cf1b1f68defbfed03bd0"
+    },
+    "download_sha256_match": true,
+    "migration_smoke": {
+      "port": 18081,
+      "target": "copy of backup",
+      "status": "PASS",
+      "fromSchemaVersion": 136,
+      "toSchemaVersion": 138,
+      "integrityCheck": "ok",
+      "foreignKeyViolations": 0,
+      "staging_db_unchanged": true
+    },
+    "smoke": {
+      "status": "PASS",
+      "health": 200,
+      "ready": "ready",
+      "version": "v4.36.3",
+      "unauth_publications": 401,
+      "unauth_mcp_media_upload": 401,
+      "draft_create": 200,
+      "creation_source": "web",
+      "schedule_no_destination": 503,
+      "retry_failed_contract": 409,
+      "publications_list": 200,
+      "jobs_list": 200,
+      "analytics_read": 200,
+      "analytics_refresh_queue": 200
+    },
+    "restart_persistence": "PASS",
+    "final": {
+      "version": "v4.36.3",
+      "binary_sha256": "8d799a0de2a2a0cf286c02c479343187a75b21d8329e1d9e0bb410fe81f3f35f",
+      "running": true,
+      "schema": 138,
+      "start_script_sha256": "9ca6072fc8789ffd846a72bea2e73951446c824bb9532797ef6accaedb73460a",
+      "firewall": "VelvetOS-OpenPost-Staging-LocalOnly enabled Inbound Block Any",
+      "listener": "::18080 (all interfaces; firewall-enforced local-only)"
+    },
+    "rollback": "not needed",
+    "residue": "one synthetic smoke user + workspace in staging DB",
+    "not_exercised": "provider OAuth / Meta scopes / Instagram publish (staging has no provider accounts)",
+    "openpost_json_staging_fields": "stale (still v4.35.0); separate owner decision"
   },
   "production": {
     "status": "UNCHANGED",
@@ -86,9 +154,9 @@
     "api_mcp_contract": "REVIEWED",
     "media_limits": "REVIEWED",
     "scheduler_queue_retry": "REVIEWED_FOLLOWUP",
-    "database_schema_migrations": "BOX_SMOKE_PASS_STAGING_NOT_RUN",
+    "database_schema_migrations": "PASS_STAGING_136_TO_138",
     "security": "REVIEWED",
-    "staging_smoke": "NOT_RUN",
+    "staging_smoke": "PASS",
     "instagram_live_verify": "UNCHANGED_NOT_APPLICABLE",
     "analytics_read": "REVIEWED",
     "signed_delivery_approval_live": "UNCHANGED"
@@ -99,7 +167,14 @@
     "no liveVerified change",
     "no Instagram write",
     "no production host access",
-    "hold PRs #279/#298 untouched"
+    "hold PRs #279/#298 untouched",
+    "no Meta reconnect / new scopes not requested",
+    "Instagram failover watcher and GrokBot tasks untouched",
+    "staging firewall kept Block"
   ],
-  "reviewed_at": "2026-09-26T08:50:00+03:00"
+  "reviewed_at": "2026-09-26T10:30:00+03:00",
+  "owner_approval_staging_run": {
+    "text": "Run the test from my computer, staging environment only.",
+    "date": "2026-09-26"
+  }
 }

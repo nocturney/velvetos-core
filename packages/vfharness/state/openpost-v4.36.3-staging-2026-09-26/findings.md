@@ -139,15 +139,46 @@ no Meta credential and no network exposure. Upstream Linux binaries were verifie
 
 What this does **not** prove: the real staging DB, the Windows binary, provider OAuth, publish/queue/retry flows, or anything in production.
 
-## 6. Why the repo staging run did not happen
+## 6. Repo staging run (Windows staging host, 2026-09-26, owner-approved)
 
-- The repo defines staging as the Windows host `windows-backup-worker` (`OPENPOST.json` `runtime.stagingHost`), method
-  `pinned-single-binary`, `D:\Velvet\Services\OpenPost\staging\start-openpost-staging.ps1` (scheduled task
-  `VelvetOS-OpenPost-Staging`), listener `http://127.0.0.1:18080` with the inbound firewall rule `VelvetOS-OpenPost-Staging-LocalOnly` = Block
-  (`runtime.networkHardening.localOnlyEnforced=true`). Isolated migration smoke uses port `18081` (`runtime.migrationSmoke.isolatedPort`).
-- That host is loopback-only by design and is not reachable from the agent box. Running there means operating on the office Windows machine,
-  which also runs the boot-supervised Instagram failover watcher (`runtime.grokInstagramFailover`, `C:\ProgramData\VelvetOS\instagram-failover`).
-  The task's stop rule applies: stop at the prepared plan.
-- Staging holds no provider OAuth (`openpost-v4.35.0-staging-2026-09-17.json` → provider apps/social accounts 0). The new Meta scopes
-  therefore cannot be exercised on staging without the Meta app secret, a public HTTPS callback and owner Meta-dashboard steps, which are all
-  production-class credentials or owner-only steps.
+Owner approval (10:08 Asia/Jerusalem): "Run the test from my computer, staging environment only."
+Turn 1 of this task could not reach the host from the agent box (see git history of this file); it was then run on the owner's registered PC.
+
+### 6.1 Host verification (read-only, before any change)
+
+- PC `Chris`, `COMPUTERNAME=CHRIS`, Windows 11 Pro, PowerShell 7.6.6. `windows-backup-worker` in `OPENPOST.json` is a role label; every
+  fingerprint matched: `D:\Velvet\Services\OpenPost\staging` (`data`, `media`, `v4.31.0`, `v4.34.2`, `v4.35.0`), task `VelvetOS-OpenPost-Staging`
+  Running, running exe sha `be6520f4…4cc8` (v4.35.0), start script sha `2d5541e4…3bd0`, firewall rule `VelvetOS-OpenPost-Staging-LocalOnly`
+  enabled/Inbound/Block/Any/18080, `/api/v1/ready` ready, schema 136, provider apps/social accounts/OAuth grants 0.
+- Isolation: the staging `.env` points only at `staging\data` / `staging\media`, port 18080 and staging-only secrets. Production runs on GCP
+  `openpost-prod`; no prod-class OpenPost runs on this PC. Nothing (DB, data dir, port, credentials) is shared.
+- Avoided: GrokBot tasks (Boot Supervisor/Interactive Handoff/Watchdog), the Instagram failover watcher (`C:\ProgramData\VelvetOS\instagram-failover`),
+  and the prod rollout scripts in `C:\ProgramData\VelvetOS\openpost-rollout` (not scheduled here; not run).
+
+### 6.2 Run (`run-openpost-v4.36.3-staging.ps1`, sha256 `963a176b…0d39`, non-admin)
+
+| Step | Result |
+|---|---|
+| Attempt 1 (10:13) | `FAIL_BEFORE_ANY_CHANGE`: pre-probe firewall read returned null because a helper named `Fw` is shadowed by the built-in alias `fw` (Format-Wide). Staging was not stopped; nothing changed. Fixed by renaming. |
+| Pre-probe (10:14:58) | ready; v4.35.0 sha; start script sha; firewall Block; schema 136; providers 0 |
+| Backup | `D:\Velvet\Backups\OpenPost\pre-v4.36.3-20260926-101455`: raw copy of `data\` (`openpost.db`, `-wal`, `-shm`, migrate lock) hash-matched the originals; start script copied; `openpost.consolidated.db` (sqlite backup API, sha `3bdffb8d…cb28`) schema 136, integrity ok, FK 0; media 0 files; `BACKUP-MANIFEST.json` + `RUN-RESULT.json` |
+| Download | `openpost-server-windows-amd64.exe` sha `8d799a0d…f35f` = release digest; `.env` copied from v4.35.0 (identical config) into `staging\v4.36.3` |
+| Migration smoke 127.0.0.1:18081 (copy of backup) | **PASS**: ready; schema **138**; integrity ok; FK 0; `mcp_media_upload_tickets` + `publications.creation_source` present; jobs 3992 completed/6 pending preserved; API smoke pass; real staging DB sha unchanged |
+| Promote 18080 | start script path `v4.35.0` → `v4.36.3` (new sha `9ca6072f…460a`); task started; ready; listener sha = v4.36.3; firewall Block |
+| Staging smoke 18080 | **PASS**: health 200, ready, version `v4.36.3`, unauth `/api/v1/publications` + `/mcp/media-upload` 401, register/login, workspace, draft create (`creation_source=web`)/validate/get/delete, schedule without destination 503 ("no destinations to authorize"; no job), retry-failed 409 ("no retryable failed destinations remain"), publications + jobs list 200, analytics read 200 + refresh queue 200, accounts 0 |
+| Restart/persistence | **PASS**: stop + start via the scheduled task, ready, v4.36.3 sha, schema 138, integrity ok, firewall Block |
+| Result | `PASS`; no rollback needed |
+
+Post-run read-only check: task Running; `::18080` pid 13808 = v4.36.3, ready; no 18081 listener; firewall rule Block; no firewall rules were
+auto-created for the new exe.
+
+### 6.3 Caveats
+
+- Upstream listens on all interfaces (`e.Start(":"+port)`); local-only relies on the firewall. 18080 has the Block rule. The ~5 s 18081 smoke ran
+  non-admin, so no temporary block rule was created; all profiles report `DefaultInboundAction=NotConfigured` (Windows default: Block inbound).
+- Staging keeps one synthetic smoke user/workspace (`staging-smoke-staging-20260926101531@example.invalid`); the draft was deleted.
+- Staging still has no provider OAuth, so Meta/Instagram publishing and the new scopes were **not** exercised (not possible without prod-class
+  credentials; out of scope).
+- `OPENPOST.json` `runtime.staging*` and `persistence.startScriptSha256` (pinned in `scripts/check-windows-path-contract.py`) still describe v4.35.0.
+  Recording the new staging state is a separate owner decision/PR; this PR does not edit `OPENPOST.json`.
+- Rollback path: stop the task, restore `start-openpost-staging.ps1` and `data\*` from the backup dir, start the task (v4.35.0 on schema 136).

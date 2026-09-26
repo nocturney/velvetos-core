@@ -6,6 +6,8 @@
 **pack:** vfigos · vfharness
 **Opened:** 2026-09-26 (Asia/Jerusalem)
 **Owner approval (scope):** "prepare a v4.36.3 test in a staging environment, without touching production"
+**Owner approval (staging run):** "Run the test from my computer, staging environment only." (2026-09-26)
+**Staging result:** PASS 2026-09-26 10:16 Asia/Jerusalem; see findings.md §6 and progress.md
 
 ## Goal
 
