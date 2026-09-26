@@ -1,0 +1,37 @@
+{
+  "task_id": "weekly-research-2026-09-25",
+  "routine": "weekly-research-accountability",
+  "status": "done",
+  "component_state": "Idle",
+  "path": "gh-failover",
+  "failover_reason": "Cursor Cloud Agent launch blocked: Cursor usage exhausted",
+  "date": "2026-09-25",
+  "timezone": "Asia/Jerusalem",
+  "last_updated": "2026-09-25T12:21:00+03:00",
+  "artifacts": [
+    "packages/vfresearch/sources/2026-09-25-weekly-links.md",
+    "packages/vfresearch/sources/2026-09-25-print-demand.md",
+    "packages/vfresearch/LINKS.json",
+    "packages/vfops/data/research.md"
+  ],
+  "links": {
+    "total": 84,
+    "reviewed_live": 80,
+    "walled_sourceNote_only": 4,
+    "dead": 0,
+    "changed": [
+      "huly-platform:archived"
+    ]
+  },
+  "print_demand_signals": 4,
+  "embeds": [
+    "huly-platform->LINKS.json note",
+    "heyorca 2026-09-25->print-demand sound"
+  ],
+  "not_done": [
+    "calendar/HANDOFF draft line not written (scope limited to weekly artifacts)",
+    "MakerWorld scan not due (sun+wed)",
+    "Best Skills owned by Research Seat; not due"
+  ],
+  "locks": "no invented ILS/Insights/customers/Origin slugs/LIVE; no auto-DM; no IG writes; no owner email; pickup Sderot only"
+}
