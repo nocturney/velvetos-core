@@ -2,7 +2,7 @@
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden and removed from executable project surfaces. Instagram scheduling authority is the Cloudflare Publisher in `packages/vfigos/PUBLISHER.json`; OpenPost is frozen.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 PRODUCT: VelvetOS Core
@@ -30,7 +30,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - **Visible Text Gate is global:** any prose/microcopy an AI creates or rewrites and Christian, a customer, the public, a partner, or another human will read is not final until the relevant `constitution/VISIBLE_TEXT.md` chain actually ran. Route through `vfcopy`; select the real surface (`public-social`, `visual-microcopy`, `customer-message`, `sales-proposal`, `owner-brief`, `human-document`, `ui-microcopy`, `desk`), use reader-first + relevant domain/writing tools + Humanizer/AI-tells + factual/surface QA, and bind PASS to the exact text/version when the surface has an artifact/digest. Do not humanize verbatim source, IDs, hashes, URLs, code, raw logs or machine payloads. CI/skill existence is not a candidate receipt; unproven execution = `UNPROVEN`, not PASS.
 - HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot to press Send/Publish. Grok Bot is optional backup.
 - Gmail: `send_message` / `reply` / `forward` are **allowed** for office mail and named inquiry threads. No blast list. No invented ₪. Office 07:00 brief is תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`).
-> LEGACY / provenance only for VF publication; not a provider route: - Instagram `@velvets_cloud`: send via a connected publish tool; if none, failover **same turn** to Canva + Drive `create_file` + Gmail (`vfigos/SEND.md`). Do not idle. Do not claim the feed posted if it did not.
+- Instagram `@velvets_cloud`: schedule/publish through **cloudflare-instagram-publisher** (`packages/vfigos/PUBLISHER.json`) to the official Meta Instagram Graph API. Verify live state independently; never route via OpenPost or Canva.
 - Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - CTA is **PUBLIC_CURRENT_CTA** = Instagram message («שלחו לנו הודעה כאן באינסטגרם») / איסוף שדרות. Not bare English «שלחו DM». Not WhatsApp phone in public copy. **BUSINESS_CONTACT_RECORD** WhatsApp `050-2517000` stays in desk/integration only (`constitution/PUBLIC_CTA.md`). Customer WhatsApp **send** stays human. Core may have WhatsApp MCP for search/draft (`packages/vfmcp/CONNECT-WHATSAPP.md`); VF `mcpBind.whatsapp.send=false`.
@@ -96,7 +96,6 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfe2b.py` | Awesome-agents desk |
 | `scripts/check-vfmakers.py` | Maker-skills desk |
 | `scripts/check-vfagents.py` | 500-list playbooks |
-> LEGACY / provenance only for VF publication; not a provider route: | `scripts/check-vf-canva.py` | Canva Instagram desk |
 | `scripts/check-vfresearch.py` | Weekly inspiration-links + bi-daily best-skills + last30 community research + IG music + orchestra failover law |
 | `scripts/check-vfcost.py` | Material-only cost CLI (grams × ILS/kg); missing grams refuse; no invented sale ₪ |
 | `scripts/check-vfprod.py` | Floor fleet routing (4 beds, no Print from HQ); filament remainder; maintenance snapshot empty=אין ספירה |
@@ -107,7 +106,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-control-api.py` | Control API projection gateway — schema honesty, auth, fail-closed actions, no second SoT, no secret leakage |
 | `scripts/check-living-studio.py` | Living Studio connective tissue — Skills registry, World Model projection, Pulse, Universal Intake, no duplicate SoTs |
 | `scripts/check-vfops-loop.py` | Office activation loop — every pack consumed into 07:00 brief + HANDOFF |
-> LEGACY / provenance only for VF publication; not a provider route: | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + Canva ready + Gemini/ChatGPT API desks (`vf_gemini.py` / `vf_chatgpt.py`; not aliargun / RLabs; no Cloud browser login) |
+> LEGACY / provenance only for VF publication; not a provider route: | `scripts/check-vfmcp.py` | Grok/GPT/Gemini/Perplexity tool-gap map + desk web/image + current tool authority + Gemini/ChatGPT API desks (`vf_gemini.py` / `vf_chatgpt.py`; not aliargun / RLabs; no Cloud browser login) |
 | `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
 | `scripts/check-velvetos.py` | VelvetOS Core + modules; VF frontend scaffold under instances/; backend≠frontend; offering shape stays ready-products + custom-work |
 | `scripts/check-vf-offering.py` | Velvet Factory offer language — ready products + custom work only; quantity/customer type stay job attributes; retired service-line labels/files fail closed |
@@ -130,7 +129,7 @@ ALLOW write: `packages/**`, `constitution/**`, `docs/**`, `AGENTS.md`, `CHANGELO
 ALLOW execute: `python3 scripts/check-*.py`
 ASK before: `git push`; Calendar create **מחוץ** לרשת IG הקבועה
 ALLOW calendar: `create_event` לכל פוסט מתוכנן על `vfgrowth/CALENDAR.md` (`CALENDAR-OPS.md`) — לא שואלים משבצת
-> LEGACY / provenance only for VF publication; not a provider route: ALLOW send: Gmail `send_message` / `reply` / `forward`; Instagram via connected tool or Canva+Drive+Gmail failover (`constitution/SEND.md`)
+ALLOW send: Gmail `send_message` / `reply` / `forward`; Instagram scheduling/publish only through the current Cloudflare Publisher route (`packages/vfigos/SEND.md`).
 ALLOW write: Drive `create_file` for office docs (no personal/medical/legal folders)
 DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights / Origin slugs, claiming IG posted without a publish tool, Cloud/Grok login to `gemini.google.com` / `chatgpt.com`, persisting browser cookies, installing aliargun or RLabs gemini-mcp
 
@@ -164,3 +163,7 @@ For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK
 ## UNIVERSAL PROJECT REQUEST GATE — ALWAYS REQUIRED
 
 Before substantive work on **any** VelvetOS / Velvet Factory request, load `packages/velvetos/PROJECT-REQUEST-GATE.md` and resolve `packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json`. Classify the request, load only the routed authorities/skills/Sources of Truth, resolve hard gates, and require `project_preflight: PASS` before execution. Missing/stale/contradictory mandatory authority is fail-closed; do not fall back to model defaults or memory of an older chat. After execution, run the routed domain postflight on the exact final artifact/provider result before claiming completion. Use `scripts/vf_project_preflight.py` as the deterministic authority-path resolver when operating in the repo.
+
+
+## Current tool authority (2026-09-26)
+Read `packages/velvetos/TOOL-STATUS.json` before routing an external tool. Cloudflare Publisher + Meta Graph are canonical for Instagram publication; OpenPost is frozen; Canva/vfcanva are removed and forbidden.

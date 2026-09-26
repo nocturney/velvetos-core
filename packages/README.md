@@ -17,7 +17,7 @@ Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). HQ overlay (not 
 
 Constitution and team of 5: [`../constitution/`](../constitution/). Hebrew reports: [`../docs/SHARE-EMBED-he.md`](../docs/SHARE-EMBED-he.md), [`../docs/SHARES-2026-08-30.md`](../docs/SHARES-2026-08-30.md).
 
-`vfcanva` is HQ-native (tree lives here). Instagram visuals go through Canva MCP; see `docs/CANVA.md`.
+Instagram publication is owned by `vfigos` through the Cloudflare Publisher (`vfigos/PUBLISHER.json`) and Meta Instagram Graph API. Canva/vfcanva are forbidden/removed.
 
 `vfmedia` is HQ-native. One shared media catalog over the locked Drive vault (`docs/MEDIA-VAULT.md`). תפעול owns intake. Do not invent SKUs or ₪. Do not change Drive sharing.
 

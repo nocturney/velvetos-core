@@ -2,7 +2,7 @@
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
+For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden and removed from executable VF project surfaces. OpenPost is frozen. Instagram scheduling/publish authority is Cloudflare Publisher -> official Meta Instagram Graph API.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 נעילה 31.8.2026 (Asia/Jerusalem) — הבעלים.  
@@ -32,7 +32,7 @@ Treg לא רלוונטי. Drive יוצר מסמכים לפי צורך.
 | ערוץ | מי | כלי | תנאי טקסט | לא |
 |---|---|---|---|---|
 | ג׳ימייל | **סוכן HQ** | `send_message` / `reply` / `forward` על `nocturney@gmail.com` | Visible Text Gate לפי הקורא + facts | לא מחכים לגרוק. לא מחכים לאדם ללחוץ Send |
-> LEGACY / provenance only for VF publication; not a provider route: | אינסטגרם `@velvets_cloud` | **סוכן HQ** דרך כלי מחובר | `publish_image` / `publish_carousel` / `publish_reel` / `publish_story` אחרי creative+Canva+vault+PREFLIGHT v2 | `public-social` + `visual-microcopy` כשיש טקסט על הוויזואל | לא LIVE-PACKET לאדם כברירת מחדל. לא אוטו־DM. לא Metricool כתלות |
+> LEGACY / provenance only for VF publication; not a provider route: | אינסטגרם `@velvets_cloud` | **סוכן HQ** דרך כלי מחובר | `Cloudflare Publisher after creative + exact approved bytes + PREFLIGHT | `public-social` + `visual-microcopy` כשיש טקסט על הוויזואל | לא LIVE-PACKET לאדם כברירת מחדל. לא אוטו־DM. לא Metricool כתלות |
 | וואטסאפ לקוח | אדם `050-2517000` | Core: MCP חיפוש/טיוטה. VF `send=false` | gated draft לפני handoff | HQ לא ממציא בוט |
 | מדפסות | רצפה | `vfprod` | — | HQ לא לוחץ Print |
 | בוסט / אוטו־DM | — | נעול | — | נעול תמיד |
@@ -107,10 +107,10 @@ python3 scripts/vf_send_preflight.py --gate gmail
 
 ## אינסטגרם — מותר דרך כלי
 
-> LEGACY / provenance only for VF publication; not a provider route: 1. **Visible Text + creative QA + שער עריכה** — copy chain, VOICE/Brand Guardian/רובריקה, Canva/vfcovers/vfcanva, ואז בדיקת final render.
+> LEGACY / provenance only for VF publication; not a provider route: 1. **Visible Text + creative QA + שער עריכה** — copy chain, VOICE/Brand Guardian/רובריקה, current vfom/vfcovers source-grounded route, ואז בדיקת final render.
 2. **PREFLIGHT v2** — קשור ל־hash של הקופי והחבילה המדויקת. approval ישן/חסר digest אינו תקף לפרסום חדש.
 3. `vfcopy` נותן public copy לפי `PUBLIC_CURRENT_CTA`; לא וואטסאפ בכיתוב ציבורי. Showcase יכול לבחור CTA ניטרלי/ללא CTA לפי המדיניות הפעילה.
-4. אם Instagram MCP מחובר — מריצים exact-package gate, ורק אחרי PASS מפרסמים ב־`publish_*`.
+4. After exact-package gate PASS, schedule/apply only through Cloudflare Publisher. The Instagram MCP bridge is independent read/verification, not scheduler authority.
 5. אחרי publish מאמתים ב־`list_media`/`get_media`; רק אז `liveVerified`.
 6. אם אין Publish MCP חי — failover Drive+Gmail באותו תור; לא טוענים שעלה.
 7. לא סרק. לא ממציאים שנשלח לפיד אם לא עלה.
