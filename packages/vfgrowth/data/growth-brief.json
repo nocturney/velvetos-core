@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-20",
-  "generatedAt": "2026-09-20T09:05:58+03:00",
+  "date": "2026-09-26",
+  "generatedAt": "2026-09-26T18:35:56+03:00",
   "component_state": "Blocked",
   "goal": "פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.",
   "locks": [
@@ -11,16 +11,16 @@
     "no-invented-ils",
     "no-schedule-from-hq"
   ],
-  "weekdayNote": "2026-09-20 = ראשון (Asia/Jerusalem)",
+  "weekdayNote": "2026-09-26 = שבת (Asia/Jerusalem)",
   "slotRecommendation": {
     "choice": "poll",
-    "when": "2026-09-21T20:30+03:00",
-    "whenHe": "שני 2026-09-21 20:30 Asia/Jerusalem",
+    "when": "2026-09-28T20:30+03:00",
+    "whenHe": "שני 2026-09-28 20:30 Asia/Jerusalem",
     "reasonShort": "20:30 היום חלף · משבצת הבאה",
-    "reason": "20:30 היום חלף. משבצת סטוריז הבאה: שני 2026-09-21 20:30 Asia/Jerusalem. בלי תזמון מ־HQ."
+    "reason": "20:30 היום חלף. משבצת סטוריז הבאה: שני 2026-09-28 20:30 Asia/Jerusalem. בלי תזמון מ־HQ."
   },
   "reel": {
-    "slot": "היום 16:00 · ריל ראשון בשבוע",
+    "slot": "אין פיד בשישי–שבת",
     "gate": "blocked_no_media",
     "topic": "חסר — אין print.done עם מדיה",
     "asset": "חסר",
@@ -38,13 +38,13 @@
   "story": {
     "slot": "אין סטוריז בשישי–שבת",
     "gate": "next_slot_recommendation",
-    "slotStatus": "המלצה · שני 2026-09-21 20:30 Asia/Jerusalem",
+    "slotStatus": "המלצה · שני 2026-09-28 20:30 Asia/Jerusalem",
     "recommendation": {
       "choice": "poll",
-      "when": "2026-09-21T20:30+03:00",
-      "whenHe": "שני 2026-09-21 20:30 Asia/Jerusalem",
+      "when": "2026-09-28T20:30+03:00",
+      "whenHe": "שני 2026-09-28 20:30 Asia/Jerusalem",
       "reasonShort": "20:30 היום חלף · משבצת הבאה",
-      "reason": "20:30 היום חלף. משבצת סטוריז הבאה: שני 2026-09-21 20:30 Asia/Jerusalem. בלי תזמון מ־HQ."
+      "reason": "20:30 היום חלף. משבצת סטוריז הבאה: שני 2026-09-28 20:30 Asia/Jerusalem. בלי תזמון מ־HQ."
     },
     "poll_id": "petg_vs_nylon",
     "question": "מה לבדוק מחר במעבדה?",
@@ -68,7 +68,7 @@
   },
   "studio_tasks": [
     "למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.",
-    "לתכנן ידנית למשבצת שני 2026-09-21 20:30 Asia/Jerusalem — לא Calendar מ־HQ.",
+    "לתכנן ידנית למשבצת שני 2026-09-28 20:30 Asia/Jerusalem — לא Calendar מ־HQ.",
     "לא להציג חום/חוזק בלי vfprod/CLAIMS.md."
   ],
   "print_events": 1,

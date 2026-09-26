@@ -1,0 +1,20 @@
+{
+  "schema": "vf.learning-candidate.v1",
+  "candidate_id": "learn-ci-office-control-plane",
+  "trigger": "GitHub Actions workflow 'Office Control Plane' failed on main",
+  "action": "Open a fix PR from the failing run log; if the root cause can recur, add or tighten a sensor/contract; triage this candidate (accept/reject/prune) instead of letting it accumulate.",
+  "scope": "project",
+  "confidence": 0.8,
+  "status": "accepted",
+  "evidence": [
+    "gh-run:36236658285:failure:2026-09-26T10:43:44Z:https://github.com/nocturney/velvetos-core/actions/runs/36236658285",
+    "office-loop-1830 triage 2026-09-26: Persist step failed because git add includes gitignored packages/velvetos/living-studio/data/signal-room.jsonl (living-studio/.gitignore); Watchdog/Sensor/Handoff steps succeeded. Misleading Fail-on-control-plane-error annotation."
+  ],
+  "first_seen": "2026-09-26T10:43:44Z",
+  "last_seen": "2026-09-26T18:37:51+03:00",
+  "owner_correction": false,
+  "promote_to": null,
+  "supersedes": null,
+  "source": "ci-failure-ingest",
+  "workflow": "Office Control Plane"
+}
