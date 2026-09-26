@@ -99,4 +99,4 @@ python3 scripts/vfresearch_cadence.py freshness
 
 ## Structured demand adapter note
 
-The weekly Print-Demand pass may use `DEMAND-SIGNALS.md` when structured search/marketplace evidence adds value. It is not a new cadence: acquisition happens inside the existing research run, normalized by `vf_demand_signals.py`, and the resulting evidence is consumed by the existing Print-Demand artifact. No provider scheduler is added.
+**DORMANT:** no provider feeds the adapter yet, so the weekly pass does not expect a DemandSignalPacket and does not report one as missing. When a provider is actually wired, the weekly Print-Demand pass may use `DEMAND-SIGNALS.md` when structured search/marketplace evidence adds value. It is not a new cadence: acquisition happens inside the existing research run, normalized by `vf_demand_signals.py`, and the resulting evidence is consumed by the existing Print-Demand artifact. No provider scheduler is added.

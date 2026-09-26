@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
-"""Normalize external public demand evidence for VelvetOS. No network. No send.
+"""DORMANT (2026-09-26, owner decision): no provider feeds this adapter yet.
+
+Kept runnable on purpose. `normalize` and `--self-test` work unchanged for any
+legitimate caller, but nothing schedules or invokes it, no provider is wired
+(the #247 provider request was closed: low priority, provider not in use), and
+no brief or sensor may treat demand signals as an active feed.
+scripts/check-demand-signals-dormant.py enforces this.
+
+Normalize external public demand evidence for VelvetOS. No network. No send.
 
 Acquisition stays provider-specific. This helper accepts already-acquired public facts,
 normalizes them into a stable DemandSignalPacket, and refuses synthetic demand scores.
