@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Cloudflare fingerprint guard D1 migration:** adds idempotent `packages/vfigos/cloudflare-publisher/migrations/d1/0001_publish_fingerprints.sql` and a README deploy order (migration → verify table → `wrangler deploy`). Without it, the existing D1 lacks `publish_fingerprints` and a redeployed Worker would fail closed on every due job. The guard is still not live; no deploy was performed. `check-cloudflare-publish-fingerprint.py` now requires the migration to match `schema.sql`.
+
 - 2026-09-26 — **Office Control Plane schedule offset:** `office-control-plane.yml` cron `0 */6 * * *` → `0 2,8,14,20 * * *` (05:00/11:00/17:00/23:00 IDT), so it no longer collides with the Office Loop at 10:30/18:30 IDT even with ~40 min GitHub delays. The chief-of-staff README/LOOPS/SYSTEM-MAP, learning-lifecycle playbook and `vfops/LOOP.json` cadence are updated. Approved by Christian 19:15 IDT.
 
 - 2026-09-26 — **Cloudflare scheduled-publish fingerprint guard:** the Cloudflare Instagram Publisher now computes the same 72-hour fingerprint as `packages/vfigos/approval/publish_fingerprint.py` (`ig_user_id` + ordered media SHA-256 digests + NFC/whitespace-normalized caption), blocks a recorded repeat before any Meta write, and records `published_verified` or `reconcile_required` outcomes in D1. New regression `check-cloudflare-publish-fingerprint.py` replays the 2026-09-13 incident: 5 repeats, 0 extra publishes. Morning Green contract and 2026-09-26 dry-run remain green.

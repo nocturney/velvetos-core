@@ -47,3 +47,13 @@ The first fully scheduled write through this route remains production evidence t
 ## Migration evidence
 
 The OpenPost schedule for `VF-OCTOPUS-20260927-CAROUSEL` was moved to this publisher for 2026-09-27 12:00 Asia/Jerusalem. OpenPost was cleared to no active schedules. The migration files in `migrations/2026-09-24-openpost/` preserve the exact content/package/media hashes and source evidence.
+
+## Publish fingerprint guard · deploy order (owner step)
+
+The 72-hour fingerprint guard (same definition as `packages/vfigos/approval/publish_fingerprint.py`) lives in the source only; it is **not live until the Worker is redeployed**. The existing D1 database does not have the `publish_fingerprints` table yet. Apply the idempotent migration first, then deploy:
+
+1. `npx wrangler d1 execute velvetos-instagram-publisher --remote --file=migrations/d1/0001_publish_fingerprints.sql`
+2. `npx wrangler d1 execute velvetos-instagram-publisher --remote --command "SELECT name FROM sqlite_master WHERE name='publish_fingerprints'"` → one row
+3. `npx wrangler deploy`
+
+Deploying without step 1 fails closed: the guard query errors before any Meta write and each due job goes retry → dead_letter. Nothing is published twice, but nothing is published either.
