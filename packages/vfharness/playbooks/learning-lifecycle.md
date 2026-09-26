@@ -39,6 +39,10 @@ Schema fields:
 }
 ```
 
+## Automatic CI signal source
+
+`office-control-plane.yml` (every 6h) runs `python3 scripts/vf_learning.py ingest-ci` over `gh run list --branch main`: each workflow that failed on `main` (push/schedule/dispatch, last 7 days) gets one candidate `learn-ci-<workflow>` with `gh-run:<id>:<conclusion>:<createdAt>:<url>` evidence. It is deterministic and idempotent (evidence de-duplicated by run id, timestamps from the runs, file written only on change), confidence rises 0.1 per independent failure (0.3 → max 0.8), and **status is never changed automatically** — accept/reject/promote/prune is triage by the Office Loop or a human. Self-test: `python3 scripts/vf_learning.py selftest`.
+
 ## Confidence rules
 
 - Confidence is evidence strength, not model certainty.

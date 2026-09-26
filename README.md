@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Best Skills due gate 44h:** `BEST-SKILLS.json` `freshnessContract` is now 44h due + 8h grace (was 48h + 4h), so the stale threshold stays 52h and the cadence stays every-2-days. The daily Researc…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Best Skills due gate 44h:** `BEST-SKILLS.json` `freshnessContract` is now 44h due + 8h grace (was 48h + 4h), so the stale threshold stays 52h and the cadence stays every-2-days. The daily Researc…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Learning candidates from CI failures:** `scripts/vf_learning.py` gains `ingest-ci` (+ `selftest`). `office-control-plane.yml` (existing 6h schedule, now also `actions: read`) lists `main` runs an…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Learning candidates from CI failures:** `scripts/vf_learning.py` gains `ingest-ci` (+ `selftest`). `office-control-plane.yml` (existing 6h schedule, now also `actions: read`) lists `main` runs an…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -150,7 +150,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 
 - full sensor suite
 - Gmail brief send
-- Office Control Plane loop
+- ‏Office Control Plane loop (כולל רישום מועמדי למידה מכשלי CI ב־main דרך `vf_learning.py ingest-ci`)
 - publish-bridge cleanup
 - ‏VelvetOS research (מתקין את אותו runtime של חיישנים כמו full sensor suite לפני הרצת check-all)
 - weekly deck generation
@@ -291,6 +291,8 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 ## Operational workflows
 
 The repository currently carries workflows for the sensor suite, Gmail brief, Office Control Plane, publish-bridge cleanup, VelvetOS research, weekly deck generation and vfmedia intake.
+
+The Office Control Plane workflow also turns failed `main` runs into learning candidates (`scripts/vf_learning.py ingest-ci` → `packages/vfharness/state/learning-candidates/learn-ci-<workflow>.json`, deterministic, status never auto-changed; triage stays with the Office Loop).
 
 The VelvetOS research workflow installs the same sensor runtime as the sensor-suite workflow (Pillow, cryptography, starlette, ffmpeg) before its final `check-all.py` step, so its sensor verdict reflects the contracts rather than a missing module.
 
