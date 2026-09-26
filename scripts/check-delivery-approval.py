@@ -1838,6 +1838,9 @@ def main() -> int:
             return mem_spend.claim(approval_id, meta=meta)
 
     _dag._spend_store = lambda: _CountingSpend()  # type: ignore[assignment]
+    # Publish fingerprint guard (#198) is covered by check-publish-fingerprint.py;
+    # this matrix exercises approval spend, so the fingerprint window is disabled here.
+    _dag._fingerprint_window_seconds = lambda: 0  # type: ignore[assignment]
 
     def _fresh_image_receipt(**overrides):
         kwargs = dict(now=real_now, ttl_seconds=600)

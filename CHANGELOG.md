@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Publish fingerprint guard (#198):** `vfigos/approval/publish_fingerprint.py` plus a gate hook refuse a repeated identical publish (same account + signed media digests + normalized caption within 72h) before approval spend and before any media fetch. Ambiguous outcomes are recorded and definite failures are not. The store fails closed. New sensor `check-publish-fingerprint.py` replays the 2026-09-13 incident (5 fresh-approval repeats → 0 extra Graph calls). The approval matrix sensor disables the window for its spend cases. Live grid check (read-only): the five duplicate media IDs no longer exist on @velvets_cloud.
+
 - 2026-09-26 — **Chief of Staff system map, refreshed (replaces #227):**
   - The docs-only operating map `docs/chief-of-staff/` (README, SYSTEM-MAP, SOT-INDEX, GATES-AND-ESCALATION, PACKS-CATALOG, LOOPS), rebased onto current main.
   - **Refreshed:**
