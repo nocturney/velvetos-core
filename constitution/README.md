@@ -10,7 +10,7 @@
 | [`STUDIO.md`](STUDIO.md) | עובדות סטודיו VF |
 | [`TEAM.md`](TEAM.md) | חמישה מושבים |
 | [`tags.md`](tags.md) | תגיות משרד וצינור |
-| [`TAGS.md`](TAGS.md) | תגיות בריף + מיפוי Gemini/Perplexity |
+| [`BRIEF-TAGS.md`](BRIEF-TAGS.md) | תגיות בריף + מיפוי Gemini/Perplexity |
 | [`ORCHESTRA.md`](ORCHESTRA.md) | תזמורת הכלים החיצוניים — ChatGPT · Gemini · Perplexity |
 | [`ORGANIC_GROWTH.md`](ORGANIC_GROWTH.md) | מפעל תוכן אורגני — טיוטות + בריף 07:00; לא פרסום אוטומטי |
 | [`../docs/FAILOVER.md`](../docs/FAILOVER.md) | מעבר מנהל משרד (ChatGPT → Perplexity / Gemini / Grok / Cursor) |

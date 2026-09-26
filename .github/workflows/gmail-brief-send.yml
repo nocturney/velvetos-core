@@ -112,7 +112,7 @@ jobs:
           GMAIL_APPS_SCRIPT_SECRET: ${{ secrets.GMAIL_APPS_SCRIPT_SECRET }}
         run: |
           if [ -z "$GMAIL_APPS_SCRIPT_URL" ]; then
-            echo "::error::Missing repository secret GMAIL_APPS_SCRIPT_URL."
+            echo "::error::Missing Apps Script endpoint GMAIL_APPS_SCRIPT_URL (set in this workflow env, not a secret)."
             exit 2
           fi
           if [ -z "$GMAIL_APPS_SCRIPT_SECRET" ]; then
