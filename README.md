@@ -31,7 +31,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>82</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>83</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>9</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>32</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Research Cadence sensor runtime fix:** `.github/workflows/velvetos-research.yml` now installs the same sensor runtime as `check-all.yml` (Pillow, cryptography, starlette, ffmpeg) before its final…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Research Cadence sensor runtime fix:** `.github/workflows/velvetos-research.yml` now installs the same sensor runtime as `check-all.yml` (Pillow, cryptography, starlette, ffmpeg) before its final…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Living README gate exempts routine output:** the PR gate moved from inline bash in `check-all.yml` to `scripts/readme_contract.py`. Routine/machine outputs are exempt from the README requirement …</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Living README gate exempts routine output:** the PR gate moved from inline bash in `check-all.yml` to `scripts/readme_contract.py`. Routine/machine outputs are exempt from the README requirement …</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -192,6 +192,8 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 
 ‏ה־README הוא חלק מהמוצר. שינוי מהותי ב־`packages/`, `office/`, `scripts/`, `.github/workflows/` או `constitution/` מחייב עדכון README באותו PR, אלא אם מדובר בשינוי פנימי שאינו משנה capability.
 
+‏פלט שגרתי פטור: תוצרי מחקר מתוארכים, checkpoints, תוצרי בריף, קבצי `data/`/`state/` של חבילות וראיות של workflows לא מחייבים עדכון README. קוד, קונפיגורציה וחוזים עדיין מחייבים. הרשימה המדויקת ב־`scripts/readme_contract.py`. ב־CI החיישנים רצים גם אם שלב README נכשל.
+
 ‏ה־System Pulse למעלה **נוצר מנתוני הריפו עצמו**. להרצה ידנית:
 
 ```bash
@@ -314,6 +316,8 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 ## Living README contract
 
 This README is part of the product. Material capability/runtime changes must update it in the same PR.
+
+Routine output is exempt: dated research artifacts, harness checkpoints, Morning Brief artifacts/outputs, pack `data/`/`state/` files and machine-workflow evidence do not require a README edit. Code, config, contracts and pack docs still do. The exact list lives in `scripts/readme_contract.py` (`ROUTINE_OUTPUT`) and is guarded by `scripts/check-readme-contract.py`. In CI, the README steps no longer hide the sensors: `check-all.py` and commission isolation run even when a README step fails.
 
 The System Pulse above is generated from repository sources:
 
