@@ -76,14 +76,14 @@ Jobs SoT: Google Sheet `VF HQ · jobs`.
 ```
 העלאה → 01 נכנס
   → vfmedia.py intake run (תפעול) → catalog registered → 02 מקור verified
-  → נגזרת 03 בעבודה (Canva / vfom)
+  → נגזרת 03 בעבודה (vfom / כלי עריכה מאושר)
   → versionApproval בקטלוג → 04 מאושר לפרסום
   → PREFLIGHT + SEND (פרסום צעד נפרד)
 ```
 
 - Upload ≠ approval. Folder 04 ≠ proof.
 - אין מחיקה. אין שינוי share על מקור/נכנס/עבודה.
-- HTTPS ציבורי זמני רק לנגזרת מאושרת (Publish Bridge / Canva CDN).
+- HTTPS ציבורי זמני רק לנגזרת מאושרת דרך Publish Bridge.
 
 ## מפעל תוכן / Organic Growth
 
@@ -91,7 +91,7 @@ Jobs SoT: Google Sheet `VF HQ · jobs`.
 
 ```
 print.done + מדיה אמיתית
-  → vfom concept/hook/EDL + vfcopy + vfcanva
+  → vfom concept/hook/EDL + vfcopy
   → quality_checked → policy_checked
   → pending_publish_authorization
       → authorized_for_tool_publish (אם standing auth ב־instance)

@@ -47,11 +47,10 @@
       "active": true,
       "timezone": "Asia/Jerusalem",
       "schedule": "CRON_TZ=Asia/Jerusalem 45 1 * * *",
-      "protectedRoutineCount": 9,
+      "protectedRoutineCount": 8,
       "protectedRoutineTitles": [
         "VelvetOS Integrity Guard",
         "Velvet Research Seat",
-        "OpenPost Release Watch",
         "Velvet Morning Brief",
         "Morning Delivery Guard",
         "VelvetOS Office Loop",

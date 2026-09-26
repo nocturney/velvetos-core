@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - The #357 crons (vfmedia `23 */3`, jobs `53 1-23/3`) and the #355 Docker/Actions pins.
     - `instagram-read-smoke.yml`, and `vf_learning ingest-ci` learning candidates.
     - Frontend synced to the union template, with `core.lock.yml` tracking main and the `VELVETOS_CORE_READ_TOKEN` CI note.
-    - OpenPost is paused (publishing frozen); Canva is denied for VF publication (#228).
+    - OpenPost is paused (publishing frozen); scheduled publication authority moved to the Cloudflare Instagram Publisher.
     - Research Seat is the scheduler (no external timer), and the sensor count is 85.
   - It still reads existing authorities only: not a SoT, sensor or runtime.
 

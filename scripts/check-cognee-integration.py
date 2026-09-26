@@ -227,10 +227,10 @@ def main() -> None:
         fail("verified Integrity Guard active/timezone drift")
     if guard.get("schedule") != "CRON_TZ=Asia/Jerusalem 45 1 * * *":
         fail("verified Integrity Guard schedule drift")
-    if guard.get("protectedRoutineCount") != 9:
-        fail("verified Integrity Guard must protect nine routines")
+    if guard.get("protectedRoutineCount") != 8:
+        fail("verified Integrity Guard must protect eight routines")
     expected_titles = {
-        "VelvetOS Integrity Guard", "Velvet Research Seat", "OpenPost Release Watch",
+        "VelvetOS Integrity Guard", "Velvet Research Seat",
         "Velvet Morning Brief", "Morning Delivery Guard", "VelvetOS Office Loop",
         "Weekly Research Accountability", "Cognee Memory Sync", "Cognee Stable Updates",
     }

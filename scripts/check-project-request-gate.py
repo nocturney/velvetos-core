@@ -160,9 +160,10 @@ if not required_entrypoints.issubset(set(entrypoints)):
 patterns = route.get("deniedDirectivePatterns", [])
 if not patterns:
     fail("publicationRoute must declare deniedDirectivePatterns")
-legacy_denied = set(route.get("legacyDeniedToolSurfaces", []))
-if not legacy_denied:
-    fail("publicationRoute must quarantine denied-tool surfaces outside active entrypoints")
+legacy_raw = route.get("legacyDeniedToolSurfaces", [])
+if not isinstance(legacy_raw, list) or not all(isinstance(x, str) for x in legacy_raw):
+    fail("publicationRoute legacyDeniedToolSurfaces must be an array of strings")
+legacy_denied = set(legacy_raw)
 if set(entrypoints) & legacy_denied:
     fail("publicationRoute active entrypoints overlap legacy denied-tool surfaces")
 

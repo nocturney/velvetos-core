@@ -148,7 +148,7 @@ Desk note: `publish_story` מוצהר; live story publish **לא נבדק** בא
 Team MCP scope: **not-verified**.  
 DM כבוי תמיד.
 
-Failover פרסום: לפרסום VF חל `VF_PUBLICATION_ROUTE_V1` — Canva/vfcanva **אסורים** (#228). אין failover שעוקף שערים. לא לטעון שעלה לפיד בלי read-back.
+Failover פרסום: לפרסום VF חל `VF_PUBLICATION_ROUTE_V1`. אין failover שעוקף שערים. לא לטעון שעלה לפיד בלי read-back.
 
 ### 6.8 Visible Text + Hebrew copy — IMPLEMENTED
 
@@ -208,10 +208,9 @@ Insights עצמיים קנוניים ב־Instagram MCP. Scraping פרטי אסו
 | Gmail `nocturney@gmail.com` | ready, read-and-send | Drive `create_file` + המשך; לא ממציאים פנייה |
 | Calendar | ready, read; create לפי CALENDAR-OPS לרשת IG | «חסר לוח» + המשך |
 | Drive | ready, search-and-create | לא תיקיות אישיות; לא שינוי share לכספת |
-| Canva | desk (legacy) — **אסור לפרסום VF** (`VF_PUBLICATION_ROUTE_V1`, #228) | לא מסלול פרסום VF |
 | Instagram MCP | LIVE/VERIFIED לפי pulse; smoke קריאה יומי (`instagram-read-smoke.yml`) | `BLOCKED` + דיווח; אין failover שעוקף שערים |
 | WebSearch | desk | תזמורת ChatGPT+Gemini+Perplexity |
-| GenerateImage | desk | לפי `PUBLICATION-PREP-EXECUTION.md`; לא Canva לפרסום VF |
+| GenerateImage | desk | לפי `PUBLICATION-PREP-EXECUTION.md`; source-grounded בלבד |
 | 3DAI | OAuth / site | Drive + 3DAISTUDIO.md; לא Print |
 | Sheets | Desktop / WIF ל־jobs | Drive CSV (`vfbooks/SHEETS.md`) |
 | WhatsApp MCP | draft/search; VF `send=false` | `vf_office.py convert draft` |
