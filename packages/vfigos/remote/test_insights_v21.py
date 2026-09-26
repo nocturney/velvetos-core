@@ -23,6 +23,7 @@ from insights_v21 import (  # noqa: E402
     normalize_media_metrics,
     partition_account_metrics,
     partition_account_metrics_by_period,
+    split_range_capable,
 )
 from cta_audit import audit_caption, audit_list_media_payload, audit_profile  # noqa: E402
 from mutations import MATRIX, _unsupported  # noqa: E402
@@ -207,10 +208,12 @@ class InsightsV21Tests(unittest.TestCase):
         self.assertNotIn("saves", calls[1]["metric"].split(","))
 
     def test_live_failure_account_days_28_period_partition(self):
-        """Live ChatGPT call: period=days_28 with follower_count + profile_views + engagement.
+        """Live ChatGPT/desk call: period=days_28 with follower_count + profile_views + engagement.
 
-        Must return reach successfully and expose incompatible metrics as structured
-        partial errors — not fail the whole snapshot, and not fabricate 28-day totals.
+        2026-09-26 live read: days_28 returned only reach. Meta's documented path for
+        28-day interaction totals is period=day + metric_type=total_value + since/until.
+        Must: keep reach on days_28, fetch interaction metrics as ONE Meta range total
+        (no summing/extrapolation here), and keep follower_count a structured partial.
         """
         metrics = (
             "reach,follower_count,profile_views,total_interactions,"
@@ -219,38 +222,36 @@ class InsightsV21Tests(unittest.TestCase):
         names = normalize_account_metrics(metrics)
         compatible, incompat = partition_account_metrics_by_period(names, "days_28")
         self.assertEqual(compatible, ["reach"])
-        incompat_names = {p["metrics"][0] for p in incompat}
+        ranged, still = split_range_capable("days_28", incompat)
         self.assertEqual(
-            incompat_names,
-            {
-                "follower_count",
-                "profile_views",
-                "total_interactions",
-                "likes",
-                "comments",
-                "shares",
-                "saves",
-            },
+            ranged,
+            ["profile_views", "total_interactions", "likes", "comments", "shares", "saves"],
         )
-        for row in incompat:
+        self.assertEqual({p["metrics"][0] for p in still}, {"follower_count"})
+        for row in still:
             self.assertEqual(row["error_class"], "period_incompatible")
-            self.assertEqual(row["period_requested"], "days_28")
             self.assertNotIn("days_28", row["periods_supported"])
 
+        now = 1_790_000_000
         calls: list[dict] = []
 
         def getter(path: str, **params):
             calls.append({"path": path, **params})
-            # Would historically fail if follower_count shared this call.
-            self.assertEqual(params.get("period"), "days_28")
-            self.assertEqual(params.get("metric"), "reach")
+            if params.get("period") == "days_28":
+                self.assertEqual(params.get("metric"), "reach")
+                self.assertNotIn("since", params)
+                return {"data": [{"name": "reach", "period": "days_28", "values": [{"value": 330}]}]}
+            # Range call: Meta-documented day + total_value + since/until (28 days).
+            self.assertEqual(params.get("period"), "day")
+            self.assertEqual(params.get("metric_type"), "total_value")
+            self.assertEqual(params.get("until"), now)
+            self.assertEqual(params.get("until") - params.get("since"), 28 * 86400)
+            self.assertLessEqual(params.get("until") - params.get("since"), 30 * 86400)
+            self.assertNotIn("follower_count", params["metric"].split(","))
             return {
                 "data": [
-                    {
-                        "name": "reach",
-                        "period": "days_28",
-                        "values": [{"value": 335}],
-                    }
+                    {"name": n, "period": "day", "total_value": {"value": 7}}
+                    for n in params["metric"].split(",")
                 ]
             }
 
@@ -260,17 +261,48 @@ class InsightsV21Tests(unittest.TestCase):
             metrics=metrics,
             period="days_28",
             get_fn=getter,
+            now_fn=lambda: now,
         )
         self.assertTrue(out["ok"])
         self.assertTrue(out.get("partial"))
-        self.assertEqual({r["name"] for r in out["insights"]}, {"reach"})
-        self.assertEqual(out["metrics_fetched"], ["reach"])
-        self.assertEqual(len(calls), 1)
-        partial_names = {p["metrics"][0] for p in out["partial_errors"]}
-        self.assertIn("follower_count", partial_names)
-        self.assertIn("profile_views", partial_names)
-        # No fabricated multi-day engagement rows.
-        self.assertNotIn("likes", {r["name"] for r in out["insights"]})
+        self.assertEqual(len(calls), 2)
+        got = {r["name"]: r for r in out["insights"]}
+        self.assertIn("reach", got)
+        self.assertIn("profile_views", got)
+        self.assertIn("total_interactions", got)
+        self.assertNotIn("follower_count", got)
+        # Range rows carry Meta's single total and the range, never a per-day sum.
+        self.assertEqual(got["profile_views"]["total_value"], {"value": 7})
+        self.assertEqual(got["profile_views"]["range_days"], 28)
+        self.assertEqual(got["profile_views"]["period_requested"], "days_28")
+        self.assertEqual(out["range_aggregation"]["source"], "meta_total_value_range")
+        self.assertEqual(out["range_aggregation"]["days"], 28)
+        self.assertIn("profile_views", out["metrics_fetched"])
+        self.assertEqual({p["metrics"][0] for p in out["partial_errors"]}, {"follower_count"})
+
+    def test_week_range_and_day_unchanged(self):
+        now = 1_790_000_000
+        calls: list[dict] = []
+
+        def getter(path: str, **params):
+            calls.append(dict(params))
+            return {"data": [{"name": n} for n in params["metric"].split(",")]}
+
+        out = fetch_account_insights(
+            None, "1", metrics="profile_views", period="week", get_fn=getter, now_fn=lambda: now
+        )
+        self.assertTrue(out["ok"])
+        self.assertEqual(calls[0]["period"], "day")
+        self.assertEqual(calls[0]["until"] - calls[0]["since"], 7 * 86400)
+        # period=day requests never get a since/until range (unchanged behaviour).
+        calls.clear()
+        fetch_account_insights(None, "1", metrics=None, period="day", get_fn=getter, now_fn=lambda: now)
+        self.assertTrue(all("since" not in c for c in calls))
+        self.assertTrue(all(c["period"] == "day" for c in calls))
+        # Lifetime-only demographics are never range-fetched.
+        self.assertEqual(
+            split_range_capable("days_28", [{"metrics": ["follower_demographics"]}])[0], []
+        )
 
 
 class CtaAuditTests(unittest.TestCase):

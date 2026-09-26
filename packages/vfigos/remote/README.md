@@ -49,7 +49,7 @@ Never mount `VELVET_DELIVERY_APPROVAL_PRIVATE_KEY_B64` or issuer tokens on this 
 
 | Module | Purpose |
 |---|---|
-| `insights_v21.py` | Fix Graph v21 Insights: media-type defaults (`saved`≠`saves`), `metric_type` split, period partitioning (no fabricated days_28) |
+| `insights_v21.py` | Fix Graph v21 Insights: media-type defaults (`saved`≠`saves`), `metric_type` split, period partitioning; week/days_28 interaction metrics via Meta's since/until `total_value` range (`range_aggregation`, nothing summed locally) |
 | `mutations.py` | `graph_mutation_matrix` SoT + gated `delete_media`; profile/caption writes **not exposed** |
 | `cta_tools.py` / `cta_audit.py` | Read-only PUBLIC_CURRENT_CTA audit of live captions/bio |
 | `delivery_approval_gate.py` | Verify signed owner approval, then the publish fingerprint guard (#198, refuses a repeated identical publish before spend), then atomic spend, before any write tool |

@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **OpenPost records corrected (records only):** `OPENPOST.json` has a new `status` block saying paused (publishing frozen), staging v6.2.0 (PR #342 evidence, commit d6b55fcd), production and LIVE st…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **OpenPost records corrected (records only):** `OPENPOST.json` has a new `status` block saying paused (publishing frozen), staging v6.2.0 (PR #342 evidence, commit d6b55fcd), production and LIVE st…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **IG insights days_28 read path:** diagnosis from a read-only live call. Only `reach` came back because Meta allows only `period=day` for interaction metrics. Not a scope problem (`period=day` retu…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **IG insights days_28 read path:** diagnosis from a read-only live call. Only `reach` came back because Meta allows only `period=day` for interaction metrics. Not a scope problem (`period=day` retu…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -362,6 +362,10 @@ Pinned runtime: the three Cloud Run Dockerfiles (`vfigos/remote`, `vfigos/approv
 Publish fingerprint guard (#198): at the Instagram mutation boundary (`packages/vfigos/remote/delivery_approval_gate.py`), every publish tool computes sha256(account + signed media digests + normalized caption) and is refused if the same fingerprint was published within 72h. The refusal happens before the approval is spent and before any media fetch. Ambiguous `media_publish` outcomes count as possibly live, so reconcile with `list_media` before retrying. Operator override is deploy config only (`VELVET_PUBLISH_FINGERPRINT_WINDOW_SECONDS=0`). Store: `publish-fingerprints/` in the approval spend bucket; if it is unavailable, publishing fails closed. Regression sensor: `scripts/check-publish-fingerprint.py`. It takes effect on the next manual redeploy, which needs objects list/get on the bucket for the mutation SA.
 
 שומר טביעת פרסום: אותו נכס + אותו כיתוב לא יתפרסמו שוב תוך 72 שעות. הסירוב קורה לפני שהאישור נצרך.
+
+Instagram 28-day insights (read path): `get_account_insights(period=days_28)` used to return only `reach`. The cause was neither token scope nor deprecation: Meta supports only `period=day` for follower_count / profile_views / total_interactions (and the other interaction metrics), and our overlay turned them into partial errors. `packages/vfigos/remote/insights_v21.py` now fetches them the way Meta documents it: `period=day&metric_type=total_value&since/until` over 28 (or 7) days, one Meta total per metric, reported under `range_aggregation`. follower_count stays day-only and is hidden under 100 followers (the account has 81). It takes effect on the next manual redeploy.
+
+תובנות 28 יום: לא בעיית הרשאה ולא deprecation. זו מגבלת period של Meta, ועכשיו מביאים את הסכום של Meta לטווח של 28 יום.
 
 Realistic schedules: VF Media Auto Intake (`23 */3 * * *`) and Jobs Sheet Write-Through (`53 1-23/3 * * *`) each run every 3h (8/day), 1.5h apart. The old `*/5` and 15-min crons were only delivered ~6–8 times a day by GitHub (median gap ~3.5h), while sparse schedules here are honoured in full. Immediate runs: `workflow_dispatch`; jobs also runs on `sync-receipt.json` pushes.
 
