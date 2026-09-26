@@ -37,7 +37,6 @@
 |---|---|---|
 | **Gmail thread** | subject · 3 הודעות אחרונות · CTA · שדות חסרים | thread מלא |
 | **JSON / Sheets export** | שורות/שדות לעבודה · לא dump | קובץ / export מלא |
-| **Canva / תמונה** | caption · edit URL · פורמט | metadata / export |
 | **Drive doc** | כותרת · 10 שורות רלוונטיות | doc מלא |
 | **WebSearch / orchestra** | 3 bullets + URL | לא גוף חסום — «אין גוף» |
 | **Sensor output** | pass/fail + שורת שגיאה | stdout מלא ב-checkpoint |
@@ -108,4 +107,3 @@ headroom wrap cursor   # או proxy + הגדרות Cursor
 | פק `vfheadroom` | embed בפלייבוק, לא פק |
 | orchestrator / proxy על Cloud Agent | Cursor הוא המשרד |
 | דחיסה שממציאה ₪ / Insights | חוק HQ |
-| MCP Headroom + Gmail/Canva כפול | `docs/MCP-FIT.md` — אין כפילות |

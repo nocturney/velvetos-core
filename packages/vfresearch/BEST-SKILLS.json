@@ -13,7 +13,6 @@
   "standingForever": true,
   "standingSince": "2026-09-03",
   "standingNote": "Owner standing order remains active. Research Seat is the canonical scheduler authority: run a Best Skills pass when lastPass is at least 44h old (daily seat gives a ~48h cadence without slipping to 72h); no external timer renewal is required.",
-  "stoppedAt": null,
   "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-best-skills.md",
   "briefBlock": "05-משרד",
   "mention": [
@@ -198,8 +197,7 @@
       "note": "Production engineering skills — watch for harness-relevant patterns."
     },
     {
-      "id": "ai-video-image-gen-trending",
-      "note": "skills-101 / genmedia trending. Map only via expert-media-director + Canva-first; no Veo/Kling from HQ."
+      "id": "ai-video-image-gen-trending"
     },
     {
       "id": "archify",

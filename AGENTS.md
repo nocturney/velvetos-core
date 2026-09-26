@@ -2,7 +2,6 @@
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 PRODUCT: VelvetOS Core
@@ -30,7 +29,6 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - **Visible Text Gate is global:** any prose/microcopy an AI creates or rewrites and Christian, a customer, the public, a partner, or another human will read is not final until the relevant `constitution/VISIBLE_TEXT.md` chain actually ran. Route through `vfcopy`; select the real surface (`public-social`, `visual-microcopy`, `customer-message`, `sales-proposal`, `owner-brief`, `human-document`, `ui-microcopy`, `desk`), use reader-first + relevant domain/writing tools + Humanizer/AI-tells + factual/surface QA, and bind PASS to the exact text/version when the surface has an artifact/digest. Do not humanize verbatim source, IDs, hashes, URLs, code, raw logs or machine payloads. CI/skill existence is not a candidate receipt; unproven execution = `UNPROVEN`, not PASS.
 - HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot to press Send/Publish. Grok Bot is optional backup.
 - Gmail: `send_message` / `reply` / `forward` are **allowed** for office mail and named inquiry threads. No blast list. No invented ₪. Office 07:00 brief is תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`).
-- Instagram `@velvets_cloud`: scheduled publication uses the Cloudflare Instagram Publisher; publication target is Meta Instagram Graph API; live status requires Graph/MCP read-back. OpenPost is frozen. Canva/vfcanva are forbidden. See `packages/vfigos/SEND.md` and `packages/velvetos/TOOL-STATUS.json`.
 - Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - CTA is **PUBLIC_CURRENT_CTA** = Instagram message («שלחו לנו הודעה כאן באינסטגרם») / איסוף שדרות. Not bare English «שלחו DM». Not WhatsApp phone in public copy. **BUSINESS_CONTACT_RECORD** WhatsApp `050-2517000` stays in desk/integration only (`constitution/PUBLIC_CTA.md`). Customer WhatsApp **send** stays human. Core may have WhatsApp MCP for search/draft (`packages/vfmcp/CONNECT-WHATSAPP.md`); VF `mcpBind.whatsapp.send=false`.

@@ -1751,7 +1751,6 @@ def work_to_story() -> dict:
         "close followup",
     ]
     closable = [i for i in fu["items"] if i.get("state") == "closed_verified"]
-    not_close_on = ["scheduling", "upload", "Canva export", "approval", "publish request"]
     return {
         "pipeline": pipeline,
         "followups_by_state": fu["by_state"],

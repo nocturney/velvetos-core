@@ -1,6 +1,5 @@
 # Velvet Motion Presets
 
-Canonical motion vocabulary for Velvet Factory social creative. Use these as restrained building blocks across Edits, CapCut, Premiere, Canva or the existing composition stack. Do not create transition noise for its own sake.
 
 | Preset | Use | Avoid | Default duration |
 |---|---|---|---|

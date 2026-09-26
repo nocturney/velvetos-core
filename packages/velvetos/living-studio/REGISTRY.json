@@ -161,7 +161,6 @@
         "packages/vfmedia/data/intake-events.jsonl"
       ],
       "risk": "yellow",
-      "blockedExternal": null,
       "note": "GHA OIDC commissioned 2026-09-10 — auth.ready=true; no VFMEDIA_DRIVE_CREDENTIALS_JSON owner action",
       "success": "real bytes verified → fingerprint → catalog → source move → receipt"
     },
@@ -239,13 +238,11 @@
       "route": [
         "vf_organic_growth.py",
         "vf-content-sprint",
-        "vfcanva",
         "vfigos"
       ],
       "packs": [
         "vfgrowth",
         "vfcopy",
-        "vfcanva",
         "vfom",
         "vfigos",
         "vfinsights"

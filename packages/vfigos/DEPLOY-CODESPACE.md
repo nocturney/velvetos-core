@@ -36,7 +36,6 @@ Status date: **2026-09-09**. No secrets in this file.
 3. `pip install adelaidasofia-instagram-mcp` (or editable install from the clone).
 4. Register MCP server name `instagram` with command `instagram-mcp` and env passthrough (see `packages/vfmcp/mcp.desktop.example.json`).
 5. Reload MCP client → run `healthcheck` → confirm `@velvets_cloud`.
-6. Publishing still requires vault approval + Canva/vfcovers + PREFLIGHT + **live verify** after `publish_*`.
 
 ## Explicit non-goals of this note
 

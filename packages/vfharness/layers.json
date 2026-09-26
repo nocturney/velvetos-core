@@ -124,8 +124,7 @@
     },
     {
       "id": "check-tool-authority",
-      "script": "scripts/check-tool-authority.py",
-      "how": "Enforce packages/velvetos/TOOL-STATUS.json; forbid active Canva/vfcanva and OpenPost routing."
+      "script": "scripts/check-tool-authority.py"
     },
     {
       "id": "check-vfgrowth",

@@ -37,7 +37,6 @@ If any required field is missing, the state is `BLOCKED`, not ready.
 
 ## Owner correction - canonical publication route (2026-09-15)
 
-For Velvet Factory publication creative, **Canva and vfcanva are not part of the canonical production pipeline**. Legacy references to Canva/vfcanva in older office documents are `UNSYNCED_LEGACY` for this scope and MUST NOT be used to route, generate, compose, export or approve a publication artifact.
 
 Mandatory execution gates are now explicit and sequential:
 

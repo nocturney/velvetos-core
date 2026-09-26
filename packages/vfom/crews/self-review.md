@@ -1,7 +1,6 @@
 # Crew: self-review
 
 Source pattern: OpenMontage slideshow-risk scoring + post-render self-review (delivery promise, motion honesty, subtitle/audio checks).
-Packs: `vfigos`, `vfcopy`, `vfcanva`.
 
 ## Roles
 
@@ -9,7 +8,6 @@ Packs: `vfigos`, `vfcopy`, `vfcanva`.
 |---|---|---|---|
 | Promise | `vfgrowth` | Restate what we claimed (timelapse / stills / hybrid). | Claim cinema without motion |
 | Copy lint | `vfcopy` | Voice, CTA, banned claims. | Invent Insights |
-| Frame | `vfcanva` | Safe zone + no price on art. | Export-and-post |
 | Review | `vfigos` | Pass / return to the previous crew. | Send |
 | Human | — | Final yes to Grok. | — |
 

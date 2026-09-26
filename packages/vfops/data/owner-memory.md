@@ -39,11 +39,9 @@
 ### צמיחה (content / IG)
 
 - **למדנו (5.9):** לוח פרסום קבוע — ריל ~16:00 א׳/ג׳, קרוסלה ה׳ ~12:00, סטורי א׳–ה׳ ~20:30, אין פיד ו׳–ש׳. ≥36ש בין פיד. שיבוץ ב־instagram.com לא בסוויט. חסר גלם → `MEDIA-NEEDED-FROM-CHRISTIAN`.
-- **למדנו:** תוכן מרצפת הוכחה — לא סצנות מומצאות; Canva ראשון ל-IG.
 - **למדנו:** מוזיקה לריל מ-HeyOrca / IG paste — לא שמות שירים מומצאים (`MUSIC.md`).
 - **למדנו:** אין בוסט / אוטו-DM / TikTok בלי ראש צוות.
 - **למדנו (חדש):** Social Booster = `expert-social-booster` + `@carousel-growth-engine`; Media director = `vfom/experts/MEDIA-DIRECTOR.md`.
-- **מקור:** vfgrowth PLAYBOOK, vfcanva, expert modules 2026-09-01.
 
 ### תפעול (ops / books)
 
@@ -148,9 +146,7 @@
 ### 2026-09-07 (רף סוכנות / סטוריז)
 - **מושב:** lead + צמיחה
 - **למדנו:** כריסטיאן (~08:27): כלים בקטלוג שלא רצים בפלט החי = מתחת לרף סוכנות. סטוריז G004 נכשלו כי הפריים נשאר קטלוג («איפה הטבעת?» / «לא על הרצפה») ולא סיפור-מוצר.
-- **מחר:** אין סטוריז/פיד בלי Canva MCP או vfcovers/vfcanva. חריץ 05 = CLI אמיתי או «אין חדש במשרד» + שורות פער. הדבקת סטוריז G004 = `G004-STORIES-FIX.md`.
 - **מקור:** תלונת בעלים 7.9.2026 · `vfops/hq/TOOL-USE-GAP-2026-09-07.md`.
-- **Superseded 14.9.2026:** הלקח על רף איכות נשאר; מסלול Canva/vfcanva אינו סמכות פרסום VF. הנתיב הנוכחי הוא `PUBLICATION-PREP-EXECUTION.md` + `publicationRoute` עם Product Truth ו־exact-final QA.
 
 ### 2026-09-05 (קישורי בעלים ×4)
 - **מושב:** ייצור
@@ -216,4 +212,3 @@
 - **למדנו:** מעקב פקיעת טוקן = `vfigos/data/token-watch.json` (רק `expiresAt` מאומת מ־Meta; בלי טוקן בדוחות). היקף Team MCP = לא מאומת.
 - **מחר:** להדביק `expiresAt` מ־debug_token; טיוטת G004 סטוריז ב־`vfgrowth/drafts/NEXT-2026-09-09-G004-stories.md`; follow-up G003→מוגמר `fu-G003-soccerball`.
 - **מקור:** אימות Cloud Agent 9.9.2026 · `vfigos/TOKEN-WATCH.md` · checkpoint `instagram-mcp-verify-2026-09-09`.
-

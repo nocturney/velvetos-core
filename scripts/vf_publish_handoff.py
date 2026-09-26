@@ -7,7 +7,6 @@ Missing bridge assets must trigger recovery — not an immediate
 `blocked_publish_transport`.
 
 Flow:
-  approved Canva/export
     → register handoff manifest (git, no binaries on main)
     → Publish Bridge normalize + stage (publish-bridge branch only)
     → public fetch verify
@@ -40,15 +39,12 @@ STATES_PATH = ROOT / "packages" / "vfigos" / "PUBLICATION-STATES.json"
 
 # Delivery sources that must never become the current approved package.
 FORBIDDEN_SOURCE_PATTERNS = (
-    re.compile(r"packages/vfcanva/jobs/", re.I),
     re.compile(r"packages/vfcovers/.*/out/", re.I),
     re.compile(r"/story-[0-9]+\.png$", re.I),
     re.compile(r"wsrv\.nl", re.I),
     re.compile(r"drive\.google\.com", re.I),
     re.compile(r"docs\.google\.com", re.I),
     re.compile(r"thumbnail", re.I),
-    re.compile(r"canva\.com/.*/preview", re.I),
-    re.compile(r"media-private\.canva\.com", re.I),
 )
 
 FORBIDDEN_PUBLIC_TEXT = (
@@ -257,7 +253,6 @@ def recover_and_stage_frame(
         return {"ok": False, "blocker": "blocked_creative_preflight", "error": "unapproved"}
 
     if not file_path.is_file():
-        # Attempt Canva re-export is an orchestration step; here we only record the blocker layer.
         set_state(doc, "blocked_artifact_retrieval", note=f"missing local export {file_path}")
         save_publication(doc)
         return {

@@ -19,7 +19,6 @@ Do not use for: ordinary code review, inventing ₪ / Insights, or refactoring p
 | 7 | Tool execution | real MCP call vs claimed send | `constitution/SEND.md` |
 | 8 | Tool interpretation | failover without inventing body | `ORCHESTRA.md` |
 | 9 | Answer shaping | Hebrew office copy; CTA WhatsApp / איסוף | desk CTA law |
-| 10 | Platform rendering | Gmail `htmlBody` / Canva / Drive | תצוגה 3 brief |
 | 11 | Hidden repair loops | second orchestrator / swarm / auto-fix | `vfe2b/LOCK.md` |
 | 12 | Persistence | `vfharness/state/*.json` vs stale cache | checkpoint schema |
 

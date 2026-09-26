@@ -64,8 +64,7 @@
       "verdict": "embed",
       "packs": [
         "vfgrowth",
-        "vfigos",
-        "vfcanva"
+        "vfigos"
       ],
       "note": "Instagram draft only. Review/schedule in vfigos. Grok sends. No TikTok, boost, or auto-DM."
     },
@@ -116,10 +115,8 @@
       "name": "image",
       "verdict": "embed",
       "packs": [
-        "vfcovers",
-        "vfcanva"
-      ],
-      "note": "Cover briefs. Canva first; Superdesign if Canva is disconnected. No invented floor scenes."
+        "vfcovers"
+      ]
     },
     {
       "name": "video",

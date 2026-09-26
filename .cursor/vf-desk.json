@@ -48,8 +48,7 @@
     "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
     "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done.",
     "2026-09-08: Shared media vault locked by Christian — Drive Velvet Media (root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv). One catalog packages/vfmedia. תפעול owns intake נכנס→מקור. GrokBot uses Drive MCP. Cursor owns catalog schema. Upload ≠ approval. Approved folder alone ≠ approval proof. No share-permission changes. No invented SKUs or ₪.",
-    "2026-09-08: PUBLIC_CURRENT_CTA = Instagram message only (@velvets_cloud). BUSINESS_CONTACT_RECORD WhatsApp 050-2517000 stays on desk but disabled for public CTA and customer outreach from HQ. constitution/PUBLIC_CTA.md. Auto-DM still forever forbidden. Publish states: prepared≠scheduled≠liveVerified (vfigos/PUBLICATION-STATES). Risk GREEN/YELLOW/ORANGE/RED (constitution/RISK.md). Office watchdog: scripts/vf_office_watchdog.py. Production→content continuity for process/WIP posts. Feed audit from post #3 REVIEW_REQUIRED. No Metricool dependency.",
-    "2026-09-26: Tool authority is packages/velvetos/TOOL-STATUS.json. Canva/vfcanva and Treg are forbidden. OpenPost is frozen. Scheduled Instagram publication uses the Cloudflare Instagram Publisher; organic publication target is Meta Instagram Graph API; live state requires Graph/MCP read-back."
+    "2026-09-08: PUBLIC_CURRENT_CTA = Instagram message only (@velvets_cloud). BUSINESS_CONTACT_RECORD WhatsApp 050-2517000 stays on desk but disabled for public CTA and customer outreach from HQ. constitution/PUBLIC_CTA.md. Auto-DM still forever forbidden. Publish states: prepared≠scheduled≠liveVerified (vfigos/PUBLICATION-STATES). Risk GREEN/YELLOW/ORANGE/RED (constitution/RISK.md). Office watchdog: scripts/vf_office_watchdog.py. Production→content continuity for process/WIP posts. Feed audit from post #3 REVIEW_REQUIRED. No Metricool dependency."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -123,7 +122,7 @@
     "superdesign": {
       "status": "skill-installed",
       "useWhen": "non-VF-publication graphics only when separately authorized",
-      "failover": "no Canva/vfcanva fallback"
+      "failover": "No automatic provider fallback for Velvet Factory public creative; use only when a separate non-publication authority permits it."
     },
     "instagram": {
       "status": "ready",
@@ -145,7 +144,6 @@
       "useWhen": "scheduled publish via Cloudflare publisher; live verification/read via Instagram Graph/MCP",
       "connect": "packages/vfigos/CONNECT-IG.md",
       "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
-      "officeRule": "OpenPost is frozen. Canva/vfcanva forbidden. Scheduled jobs must use Cloudflare publisher; live publication requires Graph read-back.",
       "notRequired": [
         "Metricool",
         "Publer",
@@ -188,9 +186,9 @@
         "INSTAGRAM_MCP_DM_ENABLED"
       ],
       "rule": "Approved public HTTPS media URL → publish_image|carousel|reel|story → verify live with list_media/get_media. No invented Insights. No auto-DM. No boost. publish tool success ≠ liveVerified.",
-      "failover": "MCP down / oauth fail at runtime → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)",
       "scheduler": "packages/vfigos/cloudflare-publisher/",
-      "publicationTarget": "Meta Instagram Graph API"
+      "publicationTarget": "Meta Instagram Graph API",
+      "failover": "Scheduled delivery stays on the Cloudflare Instagram Publisher. If the live Instagram Graph/MCP boundary is unavailable, preserve the exact approved artifact and mark the operation blocked pending canonical live verification."
     },
     "web": {
       "status": "ready",
@@ -205,9 +203,7 @@
     },
     "image": {
       "status": "ready",
-      "namespace": "cursor GenerateImage + Canva generate-design",
-      "useWhen": "User-asked image / brief graphic. Instagram still prefers Canva first.",
-      "failover": "Canva generate-design → Superdesign → packages/vfcanva/studio/render.py. No invented Canva URL."
+      "failover": "Use another currently connected image/edit capability or preserve the source and return visual_execution_unavailable; never invent provider success."
     },
     "treg": {
       "status": "not-relevant",
@@ -258,7 +254,7 @@
       "mcp": "https://studiomcphub.com/mcp",
       "useWhen": "Core print-file tools. VF: remove_background / resize only. Playbook: packages/vfmcp/CONNECT-STUDIOHUB.md",
       "rule": "Free tools unless lead seat. No wallet/x402 in git. No NFT. VF skips print_ready/CMYK. HQ does not print. No invented ₪.",
-      "failover": "Canva / packages/vfcanva/studio/render.py / 3DAI + vfprod/PREFLIGHT.md"
+      "failover": "Use the directly connected specialist capability or the existing local pack; if neither is available, report the specific unavailable capability without inventing execution."
     },
     "mcp-gsheets": {
       "status": "desktop-credentials",
@@ -277,7 +273,6 @@
     "gemini": {
       "status": "needs-key",
       "command": "python3 scripts/vf_gemini.py",
-      "namespace": null,
       "useWhen": "Orchestra Gemini desk via GEMINI_API_KEY. Do not open gemini.google.com from Cloud. Playbook: packages/vfmcp/SUBSCRIPTIONS.md + CONNECT-GEMINI.md",
       "rule": "Subscription gemini.google.com ≠ Gemini API. Do not install aliargun or RLabs gemini-mcp. No key in git. No Veo from HQ. No browser cookies. Without a key write חסר מפתח Gemini. Never invent a body.",
       "failover": "python3 scripts/vf_gemini.py orchestra if GEMINI_API_KEY else ChatGPT API + Perplexity + WebSearch"
@@ -285,7 +280,6 @@
     "chatgpt": {
       "status": "needs-key",
       "command": "python3 scripts/vf_chatgpt.py",
-      "namespace": null,
       "useWhen": "Orchestra ChatGPT desk via OPENAI_API_KEY. Do not open chatgpt.com from Cloud. Playbook: packages/vfmcp/SUBSCRIPTIONS.md + CONNECT-CHATGPT.md",
       "rule": "ChatGPT Plus ≠ OpenAI API. No key in git. No browser cookies. Without a key write חסר מפתח ChatGPT. Never invent a body.",
       "failover": "python3 scripts/vf_chatgpt.py orchestra if OPENAI_API_KEY else Gemini API + Perplexity + WebSearch"
@@ -398,12 +392,10 @@
       "tools": [
         "superdesign",
         "drive",
-        "canva",
         "instagram",
         "image",
         "web"
-      ],
-      "decides": "content pack and cover drafts. HQ reviews/schedules and publishes via Instagram MCP (adelaidasofia) or Canva+Drive+Gmail failover. Grok is optional backup."
+      ]
     },
     {
       "id": "ops",
@@ -610,7 +602,6 @@
         "vfom"
       ],
       "tools": [
-        "canva",
         "web"
       ],
       "job": "Review, schedule, and send via tools (vfigos/SEND.md). No boost. No auto-DM."
@@ -625,7 +616,6 @@
       "tools": [
         "superdesign",
         "drive",
-        "canva",
         "image"
       ],
       "job": "Cover and reel narrative from floor proof, not invented scenes; media-director expert (vfom/experts/MEDIA-DIRECTOR.md)"
@@ -637,8 +627,7 @@
       ],
       "tools": [
         "superdesign",
-        "image",
-        "canva"
+        "image"
       ],
       "job": "Cover-art prompts. No Israeli brand-file copies."
     },
@@ -777,7 +766,6 @@
         "vfigos"
       ],
       "tools": [
-        "canva",
         "web",
         "image"
       ],
@@ -791,7 +779,6 @@
         "vfcovers"
       ],
       "tools": [
-        "canva",
         "drive",
         "image"
       ],
@@ -819,7 +806,6 @@
         "vfsku"
       ],
       "tools": [
-        "canva",
         "web"
       ],
       "job": "Revenue loop — monetized offer on every IG post (SKU, X ₪, CTA). expert-revenue-loop. No DM CTA."
@@ -924,7 +910,6 @@
     ".cursor/skills/vf-velvetos/SKILL.md",
     ".cursor/skills/vf-daily-learning/SKILL.md",
     ".cursor/skills/vf-revenue-loop/SKILL.md",
-    ".cursor/skills/vf-organic-growth/SKILL.md",
-    ".cursor/skills/vf-canva-instagram/SKILL.md"
+    ".cursor/skills/vf-organic-growth/SKILL.md"
   ]
 }

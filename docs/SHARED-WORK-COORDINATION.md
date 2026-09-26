@@ -113,7 +113,6 @@
 | G004 Stories luxury rebuild | IDLE | `cursor/g004-stories-luxury-c7cb` | PR #103 ממוזג |
 | VF agency gap + stories quality gate | IDLE | `cursor/agency-quality-gap-13f7` | PR #102 ממוזג |
 | VF push brief HTML 7.9 | IDLE | `cursor/brief-2026-09-07-html-3d70` | PR #101 ממוזג |
-| אחרים (VOICE / Canva / mid-day) | IDLE | ללא / ישן | אין PR פתוח ב־core |
 
 Checkpoints תחת `packages/vfharness/state/*2026-09-07*.json` — רובם `done`. Checkpoint תיאום זה: **done** אחרי מיזוג #105 ע״י `nocturney` (2026-09-07T14:02:49Z).
 
@@ -126,7 +125,6 @@ Checkpoints תחת `packages/vfharness/state/*2026-09-07*.json` — רובם `do
 | `SWC-001` | Cursor | הקמת רשומת תיאום + סקר מצב + תיחום Codex | core | `cursor/shared-work-coordination-7305` | `docs/SHARED-WORK-COORDINATION.md`, checkpoint תיאום | — | מסמך חי + מיזוג | **done · merged #105** (`cb4dd02`) · 2026-09-07T14:02Z ע״י nocturney | [#105](https://github.com/nocturney/velvetos-core/pull/105) |
 | `SWC-GROK-BRIEF-0709` | GrokBot | בריף 7.9 נשלח ל־nocturney@gmail.com | runtime (לא ענף קוד) | — | INSTA brief HTML · 66544B · sha `0eb3e208…` (כפי שדווח) | הרשאת בריף 07:00 | Gmail id אומת | **done** · נשלח 07:43 Asia/Jerusalem · `msg-a:r2304579302807259922` | — |
 | `SWC-GROK-G003` | GrokBot (Studio מסייע) | Reel SoccerBall משובץ 7.9 16:00 | runtime | — | INSTA media/SoccerBall + כיתוב נעול | לוח IG | פורסם + אימות IG | **owned / scheduled** · טרם פורסם | — |
-| `SWC-GROK-G004-FIX` | GrokBot (Studio מסייע) | Stories B navy/gold ~20:30 | runtime | — | `/workspace/INSTA/content/2026-09-07/VF-G004-stories-fix/canva/story-1..4.png` + PREFLIGHT | PREFLIGHT PASS · routine `g004-stories-fix-live-20-30` 20:25 | פורסם + צילום מסך | **owned / scheduled** · טרם פורסם | — |
 | `SWC-GROK-G004-CAR` | GrokBot (Studio מסייע) | קרוסלת G004 לפיד | runtime | — | חבילת G004 | לוח | פורסם במועד | **owned / scheduled** ה׳ 10.9 12:00 · **לא נוגעים** עד אז | — |
 | `SWC-GROK-ROUTINES` | GrokBot | cron משרד (ops) | runtime | — | `velvet-factory-weekday-ops` 07:00 · MakerWorld א׳+ד׳ 06:00 · vf-profit ב׳ 06:00 · HQ backup א׳–ה׳ 18:00 · GPT/Gemini daily **paused** | הרשאות קיימות | שגרה חיה | **owned** (תפעול; לא ענף קוד) | — |
 | `SWC-CODEX-001` | Codex → Cursor merge | שלב א׳: קריאה+ולידציה של מצב משימות + פלט מובנה | core | `cursor/swc-codex-001-phase-a-6de7` | ראו [לוח בעלות](#ownership-swc-codex-001) | ממוזג ל־main | 8 תנאי השלמה | **done · merged #108** (`06f9854`) | [#108](https://github.com/nocturney/velvetos-core/pull/108) |

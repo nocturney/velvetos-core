@@ -82,8 +82,7 @@
         "offering_shape",
         "reference_match",
         "actual_file_evidence",
-        "rejected_direction",
-        "no_canva_route"
+        "rejected_direction"
       ]
     },
     "copywriting": {
@@ -313,8 +312,7 @@
         "offering_shape",
         "reference_match",
         "actual_file_evidence",
-        "rejected_direction",
-        "no_canva_route"
+        "rejected_direction"
       ]
     },
     "general_business": {

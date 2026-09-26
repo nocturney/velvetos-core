@@ -7,7 +7,6 @@
     "Read origin/main + CHANGELOG Unreleased + packages/manifest.json",
     "origin auth status: not logged in; skip vendor",
     "Set catalogRefreshedAt 2026-09-06 and prepend evening note",
-    "Update pack summaries from the tree (vfcanva/vfcost/vfops/vfgrowth/vfresearch + related)",
     "Add CHANGELOG Unreleased evening-catalog line"
   ],
   "next_step": "Push branch + PR; push main if that remains the evening backup path.",

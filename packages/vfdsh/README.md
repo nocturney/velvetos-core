@@ -13,7 +13,6 @@
 | MinerU / PDF / Office → Markdown | `vfbooks`, `vfconvert` | חילוץ מחשבונית או בריף שצוין. אין ₪ מומצא |
 | Engramory / MemSearch / project-memory | `vfresearch`, `vfsku` | זיכרון מקבצי HQ עם ציטוט. אין שרת זיכרון שני |
 | dsh_workflow / Taskboard / verification | `vfops`, `vfprod` | לוח צינור + שער אדם. הסוכן מגיש לסקירה, לא ל«בוצע» |
-| Superdesign / TongFlow / iPolloWork | `vfcovers`, `vfcanva` | Canva או Superdesign שכבר על השולחן. אין פוסט חי |
 | Treg DSH | `vfresearch`, `vfinsights` | Treg שכבר מותקן; מחיר קטלוג לפני `call` |
 | Ambiguity + negative ledger | `vfconvert`, `vfprod` | שואלים לפני ניחוש; נתיב שנכשל נשאר כתוב |
 

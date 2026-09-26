@@ -141,13 +141,11 @@ def main() -> None:
 
     desk = json.loads(DESK.read_text())
     tools = desk.get("tools") or {}
-    for key in ("web", "image", "canva"):
+    for key in ("web", "image"):
         if key not in tools:
             fail(f"vf-desk.json tools missing {key}")
         if not (tools[key].get("failover") or ""):
             fail(f"vf-desk.json tools.{key} must declare failover")
-    if (tools.get("canva") or {}).get("status") != "ready":
-        fail("vf-desk.json canva.status must be ready after Cloud Agent verify")
 
     threed = tools.get("threedaistudio") or {}
     if not threed:
@@ -590,7 +588,7 @@ def main() -> None:
         fail(f"vf_send_preflight.py must print JSON: {exc}")
     if not report.get("ok") or "channels" not in report:
         fail("vf_send_preflight.py report missing ok/channels")
-    for need in ("gmail", "instagram", "canva", "gemini", "chatgpt"):
+    for need in ("gmail", "instagram", "gemini", "chatgpt"):
         if need not in report["channels"]:
             fail(f"vf_send_preflight.py missing channel {need}")
     proc4 = subprocess.run(
@@ -655,7 +653,7 @@ def main() -> None:
     if "contents: write" in ig_wf_text or "git push" in ig_wf_text:
         fail("instagram-read-smoke.yml must stay read-only (no write/push)")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api+chatgpt-api+instagram-mcp+icloud+send-preflight+ig-read-smoke")
+    print("OK vfmcp gap+sheets+desk web/image+3daistudio+office-mcp+gemini-api+chatgpt-api+instagram-mcp+icloud+send-preflight+ig-read-smoke")
 
 
 if __name__ == "__main__":

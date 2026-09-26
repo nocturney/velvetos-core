@@ -9,7 +9,6 @@
     "portablePrompt": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
     "referenceAsset": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
     "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
-    "canvaAssetId": "MAHVL7PKpvE",
     "canvaAssetTitle": "Velvet Factory · APPROVED GRID VISUAL STANDARD · 2026-09-14",
     "artifactSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
     "artifactDimensions": "1254x1254",
@@ -43,9 +42,7 @@
       "subject_drift_from_source_geometry_material_color",
       "fake_customer_scene_or_fake_shelf_presence",
       "text_heavy_template_card_overpowering_product",
-      "generic_canva_template_aesthetic",
-      "decorative_stock_filler",
-      "rejected_g004_canva_DAHUaelaug0"
+      "decorative_stock_filler"
     ]
   },
   "visualArchetype": [
@@ -242,7 +239,6 @@
     "placeholder shown as intended final",
     "generic icon replacing real product media",
     "text-heavy template card overpowering product",
-    "generic Canva-template look",
     "intermediate hero handed off as completed post",
     "final artifact weaker than selected creative master without recorded cause",
     "conversation-only image treated as deterministic compositor input",

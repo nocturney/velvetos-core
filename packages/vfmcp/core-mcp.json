@@ -85,7 +85,7 @@
     {
       "id": "instagram",
       "inProjectMcpJson": false,
-      "canonical": false,
+      "canonical": true,
       "package": "adelaidasofia-instagram-mcp",
       "whyNotProject": "adelaidasofia/instagram-mcp is stdio Python + Meta long-lived token (INSTAGRAM_MCP_*). Project mcp.json must not hold secrets. Desktop ~/.cursor/mcp.json, Codespace secrets, or future remote Team MCP.",
       "source": "https://github.com/adelaidasofia/instagram-mcp",
@@ -98,7 +98,6 @@
       "remote_access": "ready",
       "igUserId": "17841407772120429",
       "accountLabel": "velvets_cloud",
-      "failover": "No OpenPost/Canva failover. Scheduled publication stays on Cloudflare publisher; ambiguous writes require reconciliation.",
       "allowedRead": [
         "healthcheck",
         "list_accounts",

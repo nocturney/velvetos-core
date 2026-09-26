@@ -22,7 +22,6 @@ VelvetOS מחזיק **חמישה שלבים קנוניים**. כל tenant ממפ
 | fulfill | `vfprod` (או מיפוי tenant ל־appointment/document) |
 | close | `vfsales` follow-up + `vfgrowth` תוכן אחרי הוכחה |
 
-תוכן / כריכות / לוח IG: `vfgrowth` · `vfcovers` · `vfigos` · `vfcanva` — אחרי שיש הוכחה מהשטח (לא סצנה מומצאת).
 
 ## אספקה (fulfillment.mode)
 

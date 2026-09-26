@@ -10,6 +10,5 @@ Module id: `channels-instagram`
 - Never invent WhatsApp phone as public CTA; \`BUSINESS_CONTACT_RECORD\` stays in desk/integration only
 
 ## Packs
-\`vfigos\`, \`vfcanva\`, \`vfcovers\`
 
 Always present in core. An instance enables it via `modulesEnabled` — this is not an on/off goal toggle in a shared tenant list.

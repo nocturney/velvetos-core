@@ -47,4 +47,3 @@
 - התקנת skill / moxt hub / gallery copy מלא
 - החלפת `MAIL.html` ב־Chart.js
 - פק `vfcharts` חדש
-- צבעי `@velvets_cloud` בלי brand kit מאומת (Canva נשאר ל־IG)

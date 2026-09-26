@@ -12,10 +12,8 @@
 
 | mcpmarket slug | גוף פתוח (מיפוי סביר) | דין Cloud | דין Desktop | למה |
 |---|---|---|---|---|
-| `excalidraw-4` | [excalidraw/excalidraw-mcp](https://github.com/excalidraw/excalidraw-mcp) | **optional later** (remote) | optional | דיאגרמות משרד פנימיות — לא מחליף Canva ל־IG |
 | `blender-open` | [dhakalnirajan/blender-open-mcp](https://github.com/dhakalnirajan/blender-open-mcp) (Ollama) | **skip** | sibling optional | אותו מעמד כמו Blender MCP + Ollama מקומי |
 | `blender-ai` | משפחת Blender MCP (דף חסום; וריאנטי sandbox בשוק) | **skip** | sibling → `BLENDER-MCP.md` | לא מתקינים וריאנט שני במקביל ל־ahujasid בלי ראש צוות |
-| `svgmaker` | [GenWaveLLC/svgmaker-mcp](https://github.com/GenWaveLLC/svgmaker-mcp) | **skip** | later + API key | מפתח ספק; Canva קודם למותג |
 | `multicad` | [AnCode666/multiCAD-mcp](https://github.com/AnCode666/multiCAD-mcp) | **skip** | skip (אלא אם יש AutoCAD/ZWCAD במק) | COM/Windows CAD — לא רצפת ההדפסה של VF |
 | `openscad-2` | משפחת OpenSCAD MCP ([petrijr/openscad-mcp](https://github.com/petrijr/openscad-mcp) ודומים) | **skip** | **local optional** אחרי ראש צוות | פרמטרי → STL; דורש OpenSCAD מקומי; עדיין `vlicense` + סלייס |
 | `blender-vxai` | רשימת שוק בלבד; GitHub לא אומת | **skip** | skip עד זיהוי ריפו | אין גוף מאומת — לא ממציאים |
@@ -37,7 +35,6 @@
 | נפל | מיד ל־ |
 |---|---|
 | כל Blender*/FreeCAD/SketchUp/OpenSCAD על Cloud | 3DAI MCP או אתר + דרייב |
-| SVGMaker בלי מפתח | Canva / Superdesign / `GenerateImage` |
 | MultiCAD בלי AutoCAD | דילוג — לא ערימת VF |
 | דף mcpmarket 429/Cloudflare | GitHub / «אין גוף» — ממשיכים |
 

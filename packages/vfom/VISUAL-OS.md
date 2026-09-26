@@ -6,7 +6,7 @@ Machine-readable projection: `VISUAL-DNA.json`. אם יש סתירה, המסמך
 
 ## Owner-approved visual reference · cold-start invariant
 
-For Velvet Factory public visual work, `OWNER-APPROVED-GRID-STANDARD-2026-09-14.md` and `VELVET-VISUAL-SYSTEM-PROMPT.md` are mandatory instance authorities. The canonical public visual reference is `reference/velvet-approved-grid-2026-09-14.jpg` / Canva asset `MAHVL7PKpvE`, bound to SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. A cold-start conversation or agent must load and verify that identity before creative generation. Missing/mismatched identity is fail-closed; there is no fallback to generic model aesthetics. Product Truth, rights and factual source evidence remain higher authority than style.
+Every public visual job must load `OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VELVET-VISUAL-SYSTEM-PROMPT.md`, `VISUAL-DNA.json` and the local reference `reference/velvet-approved-grid-2026-09-14.jpg`. The reference identity is file-backed and bound by SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. Persist `visualStandard.gate=PASS` only after that local authority is available. Missing/mismatched authority is `visual_standard_unavailable`; generic/default visual fallback is forbidden.
 
 ## DNA
 

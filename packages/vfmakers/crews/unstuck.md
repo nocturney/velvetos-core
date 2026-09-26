@@ -19,7 +19,6 @@ Packs: `vfops`, `vfprod`, `vlicense`. Seats: ייצור / ראש צוות.
 | Assumption | Nobody re-checked | List beliefs vs verified facts |
 | Framing | Goal wording hides the door | Restate one level up and one level down |
 | Gatekeeper | A person said no | Different door they would open — never the closed one |
-| Tool | «הכלי לא תומך» | Substitute the primitive (Canva vs Superdesign, Gmail read vs send) |
 | Resource | No time / money / bed | Toggle one constraint; missing ₪ stays `X ₪` |
 | Physics | FDM / math actually cannot | Honest exit. Reroute the goal |
 

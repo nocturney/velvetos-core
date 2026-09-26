@@ -9,17 +9,10 @@
     "stagingEvidence": "PR #342 (open, not merged) commit d6b55fcd, 2026-09-26 10:40 IDT: backup, isolated 18081 migration smoke 138->139, promote + smoke + restart PASS on the Windows staging host; staging evaluation only, pin unchanged, production UNCHANGED",
     "lastRecordedProductionVersion": "v4.35.0-vfbridge6 (2026-09-20 record; not re-verified)",
     "correctedAt": "2026-09-26",
-    "note": "Records only. The owner paused OpenPost publishing (scheduled posts were unreliable). Nothing in this file is evidence that OpenPost is LIVE today; sensors and briefs must treat it as paused. Instagram live evidence stays list_media/get_media from the canonical Instagram MCP."
+    "note": "Historical/runtime record only. Owner froze OpenPost after unreliable scheduled publication and insufficient alerting. No active VelvetOS component may route new work, scheduling, failover, monitoring or publication through it."
   },
   "upstream": "https://github.com/getopenpost/openpost",
-  "role": [
-    "scheduler",
-    "publication_queue",
-    "retry_delivery_status",
-    "multi_channel_publishing_control",
-    "analytics_collection"
-  ],
-  "integrationMode": "paused",
+  "integrationMode": "frozen-historical-only",
   "creativeAuthority": false,
   "qualityGateAuthority": false,
   "instagram": {
@@ -75,7 +68,9 @@
       "databaseSchemaStorage": "No migration files were added between v4.34.2 and v4.35.0. Isolated smoke and promoted staging both remain at schema 136 with integrity_check=ok and zero foreign-key violations.",
       "security": "No VF provider-security boundary change identified. Current v4.35.0 runtime explicitly sets OPENPOST_DIAGNOSTICS_ENABLED=false. A pre-upgrade backup captured the same setting, but continuous enforcement before that snapshot is not inferred from the backup alone.",
       "runtimeDecision": "Historical 2026-09-17 review of v4.34.2 -> v4.35.0. Superseded 2026-09-26: OpenPost is paused (publishing frozen), production runtime and LIVE status are unknown / not verified, staging is v6.2.0 per PR #342."
-    }
+    },
+    "monitoringEnabled": false,
+    "upgradeWorkAllowed": false
   },
   "securityPolicy": {
     "maintainerDiagnostics": {
@@ -267,9 +262,9 @@
       "stateGate": "packages/vfigos/failover/openpost_failover_state.py",
       "watcher": "packages/vfigos/failover/failover_watch.py",
       "requiresPreparedManifest": true,
-      "autoFailoverDefaultForOwnerApprovedScheduledImage": true,
+      "autoFailoverDefaultForOwnerApprovedScheduledImage": false,
       "defaultFailoverWindowMinutes": 30,
-      "coverageAuditSeconds": 60,
+      "coverageAuditSeconds": null,
       "coverageState": "C:\\ProgramData\\VelvetOS\\instagram-failover\\coverage-state.json",
       "requiresSafeToFailover": true,
       "blocksAmbiguousOrActivePrimary": true,
@@ -331,5 +326,36 @@
     ]
   },
   "playbook": "packages/vfigos/OPENPOST.md",
-  "providerOAuthEvidenceRef": "packages/vfharness/state/openpost-production-origin-2026-09-18.json#providerOAuthEvidence"
+  "providerOAuthEvidenceRef": "packages/vfharness/state/openpost-production-origin-2026-09-18.json#providerOAuthEvidence",
+  "routingAuthority": false,
+  "newSchedulesAllowed": false,
+  "queueAuthority": false,
+  "retryAuthority": false,
+  "failoverTarget": false,
+  "releaseWatchEnabled": false,
+  "healthDependency": false,
+  "credentialsMaintenance": false,
+  "upgradeWorkAllowed": false,
+  "historicalEvidenceOnly": true,
+  "historicalCapabilities": [
+    "scheduler",
+    "publication_queue",
+    "retry_delivery_status",
+    "multi_channel_publishing_control",
+    "analytics_collection"
+  ],
+  "replacement": {
+    "scheduler": "packages/vfigos/cloudflare-publisher/",
+    "runtime": "Cloudflare Worker + D1 + KV + cron",
+    "publicationTarget": "Meta Instagram Graph API",
+    "liveVerification": "Instagram Graph/MCP canonical read-back"
+  },
+  "migration": {
+    "contentId": "VF-OCTOPUS-20260927-CAROUSEL",
+    "scheduledAt": "2026-09-27T09:00:00Z",
+    "sourceOpenPostCleared": true,
+    "sourceScheduleSnapshotEmpty": true,
+    "evidence": "packages/vfigos/cloudflare-publisher/migrations/2026-09-24-openpost/"
+  },
+  "toolStatusAuthority": "packages/velvetos/TOOL-STATUS.json"
 }

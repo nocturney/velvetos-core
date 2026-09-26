@@ -45,7 +45,6 @@
 |---|---|
 | `/plugin marketplace add` / `npx skills add` | Claude Code vendor; Cursor = office |
 | `context-memory` hosted (Slova) | שולח prompt ל־API חיצוני; יש לנו קבצי markdown בגיט |
-| `give-claude-eyes` (Qwen Omni) | מפתח DashScope; רילים → Canva/`vfom` + computerUse |
 | `cashflow` plugin | ממציא/מודל כספי — אצלנו `vfcost`/`vfbooks` בלי ₪ מומצא |
 | `ai-search-visibility-audit` על דומיין סטודיו | אתר שיווקי מ־HQ **נעול**; רלוונטי רק אם נפתח אתר תחת `vfbiz` |
 | `sales-automator` cold email | VF = פניות נכנסות; cold-email אסור ב־MCP-FIT |

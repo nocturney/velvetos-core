@@ -1,6 +1,5 @@
 # איך מחברים iCloud Drive ל-Cursor (Mac בלבד)
 
-Apple **לא** נותנת OAuth/HTTP MCP ל-iCloud Drive כמו Gmail או Canva.  
 הגישה היא **MCP מקומי** על macOS — קריאה/כתיבה לתיקייה ש-iCloud Drive מסנכרן.
 
 **Cloud Agent (Linux) לא רואה iCloud.** לעבודה מהענן: סנכרון ל-Google Drive — [`ICLOUD-DRIVE-SYNC.md`](ICLOUD-DRIVE-SYNC.md).
@@ -32,16 +31,13 @@ npm install -g icloud-drive-mcp-server
 
 ### 3. הוספה ל-Cursor
 
-`Ctrl+Shift+P` → **View: Open MCP Settings** → הוסף ל-`mcp.json` (או מיזוג עם Canva / 3DAI מהריפו):
 
 דוגמה מלאה: [`examples/mcp-icloud-desktop.json`](examples/mcp-icloud-desktop.json).
 
 ```json
 {
   "mcpServers": {
-    "canva": {
       "type": "http",
-      "url": "https://mcp.canva.com/mcp"
     },
     "threedaistudio": {
       "url": "https://mcp.3daistudio.com/mcp"

@@ -11,7 +11,6 @@
     "2026-09-09 Living Studio unification: ported unique #138 vfmedia intake (real-byte verify, persist-before-move, backoff, GHA */5) onto main; Skills registry + World Model/Signal Room/Studio Pulse/Universal Intake/Invisible Work/Failure Museum/Lab/Commercial QA as projection/router layer (packages/velvetos/living-studio). Preserved #140–#146 Instagram MCP path. Insights media-period verified live (deployed=true). #141 superseded by #140/#142/#145/#146. HQ sends Gmail/IG via tools (constitution/SEND.md). No second Control Plane/catalog/decision journal.",
     "2026-09-08: Shared media vault locked by Christian — packages/vfmedia one catalog + docs/MEDIA-VAULT.md. Drive root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv. תפעול intake. No parallel catalogs. No invented SKUs/₪. No Drive share-permission changes. Sensor: scripts/check-vfmedia.py.",
     "2026-09-07 evening catalog: GitHub nocturney/velvetos-core. Folded merged #118 print-demand/print.done/revenue retro, #117 three-layer SoC, #116 core stability, #115/#105 SWC board, #109–#114 quality+loop+templates, #107/#106 research seat, #104/#103/#102 agency gate + G004 stories, #101 brief HTML, #100 vfbiz week. Origin not vendored (CLI not logged in). No open PRs at refresh.",
-    "2026-09-06 evening catalog: GitHub nocturney/velvetos-core. Folded merged #97 vfcanva/G004, #96 vfops loop + agency floor, #95 vfcost material CLI, #94 ig-mcp+iCloud, #93 HQ sweep, #92/#73 best-skills, #89/#90 vfgrowth calendar, #77 vfresearch last30days. Origin not vendored (CLI not logged in). No open PRs at refresh.",
     "2026-09-03 evening catalog: GitHub nocturney/velvetos-core. Included merged #71 buildwithclaude, #59 office MCPs in Core, #72 best-skills. Origin not vendored (CLI not logged in). Open branches still on GitHub: #70 cursor/daily-research-2026-09-03-b067, #68 cursor/integrate-ig-mcp-abe1, #66 cursor/close-access-gaps-5b1b, #58 cursor/icloud-drive-dual-path-c95c.",
     "2026-09-03: Standing forever bi-daily LinklyAI/best-skills pulse — BEST-SKILLS.md + TIMER.md + standingForever. Renew subscribe_timer every pass. Sensor: scripts/check-vfresearch.py.",
     "2026-09-03: Bi-daily LinklyAI/best-skills ranking scan on vfresearch — BEST-SKILLS.md + BEST-SKILLS.json + skill vf-best-skills. Embed patterns in place; no npx on Cloud. Sensor: scripts/check-vfresearch.py.",
@@ -33,7 +32,6 @@
     "2026-08-30: vfom is an HQ-native pack (not Origin). OpenMontage pipeline patterns (clip-factory, hybrid, reference plan, scene gate, self-review) map onto existing content packs. Do not vendor Remotion or send Instagram.",
     "2026-08-30: vfmem is HQ-native. Structural queries over desk/manifest/Agency maps (DeusData/codebase-memory-mcp pattern). Do not install their binary from this repo. See docs/VFMEM.md.",
     "2026-08-30: vfgraft is an HQ-native pack (not Origin). Graft pattern (committed markdown office graph) only — no npm CLI, no Graft MCP.",
-    "2026-08-30: vfcanva is an HQ-native pack (not Origin). Canva MCP is the Instagram visual tool for @velvets_cloud. Connect in Cursor Settings → MCP Tools.",
     "2026-08-30: vfmakers maps coreyhaines31/makerskills (20, MIT) onto existing packs — decide / unstuck / cash pulse / IG rotation / studio brain. No plugin, no Typefully, no live bank, no send. See docs/MAKERSKILLS-EMBED-he.md.",
     "2026-08-30: ChatGPT share https://chatgpt.com/s/t_6a94208d21048191a67144976f50de19 embedded in place (packages/*/hq, constitution/, vfbriefux packet). No new pack per agent. Vendor preserves hq/ overlays. See packages/chatgpt-embed-map.json and docs/SHARE-EMBED-he.md.",
     "2026-08-30 share embed: Gemini hbuCq3MEy5po / 4f223bc1774c read and mapped onto existing packs + constitution/. Perplexity c950af30: morning Cloudflare wall; afternoon owner PDFs read and mapped in place (no new pack, no invented ₪, no live bot/site/widget). See docs/SHARES-2026-08-30.md.",
@@ -137,9 +135,6 @@
       "summary": "Operations pack — office loop (vfops_loop.py) + 07:00 brief + Gmail brief CLI (gmail_brief_send.py, disk HTML+CID). No invented ₪ / Insights.",
       "bcId": "bc-93fbfca6",
       "agentUrl": "https://cursor.com/agents/bc-93fbfca6",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
     },
     {
@@ -147,9 +142,6 @@
       "summary": "Covers pack — brief and post cover art.",
       "bcId": "bc-390e0de1",
       "agentUrl": "https://cursor.com/agents/bc-390e0de1",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
     },
     {
@@ -157,9 +149,6 @@
       "summary": "Insights pack — closed measurement loop (scripts/vf_insights_loop.py) from owner snapshot / CSV only. Writes «אין ספירה» when missing. Never invents metrics.",
       "bcId": "bc-02df9e72",
       "agentUrl": "https://cursor.com/agents/bc-02df9e72",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
     },
     {
@@ -167,9 +156,6 @@
       "summary": "Books pack — receivables and studio ledger work.",
       "bcId": "bc-280dd241",
       "agentUrl": "https://cursor.com/agents/bc-280dd241",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
     },
     {
@@ -177,9 +163,6 @@
       "summary": "Research pack — weekly links, bi-daily best-skills, last30 community research, and weekly print-demand pulse (hq/PRINT-DEMAND.md). No invented trends.",
       "bcId": "bc-01278e9b",
       "agentUrl": "https://cursor.com/agents/bc-01278e9b",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
     },
     {
@@ -187,9 +170,6 @@
       "summary": "Business pack — studio strategy, commercial decisions and offering authority. Public offer: ready products + custom work; quantity/customer type are job attributes. Sale price stays X ₪ until verified.",
       "bcId": "bc-3921041e",
       "agentUrl": "https://cursor.com/agents/bc-3921041e",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
     },
     {
@@ -198,9 +178,6 @@
       "bcId": "bc-b6bc8b8c",
       "bcIdFull": "bc-b6bc8b8c-136d-4d95-812e-177991534e42",
       "agentUrl": "https://cursor.com/agents/bc-b6bc8b8c-136d-4d95-812e-177991534e42",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
     },
     {
@@ -208,9 +185,6 @@
       "summary": "License gate — studio license / access check.",
       "bcId": "bc-0a6460b1",
       "agentUrl": "https://cursor.com/agents/bc-0a6460b1",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
     },
     {
@@ -218,9 +192,6 @@
       "summary": "Seasonal calendar — studio calendar and season marks.",
       "bcId": "bc-2a4a3260",
       "agentUrl": "https://cursor.com/agents/bc-2a4a3260",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
     },
     {
@@ -228,9 +199,6 @@
       "summary": "SKU cards, empty shelf (SHELF.json), and reprint runs — no invented names or ₪.",
       "bcId": "bc-68f7f06c",
       "agentUrl": "https://cursor.com/agents/bc-68f7f06c",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
     },
     {
@@ -238,22 +206,7 @@
       "summary": "Brief format research — morning-brief layout and UX notes; DESIGN-EMBED anti-slop for HQ brief only.",
       "bcId": "bc-9e0be231",
       "agentUrl": "https://cursor.com/agents/bc-9e0be231",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native"
-    },
-    {
-      "name": "vfcanva",
-      "summary": "Canva desk — Instagram visuals for @velvets_cloud (create / resize / review). Includes jobs/G004.md + G004 stories luxury rebuild. Send stays on vfigos.",
-      "bcId": "bc-2020e135-820c-40b6-a922-e2822b5e81bf",
-      "agentUrl": "https://cursor.com/agents/bc-2020e135-820c-40b6-a922-e2822b5e81bf",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
-      "vendorStatus": "hq-native",
-      "docs": "docs/CANVA.md",
-      "skill": ".cursor/skills/vf-canva-instagram/SKILL.md"
     },
     {
       "name": "vfmcp",
@@ -261,9 +214,6 @@
       "bcId": "bc-1764e30f-b592-4805-9586-037da3351d65",
       "bcIdFull": "bc-1764e30f-b592-4805-9586-037da3351d65",
       "agentUrl": "https://cursor.com/agents/bc-1764e30f-b592-4805-9586-037da3351d65",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "writeup": "docs/MCP-FIT.md"
     },
@@ -273,9 +223,6 @@
       "bcId": "bc-21cee8d9",
       "bcIdFull": "bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057",
       "agentUrl": "https://cursor.com/agents/bc-21cee8d9-a82a-468d-b0a5-1d8fa87ef057",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "source": "https://github.com/e2b-dev/awesome-ai-agents"
     },
@@ -285,9 +232,6 @@
       "bcId": "bc-b4c0a22f",
       "bcIdFull": "bc-b4c0a22f-7c08-497e-beac-c4518acbea1d",
       "agentUrl": "https://cursor.com/agents/bc-b4c0a22f-7c08-497e-beac-c4518acbea1d",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "source": "https://github.com/awesome-dsh-plugin/awesome-dsh-plugin",
       "writeup": "docs/DSH-FIT.md"
@@ -298,9 +242,6 @@
       "bcId": "bc-888d3ff6",
       "bcIdFull": "bc-888d3ff6-c3ad-43f7-bda3-814c82546324",
       "agentUrl": "https://cursor.com/agents/bc-888d3ff6-c3ad-43f7-bda3-814c82546324",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "source": "https://github.com/coreyhaines31/makerskills",
       "writeup": "docs/MAKERSKILLS-EMBED-he.md",
@@ -312,9 +253,6 @@
       "bcId": "bc-9765dc13",
       "bcIdFull": "bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027",
       "agentUrl": "https://cursor.com/agents/bc-9765dc13-6ca2-4c51-a550-6dfb1d3b0027",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "writeup": "docs/500-AGENTS.md"
     },
@@ -324,9 +262,6 @@
       "bcId": "bc-cbd42dd7",
       "bcIdFull": "bc-cbd42dd7-d35f-4c48-88f3-1d993d3b1792",
       "agentUrl": "https://cursor.com/agents/bc-cbd42dd7-d35f-4c48-88f3-1d993d3b1792",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "source": "https://github.com/coreyhaines31/marketingskills",
       "writeup": "docs/MARKETING-SKILLS.md",
@@ -338,9 +273,6 @@
       "bcId": "bc-4be8813f",
       "bcIdFull": "bc-4be8813f-000e-43a0-b297-7537bda05d4e",
       "agentUrl": "https://cursor.com/agents/bc-4be8813f-000e-43a0-b297-7537bda05d4e",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "source": "https://github.com/calesthio/OpenMontage",
       "writeup": "docs/OPENMONTAGE.md"
@@ -351,9 +283,6 @@
       "bcId": "bc-c6e01d3b",
       "bcIdFull": "bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
       "agentUrl": "https://cursor.com/agents/bc-c6e01d3b-4cbe-4a8c-9b9c-4e87b5aa9ccb",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "writeup": "docs/HARNESS.md",
       "guide": "AGENTS.md",
@@ -365,9 +294,6 @@
       "bcId": "bc-e154ffc2-061a-4635-8d32-a6bcb145bc64",
       "bcIdFull": "bc-e154ffc2-061a-4635-8d32-a6bcb145bc64",
       "agentUrl": "https://cursor.com/agents/bc-e154ffc2-061a-4635-8d32-a6bcb145bc64",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "source": "https://github.com/trailhq/Graft",
       "writeup": "docs/GRAFT.md",
@@ -379,9 +305,6 @@
       "bcId": "bc-8bd6ba75",
       "bcIdFull": "bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
       "agentUrl": "https://cursor.com/agents/bc-8bd6ba75-55a3-4b68-a30e-175d94b67823",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "source": "https://github.com/DeusData/codebase-memory-mcp",
       "writeup": "docs/VFMEM.md"
@@ -392,9 +315,6 @@
       "bcId": "bc-5abae8de",
       "bcIdFull": "bc-5abae8de-a5da-455e-b71c-3db25e3d029c",
       "agentUrl": "https://cursor.com/agents/bc-5abae8de-a5da-455e-b71c-3db25e3d029c",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "source": "https://github.com/Alishahryar1/free-claude-code",
       "writeup": "docs/FCC-FIT.md"
@@ -402,11 +322,6 @@
     {
       "name": "vfmedia",
       "summary": "Shared media vault catalog — one Drive tree (Velvet Media) + one catalog.json. תפעול owns intake. Cursor owns schema. GrokBot uses Drive MCP. No invented SKUs/₪. No share-permission changes.",
-      "bcId": null,
-      "agentUrl": null,
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "docs": "docs/MEDIA-VAULT.md",
       "skill": "packages/vfmedia/SKILL.md"
@@ -417,9 +332,6 @@
       "bcId": "bc-f7a22589",
       "bcIdFull": "bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
       "agentUrl": "https://cursor.com/agents/bc-f7a22589-19ed-4f1e-afed-40acb278bcb3",
-      "originSlug": null,
-      "codebaseUrl": null,
-      "cloneUrl": null,
       "vendorStatus": "hq-native",
       "writeup": "docs/VELVETOS.md",
       "skill": ".cursor/skills/vf-velvetos/SKILL.md"
@@ -427,8 +339,6 @@
     {
       "name": "velvetos_control_api",
       "summary": "HTTP projection gateway (velvetos.control.v1) for Control Center UI — read-first snapshot/search/capabilities; fail-closed actions; not a SoT/runtime/queue.",
-      "bcId": null,
-      "originSlug": null,
       "vendorStatus": "hq-native",
       "writeup": "packages/velvetos_control_api/README.md",
       "sensor": "scripts/check-control-api.py"

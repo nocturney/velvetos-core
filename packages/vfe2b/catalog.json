@@ -220,8 +220,7 @@
         "vfcovers",
         "vfbriefux"
       ],
-      "crew": "crews/content.md",
-      "note": "Use Superdesign / Canva already on the desk. Not a new site."
+      "crew": "crews/content.md"
     },
     {
       "name": "v0 by Vercel",

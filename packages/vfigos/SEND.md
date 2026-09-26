@@ -2,7 +2,6 @@
 
 ## Canonical publication route — 2026-09-26
 
-For Velvet Factory publication tasks, creative preparation follows the current VF Project / vfom authority. Canva/vfcanva are forbidden and have no connector, skill, package, composition, export, approval or fallback role.
 
 ### Active transport
 
@@ -14,8 +13,18 @@ For Velvet Factory publication tasks, creative preparation follows the current V
 
 Machine-readable authority: `packages/velvetos/TOOL-STATUS.json`.
 
+## Creative and media safety bindings
+
+- Canonical media authority: `docs/MEDIA-VAULT.md` + `packages/vfmedia/catalog.json`.
+- Publication preparation must follow `packages/vfom/PUBLICATION-PREP-EXECUTION.md`: selection/caption/planning alone is incomplete; if a required visual cannot be executed, fail closed as `visual_execution_unavailable`.
+- Brand handling must follow `packages/vfom/BRAND-ASSET-LOCK.md`; generated or invented brand marks are prohibited.
+- Transformation must follow `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md`: `raw_passthrough: false` and at least one fully treated hero before publication review.
+- Private-source derivatives route through `packages/vfigos/PUBLISH-BRIDGE.md` / `publish-bridge`; archived transport evidence lives under `publish-bridge/archive`, with `archiveRetention=unlimited` and `deleteArchived=false`.
+- A publish request is not live proof. Require publish receipt and then verify through `list_media` / `get_media` or equivalent Meta Graph read-back before any live claim. Only that verified state may be called `liveVerified`.
+
 ## Preconditions
 
+- Run `scripts/vf_send_preflight.py` against the exact current package and respect its fail-closed result.
 - Use the exact approved final package/hash.
 - Pass the current creative/publication preflight and all rights/privacy/brand/copy gates.
 - A scheduled/accepted job is not proof of publication.
@@ -38,6 +47,8 @@ The migrated production job `VF-OCTOPUS-20260927-CAROUSEL` is recorded under `cl
 
 ## Immediate publication
 
+For explicitly authorized immediate operations, canonical direct write tools may include `publish_image` / carousel/reel/story equivalents. They are never scheduler evidence and still require live read-back.
+
 When an explicitly authorized immediate publish uses the existing Instagram write boundary directly, it must still use the same exact approved package and live verification discipline. Direct mutation is not an approval bypass and is not the scheduler of record.
 
 ## Truth states
@@ -50,10 +61,13 @@ When an explicitly authorized immediate publish uses the existing Instagram writ
 
 ## Forbidden
 
-- Canva / vfcanva
 - OpenPost as active scheduler, queue, retry engine, release watch, fallback or source of schedule truth
 - treating Meta Ads MCP as organic Instagram publishing
 - blind retry after `media_publish`
 - claiming live from an accepted job without Graph read-back
 - auto-DM
 - Treg
+
+## VF_VISUAL_STANDARD_GATE
+
+Before public creative execution, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`. Bind SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897` and require `visualStandard.gate=PASS`. Missing/mismatched authority is `visual_standard_unavailable`; generic visual fallback is forbidden.

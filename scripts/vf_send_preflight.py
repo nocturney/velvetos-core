@@ -50,7 +50,6 @@ READY = {"ready", "skill-installed", "plugin-installed", "hq-native"}
 IG_AUTH_READY = {"ready", "ready-codespace", "ready-local"}
 FAILOVER = {"needsAuth", "needs-key", "down", "not-on-this-cloud-agent"}
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$", re.IGNORECASE)
-VELVET_VISUAL_STANDARD_ASSET = "MAHVL7PKpvE"
 VELVET_VISUAL_STANDARD_SHA256 = "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897"
 VELVET_VISUAL_STANDARD_DOCUMENT = "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md"
 VELVET_VISUAL_STANDARD_FAILURE = "visual_standard_unavailable"
@@ -189,7 +188,6 @@ def validate_publication_approval(
         }
 
     visual_standard_gate = (_field(text, "visual_standard_gate") or "").strip().upper()
-    visual_standard_asset = (_field(text, "visual_standard_canva_asset_id") or "").strip()
     visual_standard_sha = (_field(text, "visual_standard_artifact_sha256") or "").strip().lower()
     visual_standard_document = (_field(text, "visual_standard_document") or "").strip()
     product_truth_source_refs = (_field(text, "product_truth_source_refs") or "").strip()
@@ -209,7 +207,6 @@ def validate_publication_approval(
         problems.append("approval is explicitly invalidated")
     if visual_standard_gate != "PASS":
         problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: visual_standard_gate must be PASS")
-    # Canva asset ID is archival provenance, never a required execution provider.
     if visual_standard_sha != VELVET_VISUAL_STANDARD_SHA256:
         problems.append(f"{VELVET_VISUAL_STANDARD_FAILURE}: visual_standard_artifact_sha256 does not match canonical owner-approved standard")
     if visual_standard_document != VELVET_VISUAL_STANDARD_DOCUMENT:
@@ -371,7 +368,6 @@ def validate_publication_approval(
 
 def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
     gmail = _tool(desk, "gmail")
-    canva = _tool(desk, "canva")
     ig = _tool(desk, "instagram")
     gemini = _tool(desk, "gemini")
     chatgpt = _tool(desk, "chatgpt")
@@ -398,12 +394,6 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
             "action": "send_message / reply / forward",
             "failover": "Drive create_file + continue; never invent inquiry",
             "note": "Desk status only — MCP auth is runtime. Failover if tool call fails.",
-        },
-        "canva": {
-            "desk_status": canva.get("status") or "unknown",
-            "ready": (canva.get("status") or "") in READY,
-            "action": "generate-design / export-design",
-            "failover": canva.get("failover") or "Canva לא מחובר → packages/vfcanva/studio/render.py → Superdesign",
         },
         "instagram": {
             "desk_status": ig_status or "unknown",
@@ -445,7 +435,6 @@ def gate_channel(report: dict[str, Any], name: str) -> int:
     if not ch:
         print(f"FAIL unknown gate channel {name!r}", file=sys.stderr)
         return 1
-    # This is transport diagnostics only. VF publication rejects Canva in its evidence gate.
     if ch.get("ready"):
         print(f"GATE {name}=ready")
         return 0
@@ -458,7 +447,7 @@ def gate_channel(report: dict[str, Any], name: str) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--gate", choices=("gmail", "instagram", "canva", "gemini", "chatgpt"))
+    parser.add_argument("--gate", choices=("gmail", "instagram", "gemini", "chatgpt"))
     parser.add_argument("--transport-only", action="store_true", help="diagnostic only; never authorizes publish")
     parser.add_argument("--approval-ref", help="repo-relative packages/vfgrowth/preflight/<ID>.md")
     parser.add_argument("--content-id", help="content correlation, e.g. G004")

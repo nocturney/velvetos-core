@@ -47,7 +47,6 @@ retention                @customer-success-manager
 
 ```markdown
 - ig_source: post|reel|story|carousel
-- ig_post_ref: YYYY-MM-DD / Canva id / caption hook
 - offer_sku: …
 - stage: פנייה|…
 ```

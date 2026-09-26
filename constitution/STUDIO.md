@@ -2,7 +2,6 @@
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 ## רף סוכנות (כוכב צפון)
@@ -39,7 +38,6 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 ## שער עריכה — לפני שיבוץ (קשיח)
 
 **אסור** לשבץ / לפרסם JPEG גולמי עם טקסט עליו בלבד.  
-הנתיב הנוכחי: source lock → Product Truth → Creative Director → source-grounded edit → `vfcopy`/Visible Text → deterministic graphics/logo → Brand Guardian → publication evidence → exact-final QA. Canva/vfcanva אסורים בכל נתיב VF ואינם fallback.
 סטוריז מוצר = סיפור-מוצר (`VOICE.md`) דרך `vfgrowth/STORIES.md`; השפה החזותית נגזרת מהרפרנסים המאושרים של העבודה המדויקת, לא מ־G004 legacy.
 פלייבוק: [`packages/vfgrowth/EDIT-GATE.md`](../packages/vfgrowth/EDIT-GATE.md).  
 G004 סטוריז: [`packages/vfcopy/G004-STORIES-FIX.md`](../packages/vfcopy/G004-STORIES-FIX.md).

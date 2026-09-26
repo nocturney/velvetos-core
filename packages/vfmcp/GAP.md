@@ -13,6 +13,7 @@
 | Drive | ready · חיפוש **ויצירה** (`create_file`) | namespace `Google-drive` |
 | **3D AI Studio** | **ready** | namespace `3DAIStudio` · `get_credit_balance` אומת 2026-09-01 |
 | WebSearch / WebFetch | ready · מקורי Cursor | כלי native בסוכן |
+| GenerateImage | built-in image capability when exposed by the current host | creative generation/editing is capability-gated; never infer availability from documentation |
 | Superdesign | skill · בלי CLI login | פלאגין על הדיסק |
 | Treg | **לא רלוונטי** | לא login, לא `call`, לא failover |
 | Mobbin | plugin · אין MCP כאן | namespace לא על Cloud Agent |
@@ -140,5 +141,3 @@
 
 
 ## Current authority override — 2026-09-26
-
-This file contains historical capability snapshots. Current routing is governed by `packages/velvetos/TOOL-STATUS.json`: Cloudflare Instagram Publisher is the active scheduler; Meta Instagram Graph API is the organic publication target; OpenPost is frozen; Canva/vfcanva and Treg are forbidden. Historical snapshot wording does not reactivate them.

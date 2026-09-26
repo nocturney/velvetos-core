@@ -48,6 +48,5 @@ VF: תלת־ממד — פריפלייט STL ב־`vfprod/PREFLIGHT.md`. לא מח
 
 ## Failover
 
-MCP אפור → Canva / `vfcanva/studio/render.py` / 3DAI + STL preflight. אין ₪ מ־GCX. HQ לא מדפיס.
 
 מקור: [studiomcphub.com/mcp](https://studiomcphub.com/mcp) · [github.com/codex-curator/studiomcphub](https://github.com/codex-curator/studiomcphub)

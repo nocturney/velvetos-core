@@ -27,7 +27,6 @@ V10.3 שומר על ה־V10.2 image-first וה־RTL, אבל הופך את המי
 
 ## עברית תחילה
 
-עברית היא שפת ברירת המחדל. אנגלית נשארת רק למונחים טבעיים: `Instagram`, `Reel`, `Canva`, `Insights`, `VelvetOS`, `V10.3`.
 
 כותרות ברירת מחדל:
 - `תמונת היום`
@@ -64,7 +63,6 @@ V10.3 שומר על ה־V10.2 image-first וה־RTL, אבל הופך את המי
 מקורות עדיפות:
 1. studio / WIP / finished asset אמיתי.
 2. Instagram `thumbnail_url` / `media_url` חי.
-3. Canva thumbnail אמיתי.
 4. Drive/Media Vault דרך CID.
 5. source image אמיתי של finding מחקרי.
 

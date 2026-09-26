@@ -2,7 +2,6 @@
 """Send one Velvet Factory office brief via Gmail API.
 
 The production path uses multipart/related and Content-ID (CID) images so the
-brief does not depend on Gmail loading expiring Canva / Instagram / research
 URLs after delivery.
 
 Examples:

@@ -43,10 +43,8 @@ You are in **VelvetOS Core** (backend OS kernel). Reference studio bind remains 
 | Cost / ledger | `vfcost` `vfbooks` | `@pricing-analyst` `@bookkeeper-controller` | Gmail label חשבונות; never invent ₪ |
 | Shared media vault / כספת מדיה | `vfmedia` | `@studio-operations` | Drive MCP (GrokBot office) + `docs/MEDIA-VAULT.md`; תפעול intake נכנס→מקור; Cursor owns `catalog.schema.json`; upload ≠ approval; approved folder ≠ proof; no share-permission changes; no invented SKUs/₪ |
 | Print floor / SKU / license | `vfprod` `vfsku` `vlicense` | `@studio-producer` `@legal-compliance-checker` | Drive search **or create** by job name; bed **recommend** `vfprod.py route` (no Print from HQ); catalog `vfsku.py scan`; 3D AI Studio mesh via `vfprod/3DAISTUDIO.md` |
-| Covers / content pack | `vfcovers` `vfgrowth` | `@visual-storyteller` `@image-prompt-engineer` | current vfom/VF Project creative route; no Canva/vfcanva |
 | Organic Growth Control Plane | `vfgrowth` `vfprod` `vfinsights` `vfsales` | `@instagram-curator` `@offer-lead-gen-strategist` | `ORGANIC_GROWTH.md` + `vf_organic_growth.py` — drafts + 07:00 pack; no autopost / no auto-DM |
 | Marketing frameworks | `vfmskill` | `@content-creator` `@growth-hacker` | Curated Corey Haines skills. Read `.agents/product-marketing.md` first. No send. |
-| Reel plan / timelapse cut | `vfom` | `@visual-storyteller` `@instagram-curator` | current vfom route; no Canva/vfcanva |
 | IG board | `vfigos` | `@instagram-curator` | Review, schedule, **send via tools** (`vfigos/SEND.md`) |
 | Insights | `vfinsights` | `@analytics-reporter` | Verified snapshot or «אין ספירה». Never invent. Treg not used. |
 | Season / research | `vfseason` `vfresearch` | `@trend-researcher` `@research-synthesist` | Calendar + WebSearch; weekly inspiration links: `vfresearch/WEEKLY.md` + `LINKS.json`; every ~2 days: `BEST-SKILLS.md` (LinklyAI); last-30 community: `LAST30.md` + skill `vf-last30` |
@@ -88,7 +86,6 @@ Also: `architecture`, `impact <pack>`, `route <stage>`, `adr`. Pack `vfmem`. Pat
 - **Calendar:** `list_events` on `nocturney@gmail.com`, timezone `Asia/Jerusalem`. Create events only if asked. Down → ask pickup window / «חסר לוח» and continue.
 - **Drive:** `search_files` by job/SKU **and `create_file`** for office docs/sheets. Shared media vault: `docs/MEDIA-VAULT.md` + `packages/vfmedia` (one catalog). Do not change public share permissions. Do not delete vault files. Do not open personal, medical, or legal folders unless the user names them.
 - **Web:** Cursor `WebSearch` / `WebFetch`. Down → orchestra ChatGPT+Gemini+Perplexity. Never invent a blocked body. **Not Treg.**
-- **Image:** use the current native/source-grounded VF Project route. Canva/vfcanva are forbidden.
 - **Superdesign:** not a VF publication provider route; use only where a separate non-publication authority explicitly permits it.
 - **Treg:** **not relevant.** Do not call. Web + orchestra only.
 - **Mobbin:** morning-brief / UX references when the MCP is actually available. Down → `vfbriefux` templates / Superdesign.

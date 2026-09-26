@@ -49,7 +49,6 @@
       "deployed": true,
       "verifiedAt": "2026-09-09T20:00:15Z",
       "lastDeployedImageTag": "insights-v21-media-period-2026-09-09",
-      "pendingImageTag": null,
       "note": "PR #146 media-type defaults + days_28 partition verified live via public smoke EXPECT_FIXED=1 on 2026-09-09. Both Cloud Run URL aliases pass.",
       "evidence": {
         "smoke": "INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 packages/vfigos/remote/smoke_public.py",
@@ -68,7 +67,6 @@
     "chatgptNoAuthFailsWith": "HTTP 401 on initialize",
     "chatgptOAuthFailsWith": "MCP server does not implement OAuth",
     "githubConnectorNote": "ChatGPT GitHub connector disabled is ChatGPT/plugin-side — not an Instagram MCP issue. Do not change GitHub auth from VelvetOS.",
-    "blocker": null,
     "publicUrlAliases": [
       "https://velvet-instagram-mcp-3sz7smh74a-zf.a.run.app/mcp"
     ]
@@ -196,6 +194,5 @@
     "ads",
     "INSTAGRAM_MCP_DM_ENABLED"
   ],
-  "officeRule": "Office logic binds to capability ids above — not to a SaaS vendor. Metricool optional/legacy only. remote_access ready after live_check.ok.",
-  "noInstagramConnectionMeans": "continue media intake, copy, Canva, preflight, queue, calendar candidates, feed audit — do not pretend published"
+  "officeRule": "Office logic binds to capability ids above — not to a SaaS vendor. Metricool optional/legacy only. remote_access ready after live_check.ok."
 }

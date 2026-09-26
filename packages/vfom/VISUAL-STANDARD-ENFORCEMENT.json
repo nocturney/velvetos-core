@@ -5,7 +5,6 @@
   "standard": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
   "visualAuthority": "packages/vfom/VISUAL-OS.md",
   "visualDNA": "packages/vfom/VISUAL-DNA.json",
-  "canvaAssetId": "MAHVL7PKpvE",
   "artifactSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
   "requiredEvidence": [
     "visual_standard_gate=PASS",
@@ -23,7 +22,6 @@
     "source_ingest=PASS"
   ],
   "vfCreativeSurfaces": [
-    ".cursor/skills/vf-canva-instagram/SKILL.md",
     ".cursor/skills/vf-organic-growth/SKILL.md",
     ".cursor/skills/vf-marketing-skills/SKILL.md",
     ".cursor/skills/vf-openmontage/SKILL.md",
@@ -33,9 +31,6 @@
     "packages/vfgrowth/STORIES.md",
     "packages/vfcovers/SKILL.md",
     "packages/vfcovers/hq/PLAYBOOK.md",
-    "packages/vfcanva/WORKFLOW.md",
-    "packages/vfcanva/README.md",
-    "packages/vfcanva/jobs/TEMPLATE.md",
     "packages/vfom/SKILL.md",
     "packages/vfom/experts/MEDIA-DIRECTOR.md",
     "packages/velvetos/modules/expert-media-director.md",
@@ -47,14 +42,6 @@
     "packages/vfigos/SEND.md",
     "packages/vfgrowth/preflight/TEMPLATE.md",
     "packages/vfcopy/hq/templates/ig-stories.md"
-  ],
-  "conditionalCanvaSurfaces": [
-    ".cursor/skills/canva-brand-check/SKILL.md",
-    ".cursor/skills/canva-bulk-create/SKILL.md",
-    ".cursor/skills/canva-edit-design/SKILL.md",
-    ".cursor/skills/canva-get-design-feedback/SKILL.md",
-    ".cursor/skills/canva-implement-feedback/SKILL.md",
-    ".cursor/skills/canva-resize-for-social-media/SKILL.md"
   ],
   "hardFailure": "visual_standard_unavailable",
   "genericFallbackAllowed": false,
@@ -71,10 +58,7 @@
     "scope": "velvet-factory-publication",
     "authority": "packages/vfom/PUBLICATION-PREP-EXECUTION.md",
     "evidenceValidator": "scripts/vf_publication_evidence.py",
-    "deniedTools": [
-      "Canva",
-      "vfcanva"
-    ],
+    "deniedTools": [],
     "rejectedDirectionFamilies": [
       "vf-20260915-synthetic-grid",
       "vf-20260915-raw-contact-sheet",
@@ -137,28 +121,10 @@
     "deniedDirectivePatterns": [
       "edit_url",
       "compose_slides.py",
-      "studio/render.py",
-      "failover Canva",
-      "Canva+Drive+Gmail",
-      "נגזרת Canva/vfcovers",
-      "אחרי Canva/vfcovers",
-      "עד Canva/vfcovers",
-      "בלי Canva MCP"
+      "studio/render.py"
     ],
-    "legacyDeniedToolSurfaces": [
-      ".cursor/skills/canva-brand-check/SKILL.md",
-      ".cursor/skills/canva-bulk-create/SKILL.md",
-      ".cursor/skills/canva-edit-design/SKILL.md",
-      ".cursor/skills/canva-get-design-feedback/SKILL.md",
-      ".cursor/skills/canva-implement-feedback/SKILL.md",
-      ".cursor/skills/canva-resize-for-social-media/SKILL.md",
-      ".cursor/skills/vf-canva-instagram/SKILL.md",
-      "packages/vfcanva/README.md",
-      "packages/vfcanva/WORKFLOW.md",
-      "packages/vfcanva/jobs/TEMPLATE.md"
-    ]
+    "legacyDeniedToolSurfaces": []
   },
-  "canvaAssetIdRole": "ARCHIVAL_PROVENANCE_ONLY_NOT_A_PROVIDER_DEPENDENCY",
   "productTruthPhotoRetouchPolicy": {
     "ownerCorrectionDate": "2026-09-18",
     "principle": "basic photographic correction is not Product Truth drift when the physical product remains materially unchanged",

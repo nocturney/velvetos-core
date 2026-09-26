@@ -10,15 +10,15 @@
     "packages/vfresearch/sources/2026-09-05-footrue.md",
     "packages/vfresearch/sources/2026-09-05-weekly-links-footrue.md",
     "packages/vfcovers/hq/PLAYBOOK.md",
-    "packages/vfcanva/WORKFLOW.md",
     "packages/vfops/BRIEF-2026-09-05.md",
     "packages/vfops/data/research.md"
   ],
   "execution_state": {
     "registered": true,
-    "embedded_packs": ["vfcovers", "vfcanva"],
+    "embedded_packs": [
+      "vfcovers"
+    ],
     "mcp_install_skipped": true,
     "no_invented_insights": true
-  },
-  "latest_observation": "Owner mid-week URL registered; browser-local prep path documented before Canva"
+  }
 }

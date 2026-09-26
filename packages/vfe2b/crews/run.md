@@ -69,12 +69,10 @@ Three misses in a row on the same needed fact (queue hours, ₪, license, measur
 
 - a computational sensor that passed (`python3 scripts/check-….py`), or
 - a named field that was actually read (subject, file path, calendar block), or
-- a **tool receipt** for sends and external artifacts (`Gmail message_id=…`, `Canva design_id=…`, `#נשלח-מ-HQ` / `#ממתין-ל-כלי-IG`), or
 - **חסר** — then the state cannot be `worker_done`.
 
 ## Session goal (DeerFlow `/goal`)
 
-At run start, write one line `מטרה:` — the completion condition for this job. Examples: «Gmail reply sent in thread X», «Canva+Drive+Gmail failover packet on disk». Sale ₪ is never a goal; use `decision_gate`.
 
 Rules:
 
@@ -113,7 +111,6 @@ Rules:
 הבא: <who — HQ tool send | human WhatsApp | lead ₪ | none>
 ```
 
-`worker_done` — a reviewable draft exists **and** `אימות` is not חסר. If this job was a Gmail/IG send, the tool already fired or the Canva+Drive+Gmail failover is on disk (`#נשלח-מ-HQ` / `#ממתין-ל-כלי-IG`).
 `escalation` — a named field is **חסר**. One WhatsApp ask, drafted, not sent (customer chat stays human).
 `decision_gate` — sale ₪ waits for head of desk. Not a «wait for Grok to send» gate.
 

@@ -17,7 +17,6 @@ Each folder keeps `ORIGIN.md` (slug, agent URL, one-line role). HQ overlay (not 
 
 Constitution and team of 5: [`../constitution/`](../constitution/). Hebrew reports: [`../docs/SHARE-EMBED-he.md`](../docs/SHARE-EMBED-he.md), [`../docs/SHARES-2026-08-30.md`](../docs/SHARES-2026-08-30.md).
 
-Velvet Factory public creative follows the current vfom/VF Project route. Canva/vfcanva are forbidden and removed.
 `vfmedia` is HQ-native. One shared media catalog over the locked Drive vault (`docs/MEDIA-VAULT.md`). תפעול owns intake. Do not invent SKUs or ₪. Do not change Drive sharing.
 
 HQ-native research packs (not Origin trees): `velvetos` ([`docs/VELVETOS.md`](../docs/VELVETOS.md) — universal kernel + tenants; active default velvet-factory), `vfmcp` ([`docs/MCP-FIT.md`](../docs/MCP-FIT.md)), `vfe2b` (e2b-dev/awesome-ai-agents desk), `vfdsh` ([`docs/DSH-FIT.md`](../docs/DSH-FIT.md)), `vfmakers` ([`docs/MAKERSKILLS-EMBED-he.md`](../docs/MAKERSKILLS-EMBED-he.md)), `vfagents` ([`docs/500-AGENTS.md`](../docs/500-AGENTS.md)), `vfmskill` ([`docs/MARKETING-SKILLS.md`](../docs/MARKETING-SKILLS.md)), `vfom` ([`docs/OPENMONTAGE.md`](../docs/OPENMONTAGE.md)), `vfharness` ([`docs/HARNESS.md`](../docs/HARNESS.md) — six-layer outer harness on existing packs), `vfgraft` ([`docs/GRAFT.md`](../docs/GRAFT.md) — Graft pattern, no npm), `vfmem` ([`docs/VFMEM.md`](../docs/VFMEM.md) — office-graph queries; no CBM binary), and `vffcc` ([`docs/FCC-FIT.md`](../docs/FCC-FIT.md) — Free Claude Code map; no local proxy on this HQ).

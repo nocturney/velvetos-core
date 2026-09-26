@@ -24,7 +24,6 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 - כל טיוטת כיתוב / ריל / קרוסלה / סטוריז / cover / overlay / first-frame בעברית.
 - כל Gmail / WhatsApp draft / IG reply / follow-up / quote / proposal שהמשרד ניסח ללקוח.
 - כל בריף, מייל, סיכום, החלטה או prose תפעולי שהמשרד מייצר לכריסטיאן.
-- כל טקסט שנכתב ב־AI בתוך מסמך, PDF, מצגת, HTML, Canva או UI/dashboard ונועד לעין אנושית.
 - כל תשובת דלפק או הסבר human-facing שניסח ChatGPT/Cursor/Gemini/Perplexity/Grok עבור המשרד.
 - כשטיוטה נשמעת כמו ChatGPT בעברית, כמו סלוגן גנרי, או כשהטקסט אינו מוסיף דבר.
 

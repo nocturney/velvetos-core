@@ -230,7 +230,7 @@ def main() -> None:
     if guard.get("protectedRoutineCount") != 9:
         fail("verified Integrity Guard must protect nine routines")
     expected_titles = {
-        "VelvetOS Integrity Guard", "Velvet Research Seat",
+        "VelvetOS Integrity Guard", "Velvet Research Seat", "OpenPost Release Watch",
         "Velvet Morning Brief", "Morning Delivery Guard", "VelvetOS Office Loop",
         "Weekly Research Accountability", "Cognee Memory Sync", "Cognee Stable Updates",
     }

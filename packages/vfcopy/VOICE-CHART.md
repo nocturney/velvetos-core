@@ -53,7 +53,6 @@
 
 ## חוק מפעיל — public-social
 
-כל כלי (Cursor, ChatGPT, Gemini, Perplexity, Canva, Grok או סקריפט) שמפיק טקסט ציבורי עובר את `constitution/VISIBLE_TEXT.md` ב־surface `public-social`: verified context → `hq/reader-first-he.md` → `VOICE.md` + קובץ זה + `voice/approved/` → relevant vfmskill writing aids → `skills/velvet-hebrew-copy/SKILL.md` → `hq/ai-tells-he.md` → `scripts/vf_visible_text.py --surface public-social` / actual-copy lint → fact gate → vfgrowth/PREFLIGHT.  
 לטקסט על ויזואל מוסיפים `visual-microcopy` + `NO_TEXT` + Creative Director/Brand Guardian.  
 בלי מקור/צילום/פרטי מוצר אמיתיים: `needs_input` / ״חסר״ — לא המצאה.  
 קורפוס לדוגמאות: `voice/approved/` בלבד.

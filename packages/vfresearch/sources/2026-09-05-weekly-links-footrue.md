@@ -13,7 +13,6 @@
 ## מה הוטמע
 
 - `vfcovers/hq/PLAYBOOK.md` — הכנת הוכחת רצפה בדפדפן (HEIC / רקע / דחיסה)
-- `vfcanva/WORKFLOW.md` — שלב prep לפני Canva
 
 ## מה חדש לחקור
 
@@ -24,9 +23,6 @@
 | מה | למה |
 |---|---|
 | Finance/Crypto/Currency | מחוץ לצינור; אין ₪ |
-| החלפת Canva | מותג IG נשאר Canva |
 | מספרי משתמשים/MRR מצד ג׳ | אין ספירה |
 
 ## בלוק 05
-
-שבועי קישורים — הוטמע footrue ToolBox (הכנת מדיה בדפדפן) ב־vfcovers/vfcanva

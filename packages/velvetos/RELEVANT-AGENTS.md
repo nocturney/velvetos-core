@@ -70,7 +70,6 @@ Regenerate: `python3 scripts/vf_relevant_agents.py`
 | `support-responder` | Expert customer support specialist delivering exceptional customer service, issue resolution, and user experience optimization. Specializes  |
 | `twitter-engager` | Expert Twitter marketing specialist focused on real-time engagement, thought leadership building, and community-driven growth. Builds brand  |
 | `ui-designer` | Expert UI designer specializing in visual design systems, component libraries, and pixel-perfect interface creation. Creates beautiful, cons |
-| `vf-canva-instagram` |  |
 | `visual-storyteller` | Expert visual communication specialist focused on creating compelling visual narratives, multimedia content, and brand storytelling through  |
 | `whimsy-injector` | Expert creative specialist focused on adding personality, delight, and playful elements to brand experiences. Creates memorable, joyful inte |
 

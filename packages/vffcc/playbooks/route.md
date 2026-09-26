@@ -9,7 +9,6 @@
 - Gmail קריאה / טיוטה
 - יומן `Asia/Jerusalem`
 - Drive לפי שם עבודה
-- Canva / Superdesign / Treg / Mobbin
 - בריף בוקר, פנייה, הצעה, תור הדפסה, לוח IG
 - החלטת ראש צוות, ₪, Insights
 
@@ -21,7 +20,6 @@ ChatGPT + Gemini + Perplexity כבר סוסי המחקר. FCC **אינו** שו�
 
 ## הורדה מקומית — רק אחרי ראש צוות
 
-מתאים **רק** אם כריסטיאן רוצה סוכן קוד על המק, בלי Gmail/Canva, עם מפתח חינם (NIM / Groq / Gemini / OpenRouter).
 
 דוגמאות שמותר להוריד:
 

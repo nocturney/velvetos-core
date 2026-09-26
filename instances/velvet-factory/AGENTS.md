@@ -2,7 +2,6 @@
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 PRODUCT: VelvetOS
@@ -17,7 +16,6 @@ This file is the **guide for this business office**. Core laws still win for sen
 
 - Pull packs and modules from **VelvetOS Core** (`vendor/velvetos-core`). Do not duplicate the pack tree.
 - Studio facts: `constitution/STUDIO.md` + `instance/velvet-factory.json`.
-- HQ sends Gmail via the connected mail path. Scheduled Instagram publication uses the Cloudflare Instagram Publisher; organic publication targets Meta Instagram Graph API; live status requires Graph/MCP read-back (`vendor/velvetos-core/packages/vfigos/SEND.md`). OpenPost is frozen; Canva/vfcanva are forbidden.
 - Christian surface: decisions / hard blockers / live publish needing him only. Preflight (`vfgrowth/PREFLIGHT.md`) fail-closes schedule. Never «רמה נמוכה» upward.
 - Never invent ₪ or Insights. No auto-DM, Boost/Ads without lead, customer WhatsApp send, or Print from HQ.
 - **PUBLIC_CURRENT_CTA** = Instagram message to `@velvets_cloud` / איסוף שדרות — not bare «שלחו DM», not WhatsApp phone in public copy. BUSINESS_CONTACT_RECORD WhatsApp `050-2517000` stays in desk only.
@@ -26,7 +24,6 @@ This file is the **guide for this business office**. Core laws still win for sen
 
 ## OWNER-APPROVED VISUAL STANDARD — COLD-START, mandatory
 
-Scope (VF_PUBLICATION_ROUTE_V1): for VF publication the executable route is the publication route above and Canva/vfcanva are denied tools. Canva mentions in this section are the reference-asset identity and hard-reject IDs, never a provider route. The cold-start standard itself stays fail-closed (Core `scripts/check-visual-standard-bootstrap.py`).
 
 For every Instagram/feed visual workflow, read and obey Core:
 
@@ -35,13 +32,11 @@ For every Instagram/feed visual workflow, read and obey Core:
 - `vendor/velvetos-core/packages/vfom/VISUAL-DNA.json`
 - `vendor/velvetos-core/.cursor/skills/velvet-brand-guardian/SKILL.md`
 
-Canonical approved Canva reference asset: `MAHVL7PKpvE` (`Velvet Factory · APPROVED GRID VISUAL STANDARD · 2026-09-14`); artifact SHA-256: `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. Public reference: `https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg`. Portable cross-system prompt: `packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md`.
 
 The approved grid standard is the required visual-language and quality floor for feed posts, Reel covers, carousel pages, Story stills, service/editorial tiles and grid planning. It is **not** permission to alter real products: Product Truth, real source evidence, constitution and rights always win.
 
 Required direction: product-first, real photography as truth anchor, `Retouch the photo, not the product`, minimal Hebrew typography, premium/non-template editorial finish, photo-first service communication, curated recipe diversity (hero / UGC-human / macro-detail / minimal-studio / bundle-flatlay / service-editorial / proof-process), coherent feed treatment and exact-final QA.
 
-Hard rejects include placeholders presented as finals, generic icons replacing product photography, synthetic replacement/drift of a real product, fake customer/shelf scenes, stock filler, text-heavy generic template cards and rejected G004 Canva design `DAHUaelaug0` as source/style/layout/canonical edit/publish asset.
 
 Any tool or agent that selects media, retouches, designs, builds covers/carousels/stories, plans the grid, runs Brand Guardian/QA or prepares publish preflight must apply this standard before output can PASS. This is a cold-start invariant: a fresh conversation with no previous chat context must still load and verify the standard before creative work without relying on chat history; missing or mismatched binding stops the creative branch as `visual_standard_unavailable` instead of falling back to generic/default model aesthetics. Real product source media remains Product Truth.
 

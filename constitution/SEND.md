@@ -2,7 +2,6 @@
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 נעילה 31.8.2026 (Asia/Jerusalem) — הבעלים.  
@@ -32,7 +31,6 @@ Treg לא רלוונטי. Drive יוצר מסמכים לפי צורך.
 | ערוץ | מי | כלי | תנאי טקסט | לא |
 |---|---|---|---|---|
 | ג׳ימייל | **סוכן HQ** | `send_message` / `reply` / `forward` על `nocturney@gmail.com` | Visible Text Gate לפי הקורא + facts | לא מחכים לגרוק. לא מחכים לאדם ללחוץ Send |
-| אינסטגרם `@velvets_cloud` | Cloudflare Instagram Publisher לתזמון; Meta Instagram Graph לפרסום; Graph/MCP read-back לאימות | `packages/vfigos/SEND.md` | `public-social` + `visual-microcopy` לפי הצורך | OpenPost קפוא; Canva/vfcanva אסורים; אין auto-DM |
 | וואטסאפ לקוח | אדם `050-2517000` | Core: MCP חיפוש/טיוטה. VF `send=false` | gated draft לפני handoff | HQ לא ממציא בוט |
 | מדפסות | רצפה | `vfprod` | — | HQ לא לוחץ Print |
 | בוסט / אוטו־DM | — | נעול | — | נעול תמיד |
@@ -106,7 +104,6 @@ python3 scripts/vf_send_preflight.py --gate gmail
 
 ## אינסטגרם — מותר דרך כלי
 
-1. **Visible Text + creative QA + שער עריכה** — copy chain, VOICE/Brand Guardian/רובריקה וה־final render הנוכחי; אין Canva/vfcanva.
 2. **PREFLIGHT v2** — קשור ל־hash של הקופי והחבילה המדויקת. approval ישן/חסר digest אינו תקף לפרסום חדש.
 3. `vfcopy` נותן public copy לפי `PUBLIC_CURRENT_CTA`; לא וואטסאפ בכיתוב ציבורי. Showcase יכול לבחור CTA ניטרלי/ללא CTA לפי המדיניות הפעילה.
 4. אם Instagram MCP מחובר — מריצים exact-package gate, ורק אחרי PASS מפרסמים ב־`publish_*`.

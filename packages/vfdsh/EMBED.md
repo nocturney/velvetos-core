@@ -54,8 +54,6 @@
 
 **אצלנו:**
 
-1. `vfcopy` → טיוטה. `vfcovers` / `vfcanva` → כיסוי. `vfigos` → סקירה/תזמון.
-2. Canva אם מחובר. אם לא: `Canva לא מחובר` + `packages/vfcanva/CONNECT.md`.
 3. אין סצנת רצפה מומצאת על הגרפיקה. אין Insights על השקף.
 4. HQ לא שולח. Grok משבץ.
 

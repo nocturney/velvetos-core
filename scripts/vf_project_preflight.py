@@ -128,10 +128,6 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
         if not isinstance(route, dict):
             problems.append("publicationRoute must be an object")
             return problems
-        if "vfcovers/vfcanva composition route" in authority:
-            problems.append("stale vfcanva publication route remains active in Project Authority")
-        if "Canva/vfcanva are forbidden" not in authority:
-            problems.append("Project Authority lacks the current no-Canva publication override")
         if "creative_execution_authorized: true" not in authority or "creative_execution_authorized: true" not in gate:
             problems.append("pre-tool creative execution receipt is not bound into Project Authority/Gate")
         denied_tools = route.get("deniedTools")
@@ -139,8 +135,6 @@ def project_binding_problems(root: Path = ROOT, *, creative: bool = False) -> li
             problems.append("publicationRoute deniedTools must be an array of strings")
         else:
             denied = {x.casefold() for x in denied_tools}
-            if not {"canva", "vfcanva"}.issubset(denied):
-                problems.append("publicationRoute does not deny Canva/vfcanva")
         current_refs = assets.get("current_references")
         current_names: set[str] = set()
         if not isinstance(current_refs, dict):

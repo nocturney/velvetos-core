@@ -27,7 +27,6 @@
 1. קריאת תיבה / לוח / דרייב־לפי־שם.
 2. `render_mail.py` ואז שליחה — בריף 07:00 אל `nocturney@gmail.com` בלבד (`htmlBody` תצוגה 3 מ־`vfbriefux/MAIL.html` + כריכות `cid`). מועדף `python -m vfops.gmail_brief_send`. MCP גדול מדי: `create_draft` → `update_draft` מצורפים → `send_message(draftId)` (`docs/SEND-BRIEF-MCP.md`). אין `LOAD_FROM_FILE`. MAIL-PACK הוא חלופת טקסט אם MCP נופל. בלי לחיצת בעלים.
 3. `create_event` — משבצת חיה שכבר קיימת ב־`vfgrowth` (למשל G005 חמישי 12:00).
-4. VF public creative follows the current vfom/VF Project route; no Canva/vfcanva.
 5. תור `#מוכן-ל-Grok` / `#פרסום-חי-דחוף` + LIVE-PACKET.
 
 ## מה נשאר נעול (אין כלי, לא רק מדיניות)

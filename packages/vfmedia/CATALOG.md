@@ -8,7 +8,6 @@
 **התיקיות:** [`FOLDERS.json`](FOLDERS.json)  
 **הנוהל:** [`docs/MEDIA-VAULT.md`](../../docs/MEDIA-VAULT.md)
 
-אין קטלוג שני. שורת INSTA / Canva / מדף מק״ט אינה מחליפה את הקובץ הזה.
 
 ## שדות חובה לכל פריט
 
@@ -32,7 +31,6 @@
 `truth` מרחיב את אותה שורת קטלוג; הוא **לא** קטלוג נוסף. אם השדה חסר, Visual Foundry מתייחס לנכס כ־`unverified` לצורכי טענה ציבורית.
 
 - `truthLevel`: `verified_real` / `derived_real` / `illustrative_ai` / `synthetic` / `unverified`.
-- `origin`: מקור ידוע בלבד (`studio_camera`, `studio_export`, `customer_media`, `canva`, `generated_ai`, `external_reference`, `unknown`).
 - `rightsStatus`: `approved` / `restricted` / `unknown` / `not_applicable`.
 - `usableFor`: שימושים מותרים כמו `hero`, `proof`, `reel`, `cover`, `reference_only`.
 - `qualityScore`, `visualTags`, `project`, `object`, `material`, `evidenceRefs` — רק כאשר ידועים/נמדדו.

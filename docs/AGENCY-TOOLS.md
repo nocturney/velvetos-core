@@ -84,5 +84,3 @@ Mention a non-desk `@slug` only when the user asks for that specialty. Do not dr
 
 
 ## Current routing authority — 2026-09-26
-
-`packages/velvetos/TOOL-STATUS.json` is authoritative for executable tool status. Canva/vfcanva and Treg are forbidden; OpenPost is frozen; Cloudflare Instagram Publisher is active for scheduled Instagram delivery.

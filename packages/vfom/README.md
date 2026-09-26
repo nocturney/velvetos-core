@@ -9,11 +9,9 @@ OpenMontage הוא סטודיו וידאו סוכני: 12 צינורות, 100+ �
 | דפוס מ-OpenMontage | פק | מה עושים |
 |---|---|---|
 | Clip Factory | `vfgrowth`, `vfprod` | טיימלאפס ארוך → כרטיסי קליפ מדורגים |
-| Hybrid | `vfcanva`, `vfcovers` | גלם מהמיטה + שכבת Canva. הגלם ראשי |
 | Cinematic / reference video | `vfgrowth`, `vfresearch` | ריל שאוהבים → מה נשמר / מה משתנה / מסלול כלים ישר |
 | Backlot approval gate | `vfigos` | דף סצנות לאישור אדם לפני «מוכן ל-Grok» |
 | Self-review / slideshow risk | `vfigos`, `vfcopy` | רשימת איכות לפני מסירה. אין שליחה |
-| Instagram Reels 1080×1920 | `vfcanva` | כבר ב-`FORMATS.json` (`ig_reel_cover` / `ig_story`) |
 
 ## מה לא
 

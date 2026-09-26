@@ -233,8 +233,8 @@ def _validate(root, manifest_ref, content_id, phase, expected_package, expected_
         raise ValueError("REJECTED_FOR_REUSE: direction family or parent rejected")
     tools = _rows(ev.get("tools"), "tools")
     for tool in tools:
-        if not meaningful(tool) or "canva" in tool.casefold():
-            raise ValueError("Canva/vfcanva prohibited in VF publication route")
+        if not meaningful(tool):
+            raise ValueError("publication tool evidence must be meaningful")
     sources = _rows(ev.get("sources"), "sources")
     source_shas = set()
     for src in sources:

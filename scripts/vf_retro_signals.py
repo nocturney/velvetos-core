@@ -36,7 +36,6 @@ MATERIAL_PAT = re.compile(
     r"\b(PETG|PLA|ASA|ABS|TPU|Nylon|PA12|PEBA)\b|חומר\s*חוזר|מדף\s*חומר",
     re.I,
 )
-SENSOR_NAME = re.compile(r"check-[\w-]+\.py|vf_\w+\.py|[A-Za-z]+ MCP|Canva|Gmail|Drive", re.I)
 FAILOVER_LINE = re.compile(r"failover\s*[:：]\s*(\S+)\s*→\s*(\S+)", re.I)
 DAY_BLOCK = re.compile(
     r"(?m)^### (\d{4}-\d{2}-\d{2})\b[^\n]*\n(.*?)(?=^### \d{4}-\d{2}-\d{2}\b|\Z)",

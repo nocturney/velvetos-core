@@ -56,20 +56,6 @@
       "failover_target": false,
       "historical_only": true
     },
-    "canva": {
-      "status": "forbidden",
-      "reason": "owner prohibition for Velvet Factory workflow",
-      "connector_allowed": false,
-      "skill_allowed": false,
-      "package_allowed": false,
-      "route_allowed": false,
-      "fallback_allowed": false
-    },
-    "vfcanva": {
-      "status": "forbidden",
-      "reason": "same prohibition as Canva",
-      "package_allowed": false
-    },
     "text-to-cad": {
       "status": "active_scope_limited",
       "role": "local parametric CAD, STEP/STL/3MF export, DfAM, local OrcaSlicer routing and G-code validation",

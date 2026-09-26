@@ -19,7 +19,6 @@
 | `manychat-dm` | — | **דולג** (אוטו־DM) |
 | `voiceflow-faq` | `vfcopy` | ידע FAQ, בלי בוט חי |
 | `custom-gpt` | `vfgrowth`, `vfcopy` | לוח שבועי + כיתוב |
-| `capcut-canva` | `vfcovers` | טיוטת כריכה/ריל |
 | `metricool` | `vfigos`, `vfinsights` | סקירה + שליחה דרך `SEND.md` |
 | `make-zapier` | `vfops`, `vfconvert` | שורת משרד. HQ שולח ג׳ימייל דרך כלי (בלי דיוור המוני) |
 | `stl-quote` | `vfsales`, `vfcost` | סלייס ובדיקה. ₪ רק אחרי סכום |

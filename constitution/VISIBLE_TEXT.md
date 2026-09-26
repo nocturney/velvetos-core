@@ -16,7 +16,6 @@
 - Gmail ללקוח או לבעלים, WhatsApp draft, Instagram reply/caption/Story/Reel/Carousel copy.
 - הצעת מחיר, הצעה מסחרית, מסמך ללקוח, הודעת סטטוס, follow-up.
 - cover headline, overlay, first-frame text, slide copy, CTA, UI microcopy שנוצרו או שוכתבו ב־AI.
-- טקסט בתוך PDF/DOCX/מצגת/HTML/Canva שנועד להיקרא בידי אדם.
 
 ## מה לא עובר "האנשה"
 

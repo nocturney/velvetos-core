@@ -25,7 +25,3 @@ Read `packages/vfom/EMBED.md` and run one crew from `packages/vfom/crews/`:
 - Human approves scenes before «מוכן ל-Grok».
 
 ## Packs you may write notes into
-
-Existing VF packs (`vfigos`, `vfgrowth`, `vfcovers`, `vfcanva`, `vfcopy`, `vfprod`, `vfresearch`, `vfom`). Do not create a second video product pack.
-
-Cursor is already the office. Canva is the stills tool. Do not clone the OpenMontage monorepo into this repo.

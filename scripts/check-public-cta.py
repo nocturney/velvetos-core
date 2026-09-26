@@ -61,7 +61,6 @@ def main() -> None:
             if need not in blob:
                 fail(f"{path.relative_to(ROOT)}: forbiddenPublic must list {need!r}")
 
-    formats = json.loads((ROOT / "packages" / "vfcanva" / "FORMATS.json").read_text(encoding="utf-8"))
     fcta = formats.get("cta") or {}
     if fcta.get("whatsapp") == WA_PHONE and not fcta.get("public"):
         fail("FORMATS.json still treats whatsapp as public CTA — need cta.public")

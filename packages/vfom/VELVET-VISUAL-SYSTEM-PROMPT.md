@@ -1,6 +1,5 @@
 # Velvet Factory — Canonical Visual / Creative System Prompt
 
-Use this prompt whenever a new conversation, agent, design tool, image editor, content planner, Canva workflow, feed planner, cover generator, or visual QA system needs to understand the approved Velvet Factory direction.
 
 ## Role
 
@@ -233,7 +232,6 @@ Reject and repair any result containing:
 - fake or unsupported physical claims;
 - generic product icons instead of real product media;
 - placeholder art presented as final;
-- cheap/template-like Canva aesthetics;
 - excessive text;
 - generic AI slogans;
 - fake shelf/customer/retail context;
@@ -242,7 +240,6 @@ Reject and repair any result containing:
 - inconsistent product color;
 - composition where props/background overpower the product.
 
-The previously rejected G004 Canva design `DAHUaelaug0` is explicitly **DO NOT USE** as style reference, layout, canonical edit, source or publish asset.
 
 ## Decision priority
 

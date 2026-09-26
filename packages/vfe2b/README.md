@@ -20,7 +20,6 @@
 | Zapier / Bardeen / Gumloop | `vfops` | נהלי צומת; אין Zap חי מ-HQ |
 | Huginn | `vfe2b` | Scenarios + events + staleness; אין Rails |
 | Cursor / Superagent+E2B | המשרד הזה | כבר רץ כאן; אין ארגז חול שני |
-| Diagram / v0 | `vfcovers`, `vfbriefux` | Superdesign / Canva; לא אתר חדש |
 
 ## מה לא
 

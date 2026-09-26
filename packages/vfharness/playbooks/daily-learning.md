@@ -32,7 +32,6 @@ Day work (existing packs)
 | `expert-social-booster` | Which hook/format landed? (verified only) |
 | `expert-3d-model` | Which mesh issue recurred? slicer lesson? |
 | `expert-trend-explorer` | Which source was worth keeping? stale link? |
-| `expert-media-director` | Which storyboard/Canva path saved time? |
 
 ## Checkpoint fields (optional)
 

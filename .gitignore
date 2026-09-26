@@ -1,4 +1,4 @@
-.env
+﻿.env
 .env.*
 !.env.example
 .DS_Store
@@ -12,7 +12,6 @@ node_modules/
 tmp-clone/
 __pycache__/
 *.pyc
-packages/vfcanva/studio/out/*.png
 packages/vfops/data/cli-runs.jsonl
 packages/vfops/out/report-*.md
 packages/vfops/out/report-*.json

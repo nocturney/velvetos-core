@@ -10,7 +10,6 @@
 
 1. ב-Google Cloud: service account + Sheets API. הורד JSON **מחוץ לגיט** (למשל `~/.config/velvetos/gsheets.json`).
 2. שתף את ארבעת הגיליונות ב־[VF HQ · משרד](https://drive.google.com/drive/folders/1dFvQBlwzoefZ7OZKHDbMAFjuJ_9kXw8e) עם אימייל ה־service account (עורך).
-3. הדבק ל־`~/.cursor/mcp.json` (מזג, אל תמחק Canva):
 
 ```json
 "mcp-gsheets": {

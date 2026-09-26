@@ -8,7 +8,6 @@ FCC ([README](https://github.com/Alishahryar1/free-claude-code)) הוא `fcc-ser
 
 1. ראש צוות אישר הורדת **קידוד ניסיוני** מהמק — לא החלפת HQ.
 2. אין מפתח בגיט, לא ב־`.env` של הריפו, לא בפריט Drive משותף.
-3. העבודה לא צריכה Gmail / יומן / Drive / Canva / Treg. אם כן — נשארים ב־Cursor.
 
 ## התקנה (על המק, לא כאן)
 
@@ -48,7 +47,6 @@ Fallback Models ב־Admin — לפי הסדר למעלה. ספק שנכשל על
 ## Superset (אופציונלי, מקבילי)
 
 אם צריך **יותר מסוכן קוד אחד במקביל** על Mac — [superset-sh/superset](https://github.com/superset-sh/superset) (worktrees + diff viewer).  
-אותם חוקים כמו FCC: אחרי ראש צוות, בלי Gmail/Canva/IG/₪, לא מחליף Cursor כמשרד HQ.  
 דפוסים כבר במשרד: `packages/vfresearch/sources/2026-08-31-superset-patterns.md`.
 
 ## אחרי הניסוי

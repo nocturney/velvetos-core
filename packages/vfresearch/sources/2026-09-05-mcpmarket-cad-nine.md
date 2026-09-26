@@ -13,10 +13,8 @@ Failover מיד ל־WebSearch + GitHub README. לא ממציאים את דף ה�
 
 | slug | גוף פתוח | דין |
 |---|---|---|
-| excalidraw-4 | [excalidraw/excalidraw-mcp](https://github.com/excalidraw/excalidraw-mcp) | later — דיאגרמות פנימיות; לא Canva/IG |
 | blender-open | [dhakalnirajan/blender-open-mcp](https://github.com/dhakalnirajan/blender-open-mcp) (Ollama) | Cloud skip · sibling Desktop |
 | blender-ai | משפחת Blender MCP (דף חסום; וריאנטי sandbox/AST בשוק) | Cloud skip · sibling → BLENDER-MCP |
-| svgmaker | [GenWaveLLC/svgmaker-mcp](https://github.com/GenWaveLLC/svgmaker-mcp) | skip עד API key · Canva קודם |
 | multicad | [AnCode666/multiCAD-mcp](https://github.com/AnCode666/multiCAD-mcp) | skip — AutoCAD/COM לא רצפת VF |
 | openscad-2 | משפחת OpenSCAD MCP (CLI validate/STL; גם [petrijr/openscad-mcp](https://github.com/petrijr/openscad-mcp) ודומים) | Cloud skip · Desktop optional אחרי ראש צוות |
 | blender-vxai | רשימת קטגוריה בלבד — GitHub לא אומת | skip עד זיהוי ריפו |

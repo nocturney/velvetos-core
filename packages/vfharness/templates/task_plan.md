@@ -15,7 +15,6 @@
 ## שלבים
 
 - [ ] **1. תכנון** — קרא `AGENTS.md` + SKILL של הפק. אין פק חדש.
-- [ ] **2. מקור** — Gmail / Calendar / Drive / Canva לפי שם העבודה. חסר → `escalation`, לא המצאה.
 - [ ] **3. ביצוע** — צעד אחד. ארטיפקט על דיסק.
 - [ ] **4. אימות** — סנסור (`python3 scripts/check-….py`) או שדה שקראנו בפועל.
 - [ ] **5. סגירה** — `checkpoint.json` + תוצאה: `worker_done` / `escalation` / `decision_gate`.

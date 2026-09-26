@@ -7,7 +7,6 @@ description: Review and repair Velvet Factory social creative against the canoni
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 Act as the unified visual QA and feed-continuity specialist inside VelvetOS. Do not become a second approval queue.
@@ -37,7 +36,6 @@ Before approving any feed visual, cover, carousel page, Story still or grid plan
 - no placeholders presented as intended finals;
 - no generic icons replacing real product imagery;
 - no stock filler or fake customer/shelf scenes;
-> LEGACY / provenance only for VF publication; not a provider route: - no use of rejected G004 Canva design `DAHUaelaug0` as layout, style, canonical edit, source or publish asset.
 
 A visual that is technically valid but visibly template-like, placeholder-like, product-secondary, or inconsistent with the approved grid quality bar must FAIL and return the smallest targeted repair.
 
@@ -76,11 +74,10 @@ No real-product asset may pass when any of these are false or unproven: product 
 
 ## Required manifest contribution
 
-> LEGACY / provenance only for VF publication; not a provider route: Require `visualStandard.gate=PASS` and verify its canonical document, public reference, Canva asset ID `MAHVL7PKpvE` and artifact SHA before approving a public visual. Update `finishing.policyVersion`, `finishing.principle`, all `finishing.stages` fields, `finishing.productTruth`, `finishing.repairCycles`, `finishing.reviewedArtifactDigest`, `finishing.evidenceRefs`, plus `qa.brandScore`, `qa.hookScore`, `qa.realityScore`, `qa.originalityScore`, `qa.artifactScore`, `qa.deterministicChecks`, `qa.failures`, `qa.repairs`, `feed.continuityDecision`, `feed.reasoning` and `status`.
+Record the finishing audit with `finishing.policyVersion`, the four stage outcomes, exact-final artifact identity, Product Truth result, `visualStandard.gate=PASS` when proven, and repair evidence.
 
 For visual microcopy, record `TEXT_WINS`/`NO_TEXT`, Humanizer/AI-tells result, no-text comparison rationale and any owner wording preference in the existing visual-copy fields.
 
-> LEGACY / provenance only for VF publication; not a provider route: For public feed visuals, include the owner-approved reference document and/or Canva asset ID `MAHVL7PKpvE` in `finishing.evidenceRefs` or equivalent evidence when the schema permits it.
 
 Do not ask the owner to choose routine creative options. Human escalation is exception-only under the active instance policy.
 
@@ -95,4 +92,3 @@ For Velvet Factory requests that mean prepare/treat/edit content for a potential
 ## Creative transformation lock
 
 For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md` is mandatory. Preserve the real product, but do not pass through raw/source photos as the finished creative. At least one review visual — normally the hero/first slide — must show a meaningful approved Velvet treatment around the source-locked product. Default to editing the real source image, not recreating the product from text. Multiple photos do not imply a carousel; if carousel is chosen, slide 1 must be a fully treated hero. `raw_passthrough=true`, an essentially untouched source carousel, or crop/exposure-only work presented as publication-grade is FAIL. Generative edits must explicitly contain NO LOGO, NO WORDMARK, NO PHONE NUMBER, NO WHATSAPP, NO CONTACT BAR, NO GENERATED HEBREW TEXT.
-

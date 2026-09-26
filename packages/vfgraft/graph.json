@@ -129,11 +129,9 @@
       "id": "tools",
       "file": "graph/tools.md",
       "type": "system",
-      "summary": "Gmail read-and-send, Calendar Asia/Jerusalem, Drive search-and-create, Canva ready, WebSearch, GenerateImage, Superdesign. Treg not relevant. 3D AI Studio owner-account site-first. HQ sends via tools.",
       "sources": [
         ".cursor/vf-desk.json",
         "docs/AGENCY-TOOLS.md",
-        "docs/CANVA.md",
         "packages/vfmcp/GAP.md",
         "constitution/SEND.md"
       ],
@@ -150,18 +148,17 @@
           "verb": "depends_on",
           "to": "grok-bot"
         }
-      ]
+      ],
+      "summary": "Current office capability map, failover boundaries and verified send/read surfaces."
     },
     {
       "id": "skills",
       "file": "graph/skills.md",
       "type": "system",
-      "summary": "Daily Cursor skills: morning brief, inquiry chain, content sprint, Canva Instagram.",
       "sources": [
         ".cursor/skills/vf-morning-brief/SKILL.md",
         ".cursor/skills/vf-inquiry-chain/SKILL.md",
         ".cursor/skills/vf-content-sprint/SKILL.md",
-        ".cursor/skills/vf-canva-instagram/SKILL.md",
         ".cursor/skills/vf-graft-map/SKILL.md"
       ],
       "links": [
@@ -189,7 +186,8 @@
           "verb": "produces",
           "to": "content-job"
         }
-      ]
+      ],
+      "summary": "Task-specific skill routers that consume existing packs without creating a second runtime."
     },
     {
       "id": "packs",
@@ -307,10 +305,8 @@
       "id": "content-job",
       "file": "graph/content-job.md",
       "type": "job",
-      "summary": "Content pack and covers from floor proof. Canva for IG visuals. HQ reviews; Grok sends.",
       "sources": [
         ".cursor/skills/vf-content-sprint/SKILL.md",
-        ".cursor/skills/vf-canva-instagram/SKILL.md",
         "packages/vfe2b/crews/content.md",
         "constitution/ORGANIC_GROWTH.md"
       ],
@@ -335,7 +331,8 @@
           "verb": "depends_on",
           "to": "grok-bot"
         }
-      ]
+      ],
+      "summary": "Source-grounded content job from real evidence through creative gates to verified publication evidence."
     },
     {
       "id": "blast",
