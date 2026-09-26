@@ -45,6 +45,7 @@ Before claiming completion, verify the routed target state or run the existing p
 
 ## Structured Demand Signals
 
+- **DORMANT:** no provider feeds it yet; not an active feed. It stays runnable for a manual call only (see the `DEMAND-SIGNALS.md` banner).
 - Authority/playbook: `DEMAND-SIGNALS.md`
 - Stable packet: `demand-signal-packet.schema.json`
 - Deterministic normalizer: `python scripts/vf_demand_signals.py`

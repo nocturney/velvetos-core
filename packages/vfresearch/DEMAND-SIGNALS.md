@@ -1,6 +1,8 @@
 # Structured Demand Signals — adapters inside vfresearch
 
-Status: additive research capability inside existing `vfresearch`. Not a new runtime, scheduler, source of truth, pricing engine, or SKU generator.
+> **DORMANT (2026-09-26).** No provider feeds this adapter yet: no Apify/Trends/Etsy/Keyword Planner run is wired, scheduled or credentialed, and #247 (provider request) was closed as low priority. `scripts/vf_demand_signals.py` stays runnable for a legitimate manual call, but it is **not an active feed**. The weekly research pass, briefs and sensors must not report demand signals as live, and "no packet" is the expected state, not a failure. `scripts/check-demand-signals-dormant.py` enforces this.
+
+Status: dormant additive research capability inside existing `vfresearch`. Not a new runtime, scheduler, source of truth, pricing engine, or SKU generator.
 
 ## Purpose
 

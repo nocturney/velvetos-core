@@ -89,6 +89,6 @@ ADR שכבות: `packages/velvetos/ADR-THREE-LAYERS.md` (Edge≠Core runtime).
 
 ## Structured demand evidence
 
-When repeatable demand evidence materially improves the weekly pass, use `../DEMAND-SIGNALS.md` and normalize already-acquired public observations with `python scripts/vf_demand_signals.py`. WebSearch/WebFetch remain first-line. Google Trends is the preferred first structured benchmark class; Etsy/search-suggestion/marketplace/SERP adapters are optional secondary evidence.
+**DORMANT:** no provider feeds this yet. Leave the section out, or write «structured demand — dormant (no provider)»; never present it as a live signal. When a provider is actually wired and repeatable demand evidence materially improves the weekly pass, use `../DEMAND-SIGNALS.md` and normalize already-acquired public observations with `python scripts/vf_demand_signals.py`. WebSearch/WebFetch remain first-line. Google Trends is the preferred first structured benchmark class; Etsy/search-suggestion/marketplace/SERP adapters are optional secondary evidence.
 
 A DemandSignalPacket is research evidence only. It does not prove sales, set Velvet Factory prices, establish model rights, create a SKU, or authorize printing. Missing metrics stay missing; `demand_score` / `virality_score` are forbidden. Candidate products still pass the existing source -> license -> slice/feasibility -> test -> vfsku path.

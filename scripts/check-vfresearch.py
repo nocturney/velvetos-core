@@ -118,7 +118,7 @@ def main() -> None:
             fail(f"PRINT-DEMAND.md must mention {needle}")
     for needle in ("DEMAND-SIGNALS.md", "vf_demand_signals.py", "demand_score"):
         if needle not in print_demand:
-            fail(f"PRINT-DEMAND.md structured demand wiring must mention {needle}")
+            fail(f"PRINT-DEMAND.md dormant structured-demand section must mention {needle}")
 
     demand_doc = DEMAND_SIGNALS.read_text(encoding="utf-8")
     for needle in ("DemandSignalPacket", "WebSearch/WebFetch", "noAutomaticSkuPromotion", "UNPROVEN"):
