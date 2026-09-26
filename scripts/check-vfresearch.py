@@ -177,8 +177,8 @@ def main() -> None:
     if best_json.get("timerName") != "research-seat:best-skills-48h":
         fail("BEST-SKILLS.json timerName must route through Research Seat")
     freshness = best_json.get("freshnessContract") or {}
-    if freshness.get("targetHours") != 48 or freshness.get("graceHours") != 4:
-        fail("BEST-SKILLS.json freshness must be 48h + 4h grace")
+    if freshness.get("targetHours") != 44 or freshness.get("graceHours") != 8:
+        fail("BEST-SKILLS.json freshness must be 44h due + 8h grace (stale >52h)")
     if "TIMER.md" not in (best_json.get("timerPlaybook") or ""):
         fail("BEST-SKILLS.json must point timerPlaybook at TIMER.md")
     best_locks = set(best_json.get("locks") or [])
@@ -191,8 +191,8 @@ def main() -> None:
     timer = BEST_SKILLS_TIMER.read_text(encoding="utf-8")
     if "Velvet Research Seat" not in timer:
         fail("TIMER.md must name Velvet Research Seat as cadence authority")
-    if "48" not in timer or "52" not in timer:
-        fail("TIMER.md must state 48h cadence and 52h stale threshold")
+    if "48" not in timer or "44h" not in timer or "52" not in timer:
+        fail("TIMER.md must state ~48h cadence, 44h due threshold and 52h stale threshold")
     if "forever" not in timer.lower() and "standing order" not in timer:
         fail("TIMER.md must state forever-until-owner-stops standing order")
     if "subscribe_timer" in timer:

@@ -88,14 +88,15 @@ def close_best_skills() -> None:
     data["timerName"] = "research-seat:best-skills-48h"
     data["standingNote"] = (
         "Owner standing order remains active. Research Seat is the canonical scheduler authority: "
-        "run a Best Skills pass when lastPass is about 48h old; no external timer renewal is required."
+        "run a Best Skills pass when lastPass is at least 44h old (daily seat gives a ~48h cadence without slipping to 72h); no external timer renewal is required."
     )
     data["lastTimerStatus"] = (
         "PROVEN_BY_RESEARCH_SEAT: lastPass/data artifact is the evidence; external Cursor subscriptions are not an authority."
     )
     data["freshnessContract"] = {
-        "targetHours": 48,
-        "graceHours": 4,
+        "targetHours": 44,
+        "graceHours": 8,
+        "dueRule": "Research Seat runs the pass when lastPass is >=44h old; stale above 52h (44h + 8h grace). Cadence stays every-2-days (~48h).",
         "evidence": ["lastPass", "lastArtifact", "lastResult"],
         "onStale": "Research Seat executes the pass; do not create a second recurring automation",
     }
