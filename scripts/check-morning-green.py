@@ -25,9 +25,8 @@ def main() -> None:
         ASSETS / "morning-story.jpg",
         ASSETS / "morning-radar.jpg",
         ASSETS / "morning-footer.jpg",
-        ROOT / "packages" / "vfigos" / "openpost_morning_snapshot.py",
-        ROOT / "packages" / "vfigos" / "run_openpost_morning_snapshot.ps1",
-        ROOT / "packages" / "vfigos" / "materialize_openpost_morning_thumbnails.ps1",
+        ROOT / "packages" / "vfigos" / "publisher_morning_snapshot.py",
+        ROOT / "packages" / "vfigos" / "run_publisher_morning_snapshot.ps1",
         ROOT / "automation" / "grok" / "CONTRACT.md",
         ROOT / "automation" / "grok" / "manifest.json",
         ROOT / "packages" / "vfops" / "ROUTINE.md",
@@ -60,29 +59,30 @@ def main() -> None:
     contract = (PACK / "MORNING-GREEN.md").read_text(encoding="utf-8")
     for token in (
         "scheduled != approved != published_verified",
-        "מתוזמן", "טרם שובץ", "OpenPost", "CID", "TARGET-CONCEPT", "QA חזותי", "VF-YYYYMMDD-NNN",
+        "מתוזמן", "טרם שובץ", "Cloudflare Publisher", "CID", "TARGET-CONCEPT", "QA חזותי", "VF-YYYYMMDD-NNN",
         "list_media/get_media", "owner-visible-text",
     ):
         if token not in contract:
             fail(f"Morning Green contract missing {token!r}")
 
-    openpost = (ROOT / "packages" / "vfigos" / "openpost_morning_snapshot.py").read_text(encoding="utf-8")
-    for token in ("activity_bucket':'scheduled'", "scheduled_at", "public_url_ready", "thumbnail_media_id", "thumbnail_cid", "OPENPOST_TOKEN"):
-        if token not in openpost:
-            fail(f"OpenPost Morning adapter missing {token!r}")
-    if "value.startswith('/media/')" in openpost or "origin+value" in openpost:
-        fail("OpenPost Morning adapter must not treat authenticated relative /media paths as public")
-    for forbidden in ("method='POST'", 'method="POST"', "method='PUT'", 'method="PUT"', "method='DELETE'", 'method="DELETE"'):
-        if forbidden in openpost:
-            fail(f"OpenPost Morning adapter contains write HTTP method: {forbidden}")
-    snapshot_runner=(ROOT / "packages" / "vfigos" / "run_openpost_morning_snapshot.ps1").read_text(encoding="utf-8")
-    materializer=(ROOT / "packages" / "vfigos" / "materialize_openpost_morning_thumbnails.ps1").read_text(encoding="utf-8")
-    for token in ("openpost-morning-brief.token.dpapi", "OPENPOST_TOKEN", "ZeroFreeBSTR"):
-        if token not in snapshot_runner:
-            fail(f"OpenPost DPAPI runner missing {token!r}")
-    for token in ("sm_$media.jpg", "--tunnel-through-iap", "thumbnail_cid", "sudo rm -f"):
-        if token not in materializer:
-            fail(f"OpenPost thumbnail materializer missing {token!r}")
+    publisher = (ROOT / "packages" / "vfigos" / "publisher_morning_snapshot.py").read_text(encoding="utf-8")
+    for token in ("CLOUDFLARE_PUBLISHER_CONTROL_TOKEN", "/v1/jobs", "method=\"GET\"", "velvet.morning_brief.publisher_snapshot.v1", "thumbnail_url", "scheduled_at"):
+        if token not in publisher:
+            fail(f"Publisher Morning adapter missing {token!r}")
+    for forbidden in ("method=\"POST\"", "method=\"PUT\"", "method=\"DELETE\""):
+        if forbidden in publisher:
+            fail(f"Publisher Morning adapter contains write HTTP method: {forbidden}")
+    runner=(ROOT / "packages" / "vfigos" / "run_publisher_morning_snapshot.ps1").read_text(encoding="utf-8")
+    for token in ("cloudflare-instagram-publisher-control.token.dpapi", "CLOUDFLARE_PUBLISHER_CONTROL_TOKEN", "ZeroFreeBSTR"):
+        if token not in runner:
+            fail(f"Publisher DPAPI runner missing {token!r}")
+    for forbidden_path in (
+        ROOT / "packages" / "vfigos" / "openpost_morning_snapshot.py",
+        ROOT / "packages" / "vfigos" / "run_openpost_morning_snapshot.ps1",
+        ROOT / "packages" / "vfigos" / "materialize_openpost_morning_thumbnails.ps1",
+    ):
+        if forbidden_path.exists():
+            fail(f"frozen OpenPost Morning path still exists: {forbidden_path.relative_to(ROOT)}")
 
     sender = (ROOT / "packages" / "vfops" / "gmail_brief_send.py").read_text(encoding="utf-8")
     for token in ("multipart/related", "Content-ID", "embed_remote_images"):
@@ -109,7 +109,7 @@ def main() -> None:
 
     builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
     preparer = (PACK / "prepare_morning_green.py").read_text(encoding="utf-8")
-    for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--thumbnail-dir", "morning-green-assets-"):
+    for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--publisher", "morning-green-assets-"):
         if token not in preparer:
             fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
     for token in ("reader_friendly", "compact_overview", "compact_attention", "compact_progress", "compact_receivables", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights", "Instagram has its own dedicated analytics section", "דברים שכדאי לשים לב אליהם", "תודה שאתה חלק מהדרך"):
@@ -130,7 +130,7 @@ def main() -> None:
     proc = subprocess.run([sys.executable, str(PACK / "render_morning_green.py"), "--check"], cwd=ROOT, text=True, capture_output=True)
     if proc.returncode != 0:
         fail(proc.stderr or proc.stdout or "Morning Green renderer self-check failed")
-    print("OK Morning Green v3.1 editorial email + truth semantics + CID transport contract")
+    print("OK Morning Green v3.1 + canonical Cloudflare Publisher schedule truth")
 
 if __name__ == "__main__":
     main()

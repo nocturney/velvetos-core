@@ -30,8 +30,7 @@ def main() -> int:
     ap=argparse.ArgumentParser()
     ap.add_argument('--brief-json',type=Path,required=True)
     ap.add_argument('--brief-txt',type=Path,required=True)
-    ap.add_argument('--openpost',type=Path)
-    ap.add_argument('--thumbnail-dir',type=Path,help='Local cache containing thumbnail_cid files named by the OpenPost snapshot')
+    ap.add_argument('--publisher',type=Path,help='Read-only canonical Cloudflare Publisher schedule snapshot')
     ap.add_argument('--request',type=Path,default=OUT/'gmail-send-request.json')
     ap.add_argument('--enable',action='store_true',help='Explicitly arm the one-shot Gmail request')
     args=ap.parse_args()
@@ -42,17 +41,8 @@ def main() -> int:
     assets_out=OUT/f'morning-green-assets-{iso}'
     if assets_out.exists(): shutil.rmtree(assets_out)
     shutil.copytree(PACK/'assets'/'morning-green',assets_out)
-    if args.openpost:
-        snapshot=json.loads(args.openpost.read_text(encoding='utf-8'))
-        for row in snapshot.get('scheduled') or []:
-            cid=str(row.get('thumbnail_cid') or '').strip()
-            if not cid: continue
-            if not args.thumbnail_dir: raise ValueError(f'snapshot requires thumbnail {cid} but --thumbnail-dir is missing')
-            src=args.thumbnail_dir/cid
-            if not src.is_file(): raise FileNotFoundError(f'materialized thumbnail missing: {src}')
-            shutil.copy2(src,assets_out/cid)
     build=[sys.executable,str(PACK/'build_morning_green.py'),'--brief-json',str(args.brief_json),'--brief-txt',str(args.brief_txt),'--output',str(green_json),'--visible-text',str(green_txt)]
-    if args.openpost: build += ['--openpost',str(args.openpost)]
+    if args.publisher: build += ['--publisher',str(args.publisher)]
     run(build)
     run([sys.executable,str(PACK/'render_morning_green.py'),str(green_json),'-o',str(green_html)])
     def rel(p: Path) -> str: return p.resolve().relative_to(ROOT.resolve()).as_posix()

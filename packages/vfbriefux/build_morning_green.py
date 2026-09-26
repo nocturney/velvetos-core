@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Project the canonical factual Morning Brief into Morning Green.
 
-Consumes the existing V10.x factual JSON/TXT plus an optional read-only OpenPost
-snapshot. It does not fetch providers and does not create a parallel source of truth.
+Consumes the existing factual Morning Brief plus an optional read-only canonical
+Cloudflare Publisher snapshot. It does not fetch providers and does not create a parallel source of truth.
 """
 from __future__ import annotations
 import argparse
@@ -248,14 +248,14 @@ def main() -> int:
     ap=argparse.ArgumentParser()
     ap.add_argument('--brief-json',type=Path,required=True)
     ap.add_argument('--brief-txt',type=Path,required=True)
-    ap.add_argument('--openpost',type=Path)
+    ap.add_argument('--publisher',type=Path)
     ap.add_argument('--output',type=Path,required=True)
     ap.add_argument('--visible-text',type=Path)
     a=ap.parse_args()
     factual=json.loads(a.brief_json.read_text(encoding='utf-8'))
     text=a.brief_txt.read_text(encoding='utf-8')
     sec=sections(text)
-    op=json.loads(a.openpost.read_text(encoding='utf-8')) if a.openpost and a.openpost.exists() else None
+    publisher=json.loads(a.publisher.read_text(encoding='utf-8')) if a.publisher and a.publisher.exists() else None
 
     attention=compact_attention([split_title_detail(x) for x in sec['צריך ממך'][:4]])
     progress=compact_progress([split_title_detail(x) for x in sec['מה השתנה מאז הבריף הקודם'] if 'Instagram' not in x and 'OpenPost' not in x][:3])
@@ -293,7 +293,7 @@ def main() -> int:
       'date_label':factual_date_label(factual),
       'greeting':'בוקר טוב, כריסטיאן',
       'daily_summary':overview,
-      'scheduled_posts':post_cards(op,factual_datetime(factual)),
+      'scheduled_posts':post_cards(publisher,factual_datetime(factual)),
       'instagram':insta,
       'story':{
         'title':story_source or 'תמונת היום',
