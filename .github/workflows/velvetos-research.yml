@@ -23,14 +23,12 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install semantic-search deps
-        run: pip install scikit-learn
-
-      # Same sensor runtime as check-all.yml: the final check-all step imports
-      # Pillow/cryptography/starlette and the video sensors need real ffmpeg/ffprobe.
+      # Same pinned sensor runtime as check-all.yml (requirements-sensors.txt):
+      # scikit-learn for build-index, Pillow/cryptography/starlette for the final
+      # check-all step, and real ffmpeg/ffprobe for the video sensors.
       - name: Install sensor runtime dependencies
         run: |
-          python3 -m pip install --disable-pip-version-check Pillow cryptography starlette
+          python3 -m pip install --disable-pip-version-check -r requirements-sensors.txt
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
 

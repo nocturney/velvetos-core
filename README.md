@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Living README gate exempts routine output:** the PR gate moved from inline bash in `check-all.yml` to `scripts/readme_contract.py`. Routine/machine outputs are exempt from the README requirement …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Living README gate exempts routine output:** the PR gate moved from inline bash in `check-all.yml` to `scripts/readme_contract.py`. Routine/machine outputs are exempt from the README requirement …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Pinned sensor runtime:** added `requirements-sensors.txt` (Pillow 12.3.0, cryptography 50.0.1, starlette 1.7.0, scikit-learn 1.9.1 plus resolved transitive pins; numpy/scipy pinned per Python ver…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Pinned sensor runtime:** added `requirements-sensors.txt` (Pillow 12.3.0, cryptography 50.0.1, starlette 1.7.0, scikit-learn 1.9.1 plus resolved transitive pins; numpy/scipy pinned per Python ver…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -173,7 +173,7 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 | Media catalog | `packages/vfmedia/` |
 |‏ קישורי השראה שבועיים | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
 |‏ חוקי מערכת | `constitution/` |
-| Sensors | `scripts/check-*.py` |
+| Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
 | Workflows | `.github/workflows/` |
 |‏ היסטוריית שינויים | [`CHANGELOG.md`](CHANGELOG.md) |
 |‏ הנחיות agents | [`AGENTS.md`](AGENTS.md) |
@@ -308,7 +308,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Media catalog | `packages/vfmedia/` |
 | Weekly inspiration links | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
 | Constitution | `constitution/` |
-| Sensors | `scripts/check-*.py` |
+| Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
 | Workflows | `.github/workflows/` |
 | Change history | [`CHANGELOG.md`](CHANGELOG.md) |
 | Agent guidance | [`AGENTS.md`](AGENTS.md) |

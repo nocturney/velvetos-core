@@ -21,7 +21,7 @@ jobs:
 
       - name: Install sensor runtime dependencies
         run: |
-          python3 -m pip install --disable-pip-version-check Pillow cryptography starlette
+          python3 -m pip install --disable-pip-version-check -r requirements-sensors.txt
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
 
