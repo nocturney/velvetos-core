@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Pinned sensor runtime:** added `requirements-sensors.txt` (Pillow 12.3.0, cryptography 50.0.1, starlette 1.7.0, scikit-learn 1.9.1 plus resolved transitive pins; numpy/scipy pinned per Python ver…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Pinned sensor runtime:** added `requirements-sensors.txt` (Pillow 12.3.0, cryptography 50.0.1, starlette 1.7.0, scikit-learn 1.9.1 plus resolved transitive pins; numpy/scipy pinned per Python ver…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Best Skills due gate 44h:** `BEST-SKILLS.json` `freshnessContract` is now 44h due + 8h grace (was 48h + 4h), so the stale threshold stays 52h and the cadence stays every-2-days. The daily Researc…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Best Skills due gate 44h:** `BEST-SKILLS.json` `freshnessContract` is now 44h due + 8h grace (was 48h + 4h), so the stale threshold stays 52h and the cadence stays every-2-days. The daily Researc…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -172,6 +172,7 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
 |‏ קישורי השראה שבועיים | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
+|‏ דופק Best Skills | `packages/vfresearch/BEST-SKILLS.json` + `TIMER.md` — Research Seat מריץ כש־`lastPass` בן 44h לפחות (קצב ~48h, stale מעל 52h) |
 |‏ חוקי מערכת | `constitution/` |
 | Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
 | Workflows | `.github/workflows/` |
@@ -307,6 +308,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
 | Weekly inspiration links | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
+| Best Skills pulse | `packages/vfresearch/BEST-SKILLS.json` + `TIMER.md` — Research Seat runs a pass when `lastPass` is ≥44h old (~48h cadence, stale above 52h) |
 | Constitution | `constitution/` |
 | Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
 | Workflows | `.github/workflows/` |

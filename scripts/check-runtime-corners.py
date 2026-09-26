@@ -92,8 +92,8 @@ def main() -> int:
     if best.get("schedulerAuthority") != "Velvet Research Seat":
         fail("Best Skills schedulerAuthority must be Velvet Research Seat")
     freshness = best.get("freshnessContract") or {}
-    if freshness.get("targetHours") != 48 or freshness.get("graceHours") != 4:
-        fail("Best Skills freshness contract must be 48h + 4h grace")
+    if freshness.get("targetHours") != 44 or freshness.get("graceHours") != 8:
+        fail("Best Skills freshness contract must be 44h due + 8h grace (stale >52h)")
     if "subscribe_timer" in str(best.get("standingNote") or ""):
         fail("Best Skills still depends on external subscribe_timer renewal")
 

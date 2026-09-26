@@ -5,7 +5,7 @@ description: Standing forever ~48h pass over LinklyAI/best-skills rankings until
 
 # Best Skills (~48h · forever until owner stops)
 
-Use when the user asks for סקירת best-skills, LinklyAI rankings, skills.sh Top 100, דופק קבוע, or when **Velvet Research Seat** detects that `lastPass` is due.
+Use when the user asks for סקירת best-skills, LinklyAI rankings, skills.sh Top 100, דופק קבוע, or when **Velvet Research Seat** detects that `lastPass` is due (at least 44h old).
 
 **Standing order:** keep running about every 48h forever until the owner explicitly says to stop or change cadence. See `packages/vfresearch/TIMER.md`.
 
