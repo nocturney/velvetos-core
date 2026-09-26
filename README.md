@@ -31,7 +31,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>82</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>83</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>9</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>32</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -152,7 +152,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 - Gmail brief send
 - Office Control Plane loop
 - publish-bridge cleanup
-- VelvetOS research
+- ‏VelvetOS research (מתקין את אותו runtime של חיישנים כמו full sensor suite לפני הרצת check-all)
 - weekly deck generation
 - vfmedia intake
 
@@ -171,6 +171,7 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 | Control API (projection) | `packages/velvetos_control_api/` — HTTP projection gateway, not a SoT |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
+|‏ קישורי השראה שבועיים | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
 |‏ חוקי מערכת | `constitution/` |
 | Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
 | Workflows | `.github/workflows/` |
@@ -190,6 +191,8 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 ## ‏README חי
 
 ‏ה־README הוא חלק מהמוצר. שינוי מהותי ב־`packages/`, `office/`, `scripts/`, `.github/workflows/` או `constitution/` מחייב עדכון README באותו PR, אלא אם מדובר בשינוי פנימי שאינו משנה capability.
+
+‏פלט שגרתי פטור: תוצרי מחקר מתוארכים, checkpoints, תוצרי בריף, קבצי `data/`/`state/` של חבילות וראיות של workflows לא מחייבים עדכון README. קוד, קונפיגורציה וחוזים עדיין מחייבים. הרשימה המדויקת ב־`scripts/readme_contract.py`. ב־CI החיישנים רצים גם אם שלב README נכשל.
 
 ‏ה־System Pulse למעלה **נוצר מנתוני הריפו עצמו**. להרצה ידנית:
 
@@ -288,6 +291,8 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 
 The repository currently carries workflows for the sensor suite, Gmail brief, Office Control Plane, publish-bridge cleanup, VelvetOS research, weekly deck generation and vfmedia intake.
 
+The VelvetOS research workflow installs the same sensor runtime as the sensor-suite workflow (Pillow, cryptography, starlette, ffmpeg) before its final `check-all.py` step, so its sensor verdict reflects the contracts rather than a missing module.
+
 A workflow file proves automation exists; provider-dependent behavior is **LIVE** only after real provider/runtime verification.
 
 ## Canonical sources
@@ -301,6 +306,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Control API (projection) | `packages/velvetos_control_api/` — HTTP projection gateway, not a SoT |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
+| Weekly inspiration links | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
 | Constitution | `constitution/` |
 | Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
 | Workflows | `.github/workflows/` |
@@ -310,6 +316,8 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 ## Living README contract
 
 This README is part of the product. Material capability/runtime changes must update it in the same PR.
+
+Routine output is exempt: dated research artifacts, harness checkpoints, Morning Brief artifacts/outputs, pack `data/`/`state/` files and machine-workflow evidence do not require a README edit. Code, config, contracts and pack docs still do. The exact list lives in `scripts/readme_contract.py` (`ROUTINE_OUTPUT`) and is guarded by `scripts/check-readme-contract.py`. In CI, the README steps no longer hide the sensors: `check-all.py` and commission isolation run even when a README step fails.
 
 The System Pulse above is generated from repository sources:
 
@@ -332,6 +340,10 @@ python3 scripts/check-all.py
 python3 scripts/check-commission-isolation.py
 python3 scripts/update-readme-snapshot.py --check
 ```
+
+Sensors are read-only: a `check-all.py` run must leave repository files unchanged and ends with `OK sensor run left repository files unchanged` (or a `WARN sensor side effects …` list). Sensors that smoke-test writer CLIs restore those outputs through `scripts/sensor_isolation.py`. Canonical artifacts are written only by the explicit commands (`vfops_loop.py brief --write`, `vf_control_plane.py handoff`, `vf_organic_growth.py brief --write`, `vf_retro_signals.py --write`).
+
+חיישנים רק קוראים: הרצת `check-all.py` לא משאירה שינויים בקבצי הריפו. ארטיפקט קנוני נכתב רק דרך הפקודה המפורשת.
 
 ## Read next · המשך קריאה
 
