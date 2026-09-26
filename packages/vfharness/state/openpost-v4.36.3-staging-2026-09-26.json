@@ -1,0 +1,105 @@
+{
+  "schema": "velvet.openpost_staging_review.v1",
+  "task_id": "openpost-v4.36.3-staging-2026-09-26",
+  "domain": "system_engineering",
+  "authority": {
+    "project_preflight": "PASS",
+    "preflight_tool": "scripts/vf_project_preflight.py --domain system_engineering"
+  },
+  "repo": {
+    "base_main": "8aa420ef0a0872404e4545b95b935bf598102b20",
+    "branch": "cursor/openpost-staging-v4.36.3-d974"
+  },
+  "owner_approval": {
+    "scope": "prepare a v4.36.3 test in a staging environment, without touching production",
+    "date": "2026-09-26"
+  },
+  "upstream": {
+    "repository": "getopenpost/openpost",
+    "from_version": "v4.35.0",
+    "version": "v4.36.3",
+    "published_at": "2026-09-19T11:44:55Z",
+    "releases_in_range": [
+      "v4.35.3",
+      "v4.36.3"
+    ],
+    "compare": "https://github.com/getopenpost/openpost/compare/v4.35.0...v4.36.3",
+    "ahead_by": 118,
+    "windows_server_sha256": "8d799a0de2a2a0cf286c02c479343187a75b21d8329e1d9e0bb410fe81f3f35f",
+    "linux_server_sha256": "de478b024d751135620f707fa6c84f34b5fc679b4310490e2dee5c8c3a38c286",
+    "vf_relevant_breaking_change": "none_declared; MCP default tool mode changed (OPENPOST_MCP_MODE opt-out not wired until v5.0.0)",
+    "schema_migration": true,
+    "migrations": [
+      "137_mcp_media_upload_tickets.sql",
+      "138_publication_creation_source.sql"
+    ],
+    "meta_scopes_added": [
+      "pages_read_user_content",
+      "pages_manage_metadata"
+    ]
+  },
+  "classification": {
+    "meta_instagram_auth": "new_scopes_requested_on_connect; existing_grant_not_forced_to_reauth_by_code; meta_app_permission_state_UNPROVEN_owner_check",
+    "api_mcp_contract": "rest_additive_creation_source; mcp_default_direct; vf_does_not_call_openpost_mcp",
+    "media_limits": "instagram_unchanged",
+    "scheduler_queue_retry": "tiktok_request_reconciler_only; vfbridge_transport_error_followup",
+    "analytics": "facebook_metric_families_changed; instagram_contract_unchanged",
+    "database_schema_storage": "migrations_137_138_additive_require_backup_and_staging_smoke",
+    "security_privacy": "credential_url_scrub; archive_reader_dos_fix; new_authenticated_mcp_endpoints_401_unauth"
+  },
+  "vfbridge_rebase": {
+    "base_overlay": "vfbridge6",
+    "tracked_patch_apply": "clean (main.go hunk offset 1)",
+    "go_test": "ok: internal/platform internal/services/publisher internal/queue internal/services/apitokens",
+    "compile_probe": "ok (stub frontend; not a deployable artifact)",
+    "semantic_followup": "classify *platform.TransportError in failures.go before vfbridge7 build"
+  },
+  "box_isolated_smoke": {
+    "status": "PASS",
+    "scope": "agent box loopback 18090, fresh synthetic SQLite, no provider, no credentials; NOT repo staging",
+    "fromSchemaVersion": 136,
+    "toSchemaVersion": 138,
+    "integrityCheck": "ok",
+    "foreignKeyViolations": 0,
+    "readyAfterUpgrade": "ready",
+    "restartVerified": true,
+    "rollbackByRestore": "PASS (v4.35.0 on restored schema-136 backup ready)",
+    "diagnostics_enabled": false
+  },
+  "staging": {
+    "host": "windows-backup-worker",
+    "method": "pinned-single-binary",
+    "local_url": "http://127.0.0.1:18080",
+    "status": "NOT_RUN",
+    "reason": "loopback-only Windows host not reachable from agent box; host also runs Instagram failover watcher; owner/operator step",
+    "runbook": "packages/vfharness/state/openpost-v4.36.3-staging-2026-09-26/task_plan.md"
+  },
+  "production": {
+    "status": "UNCHANGED",
+    "version": "v4.35.0-vfbridge6",
+    "promotion_allowed": false,
+    "touched": false
+  },
+  "requiredChecks": {
+    "release_notes_and_breaking_changes": "REVIEWED",
+    "meta_instagram_auth": "REVIEWED_OWNER_ACTION_BEFORE_RECONNECT",
+    "api_mcp_contract": "REVIEWED",
+    "media_limits": "REVIEWED",
+    "scheduler_queue_retry": "REVIEWED_FOLLOWUP",
+    "database_schema_migrations": "BOX_SMOKE_PASS_STAGING_NOT_RUN",
+    "security": "REVIEWED",
+    "staging_smoke": "NOT_RUN",
+    "instagram_live_verify": "UNCHANGED_NOT_APPLICABLE",
+    "analytics_read": "REVIEWED",
+    "signed_delivery_approval_live": "UNCHANGED"
+  },
+  "hard_stops_honored": [
+    "no pin change",
+    "no production tag change",
+    "no liveVerified change",
+    "no Instagram write",
+    "no production host access",
+    "hold PRs #279/#298 untouched"
+  ],
+  "reviewed_at": "2026-09-26T08:50:00+03:00"
+}
