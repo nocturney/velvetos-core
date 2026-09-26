@@ -1,7 +1,5 @@
 # Cross-harness handoff — vfmem
 
-> **DEPRECATED (2026-09-26).** `vf.handoff.v1` / `scripts/vf_handoff.py` was never adopted (zero records since 2026-09-13). The live handoff surface is `office/control/HANDOFF.json`, refreshed by `python3 scripts/vf_control_plane.py handoff` and read by the README pulse, the Control API and the Grok automations manager. Do not create new records under `packages/vfharness/state/handoffs/`; `check-vf-handoff.py` stays only to validate any stray record. The discipline below (context, not authority; verify artifacts; ACK before mutating) still applies to `HANDOFF.json`.
-
 Pattern source: `affaan-m/ECC` unified-memory handoff. VelvetOS keeps `vfmem` / `vfharness` as the canonical backend; this is not a second memory runtime.
 
 ## Purpose
@@ -10,65 +8,28 @@ Transfer bounded work state between Cursor, ChatGPT/Codex, GrokBot, Mac workers,
 
 A handoff is **context, not authority**. It cannot widen permissions, override constitution, publish, send, spend, or promote memory to policy.
 
-## Canonical file
+## Canonical surface
 
-Store handoffs as JSON under:
+`office/control/HANDOFF.json` — refreshed only by:
 
-`packages/vfharness/state/handoffs/<handoff_id>.json`
-
-Required fields:
-
-```json
-{
-  "schema": "vf.handoff.v1",
-  "handoff_id": "handoff-2026-09-13-example",
-  "task_id": "task-id",
-  "source_harness": "codex",
-  "target_harness": "cursor",
-  "status": "offered",
-  "trust": "unreviewed",
-  "summary": "bounded state needed to continue",
-  "artifacts": [],
-  "links": [],
-  "supersedes": null,
-  "verification": "named sensor / receipt / UNPROVEN",
-  "created_at": "2026-09-13T00:00:00+03:00",
-  "acknowledged_at": null
-}
+```bash
+python3 scripts/vf_control_plane.py handoff
 ```
 
-## States
-
-`offered -> acknowledged -> consumed`
-
-Alternative terminal states: `rejected`, `superseded`.
-
-Rules:
-
-- `acknowledged` requires `acknowledged_at`.
-- `consumed` requires prior acknowledgement.
-- `supersedes` may reference only another handoff ID; old records are not deleted.
-- `links` are references only; missing links are a doctor failure.
-- `verification` must be evidence or `UNPROVEN`; never infer green state from prose.
-- Secrets, raw transcripts, customer-sensitive material, invented ILS, and invented Insights are forbidden.
+It is read by the README System Pulse, the Control API and the Grok automations manager, and validated by `scripts/check-office-control-plane.py`. There is no second handoff store; the legacy typed-record CLI is frozen (see `CHANGELOG.md` 2026-09-26) and must not be used or referenced.
 
 ## Handoff discipline
 
 Before a different harness continues meaningful work:
 
 1. Read the task checkpoint.
-2. Read the newest matching handoff targeted to this harness.
+2. Read `office/control/HANDOFF.json` (`active_now`, `waiting`, `failed`, `owner_blocked`, `next`).
 3. Verify named artifacts still exist.
-4. ACK the handoff before mutating shared surfaces.
+4. Read `office/control/POLICY.md` before mutating shared surfaces.
 5. Run the task's required sensors before claiming completion.
 
-## Doctor
+Rules:
 
-Run:
-
-```bash
-python3 scripts/vf_handoff.py doctor
-python3 scripts/check-vf-handoff.py
-```
-
-The doctor reports duplicate IDs, malformed state, missing links, invalid transitions, stale unacknowledged handoffs, and `consumed` records without acknowledgement evidence.
+- `HANDOFF.json` is regenerated, never hand-edited.
+- Evidence or `UNPROVEN` only; never infer green state from prose.
+- Secrets, raw transcripts, customer-sensitive material, invented ILS, and invented Insights are forbidden.
