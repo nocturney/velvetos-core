@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-24 — **VelvetOS Control API v1:** read-first HTTP projection gateway (`packages/velvetos_control_api`, schema `velvetos.control.v1`) for the Control Center UI. Reuses control-plane / jobs adapter / capa…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-24 — **VelvetOS Control API v1:** read-first HTTP projection gateway (`packages/velvetos_control_api`, schema `velvetos.control.v1`) for the Control Center UI. Reuses control-plane / jobs adapter / capa…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Pinned sensor runtime:** added `requirements-sensors.txt` (Pillow 12.3.0, cryptography 50.0.1, starlette 1.7.0, scikit-learn 1.9.1 plus resolved transitive pins; numpy/scipy pinned per Python ver…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Pinned sensor runtime:** added `requirements-sensors.txt` (Pillow 12.3.0, cryptography 50.0.1, starlette 1.7.0, scikit-learn 1.9.1 plus resolved transitive pins; numpy/scipy pinned per Python ver…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -172,7 +172,7 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
 |‏ חוקי מערכת | `constitution/` |
-| Sensors | `scripts/check-*.py` |
+| Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
 | Workflows | `.github/workflows/` |
 |‏ היסטוריית שינויים | [`CHANGELOG.md`](CHANGELOG.md) |
 |‏ הנחיות agents | [`AGENTS.md`](AGENTS.md) |
@@ -302,7 +302,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
 | Constitution | `constitution/` |
-| Sensors | `scripts/check-*.py` |
+| Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
 | Workflows | `.github/workflows/` |
 | Change history | [`CHANGELOG.md`](CHANGELOG.md) |
 | Agent guidance | [`AGENTS.md`](AGENTS.md) |

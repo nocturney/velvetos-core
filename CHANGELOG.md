@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Pinned sensor runtime:** added `requirements-sensors.txt` (Pillow 12.3.0, cryptography 50.0.1, starlette 1.7.0, scikit-learn 1.9.1 plus resolved transitive pins; numpy/scipy pinned per Python version for the 3.11 sensor job and the 3.12 research job). `check-all.yml` and `velvetos-research.yml` install from it instead of unpinned package names. ffmpeg stays an apt install. Schedules and triggers are unchanged.
+
 - 2026-09-24 — **VelvetOS Control API v1:** read-first HTTP projection gateway (`packages/velvetos_control_api`, schema `velvetos.control.v1`) for the Control Center UI. Reuses control-plane / jobs adapter / capability registries / autonomy blockers — not a new SoT, runtime, queue, or database. Endpoints: `/health`, `/v1/snapshot`, `/v1/search`, `/v1/capabilities`, fail-closed `POST /v1/actions`. Server-to-server auth + Cloud Run deploy docs; unavailable domains stay `items:null`. Sensor: `scripts/check-control-api.py`.
 
 - 2026-09-24 — **GrokBot boot architecture hardening:** separated boot-time Instagram failover supervision from the Grok desktop lifecycle. The canonical boot supervisor no longer references or launches the Grok desktop, the Windows installer registers it as `SYSTEM / ServiceAccount`, Interactive Handoff remains `Chris / Interactive`, and a new sensor blocks regressions back to S4U/Session-0 desktop launch.
