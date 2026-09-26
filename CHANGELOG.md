@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Frontend core lock and drift allowlist:**
+  - `instances/velvet-factory/core.lock.yml` now says explicitly that it is not a SHA pin: `ref: main`, `refPolicy: track-main`, with a comment on the owner decision to keep tracking core main. This matches the `attach-core.sh`/`verify-core.sh` default, and `check-velvetos.py` fails if the lock ref and the scripts' default ref ever disagree.
+  - `sync-instance-scaffold.sh` (still check-only) reports the frontend's own `.github/`, `docs/` and `.cursor/mcp.json` as allowed instance-only paths instead of counting them as drift.
+
 - 2026-09-26 — **Morning Green marks OpenPost as paused:**
   - New `packages/vfbriefux/FEED-SOURCE.json` (`openpost.state=paused` since 2026-09-26, owner freeze).
   - When no OpenPost snapshot is given, `build_morning_green.py` emits `feed_status`. The renderer's new `{{feed_status_html}}` slot adds one row under the "בקרוב בפיד" heading ("OpenPost מושהה כרגע…"), and the Visible Text gets a matching line, so the seven quiet cells no longer read as "nothing scheduled". Any other state shows a neutral "not read this morning" label.

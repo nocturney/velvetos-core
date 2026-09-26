@@ -297,6 +297,16 @@ def main() -> None:
             continue
         if "git push" in code or "publish-instance.sh" in code or "git commit" in code:
             fail(f"sync-instance-scaffold.sh must stay check-only: {code}")
+    if 'INSTANCE_ONLY_ALLOWED=(".github" "docs" ".cursor/mcp.json")' not in sync_sh:
+        fail("sync-instance-scaffold.sh instance-only allowlist drifted (keep it explicit and minimal)")
+    lock = (INSTANCES / "velvet-factory" / "core.lock.yml").read_text(encoding="utf-8")
+    lock_ref = next((l.split(":", 1)[1].strip() for l in lock.splitlines() if l.startswith("ref:")), "")
+    if "refPolicy: track-main" not in lock or lock_ref != "main" or "Intentionally NOT a SHA pin" not in lock:
+        fail("instances/velvet-factory/core.lock.yml must state ref: main + refPolicy: track-main explicitly")
+    for script in ("attach-core.sh", "verify-core.sh"):
+        body = (INSTANCES / "velvet-factory" / "scripts" / script).read_text(encoding="utf-8")
+        if f'CORE_REF="${{VELVETOS_CORE_REF:-{lock_ref}}}"' not in body:
+            fail(f"instances/velvet-factory/scripts/{script} default ref must match core.lock.yml ref={lock_ref}")
     check_all_wf = (ROOT / ".github" / "workflows" / "check-all.yml").read_text(encoding="utf-8")
     if "sync-instance-scaffold.sh --skip-if-inaccessible" not in check_all_wf:
         fail("check-all.yml must run sync-instance-scaffold.sh --skip-if-inaccessible")
