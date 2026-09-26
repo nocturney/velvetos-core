@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Realistic crons for vfmedia intake and jobs write-through:**
+  - `vfmedia-intake.yml` moved from `*/5 * * * *` to `23 */3 * * *`, and `jobs-write-through.yml` from `7,22,37,52 * * * *` to `53 1-23/3 * * *`: 8 runs/day each, 1.5h apart, off the top of the hour.
+  - Why: run history for 2026-09-17..25 shows GitHub delivered only 5–8 scheduled runs/day of either (median gap 3.7h / 3.4h, max ~7h). On this repo the 6-hourly and daily schedules are honoured 4/4 and 1/1. The new cadence equals or beats real delivery with even spacing.
+  - Nothing is lost: `workflow_dispatch` is unchanged, jobs still triggers on `sync-receipt.json` pushes, and intake volume is small (81 files in 17 days) with pagination/resume.
+  - `runner.py` now always takes the `schedule` block from code, so the state file can't go stale. `check-vfmedia.py` now requires the workflow cron to equal `runner.py` `githubActionsCron`, with a fixed minute.
+
 - 2026-09-26 — **Doc/text fixes:**
   - The `constitution/README.md` index linked a non-existent `TAGS.md` for brief tags. The real file is `BRIEF-TAGS.md`; `tags.md` (office tags) was already listed on the line above.
   - The Gmail sender's missing-URL error now says "Apps Script endpoint" instead of "repository secret" (the URL is set in the workflow env; text only, no behaviour change).
