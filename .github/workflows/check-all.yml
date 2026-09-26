@@ -51,6 +51,14 @@ jobs:
         if: ${{ !cancelled() }}
         run: python3 scripts/check-commission-isolation.py
 
+      # Report-only. The frontend repo is private, so GITHUB_TOKEN normally cannot
+      # read it and this prints SKIP. With access, drift shows as a ::warning::.
+      - name: Instance scaffold drift (check-only)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        timeout-minutes: 3
+        run: bash scripts/sync-instance-scaffold.sh --skip-if-inaccessible
+
       - name: Fail build on sensor error
         if: failure()
         run: echo "::error::One or more VelvetOS contract checks failed. See log above." && exit 1
