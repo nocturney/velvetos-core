@@ -1,0 +1,22 @@
+{
+  "schema": "vf.learning-candidate.v1",
+  "candidate_id": "learn-ci-velvetos-core-sensors",
+  "trigger": "GitHub Actions workflow 'VelvetOS Core Sensors' failed on main",
+  "action": "Open a fix PR from the failing run log; if the root cause can recur, add or tighten a sensor/contract; triage this candidate (accept/reject/prune) instead of letting it accumulate.",
+  "scope": "project",
+  "confidence": 0.85,
+  "status": "accepted",
+  "evidence": [
+    "gh-run:36101734482:failure:2026-09-25T06:11:05Z:https://github.com/nocturney/velvetos-core/actions/runs/36101734482",
+    "gh-run:36222919346:failure:2026-09-26T06:09:47Z:https://github.com/nocturney/velvetos-core/actions/runs/36222919346",
+    "gh-run:36222958014:failure:2026-09-26T06:10:29Z:https://github.com/nocturney/velvetos-core/actions/runs/36222958014",
+    "office-loop-1830 triage 2026-09-26: recurring FAIL check-staleness.py LINKS.json stale>8d (10d on 36222958014); run 36222919346 also FAIL check-gmail-brief-send.py bootstrap send request must be disabled on main."
+  ],
+  "first_seen": "2026-09-25T06:11:05Z",
+  "last_seen": "2026-09-26T18:37:51+03:00",
+  "owner_correction": false,
+  "promote_to": null,
+  "supersedes": null,
+  "source": "ci-failure-ingest",
+  "workflow": "VelvetOS Core Sensors"
+}
