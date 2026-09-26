@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Tool authority + Instagram scheduler cutover:** Cloudflare Publisher is now the canonical Instagram scheduler/queue and the official Meta Instagram Graph API is provider authority. Production code from `feat/cloudflare-publisher` / `d286e4f` is carried onto the current line; the 27.9 12:00 six-image carousel is recorded as scheduled while the first due-time `media_publish` remains honestly unproven. OpenPost is frozen with zero active schedules and its implementation/failover code moved under `packages/vfigos/archive/`. Canva/vfcanva were removed from project MCP/plugin/rules/skills/pack surfaces. `TOOL-STATUS.json` + `check-tool-authority.py` prevent resurrection. The broken `TEXT-TO-CAD.md` README-contract pointer was removed; text-to-cad remains watch-only.
+
 - 2026-09-26 — **One-shot script triage:**
   - `scripts/vf_close_runtime_corners.py` (unreferenced 2026-09-14 migration) moved to `scripts/archive/`. It now refuses to run, with an ARCHIVED header and an `archive/README.md` explaining why: re-running it would overwrite current REGISTRY/BEST-SKILLS/OWNER-ACTIONS authorities.
   - `scripts/vf_project669_transport.py` stays. It is the only producer of the `velvet.project669.transport_qa.v1` receipts that `vf_project669_publication.py` requires, so it is a live tool. It is now referenced from that script's docstring and from `vfigos/SEND.md`.
