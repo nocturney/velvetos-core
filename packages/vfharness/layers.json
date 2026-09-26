@@ -123,11 +123,6 @@
       "type": "computational"
     },
     {
-      "id": "check-vf-canva",
-      "script": "scripts/check-vf-canva.py",
-      "type": "computational"
-    },
-    {
       "id": "check-vfgrowth",
       "script": "scripts/check-vfgrowth.py",
       "type": "computational"
@@ -160,6 +155,11 @@
     {
       "id": "check-vfprod",
       "script": "scripts/check-vfprod.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-tool-authority",
+      "script": "scripts/check-tool-authority.py",
       "type": "computational"
     }
   ],
@@ -198,7 +198,10 @@
       "treg:call",
       "fake-ig-post",
       "rm -rf",
-      "invented-ils"
+      "invented-ils",
+      "canva",
+      "vfcanva",
+      "openpost:execute"
     ]
   },
   "embed": [
@@ -245,7 +248,7 @@
     {
       "pack": "vfigos",
       "layer": "permissions",
-      "how": "Review, schedule, and send via tools (SEND.md). Failover Canva+Drive+Gmail same turn."
+      "how": "Review, schedule and publish via Cloudflare Publisher -> Meta Graph; verify live; OpenPost frozen; Canva forbidden."
     },
     {
       "pack": "vfgrowth",
@@ -271,11 +274,6 @@
       "pack": "vfagents",
       "layer": "guides",
       "how": "Office playbooks only."
-    },
-    {
-      "pack": "vfcanva",
-      "layer": "permissions",
-      "how": "Create / resize / review. Hand to vfigos/SEND.md — HQ sends via tools."
     },
     {
       "pack": "constitution",

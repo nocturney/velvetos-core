@@ -12,6 +12,7 @@ CHECKS={
   'skill_health':'check-skill-health.py',
   'agent_surface':'check-agent-surface-security.py',
   'harness':'check-vfharness.py',
+  'tool_authority':'check-tool-authority.py',
 }
 
 def main():

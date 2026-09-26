@@ -29,7 +29,7 @@ Feedback. חישובי קודם; סמנטי רק אם אי אפשר כלל דט�
 | `scripts/check-vfharness.py` | חישובי | שכבה חסרה, מדריך בלי TEST/LINT |
 | `scripts/check-vfe2b.py` | חישובי | צוות E2B בלי קובץ |
 | `scripts/check-vfagents.py` | חישובי | פלייבוק 500 בלי קובץ |
-| `scripts/check-vf-canva.py` | חישובי | שולחן Canva שבור |
+| `scripts/check-tool-authority.py` | חישובי | כלי אסור שחזר / OpenPost פעיל / authority drift |
 | `scripts/check-all.py` | מריץ | כל האמור |
 
 סוכן לא מכריז «עבר» בלי סנסור ירוק על שינוי קטלוג.
