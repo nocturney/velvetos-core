@@ -8,15 +8,22 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+from vf_project_bundle import resolve as _resolve_project_bundle  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
-PROJECT_AUTHORITY = Path("packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt")
-PROJECT_ASSET_MANIFEST = Path("packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json")
-PROJECT_INSTRUCTIONS = Path("packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt")
-PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.6.4"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE"
-PROJECT_ASSET_MANIFEST_SHA256 = "8d5f4431650d4b03cc202ae9536b96f949a2538922245117bc5660a1b54bdb4d"
+# Active bundle identity comes from PROJECT-AUTHORITY-MANIFEST.json (chatgptProjectBundle)
+# via vf_project_bundle; no revision literals here.
+_BUNDLE = _resolve_project_bundle(ROOT)
+PROJECT_AUTHORITY = Path(_BUNDLE.authority)
+PROJECT_ASSET_MANIFEST = Path(_BUNDLE.asset_manifest)
+PROJECT_INSTRUCTIONS = Path(_BUNDLE.instructions)
+PROJECT_CONTRACT_VERSION = _BUNDLE.contract_version
+PROJECT_REVISION = _BUNDLE.revision
+PROJECT_BUNDLE_ID = _BUNDLE.bundle_id
+PROJECT_ASSET_MANIFEST_SHA256 = _BUNDLE.asset_manifest_sha256
 VISUAL_ENFORCEMENT = Path("packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json")
 CREATIVE_MASTER_BRIDGE = Path("scripts/vf_creative_master_bridge.py")
 SOURCE_INGEST_BRIDGE = Path("scripts/vf_source_ingest.py")

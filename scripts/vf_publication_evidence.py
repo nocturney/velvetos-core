@@ -16,16 +16,20 @@ from pathlib import Path
 from typing import Any
 
 from vf_media_integrity import inspect_media
+from vf_project_bundle import resolve as _resolve_project_bundle
 
 POLICY = "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
-AUTHORITY = "packages/velvetos/chatgpt-project/PROJECT-AUTHORITY-v6.6.4.txt"
-ASSETS = "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json"
-ASSETS_SHA = "8d5f4431650d4b03cc202ae9536b96f949a2538922245117bc5660a1b54bdb4d"
-AUTHORITY_SHA = "02b79689dc8872b1f50cb8428fefcb045a4539012ffe9b9aad72ca7f951b80d7"
-PROJECT_CONTRACT_VERSION = 6
-PROJECT_REVISION = "6.6.4"
-PROJECT_BUNDLE_ID = "VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE"
-PRODUCT_TRUTH_GUIDE = "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt"
+# Active bundle identity + SHA-256 trust pins come from PROJECT-AUTHORITY-MANIFEST.json
+# (chatgptProjectBundle) via vf_project_bundle; no revision literals here.
+_BUNDLE = _resolve_project_bundle()
+AUTHORITY = _BUNDLE.authority
+ASSETS = _BUNDLE.asset_manifest
+ASSETS_SHA = _BUNDLE.asset_manifest_sha256
+AUTHORITY_SHA = _BUNDLE.authority_sha256
+PROJECT_CONTRACT_VERSION = _BUNDLE.contract_version
+PROJECT_REVISION = _BUNDLE.revision
+PROJECT_BUNDLE_ID = _BUNDLE.bundle_id
+PRODUCT_TRUTH_GUIDE = _BUNDLE.product_truth_guide
 REJECTED_PRODUCT_TRUTH_REFERENCE_SHA256 = "17c3a4deeebb566b7566e3e69257c03b666fcc92436c78e824efbccf627e6dc9"
 STAGES = ("authority", "source_lock", "product_truth_lock", "reference_decomposition",
           "creative_director", "source_grounded_production", "creative_master_materialization",

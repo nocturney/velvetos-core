@@ -342,6 +342,8 @@
     "assetManifest": "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
     "instructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt",
     "productTruthGuide": "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt",
+    "authoritySha256": "02b79689dc8872b1f50cb8428fefcb045a4539012ffe9b9aad72ca7f951b80d7",
+    "assetManifestSha256": "8d5f4431650d4b03cc202ae9536b96f949a2538922245117bc5660a1b54bdb4d",
     "offlineCreativePublicationFallback": true,
     "offlineRepoStateLabel": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK",
     "referenceSeparation": "AESTHETIC_REFERENCES_ONLY_FOR_STYLE; PRODUCT_TRUTH=SOURCE_PIXELS_PLUS_TEXT_GUIDE"

@@ -31,7 +31,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>84</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>85</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>10</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>32</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Text-to-CAD production bridge** (authored 2026-09-24, PR #336, merged after main sync): integrated `earthtojake/text-to-cad` into the existing `vfprod` / `expert-3d-model` path without creating a…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Text-to-CAD production bridge** (authored 2026-09-24, PR #336, merged after main sync): integrated `earthtojake/text-to-cad` into the existing `vfprod` / `expert-3d-model` path without creating a…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Dynamic Project bundle resolver (replaces #270):**</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Dynamic Project bundle resolver (replaces #270):**</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -124,7 +124,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <tr><td><strong>Autonomy + Risk Gates</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">הפרדה בין פעולות בסיכון נמוך לבין פעולות שדורשות gate/approval.</td></tr>
 <tr><td><strong>Engineering Delivery + Agent Instruction QA</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">החלטה→spec→tickets אנכיים→branch→אימות→review איכות והתאמה ל־spec→PR/CI; עריכת הוראות agents נבדקת מול מקור סמכות יחיד ו־context budget, וחסם אנושי אמיתי מצטמצם ל־wizard של פעולה אחת.</td></tr>
 <tr><td><strong>Harness Execution Discipline</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td dir="rtl" align="right">תוכניות עוברות preflight עם ראיות; שינויי behavior עוברים RED→GREEN→REFACTOR; ambiguity מקומי והפיך יכול safe ruling מתועד; fan-out רק בלי shared state, ו־gates/receipts לעולם לא נעקפים.</td></tr>
-<tr><td><strong>VF Creative Publication Preflight</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td dir="rtl" align="right">ולידטורי ה־preflight וה־publication evidence קשורים ל־Contract 6 / Revision 6.6.2. אחרי בחירת `creative_master`, finalization דטרמיניסטי דורש materialization אמיתי: קובץ מקומי + SHA-256 + receipt של exact bytes. תמונת UI/URL/task id לבדם אינם handoff, ושחזור הסצנה מחדש מ־raw source אינו נחשב materialization. רציפות 6.6.1, Product Truth ו־multi-source נשארים בתוקף.</td></tr>
+<tr><td><strong>VF Creative Publication Preflight</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td dir="rtl" align="right">ולידטורי ה־preflight וה־publication evidence קשורים ל־Contract 6 / Revision 6.6.2. אחרי בחירת `creative_master`, finalization דטרמיניסטי דורש materialization אמיתי: קובץ מקומי + SHA-256 + receipt של exact bytes. תמונת UI/URL/task id לבדם אינם handoff, ושחזור הסצנה מחדש מ־raw source אינו נחשב materialization. רציפות 6.6.1, Product Truth ו־multi-source נשארים בתוקף. The active ChatGPT Project bundle (revision, bundle id, paths, SHA-256 pins) is resolved from `PROJECT-AUTHORITY-MANIFEST.json` → `chatgptProjectBundle` by `scripts/vf_project_bundle.py`; a revision bump is a manifest edit, guarded by `check-project-bundle.py`.</td></tr>
 <tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">נתיבי Insights נתמכים ו־CTA audit מאומתים; mutations לא נתמכים לא מוצגים כאילו הם עובדים. בדיקת קריאה בלבד מתוזמנת (<code>instagram-read-smoke.yml</code>) רצה יומית; החלק החי מדלג עד שמוגדר הסוד <code>VELVET_INSTAGRAM_MCP_BEARER_TOKEN</code>.</td></tr>
 <tr><td><strong>Publish Bridge</strong></td><td><strong>IMPLEMENTED / ARCHIVE-PRESERVING</strong></td><td dir="rtl" align="right">נגזרות שאושרו לציבור בלבד עוברות דרך <code>publish-bridge/assets</code>; אחרי חלון active הן מועברות ל־<code>publish-bridge/archive</code>. הארכיון נשמר ללא הגבלת זמן, אין מחיקה אוטומטית ואין overwrite על collision.</td></tr>
 <tr><td><strong>OpenPost Publishing Control Plane</strong></td><td><strong>PROD OAUTH READY / LIVE BLOCKED</strong></td><td dir="rtl" align="right">OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace, provider app ו־OAuth ל־@velvets_cloud מאומתים, והרשמות חדשות כבויות. write חי מאומת עדיין חסר; LIVE=false.</td></tr>
