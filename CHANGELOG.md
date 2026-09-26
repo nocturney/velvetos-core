@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Dynamic Project bundle resolver (replaces #270):**
+  - New `scripts/vf_project_bundle.py` resolves the active ChatGPT Project bundle from `PROJECT-AUTHORITY-MANIFEST.json` → `chatgptProjectBundle`. It currently resolves to revision 6.6.4, `VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE`.
+  - The two SHA-256 trust pins (`authoritySha256`, `assetManifestSha256`) moved from code into that manifest entry.
+  - `vf_project_preflight.py` and `vf_publication_evidence.py` now derive every revision/bundle/path/hash constant from the resolver, so they hold no revision literals and a bump no longer means editing two scripts. The public attribute names are unchanged, so existing sensors and tests keep working (79 publication-evidence tests pass).
+  - The resolver fails closed on a missing or malformed field, a bad hash, a missing file, an absolute path, or a path or bundle id without the declared revision.
+  - New `check-project-bundle.py`: pins match the real bytes, both consumers are resolver-derived, no literals remain, plus 7 negative manifest cases.
+  - The separate 6.6.9 Project669 lane is unchanged.
+
 - 2026-09-26 — **Text-to-CAD production bridge** (authored 2026-09-24, PR #336, merged after main sync): integrated `earthtojake/text-to-cad` into the existing `vfprod` / `expert-3d-model` path without creating a second printer source of truth. The Windows host uses an isolated local clone/venv, reuses `VelvetPrintLab/slicer-router/printer_matrix.json` and existing native Orca profiles, generates text-to-cad wrapper profiles, and exposes `scripts/vf_cad.py` for doctor, DfAM and local slicing. Printer upload/start/heating/motion remain disabled. Sensor: `scripts/check-vf-cad-integration.py`.
 - 2026-09-26 — **Velvet Factory template: two-way merge with the published frontend:**
   - **From the frontend into `instances/velvet-factory/`:**
