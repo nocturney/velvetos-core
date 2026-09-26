@@ -1,0 +1,63 @@
+name: Instagram Read Smoke
+# Read-only. Offline unit tests + live MCP smoke (Graph GETs only, via
+# smoke_public.py READ_ONLY_TOOLS). Never publishes, deletes, DMs or commits.
+# Live part needs repo secret VELVET_INSTAGRAM_MCP_BEARER_TOKEN; without it
+# the step prints SKIP and stays green (no numbers claimed).
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 4 * * *"
+  push:
+    branches: [main]
+    paths:
+      - "packages/vfigos/remote/**"
+      - ".github/workflows/instagram-read-smoke.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: instagram-read-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pinned sensor deps
+        run: python3 -m pip install -r requirements-sensors.txt
+
+      - name: Offline Instagram MCP unit tests
+        working-directory: packages/vfigos/remote
+        run: |
+          python3 -m unittest -v test_http_path
+          python3 -m unittest -v test_insights_v21
+
+      - name: Live read-only smoke (skips without bearer secret)
+        env:
+          VELVET_INSTAGRAM_MCP_BEARER_TOKEN: ${{ secrets.VELVET_INSTAGRAM_MCP_BEARER_TOKEN }}
+          INSTAGRAM_MCP_REMOTE_URL: ${{ vars.INSTAGRAM_MCP_REMOTE_URL }}
+        shell: bash
+        run: |
+          set +e
+          python3 packages/vfigos/remote/smoke_public.py --skip-if-missing > smoke.txt 2>&1
+          rc=$?
+          set -e
+          cat smoke.txt
+          {
+            echo '### Instagram read smoke'
+            echo "exit=${rc}"
+            echo '```'
+            cat smoke.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "${rc}"

@@ -2,14 +2,20 @@
 """Public-URL smoke for VelvetOS Instagram remote MCP.
 
 Requires env:
-  INSTAGRAM_MCP_REMOTE_URL   (…/mcp)
   VELVET_INSTAGRAM_MCP_BEARER_TOKEN
+  INSTAGRAM_MCP_REMOTE_URL   (…/mcp; optional — defaults to
+                              CAPABILITIES.json remoteVerify.publicUrl)
+
+--skip-if-missing: exit 0 with a SKIP line when the bearer is absent
+(scheduled CI without the secret must stay green, never fake a pass).
 
 Checks: no-auth 401, initialize → initialized → tools/list,
 healthcheck, get_profile (@velvets_cloud), list_media.
 Optional Insights Graph v21 checks (reported; fail suite only when
 INSTAGRAM_MCP_INSIGHTS_EXPECT_FIXED=1 after production deploy).
-Never calls publish_* / delete_media / DM.
+Never calls publish_* / delete_media / DM: every tools/call goes through
+READ_ONLY_TOOLS (Graph GETs or static SoT) and anything else raises before
+any request is sent. Prints a JSON report only; writes nothing to the repo.
 """
 
 from __future__ import annotations
@@ -20,8 +26,34 @@ import re
 import sys
 import urllib.error
 import urllib.request
+from pathlib import Path
 
 EXPECTED_USER = "velvets_cloud"
+BEARER_ENV = "VELVET_INSTAGRAM_MCP_BEARER_TOKEN"
+URL_ENV = "INSTAGRAM_MCP_REMOTE_URL"
+CAPABILITIES = Path(__file__).resolve().parents[1] / "CAPABILITIES.json"
+# Only these MCP tools may be called. All are Graph GETs (healthcheck,
+# get_profile, list_media, get_*_insights) or a static dict
+# (graph_mutation_matrix). publish_* / delete_media / send_message /
+# add_account / reply / hide / delete_comment are deliberately absent.
+READ_ONLY_TOOLS = frozenset(
+    {
+        "healthcheck",
+        "get_profile",
+        "list_media",
+        "get_account_insights",
+        "get_media_insights",
+        "graph_mutation_matrix",
+    }
+)
+
+
+def default_url() -> str:
+    try:
+        caps = json.loads(CAPABILITIES.read_text(encoding="utf-8"))
+        return str((caps.get("remoteVerify") or {}).get("publicUrl") or "").strip()
+    except (OSError, ValueError):
+        return ""
 
 
 def _post(url: str, body: dict, *, token: str | None, sid: str | None = None):
@@ -65,11 +97,17 @@ def _tool_result(payloads: list[dict]) -> dict:
     return json.loads(text)
 
 
-def main() -> int:
-    url = (os.environ.get("INSTAGRAM_MCP_REMOTE_URL") or "").strip()
-    token = (os.environ.get("VELVET_INSTAGRAM_MCP_BEARER_TOKEN") or "").strip()
+def main(argv: list[str] | None = None) -> int:
+    args = sys.argv[1:] if argv is None else argv
+    skip_if_missing = "--skip-if-missing" in args
+    url = (os.environ.get(URL_ENV) or "").strip() or default_url()
+    token = (os.environ.get(BEARER_ENV) or "").strip()
     if not url or not token:
-        print("FAIL: need INSTAGRAM_MCP_REMOTE_URL + VELVET_INSTAGRAM_MCP_BEARER_TOKEN", file=sys.stderr)
+        missing = [n for n, v in ((BEARER_ENV, token), (URL_ENV, url)) if not v]
+        if skip_if_missing:
+            print(f"SKIP: missing {' + '.join(missing)} — live read smoke not run (no data claimed)")
+            return 0
+        print(f"FAIL: need {' + '.join(missing)}", file=sys.stderr)
         return 2
 
     report: dict = {"url": url, "checks": {}}
@@ -157,6 +195,8 @@ def main() -> int:
     report["tool_count"] = len(names)
 
     def call(name: str, arguments: dict | None = None, rid: int = 10):
+        if name not in READ_ONLY_TOOLS:
+            raise RuntimeError(f"smoke_public refuses non-read-only tool: {name}")
         c, s, r = _post(
             url,
             {

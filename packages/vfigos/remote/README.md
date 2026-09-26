@@ -79,4 +79,6 @@ Requires authenticated `gcloud` for project `1016876126699` (or `GCP_PROJECT`) r
 python3 packages/vfigos/remote/smoke_public.py
 ```
 
-Uses `INSTAGRAM_MCP_REMOTE_URL` + `VELVET_INSTAGRAM_MCP_BEARER_TOKEN`. No publish.
+Uses `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` + optional `INSTAGRAM_MCP_REMOTE_URL` (defaults to `CAPABILITIES.json` `remoteVerify.publicUrl`). No publish: every `tools/call` goes through `READ_ONLY_TOOLS` (`healthcheck`, `get_profile`, `list_media`, `get_account_insights`, `get_media_insights` = Graph GETs; `graph_mutation_matrix` = static SoT) and anything else raises before a request is sent. `--skip-if-missing` prints `SKIP` and exits 0 when the bearer is absent.
+
+Scheduled: `.github/workflows/instagram-read-smoke.yml` (daily 04:41 UTC + push to `packages/vfigos/remote/**`, `contents: read`, commits nothing) runs the offline `test_http_path` / `test_insights_v21` unit tests and this smoke. The live part needs repo secret **`VELVET_INSTAGRAM_MCP_BEARER_TOKEN`** (connector bearer — not the Meta token); until it is set the step skips green and claims no numbers. `scripts/check-vfmcp.py` (check-all) runs the same unit tests and asserts the read-only allowlist.
