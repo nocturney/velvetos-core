@@ -98,7 +98,7 @@ CTA ציבורי: הודעת Instagram.
 - מדיניות: `office/control/POLICY.md`
 - CLI: `python3 scripts/vf_control_plane.py` — `status` `watchdog` `gaps` `handoff` `followups` `review` `memory-hygiene` `simulate` `selftest` `brief-summary`
 - Sensor: `scripts/check-office-control-plane.py` · `check-office-watchdog.py`
-- Workflow: `.github/workflows/office-control-plane.yml` (כל 6ש)
+- Workflow: `.github/workflows/office-control-plane.yml` (`0 2,8,14,20 * * *` UTC · 05/11/17/23 IDT)
 
 חיבור: בולע משימות מכניות מ־ChatGPT (intake, sprint, insights review, memory hygiene, WIP→finished, dead-letter) ומשאיר ל־ChatGPT בריף + Research Seat + Publish Watch אופציונלי.
 

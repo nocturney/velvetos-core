@@ -554,7 +554,7 @@
     {
       "id": "office-control-plane",
       "path": "office/control-plane.json",
-      "cadence": "every-6h",
+      "cadence": "every-6h-02-08-14-20-utc",
       "consume": "python3 scripts/vf_control_plane.py watchdog"
     },
     {

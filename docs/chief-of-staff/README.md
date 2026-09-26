@@ -11,7 +11,7 @@ Tenant ייחוס: Velvet Factory · שדרות · `@velvets_cloud`
 ## מצב נוכחי (רענון 2026-09-26)
 
 - **מסירה:** `office/control/HANDOFF.json` הוא ערוץ המסירה היחיד (`vf_control_plane.py handoff`). ה־CLI הישן מוקפא, ושום מסמך/skill/workflow לא מפנה אליו (נאכף בסנסור).
-- **קצבי workflows (#357):** `vfmedia-intake` `23 */3 * * *`, `jobs-write-through` `53 1-23/3 * * *` (8 ביום כל אחד, מיושר למה ש־GitHub באמת מריץ), control plane כל 6 שעות, research 04:30 UTC, pulse כל שעה.
+- **קצבי workflows (#357):** `vfmedia-intake` `23 */3 * * *`, `jobs-write-through` `53 1-23/3 * * *` (8 ביום כל אחד, מיושר למה ש־GitHub באמת מריץ), control plane `0 2,8,14,20 * * *` (05:00/11:00/17:00/23:00 IDT, מחוץ לחלונות Office Loop 10:30/18:30), research 04:30 UTC, pulse כל שעה.
 - **Pins (#355):** בסיס Docker `python:3.12.14-slim-trixie@sha256:…` וחבילות מוצמדות; Actions `checkout`/`setup-python`/`upload-artifact` @v7, `google-github-actions/auth@v3`.
 - **Instagram:** `instagram-read-smoke.yml` (04:41 UTC, קריאה בלבד) מאמת MCP מרוחק: 401 בלי טוקן, profile, media, insights, בלי כלי כתיבה מטעים.
 - **למידה:** `vf_learning.py ingest-ci` רושם ריצות main שנכשלו כ־learning candidates תחת `packages/vfharness/state/learning-candidates/`. מועמד ≠ חוק; קידום דרך האוטומציות / הבעלים.

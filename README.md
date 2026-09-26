@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Cloudflare scheduled-publish fingerprint guard:** the Cloudflare Instagram Publisher now computes the same 72-hour fingerprint as `packages/vfigos/approval/publish_fingerprint.py` (`ig_user_id` +…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Cloudflare scheduled-publish fingerprint guard:** the Cloudflare Instagram Publisher now computes the same 72-hour fingerprint as `packages/vfigos/approval/publish_fingerprint.py` (`ig_user_id` +…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Office Control Plane schedule offset:** `office-control-plane.yml` cron `0 */6 * * *` → `0 2,8,14,20 * * *` (05:00/11:00/17:00/23:00 IDT), so it no longer collides with the Office Loop at 10:30/1…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Office Control Plane schedule offset:** `office-control-plane.yml` cron `0 */6 * * *` → `0 2,8,14,20 * * *` (05:00/11:00/17:00/23:00 IDT), so it no longer collides with the Office Loop at 10:30/1…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -374,6 +374,10 @@ Instagram 28-day insights (read path): `get_account_insights(period=days_28)` us
 Realistic schedules: VF Media Auto Intake (`23 */3 * * *`) and Jobs Sheet Write-Through (`53 1-23/3 * * *`) each run every 3h (8/day), 1.5h apart. The old `*/5` and 15-min crons were only delivered ~6–8 times a day by GitHub (median gap ~3.5h), while sparse schedules here are honoured in full. Immediate runs: `workflow_dispatch`; jobs also runs on `sync-receipt.json` pushes.
 
 תזמון מציאותי: קליטת המדיה וכתיבת ה־Jobs רצות כל 3 שעות (8 ביום) — שווה או יותר ממה ש־GitHub הריץ בפועל.
+
+Office Control Plane schedule: `.github/workflows/office-control-plane.yml` runs at `0 2,8,14,20 * * *` UTC (05:00/11:00/17:00/23:00 IDT). That keeps it at least 30 minutes clear of the Office Loop at 10:30/18:30 IDT even with GitHub schedule delays of up to ~40 min. It was `0 */6 * * *`, whose 06:00/18:00 UTC slots delayed into the loop windows.
+
+לוח Office Control Plane: 05:00/11:00/17:00/23:00 שעון ישראל, לא מתנגש ב־Office Loop של 10:30/18:30.
 
 Archived one-shots live in `scripts/archive/` (inert, history only; see its README).
 

@@ -38,7 +38,7 @@ Deck: `.github/workflows/velvetos-weekly-deck.yml` שישי 06:00 UTC.
 | `vfmedia-intake.yml` | קליטת Drive נכנס→קטלוג | `23 */3 * * *` — 8 ריצות ביום (#357, מיושר לקצב ש־GitHub באמת מריץ) |
 | `jobs-write-through.yml` | write-through לגיליון העבודות | `53 1-23/3 * * *` — 8 ביום + push ל־sync-receipt |
 | `instagram-read-smoke.yml` | smoke קריאה-בלבד ל־Instagram MCP (401 בלי טוקן, profile, media, insights, בלי כלי כתיבה) | 04:41 UTC יומי; secret `VELVET_INSTAGRAM_MCP_BEARER_TOKEN` |
-| `office-control-plane.yml` | activation sweep + watchdog + hygiene + gaps + handoff | כל 6 שעות |
+| `office-control-plane.yml` | activation sweep + watchdog + hygiene + gaps + handoff | `0 2,8,14,20 * * *` UTC = 05:00/11:00/17:00/23:00 IDT (לא מתנגש ב־Office Loop 10:30/18:30 גם עם עיכוב GitHub של ~40 דק׳) |
 | `jobs-write-through.yml` | Sheet jobs WIF pull/push/read-back | `:07,:22,:37,:52` כל שעה |
 | `velvetos-research.yml` | freshness/index/sensors אחרי Research Seat | 04:30 UTC |
 | `readme-system-pulse.yml` | רענון README pulse | שעתי + שינוי קבצי ראיה |
