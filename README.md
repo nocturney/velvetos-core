@@ -31,7 +31,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>85</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>86</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>10</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>32</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Chief of Staff system map, refreshed (replaces #227):**</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Chief of Staff system map, refreshed (replaces #227):**</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Publish fingerprint guard (#198):** `vfigos/approval/publish_fingerprint.py` plus a gate hook refuse a repeated identical publish (same account + signed media digests + normalized caption within …</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Publish fingerprint guard (#198):** `vfigos/approval/publish_fingerprint.py` plus a gate hook refuse a repeated identical publish (same account + signed media digests + normalized caption within …</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -358,6 +358,10 @@ Sensors are read-only: a `check-all.py` run must leave repository files unchange
 Pinned runtime: the three Cloud Run Dockerfiles (`vfigos/remote`, `vfigos/approval/issuer`, `velvetos_control_api`) use `python:3.12.14-slim-trixie` by digest plus exact pip versions, with starlette/cryptography matching `requirements-sensors.txt`. Workflows use `actions/checkout@v7`, `actions/setup-python@v7`, `actions/upload-artifact@v7` and `google-github-actions/auth@v3` (Node 24). A redeploy is still a manual owner step.
 
 סביבת ריצה נעולה: שלושת ה־Dockerfiles נעולים ל־digest ולגרסאות מדויקות; ה־Actions עודכנו לגרסאות הראשיות הנוכחיות.
+
+Publish fingerprint guard (#198): at the Instagram mutation boundary (`packages/vfigos/remote/delivery_approval_gate.py`), every publish tool computes sha256(account + signed media digests + normalized caption) and is refused if the same fingerprint was published within 72h. The refusal happens before the approval is spent and before any media fetch. Ambiguous `media_publish` outcomes count as possibly live, so reconcile with `list_media` before retrying. Operator override is deploy config only (`VELVET_PUBLISH_FINGERPRINT_WINDOW_SECONDS=0`). Store: `publish-fingerprints/` in the approval spend bucket; if it is unavailable, publishing fails closed. Regression sensor: `scripts/check-publish-fingerprint.py`. It takes effect on the next manual redeploy, which needs objects list/get on the bucket for the mutation SA.
+
+שומר טביעת פרסום: אותו נכס + אותו כיתוב לא יתפרסמו שוב תוך 72 שעות. הסירוב קורה לפני שהאישור נצרך.
 
 Realistic schedules: VF Media Auto Intake (`23 */3 * * *`) and Jobs Sheet Write-Through (`53 1-23/3 * * *`) each run every 3h (8/day), 1.5h apart. The old `*/5` and 15-min crons were only delivered ~6–8 times a day by GitHub (median gap ~3.5h), while sparse schedules here are honoured in full. Immediate runs: `workflow_dispatch`; jobs also runs on `sync-receipt.json` pushes.
 

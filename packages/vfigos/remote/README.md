@@ -37,6 +37,8 @@ Cloud Run **env** names (left) map to GSM **secret** names on project `instamcp`
 | `PORT` | — | Cloud Run port (default 8080) |
 | `MCP_PATH` | — | default `/mcp` |
 | `VELVET_DELIVERY_APPROVAL_SPEND_BUCKET` | bucket `velvet-ig-approval-spend` | Atomic approval spend (create-only) |
+| `VELVET_PUBLISH_FINGERPRINT_WINDOW_SECONDS` | — | Repeat-publish window (default `259200` = 72h; `0` = operator override, disables) |
+| `VELVET_PUBLISH_FINGERPRINT_PREFIX` | — | Fingerprint object prefix in the spend bucket (default `publish-fingerprints/`; mutation SA needs objects list/get/create) |
 
 `deploy.sh` defaults to those kebab GSM names. Override with `GSM_BEARER_SECRET` / `GSM_ACCESS_SECRET` / `GSM_IG_USER_SECRET` if needed.
 
@@ -50,7 +52,7 @@ Never mount `VELVET_DELIVERY_APPROVAL_PRIVATE_KEY_B64` or issuer tokens on this 
 | `insights_v21.py` | Fix Graph v21 Insights: media-type defaults (`saved`≠`saves`), `metric_type` split, period partitioning (no fabricated days_28) |
 | `mutations.py` | `graph_mutation_matrix` SoT + gated `delete_media`; profile/caption writes **not exposed** |
 | `cta_tools.py` / `cta_audit.py` | Read-only PUBLIC_CURRENT_CTA audit of live captions/bio |
-| `delivery_approval_gate.py` | Verify signed owner approval + atomic spend before any write tool |
+| `delivery_approval_gate.py` | Verify signed owner approval, then the publish fingerprint guard (#198, refuses a repeated identical publish before spend), then atomic spend, before any write tool |
 | `test_insights_v21.py` | Regression tests for the two ChatGPT Insights failures |
 
 ## Local run
