@@ -1,11 +1,11 @@
 {
   "enabled": false,
-  "requestId": "morning-green-2026-09-25",
+  "requestId": "morning-green-2026-09-26",
   "to": "nocturney@gmail.com",
-  "subject": "Velvet Factory · Morning Brief · 25.9.2026",
-  "html": "packages/vfops/out/morning-green-2026-09-25.html",
-  "visibleText": "packages/vfops/out/morning-green-2026-09-25.txt",
-  "images": "packages/vfops/out/morning-green-assets-2026-09-25",
+  "subject": "Velvet Factory · Morning Brief · 26.9.2026",
+  "html": "packages/vfops/out/morning-green-2026-09-26.html",
+  "visibleText": "packages/vfops/out/morning-green-2026-09-26.txt",
+  "images": "packages/vfops/out/morning-green-assets-2026-09-26",
   "embedRemoteImages": true,
   "remoteImageLimit": 8
 }
