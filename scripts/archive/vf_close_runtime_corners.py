@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""One deterministic migration for the 2026-09-14 runtime closeout.
+"""ARCHIVED 2026-09-26 — inert. Do not run (paths resolve from scripts/, and the
+authorities it edits have moved on; e.g. BEST-SKILLS.json now carries the 44h gate).
+
+One deterministic migration for the 2026-09-14 runtime closeout.
 
 Safe to re-run. It edits existing authorities only; it does not create a second
 scheduler, Control Plane, skill registry, or business database.
@@ -191,4 +194,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit("ARCHIVED: one-shot 2026-09-14 migration; kept for history only (see scripts/archive/README.md)")

@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Realistic crons for vfmedia intake and jobs write-through:**</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Realistic crons for vfmedia intake and jobs write-through:**</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **One-shot script triage:**</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **One-shot script triage:**</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -361,6 +361,8 @@ Pinned runtime: the three Cloud Run Dockerfiles (`vfigos/remote`, `vfigos/approv
 Realistic schedules: VF Media Auto Intake (`23 */3 * * *`) and Jobs Sheet Write-Through (`53 1-23/3 * * *`) each run every 3h (8/day), 1.5h apart. The old `*/5` and 15-min crons were only delivered ~6–8 times a day by GitHub (median gap ~3.5h), while sparse schedules here are honoured in full. Immediate runs: `workflow_dispatch`; jobs also runs on `sync-receipt.json` pushes.
 
 תזמון מציאותי: קליטת המדיה וכתיבת ה־Jobs רצות כל 3 שעות (8 ביום) — שווה או יותר ממה ש־GitHub הריץ בפועל.
+
+Archived one-shots live in `scripts/archive/` (inert, history only; see its README).
 
 ## Read next · המשך קריאה
 
