@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""DEPRECATED (2026-09-26) — typed cross-harness handoff records (vf.handoff.v1).
+"""FROZEN / UNUSED (2026-09-26, owner decision) — do not use, do not reference.
 
-Never adopted: zero records since #189 (2026-09-13). The live handoff surface is
-office/control/HANDOFF.json (`python3 scripts/vf_control_plane.py handoff`,
-rendered in the README pulse, read by the Control API and the Grok automations
-manager). Kept only so `doctor` (check-vf-handoff.py) still validates any stray
-record; do not create new handoffs here. Removal needs an owner decision.
+Legacy typed cross-harness handoff records (vf.handoff.v1, #189). Never adopted:
+zero records ever. The only handoff surface is office/control/HANDOFF.json
+(`python3 scripts/vf_control_plane.py handoff`). This file is the freeze note:
+it is kept for history only. new/ack/consume/reject refuse with exit 3; nothing
+in the repo may invoke or document this script. scripts/check-vf-handoff.py
+fails if any file other than this one (and the append-only CHANGELOG.md)
+mentions it, or if these writers stop refusing.
 """
 from __future__ import annotations
 import argparse, json, sys
@@ -59,7 +61,6 @@ def load_all():
     return records,errors
 
 def cmd_new(a):
-    print("DEPRECATED: vf_handoff.py — use office/control/HANDOFF.json (vf_control_plane.py handoff)", file=sys.stderr)
     if path_for(a.handoff_id).exists(): raise SystemExit(f"handoff exists: {a.handoff_id}")
     data={"schema":"vf.handoff.v1","handoff_id":a.handoff_id,"task_id":a.task_id,"source_harness":a.source,
           "target_harness":a.target,"status":"offered","trust":"unreviewed","summary":a.summary,
@@ -99,5 +100,11 @@ def parser():
     d=sub.add_parser("doctor"); d.set_defaults(fn=lambda a:doctor())
     return p
 
+FROZEN_CMDS = {"new","ack","consume","reject"}
+
 if __name__ == "__main__":
-    args=parser().parse_args(); raise SystemExit(args.fn(args))
+    args=parser().parse_args()
+    if args.cmd in FROZEN_CMDS:
+        print("FROZEN: this handoff CLI is unused; use office/control/HANDOFF.json (vf_control_plane.py handoff)", file=sys.stderr)
+        raise SystemExit(3)
+    raise SystemExit(args.fn(args))
