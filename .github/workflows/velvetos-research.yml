@@ -23,12 +23,12 @@ jobs:
         with:
           python-version: '3.12'
 
-      # Same pinned sensor runtime as check-all.yml (requirements-sensors.txt):
+      # Same pinned sensor runtime as check-all.yml (hashed lock generated from requirements-sensors.txt):
       # scikit-learn for build-index, Pillow/cryptography/starlette for the final
       # check-all step, and real ffmpeg/ffprobe for the video sensors.
       - name: Install sensor runtime dependencies
         run: |
-          python3 -m pip install --disable-pip-version-check -r requirements-sensors.txt
+          python3 -m pip install --disable-pip-version-check --require-hashes -r requirements-sensors.py312.lock
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
 

@@ -31,7 +31,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>88</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>89</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>10</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>32</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Demand-signals adapter DORMANT:** `scripts/vf_demand_signals.py` gets a DORMANT header (no provider feeds it; #247 closed) and stays runnable for a legitimate manual call. `DEMAND-SIGNALS.md` ban…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Demand-signals adapter DORMANT:** `scripts/vf_demand_signals.py` gets a DORMANT header (no provider feeds it; #247 closed) and stays runnable for a legitimate manual call. `DEMAND-SIGNALS.md` ban…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Hashed sensor lock files:** `requirements-sensors.py311.lock` / `requirements-sensors.py312.lock` are generated with `pip-compile --generate-hashes` (pip-tools 7.6.1) from `requirements-sensors.t…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Hashed sensor lock files:** `requirements-sensors.py311.lock` / `requirements-sensors.py312.lock` are generated with `pip-compile --generate-hashes` (pip-tools 7.6.1) from `requirements-sensors.t…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -174,7 +174,7 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 |‏ קישורי השראה שבועיים | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
 |‏ דופק Best Skills | `packages/vfresearch/BEST-SKILLS.json` + `TIMER.md` — Research Seat מריץ כש־`lastPass` בן 44h לפחות (קצב ~48h, stale מעל 52h) |
 |‏ חוקי מערכת | `constitution/` |
-| Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
+| Sensors | `scripts/check-*.py` · CI runtime: hashed locks `requirements-sensors.py311.lock` / `.py312.lock` (from `requirements-sensors.txt`) |
 | Workflows | `.github/workflows/` |
 |‏ היסטוריית שינויים | [`CHANGELOG.md`](CHANGELOG.md) |
 |‏ הנחיות agents | [`AGENTS.md`](AGENTS.md) |
@@ -313,7 +313,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Weekly inspiration links | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
 | Best Skills pulse | `packages/vfresearch/BEST-SKILLS.json` + `TIMER.md` — Research Seat runs a pass when `lastPass` is ≥44h old (~48h cadence, stale above 52h) |
 | Constitution | `constitution/` |
-| Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
+| Sensors | `scripts/check-*.py` · CI runtime: hashed locks `requirements-sensors.py311.lock` / `.py312.lock` (from `requirements-sensors.txt`) |
 | Workflows | `.github/workflows/` |
 | Change history | [`CHANGELOG.md`](CHANGELOG.md) |
 | Agent guidance | [`AGENTS.md`](AGENTS.md) |
@@ -358,6 +358,10 @@ Sensors are read-only: a `check-all.py` run must leave repository files unchange
 Pinned runtime: the three Cloud Run Dockerfiles (`vfigos/remote`, `vfigos/approval/issuer`, `velvetos_control_api`) use `python:3.12.14-slim-trixie` by digest plus exact pip versions, with starlette/cryptography matching `requirements-sensors.txt`. Workflows use `actions/checkout@v7`, `actions/setup-python@v7`, `actions/upload-artifact@v7` and `google-github-actions/auth@v3` (Node 24). A redeploy is still a manual owner step.
 
 סביבת ריצה נעולה: שלושת ה־Dockerfiles נעולים ל־digest ולגרסאות מדויקות; ה־Actions עודכנו לגרסאות הראשיות הנוכחיות.
+
+Sensor lock files: `requirements-sensors.txt` is the human-edited input (direct and transitive pins). CI installs full hashed locks generated from it with `pip-compile --generate-hashes`: `requirements-sensors.py311.lock` (check-all, instagram-read-smoke, Python 3.11) and `requirements-sensors.py312.lock` (velvetos-research, Python 3.12), via `pip install --require-hashes`. To regenerate after editing the input, run `scripts/regen-sensor-locks.sh` (pip-tools 7.6.1; `PY311=`/`PY312=` pick the interpreters) and commit all three files. `scripts/check-sensor-locks.py` fails if a lock drifts from the input, loses a hash, or a workflow installs without the lock.
+
+קבצי נעילה לחיישנים: ה־CI מתקין מנעילה מלאה עם hashes (כולל תלויות עקיפות). אחרי שינוי ב־requirements-sensors.txt מריצים `scripts/regen-sensor-locks.sh`.
 
 Publish fingerprint guard (#198): at the Instagram mutation boundary (`packages/vfigos/remote/delivery_approval_gate.py`), every publish tool computes sha256(account + signed media digests + normalized caption) and is refused if the same fingerprint was published within 72h. The refusal happens before the approval is spent and before any media fetch. Ambiguous `media_publish` outcomes count as possibly live, so reconcile with `list_media` before retrying. Operator override is deploy config only (`VELVET_PUBLISH_FINGERPRINT_WINDOW_SECONDS=0`). Store: `publish-fingerprints/` in the approval spend bucket; if it is unavailable, publishing fails closed. Regression sensor: `scripts/check-publish-fingerprint.py`. It takes effect on the next manual redeploy, which needs objects list/get on the bucket for the mutation SA.
 

@@ -21,7 +21,8 @@ jobs:
 
       - name: Install sensor runtime dependencies
         run: |
-          python3 -m pip install --disable-pip-version-check -r requirements-sensors.txt
+          # Hashed full lock (direct + indirect); regenerate with scripts/regen-sensor-locks.sh
+          python3 -m pip install --disable-pip-version-check --require-hashes -r requirements-sensors.py311.lock
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
 
