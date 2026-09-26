@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-24 — **VelvetOS Control API v1:** read-first HTTP projection gateway (`packages/velvetos_control_api`, schema `velvetos.control.v1`) for the Control Center UI. Reuses control-plane / jobs adapter / capa…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-24 — **VelvetOS Control API v1:** read-first HTTP projection gateway (`packages/velvetos_control_api`, schema `velvetos.control.v1`) for the Control Center UI. Reuses control-plane / jobs adapter / capa…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Research Cadence sensor runtime fix:** `.github/workflows/velvetos-research.yml` now installs the same sensor runtime as `check-all.yml` (Pillow, cryptography, starlette, ffmpeg) before its final…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Research Cadence sensor runtime fix:** `.github/workflows/velvetos-research.yml` now installs the same sensor runtime as `check-all.yml` (Pillow, cryptography, starlette, ffmpeg) before its final…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -152,7 +152,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 - Gmail brief send
 - Office Control Plane loop
 - publish-bridge cleanup
-- VelvetOS research
+- ‏VelvetOS research (מתקין את אותו runtime של חיישנים כמו full sensor suite לפני הרצת check-all)
 - weekly deck generation
 - vfmedia intake
 
@@ -287,6 +287,8 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 ## Operational workflows
 
 The repository currently carries workflows for the sensor suite, Gmail brief, Office Control Plane, publish-bridge cleanup, VelvetOS research, weekly deck generation and vfmedia intake.
+
+The VelvetOS research workflow installs the same sensor runtime as the sensor-suite workflow (Pillow, cryptography, starlette, ffmpeg) before its final `check-all.py` step, so its sensor verdict reflects the contracts rather than a missing module.
 
 A workflow file proves automation exists; provider-dependent behavior is **LIVE** only after real provider/runtime verification.
 
