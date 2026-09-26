@@ -30,7 +30,7 @@
 16. שינוי מהותי רגיל → fresh-context reviewer אחד לפי `playbooks/critique-review.md` עם Goal+Spec+diff+proof בלבד, לא כל history. שינוי רגיש/רחב → high-risk mode עם שני reviewers עצמאיים + deterministic proof; receipt תחת `state/reviews/` נבדק ע״י `check-review-convergence.py`.
 17. worker-to-worker בלבד → `playbooks/terse-worker-output.md` — פלט קצר ומבני; לעולם לא על טקסט אנושי.
 18. Agent/MCP/rules surface → `AGENT-SURFACE-SECURITY.md` + `python3 scripts/check-agent-surface-security.py` (AgentShield pattern).
-19. מעבר עבודה בין harnesses → `vfmem/HANDOFF.md` + `python3 scripts/vf_handoff.py new|ack|consume|reject|doctor`; handoff הוא context, לא authority.
+19. מעבר עבודה בין harnesses → `office/control/HANDOFF.json` (`python3 scripts/vf_control_plane.py handoff`) + המשמעת ב־`vfmem/HANDOFF.md`; handoff הוא context, לא authority.
 20. לפני טענה ש״הוטמע/רץ״ על worker/automation/connector → `python3 scripts/check-runtime-doctor.py --strict`. `check-all` בודק רק את חוזה ה־runtime offline; strict דורש receipts אמיתיים.
 21. סקירת בריאות מערכת → `python3 scripts/check-velvet-health.py`; הפלט דטרמיניסטי ומורכב מחיישנים, בלי ציוני LLM מומצאים.
 22. תחזוקת Skills/docs → `python3 scripts/check-skill-health.py` + `python3 scripts/check-living-docs.py`; warnings הם חומר לתיקון/קונסולידציה, לא success-rate מומצא.

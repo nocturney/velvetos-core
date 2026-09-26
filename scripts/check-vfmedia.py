@@ -326,8 +326,16 @@ def main() -> None:
     workflow = INTAKE_WORKFLOW.read_text(encoding="utf-8")
     if "cron:" not in workflow:
         fail("vfmedia-intake.yml must declare schedule cron")
-    if "*/5" not in workflow:
-        fail("vfmedia-intake.yml must target 5-minute cadence (*/5) — GHA minimum")
+    runner_src = (PACK / "intake" / "runner.py").read_text(encoding="utf-8")
+    import re as _re
+    wf_cron = _re.search(r'cron:\s*"([^"]+)"', workflow)
+    rn_cron = _re.search(r'"githubActionsCron":\s*"([^"]+)"', runner_src)
+    if not wf_cron or not rn_cron or wf_cron.group(1) != rn_cron.group(1):
+        fail("vfmedia-intake.yml cron must equal runner.py schedule.githubActionsCron")
+    if wf_cron.group(1).split()[0].startswith("*"):
+        fail("vfmedia-intake.yml cron must use a fixed minute (GitHub under-delivers dense schedules)")
+    if 'base["schedule"] = default_runner_state()["schedule"]' not in runner_src:
+        fail("runner.py must refresh schedule config from code on load")
     if "concurrency:" not in workflow:
         fail("vfmedia-intake.yml must declare concurrency to prevent overlapping runners")
     if "git push ||" in workflow:

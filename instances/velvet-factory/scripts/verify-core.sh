@@ -36,6 +36,9 @@ required=(
   ".cursor/skills/velvet-media-librarian/SKILL.md"
   "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md"
   "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md"
+  "packages/vfom/BRAND-ASSET-LOCK.md"
+  "packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md"
+  "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
   "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"
   "packages/vfom/CREATIVE-MANIFEST.schema.json"
   "packages/vfom/FORMAT-GENOMES.md"
@@ -49,6 +52,7 @@ required=(
   "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
   "scripts/vf_project_preflight.py"
   "scripts/check-project-request-gate.py"
+  "scripts/check-vf-offering.py"
   "scripts/check-creative-system.py"
   "scripts/check-creative-autopilot.py"
 )
@@ -64,6 +68,7 @@ done
 "$PYTHON_BIN" "$DEST/scripts/check-brand-asset-cta-lock.py"
 "$PYTHON_BIN" "$DEST/scripts/check-creative-transformation-lock.py"
 "$PYTHON_BIN" "$DEST/scripts/check-project-request-gate.py"
+"$PYTHON_BIN" "$DEST/scripts/check-vf-offering.py"
 "$PYTHON_BIN" "$DEST/scripts/check-creative-system.py"
 "$PYTHON_BIN" "$DEST/scripts/check-creative-autopilot.py"
 

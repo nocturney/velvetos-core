@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+"""FROZEN / UNUSED (2026-09-26, owner decision) — do not use, do not reference.
+
+Legacy typed cross-harness handoff records (vf.handoff.v1, #189). Never adopted:
+zero records ever. The only handoff surface is office/control/HANDOFF.json
+(`python3 scripts/vf_control_plane.py handoff`). This file is the freeze note:
+it is kept for history only. new/ack/consume/reject refuse with exit 3; nothing
+in the repo may invoke or document this script. scripts/check-vf-handoff.py
+fails if any file other than this one (and the append-only CHANGELOG.md)
+mentions it, or if these writers stop refusing.
+"""
 from __future__ import annotations
 import argparse, json, sys
 from datetime import datetime, timezone
@@ -23,8 +33,8 @@ def load_one(hid):
     return path,json.loads(path.read_text())
 
 def load_all():
-    HANDOFFS.mkdir(parents=True, exist_ok=True)
-    errors=[]; records=[]; ids=set()
+    errors=[]
+    if not HANDOFFS.is_dir(): return [],errors  # read-only doctor: never create the dir; records=[]; ids=set()
     for path in sorted(HANDOFFS.glob("*.json")):
         try: data=json.loads(path.read_text())
         except Exception as e:
@@ -90,5 +100,11 @@ def parser():
     d=sub.add_parser("doctor"); d.set_defaults(fn=lambda a:doctor())
     return p
 
+FROZEN_CMDS = {"new","ack","consume","reject"}
+
 if __name__ == "__main__":
-    args=parser().parse_args(); raise SystemExit(args.fn(args))
+    args=parser().parse_args()
+    if args.cmd in FROZEN_CMDS:
+        print("FROZEN: this handoff CLI is unused; use office/control/HANDOFF.json (vf_control_plane.py handoff)", file=sys.stderr)
+        raise SystemExit(3)
+    raise SystemExit(args.fn(args))

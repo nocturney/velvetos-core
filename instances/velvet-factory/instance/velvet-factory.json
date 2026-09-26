@@ -32,11 +32,47 @@
   ],
   "pipeline": {
     "stages": [
-      {"id": "lead", "label": "פנייה", "packHints": ["vfconvert"]},
-      {"id": "talk", "label": "שיחה", "packHints": ["vfconvert", "vfsales"]},
-      {"id": "offer", "label": "הצעה", "packHints": ["vfsales", "vfcopy", "vfcost"]},
-      {"id": "fulfill", "label": "הדפסה", "packHints": ["vfprod", "vfsku", "vlicense"]},
-      {"id": "close", "label": "איסוף", "packHints": ["vfsales", "vfgrowth"]}
+      {
+        "id": "lead",
+        "label": "פנייה",
+        "packHints": [
+          "vfconvert"
+        ]
+      },
+      {
+        "id": "talk",
+        "label": "שיחה",
+        "packHints": [
+          "vfconvert",
+          "vfsales"
+        ]
+      },
+      {
+        "id": "offer",
+        "label": "הצעה",
+        "packHints": [
+          "vfsales",
+          "vfcopy",
+          "vfcost"
+        ]
+      },
+      {
+        "id": "fulfill",
+        "label": "הדפסה",
+        "packHints": [
+          "vfprod",
+          "vfsku",
+          "vlicense"
+        ]
+      },
+      {
+        "id": "close",
+        "label": "איסוף",
+        "packHints": [
+          "vfsales",
+          "vfgrowth"
+        ]
+      }
     ]
   },
   "fulfillment": {
@@ -50,7 +86,13 @@
   },
   "channels": {
     "instagram": [
-      {"id": "ig-primary", "handle": "@velvets_cloud", "purpose": "studio", "primary": true, "language": "he"}
+      {
+        "id": "ig-primary",
+        "handle": "@velvets_cloud",
+        "purpose": "studio",
+        "primary": true,
+        "language": "he"
+      }
     ]
   },
   "cta": {
@@ -64,8 +106,22 @@
       "status": "disabled-for-public-cta",
       "note": "BUSINESS_CONTACT_RECORD only — not PUBLIC_CURRENT_CTA"
     },
-    "forbiddenPublic": ["050-2517000", "וואטסאפ", "WhatsApp", "wa.me", "דברו איתנו בוואטסאפ", "הזמנות בוואטסאפ"],
-    "forbidden": ["send_dm", "auto-dm", "050-2517000", "וואטסאפ", "WhatsApp", "wa.me"]
+    "forbiddenPublic": [
+      "050-2517000",
+      "וואטסאפ",
+      "WhatsApp",
+      "wa.me",
+      "דברו איתנו בוואטסאפ",
+      "הזמנות בוואטסאפ"
+    ],
+    "forbidden": [
+      "send_dm",
+      "auto-dm",
+      "050-2517000",
+      "וואטסאפ",
+      "WhatsApp",
+      "wa.me"
+    ]
   },
   "close": "instagram-message public; human WhatsApp record disabled for outreach",
   "compliance": {
@@ -78,20 +134,76 @@
     "contentAllowed": "floor proof + Hebrew product copy",
     "offeringAuthority": "packages/vfbiz/OFFERING.md",
     "noCustomerTypeServicePillar": true,
-    "extraLocks": ["pickup-sderot-only", "no-customer-type-service-pillar", "no-tiktok-without-lead", "no-ads-without-lead"]
+    "extraLocks": [
+      "pickup-sderot-only",
+      "no-customer-type-service-pillar",
+      "no-tiktok-without-lead",
+      "no-ads-without-lead"
+    ]
   },
   "seats": [
-    {"id": "lead", "he": "ראש צוות", "roleNote": "בריף, החלטות, ₪"},
-    {"id": "studio", "he": "סטודיו", "roleNote": "פנייה, הצעה, קופי"},
-    {"id": "growth", "he": "צמיחה", "roleNote": "תוכן, כריכות, לוח IG"},
-    {"id": "ops", "he": "תפעול", "roleNote": "עלות, ספרים, החלטות עסקיות"},
-    {"id": "production", "he": "ייצור", "roleNote": "הדפסה, מק״ט, רישיון"}
+    {
+      "id": "lead",
+      "he": "ראש צוות",
+      "roleNote": "בריף, החלטות, ₪"
+    },
+    {
+      "id": "studio",
+      "he": "סטודיו",
+      "roleNote": "פנייה, הצעה, קופי"
+    },
+    {
+      "id": "growth",
+      "he": "צמיחה",
+      "roleNote": "תוכן, כריכות, לוח IG"
+    },
+    {
+      "id": "ops",
+      "he": "תפעול",
+      "roleNote": "עלות, ספרים, החלטות עסקיות"
+    },
+    {
+      "id": "production",
+      "he": "ייצור",
+      "roleNote": "הדפסה, מק״ט, רישיון"
+    }
   ],
   "mcpBind": {
-    "studiomcphub": {"enabled": true, "use": ["search_tools", "remove_background", "resize_image"], "skip": ["print_ready", "convert_color_profile", "x402", "nft"]},
-    "mcp-gsheets": {"enabled": true, "when": "desktop-credentials", "bindings": "office/ledger/bindings.json"},
-    "whatsapp": {"enabled": true, "when": "desktop-lharries", "mode": "search-and-draft", "send": false},
-    "instagram": {"enabled": true, "when": "codespace-stdio-or-remote-when-ready", "publish": true, "dm": false, "stories": true, "canonicalMcp": "adelaidasofia/instagram-mcp", "connect": "packages/vfigos/CONNECT-IG.md", "publishBridge": "packages/vfigos/PUBLISH-BRIDGE.json"}
+    "studiomcphub": {
+      "enabled": true,
+      "use": [
+        "search_tools",
+        "remove_background",
+        "resize_image"
+      ],
+      "skip": [
+        "print_ready",
+        "convert_color_profile",
+        "x402",
+        "nft"
+      ]
+    },
+    "mcp-gsheets": {
+      "enabled": true,
+      "when": "desktop-credentials",
+      "bindings": "office/ledger/bindings.json"
+    },
+    "whatsapp": {
+      "enabled": true,
+      "when": "desktop-lharries",
+      "mode": "search-and-draft",
+      "send": false
+    },
+    "instagram": {
+      "enabled": true,
+      "when": "codespace-stdio-or-remote-when-ready",
+      "publish": true,
+      "dm": false,
+      "stories": true,
+      "canonicalMcp": "adelaidasofia/instagram-mcp",
+      "connect": "packages/vfigos/CONNECT-IG.md",
+      "publishBridge": "packages/vfigos/PUBLISH-BRIDGE.json"
+    }
   },
   "creativeAutonomy": {
     "enabled": true,
@@ -110,7 +222,28 @@
       "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
       "canvaAssetId": "MAHVL7PKpvE",
       "artifactSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
-      "coldStartGate": "fail_closed"
+      "coldStartGate": "fail_closed",
+      "requiredFor": [
+        "feed-plan",
+        "post",
+        "carousel",
+        "reel-cover",
+        "story-still",
+        "service-editorial",
+        "visual-qa",
+        "publish-preflight"
+      ],
+      "truthPriority": "constitution-product-truth-source-evidence-over-style-reference",
+      "hardRejects": [
+        "placeholder-final",
+        "generic-product-icon",
+        "synthetic-real-product-replacement",
+        "subject-drift",
+        "fake-customer-scene",
+        "generic-template-card",
+        "stock-filler",
+        "rejected-g004-canva-DAHUaelaug0"
+      ]
     },
     "orchestration": "packages/vfom/CREATIVE-AUTOPILOT.md",
     "foundryPolicy": "packages/vfom/FOUNDRY.json",
@@ -136,8 +269,15 @@
     },
     "publish": {
       "standingAuthorization": true,
-      "scope": ["organic-instagram-routine"],
-      "allowedFormats": ["reel", "story", "carousel", "post"],
+      "scope": [
+        "organic-instagram-routine"
+      ],
+      "allowedFormats": [
+        "reel",
+        "story",
+        "carousel",
+        "post"
+      ],
       "calendarAuthority": "packages/vfgrowth/CALENDAR.md",
       "transportBridge": "packages/vfigos/PUBLISH-BRIDGE.json",
       "transportBridgeRequiredForPrivateAssets": true,
@@ -147,7 +287,10 @@
       "requireContentContract": true,
       "requireSupportedClaims": true,
       "requireToolReceipt": true,
-      "requireLiveVerification": true
+      "requireLiveVerification": true,
+      "requireBrandAssetLock": true,
+      "requireCreativeTransformationLock": true,
+      "requireProjectRequestGate": true
     },
     "humanRequired": [
       "physical-footage-or-staging",
@@ -160,9 +303,37 @@
       "print-from-hq",
       "irreversible-destructive-action",
       "hard-blocker-after-failover"
-    ]
+    ],
+    "brandAssetLock": {
+      "required": true,
+      "document": "packages/vfom/BRAND-ASSET-LOCK.md",
+      "mode": "fail_closed",
+      "generatedBrandMark": "forbidden",
+      "logoWhenVerifiedOnly": "deterministic_overlay",
+      "publicPhoneForbidden": true,
+      "publicCtaAuthority": "constitution/PUBLIC_CTA.md"
+    },
+    "creativeTransformationLock": {
+      "required": true,
+      "document": "packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md",
+      "mode": "fail_closed",
+      "rawPassthrough": false,
+      "defaultEditMode": "SOURCE_IMAGE_EDIT",
+      "heroTreatmentRequired": true
+    },
+    "projectRequestGate": {
+      "required": true,
+      "document": "packages/velvetos/PROJECT-REQUEST-GATE.md",
+      "manifest": "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+      "mode": "fail_closed"
+    }
   },
-  "locks": ["human-close-whatsapp", "pickup-only", "no-customer-type-service-pillar", "public-commercial-files-only"],
+  "locks": [
+    "human-close-whatsapp",
+    "pickup-only",
+    "no-customer-type-service-pillar",
+    "public-commercial-files-only"
+  ],
   "packPrefix": "vf",
-  "notes": "Live Velvet Factory office frontend. Pulls modules/packs from VelvetOS Core. Velvet Visual Foundry uses one Creative Manifest plus Creative Director, Brand Guardian and Media Librarian specialists; exception-only and standing-authorized for LOW-risk routine organic Instagram only. Approved private-source derivatives route through the canonical Publish Bridge before Instagram publish."
+  "notes": "Live Velvet Factory office frontend. Pulls modules/packs from VelvetOS Core. Velvet Visual Foundry uses one Creative Manifest plus Creative Director, Brand Guardian and Media Librarian specialists; exception-only and standing-authorized for LOW-risk routine organic Instagram only. Approved private-source derivatives route through the canonical Publish Bridge before Instagram publish. Owner-approved grid visual standard is mandatory for public visual QA/preflight; brand-asset, creative-transformation and project-request gates are fail-closed."
 }

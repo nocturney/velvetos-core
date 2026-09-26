@@ -16,15 +16,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
-      - name: Install semantic-search deps
-        run: pip install scikit-learn
+      # Same pinned sensor runtime as check-all.yml (requirements-sensors.txt):
+      # scikit-learn for build-index, Pillow/cryptography/starlette for the final
+      # check-all step, and real ffmpeg/ffprobe for the video sensors.
+      - name: Install sensor runtime dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check -r requirements-sensors.txt
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
 
       - name: Cadence map + DST note
         run: python3 scripts/vfresearch_cadence.py map
@@ -36,7 +42,7 @@ jobs:
         run: python3 scripts/vfresearch_cadence.py build-index
 
       - name: Upload semantic index for consumers
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vfmem-semantic-index
           path: packages/vfmem/semantic_index.pkl

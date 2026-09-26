@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""One deterministic migration for the 2026-09-14 runtime closeout.
+"""ARCHIVED 2026-09-26 — inert. Do not run (paths resolve from scripts/, and the
+authorities it edits have moved on; e.g. BEST-SKILLS.json now carries the 44h gate).
+
+One deterministic migration for the 2026-09-14 runtime closeout.
 
 Safe to re-run. It edits existing authorities only; it does not create a second
 scheduler, Control Plane, skill registry, or business database.
@@ -88,14 +91,15 @@ def close_best_skills() -> None:
     data["timerName"] = "research-seat:best-skills-48h"
     data["standingNote"] = (
         "Owner standing order remains active. Research Seat is the canonical scheduler authority: "
-        "run a Best Skills pass when lastPass is about 48h old; no external timer renewal is required."
+        "run a Best Skills pass when lastPass is at least 44h old (daily seat gives a ~48h cadence without slipping to 72h); no external timer renewal is required."
     )
     data["lastTimerStatus"] = (
         "PROVEN_BY_RESEARCH_SEAT: lastPass/data artifact is the evidence; external Cursor subscriptions are not an authority."
     )
     data["freshnessContract"] = {
-        "targetHours": 48,
-        "graceHours": 4,
+        "targetHours": 44,
+        "graceHours": 8,
+        "dueRule": "Research Seat runs the pass when lastPass is >=44h old; stale above 52h (44h + 8h grace). Cadence stays every-2-days (~48h).",
         "evidence": ["lastPass", "lastArtifact", "lastResult"],
         "onStale": "Research Seat executes the pass; do not create a second recurring automation",
     }
@@ -190,4 +194,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit("ARCHIVED: one-shot 2026-09-14 migration; kept for history only (see scripts/archive/README.md)")

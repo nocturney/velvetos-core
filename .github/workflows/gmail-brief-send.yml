@@ -26,10 +26,10 @@ jobs:
       REQUEST_PATH: ${{ github.event.inputs.request_path || 'packages/vfops/out/gmail-send-request.json' }}
       VFBRIEF_ALLOWED_RECIPIENT: nocturney@gmail.com
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
@@ -112,7 +112,7 @@ jobs:
           GMAIL_APPS_SCRIPT_SECRET: ${{ secrets.GMAIL_APPS_SCRIPT_SECRET }}
         run: |
           if [ -z "$GMAIL_APPS_SCRIPT_URL" ]; then
-            echo "::error::Missing repository secret GMAIL_APPS_SCRIPT_URL."
+            echo "::error::Missing Apps Script endpoint GMAIL_APPS_SCRIPT_URL (set in this workflow env, not a secret)."
             exit 2
           fi
           if [ -z "$GMAIL_APPS_SCRIPT_SECRET" ]; then

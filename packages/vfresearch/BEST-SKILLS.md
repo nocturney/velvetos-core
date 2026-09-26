@@ -13,7 +13,7 @@
 הדירוגים זזים כל יום (WIS, trending, social buzz, top repos). מעבר שבועי בלבד מפספס קפיצות.  
 **כל ~48 שעות** (Asia/Jerusalem) — **דופק קבוע לנצח** עד שהבעלים מעדכן אחרת (standing order 2026-09-03).
 
-סמכות cadence: **Velvet Research Seat** לפי `packages/vfresearch/TIMER.md`. `lastPass` + artifact הם הראיה; אין תלות במנוי timer חיצוני. חלון grace הוא 4 שעות, כלומר מעל 52h המצב stale.
+סמכות cadence: **Velvet Research Seat** לפי `packages/vfresearch/TIMER.md`. `lastPass` + artifact הם הראיה; אין תלות במנוי timer חיצוני. מעבר מתבצע כש־`lastPass` בן 44 שעות לפחות; grace של 8 שעות, כלומר מעל 52h המצב stale.
 
 אירוע Calendar: רק אם ראש צוות מבקש יצירה.
 

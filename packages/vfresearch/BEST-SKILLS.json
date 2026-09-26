@@ -12,7 +12,7 @@
   "timerPlaybook": "packages/vfresearch/TIMER.md",
   "standingForever": true,
   "standingSince": "2026-09-03",
-  "standingNote": "Owner standing order remains active. Research Seat is the canonical scheduler authority: run a Best Skills pass when lastPass is about 48h old; no external timer renewal is required.",
+  "standingNote": "Owner standing order remains active. Research Seat is the canonical scheduler authority: run a Best Skills pass when lastPass is at least 44h old (daily seat gives a ~48h cadence without slipping to 72h); no external timer renewal is required.",
   "stoppedAt": null,
   "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-best-skills.md",
   "briefBlock": "05-משרד",
@@ -288,8 +288,9 @@
   ],
   "schedulerAuthority": "Velvet Research Seat",
   "freshnessContract": {
-    "targetHours": 48,
-    "graceHours": 4,
+    "targetHours": 44,
+    "graceHours": 8,
+    "dueRule": "Research Seat runs the pass when lastPass is >=44h old; stale above 52h (44h + 8h grace). Cadence stays every-2-days (~48h).",
     "evidence": [
       "lastPass",
       "lastArtifact",

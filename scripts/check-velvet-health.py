@@ -5,7 +5,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 CHECKS={
   'runtime_contract':'check-runtime-doctor.py',
-  'handoffs':'check-vf-handoff.py',
+  'handoff_freeze':'check-vf-handoff.py',
   'learning':'check-learning-lifecycle.py',
   'review_convergence':'check-review-convergence.py',
   'living_docs':'check-living-docs.py',

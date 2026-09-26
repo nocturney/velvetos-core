@@ -13,6 +13,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 TZ=ZoneInfo('Asia/Jerusalem')
+FEED_SOURCE=Path(__file__).resolve().parent/'FEED-SOURCE.json'
 HE_DAYS=['יום שני','יום שלישי','יום רביעי','יום חמישי','יום שישי','שבת','יום ראשון']
 HE_DAY_SHORT=['ב׳','ג׳','ד׳','ה׳','ו׳','שבת','א׳']
 HE_MONTHS={1:'בינואר',2:'בפברואר',3:'במרץ',4:'באפריל',5:'במאי',6:'ביוני',7:'ביולי',8:'באוגוסט',9:'בספטמבר',10:'באוקטובר',11:'בנובמבר',12:'בדצמבר'}
@@ -244,6 +245,31 @@ def post_cards(snapshot: dict | None, start: datetime) -> list[dict]:
         cards.append(cell)
     return cards
 
+def feed_status(op: dict | None, config_path: Path = FEED_SOURCE) -> dict[str,str]:
+    """Explain the 7-day strip: live schedule, owner-paused OpenPost, or unread.
+
+    Never raises: a missing/invalid config degrades to the neutral 'unavailable'
+    label so the 09:00 brief still renders.
+    """
+    if op is not None:
+        return {'state':'live','label':'','visible_text':''}
+    try:
+        cfg=json.loads(config_path.read_text(encoding='utf-8'))
+    except Exception:
+        cfg={}
+    source=cfg.get('openpost') if isinstance(cfg.get('openpost'),dict) else {}
+    if str(source.get('state') or '').strip().lower()=='paused':
+        return {
+            'state':'paused',
+            'label':str(source.get('label') or 'OpenPost מושהה כרגע · לוח הפרסום לא נקרא עד חידוש.'),
+            'visible_text':str(source.get('visibleText') or 'בקרוב בפיד: OpenPost מושהה כרגע'),
+        }
+    return {
+        'state':'unavailable',
+        'label':str(cfg.get('unavailableLabel') or 'לוח הפרסום לא נקרא הבוקר · ימים ריקים כאן אינם אומרים שאין פרסום.'),
+        'visible_text':str(cfg.get('unavailableVisibleText') or 'בקרוב בפיד: לוח הפרסום לא נקרא הבוקר'),
+    }
+
 def main() -> int:
     ap=argparse.ArgumentParser()
     ap.add_argument('--brief-json',type=Path,required=True)
@@ -286,6 +312,7 @@ def main() -> int:
                 stats.append(item); existing.add(item['label'])
             if len(stats) >= 3: break
     insta=instagram_snapshot(sec)
+    feed=feed_status(op)
 
     data={
       'email_title':'Velvet Factory - Morning Brief',
@@ -294,6 +321,7 @@ def main() -> int:
       'greeting':'בוקר טוב, כריסטיאן',
       'daily_summary':overview,
       'scheduled_posts':post_cards(op,factual_datetime(factual)),
+      'feed_status':{'state':feed['state'],'label':feed['label']},
       'instagram':insta,
       'story':{
         'title':story_source or 'תמונת היום',
@@ -314,6 +342,8 @@ def main() -> int:
         for item in attention: lines.append('• '+item['title']+(' - '+item['detail'] if item['detail'] else ''))
         lines += ['', 'מה מתקדם']
         for item in progress: lines.append('• '+item['title']+(' - '+item['detail'] if item['detail'] else ''))
+        if feed['visible_text']:
+            lines += ['', feed['visible_text']]
         lines += ['', 'Instagram']
         if insta.get('followers') is not None: lines.append(f"• עוקבים: {insta['followers']}")
         latest=insta.get('latest') or {}

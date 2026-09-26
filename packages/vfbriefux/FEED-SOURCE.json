@@ -1,0 +1,13 @@
+{
+  "schema": "vf.morning-green.feed-source.v1",
+  "openpost": {
+    "state": "paused",
+    "since": "2026-09-26",
+    "reason": "Owner freeze: OpenPost is paused, so the publishing schedule is not read. Not a failure.",
+    "label": "OpenPost מושהה כרגע · לוח הפרסום לא נקרא עד חידוש, ולכן ימים ריקים כאן אינם אומרים שאין פרסום.",
+    "visibleText": "בקרוב בפיד: OpenPost מושהה כרגע - לוח הפרסום לא נקרא עד חידוש"
+  },
+  "unavailableLabel": "לוח הפרסום לא נקרא הבוקר · ימים ריקים כאן אינם אומרים שאין פרסום.",
+  "unavailableVisibleText": "בקרוב בפיד: לוח הפרסום לא נקרא הבוקר",
+  "note": "state=paused|active. With an OpenPost snapshot the strip renders live data and no label. Without one: paused -> paused label; active -> unavailable label. Edit state here to unpause; no code change needed."
+}

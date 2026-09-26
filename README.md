@@ -31,8 +31,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>83</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
-<td align="center"><strong>9</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
+<td align="center"><strong>84</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>10</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>32</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
 </table>
@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-24 — **Text-to-CAD production bridge:** integrated `earthtojake/text-to-cad` into the existing `vfprod` / `expert-3d-model` path without creating a second printer source of truth. The Windows host uses …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-24 — **Text-to-CAD production bridge:** integrated `earthtojake/text-to-cad` into the existing `vfprod` / `expert-3d-model` path without creating a second printer source of truth. The Windows host uses …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Text-to-CAD production bridge** (authored 2026-09-24, PR #336, merged after main sync): integrated `earthtojake/text-to-cad` into the existing `vfprod` / `expert-3d-model` path without creating a…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Text-to-CAD production bridge** (authored 2026-09-24, PR #336, merged after main sync): integrated `earthtojake/text-to-cad` into the existing `vfprod` / `expert-3d-model` path without creating a…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -115,8 +115,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 ## ‏מפת היכולות
 
 <table>
-<tr><td><strong>Office Control Plane</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">סטטוס משרד, watchdog, gaps, follow-ups, dead-letter, handoff, review, memory hygiene ו־WIP→finished.</td></tr>
-<tr><td><strong>VelvetOS Control API v1</strong></td><td><strong>IMPLEMENTED / NOT LIVE-VERIFIED</strong></td><td dir="rtl" align="right"><code>packages/velvetos_control_api/</code> — שער HTTP לקריאה ראשונה (<code>velvetos.control.v1</code>) ל־Control Center: <code>/health</code>, <code>/v1/snapshot</code>, <code>/v1/search</code>, <code>/v1/capabilities</code>, <code>/v1/actions</code>. לא SoT / runtime / queue / Control Plane חדש. דומיינים חיים: Control Plane/system, capabilities, attention/activity ו־jobs adapter; production/content/files/agents/models נשארים unavailable במפורש. Actions fail-closed בלי ביצוע כתיבה. Cloud Run ו־Site roundtrip עדיין לא אומתו חי.</td></tr>
+<tr><td><strong>Office Control Plane</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">סטטוס משרד, watchdog, gaps, follow-ups, dead-letter, handoff, review, memory hygiene ו־WIP→finished. <code>office/control/HANDOFF.json</code> הוא משטח ה־handoff היחיד.</td></tr>
+<tr><td><strong>VelvetOS Control API v1</strong></td><td><strong>CLOUD RUN LIVE / SITE ROUNDTRIP PENDING</strong></td><td dir="rtl" align="right"><code>packages/velvetos_control_api/</code> — שער HTTP לקריאה ראשונה (<code>velvetos.control.v1</code>) ל־Control Center: <code>/health</code>, <code>/v1/snapshot</code>, <code>/v1/search</code>, <code>/v1/capabilities</code>, <code>/v1/actions</code>. לא SoT / runtime / queue / Control Plane חדש. דומיינים חיים: Control Plane/system, capabilities, attention/activity ו־jobs adapter; production/content/files/agents/models נשארים unavailable במפורש. Actions fail-closed בלי ביצוע כתיבה. Cloud Run נפרס ואומת ברמת השירות: revision `velvetos-control-api-00001-h6n` במצב Ready, `/health` מחזיר 200 ו־`/v1/snapshot` ללא credential נחסם ב־401. authenticated snapshot ו־Site roundtrip עדיין לא אומתו.</td></tr>
 <tr><td><strong>Living Studio</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">שכבת חיבור על מקורות האמת הקיימים עם 22 Skills תפעוליים.</td></tr>
 <tr><td><strong>Universal Intake</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">נרמול וניתוב פניות/מסמכים/פגישות/מדיה ל־handlers קיימים, בלי Inbox מקביל.</td></tr>
 <tr><td><strong>Jobs + Google Sheet bridge</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td dir="rtl" align="right">pull/push/reconcile, הגנת concurrency וללא ניחוש tab.</td></tr>
@@ -125,7 +125,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <tr><td><strong>Engineering Delivery + Agent Instruction QA</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">החלטה→spec→tickets אנכיים→branch→אימות→review איכות והתאמה ל־spec→PR/CI; עריכת הוראות agents נבדקת מול מקור סמכות יחיד ו־context budget, וחסם אנושי אמיתי מצטמצם ל־wizard של פעולה אחת.</td></tr>
 <tr><td><strong>Harness Execution Discipline</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td dir="rtl" align="right">תוכניות עוברות preflight עם ראיות; שינויי behavior עוברים RED→GREEN→REFACTOR; ambiguity מקומי והפיך יכול safe ruling מתועד; fan-out רק בלי shared state, ו־gates/receipts לעולם לא נעקפים.</td></tr>
 <tr><td><strong>VF Creative Publication Preflight</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td dir="rtl" align="right">ולידטורי ה־preflight וה־publication evidence קשורים ל־Contract 6 / Revision 6.6.2. אחרי בחירת `creative_master`, finalization דטרמיניסטי דורש materialization אמיתי: קובץ מקומי + SHA-256 + receipt של exact bytes. תמונת UI/URL/task id לבדם אינם handoff, ושחזור הסצנה מחדש מ־raw source אינו נחשב materialization. רציפות 6.6.1, Product Truth ו־multi-source נשארים בתוקף.</td></tr>
-<tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">נתיבי Insights נתמכים ו־CTA audit מאומתים; mutations לא נתמכים לא מוצגים כאילו הם עובדים.</td></tr>
+<tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">נתיבי Insights נתמכים ו־CTA audit מאומתים; mutations לא נתמכים לא מוצגים כאילו הם עובדים. בדיקת קריאה בלבד מתוזמנת (<code>instagram-read-smoke.yml</code>) רצה יומית; החלק החי מדלג עד שמוגדר הסוד <code>VELVET_INSTAGRAM_MCP_BEARER_TOKEN</code>.</td></tr>
 <tr><td><strong>Publish Bridge</strong></td><td><strong>IMPLEMENTED / ARCHIVE-PRESERVING</strong></td><td dir="rtl" align="right">נגזרות שאושרו לציבור בלבד עוברות דרך <code>publish-bridge/assets</code>; אחרי חלון active הן מועברות ל־<code>publish-bridge/archive</code>. הארכיון נשמר ללא הגבלת זמן, אין מחיקה אוטומטית ואין overwrite על collision.</td></tr>
 <tr><td><strong>OpenPost Publishing Control Plane</strong></td><td><strong>PROD OAUTH READY / LIVE BLOCKED</strong></td><td dir="rtl" align="right">OpenPost v4.35.0 רץ על host ייעודי ב־GCP עם HTTPS מאומת. owner/workspace, provider app ו־OAuth ל־@velvets_cloud מאומתים, והרשמות חדשות כבויות. write חי מאומת עדיין חסר; LIVE=false.</td></tr>
 <tr><td><strong>Instagram Delivery Approval</strong></td><td><strong>DEPLOYED / BOUNDARY VERIFIED / LIVE BLOCKED</strong></td><td dir="rtl" align="right">ה־issuer וה־mutation runtime פרוסים עם identities מופרדים; owner-invoker הצר עבר `/health` ב־HTTP 200 דרך IAMCredentials `generateIdToken` בלבד. smoke חי הנפיק receipt חתום אמיתי, ביצע atomic spend ב־GCS, נכשל במכוון לפני Graph ב־media fetch, וחסם replay כ־`already_spent`; `list_media` נשאר ללא שינוי. נתיבי deploy נעולים כעת גם ל־`instamcp` / `me-west1`, ל־secrets קנוניים ול־service-level issuer IAM מדויק של owner-invoker; effective-IAM מכסה כתיבה/השמדה של secrets ונתיבי credentials של Compute/Build. bootstrap ראשון נשאר ב־0% traffic עד full isolation proof, ורק אז מקודם. לא בוצע Instagram Graph write או deploy חדש בשינוי הזה, לכן `LIVE` נשאר false.</td></tr>
@@ -139,7 +139,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <tr><td><strong>Windows Speech Backend</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">VoiceStudio 0.5.2 על `sderot-windows` משתמש ב־`omnivoice` ל־TTS עברי וב־`faster-whisper` ל־QA חוזר; smoke אמיתי עבר ב־0.93617 מול סף fail-closed של 0.90. ה־adapter מקבל גם UTF-8 BOM מ־PowerShell ומקבע stdout/stderr ל־UTF-8 כדי שעברית לא תכשיל receipt תקין. MOSS-TTS-v1.5 עבר smoke יחיד ב־0.923077 אך נשאר ניסיוני לאחר sidecar crash חוזר, ולכן אינו ברירת המחדל. מיקום/כלי לא מוריד QA, וקבלות speech אינן אישור פרסום.</td></tr>
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td dir="rtl" align="right">routing, חומר, spool/slice, maintenance signals ותכנון ייצור מבוקר.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>LIVE / VERIFIED / EVIDENCE-GATED</strong></td><td dir="rtl" align="right">בריף 09:00 מקבע קודם factual artifact יומי דרך `vfops_loop.py brief --write --date`, משלב OpenPost schedule truth ומקרין אותו ל־Morning Green v3.1; ה־10:00 Delivery Guard משחזר את אותו מסלול בלבד אם המסירה חסרה. backfill אינו receipt למסירת Gmail. HTML/שליחה נשארים שלבים נפרדים עם Visible Text evidence, Apps Script bridge ו־Gmail message ID/readback.</td></tr>
-<tr><td><strong>Morning Green Owner Brief</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">מסלול בריף 09:00 הקנוני: מגזיני RTL, Desktop-first ורספונסיבי עם CID לנכסי אווירה ו־thumbnails חיים. `מתוזמן` דורש `scheduled_at` מ־OpenPost; מדיה מאושרת ללא ראיית schedule נשארת `מאושר / טרם שובץ`. Apps Script deployment v5 החזיר HTTP 200, ה־workflow הקנוני החזיר Gmail message ID `1a0ca4521ef56af0`, ו־readback אימת 6 CID images, את 09:00/12:00 וללא template tokens פתוחים. V10.3 נשאר legacy/recovery בלבד.</td></tr>
+<tr><td><strong>Morning Green Owner Brief</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">מסלול בריף 09:00 הקנוני: מגזיני RTL, Desktop-first ורספונסיבי עם CID לנכסי אווירה ו־thumbnails חיים. `מתוזמן` דורש `scheduled_at` מ־OpenPost; כש־OpenPost מוקפא (`vfbriefux/FEED-SOURCE.json` state=paused) הרצועה מסומנת במפורש `מושהה` ולא נראית ריקה או כושלת; מדיה מאושרת ללא ראיית schedule נשארת `מאושר / טרם שובץ`. Apps Script deployment v5 החזיר HTTP 200, ה־workflow הקנוני החזיר Gmail message ID `1a0ca4521ef56af0`, ו־readback אימת 6 CID images, את 09:00/12:00 וללא template tokens פתוחים. V10.3 נשאר legacy/recovery בלבד.</td></tr>
 <tr><td><strong>Protected Office Scheduler</strong></td><td><strong>LIVE / VERIFIED</strong></td><td dir="rtl" align="right">Grok Bot הוא השעון המאומת לתשע שגרות מוגנות ב־Asia/Jerusalem. ב־23.9 אומתו ב־provider readback גם `Cognee Memory Sync` ב־06:30 יומי וגם `Cognee Stable Updates` ביום שני 10:00, ורק לאחר האימות הושבתו שני עותקי ChatGPT המקבילים. `VelvetOS Integrity Guard` אומת מחדש כפעיל ב־01:45 ומגן על כל תשע השגרות בלי לשנות שגרה אחרת. חוזה וראיות: <code>automation/grok/CONTRACT.md</code> + <code>automation/grok/manifest.json</code> + <code>automation/grok/cognee-routines.json</code>.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td dir="rtl" align="right">מעבר מבוקר לכלי חלופי בלי לייצר SoT נוסף.</td></tr>
 <tr><td><strong>Agents / Skills catalog</strong></td><td><strong>AVAILABLE TOOLING</strong></td><td dir="rtl" align="right">קטלוג specialists גדול; עצם קיום prompt/rule לא נחשב הוכחת capability פעילה.</td></tr>
@@ -150,9 +150,9 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 
 - full sensor suite
 - Gmail brief send
-- Office Control Plane loop
+- ‏Office Control Plane loop (כולל רישום מועמדי למידה מכשלי CI ב־main דרך `vf_learning.py ingest-ci`)
 - publish-bridge cleanup
-- VelvetOS research
+- ‏VelvetOS research (מתקין את אותו runtime של חיישנים כמו full sensor suite לפני הרצת check-all)
 - weekly deck generation
 - vfmedia intake
 
@@ -171,8 +171,10 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 | Control API (projection) | `packages/velvetos_control_api/` — HTTP projection gateway, not a SoT |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
+|‏ קישורי השראה שבועיים | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
+|‏ דופק Best Skills | `packages/vfresearch/BEST-SKILLS.json` + `TIMER.md` — Research Seat מריץ כש־`lastPass` בן 44h לפחות (קצב ~48h, stale מעל 52h) |
 |‏ חוקי מערכת | `constitution/` |
-| Sensors | `scripts/check-*.py` |
+| Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
 | Workflows | `.github/workflows/` |
 |‏ היסטוריית שינויים | [`CHANGELOG.md`](CHANGELOG.md) |
 |‏ הנחיות agents | [`AGENTS.md`](AGENTS.md) |
@@ -190,6 +192,8 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 ## ‏README חי
 
 ‏ה־README הוא חלק מהמוצר. שינוי מהותי ב־`packages/`, `office/`, `scripts/`, `.github/workflows/` או `constitution/` מחייב עדכון README באותו PR, אלא אם מדובר בשינוי פנימי שאינו משנה capability.
+
+‏פלט שגרתי פטור: תוצרי מחקר מתוארכים, checkpoints, תוצרי בריף, קבצי `data/`/`state/` של חבילות וראיות של workflows לא מחייבים עדכון README. קוד, קונפיגורציה וחוזים עדיין מחייבים. הרשימה המדויקת ב־`scripts/readme_contract.py`. ב־CI החיישנים רצים גם אם שלב README נכשל.
 
 ‏ה־System Pulse למעלה **נוצר מנתוני הריפו עצמו**. להרצה ידנית:
 
@@ -253,8 +257,8 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 ## Capability map
 
 <table>
-<tr><td><strong>Office Control Plane</strong></td><td><strong>IMPLEMENTED</strong></td><td>Status, watchdog, gaps, follow-ups, dead-letter, handoff, review, memory hygiene and WIP→finished.</td></tr>
-<tr><td><strong>VelvetOS Control API v1</strong></td><td><strong>IMPLEMENTED / NOT LIVE-VERIFIED</strong></td><td><code>packages/velvetos_control_api/</code> — read-first HTTP projection gateway (<code>velvetos.control.v1</code>) for the VelvetOS Control Center: <code>/health</code>, <code>/v1/snapshot</code>, <code>/v1/search</code>, <code>/v1/capabilities</code>, <code>/v1/actions</code>. Not a new SoT, runtime, queue, or Control Plane. Live projected domains: Control Plane/system, capabilities, attention/activity projections, and the jobs adapter; production/content/files/agents/models remain explicitly unavailable in v1. Actions stay fail-closed with no write execution claimed. Cloud Run deployment and Site roundtrip are not live-verified.</td></tr>
+<tr><td><strong>Office Control Plane</strong></td><td><strong>IMPLEMENTED</strong></td><td>Status, watchdog, gaps, follow-ups, dead-letter, handoff, review, memory hygiene and WIP→finished. <code>office/control/HANDOFF.json</code> is the single handoff surface.</td></tr>
+<tr><td><strong>VelvetOS Control API v1</strong></td><td><strong>CLOUD RUN LIVE / SITE ROUNDTRIP PENDING</strong></td><td><code>packages/velvetos_control_api/</code> — read-first HTTP projection gateway (<code>velvetos.control.v1</code>) for the VelvetOS Control Center: <code>/health</code>, <code>/v1/snapshot</code>, <code>/v1/search</code>, <code>/v1/capabilities</code>, <code>/v1/actions</code>. Not a new SoT, runtime, queue, or Control Plane. Live projected domains: Control Plane/system, capabilities, attention/activity projections, and the jobs adapter; production/content/files/agents/models remain explicitly unavailable in v1. Actions stay fail-closed with no write execution claimed. Cloud Run is deployed and service-level behavior is live-verified: revision `velvetos-control-api-00001-h6n` is Ready, `/health` returns 200, and unauthenticated `/v1/snapshot` is denied with 401. Authenticated snapshot and Site roundtrip remain unverified.</td></tr>
 <tr><td><strong>Living Studio</strong></td><td><strong>IMPLEMENTED</strong></td><td>Connective layer over canonical SoTs with 22 operational skills.</td></tr>
 <tr><td><strong>Universal Intake</strong></td><td><strong>IMPLEMENTED</strong></td><td>Normalizes and routes inquiries, documents, meetings and media into existing handlers.</td></tr>
 <tr><td><strong>Jobs + Google Sheet bridge</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td>Pull/push/reconcile with concurrency guards and no guessed tab names.</td></tr>
@@ -263,7 +267,7 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>Engineering Delivery + Agent Instruction QA</strong></td><td><strong>IMPLEMENTED</strong></td><td>Decision→spec→vertical tickets→branch→proof→quality + spec-compliance review→PR/CI; agent instructions are checked for single authority and context cost, and genuine human-only blockers become one bounded wizard step.</td></tr>
 <tr><td><strong>Harness Execution Discipline</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td>Plans use evidence-bearing preflight; executable behavior follows RED→GREEN→REFACTOR; local reversible ambiguity may use a recorded safe ruling; fan-out requires independent state, and gates/receipts are never overridden.</td></tr>
 <tr><td><strong>VF Creative Publication Preflight</strong></td><td><strong>IMPLEMENTED / FAIL-CLOSED</strong></td><td>Before any Velvet Factory image generation/editing, design/composition or public-copy production tool, the exact manifest must return `project_preflight: PASS` and `creative_execution_authorized: true`; authority conflicts, Canva/vfcanva, missing evidence or unproven source/reference bindings block before a preview is produced.</td></tr>
-<tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>Supported Insights reads and CTA audit are verified; unsupported mutations are not presented as working writes.</td></tr>
+<tr><td><strong>Instagram MCP + Insights</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>Supported Insights reads and CTA audit are verified; unsupported mutations are not presented as working writes. A scheduled read-only smoke (<code>instagram-read-smoke.yml</code>) runs daily; its live part skips until repo secret <code>VELVET_INSTAGRAM_MCP_BEARER_TOKEN</code> is set.</td></tr>
 <tr><td><strong>Publish Bridge</strong></td><td><strong>IMPLEMENTED / ARCHIVE-PRESERVING</strong></td><td>Only public-release-approved derivatives enter <code>publish-bridge/assets</code>; after the active window they move to <code>publish-bridge/archive</code>. Archive retention is unlimited by default, with no automatic deletion and no overwrite on collision.</td></tr>
 <tr><td><strong>OpenPost Publishing Control Plane</strong></td><td><strong>PROD OAUTH READY / LIVE BLOCKED</strong></td><td>OpenPost v4.35.0 runs on the dedicated GCP origin with verified HTTPS. Owner/workspace bootstrap, the encrypted Meta provider app, and OAuth for @velvets_cloud are verified. The OAuth grant is valid and unrevoked. No Instagram Graph write has been performed, so LIVE remains false and production promotion stays blocked on one authorized write plus canonical list_media/get_media verification.</td></tr>
 <tr><td><strong>Instagram Delivery Approval</strong></td><td><strong>DEPLOYED / BOUNDARY VERIFIED / LIVE BLOCKED</strong></td><td>Issuer and mutation runtime are deployed with separated identities; the narrow owner-invoker `/health` path returns HTTP 200 via IAMCredentials `generateIdToken` without broad TokenCreator. A live boundary smoke issued a real signed receipt, atomically spent it in GCS, intentionally failed before Graph on private media fetch, and rejected replay as `already_spent`; canonical `list_media` stayed unchanged. Deploy paths are now also pinned to `instamcp` / `me-west1`, canonical secrets, and exact owner-invoker service-level issuer IAM; effective-IAM probes cover destructive secret writes and Compute/Build credential paths. A first bootstrap stays at 0% traffic until the full isolation proof passes, then promotes the proven revision. This change performs no new deploy or Instagram Graph write, so `LIVE` remains false.</td></tr>
@@ -278,7 +282,7 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 <tr><td><strong>Production Support</strong></td><td><strong>IMPLEMENTED</strong></td><td>Routing, material/spool planning and maintenance signals.</td></tr>
 <tr><td><strong>Parametric CAD + DfAM + Slicing Bridge</strong></td><td><strong>IMPLEMENTED / WINDOWS HOST VERIFIED</strong></td><td>`vfprod` integrates `earthtojake/text-to-cad` through `scripts/vf_cad.py`: parametric STEP/STL/3MF workflows, local DfAM measurement and validated OrcaSlicer handoff. It reuses the existing VelvetPrintLab printer matrix and native profiles for H2D, U1, ECC2, Creator 5 and Creator 5 Pro. Printer upload/start/heating/motion remain disabled.</td></tr>
 <tr><td><strong>Gmail Operating Brief</strong></td><td><strong>LIVE / VERIFIED / EVIDENCE-GATED</strong></td><td>The 09:00 brief first persists the same-day factual artifact through `vfops_loop.py brief --write --date`, adds OpenPost schedule truth and projects it into Morning Green v3.1; the 10:00 Delivery Guard recovers the same route only when delivery is absent. A backfill is not a Gmail delivery receipt. Rendering and sending remain separate evidence-gated stages with Visible Text proof, the Apps Script bridge and Gmail message ID/readback.</td></tr>
-<tr><td><strong>Morning Green Owner Brief</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>The canonical 09:00 owner brief route: editorial RTL, desktop-first responsive email with CID atmosphere assets and live thumbnails. `scheduled` requires OpenPost `scheduled_at`; approved media without schedule evidence remains `approved / not scheduled`. Apps Script deployment v5 returns HTTP 200, the canonical workflow returned Gmail message ID `1a0ca4521ef56af0`, and readback verified 6 CID images, the 09:00/12:00 schedule cards and no unresolved template tokens. V10.3 remains legacy/recovery only.</td></tr>
+<tr><td><strong>Morning Green Owner Brief</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>The canonical 09:00 owner brief route: editorial RTL, desktop-first responsive email with CID atmosphere assets and live thumbnails. `scheduled` requires OpenPost `scheduled_at`; while OpenPost is frozen (`vfbriefux/FEED-SOURCE.json` state=paused) the feed strip is explicitly labelled paused instead of looking empty or failed; approved media without schedule evidence remains `approved / not scheduled`. Apps Script deployment v5 returns HTTP 200, the canonical workflow returned Gmail message ID `1a0ca4521ef56af0`, and readback verified 6 CID images, the 09:00/12:00 schedule cards and no unresolved template tokens. V10.3 remains legacy/recovery only.</td></tr>
 <tr><td><strong>Protected Office Scheduler</strong></td><td><strong>LIVE / VERIFIED</strong></td><td>Grok Bot is the verified clock for nine protected routines in Asia/Jerusalem. On 2026-09-23 provider readback verified `Cognee Memory Sync` (daily 06:30) and `Cognee Stable Updates` (Monday 10:00); only then were the two matching ChatGPT copies disabled. `VelvetOS Integrity Guard` was read back enabled at 01:45 and protecting all nine routines without changing any other routine. Contract and evidence: <code>automation/grok/CONTRACT.md</code> + <code>automation/grok/manifest.json</code> + <code>automation/grok/cognee-routines.json</code>.</td></tr>
 <tr><td><strong>Office-manager Failover</strong></td><td><strong>OPTIONAL / GOVERNED</strong></td><td>Controlled takeover without creating another source of truth.</td></tr>
 <tr><td><strong>Agents / Skills catalog</strong></td><td><strong>AVAILABLE TOOLING</strong></td><td>Large specialist catalog; a prompt/rule file alone is not proof of active capability.</td></tr>
@@ -288,6 +292,10 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 ## Operational workflows
 
 The repository currently carries workflows for the sensor suite, Gmail brief, Office Control Plane, publish-bridge cleanup, VelvetOS research, weekly deck generation and vfmedia intake.
+
+The Office Control Plane workflow also turns failed `main` runs into learning candidates (`scripts/vf_learning.py ingest-ci` → `packages/vfharness/state/learning-candidates/learn-ci-<workflow>.json`, deterministic, status never auto-changed; triage stays with the Office Loop).
+
+The VelvetOS research workflow installs the same sensor runtime as the sensor-suite workflow (Pillow, cryptography, starlette, ffmpeg) before its final `check-all.py` step, so its sensor verdict reflects the contracts rather than a missing module.
 
 A workflow file proves automation exists; provider-dependent behavior is **LIVE** only after real provider/runtime verification.
 
@@ -302,8 +310,10 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Control API (projection) | `packages/velvetos_control_api/` — HTTP projection gateway, not a SoT |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
+| Weekly inspiration links | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
+| Best Skills pulse | `packages/vfresearch/BEST-SKILLS.json` + `TIMER.md` — Research Seat runs a pass when `lastPass` is ≥44h old (~48h cadence, stale above 52h) |
 | Constitution | `constitution/` |
-| Sensors | `scripts/check-*.py` |
+| Sensors | `scripts/check-*.py` · pinned CI runtime `requirements-sensors.txt` |
 | Workflows | `.github/workflows/` |
 | Change history | [`CHANGELOG.md`](CHANGELOG.md) |
 | Agent guidance | [`AGENTS.md`](AGENTS.md) |
@@ -311,6 +321,8 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 ## Living README contract
 
 This README is part of the product. Material capability/runtime changes must update it in the same PR.
+
+Routine output is exempt: dated research artifacts, harness checkpoints, Morning Brief artifacts/outputs, pack `data/`/`state/` files and machine-workflow evidence do not require a README edit. Code, config, contracts and pack docs still do. The exact list lives in `scripts/readme_contract.py` (`ROUTINE_OUTPUT`) and is guarded by `scripts/check-readme-contract.py`. In CI, the README steps no longer hide the sensors: `check-all.py` and commission isolation run even when a README step fails.
 
 The System Pulse above is generated from repository sources:
 
@@ -332,7 +344,26 @@ python3 scripts/velvetos.py instances
 python3 scripts/check-all.py
 python3 scripts/check-commission-isolation.py
 python3 scripts/update-readme-snapshot.py --check
+./scripts/sync-instance-scaffold.sh --check   # frontend drift, check-only; the frontend repo is private
 ```
+
+Frontend drift: `nocturney/velvetos-velvet-factory` is **private**. `sync-instance-scaffold.sh` only reads and diffs, never pushes. CI runs it report-only and SKIPs without access. The frontend-only `.github/`, `docs/` and `.cursor/mcp.json` are an allowlist, not drift. `instances/velvet-factory/core.lock.yml` intentionally tracks core `main` (`refPolicy: track-main`, not a SHA pin), matching `attach-core.sh`/`verify-core.sh`. The template is now the union of core and frontend gates (`check-velvetos.py` guards it).
+
+פער חזית: ריפו החזית פרטי; הבדיקה רק קוראת ומשווה, לא דוחפת, וב־CI מדלגת כשאין גישה.
+
+Sensors are read-only: a `check-all.py` run must leave repository files unchanged and ends with `OK sensor run left repository files unchanged` (or a `WARN sensor side effects …` list). Sensors that smoke-test writer CLIs restore those outputs through `scripts/sensor_isolation.py`. Canonical artifacts are written only by the explicit commands (`vfops_loop.py brief --write`, `vf_control_plane.py handoff`, `vf_organic_growth.py brief --write`, `vf_retro_signals.py --write`).
+
+חיישנים רק קוראים: הרצת `check-all.py` לא משאירה שינויים בקבצי הריפו. ארטיפקט קנוני נכתב רק דרך הפקודה המפורשת.
+
+Pinned runtime: the three Cloud Run Dockerfiles (`vfigos/remote`, `vfigos/approval/issuer`, `velvetos_control_api`) use `python:3.12.14-slim-trixie` by digest plus exact pip versions, with starlette/cryptography matching `requirements-sensors.txt`. Workflows use `actions/checkout@v7`, `actions/setup-python@v7`, `actions/upload-artifact@v7` and `google-github-actions/auth@v3` (Node 24). A redeploy is still a manual owner step.
+
+סביבת ריצה נעולה: שלושת ה־Dockerfiles נעולים ל־digest ולגרסאות מדויקות; ה־Actions עודכנו לגרסאות הראשיות הנוכחיות.
+
+Realistic schedules: VF Media Auto Intake (`23 */3 * * *`) and Jobs Sheet Write-Through (`53 1-23/3 * * *`) each run every 3h (8/day), 1.5h apart. The old `*/5` and 15-min crons were only delivered ~6–8 times a day by GitHub (median gap ~3.5h), while sparse schedules here are honoured in full. Immediate runs: `workflow_dispatch`; jobs also runs on `sync-receipt.json` pushes.
+
+תזמון מציאותי: קליטת המדיה וכתיבת ה־Jobs רצות כל 3 שעות (8 ביום) — שווה או יותר ממה ש־GitHub הריץ בפועל.
+
+Archived one-shots live in `scripts/archive/` (inert, history only; see its README).
 
 ## Read next · המשך קריאה
 

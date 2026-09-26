@@ -10,52 +10,54 @@ jobs:
   check-all:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
       - name: Install sensor runtime dependencies
         run: |
-          python3 -m pip install --disable-pip-version-check Pillow cryptography starlette
+          python3 -m pip install --disable-pip-version-check -r requirements-sensors.txt
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
 
+      # README gate: routine output (research artifacts, checkpoints, briefs, data files)
+      # is exempt; code/config/contract changes still require README.md.
+      # See scripts/readme_contract.py (ROUTINE_OUTPUT) and scripts/check-readme-contract.py.
       - name: Living README contract
         if: github.event_name == 'pull_request'
-        shell: bash
-        run: |
-          set -euo pipefail
-          BASE="${{ github.event.pull_request.base.sha }}"
-          HEAD="${{ github.event.pull_request.head.sha }}"
-          CHANGED="$(git diff --name-only "$BASE" "$HEAD")"
-
-          if printf '%s\n' "$CHANGED" | grep -Eq '^(packages/|office/|scripts/|\.github/workflows/|constitution/)'; then
-            if ! printf '%s\n' "$CHANGED" | grep -qx 'README.md'; then
-              echo '::error::Capability/runtime files changed without README.md. VelvetOS uses a living README; update the capability/status map in this PR or narrow the change to a documented exemption.'
-              echo 'Changed capability-sensitive files:'
-              printf '%s\n' "$CHANGED" | grep -E '^(packages/|office/|scripts/|\.github/workflows/|constitution/)' || true
-              exit 1
-            fi
-          fi
+        run: >-
+          python3 scripts/readme_contract.py
+          --base "${{ github.event.pull_request.base.sha }}"
+          --head "${{ github.event.pull_request.head.sha }}"
 
       - name: README System Pulse is current
-        if: github.event_name == 'pull_request'
+        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         run: python3 scripts/update-readme-snapshot.py --check
 
       - name: README Hebrew BiDi and language anchors are valid
-        if: github.event_name == 'pull_request'
+        if: ${{ !cancelled() && github.event_name == 'pull_request' }}
         run: python3 scripts/fix-readme-bidi.py --check
 
       - name: Run all VelvetOS sensors
+        if: ${{ !cancelled() }}
         run: python3 scripts/check-all.py
 
       - name: Commission isolation (non-mutating SoT checksum)
+        if: ${{ !cancelled() }}
         run: python3 scripts/check-commission-isolation.py
+
+      # Report-only. The frontend repo is private, so GITHUB_TOKEN normally cannot
+      # read it and this prints SKIP. With access, drift shows as a ::warning::.
+      - name: Instance scaffold drift (check-only)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        timeout-minutes: 3
+        run: bash scripts/sync-instance-scaffold.sh --skip-if-inaccessible
 
       - name: Fail build on sensor error
         if: failure()

@@ -35,7 +35,7 @@ Weekly / קאדנס שבועי: `Cognee Stable Updates` runs Monday at 10:00 and
 ## Machine-owned GitHub workflow roles
 
 - `vfmedia-intake.yml` — high-frequency canonical Media Vault intake.
-- `office-control-plane.yml` — watchdog/control-plane health, memory hygiene, gaps and handoff; not a replacement scheduler for every office capability.
+- `office-control-plane.yml` — watchdog/control-plane health, memory hygiene, gaps and handoff, plus CI-failure learning candidates (`vf_learning.py ingest-ci` → `packages/vfharness/state/learning-candidates/`); not a replacement scheduler for every office capability.
 - `velvetos-research.yml` — research freshness/index/sensor verification around artifacts; the live Research Seat performs the owner-facing web research body.
 - `readme-system-pulse.yml` — README/System Pulse refresh.
 - `gmail-brief-send.yml` — one-shot production Gmail transport through the owner Apps Script bridge when `packages/vfops/out/gmail-send-request.json` is explicitly enabled.

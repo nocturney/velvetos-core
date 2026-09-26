@@ -287,6 +287,56 @@ def main() -> None:
     for needle in ("VELVETOS_CORE_OFFLINE", "VELVETOS_CORE_PATH", ".attach-stamp"):
         if needle not in tmpl_attach:
             fail(f"instances/_template/scripts/attach-core.sh must support {needle}")
+    sync_sh = (ROOT / "scripts" / "sync-instance-scaffold.sh").read_text(encoding="utf-8")
+    for needle in ("CHECK-ONLY", "--skip-if-inaccessible", "--check", "GIT_TERMINAL_PROMPT=0", "-x .git"):
+        if needle not in sync_sh:
+            fail(f"sync-instance-scaffold.sh must keep {needle}")
+    for line in sync_sh.splitlines():
+        code = line.split("#", 1)[0].strip()
+        if not code or code.startswith("echo "):
+            continue
+        if "git push" in code or "publish-instance.sh" in code or "git commit" in code:
+            fail(f"sync-instance-scaffold.sh must stay check-only: {code}")
+    if 'INSTANCE_ONLY_ALLOWED=(".github" "docs" ".cursor/mcp.json")' not in sync_sh:
+        fail("sync-instance-scaffold.sh instance-only allowlist drifted (keep it explicit and minimal)")
+    vf = INSTANCES / "velvet-factory"
+    vf_desk = json.loads((vf / ".cursor" / "vf-desk.json").read_text(encoding="utf-8"))
+    vf_prof = json.loads((vf / "instance" / "velvet-factory.json").read_text(encoding="utf-8"))
+    vf_auto = vf_prof.get("creativeAutonomy") or {}
+    for gate in ("brandAssetLock", "creativeTransformationLock", "projectRequestGate"):
+        if (vf_desk.get(gate) or {}).get("mode") != "fail_closed" or (vf_auto.get(gate) or {}).get("mode") != "fail_closed":
+            fail(f"velvet-factory template lost fail-closed {gate} (vf-desk + profile)")
+    for flag in ("requireOwnerApprovedVisualStandard", "requireBrandAssetLock", "requireCreativeTransformationLock", "requireProjectRequestGate", "requireLiveVerification"):
+        if (vf_auto.get("publish") or {}).get(flag) is not True:
+            fail(f"velvet-factory template publish gate lost {flag}")
+    if not {"050-2517000", "wa.me"} <= set((vf_prof.get("cta") or {}).get("forbiddenPublic") or []):
+        fail("velvet-factory template lost cta.forbiddenPublic phone/wa.me")
+    vf_verify = (vf / "scripts" / "verify-core.sh").read_text(encoding="utf-8")
+    for needle in ("check-vf-offering.py", "check-publication-prep-execution.py", "check-brand-asset-cta-lock.py", "check-creative-transformation-lock.py", "check-project-request-gate.py", "check-instance-visual-bootstrap.py"):
+        if needle not in vf_verify:
+            fail(f"velvet-factory verify-core.sh must run {needle}")
+    if "verify_attached" not in attach or 'verify-core.sh" focused' not in attach:
+        fail("velvet-factory attach-core.sh must verify an online attach (fail-closed)")
+    for rel in ("AGENTS.md", ".cursor/rules/velvetos-instance-desk.mdc"):
+        body = (vf / rel).read_text(encoding="utf-8")
+        for needle in ("VF_PUBLICATION_ROUTE_V1", "OFFERING SHAPE", "BRAND ASSET + PUBLIC CTA LOCK", "CREATIVE TRANSFORMATION LOCK", "UNIVERSAL PROJECT REQUEST GATE", "visual_standard_unavailable"):
+            if needle not in body:
+                fail(f"velvet-factory {rel} lost gate section {needle!r}")
+    lock = (INSTANCES / "velvet-factory" / "core.lock.yml").read_text(encoding="utf-8")
+    lock_ref = next((l.split(":", 1)[1].strip() for l in lock.splitlines() if l.startswith("ref:")), "")
+    if "refPolicy: track-main" not in lock or lock_ref != "main" or "Intentionally NOT a SHA pin" not in lock:
+        fail("instances/velvet-factory/core.lock.yml must state ref: main + refPolicy: track-main explicitly")
+    for script in ("attach-core.sh", "verify-core.sh"):
+        body = (INSTANCES / "velvet-factory" / "scripts" / script).read_text(encoding="utf-8")
+        if f'CORE_REF="${{VELVETOS_CORE_REF:-{lock_ref}}}"' not in body:
+            fail(f"instances/velvet-factory/scripts/{script} default ref must match core.lock.yml ref={lock_ref}")
+    check_all_wf = (ROOT / ".github" / "workflows" / "check-all.yml").read_text(encoding="utf-8")
+    if "sync-instance-scaffold.sh --skip-if-inaccessible" not in check_all_wf:
+        fail("check-all.yml must run sync-instance-scaffold.sh --skip-if-inaccessible")
+    inst_readme = (INSTANCES / "README.md").read_text(encoding="utf-8")
+    if "velvetos-velvet-factory` are **public**" in inst_readme or "`nocturney/velvetos-velvet-factory` is **private**" not in inst_readme:
+        fail("instances/README.md must state the frontend repo is private")
+
     inst_env = (PACK / "INSTANCE-ENV.md").read_text(encoding="utf-8")
     for needle in ("Offline", "VELVETOS_CORE_OFFLINE", "VELVETOS_CORE_PATH", ".attach-stamp"):
         if needle not in inst_env:
