@@ -1,5 +1,7 @@
 # Cross-harness handoff — vfmem
 
+> **DEPRECATED (2026-09-26).** `vf.handoff.v1` / `scripts/vf_handoff.py` was never adopted (zero records since 2026-09-13). The live handoff surface is `office/control/HANDOFF.json`, refreshed by `python3 scripts/vf_control_plane.py handoff` and read by the README pulse, the Control API and the Grok automations manager. Do not create new records under `packages/vfharness/state/handoffs/`; `check-vf-handoff.py` stays only to validate any stray record. The discipline below (context, not authority; verify artifacts; ACK before mutating) still applies to `HANDOFF.json`.
+
 Pattern source: `affaan-m/ECC` unified-memory handoff. VelvetOS keeps `vfmem` / `vfharness` as the canonical backend; this is not a second memory runtime.
 
 ## Purpose

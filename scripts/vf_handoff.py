@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""DEPRECATED (2026-09-26) — typed cross-harness handoff records (vf.handoff.v1).
+
+Never adopted: zero records since #189 (2026-09-13). The live handoff surface is
+office/control/HANDOFF.json (`python3 scripts/vf_control_plane.py handoff`,
+rendered in the README pulse, read by the Control API and the Grok automations
+manager). Kept only so `doctor` (check-vf-handoff.py) still validates any stray
+record; do not create new handoffs here. Removal needs an owner decision.
+"""
 from __future__ import annotations
 import argparse, json, sys
 from datetime import datetime, timezone
@@ -23,8 +31,8 @@ def load_one(hid):
     return path,json.loads(path.read_text())
 
 def load_all():
-    HANDOFFS.mkdir(parents=True, exist_ok=True)
-    errors=[]; records=[]; ids=set()
+    errors=[]
+    if not HANDOFFS.is_dir(): return [],errors  # read-only doctor: never create the dir; records=[]; ids=set()
     for path in sorted(HANDOFFS.glob("*.json")):
         try: data=json.loads(path.read_text())
         except Exception as e:
@@ -51,6 +59,7 @@ def load_all():
     return records,errors
 
 def cmd_new(a):
+    print("DEPRECATED: vf_handoff.py — use office/control/HANDOFF.json (vf_control_plane.py handoff)", file=sys.stderr)
     if path_for(a.handoff_id).exists(): raise SystemExit(f"handoff exists: {a.handoff_id}")
     data={"schema":"vf.handoff.v1","handoff_id":a.handoff_id,"task_id":a.task_id,"source_harness":a.source,
           "target_harness":a.target,"status":"offered","trust":"unreviewed","summary":a.summary,
