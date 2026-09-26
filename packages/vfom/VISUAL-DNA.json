@@ -42,7 +42,9 @@
       "subject_drift_from_source_geometry_material_color",
       "fake_customer_scene_or_fake_shelf_presence",
       "text_heavy_template_card_overpowering_product",
-      "decorative_stock_filler"
+      "generic_canva_template_aesthetic",
+      "decorative_stock_filler",
+      "rejected_g004_canva_DAHUaelaug0"
     ]
   },
   "visualArchetype": [
@@ -239,6 +241,7 @@
     "placeholder shown as intended final",
     "generic icon replacing real product media",
     "text-heavy template card overpowering product",
+    "generic Canva-template look",
     "intermediate hero handed off as completed post",
     "final artifact weaker than selected creative master without recorded cause",
     "conversation-only image treated as deterministic compositor input",

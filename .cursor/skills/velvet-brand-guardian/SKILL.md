@@ -36,6 +36,7 @@ Before approving any feed visual, cover, carousel page, Story still or grid plan
 - no placeholders presented as intended finals;
 - no generic icons replacing real product imagery;
 - no stock filler or fake customer/shelf scenes;
+- no use of rejected G004 design `DAHUaelaug0` (legacy Canva design ID; reject list only, never a route) as layout, style, canonical edit, source or publish asset.
 
 A visual that is technically valid but visibly template-like, placeholder-like, product-secondary, or inconsistent with the approved grid quality bar must FAIL and return the smallest targeted repair.
 
