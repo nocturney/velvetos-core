@@ -152,7 +152,7 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 - Gmail brief send
 - Office Control Plane loop
 - publish-bridge cleanup
-- VelvetOS research
+- ‏VelvetOS research (מתקין את אותו runtime של חיישנים כמו full sensor suite לפני הרצת check-all)
 - weekly deck generation
 - vfmedia intake
 
@@ -171,6 +171,7 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 | Control API (projection) | `packages/velvetos_control_api/` — HTTP projection gateway, not a SoT |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
+|‏ קישורי השראה שבועיים | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
 |‏ חוקי מערכת | `constitution/` |
 | Sensors | `scripts/check-*.py` |
 | Workflows | `.github/workflows/` |
@@ -290,6 +291,8 @@ Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/vel
 
 The repository currently carries workflows for the sensor suite, Gmail brief, Office Control Plane, publish-bridge cleanup, VelvetOS research, weekly deck generation and vfmedia intake.
 
+The VelvetOS research workflow installs the same sensor runtime as the sensor-suite workflow (Pillow, cryptography, starlette, ffmpeg) before its final `check-all.py` step, so its sensor verdict reflects the contracts rather than a missing module.
+
 A workflow file proves automation exists; provider-dependent behavior is **LIVE** only after real provider/runtime verification.
 
 ## Canonical sources
@@ -303,6 +306,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Control API (projection) | `packages/velvetos_control_api/` — HTTP projection gateway, not a SoT |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
+| Weekly inspiration links | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
 | Constitution | `constitution/` |
 | Sensors | `scripts/check-*.py` |
 | Workflows | `.github/workflows/` |
@@ -336,6 +340,10 @@ python3 scripts/check-all.py
 python3 scripts/check-commission-isolation.py
 python3 scripts/update-readme-snapshot.py --check
 ```
+
+Sensors are read-only: a `check-all.py` run must leave repository files unchanged and ends with `OK sensor run left repository files unchanged` (or a `WARN sensor side effects …` list). Sensors that smoke-test writer CLIs restore those outputs through `scripts/sensor_isolation.py`. Canonical artifacts are written only by the explicit commands (`vfops_loop.py brief --write`, `vf_control_plane.py handoff`, `vf_organic_growth.py brief --write`, `vf_retro_signals.py --write`).
+
+חיישנים רק קוראים: הרצת `check-all.py` לא משאירה שינויים בקבצי הריפו. ארטיפקט קנוני נכתב רק דרך הפקודה המפורשת.
 
 ## Read next · המשך קריאה
 
