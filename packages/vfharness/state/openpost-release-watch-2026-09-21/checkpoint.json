@@ -1,0 +1,52 @@
+{
+  "task_id": "openpost-release-watch-2026-09-21",
+  "status": "blocked",
+  "component_state": "Blocked",
+  "pack": "vfigos",
+  "goal": "Record upstream OpenPost tip v5.2.2 vs current merged pin v4.35.0 without promoting staging/production or bumping latestReviewedVersion.",
+  "completed_steps": [
+    "read-openpost-authority-on-main",
+    "reverify-github-releases-tip-v5.2.2",
+    "classify-required-checks-no-pass",
+    "record-hold-watch-state",
+    "run-relevant-sensors",
+    "open-hold-watch-pr"
+  ],
+  "next_step": "Staging review of at least v4.36.3 (Meta/Instagram auth + MCP contract, plus backup/migration smoke for 137_mcp_media_upload_tickets.sql and 138_publication_creation_source.sql) before any 5.x consideration.",
+  "artifacts": [
+    "packages/vfigos/OPENPOST.md",
+    "packages/vfigos/OPENPOST.json",
+    "CHANGELOG.md",
+    "packages/vfharness/state/openpost-release-watch-2026-09-21.json",
+    "https://github.com/nocturney/velvetos-core/pull/298"
+  ],
+  "unresolved": [
+    "requiredChecks not evidenced on any tag newer than v4.35.0",
+    "v4.36.3 Meta OAuth dependency scopes and MCP tool-per-operation default need staging proof",
+    "migrations 137 and 138 are present on the compare range; staging_smoke NOT_RUN",
+    "v5.0.0 breaking-change completeness UNPROVEN",
+    "v5.2.2 is incremental vs v5.1.2 and does not change HOLD",
+    "draft PR #279 remains open and is superseded for tip currency only"
+  ],
+  "outcome": "decision_gate",
+  "pulse": "blocked",
+  "verification": "PR #298 documents tip v5.2.2 vs pin v4.35.0 HOLD. Pin-hold proof OK. Relevant sensors PASS. check-all.py 70/76 local PIL/starlette import gaps only. ownerNotify=false.",
+  "gate": {
+    "kind": "decision_gate",
+    "waiting_for": "staging review of at least OpenPost v4.36.3 with real requiredChecks evidence",
+    "reason": "Watch-only hold. Tip moved to v5.2.2. Pin stays v4.35.0. Do not bump latestReviewedVersion or promote. ownerNotify=false."
+  },
+  "escalation": null,
+  "last_updated": "2026-09-21T07:25:00+03:00",
+  "execution_state": {
+    "pr": 298,
+    "supersedesWatchPrForTipCurrencyOnly": 279,
+    "decision": "PIN_HOLD_REVIEW_REQUIRED",
+    "ownerNotify": false,
+    "upstreamLatestTag": "v5.2.2",
+    "currentBaseline": "v4.35.0",
+    "latestReviewedVersion": "v4.35.0",
+    "productionHostVersion": "v4.35.0-vfbridge6"
+  },
+  "latest_observation": "Draft PR #298 is open. Decision PIN_HOLD_REVIEW_REQUIRED. Next recommended hop remains staging review of at least v4.36.3."
+}
