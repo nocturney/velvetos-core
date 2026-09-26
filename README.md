@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path: `packages/vfops/out/morning-g
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Pinned Docker images and current Actions:** all three Dockerfiles now use `python:3.12.14-slim-trixie@sha256:f77ac9e4…` (what `python:3.12-slim` resolves to today, checked against the Docker Hub …</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Pinned Docker images and current Actions:** all three Dockerfiles now use `python:3.12.14-slim-trixie@sha256:f77ac9e4…` (what `python:3.12-slim` resolves to today, checked against the Docker Hub …</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Doc/text fixes:**</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Doc/text fixes:**</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

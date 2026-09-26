@@ -197,6 +197,14 @@ def main() -> None:
         fail("TIMER.md must state forever-until-owner-stops standing order")
     if "subscribe_timer" in timer:
         fail("TIMER.md must not depend on external subscribe_timer")
+    for rel in ("AGENTS.md", "constitution/ORCHESTRA.md"):
+        law = (ROOT / rel).read_text(encoding="utf-8")
+        if "subscribe_timer" in law or "חידוש טיימר חובה" in law:
+            fail(f"{rel} must not instruct external timer renewal (Research Seat is scheduler authority per BEST-SKILLS.json)")
+    constitution_index = (ROOT / "constitution" / "README.md").read_text(encoding="utf-8")
+    for link in __import__("re").findall(r"\]\(([A-Za-z0-9_.-]+\.md)\)", constitution_index):
+        if not (ROOT / "constitution" / link).is_file():
+            fail(f"constitution/README.md links missing file {link}")
 
     best_skill = BEST_SKILLS_SKILL.read_text(encoding="utf-8")
     if "BEST-SKILLS.md" not in best_skill:
