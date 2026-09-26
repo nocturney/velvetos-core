@@ -3,8 +3,8 @@
 מושב: **צמיחה / vfigos**. OpenPost אינו מנוע קריאייטיב, אינו pack/runtime שני ואינו מחליף שום שער איכות או הרשאת מסירה של VelvetOS.
 
 Upstream: `getopenpost/openpost`  
-Runtime baseline: **v4.35.0**
-Latest reviewed upstream: **v4.35.0** (2026-09-17)
+**Status (2026-09-26): PAUSED (publishing frozen).** Staging: **v6.2.0** (evidence: PR #342, commit `d6b55fcd`; staging only, pin unchanged). Production runtime and LIVE status: **unknown / not verified**. Machine-readable: `OPENPOST.json` → `status`.
+Last pinned baseline: v4.35.0 (pin record only; production not re-verified since 2026-09-20)
 Role: **scheduler + queue + retry/delivery status + multi-channel publication control + analytics collector**.
 
 ## החלטת ארכיטקטורה
@@ -50,6 +50,7 @@ OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום �
 2. `staging` — בדיקות מבוקרות: health/auth, queue/schedule, post/carousel/reel/story contract, forced failure/retry, analytics ingest ומיגרציות על staging בלבד.
 3. `primary-control-plane` — רק אחרי שכל הבדיקות, provider OAuth/public HTTPS, signed delivery approval וה־Instagram live verification עוברים.
 4. `degraded` — כשל OpenPost מחזיר מיד ל־direct Instagram MCP; אותה הרשאת delivery חתומה עדיין חובה לכל write.
+5. `paused` — **המצב הנוכחי.** הבעלים הקפיא את הפרסום דרך OpenPost. זה לא נתיב שליחה, לא primary ולא failover; לוח הפרסום לא נקרא, ובריפים מציגים "מושהה" ולא כשל.
 
 ## Release / upgrade policy
 
@@ -79,9 +80,11 @@ OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום �
 - **Pinned artifact reviewed:** Windows server v4.35.0 SHA-256 `be6520f495def72b1b466a69c9a223954b4403c3c7c40881b52ce0f030334cc8`.
 - **Production-host artifact:** Linux server v4.35.0 SHA-256 `157abefc2810dde09e914b78915f79c0160fcf60047856a30a1261c1721d2856`.
 
-## Current runtime decision
+## Historical runtime record (2026-09-20; not re-verified)
 
-OpenPost is now the production publication control-plane on the dedicated GCP host at `https://openpost.34.9.7.22.sslip.io`. The host remains pinned to upstream **v4.35.0** plus the reproducible Velvet overlay `vfbridge6`; both `openpost` and `openpost-worker` run `/opt/openpost/v4.35.0-vfbridge6/openpost-server`. The deployed server SHA-256 is `7680c802ddb9de55e51b5fc68ef7dafae659a2798b9ba2fd07cfeab907100293`, the token-helper SHA-256 is `a31030d4bb9c8234266e168f9aa6435970a44f9cbc6923a5a60ba5735cf1dc31`, and `/api/v1/ready` returns `status=ready` with `database=ok`. The exact build/deploy provenance is preserved under `packages/vfigos/openpost/vfbridge6/`.
+> Superseded 2026-09-26: OpenPost is **paused (publishing frozen)**, and the production runtime and LIVE status are **unknown / not verified**. What follows is a historical record of the 2026-09-20 state. It is not a current claim.
+
+At that time OpenPost was the production publication control-plane on the dedicated GCP host at `https://openpost.34.9.7.22.sslip.io`. The host remains pinned to upstream **v4.35.0** plus the reproducible Velvet overlay `vfbridge6`; both `openpost` and `openpost-worker` run `/opt/openpost/v4.35.0-vfbridge6/openpost-server`. The deployed server SHA-256 is `7680c802ddb9de55e51b5fc68ef7dafae659a2798b9ba2fd07cfeab907100293`, the token-helper SHA-256 is `a31030d4bb9c8234266e168f9aa6435970a44f9cbc6923a5a60ba5735cf1dc31`, and `/api/v1/ready` returns `status=ready` with `database=ok`. The exact build/deploy provenance is preserved under `packages/vfigos/openpost/vfbridge6/`.
 
 The Meta provider OAuth for `@velvets_cloud` is valid and a real owner-approved Instagram write has now been completed and canonically verified with the Instagram MCP (`media_id=17899807347597720`). The live mutation service is Cloud Run revision `velvet-instagram-mcp-00018-8mk`, image digest `sha256:5336f9b4ae3db34bb954e31522f07d4e6f85462a1e416964be516704c08569c2`, which waits for feed-image container `FINISHED` before `media_publish` and returns sanitized `error_class`, `stage`, `write_outcome` and `retry_safety` metadata for safe recovery. Delivery approval is therefore **LIVE_VERIFIED** rather than `LIVE_BLOCKED`.
 
