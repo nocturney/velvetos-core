@@ -32,9 +32,9 @@ Blast radius for this office: which jobs and tools break when a law, tool mode, 
 | Internal command surface | `vfops/hq/capabilities.json` + `COMMAND-SURFACE.md` — view only; breaks if capabilities drift from SEND.md / desk laws |
 | Treg without login | `vfinsights`, `vfgrowth`, `vfresearch` live reads — WebSearch / «אין ספירה»; music → HeyOrca |
 | Research desk wall (ChatGPT/Gemini/Perplexity) | 06:15 orchestra — **API** (`vf_chatgpt.py` / `vf_gemini.py`), not Cloud browser login to chatgpt.com / gemini.google.com (security alerts). Plus ≠ API. Hub: `SUBSCRIPTIONS.md`. Never invent body. |
-| Web / image native tools | `vfresearch`, `vfcovers` — failover in `constitution/ORCHESTRA.md`; Instagram still Canva-first |
+| Web / image native tools | `vfresearch`, `vfcovers` — failover in `constitution/ORCHESTRA.md`; VF publication uses current source-grounded native route; Canva forbidden |
 | 3D AI Studio MCP / credits | `vfprod` concept mesh — site UI + Drive (`3DAISTUDIO.md`); still `vlicense` + slice; no print from HQ |
-| Instagram MCP (adelaidasofia) / Meta token | `vfigos` publish + `vfinsights` verified metrics — Cloud remote `ready`; Insights deployed; publish tools declared (`READY_NOT_LIVE_PUBLISH_TESTED`). No auto-DM. Failover still Canva+Drive+Gmail if publish MCP down. |
+| Instagram publication | `vfigos`: Cloudflare Publisher is scheduler/write executor -> official Meta Graph. Instagram MCP bridge is read/Insights/live verification only. OpenPost frozen; Canva forbidden. |
 | iCloud Desktop MCP | Cloud HQ reads Drive `Velvet Factory/iCloud mirror` only (`CONNECT-ICLOUD.md`) |
 
 Do not "fix" a missing ₪ or Insights number to make the blast look closed.

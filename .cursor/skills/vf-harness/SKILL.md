@@ -33,7 +33,7 @@ Use when the user asks for רתמה, harness, AGENTS.md, checkpoint, escalate, h
 7. Long task (5+ tool calls): open `packages/vfharness/state/<task-id>/` with `task_plan.md`, `findings.md`, `progress.md` per `PLANNING-FILES.md`. Re-read at session start. Each turn: guide \(P\) + checkpoint \(\Sigma\) + latest observation \(O\) only (`playbooks/skillstate.md`).
 8. Before close: write `checkpoint.json` from the checkpoint schema. For a משמרת: `planned_steps` before heavy work; `gate` when blocked on ₪ or human field. See `playbooks/oma-patterns.md`.
 9. New/edited agent instructions, rules or skills → `agent-instruction-qa.md` + `python3 scripts/check-skill-health.py`; keep routers thin and one authority per rule.
-10. Grok down: **send** the office brief (`htmlBody` תצוגה 3) to `nocturney@gmail.com`. Live IG → `vfigos/SEND.md` (tool or Canva+Drive+Gmail). Do not claim the feed posted if no publish tool fired.
+10. Grok down: send the office brief through the canonical Gmail route. Live IG remains on `vfigos/SEND.md` -> Cloudflare Publisher -> official Meta Graph; Grok is never a duplicate scheduler/writer. Do not claim the feed posted without live Graph verification.
 
 ## Forbidden
 

@@ -11,9 +11,9 @@ ALLOW write: packages/**, constitution/**, docs/**, AGENTS.md, CHANGELOG.md
 ALLOW write: drive create_file (office docs/sheets; no personal/medical/legal folders)
 ALLOW execute: python3 scripts/check-*.py
 ALLOW send: gmail send_message / reply / forward
-ALLOW send: instagram via connected publish tool, or Canva+Drive+Gmail failover
+ALLOW send: instagram only via canonical Cloudflare Publisher -> official Meta Instagram Graph API after current publication gates
 ASK before: git push, calendar create
-DENY: auto-DM, boost without lead seat, treg call, fake-ig-post
+DENY: auto-DM, boost without lead seat, treg call, fake-ig-post, Canva/vfcanva, OpenPost execution
 DENY: rm -rf, DROP TABLE, secrets in git
 DENY: invented ₪, invented Insights
 ```

@@ -33,7 +33,7 @@
 
 - בריף 07:00: HQ **שולח** ג׳ימייל אחרי המיון (`send_message`).
 - פנייה בשרשור נקוב: HQ **`reply`** כשהטיוטה מוכנה. וואטסאפ לקוח נשאר אדם.
-- תוכן: שליחה דרך `vfigos/SEND.md` (כלי או Canva+Drive+Gmail). לא ממציאים שעלה לפיד.
+- תוכן: `vfigos/SEND.md` -> Cloudflare Publisher -> official Meta Graph. MCP bridge verifies live. OpenPost frozen; Canva forbidden.
 - `decision_gate` = ₪ לראש צוות. לא שער «חכה לגרוק».
 - כרטיס משמרת דורש דופק + אימות + נתיב ארטיפקט.
 
