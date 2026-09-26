@@ -29,3 +29,12 @@ CREATE TABLE IF NOT EXISTS events (
   created_at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS events_job_idx ON events(job_id, id);
+CREATE TABLE IF NOT EXISTS publish_fingerprints (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  fingerprint TEXT NOT NULL,
+  job_id TEXT NOT NULL,
+  recorded_at INTEGER NOT NULL,
+  outcome TEXT NOT NULL CHECK(outcome IN ('published_verified','reconcile_required'))
+);
+CREATE INDEX IF NOT EXISTS publish_fingerprints_lookup_idx
+  ON publish_fingerprints(fingerprint, recorded_at DESC);
