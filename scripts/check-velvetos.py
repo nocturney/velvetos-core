@@ -299,6 +299,29 @@ def main() -> None:
             fail(f"sync-instance-scaffold.sh must stay check-only: {code}")
     if 'INSTANCE_ONLY_ALLOWED=(".github" "docs" ".cursor/mcp.json")' not in sync_sh:
         fail("sync-instance-scaffold.sh instance-only allowlist drifted (keep it explicit and minimal)")
+    vf = INSTANCES / "velvet-factory"
+    vf_desk = json.loads((vf / ".cursor" / "vf-desk.json").read_text(encoding="utf-8"))
+    vf_prof = json.loads((vf / "instance" / "velvet-factory.json").read_text(encoding="utf-8"))
+    vf_auto = vf_prof.get("creativeAutonomy") or {}
+    for gate in ("brandAssetLock", "creativeTransformationLock", "projectRequestGate"):
+        if (vf_desk.get(gate) or {}).get("mode") != "fail_closed" or (vf_auto.get(gate) or {}).get("mode") != "fail_closed":
+            fail(f"velvet-factory template lost fail-closed {gate} (vf-desk + profile)")
+    for flag in ("requireOwnerApprovedVisualStandard", "requireBrandAssetLock", "requireCreativeTransformationLock", "requireProjectRequestGate", "requireLiveVerification"):
+        if (vf_auto.get("publish") or {}).get(flag) is not True:
+            fail(f"velvet-factory template publish gate lost {flag}")
+    if not {"050-2517000", "wa.me"} <= set((vf_prof.get("cta") or {}).get("forbiddenPublic") or []):
+        fail("velvet-factory template lost cta.forbiddenPublic phone/wa.me")
+    vf_verify = (vf / "scripts" / "verify-core.sh").read_text(encoding="utf-8")
+    for needle in ("check-vf-offering.py", "check-publication-prep-execution.py", "check-brand-asset-cta-lock.py", "check-creative-transformation-lock.py", "check-project-request-gate.py", "check-instance-visual-bootstrap.py"):
+        if needle not in vf_verify:
+            fail(f"velvet-factory verify-core.sh must run {needle}")
+    if "verify_attached" not in attach or 'verify-core.sh" focused' not in attach:
+        fail("velvet-factory attach-core.sh must verify an online attach (fail-closed)")
+    for rel in ("AGENTS.md", ".cursor/rules/velvetos-instance-desk.mdc"):
+        body = (vf / rel).read_text(encoding="utf-8")
+        for needle in ("VF_PUBLICATION_ROUTE_V1", "OFFERING SHAPE", "BRAND ASSET + PUBLIC CTA LOCK", "CREATIVE TRANSFORMATION LOCK", "UNIVERSAL PROJECT REQUEST GATE", "visual_standard_unavailable"):
+            if needle not in body:
+                fail(f"velvet-factory {rel} lost gate section {needle!r}")
     lock = (INSTANCES / "velvet-factory" / "core.lock.yml").read_text(encoding="utf-8")
     lock_ref = next((l.split(":", 1)[1].strip() for l in lock.splitlines() if l.startswith("ref:")), "")
     if "refPolicy: track-main" not in lock or lock_ref != "main" or "Intentionally NOT a SHA pin" not in lock:

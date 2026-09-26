@@ -6,6 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Velvet Factory template: two-way merge with the published frontend:**
+  - **From the frontend into `instances/velvet-factory/`:**
+    - The fail-closed `brandAssetLock` / `creativeTransformationLock` / `projectRequestGate` blocks, in both `vf-desk.json` and `instance/velvet-factory.json`.
+    - `ownerApprovedVisualStandard.requiredFor`/`truthPriority`/`hardRejects`, and the `requireBrandAssetLock`/`requireCreativeTransformationLock`/`requireProjectRequestGate` publish flags.
+    - The full cold-start visual gate text, the OFFERING SHAPE section, and CREATIVE AUTOPILOT in AGENTS.md.
+    - `check-vf-offering.py` plus the lock documents in `verify-core.sh`, and the stricter `check-instance-visual-bootstrap.py`.
+    - Verify-on-attach: an online attach now runs `verify-core.sh focused` fail-closed.
+  - **Core work kept:**
+    - VF_PUBLICATION_ROUTE_V1 (Canva/vfcanva denied for VF publication; the cold-start section says Canva mentions are identity/reject IDs only).
+    - The offline/stale attach, which now WARNs that it is unverified.
+    - `check-publication-prep-execution.py`, ORCHESTRA.md and SEND.md.
+    - The newer IG-message public CTA and the retired customer-type pillar (this supersedes the frontend's stale "WhatsApp CTA" and "locked B2B" seat strings).
+    - The extra tool bindings and foundry/manifest gates.
+  - `check-vf-offering.py` already runs in check-all (glob).
+  - `check-velvetos.py` now fails if the template loses any of these gates.
+
 - 2026-09-26 — **Frontend core lock and drift allowlist:**
   - `instances/velvet-factory/core.lock.yml` now says explicitly that it is not a SHA pin: `ref: main`, `refPolicy: track-main`, with a comment on the owner decision to keep tracking core main. This matches the `attach-core.sh`/`verify-core.sh` default, and `check-velvetos.py` fails if the lock ref and the scripts' default ref ever disagree.
   - `sync-instance-scaffold.sh` (still check-only) reports the frontend's own `.github/`, `docs/` and `.cursor/mcp.json` as allowed instance-only paths instead of counting them as drift.
