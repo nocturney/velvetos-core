@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Chief of Staff system map, refreshed (replaces #227):**
+  - The docs-only operating map `docs/chief-of-staff/` (README, SYSTEM-MAP, SOT-INDEX, GATES-AND-ESCALATION, PACKS-CATALOG, LOOPS), rebased onto current main.
+  - **Refreshed:**
+    - `office/control/HANDOFF.json` is the only handoff; the legacy CLI is frozen and unreferenced.
+    - The #357 crons (vfmedia `23 */3`, jobs `53 1-23/3`) and the #355 Docker/Actions pins.
+    - `instagram-read-smoke.yml`, and `vf_learning ingest-ci` learning candidates.
+    - Frontend synced to the union template, with `core.lock.yml` tracking main and the `VELVETOS_CORE_READ_TOKEN` CI note.
+    - OpenPost is paused (publishing frozen); Canva is denied for VF publication (#228).
+    - Research Seat is the scheduler (no external timer), and the sensor count is 85.
+  - It still reads existing authorities only: not a SoT, sensor or runtime.
+
 - 2026-09-26 — **vfmedia: historical G001/G002 backfill (replaces #277):**
   - Re-applied onto current `packages/vfmedia/catalog.json` as a key-based patch on the two exact source rows. Nothing else changed; all 482 items, including the scheduled intake's entries, are kept.
   - **G001** `DcqkjOLlYVX` (media 18107769701162221): exact source-to-live match (904/905 frames, 113 aligned samples, mean 0.9999689).
