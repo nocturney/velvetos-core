@@ -37,7 +37,7 @@ Deterministic services remain normal VelvetOS services/workers: Media Vault, ren
 
 ## Laws
 
-> LEGACY / provenance only for VF publication; not a provider route: - Instagram stills: Canva-first (`vf-canva-instagram` skill).
+> LEGACY / provenance only for VF publication; not a provider route: - Instagram stills: current VF native/source-grounded route (`vf-canva-instagram` skill).
 - Floor proof — no invented brand hex/fonts/scenes.
 - Content Contract is required before storyboard/render for factual public content.
 - Asset Truth is not Claim Truth: real media still requires evidence-linked claim provenance.
@@ -56,3 +56,6 @@ Always present in core. An instance enables it via `modulesEnabled`; per-instanc
 ## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
 
 > LEGACY / provenance only for VF publication; not a provider route: This execution surface is inside the Velvet Factory creative/publish path. Before concept, edit, render, handoff or publish, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`; verify Canva asset `MAHVL7PKpvE` and SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`; require `visual_standard_gate=PASS`. Missing/mismatched evidence is `visual_standard_unavailable` and blocks the branch. Generic/default visual fallback is forbidden. Product Truth from real source media overrides style.
+
+
+> Current tool authority: `packages/velvetos/TOOL-STATUS.json`. Canva/vfcanva are forbidden for Velvet Factory; OpenPost is frozen. Do not reinterpret historical provider notes as active routing.

@@ -1,7 +1,7 @@
 {
   "name": "velvet-factory-desk",
   "title": "VelvetOS Core desk — reference bind Velvet Factory",
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-26",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvet-factory-desk.mdc",
   "product": "VelvetOS",
@@ -36,7 +36,6 @@
     "Last-30-days community research: vfresearch/hq/LAST30.md + skill vf-last30 (mvanhorn/last30days-skill patterns). WebSearch/gh/orchestra only — no vendor CLI, no X/TikTok keys.",
     "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
     "Grok Bot quota failover: keep producing AND sending via HQ tools. Office brief is תצוגה 3 HTML via send_message to nocturney@gmail.com. #נשלח-מ-HQ or #ממתין-ל-כלי-IG. Grok is optional backup. See docs/GROK-FAILOVER.md + constitution/SEND.md.",
-    "Tool-gap 2026-08-31: Canva ready. tools.web / tools.image on the desk. Treg not relevant. Drive creates office docs. HQ sends Gmail+IG via tools. Map: packages/vfmcp/GAP.md + constitution/SEND.md.",
     "2026-08-31: vfe2b orchestrator overlay from andyrewlee/awesome-agent-orchestrators (194). Patterns on existing crews — pulse/verify/artifact. Do not install a second orchestrator. See packages/vfe2b/ORCHESTRATORS.md.",
     "3D AI Studio: HTTP MCP at mcp.3daistudio.com. Desktop: .cursor/mcp.json OAuth. Cloud: Team MCP + per-user OAuth (CONNECT-3DAI.md). Playbook packages/vfprod/3DAISTUDIO.md. No API key in git.",
     "2026-08-31: Core office MCP — studiomcphub in .cursor/mcp.json; Sheets + WhatsApp Desktop CONNECT (VF send=false, skip CMYK). packages/vfmcp/CORE-MCP.md.",
@@ -49,7 +48,8 @@
     "iCloud Drive: owner Mac only (CONNECT-ICLOUD.md). Cloud Agent reads mirror via Drive (ICLOUD-DRIVE-SYNC.md + scripts/sync-icloud-to-drive.sh).",
     "2026-09-07: Four office crews on existing packs — MakerWorld scan (vfresearch/vfsku), print.done→feed (vfprod/vfom), profile→WhatsApp (vfgrowth/vfcopy), books integrity (vfbooks). No new pack. No second runtime. CLIs: vfsku.py scan, vfbooks.py brief, vfprod.py print-done.",
     "2026-09-08: Shared media vault locked by Christian — Drive Velvet Media (root 1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv). One catalog packages/vfmedia. תפעול owns intake נכנס→מקור. GrokBot uses Drive MCP. Cursor owns catalog schema. Upload ≠ approval. Approved folder alone ≠ approval proof. No share-permission changes. No invented SKUs or ₪.",
-    "2026-09-08: PUBLIC_CURRENT_CTA = Instagram message only (@velvets_cloud). BUSINESS_CONTACT_RECORD WhatsApp 050-2517000 stays on desk but disabled for public CTA and customer outreach from HQ. constitution/PUBLIC_CTA.md. Auto-DM still forever forbidden. Publish states: prepared≠scheduled≠liveVerified (vfigos/PUBLICATION-STATES). Risk GREEN/YELLOW/ORANGE/RED (constitution/RISK.md). Office watchdog: scripts/vf_office_watchdog.py. Production→content continuity for process/WIP posts. Feed audit from post #3 REVIEW_REQUIRED. No Metricool dependency."
+    "2026-09-08: PUBLIC_CURRENT_CTA = Instagram message only (@velvets_cloud). BUSINESS_CONTACT_RECORD WhatsApp 050-2517000 stays on desk but disabled for public CTA and customer outreach from HQ. constitution/PUBLIC_CTA.md. Auto-DM still forever forbidden. Publish states: prepared≠scheduled≠liveVerified (vfigos/PUBLICATION-STATES). Risk GREEN/YELLOW/ORANGE/RED (constitution/RISK.md). Office watchdog: scripts/vf_office_watchdog.py. Production→content continuity for process/WIP posts. Feed audit from post #3 REVIEW_REQUIRED. No Metricool dependency.",
+    "2026-09-26: Tool authority is packages/velvetos/TOOL-STATUS.json. Canva/vfcanva and Treg are forbidden. OpenPost is frozen. Scheduled Instagram publication uses the Cloudflare Instagram Publisher; organic publication target is Meta Instagram Graph API; live state requires Graph/MCP read-back."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -122,17 +122,8 @@
     },
     "superdesign": {
       "status": "skill-installed",
-      "useWhen": "vfcovers, brief packet, posters, social graphics. Graphics path skips repo init.",
-      "failover": "Canva if connected, else packages/vfcanva/studio/render.py"
-    },
-    "canva": {
-      "status": "ready",
-      "namespace": "Canva",
-      "useWhen": "Instagram post/story/reel cover/carousel for @velvets_cloud",
-      "mcp": "https://mcp.canva.com/mcp",
-      "verifiedAt": "2026-08-31",
-      "note": "Cloud Agent search-designs returned DAGoYmCu4c4. Instagram send: vfigos/SEND.md (tool or Canva+Drive+Gmail failover).",
-      "failover": "needsAuth → packages/vfcanva/studio/render.py → Superdesign. Say Canva לא מחובר."
+      "useWhen": "non-VF-publication graphics only when separately authorized",
+      "failover": "no Canva/vfcanva fallback"
     },
     "instagram": {
       "status": "ready",
@@ -151,11 +142,17 @@
       "capabilities": "packages/vfigos/CAPABILITIES.json",
       "publicationStates": "packages/vfigos/PUBLICATION-STATES.json",
       "profileDesired": "packages/vfigos/PROFILE-DESIRED.json",
-      "useWhen": "vfigos publish (image/carousel/reel/story), vfinsights verified metrics, feed review",
+      "useWhen": "scheduled publish via Cloudflare publisher; live verification/read via Instagram Graph/MCP",
       "connect": "packages/vfigos/CONNECT-IG.md",
       "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
-      "officeRule": "Cloud remote MCP live_check.ok + get_profile @velvets_cloud verified 2026-09-09; never fake liveVerified without list_media/get_media after publish; DM off",
-      "notRequired": ["Metricool", "Publer", "Postly", "SimplePost", "Meta Business Suite"],
+      "officeRule": "OpenPost is frozen. Canva/vfcanva forbidden. Scheduled jobs must use Cloudflare publisher; live publication requires Graph read-back.",
+      "notRequired": [
+        "Metricool",
+        "Publer",
+        "Postly",
+        "SimplePost",
+        "Meta Business Suite"
+      ],
       "stories": "enabled-same-mcp",
       "dmEnabled": false,
       "boostEnabled": false,
@@ -191,7 +188,9 @@
         "INSTAGRAM_MCP_DM_ENABLED"
       ],
       "rule": "Approved public HTTPS media URL → publish_image|carousel|reel|story → verify live with list_media/get_media. No invented Insights. No auto-DM. No boost. publish tool success ≠ liveVerified.",
-      "failover": "MCP down / oauth fail at runtime → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)"
+      "failover": "MCP down / oauth fail at runtime → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)",
+      "scheduler": "packages/vfigos/cloudflare-publisher/",
+      "publicationTarget": "Meta Instagram Graph API"
     },
     "web": {
       "status": "ready",

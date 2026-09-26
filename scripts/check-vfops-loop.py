@@ -83,7 +83,7 @@ def main() -> None:
         (CAL_OPS, ("לא שואלים", "Google Calendar", "Instagram")),
         (STORIES, ("VF_PUBLICATION_ROUTE_V1", "Canva/vfcanva אסורים", "source-grounded", "publication evidence", "סיפור-מוצר", "הודעה")),
         (STORIES_FIX, ("LEGACY / STALE", "audit only", "VF_PUBLICATION_ROUTE_V1", "סיפור-מוצר", "הודעה")),
-        (GAP, ("vfcopy", "vfcanva", "vfcovers", "פער", "7.9")),
+        (GAP, ("vfcopy", "vfcovers", "פער", "7.9")),
     ):
         text = path.read_text(encoding="utf-8")
         for needle in needles:
@@ -312,8 +312,8 @@ def main() -> None:
         fail("consumer registry must list sensor-suite as explicit skip")
     if specs["sensor-suite"].auto_daily or specs["sensor-suite"].kind != "skip":
         fail("check-all must never be an auto-daily consumer (recursion)")
-    if specs["vfcovers-compose"].auto_daily or specs["vfcanva-render"].auto_daily:
-        fail("vfcanva/vfcovers must not auto-run standing packs")
+    if specs["vfcovers-compose"].auto_daily:
+        fail("vfcovers must not auto-run standing packs")
     if specs["vfsales-quote"].auto_daily:
         fail("vfsales quote is on-inquiry only")
 

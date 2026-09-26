@@ -24,7 +24,7 @@ Visible Text extension: 11.9.2026.
 |---|---|---|
 | א | **Visible Text + SOFT-TOOLS-CONTRACT + VOICE** | כל AI-authored copy שהקהל רואה עבר `public-social` Visible Text Gate על **הגרסה הסופית**: verified context → reader-first → VOICE/VOICE-CHART/`voice/approved/` → relevant vfmskill aids → template → `velvet-hebrew-copy` → `ai-tells-he.md` → `python3 scripts/check-vfcopy.py lint` / surface-aware gate על actual final copy → fact gate. חובה `visible_text_gate=PASS`, `surface`, `text_sha256`/copy digest, ו־`vfcopy_lint=pass` |
 | א2 | **Visual microcopy** | אם יש cover/first-frame/overlay/slide text: גם `visual-microcopy` gate, 3–5 candidates + `NO_TEXT`, Creative Director/Brand Guardian, והחלטת `TEXT_WINS` מנומקת או `NO_TEXT`. אם אין טקסט ויזואלי: `N/A` מתועד |
-> LEGACY / provenance only for VF publication; not a provider route: | ב | **Canva / vfcovers** + ראיית ויזואל | `edit_url` אמיתי מ־Canva MCP **או** PNG מ־`vfcovers` / `vfcanva`. לא JPEG גולמי. ראייה: thumbnail/export path או צילום מסך מקומי — לא «נראה טוב» בעל־פה |
+> LEGACY / provenance only for VF publication; not a provider route: | ב | **Canva / vfcovers** + ראיית ויזואל | `edit_url` אמיתי מ־forbidden Canva MCP **או** PNG מ־`vfcovers` / `vfcanva`. לא JPEG גולמי. ראייה: thumbnail/export path או צילום מסך מקומי — לא «נראה טוב» בעל־פה |
 | ג | **ציון עצמי מול רף סוכנות** | ביקורת עצמית כתובה. כל שורת רף = כן. לא = נכשל-סגור |
 | ד | **VOICE-RESEARCH / קומפס / ייחוד כשנדרש** | בודקים **2–3 קומפס/כיוונים** כשיש טעם אמיתי בהשוואה; מקורות רלוונטיים ומה מאמצים/דוחים; אין חיקוי זהות ואין ספירת עוקבים מומצאת |
 | ה | **CONTENT-RUBRIC** | טבלת Rubric מלאה (5 צירים), ≥20/25, בלי 1 ובלי דגל אדום |
@@ -127,3 +127,6 @@ Brand/CTA final gate also requires `brand_asset_gate: PASS`, `generated_brand_ma
 
 For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md` is mandatory. Preserve the real product, but do not pass through raw/source photos as the finished creative. At least one review visual — normally the hero/first slide — must show a meaningful approved Velvet treatment around the source-locked product. Default to editing the real source image, not recreating the product from text. Multiple photos do not imply a carousel; if carousel is chosen, slide 1 must be a fully treated hero. `raw_passthrough=true`, an essentially untouched source carousel, or crop/exposure-only work presented as publication-grade is FAIL. Generative edits must explicitly contain NO LOGO, NO WORDMARK, NO PHONE NUMBER, NO WHATSAPP, NO CONTACT BAR, NO GENERATED HEBREW TEXT.
 
+
+
+> Current tool authority: `packages/velvetos/TOOL-STATUS.json`. Canva/vfcanva are forbidden for Velvet Factory; OpenPost is frozen. Do not reinterpret historical provider notes as active routing.

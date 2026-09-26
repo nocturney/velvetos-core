@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+TOOL_STATUS = ROOT / "packages" / "velvetos" / "TOOL-STATUS.json"
 GAP = ROOT / "packages" / "vfmcp" / "GAP.md"
 FIT = ROOT / "docs" / "MCP-FIT.md"
 SHEETS = ROOT / "packages" / "vfbooks" / "SHEETS.md"
@@ -19,7 +20,6 @@ CONNECT_3DAI = ROOT / "packages" / "vfprod" / "CONNECT-3DAI.md"
 PLAYBOOK_3DAI = ROOT / "packages" / "vfprod" / "3DAISTUDIO.md"
 
 REQUIRED_MCP = {
-    "canva": "https://mcp.canva.com/mcp",
     "threedaistudio": "https://mcp.3daistudio.com/mcp",
     "studiomcphub": "https://studiomcphub.com/mcp",
 }
@@ -41,7 +41,7 @@ VF_CHATGPT = ROOT / "scripts" / "vf_chatgpt.py"
 NEEDLES_GAP = (
     "WebSearch",
     "GenerateImage",
-    "Canva",
+    "Cloudflare",
     "skip",
     "אין בכוונה",
     "SHEETS.md",

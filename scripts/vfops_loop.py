@@ -729,16 +729,6 @@ def consumer_registry() -> list[ConsumerSpec]:
             skip_reason="on-inquiry only — no automatic quote without known fields / lead ILS",
         ),
         ConsumerSpec(
-            id="vfcanva-render",
-            title="vfcanva studio render",
-            cadence="on-content",
-            kind="skip",
-            requires=(ROOT / "packages" / "vfcanva" / "studio" / "render.py",),
-            pack="vfcanva",
-            auto_daily=False,
-            skip_reason="on-content only — do not auto-render a standing pack (e.g. G005)",
-        ),
-        ConsumerSpec(
             id="vfcovers-compose",
             title="vfcovers compose",
             cadence="on-content",

@@ -161,16 +161,16 @@ def main() -> None:
         fail("Integrity Guard provider binding missing after Cognee cutover")
     if guard_binding.get("enabled") is not True or guard_binding.get("cadence") != "daily 01:45":
         fail("Integrity Guard enabled/cadence drift after Cognee cutover")
-    if guard_binding.get("protectedRoutineCount") != 9:
-        fail("Integrity Guard must protect nine routines after Cognee cutover")
+    if guard_binding.get("protectedRoutineCount") != 8:
+        fail("Integrity Guard must protect eight routines after OpenPost retirement")
 
     manifest_routines = {row.get("id"): row for row in (grok_manifest.get("routines") or [])}
     expected_manifest = {
         "cognee-memory-sync": "daily 06:30",
         "cognee-stable-updates": "Monday 10:00",
     }
-    if len(manifest_routines) != 9:
-        fail("Grok manifest must contain the nine protected routines")
+    if len(manifest_routines) != 8:
+        fail("Grok manifest must contain the eight protected routines")
     for routine_id, cadence in expected_manifest.items():
         row = manifest_routines.get(routine_id) or {}
         if row.get("cadence") != cadence or row.get("enabled") is not True:
@@ -230,7 +230,7 @@ def main() -> None:
     if guard.get("protectedRoutineCount") != 9:
         fail("verified Integrity Guard must protect nine routines")
     expected_titles = {
-        "VelvetOS Integrity Guard", "Velvet Research Seat", "OpenPost Release Watch",
+        "VelvetOS Integrity Guard", "Velvet Research Seat",
         "Velvet Morning Brief", "Morning Delivery Guard", "VelvetOS Office Loop",
         "Weekly Research Accountability", "Cognee Memory Sync", "Cognee Stable Updates",
     }

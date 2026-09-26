@@ -1,4 +1,4 @@
-# Changelog
+- 2026-09-26 — **Instagram publisher authority cutover / tool hygiene:** OpenPost is owner-frozen after missed scheduled publications without adequate alerting. The active scheduled publisher is the Cloudflare Worker in `packages/vfigos/cloudflare-publisher/` (D1 + KV + one-minute cron) targeting Meta Instagram Graph API; `VF-OCTOPUS-20260927-CAROUSEL` was migrated and OpenPost scheduling cleared. Canva/vfcanva active surfaces were removed (MCP, plugin, skills, rule, pack); `packages/velvetos/TOOL-STATUS.json` and `scripts/check-tool-authority.py` are the machine authority/drift guard. The former Grok `OpenPost Release Watch` is retired in desired repo authority and still requires provider read-back before claiming the live Grok routine disabled. Morning Green future-schedule input now reads the Cloudflare publisher rather than OpenPost.\n# Changelog
 
 All notable changes to VelvetOS (active tenant: Velvet Factory Headquarters & OS).
 

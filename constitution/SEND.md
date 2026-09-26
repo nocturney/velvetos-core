@@ -32,7 +32,7 @@ Treg לא רלוונטי. Drive יוצר מסמכים לפי צורך.
 | ערוץ | מי | כלי | תנאי טקסט | לא |
 |---|---|---|---|---|
 | ג׳ימייל | **סוכן HQ** | `send_message` / `reply` / `forward` על `nocturney@gmail.com` | Visible Text Gate לפי הקורא + facts | לא מחכים לגרוק. לא מחכים לאדם ללחוץ Send |
-> LEGACY / provenance only for VF publication; not a provider route: | אינסטגרם `@velvets_cloud` | **סוכן HQ** דרך כלי מחובר | `publish_image` / `publish_carousel` / `publish_reel` / `publish_story` אחרי creative+Canva+vault+PREFLIGHT v2 | `public-social` + `visual-microcopy` כשיש טקסט על הוויזואל | לא LIVE-PACKET לאדם כברירת מחדל. לא אוטו־DM. לא Metricool כתלות |
+| אינסטגרם `@velvets_cloud` | Cloudflare Instagram Publisher לתזמון; Meta Instagram Graph לפרסום; Graph/MCP read-back לאימות | `packages/vfigos/SEND.md` | `public-social` + `visual-microcopy` לפי הצורך | OpenPost קפוא; Canva/vfcanva אסורים; אין auto-DM |
 | וואטסאפ לקוח | אדם `050-2517000` | Core: MCP חיפוש/טיוטה. VF `send=false` | gated draft לפני handoff | HQ לא ממציא בוט |
 | מדפסות | רצפה | `vfprod` | — | HQ לא לוחץ Print |
 | בוסט / אוטו־DM | — | נעול | — | נעול תמיד |
@@ -89,7 +89,6 @@ python3 scripts/vf_send_preflight.py --gate gmail
 - בריף 07:00 ל־`nocturney@gmail.com` — `owner-brief` gate לפני render/send.
 - תשובה בשרשור פנייה שכבר נקרא — `customer-message` gate; בלי ₪ מומצא.
 - הצעה — `sales-proposal` gate + מחיר/עובדות מאומתים.
-> LEGACY / provenance only for VF publication; not a provider route: - חבילת LIVE / כיתוב / קישור Canva / קישור Drive — prose שנכתב ב־AI עובר surface המתאים; הקישורים/IDs עצמם literal.
 - `reply` / `forward` כשזה מקדם את הצינור ואחרי gate מתאים לגוף החדש שנוסף.
 
 אסור: דיוור המוני, חוב בלי ראש צוות, סודות, אוטו־DM / `send_dm`, או Send של AI body עם `visible_text_gate != PASS`.
@@ -107,7 +106,7 @@ python3 scripts/vf_send_preflight.py --gate gmail
 
 ## אינסטגרם — מותר דרך כלי
 
-> LEGACY / provenance only for VF publication; not a provider route: 1. **Visible Text + creative QA + שער עריכה** — copy chain, VOICE/Brand Guardian/רובריקה, Canva/vfcovers/vfcanva, ואז בדיקת final render.
+1. **Visible Text + creative QA + שער עריכה** — copy chain, VOICE/Brand Guardian/רובריקה וה־final render הנוכחי; אין Canva/vfcanva.
 2. **PREFLIGHT v2** — קשור ל־hash של הקופי והחבילה המדויקת. approval ישן/חסר digest אינו תקף לפרסום חדש.
 3. `vfcopy` נותן public copy לפי `PUBLIC_CURRENT_CTA`; לא וואטסאפ בכיתוב ציבורי. Showcase יכול לבחור CTA ניטרלי/ללא CTA לפי המדיניות הפעילה.
 4. אם Instagram MCP מחובר — מריצים exact-package gate, ורק אחרי PASS מפרסמים ב־`publish_*`.

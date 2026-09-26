@@ -27,7 +27,7 @@ Do **not** activate the full 50-skill upstream set. Ads, email send, SaaS CRO, a
 | כיתוב / קופי / לינט | `copywriting` `copy-editing` `marketing-psychology` | `vfcopy` | HQ sends via tools |
 | ריל / סטורי / לוח תוכן | `social` `content-strategy` `video` | `vfgrowth` → `vfigos` | `SEND.md` |
 | מוזיקה / סאונד לריל | (frame) `social` Audio Strategy | `vfresearch` → `vfom` → `vfigos` | `@trend-researcher`; HeyOrca / IG paste (no Treg) |
-> LEGACY / provenance only for VF publication; not a provider route: | כריכה / גרפיקה | `image` | `vfcovers` `vfcanva` | Canva first |
+> LEGACY / provenance only for VF publication; not a provider route: | כריכה / גרפיקה | `image` | `vfcovers` `vfcanva` | current VF native/source-grounded route |
 | פנייה / VOC | `customer-research` | `vfconvert` | Gmail read then reply via tool |
 | הצעה / התנגדות | `offers` `sales-enablement` | `vfsales` | After `vfcost`; human WhatsApp |
 | מתחרה / רעיון / תוכנית / השקה | `competitor-profiling` `marketing-ideas` `marketing-plan` `launch` | `vfresearch` `vfbiz` `vfsku` | Sources or «חסר» |
@@ -43,7 +43,7 @@ Specialists on the desk: `@content-creator` `@brand-guardian` `@instagram-curato
 - One pipeline: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping.
 - Floor scenes only from a named Drive job/SKU. Partial pack if proof is missing.
 
-> LEGACY / provenance only for VF publication; not a provider route: If Canva MCP is `needsAuth`, say `Canva לא מחובר` and use Superdesign / `packages/vfcanva/studio/render.py`.
+> LEGACY / provenance only for VF publication; not a provider route: If forbidden Canva MCP is `needsAuth`, say `Canva לא מחובר` and use Superdesign / `packages/FORBIDDEN_VFCANVA_RENDERER`.
 
 ## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
 
@@ -55,3 +55,6 @@ Specialists on the desk: `@content-creator` `@brand-guardian` `@instagram-curato
 
 For Velvet Factory requests that mean prepare/treat/edit content for a potential publication, `packages/vfom/PUBLICATION-PREP-EXECUTION.md` is mandatory. This is an execution task: when usable images and an editing capability exist, selection/caption/planning alone is incomplete. Produce at least one real edited visual artifact, preserve Product Truth, run exact-final visual QA, and only then package copy for owner review. If visual execution is unavailable, fail closed as `visual_execution_unavailable`; never claim ready from raw photos plus copy. Resolve public CTA from current authority; never hardcode the business WhatsApp number into public content from memory.
 
+
+
+> Current tool authority: `packages/velvetos/TOOL-STATUS.json`. Canva/vfcanva are forbidden for Velvet Factory; OpenPost is frozen. Do not reinterpret historical provider notes as active routing.

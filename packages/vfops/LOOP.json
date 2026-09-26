@@ -81,15 +81,6 @@
       "blocked": null
     },
     {
-      "id": "vfcanva",
-      "kind": "mcp-ready",
-      "cadence": "on-content",
-      "consume": "packages/vfcanva/studio/render.py",
-      "briefSlot": "07",
-      "handoff": "packages/vfcanva/WORKFLOW.md",
-      "blocked": null
-    },
-    {
       "id": "vfconvert",
       "kind": "docs-playbook",
       "cadence": "on-inquiry",

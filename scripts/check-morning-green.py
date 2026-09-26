@@ -27,9 +27,7 @@ def main() -> None:
         ASSETS / "morning-story.jpg",
         ASSETS / "morning-radar.jpg",
         ASSETS / "morning-footer.jpg",
-        ROOT / "packages" / "vfigos" / "openpost_morning_snapshot.py",
-        ROOT / "packages" / "vfigos" / "run_openpost_morning_snapshot.ps1",
-        ROOT / "packages" / "vfigos" / "materialize_openpost_morning_thumbnails.ps1",
+        ROOT / "packages" / "vfigos" / "cloudflare_publisher_snapshot.py",
         ROOT / "automation" / "grok" / "CONTRACT.md",
         ROOT / "automation" / "grok" / "manifest.json",
         ROOT / "packages" / "vfops" / "ROUTINE.md",
@@ -62,29 +60,19 @@ def main() -> None:
     contract = (PACK / "MORNING-GREEN.md").read_text(encoding="utf-8")
     for token in (
         "scheduled != approved != published_verified",
-        "מתוזמן", "טרם שובץ", "OpenPost", "CID", "TARGET-CONCEPT", "QA חזותי", "VF-YYYYMMDD-NNN",
+        "מתוזמן", "טרם שובץ", "Cloudflare", "CID", "TARGET-CONCEPT", "QA חזותי", "VF-YYYYMMDD-NNN",
         "list_media/get_media", "owner-visible-text",
     ):
         if token not in contract:
             fail(f"Morning Green contract missing {token!r}")
 
-    openpost = (ROOT / "packages" / "vfigos" / "openpost_morning_snapshot.py").read_text(encoding="utf-8")
-    for token in ("activity_bucket':'scheduled'", "scheduled_at", "public_url_ready", "thumbnail_media_id", "thumbnail_cid", "OPENPOST_TOKEN"):
-        if token not in openpost:
-            fail(f"OpenPost Morning adapter missing {token!r}")
-    if "value.startswith('/media/')" in openpost or "origin+value" in openpost:
-        fail("OpenPost Morning adapter must not treat authenticated relative /media paths as public")
-    for forbidden in ("method='POST'", 'method="POST"', "method='PUT'", 'method="PUT"', "method='DELETE'", 'method="DELETE"'):
-        if forbidden in openpost:
-            fail(f"OpenPost Morning adapter contains write HTTP method: {forbidden}")
-    snapshot_runner=(ROOT / "packages" / "vfigos" / "run_openpost_morning_snapshot.ps1").read_text(encoding="utf-8")
-    materializer=(ROOT / "packages" / "vfigos" / "materialize_openpost_morning_thumbnails.ps1").read_text(encoding="utf-8")
-    for token in ("openpost-morning-brief.token.dpapi", "OPENPOST_TOKEN", "ZeroFreeBSTR"):
-        if token not in snapshot_runner:
-            fail(f"OpenPost DPAPI runner missing {token!r}")
-    for token in ("sm_$media.jpg", "--tunnel-through-iap", "thumbnail_cid", "sudo rm -f"):
-        if token not in materializer:
-            fail(f"OpenPost thumbnail materializer missing {token!r}")
+    schedule_adapter = (ROOT / "packages" / "vfigos" / "cloudflare_publisher_snapshot.py").read_text(encoding="utf-8")
+    for token in ("VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN", "/v1/jobs", "method=\"GET\"", "cloudflare-instagram-publisher"):
+        if token not in schedule_adapter:
+            fail(f"Cloudflare publisher snapshot adapter missing {token!r}")
+    for forbidden in ("POST", "PUT", "DELETE"):
+        if f'method="{forbidden}"' in schedule_adapter or f"method='{forbidden}'" in schedule_adapter:
+            fail(f"Cloudflare publisher snapshot adapter contains write method {forbidden}")
 
     sender = (ROOT / "packages" / "vfops" / "gmail_brief_send.py").read_text(encoding="utf-8")
     for token in ("multipart/related", "Content-ID", "embed_remote_images"):
@@ -111,9 +99,11 @@ def main() -> None:
 
     builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
     preparer = (PACK / "prepare_morning_green.py").read_text(encoding="utf-8")
-    for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--thumbnail-dir", "morning-green-assets-"):
+    for token in ('\"enabled\": bool(args.enable)', "--enable", "embedRemoteImages", "PACK / \"assets\" / \"morning-green\"", "--thumbnail-dir", "morning-green-assets-"):
         if token not in preparer:
             fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
+    if "--openpost" in preparer:
+        fail("Morning Green active preparer must not expose an OpenPost input")
     for token in ("reader_friendly", "compact_overview", "compact_attention", "compact_progress", "compact_receivables", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights", "Instagram has its own dedicated analytics section", "דברים שכדאי לשים לב אליהם", "תודה שאתה חלק מהדרך"):
         if token not in builder:
             fail(f"Morning Green builder missing reader-friendly/week-strip/Instagram mapping {token!r}")
@@ -136,13 +126,13 @@ def main() -> None:
     print("OK Morning Green v3.1 editorial email + truth semantics + CID transport contract")
 
 def check_feed_status() -> None:
-    """OpenPost paused must read as paused, never as an empty/failed schedule."""
+    """Missing Cloudflare schedule evidence must never read as an empty/failed schedule."""
     cfg_path = PACK / "FEED-SOURCE.json"
     try:
         cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
     except Exception as exc:
         fail(f"FEED-SOURCE.json unreadable: {exc}")
-    if cfg.get("schema") != "vf.morning-green.feed-source.v1":
+    if cfg.get("schema") != "vf.morning-green.feed-source.v2":
         fail("FEED-SOURCE.json schema drifted")
     template = (PACK / "MORNING-GREEN.html").read_text(encoding="utf-8")
     if template.count("{{feed_status_html}}") != 1:
@@ -153,8 +143,8 @@ def check_feed_status() -> None:
     render = importlib.util.module_from_spec(rspec); rspec.loader.exec_module(render)  # type: ignore[union-attr]
     with tempfile.TemporaryDirectory() as tmp:
         t = Path(tmp)
-        paused = t / "paused.json"; paused.write_text(json.dumps({"openpost": {"state": "paused", "label": "P", "visibleText": "V"}}), encoding="utf-8")
-        active = t / "active.json"; active.write_text(json.dumps({"openpost": {"state": "active"}}), encoding="utf-8")
+        paused = t / "paused.json"; paused.write_text(json.dumps({"cloudflare_publisher": {"state": "paused", "label": "P", "visibleText": "V"}}), encoding="utf-8")
+        active = t / "active.json"; active.write_text(json.dumps({"cloudflare_publisher": {"state": "active"}}), encoding="utf-8")
         broken = t / "broken.json"; broken.write_text("{not json", encoding="utf-8")
         cases = [
             (build.feed_status({"scheduled": []}, paused), "live", ""),
@@ -172,7 +162,7 @@ def check_feed_status() -> None:
         fail("feed_status without a snapshot must be paused or unavailable")
     if render.feed_status_html({"state": "live", "label": "x"}) != "" or render.feed_status_html(None) != "":
         fail("feed_status_html must be empty for live/missing status (backward compatible)")
-    html = render.feed_status_html({"state": "paused", "label": "OpenPost <paused>"})
+    html = render.feed_status_html({"state": "paused", "label": "Cloudflare <paused>"})
     if 'data-state="paused"' not in html or "&lt;paused&gt;" not in html or not html.startswith("<tr>"):
         fail("feed_status_html must render an escaped full-row paused note")
 

@@ -37,7 +37,8 @@
     "Harness: AGENTS.md + packages/vfharness. Six layers on existing packs. No second runtime. After catalog edits run python3 scripts/check-all.py.",
     "Free Claude Code (vffcc) is a local BYOK map only. It does not cut Cursor Cloud usage. Do not install fcc-server on this agent.",
     "Weekly: re-read inspiration/embed links in packages/vfresearch/LINKS.json via WEEKLY.md. Same-day append for new URLs. No invented bodies.",
-    "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md."
+    "Tool failover: if a tool is down or needsAuth, hand the task to the backup tool in the same turn. Never finish empty-handed. Never invent ₪ / Insights / blocked bodies. See constitution/ORCHESTRA.md.",
+    "2026-09-26: Tool authority is vendor/velvetos-core/packages/velvetos/TOOL-STATUS.json. Canva/vfcanva and Treg are forbidden. OpenPost is frozen. Scheduled Instagram publication uses the Cloudflare Instagram Publisher; organic publication target is Meta Instagram Graph API; live state requires Graph/MCP read-back."
   ],
   "studio": {
     "name": "Velvet Factory",
@@ -107,17 +108,8 @@
     },
     "superdesign": {
       "status": "skill-installed",
-      "useWhen": "vfcovers, brief packet, posters, social graphics. Graphics path skips repo init.",
-      "failover": "Canva if connected, else packages/vfcanva/studio/render.py"
-    },
-    "canva": {
-      "status": "ready",
-      "namespace": "Canva",
-      "useWhen": "Instagram post/story/reel cover/carousel for @velvets_cloud",
-      "mcp": "https://mcp.canva.com/mcp",
-      "verifiedAt": "2026-08-31",
-      "note": "Cloud Agent search-designs returned DAGoYmCu4c4. Instagram send: vfigos/SEND.md (tool or Canva+Drive+Gmail failover).",
-      "failover": "needsAuth → packages/vfcanva/studio/render.py → Superdesign. Say Canva לא מחובר."
+      "useWhen": "non-VF-publication graphics only when separately authorized",
+      "failover": "no Canva/vfcanva fallback"
     },
     "instagram": {
       "status": "ready",
@@ -131,7 +123,7 @@
       "mcp": "Cloud Team MCP namespace instagram · adelaidasofia/instagram-mcp",
       "package": "adelaidasofia-instagram-mcp",
       "source": "https://github.com/adelaidasofia/instagram-mcp",
-      "useWhen": "vfigos publish (image/carousel/reel/story), vfinsights verified metrics, feed review",
+      "useWhen": "scheduled publish via Cloudflare publisher; live verification/read via Instagram Graph/MCP",
       "connect": "packages/vfigos/CONNECT-IG.md",
       "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
       "stories": "enabled-same-mcp",
@@ -168,7 +160,10 @@
         "ads"
       ],
       "rule": "Approved public HTTPS media URL → publish_* → verify with list_media/get_media. No invented Insights. No auto-DM. No boost. publish success ≠ liveVerified.",
-      "failover": "MCP down or remote_access pending without live session → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)"
+      "failover": "MCP down or remote_access pending without live session → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)",
+      "scheduler": "vendor/velvetos-core/packages/vfigos/cloudflare-publisher/",
+      "publicationTarget": "Meta Instagram Graph API",
+      "officeRule": "OpenPost is frozen. Canva/vfcanva forbidden. Scheduled jobs use Cloudflare publisher; live publication requires Graph read-back."
     },
     "web": {
       "status": "ready",
@@ -229,7 +224,7 @@
       "mcp": "https://studiomcphub.com/mcp",
       "useWhen": "Core print-file tools. VF: remove_background / resize only. Playbook: packages/vfmcp/CONNECT-STUDIOHUB.md",
       "rule": "Free tools unless lead seat. No wallet/x402 in git. No NFT. VF skips print_ready/CMYK. HQ does not print. No invented ₪.",
-      "failover": "Canva / packages/vfcanva/studio/render.py / 3DAI + vfprod/PREFLIGHT.md"
+      "failover": "3DAI + vfprod/PREFLIGHT.md; no Canva/vfcanva fallback"
     },
     "mcp-gsheets": {
       "status": "desktop-credentials",
@@ -318,7 +313,6 @@
       "tools": [
         "superdesign",
         "drive",
-        "canva",
         "instagram",
         "image",
         "web"
@@ -528,7 +522,6 @@
         "vfom"
       ],
       "tools": [
-        "canva",
         "web"
       ],
       "job": "Review, schedule, and send via tools (vfigos/SEND.md). No boost. No auto-DM."
@@ -543,7 +536,6 @@
       "tools": [
         "superdesign",
         "drive",
-        "canva",
         "image"
       ],
       "job": "Cover and reel narrative from floor proof, not invented scenes"
@@ -555,8 +547,7 @@
       ],
       "tools": [
         "superdesign",
-        "image",
-        "canva"
+        "image"
       ],
       "job": "Cover-art prompts. No Israeli brand-file copies."
     },

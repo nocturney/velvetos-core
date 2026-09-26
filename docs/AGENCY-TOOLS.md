@@ -26,9 +26,7 @@ Checked 2026-08-30 on this HQ:
 | Treg | **Not relevant** | Do not login or `call`. Live web = WebSearch / orchestra. Insights = verified snapshot or «אין ספירה». |
 | vfmem | HQ-native (`scripts/vfmem.py`) | Office graph: pack / `@slug` / tool. Pattern from codebase-memory-mcp; no binary. |
 | FCC (Free Claude Code) | Not on this Cloud Agent | Local BYOK proxy on the owner Mac only (`vffcc`). Does not cut Cursor usage. |
-| Canva | **Ready** (verified 2026-08-31, design `DAGoYmCu4c4`) | Instagram visuals. If `needsAuth`: `vfcanva/studio/render.py` → Superdesign. |
 | WebSearch / WebFetch | Ready (native Cursor) | Live web (Treg not used). ChatGPT/Gemini/Perplexity/Grok browse equivalent. Never invent a blocked body. |
-| GenerateImage | Ready (native Cursor) | User-asked stills. Instagram still Canva-first. Failover: Canva `generate-design` → Superdesign → `studio/render.py`. |
 | 3D AI Studio | Owner subscription; **not on this Cloud Agent** | Text/image → mesh → STL. Playbook `vfprod/3DAISTUDIO.md`. Official MCP is OAuth from their Settings. Failover: site UI + Drive. No key in git. |
 
 **Failover law:** tool down / no access → hand the job to the backup **in the same turn**. Never end empty-handed. Never invent ₪, Insights, or a blocked body to fill the gap. Matrix: [`constitution/ORCHESTRA.md`](../constitution/ORCHESTRA.md).
@@ -43,7 +41,7 @@ Tool-gap map (Grok / ChatGPT / Gemini / Perplexity vs this HQ): [`packages/vfmcp
 |---|---|---|---|
 | ראש צוות | `vfops` `vfbriefux` `vfharness` `vfmem` | `@studio-operations` `@chief-of-staff` `@meeting-notes-specialist` `@workflow-architect` `@ux-architect` | Calendar, Gmail read, Mobbin, WebSearch, `check-all.py`, vfmem |
 | סטודיו | `vfconvert` `vfsales` `vfcopy` `vfmskill` | `@email-intelligence-engineer` `@discovery-coach` `@sales-engineer` `@proposal-strategist` `@content-creator` `@brand-guardian` | Gmail read, Drive by job |
-| צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` `vfmskill` `vfom` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | Superdesign, Treg, Drive, Canva, GenerateImage, WebSearch |
+| צמיחה | `vfgrowth` `vfcovers` `vfigos` `vfinsights` `vfmskill` `vfom` | `@instagram-curator` `@visual-storyteller` `@image-prompt-engineer` `@growth-hacker` `@analytics-reporter` `@social-media-strategist` | current VF Project creative route, Drive, WebSearch |
 | תפעול | `vfcost` `vfbooks` `vfbiz` | `@pricing-analyst` `@bookkeeper-controller` `@finance-tracker` `@business-strategist` | Gmail חשבונות, Drive, Sheets-via-Drive (`SHEETS.md`) |
 | ייצור | `vfprod` `vfsku` `vlicense` `vfresearch` | `@studio-producer` `@operations-manager` `@legal-compliance-checker` `@research-synthesist` `@trend-researcher` | Drive, Calendar, WebSearch, 3D AI Studio (site / MCP after connect) |
 
@@ -83,3 +81,8 @@ Tool-gap map (Grok / ChatGPT / Gemini / Perplexity vs this HQ): [`packages/vfmcp
 Mention a non-desk `@slug` only when the user asks for that specialty. Do not drag `@godot-gameplay-scripter`, `@gis-analyst`, or `@xiaohongshu-specialist` onto a Sderot print job.
 
 `@vfdsh` is a research overlay (awesome-dsh-plugin patterns), not a sixth seat. Do not install DeepSeek Harness.
+
+
+## Current routing authority — 2026-09-26
+
+`packages/velvetos/TOOL-STATUS.json` is authoritative for executable tool status. Canva/vfcanva and Treg are forbidden; OpenPost is frozen; Cloudflare Instagram Publisher is active for scheduled Instagram delivery.

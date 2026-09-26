@@ -1,0 +1,91 @@
+{
+  "schema": "velvetos.tool-status.v1",
+  "updated_at": "2026-09-26",
+  "authority": "owner-explicit",
+  "rules": {
+    "active": "May be routed to and executed when its normal gates pass.",
+    "frozen": "Must not receive new work, schedules, credentials, monitoring, upgrades or failover traffic. Historical evidence may remain only when clearly marked.",
+    "forbidden": "Must not have an active connector, rule, skill, package, route or fallback. Historical mentions must be explicitly historical and non-executable.",
+    "watch": "Research only; never route production work.",
+    "desired_not_connected": "Relevant/approved target capability, but no live connector/tool namespace is currently verified. Do not claim it works until connection + read smoke pass."
+  },
+  "tools": {
+    "cloudflare-instagram-publisher": {
+      "status": "active",
+      "role": "primary Instagram scheduled publisher",
+      "runtime": "Cloudflare Worker + D1 + KV + cron",
+      "endpoint": "velvetos-instagram-publisher.velvetos-vf.workers.dev",
+      "source": "packages/vfigos/cloudflare-publisher/",
+      "publication_target": "Meta Instagram Graph API",
+      "evidence": [
+        "production code commit d286e4face5dc0f4ab1d062c159b04ed15a726fe",
+        "VF-OCTOPUS-20260927-CAROUSEL migrated to 2026-09-27T09:00:00Z",
+        "OpenPost schedule cleared",
+        "media byte hashes verified",
+        "Cloudflare to Meta read-back verified"
+      ],
+      "limitation": "first scheduled write through this route is not yet proven until execution"
+    },
+    "instagram-graph": {
+      "status": "active",
+      "role": "organic Instagram publication target and live verification",
+      "note": "Meta Graph is the publication API. Do not describe Meta Ads MCP as the organic publisher."
+    },
+    "instagram-mcp-existing": {
+      "status": "active",
+      "role": "read/verification and supported direct operations where explicitly gated",
+      "implementation": "existing VelvetOS Instagram MCP / Graph wrapper",
+      "note": "Not the scheduling control plane."
+    },
+    "meta-ads-mcp": {
+      "status": "desired_not_connected",
+      "role": "read-only Meta Ads/Marketing analysis: spend, campaign performance and creatives",
+      "preferred_implementation": "pipeboard-co/meta-ads-mcp",
+      "scope": "ads_read_only",
+      "current_chat_evidence": "No Meta Ads MCP namespace/tool is exposed in the current connected tool inventory.",
+      "activation_gate": "connect/authenticate and pass a read-only account/campaign smoke before routing routine work",
+      "writes": false,
+      "forbidden_for": "organic Instagram content scheduling/publishing"
+    },
+    "openpost": {
+      "status": "frozen",
+      "reason": "scheduled publication reliability failures: multiple posts missed their expected time without adequate alerting",
+      "new_schedules": false,
+      "monitoring": false,
+      "upgrade_watch": false,
+      "failover_target": false,
+      "historical_only": true
+    },
+    "canva": {
+      "status": "forbidden",
+      "reason": "owner prohibition for Velvet Factory workflow",
+      "connector_allowed": false,
+      "skill_allowed": false,
+      "package_allowed": false,
+      "route_allowed": false,
+      "fallback_allowed": false
+    },
+    "vfcanva": {
+      "status": "forbidden",
+      "reason": "same prohibition as Canva",
+      "package_allowed": false
+    },
+    "text-to-cad": {
+      "status": "active_scope_limited",
+      "role": "local parametric CAD, STEP/STL/3MF export, DfAM, local OrcaSlicer routing and G-code validation",
+      "source": "packages/vfprod/TEXT-TO-CAD.md",
+      "bridge": "scripts/vf_cad.py",
+      "host_status": "WINDOWS_HOST_VERIFIED",
+      "safety": "no printer network control, upload, start_print, heating or motion",
+      "print_start": false
+    },
+    "jlbadano-ig-mcp": {
+      "status": "forbidden",
+      "reason": "superseded legacy Instagram MCP; do not install or route"
+    },
+    "treg": {
+      "status": "forbidden",
+      "reason": "explicitly not used in Velvet Factory; web/research routes use current supported sources"
+    }
+  }
+}

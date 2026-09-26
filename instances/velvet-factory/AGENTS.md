@@ -17,7 +17,7 @@ This file is the **guide for this business office**. Core laws still win for sen
 
 - Pull packs and modules from **VelvetOS Core** (`vendor/velvetos-core`). Do not duplicate the pack tree.
 - Studio facts: `constitution/STUDIO.md` + `instance/velvet-factory.json`.
-- HQ sends Gmail and Instagram via real tools (`vendor/velvetos-core/constitution/SEND.md`); never claim a send/publish without receipt/evidence.
+- HQ sends Gmail via the connected mail path. Scheduled Instagram publication uses the Cloudflare Instagram Publisher; organic publication targets Meta Instagram Graph API; live status requires Graph/MCP read-back (`vendor/velvetos-core/packages/vfigos/SEND.md`). OpenPost is frozen; Canva/vfcanva are forbidden.
 - Christian surface: decisions / hard blockers / live publish needing him only. Preflight (`vfgrowth/PREFLIGHT.md`) fail-closes schedule. Never «רמה נמוכה» upward.
 - Never invent ₪ or Insights. No auto-DM, Boost/Ads without lead, customer WhatsApp send, or Print from HQ.
 - **PUBLIC_CURRENT_CTA** = Instagram message to `@velvets_cloud` / איסוף שדרות — not bare «שלחו DM», not WhatsApp phone in public copy. BUSINESS_CONTACT_RECORD WhatsApp `050-2517000` stays in desk only.
@@ -105,3 +105,8 @@ Before substantive work on **any** Velvet Factory request, load `packages/velvet
 ## OFFERING SHAPE — ALWAYS REQUIRED
 
 Public offering authority: `vendor/velvetos-core/packages/vfbiz/OFFERING.md`. Velvet Factory exposes two clear tracks only: ready products and custom 3D print/model work. Customer type and quantity are job attributes, never a standalone service category. Missing offering authority fails closed.
+
+
+## TOOL AUTHORITY
+
+Executable tool status is governed by `vendor/velvetos-core/packages/velvetos/TOOL-STATUS.json`. Historical provider references do not reactivate frozen/forbidden tools.
