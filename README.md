@@ -171,6 +171,7 @@ External scheduled office clock: **Grok Bot protected routines** (`automation/gr
 | Control API (projection) | `packages/velvetos_control_api/` — HTTP projection gateway, not a SoT |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
+|‏ קישורי השראה שבועיים | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
 |‏ חוקי מערכת | `constitution/` |
 | Sensors | `scripts/check-*.py` |
 | Workflows | `.github/workflows/` |
@@ -301,6 +302,7 @@ A workflow file proves automation exists; provider-dependent behavior is **LIVE*
 | Control API (projection) | `packages/velvetos_control_api/` — HTTP projection gateway, not a SoT |
 | Living Studio | `packages/velvetos/living-studio/` |
 | Media catalog | `packages/vfmedia/` |
+| Weekly inspiration links | `packages/vfresearch/LINKS.json` + `packages/vfresearch/sources/YYYY-MM-DD-weekly-links.md` |
 | Constitution | `constitution/` |
 | Sensors | `scripts/check-*.py` |
 | Workflows | `.github/workflows/` |
