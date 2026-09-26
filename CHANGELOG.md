@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **OpenPost records corrected (records only):** `OPENPOST.json` has a new `status` block saying paused (publishing frozen), staging v6.2.0 (PR #342 evidence, commit d6b55fcd), production and LIVE status unknown / not verified. `integrationMode` is now `paused`. The stale `runtime.liveVerified=true`, `HOST_READY_LIVE_VERIFIED`, `READY_AUTO_FAILOVER…` and "current v4.35.0" claims are now `unknown_not_verified` or historical `lastRecorded*` fields. The delivery-approval media evidence is renamed `mediaLiveVerified` and scoped (that post is still on the grid). README rows, `OPENPOST.md` (status header, `paused` mode, historical runtime record) and `SEND.md` routing are updated. New sensor `check-openpost-status.py` with 7 negative controls. No runtime or workflow change; #279/#298/#342 untouched.
+
 - 2026-09-26 — **Publish fingerprint guard (#198):** `vfigos/approval/publish_fingerprint.py` plus a gate hook refuse a repeated identical publish (same account + signed media digests + normalized caption within 72h) before approval spend and before any media fetch. Ambiguous outcomes are recorded and definite failures are not. The store fails closed. New sensor `check-publish-fingerprint.py` replays the 2026-09-13 incident (5 fresh-approval repeats → 0 extra Graph calls). The approval matrix sensor disables the window for its spend cases. Live grid check (read-only): the five duplicate media IDs no longer exist on @velvets_cloud.
 
 - 2026-09-26 — **Chief of Staff system map, refreshed (replaces #227):**
