@@ -1,0 +1,36 @@
+{
+  "source_publication_id": "d1a55aa8-a851-499f-99b3-6ebc95c037e2",
+  "source_control_plane": "OpenPost",
+  "media": [
+    {
+      "key": "vf-octopus-20260927-01-e27fc9ef5f49.jpg",
+      "sha256": "e27fc9ef5f492039fcc9a618eb6a207ab11bf1df5db91853409f6c457db26033",
+      "source_filename": "01-cover.jpg"
+    },
+    {
+      "key": "vf-octopus-20260927-02-d28659e40e96.jpg",
+      "sha256": "d28659e40e963bd3b84004d5fc5670e9bbad9a8a0c50de4d385abc6a20a6499c",
+      "source_filename": "02-closeup.jpg"
+    },
+    {
+      "key": "vf-octopus-20260927-03-780c1fc56ccc.jpg",
+      "sha256": "780c1fc56ccc46a1f0a028cf05d1ed9af83ad0a9efcae2d8b1ef46bee428312a",
+      "source_filename": "03-articulated-arms.jpg"
+    },
+    {
+      "key": "vf-octopus-20260927-04-df0ee7332a29.jpg",
+      "sha256": "df0ee7332a29dfc81b7cd18ba1ce9654d983c361bff74552e3997dd2f74e1424",
+      "source_filename": "04-color-variation.jpg"
+    },
+    {
+      "key": "vf-octopus-20260927-05-e8bab7cf3489.jpg",
+      "sha256": "e8bab7cf3489bac7b60f0278fd8652f04bdacccfb80aac879ae2f62ea9b1a438",
+      "source_filename": "05-duo.jpg"
+    },
+    {
+      "key": "vf-octopus-20260927-06-cb73aaba7085.jpg",
+      "sha256": "cb73aaba70851add86519f2649b5704e3b41f314d2df13f97d72b87d46a66c32",
+      "source_filename": "06-display.jpg"
+    }
+  ]
+}

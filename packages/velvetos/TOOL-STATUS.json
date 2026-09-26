@@ -1,0 +1,100 @@
+{
+  "schema": "velvetos.tool-status.v1",
+  "updatedAt": "2026-09-26",
+  "authority": "owner decision + verified repository/runtime evidence",
+  "rule": "FORBIDDEN tools may not exist in executable config, rules, skills or active packs. FROZEN tools may remain only as non-executable audit/rollback history. Current routing follows this registry before older prose.",
+  "tools": [
+    {
+      "id": "cloudflare-instagram-publisher",
+      "status": "ACTIVE_CANONICAL",
+      "scope": "Instagram scheduling/queue/publish",
+      "source": "packages/vfigos/PUBLISHER.json"
+    },
+    {
+      "id": "meta-instagram-graph-api",
+      "status": "ACTIVE_CANONICAL",
+      "scope": "official provider API for organic Instagram publication/read-back"
+    },
+    {
+      "id": "velvet-instagram-mcp",
+      "status": "ACTIVE_READ_VERIFY",
+      "scope": "reads/Insights/live verification; not scheduler authority",
+      "metaOwned": false,
+      "upstream": "adelaidasofia/instagram-mcp"
+    },
+    {
+      "id": "openpost",
+      "status": "FROZEN",
+      "reason": "unreliable scheduled delivery + missing timely failure alert",
+      "executableRouting": false,
+      "replacement": "cloudflare-instagram-publisher"
+    },
+    {
+      "id": "canva",
+      "status": "FORBIDDEN_REMOVED",
+      "executableRouting": false
+    },
+    {
+      "id": "vfcanva",
+      "status": "FORBIDDEN_REMOVED",
+      "executableRouting": false
+    },
+    {
+      "id": "jlbadano-ig-mcp",
+      "status": "RETIRED_FORBIDDEN_PRIMARY",
+      "executableRouting": false
+    },
+    {
+      "id": "treg",
+      "status": "DISABLED_NOT_RELEVANT",
+      "executableRouting": false
+    },
+    {
+      "id": "buffer-later-bolta",
+      "status": "REJECTED_NO_INSTALL",
+      "executableRouting": false
+    },
+    {
+      "id": "zapier-make-bardeen",
+      "status": "REJECTED_NO_INSTALL",
+      "executableRouting": false
+    },
+    {
+      "id": "text-to-cad",
+      "status": "WATCH_ONLY",
+      "executableRouting": false
+    },
+    {
+      "id": "opencreator",
+      "status": "RESEARCH_ONLY",
+      "executableRouting": false
+    },
+    {
+      "id": "deja-vu",
+      "status": "NO_ACTIVE_CORE_BINDING",
+      "executableRouting": false
+    },
+    {
+      "id": "cognee",
+      "status": "ACTIVE_DERIVED_LOCAL",
+      "authority": false
+    },
+    {
+      "id": "3d-ai-studio",
+      "status": "ACTIVE_WHEN_CONNECTED"
+    },
+    {
+      "id": "studio-mcp-hub",
+      "status": "ACTIVE_BOUNDED"
+    },
+    {
+      "id": "superdesign",
+      "status": "NON_PUBLICATION_ONLY",
+      "scope": "internal packet/brief graphics only"
+    },
+    {
+      "id": "mobbin",
+      "status": "OPTIONAL_WHEN_AVAILABLE"
+    }
+  ]
+}

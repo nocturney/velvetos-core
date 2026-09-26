@@ -1,0 +1,60 @@
+{
+  "schema": "vfigos.publisher.v1",
+  "updatedAt": "2026-09-26",
+  "account": "@velvets_cloud",
+  "schedulerAuthority": "cloudflare-instagram-publisher",
+  "queueAuthority": "cloudflare-d1",
+  "endpoint": "https://velvetos-instagram-publisher.velvetos-vf.workers.dev",
+  "runtime": {
+    "status": "LIVE",
+    "cron": "* * * * *",
+    "productionProvenance": {
+      "branch": "feat/cloudflare-publisher",
+      "commit": "d286e4face5dc0f4ab1d062c159b04ed15a726fe"
+    },
+    "firstScheduledWrite": "PENDING_DUE_TIME_VERIFICATION"
+  },
+  "provider": {
+    "authority": "Meta Instagram Graph API",
+    "officialProviderApi": true,
+    "graphVersion": "v21.0",
+    "schedulerUsesMcp": false
+  },
+  "verification": {
+    "workerHealth": "PASS",
+    "metaReadBack": "PASS",
+    "mediaFetchAndSha256": "PASS_6_OF_6",
+    "scheduledWrite": "UNPROVEN_UNTIL_2026-09-27T09:00:00Z"
+  },
+  "currentQueue": {
+    "migratedContentId": "VF-OCTOPUS-20260927-CAROUSEL",
+    "scheduledAtUtc": "2026-09-27T09:00:00Z",
+    "scheduledAtAsiaJerusalem": "2026-09-27T12:00:00+03:00",
+    "mediaCount": 6,
+    "status": "scheduled"
+  },
+  "openPost": {
+    "status": "FROZEN",
+    "reason": "missed scheduled publications without timely failure alert",
+    "activeSchedules": 0,
+    "migratedRowStatus": "draft",
+    "replacement": "cloudflare-instagram-publisher"
+  },
+  "readVerifyBridge": {
+    "id": "velvet-instagram-mcp",
+    "upstream": "adelaidasofia/instagram-mcp",
+    "metaOwned": false,
+    "role": [
+      "read",
+      "insights",
+      "live_verification",
+      "capability_probe"
+    ],
+    "schedulerAuthority": false
+  },
+  "forbiddenPublicationTools": [
+    "canva",
+    "vfcanva"
+  ],
+  "truthRule": "scheduled != publish_requested != published_verified; only live Graph read-back upgrades to published_verified"
+}
