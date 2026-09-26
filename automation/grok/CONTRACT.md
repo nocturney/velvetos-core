@@ -15,7 +15,7 @@ Status: production scheduler as of 2026-09-19.
 - VelvetOS Integrity Guard — 01:45 daily
 - Velvet Research Seat — 02:00 daily
 - Cognee Memory Sync — 06:30 daily
-- OpenPost Release Watch — 07:15 daily
+- Instagram Publisher Watch — 07:15 daily
 - Velvet Morning Brief — 09:00 daily
 - Morning Delivery Guard — 10:00 daily
 - Cognee Stable Updates — Monday 10:00
@@ -50,6 +50,6 @@ Interactive/connected Gmail is not a normal or fallback owner-delivery path. Req
 
 Before the scheduler cutover, Grok Bot completed a read-only shadow verification for all seven routines and reported 7/7 SHADOW_PASS against current repository authority, web research, live business-source reads, Instagram read evidence, the then-current V10.3 assets, and the canonical Gmail/GitHub path. The routines were then updated in place to production mode without manual execution, preserving identity, schedule, timezone, and enabled state.
 
-On 2026-09-23, owner-email authority moved from V10.3 to Morning Green v3.1 after OpenPost schedule read, thumbnail materialization, renderer/sensor checks, Apps Script bridge v5 health, canonical GitHub/Gmail send success, Gmail message ID, and Gmail readback with six CID images all passed. At that point the schedule, routine identity, timezone and seven-routine protected set did not change.
+On 2026-09-23, owner-email authority moved from V10.3 to Morning Green v3.1 after canonical Cloudflare Publisher schedule read, thumbnail materialization, renderer/sensor checks, Apps Script bridge v5 health, canonical GitHub/Gmail send success, Gmail message ID, and Gmail readback with six CID images all passed. At that point the schedule, routine identity, timezone and seven-routine protected set did not change.
 
 Later on 2026-09-23, live Grok readback verified `Cognee Memory Sync` (`cognee-memory-sync`, daily 06:30) and `Cognee Stable Updates` (`cognee-stable-updates`, Monday 10:00) as enabled in `Asia/Jerusalem`; only then were the corresponding ChatGPT copies disabled. A second provider readback verified `VelvetOS Integrity Guard` (`velvetos-integrity-guard`) still enabled at daily 01:45 and protecting the expanded nine-routine set without changing any other routine.

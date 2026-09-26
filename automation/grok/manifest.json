@@ -59,11 +59,11 @@
       "responsibility": "refresh and verify the local derived Cognee/vfmem index; silent when current and healthy"
     },
     {
-      "id": "openpost-release-watch",
-      "title": "OpenPost Release Watch",
+      "id": "instagram-publisher-watch",
+      "title": "Instagram Publisher Watch",
       "cadence": "daily 07:15",
       "enabled": true,
-      "responsibility": "condition watch; silent when no meaningful change"
+      "responsibility": "verify Cloudflare Publisher authority/health; surface overdue/reconcile/dead-letter evidence; never execute OpenPost"
     },
     {
       "id": "velvet-morning-brief",
