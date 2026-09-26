@@ -21,6 +21,7 @@ This reference is a **visual-language and quality-bar reference**, not a substit
 4. **Minimal typography** — text is used only when it clearly beats a `NO_TEXT` baseline; Hebrew is short, natural and mobile-readable.
 5. **Recipe diversity without visual chaos** — balance `hero`, `UGC/human`, `macro/detail`, `minimal studio`, `bundle/flatlay`, `service/editorial` and process/proof where the evidence supports them.
 6. **Feed coherence** — warm refined product photography, restrained dark/cream/neutral surfaces and controlled orange accent behavior when supported by the verified brand/template palette.
+7. **Premium but not template-like** — no generic icons, placeholder art, fake retail mockups, stock-looking workshop scenes or visible generic design-template feel (including the retired Canva-template look).
 8. **Photo-first service communication** — even service/brand tiles should be grounded in real Velvet products rather than abstract iconography.
 9. **No rigid checkerboard** — diversity should feel curated, not mechanically alternated.
 10. **Exact-final review** — approval applies to the quality bar, not to a draft intention. Every public visual must be checked on the rendered artifact.
@@ -58,7 +59,9 @@ The following are incompatible with this approved standard unless the owner expl
 - visible subject drift from source product geometry/material/color;
 - fake customer scenes, fake shelf presence or invented product variants presented as real;
 - text-heavy template cards that overpower the product;
+- generic design-template aesthetics (including the retired Canva-template look);
 - decorative filler stock imagery;
+- the rejected G004 design `DAHUaelaug0` (legacy Canva design ID; reject list only, never a route) as layout, style, canonical edit, source or publish asset.
 
 ## Owner extension · multi-source composition · 2026-09-20
 

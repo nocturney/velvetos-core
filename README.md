@@ -31,7 +31,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>90</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>91</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>10</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -51,8 +51,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Office Control Plane schedule offset:** `office-control-plane.yml` cron `0 */6 * * *` → `0 2,8,14,20 * * *` (05:00/11:00/17:00/23:00 IDT), so it no longer collides with the Office Loop at 10:30/1…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Office Control Plane schedule offset:** `office-control-plane.yml` cron `0 */6 * * *` → `0 2,8,14,20 * * *` (05:00/11:00/17:00/23:00 IDT), so it no longer collides with the Office Loop at 10:30/1…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-26 — **Visual identity restored after Canva removal:** #362 deleted every line mentioning Canva, which also dropped the approved-reference SHA line and cold-start trigger from the instance desk rule (fr…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-26 — **Visual identity restored after Canva removal:** #362 deleted every line mentioning Canva, which also dropped the approved-reference SHA line and cold-start trigger from the instance desk rule (fr…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
