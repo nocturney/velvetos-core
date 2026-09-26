@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- 2026-09-26 — **Text-to-CAD production bridge** (authored 2026-09-24, PR #336, merged after main sync): integrated `earthtojake/text-to-cad` into the existing `vfprod` / `expert-3d-model` path without creating a second printer source of truth. The Windows host uses an isolated local clone/venv, reuses `VelvetPrintLab/slicer-router/printer_matrix.json` and existing native Orca profiles, generates text-to-cad wrapper profiles, and exposes `scripts/vf_cad.py` for doctor, DfAM and local slicing. Printer upload/start/heating/motion remain disabled. Sensor: `scripts/check-vf-cad-integration.py`.
 - 2026-09-26 — **Velvet Factory template: two-way merge with the published frontend:**
   - **From the frontend into `instances/velvet-factory/`:**
     - The fail-closed `brandAssetLock` / `creativeTransformationLock` / `projectRequestGate` blocks, in both `vf-desk.json` and `instance/velvet-factory.json`.

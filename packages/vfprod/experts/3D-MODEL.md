@@ -6,8 +6,10 @@
 ## מתי
 
 - קובץ STL/3MF/STEP חדש לבדיקה לפני תור
-- קונספט מטקסט/תמונה (אחרי אישור ראש צוות)
-- תיקון mesh / wall thickness / supports hint
+- CAD פונקציונלי פרמטרי מטקסט/מידות דרך `TEXT-TO-CAD.md`
+- קונספט אורגני/סקלפטורלי מטקסט/תמונה דרך 3D AI Studio (אחרי אישור ראש צוות)
+- DfAM: wall thickness / overhang / supports / orientation עם מדידה מקומית
+- slicing מאומת דרך OrcaSlicer וה־printer matrix הקיים
 - מק״ט חוזר (`#vfsku`) + רישיון (`#vlicense`)
 
 ## שלבים
