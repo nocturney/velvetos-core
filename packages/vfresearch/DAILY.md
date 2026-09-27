@@ -10,7 +10,7 @@ Cloud לא גולש ל־chatgpt.com / gemini.google.com / perplexity.ai. לא ש
 
 1. לקרוא את הבריף הקודם, לוח `vfgrowth`, מצב `vfsku`/ייצור, והקשר משרד/הזמנות החי כשזמין.
 2. להריץ מחקר Web אמיתי על אותות רלוונטיים לסטודיו: מוצרים חוזרים קלים להדפסה/מכירה, המרה מפנייה להזמנה, יעילות ייצור/משרד, תוכן מהעבודה עצמה, ומגמות maker/3D-print שימושיות.
-3. להריץ `python3 scripts/vf_upstream_watch.py check --write packages/vfresearch/sources/upstream-watch-latest.json`. זהו read-only watch על כלים מותקנים וגם על repos שמספקים skills/agents/patterns; אין auto-upgrade. שינוי upstream הוא אות לבדיקה, לא אישור להתקנה.
+3. להריץ `python3 scripts/vf_upstream_watch.py check --write packages/vfresearch/sources/upstream-watch-latest.json`. זהו read-only watch על כלים מותקנים וגם על repos שמספקים skills/agents/patterns; אין auto-upgrade. שינוי upstream נשאר `pendingUpdate` גם בריצות הבאות עד אימוץ שנבדק. רק אחרי compatibility/adoption evidence מפורש מותר `vf_upstream_watch.py ack`; עצם גילוי העדכון אינו אישור להתקנה או ack.
 4. להעדיף מקור ראשוני/עדכני; לשמור URL + תאריך מקור. לא להעתיק buzz ולא להציג אות כללי כאילו הוא Insight של `@velvets_cloud`.
 5. להטמיע רק מה ששימושי בפק קיים (`constitution/ORCHESTRA.md`). בלי פק חדש רק כי נמצא רעיון.
 6. לכתוב את התמצית הצרכנית ל־`packages/vfops/data/research.md` עבור בריף 09:00. כאשר המצב הוא `ready_for_brief`, גוף התמצית חייב להשתמש בכותרת הקנונית **`## מה נבנה / יועל`** לפני הממצאים. אם אין משהו מוצק: **«אין חדש במשרד»** בדיוק.

@@ -57,7 +57,7 @@ No Instagram connection does **not** stop office work: continue intake, inspecti
 
 ## Recurring non-clock responsibilities
 
-- **Upstream/toolchain watch:** the existing Research Seat runs `python3 scripts/vf_upstream_watch.py check --write packages/vfresearch/sources/upstream-watch-latest.json`. It covers installed/runtime sources and repository-only skill/agent/pattern upstreams from `packages/velvetos/UPSTREAM-WATCH.json`. It never auto-upgrades; compatibility/smoke evidence is required before adopting changes.
+- **Upstream/toolchain watch:** the existing Research Seat runs `python3 scripts/vf_upstream_watch.py check --write packages/vfresearch/sources/upstream-watch-latest.json`. It covers installed/runtime sources and repository-only skill/agent/pattern upstreams from `packages/velvetos/UPSTREAM-WATCH.json`. It never auto-upgrades. Detected updates are sticky until a reviewed adoption explicitly runs `vf_upstream_watch.py ack --repo … --evidence …`; compatibility/smoke evidence is required before that acknowledgement.
 - **Bi-daily Best Skills:** `BEST-SKILLS.md` / `vf-best-skills` runs approximately every 48h until explicitly stopped. This is a standing lifecycle responsibility, not a second fixed-clock scheduler; timer/provider renewal evidence must remain honest.
 - **Weekly inspiration links / קישורי השראה שבועיים:** `vfresearch/WEEKLY.md` + `LINKS.json`, followed by Print·Demand·Sound via `vfresearch/hq/PRINT-DEMAND.md`. The weekly cadence must emit real source/evidence or an explicit no-change/blocker state.
 - MakerWorld/Printables candidate research runs behind `MAKERWORLD-SCAN.md` + license/slice/test gates; never promote directly to SKU/price.
