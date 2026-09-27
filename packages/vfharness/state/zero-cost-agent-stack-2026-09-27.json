@@ -22,7 +22,7 @@
     "Completed Phase 9 ecosystem radar through the existing Velvet Research Seat: Best Skills freshness restored using latest observed 2026-09-25 data, no candidate proved unique value beyond existing coverage/locks, no extra dev lab installed, no scheduler or authority added, recurring cost 0",
     "Completed Phase 10-11 resilient targeted acceptance: zero-cost implementation stack PASS at recurring cost 0 and unchanged authority; repository-wide strict deployment proof remains PARTIAL because current runtime receipts/ownership need reconciliation and unrelated parallel worktree edits remain active; monolithic check-all is not claimed PASS"
   ],
-  "next_step": "Owner review of completed zero-cost scope. The only remaining repository-wide strict evidence blocker is a fresh Grok Bot provider readback for the production scheduler; Git/manifest state must not substitute for provider proof. Push remains owner-authorized only.",
+  "next_step": "Owner review of the completed zero-cost scope. Repository-wide strict runtime proof now passes with live Grok provider readback, Windows edge fallback, and fresh GitHub/Google Drive connector receipts. Push remains owner-authorized only.",
   "artifacts": [
     "docs/implementation/velvetos-zero-cost-agent-stack.md",
     "packages/vfharness/reliability/components.json",
@@ -82,7 +82,11 @@
     "packages/vfharness/state/runtime/sderot-windows.json",
     "packages/vfharness/state/runtime/github.json",
     "packages/vfharness/state/runtime/google-drive.json",
-    "packages/vfharness/state/runtime/grok-production-scheduler.json"
+    "packages/vfharness/state/runtime/grok-production-scheduler.json",
+    "automation/grok/provider-readback-2026-09-27.json",
+    "automation/grok/manifest.json",
+    "automation/grok/CONTRACT.md",
+    "scripts/check-grok-provider-readback.py"
   ],
   "unresolved": [
     "Browser automation isolation remains PARTIAL",
@@ -95,11 +99,10 @@
     "Cognee remains a derived/context-only index: final 22-case retrieval trails the TF-IDF challenger and median end-to-end recall is about 15.44 seconds; canonical verification remains mandatory",
     "Reef untrusted proposer execution remains blocked on this Windows host until a justified Linux/bwrap isolation path and a separately approved zero-cost local model endpoint exist",
     "Velvet Research Seat daily body for 2026-09-27 missed the 07:00 cutoff and was recovered at about 12:15; same-day freshness is restored but the scheduled 02:00 execution for this date remains unproven",
-    "Monolithic check-all remains historically INTERRUPTED and is not claimed PASS; final acceptance instead completed via resilient targeted batches.",
-    "Repository-wide strict runtime proof is narrowed to one blocker: fresh Grok Bot provider readback is unavailable in this session. Runtime contract v2 proves sderot-windows healthy as the Mac failover and records fresh GitHub/Google Drive connector receipts; Git/manifest state alone remains insufficient Grok provider proof."
+    "Monolithic check-all remains historically INTERRUPTED and is not claimed PASS; final acceptance instead completed via resilient targeted batches."
   ],
   "pulse": "idle",
-  "verification": "Phases 1-4 gates PASS in declared scope; Phase5 initial pilot limitations preserved plus promotion follow-up PASS: FreeCAD 1.1.3 portable verified, CLI-Anything headless 106 PASS/6 GUI-only disabled, repaired one-body geometry + DfAM + U1 Orca/G-code validation PASS, 3MF remains blocked; Phase6 Laya cost preflight PASS, 78-case offline benchmark + calibration + exact repeatability complete, check-laya-shadow PASS, STAY_SHADOW_NOT_PROMOTED; Phase7 22-case both-backend benchmark complete on Cognee b98a digest with provenance=1, repeatability=1, unique canonical sources, source-dedup repair and vfmem authority preserved; Phase8 Reef lab sensor PASS, 88 harness-example and 56 contract/render tests PASS under import-only fail-closed overlay, broader Windows diagnostics explicitly PARTIAL, no provider/model calls, LAB_ONLY_NOT_PROMOTED, WSL deferred; Phase9 ecosystem-radar sensor PASS, Research Seat same-day freshness restored by explicit late recovery after the missed cutoff, NO_ADDITIONAL_DEV_LAB_JUSTIFIED and no extra install/scheduler; recurring cost=0; Phase10-11 targeted acceptance batches PASS for the zero-cost stack, check-zero-cost-final-acceptance PASS, runtime-doctor strict remains PARTIAL on four missing/stale receipts; check-all not claimed PASS",
+  "verification": "Phases 1-4 gates PASS in declared scope; Phase5 initial pilot limitations preserved plus promotion follow-up PASS: FreeCAD 1.1.3 portable verified, CLI-Anything headless 106 PASS/6 GUI-only disabled, repaired one-body geometry + DfAM + U1 Orca/G-code validation PASS, 3MF remains blocked; Phase6 Laya cost preflight PASS, 78-case offline benchmark + calibration + exact repeatability complete, check-laya-shadow PASS, STAY_SHADOW_NOT_PROMOTED; Phase7 22-case both-backend benchmark complete on Cognee b98a digest with provenance=1, repeatability=1, unique canonical sources, source-dedup repair and vfmem authority preserved; Phase8 Reef lab sensor PASS, 88 harness-example and 56 contract/render tests PASS under import-only fail-closed overlay, broader Windows diagnostics explicitly PARTIAL, no provider/model calls, LAB_ONLY_NOT_PROMOTED, WSL deferred; Phase9 ecosystem-radar sensor PASS, Research Seat same-day freshness restored by explicit late recovery after the missed cutoff, NO_ADDITIONAL_DEV_LAB_JUSTIFIED and no extra install/scheduler; recurring cost=0; Phase10-11 targeted acceptance batches PASS for the zero-cost stack, check-zero-cost-final-acceptance PASS, runtime-doctor --strict PASS with fresh live Grok provider readback; Mac offline is covered by verified Windows anyOf fallback; check-all not claimed PASS",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-27"

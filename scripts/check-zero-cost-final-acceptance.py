@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the targeted-batch final acceptance without claiming check-all or a clean parallel worktree."""
+"""Validate the targeted-batch final acceptance without claiming a monolithic check-all run."""
 from __future__ import annotations
 
 import json
@@ -54,15 +54,27 @@ def main() -> None:
     assert runtime_manifest.get("schema") == "vf.runtime.expected.v2"
 
     strict = receipt.get("repositoryWideStrictDeploymentProof") or {}
-    assert strict.get("status") == "PARTIAL_SINGLE_PROVIDER_BLOCKER"
+    assert strict.get("status") == "PASS"
     assert strict.get("contractSchema") == "vf.runtime.expected.v2"
     assert strict.get("command") == "python scripts/check-runtime-doctor.py --strict"
-    assert strict.get("blockingEvidence") == [
-        "grok-production-scheduler: current provider readback unavailable; last canonical provider readback is 2026-09-23"
-    ]
+    assert strict.get("observedExitCode") == 0
+    assert strict.get("blockingEvidence") == []
+    assert strict.get("providerReadbackArtifact") == "automation/grok/provider-readback-2026-09-27.json"
 
     doctor_env = dict(os.environ)
     doctor_env["PYTHONUTF8"] = "1"
+
+    grok = subprocess.run(
+        [sys.executable, "scripts/check-grok-provider-readback.py"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        env=doctor_env,
+    )
+    grok_output = grok.stdout + "\n" + grok.stderr
+    assert grok.returncode == 0
+    assert "GROK PROVIDER READBACK PASS" in grok_output
+
     doctor = subprocess.run(
         [sys.executable, "scripts/check-runtime-doctor.py", "--strict"],
         cwd=ROOT,
@@ -71,8 +83,8 @@ def main() -> None:
         env=doctor_env,
     )
     doctor_output = doctor.stdout + "\n" + doctor.stderr
-    assert doctor.returncode == 1
-    assert "FAIL grok-production-scheduler" in doctor_output
+    assert doctor.returncode == 0
+    assert "FAIL grok-production-scheduler" not in doctor_output
     assert "fallback healthy via sderot-windows" in doctor_output
     assert "FAIL github" not in doctor_output
     assert "FAIL google-drive" not in doctor_output
