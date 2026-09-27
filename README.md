@@ -20,6 +20,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 **Memory backend:** `vfmem` remains canonical; Cognee `1.6.0` is integrated as an optional local/keyless derived semantic index over a curated 66-source / 13-category durable corpus. The active index uses local multilingual FastEmbed, provenance-mapped `CHUNKS`, canonical verification, deterministic vfmem fallback, and atomic `active-state.json` cutover with legacy `state.json` retained as rollback evidence. See `packages/vfmem/COGNEE.md`.
 
+**Zero-cost stack closeout:** PR #390 is merged to `main`; the canonical final-acceptance receipt/sensor records `MERGED / merge=YES` and the reconciled suite remains **109/109 PASS**. Declared limitations remain fail-closed and unchanged.
 
 <!-- OPERATIONAL-SNAPSHOT:START -->
 <table>

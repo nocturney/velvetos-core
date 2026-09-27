@@ -3,9 +3,9 @@
   "date": "2026-09-27",
   "program": "zero-cost-agent-stack",
   "branch": "implementation/zero-cost-agent-stack",
-  "acceptedCodeHead": "bd956faf0eb6ff8839ecb23f57a6d4159ebb3673",
+  "acceptedCodeHead": "ac7a74972c9d7898c206be4ba6689b60ed2cf326",
   "status": "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS",
-  "decision": "PUSHED_FOR_DRAFT_PR_REVIEW_NO_MERGE",
+  "decision": "MERGED_TO_MAIN_AFTER_OWNER_APPROVAL",
   "fullCheckAll": {
     "status": "PASS",
     "command": "python scripts/check-all.py",
@@ -13,7 +13,7 @@
     "sensorCount": 109,
     "terminalLine": "OK suite passed=109",
     "windowsProcessIsolation": "Each sensor launched with CREATE_NEW_PROCESS_GROUP on Windows to prevent child console-control teardown from terminating the parent suite.",
-    "historicalNote": "Integrated rerun after current-main policy/CAD reconciliation completed normally with 109/109 sensors; Windows child isolation remains enforced through CREATE_NEW_PROCESS_GROUP."
+    "historicalNote": "Final PR head and post-reconciliation local suites completed normally at 109/109; PR #390 was then merged to main after explicit owner approval."
   },
   "targetedBatches": [
     {
@@ -69,13 +69,13 @@
       "status": "PASS"
     },
     "integratedMainRange": {
-      "range": "be4259604eb2e955b5e5966c297241bfb307df46..bd956faf0eb6ff8839ecb23f57a6d4159ebb3673",
+      "range": "be4259604eb2e955b5e5966c297241bfb307df46..ac7a74972c9d7898c206be4ba6689b60ed2cf326",
       "status": "PASS",
-      "note": "Checks the reconciled PR delta against the current main parent after integrating policy, Instagram, vfmedia and CAD changes."
+      "note": "Covers the final reconciled PR delta against the main parent that PR #390 merged from."
     },
     "liveWorkingTree": {
       "status": "PASS_CLEAN",
-      "evidence": "Accepted code head bd956faf had clean working tree before receipt refresh; final cleanliness is rechecked after the acceptance commit."
+      "evidence": "Final PR head ac7a7497 was clean before merge; post-merge closeout rechecks git cleanliness on main."
     }
   },
   "costAndAuthority": {
@@ -122,7 +122,10 @@
     "e60e534a merge: integrate latest main into zero-cost stack",
     "b9b1d6d1 merge: refresh latest main before PR review",
     "092f614f fix: close final review cost and docs gaps",
-    "bd956faf merge: reconcile latest main into zero-cost stack"
+    "bd956faf merge: reconcile latest main into zero-cost stack",
+    "e2b65ed9 test: refresh zero-cost acceptance after main reconciliation",
+    "ac7a7497 docs: bind zero-cost normative text to policy registry",
+    "2d72e486 merge: PR #390 merged to main after explicit owner approval"
   ],
   "acceptance": {
     "committedScopeReady": true,
@@ -130,9 +133,11 @@
     "pushRequiresExplicitOwnerPermission": true,
     "pushWasExplicitlyAuthorized": true,
     "pullRequest": "https://github.com/nocturney/velvetos-core/pull/390",
-    "pullRequestState": "DRAFT",
-    "mergePerformed": false,
-    "next": "PR #390 is reconciled with current main and remains DRAFT; keep merge owner-controlled while declared limitations remain fail-closed."
+    "pullRequestState": "MERGED",
+    "mergePerformed": true,
+    "next": "PR #390 merged into main after explicit owner approval; no additional owner action is required for this program closeout.",
+    "mergeCommitSha": "2d72e486104fc055f215a7873f623fc4498c8355",
+    "mergedAt": "2026-09-27T18:36:42Z"
   },
   "repositoryWideStrictDeploymentProof": {
     "status": "PASS",
