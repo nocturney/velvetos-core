@@ -110,7 +110,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 ‏ארכיטקטורה קנונית: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/velvetos/LAYERS.md`](packages/velvetos/LAYERS.md) · [`packages/velvetos/ADR-THREE-LAYERS.md`](packages/velvetos/ADR-THREE-LAYERS.md)
 
-‏Registry ארכיטקטורת מדיניות: [`packages/velvetos/policy/README.md`](packages/velvetos/policy/README.md) — מיפוי סמכויות, סנסורים ו־retention; דוחות Stage 0 נמצאים תחת `packages/velvetos/policy/reports/`. Stage 1 מרכז את `instagram.publish` ב־evaluator יחיד ומחבר אותו ל־Cloudflare publisher לפני ה־publish mutation; סטטוס הפריסה החיה נשמר בנפרד ב־`packages/vfigos/PUBLISHER.json`.
+‏Registry ארכיטקטורת מדיניות: [`packages/velvetos/policy/README.md`](packages/velvetos/policy/README.md) — מיפוי סמכויות, סנסורים ו־retention; דוחות Stage 0 נמצאים תחת `packages/velvetos/policy/reports/`. Stage 1 מרכז את `instagram.publish` ב־evaluator יחיד ומחבר אותו ל־Cloudflare publisher לפני ה־publish mutation. Cutover חי אומת ב־27.9.2026 ב־Worker version `c4e82e25-2949-47ce-9446-4222012ff81e`; receipt מלא ב־`packages/velvetos/policy/reports/stage1-instagram-publish-cutover.json`.
 
 > ‏**עיקרון:** מקור אמת אחד, הרבה תצוגות ואוטומציות. לא בונים מערכת מקבילה רק כי עלה רעיון חדש.
 
@@ -256,7 +256,7 @@ The active deployment today is **Velvet Factory**, a 3D-printing studio in Sdero
 
 Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/velvetos/LAYERS.md`](packages/velvetos/LAYERS.md) · [`packages/velvetos/ADR-THREE-LAYERS.md`](packages/velvetos/ADR-THREE-LAYERS.md)
 
-Policy architecture registry: [`packages/velvetos/policy/README.md`](packages/velvetos/policy/README.md) — authority, sensor and retention mapping; Stage 0 reports live under `packages/velvetos/policy/reports/`. Stage 1 centralizes `instagram.publish` in one evaluator and wires it into the Cloudflare publisher before the publish mutation; live deployment evidence remains separate in `packages/vfigos/PUBLISHER.json`.
+Policy architecture registry: [`packages/velvetos/policy/README.md`](packages/velvetos/policy/README.md) — authority, sensor and retention mapping; Stage 0 reports live under `packages/velvetos/policy/reports/`. Stage 1 centralizes `instagram.publish` in one evaluator and wires it into the Cloudflare publisher before the publish mutation. Live cutover was verified on September 27, 2026 at Worker version `c4e82e25-2949-47ce-9446-4222012ff81e`; the receipt is `packages/velvetos/policy/reports/stage1-instagram-publish-cutover.json`.
 
 > **Principle:** one source of truth, many projections and automations. New ideas extend existing SoTs instead of creating parallel systems.
 

@@ -232,6 +232,14 @@ def validate_registries() -> tuple[list[str], set[str]]:
             instance = load(instance_path)
             standing = bool((((instance.get("creativeAutonomy") or {}).get("publish") or {}).get("standingAuthorization")))
             require(('STANDING_AUTHORIZATION = "true"' in wrangler) == standing, "Cloudflare standing authorization projection drift", problems)
+        cutover_path = REPORTS / "stage1-instagram-publish-cutover.json"
+        require(cutover_path.is_file(), "instagram.publish production cutover evidence missing", problems)
+        if cutover_path.is_file():
+            cutover = load(cutover_path)
+            require(cutover.get("policy_id") == "instagram.publish" and cutover.get("policy_version") == 1, "instagram.publish cutover policy binding mismatch", problems)
+            require(cutover.get("cutover_result") == "PASS", "instagram.publish cutover is not PASS", problems)
+            require(cutover.get("negative_control", {}).get("persistent_job_created") is False, "instagram.publish negative control persisted a job", problems)
+            require(cutover.get("postdeploy", {}).get("scheduled_count") == 0, "unexpected scheduled jobs recorded at Stage 1 cutover", problems)
         node_tests = [
             ROOT / "packages" / "velvetos" / "policy" / "test-instagram-publish-policy.mjs",
             ROOT / "packages" / "vfigos" / "cloudflare-publisher" / "test-policy-gate.mjs",
