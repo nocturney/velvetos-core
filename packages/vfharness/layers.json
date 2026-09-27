@@ -87,7 +87,9 @@
       "files": [
         "CHANGELOG.md",
         "packages/vfharness/CHECKLIST.md",
-        "docs/HARNESS.md"
+        "docs/HARNESS.md",
+        "packages/vfharness/observability/trace-policy.json",
+        "packages/vfharness/state/observability-phase2-2026-09-27.json"
       ]
     }
   ],
@@ -170,6 +172,11 @@
     {
       "id": "check-agent-security-conformance",
       "script": "scripts/check-agent-security-conformance.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-observability",
+      "script": "scripts/check-observability.py",
       "type": "computational"
     },
     {

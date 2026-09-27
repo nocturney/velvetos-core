@@ -3,6 +3,7 @@
 !.env.example
 .DS_Store
 node_modules/
+tools/observability/python/
 packages/vfharness/evals/latest-results.json
 .origincache/
 .config/origin-cli/

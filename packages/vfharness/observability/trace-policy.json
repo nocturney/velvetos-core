@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "role": "LOCAL_NON_AUTHORITATIVE_TELEMETRY",
+  "authority": false,
+  "deployment": "LOCAL_FILE_ONLY",
+  "remote_exporters": [],
+  "service_name": "velvetos-local-observability",
+  "required_flow": [
+    "request",
+    "routing",
+    "retrieval",
+    "agent",
+    "tool",
+    "approval",
+    "execution",
+    "readback",
+    "result"
+  ],
+  "allowed_attributes": [
+    "velvetos.stage",
+    "velvetos.status",
+    "velvetos.component",
+    "velvetos.domain",
+    "velvetos.hit_count",
+    "velvetos.top_route",
+    "velvetos.decision",
+    "velvetos.cost_classification",
+    "velvetos.approval_required",
+    "velvetos.case_count",
+    "velvetos.readback_verified",
+    "velvetos.incremental_cost_ils",
+    "velvetos.error_type",
+    "openinference.span.kind"
+  ],
+  "forbidden_attribute_fragments": [
+    "prompt",
+    "input",
+    "output",
+    "content",
+    "body",
+    "message",
+    "email",
+    "phone",
+    "customer",
+    "secret",
+    "token",
+    "password",
+    "authorization",
+    "cookie",
+    "credential",
+    "stdout",
+    "stderr",
+    "path_payload"
+  ],
+  "notes": [
+    "OpenTelemetry and OpenInference spans are debug evidence only and never authorize an action.",
+    "No raw user text, retrieved chunks, tool payloads, secrets or connector credentials are emitted.",
+    "Only committed allowlisted metadata may be persisted.",
+    "No collector, cloud backend, telemetry SaaS or network exporter is configured."
+  ]
+}

@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phase 0 and Phase 1 implemented and locally verified; Phase 2 in progress.
+Phase 0, Phase 1 and Phase 2 implemented and locally verified; Phase 3 in progress.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -38,9 +38,11 @@ Phase 0 and Phase 1 implemented and locally verified; Phase 2 in progress.
 - Behavioral regression suite covers 10 required authority classes in 17 cases; local Promptfoo run passed 17/17 with cost=0, tokens=0 and a failing negative control.
 - OWASP Secure Agent Playbook mapped to 9 actual VelvetOS surfaces; 7 PASS and 2 PARTIAL (browser isolation and local eval-runner sandbox boundary).
 - Phase 1 sensors: `check-behavioral-evals.py` PASS; `check-agent-security-conformance.py` PASS.
+- OpenTelemetry SDK 1.45.0 + OpenInference instrumentation 0.1.66 / semantic conventions 0.1.39 installed locally after FREE_LOCAL cost preflights; no collector/cloud backend.
+- One real safe local trace passed with 9 spans: request → routing → retrieval → agent → tool → approval → execution → readback → result.
+- Trace receipt is local-only, non-authoritative, allowlisted and contains no prompt/tool payload bodies; `check-observability.py --strict` PASS.
 
 ## Pending
-- Phase 2: OpenTelemetry + OpenInference local instrumentation and one safe end-to-end trace.
 - Phase 3: local/self-hosted reliability sensors (Healthchecks, GlitchTip, changedetection.io) only after validated cost/license preflights.
 - Phase 4: engineering-quality embeds/tools; removable and non-authoritative.
 - Phase 5+: CLI-Anything, Laya shadow, memory benchmark, Reef lab, additional dev labs, ecosystem radar and final acceptance.

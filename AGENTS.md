@@ -100,6 +100,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-no-new-recurring-cost.py` | Canonical NO_NEW_RECURRING_COST law + fail-closed Cost Preflight enforcement |
 | `scripts/check-behavioral-evals.py` | Authority-bound behavioral regression for missing facts, tool failure, memory, connectors, handoff, publish/read-back and prompt injection |
 | `scripts/check-agent-security-conformance.py` | OWASP-mapped agent/MCP/connectors/control-API/memory/approval/ingestion security evidence; PARTIAL stays explicit |
+| `scripts/check-observability.py` | Local OpenTelemetry/OpenInference trace contract; sanitized metadata only, no remote exporter, telemetry never authority |
 | `scripts/check-vfprod.py` | Floor fleet routing (4 beds, no Print from HQ); filament remainder; maintenance snapshot empty=אין ספירה |
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
 | `scripts/check-vfgrowth.py` | Standing IG calendar + ledger + Studio handoff (instagram.com, no Suite) |
