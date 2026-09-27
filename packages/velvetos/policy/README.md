@@ -74,5 +74,6 @@ The affected selector is intentionally non-authoritative in Stage 2B. `scripts/c
 - Current registry evidence contains 35 technical dependency edges across 20 sensors.
 - A single `packages/vfcopy/VOICE.md` replay selects 14/95 sensors after conservative package-domain refinement, versus 67/95 before that refinement.
 - Pull requests record the shadow selection and comparison in the GitHub job summary and emit machine-readable log markers. The authoritative full-suite result is compared against the would-select set to detect misses without duplicating CI work.
+- Opening evidence is pinned in `reports/stage2-shadow-observation-baseline.json`: PR #398, its shadow/full comparison, the successful post-merge main run, and deterministic replay samples. It is a fixed baseline, not a live counter.
 - Exit criteria are fixed at at least 20 observed pull requests and 7 observation days, zero critical misses, classification of every noncritical miss, mapping repair for every relevant miss, deterministic replay, and a tested `FULL_SUITE_REQUIRED` rollback.
 - Stage 2B does not change branch protection, remove duplicate checks, or activate affected-only enforcement.
