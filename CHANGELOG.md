@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-27 — **Control Center integration projection + deploy-contract fix:** the Control API now projects canonical instance integrations from `instances/velvet-factory/.cursor/vf-desk.json#tools`, packages that desk in the Cloud Run image, and documents the current private-IAP Control Center / app-token-protected public-upstream topology. The deploy helper now preserves `--allow-unauthenticated` for this read-only upstream instead of silently removing the platform invocation path required by the proxy; `/health` remains public while protected `/v1/*` reads still require `VELVETOS_CONTROL_API_TOKEN`. Local Control API tests, host smoke, and six-view Control Center QA pass; authenticated owner IAP roundtrip remains pending.
+
 - 2026-09-27 — **Fabrication Router + full text-to-cad skill suite:** installs and pins 12 `earthtojake/text-to-cad` skills (`cad`, Viewer, STEP Parts, DfAM/DFM, DXF, engineering drawing, G-code, URDF/SRDF/SDF and SendCutSend preflight), adds a deterministic per-request tool-selection router, binds it into Core/instance/Living Studio production routing, and verifies the Windows host with CAD/Viewer/orientation/DFM/STEP-part/DXF/PDF/robot-description/Orca smokes. Native reasoning/vision and 3D AI Studio remain preferred where they fit better than deterministic CAD. `bambu-labs`, printer upload/start/control, and SendCutSend order submission remain excluded. Cost preflights preserve the zero-new-recurring-cost default.
 
 - 2026-09-26 — **NO_NEW_RECURRING_COST:** adds canonical zero-new-recurring-cost authority, fail-closed cost classifications/preflight, RED billing gates, and no-silent-paid-failover enforcement.
