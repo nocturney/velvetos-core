@@ -14,7 +14,7 @@
     "Fixed Windows vfmedia PID liveness probe so captured selftests no longer interrupt parent processes.",
     "Ran targeted sensors and full 90-sensor suite."
   ],
-  "next_step": "Commit and push the reviewed feature branch, open a PR, and keep merge blocked until repository CI is green. Separately, when Grok routine-management access exists, delete any live openpost-release-watch provider routine and require readback.",
+  "next_step": "Keep PR #403 unmerged until repository CI is green. Separately, when Grok routine-management access exists, delete any live openpost-release-watch provider routine and require provider readback.",
   "artifacts": [
     "packages/velvetos/UPSTREAM-WATCH.json",
     "scripts/vf_upstream_watch.py",
@@ -52,7 +52,10 @@
       "repo": "topoteretes/cognee",
       "release": "v1.6.1",
       "action": "detected_only_no_auto_upgrade"
-    }
+    },
+    "remote_branch": "origin/feat/upstream-release-watch",
+    "implementation_commit": "3acac65d6502654f4cb25621aa9a0744134b4d1c",
+    "pull_request": "https://github.com/nocturney/velvetos-core/pull/403"
   },
-  "latest_observation": "Current strict upstream sweep: 93 sources, 0 failed, 1 changed (topoteretes/cognee, release v1.6.1). Targeted sensors all PASS. Full suite remains 89/90 solely because the 2026-09-27 owner brief artifact is absent in both operational and clean worktrees."
+  "latest_observation": "Implementation commit 3acac65 pushed and draft PR #403 opened. Current strict upstream sweep: 93 sources, 0 failed, 1 changed (topoteretes/cognee, release v1.6.1). Targeted sensors all PASS. Full suite remains 89/90 solely because the 2026-09-27 owner brief artifact is absent in both operational and clean worktrees."
 }
