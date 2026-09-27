@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "phase": 7,
+  "status": "COMPLETE",
+  "date": "2026-09-27",
+  "authority": "vfmem remains canonical memory; evaluated systems are derived/context-only",
+  "cost": {
+    "incrementalRecurringCostIls": 0,
+    "cogneePreflight": "PASS FREE_LOCAL",
+    "scikitLearnPreflight": "PASS FREE_LOCAL",
+    "dejaVuPreflight": "PASS FREE_LOCAL"
+  },
+  "tfidfBaseline": {
+    "cases": 22,
+    "chunks": 5677,
+    "buildMs": 1283.97,
+    "hit1": 0.4545,
+    "hit3": 0.7273,
+    "hit5": 0.8182,
+    "mrr": 0.5962,
+    "latencyMsMedian": 15.39,
+    "latencyMsP95BeforeNearestRankFix": 19.38,
+    "dimensions": {
+      "contradiction_handling": {
+        "cases": 2,
+        "hit1": 1.0,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 1.0
+      },
+      "temporal_correctness": {
+        "cases": 2,
+        "hit1": 0.5,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 0.75
+      }
+    },
+    "scope": "all Markdown under packages/, constitution/, docs/; broader contamination surface than Cognee allowlist",
+    "indexBytes": 7505276
+  },
+  "dejaVu": {
+    "version": "0.21.2",
+    "role": "session-history adjunct only",
+    "preExistingInstall": "C:\\Users\\Chris\\.local\\bin\\deja.exe",
+    "preExistingIndexSessions": 387,
+    "indexBytes": 7827665,
+    "preExistingWiringDetected": true,
+    "changesToExistingWiring": false,
+    "builtinBench": {
+      "sessions": 500,
+      "queries": 100,
+      "lexicalRecallAt1": 1.0,
+      "mrr": 1.0,
+      "recallAt5": 1.0,
+      "recallAt10": 1.0,
+      "medianLatencyMs": 1.3665,
+      "hybrid": "SKIPPED_NO_LOCAL_ENDPOINT"
+    },
+    "fieldQueries": {
+      "count": 5,
+      "top1Plausible": 5,
+      "cliLatencyMsRange": [
+        144.96,
+        280.02
+      ]
+    },
+    "caveats": [
+      "identifier-style NO_NEW_RECURRING_COST query returned no exact match",
+      "doctor reported 8 clipped Codex messages and 8 clipped Cursor messages",
+      "not a substitute for canonical business memory"
+    ]
+  },
+  "hindsight": {
+    "versionObserved": "0.10.1",
+    "status": "NOT_INSTALLED_NOT_JUSTIFIED_YET",
+    "reason": "Windows/self-hosted is supported, but full memory requires an LLM provider plus embedded/external PostgreSQL. Verified absent on this host: Ollama, LM Studio, llama.cpp server/CLI. Adding provider/daemon/DB complexity is not justified before current baseline is measured."
+  },
+  "supermemory": {
+    "versionObserved": "0.0.8",
+    "status": "NOT_INSTALLED_OPTIONAL_NOT_JUSTIFIED",
+    "reason": "Self-hosted path requires an LLM provider; release/docs platform guidance is inconsistent for Windows, self-hosted lite has a 10000-document license cap, and current v0.0.8 has open provider-detection issues."
+  },
+  "cognee": {
+    "version": "1.6.0",
+    "role": "derived context only",
+    "sourceCount": 66,
+    "runtimeBytesObservedDuringSync": 2673603919,
+    "sourceScope": "explicit 66-file canonical allowlist with per-result SHA/category/authority/freshness provenance",
+    "targetSourceDigest": "b98a3b31199eb548432e16e6afef4ef5a9c7696361b48fa2771e497eb5359d9a",
+    "activeSourceDigestBeforeSync": "faf0cde0790ef4da3062784447e2a930824e9857338441a8f88af3ae81eaa578",
+    "syncProgress": "added=true,cognified=true; active-state cutover succeeded and doctor stateCurrent=true",
+    "cutoverHardening": "source bytes are hash-verified during materialization; canonical digest is recomputed before cutover; Windows replace failures preserve a derived-pointer rollback before fsynced in-place fallback; forced fallback negative control PASS.",
+    "duplicateSyncIncident": "An earlier second resume process was detected and terminated; no concurrent duplicate is running now.",
+    "warnings": [
+      "FastEmbed multilingual model currently uses mean pooling vs prior CLS behavior",
+      "torch.jit Python 3.14 FutureWarning",
+      "Deberta SDPA fallback to eager"
+    ],
+    "activeDataset": "velvetos_shared_b98a3b31199eb548",
+    "activeSourceDigest": "b98a3b31199eb548432e16e6afef4ef5a9c7696361b48fa2771e497eb5359d9a",
+    "stateCurrent": true
+  },
+  "next": "Phase 7 complete; continue to isolated Phase 8 Reef harness-improvement lab with no production authority.",
+  "benchmarkFinal": {
+    "cases": 22,
+    "tfidf": {
+      "buildMs": 1206.68,
+      "cases": 22,
+      "hit1": 0.4545,
+      "hit3": 0.6818,
+      "hit5": 0.8182,
+      "mrr": 0.5902,
+      "latency_ms_median": 14.75,
+      "latency_ms_p95": 18.23
+    },
+    "cognee": {
+      "cases": 22,
+      "hit1": 0.2727,
+      "hit3": 0.5909,
+      "hit5": 0.6818,
+      "mrr": 0.4318,
+      "latency_ms_median": 15440.45,
+      "latency_ms_p95": 15627.34,
+      "dataset": "velvetos_shared_b98a3b31199eb548",
+      "sourceDigest": "b98a3b31199eb548432e16e6afef4ef5a9c7696361b48fa2771e497eb5359d9a",
+      "provenance": 1.0,
+      "repeatability": 1.0
+    },
+    "dataset": "velvetos_shared_b98a3b31199eb548",
+    "sourceDigest": "b98a3b31199eb548432e16e6afef4ef5a9c7696361b48fa2771e497eb5359d9a"
+  }
+}

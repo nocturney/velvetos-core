@@ -16,10 +16,10 @@
     "strategy": "content-hash-versioned-dataset",
     "knowledgeProfile": "velvetos-durable-v1",
     "ingestionRevision": "granular-file-multilingual-v2",
-    "addDataPerBatch": 1,
+    "addDataPerBatch": 4,
     "chunkSize": 384,
     "chunksPerBatch": 1,
-    "cognifyDataPerBatch": 1,
+    "cognifyDataPerBatch": 4,
     "sources": [
       "docs/VFMEM.md",
       "packages/vfmem/MEMORY-UPDATE.md",

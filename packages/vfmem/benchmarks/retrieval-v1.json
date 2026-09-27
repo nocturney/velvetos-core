@@ -1,0 +1,197 @@
+{
+  "schema": 1,
+  "id": "vfmem-retrieval-v1",
+  "purpose": "Deterministic retrieval benchmark over canonical vfmem/Cognee sources; no LLM judge.",
+  "top_k": 5,
+  "cases": [
+    {
+      "id": "mem-recall",
+      "category": "memory-governance",
+      "query": "לפני עבודה על פרויקט שכבר נגענו בו, מתי עושים recall ומה עושים אם השאילתה הראשונה ריקה?",
+      "expected": [
+        "packages/vfmem/MEMORY-UPDATE.md"
+      ]
+    },
+    {
+      "id": "mem-evidence-policy",
+      "category": "memory-governance",
+      "dimensions": ["contradiction_handling"],
+      "query": "תצפית אחת היא evidence ולא policy; איך סוגרים רשומה ישנה במקום למחוק?",
+      "expected": [
+        "packages/vfmem/MEMORY-UPDATE.md"
+      ]
+    },
+    {
+      "id": "mem-stale-index",
+      "category": "memory-governance",
+      "dimensions": ["temporal_correctness"],
+      "query": "אחרי שמקור קנוני השתנה אבל Cognee עדיין עם digest ישן, האם מותר להשתמש באינדקס הסמנטי stale ומהו ה-fallback הנכון?",
+      "expected": [
+        "packages/vfmem/MEMORY-UPDATE.md"
+      ]
+    },
+    {
+      "id": "mem-conflicting-records",
+      "category": "memory-governance",
+      "dimensions": ["contradiction_handling", "temporal_correctness"],
+      "query": "אם שתי רשומות זיכרון סותרות מתקופות שונות, האם בוחרים אחת בשקט או מציגים את שתיהן עם תאריכים ותוקף?",
+      "expected": [
+        "packages/vfmem/MEMORY-UPDATE.md"
+      ]
+    },
+    {
+      "id": "layers",
+      "category": "architecture",
+      "query": "מה ההבדל בין Edge, Kernel ו-Office/HQ ומה כל שכבה לא אמורה לעשות?",
+      "expected": [
+        "packages/velvetos/LAYERS.md"
+      ]
+    },
+    {
+      "id": "pipeline",
+      "category": "architecture",
+      "query": "מה חמשת שלבי הצינור הקנוניים lead talk offer fulfill close ומה הדוגמה שלהם ב-Velvet Factory?",
+      "expected": [
+        "packages/velvetos/PIPELINE.md"
+      ]
+    },
+    {
+      "id": "product-truth",
+      "category": "brand-copy",
+      "query": "בפוסט שמציג מוצר מודפס אמיתי אסור לשנות גאומטריה, צללית, פרופורציות או חומר של האובייקט מה-RAW המאושר.",
+      "expected": [
+        "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+        "packages/vfgrowth/EDIT-GATE.md"
+      ]
+    },
+    {
+      "id": "brand-asset-lock",
+      "category": "creative",
+      "query": "לוגו או wordmark רק מנכס מאושר וב-overlay דטרמיניסטי; בגנרציה אין לוגו, טלפון או WhatsApp.",
+      "expected": [
+        "packages/vfom/BRAND-ASSET-LOCK.md"
+      ]
+    },
+    {
+      "id": "voice",
+      "category": "brand-copy",
+      "query": "מה ברירת המחדל לאורך כיתוב אינסטגרם בעברית טבעית וכמה האשטגים לכל היותר?",
+      "expected": [
+        "packages/vfcopy/VOICE.md",
+        "packages/vfcopy/VOICE-CHART.md"
+      ]
+    },
+    {
+      "id": "edit-gate",
+      "category": "growth",
+      "query": "מהו שער RAW ו-Product Truth שחייב לעבור לפני תוכן של מוצר אמיתי, ומה נבדק על exact final?",
+      "expected": [
+        "packages/vfgrowth/EDIT-GATE.md"
+      ]
+    },
+    {
+      "id": "media-intake",
+      "category": "media",
+      "query": "ב-intake למדיה מה ההבדל בין registered, Drive movement, approval והפעלה מתוזמנת, ולמה הרשאת Drive היא תנאי?",
+      "expected": [
+        "packages/vfmedia/INTAKE.md"
+      ]
+    },
+    {
+      "id": "print-done",
+      "category": "production",
+      "query": "אחרי הדפסה תקינה עם timelapse או סטיל אמיתי, איך print.done הופך לכרטיס וטיוטת תוכן בלי לפרסם אוטומטית?",
+      "expected": [
+        "packages/vfprod/PRINT-DONE.md"
+      ]
+    },
+    {
+      "id": "maintenance",
+      "category": "production",
+      "query": "בתחזוקת מדפסות מה בודקים רק ממדידה ומתי מתזמנים טיפול?",
+      "expected": [
+        "packages/vfprod/MAINTENANCE.md"
+      ]
+    },
+    {
+      "id": "material",
+      "category": "production",
+      "query": "איפה נרשמת יתרת גרם בגליל הפעיל, ומה קורה כשאין ספירת גרם להדפסת לילה?",
+      "expected": [
+        "packages/vfprod/MATERIAL.md"
+      ]
+    },
+    {
+      "id": "publication-state",
+      "category": "publication",
+      "query": "מתי מותר לסמן תוכן live ומה ההבדל בין scheduled, uploadAccepted, publish_requested ו-published_verified?",
+      "expected": [
+        "packages/vfigos/PUBLICATION-STATES.md"
+      ]
+    },
+    {
+      "id": "publish-bridge",
+      "category": "publication",
+      "query": "מה עושים עם approved_export_local לפני blocked_publish_transport, ולמה Publish Bridge אינו מקור אמת או הוכחה שהתוכן live?",
+      "expected": [
+        "packages/vfigos/PUBLISH-BRIDGE.md"
+      ]
+    },
+    {
+      "id": "quote",
+      "category": "sales",
+      "query": "לקוח שולח STL או 3MF: קודם slice למשקל וזמן, אבל אסור לתת מחיר עד שראש הצוות נתן סכום.",
+      "expected": [
+        "packages/vfsales/QUOTE.md"
+      ]
+    },
+    {
+      "id": "weekly-research",
+      "category": "research",
+      "query": "בסקירת הקישורים השבועית, אם קישור חסום Cloudflare או מנוי אין להמציא גוף וממשיכים מיד למקור הבא.",
+      "expected": [
+        "packages/vfresearch/WEEKLY.md"
+      ]
+    },
+    {
+      "id": "daily-research",
+      "category": "research",
+      "query": "במחקר היומי מהו חוזה freshness ומה כותבים בדיוק אם אין ממצא מוצק לבריף?",
+      "expected": [
+        "packages/vfresearch/DAILY.md"
+      ]
+    },
+    {
+      "id": "host",
+      "category": "tooling-capability",
+      "query": "איפה אמורים לרוץ Gemini ChatGPT Perplexity במנויים האישיים: המק הייעודי או מחשב Windows, ומה אסור להעתיק לענן?",
+      "expected": [
+        "packages/vfmcp/HOST.md"
+      ]
+    },
+    {
+      "id": "growth-preflight",
+      "category": "growth",
+      "query": "איזה preflight חוסם שיבוץ כשאיכות התוכן או העובדות לא עברו, לפני שליחה לאינסטגרם?",
+      "expected": [
+        "packages/vfgrowth/PREFLIGHT.md"
+      ]
+    },
+    {
+      "id": "media-lock",
+      "category": "media",
+      "query": "למה upload לתיקייה או מיקום ב-Drive לא נחשב version approval של מדיה?",
+      "expected": [
+        "packages/vfmedia/LOCK.md",
+        "packages/vfmedia/INTAKE.md"
+      ]
+    }
+  ],
+  "repeatability_cases": [
+    "mem-recall",
+    "layers",
+    "publication-state",
+    "quote",
+    "product-truth"
+  ]
+}

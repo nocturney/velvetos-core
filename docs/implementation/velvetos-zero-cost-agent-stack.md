@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-4 implemented and locally verified within their declared scope; Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter after a follow-up repair/acceptance pass; Phase 6 Laya completed as SHADOW_NOT_PROMOTED. GlitchTip remains explicitly blocked. Phase 7 memory rationalization/benchmark is next.
+Phases 0-7 are implemented and locally verified within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical, repaired Cognee source-ranking semantics and retained Cognee only as a derived index. GlitchTip remains explicitly blocked. Phase 8 Reef Lab preflight/Windows-native hermetic setup is underway; no Production authority has moved.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -77,9 +77,18 @@ Phases 0-4 implemented and locally verified within their declared scope; Phase 5
 - Decision: `STAY_SHADOW_NOT_PROMOTED`. Re-entry requires a fresh untouched Hebrew-heavy holdout, improvement over both trivial and current baselines on all three tasks, removal of current label-collapse/publish bias, no high-confidence wrong publish/no-model slice decisions, continued exact offline repeatability and zero authority/cost.
 - Evidence: `packages/vfharness/state/laya-shadow-2026-09-27.json`, `laya-shadow-calibration-2026-09-27.json`, and `laya-shadow-assessment-2026-09-27.json`. Sensor: `scripts/check-laya-shadow.py`.
 
+## Phase 7 memory-rationalization outcome
+- Authority is unchanged: `vfmem` is the sole canonical durable memory; Cognee 1.6.0 is context-only/derived; the pre-existing Deja Vu 0.21.2 install remains a session-history adjunct with no wiring changes. Hindsight and Supermemory were not installed because their useful local paths were not justified on the current host without additional provider/infrastructure burden.
+- The representative corpus contains 22 deterministic Hebrew/English cases, including temporal-correctness and contradiction-handling slices. No LLM judge is used.
+- Final TF-IDF challenger: hit@1 45.45%, hit@3 68.18%, hit@5 81.82%, MRR 0.5902, median query latency 14.75 ms. It remains benchmark-only because its current implementation scans a broader Markdown surface, has no canonical allowlist/freshness contract and persists a pickle index.
+- Cognee initially returned repeated chunks from the same canonical document, producing hit@5 31.82%. The adapter now over-fetches chunk candidates and deduplicates by canonical source before top-k ranking. Final Cognee: hit@1 27.27%, hit@3 59.09%, hit@5 68.18%, MRR 0.4318, median end-to-end recall latency 15.44 s, provenance 100%, repeatability 100%.
+- Cognee temporal slice is 2/2 at hit@5 and contradiction slice is 1/2 at hit@5. The index is pinned to dataset `velvetos_shared_b98a3b31199eb548`, source digest `b98a3b31199eb548432e16e6afef4ef5a9c7696361b48fa2771e497eb5359d9a`, 66 canonical sources, and `doctor` reports `stateCurrent=true`.
+- Sync hardening now hashes source bytes during materialization, recomputes the canonical digest before cutover, rejects stale state, validates dataset/digest in the benchmark, and has a Windows rollback+fsync fallback whose forced negative control passed. No remote provider and no canonical writeback are allowed.
+- Decision: `KEEP_CURRENT_ARCHITECTURE_WITH_SOURCE_DEDUP_REPAIR`; zero new always-on memory systems; incremental recurring cost remains 0 ILS. Evidence: `memory-retrieval-phase7-2026-09-27.json` and `memory-rationalization-phase7-2026-09-27.json`.
+
 ## Pending
-- Phase 7: memory rationalization/benchmark while keeping vfmem canonical and Cognee derived-only.
-- Phase 8+: Reef lab, additional dev labs, ecosystem radar and final acceptance.
+- Phase 8: Reef isolated Lab — complete Windows-native hermetic tests first; untrusted proposer execution remains Linux-sandbox-only.
+- Phase 9-11: additional dev labs, ecosystem radar and final acceptance.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.

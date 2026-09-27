@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "phase": 7,
+  "status": "COMPLETE",
+  "date": "2026-09-27",
+  "decision": "KEEP_CURRENT_ARCHITECTURE_WITH_SOURCE_DEDUP_REPAIR",
+  "incrementalRecurringCostIls": 0,
+  "newAlwaysOnMemorySystems": 0,
+  "roles": {
+    "vfmem": "CANONICAL_DURABLE_MEMORY",
+    "cognee": "DERIVED_SEMANTIC_INDEX",
+    "dejaVu": "SESSION_HISTORY_ADJUNCT",
+    "hindsight": "NOT_PROMOTED",
+    "supermemory": "NOT_PROMOTED"
+  },
+  "benchmark": {
+    "id": "vfmem-retrieval-v1",
+    "cases": 22,
+    "judge": "deterministic expected canonical source paths; no LLM judge",
+    "tfidfSummary": {
+      "buildMs": 1206.68,
+      "cases": 22,
+      "hit1": 0.4545,
+      "hit3": 0.6818,
+      "hit5": 0.8182,
+      "mrr": 0.5902,
+      "latency_ms_median": 14.75,
+      "latency_ms_p95": 18.23
+    },
+    "cogneeSummary": {
+      "cases": 22,
+      "hit1": 0.2727,
+      "hit3": 0.5909,
+      "hit5": 0.6818,
+      "mrr": 0.4318,
+      "latency_ms_median": 15440.45,
+      "latency_ms_p95": 15627.34,
+      "dataset": "velvetos_shared_b98a3b31199eb548",
+      "sourceDigest": "b98a3b31199eb548432e16e6afef4ef5a9c7696361b48fa2771e497eb5359d9a",
+      "provenance": 1.0,
+      "repeatability": 1.0
+    },
+    "preRepairCognee": {
+      "hit1": 0.2727,
+      "hit3": 0.2727,
+      "hit5": 0.3182,
+      "mrr": 0.2818
+    },
+    "repair": "Cognee chunk results are now over-fetched and deduplicated by canonical source before top-k ranking."
+  },
+  "tfidfChallenger": {
+    "decision": "BENCHMARK_ONLY_NOT_PROMOTED",
+    "reason": "Higher recall and far lower latency, but current implementation scans a broader Markdown corpus, lacks the canonical allowlist/freshness contract, and persists a pickle index; promoting it would add a second retrieval architecture before those provenance/contamination gaps are repaired."
+  },
+  "candidates": {
+    "cognee": {
+      "installed": true,
+      "version": "1.6.0",
+      "canonicalAuthority": false,
+      "dataset": "velvetos_shared_b98a3b31199eb548",
+      "sourceDigest": "b98a3b31199eb548432e16e6afef4ef5a9c7696361b48fa2771e497eb5359d9a",
+      "stateCurrent": true,
+      "role": "derived semantic index with canonical provenance",
+      "decision": "RETAIN_DERIVED",
+      "caveats": [
+        "FastEmbed multilingual model currently uses mean pooling vs prior CLS behavior",
+        "torch.jit Python 3.14 FutureWarning",
+        "Deberta SDPA fallback to eager"
+      ]
+    },
+    "dejaVu": {
+      "installed": true,
+      "preExistingInstall": true,
+      "version": "0.21.2",
+      "canonicalAuthority": false,
+      "role": "coding/session-history adjunct only",
+      "decision": "RETAIN_ADJUNCT_NO_WIRING_CHANGE",
+      "caveats": [
+        "identifier-style NO_NEW_RECURRING_COST query returned no exact match",
+        "doctor reported 8 clipped Codex messages and 8 clipped Cursor messages",
+        "not a substitute for canonical business memory"
+      ]
+    },
+    "hindsight": {
+      "installed": false,
+      "canonicalAuthority": false,
+      "decision": "NOT_PROMOTED",
+      "reason": "Windows/self-hosted is supported, but full memory requires an LLM provider plus embedded/external PostgreSQL. Verified absent on this host: Ollama, LM Studio, llama.cpp server/CLI. Adding provider/daemon/DB complexity is not justified before current baseline is measured."
+    },
+    "supermemory": {
+      "installed": false,
+      "canonicalAuthority": false,
+      "decision": "NOT_PROMOTED",
+      "reason": "Self-hosted path requires an LLM provider; release/docs platform guidance is inconsistent for Windows, self-hosted lite has a 10000-document license cap, and current v0.0.8 has open provider-detection issues."
+    }
+  },
+  "guardrails": {
+    "requiresCanonicalVerification": true,
+    "remoteProvidersAllowed": false,
+    "writebackToCanonicalMemory": false,
+    "incrementalRecurringCostIls": 0
+  },
+  "cutover": {
+    "activeDataset": "velvetos_shared_b98a3b31199eb548",
+    "activeSourceDigest": "b98a3b31199eb548432e16e6afef4ef5a9c7696361b48fa2771e497eb5359d9a",
+    "sourceCount": 66,
+    "stalePointerBackup": "C:\\Users\\Chris\\.velvetos\\cognee\\active-state.faf0cde0790ef4da.stale-backup-20260927.json",
+    "stalePointerBackupSha256": "6b785c8ae4c37af815e97ce9936efa93e74a1ca6430019a2412ae49e9602e478",
+    "windowsFallbackNegativeControl": "PASS"
+  },
+  "authorityConclusion": "vfmem remains the sole canonical durable memory; all retrieval outputs remain context requiring canonical verification."
+}

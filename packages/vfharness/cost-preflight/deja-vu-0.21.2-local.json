@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "component": "deja-vu@0.21.2 Windows amd64 binary-only pilot",
+  "classification": "FREE_LOCAL",
+  "license": "MIT",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for local binary use under MIT",
+  "deployment_model": "portable release binary under gitignored .local-devtools/phase7; no global PATH, MCP wiring, hooks, auto-recall, sync/import, or daemon",
+  "api_dependencies": [],
+  "billing_risk": "none; local zero-dependency binary, no LLM, embeddings, API key, hosted service or subscription required",
+  "selected_mode": "BINARY_ONLY_SESSION_HISTORY_PILOT; search/read benchmark only; not canonical memory",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk only during index/search",
+  "api_cost_notes": "none",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "deja install --auto, MCP/hooks, cross-machine sync and semantic embedding sidecars are excluded from this pilot",
+  "quota_controls": "no credentials and no network required after release artifact download",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/vshulcz/deja-vu/releases/tag/v0.21.2 stable release",
+    "https://github.com/vshulcz/deja-vu README: MIT; one local zero-dependency binary; no LLM/embeddings; Windows portable release supported",
+    "release checksum must be verified against checksums.txt before execution"
+  ],
+  "approval": null
+}
