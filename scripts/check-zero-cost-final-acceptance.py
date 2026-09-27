@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,16 +50,33 @@ def main() -> None:
     assert diff.get("committedProgramRange", {}).get("status") == "PASS"
     assert diff.get("liveWorkingTree", {}).get("status") == "BLOCKED_BY_UNRELATED_PARALLEL_WORK"
 
+    runtime_manifest = load(ROOT / "packages/vfharness/runtime/expected-components.json")
+    assert runtime_manifest.get("schema") == "vf.runtime.expected.v2"
+
     strict = receipt.get("repositoryWideStrictDeploymentProof") or {}
-    assert strict.get("status") == "PARTIAL"
+    assert strict.get("status") == "PARTIAL_SINGLE_PROVIDER_BLOCKER"
+    assert strict.get("contractSchema") == "vf.runtime.expected.v2"
     assert strict.get("command") == "python scripts/check-runtime-doctor.py --strict"
-    missing = set(strict.get("missingEvidence") or [])
-    assert missing == {
-        "mac-office: runtime-receipt",
-        "automation-steward: automation-state",
-        "morning-brief: automation-state",
-        "github: connector-state",
-    }
+    assert strict.get("blockingEvidence") == [
+        "grok-production-scheduler: current provider readback unavailable; last canonical provider readback is 2026-09-23"
+    ]
+
+    doctor_env = dict(os.environ)
+    doctor_env["PYTHONUTF8"] = "1"
+    doctor = subprocess.run(
+        [sys.executable, "scripts/check-runtime-doctor.py", "--strict"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        env=doctor_env,
+    )
+    doctor_output = doctor.stdout + "\n" + doctor.stderr
+    assert doctor.returncode == 1
+    assert "FAIL grok-production-scheduler" in doctor_output
+    assert "fallback healthy via sderot-windows" in doctor_output
+    assert "FAIL github" not in doctor_output
+    assert "FAIL google-drive" not in doctor_output
+    assert "edge-execution: no healthy member" not in doctor_output
 
     guards = receipt.get("costAndAuthority") or {}
     assert guards.get("incrementalRecurringCostIls") == 0

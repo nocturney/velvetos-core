@@ -3,7 +3,7 @@
   "date": "2026-09-27",
   "program": "zero-cost-agent-stack",
   "branch": "implementation/zero-cost-agent-stack",
-  "acceptedCodeHead": "b7b84629f23ac4ab6a3f2e02c62e02a8dc624003",
+  "acceptedCodeHead": "fc075ff90b6fb44fdfd16a15bb7ef54422868746",
   "status": "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS",
   "decision": "READY_FOR_OWNER_REVIEW_NO_PUSH",
   "fullCheckAll": {
@@ -59,7 +59,7 @@
   ],
   "diffChecks": {
     "committedProgramRange": {
-      "range": "bb54b0a7^..b7b84629f23ac4ab6a3f2e02c62e02a8dc624003",
+      "range": "bb54b0a7^..fc075ff90b6fb44fdfd16a15bb7ef54422868746",
       "status": "PASS"
     },
     "liveWorkingTree": {
@@ -90,7 +90,7 @@
     "Reef remains LAB_ONLY_NOT_PROMOTED; Windows harness diagnostics are partial and untrusted proposer execution remains Linux/bwrap-gated.",
     "The 2026-09-27 Research Seat daily body missed the 07:00 cutoff and was honestly recovered around 12:15; scheduled 02:00 execution for that date is unproven.",
     "The live worktree contains unrelated concurrent 3D/HQ/control edits; global worktree diff-check is therefore not accepted as PASS.",
-    "Repository-wide runtime-doctor --strict remains PARTIAL: required receipts are missing for mac-office, legacy automation-steward, morning-brief and github; reconcile expected ownership with current failover and Grok scheduler authority rather than fabricating healthy receipts."
+    "Repository-wide runtime-doctor --strict is narrowed to one required blocker: Grok production scheduler lacks a fresh provider readback in this session. Windows edge execution is live through the documented fallback, and GitHub/Google Drive connectors have fresh receipts. Git/manifest state is not accepted as Grok provider proof."
   ],
   "milestoneCommits": [
     "bb54b0a7 policy: enforce zero new recurring cost",
@@ -104,7 +104,8 @@
     "815c2a09 lab: record Reef Windows compatibility boundary",
     "9b575c49 lab: close Phase 9 ecosystem radar",
     "9f79b1d5 ops: recover daily research freshness honestly",
-    "b7b84629 chore: normalize zero-cost evidence whitespace"
+    "b7b84629 chore: normalize zero-cost evidence whitespace",
+    "fc075ff9 runtime: reconcile strict proof with failover"
   ],
   "acceptance": {
     "committedScopeReady": true,
@@ -113,18 +114,21 @@
     "next": "owner review / optional explicit push permission; normal operations may continue while known limitations remain fail-closed"
   },
   "repositoryWideStrictDeploymentProof": {
-    "status": "PARTIAL",
+    "status": "PARTIAL_SINGLE_PROVIDER_BLOCKER",
+    "contractSchema": "vf.runtime.expected.v2",
     "command": "python scripts/check-runtime-doctor.py --strict",
-    "missingEvidence": [
-      "mac-office: runtime-receipt",
-      "automation-steward: automation-state",
-      "morning-brief: automation-state",
-      "github: connector-state"
+    "observedExitCode": 1,
+    "verifiedHealthyNow": [
+      "sderot-windows fallback",
+      "github connector",
+      "google-drive connector"
     ],
-    "interpretation": [
-      "Mac-Office is the preferred host but documented first-healthy failover permits sderot-windows when Mac is offline.",
-      "automation-steward in expected-components predates the verified Grok production scheduler cutover, whose current protected routines use VelvetOS Integrity Guard and Office Loop.",
-      "Connector availability or historical host evidence is not converted into a healthy strict receipt without current receipt evidence."
-    ]
+    "degradedButCovered": [
+      "sderot-mac offline; edge-execution healthy through sderot-windows anyOf fallback"
+    ],
+    "blockingEvidence": [
+      "grok-production-scheduler: current provider readback unavailable; last canonical provider readback is 2026-09-23"
+    ],
+    "rule": "Git/manifest state is not provider proof; do not mark Grok healthy without fresh provider readback."
   }
 }

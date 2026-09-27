@@ -106,13 +106,13 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 ## Phase 10-11 final-acceptance outcome
 - Resilient targeted batches passed across cost/risk, behavioral/security, observability, reliability, engineering quality, CLI-Anything, Laya, memory/Cognee, Reef, ecosystem radar, tool authority, harness/vfmem/vfe2b, Windows path, skill health, autonomy, request-gate, runtime activation and sensor-lock surfaces.
 - Windows `cp1252` caused initial decode-only failures in `check-hq-overlay.py` and the nested control-api path used by agent-security. Re-running the same checks with `PYTHONUTF8=1` passed without code changes; the locale incident is preserved as evidence, not hidden.
-- `scripts/check-runtime-doctor.py --strict` remains **PARTIAL**: `mac-office`, legacy `automation-steward`, `morning-brief` and `github` lack the strict receipt files expected by the older manifest. Current architecture documents Mac→Windows first-healthy failover and a verified Grok scheduler cutover, so these receipts must be reconciled rather than fabricated.
+- Runtime proof has been reconciled to `vf.runtime.expected.v2`. `edge-execution` is an `anyOf` group over `sderot-mac` / `sderot-windows`, so the currently offline Mac no longer makes the system falsely unhealthy while the verified Windows fallback is online. Fresh live connector reads produced current GitHub and Google Drive receipts. `scripts/check-runtime-doctor.py --strict` now fails on **one** required blocker only: `grok-production-scheduler` lacks a fresh provider readback in this session. The last canonical Grok readback is 2026-09-23, and the Grok contract explicitly forbids treating Git/manifest state as provider proof.
 - Repository-wide `git diff --check` is also PARTIAL while unrelated parallel 3D/HQ/control work remains active; the observed failure was a blank line at EOF in `packages/vfops/hq/STATUS-he.md`, outside this program's edit set.
 - The monolithic `scripts/check-all.py` was **not** re-run and is not claimed PASS. The earlier interrupted run remains historical evidence only.
 - Acceptance receipt: `packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json`; sensor: `scripts/check-zero-cost-final-acceptance.py`.
 
 ## Pending
-- Repository-wide strict deployment proof remains PARTIAL until current runtime receipt ownership is reconciled and the unrelated parallel worktree reaches its own verified checkpoint. This does not reopen the completed zero-cost implementation phases.
+- Repository-wide strict deployment proof remains PARTIAL for one external evidence dependency: a fresh Grok Bot provider readback. The runtime ownership/failover contract itself is reconciled in v2; unrelated parallel 3D/HQ/control work must also reach its own verified checkpoint before a global clean-worktree claim. This does not reopen the completed zero-cost implementation phases.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.
