@@ -14,9 +14,10 @@
     "Embedded Ponytail minimum-safe-change rules and gstack safe patterns without installing another runtime",
     "Installed pinned Impeccable locally for Web/UI only with hooks/init/creative-post integration disabled and passed isolated doctor smoke",
     "Installed pinned diagram-design locally with VelvetOS/Velvet Factory documentation profiles and passed upstream HTML self-check",
-    "Completed CLI-Anything Phase 5 pilot: FreeCAD harness 101 PASS/11 expected SKIP with stable JSON/failure semantics; 3MF harness 122 PASS/4 FAIL on Python 3.14 and 3.12; no promotion and no duplicate Orca harness"
+    "Completed CLI-Anything Phase 5 pilot: FreeCAD harness 101 PASS/11 expected SKIP with stable JSON/failure semantics; 3MF harness 122 PASS/4 FAIL on Python 3.14 and 3.12; no promotion and no duplicate Orca harness",
+    "Completed Laya Phase 6 shadow evaluation: 78 cases / 72 Hebrew, exact snapshot offline repeatability PASS, but domain 30.77%, action 30.77%, escalation 39.74% and joint 5.13%; calibration cannot repair classification; STAY_SHADOW_NOT_PROMOTED"
   ],
-  "next_step": "Implement Phase 6 Laya as a local SHADOW-only decision helper with Hebrew-heavy labeled evaluation; VelvetOS remains authorization authority",
+  "next_step": "Run Phase 7 memory rationalization/benchmark while preserving vfmem as canonical memory and Cognee as derived-only",
   "artifacts": [
     "docs/implementation/velvetos-zero-cost-agent-stack.md",
     "packages/vfharness/reliability/components.json",
@@ -32,17 +33,27 @@
     ".cursor/skills/vf-web-ui-quality/SKILL.md",
     ".cursor/skills/vf-diagram-design/SKILL.md",
     "packages/vfharness/cost-preflight/cli-anything-34f5195.json",
-    "packages/vfharness/state/cli-anything-pilot-2026-09-27.json"
+    "packages/vfharness/state/cli-anything-pilot-2026-09-27.json",
+    "packages/vfharness/cost-preflight/laya-0.3.20.json",
+    "packages/vfharness/evals/laya-shadow-dataset.jsonl",
+    "packages/vfharness/evals/laya-shadow-rubric.md",
+    "packages/vfharness/state/laya-shadow-2026-09-27.json",
+    "packages/vfharness/state/laya-shadow-calibration-2026-09-27.json",
+    "packages/vfharness/state/laya-shadow-assessment-2026-09-27.json",
+    "scripts/run-laya-shadow.py",
+    "scripts/calibrate-laya-shadow.py",
+    "scripts/check-laya-shadow.py"
   ],
   "unresolved": [
     "Full check-all baseline was interrupted by Remote MCP session; final acceptance must run sensors in resilient batches",
     "Browser automation isolation remains PARTIAL",
     "Promptfoo local script provider remains trusted local code rather than a sandbox",
     "GlitchTip blocked until one later WSL/PostgreSQL/container batch is justified",
-    "WSL2 is not installed; defer one human reboot/UAC batch until Linux-first labs are reached"
+    "WSL2 is not installed; defer one human reboot/UAC batch until Linux-first labs are reached",
+    "Laya remains SHADOW_NOT_PROMOTED due weak Hebrew/domain/action/escalation accuracy and systematic publish/write/no-model collapse; fresh holdout + domain tuning required before any pilot"
   ],
   "pulse": "working",
-  "verification": "Phases 1-4 gates PASS in declared scope; Phase5 CLI-Anything cost preflight PASS, vf_cad doctor PASS, FreeCAD harness 101 PASS/11 expected SKIP and stable JSON reads, 3MF harness 122 PASS/4 FAIL on Python 3.14 and 3.12 so NOT_PROMOTED; recurring cost=0",
+  "verification": "Phases 1-4 gates PASS in declared scope; Phase5 NOT_PROMOTED with documented failures; Phase6 Laya cost preflight PASS, 78-case offline benchmark + calibration + exact repeatability complete, check-laya-shadow PASS, STAY_SHADOW_NOT_PROMOTED; recurring cost=0",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-27"

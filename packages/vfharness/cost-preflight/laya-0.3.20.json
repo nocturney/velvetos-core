@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "component": "laya@0.3.20",
+  "classification": "FREE_LOCAL",
+  "license": "Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for local inference under Apache-2.0",
+  "deployment_model": "Windows-native isolated Python 3.12 venv; pinned canonical v0.3.20 source; public local multilingual checkpoint; SHADOW classification only",
+  "api_dependencies": [],
+  "billing_risk": "none in selected path; no hosted inference, paid model API, subscription, token billing or payment method",
+  "selected_mode": "SHADOW_ONLY with convaiinnovations/laya-multilingual; domain/action/escalation classification only; no execution or authorization authority",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/GPU/RAM/disk only; public model download is approximately 0.7 GB once; no CUDA toolkit install required for initial pilot",
+  "api_cost_notes": "Hugging Face is used only as a public artifact download source; no hosted inference endpoint or credential is required",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "no Jev/TypeSafe, no paid API, no cloud GPU, no managed service, no auto-paid trial",
+  "quota_controls": "offline inference after checkpoint is cached; runner must not contain network/tool/action execution paths",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/NandhaKishorM/laya tag v0.3.20 / ref 412531034634775c2c102fac8d160e84203cfae4",
+    "canonical pyproject: Apache-2.0, Python >=3.10, torch/transformers/safetensors/huggingface_hub/numpy",
+    "https://huggingface.co/convaiinnovations/laya-multilingual: Apache-2.0, Hebrew listed, public local checkpoint"
+  ],
+  "approval": null
+}

@@ -190,6 +190,11 @@
       "type": "computational"
     },
     {
+      "id": "check-laya-shadow",
+      "script": "scripts/check-laya-shadow.py",
+      "type": "computational"
+    },
+    {
       "id": "check-vfprod",
       "script": "scripts/check-vfprod.py",
       "type": "computational"

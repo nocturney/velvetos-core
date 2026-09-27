@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-4 implemented and locally verified within their declared scope; Phase 5 CLI-Anything pilot completed without promotion; GlitchTip remains explicitly blocked. Phase 6 Laya shadow evaluation is next.
+Phases 0-4 implemented and locally verified within their declared scope; Phase 5 CLI-Anything completed without promotion; Phase 6 Laya completed as SHADOW_NOT_PROMOTED. GlitchTip remains explicitly blocked. Phase 7 memory rationalization/benchmark is next.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -63,9 +63,20 @@ Phases 0-4 implemented and locally verified within their declared scope; Phase 5
 - CLI-Anything upstream explicitly has no OrcaSlicer/Bambu Studio harness-level wrapper; no duplicate Orca harness was invented because the existing `vf_cad` bridge is already Windows-host verified.
 - Decision: PILOT_ONLY / NOT_PROMOTED. Retest after upstream 3MF tests are green or if a real FreeCAD installation need emerges. Receipt: `packages/vfharness/state/cli-anything-pilot-2026-09-27.json`.
 
+## Phase 6 Laya shadow outcome
+- Laya v0.3.20 source pinned to release commit `23a17522aa4942da6cce53a995a275760320b691`; Cost Preflight FREE_LOCAL/PASS. Windows-native Python 3.12 venv installed `laya 0.3.20`, `torch 2.14.0+cpu`, `transformers 5.17.0`; no serve/MCP/LangChain/fast extras.
+- Multilingual checkpoint pinned locally to Hugging Face snapshot `e4e9ddf21a7b1903b7acffd8814ad4307bf63a67`; `model.safetensors` is 643,835,514 bytes, SHA-256 `9d628fd971b700382ac6f65920a86f149777b2e748e0c955fb3b19695aa8f204`.
+- Benchmark: 78 non-sensitive VelvetOS task-shape cases, 72 Hebrew-script (92.3%), 13 cases per domain. Laya remained pure SHADOW: no execution, authorization or production-routing authority.
+- Zero-shot exact accuracy: domain 30.77%, action 30.77%, escalation 39.74%, joint all-three 5.13%. Trivial majority baselines are 16.67%, 20.51% and 44.87% respectively, so escalation underperforms a majority classifier.
+- Hebrew subset: domain 29.17%, action 26.39%, escalation 38.89%. Major collapse patterns: office 1/13, media 1/13, unknown 2/13; write 1/12; no-model 8/35. Action model predicted `publish` 45/78 times although only 11 cases were publish, producing 35 false positives.
+- Calibration: a disjoint Hebrew split (50 fit / 22 holdout) improved ECE and NLL for domain/action but did not change weak accuracy; escalation temperature fit hit the search ceiling. Calibration is evidence only and was not installed into runtime.
+- Repeatability: two complete offline runs against the exact snapshot produced byte-identical canonical case outputs and identical metrics; cases SHA-256 `734e638ed1d07722e27decc3d7e8f874352cb7713312574a6e8456595427d84e`.
+- Decision: `STAY_SHADOW_NOT_PROMOTED`. Re-entry requires a fresh untouched Hebrew-heavy holdout, improvement over both trivial and current baselines on all three tasks, removal of current label-collapse/publish bias, no high-confidence wrong publish/no-model slice decisions, continued exact offline repeatability and zero authority/cost.
+- Evidence: `packages/vfharness/state/laya-shadow-2026-09-27.json`, `laya-shadow-calibration-2026-09-27.json`, and `laya-shadow-assessment-2026-09-27.json`. Sensor: `scripts/check-laya-shadow.py`.
+
 ## Pending
-- Phase 6: Laya local System-1 decision layer in SHADOW mode only; Hebrew-heavy labeled dataset, routing/action/escalation classification, calibration and failure analysis.
-- Phase 7+: memory benchmark, Reef lab, additional dev labs, ecosystem radar and final acceptance.
+- Phase 7: memory rationalization/benchmark while keeping vfmem canonical and Cognee derived-only.
+- Phase 8+: Reef lab, additional dev labs, ecosystem radar and final acceptance.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.

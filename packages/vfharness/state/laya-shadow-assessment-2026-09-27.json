@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "phase": 6,
+  "date": "2026-09-27",
+  "component": "Laya",
+  "state": "SHADOW_NOT_PROMOTED",
+  "incremental_recurring_cost_ils": 0,
+  "source": {
+    "repository": "https://github.com/NandhaKishorM/laya",
+    "version": "0.3.20",
+    "tag_ref": "412531034634775c2c102fac8d160e84203cfae4",
+    "release_commit": "23a17522aa4942da6cce53a995a275760320b691",
+    "license": "Apache-2.0"
+  },
+  "model": {
+    "repository": "convaiinnovations/laya-multilingual",
+    "snapshot_sha": "e4e9ddf21a7b1903b7acffd8814ad4307bf63a67",
+    "model_safetensors_bytes": 643835514,
+    "model_safetensors_sha256": "9d628fd971b700382ac6f65920a86f149777b2e748e0c955fb3b19695aa8f204",
+    "runtime": "torch 2.14.0+cpu / transformers 5.17.0",
+    "deployment": "Windows-native local CPU, offline after public checkpoint download"
+  },
+  "authority": {
+    "execution_authority": false,
+    "authorization_authority": false,
+    "production_routing_authority": false,
+    "velvetos_hard_rules_above_laya": true
+  },
+  "dataset": {
+    "path": "packages/vfharness/evals/laya-shadow-dataset.jsonl",
+    "rubric": "packages/vfharness/evals/laya-shadow-rubric.md",
+    "cases": 78,
+    "hebrew_script_cases": 72,
+    "hebrew_share": 0.9231,
+    "domain_balance": "13 cases per domain",
+    "kind": "non-sensitive VelvetOS-specific task-shape benchmark",
+    "limitation": "not a production-derived event corpus; a fresh real holdout is required before any promotion"
+  },
+  "measured_baseline": {
+    "domain_accuracy": 0.3077,
+    "action_accuracy": 0.3077,
+    "escalation_accuracy": 0.3974,
+    "joint_all_three_accuracy": 0.0513,
+    "trivial_majority_accuracy": {
+      "domain": 0.1667,
+      "action": 0.2051,
+      "escalation": 0.4487
+    },
+    "hebrew_accuracy": {
+      "domain": 0.2917,
+      "action": 0.2639,
+      "escalation": 0.3889
+    },
+    "english_diagnostic_small_n": {
+      "n": 6,
+      "domain": 0.5,
+      "action": 0.8333,
+      "escalation": 0.5
+    },
+    "inference_ms_per_case_cpu": 450.42
+  },
+  "failure_patterns": {
+    "domain": {
+      "office_correct": "1/13",
+      "media_correct": "1/13",
+      "unknown_correct": "2/13",
+      "bias": "system/development/velvet-factory absorb most misses"
+    },
+    "action": {
+      "actual_publish": 11,
+      "predicted_publish": 45,
+      "publish_correct": 10,
+      "publish_false_positives": 35,
+      "write_correct": "1/12",
+      "bias": "publish is strongly over-predicted on unrelated requests"
+    },
+    "escalation": {
+      "no_model_correct": "8/35",
+      "observation": "model frequently over-escalates deterministic no-model requests; overall accuracy is below trivial majority baseline"
+    },
+    "high_confidence_wrong": {
+      "threshold": 0.8,
+      "domain": 5,
+      "action": 4,
+      "escalation": 3
+    }
+  },
+  "calibration": {
+    "receipt": "packages/vfharness/state/laya-shadow-calibration-2026-09-27.json",
+    "method": "post-hoc scalar temperature fit on 50 Hebrew calibration cases; evaluated on 22 disjoint Hebrew holdout cases",
+    "domain": {
+      "temperature": 4.756828,
+      "ece_before": 0.202329,
+      "ece_after": 0.082962,
+      "nll_before": 1.975605,
+      "nll_after": 1.715566,
+      "accuracy": 0.3182
+    },
+    "action": {
+      "temperature": 4.489848,
+      "ece_before": 0.282857,
+      "ece_after": 0.103984,
+      "nll_before": 2.028586,
+      "nll_after": 1.696096,
+      "accuracy": 0.3636
+    },
+    "escalation": {
+      "temperature": 8,
+      "ece_before": 0.192257,
+      "ece_after": 0.181775,
+      "nll_before": 1.152098,
+      "nll_after": 1.079615,
+      "accuracy": 0.5455
+    },
+    "conclusion": "calibration can soften probabilities but cannot repair weak argmax classification; escalation fit hit the search ceiling"
+  },
+  "repeatability": {
+    "offline_full_runs": 2,
+    "cases_equal": true,
+    "metrics_equal": true,
+    "canonical_cases_sha256": "734e638ed1d07722e27decc3d7e8f874352cb7713312574a6e8456595427d84e"
+  },
+  "promotion_decision": "STAY_SHADOW_NOT_PROMOTED",
+  "promotion_criterion": {
+    "basis": "derived after observing baseline failure patterns; no predeclared success threshold",
+    "fresh_holdout_required": true,
+    "requirements": [
+      "Use a new untouched Hebrew-heavy VelvetOS holdout that was not used for prompt, calibration or fine-tuning.",
+      "Domain, action and escalation must each outperform both their holdout trivial-majority baseline and this zero-shot baseline; escalation must no longer trail a trivial majority classifier.",
+      "No supported label may show the current collapse pattern; specifically office/media/unknown routing, write actions and no-model escalation must demonstrate useful recall rather than near-zero behavior.",
+      "The current publish-collapse must be removed: unrelated non-publish requests must not be systematically mapped to publish.",
+      "After calibration, there must be no high-confidence wrong classifications in authorization-adjacent publish/no-model slices on the promotion holdout.",
+      "Offline repeatability and zero-cost/no-authority invariants must remain intact."
+    ],
+    "likely_next_experiment": "domain-specific fine-tuning/calibration on a larger real labeled Hebrew corpus, with a separate untouched holdout"
+  },
+  "human_action_required": false
+}
