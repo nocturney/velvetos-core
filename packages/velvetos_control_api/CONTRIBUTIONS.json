@@ -26,6 +26,15 @@
       ]
     },
     {
+      "id": "integrations",
+      "module": "velvetos_control_api.contributions.integrations",
+      "class": "IntegrationsContribution",
+      "domains": ["integrations"],
+      "authoritativeSources": [
+        "instances/velvet-factory/.cursor/vf-desk.json#tools"
+      ]
+    },
+    {
       "id": "attention",
       "module": "velvetos_control_api.contributions.attention",
       "class": "AttentionContribution",

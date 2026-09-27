@@ -53,6 +53,12 @@ def _default_registry() -> list[dict[str, Any]]:
             "domains": ["capabilities"],
         },
         {
+            "id": "integrations",
+            "module": "velvetos_control_api.contributions.integrations",
+            "class": "IntegrationsContribution",
+            "domains": ["integrations"],
+        },
+        {
             "id": "attention",
             "module": "velvetos_control_api.contributions.attention",
             "class": "AttentionContribution",

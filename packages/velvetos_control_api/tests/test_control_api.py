@@ -23,6 +23,7 @@ from velvetos_control_api.auth import authorize  # noqa: E402
 from velvetos_control_api.contributions.capabilities import (  # noqa: E402
     normalize_all_capabilities,
 )
+from velvetos_control_api.contributions.integrations import normalize_integrations  # noqa: E402
 from velvetos_control_api.contributions.unavailable import V1_UNAVAILABLE  # noqa: E402
 from velvetos_control_api.errors import ControlApiError  # noqa: E402
 from velvetos_control_api.schema import SCHEMA  # noqa: E402
@@ -41,6 +42,7 @@ class SchemaTests(unittest.TestCase):
             "flags",
             "modules",
             "capabilities",
+            "integrations",
             "health",
             "attention",
             "activity",
@@ -115,6 +117,37 @@ class CapabilityTests(unittest.TestCase):
             if "price" in c and c["price"] not in (None, "X ₪"):
                 # Only allow absence or explicit placeholder — never a fabricated number
                 self.fail(f"capability {c.get('id')} must not invent price={c.get('price')}")
+
+
+class IntegrationProjectionTests(unittest.TestCase):
+    def test_instance_tools_project_from_canonical_desk(self) -> None:
+        rows, envelope = normalize_integrations(ROOT)
+        self.assertEqual(envelope["state"], "ready")
+        self.assertGreaterEqual(len(rows), 10)
+        by_id = {row["id"]: row for row in rows}
+        self.assertEqual(by_id["gmail"]["status"], "AVAILABLE")
+        self.assertEqual(by_id["threedaistudio"]["status"], "AVAILABLE")
+        self.assertEqual(by_id["studiomcphub"]["status"], "NEEDS_AUTH")
+        self.assertEqual(by_id["treg"]["status"], "BLOCKED")
+        self.assertEqual(by_id["mcp-gsheets"]["status"], "UNAVAILABLE")
+        self.assertIn("provenance", by_id["whatsapp"])
+
+    def test_snapshot_includes_integration_collection(self) -> None:
+        snap = build_snapshot(root=ROOT)
+        self.assertIsInstance(snap["integrations"], list)
+        self.assertEqual(snap["collections"]["integrations"]["state"], "ready")
+        self.assertEqual(
+            snap["collections"]["integrations"]["count"],
+            len(snap["integrations"]),
+        )
+
+    def test_missing_instance_desk_is_honestly_unavailable(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            rows, envelope = normalize_integrations(Path(td))
+            self.assertEqual(rows, [])
+            self.assertEqual(envelope["state"], "unavailable")
+            self.assertIsNone(envelope["items"])
+            self.assertIsNone(envelope["count"])
 
 
 class AuthActionTests(unittest.TestCase):
