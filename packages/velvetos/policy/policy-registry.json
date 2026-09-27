@@ -38,6 +38,7 @@
         "packages/vfgrowth/GATE.md"
       ],
       "machine_policy_locations": [
+        "packages/velvetos/policy/instagram.publish.json",
         "instances/velvet-factory/instance/velvet-factory.json"
       ],
       "enforced_by": [

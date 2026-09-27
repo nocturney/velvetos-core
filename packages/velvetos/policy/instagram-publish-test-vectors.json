@@ -1,0 +1,170 @@
+{
+  "vector_version": 1,
+  "base_context": {
+    "channel": "instagram",
+    "publication_type": "organic",
+    "mutation_tool": "publish_image",
+    "content_id": "G100",
+    "package_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "copy_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "media_sha256s": [
+      "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    ],
+    "risk_class": "LOW",
+    "standing_authorization": true,
+    "forbidden_effects": [],
+    "gates": {
+      "transport": "PASS",
+      "visible_text": "PASS",
+      "exact_final_preflight": "PASS",
+      "visual_standard": "PASS",
+      "rights_privacy": "PASS",
+      "brand": "PASS",
+      "product_truth": "PASS"
+    },
+    "human_approval": null,
+    "legacy_authorization": null,
+    "job_created_at": "2026-09-27T12:00:00Z"
+  },
+  "cases": [
+    {
+      "id": "standing-low-pass",
+      "patch": {},
+      "expected_decision": "ALLOW",
+      "expected_reason": "STANDING_AUTHORIZATION"
+    },
+    {
+      "id": "no-standing-requires-owner",
+      "patch": {"standing_authorization": false},
+      "expected_decision": "REQUIRE_OWNER_APPROVAL",
+      "expected_reason": "OWNER_APPROVAL_REQUIRED"
+    },
+    {
+      "id": "medium-standing-requires-owner",
+      "patch": {"risk_class": "MEDIUM"},
+      "expected_decision": "REQUIRE_OWNER_APPROVAL",
+      "expected_reason": "RISK_EXCEEDS_STANDING_AUTHORIZATION"
+    },
+    {
+      "id": "exact-owner-approval-pass",
+      "patch": {
+        "standing_authorization": false,
+        "human_approval": {
+          "approved": true,
+          "evidence": "owner approval receipt",
+          "content_id": "G100",
+          "package_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "copy_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      },
+      "expected_decision": "ALLOW",
+      "expected_reason": "EXACT_OWNER_APPROVAL"
+    },
+    {
+      "id": "medium-exact-owner-approval-pass",
+      "patch": {
+        "risk_class": "MEDIUM",
+        "standing_authorization": false,
+        "human_approval": {
+          "approved": true,
+          "evidence": "owner approval receipt",
+          "content_id": "G100",
+          "package_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "copy_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      },
+      "expected_decision": "ALLOW",
+      "expected_reason": "EXACT_OWNER_APPROVAL"
+    },
+    {
+      "id": "gate-failure-denies",
+      "patch": {
+        "gates": {"exact_final_preflight": "FAIL"}
+      },
+      "expected_decision": "DENY",
+      "expected_reason": "GATE_NOT_PASS:exact_final_preflight"
+    },
+    {
+      "id": "boost-forbidden",
+      "patch": {
+        "forbidden_effects": ["boost_ads"]
+      },
+      "expected_decision": "DENY",
+      "expected_reason": "FORBIDDEN_EFFECT"
+    },
+    {
+      "id": "bad-package-digest-denies",
+      "patch": {
+        "package_sha256": "bad"
+      },
+      "expected_decision": "DENY",
+      "expected_reason": "EXACT_BINDINGS_INVALID"
+    },
+    {
+      "id": "owner-binding-mismatch-denies",
+      "patch": {
+        "standing_authorization": false,
+        "human_approval": {
+          "approved": true,
+          "evidence": "owner approval receipt",
+          "content_id": "G100",
+          "package_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "copy_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      },
+      "expected_decision": "DENY",
+      "expected_reason": "HUMAN_APPROVAL_BINDING_MISMATCH"
+    },
+    {
+      "id": "legacy-owner-schedule-before-cutoff",
+      "patch": {
+        "standing_authorization": false,
+        "legacy_authorization": {
+          "kind": "owner_schedule_authorization",
+          "owner_approved": true,
+          "evidence": "legacy exact approval",
+          "content_id": "G100",
+          "package_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "expected_decision": "ALLOW",
+      "expected_reason": "LEGACY_COMPATIBILITY"
+    },
+    {
+      "id": "legacy-after-cutoff-denies",
+      "patch": {
+        "standing_authorization": false,
+        "job_created_at": "2026-09-28T00:00:01Z",
+        "legacy_authorization": {
+          "kind": "owner_schedule_authorization",
+          "owner_approved": true,
+          "evidence": "legacy exact approval",
+          "content_id": "G100",
+          "package_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "expected_decision": "DENY",
+      "expected_reason": "LEGACY_AUTHORIZATION_INVALID_OR_EXPIRED"
+    },
+    {
+      "id": "product-truth-not-applicable",
+      "patch": {
+        "gates": {"product_truth": "NOT_APPLICABLE"}
+      },
+      "expected_decision": "ALLOW",
+      "expected_reason": "STANDING_AUTHORIZATION"
+    },
+    {
+      "id": "wrong-channel-denies",
+      "patch": {"channel": "facebook"},
+      "expected_decision": "DENY",
+      "expected_reason": "SCOPE_MISMATCH"
+    },
+    {
+      "id": "unknown-mutation-denies",
+      "patch": {"mutation_tool": "delete_comment"},
+      "expected_decision": "DENY",
+      "expected_reason": "MUTATION_TOOL_NOT_ALLOWED"
+    }
+  ]
+}
