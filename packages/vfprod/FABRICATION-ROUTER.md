@@ -27,7 +27,7 @@ Use the smallest verified tool chain that can produce and check the requested re
 
 The machine-readable routes live in `FABRICATION-ROUTER.json`.
 
-The `cad` route may use interchangeable local execution engines declared in `CAD-ENGINE-REGISTRY.json`. The registry is subordinate to this router: it chooses an implementation for deterministic CAD, never a new intent or authority. `scripts/vf_cad_stack.py doctor` verifies the local engine layer; Geometry IR and the two-attempt repair bound are defined in `CAD-ENGINE-STACK.md`.
+The `cad` route may use interchangeable local execution engines declared in `CAD-ENGINE-REGISTRY.json`. The registry is subordinate to this router: it chooses an implementation for deterministic CAD, never a new intent or authority. `scripts/vf_cad_stack.py doctor` verifies the local engine layer; Geometry IR and the two-attempt repair bound are defined in `CAD-ENGINE-STACK.md`. For chat-driven functional CAD, resolve the intent here first, materialize only explicit dimensions/constraints into Geometry IR, then call `scripts/vf_cad_stack.py build --engine auto`; unsupported geometry fails closed into the existing CAD skill/code-generation route rather than being guessed.
 
 ## Installed upstream skills
 

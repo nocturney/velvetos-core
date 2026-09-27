@@ -10,6 +10,8 @@
       "id":{"type":"string","minLength":1},
       "kind":{"enum":["box","cylinder","extrusion","imported_step","assembly"]},
       "dimensions":{"type":"object","minProperties":1},
+      "operation":{"enum":["add","cut"]},
+      "translate_mm":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"number"}},
       "parent":{"type":["string","null"]},
       "source":{"type":["string","null"]}
     }}},

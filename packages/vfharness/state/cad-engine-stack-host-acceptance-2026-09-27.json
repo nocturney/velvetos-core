@@ -28,6 +28,17 @@
       "watertight": true
     }
   },
+  "chat_build_acceptance": {
+    "status": "PASS",
+    "request_language": "he",
+    "router_intent": "functional_part_to_print",
+    "auto_engine": "build123d",
+    "geometry_ir": "packages/vfharness/state/cad-engine-stack-20260927/chat-acceptance-ir.json",
+    "evidence": "packages/vfharness/state/cad-engine-stack-20260927/chat-acceptance.json",
+    "cross_engine_verified": ["build123d", "cadquery", "jscad"],
+    "printer_actions_performed": false,
+    "paid_provider_calls_performed": false
+  },
   "pilots": {
     "cad-cae-copilot": {
       "status": "PASS_LOCAL_SMOKE",

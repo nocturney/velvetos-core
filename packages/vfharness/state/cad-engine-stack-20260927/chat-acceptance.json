@@ -1,0 +1,52 @@
+{
+  "schema": "velvetos.cad-chat-acceptance.v1",
+  "checked_at": "2026-09-27",
+  "request_he": "צור פלטה 40x30x10 מ\"מ עם חור עובר בקוטר 10 מ\"מ ותכין מודל CAD להדפסה",
+  "router": {
+    "status": "PASS",
+    "intent": "functional_part_to_print",
+    "confidence": "high",
+    "primary": "cad",
+    "chain": ["cad", "cad-viewer", "dfam-check", "gcode"],
+    "printer_actions_allowed": false
+  },
+  "geometry_ir": "packages/vfharness/state/cad-engine-stack-20260927/chat-acceptance-ir.json",
+  "auto_engine": "build123d",
+  "build123d": {
+    "status": "PASS",
+    "artifacts": ["model.step", "model.stl"],
+    "bbox_mm": [40.0, 30.0, 10.0],
+    "volume_mm3": 11214.9,
+    "watertight": true,
+    "body_count": 1,
+    "step_sha256": "bffeb80a972117a9e41a4d443ea5c891fa6ddf25efd3fba74e6d65e148d73588",
+    "stl_sha256": "314c8c9b11c9cb7ef52600534007e3502b4334576c1fe52cf2a6406b58d32274"
+  },
+  "cadquery": {
+    "status": "PASS",
+    "artifacts": ["model.step", "model.stl"],
+    "bbox_mm": [40.0, 30.0, 10.0],
+    "volume_mm3": 11214.9,
+    "watertight": true,
+    "body_count": 1,
+    "step_sha256": "fc5cb134b5fbfb514b3931368a886a7524162ddf43048510381312d0aedb60d9",
+    "stl_sha256": "708644abbb62be2713583eae2702c30e247b77fe5252a025c3c1b0613d48effc"
+  },
+  "jscad": {
+    "status": "PASS",
+    "artifacts": ["model.stl"],
+    "bbox_mm": [40.0, 30.0, 10.0],
+    "volume_mm3": 11215.9,
+    "watertight": true,
+    "body_count": 1,
+    "stl_sha256": "796de27b1740c08b2615026761fd90e538cc6dffce0f7bf26e8e25f10e086849"
+  },
+  "cross_engine": {
+    "bbox_match": true,
+    "all_watertight": true,
+    "all_single_body": true,
+    "max_volume_delta_pct": 0.009
+  },
+  "paid_provider_calls_performed": false,
+  "printer_actions_performed": false
+}
