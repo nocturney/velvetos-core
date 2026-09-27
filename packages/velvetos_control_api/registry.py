@@ -82,6 +82,12 @@ def _default_registry() -> list[dict[str, Any]]:
             "class": "UnavailableDomainsContribution",
             "domains": ["production", "content", "files", "agents", "models"],
         },
+        {
+            "id": "operational_domains",
+            "module": "velvetos_control_api.contributions.operational",
+            "class": "OperationalDomainsContribution",
+            "domains": ["production", "content", "files", "agents", "models"],
+        },
     ]
 
 

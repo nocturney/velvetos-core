@@ -38,6 +38,10 @@ COPY constitution/CONSTITUTION.md /app/constitution/CONSTITUTION.md
 COPY constitution/ORCHESTRA.md /app/constitution/ORCHESTRA.md
 COPY packages/vfgrowth/data /app/packages/vfgrowth/data
 COPY packages/vfprod/hq /app/packages/vfprod/hq
+COPY packages/vfprod/FLEET.json /app/packages/vfprod/FLEET.json
+COPY packages/vfprod/data/print-events.jsonl /app/packages/vfprod/data/print-events.jsonl
+COPY packages/vfprod/data/maintenance-snapshot.json /app/packages/vfprod/data/maintenance-snapshot.json
+COPY packages/vfsku/SHELF.json /app/packages/vfsku/SHELF.json
 COPY packages/vfmedia/catalog.json /app/packages/vfmedia/catalog.json
 # Canonical instance tool desk used by the integrations contribution. This is
 # configuration only; no connector credentials or secrets are stored here.

@@ -1,4 +1,4 @@
-"""Honest unavailable domains for v1 — never fake empty collections."""
+"""Fail-closed fallback envelopes for operational domains when adapters cannot project their SoT."""
 
 from __future__ import annotations
 
@@ -7,27 +7,27 @@ from typing import Any
 from velvetos_control_api.schema import collection_unavailable
 
 
-# Domains intentionally not projected in Control API v1.
-# Canonical SoTs exist elsewhere; this gateway does not yet adapt them.
+# Fallback metadata. OperationalDomainsContribution runs after this contribution
+# and replaces these envelopes only when the canonical source is readable.
 V1_UNAVAILABLE = {
     "production": {
-        "reason": "not_yet_projected — production cards live under packages/vfprod (print.done); no Control API adapter in v1",
+        "reason": "projection_unavailable — production source could not be adapted",
         "hintSource": "packages/vfprod/hq/cards + packages/vfprod/data/print-events.jsonl",
     },
     "content": {
-        "reason": "not_yet_projected — content calendar/approval remain packages/vfgrowth; no Control API adapter in v1",
+        "reason": "projection_unavailable — content source could not be adapted",
         "hintSource": "packages/vfgrowth/CALENDAR.md + packages/vfgrowth/data/approval-queue.json",
     },
     "files": {
-        "reason": "not_yet_projected — media vault stays packages/vfmedia/catalog.json; no Control API adapter in v1",
+        "reason": "projection_unavailable — media catalog could not be adapted",
         "hintSource": "packages/vfmedia/catalog.json",
     },
     "agents": {
-        "reason": "not_yet_projected — desk specialists are .cursor/vf-desk.json; no Control API agent roster in v1",
+        "reason": "projection_unavailable — agent desk could not be adapted",
         "hintSource": ".cursor/vf-desk.json",
     },
     "models": {
-        "reason": "not_yet_projected — 3D/model pipelines stay vfprod/vfsku; no Control API models domain in v1",
+        "reason": "projection_unavailable — model shelf could not be adapted",
         "hintSource": "packages/vfsku + packages/vfprod",
     },
 }
