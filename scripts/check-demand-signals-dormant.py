@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+GIT = ["git", "-c", f"safe.directory={ROOT.as_posix()}"]
 NAME = "demand-signals-dormant"
 TOKEN = "vf_demand" + "_signals"
 PACKET = "DemandSignal" + "Packet"
@@ -44,7 +45,7 @@ def fail(msg: str) -> None:
 def tracked_files() -> list[str]:
     try:
         out = subprocess.run(
-            ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+            [*GIT, "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
             cwd=ROOT, capture_output=True, check=True,
         ).stdout.decode("utf-8", "replace")
         files = [f for f in out.split("\0") if f]

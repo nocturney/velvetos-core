@@ -245,7 +245,9 @@ class HttpIntegrationTests(unittest.TestCase):
         cls.httpd.shutdown()
 
     def _conn(self) -> HTTPConnection:
-        return HTTPConnection("127.0.0.1", self.port, timeout=5)
+        conn = HTTPConnection("127.0.0.1", self.port, timeout=5)
+        self.addCleanup(conn.close)
+        return conn
 
     def test_health_no_auth(self) -> None:
         c = self._conn()

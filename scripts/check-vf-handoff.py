@@ -21,6 +21,7 @@ SCRIPT_REL = f"scripts/{TOKEN}.py"
 SCRIPT = ROOT / SCRIPT_REL
 ALLOW = {SCRIPT_REL, "CHANGELOG.md"}
 STATE_DIR = ROOT / "packages" / "vfharness" / "state" / "handoffs"
+GIT = ["git", "-c", f"safe.directory={ROOT.as_posix()}"]
 
 
 def fail(msg: str) -> None:
@@ -28,21 +29,50 @@ def fail(msg: str) -> None:
     raise SystemExit(1)
 
 
-def tracked_files() -> list[str]:
+def token_offenders() -> list[str]:
+    """Find TOKEN references without byte-scanning the whole repository."""
+    offenders: set[str] = set()
     try:
-        out = subprocess.run(
-            ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"], cwd=ROOT, capture_output=True, check=True
+        tracked = subprocess.run(
+            [*GIT, "grep", "-l", "-F", TOKEN, "--", "."],
+            cwd=ROOT, text=True, capture_output=True, check=False,
+        )
+        if tracked.returncode not in {0, 1}:
+            raise subprocess.CalledProcessError(tracked.returncode, tracked.args, tracked.stdout, tracked.stderr)
+        for rel in tracked.stdout.splitlines():
+            rel = rel.replace("\\", "/").strip()
+            if rel and rel not in ALLOW:
+                offenders.add(rel)
+
+        untracked = subprocess.run(
+            [*GIT, "ls-files", "-z", "--others", "--exclude-standard"],
+            cwd=ROOT, capture_output=True, check=True,
         ).stdout.decode("utf-8", "replace")
-        files = [f for f in out.split("\0") if f]
-        if files:
-            return files
+        for rel in (f for f in untracked.split("\0") if f):
+            rel = rel.replace("\\", "/")
+            if rel in ALLOW:
+                continue
+            path = ROOT / rel
+            try:
+                if TOKEN.encode() in path.read_bytes():
+                    offenders.add(rel)
+            except OSError:
+                continue
+        return sorted(offenders)
     except (OSError, subprocess.CalledProcessError):
-        pass
-    return [
-        str(p.relative_to(ROOT)).replace("\\", "/")
-        for p in ROOT.rglob("*")
-        if p.is_file() and ".git" not in p.parts
-    ]
+        # Git unavailable: preserve the original fail-safe semantics.
+        for path in ROOT.rglob("*"):
+            if not path.is_file() or ".git" in path.parts:
+                continue
+            rel = str(path.relative_to(ROOT)).replace("\\", "/")
+            if rel in ALLOW:
+                continue
+            try:
+                if TOKEN.encode() in path.read_bytes():
+                    offenders.add(rel)
+            except OSError:
+                continue
+        return sorted(offenders)
 
 
 def main() -> None:
@@ -63,17 +93,7 @@ def main() -> None:
     if (STATE_DIR / "freeze-probe.json").exists() or (STATE_DIR.exists() and not existed):
         fail("frozen writer created state")
 
-    offenders: list[str] = []
-    for rel in tracked_files():
-        if rel in ALLOW:
-            continue
-        path = ROOT / rel
-        try:
-            data = path.read_bytes()
-        except OSError:
-            continue
-        if TOKEN.encode() in data:
-            offenders.append(rel)
+    offenders = token_offenders()
     if offenders:
         fail(f"{TOKEN} is frozen; remove references from: {', '.join(sorted(offenders))}")
 
