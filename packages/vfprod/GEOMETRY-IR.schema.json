@@ -1,0 +1,25 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"velvetos.geometry-ir.v1",
+  "type":"object",
+  "required":["schema","units","parts","constraints"],
+  "properties":{
+    "schema":{"const":"velvetos.geometry-ir.v1"},
+    "units":{"const":"mm"},
+    "parts":{"type":"array","minItems":1,"items":{"type":"object","required":["id","kind","dimensions"],"properties":{
+      "id":{"type":"string","minLength":1},
+      "kind":{"enum":["box","cylinder","extrusion","imported_step","assembly"]},
+      "dimensions":{"type":"object","minProperties":1},
+      "operation":{"enum":["add","cut"]},
+      "translate_mm":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"number"}},
+      "parent":{"type":["string","null"]},
+      "source":{"type":["string","null"]}
+    }}},
+    "constraints":{"type":"array","items":{"type":"object","required":["type","a","b"],"properties":{
+      "type":{"enum":["align","offset","mate","clearance","contains"]},
+      "a":{"type":"string","minLength":1},
+      "b":{"type":"string","minLength":1},
+      "value_mm":{"type":["number","null"]}
+    }}}
+  }
+}

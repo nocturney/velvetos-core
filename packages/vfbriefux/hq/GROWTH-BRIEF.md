@@ -33,5 +33,5 @@ WhatsApp: {orders_or_אין_ספירה}
 {studio_tasks}
 ```
 
-אישור = `approved_for_manual_posting` בלבד.  
+הפעולה האנושית כאן היא קלט ל־`policy_id: instagram.publish`; היא אינה בעצמה טענת פרסום. רק evaluator `ALLOW` יכול להוביל ל־tool publish, ו־`approved_for_manual_posting` נשאר מסלול legacy ידני.
 אין מספר Reach/Saves בלי סנאפשוט מיובא.

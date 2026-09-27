@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://policy/artifact-retention.schema.json",
+  "title": "VelvetOS Artifact Retention Registry",
+  "type": "object",
+  "required": ["schema_version", "registry_kind", "entries"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "registry_kind": {"const": "velvetos_artifact_retention_registry"},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "artifact_class_id", "match", "classification", "current_storage",
+          "target_storage", "retention_class", "policy_refs", "migration_stage",
+          "deletion_authorized"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "artifact_class_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+          "match": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "classification": {"type": "string", "minLength": 1},
+          "current_storage": {"type": "string", "minLength": 1},
+          "target_storage": {"type": "string", "minLength": 1},
+          "retention_class": {"type": "string", "minLength": 1},
+          "policy_refs": {"type": "array", "items": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"}},
+          "migration_stage": {"type": "string", "minLength": 1},
+          "deletion_authorized": {"const": false}
+        }
+      }
+    }
+  }
+}

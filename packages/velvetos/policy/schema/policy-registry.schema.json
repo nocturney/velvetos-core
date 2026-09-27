@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://policy/policy-registry.schema.json",
+  "title": "VelvetOS Policy Registry",
+  "type": "object",
+  "required": ["schema_version", "registry_kind", "decision_ownership", "policies"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "registry_kind": {"const": "velvetos_policy_registry"},
+    "decision_ownership": {"const": "REFERENCES_ONLY_DO_NOT_DUPLICATE_POLICY_DECISIONS"},
+    "policies": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/policy"}
+    }
+  },
+  "$defs": {
+    "enforcer": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["sensor", "runtime", "workflow"]},
+        "id": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {"if": {"properties": {"kind": {"const": "sensor"}}}, "then": {"required": ["id"]}},
+        {"if": {"properties": {"kind": {"enum": ["runtime", "workflow"]}}}, "then": {"required": ["path"]}}
+      ]
+    },
+    "policy": {
+      "type": "object",
+      "required": ["policy_id", "title", "status", "risk_class", "authority_locations", "machine_policy_locations", "enforced_by"],
+      "additionalProperties": false,
+      "properties": {
+        "policy_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+        "title": {"type": "string", "minLength": 1},
+        "status": {"enum": ["active", "conflicted", "deprecated", "temporary_hotfix"]},
+        "risk_class": {"enum": ["critical", "high", "medium", "low"]},
+        "authority_locations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "machine_policy_locations": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "enforced_by": {"type": "array", "items": {"$ref": "#/$defs/enforcer"}},
+        "temporary_metadata": {"$ref": "#/$defs/temporary_metadata"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "temporary_hotfix"}}},
+          "then": {"required": ["temporary_metadata"]}
+        }
+      ]
+    },
+    "temporary_metadata": {
+      "type": "object",
+      "required": ["source_authority", "migration_target", "review_at", "expiry_behavior"],
+      "additionalProperties": false,
+      "properties": {
+        "source_authority": {"type": "string", "minLength": 1},
+        "migration_target": {"type": "string", "minLength": 1},
+        "review_at": {"type": "string", "format": "date-time"},
+        "expires_at": {"type": ["string", "null"], "format": "date-time"},
+        "expiry_behavior": {
+          "enum": [
+            "remain_active_until_replaced",
+            "fail_closed_after_expiry",
+            "explicit_owner_review_required"
+          ]
+        }
+      }
+    }
+  }
+}

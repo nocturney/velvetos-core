@@ -1,0 +1,11 @@
+{
+  "component": "CAD/CAE Copilot pilot",
+  "action": "clone_and_probe_local_backend_mcp_only",
+  "classification": "FREE_LOCAL",
+  "evidence": "Upstream documents local FastAPI/MCP/build123d/OpenCASCADE execution and states ordinary backend CAD/CAE package operations do not require an API key. Pilot forbids external model-provider calls and credentials.",
+  "checked_at": "2026-09-27",
+  "incremental_cost_possible": false,
+  "automatic_paid_overage_possible": false,
+  "hard_cap_enforced": true,
+  "paid_features_enabled": false
+}

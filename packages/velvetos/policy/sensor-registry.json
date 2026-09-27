@@ -1,0 +1,3165 @@
+{
+  "schema_version": 1,
+  "registry_kind": "velvetos_sensor_registry",
+  "suite_runner": "scripts/check-all.py",
+  "sensors": [
+    {
+      "id": "check-agent-security-conformance",
+      "path": "scripts/check-agent-security-conformance.py",
+      "owns": [
+        "packages/vfharness/security/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/security/**",
+        "scripts/check-agent-security-conformance.py"
+      ],
+      "depends_on": [
+        "check-agent-surface-security",
+        "check-control-api",
+        "check-behavioral-evals"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-agent-surface-security",
+      "path": "scripts/check-agent-surface-security.py",
+      "owns": [
+        ".cursor/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "scripts/check-agent-surface-security.py"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "repository.agent_surface.secrets"
+      ],
+      "risk": "critical",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "ALWAYS_ON",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-behavioral-evals",
+      "path": "scripts/check-behavioral-evals.py",
+      "owns": [
+        "packages/vfharness/evals/**",
+        "tools/promptfoo/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/evals/**",
+        "tools/promptfoo/**",
+        "scripts/check-behavioral-evals.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-brand-asset-cta-lock",
+      "path": "scripts/check-brand-asset-cta-lock.py",
+      "owns": [
+        "packages/vfgrowth/preflight/TEMPLATE.md",
+        "packages/vfom/BRAND-ASSET-LOCK.md",
+        "packages/vfom/tests/publication-prep-coldstart.json",
+        "scripts/vf_send_preflight.py"
+      ],
+      "triggered_by": [
+        "packages/vfgrowth/preflight/TEMPLATE.md",
+        "packages/vfom/BRAND-ASSET-LOCK.md",
+        "packages/vfom/tests/publication-prep-coldstart.json",
+        "scripts/check-brand-asset-cta-lock.py",
+        "scripts/vf_send_preflight.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-chat-cold-start-preflight",
+      "path": "scripts/check-chat-cold-start-preflight.py",
+      "owns": [
+        "packages/velvetos/chatgpt-project/**",
+        "scripts/vf_chat_cold_start_preflight.py",
+        "scripts/vf_source_ingest.py"
+      ],
+      "triggered_by": [
+        "packages/velvetos/chatgpt-project/**",
+        "scripts/check-chat-cold-start-preflight.py",
+        "scripts/vf_chat_cold_start_preflight.py",
+        "scripts/vf_source_ingest.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-chat-runtime-bundle",
+      "path": "scripts/check-chat-runtime-bundle.py",
+      "owns": [
+        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json"
+      ],
+      "triggered_by": [
+        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
+        "scripts/check-chat-runtime-bundle.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-cli-anything-pilot",
+      "path": "scripts/check-cli-anything-pilot.py",
+      "owns": [
+        "packages/vfharness/devtools/**",
+        "packages/vfharness/cost-preflight/**",
+        "scripts/vf_cli_anything.py",
+        "scripts/vf_cad.py"
+      ],
+      "triggered_by": [
+        "packages/vfharness/devtools/**",
+        "packages/vfharness/cost-preflight/**",
+        "scripts/check-cli-anything-pilot.py"
+      ],
+      "depends_on": [
+        "scripts/vf_cli_anything.py",
+        "scripts/vf_cad.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-cloudflare-publish-fingerprint",
+      "path": "scripts/check-cloudflare-publish-fingerprint.py",
+      "owns": [
+        "packages/vfigos/**"
+      ],
+      "triggered_by": [
+        "packages/vfigos/**",
+        "scripts/check-cloudflare-publish-fingerprint.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-cognee-integration",
+      "path": "scripts/check-cognee-integration.py",
+      "owns": [
+        "automation/**",
+        "packages/vfmem/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "automation/**",
+        "packages/vfmem/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-commission-isolation",
+      "path": "scripts/check-commission-isolation.py",
+      "owns": [
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/commission_operational_gaps.py",
+        "scripts/sensor_isolation.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-control-api",
+      "path": "scripts/check-control-api.py",
+      "owns": [
+        "AGENTS.md",
+        "office/**",
+        "packages/velvetos_control_api/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "AGENTS.md",
+        "office/**",
+        "packages/velvetos_control_api/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-creative-autopilot",
+      "path": "scripts/check-creative-autopilot.py",
+      "owns": [
+        ".cursor/**",
+        "constitution/**",
+        "instances/**",
+        "packages/velvetos/**",
+        "packages/vfe2b/**",
+        "packages/vfgraft/**",
+        "packages/vfgrowth/**",
+        "packages/vfmedia/**",
+        "packages/vfom/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "constitution/**",
+        "instances/**",
+        "packages/velvetos/**",
+        "packages/vfe2b/**",
+        "packages/vfgraft/**",
+        "packages/vfgrowth/**",
+        "packages/vfmedia/**",
+        "packages/vfom/**",
+        "scripts/check-creative-autopilot.py"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "instagram.publish"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-creative-master-bridge",
+      "path": "scripts/check-creative-master-bridge.py",
+      "owns": [
+        "scripts/vf_creative_master_bridge.py"
+      ],
+      "triggered_by": [
+        "scripts/check-creative-master-bridge.py",
+        "scripts/vf_creative_master_bridge.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-creative-system",
+      "path": "scripts/check-creative-system.py",
+      "owns": [
+        ".cursor/**",
+        "instances/**",
+        "packages/vfcopy/**",
+        "packages/vfom/**",
+        "packages/vfresearch/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "instances/**",
+        "packages/vfcopy/**",
+        "packages/vfom/**",
+        "packages/vfresearch/**",
+        "scripts/check-creative-system.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-creative-transformation-lock",
+      "path": "scripts/check-creative-transformation-lock.py",
+      "owns": [
+        ".cursor/skills/velvet-brand-guardian/**",
+        ".cursor/skills/velvet-creative-director/**",
+        ".cursor/skills/vf-content-sprint/**",
+        "AGENTS.md",
+        "instances/velvet-factory/**",
+        "packages/vfcovers/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfom/**",
+        "scripts/vf_send_preflight.py"
+      ],
+      "triggered_by": [
+        ".cursor/skills/velvet-brand-guardian/**",
+        ".cursor/skills/velvet-creative-director/**",
+        ".cursor/skills/vf-content-sprint/**",
+        "AGENTS.md",
+        "instances/velvet-factory/**",
+        "packages/vfcovers/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfom/**",
+        "scripts/check-creative-transformation-lock.py",
+        "scripts/vf_send_preflight.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-critical-syntax",
+      "path": "scripts/check-critical-syntax.py",
+      "owns": [
+        "**/*.py"
+      ],
+      "triggered_by": [
+        "**/*.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "critical",
+      "timeout_seconds": 60,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "ALWAYS_ON",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-delivery-approval",
+      "path": "scripts/check-delivery-approval.py",
+      "owns": [
+        "packages/vfigos/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "packages/vfigos/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-demand-signals-dormant",
+      "path": "scripts/check-demand-signals-dormant.py",
+      "owns": [
+        "README.md",
+        "packages/vfresearch/DEMAND-SIGNALS.md",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "README.md",
+        "packages/vfresearch/DEMAND-SIGNALS.md",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-ecosystem-radar-phase9",
+      "path": "scripts/check-ecosystem-radar-phase9.py",
+      "owns": [
+        "packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json",
+        "packages/vfresearch/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json",
+        "packages/vfresearch/**",
+        "scripts/check-ecosystem-radar-phase9.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "medium",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-engineering-quality",
+      "path": "scripts/check-engineering-quality.py",
+      "owns": [
+        "packages/vfharness/devtools/**",
+        "packages/vfharness/playbooks/**",
+        ".cursor/skills/vf-web-ui-quality/**",
+        ".cursor/skills/vf-diagram-design/**",
+        ".diagram-design",
+        "instances/velvet-factory/.diagram-design"
+      ],
+      "triggered_by": [
+        "packages/vfharness/devtools/**",
+        "packages/vfharness/playbooks/**",
+        ".cursor/skills/vf-web-ui-quality/**",
+        ".cursor/skills/vf-diagram-design/**",
+        ".diagram-design",
+        "instances/velvet-factory/.diagram-design",
+        "scripts/check-engineering-quality.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-gmail-brief-send",
+      "path": "scripts/check-gmail-brief-send.py",
+      "owns": [
+        ".github/**",
+        "packages/vfops/**"
+      ],
+      "triggered_by": [
+        ".github/**",
+        "packages/vfops/**",
+        "scripts/check-gmail-brief-send.py"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "gmail.send"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-grok-boot-hardening",
+      "path": "scripts/check-grok-boot-hardening.py",
+      "owns": [
+        "packages/vfigos/**"
+      ],
+      "triggered_by": [
+        "packages/vfigos/**",
+        "scripts/check-grok-boot-hardening.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-grok-provider-readback",
+      "path": "scripts/check-grok-provider-readback.py",
+      "owns": [
+        "automation/grok/**",
+        "packages/vfharness/state/runtime/grok-production-scheduler.json"
+      ],
+      "triggered_by": [
+        "automation/grok/**",
+        "packages/vfharness/state/runtime/grok-production-scheduler.json",
+        "scripts/check-grok-provider-readback.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-hq-overlay",
+      "path": "scripts/check-hq-overlay.py",
+      "owns": [
+        "constitution/**",
+        "packages/chatgpt-embed-map.json",
+        "packages/manifest.json",
+        "packages/vfbriefux/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfops/**",
+        "scripts/vendor-origin-packs.sh",
+        "scripts/vfops_loop.py"
+      ],
+      "triggered_by": [
+        "constitution/**",
+        "packages/chatgpt-embed-map.json",
+        "packages/manifest.json",
+        "packages/vfbriefux/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfops/**",
+        "scripts/check-hq-overlay.py",
+        "scripts/vendor-origin-packs.sh",
+        "scripts/vfops_loop.py"
+      ],
+      "depends_on": [
+        "scripts/sensor_isolation.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-hyperframes-backend",
+      "path": "scripts/check-hyperframes-backend.py",
+      "owns": [
+        ".cursor/**",
+        "packages/vfmcp/**",
+        "packages/vfom/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "packages/vfmcp/**",
+        "packages/vfom/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-instagram-content-decision",
+      "path": "scripts/check-instagram-content-decision.py",
+      "owns": [
+        ".cursor/**",
+        "packages/vfe2b/**",
+        "packages/vfom/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "packages/vfe2b/**",
+        "packages/vfom/**",
+        "scripts/check-instagram-content-decision.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-laya-shadow",
+      "path": "scripts/check-laya-shadow.py",
+      "owns": [
+        "packages/vfharness/evals/laya-shadow-dataset.jsonl",
+        "packages/vfharness/state/laya-shadow-*.json",
+        "packages/vfharness/cost-preflight/laya-*.json",
+        "scripts/run-laya-shadow.py"
+      ],
+      "triggered_by": [
+        "packages/vfharness/evals/laya-shadow-dataset.jsonl",
+        "packages/vfharness/state/laya-shadow-*.json",
+        "packages/vfharness/cost-preflight/laya-*.json",
+        "scripts/run-laya-shadow.py",
+        "scripts/check-laya-shadow.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "medium",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-learning-lifecycle",
+      "path": "scripts/check-learning-lifecycle.py",
+      "owns": [
+        ".github/workflows/office-control-plane.yml",
+        "packages/vfharness/state/learning-candidates/**",
+        "scripts/vf_learning.py"
+      ],
+      "triggered_by": [
+        ".github/workflows/office-control-plane.yml",
+        "packages/vfharness/state/learning-candidates/**",
+        "scripts/check-learning-lifecycle.py",
+        "scripts/vf_learning.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-living-docs",
+      "path": "scripts/check-living-docs.py",
+      "owns": [
+        "AGENTS.md",
+        "README.md",
+        "docs/SHARED-WORK-COORDINATION.md",
+        "packages/vfharness/LIVING-DOCS.md",
+        "packages/vfharness/runtime/expected-components.json"
+      ],
+      "triggered_by": [
+        "AGENTS.md",
+        "README.md",
+        "docs/SHARED-WORK-COORDINATION.md",
+        "packages/vfharness/LIVING-DOCS.md",
+        "packages/vfharness/runtime/expected-components.json",
+        "scripts/check-living-docs.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-living-studio",
+      "path": "scripts/check-living-studio.py",
+      "owns": [
+        "AGENTS.md",
+        "office/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfcopy/**",
+        "packages/vfharness/**",
+        "packages/vfmedia/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "AGENTS.md",
+        "office/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfcopy/**",
+        "packages/vfharness/**",
+        "packages/vfmedia/**",
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/sensor_isolation.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-machine-writers",
+      "path": "scripts/check-machine-writers.py",
+      "owns": [
+        ".github/**"
+      ],
+      "triggered_by": [
+        ".github/**",
+        "scripts/check-machine-writers.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "critical",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "ALWAYS_ON",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-memory-rationalization",
+      "path": "scripts/check-memory-rationalization.py",
+      "owns": [
+        "packages/vfharness/state/memory-*.json"
+      ],
+      "triggered_by": [
+        "packages/vfharness/state/memory-*.json",
+        "scripts/check-memory-rationalization.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-morning-green",
+      "path": "scripts/check-morning-green.py",
+      "owns": [
+        "automation/**",
+        "packages/vfbriefux/**",
+        "packages/vfigos/**",
+        "packages/vfops/**"
+      ],
+      "triggered_by": [
+        "automation/**",
+        "packages/vfbriefux/**",
+        "packages/vfigos/**",
+        "packages/vfops/**",
+        "scripts/check-morning-green.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-no-new-recurring-cost",
+      "path": "scripts/check-no-new-recurring-cost.py",
+      "owns": [
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/vf_cost_preflight.py"
+      ],
+      "enforces": [
+        "cost.recurring.new"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-observability",
+      "path": "scripts/check-observability.py",
+      "owns": [
+        "packages/vfharness/observability/**",
+        "packages/vfharness/state/observability-phase2-*.json",
+        "tools/observability/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/observability/**",
+        "packages/vfharness/state/observability-phase2-*.json",
+        "tools/observability/**",
+        "scripts/check-observability.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "medium",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-office-control-plane",
+      "path": "scripts/check-office-control-plane.py",
+      "owns": [
+        "AGENTS.md",
+        "constitution/**",
+        "docs/**",
+        "office/**",
+        "packages/vfgrowth/**",
+        "packages/vfharness/**",
+        "packages/vfigos/**",
+        "packages/vfmedia/**",
+        "packages/vfops/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "AGENTS.md",
+        "constitution/**",
+        "docs/**",
+        "office/**",
+        "packages/vfgrowth/**",
+        "packages/vfharness/**",
+        "packages/vfigos/**",
+        "packages/vfmedia/**",
+        "packages/vfops/**",
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/sensor_isolation.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-office-watchdog",
+      "path": "scripts/check-office-watchdog.py",
+      "owns": [
+        ".cursor/**",
+        "constitution/**",
+        "office/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfops/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "constitution/**",
+        "office/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfops/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-openpost-status",
+      "path": "scripts/check-openpost-status.py",
+      "owns": [
+        "README.md",
+        "packages/vfbriefux/FEED-SOURCE.json",
+        "packages/vfigos/OPENPOST.json",
+        "packages/vfigos/OPENPOST.md"
+      ],
+      "triggered_by": [
+        "README.md",
+        "packages/vfbriefux/FEED-SOURCE.json",
+        "packages/vfigos/OPENPOST.json",
+        "packages/vfigos/OPENPOST.md",
+        "scripts/check-openpost-status.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-organic-growth",
+      "path": "scripts/check-organic-growth.py",
+      "owns": [
+        ".cursor/**",
+        "AGENTS.md",
+        "constitution/**",
+        "packages/velvetos/**",
+        "packages/vfbriefux/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfsales/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "AGENTS.md",
+        "constitution/**",
+        "packages/velvetos/**",
+        "packages/vfbriefux/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfsales/**",
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/sensor_isolation.py",
+        "scripts/vf_organic_growth.py"
+      ],
+      "enforces": [
+        "instagram.publish",
+        "advertising.boost",
+        "customer.whatsapp.send"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-origin-slugs",
+      "path": "scripts/check-origin-slugs.py",
+      "owns": [
+        "AGENTS.md",
+        "README.md",
+        "docs/**",
+        "packages/README.md",
+        "packages/manifest.json",
+        "packages/vfmem/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "AGENTS.md",
+        "README.md",
+        "docs/**",
+        "packages/README.md",
+        "packages/manifest.json",
+        "packages/vfmem/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-policy-architecture",
+      "path": "scripts/check-policy-architecture.py",
+      "owns": [
+        "instances/**",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "instances/**",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "critical",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "ALWAYS_ON",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-production-content",
+      "path": "scripts/check-production-content.py",
+      "owns": [
+        "office/**",
+        "packages/vfgrowth/**",
+        "packages/vfprod/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "office/**",
+        "packages/vfgrowth/**",
+        "packages/vfprod/**",
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/vf_control_plane.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-project-bundle",
+      "path": "scripts/check-project-bundle.py",
+      "owns": [
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/vf_project_bundle.py",
+        "scripts/vf_project_preflight.py",
+        "scripts/vf_publication_evidence.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-project-request-gate",
+      "path": "scripts/check-project-request-gate.py",
+      "owns": [
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+        "packages/velvetos/PROJECT-REQUEST-GATE.md",
+        "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+        "packages/velvetos/PROJECT-REQUEST-GATE.md",
+        "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/vf_project_preflight.py",
+        "scripts/vf_publication_evidence.py"
+      ],
+      "enforces": [
+        "project.request.preflight"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-project669-publication",
+      "path": "scripts/check-project669-publication.py",
+      "owns": [
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/vf_project669_publication.py"
+      ],
+      "enforces": [
+        "instagram.publish"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-public-cta",
+      "path": "scripts/check-public-cta.py",
+      "owns": [
+        ".cursor/**",
+        "constitution/**",
+        "instances/**",
+        "packages/velvetos/**",
+        "packages/vfigos/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "constitution/**",
+        "instances/**",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "scripts/check-public-cta.py"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "public.cta",
+        "customer.whatsapp.send"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-publication-evidence",
+      "path": "scripts/check-publication-evidence.py",
+      "owns": [
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/vf_media_integrity.py",
+        "scripts/vf_media_limits.py",
+        "scripts/vf_project_preflight.py",
+        "scripts/vf_publication_evidence.py",
+        "scripts/vf_publish_bridge.py",
+        "scripts/vf_publish_handoff.py",
+        "scripts/vf_send_preflight.py"
+      ],
+      "enforces": [
+        "instagram.publish"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-publication-prep-execution",
+      "path": "scripts/check-publication-prep-execution.py",
+      "owns": [
+        ".cursor/skills/velvet-brand-guardian/**",
+        ".cursor/skills/velvet-creative-director/**",
+        ".cursor/skills/vf-content-sprint/**",
+        ".cursor/skills/vf-marketing-skills/**",
+        ".cursor/skills/vf-organic-growth/**",
+        "AGENTS.md",
+        "instances/velvet-factory/**",
+        "packages/vfcovers/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfom/**",
+        "scripts/vf_send_preflight.py"
+      ],
+      "triggered_by": [
+        ".cursor/skills/velvet-brand-guardian/**",
+        ".cursor/skills/velvet-creative-director/**",
+        ".cursor/skills/vf-content-sprint/**",
+        ".cursor/skills/vf-marketing-skills/**",
+        ".cursor/skills/vf-organic-growth/**",
+        "AGENTS.md",
+        "instances/velvet-factory/**",
+        "packages/vfcovers/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfom/**",
+        "scripts/check-publication-prep-execution.py",
+        "scripts/vf_send_preflight.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-publication-states",
+      "path": "scripts/check-publication-states.py",
+      "owns": [
+        "packages/vfigos/**"
+      ],
+      "triggered_by": [
+        "packages/vfigos/**",
+        "scripts/check-publication-states.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-publish-bridge",
+      "path": "scripts/check-publish-bridge.py",
+      "owns": [
+        ".github/**",
+        "instances/**",
+        "packages/vfigos/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        ".github/**",
+        "instances/**",
+        "packages/vfigos/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-publish-fingerprint",
+      "path": "scripts/check-publish-fingerprint.py",
+      "owns": [
+        "packages/vfigos/**"
+      ],
+      "triggered_by": [
+        "packages/vfigos/**",
+        "scripts/check-publish-fingerprint.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-publish-handoff",
+      "path": "scripts/check-publish-handoff.py",
+      "owns": [
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/vf_publish_bridge.py",
+        "scripts/vf_publish_handoff.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-readme-contract",
+      "path": "scripts/check-readme-contract.py",
+      "owns": [
+        "scripts/readme_contract.py"
+      ],
+      "triggered_by": [
+        "scripts/check-readme-contract.py"
+      ],
+      "depends_on": [
+        "scripts/readme_contract.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-reef-phase8-lab",
+      "path": "scripts/check-reef-phase8-lab.py",
+      "owns": [
+        "packages/vfharness/state/reef-phase8-lab-2026-09-27.json",
+        "packages/vfharness/devtools/reef-windows-import-overlay.patch",
+        "packages/vfharness/cost-preflight/reef-*.json",
+        "packages/vfharness/cost-preflight/uv-*.json"
+      ],
+      "triggered_by": [
+        "packages/vfharness/state/reef-phase8-lab-2026-09-27.json",
+        "packages/vfharness/devtools/reef-windows-import-overlay.patch",
+        "packages/vfharness/cost-preflight/reef-*.json",
+        "packages/vfharness/cost-preflight/uv-*.json",
+        "scripts/check-reef-phase8-lab.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "medium",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-reliability-pilots",
+      "path": "scripts/check-reliability-pilots.py",
+      "owns": [
+        "packages/vfharness/reliability/**",
+        "packages/vfharness/state/**",
+        "packages/vfharness/cost-preflight/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/reliability/**",
+        "packages/vfharness/state/**",
+        "packages/vfharness/cost-preflight/**",
+        "scripts/check-reliability-pilots.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-review-convergence",
+      "path": "scripts/check-review-convergence.py",
+      "owns": [
+        "packages/vfharness/state/reviews/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/state/reviews/**",
+        "scripts/check-review-convergence.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-risk-policy",
+      "path": "scripts/check-risk-policy.py",
+      "owns": [
+        "constitution/**",
+        "office/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "constitution/**",
+        "office/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "office.owner_escalation",
+        "external.irreversible.delete",
+        "advertising.boost"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-runtime-activation",
+      "path": "scripts/check-runtime-activation.py",
+      "owns": [
+        "office/**",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfmedia/**",
+        "packages/vfom/**",
+        "packages/vfops/**"
+      ],
+      "triggered_by": [
+        "office/**",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfmedia/**",
+        "packages/vfom/**",
+        "packages/vfops/**",
+        "scripts/check-runtime-activation.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-runtime-corners",
+      "path": "scripts/check-runtime-corners.py",
+      "owns": [
+        ".github/**",
+        "office/**",
+        "packages/velvetos/**",
+        "packages/vfresearch/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        ".github/**",
+        "office/**",
+        "packages/velvetos/**",
+        "packages/vfresearch/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-runtime-doctor",
+      "path": "scripts/check-runtime-doctor.py",
+      "owns": [
+        "packages/vfharness/runtime/expected-components.json"
+      ],
+      "triggered_by": [
+        "packages/vfharness/runtime/expected-components.json",
+        "scripts/check-runtime-doctor.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-sensor-locks",
+      "path": "scripts/check-sensor-locks.py",
+      "owns": [
+        ".github/**",
+        "requirements-sensors.txt"
+      ],
+      "triggered_by": [
+        ".github/**",
+        "requirements-sensors.txt",
+        "scripts/check-sensor-locks.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-skill-health",
+      "path": "scripts/check-skill-health.py",
+      "owns": [
+        ".agents/**",
+        ".cursor/**",
+        "packages/**",
+        "skills-lock.json"
+      ],
+      "triggered_by": [
+        ".agents/**",
+        ".cursor/**",
+        "packages/**",
+        "scripts/check-skill-health.py",
+        "skills-lock.json"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-skill-pattern-embeds",
+      "path": "scripts/check-skill-pattern-embeds.py",
+      "owns": [
+        "packages/velvetos/PRODUCTIZATION.md",
+        "packages/vfbriefux/**",
+        "packages/vfcopy/hq/AI-TELLS-GAP.md",
+        "packages/vfharness/**",
+        "packages/vfresearch/**",
+        "scripts/check-vfharness-execution-discipline.py"
+      ],
+      "triggered_by": [
+        "packages/velvetos/PRODUCTIZATION.md",
+        "packages/vfbriefux/**",
+        "packages/vfcopy/hq/AI-TELLS-GAP.md",
+        "packages/vfharness/**",
+        "packages/vfresearch/**",
+        "scripts/check-skill-pattern-embeds.py",
+        "scripts/check-vfharness-execution-discipline.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-social-intelligence",
+      "path": "scripts/check-social-intelligence.py",
+      "owns": [
+        ".cursor/**",
+        "packages/vfinsights/**",
+        "packages/vfom/**",
+        "packages/vfresearch/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "packages/vfinsights/**",
+        "packages/vfom/**",
+        "packages/vfresearch/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-soft-tools-pipeline",
+      "path": "scripts/check-soft-tools-pipeline.py",
+      "owns": [
+        ".cursor/rules/velvet-public-copy-soft-tools.mdc",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
+        "packages/vfcopy/SKILL.md",
+        "packages/vfcopy/SOFT-TOOLS-CONTRACT.md",
+        "packages/vfcopy/VOICE-CHART.md",
+        "packages/vfcopy/VOICE.md",
+        "packages/vfcopy/hq/PLAYBOOK.md",
+        "packages/vfcopy/hq/ai-tells-he.md",
+        "packages/vfcopy/hq/reader-first-he.md",
+        "packages/vfcopy/skills/velvet-hebrew-copy/PIPELINE.md",
+        "packages/vfgrowth/EDIT-GATE.md",
+        "packages/vfgrowth/GATE.md",
+        "packages/vfgrowth/PREFLIGHT.md",
+        "packages/vfgrowth/preflight/TEMPLATE.md",
+        "packages/vfmskill/EMBED.md",
+        "scripts/check-vfcopy.py"
+      ],
+      "triggered_by": [
+        ".cursor/rules/velvet-public-copy-soft-tools.mdc",
+        ".cursor/skills/vf-content-sprint/SKILL.md",
+        "packages/vfcopy/SKILL.md",
+        "packages/vfcopy/SOFT-TOOLS-CONTRACT.md",
+        "packages/vfcopy/VOICE-CHART.md",
+        "packages/vfcopy/VOICE.md",
+        "packages/vfcopy/hq/PLAYBOOK.md",
+        "packages/vfcopy/hq/ai-tells-he.md",
+        "packages/vfcopy/hq/reader-first-he.md",
+        "packages/vfcopy/skills/velvet-hebrew-copy/PIPELINE.md",
+        "packages/vfgrowth/EDIT-GATE.md",
+        "packages/vfgrowth/GATE.md",
+        "packages/vfgrowth/PREFLIGHT.md",
+        "packages/vfgrowth/preflight/TEMPLATE.md",
+        "packages/vfmskill/EMBED.md",
+        "scripts/check-soft-tools-pipeline.py",
+        "scripts/check-vfcopy.py"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "visible_text.finalization"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-source-ingest",
+      "path": "scripts/check-source-ingest.py",
+      "owns": [
+        "scripts/vf_source_ingest.py"
+      ],
+      "triggered_by": [
+        "scripts/check-source-ingest.py",
+        "scripts/vf_source_ingest.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-speech-layer",
+      "path": "scripts/check-speech-layer.py",
+      "owns": [
+        "packages/vfmcp/**",
+        "packages/vfom/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "packages/vfmcp/**",
+        "packages/vfom/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-staleness",
+      "path": "scripts/check-staleness.py",
+      "owns": [
+        "packages/vfe2b/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "packages/vfresearch/**"
+      ],
+      "triggered_by": [
+        "packages/vfe2b/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "packages/vfresearch/**",
+        "scripts/check-staleness.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-tool-authority",
+      "path": "scripts/check-tool-authority.py",
+      "owns": [
+        "automation/**",
+        "packages/velvetos/**",
+        "packages/vfbriefux/**",
+        "packages/vfigos/**"
+      ],
+      "triggered_by": [
+        "automation/**",
+        "packages/velvetos/**",
+        "packages/vfbriefux/**",
+        "packages/vfigos/**",
+        "scripts/check-tool-authority.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-velvet-health",
+      "path": "scripts/check-velvet-health.py",
+      "owns": [
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-velvetos",
+      "path": "scripts/check-velvetos.py",
+      "owns": [
+        ".cursor/**",
+        ".github/**",
+        "AGENTS.md",
+        "constitution/**",
+        "docs/**",
+        "instances/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfbiz/**",
+        "packages/vfsales/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        ".github/**",
+        "AGENTS.md",
+        "constitution/**",
+        "docs/**",
+        "instances/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfbiz/**",
+        "packages/vfsales/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-3d-router",
+      "path": "scripts/check-vf-3d-router.py",
+      "owns": [
+        "scripts/vf_3d.py",
+        "scripts/vf_cad.py",
+        "packages/vfprod/**",
+        "packages/velvetos/modules/expert-3d-model.md",
+        ".cursor/skills/vf-3d-router/**",
+        "packages/vfharness/cost-preflight/**"
+      ],
+      "triggered_by": [
+        "packages/vfprod/**",
+        "packages/velvetos/modules/expert-3d-model.md",
+        ".cursor/skills/vf-3d-router/**",
+        "packages/vfharness/cost-preflight/**",
+        "scripts/check-vf-3d-router.py"
+      ],
+      "depends_on": [
+        "scripts/vf_3d.py",
+        "scripts/vf_cad.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-autonomy",
+      "path": "scripts/check-vf-autonomy.py",
+      "owns": [
+        "office/**",
+        "packages/velvetos/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "office/**",
+        "packages/velvetos/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-cad-integration",
+      "path": "scripts/check-vf-cad-integration.py",
+      "owns": [
+        "packages/vfprod/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "packages/vfprod/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-cad-stack",
+      "path": "scripts/check-vf-cad-stack.py",
+      "owns": [
+        "packages/vfprod/**",
+        "packages/vfresearch/LINKS.json",
+        "packages/velvetos/TOOL-STATUS.json",
+        "packages/vfharness/state/cad-engine-stack-20260927/**",
+        "packages/vfharness/state/fabrication-cost-cadquery-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-jscad-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-cad-cae-copilot-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-forgent3d-2026-09-27.json",
+        "scripts/vf_cad_stack.py",
+        "scripts/check-vf-cad-stack.py"
+      ],
+      "triggered_by": [
+        "packages/vfprod/**",
+        "packages/vfresearch/LINKS.json",
+        "packages/velvetos/TOOL-STATUS.json",
+        "packages/vfharness/state/cad-engine-stack-20260927/**",
+        "scripts/vf_cad_stack.py",
+        "scripts/check-vf-cad-stack.py"
+      ],
+      "depends_on": [
+        "scripts/vf_cost_preflight.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-desk",
+      "path": "scripts/check-vf-desk.py",
+      "owns": [
+        ".cursor/**",
+        "constitution/**",
+        "packages/manifest.json"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "constitution/**",
+        "packages/manifest.json",
+        "scripts/check-vf-desk.py"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "customer.whatsapp.send"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-fabrication-router",
+      "path": "scripts/check-vf-fabrication-router.py",
+      "owns": [
+        ".agents/**",
+        ".grok/**",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfprod/**",
+        "scripts/**",
+        "skills-lock.json"
+      ],
+      "triggered_by": [
+        ".agents/**",
+        ".grok/**",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfprod/**",
+        "scripts/**",
+        "skills-lock.json"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-handoff",
+      "path": "scripts/check-vf-handoff.py",
+      "owns": [
+        "packages/vfharness/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/**",
+        "scripts/check-vf-handoff.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-offering",
+      "path": "scripts/check-vf-offering.py",
+      "owns": [
+        "packages/velvetos/**",
+        "packages/vfbiz/**",
+        "packages/vfconvert/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfom/**",
+        "packages/vfops/**",
+        "packages/vfsales/**",
+        "packages/vfsku/**"
+      ],
+      "triggered_by": [
+        "packages/velvetos/**",
+        "packages/vfbiz/**",
+        "packages/vfconvert/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfom/**",
+        "packages/vfops/**",
+        "packages/vfsales/**",
+        "packages/vfsku/**",
+        "scripts/check-vf-offering.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-office",
+      "path": "scripts/check-vf-office.py",
+      "owns": [
+        "docs/**",
+        "office/**",
+        "packages/vfbooks/**",
+        "packages/vfconvert/**",
+        "packages/vfprod/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "docs/**",
+        "office/**",
+        "packages/vfbooks/**",
+        "packages/vfconvert/**",
+        "packages/vfprod/**",
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/vf_jobs_adapter.py",
+        "scripts/vf_office.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-task-state",
+      "path": "scripts/check-vf-task-state.py",
+      "owns": [
+        "scripts/vf_task_state.py"
+      ],
+      "triggered_by": [
+        "scripts/check-vf-task-state.py"
+      ],
+      "depends_on": [
+        "scripts/vf_task_state.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfagents",
+      "path": "scripts/check-vfagents.py",
+      "owns": [
+        "packages/manifest.json",
+        "packages/vfagents/**"
+      ],
+      "triggered_by": [
+        "packages/manifest.json",
+        "packages/vfagents/**",
+        "scripts/check-vfagents.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfcopy",
+      "path": "scripts/check-vfcopy.py",
+      "owns": [
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**"
+      ],
+      "triggered_by": [
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "scripts/check-vfcopy.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfcost",
+      "path": "scripts/check-vfcost.py",
+      "owns": [
+        "AGENTS.md",
+        "packages/vfcost/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "AGENTS.md",
+        "packages/vfcost/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfdsh",
+      "path": "scripts/check-vfdsh.py",
+      "owns": [
+        "docs/**",
+        "packages/manifest.json",
+        "packages/vfdsh/**"
+      ],
+      "triggered_by": [
+        "docs/**",
+        "packages/manifest.json",
+        "packages/vfdsh/**",
+        "scripts/check-vfdsh.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfe2b",
+      "path": "scripts/check-vfe2b.py",
+      "owns": [
+        ".cursor/**",
+        "docs/**",
+        "packages/manifest.json",
+        "packages/vfconvert/**",
+        "packages/vfe2b/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        "docs/**",
+        "packages/manifest.json",
+        "packages/vfconvert/**",
+        "packages/vfe2b/**",
+        "scripts/check-vfe2b.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vffcc",
+      "path": "scripts/check-vffcc.py",
+      "owns": [
+        "docs/**",
+        "packages/manifest.json",
+        "packages/vffcc/**"
+      ],
+      "triggered_by": [
+        "docs/**",
+        "packages/manifest.json",
+        "packages/vffcc/**",
+        "scripts/check-vffcc.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfgraft",
+      "path": "scripts/check-vfgraft.py",
+      "owns": [
+        ".cursor/rules/velvet-factory-desk.mdc",
+        "packages/manifest.json",
+        "packages/vfgraft/**"
+      ],
+      "triggered_by": [
+        ".cursor/rules/velvet-factory-desk.mdc",
+        "packages/manifest.json",
+        "packages/vfgraft/**",
+        "scripts/check-vfgraft.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfgrowth",
+      "path": "scripts/check-vfgrowth.py",
+      "owns": [
+        "AGENTS.md",
+        "constitution/**",
+        "instances/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**"
+      ],
+      "triggered_by": [
+        "AGENTS.md",
+        "constitution/**",
+        "instances/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "scripts/check-vfgrowth.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfharness",
+      "path": "scripts/check-vfharness.py",
+      "owns": [
+        "AGENTS.md",
+        "constitution/**",
+        "docs/FAILOVER.md",
+        "docs/GROK-FAILOVER.md",
+        "packages/manifest.json",
+        "packages/vfharness/**",
+        "packages/vfigos/**"
+      ],
+      "triggered_by": [
+        "AGENTS.md",
+        "constitution/**",
+        "docs/FAILOVER.md",
+        "docs/GROK-FAILOVER.md",
+        "packages/manifest.json",
+        "packages/vfharness/**",
+        "packages/vfigos/**",
+        "scripts/check-vfharness.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfharness-execution-discipline",
+      "path": "scripts/check-vfharness-execution-discipline.py",
+      "owns": [
+        "packages/vfharness/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/**",
+        "scripts/check-vfharness-execution-discipline.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfmakers",
+      "path": "scripts/check-vfmakers.py",
+      "owns": [
+        "packages/manifest.json",
+        "packages/vfbiz/**",
+        "packages/vfbooks/**",
+        "packages/vfgrowth/**",
+        "packages/vfmakers/**",
+        "packages/vfops/**"
+      ],
+      "triggered_by": [
+        "packages/manifest.json",
+        "packages/vfbiz/**",
+        "packages/vfbooks/**",
+        "packages/vfgrowth/**",
+        "packages/vfmakers/**",
+        "packages/vfops/**",
+        "scripts/check-vfmakers.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfmcp",
+      "path": "scripts/check-vfmcp.py",
+      "owns": [
+        ".cursor/**",
+        ".github/**",
+        "constitution/**",
+        "docs/**",
+        "packages/velvetos/**",
+        "packages/vfbooks/**",
+        "packages/vfigos/**",
+        "packages/vfmcp/**",
+        "packages/vfprod/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        ".github/**",
+        "constitution/**",
+        "docs/**",
+        "packages/velvetos/**",
+        "packages/vfbooks/**",
+        "packages/vfigos/**",
+        "packages/vfmcp/**",
+        "packages/vfprod/**",
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/vf_chatgpt.py",
+        "scripts/vf_gemini.py"
+      ],
+      "enforces": [
+        "customer.whatsapp.send"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfmedia",
+      "path": "scripts/check-vfmedia.py",
+      "owns": [
+        ".cursor/**",
+        ".github/**",
+        "AGENTS.md",
+        "docs/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "packages/vfmedia/**",
+        "packages/vfmem/**",
+        "packages/vfops/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        ".github/**",
+        "AGENTS.md",
+        "docs/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "packages/vfmedia/**",
+        "packages/vfmem/**",
+        "packages/vfops/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfmem",
+      "path": "scripts/check-vfmem.py",
+      "owns": [
+        "packages/manifest.json",
+        "packages/vfmem/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "packages/manifest.json",
+        "packages/vfmem/**",
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/vfmem.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfmskill",
+      "path": "scripts/check-vfmskill.py",
+      "owns": [
+        ".agents/**",
+        ".cursor/**",
+        "packages/manifest.json",
+        "packages/vfmskill/**"
+      ],
+      "triggered_by": [
+        ".agents/**",
+        ".cursor/**",
+        "packages/manifest.json",
+        "packages/vfmskill/**",
+        "scripts/check-vfmskill.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfom",
+      "path": "scripts/check-vfom.py",
+      "owns": [
+        "packages/manifest.json",
+        "packages/vfom/**"
+      ],
+      "triggered_by": [
+        "packages/manifest.json",
+        "packages/vfom/**",
+        "scripts/check-vfom.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfops-loop",
+      "path": "scripts/check-vfops-loop.py",
+      "owns": [
+        "AGENTS.md",
+        "constitution/**",
+        "docs/**",
+        "packages/vfbiz/**",
+        "packages/vfbooks/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfmem/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfresearch/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "AGENTS.md",
+        "constitution/**",
+        "docs/**",
+        "packages/vfbiz/**",
+        "packages/vfbooks/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfmem/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfresearch/**",
+        "scripts/**"
+      ],
+      "depends_on": [
+        "scripts/sensor_isolation.py",
+        "scripts/vfops_loop.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfprod",
+      "path": "scripts/check-vfprod.py",
+      "owns": [
+        "AGENTS.md",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "AGENTS.md",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfresearch",
+      "path": "scripts/check-vfresearch.py",
+      "owns": [
+        ".cursor/**",
+        ".github/**",
+        "constitution/**",
+        "packages/manifest.json",
+        "packages/vfops/**",
+        "packages/vfresearch/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        ".cursor/**",
+        ".github/**",
+        "constitution/**",
+        "packages/manifest.json",
+        "packages/vfops/**",
+        "packages/vfresearch/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vfsku",
+      "path": "scripts/check-vfsku.py",
+      "owns": [
+        "packages/vfconvert/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfsku/**",
+        "packages/vlicense/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "packages/vfconvert/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfsku/**",
+        "packages/vlicense/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-video-normalization",
+      "path": "scripts/check-video-normalization.py",
+      "owns": [
+        "scripts/vf_video_normalization.py"
+      ],
+      "triggered_by": [
+        "scripts/check-video-normalization.py"
+      ],
+      "depends_on": [
+        "scripts/vf_video_normalization.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-video-toolchain",
+      "path": "scripts/check-video-toolchain.py",
+      "owns": [
+        "packages/vfom/**",
+        "scripts/**"
+      ],
+      "triggered_by": [
+        "packages/vfom/**",
+        "scripts/**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-visible-text-gate",
+      "path": "scripts/check-visible-text-gate.py",
+      "owns": [
+        ".cursor/rules/visible-text-gate.mdc",
+        ".cursor/skills/velvet-brand-guardian/**",
+        ".cursor/skills/velvet-creative-director/**",
+        ".cursor/skills/vf-hebrew-copy/**",
+        ".cursor/skills/vf-inquiry-chain/**",
+        ".cursor/skills/vf-morning-brief/**",
+        "AGENTS.md",
+        "constitution/**",
+        "packages/vfconvert/**",
+        "packages/vfcopy/**",
+        "packages/vfe2b/**",
+        "packages/vfgrowth/**",
+        "packages/vfharness/**",
+        "packages/vfom/**",
+        "packages/vfsales/**",
+        "scripts/vf_visible_text.py"
+      ],
+      "triggered_by": [
+        ".cursor/rules/visible-text-gate.mdc",
+        ".cursor/skills/velvet-brand-guardian/**",
+        ".cursor/skills/velvet-creative-director/**",
+        ".cursor/skills/vf-hebrew-copy/**",
+        ".cursor/skills/vf-inquiry-chain/**",
+        ".cursor/skills/vf-morning-brief/**",
+        "AGENTS.md",
+        "constitution/**",
+        "packages/vfconvert/**",
+        "packages/vfcopy/**",
+        "packages/vfe2b/**",
+        "packages/vfgrowth/**",
+        "packages/vfharness/**",
+        "packages/vfom/**",
+        "packages/vfsales/**",
+        "scripts/check-visible-text-gate.py",
+        "scripts/vf_visible_text.py"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "visible_text.finalization"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-visual-reject-identity",
+      "path": "scripts/check-visual-reject-identity.py",
+      "owns": [
+        "instances/**"
+      ],
+      "triggered_by": [
+        "instances/**",
+        "scripts/check-visual-reject-identity.py"
+      ],
+      "depends_on": [
+        "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-visual-standard-bootstrap",
+      "path": "scripts/check-visual-standard-bootstrap.py",
+      "owns": [
+        "packages/vfom/jobs/**"
+      ],
+      "triggered_by": [
+        "packages/vfom/jobs/**",
+        "scripts/check-visual-standard-bootstrap.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-visual-surface-enforcement",
+      "path": "scripts/check-visual-surface-enforcement.py",
+      "owns": [
+        "instances/velvet-factory/**",
+        "packages/vfgrowth/**",
+        "packages/vfom/**",
+        "scripts/vf_send_preflight.py"
+      ],
+      "triggered_by": [
+        "instances/velvet-factory/**",
+        "packages/vfgrowth/**",
+        "packages/vfom/**",
+        "scripts/check-visual-surface-enforcement.py",
+        "scripts/vf_send_preflight.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-windows-path-contract",
+      "path": "scripts/check-windows-path-contract.py",
+      "owns": [
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "packages/vfmcp/**",
+        "packages/vfmem/**",
+        "packages/vfom/**"
+      ],
+      "triggered_by": [
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "packages/vfmcp/**",
+        "packages/vfmem/**",
+        "packages/vfom/**",
+        "scripts/check-windows-path-contract.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-zero-cost-final-acceptance",
+      "path": "scripts/check-zero-cost-final-acceptance.py",
+      "owns": [
+        "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
+        "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json",
+        "packages/vfharness/runtime/expected-components.json"
+      ],
+      "triggered_by": [
+        "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
+        "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json",
+        "packages/vfharness/runtime/expected-components.json",
+        "scripts/check-zero-cost-final-acceptance.py"
+      ],
+      "depends_on": [
+        "check-grok-provider-readback",
+        "check-runtime-doctor",
+        "check-no-new-recurring-cost"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "report": "stage2-sensor-registry-audit",
+  "stage": "2A",
+  "behavior_change": false,
+  "suite_runner": "scripts/check-all.py",
+  "registered_sensor_count": 109,
+  "live_sensor_count": 109,
+  "registry_matches_live": true,
+  "mapping_state_counts": {
+    "mapped": 109
+  },
+  "fallback_scope_counts": {
+    "ALWAYS_ON": 4,
+    "FULL_SUITE": 105
+  },
+  "dependency_edge_count": 46,
+  "sensors_with_dependencies": 25,
+  "critical_always_on": [
+    "check-agent-surface-security",
+    "check-critical-syntax",
+    "check-machine-writers",
+    "check-policy-architecture"
+  ],
+  "broad_legacy_sensors": [],
+  "nested_sensor_invocations": [
+    {
+      "sensor_id": "check-visual-reject-identity",
+      "targets": [
+        "scripts/check-instance-visual-bootstrap.py"
+      ]
+    },
+    {
+      "sensor_id": "check-zero-cost-final-acceptance",
+      "targets": [
+        "scripts/check-grok-provider-readback.py",
+        "scripts/check-runtime-doctor.py"
+      ]
+    }
+  ],
+  "workflow_direct_sensor_invocations": [
+    {
+      "workflow": ".github/workflows/check-all.yml",
+      "line": 42,
+      "sensor_path": "scripts/check-policy-architecture.py",
+      "suite_runner_present": true,
+      "potential_duplicate_with_suite_runner": true
+    },
+    {
+      "workflow": ".github/workflows/check-all.yml",
+      "line": 87,
+      "sensor_path": "scripts/check-commission-isolation.py",
+      "suite_runner_present": true,
+      "potential_duplicate_with_suite_runner": true
+    },
+    {
+      "workflow": ".github/workflows/jobs-write-through.yml",
+      "line": 111,
+      "sensor_path": "scripts/check-vf-office.py",
+      "suite_runner_present": false,
+      "potential_duplicate_with_suite_runner": false
+    },
+    {
+      "workflow": ".github/workflows/office-control-plane.yml",
+      "line": 39,
+      "sensor_path": "scripts/check-office-control-plane.py",
+      "suite_runner_present": false,
+      "potential_duplicate_with_suite_runner": false
+    },
+    {
+      "workflow": ".github/workflows/office-control-plane.yml",
+      "line": 40,
+      "sensor_path": "scripts/check-runtime-corners.py",
+      "suite_runner_present": false,
+      "potential_duplicate_with_suite_runner": false
+    },
+    {
+      "workflow": ".github/workflows/office-control-plane.yml",
+      "line": 53,
+      "sensor_path": "scripts/check-learning-lifecycle.py",
+      "suite_runner_present": false,
+      "potential_duplicate_with_suite_runner": false
+    },
+    {
+      "workflow": ".github/workflows/vfmedia-intake.yml",
+      "line": 134,
+      "sensor_path": "scripts/check-vfmedia.py",
+      "suite_runner_present": false,
+      "potential_duplicate_with_suite_runner": false
+    }
+  ],
+  "potential_duplicate_sensor_runs": [
+    {
+      "workflow": ".github/workflows/check-all.yml",
+      "line": 42,
+      "sensor_path": "scripts/check-policy-architecture.py",
+      "suite_runner_present": true,
+      "potential_duplicate_with_suite_runner": true
+    },
+    {
+      "workflow": ".github/workflows/check-all.yml",
+      "line": 87,
+      "sensor_path": "scripts/check-commission-isolation.py",
+      "suite_runner_present": true,
+      "potential_duplicate_with_suite_runner": true
+    }
+  ],
+  "duplicate_removal_stage": 3,
+  "notes": [
+    "Stage 2A records duplicates and nested execution; it does not remove or skip existing checks.",
+    "Broad legacy mappings remain fail-broad and are not eligible for affected-only enforcement.",
+    "Stage 2B selector shadowing must continue to run the full suite."
+  ]
+}

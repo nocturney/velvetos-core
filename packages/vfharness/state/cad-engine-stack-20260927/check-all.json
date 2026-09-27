@@ -1,0 +1,681 @@
+{
+  "schema": "velvetos.sensor-full-results.v1",
+  "suite_runner": "scripts/check-all.py",
+  "sensor_count": 96,
+  "failed_count": 26,
+  "repository_side_effects": [],
+  "results": [
+    {
+      "sensor_id": "check-agent-surface-security",
+      "path": "scripts/check-agent-surface-security.py",
+      "returncode": 0,
+      "duration_seconds": 0.319,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-brand-asset-cta-lock",
+      "path": "scripts/check-brand-asset-cta-lock.py",
+      "returncode": 0,
+      "duration_seconds": 0.028,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-chat-cold-start-preflight",
+      "path": "scripts/check-chat-cold-start-preflight.py",
+      "returncode": 0,
+      "duration_seconds": 0.587,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-chat-runtime-bundle",
+      "path": "scripts/check-chat-runtime-bundle.py",
+      "returncode": 0,
+      "duration_seconds": 0.294,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-cloudflare-publish-fingerprint",
+      "path": "scripts/check-cloudflare-publish-fingerprint.py",
+      "returncode": 0,
+      "duration_seconds": 0.085,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-cognee-integration",
+      "path": "scripts/check-cognee-integration.py",
+      "returncode": 0,
+      "duration_seconds": 0.039,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-commission-isolation",
+      "path": "scripts/check-commission-isolation.py",
+      "returncode": 1,
+      "duration_seconds": 1.554,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-control-api",
+      "path": "scripts/check-control-api.py",
+      "returncode": 1,
+      "duration_seconds": 1.203,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-creative-autopilot",
+      "path": "scripts/check-creative-autopilot.py",
+      "returncode": 0,
+      "duration_seconds": 0.033,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-creative-master-bridge",
+      "path": "scripts/check-creative-master-bridge.py",
+      "returncode": 0,
+      "duration_seconds": 0.417,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-creative-system",
+      "path": "scripts/check-creative-system.py",
+      "returncode": 0,
+      "duration_seconds": 0.032,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-creative-transformation-lock",
+      "path": "scripts/check-creative-transformation-lock.py",
+      "returncode": 0,
+      "duration_seconds": 0.03,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-critical-syntax",
+      "path": "scripts/check-critical-syntax.py",
+      "returncode": 0,
+      "duration_seconds": 0.373,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-delivery-approval",
+      "path": "scripts/check-delivery-approval.py",
+      "returncode": 0,
+      "duration_seconds": 0.261,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-demand-signals-dormant",
+      "path": "scripts/check-demand-signals-dormant.py",
+      "returncode": 0,
+      "duration_seconds": 0.239,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-gmail-brief-send",
+      "path": "scripts/check-gmail-brief-send.py",
+      "returncode": 0,
+      "duration_seconds": 0.089,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-grok-boot-hardening",
+      "path": "scripts/check-grok-boot-hardening.py",
+      "returncode": 0,
+      "duration_seconds": 0.031,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-hq-overlay",
+      "path": "scripts/check-hq-overlay.py",
+      "returncode": 1,
+      "duration_seconds": 0.046,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-hyperframes-backend",
+      "path": "scripts/check-hyperframes-backend.py",
+      "returncode": 0,
+      "duration_seconds": 0.048,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-instagram-content-decision",
+      "path": "scripts/check-instagram-content-decision.py",
+      "returncode": 0,
+      "duration_seconds": 0.033,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-learning-lifecycle",
+      "path": "scripts/check-learning-lifecycle.py",
+      "returncode": 1,
+      "duration_seconds": 0.03,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-living-docs",
+      "path": "scripts/check-living-docs.py",
+      "returncode": 0,
+      "duration_seconds": 0.029,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-living-studio",
+      "path": "scripts/check-living-studio.py",
+      "returncode": 1,
+      "duration_seconds": 0.127,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-machine-writers",
+      "path": "scripts/check-machine-writers.py",
+      "returncode": 0,
+      "duration_seconds": 0.03,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-morning-green",
+      "path": "scripts/check-morning-green.py",
+      "returncode": 0,
+      "duration_seconds": 0.139,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-no-new-recurring-cost",
+      "path": "scripts/check-no-new-recurring-cost.py",
+      "returncode": 0,
+      "duration_seconds": 0.036,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-office-control-plane",
+      "path": "scripts/check-office-control-plane.py",
+      "returncode": 1,
+      "duration_seconds": 0.26,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-office-watchdog",
+      "path": "scripts/check-office-watchdog.py",
+      "returncode": 0,
+      "duration_seconds": 0.26,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-openpost-status",
+      "path": "scripts/check-openpost-status.py",
+      "returncode": 0,
+      "duration_seconds": 0.031,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-organic-growth",
+      "path": "scripts/check-organic-growth.py",
+      "returncode": 1,
+      "duration_seconds": 0.202,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-origin-slugs",
+      "path": "scripts/check-origin-slugs.py",
+      "returncode": 0,
+      "duration_seconds": 0.031,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-policy-architecture",
+      "path": "scripts/check-policy-architecture.py",
+      "returncode": 1,
+      "duration_seconds": 0.682,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-production-content",
+      "path": "scripts/check-production-content.py",
+      "returncode": 0,
+      "duration_seconds": 0.063,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-project-bundle",
+      "path": "scripts/check-project-bundle.py",
+      "returncode": 0,
+      "duration_seconds": 0.074,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-project-request-gate",
+      "path": "scripts/check-project-request-gate.py",
+      "returncode": 0,
+      "duration_seconds": 10.113,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-project669-publication",
+      "path": "scripts/check-project669-publication.py",
+      "returncode": 0,
+      "duration_seconds": 0.163,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-public-cta",
+      "path": "scripts/check-public-cta.py",
+      "returncode": 0,
+      "duration_seconds": 0.033,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-publication-evidence",
+      "path": "scripts/check-publication-evidence.py",
+      "returncode": 0,
+      "duration_seconds": 7.217,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-publication-prep-execution",
+      "path": "scripts/check-publication-prep-execution.py",
+      "returncode": 0,
+      "duration_seconds": 0.034,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-publication-states",
+      "path": "scripts/check-publication-states.py",
+      "returncode": 1,
+      "duration_seconds": 0.047,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-publish-bridge",
+      "path": "scripts/check-publish-bridge.py",
+      "returncode": 0,
+      "duration_seconds": 0.031,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-publish-fingerprint",
+      "path": "scripts/check-publish-fingerprint.py",
+      "returncode": 0,
+      "duration_seconds": 0.1,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-publish-handoff",
+      "path": "scripts/check-publish-handoff.py",
+      "returncode": 0,
+      "duration_seconds": 0.286,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-readme-contract",
+      "path": "scripts/check-readme-contract.py",
+      "returncode": 0,
+      "duration_seconds": 0.039,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-review-convergence",
+      "path": "scripts/check-review-convergence.py",
+      "returncode": 0,
+      "duration_seconds": 0.039,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-risk-policy",
+      "path": "scripts/check-risk-policy.py",
+      "returncode": 0,
+      "duration_seconds": 0.052,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-runtime-activation",
+      "path": "scripts/check-runtime-activation.py",
+      "returncode": 0,
+      "duration_seconds": 0.033,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-runtime-corners",
+      "path": "scripts/check-runtime-corners.py",
+      "returncode": 0,
+      "duration_seconds": 0.033,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-runtime-doctor",
+      "path": "scripts/check-runtime-doctor.py",
+      "returncode": 0,
+      "duration_seconds": 0.031,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-sensor-locks",
+      "path": "scripts/check-sensor-locks.py",
+      "returncode": 0,
+      "duration_seconds": 0.033,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-skill-health",
+      "path": "scripts/check-skill-health.py",
+      "returncode": 0,
+      "duration_seconds": 0.06,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-skill-pattern-embeds",
+      "path": "scripts/check-skill-pattern-embeds.py",
+      "returncode": 0,
+      "duration_seconds": 0.03,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-social-intelligence",
+      "path": "scripts/check-social-intelligence.py",
+      "returncode": 0,
+      "duration_seconds": 0.091,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-soft-tools-pipeline",
+      "path": "scripts/check-soft-tools-pipeline.py",
+      "returncode": 0,
+      "duration_seconds": 0.029,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-source-ingest",
+      "path": "scripts/check-source-ingest.py",
+      "returncode": 0,
+      "duration_seconds": 0.355,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-speech-layer",
+      "path": "scripts/check-speech-layer.py",
+      "returncode": 0,
+      "duration_seconds": 0.031,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-staleness",
+      "path": "scripts/check-staleness.py",
+      "returncode": 1,
+      "duration_seconds": 0.065,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-tool-authority",
+      "path": "scripts/check-tool-authority.py",
+      "returncode": 0,
+      "duration_seconds": 0.029,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-velvet-health",
+      "path": "scripts/check-velvet-health.py",
+      "returncode": 1,
+      "duration_seconds": 0.754,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-velvetos",
+      "path": "scripts/check-velvetos.py",
+      "returncode": 0,
+      "duration_seconds": 0.041,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vf-autonomy",
+      "path": "scripts/check-vf-autonomy.py",
+      "returncode": 0,
+      "duration_seconds": 0.115,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vf-cad-integration",
+      "path": "scripts/check-vf-cad-integration.py",
+      "returncode": 0,
+      "duration_seconds": 0.03,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vf-cad-stack",
+      "path": "scripts/check-vf-cad-stack.py",
+      "returncode": 0,
+      "duration_seconds": 0.514,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vf-desk",
+      "path": "scripts/check-vf-desk.py",
+      "returncode": 1,
+      "duration_seconds": 0.043,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vf-fabrication-router",
+      "path": "scripts/check-vf-fabrication-router.py",
+      "returncode": 0,
+      "duration_seconds": 0.913,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vf-handoff",
+      "path": "scripts/check-vf-handoff.py",
+      "returncode": 0,
+      "duration_seconds": 0.185,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vf-offering",
+      "path": "scripts/check-vf-offering.py",
+      "returncode": 0,
+      "duration_seconds": 0.041,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vf-office",
+      "path": "scripts/check-vf-office.py",
+      "returncode": 0,
+      "duration_seconds": 0.07,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vf-task-state",
+      "path": "scripts/check-vf-task-state.py",
+      "returncode": 0,
+      "duration_seconds": 1.443,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vfagents",
+      "path": "scripts/check-vfagents.py",
+      "returncode": 0,
+      "duration_seconds": 0.03,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vfcopy",
+      "path": "scripts/check-vfcopy.py",
+      "returncode": 0,
+      "duration_seconds": 0.088,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vfcost",
+      "path": "scripts/check-vfcost.py",
+      "returncode": 1,
+      "duration_seconds": 0.048,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfdsh",
+      "path": "scripts/check-vfdsh.py",
+      "returncode": 1,
+      "duration_seconds": 0.043,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfe2b",
+      "path": "scripts/check-vfe2b.py",
+      "returncode": 1,
+      "duration_seconds": 0.046,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vffcc",
+      "path": "scripts/check-vffcc.py",
+      "returncode": 1,
+      "duration_seconds": 0.044,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfgraft",
+      "path": "scripts/check-vfgraft.py",
+      "returncode": 1,
+      "duration_seconds": 0.042,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfgrowth",
+      "path": "scripts/check-vfgrowth.py",
+      "returncode": 1,
+      "duration_seconds": 0.044,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfharness-execution-discipline",
+      "path": "scripts/check-vfharness-execution-discipline.py",
+      "returncode": 0,
+      "duration_seconds": 0.054,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vfharness",
+      "path": "scripts/check-vfharness.py",
+      "returncode": 1,
+      "duration_seconds": 0.043,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfmakers",
+      "path": "scripts/check-vfmakers.py",
+      "returncode": 1,
+      "duration_seconds": 0.042,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfmcp",
+      "path": "scripts/check-vfmcp.py",
+      "returncode": 1,
+      "duration_seconds": 0.047,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfmedia",
+      "path": "scripts/check-vfmedia.py",
+      "returncode": 1,
+      "duration_seconds": 0.156,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfmem",
+      "path": "scripts/check-vfmem.py",
+      "returncode": 0,
+      "duration_seconds": 0.054,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vfmskill",
+      "path": "scripts/check-vfmskill.py",
+      "returncode": 1,
+      "duration_seconds": 0.045,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfom",
+      "path": "scripts/check-vfom.py",
+      "returncode": 1,
+      "duration_seconds": 0.049,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfops-loop",
+      "path": "scripts/check-vfops-loop.py",
+      "returncode": 0,
+      "duration_seconds": 6.453,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vfprod",
+      "path": "scripts/check-vfprod.py",
+      "returncode": 1,
+      "duration_seconds": 0.094,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-vfresearch",
+      "path": "scripts/check-vfresearch.py",
+      "returncode": 0,
+      "duration_seconds": 0.162,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-vfsku",
+      "path": "scripts/check-vfsku.py",
+      "returncode": 1,
+      "duration_seconds": 0.044,
+      "status": "FAIL"
+    },
+    {
+      "sensor_id": "check-video-normalization",
+      "path": "scripts/check-video-normalization.py",
+      "returncode": 0,
+      "duration_seconds": 3.132,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-video-toolchain",
+      "path": "scripts/check-video-toolchain.py",
+      "returncode": 0,
+      "duration_seconds": 0.031,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-visible-text-gate",
+      "path": "scripts/check-visible-text-gate.py",
+      "returncode": 0,
+      "duration_seconds": 0.03,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-visual-reject-identity",
+      "path": "scripts/check-visual-reject-identity.py",
+      "returncode": 0,
+      "duration_seconds": 0.081,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-visual-standard-bootstrap",
+      "path": "scripts/check-visual-standard-bootstrap.py",
+      "returncode": 0,
+      "duration_seconds": 0.03,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-visual-surface-enforcement",
+      "path": "scripts/check-visual-surface-enforcement.py",
+      "returncode": 0,
+      "duration_seconds": 0.031,
+      "status": "PASS"
+    },
+    {
+      "sensor_id": "check-windows-path-contract",
+      "path": "scripts/check-windows-path-contract.py",
+      "returncode": 0,
+      "duration_seconds": 0.03,
+      "status": "PASS"
+    }
+  ]
+}

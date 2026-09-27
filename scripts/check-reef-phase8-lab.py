@@ -21,7 +21,10 @@ def load(path: Path) -> dict:
 
 
 def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    # Git stores this text patch with LF endings; Windows may check it out as CRLF.
+    # Normalize checkout-only line-ending drift while preserving content integrity.
+    data = path.read_bytes().replace(b"\r\n", b"\n")
+    return hashlib.sha256(data).hexdigest()
 
 
 def main() -> None:

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://policy/instagram-publish.schema.json",
+  "title": "instagram.publish policy",
+  "type": "object",
+  "required": [
+    "policy_id",
+    "version",
+    "status",
+    "decision_values",
+    "scope",
+    "risk",
+    "exact_bindings",
+    "required_gates",
+    "gate_pass_values",
+    "authorization",
+    "forbidden_effects",
+    "legacy_compatibility",
+    "postconditions"
+  ],
+  "properties": {
+    "policy_id": {"const": "instagram.publish"},
+    "version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["candidate", "active", "retired"]},
+    "decision_values": {
+      "const": ["ALLOW", "DENY", "REQUIRE_OWNER_APPROVAL"]
+    },
+    "scope": {
+      "type": "object",
+      "required": ["channel", "publication_type", "mutation_tools"],
+      "properties": {
+        "channel": {"const": "instagram"},
+        "publication_type": {"const": "organic"},
+        "mutation_tools": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string"},
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "risk": {
+      "type": "object",
+      "required": ["standing_authorization_max", "owner_approval_allows"],
+      "properties": {
+        "standing_authorization_max": {"const": "LOW"},
+        "owner_approval_allows": {
+          "type": "array",
+          "items": {"enum": ["LOW", "MEDIUM", "HIGH"]},
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "exact_bindings": {"type": "array", "minItems": 4, "items": {"type": "string"}, "uniqueItems": true},
+    "required_gates": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+    "gate_pass_values": {"const": ["PASS", "NOT_APPLICABLE"]},
+    "authorization": {"type": "object"},
+    "forbidden_effects": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "legacy_compatibility": {"type": "object"},
+    "postconditions": {"type": "object"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "velvetos.geometry-ir.v1",
+  "units": "mm",
+  "parts": [
+    {
+      "id": "plate",
+      "kind": "box",
+      "dimensions": {"x": 40, "y": 30, "z": 10},
+      "operation": "add",
+      "translate_mm": [0, 0, 0],
+      "parent": null,
+      "source": null
+    },
+    {
+      "id": "center_hole",
+      "kind": "cylinder",
+      "dimensions": {"diameter": 10, "height": 20},
+      "operation": "cut",
+      "translate_mm": [0, 0, 0],
+      "parent": "plate",
+      "source": null
+    }
+  ],
+  "constraints": [
+    {"type": "align", "a": "center_hole", "b": "plate", "value_mm": 0}
+  ]
+}

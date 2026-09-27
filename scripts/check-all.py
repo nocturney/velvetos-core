@@ -2,9 +2,12 @@
 """Run every computational HQ sensor. No network. No send."""
 from __future__ import annotations
 
+import argparse
+import json
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -43,6 +46,10 @@ def git_dirty_state() -> dict[str, bytes] | None:
 
 
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--json-out", type=Path)
+    args = ap.parse_args()
+
     checks = sorted(
         p
         for p in SCRIPTS.glob("check-*.py")
@@ -53,6 +60,7 @@ def main() -> int:
         return 1
 
     failed: list[str] = []
+    results: list[dict[str, object]] = []
     dirty_before = git_dirty_state()
     sensor_env = os.environ.copy()
     sensor_env["PYTHONUTF8"] = "1"
@@ -63,6 +71,7 @@ def main() -> int:
     sensor_creationflags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
     print(f"SENSORS {len(checks)}")
     for path in checks:
+        started = time.perf_counter()
         proc = subprocess.run(
             [sys.executable, str(path)],
             cwd=ROOT,
@@ -72,8 +81,16 @@ def main() -> int:
             env=sensor_env,
             creationflags=sensor_creationflags,
         )
+        duration = round(time.perf_counter() - started, 3)
         out = (proc.stdout or "").strip()
         err = (proc.stderr or "").strip()
+        results.append({
+            "sensor_id": path.stem,
+            "path": path.relative_to(ROOT).as_posix(),
+            "returncode": proc.returncode,
+            "duration_seconds": duration,
+            "status": "PASS" if proc.returncode == 0 else "FAIL",
+        })
         if proc.returncode == 0:
             print(f"PASS {path.name}  {out}")
         else:
@@ -84,6 +101,7 @@ def main() -> int:
     # Sensors must only read. Report (do not fail on) any git-visible file the run changed,
     # so a routine never commits sensor side effects by accident.
     dirty_after = git_dirty_state()
+    drift: list[str] = []
     if dirty_before is not None and dirty_after is not None:
         drift = sorted(
             rel for rel, data in dirty_after.items()
@@ -94,6 +112,18 @@ def main() -> int:
             print(f"WARN sensor side effects on repo files ({len(drift)}): {', '.join(drift[:20])}")
         else:
             print("OK sensor run left repository files unchanged")
+
+    if args.json_out:
+        payload = {
+            "schema": "velvetos.sensor-full-results.v1",
+            "suite_runner": "scripts/check-all.py",
+            "sensor_count": len(checks),
+            "failed_count": len(failed),
+            "repository_side_effects": drift,
+            "results": results,
+        }
+        args.json_out.parent.mkdir(parents=True, exist_ok=True)
+        args.json_out.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     if failed:
         print(f"FAIL suite failed={len(failed)}/{len(checks)}", file=sys.stderr)

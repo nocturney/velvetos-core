@@ -1,0 +1,301 @@
+{
+  "report": "artifact-inventory",
+  "source_commit_sha": "52bcb819c1a6d9924f0f2800340169df5f991e08",
+  "tracked_file_count": 2204,
+  "tracked_bytes": 25474214,
+  "classifications": [
+    {
+      "artifact_class_id": "canonical-policy-config-schema",
+      "tracked_file_count": 27,
+      "tracked_bytes": 133429,
+      "current_storage": "GIT",
+      "target_storage": "GIT",
+      "retention_class": "DURABLE",
+      "migration_stage": "NONE",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "compact-audit-receipts",
+      "tracked_file_count": 4,
+      "tracked_bytes": 7588,
+      "current_storage": "MIXED",
+      "target_storage": "GIT_WHEN_COMPACT",
+      "retention_class": "AUDIT_DURABLE",
+      "migration_stage": "STAGE_7",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "harness-checkpoints",
+      "tracked_file_count": 214,
+      "tracked_bytes": 305556,
+      "current_storage": "GIT",
+      "target_storage": "STATE_STORE",
+      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "migration_stage": "STAGE_7",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "office-generated-output",
+      "tracked_file_count": 171,
+      "tracked_bytes": 4364323,
+      "current_storage": "GIT",
+      "target_storage": "ARTIFACT_STORE_OR_DRIVE",
+      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "migration_stage": "STAGE_7",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "publish-bridge-archive",
+      "tracked_file_count": 0,
+      "tracked_bytes": 0,
+      "current_storage": "GIT_OR_ARCHIVE",
+      "target_storage": "ARCHIVE",
+      "retention_class": "UNLIMITED_CURRENT_CONTRACT",
+      "migration_stage": "STAGE_7_REVIEW_ONLY",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "creative-render-output",
+      "tracked_file_count": 11,
+      "tracked_bytes": 6539173,
+      "current_storage": "GIT",
+      "target_storage": "ARTIFACT_STORE_OR_MEDIA_VAULT",
+      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "migration_stage": "STAGE_7",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "approved-visual-reference",
+      "tracked_file_count": 2,
+      "tracked_bytes": 537914,
+      "current_storage": "GIT",
+      "target_storage": "GIT_OR_VERSIONED_MEDIA_VAULT",
+      "retention_class": "DURABLE_REFERENCE",
+      "migration_stage": "STAGE_7_REVIEW_ONLY",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "vfmedia-operational-data",
+      "tracked_file_count": 4,
+      "tracked_bytes": 395039,
+      "current_storage": "GIT",
+      "target_storage": "STATE_STORE",
+      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "migration_stage": "STAGE_7",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "research-evidence",
+      "tracked_file_count": 105,
+      "tracked_bytes": 400169,
+      "current_storage": "GIT",
+      "target_storage": "GIT_WHEN_COMPACT",
+      "retention_class": "DURABLE_WHEN_CITED",
+      "migration_stage": "STAGE_7_REVIEW_ONLY",
+      "deletion_authorized": false
+    }
+  ],
+  "largest_tracked_files": [
+    {
+      "path": "packages/vfcovers/g004/out/story-1.png",
+      "bytes": 1926267
+    },
+    {
+      "path": "packages/vfcovers/g004/out/story-2.png",
+      "bytes": 1685687
+    },
+    {
+      "path": "packages/vfcovers/g004/out/story-3.png",
+      "bytes": 1312904
+    },
+    {
+      "path": "packages/vfmedia/catalog.json",
+      "bytes": 764930
+    },
+    {
+      "path": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
+      "bytes": 524360
+    },
+    {
+      "path": "packages/vfcovers/g005/slides/VF-G005-06-pickup.jpg",
+      "bytes": 313281
+    },
+    {
+      "path": "packages/vfmedia/data/intake-events.jsonl",
+      "bytes": 264473
+    },
+    {
+      "path": "packages/vfcovers/g005/slides/VF-G005-03-file.jpg",
+      "bytes": 263858
+    },
+    {
+      "path": "packages/vfcovers/g005/slides/VF-G005-01-cover.jpg",
+      "bytes": 232489
+    },
+    {
+      "path": "packages/vfcovers/g005/slides/VF-G005-05-slice.jpg",
+      "bytes": 212909
+    },
+    {
+      "path": "packages/vfcovers/g005/slides/VF-G005-02-idea.jpg",
+      "bytes": 187803
+    },
+    {
+      "path": "packages/vfcovers/g005/slides/VF-G005-04-use.jpg",
+      "bytes": 184266
+    },
+    {
+      "path": "packages/vfcovers/g005/slides/VF-G005-07-cta.jpg",
+      "bytes": 176116
+    },
+    {
+      "path": ".cursor/agency-agents.json",
+      "bytes": 153395
+    },
+    {
+      "path": "packages/vfmedia/state/pending-drive-actions.json",
+      "bytes": 128586
+    },
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 119885
+    },
+    {
+      "path": "scripts/check-delivery-approval.py",
+      "bytes": 113899
+    },
+    {
+      "path": "packages/vfbriefux/assets/morning-green/morning-top.jpg",
+      "bytes": 108558
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-24/morning-top.jpg",
+      "bytes": 108558
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-25/morning-top.jpg",
+      "bytes": 108558
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-26/morning-top.jpg",
+      "bytes": 108558
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-27/morning-top.jpg",
+      "bytes": 108558
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa4-2026-09-23/morning-top.jpg",
+      "bytes": 108558
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa5-2026-09-23/morning-top.jpg",
+      "bytes": 108558
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa-2026-09-23/morning-top.jpg",
+      "bytes": 106646
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa2-2026-09-23/morning-top.jpg",
+      "bytes": 106646
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa3-2026-09-23/morning-top.jpg",
+      "bytes": 106646
+    },
+    {
+      "path": "scripts/vf_control_plane.py",
+      "bytes": 98932
+    },
+    {
+      "path": "packages/vfbriefux/assets/morning-green/morning-story.jpg",
+      "bytes": 95888
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-24/morning-story.jpg",
+      "bytes": 95888
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-25/morning-story.jpg",
+      "bytes": 95888
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-26/morning-story.jpg",
+      "bytes": 95888
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-27/morning-story.jpg",
+      "bytes": 95888
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa-2026-09-23/morning-story.jpg",
+      "bytes": 95888
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa2-2026-09-23/morning-story.jpg",
+      "bytes": 95888
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa3-2026-09-23/morning-story.jpg",
+      "bytes": 95888
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa4-2026-09-23/morning-story.jpg",
+      "bytes": 95888
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa5-2026-09-23/morning-story.jpg",
+      "bytes": 95888
+    },
+    {
+      "path": "scripts/vf_living_studio.py",
+      "bytes": 90774
+    },
+    {
+      "path": "packages/vfbriefux/assets/morning-green/morning-footer.jpg",
+      "bytes": 84492
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-24/morning-footer.jpg",
+      "bytes": 84492
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-25/morning-footer.jpg",
+      "bytes": 84492
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-26/morning-footer.jpg",
+      "bytes": 84492
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-2026-09-27/morning-footer.jpg",
+      "bytes": 84492
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa3-2026-09-23/morning-footer.jpg",
+      "bytes": 84492
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa4-2026-09-23/morning-footer.jpg",
+      "bytes": 84492
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa5-2026-09-23/morning-footer.jpg",
+      "bytes": 84492
+    },
+    {
+      "path": "docs/AGENCY-AGENTS.md",
+      "bytes": 77780
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa-2026-09-23/morning-footer.jpg",
+      "bytes": 69427
+    },
+    {
+      "path": "packages/vfops/out/morning-green-assets-approved-mockup-qa2-2026-09-23/morning-footer.jpg",
+      "bytes": 69427
+    }
+  ],
+  "stage0_action": "CLASSIFICATION_ONLY_NO_MOVE_NO_DELETE"
+}

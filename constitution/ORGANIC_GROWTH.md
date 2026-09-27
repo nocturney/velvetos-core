@@ -1,5 +1,7 @@
 # Organic Growth Control Plane
 
+Executable publication authorization is owned by `policy_id: instagram.publish` in `packages/velvetos/policy/instagram.publish.json`. This document explains the workflow and states; it does not independently decide `ALLOW` / `DENY` / `REQUIRE_OWNER_APPROVAL`.
+
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.

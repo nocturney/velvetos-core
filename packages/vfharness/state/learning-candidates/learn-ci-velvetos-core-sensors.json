@@ -10,10 +10,16 @@
     "gh-run:36101734482:failure:2026-09-25T06:11:05Z:https://github.com/nocturney/velvetos-core/actions/runs/36101734482",
     "gh-run:36222919346:failure:2026-09-26T06:09:47Z:https://github.com/nocturney/velvetos-core/actions/runs/36222919346",
     "gh-run:36222958014:failure:2026-09-26T06:10:29Z:https://github.com/nocturney/velvetos-core/actions/runs/36222958014",
-    "office-loop-1830 triage 2026-09-26: recurring FAIL check-staleness.py LINKS.json stale>8d (10d on 36222958014); run 36222919346 also FAIL check-gmail-brief-send.py bootstrap send request must be disabled on main."
+    "office-loop-1830 triage 2026-09-26: recurring FAIL check-staleness.py LINKS.json stale>8d (10d on 36222958014); run 36222919346 also FAIL check-gmail-brief-send.py bootstrap send request must be disabled on main.",
+    "gh-run:36301105001:failure:2026-09-27T06:46:50Z:https://github.com/nocturney/velvetos-core/actions/runs/36301105001",
+    "gh-run:36301208068:failure:2026-09-27T06:48:57Z:https://github.com/nocturney/velvetos-core/actions/runs/36301208068",
+    "gh-run:36302198913:failure:2026-09-27T07:08:43Z:https://github.com/nocturney/velvetos-core/actions/runs/36302198913",
+    "gh-run:36311506176:failure:2026-09-27T10:07:05Z:https://github.com/nocturney/velvetos-core/actions/runs/36311506176",
+    "gh-run:36311900603:failure:2026-09-27T10:14:33Z:https://github.com/nocturney/velvetos-core/actions/runs/36311900603",
+    "office-loop-1830 triage 2026-09-27: morning failures (36301105001..36311900603) suite failed=3/93 — check-hq-overlay/vfops_loop CALENDAR-OPS.md autonomous-slot lock + לא שואלים; check-vfgrowth packages/vfgrowth/HANDOFF-he.md missing 'Google Calendar'. Later main runs green from ~11:26Z after fixes on main. No promote — no new durable sensor from this handoff."
   ],
   "first_seen": "2026-09-25T06:11:05Z",
-  "last_seen": "2026-09-26T18:37:51+03:00",
+  "last_seen": "2026-09-27T18:37:42+03:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,

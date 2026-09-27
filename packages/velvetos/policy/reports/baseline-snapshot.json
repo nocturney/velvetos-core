@@ -1,0 +1,27 @@
+{
+  "report": "stage0-live-baseline",
+  "source_commit_sha": "52bcb819c1a6d9924f0f2800340169df5f991e08",
+  "cutoff_utc": "2026-09-27T13:06:53.045550+00:00",
+  "pre_change": {
+    "check_py_files_including_suite_runner": 94,
+    "runnable_sensors_discovered_by_check_all": 93,
+    "workflow_count": 10,
+    "agents_files": [
+      "AGENTS.md",
+      "instances/velvet-factory/AGENTS.md"
+    ],
+    "main_ruleset_enforcement": "disabled",
+    "main_branch_protected": false,
+    "check_all_pr_and_main": true,
+    "commission_isolation_duplicate_ci_step": true,
+    "root_agents_contains_velvet_factory_business_facts": true,
+    "visible_text_scope": "GLOBAL_FULL_CHAIN",
+    "instagram_publish_semantics": "SPLIT_BRAIN_RECORDED"
+  },
+  "post_0a": {
+    "source_commit_sha": "9217e172d4f11a01f5db124d7d811c7dcab6b9c5",
+    "runnable_sensor_count": 94,
+    "policy_registry_count": 11,
+    "policy_creation_freeze": "ACTIVE_ON_PULL_REQUEST"
+  }
+}

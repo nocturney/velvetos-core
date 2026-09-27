@@ -47,7 +47,7 @@ Any tool or agent that selects media, retouches, designs, builds covers/carousel
 
 ## CREATIVE AUTOPILOT
 
-This instance enables `creativeAutonomy.mode=exception-only` with standing authorization for routine organic Instagram publishing.
+This instance enables `creativeAutonomy.mode=exception-only`. For routine organic Instagram publishing, the instance projects standing authorization into the runtime, but the executable decision is owned by `policy_id: instagram.publish`; only an evaluator result of `ALLOW` may reach the publish mutation.
 
 Use Core:
 

@@ -1,6 +1,6 @@
 {
-  "date": "2026-09-26",
-  "generatedAt": "2026-09-26T18:35:56+03:00",
+  "date": "2026-09-27",
+  "generatedAt": "2026-09-27T18:36:30+03:00",
   "component_state": "Blocked",
   "goal": "פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.",
   "locks": [
@@ -11,7 +11,7 @@
     "no-invented-ils",
     "no-schedule-from-hq"
   ],
-  "weekdayNote": "2026-09-26 = שבת (Asia/Jerusalem)",
+  "weekdayNote": "2026-09-27 = ראשון (Asia/Jerusalem)",
   "slotRecommendation": {
     "choice": "poll",
     "when": "2026-09-28T20:30+03:00",
@@ -20,7 +20,7 @@
     "reason": "20:30 היום חלף. משבצת סטוריז הבאה: שני 2026-09-28 20:30 Asia/Jerusalem. בלי תזמון מ־HQ."
   },
   "reel": {
-    "slot": "אין פיד בשישי–שבת",
+    "slot": "היום 16:00 · ריל ראשון בשבוע",
     "gate": "blocked_no_media",
     "topic": "חסר — אין print.done עם מדיה",
     "asset": "חסר",
