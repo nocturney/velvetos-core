@@ -14,7 +14,9 @@
     ],
     "normalExecution": "capability-and-smoke evidence wins; newer compatible versions are allowed",
     "incompatibleUpdate": "report and keep current known-good runtime until compatibility repair is reviewed",
-    "frozenTools": "do not monitor for upgrades unless owner explicitly unfreezes"
+    "frozenTools": "do not monitor for upgrades unless owner explicitly unfreezes",
+    "pendingUpdates": "sticky-until-explicit-reviewed-adoption-ack",
+    "adoptionAck": "python3 scripts/vf_upstream_watch.py ack --repo <owner/repo> --evidence <compatibility/adoption receipt>"
   },
   "scheduler": {
     "owner": "velvet-research-seat",
@@ -896,7 +898,9 @@
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",
       "autoUpgrade": false,
-      "adoptionGate": "staging-venv+smoke+vfmem-sensor+rollback"
+      "adoptionGate": "staging-venv+smoke+vfmem-sensor+rollback",
+      "adoptedRelease": "v1.6.0",
+      "adoptionClass": "staged-stability-pin"
     },
     {
       "repo": "trailhq/Graft",

@@ -2,6 +2,7 @@
 from __future__ import annotations
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -18,6 +19,7 @@ HF_WIN = ROOT / "scripts" / "bootstrap-edge-host-windows.ps1"
 HF_MAC = ROOT / "scripts" / "bootstrap-hyperframes-host-macos.sh"
 MANIM_WIN = ROOT / "scripts" / "bootstrap-manim-host-windows.ps1"
 VIDEO_TOOLCHAIN = ROOT / "packages" / "vfom" / "VIDEO-TOOLCHAIN.json"
+UPSTREAM_CLI = ROOT / "scripts" / "vf_upstream_watch.py"
 GITHUB = re.compile(r"https?://github\.com/([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)", re.I)
 
 
@@ -70,6 +72,19 @@ def main() -> int:
     policy = data.get("policy") or {}
     if policy.get("default") != "latest-compatible" or policy.get("autoUpgrade") is not False:
         fail("default must be latest-compatible with autoUpgrade=false")
+    if policy.get("pendingUpdates") != "sticky-until-explicit-reviewed-adoption-ack":
+        fail("pending updates must remain sticky until reviewed adoption acknowledgement")
+    if "vf_upstream_watch.py ack" not in str(policy.get("adoptionAck") or ""):
+        fail("registry must document explicit adoption acknowledgement command")
+    selftest = subprocess.run(
+        [sys.executable, str(UPSTREAM_CLI), "selftest"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        timeout=20,
+    )
+    if selftest.returncode != 0 or "sticky-pending" not in (selftest.stdout or ""):
+        fail(f"upstream behavioral selftest failed: {selftest.stderr or selftest.stdout}")
     sources = data.get("sources") or []
     tracked = {norm_repo(str(row.get("repo") or "")): row for row in sources if row.get("repo")}
     excluded_rows = data.get("excludedSources") or []
@@ -118,6 +133,15 @@ def main() -> int:
     if len(cognee_exception) != 1:
         fail("Cognee exact pin must be explicitly classified as staged stability")
     cognee = json.loads(COGNEE.read_text(encoding="utf-8"))
+    cognee_source = tracked.get("topoteretes/cognee") or {}
+    expected_cognee_release = "v" + str(cognee.get("pinnedVersion") or "").lstrip("v")
+    if cognee_source.get("adoptedRelease") != expected_cognee_release:
+        fail(
+            "Cognee tracked adoptedRelease must match the staged stability pin "
+            f"{expected_cognee_release}"
+        )
+    if cognee_source.get("adoptionClass") != "staged-stability-pin":
+        fail("Cognee tracked source must classify its exact pin as staged stability")
     updates = cognee.get("updates") or {}
     if not all(updates.get(k) is True for k in ("stagingVenv", "requireSmoke", "requireVfmemSensor", "rollbackOnFailure", "updatePinOnlyAfterGreen")):
         fail("Cognee stability pin lacks staging/smoke/rollback gates")
