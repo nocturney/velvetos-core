@@ -37,7 +37,7 @@ The compatibility switch `-StartWorker` is accepted, but it does not create a se
 The media bootstrap is fail-closed. It first runs `bootstrap-edge-host-windows.ps1`, which:
 
 - provisions Git through `winget` when needed;
-- installs a pinned Node 22 user-local toolchain and verifies the official Node SHA-256 before extraction;
+- when Node >=22 is unavailable, installs the recorded Node recovery baseline user-locally and verifies the official Node SHA-256 before extraction; an already compatible newer Node is accepted;
 - resolves/provisions Python 3.12 for the current user;
 - provisions FFmpeg + ffprobe user-locally when missing;
 - pins HyperFrames `0.8.34` with runtime update/auto-install disabled for content jobs;

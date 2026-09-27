@@ -656,6 +656,7 @@ INSIGHTS_LOOP = ROOT / "packages" / "vfinsights" / "scripts" / "vf_insights_loop
 INSIGHTS_CSV = ROOT / "packages" / "vfinsights" / "data" / "posts.csv"
 RESEARCH_DAILY = ROOT / "packages" / "vfresearch" / "DAILY.md"
 RESEARCH_MD = ROOT / "packages" / "vfops" / "data" / "research.md"
+UPSTREAM_REPORT = ROOT / "packages" / "vfresearch" / "sources" / "upstream-watch-latest.json"
 QUOTE_LADDER = ROOT / "packages" / "vfsales" / "scripts" / "vf_quote_ladder.py"
 QUOTE_MD = ROOT / "packages" / "vfsales" / "QUOTE.md"
 VELVETOS_CLI = ROOT / "scripts" / "velvetos.py"
@@ -708,7 +709,7 @@ def consumer_registry() -> list[ConsumerSpec]:
             title="vfresearch daily playbook status",
             cadence="daily-06:15",
             kind="verify",
-            requires=(RESEARCH_DAILY, RESEARCH_MD),
+            requires=(RESEARCH_DAILY, RESEARCH_MD, UPSTREAM_REPORT),
             artifact=RESEARCH_MD,
             pack="vfresearch",
             auto_daily=True,
@@ -845,8 +846,33 @@ def run_consumer(spec: ConsumerSpec, *, today: str, force: bool = False) -> dict
         return {"id": spec.id, "status": "failed", "reason": detail}
 
     if spec.kind == "verify":
-        # Playbook present + research.md readable — not "we tried to run a missing .py"
-        detail = f"verified {' · '.join(str(p.relative_to(ROOT)) for p in spec.requires)}"
+        if spec.id == "vfresearch-daily":
+            try:
+                upstream = json.loads(UPSTREAM_REPORT.read_text(encoding="utf-8"))
+                summary = upstream.get("summary") or {}
+                checked = datetime.fromisoformat(str(upstream.get("checkedAt") or "").replace("Z", "+00:00")).astimezone(TZ).date().isoformat()
+            except (OSError, ValueError, json.JSONDecodeError) as exc:
+                detail = f"upstream watch report invalid: {exc}"
+                append_consumer_run(today, spec, ok=False, detail=detail)
+                return {"id": spec.id, "status": "failed", "reason": detail}
+            if upstream.get("schema") != "velvetos.upstream-watch-report.v1":
+                detail = "upstream watch report schema mismatch"
+                append_consumer_run(today, spec, ok=False, detail=detail)
+                return {"id": spec.id, "status": "failed", "reason": detail}
+            if checked != today:
+                detail = f"upstream watch report stale: checked={checked} expected={today}"
+                append_consumer_run(today, spec, ok=False, detail=detail)
+                return {"id": spec.id, "status": "failed", "reason": detail}
+            failed = int(summary.get("failed") or 0)
+            sources = int(summary.get("sources") or 0)
+            changed = int(summary.get("changed") or 0)
+            if sources <= 0 or failed:
+                detail = f"upstream watch incomplete: sources={sources} failed={failed}"
+                append_consumer_run(today, spec, ok=False, detail=detail)
+                return {"id": spec.id, "status": "failed", "reason": detail}
+            detail = f"research+upstreams verified sources={sources} changed={changed}"
+        else:
+            detail = f"verified {' · '.join(str(p.relative_to(ROOT)) for p in spec.requires)}"
         append_consumer_run(today, spec, ok=True, detail=detail)
         return {"id": spec.id, "status": "ok", "detail": detail, "pack": spec.pack}
 

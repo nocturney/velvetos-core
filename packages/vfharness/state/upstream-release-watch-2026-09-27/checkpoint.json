@@ -1,0 +1,58 @@
+{
+  "task_id": "upstream-release-watch-2026-09-27",
+  "status": "ready_for_review",
+  "component_state": "Partial",
+  "pack": "velvetos/vfresearch/vfharness",
+  "goal": "Track installed/toolchain and repository-only skill/agent upstream changes without auto-upgrading or exact-version locking normal execution; remove OpenPost release watch authority.",
+  "completed_steps": [
+    "Created machine-readable upstream registry with 93 monitored sources and 2 explicit exclusions.",
+    "Bound read-only upstream checks to the existing Velvet Research Seat and Office Loop; no new scheduler.",
+    "Deleted OpenPost Release Watch from repository scheduler authority and kept OpenPost frozen.",
+    "Converted HyperFrames, VoiceStudio, Manim and Remotion normal execution to latest-compatible capability/smoke policy.",
+    "Retained exact versions only for recovery, reproducibility, artifact evidence or staged stability such as Cognee.",
+    "Ran strict live upstream sweep: 93 sources, 0 failed checks.",
+    "Fixed Windows vfmedia PID liveness probe so captured selftests no longer interrupt parent processes.",
+    "Ran targeted sensors and full 90-sensor suite."
+  ],
+  "next_step": "Commit and push the reviewed feature branch, open a PR, and keep merge blocked until repository CI is green. Separately, when Grok routine-management access exists, delete any live openpost-release-watch provider routine and require readback.",
+  "artifacts": [
+    "packages/velvetos/UPSTREAM-WATCH.json",
+    "scripts/vf_upstream_watch.py",
+    "scripts/check-upstream-watch.py",
+    "packages/vfresearch/sources/upstream-watch-latest.json",
+    "packages/vfharness/state/upstream-release-watch-2026-09-27/implementation-spec.md",
+    "packages/vfharness/state/upstream-release-watch-2026-09-27/tickets.md"
+  ],
+  "unresolved": [
+    "Live Grok provider routine deletion/readback is unavailable in the current tool session; repository authority is corrected but provider deletion is UNPROVEN.",
+    "check-all is 89/90 because check-staleness correctly reports the 2026-09-27 owner brief artifact missing after 09:15 Asia/Jerusalem; the artifact is also absent from the operational working copy and is unrelated to this branch."
+  ],
+  "outcome": "implementation_complete_external_followup",
+  "pulse": "green_with_external_blockers",
+  "verification": "Targeted sensors PASS; PowerShell bootstraps parse; vfmedia capture regression RED→GREEN; strict upstream sweep sources=93 failed=0; check-all 89/90 with sole unrelated check-staleness operational failure.",
+  "gate": {
+    "kind": "merge_gate",
+    "waiting_for": "green repository CI plus Grok provider-management access for live watcher deletion/readback",
+    "reason": "Repository implementation is complete and targeted verification is green. check-staleness remains a real unrelated daily-state failure; live Grok deletion is not yet provable."
+  },
+  "escalation": "No Grok routine-management tool is exposed in the current session.",
+  "last_updated": "2026-09-27",
+  "execution_state": {
+    "branch": "feat/upstream-release-watch",
+    "base": "origin/main@61a0f7fce4323ff563fe8f130c750449432b1ed3",
+    "monitored_sources": 93,
+    "embedded_provenance_sources": 71,
+    "excluded_sources": 2,
+    "upstream_failed": 0,
+    "targeted_sensors": "PASS",
+    "check_all": "89/90; check-staleness only",
+    "openpost_repo_watch": "deleted",
+    "openpost_live_provider_watch": "UNPROVEN",
+    "upstream_changed_now": {
+      "repo": "topoteretes/cognee",
+      "release": "v1.6.1",
+      "action": "detected_only_no_auto_upgrade"
+    }
+  },
+  "latest_observation": "Current strict upstream sweep: 93 sources, 0 failed, 1 changed (topoteretes/cognee, release v1.6.1). Targeted sensors all PASS. Full suite remains 89/90 solely because the 2026-09-27 owner brief artifact is absent in both operational and clean worktrees."
+}

@@ -1,0 +1,1005 @@
+{
+  "schema": "velvetos.upstream-watch.v1",
+  "updatedAt": "2026-09-27",
+  "authority": "owner-explicit",
+  "purpose": "Track update signals for installed tools and repository-only skills/agents/pattern sources without auto-upgrading or version-locking normal work.",
+  "policy": {
+    "default": "latest-compatible",
+    "autoUpgrade": false,
+    "exactVersionUse": [
+      "rollback",
+      "recovery",
+      "reproducibility",
+      "artifact-proof"
+    ],
+    "normalExecution": "capability-and-smoke evidence wins; newer compatible versions are allowed",
+    "incompatibleUpdate": "report and keep current known-good runtime until compatibility repair is reviewed",
+    "frozenTools": "do not monitor for upgrades unless owner explicitly unfreezes"
+  },
+  "scheduler": {
+    "owner": "velvet-research-seat",
+    "existingCadence": "daily 02:00 Asia/Jerusalem",
+    "newRoutine": false,
+    "consumer": "velvetos-office-loop",
+    "report": "packages/vfresearch/sources/upstream-watch-latest.json"
+  },
+  "sources": [
+    {
+      "repo": "00080000/dsh-project-memory",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "240xu/tech-lead-skill",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "ahujasid/blender-mcp",
+      "kind": "runtime-source",
+      "integration": [
+        "%USERPROFILE%/.blender-mcp"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "akslcw/dsh-negative-ledger",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Alishahryar1/free-claude-code",
+      "kind": "skill-pattern",
+      "integration": [
+        ".cursor/skills/vf-fcc-offload/SKILL.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "alpacachen/dsh-kanban",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "andyrewlee/awesome-agent-orchestrators",
+      "kind": "agent-index",
+      "integration": [
+        "packages/vfharness/playbooks/orchestrators.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Anionex/dsh-vision-toolkit",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "anthropics/skills",
+      "kind": "skill-pattern",
+      "integration": [
+        "packages/vfharness/playbooks/skill-authoring.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "armpro24-blip/cad-cae-copilot",
+      "kind": "cad-agent-source",
+      "integration": [
+        "CAD/CAE agent toolchain upstream"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "ashishpatel26/500-AI-Agents-Projects",
+      "kind": "agent-pattern",
+      "integration": [
+        "packages/vfagents/ORIGIN.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "assafelovic/gpt-researcher",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfe2b/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "automations-project/vscode-perplexity-mcp",
+      "kind": "embedded-provenance",
+      "integration": [
+        "packages/vfmcp/ORIGIN.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "awesome-dsh-plugin/awesome-dsh-plugin",
+      "kind": "embedded-provenance",
+      "integration": [
+        "packages/vfdsh/ORIGIN.md",
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "awesome-dsh-plugin/dsh-find-plugin",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Awu12277/dsh-sleep-send",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "bambulab/BambuStudio",
+      "kind": "runtime-source",
+      "integration": [
+        "production slicer/studio"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "BillyChen123/qdd",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "blender/blender",
+      "kind": "cad-runtime-source",
+      "integration": [
+        "Blender host/runtime"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "bpc-oss/dsh-verification",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "browser-use/video-use",
+      "kind": "embedded-provenance",
+      "integration": [
+        "packages/vfom/VIDEO-TOOLCHAIN.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "CadQuery/cadquery",
+      "kind": "cad-runtime-source",
+      "integration": [
+        "CAD/3D toolchain upstream"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "calesthio/OpenMontage",
+      "kind": "embedded-provenance",
+      "integration": [
+        "packages/vfom/ORIGIN.md",
+        "packages/vfom/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "changlianxiya-139/dsh-ambiguity-handling",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Co-Engram/Co-Engram",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "coreyhaines31/makerskills",
+      "kind": "embedded-provenance",
+      "integration": [
+        "packages/vfmakers/ORIGIN.md",
+        "packages/vfmakers/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "coreyhaines31/marketingskills",
+      "kind": "embedded-provenance",
+      "integration": [
+        "packages/vfmskill/ORIGIN.md",
+        "packages/vfmskill/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "cpacker/MemGPT",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfe2b/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "debpalash/VoiceStudio",
+      "kind": "runtime-source",
+      "integration": [
+        "packages/vfom/SPEECH-BACKEND.json",
+        "scripts/bootstrap-speech-host-windows.ps1"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "DeusData/codebase-memory-mcp",
+      "kind": "pattern-source",
+      "integration": [
+        "packages/vfmem/ORIGIN.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Devin-AXIS/deepseek-design",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "dhb861832993-star/pbr-render",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "didclawapp-ai/DSH-Office",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "dsh-market/dsh-market",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "e2b-dev/awesome-ai-agents",
+      "kind": "embedded-provenance",
+      "integration": [
+        "packages/vfe2b/ORIGIN.md",
+        "packages/vfe2b/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "earthtojake/text-to-cad",
+      "kind": "runtime-source",
+      "integration": [
+        "packages/vfprod/TEXT-TO-CAD.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "FFmpeg/FFmpeg",
+      "kind": "runtime-toolchain",
+      "integration": [
+        "scripts/bootstrap-edge-host-windows.ps1",
+        "scripts/bootstrap-hyperframes-host-macos.sh",
+        "scripts/vf_hyperframes.py"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "FreeCAD/FreeCAD",
+      "kind": "cad-runtime-source",
+      "integration": [
+        "CAD/3D toolchain upstream"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "git/git",
+      "kind": "runtime-toolchain",
+      "integration": [
+        "scripts/bootstrap-edge-host-windows.ps1"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Han-1413141/dsh-cost-meter",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "headroomlabs-ai/headroom",
+      "kind": "pattern-source",
+      "integration": [
+        "packages/vfharness/playbooks/context-thrift.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "heygen-com/hyperframes",
+      "kind": "runtime-source",
+      "integration": [
+        "scripts/vf_hyperframes.py"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "HKUDS/DeepTutor",
+      "kind": "pattern-source",
+      "integration": [
+        "packages/vfmem/MEMORY-UPDATE.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "HuanLinOTO/dsh-plugin-mineru",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "huginn/huginn",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfe2b/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "icetomoyo/dsh_workflow",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Jeffallan/claude-skills",
+      "kind": "skill-pattern",
+      "integration": [
+        "packages/vfmem/MEMORY-UPDATE.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "jing-hy/picturereader",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "joaomdmoura/crewai",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfe2b/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "jscad/OpenJSCAD.org",
+      "kind": "cad-runtime-source",
+      "integration": [
+        "CAD/3D toolchain upstream"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Leonxlnx/taste-skill",
+      "kind": "skill-pattern",
+      "integration": [
+        "packages/vfharness/playbooks/full-output-enforcement.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "linkingoscar/dsh-attachment-formats",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "LinklyAI/best-skills",
+      "kind": "skill-index",
+      "integration": [
+        ".cursor/skills/vf-best-skills/SKILL.md",
+        "packages/vfresearch/BEST-SKILLS.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "liustack/modlens",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "ManimCommunity/manim",
+      "kind": "runtime-source",
+      "integration": [
+        "scripts/bootstrap-manim-host-windows.ps1"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "mattpocock/skills",
+      "kind": "skill-pattern",
+      "integration": [
+        "packages/vfharness/playbooks/engineering-delivery-chain.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "MichengAI/dsh-agency-agents",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "microsoft/autogen",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfe2b/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "mlightcad/awesome-cad",
+      "kind": "cad-index",
+      "integration": [
+        "CAD discovery upstream"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "msitarzewski/agency-agents",
+      "kind": "agent-repo",
+      "integration": [
+        "%USERPROFILE%/.agency-agents"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "multica-ai/andrej-karpathy-skills",
+      "kind": "skill-pattern",
+      "integration": [
+        "packages/vfharness/playbooks/implementation-discipline.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "mvanhorn/last30days-skill",
+      "kind": "skill-pattern",
+      "integration": [
+        ".cursor/skills/vf-last30/SKILL.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "nicepkg/gpt-runner",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfe2b/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "NirDiamant/GenAI_Agents",
+      "kind": "agent-pattern",
+      "integration": [
+        "packages/vfagents/playbooks/reflection-before-send.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "nodejs/node",
+      "kind": "runtime-toolchain",
+      "integration": [
+        "scripts/bootstrap-edge-host-windows.ps1",
+        "scripts/bootstrap-hyperframes-host-macos.sh"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "obra/superpowers",
+      "kind": "skill-pattern",
+      "integration": [
+        "packages/vfharness/playbooks/brainstorm-gate.md",
+        "packages/vfharness/playbooks/systematic-debugging.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "omdsh-dev/dsh-data-agent",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "open-multi-agent/open-multi-agent",
+      "kind": "agent-pattern",
+      "integration": [
+        "packages/vfharness/playbooks/oma-patterns.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "OpenMOSS/MOSS-TTS-Nano",
+      "kind": "runtime-source",
+      "integration": [
+        "%USERPROFILE%/.velvetos/deps/MOSS-TTS-Nano"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "openscad/openscad",
+      "kind": "cad-runtime-source",
+      "integration": [
+        "CAD/3D toolchain upstream"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "OrcaSlicer/OrcaSlicer",
+      "kind": "runtime-source",
+      "integration": [
+        "production slicer"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "PromtEngineer/localGPT",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfe2b/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "prusa3d/PrusaSlicer",
+      "kind": "runtime-source",
+      "integration": [
+        "production slicer"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "punkpeye/awesome-mcp-servers",
+      "kind": "embedded-provenance",
+      "integration": [
+        "packages/vfmcp/ORIGIN.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "python/cpython",
+      "kind": "runtime-toolchain",
+      "integration": [
+        "scripts/bootstrap-edge-host-windows.ps1",
+        "scripts/bootstrap-manim-host-windows.ps1"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Q00/ouroboros",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "remotion-dev/remotion",
+      "kind": "embedded-provenance",
+      "integration": [
+        "packages/vfom/VIDEO-TOOLCHAIN.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "scenario-labs/skills",
+      "kind": "skill-repo",
+      "integration": [
+        "owner-tracked upstream; integration may live outside current main"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "shengsheng90/DSH-taskboard",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Snapmaker/OrcaSlicer",
+      "kind": "slicer-runtime-source",
+      "integration": [
+        "Snapmaker slicer upstream"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "stablyai/orca",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfe2b/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "superdesigndev/superdesign-skill",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Tencent/WeKnora",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "tinqiao-oss/engramory",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "tong-io/tongflow",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "topoteretes/cognee",
+      "kind": "runtime-source",
+      "integration": [
+        "packages/vfmem/cognee.json",
+        "%USERPROFILE%/.velvetos/cognee-venv"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false,
+      "adoptionGate": "staging-venv+smoke+vfmem-sensor+rollback"
+    },
+    {
+      "repo": "trailhq/Graft",
+      "kind": "embedded-provenance",
+      "integration": [
+        "packages/vfgraft/ORIGIN.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "volcengine/OpenViking",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "WaveSpeedAI/wavespeed-dsh-skill",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "xmanrui/dsh-im",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "yxqfg/phone-lens",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "zhtx2024/dsh-pdf",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "zilliztech/memsearch",
+      "kind": "catalog-source",
+      "integration": [
+        "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    }
+  ],
+  "stabilityExceptions": [
+    {
+      "component": "cognee",
+      "path": "packages/vfmem/cognee.json",
+      "field": "pinnedVersion",
+      "class": "staged-stability-pin",
+      "reason": "Active Cognee runtime is promoted only after isolated staging venv, smoke, vfmem sensor and rollback checks; the upstream itself remains monitored for newer stable versions."
+    },
+    {
+      "component": "sensor-dependency-locks",
+      "path": "requirements-sensors.py*.lock",
+      "class": "reproducibility-lock",
+      "reason": "CI/sensor lock files reproduce a tested dependency graph and do not block normal tool capability routing."
+    },
+    {
+      "component": "container-image-digests",
+      "path": "Dockerfile*/workflow image digests",
+      "class": "artifact-reproducibility-lock",
+      "reason": "Image digests bind deployable artifacts for supply-chain stability; update detection remains separate from runtime capability policy."
+    }
+  ],
+  "excludedSources": [
+    {
+      "repo": "getopenpost/openpost",
+      "status": "frozen",
+      "reason": "Owner froze OpenPost; no release/update monitoring until explicitly unfrozen."
+    },
+    {
+      "repo": "superdesigndev/treg",
+      "status": "forbidden",
+      "reason": "VelvetOS authority explicitly forbids Treg; no update monitoring or routing."
+    }
+  ]
+}

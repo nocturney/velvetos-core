@@ -21,7 +21,6 @@
 |---|---|---|---|
 | 01:45 | Automation Integrity Guard | תיקון סט האוטומציות המוגן | לא בונה מערכת שנייה |
 | 02:00 | Velvet Research Seat | מחקר חי עד cutoff 07:00 → `vfops/data/research.md` | GHA לא מחליף את גוף המחקר |
-| 07:15 | ~~OpenPost Release Watch~~ | **מושהה** — OpenPost מוקפא (publishing frozen) מאז 2026-09-26; אין release watch / upgrade | OpenPost `paused` |
 | **09:00** | Velvet Morning Brief | בריף V10.3 לבעלים | קובץ שנוצר ≠ נשלח; דרוש Gmail evidence |
 | 10:00 | Morning Delivery Guard | וידוא שנשלח הבריף של היום | |
 | 10:30 | VelvetOS Office Loop | blockers, production→content, drift | לא scheduler לכל היכולות |

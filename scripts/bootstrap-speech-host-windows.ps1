@@ -91,25 +91,51 @@ Set-Location $Repo
 $ConfigPath = Join-Path $Repo "packages\vfom\SPEECH-BACKEND.json"
 if (-not (Test-Path $ConfigPath)) { Fail "speech backend config missing: $ConfigPath" }
 $config = Get-Content -Raw -Encoding UTF8 $ConfigPath | ConvertFrom-Json
-$VoiceStudioVersion = [string]$config.provider.version
+$VoiceStudioMinimumVersion = [string]$config.provider.minimumVersion
+$VoiceStudioRecoveryVersion = [string]$config.provider.recoveryVersion
 $TtsModel = if ($config.defaults.ttsModelWindows) { [string]$config.defaults.ttsModelWindows } else { [string]$config.defaults.ttsModel }
 $AsrModel = [string]$config.defaults.asrModelWindows
 $MinSimilarity = [double]$config.defaults.qaMinimumSimilarity
-$artifact = "VoiceStudio_Current_User_${VoiceStudioVersion}_x64_en-US.msi"
-$url = "https://github.com/debpalash/VoiceStudio/releases/download/v$VoiceStudioVersion/$artifact"
+
+function Resolve-VoiceStudioInstaller {
+    try {
+        $release = Invoke-RestMethod -Uri "https://api.github.com/repos/debpalash/VoiceStudio/releases/latest" -Headers @{ "User-Agent" = "VelvetOS-Speech-Bootstrap/1" } -TimeoutSec 20
+        $asset = @($release.assets | Where-Object { $_.name -match '^VoiceStudio_Current_User_.*_x64_en-US\.msi$' } | Select-Object -First 1)
+        if ($asset.Count -eq 1 -and $asset[0].browser_download_url) {
+            return [pscustomobject]@{
+                Version = ([string]$release.tag_name).TrimStart('v')
+                Name = [string]$asset[0].name
+                Url = [string]$asset[0].browser_download_url
+                Source = "latest-release"
+            }
+        }
+    } catch {
+        Write-Warning "Latest VoiceStudio release lookup failed; using recovery baseline: $($_.Exception.Message)"
+    }
+    $name = "VoiceStudio_Current_User_${VoiceStudioRecoveryVersion}_x64_en-US.msi"
+    return [pscustomobject]@{
+        Version = $VoiceStudioRecoveryVersion
+        Name = $name
+        Url = "https://github.com/debpalash/VoiceStudio/releases/download/v$VoiceStudioRecoveryVersion/$name"
+        Source = "recovery"
+    }
+}
 
 Write-Host "=== VelvetOS Windows Speech Fallback ==="
-Write-Host "host=$HostId provider=VoiceStudio/$VoiceStudioVersion tts=$TtsModel asr=$AsrModel"
+Write-Host "host=$HostId provider=VoiceStudio policy=latest-compatible minimum=$VoiceStudioMinimumVersion recovery=$VoiceStudioRecoveryVersion tts=$TtsModel asr=$AsrModel"
 
 $exe = Find-VoiceStudioExe
+$VoiceStudioInstallVersion = $null
 if (-not $exe -and -not $SkipVoiceStudioInstall) {
+    $installer = Resolve-VoiceStudioInstaller
+    $VoiceStudioInstallVersion = [string]$installer.Version
     $tmp = Join-Path $TmpRoot ("velvet-voicestudio-" + [Guid]::NewGuid().ToString("N"))
     New-Item -ItemType Directory -Force -Path $tmp | Out-Null
     try {
-        $msi = Join-Path $tmp $artifact
+        $msi = Join-Path $tmp ([string]$installer.Name)
         $log = Join-Path $tmp "voicestudio-install.log"
-        Write-Host "Downloading pinned VoiceStudio $VoiceStudioVersion current-user installer..."
-        Invoke-WebRequest $url -OutFile $msi
+        Write-Host "VoiceStudio missing; downloading $($installer.Source) version $VoiceStudioInstallVersion..."
+        Invoke-WebRequest ([string]$installer.Url) -OutFile $msi
         Write-Host "Installing VoiceStudio for the current Windows user..."
         $args = @("/i", "`"$msi`"", "/qn", "/norestart", "/L*V", "`"$log`"")
         $proc = Start-Process msiexec.exe -ArgumentList $args -Wait -PassThru
@@ -124,7 +150,7 @@ if (-not $exe -and -not $SkipVoiceStudioInstall) {
     $exe = Find-VoiceStudioExe
 }
 if (-not $exe) {
-    Fail "VoiceStudio.exe not found. Install VoiceStudio $VoiceStudioVersion or rerun without -SkipVoiceStudioInstall"
+    Fail "VoiceStudio.exe not found. Install a compatible VoiceStudio >=$VoiceStudioMinimumVersion or rerun without -SkipVoiceStudioInstall"
 }
 
 $discovery = Test-SpeechService
@@ -141,10 +167,18 @@ if (-not $discovery) {
     Fail "VoiceStudio is installed but speech API is not ready. Open VoiceStudio once and complete its explicit first-run setup (Start installation), then rerun this command."
 }
 
-$reported = [string]($discovery.service_version)
-if ($reported -and $reported -ne $VoiceStudioVersion) {
-    Fail "VoiceStudio version mismatch: expected $VoiceStudioVersion, service reports $reported"
+$reported = ([string]($discovery.service_version)).Trim().TrimStart('v')
+if ($reported) {
+    try {
+        if ([version]$reported -lt [version]$VoiceStudioMinimumVersion) {
+            Fail "VoiceStudio is below supported minimum ${VoiceStudioMinimumVersion}: service reports $reported"
+        }
+    } catch {
+        Fail "VoiceStudio service version is not comparable: '$reported'"
+    }
 }
+$ActualVoiceStudioVersion = if ($reported) { $reported } elseif ($VoiceStudioInstallVersion) { $VoiceStudioInstallVersion } else { "unknown" }
+Write-Host "VoiceStudio runtime accepted: $ActualVoiceStudioVersion (policy=latest-compatible; recovery=$VoiceStudioRecoveryVersion)"
 
 $script:Python = Resolve-Python
 Write-Host "Selecting VoiceStudio TTS engine: $TtsModel"
@@ -199,7 +233,9 @@ $state = [ordered]@{
     hostId = $HostId
     platform = "Windows"
     provider = "voicestudio"
-    providerVersion = $VoiceStudioVersion
+    providerVersion = $ActualVoiceStudioVersion
+    providerVersionPolicy = "latest-compatible"
+    providerRecoveryVersion = $VoiceStudioRecoveryVersion
     ttsModel = $TtsModel
     asrModel = $AsrModel
     doctor = "pass"
@@ -218,7 +254,8 @@ if (Test-Path $EdgeState) {
     $edge = Get-Content -Raw -Encoding UTF8 $EdgeState | ConvertFrom-Json
     $edge | Add-Member -NotePropertyName speechDoctor -NotePropertyValue "pass" -Force
     $edge | Add-Member -NotePropertyName speechSmoke -NotePropertyValue "pass" -Force
-    $edge | Add-Member -NotePropertyName voiceStudioVersion -NotePropertyValue $VoiceStudioVersion -Force
+    $edge | Add-Member -NotePropertyName voiceStudioVersion -NotePropertyValue $ActualVoiceStudioVersion -Force
+    $edge | Add-Member -NotePropertyName voiceStudioVersionPolicy -NotePropertyValue "latest-compatible" -Force
     $edge | Add-Member -NotePropertyName speechState -NotePropertyValue $SpeechState -Force
     [IO.File]::WriteAllText($EdgeState, ($edge | ConvertTo-Json -Depth 8), (New-Object Text.UTF8Encoding($false)))
 }

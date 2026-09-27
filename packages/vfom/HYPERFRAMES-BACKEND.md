@@ -75,13 +75,13 @@ Composition source media must resolve to concrete Media Vault assets or explicit
 
 ## Bridge usage
 
-Validate a request and inspect the exact pinned commands without rendering or resolving a binary:
+Validate a request and inspect the exact commands for the request without rendering or resolving a binary:
 
 ```bash
 python3 scripts/vf_hyperframes.py plan path/to/render-request.json
 ```
 
-Check host prerequisites and the exact HyperFrames version without installing anything:
+Check host prerequisites and verify that the installed HyperFrames version meets the compatibility floor without installing or upgrading anything:
 
 ```bash
 python3 scripts/vf_hyperframes.py doctor

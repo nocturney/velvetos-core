@@ -28,6 +28,13 @@
     "chatgpt": "disabled_after_verified_cutover",
     "antigravity": "shadow_sidecars_disabled"
   },
+  "upstreamWatch": {
+    "ownerRoutineId": "velvet-research-seat",
+    "registry": "packages/velvetos/UPSTREAM-WATCH.json",
+    "report": "packages/vfresearch/sources/upstream-watch-latest.json",
+    "autoUpgrade": false,
+    "consumerRoutineId": "velvetos-office-loop"
+  },
   "ownerEmailAuthority": {
     "design": "Morning Green v3.1 editorial RTL Desktop-first responsive Outlook-safe",
     "visibleText": "constitution/VISIBLE_TEXT.md",
@@ -49,7 +56,7 @@
       "title": "Velvet Research Seat",
       "cadence": "daily 02:00",
       "enabled": true,
-      "responsibility": "daily research and canonical artifact before 07:00 cutoff"
+      "responsibility": "daily research plus read-only upstream/toolchain watch; canonical artifacts before 07:00 cutoff; never auto-upgrade"
     },
     {
       "id": "cognee-memory-sync",
@@ -95,20 +102,10 @@
     }
   ],
   "publisherAuthority": {
-    "updatedDate": "2026-09-26",
+    "updatedDate": "2026-09-27",
     "scheduler": "cloudflare-instagram-publisher",
     "source": "packages/vfigos/cloudflare-publisher/",
     "openpost": "frozen",
-    "openpostReleaseWatch": "retire_and_disable",
     "providerReadbackRequired": true
-  },
-  "retiredRoutines": [
-    {
-      "id": "openpost-release-watch",
-      "title": "OpenPost Release Watch",
-      "desiredEnabled": false,
-      "reason": "OpenPost frozen by owner on 2026-09-26",
-      "providerReadback": "required_before_claiming_disabled"
-    }
-  ]
+  }
 }

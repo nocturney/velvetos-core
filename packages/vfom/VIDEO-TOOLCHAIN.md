@@ -33,11 +33,11 @@ python3 scripts/vf_video_edit.py inspect request.json
 
 ## Remotion license gate
 
-Reviewed integration target: Remotion `4.0.523`. The upstream commercial license has organization-size conditions rather than being an unrestricted MIT-style production license. VelvetOS therefore records Remotion as `license-gated` instead of silently installing it. A future license approval changes only this slot's eligibility; it does not change Foundry authority or QA.
+Remotion uses a `latest-compatible` policy. `4.0.523` is retained only as the version against which the current integration/license review was recorded, not as an execution pin. The upstream commercial license has organization-size conditions rather than being an unrestricted MIT-style production license, so any future activation must re-check current license eligibility and pass the adapter smoke before use. It remains `license-gated` and subordinate to Foundry authority/QA.
 
 ## Manim host gate
 
-Reviewed integration target: Manim `0.21.0` (MIT), requiring Python `>=3.11`. `sderot-windows` now carries an isolated Python 3.12 toolchain and has completed a real 1080×1920 Manim smoke render verified by ffprobe + SHA-256. Status is therefore `host-smoke-verified` for the Windows technical-slot path. Reprovision with `scripts/bootstrap-manim-host-windows.ps1`; do not auto-install Manim during a content job.
+Manim uses a `latest-compatible` policy with `0.21.0` retained as the minimum/recovery baseline (MIT; Python `>=3.11`). The existing `sderot-windows` evidence records a real 0.21.0 / Python 3.12 1080×1920 smoke render verified by ffprobe + SHA-256; that evidence is historical proof, not a runtime lock. Reprovisioning accepts a newer compatible Manim after version/host smoke checks. Do not auto-install or upgrade Manim during a content job.
 
 ## Truth boundary
 
