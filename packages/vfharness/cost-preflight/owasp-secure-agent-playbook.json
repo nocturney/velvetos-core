@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "OWASP secure-agent-playbook",
+  "classification": "FREE_LOCAL",
+  "license": "CC-BY-4.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none; selected use is local reference procedures",
+  "deployment_model": "repository procedures referenced locally; no agent runtime installed",
+  "api_dependencies": [],
+  "billing_risk": "none",
+  "selected_mode": "standalone playbook/checklist procedures mapped into VelvetOS conformance evidence",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "documentation-only use; local repository files",
+  "api_cost_notes": "none",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "upstream recommends optional security tools, but none are auto-installed by this integration",
+  "quota_controls": "not applicable",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/OWASP/secure-agent-playbook README: open-source procedures, standalone use supported",
+    "https://github.com/OWASP/secure-agent-playbook LICENSE.md: CC-BY-4.0"
+  ],
+  "approval": null
+}

@@ -163,6 +163,16 @@
       "type": "computational"
     },
     {
+      "id": "check-behavioral-evals",
+      "script": "scripts/check-behavioral-evals.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-agent-security-conformance",
+      "script": "scripts/check-agent-security-conformance.py",
+      "type": "computational"
+    },
+    {
       "id": "check-vfprod",
       "script": "scripts/check-vfprod.py",
       "type": "computational"

@@ -8,20 +8,30 @@
     "Verified remote machine and velvetos-core repository access",
     "Read repository authority and cost policy",
     "Validated and committed NO_NEW_RECURRING_COST as bb54b0a7",
-    "Created durable implementation state document"
+    "Created durable implementation state document",
+    "Passed system_engineering project preflight",
+    "Installed pinned Promptfoo 0.123.1 locally after FREE_LOCAL cost preflight",
+    "Implemented and passed 17-case behavioral regression with negative controls",
+    "Mapped OWASP Secure Agent Playbook to 9 VelvetOS surfaces and added conformance sensor"
   ],
-  "next_step": "Perform component cost preflights and implement Phase 1 behavioral/security gates",
+  "next_step": "Implement Phase 2 local OpenTelemetry and OpenInference observability with a safe end-to-end trace",
   "artifacts": [
     "docs/implementation/velvetos-zero-cost-agent-stack.md",
-    "constitution/NO_NEW_RECURRING_COST.md",
-    "scripts/vf_cost_preflight.py"
+    "docs/security/VELVETOS-AGENT-SECURITY-CONFORMANCE.md",
+    "packages/vfharness/evals/promptfooconfig.json",
+    "packages/vfharness/security/agent-security-conformance.json",
+    "scripts/check-behavioral-evals.py",
+    "scripts/run-promptfoo-evals.py",
+    "scripts/check-agent-security-conformance.py"
   ],
   "unresolved": [
     "Full check-all baseline was interrupted by Remote MCP session; must be completed by batched execution",
+    "Browser automation isolation is PARTIAL; policy and behavioral controls exist but no general browser sandbox is proven",
+    "Promptfoo local script provider is trusted local code, not a sandbox",
     "WSL2 not installed; defer until Linux-first lab requires it"
   ],
   "pulse": "working",
-  "verification": "check-no-new-recurring-cost PASS; risk-policy PASS; hq-overlay PASS; readme-contract PASS",
+  "verification": "behavioral-evals PASS; promptfoo 17/17 PASS + negative control; agent-security-conformance PASS; cost policy PASS; vfharness PASS",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-27"

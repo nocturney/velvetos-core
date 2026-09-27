@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phase 0 verified; Phase 1 in progress.
+Phase 0 and Phase 1 implemented and locally verified; Phase 2 in progress.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -33,9 +33,13 @@ Phase 0 verified; Phase 1 in progress.
 - Committed canonical zero-cost policy as `bb54b0a7`.
 - Full `check-all.py` did not complete: Remote MCP session delivered KeyboardInterrupt after 20+ passing sensors; this is not recorded as PASS.
 - Repository scan found existing watch/lock references for Ponytail, Impeccable, diagram-design and Herdr; no second runtime will be introduced.
+- Project Request Gate passed for `system_engineering`; routed packs are velvetos/vfharness/vfmem.
+- Promptfoo 0.123.1 installed repo-locally after FREE_LOCAL cost preflight; no model/API credentials configured.
+- Behavioral regression suite covers 10 required authority classes in 17 cases; local Promptfoo run passed 17/17 with cost=0, tokens=0 and a failing negative control.
+- OWASP Secure Agent Playbook mapped to 9 actual VelvetOS surfaces; 7 PASS and 2 PARTIAL (browser isolation and local eval-runner sandbox boundary).
+- Phase 1 sensors: `check-behavioral-evals.py` PASS; `check-agent-security-conformance.py` PASS.
 
 ## Pending
-- Phase 1: Promptfoo behavioral regression suite and OWASP-mapped agent security conformance.
 - Phase 2: OpenTelemetry + OpenInference local instrumentation and one safe end-to-end trace.
 - Phase 3: local/self-hosted reliability sensors (Healthchecks, GlitchTip, changedetection.io) only after validated cost/license preflights.
 - Phase 4: engineering-quality embeds/tools; removable and non-authoritative.

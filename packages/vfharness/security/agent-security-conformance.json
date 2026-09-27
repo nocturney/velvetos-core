@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "authority_role": "security_conformance_evidence_only_not_policy",
+  "upstream": {
+    "project": "OWASP Secure Agent Playbook",
+    "canonical": "https://github.com/OWASP/secure-agent-playbook",
+    "license": "CC-BY-4.0",
+    "reviewed_at": "2026-09-27",
+    "plays": [
+      "agent-security-audit",
+      "mcp-server-review",
+      "prompt-injection-testing",
+      "agentic-ai-risk-assess",
+      "ai-security-verification"
+    ]
+  },
+  "surfaces": [
+    {
+      "id": "mcp",
+      "status": "PASS",
+      "controls": [
+        {
+          "name": "no_committed_secrets_and_url_credentials",
+          "evidence": ["scripts/check-agent-surface-security.py", ".cursor/mcp.json"]
+        },
+        {
+          "name": "tool_authority_remains_manifest_and_policy_scoped",
+          "evidence": ["packages/velvetos/PROJECT-REQUEST-GATE.md", "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"]
+        }
+      ],
+      "residual": []
+    },
+    {
+      "id": "plugins_connectors",
+      "status": "PASS",
+      "controls": [
+        {
+          "name": "read_only_cannot_escalate_to_write",
+          "evidence": ["packages/vfharness/evals/promptfooconfig.json", "office/control/POLICY.md"]
+        },
+        {
+          "name": "external_tool_availability_is_not_authority",
+          "evidence": ["packages/velvetos/PROJECT-REQUEST-GATE.md", "constitution/ORCHESTRA.md"]
+        }
+      ],
+      "residual": []
+    },
+    {
+      "id": "agents",
+      "status": "PASS",
+      "controls": [
+        {
+          "name": "no_second_runtime_or_control_plane",
+          "evidence": ["packages/vfharness/SKILL.md", "packages/velvetos/LAYERS.md", "office/control-plane.json"]
+        },
+        {
+          "name": "handoff_is_context_not_authority",
+          "evidence": ["packages/vfharness/SKILL.md", "packages/vfharness/evals/promptfooconfig.json"]
+        }
+      ],
+      "residual": []
+    },
+    {
+      "id": "control_apis",
+      "status": "PASS",
+      "controls": [
+        {
+          "name": "typed_read_first_projection_and_fail_closed_actions",
+          "evidence": ["packages/velvetos_control_api/README.md", "scripts/check-control-api.py"]
+        }
+      ],
+      "residual": []
+    },
+    {
+      "id": "browser_automation",
+      "status": "PARTIAL",
+      "controls": [
+        {
+          "name": "cloud_agent_browser_login_and_cookie_persistence_restricted",
+          "evidence": ["AGENTS.md", "constitution/ORCHESTRA.md"]
+        },
+        {
+          "name": "fetched_content_cannot_override_authority",
+          "evidence": ["packages/velvetos/PROJECT-REQUEST-GATE.md", "packages/vfharness/evals/promptfooconfig.json"]
+        }
+      ],
+      "residual": [
+        "No general-purpose browser sandbox or content-isolation enforcement is proven by this phase; policy plus behavioral tests are present."
+      ]
+    },
+    {
+      "id": "memory",
+      "status": "PASS",
+      "controls": [
+        {
+          "name": "vfmem_canonical_cognee_derived_and_reverify_before_action",
+          "evidence": ["docs/VFMEM.md", "packages/vfmem/SKILL.md", "scripts/check-vfmem.py"]
+        }
+      ],
+      "residual": []
+    },
+    {
+      "id": "approval_boundaries",
+      "status": "PASS",
+      "controls": [
+        {
+          "name": "risk_and_publish_gates_fail_closed",
+          "evidence": ["office/control/POLICY.md", "constitution/SEND.md", "scripts/check-delivery-approval.py"]
+        },
+        {
+          "name": "publish_requires_authorization",
+          "evidence": ["packages/vfharness/evals/promptfooconfig.json", "constitution/SEND.md"]
+        }
+      ],
+      "residual": []
+    },
+    {
+      "id": "external_content_ingestion",
+      "status": "PASS",
+      "controls": [
+        {
+          "name": "untrusted_content_cannot_widen_authority",
+          "evidence": ["packages/velvetos/PROJECT-REQUEST-GATE.md", "packages/vfharness/evals/promptfooconfig.json"]
+        },
+        {
+          "name": "current_attachment_ingest_is_evidence_only",
+          "evidence": ["packages/vfom/PUBLICATION-PREP-EXECUTION.md", "scripts/vf_source_ingest.py"]
+        }
+      ],
+      "residual": []
+    },
+    {
+      "id": "local_eval_runner",
+      "status": "PARTIAL",
+      "controls": [
+        {
+          "name": "promptfoo_pinned_local_exec_provider_no_model_calls",
+          "evidence": ["tools/promptfoo/package.json", "tools/promptfoo/package-lock.json", "scripts/run-promptfoo-evals.py"]
+        }
+      ],
+      "residual": [
+        "Promptfoo custom/script providers execute trusted local code without sandboxing; only repo-owned configs/providers are permitted.",
+        "Promptfoo telemetry/update/remote-generation/sharing flags are disabled, but these are not treated as a network sandbox."
+      ]
+    }
+  ]
+}
