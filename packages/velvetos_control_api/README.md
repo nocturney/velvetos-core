@@ -40,8 +40,13 @@ Schema id: `velvetos.control.v1`.
 | Attention | `vf_control_plane.owner_surface_items` + `vf_autonomy.blockers` |
 | Activity | `office/control/HANDOFF.json`, `decisions.jsonl`, living-studio pulse/autonomy projections |
 | Jobs | `scripts/vf_jobs_adapter.py` (Sheet canonical; CSV cache) |
+| Production | `packages/vfprod/FLEET.json` + canonical print/maintenance projections |
+| Content | `packages/vfgrowth/LEDGER.md` / approval-queue projection |
+| Files / media | `packages/vfmedia/catalog.json` — bounded item projection with canonical total count preserved |
+| Agents | `instances/<VELVETOS_INSTANCE_ID or velvet-factory>/.cursor/vf-desk.json` specialist roster |
+| Models | `packages/vfsku/SHELF.md` projection; missing values remain missing |
 
-**Unavailable in v1 (honest `items: null`):** production, content, files, agents, models.
+Production/content/files/agents/models are projection-backed in v1 when their canonical source is present. A missing or unreadable source stays honestly `unavailable`; it is never converted into a verified empty collection.
 
 Absent source ≠ verified empty. Verified empty jobs (`state=ready`, `items=[]`) is allowed only when the jobs adapter reports `ready`.
 
