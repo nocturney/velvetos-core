@@ -3,7 +3,7 @@
   "date": "2026-09-27",
   "program": "zero-cost-agent-stack",
   "branch": "implementation/zero-cost-agent-stack",
-  "acceptedCodeHead": "3a2faccf82ef77672b6598d45ae12f792fb49253",
+  "acceptedCodeHead": "e60e534addedcbfa22f8436a7a79d943b2ff3fc4",
   "status": "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS",
   "decision": "PUSHED_FOR_DRAFT_PR_REVIEW_NO_MERGE",
   "fullCheckAll": {
@@ -67,6 +67,11 @@
       "range": "bb54b0a7^..3a2faccf82ef77672b6598d45ae12f792fb49253",
       "status": "PASS"
     },
+    "integratedMainRange": {
+      "range": "06f8c906a67cf90e0caa4eb58a7d33eb93e01c42..e60e534addedcbfa22f8436a7a79d943b2ff3fc4",
+      "status": "PASS",
+      "note": "Checks the PR integration delta relative to the current-main parent; upstream main contains two intentional Markdown hard-break trailing spaces outside this delta."
+    },
     "liveWorkingTree": {
       "status": "PASS_CLEAN",
       "evidence": "git status --short empty; git diff --check exit 0 after final acceptance commit"
@@ -112,7 +117,8 @@
     "6829242b ops: refresh HQ control handoff and daily brief",
     "6415b991 ops: verify live Grok scheduler readback",
     "abcb8799 reliability: avoid nested Python capture in check-all",
-    "3a2faccf test: isolate Windows check-all sensor process groups"
+    "3a2faccf test: isolate Windows check-all sensor process groups",
+    "e60e534a merge: integrate latest main into zero-cost stack"
   ],
   "acceptance": {
     "committedScopeReady": true,

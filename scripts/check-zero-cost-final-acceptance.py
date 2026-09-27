@@ -41,7 +41,13 @@ def main() -> None:
     head = receipt.get("acceptedCodeHead")
     assert isinstance(head, str) and len(head) == 40
     assert git("merge-base", "--is-ancestor", head, "HEAD").returncode == 0
-    assert git("diff", "--check", f"bb54b0a7^..{head}").returncode == 0
+    diff_checks = receipt.get("diffChecks") or {}
+    program_range = diff_checks.get("committedProgramRange") or {}
+    integration_range = diff_checks.get("integratedMainRange") or {}
+    assert program_range.get("status") == "PASS"
+    assert integration_range.get("status") == "PASS"
+    assert git("diff", "--check", str(program_range.get("range", ""))).returncode == 0
+    assert git("diff", "--check", str(integration_range.get("range", ""))).returncode == 0
 
     batches = {row.get("id"): row for row in receipt.get("targetedBatches", [])}
     assert set(batches) == {
@@ -54,6 +60,7 @@ def main() -> None:
         assert str(row.get("status", "")).startswith("PASS")
     diff = receipt.get("diffChecks") or {}
     assert diff.get("committedProgramRange", {}).get("status") == "PASS"
+    assert diff.get("integratedMainRange", {}).get("status") == "PASS"
     assert diff.get("liveWorkingTree", {}).get("status") == "PASS_CLEAN"
 
     runtime_manifest = load(ROOT / "packages/vfharness/runtime/expected-components.json")
