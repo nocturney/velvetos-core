@@ -30,7 +30,7 @@ def git(*args: str) -> subprocess.CompletedProcess[str]:
 def main() -> None:
     receipt, program = load(RECEIPT), load(PROGRAM)
     assert receipt.get("status") == "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS"
-    assert receipt.get("decision") == "PUSHED_FOR_DRAFT_PR_REVIEW_NO_MERGE"
+    assert receipt.get("decision") == "MERGED_TO_MAIN_AFTER_OWNER_APPROVAL"
     full = receipt.get("fullCheckAll") or {}
     assert full.get("status") == "PASS"
     assert full.get("command") == "python scripts/check-all.py"
@@ -123,7 +123,7 @@ def main() -> None:
     assert program.get("status") == "complete"
     assert program.get("component_state") == "Verified"
     assert program.get("pulse") == "idle"
-    assert "owner review" in str(program.get("next_step", "")).lower()
+    assert "merged" in str(program.get("next_step", "")).lower()
 
     limitations = "\n".join(receipt.get("knownLimitations", []))
     for marker in (
@@ -141,9 +141,12 @@ def main() -> None:
     assert acceptance.get("ownerActionRequiredNow") is False
     assert acceptance.get("pushRequiresExplicitOwnerPermission") is True
     assert acceptance.get("pushWasExplicitlyAuthorized") is True
-    assert acceptance.get("pullRequestState") == "DRAFT"
-    assert acceptance.get("mergePerformed") is False
-    print(f"OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors={live_sensor_count} push=YES pr=DRAFT merge=NO")
+    assert acceptance.get("pullRequestState") == "MERGED"
+    assert acceptance.get("mergePerformed") is True
+    merge_commit = acceptance.get("mergeCommitSha")
+    assert isinstance(merge_commit, str) and len(merge_commit) == 40
+    assert git("merge-base", "--is-ancestor", merge_commit, "HEAD").returncode == 0
+    print(f"OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors={live_sensor_count} push=YES pr=MERGED merge=YES")
 
 
 if __name__ == "__main__":
