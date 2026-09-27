@@ -1,0 +1,11 @@
+{
+  "component_id": "google-drive",
+  "state": "healthy",
+  "observed_at": "2026-09-27T09:43:38.085114+00:00",
+  "evidence": {
+    "source": "Google Drive connector live search",
+    "query": "Velvet Media",
+    "resultCountObserved": 1,
+    "sampleFileId": "1h7niwW6GzblqHt5jbGM_8hJn9C3NJJY5"
+  }
+}

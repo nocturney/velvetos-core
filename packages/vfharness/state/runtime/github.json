@@ -1,0 +1,12 @@
+{
+  "component_id": "github",
+  "state": "healthy",
+  "observed_at": "2026-09-27T09:43:38.085114+00:00",
+  "evidence": {
+    "source": "GitHub connector live fetch",
+    "repository": "nocturney/velvetos-core",
+    "path": "automation/grok/manifest.json",
+    "ref": "main",
+    "blobSha": "286650064345f0c7eaa69b38334f3dac736dadc5"
+  }
+}
