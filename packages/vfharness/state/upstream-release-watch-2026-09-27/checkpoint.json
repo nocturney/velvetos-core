@@ -27,12 +27,11 @@
     "packages/vfharness/state/upstream-release-watch-2026-09-27/tickets.md"
   ],
   "unresolved": [
-    "Live Grok provider deletion/readback is unavailable: local Grok handoff could not expose the provider management session on remote debugging port 9222.",
-    "check-all remains 89/90 because check-staleness correctly reports the 2026-09-27 owner brief artifact missing after 09:15 Asia/Jerusalem; the artifact is absent in both the operational and clean worktrees."
+    "Live Grok provider deletion/readback is unavailable: local Grok handoff could not expose the provider management session on remote debugging port 9222."
   ],
   "outcome": "decision_gate",
   "pulse": "blocked",
-  "verification": "Targeted sensors PASS; vf_upstream_watch sticky-pending selftest PASS; strict upstream sweep sources=93 failed=0; PowerShell bootstraps parse; vfmedia capture regression RED->GREEN; check-all 89/90 with sole unrelated check-staleness operational failure.",
+  "verification": "Targeted sensors PASS; vf_upstream_watch sticky-pending selftest PASS; strict upstream sweep sources=93 failed=0; PowerShell bootstraps parse; vfmedia capture regression RED->GREEN; canonical 2026-09-27 brief generated; check-all PASS 90/90.",
   "gate": {
     "kind": "escalation",
     "waiting_for": "Grok provider routine-management access and a real provider readback",
@@ -52,7 +51,7 @@
     "upstream_release": "v1.6.1",
     "auto_upgrade": false,
     "targeted_sensors": "PASS",
-    "check_all": "89/90; check-staleness only",
+    "check_all": "90/90 PASS",
     "openpost_repo_watch": "deleted",
     "openpost_live_provider_watch": "UNPROVEN",
     "pull_request": "#403",
@@ -96,5 +95,5 @@
       }
     ]
   },
-  "latest_observation": "Repository implementation is complete and locally verified. Current upstream watch has 4 sticky pending updates and 0 failed checks. Remaining external blockers: live Grok routine deletion/readback and the unrelated missing 2026-09-27 owner brief required by check-staleness."
+  "latest_observation": "Repository implementation and daily-state verification are complete: check-all PASS 90/90, upstream watch 93 sources / 0 failed with 4 sticky pending updates. Remaining blocker is external only: live Grok routine deletion/readback cannot be proven from the current session."
 }
