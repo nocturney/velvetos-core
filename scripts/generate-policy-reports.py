@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 POLICY_DIR = ROOT / "packages" / "velvetos" / "policy"
 DEFAULT_BASELINE = "52bcb819c1a6d9924f0f2800340169df5f991e08"
 DEFAULT_COVERAGE = "9217e172d4f11a01f5db124d7d811c7dcab6b9c5"
+DEFAULT_REGISTRY = "aaa1ec83cdb62e2b140c54ce00c5a73ccf2faa17"
 
 
 def git(*args: str) -> str:
@@ -31,6 +32,10 @@ def git_show(sha: str, path: str) -> str:
 
 def load_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_git_json(sha: str, path: str) -> dict:
+    return json.loads(git_show(sha, path))
 
 
 def write_json(path: Path, data: object) -> None:
@@ -52,11 +57,11 @@ def assert_baseline_evidence(sha: str) -> None:
             raise SystemExit(f"baseline evidence drift: {path} missing {needle!r}")
 
 
-def build_reports(baseline_sha: str, coverage_sha: str, ci_baseline: dict) -> dict[str, dict]:
+def build_reports(baseline_sha: str, coverage_sha: str, registry_sha: str, ci_baseline: dict) -> dict[str, dict]:
     assert_baseline_evidence(baseline_sha)
-    policies = load_json(POLICY_DIR / "policy-registry.json")
-    sensors = load_json(POLICY_DIR / "sensor-registry.json")
-    artifacts = load_json(POLICY_DIR / "artifact-retention.json")
+    policies = load_git_json(registry_sha, "packages/velvetos/policy/policy-registry.json")
+    sensors = load_git_json(registry_sha, "packages/velvetos/policy/sensor-registry.json")
+    artifacts = load_git_json(registry_sha, "packages/velvetos/policy/artifact-retention.json")
 
     authority_graph = {
         "report": "authority-graph",
@@ -263,13 +268,14 @@ def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--baseline-sha", default=DEFAULT_BASELINE)
     p.add_argument("--coverage-sha", default=DEFAULT_COVERAGE)
+    p.add_argument("--registry-sha", default=DEFAULT_REGISTRY)
     p.add_argument("--ci-baseline", default=str(POLICY_DIR / "reports" / "ci-baseline.json"))
     p.add_argument("--check", action="store_true")
     args = p.parse_args()
 
     ci_path = Path(args.ci_baseline).resolve()
     ci = load_json(ci_path)
-    reports = build_reports(args.baseline_sha, args.coverage_sha, ci)
+    reports = build_reports(args.baseline_sha, args.coverage_sha, args.registry_sha, ci)
     out_dir = POLICY_DIR / "reports"
 
     if args.check:

@@ -1,0 +1,70 @@
+{
+  "policy_id": "instagram.publish",
+  "version": 1,
+  "status": "candidate",
+  "decision_values": ["ALLOW", "DENY", "REQUIRE_OWNER_APPROVAL"],
+  "scope": {
+    "channel": "instagram",
+    "publication_type": "organic",
+    "mutation_tools": [
+      "publish_image",
+      "publish_carousel",
+      "publish_reel",
+      "publish_video",
+      "publish_story"
+    ]
+  },
+  "risk": {
+    "standing_authorization_max": "LOW",
+    "owner_approval_allows": ["LOW", "MEDIUM", "HIGH"]
+  },
+  "exact_bindings": [
+    "content_id",
+    "package_sha256",
+    "copy_sha256",
+    "media_sha256s"
+  ],
+  "required_gates": [
+    "transport",
+    "visible_text",
+    "exact_final_preflight",
+    "visual_standard",
+    "rights_privacy",
+    "brand",
+    "product_truth"
+  ],
+  "gate_pass_values": ["PASS", "NOT_APPLICABLE"],
+  "authorization": {
+    "default": "REQUIRE_OWNER_APPROVAL",
+    "standing_instance_field": "creativeAutonomy.publish.standingAuthorization",
+    "human_approval_binding_fields": [
+      "content_id",
+      "package_sha256",
+      "copy_sha256"
+    ]
+  },
+  "forbidden_effects": [
+    "auto_dm",
+    "boost_ads",
+    "customer_whatsapp",
+    "print_from_hq",
+    "user_tag_without_opt_in",
+    "unclear_rights",
+    "unverified_public_claim"
+  ],
+  "legacy_compatibility": {
+    "allowed_authorization_kinds": [
+      "owner_schedule_authorization",
+      "migration_authorization"
+    ],
+    "jobs_created_before": "2026-09-28T00:00:00Z",
+    "binding_fields": ["content_id", "package_sha256"],
+    "purpose": "Preserve already-created scheduled jobs while new jobs migrate to canonical policy decisions."
+  },
+  "postconditions": {
+    "decision_receipt_required": true,
+    "provider_receipt_required": true,
+    "live_readback_required": true,
+    "ambiguous_after_publish_boundary": "RECONCILE_REQUIRED"
+  }
+}

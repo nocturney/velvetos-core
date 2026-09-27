@@ -186,6 +186,8 @@ def validate_registries() -> tuple[list[str], set[str]]:
         "policy-registry.schema.json",
         "sensor-registry.schema.json",
         "artifact-retention.schema.json",
+        "instagram-publish.schema.json",
+        "instagram-publish-context.schema.json",
     }
     actual_schemas = {p.name for p in SCHEMAS.glob("*.json")}
     require(expected_schemas <= actual_schemas, f"missing schemas {sorted(expected_schemas-actual_schemas)}", problems)
@@ -194,6 +196,23 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if path.exists():
             schema = load(path)
             require(schema.get("$schema") == "https://json-schema.org/draft/2020-12/schema", f"{name}: draft mismatch", problems)
+
+    instagram_policy_path = POLICY_DIR / "instagram.publish.json"
+    require(instagram_policy_path.is_file(), "instagram.publish machine policy missing", problems)
+    if instagram_policy_path.is_file():
+        instagram_policy = load(instagram_policy_path)
+        require(instagram_policy.get("policy_id") == "instagram.publish", "instagram.publish policy_id mismatch", problems)
+        require(instagram_policy.get("version") == 1, "instagram.publish version mismatch", problems)
+        require(instagram_policy.get("decision_values") == ["ALLOW", "DENY", "REQUIRE_OWNER_APPROVAL"], "instagram.publish decision values mismatch", problems)
+        row = next((x for x in rows if x.get("policy_id") == "instagram.publish"), None)
+        require(row is not None and "packages/velvetos/policy/instagram.publish.json" in row.get("machine_policy_locations", []), "instagram.publish registry binding missing", problems)
+        for rel_path in (
+            "packages/velvetos/policy/instagram-publish-evaluator.mjs",
+            "packages/velvetos/policy/instagram-publish-test-vectors.json",
+            "packages/velvetos/policy/test-instagram-publish-policy.mjs",
+            "scripts/vf_instagram_publish_policy.mjs",
+        ):
+            require(existing_repo_path(rel_path), f"instagram.publish component missing: {rel_path}", problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
