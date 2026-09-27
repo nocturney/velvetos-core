@@ -39,7 +39,10 @@
         "malformed-missing-source-of-truth",
         "sensitive-ambiguity",
         "unresolved-after-failover",
-        "owner-reserved-action"
+        "owner-reserved-action",
+        "new-recurring-cost",
+        "paid-api-call",
+        "billing-capable-resource"
       ],
       "neverFor": [
         "weak-metrics",

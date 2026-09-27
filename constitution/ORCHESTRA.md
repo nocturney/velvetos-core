@@ -28,6 +28,10 @@ Failover מיידי. בלי חצי-עבודה. בלי גוף/₪/Insights מומ
 | **Gemini** | הזדמנות מוצר, המרה בלי לעצור מדפסות, בריף | ManyChat, אוטו־DM, Meta Suite |
 | **Perplexity** | מקורות חיים, מק״ט קל־להדפסה/קל־למכירה, ציטוטים | גוף מומצא אם Cloudflare חוסם |
 
+## NO_NEW_RECURRING_COST - failover לא יוצר חיוב
+
+מקור אמת: [`NO_NEW_RECURRING_COST.md`](NO_NEW_RECURRING_COST.md). Failover, degraded mode או תקלה מקומית אינם הרשאה לעבור בשקט מ-Local ל-Hosted, מ-Free ל-Trial/Paid, או למודל/API usage-based. לפני התקנה ולפני paid-capable call ראשון נדרש Cost Preflight. אם חלופה דורשת חיוב או שהעלות אינה ברורה, מסמנים `BLOCKED_BY_NO_NEW_RECURRING_COST`, מבודדים רק את הרכיב, מחפשים חלופה חינמית וממשיכים בכל מה שאינו תלוי בו.
+
 ## Failover — אסור להישאר בלי תוצאה
 
 **ניהול משרד (מנהל ראשי נפל):** מעבר מבוקר בין ChatGPT · Perplexity · Gemini · Grok · Cursor — [`docs/FAILOVER.md`](../docs/FAILOVER.md) (מקור אמת + דוח השתלטות + בריף). לא בונים מערכת מחדש.

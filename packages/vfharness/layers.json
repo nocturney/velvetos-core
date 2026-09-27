@@ -158,6 +158,11 @@
       "type": "computational"
     },
     {
+      "id": "check-no-new-recurring-cost",
+      "script": "scripts/check-no-new-recurring-cost.py",
+      "type": "computational"
+    },
+    {
       "id": "check-vfprod",
       "script": "scripts/check-vfprod.py",
       "type": "computational"

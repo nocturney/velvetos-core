@@ -1,0 +1,60 @@
+{
+  "id": "no-new-recurring-cost",
+  "version": 1,
+  "sourceOfTruth": "constitution/NO_NEW_RECURRING_COST.md",
+  "defaultRecurringCostIls": 0,
+  "failClosed": true,
+  "blockedStatus": "BLOCKED_BY_NO_NEW_RECURRING_COST",
+  "classifications": [
+    "FREE_LOCAL",
+    "FREE_SELF_HOSTED",
+    "EXISTING_PAID_CAPABILITY",
+    "FREE_TIER_LIMITED",
+    "PAID_OPTIONAL",
+    "PAID_REQUIRED",
+    "COST_UNKNOWN"
+  ],
+  "blockedWithoutExplicitApproval": [
+    "PAID_REQUIRED",
+    "COST_UNKNOWN"
+  ],
+  "conditional": {
+    "EXISTING_PAID_CAPABILITY": "must prove no incremental charge for the proposed workload",
+    "FREE_TIER_LIMITED": "must document quota controls and automatic-overage behavior; hard cap when available",
+    "PAID_OPTIONAL": "implementation must be locked to the free path"
+  },
+  "approvalRequiredFields": [
+    "service",
+    "purpose",
+    "billing_type",
+    "expected_cost",
+    "cost_limit",
+    "recurrence",
+    "approval_duration",
+    "environment",
+    "production_allowed",
+    "auto_renew_allowed",
+    "usage_based_billing_allowed",
+    "approved_by",
+    "approval_date"
+  ],
+  "preflightRequiredFields": [
+    "component",
+    "classification",
+    "license",
+    "commercial_use_allowed",
+    "self_hosting_restriction",
+    "deployment_model",
+    "api_dependencies",
+    "billing_risk",
+    "selected_mode",
+    "expected_recurring_cost",
+    "runtime_cost_notes",
+    "api_cost_notes",
+    "subscription_notes",
+    "hidden_secondary_cost_notes",
+    "quota_controls",
+    "pricing_verified_at",
+    "evidence"
+  ]
+}

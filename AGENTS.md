@@ -30,6 +30,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot to press Send/Publish. Grok Bot is optional backup.
 - Gmail: `send_message` / `reply` / `forward` are **allowed** for office mail and named inquiry threads. No blast list. No invented ₪. Office 07:00 brief is תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`).
 - Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
+- **NO_NEW_RECURRING_COST is global:** canonical authority `constitution/NO_NEW_RECURRING_COST.md`. Before installing, connecting, provisioning, upgrading, adding credentials to, or first-calling any new external/cloud-connected component, complete a Cost Preflight and validate it with `python3 scripts/vf_cost_preflight.py validate <preflight.json>`. Default is zero new recurring cost. `PAID_REQUIRED`, `COST_UNKNOWN`, any incremental metered use of an existing paid capability, and any free tier that can auto-overage fail closed unless the owner gave complete explicit cost approval. General instructions such as “install what is needed” are not spend approval.
 - One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
 - CTA is **PUBLIC_CURRENT_CTA** = Instagram message («שלחו לנו הודעה כאן באינסטגרם») / איסוף שדרות. Not bare English «שלחו DM». Not WhatsApp phone in public copy. **BUSINESS_CONTACT_RECORD** WhatsApp `050-2517000` stays in desk/integration only (`constitution/PUBLIC_CTA.md`). Customer WhatsApp **send** stays human. Core may have WhatsApp MCP for search/draft (`packages/vfmcp/CONNECT-WHATSAPP.md`); VF `mcpBind.whatsapp.send=false`.
 - Do not create a new pack for an idea. Map onto an existing pack the same day. New business = **frontend instance repo** that attaches Core modules (`packages/velvetos/REPOS.md` + `scripts/publish-instance.sh`), not a parallel pack tree inside Core.
@@ -96,6 +97,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfagents.py` | 500-list playbooks |
 | `scripts/check-vfresearch.py` | Weekly inspiration-links + bi-daily best-skills + last30 community research + IG music + orchestra failover law |
 | `scripts/check-vfcost.py` | Material-only cost CLI (grams × ILS/kg); missing grams refuse; no invented sale ₪ |
+| `scripts/check-no-new-recurring-cost.py` | Canonical NO_NEW_RECURRING_COST law + fail-closed Cost Preflight enforcement |
 | `scripts/check-vfprod.py` | Floor fleet routing (4 beds, no Print from HQ); filament remainder; maintenance snapshot empty=אין ספירה |
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
 | `scripts/check-vfgrowth.py` | Standing IG calendar + ledger + Studio handoff (instagram.com, no Suite) |
