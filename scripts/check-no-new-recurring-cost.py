@@ -102,6 +102,11 @@ def main() -> None:
     if run(ok).returncode != 0:
         fail("FREE_LOCAL valid preflight must pass")
 
+    free_conflict = base("FREE_LOCAL")
+    free_conflict["incremental_cost_possible"] = True
+    if run(free_conflict).returncode == 0:
+        fail("FREE_LOCAL conflicting with incremental_cost_possible=true must require approval")
+
     unknown = base("COST_UNKNOWN")
     if run(unknown).returncode == 0 or "BLOCKED_BY_NO_NEW_RECURRING_COST" not in run(unknown).stderr:
         fail("COST_UNKNOWN must fail closed without explicit approval")
@@ -120,10 +125,31 @@ def main() -> None:
     if run(free_tier).returncode == 0:
         fail("free tier with automatic overage and no hard cap must fail closed")
 
+    misleading_cap = base("FREE_TIER_LIMITED")
+    misleading_cap["automatic_paid_overage_possible"] = True
+    misleading_cap["hard_cap_enforced"] = False
+    misleading_cap["hard_cap"] = "monitoring only, not enforced"
+    if run(misleading_cap).returncode == 0:
+        fail("descriptive hard_cap text must not bypass hard_cap_enforced=false")
+
     optional = base("PAID_OPTIONAL")
     optional["paid_features_enabled"] = False
     if run(optional).returncode != 0:
         fail("PAID_OPTIONAL locked to free features should pass")
+
+    detailed_preflights = 0
+    for path in sorted(TEMPLATE.parent.glob("*.json")):
+        if path == TEMPLATE:
+            continue
+        proc = subprocess.run(
+            [sys.executable, str(CLI), "validate", str(path)],
+            cwd=ROOT, text=True, capture_output=True,
+        )
+        if proc.returncode != 0:
+            fail(f"detailed cost preflight must validate: {path.relative_to(ROOT)}: {proc.stderr.strip()}")
+        detailed_preflights += 1
+    if detailed_preflights == 0:
+        fail("no active detailed cost preflights found")
 
     for rel in (
         "packages/vfharness/state/fabrication-cost-text-to-cad-2026-09-27.json",

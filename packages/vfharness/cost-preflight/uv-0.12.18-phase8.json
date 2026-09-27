@@ -12,6 +12,7 @@
   "expected_recurring_cost": "0 ILS/month incremental",
   "runtime_cost_notes": "local disk/network during package resolution only; no daemon or cloud account",
   "api_cost_notes": "no model or paid API calls",
+  "subscription_notes": "no subscription, trial, billing account or hosted workspace; local pinned development tool only",
   "hidden_secondary_cost_notes": "none in selected mode",
   "quota_controls": "not applicable",
   "pricing_verified_at": "2026-09-27",

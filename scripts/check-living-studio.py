@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 LS = ROOT / "packages" / "velvetos" / "living-studio"
 REGISTRY = LS / "REGISTRY.json"
 README = LS / "README.md"
+ROOT_README = ROOT / "README.md"
+SOT_INDEX = ROOT / "docs" / "chief-of-staff" / "SOT-INDEX.md"
 CLI = ROOT / "scripts" / "vf_living_studio.py"
 CONTROL_PLANE = ROOT / "office" / "control-plane.json"
 DECISIONS = ROOT / "office" / "control" / "decisions.jsonl"
@@ -29,7 +31,7 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LS, REGISTRY, README, CLI, CONTROL_PLANE, DECISIONS, EVENTS, INTAKE, WRITING_PLANS, VFCOPY_HE):
+    for path in (LS, REGISTRY, README, ROOT_README, SOT_INDEX, CLI, CONTROL_PLANE, DECISIONS, EVENTS, INTAKE, WRITING_PLANS, VFCOPY_HE):
         if not path.exists():
             fail(f"missing {path.relative_to(ROOT)}")
 
@@ -37,6 +39,12 @@ def main() -> None:
     skills = reg.get("skills") or []
     if len(skills) != 23:
         fail(f"REGISTRY skills must be 23, got {len(skills)}")
+    readme = ROOT_README.read_text(encoding="utf-8")
+    if f"with {len(skills)} operational skills." not in readme or f"עם {len(skills)} Skills תפעוליים." not in readme:
+        fail("README Living Studio skill count is stale relative to REGISTRY.json")
+    sot_index = SOT_INDEX.read_text(encoding="utf-8")
+    if f"| {len(skills)} operational skills ב־README pulse |" not in sot_index:
+        fail("SOT-INDEX Living Studio skill count is stale relative to REGISTRY.json")
     living = reg.get("livingCapabilities") or []
     if len(living) < 10:
         fail("REGISTRY livingCapabilities too thin")

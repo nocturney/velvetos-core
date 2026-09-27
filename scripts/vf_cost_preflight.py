@@ -28,10 +28,10 @@ def load_json(path: Path) -> dict[str, Any]:
 def load_policy(path: Path = DEFAULT_POLICY) -> dict[str, Any]:
     return load_json(path)
 def meaningful(value: Any) -> bool:
-    if value in PLACEHOLDERS:
-        return False
     if isinstance(value, str):
         return bool(value.strip()) and value.strip().upper() not in PLACEHOLDERS
+    if value is None:
+        return False
     if isinstance(value, list):
         return len(value) > 0
     return True
@@ -131,9 +131,11 @@ def validate_detailed(doc: dict[str, Any], policy: dict[str, Any]) -> dict[str, 
     needs_approval = classification in policy["blockedWithoutExplicitApproval"]
     if classification == "EXISTING_PAID_CAPABILITY":
         needs_approval = doc.get("incremental_cost_possible") is not False
+    elif classification in {"FREE_LOCAL", "FREE_SELF_HOSTED"}:
+        needs_approval = doc.get("incremental_cost_possible") is True
     elif classification == "FREE_TIER_LIMITED":
         overage = doc.get("automatic_paid_overage_possible")
-        capped = doc.get("hard_cap_enforced") is True or meaningful(doc.get("hard_cap"))
+        capped = doc.get("hard_cap_enforced") is True
         needs_approval = overage is not False and not capped
     elif classification == "PAID_OPTIONAL":
         if doc.get("paid_features_enabled") is not False:

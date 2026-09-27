@@ -95,7 +95,7 @@
 | דומיין | סמכות קנונית | CLI / sensor | הערה |
 |---|---|---|---|
 | Living Studio | `packages/velvetos/living-studio/` | `vf_living_studio.py` · `check-living-studio.py` | projection/router בלבד |
-| Skills registry | `packages/velvetos/living-studio/REGISTRY.json` | | 22 operational skills ב־README pulse |
+| Skills registry | `packages/velvetos/living-studio/REGISTRY.json` | | 23 operational skills ב־README pulse |
 | Autonomy composition | `packages/velvetos/living-studio/AUTONOMY.json` | `vf_autonomy.py` · `check-vf-autonomy.py` | לא runtime שני |
 | רתמה | `AGENTS.md` + `packages/vfharness/` | `check-all.py` · `check-vfharness.py` | שש שכבות על פקים קיימים |
 | Checkpoints | `packages/vfharness/state/` | `checkpoint.schema.json` · `skillstate.md` | `component_state`: Idle/Processing/Degraded/Syncing/Blocked |
