@@ -59,3 +59,11 @@ Later on 2026-09-23, live Grok readback verified `Cognee Memory Sync` (`cognee-m
 `OpenPost Release Watch` is retired and must be disabled in the live Grok scheduler. It is not part of the protected set. The desired protected inventory is eight routines. Git state is desired authority only; a provider read-back is still required before claiming the live Grok routine is disabled.
 
 The 09:00 Morning Brief must read scheduled Instagram state from the Cloudflare Instagram Publisher, not OpenPost.
+
+## Live provider re-read — 2026-09-27
+
+A fresh read-only inventory observation was taken from the already signed-in Grok Bot 0.59.1 renderer through its existing loopback DevTools surface, without sending a model prompt. The provider exposed the exact eight protected routine IDs, all eight enabled, with effective schedule displays matching this contract in an `Asia/Jerusalem` renderer.
+
+The same live readback found the retired `OpenPost Release Watch` still enabled at 07:15 despite the 2026-09-26 retirement directive. That already-authorized drift was repaired in place by disabling only that routine. The provider write completed, and the post-write provider state read back `aria-checked=false` / `Resume OpenPost Release Watch`; all eight protected routines remained enabled and unchanged. Evidence is recorded in `automation/grok/provider-readback-2026-09-27.json`.
+
+This readback proves current provider inventory, enabled state, effective schedule display and renderer timezone. It does **not** claim that every routine prompt body was re-read or byte-compared on 2026-09-27.

@@ -1,12 +1,18 @@
 {
   "component_id": "grok-production-scheduler",
-  "state": "degraded",
-  "observed_at": "2026-09-27T09:43:38.085114+00:00",
+  "state": "healthy",
+  "observed_at": "2026-09-27T10:12:59.224768+00:00",
   "evidence": {
-    "source": "canonical repository provider-readback receipt",
-    "manifest": "automation/grok/manifest.json",
-    "readback": "automation/grok/cognee-routines.json",
-    "lastVerifiedReadbackOn": "2026-09-23",
-    "reason": "no current provider readback tool is available in this session; Git/manifest alone is explicitly not provider proof"
+    "source": "live Grok Bot provider UI readback",
+    "artifact": "automation/grok/provider-readback-2026-09-27.json",
+    "provider": "grok-bot",
+    "providerAppVersion": "0.59.1",
+    "signedIn": true,
+    "rendererTimeZone": "Asia/Jerusalem",
+    "protectedRoutineCount": 8,
+    "allProtectedEnabled": true,
+    "allProtectedClockMatch": true,
+    "openPostReleaseWatchDisabled": true,
+    "promptBodyParityClaimed": false
   }
 }
