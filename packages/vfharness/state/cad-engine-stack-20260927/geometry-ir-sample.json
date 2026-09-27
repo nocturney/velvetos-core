@@ -1,0 +1,9 @@
+{
+  "schema":"velvetos.geometry-ir.v1",
+  "units":"mm",
+  "parts":[
+    {"id":"base","kind":"box","dimensions":{"x":120,"y":80,"z":8},"parent":null,"source":null},
+    {"id":"boss","kind":"cylinder","dimensions":{"diameter":20,"height":12},"parent":"base","source":null}
+  ],
+  "constraints":[{"type":"align","a":"boss","b":"base","value_mm":0}]
+}

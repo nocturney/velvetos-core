@@ -1,0 +1,11 @@
+{
+  "component": "CadQuery local engine",
+  "action": "install_and_probe_local_cadquery",
+  "classification": "FREE_LOCAL",
+  "evidence": "CadQuery is Apache-2.0 open-source and supports local pip installation; this deployment uses a dedicated local Python 3.12 venv and no hosted service or billing credential.",
+  "checked_at": "2026-09-27",
+  "incremental_cost_possible": false,
+  "automatic_paid_overage_possible": false,
+  "hard_cap_enforced": true,
+  "paid_features_enabled": false
+}

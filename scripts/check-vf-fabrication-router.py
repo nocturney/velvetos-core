@@ -94,7 +94,7 @@ for request, files, expected_intent in decision_cases:
     ]
     for file_name in files:
         cmd.extend(["--file", file_name])
-    decision = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True)
+    decision = subprocess.run(cmd, cwd=ROOT, text=True, encoding="utf-8", capture_output=True)
     assert decision.returncode == 0, decision.stdout + decision.stderr
     payload = json.loads(decision.stdout)
     assert payload["intent"] == expected_intent, (request, payload)

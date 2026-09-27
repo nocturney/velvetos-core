@@ -18,7 +18,7 @@ This integration extends the existing `vfprod` + `expert-3d-model` path. It does
 - Slicing: upstream `gcode` skill + the existing VelvetPrintLab OrcaSlicer router
 - Decision authority: `FABRICATION-ROUTER.md` + `FABRICATION-ROUTER.json`
 
-The host bridge is `scripts/vf_cad.py`; route inspection is `scripts/vf_fabrication_router.py`.
+The host bridge is `scripts/vf_cad.py`; route inspection is `scripts/vf_fabrication_router.py`. The subordinate engine layer is `CAD-ENGINE-REGISTRY.json` + `scripts/vf_cad_stack.py`: build123d/cadgen remains primary, CadQuery and JSCAD are local secondary engines, and CAD/CAE Copilot/Forgent3D remain bounded pilots.
 
 ## Source-of-truth rule
 

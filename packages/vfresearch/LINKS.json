@@ -1361,6 +1361,20 @@
         "vfresearch"
       ],
       "note": "Discovery index only, including sponsored/featured listings. Filter by real capability gaps, independently validate providers, and integrate only through existing VelvetOS modules/contracts. No wholesale import or parallel runtime."
+    },
+    {
+      "id": "awesome-cad",
+      "kind": "repo",
+      "url": "https://github.com/mlightcad/awesome-cad",
+      "title": "awesome-cad — open-source CAD ecosystem radar",
+      "firstEmbedded": "2026-09-27",
+      "lastReviewed": "2026-09-27",
+      "report": "packages/vfprod/CAD-ENGINE-STACK.md",
+      "packs": [
+        "vfresearch",
+        "vfprod"
+      ],
+      "note": "Ecosystem radar only. Do not auto-install entries; evaluate license, local/headless fit, cost and Fabrication Router role before adoption."
     }
   ],
   "addLink": {

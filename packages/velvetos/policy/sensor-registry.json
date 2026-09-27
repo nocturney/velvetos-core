@@ -2771,6 +2771,43 @@
       },
       "fallback_scope": "FULL_SUITE",
       "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-cad-stack",
+      "path": "scripts/check-vf-cad-stack.py",
+      "owns": [
+        "packages/vfprod/**",
+        "packages/vfresearch/LINKS.json",
+        "packages/velvetos/TOOL-STATUS.json",
+        "packages/vfharness/state/cad-engine-stack-20260927/**",
+        "packages/vfharness/state/fabrication-cost-cadquery-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-jscad-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-cad-cae-copilot-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-forgent3d-2026-09-27.json",
+        "scripts/vf_cad_stack.py",
+        "scripts/check-vf-cad-stack.py"
+      ],
+      "triggered_by": [
+        "packages/vfprod/**",
+        "packages/vfresearch/LINKS.json",
+        "packages/velvetos/TOOL-STATUS.json",
+        "packages/vfharness/state/cad-engine-stack-20260927/**",
+        "scripts/vf_cad_stack.py",
+        "scripts/check-vf-cad-stack.py"
+      ],
+      "depends_on": [
+        "scripts/vf_cost_preflight.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
     }
   ]
 }

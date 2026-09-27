@@ -1,0 +1,60 @@
+{
+  "schema": "velvetos.cad-engine-stack-host-acceptance.v1",
+  "checked_at": "2026-09-27",
+  "host": "Chris Windows workstation",
+  "stack_root": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\cad-stack",
+  "printer_actions_allowed": false,
+  "paid_provider_calls_performed": false,
+  "engines": {
+    "build123d": {
+      "status": "PASS",
+      "evidence": "Existing text-to-cad/cadgen doctor PASS plus local Box export probe.",
+      "step_bytes": 15430,
+      "stl_bytes": 684
+    },
+    "cadquery": {
+      "status": "PASS",
+      "python": "3.12",
+      "version": "2.8.0",
+      "evidence": "Isolated local venv; Box exported to STEP and STL.",
+      "step_bytes": 15478,
+      "stl_bytes": 684
+    },
+    "jscad": {
+      "status": "PASS",
+      "evidence": "Local Node packages generated a binary STL; DfAM mesh inspection confirmed 20x30x10 mm, 12 triangles, watertight, one body.",
+      "stl_bytes": 684,
+      "triangles": 12,
+      "watertight": true
+    }
+  },
+  "pilots": {
+    "cad-cae-copilot": {
+      "status": "PASS_LOCAL_SMOKE",
+      "commit": "6e851d3cf513f5ab4225093bd0b5ab35db317663",
+      "python": "3.12",
+      "llm_extras_enabled": false,
+      "smoke_mode": "stubbed-cad",
+      "tool_count": 98,
+      "prompt_count": 6,
+      "resource_count": 1,
+      "note": "Local aieng-format installed from the same checkout before backend CAD/dev extras. No external model provider invoked."
+    },
+    "forgent3d": {
+      "status": "SOURCE_CLONED_RUNTIME_UNVERIFIED",
+      "commit": "d538ca46d9c3766a0a21ba73ba88607ef305dedd",
+      "reason": "pnpm is not installed on this host; no extra runtime was installed solely to force a pilot green state.",
+      "production_route_enabled": false
+    }
+  },
+  "patterns": {
+    "graph-cad": "Geometry/assembly IR inspiration only; no model/checkpoint runtime installed.",
+    "multi-agent-cad": "decompose-generate-inspect-bounded-repair pattern only; no LangGraph/Aider production runtime."
+  },
+  "radar": {
+    "awesome-cad": "registered in packages/vfresearch/LINKS.json as ecosystem radar only"
+  },
+  "rejected": {
+    "cadam_runtime_installed": false
+  }
+}

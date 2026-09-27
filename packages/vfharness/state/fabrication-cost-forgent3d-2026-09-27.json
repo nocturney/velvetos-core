@@ -1,0 +1,11 @@
+{
+  "component": "Forgent3D desktop pilot",
+  "action": "clone_and_probe_local_workbench_only",
+  "classification": "FREE_LOCAL",
+  "evidence": "Forgent3D source is MIT and documents a local desktop CAD runner/viewer workflow. Pilot is source/local-only and does not enable external paid model-provider calls.",
+  "checked_at": "2026-09-27",
+  "incremental_cost_possible": false,
+  "automatic_paid_overage_possible": false,
+  "hard_cap_enforced": true,
+  "paid_features_enabled": false
+}
