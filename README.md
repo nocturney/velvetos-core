@@ -30,8 +30,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <td align="center"><strong>0</strong><br><sub><span dir="ltr">Needs Attention</span><br><span dir="rtl">דורש טיפול</span></sub></td>
 </tr>
 <tr>
-<td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>93</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
+<td align="center"><strong>106</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>10</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -46,13 +46,13 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 | **Waiting work** | 1 |
 | **Owner blocked** | 0 |
 | **Degraded tools** | 0 |
-| **Last verified / refreshed evidence** | `2026-09-26T18:35:56+03:00` |
+| **Last verified / refreshed evidence** | `2026-09-27T11:18:57+03:00` |
 
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-27 — **Control API operational domain projection:** adds canonical read-only projections for production, content, media/files, agent roster and model shelf into `velvetos.control.v1`, preserving unknown…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-27 — **Control API operational domain projection:** adds canonical read-only projections for production, content, media/files, agent roster and model shelf into `velvetos.control.v1`, preserving unknown…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-27 — **3D runtime is capability-gated, not version-pinned:** `vf_3d.py` discovers installed Blender versions at runtime (or honors `BLENDER_BIN`), verifies `blender_ai_mcp` in the selected installation,…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-27 — **3D runtime is capability-gated, not version-pinned:** `vf_3d.py` discovers installed Blender versions at runtime (or honors `BLENDER_BIN`), verifies `blender_ai_mcp` in the selected installation,…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
