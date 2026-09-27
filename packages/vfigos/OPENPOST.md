@@ -5,11 +5,11 @@
 Upstream: `getopenpost/openpost`  
 **Status (2026-09-26): PAUSED (publishing frozen).** Staging: **v6.2.0** (evidence: PR #342, commit `d6b55fcd`; staging only, pin unchanged). Production runtime and LIVE status: **unknown / not verified**. Machine-readable: `OPENPOST.json` → `status`.
 Last pinned baseline: v4.35.0 (pin record only; production not re-verified since 2026-09-20)
-Role: **scheduler + queue + retry/delivery status + multi-channel publication control + analytics collector**.
+Role: **FROZEN historical publication control-plane only**. New scheduling, queueing, retry, monitoring and failover route to Cloudflare Publisher / current canonical tools, not OpenPost.
 
 ## החלטת ארכיטקטורה
 
-OpenPost נכנס **בתוך `vfigos` הקיים** כשכבת publication operations/control-plane בלבד.
+מאז cutover של 2026-09-24, **Cloudflare Publisher הוא מקור האמת היחיד לתזמון Instagram עתידי**; `packages/velvetos/TOOL-STATUS.json` ו־`PUBLISHER.json` הם הסמכות הנוכחית. OpenPost נשאר לקריאת provenance/incident evidence בלבד ואסור להזרים אליו עבודה חדשה.
 
 ```text
 Content decision / creative pipeline
@@ -18,14 +18,15 @@ Content decision / creative pipeline
   -> Product Truth + Owner-Approved Grid Standard
   -> VISIBLE_TEXT + Brand Guardian + executable creative preflight
   -> PREFLIGHT/publicationEvidence + exact artifact/package hash
-  -> signed velvet.delivery_approval.v1 for the exact write mutation
-  -> OpenPost queue/schedule/apply OR direct Instagram MCP failover
-  -> Instagram MCP list_media/get_media live verification
-  -> liveVerified + ledger
+  -> owner schedule authorization + Cloudflare D1/KV for future schedule
+     OR signed velvet.delivery_approval.v1 for explicitly authorized immediate publish
+  -> Meta Instagram Graph API
+  -> list_media/get_media live verification
+  -> published_verified + ledger
   -> Insights / learning loop
 ```
 
-OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום הקנוני וקיבל את הראיות הנדרשות. הוא **לא** יוצר bypass ל־VISIBLE_TEXT, `packages/vfom/PUBLICATION-PREP-EXECUTION.md`, Product Truth, Media Vault/versionApproval, Owner-Approved Grid Standard, Brand Guardian, PREFLIGHT/publicationEvidence, rights/privacy, exact-hash binding או signed `velvet.delivery_approval.v1`.
+OpenPost evidence may be inspected historically, but it is not an approval, transport, scheduler, retry or failover authority.
 
 ## Instagram / Meta
 

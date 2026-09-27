@@ -1,7 +1,7 @@
 # קצב שבועי קבוע · @velvets_cloud
 
 מושב: **צמיחה**. תבנית סטודיו — חוזרת כל שבוע עד שראש צוות משנה.  
-אזור זמן: **Asia/Jerusalem**. שיבוץ ב־`instagram.com` בלבד. **לא Meta Suite.**  
+אזור זמן: **Asia/Jerusalem**. תזמון production ב־Cloudflare Publisher; Google Calendar `אינסטגרם` הוא mirror. **לא OpenPost / instagram.com / Meta Suite.**
 לוח ממולא: `CALENDAR.md` + `LEDGER.md`. מסירה: `HANDOFF-he.md` (מקור האמת). מצביע + מזהי יומן: `vfigos/HANDOFF-STANDING-he.md`.
 
 ## משבצות קבועות

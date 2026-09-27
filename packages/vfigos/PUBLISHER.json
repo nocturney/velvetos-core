@@ -1,0 +1,75 @@
+{
+  "schema": "velvet.instagram_publisher.v1",
+  "id": "cloudflare-instagram-publisher",
+  "integrationMode": "primary-scheduled-control-plane",
+  "target": "@velvets_cloud",
+  "accountLabel": "velvets_cloud",
+  "igUserId": "17841407772120429",
+  "runtime": {
+    "provider": "Cloudflare Workers",
+    "worker": "velvetos-instagram-publisher",
+    "url": "https://velvetos-instagram-publisher.velvetos-vf.workers.dev",
+    "versionId": "2c6e4c70-9824-4c29-8ee6-c3807165f19e",
+    "cron": "* * * * *",
+    "d1": {
+      "name": "velvetos-instagram-publisher",
+      "id": "0ff84516-8b91-44a2-bdd6-6349c3bb3bc7",
+      "region": "WEUR"
+    },
+    "kv": {
+      "binding": "MEDIA",
+      "id": "31e0c6fd4c084cc4a0c5fecddfa179c3"
+    },
+    "health": "PASS",
+    "metaHealth": "PASS",
+    "cronHeartbeat": "PASS",
+    "verifiedAt": "2026-09-27T06:40:11Z"
+  },
+  "authorization": {
+    "scheduled": "owner_schedule_authorization exact-bound to content_id, package_sha256, scheduled_at, caption and media; immutable HMAC stored with the job",
+    "immediate": "velvet.delivery_approval.v1 remains required for immediate direct publish_* mutations",
+    "migration": "migration_authorization allowed only for the recorded 2026-09-24 OpenPost cutover"
+  },
+  "reliability": {
+    "media": "KV write-once/idempotent with SHA-256 verification at upload, scheduling and publish time",
+    "duplicateProtection": "atomic D1 claim + HMAC-bound immutable job + 72h publish fingerprint guard",
+    "retries": "pre-publish failures only; bounded retries",
+    "ambiguousOutcome": "reconcile_required; never blind-retry after media_publish boundary or expired publishing lease",
+    "verification": "published_verified only after Graph media read-back returns permalink",
+    "heartbeat": "runtime_state.last_cron_tick updated by Cloudflare cron"
+  },
+  "costPolicy": {
+    "requirement": "zero ongoing cost",
+    "plan": "Cloudflare Free",
+    "guard": "stay within Free plan quotas; no paid dependency is required by this runtime"
+  },
+  "openPost": {
+    "mode": "legacy-read-only",
+    "noNewSchedules": true,
+    "cutoverAt": "2026-09-24",
+    "migratedPublicationId": "d1a55aa8-a851-499f-99b3-6ebc95c037e2",
+    "postCutoverScheduledCount": 0
+  },
+  "canonicalDocs": [
+    "packages/vfigos/cloudflare-publisher/README.md",
+    "packages/vfigos/SEND.md",
+    "packages/vfigos/PUBLICATION-STATES.md",
+    "packages/vfgrowth/CALENDAR-OPS.md"
+  ],
+  "calendarMirror": {
+    "role": "read-only operational mirror; never source of truth",
+    "calendarName": "אינסטגרם",
+    "owner": "nocturney@gmail.com",
+    "timezone": "Asia/Jerusalem",
+    "syncDirection": "Cloudflare Publisher -> Google Calendar only",
+    "eventDurationMinutes": 30,
+    "reminders": false,
+    "manualCalendarEditsAffectPublishing": false,
+    "bridge": "Google Apps Script",
+    "scriptId": "1eXUGA574qXazEBzVSifNqSV8bgoz1Pw3CgRfebytCAIbVVcc0zoRbeNH",
+    "deploymentId": "AKfycbwYB27gOcNgjDhKkmARzpLzTlsgdnheLgan1VEISnm7Ryr-GYn1lRpTJf_74unGaPgjig",
+    "deploymentVersion": 3,
+    "syncCadenceMinutes": 5,
+    "status": "awaiting_owner_authorization"
+  }
+}

@@ -21,7 +21,7 @@ Grok הוא גיבוי אופציונלי. לא מחכים למכסה. לא מח
 
 ## תור פתוח
 
-לוח קבוע: `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. שיבוץ ב־instagram.com.
+לוח מדיניות: `vfgrowth/CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. queue production קנוני: Cloudflare Publisher D1; Google Calendar `אינסטגרם` הוא mirror בלבד. השורות ההיסטוריות למטה אינן schedule truth.
 
 | תאריך | מזהה | סוג | נתיב / הערה | סטטוס |
 |---|---|---|---|---|

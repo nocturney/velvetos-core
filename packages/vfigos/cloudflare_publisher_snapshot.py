@@ -11,6 +11,7 @@ def get_json(base: str, path: str, token: str) -> dict:
     req=urllib.request.Request(base.rstrip("/") + path, headers={
         "Authorization": f"Bearer {token}",
         "Accept": "application/json",
+        "User-Agent": "VelvetOS-Morning-Green/1.0",
     }, method="GET")
     with urllib.request.urlopen(req, timeout=20) as resp:
         return json.loads(resp.read().decode("utf-8"))
@@ -19,6 +20,15 @@ def iso(ts: int) -> str:
     return datetime.fromtimestamp(int(ts), tz=timezone.utc).isoformat().replace("+00:00","Z")
 
 def snapshot(base: str, token: str) -> dict:
+    observed=datetime.now(timezone.utc)
+    runtime=get_json(base, "/v1/runtime", token)
+    tick=int(runtime.get("last_cron_tick") or 0)
+    heartbeat_age=max(0, int(observed.timestamp()) - tick) if tick else None
+    if heartbeat_age is None or heartbeat_age > 180:
+        raise RuntimeError(f"publisher cron heartbeat stale/missing: age={heartbeat_age}")
+    meta=get_json(base, "/v1/meta-health", token)
+    if meta.get("ok") is not True:
+        raise RuntimeError("publisher Meta health failed")
     listing=get_json(base, "/v1/jobs", token)
     scheduled=[]
     for row in listing.get("jobs") or []:
@@ -41,7 +51,16 @@ def snapshot(base: str, token: str) -> dict:
     return {
         "schema": "vf.instagram.schedule-snapshot.v1",
         "source": "cloudflare-instagram-publisher",
-        "observed_at": datetime.now(timezone.utc).isoformat().replace("+00:00","Z"),
+        "observed_at": observed.isoformat().replace("+00:00","Z"),
+        "runtime": {
+            "last_cron_tick": tick,
+            "heartbeat_age_seconds": heartbeat_age,
+            "job_counts": runtime.get("job_counts") or [],
+        },
+        "meta_health": {
+            "ok": True,
+            "username": str(meta.get("username") or ""),
+        },
         "scheduled": scheduled,
     }
 

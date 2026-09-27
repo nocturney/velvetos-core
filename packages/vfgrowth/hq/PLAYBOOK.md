@@ -26,11 +26,11 @@
 קצב קבוע ב־`../CALENDAR.md`. מועמדים ב־`../LEDGER.md`. מסירה ב־`../HANDOFF-he.md`.  
 לפני שיבוץ: `../PREFLIGHT.md` + `preflight/<id>.md`. נכשל-סגור = לא משבצים. אל תפנה לכריסטיאן על מדדים חלשים.  
 צמיחה בלי מרדף עוקבים: `FOLLOWER-GROWTH.md` — CTA → הודעת Instagram / היילייטס.  
-לא זזים ממשובץ. לא בוסט. שיבוץ ב־instagram.com — לא סוויט.  
+לא זזים מ־job מתוזמן בלי cancel + authorization חדש. לא בוסט. תזמון ב־Cloudflare Publisher; Calendar `אינסטגרם` הוא mirror בלבד.
 Proof מהרצפה רק אם העבודה על המיטה עכשיו — לא ממציאים סצנה.
 
 לוח עומד (2–3 שבועות + קצב): `CALENDAR.md` · `LEDGER.md` · `RHYTHM.md`.  
-מסירה ל־instagram.com: `HANDOFF-he.md` (מקור האמת). מצביע + מזהי יומן: `vfigos/HANDOFF-STANDING-he.md`.  
+מסירה ל־Publisher: `HANDOFF-he.md` + `vfigos/SEND.md`. Calendar mirror: `vfgrowth/CALENDAR-OPS.md`.
 `MEDIA-NEEDED-FROM-CHRISTIAN` כשחסר צילום — שואלים, לא ממציאים.
 
 `#vfseason` לפתיחת שנה / חלון איסוף ידוע. בלי מק״ט על רילס שמסומנים «ריל בלבד».

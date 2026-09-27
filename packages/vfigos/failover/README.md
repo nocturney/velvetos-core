@@ -1,6 +1,8 @@
-# Instagram failover
+# LEGACY — OpenPost Instagram failover
 
-Purpose: preserve an owner-approved Instagram delivery window when OpenPost has definitively failed, without creating an unrestricted second publisher.
+> **Not armed for Cloudflare Publisher jobs.** Since the 2026-09-24 cutover, do not create new manifests or execute this runner for current schedules. Publisher retry/reconcile rules in `../SEND.md` are authoritative.
+
+Historical purpose: preserve an owner-approved Instagram delivery window when OpenPost had definitively failed, without creating an unrestricted second publisher.
 
 ## Architecture
 
@@ -66,9 +68,9 @@ python -X utf8 packages/vfigos/failover/prepare_manifest.py ... \
   --failover-window-minutes 30
 ```
 
-When `--scheduled-at-utc` is present, `auto_failover` is enabled by default for the already owner-approved exact package. Use `--no-auto-failover` only when the owner explicitly disables automatic recovery for that schedule. Auto-failover never changes media, caption, account, package hash or schedule; it only authorizes the watcher to invoke the already-fenced recovery path after OpenPost proves `safe_to_failover=true`.
+Historical behavior: when `--scheduled-at-utc` was present, `auto_failover` was enabled by default for the already owner-approved exact package. Use `--no-auto-failover` only when the owner explicitly disables automatic recovery for that schedule. Auto-failover never changes media, caption, account, package hash or schedule; it only authorizes the watcher to invoke the already-fenced recovery path after OpenPost proves `safe_to_failover=true`.
 
-## Automatic delivery-window recovery
+## Historical automatic delivery-window recovery
 
 `failover_watch.py` scans prepared manifests only. Before any automatic write it calls the Grok-facing client in dry-run mode. It proceeds only when the dry-run proves both `duplicate_found=false` and `primary_safe_to_failover=true`.
 
@@ -76,14 +78,12 @@ The watcher writes `execute_attempted=true` atomically **before** the one permit
 
 Every 60 seconds the same watcher performs a read-only coverage audit against OpenPost. Active Instagram `image_post` schedules are compared with prepared manifests. `coverage-state.json` is `PROTECTED` only when every active scheduled image rendition has an armed exact manifest; missing or unarmed coverage becomes `UNPROTECTED_SCHEDULE` and is recorded in `watch.log`. The audit never publishes or mutates OpenPost.
 
-On the Chris machine the watcher is supervised at boot by `GrokBot Boot Supervisor` running as **SYSTEM / ServiceAccount**. The boot supervisor is failover-only: it never launches the Grok desktop, never reads Grok desktop auth/status, and does not depend on an interactive user session. Desktop launch belongs only to the Interactive Handoff/Watchdog after a real Chris logon. A singleton file lock prevents two watcher processes from running concurrently. The canonical supervisor and installer are `windows/grok_boot_supervisor.py` and `windows/install_grok_boot.ps1`.
+Historical runtime: before the 2026-09-24 cutover, the watcher was supervised at boot by `GrokBot Boot Supervisor`. That task is now intentionally disabled and the canonical `windows/grok_boot_supervisor.py` is a no-op. Interactive Handoff/Watchdog remain separate and are unaffected.
 
-## GrokBot command
-
-Dry-run first:
+## Historical command — do not execute for current schedules
 
 ```text
-C:\Python314\python.exe -X utf8 C:\ProgramData\VelvetOS\instagram-failover\grok-instagram-failover.py --manifest <manifest>
+C:\Python314\python.exe -X utf8 C:\ProgramData\VelvetOS\instagram-failover\grok-instagram-failover.py --manifest <legacy-openpost-manifest>
 ```
 
-Then `--execute` only when the primary OpenPost attempt is definitively failed and the trusted state gate authorizes failover. The runner itself enforces this condition.
+This command is retained for incident forensics only. Current Cloudflare Publisher jobs use the recovery/reconcile rules in `../SEND.md`.

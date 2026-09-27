@@ -45,7 +45,7 @@ G004 סטוריז: [`packages/vfcopy/G004-STORIES-FIX.md`](../packages/vfcopy/G0
 ## שיבוץ אוטונומי — בלי לשאול משבצת
 
 לא שואלים את כריסטיאן מתי לפרסם. הרשת קבועה ב־`vfgrowth/CALENDAR.md`.  
-כל פוסט מתוכנן עולה ל־Google Calendar של `nocturney@gmail.com` (תפעול, `CALENDAR-OPS.md`). שיבוץ הרשת: instagram.com.
+כל פוסט מתוזמן נוצר כ־job ב־Cloudflare Publisher. Google Calendar `אינסטגרם` הוא mirror תפעולי חד־כיווני (`CALENDAR-OPS.md`); עריכה ביומן אינה משנה את התזמון.
 
 ## נעילת כריסטיאן — משטח + פריפלייט (7.9.2026)
 

@@ -10,7 +10,7 @@ This Worker replaces OpenPost scheduling. Instagram publication itself uses Meta
 - Cron every minute.
 - D1 stores jobs/events.
 - Workers KV stores approved publication media as write-once, hash-bound objects.
-- Secrets: `CONTROL_TOKEN`, `SCHEDULE_HMAC_KEY`, `META_ACCESS_TOKEN`, `IG_USER_ID`.
+- Secrets: `CONTROL_TOKEN`, optional read-only `SNAPSHOT_TOKEN`, `SCHEDULE_HMAC_KEY`, `META_ACCESS_TOKEN`, `IG_USER_ID`.
 - No token or private media is committed.
 
 ## Job states
@@ -32,9 +32,9 @@ A D1 lease prevents two cron invocations from taking the same job. Every immutab
 ## Control API
 
 - `GET /healthz` public.
-- `GET /v1/meta-health` authenticated Graph read-back.
-- `GET /v1/jobs` and `GET /v1/jobs/{id}` require `CONTROL_TOKEN`.
-- `POST /v1/jobs` schedules exact content.
+- Read endpoints `GET /v1/meta-health`, `/v1/runtime`, `/v1/jobs`, `/v1/jobs/{id}` accept `CONTROL_TOKEN` or the separate read-only `SNAPSHOT_TOKEN` when configured.
+- Write endpoints never accept `SNAPSHOT_TOKEN`.
+- `POST /v1/jobs` schedules exact content with `CONTROL_TOKEN`.
 - `POST /v1/jobs/{id}/cancel` cancels only `scheduled`/`retry` jobs.
 - `POST /v1/run` manually processes due jobs.
 
@@ -48,12 +48,14 @@ The first fully scheduled write through this route remains production evidence t
 
 The OpenPost schedule for `VF-OCTOPUS-20260927-CAROUSEL` was moved to this publisher for 2026-09-27 12:00 Asia/Jerusalem. OpenPost was cleared to no active schedules. The migration files in `migrations/2026-09-24-openpost/` preserve the exact content/package/media hashes and source evidence.
 
-## Publish fingerprint guard · deploy order (owner step)
+## Publish fingerprint guard · LIVE
 
-The 72-hour fingerprint guard (same definition as `packages/vfigos/approval/publish_fingerprint.py`) lives in the source only; it is **not live until the Worker is redeployed**. The existing D1 database does not have the `publish_fingerprints` table yet. Apply the idempotent migration first, then deploy:
+The 72-hour fingerprint guard (same definition as `packages/vfigos/approval/publish_fingerprint.py`) is **live in production** as of 2026-09-27. D1 contains `publish_fingerprints`; the Worker checks the fingerprint before any Meta write and records both `published_verified` and `reconcile_required` outcomes.
+
+Deployment order remains fail-closed for future environments:
 
 1. `npx wrangler d1 execute velvetos-instagram-publisher --remote --file=migrations/d1/0001_publish_fingerprints.sql`
-2. `npx wrangler d1 execute velvetos-instagram-publisher --remote --command "SELECT name FROM sqlite_master WHERE name='publish_fingerprints'"` → one row
-3. `npx wrangler deploy`
+2. verify the table exists;
+3. deploy the Worker.
 
-Deploying without step 1 fails closed: the guard query errors before any Meta write and each due job goes retry → dead_letter. Nothing is published twice, but nothing is published either.
+The production deploy that activated the guard is Worker version `c302b0a1-4d03-4db6-9ff9-056ee69166d7`.

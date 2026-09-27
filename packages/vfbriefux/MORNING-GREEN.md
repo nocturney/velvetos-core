@@ -33,7 +33,7 @@
 
 - נכסי אווירה קבועים מגיעים כ־CID מתוך `assets/morning-green/`: `morning-top.jpg`, `morning-story.jpg`, `morning-radar.jpg`, `morning-footer.jpg`.
 - thumbnail של פוסט עתידי נלקח רק מה־media URL הציבורי של אותו job ב־Cloudflare Publisher או מ־CID חומר מאומת.
-- מסלול production: `packages/vfigos/cloudflare_publisher_snapshot.py --output ...` קורא read-only את `/v1/jobs` + job detail באמצעות `VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN`; אין קריאת OpenPost.
+- מסלול production: `packages/vfigos/cloudflare_publisher_snapshot.py --output ...` קורא read-only את `/v1/runtime`, `/v1/meta-health`, `/v1/jobs` + job detail באמצעות `VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN`; snapshot נכשל אם heartbeat ה־Cron ישן מ־180 שניות או Meta health אינו PASS. אין קריאת OpenPost.
 - HTTPS ציבורי אמיתי עדיין מותר, אבל production renderer דוחה HTTP, נתיב מקומי או reference שאינו `cid:`/HTTPS.
 - local preview מותר רק עם `--allow-local-images`.
 
@@ -87,7 +87,7 @@ Self-check: `python packages/vfbriefux/render_morning_green.py --check`
 שערי production של Morning Green:
 1. renderer check;
 2. sensor/check-all;
-3. Cloudflare Publisher read עובד ומחזיר schedule אמיתי או empty אמת;
+3. Cloudflare Publisher read עובד, Cron heartbeat טרי, Meta health תקין, ומתקבל schedule אמיתי או empty אמת;
 4. email E2E נשלח לבעלים עם CID + thumbnails;
 5. Gmail readback מאמת את ההודעה;
 6. Apps Script bridge health תקין וה־one-shot חוזר ל־disabled.

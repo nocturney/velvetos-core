@@ -1,28 +1,33 @@
-# שיבוץ אוטונומי — לוח Google בלי לשאול משבצת
+# Instagram scheduling mirror — Google Calendar
 
-מושב: **תפעול / צמיחה**. לא פק חדש.  
-רשת הזמנים: `CALENDAR.md` (א׳ 16:00 · ג׳ 16:00 · ה׳ 12:00 · סטוריז 20:30 · אין פיד ו׳–ש׳).
+Cloudflare Publisher הוא מקור האמת היחיד לתזמון Instagram. Google Calendar הוא **mirror תפעולי לקריאה**, לא queue ולא מנגנון פרסום.
 
-**נעול:** לא שואלים את כריסטיאן «מתי לפרסם?» / «איזו משבצת?».  
-המשבצות קבועות. כל פוסט מתוכנן (שורת לדג׳ר + תאריך) **חייב** אירוע ב־Google Calendar של `nocturney@gmail.com`.
+## יומן קנוני
 
-## מה תפעול עושה (בלי רשות למשבצת)
+- בעלים: `nocturney@gmail.com`.
+- יומן משני ייעודי: **`אינסטגרם`**.
+- timezone: `Asia/Jerusalem`.
+- כל job פעיל ב־Publisher חייב להופיע ביומן הזה.
+- עריכה ידנית, מחיקה או הזזה ב־Google Calendar **אינן משנות** את ה־Publisher ולעולם אינן נחשבות approval.
 
-1. קורא `CALENDAR.md` + `LEDGER.md`.
-2. לכל מועמד עם תאריך — `Google-calendar.create_event` (או `update_event` אם כבר יש מזהה).
-3. כותרת: `VF-G00x · פורמט · מועמד` · אזור: `Asia/Jerusalem`.
-4. תיאור: כיתוב `vfcopy` · שער עריכה `EDIT-GATE.md` · CTA הודעת Instagram · בלי ₪ · בלי וואטסאפ בכיתוב.
-5. רושם את מזהה האירוע ב־`vfigos/HANDOFF-STANDING-he.md`.
-6. שיבוץ הרשת עצמה נשאר ב־**instagram.com**. הלוח = תזכורת לעין + אוטונומיית תפעול.
+## סנכרון
 
-## מה לא
+כיוון יחיד: `Cloudflare Publisher D1 -> Google Calendar`.
 
-- לא שואלים משבצת / שעה
-- לא מזיזים `#משובץ` בלי ראש צוות
-- לא יוצרים אירוע עם מחיר ₪
-- לא מחליפים את שיבוץ instagram.com בלוח
-- Calendar מחוץ לרשת IG (איסוף לקוח, פגישה) — עדיין רק אם נתבקש
+- `scheduled` / `retry` / `publishing` / `reconcile_required` / `published_verified` / `dead_letter`: upsert של אותו event לפי `job_id`.
+- `cancelled`: מחיקת event mirror.
+- reschedule אינו PATCH ל־job: מבטלים את ה־job הישן ויוצרים job חדש עם authorization חדש; ה־mirror עוקב בהתאם.
+- event start = `scheduled_at`; end = +30 דקות.
+- האירוע שקוף (`free`) וללא reminders.
+- כותרת: `Instagram · <content_id> · <format> · <status>`.
+- תיאור כולל `job_id`, status, permalink אם קיים, והבהרה שמקור האמת הוא Publisher.
 
-## Failover
+## אמינות
 
-Calendar MCP down → שורה ב־`HANDOFF-STANDING-he.md` «חסר לוח» + ממשיכים את המסירה. לא ממציאים שעה אחרת.
+כשל Calendar **אינו חוסם פרסום שכבר מתוזמן**. הוא מסומן כ־mirror drift ומדווח ב־Morning Green עד תיקון. אין לשנות תזמון כדי "להתאים" ליומן.
+
+Morning Green קורא את Publisher ישירות; הוא אינו מסתמך על Calendar כדי להחליט אם פוסט מתוזמן.
+
+## רשת התוכן
+
+`CALENDAR.md` נשאר מדיניות המשבצות/קצב. ברגע שנוצר job בפועל, `scheduled_at` ב־Publisher הוא העובדה הקנונית. אין OpenPost/instagram.com queue חדש.
