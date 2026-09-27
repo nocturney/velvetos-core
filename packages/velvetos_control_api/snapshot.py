@@ -16,6 +16,7 @@ def build_snapshot(*, root=None) -> dict[str, Any]:
 
     modules: list[Any] = []
     capabilities: list[Any] = []
+    integrations: list[Any] = []
     health: list[Any] = []
     attention: list[Any] = []
     activity: list[Any] = []
@@ -39,6 +40,8 @@ def build_snapshot(*, root=None) -> dict[str, Any]:
             system_meta = slice_["system"]
         if "capabilities" in slice_:
             capabilities = slice_["capabilities"] or []
+        if "integrations" in slice_:
+            integrations = slice_["integrations"] or []
         if "attention" in slice_:
             att = slice_["attention"]
             if isinstance(att, dict) and att.get("state") == "ready" and att.get("items") is not None:
@@ -111,6 +114,7 @@ def build_snapshot(*, root=None) -> dict[str, Any]:
         },
         "modules": modules,
         "capabilities": capabilities,
+        "integrations": integrations,
         "health": health,
         "attention": attention if flags.get("attentionCollection", {}).get("state") == "ready" else [],
         "activity": activity,
