@@ -35,7 +35,7 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Repository scan found existing watch/lock references for Ponytail, Impeccable, diagram-design and Herdr; no second runtime will be introduced.
 - Project Request Gate passed for `system_engineering`; routed packs are velvetos/vfharness/vfmem.
 - Promptfoo 0.123.1 installed repo-locally after FREE_LOCAL cost preflight; no model/API credentials configured.
-- Behavioral regression suite covers 10 required authority classes in 17 cases; local Promptfoo run passed 17/17 with cost=0, tokens=0 and a failing negative control.
+- Behavioral regression suite covers 10 required authority classes in 17 cases; local Promptfoo run passed 17/17 with cost=0, tokens=0 and a failing negative control under `policy_id: cost.recurring.new`.
 - OWASP Secure Agent Playbook mapped to 9 actual VelvetOS surfaces; 7 PASS and 2 PARTIAL (browser isolation and local eval-runner sandbox boundary).
 - Phase 1 sensors: `check-behavioral-evals.py` PASS; `check-agent-security-conformance.py` PASS.
 - OpenTelemetry SDK 1.45.0 + OpenInference instrumentation 0.1.66 / semantic conventions 0.1.39 installed locally after FREE_LOCAL cost preflights; no collector/cloud backend.

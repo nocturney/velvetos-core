@@ -26,7 +26,7 @@ Blender contract: `packages/vfprod/BLENDER-MCP.md`.
 - Text-to-CAD / STEP / DfAM / Orca bridge: `packages/vfprod/TEXT-TO-CAD.md`.
 - Hardened local Blender controller: `blender-ai-mcp` through `scripts/vf_3d.py`.
 - Headless geometry/print QA: `design-os-3d-blender`.
-- 3D AI Studio only as separately authorized optional capability, never the zero-cost default.
+- 3D AI Studio only as separately authorized optional capability, never the zero-cost default under `policy_id: cost.recurring.new`.
 
 ## Laws
 

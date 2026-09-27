@@ -45,4 +45,4 @@ Run:
 
 `python scripts/check-agent-security-conformance.py`
 
-The Promptfoo run must report 17/17 PASS, a deliberately wrong assertion must fail, reported model cost must remain 0 and token usage must remain 0.
+The Promptfoo run must report 17/17 PASS, a deliberately wrong assertion must fail, and under `policy_id: cost.recurring.new` reported model cost must remain 0 and token usage must remain 0.
