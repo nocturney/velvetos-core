@@ -6,7 +6,7 @@ This is not a new pack, runtime, printer controller or source of truth.
 
 ## Decision
 
-VelvetOS does not expose one generic "Blender agent". The canonical entrypoint is:
+The canonical entrypoint is:
 
 ```text
 request
@@ -14,35 +14,59 @@ request
   -> TEXT_TO_CAD | BLENDER_NATIVE | HYBRID_CAD_THEN_BLENDER
   -> geometry/print QA
   -> STL/3MF + master source
-  -> existing OrcaSlicer dry-run / human floor handoff
+  -> existing slicer dry-run / human floor handoff
 ```
 
 Functional parametric work stays on `TEXT-TO-CAD.md`. Blender is selected for organic,
 sculptural, reference-driven and existing-mesh work. Mixed jobs keep a STEP functional
 master before Blender refinement instead of converting Blender into a CAD authority.
 
+## Version policy — capability, not allowlist
+
+VelvetOS is **version-agnostic** for this stack. It uses the installed version that is
+actually present on the host and accepts it by capability checks, not by a hard-coded
+Blender release, MCP release, source commit or slicer release.
+
+- `BLENDER_BIN` may explicitly select Blender; otherwise `vf_3d.py` discovers installed
+  Blender executables and selects the highest observed installed version.
+- The selected Blender must expose the `blender_ai_mcp` addon in that same Blender
+  installation, with the addon enabled and its installed RPC file passing the loopback
+  hardening contract.
+- `blender-ai-mcp` and `design-os-3d-blender` report their installed version from their
+  local package metadata. A receipt is valid only when its recorded version matches the
+  version currently installed. There is no permitted-version list.
+- After a component upgrade, rerun acceptance/benchmark evidence before making a release
+  acceptance claim. Runtime discovery may proceed when live capability checks pass; stale
+  historical evidence is not a version ban.
+- Exact versions, source revisions, hashes and paths in receipts are provenance snapshots
+  of what was tested, never runtime pins.
+
+The same rule applies to OrcaSlicer in `vf_cad.py`: the matrix executable/version fields
+are hints and evidence. Runtime discovery checks `ORCASLICER_BIN`, PATH, VelvetPrintLab
+tool directories and common local install locations, then uses the best installed candidate.
+
 ## Primary Blender controller
 
-Primary interactive controller: [PatrykIti/blender-ai-mcp](https://github.com/PatrykIti/blender-ai-mcp),
-pinned by the local install receipt to commit
-`43253155440f78ce208f7c4264bb8be6fb784ec7` (upstream v3.3.0 line).
+Primary interactive controller: `blender-ai-mcp`.
 
 VelvetOS uses its curated `llm-guided` / macro / measure / assert surface. Raw Python is
-not the normal public contract. The local add-on is **patched before use** from upstream
-`HOST = "0.0.0.0"` to `127.0.0.1` and uses the reserved local port `18765`; `vf_3d.py doctor`
-fails unless this hardening is visible. An open TCP port is not evidence by itself: when Blender
-is live, the doctor performs the framed Blender RPC `ping` protocol and reports `PASS`, `OFFLINE`
-or `FAIL` rather than mistaking another local service for Blender.
-External OpenRouter/Gemini/provider vision is disabled. The component is classified
-`PAID_OPTIONAL` only because those optional upstream paths exist; VelvetOS locks the
-selected mode to zero incremental cost and supplies no paid-provider credentials.
+not the normal public contract. The local addon must be hardened to loopback
+`127.0.0.1`; its RPC port is resolved from the installed hardened addon rather than
+assumed from a release number or fixed runtime constant.
 
-The canonical MCP adapter is `llm-guided` over `stdio`, with the prompt bridge disabled,
-`HF_HUB_OFFLINE=1`, `TRANSFORMERS_OFFLINE=1` and `HF_DATASETS_OFFLINE=1`.
-This keeps the normal bootstrap surface at nine tools and prevents the upstream LaBSE
-router from downloading a model at runtime. If LaBSE is absent locally, the upstream
-router falls back to local keyword/TF-IDF-style resolution. Acceptance on this host proved
-both the nine-tool bootstrap and a goal-first `picnic_table_workflow` match while offline.
+An open TCP port is not evidence by itself. When Blender is live, `vf_3d.py doctor`
+performs the framed Blender RPC `ping` protocol and distinguishes a real Blender endpoint
+from another local service.
+
+External OpenRouter/Gemini/provider vision is disabled. The component remains
+`PAID_OPTIONAL` only because those optional upstream paths exist; VelvetOS supplies no
+paid-provider credentials and does not auto-escalate to them.
+
+The canonical MCP adapter uses `llm-guided` over `stdio`, disables the prompt bridge,
+sets `HF_HUB_OFFLINE=1`, `TRANSFORMERS_OFFLINE=1` and `HF_DATASETS_OFFLINE=1`, and
+keeps vision and telemetry off. If the optional LaBSE model is not cached locally, routing
+falls back to local keyword/resolver paths rather than downloading a model at runtime.
+The accepted bootstrap surface on this host contains nine tools.
 
 Local root:
 
@@ -50,19 +74,20 @@ Local root:
 %VELVET_PRINTLAB_ROOT%\tools\blender-ai-mcp
 ```
 
-The MCP adapter is optional. ChatGPT can use the same stack immediately through the
-authorized host connection and `scripts/vf_3d.py`; Cursor/other MCP clients may consume
+The MCP adapter is optional. ChatGPT can use the same stack through the authorized host
+connection and `scripts/vf_3d.py`; other MCP clients may consume
 `python scripts/vf_3d.py mcp-config`. MCP is an adapter, not the only control path.
 
 ## Geometry / print evidence
 
-[design-os-3d-blender](https://github.com/jangtrinh/design-os-3d-blender) is the local
-headless QA layer, pinned to commit
-`61390fd535d812a1763ec0d2b3fd9304591fa3e0`.
+`design-os-3d-blender` is the local headless QA layer. Upstream releases may describe a
+particular Blender target, but VelvetOS does not convert that description into a version
+lock. The installed Blender is accepted only after the real headless and production-gate
+capability path succeeds on this host.
 
-It contributes Blender 5.2 knowledge, `AGENT_OK / AGENT_FAIL` execution contracts,
-part-spec validation and the production geometry gate. A gate PASS is digital geometry
-evidence only; it is not proof of load, fit, material behavior or a successful physical print.
+It contributes `AGENT_OK / AGENT_FAIL` execution contracts, part-spec validation and the
+production geometry gate. A gate PASS is digital geometry evidence only; it is not proof
+of load, fit, material behavior or a successful physical print.
 
 Local root:
 
@@ -70,22 +95,18 @@ Local root:
 %VELVET_PRINTLAB_ROOT%\tools\design-os-3d-blender
 ```
 
-Upstream host tests document macOS/Linux; Windows support is therefore never assumed.
-Promotion on this host requires the real `vf_3d.py benchmark` against the installed Blender.
 ## Workflow knowledge, not another runtime
 
-[RobLe3/cc-blender-skill](https://github.com/RobLe3/cc-blender-skill) is used as a
-reference library for source-locked reconstruction, multiview refinement, fit repair,
-UV/texture and quality-loop patterns. VelvetOS does **not** install its Claude Code
-orchestrator and does not depend on Claude for this route.
+`cc-blender-skill` is a reference library for source-locked reconstruction, multiview
+refinement, fit repair, UV/texture and quality-loop patterns. VelvetOS does not depend on
+its Claude runtime.
 
 ## Legacy fallback
 
-[ahujasid/mcp-for-blender](https://github.com/ahujasid/mcp-for-blender) is legacy/fallback
-only. If a bounded task genuinely requires it, keep the socket on localhost, set
-`BLENDER_MCP_SAFE_MODE=1`, disable telemetry where supported, and do not enable Premium,
-Hyper3D, Hunyuan3D or other paid/external generation. Its unauthenticated socket and broad
-Python surface are why it is not the default VelvetOS controller.
+`mcp-for-blender` remains legacy/fallback only. If a bounded task genuinely requires it,
+keep the socket on localhost, enable its safe mode where supported, disable telemetry where
+supported, and do not enable Premium or paid/external generation. Its broad Python surface
+is why it is not the default controller.
 
 ## Commands
 
@@ -99,8 +120,7 @@ python scripts/vf_3d.py mcp-config
 ```
 
 `run-pass` only accepts scripts under `VELVET_3D_JOB_ROOT` and applies a local static
-safety gate before Blender. Final manufacturing checks still flow through `vfprod`,
-`vlicense`, the printer matrix and the existing slicer route.
+safety gate before Blender.
 
 ## Hard boundaries
 
@@ -109,7 +129,8 @@ safety gate before Blender. Final manufacturing checks still flow through `vfpro
 - no external vision/provider escalation from a local failure;
 - no synthetic claim that a digital gate proves a physical print;
 - no second printer matrix, second production SoT or second office runtime;
-- no Blender-first route for work whose engineering master belongs in STEP/B-rep.
+- no Blender-first route for work whose engineering master belongs in STEP/B-rep;
+- no runtime allowlist tied to a specific tool version or upstream commit.
 
 Verification: `python scripts/check-vf-3d-router.py`, then `python scripts/vf_3d.py doctor`
 and a real `python scripts/vf_3d.py benchmark` on the target host.

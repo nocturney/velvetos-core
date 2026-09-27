@@ -12,6 +12,7 @@
 דשבורד חווה עתידי (Watchtower): `WATCHTOWER.md` — Edge על LAN שדרות, לא daemon בליבה.  
 CAD/DfAM/slicing מקומי: `TEXT-TO-CAD.md` · `python scripts/vf_cad.py doctor`.
 3D routing מקומי: `BLENDER-MCP.md` · `python scripts/vf_3d.py route --request "..."` · `python scripts/vf_3d.py doctor`.
+גרסאות כלי 3D/slicer אינן allowlist: משתמשים במה שמותקן בפועל, מאמתים capability/acceptance, ושומרים גרסה/commit רק כ־provenance ב־receipt.
 3D AI Studio נשאר יכולת אופציונלית בלבד: `3DAISTUDIO.md` · `CONNECT-3DAI.md`; אין להסלים אליו כאשר המסלול המקומי מספיק, ואין שימוש בתשלום בלי סמכות עלות מפורשת.
 אחרי אישור רצפה: תור על הצינור `הדפסה`.
 רישיון קובץ: `#vlicense`.

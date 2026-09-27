@@ -19,6 +19,8 @@ python scripts/vf_3d.py route --request "<owner request>"
 
 אין לבחור Blender רק כי הוא יודע ליצור 3D; master הנדסי שנדרש להיות פרמטרי נשאר CAD.
 
+גרסאות runtime אינן נעולות. `vf_3d.py doctor` בוחר את Blender המותקן בפועל ומאמת את ה־addon באותה התקנה; `vf_cad.py` מגלה OrcaSlicer מקומית. גרסה/commit מדויקים הם provenance של בדיקה, לא רשימת גרסאות מותרות. אחרי upgrade דורשים evidence חדש התואם לגרסה המותקנת במקום לדחות אותה לפי מספר גרסה.
+
 ## Analyze
 
 קלט: קובץ / Drive / תמונות / תיאור.

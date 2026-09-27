@@ -35,14 +35,31 @@ Treat that result as the engine-selection contract.
 ## Execute
 
 Before live Blender execution run `python scripts/vf_3d.py doctor`.
+Follow the Runtime version policy below.
 For local Blender scripts, materialize the script under `VELVET_3D_JOB_ROOT` and execute through
 `python scripts/vf_3d.py run-pass --script <path>`; do not bypass the script safety gate.
 
 Use `blender-ai-mcp` as the normal bounded interactive Blender tool surface when an MCP client is available.
 Launch it through `python scripts/vf_3d.py mcp-server`; that adapter locks `llm-guided`/stdio,
-RPC loopback `127.0.0.1:18765`, Hugging Face offline mode, vision off and telemetry off.
+RPC loopback, Hugging Face offline mode, vision off and telemetry off. Resolve the RPC port
+from the installed hardened addon instead of assuming a release-specific value.
 Prefer macro/workflow tools plus deterministic measure/assert tools over raw Python.
 Use `design-os-3d-blender` for headless passes and production geometry gates.
+
+## Runtime version policy
+
+Use the tools actually installed on the host. Do not hard-code or allowlist a Blender,
+blender-ai-mcp, design-os, Text-to-CAD or slicer version/commit. Treat exact versions,
+source revisions, hashes and paths as receipt provenance only.
+
+Run `python scripts/vf_3d.py doctor` to discover the selected installed Blender and verify
+that the addon exists and is enabled in that same installation. A component receipt is
+current only when its recorded version matches the locally installed version. After an
+upgrade, refresh acceptance evidence before a release/acceptance claim. Runtime discovery
+may proceed when live capability checks pass; stale historical evidence is not a version ban.
+
+OrcaSlicer selection is dynamic through `vf_cad.py`; `ORCASLICER_BIN` is an explicit
+override and matrix executable/version fields are hints, not runtime pins.
 
 For a printable Blender result, run the applicable `vf_3d.py gate`, then the existing DfAM/slicer checks.
 A digital gate is not a physical-print proof.

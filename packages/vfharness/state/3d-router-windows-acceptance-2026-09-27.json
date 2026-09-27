@@ -1,9 +1,21 @@
 {
-  "schema": 1,
+  "schema": 2,
   "id": "3d-router-windows-acceptance-2026-09-27",
   "status": "ACCEPTED_LOCAL_RUNTIME",
   "accepted_at": "2026-09-27",
   "scope": "VelvetOS routed local 3D stack on Chris Windows host; no physical printer action",
+  "version_policy": {
+    "tool_version_allowlist": false,
+    "selection": "discover installed runtime and validate capabilities",
+    "explicit_overrides": [
+      "BLENDER_BIN",
+      "ORCASLICER_BIN"
+    ],
+    "exact_versions_are": "observed acceptance snapshots only",
+    "source_revisions_are": "provenance only",
+    "stale_evidence_behavior": "blocks release/acceptance claim, not discovery of a newly installed version",
+    "upgrade_rule": "rerun doctor + applicable benchmark/gates after a tool upgrade"
+  },
   "project_preflight": {
     "system_engineering": "PASS",
     "production": "PASS"
@@ -17,20 +29,39 @@
       "BLENDER_NATIVE",
       "HYBRID_CAD_THEN_BLENDER"
     ],
-    "regression": "PASS"
+    "regression": "PASS",
+    "dynamic_version_guard": "PASS"
   },
   "runtime": {
-    "blender": "5.2.2 LTS",
+    "blender": {
+      "status": "PASS",
+      "observed_version": "5.2.2 LTS",
+      "observed_path": "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+      "role": "current installed selection, not a runtime pin",
+      "discovery": "PASS",
+      "selected_addon_same_install": "PASS"
+    },
     "text_to_cad": {
       "status": "PASS",
-      "upstream_commit": "4eaf7459a95c0547b089ab53aa579c7597fab1d5"
+      "source_revision": "4eaf7459a95c0547b089ab53aa579c7597fab1d5",
+      "source_revision_role": "provenance_only"
+    },
+    "orcaslicer": {
+      "status": "PASS",
+      "observed_version": "2.4.2",
+      "observed_path": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\OrcaSlicer-2.4.2\\orca-slicer.exe",
+      "role": "current installed discovery result, not a runtime pin",
+      "selection_policy": "auto_discover_installed"
     },
     "blender_ai_mcp": {
       "status": "PASS",
-      "version": "3.3.0",
-      "pinned_commit": "43253155440f78ce208f7c4264bb8be6fb784ec7",
+      "observed_version": "3.3.0",
+      "version_role": "current installed acceptance snapshot, not an allowlist",
+      "source_revision": "43253155440f78ce208f7c4264bb8be6fb784ec7",
+      "source_revision_role": "provenance_only",
       "host": "127.0.0.1",
-      "port": 18765,
+      "observed_port": 18765,
+      "port_role": "resolved from installed hardened addon",
       "hardening": "PASS",
       "mcp_surface": "llm-guided",
       "mcp_transport": "stdio",
@@ -38,22 +69,27 @@
       "vision_enabled": false,
       "live_protocol_acceptance": "PASS",
       "mcp_stdio_acceptance": "PASS",
-      "goal_first_offline_acceptance": "PASS",
       "velvet_adapter_acceptance": "PASS",
-      "velvet_adapter_evidence": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\mcp-velvet-adapter-acceptance.json",
-      "evidence": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\rpc-acceptance.json",
-      "mcp_stdio_evidence": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\mcp-stdio-acceptance.json",
-      "goal_first_offline_evidence": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\mcp-goal-offline-acceptance.json",
-      "normal_idle_state": "OFFLINE when Blender is closed"
+      "velvet_adapter_tool_count": 9,
+      "normal_idle_state": "OFFLINE when Blender is closed",
+      "receipt_version_current": true,
+      "blender_evidence_current": true,
+      "acceptance_current": true
     },
     "design_os_3d_blender": {
       "status": "PASS",
-      "version": "0.2.0",
-      "pinned_commit": "61390fd535d812a1763ec0d2b3fd9304591fa3e0",
+      "observed_version": "0.2.0",
+      "version_role": "current installed acceptance snapshot, not an allowlist",
+      "source_revision": "61390fd535d812a1763ec0d2b3fd9304591fa3e0",
+      "source_revision_role": "provenance_only",
       "windows_benchmark": "PASS",
       "production_geometry_gate": "PASS",
-      "declared_part_coverage_audit": "PASS"
-    }
+      "declared_part_coverage_audit": "PASS",
+      "receipt_version_current": true,
+      "blender_evidence_current": true,
+      "acceptance_current": true
+    },
+    "release_evidence_current": true
   },
   "acceptance_evidence": {
     "headless_smoke": {
@@ -71,7 +107,7 @@
       "status": "PASS",
       "checker_version": "1.0.2",
       "failing_checks": 0,
-      "scene_sha256": "7c4eb605aa96eb89c54defc079d92254d5c13115915435d30a299f57bd8ef3da",
+      "scene_sha256": "c2fe42cc7ee9a8b49a7be5ea672ee9b739ed72015be1949e3c82ae6fdd2118e9",
       "spec_sha256": "c573021934865717b8eb49f19ece8bf348378ef6187fd8c5263513fc4a9f7724",
       "report": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\gate-report.json"
     },
@@ -82,47 +118,22 @@
     },
     "rpc_roundtrip": {
       "status": "PASS",
-      "calls": [
-        "ping",
-        "scene.list_objects",
-        "modeling.create_primitive",
-        "scene.measure_dimensions"
-      ],
+      "dynamic_selected_blender": true,
       "blender_version": "5.2.2 LTS",
-      "observed_objects": [
-        "Cube",
-        "Light",
-        "Camera"
-      ],
-      "write_acceptance": {
-        "object": "VF_RPC_WRITE_ACCEPTANCE",
-        "primitive": "cube",
-        "requested_size_blender_units": 0.04,
-        "measured_dimensions": [0.04, 0.04, 0.04],
-        "evidence": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\rpc-write-acceptance.json"
-      },
-      "doctor_live_protocol": "PASS",
+      "protocol": "framed Blender RPC",
+      "host": "127.0.0.1",
+      "observed_port": 18765,
+      "addon_same_selected_install": "PASS",
       "test_instance_cleanup": "PASS"
     },
-    "mcp_stdio": {
+    "mcp_adapter": {
       "status": "PASS",
       "surface": "llm-guided",
       "transport": "stdio",
-      "bootstrap_tool_count": 9,
-      "read_path": "scene_scope_graph",
-      "write_path": "search_tools -> call_tool -> scene_clean_scene",
-      "evidence": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\mcp-stdio-acceptance.json"
-    },
-    "mcp_goal_first_offline": {
-      "status": "PASS",
-      "workflow": "picnic_table_workflow",
-      "initial_status": "needs_input",
-      "final_server_status": "ready",
-      "workflow_tool_calls": 85,
-      "generated_object_count": 30,
-      "generated_table_component_count": 28,
-      "hf_offline": true,
-      "evidence": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\mcp-goal-offline-acceptance.json"
+      "tool_count": 9,
+      "interpreter": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\blender-ai-mcp\\.venv\\Scripts\\python.exe",
+      "interpreter_role": "installed component environment, not system-Python pin",
+      "evidence": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\mcp-velvet-adapter-acceptance.json"
     }
   },
   "targeted_sensors": {
@@ -130,27 +141,41 @@
     "check-vf-cad-integration": "PASS",
     "check-no-new-recurring-cost": "PASS",
     "check-vfprod": "PASS",
-    "check-skill-health": "PASS; skills=69 structural_errors=0 active_warnings=0",
-    "living-studio-skill-verify-all": "PASS; 23/23",
-    "living-studio-unit-tests": "PASS; 15/15",
+    "check-skill-health": "PASS; skills=69 structural_errors=0 active_warnings=0; 2 unrelated reference warnings",
     "check-vfharness": "PASS; layers=6 sensors=23",
-    "check-agent-security-conformance": "PASS; surfaces=9 pass=7 partial=2",
     "check-velvetos": "PASS; modules=24",
-    "check-project-request-gate": "PASS"
+    "check-project-request-gate": "PASS",
+    "check-agent-security-conformance": "PASS; exit 0",
+    "check-memory-rationalization": "PASS; Phase 7 receipts current",
+    "check-staleness": "PASS; brief=2026-09-27 running_checkpoints=0"
   },
   "broader_suite": {
-    "status": "BLOCKED_UNRELATED",
-    "detail": "Full check-all could not produce a clean terminal receipt because an existing check-velvet-health -> check-vf-handoff chain remained blocked; Living Studio full selftest also exceeded the remote execution window. 3D-specific route verification, skill verify-all and unit tests passed independently.",
-    "claim": "This does not upgrade unrelated sensors to PASS."
+    "status": "HISTORICAL_FULL_RUN_NOT_RERUN",
+    "last_full_run": {
+      "sensors": 101,
+      "passed": 99,
+      "failed": 2,
+      "failures": [
+        "check-memory-rationalization.py: Phase 7 benchmark/decision receipts not yet produced",
+        "check-staleness.py: morning brief missing at time of full run"
+      ]
+    },
+    "targeted_reruns": {
+      "check-staleness": "PASS after canonical local brief generation for 2026-09-27",
+      "check-memory-rationalization": "PASS after Phase 7 memory rationalization completed with current receipts"
+    },
+    "current_known_unrelated_failure_count": 0,
+    "claim": "No full-suite PASS is claimed; the two failures from the historical 99/101 run have both been individually rerun and cleared."
   },
   "cost_policy": {
     "expected_new_recurring_cost": "0 ILS/month",
     "external_paid_ai": "DISABLED",
-    "preflights": [
-      "packages/vfharness/cost-preflight/blender-ai-mcp-3.3.0-local.json",
-      "packages/vfharness/cost-preflight/design-os-3d-blender-0.2.0-local.json",
-      "packages/vfharness/cost-preflight/cc-blender-skill-1.3.0-reference.json"
-    ]
+    "preflight_families": [
+      "blender-ai-mcp-*",
+      "design-os-3d-blender-*",
+      "cc-blender-skill-*"
+    ],
+    "note": "Versioned preflight filenames are historical evidence; runtime does not select tools by those filenames."
   },
   "safety": {
     "printer_network_control": false,
@@ -161,7 +186,7 @@
     "physical_manufacture_proven": false
   },
   "correction": {
-    "stale_false_positive": "The earlier observed_listener 127.0.0.1:8765 was invalid: that port belonged to a separate python http.server.",
-    "remediation": "Blender AI MCP is reserved to 127.0.0.1:18765 and readiness now uses framed Blender RPC protocol verification, not open-port detection."
+    "stale_false_positive": "Earlier observed_listener 127.0.0.1:8765 was invalid because that port belonged to a separate python http.server.",
+    "remediation": "Readiness uses installed-addon loopback hardening plus framed Blender RPC verification, and the RPC port is resolved from the installed addon."
   }
 }

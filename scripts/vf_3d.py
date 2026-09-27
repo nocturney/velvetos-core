@@ -89,6 +89,13 @@ def component_version(repo: Path) -> str | None:
     return match.group(1).strip() if match else None
 
 
+def version_tuple_from_text(value: str | None) -> tuple[int, ...]:
+    if not value:
+        return ()
+    match = re.search(r"(\d+(?:\.\d+)+)", value)
+    return tuple(int(part) for part in match.group(1).split(".")) if match else ()
+
+
 def _blender_version(path: Path) -> tuple[tuple[int, ...], str]:
     """Return a sortable observed Blender version and its display string."""
     try:
@@ -99,9 +106,7 @@ def _blender_version(path: Path) -> tuple[tuple[int, ...], str]:
         line = (cp.stdout.splitlines() or cp.stderr.splitlines() or [""])[0].strip()
     except Exception:
         return (), ""
-    match = re.search(r"Blender\s+(\d+(?:\.\d+)+)", line)
-    version = tuple(int(part) for part in match.group(1).split(".")) if match else ()
-    return version, line
+    return version_tuple_from_text(line), line
 
 
 def detect_blender() -> Path | None:
@@ -401,6 +406,15 @@ def doctor() -> dict:
     rpc_probe = blender_rpc_probe(port=installed_hardening.get("rpc_port"))
     dos_runtime = (dos_receipt or {}).get("runtime") or {}
     bai_runtime = (bai_receipt or {}).get("runtime") or {}
+    current_blender_version = version_tuple_from_text(bver)
+    dos_accepted_blender = version_tuple_from_text(dos_runtime.get("accepted_blender_version"))
+    bai_accepted_blender = version_tuple_from_text(bai_runtime.get("selected_blender_version"))
+    dos_blender_evidence_current = bool(
+        current_blender_version and dos_accepted_blender == current_blender_version
+    )
+    bai_blender_evidence_current = bool(
+        current_blender_version and bai_accepted_blender == current_blender_version
+    )
     dos_version = component_version(dos)
     bai_version = component_version(bai)
     dos_receipt_current = bool(
@@ -411,14 +425,19 @@ def doctor() -> dict:
     )
 
     design_ready = bool(
+        (design_os_root() / "scripts" / "production-gate.py").is_file()
+        and design_import and design_import.returncode == 0
+    )
+    design_acceptance_current = bool(
         dos_receipt_current
+        and dos_blender_evidence_current
         and dos_runtime.get("windows_benchmark") == "PASS"
         and dos_runtime.get("production_geometry_gate") == "PASS"
         and dos_runtime.get("declared_part_coverage_audit") == "PASS"
-        and design_import and design_import.returncode == 0
     )
-    receipt_rpc_ready = (
+    blender_ai_acceptance_current = bool(
         bai_receipt_current
+        and bai_blender_evidence_current
         and bai_runtime.get("protocol_acceptance") == "PASS"
         and bai_runtime.get("write_acceptance") == "PASS"
     )
@@ -426,7 +445,6 @@ def doctor() -> dict:
     blender_ai_ready = bool(
         hardening["status"] == "PASS"
         and addon_state.get("status") == "PASS"
-        and receipt_rpc_ready
         and rpc_safe
         and blender_ai_import and blender_ai_import.returncode == 0
     )
@@ -439,6 +457,8 @@ def doctor() -> dict:
             "root": str(dos), "venv": str(venv_python(dos)), "ready": design_ready,
             "installed_version": dos_version,
             "receipt_version_current": dos_receipt_current,
+            "blender_evidence_current": dos_blender_evidence_current,
+            "acceptance_current": design_acceptance_current,
             "receipt": dos_receipt,
             "import_tail": (design_import.stderr[-500:] if design_import and design_import.returncode else "OK" if design_import else "MISSING"),
         },
@@ -446,16 +466,25 @@ def doctor() -> dict:
             "root": str(bai), "venv": str(venv_python(bai)), "ready": blender_ai_ready,
             "installed_version": bai_version,
             "receipt_version_current": bai_receipt_current,
+            "blender_evidence_current": bai_blender_evidence_current,
+            "acceptance_current": blender_ai_acceptance_current,
             "hardening": hardening,
             "selected_blender_addon": addon_state,
             "rpc_probe": rpc_probe,
             "receipt": bai_receipt,
             "import_tail": (blender_ai_import.stderr[-500:] if blender_ai_import and blender_ai_import.returncode else "OK" if blender_ai_import else "MISSING"),
         },
+        "acceptance": {
+            "release_evidence_current": bool(
+                design_acceptance_current and blender_ai_acceptance_current
+            ),
+            "stale_evidence_blocks_release_claim_not_runtime_discovery": True,
+        },
         "policy": {
             "external_paid_ai": "DISABLED",
             "printer_network_control": False,
             "start_print": False,
+            "tool_version_allowlist": False,
         },
     }
 def safe_script(path: Path) -> tuple[bool, list[str]]:

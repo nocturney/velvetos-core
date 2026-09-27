@@ -16,6 +16,10 @@ This integration extends the existing `vfprod` + `expert-3d-model` path. It does
 
 The host bridge is `scripts/vf_cad.py`.
 
+## Runtime version policy
+
+VelvetOS does not require a specific Text-to-CAD or OrcaSlicer release. It uses the local clone/environment and discovers the installed OrcaSlicer at runtime; `ORCASLICER_BIN` is an explicit override and `printer_matrix.json` version/executable fields are compatibility hints/snapshots, not an allowlist. Upstream tools may pin their own internal Python dependencies; those are the tool's compatibility contract, not a VelvetOS runtime version lock. After upgrades, rerun `vf_cad.py doctor` and the CAD→DfAM→slice smoke.
+
 ## Source-of-truth rule
 
 `VelvetPrintLab\slicer-router\printer_matrix.json` remains the machine/profile authority. The bridge generates text-to-cad wrapper profiles from that matrix and the existing native machine/process/filament JSON files. Do not maintain a second handwritten printer matrix in Core.

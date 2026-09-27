@@ -29,6 +29,7 @@ Blender contract: `packages/vfprod/BLENDER-MCP.md`.
 ## Laws
 
 - Run the 3D router before selecting a modeling engine.
+- Discover installed 3D/slicer tool versions at runtime; exact versions/commits are evidence, never an allowlist or runtime pin.
 - Keep parametric functional masters in CAD when STEP/B-rep is the correct source of truth.
 - License gate (`#vlicense`) before reprint.
 - No invented ₪, dimensions, material properties or physical-print claims.
