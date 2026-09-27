@@ -1,0 +1,2014 @@
+{
+  "schema_version": 1,
+  "registry_kind": "velvetos_sensor_registry",
+  "suite_runner": "scripts/check-all.py",
+  "sensors": [
+    {
+      "id": "check-agent-surface-security",
+      "path": "scripts/check-agent-surface-security.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "repository.agent_surface.secrets"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-brand-asset-cta-lock",
+      "path": "scripts/check-brand-asset-cta-lock.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-chat-cold-start-preflight",
+      "path": "scripts/check-chat-cold-start-preflight.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-chat-runtime-bundle",
+      "path": "scripts/check-chat-runtime-bundle.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-cloudflare-publish-fingerprint",
+      "path": "scripts/check-cloudflare-publish-fingerprint.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-cognee-integration",
+      "path": "scripts/check-cognee-integration.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-commission-isolation",
+      "path": "scripts/check-commission-isolation.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-control-api",
+      "path": "scripts/check-control-api.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-creative-autopilot",
+      "path": "scripts/check-creative-autopilot.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "instagram.publish"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-creative-master-bridge",
+      "path": "scripts/check-creative-master-bridge.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-creative-system",
+      "path": "scripts/check-creative-system.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-creative-transformation-lock",
+      "path": "scripts/check-creative-transformation-lock.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-delivery-approval",
+      "path": "scripts/check-delivery-approval.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-demand-signals-dormant",
+      "path": "scripts/check-demand-signals-dormant.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-gmail-brief-send",
+      "path": "scripts/check-gmail-brief-send.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "gmail.send"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-grok-boot-hardening",
+      "path": "scripts/check-grok-boot-hardening.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-hq-overlay",
+      "path": "scripts/check-hq-overlay.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-hyperframes-backend",
+      "path": "scripts/check-hyperframes-backend.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-instagram-content-decision",
+      "path": "scripts/check-instagram-content-decision.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-learning-lifecycle",
+      "path": "scripts/check-learning-lifecycle.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-living-docs",
+      "path": "scripts/check-living-docs.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-living-studio",
+      "path": "scripts/check-living-studio.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-machine-writers",
+      "path": "scripts/check-machine-writers.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-morning-green",
+      "path": "scripts/check-morning-green.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-no-new-recurring-cost",
+      "path": "scripts/check-no-new-recurring-cost.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "cost.recurring.new"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-office-control-plane",
+      "path": "scripts/check-office-control-plane.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-office-watchdog",
+      "path": "scripts/check-office-watchdog.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-openpost-status",
+      "path": "scripts/check-openpost-status.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-organic-growth",
+      "path": "scripts/check-organic-growth.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "instagram.publish",
+        "advertising.boost",
+        "customer.whatsapp.send"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-origin-slugs",
+      "path": "scripts/check-origin-slugs.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-policy-architecture",
+      "path": "scripts/check-policy-architecture.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-production-content",
+      "path": "scripts/check-production-content.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-project-bundle",
+      "path": "scripts/check-project-bundle.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-project-request-gate",
+      "path": "scripts/check-project-request-gate.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "project.request.preflight"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-project669-publication",
+      "path": "scripts/check-project669-publication.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "instagram.publish"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-public-cta",
+      "path": "scripts/check-public-cta.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "public.cta",
+        "customer.whatsapp.send"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-publication-evidence",
+      "path": "scripts/check-publication-evidence.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "instagram.publish"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-publication-prep-execution",
+      "path": "scripts/check-publication-prep-execution.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-publication-states",
+      "path": "scripts/check-publication-states.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-publish-bridge",
+      "path": "scripts/check-publish-bridge.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-publish-fingerprint",
+      "path": "scripts/check-publish-fingerprint.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-publish-handoff",
+      "path": "scripts/check-publish-handoff.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-readme-contract",
+      "path": "scripts/check-readme-contract.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-review-convergence",
+      "path": "scripts/check-review-convergence.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-risk-policy",
+      "path": "scripts/check-risk-policy.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "office.owner_escalation",
+        "external.irreversible.delete",
+        "advertising.boost"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-runtime-activation",
+      "path": "scripts/check-runtime-activation.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-runtime-corners",
+      "path": "scripts/check-runtime-corners.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-runtime-doctor",
+      "path": "scripts/check-runtime-doctor.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-sensor-locks",
+      "path": "scripts/check-sensor-locks.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-skill-health",
+      "path": "scripts/check-skill-health.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-skill-pattern-embeds",
+      "path": "scripts/check-skill-pattern-embeds.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-social-intelligence",
+      "path": "scripts/check-social-intelligence.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-soft-tools-pipeline",
+      "path": "scripts/check-soft-tools-pipeline.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "visible_text.finalization"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-source-ingest",
+      "path": "scripts/check-source-ingest.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-speech-layer",
+      "path": "scripts/check-speech-layer.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-staleness",
+      "path": "scripts/check-staleness.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-tool-authority",
+      "path": "scripts/check-tool-authority.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-velvet-health",
+      "path": "scripts/check-velvet-health.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-velvetos",
+      "path": "scripts/check-velvetos.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vf-autonomy",
+      "path": "scripts/check-vf-autonomy.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vf-cad-integration",
+      "path": "scripts/check-vf-cad-integration.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vf-desk",
+      "path": "scripts/check-vf-desk.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "customer.whatsapp.send"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vf-fabrication-router",
+      "path": "scripts/check-vf-fabrication-router.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vf-handoff",
+      "path": "scripts/check-vf-handoff.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vf-offering",
+      "path": "scripts/check-vf-offering.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vf-office",
+      "path": "scripts/check-vf-office.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vf-task-state",
+      "path": "scripts/check-vf-task-state.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfagents",
+      "path": "scripts/check-vfagents.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfcopy",
+      "path": "scripts/check-vfcopy.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfcost",
+      "path": "scripts/check-vfcost.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfdsh",
+      "path": "scripts/check-vfdsh.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfe2b",
+      "path": "scripts/check-vfe2b.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vffcc",
+      "path": "scripts/check-vffcc.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfgraft",
+      "path": "scripts/check-vfgraft.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfgrowth",
+      "path": "scripts/check-vfgrowth.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfharness-execution-discipline",
+      "path": "scripts/check-vfharness-execution-discipline.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfharness",
+      "path": "scripts/check-vfharness.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfmakers",
+      "path": "scripts/check-vfmakers.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfmcp",
+      "path": "scripts/check-vfmcp.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "customer.whatsapp.send"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfmedia",
+      "path": "scripts/check-vfmedia.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfmem",
+      "path": "scripts/check-vfmem.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfmskill",
+      "path": "scripts/check-vfmskill.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfom",
+      "path": "scripts/check-vfom.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfops-loop",
+      "path": "scripts/check-vfops-loop.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfprod",
+      "path": "scripts/check-vfprod.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfresearch",
+      "path": "scripts/check-vfresearch.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-vfsku",
+      "path": "scripts/check-vfsku.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-video-normalization",
+      "path": "scripts/check-video-normalization.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-video-toolchain",
+      "path": "scripts/check-video-toolchain.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-visible-text-gate",
+      "path": "scripts/check-visible-text-gate.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [
+        "visible_text.finalization"
+      ],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-visual-reject-identity",
+      "path": "scripts/check-visual-reject-identity.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-visual-standard-bootstrap",
+      "path": "scripts/check-visual-standard-bootstrap.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-visual-surface-enforcement",
+      "path": "scripts/check-visual-surface-enforcement.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    },
+    {
+      "id": "check-windows-path-contract",
+      "path": "scripts/check-windows-path-contract.py",
+      "owns": [
+        "__UNMAPPED_STAGE0__"
+      ],
+      "triggered_by": [
+        "**"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "broad_legacy_baseline"
+    }
+  ]
+}

@@ -26,6 +26,13 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
 
+      - name: Policy registry integrity and creation freeze
+        if: github.event_name == 'pull_request'
+        run: >-
+          python3 scripts/check-policy-architecture.py
+          --base "${{ github.event.pull_request.base.sha }}"
+          --head "${{ github.event.pull_request.head.sha }}"
+
       # README gate: routine output (research artifacts, checkpoints, briefs, data files)
       # is exempt; code/config/contract changes still require README.md.
       # See scripts/readme_contract.py (ROUTINE_OUTPUT) and scripts/check-readme-contract.py.
