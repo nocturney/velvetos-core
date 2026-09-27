@@ -15,6 +15,17 @@ POLICIES = POLICY_DIR / "policy-registry.json"
 SENSORS = POLICY_DIR / "sensor-registry.json"
 ARTIFACTS = POLICY_DIR / "artifact-retention.json"
 SCHEMAS = POLICY_DIR / "schema"
+REPORTS = POLICY_DIR / "reports"
+EXPECTED_REPORTS = {
+    "authority-graph.json",
+    "sensor-coverage-graph.json",
+    "coverage-report.json",
+    "conflict-report.json",
+    "artifact-inventory.json",
+    "ci-baseline.json",
+    "baseline-snapshot.json",
+    "migration-map.json",
+}
 
 RISK = {"critical", "high", "medium", "low"}
 STATUS = {"active", "conflicted", "deprecated", "temporary_hotfix"}
@@ -183,6 +194,45 @@ def validate_registries() -> tuple[list[str], set[str]]:
         if path.exists():
             schema = load(path)
             require(schema.get("$schema") == "https://json-schema.org/draft/2020-12/schema", f"{name}: draft mismatch", problems)
+
+    report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
+    require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
+    if EXPECTED_REPORTS <= report_names:
+        coverage = load(REPORTS / "coverage-report.json")
+        require(
+            coverage.get("runnable_sensor_count") == len(sensor_rows)
+            and coverage.get("registered_sensor_count") == len(sensor_rows)
+            and coverage.get("omitted_sensors") == [],
+            "coverage report no longer matches sensor registry",
+            problems,
+        )
+        authority = load(REPORTS / "authority-graph.json")
+        require(authority.get("policy_count") == len(rows), "authority graph policy count mismatch", problems)
+        sensor_graph = load(REPORTS / "sensor-coverage-graph.json")
+        require(sensor_graph.get("sensor_count") == len(sensor_rows), "sensor coverage graph count mismatch", problems)
+        conflicts = load(REPORTS / "conflict-report.json")
+        conflict_ids = {x.get("id") for x in conflicts.get("conflicts", [])}
+        require("instagram-publish-split-brain" in conflict_ids, "Stage 0 publish conflict report missing", problems)
+        inventory = load(REPORTS / "artifact-inventory.json")
+        require(inventory.get("stage0_action") == "CLASSIFICATION_ONLY_NO_MOVE_NO_DELETE", "Stage 0 artifact action drifted", problems)
+        ci = load(REPORTS / "ci-baseline.json")
+        require(bool(ci.get("cutoff_utc")) and bool(ci.get("runs")), "CI baseline cutoff/runs missing", problems)
+        require(ci.get("branch_protection", {}).get("state") == "UNPROTECTED", "Stage 0 branch baseline changed in report", problems)
+        migration = load(REPORTS / "migration-map.json")
+        require([x.get("stage") for x in migration.get("stages", [])] == list(range(1, 10)), "migration map stages must be 1..9", problems)
+        generator = ROOT / "scripts" / "generate-policy-reports.py"
+        require(generator.is_file(), "policy report generator missing", problems)
+        if generator.is_file():
+            proc = subprocess.run(
+                [sys.executable, str(generator), "--check"],
+                cwd=ROOT,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                capture_output=True,
+                timeout=60,
+            )
+            require(proc.returncode == 0, "policy reports not reproducible: " + (proc.stderr or proc.stdout).strip()[:500], problems)
 
     return problems, known_policies
 

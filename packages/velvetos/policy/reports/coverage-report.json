@@ -1,0 +1,56 @@
+{
+  "report": "coverage",
+  "source_commit_sha": "9217e172d4f11a01f5db124d7d811c7dcab6b9c5",
+  "runnable_sensor_count": 94,
+  "registered_sensor_count": 94,
+  "omitted_sensors": [],
+  "mapping_state_counts": {
+    "broad_legacy_baseline": 94
+  },
+  "policy_count": 11,
+  "policies_without_sensor_enforcement": [],
+  "policy_sensor_enforcement": {
+    "cost.recurring.new": [
+      "check-no-new-recurring-cost"
+    ],
+    "instagram.publish": [
+      "check-creative-autopilot",
+      "check-organic-growth",
+      "check-project669-publication",
+      "check-publication-evidence"
+    ],
+    "gmail.send": [
+      "check-gmail-brief-send"
+    ],
+    "customer.whatsapp.send": [
+      "check-organic-growth",
+      "check-public-cta",
+      "check-vf-desk",
+      "check-vfmcp"
+    ],
+    "advertising.boost": [
+      "check-organic-growth",
+      "check-risk-policy"
+    ],
+    "external.irreversible.delete": [
+      "check-risk-policy"
+    ],
+    "visible_text.finalization": [
+      "check-soft-tools-pipeline",
+      "check-visible-text-gate"
+    ],
+    "public.cta": [
+      "check-public-cta"
+    ],
+    "project.request.preflight": [
+      "check-project-request-gate"
+    ],
+    "repository.agent_surface.secrets": [
+      "check-agent-surface-security"
+    ],
+    "office.owner_escalation": [
+      "check-risk-policy"
+    ]
+  },
+  "note": "Stage 0 uses conservative broad ownership/trigger mappings and FULL_SUITE fallback. Trigger narrowing is deferred to Stage 2 shadow mode."
+}

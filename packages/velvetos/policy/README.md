@@ -24,3 +24,21 @@ A `temporary_hotfix` registry entry must identify its source authority, migratio
 ## Current Stage 0 finding
 
 `instagram.publish` is deliberately marked `conflicted` because live sources currently expose both standing tool-publish authorization and legacy/manual approval wording. Stage 0 records the conflict without resolving it. Stage 1 owns that semantic migration.
+
+## Stage 0 baseline reports
+
+The `reports/` directory records the pre-change live baseline at commit `52bcb819c1a6d9924f0f2800340169df5f991e08` and the post-0A coverage point at `9217e172d4f11a01f5db124d7d811c7dcab6b9c5`.
+
+- `baseline-snapshot.json` — pre-change sensor/workflow/authority facts.
+- `conflict-report.json` — unresolved semantic/structural conflicts; recording is not resolution.
+- `coverage-report.json` and `sensor-coverage-graph.json` — complete runnable-sensor inventory with conservative full-suite fallback.
+- `authority-graph.json` — policy IDs to authority/enforcement locations.
+- `artifact-inventory.json` — tracked artifact families and sizes; Stage 0 authorizes no move or deletion.
+- `ci-baseline.json` — GitHub Actions workflow IDs, fixed cutoff, run IDs/results/durations and branch-protection/ruleset evidence.
+- `migration-map.json` — stages 1–9 with explicit rollback paths.
+
+The deterministic Git-derived reports can be checked with:
+
+`python3 scripts/generate-policy-reports.py --check`
+
+`ci-baseline.json` is an external GitHub Actions evidence snapshot. It carries its fixed cutoff and run IDs so individual runs can be re-read from GitHub without replacing the historical baseline with newer data.
