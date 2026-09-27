@@ -30,4 +30,6 @@ Morning Green קורא את Publisher ישירות; הוא אינו מסתמך �
 
 ## רשת התוכן
 
-`CALENDAR.md` נשאר מדיניות המשבצות/קצב. ברגע שנוצר job בפועל, `scheduled_at` ב־Publisher הוא העובדה הקנונית. אין OpenPost/instagram.com queue חדש.
+`CALENDAR.md` נשאר מדיניות המשבצות/קצב. אחרי שכל שערי ה־publication וה־approval הנדרשים עברו, בחירת המשבצת מתוך הרשת היא אוטונומית: **לא שואלים** את כריסטיאן איזו משבצת או מתי לפרסם. זה אינו אישור לפרסום ואינו עוקף שום gate; הוא רק מונע שאלת slot שכבר הוכרעה במדיניות.
+
+ברגע שנוצר job בפועל, `scheduled_at` ב־Publisher הוא העובדה הקנונית. אין OpenPost/instagram.com queue חדש.

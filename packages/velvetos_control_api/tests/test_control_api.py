@@ -172,6 +172,11 @@ class IntegrationProjectionTests(unittest.TestCase):
             dockerfile,
         )
 
+    def test_control_center_deploy_keeps_app_token_topology_reachable(self) -> None:
+        deploy = (ROOT / "packages" / "velvetos_control_api" / "deploy.sh").read_text(encoding="utf-8")
+        self.assertIn("--allow-unauthenticated", deploy)
+        self.assertNotIn("--no-allow-unauthenticated", deploy)
+
 
 class OperationalProjectionTests(unittest.TestCase):
     def test_production_projects_known_fleet_without_fake_telemetry(self) -> None:

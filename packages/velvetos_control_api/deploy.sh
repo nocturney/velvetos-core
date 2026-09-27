@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy velvetos-control-api to Cloud Run (IAM-authenticated).
+# Deploy velvetos-control-api to Cloud Run for the private Control Center proxy.
 # NEVER mount Instagram / delivery-approval private credentials.
 # This script is an operator helper — running it is not claimed by CI agents.
 set -euo pipefail
@@ -38,11 +38,11 @@ gcloud run deploy "${SERVICE}" \
   --project "${PROJECT}" \
   --region "${REGION}" \
   --image "${IMAGE}" \
-  --no-allow-unauthenticated \
+  --allow-unauthenticated \
   --service-account "${SA_EMAIL}" \
   --set-secrets "VELVETOS_CONTROL_API_TOKEN=${TOKEN_SECRET}:latest" \
   --cpu 1 \
   --memory 512Mi \
   --max-instances 3
 
-echo "Deploy submitted. Verify GET /health and authenticated GET /v1/snapshot before claiming LIVE."
+echo "Deploy submitted. Verify unauthenticated GET /health=200, unauthenticated GET /v1/snapshot=401, then bearer-authenticated snapshot before claiming LIVE."
