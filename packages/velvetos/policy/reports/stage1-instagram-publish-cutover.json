@@ -1,0 +1,67 @@
+{
+  "report": "stage1-instagram-publish-cutover",
+  "policy_id": "instagram.publish",
+  "policy_version": 1,
+  "merged_main_sha": "de9f190c6616d74cb7864443c4a82791f671a769",
+  "worker": {
+    "name": "velvetos-instagram-publisher",
+    "version_id": "c4e82e25-2949-47ce-9446-4222012ff81e",
+    "deployed_at": "2026-09-27T15:12:00Z",
+    "standing_authorization_runtime_projection": true
+  },
+  "cost_preflight": {
+    "status": "PASS",
+    "classification": "FREE_TIER_LIMITED",
+    "approval_required": false,
+    "evidence": "packages/vfigos/PUBLISHER.json costPolicy: Cloudflare Free; zero ongoing cost; no paid dependency"
+  },
+  "predeploy": {
+    "observed_at": "2026-09-27T15:10:17.750632Z",
+    "scheduled_count": 0,
+    "cron_heartbeat_age_seconds": 30,
+    "meta_username": "velvets_cloud",
+    "job_counts": [
+      {
+        "status": "published_verified",
+        "count": 1
+      }
+    ]
+  },
+  "deployment": {
+    "dry_run": "PASS",
+    "upload_kib": 33.2,
+    "gzip_kib": 8.79,
+    "triggers": [
+      "cron * * * * *"
+    ],
+    "bindings": [
+      "MEDIA",
+      "DB",
+      "GRAPH_VERSION",
+      "ACCOUNT_LABEL",
+      "MAX_ATTEMPTS",
+      "STANDING_AUTHORIZATION"
+    ]
+  },
+  "negative_control": {
+    "request": "new job using legacy owner_schedule_authorization",
+    "expected": "reject before persistence",
+    "observed_http": 400,
+    "observed_error": "policy_authorization_v1_required",
+    "persistent_job_created": false
+  },
+  "postdeploy": {
+    "observed_at": "2026-09-27T15:14:54.072048Z",
+    "scheduled_count": 0,
+    "cron_heartbeat_age_seconds": 7,
+    "meta_username": "velvets_cloud",
+    "job_counts": [
+      {
+        "status": "published_verified",
+        "count": 1
+      }
+    ]
+  },
+  "cutover_result": "PASS",
+  "rollback": "redeploy previous Worker version and revert Stage 1B merge; exact publication receipts and existing D1 state remain preserved"
+}

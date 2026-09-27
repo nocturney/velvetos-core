@@ -90,3 +90,7 @@ The production deploy that activated the guard is Worker version `c302b0a1-4d03-
 ```
 
 For a non-routine decision that requires owner approval, `human_approval` must bind `content_id`, `package_sha256` and the Worker-computed raw UTF-8 caption SHA-256. A mismatched approval is `DENY`, not a fallback to standing authorization.
+
+## Canonical policy gate · LIVE
+
+`policy_id: instagram.publish` is live in production as of 2026-09-27 on Worker version `c4e82e25-2949-47ce-9446-4222012ff81e`. Cutover evidence is stored at `packages/velvetos/policy/reports/stage1-instagram-publish-cutover.json`. The deployment was verified with an empty scheduled queue, healthy cron and Meta read-back, plus a negative control proving a new legacy-form scheduling request is rejected before persistence.
