@@ -3,17 +3,17 @@
   "date": "2026-09-27",
   "program": "zero-cost-agent-stack",
   "branch": "implementation/zero-cost-agent-stack",
-  "acceptedCodeHead": "b9b1d6d139d9674b3779c95ce2338b3b8c63d6cc",
+  "acceptedCodeHead": "bd956faf0eb6ff8839ecb23f57a6d4159ebb3673",
   "status": "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS",
   "decision": "PUSHED_FOR_DRAFT_PR_REVIEW_NO_MERGE",
   "fullCheckAll": {
     "status": "PASS",
     "command": "python scripts/check-all.py",
     "observedExitCode": 0,
-    "sensorCount": 106,
-    "terminalLine": "OK suite passed=106",
+    "sensorCount": 109,
+    "terminalLine": "OK suite passed=109",
     "windowsProcessIsolation": "Each sensor launched with CREATE_NEW_PROCESS_GROUP on Windows to prevent child console-control teardown from terminating the parent suite.",
-    "historicalNote": "Earlier monolithic attempts were interrupted by Windows console process-group leakage; the isolated rerun completed normally."
+    "historicalNote": "Integrated rerun after current-main policy/CAD reconciliation completed normally with 109/109 sensors; Windows child isolation remains enforced through CREATE_NEW_PROCESS_GROUP."
   },
   "targetedBatches": [
     {
@@ -26,7 +26,8 @@
         "hqOverlay": "PASS",
         "readmeContract": "PASS cases=35 exemptions=13",
         "behavioralEvals": "PASS cases=17 required=10 negative_controls=2",
-        "agentSecurity": "9 surfaces: 7 PASS, 2 PARTIAL"
+        "agentSecurity": "9 surfaces: 7 PASS, 2 PARTIAL",
+        "policyArchitecture": "PASS policies=11 sensors=109 artifact_classes=9"
       }
     },
     {
@@ -68,13 +69,13 @@
       "status": "PASS"
     },
     "integratedMainRange": {
-      "range": "52bcb819c1a6d9924f0f2800340169df5f991e08..b9b1d6d139d9674b3779c95ce2338b3b8c63d6cc",
+      "range": "be4259604eb2e955b5e5966c297241bfb307df46..bd956faf0eb6ff8839ecb23f57a6d4159ebb3673",
       "status": "PASS",
-      "note": "Checks the PR integration delta relative to the current-main parent; upstream main contains two intentional Markdown hard-break trailing spaces outside this delta."
+      "note": "Checks the reconciled PR delta against the current main parent after integrating policy, Instagram, vfmedia and CAD changes."
     },
     "liveWorkingTree": {
       "status": "PASS_CLEAN",
-      "evidence": "git status --short empty; git diff --check exit 0 after final acceptance commit"
+      "evidence": "Accepted code head bd956faf had clean working tree before receipt refresh; final cleanliness is rechecked after the acceptance commit."
     }
   },
   "costAndAuthority": {
@@ -119,7 +120,9 @@
     "abcb8799 reliability: avoid nested Python capture in check-all",
     "3a2faccf test: isolate Windows check-all sensor process groups",
     "e60e534a merge: integrate latest main into zero-cost stack",
-    "b9b1d6d1 merge: refresh latest main before PR review"
+    "b9b1d6d1 merge: refresh latest main before PR review",
+    "092f614f fix: close final review cost and docs gaps",
+    "bd956faf merge: reconcile latest main into zero-cost stack"
   ],
   "acceptance": {
     "committedScopeReady": true,
@@ -129,7 +132,7 @@
     "pullRequest": "https://github.com/nocturney/velvetos-core/pull/390",
     "pullRequestState": "DRAFT",
     "mergePerformed": false,
-    "next": "review PR #390 after integration with current main; keep merge owner-controlled while known limitations remain fail-closed"
+    "next": "PR #390 is reconciled with current main and remains DRAFT; keep merge owner-controlled while declared limitations remain fail-closed."
   },
   "repositoryWideStrictDeploymentProof": {
     "status": "PASS",

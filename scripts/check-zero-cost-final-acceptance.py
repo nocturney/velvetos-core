@@ -35,8 +35,12 @@ def main() -> None:
     assert full.get("status") == "PASS"
     assert full.get("command") == "python scripts/check-all.py"
     assert full.get("observedExitCode") == 0
-    assert full.get("sensorCount") == 106
-    assert full.get("terminalLine") == "OK suite passed=106"
+    live_sensor_count = len([
+        path for path in (ROOT / "scripts").glob("check-*.py")
+        if path.name != "check-all.py"
+    ])
+    assert full.get("sensorCount") == live_sensor_count
+    assert full.get("terminalLine") == f"OK suite passed={live_sensor_count}"
     assert "CREATE_NEW_PROCESS_GROUP" in str(full.get("windowsProcessIsolation", ""))
     head = receipt.get("acceptedCodeHead")
     assert isinstance(head, str) and len(head) == 40
@@ -139,7 +143,7 @@ def main() -> None:
     assert acceptance.get("pushWasExplicitlyAuthorized") is True
     assert acceptance.get("pullRequestState") == "DRAFT"
     assert acceptance.get("mergePerformed") is False
-    print("OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors=106 push=YES pr=DRAFT merge=NO")
+    print(f"OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors={live_sensor_count} push=YES pr=DRAFT merge=NO")
 
 
 if __name__ == "__main__":
