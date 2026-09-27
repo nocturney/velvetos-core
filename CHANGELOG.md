@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-27 — **Calendar/Handoff contract alignment:** `vfgrowth/CALENDAR-OPS.md` now states the existing slot policy explicitly: after all required publication/approval gates pass, slot choice from `CALENDAR.md` is autonomous and does not escalate a slot question to Christian. `HANDOFF-he.md` names the `Google Calendar` `אינסטגרם` mirror explicitly. Cloudflare Publisher remains scheduling SoT, the calendar remains read-only mirror, and no approval/publish authority is widened. This fixes the standing `check-vfgrowth`, `check-vfops-loop`, `vfops_loop.py check`, and HQ-overlay contract failures without changing runtime behavior.
+
 - 2026-09-27 — **Fabrication Router + full text-to-cad skill suite:** installs and pins 12 `earthtojake/text-to-cad` skills (`cad`, Viewer, STEP Parts, DfAM/DFM, DXF, engineering drawing, G-code, URDF/SRDF/SDF and SendCutSend preflight), adds a deterministic per-request tool-selection router, binds it into Core/instance/Living Studio production routing, and verifies the Windows host with CAD/Viewer/orientation/DFM/STEP-part/DXF/PDF/robot-description/Orca smokes. Native reasoning/vision and 3D AI Studio remain preferred where they fit better than deterministic CAD. `bambu-labs`, printer upload/start/control, and SendCutSend order submission remain excluded. Cost preflights preserve the zero-new-recurring-cost default.
 
 - 2026-09-26 — **NO_NEW_RECURRING_COST:** adds canonical zero-new-recurring-cost authority, fail-closed cost classifications/preflight, RED billing gates, and no-silent-paid-failover enforcement.
