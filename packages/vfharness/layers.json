@@ -180,6 +180,11 @@
       "type": "computational"
     },
     {
+      "id": "check-reliability-pilots",
+      "script": "scripts/check-reliability-pilots.py",
+      "type": "computational"
+    },
+    {
       "id": "check-vfprod",
       "script": "scripts/check-vfprod.py",
       "type": "computational"

@@ -1,0 +1,20 @@
+{
+  "authority_role": "EXTERNAL_DEPENDENCY_CHANGE_SENSOR_ONLY",
+  "baseline_snapshot": "PASS",
+  "browser_fetcher_used": false,
+  "change_detection": "PASS",
+  "component": "changedetection.io",
+  "dependency_footprint": "HEAVY_OPTIONAL_CLIENTS_INSTALLED_BY_UPSTREAM_DISTRIBUTION",
+  "deployment": "LOCAL_WINDOWS_BATCH_HTML_REQUESTS",
+  "fetch_backend": "html_requests",
+  "hosted_service_used": false,
+  "incremental_recurring_cost_ils": 0,
+  "llm_or_ai_feature_used": false,
+  "localhost_override_scope": "ACCEPTANCE_FIXTURE_ONLY",
+  "paid_api_credentials_supplied": false,
+  "promotion_decision": "PILOT_ONLY_PENDING_COMPLEXITY_REVIEW",
+  "schema": 1,
+  "snapshots_observed": 2,
+  "state": "PILOT",
+  "version": "0.60.7"
+}

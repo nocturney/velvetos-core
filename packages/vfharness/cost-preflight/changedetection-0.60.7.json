@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "changedetection.io@0.60.7",
+  "classification": "FREE_SELF_HOSTED",
+  "license": "Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "selected use is internal self-hosting only; no resale, managed service or third-party hosting",
+  "deployment_model": "Windows-native local Python service using built-in fetcher; no Chrome/proxy add-ons required for pilot",
+  "api_dependencies": [],
+  "billing_risk": "none; paid changedetection.io hosting, Bright Data and Oxylabs are not used",
+  "selected_mode": "internal localhost self-hosted sensor",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk and normal outbound HTTP only",
+  "api_cost_notes": "no paid APIs or proxy services",
+  "subscription_notes": "no SaaS subscription or trial",
+  "hidden_secondary_cost_notes": "commercial support/hosting and paid proxies disabled; internal use only. Upstream 0.60.7 distribution also installs optional Litellm/OpenAI/Boto3/browser clients; selected batch/html_requests path supplies no paid credentials and does not activate AI/cloud/proxy/browser integrations.",
+  "quota_controls": "localhost binding; bounded watch list; no paid proxy configuration",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://pypi.org/project/changedetection.io/0.60.7 release 2026-09-17, Apache-2.0, Python >=3.11",
+    "https://github.com/dgtlmoon/changedetection.io documents Windows/Python self-hosting and Apache-2.0"
+  ],
+  "approval": null
+}

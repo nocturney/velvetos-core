@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phase 0, Phase 1 and Phase 2 implemented and locally verified; Phase 3 in progress.
+Phases 0-2 implemented and locally verified; Phase 3 independent work completed with GlitchTip explicitly blocked; Phase 4 in progress.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -42,8 +42,12 @@ Phase 0, Phase 1 and Phase 2 implemented and locally verified; Phase 3 in progre
 - One real safe local trace passed with 9 spans: request → routing → retrieval → agent → tool → approval → execution → readback → result.
 - Trace receipt is local-only, non-authoritative, allowlisted and contains no prompt/tool payload bodies; `check-observability.py --strict` PASS.
 
+## Phase 3 reliability outcome
+- Healthchecks v4.4: FREE_SELF_HOSTED, Windows/SQLite PILOT. Wrapped real `check-office-watchdog.py`, healthy ping PASS, deliberately missed heartbeat PASS. Sensor only; no scheduler authority or paid notification channel.
+- changedetection.io 0.60.7: FREE_SELF_HOSTED, Windows batch/html_requests PILOT. Local two-snapshot change detection PASS; no browser/AI/paid credentials. Dependency footprint is heavy, so no promotion yet.
+- GlitchTip v6.2.6: FREE_SELF_HOSTED but BLOCKED in this host state because the current local path adds PostgreSQL/container infrastructure while Docker/WSL are absent. Hosted fallback is forbidden. Revisit in the later WSL batch if still justified.
+
 ## Pending
-- Phase 3: local/self-hosted reliability sensors (Healthchecks, GlitchTip, changedetection.io) only after validated cost/license preflights.
 - Phase 4: engineering-quality embeds/tools; removable and non-authoritative.
 - Phase 5+: CLI-Anything, Laya shadow, memory benchmark, Reef lab, additional dev labs, ecosystem radar and final acceptance.
 

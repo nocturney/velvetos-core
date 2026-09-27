@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "healthchecks@v4.4",
+  "classification": "FREE_SELF_HOSTED",
+  "license": "BSD-3-Clause",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for internal self-hosting under BSD-3-Clause",
+  "deployment_model": "localhost-only Windows-native development/pilot instance using SQLite; sensor only, never scheduler authority",
+  "api_dependencies": [],
+  "billing_risk": "none; hosted healthchecks.io and paid notification services are not used",
+  "selected_mode": "self-hosted localhost sensor with notifications disabled for pilot",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk; bounded pilot, not 24/7 until persistence is justified",
+  "api_cost_notes": "local HTTP only; no SMS/phone/hosted API",
+  "subscription_notes": "no hosted account, trial or subscription",
+  "hidden_secondary_cost_notes": "SMTP/SMS/third-party integrations remain disabled; SQLite selected for local pilot",
+  "quota_controls": "localhost binding; no paid notification channels",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/healthchecks/healthchecks v4.4 current stable, BSD-3-Clause",
+    "https://healthchecks.io/docs/self_hosted/ documents self-hosted local setup and SQLite default for development"
+  ],
+  "approval": null
+}

@@ -1,0 +1,20 @@
+{
+  "authority_role": "HEARTBEAT_SENSOR_ONLY",
+  "commit": "49924faadf0f24a846abc3acf3014b396fdc1f29",
+  "component": "healthchecks",
+  "database": "SQLite",
+  "deployment": "LOCAL_WINDOWS_SQLITE",
+  "healthy_ping": "PASS",
+  "hosted_service_used": false,
+  "incremental_recurring_cost_ils": 0,
+  "missed_heartbeat_detection": "PASS",
+  "missed_heartbeat_status": "down",
+  "paid_notifications_enabled": false,
+  "pilot_job": "scripts/check-office-watchdog.py",
+  "pilot_job_execution": "PASS",
+  "production_job_wiring": "NOT_ENABLED_PILOT_ONLY",
+  "scheduler_authority": false,
+  "schema": 1,
+  "state": "PILOT",
+  "version": "v4.4"
+}
