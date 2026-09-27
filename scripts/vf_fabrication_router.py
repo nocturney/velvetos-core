@@ -8,6 +8,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+# The router accepts Hebrew owner requests and emits JSON on Windows hosts where
+# the inherited console encoding may be cp1252. Keep machine-readable output UTF-8.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 ROOT = Path(__file__).resolve().parents[1]
 ROUTER_PATH = ROOT / "packages" / "vfprod" / "FABRICATION-ROUTER.json"
 SKILLS_ROOT = ROOT / ".agents" / "skills"

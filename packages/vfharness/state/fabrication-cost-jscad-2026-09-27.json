@@ -1,0 +1,11 @@
+{
+  "component": "JSCAD local engine",
+  "action": "install_and_probe_local_jscad",
+  "classification": "FREE_LOCAL",
+  "evidence": "JSCAD is MIT open-source with local CLI/Node packages; this deployment uses only local Node execution and no hosted service or billing credential.",
+  "checked_at": "2026-09-27",
+  "incremental_cost_possible": false,
+  "automatic_paid_overage_possible": false,
+  "hard_cap_enforced": true,
+  "paid_features_enabled": false
+}

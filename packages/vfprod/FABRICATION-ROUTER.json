@@ -3,6 +3,8 @@
   "status": "active",
   "upstream": "earthtojake/text-to-cad",
   "upstream_commit": "4eaf7459a95c0547b089ab53aa579c7597fab1d5",
+  "engine_registry": "packages/vfprod/CAD-ENGINE-REGISTRY.json",
+  "engine_stack_cli": "scripts/vf_cad_stack.py",
   "viewer_policy": {
     "host": "127.0.0.1",
     "external_bind": false

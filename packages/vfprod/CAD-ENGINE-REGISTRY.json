@@ -1,0 +1,21 @@
+{
+  "schema": "velvetos.cad-engines.v1",
+  "authority": "packages/vfprod/FABRICATION-ROUTER.md",
+  "printer_actions_allowed": false,
+  "max_repair_iterations": 2,
+  "engines": {
+    "build123d": {"role":"primary","mode":"local_python","artifact_formats":["STEP","STL","3MF","GLB"],"paid_provider_required":false,"printer_control":false},
+    "cadquery": {"role":"secondary","mode":"local_python_venv","artifact_formats":["STEP","STL"],"paid_provider_required":false,"printer_control":false},
+    "jscad": {"role":"secondary","mode":"local_node","artifact_formats":["STL"],"paid_provider_required":false,"printer_control":false},
+    "cad-cae-copilot": {"role":"pilot","mode":"local_mcp_backend","artifact_formats":["STEP","STL","GLB"],"paid_provider_required":false,"printer_control":false},
+    "forgent3d": {"role":"pilot","mode":"local_desktop_workbench","artifact_formats":["LOCAL_PREVIEW"],"paid_provider_required":false,"printer_control":false}
+  },
+  "patterns": {
+    "graph_cad":"IR_INSPIRATION_ONLY",
+    "multi_agent_cad":"BOUNDED_WORKFLOW_PATTERN_ONLY"
+  },
+  "radar": {
+    "awesome-cad":{"runtime":false,"source":"https://github.com/mlightcad/awesome-cad"}
+  },
+  "rejected_runtime":{"cadam":true}
+}
