@@ -31,7 +31,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 </tr>
 <tr>
 <td align="center"><strong>22</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>93</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>94</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>10</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -109,6 +109,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 |‏ **Edge** | ביצוע מקומי/פיזי כשצריך לגעת במכונות או runtime מקומי |
 
 ‏ארכיטקטורה קנונית: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/velvetos/LAYERS.md`](packages/velvetos/LAYERS.md) · [`packages/velvetos/ADR-THREE-LAYERS.md`](packages/velvetos/ADR-THREE-LAYERS.md)
+
+‏Registry ארכיטקטורת מדיניות (Stage 0): [`packages/velvetos/policy/README.md`](packages/velvetos/policy/README.md) — מיפוי סמכויות, סנסורים ו־retention בלבד; ההחלטות נשארות במקורות הסמכות המקושרים.
 
 > ‏**עיקרון:** מקור אמת אחד, הרבה תצוגות ואוטומציות. לא בונים מערכת מקבילה רק כי עלה רעיון חדש.
 
@@ -253,6 +255,8 @@ The active deployment today is **Velvet Factory**, a 3D-printing studio in Sdero
 | **Edge** | Local/physical execution when work must reach machines or a local runtime |
 
 Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/velvetos/LAYERS.md`](packages/velvetos/LAYERS.md) · [`packages/velvetos/ADR-THREE-LAYERS.md`](packages/velvetos/ADR-THREE-LAYERS.md)
+
+Policy architecture registry (Stage 0): [`packages/velvetos/policy/README.md`](packages/velvetos/policy/README.md) — authority, sensor and retention mapping only; decisions remain in the linked authority sources.
 
 > **Principle:** one source of truth, many projections and automations. New ideas extend existing SoTs instead of creating parallel systems.
 

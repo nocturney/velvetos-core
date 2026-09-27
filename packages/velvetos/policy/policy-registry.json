@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "registry_kind": "velvetos_policy_registry",
+  "decision_ownership": "REFERENCES_ONLY_DO_NOT_DUPLICATE_POLICY_DECISIONS",
+  "policies": [
+    {
+      "policy_id": "cost.recurring.new",
+      "title": "No new recurring cost",
+      "status": "active",
+      "risk_class": "critical",
+      "authority_locations": [
+        "constitution/NO_NEW_RECURRING_COST.md"
+      ],
+      "machine_policy_locations": [
+        "packages/vfharness/cost-policy.json"
+      ],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-no-new-recurring-cost"
+        },
+        {
+          "kind": "runtime",
+          "path": "scripts/vf_cost_preflight.py"
+        }
+      ]
+    },
+    {
+      "policy_id": "instagram.publish",
+      "title": "Instagram publication authorization",
+      "status": "conflicted",
+      "risk_class": "critical",
+      "authority_locations": [
+        "constitution/SEND.md",
+        "constitution/ORGANIC_GROWTH.md",
+        "AGENTS.md",
+        "instances/velvet-factory/AGENTS.md",
+        "packages/vfgrowth/GATE.md"
+      ],
+      "machine_policy_locations": [
+        "instances/velvet-factory/instance/velvet-factory.json"
+      ],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-organic-growth"
+        },
+        {
+          "kind": "sensor",
+          "id": "check-creative-autopilot"
+        },
+        {
+          "kind": "sensor",
+          "id": "check-publication-evidence"
+        },
+        {
+          "kind": "sensor",
+          "id": "check-project669-publication"
+        },
+        {
+          "kind": "runtime",
+          "path": "scripts/vf_send_preflight.py"
+        },
+        {
+          "kind": "runtime",
+          "path": "scripts/vf_autonomy.py"
+        }
+      ]
+    },
+    {
+      "policy_id": "gmail.send",
+      "title": "Gmail external send",
+      "status": "active",
+      "risk_class": "high",
+      "authority_locations": [
+        "constitution/SEND.md"
+      ],
+      "machine_policy_locations": [],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-gmail-brief-send"
+        },
+        {
+          "kind": "sensor",
+          "id": "check-visible-text-gate"
+        }
+      ]
+    },
+    {
+      "policy_id": "customer.whatsapp.send",
+      "title": "Customer WhatsApp send boundary",
+      "status": "active",
+      "risk_class": "critical",
+      "authority_locations": [
+        "constitution/SEND.md",
+        "constitution/PUBLIC_CTA.md",
+        "instances/velvet-factory/AGENTS.md"
+      ],
+      "machine_policy_locations": [
+        "instances/velvet-factory/instance/velvet-factory.json"
+      ],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-public-cta"
+        },
+        {
+          "kind": "sensor",
+          "id": "check-vfmcp"
+        },
+        {
+          "kind": "sensor",
+          "id": "check-vf-desk"
+        }
+      ]
+    },
+    {
+      "policy_id": "advertising.boost",
+      "title": "Boost and ads approval boundary",
+      "status": "active",
+      "risk_class": "critical",
+      "authority_locations": [
+        "constitution/ORGANIC_GROWTH.md",
+        "office/control/POLICY.md"
+      ],
+      "machine_policy_locations": [],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-organic-growth"
+        },
+        {
+          "kind": "sensor",
+          "id": "check-risk-policy"
+        }
+      ]
+    },
+    {
+      "policy_id": "external.irreversible.delete",
+      "title": "Irreversible external deletion",
+      "status": "active",
+      "risk_class": "critical",
+      "authority_locations": [
+        "office/control/POLICY.md"
+      ],
+      "machine_policy_locations": [
+        "packages/vfops/risk-policy.json"
+      ],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-risk-policy"
+        }
+      ]
+    },
+    {
+      "policy_id": "visible_text.finalization",
+      "title": "Human-visible AI text finalization",
+      "status": "active",
+      "risk_class": "high",
+      "authority_locations": [
+        "constitution/VISIBLE_TEXT.md",
+        "packages/vfcopy/SOFT-TOOLS-CONTRACT.md"
+      ],
+      "machine_policy_locations": [],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-visible-text-gate"
+        },
+        {
+          "kind": "sensor",
+          "id": "check-soft-tools-pipeline"
+        }
+      ]
+    },
+    {
+      "policy_id": "public.cta",
+      "title": "Public CTA boundary",
+      "status": "active",
+      "risk_class": "high",
+      "authority_locations": [
+        "constitution/PUBLIC_CTA.md"
+      ],
+      "machine_policy_locations": [
+        "instances/velvet-factory/instance/velvet-factory.json"
+      ],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-public-cta"
+        }
+      ]
+    },
+    {
+      "policy_id": "project.request.preflight",
+      "title": "Universal project request gate",
+      "status": "active",
+      "risk_class": "high",
+      "authority_locations": [
+        "packages/velvetos/PROJECT-REQUEST-GATE.md",
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
+      ],
+      "machine_policy_locations": [
+        "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json"
+      ],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-project-request-gate"
+        }
+      ]
+    },
+    {
+      "policy_id": "repository.agent_surface.secrets",
+      "title": "No committed secrets on agent surfaces",
+      "status": "active",
+      "risk_class": "critical",
+      "authority_locations": [
+        "AGENTS.md"
+      ],
+      "machine_policy_locations": [],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-agent-surface-security"
+        }
+      ]
+    },
+    {
+      "policy_id": "office.owner_escalation",
+      "title": "Owner escalation boundary",
+      "status": "active",
+      "risk_class": "high",
+      "authority_locations": [
+        "office/control/POLICY.md"
+      ],
+      "machine_policy_locations": [
+        "packages/vfops/risk-policy.json"
+      ],
+      "enforced_by": [
+        {
+          "kind": "sensor",
+          "id": "check-risk-policy"
+        }
+      ]
+    }
+  ]
+}

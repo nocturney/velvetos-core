@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "registry_kind": "velvetos_artifact_retention_registry",
+  "entries": [
+    {
+      "artifact_class_id": "canonical-policy-config-schema",
+      "match": [
+        "constitution/**",
+        "packages/velvetos/policy/**",
+        "packages/**/schema/**",
+        "packages/**/*.schema.json"
+      ],
+      "classification": "CANONICAL_CONFIG_OR_POLICY",
+      "current_storage": "GIT",
+      "target_storage": "GIT",
+      "retention_class": "DURABLE",
+      "policy_refs": [],
+      "migration_stage": "NONE",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "compact-audit-receipts",
+      "match": [
+        "**/*receipt*.json",
+        "**/*evidence*.json"
+      ],
+      "classification": "AUDIT_CHAIN",
+      "current_storage": "MIXED",
+      "target_storage": "GIT_WHEN_COMPACT",
+      "retention_class": "AUDIT_DURABLE",
+      "policy_refs": [
+        "instagram.publish"
+      ],
+      "migration_stage": "STAGE_7",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "harness-checkpoints",
+      "match": [
+        "packages/vfharness/state/**"
+      ],
+      "classification": "TRANSIENT_OR_TASK_STATE",
+      "current_storage": "GIT",
+      "target_storage": "STATE_STORE",
+      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "policy_refs": [],
+      "migration_stage": "STAGE_7",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "office-generated-output",
+      "match": [
+        "packages/vfops/out/**"
+      ],
+      "classification": "GENERATED_OUTPUT",
+      "current_storage": "GIT",
+      "target_storage": "ARTIFACT_STORE_OR_DRIVE",
+      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "policy_refs": [],
+      "migration_stage": "STAGE_7",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "publish-bridge-archive",
+      "match": [
+        "publish-bridge/archive/**"
+      ],
+      "classification": "PUBLICATION_AUDIT_ARCHIVE",
+      "current_storage": "GIT_OR_ARCHIVE",
+      "target_storage": "ARCHIVE",
+      "retention_class": "UNLIMITED_CURRENT_CONTRACT",
+      "policy_refs": [
+        "instagram.publish"
+      ],
+      "migration_stage": "STAGE_7_REVIEW_ONLY",
+      "deletion_authorized": false
+    }
+  ]
+}

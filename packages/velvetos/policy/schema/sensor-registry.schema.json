@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://policy/sensor-registry.schema.json",
+  "title": "VelvetOS Sensor Registry",
+  "type": "object",
+  "required": ["schema_version", "registry_kind", "suite_runner", "sensors"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "registry_kind": {"const": "velvetos_sensor_registry"},
+    "suite_runner": {"const": "scripts/check-all.py"},
+    "sensors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id", "path", "owns", "triggered_by", "depends_on", "enforces",
+          "risk", "timeout_seconds", "failure_effect", "fallback_scope", "mapping_state"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^check-[a-z0-9-]+$"},
+          "path": {"type": "string", "pattern": "^scripts/check-[a-z0-9-]+\\.py$"},
+          "owns": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "triggered_by": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "depends_on": {"type": "array", "items": {"type": "string", "minLength": 1}},
+          "enforces": {"type": "array", "items": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"}},
+          "risk": {"enum": ["critical", "high", "medium", "low"]},
+          "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 1800},
+          "failure_effect": {
+            "type": "object",
+            "required": ["merge", "release", "runtime"],
+            "additionalProperties": false,
+            "properties": {
+              "merge": {"enum": ["BLOCK", "REPORT"]},
+              "release": {"enum": ["BLOCK", "BLOCK_IF_RELEVANT", "REPORT"]},
+              "runtime": {"enum": ["NO_DIRECT_RUNTIME_EFFECT", "BLOCK_RELEVANT_ACTION"]}
+            }
+          },
+          "fallback_scope": {"enum": ["FULL_SUITE", "FULL_DOMAIN", "ALWAYS_ON"]},
+          "mapping_state": {"enum": ["broad_legacy_baseline", "mapped", "legacy", "deprecated"]}
+        }
+      }
+    }
+  }
+}
