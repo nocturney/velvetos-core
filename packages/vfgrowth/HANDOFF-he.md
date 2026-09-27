@@ -16,7 +16,7 @@
 **לא** משבצים JPEG גולמי עם טקסט עליו. גלם מתיבת Grok = חומר בלבד.  
 עברו קודם: Product Truth lock → Creative Director → source-grounded edit → `vfcopy`/Visible Text → deterministic typography/logo → Brand Guardian → publication evidence → exact-final QA (`EDIT-GATE.md`).
 **חובה נתיב ארטיפקט:** `packages/vfgrowth/preflight/<id>.md` לפי `PREFLIGHT.md` (VOICE + ציון עצמי + 2–3 קומפס). בלי נתיב + שער עבור = **נכשל-סגור**.  
-בלי edited review artifact + source/final evidence + exact-final QA = השורה נשארת **חסום עריכה**. לא שואלים משבצת — הרשת ב־`CALENDAR.md`. כל job מתוזמן → mirror אוטומטי ביומן Google `אינסטגרם` (`CALENDAR-OPS.md`); היומן אינו מקור אמת.
+בלי edited review artifact + source/final evidence + exact-final QA = השורה נשארת **חסום עריכה**. לא שואלים משבצת — הרשת ב־`CALENDAR.md`. כל job מתוזמן → mirror אוטומטי ב־Google Calendar, יומן `אינסטגרם` (`CALENDAR-OPS.md`); היומן אינו מקור אמת.
 **אל תפנה לכריסטיאן על מדדים חלשים.** אין «רמה נמוכה» לצ׳אט. משטח: החלטה / חסם קשיח / פרסום חי שדורש אותו.
 
 > LEGACY / provenance only — **כל שאר המסמך מתחת לנקודה זו הוא ארכיון 7.9.2026 ואסור לביצוע.** `LEDGER.md` והמסלול הנוכחי למעלה מנצחים. פרטי G003/G004 נשמרים לצורכי lineage בלבד.
