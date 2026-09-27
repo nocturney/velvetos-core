@@ -1,0 +1,72 @@
+VELVET FACTORY · מודיעין יומי
+בריף הבוקר
+27.9.2026 · מקור עובדתי קנוני · Asia/Jerusalem
+
+תמונת מצב עכשיו
+כל חמש העבודות בגיליון VF HQ · jobs מסומנות כסופקו. שלוש יתרות פתוחות מאומתות גם ב-VF HQ · books: סינקופה 4350, ודים 320, אלה+לוגו 120. סך הגבייה הפתוחה 4790. ביומן היום וגם מחר אין אירועים. Instagram חי: 81 עוקבים, 6 פריטים, והפיד האחרון הוא האייל מ-23.9 עם לייק אחד מאומת.
+
+מה השתנה מאז הבריף הקודם
+• מחקר 27.9 נחתם ready_for_brief לפני cutoff 07:00 (PR #379 מוזג ל-main)
+• ביומן של 27.9 ושל 28.9 אין אירועים
+• הגבייה הפתוחה נשארה 4790 לפי קריאה חיה של jobs ו-books
+• Instagram: עוקבים/מדיה ללא שינוי (81/125/6); בפיד האחרון DdosGbRia0T אומת לייק 1 ותגובות 0
+• לוח Cloudflare Instagram Publisher לא נקרא הבוקר (חסר VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN ב-Shell של GitHub failover) — רצועת בקרוב בפיד מסומנת unavailable, בלי OpenPost ובלי תזמון ממוחזר
+
+צריך ממך
+גבייה פתוחה אצל סינקופה, ודים ואלה+לוגו.
+סינקופה VF-20260908-001: סופק, טרם שולם, 4350, מועד בגיליון 15.10.2026.
+ודים VF-20260908-003: סופק, לגבייה, 320.
+אלה+לוגו VF-20260908-004: סופק, טרם שולם, 120.
+
+מצב הכסף
+גבייה פתוחה לפי VF HQ · jobs ובאימות VF HQ · books: 4350 + 320 + 120 = 4790.
+אלה VF-20260908-002: 35 יחידות, סופק ושולם, 175.
+לינה VF-20260908-005: סופק, מתנה, 0, אין יתרה לגבייה.
+Insights כספיים נוספים: אין ספירה.
+
+עבודות חיות
+אין ייצור פעיל בגיליון jobs. כל חמש העבודות הרשומות מסומנות כסופקו.
+אין כרטיס print.done חדש בבריף של 27.9.
+מדף חוזר: 0/5 כרטיסים מוכנים. אין שם להציע.
+
+היום / בהמשך
+Google Calendar ל-27.9.2026 ול-28.9.2026 Asia/Jerusalem: אין אירועים.
+Cloudflare Instagram Publisher: אין קריאת schedule חיה הבוקר (חסר control token ב-Shell). ימים ריקים ברצועה אינם אומרים שאין פרסום.
+OpenPost קפוא/היסטורי בלבד — לא מקור schedule לבריף.
+גיליון jobs lastMod עדיין 14.9.2026 — אין עדכון מאז הבריף של אתמול.
+
+Instagram · מצב העמוד
+@velvets_cloud חי. עוקבים 81, עוקב 125, מדיה 6.
+Insights: אין ספירה.
+הפיד האחרון: 23.9.2026 19:00 Asia/Jerusalem, אייל דקורטיבי, DdosGbRia0T, לייקים 1, תגובות 0 לפי list_media.
+הפיד הקודם: 20.9.2026, מגש דרקון, DdgkjZGG7mw, לייקים 2, תגובות 0 לפי list_media.
+CTA ציבורי: instagram_message_only, compliant. hashtag_over_limit בפיד האחרון הוא הערת AMBER היסטורית בלבד, לא הפרת CTA אדומה.
+
+רדאר תוכן
+לוח Cloudflare Instagram Publisher לא נקרא הבוקר — אין ראיית scheduled_at חיה.
+הפיד האחרון שאומת חי ב-Instagram הוא האייל מ-23.9.
+אין Publish מהבריף.
+
+שולחן המחקר
+Research Seat 27.9.2026: ready_for_brief, לפני cutoff 07:00 (PR #379).
+1) טופס קליטה לפני מחיר (8 בלוקים / 6 שאלות קצרות) שמחליט quote / hold / discovery / sample-first לפני שפת ₪ — מיפוי ל-vfconvert.
+2) חבילת הצעה מינימלית: קובץ שולט אחד + מספר גרסה + כמות/שלב + שימוש + גימור + קריטי למידה — vfconvert/vfsales (בלי ₪ מומצא).
+3) שלוש מדרגות גימור לפני אישור הצעה (פונקציונלי / פונה-ללקוח / דגימת מצגת) + פנים מוגנים — vfsales/vfconvert/vfprod.
+4) רשימת automatic-fail ל-QC + אריזת איסוף שמעדיפה מניעת שבירה על מהירות — vfprod (דפוס בלבד).
+5) מארגנים פונקציונליים ברי-הדפסה באותו G-code + ימי אצווה לפי צבע + סטאק עלות מלא — vfsku/vfprod/vfconvert (EXTRA; בלי ₪ מומצא; VF = איסוף/IG בלבד).
+6) מועדון איסוף מקומי קטן מסוג desk-reset — vfsku/vfsales + לוח freeze→print→QA→ready ב-vfops (EXTRA; לא משלוח ארצי).
+7) Best Skills: due/stale (~72ש מ-24.9) — בוצע על דירוג 26.9; no-embed-existing-coverage.
+8) MakerWorld/Printables א׳: Cloudflare; רישיונות UNPROVEN; אין שם להציע למדף.
+
+פעילות VelvetOS
+מחקר 27.9 מוזג ב-PR #379 ל-main לפני הבריף.
+Cloudflare Publisher לא נקרא חי הבוקר (חסר control token) — רצועה unavailable באמת; OpenPost לא בשימוש.
+Jobs, books, Calendar ו-Instagram נקראו מחדש.
+Morning Green v3.1 הוא מסלול התצוגה הקנוני; השליחה רק דרך gmail-brief-send.
+Cursor Cloud Agent חסום (usage) → GitHub failover.
+
+05a · זיכרון
+ההצעה לציבור נשארת מוצרים מוכנים והדפסה או מודל בהתאמה אישית. סוג לקוח וכמות הם מאפייני הזמנה, לא מסלול שירות.
+
+Velvet Factory · Morning Brief
+חסר נשאר חסר. אין סכומים, Insights, תזמונים או סטטוסים מומצאים.
