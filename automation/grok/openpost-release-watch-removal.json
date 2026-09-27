@@ -1,0 +1,28 @@
+{
+  "schema": "velvetos.grok-routine-removal.v1",
+  "provider": "grok-bot",
+  "timezone": "Asia/Jerusalem",
+  "routine": {
+    "title": "OpenPost Release Watch",
+    "schedule": "Every day at 7:15 AM",
+    "state_before": "paused",
+    "action": "delete"
+  },
+  "verified_at": "2026-09-27T21:40:21.1296365+03:00",
+  "verification_method": "Grok Bot desktop UI via CDP on interactive Chris session 1",
+  "provider_readback": {
+    "routine_present": false,
+    "remaining_count": 8,
+    "remaining_titles": [
+      "Velvet Research Seat",
+      "Velvet Morning Brief",
+      "Morning Delivery Guard",
+      "VelvetOS Office Loop",
+      "Weekly Research Accountability",
+      "VelvetOS Integrity Guard",
+      "Cognee Memory Sync",
+      "Cognee Stable Updates"
+    ]
+  },
+  "authority": "owner-explicit task: remove OpenPost update checker"
+}

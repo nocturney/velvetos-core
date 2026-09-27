@@ -102,30 +102,25 @@
     }
   ],
   "publisherAuthority": {
-    "updatedDate": "2026-09-26",
+    "updatedDate": "2026-09-27",
     "scheduler": "cloudflare-instagram-publisher",
     "source": "packages/vfigos/cloudflare-publisher/",
     "openpost": "frozen",
-    "openpostReleaseWatch": "retire_and_disable",
-    "providerReadbackRequired": true
-  },
-  "retiredRoutines": [
-    {
-      "id": "openpost-release-watch",
-      "title": "OpenPost Release Watch",
-      "desiredEnabled": false,
-      "reason": "OpenPost frozen by owner on 2026-09-26",
-      "providerReadback": "verified_disabled_2026-09-27",
-      "verifiedReadbackArtifact": "automation/grok/provider-readback-2026-09-27.json"
+    "providerReadbackRequired": true,
+    "openpostReleaseWatchRemoval": {
+      "state": "live_verified_deleted",
+      "verifiedAt": "2026-09-27T21:40:21.1296365+03:00",
+      "evidence": "automation/grok/openpost-release-watch-removal.json",
+      "remainingRoutineCount": 8
     }
-  ],
+  },
   "latestProviderReadback": {
     "status": "live_verified",
     "date": "2026-09-27",
-    "artifact": "automation/grok/provider-readback-2026-09-27.json",
+    "artifact": "automation/grok/openpost-release-watch-removal.json",
     "protectedRoutineCount": 8,
     "protectedInventoryClockMatch": true,
-    "retiredOpenPostDisabled": true,
+    "openpostReleaseWatchAbsent": true,
     "rendererTimeZone": "Asia/Jerusalem",
     "promptBodyParityClaimed": false
   }

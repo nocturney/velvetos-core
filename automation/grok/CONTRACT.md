@@ -56,7 +56,7 @@ Later on 2026-09-23, live Grok readback verified `Cognee Memory Sync` (`cognee-m
 
 ## OpenPost frozen state — updated 2026-09-27
 
-OpenPost is frozen and has no release/update watcher in scheduler authority. The protected inventory remains eight routines. Any stale live provider routine named `openpost-release-watch` is unauthorized drift and must be removed when provider routine-management access is available; provider read-back is required before claiming that live deletion.
+OpenPost is frozen and has no release/update watcher in scheduler authority. On 2026-09-27 the paused live `OpenPost Release Watch` routine was deleted in the Grok Bot provider UI. A provider read-back immediately after deletion returned exactly the eight protected routines and no OpenPost watcher. Machine-readable evidence is `automation/grok/openpost-release-watch-removal.json`.
 
 The 09:00 Morning Brief must read scheduled Instagram state from the Cloudflare Instagram Publisher, not OpenPost.
 
