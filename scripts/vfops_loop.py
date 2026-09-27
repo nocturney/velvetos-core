@@ -865,12 +865,11 @@ def run_consumer(spec: ConsumerSpec, *, today: str, force: bool = False) -> dict
                 return {"id": spec.id, "status": "failed", "reason": detail}
             failed = int(summary.get("failed") or 0)
             sources = int(summary.get("sources") or 0)
-            changed = int(summary.get("changed") or 0)
             if sources <= 0 or failed:
                 detail = f"upstream watch incomplete: sources={sources} failed={failed}"
                 append_consumer_run(today, spec, ok=False, detail=detail)
                 return {"id": spec.id, "status": "failed", "reason": detail}
-            detail = f"research+upstreams verified sources={sources} changed={changed}"
+            detail = "research daily verified; upstream monitor healthy (decisions delivered separately by email)"
         else:
             detail = f"verified {' · '.join(str(p.relative_to(ROOT)) for p in spec.requires)}"
         append_consumer_run(today, spec, ok=True, detail=detail)

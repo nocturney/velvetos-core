@@ -13,7 +13,7 @@ Status: production scheduler as of 2026-09-19.
 ## Protected routine set
 
 - VelvetOS Integrity Guard — 01:45 daily
-- Velvet Research Seat — 02:00 daily
+- Velvet Research Seat — 02:00 daily; tool-update decisions use the dedicated owner email path and are excluded from the Morning Brief
 - Cognee Memory Sync — 06:30 daily
 - Velvet Morning Brief — 09:00 daily
 - Morning Delivery Guard — 10:00 daily
