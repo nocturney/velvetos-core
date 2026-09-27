@@ -1,0 +1,11 @@
+{
+  "component": "text-to-cad-skill-suite",
+  "action": "install_and_use_local_fabrication_skills",
+  "classification": "FREE_LOCAL",
+  "evidence": "earthtojake/text-to-cad is installed as local project-pinned skills and a local Python/cadgen runtime; no paid provider or billing credential is required for CAD/DfAM/DFM/DXF/drawing/G-code/URDF/SRDF/SDF execution.",
+  "checked_at": "2026-09-27",
+  "incremental_cost_possible": false,
+  "automatic_paid_overage_possible": false,
+  "hard_cap_enforced": true,
+  "paid_features_enabled": false
+}

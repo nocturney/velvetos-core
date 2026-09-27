@@ -1,15 +1,21 @@
 # 3D Model — מנתח / יוצר / בונה
 
 מושב: ייצור. מודול: `expert-3d-model`.  
-אין הדפסה מ־HQ. אין מפתח API בגיט.
+לפני כל משימת CAD/ייצור יש לפתור `../FABRICATION-ROUTER.md` ולקרוא את ה־Skill שנבחר מ־`.agents/skills/<skill>/SKILL.md`.
+אין שליטה/שליחה למדפסת מ־HQ. אין מפתח API בגיט.
 
 ## מתי
 
 - קובץ STL/3MF/STEP חדש לבדיקה לפני תור
-- CAD פונקציונלי פרמטרי מטקסט/מידות דרך `TEXT-TO-CAD.md`
-- קונספט אורגני/סקלפטורלי מטקסט/תמונה דרך 3D AI Studio (אחרי אישור ראש צוות)
-- DfAM: wall thickness / overhang / supports / orientation עם מדידה מקומית
-- slicing מאומת דרך OrcaSlicer וה־printer matrix הקיים
+- CAD פונקציונלי פרמטרי מטקסט/מידות דרך `cad`
+- חלקי מדף/ברגים/מיסבים/מנועים דרך `step-parts` לפני placeholder
+- צפייה ובקרת artifact דרך `cad-viewer`
+- קונספט אורגני/סקלפטורלי מטקסט/תמונה דרך 3D AI Studio כשה־router מעדיף mesh
+- DfAM: wall thickness / overhang / supports / orientation דרך `dfam-check`
+- DFM ל־CNC/sheet-metal/injection דרך `dfm`
+- DXF / flat pattern דרך `dxf`; שרטוט PDF ממודד דרך `engineering-drawing`
+- URDF/SRDF/SDF רק כשמדובר ברובוטיקה/סימולציה
+- slicing מאומת דרך `gcode` + OrcaSlicer וה־printer matrix הקיים
 - מק״ט חוזר (`#vfsku`) + רישיון (`#vlicense`)
 
 ## שלבים

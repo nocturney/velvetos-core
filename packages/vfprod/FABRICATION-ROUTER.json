@@ -1,0 +1,248 @@
+{
+  "schema": "velvetos.fabrication-router.v1",
+  "status": "active",
+  "upstream": "earthtojake/text-to-cad",
+  "upstream_commit": "4eaf7459a95c0547b089ab53aa579c7597fab1d5",
+  "viewer_policy": {
+    "host": "127.0.0.1",
+    "external_bind": false
+  },
+  "installed_skills": [
+    "cad",
+    "cad-viewer",
+    "dfam-check",
+    "dfm",
+    "dxf",
+    "engineering-drawing",
+    "gcode",
+    "sdf",
+    "sendcutsend",
+    "srdf",
+    "step-parts",
+    "urdf"
+  ],
+  "excluded_skills": [
+    "bambu-labs"
+  ],
+  "hard_boundaries": {
+    "printer_network_control": false,
+    "upload_to_printer": false,
+    "start_print": false,
+    "heating": false,
+    "motion": false,
+    "sendcutsend_order_submission": false,
+    "hidden_dimensions_may_be_invented": false
+  },
+  "selection_policy": [
+    "Use the smallest tool chain that can produce and verify the requested result.",
+    "Use native reasoning for advice, calculations, tolerances, requirements and tradeoffs when no geometry artifact or exact measurement is required.",
+    "Use native vision to interpret a user photo or sketch before CAD, but never treat pixels as dimensional truth for hidden or critical dimensions.",
+    "Use cad for deterministic functional geometry, exact edits, assemblies and STEP/STL/3MF/GLB artifacts.",
+    "Use 3D AI Studio instead of cad for organic/sculptural/generative forms when a mesh is the natural representation; hand the result to dfam-check before printing.",
+    "Search step-parts before inventing placeholder geometry for named off-the-shelf hardware or components.",
+    "Use cad-viewer after creating or materially editing CAD/robot-description/DXF artifacts when visual review adds value.",
+    "Use dfam-check before first slicing of a new or materially changed additive part; use its orientation analysis when supports, overhangs or build orientation matter.",
+    "Use gcode only after a slice-ready mesh exists; VelvetPrintLab printer_matrix.json remains the printer/profile authority.",
+    "Use engineering-drawing for dimensioned manufacturing PDFs, not as a substitute for DXF cut geometry.",
+    "Use dxf for 2D profiles, flat patterns, templates and cut layouts.",
+    "Use dfm for CNC, sheet-metal or injection-molding manufacturability, not for FDM printability.",
+    "Use urdf/srdf/sdf only for robot/simulation descriptions.",
+    "Use sendcutsend only for SendCutSend preflight/readiness; never place or submit an order.",
+    "If an exact artifact request cannot be completed with the selected specialized tool, fail closed or choose a semantically equivalent verified route; do not silently approximate with prose."
+  ],
+  "intents": {
+    "advice_calculation": {
+      "primary": "native_reasoning",
+      "chain": [
+        "native_reasoning"
+      ],
+      "artifact": false
+    },
+    "photo_or_sketch_to_functional_cad": {
+      "primary": "native_vision",
+      "chain": [
+        "native_vision",
+        "cad",
+        "cad-viewer"
+      ],
+      "artifact": true
+    },
+    "functional_cad_create_edit": {
+      "primary": "cad",
+      "chain": [
+        "cad",
+        "cad-viewer"
+      ],
+      "artifact": true
+    },
+    "assembly_with_standard_parts": {
+      "primary": "step-parts",
+      "chain": [
+        "step-parts",
+        "cad",
+        "cad-viewer"
+      ],
+      "artifact": true
+    },
+    "organic_sculptural_model": {
+      "primary": "3d-ai-studio",
+      "chain": [
+        "3d-ai-studio",
+        "dfam-check",
+        "cad-viewer"
+      ],
+      "artifact": true
+    },
+    "additive_printability_review": {
+      "primary": "dfam-check",
+      "chain": [
+        "dfam-check",
+        "cad-viewer"
+      ],
+      "artifact": false
+    },
+    "additive_orientation_optimization": {
+      "primary": "dfam-check",
+      "chain": [
+        "dfam-check"
+      ],
+      "artifact": false
+    },
+    "additive_redesign": {
+      "primary": "dfam-check",
+      "chain": [
+        "dfam-check",
+        "cad",
+        "dfam-check",
+        "cad-viewer"
+      ],
+      "artifact": true
+    },
+    "slice_and_validate": {
+      "primary": "gcode",
+      "chain": [
+        "dfam-check",
+        "gcode"
+      ],
+      "artifact": true
+    },
+    "engineering_drawing_pdf": {
+      "primary": "engineering-drawing",
+      "chain": [
+        "engineering-drawing"
+      ],
+      "artifact": true
+    },
+    "dxf_profile_or_flat_pattern": {
+      "primary": "dxf",
+      "chain": [
+        "dxf",
+        "cad-viewer"
+      ],
+      "artifact": true
+    },
+    "cnc_sheetmetal_injection_dfm": {
+      "primary": "dfm",
+      "chain": [
+        "dfm"
+      ],
+      "artifact": false
+    },
+    "sendcutsend_preflight": {
+      "primary": "sendcutsend",
+      "chain": [
+        "sendcutsend"
+      ],
+      "artifact": false
+    },
+    "urdf_authoring": {
+      "primary": "urdf",
+      "chain": [
+        "urdf",
+        "cad-viewer"
+      ],
+      "artifact": true
+    },
+    "srdf_moveit_semantics": {
+      "primary": "srdf",
+      "chain": [
+        "urdf",
+        "srdf",
+        "cad-viewer"
+      ],
+      "artifact": true
+    },
+    "sdf_simulation_description": {
+      "primary": "sdf",
+      "chain": [
+        "sdf",
+        "cad-viewer"
+      ],
+      "artifact": true
+    },
+    "visual_concept_only": {
+      "primary": "native_image_generation",
+      "chain": [
+        "native_image_generation"
+      ],
+      "artifact": true
+    },
+    "functional_part_to_print": {
+      "primary": "cad",
+      "chain": [
+        "cad",
+        "cad-viewer",
+        "dfam-check",
+        "gcode"
+      ],
+      "artifact": true
+    },
+    "photo_or_sketch_to_print": {
+      "primary": "native_vision",
+      "chain": [
+        "native_vision",
+        "cad",
+        "cad-viewer",
+        "dfam-check",
+        "gcode"
+      ],
+      "artifact": true
+    },
+    "organic_model_to_print": {
+      "primary": "3d-ai-studio",
+      "chain": [
+        "3d-ai-studio",
+        "dfam-check",
+        "gcode"
+      ],
+      "artifact": true
+    },
+    "standard_part_lookup": {
+      "primary": "step-parts",
+      "chain": [
+        "step-parts"
+      ],
+      "artifact": false
+    },
+    "cad_visual_review": {
+      "primary": "cad-viewer",
+      "chain": [
+        "cad-viewer"
+      ],
+      "artifact": false
+    },
+    "assembly_with_standard_parts_to_print": {
+      "primary": "step-parts",
+      "chain": [
+        "step-parts",
+        "cad",
+        "cad-viewer",
+        "dfam-check",
+        "gcode"
+      ],
+      "artifact": true
+    }
+  },
+  "decision_entrypoint": "python scripts/vf_fabrication_router.py decide --request <text> [--file <path>]",
+  "decision_fallback": "If deterministic cues are ambiguous, the agent resolves intent using FABRICATION-ROUTER.md, then calls route --intent; never guess hidden dimensions or manufacturing facts."
+}

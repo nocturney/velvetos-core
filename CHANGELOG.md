@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-27 — **Fabrication Router + full text-to-cad skill suite:** installs and pins 12 `earthtojake/text-to-cad` skills (`cad`, Viewer, STEP Parts, DfAM/DFM, DXF, engineering drawing, G-code, URDF/SRDF/SDF and SendCutSend preflight), adds a deterministic per-request tool-selection router, binds it into Core/instance/Living Studio production routing, and verifies the Windows host with CAD/Viewer/orientation/DFM/STEP-part/DXF/PDF/robot-description/Orca smokes. Native reasoning/vision and 3D AI Studio remain preferred where they fit better than deterministic CAD. `bambu-labs`, printer upload/start/control, and SendCutSend order submission remain excluded. Cost preflights preserve the zero-new-recurring-cost default.
+
 - 2026-09-26 — **NO_NEW_RECURRING_COST:** adds canonical zero-new-recurring-cost authority, fail-closed cost classifications/preflight, RED billing gates, and no-silent-paid-failover enforcement.
 - 2026-09-26 — **Cloudflare fingerprint guard D1 migration:** adds idempotent `packages/vfigos/cloudflare-publisher/migrations/d1/0001_publish_fingerprints.sql` and a README deploy order (migration → verify table → `wrangler deploy`). Without it, the existing D1 lacks `publish_fingerprints` and a redeployed Worker would fail closed on every due job. The guard is still not live; no deploy was performed. `check-cloudflare-publish-fingerprint.py` now requires the migration to match `schema.sql`.
 
