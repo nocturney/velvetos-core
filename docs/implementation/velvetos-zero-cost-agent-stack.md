@@ -100,7 +100,8 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Current high-signal candidates did not expose a unique measured gap: agent-browser/browser-use overlaps existing browser QA and does not solve the isolation boundary; ui-taste overlaps Impeccable/anti-slop; improve-codebase-architecture/TDD overlaps existing architecture and regression gates; gh-cli-readonly-agent overlaps the existing GitHub connector/local-git evidence path.
 - Google Agents CLI and twitter automation remain policy/runtime skips. Media-generation movers belong to existing routed media paths rather than this agent-stack program. Ponytail, Matt Pocock/Anthropic skills and Caveman patterns are already embedded where useful.
 - Decision: `NO_ADDITIONAL_DEV_LAB_JUSTIFIED` / `INSTALL_NOTHING_NEW`. Research cadence is fresh again, no new scheduler or always-on service exists, and incremental recurring cost remains **0 ILS**.
-- Evidence: `packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json`; sensor: `scripts/check-ecosystem-radar-phase9.py`.
+- The broader research-freshness sensor initially failed because the 27.9 daily orchestra body was missing. A real same-day public-source body was recovered at ~12:15 and `vfresearch_cadence.py freshness` now PASS; this is explicitly a late recovery after the 07:00 cutoff, not proof that the scheduled 02:00 run succeeded.
+- Evidence: `packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json`; sensor: `scripts/check-ecosystem-radar-phase9.py`; recovery body: `packages/vfresearch/sources/2026-09-27-orchestra.md`.
 
 ## Pending
 - Phase 10-11: final acceptance via resilient targeted sensor batches; do not substitute the previously interrupted monolithic `check-all.py` run.

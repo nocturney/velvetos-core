@@ -68,7 +68,10 @@
     "packages/vfharness/devtools/reef-windows-import-overlay.patch",
     "packages/vfharness/state/reef-phase8-lab-2026-09-27.json",
     "scripts/check-reef-phase8-lab.py",
+    "packages/vfresearch/BEST-SKILLS.json",
     "packages/vfresearch/sources/2026-09-27-best-skills.md",
+    "packages/vfresearch/sources/2026-09-27-orchestra.md",
+    "packages/vfops/data/research.md",
     "packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json",
     "scripts/check-ecosystem-radar-phase9.py"
   ],
@@ -82,10 +85,11 @@
     "CLI-Anything FreeCAD GUI preview/motion/live path is disabled because Windows portable preview did not terminate reliably; headless CAD remains verified",
     "CLI-Anything 3MF remains BLOCKED_NOT_ROUTABLE because 4 hole-detection/resize tests fail reproducibly on Python 3.14 and 3.12",
     "Cognee remains a derived/context-only index: final 22-case retrieval trails the TF-IDF challenger and median end-to-end recall is about 15.44 seconds; canonical verification remains mandatory",
-    "Reef untrusted proposer execution remains blocked on this Windows host until a justified Linux/bwrap isolation path and a separately approved zero-cost local model endpoint exist"
+    "Reef untrusted proposer execution remains blocked on this Windows host until a justified Linux/bwrap isolation path and a separately approved zero-cost local model endpoint exist",
+    "Velvet Research Seat daily body for 2026-09-27 missed the 07:00 cutoff and was recovered at about 12:15; same-day freshness is restored but the scheduled 02:00 execution for this date remains unproven"
   ],
   "pulse": "working",
-  "verification": "Phases 1-4 gates PASS in declared scope; Phase5 initial pilot limitations preserved plus promotion follow-up PASS: FreeCAD 1.1.3 portable verified, CLI-Anything headless 106 PASS/6 GUI-only disabled, repaired one-body geometry + DfAM + U1 Orca/G-code validation PASS, 3MF remains blocked; Phase6 Laya cost preflight PASS, 78-case offline benchmark + calibration + exact repeatability complete, check-laya-shadow PASS, STAY_SHADOW_NOT_PROMOTED; Phase7 22-case both-backend benchmark complete on Cognee b98a digest with provenance=1, repeatability=1, unique canonical sources, source-dedup repair and vfmem authority preserved; Phase8 Reef lab sensor PASS, 88 harness-example and 56 contract/render tests PASS under import-only fail-closed overlay, broader Windows diagnostics explicitly PARTIAL, no provider/model calls, LAB_ONLY_NOT_PROMOTED, WSL deferred; Phase9 ecosystem-radar sensor PASS, Research Seat freshness restored, NO_ADDITIONAL_DEV_LAB_JUSTIFIED and no extra install/scheduler; recurring cost=0",
+  "verification": "Phases 1-4 gates PASS in declared scope; Phase5 initial pilot limitations preserved plus promotion follow-up PASS: FreeCAD 1.1.3 portable verified, CLI-Anything headless 106 PASS/6 GUI-only disabled, repaired one-body geometry + DfAM + U1 Orca/G-code validation PASS, 3MF remains blocked; Phase6 Laya cost preflight PASS, 78-case offline benchmark + calibration + exact repeatability complete, check-laya-shadow PASS, STAY_SHADOW_NOT_PROMOTED; Phase7 22-case both-backend benchmark complete on Cognee b98a digest with provenance=1, repeatability=1, unique canonical sources, source-dedup repair and vfmem authority preserved; Phase8 Reef lab sensor PASS, 88 harness-example and 56 contract/render tests PASS under import-only fail-closed overlay, broader Windows diagnostics explicitly PARTIAL, no provider/model calls, LAB_ONLY_NOT_PROMOTED, WSL deferred; Phase9 ecosystem-radar sensor PASS, Research Seat same-day freshness restored by explicit late recovery after the missed cutoff, NO_ADDITIONAL_DEV_LAB_JUSTIFIED and no extra install/scheduler; recurring cost=0",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-27"
