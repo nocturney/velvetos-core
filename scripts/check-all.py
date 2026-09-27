@@ -57,6 +57,10 @@ def main() -> int:
     sensor_env = os.environ.copy()
     sensor_env["PYTHONUTF8"] = "1"
     sensor_env["PYTHONIOENCODING"] = "utf-8"
+    # On Windows, isolate each sensor from check-all's console process group.
+    # Some sensor dependencies emit console control events during teardown; without
+    # a new process group those events can terminate the parent suite itself.
+    sensor_creationflags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
     print(f"SENSORS {len(checks)}")
     for path in checks:
         proc = subprocess.run(
@@ -66,6 +70,7 @@ def main() -> int:
             capture_output=True,
             encoding="utf-8",
             env=sensor_env,
+            creationflags=sensor_creationflags,
         )
         out = (proc.stdout or "").strip()
         err = (proc.stderr or "").strip()
