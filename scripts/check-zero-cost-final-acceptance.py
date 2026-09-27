@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the targeted-batch final acceptance without claiming a monolithic check-all run."""
+"""Validate zero-cost final acceptance, including the completed monolithic check-all proof."""
 from __future__ import annotations
 
 import json
@@ -31,7 +31,13 @@ def main() -> None:
     receipt, program = load(RECEIPT), load(PROGRAM)
     assert receipt.get("status") == "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS"
     assert receipt.get("decision") == "READY_FOR_OWNER_REVIEW_NO_PUSH"
-    assert receipt.get("fullCheckAll", {}).get("status") == "NOT_RUN"
+    full = receipt.get("fullCheckAll") or {}
+    assert full.get("status") == "PASS"
+    assert full.get("command") == "python scripts/check-all.py"
+    assert full.get("observedExitCode") == 0
+    assert full.get("sensorCount") == 105
+    assert full.get("terminalLine") == "OK suite passed=105"
+    assert "CREATE_NEW_PROCESS_GROUP" in str(full.get("windowsProcessIsolation", ""))
     head = receipt.get("acceptedCodeHead")
     assert isinstance(head, str) and len(head) == 40
     assert git("merge-base", "--is-ancestor", head, "HEAD").returncode == 0
@@ -123,7 +129,7 @@ def main() -> None:
     assert acceptance.get("committedScopeReady") is True
     assert acceptance.get("ownerActionRequiredNow") is False
     assert acceptance.get("pushRequiresExplicitOwnerPermission") is True
-    print("OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=NOT_RUN push=NO")
+    print("OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors=105 push=NO")
 
 
 if __name__ == "__main__":

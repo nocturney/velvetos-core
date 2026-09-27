@@ -3,12 +3,17 @@
   "date": "2026-09-27",
   "program": "zero-cost-agent-stack",
   "branch": "implementation/zero-cost-agent-stack",
-  "acceptedCodeHead": "6415b991fd67fc4c7d78e1d2b36b15997cf924e6",
+  "acceptedCodeHead": "3a2faccf82ef77672b6598d45ae12f792fb49253",
   "status": "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS",
   "decision": "READY_FOR_OWNER_REVIEW_NO_PUSH",
   "fullCheckAll": {
-    "status": "NOT_RUN",
-    "reason": "The earlier monolithic check-all run was interrupted; final acceptance intentionally used resilient targeted batches instead and does not claim a full check-all PASS."
+    "status": "PASS",
+    "command": "python scripts/check-all.py",
+    "observedExitCode": 0,
+    "sensorCount": 105,
+    "terminalLine": "OK suite passed=105",
+    "windowsProcessIsolation": "Each sensor launched with CREATE_NEW_PROCESS_GROUP on Windows to prevent child console-control teardown from terminating the parent suite.",
+    "historicalNote": "Earlier monolithic attempts were interrupted by Windows console process-group leakage; the isolated rerun completed normally."
   },
   "targetedBatches": [
     {
@@ -59,7 +64,7 @@
   ],
   "diffChecks": {
     "committedProgramRange": {
-      "range": "bb54b0a7^..6415b991fd67fc4c7d78e1d2b36b15997cf924e6",
+      "range": "bb54b0a7^..3a2faccf82ef77672b6598d45ae12f792fb49253",
       "status": "PASS"
     },
     "liveWorkingTree": {
@@ -105,7 +110,9 @@
     "fc075ff9 runtime: reconcile strict proof with failover",
     "3569403d feat: make local 3D routing version-agnostic",
     "6829242b ops: refresh HQ control handoff and daily brief",
-    "6415b991 ops: verify live Grok scheduler readback"
+    "6415b991 ops: verify live Grok scheduler readback",
+    "abcb8799 reliability: avoid nested Python capture in check-all",
+    "3a2faccf test: isolate Windows check-all sensor process groups"
   ],
   "acceptance": {
     "committedScopeReady": true,

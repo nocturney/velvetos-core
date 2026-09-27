@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. Phase 10-11 resilient targeted acceptance passes for the zero-cost stack, the repository worktree is clean, and repository-wide strict deployment proof now passes after a fresh Grok Bot provider readback. GlitchTip remains explicitly blocked and no Production authority has moved.
+Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. Phase 10-11 targeted acceptance passes for the zero-cost stack, repository-wide strict deployment proof passes after a fresh Grok Bot provider readback, and the Windows-isolated monolithic `scripts/check-all.py` run completes **105/105 PASS with exit 0**. GlitchTip remains explicitly blocked and no Production authority has moved.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -31,7 +31,7 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Preserved and validated existing uncommitted NO_NEW_RECURRING_COST work.
 - Cost policy sensor, risk policy, HQ overlay, README contract and git diff check passed.
 - Committed canonical zero-cost policy as `bb54b0a7`.
-- Full `check-all.py` did not complete: Remote MCP session delivered KeyboardInterrupt after 20+ passing sensors; this is not recorded as PASS.
+- The original `check-all.py` attempts exposed Windows console process-group leakage around nested sensor teardown. After moving the nested Living Studio/media paths in-process and isolating each Windows sensor with `CREATE_NEW_PROCESS_GROUP`, a full monolithic run completed **105/105 PASS**, printed `OK suite passed=105`, and exited 0.
 - Repository scan found existing watch/lock references for Ponytail, Impeccable, diagram-design and Herdr; no second runtime will be introduced.
 - Project Request Gate passed for `system_engineering`; routed packs are velvetos/vfharness/vfmem.
 - Promptfoo 0.123.1 installed repo-locally after FREE_LOCAL cost preflight; no model/API credentials configured.
@@ -108,11 +108,11 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Windows `cp1252` caused initial decode-only failures in `check-hq-overlay.py` and the nested control-api path used by agent-security. Re-running the same checks with `PYTHONUTF8=1` passed without code changes; the locale incident is preserved as evidence, not hidden.
 - Runtime proof is reconciled to `vf.runtime.expected.v2`. `edge-execution` is an `anyOf` group over `sderot-mac` / `sderot-windows`, so the currently offline Mac no longer makes the system falsely unhealthy while the verified Windows fallback is online. Fresh live connector reads produced current GitHub and Google Drive receipts. On 2026-09-27 a fresh signed-in Grok Bot provider UI readback verified the exact eight protected routine IDs enabled with canonical effective schedule displays in an `Asia/Jerusalem` renderer. It also detected `OpenPost Release Watch` still enabled contrary to the 2026-09-26 retirement directive; that already-authorized drift was disabled in place and read back disabled while the protected eight remained unchanged. The evidence is `automation/grok/provider-readback-2026-09-27.json`; prompt-body parity is explicitly not claimed.
 - Repository-wide worktree hygiene is now clean: the 3D and HQ/control work were independently verified and committed, `git status --short` is empty, and repository-wide `git diff --check` exits 0. The earlier EOF warning in `packages/vfops/hq/STATUS-he.md` was repaired before the HQ/control commit.
-- The monolithic `scripts/check-all.py` was **not** re-run and is not claimed PASS. The earlier interrupted run remains historical evidence only.
+- The monolithic `scripts/check-all.py` was re-run after the Windows process-group isolation repair and completed **105/105 PASS with exit 0**. Earlier interrupted attempts remain historical diagnostics only and are superseded by the completed isolated run.
 - Acceptance receipt: `packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json`; sensor: `scripts/check-zero-cost-final-acceptance.py`.
 
 ## Final runtime status
-- Repository-wide `scripts/check-runtime-doctor.py --strict` now exits **0**. Required components are healthy: repo HEAD proof, Windows edge-execution fallback, fresh Grok production scheduler readback, GitHub connector and Google Drive connector. The offline Mac is reported as a covered/degraded member of the `anyOf` host group, not a required blocker. This does not convert the historical monolithic `check-all` run into a PASS; that run remains explicitly NOT_RERUN/NOT_CLAIMED.
+- Repository-wide `scripts/check-runtime-doctor.py --strict` exits **0**. Required components are healthy: repo HEAD proof, Windows edge-execution fallback, fresh Grok production scheduler readback, GitHub connector and Google Drive connector. The offline Mac is reported as a covered/degraded member of the `anyOf` host group, not a required blocker. Separately, the repaired monolithic `scripts/check-all.py` now completes **105/105 PASS with exit 0**.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.
@@ -133,4 +133,4 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - `scripts/check-hq-overlay.py`: PASS 2026-09-27
 - `scripts/check-readme-contract.py`: PASS 2026-09-27
 - `git diff --check`: PASS 2026-09-27
-- `scripts/check-all.py`: INTERRUPTED, not PASS
+- `scripts/check-all.py`: PASS 105/105, exit 0 (Windows sensor process-group isolation enabled)
