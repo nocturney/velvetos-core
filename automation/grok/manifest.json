@@ -106,6 +106,12 @@
     "scheduler": "cloudflare-instagram-publisher",
     "source": "packages/vfigos/cloudflare-publisher/",
     "openpost": "frozen",
-    "providerReadbackRequired": true
+    "providerReadbackRequired": true,
+    "openpostReleaseWatchRemoval": {
+      "state": "live_verified_deleted",
+      "verifiedAt": "2026-09-27T21:40:21.1296365+03:00",
+      "evidence": "automation/grok/openpost-release-watch-removal.json",
+      "remainingRoutineCount": 8
+    }
   }
 }

@@ -58,7 +58,10 @@
       "monitoring": false,
       "upgrade_watch": false,
       "failover_target": false,
-      "historical_only": true
+      "historical_only": true,
+      "release_watch_provider_state": "deleted_verified",
+      "release_watch_verified_at": "2026-09-27T21:40:21.1296365+03:00",
+      "release_watch_evidence": "automation/grok/openpost-release-watch-removal.json"
     },
     "text-to-cad": {
       "status": "active_scope_limited",
