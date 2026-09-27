@@ -1,6 +1,5 @@
 ---
 name: image
-description: "When the user wants to create, generate, edit, or optimize images for marketing — blog heroes, social graphics, product mockups, profile banners, listing visuals, or brand assets. Also use when the user mentions 'AI image generation,' 'generate an image,' 'create a graphic,' 'product mockup,' 'hero image,' 'social media graphic,' 'banner image,' 'cover photo,' 'profile banner,' 'listing screenshot,' 'Flux,' 'Flux Kontext,' 'Midjourney,' 'DALL-E,' 'GPT Image,' 'ChatGPT Images,' 'Ideogram,' 'Gemini image,' 'Nano Banana,' 'Recraft,' 'Stable Diffusion,' 'Canva,' 'Figma,' 'image optimization,' 'compress images,' 'WebP,' or 'OG image.' Use this for general-purpose marketing image creation and optimization. For paid ad image creative and platform-specific ad specs, see ad-creative. For video production, see video."
 metadata:
   version: 2.0.1
 ---
@@ -41,7 +40,6 @@ Pick the right tool for the job:
 |----------|----------|-------|-------------|
 | **AI Generation** | Original images from text prompts | Gemini/Nano Banana, Flux, Ideogram | Blog heroes, social graphics, lifestyle scenes |
 | **AI Editing** | Modify existing images | Gemini, Flux Flex | Background removal, style changes, variations |
-| **Design Tools** | Templated, brand-consistent assets | Canva, Figma | Profile banners, social templates, presentations |
 | **Screenshot + Overlay** | Product UI showcases | Browser screenshot + code overlay | Product mockups, feature announcements |
 | **Stock Photography** | Generic business/lifestyle scenes | Unsplash, Pexels | When speed matters more than uniqueness |
 
@@ -116,7 +114,6 @@ For detailed prompting guides per model, see [references/ai-image-prompting.md](
 
 For templated, brand-consistent work where AI generation is overkill or too unpredictable.
 
-### Canva
 
 Best for non-designers who need polished output fast.
 
@@ -139,7 +136,6 @@ Best for teams with design systems or pixel-perfect needs.
 | Scenario | Design Tool | AI Generation |
 |----------|:-:|:-:|
 | Exact brand guidelines must be followed | Yes | Maybe (with strong ref images) |
-| Need 20 size variants of one design | Yes (Canva Magic Resize) | No |
 | Unique hero image for a blog post | No | Yes |
 | Recurring social media template | Yes | No |
 | Product mockup with real UI | No (use screenshots) | No (hallucinated UI) |
@@ -179,7 +175,6 @@ Platform-specific images for organic posts.
 
 **Workflow:**
 1. Create the hero concept at highest resolution needed
-2. Use Canva Magic Resize or manual crop for platform variants
 3. Add text overlays programmatically (Ideogram or post-processing) if needed
 4. Export at platform-specific dimensions
 
@@ -220,7 +215,6 @@ Banners for profiles, directory listings, and marketplace pages. Often the first
 1. Pick the platform(s) and note exact dimensions
 2. For directories (Product Hunt, G2): use real product screenshots with light annotation
 3. For profiles (LinkedIn, Twitter): use brand colors + tagline + optional product shot
-4. Generate with Canva/Figma templates or Ideogram (if text-heavy)
 5. Test at actual display size — zoom out to check readability
 
 ### Brand Assets

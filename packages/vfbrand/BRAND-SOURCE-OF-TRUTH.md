@@ -7,7 +7,6 @@ This document is the visual source of truth for public Velvet Factory creative. 
 ## Authoritative identity
 
 - Master logo: **user-supplied `logo vector.svg`**.
-- Canva private asset: `MAHVE29Ucn0` (`Velvet Factory master logo`).
 - Visual reference supplied by owner: deep **navy** field with **warm gold / ivory** logo and typography.
 - Wordmark: `VELVET FACTORY` + `3D PRINTING STUDIO` as supplied in the master identity.
 - The exact master logo must be placed as an asset. **Do not redraw, regenerate, reinterpret or approximate the VF mark.**

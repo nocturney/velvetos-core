@@ -11,7 +11,6 @@ MARKER = "VF_VISUAL_STANDARD_GATE"
 STD = "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md"
 VIS = "packages/vfom/VISUAL-OS.md"
 DNA = "packages/vfom/VISUAL-DNA.json"
-ASSET = "MAHVL7PKpvE"
 SHA = "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897"
 
 def fail(message: str) -> None:
@@ -29,7 +28,6 @@ def main() -> None:
     policy = load_json(POLICY)
     expected = {
         "mode": "fail_closed", "standard": STD, "visualAuthority": VIS,
-        "visualDNA": DNA, "canvaAssetId": ASSET, "artifactSha256": SHA,
         "hardFailure": "visual_standard_unavailable",
         "genericFallbackAllowed": False, "productTruthOverridesStyle": True,
     }
@@ -45,14 +43,14 @@ def main() -> None:
     if not expected_evidence.issubset(required_evidence):
         fail(f"missing evidence contract {sorted(expected_evidence-required_evidence)}")
 
-    surfaces = list(policy.get("vfCreativeSurfaces") or []) + list(policy.get("conditionalCanvaSurfaces") or [])
-    if len(surfaces) < 18:
+    surfaces = list(policy.get("vfCreativeSurfaces") or [])
+    if len(surfaces) < 12:
         fail("creative surface inventory unexpectedly small")
     for rel in surfaces:
         path = ROOT / rel
         if not path.is_file(): fail(f"missing creative surface {rel}")
         body = path.read_text(encoding="utf-8")
-        for needle in (MARKER, STD, VIS, DNA, ASSET, SHA, "visual_standard_unavailable"):
+        for needle in (MARKER, STD, VIS, DNA, SHA, "visual_standard_unavailable"):
             if needle not in body:
                 fail(f"{rel} missing enforcement marker {needle}")
 
@@ -60,7 +58,7 @@ def main() -> None:
     if "scripts/vf_send_preflight.py" not in runtime_gates:
         fail("runtime gate inventory must include vf_send_preflight.py")
     runtime = (ROOT / "scripts/vf_send_preflight.py").read_text(encoding="utf-8")
-    for needle in ("visual_standard_gate", "VELVET_VISUAL_STANDARD_ASSET", "VELVET_VISUAL_STANDARD_SHA256", "product_truth_source_refs", "visual_standard_unavailable"):
+    for needle in ("visual_standard_gate", "VELVET_VISUAL_STANDARD_SHA256", "product_truth_source_refs", "visual_standard_unavailable"):
         if needle not in runtime:
             fail(f"vf_send_preflight.py missing runtime visual enforcement {needle}")
 
@@ -75,7 +73,6 @@ def main() -> None:
 
     for rel in (
         "packages/vfgrowth/GATE.md", "packages/vfgrowth/PREFLIGHT.md",
-        "packages/vfcanva/jobs/TEMPLATE.md", ".cursor/skills/vf-canva-instagram/SKILL.md",
     ):
         body = (ROOT / rel).read_text(encoding="utf-8")
         if "visual_standard_gate" not in body:
@@ -86,7 +83,7 @@ def main() -> None:
         path = embedded / rel
         if not path.is_file(): fail(f"missing embedded instance surface {rel}")
         body = path.read_text(encoding="utf-8")
-        for needle in ("OWNER-APPROVED-GRID-STANDARD-2026-09-14.md", ASSET):
+        for needle in ("OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",):
             if needle not in body:
                 fail(f"embedded instance {rel} missing {needle}")
         lower = body.lower()

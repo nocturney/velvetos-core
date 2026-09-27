@@ -18,7 +18,6 @@
 | — | handoff (mattpocock) | best-100 area | הוטמע — `vfharness/templates/handoff.md` |
 | — | last30days-skill | top-repos #25 | הוטמע דפוס — `vfresearch/hq/LAST30.md` (בלי CLI/keys) |
 | — | anti-ui-slop / taste-skill | trending / repos | watch — כבר יש taste-skill embed חלקי |
-| — | ai-video / ai-image gen | trending 1–3 | watch — media-director + Canva; אין Veo/Kling מ־HQ |
 | — | twitter/reddit-automation | trending | דולג — אוטו־פוסט / מחוץ ל־CTA |
 
 ## מה הוטמע

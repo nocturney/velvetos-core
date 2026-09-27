@@ -26,7 +26,6 @@
 
 1. חומר רק מעבודה גמורה / קובץ Drive שהמשתמש נקב. חסר הוכחה = חלקי.
 2. ריל/סטורי/קרוסלה עוברים דרך `.cursor/skills/vf-content-sprint/SKILL.md`; כל טקסט ציבורי שם כפוף ל־`vfcopy/SOFT-TOOLS-CONTRACT.md`.
-3. כריכה ב־`vfcovers` / `vfcanva`. Superdesign רק אם Canva לא מחובר.
 4. `vfigos` סוקר/שולח רק אחרי gates הקנוניים; אין claim live בלי tool receipt + verification.
 5. בלי TikTok, בוסט, follow-back, או צפיית־סטורי כטריק.
 

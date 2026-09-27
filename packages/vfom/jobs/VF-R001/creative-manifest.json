@@ -19,13 +19,11 @@
     "portablePrompt": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
     "referenceAsset": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
     "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
-    "canvaAssetId": "MAHVL7PKpvE",
     "artifactSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
     "coldStart": true,
     "evidenceRefs": [
       "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
-      "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
-      "canva:MAHVL7PKpvE"
+      "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"
     ]
   },
   "concept": {
@@ -37,17 +35,59 @@
   },
   "hook": {
     "candidates": [
-      {"id": "h1-no-text", "visual": "strongest movement frame, object already flexing in hand", "text": "", "reason": "clean baseline; motion is legible without copy"},
-      {"id": "h2", "visual": "tight crop on moving front limbs", "text": "כל זרוע אחרת", "reason": "specific but mostly descriptive"},
-      {"id": "h3-owner", "visual": "strongest movement frame, object already flexing in hand", "text": "פה התנועה היא כל העניין", "reason": "owner-selected; adds the point rather than restating the frame"}
+      {
+        "id": "h1-no-text",
+        "visual": "strongest movement frame, object already flexing in hand",
+        "text": "",
+        "reason": "clean baseline; motion is legible without copy"
+      },
+      {
+        "id": "h2",
+        "visual": "tight crop on moving front limbs",
+        "text": "כל זרוע אחרת",
+        "reason": "specific but mostly descriptive"
+      },
+      {
+        "id": "h3-owner",
+        "visual": "strongest movement frame, object already flexing in hand",
+        "text": "פה התנועה היא כל העניין",
+        "reason": "owner-selected; adds the point rather than restating the frame"
+      }
     ],
     "selected": "h3-owner"
   },
   "shots": {
     "plan": [
-      {"assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "shotType": "proof", "orientation": "vertical", "angle": "front three-quarter", "distance": "close", "action": "show multiple articulated limbs moving while held", "targetDurationSec": 2.2, "proof": "real visible articulation during handling"},
-      {"assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "shotType": "macro", "orientation": "vertical", "angle": "side/detail", "distance": "close", "action": "hold detail on segmented moving limbs", "targetDurationSec": 2.8, "proof": "real segmented geometry and motion"},
-      {"assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "shotType": "hero", "orientation": "vertical", "angle": "front", "distance": "medium-close", "action": "finish on a clean full-subject hand-held view", "targetDurationSec": 3.166, "proof": "real finished object and overall appearance"}
+      {
+        "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3",
+        "shotType": "proof",
+        "orientation": "vertical",
+        "angle": "front three-quarter",
+        "distance": "close",
+        "action": "show multiple articulated limbs moving while held",
+        "targetDurationSec": 2.2,
+        "proof": "real visible articulation during handling"
+      },
+      {
+        "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3",
+        "shotType": "macro",
+        "orientation": "vertical",
+        "angle": "side/detail",
+        "distance": "close",
+        "action": "hold detail on segmented moving limbs",
+        "targetDurationSec": 2.8,
+        "proof": "real segmented geometry and motion"
+      },
+      {
+        "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3",
+        "shotType": "hero",
+        "orientation": "vertical",
+        "angle": "front",
+        "distance": "medium-close",
+        "action": "finish on a clean full-subject hand-held view",
+        "targetDurationSec": 3.166,
+        "proof": "real finished object and overall appearance"
+      }
     ],
     "missing": []
   },
@@ -55,9 +95,33 @@
     "durationTargetSec": 8.166,
     "audioStrategy": "Source audio was measured near-silent and was not boosted. Exact final uses original procedural non-diegetic tactile SFX authored for the motion, normalized and muxed as AAC mono 48kHz; mean -19.3 dB, max -1.5 dB. Not claimed as source sound or trending music.",
     "timeline": [
-      {"startSec": 0.0, "endSec": 2.2, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "tight vertical subject crop", "speed": 1.0, "cut": "hard", "audio": "original-procedural-tactile-sfx"},
-      {"startSec": 2.2, "endSec": 5.0, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "detail crop on articulated limbs", "speed": 1.0, "cut": "hard", "audio": "original-procedural-tactile-sfx"},
-      {"startSec": 5.0, "endSec": 8.166, "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3", "crop": "clean full-subject view", "speed": 1.0, "cut": "hard", "audio": "original-procedural-tactile-sfx"}
+      {
+        "startSec": 0.0,
+        "endSec": 2.2,
+        "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3",
+        "crop": "tight vertical subject crop",
+        "speed": 1.0,
+        "cut": "hard",
+        "audio": "original-procedural-tactile-sfx"
+      },
+      {
+        "startSec": 2.2,
+        "endSec": 5.0,
+        "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3",
+        "crop": "detail crop on articulated limbs",
+        "speed": 1.0,
+        "cut": "hard",
+        "audio": "original-procedural-tactile-sfx"
+      },
+      {
+        "startSec": 5.0,
+        "endSec": 8.166,
+        "assetRef": "drive:1AJsdclVnkFegtpEnV0ec25a7xt7jGXj3",
+        "crop": "clean full-subject view",
+        "speed": 1.0,
+        "cut": "hard",
+        "audio": "original-procedural-tactile-sfx"
+      }
     ]
   },
   "overlays": [],
@@ -65,11 +129,29 @@
     "decision": "TEXT_WINS",
     "selectedText": "פה התנועה היא כל העניין",
     "noTextCompared": true,
-    "pipeline": ["reader-first-he", "velvet-hebrew-copy", "ai-tells-he", "owner-preference-lock", "brand-guardian-final-review"],
+    "pipeline": [
+      "reader-first-he",
+      "velvet-hebrew-copy",
+      "ai-tells-he",
+      "owner-preference-lock",
+      "brand-guardian-final-review"
+    ],
     "candidates": [
-      {"text": "", "result": "baseline", "reason": "clean visual remains viable"},
-      {"text": "הכול זז", "result": "rejected", "reason": "generic and redundant"},
-      {"text": "פה התנועה היא כל העניין", "result": "selected", "reason": "owner-selected and passes current visual-microcopy gate"}
+      {
+        "text": "",
+        "result": "baseline",
+        "reason": "clean visual remains viable"
+      },
+      {
+        "text": "הכול זז",
+        "result": "rejected",
+        "reason": "generic and redundant"
+      },
+      {
+        "text": "פה התנועה היא כל העניין",
+        "result": "selected",
+        "reason": "owner-selected and passes current visual-microcopy gate"
+      }
     ],
     "ownerPreference": "פה התנועה היא כל העניין",
     "readerFirstNote": "The movement is already visible; copy only earns its place by stating the point of watching it.",
@@ -78,21 +160,55 @@
   },
   "cover": {
     "candidates": [
-      {"id": "c0-no-text", "headline": "", "subjectCrop": "real source movement frame", "textPlacement": "none", "gridRationale": "clean baseline"},
-      {"id": "c1", "headline": "כל זרוע אחרת", "subjectCrop": "real source close crop", "textPlacement": "upper safe zone", "gridRationale": "specific but descriptive"},
-      {"id": "c2-owner", "headline": "פה התנועה היא כל העניין", "subjectCrop": "real source movement frame", "textPlacement": "upper safe zone with readability scrim", "gridRationale": "owner-selected; exact final reviewed"}
+      {
+        "id": "c0-no-text",
+        "headline": "",
+        "subjectCrop": "real source movement frame",
+        "textPlacement": "none",
+        "gridRationale": "clean baseline"
+      },
+      {
+        "id": "c1",
+        "headline": "כל זרוע אחרת",
+        "subjectCrop": "real source close crop",
+        "textPlacement": "upper safe zone",
+        "gridRationale": "specific but descriptive"
+      },
+      {
+        "id": "c2-owner",
+        "headline": "פה התנועה היא כל העניין",
+        "subjectCrop": "real source movement frame",
+        "textPlacement": "upper safe zone with readability scrim",
+        "gridRationale": "owner-selected; exact final reviewed"
+      }
     ],
     "selected": "c2-owner"
   },
   "finishing": {
     "policyVersion": 1,
     "principle": "Retouch the photo, not the product.",
-    "stages": {"photoRetouch": "PASS", "brandContentStyling": "PASS", "textLayoutQa": "PASS", "finalVisualQa": "PASS"},
-    "productTruth": {"gate": "PASS", "subjectIdentityIntegrity": "PASS", "syntheticSubjectChange": "NONE", "sourceSubjectMatch": "PASS", "colorPreserved": "PASS", "notes": "Real source object only; crop/timing/cover treatment does not alter the product."},
+    "stages": {
+      "photoRetouch": "PASS",
+      "brandContentStyling": "PASS",
+      "textLayoutQa": "PASS",
+      "finalVisualQa": "PASS"
+    },
+    "productTruth": {
+      "gate": "PASS",
+      "subjectIdentityIntegrity": "PASS",
+      "syntheticSubjectChange": "NONE",
+      "sourceSubjectMatch": "PASS",
+      "colorPreserved": "PASS",
+      "notes": "Real source object only; crop/timing/cover treatment does not alter the product."
+    },
     "repairCycles": 1,
     "lastRepairAction": "Re-rendered video with intentional original SFX, showcase caption and owner-selected cover; rebound exact hashes.",
     "reviewedArtifactDigest": "sha256:68d79b3384b7428a946d6b85c3d66d1d02883eb8c03d93b0ebb3c152fe42d1ab",
-    "evidenceRefs": ["drive:1_YozA-MOfv1TEeFH0xIsNLBv91Lp1yGz", "drive:19kdDtM-EM9SxXezXINIa045NG73z-Bvw", "drive:11rH_qAx1YKxsxxL9ucyZ4JjRoUePYDmS"]
+    "evidenceRefs": [
+      "drive:1_YozA-MOfv1TEeFH0xIsNLBv91Lp1yGz",
+      "drive:19kdDtM-EM9SxXezXINIa045NG73z-Bvw",
+      "drive:11rH_qAx1YKxsxxL9ucyZ4JjRoUePYDmS"
+    ]
   },
   "qa": {
     "brandScore": 86,
@@ -120,7 +236,12 @@
       "executionReceipt": "PASS_CURRENT_MAIN"
     },
     "failures": [],
-    "repairs": ["Rejected near-silent source audio instead of boosting noise.", "Added original non-diegetic tactile SFX and reran audio measurements.", "Rewrote caption as showcase copy and reran current-main Visible Text Gate.", "Rendered owner-selected cover and rebound exact hashes/receipts."]
+    "repairs": [
+      "Rejected near-silent source audio instead of boosting noise.",
+      "Added original non-diegetic tactile SFX and reran audio measurements.",
+      "Rewrote caption as showcase copy and reran current-main Visible Text Gate.",
+      "Rendered owner-selected cover and rebound exact hashes/receipts."
+    ]
   },
   "feed": {
     "continuityDecision": "pass",

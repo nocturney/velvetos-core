@@ -1,14 +1,29 @@
-# 05 · משרד · 24.9.2026
+# 05 · משרד · 27.9.2026
 
 מצב Research Seat: `ready_for_brief`.
 הריצה הושלמה לפני cutoff 07:00 Asia/Jerusalem.
 
 ## מה נבנה / יועל
-- עמודת קליטה אחת לפניות רציניות (IG/מייל) — לא לתת לשרשור להיות רשומת ההזמנה; מיפוי ל־`vfconvert` בלי auto-DM ובלי שינוי CTA.
-- קריטריוני קבלה / First Article לפני כמות — טבלת שחרור קצרה על כרטיס עבודה ב־`vfprod`/`vfsku` (קובץ+חומר, התאמה, אזורי קוסמטיקה, דגימה, מה קורה בכשל).
-- חוט כמלאי: תווית סליל + lot כשצריך עקביות צבע/התאמה; נקודות הזמנה מחדש — הרגל `vfprod`, לא קניית מייבש/מערכת מ-HQ; אין ספירת מלאי מומצאת.
-- מהירות הצעה ככיוון המרה (פורום; אין Insights VF) — תשובה באותו יום כשאפשר; בלי מחשבון שממציא ₪.
-- Best Skills due (~48ש מ־22.9): `no-embed-existing-coverage` על דירוג 23.9.
-- MakerWorld: דולג (יום ה׳; קאדנס א׳–ד׳).
+- טופס קליטה לפני מחיר (8 בלוקים / 6 שאלות קצרות) שמחליט quote / hold / discovery / sample-first לפני שפת ₪ — מיפוי ל־`vfconvert`.
+- חבילת הצעה מינימלית: קובץ שולט אחד + מספר גרסה + כמות/שלב + שימוש + גימור + קריטי למידה — `vfconvert`/`vfsales` (בלי ₪ מומצא).
+- שלוש מדרגות גימור לפני אישור הצעה (פונקציונלי / פונה-ללקוח / דגימת מצגת) + פנים מוגנים — `vfsales`/`vfconvert`/`vfprod`.
+- רשימת automatic-fail ל־QC + אריזת איסוף שמעדיפה מניעת שבירה על מהירות — `vfprod` (דפוס בלבד).
+- מארגנים פונקציונליים ברי־הדפסה באותו G-code + ימי אצווה לפי צבע + סטאק עלות מלא (חומר/חשמל/עבודה/פחת/עמלות) — מיפוי ל־`vfsku`/`vfprod`/`vfconvert` (**EXTRA**; בלי ₪ מומצא; VF = איסוף/IG בלבד).
+- מועדון איסוף מקומי קטן מסוג desk-reset: אביזרי שולחן שחוזרים טבעית, קאדנס ברור, באפר חומר, skip/pause — `vfsku`/`vfsales` + לוח freeze→print→QA→ready ב־`vfops` (**EXTRA**; לא משלוח ארצי / לא Printie outsourcing).
+- Best Skills: due/stale (~72ש מ־24.9) — בוצע על דירוג 26.9; `no-embed-existing-coverage`.
+- MakerWorld/Printables א׳: Cloudflare; רישיונות UNPROVEN; אין שם להציע למדף.
 
-מקור מלא: `packages/vfresearch/sources/2026-09-24-orchestra.md`.
+מקור מלא: `packages/vfresearch/sources/2026-09-27-orchestra.md` · `2026-09-27-best-skills.md` · `2026-09-27-makerworld-scan.md`.
+
+## שבועי קישורים · 25.9.2026 (Weekly Research Accountability · gh-failover)
+
+- 84 קישורי `LINKS.json`: 80 נבדקו חי, 4 חומות (נקרא רק sourceNote). `lastReviewed=2026-09-25`.
+- הוטמע: Huly בארכיון (הפיתוח עבר ל־Platform-Collective; השירות המתארח נסגר) → `note` ב־`LINKS.json`. HeyOrca 25.9 → print-demand.
+- print-demand — 4 אותות (`sources/2026-09-25-print-demand.md`); מדף חומרים חסר ספירה.
+
+```text
+05 · משרד
+שבועי קישורים — 80/84 נבדקו חי · הוטמע Huly-ארכיון + HeyOrca 25.9 · print-demand — 4 אותות
+```
+
+מקור מלא: `packages/vfresearch/sources/2026-09-25-weekly-links.md`.

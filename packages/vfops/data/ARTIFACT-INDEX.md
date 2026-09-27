@@ -38,7 +38,6 @@
 | מסמכי עבודה | Drive `create_file` | כל מושב | חיפוש לפי job/SKU |
 | מייל שנשלח | Gmail (thread id) | HQ send | vfconvert / מעקב |
 | בריף htmlBody | `vfops/out/BRIEF-YYYY-MM-DD.html` | אחרי `send_message` | Grok / Cloud / GitHub — לא `/opt/cursor/artifacts` |
-| עיצוב IG | Canva (design id / URL אמיתי) | vfcanva | vfigos |
 | לוח פרסום קבוע | Cloudflare Publisher D1 + `vfgrowth/CALENDAR.md` + `RHYTHM.md` | צמיחה | Morning Green + Google Calendar `אינסטגרם` mirror |
 | mesh / 3D | Drive + 3D AI Studio dashboard | vfprod | ייצור |
 
@@ -60,11 +59,9 @@
 | Revenue loop | Offer card, pipeline `ig_post_ref`, weekly pulse | `vfgrowth/experts/REVENUE-LOOP.md`, `PIPELINE-BOARD.md`, `WEEKLY-REVENUE-PULSE.md` |
 | Insights ingest | snapshot מאומת | `vfinsights/sources/*-ig-snapshot.md`, `templates/snapshot-ingest.md` |
 | Instance onboard | פרונט + זיכרון נפרד | `velvetos/experts/INSTANCE-ONBOARD.md`, `owner-memory-<id>.md` |
-| Social Booster | חבילת קרוסלה / הוקים | `vfgrowth/`, Canva, `vfigos` queue |
 | לוח פרסום קבוע | משבצות + לדג׳ר + מסירה | `vfgrowth/CALENDAR.md`, `LEDGER.md`, `HANDOFF-he.md` |
 | 3D model | כרטיס כדאיות, mesh | `vfprod/`, Drive, checkpoint |
 | Trend explorer | מפת מקורות, מוזיקה | `vfresearch/sources/`, `LINKS.json` |
-| Media director | storyboard, ריל packet | `vfom/`, `vfcovers/`, Canva |
 
 ## מה עדיין לא אוטומטי
 

@@ -42,13 +42,10 @@
 
 ## 4. תוכן — `crews/content.md`
 
-**מהרשימה:** Wordware / GoCharlie / Wispy (טיוטה), Diagram / v0 (פריסה — אצלנו Superdesign/Canva), Claudexor (סיבוב מכסה).
 
 **אצלנו:**
 
 1. `vfcopy`: שיעורי בית, טיוטה, לינט קול.
-2. `vfcovers`: כיסוי לבריף. Canva קודם.
-3. `vfigos`: סקירה **ושליחה דרך כלים** (`SEND.md`). אין Publish MCP → Canva+Drive+Gmail באותו תור.
 4. `vfgrowth`: ספרינט תוכן. בלי בוסט/DM.
 5. לא ממציאים שעלה לפיד. לא יושבים על `#מוכן-ל-Grok`.
 

@@ -5,8 +5,8 @@
   "created_for": "owner-requested dependency closure after 6.6.3: ship every transitive local chat-runtime dependency inside the Project bundle so cold-start source ingest works without relying on repo-only modules",
   "instructions": {
     "filename": "Velvet-Factory-Project-Instructions-v6.6.4.txt",
-    "sha256": "31949454f0743783c230843c35cd76e5e680228a491784034e2a148256f916bf",
-    "characters": 6865,
+    "sha256": "c95f2c647a54a9fb6d6b1c04b022f72c90352f08f655a22beb6554f1d7a42fed",
+    "characters": 6837,
     "limit_supplied_by_owner": 8000
   },
   "assets": [
@@ -14,8 +14,8 @@
       "filename": "Velvet-Factory-Project-Authority-v6.txt",
       "role": "authority",
       "required_for": "all_requests",
-      "sha256": "02b79689dc8872b1f50cb8428fefcb045a4539012ffe9b9aad72ca7f951b80d7",
-      "bytes": 31548
+      "sha256": "db07dd973272a96b154b4771af1dbb13c03d039de595b56cd857bb0144025976",
+      "bytes": 31135
     },
     {
       "filename": "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",

@@ -7,7 +7,6 @@
 ## כל בוקר 06:15–07:00 (Asia/Jerusalem)
 
 הפרדה קשיחה: **run** (משימות) → **brief** (הרכבה) → **check**/CI (תקינות).  
-`run` לא מפעיל `check-all` (רקורסיה עם `check-vfops-loop`). לא מרנדר G005/Canva אוטומטית.
 
 ```
 python3 scripts/vfops_loop.py run

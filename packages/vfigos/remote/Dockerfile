@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 # Build context MUST be the repository root so approval/ + CAPABILITIES + core-mcp
 # are available. Private signing keys are NEVER copied into this image.
-FROM python:3.12-slim
+# Base pinned 2026-09-26: python:3.12-slim resolved to 3.12.14-slim-trixie (index digest, multi-arch).
+FROM python:3.12.14-slim-trixie@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -12,13 +13,15 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+# Exact pins resolved together on py3.12 (pip check clean; boot-tested /healthz,
+# 401 without bearer, initialize). starlette/cryptography match requirements-sensors.txt.
 RUN pip install --no-cache-dir \
-    "adelaidasofia-instagram-mcp>=0.1.2" \
-    "fastmcp>=3.4.2,<4" \
-    "uvicorn[standard]>=0.30" \
-    "starlette>=0.37" \
-    "cryptography>=41" \
-    "google-cloud-storage>=2.14"
+    "adelaidasofia-instagram-mcp==0.1.2" \
+    "fastmcp==3.4.7" \
+    "uvicorn[standard]==0.54.0" \
+    "starlette==1.7.0" \
+    "cryptography==50.0.1" \
+    "google-cloud-storage==3.15.0"
 
 # Remote MCP entry + overlays
 COPY packages/vfigos/remote/*.py /app/

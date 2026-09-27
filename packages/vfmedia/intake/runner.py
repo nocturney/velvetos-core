@@ -115,9 +115,9 @@ def default_runner_state() -> dict:
             "note": "never permanent stop — escalate then repeat last interval",
         },
         "schedule": {
-            "targetMinutes": 5,
-            "githubActionsCron": "*/5 * * * *",
-            "note": "GHA minimum interval is 5 minutes; runs may be delayed under platform load",
+            "targetMinutes": 180,
+            "githubActionsCron": "23 */3 * * *",
+            "note": "Every 3h (8/day): GitHub delivered only ~6-8/day of the old */5 (2026-09-17..25); workflow_dispatch for immediate runs",
         },
         "activation": {
             "proven": False,
@@ -142,6 +142,7 @@ def load_runner_state() -> dict:
         **default_runner_state()["pagination"],
         **(state.get("pagination") or {}),
     }
+    base["schedule"] = default_runner_state()["schedule"]  # config from code, never stale state
     return base
 
 

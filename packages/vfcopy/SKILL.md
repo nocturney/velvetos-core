@@ -24,7 +24,6 @@ Evals: `python3 scripts/check-vfcopy.py eval` — בודקים את המנוע, 
 - `customer-message` — Gmail/WhatsApp/IG private reply; מוסיף vfconvert/vfsales/vfcost/vlicense כשישים.
 - `sales-proposal` — quote/proposal/follow-up; מוסיף sales/cost truth + vfmskill writing aids כשישים.
 - `owner-brief` — בריף/מייל/סיכום/החלטה לכריסטיאן; שומר IDs/status/numbers literal, בלי public CTA.
-- `human-document` — PDF/DOC/slide/HTML/Canva prose; format QA אחרי text QA.
 - `ui-microcopy` — dashboard/UI text; technical labels/source values literal.
 - `desk` — טקסט אנושי אחר במשרד לפי domain context.
 
@@ -42,4 +41,3 @@ Evals: `python3 scripts/check-vfcopy.py eval` — בודקים את המנוע, 
 - human document → layout/render only after text gate.
 
 HQ שולח דרך כלים רק לאחר gates הקנוניים (`constitution/SEND.md`).  
-לוח/פיד: `vfgrowth/CALENDAR.md`; public CTA תמיד לפי `constitution/PUBLIC_CTA.md`; אין Canva/vfcovers/Brand QA כשנדרש = לא משבצים.

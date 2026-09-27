@@ -150,7 +150,6 @@ G004 (**מחזיק טבעות לזמן אימון**, לא משקולת) = **סי
 פריט גמור = סיפור-מוצר מקוצר: הוק → פרט/אופי → CTA לפי `publicIntent`.  
 `showcase` אינו מקבל אוטומטית הזמנה/איסוף. `commercial` משתמש ב־Instagram message + איסוף כאשר רלוונטי.  
 G004 ההיסטורי: `G004-STORIES-FIX.md` + `FEED-AUDIT.md`; הקריאייטיב הישן נשאר STALE אחרי reset.  
-בלי Canva MCP / vfcovers = לא משבצים.
 
 ## בדיקה לפני `#vfigos`
 

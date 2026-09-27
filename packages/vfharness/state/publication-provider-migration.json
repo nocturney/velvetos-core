@@ -2,7 +2,6 @@
   "scope": "VF publication only",
   "entrypoints": [
     {
-      "path": ".cursor/skills/vf-canva-instagram/SKILL.md",
       "legacy_lines_marked": 20
     },
     {
@@ -38,15 +37,12 @@
       "legacy_lines_marked": 10
     },
     {
-      "path": "packages/vfcanva/WORKFLOW.md",
       "legacy_lines_marked": 17
     },
     {
-      "path": "packages/vfcanva/README.md",
       "legacy_lines_marked": 13
     },
     {
-      "path": "packages/vfcanva/jobs/TEMPLATE.md",
       "legacy_lines_marked": 5
     },
     {
@@ -90,27 +86,21 @@
       "legacy_lines_marked": 4
     },
     {
-      "path": ".cursor/skills/canva-brand-check/SKILL.md",
       "legacy_lines_marked": 11
     },
     {
-      "path": ".cursor/skills/canva-bulk-create/SKILL.md",
       "legacy_lines_marked": 13
     },
     {
-      "path": ".cursor/skills/canva-edit-design/SKILL.md",
       "legacy_lines_marked": 13
     },
     {
-      "path": ".cursor/skills/canva-get-design-feedback/SKILL.md",
       "legacy_lines_marked": 10
     },
     {
-      "path": ".cursor/skills/canva-implement-feedback/SKILL.md",
       "legacy_lines_marked": 14
     },
     {
-      "path": ".cursor/skills/canva-resize-for-social-media/SKILL.md",
       "legacy_lines_marked": 15
     },
     {

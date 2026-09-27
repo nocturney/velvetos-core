@@ -2,7 +2,6 @@
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 מושב: **צמיחה + סטודיו**. לא פק חדש.  
@@ -24,7 +23,6 @@ Visible Text extension: 11.9.2026.
 |---|---|---|
 | א | **Visible Text + SOFT-TOOLS-CONTRACT + VOICE** | כל AI-authored copy שהקהל רואה עבר `public-social` Visible Text Gate על **הגרסה הסופית**: verified context → reader-first → VOICE/VOICE-CHART/`voice/approved/` → relevant vfmskill aids → template → `velvet-hebrew-copy` → `ai-tells-he.md` → `python3 scripts/check-vfcopy.py lint` / surface-aware gate על actual final copy → fact gate. חובה `visible_text_gate=PASS`, `surface`, `text_sha256`/copy digest, ו־`vfcopy_lint=pass` |
 | א2 | **Visual microcopy** | אם יש cover/first-frame/overlay/slide text: גם `visual-microcopy` gate, 3–5 candidates + `NO_TEXT`, Creative Director/Brand Guardian, והחלטת `TEXT_WINS` מנומקת או `NO_TEXT`. אם אין טקסט ויזואלי: `N/A` מתועד |
-> LEGACY / provenance only for VF publication; not a provider route: | ב | **Canva / vfcovers** + ראיית ויזואל | `edit_url` אמיתי מ־Canva MCP **או** PNG מ־`vfcovers` / `vfcanva`. לא JPEG גולמי. ראייה: thumbnail/export path או צילום מסך מקומי — לא «נראה טוב» בעל־פה |
 | ג | **ציון עצמי מול רף סוכנות** | ביקורת עצמית כתובה. כל שורת רף = כן. לא = נכשל-סגור |
 | ד | **VOICE-RESEARCH / קומפס / ייחוד כשנדרש** | בודקים **2–3 קומפס/כיוונים** כשיש טעם אמיתי בהשוואה; מקורות רלוונטיים ומה מאמצים/דוחים; אין חיקוי זהות ואין ספירת עוקבים מומצאת |
 | ה | **CONTENT-RUBRIC** | טבלת Rubric מלאה (5 צירים), ≥20/25, בלי 1 ובלי דגל אדום |
@@ -81,7 +79,6 @@ visual_text_sha256: <64-hex | N/A>
 | עושים במשרד | אסור על משטח כריסטיאן / ראש צוות |
 |---|---|
 | חסום שיבוץ ב־`HANDOFF-he.md` | «רמה נמוכה» |
-> LEGACY / provenance only for VF publication; not a provider route: | תיקון copy chain / Canva / audio / evidence באותו תור | דוח בושה «לא השתמשתם בכלים» |
 | `UNPROVEN` כשאין receipt אמיתי | להפוך ידנית ל־PASS |
 | מדדים חלשים — לוג פנימי בלבד | פינג בצ׳אט על Insights חלשים |
 
@@ -103,13 +100,14 @@ packages/vfgrowth/preflight/<G00X-or-sku>.md
 
 ## Velvet Factory Visual Standard Gate — mandatory (`VF_VISUAL_STANDARD_GATE`)
 
-> LEGACY / provenance only for VF publication; not a provider route: Before any Velvet Factory concept, image selection/edit, Canva operation, cover, carousel, Story still, Reel cover, feed/grid plan, render or publish handoff, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`. Verify Canva asset `MAHVL7PKpvE` and artifact SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`. Record a PASS binding in the job/manifest/preflight before creative work continues.
 
-> LEGACY / provenance only for VF publication; not a provider route: This gate is **fail-closed**: if the standard is unavailable, mismatched or unverified, stop the creative branch as `visual_standard_unavailable`; never fall back to a generic 3D-print, stock, template, Canva-default or model-default aesthetic. Real source product media remains Product Truth and outranks style; preserve product identity/geometry/material/color and apply the approved reference to composition, surroundings, light, crop, typography and finish.
 
 ### Visual-standard evidence contract
 
-> LEGACY / provenance only for VF publication; not a provider route: A Velvet Factory creative job cannot advance to design handoff, quality_checked, authorized_for_tool_publish, export or publish unless the same job records all of: `visual_standard_gate=PASS`, `visual_standard_canva_asset_id=MAHVL7PKpvE`, `visual_standard_artifact_sha256=df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, concrete `product_truth_source_refs`, and the exact-final artifact digest. Missing or mismatched evidence is `visual_standard_unavailable` and blocks the branch.
+- `visual_standard_gate=PASS`
+- `visual_standard_artifact_sha256=df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`
+- `product_truth_source_refs` identifies real source evidence.
+- `exact_final_artifact_digest` binds the reviewed final.
 
 ## Publication-prep execution gate
 
@@ -127,3 +125,6 @@ Brand/CTA final gate also requires `brand_asset_gate: PASS`, `generated_brand_ma
 
 For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md` is mandatory. Preserve the real product, but do not pass through raw/source photos as the finished creative. At least one review visual — normally the hero/first slide — must show a meaningful approved Velvet treatment around the source-locked product. Default to editing the real source image, not recreating the product from text. Multiple photos do not imply a carousel; if carousel is chosen, slide 1 must be a fully treated hero. `raw_passthrough=true`, an essentially untouched source carousel, or crop/exposure-only work presented as publication-grade is FAIL. Generative edits must explicitly contain NO LOGO, NO WORDMARK, NO PHONE NUMBER, NO WHATSAPP, NO CONTACT BAR, NO GENERATED HEBREW TEXT.
 
+## VF_VISUAL_STANDARD_GATE
+
+Before public creative execution, load `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VISUAL-OS.md` and `packages/vfom/VISUAL-DNA.json`. Bind SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897` and require `visualStandard.gate=PASS`. Missing/mismatched authority is `visual_standard_unavailable`; generic visual fallback is forbidden.

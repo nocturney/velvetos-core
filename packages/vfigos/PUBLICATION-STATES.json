@@ -97,8 +97,7 @@
     {
       "id": "blocked_artifact_retrieval",
       "he": "חסום שליפת ארטיפקט",
-      "live": false,
-      "note": "אין ייצוא מאושר נגיש (Cursor path אבוד + Canva re-export נכשל). אחרי ניסיונות שחזור בלבד."
+      "live": false
     },
     {
       "id": "blocked_bridge_staging",
@@ -127,8 +126,7 @@
     {
       "id": "blocked_publish_transport",
       "he": "חסום תחבורה (טרמינלי)",
-      "live": false,
-      "note": "רק אחרי שכל נתיבי השחזור (local export → Canva re-export → bridge stage → fetch) נכשלו באמת. לא ברירת מחדל."
+      "live": false
     },
     {
       "id": "failed",
@@ -165,7 +163,6 @@
   "transportRecoveryOrder": [
     "approved_export_local",
     "attempt_exact_artifact_retrieval",
-    "attempt_canva_reexport_from_source_ref",
     "attempt_canonical_bridge_staging",
     "public_fetch_verify",
     "publish",

@@ -1,7 +1,7 @@
 {
   "name": "velvetos-velvet-factory-desk",
   "title": "VelvetOS — Velvet Factory (frontend instance)",
-  "updatedAt": "2026-08-31",
+  "updatedAt": "2026-09-26",
   "sourceAgency": ".cursor/agency-agents.json",
   "alwaysOnRule": ".cursor/rules/velvetos-instance-desk.mdc",
   "product": "VelvetOS",
@@ -13,9 +13,9 @@
     "portablePrompt": "vendor/velvetos-core/packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
     "referenceAsset": "vendor/velvetos-core/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
     "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
-    "canvaAssetId": "MAHVL7PKpvE",
     "artifactSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
-    "coldStartGate": "fail_closed"
+    "coldStartGate": "fail_closed",
+    "rule": "Load and verify before any visual-content concept/generation; no generic fallback. Product Truth outranks style."
   },
   "velvetos": {
     "core": "vendor/velvetos-core",
@@ -105,17 +105,8 @@
     },
     "superdesign": {
       "status": "skill-installed",
-      "useWhen": "vfcovers, brief packet, posters, social graphics. Graphics path skips repo init.",
-      "failover": "Canva if connected, else packages/vfcanva/studio/render.py"
-    },
-    "canva": {
-      "status": "ready",
-      "namespace": "Canva",
-      "useWhen": "Instagram post/story/reel cover/carousel for @velvets_cloud",
-      "mcp": "https://mcp.canva.com/mcp",
-      "verifiedAt": "2026-08-31",
-      "note": "Cloud Agent search-designs returned DAGoYmCu4c4. Instagram send: vfigos/SEND.md (tool or Canva+Drive+Gmail failover).",
-      "failover": "needsAuth → packages/vfcanva/studio/render.py → Superdesign. Say Canva לא מחובר."
+      "useWhen": "non-VF-publication graphics only when separately authorized",
+      "failover": "No automatic provider fallback for Velvet Factory public creative; use only when a separate non-publication authority permits it."
     },
     "instagram": {
       "status": "ready",
@@ -129,13 +120,19 @@
       "mcp": "Cloud Team MCP namespace instagram · adelaidasofia/instagram-mcp",
       "package": "adelaidasofia-instagram-mcp",
       "source": "https://github.com/adelaidasofia/instagram-mcp",
-      "useWhen": "vfigos publish (image/carousel/reel/story), vfinsights verified metrics, feed review",
+      "useWhen": "scheduled publish via Cloudflare publisher; live verification/read via Instagram Graph/MCP",
       "connect": "packages/vfigos/CONNECT-IG.md",
       "deploy": "packages/vfigos/DEPLOY-CODESPACE.md",
       "stories": "enabled-same-mcp",
       "dmEnabled": false,
       "boostEnabled": false,
-      "notRequired": ["Metricool", "Publer", "Postly", "SimplePost", "Meta Business Suite"],
+      "notRequired": [
+        "Metricool",
+        "Publer",
+        "Postly",
+        "SimplePost",
+        "Meta Business Suite"
+      ],
       "allowed": [
         "healthcheck",
         "get_profile",
@@ -160,7 +157,9 @@
         "ads"
       ],
       "rule": "Approved public HTTPS media URL → publish_* → verify with list_media/get_media. No invented Insights. No auto-DM. No boost. publish success ≠ liveVerified.",
-      "failover": "MCP down or remote_access pending without live session → Canva export + Drive create_file + Gmail send_message same turn (#ממתין-ל-כלי-IG)"
+      "scheduler": "vendor/velvetos-core/packages/vfigos/cloudflare-publisher/",
+      "publicationTarget": "Meta Instagram Graph API",
+      "failover": "Scheduled delivery stays on the Cloudflare Instagram Publisher. If the live Instagram Graph/MCP boundary is unavailable, preserve the exact approved artifact and mark the operation blocked pending canonical live verification."
     },
     "web": {
       "status": "ready",
@@ -175,9 +174,7 @@
     },
     "image": {
       "status": "ready",
-      "namespace": "cursor GenerateImage + Canva generate-design",
-      "useWhen": "User-asked image / brief graphic. Instagram still prefers Canva first.",
-      "failover": "Canva generate-design → Superdesign → packages/vfcanva/studio/render.py. No invented Canva URL."
+      "failover": "Use another currently connected image/edit capability or preserve the source and return visual_execution_unavailable; never invent provider success."
     },
     "treg": {
       "status": "not-relevant",
@@ -221,7 +218,7 @@
       "mcp": "https://studiomcphub.com/mcp",
       "useWhen": "Core print-file tools. VF: remove_background / resize only. Playbook: packages/vfmcp/CONNECT-STUDIOHUB.md",
       "rule": "Free tools unless lead seat. No wallet/x402 in git. No NFT. VF skips print_ready/CMYK. HQ does not print. No invented ₪.",
-      "failover": "Canva / packages/vfcanva/studio/render.py / 3DAI + vfprod/PREFLIGHT.md"
+      "failover": "Use the directly connected specialist capability or the existing local pack; if neither is available, report the specific unavailable capability without inventing execution."
     },
     "mcp-gsheets": {
       "status": "desktop-credentials",
@@ -310,12 +307,10 @@
       "tools": [
         "superdesign",
         "drive",
-        "canva",
         "instagram",
         "image",
         "web"
-      ],
-      "decides": "content pack and cover drafts. HQ reviews/schedules and publishes via Instagram MCP (adelaidasofia) or Canva+Drive+Gmail failover. Grok is optional backup."
+      ]
     },
     {
       "id": "ops",
@@ -520,7 +515,6 @@
         "vfom"
       ],
       "tools": [
-        "canva",
         "web"
       ],
       "job": "Review, schedule, and send via tools (vfigos/SEND.md). No boost. No auto-DM."
@@ -535,7 +529,6 @@
       "tools": [
         "superdesign",
         "drive",
-        "canva",
         "image"
       ],
       "job": "Cover and reel narrative from floor proof, not invented scenes"
@@ -547,8 +540,7 @@
       ],
       "tools": [
         "superdesign",
-        "image",
-        "canva"
+        "image"
       ],
       "job": "Cover-art prompts. No Israeli brand-file copies."
     },
@@ -698,5 +690,31 @@
     ".cursor/skills/vf-ig-music/SKILL.md",
     ".cursor/skills/vf-velvetos/SKILL.md"
   ],
-  "role": "instance"
+  "role": "instance",
+  "brandAssetLock": {
+    "required": true,
+    "document": "vendor/velvetos-core/packages/vfom/BRAND-ASSET-LOCK.md",
+    "mode": "fail_closed",
+    "generatedBrandMark": "forbidden",
+    "logoWhenVerifiedOnly": "deterministic_overlay",
+    "publicPhoneForbidden": true,
+    "publicCtaAuthority": "vendor/velvetos-core/constitution/PUBLIC_CTA.md"
+  },
+  "creativeTransformationLock": {
+    "required": true,
+    "document": "vendor/velvetos-core/packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md",
+    "mode": "fail_closed",
+    "rawPassthrough": false,
+    "defaultEditMode": "SOURCE_IMAGE_EDIT",
+    "heroTreatmentRequired": true,
+    "multiplePhotosDoNotImplyCarousel": true
+  },
+  "projectRequestGate": {
+    "required": true,
+    "document": "vendor/velvetos-core/packages/velvetos/PROJECT-REQUEST-GATE.md",
+    "manifest": "vendor/velvetos-core/packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
+    "mode": "fail_closed",
+    "requirePreflightPass": true,
+    "postflightRequired": true
+  }
 }

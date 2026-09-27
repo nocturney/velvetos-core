@@ -1,10 +1,34 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import re, sys
+import json, re, sys
 from collections import defaultdict
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 SEARCH_ROOTS=[ROOT/'packages', ROOT/'.agents', ROOT/'.claude', ROOT/'.codex', ROOT/'.cursor'/'skills']
+LOCK_PATH=ROOT/'skills-lock.json'
+
+
+def _locked_external_skills() -> set[str]:
+    """Return project skills explicitly pinned to an external source + content hash."""
+    if not LOCK_PATH.is_file():
+        return set()
+    try:
+        data=json.loads(LOCK_PATH.read_text(encoding='utf-8'))
+    except (OSError, json.JSONDecodeError):
+        return set()
+    out=set()
+    for name, meta in (data.get('skills') or {}).items():
+        if not isinstance(meta, dict):
+            continue
+        source=str(meta.get('source') or '').strip()
+        source_type=str(meta.get('sourceType') or '').strip().lower()
+        digest=str(meta.get('computedHash') or '').strip().lower()
+        if source and source_type not in {'', 'local'} and re.fullmatch(r'[0-9a-f]{64}', digest):
+            out.add(str(name).strip().lower())
+    return out
+
+
+LOCKED_EXTERNAL_SKILLS=_locked_external_skills()
 
 
 def _description(frontmatter: str) -> str | None:
@@ -28,7 +52,12 @@ def _description(frontmatter: str) -> str | None:
 
 def _reference_skill(rel: Path) -> bool:
     s='/' + rel.as_posix().lower() + '/'
-    return '/vendor/' in s or '/third_party/' in s or '/reference/' in s
+    if '/vendor/' in s or '/third_party/' in s or '/reference/' in s:
+        return True
+    parts=rel.parts
+    if len(parts) >= 3 and parts[0] == '.agents' and parts[1] == 'skills':
+        return parts[2].lower() in LOCKED_EXTERNAL_SKILLS
+    return False
 
 
 def _expected_router_pair(paths: list[Path]) -> bool:

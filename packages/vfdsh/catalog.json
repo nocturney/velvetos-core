@@ -313,11 +313,9 @@
       "verdict": "later",
       "pattern": "saved image / audio / video / 3D workflows",
       "packs": [
-        "vfcovers",
-        "vfcanva"
+        "vfcovers"
       ],
-      "crew": "crews/design-assets.md",
-      "note": "Canva + Superdesign cover the visual job. No TongFlow studio from HQ."
+      "crew": "crews/design-assets.md"
     },
     {
       "name": "iPolloWork / deepseek-idesign",
@@ -325,11 +323,9 @@
       "verdict": "later",
       "pattern": "visual design studio inside the harness",
       "packs": [
-        "vfcovers",
-        "vfcanva"
+        "vfcovers"
       ],
-      "crew": "crews/design-assets.md",
-      "note": "Same job as Canva. Do not install a second design host."
+      "crew": "crews/design-assets.md"
     },
     {
       "name": "WaveSpeed 3D",

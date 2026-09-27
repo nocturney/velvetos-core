@@ -26,13 +26,11 @@
 |---|---|
 | `npx skills add` / vendor מלא | skills מחוץ למבנה HQ; Cursor כבר המשרד |
 | `taste-skill` v2 / gpt-taste / brutalist / image-to-code | web dev; לא עבודת הרצפה |
-| `brandkit` / `imagegen-*` כ-generator | סותר «לא להמציא hex/fonts/brand» — Canva + brand-check |
 | Sent.dm / Stitch | toolchain נפרד; WhatsApp נשאר אנושי |
 | pack חדש | חוק AGENTS: ממפים על פק קיים |
 
 ## מתי כן taste-skill מלא
 
-רק אם נפתח **אתר סטודיו** תחת `vfbiz` — אז vendor + overrides: עברית, WhatsApp `050-2517000`, איסוף שדרות, בלי משלוח ארצי. עד אז — finish gate + Canva.
 
 ## איך עובדים
 

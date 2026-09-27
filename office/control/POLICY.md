@@ -41,8 +41,10 @@
 - חסם קשיח בלי failover
 - מחיקה בלתי הפיכה
 - התחייבות עסקית שלא מכוסה במדיניות
+- עלות חוזרת חדשה / מנוי / תוכנית / משאב בתשלום בלי אישור בעלים מפורש
+- קריאת API בתשלום, workload usage-based או billing-capable resource בלי cost preflight ואישור נדרש
+- `COST_UNKNOWN` — כשהעלות, overage או incremental cost לא הוכחו
 
 ## משטח בעלים (read model)
 
 תור האישורים הקנוני נשאר `packages/vfgrowth/data/approval-queue.json`.  
-Control Plane מציג לבעלים רק פריטי **אדום** ו־**כתום אמיתי** — לא תיקוני כיתוב, לא מדדים חלשים, לא ליטוש Canva, לא שיבוץ פנימי.

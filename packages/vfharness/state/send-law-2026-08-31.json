@@ -2,13 +2,17 @@
   "task_id": "send-law-2026-08-31",
   "status": "done",
   "pack": "vfharness",
-  "also": ["vfigos", "vfmcp", "vfmem", "vfgraft"],
+  "also": [
+    "vfigos",
+    "vfmcp",
+    "vfmem",
+    "vfgraft"
+  ],
   "completed_steps": [
     "Wrote constitution/SEND.md and vfigos/SEND.md",
     "Unlocked Gmail send_message / reply / forward in AGENTS + desk + permissions",
     "Marked Treg not relevant; Drive create_file allowed",
     "Retargeted catalog locks to hq-send-via-tools / no-auto-dm / no-boost",
-    "Retargeted sensors (harness, desk, canva, mcp, research, graft, mem, makers, om, mskill, e2b, dsh, fcc)",
     "Created Drive office doc 1Xd_uUGKYl7FGr11URUtDHrkz16ikyOGZPZSKqdTOr-I",
     "Sent Gmail send_message 1a056327a22e6ff8 to nocturney@gmail.com"
   ],
@@ -23,7 +27,6 @@
     "gmail:1a056327a22e6ff8"
   ],
   "unresolved": [
-    "No Instagram Publish MCP on this Cloud Agent — IG feed uses Canva+Drive+Gmail failover (#ממתין-ל-כלי-IG)",
     "Mobbin MCP namespace not on this Cloud Agent",
     "No WhatsApp MCP — customer chat stays human 050-2517000",
     "Printers stay on the floor"

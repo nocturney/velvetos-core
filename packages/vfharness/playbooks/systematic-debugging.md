@@ -33,7 +33,6 @@ NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST
 ## מתי חובה
 
 - סנסור אדום (`check-*.py`)
-- כלי MCP / Gmail / Canva / Drive שנכשל
 - התנהגות סוכן לא צפויה / דילוג על פלייבוק
 - «תיקון מהיר» שלא החזיק מעמד
 - לחץ זמן (חירום מגביר ניחושים — לא מקצר חקירה)

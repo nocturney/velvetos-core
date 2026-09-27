@@ -19,7 +19,10 @@ name: VF Media Auto Intake
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    # Every 3h at :23 UTC (8/day). GitHub delivered only ~6-8/day of the old */5
+    # (median gap 3.7h); sparse schedules here are honoured 100%. Off the top of
+    # the hour and 1.5h apart from jobs-write-through. Manual: workflow_dispatch.
+    - cron: "23 */3 * * *"
   workflow_dispatch:
     inputs:
       max_files:
@@ -42,12 +45,12 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
@@ -62,7 +65,7 @@ jobs:
 
       - name: Authenticate to Google Cloud with GitHub OIDC
         id: auth
-        uses: google-github-actions/auth@v2
+        uses: google-github-actions/auth@v3
         with:
           workload_identity_provider: projects/1016876126699/locations/global/workloadIdentityPools/github-actions/providers/velvetos-core
           service_account: velvetos-media-intake@instamcp.iam.gserviceaccount.com

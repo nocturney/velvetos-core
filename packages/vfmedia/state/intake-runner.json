@@ -1,15 +1,15 @@
 {
   "name": "vfmedia-intake-runner",
   "component_state": "Idle",
-  "updatedAt": "2026-09-24T11:55:02Z",
+  "updatedAt": "2026-09-27T05:26:36Z",
   "pagination": {
     "pageToken": null,
     "pageSize": 50
   },
-  "catalogDigest": "07f66fd21f21eb3349c717099b39c324771826fcf6b6c81d9106831440fc9f7f",
-  "inboxDigest": "f2e9e41c17d7305ffac5edd6cf960a7d6e1f3df8248e758cb1ad8b94164d8fd6",
-  "lastRunAt": "2026-09-24T11:55:02Z",
-  "lastSuccessAt": "2026-09-24T11:55:02Z",
+  "catalogDigest": "1beb0e97b8bef5a48b9a73fc111c26b30b9ecc4740ab9de73cd9e4c3c416869b",
+  "inboxDigest": "7b59948b6aed82439d896f0c9de2910e8ab832e6ad66b28cc429dc5930d960db",
+  "lastRunAt": "2026-09-27T05:26:36Z",
+  "lastSuccessAt": "2026-09-27T05:26:36Z",
   "lastError": null,
   "persistError": null,
   "auth": {
@@ -17,7 +17,7 @@
     "detail": "provider=google"
   },
   "stats": {
-    "runs": 99,
+    "runs": 114,
     "registered": 81,
     "verified": 479,
     "skipped": 0,
@@ -40,9 +40,9 @@
     "note": "never permanent stop — escalate then repeat last interval"
   },
   "schedule": {
-    "targetMinutes": 5,
-    "githubActionsCron": "*/5 * * * *",
-    "note": "GHA minimum interval is 5 minutes; runs may be delayed under platform load"
+    "targetMinutes": 180,
+    "githubActionsCron": "23 */3 * * *",
+    "note": "Every 3h (8/day): GitHub delivered only ~6-8/day of the old */5 (2026-09-17..25); workflow_dispatch for immediate runs"
   },
   "activation": {
     "proven": true,

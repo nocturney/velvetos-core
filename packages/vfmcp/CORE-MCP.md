@@ -17,6 +17,5 @@ VelvetOS Core **מתקין** את כלי המשרד. מופע (הפקטורי / 
 
 רשימת מכונה: [`core-mcp.json`](core-mcp.json). דוגמת Desktop: [`mcp.desktop.example.json`](mcp.desktop.example.json).
 
-Cloud Agent רואה HTTP מ־Team MCP (כמו Canva / 3DAI / Instagram). `npx` / `uv` / stdio מקומי לא רצים בענן בלי חיבור מרוחק — לכן Sheets וואטסאפ האישי נשארים ב־`~/.cursor`. Instagram קנוני: Cloud Team MCP `remote_access: ready` (2026-09-09).
 
 אין ארנק / x402 בגיט. אין ₪ מומצא. HQ לא מדפיס.

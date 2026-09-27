@@ -1,53 +1,61 @@
-# VelvetOS Instagram Publisher — Cloudflare Free
+# VelvetOS Instagram Publisher — Cloudflare
 
-Purpose: replace OpenPost scheduling with a small fail-closed scheduler while keeping Instagram Graph as the publication target.
+Status: **ACTIVE PRIMARY SCHEDULER** for Velvet Factory Instagram scheduled publication.
+
+This Worker replaces OpenPost scheduling. Instagram publication itself uses Meta Graph API. OpenPost is frozen and must not receive new schedules.
 
 ## Runtime
-- Cloudflare Worker Free, cron every minute.
+
+- Cloudflare Worker at `velvetos-instagram-publisher.velvetos-vf.workers.dev`.
+- Cron every minute.
 - D1 stores jobs/events.
 - Workers KV stores approved publication media as write-once, hash-bound objects.
-- Secrets: CONTROL_TOKEN, SCHEDULE_HMAC_KEY, META_ACCESS_TOKEN, IG_USER_ID.
+- Secrets: `CONTROL_TOKEN`, optional read-only `SNAPSHOT_TOKEN`, `SCHEDULE_HMAC_KEY`, `META_ACCESS_TOKEN`, `IG_USER_ID`.
 - No token or private media is committed.
 
 ## Job states
-scheduled -> publishing -> published_verified
-scheduled/retry -> publishing -> retry (pre-publish failure only)
-publishing -> reconcile_required (failure at/after media_publish; never blind-retry)
-retry -> dead_letter after MAX_ATTEMPTS
-scheduled/retry -> cancelled
 
-A D1 lease prevents two cron invocations from taking the same job. Every immutable job is HMAC-bound; DB tampering produces dead_letter.
+`scheduled -> publishing -> published_verified`
+
+`scheduled/retry -> publishing -> retry` for pre-publish failures only.
+
+Any failure at or after `media_publish` becomes `reconcile_required`; never blind-retry an ambiguous publish.
+
+A D1 lease prevents two cron invocations from taking the same job. Every immutable job is HMAC-bound; DB tampering becomes `dead_letter`.
 
 ## Media contract
-PUT /v1/media/{key}?sha256={hex} with admin Bearer and the exact bytes.
-GET /media/{key} is public for Meta fetch. The upload hashes bytes before KV write.
-Before publication the scheduler reads KV again and checks the stored bytes/hash against the job.
-Max supported object: 25 MiB (KV limit).
+
+`PUT /v1/media/{key}?sha256={hex}` with admin Bearer and exact bytes.
+
+`GET /media/{key}` is public for Meta fetch. The Worker hashes bytes on upload and verifies KV bytes/hash again before publication.
 
 ## Control API
-GET /healthz is public.
-GET /v1/jobs and GET /v1/jobs/{id} require CONTROL_TOKEN.
-POST /v1/jobs schedules exact content.
-POST /v1/jobs/{id}/cancel cancels only scheduled/retry jobs.
-POST /v1/run manually processes due jobs (operator/testing only).
 
-## Google Calendar mirror
-The dedicated Google Calendar `אינסטגרם` is a one-way operational mirror of D1 jobs. Cloudflare Publisher remains the only schedule source of truth. Calendar edits never change publication time or authorization. The bridge code lives in `../apps_script_calendar_bridge/` and is designed to run every 5 minutes inside the owner's Google account. Mirror failure is reported operationally but does not cancel an already scheduled publication.
+- `GET /healthz` public.
+- Read endpoints `GET /v1/meta-health`, `/v1/runtime`, `/v1/jobs`, `/v1/jobs/{id}` accept `CONTROL_TOKEN` or the separate read-only `SNAPSHOT_TOKEN` when configured.
+- Write endpoints never accept `SNAPSHOT_TOKEN`.
+- `POST /v1/jobs` schedules exact content with `CONTROL_TOKEN`.
+- `POST /v1/jobs/{id}/cancel` cancels only `scheduled`/`retry` jobs.
+- `POST /v1/run` manually processes due jobs.
 
 ## Safety
-Scheduler acceptance is not publication proof. A job becomes published_verified only after media_publish returns a media id and a Graph read-back returns a permalink.
-Any ambiguous failure after the publish boundary becomes reconcile_required, not retry.
-New content should carry normal VelvetOS publication approval evidence. The 2026-09-24 OpenPost migration has a separately recorded migration_authorization because the original approval lives in the OpenPost record.
 
-## Deployment
-1. Authenticate Wrangler once with the owner's Cloudflare account.
-2. Create D1 database and KV namespace; replace the two REPLACE_AFTER_* ids in wrangler.toml.
-3. Apply schema.sql remotely.
-4. Put the four secrets above. Generate CONTROL_TOKEN and SCHEDULE_HMAC_KEY randomly; copy Meta token / IG user id from existing Secret Manager without printing them.
-5. Deploy and verify /healthz.
-6. Upload every approved media object; GET it back and verify SHA-256.
-7. POST the job; read it back and verify scheduled_at/status.
-8. Only after steps 5-7 pass, cancel the corresponding OpenPost schedule.
-9. After due time, require published_verified and cross-check Instagram read-back.
+Scheduler acceptance is not publication proof. A job becomes `published_verified` only after `media_publish` returns a media id and Graph read-back returns a permalink.
 
-Local smoke is safe because the test job is scheduled for 2099 and never calls Meta.
+The first fully scheduled write through this route remains production evidence to observe at execution time. Until then, pre-publish transport, media integrity, queue state and Meta read-back are verified.
+
+## Migration evidence
+
+The OpenPost schedule for `VF-OCTOPUS-20260927-CAROUSEL` was moved to this publisher for 2026-09-27 12:00 Asia/Jerusalem. OpenPost was cleared to no active schedules. The migration files in `migrations/2026-09-24-openpost/` preserve the exact content/package/media hashes and source evidence.
+
+## Publish fingerprint guard · LIVE
+
+The 72-hour fingerprint guard (same definition as `packages/vfigos/approval/publish_fingerprint.py`) is **live in production** as of 2026-09-27. D1 contains `publish_fingerprints`; the Worker checks the fingerprint before any Meta write and records both `published_verified` and `reconcile_required` outcomes.
+
+Deployment order remains fail-closed for future environments:
+
+1. `npx wrangler d1 execute velvetos-instagram-publisher --remote --file=migrations/d1/0001_publish_fingerprints.sql`
+2. verify the table exists;
+3. deploy the Worker.
+
+The production deploy that activated the guard is Worker version `c302b0a1-4d03-4db6-9ff9-056ee69166d7`.

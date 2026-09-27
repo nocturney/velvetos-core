@@ -118,7 +118,7 @@ def main() -> None:
             fail(f"PRINT-DEMAND.md must mention {needle}")
     for needle in ("DEMAND-SIGNALS.md", "vf_demand_signals.py", "demand_score"):
         if needle not in print_demand:
-            fail(f"PRINT-DEMAND.md structured demand wiring must mention {needle}")
+            fail(f"PRINT-DEMAND.md dormant structured-demand section must mention {needle}")
 
     demand_doc = DEMAND_SIGNALS.read_text(encoding="utf-8")
     for needle in ("DemandSignalPacket", "WebSearch/WebFetch", "noAutomaticSkuPromotion", "UNPROVEN"):
@@ -146,7 +146,7 @@ def main() -> None:
         fail("constitution/ORCHESTRA.md must mention weekly link review")
     if "BEST-SKILLS.md" not in orchestra and "best-skills" not in orchestra.lower():
         fail("constitution/ORCHESTRA.md must mention bi-daily best-skills review")
-    for needle in ("Failover", "באותו רגע", "אסור להישאר בלי תוצאה", "studio/render.py"):
+    for needle in ("Failover", "באותו רגע", "אסור להישאר בלי תוצאה"):
         if needle not in orchestra:
             fail(f"constitution/ORCHESTRA.md must mention failover needle: {needle}")
     if "מחכים לבעלים" in orchestra and "לא «מחכים לבעלים»" not in orchestra:
@@ -177,8 +177,8 @@ def main() -> None:
     if best_json.get("timerName") != "research-seat:best-skills-48h":
         fail("BEST-SKILLS.json timerName must route through Research Seat")
     freshness = best_json.get("freshnessContract") or {}
-    if freshness.get("targetHours") != 48 or freshness.get("graceHours") != 4:
-        fail("BEST-SKILLS.json freshness must be 48h + 4h grace")
+    if freshness.get("targetHours") != 44 or freshness.get("graceHours") != 8:
+        fail("BEST-SKILLS.json freshness must be 44h due + 8h grace (stale >52h)")
     if "TIMER.md" not in (best_json.get("timerPlaybook") or ""):
         fail("BEST-SKILLS.json must point timerPlaybook at TIMER.md")
     best_locks = set(best_json.get("locks") or [])
@@ -191,12 +191,20 @@ def main() -> None:
     timer = BEST_SKILLS_TIMER.read_text(encoding="utf-8")
     if "Velvet Research Seat" not in timer:
         fail("TIMER.md must name Velvet Research Seat as cadence authority")
-    if "48" not in timer or "52" not in timer:
-        fail("TIMER.md must state 48h cadence and 52h stale threshold")
+    if "48" not in timer or "44h" not in timer or "52" not in timer:
+        fail("TIMER.md must state ~48h cadence, 44h due threshold and 52h stale threshold")
     if "forever" not in timer.lower() and "standing order" not in timer:
         fail("TIMER.md must state forever-until-owner-stops standing order")
     if "subscribe_timer" in timer:
         fail("TIMER.md must not depend on external subscribe_timer")
+    for rel in ("AGENTS.md", "constitution/ORCHESTRA.md"):
+        law = (ROOT / rel).read_text(encoding="utf-8")
+        if "subscribe_timer" in law or "חידוש טיימר חובה" in law:
+            fail(f"{rel} must not instruct external timer renewal (Research Seat is scheduler authority per BEST-SKILLS.json)")
+    constitution_index = (ROOT / "constitution" / "README.md").read_text(encoding="utf-8")
+    for link in __import__("re").findall(r"\]\(([A-Za-z0-9_.-]+\.md)\)", constitution_index):
+        if not (ROOT / "constitution" / link).is_file():
+            fail(f"constitution/README.md links missing file {link}")
 
     best_skill = BEST_SKILLS_SKILL.read_text(encoding="utf-8")
     if "BEST-SKILLS.md" not in best_skill:
@@ -267,7 +275,7 @@ def main() -> None:
 
     desk = json.loads(DESK.read_text(encoding="utf-8"))
     tools = desk.get("tools") or {}
-    for key in ("gmail", "calendar", "drive", "canva", "superdesign", "treg", "mobbin", "fcc", "web", "image", "gemini", "chatgpt"):
+    for key in ("gmail", "calendar", "drive", "superdesign", "treg", "mobbin", "fcc", "web", "image", "gemini", "chatgpt"):
         if key not in tools:
             fail(f"vf-desk.json tools missing {key}")
         if not (tools[key].get("failover") or ""):

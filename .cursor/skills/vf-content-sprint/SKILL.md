@@ -7,7 +7,6 @@ description: Run Velvet Factory content autonomously through the Visual Foundry:
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 Use the existing office orchestrator only. Never install or simulate a second runtime, queue, catalog, creative-memory DB or renderer. HyperFrames is a deterministic render backend behind the existing Foundry capability, not a new authority/runtime.
@@ -16,8 +15,7 @@ Use the existing office orchestrator only. Never install or simulate a second ru
 
 ## Core flow
 
-> LEGACY / provenance only for VF publication; not a provider route: **Cold-start invariant:** before candidate expansion or creative generation, validate the owner-approved visual-standard identity against `VISUAL-DNA.json` and the active Velvet Factory instance. Require Canva asset `MAHVL7PKpvE`, artifact SHA-256 `df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897`, and the canonical public/reference paths. Write `visualStandard.gate=PASS` into the Creative Manifest. Missing/mismatched authority is fail-closed: do not invent a generic substitute style.
-
+Public copy is fail-closed under `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`. For every final copy, use `reader-first-he.md` → `VOICE.md` / `VOICE-CHART.md` / `voice/approved/` → relevant copywriting/copy-editing/marketing-psychology aids → `velvet-hebrew-copy` → Humanizer / `ai-tells-he.md` → `check-vfcopy.py lint` on the exact final copy → fact gate → CONTENT-RUBRIC → PREFLIGHT. This applies equally to agent/tool/human-originated public copy; a rewrite after lint must be linted again.
 
 1. Read `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md`, `packages/vfom/FOUNDRY.json`, `CREATIVE-AUTOPILOT.md`, `INSTAGRAM-CONTENT-DECISION.json`, `VISUAL-OS.md`, `VISUAL-DNA.json`, `CREATIVE-MANIFEST.schema.json`, `CONTENT-CONTRACT.schema.json`, `EDIT-DIRECTOR.md`, `MOTION-PRESETS.md`, `FORMAT-GENOMES.md`, `HYPERFRAMES-BACKEND.json`, `HYPERFRAMES-FRAME.md` and the mandatory public-copy invariant `packages/vfcopy/SOFT-TOOLS-CONTRACT.md`.
 2. Start from real proof: `packages/vfprod/PRINT-DONE.md` / `print.done`, verified Media Vault item, named product/material/failure, or another evidenced opportunity. No invented floor scene.
@@ -31,7 +29,6 @@ Use the existing office orchestrator only. Never install or simulate a second ru
 10. Invoke `.cursor/skills/velvet-creative-director/SKILL.md` for the proof-first concept, selected hook, format genome, exact shot plan, shot gaps, EDL, overlays and cover directions. Do not ask the owner to choose routine creative options.
 11. Invoke `.cursor/skills/velvet-media-librarian/SKILL.md` to search/classify canonical Media Vault assets and write concrete asset refs, rights notes and exact gaps into the Manifest. If a critical physical shot is missing, stop only that blocked branch as `waiting_for_media`.
 12. Use progressive variants: many cheap concepts/storyboards, fewer rough cuts, at most two full-quality renders by default. Do not spend a final render on an unranked concept.
-> LEGACY / provenance only for VF publication; not a provider route: 13. Build/edit through `EDIT-DIRECTOR.md`; every public Hebrew text artifact MUST run the full `packages/vfcopy/SOFT-TOOLS-CONTRACT.md` chain: verified context -> `hq/reader-first-he.md` -> `VOICE.md` + `VOICE-CHART.md` + `voice/approved/` -> relevant template -> `velvet-hebrew-copy` -> `hq/ai-tells-he.md` -> `python3 scripts/check-vfcopy.py lint` on the ACTUAL final copy with verified context -> factual gate -> `TEXT_WINS`/`NO_TEXT` when visual copy applies. `VOICE.md` alone is never sufficient. Use `MOTION-PRESETS.md`; build/select cover through existing Canva/vfcovers paths.
 14. Run `retention_pass` on the actual draft: Reel = 0–2 second hold, progression and payoff; carousel = slide-to-slide forward drive and no filler; post = opening lines that earn the read; Story = immediate context and one clear beat per frame. Remove filler instead of padding duration/slides.
 15. Run `authority_voice_pass`: expertise must come from demonstrated work, decisions, constraints, reasons and proof. Remove guru language, empty hype, unsupported “leader/best” positioning, clichés and over-promotion.
 16. Run `engagement_pass`: use a specific, natural question or tradeoff only when it genuinely fits. `engagementBait` must remain false; no “comment YES”, forced tagging, fake controversy or algorithm-first prompts.
@@ -79,7 +76,6 @@ Post-publish performance feedback is appended only when real evidence exists.
 - `vfcopy` — mandatory `SOFT-TOOLS-CONTRACT.md`: reader-first, voice, Hebrew copy, Humanizer/AI-tells, actual-copy lint and factual gate.
 - HyperFrames — deterministic multi-shot/motion/RTL video backend through `scripts/vf_hyperframes.py`; never a creative authority or second runtime.
 - `ffmpeg-svg-caption-composition` — deterministic fallback/simple-overlay path.
-> LEGACY / provenance only for VF publication; not a provider route: - `vfcovers` + `vfcanva` — cover/visual production.
 - `vfgrowth` — calendar, rubric, policy, preflight.
 - `vfigos` — real Instagram tool send + verification/failover.
 - `vfresearch` — public Social Intelligence / reference mechanics via `SOCIAL-INTELLIGENCE.md`; research only, never publish authority.
@@ -102,4 +98,3 @@ For Velvet Factory requests that mean prepare/treat/edit content for a potential
 ## Creative transformation lock
 
 For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md` is mandatory. Preserve the real product, but do not pass through raw/source photos as the finished creative. At least one review visual — normally the hero/first slide — must show a meaningful approved Velvet treatment around the source-locked product. Default to editing the real source image, not recreating the product from text. Multiple photos do not imply a carousel; if carousel is chosen, slide 1 must be a fully treated hero. `raw_passthrough=true`, an essentially untouched source carousel, or crop/exposure-only work presented as publication-grade is FAIL. Generative edits must explicitly contain NO LOGO, NO WORDMARK, NO PHONE NUMBER, NO WHATSAPP, NO CONTACT BAR, NO GENERATED HEBREW TEXT.
-

@@ -11,7 +11,6 @@
     "gcp_live_deployment": "NEEDS_OPERATOR_SETUP",
     "mutation_service_has_private_key": false,
     "issuer_auth": "cloud-run-iam",
-    "project_authority_canva_mirror": "needs_sync",
     "ci_note": "cryptography added to check-all.yml for Ed25519 sensors; unrelated LINKS.json staleness may still fail check-staleness"
   },
   "latest_observation": "Implementation complete on PR #229 head ed55cab. GCP NEEDS_OPERATOR_SETUP. Waiting CI after cryptography install fix."

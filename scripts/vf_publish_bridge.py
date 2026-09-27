@@ -7,10 +7,8 @@ publication.
 
 Examples:
   python3 scripts/vf_publish_bridge.py prepare --file story.png --correlation G004 \
-    --approval-ref packages/vfgrowth/preflight/G004.md --source-ref canva:DA...
 
   python3 scripts/vf_publish_bridge.py stage --file story.png --correlation G004 \
-    --approval-ref packages/vfgrowth/preflight/G004.md --source-ref canva:DA... \
     --public-release-approved
 
 Actual staging uses GitHub's REST API and requires GH_TOKEN or GITHUB_TOKEN.

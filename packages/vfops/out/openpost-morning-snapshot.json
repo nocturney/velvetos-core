@@ -1,13 +1,13 @@
 {
   "schema": "velvet.morning_brief.openpost_snapshot.v1",
-  "observed_at": "2026-09-24T06:11:24.929643Z",
+  "observed_at": "2026-09-26T06:08:31Z",
   "window_days": 14,
   "workspace_id": null,
   "scheduled": [],
   "scheduled_thumbnail_issues": [],
   "gap": {
-    "reason": "OpenPost DPAPI credential present but decrypt failed in remote Shell session (ConvertTo-SecureString cryptographic operation error). Auth Bridge last success 2026-09-19. Honest empty schedule strip — no recycled scheduled_at.",
+    "reason": "OpenPost DPAPI credential not available in this Linux GitHub-failover Shell (Windows DPAPI decrypt required). Auth Bridge last known success 2026-09-19. Honest empty schedule strip — no recycled scheduled_at.",
     "credential_path": "%APPDATA%\\VelvetOS\\openpost-morning-brief.token.dpapi",
-    "attempted_at": "2026-09-24T06:11:24.929643Z"
+    "attempted_at": "2026-09-26T06:08:31Z"
   }
 }

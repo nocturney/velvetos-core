@@ -12,12 +12,19 @@ Upstream adelaidasofia-instagram-mcp 0.1.2 defaults still request deprecated
 5. Keeps media `saved` vs account `saves` distinct (Graph names differ)
 6. Merges results into one MCP response and surfaces Meta / compatibility
    errors as structured partials without inventing metrics
+7. For period=week/days_28, day-only total_value interaction metrics
+   (profile_views, total_interactions, likes, ...) are fetched the way Meta
+   documents it: period=day + metric_type=total_value + since/until spanning
+   7/28 days. Meta returns one total for the range; nothing is summed or
+   extrapolated here. follower_count stays day-only (time series; also hidden
+   under 100 followers).
 
 Applied by `apply_insights_patch(mcp)` from the Cloud Run HTTP entry.
 """
 
 from __future__ import annotations
 
+import time
 from typing import Any, Callable
 
 # ChatGPT-verified failure: default included impressions (invalid on live Graph).
@@ -212,6 +219,33 @@ def partition_account_metrics_by_period(
     return compatible, incompat
 
 
+# Multi-day periods served through Meta's documented since/until range on
+# period=day total_value metrics (range must stay <= 30 days).
+RANGE_PERIOD_DAYS: dict[str, int] = {"week": 7, "days_28": 28}
+
+
+def split_range_capable(
+    period: str, incompat: list[dict[str, Any]]
+) -> tuple[list[str], list[dict[str, Any]]]:
+    """From period-incompatible rows, pull day-only total_value metrics that Meta
+    can total over a since/until range for ``period``. Returns (range_metrics, still_incompat)."""
+    if period not in RANGE_PERIOD_DAYS:
+        return [], list(incompat)
+    ranged: list[str] = []
+    rest: list[dict[str, Any]] = []
+    for row in incompat:
+        name = (row.get("metrics") or [None])[0]
+        if (
+            name in TOTAL_VALUE_ONLY_ACCOUNT
+            and "day" in periods_for_account_metric(name)
+            and not name.endswith("_demographics")
+        ):
+            ranged.append(name)
+        else:
+            rest.append(row)
+    return ranged, rest
+
+
 def media_default_metrics(media: dict[str, Any] | None) -> str:
     """Pick a conservative default metric string from media type fields."""
     if not media:
@@ -239,10 +273,11 @@ def fetch_account_insights(
     metrics: str | None,
     period: str,
     get_fn: Callable[..., dict[str, Any]] | None = None,
+    now_fn: Callable[[], float] | None = None,
 ) -> dict[str, Any]:
     """Execute split Graph insights requests and merge.
 
-    `get_fn` is injectable for unit tests (defaults to client.get).
+    `get_fn` / `now_fn` are injectable for unit tests (default client.get / time.time).
     """
     getter = get_fn or client.get
     names = normalize_account_metrics(metrics)
@@ -261,26 +296,59 @@ def fetch_account_insights(
     # Period gate before Graph — ChatGPT days_28 + follower_count/profile_views
     # must not fail the whole snapshot when reach (etc.) is still legal.
     compatible, period_partials = partition_account_metrics_by_period(names, period)
+    range_names, period_partials = split_range_capable(period, period_partials)
     ts_names = [n for n in ts_names if n in compatible]
     tv_names = [n for n in tv_names if n in compatible]
+    range_meta: dict[str, Any] | None = None
+    if range_names:
+        until = int((now_fn or time.time)())
+        days = RANGE_PERIOD_DAYS[period]
+        range_meta = {
+            "since": until - days * 86400,
+            "until": until,
+            "days": days,
+            "period_requested": period,
+            "graph_period": "day",
+            "metric_type": "total_value",
+            "source": "meta_total_value_range",
+            "metrics": list(range_names),
+        }
 
     merged: list[dict[str, Any]] = []
     requests_made: list[dict[str, Any]] = []
     partial_errors: list[dict[str, Any]] = list(period_partials)
 
-    def _one(metric_list: list[str], metric_type: str | None) -> None:
+    def _one(
+        metric_list: list[str],
+        metric_type: str | None,
+        *,
+        graph_period: str | None = None,
+        rng: dict[str, Any] | None = None,
+    ) -> None:
         if not metric_list:
             return
         params: dict[str, Any] = {
             "metric": ",".join(metric_list),
-            "period": period,
+            "period": graph_period or period,
         }
         if metric_type:
             params["metric_type"] = metric_type
+        if rng:
+            params["since"] = rng["since"]
+            params["until"] = rng["until"]
         req_meta = {"metrics": list(metric_list), "metric_type": metric_type or "time_series_default"}
+        if rng:
+            req_meta["range_days"] = rng["days"]
         try:
             data = getter(f"{ig_user_id}/insights", **params)
             rows = data.get("data") or []
+            if rng:
+                rows = [
+                    {**r, "period_requested": period, "range_days": rng["days"],
+                     "range_since": rng["since"], "range_until": rng["until"]}
+                    for r in rows
+                    if isinstance(r, dict)
+                ]
             merged.extend(rows)
             req_meta["ok"] = True
             req_meta["count"] = len(rows)
@@ -297,8 +365,11 @@ def fetch_account_insights(
     # Time-series cohort first (reach, follower_count), then total_value cohort.
     _one(ts_names, None)
     _one(tv_names, "total_value")
+    if range_meta:
+        _one(range_names, "total_value", graph_period="day", rng=range_meta)
+    fetched = compatible + range_names
 
-    if not merged and not compatible:
+    if not merged and not fetched:
         # Everything was period-incompatible — structured failure, no fake totals.
         return {
             "ok": False,
@@ -336,11 +407,13 @@ def fetch_account_insights(
         "ok": True,
         "period": period,
         "metrics_requested": names,
-        "metrics_fetched": compatible,
+        "metrics_fetched": fetched,
         "insights": merged,
         "requests": requests_made,
         "graph_compat": "v21+",
     }
+    if range_meta:
+        out["range_aggregation"] = range_meta
     if partial_errors:
         out["partial"] = True
         out["partial_errors"] = partial_errors
@@ -422,8 +495,11 @@ def apply_insights_patch(mcp: Any) -> None:
         Automatically splits time_series vs total_value cohorts (Meta requires
         metric_type=total_value for profile_views / total_interactions / views / …).
         Also partitions by period compatibility — e.g. follower_count and
-        profile_views are day-only; days_28 returns reach (etc.) plus structured
-        partial errors for incompatible metrics (no fabricated 28-day totals).
+        profile_views are day-only. For period=week/days_28, day-only interaction
+        metrics (profile_views, total_interactions, likes, …) come back as Meta's
+        own range total (period=day + metric_type=total_value + since/until over
+        7/28 days; see `range_aggregation`). reach uses days_28 natively. Nothing
+        is summed or extrapolated locally.
         Deprecated `impressions` is remapped to `views`. Does not invent metrics.
         follower_count may fail below Meta's ~100-follower privacy floor — returned
         as a clean partial/error without fabricating counts.

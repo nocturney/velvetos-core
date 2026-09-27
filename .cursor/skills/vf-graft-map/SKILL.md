@@ -29,7 +29,6 @@ Use when the user asks how HQ is wired, where to start, what Graft gave us, blas
 
 - בריף בוקר → `graph/morning-job.md`
 - פנייה / הצעה → `graph/inquiry-job.md`
-- חבילת תוכן / Canva → `graph/content-job.md`
 - what breaks → `graph/blast.md`
 
 ## Verification

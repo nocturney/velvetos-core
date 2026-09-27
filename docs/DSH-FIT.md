@@ -15,7 +15,6 @@ DeepSeek Harness הוא סוכן קידוד שני. **לא מתקינים אות
 | מסמכים בתיבה | MinerU, PDF/Office → Markdown | `vfbooks` `vfconvert` `vfsales` | Gmail קריאה. אין ₪ מומצא |
 | זיכרון קטלוג | Engramory, MemSearch, project-memory | `vfresearch` `vfsku` `vfops` | ציטוט קובץ. אין שרת זיכרון |
 | לוח צינור | dsh_workflow, Taskboard (רק in_review), verification | `vfops` `vfprod` `vfconvert` | אדם על «בוצע». אין מדפסת מ-HQ |
-| נכסי עיצוב | Superdesign (כבר כאן), TongFlow/iPolloWork אחר כך | `vfcopy` `vfcovers` `vfcanva` `vfigos` | Canva או Superdesign. HQ לא שולח |
 
 הפעלה: `@vfdsh floor` / `docs` / `memory` / `board` / `design`.
 

@@ -17,7 +17,6 @@
 |---|---|---|
 | `copywriting` / `copy-editing` | `vfcopy` | שיעורי בית, טיוטה, לינט |
 | `social` / `content-strategy` / `video` | `vfgrowth`, `vfigos` | חבילה וסקירה. Grok שולח |
-| `image` | `vfcovers`, `vfcanva` | כריכות. Canva קודם |
 | `customer-research` | `vfconvert` | בריף משרשור |
 | `offers` / `sales-enablement` | `vfsales` | הצעה אחרי `vfcost` |
 | `competitor-profiling` | `vfresearch` | מקורות או «חסר» |

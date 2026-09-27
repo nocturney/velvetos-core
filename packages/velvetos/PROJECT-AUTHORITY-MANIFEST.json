@@ -82,8 +82,7 @@
         "offering_shape",
         "reference_match",
         "actual_file_evidence",
-        "rejected_direction",
-        "no_canva_route"
+        "rejected_direction"
       ]
     },
     "copywriting": {
@@ -145,6 +144,25 @@
         "תמיכות",
         "חומר",
         "מק״ט",
+        "CAD",
+        "STEP",
+        "STL",
+        "3MF",
+        "DXF",
+        "G-code",
+        "שרטוט",
+        "מודל",
+        "תכנון חלק",
+        "תכנון מכני",
+        "DfAM",
+        "DFM",
+        "CNC",
+        "sheet metal",
+        "injection molding",
+        "URDF",
+        "SRDF",
+        "SDF",
+        "SendCutSend",
         "production",
         "print"
       ],
@@ -156,11 +174,17 @@
       ],
       "authorities": [
         "packages/vfprod/SKILL.md",
+        "packages/vfprod/FABRICATION-ROUTER.md",
+        "packages/vfprod/FABRICATION-ROUTER.json",
+        "packages/vfprod/TEXT-TO-CAD.md",
         "packages/vfcost/SKILL.md",
         "packages/vfsku/SKILL.md"
       ],
       "hardGates": [
         "verified_specs",
+        "fabrication_tool_route",
+        "specialized_skill_instructions",
+        "no_printer_control",
         "no_invented_price",
         "print_authority"
       ]
@@ -313,8 +337,7 @@
         "offering_shape",
         "reference_match",
         "actual_file_evidence",
-        "rejected_direction",
-        "no_canva_route"
+        "rejected_direction"
       ]
     },
     "general_business": {
@@ -342,6 +365,8 @@
     "assetManifest": "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
     "instructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.4.txt",
     "productTruthGuide": "packages/velvetos/chatgpt-project/PRODUCT-TRUTH-GUIDE-v1.txt",
+    "authoritySha256": "db07dd973272a96b154b4771af1dbb13c03d039de595b56cd857bb0144025976",
+    "assetManifestSha256": "13bd7dc24f4c00cda96f16a47c0fc45986d8e10280b21f7f8a6da292da68645b",
     "offlineCreativePublicationFallback": true,
     "offlineRepoStateLabel": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK",
     "referenceSeparation": "AESTHETIC_REFERENCES_ONLY_FOR_STYLE; PRODUCT_TRUTH=SOURCE_PIXELS_PLUS_TEXT_GUIDE"

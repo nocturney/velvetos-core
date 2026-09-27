@@ -1,0 +1,17 @@
+{
+  "schema": "vf.morning-green.feed-source.v2",
+  "cloudflare_publisher": {
+    "state": "active",
+    "since": "2026-09-26",
+    "source": "packages/vfigos/cloudflare_publisher_snapshot.py",
+    "endpoint": "velvetos-instagram-publisher.velvetos-vf.workers.dev"
+  },
+  "unavailableLabel": "לוח Cloudflare Instagram Publisher לא נקרא הבוקר · ימים ריקים כאן אינם אומרים שאין פרסום.",
+  "unavailableVisibleText": "בקרוב בפיד: לוח Cloudflare Instagram Publisher לא נקרא הבוקר",
+  "note": "Cloudflare publisher is current schedule authority. Missing snapshot is unavailable, never an empty schedule. OpenPost is frozen historical evidence only.",
+  "openpost": {
+    "state": "paused",
+    "historicalOnly": true,
+    "routingAuthority": false
+  }
+}

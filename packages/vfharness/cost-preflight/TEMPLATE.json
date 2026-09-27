@@ -1,0 +1,12 @@
+{
+  "component": "REPLACE_ME",
+  "action": "REPLACE_ME",
+  "classification": "COST_UNKNOWN",
+  "evidence": "REPLACE_ME with current pricing/account/quota evidence",
+  "checked_at": "YYYY-MM-DD",
+  "incremental_cost_possible": null,
+  "automatic_paid_overage_possible": null,
+  "hard_cap_enforced": null,
+  "paid_features_enabled": null,
+  "approval": null
+}

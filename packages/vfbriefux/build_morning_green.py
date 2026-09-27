@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Project the canonical factual Morning Brief into Morning Green.
 
-Consumes the existing V10.x factual JSON/TXT plus an optional read-only publisher
-snapshot. Cloudflare Publisher is canonical; --openpost remains a legacy/recovery alias.
-It does not fetch providers and does not create a parallel source of truth.
+Consumes the existing V10.x factual JSON/TXT plus an optional read-only current-publisher
+schedule snapshot. It does not fetch providers and does not create a parallel source of truth.
 """
 from __future__ import annotations
 import argparse
@@ -14,6 +13,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 TZ=ZoneInfo('Asia/Jerusalem')
+FEED_SOURCE=Path(__file__).resolve().parent/'FEED-SOURCE.json'
 HE_DAYS=['יום שני','יום שלישי','יום רביעי','יום חמישי','יום שישי','שבת','יום ראשון']
 HE_DAY_SHORT=['ב׳','ג׳','ד׳','ה׳','ו׳','שבת','א׳']
 HE_MONTHS={1:'בינואר',2:'בפברואר',3:'במרץ',4:'באפריל',5:'במאי',6:'ביוני',7:'ביולי',8:'באוגוסט',9:'בספטמבר',10:'באוקטובר',11:'בנובמבר',12:'בדצמבר'}
@@ -245,19 +245,43 @@ def post_cards(snapshot: dict | None, start: datetime) -> list[dict]:
         cards.append(cell)
     return cards
 
+def feed_status(op: dict | None, config_path: Path = FEED_SOURCE) -> dict[str,str]:
+    """Explain the 7-day strip from current publisher evidence or an honest unread state.
+
+    Never raises: a missing/invalid config degrades to the neutral 'unavailable'
+    label so the 09:00 brief still renders.
+    """
+    if op is not None:
+        return {'state':'live','label':'','visible_text':''}
+    try:
+        cfg=json.loads(config_path.read_text(encoding='utf-8'))
+    except Exception:
+        cfg={}
+    source=cfg.get('cloudflare_publisher') if isinstance(cfg.get('cloudflare_publisher'),dict) else {}
+    if str(source.get('state') or '').strip().lower()=='paused':
+        return {
+            'state':'paused',
+            'label':str(source.get('label') or 'לוח Cloudflare Publisher לא נקרא כרגע.'),
+            'visible_text':str(source.get('visibleText') or 'בקרוב בפיד: לוח Cloudflare Publisher לא נקרא כרגע'),
+        }
+    return {
+        'state':'unavailable',
+        'label':str(cfg.get('unavailableLabel') or 'לוח הפרסום לא נקרא הבוקר · ימים ריקים כאן אינם אומרים שאין פרסום.'),
+        'visible_text':str(cfg.get('unavailableVisibleText') or 'בקרוב בפיד: לוח הפרסום לא נקרא הבוקר'),
+    }
+
 def main() -> int:
     ap=argparse.ArgumentParser()
     ap.add_argument('--brief-json',type=Path,required=True)
     ap.add_argument('--brief-txt',type=Path,required=True)
-    ap.add_argument('--publisher',type=Path)
-    ap.add_argument('--openpost',type=Path,help='legacy/recovery alias; ignored when --publisher is supplied')
+    ap.add_argument('--schedule-snapshot',type=Path)
     ap.add_argument('--output',type=Path,required=True)
     ap.add_argument('--visible-text',type=Path)
     a=ap.parse_args()
     factual=json.loads(a.brief_json.read_text(encoding='utf-8'))
     text=a.brief_txt.read_text(encoding='utf-8')
     sec=sections(text)
-    snapshot_path=a.publisher or a.openpost
+    snapshot_path=a.schedule_snapshot
     op=json.loads(snapshot_path.read_text(encoding='utf-8')) if snapshot_path and snapshot_path.exists() else None
 
     attention=compact_attention([split_title_detail(x) for x in sec['צריך ממך'][:4]])
@@ -289,6 +313,7 @@ def main() -> int:
                 stats.append(item); existing.add(item['label'])
             if len(stats) >= 3: break
     insta=instagram_snapshot(sec)
+    feed=feed_status(op)
 
     data={
       'email_title':'Velvet Factory - Morning Brief',
@@ -297,6 +322,7 @@ def main() -> int:
       'greeting':'בוקר טוב, כריסטיאן',
       'daily_summary':overview,
       'scheduled_posts':post_cards(op,factual_datetime(factual)),
+      'feed_status':{'state':feed['state'],'label':feed['label']},
       'instagram':insta,
       'story':{
         'title':story_source or 'תמונת היום',
@@ -317,6 +343,8 @@ def main() -> int:
         for item in attention: lines.append('• '+item['title']+(' - '+item['detail'] if item['detail'] else ''))
         lines += ['', 'מה מתקדם']
         for item in progress: lines.append('• '+item['title']+(' - '+item['detail'] if item['detail'] else ''))
+        if feed['visible_text']:
+            lines += ['', feed['visible_text']]
         lines += ['', 'Instagram']
         if insta.get('followers') is not None: lines.append(f"• עוקבים: {insta['followers']}")
         latest=insta.get('latest') or {}

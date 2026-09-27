@@ -1,24 +1,27 @@
 name: Office Control Plane
 
-# VELVET_MACHINE_WRITER_ALLOW: packages/velvetos/living-studio/data/activation-latest.json packages/velvetos/living-studio/data/activation-history.jsonl office/learning/failure-museum/entries.jsonl packages/velvetos/living-studio/data/signal-room.jsonl packages/velvetos/living-studio/data/receipts.jsonl
+# VELVET_MACHINE_WRITER_ALLOW: packages/velvetos/living-studio/data/activation-latest.json packages/velvetos/living-studio/data/activation-history.jsonl office/learning/failure-museum/entries.jsonl packages/velvetos/living-studio/data/signal-room.jsonl packages/velvetos/living-studio/data/receipts.jsonl packages/vfharness/state/learning-candidates
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    # 02/08/14/20 UTC = 05:00/11:00/17:00/23:00 Asia/Jerusalem (IDT): >=30 min clear of the
+    # Office Loop at 10:30/18:30 IDT even with GitHub schedule delays up to ~40 min.
+    - cron: "0 2,8,14,20 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: read   # list this repo's workflow runs for learning-candidate ingest (read-only)
 
 jobs:
   control-plane:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Living Studio activation sweep
@@ -35,6 +38,19 @@ jobs:
         run: |
           python3 scripts/check-office-control-plane.py
           python3 scripts/check-runtime-corners.py
+      # Failed main-branch runs (push/schedule/dispatch, last 7 days) become learning
+      # candidates (packages/vfharness/state/learning-candidates/learn-ci-<workflow>.json).
+      # Idempotent: evidence de-duplicated by run id, timestamps from the runs, status never
+      # changed here. Triage (accept/reject/promote/prune) stays with the Office Loop / human.
+      - name: Learning candidates from failed main runs
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run list --repo "$GITHUB_REPOSITORY" --branch main --limit 500 \
+            --json databaseId,workflowName,conclusion,createdAt,headBranch,event,url > "$RUNNER_TEMP/main-runs.json"
+          python3 scripts/vf_learning.py ingest-ci --runs "$RUNNER_TEMP/main-runs.json" --window-days 7
+          python3 scripts/check-learning-lifecycle.py
       - name: Persist activation evidence only when materially changed
         run: |
           set -e
@@ -47,14 +63,22 @@ jobs:
           )
           existing=()
           for p in "${paths[@]}"; do [ -e "$p" ] && existing+=("$p"); done
-          if [ ${#existing[@]} -eq 0 ] || git diff --quiet -- "${existing[@]}"; then
-            echo "No material Living Studio evidence change"
+          learning=packages/vfharness/state/learning-candidates
+          learning_changed=""
+          if [ -d "$learning" ]; then learning_changed="$(git status --porcelain -- "$learning")"; fi
+          if { [ ${#existing[@]} -eq 0 ] || git diff --quiet -- "${existing[@]}"; } && [ -z "$learning_changed" ]; then
+            echo "No material Living Studio evidence or learning-candidate change"
             exit 0
           fi
           git config user.name "velvetos-office-control-plane"
           git config user.email "noreply@velvetos.local"
-          git add -- "${existing[@]}"
-          git commit -m "office: persist Living Studio activation evidence"
+          if [ ${#existing[@]} -gt 0 ]; then
+            git add -- "${existing[@]}"
+          fi
+          if [ -n "$learning_changed" ]; then
+            git add -- "$learning"
+          fi
+          git commit -m "office: persist Living Studio activation evidence / learning candidates"
           branch="${GITHUB_REF_NAME}"
           git fetch origin "$branch"
           if ! git rebase "origin/$branch"; then

@@ -6,7 +6,6 @@
     {
       "kicker": "01 · קודם החלטה",
       "title": "החלטות",
-      "prose": "מחיר מכירה דחה עד סכום מראש צוות. כיתוב G004 סטוריז = G004-STORIES-FIX.md. שיבוץ בלי לשאול משבצת — אחרי שער עריכה (Canva/vfcovers). לחיצת כן/דחה לא שולחת וואטסאפ ולא מדפיסה מ-HQ. Organic Growth: אישור = approved_for_manual_posting — לא Publish.",
       "headers": [
         "החלטה",
         "כן/לא/דחה",
@@ -91,7 +90,6 @@
     {
       "kicker": "07 · פיד בסוף",
       "title": "מה עולה בפיד",
-      "prose": "מסירה: vfgrowth/HANDOFF-he.md · PREFLIGHT.md חובה לפני שיבוץ (VOICE + Canva/vfcovers + ציון עצמי + קומפס) · סטוריז G004 = vfcopy/G004-STORIES-FIX.md · שער עריכה קשיח: Canva MCP או vfcovers/vfcanva — לא JPEG גולמי · נכשל-סגור = חסום · פער סוכנות = שורת פער למשרד, לא אשמת בעלים · סטוריז ב-instagram.com · לוח אוטונומי · Organic Growth Decision Pack: vf_organic_growth.py · אישור ≠ פרסום.",
       "headers": [
         "מזהה",
         "פתיחה",

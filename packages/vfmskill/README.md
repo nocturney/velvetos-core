@@ -11,7 +11,6 @@
 | `product-marketing` | הקשר משותף | `.agents/product-marketing.md` — עובדות בלבד |
 | `copywriting` / `copy-editing` / `marketing-psychology` | `vfcopy` | טיוטה ולינט בעברית מדוברת |
 | `social` / `content-strategy` / `video` | `vfgrowth`, `vfigos` | חבילת תוכן. Grok שולח |
-| `image` | `vfcovers`, `vfcanva` | כריכות. לא פוסט חי |
 | `customer-research` | `vfconvert` | בריף משרשור. אין לקוח מומצא |
 | `offers` / `sales-enablement` | `vfsales` | מסגור הצעה אחרי `vfcost` |
 | `competitor-profiling` | `vfresearch` | מקורות ציבוריים. אין Insights מומצא |

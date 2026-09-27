@@ -137,7 +137,7 @@ def main() -> None:
         fail("LOOP.json guides must include constitution/ORGANIC_GROWTH.md")
 
     cli_text = CLI.read_text(encoding="utf-8")
-    for stale in ("EDIT-GATE/Canva", "G004 עדיין חסום עריכה/preflight", "G003 הנעול לא זז"):
+    for stale in ("G004 עדיין חסום עריכה/preflight", "G003 הנעול לא זז"):
         if stale in cli_text:
             fail(f"vf_organic_growth.py still contains stale pre-reset execution text {stale!r}")
     sys.path.insert(0, str(ROOT / "scripts"))
@@ -175,7 +175,7 @@ def main() -> None:
         fail("current stale G004 must not be recommended by growth brief")
     if brief.get("story", {}).get("recommendation", {}).get("choice") == "G004":
         fail("current stale G004 must not be recommended in story decision")
-    for stale in ("G004 עדיין חסום עריכה/preflight", "EDIT-GATE/Canva", "G003 הנעול לא זז"):
+    for stale in ("G004 עדיין חסום עריכה/preflight", "G003 הנעול לא זז"):
         if stale in brief_blob:
             fail(f"growth brief still emits stale pre-reset execution text {stale!r}")
 
@@ -191,5 +191,16 @@ def main() -> None:
     print("OK organic growth control plane")
 
 
+# Sensors only read: undo writes made by the office CLIs this sensor smoke-tests
+# (see scripts/sensor_isolation.py).
+SIDE_EFFECT_PATHS = (
+    "packages/vfgrowth/data",
+)
+
+
 if __name__ == "__main__":
-    main()
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from sensor_isolation import preserve_repo_files  # noqa: E402
+
+    with preserve_repo_files(ROOT, SIDE_EFFECT_PATHS):
+        main()

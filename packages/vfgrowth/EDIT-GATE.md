@@ -2,7 +2,6 @@
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 מושב: **סטודיו**. לא פק חדש.  
@@ -63,6 +62,8 @@ brand_source_lock: FAIL
 
 `NO_TEXT` הוא החלטת visual-copy לגיטימית, אבל **לא** פוטר מטיפול מותגי. גם תמונה נקייה ללא טקסט חייבת להרגיש מכוונת, עקבית ומוכנה מסחרית.
 
+Machine route restrictions are read from `publicationRoute.deniedTools`; the list is policy data, not a reason to keep a retired provider installed or named in active instructions.
+
 ## נתיב ביצוע נוכחי — capability + evidence, לא provider
 
 1. נועלים את מקור המוצר והאזורים המוגנים.
@@ -72,7 +73,6 @@ brand_source_lock: FAIL
 5. Brand Guardian + Product Truth + copy/facts gates בודקים את ה־exact final.
 6. `scripts/vf_publication_evidence.py` חייב לעבור על החבילה המדויקת לפני מסירת review/פרסום.
 
-`Canva` ו־`vfcanva` נמצאים ב־`publicationRoute.deniedTools` ואינם failover לפרסום Velvet Factory. `vfcovers` או כלי עריכה אחר אינם PASS בפני עצמם: הם מותרים רק כחלק מהמסלול הנוכחי, בלי provider shortcut ועם source/final evidence מלא.
 
 ### שימוש ב־AI בתמונות מוצר
 

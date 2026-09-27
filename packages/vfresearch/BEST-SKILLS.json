@@ -12,8 +12,7 @@
   "timerPlaybook": "packages/vfresearch/TIMER.md",
   "standingForever": true,
   "standingSince": "2026-09-03",
-  "standingNote": "Owner standing order remains active. Research Seat is the canonical scheduler authority: run a Best Skills pass when lastPass is about 48h old; no external timer renewal is required.",
-  "stoppedAt": null,
+  "standingNote": "Owner standing order remains active. Research Seat is the canonical scheduler authority: run a Best Skills pass when lastPass is at least 44h old (daily seat gives a ~48h cadence without slipping to 72h); no external timer renewal is required.",
   "artifactPattern": "packages/vfresearch/sources/YYYY-MM-DD-best-skills.md",
   "briefBlock": "05-משרד",
   "mention": [
@@ -40,11 +39,11 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-24",
-  "dataDate": "2026-09-24",
-  "lastArtifact": "packages/vfresearch/sources/2026-09-24-best-skills.md",
+  "lastPass": "2026-09-27",
+  "dataDate": "2026-09-26",
+  "lastArtifact": "packages/vfresearch/sources/2026-09-27-best-skills.md",
   "lastResult": "no-embed-existing-coverage",
-  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due pulse executed inside 2026-09-24 Research Seat; no separate automation created",
+  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due/stale pulse (~72h since 2026-09-24) executed inside 2026-09-27 Research Seat; ranking snapshot dataDate 2026-09-26; no separate automation created",
   "embedded": [
     {
       "id": "grill-me",
@@ -198,8 +197,7 @@
       "note": "Production engineering skills — watch for harness-relevant patterns."
     },
     {
-      "id": "ai-video-image-gen-trending",
-      "note": "skills-101 / genmedia trending. Map only via expert-media-director + Canva-first; no Veo/Kling from HQ."
+      "id": "ai-video-image-gen-trending"
     },
     {
       "id": "archify",
@@ -250,6 +248,16 @@
       "id": "earthtojake-text-to-cad",
       "url": "https://github.com/earthtojake/text-to-cad",
       "note": "2026-09-14: remains watch-only. Source-controlled CAD + DfAM validation may fit vfprod only if a real pre-slice geometry gap is measured. No second CAD runtime."
+    },
+    {
+      "id": "ui-taste",
+      "url": "https://www.skills.sh/uizze.sh/ui-taste",
+      "note": "2026-09-27: trending-7d #1 on LinklyAI dataDate 2026-09-26. Watch with anti-ui-slop / taste-skill; vfbriefux internal only; no foreign tokens; no public site."
+    },
+    {
+      "id": "affaan-m-ecc",
+      "url": "https://github.com/affaan-m/ECC",
+      "note": "2026-09-27: top-repos #3 on 26.9 snapshot. Watch only; no second architecture runtime / no npx."
     }
   ],
   "skipped": [
@@ -288,8 +296,9 @@
   ],
   "schedulerAuthority": "Velvet Research Seat",
   "freshnessContract": {
-    "targetHours": 48,
-    "graceHours": 4,
+    "targetHours": 44,
+    "graceHours": 8,
+    "dueRule": "Research Seat runs the pass when lastPass is >=44h old; stale above 52h (44h + 8h grace). Cadence stays every-2-days (~48h).",
     "evidence": [
       "lastPass",
       "lastArtifact",

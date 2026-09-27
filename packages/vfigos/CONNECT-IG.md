@@ -2,7 +2,6 @@
 
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
-For Velvet Factory publication tasks, use `packages/vfom/PUBLICATION-PREP-EXECUTION.md` and the `publicationRoute` in `packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json`. Canva/vfcanva are forbidden in this scope; provider notes labelled LEGACY below are not executable routes for VF. Other businesses and non-publication uses are unchanged.
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
 
 סטטוס שולחן: **`ready`** — Cloud Team MCP namespace `instagram` מאומת ב־2026-09-09.  
@@ -49,7 +48,6 @@ CTA live audit: `audit_public_cta` / [`cta_audit.py`](cta_audit.py).
 | **סטורי** | `publish_story` (אותו MCP — לא מערכת נפרדת) |
 | תגובות | `get_comments` · `reply_to_comment` · hide/delete לפי מדיניות מודרציה |
 | מחקר | `get_mentions` · `publishing_limit` · `business_discovery` לפי צורך |
-> LEGACY / provenance only for VF publication; not a provider route: | Failover כש־MCP down / remote pending | Canva + Drive + Gmail — [`SEND.md`](SEND.md) |
 
 ## מדיניות הרשאות (VelvetOS)
 
@@ -61,7 +59,6 @@ CTA live audit: `audit_public_cta` / [`cta_audit.py`](cta_audit.py).
 
 `publish_image` · `publish_video` · `publish_reel` · `publish_carousel` · `publish_story` · `reply_to_comment` · `hide_comment` / `delete_comment` רק כשמדיניות מודרציה מחייבת
 
-> LEGACY / provenance only for VF publication; not a provider route: שערים לפני publish: מאגר מדיה + `versionApproval` · Canva/vfcovers · `vfgrowth/PREFLIGHT.md` · `vf_send_preflight.py --gate instagram` · אז כלי `publish_*`.
 
 ### אסור תמיד
 
@@ -74,7 +71,6 @@ Metricool / Publer / Postly / SimplePost / Meta Business Suite = **לא נדרש
 
 ```
 Drive Media Vault (מקור פרטי)
-> LEGACY / provenance only for VF publication; not a provider route:   → נגזרת Canva / vfcovers (בעבודה)
   → שער אישור (versionApproval + PREFLIGHT)
   → URL HTTPS ציבורי לנגזרת המאושרת בלבד (לא כל הכספת)
   → Instagram MCP publish_image | publish_carousel | publish_reel | publish_story

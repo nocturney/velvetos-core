@@ -5,7 +5,6 @@
 **לא:** בנייה מחדש של המערכת · פק חדש · runtime שני · vault מדיה מקביל.
 
 מסמך זה הוא **נקודת הכניסה** כשהמנהל הראשי אינו זמין.  
-פיילאובר כלי/MCP (Canva, Gmail, API…) נשאר ב־[`constitution/ORCHESTRA.md`](../constitution/ORCHESTRA.md) + [`packages/vfharness/playbooks/degraded-mode.md`](../packages/vfharness/playbooks/degraded-mode.md).  
 פיילאובר מכסת **Grok Bot** בלבד: [`GROK-FAILOVER.md`](GROK-FAILOVER.md) · [`packages/vfharness/playbooks/grok-failover.md`](../packages/vfharness/playbooks/grok-failover.md).
 
 ---

@@ -123,8 +123,8 @@
       "type": "computational"
     },
     {
-      "id": "check-vf-canva",
-      "script": "scripts/check-vf-canva.py",
+      "id": "check-tool-authority",
+      "script": "scripts/check-tool-authority.py",
       "type": "computational"
     },
     {
@@ -160,6 +160,11 @@
     {
       "id": "check-vfprod",
       "script": "scripts/check-vfprod.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-no-new-recurring-cost",
+      "script": "scripts/check-no-new-recurring-cost.py",
       "type": "computational"
     }
   ],
@@ -245,7 +250,7 @@
     {
       "pack": "vfigos",
       "layer": "permissions",
-      "how": "Review, schedule, and send via tools (SEND.md). Failover Canva+Drive+Gmail same turn."
+      "how": "Review, schedule, and send via tools (SEND.md). Scheduled Instagram uses Cloudflare publisher; live verification uses Meta/Instagram Graph read-back."
     },
     {
       "pack": "vfgrowth",
@@ -273,7 +278,7 @@
       "how": "Office playbooks only."
     },
     {
-      "pack": "vfcanva",
+      "pack": "vfom",
       "layer": "permissions",
       "how": "Create / resize / review. Hand to vfigos/SEND.md — HQ sends via tools."
     },

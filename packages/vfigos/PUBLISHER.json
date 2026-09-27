@@ -9,7 +9,7 @@
     "provider": "Cloudflare Workers",
     "worker": "velvetos-instagram-publisher",
     "url": "https://velvetos-instagram-publisher.velvetos-vf.workers.dev",
-    "versionId": "1b21f8be-edc9-4241-b1d4-626582628814",
+    "versionId": "2c6e4c70-9824-4c29-8ee6-c3807165f19e",
     "cron": "* * * * *",
     "d1": {
       "name": "velvetos-instagram-publisher",
@@ -23,7 +23,7 @@
     "health": "PASS",
     "metaHealth": "PASS",
     "cronHeartbeat": "PASS",
-    "verifiedAt": "2026-09-27T05:50:00Z"
+    "verifiedAt": "2026-09-27T06:40:11Z"
   },
   "authorization": {
     "scheduled": "owner_schedule_authorization exact-bound to content_id, package_sha256, scheduled_at, caption and media; immutable HMAC stored with the job",
@@ -32,7 +32,7 @@
   },
   "reliability": {
     "media": "KV write-once/idempotent with SHA-256 verification at upload, scheduling and publish time",
-    "duplicateProtection": "atomic D1 claim + HMAC-bound immutable job",
+    "duplicateProtection": "atomic D1 claim + HMAC-bound immutable job + 72h publish fingerprint guard",
     "retries": "pre-publish failures only; bounded retries",
     "ambiguousOutcome": "reconcile_required; never blind-retry after media_publish boundary or expired publishing lease",
     "verification": "published_verified only after Graph media read-back returns permalink",

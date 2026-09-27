@@ -140,5 +140,16 @@ def main() -> None:
     print("OK living-studio registry+projection+skills+selftest")
 
 
+# Sensors only read: undo writes made by the office CLIs this sensor smoke-tests
+# (see scripts/sensor_isolation.py).
+SIDE_EFFECT_PATHS = (
+    "packages/velvetos/living-studio/data",
+)
+
+
 if __name__ == "__main__":
-    main()
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from sensor_isolation import preserve_repo_files  # noqa: E402
+
+    with preserve_repo_files(ROOT, SIDE_EFFECT_PATHS):
+        main()

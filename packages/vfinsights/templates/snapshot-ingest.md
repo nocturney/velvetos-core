@@ -12,7 +12,6 @@ YYYY-MM-DD
 
 ## פוסטים (חזור על שורה לכל פוסט)
 
-| תאריך פרסום | סוג | hook קצר | reach | impressions | saves | shares | comments | profile_visits | קישור לפוסט / Canva id |
 |---|---|---|---|---|---|---|---|---|---|
 | | post/reel/story/carousel | | | | | | | | |
 

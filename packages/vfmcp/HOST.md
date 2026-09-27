@@ -67,7 +67,6 @@ agent worker --name "sderot-mac" start
 | אפליקציות הדפדפן | Gems, GPTs, Canvas, Deep Research, Perplexity Pro / Collections | Chrome במק — פרופיל אחד שנשאר מחובר |
 | CLI רשמי בלי מפתח API | `agy` = Google AI Plus. Codex = `codex login` (ChatGPT Plus). שניהם אומתו 5.9.2026 | טרמינל במק בלבד |
 | Perplexity לסוכן | אין CLI רשמי למנוי. כרום, או `perplexity-user-mcp` **רק במק** אחרי ראש צוות | לא Cloud |
-| Cloud Agent | Gmail / Drive / Canva / git / `WebSearch` | לא אתרי מנוי |
 
 Gemini CLI ו־Codex **לא** מחליפים את Gems/GPTs/Canvas של האתר. «מלא» לאפליקציה = כרום. «קבוע» לסוכן מקומי = OAuth על המק, לא העתקת טוקן לענן.
 

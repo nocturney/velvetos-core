@@ -8,7 +8,7 @@
     {
       "name": "content-draft-ready",
       "expect": "worker_done",
-      "card": "משמרת: VF-G005 d12b\nצוות: content\nמושב: growth\nמצב: worker_done\nדופק: idle\nאימות: packages/vfcopy/G005-d12b.md opened\nארטיפקט: packages/vfcopy/G005-d12b.md\nמה נעשה: טיוטת כיתוב מוכנה. failover Canva+Drive+Gmail. #נשלח-מ-HQ #ממתין-ל-כלי-IG.\nחסר: אין\nהבא: HQ tool send"
+      "card": "משמרת: VF-G005 d12b\nצוות: content\nמושב: growth\nמצב: worker_done\nדופק: idle\nאימות: packages/vfcopy/G005-d12b.md opened\nארטיפקט: packages/vfcopy/G005-d12b.md\nמה נעשה: טיוטת כיתוב מוכנה. failover דרך יכולת עיצוב מאושרת + Drive + Gmail. #נשלח-מ-HQ #ממתין-ל-כלי-IG.\nחסר: אין\nהבא: HQ tool send"
     },
     {
       "name": "sale-shekels-wait",

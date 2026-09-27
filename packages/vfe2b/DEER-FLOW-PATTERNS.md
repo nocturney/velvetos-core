@@ -39,7 +39,6 @@ DeerFlow ≠ BabyDeer (מוד AutoGPT ב־`LOCK.md`). DeerFlow הוא harness נ
 | Sub-agent bounds | delegation רק לתועלת מקבילית/התמחות; fan-out ≤3 רק copy/covers | `crews/run.md` · `LOCK.md` |
 | Progressive skills | קרא `SKILL.md` רק כשהמשימה דורשת; אל תטען את כל המחסן | `.cursor/skills/` · desk rule |
 | allowed-tools (רעיון) | skill מציין כלים מותרים; שליחה/₪/Publish נשארים בחוקה | skill frontmatter (הנחיה) |
-| Tool receipts | `אימות` מציין receipt: `message_id`, Canva URL, sensor name | `crews/run.md` |
 | Context compaction | checkpoint מסכם `completed_steps`; לא לשחזר שיח שלם; גבול שלב (לא באמצע ביצוע) | `vfharness/EMBED.md` · `context-thrift.md` § phase-boundary |
 | Doctor / support bundle | `python3 scripts/check-all.py` לפני `worker_done` על שינוי קטלוג | sensors |
 
@@ -51,7 +50,6 @@ DeerFlow ≠ BabyDeer (מוד AutoGPT ב־`LOCK.md`). DeerFlow הוא harness נ
 |---|---|
 | פנייה | «Gmail reply נשלח בשרשור X» |
 | בריף 07:00 | «send_message עם htmlBody תצוגה 3» |
-| תוכן IG | «Publish MCP או failover Canva+Drive+Gmail על הדיסק» |
 | מחקר | «ארטיפקט ב־`vfresearch/sources/` עם מקורות, בלי גוף חסום» |
 | ₪ | **לא goal** — `decision_gate` לראש צוות |
 
@@ -67,13 +65,11 @@ DeerFlow ≠ BabyDeer (מוד AutoGPT ב־`LOCK.md`). DeerFlow הוא harness נ
 |---|---|
 | 2–3 וריאנטי copy/covers | ₪, שליחה, רישיון |
 | מחקר מקבילי (WebSearch + orchestra) | fan-out על אותו שרשור Gmail |
-| בדיקת pack נפרד (vfcanva brand-check) | BabyAGI / DeerFlow Gateway / swarm |
 
 ### אימות כ-receipt
 
 ```
 אימות: Gmail reply message_id=18abc… · sensor check-vfe2b.py OK
-אימות: Canva design_id=DAG… · Drive file … · #ממתין-ל-כלי-IG
 אימות: python3 scripts/check-all.py — exit 0
 ```
 

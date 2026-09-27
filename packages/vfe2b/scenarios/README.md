@@ -12,7 +12,6 @@
 | `morning-digest` | [`morning-digest.md`](morning-digest.md) | morning-brief | `calendar.read` → `mail.read` → `brief.written` → `mail.sent` |
 | `inquiry-chain` | [`inquiry-chain.md`](inquiry-chain.md) | inquiry | `inquiry.received` → `fields.extracted` → `draft.ready` → `mail.replied` |
 | `weekly-links` | [`weekly-links.md`](weekly-links.md) | research | `links.listed` → `link.reviewed` → `embed.done` → `brief.block05` |
-| `content-live` | [`content-live.md`](content-live.md) | content | `brief.ready` → `canva.done` → `ig.send` / `ig.failover` |
 
 ## איך מריצים
 

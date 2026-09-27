@@ -49,7 +49,6 @@ dataDate: **2026-09-13** — זהו ה-dataset החדש ביותר שאומת ב
 - Google Agents CLI — vendor scaffold/deploy/observability path נוסף.
 - reddit/twitter/social automation — מחוץ למנדט; אין auto-DM/blast.
 - duplicate agent orchestration (`stablyai/orca`, Herdr וכדומה) — `vfe2b` lock; אין runtime שני.
-- generic image/video generators — לא עוקפים את `expert-media-director`/Canva/Hyperframes pipeline הקיים.
 
 ## Validation
 

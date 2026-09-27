@@ -6,7 +6,6 @@
 
 Remotion, HyperFrames, `tools/`, `make setup`, `python -m backlot`, Piper TTS, ורשת ספקי ענן (fal / Veo / Kling / Runway / Seedance / Atlas / HeyGen / Suno / ElevenLabs) אינם runtime קנוני של HQ.
 
-למה: Office Control Plane כבר orchestrator. Media Vault הוא SoT. Canva/כלי המדיה הקיימים הם שכבת production הנוכחית. אין מונורפו שני ואין מפתחות API בגיט.
 
 ספק generation בתשלום יכול להיפתח רק דרך policy/spend gate קיים; פתיחת ספק אינה משנה את חוקי Asset Truth, Content Contract או Claim Provenance.
 
@@ -61,4 +60,3 @@ Hook חלש, crop רע, cover חלש, subject drift, flicker, עברית משו�
 ## Specialized video toolchain boundary
 
 `VIDEO-TOOLCHAIN.json` may add deterministic edit intelligence and optional animation slots, but it must never create a second content runtime, job queue, media catalog, creative authority or publish path. HyperFrames remains the canonical master compositor. Remotion stays license-gated; Manim is host-smoke-verified on sderot-windows as a subordinate technical/explainer slot. Generated animation is illustrative and never proves a physical product/test/customer claim.
-

@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+TOOL_STATUS = ROOT / "packages" / "velvetos" / "TOOL-STATUS.json"
 GAP = ROOT / "packages" / "vfmcp" / "GAP.md"
 FIT = ROOT / "docs" / "MCP-FIT.md"
 SHEETS = ROOT / "packages" / "vfbooks" / "SHEETS.md"
@@ -18,7 +20,6 @@ CONNECT_3DAI = ROOT / "packages" / "vfprod" / "CONNECT-3DAI.md"
 PLAYBOOK_3DAI = ROOT / "packages" / "vfprod" / "3DAISTUDIO.md"
 
 REQUIRED_MCP = {
-    "canva": "https://mcp.canva.com/mcp",
     "threedaistudio": "https://mcp.3daistudio.com/mcp",
     "studiomcphub": "https://studiomcphub.com/mcp",
 }
@@ -40,7 +41,7 @@ VF_CHATGPT = ROOT / "scripts" / "vf_chatgpt.py"
 NEEDLES_GAP = (
     "WebSearch",
     "GenerateImage",
-    "Canva",
+    "Cloudflare",
     "skip",
     "אין בכוונה",
     "SHEETS.md",
@@ -140,13 +141,11 @@ def main() -> None:
 
     desk = json.loads(DESK.read_text())
     tools = desk.get("tools") or {}
-    for key in ("web", "image", "canva"):
+    for key in ("web", "image"):
         if key not in tools:
             fail(f"vf-desk.json tools missing {key}")
         if not (tools[key].get("failover") or ""):
             fail(f"vf-desk.json tools.{key} must declare failover")
-    if (tools.get("canva") or {}).get("status") != "ready":
-        fail("vf-desk.json canva.status must be ready after Cloud Agent verify")
 
     threed = tools.get("threedaistudio") or {}
     if not threed:
@@ -589,7 +588,7 @@ def main() -> None:
         fail(f"vf_send_preflight.py must print JSON: {exc}")
     if not report.get("ok") or "channels" not in report:
         fail("vf_send_preflight.py report missing ok/channels")
-    for need in ("gmail", "instagram", "canva", "gemini", "chatgpt"):
+    for need in ("gmail", "instagram", "gemini", "chatgpt"):
         if need not in report["channels"]:
             fail(f"vf_send_preflight.py missing channel {need}")
     proc4 = subprocess.run(
@@ -603,7 +602,58 @@ def main() -> None:
     if proc4.returncode not in (0, 2):
         fail(f"vf_send_preflight --gate instagram must exit 0 or 2, got {proc4.returncode}")
 
-    print("OK vfmcp gap+sheets+desk web/image+canva-ready+3daistudio+office-mcp+gemini-api+chatgpt-api+instagram-mcp+icloud+send-preflight")
+    # Instagram remote MCP: offline unit tests + read-only live smoke contract.
+    ig_remote = ROOT / "packages" / "vfigos" / "remote"
+    for test_mod in ("test_http_path", "test_insights_v21"):
+        proc_t = subprocess.run(
+            [sys.executable, "-m", "unittest", test_mod],
+            cwd=ig_remote,
+            text=True,
+            capture_output=True,
+            env=env,
+        )
+        if proc_t.returncode != 0:
+            fail(f"vfigos/remote {test_mod} failed:\n{proc_t.stderr[-2000:] or proc_t.stdout[-2000:]}")
+    smoke_src = (ig_remote / "smoke_public.py").read_text(encoding="utf-8")
+    ro_match = re.search(r"READ_ONLY_TOOLS = frozenset\(\s*\{(.*?)\}", smoke_src, re.S)
+    if not ro_match:
+        fail("smoke_public.py must define READ_ONLY_TOOLS")
+    read_only = set(re.findall(r'"([a-z_]+)"', ro_match.group(1)))
+    banned_prefixes = ("publish_", "delete_", "send_", "reply_", "hide_", "add_", "remove_", "update_")
+    if any(t.startswith(banned_prefixes) for t in read_only):
+        fail(f"smoke_public READ_ONLY_TOOLS contains a write tool: {sorted(read_only)}")
+    called = set(re.findall(r'\bcall\(\s*"([a-z_]+)"', smoke_src))
+    if not called or not called <= read_only:
+        fail(f"smoke_public calls tools outside READ_ONLY_TOOLS: {sorted(called - read_only)}")
+    if "if name not in READ_ONLY_TOOLS" not in smoke_src:
+        fail("smoke_public call() must refuse tools outside READ_ONLY_TOOLS")
+    env_skip = {k: v for k, v in env.items() if k != "VELVET_INSTAGRAM_MCP_BEARER_TOKEN"}
+    proc_s = subprocess.run(
+        [sys.executable, str(ig_remote / "smoke_public.py"), "--skip-if-missing"],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+        env=env_skip,
+    )
+    if proc_s.returncode != 0 or not proc_s.stdout.startswith("SKIP: missing VELVET_INSTAGRAM_MCP_BEARER_TOKEN"):
+        fail(f"smoke_public --skip-if-missing must SKIP cleanly without bearer: rc={proc_s.returncode} {proc_s.stdout}{proc_s.stderr}")
+    ig_wf = ROOT / ".github" / "workflows" / "instagram-read-smoke.yml"
+    if not ig_wf.is_file():
+        fail("missing .github/workflows/instagram-read-smoke.yml")
+    ig_wf_text = ig_wf.read_text(encoding="utf-8")
+    for need in (
+        "contents: read",
+        "smoke_public.py --skip-if-missing",
+        "secrets.VELVET_INSTAGRAM_MCP_BEARER_TOKEN",
+        "unittest -v test_http_path",
+        "unittest -v test_insights_v21",
+    ):
+        if need not in ig_wf_text:
+            fail(f"instagram-read-smoke.yml missing {need!r}")
+    if "contents: write" in ig_wf_text or "git push" in ig_wf_text:
+        fail("instagram-read-smoke.yml must stay read-only (no write/push)")
+
+    print("OK vfmcp gap+sheets+desk web/image+3daistudio+office-mcp+gemini-api+chatgpt-api+instagram-mcp+icloud+send-preflight+ig-read-smoke")
 
 
 if __name__ == "__main__":

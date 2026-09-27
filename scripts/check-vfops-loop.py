@@ -69,21 +69,21 @@ def main() -> None:
     for needle in ("vfops_loop.py", "07:00", "FOLLOWER-GROWTH", "רף סוכנות", "אין חדש במשרד", "פער", "PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור"):
         if needle not in orch:
             fail(f"ORCHESTRA.md must mention {needle}")
-    if "VF_PUBLICATION_ROUTE_V1" not in orch or "Canva/vfcanva are forbidden" not in orch:
-        fail("ORCHESTRA.md must bind current VF publication route and forbid Canva/vfcanva")
+    if "VF_PUBLICATION_ROUTE_V1" not in orch:
+        fail("ORCHESTRA.md must bind current VF publication route")
     send = (ROOT / "constitution" / "SEND.md").read_text(encoding="utf-8")
     for needle in ("PREFLIGHT.md", "רמה נמוכה", "נכשל-סגור", "החלטה"):
         if needle not in send:
             fail(f"SEND.md must mention Christian-lock needle {needle}")
     for path, needles in (
         (INSTANCE, ("רף סוכנות", "חצי-פק", "עברית", "PREFLIGHT.md")),
-        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "VF_PUBLICATION_ROUTE_V1", "Canva/vfcanva are forbidden", "G004-STORIES-FIX", "PREFLIGHT.md", "רמה נמוכה")),
+        (STUDIO, ("רף סוכנות", "JPEG גולמי", "לא שואלים", "VOICE.md", "VF_PUBLICATION_ROUTE_V1", "G004-STORIES-FIX", "PREFLIGHT.md", "רמה נמוכה")),
         (EDIT, ("JPEG גולמי", "VF_PUBLICATION_ROUTE_V1", "publicationRoute.deniedTools", "source-grounded", "publication evidence", "G004-STORIES-FIX", "PREFLIGHT.md", "VOICE.md")),
         (PREFLIGHT, ("VOICE.md", "VOICE-RESEARCH", "VOICE-CHART", "ציון עצמי", "נכשל-סגור", "2–3", "CONTENT-RUBRIC")),
         (CAL_OPS, ("לא שואלים", "Google Calendar", "Instagram")),
-        (STORIES, ("VF_PUBLICATION_ROUTE_V1", "Canva/vfcanva אסורים", "source-grounded", "publication evidence", "סיפור-מוצר", "הודעה")),
+        (STORIES, ("VF_PUBLICATION_ROUTE_V1", "source-grounded", "publication evidence", "סיפור-מוצר", "הודעה")),
         (STORIES_FIX, ("LEGACY / STALE", "audit only", "VF_PUBLICATION_ROUTE_V1", "סיפור-מוצר", "הודעה")),
-        (GAP, ("vfcopy", "vfcanva", "vfcovers", "פער", "7.9")),
+        (GAP, ("vfcopy", "vfcovers", "פער", "7.9")),
     ):
         text = path.read_text(encoding="utf-8")
         for needle in needles:
@@ -98,14 +98,11 @@ def main() -> None:
                     fail(f"{path.name} still requires WhatsApp phone as public CTA")
 
     stories_active = STORIES.read_text(encoding="utf-8").split("## LEGACY / provenance only", 1)[0]
-    for forbidden in ("edit_url", "compose_slides.py", "studio/render.py", "נגזרת Canva/vfcovers", "failover Canva"):
+    for forbidden in ("edit_url", "compose_slides.py", "studio/render.py"):
         if forbidden in stories_active:
             fail(f"STORIES.md active route still contains denied provider directive {forbidden!r}")
 
     handoff_active = HANDOFF.read_text(encoding="utf-8").split("> LEGACY / provenance only", 1)[0]
-    for forbidden in ("Canva MCP או vfcovers/vfcanva", "אחרי Canva/vfcovers", "עד Canva/vfcovers"):
-        if forbidden in handoff_active:
-            fail(f"HANDOFF-he.md active route still contains legacy provider directive {forbidden!r}")
 
     routine = ROUTINE.read_text(encoding="utf-8")
     if "vfops_loop.py" not in routine:
@@ -122,8 +119,8 @@ def main() -> None:
         fail("HANDOFF-he.md must open G004 pack")
     if "G004-STORIES-FIX.md" not in handoff:
         fail("HANDOFF-he.md must point Stories at G004-STORIES-FIX.md")
-    if "VF_PUBLICATION_ROUTE_V1" not in handoff or "Canva/vfcanva אסורים" not in handoff:
-        fail("HANDOFF-he.md must bind current VF publication route and forbid Canva/vfcanva")
+    if "VF_PUBLICATION_ROUTE_V1" not in handoff:
+        fail("HANDOFF-he.md must bind current VF publication route")
     if "אל תפנה לכריסטיאן על מדדים חלשים" not in handoff:
         fail("HANDOFF-he.md must lock אל תפנה לכריסטיאן על מדדים חלשים")
     if "PREFLIGHT.md" not in handoff or "preflight/G004.md" not in handoff:
@@ -312,8 +309,8 @@ def main() -> None:
         fail("consumer registry must list sensor-suite as explicit skip")
     if specs["sensor-suite"].auto_daily or specs["sensor-suite"].kind != "skip":
         fail("check-all must never be an auto-daily consumer (recursion)")
-    if specs["vfcovers-compose"].auto_daily or specs["vfcanva-render"].auto_daily:
-        fail("vfcanva/vfcovers must not auto-run standing packs")
+    if specs["vfcovers-compose"].auto_daily:
+        fail("vfcovers must not auto-run standing packs")
     if specs["vfsales-quote"].auto_daily:
         fail("vfsales quote is on-inquiry only")
 
@@ -378,10 +375,6 @@ def main() -> None:
         blob = json.dumps(brief, ensure_ascii=False)
         if "velvetos-modules" not in blob and "צרכנים" not in blob:
             fail("assemble brief must surface consumer results")
-        if "VOICE + Canva/vfcovers" in blob or "Canva MCP או vfcovers/vfcanva" in blob:
-            fail("assemble brief must not emit legacy Canva/vfcanva publication route")
-        if "Canva/vfcanva אסורים בפרסום VF" not in blob:
-            fail("assemble brief must surface current no-Canva VF publication route")
         if "מקור vfbiz/out/week.md מיושן" not in blob:
             fail("assemble brief must label stale weekly business source instead of presenting it as current")
         if "growth-brief מיושן" not in blob:
@@ -519,5 +512,19 @@ def main() -> None:
     print("OK vfops-loop wired into orchestra+brief+handoff + consumers")
 
 
+# Sensors only read: undo writes made by the office CLIs this sensor smoke-tests
+# (see scripts/sensor_isolation.py).
+SIDE_EFFECT_PATHS = (
+    "office/control",
+    "packages/vfgrowth/data",
+    "packages/vfops/data",
+    "packages/vfinsights",
+)
+
+
 if __name__ == "__main__":
-    main()
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from sensor_isolation import preserve_repo_files  # noqa: E402
+
+    with preserve_repo_files(ROOT, SIDE_EFFECT_PATHS):
+        main()

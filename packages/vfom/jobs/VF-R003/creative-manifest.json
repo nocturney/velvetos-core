@@ -20,13 +20,11 @@
     "portablePrompt": "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md",
     "referenceAsset": "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
     "publicReferenceUrl": "https://raw.githubusercontent.com/nocturney/velvetos-core/main/packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
-    "canvaAssetId": "MAHVL7PKpvE",
     "artifactSha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
     "coldStart": true,
     "evidenceRefs": [
       "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md",
-      "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg",
-      "canva:MAHVL7PKpvE"
+      "packages/vfom/reference/velvet-approved-grid-2026-09-14.jpg"
     ]
   },
   "concept": {
@@ -38,17 +36,59 @@
   },
   "hook": {
     "candidates": [
-      {"id": "h1-no-text", "visual": "front-to-three-quarter move where highlights change visibly", "text": "", "reason": "clean baseline; the subject can carry the opener"},
-      {"id": "h2", "visual": "side detail as angle changes", "text": "פרט אחד, זווית אחרת", "reason": "accurate but more editorial than conversational"},
-      {"id": "h3-owner", "visual": "front-to-three-quarter move where highlights change most clearly", "text": "פה הזווית משנה הכול", "reason": "owner-selected and states the point without inventing a process claim"}
+      {
+        "id": "h1-no-text",
+        "visual": "front-to-three-quarter move where highlights change visibly",
+        "text": "",
+        "reason": "clean baseline; the subject can carry the opener"
+      },
+      {
+        "id": "h2",
+        "visual": "side detail as angle changes",
+        "text": "פרט אחד, זווית אחרת",
+        "reason": "accurate but more editorial than conversational"
+      },
+      {
+        "id": "h3-owner",
+        "visual": "front-to-three-quarter move where highlights change most clearly",
+        "text": "פה הזווית משנה הכול",
+        "reason": "owner-selected and states the point without inventing a process claim"
+      }
     ],
     "selected": "h3-owner"
   },
   "shots": {
     "plan": [
-      {"assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "shotType": "hero", "orientation": "vertical", "angle": "front to three-quarter", "distance": "medium-close", "action": "start on the strongest front view and move immediately into angle change", "targetDurationSec": 2.0, "proof": "real object and changing highlights"},
-      {"assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "shotType": "macro", "orientation": "vertical", "angle": "side/front detail", "distance": "close", "action": "show ornament and dark crest from the side", "targetDurationSec": 3.0, "proof": "real visible surface and crest detail"},
-      {"assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "shotType": "proof", "orientation": "vertical", "angle": "rear to opposite side", "distance": "medium-close", "action": "complete the viewpoint change", "targetDurationSec": 3.486, "proof": "same real object from multiple continuous viewpoints"}
+      {
+        "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5",
+        "shotType": "hero",
+        "orientation": "vertical",
+        "angle": "front to three-quarter",
+        "distance": "medium-close",
+        "action": "start on the strongest front view and move immediately into angle change",
+        "targetDurationSec": 2.0,
+        "proof": "real object and changing highlights"
+      },
+      {
+        "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5",
+        "shotType": "macro",
+        "orientation": "vertical",
+        "angle": "side/front detail",
+        "distance": "close",
+        "action": "show ornament and dark crest from the side",
+        "targetDurationSec": 3.0,
+        "proof": "real visible surface and crest detail"
+      },
+      {
+        "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5",
+        "shotType": "proof",
+        "orientation": "vertical",
+        "angle": "rear to opposite side",
+        "distance": "medium-close",
+        "action": "complete the viewpoint change",
+        "targetDurationSec": 3.486,
+        "proof": "same real object from multiple continuous viewpoints"
+      }
     ],
     "missing": []
   },
@@ -56,9 +96,33 @@
     "durationTargetSec": 8.486,
     "audioStrategy": "Source contains no audio stream. Exact final uses original procedural non-diegetic subtle metallic shimmer/pings authored for the angle reveal, normalized and muxed as AAC mono 48kHz; mean -17.9 dB, max -1.8 dB. Not claimed as source sound or trending music.",
     "timeline": [
-      {"startSec": 0.0, "endSec": 2.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "vertical 9:16 crop preserving front silhouette", "speed": 1.5, "cut": "hard", "audio": "original-procedural-metallic-sfx"},
-      {"startSec": 2.0, "endSec": 5.0, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "tight detail crop on side ornament and crest", "speed": 1.5, "cut": "hard", "audio": "original-procedural-metallic-sfx"},
-      {"startSec": 5.0, "endSec": 8.486, "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5", "crop": "medium-close crop completing the rotation", "speed": 1.5, "cut": "hard", "audio": "original-procedural-metallic-sfx"}
+      {
+        "startSec": 0.0,
+        "endSec": 2.0,
+        "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5",
+        "crop": "vertical 9:16 crop preserving front silhouette",
+        "speed": 1.5,
+        "cut": "hard",
+        "audio": "original-procedural-metallic-sfx"
+      },
+      {
+        "startSec": 2.0,
+        "endSec": 5.0,
+        "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5",
+        "crop": "tight detail crop on side ornament and crest",
+        "speed": 1.5,
+        "cut": "hard",
+        "audio": "original-procedural-metallic-sfx"
+      },
+      {
+        "startSec": 5.0,
+        "endSec": 8.486,
+        "assetRef": "drive:1V5daU2XcB0kMsDo_erzv3AkumElfmrr5",
+        "crop": "medium-close crop completing the rotation",
+        "speed": 1.5,
+        "cut": "hard",
+        "audio": "original-procedural-metallic-sfx"
+      }
     ]
   },
   "overlays": [],
@@ -66,11 +130,29 @@
     "decision": "TEXT_WINS",
     "selectedText": "פה הזווית משנה הכול",
     "noTextCompared": true,
-    "pipeline": ["reader-first-he", "velvet-hebrew-copy", "ai-tells-he", "owner-preference-lock", "brand-guardian-final-review"],
+    "pipeline": [
+      "reader-first-he",
+      "velvet-hebrew-copy",
+      "ai-tells-he",
+      "owner-preference-lock",
+      "brand-guardian-final-review"
+    ],
     "candidates": [
-      {"text": "", "result": "baseline", "reason": "clean visual baseline remains viable"},
-      {"text": "נראה אחרת בתנועה", "result": "rejected", "reason": "generic and mostly descriptive"},
-      {"text": "פה הזווית משנה הכול", "result": "selected", "reason": "owner-selected and passes current visual-microcopy gate"}
+      {
+        "text": "",
+        "result": "baseline",
+        "reason": "clean visual baseline remains viable"
+      },
+      {
+        "text": "נראה אחרת בתנועה",
+        "result": "rejected",
+        "reason": "generic and mostly descriptive"
+      },
+      {
+        "text": "פה הזווית משנה הכול",
+        "result": "selected",
+        "reason": "owner-selected and passes current visual-microcopy gate"
+      }
     ],
     "ownerPreference": "פה הזווית משנה הכול",
     "readerFirstNote": "The viewer can see one object change with angle; copy should explain why the rotation matters, not invent a finish claim.",
@@ -79,21 +161,55 @@
   },
   "cover": {
     "candidates": [
-      {"id": "c0-no-text", "headline": "", "subjectCrop": "real rear/side helmet frame", "textPlacement": "none", "gridRationale": "clean baseline"},
-      {"id": "c1", "headline": "פרט אחד, זווית אחרת", "subjectCrop": "real side ornament frame", "textPlacement": "upper safe zone", "gridRationale": "accurate but too editorial"},
-      {"id": "c2-owner", "headline": "פה הזווית משנה הכול", "subjectCrop": "real rear/side frame showing the crest and metallic detail", "textPlacement": "upper safe zone with readability scrim", "gridRationale": "owner-selected; exact final reviewed"}
+      {
+        "id": "c0-no-text",
+        "headline": "",
+        "subjectCrop": "real rear/side helmet frame",
+        "textPlacement": "none",
+        "gridRationale": "clean baseline"
+      },
+      {
+        "id": "c1",
+        "headline": "פרט אחד, זווית אחרת",
+        "subjectCrop": "real side ornament frame",
+        "textPlacement": "upper safe zone",
+        "gridRationale": "accurate but too editorial"
+      },
+      {
+        "id": "c2-owner",
+        "headline": "פה הזווית משנה הכול",
+        "subjectCrop": "real rear/side frame showing the crest and metallic detail",
+        "textPlacement": "upper safe zone with readability scrim",
+        "gridRationale": "owner-selected; exact final reviewed"
+      }
     ],
     "selected": "c2-owner"
   },
   "finishing": {
     "policyVersion": 1,
     "principle": "Retouch the photo, not the product.",
-    "stages": {"photoRetouch": "PASS", "brandContentStyling": "PASS", "textLayoutQa": "PASS", "finalVisualQa": "PASS"},
-    "productTruth": {"gate": "PASS", "subjectIdentityIntegrity": "PASS", "syntheticSubjectChange": "NONE", "sourceSubjectMatch": "PASS", "colorPreserved": "PASS", "notes": "Real source object only; rotation crop/timing/cover treatment does not alter the product."},
+    "stages": {
+      "photoRetouch": "PASS",
+      "brandContentStyling": "PASS",
+      "textLayoutQa": "PASS",
+      "finalVisualQa": "PASS"
+    },
+    "productTruth": {
+      "gate": "PASS",
+      "subjectIdentityIntegrity": "PASS",
+      "syntheticSubjectChange": "NONE",
+      "sourceSubjectMatch": "PASS",
+      "colorPreserved": "PASS",
+      "notes": "Real source object only; rotation crop/timing/cover treatment does not alter the product."
+    },
     "repairCycles": 1,
     "lastRepairAction": "Re-rendered with intentional original SFX, showcase caption and owner-selected cover; rebound exact hashes.",
     "reviewedArtifactDigest": "sha256:ceb58af7ee16c579561878768f0d21822f83530fbf9c7867f5394072d5f52904",
-    "evidenceRefs": ["drive:1q9NT54HrwDsC4hy1kziML-boa1mgcbPa", "drive:1D-kh0iMJKFVuYzh60Cwrrr0iClMQBrMo", "drive:1C_DtQYi3qCEOenoyVOQ8cgdolgeqS-Sq"]
+    "evidenceRefs": [
+      "drive:1q9NT54HrwDsC4hy1kziML-boa1mgcbPa",
+      "drive:1D-kh0iMJKFVuYzh60Cwrrr0iClMQBrMo",
+      "drive:1C_DtQYi3qCEOenoyVOQ8cgdolgeqS-Sq"
+    ]
   },
   "qa": {
     "brandScore": 88,
@@ -121,7 +237,12 @@
       "executionReceipt": "PASS_CURRENT_MAIN"
     },
     "failures": [],
-    "repairs": ["Did not treat missing source audio as acceptable silence.", "Added original non-diegetic metallic SFX and reran audio measurements.", "Rewrote caption as showcase copy and reran current-main Visible Text Gate.", "Rendered owner-selected cover and rebound exact hashes/receipts."]
+    "repairs": [
+      "Did not treat missing source audio as acceptable silence.",
+      "Added original non-diegetic metallic SFX and reran audio measurements.",
+      "Rewrote caption as showcase copy and reran current-main Visible Text Gate.",
+      "Rendered owner-selected cover and rebound exact hashes/receipts."
+    ]
   },
   "feed": {
     "continuityDecision": "pass",

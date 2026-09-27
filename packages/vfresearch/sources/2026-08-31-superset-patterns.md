@@ -46,7 +46,6 @@
 ## מה לא מתקינים
 
 - Superset כמשרד HQ או תחליף Cursor
-- MCP של Superset לתזמורת Gmail / Canva / IG
 - automations ששולחות ללקוח או לפיד בלי כלי HQ
 - fan-out של ₪, רישיון, או שליחה
 

@@ -34,6 +34,8 @@ for candidate in (
 _delivery_approval_ctx: ContextVar[Any] = ContextVar("velvet_delivery_approval", default=None)
 _binding_ctx: ContextVar[dict[str, Any]] = ContextVar("velvet_delivery_binding", default={})
 _mutation_args_ctx: ContextVar[dict[str, Any]] = ContextVar("velvet_mutation_args", default={})
+# Fingerprint computed pre-claim for publish tools; recorded after a non-failed Graph write.
+_pending_fingerprint_ctx: ContextVar[Any] = ContextVar("velvet_publish_fingerprint", default=None)
 
 
 def get_request_delivery_approval() -> Any:
@@ -57,6 +59,18 @@ def _spend_store():
     from vfigos.approval.spend import default_spend_store_from_env
 
     return default_spend_store_from_env()
+
+
+def _fingerprint_store():
+    from vfigos.approval.publish_fingerprint import default_fingerprint_store_from_env
+
+    return default_fingerprint_store_from_env()
+
+
+def _fingerprint_window_seconds() -> int:
+    from vfigos.approval.publish_fingerprint import window_seconds_from_env
+
+    return window_seconds_from_env()
 
 
 def _mutation_tools() -> frozenset[str]:
@@ -180,6 +194,36 @@ def authorize_or_block(mutation_tool: str, params: dict[str, Any] | None = None)
                 [f"{mutation_tool} requires video_url for media-byte binding"],
             )
 
+    # --- Fingerprint guard (#198): refuse a repeated identical publish BEFORE spend ---
+    _pending_fingerprint_ctx.set(None)
+    from vfigos.approval.publish_fingerprint import (
+        PUBLISH_TOOLS,
+        check_fingerprint,
+        publish_fingerprint,
+    )
+
+    if mutation_tool in PUBLISH_TOOLS:
+        claims = pre.verify.claims if pre.verify is not None else {}
+        try:
+            fingerprint = publish_fingerprint(
+                ig_user_id=claims.get("ig_user_id") or ig_user_id,
+                media_sha256s=claims.get("media_sha256s"),
+                caption=merged.get("caption"),
+            )
+            window = _fingerprint_window_seconds()
+        except (TypeError, ValueError) as exc:
+            return _blocked(mutation_tool, [f"publish fingerprint failed: {exc}"])
+        fp_check = check_fingerprint(fingerprint, store=_fingerprint_store(), window_seconds=window)
+        if not fp_check.ok:
+            return _blocked(
+                mutation_tool,
+                [f"publish fingerprint guard: {fp_check.status}", fp_check.detail],
+                gate={"publish_fingerprint": fingerprint, **fp_check.as_dict()},
+            )
+        _pending_fingerprint_ctx.set(
+            {"fingerprint": fingerprint, "mutation_tool": mutation_tool, "window": window}
+        )
+
     # --- Phase B: atomic claim BEFORE any media fetch ---
     claimed = claim_authorization(
         pre=pre,
@@ -250,10 +294,50 @@ def apply_delivery_approval_gate(mcp: Any = None) -> None:
             blocked = authorize_or_block(tool_name, dict(params or {}))
             if blocked is not None:
                 return blocked
+            pending = _pending_fingerprint_ctx.get()
+            _pending_fingerprint_ctx.set(None)
+            if pending is not None:
+                return _run_and_record_fingerprint(pending, lambda: _orig_guard(tool_name, params, impl))
         return _orig_guard(tool_name, params, impl)
 
     ig_server._guard = _guard  # type: ignore[assignment]
     ig_server._velvet_delivery_approval_guard_patched = True  # type: ignore[attr-defined]
+
+
+def _run_and_record_fingerprint(pending: dict[str, Any], call: Callable[[], Any]) -> Any:
+    """Run the Graph write; record the fingerprint unless it definitely failed."""
+    import time
+
+    from vfigos.approval.publish_fingerprint import is_definite_failure
+
+    def _record() -> str | None:
+        if pending.get("window") == 0:
+            return None
+        try:
+            _fingerprint_store().record(
+                pending["fingerprint"],
+                at=time.time(),
+                meta={"mutation_tool": pending.get("mutation_tool")},
+            )
+            return None
+        except Exception as exc:  # noqa: BLE001 - never turn a live publish into an error
+            return f"{type(exc).__name__}: {exc}"
+
+    try:
+        result = call()
+    except Exception:
+        _record()  # ambiguous: may be live
+        raise
+    if is_definite_failure(result) or pending.get("window") == 0:
+        return result
+    err = _record()
+    if isinstance(result, dict):
+        result = dict(result)
+        result["publish_fingerprint"] = pending["fingerprint"]
+        result["publish_fingerprint_recorded"] = err is None
+        if err:
+            result["publish_fingerprint_record_error"] = err
+    return result
 
 
 def live_guard():

@@ -1019,8 +1019,16 @@ def main() -> int:
         "storage.objects.update",
     } - spend_runtime_permissions:
         fail("mutation runtime replay-store probe coverage is incomplete")
-    if "storage.objects.create" in spend_runtime_permissions:
-        fail("mutation runtime isolation probe must preserve intended replay object create")
+    for intended_bucket_permission in (
+        "storage.objects.create",
+        "storage.objects.get",
+        "storage.objects.list",
+    ):
+        if intended_bucket_permission in spend_runtime_permissions:
+            fail(
+                "mutation runtime isolation probe must preserve intended replay/fingerprint "
+                f"permission {intended_bucket_permission}"
+            )
     for secret in isolation.INSTAGRAM_SECRETS:
         secret_items = [item for item in mutation_plan if secret in item[0]]
         if any(item[1] == "secretmanager.versions.access" for item in secret_items):
@@ -1838,6 +1846,9 @@ def main() -> int:
             return mem_spend.claim(approval_id, meta=meta)
 
     _dag._spend_store = lambda: _CountingSpend()  # type: ignore[assignment]
+    # Publish fingerprint guard (#198) is covered by check-publish-fingerprint.py;
+    # this matrix exercises approval spend, so the fingerprint window is disabled here.
+    _dag._fingerprint_window_seconds = lambda: 0  # type: ignore[assignment]
 
     def _fresh_image_receipt(**overrides):
         kwargs = dict(now=real_now, ttl_seconds=600)
