@@ -1,19 +1,17 @@
-# 05 · משרד · 27.9.2026
+# 05 · משרד · 28.9.2026
 
 מצב Research Seat: `ready_for_brief`.
 הריצה הושלמה לפני cutoff 07:00 Asia/Jerusalem.
 
 ## מה נבנה / יועל
-- טופס קליטה לפני מחיר (8 בלוקים / 6 שאלות קצרות) שמחליט quote / hold / discovery / sample-first לפני שפת ₪ — מיפוי ל־`vfconvert`.
-- חבילת הצעה מינימלית: קובץ שולט אחד + מספר גרסה + כמות/שלב + שימוש + גימור + קריטי למידה — `vfconvert`/`vfsales` (בלי ₪ מומצא).
-- שלוש מדרגות גימור לפני אישור הצעה (פונקציונלי / פונה-ללקוח / דגימת מצגת) + פנים מוגנים — `vfsales`/`vfconvert`/`vfprod`.
-- רשימת automatic-fail ל־QC + אריזת איסוף שמעדיפה מניעת שבירה על מהירות — `vfprod` (דפוס בלבד).
-- מארגנים פונקציונליים ברי־הדפסה באותו G-code + ימי אצווה לפי צבע + סטאק עלות מלא (חומר/חשמל/עבודה/פחת/עמלות) — מיפוי ל־`vfsku`/`vfprod`/`vfconvert` (**EXTRA**; בלי ₪ מומצא; VF = איסוף/IG בלבד).
-- מועדון איסוף מקומי קטן מסוג desk-reset: אביזרי שולחן שחוזרים טבעית, קאדנס ברור, באפר חומר, skip/pause — `vfsku`/`vfsales` + לוח freeze→print→QA→ready ב־`vfops` (**EXTRA**; לא משלוח ארצי / לא Printie outsourcing).
-- Best Skills: due/stale (~72ש מ־24.9) — בוצע על דירוג 26.9; `no-embed-existing-coverage`.
-- MakerWorld/Printables א׳: Cloudflare; רישיונות UNPROVEN; אין שם להציע למדף.
+- לוח תפעול שבועי עם שלושה אופקים (היום / השבוע / 4–12 שבועות) + חישוב safe-start מהבטחת איסוף + ערכות סיכון ליום + ניסוי איכות אחד ביום ד׳ — מיפוי ל־`vfops`.
+- נקודת הזמנה מחדש ו־material cover (ימים) לחוטים + חומרה + אריזה כהון חוזר; בדיקת זמינות BOM לפני הבטחת איסוף — `vfprod`/`vfsku`/`vfconvert` (בלי ₪ מומצא; בלי התקנת SaaS מלאי).
+- מדיניות אישור ושינויים: אירוע אישור מדויק · הבחנה בין תיקון הצעה / שינוי עיצוב / הצעה מחדש · חבילת דלתא לאיפוס שרשור — `vfconvert`/`vfsales`.
+- דגימה מאושרת + ייצור עדיין בהמתנה: שני מסמכים נפרדים (אישור דגימה עם hold מפורש / שחרור ייצור כתוב עם כמות וגרסה) — `vfsales`/`vfconvert`/`vfops`.
+- Best Skills: לא due (~24ש מ־27.9) — לא הורץ; `BEST-SKILLS.json` ללא שינוי.
+- MakerWorld/Printables: יום ב׳ — «לא יום סריקה».
 
-מקור מלא: `packages/vfresearch/sources/2026-09-27-orchestra.md` · `2026-09-27-best-skills.md` · `2026-09-27-makerworld-scan.md`.
+מקור מלא: `packages/vfresearch/sources/2026-09-28-orchestra.md`.
 
 ## שבועי קישורים · 25.9.2026 (Weekly Research Accountability · gh-failover)
 
