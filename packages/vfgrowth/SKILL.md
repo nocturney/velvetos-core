@@ -13,7 +13,7 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 **לוח עומד:** `CALENDAR.md` + `RHYTHM.md` — לא שואלים כל יום «מה לפרסם?».  
 חסר גלם מכריסטיאן → `MEDIA-NEEDED-FROM-CHRISTIAN`. לא ממציאים מדיה.
 
-לוח **קבוע**: `CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. שיבוץ ב־instagram.com (לא סוויט).  
+לוח **קבוע**: `CALENDAR.md` + `LEDGER.md` + `HANDOFF-he.md`. תזמון אמיתי ב־Cloudflare Publisher; Calendar mirror לפי `CALENDAR-OPS.md`.
 שער עריכה: `EDIT-GATE.md`. פריפלייט כתוב: `PREFLIGHT.md` (VOICE + ציון עצמי + 2–3 קומפס) — בלי `preflight/<id>.md` עבור = נכשל-סגור.  
 אל תפנה לכריסטיאן על מדדים חלשים. לוח אוטונומי: `CALENDAR-OPS.md`. סנסור `scripts/check-vfgrowth.py`.
 

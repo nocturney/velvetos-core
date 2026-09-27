@@ -25,6 +25,8 @@ def main() -> None:
         ASSETS / "morning-story.jpg",
         ASSETS / "morning-radar.jpg",
         ASSETS / "morning-footer.jpg",
+        ROOT / "packages" / "vfigos" / "cloudflare_publisher_morning_snapshot.py",
+        ROOT / "packages" / "vfigos" / "run_publisher_morning_snapshot.ps1",
         ROOT / "packages" / "vfigos" / "openpost_morning_snapshot.py",
         ROOT / "packages" / "vfigos" / "run_openpost_morning_snapshot.ps1",
         ROOT / "packages" / "vfigos" / "materialize_openpost_morning_thumbnails.ps1",
@@ -60,11 +62,23 @@ def main() -> None:
     contract = (PACK / "MORNING-GREEN.md").read_text(encoding="utf-8")
     for token in (
         "scheduled != approved != published_verified",
-        "מתוזמן", "טרם שובץ", "OpenPost", "CID", "TARGET-CONCEPT", "QA חזותי", "VF-YYYYMMDD-NNN",
+        "מתוזמן", "טרם שובץ", "Cloudflare Publisher", "legacy/read-only", "CID", "TARGET-CONCEPT", "QA חזותי", "VF-YYYYMMDD-NNN",
         "list_media/get_media", "owner-visible-text",
     ):
         if token not in contract:
             fail(f"Morning Green contract missing {token!r}")
+
+    publisher = (ROOT / "packages" / "vfigos" / "cloudflare_publisher_morning_snapshot.py").read_text(encoding="utf-8")
+    for token in ("VELVET_PUBLISHER_CONTROL_TOKEN", "/v1/jobs", "/v1/runtime", "/v1/meta-health", "heartbeat_age", "scheduled_at", "thumbnail_url", "cloudflare-instagram-publisher"):
+        if token not in publisher:
+            fail(f"Cloudflare Publisher Morning adapter missing {token!r}")
+    for forbidden in ("method='POST'", 'method="POST"', "method='PUT'", 'method="PUT"', "method='DELETE'", 'method="DELETE"'):
+        if forbidden in publisher:
+            fail(f"Cloudflare Publisher Morning adapter contains write HTTP method: {forbidden}")
+    publisher_runner=(ROOT / "packages" / "vfigos" / "run_publisher_morning_snapshot.ps1").read_text(encoding="utf-8")
+    for token in ("cloudflare-publisher-control.dpapi", "VELVET_PUBLISHER_CONTROL_TOKEN", "ZeroFreeBSTR"):
+        if token not in publisher_runner:
+            fail(f"Publisher DPAPI runner missing {token!r}")
 
     openpost = (ROOT / "packages" / "vfigos" / "openpost_morning_snapshot.py").read_text(encoding="utf-8")
     for token in ("activity_bucket':'scheduled'", "scheduled_at", "public_url_ready", "thumbnail_media_id", "thumbnail_cid", "OPENPOST_TOKEN"):
@@ -109,7 +123,7 @@ def main() -> None:
 
     builder = (PACK / "build_morning_green.py").read_text(encoding="utf-8")
     preparer = (PACK / "prepare_morning_green.py").read_text(encoding="utf-8")
-    for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--thumbnail-dir", "morning-green-assets-"):
+    for token in ("'enabled':bool(args.enable)", "--enable", "embedRemoteImages", "PACK/'assets'/'morning-green'", "--publisher", "--thumbnail-dir", "morning-green-assets-"):
         if token not in preparer:
             fail(f"Morning Green preparer missing fail-closed send contract {token!r}")
     for token in ("reader_friendly", "compact_overview", "compact_attention", "compact_progress", "compact_receivables", "ready_for_brief", "waiting_for_print_done", "lastMod", "thumbnail_cid", "no materialized/public thumbnail", "range(7)", "HE_DAY_SHORT", "extra_count", "instagram_snapshot", "מעורבות בפוסט האחרון", "Insights", "Instagram has its own dedicated analytics section", "דברים שכדאי לשים לב אליהם", "תודה שאתה חלק מהדרך"):

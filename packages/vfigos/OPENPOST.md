@@ -5,11 +5,13 @@
 Upstream: `getopenpost/openpost`  
 Runtime baseline: **v4.35.0**
 Latest reviewed upstream: **v4.35.0** (2026-09-17)
-Role: **scheduler + queue + retry/delivery status + multi-channel publication control + analytics collector**.
+Role: **LEGACY / read-only provenance and recovery inspection** as of 2026-09-24.
+
+> **Cutover 2026-09-24:** Cloudflare Publisher (`packages/vfigos/PUBLISHER.json`) is the primary scheduled publication control-plane. Do not create new Velvet Factory schedules in OpenPost. The production OpenPost runtime stays deployed only so historical records, provider outcomes and recovery evidence remain inspectable.
 
 ## החלטת ארכיטקטורה
 
-OpenPost נכנס **בתוך `vfigos` הקיים** כשכבת publication operations/control-plane בלבד.
+OpenPost was previously the `vfigos` publication operations/control-plane. It is now retained as a legacy/recovery surface only; scheduled apply belongs to Cloudflare Publisher and live verification remains the canonical Instagram MCP.
 
 ```text
 Content decision / creative pipeline
@@ -18,14 +20,14 @@ Content decision / creative pipeline
   -> Product Truth + Owner-Approved Grid Standard
   -> VISIBLE_TEXT + Brand Guardian + executable creative preflight
   -> PREFLIGHT/publicationEvidence + exact artifact/package hash
-  -> signed velvet.delivery_approval.v1 for the exact write mutation
-  -> OpenPost queue/schedule/apply OR direct Instagram MCP failover
-  -> Instagram MCP list_media/get_media live verification
+  -> scheduled: exact owner_schedule_authorization -> Cloudflare Publisher D1/KV
+  -> immediate: signed velvet.delivery_approval.v1 -> direct Instagram MCP
+  -> Instagram Graph/MCP live read-back verification
   -> liveVerified + ledger
   -> Insights / learning loop
 ```
 
-OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום הקנוני וקיבל את הראיות הנדרשות. הוא **לא** יוצר bypass ל־VISIBLE_TEXT, `packages/vfom/PUBLICATION-PREP-EXECUTION.md`, Product Truth, Media Vault/versionApproval, Owner-Approved Grid Standard, Brand Guardian, PREFLIGHT/publicationEvidence, rights/privacy, exact-hash binding או signed `velvet.delivery_approval.v1`.
+OpenPost אינו מקבל עוד schedules חדשים. הוא נשאר read-only לצורך provenance/recovery ואינו מקור הרשאה או נתיב apply.
 
 ## Instagram / Meta
 
@@ -35,21 +37,16 @@ OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום �
 - OpenPost upload/schedule/publish success לעולם אינו `liveVerified`; רק `list_media` / `get_media` מה־Instagram MCP הקנוני הם ראיית live.
 - אין auto-DM, אין boost/Ads, אין שינוי מחיר/Spend ואין המצאת Insights/metrics.
 
-## Authenticated write boundary
+## Authorization boundary after cutover
 
-כל Instagram write mutation — גם דרך OpenPost וגם דרך direct Instagram MCP — חייבת לעבור את אותו mutation boundary עם receipt חתום מסוג `velvet.delivery_approval.v1` מה־dedicated issuer.
+- **Future scheduled publication:** owner approval is captured when the immutable schedule job is created. The authorization must bind the exact `content_id`, package SHA-256, `scheduled_at`, caption and ordered media hashes. The Worker HMAC-binds the full job and re-verifies media bytes before publish.
+- **Immediate direct publication:** the existing short-lived signed `velvet.delivery_approval.v1` boundary remains mandatory.
+- A scheduled job is not editable in-place: changing time, caption, package or media requires cancellation and a newly authorized job.
+- Ambiguous outcomes after `media_publish` never auto-retry; they enter `reconcile_required`.
 
-- `packages/vfigos/approval/OPERATOR-SETUP.md` הוא מסמך ההקמה/סטטוס הקנוני.
-- כל עוד live evidence נשאר `NEEDS_OPERATOR_SETUP`, אין production promotion ואין write authorization.
-- Publication evidence, standing authorization או transport success אינם תחליף ל־delivery approval חתום.
-- Direct Instagram MCP הוא failover תעבורתי בלבד; הוא **לא** approval bypass.
+## Legacy OpenPost mode
 
-## מצבי הפעלה
-
-1. `shadow` — OpenPost מקבל/מאמת payloads ותזמון בלי להחליף את הנתיב הקנוני.
-2. `staging` — בדיקות מבוקרות: health/auth, queue/schedule, post/carousel/reel/story contract, forced failure/retry, analytics ingest ומיגרציות על staging בלבד.
-3. `primary-control-plane` — רק אחרי שכל הבדיקות, provider OAuth/public HTTPS, signed delivery approval וה־Instagram live verification עוברים.
-4. `degraded` — כשל OpenPost מחזיר מיד ל־direct Instagram MCP; אותה הרשאת delivery חתומה עדיין חובה לכל write.
+`integrationMode=legacy-read-only`. Health/read operations remain useful for historical evidence and incident inspection. Scheduling, retry delivery and new publication mutations are no longer authorized VF routes.
 
 ## Release / upgrade policy
 
@@ -81,12 +78,10 @@ OpenPost רשאי לקבל רק artifact שעבר את מסלול הפרסום �
 
 ## Current runtime decision
 
-OpenPost is now the production publication control-plane on the dedicated GCP host at `https://openpost.34.9.7.22.sslip.io`. The host remains pinned to upstream **v4.35.0** plus the reproducible Velvet overlay `vfbridge6`; both `openpost` and `openpost-worker` run `/opt/openpost/v4.35.0-vfbridge6/openpost-server`. The deployed server SHA-256 is `7680c802ddb9de55e51b5fc68ef7dafae659a2798b9ba2fd07cfeab907100293`, the token-helper SHA-256 is `a31030d4bb9c8234266e168f9aa6435970a44f9cbc6923a5a60ba5735cf1dc31`, and `/api/v1/ready` returns `status=ready` with `database=ok`. The exact build/deploy provenance is preserved under `packages/vfigos/openpost/vfbridge6/`.
+מאז cutover של **2026-09-24**, OpenPost **אינו** production publication control-plane של Velvet Factory. ה־GCP host v4.35.0 + `vfbridge6` נשאר זמין לקריאה, provenance, incident inspection וראיות היסטוריות בלבד. אין schedule חדש, אין provider apply חדש ואין auto-failover חדש דרך OpenPost.
 
-The Meta provider OAuth for `@velvets_cloud` is valid and a real owner-approved Instagram write has now been completed and canonically verified with the Instagram MCP (`media_id=17899807347597720`). The live mutation service is Cloud Run revision `velvet-instagram-mcp-00018-8mk`, image digest `sha256:5336f9b4ae3db34bb954e31522f07d4e6f85462a1e416964be516704c08569c2`, which waits for feed-image container `FINISHED` before `media_publish` and returns sanitized `error_class`, `stage`, `write_outcome` and `retry_safety` metadata for safe recovery. Delivery approval is therefore **LIVE_VERIFIED** rather than `LIVE_BLOCKED`.
+ה־production scheduled control-plane הוא Cloudflare Publisher (`PUBLISHER.json`): D1 queue, KV exact-hash media, Cron, bounded pre-publish retry ו־Graph read-back. חבילת `packages/vfigos/failover/` מתועדת כ־legacy של OpenPost ואינה חמושה ל־Publisher jobs.
 
-`vfbridge6` preserves safe Meta/Instagram diagnostics: definite auth/permission/validation/rate-limit failures retain their class/code; timeout/network/provider interruption after the durable write fence remains ambiguous and is never blindly replayed. A GrokBot recovery path is available under `packages/vfigos/failover/`, but it is fenced by exact manifest binding, fresh preflight, live duplicate check, signed delivery approval and a read-only OpenPost state check. Grok cannot call Graph directly or publish when the primary outcome is ambiguous/processing/reconcile-only.
-
-Every production `publish_image` schedule must prepare a `velvet.instagram_failover.v1` manifest at staging time so a definitively failed delivery can be recovered inside the delivery window without inventing bindings during the incident. Owner-approved scheduled image posts arm automatic failover by default when `scheduled_at_utc` is present; `--no-auto-failover` is the explicit opt-out. The boot-supervised watcher performs a read-only OpenPost coverage audit every 60 seconds and records `UNPROTECTED_SCHEDULE` when an active Instagram image schedule has no armed exact manifest.
+פרטי build/pin, ה־owner-approved write ההיסטורי וראיות `vfbridge6` נשמרים ב־`OPENPOST.json` וב־`packages/vfigos/openpost/vfbridge6/` לצורך lineage; הם אינם authorization למסלול חדש.
 
 Version state: [`OPENPOST.json`](OPENPOST.json).

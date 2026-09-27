@@ -31,6 +31,9 @@ POST /v1/jobs schedules exact content.
 POST /v1/jobs/{id}/cancel cancels only scheduled/retry jobs.
 POST /v1/run manually processes due jobs (operator/testing only).
 
+## Google Calendar mirror
+The dedicated Google Calendar `אינסטגרם` is a one-way operational mirror of D1 jobs. Cloudflare Publisher remains the only schedule source of truth. Calendar edits never change publication time or authorization. The bridge code lives in `../apps_script_calendar_bridge/` and is designed to run every 5 minutes inside the owner's Google account. Mirror failure is reported operationally but does not cancel an already scheduled publication.
+
 ## Safety
 Scheduler acceptance is not publication proof. A job becomes published_verified only after media_publish returns a media id and a Graph read-back returns a permalink.
 Any ambiguous failure after the publish boundary becomes reconcile_required, not retry.

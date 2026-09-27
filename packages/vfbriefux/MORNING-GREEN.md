@@ -15,14 +15,14 @@
 - אזור `בקרוב בפיד` נמצא בראש המייל כרצועת שבוע אחת.
 - הרצועה מציגה תמיד את 7 הימים הקרובים, עמודה לכל יום, עם thumbnail קטן + שעה/סוג רק כשיש schedule חי; יום ללא פרסום נשאר תא שקט ולא מומצא.
 - `Instagram` הוא מדור נפרד ללא thumbnails: עוקבים, מעורבות מאומתת בפוסט האחרון, שינוי מאז הבריף הקודם, והערת Insights/Reach רק אם המקור מספק אותם.
-- QA חזותי אחרי שינוי תבנית חייב להריץ מחדש את `build_morning_green.py` ממקורות ה־brief העובדתיים + OpenPost העדכני. אסור לבדוק תבנית חדשה על JSON ביניים היסטורי ששמר כפילויות/מבנה ישן.
+- QA חזותי אחרי שינוי תבנית חייב להריץ מחדש את `build_morning_green.py` ממקורות ה־brief העובדתיים + snapshot עדכני של Cloudflare Publisher. אסור לבדוק תבנית חדשה על JSON ביניים היסטורי ששמר כפילויות/מבנה ישן.
 - במובייל מזהי `VF-YYYYMMDD-NNN` חייבים להישאר יחידה אחת ולא להישבר באמצע. כרטיס ה־Hero נשען על יחס 64% תוכן / 36% צילום, ה־Story נשאר landscape רחב, וה־Radar נשאר banner נמוך כמו ב־TARGET. בכרטיס `דורש תשומת לב` עמודת הסיכום צרה ושלוש עמודות הגבייה רחבות יותר כדי לשמור IDs שלמים. ה־KPI מוצגים חזותית משמאל לימין: גבייה, אירועים, ייצור.
 
 ## אמת בפרסום
 
 `scheduled != approved != published_verified`.
 
-- `מתוזמן` מותר רק כאשר קיימת ראיית schedule חיה, למשל OpenPost publication עם `scheduled_at`.
+- `מתוזמן` מותר רק כאשר קיימת ראיית schedule חיה. מקור production הקנוני הוא Cloudflare Publisher job עם `scheduled_at` ו־status `scheduled`/`retry`; OpenPost הוא legacy/read-only בלבד.
 - קובץ בתיקיית `Velvet Media / 04 - מאושר לפרסום` הוא `מאושר` בלבד. אם אין ראיית schedule הוא מוצג כ־`טרם שובץ`.
 - תאריך בשם קובץ אינו ראיית תזמון.
 - Calendar היסטורי/ישן אינו גובר על queue חי.
@@ -31,8 +31,8 @@
 ## תמונות
 
 - נכסי אווירה קבועים מגיעים כ־CID מתוך `assets/morning-green/`: `morning-top.jpg`, `morning-story.jpg`, `morning-radar.jpg`, `morning-footer.jpg`.
-- thumbnail של פוסט עתידי אינו נחשף לציבור רק בשביל המייל. ב־OpenPost local-storage, `public_url_ready` עם `/media/<id>` אינו נחשב URL ציבורי עד בדיקה אנונימית אמיתית.
-- מסלול production המועדף: OpenPost `api:read` מוכיח `scheduled_at` + media ID; `packages/vfigos/run_openpost_morning_snapshot.ps1` קורא את ה־credential מ־DPAPI בלי להדפיס אותו; `packages/vfigos/materialize_openpost_morning_thumbnails.ps1` materializes רק את thumbnail ה־`sm_<media-id>.jpg` דרך GCP IAP; `prepare_morning_green.py --thumbnail-dir ...` מאחד אותו עם נכסי האווירה ל־CID bundle.
+- thumbnail של פוסט עתידי מגיע מה־KV הציבורי של Cloudflare Publisher ורק אחרי שה־job עצמו מתוזמן ומאושר. `packages/vfigos/run_publisher_morning_snapshot.ps1` קורא את control credential מ־DPAPI בלי להדפיס אותו ומחזיר רק schedule/read metadata.
+- מסלול production: Cloudflare Publisher מוכיח `scheduled_at` + status ומחזיר URL HTTPS של המדיה המדויקת; `prepare_morning_green.py --publisher ...` מוריד את ה־thumbnail דרך מנגנון ה־CID הבטוח של Gmail. OpenPost snapshot/materializer נשמרים ל־legacy/recovery בלבד.
 - HTTPS ציבורי אמיתי עדיין מותר, אבל production renderer דוחה HTTP, נתיב מקומי או reference שאינו `cid:`/HTTPS.
 - local preview מותר רק עם `--allow-local-images`.
 
@@ -40,7 +40,7 @@
 
 ה־brief builder חייב לקרוא מחדש בכל ריצה:
 - `VF HQ · jobs` + `VF HQ · books` לכסף/עבודות.
-- OpenPost queue לתזמון עתידי, כאשר auth/runtime זמינים.
+- Cloudflare Publisher D1 queue לתזמון עתידי; OpenPost אינו מקור production חדש החל מ־24.9.2026.
 - `Velvet Media / 04 - מאושר לפרסום` למדיה שמוכנה אך עדיין לא הוכח ששובצה.
 - Instagram MCP ל־live media/verification.
 - מקורות נוספים לפי `packages/vfe2b/crews/morning-brief.md`.
@@ -64,7 +64,7 @@
 
 ## Render
 
-`python packages/vfbriefux/prepare_morning_green.py --brief-json FACTUAL.json --brief-txt FACTUAL.txt --openpost OPENPOST-SNAPSHOT.json --thumbnail-dir MATERIALIZED-THUMBNAILS --request packages/vfops/out/gmail-send-request.json`
+`python packages/vfbriefux/prepare_morning_green.py --brief-json FACTUAL.json --brief-txt FACTUAL.txt --publisher PUBLISHER-SNAPSHOT.json --request packages/vfops/out/gmail-send-request.json`
 
 Render-only: `python packages/vfbriefux/render_morning_green.py BRIEF.json -o OUT.html`
 
@@ -86,7 +86,7 @@ Self-check: `python packages/vfbriefux/render_morning_green.py --check`
 שערי production של Morning Green:
 1. renderer check;
 2. sensor/check-all;
-3. OpenPost read עובד ומחזיר schedule אמיתי או empty אמת;
+3. Cloudflare Publisher read עובד, heartbeat טרי, ומחזיר schedule אמיתי או empty אמת;
 4. email E2E נשלח לבעלים עם CID + thumbnails;
 5. Gmail readback מאמת את ההודעה;
 6. Apps Script bridge health תקין וה־one-shot חוזר ל־disabled.
