@@ -37,14 +37,10 @@ def main() -> int:
             fail(f"OPENPOST.json {key} must be false while frozen")
 
     grok = json.loads(GROK.read_text(encoding="utf-8"))
-    active = grok.get("routines") or []
-    for row in active:
+    scheduler_rows = list(grok.get("routines") or []) + list(grok.get("retiredRoutines") or [])
+    for row in scheduler_rows:
         if str(row.get("id") or "").casefold() == "openpost-release-watch" or str(row.get("title") or "").casefold() == "openpost release watch":
-            fail("OpenPost Release Watch must not be in the active Grok routine set")
-    retired = {str(x.get("id") or ""): x for x in (grok.get("retiredRoutines") or [])}
-    retired_watch = retired.get("openpost-release-watch") or {}
-    if retired_watch.get("desiredEnabled") is not False:
-        fail("retired OpenPost watch must have desiredEnabled=false")
+            fail("OpenPost Release Watch must be deleted from Grok scheduler authority")
 
     send = SEND.read_text(encoding="utf-8")
     if "Cloudflare Worker" not in send or "Meta Instagram Graph API" not in send:

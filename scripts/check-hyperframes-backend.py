@@ -45,13 +45,17 @@ def contains(path: Path, *needles: str) -> str:
     return text
 
 
-def check_common_host(host: dict, *, host_id: str, platform: str, version: str) -> None:
+def check_common_host(host: dict, *, host_id: str, platform: str, recovery_version: str) -> None:
     if host.get("workerName") != host_id or host.get("platform") != platform:
         fail(f"{host_id} identity/platform mismatch")
     if host.get("renderBackend") != "packages/vfom/HYPERFRAMES-BACKEND.json":
         fail(f"{host_id} render backend mismatch")
-    if host.get("hyperframesVersion") != version:
-        fail(f"{host_id} HyperFrames pin mismatch")
+    if host.get("hyperframesKnownGoodVersion") != recovery_version:
+        fail(f"{host_id} HyperFrames recovery baseline mismatch")
+    if host.get("hyperframesVersionPolicy") != "latest-compatible":
+        fail(f"{host_id} HyperFrames version policy must be latest-compatible")
+    if host.get("hyperframesCompatibilityGate") != "doctor+real-smoke":
+        fail(f"{host_id} HyperFrames compatibility gate mismatch")
     if host.get("inboundPortRequired") is not False:
         fail(f"{host_id} must require no inbound port")
     if "video-render-host" not in set(host.get("roles") or []):
@@ -68,11 +72,18 @@ def main() -> None:
         fail("backend must not be second runtime")
     if exe.get("layer") != "edge-or-office-host" or exe.get("bridge") != "scripts/vf_hyperframes.py":
         fail("execution layer/bridge mismatch")
-    version = str(exe.get("packageVersion") or "")
-    if exe.get("package") != "hyperframes" or not re.fullmatch(r"\d+\.\d+\.\d+", version):
-        fail("exact HyperFrames pin required")
-    if exe.get("networkInstallAllowed") is not False or exe.get("versionMismatch") != "fail":
-        fail("render execution must fail closed")
+    minimum = str(exe.get("minimumVersion") or "")
+    recovery = str(exe.get("recoveryVersion") or "")
+    if exe.get("package") != "hyperframes":
+        fail("HyperFrames package identity mismatch")
+    if exe.get("versionPolicy") != "latest-compatible":
+        fail("HyperFrames execution must use latest-compatible policy")
+    if not re.fullmatch(r"\d+\.\d+\.\d+", minimum) or not re.fullmatch(r"\d+\.\d+\.\d+", recovery):
+        fail("HyperFrames minimum/recovery versions must be semver")
+    if exe.get("compatibilityGate") != "doctor+real-smoke":
+        fail("HyperFrames compatibility gate must be doctor+real-smoke")
+    if exe.get("networkInstallAllowed") is not False or exe.get("versionMismatch") != "capability-check":
+        fail("render execution must use capability-check without in-job installs")
     if set(exe.get("requires") or []) != {"hyperframes", "ffmpeg", "ffprobe"}:
         fail("render host requirements mismatch")
     if exe.get("hostRegistry") != "packages/vfmcp/RENDER-HOSTS.json":
@@ -139,8 +150,8 @@ def main() -> None:
 
     mac = host_map.get("sderot-mac") or {}
     windows = host_map.get("sderot-windows") or {}
-    check_common_host(mac, host_id="sderot-mac", platform="macOS", version=version)
-    check_common_host(windows, host_id="sderot-windows", platform="Windows", version=version)
+    check_common_host(mac, host_id="sderot-mac", platform="macOS", recovery_version=recovery)
+    check_common_host(windows, host_id="sderot-windows", platform="Windows", recovery_version=recovery)
 
     if mac.get("displayName") != "Mac-Office" or mac.get("bootstrap") != "scripts/bootstrap-hyperframes-host-macos.sh" or mac.get("route") != "cursor-agent-worker":
         fail("canonical Mac render host contract mismatch")
@@ -183,11 +194,15 @@ def main() -> None:
     policy = contains(POLICY, "not a second orchestrator", "ffmpeg-svg-caption-composition", "ffprobe receipt", "render receipt", "vfcopy", "RTL")
     contains(FRAME, "portrait 9:16", "explicit RTL", "Do not invent font", "Subject lock", "Evaluation Engine")
     contains(EDIT, "HYPERFRAMES-BACKEND.json", "HYPERFRAMES-RENDER.schema.json", "vf_hyperframes.py plan", "ffmpeg-svg-caption-composition")
-    bridge = contains(BRIDGE, f'HYPERFRAMES_VERSION = "{version}"', 'HYPERFRAMES_PACKAGE = f"hyperframes@{HYPERFRAMES_VERSION}"', 'SUPPORTED_STAGES = {"rough", "review", "final"}', 'shutil.which("hyperframes")', '"--strict-all"', '"ffprobe"', '"sha256"', '"audioRequired"')
+    bridge = contains(BRIDGE, 'MIN_HYPERFRAMES_VERSION =', f'RECOVERY_HYPERFRAMES_VERSION = "{recovery}"', 'HYPERFRAMES_PACKAGE = "hyperframes"', 'policy=latest-compatible', 'SUPPORTED_STAGES = {"rough", "review", "final"}', 'shutil.which("hyperframes")', '"--strict-all"', '"ffprobe"', '"sha256"', '"audioRequired"')
+    if "version mismatch: required" in bridge or re.search(r"(?m)^HYPERFRAMES_VERSION\s*=", bridge):
+        fail("bridge must not exact-pin normal HyperFrames execution")
     if "npx" in bridge or "shell=True" in bridge:
         fail("bridge must not download via npx or use shell=True")
 
-    mac_bootstrap = contains(MAC_BOOTSTRAP, f'HYPERFRAMES_VERSION="{version}"', 'HOST_ID="sderot-mac"', 'HYPERFRAMES_NO_UPDATE_CHECK=1', 'HYPERFRAMES_NO_AUTO_INSTALL=1', 'hyperframes browser ensure', 'python3 scripts/vf_hyperframes.py doctor', 'python3 scripts/vf_hyperframes.py run', 'data-no-timeline', 'dir="rtl"', 'STATE_DIR="$HOME/.velvetos"')
+    mac_bootstrap = contains(MAC_BOOTSTRAP, f'HYPERFRAMES_RECOVERY_VERSION="{recovery}"', 'NODE_RECOVERY_VERSION="22.22.0"', 'HOST_ID="sderot-mac"', 'HYPERFRAMES_NO_UPDATE_CHECK=1', 'HYPERFRAMES_NO_AUTO_INSTALL=1', 'hyperframes browser ensure', 'python3 scripts/vf_hyperframes.py doctor', 'python3 scripts/vf_hyperframes.py run', 'data-no-timeline', 'dir="rtl"', 'STATE_DIR="$HOME/.velvetos"')
+    if "Installing pinned HyperFrames" in mac_bootstrap or 'HYPERFRAMES_VERSION="' in mac_bootstrap:
+        fail("Mac bootstrap must not exact-pin normal HyperFrames execution")
     if '<html lang="he" dir="rtl">' in mac_bootstrap:
         fail("RTL must not be set on html root in HyperFrames smoke render")
     if "ngrok" in mac_bootstrap or "--share-desktop" in mac_bootstrap:
@@ -201,8 +216,8 @@ def main() -> None:
     windows_bootstrap = contains(
         WINDOWS_BOOTSTRAP,
         '$HostId = "sderot-windows"',
-        '$HyperFramesVersion = "0.8.34"',
-        '$NodeVersionPin = "22.22.0"',
+        f'$HyperFramesRecoveryVersion = "{recovery}"',
+        '$NodeRecoveryVersion = "22.22.0"',
         '$script:Python = @(Resolve-Python)',
         "Get-FileHash -Algorithm SHA256",
         'HYPERFRAMES_NO_UPDATE_CHECK = "1"',
@@ -231,8 +246,11 @@ def main() -> None:
     if "A render receipt proves a file was produced" not in policy:
         fail("render/publish receipt boundary missing")
 
+    if "Installing pinned HyperFrames" in windows_bootstrap or '$HyperFramesVersion = "' in windows_bootstrap:
+        fail("Windows bootstrap must not exact-pin normal HyperFrames execution")
+
     print(
-        f"OK hyperframes backend pinned={version} "
+        f"OK hyperframes backend policy=latest-compatible minimum={minimum} recovery={recovery} "
         f"hosts=mac:{mac_status},windows:{windows_status} "
         "route=first-healthy verified-only smoke-receipt+qa-boundary+wired"
     )

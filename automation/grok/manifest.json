@@ -49,7 +49,7 @@
       "title": "Velvet Research Seat",
       "cadence": "daily 02:00",
       "enabled": true,
-      "responsibility": "daily research and canonical artifact before 07:00 cutoff"
+      "responsibility": "daily research plus read-only upstream/toolchain watch; canonical artifacts before 07:00 cutoff; tool-update decisions go to a separate owner email, never the Morning Brief; never auto-upgrade"
     },
     {
       "id": "cognee-memory-sync",
@@ -100,26 +100,29 @@
     "source": "packages/vfigos/cloudflare-publisher/",
     "openpost": "frozen",
     "openpostReleaseWatch": "retire_and_disable",
-    "providerReadbackRequired": true
-  },
-  "retiredRoutines": [
-    {
-      "id": "openpost-release-watch",
-      "title": "OpenPost Release Watch",
-      "desiredEnabled": false,
-      "reason": "OpenPost frozen by owner on 2026-09-26",
-      "providerReadback": "verified_disabled_2026-09-27",
-      "verifiedReadbackArtifact": "automation/grok/provider-readback-2026-09-27.json"
+    "providerReadbackRequired": true,
+    "openpostReleaseWatchRemoval": {
+      "state": "live_verified_deleted",
+      "verifiedAt": "2026-09-27T21:40:21.1296365+03:00",
+      "evidence": "automation/grok/openpost-release-watch-removal.json",
+      "remainingRoutineCount": 8
     }
-  ],
+  },
   "latestProviderReadback": {
     "status": "live_verified",
     "date": "2026-09-27",
     "artifact": "automation/grok/provider-readback-2026-09-27.json",
     "protectedRoutineCount": 8,
     "protectedInventoryClockMatch": true,
-    "retiredOpenPostDisabled": true,
     "rendererTimeZone": "Asia/Jerusalem",
-    "promptBodyParityClaimed": false
+    "promptBodyParityClaimed": false,
+    "openpostReleaseWatchPresent": false
+  },
+  "upstreamWatch": {
+    "ownerRoutineId": "velvet-research-seat",
+    "registry": "packages/velvetos/UPSTREAM-WATCH.json",
+    "report": "packages/vfresearch/sources/upstream-watch-latest.json",
+    "autoUpgrade": false,
+    "consumerRoutineId": "velvetos-office-loop"
   }
 }

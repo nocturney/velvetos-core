@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-27 — **Upstream/toolchain release watch + latest-compatible version policy:** added `packages/velvetos/UPSTREAM-WATCH.json`, `scripts/vf_upstream_watch.py` and `check-upstream-watch.py`. The existing 02:00 Research Seat performs a read-only upstream pass and the Office Loop consumes its report; repository-only skills/agents/pattern sources are tracked alongside runtime tools. OpenPost is excluded while frozen. Normal execution is capability/smoke-gated and latest-compatible; update installation remains a separate reviewed action.
+
+
 - 2026-09-27 — **3D runtime is capability-gated, not version-pinned:** `vf_3d.py` discovers installed Blender versions at runtime (or honors `BLENDER_BIN`), verifies `blender_ai_mcp` in the selected installation, and resolves the RPC port from the installed addon. `vf_cad.py` discovers OrcaSlicer from `ORCASLICER_BIN`, PATH, PrintLab and common install roots. Exact tool versions, source revisions and hashes remain receipt provenance, never an allowlist. Current host acceptance covers doctor, local Blender RPC/MCP, headless geometry gates and slicer discovery; no physical print was attempted or authorized.
 
 - 2026-09-27 — **Control API operational domain projection:** adds canonical read-only projections for production, content, media/files, agent roster and model shelf into `velvetos.control.v1`, preserving unknown/missing values and provenance and bounding media item payloads while retaining canonical totals. Missing sources remain honestly unavailable. This is implementation-ready but not claimed LIVE until merge, Control API redeploy and private-staging roundtrip verification.

@@ -7,7 +7,7 @@ Asia/Jerusalem. The **live protected Grok Bot routine inventory** is the clock a
 | Time | Surface | Responsibility |
 |---|---|---|
 | **01:45** | VelvetOS Integrity Guard | Verify/repair the protected active automation set before daily workloads. |
-| **02:00** | Velvet Research Seat | Daily live research. Finish by the **07:00 cutoff** as `ready_for_brief`, `no_meaningful_findings`, or an explicit blocker. Consumer output is `packages/vfops/data/research.md` for the 09:00 brief. |
+| **02:00** | Velvet Research Seat | Daily live research plus read-only upstream/toolchain update observation. Finish by the **07:00 cutoff** as `ready_for_brief`, `no_meaningful_findings`, or an explicit blocker. Consumer output is `packages/vfops/data/research.md`; upstream evidence is `packages/vfresearch/sources/upstream-watch-latest.json`. |
 | **06:30** | Cognee Memory Sync | Refresh/verify the local derived Cognee/vfmem index; stay silent when current and healthy, report exact blockers/anomalies only. |
 | **09:00** | Velvet Morning Brief | Owner-facing Morning Green v3.1 brief from current live sources. Persist the same-day canonical factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`, refresh Cloudflare Instagram Publisher queue truth and approved publication media evidence, project through `prepare_morning_green.py`, then deliver only through the canonical GitHub/Gmail path. Delivery still requires Gmail provider evidence, not merely generated files. |
 | **10:00** | Morning Delivery Guard | Verify TODAY'S 09:00 Morning Green delivery; recover only if absent/unverified. Recovery must persist/rebuild the same-day factual artifact with `python3 scripts/vfops_loop.py brief --write --date <YYYY-MM-DD>`, refresh current Cloudflare Instagram Publisher evidence, rebuild the same Morning Green route and use the canonical Gmail path. `backfill artifact is not a delivery receipt`, and recovery must not silently downgrade to V10.3. |
@@ -57,6 +57,7 @@ No Instagram connection does **not** stop office work: continue intake, inspecti
 
 ## Recurring non-clock responsibilities
 
+- **Upstream/toolchain watch:** the existing Research Seat runs `python3 scripts/vf_upstream_watch.py check --write packages/vfresearch/sources/upstream-watch-latest.json`. It covers installed/runtime sources and repository-only skill/agent/pattern upstreams from `packages/velvetos/UPSTREAM-WATCH.json`. It never auto-upgrades; compatibility/smoke evidence is required before adopting changes.
 - **Bi-daily Best Skills:** `BEST-SKILLS.md` / `vf-best-skills` runs approximately every 48h until explicitly stopped. This is a standing lifecycle responsibility, not a second fixed-clock scheduler; timer/provider renewal evidence must remain honest.
 - **Weekly inspiration links / קישורי השראה שבועיים:** `vfresearch/WEEKLY.md` + `LINKS.json`, followed by Print·Demand·Sound via `vfresearch/hq/PRINT-DEMAND.md`. The weekly cadence must emit real source/evidence or an explicit no-change/blocker state.
 - MakerWorld/Printables candidate research runs behind `MAKERWORLD-SCAN.md` + license/slice/test gates; never promote directly to SKU/price.
@@ -85,4 +86,4 @@ For routing/search before opening packs manually: `python3 scripts/vfmem.py who 
 
 ## Publisher authority update — 2026-09-26
 
-OpenPost is frozen and has no recurring office responsibility. The former `OpenPost Release Watch` must remain disabled/retired. Scheduled Instagram truth comes from the Cloudflare Instagram Publisher; live publication truth still requires Meta/Instagram read-back. See `packages/velvetos/TOOL-STATUS.json`.
+OpenPost is frozen and has no recurring office responsibility or release/update watcher in scheduler authority. Scheduled Instagram truth comes from the Cloudflare Instagram Publisher; live publication truth still requires Meta/Instagram read-back. See `packages/velvetos/TOOL-STATUS.json`.

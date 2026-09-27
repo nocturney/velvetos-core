@@ -9,7 +9,8 @@ function Resolve-VelvetPath([string]$Name, [string]$Fallback) {
   return [Environment]::ExpandEnvironmentVariables($value)
 }
 
-$MANIM_VERSION = '0.21.0'
+$MANIM_MINIMUM_VERSION = '0.21.0'
+$MANIM_RECOVERY_VERSION = '0.21.0'
 $PYTHON_VERSION = '3.12'
 $HOST_ID = 'sderot-windows'
 $LegacyRoot = Join-Path $env:USERPROFILE '.velvetos'
@@ -18,7 +19,7 @@ $StateDir = Resolve-VelvetPath 'VELVETOS_STATE_ROOT' $LegacyRoot
 $VelvetRoot = Resolve-VelvetPath 'VELVET_ROOT' ''
 $TmpRoot = if ([string]::IsNullOrWhiteSpace($VelvetRoot)) { [IO.Path]::GetTempPath() } else { Join-Path $VelvetRoot 'Tmp' }
 New-Item -ItemType Directory -Force -Path $TmpRoot | Out-Null
-$Toolchain = Join-Path $RuntimeRoot "Toolchains\manim-$MANIM_VERSION-py312"
+$Toolchain = Join-Path $RuntimeRoot "Toolchains\manim-py312"
 $StateFile = Join-Path $StateDir 'manim-host.json'
 
 function Say([string]$Message) { Write-Host $Message }
@@ -60,21 +61,33 @@ if (-not (Test-Path (Join-Path $Toolchain 'Scripts\python.exe'))) {
 
 $Python = Join-Path $Toolchain 'Scripts\python.exe'
 $Manim = Join-Path $Toolchain 'Scripts\manim.exe'
-$current = ''
-if (Test-Path $Manim) {
-  $current = (& $Manim --version 2>$null | Select-Object -First 1)
-}
-if ($current -notmatch [regex]::Escape($MANIM_VERSION)) {
-  Say "Installing Manim $MANIM_VERSION into isolated venv..."
-  & $Python -m pip install --disable-pip-version-check --no-input "manim==$MANIM_VERSION"
-  if ($LASTEXITCODE -ne 0) { Fail 'Manim install failed' }
+
+function Get-ManimVersion {
+  if (-not (Test-Path $Manim)) { return $null }
+  $raw = (& $Manim --version 2>$null | Select-Object -First 1)
+  if ($raw -match '(\d+\.\d+\.\d+)') { return $Matches[1] }
+  return $null
 }
 
-$current = (& $Manim --version | Select-Object -First 1)
-if ($current -notmatch [regex]::Escape($MANIM_VERSION)) {
-  Fail "Manim version mismatch: expected $MANIM_VERSION, got $current"
+$current = Get-ManimVersion
+if (-not $current) {
+  Say "Manim missing; installing current stable release into isolated venv..."
+  & $Python -m pip install --disable-pip-version-check --no-input manim
+  if ($LASTEXITCODE -ne 0) { Fail 'Manim install failed' }
+  $current = Get-ManimVersion
+} elseif ([version]$current -lt [version]$MANIM_MINIMUM_VERSION) {
+  Say "Manim $current is below supported minimum $MANIM_MINIMUM_VERSION; upgrading to a current compatible release..."
+  & $Python -m pip install --disable-pip-version-check --no-input --upgrade manim
+  if ($LASTEXITCODE -ne 0) { Fail 'Manim compatibility upgrade failed' }
+  $current = Get-ManimVersion
 }
-Say "OK Manim version $MANIM_VERSION"
+
+if (-not $current) { Fail 'Manim version could not be determined after provisioning' }
+if ([version]$current -lt [version]$MANIM_MINIMUM_VERSION) {
+  Fail "Manim below supported minimum: required >=$MANIM_MINIMUM_VERSION, got $current"
+}
+Say "OK Manim compatible version $current (policy=latest-compatible; recovery=$MANIM_RECOVERY_VERSION)"
+Say 'Existing compatible installs are not auto-upgraded; upstream adoption is a separate compatibility-tested change.'
 
 $SmokeRoot = Join-Path $TmpRoot 'velvet-manim-windows-smoke'
 if (Test-Path $SmokeRoot) { Remove-Item -Recurse -Force $SmokeRoot }
@@ -118,7 +131,10 @@ $State = [ordered]@{
   schemaVersion = 1
   hostId = $HOST_ID
   engine = 'manim'
-  version = $MANIM_VERSION
+  version = $current
+  versionPolicy = 'latest-compatible'
+  minimumVersion = $MANIM_MINIMUM_VERSION
+  recoveryVersion = $MANIM_RECOVERY_VERSION
   python = $PYTHON_VERSION
   toolchain = $Toolchain
   smoke = 'pass'
@@ -133,7 +149,7 @@ New-Item -ItemType Directory -Force -Path $StateDir | Out-Null
 
 Say 'OK Manim Windows host smoke verified'
 Say "  host=$HOST_ID"
-Say "  version=$MANIM_VERSION"
+Say "  version=$current"
 Say "  output=$($Output.FullName)"
 Say "  sha256=$Sha"
 Say "  state=$StateFile"

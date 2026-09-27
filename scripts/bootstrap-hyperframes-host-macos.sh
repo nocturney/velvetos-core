@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-HYPERFRAMES_VERSION="0.8.34"
-NODE_VERSION_PIN="22.22.0"
-FFMPEG_STATIC_PACKAGE="ffmpeg-ffprobe-static@6.1.2-rc.1"
+HYPERFRAMES_RECOVERY_VERSION="0.8.34"
+NODE_RECOVERY_VERSION="22.22.0"
+FFMPEG_RECOVERY_PACKAGE="ffmpeg-ffprobe-static@6.1.2-rc.1"
 HOST_ID="sderot-mac"
 START_WORKER=0
 
@@ -61,14 +61,14 @@ install_user_node() {
     *) fail "unsupported macOS architecture: $machine" ;;
   esac
 
-  artifact="node-v${NODE_VERSION_PIN}-darwin-${arch}.tar.gz"
-  base="https://nodejs.org/dist/v${NODE_VERSION_PIN}"
+  artifact="node-v${NODE_RECOVERY_VERSION}-darwin-${arch}.tar.gz"
+  base="https://nodejs.org/dist/v${NODE_RECOVERY_VERSION}"
   toolchain="$HOME/.velvetos/toolchain"
-  node_dir="$toolchain/node-v${NODE_VERSION_PIN}-darwin-${arch}"
+  node_dir="$toolchain/node-v${NODE_RECOVERY_VERSION}-darwin-${arch}"
   tmp="$(mktemp -d "${TMPDIR:-/tmp}/velvet-node.XXXXXX")"
   trap 'rm -rf "${tmp:-}"' RETURN
 
-  say "Installing Node v${NODE_VERSION_PIN} user-locally (no sudo)..."
+  say "Installing recovery Node v${NODE_RECOVERY_VERSION} user-locally (no sudo)..."
   curl -fL "$base/$artifact" -o "$tmp/$artifact"
   curl -fL "$base/SHASUMS256.txt" -o "$tmp/SHASUMS256.txt"
   sums="$(grep "  $artifact$" "$tmp/SHASUMS256.txt" || true)"
@@ -96,7 +96,7 @@ install_user_ffmpeg() {
   mkdir -p "$package_root" "$HOME/.local/bin"
 
   say "Installing FFmpeg + ffprobe user-locally (no sudo)..."
-  npm install --prefix "$package_root" --no-audit --no-fund "$FFMPEG_STATIC_PACKAGE"
+  npm install --prefix "$package_root" --no-audit --no-fund "$FFMPEG_RECOVERY_PACKAGE"
   ffmpeg_bin="$package_root/node_modules/ffmpeg-ffprobe-static/ffmpeg"
   ffprobe_bin="$package_root/node_modules/ffmpeg-ffprobe-static/ffprobe"
   [[ -x "$ffmpeg_bin" ]] || fail "user-local ffmpeg binary missing after npm install"
@@ -127,17 +127,15 @@ fi
 command -v ffmpeg >/dev/null 2>&1 || fail "ffmpeg missing after bootstrap"
 command -v ffprobe >/dev/null 2>&1 || fail "ffprobe missing after bootstrap"
 
-CURRENT_HF="$(hyperframes --version 2>/dev/null | head -n 1 | tr -d '[:space:]' || true)"
-if [[ "$CURRENT_HF" != "$HYPERFRAMES_VERSION" && "$CURRENT_HF" != "v$HYPERFRAMES_VERSION" ]]; then
-  say "Installing pinned HyperFrames $HYPERFRAMES_VERSION user-locally..."
-  npm install -g --no-audit --no-fund "hyperframes@$HYPERFRAMES_VERSION"
+if ! command -v hyperframes >/dev/null 2>&1; then
+  say "HyperFrames missing; installing current release user-locally..."
+  npm install -g --no-audit --no-fund "hyperframes@latest"
 fi
 
 command -v hyperframes >/dev/null 2>&1 || fail "hyperframes CLI not found after install"
 CURRENT_HF="$(hyperframes --version | head -n 1 | tr -d '[:space:]')"
-if [[ "$CURRENT_HF" != "$HYPERFRAMES_VERSION" && "$CURRENT_HF" != "v$HYPERFRAMES_VERSION" ]]; then
-  fail "HyperFrames version mismatch after install: expected $HYPERFRAMES_VERSION, got $CURRENT_HF"
-fi
+say "HyperFrames installed: $CURRENT_HF (policy: latest-compatible; recovery baseline: $HYPERFRAMES_RECOVERY_VERSION)"
+say "Existing installs are not auto-upgraded by bootstrap; upstream adoption is a separate compatibility-tested change."
 
 say "Ensuring HyperFrames browser runtime..."
 hyperframes browser ensure
@@ -197,7 +195,7 @@ RECEIPT="$SMOKE_ROOT/renders/host-smoke.mp4.receipt.json"
 STATE_DIR="$HOME/.velvetos"
 STATE_FILE="$STATE_DIR/render-host.json"
 mkdir -p "$STATE_DIR"
-python3 - "$STATE_FILE" "$HOST_ID" "$HYPERFRAMES_VERSION" "$ROOT" "$RECEIPT" <<'PY'
+python3 - "$STATE_FILE" "$HOST_ID" "$CURRENT_HF" "$ROOT" "$RECEIPT" <<'PY'
 import json
 import socket
 import subprocess
@@ -230,7 +228,7 @@ PY
 
 say "OK HyperFrames host smoke verified"
 say "  host=$HOST_ID"
-say "  hyperframes=$HYPERFRAMES_VERSION"
+say "  hyperframes=$CURRENT_HF"
 say "  output=$SMOKE_ROOT/renders/host-smoke.mp4"
 say "  receipt=$RECEIPT"
 say "  state=$STATE_FILE"

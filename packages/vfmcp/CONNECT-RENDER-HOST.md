@@ -16,7 +16,7 @@ git pull --ff-only
 bash scripts/bootstrap-hyperframes-host-macos.sh --start-worker
 ```
 
-The bootstrap is fail-closed and does not require administrator privileges. It verifies macOS, provides a user-local Node >=22 toolchain when needed, provides user-local FFmpeg/ffprobe when needed, installs the pinned public HyperFrames CLI `0.8.34` under the user profile, ensures the HyperFrames browser runtime, runs `vf_hyperframes.py doctor`, performs a real portrait MP4 smoke render with deterministic Hebrew RTL text, verifies the render receipt, writes local host evidence to `~/.velvetos/render-host.json`, then reuses the existing Cursor worker route.
+The bootstrap is fail-closed and does not require administrator privileges. It verifies macOS, provides a user-local Node >=22 recovery toolchain when needed, provides user-local FFmpeg/ffprobe when needed, installs the current public HyperFrames CLI only when HyperFrames is missing, accepts newer compatible versions through `vf_hyperframes.py doctor`, ensures the browser runtime, performs a real portrait MP4 smoke render with deterministic Hebrew RTL text, verifies the render receipt, writes the actual runtime version to `~/.velvetos/render-host.json`, then reuses the existing Cursor worker route. `0.8.34` is retained only as a recovery/reproducibility baseline.
 
 If `sderot-mac` is already running, the script does not start a duplicate worker.
 
@@ -69,6 +69,6 @@ The static smoke fixture uses `data-no-timeline`; otherwise HyperFrames waits fo
 ## Failure handling
 
 - Node/FFmpeg missing: bootstrap installs the required toolchain under the user's profile without sudo/Homebrew.
-- HyperFrames version mismatch: installs the pinned version and verifies it; any remaining mismatch fails.
+- HyperFrames compatibility failure: versions below the supported minimum fail; newer versions are accepted only when doctor + real smoke pass. Existing compatible installs are not silently changed.
 - Cursor `agent` missing/not logged in: render smoke can finish, but host routing is not considered connected; follow `packages/vfmcp/HOST.md` and rerun.
 - HyperFrames render fails: do not promote the backend; use the existing `ffmpeg-svg-caption-composition` fallback only when the artifact can preserve the content contract and QA requirements.
