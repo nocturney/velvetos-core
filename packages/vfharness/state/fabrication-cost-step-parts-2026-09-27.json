@@ -1,0 +1,11 @@
+{
+  "component": "step-parts",
+  "action": "public_read_only_part_lookup_and_step_download",
+  "classification": "FREE_TIER_LIMITED",
+  "evidence": "step.parts presents an open-source CAD directory and the installed skill uses unauthenticated read-only search/download endpoints; no billing credential or automatic paid-overage path is enabled.",
+  "checked_at": "2026-09-27",
+  "incremental_cost_possible": false,
+  "automatic_paid_overage_possible": false,
+  "hard_cap_enforced": false,
+  "paid_features_enabled": false
+}

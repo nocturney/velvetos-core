@@ -1,0 +1,88 @@
+{
+  "id": "fabrication-router-host-acceptance-2026-09-27",
+  "date": "2026-09-27",
+  "host": "sderot-windows",
+  "device_nickname": "Chris",
+  "upstream": "earthtojake/text-to-cad",
+  "upstream_commit": "4eaf7459a95c0547b089ab53aa579c7597fab1d5",
+  "result": "PASS",
+  "installed_skill_count": 12,
+  "installed_skills": [
+    "cad",
+    "cad-viewer",
+    "dfam-check",
+    "dfm",
+    "dxf",
+    "engineering-drawing",
+    "gcode",
+    "sdf",
+    "sendcutsend",
+    "srdf",
+    "step-parts",
+    "urdf"
+  ],
+  "excluded_skills": [
+    "bambu-labs"
+  ],
+  "safety": {
+    "printer_network_control": false,
+    "upload_to_printer": false,
+    "start_print": false,
+    "pause_cancel_print": false,
+    "heating": false,
+    "motion": false,
+    "sendcutsend_order_submission": false
+  },
+  "checks": {
+    "fabrication_router_verify": "PASS",
+    "fabrication_router_doctor": "PASS",
+    "vf_cad_doctor": "PASS",
+    "cadgen_doctors": "PASS for cad,cad-viewer,dxf,engineering-drawing,sdf,srdf,urdf",
+    "dfam_orientations": "PASS; 6 candidate orientations measured",
+    "dfm_measure": "PASS; draft/undercut/projection report complete",
+    "step_parts": "PASS; 608ZZ lookup and STEP checksum verified",
+    "cad_viewer": "PASS; loopback 127.0.0.1:3245 HTTP 200 then stopped",
+    "dxf": "PASS; generated panel.dxf",
+    "engineering_drawing": "PASS; generated one-page bracket_drawing.pdf",
+    "urdf": "PASS; validator ok=true",
+    "srdf": "PASS; validator ok=true against paired URDF",
+    "sdf": "PASS; validator ok=true; optional Gazebo CLI check unavailable because gz is not installed",
+    "gcode": "PASS through existing vf_cad/Orca bridge",
+    "decision_router": "PASS; 11 Hebrew regression cases",
+    "recurring_cost_preflights": "PASS"
+  },
+  "artifacts": [
+    {
+      "kind": "dxf_smoke",
+      "bytes": 16015,
+      "sha256": "00e51429f0ea340060b35fc94ded16f7a39bce67f45d0036c7ad6691c4c88d94"
+    },
+    {
+      "kind": "engineering_drawing_pdf_smoke",
+      "bytes": 18885,
+      "sha256": "3d1803577d7ab0679d2403effc524da0bb3ebdc2a3a9f79513ad08e0664f91c7"
+    },
+    {
+      "kind": "urdf_smoke",
+      "bytes": 255,
+      "sha256": "1544c5b97acae533beace44971fc776bac73b772827e60f9db0176db3bf1a903"
+    },
+    {
+      "kind": "srdf_smoke",
+      "bytes": 115,
+      "sha256": "63c3778a21c2261e59c362450b95de192a820559657fbf142aecb0a0b593a9b3"
+    },
+    {
+      "kind": "sdf_smoke",
+      "bytes": 379,
+      "sha256": "fce3dc651503ab069d8ccdd073e916ab5137a65643b1210d0503908889af9bec"
+    },
+    {
+      "kind": "step_parts_608zz",
+      "bytes": 39700,
+      "sha256": "62d262cc91fb6e213ae85f182811201787e583d527d9a7718ea30a08e1f19fc9",
+      "checksum_verified": true
+    }
+  ],
+  "note": "Smoke artifacts live in D:\\Velvet\\Workspaces\\fabrication-skill-smoke and are not canonical production data. SDF core validation is verified; Gazebo simulator CLI handoff is optional and currently not installed."
+}

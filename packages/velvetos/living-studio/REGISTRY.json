@@ -97,6 +97,8 @@
       "route": [
         "vfprod.py route",
         "vfprod/ROUTING.md",
+        "vfprod/FABRICATION-ROUTER.md",
+        "vf_fabrication_router.py route",
         "intake --kind production_update"
       ],
       "packs": [

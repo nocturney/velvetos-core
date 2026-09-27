@@ -18,10 +18,13 @@ Extends `production-print`. Playbook: `packages/vfprod/experts/3D-MODEL.md`.
 
 ## Tools
 
-Drive (job files) · local text-to-cad/CAD/DfAM/G-code bridge (`packages/vfprod/TEXT-TO-CAD.md`) · 3D AI Studio MCP (`3DAISTUDIO.md`) for organic/generative work
+Drive (job files) · Fabrication Router (`packages/vfprod/FABRICATION-ROUTER.md`) · pinned text-to-cad Skills (`.agents/skills/`) for CAD/viewer/STEP-parts/DfAM/DFM/DXF/drawings/G-code/URDF/SRDF/SDF/SendCutSend preflight · 3D AI Studio MCP (`3DAISTUDIO.md`) for organic/generative work
 
 ## Laws
 
+- Resolve `packages/vfprod/FABRICATION-ROUTER.md` before selecting a fabrication tool
+- Load the selected pinned `.agents/skills/<skill>/SKILL.md` when available
+- `bambu-labs` / printer upload / print-start / heating / motion remain excluded
 - License gate (`#vlicense`) before reprint
 - No invented ₪ from credits
 - No API key in git
