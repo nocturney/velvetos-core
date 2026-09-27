@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. GlitchTip remains explicitly blocked and no Production authority has moved.
+Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. Phase 10-11 resilient targeted acceptance now passes for the zero-cost stack itself; repository-wide strict deployment proof remains PARTIAL because required runtime receipts are not current/complete and unrelated parallel 3D/HQ/control work is still dirty. GlitchTip remains explicitly blocked and no Production authority has moved.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -103,8 +103,16 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - The broader research-freshness sensor initially failed because the 27.9 daily orchestra body was missing. A real same-day public-source body was recovered at ~12:15 and `vfresearch_cadence.py freshness` now PASS; this is explicitly a late recovery after the 07:00 cutoff, not proof that the scheduled 02:00 run succeeded.
 - Evidence: `packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json`; sensor: `scripts/check-ecosystem-radar-phase9.py`; recovery body: `packages/vfresearch/sources/2026-09-27-orchestra.md`.
 
+## Phase 10-11 final-acceptance outcome
+- Resilient targeted batches passed across cost/risk, behavioral/security, observability, reliability, engineering quality, CLI-Anything, Laya, memory/Cognee, Reef, ecosystem radar, tool authority, harness/vfmem/vfe2b, Windows path, skill health, autonomy, request-gate, runtime activation and sensor-lock surfaces.
+- Windows `cp1252` caused initial decode-only failures in `check-hq-overlay.py` and the nested control-api path used by agent-security. Re-running the same checks with `PYTHONUTF8=1` passed without code changes; the locale incident is preserved as evidence, not hidden.
+- `scripts/check-runtime-doctor.py --strict` remains **PARTIAL**: `mac-office`, legacy `automation-steward`, `morning-brief` and `github` lack the strict receipt files expected by the older manifest. Current architecture documents Mac→Windows first-healthy failover and a verified Grok scheduler cutover, so these receipts must be reconciled rather than fabricated.
+- Repository-wide `git diff --check` is also PARTIAL while unrelated parallel 3D/HQ/control work remains active; the observed failure was a blank line at EOF in `packages/vfops/hq/STATUS-he.md`, outside this program's edit set.
+- The monolithic `scripts/check-all.py` was **not** re-run and is not claimed PASS. The earlier interrupted run remains historical evidence only.
+- Acceptance receipt: `packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json`; sensor: `scripts/check-zero-cost-final-acceptance.py`.
+
 ## Pending
-- Phase 10-11: final acceptance via resilient targeted sensor batches; do not substitute the previously interrupted monolithic `check-all.py` run.
+- Repository-wide strict deployment proof remains PARTIAL until current runtime receipt ownership is reconciled and the unrelated parallel worktree reaches its own verified checkpoint. This does not reopen the completed zero-cost implementation phases.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.

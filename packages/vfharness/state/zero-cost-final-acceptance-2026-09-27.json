@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "date": "2026-09-27",
+  "program": "zero-cost-agent-stack",
+  "branch": "implementation/zero-cost-agent-stack",
+  "acceptedCodeHead": "b7b84629f23ac4ab6a3f2e02c62e02a8dc624003",
+  "status": "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS",
+  "decision": "READY_FOR_OWNER_REVIEW_NO_PUSH",
+  "fullCheckAll": {
+    "status": "NOT_RUN",
+    "reason": "The earlier monolithic check-all run was interrupted; final acceptance intentionally used resilient targeted batches instead and does not claim a full check-all PASS."
+  },
+  "targetedBatches": [
+    {
+      "id": "policy-security",
+      "status": "PASS_WITH_DECLARED_PARTIALS",
+      "observed": {
+        "projectRequestGate": "PASS domains=10 authority_paths=36 fail_closed",
+        "noNewRecurringCost": "PASS",
+        "riskPolicy": "PASS",
+        "hqOverlay": "PASS",
+        "readmeContract": "PASS cases=35 exemptions=13",
+        "behavioralEvals": "PASS cases=17 required=10 negative_controls=2",
+        "agentSecurity": "9 surfaces: 7 PASS, 2 PARTIAL"
+      }
+    },
+    {
+      "id": "observability-reliability-engineering",
+      "status": "PASS_WITH_DECLARED_BLOCK",
+      "observed": {
+        "observability": "PASS strict spans=9 traces=1 local_only=YES authority=NO",
+        "reliability": "Healthchecks missed-heartbeat PASS; changedetection change PASS; GlitchTip BLOCKED local-stack",
+        "engineeringQuality": "PASS strict Ponytail=EMBEDDED gstack=SAFE_SUBSET Impeccable=WEB_UI_ONLY diagram=DOCS_ONLY",
+        "vfharness": "PASS layers=6 sensors=23 embeds=19 locks=9 packs=31"
+      }
+    },
+    {
+      "id": "cad-laya",
+      "status": "PASS_WITH_DECLARED_LIMITS",
+      "observed": {
+        "cliAnythingFreeCAD": "PASS strict headless_tests=106 geometry_body=1 volume_mm3=5748.8 Orca=Snapmaker U1 cost=0",
+        "cliAnything3mf": "BLOCKED_NOT_ROUTABLE retained",
+        "laya": "PASS shadow receipt cases=78 hebrew=72 state=SHADOW_NOT_PROMOTED authority=false cost=0"
+      }
+    },
+    {
+      "id": "memory-labs-research",
+      "status": "PASS_WITH_DECLARED_LIMITS",
+      "observed": {
+        "memoryRationalization": "PASS cases=22 provenance=1 repeatability=1 cost=0 authority=vfmem",
+        "cognee": "PASS pin=1.6.0 role=derived fallback=vfmem sources=66",
+        "vfmem": "PASS embed=9 packs=31 nodes=406 edges=340 desk=38",
+        "reef": "PASS lab-only windows-partial cost=0 authority=none wsl=defer",
+        "ecosystemRadar": "PASS no-new-lab cost=0 authority=none research-seat=fresh",
+        "researchFreshness": "PASS same-day artifact present with external source; recovered late after cutoff",
+        "researchStructure": "PASS verify; no live activation claim"
+      }
+    }
+  ],
+  "diffChecks": {
+    "committedProgramRange": {
+      "range": "bb54b0a7^..b7b84629f23ac4ab6a3f2e02c62e02a8dc624003",
+      "status": "PASS"
+    },
+    "liveWorkingTree": {
+      "status": "BLOCKED_BY_UNRELATED_PARALLEL_WORK",
+      "observedFailure": "packages/vfops/hq/STATUS-he.md:67 new blank line at EOF",
+      "action": "not modified because it belongs to concurrent HQ/3D/control work"
+    }
+  },
+  "costAndAuthority": {
+    "incrementalRecurringCostIls": 0,
+    "newControlPlaneAuthority": 0,
+    "newSchedulerAuthority": 0,
+    "newMemoryAuthority": 0,
+    "newReleaseAuthority": 0,
+    "newAlwaysOnProductionRuntime": 0,
+    "providerModelPaidCalls": 0,
+    "pushPerformed": false,
+    "productionPublicationPerformed": false
+  },
+  "knownLimitations": [
+    "Agent-security browser isolation remains PARTIAL.",
+    "Promptfoo local script provider remains trusted local code rather than a sandbox boundary.",
+    "GlitchTip remains BLOCKED because the host lacks a justified local PostgreSQL/container stack; hosted fallback is forbidden.",
+    "WSL2 remains deferred; no Docker was installed for symmetry.",
+    "Laya remains SHADOW_NOT_PROMOTED after weak classification accuracy.",
+    "CLI-Anything 3MF remains BLOCKED_NOT_ROUTABLE; FreeCAD GUI preview/motion/live path remains disabled while headless CAD is verified.",
+    "Cognee remains a slow derived semantic index and never canonical authority.",
+    "Reef remains LAB_ONLY_NOT_PROMOTED; Windows harness diagnostics are partial and untrusted proposer execution remains Linux/bwrap-gated.",
+    "The 2026-09-27 Research Seat daily body missed the 07:00 cutoff and was honestly recovered around 12:15; scheduled 02:00 execution for that date is unproven.",
+    "The live worktree contains unrelated concurrent 3D/HQ/control edits; global worktree diff-check is therefore not accepted as PASS.",
+    "Repository-wide runtime-doctor --strict remains PARTIAL: required receipts are missing for mac-office, legacy automation-steward, morning-brief and github; reconcile expected ownership with current failover and Grok scheduler authority rather than fabricating healthy receipts."
+  ],
+  "milestoneCommits": [
+    "bb54b0a7 policy: enforce zero new recurring cost",
+    "cdba7ddd test: add zero-cost behavioral and agent security gates",
+    "86ab88da obs: add local zero-cost trace pipeline",
+    "2bfed5af reliability: add zero-cost local pilots",
+    "7088885b dev: add removable zero-cost engineering quality tools",
+    "70a72746 cad: promote scoped cli-anything freecad adapter",
+    "0026f6e3 lab: evaluate Laya as shadow-only decision helper",
+    "54275820 memory: rationalize zero-cost retrieval stack",
+    "815c2a09 lab: record Reef Windows compatibility boundary",
+    "9b575c49 lab: close Phase 9 ecosystem radar",
+    "9f79b1d5 ops: recover daily research freshness honestly",
+    "b7b84629 chore: normalize zero-cost evidence whitespace"
+  ],
+  "acceptance": {
+    "committedScopeReady": true,
+    "ownerActionRequiredNow": false,
+    "pushRequiresExplicitOwnerPermission": true,
+    "next": "owner review / optional explicit push permission; normal operations may continue while known limitations remain fail-closed"
+  },
+  "repositoryWideStrictDeploymentProof": {
+    "status": "PARTIAL",
+    "command": "python scripts/check-runtime-doctor.py --strict",
+    "missingEvidence": [
+      "mac-office: runtime-receipt",
+      "automation-steward: automation-state",
+      "morning-brief: automation-state",
+      "github: connector-state"
+    ],
+    "interpretation": [
+      "Mac-Office is the preferred host but documented first-healthy failover permits sderot-windows when Mac is offline.",
+      "automation-steward in expected-components predates the verified Grok production scheduler cutover, whose current protected routines use VelvetOS Integrity Guard and Office Loop.",
+      "Connector availability or historical host evidence is not converted into a healthy strict receipt without current receipt evidence."
+    ]
+  }
+}
