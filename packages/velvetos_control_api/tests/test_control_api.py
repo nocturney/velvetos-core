@@ -149,6 +149,14 @@ class IntegrationProjectionTests(unittest.TestCase):
             self.assertIsNone(envelope["items"])
             self.assertIsNone(envelope["count"])
 
+    def test_cloud_run_image_packages_canonical_instance_desk(self) -> None:
+        dockerfile = (ROOT / "packages" / "velvetos_control_api" / "Dockerfile").read_text(encoding="utf-8")
+        self.assertIn(
+            "COPY instances/velvet-factory/.cursor/vf-desk.json "
+            "/app/instances/velvet-factory/.cursor/vf-desk.json",
+            dockerfile,
+        )
+
 
 class AuthActionTests(unittest.TestCase):
     def setUp(self) -> None:
