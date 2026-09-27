@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-7 are implemented and locally verified within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical, repaired Cognee source-ranking semantics and retained Cognee only as a derived index. GlitchTip remains explicitly blocked. Phase 8 Reef Lab preflight/Windows-native hermetic setup is underway; no Production authority has moved.
+Phases 0-8 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED after Windows compatibility testing. GlitchTip remains explicitly blocked and no Production authority has moved.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -86,14 +86,22 @@ Phases 0-7 are implemented and locally verified within their declared scope. Pha
 - Sync hardening now hashes source bytes during materialization, recomputes the canonical digest before cutover, rejects stale state, validates dataset/digest in the benchmark, and has a Windows rollback+fsync fallback whose forced negative control passed. No remote provider and no canonical writeback are allowed.
 - Decision: `KEEP_CURRENT_ARCHITECTURE_WITH_SOURCE_DEDUP_REPAIR`; zero new always-on memory systems; incremental recurring cost remains 0 ILS. Evidence: `memory-retrieval-phase7-2026-09-27.json` and `memory-rationalization-phase7-2026-09-27.json`.
 
+## Phase 8 Reef lab outcome
+- Reef is pinned to canonical commit `5de976be90c0676c60694e55499255a81913f8fd`; `reef-client` is pinned at `b7bfd4eefac22a7b0ea1be38f7ed998d174d27ac`, Python 3.12.10 and local `uv` 0.12.18. Reef and uv Cost Preflights are FREE_LOCAL; no model/API call, daemon or new always-on service was authorized.
+- A removable lab-only Windows overlay at `packages/vfharness/devtools/reef-windows-import-overlay.patch` makes POSIX `resource` and the Unix-domain native server import-safe while failing closed if sandbox or native serve execution is attempted. This is compatibility evidence, not a Windows port or production runtime.
+- Hermetic evidence with the overlay: harness example **88 PASS / 0 FAIL**; harness contracts + rendering **56 PASS / 0 FAIL**. Explicit fail-closed probes for the sandbox and native Unix server both PASS.
+- Broader Windows diagnostics remain PARTIAL rather than hidden: local-executor subset **5 PASS / 1 FAIL** because timeout cleanup uses POSIX `os.killpg`; the broader proposals/read/recipe diagnostic is **116 PASS / 63 FAIL**, primarily from POSIX process/shebang assumptions, canonical forward-slash path expectations and Unix-only serve/sandbox behavior.
+- Harness evolution was not run because no zero-cost local OpenAI-compatible model endpoint is provisioned. Untrusted proposer execution remains `BLOCKED_LINUX_SANDBOX_REQUIRED`; native serve remains `BLOCKED_UNIX_DOMAIN_SERVER_REQUIRED`; sandbox execution remains `BLOCKED_POSIX_BWRAP_REQUIRED`.
+- Decision: `LAB_ONLY_NOT_PROMOTED`. WSL2 is deferred: it would improve POSIX/bwrap compatibility, but installing it now would not unlock a useful zero-cost Reef evolution path without a local model endpoint. Any future WSL/UAC/reboot action should be aggregated with another justified Linux-only need such as a GlitchTip revisit. Incremental recurring cost remains **0 ILS** and all authority remains with VelvetOS.
+- Evidence: `packages/vfharness/state/reef-phase8-lab-2026-09-27.json`; sensor: `scripts/check-reef-phase8-lab.py`.
+
 ## Pending
-- Phase 8: Reef isolated Lab — complete Windows-native hermetic tests first; untrusted proposer execution remains Linux-sandbox-only.
-- Phase 9-11: additional dev labs, ecosystem radar and final acceptance.
+- Phase 9-11: evaluate additional dev labs only when they add unique value, then complete ecosystem radar and final acceptance with resilient targeted sensor batches.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.
 - Do not install Docker merely for symmetry.
-- WSL2 is deferred until a Linux-first component (expected Reef) proves it materially simplifies isolation; installation may require owner UAC/reboot.
+- Reef proved that WSL2 would materially improve POSIX/bwrap compatibility, but it would not yet unlock useful zero-cost harness evolution because no local model endpoint is provisioned. Defer WSL2 and aggregate any future UAC/reboot request with another justified Linux-only need.
 
 ## Cost / authority guardrails
 - No paid or usage-metered API calls.

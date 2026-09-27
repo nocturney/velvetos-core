@@ -17,9 +17,10 @@
     "Completed CLI-Anything Phase 5 pilot: FreeCAD harness 101 PASS/11 expected SKIP with stable JSON/failure semantics; 3MF harness 122 PASS/4 FAIL on Python 3.14 and 3.12; initial decision was no promotion and no duplicate Orca harness",
     "Completed CLI-Anything Phase 5 promotion follow-up after owner-authorized FreeCAD install: FreeCAD 1.1.3 portable/hash verified, 106 headless tests PASS with 6 GUI-only groups disabled, boolean/export drift repaired by pinned overlay, real one-body geometry + DfAM + Snapmaker U1 Orca slice/G-code validation PASS; adapter promoted ACTIVE_SCOPE_LIMITED at recurring cost 0",
     "Completed Laya Phase 6 shadow evaluation: 78 cases / 72 Hebrew, exact snapshot offline repeatability PASS, but domain 30.77%, action 30.77%, escalation 39.74% and joint 5.13%; calibration cannot repair classification; STAY_SHADOW_NOT_PROMOTED",
-    "Completed Phase 7 memory rationalization: vfmem remains canonical; Cognee 1.6.0 retained only as a derived semantic index after canonical-source dedup repair, 22-case provenance/repeatability PASS on b98a digest, Deja Vu remains session-history adjunct, Hindsight/Supermemory not promoted, recurring cost 0"
+    "Completed Phase 7 memory rationalization: vfmem remains canonical; Cognee 1.6.0 retained only as a derived semantic index after canonical-source dedup repair, 22-case provenance/repeatability PASS on b98a digest, Deja Vu remains session-history adjunct, Hindsight/Supermemory not promoted, recurring cost 0",
+    "Completed Phase 8 Reef lab assessment at pinned 5de976b: lab-only Windows import overlay fails closed for POSIX sandbox/native serve, 88 harness-example + 56 contract/render tests PASS, broader Windows diagnostics remain PARTIAL, no model/API calls, no authority, no promotion, WSL deferred, recurring cost 0"
   ],
-  "next_step": "Run isolated Phase 8 Reef Windows-native hermetic evaluation; keep untrusted proposer execution blocked until a justified Linux/bwrap path and zero-cost local model endpoint exist",
+  "next_step": "Evaluate Phase 9+ dev labs only for unique value, then ecosystem radar and resilient targeted final acceptance; do not add WSL/Docker/hosted fallbacks merely for symmetry",
   "artifacts": [
     "docs/implementation/velvetos-zero-cost-agent-stack.md",
     "packages/vfharness/reliability/components.json",
@@ -60,14 +61,19 @@
     "packages/vfharness/state/memory-rationalization-phase7-2026-09-27.json",
     "scripts/run-memory-retrieval-benchmark.py",
     "scripts/check-memory-rationalization.py",
-    "scripts/check-cognee-integration.py"
+    "scripts/check-cognee-integration.py",
+    "packages/vfharness/cost-preflight/reef-5de976b-lab.json",
+    "packages/vfharness/cost-preflight/uv-0.12.18-phase8.json",
+    "packages/vfharness/devtools/reef-windows-import-overlay.patch",
+    "packages/vfharness/state/reef-phase8-lab-2026-09-27.json",
+    "scripts/check-reef-phase8-lab.py"
   ],
   "unresolved": [
     "Full check-all baseline was interrupted by Remote MCP session; final acceptance must run sensors in resilient batches",
     "Browser automation isolation remains PARTIAL",
     "Promptfoo local script provider remains trusted local code rather than a sandbox",
     "GlitchTip blocked until one later WSL/PostgreSQL/container batch is justified",
-    "WSL2 is not installed; defer one human reboot/UAC batch until Linux-first labs are reached",
+    "WSL2 is not installed; Reef confirms it would improve POSIX/bwrap compatibility, but useful zero-cost evolution is still blocked by the absence of a local model endpoint, so defer and aggregate any future UAC/reboot batch",
     "Laya remains SHADOW_NOT_PROMOTED due weak Hebrew/domain/action/escalation accuracy and systematic publish/write/no-model collapse; fresh holdout + domain tuning required before any pilot",
     "CLI-Anything FreeCAD GUI preview/motion/live path is disabled because Windows portable preview did not terminate reliably; headless CAD remains verified",
     "CLI-Anything 3MF remains BLOCKED_NOT_ROUTABLE because 4 hole-detection/resize tests fail reproducibly on Python 3.14 and 3.12",
@@ -75,7 +81,7 @@
     "Reef untrusted proposer execution remains blocked on this Windows host until a justified Linux/bwrap isolation path and a separately approved zero-cost local model endpoint exist"
   ],
   "pulse": "working",
-  "verification": "Phases 1-4 gates PASS in declared scope; Phase5 initial pilot limitations preserved plus promotion follow-up PASS: FreeCAD 1.1.3 portable verified, CLI-Anything headless 106 PASS/6 GUI-only disabled, repaired one-body geometry + DfAM + U1 Orca/G-code validation PASS, 3MF remains blocked; Phase6 Laya cost preflight PASS, 78-case offline benchmark + calibration + exact repeatability complete, check-laya-shadow PASS, STAY_SHADOW_NOT_PROMOTED; Phase7 22-case both-backend benchmark complete on Cognee b98a digest with provenance=1, repeatability=1, unique canonical sources, source-dedup repair and vfmem authority preserved; recurring cost=0",
+  "verification": "Phases 1-4 gates PASS in declared scope; Phase5 initial pilot limitations preserved plus promotion follow-up PASS: FreeCAD 1.1.3 portable verified, CLI-Anything headless 106 PASS/6 GUI-only disabled, repaired one-body geometry + DfAM + U1 Orca/G-code validation PASS, 3MF remains blocked; Phase6 Laya cost preflight PASS, 78-case offline benchmark + calibration + exact repeatability complete, check-laya-shadow PASS, STAY_SHADOW_NOT_PROMOTED; Phase7 22-case both-backend benchmark complete on Cognee b98a digest with provenance=1, repeatability=1, unique canonical sources, source-dedup repair and vfmem authority preserved; Phase8 Reef lab sensor PASS, 88 harness-example and 56 contract/render tests PASS under import-only fail-closed overlay, broader Windows diagnostics explicitly PARTIAL, no provider/model calls, LAB_ONLY_NOT_PROMOTED, WSL deferred; recurring cost=0",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-27"

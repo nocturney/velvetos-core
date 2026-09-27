@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "component": "Reef@5de976be90c0676c60694e55499255a81913f8fd",
+  "classification": "FREE_LOCAL",
+  "license": "Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for local Reef core/harness lab under Apache-2.0",
+  "deployment_model": "isolated Phase 8 Lab only; source-pinned checkout; harness-improvement surface only; no production mutation, no model-weight training, no paid upstream provider",
+  "api_dependencies": [],
+  "billing_risk": "none in selected source/install evaluation path; any model endpoint used later must pass a separate zero-cost Cost Preflight",
+  "selected_mode": "LAB_PREFLIGHT_ONLY; Windows-native hermetic tests are allowed, but untrusted proposer execution requires an isolated Linux/bwrap path; do not enable Slime/SGLang training extras",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk; Git LFS required for artifact/checkpoint functions; harness evolution needs an OpenAI-compatible model endpoint that is not provisioned by this preflight",
+  "api_cost_notes": "no cloud/model API calls authorized by this preflight",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "training/GPU extras, hosted providers, W&B, paid sandboxes and cloud inference are excluded",
+  "quota_controls": "localhost-only lab service; no production credentials; candidate artifacts must pass Promptfoo and deterministic VelvetOS sensors before any promotion",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/Human-Agent-Society/reef README: harness optimization is a supported learning surface and does not require local training GPUs",
+    "Pinned checkout pyproject.toml at 5de976be90c0676c60694e55499255a81913f8fd: Apache-2.0; Python >=3.12; base dependency set is explicitly CPU-capable",
+    "https://github.com/Human-Agent-Society/reef AGENTS.md: development path uses uv, Python 3.12 and Git LFS",
+    "Pinned reef-client submodule b7bfd4eefac22a7b0ea1be38f7ed998d174d27ac: version 0.2.1, Apache-2.0, stdlib-only dependency contract",
+    "Pinned source core/harness compileall PASS on Windows Python 3.12; full proposer sandbox code uses Linux bubblewrap and process-group signals",
+    "git ls-remote canonical HEAD 5de976be90c0676c60694e55499255a81913f8fd"
+  ],
+  "approval": null
+}
