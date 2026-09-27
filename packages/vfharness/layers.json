@@ -190,6 +190,11 @@
       "type": "computational"
     },
     {
+      "id": "check-cli-anything-pilot",
+      "script": "scripts/check-cli-anything-pilot.py",
+      "type": "computational"
+    },
+    {
       "id": "check-laya-shadow",
       "script": "scripts/check-laya-shadow.py",
       "type": "computational"

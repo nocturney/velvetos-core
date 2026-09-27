@@ -1,0 +1,81 @@
+diff --git a/freecad/agent-harness/cli_anything/freecad/utils/freecad_macro_gen.py b/freecad/agent-harness/cli_anything/freecad/utils/freecad_macro_gen.py
+index 55bfdb5..9e0ba53 100644
+--- a/freecad/agent-harness/cli_anything/freecad/utils/freecad_macro_gen.py
++++ b/freecad/agent-harness/cli_anything/freecad/utils/freecad_macro_gen.py
+@@ -160,0 +161,30 @@ def _render_spec_for_part(project: dict, part: Dict[str, Any]) -> Optional[Dict[
++_BOOLEAN_PART_TYPES = {"cut", "fuse", "common"}
++
++
++def _derived_boolean_ops(project: dict) -> List[Dict[str, Any]]:
++    """Translate current parts-state boolean results into macro boolean specs."""
++    parts = project.get("parts", [])
++    names_by_id = {
++        part.get("id"): _safe_name(part.get("name", ""))
++        for part in parts
++        if part.get("id") is not None
++    }
++    derived: List[Dict[str, Any]] = []
++    for part in parts:
++        part_type = str(part.get("type", "")).lower()
++        if part_type not in _BOOLEAN_PART_TYPES:
++            continue
++        params = part.get("params") or {}
++        base_name = names_by_id.get(params.get("base_id"))
++        tool_name = names_by_id.get(params.get("tool_id"))
++        if not base_name or not tool_name:
++            continue
++        derived.append({
++            "type": part_type,
++            "name": _safe_name(part.get("name", part_type.capitalize())),
++            "base": base_name,
++            "tool": tool_name,
++        })
++    return derived
++
++
+@@ -162 +192 @@ def _gen_parts(project: dict) -> List[str]:
+-    """Generate Part primitives (Box, Cylinder, Sphere, Cone, Torus)."""
++    """Generate Part primitives; defer boolean result parts to _gen_boolean_ops."""
+@@ -168,0 +199,4 @@ def _gen_parts(project: dict) -> List[str]:
++        if part_type in _BOOLEAN_PART_TYPES:
++            lines.append(f"# Deferred boolean part '{name}'")
++            lines.append("")
++            continue
+@@ -183 +217 @@ def _gen_boolean_ops(project: dict) -> List[str]:
+-    """Generate boolean operations (Cut, Fuse, Common)."""
++    """Generate boolean operations from legacy boolean_ops and current parts state."""
+@@ -185 +219 @@ def _gen_boolean_ops(project: dict) -> List[str]:
+-    boolean_ops = project.get("boolean_ops", [])
++    boolean_ops = list(project.get("boolean_ops", [])) + _derived_boolean_ops(project)
+@@ -540,2 +574,20 @@ def _gen_export(
+-    # Collect all visible shape objects for export
+-    lines.append("# Collect all shape objects for export")
++    # Export only the project-state objects that are currently visible.
++    visible_names = [
++        _safe_name(part.get("name", ""))
++        for part in project.get("parts", [])
++        if part.get("visible", True)
++    ]
++    visible_names.extend(
++        _safe_name(body.get("name", "Body"))
++        for body in project.get("bodies", [])
++        if body.get("visible", True)
++    )
++    visible_names.extend(
++        _safe_name(op.get("name", ""))
++        for op in project.get("boolean_ops", [])
++        if op.get("name")
++    )
++    # Preserve order while removing duplicates/empty names.
++    visible_names = list(dict.fromkeys(name for name in visible_names if name))
++    lines.append("# Collect visible project-state shape objects for export")
++    lines.append(f"export_names = {visible_names!r}")
+@@ -543,2 +595,3 @@ def _gen_export(
+-    lines.append("for obj in doc.Objects:")
+-    lines.append("    if hasattr(obj, 'Shape') and obj.Shape.isValid():")
++    lines.append("for name in export_names:")
++    lines.append("    obj = doc.getObject(name)")
++    lines.append("    if obj is not None and hasattr(obj, 'Shape') and obj.Shape.isValid():")
+@@ -545,0 +599,2 @@ def _gen_export(
++    lines.append("if not export_objects:")
++    lines.append("    raise RuntimeError('No visible valid shape objects available for export')")

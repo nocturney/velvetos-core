@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "role": "AGENT_NATIVE_DEV_ADAPTER_NOT_AUTHORITY",
+  "component": "CLI-Anything",
+  "source": "https://github.com/HKUDS/CLI-Anything",
+  "pin": "34f519533bc175d2fe287ab8316b0dd99bb9cc43",
+  "root_license": "Apache-2.0",
+  "state": "ACTIVE_SCOPE_LIMITED",
+  "local_source": ".local-devtools/phase5/cli-anything",
+  "venv": ".local-devtools/phase5/venv",
+  "adapter": "scripts/vf_cli_anything.py",
+  "setup": "scripts/setup-cli-anything-pilot.py",
+  "sensor": "scripts/check-cli-anything-pilot.py",
+  "overlay": "packages/vfharness/devtools/cli-anything-freecad-overlay.patch",
+  "cost_preflight": "packages/vfharness/cost-preflight/cli-anything-34f5195.json",
+  "authority": {
+    "runtime_authority": false,
+    "production_authority": false,
+    "memory_authority": false,
+    "release_authority": false,
+    "slicer_authority": false,
+    "canonical_cad_route": "packages/vfprod/TEXT-TO-CAD.md"
+  },
+  "freecad": {
+    "status": "ACTIVE_SCOPE_LIMITED",
+    "harness": "freecad/agent-harness",
+    "harness_version": "1.0.0",
+    "portable_version": "1.1.3",
+    "portable_root": "%USERPROFILE%/Documents/VelvetPrintLab/tools/FreeCAD_1.1.3-Windows-x86_64-py311",
+    "portable_archive": "%USERPROFILE%/Documents/VelvetPrintLab/tools/FreeCAD_1.1.3-Windows-x86_64-py311.7z",
+    "portable_sha256": "9c6959dc9c4dba64dd818a62447e3dfedb4221d776fb044b239d462f150bcec4",
+    "cost_preflight": "packages/vfharness/cost-preflight/freecad-1.1.3-portable.json",
+    "headless": true,
+    "gui_preview": false,
+    "blocked_groups": ["preview", "motion", "repl"],
+    "repair": {
+      "reason": "upstream macro generator ignored current parts-state booleans and exported hidden operands",
+      "mode": "PINNED_LOCAL_OVERLAY",
+      "acceptance": "106 headless tests pass; real boolean part exports one watertight body with expected bbox/volume"
+    }
+  },
+  "routing": {
+    "text_to_cad_default_for": [
+      "plain-language functional part generation",
+      "parametric source-first workflows",
+      "DfAM and slicer handoff"
+    ],
+    "cli_anything_freecad_for": [
+      "explicit iterative FreeCAD edits",
+      "structured JSON CAD operations",
+      "FreeCAD-specific workbench operations",
+      "headless STEP/STL/FCStd export"
+    ],
+    "vf_cad_remains_for": [
+      "DfAM",
+      "printer profile routing",
+      "OrcaSlicer execution",
+      "G-code validation"
+    ]
+  },
+  "three_mf": {
+    "status": "BLOCKED_NOT_ROUTABLE",
+    "harness": "3MF/agent-harness",
+    "evaluation_python": ["3.14.0", "3.12.10"],
+    "test_result": "122 passed, 4 failed",
+    "failed_area": "hole detection/resize for concentric, blind, through and non-default-axis holes",
+    "license_metadata_note": "root repo declares Apache-2.0 while 3MF setup.py/README label MIT; permissive but inconsistent metadata",
+    "active_venv_installed": false
+  },
+  "safety": {
+    "printer_network_control": false,
+    "upload": false,
+    "start_print": false,
+    "heating": false,
+    "motion": false,
+    "incremental_recurring_cost_ils": 0
+  }
+}

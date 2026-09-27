@@ -105,6 +105,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-observability.py` | Local OpenTelemetry/OpenInference trace contract; sanitized metadata only, no remote exporter, telemetry never authority |
 | `scripts/check-reliability-pilots.py` | Phase 3 reliability evidence: Healthchecks missed-heartbeat pilot, changedetection local change pilot, GlitchTip blocker remains explicit |
 | `scripts/check-engineering-quality.py` | Phase 4 removable Dev tools: Ponytail/gstack pattern bounds, Impeccable Web/UI-only, diagram-design docs-only; `--strict` verifies local pins/profiles |
+| `scripts/check-cli-anything-pilot.py` | Phase 5 scoped CLI-Anything FreeCAD adapter: zero-cost authority bounds; `--strict` verifies pinned headless tests plus real geometry→DfAM→Orca dry-run |
 | `scripts/check-laya-shadow.py` | Phase 6 Laya shadow evidence: 78-case Hebrew-heavy benchmark, calibration/repeatability receipts, cost=0 and hard no-authority/no-promotion guard |
 | `scripts/check-vfprod.py` | Floor fleet routing (4 beds, no Print from HQ); filament remainder; maintenance snapshot empty=אין ספירה |
 | `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |

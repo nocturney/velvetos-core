@@ -58,6 +58,19 @@ plain-language requirement → parametric CAD source → STEP master → STL/3MF
 
 For organic/sculptural generation, 3D AI Studio remains a separate specialist route; do not force text-to-cad to replace it.
 
+## Deterministic CAD tool decision
+
+Text-to-cad remains the default for plain-language functional parts, parametric source-first workflows, DfAM and the normal slicer handoff.
+
+Use the scoped CLI-Anything FreeCAD adapter only when the task materially benefits from explicit iterative FreeCAD operations, structured JSON commands, FreeCAD-specific workbench operations, or headless STEP/STL/FCStd export:
+
+`python scripts/vf_cli_anything.py doctor`
+`python scripts/vf_cli_anything.py freecad -- <args>`
+
+After a CLI-Anything export, return to this canonical bridge for DfAM, printer-profile routing, OrcaSlicer and G-code validation. CLI-Anything never owns printer profiles or physical printer control. Its `preview`, `motion` and `repl` groups are disabled in VelvetOS because the pinned Windows portable GUI-preview path did not terminate reliably. The pinned CLI-Anything 3MF harness is not routable while its known hole-detection/resize tests are failing.
+
+Registry and evidence: `packages/vfharness/devtools/cli-anything.json` and `packages/vfharness/state/cli-anything-phase5-promotion-2026-09-27.json`.
+
 ## Verification
 
 A host is usable only after `python scripts/vf_cad.py doctor` reports PASS. Repository wiring alone is not host capability proof. Upstream updates require rerunning doctor and at least one CAD→mesh→DfAM→slice smoke before promotion.

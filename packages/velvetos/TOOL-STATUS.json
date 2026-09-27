@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.tool-status.v1",
-  "updated_at": "2026-09-26",
+  "updated_at": "2026-09-27",
   "authority": "owner-explicit",
   "rules": {
     "active": "May be routed to and executed when its normal gates pass.",
@@ -64,6 +64,24 @@
       "host_status": "WINDOWS_HOST_VERIFIED",
       "safety": "no printer network control, upload, start_print, heating or motion",
       "print_start": false
+    },
+    "cli-anything-freecad": {
+      "status": "active_scope_limited",
+      "role": "headless agent-native FreeCAD adapter for explicit structured CAD operations and STEP/STL/FCStd export",
+      "source": "packages/vfharness/devtools/cli-anything.json",
+      "bridge": "scripts/vf_cli_anything.py",
+      "backend": "FreeCAD 1.1.3 portable",
+      "host_status": "WINDOWS_HEADLESS_VERIFIED",
+      "authority": "adapter only; text-to-cad/vf_cad remain canonical CAD/DfAM/slicer route",
+      "blocked_groups": ["preview", "motion", "repl"],
+      "safety": "no printer network control, upload, start_print, heating or motion",
+      "print_start": false
+    },
+    "cli-anything-3mf": {
+      "status": "watch",
+      "role": "research-only 3MF mesh editing harness",
+      "source": "packages/vfharness/devtools/cli-anything.json",
+      "reason": "pinned suite has 4 reproducible hole-detection/resize failures on both Python 3.14 and 3.12; not routable"
     },
     "jlbadano-ig-mcp": {
       "status": "forbidden",

@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-4 implemented and locally verified within their declared scope; Phase 5 CLI-Anything completed without promotion; Phase 6 Laya completed as SHADOW_NOT_PROMOTED. GlitchTip remains explicitly blocked. Phase 7 memory rationalization/benchmark is next.
+Phases 0-4 implemented and locally verified within their declared scope; Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter after a follow-up repair/acceptance pass; Phase 6 Laya completed as SHADOW_NOT_PROMOTED. GlitchTip remains explicitly blocked. Phase 7 memory rationalization/benchmark is next.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -56,12 +56,15 @@ Phases 0-4 implemented and locally verified within their declared scope; Phase 5
 - Phase 4 receipt: `packages/vfharness/state/engineering-quality-phase4-2026-09-27.json`.
 
 ## Phase 5 CLI-Anything outcome
-- Canonical CLI-Anything source pinned at `34f519533bc175d2fe287ab8316b0dd99bb9cc43`; local isolated pilot only, no global plugin/CLI-Hub and no new authority. Cost Preflight: FREE_LOCAL/PASS.
-- Existing baseline stayed authoritative: `python scripts/vf_cad.py doctor` PASS with cadgen 0.6.6, text-to-cad `4eaf7459...`, OrcaSlicer 2.4.2 and five printer profiles; all printer-network/start/heating/motion controls false.
-- FreeCAD harness 1.0.0: 101 PASS / 11 expected SKIP with target FreeCAD absent. JSON create/add/list flows worked; repeated read output was byte-identical and did not mutate the project. Missing-backend export failed with JSON error + exit 1 and no partial artifact. Clean tests exposed an undeclared Pillow test dependency.
-- 3MF harness 1.0.0: BLOCKED for promotion. Current pinned source produced 122 PASS / 4 FAIL on both Python 3.14 and 3.12; failures are concentrated in hole detection/resize. Root repository license metadata says Apache-2.0 while the 3MF subpackage declares MIT, so redistribution provenance also needs clarification.
-- CLI-Anything upstream explicitly has no OrcaSlicer/Bambu Studio harness-level wrapper; no duplicate Orca harness was invented because the existing `vf_cad` bridge is already Windows-host verified.
-- Decision: PILOT_ONLY / NOT_PROMOTED. Retest after upstream 3MF tests are green or if a real FreeCAD installation need emerges. Receipt: `packages/vfharness/state/cli-anything-pilot-2026-09-27.json`.
+- Initial pilot history is preserved in `packages/vfharness/state/cli-anything-pilot-2026-09-27.json`: canonical source pinned at `34f519533bc175d2fe287ab8316b0dd99bb9cc43`, cost preflight FREE_LOCAL/PASS, and no promotion while a justified FreeCAD target was absent.
+- After the owner explicitly authorized compliant local software installation, FreeCAD **1.1.3 portable** was installed under `VelvetPrintLab/tools` without UAC, registry install or global PATH changes. The official portable archive SHA-256 was verified as `9c6959dc9c4dba64dd818a62447e3dfedb4221d776fb044b239d462f150bcec4`; `FreeCADCmd --version` and an internal `FreeCAD.Version()` smoke both passed. FreeCAD Cost Preflight: FREE_LOCAL/PASS.
+- With real FreeCAD present, the upstream FreeCAD harness passed **106 headless tests**; six GUI-only preview/motion/live tests are deliberately deselected in VelvetOS. The Windows portable GUI preview path remained alive beyond its own timeout and produced no first preview artifact, so `preview`, `motion` and `repl` are blocked by the adapter rather than falsely marked usable.
+- The real acceptance task uncovered an upstream geometry export defect: current `part boolean` state hides operands and stores the result in `parts`, while the macro generator consumed only legacy `boolean_ops` and exported every valid Shape. The initial STL therefore contained two bodies with a 40×30×10 mm bbox instead of the intended cut result.
+- A pinned local overlay, `packages/vfharness/devtools/cli-anything-freecad-overlay.patch`, fixes only that boundary: current-state booleans are translated into FreeCAD boolean objects and export is restricted to visible project-state shapes. The upstream headless suite remained **106 PASS / 6 GUI-only deselected** after the repair.
+- Repeated real-task acceptance then produced one watertight body at **40×30×5 mm**, volume **5748.8 mm³**, STEP 8,294 bytes and STL 26,084 bytes. The canonical `vf_cad` route performed DfAM, then OrcaSlicer 2.4.2 sliced the part for Snapmaker U1 and generated a **257,839-byte** G-code; validator returned `ok:true`, no errors, 5,665 extrusion moves. No upload/start-print/network-control/heating/motion occurred.
+- Routing is now deterministic: text-to-cad remains default for plain-language functional/parametric source-first CAD; CLI-Anything FreeCAD is an **ACTIVE_SCOPE_LIMITED headless adapter** for explicit structured/iterative FreeCAD operations; `vf_cad.py` remains DfAM/printer-profile/Orca/G-code authority.
+- The CLI-Anything 3MF harness remains **BLOCKED_NOT_ROUTABLE**: 122 PASS / 4 FAIL on both Python 3.14 and 3.12, concentrated in hole detection/resize, with inconsistent root/subpackage license metadata still noted. It was removed from the active pilot venv.
+- Reproducible entry points: `scripts/setup-cli-anything-pilot.py`, `scripts/vf_cli_anything.py`, and `scripts/check-cli-anything-pilot.py --strict`. Promotion receipt: `packages/vfharness/state/cli-anything-phase5-promotion-2026-09-27.json`. Incremental recurring cost remains **0 ILS**.
 
 ## Phase 6 Laya shadow outcome
 - Laya v0.3.20 source pinned to release commit `23a17522aa4942da6cce53a995a275760320b691`; Cost Preflight FREE_LOCAL/PASS. Windows-native Python 3.12 venv installed `laya 0.3.20`, `torch 2.14.0+cpu`, `transformers 5.17.0`; no serve/MCP/LangChain/fast extras.
