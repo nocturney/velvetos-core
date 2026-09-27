@@ -144,6 +144,25 @@
         "תמיכות",
         "חומר",
         "מק״ט",
+        "CAD",
+        "STEP",
+        "STL",
+        "3MF",
+        "DXF",
+        "G-code",
+        "שרטוט",
+        "מודל",
+        "תכנון חלק",
+        "תכנון מכני",
+        "DfAM",
+        "DFM",
+        "CNC",
+        "sheet metal",
+        "injection molding",
+        "URDF",
+        "SRDF",
+        "SDF",
+        "SendCutSend",
         "production",
         "print"
       ],
@@ -155,11 +174,17 @@
       ],
       "authorities": [
         "packages/vfprod/SKILL.md",
+        "packages/vfprod/FABRICATION-ROUTER.md",
+        "packages/vfprod/FABRICATION-ROUTER.json",
+        "packages/vfprod/TEXT-TO-CAD.md",
         "packages/vfcost/SKILL.md",
         "packages/vfsku/SKILL.md"
       ],
       "hardGates": [
         "verified_specs",
+        "fabrication_tool_route",
+        "specialized_skill_instructions",
+        "no_printer_control",
         "no_invented_price",
         "print_authority"
       ]

@@ -21,7 +21,7 @@ def main() -> None:
     assert state.get("decision") == "NO_ADDITIONAL_DEV_LAB_JUSTIFIED"
     research = state.get("researchSeat") or {}
     assert research.get("lastPass") == best.get("lastPass") == "2026-09-27"
-    assert research.get("observedDataDate") == best.get("dataDate") == "2026-09-25"
+    assert research.get("observedDataDate") == best.get("dataDate") == "2026-09-26"
     assert research.get("newSchedulerCreated") is False
     artifact = ROOT / research.get("artifact", "")
     assert artifact.is_file() and artifact.stat().st_size > 500

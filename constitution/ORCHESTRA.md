@@ -45,6 +45,8 @@ Failover מיידי. בלי חצי-עבודה. בלי גוף/₪/Insights מומ
 לא מחכים בסרק. לא סוגרים את המעבר בלי ארטיפקט.  
 Failover ≠ המצאה: אסור למלא גוף חסום, ₪, או Insights במקום הכלי שנפל.
 
+**Cost failover law — NO_NEW_RECURRING_COST:** failover שומר גם על גבול העלות. כשל במסלול local/free/existing-with-zero-incremental-cost אינו רשות לעבור אוטומטית ל־hosted/paid. לפני כל fallback שעלול לחייב מפעילים cost preflight; PAID_REQUIRED או COST_UNKNOWN נשארים חסומים בלי אישור בעלים מפורש. מחפשים קודם חלופה חינמית/מקומית/עצמית או מצמצמים scope בבטחה.
+
 ### שולחנות מחקר (06:15)
 
 | כלי שנפל | מעבירים מיד ל־ | מה רושמים |

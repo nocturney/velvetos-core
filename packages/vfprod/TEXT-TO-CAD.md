@@ -11,10 +11,14 @@ This integration extends the existing `vfprod` + `expert-3d-model` path. It does
 - Default PrintLab: `%USERPROFILE%\Documents\VelvetPrintLab`
 - Dedicated Python env: `text-to-cad\.venv`
 - CAD kernel: `cadgen` + build123d/OCP
+- Project-pinned upstream Skills: `cad`, `cad-viewer`, `dfam-check`, `dfm`, `dxf`, `engineering-drawing`, `gcode`, `sdf`, `sendcutsend`, `srdf`, `step-parts`, `urdf`
+- Agent copies: `.agents/skills/` (Cursor/Codex/Antigravity/Gemini and compatible agents) + `.grok/skills/`
+- Skill lock: `skills-lock.json`
 - DfAM: upstream `dfam-check`
 - Slicing: upstream `gcode` skill + the existing VelvetPrintLab OrcaSlicer router
+- Decision authority: `FABRICATION-ROUTER.md` + `FABRICATION-ROUTER.json`
 
-The host bridge is `scripts/vf_cad.py`.
+The host bridge is `scripts/vf_cad.py`; route inspection is `scripts/vf_fabrication_router.py`.
 
 ## Runtime version policy
 
@@ -32,9 +36,17 @@ Current logical printer keys:
 - `c5` — Flashforge Creator 5
 - `c5pro` — Flashforge Creator 5 Pro
 
+## Skill scope
+
+Installed and enabled: CAD creation/editing, CAD Viewer, additive DfAM, non-additive DFM, DXF, engineering drawings, G-code/slicer orchestration, SDF/SRDF/URDF, STEP Parts lookup and SendCutSend preflight.
+
+The upstream `bambu-labs` skill is deliberately **excluded**. Printer handoff/control is not part of this integration.
+
+Use `FABRICATION-ROUTER.md` before selecting a skill. The router may prefer native reasoning/vision or 3D AI Studio when they are a better fit than parametric CAD.
+
 ## Safety boundary
 
-CAD generation, STEP/STL/3MF export, DfAM measurement, local slicing and G-code validation are allowed engineering operations. This bridge never uploads, starts a print, heats, homes, jogs, or controls printer networking.
+CAD generation, STEP/STL/3MF/GLB export, visual review, DfAM/DFM analysis, DXF/drawing generation, local slicing and G-code validation are allowed engineering operations. This integration never uploads, starts a print, pauses/cancels a print, heats, homes, jogs, or controls printer networking. SendCutSend is preflight-only and may not submit an order.
 
 The existing printer matrix must keep all of these false:
 
@@ -45,6 +57,9 @@ Physical printing remains a separate production-floor action.
 ## Operator commands
 
 ```bash
+python scripts/vf_fabrication_router.py list
+python scripts/vf_fabrication_router.py route --intent functional_cad_create_edit
+python scripts/vf_fabrication_router.py skill --name cad
 python scripts/vf_cad.py doctor
 python scripts/vf_cad.py profiles
 python scripts/vf_cad.py dfam --input path/to/model.stl --angle-limit 45
@@ -77,4 +92,6 @@ Registry and evidence: `packages/vfharness/devtools/cli-anything.json` and `pack
 
 ## Verification
 
-A host is usable only after `python scripts/vf_cad.py doctor` reports PASS. Repository wiring alone is not host capability proof. Upstream updates require rerunning doctor and at least one CAD→mesh→DfAM→slice smoke before promotion.
+Repository wiring must pass `python scripts/check-vf-fabrication-router.py` and `python scripts/vf_fabrication_router.py verify`. A host is usable only after both `python scripts/vf_fabrication_router.py doctor` and `python scripts/vf_cad.py doctor` report PASS. Repository wiring alone is not host capability proof.
+
+Host acceptance covers: cadgen/OCP pins; CAD Viewer loopback launch; DfAM measurement/orientations; DFM measurement; STEP Parts read/download/checksum; DXF generation; engineering-drawing PDF generation; URDF/SRDF/SDF validation; Orca/G-code discovery/validation. SendCutSend remains preflight-only. Upstream updates require rerunning the doctors and representative smokes before promotion.

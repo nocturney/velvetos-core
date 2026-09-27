@@ -67,7 +67,15 @@ def main() -> None:
     # CONTRIBUTIONS registry present
     reg = json.loads(CONTRIB.read_text(encoding="utf-8"))
     ids = {c.get("id") for c in reg.get("contributions") or []}
-    for need in ("jobs", "capabilities", "attention", "control_plane", "unavailable_domains"):
+    for need in (
+        "jobs",
+        "capabilities",
+        "integrations",
+        "attention",
+        "control_plane",
+        "unavailable_domains",
+        "operational_domains",
+    ):
         if need not in ids:
             fail(f"CONTRIBUTIONS.json missing {need}")
 
@@ -111,8 +119,25 @@ def main() -> None:
         fail("non-ready jobs must not report []")
     for name in ("production", "content", "files", "agents", "models"):
         col = (snap.get("collections") or {}).get(name) or {}
-        if col.get("items") is not None:
-            fail(f"{name} must keep items=null when unavailable")
+        state = col.get("state")
+        if state == "ready":
+            items = col.get("items")
+            count = col.get("count")
+            if not isinstance(items, list):
+                fail(f"{name} ready projection must expose items=list")
+            if not isinstance(count, int) or count < 0:
+                fail(f"{name} ready projection must expose non-negative count")
+            if col.get("truncated"):
+                if col.get("projectedCount") != len(items) or count < len(items):
+                    fail(f"{name} truncated projection count contract invalid")
+            elif count != len(items):
+                fail(f"{name} ready projection count must equal len(items)")
+            prov = col.get("provenance") or {}
+            if not prov.get("source"):
+                fail(f"{name} ready projection must carry provenance source")
+        else:
+            if col.get("items") is not None or col.get("count") is not None:
+                fail(f"{name} non-ready projection must keep items/count null")
 
     # No secrets in package source
     for path in PKG.rglob("*.py"):
@@ -126,7 +151,7 @@ def main() -> None:
         if "Office Control Plane" not in agents and "control-plane" not in agents:
             fail("AGENTS.md should mention Control Plane / Control API")
 
-    print("OK control-api schema+auth+actions+jobs-honesty+tests")
+    print("OK control-api schema+auth+actions+operational-honesty+tests")
 
 
 if __name__ == "__main__":

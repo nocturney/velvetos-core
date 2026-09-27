@@ -43,6 +43,12 @@ ALLOWED_DESTINATION_PREFIXES = (
     "/health/",
     "/collections/",
     "/system/",
+    "/integrations/",
+    "/production/",
+    "/content/",
+    "/files/",
+    "/agents/",
+    "/models/",
 )
 
 MAX_BODY_BYTES = 64 * 1024  # 64 KiB — actions are small

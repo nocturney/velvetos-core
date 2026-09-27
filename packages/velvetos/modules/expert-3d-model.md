@@ -7,7 +7,8 @@ Module id: `expert-3d-model`
 One routed 3D capability over the existing production stack: functional CAD, local Blender modeling/reconstruction,
 mesh repair, deterministic geometry QA and STL/3MF handoff. **No print from HQ.**
 
-Canonical router: `python scripts/vf_3d.py route --request "..."`.
+Top-level fabrication routing: `packages/vfprod/FABRICATION-ROUTER.md` / `python scripts/vf_fabrication_router.py decide --request "..."`.
+When that route requires 3D modeling-engine selection, use the subordinate router: `python scripts/vf_3d.py route --request "..."`.
 Playbook: `packages/vfprod/experts/3D-MODEL.md`.
 Blender contract: `packages/vfprod/BLENDER-MCP.md`.
 
@@ -21,6 +22,7 @@ Blender contract: `packages/vfprod/BLENDER-MCP.md`.
 
 ## Tools
 
+- Fabrication Router: `packages/vfprod/FABRICATION-ROUTER.md` with pinned project skills in `.agents/skills/` for CAD/viewer/STEP-parts/DfAM/DFM/DXF/drawings/G-code/URDF/SRDF/SDF/SendCutSend preflight.
 - Text-to-CAD / STEP / DfAM / Orca bridge: `packages/vfprod/TEXT-TO-CAD.md`.
 - Hardened local Blender controller: `blender-ai-mcp` through `scripts/vf_3d.py`.
 - Headless geometry/print QA: `design-os-3d-blender`.
@@ -28,7 +30,8 @@ Blender contract: `packages/vfprod/BLENDER-MCP.md`.
 
 ## Laws
 
-- Run the 3D router before selecting a modeling engine.
+- Resolve the Fabrication Router before selecting a fabrication tool; load the selected pinned skill when one is routed.
+- Run the 3D sub-router before selecting a modeling engine.
 - Discover installed 3D/slicer tool versions at runtime; exact versions/commits are evidence, never an allowlist or runtime pin.
 - Keep parametric functional masters in CAD when STEP/B-rep is the correct source of truth.
 - License gate (`#vlicense`) before reprint.

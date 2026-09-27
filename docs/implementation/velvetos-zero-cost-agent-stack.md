@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. Phase 10-11 targeted acceptance passes for the zero-cost stack, repository-wide strict deployment proof passes after a fresh Grok Bot provider readback, and the Windows-isolated monolithic `scripts/check-all.py` run completes **105/105 PASS with exit 0**. GlitchTip remains explicitly blocked and no Production authority has moved.
+Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. Phase 10-11 targeted acceptance passes for the zero-cost stack, repository-wide strict deployment proof passes after a fresh Grok Bot provider readback, and the Windows-isolated monolithic `scripts/check-all.py` run completes **106/106 PASS with exit 0** after integration with current `main`. GlitchTip remains explicitly blocked and no Production authority has moved.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -31,7 +31,7 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Preserved and validated existing uncommitted NO_NEW_RECURRING_COST work.
 - Cost policy sensor, risk policy, HQ overlay, README contract and git diff check passed.
 - Committed canonical zero-cost policy as `bb54b0a7`.
-- The original `check-all.py` attempts exposed Windows console process-group leakage around nested sensor teardown. After moving the nested Living Studio/media paths in-process and isolating each Windows sensor with `CREATE_NEW_PROCESS_GROUP`, a full monolithic run completed **105/105 PASS**, printed `OK suite passed=105`, and exited 0.
+- The original `check-all.py` attempts exposed Windows console process-group leakage around nested sensor teardown. After moving the nested Living Studio/media paths in-process and isolating each Windows sensor with `CREATE_NEW_PROCESS_GROUP`, the pre-integration monolithic run completed **105/105 PASS**; after integrating current `main` and its Fabrication Router sensor, the suite completed **106/106 PASS**, printed `OK suite passed=106`, and exited 0.
 - Repository scan found existing watch/lock references for Ponytail, Impeccable, diagram-design and Herdr; no second runtime will be introduced.
 - Project Request Gate passed for `system_engineering`; routed packs are velvetos/vfharness/vfmem.
 - Promptfoo 0.123.1 installed repo-locally after FREE_LOCAL cost preflight; no model/API credentials configured.
@@ -96,11 +96,11 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Evidence: `packages/vfharness/state/reef-phase8-lab-2026-09-27.json`; sensor: `scripts/check-reef-phase8-lab.py`.
 
 ## Phase 9 ecosystem-radar outcome
-- The standing Best Skills pass was stale, so the existing Velvet Research Seat performed the due pass without creating a second timer/scheduler. Latest observed source data was dated 2026-09-25; the 2026-09-27 artifact is `packages/vfresearch/sources/2026-09-27-best-skills.md`.
+- The standing Best Skills pass was stale, so the existing Velvet Research Seat performed the due pass without creating a second timer/scheduler. Latest observed source data is dated 2026-09-26 after current-main reconciliation; the 2026-09-27 artifact is `packages/vfresearch/sources/2026-09-27-best-skills.md`.
 - Current high-signal candidates did not expose a unique measured gap: agent-browser/browser-use overlaps existing browser QA and does not solve the isolation boundary; ui-taste overlaps Impeccable/anti-slop; improve-codebase-architecture/TDD overlaps existing architecture and regression gates; gh-cli-readonly-agent overlaps the existing GitHub connector/local-git evidence path.
 - Google Agents CLI and twitter automation remain policy/runtime skips. Media-generation movers belong to existing routed media paths rather than this agent-stack program. Ponytail, Matt Pocock/Anthropic skills and Caveman patterns are already embedded where useful.
 - Decision: `NO_ADDITIONAL_DEV_LAB_JUSTIFIED` / `INSTALL_NOTHING_NEW`. Research cadence is fresh again, no new scheduler or always-on service exists, and incremental recurring cost remains **0 ILS**.
-- The broader research-freshness sensor initially failed because the 27.9 daily orchestra body was missing. A real same-day public-source body was recovered at ~12:15 and `vfresearch_cadence.py freshness` now PASS; this is explicitly a late recovery after the 07:00 cutoff, not proof that the scheduled 02:00 run succeeded.
+- The zero-cost branch initially carried a late-recovery research note. During current-main integration, the canonical 27.9 Research Seat artifacts were reconciled to the newer main evidence, which records an observed run before the 07:00 cutoff. The current-main evidence is retained as authoritative; the branch-local late-recovery note is historical.
 - Evidence: `packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json`; sensor: `scripts/check-ecosystem-radar-phase9.py`; recovery body: `packages/vfresearch/sources/2026-09-27-orchestra.md`.
 
 ## Phase 10-11 final-acceptance outcome
@@ -108,11 +108,11 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Windows `cp1252` caused initial decode-only failures in `check-hq-overlay.py` and the nested control-api path used by agent-security. Re-running the same checks with `PYTHONUTF8=1` passed without code changes; the locale incident is preserved as evidence, not hidden.
 - Runtime proof is reconciled to `vf.runtime.expected.v2`. `edge-execution` is an `anyOf` group over `sderot-mac` / `sderot-windows`, so the currently offline Mac no longer makes the system falsely unhealthy while the verified Windows fallback is online. Fresh live connector reads produced current GitHub and Google Drive receipts. On 2026-09-27 a fresh signed-in Grok Bot provider UI readback verified the exact eight protected routine IDs enabled with canonical effective schedule displays in an `Asia/Jerusalem` renderer. It also detected `OpenPost Release Watch` still enabled contrary to the 2026-09-26 retirement directive; that already-authorized drift was disabled in place and read back disabled while the protected eight remained unchanged. The evidence is `automation/grok/provider-readback-2026-09-27.json`; prompt-body parity is explicitly not claimed.
 - Repository-wide worktree hygiene is now clean: the 3D and HQ/control work were independently verified and committed, `git status --short` is empty, and repository-wide `git diff --check` exits 0. The earlier EOF warning in `packages/vfops/hq/STATUS-he.md` was repaired before the HQ/control commit.
-- The monolithic `scripts/check-all.py` was re-run after the Windows process-group isolation repair and completed **105/105 PASS with exit 0**. Earlier interrupted attempts remain historical diagnostics only and are superseded by the completed isolated run.
+- The monolithic `scripts/check-all.py` was re-run after the Windows process-group isolation repair and completed **106/106 PASS with exit 0** after current-main integration. Earlier interrupted attempts remain historical diagnostics only and are superseded by the completed isolated runs.
 - Acceptance receipt: `packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json`; sensor: `scripts/check-zero-cost-final-acceptance.py`.
 
 ## Final runtime status
-- Repository-wide `scripts/check-runtime-doctor.py --strict` exits **0**. Required components are healthy: repo HEAD proof, Windows edge-execution fallback, fresh Grok production scheduler readback, GitHub connector and Google Drive connector. The offline Mac is reported as a covered/degraded member of the `anyOf` host group, not a required blocker. Separately, the repaired monolithic `scripts/check-all.py` now completes **105/105 PASS with exit 0**.
+- Repository-wide `scripts/check-runtime-doctor.py --strict` exits **0**. Required components are healthy: repo HEAD proof, Windows edge-execution fallback, fresh Grok production scheduler readback, GitHub connector and Google Drive connector. The offline Mac is reported as a covered/degraded member of the `anyOf` host group, not a required blocker. Separately, the repaired monolithic `scripts/check-all.py` now completes **106/106 PASS with exit 0** on the current-main-integrated tree.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.
@@ -133,4 +133,4 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - `scripts/check-hq-overlay.py`: PASS 2026-09-27
 - `scripts/check-readme-contract.py`: PASS 2026-09-27
 - `git diff --check`: PASS 2026-09-27
-- `scripts/check-all.py`: PASS 105/105, exit 0 (Windows sensor process-group isolation enabled)
+- `scripts/check-all.py`: PASS 106/106, exit 0 (current-main integrated; Windows sensor process-group isolation enabled)

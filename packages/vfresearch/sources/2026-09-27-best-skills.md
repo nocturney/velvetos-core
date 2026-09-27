@@ -1,38 +1,54 @@
-﻿# Best Skills Â· 2026-09-27
+# Best Skills · 2026-09-27
 
-×ž×§×•×¨: LinklyAI/best-skills Â· dataDate: 2026-09-25 UTC
-×ž×•×©×‘: Research Seat Â· Asia/Jerusalem
-×ª×•×¦××”: **××™×Ÿ embed/install ×—×“×© â€” existing coverage**
+מקור: https://github.com/LinklyAI/best-skills · https://linkly.ai/skills · ranking dataDate observed: **2026-09-26** (UTC README “Last updated”) · Research Seat wake 2026-09-27 Asia/Jerusalem  
+מושב: ייצור · Asia/Jerusalem  
+Cadence: due/stale (`lastPass` 2026-09-24 → ~72h; due ≥44h, stale >52h) → execute. Executed inside Velvet Research Seat. No second timer/automation. No `npx skills`.
 
-## Movers ×¨×œ×•×•× ×˜×™×™×
+## Movers (VF-relevant)
 
-| skill/repo | ××•×ª ×—×™ | ×”×—×œ×˜×” |
+| # / signal | list | פעולה |
 |---|---|---|
-| agent-browser / browser-use | Best #1 + social/top-repo | watch ×‘×œ×‘×“; browser automation isolation ×¢×“×™×™×Ÿ PARTIAL, ×•××™×Ÿ ×”×¦×“×§×” ×œ-runtime × ×•×¡×£ |
-| frontend-design | Best #2 + social | ×ž×›×•×¡×” ×‘-vfbriefux + Impeccable ×”×ž×§×•×ž×™ |
-| find-skills | Best #3 | ×ž×›×•×¡×” ×‘-vfresearch / skill scouting |
-| grill-me | Best #4 | ×›×‘×¨ ×ž×•×˜×ž×¢ ×‘-vfconvert |
-| skill-creator | Best top-10 + social | ×›×‘×¨ ×ž×•×˜×ž×¢ ×‘-vfharness skill-authoring |
-| ui-taste | Trending top-5 | ×—×•×¤×£ Impeccable + anti-ui-slop; watch methodology ×‘×œ×‘×“ |
-| improve-codebase-architecture | Top installs | ×ž×›×•×¡×” agent-architecture-audit; ××™×Ÿ SDD layer × ×•×¡×£ |
-| gh-cli-readonly-agent | Rising star | watch; GitHub connector + local git ×›×‘×¨ ×ž×¡×¤×§×™× read-only evidence routes |
-| poster-design-studio | Rising star | watch creative lane; ×œ× ×¤×¢×¨ ×‘-zero-cost agent stack |
-## × ×¢×•×œ×™× / ×“×•×œ×’×•
+| agent-browser (#1) / frontend-design (#2) / find-skills (#3) / grill-me (#4) | Best 100 (26.9) | existing coverage; no duplicate |
+| web-design-guidelines (#5) | Best 100 | vfbriefux-internal only; public site locked |
+| microsoft-foundry / azure-* (#6–#10) | Best 100 | **דולג** — not VF office domain |
+| ui-taste (#1 trending) / ios-design (#2) | Trending 7d | watch with anti-ui-slop / taste-skill; no foreign brand tokens; no second design pack |
+| ai-image/video/avatar + twitter-automation | Trending 7d #3–#6 | **דולג** — genmedia/auto-post outside VF CTA + no auto-DM |
+| google-agents-cli-* | Trending 7d #7–#10 | **דולג** — vendor CLI outside Cloud mandate |
+| self-improving / self-improving-agent / skill-creator | Social buzz | office-learning + skill-authoring already; **second runtime locked** |
+| planning-with-files (most-active #9, updated 23.9) | Most Active | overlap writing-plans + executing-plans embeds — watch only |
+| obra/superpowers · mattpocock/skills · anthropics/skills · DietrichGebert/ponytail · nextlevelbuilder/ui-ux-pro-max-skill · browser-use · JuliusBrussee/caveman | Top repos (26.9) | partial+ already; TDD/worktrees / codebase-design / ui-ux-pro-max (brief-only) / ponytail / caveman remain watch |
+| affaan-m/ECC (#3 top repos) | Top repos | new-ish high signal — **watch only**; no new pack / no second architecture runtime |
+| parenting-expert / tencent-* / talking-avatar / poster-design | Rising Stars | not VF office domain / genmedia — skip |
 
-| ×ž×” | ×œ×ž×” |
+## מה הוטמע
+
+- אין embed חדש. Current pack coverage is sufficient for VF-relevant movers on the 26.9 ranking snapshot (`no-embed-existing-coverage`).
+
+## Watchlist
+
+- Existing watchlist retained (obra TDD/worktrees; mattpocock codebase-design/domain-modeling; anti-ui-slop taste-skill → note `ui-taste` momentum; archify; OpenSpec; impeccable methodology-only; earthtojake text-to-cad; addyosmani; ponytail; caveman; etc.).
+- Optional note: `affaan-m/ECC` and `nextlevelbuilder/ui-ux-pro-max-skill` — watch; do not install via npx; ui-ux patterns only into vfbriefux internal if a measured gap appears.
+
+## מה דולג
+
+| מה | למה |
 |---|---|
-| google-agents-cli-* | vendor CLI/scaffold; Google agent runtime × ×•×¡×£ ×ž×—×•×¥ ×œ×ž× ×“×˜ |
-| twitter-automation | auto-social/growth automation ×ž×—×•×¥ ×œ× ×¢×™×œ×•×ª VF |
-| self-improving-agent runtime | reflectionâ†’memory ×›×‘×¨ ×§×™×™×; ××™×Ÿ memory/runtime authority × ×•×¡×£ |
-| Ponytail / mattpocock skills / Anthropic skills | ×›×‘×¨ ×”×•×˜×ž×¢×• ×“×¤×•×¡×™× ×¨×œ×•×•× ×˜×™×™×; ××™×Ÿ ×¦×•×¨×š ×‘×”×ª×§× ×” × ×•×¡×¤×ª |
-| Caveman | context-thrift ×›×‘×¨ ×ž×›×¡×” ××ª ×”××•×ª |
-| AI image/video/avatar trending | ×ž×¡×œ×•×œ ×ž×“×™×” ×§×™×™×; ×œ× ×¤×¢×¨ engineering/agent-stack ×•×œ× ×¡×™×‘×” ×œ×”×ª×§×™×Ÿ vendor runtime |
+| npx skills / ClawHub installs | HQ/Cloud does not npx-install; patterns only |
+| twitter/reddit/genmedia automation trending | growth hacks / auto-post outside VF CTA + no auto-DM |
+| self-improving second runtime | locked; office-learning covers reflection→memory |
+| Azure / Prisma / Tencent / parenting / google-agents-cli | not VF office domain / vendor CLI |
+| ios-design as VF public aesthetic | public marketing site locked; taste watch only |
 
-## Phase 9 conclusion
+## בלוק 05
 
-×œ× × ×ž×¦× ×ž×•×¢×ž×“ ×¢× **unique value + zero-cost + no-parallel-authority** ×©×ž×¦×“×™×§ dev lab ×—×“×© ×”×™×•×.
-×”×¤×¢×•×œ×” ×”× ×›×•× ×” ×”×™× ×œ× ×œ×”×ª×§×™×Ÿ ×“×‘×¨ × ×•×¡×£: ×œ×”×ž×©×™×š ×¢× ×”×›×œ×™× ×©×›×‘×¨ ×”×•×›×—×•, ×•×œ×”×©××™×¨ watch ×‘×œ×‘×“ ×œ×¤×¢×¨×™× ×ž×“×™×“×™× ×¢×ª×™×“×™×™×.
+best-skills — refresh 27.9 על דירוג `data/2026-09-26` observed; `no-embed-existing-coverage`; due/stale pulse executed inside Research Seat; no duplicate runtime.
 
-## ×‘×œ×•×§ 05
+## Phase 9 zero-cost ecosystem radar addendum
 
-best-skills â€” ××™×Ÿ ×—×“×© ×‘×ž×©×¨×“; Phase 9 ecosystem radar × ×¡×’×¨ ×œ×œ× ×”×ª×§× ×” × ×•×¡×¤×ª.
+The fresher 2026-09-26 ranking snapshot supersedes the earlier 2026-09-25 observation used during the implementation pass. The Phase 9 unique-value decision is unchanged:
+
+- `agent-browser` / `browser-use`: WATCH_EXISTING_BROWSER_PATH; popularity did not prove a better isolation boundary than the existing browser/manual QA routes.
+- `ui-taste`: NO_LAB_EXISTING_COVERAGE; Impeccable plus anti-ui-slop/taste coverage already addresses the measured UI-quality gap.
+- `gh-cli-readonly-agent`: WATCH_EXISTING_GITHUB_PATH; GitHub connector + local git already provide the required read-only evidence.
+- Google Agents CLI and self-improving runtimes remain outside the current runtime authority; twitter automation remains policy-locked.
+- Conclusion: `NO_ADDITIONAL_DEV_LAB_JUSTIFIED` / `INSTALL_NOTHING_NEW`; no scheduler or authority movement; incremental recurring cost remains 0.

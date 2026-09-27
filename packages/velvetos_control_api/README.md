@@ -36,22 +36,28 @@ Schema id: `velvetos.control.v1`.
 | System / locks / SoT map | `office/control-plane.json` |
 | Risk / Don't Bother Christian | `office/control/POLICY.md` |
 | Capabilities | `packages/vfops/hq/capabilities.json` + `packages/vfigos/CAPABILITIES.json` |
+| Integrations | `instances/<VELVETOS_INSTANCE_ID or velvet-factory>/.cursor/vf-desk.json#tools` — canonical desk projection with source status + provenance preserved |
 | Attention | `vf_control_plane.owner_surface_items` + `vf_autonomy.blockers` |
 | Activity | `office/control/HANDOFF.json`, `decisions.jsonl`, living-studio pulse/autonomy projections |
 | Jobs | `scripts/vf_jobs_adapter.py` (Sheet canonical; CSV cache) |
+| Production | `packages/vfprod/FLEET.json` + canonical print/maintenance projections |
+| Content | `packages/vfgrowth/LEDGER.md` / approval-queue projection |
+| Files / media | `packages/vfmedia/catalog.json` — bounded item projection with canonical total count preserved |
+| Agents | `instances/<VELVETOS_INSTANCE_ID or velvet-factory>/.cursor/vf-desk.json` specialist roster |
+| Models | `packages/vfsku/SHELF.md` projection; missing values remain missing |
 
-**Unavailable in v1 (honest `items: null`):** production, content, files, agents, models.
+Production/content/files/agents/models are projection-backed in v1 when their canonical source is present. A missing or unreadable source stays honestly `unavailable`; it is never converted into a verified empty collection.
 
 Absent source ≠ verified empty. Verified empty jobs (`state=ready`, `items=[]`) is allowed only when the jobs adapter reports `ready`.
 
 ## Auth
 
-Server-to-server only. Assume the consuming Site may be link-shared.
+Current Control Center topology is server-to-server: the owner-facing Control Center stays private behind IAP, while this read-only projection service is publicly invokable at the Cloud Run layer and protects `/v1/*` with the app token.
 
-1. **Cloud Run IAM** — deploy with `--no-allow-unauthenticated` (primary).
-2. **App bearer** — `VELVETOS_CONTROL_API_TOKEN` via Secret Manager (defense in depth).
+1. **App bearer** — `VELVETOS_CONTROL_API_TOKEN` via Secret Manager is mandatory for protected `/v1/*` reads.
+2. **Cloud Run invocation** — deploy this service with `--allow-unauthenticated` in the current topology so the private Control Center proxy can authenticate at the application layer; `/health` remains an unauthenticated probe. Do not copy this pattern to mutation services.
 
-Send `Authorization: Bearer <token>` or `X-Api-Key`. Credentials never in git. Endpoint contracts stay Bearer-shaped so a later scoped operator identity can replace the shared secret without UI/API churn.
+Send `Authorization: Bearer <token>`, `X-VelvetOS-Token`, or `X-Api-Key`. Credentials never enter the browser or git. A future move back to IAM-only invocation must first enable and verify the Control Center identity-token path end to end.
 
 ## Actions (fail-closed)
 

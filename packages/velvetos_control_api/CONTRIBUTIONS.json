@@ -26,6 +26,15 @@
       ]
     },
     {
+      "id": "integrations",
+      "module": "velvetos_control_api.contributions.integrations",
+      "class": "IntegrationsContribution",
+      "domains": ["integrations"],
+      "authoritativeSources": [
+        "instances/velvet-factory/.cursor/vf-desk.json#tools"
+      ]
+    },
+    {
       "id": "attention",
       "module": "velvetos_control_api.contributions.attention",
       "class": "AttentionContribution",
@@ -66,7 +75,22 @@
       "class": "UnavailableDomainsContribution",
       "domains": ["production", "content", "files", "agents", "models"],
       "authoritativeSources": [],
-      "note": "v1 honest unavailable — not fake empty arrays"
+      "note": "Fail-closed fallback; operational_domains overrides only when canonical sources are packaged and readable."
+    },
+    {
+      "id": "operational_domains",
+      "module": "velvetos_control_api.contributions.operational",
+      "class": "OperationalDomainsContribution",
+      "domains": ["production", "content", "files", "agents", "models"],
+      "authoritativeSources": [
+        "packages/vfprod/FLEET.json",
+        "packages/vfprod/data/print-events.jsonl",
+        "packages/vfprod/data/maintenance-snapshot.json",
+        "packages/vfgrowth/data/approval-queue.json",
+        "packages/vfmedia/catalog.json",
+        "instances/velvet-factory/.cursor/vf-desk.json#desk",
+        "packages/vfsku/SHELF.json"
+      ]
     }
   ]
 }

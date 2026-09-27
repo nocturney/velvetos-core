@@ -1,0 +1,11 @@
+{
+  "component": "sendcutsend",
+  "action": "preflight_only_no_order_submission",
+  "classification": "PAID_OPTIONAL",
+  "evidence": "The installed SendCutSend skill is restricted by FABRICATION-ROUTER to file/order-readiness preflight only; order submission and any paid purchase are disabled.",
+  "checked_at": "2026-09-27",
+  "incremental_cost_possible": false,
+  "automatic_paid_overage_possible": false,
+  "hard_cap_enforced": true,
+  "paid_features_enabled": false
+}

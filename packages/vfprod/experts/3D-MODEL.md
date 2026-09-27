@@ -1,11 +1,12 @@
 # 3D Model — מנתח / יוצר / בונה
 
 מושב: ייצור. מודול: `expert-3d-model`.  
-אין הדפסה מ־HQ. אין מפתח API בגיט. ברירת המחדל היא local / zero-new-recurring-cost.
+לפני כל משימת CAD/ייצור יש לפתור `../FABRICATION-ROUTER.md` ולקרוא את ה־Skill שנבחר מ־`.agents/skills/<skill>/SKILL.md` כאשר קיים route כזה.
+אין שליטה/שליחה למדפסת מ־HQ. אין מפתח API בגיט. ברירת המחדל היא local / zero-new-recurring-cost.
 
-## כניסה אחת
+## Fabrication Router → 3D sub-router
 
-כל בקשת מידול עוברת תחילה דרך:
+Fabrication Router הוא שער העל לבחירת כלי הייצור. כאשר הוא מפנה למשימת מידול 3D, בקשת המידול עוברת דרך:
 
 ```bash
 python scripts/vf_3d.py route --request "<owner request>"
@@ -18,6 +19,8 @@ python scripts/vf_3d.py route --request "<owner request>"
 - `HYBRID_CAD_THEN_BLENDER` — ממשקים/מידות פונקציונליים נשמרים ב־STEP, ואז מעטפת/צורה אורגנית ב־Blender.
 
 אין לבחור Blender רק כי הוא יודע ליצור 3D; master הנדסי שנדרש להיות פרמטרי נשאר CAD.
+
+ה־Fabrication Router מכסה גם CAD פונקציונלי, `step-parts`, `cad-viewer`, `dfam-check`, `dfm`, `dxf`, `engineering-drawing`, `gcode`, `urdf`/`srdf`/`sdf` ו־SendCutSend preflight בלבד. `bambu-labs`, printer upload/start/heating/motion ו־SendCutSend order submission נשארים מחוץ לסמכות.
 
 גרסאות runtime אינן נעולות. `vf_3d.py doctor` בוחר את Blender המותקן בפועל ומאמת את ה־addon באותה התקנה; `vf_cad.py` מגלה OrcaSlicer מקומית. גרסה/commit מדויקים הם provenance של בדיקה, לא רשימת גרסאות מותרות. אחרי upgrade דורשים evidence חדש התואם לגרסה המותקנת במקום לדחות אותה לפי מספר גרסה.
 

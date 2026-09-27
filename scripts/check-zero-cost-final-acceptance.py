@@ -30,13 +30,13 @@ def git(*args: str) -> subprocess.CompletedProcess[str]:
 def main() -> None:
     receipt, program = load(RECEIPT), load(PROGRAM)
     assert receipt.get("status") == "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS"
-    assert receipt.get("decision") == "READY_FOR_OWNER_REVIEW_NO_PUSH"
+    assert receipt.get("decision") == "PUSHED_FOR_DRAFT_PR_REVIEW_NO_MERGE"
     full = receipt.get("fullCheckAll") or {}
     assert full.get("status") == "PASS"
     assert full.get("command") == "python scripts/check-all.py"
     assert full.get("observedExitCode") == 0
-    assert full.get("sensorCount") == 105
-    assert full.get("terminalLine") == "OK suite passed=105"
+    assert full.get("sensorCount") == 106
+    assert full.get("terminalLine") == "OK suite passed=106"
     assert "CREATE_NEW_PROCESS_GROUP" in str(full.get("windowsProcessIsolation", ""))
     head = receipt.get("acceptedCodeHead")
     assert isinstance(head, str) and len(head) == 40
@@ -99,7 +99,7 @@ def main() -> None:
     guards = receipt.get("costAndAuthority") or {}
     assert guards.get("incrementalRecurringCostIls") == 0
     assert guards.get("providerModelPaidCalls") == 0
-    assert guards.get("pushPerformed") is False
+    assert guards.get("pushPerformed") is True
     assert guards.get("productionPublicationPerformed") is False
     for key in (
         "newControlPlaneAuthority",
@@ -129,7 +129,10 @@ def main() -> None:
     assert acceptance.get("committedScopeReady") is True
     assert acceptance.get("ownerActionRequiredNow") is False
     assert acceptance.get("pushRequiresExplicitOwnerPermission") is True
-    print("OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors=105 push=NO")
+    assert acceptance.get("pushWasExplicitlyAuthorized") is True
+    assert acceptance.get("pullRequestState") == "DRAFT"
+    assert acceptance.get("mergePerformed") is False
+    print("OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors=106 push=YES pr=DRAFT merge=NO")
 
 
 if __name__ == "__main__":

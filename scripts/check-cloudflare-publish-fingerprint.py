@@ -88,8 +88,8 @@ def main() -> int:
     if block not in migration.read_text(encoding="utf-8"):
         fail("D1 migration differs from schema.sql publish_fingerprints block")
     readme = (WORKER / "README.md").read_text(encoding="utf-8")
-    if "0001_publish_fingerprints.sql" not in readme or "not live until the Worker is redeployed" not in readme:
-        fail("README must document migration-before-deploy order and not-live status")
+    if "0001_publish_fingerprints.sql" not in readme or "live in production" not in readme:
+        fail("README must document migration-before-deploy order and live production status")
 
     print(
         "OK cloudflare-publish-fingerprint "

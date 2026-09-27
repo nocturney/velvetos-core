@@ -224,3 +224,11 @@ CPU מקומי, GPU מקומי, RAM, disk ו-network מקומי אינם נחש�
 VelvetOS רשאי באופן אוטונומי להתקין, לבדוק, להריץ, להגדיר, לשלב, לבצע POC ולבצע benchmark רק כאשר הדבר אינו יוצר עלות חדשה חוזרת או חיוב חדש.
 
 כל פעולה שעלולה ליצור חיוב, מנוי, usage fee או API cost חדש דורשת אישור מפורש מראש מבעל המערכת.
+
+## 22. Compatibility and action-scoped evidence
+
+The machine contract may accept more than one preflight evidence shape, but the policy decision is identical. Detailed schema evidence and compact action-oriented evidence both bind to the same classifications, fail-closed states, incremental-cost rule, paid-overage controls, and explicit owner approval boundary.
+
+A compact preflight must identify the component and action, carry current evidence and a check date, and state whether incremental cost, automatic paid overage, a hard cap, or paid optional features are possible/enabled. This compatibility exists to preserve existing evidence while integrating newer production routers; it does not weaken the policy.
+
+A monthly cost-drift review remains required for external or cloud-connected components. No silent cost escalation is permitted when changing provider, model tier, hosting mode, storage class, retention, concurrency, polling cadence, or scheduled frequency.

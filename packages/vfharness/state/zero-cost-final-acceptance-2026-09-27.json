@@ -5,13 +5,13 @@
   "branch": "implementation/zero-cost-agent-stack",
   "acceptedCodeHead": "3a2faccf82ef77672b6598d45ae12f792fb49253",
   "status": "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS",
-  "decision": "READY_FOR_OWNER_REVIEW_NO_PUSH",
+  "decision": "PUSHED_FOR_DRAFT_PR_REVIEW_NO_MERGE",
   "fullCheckAll": {
     "status": "PASS",
     "command": "python scripts/check-all.py",
     "observedExitCode": 0,
-    "sensorCount": 105,
-    "terminalLine": "OK suite passed=105",
+    "sensorCount": 106,
+    "terminalLine": "OK suite passed=106",
     "windowsProcessIsolation": "Each sensor launched with CREATE_NEW_PROCESS_GROUP on Windows to prevent child console-control teardown from terminating the parent suite.",
     "historicalNote": "Earlier monolithic attempts were interrupted by Windows console process-group leakage; the isolated rerun completed normally."
   },
@@ -20,7 +20,7 @@
       "id": "policy-security",
       "status": "PASS_WITH_DECLARED_PARTIALS",
       "observed": {
-        "projectRequestGate": "PASS domains=10 authority_paths=36 fail_closed",
+        "projectRequestGate": "PASS domains=10 authority_paths=39 fail_closed",
         "noNewRecurringCost": "PASS",
         "riskPolicy": "PASS",
         "hqOverlay": "PASS",
@@ -36,7 +36,7 @@
         "observability": "PASS strict spans=9 traces=1 local_only=YES authority=NO",
         "reliability": "Healthchecks missed-heartbeat PASS; changedetection change PASS; GlitchTip BLOCKED local-stack",
         "engineeringQuality": "PASS strict Ponytail=EMBEDDED gstack=SAFE_SUBSET Impeccable=WEB_UI_ONLY diagram=DOCS_ONLY",
-        "vfharness": "PASS layers=6 sensors=23 embeds=19 locks=9 packs=31"
+        "vfharness": "PASS layers=6 sensors=24 embeds=19 locks=9 packs=31"
       }
     },
     {
@@ -57,7 +57,7 @@
         "vfmem": "PASS embed=9 packs=31 nodes=406 edges=340 desk=38",
         "reef": "PASS lab-only windows-partial cost=0 authority=none wsl=defer",
         "ecosystemRadar": "PASS no-new-lab cost=0 authority=none research-seat=fresh",
-        "researchFreshness": "PASS same-day artifact present with external source; recovered late after cutoff",
+        "researchFreshness": "PASS same-day artifact present with external source; current-main evidence records observed run before 07:00 cutoff",
         "researchStructure": "PASS verify; no live activation claim"
       }
     }
@@ -80,7 +80,7 @@
     "newReleaseAuthority": 0,
     "newAlwaysOnProductionRuntime": 0,
     "providerModelPaidCalls": 0,
-    "pushPerformed": false,
+    "pushPerformed": true,
     "productionPublicationPerformed": false
   },
   "knownLimitations": [
@@ -92,7 +92,7 @@
     "CLI-Anything 3MF remains BLOCKED_NOT_ROUTABLE; FreeCAD GUI preview/motion/live path remains disabled while headless CAD is verified.",
     "Cognee remains a slow derived semantic index and never canonical authority.",
     "Reef remains LAB_ONLY_NOT_PROMOTED; Windows harness diagnostics are partial and untrusted proposer execution remains Linux/bwrap-gated.",
-    "The 2026-09-27 Research Seat daily body missed the 07:00 cutoff and was honestly recovered around 12:15; scheduled 02:00 execution for that date is unproven."
+    "Research freshness was reconciled during main integration: the branch had a late-recovery note, while current-main canonical evidence records an observed run before the 07:00 cutoff; the current-main evidence is retained as authoritative."
   ],
   "milestoneCommits": [
     "bb54b0a7 policy: enforce zero new recurring cost",
@@ -118,7 +118,11 @@
     "committedScopeReady": true,
     "ownerActionRequiredNow": false,
     "pushRequiresExplicitOwnerPermission": true,
-    "next": "owner review / optional explicit push permission; normal operations may continue while known limitations remain fail-closed"
+    "pushWasExplicitlyAuthorized": true,
+    "pullRequest": "https://github.com/nocturney/velvetos-core/pull/390",
+    "pullRequestState": "DRAFT",
+    "mergePerformed": false,
+    "next": "review PR #390 after integration with current main; keep merge owner-controlled while known limitations remain fail-closed"
   },
   "repositoryWideStrictDeploymentProof": {
     "status": "PASS",

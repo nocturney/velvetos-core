@@ -17,7 +17,7 @@
     "check_hq_overlay": "PASS_2026-09-27",
     "check_readme_contract_selftest": "PASS_2026-09-27",
     "git_diff_check": "PASS_2026-09-27",
-    "full_check_all": "INTERRUPTED_BY_REMOTE_SESSION_AFTER_20_PLUS_PASSES_NOT_CLAIMED_PASS"
+    "full_check_all": "PASS_2026-09-27_CURRENT_MAIN_INTEGRATION_106_OF_106_EXIT_0"
   },
   "cost": {
     "new_paid_service_created": false,

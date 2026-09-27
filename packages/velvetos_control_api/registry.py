@@ -53,6 +53,12 @@ def _default_registry() -> list[dict[str, Any]]:
             "domains": ["capabilities"],
         },
         {
+            "id": "integrations",
+            "module": "velvetos_control_api.contributions.integrations",
+            "class": "IntegrationsContribution",
+            "domains": ["integrations"],
+        },
+        {
             "id": "attention",
             "module": "velvetos_control_api.contributions.attention",
             "class": "AttentionContribution",
@@ -74,6 +80,12 @@ def _default_registry() -> list[dict[str, Any]]:
             "id": "unavailable_domains",
             "module": "velvetos_control_api.contributions.unavailable",
             "class": "UnavailableDomainsContribution",
+            "domains": ["production", "content", "files", "agents", "models"],
+        },
+        {
+            "id": "operational_domains",
+            "module": "velvetos_control_api.contributions.operational",
+            "class": "OperationalDomainsContribution",
             "domains": ["production", "content", "files", "agents", "models"],
         },
     ]

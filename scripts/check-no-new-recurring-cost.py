@@ -125,6 +125,18 @@ def main() -> None:
     if run(optional).returncode != 0:
         fail("PAID_OPTIONAL locked to free features should pass")
 
+    for rel in (
+        "packages/vfharness/state/fabrication-cost-text-to-cad-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-step-parts-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-sendcutsend-2026-09-27.json",
+    ):
+        path = ROOT / rel
+        if not path.is_file():
+            fail(f"missing compact preflight {rel}")
+        proc = subprocess.run([sys.executable, str(CLI), str(path)], cwd=ROOT, text=True, capture_output=True)
+        if proc.returncode != 0:
+            fail(f"compact preflight must pass: {rel}: {proc.stderr.strip()}")
+
     layers = json.loads(LAYERS.read_text(encoding="utf-8"))
     scripts = {r.get("script") for r in layers.get("sensors", [])}
     if "scripts/check-no-new-recurring-cost.py" not in scripts:

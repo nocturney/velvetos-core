@@ -10,7 +10,7 @@ Human-visible text authority: `constitution/VISIBLE_TEXT.md`, mode `owner-brief`
 | Role | Pack | Does | Does not |
 |---|---|---|---|
 | Brief sender | `vfops` | Send the 09:00 Asia/Jerusalem Morning Green brief through the canonical owner Gmail workflow only after `visible_text_gate: PASS`. | Read inbox for brief content. Blast list. Invent ₪. Customer WhatsApp. Plaintext-only brief |
-| Calendar clerk | `vfseason` | Read `Asia/Jerusalem`. Put every planned IG post on Google Calendar (`CALENDAR-OPS.md`). Do not ask Christian for slots. | Create events outside the standing IG grid unless asked |
+| Calendar clerk | `vfseason` | Read `Asia/Jerusalem`. Mirror every live Publisher schedule to the dedicated Google Calendar `אינסטגרם` (`CALENDAR-OPS.md`). Publisher remains source of truth; do not ask Christian for slots. | Create events outside the standing IG grid unless asked |
 | Brief editor | `vfbriefux` + `vfcopy` | Shape the morning list, then run owner-brief reader-first + Humanizer on AI-authored prose. | Invent metrics. Rewrite literal IDs/hashes/source values. Apply Instagram CTA/voice to operations |
 | Floor lead | `vfops` | Mark print-floor blockers from verified sources. | Assign printers from HQ |
 | Human | — | Picks the next משמרת from the **אדם** bucket. | — |
@@ -26,7 +26,7 @@ Human-visible text authority: `constitution/VISIBLE_TEXT.md`, mode `owner-brief`
    - Slot 07 = captions + PREFLIGHT path. Brief approval does **not** publish the feed.
 5. Write the factual draft to `packages/vfops/BRIEF.md` (or the packet the brief UX names). Block `05` is `packages/vfops/data/research.md`.
 6. **Visible Text Gate:** preserve literal source rows/IDs/numbers; route every AI-authored heading, summary, explanation or recommendation through `reader-first-he.md` → `.cursor/skills/vf-hebrew-copy/SKILL.md` in `owner-brief` mode → `ai-tells-he.md` + lint → factual validation. Public Instagram voice/CTA is not applied to this surface. No material rewrite after PASS without re-running the gate.
-7. Only after `visible_text_gate: PASS`, project the same factual brief through `packages/vfbriefux/build_morning_green.py`, render `packages/vfbriefux/MORNING-GREEN.html` with `render_morning_green.py`, and send through the canonical owner Gmail request/workflow. Decorative imagery is CID-bound; future Instagram cards use the read-only OpenPost snapshot and `מתוזמן` requires live `scheduled_at` evidence. `MAIL.html` + `render_mail.py` remain legacy/other-owner-surface renderers, not the canonical Morning Brief route. Fail closed on production Gmail failure; do not send plaintext or a lower-quality plugin fallback.
+7. Only after `visible_text_gate: PASS`, project the same factual brief through `packages/vfbriefux/build_morning_green.py`, render `packages/vfbriefux/MORNING-GREEN.html` with `render_morning_green.py`, and send through the canonical owner Gmail request/workflow. Decorative imagery is CID-bound; future Instagram cards use the read-only Cloudflare Publisher snapshot and `מתוזמן` requires live Publisher `scheduled_at` evidence plus a fresh cron heartbeat. `MAIL.html` + `render_mail.py` remain legacy/other-owner-surface renderers, not the canonical Morning Brief route. Fail closed on production Gmail failure; do not send plaintext or a lower-quality plugin fallback.
 
 ## Done when
 
