@@ -48,7 +48,7 @@ def main() -> None:
         assert str(row.get("status", "")).startswith("PASS")
     diff = receipt.get("diffChecks") or {}
     assert diff.get("committedProgramRange", {}).get("status") == "PASS"
-    assert diff.get("liveWorkingTree", {}).get("status") == "BLOCKED_BY_UNRELATED_PARALLEL_WORK"
+    assert diff.get("liveWorkingTree", {}).get("status") == "PASS_CLEAN"
 
     runtime_manifest = load(ROOT / "packages/vfharness/runtime/expected-components.json")
     assert runtime_manifest.get("schema") == "vf.runtime.expected.v2"
@@ -104,7 +104,6 @@ def main() -> None:
         "Cognee",
         "Reef",
         "07:00 cutoff",
-        "3D/HQ/control",
     ):
         assert marker in limitations
 

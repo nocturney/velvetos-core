@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. Phase 10-11 resilient targeted acceptance now passes for the zero-cost stack itself; repository-wide strict deployment proof remains PARTIAL because required runtime receipts are not current/complete and unrelated parallel 3D/HQ/control work is still dirty. GlitchTip remains explicitly blocked and no Production authority has moved.
+Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. Phase 10-11 resilient targeted acceptance passes for the zero-cost stack and the repository worktree is now clean. Repository-wide strict deployment proof remains PARTIAL for one external evidence dependency only: a fresh Grok Bot provider readback. GlitchTip remains explicitly blocked and no Production authority has moved.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -107,12 +107,12 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Resilient targeted batches passed across cost/risk, behavioral/security, observability, reliability, engineering quality, CLI-Anything, Laya, memory/Cognee, Reef, ecosystem radar, tool authority, harness/vfmem/vfe2b, Windows path, skill health, autonomy, request-gate, runtime activation and sensor-lock surfaces.
 - Windows `cp1252` caused initial decode-only failures in `check-hq-overlay.py` and the nested control-api path used by agent-security. Re-running the same checks with `PYTHONUTF8=1` passed without code changes; the locale incident is preserved as evidence, not hidden.
 - Runtime proof has been reconciled to `vf.runtime.expected.v2`. `edge-execution` is an `anyOf` group over `sderot-mac` / `sderot-windows`, so the currently offline Mac no longer makes the system falsely unhealthy while the verified Windows fallback is online. Fresh live connector reads produced current GitHub and Google Drive receipts. `scripts/check-runtime-doctor.py --strict` now fails on **one** required blocker only: `grok-production-scheduler` lacks a fresh provider readback in this session. The last canonical Grok readback is 2026-09-23, and the Grok contract explicitly forbids treating Git/manifest state as provider proof.
-- Repository-wide `git diff --check` is also PARTIAL while unrelated parallel 3D/HQ/control work remains active; the observed failure was a blank line at EOF in `packages/vfops/hq/STATUS-he.md`, outside this program's edit set.
+- Repository-wide worktree hygiene is now clean: the 3D and HQ/control work were independently verified and committed, `git status --short` is empty, and repository-wide `git diff --check` exits 0. The earlier EOF warning in `packages/vfops/hq/STATUS-he.md` was repaired before the HQ/control commit.
 - The monolithic `scripts/check-all.py` was **not** re-run and is not claimed PASS. The earlier interrupted run remains historical evidence only.
 - Acceptance receipt: `packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json`; sensor: `scripts/check-zero-cost-final-acceptance.py`.
 
 ## Pending
-- Repository-wide strict deployment proof remains PARTIAL for one external evidence dependency: a fresh Grok Bot provider readback. The runtime ownership/failover contract itself is reconciled in v2; unrelated parallel 3D/HQ/control work must also reach its own verified checkpoint before a global clean-worktree claim. This does not reopen the completed zero-cost implementation phases.
+- Repository-wide strict deployment proof remains PARTIAL for one external evidence dependency: a fresh Grok Bot provider readback. Runtime ownership/failover is reconciled in v2 and the worktree is clean; no other repository evidence blocker is currently known. This does not reopen the completed zero-cost implementation phases.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.
