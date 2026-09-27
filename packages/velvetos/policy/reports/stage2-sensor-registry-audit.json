@@ -13,6 +13,8 @@
     "ALWAYS_ON": 4,
     "FULL_SUITE": 91
   },
+  "dependency_edge_count": 35,
+  "sensors_with_dependencies": 20,
   "critical_always_on": [
     "check-agent-surface-security",
     "check-critical-syntax",
@@ -31,14 +33,14 @@
   "workflow_direct_sensor_invocations": [
     {
       "workflow": ".github/workflows/check-all.yml",
-      "line": 32,
+      "line": 42,
       "sensor_path": "scripts/check-policy-architecture.py",
       "suite_runner_present": true,
       "potential_duplicate_with_suite_runner": true
     },
     {
       "workflow": ".github/workflows/check-all.yml",
-      "line": 63,
+      "line": 87,
       "sensor_path": "scripts/check-commission-isolation.py",
       "suite_runner_present": true,
       "potential_duplicate_with_suite_runner": true
@@ -82,14 +84,14 @@
   "potential_duplicate_sensor_runs": [
     {
       "workflow": ".github/workflows/check-all.yml",
-      "line": 32,
+      "line": 42,
       "sensor_path": "scripts/check-policy-architecture.py",
       "suite_runner_present": true,
       "potential_duplicate_with_suite_runner": true
     },
     {
       "workflow": ".github/workflows/check-all.yml",
-      "line": 63,
+      "line": 87,
       "sensor_path": "scripts/check-commission-isolation.py",
       "suite_runner_present": true,
       "potential_duplicate_with_suite_runner": true

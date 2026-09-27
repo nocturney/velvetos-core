@@ -102,6 +102,8 @@ def build() -> dict:
         "registry_matches_live": sorted(row["path"] for row in sensors) == live,
         "mapping_state_counts": dict(sorted(mapping_counts.items())),
         "fallback_scope_counts": dict(sorted(fallback_counts.items())),
+        "dependency_edge_count": sum(len(row.get("depends_on") or []) for row in sensors),
+        "sensors_with_dependencies": sum(bool(row.get("depends_on")) for row in sensors),
         "critical_always_on": sorted(
             row["id"] for row in sensors
             if row.get("fallback_scope") == "ALWAYS_ON"

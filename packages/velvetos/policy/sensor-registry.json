@@ -107,10 +107,10 @@
       "id": "check-cloudflare-publish-fingerprint",
       "path": "scripts/check-cloudflare-publish-fingerprint.py",
       "owns": [
-        "packages/**"
+        "packages/vfigos/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfigos/**",
         "scripts/check-cloudflare-publish-fingerprint.py"
       ],
       "depends_on": [],
@@ -130,12 +130,12 @@
       "path": "scripts/check-cognee-integration.py",
       "owns": [
         "automation/**",
-        "packages/**",
+        "packages/vfmem/**",
         "scripts/**"
       ],
       "triggered_by": [
         "automation/**",
-        "packages/**",
+        "packages/vfmem/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -159,7 +159,10 @@
       "triggered_by": [
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/commission_operational_gaps.py",
+        "scripts/sensor_isolation.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -177,13 +180,13 @@
       "owns": [
         "AGENTS.md",
         "office/**",
-        "packages/**",
+        "packages/velvetos_control_api/**",
         "scripts/**"
       ],
       "triggered_by": [
         "AGENTS.md",
         "office/**",
-        "packages/**",
+        "packages/velvetos_control_api/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -205,13 +208,23 @@
         ".cursor/**",
         "constitution/**",
         "instances/**",
-        "packages/**"
+        "packages/velvetos/**",
+        "packages/vfe2b/**",
+        "packages/vfgraft/**",
+        "packages/vfgrowth/**",
+        "packages/vfmedia/**",
+        "packages/vfom/**"
       ],
       "triggered_by": [
         ".cursor/**",
         "constitution/**",
         "instances/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfe2b/**",
+        "packages/vfgraft/**",
+        "packages/vfgrowth/**",
+        "packages/vfmedia/**",
+        "packages/vfom/**",
         "scripts/check-creative-autopilot.py"
       ],
       "depends_on": [],
@@ -256,12 +269,16 @@
       "owns": [
         ".cursor/**",
         "instances/**",
-        "packages/**"
+        "packages/vfcopy/**",
+        "packages/vfom/**",
+        "packages/vfresearch/**"
       ],
       "triggered_by": [
         ".cursor/**",
         "instances/**",
-        "packages/**",
+        "packages/vfcopy/**",
+        "packages/vfom/**",
+        "packages/vfresearch/**",
         "scripts/check-creative-system.py"
       ],
       "depends_on": [],
@@ -341,11 +358,11 @@
       "id": "check-delivery-approval",
       "path": "scripts/check-delivery-approval.py",
       "owns": [
-        "packages/**",
+        "packages/vfigos/**",
         "scripts/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfigos/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -390,11 +407,11 @@
       "path": "scripts/check-gmail-brief-send.py",
       "owns": [
         ".github/**",
-        "packages/**"
+        "packages/vfops/**"
       ],
       "triggered_by": [
         ".github/**",
-        "packages/**",
+        "packages/vfops/**",
         "scripts/check-gmail-brief-send.py"
       ],
       "depends_on": [],
@@ -415,10 +432,10 @@
       "id": "check-grok-boot-hardening",
       "path": "scripts/check-grok-boot-hardening.py",
       "owns": [
-        "packages/**"
+        "packages/vfigos/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfigos/**",
         "scripts/check-grok-boot-hardening.py"
       ],
       "depends_on": [],
@@ -438,19 +455,32 @@
       "path": "scripts/check-hq-overlay.py",
       "owns": [
         "constitution/**",
-        "packages/**",
+        "packages/chatgpt-embed-map.json",
+        "packages/manifest.json",
+        "packages/vfbriefux/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfops/**",
         "scripts/vendor-origin-packs.sh",
         "scripts/vfops_loop.py"
       ],
       "triggered_by": [
         "constitution/**",
-        "packages/**",
+        "packages/chatgpt-embed-map.json",
+        "packages/manifest.json",
+        "packages/vfbriefux/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfops/**",
         "scripts/check-hq-overlay.py",
-        "scripts/sensor_isolation.py",
         "scripts/vendor-origin-packs.sh",
         "scripts/vfops_loop.py"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/sensor_isolation.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -467,12 +497,14 @@
       "path": "scripts/check-hyperframes-backend.py",
       "owns": [
         ".cursor/**",
-        "packages/**",
+        "packages/vfmcp/**",
+        "packages/vfom/**",
         "scripts/**"
       ],
       "triggered_by": [
         ".cursor/**",
-        "packages/**",
+        "packages/vfmcp/**",
+        "packages/vfom/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -492,11 +524,13 @@
       "path": "scripts/check-instagram-content-decision.py",
       "owns": [
         ".cursor/**",
-        "packages/**"
+        "packages/vfe2b/**",
+        "packages/vfom/**"
       ],
       "triggered_by": [
         ".cursor/**",
-        "packages/**",
+        "packages/vfe2b/**",
+        "packages/vfom/**",
         "scripts/check-instagram-content-decision.py"
       ],
       "depends_on": [],
@@ -573,16 +607,26 @@
       "owns": [
         "AGENTS.md",
         "office/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfcopy/**",
+        "packages/vfharness/**",
+        "packages/vfmedia/**",
         "scripts/**"
       ],
       "triggered_by": [
         "AGENTS.md",
         "office/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfcopy/**",
+        "packages/vfharness/**",
+        "packages/vfmedia/**",
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/sensor_isolation.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -621,11 +665,15 @@
       "path": "scripts/check-morning-green.py",
       "owns": [
         "automation/**",
-        "packages/**"
+        "packages/vfbriefux/**",
+        "packages/vfigos/**",
+        "packages/vfops/**"
       ],
       "triggered_by": [
         "automation/**",
-        "packages/**",
+        "packages/vfbriefux/**",
+        "packages/vfigos/**",
+        "packages/vfops/**",
         "scripts/check-morning-green.py"
       ],
       "depends_on": [],
@@ -649,7 +697,9 @@
       "triggered_by": [
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/vf_cost_preflight.py"
+      ],
       "enforces": [
         "cost.recurring.new"
       ],
@@ -671,7 +721,11 @@
         "constitution/**",
         "docs/**",
         "office/**",
-        "packages/**",
+        "packages/vfgrowth/**",
+        "packages/vfharness/**",
+        "packages/vfigos/**",
+        "packages/vfmedia/**",
+        "packages/vfops/**",
         "scripts/**"
       ],
       "triggered_by": [
@@ -679,10 +733,16 @@
         "constitution/**",
         "docs/**",
         "office/**",
-        "packages/**",
+        "packages/vfgrowth/**",
+        "packages/vfharness/**",
+        "packages/vfigos/**",
+        "packages/vfmedia/**",
+        "packages/vfops/**",
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/sensor_isolation.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -701,14 +761,18 @@
         ".cursor/**",
         "constitution/**",
         "office/**",
-        "packages/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfops/**",
         "scripts/**"
       ],
       "triggered_by": [
         ".cursor/**",
         "constitution/**",
         "office/**",
-        "packages/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfops/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -758,17 +822,32 @@
         ".cursor/**",
         "AGENTS.md",
         "constitution/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfbriefux/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfsales/**",
         "scripts/**"
       ],
       "triggered_by": [
         ".cursor/**",
         "AGENTS.md",
         "constitution/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfbriefux/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfsales/**",
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/sensor_isolation.py",
+        "scripts/vf_organic_growth.py"
+      ],
       "enforces": [
         "instagram.publish",
         "advertising.boost",
@@ -791,14 +870,18 @@
         "AGENTS.md",
         "README.md",
         "docs/**",
-        "packages/**",
+        "packages/README.md",
+        "packages/manifest.json",
+        "packages/vfmem/**",
         "scripts/**"
       ],
       "triggered_by": [
         "AGENTS.md",
         "README.md",
         "docs/**",
-        "packages/**",
+        "packages/README.md",
+        "packages/manifest.json",
+        "packages/vfmem/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -818,12 +901,14 @@
       "path": "scripts/check-policy-architecture.py",
       "owns": [
         "instances/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
         "scripts/**"
       ],
       "triggered_by": [
         "instances/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -843,15 +928,19 @@
       "path": "scripts/check-production-content.py",
       "owns": [
         "office/**",
-        "packages/**",
+        "packages/vfgrowth/**",
+        "packages/vfprod/**",
         "scripts/**"
       ],
       "triggered_by": [
         "office/**",
-        "packages/**",
+        "packages/vfgrowth/**",
+        "packages/vfprod/**",
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/vf_control_plane.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -872,7 +961,11 @@
       "triggered_by": [
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/vf_project_bundle.py",
+        "scripts/vf_project_preflight.py",
+        "scripts/vf_publication_evidence.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -899,7 +992,10 @@
         "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/vf_project_preflight.py",
+        "scripts/vf_publication_evidence.py"
+      ],
       "enforces": [
         "project.request.preflight"
       ],
@@ -922,7 +1018,9 @@
       "triggered_by": [
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/vf_project669_publication.py"
+      ],
       "enforces": [
         "instagram.publish"
       ],
@@ -943,13 +1041,15 @@
         ".cursor/**",
         "constitution/**",
         "instances/**",
-        "packages/**"
+        "packages/velvetos/**",
+        "packages/vfigos/**"
       ],
       "triggered_by": [
         ".cursor/**",
         "constitution/**",
         "instances/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
         "scripts/check-public-cta.py"
       ],
       "depends_on": [],
@@ -976,7 +1076,15 @@
       "triggered_by": [
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/vf_media_integrity.py",
+        "scripts/vf_media_limits.py",
+        "scripts/vf_project_preflight.py",
+        "scripts/vf_publication_evidence.py",
+        "scripts/vf_publish_bridge.py",
+        "scripts/vf_publish_handoff.py",
+        "scripts/vf_send_preflight.py"
+      ],
       "enforces": [
         "instagram.publish"
       ],
@@ -1038,10 +1146,10 @@
       "id": "check-publication-states",
       "path": "scripts/check-publication-states.py",
       "owns": [
-        "packages/**"
+        "packages/vfigos/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfigos/**",
         "scripts/check-publication-states.py"
       ],
       "depends_on": [],
@@ -1062,13 +1170,13 @@
       "owns": [
         ".github/**",
         "instances/**",
-        "packages/**",
+        "packages/vfigos/**",
         "scripts/**"
       ],
       "triggered_by": [
         ".github/**",
         "instances/**",
-        "packages/**",
+        "packages/vfigos/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -1087,10 +1195,10 @@
       "id": "check-publish-fingerprint",
       "path": "scripts/check-publish-fingerprint.py",
       "owns": [
-        "packages/**"
+        "packages/vfigos/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfigos/**",
         "scripts/check-publish-fingerprint.py"
       ],
       "depends_on": [],
@@ -1114,7 +1222,10 @@
       "triggered_by": [
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/vf_publish_bridge.py",
+        "scripts/vf_publish_handoff.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -1133,10 +1244,11 @@
         "scripts/readme_contract.py"
       ],
       "triggered_by": [
-        "scripts/check-readme-contract.py",
+        "scripts/check-readme-contract.py"
+      ],
+      "depends_on": [
         "scripts/readme_contract.py"
       ],
-      "depends_on": [],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -1176,13 +1288,15 @@
       "owns": [
         "constitution/**",
         "office/**",
-        "packages/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
         "scripts/**"
       ],
       "triggered_by": [
         "constitution/**",
         "office/**",
-        "packages/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -1206,11 +1320,19 @@
       "path": "scripts/check-runtime-activation.py",
       "owns": [
         "office/**",
-        "packages/**"
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfmedia/**",
+        "packages/vfom/**",
+        "packages/vfops/**"
       ],
       "triggered_by": [
         "office/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfmedia/**",
+        "packages/vfom/**",
+        "packages/vfops/**",
         "scripts/check-runtime-activation.py"
       ],
       "depends_on": [],
@@ -1231,13 +1353,15 @@
       "owns": [
         ".github/**",
         "office/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfresearch/**",
         "scripts/**"
       ],
       "triggered_by": [
         ".github/**",
         "office/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfresearch/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -1363,12 +1487,16 @@
       "path": "scripts/check-social-intelligence.py",
       "owns": [
         ".cursor/**",
-        "packages/**",
+        "packages/vfinsights/**",
+        "packages/vfom/**",
+        "packages/vfresearch/**",
         "scripts/**"
       ],
       "triggered_by": [
         ".cursor/**",
-        "packages/**",
+        "packages/vfinsights/**",
+        "packages/vfom/**",
+        "packages/vfresearch/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -1463,11 +1591,13 @@
       "id": "check-speech-layer",
       "path": "scripts/check-speech-layer.py",
       "owns": [
-        "packages/**",
+        "packages/vfmcp/**",
+        "packages/vfom/**",
         "scripts/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfmcp/**",
+        "packages/vfom/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -1486,10 +1616,16 @@
       "id": "check-staleness",
       "path": "scripts/check-staleness.py",
       "owns": [
-        "packages/**"
+        "packages/vfe2b/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "packages/vfresearch/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfe2b/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "packages/vfresearch/**",
         "scripts/check-staleness.py"
       ],
       "depends_on": [],
@@ -1509,11 +1645,15 @@
       "path": "scripts/check-tool-authority.py",
       "owns": [
         "automation/**",
-        "packages/**"
+        "packages/velvetos/**",
+        "packages/vfbriefux/**",
+        "packages/vfigos/**"
       ],
       "triggered_by": [
         "automation/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfbriefux/**",
+        "packages/vfigos/**",
         "scripts/check-tool-authority.py"
       ],
       "depends_on": [],
@@ -1559,7 +1699,10 @@
         "constitution/**",
         "docs/**",
         "instances/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfbiz/**",
+        "packages/vfsales/**",
         "scripts/**"
       ],
       "triggered_by": [
@@ -1569,7 +1712,10 @@
         "constitution/**",
         "docs/**",
         "instances/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfbiz/**",
+        "packages/vfsales/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -1589,12 +1735,12 @@
       "path": "scripts/check-vf-autonomy.py",
       "owns": [
         "office/**",
-        "packages/**",
+        "packages/velvetos/**",
         "scripts/**"
       ],
       "triggered_by": [
         "office/**",
-        "packages/**",
+        "packages/velvetos/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -1613,11 +1759,11 @@
       "id": "check-vf-cad-integration",
       "path": "scripts/check-vf-cad-integration.py",
       "owns": [
-        "packages/**",
+        "packages/vfprod/**",
         "scripts/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfprod/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -1638,12 +1784,12 @@
       "owns": [
         ".cursor/**",
         "constitution/**",
-        "packages/**"
+        "packages/manifest.json"
       ],
       "triggered_by": [
         ".cursor/**",
         "constitution/**",
-        "packages/**",
+        "packages/manifest.json",
         "scripts/check-vf-desk.py"
       ],
       "depends_on": [],
@@ -1666,14 +1812,18 @@
       "owns": [
         ".agents/**",
         ".grok/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfprod/**",
         "scripts/**",
         "skills-lock.json"
       ],
       "triggered_by": [
         ".agents/**",
         ".grok/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfprod/**",
         "scripts/**",
         "skills-lock.json"
       ],
@@ -1693,10 +1843,10 @@
       "id": "check-vf-handoff",
       "path": "scripts/check-vf-handoff.py",
       "owns": [
-        "packages/**"
+        "packages/vfharness/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfharness/**",
         "scripts/check-vf-handoff.py"
       ],
       "depends_on": [],
@@ -1715,10 +1865,28 @@
       "id": "check-vf-offering",
       "path": "scripts/check-vf-offering.py",
       "owns": [
-        "packages/**"
+        "packages/velvetos/**",
+        "packages/vfbiz/**",
+        "packages/vfconvert/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfom/**",
+        "packages/vfops/**",
+        "packages/vfsales/**",
+        "packages/vfsku/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfbiz/**",
+        "packages/vfconvert/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfigos/**",
+        "packages/vfom/**",
+        "packages/vfops/**",
+        "packages/vfsales/**",
+        "packages/vfsku/**",
         "scripts/check-vf-offering.py"
       ],
       "depends_on": [],
@@ -1739,16 +1907,23 @@
       "owns": [
         "docs/**",
         "office/**",
-        "packages/**",
+        "packages/vfbooks/**",
+        "packages/vfconvert/**",
+        "packages/vfprod/**",
         "scripts/**"
       ],
       "triggered_by": [
         "docs/**",
         "office/**",
-        "packages/**",
+        "packages/vfbooks/**",
+        "packages/vfconvert/**",
+        "packages/vfprod/**",
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/vf_jobs_adapter.py",
+        "scripts/vf_office.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -1767,10 +1942,11 @@
         "scripts/vf_task_state.py"
       ],
       "triggered_by": [
-        "scripts/check-vf-task-state.py",
+        "scripts/check-vf-task-state.py"
+      ],
+      "depends_on": [
         "scripts/vf_task_state.py"
       ],
-      "depends_on": [],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -1786,10 +1962,12 @@
       "id": "check-vfagents",
       "path": "scripts/check-vfagents.py",
       "owns": [
-        "packages/**"
+        "packages/manifest.json",
+        "packages/vfagents/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfagents/**",
         "scripts/check-vfagents.py"
       ],
       "depends_on": [],
@@ -1833,12 +2011,16 @@
       "path": "scripts/check-vfcost.py",
       "owns": [
         "AGENTS.md",
-        "packages/**",
+        "packages/vfcost/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
         "scripts/**"
       ],
       "triggered_by": [
         "AGENTS.md",
-        "packages/**",
+        "packages/vfcost/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -1858,11 +2040,13 @@
       "path": "scripts/check-vfdsh.py",
       "owns": [
         "docs/**",
-        "packages/**"
+        "packages/manifest.json",
+        "packages/vfdsh/**"
       ],
       "triggered_by": [
         "docs/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfdsh/**",
         "scripts/check-vfdsh.py"
       ],
       "depends_on": [],
@@ -1883,12 +2067,16 @@
       "owns": [
         ".cursor/**",
         "docs/**",
-        "packages/**"
+        "packages/manifest.json",
+        "packages/vfconvert/**",
+        "packages/vfe2b/**"
       ],
       "triggered_by": [
         ".cursor/**",
         "docs/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfconvert/**",
+        "packages/vfe2b/**",
         "scripts/check-vfe2b.py"
       ],
       "depends_on": [],
@@ -1908,11 +2096,13 @@
       "path": "scripts/check-vffcc.py",
       "owns": [
         "docs/**",
-        "packages/**"
+        "packages/manifest.json",
+        "packages/vffcc/**"
       ],
       "triggered_by": [
         "docs/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vffcc/**",
         "scripts/check-vffcc.py"
       ],
       "depends_on": [],
@@ -1932,11 +2122,13 @@
       "path": "scripts/check-vfgraft.py",
       "owns": [
         ".cursor/rules/velvet-factory-desk.mdc",
-        "packages/**"
+        "packages/manifest.json",
+        "packages/vfgraft/**"
       ],
       "triggered_by": [
         ".cursor/rules/velvet-factory-desk.mdc",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfgraft/**",
         "scripts/check-vfgraft.py"
       ],
       "depends_on": [],
@@ -1958,13 +2150,15 @@
         "AGENTS.md",
         "constitution/**",
         "instances/**",
-        "packages/**"
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**"
       ],
       "triggered_by": [
         "AGENTS.md",
         "constitution/**",
         "instances/**",
-        "packages/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
         "scripts/check-vfgrowth.py"
       ],
       "depends_on": [],
@@ -1987,14 +2181,18 @@
         "constitution/**",
         "docs/FAILOVER.md",
         "docs/GROK-FAILOVER.md",
-        "packages/**"
+        "packages/manifest.json",
+        "packages/vfharness/**",
+        "packages/vfigos/**"
       ],
       "triggered_by": [
         "AGENTS.md",
         "constitution/**",
         "docs/FAILOVER.md",
         "docs/GROK-FAILOVER.md",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfharness/**",
+        "packages/vfigos/**",
         "scripts/check-vfharness.py"
       ],
       "depends_on": [],
@@ -2013,10 +2211,10 @@
       "id": "check-vfharness-execution-discipline",
       "path": "scripts/check-vfharness-execution-discipline.py",
       "owns": [
-        "packages/**"
+        "packages/vfharness/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfharness/**",
         "scripts/check-vfharness-execution-discipline.py"
       ],
       "depends_on": [],
@@ -2035,10 +2233,20 @@
       "id": "check-vfmakers",
       "path": "scripts/check-vfmakers.py",
       "owns": [
-        "packages/**"
+        "packages/manifest.json",
+        "packages/vfbiz/**",
+        "packages/vfbooks/**",
+        "packages/vfgrowth/**",
+        "packages/vfmakers/**",
+        "packages/vfops/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfbiz/**",
+        "packages/vfbooks/**",
+        "packages/vfgrowth/**",
+        "packages/vfmakers/**",
+        "packages/vfops/**",
         "scripts/check-vfmakers.py"
       ],
       "depends_on": [],
@@ -2061,7 +2269,11 @@
         ".github/**",
         "constitution/**",
         "docs/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfbooks/**",
+        "packages/vfigos/**",
+        "packages/vfmcp/**",
+        "packages/vfprod/**",
         "scripts/**"
       ],
       "triggered_by": [
@@ -2069,10 +2281,17 @@
         ".github/**",
         "constitution/**",
         "docs/**",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfbooks/**",
+        "packages/vfigos/**",
+        "packages/vfmcp/**",
+        "packages/vfprod/**",
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/vf_chatgpt.py",
+        "scripts/vf_gemini.py"
+      ],
       "enforces": [
         "customer.whatsapp.send"
       ],
@@ -2094,7 +2313,12 @@
         ".github/**",
         "AGENTS.md",
         "docs/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "packages/vfmedia/**",
+        "packages/vfmem/**",
+        "packages/vfops/**",
         "scripts/**"
       ],
       "triggered_by": [
@@ -2102,7 +2326,12 @@
         ".github/**",
         "AGENTS.md",
         "docs/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "packages/vfmedia/**",
+        "packages/vfmem/**",
+        "packages/vfops/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -2121,14 +2350,18 @@
       "id": "check-vfmem",
       "path": "scripts/check-vfmem.py",
       "owns": [
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfmem/**",
         "scripts/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfmem/**",
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/vfmem.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -2146,12 +2379,14 @@
       "owns": [
         ".agents/**",
         ".cursor/**",
-        "packages/**"
+        "packages/manifest.json",
+        "packages/vfmskill/**"
       ],
       "triggered_by": [
         ".agents/**",
         ".cursor/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfmskill/**",
         "scripts/check-vfmskill.py"
       ],
       "depends_on": [],
@@ -2170,10 +2405,12 @@
       "id": "check-vfom",
       "path": "scripts/check-vfom.py",
       "owns": [
-        "packages/**"
+        "packages/manifest.json",
+        "packages/vfom/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfom/**",
         "scripts/check-vfom.py"
       ],
       "depends_on": [],
@@ -2195,17 +2432,36 @@
         "AGENTS.md",
         "constitution/**",
         "docs/**",
-        "packages/**",
+        "packages/vfbiz/**",
+        "packages/vfbooks/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfmem/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfresearch/**",
         "scripts/**"
       ],
       "triggered_by": [
         "AGENTS.md",
         "constitution/**",
         "docs/**",
-        "packages/**",
+        "packages/vfbiz/**",
+        "packages/vfbooks/**",
+        "packages/vfcopy/**",
+        "packages/vfgrowth/**",
+        "packages/vfinsights/**",
+        "packages/vfmem/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfresearch/**",
         "scripts/**"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "scripts/sensor_isolation.py",
+        "scripts/vfops_loop.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -2222,12 +2478,18 @@
       "path": "scripts/check-vfprod.py",
       "owns": [
         "AGENTS.md",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
         "scripts/**"
       ],
       "triggered_by": [
         "AGENTS.md",
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfharness/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -2249,14 +2511,18 @@
         ".cursor/**",
         ".github/**",
         "constitution/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfops/**",
+        "packages/vfresearch/**",
         "scripts/**"
       ],
       "triggered_by": [
         ".cursor/**",
         ".github/**",
         "constitution/**",
-        "packages/**",
+        "packages/manifest.json",
+        "packages/vfops/**",
+        "packages/vfresearch/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -2275,11 +2541,19 @@
       "id": "check-vfsku",
       "path": "scripts/check-vfsku.py",
       "owns": [
-        "packages/**",
+        "packages/vfconvert/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfsku/**",
+        "packages/vlicense/**",
         "scripts/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfconvert/**",
+        "packages/vfops/**",
+        "packages/vfprod/**",
+        "packages/vfsku/**",
+        "packages/vlicense/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -2301,10 +2575,11 @@
         "scripts/vf_video_normalization.py"
       ],
       "triggered_by": [
-        "scripts/check-video-normalization.py",
+        "scripts/check-video-normalization.py"
+      ],
+      "depends_on": [
         "scripts/vf_video_normalization.py"
       ],
-      "depends_on": [],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -2320,11 +2595,11 @@
       "id": "check-video-toolchain",
       "path": "scripts/check-video-toolchain.py",
       "owns": [
-        "packages/**",
+        "packages/vfom/**",
         "scripts/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/vfom/**",
         "scripts/**"
       ],
       "depends_on": [],
@@ -2403,7 +2678,9 @@
         "instances/**",
         "scripts/check-visual-reject-identity.py"
       ],
-      "depends_on": [],
+      "depends_on": [
+        "instances/velvet-factory/scripts/check-instance-visual-bootstrap.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -2442,12 +2719,14 @@
       "path": "scripts/check-visual-surface-enforcement.py",
       "owns": [
         "instances/velvet-factory/**",
-        "packages/**",
+        "packages/vfgrowth/**",
+        "packages/vfom/**",
         "scripts/vf_send_preflight.py"
       ],
       "triggered_by": [
         "instances/velvet-factory/**",
-        "packages/**",
+        "packages/vfgrowth/**",
+        "packages/vfom/**",
         "scripts/check-visual-surface-enforcement.py",
         "scripts/vf_send_preflight.py"
       ],
@@ -2467,10 +2746,18 @@
       "id": "check-windows-path-contract",
       "path": "scripts/check-windows-path-contract.py",
       "owns": [
-        "packages/**"
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "packages/vfmcp/**",
+        "packages/vfmem/**",
+        "packages/vfom/**"
       ],
       "triggered_by": [
-        "packages/**",
+        "packages/velvetos/**",
+        "packages/vfigos/**",
+        "packages/vfmcp/**",
+        "packages/vfmem/**",
+        "packages/vfom/**",
         "scripts/check-windows-path-contract.py"
       ],
       "depends_on": [],

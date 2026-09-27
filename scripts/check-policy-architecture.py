@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 POLICY_DIR = ROOT / "packages" / "velvetos" / "policy"
 POLICIES = POLICY_DIR / "policy-registry.json"
 SENSORS = POLICY_DIR / "sensor-registry.json"
+SELECTION = POLICY_DIR / "sensor-selection.json"
 ARTIFACTS = POLICY_DIR / "artifact-retention.json"
 SCHEMAS = POLICY_DIR / "schema"
 REPORTS = POLICY_DIR / "reports"
@@ -69,6 +70,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
     problems: list[str] = []
     policies = load(POLICIES)
     sensors = load(SENSORS)
+    selection = load(SELECTION)
     artifacts = load(ARTIFACTS)
 
     require(policies.get("schema_version") == 1, "policy registry schema_version", problems)
@@ -137,6 +139,15 @@ def validate_registries() -> tuple[list[str], set[str]]:
         require(isinstance(row.get("owns"), list) and bool(row.get("owns")), f"{sid}: owns required", problems)
         require(isinstance(row.get("triggered_by"), list) and bool(row.get("triggered_by")), f"{sid}: triggered_by required", problems)
         require(isinstance(row.get("depends_on"), list), f"{sid}: depends_on must be list", problems)
+        if isinstance(row.get("depends_on"), list):
+            overlap = set(row.get("triggered_by") or []) & set(row.get("depends_on") or [])
+            require(not overlap, f"{sid}: triggered_by/depends_on must be semantically separated: {sorted(overlap)}", problems)
+            for dep in row.get("depends_on") or []:
+                require(
+                    dep in sensor_id_set or existing_repo_path(dep),
+                    f"{sid}: dependency must be an existing repo path or sensor id: {dep}",
+                    problems,
+                )
         require(isinstance(row.get("enforces"), list), f"{sid}: enforces must be list", problems)
         for policy_id in row.get("enforces") or []:
             require(policy_id in known_policies, f"{sid}: unknown enforced policy {policy_id}", problems)
@@ -168,6 +179,45 @@ def validate_registries() -> tuple[list[str], set[str]]:
         require(row.get("risk") == "critical", f"{sid}: ALWAYS_ON sensor must be critical", problems)
         require(row.get("mapping_state") == "mapped", f"{sid}: ALWAYS_ON sensor must be mapped", problems)
         require(type(row.get("timeout_seconds")) is int and row.get("timeout_seconds") <= 180, f"{sid}: ALWAYS_ON timeout must stay fast", problems)
+
+    require(selection.get("schema_version") == 1, "sensor selection schema_version", problems)
+    require(selection.get("mode") == "shadow", "Stage 2 selector must remain shadow", problems)
+    require(selection.get("registry") == "packages/velvetos/policy/sensor-registry.json", "selector registry binding mismatch", problems)
+    require(selection.get("unknown_path_behavior") == "FULL_SUITE", "unknown selector paths must fail broad", problems)
+    require(selection.get("broad_change_behavior") == "FULL_SUITE", "broad selector changes must run full suite", problems)
+    broad_patterns = selection.get("broad_change_patterns")
+    require(isinstance(broad_patterns, list) and bool(broad_patterns), "selector broad_change_patterns required", problems)
+    required_broad = {
+        ".github/workflows/check-all.yml",
+        "packages/velvetos/policy/sensor-registry.json",
+        "packages/velvetos/policy/sensor-selection.json",
+        "packages/velvetos/policy/schema/**",
+        "scripts/check-all.py",
+        "scripts/check-policy-architecture.py",
+        "scripts/sensor_selector.py",
+        "scripts/compare-sensor-shadow.py",
+    }
+    require(required_broad <= set(broad_patterns or []), "selector broad-change safety set incomplete", problems)
+    shadow_exit = selection.get("shadow_exit") or {}
+    require(type(shadow_exit.get("minimum_pull_requests")) is int and shadow_exit.get("minimum_pull_requests") >= 1, "shadow minimum_pull_requests invalid", problems)
+    require(type(shadow_exit.get("minimum_observation_days")) is int and shadow_exit.get("minimum_observation_days") >= 1, "shadow minimum_observation_days invalid", problems)
+    require(shadow_exit.get("maximum_critical_misses") == 0, "shadow critical miss budget must be zero", problems)
+    require(shadow_exit.get("rollback_mode") == "FULL_SUITE_REQUIRED", "shadow rollback must be FULL_SUITE_REQUIRED", problems)
+    for rel in ("scripts/sensor_selector.py", "scripts/compare-sensor-shadow.py"):
+        require(existing_repo_path(rel), f"Stage 2 shadow component missing: {rel}", problems)
+    for shadow_rel in ("scripts/sensor_selector.py", "scripts/compare-sensor-shadow.py"):
+        shadow_harness = ROOT / shadow_rel
+        if shadow_harness.is_file():
+            proc = subprocess.run(
+                [sys.executable, str(shadow_harness), "--self-test"],
+                cwd=ROOT,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                capture_output=True,
+                timeout=30,
+            )
+            require(proc.returncode == 0, "sensor shadow selftest failed " + shadow_rel + ": " + (proc.stderr or proc.stdout).strip()[:500], problems)
 
     for row in rows:
         for item in row.get("enforced_by") or []:
@@ -207,6 +257,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
     expected_schemas = {
         "policy-registry.schema.json",
         "sensor-registry.schema.json",
+        "sensor-selection.schema.json",
         "artifact-retention.schema.json",
         "instagram-publish.schema.json",
         "instagram-publish-context.schema.json",

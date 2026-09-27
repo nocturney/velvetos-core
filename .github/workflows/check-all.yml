@@ -26,6 +26,16 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y ffmpeg
 
+      - name: Sensor selector shadow
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        run: >-
+          python3 scripts/sensor_selector.py
+          --base "${{ github.event.pull_request.base.sha }}"
+          --head "${{ github.event.pull_request.head.sha }}"
+          --output sensor-shadow-selection.json
+          --summary "$GITHUB_STEP_SUMMARY"
+
       - name: Policy registry integrity and creation freeze
         if: github.event_name == 'pull_request'
         run: >-
@@ -56,7 +66,21 @@ jobs:
 
       - name: Run all VelvetOS sensors
         if: ${{ !cancelled() }}
-        run: python3 scripts/check-all.py
+        run: python3 scripts/check-all.py --json-out sensor-full-results.json
+
+      - name: Compare sensor selector shadow with full suite
+        if: ${{ always() && github.event_name == 'pull_request' }}
+        continue-on-error: true
+        run: |
+          if [ -f sensor-shadow-selection.json ] && [ -f sensor-full-results.json ]; then
+            python3 scripts/compare-sensor-shadow.py \
+              --selection sensor-shadow-selection.json \
+              --full-results sensor-full-results.json \
+              --output sensor-shadow-comparison.json \
+              --summary "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::Sensor shadow comparison incomplete; full suite remains authoritative."
+          fi
 
       - name: Commission isolation (non-mutating SoT checksum)
         if: ${{ !cancelled() }}
