@@ -13,9 +13,10 @@
     "Recorded GlitchTip v6.2.6 as BLOCKED pending a later local PostgreSQL/container environment; hosted fallback forbidden",
     "Embedded Ponytail minimum-safe-change rules and gstack safe patterns without installing another runtime",
     "Installed pinned Impeccable locally for Web/UI only with hooks/init/creative-post integration disabled and passed isolated doctor smoke",
-    "Installed pinned diagram-design locally with VelvetOS/Velvet Factory documentation profiles and passed upstream HTML self-check"
+    "Installed pinned diagram-design locally with VelvetOS/Velvet Factory documentation profiles and passed upstream HTML self-check",
+    "Completed CLI-Anything Phase 5 pilot: FreeCAD harness 101 PASS/11 expected SKIP with stable JSON/failure semantics; 3MF harness 122 PASS/4 FAIL on Python 3.14 and 3.12; no promotion and no duplicate Orca harness"
   ],
-  "next_step": "Pilot Phase 5 CLI-Anything against existing 3MF/FreeCAD capability if available; keep it an adapter, not runtime authority",
+  "next_step": "Implement Phase 6 Laya as a local SHADOW-only decision helper with Hebrew-heavy labeled evaluation; VelvetOS remains authorization authority",
   "artifacts": [
     "docs/implementation/velvetos-zero-cost-agent-stack.md",
     "packages/vfharness/reliability/components.json",
@@ -29,7 +30,9 @@
     "scripts/setup-engineering-quality.py",
     "scripts/check-engineering-quality.py",
     ".cursor/skills/vf-web-ui-quality/SKILL.md",
-    ".cursor/skills/vf-diagram-design/SKILL.md"
+    ".cursor/skills/vf-diagram-design/SKILL.md",
+    "packages/vfharness/cost-preflight/cli-anything-34f5195.json",
+    "packages/vfharness/state/cli-anything-pilot-2026-09-27.json"
   ],
   "unresolved": [
     "Full check-all baseline was interrupted by Remote MCP session; final acceptance must run sensors in resilient batches",
@@ -39,7 +42,7 @@
     "WSL2 is not installed; defer one human reboot/UAC batch until Linux-first labs are reached"
   ],
   "pulse": "working",
-  "verification": "Phases 1-3 prior gates PASS in declared scope; Phase4 strict engineering-quality PASS; Impeccable isolated doctor PASS/no writes; diagram-design self_check PASS; Phase4 cost preflights PASS; recurring cost=0",
+  "verification": "Phases 1-4 gates PASS in declared scope; Phase5 CLI-Anything cost preflight PASS, vf_cad doctor PASS, FreeCAD harness 101 PASS/11 expected SKIP and stable JSON reads, 3MF harness 122 PASS/4 FAIL on Python 3.14 and 3.12 so NOT_PROMOTED; recurring cost=0",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-27"

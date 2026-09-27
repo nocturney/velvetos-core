@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-4 implemented and locally verified within their declared scope; GlitchTip remains explicitly blocked. Phase 5 CLI-Anything pilot is next.
+Phases 0-4 implemented and locally verified within their declared scope; Phase 5 CLI-Anything pilot completed without promotion; GlitchTip remains explicitly blocked. Phase 6 Laya shadow evaluation is next.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -55,9 +55,17 @@ Phases 0-4 implemented and locally verified within their declared scope; GlitchT
 - `scripts/check-engineering-quality.py --strict`: PASS. Remove → offline sensors → reinstall → strict rollback drill: PASS, including a Windows read-only Git-pack fix in the uninstaller. All four Phase 4 Cost Preflights: FREE_LOCAL/PASS. Incremental recurring cost: 0 ILS.
 - Phase 4 receipt: `packages/vfharness/state/engineering-quality-phase4-2026-09-27.json`.
 
+## Phase 5 CLI-Anything outcome
+- Canonical CLI-Anything source pinned at `34f519533bc175d2fe287ab8316b0dd99bb9cc43`; local isolated pilot only, no global plugin/CLI-Hub and no new authority. Cost Preflight: FREE_LOCAL/PASS.
+- Existing baseline stayed authoritative: `python scripts/vf_cad.py doctor` PASS with cadgen 0.6.6, text-to-cad `4eaf7459...`, OrcaSlicer 2.4.2 and five printer profiles; all printer-network/start/heating/motion controls false.
+- FreeCAD harness 1.0.0: 101 PASS / 11 expected SKIP with target FreeCAD absent. JSON create/add/list flows worked; repeated read output was byte-identical and did not mutate the project. Missing-backend export failed with JSON error + exit 1 and no partial artifact. Clean tests exposed an undeclared Pillow test dependency.
+- 3MF harness 1.0.0: BLOCKED for promotion. Current pinned source produced 122 PASS / 4 FAIL on both Python 3.14 and 3.12; failures are concentrated in hole detection/resize. Root repository license metadata says Apache-2.0 while the 3MF subpackage declares MIT, so redistribution provenance also needs clarification.
+- CLI-Anything upstream explicitly has no OrcaSlicer/Bambu Studio harness-level wrapper; no duplicate Orca harness was invented because the existing `vf_cad` bridge is already Windows-host verified.
+- Decision: PILOT_ONLY / NOT_PROMOTED. Retest after upstream 3MF tests are green or if a real FreeCAD installation need emerges. Receipt: `packages/vfharness/state/cli-anything-pilot-2026-09-27.json`.
+
 ## Pending
-- Phase 5: CLI-Anything local agent-native tooling pilot, beginning with existing 3MF/FreeCAD capability if present.
-- Phase 6+: Laya shadow, memory benchmark, Reef lab, additional dev labs, ecosystem radar and final acceptance.
+- Phase 6: Laya local System-1 decision layer in SHADOW mode only; Hebrew-heavy labeled dataset, routing/action/escalation classification, calibration and failure analysis.
+- Phase 7+: memory benchmark, Reef lab, additional dev labs, ecosystem radar and final acceptance.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.
