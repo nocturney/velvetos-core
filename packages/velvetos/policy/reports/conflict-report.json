@@ -1,0 +1,51 @@
+{
+  "report": "policy-conflicts",
+  "source_commit_sha": "52bcb819c1a6d9924f0f2800340169df5f991e08",
+  "conflicts": [
+    {
+      "id": "instagram-publish-split-brain",
+      "policy_id": "instagram.publish",
+      "severity": "critical",
+      "status": "OPEN_FOR_STAGE_1",
+      "evidence": [
+        {
+          "path": "instances/velvet-factory/instance/velvet-factory.json",
+          "observation": "creativeAutonomy.publish.standingAuthorization is true"
+        },
+        {
+          "path": "constitution/ORGANIC_GROWTH.md",
+          "observation": "standing authorization can transition to authorized_for_tool_publish after gates"
+        },
+        {
+          "path": "AGENTS.md",
+          "observation": "Organic Growth summary still says Approve -> approved_for_manual_posting only"
+        },
+        {
+          "path": "scripts/vf_organic_growth.py",
+          "observation": "legacy state machine exposes approved_for_manual_posting path"
+        },
+        {
+          "path": "scripts/vf_autonomy.py",
+          "observation": "runtime classification reads standingAuthorization and can authorize tool publication"
+        }
+      ],
+      "stage0_decision": "RECORD_ONLY_DO_NOT_RESOLVE"
+    },
+    {
+      "id": "commission-isolation-double-run",
+      "severity": "medium",
+      "status": "OPEN_FOR_STAGE_3",
+      "evidence": [
+        {
+          "path": "scripts/check-all.py",
+          "observation": "discovers and runs check-commission-isolation.py"
+        },
+        {
+          "path": ".github/workflows/check-all.yml",
+          "observation": "also runs check-commission-isolation.py as a separate CI step"
+        }
+      ],
+      "stage0_decision": "RECORD_ONLY_DO_NOT_CHANGE_CI_BEHAVIOR"
+    }
+  ]
+}

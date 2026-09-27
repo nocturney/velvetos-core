@@ -74,6 +74,64 @@
       ],
       "migration_stage": "STAGE_7_REVIEW_ONLY",
       "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "creative-render-output",
+      "match": [
+        "packages/vfcovers/**/out/**",
+        "packages/vfcovers/**/slides/**"
+      ],
+      "classification": "GENERATED_CREATIVE_OUTPUT",
+      "current_storage": "GIT",
+      "target_storage": "ARTIFACT_STORE_OR_MEDIA_VAULT",
+      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "policy_refs": [
+        "instagram.publish"
+      ],
+      "migration_stage": "STAGE_7",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "approved-visual-reference",
+      "match": [
+        "packages/vfom/reference/**"
+      ],
+      "classification": "CANONICAL_REFERENCE_ASSET",
+      "current_storage": "GIT",
+      "target_storage": "GIT_OR_VERSIONED_MEDIA_VAULT",
+      "retention_class": "DURABLE_REFERENCE",
+      "policy_refs": [
+        "instagram.publish"
+      ],
+      "migration_stage": "STAGE_7_REVIEW_ONLY",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "vfmedia-operational-data",
+      "match": [
+        "packages/vfmedia/data/**",
+        "packages/vfmedia/state/**"
+      ],
+      "classification": "OPERATIONAL_STATE_OR_EVENT_LOG",
+      "current_storage": "GIT",
+      "target_storage": "STATE_STORE",
+      "retention_class": "CLASSIFY_IN_STAGE_7",
+      "policy_refs": [],
+      "migration_stage": "STAGE_7",
+      "deletion_authorized": false
+    },
+    {
+      "artifact_class_id": "research-evidence",
+      "match": [
+        "packages/vfresearch/sources/**"
+      ],
+      "classification": "RESEARCH_EVIDENCE",
+      "current_storage": "GIT",
+      "target_storage": "GIT_WHEN_COMPACT",
+      "retention_class": "DURABLE_WHEN_CITED",
+      "policy_refs": [],
+      "migration_stage": "STAGE_7_REVIEW_ONLY",
+      "deletion_authorized": false
     }
   ]
 }

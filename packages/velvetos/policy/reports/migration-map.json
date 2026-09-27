@@ -1,0 +1,97 @@
+{
+  "report": "migration-and-rollback-map",
+  "source_commit_sha": "9217e172d4f11a01f5db124d7d811c7dcab6b9c5",
+  "stages": [
+    {
+      "stage": 1,
+      "name": "instagram-publish-canonicalization",
+      "policy_ids": [
+        "instagram.publish"
+      ],
+      "pr_shape": "SMALL_REVERSIBLE_SERIES",
+      "entry_requirement": "previous stage gate PASS",
+      "rollback": "Restore prior publication authorities/runtime choke-point wiring; keep exact preflight and receipt verification fail-closed."
+    },
+    {
+      "stage": 2,
+      "name": "sensor-shadow-selection",
+      "policy_ids": [],
+      "pr_shape": "SMALL_REVERSIBLE_SERIES",
+      "entry_requirement": "previous stage gate PASS",
+      "rollback": "Disable selector and run FULL_SUITE; registry remains metadata only."
+    },
+    {
+      "stage": 3,
+      "name": "required-fast-and-affected-ci",
+      "policy_ids": [],
+      "pr_shape": "SMALL_REVERSIBLE_SERIES",
+      "entry_requirement": "previous stage gate PASS",
+      "rollback": "Revert workflow/ruleset activation; affected selector can fall back to FULL_SUITE."
+    },
+    {
+      "stage": 4,
+      "name": "critical-external-effect-framework",
+      "policy_ids": [
+        "gmail.send",
+        "customer.whatsapp.send",
+        "advertising.boost",
+        "external.irreversible.delete",
+        "cost.recurring.new"
+      ],
+      "pr_shape": "SMALL_REVERSIBLE_SERIES",
+      "entry_requirement": "previous stage gate PASS",
+      "rollback": "Return callers to existing channel-specific gates; keep policy registry references."
+    },
+    {
+      "stage": 5,
+      "name": "agents-locality",
+      "policy_ids": [],
+      "pr_shape": "SMALL_REVERSIBLE_SERIES",
+      "entry_requirement": "previous stage gate PASS",
+      "rollback": "Restore moved guide lines from git history if locality change breaks routing; no business-state migration."
+    },
+    {
+      "stage": 6,
+      "name": "visible-text-and-readme-locality",
+      "policy_ids": [
+        "visible_text.finalization"
+      ],
+      "pr_shape": "SMALL_REVERSIBLE_SERIES",
+      "entry_requirement": "previous stage gate PASS",
+      "rollback": "Return to current global Visible Text + README gates while preserving exact artifact receipts."
+    },
+    {
+      "stage": 7,
+      "name": "operational-debt-and-retention",
+      "policy_ids": [
+        "cost.recurring.new"
+      ],
+      "pr_shape": "SMALL_REVERSIBLE_SERIES",
+      "entry_requirement": "previous stage gate PASS",
+      "rollback": "Stop movers/cleanup; retain Git artifacts and current schedules. No deletion is required for rollback."
+    },
+    {
+      "stage": 8,
+      "name": "core-instance-separation",
+      "policy_ids": [],
+      "pr_shape": "SMALL_REVERSIBLE_SERIES",
+      "entry_requirement": "previous stage gate PASS",
+      "rollback": "Keep compatibility reads/writes and revert callers to legacy locations; no big-bang cutover."
+    },
+    {
+      "stage": 9,
+      "name": "deprecation-and-acceptance",
+      "policy_ids": [],
+      "pr_shape": "SMALL_REVERSIBLE_SERIES",
+      "entry_requirement": "previous stage gate PASS",
+      "rollback": "Restore deprecated readers only if acceptance evidence fails; final deletion still requires explicit authorization."
+    }
+  ],
+  "global_rollback_rules": [
+    "No force push or history rewrite.",
+    "Preserve exact-action receipts and provider verification evidence.",
+    "Selection/affected CI must fail broad to FULL_SUITE on unknowns.",
+    "Artifact migration remains copy-first until verification; Stage 0 authorizes no deletion.",
+    "Policy semantics remain in current authority until the target stage explicitly migrates them."
+  ]
+}
