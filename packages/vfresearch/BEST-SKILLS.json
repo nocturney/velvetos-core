@@ -39,11 +39,11 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-24",
-  "dataDate": "2026-09-24",
-  "lastArtifact": "packages/vfresearch/sources/2026-09-24-best-skills.md",
-  "lastResult": "no-embed-existing-coverage",
-  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due pulse executed inside 2026-09-24 Research Seat; no separate automation created",
+  "lastPass": "2026-09-27",
+  "dataDate": "2026-09-25",
+  "lastArtifact": "packages/vfresearch/sources/2026-09-27-best-skills.md",
+  "lastResult": "no-additional-dev-lab-existing-coverage",
+  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: stale 48h pass executed during Phase 9 ecosystem radar on 2026-09-27; no separate automation created",
   "embedded": [
     {
       "id": "grill-me",

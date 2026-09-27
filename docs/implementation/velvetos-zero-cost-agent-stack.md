@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-8 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED after Windows compatibility testing. GlitchTip remains explicitly blocked and no Production authority has moved.
+Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. GlitchTip remains explicitly blocked and no Production authority has moved.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -95,8 +95,15 @@ Phases 0-8 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Decision: `LAB_ONLY_NOT_PROMOTED`. WSL2 is deferred: it would improve POSIX/bwrap compatibility, but installing it now would not unlock a useful zero-cost Reef evolution path without a local model endpoint. Any future WSL/UAC/reboot action should be aggregated with another justified Linux-only need such as a GlitchTip revisit. Incremental recurring cost remains **0 ILS** and all authority remains with VelvetOS.
 - Evidence: `packages/vfharness/state/reef-phase8-lab-2026-09-27.json`; sensor: `scripts/check-reef-phase8-lab.py`.
 
+## Phase 9 ecosystem-radar outcome
+- The standing Best Skills pass was stale, so the existing Velvet Research Seat performed the due pass without creating a second timer/scheduler. Latest observed source data was dated 2026-09-25; the 2026-09-27 artifact is `packages/vfresearch/sources/2026-09-27-best-skills.md`.
+- Current high-signal candidates did not expose a unique measured gap: agent-browser/browser-use overlaps existing browser QA and does not solve the isolation boundary; ui-taste overlaps Impeccable/anti-slop; improve-codebase-architecture/TDD overlaps existing architecture and regression gates; gh-cli-readonly-agent overlaps the existing GitHub connector/local-git evidence path.
+- Google Agents CLI and twitter automation remain policy/runtime skips. Media-generation movers belong to existing routed media paths rather than this agent-stack program. Ponytail, Matt Pocock/Anthropic skills and Caveman patterns are already embedded where useful.
+- Decision: `NO_ADDITIONAL_DEV_LAB_JUSTIFIED` / `INSTALL_NOTHING_NEW`. Research cadence is fresh again, no new scheduler or always-on service exists, and incremental recurring cost remains **0 ILS**.
+- Evidence: `packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json`; sensor: `scripts/check-ecosystem-radar-phase9.py`.
+
 ## Pending
-- Phase 9-11: evaluate additional dev labs only when they add unique value, then complete ecosystem radar and final acceptance with resilient targeted sensor batches.
+- Phase 10-11: final acceptance via resilient targeted sensor batches; do not substitute the previously interrupted monolithic `check-all.py` run.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.
