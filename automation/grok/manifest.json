@@ -56,7 +56,7 @@
       "title": "Velvet Research Seat",
       "cadence": "daily 02:00",
       "enabled": true,
-      "responsibility": "daily research and canonical artifact before 07:00 cutoff"
+      "responsibility": "daily research plus read-only upstream/toolchain watch; canonical artifacts before 07:00 cutoff; tool-update decisions go to a separate owner email, never the Morning Brief; never auto-upgrade"
     },
     {
       "id": "cognee-memory-sync",

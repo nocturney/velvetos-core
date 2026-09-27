@@ -23,7 +23,17 @@
     "existingCadence": "daily 02:00 Asia/Jerusalem",
     "newRoutine": false,
     "consumer": "velvetos-office-loop",
-    "report": "packages/vfresearch/sources/upstream-watch-latest.json"
+    "report": "packages/vfresearch/sources/upstream-watch-latest.json",
+    "decisionReview": "packages/vfresearch/sources/upstream-review-latest.json",
+    "ownerDelivery": {
+      "channel": "separate-email",
+      "includeInMorningBrief": false,
+      "renderCommand": "python3 scripts/vf_upstream_email.py render --arm --consume-notify",
+      "request": "packages/vfresearch/out/tool-updates-send-request.json",
+      "workflow": ".github/workflows/gmail-tool-updates-send.yml",
+      "sendWhen": "newDetection-or-review-notifyOwner",
+      "repeatUnchangedPending": false
+    }
   },
   "sources": [
     {

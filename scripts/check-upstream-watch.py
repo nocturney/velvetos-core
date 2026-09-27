@@ -165,9 +165,11 @@ def main() -> int:
         if needle not in research_text:
             fail(f"Research Seat daily contract missing upstream watch marker: {needle}")
     office_text = OFFICE_LOOP.read_text(encoding="utf-8")
-    for needle in ("UPSTREAM_REPORT", "upstream watch report stale", "research+upstreams verified"):
+    for needle in ("UPSTREAM_REPORT", "upstream watch report stale", "upstream monitor healthy (decisions delivered separately by email)"):
         if needle not in office_text:
             fail(f"Office Loop missing upstream report consumption marker: {needle}")
+    if "changed={changed}" in office_text or "pendingUpdates" in office_text:
+        fail("Office Loop must not expose update counts/decisions in Morning Brief")
     all_rows = list(grok.get("routines") or []) + list(grok.get("retiredRoutines") or [])
     if any(str(x.get("id") or "").casefold() == "openpost-release-watch" for x in all_rows):
         fail("OpenPost Release Watch must be deleted from scheduler authority")
