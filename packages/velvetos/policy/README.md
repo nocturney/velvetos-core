@@ -43,8 +43,8 @@ The deterministic Git-derived reports can be checked with:
 
 `ci-baseline.json` is an external GitHub Actions evidence snapshot. It carries its fixed cutoff and run IDs so individual runs can be re-read from GitHub without replacing the historical baseline with newer data.
 
-## Stage 1A — `instagram.publish` candidate policy
+## Stage 1 — `instagram.publish` canonical policy
 
-`instagram.publish.json` is the candidate machine-readable policy for organic Instagram publication. The single evaluator implementation is `instagram-publish-evaluator.mjs`; deterministic test vectors live in `instagram-publish-test-vectors.json`, and `scripts/vf_instagram_publish_policy.mjs` is the CLI bridge.
+`instagram.publish.json` owns the machine decision for organic Instagram publication. The single evaluator implementation is `instagram-publish-evaluator.mjs`; deterministic test vectors live in `instagram-publish-test-vectors.json`, and `scripts/vf_instagram_publish_policy.mjs` is the CLI bridge.
 
-Stage 1A does **not** claim runtime activation. The registry remains `status=conflicted` until a real publication runtime calls this evaluator at the mutation choke point and the prose authorities are reduced to projections/pointers. Legacy scheduled-job compatibility is explicit in the policy and bounded by job creation time; it is not a new bypass for jobs created after the migration cutoff.
+The Cloudflare publisher imports that evaluator through `src/policy_gate.js`. New jobs require `policy_authorization_v1`; the Worker derives exact content/package/caption/media bindings and standing authorization itself, evaluates before acceptance, then evaluates again after lease + HMAC verification and before `publishJob()`. The second decision receipt is written before any Meta Graph publish mutation. Legacy scheduled-job compatibility is explicit, bounded by job creation time, and only applies to stored jobs without the new policy context.

@@ -35,13 +35,17 @@
     },
     {
       "id": "no-standing-requires-owner",
-      "patch": {"standing_authorization": false},
+      "patch": {
+        "standing_authorization": false
+      },
       "expected_decision": "REQUIRE_OWNER_APPROVAL",
       "expected_reason": "OWNER_APPROVAL_REQUIRED"
     },
     {
       "id": "medium-standing-requires-owner",
-      "patch": {"risk_class": "MEDIUM"},
+      "patch": {
+        "risk_class": "MEDIUM"
+      },
       "expected_decision": "REQUIRE_OWNER_APPROVAL",
       "expected_reason": "RISK_EXCEEDS_STANDING_AUTHORIZATION"
     },
@@ -79,7 +83,9 @@
     {
       "id": "gate-failure-denies",
       "patch": {
-        "gates": {"exact_final_preflight": "FAIL"}
+        "gates": {
+          "exact_final_preflight": "FAIL"
+        }
       },
       "expected_decision": "DENY",
       "expected_reason": "GATE_NOT_PASS:exact_final_preflight"
@@ -87,7 +93,9 @@
     {
       "id": "boost-forbidden",
       "patch": {
-        "forbidden_effects": ["boost_ads"]
+        "forbidden_effects": [
+          "boost_ads"
+        ]
       },
       "expected_decision": "DENY",
       "expected_reason": "FORBIDDEN_EFFECT"
@@ -125,7 +133,8 @@
           "evidence": "legacy exact approval",
           "content_id": "G100",
           "package_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        },
+        "copy_sha256": null
       },
       "expected_decision": "ALLOW",
       "expected_reason": "LEGACY_COMPATIBILITY"
@@ -141,7 +150,8 @@
           "evidence": "legacy exact approval",
           "content_id": "G100",
           "package_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        }
+        },
+        "copy_sha256": null
       },
       "expected_decision": "DENY",
       "expected_reason": "LEGACY_AUTHORIZATION_INVALID_OR_EXPIRED"
@@ -149,20 +159,26 @@
     {
       "id": "product-truth-not-applicable",
       "patch": {
-        "gates": {"product_truth": "NOT_APPLICABLE"}
+        "gates": {
+          "product_truth": "NOT_APPLICABLE"
+        }
       },
       "expected_decision": "ALLOW",
       "expected_reason": "STANDING_AUTHORIZATION"
     },
     {
       "id": "wrong-channel-denies",
-      "patch": {"channel": "facebook"},
+      "patch": {
+        "channel": "facebook"
+      },
       "expected_decision": "DENY",
       "expected_reason": "SCOPE_MISMATCH"
     },
     {
       "id": "unknown-mutation-denies",
-      "patch": {"mutation_tool": "delete_comment"},
+      "patch": {
+        "mutation_tool": "delete_comment"
+      },
       "expected_decision": "DENY",
       "expected_reason": "MUTATION_TOOL_NOT_ALLOWED"
     }

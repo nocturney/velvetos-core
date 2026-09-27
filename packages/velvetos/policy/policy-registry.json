@@ -28,7 +28,7 @@
     {
       "policy_id": "instagram.publish",
       "title": "Instagram publication authorization",
-      "status": "conflicted",
+      "status": "active",
       "risk_class": "critical",
       "authority_locations": [
         "constitution/SEND.md",

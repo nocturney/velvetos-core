@@ -25,7 +25,7 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 4. Draft Reel for the **next CALENDAR.md 16:00 slot** (Sun/Tue only — no weekday-every-day reel).
 5. Draft Story poll for 20:30 Sun–Thu from `poll-library.json` (floor can actually run it).
 6. Put assets in `approval-queue.json` at `pending_human_approval`.
-7. 07:00 Decision Pack: [אישור] [עריכה] [דחייה]. Approve → `approved_for_manual_posting` only.
+7. 07:00 Decision Pack: [אישור] [עריכה] [דחייה]. Publication authorization is owned by `policy_id: instagram.publish`; an approval can satisfy the exact owner-approval branch, while `approved_for_manual_posting` remains the legacy manual-post path.
 8. Attribution via `vfsales/data/orders.json` + `vfinsights/ATTRIBUTION.md`. Missing = «אין ספירה».
 
 ## Do not

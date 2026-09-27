@@ -1,8 +1,12 @@
 {
   "policy_id": "instagram.publish",
   "version": 1,
-  "status": "candidate",
-  "decision_values": ["ALLOW", "DENY", "REQUIRE_OWNER_APPROVAL"],
+  "status": "active",
+  "decision_values": [
+    "ALLOW",
+    "DENY",
+    "REQUIRE_OWNER_APPROVAL"
+  ],
   "scope": {
     "channel": "instagram",
     "publication_type": "organic",
@@ -16,7 +20,11 @@
   },
   "risk": {
     "standing_authorization_max": "LOW",
-    "owner_approval_allows": ["LOW", "MEDIUM", "HIGH"]
+    "owner_approval_allows": [
+      "LOW",
+      "MEDIUM",
+      "HIGH"
+    ]
   },
   "exact_bindings": [
     "content_id",
@@ -33,7 +41,10 @@
     "brand",
     "product_truth"
   ],
-  "gate_pass_values": ["PASS", "NOT_APPLICABLE"],
+  "gate_pass_values": [
+    "PASS",
+    "NOT_APPLICABLE"
+  ],
   "authorization": {
     "default": "REQUIRE_OWNER_APPROVAL",
     "standing_instance_field": "creativeAutonomy.publish.standingAuthorization",
@@ -58,7 +69,10 @@
       "migration_authorization"
     ],
     "jobs_created_before": "2026-09-28T00:00:00Z",
-    "binding_fields": ["content_id", "package_sha256"],
+    "binding_fields": [
+      "content_id",
+      "package_sha256"
+    ],
     "purpose": "Preserve already-created scheduled jobs while new jobs migrate to canonical policy decisions."
   },
   "postconditions": {

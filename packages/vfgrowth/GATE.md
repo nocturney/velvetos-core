@@ -1,5 +1,7 @@
 # שער מצבי תוכן — Organic Growth
 
+`policy_id: instagram.publish` הוא מקור ההחלטה המכונתית ל־`ALLOW` / `DENY` / `REQUIRE_OWNER_APPROVAL`. הקובץ הזה מתאר מצבים, evidence ותהליך; הוא אינו evaluator מקביל.
+
 ## VF_PUBLICATION_ROUTE_V1 - current publication scope
 
 Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.

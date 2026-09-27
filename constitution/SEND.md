@@ -39,6 +39,8 @@ Grok Bot הוא **גיבוי אופציונלי**, לא השולח היחיד ו
 
 ## לפני Instagram publish — שלושה היבטים נפרדים
 
+`policy_id: instagram.publish` הוא מקור ההחלטה המכונתית הסופי ל־`ALLOW` / `DENY` / `REQUIRE_OWNER_APPROVAL`. שלושת ההיבטים להלן מספקים evidence לקונטקסט ההחלטה; הם אינם evaluator נוסף.
+
 ### 1. Transport readiness
 
 אבחון חיבור בלבד:
