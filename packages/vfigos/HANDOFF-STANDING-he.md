@@ -8,11 +8,11 @@
 
 ## איך משבצים עכשיו
 
-1. final media + caption עוברים את שערי האיכות/זכויות/PREFLIGHT.
-2. הבעלים מאשר **את החבילה המדויקת ואת מועד הפרסום**.
+1. final media + caption עוברים את שערי האיכות/זכויות/PREFLIGHT ונבנה context מדויק ל־`policy_id: instagram.publish`.
+2. ה־evaluator קובע `ALLOW` / `DENY` / `REQUIRE_OWNER_APPROVAL`. אישור בעלים נקודתי נדרש רק כאשר זו תוצאת המדיניות; standing authorization תקף יכול להספיק למסלול LOW-risk שגרתי.
 3. המדיה המדויקת עולה ל־Publisher KV עם SHA-256 ומאומתת read-back.
-4. נוצר D1 job עם `owner_schedule_authorization` exact-bound.
-5. קוראים את ה־job חזרה ומוודאים `scheduled_at`, status וה־media hashes.
+4. נוצר D1 job עם `authorization.kind=policy_authorization_v1`, evidence ו־`policy_context`; ה־Worker מחשב בעצמו את digest הכיתוב ואת bindings של content/package/media ומריץ את ה־evaluator לפני acceptance.
+5. קוראים את ה־job חזרה ומוודאים `scheduled_at`, status, media hashes ו־policy decision receipt.
 6. Calendar mirror יוצר/מעדכן אירוע ביומן `אינסטגרם`; זה visibility בלבד ולא תנאי ל־schedule.
 7. לאחר הזמן: `published_verified` דורש Graph read-back/permalink; אז Media Vault/ledger נסגרים.
 

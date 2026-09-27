@@ -110,7 +110,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 
 ‏ארכיטקטורה קנונית: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/velvetos/LAYERS.md`](packages/velvetos/LAYERS.md) · [`packages/velvetos/ADR-THREE-LAYERS.md`](packages/velvetos/ADR-THREE-LAYERS.md)
 
-‏Registry ארכיטקטורת מדיניות: [`packages/velvetos/policy/README.md`](packages/velvetos/policy/README.md) — מיפוי סמכויות, סנסורים ו־retention; דוחות Stage 0 נמצאים תחת `packages/velvetos/policy/reports/`. Stage 1A מוסיף evaluator מועמד ל־`instagram.publish`, אך הוא עדיין אינו runtime פעיל. ההחלטות נשארות במקורות הסמכות המקושרים עד cutover מפורש.
+‏Registry ארכיטקטורת מדיניות: [`packages/velvetos/policy/README.md`](packages/velvetos/policy/README.md) — מיפוי סמכויות, סנסורים ו־retention; דוחות Stage 0 נמצאים תחת `packages/velvetos/policy/reports/`. Stage 1 מרכז את `instagram.publish` ב־evaluator יחיד ומחבר אותו ל־Cloudflare publisher לפני ה־publish mutation; סטטוס הפריסה החיה נשמר בנפרד ב־`packages/vfigos/PUBLISHER.json`.
 
 > ‏**עיקרון:** מקור אמת אחד, הרבה תצוגות ואוטומציות. לא בונים מערכת מקבילה רק כי עלה רעיון חדש.
 
@@ -256,7 +256,7 @@ The active deployment today is **Velvet Factory**, a 3D-printing studio in Sdero
 
 Canonical architecture: [`docs/VELVETOS.md`](docs/VELVETOS.md) · [`packages/velvetos/LAYERS.md`](packages/velvetos/LAYERS.md) · [`packages/velvetos/ADR-THREE-LAYERS.md`](packages/velvetos/ADR-THREE-LAYERS.md)
 
-Policy architecture registry: [`packages/velvetos/policy/README.md`](packages/velvetos/policy/README.md) — authority, sensor and retention mapping; Stage 0 reports live under `packages/velvetos/policy/reports/`. Stage 1A adds a candidate `instagram.publish` evaluator, but it is not yet the active runtime. Decisions remain in the linked authority sources until explicit cutover.
+Policy architecture registry: [`packages/velvetos/policy/README.md`](packages/velvetos/policy/README.md) — authority, sensor and retention mapping; Stage 0 reports live under `packages/velvetos/policy/reports/`. Stage 1 centralizes `instagram.publish` in one evaluator and wires it into the Cloudflare publisher before the publish mutation; live deployment evidence remains separate in `packages/vfigos/PUBLISHER.json`.
 
 > **Principle:** one source of truth, many projections and automations. New ideas extend existing SoTs instead of creating parallel systems.
 

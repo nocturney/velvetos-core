@@ -1,5 +1,7 @@
 # שליחת אינסטגרם מ־HQ
 
+`policy_id: instagram.publish` הוא שער ההרשאה המכונתי לפרסום אורגני. ה־Cloudflare publisher מריץ את אותו evaluator לפני קבלת job חדש ושוב אחרי claim, לפני כל קריאת publish ל־Meta Graph. Decision receipt נכתב לפני הפעולה; `DENY` ו־`REQUIRE_OWNER_APPROVAL` אינם מגיעים ל־publish mutation.
+
 ## Canonical publication route — 2026-09-26
 
 

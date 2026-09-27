@@ -34,13 +34,17 @@ A D1 lease prevents two cron invocations from taking the same job. Every immutab
 - `GET /healthz` public.
 - Read endpoints `GET /v1/meta-health`, `/v1/runtime`, `/v1/jobs`, `/v1/jobs/{id}` accept `CONTROL_TOKEN` or the separate read-only `SNAPSHOT_TOKEN` when configured.
 - Write endpoints never accept `SNAPSHOT_TOKEN`.
-- `POST /v1/jobs` schedules exact content with `CONTROL_TOKEN`.
+- `POST /v1/jobs` schedules exact content with `CONTROL_TOKEN`. New jobs require `authorization.kind=policy_authorization_v1` plus `authorization.policy_context`; the Worker computes the caption digest itself, projects standing authorization from runtime config, and evaluates `policy_id: instagram.publish` before accepting the job.
 - `POST /v1/jobs/{id}/cancel` cancels only `scheduled`/`retry` jobs.
 - `POST /v1/run` manually processes due jobs.
 
 ## Safety
 
 Scheduler acceptance is not publication proof. A job becomes `published_verified` only after `media_publish` returns a media id and Graph read-back returns a permalink.
+
+`policy_id: instagram.publish` is evaluated twice: once before a new job is accepted, and again after the D1 lease/HMAC check immediately before fingerprint/publish work. The second decision receipt is written to the event log before any Meta Graph publish mutation. `DENY` becomes `dead_letter`; `REQUIRE_OWNER_APPROVAL` becomes `waiting_approval`; neither path reaches `publishJob()`.
+
+Stored pre-cutover jobs without `policy_context` are evaluated only through the bounded legacy-compatibility branch. New jobs cannot use the legacy authorization kinds.
 
 The first fully scheduled write through this route remains production evidence to observe at execution time. Until then, pre-publish transport, media integrity, queue state and Meta read-back are verified.
 
@@ -59,3 +63,30 @@ Deployment order remains fail-closed for future environments:
 3. deploy the Worker.
 
 The production deploy that activated the guard is Worker version `c302b0a1-4d03-4db6-9ff9-056ee69166d7`.
+
+### New job authorization contract
+
+`authorization.policy_context` supplies only policy evidence that the Worker cannot derive from immutable job bytes. The Worker ignores any caller attempt to supply standing authorization and derives that value from runtime configuration.
+
+```json
+{
+  "kind": "policy_authorization_v1",
+  "evidence": "<exact-preflight-receipt-ref>",
+  "policy_context": {
+    "risk_class": "LOW",
+    "forbidden_effects": [],
+    "gates": {
+      "transport": "PASS",
+      "visible_text": "PASS",
+      "exact_final_preflight": "PASS",
+      "visual_standard": "PASS",
+      "rights_privacy": "PASS",
+      "brand": "PASS",
+      "product_truth": "PASS"
+    },
+    "human_approval": null
+  }
+}
+```
+
+For a non-routine decision that requires owner approval, `human_approval` must bind `content_id`, `package_sha256` and the Worker-computed raw UTF-8 caption SHA-256. A mismatched approval is `DENY`, not a fallback to standing authorization.

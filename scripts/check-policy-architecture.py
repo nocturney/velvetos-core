@@ -203,32 +203,58 @@ def validate_registries() -> tuple[list[str], set[str]]:
         instagram_policy = load(instagram_policy_path)
         require(instagram_policy.get("policy_id") == "instagram.publish", "instagram.publish policy_id mismatch", problems)
         require(instagram_policy.get("version") == 1, "instagram.publish version mismatch", problems)
+        require(instagram_policy.get("status") == "active", "instagram.publish machine policy must be active after runtime cutover", problems)
         require(instagram_policy.get("decision_values") == ["ALLOW", "DENY", "REQUIRE_OWNER_APPROVAL"], "instagram.publish decision values mismatch", problems)
         row = next((x for x in rows if x.get("policy_id") == "instagram.publish"), None)
+        require(row is not None and row.get("status") == "active", "instagram.publish registry status must be active after runtime cutover", problems)
         require(row is not None and "packages/velvetos/policy/instagram.publish.json" in row.get("machine_policy_locations", []), "instagram.publish registry binding missing", problems)
         for rel_path in (
             "packages/velvetos/policy/instagram-publish-evaluator.mjs",
             "packages/velvetos/policy/instagram-publish-test-vectors.json",
             "packages/velvetos/policy/test-instagram-publish-policy.mjs",
             "scripts/vf_instagram_publish_policy.mjs",
+            "packages/vfigos/cloudflare-publisher/src/policy_gate.js",
+            "packages/vfigos/cloudflare-publisher/test-policy-gate.mjs",
         ):
             require(existing_repo_path(rel_path), f"instagram.publish component missing: {rel_path}", problems)
+        worker_path = ROOT / "packages" / "vfigos" / "cloudflare-publisher" / "src" / "index.js"
+        wrangler_path = ROOT / "packages" / "vfigos" / "cloudflare-publisher" / "wrangler.toml"
+        instance_path = ROOT / "instances" / "velvet-factory" / "instance" / "velvet-factory.json"
+        if worker_path.is_file():
+            worker = worker_path.read_text(encoding="utf-8")
+            start = worker.find("async function handleOne")
+            gate_at = worker.find("const policyDecision=await evaluateInstagramPublishJob(j,env);", start)
+            publish_at = worker.find("const live=await publishJob(env,j);", start)
+            require(start >= 0 and gate_at > start and publish_at > gate_at, "instagram.publish runtime gate must precede publishJob", problems)
+            require('a.kind!=="policy_authorization_v1"' in worker, "new Cloudflare jobs must require policy_authorization_v1", problems)
+        if wrangler_path.is_file() and instance_path.is_file():
+            wrangler = wrangler_path.read_text(encoding="utf-8")
+            instance = load(instance_path)
+            standing = bool((((instance.get("creativeAutonomy") or {}).get("publish") or {}).get("standingAuthorization")))
+            require(('STANDING_AUTHORIZATION = "true"' in wrangler) == standing, "Cloudflare standing authorization projection drift", problems)
+        node_tests = [
+            ROOT / "packages" / "velvetos" / "policy" / "test-instagram-publish-policy.mjs",
+            ROOT / "packages" / "vfigos" / "cloudflare-publisher" / "test-policy-gate.mjs",
+        ]
+        for test in node_tests:
+            if test.is_file():
+                proc = subprocess.run(["node", str(test)], cwd=ROOT, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=30)
+                require(proc.returncode == 0, f"Node policy test failed {test.relative_to(ROOT)}: " + (proc.stderr or proc.stdout).strip()[:500], problems)
 
     report_names = {p.name for p in REPORTS.glob("*.json")} if REPORTS.is_dir() else set()
     require(EXPECTED_REPORTS <= report_names, f"missing policy reports {sorted(EXPECTED_REPORTS-report_names)}", problems)
     if EXPECTED_REPORTS <= report_names:
         coverage = load(REPORTS / "coverage-report.json")
+        sensor_graph = load(REPORTS / "sensor-coverage-graph.json")
         require(
-            coverage.get("runnable_sensor_count") == len(sensor_rows)
-            and coverage.get("registered_sensor_count") == len(sensor_rows)
+            coverage.get("runnable_sensor_count") == coverage.get("registered_sensor_count")
+            and coverage.get("runnable_sensor_count") == sensor_graph.get("sensor_count")
             and coverage.get("omitted_sensors") == [],
-            "coverage report no longer matches sensor registry",
+            "historical Stage 0 coverage report is internally inconsistent",
             problems,
         )
         authority = load(REPORTS / "authority-graph.json")
-        require(authority.get("policy_count") == len(rows), "authority graph policy count mismatch", problems)
-        sensor_graph = load(REPORTS / "sensor-coverage-graph.json")
-        require(sensor_graph.get("sensor_count") == len(sensor_rows), "sensor coverage graph count mismatch", problems)
+        require(authority.get("policy_count") == len(authority.get("nodes") or []), "historical authority graph policy count mismatch", problems)
         conflicts = load(REPORTS / "conflict-report.json")
         conflict_ids = {x.get("id") for x in conflicts.get("conflicts", [])}
         require("instagram-publish-split-brain" in conflict_ids, "Stage 0 publish conflict report missing", problems)

@@ -91,9 +91,6 @@ export function evaluateInstagramPublish(policy, context) {
   if (!policy.scope.mutation_tools.includes(context.mutation_tool)) {
     return finish(policy, context, "DENY", "MUTATION_TOOL_NOT_ALLOWED");
   }
-  if (!exactBindingsValid(context)) {
-    return finish(policy, context, "DENY", "EXACT_BINDINGS_INVALID");
-  }
 
   const forbidden = Array.isArray(context.forbidden_effects) ? context.forbidden_effects : [];
   const blocked = forbidden.filter((value) => policy.forbidden_effects.includes(value));
@@ -103,8 +100,21 @@ export function evaluateInstagramPublish(policy, context) {
 
   const legacy = legacyAuthorizationState(policy, context);
   if (legacy.present) {
+    const legacyBindingsValid = (
+      CONTENT_ID.test(context.content_id || "") &&
+      HEX64.test(context.package_sha256 || "") &&
+      Array.isArray(context.media_sha256s) &&
+      context.media_sha256s.length >= 1 &&
+      context.media_sha256s.length <= 10 &&
+      context.media_sha256s.every((value) => HEX64.test(value || ""))
+    );
+    if (!legacyBindingsValid) return finish(policy, context, "DENY", "LEGACY_BINDINGS_INVALID");
     if (!legacy.valid) return finish(policy, context, "DENY", "LEGACY_AUTHORIZATION_INVALID_OR_EXPIRED");
     return finish(policy, context, "ALLOW", "LEGACY_COMPATIBILITY");
+  }
+
+  if (!exactBindingsValid(context)) {
+    return finish(policy, context, "DENY", "EXACT_BINDINGS_INVALID");
   }
 
   const gates = context.gates && typeof context.gates === "object" ? context.gates : {};
