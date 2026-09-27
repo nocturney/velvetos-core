@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos://policy/sensor-selection.schema.json",
+  "title": "VelvetOS Sensor Selection",
+  "type": "object",
+  "required": [
+    "schema_version", "mode", "registry", "unknown_path_behavior",
+    "broad_change_behavior", "always_on_source", "broad_change_patterns",
+    "shadow_exit", "evidence"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "mode": {"const": "shadow"},
+    "registry": {"const": "packages/velvetos/policy/sensor-registry.json"},
+    "unknown_path_behavior": {"const": "FULL_SUITE"},
+    "broad_change_behavior": {"const": "FULL_SUITE"},
+    "always_on_source": {"const": "sensor_registry_fallback_scope"},
+    "broad_change_patterns": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "shadow_exit": {
+      "type": "object",
+      "required": [
+        "minimum_pull_requests", "minimum_observation_days", "maximum_critical_misses",
+        "noncritical_miss_requires_classification",
+        "noncritical_relevant_miss_requires_mapping_update",
+        "deterministic_replay_required", "rollback_mode"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "minimum_pull_requests": {"type": "integer", "minimum": 1},
+        "minimum_observation_days": {"type": "integer", "minimum": 1},
+        "maximum_critical_misses": {"const": 0},
+        "noncritical_miss_requires_classification": {"const": true},
+        "noncritical_relevant_miss_requires_mapping_update": {"const": true},
+        "deterministic_replay_required": {"const": true},
+        "rollback_mode": {"const": "FULL_SUITE_REQUIRED"}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "persist_in_github_job_summary",
+        "emit_machine_readable_log_marker",
+        "repository_mutation_from_shadow"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "persist_in_github_job_summary": {"const": true},
+        "emit_machine_readable_log_marker": {"const": true},
+        "repository_mutation_from_shadow": {"const": false}
+      }
+    }
+  }
+}

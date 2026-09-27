@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "mode": "shadow",
+  "registry": "packages/velvetos/policy/sensor-registry.json",
+  "unknown_path_behavior": "FULL_SUITE",
+  "broad_change_behavior": "FULL_SUITE",
+  "always_on_source": "sensor_registry_fallback_scope",
+  "broad_change_patterns": [
+    ".github/workflows/check-all.yml",
+    "packages/velvetos/policy/sensor-registry.json",
+    "packages/velvetos/policy/sensor-selection.json",
+    "packages/velvetos/policy/schema/**",
+    "packages/velvetos/policy/*evaluator*.mjs",
+    "scripts/check-all.py",
+    "scripts/check-policy-architecture.py",
+    "scripts/sensor_selector.py",
+    "scripts/compare-sensor-shadow.py",
+    "requirements-sensors.txt",
+    "requirements-sensors.py311.lock",
+    "requirements-sensors.py312.lock"
+  ],
+  "shadow_exit": {
+    "minimum_pull_requests": 20,
+    "minimum_observation_days": 7,
+    "maximum_critical_misses": 0,
+    "noncritical_miss_requires_classification": true,
+    "noncritical_relevant_miss_requires_mapping_update": true,
+    "deterministic_replay_required": true,
+    "rollback_mode": "FULL_SUITE_REQUIRED"
+  },
+  "evidence": {
+    "persist_in_github_job_summary": true,
+    "emit_machine_readable_log_marker": true,
+    "repository_mutation_from_shadow": false
+  }
+}
