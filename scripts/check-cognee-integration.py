@@ -125,6 +125,8 @@ def main() -> None:
         "materialize_ingest_files", "documentMap", "SearchType.CHUNKS",
         "canonicalSource", "chunks-with-canonical-provenance-v1",
         "active-state.json", "legacy rollback evidence",
+        "canonical source changed during materialization", "refusing active-state cutover",
+        "Windows JSON rollback readback mismatch", "candidate_top_k", "seen_sources",
     ):
         if needle not in adapter and needle not in CFG.read_text(encoding="utf-8"):
             fail(f"adapter/config missing safety marker {needle}")

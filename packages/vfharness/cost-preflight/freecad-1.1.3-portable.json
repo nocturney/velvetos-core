@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "component": "FreeCAD 1.1.3 portable Windows x86_64",
+  "classification": "FREE_LOCAL",
+  "license": "LGPL-2.1-or-later",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for local desktop/CLI use under LGPL-2.1-or-later",
+  "deployment_model": "portable 7z extracted under the existing VelvetPrintLab tools directory; no installer, service, daemon, registry write or auto-update",
+  "api_dependencies": [],
+  "billing_risk": "none; FreeCAD is free/open source and no hosted service or subscription is required",
+  "selected_mode": "STABLE_PORTABLE_1.1.3_ONLY; no weekly/dev build",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk only when invoked",
+  "api_cost_notes": "none",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "Addon Manager, Lens/PDM, cloud collaboration and paid external services are not enabled by this install",
+  "quota_controls": "not applicable; local executable only",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://www.freecad.org/downloads current stable version 1.1.3; Windows x86_64 portable offered",
+    "https://github.com/FreeCAD/FreeCAD/releases/tag/1.1.3 official stable release",
+    "portable asset FreeCAD_1.1.3-Windows-x86_64-py311.7z sha256 9c6959dc9c4dba64dd818a62447e3dfedb4221d776fb044b239d462f150bcec4"
+  ],
+  "approval": null
+}

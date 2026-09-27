@@ -377,32 +377,47 @@ def main() -> None:
                 if canonical not in text:
                     fail(f"missing canonical media vault reference in {relative}: {canonical}")
 
-    proc = subprocess.run(
-        [sys.executable, str(CLI), "validate"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-    )
-    if proc.returncode != 0:
-        fail(f"vfmedia.py validate: {proc.stderr or proc.stdout}")
+    # Load a fresh vfmedia module for the canonical validator instead of
+    # spawning another Python process under check-all on Windows.
+    validate_spec = importlib.util.spec_from_file_location("vfmedia_validate_target", CLI)
+    if validate_spec is None or validate_spec.loader is None:
+        fail("cannot load scripts/vfmedia.py for validate")
+    validate_module = importlib.util.module_from_spec(validate_spec)
+    validate_spec.loader.exec_module(validate_module)
+    validate_rc = validate_module.cmd_validate(None)
+    if validate_rc != 0:
+        fail(f"vfmedia.py validate rc={validate_rc}")
 
-    selftest = subprocess.run(
-        [sys.executable, str(CLI), "intake", "selftest"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-    )
-    if selftest.returncode != 0:
-        fail(f"vfmedia.py intake selftest: {selftest.stderr or selftest.stdout}")
+    # Keep the offline intake proof and its hardening tests in-process.
+    # Under check-all on Windows, nesting Python -> Python -> Python with
+    # captured pipes can leak Ctrl+C to the parent process group.
+    root_import = str(ROOT)
+    added_root = root_import not in sys.path
+    if added_root:
+        sys.path.insert(0, root_import)
+    try:
+        from packages.vfmedia.intake import runner as intake_runner
+    finally:
+        if added_root:
+            sys.path.remove(root_import)
 
-    hardening_proc = subprocess.run(
-        [sys.executable, str(hardening), "-v"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-    )
-    if hardening_proc.returncode != 0:
-        fail(f"intake hardening tests: {hardening_proc.stderr or hardening_proc.stdout}")
+    selftest_rc = intake_runner.run_selftest()
+    if selftest_rc != 0:
+        fail(f"vfmedia.py intake selftest rc={selftest_rc}")
+
+    import io
+    import unittest
+
+    hardening_spec = importlib.util.spec_from_file_location("vfmedia_intake_hardening_tests", hardening)
+    if hardening_spec is None or hardening_spec.loader is None:
+        fail("could not load intake hardening tests")
+    hardening_module = importlib.util.module_from_spec(hardening_spec)
+    hardening_spec.loader.exec_module(hardening_module)
+    hardening_suite = unittest.defaultTestLoader.loadTestsFromModule(hardening_module)
+    hardening_out = io.StringIO()
+    hardening_result = unittest.TextTestRunner(stream=hardening_out, verbosity=2).run(hardening_suite)
+    if not hardening_result.wasSuccessful():
+        fail(f"intake hardening tests: {hardening_out.getvalue()}")
 
     print("OK vfmedia vault+catalog+intake locked (validate≠monitor; one catalog)")
 

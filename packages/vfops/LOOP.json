@@ -1,7 +1,7 @@
 {
   "name": "vfops-loop",
   "title": "לולאת משרד — כל פק נצרך",
-  "updatedAt": "2026-09-24",
+  "updatedAt": "2026-09-27",
   "rule": "Every packages/ folder has a consume step. Catalog without consume is a fail. No invented ₪ or Insights. No live IG publish from this loop. Office Control Plane (office/control-plane.json) unifies SoT — not a second scheduler.",
   "cli": "python3 scripts/vfops_loop.py",
   "briefCli": "python3 scripts/vfops_loop.py brief",
@@ -400,6 +400,48 @@
       "path": ".cursor/skills/vf-harness/SKILL.md",
       "cadence": "after-edit",
       "consume": ".cursor/skills/vf-harness/SKILL.md"
+    },
+    {
+      "id": "skill-3d-router",
+      "path": ".cursor/skills/vf-3d-router/SKILL.md",
+      "cadence": "on-job",
+      "consume": "python3 scripts/vf_3d.py doctor"
+    },
+    {
+      "id": "skill-brand-guardian",
+      "path": ".cursor/skills/velvet-brand-guardian/SKILL.md",
+      "cadence": "on-content",
+      "consume": ".cursor/skills/velvet-brand-guardian/SKILL.md"
+    },
+    {
+      "id": "skill-creative-director",
+      "path": ".cursor/skills/velvet-creative-director/SKILL.md",
+      "cadence": "on-content",
+      "consume": ".cursor/skills/velvet-creative-director/SKILL.md"
+    },
+    {
+      "id": "skill-media-librarian",
+      "path": ".cursor/skills/velvet-media-librarian/SKILL.md",
+      "cadence": "on-intake",
+      "consume": ".cursor/skills/velvet-media-librarian/SKILL.md"
+    },
+    {
+      "id": "skill-cli-anything-cad",
+      "path": ".cursor/skills/vf-cli-anything-cad/SKILL.md",
+      "cadence": "on-job",
+      "consume": ".cursor/skills/vf-cli-anything-cad/SKILL.md"
+    },
+    {
+      "id": "skill-diagram-design",
+      "path": ".cursor/skills/vf-diagram-design/SKILL.md",
+      "cadence": "on-demand",
+      "consume": ".cursor/skills/vf-diagram-design/SKILL.md"
+    },
+    {
+      "id": "skill-web-ui-quality",
+      "path": ".cursor/skills/vf-web-ui-quality/SKILL.md",
+      "cadence": "on-demand",
+      "consume": ".cursor/skills/vf-web-ui-quality/SKILL.md"
     },
     {
       "id": "skill-hq-memory",

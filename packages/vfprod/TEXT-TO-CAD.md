@@ -20,6 +20,10 @@ This integration extends the existing `vfprod` + `expert-3d-model` path. It does
 
 The host bridge is `scripts/vf_cad.py`; route inspection is `scripts/vf_fabrication_router.py`. The subordinate engine layer is `CAD-ENGINE-REGISTRY.json` + `scripts/vf_cad_stack.py`: build123d/cadgen remains primary, CadQuery and JSCAD are local secondary engines, and CAD/CAE Copilot/Forgent3D remain bounded pilots.
 
+## Runtime version policy
+
+VelvetOS does not require a specific Text-to-CAD or OrcaSlicer release. It uses the local clone/environment and discovers the installed OrcaSlicer at runtime; `ORCASLICER_BIN` is an explicit override and `printer_matrix.json` version/executable fields are compatibility hints/snapshots, not an allowlist. Upstream tools may pin their own internal Python dependencies; those are the tool's compatibility contract, not a VelvetOS runtime version lock. After upgrades, rerun `vf_cad.py doctor` and the CAD→DfAM→slice smoke.
+
 ## Source-of-truth rule
 
 `VelvetPrintLab\slicer-router\printer_matrix.json` remains the machine/profile authority. The bridge generates text-to-cad wrapper profiles from that matrix and the existing native machine/process/filament JSON files. Do not maintain a second handwritten printer matrix in Core.
@@ -72,6 +76,19 @@ Preferred functional-part path:
 plain-language requirement → parametric CAD source → STEP master → STL/3MF sidecar → DfAM check → targeted CAD repair when needed → OrcaSlicer dry-run → local slice → G-code validation → human/production-floor handoff.
 
 For organic/sculptural generation, 3D AI Studio remains a separate specialist route; do not force text-to-cad to replace it.
+
+## Deterministic CAD tool decision
+
+Text-to-cad remains the default for plain-language functional parts, parametric source-first workflows, DfAM and the normal slicer handoff.
+
+Use the scoped CLI-Anything FreeCAD adapter only when the task materially benefits from explicit iterative FreeCAD operations, structured JSON commands, FreeCAD-specific workbench operations, or headless STEP/STL/FCStd export:
+
+`python scripts/vf_cli_anything.py doctor`
+`python scripts/vf_cli_anything.py freecad -- <args>`
+
+After a CLI-Anything export, return to this canonical bridge for DfAM, printer-profile routing, OrcaSlicer and G-code validation. CLI-Anything never owns printer profiles or physical printer control. Its `preview`, `motion` and `repl` groups are disabled in VelvetOS because the pinned Windows portable GUI-preview path did not terminate reliably. The pinned CLI-Anything 3MF harness is not routable while its known hole-detection/resize tests are failing.
+
+Registry and evidence: `packages/vfharness/devtools/cli-anything.json` and `packages/vfharness/state/cli-anything-phase5-promotion-2026-09-27.json`.
 
 ## Verification
 

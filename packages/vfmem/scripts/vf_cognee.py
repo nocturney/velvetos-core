@@ -154,9 +154,26 @@ def atomic_json(path: Path, body: dict[str, Any]) -> None:
                 os.replace(tmp, path)
                 break
             except PermissionError:
-                if os.name != "nt" or attempt == 7:
+                if os.name != "nt":
                     raise
-                time.sleep(0.05 * (attempt + 1))
+                if attempt < 7:
+                    time.sleep(0.05 * (attempt + 1))
+                    continue
+                # Windows can deny rename/replace on an otherwise writable JSON
+                # pointer (for example due to delete-sharing/legacy ownership).
+                # Preserve the previous derived pointer, then fail closed unless
+                # an fsynced in-place write and exact readback both succeed.
+                rollback = path.with_name(path.name + ".windows-rollback")
+                if path.is_file():
+                    previous = path.read_bytes()
+                    rollback.write_bytes(previous)
+                    if rollback.read_bytes() != previous:
+                        raise RuntimeError(f"Windows JSON rollback readback mismatch: {rollback}")
+                with path.open("w", encoding="utf-8", newline="\n") as handle:
+                    handle.write(payload)
+                    handle.flush()
+                    os.fsync(handle.fileno())
+                break
         observed = json.loads(path.read_text(encoding="utf-8"))
         if observed != body:
             raise RuntimeError(f"atomic JSON readback mismatch: {path}")
@@ -177,7 +194,11 @@ def materialize_ingest_files(root: Path, digest: str, sources: list[dict[str, An
         token = hashlib.sha256(rel.encode("utf-8")).hexdigest()[:12]
         document_name = f"{index:03d}-{token}"
         path = folder / f"{document_name}.txt"
-        text = (ROOT / rel).read_text(encoding="utf-8")
+        source_path = ROOT / rel
+        raw = source_path.read_bytes()
+        if hashlib.sha256(raw).hexdigest() != row["sha256"]:
+            raise RuntimeError(f"canonical source changed during materialization: {rel}; rerun sync")
+        text = raw.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
         payload = (
             f"VELVETOS_CANONICAL_SOURCE: {rel}\n"
             f"VELVETOS_KNOWLEDGE_CATEGORY: {row['category']}\n"
@@ -294,6 +315,12 @@ async def sync_memory(cfg: dict[str, Any], root: Path) -> dict[str, Any]:
         progress["cognified"] = True
         atomic_json(progress_path, progress)
 
+    final_digest, _ = source_manifest(cfg)
+    if final_digest != digest:
+        raise RuntimeError(
+            "canonical sources changed during Cognee sync; refusing active-state cutover; rerun sync"
+        )
+
     state = {
         "schema": "vf.cognee.state.v1",
         "dataset": dataset,
@@ -330,15 +357,20 @@ async def recall_memory(cfg: dict[str, Any], root: Path, query: str, top_k: int)
     import cognee
     from cognee.modules.search.types import SearchType
 
+    # Cognee ranks chunks, and several top chunks can come from the same
+    # canonical document. vfmem recall is source-oriented, so over-fetch chunks
+    # and collapse them to unique canonical sources while preserving rank.
+    candidate_top_k = min(max(top_k * 8, 20), 100)
     rows = await cognee.recall(
         query,
         query_type=SearchType.CHUNKS,
         auto_route=False,
         datasets=[state["dataset"]],
-        top_k=top_k,
+        top_k=candidate_top_k,
         only_context=False,
     )
     results = []
+    seen_sources: set[str] = set()
     for row in rows:
         item = serialize_entry(row)
         if not isinstance(item, dict):
@@ -349,6 +381,9 @@ async def recall_memory(cfg: dict[str, Any], root: Path, query: str, top_k: int)
         source = source_by_path.get(canonical_path)
         if not source:
             raise RuntimeError("Cognee chunk result is missing canonical provenance")
+        if canonical_path in seen_sources:
+            continue
+        seen_sources.add(canonical_path)
         results.append({
             "kind": item.get("kind"),
             "search_type": item.get("search_type"),
@@ -368,10 +403,14 @@ async def recall_memory(cfg: dict[str, Any], root: Path, query: str, top_k: int)
             },
             "requiresCanonicalVerification": True,
         })
+        if len(results) >= top_k:
+            break
     return {
         "status": "OK",
         "backend": "cognee-local-derived",
         "dataset": state["dataset"],
+        "sourceDigest": state["sourceDigest"],
+        "indexContract": contract,
         "authority": cfg["authority"],
         "requiresCanonicalVerification": cfg["sync"]["requiresCanonicalVerification"],
         "results": results,

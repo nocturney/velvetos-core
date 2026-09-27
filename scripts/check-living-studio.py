@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 LS = ROOT / "packages" / "velvetos" / "living-studio"
 REGISTRY = LS / "REGISTRY.json"
 README = LS / "README.md"
+ROOT_README = ROOT / "README.md"
+SOT_INDEX = ROOT / "docs" / "chief-of-staff" / "SOT-INDEX.md"
 CLI = ROOT / "scripts" / "vf_living_studio.py"
 CONTROL_PLANE = ROOT / "office" / "control-plane.json"
 DECISIONS = ROOT / "office" / "control" / "decisions.jsonl"
@@ -29,14 +31,20 @@ def fail(msg: str) -> None:
 
 
 def main() -> None:
-    for path in (LS, REGISTRY, README, CLI, CONTROL_PLANE, DECISIONS, EVENTS, INTAKE, WRITING_PLANS, VFCOPY_HE):
+    for path in (LS, REGISTRY, README, ROOT_README, SOT_INDEX, CLI, CONTROL_PLANE, DECISIONS, EVENTS, INTAKE, WRITING_PLANS, VFCOPY_HE):
         if not path.exists():
             fail(f"missing {path.relative_to(ROOT)}")
 
     reg = json.loads(REGISTRY.read_text(encoding="utf-8"))
     skills = reg.get("skills") or []
-    if len(skills) != 22:
-        fail(f"REGISTRY skills must be 22, got {len(skills)}")
+    if len(skills) != 23:
+        fail(f"REGISTRY skills must be 23, got {len(skills)}")
+    readme = ROOT_README.read_text(encoding="utf-8")
+    if f"with {len(skills)} operational skills." not in readme or f"עם {len(skills)} Skills תפעוליים." not in readme:
+        fail("README Living Studio skill count is stale relative to REGISTRY.json")
+    sot_index = SOT_INDEX.read_text(encoding="utf-8")
+    if f"| {len(skills)} operational skills ב־README pulse |" not in sot_index:
+        fail("SOT-INDEX Living Studio skill count is stale relative to REGISTRY.json")
     living = reg.get("livingCapabilities") or []
     if len(living) < 10:
         fail("REGISTRY livingCapabilities too thin")
@@ -103,39 +111,47 @@ def main() -> None:
     if "living-studio" not in manifest and "Living Studio" not in manifest:
         fail("packages/manifest.json must mention Living Studio after unification")
 
-    # Skill verify-all + non-mutating selftest
-    verify = subprocess.run(
-        [sys.executable, str(CLI), "skill", "verify-all"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-    )
-    if verify.returncode != 0:
-        fail(f"skill verify-all: {verify.stderr or verify.stdout}")
+    # Skill verify-all + non-mutating selftest. Keep both in-process so
+    # check-all does not create a Python -> Python -> Python pipe chain on Windows.
+    import vf_living_studio as living_studio_cli
 
-    proc = subprocess.run(
-        [sys.executable, str(CLI), "selftest"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-    )
-    if proc.returncode != 0:
-        fail(f"vf_living_studio.py selftest: {proc.stderr or proc.stdout}")
-    if "non-mutating" not in (proc.stdout or ""):
+    verify = living_studio_cli.skill_verify_all()
+    if not verify.get("ok"):
+        fail(f"skill verify-all: {verify}")
+
+    # Run the Living Studio selftest in-process. On Windows this sensor is
+    # itself launched by check-all; spawning the CLI again creates a nested
+    # Python pipe-capture chain that can stall even though the selftest passes
+    # when invoked directly.
+    import contextlib
+    import io
+
+    selftest_out = io.StringIO()
+    selftest_err = io.StringIO()
+    with contextlib.redirect_stdout(selftest_out), contextlib.redirect_stderr(selftest_err):
+        selftest_rc = living_studio_cli.selftest()
+    if selftest_rc != 0:
+        fail(f"vf_living_studio.py selftest: {selftest_err.getvalue() or selftest_out.getvalue()}")
+    if "non-mutating" not in selftest_out.getvalue():
         fail("selftest must declare non-mutating")
 
     # Unit tests
     tests = LS / "tests" / "test_living_studio.py"
     if not tests.is_file():
         fail("missing living-studio tests")
-    tproc = subprocess.run(
-        [sys.executable, str(tests), "-v"],
-        cwd=ROOT,
-        text=True,
-        capture_output=True,
-    )
-    if tproc.returncode != 0:
-        fail(f"living-studio tests: {tproc.stderr or tproc.stdout}")
+    import importlib.util
+    import unittest
+
+    test_spec = importlib.util.spec_from_file_location("living_studio_tests", tests)
+    if test_spec is None or test_spec.loader is None:
+        fail("could not load living-studio tests")
+    test_module = importlib.util.module_from_spec(test_spec)
+    test_spec.loader.exec_module(test_module)
+    suite = unittest.defaultTestLoader.loadTestsFromModule(test_module)
+    test_out = io.StringIO()
+    result = unittest.TextTestRunner(stream=test_out, verbosity=2).run(suite)
+    if not result.wasSuccessful():
+        fail(f"living-studio tests: {test_out.getvalue()}")
 
     print("OK living-studio registry+projection+skills+selftest")
 

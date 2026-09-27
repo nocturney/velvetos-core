@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "role": "RELIABILITY_COMPONENT_STATUS_NOT_AUTHORITY",
+  "components": [
+    {
+      "id": "healthchecks",
+      "canonical": "https://github.com/healthchecks/healthchecks",
+      "version": "v4.4",
+      "commit": "49924faadf0f24a846abc3acf3014b396fdc1f29",
+      "state": "PILOT",
+      "authority_role": "HEARTBEAT_SENSOR_ONLY",
+      "scheduler_authority": false,
+      "deployment": "LOCAL_WINDOWS_SQLITE",
+      "cost_classification": "FREE_SELF_HOSTED",
+      "receipt": "packages/vfharness/state/healthchecks-pilot-2026-09-27.json"
+    },
+    {
+      "id": "glitchtip",
+      "canonical": "https://gitlab.com/glitchtip/glitchtip-backend",
+      "version": "v6.2.6",
+      "state": "BLOCKED",
+      "authority_role": "ERROR_SENSOR_ONLY",
+      "deployment": "NOT_INSTALLED",
+      "cost_classification": "FREE_SELF_HOSTED",
+      "blocker": "Current self-host path requires local PostgreSQL/container infrastructure; host has no Docker or WSL2. Deferred to one later WSL/reboot batch rather than adding duplicate infrastructure now.",
+      "hosted_fallback_allowed": false
+    },
+    {
+      "id": "changedetection",
+      "canonical": "https://github.com/dgtlmoon/changedetection.io",
+      "version": "0.60.7",
+      "state": "PILOT",
+      "authority_role": "EXTERNAL_DEPENDENCY_CHANGE_SENSOR_ONLY",
+      "deployment": "LOCAL_WINDOWS_BATCH_HTML_REQUESTS",
+      "cost_classification": "FREE_SELF_HOSTED",
+      "receipt": "packages/vfharness/state/changedetection-pilot-2026-09-27.json",
+      "promotion_note": "Function works, but upstream distribution is dependency-heavy and includes optional AI/cloud/browser clients; keep pilot-only until lifecycle complexity is justified."
+    }
+  ]
+}

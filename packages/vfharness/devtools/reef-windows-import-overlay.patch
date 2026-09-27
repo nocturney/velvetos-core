@@ -1,0 +1,41 @@
+diff --git a/reef/harness/episodes/executor.py b/reef/harness/episodes/executor.py
+index 3e986a9..7aa5307 100644
+--- a/reef/harness/episodes/executor.py
++++ b/reef/harness/episodes/executor.py
+@@ -27 +27,4 @@ import os
+-import resource
++try:
++    import resource
++except ModuleNotFoundError:  # Windows import-only/hermetic evaluation; sandbox remains unavailable.
++    resource = None
+@@ -243,0 +247,2 @@ class SandboxExecutor(EpisodeExecutor):
++        if resource is None:
++            raise SandboxUnavailable("the sandbox executor requires POSIX resource limits; Windows is import-only here")
+diff --git a/reef/harness/runners/native/serve.py b/reef/harness/runners/native/serve.py
+index f7f0766..5a80d98 100644
+--- a/reef/harness/runners/native/serve.py
++++ b/reef/harness/runners/native/serve.py
+@@ -429,0 +430,2 @@ class Server(ServeState, ReleaseUpdateListener):
++        if not hasattr(socketserver, "ThreadingUnixStreamServer"):
++            raise ServeError("reef-native serve requires a Unix-domain stream server; Windows is import-only in this lab")
+@@ -931,2 +933,3 @@ class _Handler(socketserver.StreamRequestHandler):
+-class _SocketServer(socketserver.ThreadingUnixStreamServer):
+-    daemon_threads = True
++if hasattr(socketserver, "ThreadingUnixStreamServer"):
++    class _SocketServer(socketserver.ThreadingUnixStreamServer):
++        daemon_threads = True
+@@ -934,3 +937,11 @@ class _SocketServer(socketserver.ThreadingUnixStreamServer):
+-    def __init__(self, path: Path, reef: Server) -> None:
+-        self.reef = reef
+-        super().__init__(str(path), _Handler)
++        def __init__(self, path: Path, reef: Server) -> None:
++            self.reef = reef
++            super().__init__(str(path), _Handler)
++else:
++    class _SocketServer:
++        """Import-only placeholder; Server.start fails before construction on Windows."""
++
++        daemon_threads = True
++
++        def __init__(self, path: Path, reef: Server) -> None:
++            raise ServeError("reef-native serve requires a Unix-domain stream server")

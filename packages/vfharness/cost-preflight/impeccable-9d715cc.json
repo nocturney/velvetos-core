@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "impeccable@9d715cc4f5564a990ca8345abfdd5df6dc9b41c8",
+  "classification": "FREE_LOCAL",
+  "license": "Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for local skill/detector usage under Apache-2.0",
+  "deployment_model": "repo-local Web/UI development aid only; no global hook, no creative-post pipeline injection",
+  "api_dependencies": [],
+  "billing_risk": "none for deterministic detector path; no API key or hosted service",
+  "selected_mode": "pinned local skill/detector assets with hooks disabled unless separately approved",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/disk only when invoked",
+  "api_cost_notes": "deterministic rules require no LLM/API key",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "Codex hook approval is deferred; live-mode browser helpers and hosted services are not required",
+  "quota_controls": "manual/path-scoped invocation only for Web/UI surfaces",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/pbakaus/impeccable README: Apache-2.0; deterministic rules run without LLM/API key",
+    "git ls-remote canonical HEAD 9d715cc4f5564a990ca8345abfdd5df6dc9b41c8"
+  ],
+  "approval": null
+}

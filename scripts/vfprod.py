@@ -11,6 +11,11 @@ import sys
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
+
 ROOT = Path(__file__).resolve().parents[1]
 FLEET = ROOT / "packages" / "vfprod" / "FLEET.json"
 SNAP = ROOT / "packages" / "vfprod" / "data" / "maintenance-snapshot.json"

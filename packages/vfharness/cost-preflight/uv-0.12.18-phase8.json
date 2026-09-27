@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "uv@0.12.18",
+  "classification": "FREE_LOCAL",
+  "license": "MIT OR Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none",
+  "deployment_model": "isolated Phase 8 tool venv under .local-devtools; invoked only for Reef lab setup",
+  "api_dependencies": [],
+  "billing_risk": "none; package manager is local and uses ordinary package indexes only",
+  "selected_mode": "PINNED_LOCAL_DEVTOOL",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local disk/network during package resolution only; no daemon or cloud account",
+  "api_cost_notes": "no model or paid API calls",
+  "subscription_notes": "no subscription, trial, billing account or hosted workspace; local pinned development tool only",
+  "hidden_secondary_cost_notes": "none in selected mode",
+  "quota_controls": "not applicable",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "astral-sh/uv release 0.12.18 dated 2026-09-22; includes a Windows wheel-install path traversal fix",
+    "astral-sh/uv project metadata: license MIT OR Apache-2.0 and Windows support"
+  ],
+  "approval": null
+}

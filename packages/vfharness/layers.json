@@ -87,7 +87,9 @@
       "files": [
         "CHANGELOG.md",
         "packages/vfharness/CHECKLIST.md",
-        "docs/HARNESS.md"
+        "docs/HARNESS.md",
+        "packages/vfharness/observability/trace-policy.json",
+        "packages/vfharness/state/observability-phase2-2026-09-27.json"
       ]
     }
   ],
@@ -155,6 +157,51 @@
     {
       "id": "check-vfcost",
       "script": "scripts/check-vfcost.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-no-new-recurring-cost",
+      "script": "scripts/check-no-new-recurring-cost.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-vf-3d-router",
+      "script": "scripts/check-vf-3d-router.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-behavioral-evals",
+      "script": "scripts/check-behavioral-evals.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-agent-security-conformance",
+      "script": "scripts/check-agent-security-conformance.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-observability",
+      "script": "scripts/check-observability.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-reliability-pilots",
+      "script": "scripts/check-reliability-pilots.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-engineering-quality",
+      "script": "scripts/check-engineering-quality.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-cli-anything-pilot",
+      "script": "scripts/check-cli-anything-pilot.py",
+      "type": "computational"
+    },
+    {
+      "id": "check-laya-shadow",
+      "script": "scripts/check-laya-shadow.py",
       "type": "computational"
     },
     {

@@ -1,0 +1,100 @@
+{
+  "schema": 1,
+  "phase": 8,
+  "date": "2026-09-27",
+  "status": "COMPLETE_LAB_ONLY",
+  "component": "Reef",
+  "decision": "LAB_ONLY_NOT_PROMOTED",
+  "incrementalRecurringCostIls": 0,
+  "newAlwaysOnSystems": 0,
+  "source": {
+    "repository": "https://github.com/Human-Agent-Society/reef.git",
+    "commit": "5de976be90c0676c60694e55499255a81913f8fd",
+    "reefClientSubmodule": "b7bfd4eefac22a7b0ea1be38f7ed998d174d27ac",
+    "python": "3.12.10",
+    "uv": "0.12.18"
+  },
+  "authority": {
+    "productionAuthority": false,
+    "controlPlaneAuthority": false,
+    "schedulerAuthority": false,
+    "memoryAuthority": false,
+    "releaseAuthority": false,
+    "role": "isolated harness-improvement lab only"
+  },
+  "environment": {
+    "host": "Windows 10.0.26200.9550",
+    "wslInstalled": false,
+    "dockerInstalled": false,
+    "localModelEndpointProvisioned": false,
+    "remoteModelProvidersAuthorized": false
+  },
+  "windowsOverlay": {
+    "path": "packages/vfharness/devtools/reef-windows-import-overlay.patch",
+    "sha256": "e6bfafd1a84b064a783715274453f1edd66ce70cf88853ef3d559ac584dc7147",
+    "scope": "lab checkout import-only and hermetic-test compatibility",
+    "promotionStatus": "NOT_UPSTREAMED_NOT_PRODUCTION_RUNTIME",
+    "changes": [
+      "resource import is optional on Windows and sandbox preflight fails closed when POSIX limits are unavailable",
+      "native Unix-domain server can be imported on Windows but start/construction fails closed before serving"
+    ]
+  },
+  "tests": {
+    "upstreamWindowsInitialCollection": {
+      "status": "BLOCKED",
+      "reason": "unconditional POSIX resource import"
+    },
+    "harnessExample": {
+      "passed": 88,
+      "failed": 0,
+      "warnings": 3,
+      "status": "PASS_WITH_LAB_OVERLAY"
+    },
+    "harnessContractsAndRender": {
+      "passed": 56,
+      "failed": 0,
+      "status": "PASS_WITH_LAB_OVERLAY"
+    },
+    "localExecutorSubset": {
+      "passed": 5,
+      "failed": 1,
+      "status": "PARTIAL_WINDOWS",
+      "failure": "timeout path calls POSIX os.killpg, which is unavailable on Windows"
+    },
+    "broaderHarnessDiagnostic": {
+      "passed": 116,
+      "failed": 63,
+      "status": "PARTIAL_WINDOWS",
+      "scope": "contracts, render, proposals, read and recipe tests",
+      "failureClasses": [
+        "POSIX process-group and executable assumptions",
+        "Windows path separators differ from canonical forward-slash harness manifests",
+        "Unix-native serve and sandbox execution are not available on this host"
+      ]
+    },
+    "failClosedProbes": {
+      "sandbox": "PASS",
+      "nativeServe": "PASS"
+    }
+  },
+  "capability": {
+    "windowsHermeticEvaluation": "PARTIAL",
+    "untrustedProposerExecution": "BLOCKED_LINUX_SANDBOX_REQUIRED",
+    "sandboxExecutor": "BLOCKED_POSIX_BWRAP_REQUIRED",
+    "nativeServe": "BLOCKED_UNIX_DOMAIN_SERVER_REQUIRED",
+    "harnessEvolution": "NOT_RUN_NO_MODEL_ENDPOINT",
+    "productionIntegration": "NOT_PROMOTED"
+  },
+  "linuxDecision": {
+    "wslAction": "DEFER",
+    "reason": "WSL would address POSIX/bwrap portability, but useful harness evolution still lacks a zero-cost local model endpoint; aggregate any future WSL/UAC/reboot with GlitchTip or another justified Linux-only need.",
+    "ownerActionRequiredNow": false
+  },
+  "cost": {
+    "reefPreflight": "PASS FREE_LOCAL",
+    "uvPreflight": "PASS FREE_LOCAL",
+    "modelApiCalls": 0,
+    "incrementalRecurringCostIls": 0
+  },
+  "conclusion": "Reef adds useful harness-design evidence but is not a Windows production runtime on this host. Retain as a removable lab checkout only; do not add authority or an always-on service."
+}

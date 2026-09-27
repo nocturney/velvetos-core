@@ -57,6 +57,7 @@ def run_cli(*args: str) -> subprocess.CompletedProcess[str]:
         cwd=ROOT,
         text=True,
         capture_output=True,
+        encoding="utf-8",
     )
 
 

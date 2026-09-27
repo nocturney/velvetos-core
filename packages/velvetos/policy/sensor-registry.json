@@ -4,6 +4,32 @@
   "suite_runner": "scripts/check-all.py",
   "sensors": [
     {
+      "id": "check-agent-security-conformance",
+      "path": "scripts/check-agent-security-conformance.py",
+      "owns": [
+        "packages/vfharness/security/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/security/**",
+        "scripts/check-agent-security-conformance.py"
+      ],
+      "depends_on": [
+        "check-agent-surface-security",
+        "check-control-api",
+        "check-behavioral-evals"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-agent-surface-security",
       "path": "scripts/check-agent-surface-security.py",
       "owns": [
@@ -25,6 +51,30 @@
         "runtime": "NO_DIRECT_RUNTIME_EFFECT"
       },
       "fallback_scope": "ALWAYS_ON",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-behavioral-evals",
+      "path": "scripts/check-behavioral-evals.py",
+      "owns": [
+        "packages/vfharness/evals/**",
+        "tools/promptfoo/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/evals/**",
+        "tools/promptfoo/**",
+        "scripts/check-behavioral-evals.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
       "mapping_state": "mapped"
     },
     {
@@ -92,6 +142,35 @@
         "scripts/check-chat-runtime-bundle.py"
       ],
       "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-cli-anything-pilot",
+      "path": "scripts/check-cli-anything-pilot.py",
+      "owns": [
+        "packages/vfharness/devtools/**",
+        "packages/vfharness/cost-preflight/**",
+        "scripts/vf_cli_anything.py",
+        "scripts/vf_cad.py"
+      ],
+      "triggered_by": [
+        "packages/vfharness/devtools/**",
+        "packages/vfharness/cost-preflight/**",
+        "scripts/check-cli-anything-pilot.py"
+      ],
+      "depends_on": [
+        "scripts/vf_cli_anything.py",
+        "scripts/vf_cad.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -403,6 +482,62 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-ecosystem-radar-phase9",
+      "path": "scripts/check-ecosystem-radar-phase9.py",
+      "owns": [
+        "packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json",
+        "packages/vfresearch/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/state/ecosystem-radar-phase9-2026-09-27.json",
+        "packages/vfresearch/**",
+        "scripts/check-ecosystem-radar-phase9.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "medium",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-engineering-quality",
+      "path": "scripts/check-engineering-quality.py",
+      "owns": [
+        "packages/vfharness/devtools/**",
+        "packages/vfharness/playbooks/**",
+        ".cursor/skills/vf-web-ui-quality/**",
+        ".cursor/skills/vf-diagram-design/**",
+        ".diagram-design",
+        "instances/velvet-factory/.diagram-design"
+      ],
+      "triggered_by": [
+        "packages/vfharness/devtools/**",
+        "packages/vfharness/playbooks/**",
+        ".cursor/skills/vf-web-ui-quality/**",
+        ".cursor/skills/vf-diagram-design/**",
+        ".diagram-design",
+        "instances/velvet-factory/.diagram-design",
+        "scripts/check-engineering-quality.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-gmail-brief-send",
       "path": "scripts/check-gmail-brief-send.py",
       "owns": [
@@ -437,6 +572,30 @@
       "triggered_by": [
         "packages/vfigos/**",
         "scripts/check-grok-boot-hardening.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-grok-provider-readback",
+      "path": "scripts/check-grok-provider-readback.py",
+      "owns": [
+        "automation/grok/**",
+        "packages/vfharness/state/runtime/grok-production-scheduler.json"
+      ],
+      "triggered_by": [
+        "automation/grok/**",
+        "packages/vfharness/state/runtime/grok-production-scheduler.json",
+        "scripts/check-grok-provider-readback.py"
       ],
       "depends_on": [],
       "enforces": [],
@@ -536,6 +695,34 @@
       "depends_on": [],
       "enforces": [],
       "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-laya-shadow",
+      "path": "scripts/check-laya-shadow.py",
+      "owns": [
+        "packages/vfharness/evals/laya-shadow-dataset.jsonl",
+        "packages/vfharness/state/laya-shadow-*.json",
+        "packages/vfharness/cost-preflight/laya-*.json",
+        "scripts/run-laya-shadow.py"
+      ],
+      "triggered_by": [
+        "packages/vfharness/evals/laya-shadow-dataset.jsonl",
+        "packages/vfharness/state/laya-shadow-*.json",
+        "packages/vfharness/cost-preflight/laya-*.json",
+        "scripts/run-laya-shadow.py",
+        "scripts/check-laya-shadow.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -661,6 +848,28 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-memory-rationalization",
+      "path": "scripts/check-memory-rationalization.py",
+      "owns": [
+        "packages/vfharness/state/memory-*.json"
+      ],
+      "triggered_by": [
+        "packages/vfharness/state/memory-*.json",
+        "scripts/check-memory-rationalization.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-morning-green",
       "path": "scripts/check-morning-green.py",
       "owns": [
@@ -704,6 +913,32 @@
         "cost.recurring.new"
       ],
       "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-observability",
+      "path": "scripts/check-observability.py",
+      "owns": [
+        "packages/vfharness/observability/**",
+        "packages/vfharness/state/observability-phase2-*.json",
+        "tools/observability/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/observability/**",
+        "packages/vfharness/state/observability-phase2-*.json",
+        "tools/observability/**",
+        "scripts/check-observability.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "medium",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
@@ -1261,6 +1496,60 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-reef-phase8-lab",
+      "path": "scripts/check-reef-phase8-lab.py",
+      "owns": [
+        "packages/vfharness/state/reef-phase8-lab-2026-09-27.json",
+        "packages/vfharness/devtools/reef-windows-import-overlay.patch",
+        "packages/vfharness/cost-preflight/reef-*.json",
+        "packages/vfharness/cost-preflight/uv-*.json"
+      ],
+      "triggered_by": [
+        "packages/vfharness/state/reef-phase8-lab-2026-09-27.json",
+        "packages/vfharness/devtools/reef-windows-import-overlay.patch",
+        "packages/vfharness/cost-preflight/reef-*.json",
+        "packages/vfharness/cost-preflight/uv-*.json",
+        "scripts/check-reef-phase8-lab.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "medium",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-reliability-pilots",
+      "path": "scripts/check-reliability-pilots.py",
+      "owns": [
+        "packages/vfharness/reliability/**",
+        "packages/vfharness/state/**",
+        "packages/vfharness/cost-preflight/**"
+      ],
+      "triggered_by": [
+        "packages/vfharness/reliability/**",
+        "packages/vfharness/state/**",
+        "packages/vfharness/cost-preflight/**",
+        "scripts/check-reliability-pilots.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-review-convergence",
       "path": "scripts/check-review-convergence.py",
       "owns": [
@@ -1731,6 +2020,39 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-vf-3d-router",
+      "path": "scripts/check-vf-3d-router.py",
+      "owns": [
+        "scripts/vf_3d.py",
+        "scripts/vf_cad.py",
+        "packages/vfprod/**",
+        "packages/velvetos/modules/expert-3d-model.md",
+        ".cursor/skills/vf-3d-router/**",
+        "packages/vfharness/cost-preflight/**"
+      ],
+      "triggered_by": [
+        "packages/vfprod/**",
+        "packages/velvetos/modules/expert-3d-model.md",
+        ".cursor/skills/vf-3d-router/**",
+        "packages/vfharness/cost-preflight/**",
+        "scripts/check-vf-3d-router.py"
+      ],
+      "depends_on": [
+        "scripts/vf_3d.py",
+        "scripts/vf_cad.py"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-vf-autonomy",
       "path": "scripts/check-vf-autonomy.py",
       "owns": [
@@ -1767,6 +2089,43 @@
         "scripts/**"
       ],
       "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-vf-cad-stack",
+      "path": "scripts/check-vf-cad-stack.py",
+      "owns": [
+        "packages/vfprod/**",
+        "packages/vfresearch/LINKS.json",
+        "packages/velvetos/TOOL-STATUS.json",
+        "packages/vfharness/state/cad-engine-stack-20260927/**",
+        "packages/vfharness/state/fabrication-cost-cadquery-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-jscad-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-cad-cae-copilot-2026-09-27.json",
+        "packages/vfharness/state/fabrication-cost-forgent3d-2026-09-27.json",
+        "scripts/vf_cad_stack.py",
+        "scripts/check-vf-cad-stack.py"
+      ],
+      "triggered_by": [
+        "packages/vfprod/**",
+        "packages/vfresearch/LINKS.json",
+        "packages/velvetos/TOOL-STATUS.json",
+        "packages/vfharness/state/cad-engine-stack-20260927/**",
+        "scripts/vf_cad_stack.py",
+        "scripts/check-vf-cad-stack.py"
+      ],
+      "depends_on": [
+        "scripts/vf_cost_preflight.py"
+      ],
       "enforces": [],
       "risk": "high",
       "timeout_seconds": 180,
@@ -2773,30 +3132,23 @@
       "mapping_state": "mapped"
     },
     {
-      "id": "check-vf-cad-stack",
-      "path": "scripts/check-vf-cad-stack.py",
+      "id": "check-zero-cost-final-acceptance",
+      "path": "scripts/check-zero-cost-final-acceptance.py",
       "owns": [
-        "packages/vfprod/**",
-        "packages/vfresearch/LINKS.json",
-        "packages/velvetos/TOOL-STATUS.json",
-        "packages/vfharness/state/cad-engine-stack-20260927/**",
-        "packages/vfharness/state/fabrication-cost-cadquery-2026-09-27.json",
-        "packages/vfharness/state/fabrication-cost-jscad-2026-09-27.json",
-        "packages/vfharness/state/fabrication-cost-cad-cae-copilot-2026-09-27.json",
-        "packages/vfharness/state/fabrication-cost-forgent3d-2026-09-27.json",
-        "scripts/vf_cad_stack.py",
-        "scripts/check-vf-cad-stack.py"
+        "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
+        "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json",
+        "packages/vfharness/runtime/expected-components.json"
       ],
       "triggered_by": [
-        "packages/vfprod/**",
-        "packages/vfresearch/LINKS.json",
-        "packages/velvetos/TOOL-STATUS.json",
-        "packages/vfharness/state/cad-engine-stack-20260927/**",
-        "scripts/vf_cad_stack.py",
-        "scripts/check-vf-cad-stack.py"
+        "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
+        "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json",
+        "packages/vfharness/runtime/expected-components.json",
+        "scripts/check-zero-cost-final-acceptance.py"
       ],
       "depends_on": [
-        "scripts/vf_cost_preflight.py"
+        "check-grok-provider-readback",
+        "check-runtime-doctor",
+        "check-no-new-recurring-cost"
       ],
       "enforces": [],
       "risk": "high",

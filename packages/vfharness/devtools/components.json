@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "role": "ENGINEERING_QUALITY_DEVTOOLS_NOT_AUTHORITY",
+  "policy": "constitution/NO_NEW_RECURRING_COST.md",
+  "gate": "All components must remain removable without disabling VelvetOS.",
+  "components": [
+    {
+      "id": "ponytail",
+      "source": "https://github.com/DietrichGebert/ponytail",
+      "pin": "e3ba2aa6f1e6f0bc4d69eb09c9f0d0a93af56156",
+      "version": "4.10.0",
+      "license": "MIT",
+      "state": "EMBEDDED",
+      "mode": "PATTERN_EMBED_ONLY",
+      "runtime_authority": false,
+      "target": "packages/vfharness/playbooks/implementation-discipline.md",
+      "cost_preflight": "packages/vfharness/cost-preflight/ponytail-4.10.0.json"
+    },
+    {
+      "id": "gstack",
+      "source": "https://github.com/garrytan/gstack",
+      "pin": "01593aa67c94780528e8f5121e47362502410ced",
+      "license": "MIT",
+      "state": "EMBEDDED_SAFE_SUBSET",
+      "mode": "PATTERN_EMBED_ONLY",
+      "runtime_authority": false,
+      "allowlist": ["review", "qa", "investigate", "careful", "freeze", "guard", "document-generate"],
+      "denylist": ["setup-gbrain", "sync-gbrain", "ship", "land-and-deploy", "setup-deploy", "gstack-brain-sync"],
+      "target": "packages/vfharness/devtools/gstack-safe-subset.md",
+      "cost_preflight": "packages/vfharness/cost-preflight/gstack-safe-01593aa.json"
+    },
+    {
+      "id": "impeccable",
+      "source": "https://github.com/pbakaus/impeccable",
+      "pin": "9d715cc4f5564a990ca8345abfdd5df6dc9b41c8",
+      "license": "Apache-2.0",
+      "state": "INSTALLED_LOCAL",
+      "mode": "LOCAL_SOURCE_PLUS_NARROW_WRAPPER",
+      "runtime_authority": false,
+      "local_source": ".local-devtools/phase4/impeccable",
+      "smoke_test": "doctor --json against isolated local HTML fixture; findings=[]; no fixture writes",
+      "wrapper": ".cursor/skills/vf-web-ui-quality/SKILL.md",
+      "hooks_enabled": false,
+      "init_product_truth_enabled": false,
+      "creative_post_pipeline_allowed": false,
+      "cost_preflight": "packages/vfharness/cost-preflight/impeccable-9d715cc.json"
+    },
+    {
+      "id": "diagram-design",
+      "source": "https://github.com/cathrynlavery/diagram-design",
+      "pin": "cea465e7f5ea1043d8dab21a99f2dd3f7f661beb",
+      "license": "MIT",
+      "state": "INSTALLED_LOCAL",
+      "mode": "LOCAL_SOURCE_PLUS_NARROW_WRAPPER",
+      "runtime_authority": false,
+      "local_source": ".local-devtools/phase4/diagram-design",
+      "smoke_test": "self_check.py PASS on shipped example-architecture.html",
+      "wrapper": ".cursor/skills/vf-diagram-design/SKILL.md",
+      "profiles": ["velvetos", "velvet-factory"],
+      "auto_update": false,
+      "creative_post_pipeline_allowed": false,
+      "cost_preflight": "packages/vfharness/cost-preflight/diagram-design-cea465e.json"
+    }
+  ]
+}

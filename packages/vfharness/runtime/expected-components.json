@@ -1,11 +1,45 @@
 {
-  "schema": "vf.runtime.expected.v1",
+  "schema": "vf.runtime.expected.v2",
+  "receiptFreshnessDefaultHours": 24,
   "components": [
-    {"id":"repo-main","kind":"git","required":true,"evidence":"git-head"},
-    {"id":"mac-office","kind":"worker","required":true,"evidence":"runtime-receipt"},
-    {"id":"automation-steward","kind":"automation","required":true,"evidence":"automation-state"},
-    {"id":"morning-brief","kind":"automation","required":true,"evidence":"automation-state"},
-    {"id":"github","kind":"connector","required":true,"evidence":"connector-state"},
-    {"id":"google-drive","kind":"connector","required":false,"evidence":"connector-state"}
+    {
+      "id": "repo-main",
+      "kind": "git",
+      "required": true,
+      "evidence": "git-head",
+      "proofMode": "builtin"
+    },
+    {
+      "id": "edge-execution",
+      "kind": "worker-group",
+      "required": true,
+      "evidence": "runtime-receipt",
+      "anyOf": ["sderot-mac", "sderot-windows"],
+      "maxAgeHours": 24
+    },
+    {
+      "id": "grok-production-scheduler",
+      "kind": "automation",
+      "required": true,
+      "evidence": "provider-readback",
+      "receipt": "grok-production-scheduler",
+      "maxAgeHours": 24
+    },
+    {
+      "id": "github",
+      "kind": "connector",
+      "required": true,
+      "evidence": "connector-state",
+      "receipt": "github",
+      "maxAgeHours": 24
+    },
+    {
+      "id": "google-drive",
+      "kind": "connector",
+      "required": false,
+      "evidence": "connector-state",
+      "receipt": "google-drive",
+      "maxAgeHours": 24
+    }
   ]
 }

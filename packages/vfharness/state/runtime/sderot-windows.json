@@ -1,0 +1,12 @@
+{
+  "component_id": "sderot-windows",
+  "state": "healthy",
+  "observed_at": "2026-09-27T09:43:38.085114+00:00",
+  "evidence": {
+    "source": "Remote Desktop Commander list_devices",
+    "deviceId": "ecdb37d2-6ae7-42af-b828-985cd03d153f",
+    "deviceName": "Chris",
+    "status": "online",
+    "role": "documented Windows first-healthy fallback"
+  }
+}

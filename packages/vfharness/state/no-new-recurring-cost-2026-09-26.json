@@ -1,27 +1,36 @@
 {
   "id": "no-new-recurring-cost-2026-09-26",
-  "date": "2026-09-26",
-  "component_state": "Processing",
-  "goal": "Enforce a fail-closed zero-new-recurring-cost default across VelvetOS Core.",
-  "canonical_authority": "constitution/NO_NEW_RECURRING_COST.md",
-  "machine_contract": "packages/vfharness/cost-policy.json",
-  "preflight_validator": "scripts/vf_cost_preflight.py",
-  "computational_sensor": "scripts/check-no-new-recurring-cost.py",
-  "bindings": [
-    "AGENTS.md",
-    "constitution/CONSTITUTION.md",
-    "constitution/ORCHESTRA.md",
-    "office/control/POLICY.md",
-    "packages/vfops/risk-policy.json",
-    "packages/vfharness/layers.json"
-  ],
-  "focused_tests": [
-    "scripts/check-no-new-recurring-cost.py",
-    "scripts/check-risk-policy.py",
-    "scripts/check-hq-overlay.py",
-    "scripts/check-readme-contract.py",
-    "git diff --check"
-  ],
-  "paid_calls_or_resources_created": false,
-  "notes": "Implementation checkpoint. GitHub branch/PR/CI state is external and must be verified separately."
+  "component_state": "Idle",
+  "policy": "NO_NEW_RECURRING_COST",
+  "status": "IMPLEMENTED_LOCAL_WORKTREE_VERIFIED",
+  "source_of_truth": "constitution/NO_NEW_RECURRING_COST.md",
+  "default_new_recurring_cost": "zero",
+  "enforcement": {
+    "cost_preflight_validator": "scripts/vf_cost_preflight.py",
+    "ci_sensor": "scripts/check-no-new-recurring-cost.py",
+    "risk_gate": "office/control/POLICY.md#אדום",
+    "fail_closed_status": "BLOCKED_BY_NO_NEW_RECURRING_COST"
+  },
+  "tests": {
+    "check_no_new_recurring_cost": "PASS_2026-09-27",
+    "check_risk_policy": "PASS_2026-09-27",
+    "check_hq_overlay": "PASS_2026-09-27",
+    "check_readme_contract_selftest": "PASS_2026-09-27",
+    "git_diff_check": "PASS_2026-09-27",
+    "full_check_all": "PASS_2026-09-27_CURRENT_MAIN_INTEGRATION_106_OF_106_EXIT_0"
+  },
+  "cost": {
+    "new_paid_service_created": false,
+    "paid_api_call_made": false,
+    "billing_resource_created": false
+  },
+  "repository": {
+    "source": "https://github.com/nocturney/velvetos-core.git",
+    "git_metadata_available": true,
+    "branch": "policy/no-new-recurring-cost",
+    "base_head": "e8396071de04010ceb1eff7593c29cfc14d6a435",
+    "origin_main_at_verification": "e8396071de04010ceb1eff7593c29cfc14d6a435",
+    "commit_created": false,
+    "pull_request_created": false
+  }
 }

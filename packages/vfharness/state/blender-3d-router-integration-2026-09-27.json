@@ -1,0 +1,65 @@
+{
+  "task_id": "blender-3d-router-integration-2026-09-27",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfprod",
+  "goal": "Route 3D work between Text-to-CAD and local Blender with capability-gated, version-agnostic host discovery and deterministic geometry evidence.",
+  "planned_steps": [
+    "Integrate one 3D router without creating a second production runtime",
+    "Install/harden local Blender controller and design-os QA at zero incremental recurring cost",
+    "Prove Blender headless, RPC, geometry gate and CAD/slicer paths on Windows",
+    "Remove hard version allowlists and invalidate stale acceptance after upgrades",
+    "Run targeted and broad repository verification"
+  ],
+  "completed_steps": [
+    "TEXT_TO_CAD, BLENDER_NATIVE and HYBRID_CAD_THEN_BLENDER routing implemented and regression-tested",
+    "Blender discovery now selects installed runtime dynamically; exact versions are provenance only",
+    "OrcaSlicer discovery now selects installed runtime dynamically; printer matrix path is a hint, not a version lock",
+    "blender-ai-mcp hardened to loopback and protocol-verified against selected installed Blender",
+    "design-os headless benchmark, production geometry gate, STL roundtrip and declared-coverage audit passed",
+    "stale acceptance evidence is rejected after installed-version changes until capability checks are rerun",
+    "vf-3d-router Skill and vfops guide registry integrated",
+    "Windows sensor ownership/UTF-8 issues encountered during verification were repaired without global Git config changes",
+    "Canonical local brief for 2026-09-27 generated; staleness sensor rerun PASS"
+  ],
+  "next_step": "Use scripts/vf_3d.py route/doctor for the first real owner 3D job. After any Blender, MCP, Design OS, Text-to-CAD or Orca upgrade, rerun doctor plus applicable benchmark/gates before a release claim.",
+  "artifacts": [
+    "scripts/vf_3d.py",
+    "scripts/check-vf-3d-router.py",
+    "scripts/vf_cad.py",
+    "packages/vfprod/BLENDER-MCP.md",
+    "packages/vfprod/TEXT-TO-CAD.md",
+    "packages/vfprod/experts/3D-MODEL.md",
+    "packages/velvetos/modules/expert-3d-model.md",
+    ".cursor/skills/vf-3d-router/SKILL.md",
+    "packages/vfharness/state/3d-router-windows-acceptance-2026-09-27.json",
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\smoke.blend",
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\gate-report-dynamic.json",
+    "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\3d-jobs\\benchmark-current\\coverage-audit.json"
+  ],
+  "unresolved": [
+    "No unresolved defect remains inside the declared digital 3D acceptance scope. Physical manufacture remains unproven/unauthorized, and the historical full check-all run was not rerun even though both of its prior failures now pass individually."
+  ],
+  "outcome": "worker_done",
+  "pulse": "idle",
+  "verification": "3D acceptance current: vf_3d doctor PASS; vf_cad doctor PASS; check-vf-3d-router PASS; check-vf-cad-integration PASS; vfprod/skill-health/vfharness/velvetos/project-request/agent-security/no-new-cost PASS; prior broad-run blockers check-memory-rationalization and check-staleness both rerun PASS. Physical manufacture remains unproven/unauthorized; no full check-all PASS is claimed.",
+  "gate": null,
+  "escalation": null,
+  "last_updated": "2026-09-27",
+  "execution_state": {
+    "tool_version_allowlist": false,
+    "version_selection": "discover installed runtime and validate capabilities",
+    "external_paid_ai": "DISABLED",
+    "expected_new_recurring_cost_ils_per_month": 0,
+    "printer_network_control": false,
+    "upload": false,
+    "start_print": false,
+    "heating": false,
+    "motion": false,
+    "physical_manufacture_proven": false,
+    "current_observed_blender": "5.2.2 LTS",
+    "current_observed_orcaslicer": "2.4.2",
+    "observed_versions_role": "acceptance snapshot only; not runtime pins"
+  },
+  "latest_observation": "The routed local 3D stack remains accepted and version-agnostic. All targeted 3D sensors pass, and both failures from the historical 99/101 repository run now pass individually; the historical full run itself is not relabeled PASS."
+}

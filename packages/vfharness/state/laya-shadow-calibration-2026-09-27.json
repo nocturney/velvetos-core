@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "phase": 6,
+  "state": "SHADOW_CALIBRATION_EVIDENCE",
+  "source_receipt": "packages\\vfharness\\state\\laya-shadow-2026-09-27.json",
+  "method": "Additional scalar temperature over published class probabilities; fit by NLL on Hebrew calibration split, evaluated on disjoint Hebrew holdout. Argmax labels and accuracy are unchanged by construction.",
+  "split": {
+    "rule": "Hebrew cases only; numeric id modulo 3 == 0 is holdout, all other Hebrew cases are calibration",
+    "hebrew_total": 72,
+    "calibration_n": 50,
+    "holdout_n": 22,
+    "calibration_ids": [
+      "L001",
+      "L002",
+      "L004",
+      "L005",
+      "L007",
+      "L008",
+      "L010",
+      "L011",
+      "L013",
+      "L014",
+      "L016",
+      "L017",
+      "L019",
+      "L020",
+      "L022",
+      "L023",
+      "L025",
+      "L026",
+      "L028",
+      "L029",
+      "L031",
+      "L032",
+      "L034",
+      "L035",
+      "L037",
+      "L038",
+      "L040",
+      "L041",
+      "L043",
+      "L046",
+      "L047",
+      "L049",
+      "L050",
+      "L052",
+      "L053",
+      "L055",
+      "L056",
+      "L058",
+      "L059",
+      "L061",
+      "L062",
+      "L064",
+      "L065",
+      "L068",
+      "L070",
+      "L071",
+      "L073",
+      "L074",
+      "L076",
+      "L077"
+    ],
+    "holdout_ids": [
+      "L003",
+      "L006",
+      "L012",
+      "L015",
+      "L018",
+      "L024",
+      "L027",
+      "L030",
+      "L036",
+      "L039",
+      "L042",
+      "L045",
+      "L048",
+      "L051",
+      "L054",
+      "L060",
+      "L063",
+      "L066",
+      "L069",
+      "L072",
+      "L075",
+      "L078"
+    ]
+  },
+  "tasks": {
+    "domain": {
+      "temperature": 4.756828,
+      "fit_nll": 1.742715,
+      "holdout_before": {
+        "n": 22,
+        "accuracy": 0.3182,
+        "multiclass_brier_sum": 0.840936,
+        "negative_log_likelihood": 1.975605,
+        "ece_10_equal_width_bins": 0.202329,
+        "high_confidence_wrong": [
+          {
+            "id": "L006",
+            "expected": "office",
+            "predicted": "system",
+            "confidence": 0.8309
+          }
+        ]
+      },
+      "holdout_after": {
+        "n": 22,
+        "accuracy": 0.3182,
+        "multiclass_brier_sum": 0.805559,
+        "negative_log_likelihood": 1.715566,
+        "ece_10_equal_width_bins": 0.082962,
+        "high_confidence_wrong": []
+      }
+    },
+    "action": {
+      "temperature": 4.489848,
+      "fit_nll": 1.769506,
+      "holdout_before": {
+        "n": 22,
+        "accuracy": 0.3636,
+        "multiclass_brier_sum": 0.851987,
+        "negative_log_likelihood": 2.028586,
+        "ece_10_equal_width_bins": 0.282857,
+        "high_confidence_wrong": [
+          {
+            "id": "L024",
+            "expected": "write",
+            "predicted": "publish",
+            "confidence": 0.8471
+          },
+          {
+            "id": "L069",
+            "expected": "generate",
+            "predicted": "publish",
+            "confidence": 0.9023
+          }
+        ]
+      },
+      "holdout_after": {
+        "n": 22,
+        "accuracy": 0.3636,
+        "multiclass_brier_sum": 0.789302,
+        "negative_log_likelihood": 1.696096,
+        "ece_10_equal_width_bins": 0.103984,
+        "high_confidence_wrong": []
+      }
+    },
+    "escalation": {
+      "temperature": 8.0,
+      "fit_nll": 1.104518,
+      "holdout_before": {
+        "n": 22,
+        "accuracy": 0.5455,
+        "multiclass_brier_sum": 0.606609,
+        "negative_log_likelihood": 1.152098,
+        "ece_10_equal_width_bins": 0.192257,
+        "high_confidence_wrong": [
+          {
+            "id": "L075",
+            "expected": "no-model",
+            "predicted": "reasoning/frontier capability",
+            "confidence": 0.9909
+          }
+        ]
+      },
+      "holdout_after": {
+        "n": 22,
+        "accuracy": 0.5455,
+        "multiclass_brier_sum": 0.653636,
+        "negative_log_likelihood": 1.079615,
+        "ece_10_equal_width_bins": 0.181775,
+        "high_confidence_wrong": []
+      }
+    }
+  },
+  "deployment_effect": "NONE; evidence only, no runtime calibration installed",
+  "authorization_effect": "NONE; VelvetOS remains the only authorization authority"
+}

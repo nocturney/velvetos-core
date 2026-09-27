@@ -21,14 +21,14 @@ SPEC.loader.exec_module(mod)
 
 
 class LivingStudioTests(unittest.TestCase):
-    def test_registry_has_22_skills(self):
+    def test_registry_has_23_skills(self):
         reg = json.loads((ROOT / "packages/velvetos/living-studio/REGISTRY.json").read_text())
-        self.assertEqual(len(reg["skills"]), 22)
+        self.assertEqual(len(reg["skills"]), 23)
 
     def test_skill_verify_all(self):
         v = mod.skill_verify_all()
         self.assertTrue(v["ok"], v)
-        self.assertEqual(v["count"], 22)
+        self.assertEqual(v["count"], 23)
 
     def test_world_model_is_projection(self):
         wm = mod.world_model()

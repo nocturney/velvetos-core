@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "date": "2026-09-27",
+  "program": "zero-cost-agent-stack",
+  "branch": "implementation/zero-cost-agent-stack",
+  "acceptedCodeHead": "bd956faf0eb6ff8839ecb23f57a6d4159ebb3673",
+  "status": "PASS_DECLARED_SCOPE_WITH_KNOWN_LIMITATIONS",
+  "decision": "PUSHED_FOR_DRAFT_PR_REVIEW_NO_MERGE",
+  "fullCheckAll": {
+    "status": "PASS",
+    "command": "python scripts/check-all.py",
+    "observedExitCode": 0,
+    "sensorCount": 109,
+    "terminalLine": "OK suite passed=109",
+    "windowsProcessIsolation": "Each sensor launched with CREATE_NEW_PROCESS_GROUP on Windows to prevent child console-control teardown from terminating the parent suite.",
+    "historicalNote": "Integrated rerun after current-main policy/CAD reconciliation completed normally with 109/109 sensors; Windows child isolation remains enforced through CREATE_NEW_PROCESS_GROUP."
+  },
+  "targetedBatches": [
+    {
+      "id": "policy-security",
+      "status": "PASS_WITH_DECLARED_PARTIALS",
+      "observed": {
+        "projectRequestGate": "PASS domains=10 authority_paths=39 fail_closed",
+        "noNewRecurringCost": "PASS",
+        "riskPolicy": "PASS",
+        "hqOverlay": "PASS",
+        "readmeContract": "PASS cases=35 exemptions=13",
+        "behavioralEvals": "PASS cases=17 required=10 negative_controls=2",
+        "agentSecurity": "9 surfaces: 7 PASS, 2 PARTIAL",
+        "policyArchitecture": "PASS policies=11 sensors=109 artifact_classes=9"
+      }
+    },
+    {
+      "id": "observability-reliability-engineering",
+      "status": "PASS_WITH_DECLARED_BLOCK",
+      "observed": {
+        "observability": "PASS strict spans=9 traces=1 local_only=YES authority=NO",
+        "reliability": "Healthchecks missed-heartbeat PASS; changedetection change PASS; GlitchTip BLOCKED local-stack",
+        "engineeringQuality": "PASS strict Ponytail=EMBEDDED gstack=SAFE_SUBSET Impeccable=WEB_UI_ONLY diagram=DOCS_ONLY",
+        "vfharness": "PASS layers=6 sensors=24 embeds=19 locks=9 packs=31"
+      }
+    },
+    {
+      "id": "cad-laya",
+      "status": "PASS_WITH_DECLARED_LIMITS",
+      "observed": {
+        "cliAnythingFreeCAD": "PASS strict headless_tests=106 geometry_body=1 volume_mm3=5748.8 Orca=Snapmaker U1 cost=0",
+        "cliAnything3mf": "BLOCKED_NOT_ROUTABLE retained",
+        "laya": "PASS shadow receipt cases=78 hebrew=72 state=SHADOW_NOT_PROMOTED authority=false cost=0"
+      }
+    },
+    {
+      "id": "memory-labs-research",
+      "status": "PASS_WITH_DECLARED_LIMITS",
+      "observed": {
+        "memoryRationalization": "PASS cases=22 provenance=1 repeatability=1 cost=0 authority=vfmem",
+        "cognee": "PASS pin=1.6.0 role=derived fallback=vfmem sources=66",
+        "vfmem": "PASS embed=9 packs=31 nodes=406 edges=340 desk=38",
+        "reef": "PASS lab-only windows-partial cost=0 authority=none wsl=defer",
+        "ecosystemRadar": "PASS no-new-lab cost=0 authority=none research-seat=fresh",
+        "researchFreshness": "PASS same-day artifact present with external source; current-main evidence records observed run before 07:00 cutoff",
+        "researchStructure": "PASS verify; no live activation claim"
+      }
+    }
+  ],
+  "diffChecks": {
+    "committedProgramRange": {
+      "range": "bb54b0a7^..3a2faccf82ef77672b6598d45ae12f792fb49253",
+      "status": "PASS"
+    },
+    "integratedMainRange": {
+      "range": "be4259604eb2e955b5e5966c297241bfb307df46..bd956faf0eb6ff8839ecb23f57a6d4159ebb3673",
+      "status": "PASS",
+      "note": "Checks the reconciled PR delta against the current main parent after integrating policy, Instagram, vfmedia and CAD changes."
+    },
+    "liveWorkingTree": {
+      "status": "PASS_CLEAN",
+      "evidence": "Accepted code head bd956faf had clean working tree before receipt refresh; final cleanliness is rechecked after the acceptance commit."
+    }
+  },
+  "costAndAuthority": {
+    "incrementalRecurringCostIls": 0,
+    "newControlPlaneAuthority": 0,
+    "newSchedulerAuthority": 0,
+    "newMemoryAuthority": 0,
+    "newReleaseAuthority": 0,
+    "newAlwaysOnProductionRuntime": 0,
+    "providerModelPaidCalls": 0,
+    "pushPerformed": true,
+    "productionPublicationPerformed": false
+  },
+  "knownLimitations": [
+    "Agent-security browser isolation remains PARTIAL.",
+    "Promptfoo local script provider remains trusted local code rather than a sandbox boundary.",
+    "GlitchTip remains BLOCKED because the host lacks a justified local PostgreSQL/container stack; hosted fallback is forbidden.",
+    "WSL2 remains deferred; no Docker was installed for symmetry.",
+    "Laya remains SHADOW_NOT_PROMOTED after weak classification accuracy.",
+    "CLI-Anything 3MF remains BLOCKED_NOT_ROUTABLE; FreeCAD GUI preview/motion/live path remains disabled while headless CAD is verified.",
+    "Cognee remains a slow derived semantic index and never canonical authority.",
+    "Reef remains LAB_ONLY_NOT_PROMOTED; Windows harness diagnostics are partial and untrusted proposer execution remains Linux/bwrap-gated.",
+    "Research freshness was reconciled during main integration: the branch had a late-recovery note, while current-main canonical evidence records an observed run before the 07:00 cutoff; the current-main evidence is retained as authoritative."
+  ],
+  "milestoneCommits": [
+    "bb54b0a7 policy: enforce zero new recurring cost",
+    "cdba7ddd test: add zero-cost behavioral and agent security gates",
+    "86ab88da obs: add local zero-cost trace pipeline",
+    "2bfed5af reliability: add zero-cost local pilots",
+    "7088885b dev: add removable zero-cost engineering quality tools",
+    "70a72746 cad: promote scoped cli-anything freecad adapter",
+    "0026f6e3 lab: evaluate Laya as shadow-only decision helper",
+    "54275820 memory: rationalize zero-cost retrieval stack",
+    "815c2a09 lab: record Reef Windows compatibility boundary",
+    "9b575c49 lab: close Phase 9 ecosystem radar",
+    "9f79b1d5 ops: recover daily research freshness honestly",
+    "b7b84629 chore: normalize zero-cost evidence whitespace",
+    "fc075ff9 runtime: reconcile strict proof with failover",
+    "3569403d feat: make local 3D routing version-agnostic",
+    "6829242b ops: refresh HQ control handoff and daily brief",
+    "6415b991 ops: verify live Grok scheduler readback",
+    "abcb8799 reliability: avoid nested Python capture in check-all",
+    "3a2faccf test: isolate Windows check-all sensor process groups",
+    "e60e534a merge: integrate latest main into zero-cost stack",
+    "b9b1d6d1 merge: refresh latest main before PR review",
+    "092f614f fix: close final review cost and docs gaps",
+    "bd956faf merge: reconcile latest main into zero-cost stack"
+  ],
+  "acceptance": {
+    "committedScopeReady": true,
+    "ownerActionRequiredNow": false,
+    "pushRequiresExplicitOwnerPermission": true,
+    "pushWasExplicitlyAuthorized": true,
+    "pullRequest": "https://github.com/nocturney/velvetos-core/pull/390",
+    "pullRequestState": "DRAFT",
+    "mergePerformed": false,
+    "next": "PR #390 is reconciled with current main and remains DRAFT; keep merge owner-controlled while declared limitations remain fail-closed."
+  },
+  "repositoryWideStrictDeploymentProof": {
+    "status": "PASS",
+    "contractSchema": "vf.runtime.expected.v2",
+    "command": "python scripts/check-runtime-doctor.py --strict",
+    "observedExitCode": 0,
+    "verifiedHealthyNow": [
+      "sderot-windows fallback",
+      "grok-production-scheduler live provider readback",
+      "github connector",
+      "google-drive connector"
+    ],
+    "degradedButCovered": [
+      "sderot-mac offline; edge-execution healthy through sderot-windows anyOf fallback"
+    ],
+    "blockingEvidence": [],
+    "providerReadbackArtifact": "automation/grok/provider-readback-2026-09-27.json",
+    "providerReadbackScope": "inventory IDs, enabled state, effective schedule display, renderer timezone; prompt-body parity not claimed",
+    "rule": "Git/manifest state is not provider proof; Grok is healthy here because a fresh signed-in provider UI readback exists."
+  }
+}

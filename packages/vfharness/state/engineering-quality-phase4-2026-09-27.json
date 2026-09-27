@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "phase": 4,
+  "date": "2026-09-27",
+  "role": "ENGINEERING_QUALITY_DEVTOOLS_NOT_AUTHORITY",
+  "incremental_recurring_cost_ils": 0,
+  "ponytail": {
+    "state": "EMBEDDED",
+    "version": "4.10.0",
+    "pin": "e3ba2aa6f1e6f0bc4d69eb09c9f0d0a93af56156",
+    "mode": "PATTERN_EMBED_ONLY",
+    "runtime_installed": false,
+    "verification": "minimum-safe-change ladder embedded in implementation-discipline.md"
+  },
+  "gstack": {
+    "state": "EMBEDDED_SAFE_SUBSET",
+    "pin": "01593aa67c94780528e8f5121e47362502410ced",
+    "mode": "PATTERN_EMBED_ONLY",
+    "runtime_installed": false,
+    "allowlist": ["review", "qa", "investigate", "careful", "freeze", "guard", "document-generate"],
+    "disabled": ["GBrain", "ship", "land-and-deploy", "setup-deploy", "telemetry/onboarding runtime"]
+  },
+  "impeccable": {
+    "state": "INSTALLED_LOCAL",
+    "pin": "9d715cc4f5564a990ca8345abfdd5df6dc9b41c8",
+    "script_version": "0.1.6",
+    "deployment": ".local-devtools/phase4/impeccable",
+    "scope": "WEB_UI_ONLY",
+    "hooks_enabled": false,
+    "product_init_enabled": false,
+    "creative_post_pipeline_allowed": false,
+    "smoke_test": {
+      "command": "impeccable doctor --json --target isolated-local-fixture",
+      "project_root_resolved_to_fixture": true,
+      "rule_registry_available": true,
+      "findings_count": 0,
+      "fixture_write_side_effects": false,
+      "result": "PASS"
+    }
+  },
+  "diagram_design": {
+    "state": "INSTALLED_LOCAL",
+    "pin": "cea465e7f5ea1043d8dab21a99f2dd3f7f661beb",
+    "deployment": ".local-devtools/phase4/diagram-design",
+    "scope": "DOCUMENTATION_ARCHITECTURE_ONLY",
+    "profiles": ["velvetos", "velvet-factory"],
+    "profile_source": "packages/vfbriefux/hq/DESIGN.md Ink & Candy tokens",
+    "auto_update": false,
+    "creative_post_pipeline_allowed": false,
+    "smoke_test": {
+      "command": "self_check.py example-architecture.html",
+      "result": "PASS"
+    }
+  },
+  "gate": {
+    "removable_without_velvetos_runtime_failure": true,
+    "single_authority_preserved": true,
+    "second_runtime_added": false,
+    "paid_or_metered_api_used": false,
+    "human_action_required": false,
+    "rollback_test": "PASS: uninstall removed local sources/profiles; offline engineering-quality and vfharness remained PASS; reinstall restored exact pins/profiles; strict PASS"
+  },
+  "verification": [
+    "python -m py_compile scripts/setup-engineering-quality.py scripts/check-engineering-quality.py",
+    "python scripts/check-engineering-quality.py",
+    "python scripts/setup-engineering-quality.py",
+    "python scripts/check-engineering-quality.py --strict",
+    "python scripts/setup-engineering-quality.py --uninstall -> offline sensors PASS -> reinstall -> strict PASS",
+    "Impeccable isolated doctor JSON smoke",
+    "diagram-design self_check.py smoke"
+  ]
+}

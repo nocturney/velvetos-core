@@ -10,12 +10,12 @@
 בריף: `python3 scripts/vfprod.py brief` + `python3 scripts/vfprod.py print-done`.  
 תחזוקה מונעת: `MAINTENANCE.md` · `python3 scripts/vfprod.py maintain`.
 דשבורד חווה עתידי (Watchtower): `WATCHTOWER.md` — Edge על LAN שדרות, לא daemon בליבה.  
-3D AI Studio (מנוי): `3DAISTUDIO.md` · חיבור MCP: `CONNECT-3DAI.md`.  
 CAD/fabrication routing: `FABRICATION-ROUTER.md` → `TEXT-TO-CAD.md` · natural request: `python scripts/vf_fabrication_router.py decide --request "<request>"` · resolved route: `route --intent <intent>` · host: `python scripts/vf_cad.py doctor`.
-אחרי אישור: תור על הצינור `הדפסה`.  
-רישיון קובץ: `#vlicense`.  
-מנוי 3D AI Studio (טקסט/תמונה → STL): `3DAISTUDIO.md`.  
-איפה ה־MCP: `CONNECT-3DAI.md` (אתר אחרי Login, לא Marketplace של Cursor).
+3D modeling-engine routing תחת Fabrication Router: `BLENDER-MCP.md` · `python scripts/vf_3d.py route --request "..."` · `python scripts/vf_3d.py doctor`.
+גרסאות כלי 3D/slicer אינן allowlist: משתמשים במה שמותקן בפועל, מאמתים capability/acceptance, ושומרים גרסה/commit רק כ־provenance ב־receipt.
+3D AI Studio נשאר יכולת אופציונלית בלבד: `3DAISTUDIO.md` · `CONNECT-3DAI.md`; אין להסלים אליו כאשר המסלול המקומי מספיק, ואין שימוש בתשלום בלי סמכות עלות מפורשת.
+אחרי אישור רצפה: תור על הצינור `הדפסה`.
+רישיון קובץ: `#vlicense`.
 
 ## Fabrication tool routing
 
@@ -31,4 +31,4 @@ Native reasoning/vision may win when no exact engineering artifact is required. 
 
 ## Verification
 
-Before claiming completion, verify the routed target state or run the existing package/route sensor. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.
+Before claiming completion, verify the routed target state or run the existing package/route sensor. For 3D routing run `python scripts/check-vf-3d-router.py`; for a live host also require `python scripts/vf_3d.py doctor` and the applicable geometry gate. Configuration, a draft, a command exit, or an agent statement alone is not success. If live/provider evidence is unavailable, report the state as `UNPROVEN`/blocked rather than COMPLETE.

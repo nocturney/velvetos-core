@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "phase": 5,
+  "date": "2026-09-27",
+  "kind": "PROMOTION_FOLLOWUP",
+  "supersedes_decision_only": "packages/vfharness/state/cli-anything-pilot-2026-09-27.json",
+  "component": "CLI-Anything FreeCAD adapter",
+  "source": "https://github.com/HKUDS/CLI-Anything",
+  "pin": "34f519533bc175d2fe287ab8316b0dd99bb9cc43",
+  "state": "ACTIVE_SCOPE_LIMITED",
+  "incremental_recurring_cost_ils": 0,
+  "authority": {
+    "runtime_authority_added": false,
+    "production_authority_added": false,
+    "memory_authority_added": false,
+    "release_authority_added": false,
+    "slicer_authority_added": false,
+    "canonical_cad_route": "packages/vfprod/TEXT-TO-CAD.md",
+    "canonical_slicer_route": "scripts/vf_cad.py + VelvetPrintLab printer_matrix.json"
+  },
+  "owner_change_since_initial_pilot": "Owner explicitly authorized installing FreeCAD or other compliant local software if needed.",
+  "freecad": {
+    "version": "1.1.3",
+    "revision": "20260725 (Git shallow)",
+    "deployment": "portable",
+    "root": "%USERPROFILE%/Documents/VelvetPrintLab/tools/FreeCAD_1.1.3-Windows-x86_64-py311",
+    "archive": "%USERPROFILE%/Documents/VelvetPrintLab/tools/FreeCAD_1.1.3-Windows-x86_64-py311.7z",
+    "sha256": "9c6959dc9c4dba64dd818a62447e3dfedb4221d776fb044b239d462f150bcec4",
+    "cost_preflight": "packages/vfharness/cost-preflight/freecad-1.1.3-portable.json",
+    "uac_required": false,
+    "global_path_changed": false,
+    "registry_install": false,
+    "smoke": "FreeCADCmd --version PASS; import FreeCAD + FreeCAD.Version() PASS"
+  },
+  "upstream_headless_acceptance": {
+    "package": "cli-anything-freecad==1.0.0",
+    "tests_passed": 106,
+    "tests_deselected": 6,
+    "failed": 0,
+    "deselected_scope": [
+      "preview capture backend",
+      "preview capture body patterns",
+      "preview capture subprocess",
+      "motion render frames",
+      "motion render video",
+      "preview live poll"
+    ],
+    "reason_deselected": "Windows portable GUI preview remained alive beyond upstream timeout and produced no first preview artifact; headless CAD remained healthy",
+    "clean_install_finding": "Pillow is imported by test_full_e2e.py but is not declared in the FreeCAD harness setup.py test/runtime dependencies"
+  },
+  "upstream_geometry_bug": {
+    "observed": true,
+    "initial_real_task": {
+      "intended_geometry": "40x30x5 mm plate with one diameter-8 through hole",
+      "exported_bbox_mm": [40.0, 30.0, 10.0],
+      "exported_body_count": 2,
+      "exported_volume_mm3": 6502.4
+    },
+    "root_cause": [
+      "boolean_op stores current boolean results as parts type=cut/fuse/common with base_id/tool_id and hides operands",
+      "freecad_macro_gen only consumed legacy project.boolean_ops",
+      "export collected every valid FreeCAD Shape and ignored project visible state"
+    ],
+    "repair": "packages/vfharness/devtools/cli-anything-freecad-overlay.patch",
+    "repair_scope": "macro generator only: derive current-state booleans and export only visible project-state objects",
+    "regression_after_repair": "106 passed, 6 GUI-only tests deselected"
+  },
+  "real_task_acceptance": {
+    "workflow": "CLI-Anything JSON CAD -> FreeCAD headless STEP/STL -> vf_cad DfAM -> OrcaSlicer U1 -> G-code validation",
+    "step_bytes": 8294,
+    "stl_bytes": 26084,
+    "dfam": {
+      "bbox_mm": [40.0, 30.0, 5.0],
+      "volume_mm3": 5748.8,
+      "body_count": 1,
+      "watertight": true,
+      "partial": false
+    },
+    "orcaslicer": {
+      "version": "2.4.2",
+      "printer": "Snapmaker U1",
+      "gcode_bytes": 257839,
+      "returncode": 0,
+      "validator_ok": true,
+      "validator_errors": [],
+      "extrusion_moves": 5665,
+      "movement_commands": 6896
+    },
+    "printer_upload_or_start": false
+  },
+  "three_mf": {
+    "state": "BLOCKED_NOT_ROUTABLE",
+    "tests_python_3_14": "122 passed, 4 failed",
+    "tests_python_3_12": "122 passed, 4 failed",
+    "failing_area": "hole detection/resize",
+    "active_venv_installed": false
+  },
+  "routing": {
+    "text_to_cad_default": "plain-language functional/parametric source-first CAD and the normal DfAM/slicer handoff",
+    "cli_anything_freecad": "explicit iterative structured FreeCAD operations and headless STEP/STL/FCStd export",
+    "vf_cad": "DfAM, printer profile routing, Orca execution and G-code validation",
+    "blocked_cli_groups": ["preview", "motion", "repl"]
+  },
+  "verification": [
+    "python scripts/setup-cli-anything-pilot.py PASS and idempotent",
+    "python scripts/vf_cli_anything.py doctor PASS",
+    "python scripts/check-cli-anything-pilot.py PASS",
+    "python scripts/check-cli-anything-pilot.py --strict PASS",
+    "strict summary: headless_tests=106 geometry_body=1 volume_mm3=5748.8 orca=Snapmaker U1 cost=0",
+    "rollback drill PASS: uninstall clone+venv -> offline sensor PASS -> vf_cad doctor PASS without CLI-Anything -> reinstall from pin+overlay -> doctor PASS -> strict PASS"
+  ],
+  "removability": {
+    "cli_anything_uninstall_breaks_velvetos": false,
+    "freecad_retained_as_independent_portable_tool": true,
+    "reinstall_reproduced_exact_pin_and_overlay": true
+  },
+  "human_action_required": false
+}

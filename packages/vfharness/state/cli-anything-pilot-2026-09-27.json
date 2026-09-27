@@ -1,0 +1,85 @@
+{
+  "schema": 1,
+  "phase": 5,
+  "date": "2026-09-27",
+  "component": "CLI-Anything",
+  "source": "https://github.com/HKUDS/CLI-Anything",
+  "pin": "34f519533bc175d2fe287ab8316b0dd99bb9cc43",
+  "state": "PILOT_ONLY_NOT_PROMOTED",
+  "incremental_recurring_cost_ils": 0,
+  "authority": {
+    "runtime_authority_added": false,
+    "production_route_changed": false,
+    "existing_cad_authority": "packages/vfprod/TEXT-TO-CAD.md + scripts/vf_cad.py",
+    "orcaslicer_harness_created": false
+  },
+  "existing_baseline": {
+    "vf_cad_doctor": "PASS",
+    "cadgen": "0.6.6",
+    "text_to_cad_commit": "4eaf7459a95c0547b089ab53aa579c7597fab1d5",
+    "orcaslicer": "2.4.2",
+    "printer_profiles": ["h2d", "u1", "ecc2", "c5", "c5pro"],
+    "print_start": false
+  },
+  "freecad_harness": {
+    "package": "cli-anything-freecad==1.0.0",
+    "target_backend_present": false,
+    "tests": {
+      "result": "PASS_WITH_EXPECTED_SKIPS",
+      "passed": 101,
+      "skipped": 11,
+      "failed": 0,
+      "seconds": 2.01
+    },
+    "installation_findings": [
+      "clean test collection requires Pillow although setup.py does not declare it as a test dependency",
+      "console entry point tests require the venv Scripts directory on PATH when forced-installed mode is enabled"
+    ],
+    "structured_output": {
+      "document_new_json": "PASS",
+      "part_add_json": "PASS",
+      "part_list_json": "PASS",
+      "repeated_read_hash": "ed33a51b0b37e1a65ad20426071508c5d069b3672aefb7a90cb3a1f74ec5f195",
+      "project_hash_before_after_reads": "49869a7e622d3fc31447a63f943731df565575f7c3923d701432d1a9a3759b4e",
+      "byte_identical_repeated_read": true
+    },
+    "failure_semantics": {
+      "export_without_freecad_exit_code": 1,
+      "json_error": true,
+      "partial_output_artifact_observed": false,
+      "message_specific": true
+    },
+    "promotion": "BLOCKED_UNTIL_FREECAD_TARGET_IS_JUSTIFIED_AND_INSTALLED"
+  },
+  "threemf_harness": {
+    "package": "cli-anything-3mf==1.0.0",
+    "python_3_14": {"passed": 122, "failed": 4, "result": "FAIL"},
+    "python_3_12": {"passed": 122, "failed": 4, "result": "FAIL"},
+    "failing_area": [
+      "concentric true-inner-hole detection",
+      "blind-hole detection",
+      "through-hole axial extent",
+      "non-default-axis resize via detected hole id"
+    ],
+    "dependency_versions_observed": {
+      "numpy": "2.5.3",
+      "scipy": "1.18.1",
+      "trimesh": "5.1.0"
+    },
+    "source_history": "3MF harness is newly introduced in the pinned merge; no earlier stable in-clone implementation exists for comparison",
+    "license_metadata": "root repository says Apache-2.0; 3MF setup.py/README say MIT; resolve provenance before redistribution",
+    "promotion": "BLOCKED_UPSTREAM_TEST_FAILURES"
+  },
+  "orcaslicer": {
+    "upstream_harness": false,
+    "evidence": "CLI-Anything matrix states Bambu Studio / OrcaSlicer are uncovered at harness level",
+    "decision": "DO_NOT_INVENT_DUPLICATE_HARNESS; retain existing validated vf_cad/Orca route"
+  },
+  "decision": {
+    "expand_cli_anything_now": false,
+    "install_freecad_now": false,
+    "reason": "pilot does not yet beat the existing Windows-verified CAD/3MF/Orca path on reliability and maintenance cost",
+    "future_retest_trigger": "upstream 3MF tests green and/or a justified FreeCAD installation need emerges"
+  },
+  "human_action_required": false
+}

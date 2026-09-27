@@ -10,6 +10,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -121,12 +123,80 @@ def make_profiles(root: Path, matrix: dict) -> dict:
     return created
 
 
-def tool_env(matrix: dict) -> dict:
+def _orca_version(path: Path) -> tuple[tuple[int, ...], str]:
+    try:
+        cp = subprocess.run(
+            [str(path), "--version"], text=True, capture_output=True,
+            timeout=10, check=False,
+        )
+        line = (cp.stdout.splitlines() or cp.stderr.splitlines() or [""])[0].strip()
+    except Exception:
+        return (), ""
+    match = re.search(r"(\d+(?:\.\d+)+)", line)
+    if match and "invalid option" not in line.casefold():
+        version = tuple(int(part) for part in match.group(1).split("."))
+        return version, line
+    path_match = re.search(r"(\d+(?:\.\d+)+)", path.parent.name)
+    if path_match:
+        value = path_match.group(1)
+        return tuple(int(part) for part in value.split(".")), f"{value} (from install path)"
+    return (), line
+
+
+def discover_orca(root: Path, matrix: dict) -> dict:
+    """Discover the installed OrcaSlicer dynamically; matrix path is only a hint."""
+    candidates: list[Path] = []
+    if os.environ.get("ORCASLICER_BIN"):
+        candidates.append(Path(os.environ["ORCASLICER_BIN"]))
+    configured = ((matrix.get("slicer_engine") or {}).get("executable") or "").strip()
+    if configured:
+        candidates.append(Path(configured))
+    for name in ("orca-slicer", "OrcaSlicer", "orca-slicer.exe", "OrcaSlicer.exe"):
+        found = shutil.which(name)
+        if found:
+            candidates.append(Path(found))
+    tools = root / "tools"
+    if tools.is_dir():
+        candidates.extend(tools.glob("OrcaSlicer*\\orca-slicer.exe"))
+        candidates.extend(tools.glob("OrcaSlicer*\\OrcaSlicer.exe"))
+    if os.name == "nt":
+        for base in (
+            Path(os.environ.get("ProgramFiles", r"C:\Program Files")),
+            Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData" / "Local"))) / "Programs",
+        ):
+            candidates.extend(base.glob("OrcaSlicer*\\orca-slicer.exe"))
+            candidates.extend(base.glob("OrcaSlicer*\\OrcaSlicer.exe"))
+
+    unique: list[Path] = []
+    seen: set[str] = set()
+    for candidate in candidates:
+        if candidate.is_file():
+            resolved = candidate.resolve()
+            key = str(resolved).casefold()
+            if key not in seen:
+                seen.add(key)
+                unique.append(resolved)
+    if not unique:
+        raise RuntimeError("No usable OrcaSlicer installation was discovered")
+
+    ranked = []
+    for candidate in unique:
+        version_key, display = _orca_version(candidate)
+        ranked.append((version_key, candidate.stat().st_mtime, candidate, display))
+    ranked.sort(key=lambda item: (item[0], item[1]), reverse=True)
+    _, _, selected, display = ranked[0]
+    return {
+        "path": str(selected),
+        "observed_version": display or None,
+        "configured_hint": configured or None,
+        "candidates": [str(item[2]) for item in ranked],
+    }
+
+
+def tool_env(root: Path, matrix: dict) -> dict:
     env = os.environ.copy()
-    exe = Path(matrix["slicer_engine"]["executable"]).resolve()
-    if not exe.is_file():
-        raise RuntimeError(f"OrcaSlicer executable missing: {exe}")
-    env["ORCASLICER_BIN"] = str(exe)
+    slicer = discover_orca(root, matrix)
+    env["ORCASLICER_BIN"] = slicer["path"]
     return env
 
 
@@ -145,7 +215,8 @@ def doctor(_: argparse.Namespace) -> int:
         return 2
     cad = run([str(py), "-m", "cadgen.cli", "doctor", str(repo / "skills" / "cad")], cwd=repo)
     gcode = run([str(py), str(repo / "skills" / "gcode" / "scripts" / "gcode_tool.py"), "discover"],
-                cwd=repo, env=tool_env(matrix))
+                cwd=repo, env=tool_env(root, matrix))
+    slicer = discover_orca(root, matrix)
     profiles = make_profiles(root, matrix)
     ok = cad.returncode == 0 and gcode.returncode == 0 and '"available": true' in gcode.stdout
     result = {
@@ -155,6 +226,7 @@ def doctor(_: argparse.Namespace) -> int:
         "upstream_commit": run(["git", "rev-parse", "HEAD"], cwd=repo).stdout.strip(),
         "cadgen_doctor": {"returncode": cad.returncode, "stdout": cad.stdout.strip(), "stderr": cad.stderr.strip()},
         "gcode_discover": {"returncode": gcode.returncode, "stdout": gcode.stdout.strip(), "stderr": gcode.stderr.strip()},
+        "slicer": slicer,
         "profiles": profiles,
         "safety": matrix["safety"],
     }
@@ -199,7 +271,7 @@ def slice_cmd(args: argparse.Namespace) -> int:
         "--backend", "orcaslicer",
         "--execute" if args.execute else "--dry-run",
     ]
-    proc = run(cmd, cwd=repo, env=tool_env(matrix))
+    proc = run(cmd, cwd=repo, env=tool_env(root, matrix))
     sys.stdout.write(proc.stdout)
     sys.stderr.write(proc.stderr)
     if proc.returncode != 0 or not args.execute:
@@ -209,7 +281,7 @@ def slice_cmd(args: argparse.Namespace) -> int:
         "--gcode", str(output),
         "--profile", wrappers[args.printer],
         "--json",
-    ], cwd=repo, env=tool_env(matrix))
+    ], cwd=repo, env=tool_env(root, matrix))
     sys.stdout.write(val.stdout)
     sys.stderr.write(val.stderr)
     return val.returncode

@@ -1,0 +1,12 @@
+{
+  "component": "healthchecks",
+  "canonical_source": "https://github.com/healthchecks/healthchecks",
+  "tag": "v4.4",
+  "commit": "49924faadf0f24a846abc3acf3014b396fdc1f29",
+  "license": "BSD-3-Clause",
+  "deployment": "LOCAL_WINDOWS_SQLITE_PILOT",
+  "authority_role": "HEARTBEAT_SENSOR_ONLY",
+  "production_scheduler": false,
+  "hosted_service_used": false,
+  "paid_notifications_enabled": false
+}

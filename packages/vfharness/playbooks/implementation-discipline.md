@@ -4,6 +4,19 @@ Source patterns: `multica-ai/andrej-karpathy-skills` + selected `obra/superpower
 
 Use before material code changes, especially refactors, cross-package changes, automation changes, and fixes that look deceptively small.
 
+## Ponytail minimum-safe-change ladder
+
+After understanding the real flow, stop at the first rung that fully solves the need:
+
+1. **Does this need to be built at all?** Remove unnecessary work first.
+2. **Existing capability?** Reuse the current pack, helper, playbook, schema, sensor, or platform feature.
+3. **Native platform?** Prefer the standard library or native OS/platform capability over new machinery.
+4. **Existing dependency?** Use a dependency that is already present and appropriate before adding another.
+5. **Smallest safe change?** Prefer the narrowest change that fixes the root cause across the real callers.
+6. **New code only when justified.** Add the minimum code/dependency after the earlier rungs fail.
+
+Never simplify away security, provenance, receipts, approvals, schemas, fail-closed behavior, accessibility, data-loss prevention, or regression protection. A smaller wrong change is not a safer change.
+
 ## Five rules
 
 1. **Think before code.** State the requested outcome, the current source of truth, and the smallest credible change before editing.

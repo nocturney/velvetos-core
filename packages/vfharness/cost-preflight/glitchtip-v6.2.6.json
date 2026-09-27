@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "glitchtip-backend@v6.2.6",
+  "classification": "FREE_SELF_HOSTED",
+  "license": "MIT",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none under MIT for selected internal self-host path",
+  "deployment_model": "DEFERRED local self-host; current documented stack uses PostgreSQL and Docker-oriented development",
+  "api_dependencies": [],
+  "billing_risk": "software is free; hosted GlitchTip is not selected",
+  "selected_mode": "deferred until an isolated local PostgreSQL/container environment is justified",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "would require new local PostgreSQL plus application runtime; not installed because existing host lacks Docker/WSL and duplicate complexity outweighs current value",
+  "api_cost_notes": "no hosted GlitchTip or external API calls",
+  "subscription_notes": "no hosted account or subscription",
+  "hidden_secondary_cost_notes": "local database/storage/maintenance burden is the blocker, not license cost",
+  "quota_controls": "not applicable while deferred",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://gitlab.com/glitchtip/glitchtip-backend/-/tags v6.2.6",
+    "https://gitlab.com/glitchtip/glitchtip-backend/ MIT; current docs describe Docker and PostgreSQL"
+  ],
+  "approval": null
+}

@@ -1,0 +1,3655 @@
+{
+  "schema": 1,
+  "phase": 6,
+  "state": "SHADOW",
+  "authority": {
+    "execution_authority": false,
+    "authorization_authority": false,
+    "production_routing_authority": false,
+    "role": "LOCAL_DECISION_HELPER_EVALUATION_ONLY"
+  },
+  "model": {
+    "requested": "C:\\Users\\Chris\\.cache\\huggingface\\hub\\models--convaiinnovations--laya-multilingual\\snapshots\\e4e9ddf21a7b1903b7acffd8814ad4307bf63a67",
+    "snapshot_sha": "e4e9ddf21a7b1903b7acffd8814ad4307bf63a67",
+    "device": "cpu",
+    "laya_version": "0.3.20",
+    "torch_version": "2.14.0+cpu",
+    "transformers_version": "5.17.0",
+    "offline": true
+  },
+  "dataset": {
+    "path": "packages\\vfharness\\evals\\laya-shadow-dataset.jsonl",
+    "n": 78,
+    "language_counts": {
+      "he": 72,
+      "en": 6
+    },
+    "hebrew_script_rows": 72,
+    "hebrew_script_share": 0.9231,
+    "label_counts": {
+      "domain": {
+        "office": 13,
+        "velvet-factory": 13,
+        "development": 13,
+        "media": 13,
+        "system": 13,
+        "unknown": 13
+      },
+      "action": {
+        "read": 12,
+        "analyse": 16,
+        "generate": 14,
+        "write": 12,
+        "execute": 13,
+        "publish": 11
+      },
+      "escalation": {
+        "no-model": 35,
+        "local/small": 19,
+        "reasoning/frontier capability": 24
+      }
+    }
+  },
+  "performance": {
+    "model_load_ms": 4097.05,
+    "inference_ms": 35132.74,
+    "inference_ms_per_case": 450.42,
+    "batch_size": 8,
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "metrics": {
+    "domain": {
+      "n": 78,
+      "correct": 24,
+      "accuracy": 0.3077,
+      "multiclass_brier_sum": 0.909134,
+      "negative_log_likelihood": 2.128181,
+      "ece_10_equal_width_bins": 0.262606,
+      "confusion": {
+        "development": {
+          "development": 9,
+          "system": 1,
+          "velvet-factory": 3
+        },
+        "media": {
+          "development": 2,
+          "system": 5,
+          "velvet-factory": 5,
+          "media": 1
+        },
+        "office": {
+          "system": 11,
+          "velvet-factory": 1,
+          "office": 1
+        },
+        "system": {
+          "system": 8,
+          "velvet-factory": 2,
+          "development": 3
+        },
+        "unknown": {
+          "system": 4,
+          "development": 5,
+          "unknown": 2,
+          "velvet-factory": 2
+        },
+        "velvet-factory": {
+          "system": 4,
+          "development": 6,
+          "velvet-factory": 3
+        }
+      },
+      "per_label": {
+        "office": {
+          "total": 13,
+          "correct": 1,
+          "accuracy": 0.0769
+        },
+        "velvet-factory": {
+          "total": 13,
+          "correct": 3,
+          "accuracy": 0.2308
+        },
+        "development": {
+          "total": 13,
+          "correct": 9,
+          "accuracy": 0.6923
+        },
+        "media": {
+          "total": 13,
+          "correct": 1,
+          "accuracy": 0.0769
+        },
+        "system": {
+          "total": 13,
+          "correct": 8,
+          "accuracy": 0.6154
+        },
+        "unknown": {
+          "total": 13,
+          "correct": 2,
+          "accuracy": 0.1538
+        }
+      },
+      "high_confidence_wrong": [
+        {
+          "id": "L006",
+          "lang": "he",
+          "expected": "office",
+          "predicted": "system",
+          "answer_confidence": 0.831,
+          "true_probability": 0.0115
+        },
+        {
+          "id": "L040",
+          "lang": "he",
+          "expected": "media",
+          "predicted": "development",
+          "answer_confidence": 0.8448,
+          "true_probability": 0.0052
+        },
+        {
+          "id": "L057",
+          "lang": "en",
+          "expected": "system",
+          "predicted": "development",
+          "answer_confidence": 0.8872,
+          "true_probability": 0.0973
+        },
+        {
+          "id": "L065",
+          "lang": "he",
+          "expected": "unknown",
+          "predicted": "system",
+          "answer_confidence": 0.8342,
+          "true_probability": 0.0268
+        },
+        {
+          "id": "L071",
+          "lang": "he",
+          "expected": "unknown",
+          "predicted": "system",
+          "answer_confidence": 0.8172,
+          "true_probability": 0.0225
+        }
+      ]
+    },
+    "action": {
+      "n": 78,
+      "correct": 24,
+      "accuracy": 0.3077,
+      "multiclass_brier_sum": 0.878852,
+      "negative_log_likelihood": 1.940149,
+      "ece_10_equal_width_bins": 0.226018,
+      "confusion": {
+        "analyse": {
+          "publish": 11,
+          "analyse": 3,
+          "write": 1,
+          "execute": 1
+        },
+        "execute": {
+          "publish": 6,
+          "analyse": 4,
+          "execute": 3
+        },
+        "generate": {
+          "publish": 6,
+          "generate": 3,
+          "analyse": 1,
+          "execute": 2,
+          "write": 1,
+          "read": 1
+        },
+        "publish": {
+          "publish": 10,
+          "read": 1
+        },
+        "read": {
+          "generate": 1,
+          "publish": 5,
+          "execute": 2,
+          "read": 4
+        },
+        "write": {
+          "read": 2,
+          "publish": 7,
+          "write": 1,
+          "analyse": 1,
+          "generate": 1
+        }
+      },
+      "per_label": {
+        "read": {
+          "total": 12,
+          "correct": 4,
+          "accuracy": 0.3333
+        },
+        "analyse": {
+          "total": 16,
+          "correct": 3,
+          "accuracy": 0.1875
+        },
+        "generate": {
+          "total": 14,
+          "correct": 3,
+          "accuracy": 0.2143
+        },
+        "write": {
+          "total": 12,
+          "correct": 1,
+          "accuracy": 0.0833
+        },
+        "execute": {
+          "total": 13,
+          "correct": 3,
+          "accuracy": 0.2308
+        },
+        "publish": {
+          "total": 11,
+          "correct": 10,
+          "accuracy": 0.9091
+        }
+      },
+      "high_confidence_wrong": [
+        {
+          "id": "L024",
+          "lang": "he",
+          "expected": "write",
+          "predicted": "publish",
+          "answer_confidence": 0.847,
+          "true_probability": 0.0397
+        },
+        {
+          "id": "L062",
+          "lang": "he",
+          "expected": "analyse",
+          "predicted": "publish",
+          "answer_confidence": 0.9255,
+          "true_probability": 0.003
+        },
+        {
+          "id": "L068",
+          "lang": "he",
+          "expected": "execute",
+          "predicted": "publish",
+          "answer_confidence": 0.8612,
+          "true_probability": 0.0085
+        },
+        {
+          "id": "L069",
+          "lang": "he",
+          "expected": "generate",
+          "predicted": "publish",
+          "answer_confidence": 0.9022,
+          "true_probability": 0.0461
+        }
+      ]
+    },
+    "escalation": {
+      "n": 78,
+      "correct": 31,
+      "accuracy": 0.3974,
+      "multiclass_brier_sum": 0.716533,
+      "negative_log_likelihood": 1.24952,
+      "ece_10_equal_width_bins": 0.165697,
+      "confusion": {
+        "local/small": {
+          "local/small": 10,
+          "reasoning/frontier capability": 5,
+          "no-model": 4
+        },
+        "no-model": {
+          "no-model": 8,
+          "reasoning/frontier capability": 12,
+          "local/small": 15
+        },
+        "reasoning/frontier capability": {
+          "reasoning/frontier capability": 13,
+          "local/small": 11
+        }
+      },
+      "per_label": {
+        "no-model": {
+          "total": 35,
+          "correct": 8,
+          "accuracy": 0.2286
+        },
+        "local/small": {
+          "total": 19,
+          "correct": 10,
+          "accuracy": 0.5263
+        },
+        "reasoning/frontier capability": {
+          "total": 24,
+          "correct": 13,
+          "accuracy": 0.5417
+        }
+      },
+      "high_confidence_wrong": [
+        {
+          "id": "L057",
+          "lang": "en",
+          "expected": "no-model",
+          "predicted": "local/small",
+          "answer_confidence": 0.9908,
+          "true_probability": 0.0058
+        },
+        {
+          "id": "L061",
+          "lang": "he",
+          "expected": "no-model",
+          "predicted": "local/small",
+          "answer_confidence": 0.8055,
+          "true_probability": 0.1546
+        },
+        {
+          "id": "L075",
+          "lang": "he",
+          "expected": "no-model",
+          "predicted": "reasoning/frontier capability",
+          "answer_confidence": 0.9909,
+          "true_probability": 0.0025
+        }
+      ]
+    }
+  },
+  "joint": {
+    "correct_all_three": 4,
+    "accuracy_all_three": 0.0513
+  },
+  "by_language_accuracy": {
+    "en": {
+      "n": 6,
+      "domain": 0.5,
+      "action": 0.8333,
+      "escalation": 0.5
+    },
+    "he": {
+      "n": 72,
+      "domain": 0.2917,
+      "action": 0.2639,
+      "escalation": 0.3889
+    }
+  },
+  "cases": [
+    {
+      "id": "L001",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "generate",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.316,
+        "action": 0.411,
+        "escalation": 0.817
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0278,
+          "velvet-factory": 0.2575,
+          "development": 0.3092,
+          "media": 0.0178,
+          "system": 0.316,
+          "unknown": 0.0717
+        },
+        "action": {
+          "read": 0.1942,
+          "analyse": 0.0115,
+          "generate": 0.411,
+          "write": 0.0151,
+          "execute": 0.0171,
+          "publish": 0.3511
+        },
+        "escalation": {
+          "no-model": 0.817,
+          "local/small": 0.1028,
+          "reasoning/frontier capability": 0.0801
+        }
+      }
+    },
+    {
+      "id": "L002",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "analyse",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.3282,
+        "action": 0.5873,
+        "escalation": 0.3504
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0204,
+          "velvet-factory": 0.2277,
+          "development": 0.2426,
+          "media": 0.0163,
+          "system": 0.3282,
+          "unknown": 0.1648
+        },
+        "action": {
+          "read": 0.1078,
+          "analyse": 0.0452,
+          "generate": 0.1012,
+          "write": 0.1008,
+          "execute": 0.0578,
+          "publish": 0.5873
+        },
+        "escalation": {
+          "no-model": 0.3179,
+          "local/small": 0.3504,
+          "reasoning/frontier capability": 0.3316
+        }
+      }
+    },
+    {
+      "id": "L003",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.4822,
+        "action": 0.6821,
+        "escalation": 0.5402
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0207,
+          "velvet-factory": 0.4012,
+          "development": 0.0575,
+          "media": 0.0101,
+          "system": 0.4822,
+          "unknown": 0.0283
+        },
+        "action": {
+          "read": 0.056,
+          "analyse": 0.0098,
+          "generate": 0.0205,
+          "write": 0.1925,
+          "execute": 0.0391,
+          "publish": 0.6821
+        },
+        "escalation": {
+          "no-model": 0.2465,
+          "local/small": 0.2133,
+          "reasoning/frontier capability": 0.5402
+        }
+      }
+    },
+    {
+      "id": "L004",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "write",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "read",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.337,
+        "action": 0.3866,
+        "escalation": 0.4145
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0172,
+          "velvet-factory": 0.1487,
+          "development": 0.2658,
+          "media": 0.0346,
+          "system": 0.337,
+          "unknown": 0.1968
+        },
+        "action": {
+          "read": 0.3866,
+          "analyse": 0.045,
+          "generate": 0.0987,
+          "write": 0.32,
+          "execute": 0.041,
+          "publish": 0.1087
+        },
+        "escalation": {
+          "no-model": 0.2166,
+          "local/small": 0.3689,
+          "reasoning/frontier capability": 0.4145
+        }
+      }
+    },
+    {
+      "id": "L005",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.6932,
+        "action": 0.4209,
+        "escalation": 0.3846
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0415,
+          "velvet-factory": 0.1594,
+          "development": 0.0681,
+          "media": 0.0115,
+          "system": 0.6932,
+          "unknown": 0.0264
+        },
+        "action": {
+          "read": 0.1129,
+          "analyse": 0.0415,
+          "generate": 0.202,
+          "write": 0.0874,
+          "execute": 0.1352,
+          "publish": 0.4209
+        },
+        "escalation": {
+          "no-model": 0.3846,
+          "local/small": 0.2693,
+          "reasoning/frontier capability": 0.3461
+        }
+      }
+    },
+    {
+      "id": "L006",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.831,
+        "action": 0.5716,
+        "escalation": 0.3929
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0115,
+          "velvet-factory": 0.0739,
+          "development": 0.0645,
+          "media": 0.0046,
+          "system": 0.831,
+          "unknown": 0.0146
+        },
+        "action": {
+          "read": 0.0987,
+          "analyse": 0.0591,
+          "generate": 0.0766,
+          "write": 0.076,
+          "execute": 0.1179,
+          "publish": 0.5716
+        },
+        "escalation": {
+          "no-model": 0.2826,
+          "local/small": 0.3245,
+          "reasoning/frontier capability": 0.3929
+        }
+      }
+    },
+    {
+      "id": "L007",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.6549,
+        "action": 0.4399,
+        "escalation": 0.6247
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.012,
+          "velvet-factory": 0.1327,
+          "development": 0.1047,
+          "media": 0.0207,
+          "system": 0.6549,
+          "unknown": 0.075
+        },
+        "action": {
+          "read": 0.1804,
+          "analyse": 0.0777,
+          "generate": 0.1425,
+          "write": 0.1212,
+          "execute": 0.0383,
+          "publish": 0.4399
+        },
+        "escalation": {
+          "no-model": 0.6247,
+          "local/small": 0.1571,
+          "reasoning/frontier capability": 0.2181
+        }
+      }
+    },
+    {
+      "id": "L008",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.4108,
+        "action": 0.3964,
+        "escalation": 0.4416
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0532,
+          "velvet-factory": 0.4108,
+          "development": 0.1048,
+          "media": 0.0102,
+          "system": 0.2383,
+          "unknown": 0.1827
+        },
+        "action": {
+          "read": 0.1132,
+          "analyse": 0.0708,
+          "generate": 0.0709,
+          "write": 0.2741,
+          "execute": 0.0745,
+          "publish": 0.3964
+        },
+        "escalation": {
+          "no-model": 0.3315,
+          "local/small": 0.4416,
+          "reasoning/frontier capability": 0.2269
+        }
+      }
+    },
+    {
+      "id": "L009",
+      "lang": "en",
+      "expected": {
+        "domain": "office",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "office",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.9552,
+        "action": 0.969,
+        "escalation": 0.6507
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.9552,
+          "velvet-factory": 0.008,
+          "development": 0.0077,
+          "media": 0.0011,
+          "system": 0.0212,
+          "unknown": 0.0068
+        },
+        "action": {
+          "read": 0.0046,
+          "analyse": 0.969,
+          "generate": 0.0023,
+          "write": 0.0024,
+          "execute": 0.0189,
+          "publish": 0.0027
+        },
+        "escalation": {
+          "no-model": 0.2022,
+          "local/small": 0.1471,
+          "reasoning/frontier capability": 0.6507
+        }
+      }
+    },
+    {
+      "id": "L010",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "write",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.4991,
+        "action": 0.6506,
+        "escalation": 0.4234
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0173,
+          "velvet-factory": 0.2393,
+          "development": 0.1228,
+          "media": 0.0122,
+          "system": 0.4991,
+          "unknown": 0.1093
+        },
+        "action": {
+          "read": 0.1209,
+          "analyse": 0.0229,
+          "generate": 0.0467,
+          "write": 0.1024,
+          "execute": 0.0564,
+          "publish": 0.6506
+        },
+        "escalation": {
+          "no-model": 0.4199,
+          "local/small": 0.1567,
+          "reasoning/frontier capability": 0.4234
+        }
+      }
+    },
+    {
+      "id": "L011",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "analyse",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.5965,
+        "action": 0.4608,
+        "escalation": 0.359
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.033,
+          "velvet-factory": 0.1099,
+          "development": 0.1145,
+          "media": 0.0426,
+          "system": 0.5965,
+          "unknown": 0.1035
+        },
+        "action": {
+          "read": 0.2821,
+          "analyse": 0.4608,
+          "generate": 0.062,
+          "write": 0.0742,
+          "execute": 0.0464,
+          "publish": 0.0745
+        },
+        "escalation": {
+          "no-model": 0.359,
+          "local/small": 0.2882,
+          "reasoning/frontier capability": 0.3527
+        }
+      }
+    },
+    {
+      "id": "L012",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.5767,
+        "action": 0.5659,
+        "escalation": 0.5469
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0259,
+          "velvet-factory": 0.0764,
+          "development": 0.1281,
+          "media": 0.017,
+          "system": 0.5767,
+          "unknown": 0.176
+        },
+        "action": {
+          "read": 0.2228,
+          "analyse": 0.0155,
+          "generate": 0.026,
+          "write": 0.1533,
+          "execute": 0.0165,
+          "publish": 0.5659
+        },
+        "escalation": {
+          "no-model": 0.5469,
+          "local/small": 0.1587,
+          "reasoning/frontier capability": 0.2944
+        }
+      }
+    },
+    {
+      "id": "L013",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.3143,
+        "action": 0.3904,
+        "escalation": 0.6594
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0156,
+          "velvet-factory": 0.1191,
+          "development": 0.2969,
+          "media": 0.0092,
+          "system": 0.3143,
+          "unknown": 0.2449
+        },
+        "action": {
+          "read": 0.2057,
+          "analyse": 0.1029,
+          "generate": 0.0798,
+          "write": 0.1272,
+          "execute": 0.0941,
+          "publish": 0.3904
+        },
+        "escalation": {
+          "no-model": 0.1141,
+          "local/small": 0.6594,
+          "reasoning/frontier capability": 0.2266
+        }
+      }
+    },
+    {
+      "id": "L014",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.7907,
+        "action": 0.2881,
+        "escalation": 0.4687
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0088,
+          "velvet-factory": 0.1102,
+          "development": 0.0565,
+          "media": 0.0104,
+          "system": 0.7907,
+          "unknown": 0.0235
+        },
+        "action": {
+          "read": 0.1275,
+          "analyse": 0.0886,
+          "generate": 0.1702,
+          "write": 0.2084,
+          "execute": 0.1172,
+          "publish": 0.2881
+        },
+        "escalation": {
+          "no-model": 0.1657,
+          "local/small": 0.4687,
+          "reasoning/frontier capability": 0.3656
+        }
+      }
+    },
+    {
+      "id": "L015",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.3363,
+        "action": 0.7781,
+        "escalation": 0.4796
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0109,
+          "velvet-factory": 0.1575,
+          "development": 0.3363,
+          "media": 0.043,
+          "system": 0.1238,
+          "unknown": 0.3285
+        },
+        "action": {
+          "read": 0.0583,
+          "analyse": 0.0121,
+          "generate": 0.0731,
+          "write": 0.059,
+          "execute": 0.0195,
+          "publish": 0.7781
+        },
+        "escalation": {
+          "no-model": 0.2233,
+          "local/small": 0.2972,
+          "reasoning/frontier capability": 0.4796
+        }
+      }
+    },
+    {
+      "id": "L016",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "write",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "read",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.7216,
+        "action": 0.3124,
+        "escalation": 0.3896
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0076,
+          "velvet-factory": 0.095,
+          "development": 0.7216,
+          "media": 0.0068,
+          "system": 0.0792,
+          "unknown": 0.0897
+        },
+        "action": {
+          "read": 0.3124,
+          "analyse": 0.1963,
+          "generate": 0.0872,
+          "write": 0.2777,
+          "execute": 0.062,
+          "publish": 0.0644
+        },
+        "escalation": {
+          "no-model": 0.2632,
+          "local/small": 0.3472,
+          "reasoning/frontier capability": 0.3896
+        }
+      }
+    },
+    {
+      "id": "L017",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "analyse",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.5914,
+        "action": 0.2185,
+        "escalation": 0.3945
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0161,
+          "velvet-factory": 0.0814,
+          "development": 0.1663,
+          "media": 0.0091,
+          "system": 0.5914,
+          "unknown": 0.1358
+        },
+        "action": {
+          "read": 0.1204,
+          "analyse": 0.2185,
+          "generate": 0.1844,
+          "write": 0.1937,
+          "execute": 0.1036,
+          "publish": 0.1793
+        },
+        "escalation": {
+          "no-model": 0.2592,
+          "local/small": 0.3945,
+          "reasoning/frontier capability": 0.3463
+        }
+      }
+    },
+    {
+      "id": "L018",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.4246,
+        "action": 0.8913,
+        "escalation": 0.5499
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0287,
+          "velvet-factory": 0.4246,
+          "development": 0.1805,
+          "media": 0.1327,
+          "system": 0.1631,
+          "unknown": 0.0705
+        },
+        "action": {
+          "read": 0.0636,
+          "analyse": 0.0097,
+          "generate": 0.01,
+          "write": 0.0169,
+          "execute": 0.0086,
+          "publish": 0.8913
+        },
+        "escalation": {
+          "no-model": 0.1798,
+          "local/small": 0.2703,
+          "reasoning/frontier capability": 0.5499
+        }
+      }
+    },
+    {
+      "id": "L019",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "read",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.5588,
+        "action": 0.5497,
+        "escalation": 0.6518
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.01,
+          "velvet-factory": 0.1407,
+          "development": 0.5588,
+          "media": 0.1535,
+          "system": 0.1,
+          "unknown": 0.0369
+        },
+        "action": {
+          "read": 0.5497,
+          "analyse": 0.054,
+          "generate": 0.0424,
+          "write": 0.0609,
+          "execute": 0.0531,
+          "publish": 0.2398
+        },
+        "escalation": {
+          "no-model": 0.1624,
+          "local/small": 0.6518,
+          "reasoning/frontier capability": 0.1858
+        }
+      }
+    },
+    {
+      "id": "L020",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.5812,
+        "action": 0.7548,
+        "escalation": 0.5284
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0104,
+          "velvet-factory": 0.1441,
+          "development": 0.5812,
+          "media": 0.01,
+          "system": 0.2146,
+          "unknown": 0.0397
+        },
+        "action": {
+          "read": 0.066,
+          "analyse": 0.0301,
+          "generate": 0.0542,
+          "write": 0.0547,
+          "execute": 0.0402,
+          "publish": 0.7548
+        },
+        "escalation": {
+          "no-model": 0.1814,
+          "local/small": 0.2902,
+          "reasoning/frontier capability": 0.5284
+        }
+      }
+    },
+    {
+      "id": "L021",
+      "lang": "en",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.7154,
+        "action": 0.6325,
+        "escalation": 0.7822
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0354,
+          "velvet-factory": 0.7154,
+          "development": 0.0925,
+          "media": 0.0155,
+          "system": 0.0966,
+          "unknown": 0.0447
+        },
+        "action": {
+          "read": 0.0369,
+          "analyse": 0.0102,
+          "generate": 0.0828,
+          "write": 0.2224,
+          "execute": 0.0152,
+          "publish": 0.6325
+        },
+        "escalation": {
+          "no-model": 0.7822,
+          "local/small": 0.0492,
+          "reasoning/frontier capability": 0.1686
+        }
+      }
+    },
+    {
+      "id": "L022",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.2637,
+        "action": 0.3764,
+        "escalation": 0.4235
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0239,
+          "velvet-factory": 0.2579,
+          "development": 0.198,
+          "media": 0.0111,
+          "system": 0.2637,
+          "unknown": 0.2454
+        },
+        "action": {
+          "read": 0.1118,
+          "analyse": 0.0929,
+          "generate": 0.0956,
+          "write": 0.1338,
+          "execute": 0.1895,
+          "publish": 0.3764
+        },
+        "escalation": {
+          "no-model": 0.2926,
+          "local/small": 0.4235,
+          "reasoning/frontier capability": 0.2839
+        }
+      }
+    },
+    {
+      "id": "L023",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "generate",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.7515,
+        "action": 0.4607,
+        "escalation": 0.4478
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0043,
+          "velvet-factory": 0.0931,
+          "development": 0.7515,
+          "media": 0.003,
+          "system": 0.0893,
+          "unknown": 0.0588
+        },
+        "action": {
+          "read": 0.0602,
+          "analyse": 0.0651,
+          "generate": 0.4607,
+          "write": 0.1943,
+          "execute": 0.1703,
+          "publish": 0.0493
+        },
+        "escalation": {
+          "no-model": 0.2821,
+          "local/small": 0.4478,
+          "reasoning/frontier capability": 0.2701
+        }
+      }
+    },
+    {
+      "id": "L024",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "write",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.4105,
+        "action": 0.847,
+        "escalation": 0.6575
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.016,
+          "velvet-factory": 0.1904,
+          "development": 0.4105,
+          "media": 0.0098,
+          "system": 0.2187,
+          "unknown": 0.1547
+        },
+        "action": {
+          "read": 0.026,
+          "analyse": 0.0078,
+          "generate": 0.0372,
+          "write": 0.0397,
+          "execute": 0.0422,
+          "publish": 0.847
+        },
+        "escalation": {
+          "no-model": 0.1821,
+          "local/small": 0.6575,
+          "reasoning/frontier capability": 0.1604
+        }
+      }
+    },
+    {
+      "id": "L025",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "execute",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.7026,
+        "action": 0.238,
+        "escalation": 0.4469
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0357,
+          "velvet-factory": 0.0679,
+          "development": 0.7026,
+          "media": 0.0056,
+          "system": 0.1471,
+          "unknown": 0.0411
+        },
+        "action": {
+          "read": 0.1198,
+          "analyse": 0.0595,
+          "generate": 0.2124,
+          "write": 0.1809,
+          "execute": 0.238,
+          "publish": 0.1894
+        },
+        "escalation": {
+          "no-model": 0.2221,
+          "local/small": 0.4469,
+          "reasoning/frontier capability": 0.3309
+        }
+      }
+    },
+    {
+      "id": "L026",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "analyse",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.395,
+        "action": 0.3034,
+        "escalation": 0.4498
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0356,
+          "velvet-factory": 0.1773,
+          "development": 0.395,
+          "media": 0.011,
+          "system": 0.3335,
+          "unknown": 0.0476
+        },
+        "action": {
+          "read": 0.1303,
+          "analyse": 0.3034,
+          "generate": 0.09,
+          "write": 0.0861,
+          "execute": 0.1862,
+          "publish": 0.204
+        },
+        "escalation": {
+          "no-model": 0.2713,
+          "local/small": 0.4498,
+          "reasoning/frontier capability": 0.2788
+        }
+      }
+    },
+    {
+      "id": "L027",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "analyse",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.3266,
+        "action": 0.5982,
+        "escalation": 0.4596
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0227,
+          "velvet-factory": 0.1359,
+          "development": 0.3266,
+          "media": 0.0178,
+          "system": 0.2408,
+          "unknown": 0.2562
+        },
+        "action": {
+          "read": 0.0851,
+          "analyse": 0.5982,
+          "generate": 0.0625,
+          "write": 0.0911,
+          "execute": 0.1076,
+          "publish": 0.0554
+        },
+        "escalation": {
+          "no-model": 0.3588,
+          "local/small": 0.4596,
+          "reasoning/frontier capability": 0.1816
+        }
+      }
+    },
+    {
+      "id": "L028",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "write",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.3167,
+        "action": 0.2988,
+        "escalation": 0.4485
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0175,
+          "velvet-factory": 0.2599,
+          "development": 0.3167,
+          "media": 0.0137,
+          "system": 0.2757,
+          "unknown": 0.1164
+        },
+        "action": {
+          "read": 0.0948,
+          "analyse": 0.0335,
+          "generate": 0.284,
+          "write": 0.1936,
+          "execute": 0.0954,
+          "publish": 0.2988
+        },
+        "escalation": {
+          "no-model": 0.2194,
+          "local/small": 0.4485,
+          "reasoning/frontier capability": 0.3322
+        }
+      }
+    },
+    {
+      "id": "L029",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.9272,
+        "action": 0.7987,
+        "escalation": 0.5387
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0017,
+          "velvet-factory": 0.0119,
+          "development": 0.9272,
+          "media": 0.0009,
+          "system": 0.0425,
+          "unknown": 0.0159
+        },
+        "action": {
+          "read": 0.0414,
+          "analyse": 0.7987,
+          "generate": 0.0397,
+          "write": 0.0394,
+          "execute": 0.0401,
+          "publish": 0.0406
+        },
+        "escalation": {
+          "no-model": 0.2581,
+          "local/small": 0.2032,
+          "reasoning/frontier capability": 0.5387
+        }
+      }
+    },
+    {
+      "id": "L030",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "write",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.4243,
+        "action": 0.507,
+        "escalation": 0.4438
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0075,
+          "velvet-factory": 0.2377,
+          "development": 0.2612,
+          "media": 0.0045,
+          "system": 0.4243,
+          "unknown": 0.0649
+        },
+        "action": {
+          "read": 0.0055,
+          "analyse": 0.0074,
+          "generate": 0.2499,
+          "write": 0.507,
+          "execute": 0.0266,
+          "publish": 0.2037
+        },
+        "escalation": {
+          "no-model": 0.2132,
+          "local/small": 0.4438,
+          "reasoning/frontier capability": 0.343
+        }
+      }
+    },
+    {
+      "id": "L031",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.4431,
+        "action": 0.6998,
+        "escalation": 0.3724
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.036,
+          "velvet-factory": 0.4431,
+          "development": 0.1649,
+          "media": 0.0238,
+          "system": 0.0584,
+          "unknown": 0.2737
+        },
+        "action": {
+          "read": 0.2297,
+          "analyse": 0.0323,
+          "generate": 0.0133,
+          "write": 0.0156,
+          "execute": 0.0093,
+          "publish": 0.6998
+        },
+        "escalation": {
+          "no-model": 0.2948,
+          "local/small": 0.3724,
+          "reasoning/frontier capability": 0.3328
+        }
+      }
+    },
+    {
+      "id": "L032",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "generate",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "execute",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.569,
+        "action": 0.2702,
+        "escalation": 0.6608
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0213,
+          "velvet-factory": 0.0907,
+          "development": 0.569,
+          "media": 0.0038,
+          "system": 0.2244,
+          "unknown": 0.0909
+        },
+        "action": {
+          "read": 0.0564,
+          "analyse": 0.0399,
+          "generate": 0.1508,
+          "write": 0.2575,
+          "execute": 0.2702,
+          "publish": 0.2252
+        },
+        "escalation": {
+          "no-model": 0.2259,
+          "local/small": 0.6608,
+          "reasoning/frontier capability": 0.1133
+        }
+      }
+    },
+    {
+      "id": "L033",
+      "lang": "en",
+      "expected": {
+        "domain": "development",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.3495,
+        "action": 0.5032,
+        "escalation": 0.8662
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0385,
+          "velvet-factory": 0.3495,
+          "development": 0.2979,
+          "media": 0.0188,
+          "system": 0.0703,
+          "unknown": 0.2249
+        },
+        "action": {
+          "read": 0.2425,
+          "analyse": 0.1459,
+          "generate": 0.0339,
+          "write": 0.0402,
+          "execute": 0.5032,
+          "publish": 0.0343
+        },
+        "escalation": {
+          "no-model": 0.8662,
+          "local/small": 0.0427,
+          "reasoning/frontier capability": 0.0911
+        }
+      }
+    },
+    {
+      "id": "L034",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "write",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "write",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.4233,
+        "action": 0.2602,
+        "escalation": 0.4151
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0188,
+          "velvet-factory": 0.4233,
+          "development": 0.1184,
+          "media": 0.0141,
+          "system": 0.349,
+          "unknown": 0.0764
+        },
+        "action": {
+          "read": 0.1867,
+          "analyse": 0.1873,
+          "generate": 0.0824,
+          "write": 0.2602,
+          "execute": 0.2004,
+          "publish": 0.083
+        },
+        "escalation": {
+          "no-model": 0.3087,
+          "local/small": 0.4151,
+          "reasoning/frontier capability": 0.2762
+        }
+      }
+    },
+    {
+      "id": "L035",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "execute",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.6215,
+        "action": 0.7326,
+        "escalation": 0.4618
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0049,
+          "velvet-factory": 0.1658,
+          "development": 0.6215,
+          "media": 0.0063,
+          "system": 0.0648,
+          "unknown": 0.1366
+        },
+        "action": {
+          "read": 0.0438,
+          "analyse": 0.0165,
+          "generate": 0.0673,
+          "write": 0.0523,
+          "execute": 0.0876,
+          "publish": 0.7326
+        },
+        "escalation": {
+          "no-model": 0.4618,
+          "local/small": 0.2375,
+          "reasoning/frontier capability": 0.3007
+        }
+      }
+    },
+    {
+      "id": "L036",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.6025,
+        "action": 0.3989,
+        "escalation": 0.7445
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0168,
+          "velvet-factory": 0.0311,
+          "development": 0.6025,
+          "media": 0.0057,
+          "system": 0.2712,
+          "unknown": 0.0728
+        },
+        "action": {
+          "read": 0.099,
+          "analyse": 0.0736,
+          "generate": 0.1254,
+          "write": 0.2022,
+          "execute": 0.1009,
+          "publish": 0.3989
+        },
+        "escalation": {
+          "no-model": 0.1079,
+          "local/small": 0.1476,
+          "reasoning/frontier capability": 0.7445
+        }
+      }
+    },
+    {
+      "id": "L037",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.79,
+        "action": 0.586,
+        "escalation": 0.6092
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.007,
+          "velvet-factory": 0.0679,
+          "development": 0.79,
+          "media": 0.0323,
+          "system": 0.0223,
+          "unknown": 0.0805
+        },
+        "action": {
+          "read": 0.1485,
+          "analyse": 0.115,
+          "generate": 0.047,
+          "write": 0.0621,
+          "execute": 0.0415,
+          "publish": 0.586
+        },
+        "escalation": {
+          "no-model": 0.1919,
+          "local/small": 0.1989,
+          "reasoning/frontier capability": 0.6092
+        }
+      }
+    },
+    {
+      "id": "L038",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "analyse",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.3832,
+        "action": 0.2591,
+        "escalation": 0.3984
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0439,
+          "velvet-factory": 0.2809,
+          "development": 0.1095,
+          "media": 0.1037,
+          "system": 0.3832,
+          "unknown": 0.0789
+        },
+        "action": {
+          "read": 0.2362,
+          "analyse": 0.1514,
+          "generate": 0.0533,
+          "write": 0.2113,
+          "execute": 0.0888,
+          "publish": 0.2591
+        },
+        "escalation": {
+          "no-model": 0.2205,
+          "local/small": 0.3984,
+          "reasoning/frontier capability": 0.3811
+        }
+      }
+    },
+    {
+      "id": "L039",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.39,
+        "action": 0.8249,
+        "escalation": 0.8455
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0176,
+          "velvet-factory": 0.39,
+          "development": 0.177,
+          "media": 0.1193,
+          "system": 0.1185,
+          "unknown": 0.1776
+        },
+        "action": {
+          "read": 0.115,
+          "analyse": 0.0066,
+          "generate": 0.8249,
+          "write": 0.0218,
+          "execute": 0.0199,
+          "publish": 0.0119
+        },
+        "escalation": {
+          "no-model": 0.0974,
+          "local/small": 0.8455,
+          "reasoning/frontier capability": 0.0571
+        }
+      }
+    },
+    {
+      "id": "L040",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "write",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.8448,
+        "action": 0.4546,
+        "escalation": 0.4793
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0065,
+          "velvet-factory": 0.0809,
+          "development": 0.8448,
+          "media": 0.0052,
+          "system": 0.0362,
+          "unknown": 0.0264
+        },
+        "action": {
+          "read": 0.1225,
+          "analyse": 0.0839,
+          "generate": 0.1365,
+          "write": 0.1153,
+          "execute": 0.0872,
+          "publish": 0.4546
+        },
+        "escalation": {
+          "no-model": 0.1804,
+          "local/small": 0.3403,
+          "reasoning/frontier capability": 0.4793
+        }
+      }
+    },
+    {
+      "id": "L041",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "media",
+        "action": "analyse",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.525,
+        "action": 0.6213,
+        "escalation": 0.4816
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0132,
+          "velvet-factory": 0.1384,
+          "development": 0.083,
+          "media": 0.525,
+          "system": 0.1301,
+          "unknown": 0.1102
+        },
+        "action": {
+          "read": 0.1933,
+          "analyse": 0.6213,
+          "generate": 0.0387,
+          "write": 0.0583,
+          "execute": 0.0388,
+          "publish": 0.0495
+        },
+        "escalation": {
+          "no-model": 0.1829,
+          "local/small": 0.4816,
+          "reasoning/frontier capability": 0.3355
+        }
+      }
+    },
+    {
+      "id": "L042",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.3494,
+        "action": 0.795,
+        "escalation": 0.4292
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0458,
+          "velvet-factory": 0.3494,
+          "development": 0.1944,
+          "media": 0.0546,
+          "system": 0.2224,
+          "unknown": 0.1334
+        },
+        "action": {
+          "read": 0.0594,
+          "analyse": 0.0141,
+          "generate": 0.0659,
+          "write": 0.051,
+          "execute": 0.0146,
+          "publish": 0.795
+        },
+        "escalation": {
+          "no-model": 0.3363,
+          "local/small": 0.2345,
+          "reasoning/frontier capability": 0.4292
+        }
+      }
+    },
+    {
+      "id": "L043",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.3122,
+        "action": 0.6921,
+        "escalation": 0.501
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0304,
+          "velvet-factory": 0.3122,
+          "development": 0.1789,
+          "media": 0.0176,
+          "system": 0.2364,
+          "unknown": 0.2246
+        },
+        "action": {
+          "read": 0.0596,
+          "analyse": 0.0374,
+          "generate": 0.0868,
+          "write": 0.0666,
+          "execute": 0.0575,
+          "publish": 0.6921
+        },
+        "escalation": {
+          "no-model": 0.3655,
+          "local/small": 0.1335,
+          "reasoning/frontier capability": 0.501
+        }
+      }
+    },
+    {
+      "id": "L044",
+      "lang": "en",
+      "expected": {
+        "domain": "media",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "generate",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.5555,
+        "action": 0.5231,
+        "escalation": 0.5973
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0037,
+          "velvet-factory": 0.5555,
+          "development": 0.3001,
+          "media": 0.0117,
+          "system": 0.0501,
+          "unknown": 0.0788
+        },
+        "action": {
+          "read": 0.0172,
+          "analyse": 0.0126,
+          "generate": 0.5231,
+          "write": 0.0947,
+          "execute": 0.0225,
+          "publish": 0.3299
+        },
+        "escalation": {
+          "no-model": 0.1162,
+          "local/small": 0.2865,
+          "reasoning/frontier capability": 0.5973
+        }
+      }
+    },
+    {
+      "id": "L045",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "read",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.377,
+        "action": 0.2362,
+        "escalation": 0.488
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0181,
+          "velvet-factory": 0.1301,
+          "development": 0.1804,
+          "media": 0.02,
+          "system": 0.377,
+          "unknown": 0.2743
+        },
+        "action": {
+          "read": 0.2362,
+          "analyse": 0.1713,
+          "generate": 0.1075,
+          "write": 0.1589,
+          "execute": 0.1161,
+          "publish": 0.2101
+        },
+        "escalation": {
+          "no-model": 0.2484,
+          "local/small": 0.488,
+          "reasoning/frontier capability": 0.2636
+        }
+      }
+    },
+    {
+      "id": "L046",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "generate",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "execute",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.6679,
+        "action": 0.3048,
+        "escalation": 0.4047
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0109,
+          "velvet-factory": 0.1082,
+          "development": 0.1768,
+          "media": 0.0153,
+          "system": 0.6679,
+          "unknown": 0.021
+        },
+        "action": {
+          "read": 0.0937,
+          "analyse": 0.0841,
+          "generate": 0.2157,
+          "write": 0.1893,
+          "execute": 0.3048,
+          "publish": 0.1124
+        },
+        "escalation": {
+          "no-model": 0.3481,
+          "local/small": 0.4047,
+          "reasoning/frontier capability": 0.2472
+        }
+      }
+    },
+    {
+      "id": "L047",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "write",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.6107,
+        "action": 0.304,
+        "escalation": 0.3785
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0045,
+          "velvet-factory": 0.6107,
+          "development": 0.0406,
+          "media": 0.0087,
+          "system": 0.2867,
+          "unknown": 0.0488
+        },
+        "action": {
+          "read": 0.1733,
+          "analyse": 0.0795,
+          "generate": 0.1225,
+          "write": 0.1776,
+          "execute": 0.143,
+          "publish": 0.304
+        },
+        "escalation": {
+          "no-model": 0.3785,
+          "local/small": 0.351,
+          "reasoning/frontier capability": 0.2704
+        }
+      }
+    },
+    {
+      "id": "L048",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "execute",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.6078,
+        "action": 0.2752,
+        "escalation": 0.4401
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0089,
+          "velvet-factory": 0.1851,
+          "development": 0.1128,
+          "media": 0.0108,
+          "system": 0.6078,
+          "unknown": 0.0745
+        },
+        "action": {
+          "read": 0.1432,
+          "analyse": 0.2674,
+          "generate": 0.0607,
+          "write": 0.1268,
+          "execute": 0.2752,
+          "publish": 0.1266
+        },
+        "escalation": {
+          "no-model": 0.1583,
+          "local/small": 0.4016,
+          "reasoning/frontier capability": 0.4401
+        }
+      }
+    },
+    {
+      "id": "L049",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "execute",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.8273,
+        "action": 0.2482,
+        "escalation": 0.6333
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0044,
+          "velvet-factory": 0.0317,
+          "development": 0.0794,
+          "media": 0.0029,
+          "system": 0.8273,
+          "unknown": 0.0543
+        },
+        "action": {
+          "read": 0.1116,
+          "analyse": 0.1978,
+          "generate": 0.1523,
+          "write": 0.203,
+          "execute": 0.2482,
+          "publish": 0.0871
+        },
+        "escalation": {
+          "no-model": 0.0871,
+          "local/small": 0.6333,
+          "reasoning/frontier capability": 0.2795
+        }
+      }
+    },
+    {
+      "id": "L050",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.5405,
+        "action": 0.2749,
+        "escalation": 0.4175
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0552,
+          "velvet-factory": 0.1047,
+          "development": 0.191,
+          "media": 0.0175,
+          "system": 0.5405,
+          "unknown": 0.091
+        },
+        "action": {
+          "read": 0.1442,
+          "analyse": 0.1349,
+          "generate": 0.1388,
+          "write": 0.1652,
+          "execute": 0.142,
+          "publish": 0.2749
+        },
+        "escalation": {
+          "no-model": 0.3178,
+          "local/small": 0.4175,
+          "reasoning/frontier capability": 0.2648
+        }
+      }
+    },
+    {
+      "id": "L051",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "write",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.5868,
+        "action": 0.3224,
+        "escalation": 0.4849
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0132,
+          "velvet-factory": 0.1502,
+          "development": 0.1494,
+          "media": 0.0089,
+          "system": 0.5868,
+          "unknown": 0.0915
+        },
+        "action": {
+          "read": 0.2016,
+          "analyse": 0.0598,
+          "generate": 0.0761,
+          "write": 0.3224,
+          "execute": 0.0555,
+          "publish": 0.2846
+        },
+        "escalation": {
+          "no-model": 0.4849,
+          "local/small": 0.1903,
+          "reasoning/frontier capability": 0.3249
+        }
+      }
+    },
+    {
+      "id": "L052",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "write",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.4128,
+        "action": 0.3844,
+        "escalation": 0.4932
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.014,
+          "velvet-factory": 0.4128,
+          "development": 0.3221,
+          "media": 0.0054,
+          "system": 0.1294,
+          "unknown": 0.1163
+        },
+        "action": {
+          "read": 0.0579,
+          "analyse": 0.0503,
+          "generate": 0.1546,
+          "write": 0.1886,
+          "execute": 0.1641,
+          "publish": 0.3844
+        },
+        "escalation": {
+          "no-model": 0.2683,
+          "local/small": 0.4932,
+          "reasoning/frontier capability": 0.2385
+        }
+      }
+    },
+    {
+      "id": "L053",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.6071,
+        "action": 0.7087,
+        "escalation": 0.507
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.024,
+          "velvet-factory": 0.0976,
+          "development": 0.1758,
+          "media": 0.0119,
+          "system": 0.6071,
+          "unknown": 0.0834
+        },
+        "action": {
+          "read": 0.0814,
+          "analyse": 0.0349,
+          "generate": 0.0512,
+          "write": 0.0562,
+          "execute": 0.0676,
+          "publish": 0.7087
+        },
+        "escalation": {
+          "no-model": 0.3227,
+          "local/small": 0.507,
+          "reasoning/frontier capability": 0.1703
+        }
+      }
+    },
+    {
+      "id": "L054",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.6068,
+        "action": 0.4131,
+        "escalation": 0.6149
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.005,
+          "velvet-factory": 0.0535,
+          "development": 0.6068,
+          "media": 0.0025,
+          "system": 0.2697,
+          "unknown": 0.0626
+        },
+        "action": {
+          "read": 0.0614,
+          "analyse": 0.0324,
+          "generate": 0.2626,
+          "write": 0.1249,
+          "execute": 0.1056,
+          "publish": 0.4131
+        },
+        "escalation": {
+          "no-model": 0.1503,
+          "local/small": 0.2348,
+          "reasoning/frontier capability": 0.6149
+        }
+      }
+    },
+    {
+      "id": "L055",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "read",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.817,
+        "action": 0.262,
+        "escalation": 0.4583
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0035,
+          "velvet-factory": 0.089,
+          "development": 0.0621,
+          "media": 0.0028,
+          "system": 0.817,
+          "unknown": 0.0255
+        },
+        "action": {
+          "read": 0.262,
+          "analyse": 0.2232,
+          "generate": 0.0638,
+          "write": 0.1026,
+          "execute": 0.1821,
+          "publish": 0.1663
+        },
+        "escalation": {
+          "no-model": 0.2522,
+          "local/small": 0.2895,
+          "reasoning/frontier capability": 0.4583
+        }
+      }
+    },
+    {
+      "id": "L056",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "generate",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "read",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.8744,
+        "action": 0.435,
+        "escalation": 0.45
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0027,
+          "velvet-factory": 0.0425,
+          "development": 0.0649,
+          "media": 0.0017,
+          "system": 0.8744,
+          "unknown": 0.0138
+        },
+        "action": {
+          "read": 0.435,
+          "analyse": 0.0501,
+          "generate": 0.0612,
+          "write": 0.2391,
+          "execute": 0.1413,
+          "publish": 0.0733
+        },
+        "escalation": {
+          "no-model": 0.3325,
+          "local/small": 0.45,
+          "reasoning/frontier capability": 0.2175
+        }
+      }
+    },
+    {
+      "id": "L057",
+      "lang": "en",
+      "expected": {
+        "domain": "system",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "execute",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.8872,
+        "action": 0.741,
+        "escalation": 0.9908
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0027,
+          "velvet-factory": 0.0067,
+          "development": 0.8872,
+          "media": 0.0004,
+          "system": 0.0973,
+          "unknown": 0.0057
+        },
+        "action": {
+          "read": 0.0244,
+          "analyse": 0.0239,
+          "generate": 0.1111,
+          "write": 0.0668,
+          "execute": 0.741,
+          "publish": 0.0328
+        },
+        "escalation": {
+          "no-model": 0.0058,
+          "local/small": 0.9908,
+          "reasoning/frontier capability": 0.0033
+        }
+      }
+    },
+    {
+      "id": "L058",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "write",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "analyse",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.4058,
+        "action": 0.585,
+        "escalation": 0.5585
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0249,
+          "velvet-factory": 0.215,
+          "development": 0.1814,
+          "media": 0.0112,
+          "system": 0.4058,
+          "unknown": 0.1617
+        },
+        "action": {
+          "read": 0.1494,
+          "analyse": 0.585,
+          "generate": 0.0497,
+          "write": 0.0909,
+          "execute": 0.0394,
+          "publish": 0.0856
+        },
+        "escalation": {
+          "no-model": 0.5585,
+          "local/small": 0.1983,
+          "reasoning/frontier capability": 0.2432
+        }
+      }
+    },
+    {
+      "id": "L059",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "analyse",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.6808,
+        "action": 0.396,
+        "escalation": 0.6674
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0053,
+          "velvet-factory": 0.6808,
+          "development": 0.042,
+          "media": 0.0028,
+          "system": 0.0459,
+          "unknown": 0.2233
+        },
+        "action": {
+          "read": 0.1177,
+          "analyse": 0.396,
+          "generate": 0.1009,
+          "write": 0.1188,
+          "execute": 0.088,
+          "publish": 0.1786
+        },
+        "escalation": {
+          "no-model": 0.1357,
+          "local/small": 0.6674,
+          "reasoning/frontier capability": 0.1969
+        }
+      }
+    },
+    {
+      "id": "L060",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "execute",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.627,
+        "action": 0.2938,
+        "escalation": 0.413
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0161,
+          "velvet-factory": 0.0885,
+          "development": 0.2019,
+          "media": 0.0069,
+          "system": 0.627,
+          "unknown": 0.0596
+        },
+        "action": {
+          "read": 0.1984,
+          "analyse": 0.1295,
+          "generate": 0.1583,
+          "write": 0.133,
+          "execute": 0.0871,
+          "publish": 0.2938
+        },
+        "escalation": {
+          "no-model": 0.2361,
+          "local/small": 0.413,
+          "reasoning/frontier capability": 0.3509
+        }
+      }
+    },
+    {
+      "id": "L061",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "read",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "read",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.5932,
+        "action": 0.3321,
+        "escalation": 0.8055
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0647,
+          "velvet-factory": 0.0996,
+          "development": 0.0883,
+          "media": 0.0219,
+          "system": 0.5932,
+          "unknown": 0.1323
+        },
+        "action": {
+          "read": 0.3321,
+          "analyse": 0.1497,
+          "generate": 0.0839,
+          "write": 0.0961,
+          "execute": 0.0932,
+          "publish": 0.2451
+        },
+        "escalation": {
+          "no-model": 0.1546,
+          "local/small": 0.8055,
+          "reasoning/frontier capability": 0.0399
+        }
+      }
+    },
+    {
+      "id": "L062",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.4913,
+        "action": 0.9255,
+        "escalation": 0.4849
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0136,
+          "velvet-factory": 0.3634,
+          "development": 0.4913,
+          "media": 0.0106,
+          "system": 0.0666,
+          "unknown": 0.0545
+        },
+        "action": {
+          "read": 0.013,
+          "analyse": 0.003,
+          "generate": 0.0333,
+          "write": 0.0134,
+          "execute": 0.0118,
+          "publish": 0.9255
+        },
+        "escalation": {
+          "no-model": 0.2893,
+          "local/small": 0.2258,
+          "reasoning/frontier capability": 0.4849
+        }
+      }
+    },
+    {
+      "id": "L063",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.5001,
+        "action": 0.601,
+        "escalation": 0.4102
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0315,
+          "velvet-factory": 0.1395,
+          "development": 0.5001,
+          "media": 0.044,
+          "system": 0.1542,
+          "unknown": 0.1308
+        },
+        "action": {
+          "read": 0.1345,
+          "analyse": 0.0157,
+          "generate": 0.1205,
+          "write": 0.116,
+          "execute": 0.0123,
+          "publish": 0.601
+        },
+        "escalation": {
+          "no-model": 0.2547,
+          "local/small": 0.3351,
+          "reasoning/frontier capability": 0.4102
+        }
+      }
+    },
+    {
+      "id": "L064",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "write",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "generate",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.7366,
+        "action": 0.4741,
+        "escalation": 0.415
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0142,
+          "velvet-factory": 0.0862,
+          "development": 0.7366,
+          "media": 0.0104,
+          "system": 0.0541,
+          "unknown": 0.0985
+        },
+        "action": {
+          "read": 0.0424,
+          "analyse": 0.0233,
+          "generate": 0.4741,
+          "write": 0.0954,
+          "execute": 0.0238,
+          "publish": 0.3411
+        },
+        "escalation": {
+          "no-model": 0.1838,
+          "local/small": 0.4013,
+          "reasoning/frontier capability": 0.415
+        }
+      }
+    },
+    {
+      "id": "L065",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "execute",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "execute",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.8342,
+        "action": 0.3924,
+        "escalation": 0.7307
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0041,
+          "velvet-factory": 0.0877,
+          "development": 0.0451,
+          "media": 0.0021,
+          "system": 0.8342,
+          "unknown": 0.0268
+        },
+        "action": {
+          "read": 0.0593,
+          "analyse": 0.0281,
+          "generate": 0.0645,
+          "write": 0.219,
+          "execute": 0.3924,
+          "publish": 0.2368
+        },
+        "escalation": {
+          "no-model": 0.1204,
+          "local/small": 0.7307,
+          "reasoning/frontier capability": 0.1489
+        }
+      }
+    },
+    {
+      "id": "L066",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "unknown",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.667,
+        "action": 0.8232,
+        "escalation": 0.5535
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.012,
+          "velvet-factory": 0.0631,
+          "development": 0.2122,
+          "media": 0.0081,
+          "system": 0.0377,
+          "unknown": 0.667
+        },
+        "action": {
+          "read": 0.0498,
+          "analyse": 0.0155,
+          "generate": 0.0474,
+          "write": 0.0369,
+          "execute": 0.0273,
+          "publish": 0.8232
+        },
+        "escalation": {
+          "no-model": 0.1672,
+          "local/small": 0.2793,
+          "reasoning/frontier capability": 0.5535
+        }
+      }
+    },
+    {
+      "id": "L067",
+      "lang": "en",
+      "expected": {
+        "domain": "unknown",
+        "action": "read",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "unknown",
+        "action": "read",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.7128,
+        "action": 0.7327,
+        "escalation": 0.8719
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0459,
+          "velvet-factory": 0.0513,
+          "development": 0.046,
+          "media": 0.0066,
+          "system": 0.1375,
+          "unknown": 0.7128
+        },
+        "action": {
+          "read": 0.7327,
+          "analyse": 0.0899,
+          "generate": 0.0313,
+          "write": 0.0309,
+          "execute": 0.0446,
+          "publish": 0.0706
+        },
+        "escalation": {
+          "no-model": 0.0564,
+          "local/small": 0.8719,
+          "reasoning/frontier capability": 0.0716
+        }
+      }
+    },
+    {
+      "id": "L068",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "execute",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.5454,
+        "action": 0.8612,
+        "escalation": 0.481
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.015,
+          "velvet-factory": 0.104,
+          "development": 0.5454,
+          "media": 0.0124,
+          "system": 0.2037,
+          "unknown": 0.1194
+        },
+        "action": {
+          "read": 0.0265,
+          "analyse": 0.0059,
+          "generate": 0.0314,
+          "write": 0.0665,
+          "execute": 0.0085,
+          "publish": 0.8612
+        },
+        "escalation": {
+          "no-model": 0.4532,
+          "local/small": 0.0658,
+          "reasoning/frontier capability": 0.481
+        }
+      }
+    },
+    {
+      "id": "L069",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "generate",
+        "escalation": "local/small"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.3952,
+        "action": 0.9022,
+        "escalation": 0.4097
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0452,
+          "velvet-factory": 0.3952,
+          "development": 0.1006,
+          "media": 0.0162,
+          "system": 0.265,
+          "unknown": 0.1779
+        },
+        "action": {
+          "read": 0.014,
+          "analyse": 0.0049,
+          "generate": 0.0461,
+          "write": 0.0259,
+          "execute": 0.0068,
+          "publish": 0.9022
+        },
+        "escalation": {
+          "no-model": 0.354,
+          "local/small": 0.4097,
+          "reasoning/frontier capability": 0.2363
+        }
+      }
+    },
+    {
+      "id": "L070",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "analyse",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.3361,
+        "action": 0.7263,
+        "escalation": 0.4973
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0285,
+          "velvet-factory": 0.3361,
+          "development": 0.3275,
+          "media": 0.0214,
+          "system": 0.2043,
+          "unknown": 0.0822
+        },
+        "action": {
+          "read": 0.071,
+          "analyse": 0.0375,
+          "generate": 0.0664,
+          "write": 0.0556,
+          "execute": 0.0431,
+          "publish": 0.7263
+        },
+        "escalation": {
+          "no-model": 0.2995,
+          "local/small": 0.2032,
+          "reasoning/frontier capability": 0.4973
+        }
+      }
+    },
+    {
+      "id": "L071",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "write",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.8172,
+        "action": 0.3117,
+        "escalation": 0.4932
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0155,
+          "velvet-factory": 0.0803,
+          "development": 0.0577,
+          "media": 0.0068,
+          "system": 0.8172,
+          "unknown": 0.0225
+        },
+        "action": {
+          "read": 0.183,
+          "analyse": 0.0631,
+          "generate": 0.1296,
+          "write": 0.1949,
+          "execute": 0.1177,
+          "publish": 0.3117
+        },
+        "escalation": {
+          "no-model": 0.2828,
+          "local/small": 0.4932,
+          "reasoning/frontier capability": 0.224
+        }
+      }
+    },
+    {
+      "id": "L072",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.4766,
+        "action": 0.7861,
+        "escalation": 0.647
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0296,
+          "velvet-factory": 0.1937,
+          "development": 0.1924,
+          "media": 0.0134,
+          "system": 0.4766,
+          "unknown": 0.0943
+        },
+        "action": {
+          "read": 0.0716,
+          "analyse": 0.0254,
+          "generate": 0.0369,
+          "write": 0.0552,
+          "execute": 0.0249,
+          "publish": 0.7861
+        },
+        "escalation": {
+          "no-model": 0.1451,
+          "local/small": 0.2079,
+          "reasoning/frontier capability": 0.647
+        }
+      }
+    },
+    {
+      "id": "L073",
+      "lang": "he",
+      "expected": {
+        "domain": "office",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.7304,
+        "action": 0.3281,
+        "escalation": 0.6191
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0173,
+          "velvet-factory": 0.0759,
+          "development": 0.1471,
+          "media": 0.0058,
+          "system": 0.7304,
+          "unknown": 0.0235
+        },
+        "action": {
+          "read": 0.1356,
+          "analyse": 0.0658,
+          "generate": 0.1562,
+          "write": 0.179,
+          "execute": 0.1354,
+          "publish": 0.3281
+        },
+        "escalation": {
+          "no-model": 0.2194,
+          "local/small": 0.1616,
+          "reasoning/frontier capability": 0.6191
+        }
+      }
+    },
+    {
+      "id": "L074",
+      "lang": "he",
+      "expected": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "velvet-factory",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "answer_confidence": {
+        "domain": 0.9724,
+        "action": 0.9397,
+        "escalation": 0.4132
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0005,
+          "velvet-factory": 0.9724,
+          "development": 0.0032,
+          "media": 0.0086,
+          "system": 0.0011,
+          "unknown": 0.0143
+        },
+        "action": {
+          "read": 0.0155,
+          "analyse": 0.005,
+          "generate": 0.0131,
+          "write": 0.0191,
+          "execute": 0.0076,
+          "publish": 0.9397
+        },
+        "escalation": {
+          "no-model": 0.4132,
+          "local/small": 0.2091,
+          "reasoning/frontier capability": 0.3777
+        }
+      }
+    },
+    {
+      "id": "L075",
+      "lang": "he",
+      "expected": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.6781,
+        "action": 0.9094,
+        "escalation": 0.9909
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0127,
+          "velvet-factory": 0.1089,
+          "development": 0.6781,
+          "media": 0.0164,
+          "system": 0.1398,
+          "unknown": 0.044
+        },
+        "action": {
+          "read": 0.0193,
+          "analyse": 0.0152,
+          "generate": 0.0275,
+          "write": 0.0171,
+          "execute": 0.0115,
+          "publish": 0.9094
+        },
+        "escalation": {
+          "no-model": 0.0025,
+          "local/small": 0.0066,
+          "reasoning/frontier capability": 0.9909
+        }
+      }
+    },
+    {
+      "id": "L076",
+      "lang": "he",
+      "expected": {
+        "domain": "media",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.3054,
+        "action": 0.57,
+        "escalation": 0.4198
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0158,
+          "velvet-factory": 0.2823,
+          "development": 0.2152,
+          "media": 0.0709,
+          "system": 0.3054,
+          "unknown": 0.1104
+        },
+        "action": {
+          "read": 0.0919,
+          "analyse": 0.0378,
+          "generate": 0.0788,
+          "write": 0.1777,
+          "execute": 0.0439,
+          "publish": 0.57
+        },
+        "escalation": {
+          "no-model": 0.2745,
+          "local/small": 0.3057,
+          "reasoning/frontier capability": 0.4198
+        }
+      }
+    },
+    {
+      "id": "L077",
+      "lang": "he",
+      "expected": {
+        "domain": "system",
+        "action": "publish",
+        "escalation": "no-model"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "local/small"
+      },
+      "answer_confidence": {
+        "domain": 0.5184,
+        "action": 0.6111,
+        "escalation": 0.3989
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0173,
+          "velvet-factory": 0.1586,
+          "development": 0.5184,
+          "media": 0.0081,
+          "system": 0.1786,
+          "unknown": 0.1189
+        },
+        "action": {
+          "read": 0.0808,
+          "analyse": 0.0486,
+          "generate": 0.1152,
+          "write": 0.0873,
+          "execute": 0.057,
+          "publish": 0.6111
+        },
+        "escalation": {
+          "no-model": 0.2446,
+          "local/small": 0.3989,
+          "reasoning/frontier capability": 0.3565
+        }
+      }
+    },
+    {
+      "id": "L078",
+      "lang": "he",
+      "expected": {
+        "domain": "unknown",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "predicted": {
+        "domain": "development",
+        "action": "publish",
+        "escalation": "reasoning/frontier capability"
+      },
+      "answer_confidence": {
+        "domain": 0.3534,
+        "action": 0.8108,
+        "escalation": 0.4925
+      },
+      "probabilities": {
+        "domain": {
+          "office": 0.0231,
+          "velvet-factory": 0.2611,
+          "development": 0.3534,
+          "media": 0.0294,
+          "system": 0.0948,
+          "unknown": 0.2382
+        },
+        "action": {
+          "read": 0.0397,
+          "analyse": 0.0163,
+          "generate": 0.0218,
+          "write": 0.0947,
+          "execute": 0.0167,
+          "publish": 0.8108
+        },
+        "escalation": {
+          "no-model": 0.1356,
+          "local/small": 0.3718,
+          "reasoning/frontier capability": 0.4925
+        }
+      }
+    }
+  ],
+  "promotion_criterion": null,
+  "promotion_decision": "UNASSESSED_MEASURE_FIRST"
+}

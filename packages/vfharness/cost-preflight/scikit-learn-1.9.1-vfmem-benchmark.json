@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "component": "scikit-learn==1.9.1 for vfmem TF-IDF benchmark",
+  "classification": "FREE_LOCAL",
+  "license": "BSD-3-Clause",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for local use under BSD-3-Clause",
+  "deployment_model": "isolated Phase 7 Python 3.12 venv; existing requirements-sensors pin; no service or daemon",
+  "api_dependencies": [],
+  "billing_risk": "none; local Python package only",
+  "selected_mode": "EXISTING_REPO_PIN_1.9.1_ONLY",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk only during deterministic TF-IDF build/query",
+  "api_cost_notes": "none",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "numpy/scipy/joblib/threadpoolctl are local transitive dependencies only",
+  "quota_controls": "not applicable; no external calls",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "requirements-sensors.txt pins scikit-learn==1.9.1 for vfmem semantic index",
+    "requirements-sensors.py312.lock contains exact scikit-learn==1.9.1 hashes",
+    "packages/vfresearch/sources/2026-09-07-orchestra.md records local semantic index built with scikit-learn"
+  ],
+  "approval": null
+}

@@ -3,6 +3,14 @@
 !.env.example
 .DS_Store
 node_modules/
+tools/observability/python/
+tools/healthchecks/source/
+tools/healthchecks/python/
+tools/healthchecks/data/
+tools/changedetection/python/
+tools/changedetection/data/
+.local-devtools/
+packages/vfharness/evals/latest-results.json
 .origincache/
 .config/origin-cli/
 **/credentials.json

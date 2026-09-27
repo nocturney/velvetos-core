@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "component": "RobLe3/cc-blender-skill v1.3.0 reference patterns",
+  "classification": "FREE_LOCAL",
+  "license": "MIT",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none",
+  "deployment_model": "reference-only source review; no Claude runtime/plugin installation",
+  "api_dependencies": [],
+  "billing_risk": "none in reference-only mode",
+  "selected_mode": "extract reusable workflow patterns into existing VelvetOS expert-3d-model only",
+  "expected_recurring_cost": "0 ILS/month",
+  "runtime_cost_notes": "documentation/source files only",
+  "api_cost_notes": "no API calls",
+  "subscription_notes": "no subscription",
+  "hidden_secondary_cost_notes": "its native plugin depends on Claude Code and mcp-for-blender; those runtime dependencies are not adopted",
+  "quota_controls": "not applicable",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/RobLe3/cc-blender-skill (MIT; v1.3.0; 30-skill workflow catalog)"
+  ],
+  "approval": null
+}

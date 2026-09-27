@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "component": "CLI-Anything@34f519533bc175d2fe287ab8316b0dd99bb9cc43",
+  "classification": "FREE_LOCAL",
+  "license": "Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for local evaluation under Apache-2.0",
+  "deployment_model": "repo-local pinned clone plus isolated Python venv; evaluate bundled FreeCAD harness without global plugin/CLI-Hub installation",
+  "api_dependencies": [],
+  "billing_risk": "none in selected path; no hosted hub account, model/provider API, paid software or subscription",
+  "selected_mode": "LOCAL_PINNED_PILOT_ONLY; FreeCAD harness evaluation; no new production authority",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk only; existing Python/Git; target FreeCAD executable is not installed and will not be added unless pilot evidence justifies it",
+  "api_cost_notes": "no external API calls required for harness tests",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "global Cursor/plugin installation, CLI-Hub package manager and target-software installation are excluded from this pilot",
+  "quota_controls": "no credentials; no provider calls; local subprocess only",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/HKUDS/CLI-Anything README: Apache-2.0; local generated CLIs; Windows Cursor installer available",
+    "https://github.com/HKUDS/CLI-Anything freecad skill: freecadcmd required in PATH",
+    "git ls-remote canonical HEAD 34f519533bc175d2fe287ab8316b0dd99bb9cc43"
+  ],
+  "approval": null
+}

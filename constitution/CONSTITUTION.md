@@ -12,6 +12,8 @@ Bind ייחוס (תאימות): Velvet Factory — שדרות · איסוף · �
 המשרד חי ב־Cursor packs. **שליחת ג׳ימייל ואינסטגרם — מ־HQ דרך כלים** (`SEND.md`). לא דרך כריסטיאן ולא דרך Grok Bot. מדפסות נשארות ברצפה.  
 **PUBLIC_CURRENT_CTA** = הודעת Instagram (`PUBLIC_CTA.md`). **BUSINESS_CONTACT_RECORD** = וואטסאפ `050-2517000` (לא CTA ציבורי כרגע; שליחה ללקוח נשארת אנושית).
 
+**NO_NEW_RECURRING_COST:** מקור הסמכות הקנוני הוא [`NO_NEW_RECURRING_COST.md`](NO_NEW_RECURRING_COST.md). ברירת המחדל היא אפס עלות חדשה חוזרת. לפני התקנה/חיבור/credential/קריאה ראשונה לשירות חיצוני חדש נדרש Cost Preflight; ספק לגבי חיוב נכשל-סגור. אין subscription, trial שהופך לתשלום, paid API call, resource מחויב או הרחבת usage שעלולה להעלות חשבון בלי אישור מפורש מראש של הבעלים.
+
 **Visible Text Gate:** כל prose/microcopy שנוצר או שוכתב ב־AI ושאדם עתיד לקרוא — כריסטיאן, לקוח, קהל או שותף — עובר את כלי הכתיבה והאימות הרלוונטיים לפני final/send/publish/render. סמכות: [`VISIBLE_TEXT.md`](VISIBLE_TEXT.md); יישום קנוני: `packages/vfcopy`. טקסט תפעולי לבעלים אינו מקבל קול Instagram בכוח, וטקסט מקור/ID/hash/log נשאר literal. אין `PASS` בלי ביצוע בפועל.
 
 

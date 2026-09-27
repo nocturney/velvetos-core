@@ -1,0 +1,114 @@
+{
+  "schema": "vf.grok.provider-readback.v1",
+  "observedAt": "2026-09-27T10:12:59.224768+00:00",
+  "provider": "grok-bot",
+  "providerAppVersion": "0.59.1",
+  "signedIn": true,
+  "rendererTimeZone": "Asia/Jerusalem",
+  "transport": {
+    "surface": "existing signed-in Grok Bot renderer",
+    "inspection": "loopback Chrome DevTools Protocol at 127.0.0.1:9222",
+    "modelPromptSent": false,
+    "writeOperationsPerformed": [
+      "setAgentAutomationEnabled(openpost-release-watch,false)"
+    ],
+    "writeAuthorization": "canonical owner retirement directive in automation/grok/manifest.json and CONTRACT.md dated 2026-09-26"
+  },
+  "protectedRoutineCount": 8,
+  "protectedRoutines": [
+    {
+      "providerRoutineId": "velvetos-integrity-guard",
+      "title": "VelvetOS Integrity Guard",
+      "expectedCadence": "daily 01:45",
+      "providerDisplayCadence": "Every day at 1:45 AM",
+      "enabled": true,
+      "ariaChecked": true,
+      "matchesCanonicalClock": true
+    },
+    {
+      "providerRoutineId": "velvet-research-seat",
+      "title": "Velvet Research Seat",
+      "expectedCadence": "daily 02:00",
+      "providerDisplayCadence": "Every day at 2:00 AM",
+      "enabled": true,
+      "ariaChecked": true,
+      "matchesCanonicalClock": true
+    },
+    {
+      "providerRoutineId": "cognee-memory-sync",
+      "title": "Cognee Memory Sync",
+      "expectedCadence": "daily 06:30",
+      "providerDisplayCadence": "Every day at 6:30 AM",
+      "enabled": true,
+      "ariaChecked": true,
+      "matchesCanonicalClock": true
+    },
+    {
+      "providerRoutineId": "velvet-morning-brief",
+      "title": "Velvet Morning Brief",
+      "expectedCadence": "daily 09:00",
+      "providerDisplayCadence": "Every day at 9:00 AM",
+      "enabled": true,
+      "ariaChecked": true,
+      "matchesCanonicalClock": true
+    },
+    {
+      "providerRoutineId": "morning-delivery-guard",
+      "title": "Morning Delivery Guard",
+      "expectedCadence": "daily 10:00",
+      "providerDisplayCadence": "Every day at 10:00 AM",
+      "enabled": true,
+      "ariaChecked": true,
+      "matchesCanonicalClock": true
+    },
+    {
+      "providerRoutineId": "cognee-stable-updates",
+      "title": "Cognee Stable Updates",
+      "expectedCadence": "Monday 10:00",
+      "providerDisplayCadence": "Every Monday at 10:00 AM",
+      "enabled": true,
+      "ariaChecked": true,
+      "matchesCanonicalClock": true
+    },
+    {
+      "providerRoutineId": "velvetos-office-loop",
+      "title": "VelvetOS Office Loop",
+      "expectedCadence": "daily 10:30 and 18:30",
+      "providerDisplayCadence": "Every day at 10:30 AM and 6:30 PM",
+      "enabled": true,
+      "ariaChecked": true,
+      "matchesCanonicalClock": true
+    },
+    {
+      "providerRoutineId": "weekly-research-accountability",
+      "title": "Weekly Research Accountability",
+      "expectedCadence": "Friday 12:00",
+      "providerDisplayCadence": "Every Friday at 12:00 PM",
+      "enabled": true,
+      "ariaChecked": true,
+      "matchesCanonicalClock": true
+    }
+  ],
+  "retiredRoutines": [
+    {
+      "providerRoutineId": "openpost-release-watch",
+      "title": "OpenPost Release Watch",
+      "providerDisplayCadence": "Every day at 7:15 AM",
+      "desiredEnabled": false,
+      "enabled": false,
+      "ariaChecked": false,
+      "repairPerformed": true,
+      "repair": "disabled live provider routine after readback found it enabled",
+      "postRepairReadback": "Resume OpenPost Release Watch"
+    }
+  ],
+  "verificationScope": {
+    "inventoryIds": true,
+    "enabledState": true,
+    "effectiveScheduleDisplay": true,
+    "rendererTimeZone": true,
+    "promptBodyParity": false,
+    "note": "This readback verifies live provider inventory, enabled state, effective schedule display, and renderer timezone. It does not claim prompt-body parity for all routines."
+  },
+  "status": "LIVE_PROVIDER_READBACK_PASS"
+}

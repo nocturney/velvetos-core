@@ -1,97 +1,234 @@
-# NO_NEW_RECURRING_COST
+# VelvetOS Policy - NO_NEW_RECURRING_COST
 
-Status: CANONICAL COST AUTHORITY
+Status: **CANONICAL COST AUTHORITY**
+Default target: **zero new recurring cost**
+Enforcement: **FAIL CLOSED ON COST**
 
-VelvetOS defaults to zero new recurring cost. A useful capability is not permission to create a new subscription, paid plan, billing account, usage-based workload, auto-renewing trial, paid resource, or other recurring charge.
+## 1. Purpose
 
-## 1. Objective and default
+מדיניות זו מחייבת את כל רכיבי VelvetOS, כלי הפיתוח, סוכנים, שירותים, integrations, plugins, APIs, מודלים, ספקי ענן ופרויקטי ניסוי.
 
-The default target is zero new recurring cost. Prefer capabilities already available locally, self-hosted, or already paid for with proven zero incremental cost. Cost is a hard execution gate, not a post-hoc reporting field.
+ברירת המחדל היא:
 
-## 2. Scope
+**אין ליצור עלות חדשה חוזרת, חיוב חדש, מנוי חדש או שימוש בשירות בתשלום ללא אישור מפורש מראש מבעל המערכת.**
 
-This law applies before installing, connecting, authenticating, provisioning, enabling, upgrading, calling, scheduling, or routing work through any component that can create recurring or usage-based cost. It applies to tools, APIs, models, SaaS plans, cloud resources, storage, databases, workers, queues, automation products, trials, hosted inference, and equivalent external capabilities.
+היעד התפעולי הוא:
 
-## 3. Definitions
+**אפס עלות חדשה חוזרת כברירת מחדל.**
 
-"New recurring cost" means a charge that can repeat because a capability remains enabled or because the workload continues. "Incremental cost" means extra spend attributable to the proposed workload even when the provider or plan already exists. "Explicit owner approval" means a specific approval for the concrete provider, plan/workload, billing model, scope, and expected recurring exposure; generic approval to use a tool is not cost approval.
+## 2. Default Rule
 
-## 4. Cost classifications
+כאשר קיימת חלופה מספקת מסוג:
 
-Every cost-sensitive component must be classified as exactly one of:
+- Open Source
+- Local
+- Self-hosted
+- Existing licensed capability
+- Existing already-paid infrastructure
+- Existing approved API/service
 
-- FREE_LOCAL — runs on already-owned local resources without a new paid service.
-- FREE_SELF_HOSTED — self-hosted without a new recurring vendor charge.
-- EXISTING_PAID_CAPABILITY — already paid for and the proposed workload is proven not to increase the bill.
-- FREE_TIER_LIMITED — no charge only while a quota or allowance is respected.
-- PAID_OPTIONAL — the required path can remain free, while optional paid features exist.
-- PAID_REQUIRED — the required path creates a paid or recurring charge.
-- COST_UNKNOWN — billing behavior or incremental cost is not proven.
+יש להעדיף אותה על פני שירות חדש בתשלום.
 
-## 5. Fail closed
+אין לבחור בפתרון בתשלום רק משום שהוא:
 
-PAID_REQUIRED and COST_UNKNOWN are blocked by default. Unclear pricing, missing quota information, unclear overage behavior, ambiguous account ownership, or unknown billing linkage must be treated as COST_UNKNOWN. Do not infer "probably free" from a marketing page, an existing login, a successful API response, or the absence of an immediate charge.
+- קל יותר להתקנה
+- מהיר יותר לבדיקה
+- hosted
+- convenient
+- recommended by vendor
+- כולל free trial
+- כולל credits זמניים
 
-## 6. Explicit owner approval contract
+## 3. Absolute Prohibition Without Explicit Approval
 
-A cost exception is valid only when the owner explicitly approves the concrete action and the evidence records: provider, product or plan/workload, billing model, expected recurring cost or exposure, billing period or usage basis, scope, any hard cap or quota control, and an approval note tied to this action. Approval for one provider, plan, workload, or limit does not transfer to another.
+ללא אישור מפורש מראש אסור:
 
-## 7. Cost preflight timing
+1. ליצור subscription בתשלום.
+2. להפעיל paid plan.
+3. להזין כרטיס אשראי או אמצעי תשלום.
+4. להפעיל billing account חדש.
+5. לבצע upgrade מתוכנית חינמית לתוכנית בתשלום.
+6. ליצור resource שידוע או סביר שייצר חיוב חדש.
+7. לבצע API call בתשלום.
+8. להשתמש ב-token/API key שמחויב לפי שימוש עבור workload חדש.
+9. לאשר marketplace purchase.
+10. להתחיל trial שהופך אוטומטית לתשלום.
+11. להגדיל quota אם ההגדלה עלולה ליצור חיוב.
+12. להפעיל model endpoint, GPU cloud instance, hosted database או SaaS בתשלום.
+13. לרכוש license, seat, credit pack או usage bundle.
+14. להעביר workload לשירות חיצוני בעל pricing usage-based בלי אישור.
 
-Run cost preflight before any install, connection, credential setup, billing-capable authentication, first paid-capable API call, production deployment, scheduled workload, resource provisioning, or change that can alter billing. A preflight result is evidence for a specific action; it does not permanently bless the provider.
+**עצם קיומו של API key, billing account או כרטיס שכבר מחובר אינו נחשב אישור להשתמש בו.**
 
-## 8. Installation and connection
+## 4. Explicit Approval Requirement
 
-Do not install or connect a component merely because installation itself is free. Determine whether normal use, required plugins, hosted control planes, storage, egress, model calls, or later activation can create recurring cost. If the cost path is not proven safe, block before connection.
+חריגה מהמדיניות תקפה רק אם בעל המערכת מאשר במפורש את כל הפרטים הבאים:
 
-## 9. Credentials and billing accounts
+- שם השירות או הספק
+- מטרת השימוש
+- סוג החיוב
+- עלות צפויה
+- תקרת עלות
+- האם העלות חד-פעמית או חוזרת
+- משך האישור
+- הסביבה המורשית
+- האם מותר Production
+- האם מותר auto-renew
+- האם מותר usage-based billing
 
-Creating or attaching a billing account, payment method, paid API key, metered project, credit commitment, or equivalent billing-capable credential is a cost-sensitive action. It requires a passing preflight and, when paid or uncertain, explicit owner approval.
+אישור כללי כגון "תתקין מה שצריך" או "תשתמש בכלים" אינו מהווה אישור ליצור חיוב.
 
-## 10. Paid-capable API calls
+## 5. Cost Preflight Before Installation
 
-The first call to an API that can bill by request, token, image, minute, compute, storage, bandwidth, or another usage unit is a cost gate. Existing credentials do not authorize paid usage. Prefer a local, self-hosted, or already-paid zero-incremental-cost route when it can satisfy the task.
+לפני התקנה, הפעלה או חיבור של כל רכיב חיצוני חדש יש לבצע Cost Preflight.
 
-## 11. Free-tier limited services
+הבדיקה חייבת לקבוע:
 
-FREE_TIER_LIMITED is acceptable only when quota evidence is current and automatic paid overage is impossible or a meaningful hard cap prevents charge. If overage can bill automatically and no hard cap is enforced, explicit owner approval is required before production use.
+### A. License
+- האם הקוד חינמי?
+- איזה license חל עליו?
+- האם שימוש מסחרי מותר?
+- האם קיימת מגבלה על self-hosting?
 
-## 12. Trials
+### B. Runtime Cost
+- האם השירות יכול לרוץ מקומית?
+- האם נדרש cloud resource?
+- האם נדרש GPU/CPU hosted?
+- האם קיימת עלות storage, traffic או database?
 
-A trial that can auto-renew, convert to paid, require a payment method, or create a paid resource is not treated as free. Prefer a non-renewing free path. Any auto-renewing or conversion-capable trial is blocked without explicit owner approval and a recorded cancellation/expiry control.
+### C. API Cost
+- האם נדרשים API calls?
+- האם הם free?
+- האם free tier מוגבל?
+- מה קורה לאחר חריגה?
+- האם billing מופעל אוטומטית?
 
-## 13. Usage-based workloads
+### D. Subscription
+- האם נדרש account בתשלום?
+- האם יש trial בלבד?
+- האם ה-trial הופך אוטומטית למנוי?
 
-Metered workloads must have a known billing unit, a bounded workload, and a hard or operational cap where the provider supports one. "Low expected usage" is not a cost control. Scheduled or autonomous workloads require stricter bounds because repetition can multiply spend.
+### E. Hidden/Secondary Cost
+יש לבדוק גם egress, storage, managed database, logging, monitoring, hosted embeddings, inference, external search, email/SMS, webhook delivery services ו-paid marketplace integrations.
 
-## 14. Existing paid capability
+## 6. Cost Classification
 
-EXISTING_PAID_CAPABILITY is allowed without a new cost exception only when incremental_cost_possible is explicitly false and supported by evidence. If the workload can raise the bill, consume paid credits that replenish for money, trigger a higher tier, or create overage, it is not zero-incremental-cost and requires explicit approval.
+כל רכיב חדש חייב לקבל אחת מהתוויות:
 
-## 15. Paid optional features
+- `FREE_LOCAL` - ללא תשלום חדש ורץ מקומית.
+- `FREE_SELF_HOSTED` - התוכנה ללא עלות רישוי חדשה, אך צורכת infrastructure קיים.
+- `EXISTING_PAID_CAPABILITY` - משתמש בשירות שכבר משולם ומאושר. שימוש חדש עדיין חייב להיבדק אם הוא עלול להגדיל את החשבון.
+- `FREE_TIER_LIMITED` - חינמי רק עד quota מסוים. נדרשים quota control, monitoring ו-hard cap אם אפשר.
+- `PAID_OPTIONAL` - ניתן לעבוד בחינם, אך קיימים features בתשלום. יש לנעול את ההטמעה למסלול החינמי.
+- `PAID_REQUIRED` - דורש תשלום. `BLOCKED_BY_NO_NEW_RECURRING_COST` עד לקבלת אישור מפורש.
+- `COST_UNKNOWN` - אין מידע מספק. `BLOCKED` עד לבירור.
 
-PAID_OPTIONAL may proceed only with paid_features_enabled=false for the proposed path. If a paid feature is needed or enabled, reclassify the action and run the corresponding approval gate. Do not silently turn on premium features to improve quality or convenience.
+## 7. Approval Gates
 
-## 16. Local and self-hosted resources
+### Gate 1 - Discovery
+לפני בחירת כלי יש לקבוע האם הוא מסוגל לפעול ללא חיוב חדש. אם לא - יש לחפש חלופה חינמית.
 
-Ordinary use of already-owned CPU, GPU, RAM, disk, and network is not treated as a new recurring vendor cost. Prefer this route when quality, reliability, and operational simplicity are acceptable. Unusually resource-intensive workloads should still record expected local resource impact and storage growth so "free" does not hide material operational burden.
+### Gate 2 - Installation
+לפני התקנה חייב להיות מתועד cost classification, license, deployment model, APIs required ו-billing risk. ללא מידע זה אין להתקין.
 
-## 17. Tool and model routing preference
+### Gate 3 - Credentials
+לפני הכנסת API key או credentials יש לוודא האם המפתח משויך לחשבון בתשלום, האם הפעולה יכולה ליצור usage cost והאם קיימת quota. אם כן - נדרש אישור מפורש.
 
-When multiple routes can satisfy the task, prefer in this order: FREE_LOCAL; FREE_SELF_HOSTED; EXISTING_PAID_CAPABILITY with proven zero incremental cost; FREE_TIER_LIMITED with effective hard controls; PAID_OPTIONAL with paid features disabled. PAID_REQUIRED and COST_UNKNOWN are last-resort blocked states until explicit approval exists.
+### Gate 4 - First External Call
+לפני הקריאה החיצונית הראשונה לשירות שעשוי להיות בתשלום יש לבצע בדיקה נוספת. אם pricing אינו חד-משמעי - לא מבצעים את הקריאה.
 
-## 18. Failover and fallback
+### Gate 5 - Production
+גם כלי שעבר Pilot בחינם אינו עובר אוטומטית ל-Production. יש לבדוק מחדש volume, rate, storage, traffic ו-expected monthly cost.
 
-Failover must preserve the cost boundary. A local/free failure does not authorize a hosted or paid replacement. First seek another zero-new-recurring-cost route, reduce scope safely, or return a concrete blocker. A paid fallback may be used only after its own preflight and required approval.
+## 8. Free Trials
 
-## 19. No silent cost escalation
+Free trial אינו נחשב חינם אם נדרש אמצעי תשלום, יש auto-renew, השירות הופך אוטומטית ל-paid, אין תקרת שימוש קשיחה או תנאי החיוב אינם ברורים. ברירת המחדל: לא מתחילים trial כזה ללא אישור.
 
-Never change model tier, provider, hosting mode, storage class, database plan, retention, concurrency, polling cadence, scheduled frequency, or another billing-relevant setting in a way that can increase recurring cost without a fresh cost decision. Quality or reliability improvements do not override this law.
+## 9. Usage-Based APIs
 
-## 20. Evidence, logging, and monthly drift review
+API המחויב לפי tokens, requests, compute time, bandwidth, generated images, inference, embeddings, storage או messages נחשב paid service גם אם העלות ל-call בודד נמוכה. ללא אישור אסור להשתמש בו.
 
-Record classification, evidence source, date checked, recurring-cost assessment, quota/overage controls, approval reference when required, and the resulting decision. External or cloud-connected components require a monthly cost-drift review: confirm the plan, free-tier rules, overage behavior, workload, and incremental-cost assumption still match the recorded preflight.
+## 10. Existing Paid Services
 
-## 21. Emergency exceptions, forbidden assumptions, and enforcement
+כאשר VelvetOS כבר משתמש בשירות בתשלום, אין להסיק שהרחבת השימוש חופשית. לפני שימוש חדש יש לבדוק האם הוא נכלל במנוי הקיים, האם יש quota, האם מדובר ב-metered usage והאם השימוש החדש יכול להעלות את החשבון. אם קיימת אפשרות לעלייה בעלות - נדרש אישור.
 
-An emergency does not create automatic cost authority. If a paid action is genuinely necessary, obtain the same explicit owner approval and record the exception. Forbidden assumptions include: "we already have an account, so it is free"; "the first call is probably free"; "credits are available, so spend is authorized"; "the free tier will be enough"; "a trial is free"; and "failover may use any provider". Enforcement is fail-closed through packages/vfharness/cost-policy.json, scripts/vf_cost_preflight.py, scripts/check-no-new-recurring-cost.py, office/control/POLICY.md, and the harness sensor registry.
+## 11. Local Resource Cost
+
+CPU מקומי, GPU מקומי, RAM, disk ו-network מקומי אינם נחשבים עלות חוזרת חדשה לצורך חסימת התקנה רגילה. אם צפויה צריכת משאבים חריגה - מאות GB, עומס GPU קבוע, שירות 24/7, שימוש חריג בחשמל או models גדולים מאוד - יש לתעד אותה.
+
+## 12. Preference Order
+
+1. Existing native capability
+2. Existing approved local tool
+3. Open-source local
+4. Open-source self-hosted
+5. Existing approved paid capability ללא עלות נוספת
+6. Free external service עם hard limits
+7. Paid service - רק לאחר אישור
+
+## 13. Fallback Rule
+
+אם רכיב שנבחר דורש תשלום בלתי צפוי:
+
+1. לעצור רק את הרכיב החסום.
+2. לסמן `BLOCKED_BY_NO_NEW_RECURRING_COST`.
+3. לחפש חלופה חינמית.
+4. להמשיך בכל שאר שלבי הפרויקט שאינם תלויים בו.
+5. לפנות לבעל המערכת רק אם אין חלופה סבירה.
+
+## 14. No Silent Cost Escalation
+
+אסור לבצע בשקט מעבר `Local -> Hosted`, `Free -> Trial -> Paid`, `Small/local model -> Paid frontier API` או `Self-hosted DB -> Managed cloud DB`, גם אם המעבר פותר תקלה טכנית.
+
+## 15. Model Routing Rule
+
+כאשר אפשר לבצע workload באמצעות model מקומי מתאים, יש להעדיף אותו כאשר הדבר עומד בדרישות האיכות. אין לבצע escalation ל-paid model רק בגלל latency, convenience, quality assumption או temporary local failure ללא אישור או policy קיימת שמתירה זאת.
+
+## 16. Logging and Evidence
+
+עבור כל רכיב חדש יש לשמור לפחות:
+
+- cost classification
+- source/license
+- free/paid mode selected
+- API dependencies
+- expected recurring cost
+- approval evidence אם קיימת חריגה
+
+במקרה של חריגה מאושרת יש לתעד `service`, `approved_by`, `approval_date`, `cost_limit`, `scope`, `expiration`.
+
+## 17. Monthly Cost Drift Check
+
+לכל רכיב חיצוני או cloud-connected שממשיך לפעול יש לבצע periodic review של pricing changes, free-tier changes, quota changes, new mandatory plans ו-discontinued free features. אם כלי שהיה חינמי הופך בתשלום, אין להמשיך אוטומטית; יש לעצור אם בטוח, לחפש חלופה, ושימוש בתשלום דורש אישור חדש.
+
+## 18. Emergency Exceptions
+
+חריג חירום מותר רק כאשר יש סיכון ממשי לאובדן מידע, יש צורך בפעולת recovery ואין חלופה חינמית זמינה בזמן הנדרש. גם אז אין לבצע חיוב בלי אישור אם ניתן להשיג את הבעלים. אם אין אפשרות לקבל אישור, ברירת המחדל נשארת לא ליצור חיוב. אין emergency billing אוטומטי.
+
+## 19. Explicitly Forbidden Assumptions
+
+אסור להניח: "זה רק כמה סנטים", "בטח יש free tier", "החשבון כבר מחובר", "כבר יש billing", "נבטל אחר כך", "זה רק לבדיקה", "ה-trial חינם" או "כנראה זה כלול". כל אחד מהמקרים דורש verification.
+
+## 20. Enforcement Rule
+
+כל agent, automation, developer workflow או implementation task ב-VelvetOS חייב לפעול לפי:
+
+> **VERIFY COST BEFORE INSTALLATION.**
+> **VERIFY COST BEFORE FIRST PAID-CAPABLE CALL.**
+> **NEVER CREATE A CHARGE WITHOUT EXPLICIT OWNER APPROVAL.**
+
+כאשר יש ספק: **FAIL CLOSED ON COST.**
+
+## 21. Final Policy Statement
+
+VelvetOS רשאי באופן אוטונומי להתקין, לבדוק, להריץ, להגדיר, לשלב, לבצע POC ולבצע benchmark רק כאשר הדבר אינו יוצר עלות חדשה חוזרת או חיוב חדש.
+
+כל פעולה שעלולה ליצור חיוב, מנוי, usage fee או API cost חדש דורשת אישור מפורש מראש מבעל המערכת.
+
+## 22. Compatibility and action-scoped evidence
+
+The machine contract may accept more than one preflight evidence shape, but the policy decision is identical. Detailed schema evidence and compact action-oriented evidence both bind to the same classifications, fail-closed states, incremental-cost rule, paid-overage controls, and explicit owner approval boundary.
+
+A compact preflight must identify the component and action, carry current evidence and a check date, and state whether incremental cost, automatic paid overage, a hard cap, or paid optional features are possible/enabled. This compatibility exists to preserve existing evidence while integrating newer production routers; it does not weaken the policy.
+
+A monthly cost-drift review remains required for external or cloud-connected components. No silent cost escalation is permitted when changing provider, model tier, hosting mode, storage class, retention, concurrency, polling cadence, or scheduled frequency.

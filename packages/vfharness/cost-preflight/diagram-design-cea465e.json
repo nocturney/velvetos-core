@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "diagram-design@cea465e7f5ea1043d8dab21a99f2dd3f7f661beb",
+  "classification": "FREE_LOCAL",
+  "license": "MIT",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for repo-local skill/profile usage",
+  "deployment_model": "repo-local documentation/architecture aid producing local self-contained HTML/SVG; no marketplace auto-update",
+  "api_dependencies": [],
+  "billing_risk": "none; no hosted service, API key, model provider or subscription is required",
+  "selected_mode": "pinned local skill with separate velvetos and velvet-factory profiles",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local file generation only",
+  "api_cost_notes": "none",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "plugin marketplace auto-update is intentionally disabled for reproducibility",
+  "quota_controls": "local-only artifacts; no network calls required at use time",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/cathrynlavery/diagram-design skill metadata: MIT; self-contained HTML/SVG",
+    "git ls-remote canonical HEAD cea465e7f5ea1043d8dab21a99f2dd3f7f661beb"
+  ],
+  "approval": null
+}

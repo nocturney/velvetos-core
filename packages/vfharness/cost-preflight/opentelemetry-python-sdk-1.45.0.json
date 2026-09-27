@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "opentelemetry-python-sdk@1.45.0",
+  "classification": "FREE_LOCAL",
+  "license": "Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for local SDK use",
+  "deployment_model": "Windows-native Python SDK with in-memory/local-file span export only",
+  "api_dependencies": [],
+  "billing_risk": "none in selected deployment; no hosted collector or telemetry SaaS",
+  "selected_mode": "local SDK and local trace file",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk only",
+  "api_cost_notes": "no external API calls",
+  "subscription_notes": "no account or subscription",
+  "hidden_secondary_cost_notes": "no collector, managed database, egress or hosted storage selected",
+  "quota_controls": "not applicable",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://pypi.org/project/opentelemetry-sdk/1.45.0/ Apache-2.0, Python >=3.10, released 2026-09-25",
+    "https://github.com/open-telemetry/opentelemetry-python canonical upstream"
+  ],
+  "approval": null
+}

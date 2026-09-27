@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "component": "promptfoo@0.123.1",
+  "classification": "FREE_LOCAL",
+  "license": "MIT",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for selected local CLI path",
+  "deployment_model": "Windows-native local CLI installed in repo-local tools/promptfoo; node_modules gitignored",
+  "api_dependencies": [],
+  "billing_risk": "none in selected configuration; no cloud/provider API keys and no hosted Promptfoo service",
+  "selected_mode": "local CLI + trusted custom exec provider only",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/disk only; Node 24.19.0 satisfies upstream Node >=22.22.0",
+  "api_cost_notes": "no model or hosted API calls are permitted in this integration",
+  "subscription_notes": "no subscription, trial, billing account or hosted workspace",
+  "hidden_secondary_cost_notes": "provider SDKs may support paid services, but this configuration does not supply credentials or call them",
+  "quota_controls": "remote providers disabled by configuration; deterministic local provider only",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/promptfoo/promptfoo README: open source MIT, local CLI, evals run locally",
+    "https://github.com/promptfoo/promptfoo/releases tag 0.123.1 released 2026-09-18",
+    "https://www.promptfoo.dev/docs/providers/custom-script/ local exec provider support"
+  ],
+  "approval": null
+}

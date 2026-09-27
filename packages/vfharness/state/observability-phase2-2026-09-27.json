@@ -1,0 +1,158 @@
+{
+  "authority": false,
+  "deployment": "LOCAL_FILE_ONLY",
+  "flow_status": "PASS",
+  "remote_exporters": [],
+  "required_flow": [
+    "request",
+    "routing",
+    "retrieval",
+    "agent",
+    "tool",
+    "approval",
+    "execution",
+    "readback",
+    "result"
+  ],
+  "role": "LOCAL_NON_AUTHORITATIVE_TELEMETRY",
+  "schema": 1,
+  "span_count": 9,
+  "spans": [
+    {
+      "attributes": {
+        "openinference.span.kind": "CHAIN",
+        "velvetos.component": "project-request-gate",
+        "velvetos.domain": "system_engineering",
+        "velvetos.stage": "routing",
+        "velvetos.status": "PASS"
+      },
+      "end_time_ns": 1790483957828266100,
+      "name": "routing",
+      "parent_span_id": "9d18f80906652409",
+      "span_id": "8d01af94150cfb02",
+      "start_time_ns": 1790483957767184200,
+      "trace_id": "c515b6089abe7258b4abfac2855c5467"
+    },
+    {
+      "attributes": {
+        "openinference.span.kind": "RETRIEVER",
+        "velvetos.component": "vfmem",
+        "velvetos.hit_count": 4,
+        "velvetos.stage": "retrieval",
+        "velvetos.status": "PASS",
+        "velvetos.top_route": "Pack:vfharness"
+      },
+      "end_time_ns": 1790483957894666800,
+      "name": "retrieval",
+      "parent_span_id": "9d18f80906652409",
+      "span_id": "fbc2d0afc1caf0aa",
+      "start_time_ns": 1790483957828447200,
+      "trace_id": "c515b6089abe7258b4abfac2855c5467"
+    },
+    {
+      "attributes": {
+        "openinference.span.kind": "AGENT",
+        "velvetos.component": "behavior-policy-target",
+        "velvetos.decision": "ALLOW",
+        "velvetos.stage": "agent",
+        "velvetos.status": "PASS"
+      },
+      "end_time_ns": 1790483957922159200,
+      "name": "agent",
+      "parent_span_id": "9d18f80906652409",
+      "span_id": "6d31422cc907304c",
+      "start_time_ns": 1790483957894846600,
+      "trace_id": "c515b6089abe7258b4abfac2855c5467"
+    },
+    {
+      "attributes": {
+        "openinference.span.kind": "TOOL",
+        "velvetos.component": "cost-preflight",
+        "velvetos.cost_classification": "FREE_LOCAL",
+        "velvetos.stage": "tool",
+        "velvetos.status": "PASS"
+      },
+      "end_time_ns": 1790483957970877300,
+      "name": "tool",
+      "parent_span_id": "9d18f80906652409",
+      "span_id": "f307c1ea355e643b",
+      "start_time_ns": 1790483957922335200,
+      "trace_id": "c515b6089abe7258b4abfac2855c5467"
+    },
+    {
+      "attributes": {
+        "openinference.span.kind": "GUARDRAIL",
+        "velvetos.approval_required": false,
+        "velvetos.component": "cost-policy",
+        "velvetos.stage": "approval",
+        "velvetos.status": "PASS"
+      },
+      "end_time_ns": 1790483957971085700,
+      "name": "approval",
+      "parent_span_id": "9d18f80906652409",
+      "span_id": "5e45b37ac1c9bd7a",
+      "start_time_ns": 1790483957971042400,
+      "trace_id": "c515b6089abe7258b4abfac2855c5467"
+    },
+    {
+      "attributes": {
+        "openinference.span.kind": "TOOL",
+        "velvetos.component": "behavioral-evals-sensor",
+        "velvetos.stage": "execution",
+        "velvetos.status": "PASS"
+      },
+      "end_time_ns": 1790483958002041600,
+      "name": "execution",
+      "parent_span_id": "9d18f80906652409",
+      "span_id": "9c5a570a1083c4ef",
+      "start_time_ns": 1790483957971238700,
+      "trace_id": "c515b6089abe7258b4abfac2855c5467"
+    },
+    {
+      "attributes": {
+        "openinference.span.kind": "EVALUATOR",
+        "velvetos.case_count": 17,
+        "velvetos.component": "promptfoo-config",
+        "velvetos.readback_verified": true,
+        "velvetos.stage": "readback",
+        "velvetos.status": "PASS"
+      },
+      "end_time_ns": 1790483958002321100,
+      "name": "readback",
+      "parent_span_id": "9d18f80906652409",
+      "span_id": "66ec3825164ba523",
+      "start_time_ns": 1790483958002201500,
+      "trace_id": "c515b6089abe7258b4abfac2855c5467"
+    },
+    {
+      "attributes": {
+        "openinference.span.kind": "EVALUATOR",
+        "velvetos.component": "observability-acceptance",
+        "velvetos.incremental_cost_ils": 0,
+        "velvetos.stage": "result",
+        "velvetos.status": "PASS"
+      },
+      "end_time_ns": 1790483958002440800,
+      "name": "result",
+      "parent_span_id": "9d18f80906652409",
+      "span_id": "2ec181e3e059dd4c",
+      "start_time_ns": 1790483958002422400,
+      "trace_id": "c515b6089abe7258b4abfac2855c5467"
+    },
+    {
+      "attributes": {
+        "openinference.span.kind": "CHAIN",
+        "velvetos.component": "vfharness",
+        "velvetos.incremental_cost_ils": 0,
+        "velvetos.stage": "request",
+        "velvetos.status": "PASS"
+      },
+      "end_time_ns": 1790483958002452300,
+      "name": "request",
+      "parent_span_id": null,
+      "span_id": "9d18f80906652409",
+      "start_time_ns": 1790483957767029900,
+      "trace_id": "c515b6089abe7258b4abfac2855c5467"
+    }
+  ]
+}

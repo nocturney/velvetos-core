@@ -1,0 +1,1718 @@
+{
+  "schema": 1,
+  "phase": 7,
+  "benchmark": "vfmem-retrieval-v1",
+  "date": "2026-09-27",
+  "backendMode": "both",
+  "authority": "vfmem canonical; both retrieval backends are context-only",
+  "judge": "deterministic expected canonical source paths; no LLM judge",
+  "topK": 5,
+  "cases": 22,
+  "tfidf": {
+    "summary": {
+      "buildMs": 1206.68,
+      "cases": 22,
+      "hit1": 0.4545,
+      "hit3": 0.6818,
+      "hit5": 0.8182,
+      "mrr": 0.5902,
+      "latency_ms_median": 14.75,
+      "latency_ms_p95": 18.23
+    },
+    "byCategory": {
+      "architecture": {
+        "cases": 2,
+        "hit1": 0.0,
+        "hit3": 0.5,
+        "hit5": 1.0,
+        "mrr": 0.35,
+        "latency_ms_median": 14.51,
+        "latency_ms_p95": 14.58
+      },
+      "brand-copy": {
+        "cases": 2,
+        "hit1": 0.5,
+        "hit3": 0.5,
+        "hit5": 1.0,
+        "mrr": 0.625,
+        "latency_ms_median": 14.52,
+        "latency_ms_p95": 14.69
+      },
+      "creative": {
+        "cases": 1,
+        "hit1": 0.0,
+        "hit3": 0.0,
+        "hit5": 0.0,
+        "mrr": 0.0,
+        "latency_ms_median": 14.29,
+        "latency_ms_p95": 14.29
+      },
+      "growth": {
+        "cases": 2,
+        "hit1": 0.5,
+        "hit3": 0.5,
+        "hit5": 0.5,
+        "mrr": 0.5,
+        "latency_ms_median": 14.8,
+        "latency_ms_p95": 15.0
+      },
+      "media": {
+        "cases": 2,
+        "hit1": 0.5,
+        "hit3": 0.5,
+        "hit5": 0.5,
+        "mrr": 0.5,
+        "latency_ms_median": 14.64,
+        "latency_ms_p95": 14.8
+      },
+      "memory-governance": {
+        "cases": 4,
+        "hit1": 0.75,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 0.875,
+        "latency_ms_median": 15.16,
+        "latency_ms_p95": 26.04
+      },
+      "production": {
+        "cases": 3,
+        "hit1": 0.6667,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 0.8333,
+        "latency_ms_median": 15.44,
+        "latency_ms_p95": 15.57
+      },
+      "publication": {
+        "cases": 2,
+        "hit1": 0.0,
+        "hit3": 0.5,
+        "hit5": 1.0,
+        "mrr": 0.2667,
+        "latency_ms_median": 16.37,
+        "latency_ms_p95": 18.23
+      },
+      "research": {
+        "cases": 2,
+        "hit1": 0.5,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 0.75,
+        "latency_ms_median": 14.58,
+        "latency_ms_p95": 14.58
+      },
+      "sales": {
+        "cases": 1,
+        "hit1": 1.0,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 1.0,
+        "latency_ms_median": 15.92,
+        "latency_ms_p95": 15.92
+      },
+      "tooling-capability": {
+        "cases": 1,
+        "hit1": 0.0,
+        "hit3": 0.0,
+        "hit5": 0.0,
+        "mrr": 0.0,
+        "latency_ms_median": 15.08,
+        "latency_ms_p95": 15.08
+      }
+    },
+    "byDimension": {
+      "contradiction_handling": {
+        "cases": 2,
+        "hit1": 1.0,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 1.0,
+        "latency_ms_median": 14.93,
+        "latency_ms_p95": 15.26
+      },
+      "temporal_correctness": {
+        "cases": 2,
+        "hit1": 0.5,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 0.75,
+        "latency_ms_median": 14.82,
+        "latency_ms_p95": 15.06
+      }
+    },
+    "rows": [
+      {
+        "id": "mem-recall",
+        "category": "memory-governance",
+        "dimensions": [],
+        "query": "לפני עבודה על פרויקט שכבר נגענו בו, מתי עושים recall ומה עושים אם השאילתה הראשונה ריקה?",
+        "expected": [
+          "packages/vfmem/MEMORY-UPDATE.md"
+        ],
+        "paths": [
+          "packages/vfmem/MEMORY-UPDATE.md",
+          "packages/vfprod/MAINTENANCE.md",
+          "packages/vfconvert/hq/DEDUP.md",
+          "packages/vfagents/playbooks/brief-pdf.md",
+          "packages/vffcc/playbooks/route.md"
+        ],
+        "scores": [
+          0.3067,
+          0.1443,
+          0.1144,
+          0.1124,
+          0.108
+        ],
+        "latencyMs": 26.04,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "mem-evidence-policy",
+        "category": "memory-governance",
+        "dimensions": [
+          "contradiction_handling"
+        ],
+        "query": "תצפית אחת היא evidence ולא policy; איך סוגרים רשומה ישנה במקום למחוק?",
+        "expected": [
+          "packages/vfmem/MEMORY-UPDATE.md"
+        ],
+        "paths": [
+          "packages/vfmem/MEMORY-UPDATE.md",
+          "packages/vfsales/hq/CUSTOMER-TIMELINE.md",
+          "packages/vfops/hq/WEEKLY-LOAD.md",
+          "packages/vfmem/MEMORY-UPDATE.md",
+          "packages/vfops/hq/LEARNING-RECORDS.md"
+        ],
+        "scores": [
+          0.262,
+          0.1664,
+          0.1517,
+          0.1433,
+          0.141
+        ],
+        "latencyMs": 15.26,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "mem-stale-index",
+        "category": "memory-governance",
+        "dimensions": [
+          "temporal_correctness"
+        ],
+        "query": "אחרי שמקור קנוני השתנה אבל Cognee עדיין עם digest ישן, האם מותר להשתמש באינדקס הסמנטי stale ומהו ה-fallback הנכון?",
+        "expected": [
+          "packages/vfmem/MEMORY-UPDATE.md"
+        ],
+        "paths": [
+          "constitution/NO_NEW_RECURRING_COST.md",
+          "packages/vfmem/MEMORY-UPDATE.md",
+          "constitution/NO_NEW_RECURRING_COST.md",
+          "packages/vfmem/COGNEE.md",
+          "packages/vfcopy/hq/ai-tells-he.md"
+        ],
+        "scores": [
+          0.3131,
+          0.2601,
+          0.1752,
+          0.1738,
+          0.1701
+        ],
+        "latencyMs": 15.06,
+        "metrics": {
+          "rank": 2,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.5
+        }
+      },
+      {
+        "id": "mem-conflicting-records",
+        "category": "memory-governance",
+        "dimensions": [
+          "contradiction_handling",
+          "temporal_correctness"
+        ],
+        "query": "אם שתי רשומות זיכרון סותרות מתקופות שונות, האם בוחרים אחת בשקט או מציגים את שתיהן עם תאריכים ותוקף?",
+        "expected": [
+          "packages/vfmem/MEMORY-UPDATE.md"
+        ],
+        "paths": [
+          "packages/vfmem/MEMORY-UPDATE.md",
+          "packages/vfcopy/hq/ai-tells-he.md",
+          "constitution/NO_NEW_RECURRING_COST.md",
+          "packages/vfcopy/hq/PLAYBOOK.md",
+          "constitution/NO_NEW_RECURRING_COST.md"
+        ],
+        "scores": [
+          0.529,
+          0.1945,
+          0.1819,
+          0.1806,
+          0.1624
+        ],
+        "latencyMs": 14.59,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "layers",
+        "category": "architecture",
+        "dimensions": [],
+        "query": "מה ההבדל בין Edge, Kernel ו-Office/HQ ומה כל שכבה לא אמורה לעשות?",
+        "expected": [
+          "packages/velvetos/LAYERS.md"
+        ],
+        "paths": [
+          "packages/vfprod/WATCHTOWER.md",
+          "packages/velvetos/LAYERS.md",
+          "packages/velvetos/KERNEL.md",
+          "docs/chief-of-staff/SYSTEM-MAP.md",
+          "packages/vfprod/WATCHTOWER.md"
+        ],
+        "scores": [
+          0.2443,
+          0.2255,
+          0.202,
+          0.1943,
+          0.1924
+        ],
+        "latencyMs": 14.58,
+        "metrics": {
+          "rank": 2,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.5
+        }
+      },
+      {
+        "id": "pipeline",
+        "category": "architecture",
+        "dimensions": [],
+        "query": "מה חמשת שלבי הצינור הקנוניים lead talk offer fulfill close ומה הדוגמה שלהם ב-Velvet Factory?",
+        "expected": [
+          "packages/velvetos/PIPELINE.md"
+        ],
+        "paths": [
+          "packages/velvetos/modules/pipeline-canonical.md",
+          "packages/vfgraft/graph/pipeline.md",
+          "packages/vfgraft/MAP.md",
+          "docs/chief-of-staff/SYSTEM-MAP.md",
+          "packages/velvetos/PIPELINE.md"
+        ],
+        "scores": [
+          0.498,
+          0.3168,
+          0.229,
+          0.2275,
+          0.1518
+        ],
+        "latencyMs": 14.44,
+        "metrics": {
+          "rank": 5,
+          "hit1": false,
+          "hit3": false,
+          "hit5": true,
+          "rr": 0.2
+        }
+      },
+      {
+        "id": "product-truth",
+        "category": "brand-copy",
+        "dimensions": [],
+        "query": "בפוסט שמציג מוצר מודפס אמיתי אסור לשנות גאומטריה, צללית, פרופורציות או חומר של האובייקט מה-RAW המאושר.",
+        "expected": [
+          "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+          "packages/vfgrowth/EDIT-GATE.md"
+        ],
+        "paths": [
+          "packages/vfgrowth/EDIT-GATE.md",
+          "packages/vfconvert/hq/GRILL.md",
+          "packages/velvetos/CHANNELS.md",
+          "packages/vfgrowth/PRODUCTION-CONTENT.md",
+          "packages/vfmem/MEMORY-UPDATE.md"
+        ],
+        "scores": [
+          0.2333,
+          0.1374,
+          0.1293,
+          0.1282,
+          0.1119
+        ],
+        "latencyMs": 14.69,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "brand-asset-lock",
+        "category": "creative",
+        "dimensions": [],
+        "query": "לוגו או wordmark רק מנכס מאושר וב-overlay דטרמיניסטי; בגנרציה אין לוגו, טלפון או WhatsApp.",
+        "expected": [
+          "packages/vfom/BRAND-ASSET-LOCK.md"
+        ],
+        "paths": [
+          "packages/vfcopy/hq/templates/inquiry-reply.md",
+          "packages/vfom/VISUAL-OS.md",
+          "packages/vfgrowth/templates/reel-16.md",
+          "packages/vfsku/TAG.md",
+          "packages/vfmedia/SKILL.md"
+        ],
+        "scores": [
+          0.3059,
+          0.146,
+          0.1177,
+          0.1114,
+          0.1074
+        ],
+        "latencyMs": 14.29,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      },
+      {
+        "id": "voice",
+        "category": "brand-copy",
+        "dimensions": [],
+        "query": "מה ברירת המחדל לאורך כיתוב אינסטגרם בעברית טבעית וכמה האשטגים לכל היותר?",
+        "expected": [
+          "packages/vfcopy/VOICE.md",
+          "packages/vfcopy/VOICE-CHART.md"
+        ],
+        "paths": [
+          "packages/vfinsights/MEASUREMENT-PLAN.md",
+          "packages/vfharness/playbooks/executing-plans.md",
+          "constitution/PUBLIC_CTA.md",
+          "packages/vfcopy/VOICE.md",
+          "packages/vfcopy/VOICE-CHART.md"
+        ],
+        "scores": [
+          0.2105,
+          0.2023,
+          0.1537,
+          0.1535,
+          0.1515
+        ],
+        "latencyMs": 14.34,
+        "metrics": {
+          "rank": 4,
+          "hit1": false,
+          "hit3": false,
+          "hit5": true,
+          "rr": 0.25
+        }
+      },
+      {
+        "id": "edit-gate",
+        "category": "growth",
+        "dimensions": [],
+        "query": "מהו שער RAW ו-Product Truth שחייב לעבור לפני תוכן של מוצר אמיתי, ומה נבדק על exact final?",
+        "expected": [
+          "packages/vfgrowth/EDIT-GATE.md"
+        ],
+        "paths": [
+          "packages/vfgrowth/EDIT-GATE.md",
+          "packages/vfgrowth/PRODUCTION-CONTENT.md",
+          "packages/vfgrowth/preflight/VF-R005.md",
+          "packages/vfcopy/VOICE.md",
+          "packages/vfgrowth/GATE.md"
+        ],
+        "scores": [
+          0.2368,
+          0.2248,
+          0.2217,
+          0.1887,
+          0.1787
+        ],
+        "latencyMs": 14.61,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "media-intake",
+        "category": "media",
+        "dimensions": [],
+        "query": "ב-intake למדיה מה ההבדל בין registered, Drive movement, approval והפעלה מתוזמנת, ולמה הרשאת Drive היא תנאי?",
+        "expected": [
+          "packages/vfmedia/INTAKE.md"
+        ],
+        "paths": [
+          "packages/vfmedia/INTAKE.md",
+          "packages/vfmedia/INTAKE.md",
+          "packages/vfmcp/CONNECT-ICLOUD.md",
+          "docs/chief-of-staff/SYSTEM-MAP.md",
+          "packages/vfmcp/ICLOUD-DRIVE-SYNC.md"
+        ],
+        "scores": [
+          0.1765,
+          0.1622,
+          0.152,
+          0.1482,
+          0.1417
+        ],
+        "latencyMs": 14.8,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "print-done",
+        "category": "production",
+        "dimensions": [],
+        "query": "אחרי הדפסה תקינה עם timelapse או סטיל אמיתי, איך print.done הופך לכרטיס וטיוטת תוכן בלי לפרסם אוטומטית?",
+        "expected": [
+          "packages/vfprod/PRINT-DONE.md"
+        ],
+        "paths": [
+          "packages/vfprod/PRINT-DONE.md",
+          "packages/vfprod/hq/cards/README.md",
+          "packages/vfprod/FLOOR.md",
+          "packages/vfprod/PRINT-DONE.md",
+          "packages/vfprod/WATCHTOWER.md"
+        ],
+        "scores": [
+          0.4281,
+          0.2977,
+          0.2927,
+          0.277,
+          0.258
+        ],
+        "latencyMs": 14.82,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "maintenance",
+        "category": "production",
+        "dimensions": [],
+        "query": "בתחזוקת מדפסות מה בודקים רק ממדידה ומתי מתזמנים טיפול?",
+        "expected": [
+          "packages/vfprod/MAINTENANCE.md"
+        ],
+        "paths": [
+          "packages/vfsku/LAB.md",
+          "packages/vfprod/MAINTENANCE.md",
+          "constitution/ORCHESTRA.md",
+          "packages/vfsku/GATE.md",
+          "packages/vfmcp/GAP.md"
+        ],
+        "scores": [
+          0.1246,
+          0.1201,
+          0.1178,
+          0.1103,
+          0.1045
+        ],
+        "latencyMs": 15.57,
+        "metrics": {
+          "rank": 2,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.5
+        }
+      },
+      {
+        "id": "material",
+        "category": "production",
+        "dimensions": [],
+        "query": "איפה נרשמת יתרת גרם בגליל הפעיל, ומה קורה כשאין ספירת גרם להדפסת לילה?",
+        "expected": [
+          "packages/vfprod/MATERIAL.md"
+        ],
+        "paths": [
+          "packages/vfprod/MATERIAL.md",
+          "packages/vfprod/ROUTING.md",
+          "packages/vfcost/FLOOR-CARD.md",
+          "packages/vfresearch/sources/2026-09-16-print-demand.md",
+          "packages/vfharness/LOOP.md"
+        ],
+        "scores": [
+          0.3194,
+          0.1741,
+          0.1288,
+          0.108,
+          0.1027
+        ],
+        "latencyMs": 15.44,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "publication-state",
+        "category": "publication",
+        "dimensions": [],
+        "query": "מתי מותר לסמן תוכן live ומה ההבדל בין scheduled, uploadAccepted, publish_requested ו-published_verified?",
+        "expected": [
+          "packages/vfigos/PUBLICATION-STATES.md"
+        ],
+        "paths": [
+          "docs/chief-of-staff/README.md",
+          "packages/vfharness/templates/handoff.md",
+          "packages/vfbriefux/MORNING-GREEN.md",
+          "packages/vfigos/cloudflare-publisher/README.md",
+          "packages/vfigos/PUBLICATION-STATES.md"
+        ],
+        "scores": [
+          0.173,
+          0.1493,
+          0.144,
+          0.1364,
+          0.1351
+        ],
+        "latencyMs": 14.5,
+        "metrics": {
+          "rank": 5,
+          "hit1": false,
+          "hit3": false,
+          "hit5": true,
+          "rr": 0.2
+        }
+      },
+      {
+        "id": "publish-bridge",
+        "category": "publication",
+        "dimensions": [],
+        "query": "מה עושים עם approved_export_local לפני blocked_publish_transport, ולמה Publish Bridge אינו מקור אמת או הוכחה שהתוכן live?",
+        "expected": [
+          "packages/vfigos/PUBLISH-BRIDGE.md"
+        ],
+        "paths": [
+          "packages/vfigos/PUBLICATION-STATES.md",
+          "packages/vfigos/handoff/README.md",
+          "packages/vfigos/PUBLISH-BRIDGE.md",
+          "docs/SEND-BRIEF-MCP.md",
+          "packages/vfbriefux/MAIL.md"
+        ],
+        "scores": [
+          0.2221,
+          0.2122,
+          0.2052,
+          0.1838,
+          0.175
+        ],
+        "latencyMs": 18.23,
+        "metrics": {
+          "rank": 3,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.3333333333333333
+        }
+      },
+      {
+        "id": "quote",
+        "category": "sales",
+        "dimensions": [],
+        "query": "לקוח שולח STL או 3MF: קודם slice למשקל וזמן, אבל אסור לתת מחיר עד שראש הצוות נתן סכום.",
+        "expected": [
+          "packages/vfsales/QUOTE.md"
+        ],
+        "paths": [
+          "packages/vfsales/QUOTE.md",
+          "packages/vfagents/playbooks/inquiry-support.md",
+          "packages/vfagents/playbooks/email-draft.md",
+          "packages/vfmakers/EXAMPLES.md",
+          "packages/vfprod/3DAISTUDIO.md"
+        ],
+        "scores": [
+          0.2338,
+          0.204,
+          0.1608,
+          0.1486,
+          0.1326
+        ],
+        "latencyMs": 15.92,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "weekly-research",
+        "category": "research",
+        "dimensions": [],
+        "query": "בסקירת הקישורים השבועית, אם קישור חסום Cloudflare או מנוי אין להמציא גוף וממשיכים מיד למקור הבא.",
+        "expected": [
+          "packages/vfresearch/WEEKLY.md"
+        ],
+        "paths": [
+          "packages/vfharness/LOCK.md",
+          "packages/vfresearch/WEEKLY.md",
+          "packages/vfresearch/DAILY.md",
+          "packages/vfresearch/sources/2026-09-05-mcpmarket-cad-nine.md",
+          "packages/vfprod/WATCHTOWER.md"
+        ],
+        "scores": [
+          0.1903,
+          0.1741,
+          0.1649,
+          0.138,
+          0.122
+        ],
+        "latencyMs": 14.58,
+        "metrics": {
+          "rank": 2,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.5
+        }
+      },
+      {
+        "id": "daily-research",
+        "category": "research",
+        "dimensions": [],
+        "query": "במחקר היומי מהו חוזה freshness ומה כותבים בדיוק אם אין ממצא מוצק לבריף?",
+        "expected": [
+          "packages/vfresearch/DAILY.md"
+        ],
+        "paths": [
+          "packages/vfresearch/DAILY.md",
+          "packages/vfagents/playbooks/sku-repeat.md",
+          "packages/vfresearch/sources/2026-09-10-orchestra.md",
+          "packages/vfresearch/hq/LAST30.md",
+          "packages/vfops/hq/CLIENT-REPORT-TEMPLATE.md"
+        ],
+        "scores": [
+          0.158,
+          0.1429,
+          0.1312,
+          0.1112,
+          0.1091
+        ],
+        "latencyMs": 14.58,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "host",
+        "category": "tooling-capability",
+        "dimensions": [],
+        "query": "איפה אמורים לרוץ Gemini ChatGPT Perplexity במנויים האישיים: המק הייעודי או מחשב Windows, ומה אסור להעתיק לענן?",
+        "expected": [
+          "packages/vfmcp/HOST.md"
+        ],
+        "paths": [
+          "packages/vfresearch/sources/2026-09-05-perplexity-user-mcp.md",
+          "packages/vfresearch/sources/2026-09-05-orchestra-subscriptions.md",
+          "packages/vfagents/playbooks/competitor-scan.md",
+          "packages/vffcc/README.md",
+          "packages/vfresearch/sources/2026-08-30-orchestra.md"
+        ],
+        "scores": [
+          0.1936,
+          0.1824,
+          0.1629,
+          0.1549,
+          0.1525
+        ],
+        "latencyMs": 15.08,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      },
+      {
+        "id": "growth-preflight",
+        "category": "growth",
+        "dimensions": [],
+        "query": "איזה preflight חוסם שיבוץ כשאיכות התוכן או העובדות לא עברו, לפני שליחה לאינסטגרם?",
+        "expected": [
+          "packages/vfgrowth/PREFLIGHT.md"
+        ],
+        "paths": [
+          "packages/vfagents/playbooks/reflection-before-send.md",
+          "packages/vfgraft/EMBED.md",
+          "packages/vfops/hq/CLIENT-REPORT-TEMPLATE.md",
+          "packages/vfresearch/experts/TREND-EXPLORER.md",
+          "packages/vfops/hq/CLIENT-REPORT-TEMPLATE.md"
+        ],
+        "scores": [
+          0.1539,
+          0.1532,
+          0.1522,
+          0.1395,
+          0.1378
+        ],
+        "latencyMs": 15.0,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      },
+      {
+        "id": "media-lock",
+        "category": "media",
+        "dimensions": [],
+        "query": "למה upload לתיקייה או מיקום ב-Drive לא נחשב version approval של מדיה?",
+        "expected": [
+          "packages/vfmedia/LOCK.md",
+          "packages/vfmedia/INTAKE.md"
+        ],
+        "paths": [
+          "packages/vfops/hq/WEEKLY-LOAD.md",
+          "packages/vfmskill/vendor/image/SKILL.md",
+          "packages/vfharness/state/standing-ig-calendar-2026-09-05/findings.md",
+          "constitution/ORCHESTRA.md",
+          "packages/vfprod/PRINT-DONE.md"
+        ],
+        "scores": [
+          0.1423,
+          0.1409,
+          0.1378,
+          0.1203,
+          0.1199
+        ],
+        "latencyMs": 14.48,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      }
+    ]
+  },
+  "cognee": {
+    "summary": {
+      "cases": 22,
+      "hit1": 0.2727,
+      "hit3": 0.5909,
+      "hit5": 0.6818,
+      "mrr": 0.4318,
+      "latency_ms_median": 15440.45,
+      "latency_ms_p95": 15627.34,
+      "dataset": "velvetos_shared_b98a3b31199eb548",
+      "sourceDigest": "b98a3b31199eb548432e16e6afef4ef5a9c7696361b48fa2771e497eb5359d9a",
+      "provenance": 1.0,
+      "repeatability": 1.0
+    },
+    "byCategory": {
+      "architecture": {
+        "cases": 2,
+        "hit1": 0.0,
+        "hit3": 0.0,
+        "hit5": 0.0,
+        "mrr": 0.0,
+        "latency_ms_median": 15360.94,
+        "latency_ms_p95": 15436.58
+      },
+      "brand-copy": {
+        "cases": 2,
+        "hit1": 0.5,
+        "hit3": 0.5,
+        "hit5": 1.0,
+        "mrr": 0.625,
+        "latency_ms_median": 15517.01,
+        "latency_ms_p95": 15589.68
+      },
+      "creative": {
+        "cases": 1,
+        "hit1": 0.0,
+        "hit3": 0.0,
+        "hit5": 0.0,
+        "mrr": 0.0,
+        "latency_ms_median": 15627.34,
+        "latency_ms_p95": 15627.34
+      },
+      "growth": {
+        "cases": 2,
+        "hit1": 0.5,
+        "hit3": 0.5,
+        "hit5": 0.5,
+        "mrr": 0.5,
+        "latency_ms_median": 15592.21,
+        "latency_ms_p95": 15620.37
+      },
+      "media": {
+        "cases": 2,
+        "hit1": 0.0,
+        "hit3": 0.5,
+        "hit5": 0.5,
+        "mrr": 0.25,
+        "latency_ms_median": 15308.49,
+        "latency_ms_p95": 15314.5
+      },
+      "memory-governance": {
+        "cases": 4,
+        "hit1": 0.5,
+        "hit3": 0.75,
+        "hit5": 0.75,
+        "mrr": 0.625,
+        "latency_ms_median": 15374.17,
+        "latency_ms_p95": 15433.44
+      },
+      "production": {
+        "cases": 3,
+        "hit1": 0.0,
+        "hit3": 0.6667,
+        "hit5": 0.6667,
+        "mrr": 0.2222,
+        "latency_ms_median": 15564.57,
+        "latency_ms_p95": 15593.75
+      },
+      "publication": {
+        "cases": 2,
+        "hit1": 0.5,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 0.75,
+        "latency_ms_median": 15218.94,
+        "latency_ms_p95": 15312.54
+      },
+      "research": {
+        "cases": 2,
+        "hit1": 0.0,
+        "hit3": 0.5,
+        "hit5": 1.0,
+        "mrr": 0.375,
+        "latency_ms_median": 15485.5,
+        "latency_ms_p95": 15517.13
+      },
+      "sales": {
+        "cases": 1,
+        "hit1": 1.0,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 1.0,
+        "latency_ms_median": 15683.22,
+        "latency_ms_p95": 15683.22
+      },
+      "tooling-capability": {
+        "cases": 1,
+        "hit1": 0.0,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 0.3333,
+        "latency_ms_median": 15624.4,
+        "latency_ms_p95": 15624.4
+      }
+    },
+    "byDimension": {
+      "contradiction_handling": {
+        "cases": 2,
+        "hit1": 0.5,
+        "hit3": 0.5,
+        "hit5": 0.5,
+        "mrr": 0.5,
+        "latency_ms_median": 15375.44,
+        "latency_ms_p95": 15433.44
+      },
+      "temporal_correctness": {
+        "cases": 2,
+        "hit1": 1.0,
+        "hit3": 1.0,
+        "hit5": 1.0,
+        "mrr": 1.0,
+        "latency_ms_median": 15415.91,
+        "latency_ms_p95": 15433.44
+      }
+    },
+    "rows": [
+      {
+        "id": "mem-recall",
+        "category": "memory-governance",
+        "dimensions": [],
+        "query": "לפני עבודה על פרויקט שכבר נגענו בו, מתי עושים recall ומה עושים אם השאילתה הראשונה ריקה?",
+        "expected": [
+          "packages/vfmem/MEMORY-UPDATE.md"
+        ],
+        "paths": [
+          "packages/vfharness/LAYERS.md",
+          "packages/vfmem/MEMORY-UPDATE.md",
+          "packages/vfops/data/owner-memory.md",
+          "packages/vfsales/QUOTE.md",
+          "packages/vfops/ROUTINE.md"
+        ],
+        "scores": [
+          0.5415160655975342,
+          0.5452282428741455,
+          0.5561187267303467,
+          0.5753488540649414,
+          0.5813236236572266
+        ],
+        "latencyMs": 15349.96,
+        "provenanceOk": true,
+        "repeatabilityMatch": true,
+        "metrics": {
+          "rank": 2,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.5
+        }
+      },
+      {
+        "id": "mem-evidence-policy",
+        "category": "memory-governance",
+        "dimensions": [
+          "contradiction_handling"
+        ],
+        "query": "תצפית אחת היא evidence ולא policy; איך סוגרים רשומה ישנה במקום למחוק?",
+        "expected": [
+          "packages/vfmem/MEMORY-UPDATE.md"
+        ],
+        "paths": [
+          "packages/vfgrowth/EDIT-GATE.md",
+          "packages/vfprod/SKILL.md",
+          "packages/vfgrowth/PREFLIGHT.md",
+          "packages/vfinsights/LEARNINGS.md",
+          "packages/vfom/SKILL.md"
+        ],
+        "scores": [
+          0.46826857328414917,
+          0.47004085779190063,
+          0.5381767153739929,
+          0.5498495101928711,
+          0.5553349256515503
+        ],
+        "latencyMs": 15317.44,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      },
+      {
+        "id": "mem-stale-index",
+        "category": "memory-governance",
+        "dimensions": [
+          "temporal_correctness"
+        ],
+        "query": "אחרי שמקור קנוני השתנה אבל Cognee עדיין עם digest ישן, האם מותר להשתמש באינדקס הסמנטי stale ומהו ה-fallback הנכון?",
+        "expected": [
+          "packages/vfmem/MEMORY-UPDATE.md"
+        ],
+        "paths": [
+          "packages/vfmem/MEMORY-UPDATE.md",
+          "packages/vfcopy/SOFT-TOOLS-CONTRACT.md",
+          "packages/vfops/data/owner-memory.md",
+          "packages/vfgrowth/PREFLIGHT.md",
+          "packages/vfprod/MAINTENANCE.md"
+        ],
+        "scores": [
+          0.47153013944625854,
+          0.578960120677948,
+          0.581951916217804,
+          0.5973081588745117,
+          0.606204628944397
+        ],
+        "latencyMs": 15398.38,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "mem-conflicting-records",
+        "category": "memory-governance",
+        "dimensions": [
+          "contradiction_handling",
+          "temporal_correctness"
+        ],
+        "query": "אם שתי רשומות זיכרון סותרות מתקופות שונות, האם בוחרים אחת בשקט או מציגים את שתיהן עם תאריכים ותוקף?",
+        "expected": [
+          "packages/vfmem/MEMORY-UPDATE.md"
+        ],
+        "paths": [
+          "packages/vfmem/MEMORY-UPDATE.md",
+          "packages/vfharness/LAYERS.md",
+          "docs/VFMEM.md",
+          "packages/vfops/data/owner-memory.md",
+          "packages/vfharness/LOOP.md"
+        ],
+        "scores": [
+          0.532825767993927,
+          0.579957127571106,
+          0.6104750633239746,
+          0.6114287376403809,
+          0.6286906599998474
+        ],
+        "latencyMs": 15433.44,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "layers",
+        "category": "architecture",
+        "dimensions": [],
+        "query": "מה ההבדל בין Edge, Kernel ו-Office/HQ ומה כל שכבה לא אמורה לעשות?",
+        "expected": [
+          "packages/velvetos/LAYERS.md"
+        ],
+        "paths": [
+          "packages/velvetos/KERNEL.md",
+          "docs/VFMEM.md",
+          "packages/vfmem/catalog.json",
+          "packages/vfops/data/owner-memory.md",
+          "packages/vfresearch/DAILY.md"
+        ],
+        "scores": [
+          0.378093957901001,
+          0.5020076036453247,
+          0.5274144411087036,
+          0.5391988754272461,
+          0.567193329334259
+        ],
+        "latencyMs": 15436.58,
+        "provenanceOk": true,
+        "repeatabilityMatch": true,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      },
+      {
+        "id": "pipeline",
+        "category": "architecture",
+        "dimensions": [],
+        "query": "מה חמשת שלבי הצינור הקנוניים lead talk offer fulfill close ומה הדוגמה שלהם ב-Velvet Factory?",
+        "expected": [
+          "packages/velvetos/PIPELINE.md"
+        ],
+        "paths": [
+          "packages/velvetos/REPOS.md",
+          "packages/vfops/data/owner-memory.md",
+          "packages/vfmem/MEMORY-UPDATE.md",
+          "packages/vfom/EDIT-DIRECTOR.md",
+          "packages/vfsales/SKILL.md"
+        ],
+        "scores": [
+          0.5038193464279175,
+          0.5336288213729858,
+          0.5442467927932739,
+          0.552802562713623,
+          0.5620654821395874
+        ],
+        "latencyMs": 15285.3,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      },
+      {
+        "id": "product-truth",
+        "category": "brand-copy",
+        "dimensions": [],
+        "query": "בפוסט שמציג מוצר מודפס אמיתי אסור לשנות גאומטריה, צללית, פרופורציות או חומר של האובייקט מה-RAW המאושר.",
+        "expected": [
+          "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+          "packages/vfgrowth/EDIT-GATE.md"
+        ],
+        "paths": [
+          "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+          "packages/vfom/VISUAL-OS.md",
+          "packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md",
+          "packages/vfgrowth/SKILL.md",
+          "packages/vfmedia/CATALOG.md"
+        ],
+        "scores": [
+          0.34569406509399414,
+          0.3967607617378235,
+          0.4426577091217041,
+          0.45725226402282715,
+          0.46084946393966675
+        ],
+        "latencyMs": 15589.68,
+        "provenanceOk": true,
+        "repeatabilityMatch": true,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "brand-asset-lock",
+        "category": "creative",
+        "dimensions": [],
+        "query": "לוגו או wordmark רק מנכס מאושר וב-overlay דטרמיניסטי; בגנרציה אין לוגו, טלפון או WhatsApp.",
+        "expected": [
+          "packages/vfom/BRAND-ASSET-LOCK.md"
+        ],
+        "paths": [
+          "packages/vfom/SKILL.md",
+          "packages/vfgrowth/SKILL.md",
+          "packages/vfgrowth/PREFLIGHT.md",
+          "packages/vfom/VISUAL-OS.md",
+          "packages/vfigos/GRAPH-MUTATIONS.md"
+        ],
+        "scores": [
+          0.3710426092147827,
+          0.3951299786567688,
+          0.427041232585907,
+          0.49766016006469727,
+          0.5345924496650696
+        ],
+        "latencyMs": 15627.34,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      },
+      {
+        "id": "voice",
+        "category": "brand-copy",
+        "dimensions": [],
+        "query": "מה ברירת המחדל לאורך כיתוב אינסטגרם בעברית טבעית וכמה האשטגים לכל היותר?",
+        "expected": [
+          "packages/vfcopy/VOICE.md",
+          "packages/vfcopy/VOICE-CHART.md"
+        ],
+        "paths": [
+          "packages/vfsales/QUOTE.md",
+          "packages/vfcopy/SOFT-TOOLS-CONTRACT.md",
+          "packages/vfom/VISUAL-OS.md",
+          "packages/vfcopy/VOICE-CHART.md",
+          "packages/vfops/LOOP.json"
+        ],
+        "scores": [
+          0.4456244111061096,
+          0.4742780923843384,
+          0.5513837933540344,
+          0.5557395219802856,
+          0.5608315467834473
+        ],
+        "latencyMs": 15444.33,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 4,
+          "hit1": false,
+          "hit3": false,
+          "hit5": true,
+          "rr": 0.25
+        }
+      },
+      {
+        "id": "edit-gate",
+        "category": "growth",
+        "dimensions": [],
+        "query": "מהו שער RAW ו-Product Truth שחייב לעבור לפני תוכן של מוצר אמיתי, ומה נבדק על exact final?",
+        "expected": [
+          "packages/vfgrowth/EDIT-GATE.md"
+        ],
+        "paths": [
+          "packages/vfgrowth/EDIT-GATE.md",
+          "packages/vfom/VISUAL-OS.md",
+          "packages/vfmedia/CATALOG.md",
+          "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+          "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json"
+        ],
+        "scores": [
+          0.4163905382156372,
+          0.45796388387680054,
+          0.4641597270965576,
+          0.48647254705429077,
+          0.4923862814903259
+        ],
+        "latencyMs": 15620.37,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "media-intake",
+        "category": "media",
+        "dimensions": [],
+        "query": "ב-intake למדיה מה ההבדל בין registered, Drive movement, approval והפעלה מתוזמנת, ולמה הרשאת Drive היא תנאי?",
+        "expected": [
+          "packages/vfmedia/INTAKE.md"
+        ],
+        "paths": [
+          "packages/vfmedia/FOLDERS.json",
+          "packages/vfmedia/INTAKE.md",
+          "packages/vfharness/PERMISSIONS.md",
+          "packages/vfresearch/HQ-ROUTINE.md",
+          "packages/vfigos/OPENPOST.md"
+        ],
+        "scores": [
+          0.5943841934204102,
+          0.5963894128799438,
+          0.5982177257537842,
+          0.6239458322525024,
+          0.623948872089386
+        ],
+        "latencyMs": 15302.49,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 2,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.5
+        }
+      },
+      {
+        "id": "print-done",
+        "category": "production",
+        "dimensions": [],
+        "query": "אחרי הדפסה תקינה עם timelapse או סטיל אמיתי, איך print.done הופך לכרטיס וטיוטת תוכן בלי לפרסם אוטומטית?",
+        "expected": [
+          "packages/vfprod/PRINT-DONE.md"
+        ],
+        "paths": [
+          "packages/vfops/data/owner-memory.md",
+          "packages/vfresearch/HQ-ROUTINE.md",
+          "packages/vfprod/PRINT-DONE.md",
+          "packages/vfom/EDIT-DIRECTOR.md",
+          "packages/vfigos/OPENPOST.md"
+        ],
+        "scores": [
+          0.42326486110687256,
+          0.4763110280036926,
+          0.48558568954467773,
+          0.4892857074737549,
+          0.5142308473587036
+        ],
+        "latencyMs": 15381.72,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 3,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.3333333333333333
+        }
+      },
+      {
+        "id": "maintenance",
+        "category": "production",
+        "dimensions": [],
+        "query": "בתחזוקת מדפסות מה בודקים רק ממדידה ומתי מתזמנים טיפול?",
+        "expected": [
+          "packages/vfprod/MAINTENANCE.md"
+        ],
+        "paths": [
+          "packages/vfops/data/owner-memory.md",
+          "packages/vfprod/PRINT-DONE.md",
+          "packages/vfprod/MAINTENANCE.md",
+          "packages/vfresearch/HQ-ROUTINE.md",
+          "packages/vfops/ROUTINE.md"
+        ],
+        "scores": [
+          0.4671832323074341,
+          0.47208428382873535,
+          0.4888994097709656,
+          0.4963381886482239,
+          0.5180992484092712
+        ],
+        "latencyMs": 15564.57,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 3,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.3333333333333333
+        }
+      },
+      {
+        "id": "material",
+        "category": "production",
+        "dimensions": [],
+        "query": "איפה נרשמת יתרת גרם בגליל הפעיל, ומה קורה כשאין ספירת גרם להדפסת לילה?",
+        "expected": [
+          "packages/vfprod/MATERIAL.md"
+        ],
+        "paths": [
+          "packages/vfprod/MAINTENANCE.md",
+          "packages/vfresearch/HQ-ROUTINE.md",
+          "packages/vfops/data/owner-memory.md",
+          "packages/vfprod/PRINT-DONE.md",
+          "packages/vfharness/LOOP.md"
+        ],
+        "scores": [
+          0.5241131782531738,
+          0.5456196665763855,
+          0.5644178986549377,
+          0.5670679211616516,
+          0.6012154817581177
+        ],
+        "latencyMs": 15593.75,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      },
+      {
+        "id": "publication-state",
+        "category": "publication",
+        "dimensions": [],
+        "query": "מתי מותר לסמן תוכן live ומה ההבדל בין scheduled, uploadAccepted, publish_requested ו-published_verified?",
+        "expected": [
+          "packages/vfigos/PUBLICATION-STATES.md"
+        ],
+        "paths": [
+          "packages/vfigos/PUBLICATION-STATES.md",
+          "packages/vfmedia/SKILL.md",
+          "packages/vfigos/CAPABILITIES.json",
+          "packages/vfagents/fit.json",
+          "packages/vfigos/OPENPOST.md"
+        ],
+        "scores": [
+          0.32223182916641235,
+          0.3566288948059082,
+          0.4303198456764221,
+          0.4703487157821655,
+          0.4773746132850647
+        ],
+        "latencyMs": 15312.54,
+        "provenanceOk": true,
+        "repeatabilityMatch": true,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "publish-bridge",
+        "category": "publication",
+        "dimensions": [],
+        "query": "מה עושים עם approved_export_local לפני blocked_publish_transport, ולמה Publish Bridge אינו מקור אמת או הוכחה שהתוכן live?",
+        "expected": [
+          "packages/vfigos/PUBLISH-BRIDGE.md"
+        ],
+        "paths": [
+          "packages/vfigos/PUBLICATION-STATES.md",
+          "packages/vfigos/PUBLISH-BRIDGE.md",
+          "docs/VFMEM.md",
+          "packages/vfresearch/SKILL.md",
+          "packages/vfgrowth/PREFLIGHT.md"
+        ],
+        "scores": [
+          0.3213875889778137,
+          0.40528368949890137,
+          0.48918426036834717,
+          0.517208456993103,
+          0.5334723591804504
+        ],
+        "latencyMs": 15125.33,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 2,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.5
+        }
+      },
+      {
+        "id": "quote",
+        "category": "sales",
+        "dimensions": [],
+        "query": "לקוח שולח STL או 3MF: קודם slice למשקל וזמן, אבל אסור לתת מחיר עד שראש הצוות נתן סכום.",
+        "expected": [
+          "packages/vfsales/QUOTE.md"
+        ],
+        "paths": [
+          "packages/vfsales/QUOTE.md",
+          "packages/vfprod/PRINT-DONE.md",
+          "packages/vfsales/SKILL.md",
+          "constitution/CONSTITUTION.md",
+          "packages/vfom/EDIT-DIRECTOR.md"
+        ],
+        "scores": [
+          0.5924848318099976,
+          0.6381902694702148,
+          0.6491530537605286,
+          0.676734447479248,
+          0.6781474351882935
+        ],
+        "latencyMs": 15683.22,
+        "provenanceOk": true,
+        "repeatabilityMatch": true,
+        "metrics": {
+          "rank": 1,
+          "hit1": true,
+          "hit3": true,
+          "hit5": true,
+          "rr": 1.0
+        }
+      },
+      {
+        "id": "weekly-research",
+        "category": "research",
+        "dimensions": [],
+        "query": "בסקירת הקישורים השבועית, אם קישור חסום Cloudflare או מנוי אין להמציא גוף וממשיכים מיד למקור הבא.",
+        "expected": [
+          "packages/vfresearch/WEEKLY.md"
+        ],
+        "paths": [
+          "packages/vfmcp/HOST.md",
+          "packages/vfresearch/HQ-ROUTINE.md",
+          "packages/vfops/data/owner-memory.md",
+          "packages/vfresearch/WEEKLY.md",
+          "packages/vfresearch/SKILL.md"
+        ],
+        "scores": [
+          0.44584399461746216,
+          0.4468722343444824,
+          0.4666803479194641,
+          0.5014466643333435,
+          0.5184940099716187
+        ],
+        "latencyMs": 15453.88,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 4,
+          "hit1": false,
+          "hit3": false,
+          "hit5": true,
+          "rr": 0.25
+        }
+      },
+      {
+        "id": "daily-research",
+        "category": "research",
+        "dimensions": [],
+        "query": "במחקר היומי מהו חוזה freshness ומה כותבים בדיוק אם אין ממצא מוצק לבריף?",
+        "expected": [
+          "packages/vfresearch/DAILY.md"
+        ],
+        "paths": [
+          "packages/vfops/LOOP.json",
+          "packages/vfresearch/DAILY.md",
+          "packages/vfgrowth/EDIT-GATE.md",
+          "packages/vfom/VISUAL-OS.md",
+          "packages/vfresearch/WEEKLY.md"
+        ],
+        "scores": [
+          0.5355337858200073,
+          0.5513615608215332,
+          0.5555766820907593,
+          0.5603246688842773,
+          0.5628728270530701
+        ],
+        "latencyMs": 15517.13,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 2,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.5
+        }
+      },
+      {
+        "id": "host",
+        "category": "tooling-capability",
+        "dimensions": [],
+        "query": "איפה אמורים לרוץ Gemini ChatGPT Perplexity במנויים האישיים: המק הייעודי או מחשב Windows, ומה אסור להעתיק לענן?",
+        "expected": [
+          "packages/vfmcp/HOST.md"
+        ],
+        "paths": [
+          "packages/vfops/data/owner-memory.md",
+          "packages/vfops/ROUTINE.md",
+          "packages/vfmcp/HOST.md",
+          "packages/vfigos/CAPABILITIES.json",
+          "packages/vfsales/QUOTE.md"
+        ],
+        "scores": [
+          0.38513243198394775,
+          0.4709988236427307,
+          0.5271058082580566,
+          0.5293867588043213,
+          0.5497623682022095
+        ],
+        "latencyMs": 15624.4,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": 3,
+          "hit1": false,
+          "hit3": true,
+          "hit5": true,
+          "rr": 0.3333333333333333
+        }
+      },
+      {
+        "id": "growth-preflight",
+        "category": "growth",
+        "dimensions": [],
+        "query": "איזה preflight חוסם שיבוץ כשאיכות התוכן או העובדות לא עברו, לפני שליחה לאינסטגרם?",
+        "expected": [
+          "packages/vfgrowth/PREFLIGHT.md"
+        ],
+        "paths": [
+          "packages/vfigos/CAPABILITIES.json",
+          "packages/vfom/VISUAL-OS.md",
+          "packages/vfharness/LOOP.md",
+          "packages/vfgrowth/EDIT-GATE.md",
+          "packages/vfops/data/owner-memory.md"
+        ],
+        "scores": [
+          0.5559884309768677,
+          0.5646616220474243,
+          0.58211749792099,
+          0.5824671387672424,
+          0.6057533621788025
+        ],
+        "latencyMs": 15564.04,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      },
+      {
+        "id": "media-lock",
+        "category": "media",
+        "dimensions": [],
+        "query": "למה upload לתיקייה או מיקום ב-Drive לא נחשב version approval של מדיה?",
+        "expected": [
+          "packages/vfmedia/LOCK.md",
+          "packages/vfmedia/INTAKE.md"
+        ],
+        "paths": [
+          "packages/vfmedia/FOLDERS.json",
+          "packages/vfgrowth/PREFLIGHT.md",
+          "packages/vfigos/OPENPOST.md",
+          "packages/vfigos/PUBLISH-BRIDGE.md",
+          "packages/vfmcp/HOST.md"
+        ],
+        "scores": [
+          0.4759069085121155,
+          0.5215708017349243,
+          0.5228182077407837,
+          0.527929425239563,
+          0.5446056127548218
+        ],
+        "latencyMs": 15314.5,
+        "provenanceOk": true,
+        "repeatabilityMatch": null,
+        "metrics": {
+          "rank": null,
+          "hit1": false,
+          "hit3": false,
+          "hit5": false,
+          "rr": 0.0
+        }
+      }
+    ]
+  },
+  "guardrails": {
+    "requiresCanonicalVerification": true,
+    "remoteProvidersAllowed": false,
+    "writebackToCanonicalMemory": false,
+    "incrementalRecurringCostIls": 0
+  }
+}

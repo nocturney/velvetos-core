@@ -3,18 +3,18 @@
   "stage": "2A",
   "behavior_change": false,
   "suite_runner": "scripts/check-all.py",
-  "registered_sensor_count": 96,
-  "live_sensor_count": 96,
+  "registered_sensor_count": 109,
+  "live_sensor_count": 109,
   "registry_matches_live": true,
   "mapping_state_counts": {
-    "mapped": 96
+    "mapped": 109
   },
   "fallback_scope_counts": {
     "ALWAYS_ON": 4,
-    "FULL_SUITE": 92
+    "FULL_SUITE": 105
   },
-  "dependency_edge_count": 36,
-  "sensors_with_dependencies": 21,
+  "dependency_edge_count": 46,
+  "sensors_with_dependencies": 25,
   "critical_always_on": [
     "check-agent-surface-security",
     "check-critical-syntax",
@@ -27,6 +27,13 @@
       "sensor_id": "check-visual-reject-identity",
       "targets": [
         "scripts/check-instance-visual-bootstrap.py"
+      ]
+    },
+    {
+      "sensor_id": "check-zero-cost-final-acceptance",
+      "targets": [
+        "scripts/check-grok-provider-readback.py",
+        "scripts/check-runtime-doctor.py"
       ]
     }
   ],

@@ -4,10 +4,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
 from pathlib import Path
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
@@ -56,6 +62,13 @@ def main() -> int:
     failed: list[str] = []
     results: list[dict[str, object]] = []
     dirty_before = git_dirty_state()
+    sensor_env = os.environ.copy()
+    sensor_env["PYTHONUTF8"] = "1"
+    sensor_env["PYTHONIOENCODING"] = "utf-8"
+    # On Windows, isolate each sensor from check-all's console process group.
+    # Some sensor dependencies emit console control events during teardown; without
+    # a new process group those events can terminate the parent suite itself.
+    sensor_creationflags = subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
     print(f"SENSORS {len(checks)}")
     for path in checks:
         started = time.perf_counter()
@@ -64,6 +77,9 @@ def main() -> int:
             cwd=ROOT,
             text=True,
             capture_output=True,
+            encoding="utf-8",
+            env=sensor_env,
+            creationflags=sensor_creationflags,
         )
         duration = round(time.perf_counter() - started, 3)
         out = (proc.stdout or "").strip()

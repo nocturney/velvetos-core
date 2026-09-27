@@ -1,4 +1,4 @@
-# סטטוס לולאת משרד · 2026-09-20
+# סטטוס לולאת משרד · 2026-09-27
 
 רף: סוכנות פרסום+תפעול יקרה. הבעלים יושב רגוע.
 
@@ -33,6 +33,7 @@
 | פק | סוג | קצב | חסום |
 |---|---|---|---|
 | `velvetos` | working-cli | on-instance | — |
+| `velvetos_control_api` | working-cli | on-job | — |
 | `vfagents` | docs-playbook | on-job | — |
 | `vfbrand` | authority | on-content | — |
 | `vfbiz` | docs-playbook | daily-07:00 | — |
@@ -63,6 +64,3 @@
 | `vfseason` | docs-playbook | daily-07:00 | אין חלון עונה בלי תאריך סטודיו |
 | `vfsku` | working-cli | daily-07:00 | — |
 | `vlicense` | docs-playbook | on-shelf | הורדה ≠ רישיון |
-
-## בריף · 21.9.2026
-V10.3 נבנה ונשלח דרך `gmail-send-request` → `gmail-brief-send.yml`. מחקר 21.9 `ready_for_brief`. גבייה פתוחה 4790 לפי Jobs.

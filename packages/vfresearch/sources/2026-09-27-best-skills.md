@@ -42,3 +42,13 @@ Cadence: due/stale (`lastPass` 2026-09-24 → ~72h; due ≥44h, stale >52h) → 
 ## בלוק 05
 
 best-skills — refresh 27.9 על דירוג `data/2026-09-26` observed; `no-embed-existing-coverage`; due/stale pulse executed inside Research Seat; no duplicate runtime.
+
+## Phase 9 zero-cost ecosystem radar addendum
+
+The fresher 2026-09-26 ranking snapshot supersedes the earlier 2026-09-25 observation used during the implementation pass. The Phase 9 unique-value decision is unchanged:
+
+- `agent-browser` / `browser-use`: WATCH_EXISTING_BROWSER_PATH; popularity did not prove a better isolation boundary than the existing browser/manual QA routes.
+- `ui-taste`: NO_LAB_EXISTING_COVERAGE; Impeccable plus anti-ui-slop/taste coverage already addresses the measured UI-quality gap.
+- `gh-cli-readonly-agent`: WATCH_EXISTING_GITHUB_PATH; GitHub connector + local git already provide the required read-only evidence.
+- Google Agents CLI and self-improving runtimes remain outside the current runtime authority; twitter automation remains policy-locked.
+- Conclusion: `NO_ADDITIONAL_DEV_LAB_JUSTIFIED` / `INSTALL_NOTHING_NEW`; no scheduler or authority movement; incremental recurring cost remains 0.

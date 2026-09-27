@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "openinference-instrumentation@0.1.66",
+  "classification": "FREE_LOCAL",
+  "license": "Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for local instrumentation",
+  "deployment_model": "Windows-native Python semantic instrumentation over local OpenTelemetry SDK",
+  "api_dependencies": [],
+  "billing_risk": "none in selected deployment; no Phoenix Cloud or Arize AX",
+  "selected_mode": "local OpenInference semantic conventions and OI tracing only",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk only; dependency resolver requires openinference-semantic-conventions>=0.1.37 and selected local pin is 0.1.39",
+  "api_cost_notes": "no model/provider or observability API calls",
+  "subscription_notes": "no account or subscription",
+  "hidden_secondary_cost_notes": "upstream supports hosted collectors, but VelvetOS uses local export only",
+  "quota_controls": "not applicable",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://pypi.org/project/openinference-instrumentation/0.1.66/ Apache-2.0, Python 3.10-3.14, released 2026-09-24",
+    "https://github.com/Arize-ai/openinference canonical upstream"
+  ],
+  "approval": null
+}

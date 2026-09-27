@@ -27,3 +27,7 @@
 ```
 
 מקור מלא: `packages/vfresearch/sources/2026-09-25-weekly-links.md`.
+
+## Phase 9 · zero-cost agent stack
+
+בנוסף למחקר הבוקר, בוצע reconciliation מול ecosystem radar של מסלול ה־zero-cost. על snapshot העדכני 26.9 לא נמצא dev lab נוסף עם unique value שמצדיק התקנה: agent-browser/browser-use ו־gh-cli-readonly-agent נשארו watch, ui-taste מכוסה, ולא נוסף runtime/scheduler/authority. תוצאת Phase 9 נשארת `NO_ADDITIONAL_DEV_LAB_JUSTIFIED`; recurring cost = 0.

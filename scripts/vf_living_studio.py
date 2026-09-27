@@ -191,29 +191,22 @@ def _find_prior_intake(ikey: str) -> dict | None:
 
 
 def vfmem_context(query: str) -> dict:
-    """Invoke existing vfmem retrieval — never treat generated text as fact."""
-    import subprocess
-
-    proc = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "vfmem.py"), "--json", "who", query],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
+    """Invoke existing vfmem who-retrieval in-process; never treat generated text as fact."""
     payload: dict[str, Any] = {
         "invoked": True,
         "query": query,
-        "exitCode": proc.returncode,
+        "exitCode": 0,
         "rule": "retrieval only — generated text is never fact",
     }
-    if proc.returncode == 0 and proc.stdout.strip():
-        try:
-            payload["result"] = json.loads(proc.stdout)
-        except json.JSONDecodeError:
-            payload["resultText"] = proc.stdout.strip()[:2000]
-    else:
-        payload["stderr"] = (proc.stderr or "")[:500]
+    try:
+        import vfmem as vfmem_cli
+
+        graph = vfmem_cli.build_graph(ROOT)
+        catalog = vfmem_cli._load_json(vfmem_cli.CATALOG)
+        payload["result"] = vfmem_cli.cmd_who(graph, catalog, query)
+    except Exception as exc:  # noqa: BLE001
+        payload["exitCode"] = 1
+        payload["stderr"] = repr(exc)[:500]
         payload["result"] = None
     return payload
 
@@ -1876,23 +1869,37 @@ def commission_dry_run() -> dict:
     # 3 skill route
     route = skill_route("content-factory")
     steps.append({"step": "skill_route", "ok": "id" in route})
-    # 4 media validate path
-    import subprocess
+    # 4 media validate path. Keep the canonical validator in-process so the
+    # Living Studio sensor stays a single Python process under check-all on Windows.
+    import importlib.util
 
-    media_v = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "vfmedia.py"), "validate"],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-    )
-    steps.append({"step": "media_catalog_validate", "ok": media_v.returncode == 0, "out": (media_v.stdout or "")[:120]})
-    intake_st = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "vfmedia.py"), "intake", "selftest"],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-    )
-    steps.append({"step": "media_intake_selftest", "ok": intake_st.returncode == 0, "out": (intake_st.stdout or "")[:160]})
+    media_cli_path = ROOT / "scripts" / "vfmedia.py"
+    media_spec = importlib.util.spec_from_file_location("vfmedia_commission_target", media_cli_path)
+    if media_spec is None or media_spec.loader is None:
+        raise RuntimeError("cannot load vfmedia validator")
+    media_cli = importlib.util.module_from_spec(media_spec)
+    media_spec.loader.exec_module(media_cli)
+    media_rc = media_cli.cmd_validate(None)
+    steps.append({"step": "media_catalog_validate", "ok": media_rc == 0, "out": "direct vfmedia validate"})
+    # Run the offline intake proof in-process. A nested Python subprocess can
+    # stall under Windows pipe capture when Living Studio is itself launched by
+    # check-all; runner.run_selftest() is the same no-Drive temp-dir proof.
+    root_import = str(ROOT)
+    added_root = root_import not in sys.path
+    if added_root:
+        sys.path.insert(0, root_import)
+    try:
+        from packages.vfmedia.intake import runner as intake_runner
+    finally:
+        if added_root:
+            sys.path.remove(root_import)
+
+    intake_rc = intake_runner.run_selftest()
+    steps.append({
+        "step": "media_intake_selftest",
+        "ok": intake_rc == 0,
+        "out": "direct offline intake selftest",
+    })
     # 5 work-to-story / invisible / opportunity / commercial
     steps.append({"step": "work_to_story", "ok": bool(work_to_story().get("pipeline"))})
     steps.append({"step": "invisible_work", "ok": isinstance(invisible_work(write=False), list)})
@@ -1909,22 +1916,15 @@ def commission_dry_run() -> dict:
             "insights_deployed": ig.get("insights_deployed"),
         }
     )
-    # 7 handoff failover simulate
-    cp = subprocess.run(
-        [sys.executable, str(ROOT / "scripts" / "vf_control_plane.py"), "simulate", "--scenario", "failover"],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-    )
-    # failover scenario may only exist after #138 port — accept status/selftest fallback
-    if cp.returncode != 0:
-        cp = subprocess.run(
-            [sys.executable, str(ROOT / "scripts" / "vf_control_plane.py"), "status"],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
-        )
-    steps.append({"step": "control_plane_status_or_failover", "ok": cp.returncode == 0})
+    # 7 handoff failover simulate. Keep this in-process for the same reason as
+    # the media selftest above: nested Python subprocess capture can stall on
+    # Windows when Living Studio is itself launched by check-all.
+    import vf_control_plane as control_plane_cli
+
+    cp_rc = control_plane_cli.cmd_simulate(argparse.Namespace(scenario="failover"))
+    if cp_rc != 0:
+        cp_rc = control_plane_cli.cmd_status(argparse.Namespace())
+    steps.append({"step": "control_plane_status_or_failover", "ok": cp_rc == 0})
     ok = all(s.get("ok") for s in steps)
     report = {
         "generatedAt": now_iso(),
@@ -2002,6 +2002,8 @@ def skill_verify_all() -> dict:
             callable_via = "scripts/check-all.py"
         elif sid == "product-spec":
             callable_via = "vf_living_studio.py forge"
+        elif sid == "3d-model-router":
+            callable_via = "scripts/vf_3d.py route"
         elif sid == "implementation-planner":
             callable_via = "vfharness writing-plans.md"
         elif sid == "research-to-brief":
@@ -2026,7 +2028,7 @@ def skill_verify_all() -> dict:
         )
     summary = {
         "count": len(results),
-        "ok": all(r["ok"] for r in results) and len(results) == 22,
+        "ok": all(r["ok"] for r in results) and len(results) == 23,
         "skills": results,
         "rule": "Skills are routers over packs — verify paths exist; do not invent a second SoT",
     }
@@ -2037,7 +2039,7 @@ def selftest() -> int:
     """Non-mutating integrity selftest — must not pollute office/control SoTs."""
     reg = load_json(REGISTRY)
     assert reg and reg.get("skills"), "registry missing skills"
-    assert len(reg["skills"]) == 22, f"expected 22 skills, got {len(reg['skills'])}"
+    assert len(reg["skills"]) == 23, f"expected 23 skills, got {len(reg['skills'])}"
     assert REGISTRY.is_file()
     assert POLICY.is_file()
     assert CONTROL_PLANE.is_file()

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "component": "cognee[gliner]==1.6.0 + local FastEmbed multilingual model",
+  "classification": "FREE_LOCAL",
+  "license": "Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for local/self-hosted use under Apache-2.0",
+  "deployment_model": "existing optional local derived vfmem index; isolated venv/data root; keyless extraction and local embeddings; no hosted memory service",
+  "api_dependencies": [],
+  "billing_risk": "none in selected mode; remote LLM/embedding providers remain disabled unless separately and explicitly authorized",
+  "selected_mode": "EXISTING_PIN_1.6.0_BASELINE_ONLY; do not upgrade to 1.6.1 during benchmark baseline",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "local CPU/RAM/disk and one-time model/package download only",
+  "api_cost_notes": "no paid API calls; adapter strips ambient provider credentials and requires explicit VFMEM_COGNEE_ALLOW_REMOTE=1 for remote providers",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "FastEmbed/Hugging Face model download consumes local disk/network but has no recurring subscription; Cognee cloud/hosted providers are outside this preflight",
+  "quota_controls": "local-only benchmark; remote providers forbidden; canonical verification remains required before action",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/topoteretes/cognee releases: v1.6.0 stable keyless workflows release on 2026-09-18",
+    "https://pypi.org/project/cognee/ license expression Apache-2.0 and Python >=3.10,<3.15",
+    "https://github.com/topoteretes/cognee README: local use without OpenAI/Anthropic API key supported"
+  ],
+  "approval": null
+}
