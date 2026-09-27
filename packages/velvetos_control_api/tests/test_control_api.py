@@ -24,6 +24,13 @@ from velvetos_control_api.contributions.capabilities import (  # noqa: E402
     normalize_all_capabilities,
 )
 from velvetos_control_api.contributions.integrations import normalize_integrations  # noqa: E402
+from velvetos_control_api.contributions.operational import (  # noqa: E402
+    project_agents,
+    project_content,
+    project_files,
+    project_models,
+    project_production,
+)
 from velvetos_control_api.contributions.unavailable import V1_UNAVAILABLE  # noqa: E402
 from velvetos_control_api.errors import ControlApiError  # noqa: E402
 from velvetos_control_api.schema import SCHEMA  # noqa: E402
@@ -53,15 +60,23 @@ class SchemaTests(unittest.TestCase):
         self.assertIn(fresh["state"], {"live", "fresh", "stale", "unknown"})
         self.assertIn("verifiedAt", fresh)
 
-    def test_unavailable_domains_honest(self) -> None:
+    def test_operational_domains_are_ready_from_canonical_sources(self) -> None:
         snap = build_snapshot(root=ROOT)
         cols = snap["collections"]
         for name in V1_UNAVAILABLE:
             col = cols[name]
-            self.assertEqual(col["state"], "unavailable", name)
-            self.assertIsNone(col["items"], msg=f"{name} must not invent []")
-            self.assertIsNone(col["count"], msg=f"{name} must not invent 0")
-            self.assertTrue(col.get("reason"))
+            self.assertEqual(col["state"], "ready", name)
+            self.assertIsInstance(col["items"], list)
+
+    def test_operational_domains_fail_closed_when_sources_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            snap = build_snapshot(root=Path(td))
+            for name in V1_UNAVAILABLE:
+                col = snap["collections"][name]
+                self.assertEqual(col["state"], "unavailable", name)
+                self.assertIsNone(col["items"], msg=f"{name} must not invent []")
+                self.assertIsNone(col["count"], msg=f"{name} must not invent 0")
+                self.assertTrue(col.get("reason"))
 
     def test_jobs_ready_empty_vs_structure(self) -> None:
         snap = build_snapshot(root=ROOT)
@@ -161,6 +176,61 @@ class IntegrationProjectionTests(unittest.TestCase):
         deploy = (ROOT / "packages" / "velvetos_control_api" / "deploy.sh").read_text(encoding="utf-8")
         self.assertIn("--allow-unauthenticated", deploy)
         self.assertNotIn("--no-allow-unauthenticated", deploy)
+
+
+class OperationalProjectionTests(unittest.TestCase):
+    def test_production_projects_known_fleet_without_fake_telemetry(self) -> None:
+        col = project_production(ROOT)
+        self.assertEqual(col["state"], "ready")
+        printers = [item for item in col["items"] if item.get("kind") == "printer"]
+        self.assertEqual(len(printers), 4)
+        self.assertTrue(all(item.get("status") == "unknown" for item in printers))
+        self.assertFalse(col["hqPrints"])
+
+    def test_content_projects_canonical_approval_queue(self) -> None:
+        col = project_content(ROOT)
+        self.assertEqual(col["state"], "ready")
+        self.assertEqual(col["count"], 1)
+        self.assertEqual(col["items"][0]["disposition"], "stale_orphan")
+        self.assertFalse(col["items"][0]["ownerSurface"])
+
+    def test_files_projects_bounded_media_catalog_with_true_total(self) -> None:
+        col = project_files(ROOT)
+        self.assertEqual(col["state"], "ready")
+        self.assertGreater(col["totalCount"], 100)
+        self.assertLessEqual(col["projectedCount"], 60)
+        self.assertEqual(col["count"], col["totalCount"])
+        self.assertTrue(col["truncated"])
+
+    def test_agents_project_canonical_specialist_roster(self) -> None:
+        col = project_agents(ROOT)
+        self.assertEqual(col["state"], "ready")
+        self.assertGreaterEqual(col["count"], 20)
+        self.assertGreaterEqual(col["seatCount"], 5)
+        self.assertTrue(all("id" in item and "job" in item for item in col["items"]))
+
+    def test_models_project_five_explicit_empty_slots(self) -> None:
+        col = project_models(ROOT)
+        self.assertEqual(col["state"], "ready")
+        self.assertEqual(col["count"], 5)
+        self.assertEqual(col["occupiedCount"], 0)
+        self.assertEqual(col["readyCount"], 0)
+        self.assertTrue(all(item["status"] == "empty" for item in col["items"]))
+
+    def test_search_allows_integration_and_operational_routes(self) -> None:
+        self.assertTrue(validate_destination("/integrations/threedaistudio"))
+        self.assertTrue(validate_destination("/agents/studio-operations"))
+        self.assertTrue(validate_destination("/models/1"))
+
+    def test_cloud_run_image_packages_operational_sources(self) -> None:
+        dockerfile = (ROOT / "packages" / "velvetos_control_api" / "Dockerfile").read_text(encoding="utf-8")
+        for source in (
+            "packages/vfprod/FLEET.json",
+            "packages/vfprod/data/print-events.jsonl",
+            "packages/vfprod/data/maintenance-snapshot.json",
+            "packages/vfsku/SHELF.json",
+        ):
+            self.assertIn(f"COPY {source}", dockerfile)
 
 
 class AuthActionTests(unittest.TestCase):
@@ -274,6 +344,18 @@ class SearchTests(unittest.TestCase):
         self.assertIn("results", out)
         for hit in out["results"]:
             self.assertTrue(validate_destination(hit["destination"]), hit)
+
+    def test_integration_search_is_not_filtered_by_destination_policy(self) -> None:
+        out = search("threedaistudio", root=ROOT)
+        hits = [hit for hit in out["results"] if hit.get("type") == "integration"]
+        self.assertTrue(hits)
+        self.assertTrue(all(validate_destination(hit["destination"]) for hit in hits))
+
+    def test_operational_search_finds_agent_roster(self) -> None:
+        out = search("studio-operations", root=ROOT)
+        hits = [hit for hit in out["results"] if hit.get("type") == "agents"]
+        self.assertTrue(hits)
+        self.assertTrue(all(validate_destination(hit["destination"]) for hit in hits))
 
 
 class HttpIntegrationTests(unittest.TestCase):
