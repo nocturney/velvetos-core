@@ -1,0 +1,3 @@
+interface:
+  display_name: "Velvet 3D Router"
+  short_description: "Route CAD vs Blender and verify print-ready geometry locally"

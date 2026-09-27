@@ -2002,6 +2002,8 @@ def skill_verify_all() -> dict:
             callable_via = "scripts/check-all.py"
         elif sid == "product-spec":
             callable_via = "vf_living_studio.py forge"
+        elif sid == "3d-model-router":
+            callable_via = "scripts/vf_3d.py route"
         elif sid == "implementation-planner":
             callable_via = "vfharness writing-plans.md"
         elif sid == "research-to-brief":
@@ -2026,7 +2028,7 @@ def skill_verify_all() -> dict:
         )
     summary = {
         "count": len(results),
-        "ok": all(r["ok"] for r in results) and len(results) == 22,
+        "ok": all(r["ok"] for r in results) and len(results) == 23,
         "skills": results,
         "rule": "Skills are routers over packs — verify paths exist; do not invent a second SoT",
     }
@@ -2037,7 +2039,7 @@ def selftest() -> int:
     """Non-mutating integrity selftest — must not pollute office/control SoTs."""
     reg = load_json(REGISTRY)
     assert reg and reg.get("skills"), "registry missing skills"
-    assert len(reg["skills"]) == 22, f"expected 22 skills, got {len(reg['skills'])}"
+    assert len(reg["skills"]) == 23, f"expected 23 skills, got {len(reg['skills'])}"
     assert REGISTRY.is_file()
     assert POLICY.is_file()
     assert CONTROL_PLANE.is_file()

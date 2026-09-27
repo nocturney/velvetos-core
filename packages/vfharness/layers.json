@@ -165,6 +165,11 @@
       "type": "computational"
     },
     {
+      "id": "check-vf-3d-router",
+      "script": "scripts/check-vf-3d-router.py",
+      "type": "computational"
+    },
+    {
       "id": "check-behavioral-evals",
       "script": "scripts/check-behavioral-evals.py",
       "type": "computational"

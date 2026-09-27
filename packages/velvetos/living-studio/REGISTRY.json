@@ -445,6 +445,33 @@
       "success": "problem/user/requirements/constraints/acceptance/unknowns"
     },
     {
+      "id": "3d-model-router",
+      "title": "3D Model Router",
+      "status": "EXISTING_COMPLETE",
+      "route": [
+        "python scripts/vf_3d.py route",
+        "packages/vfprod/experts/3D-MODEL.md",
+        "vf-3d-router"
+      ],
+      "packs": [
+        "vfprod",
+        "vfsku",
+        "vlicense"
+      ],
+      "reads": [
+        "packages/vfprod/TEXT-TO-CAD.md",
+        "packages/vfprod/BLENDER-MCP.md",
+        "VelvetPrintLab/slicer-router/printer_matrix.json"
+      ],
+      "writes": [
+        "VelvetPrintLab/3d-jobs/",
+        "geometry gate reports; never physical-printer actions"
+      ],
+      "risk": "yellow",
+      "approval": "red only for paid external generation or physical printer action",
+      "success": "routed engine + editable master + geometry/print gate; physical print remains separate"
+    },
+    {
       "id": "implementation-planner",
       "title": "Implementation Planner",
       "status": "EXISTING_COMPLETE",

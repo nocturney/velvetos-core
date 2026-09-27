@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "component": "PatrykIti/blender-ai-mcp v3.3.0 hardened local",
+  "classification": "PAID_OPTIONAL",
+  "license": "Apache-2.0",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none",
+  "deployment_model": "local Blender 5.2 + local MCP server; addon patched to 127.0.0.1",
+  "api_dependencies": [],
+  "billing_risk": "optional OpenRouter/Gemini/external vision paths exist upstream but are disabled",
+  "selected_mode": "local llm-guided stdio MCP; RPC loopback 127.0.0.1:18765; HF/Transformers offline-only; external vision/providers disabled; no paid credentials",
+  "expected_recurring_cost": "0 ILS/month",
+  "runtime_cost_notes": "local CPU/RAM/disk; no always-on cloud compute",
+  "api_cost_notes": "external OpenRouter/Gemini/provider calls forbidden in selected mode",
+  "subscription_notes": "no subscription required for selected local path",
+  "hidden_secondary_cost_notes": "upstream router can use LaBSE (~1.8GB RAM) and otherwise falls back locally; VelvetOS sets HF_HUB_OFFLINE/TRANSFORMERS_OFFLINE/HF_DATASETS_OFFLINE so no model download is permitted at runtime; optional vision/VLM paths stay disabled",
+  "quota_controls": "external providers disabled; no paid feature escalation",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/PatrykIti/blender-ai-mcp (Apache-2.0; v3.3.0 pyproject; optional external vision paths)",
+    "blender_addon/infrastructure/rpc_server.py upstream HOST=0.0.0.0; VelvetOS install must patch loopback"
+  ],
+  "paid_features_enabled": false,
+  "approval": null
+}

@@ -35,8 +35,8 @@ def main() -> None:
 
     reg = json.loads(REGISTRY.read_text(encoding="utf-8"))
     skills = reg.get("skills") or []
-    if len(skills) != 22:
-        fail(f"REGISTRY skills must be 22, got {len(skills)}")
+    if len(skills) != 23:
+        fail(f"REGISTRY skills must be 23, got {len(skills)}")
     living = reg.get("livingCapabilities") or []
     if len(living) < 10:
         fail("REGISTRY livingCapabilities too thin")

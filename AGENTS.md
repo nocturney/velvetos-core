@@ -100,6 +100,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 | `scripts/check-vfresearch.py` | Weekly inspiration-links + bi-daily best-skills + last30 community research + IG music + orchestra failover law |
 | `scripts/check-vfcost.py` | Material-only cost CLI (grams × ILS/kg); missing grams refuse; no invented sale ₪ |
 | `scripts/check-no-new-recurring-cost.py` | Canonical NO_NEW_RECURRING_COST law + fail-closed Cost Preflight enforcement |
+| `scripts/check-vf-3d-router.py` | 3D engine routing contract: Text-to-CAD vs hardened local Blender vs hybrid; no paid fallback or physical printer authority |
 | `scripts/check-behavioral-evals.py` | Authority-bound behavioral regression for missing facts, tool failure, memory, connectors, handoff, publish/read-back and prompt injection |
 | `scripts/check-agent-security-conformance.py` | OWASP-mapped agent/MCP/connectors/control-API/memory/approval/ingestion security evidence; PARTIAL stays explicit |
 | `scripts/check-observability.py` | Local OpenTelemetry/OpenInference trace contract; sanitized metadata only, no remote exporter, telemetry never authority |

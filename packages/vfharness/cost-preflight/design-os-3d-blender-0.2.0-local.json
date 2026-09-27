@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "component": "jangtrinh/design-os-3d-blender v0.2.0 local",
+  "classification": "FREE_LOCAL",
+  "license": "MIT",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none",
+  "deployment_model": "local headless Blender 5.2 execution and geometry/print QA",
+  "api_dependencies": [],
+  "billing_risk": "none in selected local mode",
+  "selected_mode": "local repository + dedicated Python environment + explicit BLENDER_BIN",
+  "expected_recurring_cost": "0 ILS/month",
+  "runtime_cost_notes": "local CPU/RAM/disk only",
+  "api_cost_notes": "no paid API calls",
+  "subscription_notes": "no subscription",
+  "hidden_secondary_cost_notes": "Windows is not listed in upstream host-test baseline; capability must be proven by local benchmark",
+  "quota_controls": "not applicable",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/jangtrinh/design-os-3d-blender (MIT; Blender 5.2 LTS; local MCP/headless tools; v0.2.0 pyproject)"
+  ],
+  "approval": null
+}

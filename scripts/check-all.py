@@ -2,9 +2,15 @@
 """Run every computational HQ sensor. No network. No send."""
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8")
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
@@ -48,6 +54,9 @@ def main() -> int:
 
     failed: list[str] = []
     dirty_before = git_dirty_state()
+    sensor_env = os.environ.copy()
+    sensor_env["PYTHONUTF8"] = "1"
+    sensor_env["PYTHONIOENCODING"] = "utf-8"
     print(f"SENSORS {len(checks)}")
     for path in checks:
         proc = subprocess.run(
@@ -55,6 +64,8 @@ def main() -> int:
             cwd=ROOT,
             text=True,
             capture_output=True,
+            encoding="utf-8",
+            env=sensor_env,
         )
         out = (proc.stdout or "").strip()
         err = (proc.stderr or "").strip()
