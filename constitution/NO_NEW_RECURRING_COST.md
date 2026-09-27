@@ -1,7 +1,7 @@
 # VelvetOS Policy - NO_NEW_RECURRING_COST
 
-Status: **CANONICAL COST AUTHORITY**  
-Default target: **zero new recurring cost**  
+Status: **CANONICAL COST AUTHORITY**
+Default target: **zero new recurring cost**
 Enforcement: **FAIL CLOSED ON COST**
 
 ## 1. Purpose
@@ -213,8 +213,8 @@ CPU מקומי, GPU מקומי, RAM, disk ו-network מקומי אינם נחש�
 
 כל agent, automation, developer workflow או implementation task ב-VelvetOS חייב לפעול לפי:
 
-> **VERIFY COST BEFORE INSTALLATION.**  
-> **VERIFY COST BEFORE FIRST PAID-CAPABLE CALL.**  
+> **VERIFY COST BEFORE INSTALLATION.**
+> **VERIFY COST BEFORE FIRST PAID-CAPABLE CALL.**
 > **NEVER CREATE A CHARGE WITHOUT EXPLICIT OWNER APPROVAL.**
 
 כאשר יש ספק: **FAIL CLOSED ON COST.**
