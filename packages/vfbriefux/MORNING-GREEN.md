@@ -33,7 +33,7 @@
 
 - נכסי אווירה קבועים מגיעים כ־CID מתוך `assets/morning-green/`: `morning-top.jpg`, `morning-story.jpg`, `morning-radar.jpg`, `morning-footer.jpg`.
 - thumbnail של פוסט עתידי נלקח רק מה־media URL הציבורי של אותו job ב־Cloudflare Publisher או מ־CID חומר מאומת.
-- מסלול production: `packages/vfigos/cloudflare_publisher_snapshot.py --output ...` קורא read-only את `/v1/runtime`, `/v1/meta-health`, `/v1/jobs` + job detail באמצעות `VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN`; snapshot נכשל אם heartbeat ה־Cron ישן מ־180 שניות או Meta health אינו PASS. אין קריאת OpenPost.
+- מסלול production: `packages/vfigos/cloudflare_publisher_snapshot.py --output ...` קורא read-only את `/v1/runtime`, `/v1/meta-health`, `/v1/jobs` + job detail. הוא מעדיף `VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN`; ב־Windows owner runtime הוא רשאי לפענח את `%APPDATA%/VelvetOS/cloudflare-publisher-control.dpapi` כ־fallback מקומי בלבד. snapshot נכשל אם heartbeat ה־Cron ישן מ־180 שניות או Meta health אינו PASS. אין קריאת OpenPost ואין credential בתוך הריפו.
 - HTTPS ציבורי אמיתי עדיין מותר, אבל production renderer דוחה HTTP, נתיב מקומי או reference שאינו `cid:`/HTTPS.
 - local preview מותר רק עם `--allow-local-images`.
 

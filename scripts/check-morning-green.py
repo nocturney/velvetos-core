@@ -67,7 +67,7 @@ def main() -> None:
             fail(f"Morning Green contract missing {token!r}")
 
     schedule_adapter = (ROOT / "packages" / "vfigos" / "cloudflare_publisher_snapshot.py").read_text(encoding="utf-8")
-    for token in ("VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN", "/v1/runtime", "/v1/meta-health", "/v1/jobs", "heartbeat_age", "User-Agent", "method=\"GET\"", "cloudflare-instagram-publisher"):
+    for token in ("VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN", "cloudflare-publisher-control.dpapi", "resolve_token", "/v1/runtime", "/v1/meta-health", "/v1/jobs", "heartbeat_age", "User-Agent", "method=\"GET\"", "cloudflare-instagram-publisher"):
         if token not in schedule_adapter:
             fail(f"Cloudflare publisher snapshot adapter missing {token!r}")
     for forbidden in ("POST", "PUT", "DELETE"):
