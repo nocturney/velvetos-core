@@ -56,6 +56,9 @@ host = json.loads((ROOT / "packages" / "vfharness" / "state" / "cad-engine-stack
 assert host["printer_actions_allowed"] is False
 assert host["paid_provider_calls_performed"] is False
 assert all(host["engines"][name]["status"] == "PASS" for name in ("build123d","cadquery","jscad"))
+assert host["chat_build_acceptance"]["status"] == "PASS"
+assert host["chat_build_acceptance"]["auto_engine"] == "build123d"
+assert host["chat_build_acceptance"]["printer_actions_performed"] is False
 assert host["pilots"]["cad-cae-copilot"]["status"] == "PASS_LOCAL_SMOKE"
 assert host["pilots"]["forgent3d"]["status"] == "SOURCE_CLONED_RUNTIME_UNVERIFIED"
 assert host["rejected"]["cadam_runtime_installed"] is False
@@ -84,6 +87,19 @@ sample = ROOT / "packages" / "vfharness" / "state" / "cad-engine-stack-20260927"
 proc = subprocess.run([sys.executable, str(cli), "ir-validate", "--input", str(sample)], cwd=ROOT, text=True, capture_output=True)
 assert proc.returncode == 0, proc.stdout + proc.stderr
 assert json.loads(proc.stdout)["status"] == "PASS"
+
+plan_out = ROOT / "packages" / "vfharness" / "state" / "cad-engine-stack-20260927" / "plan-only-output"
+proc = subprocess.run(
+    [sys.executable, str(cli), "build", "--input", str(sample), "--engine", "build123d",
+     "--out-dir", str(plan_out), "--plan-only"],
+    cwd=ROOT, text=True, capture_output=True,
+)
+assert proc.returncode == 0, proc.stdout + proc.stderr
+plan = json.loads(proc.stdout)
+assert plan["status"] == "PASS"
+assert plan["engine"] == "build123d"
+assert plan["plan_only"] is True
+assert plan["artifacts"] == ["model.step", "model.stl"]
 
 state = ROOT / "packages" / "vfharness" / "state" / "cad-engine-stack-20260927" / "repair-state-test.json"
 if state.exists():

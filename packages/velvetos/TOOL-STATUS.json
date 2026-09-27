@@ -65,7 +65,7 @@
       "route_cli": "scripts/vf_fabrication_router.py",
       "engine_registry": "packages/vfprod/CAD-ENGINE-REGISTRY.json",
       "engine_stack_cli": "scripts/vf_cad_stack.py",
-      "engine_status": "build123d/cadgen primary; CadQuery and JSCAD locally verified; CAD/CAE Copilot and Forgent3D pilot-only",
+      "engine_status": "chat build bridge verified: Fabrication Router -> Geometry IR -> vf_cad_stack.py build; build123d/cadgen primary, CadQuery/JSCAD verified fallbacks; CAD/CAE Copilot and Forgent3D pilot-only",
       "host_status": "WINDOWS_HOST_VERIFIED",
       "host_evidence": "packages/vfharness/state/fabrication-router-host-acceptance-2026-09-27.json",
       "installed_skill_count": 12,

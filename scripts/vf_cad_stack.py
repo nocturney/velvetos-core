@@ -1,92 +1,482 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse, json, os, shutil, subprocess, sys
+
+import argparse
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
-ROOT=Path(__file__).resolve().parents[1]
-REGISTRY=ROOT/"packages"/"vfprod"/"CAD-ENGINE-REGISTRY.json"
-MAX_REPAIRS=2
+ROOT = Path(__file__).resolve().parents[1]
+REGISTRY = ROOT / "packages" / "vfprod" / "CAD-ENGINE-REGISTRY.json"
+MAX_REPAIRS = 2
 
-def emit(x,code=0):
-    print(json.dumps(x,ensure_ascii=False,indent=2)); return code
 
-def load_json(p):
-    return json.loads(Path(p).read_text(encoding="utf-8"))
+def emit(payload: dict, code: int = 0) -> int:
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return code
 
-def contract(_):
-    r=load_json(REGISTRY)
-    return emit({"status":"PASS","schema":r["schema"],"max_repair_iterations":r["max_repair_iterations"],"engines":r["engines"]})
 
-def validate_ir(data):
-    if data.get("schema")!="velvetos.geometry-ir.v1" or data.get("units")!="mm": return "schema_or_units"
-    parts=data.get("parts")
-    cons=data.get("constraints")
-    if not isinstance(parts,list) or not parts or not isinstance(cons,list): return "parts_or_constraints"
-    ids=[]
-    allowed={"box","cylinder","extrusion","imported_step","assembly"}
-    for p in parts:
-        if not isinstance(p,dict) or not isinstance(p.get("id"),str) or not p["id"] or p.get("kind") not in allowed: return "invalid_part"
-        if not isinstance(p.get("dimensions"),dict) or not p["dimensions"]: return "dimensions_required"
-        for v in p["dimensions"].values():
-            if not isinstance(v,(int,float)) or isinstance(v,bool) or v<=0: return "positive_numeric_dimensions_required"
-        ids.append(p["id"])
-    if len(ids)!=len(set(ids)): return "duplicate_part_id"
-    known=set(ids)
-    for c in cons:
-        if not isinstance(c,dict) or c.get("a") not in known or c.get("b") not in known: return "constraint_ref_unknown"
-        if c.get("type") not in {"align","offset","mate","clearance","contains"}: return "constraint_type"
-        if c.get("value_mm") is not None and not isinstance(c.get("value_mm"),(int,float)): return "constraint_value"
+def load_json(path: str | Path) -> dict:
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def contract(_: argparse.Namespace) -> int:
+    registry = load_json(REGISTRY)
+    return emit({
+        "status": "PASS",
+        "schema": registry["schema"],
+        "max_repair_iterations": registry["max_repair_iterations"],
+        "engines": registry["engines"],
+    })
+
+
+def _positive_number(value: object) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0
+
+
+def _vector3(value: object) -> bool:
+    return (
+        isinstance(value, list)
+        and len(value) == 3
+        and all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in value)
+    )
+
+
+def validate_ir(data: dict) -> str | None:
+    if data.get("schema") != "velvetos.geometry-ir.v1" or data.get("units") != "mm":
+        return "schema_or_units"
+    parts = data.get("parts")
+    constraints = data.get("constraints")
+    if not isinstance(parts, list) or not parts or not isinstance(constraints, list):
+        return "parts_or_constraints"
+
+    ids: list[str] = []
+    allowed = {"box", "cylinder", "extrusion", "imported_step", "assembly"}
+    for part in parts:
+        if (
+            not isinstance(part, dict)
+            or not isinstance(part.get("id"), str)
+            or not part["id"]
+            or part.get("kind") not in allowed
+        ):
+            return "invalid_part"
+        if not isinstance(part.get("dimensions"), dict) or not part["dimensions"]:
+            return "dimensions_required"
+        for value in part["dimensions"].values():
+            if not _positive_number(value):
+                return "positive_numeric_dimensions_required"
+        if part.get("operation", "add") not in {"add", "cut"}:
+            return "invalid_operation"
+        if "translate_mm" in part and not _vector3(part["translate_mm"]):
+            return "invalid_translate_mm"
+        ids.append(part["id"])
+
+    if len(ids) != len(set(ids)):
+        return "duplicate_part_id"
+
+    known = set(ids)
+    for constraint in constraints:
+        if (
+            not isinstance(constraint, dict)
+            or constraint.get("a") not in known
+            or constraint.get("b") not in known
+        ):
+            return "constraint_ref_unknown"
+        if constraint.get("type") not in {"align", "offset", "mate", "clearance", "contains"}:
+            return "constraint_type"
+        value = constraint.get("value_mm")
+        if value is not None and (
+            not isinstance(value, (int, float)) or isinstance(value, bool)
+        ):
+            return "constraint_value"
     return None
 
-def ir_validate(a):
-    data=load_json(a.input); err=validate_ir(data)
-    return emit({"status":"BLOCKED" if err else "PASS","reason":err,"parts":len(data.get("parts",[]))},2 if err else 0)
 
-def repair_next(a):
-    p=Path(a.state)
-    state={"schema":"velvetos.cad-repair-state.v1","attempts":0,"failures":[]} if not p.exists() else load_json(p)
-    state["failures"].append(a.failure)
-    if state["attempts"]<MAX_REPAIRS:
-        state["attempts"]+=1; decision="REPAIR_ALLOWED"
+def _buildability_error(data: dict) -> str | None:
+    required = {
+        "box": {"x", "y", "z"},
+        "cylinder": {"diameter", "height"},
+    }
+    for index, part in enumerate(data["parts"]):
+        kind = part["kind"]
+        if kind not in required:
+            return f"unsupported_build_kind:{kind}"
+        if not required[kind].issubset(part["dimensions"]):
+            return f"missing_dimensions:{part['id']}"
+        if index == 0 and part.get("operation", "add") == "cut":
+            return "first_part_cannot_be_cut"
+    return None
+
+
+def ir_validate(args: argparse.Namespace) -> int:
+    data = load_json(args.input)
+    error = validate_ir(data)
+    return emit(
+        {
+            "status": "BLOCKED" if error else "PASS",
+            "reason": error,
+            "parts": len(data.get("parts", [])),
+        },
+        2 if error else 0,
+    )
+
+
+def repair_next(args: argparse.Namespace) -> int:
+    path = Path(args.state)
+    state = (
+        {"schema": "velvetos.cad-repair-state.v1", "attempts": 0, "failures": []}
+        if not path.exists()
+        else load_json(path)
+    )
+    state["failures"].append(args.failure)
+    if state["attempts"] < MAX_REPAIRS:
+        state["attempts"] += 1
+        decision = "REPAIR_ALLOWED"
     else:
-        decision="FALLBACK_REQUIRED"
-    state["decision"]=decision
-    p.parent.mkdir(parents=True,exist_ok=True)
-    p.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    return emit({"status":"PASS","decision":decision,"attempts":state["attempts"],"max":MAX_REPAIRS})
+        decision = "FALLBACK_REQUIRED"
+    state["decision"] = decision
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return emit(
+        {
+            "status": "PASS",
+            "decision": decision,
+            "attempts": state["attempts"],
+            "max": MAX_REPAIRS,
+        }
+    )
 
-def stack_root():
-    base=Path(os.environ.get("VELVET_PRINTLAB_ROOT",Path.home()/"Documents"/"VelvetPrintLab"))
-    return (base/"tools"/"cad-stack").resolve()
 
-def doctor(_):
-    r=load_json(REGISTRY); sr=stack_root()
-    text2cad=Path(os.environ.get("TEXT_TO_CAD_ROOT",Path.home()/"Documents"/"VelvetPrintLab"/"tools"/"text-to-cad"))
-    b3d_py=text2cad/".venv"/("Scripts/python.exe" if os.name=="nt" else "bin/python")
-    cq_py=sr/"cadquery"/".venv"/("Scripts/python.exe" if os.name=="nt" else "bin/python")
-    js_runner=sr/"jscad"/"probe.mjs"
-    checks={}
-    checks["build123d"]=b3d_py.is_file()
-    checks["cadquery"]=cq_py.is_file()
-    checks["jscad"]=shutil.which("node") is not None and js_runner.is_file()
-    checks["cad-cae-copilot"]=(sr/"pilots"/"cad-cae-copilot"/".git").exists()
-    checks["forgent3d"]=(sr/"pilots"/"forgent3d-desktop"/".git").exists()
-    status="PASS" if all(checks[k] for k in ("build123d","cadquery","jscad")) else "BLOCKED"
-    return emit({"status":status,"stack_root":str(sr),"engines":checks,"pilots_required_for_pass":False},0 if status=="PASS" else 2)
+def stack_root() -> Path:
+    base = Path(
+        os.environ.get(
+            "VELVET_PRINTLAB_ROOT",
+            Path.home() / "Documents" / "VelvetPrintLab",
+        )
+    )
+    return (base / "tools" / "cad-stack").resolve()
 
-def parser():
-    p=argparse.ArgumentParser(); s=p.add_subparsers(dest="cmd",required=True)
-    s.add_parser("contract"); s.add_parser("doctor")
-    q=s.add_parser("ir-validate"); q.add_argument("--input",required=True)
-    q=s.add_parser("repair-next"); q.add_argument("--state",required=True); q.add_argument("--failure",required=True)
-    return p
 
-def main():
-    a=parser().parse_args()
-    if a.cmd=="contract": return contract(a)
-    if a.cmd=="doctor": return doctor(a)
-    if a.cmd=="ir-validate": return ir_validate(a)
-    if a.cmd=="repair-next": return repair_next(a)
+def text_to_cad_root() -> Path:
+    return Path(
+        os.environ.get(
+            "TEXT_TO_CAD_ROOT",
+            Path.home() / "Documents" / "VelvetPrintLab" / "tools" / "text-to-cad",
+        )
+    ).resolve()
+
+
+def _python_in(venv: Path) -> Path:
+    return venv / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+
+
+def runtime_paths() -> dict[str, Path]:
+    root = stack_root()
+    return {
+        "build123d": _python_in(text_to_cad_root() / ".venv"),
+        "cadquery": _python_in(root / "cadquery" / ".venv"),
+        "jscad": Path(shutil.which("node") or ""),
+    }
+
+
+def doctor(_: argparse.Namespace) -> int:
+    registry = load_json(REGISTRY)
+    root = stack_root()
+    runtimes = runtime_paths()
+    checks = {
+        "build123d": runtimes["build123d"].is_file(),
+        "cadquery": runtimes["cadquery"].is_file(),
+        "jscad": bool(str(runtimes["jscad"])) and runtimes["jscad"].is_file(),
+        "cad-cae-copilot": (root / "pilots" / "cad-cae-copilot" / ".git").exists(),
+        "forgent3d": (root / "pilots" / "forgent3d-desktop" / ".git").exists(),
+    }
+    status = "PASS" if all(checks[name] for name in ("build123d", "cadquery", "jscad")) else "BLOCKED"
+    return emit(
+        {
+            "status": status,
+            "stack_root": str(root),
+            "engines": checks,
+            "pilots_required_for_pass": False,
+            "registry_schema": registry["schema"],
+        },
+        0 if status == "PASS" else 2,
+    )
+
+
+def _engine_artifacts(engine: str) -> list[str]:
+    return ["model.step", "model.stl"] if engine in {"build123d", "cadquery"} else ["model.stl"]
+
+
+def _select_engine(requested: str, plan_only: bool) -> tuple[str | None, str | None]:
+    if requested != "auto":
+        if requested not in {"build123d", "cadquery", "jscad"}:
+            return None, "unsupported_engine"
+        if plan_only:
+            return requested, None
+        runtime = runtime_paths()[requested]
+        if requested == "jscad":
+            ok = bool(str(runtime)) and runtime.is_file()
+        else:
+            ok = runtime.is_file()
+        return (requested, None) if ok else (None, f"engine_unavailable:{requested}")
+
+    if plan_only:
+        return "build123d", None
+
+    runtimes = runtime_paths()
+    for name in ("build123d", "cadquery", "jscad"):
+        runtime = runtimes[name]
+        if name == "jscad":
+            if bool(str(runtime)) and runtime.is_file():
+                return name, None
+        elif runtime.is_file():
+            return name, None
+    return None, "no_local_engine_available"
+
+
+def _build123d_driver() -> str:
+    return """from pathlib import Path
+import json, sys
+from build123d import Box, Cylinder, Location, export_step, export_stl
+
+data=json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+out=Path(sys.argv[2])
+solid=None
+for part in data['parts']:
+    dims=part['dimensions']
+    if part['kind']=='box':
+        obj=Box(dims['x'],dims['y'],dims['z'])
+    elif part['kind']=='cylinder':
+        obj=Cylinder(dims['diameter']/2,dims['height'])
+    else:
+        raise ValueError('unsupported kind: '+part['kind'])
+    obj=obj.move(Location(tuple(part.get('translate_mm',[0,0,0]))))
+    op=part.get('operation','add')
+    if solid is None:
+        if op=='cut':
+            raise ValueError('first part cannot be cut')
+        solid=obj
+    elif op=='add':
+        solid=solid+obj
+    else:
+        solid=solid-obj
+export_step(solid,out/'model.step')
+export_stl(solid,out/'model.stl')
+"""
+
+
+def _cadquery_driver() -> str:
+    return """from pathlib import Path
+import json, sys
+import cadquery as cq
+from cadquery import exporters
+
+data=json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'))
+out=Path(sys.argv[2])
+solid=None
+for part in data['parts']:
+    dims=part['dimensions']
+    if part['kind']=='box':
+        obj=cq.Workplane('XY').box(dims['x'],dims['y'],dims['z'])
+    elif part['kind']=='cylinder':
+        obj=cq.Workplane('XY').circle(dims['diameter']/2).extrude(dims['height']/2,both=True)
+    else:
+        raise ValueError('unsupported kind: '+part['kind'])
+    obj=obj.translate(tuple(part.get('translate_mm',[0,0,0])))
+    op=part.get('operation','add')
+    if solid is None:
+        if op=='cut':
+            raise ValueError('first part cannot be cut')
+        solid=obj
+    elif op=='add':
+        solid=solid.union(obj)
+    else:
+        solid=solid.cut(obj)
+exporters.export(solid,str(out/'model.step'))
+exporters.export(solid,str(out/'model.stl'))
+"""
+
+
+def _jscad_driver() -> str:
+    return """import fs from 'node:fs';
+import modeling from '@jscad/modeling';
+import serializer from '@jscad/stl-serializer';
+
+const data=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+const outDir=process.argv[3];
+const {cuboid,cylinder}=modeling.primitives;
+const {translate}=modeling.transforms;
+const {union,subtract}=modeling.booleans;
+let solid=null;
+for (const part of data.parts) {
+  const d=part.dimensions;
+  let obj;
+  if (part.kind==='box') obj=cuboid({size:[d.x,d.y,d.z]});
+  else if (part.kind==='cylinder') obj=cylinder({radius:d.diameter/2,height:d.height,segments:64});
+  else throw new Error('unsupported kind: '+part.kind);
+  obj=translate(part.translate_mm || [0,0,0],obj);
+  const op=part.operation || 'add';
+  if (solid===null) {
+    if (op==='cut') throw new Error('first part cannot be cut');
+    solid=obj;
+  } else if (op==='add') solid=union(solid,obj);
+  else solid=subtract(solid,obj);
+}
+const chunks=serializer.serialize({binary:true},solid);
+const bytes=Buffer.concat(chunks.map(x=>Buffer.from(x)));
+fs.writeFileSync(outDir+'/model.stl',bytes);
+"""
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def build(args: argparse.Namespace) -> int:
+    source = Path(args.input).resolve()
+    data = load_json(source)
+    error = validate_ir(data) or _buildability_error(data)
+    if error:
+        return emit({"status": "BLOCKED", "reason": error}, 2)
+
+    engine, engine_error = _select_engine(args.engine, args.plan_only)
+    if engine_error or engine is None:
+        return emit({"status": "BLOCKED", "reason": engine_error}, 2)
+
+    artifacts = _engine_artifacts(engine)
+    out_dir = Path(args.out_dir).resolve()
+    plan = {
+        "status": "PASS",
+        "engine": engine,
+        "plan_only": bool(args.plan_only),
+        "input": str(source),
+        "out_dir": str(out_dir),
+        "artifacts": artifacts,
+        "parts": len(data["parts"]),
+        "printer_actions_allowed": False,
+    }
+    if args.plan_only:
+        return emit(plan)
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    normalized = out_dir / "model-ir.json"
+    normalized.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+    driver = out_dir / ("_driver.mjs" if engine == "jscad" else "_driver.py")
+    if engine == "build123d":
+        driver.write_text(_build123d_driver(), encoding="utf-8")
+        command = [str(runtime_paths()[engine]), str(driver), str(normalized), str(out_dir)]
+        cwd = ROOT
+    elif engine == "cadquery":
+        driver.write_text(_cadquery_driver(), encoding="utf-8")
+        command = [str(runtime_paths()[engine]), str(driver), str(normalized), str(out_dir)]
+        cwd = ROOT
+    else:
+        jscad_root = stack_root() / "jscad"
+        driver = jscad_root / "_velvetos_build_driver.mjs"
+        driver.write_text(_jscad_driver(), encoding="utf-8")
+        command = [str(runtime_paths()[engine]), str(driver), str(normalized), str(out_dir)]
+        cwd = jscad_root
+
+    try:
+        proc = subprocess.run(
+            command,
+            cwd=cwd,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            timeout=180,
+        )
+    except Exception as exc:
+        return emit({"status": "BLOCKED", "reason": f"engine_exec_error:{exc}", "engine": engine}, 2)
+    finally:
+        try:
+            driver.unlink()
+        except OSError:
+            pass
+
+    if proc.returncode != 0:
+        return emit(
+            {
+                "status": "BLOCKED",
+                "reason": "engine_failed",
+                "engine": engine,
+                "returncode": proc.returncode,
+                "stdout": proc.stdout[-2000:],
+                "stderr": proc.stderr[-2000:],
+            },
+            2,
+        )
+
+    evidence = []
+    for name in artifacts:
+        path = out_dir / name
+        if not path.is_file() or path.stat().st_size <= 0:
+            return emit({"status": "BLOCKED", "reason": f"artifact_missing:{name}", "engine": engine}, 2)
+        evidence.append({
+            "name": name,
+            "path": str(path),
+            "bytes": path.stat().st_size,
+            "sha256": _sha256(path),
+        })
+
+    receipt = {
+        **plan,
+        "plan_only": False,
+        "status": "PASS",
+        "normalized_ir": str(normalized),
+        "artifact_evidence": evidence,
+    }
+    receipt_path = out_dir / "build-receipt.json"
+    receipt["receipt"] = str(receipt_path)
+    receipt_path.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return emit(receipt)
+
+
+def parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser()
+    subs = parser.add_subparsers(dest="cmd", required=True)
+    subs.add_parser("contract")
+    subs.add_parser("doctor")
+
+    command = subs.add_parser("ir-validate")
+    command.add_argument("--input", required=True)
+
+    command = subs.add_parser("build")
+    command.add_argument("--input", required=True)
+    command.add_argument("--engine", default="auto", choices=["auto", "build123d", "cadquery", "jscad"])
+    command.add_argument("--out-dir", required=True)
+    command.add_argument("--plan-only", action="store_true")
+
+    command = subs.add_parser("repair-next")
+    command.add_argument("--state", required=True)
+    command.add_argument("--failure", required=True)
+    return parser
+
+
+def main() -> int:
+    args = parser().parse_args()
+    if args.cmd == "contract":
+        return contract(args)
+    if args.cmd == "doctor":
+        return doctor(args)
+    if args.cmd == "ir-validate":
+        return ir_validate(args)
+    if args.cmd == "build":
+        return build(args)
+    if args.cmd == "repair-next":
+        return repair_next(args)
     return 2
 
-if __name__=="__main__": raise SystemExit(main())
+
+if __name__ == "__main__":
+    raise SystemExit(main())

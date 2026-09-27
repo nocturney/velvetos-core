@@ -16,7 +16,11 @@ VelvetOS keeps one fabrication authority: `FABRICATION-ROUTER.md`. This stack ad
 
 ## Geometry IR
 
-`GEOMETRY-IR.schema.json` is a small explicit intermediate representation for hierarchy, primitive dimensions and assembly constraints. Missing dimensions stay missing; the validator never infers or invents them.
+`GEOMETRY-IR.schema.json` is a small explicit intermediate representation for hierarchy, primitive dimensions and assembly constraints. Missing dimensions stay missing; the validator never infers or invents them. Buildable primitive parts may declare `operation: add|cut` and `translate_mm: [x,y,z]`.
+
+## Chat/runtime build bridge
+
+A fabrication chat request is resolved by `vf_fabrication_router.py decide`, then represented explicitly as Geometry IR, then executed with `vf_cad_stack.py build --engine auto`. Auto selects the first verified local engine in order: build123d, CadQuery, JSCAD. The bridge emits local artifacts plus `build-receipt.json` with SHA-256 evidence and never uploads to or controls a printer. The generic bridge currently builds explicit box/cylinder boolean models; unsupported geometry fails closed and must route through the existing CAD skill/code-generation path rather than inventing geometry.
 
 ## Bounded repair
 
