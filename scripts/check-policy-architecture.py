@@ -25,6 +25,7 @@ EXPECTED_REPORTS = {
     "ci-baseline.json",
     "baseline-snapshot.json",
     "migration-map.json",
+    "stage2-sensor-registry-audit.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -146,6 +147,27 @@ def validate_registries() -> tuple[list[str], set[str]]:
         require(row.get("mapping_state") in MAPPING, f"{sid}: invalid mapping_state", problems)
         if row.get("mapping_state") == "broad_legacy_baseline":
             require(row.get("triggered_by") == ["**"], f"{sid}: baseline sensor must fail broad", problems)
+            require(row.get("owns") == ["**"], f"{sid}: baseline sensor owns must stay broad", problems)
+            require(row.get("fallback_scope") == "FULL_SUITE", f"{sid}: baseline sensor must fall back to FULL_SUITE", problems)
+        if row.get("mapping_state") == "mapped" and row.get("fallback_scope") != "ALWAYS_ON":
+            require(row.get("triggered_by") != ["**"], f"{sid}: mapped sensor cannot keep wildcard-only trigger", problems)
+            require(row.get("owns") != ["**"], f"{sid}: mapped sensor cannot keep wildcard-only ownership", problems)
+
+    always_on = [row for row in sensor_rows if isinstance(row, dict) and row.get("fallback_scope") == "ALWAYS_ON"]
+    always_on_ids = {row.get("id") for row in always_on}
+    expected_always_on = {
+        "check-agent-surface-security",
+        "check-critical-syntax",
+        "check-machine-writers",
+        "check-policy-architecture",
+    }
+    require(always_on_ids == expected_always_on, f"critical ALWAYS_ON set drifted: {sorted(always_on_ids)}", problems)
+    require(len(always_on) <= 6, "critical ALWAYS_ON set must remain small", problems)
+    for row in always_on:
+        sid = row.get("id")
+        require(row.get("risk") == "critical", f"{sid}: ALWAYS_ON sensor must be critical", problems)
+        require(row.get("mapping_state") == "mapped", f"{sid}: ALWAYS_ON sensor must be mapped", problems)
+        require(type(row.get("timeout_seconds")) is int and row.get("timeout_seconds") <= 180, f"{sid}: ALWAYS_ON timeout must stay fast", problems)
 
     for row in rows:
         for item in row.get("enforced_by") or []:
@@ -286,6 +308,26 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 timeout=60,
             )
             require(proc.returncode == 0, "policy reports not reproducible: " + (proc.stderr or proc.stdout).strip()[:500], problems)
+
+        stage2 = load(REPORTS / "stage2-sensor-registry-audit.json")
+        require(stage2.get("stage") == "2A" and stage2.get("behavior_change") is False, "Stage 2A audit metadata mismatch", problems)
+        require(stage2.get("registry_matches_live") is True, "Stage 2A sensor registry does not match live sensors", problems)
+        require(stage2.get("registered_sensor_count") == len(sensor_rows), "Stage 2A sensor count drift", problems)
+        require(set(stage2.get("critical_always_on") or []) == expected_always_on, "Stage 2A critical ALWAYS_ON report drift", problems)
+        require(stage2.get("duplicate_removal_stage") == 3, "Stage 2A duplicate removal must remain deferred to Stage 3", problems)
+        audit_generator = ROOT / "scripts" / "generate-sensor-registry-audit.py"
+        require(audit_generator.is_file(), "Stage 2A sensor audit generator missing", problems)
+        if audit_generator.is_file():
+            proc = subprocess.run(
+                [sys.executable, str(audit_generator), "--check"],
+                cwd=ROOT,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                capture_output=True,
+                timeout=30,
+            )
+            require(proc.returncode == 0, "Stage 2A sensor audit not reproducible: " + (proc.stderr or proc.stdout).strip()[:500], problems)
 
     return problems, known_policies
 
