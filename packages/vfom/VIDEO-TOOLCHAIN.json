@@ -48,7 +48,9 @@
     },
     "remotion": {
       "origin": "https://github.com/remotion-dev/remotion",
-      "version": "4.0.523",
+      "versionPolicy": "latest-compatible",
+      "reviewedBaselineVersion": "4.0.523",
+      "compatibilityGate": "license-eligibility+adapter-smoke",
       "status": "license-gated",
       "installByDefault": false,
       "masterRenderer": false,
@@ -61,7 +63,10 @@
     },
     "manim": {
       "origin": "https://github.com/ManimCommunity/manim",
-      "version": "0.21.0",
+      "versionPolicy": "latest-compatible",
+      "minimumVersion": "0.21.0",
+      "recoveryVersion": "0.21.0",
+      "compatibilityGate": "host-doctor+real-smoke",
       "license": "MIT",
       "python": ">=3.11",
       "status": "host-smoke-verified",
@@ -84,6 +89,8 @@
         "host": "sderot-windows",
         "python": "3.12",
         "toolchain": "%VELVETOS_RUNTIME_ROOT%\\Toolchains\\manim-0.21.0-py312",
+        "evidenceVersion": "0.21.0",
+        "evidenceClass": "historical-smoke-artifact",
         "smoke": "1080x1920 technical slot rendered and ffprobe verified",
         "sha256": "8334a878cfa63aaee28e16e74c0e081dd12f1db7096ad6a8e78e3f26690e176a",
         "verifiedAt": "2026-09-14T08:59:22Z"

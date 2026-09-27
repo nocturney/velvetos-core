@@ -12,8 +12,11 @@
   },
   "provider": {
     "name": "voicestudio",
-    "version": "0.5.2",
-    "commit": "38c2405",
+    "versionPolicy": "latest-compatible",
+    "minimumVersion": "0.5.2",
+    "recoveryVersion": "0.5.2",
+    "recoveryCommit": "38c2405",
+    "compatibilityGate": "speech-doctor+real-hebrew-tts-stt-smoke",
     "serviceRoot": "http://127.0.0.1:3900",
     "openAIBase": "http://127.0.0.1:3900/v1",
     "networkExposure": "loopback-only",

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Thin VelvetOS bridge to the HyperFrames CLI.
 
-Execution adapter only: validate a render request, build pinned HyperFrames commands,
-optionally run them on an Edge/Office host, verify with ffprobe and write a receipt.
+Execution adapter only: validate a render request, build HyperFrames commands for the
+installed compatible CLI, optionally run them on an Edge/Office host, verify with ffprobe and write a receipt.
 """
 from __future__ import annotations
 
@@ -17,8 +17,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-HYPERFRAMES_VERSION = "0.8.34"
-HYPERFRAMES_PACKAGE = f"hyperframes@{HYPERFRAMES_VERSION}"
+MIN_HYPERFRAMES_VERSION = (0, 8, 34)
+MIN_HYPERFRAMES_VERSION_TEXT = ".".join(str(x) for x in MIN_HYPERFRAMES_VERSION)
+RECOVERY_HYPERFRAMES_VERSION = "0.8.34"
+HYPERFRAMES_PACKAGE = "hyperframes"
 SUPPORTED_STAGES = {"rough", "review", "final"}
 SUPPORTED_FORMATS = {"mp4", "webm", "mov"}
 SUPPORTED_RESOLUTIONS = {"portrait", "portrait-4k"}
@@ -135,8 +137,8 @@ def hyperframes_command() -> str:
     path = shutil.which("hyperframes")
     if not path:
         fail(
-            f"HyperFrames CLI {HYPERFRAMES_VERSION} is not installed on this render host; "
-            "install/cache the pinned CLI outside the content job and rerun doctor"
+            f"HyperFrames CLI >= {MIN_HYPERFRAMES_VERSION_TEXT} is not installed on this render host; "
+            "install/cache a current compatible CLI outside the content job and rerun doctor"
         )
     return path
 
@@ -200,13 +202,20 @@ def doctor() -> int:
         print(f"FAIL HyperFrames requires Node >=22; found {facts['node']}", file=sys.stderr)
         return 1
     actual = exact_hyperframes_version(facts["hyperframes"])
-    if actual != HYPERFRAMES_VERSION:
+    if actual is None:
+        print(f"FAIL could not parse HyperFrames version: {facts['hyperframes']}", file=sys.stderr)
+        return 1
+    actual_tuple = tuple(int(part) for part in actual.split("."))
+    if actual_tuple < MIN_HYPERFRAMES_VERSION:
         print(
-            f"FAIL HyperFrames version mismatch: required {HYPERFRAMES_VERSION}, found {facts['hyperframes']}",
+            f"FAIL HyperFrames is below supported minimum {MIN_HYPERFRAMES_VERSION_TEXT}: found {facts['hyperframes']}",
             file=sys.stderr,
         )
         return 1
-    print(f"OK hyperframes host prerequisites package={HYPERFRAMES_PACKAGE}")
+    print(
+        f"OK hyperframes host prerequisites package={HYPERFRAMES_PACKAGE} "
+        f"installed={actual} minimum={MIN_HYPERFRAMES_VERSION_TEXT} policy=latest-compatible"
+    )
     return 0
 
 
@@ -291,7 +300,7 @@ def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]
         "schemaVersion": 1,
         "jobId": req["jobId"],
         "backend": "hyperframes",
-        "package": HYPERFRAMES_PACKAGE,
+        "package": f"{HYPERFRAMES_PACKAGE}@{exact_hyperframes_version(tool_version('hyperframes')) or 'unknown'}",
         "stage": req["stage"],
         "target": req["target"],
         "output": req["outputArg"],
@@ -310,7 +319,7 @@ def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]
 
 def plan(req: dict[str, Any]) -> None:
     print(json.dumps({
-        "package": HYPERFRAMES_PACKAGE,
+        "package": f"{HYPERFRAMES_PACKAGE}>={MIN_HYPERFRAMES_VERSION_TEXT}",
         "cwd": str(req["projectDir"]),
         "commands": build_commands(req),
         "output": str(req["output"]),

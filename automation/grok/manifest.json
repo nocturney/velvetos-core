@@ -28,6 +28,13 @@
     "chatgpt": "disabled_after_verified_cutover",
     "antigravity": "shadow_sidecars_disabled"
   },
+  "upstreamWatch": {
+    "ownerRoutineId": "velvet-research-seat",
+    "registry": "packages/velvetos/UPSTREAM-WATCH.json",
+    "report": "packages/vfresearch/sources/upstream-watch-latest.json",
+    "autoUpgrade": false,
+    "consumerRoutineId": "velvetos-office-loop"
+  },
   "ownerEmailAuthority": {
     "design": "Morning Green v3.1 editorial RTL Desktop-first responsive Outlook-safe",
     "visibleText": "constitution/VISIBLE_TEXT.md",

@@ -23,9 +23,9 @@ New-Item -ItemType Directory -Force -Path $TmpRoot | Out-Null
 $StateFile = Join-Path $StateDir "edge-host.json"
 $ToolchainDir = Join-Path $RuntimeRoot "Toolchains"
 $NpmPrefix = Join-Path $RuntimeRoot "npm"
-$HyperFramesVersion = "0.8.34"
-$NodeVersionPin = "22.22.0"
-$FfmpegStaticPackage = "ffmpeg-ffprobe-static@6.1.2-rc.1"
+$HyperFramesRecoveryVersion = "0.8.34"
+$NodeRecoveryVersion = "22.22.0"
+$FfmpegRecoveryPackage = "ffmpeg-ffprobe-static@6.1.2-rc.1"
 
 function Fail([string]$Message) {
     throw "FAIL $Message"
@@ -88,15 +88,15 @@ function Get-NodeMajor {
 
 function Install-UserNode {
     if (-not [Environment]::Is64BitOperatingSystem) {
-        Fail "Windows x64 is required for the pinned Node toolchain"
+        Fail "Windows x64 is required for the recovery Node toolchain"
     }
 
-    $artifact = "node-v$NodeVersionPin-win-x64.zip"
-    $base = "https://nodejs.org/dist/v$NodeVersionPin"
+    $artifact = "node-v$NodeRecoveryVersion-win-x64.zip"
+    $base = "https://nodejs.org/dist/v$NodeRecoveryVersion"
     $tmp = Join-Path $TmpRoot ("velvet-node-" + [Guid]::NewGuid().ToString("N"))
     New-Item -ItemType Directory -Force -Path $tmp | Out-Null
     try {
-        Write-Host "Installing Node v$NodeVersionPin user-locally (no admin)..."
+        Write-Host "Installing recovery Node v$NodeRecoveryVersion user-locally (no admin)..."
         Invoke-WebRequest "$base/$artifact" -OutFile (Join-Path $tmp $artifact)
         Invoke-WebRequest "$base/SHASUMS256.txt" -OutFile (Join-Path $tmp "SHASUMS256.txt")
 
@@ -107,7 +107,7 @@ function Install-UserNode {
         if ($expected -ne $actual) { Fail "Node checksum mismatch for $artifact" }
 
         New-Item -ItemType Directory -Force -Path $ToolchainDir | Out-Null
-        $nodeDir = Join-Path $ToolchainDir "node-v$NodeVersionPin-win-x64"
+        $nodeDir = Join-Path $ToolchainDir "node-v$NodeRecoveryVersion-win-x64"
         if (Test-Path $nodeDir) { Remove-Item -Recurse -Force $nodeDir }
         Expand-Archive -Path (Join-Path $tmp $artifact) -DestinationPath $ToolchainDir -Force
         if (-not (Test-Path (Join-Path $nodeDir "node.exe"))) { Fail "Node binary missing after extraction" }
@@ -173,8 +173,8 @@ function Ensure-FFmpeg {
     $ffmpegRoot = Join-Path $ToolchainDir "ffmpeg-ffprobe-static"
     New-Item -ItemType Directory -Force -Path $ffmpegRoot | Out-Null
     Write-Host "Installing FFmpeg + ffprobe user-locally (no admin)..."
-    & npm install --prefix $ffmpegRoot --no-audit --no-fund $FfmpegStaticPackage
-    if ($LASTEXITCODE -ne 0) { Fail "npm failed to install $FfmpegStaticPackage" }
+    & npm.cmd install --prefix $ffmpegRoot --no-audit --no-fund $FfmpegRecoveryPackage
+    if ($LASTEXITCODE -ne 0) { Fail "npm failed to install $FfmpegRecoveryPackage" }
 
     $bin = Join-Path $ffmpegRoot "node_modules\ffmpeg-ffprobe-static"
     if (-not (Test-Path (Join-Path $bin "ffmpeg.exe"))) { Fail "ffmpeg.exe missing after provisioning" }
@@ -218,24 +218,17 @@ if ($LASTEXITCODE -ne 0) { Fail "git checkout main failed" }
 & git pull --ff-only origin main
 if ($LASTEXITCODE -ne 0) { Fail "git pull --ff-only origin main failed" }
 
-if (-not $SkipHyperFramesInstall) {
-    $installed = ""
-    if (Resolve-Command "hyperframes") {
-        try { $installed = ((& hyperframes --version 2>$null | Select-Object -First 1).Trim()).TrimStart('v') } catch {}
-    }
-    if ($installed -ne $HyperFramesVersion) {
-        Write-Host "Installing pinned HyperFrames $HyperFramesVersion user-locally..."
-        & npm install --global --no-audit --no-fund "hyperframes@$HyperFramesVersion"
-        if ($LASTEXITCODE -ne 0) { Fail "HyperFrames npm install failed" }
-        Add-UserPath $NpmPrefix
-    }
+if (-not $SkipHyperFramesInstall -and -not (Resolve-Command "hyperframes")) {
+    Write-Host "HyperFrames missing; installing current release user-locally..."
+    & npm.cmd install --global --no-audit --no-fund "hyperframes@latest"
+    if ($LASTEXITCODE -ne 0) { Fail "HyperFrames npm install failed" }
+    Add-UserPath $NpmPrefix
 }
 
 if (-not (Resolve-Command "hyperframes")) { Fail "hyperframes CLI missing" }
 $actual = ((& hyperframes --version | Select-Object -First 1).Trim()).TrimStart('v')
-if ($actual -ne $HyperFramesVersion) {
-    Fail "HyperFrames pin mismatch: expected $HyperFramesVersion, got $actual"
-}
+Write-Host "HyperFrames installed: $actual (policy: latest-compatible; recovery baseline: $HyperFramesRecoveryVersion)"
+Write-Host "Existing installs are not auto-upgraded by bootstrap; upstream adoption is a separate compatibility-tested change."
 
 Write-Host "Ensuring HyperFrames browser runtime..."
 & hyperframes browser ensure

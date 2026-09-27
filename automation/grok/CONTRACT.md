@@ -54,9 +54,9 @@ On 2026-09-23, owner-email authority moved from V10.3 to Morning Green v3.1 afte
 Later on 2026-09-23, live Grok readback verified `Cognee Memory Sync` (`cognee-memory-sync`, daily 06:30) and `Cognee Stable Updates` (`cognee-stable-updates`, Monday 10:00) as enabled in `Asia/Jerusalem`; only then were the corresponding ChatGPT copies disabled. A second provider readback verified `VelvetOS Integrity Guard` (`velvetos-integrity-guard`) still enabled at daily 01:45 and protecting the eight-routine set without changing any other routine.
 
 
-## OpenPost retirement directive — 2026-09-26
+## OpenPost frozen state — updated 2026-09-27
 
-`OpenPost Release Watch` is retired and must be disabled in the live Grok scheduler. It is not part of the protected set. The desired protected inventory is eight routines. Git state is desired authority only; a provider read-back is still required before claiming the live Grok routine is disabled.
+OpenPost is frozen and has no release/update watcher in scheduler authority. The protected inventory remains eight routines. Any stale live provider routine named `openpost-release-watch` is unauthorized drift and must be removed when provider routine-management access is available; provider read-back is required before claiming that live deletion.
 
 The 09:00 Morning Brief must read scheduled Instagram state from the Cloudflare Instagram Publisher, not OpenPost.
 

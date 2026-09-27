@@ -13,6 +13,28 @@ def _now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def _pid_alive(pid: int) -> bool:
+    """Read-only process liveness check; never signal the process on Windows."""
+    if os.name == "nt":
+        import ctypes
+
+        process_query_limited_information = 0x1000
+        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+        handle = kernel32.OpenProcess(process_query_limited_information, False, pid)
+        if handle:
+            kernel32.CloseHandle(handle)
+            return True
+        # Access denied still means that the PID exists but is not queryable.
+        return ctypes.get_last_error() == 5
+    try:
+        os.kill(pid, 0)
+        return True
+    except PermissionError:
+        return True
+    except OSError:
+        return False
+
+
 @dataclass
 class LockHandle:
     path: Path
@@ -42,13 +64,7 @@ def acquire(lock_path: Path, *, stale_seconds: int = 3600) -> LockHandle | None:
             existing = {}
         started = float(existing.get("startedEpoch") or 0)
         pid = existing.get("pid")
-        alive = False
-        if isinstance(pid, int) and pid > 0:
-            try:
-                os.kill(pid, 0)
-                alive = True
-            except OSError:
-                alive = False
+        alive = _pid_alive(pid) if isinstance(pid, int) and pid > 0 else False
         if alive and started and (now - started) < stale_seconds:
             return None
         # Stale or dead — take over
