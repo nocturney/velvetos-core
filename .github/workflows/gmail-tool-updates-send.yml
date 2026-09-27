@@ -1,0 +1,127 @@
+name: Velvet Gmail Tool Updates Sender
+
+on:
+  workflow_dispatch:
+    inputs:
+      request_path:
+        description: Repo-relative tool-updates send request JSON
+        required: true
+        default: packages/vfresearch/out/tool-updates-send-request.json
+  push:
+    branches: [main]
+    paths:
+      - packages/vfresearch/out/tool-updates-send-request.json
+
+permissions:
+  contents: read
+
+concurrency:
+  group: velvet-gmail-tool-updates-send
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    env:
+      REQUEST_PATH: ${{ github.event.inputs.request_path || 'packages/vfresearch/out/tool-updates-send-request.json' }}
+      VFBRIEF_ALLOWED_RECIPIENT: nocturney@gmail.com
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Inspect send request
+        id: request
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ["REQUEST_PATH"])
+          data = json.loads(p.read_text(encoding="utf-8"))
+          enabled = data.get("enabled") is True
+          visible_text = str(data.get("visibleText") or "").strip()
+          if "\n" in visible_text or "\r" in visible_text:
+              raise SystemExit("visibleText path contains a newline")
+          print("enabled=" + ("true" if enabled else "false"))
+          print("request_id=" + str(data.get("requestId") or "unknown"))
+          print("visible_text=" + visible_text)
+          PY
+
+      - name: Disabled request
+        if: steps.request.outputs.enabled != 'true'
+        run: echo "Tool update email request is disabled; no email sent."
+
+      - name: Visible Text Gate
+        if: steps.request.outputs.enabled == 'true'
+        env:
+          VISIBLE_TEXT_PATH: ${{ steps.request.outputs.visible_text }}
+        run: |
+          if [ -z "$VISIBLE_TEXT_PATH" ]; then
+            echo "::error::Enabled tool-update email is missing visibleText."
+            exit 3
+          fi
+          case "$VISIBLE_TEXT_PATH" in
+            /*|../*|*/../*)
+              echo "::error::visibleText must be a repo-relative path."
+              exit 3
+              ;;
+          esac
+          if [ ! -f "$VISIBLE_TEXT_PATH" ]; then
+            echo "::error::visibleText file does not exist: $VISIBLE_TEXT_PATH"
+            exit 3
+          fi
+          set +e
+          PYTHONPATH=packages python3 scripts/vf_visible_text.py \
+            --surface owner-brief \
+            --file "$VISIBLE_TEXT_PATH" \
+            --gate \
+            --truth-checked \
+            --reader-first \
+            --copy-authority \
+            --surface-qa \
+            --domain-tool vfresearch \
+            > "$RUNNER_TEMP/visible-text-gate.json"
+          gate_rc=$?
+          set -e
+          cat "$RUNNER_TEMP/visible-text-gate.json"
+          if [ "$gate_rc" -ne 0 ]; then
+            echo "::error::Visible Text Gate command failed with exit code $gate_rc."
+            exit "$gate_rc"
+          fi
+          python3 - <<'PY'
+          import json, os, pathlib
+          p = pathlib.Path(os.environ["RUNNER_TEMP"]) / "visible-text-gate.json"
+          data = json.loads(p.read_text(encoding="utf-8"))
+          if data.get("visible_text_gate") != "PASS":
+              raise SystemExit("Visible Text Gate did not PASS")
+          if data.get("surface") != "owner-brief":
+              raise SystemExit("Visible Text Gate surface mismatch")
+          sha = data.get("text_sha256")
+          if not isinstance(sha, str) or len(sha) != 64:
+              raise SystemExit("Visible Text Gate missing text_sha256")
+          print("Visible Text Gate PASS text_sha256=" + sha)
+          PY
+
+      - name: Validate Apps Script bridge configuration
+        if: steps.request.outputs.enabled == 'true'
+        env:
+          GMAIL_APPS_SCRIPT_URL: https://script.google.com/macros/s/AKfycbyabkraMQOELNDwBYxpRx6Mdzo_cT2Wwcn4_vJOtxhL4so-rgkrQ4BT0uIYD3t9yWxG/exec
+          GMAIL_APPS_SCRIPT_SECRET: ${{ secrets.GMAIL_APPS_SCRIPT_SECRET }}
+        run: |
+          if [ -z "$GMAIL_APPS_SCRIPT_SECRET" ]; then
+            echo "::error::Missing repository secret GMAIL_APPS_SCRIPT_SECRET."
+            exit 2
+          fi
+          echo "Apps Script bridge configuration present."
+
+      - name: Send tool update email through owner Apps Script Gmail bridge
+        if: steps.request.outputs.enabled == 'true'
+        env:
+          GMAIL_APPS_SCRIPT_URL: https://script.google.com/macros/s/AKfycbyabkraMQOELNDwBYxpRx6Mdzo_cT2Wwcn4_vJOtxhL4so-rgkrQ4BT0uIYD3t9yWxG/exec
+          GMAIL_APPS_SCRIPT_SECRET: ${{ secrets.GMAIL_APPS_SCRIPT_SECRET }}
+          VF_VISIBLE_TEXT_GATE_RECEIPT: ${{ runner.temp }}/visible-text-gate.json
+        run: |
+          PYTHONPATH=packages python3 -m vfops.gmail_apps_script_request --request "$REQUEST_PATH"
