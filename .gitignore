@@ -9,6 +9,7 @@ tools/healthchecks/python/
 tools/healthchecks/data/
 tools/changedetection/python/
 tools/changedetection/data/
+.local-devtools/
 packages/vfharness/evals/latest-results.json
 .origincache/
 .config/origin-cli/

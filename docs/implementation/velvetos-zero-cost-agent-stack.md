@@ -5,7 +5,7 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-2 implemented and locally verified; Phase 3 independent work completed with GlitchTip explicitly blocked; Phase 4 in progress.
+Phases 0-4 implemented and locally verified within their declared scope; GlitchTip remains explicitly blocked. Phase 5 CLI-Anything pilot is next.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
@@ -47,9 +47,17 @@ Phases 0-2 implemented and locally verified; Phase 3 independent work completed 
 - changedetection.io 0.60.7: FREE_SELF_HOSTED, Windows batch/html_requests PILOT. Local two-snapshot change detection PASS; no browser/AI/paid credentials. Dependency footprint is heavy, so no promotion yet.
 - GlitchTip v6.2.6: FREE_SELF_HOSTED but BLOCKED in this host state because the current local path adds PostgreSQL/container infrastructure while Docker/WSL are absent. Hosted fallback is forbidden. Revisit in the later WSL batch if still justified.
 
+## Phase 4 engineering-quality outcome
+- Ponytail 4.10.0: EMBEDDED pattern-only at `e3ba2aa6f1e6f0bc4d69eb09c9f0d0a93af56156`; minimum-safe-change ladder added to existing implementation discipline, no runtime installed.
+- gstack: EMBEDDED_SAFE_SUBSET at `01593aa67c94780528e8f5121e47362502410ced`; review/QA/investigate/careful/freeze/guard/documentation mapped to existing VelvetOS playbooks. GBrain, ship/deploy, telemetry/onboarding runtime remain disabled.
+- Impeccable: INSTALLED_LOCAL at `9d715cc4f5564a990ca8345abfdd5df6dc9b41c8` (script 0.1.6) under gitignored `.local-devtools/phase4`; narrow Web/UI wrapper only, no init/PRODUCT truth, no broad hook, no creative-post integration. Isolated `doctor --json` smoke resolved the fixture correctly, returned an empty findings list and wrote no fixture files.
+- diagram-design: INSTALLED_LOCAL at `cea465e7f5ea1043d8dab21a99f2dd3f7f661beb`; documentation/architecture wrapper only. VelvetOS and Velvet Factory profiles were generated from canonical Ink & Candy tokens and selected by project markers. Upstream `self_check.py` passed on a real architecture HTML example.
+- `scripts/check-engineering-quality.py --strict`: PASS. Remove → offline sensors → reinstall → strict rollback drill: PASS, including a Windows read-only Git-pack fix in the uninstaller. All four Phase 4 Cost Preflights: FREE_LOCAL/PASS. Incremental recurring cost: 0 ILS.
+- Phase 4 receipt: `packages/vfharness/state/engineering-quality-phase4-2026-09-27.json`.
+
 ## Pending
-- Phase 4: engineering-quality embeds/tools; removable and non-authoritative.
-- Phase 5+: CLI-Anything, Laya shadow, memory benchmark, Reef lab, additional dev labs, ecosystem radar and final acceptance.
+- Phase 5: CLI-Anything local agent-native tooling pilot, beginning with existing 3MF/FreeCAD capability if present.
+- Phase 6+: Laya shadow, memory benchmark, Reef lab, additional dev labs, ecosystem radar and final acceptance.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.

@@ -185,6 +185,11 @@
       "type": "computational"
     },
     {
+      "id": "check-engineering-quality",
+      "script": "scripts/check-engineering-quality.py",
+      "type": "computational"
+    },
+    {
       "id": "check-vfprod",
       "script": "scripts/check-vfprod.py",
       "type": "computational"

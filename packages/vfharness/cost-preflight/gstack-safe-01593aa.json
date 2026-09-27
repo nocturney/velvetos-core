@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "component": "gstack-safe@01593aa67c94780528e8f5121e47362502410ced",
+  "classification": "FREE_LOCAL",
+  "license": "MIT",
+  "commercial_use_allowed": true,
+  "self_hosting_restriction": "none for selected static development-guidance subset",
+  "deployment_model": "safe subset mapped into existing vfharness playbooks; no gstack runtime, GBrain, ship or deploy authority",
+  "api_dependencies": [],
+  "billing_risk": "none in selected static subset; no Claude/API/model/provider calls are invoked",
+  "selected_mode": "PATTERN_EMBED_ONLY allowlist: review, QA, investigate, careful, freeze, guard, documentation helpers",
+  "expected_recurring_cost": "0 ILS/month incremental",
+  "runtime_cost_notes": "static local guidance only; upstream executable stack remains inactive",
+  "api_cost_notes": "none",
+  "subscription_notes": "none",
+  "hidden_secondary_cost_notes": "upstream release/ship/memory/browser capabilities are excluded from activation",
+  "quota_controls": "forbidden-capability denylist enforced by deterministic sensor",
+  "pricing_verified_at": "2026-09-27",
+  "evidence": [
+    "https://github.com/garrytan/gstack README: MIT/free open source",
+    "git ls-remote canonical HEAD 01593aa67c94780528e8f5121e47362502410ced"
+  ],
+  "approval": null
+}

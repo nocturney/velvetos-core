@@ -10,9 +10,12 @@
     "Implemented Phase 2 local OpenTelemetry/OpenInference acceptance trace",
     "Piloted Healthchecks v4.4 against a real VelvetOS watchdog job and proved missed-heartbeat detection",
     "Piloted changedetection.io 0.60.7 with a controlled localhost two-snapshot change",
-    "Recorded GlitchTip v6.2.6 as BLOCKED pending a later local PostgreSQL/container environment; hosted fallback forbidden"
+    "Recorded GlitchTip v6.2.6 as BLOCKED pending a later local PostgreSQL/container environment; hosted fallback forbidden",
+    "Embedded Ponytail minimum-safe-change rules and gstack safe patterns without installing another runtime",
+    "Installed pinned Impeccable locally for Web/UI only with hooks/init/creative-post integration disabled and passed isolated doctor smoke",
+    "Installed pinned diagram-design locally with VelvetOS/Velvet Factory documentation profiles and passed upstream HTML self-check"
   ],
-  "next_step": "Implement Phase 4 engineering-quality embeds/tools without adding runtime authority",
+  "next_step": "Pilot Phase 5 CLI-Anything against existing 3MF/FreeCAD capability if available; keep it an adapter, not runtime authority",
   "artifacts": [
     "docs/implementation/velvetos-zero-cost-agent-stack.md",
     "packages/vfharness/reliability/components.json",
@@ -20,7 +23,13 @@
     "packages/vfharness/state/changedetection-pilot-2026-09-27.json",
     "scripts/run-healthchecks-pilot.py",
     "scripts/run-changedetection-pilot.py",
-    "scripts/check-reliability-pilots.py"
+    "scripts/check-reliability-pilots.py",
+    "packages/vfharness/devtools/components.json",
+    "packages/vfharness/state/engineering-quality-phase4-2026-09-27.json",
+    "scripts/setup-engineering-quality.py",
+    "scripts/check-engineering-quality.py",
+    ".cursor/skills/vf-web-ui-quality/SKILL.md",
+    ".cursor/skills/vf-diagram-design/SKILL.md"
   ],
   "unresolved": [
     "Full check-all baseline was interrupted by Remote MCP session; final acceptance must run sensors in resilient batches",
@@ -30,7 +39,7 @@
     "WSL2 is not installed; defer one human reboot/UAC batch until Linux-first labs are reached"
   ],
   "pulse": "working",
-  "verification": "Healthchecks healthy+missed heartbeat PASS; changedetection baseline+change PASS; check-reliability-pilots PASS; all Phase3 cost preflights PASS; recurring cost=0",
+  "verification": "Phases 1-3 prior gates PASS in declared scope; Phase4 strict engineering-quality PASS; Impeccable isolated doctor PASS/no writes; diagram-design self_check PASS; Phase4 cost preflights PASS; recurring cost=0",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-27"
