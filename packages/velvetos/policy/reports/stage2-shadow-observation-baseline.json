@@ -1,0 +1,115 @@
+{
+  "report": "stage2-shadow-observation-baseline",
+  "stage": "2B",
+  "status": "OBSERVING",
+  "selector_mode": "shadow",
+  "blocking_effect": "REPORT_ONLY",
+  "activation": {
+    "pull_request": 398,
+    "head_sha": "f35a9e4669d5858397f2a3dcbb6c5049d6e150c8",
+    "merge_sha": "baf02e5640bcc62e414abfb0aef65bea5c9a312e",
+    "merged_at": "2026-09-27T16:15:49Z"
+  },
+  "first_observation": {
+    "run_id": 36332453698,
+    "event": "pull_request",
+    "created_at": "2026-09-27T16:13:47Z",
+    "completed_at": "2026-09-27T16:15:06Z",
+    "selector_observed_at": "2026-09-27T16:14:29.8240824Z",
+    "comparison_observed_at": "2026-09-27T16:15:00.9299846Z",
+    "full_suite_fallback": true,
+    "full_suite_reasons": [
+      "BROAD_CHANGE"
+    ],
+    "candidate_count": 53,
+    "effective_selection_count": 95,
+    "total_sensor_count": 95,
+    "full_suite_result": "PASS",
+    "full_suite_passed_sensors": 95,
+    "comparison_status": "NO_MISS",
+    "selector_misses": [],
+    "critical_misses": []
+  },
+  "postmerge_main": {
+    "run_id": 36332587433,
+    "event": "push",
+    "head_sha": "baf02e5640bcc62e414abfb0aef65bea5c9a312e",
+    "created_at": "2026-09-27T16:15:51Z",
+    "completed_at": "2026-09-27T16:17:16Z",
+    "conclusion": "success",
+    "full_suite_passed_sensors": 95
+  },
+  "deterministic_replays": [
+    {
+      "changed_paths": [
+        "packages/vfcopy/VOICE.md"
+      ],
+      "full_suite": false,
+      "candidate_count": 14,
+      "effective_selection_count": 14,
+      "reasons": []
+    },
+    {
+      "changed_paths": [
+        "office/control/POLICY.md"
+      ],
+      "full_suite": false,
+      "candidate_count": 14,
+      "effective_selection_count": 14,
+      "reasons": []
+    },
+    {
+      "changed_paths": [
+        "scripts/vf_video_normalization.py"
+      ],
+      "full_suite": false,
+      "candidate_count": 43,
+      "effective_selection_count": 43,
+      "reasons": []
+    },
+    {
+      "changed_paths": [
+        "random/new.txt"
+      ],
+      "full_suite": true,
+      "candidate_count": 4,
+      "effective_selection_count": 95,
+      "reasons": [
+        "UNKNOWN_PATH"
+      ]
+    },
+    {
+      "changed_paths": [
+        "packages/velvetos/policy/sensor-registry.json"
+      ],
+      "full_suite": true,
+      "candidate_count": 20,
+      "effective_selection_count": 95,
+      "reasons": [
+        "BROAD_CHANGE"
+      ]
+    }
+  ],
+  "exit_criteria": {
+    "minimum_pull_requests": 20,
+    "minimum_observation_days": 7,
+    "maximum_critical_misses": 0,
+    "noncritical_miss_requires_classification": true,
+    "noncritical_relevant_miss_requires_mapping_update": true,
+    "deterministic_replay_required": true,
+    "rollback_mode": "FULL_SUITE_REQUIRED"
+  },
+  "progress": {
+    "observed_pull_requests": 1,
+    "observation_start": "2026-09-27T16:13:47Z",
+    "critical_misses": 0,
+    "noncritical_misses": 0,
+    "exit_gate": "NOT_YET_ELIGIBLE"
+  },
+  "notes": [
+    "This baseline is fixed opening evidence, not a live counter.",
+    "Later observation accounting must use GitHub PR workflow evidence generated after Stage 2B activation.",
+    "Historical replay may supplement confidence but does not satisfy the minimum observation time.",
+    "Stage 3 enforcement remains forbidden until the exit criteria are satisfied."
+  ]
+}
