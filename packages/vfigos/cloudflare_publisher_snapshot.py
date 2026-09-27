@@ -1,11 +1,41 @@
 #!/usr/bin/env python3
 """Read-only Cloudflare Instagram Publisher schedule snapshot for Morning Green."""
 from __future__ import annotations
-import argparse, json, os, urllib.request
+import argparse, json, os, subprocess, sys, urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
 DEFAULT_URL = "https://velvetos-instagram-publisher.velvetos-vf.workers.dev"
+
+def resolve_token() -> str:
+    token=(os.environ.get("VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN") or "").strip()
+    if token:
+        return token
+    if os.name != "nt":
+        raise RuntimeError("missing VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN")
+    appdata=(os.environ.get("APPDATA") or "").strip()
+    if not appdata:
+        raise RuntimeError("APPDATA unavailable for publisher DPAPI fallback")
+    credential=Path(appdata) / "VelvetOS" / "cloudflare-publisher-control.dpapi"
+    if not credential.is_file():
+        raise RuntimeError("publisher DPAPI credential missing")
+    script=(
+        "$enc=(Get-Content -Raw $env:VF_PUBLISHER_DPAPI).Trim();"
+        "$sec=ConvertTo-SecureString $enc;"
+        "$b=[Runtime.InteropServices.Marshal]::SecureStringToBSTR($sec);"
+        "try {[Runtime.InteropServices.Marshal]::PtrToStringBSTR($b)} "
+        "finally {[Runtime.InteropServices.Marshal]::ZeroFreeBSTR($b)}"
+    )
+    env=dict(os.environ)
+    env["VF_PUBLISHER_DPAPI"]=str(credential)
+    proc=subprocess.run(
+        ["powershell.exe","-NoProfile","-ExecutionPolicy","Bypass","-Command",script],
+        text=True, capture_output=True, timeout=20, env=env,
+    )
+    token=(proc.stdout or "").strip()
+    if proc.returncode != 0 or len(token) < 32:
+        raise RuntimeError("publisher DPAPI credential could not be decrypted")
+    return token
 
 def get_json(base: str, path: str, token: str) -> dict:
     req=urllib.request.Request(base.rstrip("/") + path, headers={
@@ -69,9 +99,10 @@ def main() -> int:
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--base-url", default=os.environ.get("VELVET_INSTAGRAM_PUBLISHER_URL", DEFAULT_URL))
     args=ap.parse_args()
-    token=(os.environ.get("VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN") or "").strip()
-    if not token:
-        raise SystemExit("missing VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN")
+    try:
+        token=resolve_token()
+    except RuntimeError as exc:
+        raise SystemExit(str(exc)) from exc
     data=snapshot(args.base_url, token)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(data, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
