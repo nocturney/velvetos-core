@@ -68,8 +68,13 @@
     "bridge": "Google Apps Script",
     "scriptId": "1eXUGA574qXazEBzVSifNqSV8bgoz1Pw3CgRfebytCAIbVVcc0zoRbeNH",
     "deploymentId": "AKfycbwYB27gOcNgjDhKkmARzpLzTlsgdnheLgan1VEISnm7Ryr-GYn1lRpTJf_74unGaPgjig",
-    "deploymentVersion": 3,
+    "deploymentVersion": 4,
     "syncCadenceMinutes": 5,
-    "status": "awaiting_owner_authorization"
+    "status": "active",
+    "calendarId": "dbc5394e5344be5275a46dfa43b0c16e2673aea627b4d695162445a58c4f45f0@group.calendar.google.com",
+    "lastSync": "2026-09-27T07:05:21.863Z",
+    "syncTriggerCount": 1,
+    "verifiedAt": "2026-09-27T07:06:50Z",
+    "verification": "calendar exists; exactly one syncPublisherCalendar trigger; one scheduled event verified; reminders disabled; transparency=transparent"
   }
 }

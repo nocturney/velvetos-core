@@ -37,6 +37,12 @@ function authState_() {
   };
 }
 
+function syncTriggerCount_() {
+  return ScriptApp.getProjectTriggers().filter(function(t) {
+    return t.getHandlerFunction() === 'syncPublisherCalendar';
+  }).length;
+}
+
 function doGet(e) {
   const action = String((e && e.parameter && e.parameter.action) || 'health');
   if (action === 'auth') return jsonResponse_({ok:true, service:'velvet-instagram-calendar-bridge', auth:authState_()});
@@ -47,6 +53,7 @@ function doGet(e) {
     calendarName:CALENDAR_NAME,
     calendarId:props.getProperty(CALENDAR_ID_PROPERTY) || '',
     lastSync:props.getProperty(LAST_SYNC_PROPERTY) || '',
+    syncTriggerCount:syncTriggerCount_(),
     auth:authState_()
   });
 }

@@ -24,4 +24,4 @@ The Apps Script project requires:
 Run `authorizeCalendarBridge` once as the owner, review the requested scopes, then bootstrap. After bootstrap, the time-driven trigger runs without ChatGPT or the local PC.
 
 ## Health
-The web app GET response exposes only non-secret operational fields: calendar name/id, last sync, and authorization state. Morning Green may use those fields to report mirror drift, but Calendar health never overrides Publisher schedule truth.
+The web app GET response exposes only non-secret operational fields: calendar name/id, last sync, sync-trigger count, and authorization state. Production is healthy only when exactly one `syncPublisherCalendar` trigger is present. Morning Green may use those fields to report mirror drift, but Calendar health never overrides Publisher schedule truth.
