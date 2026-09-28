@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- 2026-09-28 — **ChatGPT Project Reel/video route v6.6.10:** extends the active Project 6.6.9 Native Product Edit rules with end-to-end Reel types, real-motion/real-print-file truth boundaries, audio/cover/caption/QA/handoff requirements, exact Chris render commands, and a fail-closed route/template/preset drift sensor; also corrects the four committed OFL/SVG SHA-256 values from #420 so the Windows brand-token sensor matches the actual merged bytes. Publication remains manual/review-gated.
+- 2026-09-28 — **ChatGPT Project Reel/video route v6.6.10:** extends the active Project 6.6.9 Native Product Edit rules with end-to-end Reel types, real-motion/real-print-file truth boundaries, audio/cover/caption/QA/handoff requirements, exact Chris render commands, and a fail-closed route/template/preset drift sensor. Publication remains manual/review-gated.
 
 - 2026-09-28 — **Rich Reel HyperFrames implementation:** adds five 1080x1920/30fps RTL templates, token-bound Rubik/Cinzel/SVG assets, deterministic editorial motion presets, exact live-caption sample variables, native HyperFrames variables/batch planning with per-output receipts, and a Blender real-print-file turntable adapter; CI lints templates/schema/RTL/tokens without rendering.
 
