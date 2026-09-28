@@ -5,105 +5,117 @@
 <main style="max-width:720px;margin:0 auto;padding:28px 18px">
 <div style="font-size:13px;color:#777">VelvetOS · Toolchain Release Watch</div>
 <h1 style="margin:8px 0 6px;font-size:28px">עדכוני כלים</h1>
-<p>נמצאו 11 עדכונים ממתינים. לא בוצע שום שדרוג אוטומטי.</p>
-<p style="color:#666">סטטוס סקירה: 0/11. המייל חסום עד שכל הפריטים יקבלו review עדכני.</p>
+<p style="margin:0 0 8px">נותחו 11 עדכונים ממתינים. לא בוצע שום שדרוג אוטומטי.</p>
+<p style="margin:0 0 8px"><strong>סיכום:</strong> 0 לעדכון עכשיו · 2 להמתין · 9 ללא פעולה כרגע.</p>
+<p style="margin:0 0 18px;color:#666">בדיקת upstream אחרונה: 2026-09-27T20:17:36.055403+00:00</p>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">blender/blender</div>
-<div style="margin-top:8px"><strong>מצב:</strong> לבדוק לפני החלטה</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 35a2d9dfd0 → 388952d3b8</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> Blender host/runtime</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> השינוי רלוונטי פוטנציאלית לביצועי geometry/mesh, אבל הוא קיים כרגע רק ב־main ללא release חדש. לא מעדכנים Blender host על commit לא־משוחרר; ממתינים לבילד/גרסה יציבה ואז מריצים smoke.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> 2 commits מאז baseline: שיפור בניית faces/corners ו־vertices/edges ב-Mesh Merge · שינויי ביצועים בלבד במסלול mesh merge; אין release חדש · integration: Blender host/runtime · compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...388952d3b867ead24396cefd3cfc7e3b59682e61</div>
 <div style="margin-top:12px"><a href="https://github.com/blender/blender">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">earthtojake/text-to-cad</div>
-<div style="margin-top:8px"><strong>מצב:</strong> לבדוק לפני החלטה</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.7.0 → v0.7.0</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfprod/TEXT-TO-CAD.md</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> v0.7.0 כבר אומצה ונבדקה אצלנו. ה־commit היחיד אחרי ה־baseline מוחק סקריפטי E2E ידניים ומחזק כיסוי CI; אין שינוי runtime/CAD שדורש אימוץ נוסף.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> adoptedRelease=v0.7.0; latestRelease נשאר v0.7.0 · 1 commit: delete manual web E2E scripts + enforce CI collection · adoption evidence: packages/vfharness/state/text-to-cad-0.7.0-adoption-2026-09-27.json · compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...da7f7219569541c41a94715bab5e476615ad4177</div>
 <div style="margin-top:12px"><a href="https://github.com/earthtojake/text-to-cad">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">FreeCAD/FreeCAD</div>
-<div style="margin-top:8px"><strong>מצב:</strong> לבדוק לפני החלטה</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 1.1.3 → 1.1.3</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> CAD/3D toolchain upstream</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> release 1.1.3 לא השתנה. שני ה־commits הם תיקון CAM ל־3+2 Axis וקישור ספריות בחלון About; אין אצלנו מסלול 3+2 CAM פעיל או שינוי שנדרש ל־3D-print/CAD routing הנוכחי.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר 1.1.3 · 2 commits: CAM 3+2 transformShape fix + About dialog library links · integration: CAD/3D toolchain upstream · compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...08eb8263a3e6734ca2411f40d6f18a24afdf9044</div>
 <div style="margin-top:12px"><a href="https://github.com/FreeCAD/FreeCAD">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">liustack/modlens</div>
-<div style="margin-top:8px"><strong>מצב:</strong> לבדוק לפני החלטה</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v3.26.5 → v3.26.5</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> ה־release נשאר v3.26.5 וה־commit היחיד מתקן את תהליך הפרסום ל־npm. זהו catalog-source אצלנו, בלי שינוי בתוכן/יכולת שאנחנו מטמיעים.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר v3.26.5 · 1 commit: release workflow pushes main only after npm has the version · integration: packages/vfdsh/catalog.json · compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...f01354e78a70ed18eab721762f18ea44a92d6e9e</div>
 <div style="margin-top:12px"><a href="https://github.com/liustack/modlens">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">nodejs/node</div>
-<div style="margin-top:8px"><strong>מצב:</strong> לבדוק לפני החלטה</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v26.10.0 → v26.10.0</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> v26.10.0 לא השתנתה. שני ה־commits נוגעים לבניית התיעוד בלבד — verbosity ו־doc-kit patch bumps — ולא ל־Node runtime שבו ה־bootstrap שלנו תלוי.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר v26.10.0 · 2 commits: doc build verbosity + doc-kit dependency patch bumps · integrations: Windows edge bootstrap + HyperFrames Mac bootstrap · compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...df775ec2ea6861053995f923fcf7814c06451e72</div>
 <div style="margin-top:12px"><a href="https://github.com/nodejs/node">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">openscad/openscad</div>
-<div style="margin-top:8px"><strong>מצב:</strong> לבדוק לפני החלטה</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> openscad-2021.01 → openscad-2021.01</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> CAD/3D toolchain upstream</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> ה־release נשאר openscad-2021.01 ושני ה־commits הם שינויי GitHub workflow בלבד לעדכון submodule. אין שינוי במנוע OpenSCAD או במסלול CAD שלנו.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר openscad-2021.01 · 2 commits: workflow debug info + fetch --all · integration: CAD/3D toolchain upstream · compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...ac793b2e0cf6ea734b60c3d31601852d0bab2ee4</div>
 <div style="margin-top:12px"><a href="https://github.com/openscad/openscad">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">python/cpython</div>
-<div style="margin-top:8px"><strong>מצב:</strong> לבדוק לפני החלטה</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> baec76438e → a4eb936727</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-manim-host-windows.ps1</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> אלה שני bugfixes ב־main ללא release: אחד ל־ctypes callback על s390x/libclang ואחד לבדיקת שגיאה פנימית ב־intern_static. אין ראיה שהם משפיעים על Windows/Python toolchain שלנו, ולכן אין פעולה על commit לא־משוחרר.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> אין release חדש; changeKinds=head בלבד · ctypes fix מתועד עבור s390x/libclang callbacks · intern_static fix מתקן unreachable fatal-error path · compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...a4eb936727e5f949f5dc8c8a38bf6d325518f29b</div>
 <div style="margin-top:12px"><a href="https://github.com/python/cpython">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">Q00/ouroboros</div>
-<div style="margin-top:8px"><strong>מצב:</strong> לבדוק לפני החלטה</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.54.6 → v0.54.6</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> השינוי החדש — replay מבודד וללא רשת של פקודות שנצפו כדי לאמת claims כמו tests_passed/commands_run — רלוונטי רעיונית ל־evidence discipline שלנו. אבל Ouroboros אצלנו עדיין מסומן `later` והדפוס הקיים הוא spec-first interview, לא runtime מוטמע; לכן שומרים כמועמד להטמעת pattern ממוקדת ולא מתקינים/מעדכנים מוצר.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> 1 commit גדול: verifier command replay + replay policy + shell parsing + tests · replay רץ ב־isolated network-denied workspace copy · current catalog verdict=later; pattern=spec-first interview then execute · compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...a2b329d052c4b1a900810cc505742dff0142ebdb</div>
 <div style="margin-top:12px"><a href="https://github.com/Q00/ouroboros">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">remotion-dev/remotion</div>
-<div style="margin-top:8px"><strong>מצב:</strong> לבדוק לפני החלטה</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v4.0.529 → v4.0.529</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfom/VIDEO-TOOLCHAIN.json</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> v4.0.529 לא השתנתה ושני ה־commits הם תיעוד בלבד: הוספת BrewReel לרשימת resources. אין שינוי renderer/API או ב־Remotion path המוגבל־רישוי אצלנו.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר v4.0.529 · 2 commits, בפועל docs-only resource addition + merge · integration: packages/vfom/VIDEO-TOOLCHAIN.json · compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...6f4e0d57d41a22fa60b1a9aa77e2b7d1d2adc210</div>
 <div style="margin-top:12px"><a href="https://github.com/remotion-dev/remotion">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">stablyai/orca</div>
-<div style="margin-top:8px"><strong>מצב:</strong> לבדוק לפני החלטה</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.4.215 → v1.4.215</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfe2b/catalog.json</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> ה־7 commits משנים runtime/UI של Orca — terminal subscriptions, workspace restore, native chat ו־agent-launch caller selection. אצלנו Orca הוא pattern-only וה־LOCK אוסר התקנת Orca/ADE; דפוס ה־job isolation/handoff/three terminal states שכבר הוטמע אינו דורש שינוי בגלל commits אלה.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר v1.4.215 · 7 commits ב־Orca runtime/renderer; אין release חדש · local contract: Pattern only; do not install Orca or stand up an ADE · compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...bdaf9a3ed3a21ad81c722f1ba732a5018eaffad4</div>
 <div style="margin-top:12px"><a href="https://github.com/stablyai/orca">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
 <div style="font-size:18px;font-weight:700">topoteretes/cognee</div>
-<div style="margin-top:8px"><strong>מצב:</strong> להמתין</div>
+<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
 <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.6.1 → v1.6.1</div>
 <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
 <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfmem/cognee.json · %USERPROFILE%/.velvetos/cognee-venv</div>
-<div style="margin-top:8px"><strong>למה:</strong> ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.</div>
+<div style="margin-top:8px"><strong>למה:</strong> v1.6.1 כבר אומצה ונבדקה. שני ה־commits החדשים משנים README בלבד ומיישרים את התיעוד למה שכבר קיים ב־1.6.1; ה־commit האחרון מצהיר במפורש שאין שינוי behavior.</div>
+<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> adoptedRelease=v1.6.1; latestRelease נשאר v1.6.1 · 2 README-only commits; no behaviour change · adoption evidence: packages/vfharness/state/cognee-1.6.1-adoption-2026-09-27.json · compare: https://github.com/topoteretes/cognee/compare/eb90d03740755f5252b8b12cce91fd09970f2d81...c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b</div>
 <div style="margin-top:12px"><a href="https://github.com/topoteretes/cognee">פתיחת ה־upstream ב־GitHub</a></div>
 </section>
 <div style="margin-top:20px;padding:14px;border-radius:12px;background:#efefec;font-size:13px;line-height:1.55">ה־ack מתבצע רק אחרי אימוץ שנבדק. עצם קבלת המייל אינה משנה שום גרסה.</div>
