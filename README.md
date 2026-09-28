@@ -32,7 +32,7 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 </tr>
 <tr>
 <td align="center"><strong>23</strong><br><sub><span dir="ltr">Living Studio Skills</span><br><span dir="rtl">יכולות</span></sub></td>
-<td align="center"><strong>112</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
+<td align="center"><strong>113</strong><br><sub><span dir="ltr">Sensors</span><br><span dir="rtl">חיישנים</span></sub></td>
 <td align="center"><strong>11</strong><br><sub><span dir="ltr">Workflows</span><br><span dir="rtl">אוטומציות</span></sub></td>
 <td align="center"><strong>31</strong><br><sub><span dir="ltr">Packs</span><br><span dir="rtl">חבילות</span></sub></td>
 </tr>
@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-28 — **Reel gate reads the real media catalog (`candidates_ready`):** new `scripts/vf_reel_candidates.py` picks 2–3 unpublished source videos from `packages/vfmedia/catalog.json` (videos only, `status=s…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-28 — **Reel gate reads the real media catalog (`candidates_ready`):** new `scripts/vf_reel_candidates.py` picks 2–3 unpublished source videos from `packages/vfmedia/catalog.json` (videos only, `status=s…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-28 — **Rich editorial visual language for stills and video (owner decision):** `OWNER-APPROVED-GRID-STANDARD-2026-09-14.md` gains a dated owner amendment (headline 2–4 lines / 3–7 words + accent rule, o…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-28 — **Rich editorial visual language for stills and video (owner decision):** `OWNER-APPROVED-GRID-STANDARD-2026-09-14.md` gains a dated owner amendment (headline 2–4 lines / 3–7 words + accent rule, o…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
