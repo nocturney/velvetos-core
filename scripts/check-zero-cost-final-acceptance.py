@@ -91,7 +91,7 @@ def main() -> None:
         env=doctor_env,
     )
     grok_output = grok.stdout + "\n" + grok.stderr
-    assert grok.returncode == 0
+    assert grok.returncode == 0, grok_output.strip()
     assert "GROK PROVIDER READBACK PASS" in grok_output
 
     doctor = subprocess.run(
@@ -102,12 +102,19 @@ def main() -> None:
         env=doctor_env,
     )
     doctor_output = doctor.stdout + "\n" + doctor.stderr
-    assert doctor.returncode == 0
+    assert doctor.returncode == 0, doctor_output.strip()
     assert "FAIL grok-production-scheduler" not in doctor_output
     assert "fallback healthy via sderot-windows" in doctor_output
     assert "FAIL github" not in doctor_output
     assert "FAIL google-drive" not in doctor_output
     assert "edge-execution: no healthy member" not in doctor_output
+    # Age-only receipt expiry is a WARN on pull_request CI/local runs and a FAIL on
+    # push/schedule/workflow_dispatch (scripts/vf_runtime_receipt_policy.py); surface it.
+    receipt_warnings = sorted({
+        line.strip()
+        for line in (grok_output + "\n" + doctor_output).splitlines()
+        if line.startswith("WARN runtime receipts expired")
+    })
 
     guards = receipt.get("costAndAuthority") or {}
     assert guards.get("incrementalRecurringCostIls") == 0
@@ -148,7 +155,10 @@ def main() -> None:
     merge_commit = acceptance.get("mergeCommitSha")
     assert isinstance(merge_commit, str) and len(merge_commit) == 40
     assert git("merge-base", "--is-ancestor", merge_commit, "HEAD").returncode == 0
-    print(f"OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors={live_sensor_count} push=YES pr=MERGED merge=YES")
+    for line in receipt_warnings:
+        print(line)
+    receipts_state = "EXPIRED_WARN" if receipt_warnings else "FRESH"
+    print(f"OK zero-cost final acceptance targeted-batches committed-scope=PASS check-all=PASS sensors={live_sensor_count} push=YES pr=MERGED merge=YES runtime_receipts={receipts_state}")
 
 
 if __name__ == "__main__":
