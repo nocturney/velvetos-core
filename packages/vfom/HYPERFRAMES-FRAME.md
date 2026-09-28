@@ -24,7 +24,7 @@ Printer, workbench and process footage stay allowed as **beats inside a Reel** (
 2. **Chips** — up to 3 outline-icon chips animate in, one at a time, each stating a verified fact about this product.
 3. **Detail inset** — a literal crop of the source frame (`SAME_FRAME_CROP`) or another real frame (`ALTERNATE_VERIFIED_SOURCE`), shown as an inset card or magnifier; never a synthesized detail.
 4. **Real footage beats** — printer, process, handling or use footage from verified sources; these beats may be clean (`NO_TEXT`).
-5. **End card** — the CTA `לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם` and the exact owner-supplied logo. While the logo file is `missing: owner to supply` in `brand-tokens.json`, the end card omits the logo rather than drawing one.
+5. **End card** — the CTA `לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם` and the exact owner-supplied logo. The logo comes from the committed files in `packages/vfbrand/assets/logo/` (see `brand-tokens.json`). Until a transparent version exists, use a raster only where its own background fits, for example the gold-on-navy velvet lockup as the full end-card plate; never cut it out, recolour it or redraw it.
 
 Text is never baked into generated footage; every text layer is a deterministic overlay. Text, chips and insets never cover the product.
 

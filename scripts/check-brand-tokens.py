@@ -4,8 +4,9 @@
 Checks (read-only):
 1. packages/vfbrand/brand-tokens.json exists and has the required keys.
 2. Accent samples are labelled as approximate samples from published posts.
-3. fonts/logo are either real committed files or explicitly 'missing: owner to supply'
-   with null values; a font family or logo path is never guessed.
+3. fonts/logo are either real committed (git-tracked) files or explicitly 'missing: owner to supply'
+   with null values; a font family or logo path is never guessed. Logo may also be
+   'supplied_raster_non_transparent' (committed rasters + a note that transparent PNG/SVG is wanted).
 4. The layout limits match VISUAL-DNA.json typography (single source of numbers).
 5. The grid standard carries the 2026-09-28 amendment, marks the old minimal-typography
    rule and the text-heavy hard reject as SUPERSEDED (history kept), and still keeps the
@@ -15,6 +16,7 @@ Checks (read-only):
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import subprocess
@@ -29,6 +31,8 @@ STD = ROOT / "packages" / "vfom" / "OWNER-APPROVED-GRID-STANDARD-2026-09-14.md"
 BRAND = ROOT / "packages" / "vfbrand" / "BRAND-SOURCE-OF-TRUTH.md"
 FRAME = ROOT / "packages" / "vfom" / "HYPERFRAMES-FRAME.md"
 MISSING = "missing: owner to supply"
+# Supplied states: files must be real, git-tracked repo files.
+SUPPLIED_STATUSES = {"fonts": ("committed",), "logo": ("committed", "supplied_raster_non_transparent")}
 PROVENANCE = "sampled from published posts 2026-09-28, approximate"
 CTA = "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם"
 HEX = re.compile(r"^#[0-9a-f]{6}$")
@@ -84,14 +88,26 @@ def check_asset_block(name: str, block: object, value_keys: tuple[str, ...]) -> 
         require(not files, f"{name} is '{MISSING}' but lists files")
         for key in value_keys:
             require(block.get(key) is None, f"{name}.{key} must be null while {name} is missing (never guess)")
-    elif status == "committed":
-        require(bool(files), f"{name} status committed but no files listed")
+    elif status in SUPPLIED_STATUSES.get(name, ("committed",)):
+        require(bool(files), f"{name} status {status} but no files listed")
         for rel in files:
             require(committed_file(rel), f"{name} file is not a committed repo file: {rel}")
         for key in value_keys:
             require(block.get(key) is not None, f"{name}.{key} must be set once {name} is committed")
+        if status == "supplied_raster_non_transparent":
+            require(bool(str(block.get("stillWanted", "")).strip()), f"{name}: non-transparent rasters need a stillWanted note (transparent PNG/SVG)")
+        variants = block.get("variants")
+        if variants is not None:
+            require(isinstance(variants, list), f"{name}.variants must be a list")
+            vpaths = [v.get("path") for v in variants if isinstance(v, dict)] if isinstance(variants, list) else []
+            require(sorted(vpaths) == sorted(files), f"{name}.variants paths must match {name}.files")
+            for v in variants if isinstance(variants, list) else []:
+                if isinstance(v, dict) and committed_file(v.get("path")) and v.get("sha256"):
+                    digest = hashlib.sha256((ROOT / v["path"]).read_bytes()).hexdigest()
+                    require(digest == v["sha256"], f"{name} variant sha256 mismatch: {v['path']}")
     else:
-        problems.append(f"{name}.status must be '{MISSING}' or 'committed', got {status!r}")
+        allowed = (MISSING,) + SUPPLIED_STATUSES.get(name, ("committed",))
+        problems.append(f"{name}.status must be one of {allowed}, got {status!r}")
 
 
 def check_tokens(tokens: dict, dna: dict) -> None:
@@ -137,8 +153,14 @@ def check_tokens(tokens: dict, dna: dict) -> None:
     check_asset_block("fonts", tokens.get("fonts"), ("headline", "body"))
     check_asset_block("logo", tokens.get("logo"), ())
     mark = tokens.get("brandMark") or {}
-    if mark.get("hex") is None:
-        require(str(mark.get("hexStatus", "")).startswith(MISSING), "brandMark.hex null requires hexStatus 'missing: owner to supply …'")
+    gold = mark.get("gold") or {}
+    require(isinstance(gold.get("hex"), str) and bool(HEX.match(gold.get("hex", ""))), "brandMark.gold.hex malformed")
+    require("approximate" in str(gold.get("provenance", "")) and gold.get("status") == "sampled_approximate", "brandMark.gold must be labelled as an approximate sample")
+    logo_files = (tokens.get("logo") or {}).get("files") or []
+    require(any(f in str(gold.get("provenance", "")) for f in logo_files) or (tokens.get("logo") or {}).get("status") == MISSING,
+            "brandMark.gold provenance must name the committed logo file it was sampled from")
+    if mark.get("navyHex") is None:
+        require(str(mark.get("navyHexStatus", "")).startswith(MISSING), "brandMark.navyHex null requires navyHexStatus 'missing: owner to supply …'")
     require(TOKENS_README.is_file(), "packages/vfbrand/README.md missing")
 
 

@@ -52,10 +52,17 @@
     ]
   },
   "brandMark": {
-    "identity": "navy field with warm gold / ivory logo",
+    "identity": "navy velvet field with warm gold / ivory logo",
     "scope": "logo and brand mark only; not the default feed background",
-    "hex": null,
-    "hexStatus": "missing: owner to supply (sample from the master logo asset once committed; do not sample from screenshots)"
+    "field": "navy velvet backdrop, as in packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-navy-velvet-full-lockup.jpg",
+    "gold": {
+      "hex": "#b59761",
+      "provenance": "sampled from owner-supplied logo packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-white-full-lockup.jpg on 2026-09-28, approximate",
+      "method": "median of solid wordmark pixels in the gold-on-white JPG; JPG compression and anti-aliasing make this approximate",
+      "status": "sampled_approximate"
+    },
+    "navyHex": null,
+    "navyHexStatus": "missing: owner to supply (not sampled; the velvet backdrop is textured, so a single hex would be a guess)"
   },
   "scene": {
     "default": "warm real-feeling interior",
@@ -120,7 +127,7 @@
       "end_card"
     ],
     "endCardCta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
-    "endCardLogo": "brand logo from logo.files; omitted while logo status is missing"
+    "endCardLogo": "exact committed logo file from logo.files; while only non-transparent rasters exist, use a raster only where its own background fits (e.g. the gold-on-navy lockup as a full end-card plate); never cut out, recolour or redraw"
   },
   "fonts": {
     "status": "missing: owner to supply",
@@ -129,8 +136,45 @@
     "files": []
   },
   "logo": {
-    "status": "missing: owner to supply",
-    "files": [],
+    "status": "supplied_raster_non_transparent",
+    "suppliedBy": "owner",
+    "suppliedAt": "2026-09-28",
+    "files": [
+      "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-white-full-lockup.jpg",
+      "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-navy-velvet-full-lockup.jpg",
+      "packages/vfbrand/assets/logo/velvet-factory-logo-black-mono-velvets-cloud-small.png"
+    ],
+    "variants": [
+      {
+        "path": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-white-full-lockup.jpg",
+        "colour": "gold on white",
+        "lockup": "full (emblem + VELVET FACTORY + 3D PRINTING STUDIO)",
+        "format": "jpg",
+        "size": "1456x1600",
+        "transparent": false,
+        "sha256": "b7bad605e976ad8ad3cd94dce7e32e0831677ae85939d9e6f45f5de41dfeed0c"
+      },
+      {
+        "path": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-navy-velvet-full-lockup.jpg",
+        "colour": "gold on navy velvet",
+        "lockup": "full (emblem + VELVET FACTORY + 3D PRINTING STUDIO)",
+        "format": "jpg",
+        "size": "1280x698",
+        "transparent": false,
+        "sha256": "2a0c7f720341335e9727ec11f32161f5c9b7af9f30b20dcec2d207e0c0601b87"
+      },
+      {
+        "path": "packages/vfbrand/assets/logo/velvet-factory-logo-black-mono-velvets-cloud-small.png",
+        "colour": "black mono",
+        "lockup": "emblem + VELVET FACTORY + @velvets_cloud handle",
+        "format": "png",
+        "size": "180x200",
+        "transparent": true,
+        "note": "alpha background, but small and carries the @velvets_cloud handle; not a substitute for a transparent gold master",
+        "sha256": "fc85d6313e18fee16cd79cfa0fa79f02281ebd8072edf5aedacbe05060548ea5"
+      }
+    ],
+    "stillWanted": "transparent PNG and SVG versions of the gold full lockup (and emblem-only if available)",
     "knownOffRepoAssets": [
       "Velvet-Factory-APPROVED-LOGO-GOLD-LIGHT-v1.jpg",
       "Velvet-Factory-APPROVED-LOGO-GOLD-DARK-v1.jpg"
