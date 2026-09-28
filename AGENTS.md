@@ -59,6 +59,7 @@ Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constit
 - **Control API (projection gateway):** `packages/velvetos_control_api` exposes a typed HTTP read-first projection (`velvetos.control.v1`) for the Control Center UI. CLI `scripts/vf_control_api.py`. Sensor `scripts/check-control-api.py`. Not a new SoT/runtime/queue — reuses jobs adapter + capability registries. Actions fail-closed unless a safe canonical route exists. Auth: server-to-server token / Cloud Run IAM. Docs: `packages/velvetos_control_api/README.md` + `DEPLOY.md`.
 - **Living Studio:** connective tissue over Control Plane — `packages/velvetos/living-studio/` · CLI `scripts/vf_living_studio.py` · sensor `scripts/check-living-studio.py`. World Model / Studio Pulse / Universal Intake / Skills registry are projections/routers — never a competing SoT or second catalog.
 - **Shared media vault:** `docs/MEDIA-VAULT.md` · one catalog `packages/vfmedia/catalog.json` · תפעול owns intake (`vfmedia.py intake`). Historical Drive capability evidence is in the same procedure; verify access per tool/session. Upload and folder placement never replace version approval. Sensor: `scripts/check-vfmedia.py`.
+- **Windows host default working path is `D:\Velvet` (`VELVET_ROOT`)** per `packages/velvetos/WINDOWS-PATH-CONTRACT.md`; never use the Desktop folder (`%USERPROFILE%\Desktop`, incl. OneDrive Desktop) for any VelvetOS clone, scratch or output. If D: is unavailable, stop and report.
 - No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
 - Warehouse specialists stay off the desk unless the user asks for that `@slug`.
 
@@ -145,7 +146,7 @@ ASK before: `git push`; Calendar create **מחוץ** לרשת IG הקבועה
 ALLOW calendar: `create_event` לכל פוסט מתוכנן על `vfgrowth/CALENDAR.md` (`CALENDAR-OPS.md`) — לא שואלים משבצת
 ALLOW send: Gmail via connected Gmail tools; Instagram via `packages/vfigos/SEND.md` only.
 ALLOW write: Drive `create_file` for office docs (no personal/medical/legal folders)
-DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights / Origin slugs, claiming IG posted without a publish tool, Cloud/Grok login to `gemini.google.com` / `chatgpt.com`, persisting browser cookies, installing aliargun or RLabs gemini-mcp
+DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights / Origin slugs, claiming IG posted without a publish tool, Cloud/Grok login to `gemini.google.com` / `chatgpt.com`, persisting browser cookies, installing aliargun or RLabs gemini-mcp, writing VelvetOS files to the Windows Desktop
 
 ## MEMORY
 
