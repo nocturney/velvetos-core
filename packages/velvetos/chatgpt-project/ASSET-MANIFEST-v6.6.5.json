@@ -1,0 +1,347 @@
+{
+  "contract_version": 6,
+  "revision": "6.6.5",
+  "bundle_id": "VF-PROJECT-6.6.5-REEL-ROUTE",
+  "created_for": "owner-requested end-to-end Reel/video production route, including real-motion and real-print-file turntable routing",
+  "instructions": {
+    "filename": "Velvet-Factory-Project-Instructions-v6.6.5.txt",
+    "sha256": "5b6562431fcd1a55b2d1f772cd44b87dbea7bfc7c98fc08352734598ff3c1b91",
+    "characters": 7357,
+    "limit_supplied_by_owner": 8000
+  },
+  "assets": [
+    {
+      "filename": "Velvet-Factory-Project-Authority-v6.txt",
+      "role": "authority",
+      "required_for": "all_requests",
+      "sha256": "2e68ebbbd201e6fb03f1dcb98c55d0d00798d03f2f2643f823bf30f6c1614954",
+      "bytes": 31981
+    },
+    {
+      "filename": "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
+      "role": "broad_style_only",
+      "required_for": "visual_work",
+      "sha256": "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897",
+      "bytes": 862200,
+      "dimensions": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-EDITORIAL-STYLE-REFERENCE-v2.png",
+      "role": "editorial_layout_and_annotation_style_only",
+      "required_for": "visual_work",
+      "sha256": "f7f1d04dd1fd08e70da03627d9042a1b716a3793768c0db8408304413219c2ae",
+      "bytes": 1971573,
+      "dimensions": [
+        2048,
+        2110
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-CURRENT-CREATIVE-REFERENCE-v1.png",
+      "role": "current_owner_approved_direction_style_only_not_product_source",
+      "required_for": "visual_work",
+      "sha256": "e9e190019782b215b1a9c5eafcdb7e5bda3c14698f87b191c62bf3f8fa68f9c2",
+      "bytes": 2215826,
+      "dimensions": [
+        1122,
+        1402
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-MULTI-SOURCE-COMPOSITION-REFERENCE-v1.jpg",
+      "role": "multi_source_composition_and_layout_vocabulary_style_only",
+      "required_for": "visual_work",
+      "sha256": "78fc8b13593d8bb5806d29e41ea9785625392e00f85e391d864eabc503f14793",
+      "bytes": 1289205,
+      "dimensions": [
+        1572,
+        3912
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-PRODUCT-TRUTH-GUIDE-v1.txt",
+      "role": "text_only_product_truth_fidelity_qa_not_style",
+      "required_for": "visual_work",
+      "sha256": "2f306f9932c24939a368429e4720327b527360eb2a6369ef647893e9ff41ddb3",
+      "bytes": 2442
+    },
+    {
+      "filename": "Velvet-Factory-APPROVED-LOGO-GOLD-LIGHT-v1.jpg",
+      "role": "exact_owner_logo_light_background",
+      "required_for": "only_when_this_logo_is_used",
+      "sha256": "b7bad605e976ad8ad3cd94dce7e32e0831677ae85939d9e6f45f5de41dfeed0c",
+      "bytes": 114289,
+      "dimensions": [
+        1456,
+        1600
+      ]
+    },
+    {
+      "filename": "Velvet-Factory-APPROVED-LOGO-GOLD-DARK-v1.jpg",
+      "role": "exact_owner_logo_dark_background",
+      "required_for": "only_when_this_logo_is_used",
+      "sha256": "2a0c7f720341335e9727ec11f32161f5c9b7af9f30b20dcec2d207e0c0601b87",
+      "bytes": 83112,
+      "dimensions": [
+        1280,
+        698
+      ]
+    },
+    {
+      "filename": "REEL-ROUTE.md",
+      "role": "reel_video_execution_route",
+      "required_for": "reel_video_work",
+      "sha256": "04ce1bdb39e7e22461fae17bb6eb54103ae47cd7373bcee3d8ab60c44b79e422",
+      "bytes": 10055
+    }
+  ],
+  "current_references": {
+    "broad_visual": "Velvet-Factory-APPROVED-Visual-Reference-v2.jpg",
+    "editorial_layout": "Velvet-Factory-EDITORIAL-STYLE-REFERENCE-v2.png",
+    "current_direction": "Velvet-Factory-CURRENT-CREATIVE-REFERENCE-v1.png",
+    "multi_source_composition": "Velvet-Factory-MULTI-SOURCE-COMPOSITION-REFERENCE-v1.jpg"
+  },
+  "product_truth": {
+    "guide": "Velvet-Factory-PRODUCT-TRUTH-GUIDE-v1.txt",
+    "truth_source": "actual verified product source photographs supplied for the current task",
+    "visual_conditioning": "FORBIDDEN",
+    "qa_only_visual_teaching_assets": "DO_NOT_LOAD_AS_STYLE_OR_GENERATION_REFERENCES"
+  },
+  "reference_rules": {
+    "aesthetic_references_only_drive_style": true,
+    "product_truth_is_source_pixels_plus_text_guide": true,
+    "product_truth_qa_images_forbidden_from_generation_conditioning": true,
+    "style_boards_are_not_product_sources": true,
+    "current_creative_reference_is_style_only": true,
+    "multi_source_composition_reference_is_style_only": true,
+    "detail_cards_presented_as_magnifications_must_be_literal_same_frame_crops": true,
+    "alternate_verified_source_insets_must_not_masquerade_as_same_frame_zooms": true,
+    "same_physical_product_source_set_allowed": true,
+    "inset_provenance_required": true,
+    "inset_provenance_values": [
+      "SAME_FRAME_CROP",
+      "ALTERNATE_VERIFIED_SOURCE"
+    ],
+    "synthetic_missing_angle_or_detail_forbidden": true,
+    "layout_family_repetition_is_repair_target_when_template_like": true,
+    "ordinary_photo_retouch_is_product_truth_safe_when_product_materially_unchanged": true,
+    "background_context_should_not_be_destroyed_by_excessive_blur": true,
+    "generic_camera_angle_labels_avoided_by_default": true,
+    "orientation_labels_allowed_when_orientation_adds_useful_information": true,
+    "feature_first_copy_preferred_when_orientation_not_informative": true,
+    "publication_prep_intermediate_visual_is_not_completion": true,
+    "first_response_completion_required_when_tools_and_sources_permit": true,
+    "deliberate_no_text_final_is_allowed_after_exact_final_qa": true,
+    "creative_master_freeze_after_product_truth_and_reference_match": true,
+    "finalization_must_preserve_or_improve_creative_master": true,
+    "silent_raw_source_restart_after_successful_master_forbidden": true,
+    "creative_master_replacement_requires_recorded_cause": true,
+    "creative_master_replacement_allowed_causes": [
+      "product_truth_failure",
+      "blocking_artifact_or_readability_issue",
+      "unsupported_asset_or_claim",
+      "explicit_owner_change"
+    ],
+    "creative_master_materialization_required_before_deterministic_overlay": true,
+    "creative_master_must_be_local_path_plus_sha256": true,
+    "creative_master_materialization_receipt_required": true,
+    "creative_tool_materialization_capability_planned_before_generation_when_overlay_expected": true,
+    "conversation_or_ui_only_image_is_not_file_backed_master": true,
+    "provider_task_or_remote_url_is_not_file_backed_master_until_exact_bytes_are_materialized": true,
+    "raw_source_recreation_is_not_creative_master_materialization": true,
+    "unmaterializable_master_must_not_fall_back_silently_to_raw_source": true,
+    "allowed_unmaterializable_master_outcomes": [
+      "preserve_direction_via_file_backed_route",
+      "deliberate_same_provider_no_text_final",
+      "block_deterministic_overlay_branch"
+    ],
+    "current_chat_attachment_local_ingest_required_before_creative_preflight": true,
+    "source_ingest_exact_bytes_and_sha256_required": true,
+    "source_ingest_receipt_required": true,
+    "source_ingest_bridge": "scripts/vf_source_ingest.py",
+    "current_request_intake_root_must_be_explicit": true,
+    "arbitrary_user_folder_scan_for_sources_forbidden": true,
+    "visible_attachment_must_not_be_declared_unusable_before_platform_local_ingest_attempt": true,
+    "attachment_bytes_unavailable_is_bounded_blocker": true,
+    "unhashed_attachment_source_fallback_forbidden": true,
+    "chat_local_preflight": "scripts/vf_chat_cold_start_preflight.py",
+    "chat_local_preflight_required_when_repo_and_attachment_filesystems_differ": true,
+    "remote_repo_preflight_must_not_receive_chat_local_paths": true,
+    "chat_local_preflight_creative_only_never_publication": true,
+    "chat_runtime_files_hash_bound_in_manifest": true,
+    "chat_runtime_dependency_closed": true,
+    "chat_runtime_required_files": [
+      "scripts/vf_source_ingest.py",
+      "scripts/vf_chat_cold_start_preflight.py",
+      "scripts/vf_media_integrity.py",
+      "scripts/vf_media_limits.py",
+      "scripts/vf_creative_master_bridge.py"
+    ]
+  },
+  "optional_originals": [
+    {
+      "path": "VF-R004-source-photo-as-supplied.jpg",
+      "sha256": "312a41a45723ccefd3ddcb93af9d866f6153ad21edf0082559911e176efd77dc",
+      "bytes": 460070
+    }
+  ],
+  "rejected_or_superseded": [
+    {
+      "filename": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png",
+      "status": "REJECTED_FOR_CREATIVE_CONDITIONING",
+      "reason": "Owner reported that this technical QA-board visual biases generation toward unaesthetic results. Do not include it in Project visual references or media-tool reference inputs."
+    },
+    {
+      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.3.json",
+      "reason": "historical only; current asset manifest is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v1.png",
+      "reason": "historical only; visual Product Truth teaching sheets are no longer part of the aesthetic reference stack"
+    },
+    {
+      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.4.json",
+      "reason": "historical only; current asset manifest is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-Project-Instructions-v6.4.txt",
+      "reason": "historical only; current Project Instructions are Revision 6.6.4"
+    },
+    {
+      "filename": "PROJECT-AUTHORITY-v6.4.txt",
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.5.json",
+      "reason": "historical only; current asset manifest is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-Project-Instructions-v6.5.txt",
+      "reason": "historical only; current Project Instructions are Revision 6.6.4"
+    },
+    {
+      "filename": "PROJECT-AUTHORITY-v6.5.txt",
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.json",
+      "reason": "historical only; current asset manifest is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-Project-Instructions-v6.6.txt",
+      "reason": "historical only; current Project Instructions are Revision 6.6.4"
+    },
+    {
+      "filename": "PROJECT-AUTHORITY-v6.6.txt",
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.1.json",
+      "reason": "historical only; current asset manifest is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-Project-Instructions-v6.6.1.txt",
+      "reason": "historical only; current Project Instructions are Revision 6.6.4"
+    },
+    {
+      "filename": "PROJECT-AUTHORITY-v6.6.1.txt",
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.2.json",
+      "reason": "superseded by Revision 6.6.4 bundle"
+    },
+    {
+      "filename": "Velvet-Factory-Project-Instructions-v6.6.2.txt",
+      "reason": "superseded by Revision 6.6.4 bundle"
+    },
+    {
+      "filename": "PROJECT-AUTHORITY-v6.6.2.txt",
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.3.json",
+      "reason": "superseded by Revision 6.6.4 bundle"
+    },
+    {
+      "filename": "Velvet-Factory-Project-Instructions-v6.6.3.txt",
+      "reason": "superseded by Revision 6.6.4 bundle"
+    },
+    {
+      "filename": "PROJECT-AUTHORITY-v6.6.3.txt",
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.4"
+    },
+    {
+      "filename": "Velvet-Factory-ASSET-MANIFEST-v6.6.4.json",
+      "reason": "superseded by Revision 6.6.5 bundle"
+    },
+    {
+      "filename": "Velvet-Factory-Project-Instructions-v6.6.4.txt",
+      "reason": "superseded by Revision 6.6.5 bundle"
+    },
+    {
+      "filename": "PROJECT-AUTHORITY-v6.6.4.txt",
+      "reason": "repository historical snapshot; active Project Authority is Revision 6.6.5"
+    }
+  ],
+  "asset_resolution": "Match exact filename and hash. A filename alias may be accepted only after hash match; duplicate conflicting revisions are needs_sync.",
+  "offline_mode": {
+    "creative_publication_bundle_fallback": true,
+    "public_copy_bundle_fallback": true,
+    "minimum_revision": "6.6.5",
+    "repo_state_label": "UNAVAILABLE_PROJECT_BUNDLE_FALLBACK",
+    "live_truth_domains_still_require_live_sources": [
+      "operations",
+      "finance",
+      "production_status",
+      "catalog_status",
+      "instagram_action"
+    ]
+  },
+  "scope_status": {
+    "configuration_files": "LOCAL_VERIFIED",
+    "project_installation": "NOT_VERIFIED",
+    "repository_write": "VERIFIED_AFTER_REPO_COMMIT",
+    "cold_start_behavioral_test": "NOT_RUN_AFTER_PATCH",
+    "publication": "NOT_REQUESTED"
+  },
+  "chat_runtime": [
+    {
+      "filename": "vf_source_ingest.py",
+      "repo_path": "scripts/vf_source_ingest.py",
+      "role": "exact_byte_current_chat_source_ingest",
+      "sha256": "852926d2e44556229a6912a34a773c83b7ca9d4587bd78852e068e92d7f53ad5"
+    },
+    {
+      "filename": "vf_chat_cold_start_preflight.py",
+      "repo_path": "scripts/vf_chat_cold_start_preflight.py",
+      "role": "chat_local_creative_preflight_never_publication",
+      "sha256": "0cbd5a1ae184eae482f2af6e6f7560fd72715b16bc7a5b6b6d17c25304bac8ba"
+    },
+    {
+      "filename": "vf_media_integrity.py",
+      "repo_path": "scripts/vf_media_integrity.py",
+      "role": "media_decode_integrity_dependency",
+      "sha256": "533cb25510c6feecddcd55f9cd343da22f6bd9cae953fee3fa6d63384650f78c"
+    },
+    {
+      "filename": "vf_media_limits.py",
+      "repo_path": "scripts/vf_media_limits.py",
+      "role": "bounded_media_subprocess_dependency",
+      "sha256": "b6ec2fd93353aa4e6a28e2e12cb2f7deb24ea98cc74a17cea00a8f6d290653e9"
+    },
+    {
+      "filename": "vf_creative_master_bridge.py",
+      "repo_path": "scripts/vf_creative_master_bridge.py",
+      "role": "exact_byte_creative_master_materialization",
+      "sha256": "9299de229beb8a7a53b4a4f604960de3ccf2bf113ea0f8bea7459292c88cae95"
+    }
+  ],
+  "reel_route": {
+    "filename": "REEL-ROUTE.md",
+    "sha256": "04ce1bdb39e7e22461fae17bb6eb54103ae47cd7373bcee3d8ab60c44b79e422"
+  }
+}

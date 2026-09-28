@@ -81,16 +81,23 @@ if instructions_row.get("sha256") not in {instructions_sha, instructions_lf_sha}
     fail(f"Project Instructions bytes are not bound to the current asset manifest ({bundle['revision']})")
 for needle in (f"Revision: {bundle['revision']}", bundle["bundleId"],
                f"Velvet-Factory-ASSET-MANIFEST-v{bundle['revision']}.json",
-               "orientation itself adds useful information", "creative_master", "materialized to local path + SHA-256", "current-chat attachment ingest"):
+               "orientation itself adds useful information", "creative_master", "materialized to local path + SHA-256", "current-chat attachment ingest", "REEL-ROUTE.md"):
     if needle not in instructions_text:
         fail(f"Project Instructions missing current binding/rule: {needle}")
+reel_rel = bundle.get("reelRoute")
+reel_meta = asset_data.get("reel_route") or {}
+if reel_rel != "packages/velvetos/chatgpt-project/REEL-ROUTE.md" or reel_meta.get("filename") != "REEL-ROUTE.md":
+    fail("Reel route binding missing from Project bundle")
+reel_path = ROOT / reel_rel
+if not reel_path.is_file() or hashlib.sha256(reel_path.read_bytes().replace(b"\r\n", b"\n")).hexdigest() != reel_meta.get("sha256"):
+    fail("Reel route bytes are not bound to the current asset manifest")
 route_doc = json.loads(visual_enforcement.read_text(encoding="utf-8"))
 route = route_doc.get("publicationRoute", {})
 
 current_refs = asset_data.get("current_references")
 if not isinstance(current_refs, dict) or set(current_refs) != {
         "broad_visual", "editorial_layout", "current_direction", "multi_source_composition"}:
-    fail("Revision 6.6.4 must bind exactly four current aesthetic references")
+    fail("Revision 6.6.5 must bind exactly four current aesthetic references")
 policy_refs = (route_doc.get("referenceRoleSeparationPolicy") or {}).get("aestheticReferences")
 if not isinstance(policy_refs, list) or set(policy_refs) != set(current_refs.values()):
     fail("visual enforcement aesthetic references do not match Project asset manifest")

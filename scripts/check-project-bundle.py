@@ -72,10 +72,11 @@ cases = {
     "missing file": lambda m: m["chatgptProjectBundle"].__setitem__("instructions", "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v" + m["chatgptProjectBundle"]["revision"] + ".missing.txt"),
     "absolute path": lambda m: m["chatgptProjectBundle"].__setitem__("productTruthGuide", "/etc/passwd"),
     "missing hash field": lambda m: m["chatgptProjectBundle"].pop("authoritySha256"),
+    "missing reel route": lambda m: m["chatgptProjectBundle"].__setitem__("reelRoute", "packages/velvetos/chatgpt-project/REEL-ROUTE.missing.md"),
 }
 with tempfile.TemporaryDirectory() as tmp:
     t = Path(tmp)
-    for rel in (b.authority, b.asset_manifest, b.instructions, b.product_truth_guide):
+    for rel in (b.authority, b.asset_manifest, b.instructions, b.product_truth_guide, b.reel_route):
         (t / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / rel, t / rel)
     (t / vpb.MANIFEST_REL).parent.mkdir(parents=True, exist_ok=True)

@@ -39,6 +39,7 @@ class ProjectBundle:
     asset_manifest: str
     instructions: str
     product_truth_guide: str
+    reel_route: str
     authority_sha256: str
     asset_manifest_sha256: str
 
@@ -68,7 +69,7 @@ def resolve(root: Path = ROOT, manifest_rel: Path = MANIFEST_REL) -> ProjectBund
     bundle_id = field("bundleId")
     if f"-{revision}-" not in bundle_id:
         raise ProjectBundleError(f"bundleId {bundle_id!r} does not carry revision {revision}")
-    paths = {name: field(name) for name in ("authority", "assetManifest", "instructions", "productTruthGuide")}
+    paths = {name: field(name) for name in ("authority", "assetManifest", "instructions", "productTruthGuide", "reelRoute")}
     for name in ("authority", "assetManifest", "instructions"):
         if f"-v{revision}." not in Path(paths[name]).name:
             raise ProjectBundleError(f"chatgptProjectBundle.{name} {paths[name]!r} is not the v{revision} file")
@@ -89,6 +90,7 @@ def resolve(root: Path = ROOT, manifest_rel: Path = MANIFEST_REL) -> ProjectBund
         asset_manifest=paths["assetManifest"],
         instructions=paths["instructions"],
         product_truth_guide=paths["productTruthGuide"],
+        reel_route=paths["reelRoute"],
         authority_sha256=hashes["authoritySha256"],
         asset_manifest_sha256=hashes["assetManifestSha256"],
     )

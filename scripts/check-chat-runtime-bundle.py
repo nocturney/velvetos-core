@@ -5,7 +5,7 @@ import hashlib, json, shutil, subprocess, sys, tempfile
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
-MANIFEST=ROOT/"packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json"
+MANIFEST=ROOT/"packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.5.json"
 
 def fail(msg:str)->None:
     print("FAIL chat-runtime-bundle: "+msg,file=sys.stderr)

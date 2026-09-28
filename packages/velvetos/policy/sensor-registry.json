@@ -158,10 +158,10 @@
       "id": "check-chat-runtime-bundle",
       "path": "scripts/check-chat-runtime-bundle.py",
       "owns": [
-        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json"
+        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.5.json"
       ],
       "triggered_by": [
-        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json",
+        "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.5.json",
         "scripts/check-chat-runtime-bundle.py"
       ],
       "depends_on": [],
@@ -1537,6 +1537,34 @@
       "depends_on": [],
       "enforces": [],
       "risk": "medium",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-reel-route-sync",
+      "path": "scripts/check-reel-route-sync.py",
+      "owns": [
+        "packages/velvetos/chatgpt-project/REEL-ROUTE.md",
+        "packages/vfom/REEL-ROUTE-CONTRACT.json",
+        "packages/vfom/MOTION-PRESETS.md",
+        "packages/vfom/hyperframes/templates/**"
+      ],
+      "triggered_by": [
+        "packages/velvetos/chatgpt-project/REEL-ROUTE.md",
+        "packages/vfom/REEL-ROUTE-CONTRACT.json",
+        "packages/vfom/MOTION-PRESETS.md",
+        "packages/vfom/hyperframes/templates/**",
+        "scripts/check-reel-route-sync.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
       "timeout_seconds": 180,
       "failure_effect": {
         "merge": "BLOCK",
