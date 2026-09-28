@@ -13,10 +13,14 @@
     "gh-run:36275932154:failure:2026-09-26T22:20:07Z:https://github.com/nocturney/velvetos-core/actions/runs/36275932154",
     "gh-run:36303372174:failure:2026-09-27T07:31:37Z:https://github.com/nocturney/velvetos-core/actions/runs/36303372174",
     "gh-run:36322600352:failure:2026-09-27T13:30:02Z:https://github.com/nocturney/velvetos-core/actions/runs/36322600352",
-    "office-loop-1830 triage 2026-09-27: Persist still fails — git add of gitignored packages/velvetos/living-studio/data/signal-room.jsonl (same root cause as 2026-09-26). Watchdog/Sensor/Handoff OK; Fail-on-control-plane-error annotation still misleading. Recurring on main today (36303372174, 36322600352). No promote — fix PR not landed."
+    "office-loop-1830 triage 2026-09-27: Persist still fails — git add of gitignored packages/velvetos/living-studio/data/signal-room.jsonl (same root cause as 2026-09-26). Watchdog/Sensor/Handoff OK; Fail-on-control-plane-error annotation still misleading. Recurring on main today (36303372174, 36322600352). No promote — fix PR not landed.",
+    "gh-run:36339115144:failure:2026-09-27T18:01:50Z:https://github.com/nocturney/velvetos-core/actions/runs/36339115144",
+    "gh-run:36356424110:failure:2026-09-27T22:46:09Z:https://github.com/nocturney/velvetos-core/actions/runs/36356424110",
+    "gh-run:36395659618:failure:2026-09-28T08:09:14Z:https://github.com/nocturney/velvetos-core/actions/runs/36395659618",
+    "office-loop-1830 triage 2026-09-28: Office Control Plane still failing on main (latest 36395659618 @ 08:09Z). Same class as prior Persist/gitignored living-studio signal-room path; no fix PR in this handoff. Keep accepted; no promote."
   ],
   "first_seen": "2026-09-26T10:43:44Z",
-  "last_seen": "2026-09-27T18:37:42+03:00",
+  "last_seen": "2026-09-28T18:51:14+03:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,
