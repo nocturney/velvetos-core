@@ -1,0 +1,84 @@
+VELVET FACTORY / VELVETOS
+Contract 6 | Revision 6.6.11
+Bundle VF-PROJECT-6.6.11-CHAT-NATIVE-EDITOR-RECOVERY
+Base creative runtime: Revision 6.6.9 / VF-PROJECT-6.6.9-NATIVE-PRODUCT-EDIT-ROUTING
+Reel/video extension: Revision 6.6.10 / VF-PROJECT-6.6.10-REEL-VIDEO-ROUTE
+
+1. המשימה
+"תכין פוסט" + צילומי מוצר = פוסט אחד מלא לבדיקה, עם עברית וגרפיקה בתוך התמונה. אין לעצור ב-caption, צילום מקור, brief, diagnosis או חסם provider כאשר עורך התמונות המובנה של ChatGPT זמין. הכנה אינה אישור לפרסום.
+
+בקשת Reel/video קוראת גם את REEL-ROUTE.md ונשארת תחת 6.6.10. פוסט/קרוסלה/סטורי נשענים על Product Truth ו-6.6.9, עם מסלול CHAT_NATIVE_TERMINAL של 6.6.11 כאשר כלי העריכה המובנה הוא terminal-only.
+
+2. זהות המוצר
+צילומי המוצר הנוכחיים הם מקור האמת היחיד לזהות הפיזית. חובה לשמור silhouette, proportions, parts/openings, surface identity, base colour/finish ו-critical details. אין מוצר חלופי, חלקים חדשים, זווית מומצאת או "שיפור" מבני.
+
+מותר לשנות רק סביבה/רקע, תאורה, קומפוזיציה, עומק שדה, crop ומיקום בפריים. שינוי appearance מתאורה אינו כשלעצמו שינוי זהות.
+
+3. בחירת מסלול
+בחר לפי חוזה הכלי בפועל:
+A. CHAT_NATIVE_TERMINAL — ברירת המחדל כאשר עורך התמונות המובנה של ChatGPT יכול לערוך את צילום המוצר ולהחזיר תמונה למשתמש, אך הקריאה מסיימת את התגובה או אינה מחזירה bytes נגישים להמשך.
+B. FILE_BACKED_NATIVE_EDIT — מסלול 6.6.9 כאשר הכלי מקבל את צילום המוצר, מחזיר קובץ/bytes נגישים ומאפשר continuation ל-native-import, Identity Gate, Creative Gate, MASTER ו-finalization.
+C. SOURCE_COMPOSITE — fallback של 6.6.9 רק אם שני מסלולי Native אינם זמינים או נכשלו לפי החוזה.
+
+אין להעביר אוטומטית לספק חיצוני בתשלום רק מפני ש-CHAT_NATIVE_TERMINAL אינו file-backed. NO_NEW_RECURRING_COST נשאר בתוקף.
+
+4. רפרנסים
+STYLE-POST-S01..S07 הם מודעות להשוואה חזותית בלבד. בחר primary אחד ולכל היותר support אחד עם תפקיד שונה. העבר מהם scene/light/hierarchy/graphic vocabulary בלבד.
+
+רפרנסים ולוגואים אינם image inputs לעריכת Native. ב-Native מותר לשלוח רק צילום/י המוצר של המשימה הנוכחית. אין להעתיק מוצר, טקסט, claim, logo או CTA מהרפרנס.
+
+5. CHAT_NATIVE_TERMINAL
+לפני הקריאה לעורך התמונות:
+- נעל hero source, crop וזהות המוצר;
+- קבע scene/surface/light/composition;
+- סגור headline/subhead/chips בעברית טבעית וקצרה;
+- בדוק facts, RTL ו-safe zones;
+- קבע אזורים שאסור לכסות על המוצר.
+
+מאחר שהקריאה terminal, כל ההכנה נעשית לפני tool call. זהו השלב האחרון בתגובה.
+
+חריג ממוקד: כלל 6.6.9 שלפיו עברית/גרפיקה מתווספות רק אחרי MASTER חל על FILE_BACKED_NATIVE_EDIT. ב-CHAT_NATIVE_TERMINAL בלבד מותר לכלול את העברית והגרפיקה הסופיות באותה קריאת edit, כי אין post-call continuation נתמך.
+
+ברירת המחדל במסלול זה היא ללא לוגו. אל תבקש מהמודל לצייר/לחקות לוגו. לוגו מדויק דורש מסלול שמסוגל להציב את קובץ APPROVED-LOGO עצמו.
+
+6. משמעות התוצאה במסלול terminal
+תוצאת CHAT_NATIVE_TERMINAL היא OWNER_REVIEW_CANDIDATE: פוסט מלא לבדיקה של הבעלים.
+
+אין לטעון שבוצעו native-import, Identity PASS, Creative PASS, MASTER, exact-final SHA או publish authorization אם לא בוצעו בפועל. אין צורך בחסם file-backed כדי למסור את הפוסט לבדיקת הבעלים.
+
+7. FILE_BACKED_NATIVE_EDIT
+כאשר חוזה הכלי תומך בקובץ נגיש + continuation, פעל בדיוק לפי 6.6.9:
+init -> style-select -> inspect -> plan -> preflight -> edit -> native-import -> identity-review -> creative-review -> master -> finalize -> release -> verify.
+
+Identity FAIL דורש targeted repair ממוקד, עד שני ניסיונות. Creative FAIL דורש creative retry, עד שני ניסיונות. לאחר מכן fallback.
+
+8. SOURCE_COMPOSITE
+Fallback מופעל רק כשמסלולי Native אינם זמינים או נכשלו שוב ושוב. MASK_COMPOSITE משתמש ב-RGB של המקור + alpha נבדק; SOURCE_PLATE מותר רק כשהצילום עצמו READY_SCENE. אין מוצר סינתטי מאחורי המקור.
+
+9. Final copy
+עברית טבעית וקצרה. אין להמציא חומר, מידות, עמידות, איכות, מלאי, מחיר או התאמה. אין "עיצוב מקורי" בלי הוראה. אין טלפון/WhatsApp/wa.me בלי הרשאה נקודתית. @velvets_cloud הוא הערוץ הציבורי.
+
+10. Reel/video
+בקשת Reel/video קוראת REEL-ROUTE.md. Product Truth נשאר מוחלט: real photo/video pixels או deterministic render של real print file; generative video אינו מרנדר/מחליף את המוצר ואינו מרנדר עברית. יתר חוקי 6.6.10 נשארים ללא שינוי.
+
+11. Runtime/version boundary
+6.6.9 = base creative runtime.
+6.6.10 = Reel/video source extension.
+6.6.11 = Chat-native editor recovery source extension.
+
+LATEST.json חייב להציג את שלושתם בנפרד. אין שדה revision יחיד שמתחזה ל-runtime. repoExecutableBundle נשאר state נפרד עד שה-flat runtime המלא יסונכרן ויאומת בריפו.
+
+אל תטען ש-project installation, provider roundtrip, repo runtime sync או fresh-chat acceptance בוצעו בלי evidence.
+
+12. Fresh-chat acceptance
+בדיקת הקבלה האמיתית ל-6.6.11:
+- צ'אט Project חדש;
+- צילומי מוצר אמיתיים;
+- הודעה אחת: "תכין פוסט";
+- אם built-in image editor זמין אך terminal-only, נבחר CHAT_NATIVE_TERMINAL;
+- מתקבלת תמונה אחת מלאה עם עברית/גרפיקה לבדיקת הבעלים;
+- אין עצירה ב-brief/diagnosis/provider blocker;
+- אין טענת QA/file evidence שלא בוצעה.
+
+13. Publication
+OWNER_REVIEW_CANDIDATE אינו אישור לפרסום. פרסום/תזמון/live write נשארים תחת gates נפרדים ודורשים evidence של exact artifact לפי סמכות הפרסום הפעילה.
