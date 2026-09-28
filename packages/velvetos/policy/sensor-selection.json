@@ -15,6 +15,7 @@
     "scripts/check-policy-architecture.py",
     "scripts/sensor_selector.py",
     "scripts/compare-sensor-shadow.py",
+    "scripts/stage3_preflight.py",
     "requirements-sensors.txt",
     "requirements-sensors.py311.lock",
     "requirements-sensors.py312.lock"
@@ -32,5 +33,23 @@
     "persist_in_github_job_summary": true,
     "emit_machine_readable_log_marker": true,
     "repository_mutation_from_shadow": false
+  },
+  "stage3_preparation": {
+    "state": "PREPARED_NOT_ACTIVE",
+    "activation_requires_shadow_exit_eligible": true,
+    "activation_receipt": "packages/velvetos/policy/reports/stage3-activation-receipt.json",
+    "pull_request_execution": "SELECTED_SUITE",
+    "main_push_execution": "FULL_SUITE",
+    "selected_suite_runner": "scripts/check-all.py --selection sensor-selection.json",
+    "critical_always_on_preserved": true,
+    "unknown_or_broad_change_behavior": "FULL_SUITE",
+    "duplicate_direct_invocations_to_remove": [
+      "scripts/check-policy-architecture.py",
+      "scripts/check-commission-isolation.py"
+    ],
+    "required_status_check": "check-all",
+    "branch_ruleset_id": 23284099,
+    "branch_ruleset_target_enforcement": "active",
+    "rollback_mode": "FULL_SUITE_REQUIRED"
   }
 }
