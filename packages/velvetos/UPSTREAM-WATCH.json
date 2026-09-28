@@ -1,6 +1,6 @@
 {
   "schema": "velvetos.upstream-watch.v1",
-  "updatedAt": "2026-09-27",
+  "updatedAt": "2026-09-28",
   "authority": "owner-explicit",
   "purpose": "Track update signals for installed tools and repository-only skills/agents/pattern sources without auto-upgrading or version-locking normal work.",
   "policy": {
@@ -825,13 +825,18 @@
     },
     {
       "repo": "scenario-labs/skills",
-      "kind": "skill-repo",
+      "kind": "skill-pattern",
       "integration": [
-        "owner-tracked upstream; integration may live outside current main"
+        "packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md",
+        "packages/vfom/CREATIVE-REFINE-LOOP.md",
+        "packages/vfprod/third_party/scenario-labs/blender/VENDOR-MANIFEST.json"
       ],
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",
-      "autoUpgrade": false
+      "autoUpgrade": false,
+      "adoptedHead": "9624e295fa33168bc1be22a628c23ba132d1c959",
+      "adoptedRelease": "skills-v0.48.0",
+      "adoptionClass": "embedded-capabilities-only"
     },
     {
       "repo": "shengsheng90/DSH-taskboard",
