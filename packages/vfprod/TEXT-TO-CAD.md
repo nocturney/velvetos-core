@@ -7,6 +7,7 @@ This integration extends the existing `vfprod` + `expert-3d-model` path. It does
 ## Runtime
 
 - Upstream: `earthtojake/text-to-cad`
+- Adopted release: `v0.7.0` at `fafa7b057d8f2c3347ff422f0515380123a4b1d4` (2026-09-27; staged + host-smoke gated)
 - Local clone: `%VELVET_PRINTLAB_ROOT%\tools\text-to-cad`
 - Default PrintLab: `%USERPROFILE%\Documents\VelvetPrintLab`
 - Dedicated Python env: `text-to-cad\.venv`

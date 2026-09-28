@@ -12,9 +12,13 @@ Write-up: [`docs/FCC-FIT.md`](../../docs/FCC-FIT.md).
 | Codebase | (this HQ repo; not an Origin tree) |
 | Clone | `(none)` |
 | vendor | `hq-native` |
-| Source | https://github.com/Alishahryar1/free-claude-code (MIT; README + provider catalog read 2026-08-30) |
+| Source | https://github.com/Alishahryar1/free-claude-code (MIT; v6.4.4 / 37c77262 reviewed 2026-09-27) |
 
 FCC is a **local** Anthropic/OpenAI-compatible proxy. It does not reduce Cursor Cloud Agent usage on this run.
 
 Do not commit secrets. Do not invent prices. Do not send Instagram from this pack.
 Live Instagram, Gmail send, and printers stay on Grok Bot (5 seats).
+
+Reviewed update: `v6.4.3` (`9fe194ed`) fixes the Windows Hermes installer by dropping unsupported `-SkipSetup`. VelvetOS keeps Hermes/FCC second-office runtime skipped; no live FCC service was installed.
+
+Reviewed update: `v6.4.4` (`37c77262`) preserves provider admission/rate/concurrency/recovery state across settings changes. VelvetOS still uses FCC only as a pattern/policy source; no live FCC runtime or Hermes client is installed.

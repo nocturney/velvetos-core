@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REG = ROOT / "packages" / "velvetos" / "TOOL-STATUS.json"
 OPENPOST = ROOT / "packages" / "vfigos" / "OPENPOST.json"
 GROK = ROOT / "automation" / "grok" / "manifest.json"
+OPENPOST_WATCH_REMOVAL = ROOT / "automation" / "grok" / "openpost-release-watch-removal.json"
 SEND = ROOT / "packages" / "vfigos" / "SEND.md"
 MORNING = ROOT / "packages" / "vfbriefux" / "FEED-SOURCE.json"
 
@@ -37,14 +38,34 @@ def main() -> int:
             fail(f"OPENPOST.json {key} must be false while frozen")
 
     grok = json.loads(GROK.read_text(encoding="utf-8"))
-    active = grok.get("routines") or []
-    for row in active:
+    scheduler_rows = list(grok.get("routines") or [])
+    for row in scheduler_rows:
         if str(row.get("id") or "").casefold() == "openpost-release-watch" or str(row.get("title") or "").casefold() == "openpost release watch":
-            fail("OpenPost Release Watch must not be in the active Grok routine set")
-    retired = {str(x.get("id") or ""): x for x in (grok.get("retiredRoutines") or [])}
-    retired_watch = retired.get("openpost-release-watch") or {}
-    if retired_watch.get("desiredEnabled") is not False:
-        fail("retired OpenPost watch must have desiredEnabled=false")
+            fail("OpenPost Release Watch must be absent from active Grok scheduler authority")
+
+    if not OPENPOST_WATCH_REMOVAL.is_file():
+        fail("live OpenPost watch removal evidence is missing")
+    removal = json.loads(OPENPOST_WATCH_REMOVAL.read_text(encoding="utf-8"))
+    if removal.get("schema") != "velvetos.grok-routine-removal.v1":
+        fail("OpenPost watch removal evidence schema mismatch")
+    routine = removal.get("routine") or {}
+    readback = removal.get("provider_readback") or {}
+    if routine.get("title") != "OpenPost Release Watch" or routine.get("action") != "delete":
+        fail("OpenPost watch removal evidence must identify the deleted routine")
+    if readback.get("routine_present") is not False or readback.get("remaining_count") != 8:
+        fail("OpenPost watch provider readback must prove absence with exactly 8 routines remaining")
+    remaining_titles = set(readback.get("remaining_titles") or [])
+    manifest_titles = {str(row.get("title") or "") for row in (grok.get("routines") or [])}
+    if remaining_titles != manifest_titles:
+        fail("live Grok readback titles must match the protected manifest routine set")
+    removal_binding = (grok.get("publisherAuthority") or {}).get("openpostReleaseWatchRemoval") or {}
+    if removal_binding.get("state") != "live_verified_deleted" or removal_binding.get("evidence") != "automation/grok/openpost-release-watch-removal.json":
+        fail("Grok manifest must bind the live-verified OpenPost watch deletion evidence")
+    openpost_tool = tools.get("openpost") or {}
+    if openpost_tool.get("release_watch_provider_state") != "deleted_verified":
+        fail("TOOL-STATUS must record the verified live OpenPost watch deletion")
+    if openpost_tool.get("release_watch_evidence") != "automation/grok/openpost-release-watch-removal.json":
+        fail("TOOL-STATUS OpenPost watch evidence path mismatch")
 
     send = SEND.read_text(encoding="utf-8")
     if "Cloudflare Worker" not in send or "Meta Instagram Graph API" not in send:

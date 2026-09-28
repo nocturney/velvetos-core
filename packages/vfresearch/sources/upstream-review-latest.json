@@ -1,0 +1,44 @@
+{
+  "schema": "velvetos.upstream-review.v1",
+  "reviewedAt": "2026-09-27T22:21:00+03:00",
+  "policy": "Owner receives a separate update email; no tool-update detail is inserted into the Morning Brief.",
+  "items": {
+    "liustack/modlens": {
+      "verdict": "review",
+      "reasonHe": "זהו מקור catalog בלבד; אין סיבה לעדכן runtime. בודקים אם שינויי upstream רלוונטיים למה שהוטמע לפני כל פעולה.",
+      "evidence": [
+        "catalog-source",
+        "head changed; release unchanged"
+      ],
+      "notifyOwner": true
+    },
+    "Q00/ouroboros": {
+      "verdict": "review",
+      "reasonHe": "זהו מקור catalog בלבד; אין סיבה לעדכן runtime. בודקים אם שינויי upstream רלוונטיים למה שהוטמע לפני כל פעולה.",
+      "evidence": [
+        "catalog-source",
+        "head changed; release unchanged"
+      ],
+      "notifyOwner": true
+    },
+    "stablyai/orca": {
+      "verdict": "review",
+      "reasonHe": "זהו מקור catalog בלבד; אין סיבה לעדכן runtime. בודקים אם שינויי upstream רלוונטיים למה שהוטמע לפני כל פעולה.",
+      "evidence": [
+        "catalog-source",
+        "head changed; release unchanged"
+      ],
+      "notifyOwner": true
+    },
+    "topoteretes/cognee": {
+      "verdict": "wait",
+      "reasonHe": "Cognee מוחזק כרגע ב־staged stability על v1.6.0. v1.6.1 זוהתה, אבל לא מאמצים אותה לפני review של release notes ובדיקת compatibility/smoke.",
+      "evidence": [
+        "adopted v1.6.0",
+        "upstream v1.6.1",
+        "staged-stability-pin"
+      ],
+      "notifyOwner": true
+    }
+  }
+}

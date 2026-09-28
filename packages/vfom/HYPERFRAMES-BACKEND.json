@@ -23,12 +23,15 @@
     "hostSelection": "first-healthy",
     "hostConnectPlaybook": "packages/vfmcp/CONNECT-RENDER-HOST.md",
     "package": "hyperframes",
-    "packageVersion": "0.8.34",
+    "versionPolicy": "latest-compatible",
+    "minimumVersion": "0.8.34",
+    "recoveryVersion": "0.8.34",
+    "compatibilityGate": "doctor+real-smoke",
     "node": ">=22",
     "requires": ["hyperframes", "ffmpeg", "ffprobe"],
     "networkInstallAllowed": false,
-    "versionMismatch": "fail",
-    "note": "Install/cache the pinned HyperFrames CLI on authorized render hosts outside the content job; the bridge never downloads dependencies or turns Core into a render daemon."
+    "versionMismatch": "capability-check",
+    "note": "Normal execution accepts newer compatible HyperFrames versions after doctor/smoke proof. The exact recoveryVersion is retained only for rollback/reproducibility; the bridge never downloads dependencies or turns Core into a render daemon."
   },
   "routing": {
     "primary": "hyperframes",

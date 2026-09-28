@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -77,14 +78,24 @@ def main() -> None:
     if (slots.get("hyperframes") or {}).get("status") != "canonical":
         fail("HyperFrames animation slot must stay canonical")
     remotion = slots.get("remotion") or {}
-    if remotion.get("version") != "4.0.523" or remotion.get("status") != "license-gated":
-        fail("Remotion pin/status mismatch")
+    if remotion.get("versionPolicy") != "latest-compatible" or remotion.get("status") != "license-gated":
+        fail("Remotion version policy/status mismatch")
+    if not re.fullmatch(r"\d+\.\d+\.\d+", str(remotion.get("reviewedBaselineVersion") or "")):
+        fail("Remotion reviewed baseline must be semver evidence, not an execution pin")
+    if remotion.get("compatibilityGate") != "license-eligibility+adapter-smoke":
+        fail("Remotion compatibility/license gate mismatch")
     if remotion.get("installByDefault") is not False or remotion.get("masterRenderer") is not False:
         fail("Remotion must remain optional and subordinate")
 
     manim = slots.get("manim") or {}
-    if manim.get("version") != "0.21.0" or manim.get("license") != "MIT":
-        fail("Manim pin/license mismatch")
+    if manim.get("versionPolicy") != "latest-compatible" or manim.get("license") != "MIT":
+        fail("Manim version policy/license mismatch")
+    if not re.fullmatch(r"\d+\.\d+\.\d+", str(manim.get("minimumVersion") or "")):
+        fail("Manim minimum version must be semver")
+    if not re.fullmatch(r"\d+\.\d+\.\d+", str(manim.get("recoveryVersion") or "")):
+        fail("Manim recovery version must be semver")
+    if manim.get("compatibilityGate") != "host-doctor+real-smoke":
+        fail("Manim compatibility gate mismatch")
     if manim.get("status") != "host-smoke-verified":
         fail("Manim must carry real host smoke evidence before verified status")
     if manim.get("masterRenderer") is not False:
@@ -96,6 +107,10 @@ def main() -> None:
         fail("Manim host evidence identity mismatch")
     if len(str(evidence.get("sha256") or "")) != 64:
         fail("Manim smoke SHA-256 evidence missing")
+    if not re.fullmatch(r"\d+\.\d+\.\d+", str(evidence.get("evidenceVersion") or "")):
+        fail("Manim historical smoke evidence version missing")
+    if evidence.get("evidenceClass") != "historical-smoke-artifact":
+        fail("Manim host evidence must be classified as historical artifact proof")
     forbidden = {"physical-product-proof", "customer-result-proof", "stress-test-proof"}
     if not forbidden.issubset(set(manim.get("forbiddenAs") or [])):
         fail("Manim proof boundary incomplete")
@@ -149,14 +164,18 @@ def main() -> None:
 
     manim_bootstrap = contains(
         MANIM_BOOTSTRAP,
-        "$MANIM_VERSION = '0.21.0'",
+        "$MANIM_MINIMUM_VERSION = '0.21.0'",
+        "$MANIM_RECOVERY_VERSION = '0.21.0'",
         "$HOST_ID = 'sderot-windows'",
+        "policy=latest-compatible",
         "manim-host.json",
         "ffprobe",
         "Get-FileHash -Algorithm SHA256",
         "1080",
         "1920",
     )
+    if "$MANIM_VERSION =" in manim_bootstrap or "manim==$MANIM" in manim_bootstrap or "version mismatch: expected" in manim_bootstrap:
+        fail("Manim bootstrap must not exact-pin normal execution")
     if "ngrok" in manim_bootstrap or "--share-desktop" in manim_bootstrap:
         fail("Manim bootstrap must not create an extra remote route")
 

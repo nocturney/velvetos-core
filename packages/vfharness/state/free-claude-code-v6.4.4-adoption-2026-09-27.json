@@ -1,0 +1,32 @@
+{
+  "schema": "velvetos.tool-adoption.v1",
+  "tool": "Alishahryar1/free-claude-code",
+  "date": "2026-09-27",
+  "from": {
+    "release": "v6.4.2"
+  },
+  "to": {
+    "release": "v6.4.4",
+    "commit": "37c77262115a02d3ef97763b7e7a4e0dd011183e"
+  },
+  "upstreamDelta": {
+    "commits": 2,
+    "changes": [
+      "v6.4.3 Windows Hermes installer argument fix",
+      "v6.4.4 provider admission state preserved across settings/client replacement"
+    ]
+  },
+  "velvetIntegration": {
+    "mode": "pattern-policy-only",
+    "runtimeInstalled": false,
+    "hermesVerdict": "skip",
+    "authorityChanged": false
+  },
+  "verification": {
+    "githubCompare643": "PASS",
+    "githubCompare644": "PASS",
+    "vffccSensor": "PASS",
+    "skillHealth": "PASS structural_errors=0 active_warnings=0"
+  },
+  "status": "PASS"
+}

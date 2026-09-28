@@ -1,0 +1,45 @@
+VelvetOS · עדכוני כלים
+
+נמצאו 4 עדכונים ממתינים. לא בוצע שום שדרוג אוטומטי.
+בדיקת upstream אחרונה: 2026-09-27T18:22:14.893076+00:00
+
+1. liustack/modlens
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: v3.26.5 → v3.26.5
+   שינוי: head
+   שימוש אצלנו: packages/vfdsh/catalog.json
+   למה: זהו מקור catalog בלבד; אין סיבה לעדכן runtime. בודקים אם שינויי upstream רלוונטיים למה שהוטמע לפני כל פעולה.
+   ראיות: catalog-source · head changed; release unchanged
+   מקור: https://github.com/liustack/modlens
+
+2. Q00/ouroboros
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: v0.54.6 → v0.54.6
+   שינוי: head
+   שימוש אצלנו: packages/vfdsh/catalog.json
+   למה: זהו מקור catalog בלבד; אין סיבה לעדכן runtime. בודקים אם שינויי upstream רלוונטיים למה שהוטמע לפני כל פעולה.
+   ראיות: catalog-source · head changed; release unchanged
+   מקור: https://github.com/Q00/ouroboros
+
+3. stablyai/orca
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: v1.4.215 → v1.4.215
+   שינוי: head
+   שימוש אצלנו: packages/vfe2b/catalog.json
+   למה: זהו מקור catalog בלבד; אין סיבה לעדכן runtime. בודקים אם שינויי upstream רלוונטיים למה שהוטמע לפני כל פעולה.
+   ראיות: catalog-source · head changed; release unchanged
+   מקור: https://github.com/stablyai/orca
+
+4. topoteretes/cognee
+   מצב: להמתין
+   גרסה/מקור: v1.6.0 → v1.6.1
+   שינוי: head, release
+   שימוש אצלנו: packages/vfmem/cognee.json · %USERPROFILE%/.velvetos/cognee-venv
+   למה: Cognee מוחזק כרגע ב־staged stability על v1.6.0. v1.6.1 זוהתה, אבל לא מאמצים אותה לפני review של release notes ובדיקת compatibility/smoke.
+   ראיות: adopted v1.6.0 · upstream v1.6.1 · staged-stability-pin
+   מקור: https://github.com/topoteretes/cognee
+
+כלל פעולה:
+מומלץ לעדכן = יש מספיק ראיות לאימוץ; להמתין = נשארים בגרסה הנוכחית; לבדוק = נדרשת בדיקת תאימות; אין פעולה = שינוי לא רלוונטי כרגע.
+
+ה־ack מתבצע רק אחרי אימוץ שנבדק. עצם קבלת המייל אינה משנה שום גרסה.

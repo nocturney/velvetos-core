@@ -30,8 +30,10 @@ CONFIG = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
 PROVIDER = CONFIG["provider"]
 DEFAULTS = CONFIG["defaults"]
 ENGINES = CONFIG["engines"]
-PROVIDER_VERSION = str(PROVIDER["version"])
-PROVIDER_COMMIT = str(PROVIDER["commit"])
+PROVIDER_MINIMUM_VERSION = str(PROVIDER["minimumVersion"])
+PROVIDER_RECOVERY_VERSION = str(PROVIDER["recoveryVersion"])
+PROVIDER_RECOVERY_COMMIT = str(PROVIDER["recoveryCommit"])
+PROVIDER_VERSION_POLICY = str(PROVIDER.get("versionPolicy") or "latest-compatible")
 DEFAULT_ROOT = os.environ.get("VF_SPEECH_URL", str(PROVIDER["serviceRoot"])).rstrip("/")
 PLATFORM_DEFAULT_TTS = DEFAULTS.get("ttsModelWindows") if os.name == "nt" else DEFAULTS.get("ttsModelMac")
 DEFAULT_TTS_MODEL = os.environ.get(
@@ -57,6 +59,35 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def semver_tuple(value: str) -> tuple[int, int, int] | None:
+    match = re.fullmatch(r"v?(\d+)\.(\d+)\.(\d+)(?:[-+].*)?", value.strip())
+    return tuple(int(part) for part in match.groups()) if match else None
+
+
+_PROVIDER_DISCOVERY_CACHE: tuple[dict[str, Any], str] | None = None
+
+
+def provider_compatibility() -> tuple[dict[str, Any], str]:
+    global _PROVIDER_DISCOVERY_CACHE
+    if _PROVIDER_DISCOVERY_CACHE is not None:
+        return _PROVIDER_DISCOVERY_CACHE
+    discovery = request_json("GET", f"{DEFAULT_ROOT}/.well-known/voicestudio-speech", timeout=4)
+    actual = str(discovery.get("service_version") or discovery.get("version") or "").strip().lstrip("v")
+    actual_tuple = semver_tuple(actual)
+    minimum_tuple = semver_tuple(PROVIDER_MINIMUM_VERSION)
+    if actual_tuple is None:
+        fail(f"VoiceStudio service version is missing or invalid: {actual!r}", 1)
+    if minimum_tuple is None:
+        fail(f"VoiceStudio minimum version config is invalid: {PROVIDER_MINIMUM_VERSION!r}", 1)
+    if actual_tuple < minimum_tuple:
+        fail(
+            f"VoiceStudio is below supported minimum {PROVIDER_MINIMUM_VERSION}: found {actual}",
+            1,
+        )
+    _PROVIDER_DISCOVERY_CACHE = (discovery, actual)
+    return _PROVIDER_DISCOVERY_CACHE
+
+
 def read_json(path: Path) -> dict[str, Any]:
     try:
         data = json.loads(path.read_text(encoding="utf-8-sig"))
@@ -70,7 +101,7 @@ def read_json(path: Path) -> dict[str, Any]:
 
 
 def headers(content_type: str | None = None) -> dict[str, str]:
-    out = {"User-Agent": f"VelvetOS-Speech/1 VoiceStudio/{PROVIDER_VERSION}"}
+    out = {"User-Agent": f"VelvetOS-Speech/1 VoiceStudio/{PROVIDER_VERSION_POLICY}"}
     if content_type:
         out["Content-Type"] = content_type
     if API_KEY:
@@ -183,6 +214,7 @@ def transcribe(path: Path, model: str, language: str = "he", response_format: st
 
 
 def synthesize(req: dict[str, Any]) -> Path:
+    _, provider_version = provider_compatibility()
     text = str(req.get("text") or "").strip()
     if not text:
         fail("synthesize requires text")
@@ -212,8 +244,11 @@ def synthesize(req: dict[str, Any]) -> Path:
     receipt = {
         "schemaVersion": 1,
         "provider": "voicestudio",
-        "providerVersion": PROVIDER_VERSION,
-        "providerCommit": PROVIDER_COMMIT,
+        "providerVersion": provider_version,
+        "providerVersionPolicy": PROVIDER_VERSION_POLICY,
+        "providerMinimumVersion": PROVIDER_MINIMUM_VERSION,
+        "providerRecoveryVersion": PROVIDER_RECOVERY_VERSION,
+        "providerRecoveryCommit": PROVIDER_RECOVERY_COMMIT,
         "jobId": req.get("jobId"),
         "operation": "synthesize",
         "model": model,
@@ -237,6 +272,7 @@ def synthesize(req: dict[str, Any]) -> Path:
 
 
 def qa(req: dict[str, Any], audio_path: Path | None = None) -> dict[str, Any]:
+    _, provider_version = provider_compatibility()
     expected = str(req.get("text") or "").strip()
     if not expected:
         fail("qa requires expected text")
@@ -248,7 +284,10 @@ def qa(req: dict[str, Any], audio_path: Path | None = None) -> dict[str, Any]:
     result = {
         "schemaVersion": 1,
         "provider": "voicestudio",
-        "providerVersion": PROVIDER_VERSION,
+        "providerVersion": provider_version,
+        "providerVersionPolicy": PROVIDER_VERSION_POLICY,
+        "providerMinimumVersion": PROVIDER_MINIMUM_VERSION,
+        "providerRecoveryVersion": PROVIDER_RECOVERY_VERSION,
         "jobId": req.get("jobId"),
         "operation": "back-transcription-qa",
         "asrModel": model,
@@ -275,8 +314,10 @@ def qa(req: dict[str, Any], audio_path: Path | None = None) -> dict[str, Any]:
 def doctor() -> int:
     facts: dict[str, Any] = {
         "provider": "voicestudio",
-        "requiredVersion": PROVIDER_VERSION,
-        "requiredCommit": PROVIDER_COMMIT,
+        "versionPolicy": PROVIDER_VERSION_POLICY,
+        "minimumVersion": PROVIDER_MINIMUM_VERSION,
+        "recoveryVersion": PROVIDER_RECOVERY_VERSION,
+        "recoveryCommit": PROVIDER_RECOVERY_COMMIT,
         "serviceRoot": DEFAULT_ROOT,
         "ttsModel": DEFAULT_TTS_MODEL,
         "asrModel": DEFAULT_ASR_MODEL,
@@ -284,19 +325,18 @@ def doctor() -> int:
         "platform": os.name,
     }
     try:
-        discovery = request_json("GET", f"{DEFAULT_ROOT}/.well-known/voicestudio-speech", timeout=4)
+        discovery, actual = provider_compatibility()
     except SystemExit:
         print(json.dumps(facts, ensure_ascii=False, indent=2))
-        print("FAIL VoiceStudio speech service is not reachable", file=sys.stderr)
+        print("FAIL VoiceStudio speech service is unreachable or incompatible", file=sys.stderr)
         return 1
     facts["discovery"] = discovery
-    actual = str(discovery.get("service_version") or discovery.get("version") or "")
-    if actual and actual != PROVIDER_VERSION:
-        print(json.dumps(facts, ensure_ascii=False, indent=2))
-        print(f"FAIL VoiceStudio version mismatch: required {PROVIDER_VERSION}, found {actual}", file=sys.stderr)
-        return 1
+    facts["actualVersion"] = actual
     print(json.dumps(facts, ensure_ascii=False, indent=2))
-    print("OK VoiceStudio speech provider reachable")
+    print(
+        f"OK VoiceStudio speech provider compatible actual={actual} "
+        f"minimum={PROVIDER_MINIMUM_VERSION} policy={PROVIDER_VERSION_POLICY}"
+    )
     return 0
 
 
@@ -313,6 +353,7 @@ def validate_request(req: dict[str, Any]) -> str:
 def run(path: Path) -> None:
     req = read_json(path)
     operation = validate_request(req)
+    provider_compatibility()
     if operation == "synthesize":
         audio = synthesize(req)
         if bool(req.get("qaBackTranscribe", DEFAULTS["qaBackTranscribe"])):

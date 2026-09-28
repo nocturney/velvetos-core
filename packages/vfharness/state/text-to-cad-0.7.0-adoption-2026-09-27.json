@@ -1,0 +1,37 @@
+{
+  "schema": "velvetos.tool-adoption.v1",
+  "tool": "earthtojake/text-to-cad",
+  "date": "2026-09-27",
+  "from": {
+    "release": "v0.6.6",
+    "commit": "4eaf7459a95c0547b089ab53aa579c7597fab1d5",
+    "cadgen": "0.6.6"
+  },
+  "to": {
+    "release": "v0.7.0",
+    "commit": "fafa7b057d8f2c3347ff422f0515380123a4b1d4",
+    "cadgen": "0.7.0"
+  },
+  "stageRoot": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad-0.7.0-stage",
+  "stageChecks": {
+    "vf_cad_doctor": "PASS",
+    "fabrication_router_skill_checks": "PASS",
+    "failureBeforeMetadataUpdate": "EXPECTED_COMMIT_LOCK_ONLY",
+    "bindingDoctor": "PASS",
+    "fabricationRouterSensor": "PASS",
+    "cadIntegrationSensor": "PASS",
+    "dfamBoxSmoke": "PASS",
+    "orcaU1DryRun": "PASS"
+  },
+  "safety": {
+    "printer_network_control": false,
+    "upload_to_printer": false,
+    "start_print": false,
+    "heating": false,
+    "motion": false,
+    "sendcutsend_order_submission": false
+  },
+  "runtimePromotion": "PASS live v0.7.0/cadgen 0.7.0",
+  "rollback": "C:\\Users\\Chris\\Documents\\VelvetPrintLab\\tools\\text-to-cad.rollback-v0.6.6-20260927",
+  "status": "PASS"
+}

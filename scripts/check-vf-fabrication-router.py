@@ -20,7 +20,7 @@ expected = {
 assert set(router["installed_skills"]) == expected
 assert set(lock["skills"]) == expected
 assert router["excluded_skills"] == ["bambu-labs"]
-assert router["upstream_commit"] == "4eaf7459a95c0547b089ab53aa579c7597fab1d5"
+assert router["upstream_commit"] == "fafa7b057d8f2c3347ff422f0515380123a4b1d4"
 assert router["viewer_policy"] == {"host": "127.0.0.1", "external_bind": False}
 
 for name in expected:

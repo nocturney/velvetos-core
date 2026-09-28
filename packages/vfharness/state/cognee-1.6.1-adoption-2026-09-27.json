@@ -1,0 +1,40 @@
+{
+  "schema": "velvetos.tool-adoption.v1",
+  "tool": "topoteretes/cognee",
+  "date": "2026-09-27",
+  "from": {
+    "release": "v1.6.0",
+    "installed": "1.6.0"
+  },
+  "to": {
+    "release": "v1.6.1",
+    "version": "1.6.1"
+  },
+  "upstreamDelta": {
+    "commits": 118,
+    "notableAreas": [
+      "Google Drive/Gmail integrations",
+      "bounded graph neighborhood",
+      "retrieval/metadata",
+      "visualization streaming"
+    ]
+  },
+  "staging": {
+    "receipt": "C:\\Users\\Chris\\.velvetos\\cognee\\staging\\receipt-1.6.1-20260927T200212Z.json",
+    "status": "PASS",
+    "python": "3.14",
+    "keylessLocalSmoke": "PASS"
+  },
+  "costPreflight": "packages/vfharness/cost-preflight/cognee-1.6.1-local.json",
+  "authority": "vfmem remains canonical; Cognee derived context only",
+  "promotion": "PASS live venv 1.6.1",
+  "rollback": "C:\\Users\\Chris\\.velvetos\\cognee-venv.rollback-20260927T201040Z",
+  "status": "PASS",
+  "verification": {
+    "runtimeStatus": "PASS",
+    "doctorStateCurrent": true,
+    "canonicalReindex": "PASS 66/66 sources dataset velvetos_shared_011d88902c05cf87",
+    "recallWithCanonicalProvenance": "PASS",
+    "remoteProvidersAllowed": false
+  }
+}
