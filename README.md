@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-28 — **Windows host: D: is the default working path, never the Desktop (owner request):** `packages/velvetos/WINDOWS-PATH-CONTRACT.md` gains a "Default working path and forbidden locations" section. Eve…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-28 — **Windows host: D: is the default working path, never the Desktop (owner request):** `packages/velvetos/WINDOWS-PATH-CONTRACT.md` gains a "Default working path and forbidden locations" section. Eve…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-28 — **Windows host: legacy user-profile fallback closed (fail closed; owner-approved):** on Windows, VelvetOS code now resolves repo/runtime/state/scratch paths only through `VELVET_ROOT` and the `VELV…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-28 — **Windows host: legacy user-profile fallback closed (fail closed; owner-approved):** on Windows, VelvetOS code now resolves repo/runtime/state/scratch paths only through `VELVET_ROOT` and the `VELV…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
