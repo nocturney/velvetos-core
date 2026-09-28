@@ -1,7 +1,7 @@
 {
   "component_id": "grok-production-scheduler",
   "state": "healthy",
-  "observed_at": "2026-09-28T10:15:53.800411+00:00",
+  "observed_at": "2026-09-28T16:37:09.235741+00:00",
   "evidence": {
     "source": "live Grok Bot provider registry readback",
     "artifact": "automation/grok/provider-readback-2026-09-28.json",

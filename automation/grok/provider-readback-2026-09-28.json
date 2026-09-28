@@ -1,6 +1,6 @@
 {
   "schema": "vf.grok.provider-readback.v1",
-  "observedAt": "2026-09-28T10:15:53.800411+00:00",
+  "observedAt": "2026-09-28T16:37:09.235741+00:00",
   "provider": "grok-bot",
   "providerAppVersion": null,
   "signedIn": true,
@@ -77,7 +77,7 @@
       "providerDisplayCadence": "Every day at 10:30 AM and 6:30 PM (CRON_TZ=Asia/Jerusalem 30 10,18 * * *)",
       "enabled": true,
       "matchesCanonicalClock": true,
-      "lastRun": "9/28/2026 10:38:42 AM succeeded"
+      "lastRun": "9/28/2026 6:48:03 PM succeeded"
     },
     {
       "providerRoutineId": "weekly-research-accountability",
