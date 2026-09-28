@@ -1,0 +1,12 @@
+{
+  "schema": "velvetos.sensor-shadow-miss-classifications.v1",
+  "entries": [
+    {
+      "run_id": 36377688299,
+      "pull_request": 407,
+      "sensor_id": "check-scenario-capability-graft",
+      "classification": "RELEVANT_MAPPING_FIXED",
+      "evidence": "PR #407 run 36377688299 exposed the miss. Final PR #407 commit 35aa893911cc7f81df7055fcaa8c505ab2fa7f44 added check-scenario-capability-graft to packages/velvetos/policy/sensor-registry.json; later run 36379566120 included the sensor and reported NO_MISS."
+    }
+  ]
+}
