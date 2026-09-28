@@ -69,7 +69,7 @@ Do not claim any of the following unless a later file-backed process actually pr
 - Creative Gate PASS;
 - MASTER selected;
 - exact-final SHA-256 bound;
-- publication-ready or publish-authorized.
+- publication-ready or publish-authorized under `policy_id: instagram.publish`.
 
 The image itself is still a complete reviewable post candidate, which satisfies “תכין פוסט” / prepare-post intent. Preparation remains separate from publication.
 
