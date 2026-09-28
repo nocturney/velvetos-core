@@ -1,11 +1,15 @@
 {
   "component_id": "google-drive",
   "state": "healthy",
-  "observed_at": "2026-09-27T09:43:38.085114+00:00",
+  "observed_at": "2026-09-28T10:17:16.382875+00:00",
   "evidence": {
     "source": "Google Drive connector live search",
+    "connector": "user-Google-drive search_files",
     "query": "Velvet Media",
-    "resultCountObserved": 1,
-    "sampleFileId": "1h7niwW6GzblqHt5jbGM_8hJn9C3NJJY5"
+    "driveQuery": "title contains 'Velvet Media'",
+    "resultCountObserved": 5,
+    "sampleFileId": "1Yg3Rj0hKWTa86EXjaeu-f7CQXswSRMCv",
+    "sampleFileTitle": "Velvet Media",
+    "sampleFileMimeType": "application/vnd.google-apps.folder"
   }
 }

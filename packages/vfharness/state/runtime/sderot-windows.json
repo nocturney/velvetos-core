@@ -1,12 +1,17 @@
 {
   "component_id": "sderot-windows",
   "state": "healthy",
-  "observed_at": "2026-09-27T09:43:38.085114+00:00",
+  "observed_at": "2026-09-28T10:17:36.357849+00:00",
   "evidence": {
-    "source": "Remote Desktop Commander list_devices",
-    "deviceId": "ecdb37d2-6ae7-42af-b828-985cd03d153f",
-    "deviceName": "Chris",
+    "source": "Grok Bot ListMachines + remote Shell probe",
+    "machineId": "8ae9ddf5-a7ab-48e0-bc7e-597e422436af",
+    "machineName": "Chris",
     "status": "online",
+    "hostname": "Chris",
+    "localTimeObserved": "2026-09-28T13:17:36.3554812+03:00",
+    "velvetRootPath": "D:\\Velvet",
+    "velvetRootPresent": true,
+    "probe": "hostname; Get-Date -Format o; Test-Path D:\\Velvet (read-only)",
     "role": "documented Windows first-healthy fallback"
   }
 }
