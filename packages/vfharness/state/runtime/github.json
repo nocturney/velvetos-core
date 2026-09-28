@@ -1,12 +1,14 @@
 {
   "component_id": "github",
   "state": "healthy",
-  "observed_at": "2026-09-27T09:43:38.085114+00:00",
+  "observed_at": "2026-09-28T10:17:08.753056+00:00",
   "evidence": {
-    "source": "GitHub connector live fetch",
+    "source": "gh api live fetch",
     "repository": "nocturney/velvetos-core",
     "path": "automation/grok/manifest.json",
     "ref": "main",
-    "blobSha": "286650064345f0c7eaa69b38334f3dac736dadc5"
+    "blobSha": "a51079e0fc1c49305dd5a9956302d2713e9a3475",
+    "command": "gh api repos/nocturney/velvetos-core/contents/automation/grok/manifest.json?ref=main",
+    "authenticatedAs": "nocturney"
   }
 }

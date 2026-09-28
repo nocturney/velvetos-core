@@ -29,6 +29,13 @@
     "compatibilityGate": "doctor+real-smoke",
     "node": ">=22",
     "requires": ["hyperframes", "ffmpeg", "ffprobe"],
+    "parameterization": {
+      "singleVariablesFlag": "--variables-file",
+      "batchFlag": "--batch",
+      "batchReceipt": "one Velvet receipt binds every ffprobe-verified output row",
+      "strictVariables": true
+    },
+    "reelTemplates": "packages/vfom/hyperframes/templates",
     "networkInstallAllowed": false,
     "versionMismatch": "capability-check",
     "note": "Normal execution accepts newer compatible HyperFrames versions after doctor/smoke proof. The exact recoveryVersion is retained only for rollback/reproducibility; the bridge never downloads dependencies or turns Core into a render daemon."
@@ -58,6 +65,7 @@
     "noAIHebrewInsideFootage": true,
     "hebrewAsDeterministicOverlay": true,
     "verifiedBrandFontsOnly": true,
+    "verifiedBrandFontsSource": "packages/vfbrand/brand-tokens.json#/fonts",
     "verifiedBrandColorsOnly": true,
     "finalRequiresCheck": true,
     "finalRequiresReceipt": true,

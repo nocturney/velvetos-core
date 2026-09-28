@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="he" dir="rtl" data-composition-variables='[
+  {"id":"cta","type":"string","label":"Approved CTA","default":"לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם"},
+  {"id":"accentId","type":"string","label":"Token accent id","default":"copper"},
+  {"id":"accentHex","type":"color","label":"Verified product accent","default":"#a86838"},
+  {"id":"accentSource","type":"string","label":"Accent evidence","default":""}
+]'>
+<head>
+  <meta charset="utf-8">
+  <title>Velvet end-card</title>
+  <link rel="stylesheet" href="../velvet-reel.css">
+</head>
+<body>
+  <main id="end-card" class="vf-frame" data-composition-id="end-card"
+        data-width="1080" data-height="1920" data-fps="30" data-start="0" data-duration="2">
+    <section id="end" class="vf-end" dir="rtl">
+      <img id="logo" class="vf-logo" alt="Velvet Factory">
+      <p id="cta" class="vf-cta"></p>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script src="../velvet-reel.js"></script>
+  <script>
+    VelvetReel.boot("end-card", ({vars, applied, tl, presets, text}) => {
+      document.getElementById("logo").src = applied.logo;
+      text("cta", vars.cta);
+      presets.VELVET_FINAL_STAMP(tl, "#logo", .10);
+      presets.HEADLINE_REVEAL(tl, "#cta", .30);
+    });
+  </script>
+</body>
+</html>

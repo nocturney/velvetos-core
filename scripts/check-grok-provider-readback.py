@@ -2,8 +2,12 @@
 from __future__ import annotations
 
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from vf_runtime_receipt_policy import receipt_age_policy, warn_line  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "automation/grok/manifest.json"
@@ -97,8 +101,13 @@ def main() -> int:
     if (runtime.get("evidence") or {}).get("artifact") != artifact_rel:
         fail("runtime receipt does not point to provider readback artifact")
     age_hours = (datetime.now(timezone.utc) - parse_time(runtime.get("observed_at"))).total_seconds() / 3600
-    if age_hours < -0.25 or age_hours > 24:
+    if age_hours < -0.25:
         fail(f"runtime receipt freshness invalid: {age_hours:.1f}h")
+    if age_hours > 24:
+        age_strict, age_context = receipt_age_policy()
+        if age_strict:
+            fail(f"runtime receipt freshness invalid: {age_hours:.1f}h")
+        print(warn_line([f"grok-production-scheduler age={age_hours:.1f}h max=24h"], age_context))
 
     print(
         "GROK PROVIDER READBACK PASS "

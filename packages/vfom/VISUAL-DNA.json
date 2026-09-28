@@ -1,6 +1,6 @@
 {
   "brandName": "Velvet Factory",
-  "version": 8,
+  "version": 9,
   "authority": "packages/vfom/VISUAL-OS.md",
   "ownerApprovedVisualStandard": {
     "status": "approved",
@@ -18,7 +18,7 @@
       "product_first",
       "real_photography_truth_anchor",
       "retouch_photo_not_product",
-      "minimal_mobile_readable_typography",
+      "rich_editorial_mobile_readable_typography",
       "recipe_diversity_without_visual_chaos",
       "feed_coherence",
       "premium_not_template_like",
@@ -41,18 +41,52 @@
       "synthetic_replacement_of_real_product",
       "subject_drift_from_source_geometry_material_color",
       "fake_customer_scene_or_fake_shelf_presence",
-      "text_heavy_template_card_overpowering_product",
+      "text_chips_or_insets_covering_or_overpowering_product",
       "generic_canva_template_aesthetic",
       "decorative_stock_filler",
       "rejected_g004_canva_DAHUaelaug0"
+    ],
+    "ownerAmendments": [
+      {
+        "date": "2026-09-28",
+        "id": "rich_editorial_layout",
+        "document": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md#owner-amendment--rich-editorial-layout--2026-09-28",
+        "referencePosts": [
+          "owl 2026-09-19",
+          "dragon 2026-09-20",
+          "deer 2026-09-23",
+          "octopus 2026-09-27"
+        ],
+        "appliesTo": [
+          "feed-still",
+          "carousel",
+          "story-still",
+          "reel-cover",
+          "reel-frames"
+        ],
+        "supersedes": {
+          "requiredPrinciples": [
+            "minimal_mobile_readable_typography"
+          ],
+          "hardRejects": [
+            "text_heavy_template_card_overpowering_product"
+          ],
+          "typography.ownerApprovedDirection": "minimal, restrained, mobile-readable, product-dominant; NO_TEXT is preferred when text does not add value",
+          "typography.coverWords": "2-5",
+          "colorPolicy.ownerApprovedDirection": "warm/dark/cream/neutral visual balance with restrained orange accent behavior only when supported by verified brand/template colors",
+          "visualArchetype.default": "tactile engineering lab"
+        },
+        "brandTokens": "packages/vfbrand/brand-tokens.json"
+      }
     ]
   },
   "visualArchetype": [
-    "tactile engineering lab",
+    "warm real-feeling interior editorial (wood, plants, window side light, design books)",
+    "premium curated product editorial",
+    "one accent colour that follows the product",
+    "real printer/process footage as supporting Reel beats",
     "material intelligence",
-    "controlled experimental energy",
-    "warm practical workshop",
-    "premium curated product editorial"
+    "warm practical workshop (process beats only)"
   ],
   "heroSubjects": [
     "hands working",
@@ -112,17 +146,38 @@
     "musicRole": "support proof, never replace it"
   },
   "typography": {
-    "policy": "use only verified existing brand fonts/templates",
+    "policy": "use only the verified brand fonts (Rubik, Cinzel) and existing templates",
     "maxFonts": 2,
-    "coverWordsMin": 2,
-    "coverWordsMax": 5,
+    "verifiedBrandFonts": [
+      "Rubik",
+      "Cinzel"
+    ],
+    "verifiedBrandFontsDecision": "owner decision 2026-09-28: Rubik (Hebrew headline 700, subhead 600) + Cinzel (Latin 700/400); OFL files and hashes in packages/vfbrand/brand-tokens.json",
+    "coverWordsMin": 3,
+    "coverWordsMax": 7,
     "inventFont": false,
-    "ownerApprovedDirection": "minimal, restrained, mobile-readable, product-dominant; NO_TEXT is preferred when text does not add value"
+    "layout": "rich_editorial",
+    "headlineLinesMin": 2,
+    "headlineLinesMax": 4,
+    "headlineWordsMin": 3,
+    "headlineWordsMax": 7,
+    "headlineWeight": "heavy",
+    "accentRule": true,
+    "subheadLines": 1,
+    "subheadWordsMax": 12,
+    "chipsMax": 3,
+    "chipLabelWordsMax": 3,
+    "chipIcon": "outline",
+    "insetsMax": 3,
+    "textOverProduct": false,
+    "brandTokens": "packages/vfbrand/brand-tokens.json",
+    "ownerApprovedDirection": "rich editorial layout (owner amendment 2026-09-28): heavy Hebrew headline of 2-4 lines with an accent rule, one-line subhead, up to 3 outline-icon chips, up to 3 detail insets or one magnifier crop; mobile-readable; text never covers or overpowers the product; NO_TEXT stays a recorded comparison candidate, not the preferred default"
   },
   "colorPolicy": {
     "policy": "use verified brand/template colors only; do not invent hex values",
     "accentRule": "one dominant accent per composition when an accent exists",
-    "ownerApprovedDirection": "warm/dark/cream/neutral visual balance with restrained orange accent behavior only when supported by verified brand/template colors"
+    "ownerApprovedDirection": "warm real-feeling interior palette; one accent colour per composition that follows the product (sampled from the product or its scene); navy/gold/ivory is the logo and brand-mark identity (owner reconciliation 2026-09-28)",
+    "accentSamples": "packages/vfbrand/brand-tokens.json#/accents (sampled from published posts 2026-09-28, approximate)"
   },
   "feedContinuity": {
     "ownerApprovedBalance": [
@@ -240,7 +295,7 @@
     "retouching that redesigns the product",
     "placeholder shown as intended final",
     "generic icon replacing real product media",
-    "text-heavy template card overpowering product",
+    "text, chips or insets covering or overpowering the product",
     "generic Canva-template look",
     "intermediate hero handed off as completed post",
     "final artifact weaker than selected creative master without recorded cause",
@@ -375,5 +430,16 @@
     "whenRepoFilesystemDiffers": "run chat-local preflight beside exact attachment bytes and hash-verified Project bundle",
     "remoteRepoPreflightReceivesChatLocalPaths": false,
     "chatLocalPreflightScope": "CREATIVE_ONLY_NEVER_PUBLICATION"
+  },
+  "visualArchetypeSuperseded": {
+    "date": "2026-09-28",
+    "previous": [
+      "tactile engineering lab",
+      "material intelligence",
+      "controlled experimental energy",
+      "warm practical workshop",
+      "premium curated product editorial"
+    ],
+    "note": "'tactile engineering lab' is no longer the default look; process/printer footage stays allowed as beats inside a Reel"
   }
 }

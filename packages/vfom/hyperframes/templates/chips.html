@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="he" dir="rtl" data-composition-variables='[
+  {"id":"chip1","type":"string","label":"Verified chip 1","default":""},
+  {"id":"chip2","type":"string","label":"Verified chip 2","default":""},
+  {"id":"chip3","type":"string","label":"Verified chip 3","default":""},
+  {"id":"accentId","type":"string","label":"Token accent id","default":"copper"},
+  {"id":"accentHex","type":"color","label":"Verified product accent","default":"#a86838"},
+  {"id":"accentSource","type":"string","label":"Accent evidence","default":""}
+]'>
+<head>
+  <meta charset="utf-8">
+  <title>Velvet chips</title>
+  <link rel="stylesheet" href="../velvet-reel.css">
+</head>
+<body>
+  <main id="chips" class="vf-frame" data-composition-id="chips"
+        data-width="1080" data-height="1920" data-fps="30" data-start="0" data-duration="3">
+    <section class="vf-copy" dir="rtl">
+      <div class="vf-chips" id="chip-row">
+        <span class="vf-chip" id="chip1"></span>
+        <span class="vf-chip" id="chip2"></span>
+        <span class="vf-chip" id="chip3"></span>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <script src="../velvet-reel.js"></script>
+  <script>
+    VelvetReel.boot("chips", ({vars, tl, presets, text}) => {
+      ["chip1","chip2","chip3"].forEach((id) => {
+        text(id, vars[id]);
+        if (!vars[id]) document.getElementById(id).remove();
+      });
+      presets.CHIP_SEQUENCE(tl, document.querySelectorAll(".vf-chip"), .25);
+    });
+  </script>
+</body>
+</html>

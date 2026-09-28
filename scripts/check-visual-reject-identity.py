@@ -19,8 +19,11 @@ ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "instances" / "velvet-factory"
 SHA = "df41281b44e2c1ac99a1cb0c9f084ec926c30774f61468fc8988f59c5a136897"
 REJECT = "DAHUaelaug0"
+# Owner amendment 2026-09-28 (rich editorial layout) supersedes the minimal-typography rule and
+# the text-heavy hard reject; the G004 reject and SHA identity above stay pinned.
+AMENDMENT = "## Owner amendment · rich editorial layout · 2026-09-28"
 REQUIRED = {
-    "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md": (SHA, REJECT, "Premium but not template-like"),
+    "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md": (SHA, REJECT, "Premium but not template-like", AMENDMENT),
     "packages/vfom/VELVET-VISUAL-SYSTEM-PROMPT.md": (REJECT, "Use this prompt whenever"),
     "packages/vfom/VISUAL-DNA.json": (SHA, REJECT),
     ".cursor/skills/velvet-brand-guardian/SKILL.md": (REJECT,),

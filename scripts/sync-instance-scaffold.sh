@@ -60,8 +60,9 @@ DIFFER="$(printf '%s\n' "$DIFF" | grep '^Files ' || true)"
 SCAFFOLD_ONLY="$(printf '%s\n' "$DIFF" | grep "^Only in $SRC" || true)"
 REMOTE_ONLY_ALL="$(printf '%s\n' "$DIFF" | grep "^Only in $TMP/remote" || true)"
 # Instance-only paths that legitimately live only in the published frontend repo
-# (its own CI, desk MCP config, access-gap pointer). Reported, never counted as drift.
-INSTANCE_ONLY_ALLOWED=(".github" "docs" ".cursor/mcp.json")
+# (its own CI, desk MCP config, access-gap pointer, its own Control Center app).
+# Reported, never counted as drift.
+INSTANCE_ONLY_ALLOWED=(".github" "docs" ".cursor/mcp.json" "control-center")
 is_allowed_remote_only() {
   local line="$1" rel dir name a
   dir="${line#Only in $TMP/remote}"; dir="${dir%%: *}"; dir="${dir#/}"

@@ -1,0 +1,269 @@
+{
+  "schema": "velvetos.brand-tokens.v1",
+  "brand": "Velvet Factory",
+  "updated": "2026-09-28",
+  "authority": {
+    "standard": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md#owner-amendment--rich-editorial-layout--2026-09-28",
+    "brand": "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+    "visualDna": "packages/vfom/VISUAL-DNA.json",
+    "precedence": "Product Truth and the canonical docs above win over these tokens; tokens never authorize changing a product."
+  },
+  "consumers": {
+    "now": [
+      "docs",
+      "HyperFrames templates"
+    ],
+    "later": []
+  },
+  "accents": {
+    "provenance": "sampled from published posts 2026-09-28, approximate",
+    "method": "approximate colour sampling from 1080px thumbnails of the four published posts; not taken from a master brand file",
+    "rule": "one accent per composition; the accent follows the product. These samples are matching references, not a fixed palette.",
+    "samples": [
+      {
+        "id": "copper",
+        "hex": "#a86838",
+        "post": "owl",
+        "postDate": "2026-09-19",
+        "status": "sampled_approximate"
+      },
+      {
+        "id": "antique_gold",
+        "hex": "#a87838",
+        "post": "dragon",
+        "postDate": "2026-09-20",
+        "status": "sampled_approximate"
+      },
+      {
+        "id": "light_gold",
+        "hex": "#f8c888",
+        "post": "deer",
+        "postDate": "2026-09-23",
+        "status": "sampled_approximate"
+      },
+      {
+        "id": "amber",
+        "hex": "#f8a848",
+        "post": "octopus",
+        "postDate": "2026-09-27",
+        "status": "sampled_approximate"
+      }
+    ]
+  },
+  "brandMark": {
+    "identity": "navy velvet field with warm gold / ivory logo",
+    "scope": "logo and brand mark only; not the default feed background",
+    "field": "navy velvet backdrop, as in packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-navy-velvet-full-lockup.jpg",
+    "gold": {
+      "hex": "#b59761",
+      "provenance": "sampled from owner-supplied logo packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-white-full-lockup.jpg on 2026-09-28, approximate",
+      "method": "median of solid wordmark pixels in the gold-on-white JPG; JPG compression and anti-aliasing make this approximate",
+      "status": "sampled_approximate"
+    },
+    "navyHex": null,
+    "navyHexStatus": "missing: owner to supply (not sampled; the velvet backdrop is textured, so a single hex would be a guess)"
+  },
+  "scene": {
+    "default": "warm real-feeling interior",
+    "elements": [
+      "wood",
+      "plants",
+      "window side light",
+      "design books"
+    ],
+    "rule": "the scene changes only around the real product; product pixels stay source pixels"
+  },
+  "layout": {
+    "headline": {
+      "language": "he",
+      "direction": "rtl",
+      "weight": "heavy",
+      "linesMin": 2,
+      "linesMax": 4,
+      "wordsMin": 3,
+      "wordsMax": 7
+    },
+    "accentRule": {
+      "required": true,
+      "colour": "product accent",
+      "placement": "attached to the headline block"
+    },
+    "subhead": {
+      "lines": 1,
+      "wordsMax": 12,
+      "weight": "regular"
+    },
+    "chips": {
+      "max": 3,
+      "icon": "outline",
+      "labelWordsMax": 3,
+      "content": "one verified fact about this product per chip"
+    },
+    "insets": {
+      "max": 3,
+      "kinds": [
+        "inset_card",
+        "magnifier_crop"
+      ],
+      "magnifierCountsAs": 1,
+      "provenance": [
+        "SAME_FRAME_CROP",
+        "ALTERNATE_VERIFIED_SOURCE"
+      ]
+    },
+    "mobileReadability": "headline legible on the phone-size preview and in the feed grid crop; subhead and chips legible at full-screen phone size; outside platform UI safe zones",
+    "product": {
+      "textOverProduct": false,
+      "rule": "text, rule, chips and insets never cover or overpower the product; the product stays the largest single element"
+    }
+  },
+  "reel": {
+    "structure": [
+      "hook_card",
+      "chips_in",
+      "detail_inset",
+      "real_footage_beats",
+      "end_card"
+    ],
+    "endCardCta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+    "endCardLogo": "exact committed logo file: prefer the traced transparent SVG (logo.preferred.overlay) or the gold-on-navy lockup as a full plate; never recolour beyond brand gold, never redraw or redesign"
+  },
+  "fonts": {
+    "status": "committed",
+    "ownerDecision": "2026-09-28",
+    "maxFamilies": 2,
+    "licence": "SIL Open Font License 1.1",
+    "files": [
+      "packages/vfbrand/assets/fonts/rubik/Rubik-VariableFont_wght.ttf",
+      "packages/vfbrand/assets/fonts/cinzel/Cinzel-VariableFont_wght.ttf"
+    ],
+    "families": [
+      {
+        "family": "Rubik",
+        "file": "packages/vfbrand/assets/fonts/rubik/Rubik-VariableFont_wght.ttf",
+        "sha256": "1b3a7437ba2af80e465e773ed60c5036d1ba6ace492d89046dbcf18fb31e4e88",
+        "format": "variable TTF, wght axis 300-900",
+        "scripts": [
+          "Hebrew",
+          "Latin"
+        ],
+        "licenceFile": "packages/vfbrand/assets/fonts/rubik/OFL.txt",
+        "licenceSha256": "472cbe7c25441df63e9c7864b43eb3c0f4b3df950c66a76224e6cfe1eae843fb",
+        "source": "google/fonts ofl/rubik (Google Fonts ships Rubik as a variable font; bytes match upstream on 2026-09-28)"
+      },
+      {
+        "family": "Cinzel",
+        "file": "packages/vfbrand/assets/fonts/cinzel/Cinzel-VariableFont_wght.ttf",
+        "sha256": "f4d83d34d1f6c741193e4acf4b3dff9531e5a67b6aa65228d00a7db72a4e0f34",
+        "format": "variable TTF, wght axis 400-900",
+        "scripts": [
+          "Latin"
+        ],
+        "licenceFile": "packages/vfbrand/assets/fonts/cinzel/OFL.txt",
+        "licenceSha256": "f2b3029aba64c378bf0963b62945eee15e564fe4330b934c8f2eb058282b5e83",
+        "source": "google/fonts ofl/cinzel (variable font; bytes match upstream on 2026-09-28)",
+        "note": "no Hebrew glyphs; Latin only"
+      }
+    ],
+    "roles": {
+      "headline": {
+        "family": "Rubik",
+        "weight": 700,
+        "script": "he"
+      },
+      "subhead": {
+        "family": "Rubik",
+        "weight": 600,
+        "script": "he"
+      },
+      "latinDisplay": {
+        "family": "Cinzel",
+        "weight": 700,
+        "script": "latin"
+      },
+      "latinText": {
+        "family": "Cinzel",
+        "weight": 400,
+        "script": "latin"
+      }
+    }
+  },
+  "logo": {
+    "status": "committed",
+    "files": [
+      "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-white-full-lockup.jpg",
+      "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-navy-velvet-full-lockup.jpg",
+      "packages/vfbrand/assets/logo/velvet-factory-logo-black-mono-velvets-cloud-small.png",
+      "packages/vfbrand/assets/logo/velvet-factory-logo-gold-full-lockup-traced.svg",
+      "packages/vfbrand/assets/logo/velvet-factory-logo-gold-mark-traced.svg"
+    ],
+    "variants": [
+      {
+        "path": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-white-full-lockup.jpg",
+        "colour": "gold on white",
+        "lockup": "full (emblem + VELVET FACTORY + 3D PRINTING STUDIO)",
+        "format": "jpg",
+        "size": "1456x1600",
+        "transparent": false,
+        "sha256": "b7bad605e976ad8ad3cd94dce7e32e0831677ae85939d9e6f45f5de41dfeed0c"
+      },
+      {
+        "path": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-navy-velvet-full-lockup.jpg",
+        "colour": "gold on navy velvet",
+        "lockup": "full (emblem + VELVET FACTORY + 3D PRINTING STUDIO)",
+        "format": "jpg",
+        "size": "1280x698",
+        "transparent": false,
+        "sha256": "2a0c7f720341335e9727ec11f32161f5c9b7af9f30b20dcec2d207e0c0601b87"
+      },
+      {
+        "path": "packages/vfbrand/assets/logo/velvet-factory-logo-black-mono-velvets-cloud-small.png",
+        "colour": "black mono",
+        "lockup": "emblem + VELVET FACTORY + @velvets_cloud handle",
+        "format": "png",
+        "size": "180x200",
+        "transparent": true,
+        "note": "alpha background, but small and carries the @velvets_cloud handle; not a substitute for a transparent gold master",
+        "sha256": "fc85d6313e18fee16cd79cfa0fa79f02281ebd8072edf5aedacbe05060548ea5"
+      },
+      {
+        "path": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-full-lockup-traced.svg",
+        "colour": "brand gold on transparent",
+        "lockup": "full (emblem + VELVET FACTORY + 3D PRINTING STUDIO)",
+        "format": "svg",
+        "size": "1456x1600",
+        "transparent": true,
+        "fill": "#b59761",
+        "provenance": "traced from owner JPG, owner-approved 2026-09-28",
+        "tracedFrom": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-white-full-lockup.jpg",
+        "tool": "potrace 1.16: grayscale, 3x Lanczos upscale, threshold L<200, turdsize 20, alphamax 1.0, opttolerance 0.2; single fill",
+        "sha256": "28c5bafb88e617bd6982a235f7424965fbe1027dec729b0eaa72522dc09127f2"
+      },
+      {
+        "path": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-mark-traced.svg",
+        "colour": "brand gold on transparent",
+        "lockup": "mark only (V + nozzle emblem, no text)",
+        "format": "svg",
+        "size": "1030x882",
+        "transparent": true,
+        "fill": "#b59761",
+        "provenance": "traced from owner JPG, owner-approved 2026-09-28",
+        "tracedFrom": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-white-full-lockup.jpg (emblem region cropped above the wordmark)",
+        "tool": "potrace 1.16: grayscale, 3x Lanczos upscale, threshold L<200, turdsize 20, alphamax 1.0, opttolerance 0.2; single fill",
+        "sha256": "7743929a0bb793713cafe2da4ce0d46e91f1b88c6d1770c084c2c9866f4bc31e"
+      }
+    ],
+    "stillWanted": "an original designer vector master, if one exists, would replace the traced SVGs; not blocking",
+    "knownOffRepoAssets": [
+      "Velvet-Factory-APPROVED-LOGO-GOLD-LIGHT-v1.jpg",
+      "Velvet-Factory-APPROVED-LOGO-GOLD-DARK-v1.jpg"
+    ],
+    "knownOffRepoAssetsSource": "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json (listed there; not committed to this repository)",
+    "preferred": {
+      "overlay": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-full-lockup-traced.svg",
+      "markOnly": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-mark-traced.svg",
+      "fullPlate": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-navy-velvet-full-lockup.jpg"
+    },
+    "suppliedRastersAt": "2026-09-28"
+  }
+}

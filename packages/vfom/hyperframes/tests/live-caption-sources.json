@@ -1,0 +1,30 @@
+{
+  "schema": "velvetos.live-caption-source-hashes.v1",
+  "observedVia": "VelvetOS Instagram read-only list_media 2026-09-28",
+  "rows": [
+    {
+      "file": "deer-2026-09-23.json",
+      "sourceMediaId": "18129183877750390",
+      "sourcePermalink": "https://www.instagram.com/p/DdosGbRia0T/",
+      "captionSha256": "cc3009166534e56cb2adceb24686fb1d153ddf053c1bd22363c01e3389a6fa64"
+    },
+    {
+      "file": "dragon-2026-09-20.json",
+      "sourceMediaId": "17899807347597720",
+      "sourcePermalink": "https://www.instagram.com/p/DdgkjZGG7mw/",
+      "captionSha256": "33d29bf658105a5c3722784719272cb7919a15687671a07a028ac51cebc712a8"
+    },
+    {
+      "file": "octopus-2026-09-27.json",
+      "sourceMediaId": "18281809588293811",
+      "sourcePermalink": "https://www.instagram.com/p/DdyPXbHDqBp/",
+      "captionSha256": "04fc56066c2ba3f6fc308a823622163842aada41584ced688738fb0e33f77ae4"
+    },
+    {
+      "file": "owl-2026-09-19.json",
+      "sourceMediaId": "18048874304812929",
+      "sourcePermalink": "https://www.instagram.com/p/DdeyJiviTjm/",
+      "captionSha256": "ceed2d8055d075739bce8a8beb1721f93bac8f4c90e6df472677be633d62b79f"
+    }
+  ]
+}

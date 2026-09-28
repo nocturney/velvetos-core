@@ -1009,10 +1009,20 @@ def assemble(today: str) -> dict:
         decision_prose = f"{decision_prose} Control Plane: {cp_prose}."
     growth_brief_path = ROOT / "packages" / "vfgrowth" / "data" / "growth-brief.json"
     story_20_row = ["סטורי 20:30", "ממתין לאישור", "לא מפרסם"]
+    reel_16_row = ["ריל 16:00 (לוח א׳/ג׳)", "דחה עד גלם", "vf_organic_growth.py"]
     if growth_brief_path.is_file():
         try:
             gb = json.loads(growth_brief_path.read_text(encoding="utf-8"))
             st = gb.get("story") or {}
+            reel = gb.get("reel") or {}
+            reel_cands = reel.get("candidates") or []
+            if gb.get("date") == today and reel.get("gate") == "candidates_ready" and reel_cands:
+                # Catalog suggestions only — a human views/approves; PREFLIGHT + EDIT-GATE; no publish.
+                reel_16_row = [
+                    "ריל 16:00 (לוח א׳/ג׳)",
+                    f"{len(reel_cands)} מועמדים לצפייה",
+                    (" · ".join(str(c.get("fileName") or c.get("id")) for c in reel_cands) + " · לא ריל עד אישור")[:80],
+                ]
             rec = gb.get("slotRecommendation") or st.get("recommendation") or {}
             if gb.get("date") != today:
                 story_20_row = ["סטורי 20:30", "growth-brief מיושן", f"{gb.get('date') or 'תאריך חסר'} · לא החלטה להיום"]
@@ -1047,7 +1057,7 @@ def assemble(today: str) -> dict:
                 "rows": gate_rows
                 + cp_rows
                 + [
-                    ["ריל 16:00 (לוח א׳/ג׳)", "דחה עד גלם", "vf_organic_growth.py"],
+                    reel_16_row,
                     story_20_row,
                 ],
                 "actions": gate_actions,

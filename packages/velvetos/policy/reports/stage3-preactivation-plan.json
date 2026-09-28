@@ -1,0 +1,68 @@
+{
+  "report": "stage3-preactivation-plan",
+  "stage": 3,
+  "name": "required-fast-and-affected-ci",
+  "state": "PREPARED_NOT_ACTIVE",
+  "behavior_change": false,
+  "prepared_against_main_sha": "931b5968d6ebfe2a62e7673e57fbed30b9cb0839",
+  "entry_requirement": "Stage 2 shadow exit gate PASS",
+  "current_selector_mode": "shadow",
+  "current_merge_authority": "FULL_SUITE",
+  "selected_suite_runner_prepared": true,
+  "current_workflow_changed": false,
+  "branch_ruleset_mutated": false,
+  "activation_receipt_required": true,
+  "activation_receipt_path": "packages/velvetos/policy/reports/stage3-activation-receipt.json",
+  "critical_always_on_preserved": true,
+  "unknown_or_broad_change_behavior": "FULL_SUITE",
+  "rollback_mode": "FULL_SUITE_REQUIRED",
+  "planned_pull_request_ci": {
+    "selector": "BLOCKING",
+    "execution": "SELECTED_SUITE",
+    "runner": "scripts/check-all.py --selection sensor-selection.json",
+    "required_status_check": "check-all",
+    "shadow_full_suite_comparison": "REMOVE_AT_ACTIVATION"
+  },
+  "planned_main_push_ci": {
+    "execution": "FULL_SUITE",
+    "runner": "scripts/check-all.py"
+  },
+  "planned_duplicate_removals": [
+    "scripts/check-policy-architecture.py",
+    "scripts/check-commission-isolation.py"
+  ],
+  "ruleset_snapshot": {
+    "id": 23284099,
+    "name": "VelvetOS main protection",
+    "enforcement": "disabled",
+    "target": "branch",
+    "rules": ["deletion", "non_fast_forward"]
+  },
+  "planned_ruleset_cutover": {
+    "ruleset_id": 23284099,
+    "target_enforcement": "active",
+    "preserve_existing_rules": true,
+    "required_status_check": "check-all",
+    "live_reinspection_required_before_mutation": true
+  },
+  "activation_transaction": [
+    "Collect fresh Stage 2 observation evidence and require gate eligible.",
+    "Emit stage3-activation-receipt.json from scripts/stage3_preflight.py.",
+    "Change selector mode to enforced and stage3_preparation state to ACTIVE.",
+    "Change PR CI to run selector output through check-all.py --selection.",
+    "Keep push-to-main CI on the full suite.",
+    "Remove the two Stage 2A-recorded duplicate direct sensor invocations.",
+    "Merge only after the still-authoritative full suite passes on the cutover PR.",
+    "Reinspect ruleset 23284099 live, then activate required check-all protection.",
+    "Verify a post-cutover PR and main push; rollback to FULL_SUITE_REQUIRED on regression."
+  ],
+  "non_actions_now": [
+    "Do not change .github/workflows/check-all.yml.",
+    "Do not change selector mode from shadow.",
+    "Do not create stage3-activation-receipt.json.",
+    "Do not enable or mutate repository rulesets.",
+    "Do not remove duplicate checks before Stage 2 gate PASS."
+  ],
+  "rollback": "Revert workflow/ruleset activation; affected selector falls back to FULL_SUITE.",
+  "source": "packages/velvetos/policy/reports/migration-map.json stage 3"
+}
