@@ -2,9 +2,9 @@
 """Collect read-only Stage 2 shadow-selector evidence from GitHub Actions.
 
 The collector never changes GitHub state. It reads workflow runs/logs through
-the authenticated gh CLI, deduplicates reruns by pull request, extracts the
-machine-readable selector/comparison markers, and evaluates the predeclared
-Stage 2 shadow exit criteria.
+the authenticated gh CLI, counts each pull request once for observation volume,
+preserves every eligible run for historical miss evidence, and evaluates the
+predeclared Stage 2 shadow exit criteria.
 """
 from __future__ import annotations
 
@@ -20,10 +20,12 @@ ROOT = Path(__file__).resolve().parents[1]
 POLICY_DIR = ROOT / "packages" / "velvetos" / "policy"
 CONFIG = POLICY_DIR / "sensor-selection.json"
 BASELINE = POLICY_DIR / "reports" / "stage2-shadow-observation-baseline.json"
+DEFAULT_CLASSIFICATIONS = POLICY_DIR / "reports" / "stage2-shadow-miss-classifications.json"
 WORKFLOW = "VelvetOS Core Sensors"
 SELECTION_MARKER = "SENSOR_SHADOW_SELECTION_JSON "
 COMPARISON_MARKER = "SENSOR_SHADOW_COMPARISON_JSON "
 CLASSIFICATIONS = {"UNRELATED", "RELEVANT_MAPPING_FIXED"}
+_PR_BRANCH_CACHE: dict[tuple[str, str], list[dict]] = {}
 
 
 def load(path: Path) -> dict:
@@ -60,6 +62,36 @@ def repo_slug() -> str:
 
 
 def pr_number_for_run(repo: str, run: dict) -> int | None:
+    # Prefer a cached branch/time match. This survives force-push/rebase and
+    # avoids per-run API calls when the PR head branch is unambiguous.
+    branch = str(run.get("headBranch") or "").strip()
+    created_at = run.get("createdAt")
+    if branch and created_at:
+        key = (repo, branch)
+        if key not in _PR_BRANCH_CACHE:
+            _PR_BRANCH_CACHE[key] = json.loads(gh([
+                "pr", "list",
+                "--repo", repo,
+                "--state", "all",
+                "--head", branch,
+                "--limit", "20",
+                "--json", "number,createdAt,closedAt,mergedAt",
+            ]))
+        run_time = parse_time(created_at)
+        candidates = []
+        for pull in _PR_BRANCH_CACHE[key]:
+            opened = pull.get("createdAt")
+            closed = pull.get("closedAt") or pull.get("mergedAt")
+            if not opened or parse_time(opened) > run_time:
+                continue
+            if closed and run_time > parse_time(closed):
+                continue
+            candidates.append(pull)
+        if len(candidates) == 1:
+            return int(candidates[0]["number"])
+
+    # Fall back to GitHub's run/commit associations for missing or ambiguous
+    # branch evidence.
     data = json.loads(gh(["api", f"repos/{repo}/actions/runs/{run['databaseId']}"]))
     prs = data.get("pull_requests") or []
     if prs:
@@ -67,6 +99,7 @@ def pr_number_for_run(repo: str, run: dict) -> int | None:
             return int(prs[0]["number"])
         except (KeyError, TypeError, ValueError):
             pass
+
     sha = str(run.get("headSha") or "")
     if sha:
         pulls = json.loads(gh(["api", f"repos/{repo}/commits/{sha}/pulls"]))
@@ -112,6 +145,44 @@ def load_classifications(path: Path | None) -> dict[tuple[int, str], dict]:
     return out
 
 
+def scan_observations(
+    observations: list[dict],
+    classifications: dict[tuple[int, str], dict],
+) -> tuple[list[dict], list[dict], list[int]]:
+    critical_misses: list[dict] = []
+    noncritical_misses: list[dict] = []
+    incomplete: list[int] = []
+    for observation in observations:
+        for row in observation.get("runs") or [observation]:
+            if not row["evidence_complete"]:
+                incomplete.append(row["run_id"])
+                continue
+            comparison = row["comparison"] or {}
+            critical = set(comparison.get("critical_misses") or [])
+            for sensor_id in critical:
+                critical_misses.append({
+                    "run_id": row["run_id"],
+                    "pull_request": row["pull_request"],
+                    "sensor_id": sensor_id,
+                })
+            for sensor_id in comparison.get("selector_misses") or []:
+                if sensor_id in critical:
+                    continue
+                item = {
+                    "run_id": row["run_id"],
+                    "pull_request": row["pull_request"],
+                    "sensor_id": sensor_id,
+                }
+                classification = classifications.get((row["run_id"], sensor_id))
+                if classification:
+                    item["classification"] = classification["classification"]
+                    item["classification_evidence"] = classification["evidence"]
+                else:
+                    item["classification"] = "UNCLASSIFIED"
+                noncritical_misses.append(item)
+    return critical_misses, noncritical_misses, incomplete
+
+
 def collect(limit: int, classifications_path: Path | None) -> dict:
     config = load(CONFIG)
     baseline = load(BASELINE)
@@ -132,70 +203,68 @@ def collect(limit: int, classifications_path: Path | None) -> dict:
         and run.get("createdAt")
         and parse_time(run["createdAt"]) >= start
     ]
+    dated_runs = [run for run in runs if run.get("createdAt")]
+    history_truncated = bool(
+        len(runs) >= limit
+        and dated_runs
+        and min(parse_time(run["createdAt"]) for run in dated_runs) > start
+    )
 
-    # Resolve PRs and keep the latest completed run per PR so reruns do not
-    # inflate the observation volume.
-    by_pr: dict[int, dict] = {}
+    # Count each PR once for observation volume, but retain every run. A clean
+    # later rerun must never erase a miss discovered by an earlier run.
+    by_pr: dict[int, list[dict]] = {}
     unresolved_runs: list[int] = []
     for run in eligible:
         pr = pr_number_for_run(repo, run)
         if pr is None:
             unresolved_runs.append(int(run["databaseId"]))
             continue
-        current = by_pr.get(pr)
-        if current is None or parse_time(run["updatedAt"]) > parse_time(current["updatedAt"]):
-            run = dict(run)
-            run["pull_request"] = pr
-            by_pr[pr] = run
+        row = dict(run)
+        row["pull_request"] = pr
+        by_pr.setdefault(pr, []).append(row)
 
     observations: list[dict] = []
-    for pr, run in sorted(by_pr.items(), key=lambda item: item[1]["createdAt"]):
-        run_id = int(run["databaseId"])
-        row = {
-            "pull_request": pr,
-            "run_id": run_id,
-            "head_sha": run.get("headSha"),
-            "head_branch": run.get("headBranch"),
-            "created_at": run.get("createdAt"),
-            "updated_at": run.get("updatedAt"),
-            "conclusion": run.get("conclusion"),
-            "url": run.get("url"),
-            "selection": None,
-            "comparison": None,
-            "evidence_complete": False,
-        }
-        if run.get("status") == "completed":
-            try:
-                log = gh(["run", "view", str(run_id), "--log"], timeout=120)
-                row["selection"] = marker_json(log, SELECTION_MARKER)
-                row["comparison"] = marker_json(log, COMPARISON_MARKER)
-                row["evidence_complete"] = bool(row["selection"] and row["comparison"])
-            except RuntimeError as exc:
-                row["collection_error"] = str(exc)
-        observations.append(row)
+    for pr, runs_for_pr in sorted(
+        by_pr.items(),
+        key=lambda item: min(parse_time(run["createdAt"]) for run in item[1]),
+    ):
+        run_rows: list[dict] = []
+        for run in sorted(runs_for_pr, key=lambda value: parse_time(value["createdAt"])):
+            run_id = int(run["databaseId"])
+            row = {
+                "pull_request": pr,
+                "run_id": run_id,
+                "head_sha": run.get("headSha"),
+                "head_branch": run.get("headBranch"),
+                "created_at": run.get("createdAt"),
+                "updated_at": run.get("updatedAt"),
+                "conclusion": run.get("conclusion"),
+                "url": run.get("url"),
+                "selection": None,
+                "comparison": None,
+                "evidence_complete": False,
+            }
+            if run.get("status") == "completed":
+                try:
+                    log = gh(["run", "view", str(run_id), "--log"], timeout=120)
+                    row["selection"] = marker_json(log, SELECTION_MARKER)
+                    row["comparison"] = marker_json(log, COMPARISON_MARKER)
+                    row["evidence_complete"] = bool(row["selection"] and row["comparison"])
+                except RuntimeError as exc:
+                    row["collection_error"] = str(exc)
+            run_rows.append(row)
+
+        latest = max(run_rows, key=lambda value: parse_time(value["updated_at"]))
+        observation = dict(latest)
+        observation["run_count"] = len(run_rows)
+        observation["runs"] = run_rows
+        observations.append(observation)
 
     classifications = load_classifications(classifications_path)
-    critical_misses: list[dict] = []
-    noncritical_misses: list[dict] = []
-    incomplete: list[int] = []
-    for row in observations:
-        if not row["evidence_complete"]:
-            incomplete.append(row["run_id"])
-            continue
-        comparison = row["comparison"] or {}
-        for sensor_id in comparison.get("critical_misses") or []:
-            critical_misses.append({"run_id": row["run_id"], "pull_request": row["pull_request"], "sensor_id": sensor_id})
-        for sensor_id in comparison.get("selector_misses") or []:
-            if sensor_id in set(comparison.get("critical_misses") or []):
-                continue
-            item = {"run_id": row["run_id"], "pull_request": row["pull_request"], "sensor_id": sensor_id}
-            classification = classifications.get((row["run_id"], sensor_id))
-            if classification:
-                item["classification"] = classification["classification"]
-                item["classification_evidence"] = classification["evidence"]
-            else:
-                item["classification"] = "UNCLASSIFIED"
-            noncritical_misses.append(item)
+    critical_misses, noncritical_misses, incomplete = scan_observations(
+        observations,
+        classifications,
+    )
 
     selector_test = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "sensor_selector.py"), "--self-test"],
@@ -210,6 +279,7 @@ def collect(limit: int, classifications_path: Path | None) -> dict:
 
     now = datetime.now(timezone.utc)
     observed_prs = len(observations)
+    observed_runs = sum(len(row.get("runs") or [row]) for row in observations)
     observation_days = max(0.0, (now - start).total_seconds() / 86400.0)
     unclassified = [x for x in noncritical_misses if x.get("classification") == "UNCLASSIFIED"]
     relevant_unfixed = [
@@ -232,6 +302,8 @@ def collect(limit: int, classifications_path: Path | None) -> dict:
         blockers.append("INCOMPLETE_OBSERVATION_EVIDENCE")
     if unresolved_runs:
         blockers.append("UNRESOLVED_PULL_REQUEST_ID")
+    if history_truncated:
+        blockers.append("RUN_HISTORY_TRUNCATED")
     if not deterministic_replay_pass:
         blockers.append("DETERMINISTIC_REPLAY_FAILED")
     if criteria.get("rollback_mode") != "FULL_SUITE_REQUIRED":
@@ -247,11 +319,14 @@ def collect(limit: int, classifications_path: Path | None) -> dict:
         "criteria": criteria,
         "progress": {
             "observed_pull_requests": observed_prs,
+            "observed_runs": observed_runs,
             "observation_days": round(observation_days, 4),
             "critical_misses": len(critical_misses),
             "noncritical_misses": len(noncritical_misses),
             "unclassified_noncritical_misses": len(unclassified),
             "incomplete_observations": len(incomplete),
+            "unresolved_runs": len(unresolved_runs),
+            "run_history_complete": not history_truncated,
             "deterministic_replay_pass": deterministic_replay_pass,
         },
         "gate": {
@@ -267,12 +342,56 @@ def collect(limit: int, classifications_path: Path | None) -> dict:
     }
 
 
+def self_test() -> int:
+    early = {
+        "pull_request": 407,
+        "run_id": 1001,
+        "evidence_complete": True,
+        "comparison": {
+            "selector_misses": ["check-scenario-capability-graft"],
+            "critical_misses": [],
+        },
+    }
+    later = {
+        "pull_request": 407,
+        "run_id": 1002,
+        "evidence_complete": True,
+        "comparison": {
+            "selector_misses": [],
+            "critical_misses": [],
+        },
+    }
+    observations = [{
+        "pull_request": 407,
+        "run_id": 1002,
+        "runs": [early, later],
+    }]
+    classifications = {
+        (1001, "check-scenario-capability-graft"): {
+            "classification": "RELEVANT_MAPPING_FIXED",
+            "evidence": "fixture mapping repair",
+        }
+    }
+    critical, noncritical, incomplete = scan_observations(observations, classifications)
+    if critical or incomplete:
+        raise AssertionError("historical miss fixture produced unexpected critical/incomplete evidence")
+    if len(observations) != 1 or len(noncritical) != 1:
+        raise AssertionError("PR dedupe erased or duplicated historical miss evidence")
+    if noncritical[0].get("classification") != "RELEVANT_MAPPING_FIXED":
+        raise AssertionError("historical miss classification was not preserved")
+    print("OK sensor-shadow-observation selftest historical_miss_retention=PASS pr_dedupe=PASS")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--limit", type=int, default=100)
-    ap.add_argument("--classifications", type=Path)
+    ap.add_argument("--limit", type=int, default=1000)
+    ap.add_argument("--classifications", type=Path, default=DEFAULT_CLASSIFICATIONS)
     ap.add_argument("--output", type=Path)
+    ap.add_argument("--self-test", action="store_true")
     args = ap.parse_args()
+    if args.self_test:
+        return self_test()
     if args.limit < 1 or args.limit > 1000:
         ap.error("--limit must be 1..1000")
     try:
