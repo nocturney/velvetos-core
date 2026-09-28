@@ -114,6 +114,8 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 ## Final runtime status
 - Repository-wide `scripts/check-runtime-doctor.py --strict` exits **0**. Required components are healthy: repo HEAD proof, Windows edge-execution fallback, fresh Grok production scheduler readback, GitHub connector and Google Drive connector. The offline Mac is reported as a covered/degraded member of the `anyOf` host group, not a required blocker. Separately, the repaired monolithic `scripts/check-all.py` completes **109/109 PASS with exit 0** on the final reconciled tree.
 
+- Receipt age policy (2026-09-28, owner decision): receipts in `packages/vfharness/state/runtime/` expire after `maxAgeHours` (24h). An expired but otherwise valid receipt is a `WARN runtime receipts expired ...` line naming each receipt and its age on `pull_request` CI and local runs, and a FAIL on `push`, `schedule`, `workflow_dispatch` (and any other GitHub event), or whenever `VF_RUNTIME_RECEIPTS_STRICT=1` is set. Missing, malformed, mismatched, future-dated, evidence-less or non-healthy receipts fail in every context. Policy: `scripts/vf_runtime_receipt_policy.py`, used by `check-runtime-doctor.py --strict` and `check-grok-provider-readback.py`; both modes are tested by `scripts/check-runtime-receipt-age-policy.py`. `check-zero-cost-final-acceptance.py` reports `runtime_receipts=FRESH|EXPIRED_WARN`. Receipts are refreshed only from a real readback; main push CI stays red while they are expired.
+
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.
 - Do not install Docker merely for symmetry.
