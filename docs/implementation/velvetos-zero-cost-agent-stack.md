@@ -5,13 +5,13 @@ Cost law: `constitution/NO_NEW_RECURRING_COST.md`; no Jev exception.
 Target incremental recurring cost: **0 ILS**.
 
 ## Current phase
-Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. Phase 10-11 targeted acceptance passes for the zero-cost stack, repository-wide strict deployment proof passes after a fresh Grok Bot provider readback, and the Windows-isolated monolithic `scripts/check-all.py` run completes **106/106 PASS with exit 0** after integration with current `main`. GlitchTip remains explicitly blocked and no Production authority has moved.
+Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-Anything is promoted only as a scoped headless FreeCAD adapter; Phase 6 Laya remains SHADOW_NOT_PROMOTED; Phase 7 memory rationalization kept vfmem canonical and Cognee derived-only; Phase 8 Reef is COMPLETE_LAB_ONLY / LAB_ONLY_NOT_PROMOTED; Phase 9 ecosystem radar found no additional dev lab with unique value and installed nothing. Phase 10-11 targeted acceptance passes for the zero-cost stack, repository-wide strict deployment proof passes after a fresh Grok Bot provider readback, and the final Windows-isolated monolithic `scripts/check-all.py` run completes **109/109 PASS with exit 0** after final reconciliation with current `main`. PR #390 was merged to `main` as `2d72e486` after explicit owner approval. GlitchTip remains explicitly blocked and no Production authority has moved.
 
 ## Repository
 - Repo: `https://github.com/nocturney/velvetos-core.git`
 - Base `origin/main` observed at start: `e8396071de04010ceb1eff7593c29cfc14d6a435`
 - Cost-policy checkpoint: `bb54b0a7c24d52c29206b31a54ffd7200a81df77`
-- Active branch: `implementation/zero-cost-agent-stack`
+- Implementation branch: `implementation/zero-cost-agent-stack` (merged via PR #390)
 - No force-push, no direct push to main, no Production/Instagram writes for testing.
 
 ## Host baseline
@@ -31,7 +31,7 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Preserved and validated existing uncommitted NO_NEW_RECURRING_COST work.
 - Cost policy sensor, risk policy, HQ overlay, README contract and git diff check passed.
 - Committed canonical zero-cost policy as `bb54b0a7`.
-- The original `check-all.py` attempts exposed Windows console process-group leakage around nested sensor teardown. After moving the nested Living Studio/media paths in-process and isolating each Windows sensor with `CREATE_NEW_PROCESS_GROUP`, the pre-integration monolithic run completed **105/105 PASS**; after integrating current `main` and its Fabrication Router sensor, the suite completed **106/106 PASS**, printed `OK suite passed=106`, and exited 0.
+- The original `check-all.py` attempts exposed Windows console process-group leakage around nested sensor teardown. After moving the nested Living Studio/media paths in-process and isolating each Windows sensor with `CREATE_NEW_PROCESS_GROUP`, the pre-integration monolithic run completed **105/105 PASS**; an intermediate current-main integration completed **106/106 PASS**; after the final policy/CAD reconciliation the suite completed **109/109 PASS**, printed `OK suite passed=109`, and exited 0.
 - Repository scan found existing watch/lock references for Ponytail, Impeccable, diagram-design and Herdr; no second runtime will be introduced.
 - Project Request Gate passed for `system_engineering`; routed packs are velvetos/vfharness/vfmem.
 - Promptfoo 0.123.1 installed repo-locally after FREE_LOCAL cost preflight; no model/API credentials configured.
@@ -78,7 +78,7 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Evidence: `packages/vfharness/state/laya-shadow-2026-09-27.json`, `laya-shadow-calibration-2026-09-27.json`, and `laya-shadow-assessment-2026-09-27.json`. Sensor: `scripts/check-laya-shadow.py`.
 
 ## Phase 7 memory-rationalization outcome
-- Authority is unchanged: `vfmem` is the sole canonical durable memory; Cognee 1.6.0 is context-only/derived; the pre-existing Deja Vu 0.21.2 install remains a session-history adjunct with no wiring changes. Hindsight and Supermemory were not installed because their useful local paths were not justified on the current host without additional provider/infrastructure burden.
+- Authority is unchanged: `vfmem` is the sole canonical durable memory; Cognee 1.6.1 (pin bumped 2026-09-28) is context-only/derived; the pre-existing Deja Vu 0.21.2 install remains a session-history adjunct with no wiring changes. Hindsight and Supermemory were not installed because their useful local paths were not justified on the current host without additional provider/infrastructure burden.
 - The representative corpus contains 22 deterministic Hebrew/English cases, including temporal-correctness and contradiction-handling slices. No LLM judge is used.
 - Final TF-IDF challenger: hit@1 45.45%, hit@3 68.18%, hit@5 81.82%, MRR 0.5902, median query latency 14.75 ms. It remains benchmark-only because its current implementation scans a broader Markdown surface, has no canonical allowlist/freshness contract and persists a pickle index.
 - Cognee initially returned repeated chunks from the same canonical document, producing hit@5 31.82%. The adapter now over-fetches chunk candidates and deduplicates by canonical source before top-k ranking. Final Cognee: hit@1 27.27%, hit@3 59.09%, hit@5 68.18%, MRR 0.4318, median end-to-end recall latency 15.44 s, provenance 100%, repeatability 100%.
@@ -108,11 +108,11 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - Windows `cp1252` caused initial decode-only failures in `check-hq-overlay.py` and the nested control-api path used by agent-security. Re-running the same checks with `PYTHONUTF8=1` passed without code changes; the locale incident is preserved as evidence, not hidden.
 - Runtime proof is reconciled to `vf.runtime.expected.v2`. `edge-execution` is an `anyOf` group over `sderot-mac` / `sderot-windows`, so the currently offline Mac no longer makes the system falsely unhealthy while the verified Windows fallback is online. Fresh live connector reads produced current GitHub and Google Drive receipts. On 2026-09-27 a fresh signed-in Grok Bot provider UI readback verified the exact eight protected routine IDs enabled with canonical effective schedule displays in an `Asia/Jerusalem` renderer. It also detected `OpenPost Release Watch` still enabled contrary to the 2026-09-26 retirement directive; that already-authorized drift was disabled in place and read back disabled while the protected eight remained unchanged. The evidence is `automation/grok/provider-readback-2026-09-27.json`; prompt-body parity is explicitly not claimed.
 - Repository-wide worktree hygiene is now clean: the 3D and HQ/control work were independently verified and committed, `git status --short` is empty, and repository-wide `git diff --check` exits 0. The earlier EOF warning in `packages/vfops/hq/STATUS-he.md` was repaired before the HQ/control commit.
-- The monolithic `scripts/check-all.py` was re-run after the Windows process-group isolation repair and completed **106/106 PASS with exit 0** after current-main integration. Earlier interrupted attempts remain historical diagnostics only and are superseded by the completed isolated runs.
+- The monolithic `scripts/check-all.py` was re-run after the Windows process-group isolation repair and final current-main reconciliation and completed **109/109 PASS with exit 0**. Earlier interrupted attempts remain historical diagnostics only and are superseded by the completed isolated runs.
 - Acceptance receipt: `packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json`; sensor: `scripts/check-zero-cost-final-acceptance.py`.
 
 ## Final runtime status
-- Repository-wide `scripts/check-runtime-doctor.py --strict` exits **0**. Required components are healthy: repo HEAD proof, Windows edge-execution fallback, fresh Grok production scheduler readback, GitHub connector and Google Drive connector. The offline Mac is reported as a covered/degraded member of the `anyOf` host group, not a required blocker. Separately, the repaired monolithic `scripts/check-all.py` now completes **106/106 PASS with exit 0** on the current-main-integrated tree.
+- Repository-wide `scripts/check-runtime-doctor.py --strict` exits **0**. Required components are healthy: repo HEAD proof, Windows edge-execution fallback, fresh Grok production scheduler readback, GitHub connector and Google Drive connector. The offline Mac is reported as a covered/degraded member of the `anyOf` host group, not a required blocker. Separately, the repaired monolithic `scripts/check-all.py` completes **109/109 PASS with exit 0** on the final reconciled tree.
 
 ## Environment decisions
 - Start ordinary Node/Python tools Windows-native because the host supports them directly.
@@ -133,4 +133,4 @@ Phases 0-9 are implemented or assessed within their declared scope. Phase 5 CLI-
 - `scripts/check-hq-overlay.py`: PASS 2026-09-27
 - `scripts/check-readme-contract.py`: PASS 2026-09-27
 - `git diff --check`: PASS 2026-09-27
-- `scripts/check-all.py`: PASS 106/106, exit 0 (current-main integrated; Windows sensor process-group isolation enabled)
+- `scripts/check-all.py`: PASS 109/109, exit 0 (final current-main reconciliation; Windows sensor process-group isolation enabled)
