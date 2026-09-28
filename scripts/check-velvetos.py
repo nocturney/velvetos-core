@@ -297,7 +297,8 @@ def main() -> None:
             continue
         if "git push" in code or "publish-instance.sh" in code or "git commit" in code:
             fail(f"sync-instance-scaffold.sh must stay check-only: {code}")
-    if 'INSTANCE_ONLY_ALLOWED=(".github" "docs" ".cursor/mcp.json")' not in sync_sh:
+    # control-center/ is the frontend's own Control Center app (added 2026-09-28, owner-approved sync).
+    if 'INSTANCE_ONLY_ALLOWED=(".github" "docs" ".cursor/mcp.json" "control-center")' not in sync_sh:
         fail("sync-instance-scaffold.sh instance-only allowlist drifted (keep it explicit and minimal)")
     vf = INSTANCES / "velvet-factory"
     vf_desk = json.loads((vf / ".cursor" / "vf-desk.json").read_text(encoding="utf-8"))
