@@ -6,6 +6,8 @@ Previous Reel extension: **6.6.10**.
 Canonical production route for "תכין ריל/וידאו ל<מוצר>": **Adobe Photoshop + After Effects on Chris**.
 This route prepares an OWNER REVIEW candidate and never auto-publishes.
 
+Policy bindings: `policy_id: project.request.preflight` governs request/tool preflight; `policy_id: cost.recurring.new` keeps the route on existing/zero-new-recurring-cost capability unless separately approved; `policy_id: instagram.publish` remains a separate publication gate and is never authorized by Reel preparation.
+
 ## 1. Product Truth is absolute
 
 Product pixels come only from verified real photos/video or a deterministic render of the real print file. Generative video models never render, replace, repair, re-angle or stylize the product and never render Hebrew text.
