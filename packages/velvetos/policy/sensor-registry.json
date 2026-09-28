@@ -3314,6 +3314,30 @@
       },
       "fallback_scope": "FULL_SUITE",
       "mapping_state": "mapped"
+    },
+    {
+      "id": "check-runtime-receipt-age-policy",
+      "path": "scripts/check-runtime-receipt-age-policy.py",
+      "owns": [
+        "scripts/vf_runtime_receipt_policy.py"
+      ],
+      "triggered_by": [
+        "scripts/vf_runtime_receipt_policy.py",
+        "scripts/check-runtime-doctor.py",
+        "scripts/check-grok-provider-readback.py",
+        "scripts/check-runtime-receipt-age-policy.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
     }
   ]
 }

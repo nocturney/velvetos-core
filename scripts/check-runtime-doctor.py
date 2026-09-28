@@ -8,10 +8,15 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from vf_runtime_receipt_policy import receipt_age_policy, warn_line  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "packages/vfharness/runtime/expected-components.json"
 RECEIPTS = ROOT / "packages/vfharness/state/runtime"
 STRICT = os.environ.get("VF_RUNTIME_STRICT") == "1" or "--strict" in sys.argv
+# Age-only expiry that was softened to a warning for this run (see vf_runtime_receipt_policy).
+STALE_WARNINGS: list[str] = []
 
 
 def load_json(path: Path) -> dict:
@@ -31,7 +36,7 @@ def parse_time(value: object) -> datetime | None:
     return parsed.astimezone(timezone.utc)
 
 
-def inspect_receipt(receipt_id: str, max_age_hours: float) -> tuple[bool, str]:
+def inspect_receipt(receipt_id: str, max_age_hours: float, age_strict: bool = True) -> tuple[bool, str]:
     path = RECEIPTS / f"{receipt_id}.json"
     if not path.is_file():
         return False, f"{receipt_id}: missing receipt"
@@ -52,10 +57,15 @@ def inspect_receipt(receipt_id: str, max_age_hours: float) -> tuple[bool, str]:
     age_hours = (datetime.now(timezone.utc) - observed).total_seconds() / 3600
     if age_hours < -0.25:
         return False, f"{receipt_id}: observed_at is in the future"
-    if age_hours > max_age_hours:
-        return False, f"{receipt_id}: stale age={age_hours:.1f}h max={max_age_hours:g}h"
     if state != "healthy":
         return False, f"{receipt_id}: state={state}"
+    if age_hours > max_age_hours:
+        if age_strict:
+            return False, f"{receipt_id}: stale age={age_hours:.1f}h max={max_age_hours:g}h"
+        stale = f"{receipt_id} age={age_hours:.1f}h max={max_age_hours:g}h"
+        if stale not in STALE_WARNINGS:
+            STALE_WARNINGS.append(stale)
+        return True, f"{receipt_id}: healthy but EXPIRED age={age_hours:.1f}h max={max_age_hours:g}h (warning only)"
     return True, f"{receipt_id}: healthy age={age_hours:.1f}h"
 
 
@@ -77,6 +87,8 @@ def main() -> int:
         print("FAIL manifest has no components", file=sys.stderr)
         return 1
     default_age = float(data.get("receiptFreshnessDefaultHours", 24))
+    age_strict, age_context = receipt_age_policy()
+    STALE_WARNINGS.clear()
     errors: list[str] = []
     degraded: list[str] = []
     seen: set[str] = set()
@@ -120,7 +132,7 @@ def main() -> int:
 
         max_age = float(component.get("maxAgeHours", default_age))
         if any_of:
-            checks = [inspect_receipt(member, max_age) for member in any_of]
+            checks = [inspect_receipt(member, max_age, age_strict) for member in any_of]
             if any(ok for ok, _ in checks):
                 healthy = [message for ok, message in checks if ok]
                 unhealthy = [message for ok, message in checks if not ok]
@@ -130,12 +142,15 @@ def main() -> int:
             message = f"{cid}: no healthy member (" + "; ".join(msg for _, msg in checks) + ")"
         else:
             receipt_id = str(component.get("receipt") or cid)
-            ok, detail = inspect_receipt(receipt_id, max_age)
+            ok, detail = inspect_receipt(receipt_id, max_age, age_strict)
             if ok:
                 continue
             message = f"{cid}: {detail}"
 
         (errors if required else degraded).append(message)
+
+    if STALE_WARNINGS:
+        print(warn_line(STALE_WARNINGS, age_context))
 
     if errors:
         for error in errors:
