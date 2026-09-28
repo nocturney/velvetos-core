@@ -1,7 +1,7 @@
 {
   "contractVersion": 6,
-  "revision": "6.6.10",
-  "bundleId": "VF-PROJECT-6.6.10-REEL-VIDEO-ROUTE",
+  "revision": "6.6.11",
+  "bundleId": "VF-PROJECT-6.6.11-ADOBE-PREMIUM-REEL-ROUTE",
   "status": "PROJECT_SOURCE_EXTENSION",
   "baseProject": {
     "revision": "6.6.9",
@@ -10,7 +10,7 @@
     "styleContract": "STYLE-CONTRACT-v6.6.9.json",
     "runbook": "RUNBOOK-v6.6.9.md"
   },
-  "instructions": "PROJECT-INSTRUCTIONS-v6.6.10.txt",
+  "instructions": "PROJECT-INSTRUCTIONS-v6.6.11.txt",
   "reelRoute": "REEL-ROUTE.md",
   "productTruthGuide": "PRODUCT-TRUTH-GUIDE-v1.txt",
   "repoExecutableBundle": {

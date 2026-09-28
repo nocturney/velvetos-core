@@ -1,161 +1,201 @@
 # Velvet Factory — Reel / Video Route
 
-Status: **Project source extension for Revision 6.6.10**
+Status: **Project source extension for Revision 6.6.11**
 Base creative authority: **Revision 6.6.9 / VF-PROJECT-6.6.9-NATIVE-PRODUCT-EDIT-ROUTING**.
-Scope: prepare a complete review-ready Reel/video package. This route never auto-publishes.
+Previous Reel extension: **6.6.10**.
+Canonical production route for "תכין ריל/וידאו ל<מוצר>": **Adobe Photoshop + After Effects on Chris**.
+This route prepares an OWNER REVIEW candidate and never auto-publishes.
 
-## 1. Product Truth stays absolute
+Policy bindings: `policy_id: project.request.preflight` governs request/tool preflight; `policy_id: cost.recurring.new` keeps the route on existing/zero-new-recurring-cost capability unless separately approved; `policy_id: instagram.publish` remains a separate publication gate and is never authorized by Reel preparation.
 
-Product pixels come from verified real photos/video or from a deterministic render of the real print file. A generative video model never renders, replaces, repairs, re-angles or stylizes the product. A generative model never renders Hebrew text.
+## 1. Product Truth is absolute
 
-For photographed products, preserve the 6.6.9 Native Product Edit law: NATIVE_PRODUCT_EDIT may change scene, lighting, composition, depth of field, crop and placement around the real product; Identity Gate and Creative Gate remain separate. SOURCE_COMPOSITE remains the bounded fallback. Reel work does not weaken either gate.
+Product pixels come only from verified real photos/video or a deterministic render of the real print file. Generative video models never render, replace, repair, re-angle or stylize the product and never render Hebrew text.
 
-For a 3D turntable, the real print file is the geometry source. The render illustrates that file; it does not prove a photographed physical event, print success, material, dimensions, durability or customer use unless separate evidence supports the claim.
-## 2. Supported Reel types
+For photographed products, preserve silhouette, proportions, parts/openings, surface identity, base colour/finish and critical details. Retouch may affect only environment, light/shadow integration, composition, depth of field, crop and placement. A missing product view is a missing input, not permission to synthesize it.
 
-### A. Animated rich still — `ANIMATED_RICH_STILL`
-Use a text-free, source-faithful rich still master. Motion grammar:
-1. slow camera push on the real hero;
-2. HEADLINE_REVEAL;
-3. ACCENT_RULE_WIPE;
-4. CHIP_SEQUENCE;
-5. INSET_POP when a verified inset adds information;
-6. at least one verified real-motion beat;
-7. deterministic end card.
+For a 3D turntable, the real print file is the geometry source. The render illustrates that file only; it does not prove a photographed event, material, dimensions, durability or print success.
 
-A Ken Burns move on one still by itself is **not** a Reel.
+## 2. Trigger and fixed workflow
 
-### B. Printer-to-shelf — `PRINTER_TO_SHELF`
-Start with a verified printer timelapse/process clip, cut to useful beats, and finish on the styled still/cover. The printer clip proves only what is actually visible.
+The canonical Hebrew trigger is:
 
-### C. 3D turntable beat — `REAL_PRINT_FILE_TURNTABLE`
-Use Blender with the real print file, warm-interior lighting and colour matched to verified photos of the printed product when available. Render a loopable 6–8 second 9:16 beat and return it to the same HyperFrames/QA pipeline.
+`תכין ריל/וידאו ל<מוצר>`
 
-### D. Rich-style v2 — `RICH_STYLE_V2`
-Upgrade an existing ready package without changing its truth claims: current rich cover/hook, editorial motion, verified detail treatment, current audio gate and current end card. Preserve old receipts as history and create new exact-final receipts for v2.
-## 3. Inputs and source locations
+On that request:
 
-Resolve before production:
-- product truth and still route: `packages/velvetos/chatgpt-project/` plus the active Project 6.6.9 bundle;
-- real media: `packages/vfmedia/catalog.json`, Media Vault refs, or exact current-task source files;
-- current visual language: `packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, `VISUAL-DNA.json`, `HYPERFRAMES-FRAME.md`;
-- brand assets: `packages/vfbrand/brand-tokens.json`;
-- video/edit policy: `VIDEO-TOOLCHAIN.md/.json`, `MOTION-PRESETS.md`, `HYPERFRAMES-BACKEND.md/.json`, `packages/vfgrowth/EDIT-GATE.md`, `packages/vfgrowth/PREFLIGHT.md`;
-- reel candidates: `scripts/vf_reel_candidates.py`;
-- existing packages: `packages/vfom/jobs/VF-R00x/`;
-- render host: `packages/vfmcp/RENDER-HOSTS.json`.
+1. Find the product's published rich still and use it as the primary visual reference.
+2. Read its on-image copy as the overlay-copy source unless Christian explicitly supplies replacement copy.
+3. Ask for original product photos: **front, 3/4, side, back, close-up**. A short phone video is optional.
+4. Produce one text-free 1080x1920 scene per verified angle, matching the published still's room, light, retouch and colour grade.
+5. Produce an identical **EMPTY plate** for each scene: same camera/frame/environment/light with the product absent.
+6. Build the deterministic job package under `packages/vfom/jobs/VF-R0xx/`.
+7. Run one Chris command: `py -3.14 scripts\vf_ae_reel.py --job packages\vfom\jobs\VF-R0xx`.
+8. Run Reel QA against the published reference and hand the rendered candidate to Christian for review.
 
-Missing media or a missing print file is a needed input, never permission to fabricate it.
-## 4. Text-free master and layer separation
+Do not stop at a storyboard or raw source when the required inputs exist. If required angles/scenes are missing, fail closed with exact `neededInputs`.
 
-A still-driven Reel starts from a **text-free master**. Keep the composition separable into:
-- `product_layer`: real product pixels, or deterministic pixels from the real print file for a turntable;
-- `background_plate`: scene pixels around the product;
-- `editorial_overlay`: deterministic Hebrew, accent rule, chips, inset frame, CTA and logo;
-- `audio`: source sound / verified music / authored SFX under office policy.
+## 3. Exact scene-generation prompt template
 
-For Native edits, the candidate guard protects final overlays from touching product pixels; it is not segmentation proof and does not prove identity. Inset provenance remains `SAME_FRAME_CROP` or `ALTERNATE_VERIFIED_SOURCE`. Never synthesize a missing view.
+Use only the current-task real product photo as the identity source. References are visual guidance, not product inputs.
 
-## 5. Per-reel variables
+> Create a vertical 1080x1920 text-free editorial scene for Velvet Factory using the supplied real product photo as the sole physical identity source. Preserve the product exactly: silhouette, proportions, openings/parts, eyes/horns/base/tail where present, surface identity, base colour/finish and every critical detail. Do not redraw, replace, repair, add parts, remove parts, invent a new angle or change geometry. Match the published rich-still reference only for room/environment, warm side/window light, surface, depth, colour grade, composition hierarchy and retouch vocabulary. The product must remain large and dominant, naturally grounded with believable contact shadow, with useful negative space for later Hebrew typography. No text, icons, cards, logo, watermark or claims. Retouch may change only lighting, shadow integration, background/environment, crop, depth of field and placement. Output 1080x1920.
 
-Every template reads one JSON variables file. It may contain only verified strings/facts and explicit file refs: job id, reel type, headline, subhead, up to three chips, up to three insets, accent source/value, hero/text-free master, real-motion refs, optional turntable input, logo ref, CTA, audio strategy and output paths.
+For the paired empty plate:
 
-Hebrew is explicit RTL. Headline/subhead/chip limits come from the owner-approved rich editorial standard. Do not invent material, size, print duration, quality, stock, price, durability or suitability.
-## 6. Motion vocabulary
+> From the approved scene, create the identical EMPTY plate: same 1080x1920 frame, camera height/angle, crop, room, surface, props, light direction/intensity, depth of field and colour grade, but remove only the product and its contact shadow. Do not change any other composition element. No product, text, icons, cards, logo or watermark.
 
-The canonical editorial presets are:
-- `HEADLINE_REVEAL`
-- `ACCENT_RULE_WIPE`
-- `CHIP_SEQUENCE`
-- `INSET_POP`
+A scene pair is valid only when the plate and product scene are frame-compatible. Do not use a style reference or logo file as a Native identity input.
 
-They coexist with the existing:
-- `VELVET_HARD_CUT`
-- `VELVET_MACRO_PUNCH`
-- `VELVET_MATERIAL_LABEL`
-- `VELVET_FINAL_STAMP`
+## 4. Job package contract
 
-Motion supports hierarchy, evidence or pacing. Decorative motion that does not improve the story is removed.
+Every job lives at `packages/vfom/jobs/VF-R0xx/` and contains at minimum:
 
-## 7. Audio is mandatory creative work
+- `variables.json` — headline lines, subhead, accent, icon labels, detail labels, CTA and explicit font/logo refs;
+- `storyboard.json` — 12–15 second beat timing and scene order;
+- `manifest.json` — source/scene/plate refs plus SHA-256 bindings;
+- `prep-status.json` — `needs_input` or `needs_review`, never publish authorization.
 
-Every Reel/video Story needs a documented audio strategy and exact-final Audio Gate. Follow `packages/vfom/FOUNDRY.json#audioPolicy`, `packages/vfom/VISUAL-OS.md`, and `packages/vfresearch/MUSIC.md`.
+Canonical schema: `packages/vfom/adobe/REEL-JOB.schema.json`.
 
-Use source, music, SFX, source+music, source+SFX, or explicitly justified intentional silence. Preserve useful real machine/handling/room sound when it strengthens proof. Do not invent a trending track name. A final Reel must not be near-silent unless intentional silence is documented and reviewed.
-## 8. Cover, caption and hashtags
+If a source has not arrived, its path/hash stays an explicit empty string and the missing item appears in `neededInputs`. Never invent a SHA-256. `publicationAuthorized` is always false in this route.
 
-The Reel cover uses the same rich editorial language as the feed: dominant real product, heavy Hebrew headline, product-following accent rule, one-line subhead, and only verified chips/insets that earn their place. The cover must survive the feed-grid crop and phone preview.
+Brand refs come from `packages/vfbrand/brand-tokens.json`:
+- Rubik 700: Hebrew headline;
+- Rubik 600: Hebrew subhead/labels;
+- Cinzel: Latin display/text only;
+- exact overlay logo: `packages/vfbrand/assets/logo/velvet-factory-logo-gold-full-lockup-traced.svg`;
+- CTA: `reel.endCardCta`.
 
-Caption goes through `packages/vfcopy` and the exact public-social Visible Text gate. Public CTA resolves from current authority; the default end-card CTA is:
-`לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם`.
+## 5. Photoshop isolation
 
-No public phone/WhatsApp/wa.me without exact current-task permission. Hashtags come from `packages/vfgrowth/data/hashtag-library.json` and current growth rules; public caption uses at most five.
+Canonical script: `packages/vfom/adobe/photoshop-product-layer.jsx`.
 
-## 9. QA order
+For each scene:
+1. open the scene PNG;
+2. run Photoshop **Select Subject**;
+3. refine the selection edge deterministically with small smooth/feather operations;
+4. clear the non-product area on a duplicate pixel layer;
+5. export a full-canvas product-layer PNG with alpha.
 
-Run on the exact current artifact, in this order:
-1. **PREFLIGHT** — sources, claims, rights, copy state and visual-standard binding;
+No Firefly and no Generative Fill. Content-Aware Fill is not used automatically; if Christian explicitly requests a tiny manual edge-gap repair, it may be used only outside the verified product geometry.
+
+The resulting product-layer retains the scene's exact registration so After Effects can place it over the paired EMPTY plate without a position guess.
+
+## 6. After Effects build
+
+Canonical script: `packages/vfom/adobe/build-reel.jsx`.
+
+Canonical orchestrator: `scripts/vf_ae_reel.py`.
+
+Build:
+- 1080x1920 portrait;
+- 30fps;
+- 12–15 seconds;
+- paired plate/product layers at different Z values for 2.5D separation;
+- slow dolly push-in and gentle parallax;
+- camera depth of field plus rack focus;
+- soft sunlight sweep over the scene;
+- optional subtle dust with built-in **CC Particle World** only;
+- restrained cuts/crossfades between verified angle scenes;
+- no third-party plugins.
+
+Typography is deterministic:
+- explicit Hebrew RTL;
+- Rubik 700/600 from committed font assets;
+- Cinzel for Latin only;
+- line-by-line masked reveal;
+- thin accent-rule wipe;
+- no bouncy pop-up cards.
+
+Instagram safety:
+- no text inside the top 150px;
+- no text inside the bottom 20% of the frame;
+- reserve the right-edge button strip;
+- overlays never cross the protected product silhouette.
+
+The end card uses the exact gold SVG logo and token CTA. The logo is resized only; it is never redrawn or recoloured.
+
+## 7. Audio
+
+Every final Reel has a documented `audioStrategy`: source, music, SFX, source+music, source+SFX, or explicit intentional silence. Never invent a track name or rights status. Audio remains exact-final QA work.
+
+## 8. Render host and one-command route
+
+Chris host:
+- repo: `D:\Velvet\Repos\velvetos-core`;
+- VelvetOS runtime/artifacts: `D:\Velvet\Runtime\VelvetOS\`;
+- Photoshop 2026 expected: v27.7 under Program Files;
+- After Effects 2026 expected: v26.3 under Program Files;
+- `aerender.exe`: After Effects Support Files;
+- ffmpeg/ffprobe: `D:\Velvet\Tools\Shared\ffmpeg\current\bin`.
+
+Everything controlled by VelvetOS during the render is written under `D:\Velvet\Runtime\VelvetOS\`. Adobe may use its normal installed-app/profile state, but the pipeline does not create VelvetOS artifacts on C:.
+
+From the repo root:
+
+```bat
+py -3.14 scripts\vf_ae_reel.py --job packages\vfom\jobs\VF-R0xx
+```
+
+The orchestrator validates the job, verifies source hashes, registers the committed fonts for the Windows session, runs Photoshop, runs the AE build, calls `aerender`, transcodes with ffmpeg when needed, verifies 1080x1920/30fps with ffprobe, and writes a receipt with hashes.
+
+The first owl package remains `needs_input`; its structural check is:
+
+```bat
+py -3.14 scripts\vf_ae_reel.py --job packages\vfom\jobs\VF-R006 --validate-only
+```
+
+## 9. Supported Reel types
+
+The Adobe route is canonical, while these semantic types remain valid:
+- `ANIMATED_RICH_STILL`
+- `PRINTER_TO_SHELF`
+- `REAL_PRINT_FILE_TURNTABLE`
+- `RICH_STYLE_V2`
+
+`REAL_PRINT_FILE_TURNTABLE` may call `scripts/vf_turntable.py` and feed its deterministic MP4 into AE as an optional additional layer. The print file remains the only turntable geometry source.
+
+HyperFrames remains a compatibility/deterministic backend and its five templates remain tracked:
+`hook-card.html`, `chips.html`, `detail-inset.html`, `end-card.html`, `rich-still-reel.html`.
+
+The eight historical motion IDs stay documented:
+`HEADLINE_REVEAL`, `ACCENT_RULE_WIPE`, `CHIP_SEQUENCE`, `INSET_POP`,
+`VELVET_HARD_CUT`, `VELVET_MACRO_PUNCH`, `VELVET_MATERIAL_LABEL`, `VELVET_FINAL_STAMP`.
+
+## 10. HyperFrames regression contract
+
+PR #422 regressions are explicitly guarded:
+- the `<html>` tag in all five templates must **not** have `dir="rtl"`;
+- text containers keep `dir="rtl"`;
+- `velvet-reel.js` resolves `packages/...` from repo root;
+- brand tokens, logo and committed fonts never use `../` repo escapes;
+- `velvet-reel.css` contains no `../../vfbrand` font rules.
+
+## 11. QA order
+
+Run on the exact artifact:
+1. **PREFLIGHT** — sources, claims, copy and visual-standard binding;
 2. **EDIT-GATE** — real edit delta, Product Truth, source/final evidence and audio strategy;
-3. **Visual-standard gate** — rich editorial scene/layout, RTL, product dominance, product-following accent and mobile readability;
-4. **reference match** — compare exact cover/frames against the selected 6.6.9 S01–S07 reference(s), one primary and at most one support.
+3. **visual-standard** — warm editorial scene, product dominance, hierarchy, RTL and mobile readability;
+4. **reference match** — compare against the product's published rich still;
+5. **exact-final inspection** — first 2s, cuts, midpoint(s), last 2s/end card, full-size cover and mobile/grid crop.
 
-Then inspect first 2s, cut boundaries, representative midpoint(s), last 2s/end card, full-size cover and mobile/grid crop. A render receipt is technical evidence only; it is not creative approval and never a publish receipt.
-## 10. Render commands on Chris / sderot-windows
+Technical checks include ffprobe 1080x1920/30fps, duration 12–15s and SHA-256 receipt bindings.
 
-Verified host path contract:
-- repo: `D:\Velvet\Repos\velvetos-core`
-- HyperFrames: `C:\Users\Chris\AppData\Roaming\npm\hyperframes.cmd`
-- FFmpeg/ffprobe: `D:\Velvet\Tools\Shared\ffmpeg\current\bin`
-- Blender: `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe`
+A render receipt is technical evidence only. It is not Identity PASS, Creative PASS, MASTER approval or publish authorization.
 
-From `cmd.exe`:
+## 12. Handoff state
 
-```bat
-set "PATH=C:\Users\Chris\AppData\Roaming\npm;D:\Velvet\Tools\Shared\ffmpeg\current\bin;%PATH%"
-cd /d D:\Velvet\Repos\velvetos-core
-py -3.14 scripts\vf_hyperframes.py doctor
-py -3.14 scripts\vf_hyperframes.py plan packages\vfom\jobs\<JOB_ID>\render-request.json
-py -3.14 scripts\vf_hyperframes.py run packages\vfom\jobs\<JOB_ID>\render-request.json
-```
+A complete handoff includes the job package, scene pairs, product-layer PNGs, AEP, rendered MP4, ffprobe result and receipt. Before owner review the state is `needs_review`. The first job stays `needs_input` until required scene pairs exist.
 
-Batch variable-row render:
+`ready_for_publish` remains a handoff state only. No Instagram publishing, scheduling, post edit or other live write occurs from this route.
 
-```bat
-py -3.14 scripts\vf_hyperframes.py run packages\vfom\jobs\<JOB_ID>\render-request.json --batch packages\vfom\jobs\<JOB_ID>\render-batch.json
-```
+## 13. Drift sensors
 
-Turntable beat:
+`packages/vfom/REEL-ROUTE-CONTRACT.json` binds this document, Project revision, legacy template inventory and the Adobe schema/JSX/Python implementation.
 
-```bat
-"C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" --factory-startup --disable-autoexec -b -P scripts\vf_turntable.py -- --input "D:\Downloads\3D Prints\<REAL_PRINT_FILE>" --output "D:\Velvet\Artifacts\<JOB_ID>\turntable.mp4" --duration 7 --fps 30 --width 1080 --height 1920
-```
+`scripts/check-reel-route-sync.py` fails when Project/route/Adobe bindings drift.
+`scripts/check-reel-templates.py` statically checks HyperFrames path/RTL regressions, Adobe JSX wiring, font/logo/CTA bindings, the job schema and VF-R006 copy.
 
-The default `--color-mode embedded` preserves print-file material colours. When a verified photo of the printed item is the colour authority, use `--color-mode verified-hex --base-color-hex <#RRGGBB> --color-source <evidence ref>`; never guess a product colour.
-
-Rendering runs on the authorized host; CI lints contracts/templates and never renders production video.
-## 11. Handoff package
-
-Mirror `packages/vfom/jobs/VF-R00x`. A review-ready Reel handoff contains:
-- `content-contract.json`;
-- `creative-manifest.json` with `format: reel` and `status: ready_for_publish`;
-- per-reel variables;
-- render request/batch request;
-- exact cover and final video refs;
-- caption/hashtag selection;
-- audio/render/visible-text/package receipts with exact SHA-256 bindings;
-- turntable receipt when used, including the real print-file input ref;
-- explicit `needed_inputs` for anything Christian must provide.
-
-`ready_for_publish` is a preparation state, not publication permission. Never call Instagram publishing, schedule a post, edit a live post or write any live channel from this route.
-
-## 12. Route/template/preset drift sensor
-
-`packages/vfom/REEL-ROUTE-CONTRACT.json` binds this route to:
-`hook-card.html`, `chips.html`, `detail-inset.html`, `end-card.html`, `rich-still-reel.html`
-and to the eight motion preset IDs above.
-
-`scripts/check-reel-route-sync.py` fails when route names, templates and presets drift apart. PR2 flips the contract from pending to implemented when the templates/presets exist.
-
-## 13. Completion
-
-A Reel task is complete only with the reviewed rendered artifact (or a precise missing-input blocker), cover, caption/hashtags, receipts and handoff state. Do not stop at a storyboard, a raw timelapse, one animated still, an unrendered HTML composition or a turntable proposal.
+CI performs static/schema checks only and never launches Adobe or renders production video.

@@ -1,36 +1,30 @@
 {
-  "schema": "velvetos.reel-content-prep.v1",
+  "schema": "velvetos.reel-content-prep.v2",
   "jobId": "VF-R006",
-  "kind": "live_rich_still_to_reel",
+  "kind": "published_rich_still_to_adobe_reel",
   "product": "owl",
   "publishedPostDate": "2026-09-19",
   "status": "needs_input",
   "rendered": false,
   "publishedByThisJob": false,
-  "textFreeMaster": {
-    "exists": false,
-    "repoSearch": "no tracked text-free master found by product/date/master/text-free search",
-    "projectAssetSearch": {
-      "exists": false,
-      "searchedCurrentProjectAssets": true,
-      "relevantAssetsPresent": [
-        "Velvet-Factory-STYLE-POST-S01-v1.png",
-        "Velvet-Factory-STYLE-POST-S02-v1.png",
-        "Velvet-Factory-STYLE-POST-S03-v1.png",
-        "Velvet-Factory-STYLE-POST-S04-v1.png",
-        "Velvet-Factory-STYLE-POST-S05-v1.png",
-        "Velvet-Factory-STYLE-POST-S06-v1.png",
-        "Velvet-Factory-STYLE-POST-S07-v1.png",
-        "Velvet-Factory-APPROVED-LOGO-GOLD-LIGHT-v1.jpg",
-        "Velvet-Factory-APPROVED-LOGO-GOLD-DARK-v1.jpg"
-      ],
-      "result": "style references and approved logos only; no live-product text-free master"
-    }
+  "reference": {
+    "sourcePermalink": "https://www.instagram.com/p/DdeyJiviTjm/",
+    "copyAuthority": "published on-image copy",
+    "visualAuthority": "published rich still"
+  },
+  "scenePairs": {
+    "requiredViews": ["front", "three_quarter", "side", "back", "close_up"],
+    "sceneSize": "1080x1920",
+    "requiredPerView": ["retouched_scene_with_product", "identical_empty_plate"],
+    "status": "pending_sources"
   },
   "neededInputs": [
-    "text_free_master",
-    "verified_real_motion_beat",
-    "approved_audio_or_documented_audio_strategy"
+    "original_photos_front_three_quarter_side_back_close_up",
+    "approved_audio_or_explicit_intentional_silence"
   ],
-  "truthRule": "Never reconstruct the product or missing master with AI; product pixels must come from verified real media or the real print file."
+  "optionalInputs": [
+    "short_phone_video"
+  ],
+  "truthRule": "Never invent a missing angle or reconstruct product geometry; product identity comes from verified real source media or the real print file.",
+  "publicationAuthorized": false
 }

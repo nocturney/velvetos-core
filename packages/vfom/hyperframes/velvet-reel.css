@@ -1,15 +1,3 @@
-@font-face {
-  font-family: "Rubik";
-  src: url("../../vfbrand/assets/fonts/rubik/Rubik-VariableFont_wght.ttf") format("truetype");
-  font-weight: 300 900;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Cinzel";
-  src: url("../../vfbrand/assets/fonts/cinzel/Cinzel-VariableFont_wght.ttf") format("truetype");
-  font-weight: 400 900;
-  font-style: normal;
-}
 :root {
   --vf-accent: currentColor;
   --vf-brand-gold: currentColor;
@@ -125,3 +113,5 @@ body { font-family: "Rubik", sans-serif; }
 .vf-accent-text { color: var(--vf-accent); }
 .vf-brand-gold { color: var(--vf-brand-gold); }
 .vf-hidden { opacity: 0; visibility: hidden; }
+
+[executed on device: Chris (516b9b39-92b7-4a73-8d4b-901cc1a70a98)]
