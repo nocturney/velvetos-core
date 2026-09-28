@@ -1375,6 +1375,25 @@
         "vfprod"
       ],
       "note": "Ecosystem radar only. Do not auto-install entries; evaluate license, local/headless fit, cost and Fabrication Router role before adoption."
+    },
+    {
+      "id": "scenario-labs-skills",
+      "kind": "repo",
+      "url": "https://github.com/scenario-labs/skills",
+      "title": "scenario-labs/skills — open creative + DCC expert capability library",
+      "firstEmbedded": "2026-09-28",
+      "lastReviewed": "2026-09-28",
+      "verdict": "embedded-capabilities-only",
+      "sourceNote": "packages/vfresearch/sources/2026-09-28-scenario-labs-skills.md",
+      "playbook": "packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md",
+      "packs": [
+        "vfprod",
+        "vfom",
+        "vfgrowth",
+        "vfharness",
+        "vfresearch"
+      ],
+      "note": "MIT capabilities/patterns grafted into existing VelvetOS routes. No Scenario MCP, subscription, credits, asset store, cloud model runtime or second orchestrator. Weekly review may propose diffs; updates are never auto-promoted."
     }
   ],
   "addLink": {

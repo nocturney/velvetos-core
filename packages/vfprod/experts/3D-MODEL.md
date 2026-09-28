@@ -44,6 +44,15 @@ python scripts/vf_3d.py route --request "<owner request>"
 
 `BLENDER-MCP.md` → hardened local `blender-ai-mcp` for bounded modeling/measure/assert.
 Use `design-os-3d-blender` for headless passes and evidence-first geometry/print gates.
+Then apply `packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md` and run
+`python scripts/vf_blender_expert.py plan --request "<resolved request>"` to select the
+minimum expert domains and stage gates. This is open workflow knowledge, not a Scenario
+runtime dependency.
+
+When external AI mesh generation is genuinely part of the job, prefer the already-integrated
+3D AI Studio capability and treat its Meshy/Tripo-family output as a candidate mesh. Materialize
+the file + provenance, then audit/repair/retopologize it locally before any production/print claim.
+Do not add a parallel Scenario/Meshy/Tripo account merely because an upstream expert guide names it.
 
 Workflow patterns adopted from `cc-blender-skill` include source manifests, contour/orthographic registration,
 multiview correction, fit repair and quality loops. Its Claude runtime is not a VelvetOS dependency.

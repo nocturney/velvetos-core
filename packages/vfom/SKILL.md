@@ -17,6 +17,7 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 - `VISUAL-DNA.json` — projection machine-readable של חוקי המותג; `VISUAL-OS.md` נשאר authority.
 - `CREATIVE-AUTOPILOT.md` — orchestration + Exception Queue + Human Intervention Policy.
 - `VISUAL-OS.md` — Visual Constitution + proof-first + first frame + cover + QA + Subject Lock + fatigue guard.
+- `CREATIVE-REFINE-LOOP.md` — provider-neutral product-shot fidelity, baseline+delta repair, MASTER derivation and video/format adaptation method.
 - `EDIT-DIRECTOR.md` — EDL אופרטיבי + shot-gap handling.
 - `MOTION-PRESETS.md` — motion vocabulary מצומצם וקנוני.
 - `FORMAT-GENOMES.md` — מבני סיפור חוזרים; mechanics ולא זהות מועתקת.
@@ -44,7 +45,7 @@ Asset Truth חי באותה שורת `vfmedia/catalog.json` דרך `catalog.sche
 
 ## Variant/quality law
 
-עבוד progressive: הרבה concepts זולים → פחות storyboards/rough cuts → עד שני final renders כברירת מחדל. Evaluation מפריד deterministic/perceptual/reference/artifact checks. כשל איכות רגיל מתוקן אוטונומית ב־bounded repair loop; הוא לא owner gate.
+עבוד progressive: הרבה concepts זולים → פחות storyboards/rough cuts → עד שני final renders כברירת מחדל. Evaluation מפריד deterministic/perceptual/reference/artifact checks. כשל איכות רגיל מתוקן אוטונומית ב־bounded repair loop; הוא לא owner gate. אבחון/תיקון/derivatives חייבים לפעול לפי `CREATIVE-REFINE-LOOP.md`; אין לקדם output סוטה ל־baseline חדש ואין להחליף MASTER ברירול בלתי קשור.
 
 ## Memory law
 

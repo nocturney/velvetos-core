@@ -1,0 +1,25 @@
+{
+  "schema": "velvetos.vendor-capability.v1",
+  "upstream": "https://github.com/scenario-labs/skills",
+  "release": "skills-v0.48.0",
+  "commit": "9624e295fa33168bc1be22a628c23ba132d1c959",
+  "license": "MIT",
+  "policy": "executable Blender helper code only; upstream normative Markdown is not VelvetOS authority",
+  "scripts": [
+    "scenario-blender-animation/scripts/bx_anim.py",
+    "scenario-blender-expert/scripts/bx_audit.py",
+    "scenario-blender-expert/scripts/bx_gui.py",
+    "scenario-blender-expert/scripts/bx_review.py",
+    "scenario-blender-geometry-nodes/scripts/bx_gn.py",
+    "scenario-blender-grease-pencil/scripts/bx_gp.py",
+    "scenario-blender-hair/scripts/bx_hair.py",
+    "scenario-blender-hard-surface/scripts/bx_hardsurface.py",
+    "scenario-blender-lighting-rendering/scripts/bx_light.py",
+    "scenario-blender-previs-storyboard/scripts/bx_previs.py",
+    "scenario-blender-retopology/scripts/bx_retopo.py",
+    "scenario-blender-rigging/scripts/bx_rig.py",
+    "scenario-blender-sculpting/scripts/bx_sculpt.py",
+    "scenario-blender-texturing-shading/scripts/bx_materials.py",
+    "scenario-blender-uv-baking/scripts/bx_uvbake.py"
+  ]
+}

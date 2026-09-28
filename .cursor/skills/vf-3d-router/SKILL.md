@@ -14,6 +14,7 @@ Read only the relevant production authorities:
 - `packages/vfprod/experts/3D-MODEL.md`
 - `packages/vfprod/TEXT-TO-CAD.md`
 - `packages/vfprod/BLENDER-MCP.md`
+- `packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md` for the provider-neutral expert domain/gate graft.
 - `constitution/NO_NEW_RECURRING_COST.md` when adding/changing an external component.
 
 Do not create a second 3D pack, printer matrix, slicer router or office runtime.
@@ -27,6 +28,14 @@ python scripts/vf_3d.py route --request "<resolved user request>"
 ```
 
 Treat that result as the engine-selection contract.
+
+When the resolved route contains Blender (`BLENDER_NATIVE` or `HYBRID_CAD_THEN_BLENDER`), also run:
+
+```bash
+python scripts/vf_blender_expert.py plan --request "<resolved user request>"
+```
+
+Use its specialist domains and gates as the execution/QA plan. It is local planning knowledge only; it never authorizes Scenario cloud, a paid provider or printer control.
 
 - `TEXT_TO_CAD`: functional parametric parts, explicit dimensions/tolerances, holes/threads/fits, assemblies, STEP/B-rep masters.
 - `BLENDER_NATIVE`: organic/sculptural form, image/reference reconstruction, mesh repair/refinement, UV/form work.

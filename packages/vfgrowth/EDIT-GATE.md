@@ -64,6 +64,13 @@ brand_source_lock: FAIL
 
 Machine route restrictions are read from `publicationRoute.deniedTools`; the list is policy data, not a reason to keep a retired provider installed or named in active instructions.
 
+## Provider-neutral refine method
+
+`packages/vfom/CREATIVE-REFINE-LOOP.md` is mandatory for diagnosis/retry/derivative work.
+It adds no provider authority: Product Truth and the current publication route still win.
+In particular, never promote a drifted product output to the next identity baseline, and
+derive new formats from the accepted MASTER instead of independently rerolling the concept.
+
 ## נתיב ביצוע נוכחי — capability + evidence, לא provider
 
 1. נועלים את מקור המוצר והאזורים המוגנים.

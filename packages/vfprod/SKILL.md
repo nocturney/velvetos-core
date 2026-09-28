@@ -12,6 +12,7 @@
 דשבורד חווה עתידי (Watchtower): `WATCHTOWER.md` — Edge על LAN שדרות, לא daemon בליבה.  
 CAD/fabrication routing: `FABRICATION-ROUTER.md` → `TEXT-TO-CAD.md` · natural request: `python scripts/vf_fabrication_router.py decide --request "<request>"` · resolved route: `route --intent <intent>` · host: `python scripts/vf_cad.py doctor`.
 3D modeling-engine routing תחת Fabrication Router: `BLENDER-MCP.md` · `python scripts/vf_3d.py route --request "..."` · `python scripts/vf_3d.py doctor`.
+Open expert capability graft: `SCENARIO-EXPERT-CAPABILITIES.md` · `python scripts/vf_blender_expert.py plan --request "..."`; this is local/provider-neutral knowledge and does not require Scenario MCP/subscription.
 גרסאות כלי 3D/slicer אינן allowlist: משתמשים במה שמותקן בפועל, מאמתים capability/acceptance, ושומרים גרסה/commit רק כ־provenance ב־receipt.
 3D AI Studio נשאר יכולת אופציונלית בלבד: `3DAISTUDIO.md` · `CONNECT-3DAI.md`; אין להסלים אליו כאשר המסלול המקומי מספיק, ואין שימוש בתשלום בלי סמכות עלות מפורשת.
 אחרי אישור רצפה: תור על הצינור `הדפסה`.

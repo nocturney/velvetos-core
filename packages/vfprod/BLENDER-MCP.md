@@ -101,6 +101,20 @@ Local root:
 refinement, fit repair, UV/texture and quality-loop patterns. VelvetOS does not depend on
 its Claude runtime.
 
+## Scenario Labs open expert capability graft
+
+`packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md` maps the useful open Blender/ZBrush
+expert knowledge from `scenario-labs/skills` into this existing stack without adopting
+Scenario MCP or any Scenario service. For every Blender-routed task, generate the domain/gate
+plan with:
+
+```bash
+python scripts/vf_blender_expert.py plan --request "<resolved request>"
+```
+
+The plan complements `vf_3d.py`; it does not replace routing or host readiness. The
+installed Blender still has to pass `vf_3d.py doctor`/benchmark and actual geometry gates.
+
 ## Legacy fallback
 
 `mcp-for-blender` remains legacy/fallback only. If a bounded task genuinely requires it,
