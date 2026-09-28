@@ -27,6 +27,7 @@ EXPECTED_REPORTS = {
     "baseline-snapshot.json",
     "migration-map.json",
     "stage2-sensor-registry-audit.json",
+    "stage3-preactivation-plan.json",
 }
 
 RISK = {"critical", "high", "medium", "low"}
@@ -181,7 +182,8 @@ def validate_registries() -> tuple[list[str], set[str]]:
         require(type(row.get("timeout_seconds")) is int and row.get("timeout_seconds") <= 180, f"{sid}: ALWAYS_ON timeout must stay fast", problems)
 
     require(selection.get("schema_version") == 1, "sensor selection schema_version", problems)
-    require(selection.get("mode") == "shadow", "Stage 2 selector must remain shadow", problems)
+    selector_mode = selection.get("mode")
+    require(selector_mode in {"shadow", "enforced"}, "sensor selector mode invalid", problems)
     require(selection.get("registry") == "packages/velvetos/policy/sensor-registry.json", "selector registry binding mismatch", problems)
     require(selection.get("unknown_path_behavior") == "FULL_SUITE", "unknown selector paths must fail broad", problems)
     require(selection.get("broad_change_behavior") == "FULL_SUITE", "broad selector changes must run full suite", problems)
@@ -196,6 +198,7 @@ def validate_registries() -> tuple[list[str], set[str]]:
         "scripts/check-policy-architecture.py",
         "scripts/sensor_selector.py",
         "scripts/compare-sensor-shadow.py",
+        "scripts/stage3_preflight.py",
     }
     require(required_broad <= set(broad_patterns or []), "selector broad-change safety set incomplete", problems)
     shadow_exit = selection.get("shadow_exit") or {}
@@ -203,8 +206,49 @@ def validate_registries() -> tuple[list[str], set[str]]:
     require(type(shadow_exit.get("minimum_observation_days")) is int and shadow_exit.get("minimum_observation_days") >= 1, "shadow minimum_observation_days invalid", problems)
     require(shadow_exit.get("maximum_critical_misses") == 0, "shadow critical miss budget must be zero", problems)
     require(shadow_exit.get("rollback_mode") == "FULL_SUITE_REQUIRED", "shadow rollback must be FULL_SUITE_REQUIRED", problems)
-    for rel in ("scripts/sensor_selector.py", "scripts/compare-sensor-shadow.py"):
-        require(existing_repo_path(rel), f"Stage 2 shadow component missing: {rel}", problems)
+
+    stage3 = selection.get("stage3_preparation") or {}
+    require(stage3.get("activation_requires_shadow_exit_eligible") is True, "Stage 3 activation must require eligible shadow exit", problems)
+    require(stage3.get("pull_request_execution") == "SELECTED_SUITE", "Stage 3 PR target must be SELECTED_SUITE", problems)
+    require(stage3.get("main_push_execution") == "FULL_SUITE", "Stage 3 main push target must remain FULL_SUITE", problems)
+    require(stage3.get("selected_suite_runner") == "scripts/check-all.py --selection sensor-selection.json", "Stage 3 selected suite runner drift", problems)
+    require(stage3.get("critical_always_on_preserved") is True, "Stage 3 must preserve critical ALWAYS_ON sensors", problems)
+    require(stage3.get("unknown_or_broad_change_behavior") == "FULL_SUITE", "Stage 3 must fail broad on unknown/broad changes", problems)
+    require(stage3.get("rollback_mode") == "FULL_SUITE_REQUIRED", "Stage 3 rollback must restore full suite", problems)
+    require(stage3.get("required_status_check") == "check-all", "Stage 3 required status check drift", problems)
+    require(type(stage3.get("branch_ruleset_id")) is int and stage3.get("branch_ruleset_id") > 0, "Stage 3 branch ruleset id invalid", problems)
+    require(stage3.get("branch_ruleset_target_enforcement") == "active", "Stage 3 ruleset target must be active", problems)
+    duplicate_targets = set(stage3.get("duplicate_direct_invocations_to_remove") or [])
+    require(duplicate_targets == {"scripts/check-policy-architecture.py", "scripts/check-commission-isolation.py"}, "Stage 3 duplicate-removal targets drift", problems)
+
+    receipt_rel = str(stage3.get("activation_receipt") or "")
+    receipt_path = ROOT / receipt_rel
+    workflow_path = ROOT / ".github" / "workflows" / "check-all.yml"
+    workflow_text = workflow_path.read_text(encoding="utf-8") if workflow_path.is_file() else ""
+    if selector_mode == "shadow":
+        require(stage3.get("state") == "PREPARED_NOT_ACTIVE", "Stage 3 must remain PREPARED_NOT_ACTIVE during shadow", problems)
+        require(not receipt_path.is_file(), "Stage 3 activation receipt must not exist before cutover", problems)
+        require("--selection sensor-selection.json" not in workflow_text, "Stage 3 selected-suite enforcement activated before gate", problems)
+    elif selector_mode == "enforced":
+        require(stage3.get("state") == "ACTIVE", "Stage 3 enforced mode requires ACTIVE preparation state", problems)
+        require(receipt_path.is_file(), "Stage 3 enforced mode requires activation receipt", problems)
+        if receipt_path.is_file():
+            receipt = load(receipt_path)
+            require(receipt.get("schema") == "velvetos.stage3-activation-receipt.v1", "Stage 3 activation receipt schema mismatch", problems)
+            require(receipt.get("stage") == 3 and receipt.get("activation_gate") == "PASS", "Stage 3 activation receipt gate mismatch", problems)
+            require(receipt.get("critical_misses") == 0, "Stage 3 activation receipt contains critical miss", problems)
+            require(receipt.get("deterministic_replay_pass") is True, "Stage 3 activation receipt replay failed", problems)
+            require(receipt.get("run_history_complete") is True, "Stage 3 activation receipt history incomplete", problems)
+            require(receipt.get("rollback_mode") == "FULL_SUITE_REQUIRED", "Stage 3 activation receipt rollback mismatch", problems)
+            require(int(receipt.get("observed_pull_requests") or 0) >= int(shadow_exit.get("minimum_pull_requests") or 0), "Stage 3 activation receipt PR count below gate", problems)
+            require(float(receipt.get("observation_days") or 0) >= float(shadow_exit.get("minimum_observation_days") or 0), "Stage 3 activation receipt days below gate", problems)
+        require("--selection sensor-selection.json" in workflow_text, "Stage 3 enforced workflow must run selected suite", problems)
+        require("Compare sensor selector shadow with full suite" not in workflow_text, "Stage 3 enforced workflow must remove shadow comparison", problems)
+        for rel in sorted(duplicate_targets):
+            require(f"python3 {rel}" not in workflow_text, f"Stage 3 duplicate direct invocation still present: {rel}", problems)
+
+    for rel in ("scripts/sensor_selector.py", "scripts/compare-sensor-shadow.py", "scripts/stage3_preflight.py", "scripts/check-all.py"):
+        require(existing_repo_path(rel), f"selector enforcement component missing: {rel}", problems)
     for shadow_rel in ("scripts/sensor_selector.py", "scripts/compare-sensor-shadow.py"):
         shadow_harness = ROOT / shadow_rel
         if shadow_harness.is_file():
@@ -218,6 +262,20 @@ def validate_registries() -> tuple[list[str], set[str]]:
                 timeout=30,
             )
             require(proc.returncode == 0, "sensor shadow selftest failed " + shadow_rel + ": " + (proc.stderr or proc.stdout).strip()[:500], problems)
+
+    for prep_rel in ("scripts/check-all.py", "scripts/stage3_preflight.py"):
+        prep_harness = ROOT / prep_rel
+        if prep_harness.is_file():
+            proc = subprocess.run(
+                [sys.executable, str(prep_harness), "--self-test"],
+                cwd=ROOT,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                capture_output=True,
+                timeout=30,
+            )
+            require(proc.returncode == 0, "Stage 3 preparation selftest failed " + prep_rel + ": " + (proc.stderr or proc.stdout).strip()[:500], problems)
 
     for row in rows:
         for item in row.get("enforced_by") or []:
@@ -362,6 +420,18 @@ def validate_registries() -> tuple[list[str], set[str]]:
 
         stage2 = load(REPORTS / "stage2-sensor-registry-audit.json")
         require(stage2.get("stage") == "2A" and stage2.get("behavior_change") is False, "Stage 2A audit metadata mismatch", problems)
+
+        stage3_plan = load(REPORTS / "stage3-preactivation-plan.json")
+        require(stage3_plan.get("stage") == 3 and stage3_plan.get("state") == "PREPARED_NOT_ACTIVE", "Stage 3 preactivation plan state mismatch", problems)
+        require(stage3_plan.get("behavior_change") is False, "Stage 3 preactivation plan must not change behavior", problems)
+        require(stage3_plan.get("current_selector_mode") == "shadow", "Stage 3 preactivation plan must preserve shadow mode", problems)
+        require(stage3_plan.get("current_merge_authority") == "FULL_SUITE", "Stage 3 preactivation plan must preserve full-suite authority", problems)
+        require(stage3_plan.get("selected_suite_runner_prepared") is True, "Stage 3 selected suite runner not prepared", problems)
+        require(stage3_plan.get("current_workflow_changed") is False, "Stage 3 preactivation plan must not change workflow", problems)
+        require(stage3_plan.get("branch_ruleset_mutated") is False, "Stage 3 preactivation plan must not mutate ruleset", problems)
+        require(stage3_plan.get("rollback_mode") == "FULL_SUITE_REQUIRED", "Stage 3 preactivation rollback mismatch", problems)
+        require((stage3_plan.get("ruleset_snapshot") or {}).get("id") == stage3.get("branch_ruleset_id"), "Stage 3 ruleset snapshot id mismatch", problems)
+        require((stage3_plan.get("ruleset_snapshot") or {}).get("enforcement") == "disabled", "Stage 3 preactivation ruleset snapshot must remain disabled", problems)
         require(stage2.get("registry_matches_live") is True, "Stage 2A sensor registry does not match live sensors", problems)
         require(stage2.get("registered_sensor_count") == len(sensor_rows), "Stage 2A sensor count drift", problems)
         require(set(stage2.get("critical_always_on") or []) == expected_always_on, "Stage 2A critical ALWAYS_ON report drift", problems)

@@ -6,12 +6,12 @@
   "required": [
     "schema_version", "mode", "registry", "unknown_path_behavior",
     "broad_change_behavior", "always_on_source", "broad_change_patterns",
-    "shadow_exit", "evidence"
+    "shadow_exit", "evidence", "stage3_preparation"
   ],
   "additionalProperties": false,
   "properties": {
     "schema_version": {"const": 1},
-    "mode": {"const": "shadow"},
+    "mode": {"enum": ["shadow", "enforced"]},
     "registry": {"const": "packages/velvetos/policy/sensor-registry.json"},
     "unknown_path_behavior": {"const": "FULL_SUITE"},
     "broad_change_behavior": {"const": "FULL_SUITE"},
@@ -53,6 +53,36 @@
         "persist_in_github_job_summary": {"const": true},
         "emit_machine_readable_log_marker": {"const": true},
         "repository_mutation_from_shadow": {"const": false}
+      }
+    },
+    "stage3_preparation": {
+      "type": "object",
+      "required": [
+        "state", "activation_requires_shadow_exit_eligible", "activation_receipt",
+        "pull_request_execution", "main_push_execution", "selected_suite_runner",
+        "critical_always_on_preserved", "unknown_or_broad_change_behavior",
+        "duplicate_direct_invocations_to_remove", "required_status_check",
+        "branch_ruleset_id", "branch_ruleset_target_enforcement", "rollback_mode"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "state": {"enum": ["PREPARED_NOT_ACTIVE", "ACTIVE"]},
+        "activation_requires_shadow_exit_eligible": {"const": true},
+        "activation_receipt": {"const": "packages/velvetos/policy/reports/stage3-activation-receipt.json"},
+        "pull_request_execution": {"const": "SELECTED_SUITE"},
+        "main_push_execution": {"const": "FULL_SUITE"},
+        "selected_suite_runner": {"const": "scripts/check-all.py --selection sensor-selection.json"},
+        "critical_always_on_preserved": {"const": true},
+        "unknown_or_broad_change_behavior": {"const": "FULL_SUITE"},
+        "duplicate_direct_invocations_to_remove": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "required_status_check": {"const": "check-all"},
+        "branch_ruleset_id": {"type": "integer", "minimum": 1},
+        "branch_ruleset_target_enforcement": {"const": "active"},
+        "rollback_mode": {"const": "FULL_SUITE_REQUIRED"}
       }
     }
   }
