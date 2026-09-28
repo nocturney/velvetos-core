@@ -20,6 +20,8 @@ Owner decision 2026-09-28: the verified brand fonts are **Rubik** (Hebrew headli
 
 The owner-approved Reel compositions live under `packages/vfom/hyperframes/templates/` and read `packages/vfbrand/brand-tokens.json` plus a per-Reel variables file. Hebrew layers are explicit RTL; Rubik/Cinzel and the exact SVG logo come only from the token paths. The shared runtime implements `HEADLINE_REVEAL`, `ACCENT_RULE_WIPE`, `CHIP_SEQUENCE`, `INSET_POP` and the relevant existing Velvet presets as deterministic HyperFrames/GSAP timelines.
 
+Render with the repository root as the HyperFrames project and the template as the composition, for example `hyperframes render . -c packages/vfom/hyperframes/templates/rich-still-reel.html --variables-file <vars.json> --strict-variables`. Media variables are repo-relative paths (`packages/...`) bound with `data-var-src`, so HyperFrames discovers the hero/inset images, extracts the real-motion video and mixes the audio track; the runtime resolves brand tokens, fonts and the logo relative to `velvet-reel.js`. Each template loads GSAP 3.14.2 from jsDelivr (the HyperFrames default), so the render host needs that URL reachable or cached.
+
 `scripts/vf_turntable.py` is a subordinate product-motion adapter. It imports a **real print file** (.3mf/.stl/.obj/.glb/.gltf/.blend) in Blender, preserves source geometry, renders a loopable 6–8s 1080x1920@30fps turntable in warm interior lighting, and records an input/output SHA-256 receipt. Colour stays embedded from the print file or uses an explicitly verified hex + evidence source. It never AI-generates the product and never authorizes publication.
 
 ## video-use adaptation

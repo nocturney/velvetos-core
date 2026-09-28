@@ -15,7 +15,7 @@
 <body>
   <main id="hook-card" class="vf-frame" data-composition-id="hook-card"
         data-width="1080" data-height="1920" data-fps="30" data-start="0" data-duration="3">
-    <img id="hero" class="vf-hero" alt="">
+    <img id="hero" class="vf-hero" alt="" data-var-src="heroImage">
     <div class="vf-scrim"></div>
     <section class="vf-copy" dir="rtl">
       <h1 id="headline" class="vf-headline"></h1>
@@ -23,6 +23,7 @@
       <p id="subhead" class="vf-subhead"></p>
     </section>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
   <script src="../velvet-reel.js"></script>
   <script>
     VelvetReel.boot("hook-card", ({vars, tl, presets, text, media}) => {

@@ -45,6 +45,8 @@ if "tokens?.logo?.preferred?.overlay" not in runtime:
     fail("runtime must resolve the preferred exact logo from brand-tokens")
 if "window.__timelines[compositionId] = tl" not in runtime:
     fail("runtime must register the populated HyperFrames timeline")
+if "new URL(BRAND_TOKENS, RUNTIME_URL)" not in runtime or "document.currentScript" not in runtime:
+    fail("runtime must resolve brand tokens/repo assets against velvet-reel.js, not the served page URL")
 
 for family in tokens["fonts"]["families"]:
     rel = family["file"].removeprefix("packages/")
@@ -71,6 +73,14 @@ for name in contract["templates"]:
     ):
         if required not in body:
             fail(f"{name} missing {required}")
+    gsap_at = body.find("cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js")
+    if gsap_at < 0 or gsap_at > body.find("../velvet-reel.js"):
+        fail(f"{name} must load pinned GSAP before ../velvet-reel.js")
+    for media_id, var_id in (("hero", "heroImage"), ("inset-image", "insetImage"),
+                             ("real-motion", "realMotionVideo"), ("audio-track", "audioFile")):
+        tag = re.search(rf'<(?:img|video|audio)\b[^>]*\bid="{media_id}"[^>]*>', body, re.S)
+        if tag and f'data-var-src="{var_id}"' not in tag.group(0):
+            fail(f"{name} #{media_id} must bind data-var-src=\"{var_id}\" so HyperFrames extracts/mixes it")
     match = re.search(r"data-composition-variables='(\[.*?\])'", body, re.S)
     if not match:
         fail(f"{name} missing declared variables")

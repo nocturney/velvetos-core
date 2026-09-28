@@ -3,18 +3,24 @@
   "use strict";
 
   const BRAND_TOKENS = "../../vfbrand/brand-tokens.json";
+  // Resolve repo assets against this runtime file (packages/vfom/hyperframes/velvet-reel.js),
+  // not document.baseURI: `hyperframes render <repo> -c <template>` serves the composition
+  // from the project root, so page-relative ../../ paths escape the repo.
+  const RUNTIME_URL = (document.currentScript && document.currentScript.src)
+    || Array.from(document.scripts).map((s) => s.src).find((src) => /\/velvet-reel\.js(?:[?#]|$)/.test(src))
+    || document.baseURI;
 
   function repoAsset(repoPath) {
     if (!repoPath) return "";
     if (/^(?:https?:|data:|blob:)/i.test(repoPath)) return repoPath;
     if (repoPath.startsWith("packages/")) {
-      return new URL("../../" + repoPath.slice("packages/".length), document.baseURI).href;
+      return new URL("../../" + repoPath.slice("packages/".length), RUNTIME_URL).href;
     }
     return new URL(repoPath, document.baseURI).href;
   }
 
   async function loadTokens() {
-    const response = await fetch(new URL(BRAND_TOKENS, document.baseURI));
+    const response = await fetch(new URL(BRAND_TOKENS, RUNTIME_URL));
     if (!response.ok) throw new Error("brand-tokens.json unavailable: " + response.status);
     const tokens = await response.json();
     if (tokens?.brand !== "Velvet Factory") throw new Error("brand token identity mismatch");
@@ -55,7 +61,10 @@
 
   function media(id, value) {
     const node = document.getElementById(id);
-    if (node && value) node.setAttribute("src", repoAsset(value));
+    // data-var-src elements are bound by HyperFrames itself before media discovery,
+    // so video frames are extracted and audio is mixed; never race it at runtime.
+    if (!node || !value || node.hasAttribute("data-var-src")) return;
+    node.setAttribute("src", repoAsset(value));
   }
 
   const presets = {
