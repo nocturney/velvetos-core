@@ -9,6 +9,9 @@ from datetime import date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import vf_reel_candidates as reel_candidates  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 TZ = ZoneInfo("Asia/Jerusalem")
 GROWTH = ROOT / "packages" / "vfgrowth"
@@ -26,7 +29,10 @@ INSIGHTS_CSV = ROOT / "packages" / "vfinsights" / "data" / "posts.csv"
 POLICY = ROOT / "constitution" / "ORGANIC_GROWTH.md"
 
 GATES_FORWARD = {
-    "draft": {"quality_checked", "blocked_no_media"},
+    "draft": {"quality_checked", "candidates_ready", "blocked_no_media"},
+    # candidates_ready = catalog suggestions only; a human views/approves and PREFLIGHT+EDIT-GATE pass
+    # before anything becomes a draft reel. Never publish/edit/schedule from here.
+    "candidates_ready": {"quality_checked", "draft", "blocked_no_media"},
     "quality_checked": {"policy_checked", "blocked_policy"},
     "policy_checked": {"pending_human_approval"},
     "pending_human_approval": {"approved_for_manual_posting", "edit", "rejected"},
@@ -104,13 +110,29 @@ def print_payloads() -> list[dict]:
     return rows
 
 
-def media_quality_line(payloads: list[dict]) -> tuple[str, str]:
+NO_MEDIA_LINE = "אין Reel איכותי אוטומטי להיום. נדרשים 15 שניות צילום ידני: קלוז־אפ של המוצר ביד + בדיקת התאמה."
+CANDIDATES_LINE = (
+    "מועמדי Reel מהקטלוג ({n}) — הצעה בלבד, לא ריל: לצפות, לבחור, לאשר ידנית, "
+    "ואז PREFLIGHT + EDIT-GATE. אין טענת מוצר בלי productLink."
+)
+
+
+def media_quality_line(payloads: list[dict], candidates: list[dict] | None = None) -> tuple[str, str]:
+    """print.done/card media → quality_checked; catalog video suggestions → candidates_ready;
+    blocked_no_media only when neither exists. Never invents a reel."""
     if any(has_media(p) for p in payloads):
         return "quality_checked", "יש נתיב מדיה בכרטיס/אירוע — עדיין דורש PREFLIGHT לפני שיבוץ"
-    return (
-        "blocked_no_media",
-        "אין Reel איכותי אוטומטי להיום. נדרשים 15 שניות צילום ידני: קלוז־אפ של המוצר ביד + בדיקת התאמה.",
-    )
+    if candidates:
+        return "candidates_ready", CANDIDATES_LINE.format(n=len(candidates))
+    return "blocked_no_media", NO_MEDIA_LINE
+
+
+def reel_section(payloads: list[dict], catalog: Path | None = None) -> dict:
+    """Gate + catalog candidates for the brief (pure; used by the regression sensor)."""
+    result = reel_candidates.select_candidates(catalog or reel_candidates.MEDIA_CATALOG)
+    candidates = result["candidates"]
+    gate, line = media_quality_line(payloads, candidates)
+    return {"gate": gate, "line": line, "catalog": result, "candidates": candidates}
 
 
 def next_reel_slot(today: datetime) -> str:
@@ -195,7 +217,10 @@ def cmd_brief(args: argparse.Namespace) -> int:
     today = now.date().isoformat()
     today_d = now.date()
     payloads = print_payloads()
-    gate, media_line = media_quality_line(payloads)
+    section = reel_section(payloads)
+    gate, media_line = section["gate"], section["line"]
+    candidates = section["candidates"]
+    cand_lines = reel_candidates.candidate_lines(section["catalog"])
     queue = load_json(QUEUE, {"items": []})
     items = queue.get("items") or []
     polls = load_json(POLLS, {"polls": []})
@@ -277,14 +302,29 @@ def cmd_brief(args: argparse.Namespace) -> int:
         "reel": {
             "slot": next_reel_slot(now),
             "gate": gate,
-            "topic": "חסר — אין print.done עם מדיה",
-            "asset": "חסר",
-            "hook": "חסר",
+            "topic": (
+                f"{len(candidates)} מועמדי וידאו מהקטלוג — לצפייה ובחירה ידנית"
+                if gate == "candidates_ready"
+                else "חסר — אין print.done עם מדיה"
+            ),
+            "asset": (
+                " / ".join(c["fileName"] for c in candidates) + " (מקור לא ערוך — לא ריל)"
+                if gate == "candidates_ready"
+                else "חסר"
+            ),
+            "hook": "חסר — נכתב אחרי צפייה (NO_TEXT או עד 5 מילים)" if gate == "candidates_ready" else "חסר",
             "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
             "geotag": "שדרות" if gate != "blocked_no_media" else "חסר",
             "hashtag_set_id": tag_set.get("hashtag_set_id") or "local_custom_v1",
             "actions": ["אישור", "עריכה", "דחייה"],
             "no_media_line": media_line,
+            "candidates": candidates,
+            "candidate_lines": cand_lines,
+            "catalog": {
+                k: section["catalog"][k]
+                for k in ("catalog", "videosInCatalog", "usableVideos", "skipped", "activeEditTools")
+            },
+            "locks": ["no-autopost", "no-auto-edit", "no-schedule", "no-product-claim-without-productLink"],
         },
         "story": {
             "slot": story_slot(now),
@@ -309,7 +349,11 @@ def cmd_brief(args: argparse.Namespace) -> int:
             ),
         },
         "studio_tasks": [
-            "למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.",
+            (
+                f"לצפות ב־{len(candidates)} מועמדי הריל מהקטלוג, לבחור 7–15ש או לדחות — בלי זה אין Reel."
+                if gate == "candidates_ready"
+                else "למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel."
+            ),
             studio_story_task,
             "לא להציג חום/חוזק בלי vfprod/CLAIMS.md.",
         ],
@@ -334,7 +378,8 @@ def cmd_brief(args: argparse.Namespace) -> int:
         f"יעד היום: {pack['goal']}\n"
         f"1. REEL · {pack['reel']['slot']} · gate={pack['reel']['gate']}\n"
         f"{pack['reel']['no_media_line']}\n"
-        f"CTA: {pack['reel']['cta']}\n"
+        + "".join(f"{line}\n" for line in cand_lines)
+        + f"CTA: {pack['reel']['cta']}\n"
         f"סט האשטגים: {pack['reel']['hashtag_set_id']}\n"
         f"פעולה: [אישור] [עריכה] [דחייה] — אישור ≠ פרסום\n"
         f"2. STORY · {pack['story']['slotStatus']} · gate={pack['story']['gate']}\n"

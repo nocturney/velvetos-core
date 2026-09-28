@@ -1,7 +1,7 @@
 {
-  "date": "2026-09-27",
-  "generatedAt": "2026-09-27T18:36:30+03:00",
-  "component_state": "Blocked",
+  "date": "2026-09-28",
+  "generatedAt": "2026-09-28T09:33:44+03:00",
+  "component_state": "Idle",
   "goal": "פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.",
   "locks": [
     "no-autopost",
@@ -11,40 +11,284 @@
     "no-invented-ils",
     "no-schedule-from-hq"
   ],
-  "weekdayNote": "2026-09-27 = ראשון (Asia/Jerusalem)",
+  "weekdayNote": "2026-09-28 = שני (Asia/Jerusalem)",
   "slotRecommendation": {
     "choice": "poll",
     "when": "2026-09-28T20:30+03:00",
     "whenHe": "שני 2026-09-28 20:30 Asia/Jerusalem",
-    "reasonShort": "20:30 היום חלף · משבצת הבאה",
-    "reason": "20:30 היום חלף. משבצת סטוריז הבאה: שני 2026-09-28 20:30 Asia/Jerusalem. בלי תזמון מ־HQ."
+    "reasonShort": "G004 מסומן STALE ב־LEDGER · אין reuse אוטומטי · סקר הוא חלופה בלבד",
+    "reason": "G004 אינו מועמד נוכחי: ה־LEDGER מסמן אותו STALE וחוסם reuse אוטומטי עד qualification חדש. סקר organic `petg_vs_nylon` למשבצת שני 2026-09-28 20:30 Asia/Jerusalem הוא חלופה שאינה פרסום אוטומטי. בלי Calendar create.",
+    "deferred": {
+      "id": "G004-stories",
+      "to": "qualification חדש מול LEDGER + VF_PUBLICATION_ROUTE_V1"
+    }
   },
   "reel": {
-    "slot": "היום 16:00 · ריל ראשון בשבוע",
-    "gate": "blocked_no_media",
-    "topic": "חסר — אין print.done עם מדיה",
-    "asset": "חסר",
-    "hook": "חסר",
+    "slot": "אין משבצת ריל היום (לוח: א׳/ג׳ 16:00 בלבד)",
+    "gate": "candidates_ready",
+    "topic": "3 מועמדי וידאו מהקטלוג — לצפייה ובחירה ידנית",
+    "asset": "IMG_1285.MOV / IMG_0491.MOV / IMG_0490.MOV (מקור לא ערוך — לא ריל)",
+    "hook": "חסר — נכתב אחרי צפייה (NO_TEXT או עד 5 מילים)",
     "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
-    "geotag": "חסר",
+    "geotag": "שדרות",
     "hashtag_set_id": "local_custom_v1",
     "actions": [
       "אישור",
       "עריכה",
       "דחייה"
     ],
-    "no_media_line": "אין Reel איכותי אוטומטי להיום. נדרשים 15 שניות צילום ידני: קלוז־אפ של המוצר ביד + בדיקת התאמה."
+    "no_media_line": "מועמדי Reel מהקטלוג (3) — הצעה בלבד, לא ריל: לצפות, לבחור, לאשר ידנית, ואז PREFLIGHT + EDIT-GATE. אין טענת מוצר בלי productLink.",
+    "candidates": [
+      {
+        "id": "media-1CTzVb0JVyOuM7DTm66QwLCBLjWLJx74f",
+        "fileName": "IMG_1285.MOV",
+        "sourceUrl": "https://drive.google.com/file/d/1CTzVb0JVyOuM7DTm66QwLCBLjWLJx74f/view?usp=drivesdk",
+        "uploadedAt": "2026-09-12",
+        "kind": "phone_clip",
+        "durationSeconds": null,
+        "productLink": null,
+        "productClaim": "אין — אין productLink בקטלוג; לא לטעון איזה מוצר מופיע",
+        "why": "מקור לא מפורסם · הועלה 2026-09-12 · טרם נצפה · משך לא ידוע (inspect בעריכה)",
+        "recipe": {
+          "tool": "scripts/vf_video_edit.py",
+          "host": "office host · sderot-mac → sderot-windows (RENDER-HOSTS) · ידני, לא בתזמון",
+          "steps": [
+            {
+              "tool": "scripts/vf_video_edit.py",
+              "commands": [
+                "doctor",
+                "plan",
+                "run",
+                "inspect"
+              ],
+              "params": {
+                "segments": [
+                  {
+                    "source": "IMG_1285.MOV",
+                    "start": "נבחר אחרי צפייה",
+                    "end": "start+7..15s",
+                    "beat": "hook",
+                    "reason": "קלוז־אפ/שימוש"
+                  }
+                ],
+                "trimSeconds": [
+                  7,
+                  15
+                ],
+                "resolution": "portrait",
+                "fps": 30,
+                "cutPolicy": "visual-only",
+                "audioRequired": false
+              }
+            },
+            {
+              "tool": "scripts/vf_hyperframes.py",
+              "commands": [
+                "doctor",
+                "plan",
+                "run"
+              ],
+              "params": {
+                "backend": "hyperframes",
+                "target": "reel_master",
+                "resolution": "portrait",
+                "fps": 30,
+                "stage": "rough→review→final",
+                "hookText": "NO_TEXT או עד 5 מילים (OWNER-APPROVED-GRID-STANDARD)",
+                "ctaEndCard": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם"
+              }
+            }
+          ],
+          "gates": [
+            "צפייה+אישור אדם",
+            "packages/vfgrowth/PREFLIGHT.md",
+            "packages/vfgrowth/EDIT-GATE.md"
+          ],
+          "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+          "note": "הצעה בלבד — לא עריכה, לא רינדור, לא פרסום"
+        },
+        "gate": "candidates_ready"
+      },
+      {
+        "id": "media-1Bjv5OdJfQIE5xQXOmm265KmniIxotHh5",
+        "fileName": "IMG_0491.MOV",
+        "sourceUrl": "https://drive.google.com/file/d/1Bjv5OdJfQIE5xQXOmm265KmniIxotHh5/view?usp=drivesdk",
+        "uploadedAt": "2026-09-08",
+        "kind": "phone_clip",
+        "durationSeconds": null,
+        "productLink": null,
+        "productClaim": "אין — אין productLink בקטלוג; לא לטעון איזה מוצר מופיע",
+        "why": "מקור לא מפורסם · הועלה 2026-09-08 · טרם נצפה · משך לא ידוע (inspect בעריכה)",
+        "recipe": {
+          "tool": "scripts/vf_video_edit.py",
+          "host": "office host · sderot-mac → sderot-windows (RENDER-HOSTS) · ידני, לא בתזמון",
+          "steps": [
+            {
+              "tool": "scripts/vf_video_edit.py",
+              "commands": [
+                "doctor",
+                "plan",
+                "run",
+                "inspect"
+              ],
+              "params": {
+                "segments": [
+                  {
+                    "source": "IMG_0491.MOV",
+                    "start": "נבחר אחרי צפייה",
+                    "end": "start+7..15s",
+                    "beat": "hook",
+                    "reason": "קלוז־אפ/שימוש"
+                  }
+                ],
+                "trimSeconds": [
+                  7,
+                  15
+                ],
+                "resolution": "portrait",
+                "fps": 30,
+                "cutPolicy": "visual-only",
+                "audioRequired": false
+              }
+            },
+            {
+              "tool": "scripts/vf_hyperframes.py",
+              "commands": [
+                "doctor",
+                "plan",
+                "run"
+              ],
+              "params": {
+                "backend": "hyperframes",
+                "target": "reel_master",
+                "resolution": "portrait",
+                "fps": 30,
+                "stage": "rough→review→final",
+                "hookText": "NO_TEXT או עד 5 מילים (OWNER-APPROVED-GRID-STANDARD)",
+                "ctaEndCard": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם"
+              }
+            }
+          ],
+          "gates": [
+            "צפייה+אישור אדם",
+            "packages/vfgrowth/PREFLIGHT.md",
+            "packages/vfgrowth/EDIT-GATE.md"
+          ],
+          "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+          "note": "הצעה בלבד — לא עריכה, לא רינדור, לא פרסום"
+        },
+        "gate": "candidates_ready"
+      },
+      {
+        "id": "media-1NMzT30L81mytwBCF8pZCS9zwqzQeNhVn",
+        "fileName": "IMG_0490.MOV",
+        "sourceUrl": "https://drive.google.com/file/d/1NMzT30L81mytwBCF8pZCS9zwqzQeNhVn/view?usp=drivesdk",
+        "uploadedAt": "2026-09-08",
+        "kind": "phone_clip",
+        "durationSeconds": null,
+        "productLink": null,
+        "productClaim": "אין — אין productLink בקטלוג; לא לטעון איזה מוצר מופיע",
+        "why": "מקור לא מפורסם · הועלה 2026-09-08 · טרם נצפה · משך לא ידוע (inspect בעריכה)",
+        "recipe": {
+          "tool": "scripts/vf_video_edit.py",
+          "host": "office host · sderot-mac → sderot-windows (RENDER-HOSTS) · ידני, לא בתזמון",
+          "steps": [
+            {
+              "tool": "scripts/vf_video_edit.py",
+              "commands": [
+                "doctor",
+                "plan",
+                "run",
+                "inspect"
+              ],
+              "params": {
+                "segments": [
+                  {
+                    "source": "IMG_0490.MOV",
+                    "start": "נבחר אחרי צפייה",
+                    "end": "start+7..15s",
+                    "beat": "hook",
+                    "reason": "קלוז־אפ/שימוש"
+                  }
+                ],
+                "trimSeconds": [
+                  7,
+                  15
+                ],
+                "resolution": "portrait",
+                "fps": 30,
+                "cutPolicy": "visual-only",
+                "audioRequired": false
+              }
+            },
+            {
+              "tool": "scripts/vf_hyperframes.py",
+              "commands": [
+                "doctor",
+                "plan",
+                "run"
+              ],
+              "params": {
+                "backend": "hyperframes",
+                "target": "reel_master",
+                "resolution": "portrait",
+                "fps": 30,
+                "stage": "rough→review→final",
+                "hookText": "NO_TEXT או עד 5 מילים (OWNER-APPROVED-GRID-STANDARD)",
+                "ctaEndCard": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם"
+              }
+            }
+          ],
+          "gates": [
+            "צפייה+אישור אדם",
+            "packages/vfgrowth/PREFLIGHT.md",
+            "packages/vfgrowth/EDIT-GATE.md"
+          ],
+          "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+          "note": "הצעה בלבד — לא עריכה, לא רינדור, לא פרסום"
+        },
+        "gate": "candidates_ready"
+      }
+    ],
+    "candidate_lines": [
+      "1) IMG_1285.MOV · קליפ טלפון · 2026-09-12 · media-1CTzVb0JVyOuM7DTm66QwLCBLjWLJx74f\n   למה: מקור לא מפורסם · הועלה 2026-09-12 · טרם נצפה · משך לא ידוע (inspect בעריכה)\n   מתכון: vf_video_edit.py → vf_hyperframes.py · חיתוך 7–15ש · 9:16 1080x1920 · הוק NO_TEXT/עד 5 מילים · CTA בסוף",
+      "2) IMG_0491.MOV · קליפ טלפון · 2026-09-08 · media-1Bjv5OdJfQIE5xQXOmm265KmniIxotHh5\n   למה: מקור לא מפורסם · הועלה 2026-09-08 · טרם נצפה · משך לא ידוע (inspect בעריכה)\n   מתכון: vf_video_edit.py → vf_hyperframes.py · חיתוך 7–15ש · 9:16 1080x1920 · הוק NO_TEXT/עד 5 מילים · CTA בסוף",
+      "3) IMG_0490.MOV · קליפ טלפון · 2026-09-08 · media-1NMzT30L81mytwBCF8pZCS9zwqzQeNhVn\n   למה: מקור לא מפורסם · הועלה 2026-09-08 · טרם נצפה · משך לא ידוע (inspect בעריכה)\n   מתכון: vf_video_edit.py → vf_hyperframes.py · חיתוך 7–15ש · 9:16 1080x1920 · הוק NO_TEXT/עד 5 מילים · CTA בסוף"
+    ],
+    "catalog": {
+      "catalog": "packages/vfmedia/catalog.json",
+      "videosInCatalog": 38,
+      "usableVideos": 34,
+      "skipped": {
+        "status=published": 2,
+        "duplicate": 2
+      },
+      "activeEditTools": [
+        "scripts/vf_hyperframes.py",
+        "scripts/vf_video_edit.py"
+      ]
+    },
+    "locks": [
+      "no-autopost",
+      "no-auto-edit",
+      "no-schedule",
+      "no-product-claim-without-productLink"
+    ]
   },
   "story": {
-    "slot": "אין סטוריז בשישי–שבת",
-    "gate": "next_slot_recommendation",
-    "slotStatus": "המלצה · שני 2026-09-28 20:30 Asia/Jerusalem",
+    "slot": "היום 20:30 · סטוריז א׳–ה׳",
+    "gate": "recommended_poll_pending_human_post",
+    "slotStatus": "המלצה יחידה · סקר · שני 2026-09-28 20:30 Asia/Jerusalem",
     "recommendation": {
       "choice": "poll",
       "when": "2026-09-28T20:30+03:00",
       "whenHe": "שני 2026-09-28 20:30 Asia/Jerusalem",
-      "reasonShort": "20:30 היום חלף · משבצת הבאה",
-      "reason": "20:30 היום חלף. משבצת סטוריז הבאה: שני 2026-09-28 20:30 Asia/Jerusalem. בלי תזמון מ־HQ."
+      "reasonShort": "G004 מסומן STALE ב־LEDGER · אין reuse אוטומטי · סקר הוא חלופה בלבד",
+      "reason": "G004 אינו מועמד נוכחי: ה־LEDGER מסמן אותו STALE וחוסם reuse אוטומטי עד qualification חדש. סקר organic `petg_vs_nylon` למשבצת שני 2026-09-28 20:30 Asia/Jerusalem הוא חלופה שאינה פרסום אוטומטי. בלי Calendar create.",
+      "deferred": {
+        "id": "G004-stories",
+        "to": "qualification חדש מול LEDGER + VF_PUBLICATION_ROUTE_V1"
+      }
     },
     "poll_id": "petg_vs_nylon",
     "question": "מה לבדוק מחר במעבדה?",
@@ -58,7 +302,7 @@
       "עריכה",
       "דחייה"
     ],
-    "note": "המשבצת להיום חלפה — הצעה למשבצת הבאה בלבד."
+    "note": "בחירה אחת: סקר. G004 נשאר STALE עד qualification חדש ב־LEDGER. אישור ≠ פרסום."
   },
   "yesterday": {
     "insights": "אין ספירה",
@@ -67,8 +311,8 @@
     "recommendation": "פער סנכרון · orders.json ריק ≠ הוכחה שאין הזמנות"
   },
   "studio_tasks": [
-    "למלא כרטיס print.done עם נתיב טיימלאפס אמיתי — בלי זה אין Reel.",
-    "לתכנן ידנית למשבצת שני 2026-09-28 20:30 Asia/Jerusalem — לא Calendar מ־HQ.",
+    "לצפות ב־3 מועמדי הריל מהקטלוג, לבחור 7–15ש או לדחות — בלי זה אין Reel.",
+    "לאשר או לדחות סקר ל־שני 2026-09-28 20:30 Asia/Jerusalem (לא מפרסם).",
     "לא להציג חום/חוזק בלי vfprod/CLAIMS.md."
   ],
   "print_events": 1,
