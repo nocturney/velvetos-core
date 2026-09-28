@@ -1,13 +1,28 @@
 {
   "enabled": false,
-  "requestId": "tool-updates-cc9a7e613eaf9358",
+  "requestId": "tool-updates-review-required-2026-09-28",
   "to": "nocturney@gmail.com",
-  "subject": "VelvetOS · עדכוני כלים · 4 ממתינים",
+  "subject": "VelvetOS · עדכוני כלים · 11 ממתינים",
   "html": "packages/vfresearch/out/tool-updates-latest.html",
   "visibleText": "packages/vfresearch/out/tool-updates-latest.txt",
   "images": "",
   "embedRemoteImages": false,
   "remoteImageLimit": 0,
-  "notificationDigest": "cc9a7e613eaf9358bb835928ef0efe9022f1b896906eabe0805ee0e0a022f242",
-  "pendingCount": 4
+  "notificationDigest": null,
+  "pendingCount": 11,
+  "reviewReady": false,
+  "unreviewedCount": 11,
+  "unreviewedRepos": [
+    "blender/blender",
+    "earthtojake/text-to-cad",
+    "FreeCAD/FreeCAD",
+    "liustack/modlens",
+    "nodejs/node",
+    "openscad/openscad",
+    "python/cpython",
+    "Q00/ouroboros",
+    "remotion-dev/remotion",
+    "stablyai/orca",
+    "topoteretes/cognee"
+  ]
 }
