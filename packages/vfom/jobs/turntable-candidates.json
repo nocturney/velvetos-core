@@ -1,0 +1,37 @@
+{
+  "schema": "velvetos.turntable-candidates.v1",
+  "host": "Chris / sderot-windows",
+  "repoStored": false,
+  "rendered": false,
+  "candidates": [
+    {
+      "name": "RoboLotl",
+      "path": "D:\\Downloads\\3D Prints\\u1-RoboLotl_4Color_Clean_v03_bambuEtc.3mf",
+      "status": "available_on_chris",
+      "format": "3mf",
+      "note": "Real print file; colour may stay embedded or be overridden only from verified printed-product evidence."
+    },
+    {
+      "name": "Axolotl long tail",
+      "path": "D:\\Downloads\\3D Prints\\FLEX\\Axolotl+Long+Tail+-+All+in+One_U1.3mf",
+      "status": "available_on_chris",
+      "format": "3mf",
+      "note": "Real print file; printed-product colour evidence still required for verified-hex mode."
+    },
+    {
+      "name": "Jackalope deer variant",
+      "path": "D:\\Downloads\\3D Prints\\MMM\\MMM\\MMM_Jackalope_v02\\MMM_Jackalope_deer_noPresupport_v02.stl",
+      "status": "available_on_chris",
+      "format": "stl",
+      "note": "Variant choice is not interchangeable with the pronghorn file; owner/source evidence must select the intended item."
+    },
+    {
+      "name": "Regnum chess set",
+      "path": "D:\\Downloads\\3D Prints\\chess set\\Regnum_Chess_Set_U1.3mf",
+      "status": "available_on_chris",
+      "format": "3mf",
+      "note": "Potential family relation to king_v3 timelapses is likely only; exact linkage is not verified by catalog productLink."
+    }
+  ],
+  "truthRule": "Turntables use the real print file only; no AI product generation. These local paths are not repo assets."
+}
