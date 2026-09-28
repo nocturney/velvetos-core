@@ -105,5 +105,14 @@
     "hebrewVisualTextUsesDeterministicOverlay": true,
     "renderReceiptIsNotPublishReceipt": true,
     "noRuntimeAutoInstallDuringContentJob": true
+  },
+  "brandAssets": {
+    "tokens": "packages/vfbrand/brand-tokens.json",
+    "verifiedBrandFonts": [
+      "packages/vfbrand/assets/fonts/rubik/Rubik-VariableFont_wght.ttf",
+      "packages/vfbrand/assets/fonts/cinzel/Cinzel-VariableFont_wght.ttf"
+    ],
+    "logo": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-full-lockup-traced.svg",
+    "decision": "owner decision 2026-09-28"
   }
 }

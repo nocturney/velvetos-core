@@ -12,6 +12,10 @@ This layer adapts useful patterns from `browser-use/video-use`, Remotion and Man
 4. **Remotion is an optional animation-slot engine, not a renderer replacement.** It is license-gated. Do not install or use it commercially until `vlicense` records eligibility/company-license evidence.
 5. **Manim is an optional technical/explainer slot engine.** It is appropriate for diagrams, measurements and geometry explanations, not as proof that a physical print/test/customer result happened.
 
+## Brand assets for compositions
+
+Owner decision 2026-09-28: the verified brand fonts are **Rubik** (Hebrew headline 700, subhead 600) and **Cinzel** (Latin 700/400), shipped as OFL variable TTFs under `packages/vfbrand/assets/fonts/`. Logos (owner rasters and the owner-approved traced transparent SVGs) are under `packages/vfbrand/assets/logo/`. Compositions read paths, hashes, roles and layout limits from `packages/vfbrand/brand-tokens.json` (`brandAssets` in `VIDEO-TOOLCHAIN.json` points there). No other font family is used.
+
 ## video-use adaptation
 
 This is pattern-adapted, not vendored. We do not vendor the upstream repository and do not adopt its own project memory/state as a VelvetOS source of truth. VelvetOS already has Media Vault, Content Contract, Creative Manifest, Edit Director and Evaluation Engine. We only adapt editing mechanics that strengthen those authorities.

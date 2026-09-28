@@ -58,6 +58,7 @@
     "noAIHebrewInsideFootage": true,
     "hebrewAsDeterministicOverlay": true,
     "verifiedBrandFontsOnly": true,
+    "verifiedBrandFontsSource": "packages/vfbrand/brand-tokens.json#/fonts",
     "verifiedBrandColorsOnly": true,
     "finalRequiresCheck": true,
     "finalRequiresReceipt": true,
