@@ -37,8 +37,14 @@ print.done (Edge / מפעיל)
 
 לוח קבוע: `CALENDAR.md` — ריל א׳/ג׳ 16:00 בלבד. **אין ריל כל יום עבודה.**
 
-חסר גלם איכותי → `blocked_no_media` — לא ממציאים Reel. שורת בריף:  
+סדר ההחלטה של שער הריל (`vf_organic_growth.py brief`):
+
+1. `print.done` / כרטיס עם נתיב מדיה → `quality_checked` (כמו קודם; עדיין PREFLIGHT לפני שיבוץ).
+2. אחרת, וידאו שמיש ב־`packages/vfmedia/catalog.json` → `candidates_ready`: 2–3 מועמדים (וידאו בלבד, `status=source`, לא מפורסם, בלי נגזרות, בלי כפילויות; חדש לפני ישן; סדרה שכבר פורסמה בסוף; משך רק אם הקטלוג מחזיק אותו). לכל מועמד: מזהה קטלוג + שם קובץ, למה נבחר, ומתכון עריכה בכלי פעיל קיים — `scripts/vf_video_edit.py` (חיתוך 7–15ש, `portrait` 1080x1920 · 9:16, 30fps, `visual-only`) → `scripts/vf_hyperframes.py` (`reel_master`, הוק NO_TEXT או עד 5 מילים לפי OWNER-APPROVED-GRID-STANDARD, CTA בסוף: «לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם»). מועמד הוא **הצעה, לא ריל**: אדם צופה ומאשר, ואז PREFLIGHT + EDIT-GATE. בלי אוטו־עריכה, בלי רינדור בתזמון, בלי פרסום, ובלי טענה שהווידאו מראה מוצר מסוים אם אין `productLink`.
+3. חסר גלם איכותי וגם אין וידאו שמיש בקטלוג → `blocked_no_media` — לא ממציאים Reel. שורת בריף:  
 «אין Reel איכותי אוטומטי להיום. נדרשים 15 שניות צילום ידני: קלוז־אפ של המוצר ביד + בדיקת התאמה.»
+
+רגרסיה: `scripts/check-reel-candidates.py` (קטלוג fixture: 0 וידאו → `blocked_no_media`; 2 וידאו → `candidates_ready` עם מתכון שמצביע על כלי פעיל).
 
 ## Story 20:30 (א׳–ה׳)
 

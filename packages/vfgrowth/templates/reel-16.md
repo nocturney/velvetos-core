@@ -21,3 +21,7 @@
 - Cover 9:16: לוגו Velvet + שם + תועלת אחת.
 
 ציון פנימי: חדות, חשיפה, זיהוי מוצר, משך, אין פרטי לקוח. נכשל → `blocked_no_media`.
+
+## מועמדים מהקטלוג (`candidates_ready`)
+
+הבריף מציע 2–3 וידאו מקור מ־`vfmedia/catalog.json` (`scripts/vf_reel_candidates.py`). זו רשימת צפייה, לא ריל: בוחרים ידנית 7–15ש, עורכים ב־`vf_video_edit.py` → `vf_hyperframes.py`, ועוברים PREFLIGHT + EDIT-GATE. אין טענת מוצר בלי `productLink`.

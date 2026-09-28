@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-28 — **Windows host: D: is the default working path, never the Desktop (owner request):** `packages/velvetos/WINDOWS-PATH-CONTRACT.md` gains a "Default working path and forbidden locations" section. Eve…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-28 — **Windows host: D: is the default working path, never the Desktop (owner request):** `packages/velvetos/WINDOWS-PATH-CONTRACT.md` gains a "Default working path and forbidden locations" section. Eve…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-28 — **Reel gate reads the real media catalog (`candidates_ready`):** new `scripts/vf_reel_candidates.py` picks 2–3 unpublished source videos from `packages/vfmedia/catalog.json` (videos only, `status=s…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-28 — **Reel gate reads the real media catalog (`candidates_ready`):** new `scripts/vf_reel_candidates.py` picks 2–3 unpublished source videos from `packages/vfmedia/catalog.json` (videos only, `status=s…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>

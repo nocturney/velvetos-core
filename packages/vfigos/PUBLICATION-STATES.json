@@ -158,6 +158,7 @@
     "approved_for_manual_posting": "approved",
     "posted_manually": "liveVerified",
     "blocked_policy": "blocked_creative_preflight",
+    "candidates_ready": "blocked_creative_preflight",
     "blocked_no_media": "blocked_artifact_retrieval"
   },
   "transportRecoveryOrder": [

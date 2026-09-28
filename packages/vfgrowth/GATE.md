@@ -29,7 +29,8 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 | `performance_imported` | סנאפשוט / CSV | חסר = אין ספירה |
 | `attributed` | ייחוס הסתברותי | לא «וודאי» |
 | `learned` | רטרו / brief מחר | בלי בושה לבעלים |
-| `blocked_no_media` | מפעל | אין Reel מומצא; צור shotRequest מדויק |
+| `candidates_ready` | `vf_organic_growth.py brief` מתוך `vfmedia/catalog.json` (`scripts/vf_reel_candidates.py`) | 2–3 וידאו מקור לא מפורסמים **כהצעה בלבד — לא ריל**. אדם צופה, בוחר 7–15ש או דוחה; עריכה ידנית במתכון (`vf_video_edit.py` → `vf_hyperframes.py`) ואז PREFLIGHT + EDIT-GATE. אין אוטו־עריכה/פרסום/תזמון; אין טענת מוצר בלי `productLink` |
+| `blocked_no_media` | מפעל | רק כשאין מדיה ב־print.done/כרטיס **וגם** אין וידאו שמיש בקטלוג. אין Reel מומצא; צור shotRequest מדויק |
 | `blocked_policy` | policy | נכשל-סגור |
 | `human_required` | משרד | רק חסר פיזי/זכויות/כסף/WhatsApp/Print/חסם קשיח |
 
