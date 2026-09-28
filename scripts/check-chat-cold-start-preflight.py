@@ -12,23 +12,22 @@ with tempfile.TemporaryDirectory() as t:
     t=Path(t); bundle=t/"bundle"; bundle.mkdir(); intake=t/"attachments"; ws=t/"runtime"; intake.mkdir(); ws.mkdir()
     # Build a self-consistent synthetic bundle around the real 6.6.3 authority/instructions/guide.
     for src,dst in [
-        (PROJECT/"PROJECT-AUTHORITY-v6.6.5.txt",bundle/"PROJECT-AUTHORITY-v6.6.5.txt"),
-        (PROJECT/"PROJECT-INSTRUCTIONS-v6.6.5.txt",bundle/"PROJECT-INSTRUCTIONS-v6.6.5.txt"),
-        (PROJECT/"PRODUCT-TRUTH-GUIDE-v1.txt",bundle/"PRODUCT-TRUTH-GUIDE-v1.txt"),
-        (PROJECT/"REEL-ROUTE.md",bundle/"REEL-ROUTE.md")]:
+        (PROJECT/"PROJECT-AUTHORITY-v6.6.4.txt",bundle/"PROJECT-AUTHORITY-v6.6.4.txt"),
+        (PROJECT/"PROJECT-INSTRUCTIONS-v6.6.4.txt",bundle/"PROJECT-INSTRUCTIONS-v6.6.4.txt"),
+        (PROJECT/"PRODUCT-TRUTH-GUIDE-v1.txt",bundle/"PRODUCT-TRUTH-GUIDE-v1.txt")]:
         shutil.copyfile(src,dst)
-    mf=json.loads((PROJECT/"ASSET-MANIFEST-v6.6.5.json").read_text(encoding="utf-8"))
-    mf["instructions"]["sha256"]=sha(bundle/"PROJECT-INSTRUCTIONS-v6.6.5.txt")
+    mf=json.loads((PROJECT/"ASSET-MANIFEST-v6.6.4.json").read_text(encoding="utf-8"))
+    mf["instructions"]["sha256"]=sha(bundle/"PROJECT-INSTRUCTIONS-v6.6.4.txt")
     for row in mf["assets"]:
         if row["filename"]=="Velvet-Factory-Project-Authority-v6.txt":
-            row["sha256"]=sha(bundle/"PROJECT-AUTHORITY-v6.6.5.txt")
+            row["sha256"]=sha(bundle/"PROJECT-AUTHORITY-v6.6.4.txt")
         elif row["filename"]==mf["product_truth"]["guide"]:
             row["sha256"]=sha(bundle/"PRODUCT-TRUTH-GUIDE-v1.txt")
         elif row["filename"] in set(mf["current_references"].values()):
             p=bundle/row["filename"]; idx=list(mf["current_references"].values()).index(row["filename"])
             Image.new("RGB",(64,64),(210-idx*20,200-idx*15,190-idx*10)).save(p)
             row["sha256"]=sha(p); row["bytes"]=p.stat().st_size; row["dimensions"]=[64,64]
-    (bundle/"ASSET-MANIFEST-v6.6.5.json").write_text(json.dumps(mf),encoding="utf-8")
+    (bundle/"ASSET-MANIFEST-v6.6.4.json").write_text(json.dumps(mf),encoding="utf-8")
     ingested=[]
     for idx,(name,color) in enumerate((("hero.png",(235,230,220)),("alternate.png",(225,215,205))),1):
         src=intake/name; Image.new("RGB",(100+idx*5,120),(color)).save(src)

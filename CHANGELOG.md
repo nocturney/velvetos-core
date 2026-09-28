@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Add ChatGPT Project Reel/video route v6.6.5 with Product Truth, real-motion/turntable handoff, and route/template drift enforcement.
+- 2026-09-28 — **ChatGPT Project Reel/video route v6.6.10:** extends the active Project 6.6.9 Native Product Edit rules with end-to-end Reel types, real-motion/real-print-file truth boundaries, audio/cover/caption/QA/handoff requirements, exact Chris render commands, and a fail-closed route/template/preset drift sensor; also corrects the four committed OFL/SVG SHA-256 values from #420 so the Windows brand-token sensor matches the actual merged bytes. Publication remains manual/review-gated.
 
 - 2026-09-28 — **Brand fonts and SVG logo (owner decision):** Rubik (Hebrew headline 700, subhead 600) and Cinzel (Latin 700/400) are the two verified brand fonts, committed as Google Fonts OFL variable TTFs with their `OFL.txt` under `packages/vfbrand/assets/fonts/` and registered in `brand-tokens.json`, `VISUAL-DNA.json`, `HYPERFRAMES-FRAME.md`, `HYPERFRAMES-BACKEND.json` and `VIDEO-TOOLCHAIN`. Two transparent logo SVGs (full lockup and mark only) traced with potrace from the owner's gold-on-white JPG, single brand-gold fill `#b59761`, are committed under `packages/vfbrand/assets/logo/`. `check-brand-tokens.py` now verifies font and licence hashes, font roles, the two-family limit and the single-fill SVGs. `sync-instance-scaffold.sh` treats the frontend's own `control-center/` app as instance-only.
 

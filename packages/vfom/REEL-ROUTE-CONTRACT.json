@@ -1,9 +1,26 @@
 {
   "schema": "velvetos.reel-route-sync.v1",
+  "projectRevision": "6.6.10",
+  "baseCreativeRevision": "6.6.9",
   "routeDoc": "packages/velvetos/chatgpt-project/REEL-ROUTE.md",
+  "projectInstructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
   "templateRoot": "packages/vfom/hyperframes/templates",
-  "implementationStatus": "pending_templates_and_editorial_presets",
-  "templates": ["hook-card.html", "chips.html", "detail-inset.html", "end-card.html", "rich-still-reel.html"],
-  "presets": ["HEADLINE_REVEAL", "ACCENT_RULE_WIPE", "CHIP_SEQUENCE", "INSET_POP", "VELVET_HARD_CUT", "VELVET_MACRO_PUNCH", "VELVET_MATERIAL_LABEL", "VELVET_FINAL_STAMP"],
-  "implementationPRRule": "When templates/editorial presets land, set implementationStatus=implemented and the sensor requires every named template and preset."
+  "implementationStatus": "pending_pr2",
+  "templates": [
+    "hook-card.html",
+    "chips.html",
+    "detail-inset.html",
+    "end-card.html",
+    "rich-still-reel.html"
+  ],
+  "presets": [
+    "HEADLINE_REVEAL",
+    "ACCENT_RULE_WIPE",
+    "CHIP_SEQUENCE",
+    "INSET_POP",
+    "VELVET_HARD_CUT",
+    "VELVET_MACRO_PUNCH",
+    "VELVET_MATERIAL_LABEL",
+    "VELVET_FINAL_STAMP"
+  ]
 }

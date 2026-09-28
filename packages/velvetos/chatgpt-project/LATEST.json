@@ -1,15 +1,22 @@
 {
   "contractVersion": 6,
-  "revision": "6.6.5",
-  "bundleId": "VF-PROJECT-6.6.5-REEL-ROUTE",
-  "authority": "PROJECT-AUTHORITY-v6.6.5.txt",
-  "assetManifest": "ASSET-MANIFEST-v6.6.5.json",
-  "instructions": "PROJECT-INSTRUCTIONS-v6.6.5.txt",
+  "revision": "6.6.10",
+  "bundleId": "VF-PROJECT-6.6.10-REEL-VIDEO-ROUTE",
+  "status": "PROJECT_SOURCE_EXTENSION",
+  "baseProject": {
+    "revision": "6.6.9",
+    "bundleId": "VF-PROJECT-6.6.9-NATIVE-PRODUCT-EDIT-ROUTING",
+    "authority": "project-local Velvet-Factory-Project-Authority-v6.txt",
+    "styleContract": "STYLE-CONTRACT-v6.6.9.json",
+    "runbook": "RUNBOOK-v6.6.9.md"
+  },
+  "instructions": "PROJECT-INSTRUCTIONS-v6.6.10.txt",
+  "reelRoute": "REEL-ROUTE.md",
   "productTruthGuide": "PRODUCT-TRUTH-GUIDE-v1.txt",
-  "projectCanonicalAuthorityFilename": "Velvet-Factory-Project-Authority-v6.txt",
-  "projectAssetManifestFilename": "Velvet-Factory-ASSET-MANIFEST-v6.6.5.json",
-  "rejectedCreativeReference": "Velvet-Factory-PRODUCT-TRUTH-REFERENCE-v2.png",
-  "status": "CURRENT",
-  "multiSourceCompositionReference": "Velvet-Factory-MULTI-SOURCE-COMPOSITION-REFERENCE-v1.jpg",
-  "reelRoute": "REEL-ROUTE.md"
+  "repoExecutableBundle": {
+    "revision": "6.6.4",
+    "bundleId": "VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE",
+    "note": "Kept separate until the complete 6.6.9+ flat runtime is repo-synced and re-verified."
+  },
+  "publicationAdapter": "scripts/vf_project669_publication.py"
 }
