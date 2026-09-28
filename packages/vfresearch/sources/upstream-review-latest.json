@@ -1,7 +1,157 @@
 {
   "schema": "velvetos.upstream-review.v1",
-  "reviewedAt": null,
-  "policy": "Owner receives a separate update email; every recommendation must bind to the current remote HEAD/release before mail can arm.",
-  "previousReviewInvalidatedAt": "2026-09-28",
-  "items": {}
+  "reviewedAt": "2026-09-28T05:30:07.157Z",
+  "policy": "Owner receives a separate update email; every recommendation is bound to the current remote HEAD/release before mail can arm.",
+  "summary": {
+    "pending": 11,
+    "update": 0,
+    "wait": 2,
+    "review": 0,
+    "ignore": 9
+  },
+  "items": {
+    "blender/blender": {
+      "verdict": "wait",
+      "reasonHe": "השינוי רלוונטי פוטנציאלית לביצועי geometry/mesh, אבל הוא קיים כרגע רק ב־main ללא release חדש. לא מעדכנים Blender host על commit לא־משוחרר; ממתינים לבילד/גרסה יציבה ואז מריצים smoke.",
+      "evidence": [
+        "2 commits מאז baseline: שיפור בניית faces/corners ו־vertices/edges ב-Mesh Merge",
+        "שינויי ביצועים בלבד במסלול mesh merge; אין release חדש",
+        "integration: Blender host/runtime",
+        "compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...388952d3b867ead24396cefd3cfc7e3b59682e61"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "388952d3b867ead24396cefd3cfc7e3b59682e61",
+      "reviewedRelease": null
+    },
+    "earthtojake/text-to-cad": {
+      "verdict": "ignore",
+      "reasonHe": "v0.7.0 כבר אומצה ונבדקה אצלנו. ה־commit היחיד אחרי ה־baseline מוחק סקריפטי E2E ידניים ומחזק כיסוי CI; אין שינוי runtime/CAD שדורש אימוץ נוסף.",
+      "evidence": [
+        "adoptedRelease=v0.7.0; latestRelease נשאר v0.7.0",
+        "1 commit: delete manual web E2E scripts + enforce CI collection",
+        "adoption evidence: packages/vfharness/state/text-to-cad-0.7.0-adoption-2026-09-27.json",
+        "compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...da7f7219569541c41a94715bab5e476615ad4177"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "da7f7219569541c41a94715bab5e476615ad4177",
+      "reviewedRelease": "v0.7.0"
+    },
+    "FreeCAD/FreeCAD": {
+      "verdict": "ignore",
+      "reasonHe": "release 1.1.3 לא השתנה. שני ה־commits הם תיקון CAM ל־3+2 Axis וקישור ספריות בחלון About; אין אצלנו מסלול 3+2 CAM פעיל או שינוי שנדרש ל־3D-print/CAD routing הנוכחי.",
+      "evidence": [
+        "latestRelease נשאר 1.1.3",
+        "2 commits: CAM 3+2 transformShape fix + About dialog library links",
+        "integration: CAD/3D toolchain upstream",
+        "compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...08eb8263a3e6734ca2411f40d6f18a24afdf9044"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "08eb8263a3e6734ca2411f40d6f18a24afdf9044",
+      "reviewedRelease": "1.1.3"
+    },
+    "liustack/modlens": {
+      "verdict": "ignore",
+      "reasonHe": "ה־release נשאר v3.26.5 וה־commit היחיד מתקן את תהליך הפרסום ל־npm. זהו catalog-source אצלנו, בלי שינוי בתוכן/יכולת שאנחנו מטמיעים.",
+      "evidence": [
+        "latestRelease נשאר v3.26.5",
+        "1 commit: release workflow pushes main only after npm has the version",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...f01354e78a70ed18eab721762f18ea44a92d6e9e"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "f01354e78a70ed18eab721762f18ea44a92d6e9e",
+      "reviewedRelease": "v3.26.5"
+    },
+    "nodejs/node": {
+      "verdict": "ignore",
+      "reasonHe": "v26.10.0 לא השתנתה. שני ה־commits נוגעים לבניית התיעוד בלבד — verbosity ו־doc-kit patch bumps — ולא ל־Node runtime שבו ה־bootstrap שלנו תלוי.",
+      "evidence": [
+        "latestRelease נשאר v26.10.0",
+        "2 commits: doc build verbosity + doc-kit dependency patch bumps",
+        "integrations: Windows edge bootstrap + HyperFrames Mac bootstrap",
+        "compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...df775ec2ea6861053995f923fcf7814c06451e72"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "df775ec2ea6861053995f923fcf7814c06451e72",
+      "reviewedRelease": "v26.10.0"
+    },
+    "openscad/openscad": {
+      "verdict": "ignore",
+      "reasonHe": "ה־release נשאר openscad-2021.01 ושני ה־commits הם שינויי GitHub workflow בלבד לעדכון submodule. אין שינוי במנוע OpenSCAD או במסלול CAD שלנו.",
+      "evidence": [
+        "latestRelease נשאר openscad-2021.01",
+        "2 commits: workflow debug info + fetch --all",
+        "integration: CAD/3D toolchain upstream",
+        "compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...ac793b2e0cf6ea734b60c3d31601852d0bab2ee4"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "ac793b2e0cf6ea734b60c3d31601852d0bab2ee4",
+      "reviewedRelease": "openscad-2021.01"
+    },
+    "python/cpython": {
+      "verdict": "ignore",
+      "reasonHe": "אלה שני bugfixes ב־main ללא release: אחד ל־ctypes callback על s390x/libclang ואחד לבדיקת שגיאה פנימית ב־intern_static. אין ראיה שהם משפיעים על Windows/Python toolchain שלנו, ולכן אין פעולה על commit לא־משוחרר.",
+      "evidence": [
+        "אין release חדש; changeKinds=head בלבד",
+        "ctypes fix מתועד עבור s390x/libclang callbacks",
+        "intern_static fix מתקן unreachable fatal-error path",
+        "compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...a4eb936727e5f949f5dc8c8a38bf6d325518f29b"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "a4eb936727e5f949f5dc8c8a38bf6d325518f29b",
+      "reviewedRelease": null
+    },
+    "Q00/ouroboros": {
+      "verdict": "wait",
+      "reasonHe": "השינוי החדש — replay מבודד וללא רשת של פקודות שנצפו כדי לאמת claims כמו tests_passed/commands_run — רלוונטי רעיונית ל־evidence discipline שלנו. אבל Ouroboros אצלנו עדיין מסומן `later` והדפוס הקיים הוא spec-first interview, לא runtime מוטמע; לכן שומרים כמועמד להטמעת pattern ממוקדת ולא מתקינים/מעדכנים מוצר.",
+      "evidence": [
+        "1 commit גדול: verifier command replay + replay policy + shell parsing + tests",
+        "replay רץ ב־isolated network-denied workspace copy",
+        "current catalog verdict=later; pattern=spec-first interview then execute",
+        "compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...a2b329d052c4b1a900810cc505742dff0142ebdb"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "a2b329d052c4b1a900810cc505742dff0142ebdb",
+      "reviewedRelease": "v0.54.6"
+    },
+    "remotion-dev/remotion": {
+      "verdict": "ignore",
+      "reasonHe": "v4.0.529 לא השתנתה ושני ה־commits הם תיעוד בלבד: הוספת BrewReel לרשימת resources. אין שינוי renderer/API או ב־Remotion path המוגבל־רישוי אצלנו.",
+      "evidence": [
+        "latestRelease נשאר v4.0.529",
+        "2 commits, בפועל docs-only resource addition + merge",
+        "integration: packages/vfom/VIDEO-TOOLCHAIN.json",
+        "compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...6f4e0d57d41a22fa60b1a9aa77e2b7d1d2adc210"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "6f4e0d57d41a22fa60b1a9aa77e2b7d1d2adc210",
+      "reviewedRelease": "v4.0.529"
+    },
+    "stablyai/orca": {
+      "verdict": "ignore",
+      "reasonHe": "ה־7 commits משנים runtime/UI של Orca — terminal subscriptions, workspace restore, native chat ו־agent-launch caller selection. אצלנו Orca הוא pattern-only וה־LOCK אוסר התקנת Orca/ADE; דפוס ה־job isolation/handoff/three terminal states שכבר הוטמע אינו דורש שינוי בגלל commits אלה.",
+      "evidence": [
+        "latestRelease נשאר v1.4.215",
+        "7 commits ב־Orca runtime/renderer; אין release חדש",
+        "local contract: Pattern only; do not install Orca or stand up an ADE",
+        "compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...bdaf9a3ed3a21ad81c722f1ba732a5018eaffad4"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "bdaf9a3ed3a21ad81c722f1ba732a5018eaffad4",
+      "reviewedRelease": "v1.4.215"
+    },
+    "topoteretes/cognee": {
+      "verdict": "ignore",
+      "reasonHe": "v1.6.1 כבר אומצה ונבדקה. שני ה־commits החדשים משנים README בלבד ומיישרים את התיעוד למה שכבר קיים ב־1.6.1; ה־commit האחרון מצהיר במפורש שאין שינוי behavior.",
+      "evidence": [
+        "adoptedRelease=v1.6.1; latestRelease נשאר v1.6.1",
+        "2 README-only commits; no behaviour change",
+        "adoption evidence: packages/vfharness/state/cognee-1.6.1-adoption-2026-09-27.json",
+        "compare: https://github.com/topoteretes/cognee/compare/eb90d03740755f5252b8b12cce91fd09970f2d81...c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b"
+      ],
+      "notifyOwner": true,
+      "reviewedRemoteHead": "c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b",
+      "reviewedRelease": "v1.6.1"
+    }
+  }
 }
