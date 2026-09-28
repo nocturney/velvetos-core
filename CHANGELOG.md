@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-28 — **Runtime receipt age policy:** an expired but otherwise valid runtime receipt (`packages/vfharness/state/runtime/`) is now a named WARN with its age on pull_request CI and local runs, and still fails on push, schedule and workflow_dispatch or with `VF_RUNTIME_RECEIPTS_STRICT=1`. Missing, malformed, mismatched, future-dated and non-healthy receipts fail everywhere. Shared by `check-runtime-doctor.py --strict` and `check-grok-provider-readback.py`, tested by the new `check-runtime-receipt-age-policy.py`; `check-zero-cost-final-acceptance.py` reports the receipt state.
+
 - 2026-09-28 — **ChatGPT Project Reel/video route v6.6.10:** extends the active Project 6.6.9 Native Product Edit rules with end-to-end Reel types, real-motion/real-print-file truth boundaries, audio/cover/caption/QA/handoff requirements, exact Chris render commands, and a fail-closed route/template/preset drift sensor. Publication remains manual/review-gated.
 
 - 2026-09-28 — **Rich Reel HyperFrames implementation:** adds five 1080x1920/30fps RTL templates, token-bound Rubik/Cinzel/SVG assets, deterministic editorial motion presets, exact live-caption sample variables, native HyperFrames variables/batch planning with per-output receipts, and a Blender real-print-file turntable adapter; CI lints templates/schema/RTL/tokens without rendering.

@@ -88,6 +88,7 @@ A PR existing is not proof of completion. A merge is not proof that an external 
 ### 6. Merge → runtime truth
 
 When the claim is “deployed”, “active”, “connected”, “published”, or “running on worker/automation”, run the relevant provider/runtime proof. For VelvetOS-wide activation claims use `python3 scripts/check-runtime-doctor.py --strict` when applicable.
+For that proof set `VF_RUNTIME_RECEIPTS_STRICT=1`: without it, local and pull_request runs report expired runtime receipts as a WARN instead of a failure.
 
 Keep states distinct:
 
