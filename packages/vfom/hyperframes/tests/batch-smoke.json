@@ -1,0 +1,18 @@
+{
+  "rows": [
+    {
+      "sourceMediaId": "18048874304812929",
+      "headline": "קשה להתווכח עם המבט הזה.",
+      "accentId": "copper",
+      "accentHex": "#a86838",
+      "accentSource": "brand-tokens sample"
+    },
+    {
+      "sourceMediaId": "17899807347597720",
+      "headline": "מקום קבוע למפתחות, בלי לוותר על אופי.",
+      "accentId": "antique_gold",
+      "accentHex": "#a87838",
+      "accentSource": "brand-tokens sample"
+    }
+  ]
+}

@@ -97,6 +97,19 @@
       }
     }
   },
+  "productMotion": {
+    "realPrintFileTurntable": {
+      "status": "implemented",
+      "bridge": "scripts/vf_turntable.py",
+      "geometrySource": "real print file only",
+      "formats": [".3mf", ".stl", ".obj", ".glb", ".gltf", ".blend"],
+      "durationSeconds": {"min": 6, "max": 8},
+      "canvas": "1080x1920@30fps",
+      "scene": "warm-interior lighting around source-truth geometry",
+      "colorModes": ["embedded", "verified-hex"],
+      "rule": "never AI-generate or repair the product; turntable is illustrative and never a publish receipt"
+    }
+  },
   "guardrails": {
     "mediaVaultRemainsSourceOfTruth": true,
     "contentContractRemainsAuthority": true,

@@ -16,6 +16,14 @@ This layer adapts useful patterns from `browser-use/video-use`, Remotion and Man
 
 Owner decision 2026-09-28: the verified brand fonts are **Rubik** (Hebrew headline 700, subhead 600) and **Cinzel** (Latin 700/400), shipped as OFL variable TTFs under `packages/vfbrand/assets/fonts/`. Logos (owner rasters and the owner-approved traced transparent SVGs) are under `packages/vfbrand/assets/logo/`. Compositions read paths, hashes, roles and layout limits from `packages/vfbrand/brand-tokens.json` (`brandAssets` in `VIDEO-TOOLCHAIN.json` points there). No other font family is used.
 
+## Rich Reel templates and real-print-file turntable
+
+The owner-approved Reel compositions live under `packages/vfom/hyperframes/templates/` and read `packages/vfbrand/brand-tokens.json` plus a per-Reel variables file. Hebrew layers are explicit RTL; Rubik/Cinzel and the exact SVG logo come only from the token paths. The shared runtime implements `HEADLINE_REVEAL`, `ACCENT_RULE_WIPE`, `CHIP_SEQUENCE`, `INSET_POP` and the relevant existing Velvet presets as deterministic HyperFrames/GSAP timelines.
+
+Render with the repository root as the HyperFrames project and the template as the composition, for example `hyperframes render . -c packages/vfom/hyperframes/templates/rich-still-reel.html --variables-file <vars.json> --strict-variables`. Media variables are repo-relative paths (`packages/...`) bound with `data-var-src`, so HyperFrames discovers the hero/inset images, extracts the real-motion video and mixes the audio track; the runtime resolves brand tokens, fonts and the logo relative to `velvet-reel.js`. Each template loads GSAP 3.14.2 from jsDelivr (the HyperFrames default), so the render host needs that URL reachable or cached.
+
+`scripts/vf_turntable.py` is a subordinate product-motion adapter. It imports a **real print file** (.3mf/.stl/.obj/.glb/.gltf/.blend) in Blender, preserves source geometry, renders a loopable 6–8s 1080x1920@30fps turntable in warm interior lighting, and records an input/output SHA-256 receipt. Colour stays embedded from the print file or uses an explicitly verified hex + evidence source. It never AI-generates the product and never authorizes publication.
+
 ## video-use adaptation
 
 This is pattern-adapted, not vendored. We do not vendor the upstream repository and do not adopt its own project memory/state as a VelvetOS source of truth. VelvetOS already has Media Vault, Content Contract, Creative Manifest, Edit Director and Evaluation Engine. We only adapt editing mechanics that strengthen those authorities.

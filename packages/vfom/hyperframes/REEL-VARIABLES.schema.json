@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://velvetos.local/schemas/reel-variables.schema.json",
+  "title": "Velvet rich still Reel variables",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "headline", "subhead", "heroImage", "chip1", "chip2", "chip3",
+    "insetImage", "insetLabel", "realMotionVideo", "audioFile",
+    "caption", "sourcePermalink", "sourceMediaId", "variablesStatus",
+    "neededInputs", "cta", "accentId", "accentHex", "accentSource"
+  ],
+  "properties": {
+    "headline": {"type": "string"},
+    "subhead": {"type": "string"},
+    "heroImage": {"type": "string"},
+    "chip1": {"type": "string"},
+    "chip2": {"type": "string"},
+    "chip3": {"type": "string"},
+    "insetImage": {"type": "string"},
+    "insetLabel": {"type": "string"},
+    "realMotionVideo": {"type": "string"},
+    "audioFile": {"type": "string"},
+    "caption": {"type": "string", "minLength": 1},
+    "sourcePermalink": {"type": "string", "pattern": "^https://www\\.instagram\\.com/"},
+    "sourceMediaId": {"type": "string", "pattern": "^[0-9]+$"},
+    "variablesStatus": {"enum": ["ready", "needs_input"]},
+    "neededInputs": {"type": "string"},
+    "cta": {
+      "const": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם"
+    },
+    "accentId": {
+      "enum": ["copper", "antique_gold", "light_gold", "amber"]
+    },
+    "accentHex": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$"
+    },
+    "accentSource": {"type": "string", "minLength": 1}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"variablesStatus": {"const": "ready"}}
+      },
+      "then": {
+        "properties": {
+          "heroImage": {"minLength": 1},
+          "realMotionVideo": {"minLength": 1},
+          "audioFile": {"minLength": 1},
+          "neededInputs": {"maxLength": 0}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"variablesStatus": {"const": "needs_input"}}
+      },
+      "then": {
+        "properties": {
+          "neededInputs": {"minLength": 1}
+        }
+      }
+    }
+  ]
+}

@@ -91,9 +91,13 @@ Run on an authorized render host:
 
 ```bash
 python3 scripts/vf_hyperframes.py run path/to/render-request.json
+python3 scripts/vf_hyperframes.py run path/to/render-request.json --variables-file path/to/variables.json
+python3 scripts/vf_hyperframes.py run path/to/render-request.json --batch path/to/batch.json
 ```
 
-A successful run performs HyperFrames `check`, renders with the requested stage settings, verifies the result with ffprobe, requires portrait video and required audio, computes SHA-256 and writes a `.receipt.json` next to the output unless another in-project receipt path is provided.
+`--variables-file` overrides one declared-variable set. `--batch` uses HyperFrames native variable-row batching for the same composition/request, requires a placeholder in the output path, fails fast on collisions/variable errors, then ffprobes and hashes every produced row before writing one Velvet batch receipt. The two modes are mutually exclusive.
+
+A successful single run performs HyperFrames `check`, renders with the requested stage settings, verifies the result with ffprobe, requires portrait video and required audio, computes SHA-256 and writes a `.receipt.json` next to the output unless another in-project receipt path is provided.
 
 ## Failover
 
