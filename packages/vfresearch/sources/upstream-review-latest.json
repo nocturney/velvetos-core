@@ -1,157 +1,650 @@
 {
   "schema": "velvetos.upstream-review.v1",
-  "reviewedAt": "2026-09-28T05:30:07.157Z",
+  "reviewedAt": "2026-09-28T23:15:26Z",
   "policy": "Owner receives a separate update email; every recommendation is bound to the current remote HEAD/release before mail can arm.",
   "summary": {
-    "pending": 11,
+    "pending": 40,
     "update": 0,
-    "wait": 2,
-    "review": 0,
-    "ignore": 9
+    "wait": 7,
+    "review": 1,
+    "ignore": 32
   },
   "items": {
+    "00080000/dsh-project-memory": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "1 commits since baselineHead",
+        "commit: fix(compat): 适配 DSH 0.2.x——peer 范围补 0.2 带、BlockAssembler.message 必填、client 产物确定性",
+        "baselineRelease=v0.5.12 → latestRelease=v0.5.13",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/00080000/dsh-project-memory/compare/3d171b6d4b78d82d71398fb28c638830b5c28291...0886e2e2b914e971feef646cab08f51b43265fba"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "0886e2e2b914e971feef646cab08f51b43265fba",
+      "reviewedRelease": "v0.5.13"
+    },
+    "Alishahryar1/free-claude-code": {
+      "verdict": "review",
+      "reasonHe": "release חדש (v6.4.4 → v6.4.10) בלי ראיית אימוץ מקומית; דורש בדיקת compatibility לפני החלטה.",
+      "evidence": [
+        "6 commits since baselineHead",
+        "commit: patch: Remove obsolete Task foreground interception (#1925)",
+        "commit: patch: Keep messaging Claude tasks headless on Windows (#1927)",
+        "commit: patch: preserve native tool arguments and remove text tool parsers (#1929)",
+        "baselineRelease=v6.4.4 → latestRelease=v6.4.10",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/Alishahryar1/free-claude-code/compare/37c77262115a02d3ef97763b7e7a4e0dd011183e...105bfab8c2fa92b56c1077b103a8a5417a4f174e"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "105bfab8c2fa92b56c1077b103a8a5417a4f174e",
+      "reviewedRelease": "v6.4.10"
+    },
+    "andyrewlee/awesome-agent-orchestrators": {
+      "verdict": "ignore",
+      "reasonHe": "אין אינטגרציית VF פעילה שמצדיקה פעולת אימוץ בריצה זו.",
+      "evidence": [
+        "1 commits since baselineHead",
+        "commit: Add OpenRig to Multi-Agent Swarms (#254)",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/andyrewlee/awesome-agent-orchestrators/compare/e120484e448f6115e69788d148d67accea17a0c6...a1278087adb6023c9021abf81f8d12877cfbf0ef"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "a1278087adb6023c9021abf81f8d12877cfbf0ef",
+      "reviewedRelease": null
+    },
+    "awesome-dsh-plugin/awesome-dsh-plugin": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "22 commits since baselineHead",
+        "commit: chore: regenerate READMEs from data/plugins",
+        "commit: Add baifagg/dsh-plugin-busy-workspace (#5942)",
+        "commit: chore: regenerate READMEs from data/plugins",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/compare/4fee2fcc011f8e2d68e35695d6b411c82c7c9a12...4c4167fa0dc992395f8d9c56cfb27e1f812ddb33"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "4c4167fa0dc992395f8d9c56cfb27e1f812ddb33",
+      "reviewedRelease": null
+    },
+    "bambulab/BambuStudio": {
+      "verdict": "wait",
+      "reasonHe": "HEAD התקדם מעבר ל־baseline בעוד latestRelease נשאר v02.08.02.61. דיווחים ציבוריים על Public Beta 2.8.4 (v02.08.04.57, ~22.9) מציינים אזהרת shrinkage-compensation על מודלים צבועים ותיקון ADMesh STL — רלוונטי לסלייסר ברצפה, אבל אין אימוץ בטא בלי smoke על המכונה; ממתינים ל־stable/אישור ראש צוות.",
+      "evidence": [
+        "1 commits since baselineHead",
+        "commit: Refactor ParamTooltip to use wxPopupWindow for improved GTK compatibility",
+        "baselineRelease=v02.08.02.61 → latestRelease=v02.08.02.61",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/bambulab/BambuStudio/compare/f977235e6d736c4c0b650520ac5a5b72cbfe9244...da8b44ee34dd349f2ae0df3f1cbae366df482354",
+        "latestRelease עדיין v02.08.02.61; changeKinds=head",
+        "FilamentFeed 2026-09-24: 2.8.4 Public Beta shrinkage warning + ADMesh buffer fix (https://filamentfeed.com/article/bambu-studio-2-8-4-shrinkage-compensation-fix-september-2026)",
+        "integration: floor slicer; no HQ auto-upgrade"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "da8b44ee34dd349f2ae0df3f1cbae366df482354",
+      "reviewedRelease": "v02.08.02.61"
+    },
     "blender/blender": {
       "verdict": "wait",
-      "reasonHe": "השינוי רלוונטי פוטנציאלית לביצועי geometry/mesh, אבל הוא קיים כרגע רק ב־main ללא release חדש. לא מעדכנים Blender host על commit לא־משוחרר; ממתינים לבילד/גרסה יציבה ואז מריצים smoke.",
+      "reasonHe": "commits ב־main בלי release יציב חדש. לא מעדכנים Blender host על HEAD לא־משוחרר.",
       "evidence": [
-        "2 commits מאז baseline: שיפור בניית faces/corners ו־vertices/edges ב-Mesh Merge",
-        "שינויי ביצועים בלבד במסלול mesh merge; אין release חדש",
-        "integration: Blender host/runtime",
-        "compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...388952d3b867ead24396cefd3cfc7e3b59682e61"
+        "29 commits since baselineHead",
+        "commit: DRW: Port manager shaders to BSL",
+        "commit: Fix #164401: Overlay: Bind missing `globals_buf` in `ImagePrepass`",
+        "commit: Cleanup: Spelling in source/blender/draw directory",
+        "changeKinds=['head']; newDetection=False",
+        "compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...1b20a88e979767480a250d59317f894e2be79e0c",
+        "no latestRelease; head-only"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "388952d3b867ead24396cefd3cfc7e3b59682e61",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "1b20a88e979767480a250d59317f894e2be79e0c",
       "reviewedRelease": null
+    },
+    "debpalash/VoiceStudio": {
+      "verdict": "wait",
+      "reasonHe": "שינוי HEAD/upstream בלי אימוץ מתועד; ממתינים ל־release notes יציבים או smoke לפני עדכון.",
+      "evidence": [
+        "6 commits since baselineHead",
+        "commit: docs: reference sidebar Auto PR in changelog",
+        "commit: feat: show live hardware usage and harden preset switching",
+        "commit: Polish hardware panel and preserve usable sidebar space",
+        "baselineRelease=v0.5.6 → latestRelease=v0.5.6",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/debpalash/VoiceStudio/compare/08a1592e3cb9b4c36beef5fa3185ec2313bb1fea...e963c76e8ba2d7b1387f1f7f04b1201c7924e203"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "e963c76e8ba2d7b1387f1f7f04b1201c7924e203",
+      "reviewedRelease": "v0.5.6"
+    },
+    "DeusData/codebase-memory-mcp": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "59 commits since baselineHead",
+        "commit: Merge pull request #2065 from kavish-19/fix-count-failed-read",
+        "commit: Merge pull request #2396 from SarletteD/fix/cppcheck-nullable-strcmp",
+        "commit: Merge pull request #2089 from AmirF194/fix/2077-opencode-v2-plugin-shape",
+        "baselineRelease=v0.11.0 → latestRelease=v0.11.0",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/DeusData/codebase-memory-mcp/compare/5df8b0442c48fed654c6f11d94cb6f64f00fc368...80eb92a7017dab9a0773430433660a966b80cc15"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "80eb92a7017dab9a0773430433660a966b80cc15",
+      "reviewedRelease": "v0.11.0"
+    },
+    "dsh-market/dsh-market": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "14 commits since baselineHead",
+        "commit: fix(client): a queued row says what is holding it, and \"run now\" answers (#752)",
+        "commit: release 1.66.5: a queued operation says what is holding it",
+        "commit: fix(check): accept only a real installation as the overlay source, and stop the test depending on macOS tmpdir (#749)",
+        "baselineRelease=v1.66.3 → latestRelease=v1.66.5",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/dsh-market/dsh-market/compare/4ceda5d2b7b666a9093e97bc5ae06bcaf383f154...42e55f03c883fc301374436a534eceb398f70f33"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "42e55f03c883fc301374436a534eceb398f70f33",
+      "reviewedRelease": "v1.66.5"
     },
     "earthtojake/text-to-cad": {
       "verdict": "ignore",
-      "reasonHe": "v0.7.0 כבר אומצה ונבדקה אצלנו. ה־commit היחיד אחרי ה־baseline מוחק סקריפטי E2E ידניים ומחזק כיסוי CI; אין שינוי runtime/CAD שדורש אימוץ נוסף.",
+      "reasonHe": "אימוץ קודם מתועד; אין שינוי runtime/CAD שדורש אימוץ נוסף בריצה זו.",
       "evidence": [
-        "adoptedRelease=v0.7.0; latestRelease נשאר v0.7.0",
-        "1 commit: delete manual web E2E scripts + enforce CI collection",
-        "adoption evidence: packages/vfharness/state/text-to-cad-0.7.0-adoption-2026-09-27.json",
-        "compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...da7f7219569541c41a94715bab5e476615ad4177"
+        "6 commits since baselineHead",
+        "commit: Windows: a publish that renames over a file another process is reading retries instead of failing (#458)",
+        "commit: Release 0.7.1",
+        "commit: Viewer e2e: the camera tolerance is 1e-6 relative, above a mode switch's rounding (#461)",
+        "baselineRelease=v0.7.0 → latestRelease=v0.7.2",
+        "changeKinds=['head', 'release']; newDetection=False",
+        "compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...b10144ad98616fa7156f655cbd2aba0091216d40",
+        "prior adoption evidence exists in harness state"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "da7f7219569541c41a94715bab5e476615ad4177",
-      "reviewedRelease": "v0.7.0"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "b10144ad98616fa7156f655cbd2aba0091216d40",
+      "reviewedRelease": "v0.7.2"
+    },
+    "FFmpeg/FFmpeg": {
+      "verdict": "wait",
+      "reasonHe": "HEAD זז; FFmpeg משמש נתיבי מדיה. ממתינים ל־release/smoke לפני שדרוג host.",
+      "evidence": [
+        "51 commits since baselineHead",
+        "commit: avfilter/vf_libopencv: reject custom shape files without columns",
+        "commit: avfilter/vf_libopencv: unmap the shape file on column overflow",
+        "commit: avfilter/af_alimiter: compute the buffer size without int overflow",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/FFmpeg/FFmpeg/compare/d62aef2e50434cc31eccf236ae67d864becb7068...e383b7d532d0f8703f175b4d03e6103fedacc280",
+        "media toolchain; head-only"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "e383b7d532d0f8703f175b4d03e6103fedacc280",
+      "reviewedRelease": null
     },
     "FreeCAD/FreeCAD": {
       "verdict": "ignore",
-      "reasonHe": "release 1.1.3 לא השתנה. שני ה־commits הם תיקון CAM ל־3+2 Axis וקישור ספריות בחלון About; אין אצלנו מסלול 3+2 CAM פעיל או שינוי שנדרש ל־3D-print/CAD routing הנוכחי.",
+      "reasonHe": "שינויי HEAD/release לא משנים מסלול 3D-print/CAD הפעיל אצלנו במידה שמצדיקה אימוץ עכשיו.",
       "evidence": [
-        "latestRelease נשאר 1.1.3",
-        "2 commits: CAM 3+2 transformShape fix + About dialog library links",
-        "integration: CAD/3D toolchain upstream",
-        "compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...08eb8263a3e6734ca2411f40d6f18a24afdf9044"
+        "48 commits since baselineHead",
+        "commit: PartDesign: clarify refine preference scopes (#33022)",
+        "commit: Gui: Restore depth writes for BREP selection overlays",
+        "commit: Merge pull request #31972 from marioalexis84/app-property_inertia",
+        "baselineRelease=1.1.3 → latestRelease=1.1.4",
+        "changeKinds=['head', 'release']; newDetection=False",
+        "compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...a5908bb06eb554f16b771e545d56128c03fd164f",
+        "CAD upstream; no active critical path change proven"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "08eb8263a3e6734ca2411f40d6f18a24afdf9044",
-      "reviewedRelease": "1.1.3"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "a5908bb06eb554f16b771e545d56128c03fd164f",
+      "reviewedRelease": "1.1.4"
+    },
+    "git/git": {
+      "verdict": "ignore",
+      "reasonHe": "כלי מערכת כללי; אין שדרוג git כחלק מ־Research Seat.",
+      "evidence": [
+        "20 commits since baselineHead",
+        "commit: l10n: pt_BR: add Brazilian Portuguese translation",
+        "commit: l10n: af: add Afrikaans translation",
+        "commit: l10n: af: fix review comments",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/git/git/compare/0f8e75abebff0877cae681a3d5ff31ac47f54220...a018953688f1b10bddf91bff8747068f5f4746a4",
+        "system tool; out of seat adoption scope"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "a018953688f1b10bddf91bff8747068f5f4746a4",
+      "reviewedRelease": null
+    },
+    "Han-1413141/dsh-cost-meter": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "11 commits since baselineHead",
+        "commit: Merge pull request #193 from Han-1413141/codex/sidebar-layout-192",
+        "commit: fix: handle DSH slot anchors in sidebar footer layout",
+        "commit: Merge pull request #194 from Han-1413141/codex/sidebar-host-layout-192",
+        "baselineRelease=v1.7.40 → latestRelease=v1.7.44",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/Han-1413141/dsh-cost-meter/compare/c520d9bae873836bfafb1e672dca5042b50f05f9...1bcfdce7e7d8467c17a6c16e013ce1c2f47b74b9"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "1bcfdce7e7d8467c17a6c16e013ce1c2f47b74b9",
+      "reviewedRelease": "v1.7.44"
+    },
+    "headroomlabs-ai/headroom": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "7 commits since baselineHead",
+        "commit: fix(smart-crusher): recurse at adaptive array limit (#3770)",
+        "commit: fix(proxy): reap wrap-spawned proxies once no wrap clients remain (#3202)",
+        "commit: fix(wrap): never reuse a proxy with incompatible routing config (#3201)",
+        "baselineRelease=v0.39.1 → latestRelease=v0.39.1",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/headroomlabs-ai/headroom/compare/d13e1966f820220b482a33c30bde1e926743939a...f074711726ab7e02395463b095f121dd185aefd9"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "f074711726ab7e02395463b095f121dd185aefd9",
+      "reviewedRelease": "v0.39.1"
+    },
+    "heygen-com/hyperframes": {
+      "verdict": "ignore",
+      "reasonHe": "מסלול genmedia/video מוגבל; לא מאמצים שחרור חדש בלי צורך מוכח ב־vfom.",
+      "evidence": [
+        "82 commits since baselineHead",
+        "commit: fix(producer): renders leave no captured frames behind when interrupted (#4694)",
+        "commit: fix(studio): an escape that cancels a timeline band stops there (#4700)",
+        "commit: feat(catalog): add 3D objects, cursors, snow, starfield and paper transitions (#4349)",
+        "baselineRelease=v0.8.80 → latestRelease=v0.8.86",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/heygen-com/hyperframes/compare/b165b64eda845f46f9b622b96e4545bf704d0950...a519927436a75b48d8564c75206a8d9624fc0251",
+        "genmedia adjacent; policy-cautious"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "a519927436a75b48d8564c75206a8d9624fc0251",
+      "reviewedRelease": "v0.8.86"
+    },
+    "joaomdmoura/crewai": {
+      "verdict": "ignore",
+      "reasonHe": "אין אימוץ CrewAI runtime ב־HQ; second runtime locked.",
+      "evidence": [
+        "4 commits since baselineHead",
+        "commit: fix(tracing): turning tracing on is the answer, and an Evaluate button in the TUI (#7765)",
+        "commit: ensure panel for viewing traces is visible (#7803)",
+        "commit: feat: bump versions to 1.15.23 (#7804)",
+        "baselineRelease=1.15.22 → latestRelease=1.15.23",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/joaomdmoura/crewai/compare/4ed2abc7bbf504a634d3b733f2a97e0fbe8d44ec...deaa71e168069a1d5307340172875def4330e75b",
+        "no CrewAI production runtime"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "deaa71e168069a1d5307340172875def4330e75b",
+      "reviewedRelease": "1.15.23"
+    },
+    "linkingoscar/dsh-attachment-formats": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "1 commits since baselineHead",
+        "commit: fix: support Harness 0.1.7 attachment icon (v0.12.4)",
+        "baselineRelease=v0.12.1 → latestRelease=v0.12.4",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/linkingoscar/dsh-attachment-formats/compare/ad61a0413cb07b4622128b4bba4546120bfa66cf...5253c794baf9ca8e9ee2f4d2b5b25c2b1ac07213"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "5253c794baf9ca8e9ee2f4d2b5b25c2b1ac07213",
+      "reviewedRelease": "v0.12.4"
+    },
+    "LinklyAI/best-skills": {
+      "verdict": "ignore",
+      "reasonHe": "אינדקס דירוגים בלבד. ריצת Best Skills של היום (29.9) כבר צורכת data/2026-09-28; אין התקנה/שדרוג runtime.",
+      "evidence": [
+        "1 commits since baselineHead",
+        "commit: data: 2026-09-28",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/LinklyAI/best-skills/compare/fe7eb0ccddb1c71a3cf2459efe48cbb9ccc0793d...2a31ada38e1d831d775462ebef821dc19dc39cb2",
+        "skill-index; consumed by vf-best-skills pass",
+        "ranking snapshot dataDate 2026-09-28"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "2a31ada38e1d831d775462ebef821dc19dc39cb2",
+      "reviewedRelease": null
     },
     "liustack/modlens": {
       "verdict": "ignore",
-      "reasonHe": "ה־release נשאר v3.26.5 וה־commit היחיד מתקן את תהליך הפרסום ל־npm. זהו catalog-source אצלנו, בלי שינוי בתוכן/יכולת שאנחנו מטמיעים.",
+      "reasonHe": "catalog-source; אין שינוי תוכן שמוטמע אצלנו.",
       "evidence": [
-        "latestRelease נשאר v3.26.5",
-        "1 commit: release workflow pushes main only after npm has the version",
-        "integration: packages/vfdsh/catalog.json",
-        "compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...f01354e78a70ed18eab721762f18ea44a92d6e9e"
+        "2 commits since baselineHead",
+        "commit: ci(release): push main only after npm has the version",
+        "commit: fix(release): wait out npm's five-minute metadata cache before pushing main",
+        "baselineRelease=v3.26.5 → latestRelease=v3.26.5",
+        "changeKinds=['head']; newDetection=False",
+        "compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...333468c72bf9630ec5dd60b169b89e1f48f39b53",
+        "vfdsh catalog"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "f01354e78a70ed18eab721762f18ea44a92d6e9e",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "333468c72bf9630ec5dd60b169b89e1f48f39b53",
       "reviewedRelease": "v3.26.5"
+    },
+    "MichengAI/dsh-agency-agents": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "2 commits since baselineHead",
+        "commit: chore: release 1.0.6",
+        "commit: feat: support every DSH RC from 0.1.2-rc.1 through 0.2.0-rc.1",
+        "baselineRelease=v1.0.5 → latestRelease=v1.0.6",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/MichengAI/dsh-agency-agents/compare/a4ef1548da94c7e57828739feed7f8fa0d332a62...639d295ff7a935877cb58893beb6e6d8b4339217"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "639d295ff7a935877cb58893beb6e6d8b4339217",
+      "reviewedRelease": "v1.0.6"
+    },
+    "msitarzewski/agency-agents": {
+      "verdict": "ignore",
+      "reasonHe": "pattern/catalog watch בלבד; לא מתקינים סוכנים חיצוניים.",
+      "evidence": [
+        "2 commits since baselineHead",
+        "commit: feat(integration): add DeepSeek Harness (dsh) skills support (#846)",
+        "commit: fix(install): Hermes plugin actually gets enabled on real Hermes configs (#881)",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/msitarzewski/agency-agents/compare/053ddbbf392a1688fc7043d81529f47ef2cf86c8...68f01534ef30805ed3764f2d302ad03fe443707a",
+        "agency patterns watch"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "68f01534ef30805ed3764f2d302ad03fe443707a",
+      "reviewedRelease": null
+    },
+    "NirDiamant/GenAI_Agents": {
+      "verdict": "ignore",
+      "reasonHe": "מאגר לימודי/דוגמאות; לא runtime של VF.",
+      "evidence": [
+        "1 commits since baselineHead",
+        "commit: Add Read vs Write: What One AI Answer Costs (#57) + the energy film (#170)",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/NirDiamant/GenAI_Agents/compare/078d6d544e15c0e758c2533b422fd13ed2d15593...6746e4b0a168908f12c57ce5ab0d5d91c7a06ed8",
+        "educational agent examples"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "6746e4b0a168908f12c57ce5ab0d5d91c7a06ed8",
+      "reviewedRelease": null
     },
     "nodejs/node": {
       "verdict": "ignore",
-      "reasonHe": "v26.10.0 לא השתנתה. שני ה־commits נוגעים לבניית התיעוד בלבד — verbosity ו־doc-kit patch bumps — ולא ל־Node runtime שבו ה־bootstrap שלנו תלוי.",
+      "reasonHe": "אין שינוי release קריטי שדורש bootstrap update בריצה הזו.",
       "evidence": [
-        "latestRelease נשאר v26.10.0",
-        "2 commits: doc build verbosity + doc-kit dependency patch bumps",
-        "integrations: Windows edge bootstrap + HyperFrames Mac bootstrap",
-        "compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...df775ec2ea6861053995f923fcf7814c06451e72"
+        "15 commits since baselineHead",
+        "commit: test: unmark exit timeout tests as flaky",
+        "commit: test: unmark loader inspector wait test as flaky",
+        "commit: buffer: fix negative index for large buffers",
+        "baselineRelease=v26.10.0 → latestRelease=v26.10.0",
+        "changeKinds=['head']; newDetection=False",
+        "compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...ae9c25acc5713ccdfb0306bf641d2b7927407fb0",
+        "bootstrap edge path; no adoption evidence this seat"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "df775ec2ea6861053995f923fcf7814c06451e72",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "ae9c25acc5713ccdfb0306bf641d2b7927407fb0",
       "reviewedRelease": "v26.10.0"
+    },
+    "omdsh-dev/dsh-data-agent": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "1 commits since baselineHead",
+        "commit: fix: 适配 DSH 0.2.0-rc.1 并修复插件异常状态 (0.2.1)",
+        "baselineRelease=v0.2.0 → latestRelease=v0.2.1",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/omdsh-dev/dsh-data-agent/compare/3016f67c0a671c34bb1a7314ac11dfd0e9368546...9f052d9c17501a91507f445adb3278a95f6edfdb"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "9f052d9c17501a91507f445adb3278a95f6edfdb",
+      "reviewedRelease": "v0.2.1"
+    },
+    "open-multi-agent/open-multi-agent": {
+      "verdict": "ignore",
+      "reasonHe": "אין אינטגרציית VF פעילה שמצדיקה פעולת אימוץ בריצה זו.",
+      "evidence": [
+        "1 commits since baselineHead",
+        "commit: docs(core): clarify runImage validation errors (#618)",
+        "baselineRelease=v1.21.0 → latestRelease=v1.21.0",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/open-multi-agent/open-multi-agent/compare/ab349e7ad03900455016b798c78464edf98cc94d...4e293a21a8bceac114e395aebc0306b5730ab2d4"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "4e293a21a8bceac114e395aebc0306b5730ab2d4",
+      "reviewedRelease": "v1.21.0"
     },
     "openscad/openscad": {
       "verdict": "ignore",
-      "reasonHe": "ה־release נשאר openscad-2021.01 ושני ה־commits הם שינויי GitHub workflow בלבד לעדכון submodule. אין שינוי במנוע OpenSCAD או במסלול CAD שלנו.",
+      "reasonHe": "release ישן openscad-2021.01; שינויי workflow/HEAD לא דורשים פעולה.",
       "evidence": [
-        "latestRelease נשאר openscad-2021.01",
-        "2 commits: workflow debug info + fetch --all",
-        "integration: CAD/3D toolchain upstream",
-        "compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...ac793b2e0cf6ea734b60c3d31601852d0bab2ee4"
+        "4 commits since baselineHead",
+        "commit: workflow: Add debug info.",
+        "commit: workflow: Use fetch --all.",
+        "commit: workflow: Remove automatic recursion, init only specific submodule.",
+        "baselineRelease=openscad-2021.01 → latestRelease=openscad-2021.01",
+        "changeKinds=['head']; newDetection=False",
+        "compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...325f480887dd151311f34065e37bc30b14ed11d6",
+        "latestRelease openscad-2021.01"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "ac793b2e0cf6ea734b60c3d31601852d0bab2ee4",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "325f480887dd151311f34065e37bc30b14ed11d6",
       "reviewedRelease": "openscad-2021.01"
+    },
+    "OrcaSlicer/OrcaSlicer": {
+      "verdict": "wait",
+      "reasonHe": "latestRelease נשאר v2.4.2 ו־HEAD זז. אין ראיית אימוץ חדשה לסלייסר הרצפה; ממתינים ל־release notes יציבים + smoke לפני עדכון.",
+      "evidence": [
+        "35 commits since baselineHead",
+        "commit: Sanitize Server-Supplied Download File Names (#15955)",
+        "commit: Harden 3MF Loading Against Malformed Plate IDs and Paint Data (#15959)",
+        "commit: Validate Zip Entry Sizes Before Parsing 3MF XML (#15958)",
+        "baselineRelease=v2.4.2 → latestRelease=v2.4.2",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/OrcaSlicer/OrcaSlicer/compare/4964f49765f7963b9ee4b016fe5a3bc0581e1911...79afb020db93cac7130d79c31510173f558b9af6",
+        "latestRelease v2.4.2 unchanged; head moved",
+        "integration: floor Orca path; no HQ Print"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "79afb020db93cac7130d79c31510173f558b9af6",
+      "reviewedRelease": "v2.4.2"
     },
     "python/cpython": {
       "verdict": "ignore",
-      "reasonHe": "אלה שני bugfixes ב־main ללא release: אחד ל־ctypes callback על s390x/libclang ואחד לבדיקת שגיאה פנימית ב־intern_static. אין ראיה שהם משפיעים על Windows/Python toolchain שלנו, ולכן אין פעולה על commit לא־משוחרר.",
+      "reasonHe": "head-only bugfixes בלי release חדש; אין ראיה להשפעה על Windows/Python toolchain שלנו.",
       "evidence": [
-        "אין release חדש; changeKinds=head בלבד",
-        "ctypes fix מתועד עבור s390x/libclang callbacks",
-        "intern_static fix מתקן unreachable fatal-error path",
-        "compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...a4eb936727e5f949f5dc8c8a38bf6d325518f29b"
+        "20 commits since baselineHead",
+        "commit: gh-157429: Make test_detach_materialized_dict_no_memory deterministic (GH-157444)",
+        "commit: gh-110131: Document how a non-empty default works with append and extend (#158155)",
+        "commit: build(deps): bump the actions group with 12 updates (#158342)",
+        "changeKinds=['head']; newDetection=False",
+        "compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...333071231d3a46cccc32d7f44b99328c3299d0b1",
+        "no new release"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "a4eb936727e5f949f5dc8c8a38bf6d325518f29b",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "333071231d3a46cccc32d7f44b99328c3299d0b1",
       "reviewedRelease": null
     },
     "Q00/ouroboros": {
       "verdict": "wait",
-      "reasonHe": "השינוי החדש — replay מבודד וללא רשת של פקודות שנצפו כדי לאמת claims כמו tests_passed/commands_run — רלוונטי רעיונית ל־evidence discipline שלנו. אבל Ouroboros אצלנו עדיין מסומן `later` והדפוס הקיים הוא spec-first interview, לא runtime מוטמע; לכן שומרים כמועמד להטמעת pattern ממוקדת ולא מתקינים/מעדכנים מוצר.",
+      "reasonHe": "דפוס verifier/replay רלוונטי רעיונית ל־evidence discipline, אבל הקטלוג עדיין later/pattern — לא מתקינים.",
       "evidence": [
-        "1 commit גדול: verifier command replay + replay policy + shell parsing + tests",
-        "replay רץ ב־isolated network-denied workspace copy",
-        "current catalog verdict=later; pattern=spec-first interview then execute",
-        "compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...a2b329d052c4b1a900810cc505742dff0142ebdb"
+        "23 commits since baselineHead",
+        "commit: fix(boundary): recover a run whose replacement version was abandoned (#2479)",
+        "commit: chore(release): prepare v0.55.0 (#2480)",
+        "commit: fix(run): report an attempt that failed outside the check package as attempted (#2482)",
+        "baselineRelease=v0.54.6 → latestRelease=v0.55.0",
+        "changeKinds=['head', 'release']; newDetection=False",
+        "compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...bd2155f85e0b227cf76833cb632d4e9f065bd71f",
+        "catalog later; pattern watch"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "a2b329d052c4b1a900810cc505742dff0142ebdb",
-      "reviewedRelease": "v0.54.6"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "bd2155f85e0b227cf76833cb632d4e9f065bd71f",
+      "reviewedRelease": "v0.55.0"
     },
     "remotion-dev/remotion": {
       "verdict": "ignore",
-      "reasonHe": "v4.0.529 לא השתנתה ושני ה־commits הם תיעוד בלבד: הוספת BrewReel לרשימת resources. אין שינוי renderer/API או ב־Remotion path המוגבל־רישוי אצלנו.",
+      "reasonHe": "אין שינוי renderer שמצדיק עדכון במסלול הווידאו המוגבל־רישוי.",
       "evidence": [
-        "latestRelease נשאר v4.0.529",
-        "2 commits, בפועל docs-only resource addition + merge",
-        "integration: packages/vfom/VIDEO-TOOLCHAIN.json",
-        "compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...6f4e0d57d41a22fa60b1a9aa77e2b7d1d2adc210"
+        "97 commits since baselineHead",
+        "commit: Update read-only Studio bundle readiness check",
+        "commit: Internal: Commit generated files in new script",
+        "commit: Merge pull request #11773 from remotion-dev/codex/hide-read-only-studio-actions",
+        "baselineRelease=v4.0.529 → latestRelease=v4.0.529",
+        "changeKinds=['head']; newDetection=False",
+        "compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...d458be6a37a0259979507eaee6f3bfaf314bfedb",
+        "vfom VIDEO-TOOLCHAIN; license-limited"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "6f4e0d57d41a22fa60b1a9aa77e2b7d1d2adc210",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "d458be6a37a0259979507eaee6f3bfaf314bfedb",
       "reviewedRelease": "v4.0.529"
+    },
+    "scenario-labs/skills": {
+      "verdict": "ignore",
+      "reasonHe": "אין אינטגרציית VF פעילה שמצדיקה פעולת אימוץ בריצה זו.",
+      "evidence": [
+        "1 commits since baselineHead",
+        "commit: docs(skills): drop the not-yet-run status notes from the Maya and ZBrush tools (#161)",
+        "baselineRelease=skills-v0.48.0 → latestRelease=skills-v0.48.0",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/scenario-labs/skills/compare/9624e295fa33168bc1be22a628c23ba132d1c959...5786accd3bb6d79808330230c698898862e8a1d4"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "5786accd3bb6d79808330230c698898862e8a1d4",
+      "reviewedRelease": "skills-v0.48.0"
+    },
+    "Snapmaker/OrcaSlicer": {
+      "verdict": "ignore",
+      "reasonHe": "מזלג Snapmaker של Orca; VF לא על מסלול Snapmaker. latestRelease v2.4.0; HEAD זז בלי השפעה על האינטגרציה שלנו.",
+      "evidence": [
+        "1 commits since baselineHead",
+        "commit: docs: fix Snapmaker Orca license attribution (#557)",
+        "baselineRelease=v2.4.0 → latestRelease=v2.4.0",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/Snapmaker/OrcaSlicer/compare/da53bc5ffe47d7837ccdfde5f59a5ba1e9ec35f1...2f5c3ff13461720d8ef89ca58a000871feed980c",
+        "fork not on VF floor path",
+        "latestRelease v2.4.0"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "2f5c3ff13461720d8ef89ca58a000871feed980c",
+      "reviewedRelease": "v2.4.0"
     },
     "stablyai/orca": {
       "verdict": "ignore",
-      "reasonHe": "ה־7 commits משנים runtime/UI של Orca — terminal subscriptions, workspace restore, native chat ו־agent-launch caller selection. אצלנו Orca הוא pattern-only וה־LOCK אוסר התקנת Orca/ADE; דפוס ה־job isolation/handoff/three terminal states שכבר הוטמע אינו דורש שינוי בגלל commits אלה.",
+      "reasonHe": "release חדש v1.4.216 אבל אצלנו Orca הוא pattern-only; LOCK אוסר התקנת Orca/ADE. אין פעולת שדרוג.",
       "evidence": [
-        "latestRelease נשאר v1.4.215",
-        "7 commits ב־Orca runtime/renderer; אין release חדש",
-        "local contract: Pattern only; do not install Orca or stand up an ADE",
-        "compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...bdaf9a3ed3a21ad81c722f1ba732a5018eaffad4"
+        "122 commits since baselineHead",
+        "commit: fix(tab-group): measure fallback pane geometry once per tab group, only while visible (#23592)",
+        "commit: fix(agent-hooks): compare status rows structurally instead of serializing both (#23585)",
+        "commit: fix(ssh): don't overwrite remote agent config after a failed read (#22644)",
+        "baselineRelease=v1.4.215 → latestRelease=v1.4.216",
+        "changeKinds=['head', 'release']; newDetection=False",
+        "compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...d68eee37576ec2327f16adfcd3526b6ad61fa58c",
+        "baselineRelease v1.4.215 → latest v1.4.216",
+        "local contract: pattern only; do not install"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "bdaf9a3ed3a21ad81c722f1ba732a5018eaffad4",
-      "reviewedRelease": "v1.4.215"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "d68eee37576ec2327f16adfcd3526b6ad61fa58c",
+      "reviewedRelease": "v1.4.216"
+    },
+    "Tencent/WeKnora": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "23 commits since baselineHead",
+        "commit: fix(rss): 修复全文回退后增量同步不重试",
+        "commit: fix(models): keep Retry-After on HTTPError and honour it in agent LLM retries",
+        "commit: fix(compaction): 流因取消而关闭时不得当成空摘要成功返回",
+        "baselineRelease=v0.8.2 → latestRelease=v0.8.2",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/Tencent/WeKnora/compare/9114e4e4f905be71976a77c684d3f92731e6f9a6...1912ba26c544025adb869459a74c2cbac2a95cd9"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "1912ba26c544025adb869459a74c2cbac2a95cd9",
+      "reviewedRelease": "v0.8.2"
     },
     "topoteretes/cognee": {
-      "verdict": "ignore",
-      "reasonHe": "v1.6.1 כבר אומצה ונבדקה. שני ה־commits החדשים משנים README בלבד ומיישרים את התיעוד למה שכבר קיים ב־1.6.1; ה־commit האחרון מצהיר במפורש שאין שינוי behavior.",
+      "verdict": "wait",
+      "reasonHe": "v1.6.1 כבר ב־pin/אימוץ מקומי; HEAD זז אחרי ה־release. אין ack בלי smoke Memory Sync על Windows PC המורשה אחרי diff החדש.",
       "evidence": [
-        "adoptedRelease=v1.6.1; latestRelease נשאר v1.6.1",
-        "2 README-only commits; no behaviour change",
-        "adoption evidence: packages/vfharness/state/cognee-1.6.1-adoption-2026-09-27.json",
-        "compare: https://github.com/topoteretes/cognee/compare/eb90d03740755f5252b8b12cce91fd09970f2d81...c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b"
+        "2 commits since baselineHead",
+        "commit: docs: Align README with the 1.6.1 release (#5250)",
+        "commit: docs(readme): Shorten the keyless intro paragraph (#5251)",
+        "baselineRelease=v1.6.1 → latestRelease=v1.6.1",
+        "changeKinds=['head']; newDetection=False",
+        "compare: https://github.com/topoteretes/cognee/compare/eb90d03740755f5252b8b12cce91fd09970f2d81...c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b",
+        "latestRelease v1.6.1; changeKinds=head",
+        "integration: Cognee Memory Sync on authorized Windows PC"
       ],
-      "notifyOwner": true,
+      "notifyOwner": false,
       "reviewedRemoteHead": "c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b",
       "reviewedRelease": "v1.6.1"
+    },
+    "trailhq/Graft": {
+      "verdict": "ignore",
+      "reasonHe": "אין אינטגרציית VF פעילה שמצדיקה פעולת אימוץ בריצה זו.",
+      "evidence": [
+        "4 commits since baselineHead",
+        "commit: feat(trail): chunked upload, live watch and pull for all context files (#493)",
+        "commit: feat(trail): send the picked agents with the push (#494)",
+        "commit: feat(trail): finish the sign-up when a coding agent runs graft trail push (#495)",
+        "changeKinds=['head']; newDetection=True",
+        "compare: https://github.com/trailhq/Graft/compare/80692e5ad0bc8e8f7e1edea648247d90b9f76820...dfc46f0b6eac055d456cefa299395b441edb1f28"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "dfc46f0b6eac055d456cefa299395b441edb1f28",
+      "reviewedRelease": null
+    },
+    "volcengine/OpenViking": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "15 commits since baselineHead",
+        "commit: fix(hermes-plugin): admit Hermes psutil pins and test activation (#5425)",
+        "commit: fix(embedder): scope Gemini async clients to each request (#5428)",
+        "commit: test(queuefs): align semantic task tests with current APIs (#5410)",
+        "baselineRelease=v0.4.21 → latestRelease=v0.4.22",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/volcengine/OpenViking/compare/a09a9d20a8e07d08973aee177802d00e08df29e6...1f4f7039fc394c5d04637828166f4e4e74e249e0"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "1f4f7039fc394c5d04637828166f4e4e74e249e0",
+      "reviewedRelease": "v0.4.22"
+    },
+    "xmanrui/dsh-im": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "18 commits since baselineHead",
+        "commit: feat(context-enhancement): add optional sentAt source field",
+        "commit: fix(context-enhancement): read sentAt lazily, zone-independent tests, accurate help",
+        "commit: build: rebuild lib/ for sentAt",
+        "baselineRelease=v4.29.0 → latestRelease=v4.30.0",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/xmanrui/dsh-im/compare/b7522c70b4707c6879dc6985c20820da65e95cae...80d5d49d21cb25f511e7dff16d3b117984c1e89a"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "80d5d49d21cb25f511e7dff16d3b117984c1e89a",
+      "reviewedRelease": "v4.30.0"
+    },
+    "yxqfg/phone-lens": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
+      "evidence": [
+        "5 commits since baselineHead",
+        "commit: fix(phone-lens): adapt to dsh 0.1.7-rc.2 — agent/created event + paste-based composer injection",
+        "commit: fix(app): viewfinder rotation follows physical tilt; photos baked WYSIWYG",
+        "commit: chore: release v0.3.6",
+        "baselineRelease=v0.3.5 → latestRelease=v0.3.7",
+        "changeKinds=['head', 'release']; newDetection=True",
+        "compare: https://github.com/yxqfg/phone-lens/compare/1f9eb54f2375359a66016a30796936c69d4f8a6e...23053013f0aa876627509edd3ae0538dc51c7786"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "23053013f0aa876627509edd3ae0538dc51c7786",
+      "reviewedRelease": "v0.3.7"
     }
-  }
+  },
+  "notificationPreparedAt": "2026-09-28T23:16:17.575366+00:00",
+  "notificationDigest": "a9941abf2a2310ad3944d35660fde384889ab3079ca63a51819227e80457ea5a"
 }
