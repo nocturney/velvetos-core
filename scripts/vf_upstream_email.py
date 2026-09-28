@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import html
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -96,13 +97,29 @@ def decision_for(
     repo = str(row.get("repo") or "")
     decision = default_decision(row, registry_row)
     override = reviews.get(repo.casefold()) or {}
-    if override:
+    reviewed_head = str(override.get("reviewedRemoteHead") or "")
+    current_head = str(row.get("remoteHead") or "")
+    reviewed_release = str(override.get("reviewedRelease") or "")
+    current_release = str(row.get("latestRelease") or "")
+    review_ready = bool(
+        override
+        and reviewed_head
+        and reviewed_head == current_head
+        and reviewed_release == current_release
+    )
+    if review_ready:
         decision.update(override)
+    else:
+        decision["notifyOwner"] = False
+        decision["reasonHe"] = (
+            "ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים."
+        )
     verdict = str(decision.get("verdict") or "review")
     if verdict not in VERDICT_HE:
         raise RuntimeError(f"invalid review verdict for {repo}: {verdict}")
     decision["verdict"] = verdict
     decision["labelHe"] = VERDICT_HE[verdict]
+    decision["reviewReady"] = review_ready
     return decision
 
 
@@ -153,7 +170,11 @@ def make_payload(
                 "decision": decision,
             }
         )
-    notify = any(item["newDetection"] or bool(item["decision"].get("notifyOwner")) for item in items)
+    all_reviewed = bool(items) and all(bool(item["decision"].get("reviewReady")) for item in items)
+    notify = bool(
+        all_reviewed
+        and any(item["newDetection"] or bool(item["decision"].get("notifyOwner")) for item in items)
+    )
     digest_body = [
         {
             "repo": item["repo"],
@@ -278,7 +299,9 @@ def render(*, arm: bool, consume_notify: bool) -> int:
     html_body = "\n".join(line.rstrip() for line in render_html(items, checked_at).splitlines()) + "\n"
     VISIBLE.write_text(visible, encoding="utf-8")
     HTML.write_text(html_body, encoding="utf-8")
-    enabled = bool(arm and items and notify)
+    review_ready = bool(items) and all(bool(item["decision"].get("reviewReady")) for item in items)
+    unreviewed = [item["repo"] for item in items if not item["decision"].get("reviewReady")]
+    enabled = bool(arm and items and notify and review_ready)
     request = {
         "enabled": enabled,
         "requestId": f"tool-updates-{digest[:16]}",
@@ -291,14 +314,25 @@ def render(*, arm: bool, consume_notify: bool) -> int:
         "remoteImageLimit": 0,
         "notificationDigest": digest,
         "pendingCount": len(items),
+        "reviewReady": review_ready,
+        "unreviewedCount": len(unreviewed),
+        "unreviewedRepos": unreviewed,
     }
     REQUEST.write_text(json.dumps(request, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if enabled and consume_notify and REVIEW.is_file():
         consume_notifications(REVIEW, review, digest)
     print(
-        f"UPSTREAM EMAIL rendered pending={len(items)} notify={str(notify).lower()} "
-        f"armed={str(arm).lower()} enabled={str(enabled).lower()} digest={digest[:16]}"
+        f"UPSTREAM EMAIL rendered pending={len(items)} reviewed={len(items)-len(unreviewed)}/{len(items)} "
+        f"notify={str(notify).lower()} armed={str(arm).lower()} enabled={str(enabled).lower()} "
+        f"digest={digest[:16]}"
     )
+    if arm and items and unreviewed:
+        print(
+            "BLOCK tool-update email: explicit current review missing for "
+            + ", ".join(unreviewed),
+            file=sys.stderr,
+        )
+        return 2
     return 0
 
 
@@ -327,22 +361,28 @@ def selftest() -> int:
         ]
     }
     items, notify, digest = make_payload(report, registry, {"items": {}})
-    assert len(items) == 1 and notify and len(digest) == 64
+    assert len(items) == 1 and not notify and len(digest) == 64
     assert items[0]["decision"]["verdict"] == "review"
-    assert "מומלץ לעדכן" in render_text(
-        [
-            {
-                **items[0],
-                "decision": {
-                    **items[0]["decision"],
-                    "verdict": "update",
-                    "labelHe": VERDICT_HE["update"],
-                },
+    assert items[0]["decision"]["reviewReady"] is False
+
+    reviewed = {
+        "items": {
+            "example/runtime": {
+                "verdict": "update",
+                "reasonHe": "בדיקות התאימות עברו.",
+                "evidence": ["smoke-pass"],
+                "notifyOwner": True,
+                "reviewedRemoteHead": "abc123",
+                "reviewedRelease": "v1.1.0",
             }
-        ],
-        report["checkedAt"],
-    )
-    print("OK upstream-email selftest separate-owner-email + decision labels + notification gate")
+        }
+    }
+    report["sources"][0]["remoteHead"] = "abc123"
+    items, notify, digest = make_payload(report, registry, reviewed)
+    assert notify and items[0]["decision"]["reviewReady"] is True
+    assert items[0]["decision"]["verdict"] == "update"
+    assert "מומלץ לעדכן" in render_text(items, report["checkedAt"])
+    print("OK upstream-email selftest separate-owner-email + current-review gate + decision labels")
     return 0
 
 

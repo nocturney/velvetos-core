@@ -31,8 +31,9 @@
       "renderCommand": "python3 scripts/vf_upstream_email.py render --arm --consume-notify",
       "request": "packages/vfresearch/out/tool-updates-send-request.json",
       "workflow": ".github/workflows/gmail-tool-updates-send.yml",
-      "sendWhen": "newDetection-or-review-notifyOwner",
-      "repeatUnchangedPending": false
+      "sendWhen": "newDetection-or-current-review-notifyOwner",
+      "repeatUnchangedPending": false,
+      "reviewBinding": "every pending review must match current remoteHead and latestRelease before email arming"
     }
   },
   "sources": [

@@ -36,6 +36,8 @@ def main() -> int:
         fail("tool update decisions must not be included in Morning Brief")
     if delivery.get("repeatUnchangedPending") is not False:
         fail("unchanged pending updates must not generate repeated email")
+    if "current remoteHead and latestRelease" not in str(delivery.get("reviewBinding") or ""):
+        fail("owner email must require current HEAD/release review binding")
     if delivery.get("workflow") != ".github/workflows/gmail-tool-updates-send.yml":
         fail("dedicated workflow path mismatch")
 
@@ -43,6 +45,7 @@ def main() -> int:
     required_daily = [
         "עדכוני toolchain / skills / agents **לא נכנסים ל־Morning Brief**",
         "vf_upstream_email.py render --arm --consume-notify",
+        "reviewedRemoteHead",
         "אם אין עדכון חדש או שינוי החלטה — **לא נשלח מייל**",
         "אין להכניס לתמצית הזו רשימת עדכוני כלים",
     ]
@@ -63,6 +66,10 @@ def main() -> int:
     for repo, row in (review.get("items") or {}).items():
         if not isinstance(row, dict) or row.get("verdict") not in valid:
             fail(f"invalid verdict for {repo}")
+        if not str(row.get("reviewedRemoteHead") or "").strip():
+            fail(f"review missing reviewedRemoteHead for {repo}")
+        if "reviewedRelease" not in row:
+            fail(f"review missing reviewedRelease for {repo}")
 
     request = json.loads(REQUEST.read_text(encoding="utf-8"))
     if request.get("enabled") is not False:
