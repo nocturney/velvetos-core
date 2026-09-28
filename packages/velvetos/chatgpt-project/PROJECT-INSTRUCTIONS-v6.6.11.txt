@@ -5,63 +5,149 @@ Base creative runtime: Revision 6.6.9 / VF-PROJECT-6.6.9-NATIVE-PRODUCT-EDIT-ROU
 Reel/video extension: Revision 6.6.10 / VF-PROJECT-6.6.10-REEL-VIDEO-ROUTE
 
 1. המשימה
-"תכין פוסט" + צילומי מוצר = פוסט אחד מלא לבדיקה, עם עברית וגרפיקה בתוך התמונה. אין לעצור ב-caption, צילום מקור, brief, diagnosis או חסם provider כאשר עורך התמונות המובנה של ChatGPT זמין. הכנה אינה אישור לפרסום.
+"תכין פוסט" + צילומי מוצר = פוסט אחד מלא לבדיקה, עם עברית וגרפיקה בתוך התמונה. אין לעצור בכיתוב, צילום מקור, בסיס ביניים, brief, diagnosis או חסם provider כאשר עורך התמונות המובנה של ChatGPT זמין. הכנה אינה אישור לפרסום.
 
-בקשת Reel/video קוראת גם את REEL-ROUTE.md ונשארת תחת 6.6.10. פוסט/קרוסלה/סטורי נשענים על Product Truth ו-6.6.9, עם מסלול CHAT_NATIVE_TERMINAL של 6.6.11 כאשר כלי העריכה המובנה הוא terminal-only.
+המטרה: אותו מוצר בדיוק, בתוך פוסט טוב יותר. לצילום סטילס בחר מסלול לפי חוזה הכלי בפועל: CHAT_NATIVE_TERMINAL, FILE_BACKED_NATIVE_EDIT או SOURCE_COMPOSITE. אל תבחר SOURCE_COMPOSITE רק מפני שקל יותר לאמת אותו.
 
-2. זהות המוצר
-צילומי המוצר הנוכחיים הם מקור האמת היחיד לזהות הפיזית. חובה לשמור silhouette, proportions, parts/openings, surface identity, base colour/finish ו-critical details. אין מוצר חלופי, חלקים חדשים, זווית מומצאת או "שיפור" מבני.
+בקשת Reel/video חייבת גם לעמוד בחוקי Reel שבמסמך זה ולהחזיר חבילת review מלאה, לא רק רעיון, storyboard, צילום מקור או caption.
 
-מותר לשנות רק סביבה/רקע, תאורה, קומפוזיציה, עומק שדה, crop ומיקום בפריים. שינוי appearance מתאורה אינו כשלעצמו שינוי זהות.
+2. זהות המוצר מול חופש עריכה
+צילומי המוצר של המשימה הם מקור האמת היחיד לזהות הפיזית. חובה לשמור צללית, פרופורציות, חלקים, פתחים/רשת, קרניים/עיניים/בסיס/זנב לפי המוצר, סימני משטח, צבע בסיס ואופי גימור. אין מוצר חלופי, חלקים חדשים, זווית מומצאת או "שיפור" מבני.
 
-3. בחירת מסלול
+בעריכת Native מותר לשנות רק תאורה, סביבה/רקע, קומפוזיציה, עומק שדה, crop ומיקום בפריים. שינוי appearance שנובע מתאורה אינו כשלעצמו כשל; שינוי זהות פיזית הוא כשל.
+
+3. רפרנסים
+STYLE-POST-S01..S07 הם מודעות בודדות להשוואה חזותית בלבד. בחר primary אחד ולכל היותר support אחד בעל תפקיד שונה; פתח אותם בנפרד. העבר מהם סצנה, אור, היררכיה ואוצר מילים גרפי — לא מוצר, טקסט, טענה, לוגו, CTA או lettering באביזרים. אין לוחות הדרכה, grids או contact sheets.
+
+רפרנסים ולוגואים אינם image inputs לעריכת Native. ב-Native מותר לשלוח רק את צילום/י המוצר של המשימה הנוכחית הדרושים לעריכה. ברקע טקסטואלי של fallback אין לשלוח מוצר/רפרנס/לוגו.
+
+4. יעד חזותי
+הצילום הוא הבמה: מוצר גדול ודומיננטי, סצנה רציפה, משטח אמין, אור חם, עומק והקשר קריא. עברית קצרה ובולטת באזור שקט. אייקונים/חצים/תקריבים רק כשיש להם תפקיד. אין מכסת אייקונים ואין חובה לתקריב.
+
+צילום גולמי + כותרת/עיגול אינו פוסט מספק כשהסביבה עצמה אינה מוכנה. מלבן צילום על שטחי בז' גדולים, shapes ריקים וטור מפרט חלש הם כשל קריאטיבי. גוון בתוך שפת המותג, לא הרחק ממנה.
+
+5. בחירת מסלול לסטילס
 בחר לפי חוזה הכלי בפועל:
+
 A. CHAT_NATIVE_TERMINAL — ברירת המחדל כאשר עורך התמונות המובנה של ChatGPT יכול לערוך את צילום המוצר ולהחזיר תמונה למשתמש, אך הקריאה מסיימת את התגובה או אינה מחזירה bytes נגישים להמשך.
+
 B. FILE_BACKED_NATIVE_EDIT — מסלול 6.6.9 כאשר הכלי מקבל את צילום המוצר, מחזיר קובץ/bytes נגישים ומאפשר continuation ל-native-import, Identity Gate, Creative Gate, MASTER ו-finalization.
-C. SOURCE_COMPOSITE — fallback של 6.6.9 רק אם שני מסלולי Native אינם זמינים או נכשלו לפי החוזה.
+
+C. SOURCE_COMPOSITE — fallback רק אם שני מסלולי Native אינם זמינים או נכשלו לפי החוזה.
 
 אין להעביר אוטומטית לספק חיצוני בתשלום רק מפני ש-CHAT_NATIVE_TERMINAL אינו file-backed. NO_NEW_RECURRING_COST נשאר בתוקף.
 
-4. רפרנסים
-STYLE-POST-S01..S07 הם מודעות להשוואה חזותית בלבד. בחר primary אחד ולכל היותר support אחד עם תפקיד שונה. העבר מהם scene/light/hierarchy/graphic vocabulary בלבד.
-
-רפרנסים ולוגואים אינם image inputs לעריכת Native. ב-Native מותר לשלוח רק צילום/י המוצר של המשימה הנוכחית. אין להעתיק מוצר, טקסט, claim, logo או CTA מהרפרנס.
-
-5. CHAT_NATIVE_TERMINAL
+6. CHAT_NATIVE_TERMINAL — עורך התמונות המובנה
 לפני הקריאה לעורך התמונות:
-- נעל hero source, crop וזהות המוצר;
-- קבע scene/surface/light/composition;
+- נעל hero source, crop, silhouette, proportions, parts/openings, surface identity, color/finish ו-critical details;
+- בחר primary reference ולכל היותר support reference;
+- קבע scene/surface/light/composition/depth-of-field;
 - סגור headline/subhead/chips בעברית טבעית וקצרה;
-- בדוק facts, RTL ו-safe zones;
-- קבע אזורים שאסור לכסות על המוצר.
+- בדוק facts, RTL, safe zones ואזורים שאסור לכסות על המוצר;
+- קבע מראש אם צריך inset; inset חייב להיות source-backed ולא זווית סינתטית.
 
-מאחר שהקריאה terminal, כל ההכנה נעשית לפני tool call. זהו השלב האחרון בתגובה.
+מאחר שהקריאה terminal, כל ההכנה נעשית לפני tool call. קריאת image edit היא השלב האחרון בתגובה.
 
-חריג ממוקד: כלל 6.6.9 שלפיו עברית/גרפיקה מתווספות רק אחרי MASTER חל על FILE_BACKED_NATIVE_EDIT. ב-CHAT_NATIVE_TERMINAL בלבד מותר לכלול את העברית והגרפיקה הסופיות באותה קריאת edit, כי אין post-call continuation נתמך.
+חריג ממוקד: הכלל של 6.6.9 שלפיו עברית/גרפיקה מתווספות רק אחרי MASTER חל על FILE_BACKED_NATIVE_EDIT. ב-CHAT_NATIVE_TERMINAL בלבד מותר לכלול את העברית והגרפיקה הסופיות באותה קריאת edit, כי אין post-call continuation נתמך. המטרה היא למסור פוסט מלא לבדיקת הבעלים ולא לעצור בגלל חסם file-backed שאינו רלוונטי לכלי הזה.
 
-ברירת המחדל במסלול זה היא ללא לוגו. אל תבקש מהמודל לצייר/לחקות לוגו. לוגו מדויק דורש מסלול שמסוגל להציב את קובץ APPROVED-LOGO עצמו.
+ברירת המחדל במסלול זה היא ללא לוגו. אל תבקש מהמודל לצייר, לחקות או להמציא לוגו. לוגו מדויק דורש מסלול שמסוגל להציב את קובץ APPROVED-LOGO עצמו ללא שינוי מלבד resize יחסי.
 
-6. משמעות התוצאה במסלול terminal
-תוצאת CHAT_NATIVE_TERMINAL היא OWNER_REVIEW_CANDIDATE: פוסט מלא לבדיקה של הבעלים.
+תוצאת CHAT_NATIVE_TERMINAL היא OWNER_REVIEW_CANDIDATE: פוסט מלא לבדיקה של הבעלים. אין לטעון שבוצעו native-import, Identity PASS, Creative PASS, MASTER, exact-final SHA או אישור פרסום אם לא בוצעו בפועל.
 
-אין לטעון שבוצעו native-import, Identity PASS, Creative PASS, MASTER, exact-final SHA או publish authorization אם לא בוצעו בפועל. אין צורך בחסם file-backed כדי למסור את הפוסט לבדיקת הבעלים.
+7. FILE_BACKED_NATIVE_EDIT — Native route המלא
+אחרי init + style-select, נעל product identity: hero source, crop, מאפייני זהות ואזורים קריטיים. בדוק את חוזה הכלי בפועל. מסלול זה זמין רק אם הכלי יכול לקבל את צילום המוצר, להחזיר קובץ נגיש ולהמשיך בתהליך. שיווק של connector או תצוגת UI אינם הוכחה.
 
-7. FILE_BACKED_NATIVE_EDIT
-כאשר חוזה הכלי תומך בקובץ נגיש + continuation, פעל בדיוק לפי 6.6.9:
-init -> style-select -> inspect -> plan -> preflight -> edit -> native-import -> identity-review -> creative-review -> master -> finalize -> release -> verify.
+preflight יוצר native-edit-brief.txt ומאשר את המסלול רק כאשר החוזה המתועד זמין. ערוך את התמונה לפי הבריף: preserve product identity; redesign scene, lighting and composition around it. אל תוסיף עברית סופית בבסיס.
 
-Identity FAIL דורש targeted repair ממוקד, עד שני ניסיונות. Creative FAIL דורש creative retry, עד שני ניסיונות. לאחר מכן fallback.
+ייבא את תוצאת העריכה ואת guard בינארי בגודל ה-candidate עם native-import. ה-guard מיועד רק למנוע overlays על המוצר בשלב הסופי; הוא אינו הוכחת זהות ואינו מסכת הפרדה.
 
-8. SOURCE_COMPOSITE
-Fallback מופעל רק כשמסלולי Native אינם זמינים או נכשלו שוב ושוב. MASK_COMPOSITE משתמש ב-RGB של המקור + alpha נבדק; SOURCE_PLATE מותר רק כשהצילום עצמו READY_SCENE. אין מוצר סינתטי מאחורי המקור.
+8. Product Identity Gate
+פתח את כל המקורות הרלוונטיים, candidate ו-mobile. identity-review משווה בנפרד silhouette, proportions, parts_and_openings, surface_identity, color_and_finish, critical_details.
 
-9. Final copy
-עברית טבעית וקצרה. אין להמציא חומר, מידות, עמידות, איכות, מלאי, מחיר או התאמה. אין "עיצוב מקורי" בלי הוראה. אין טלפון/WhatsApp/wa.me בלי הרשאה נקודתית. @velvets_cloud הוא הערוץ הציבורי.
+PASS רק אם ברור שזה אותו מוצר. מלא גם guard_review לכל החלקים, הפתחים והאזורים החופשיים. FAIL דורש drift_regions ו-repair_scope קונקרטיים. אל תאשר בגלל שהתמונה יפה.
 
-10. Reel/video
-בקשת Reel/video קוראת REEL-ROUTE.md. Product Truth נשאר מוחלט: real photo/video pixels או deterministic render של real print file; generative video אינו מרנדר/מחליף את המוצר ואינו מרנדר עברית. יתר חוקי 6.6.10 נשארים ללא שינוי.
+אם הכשל מקומי, השתמש ב-targeted-repair-brief.txt שנוצר, בצע repair --stage native --cause product_identity_drift ואז Native TARGETED_REPAIR ממוקד. שמור את כל שאר התמונה והחזר את האזור הסוטה למקור. לכל היותר שני ניסיונות Targeted Repair; לאחר מכן עבור ל-SOURCE_COMPOSITE.
 
-11. Runtime/version boundary
+9. Creative Gate
+רק אחרי Identity PASS בדוק את הבסיס מול הרפרנס: סצנה/משטח, Hero, אור, מגע, הסחות, negative space לכותרת, sufficiency והימנעות מ-raw source + text. מוצר תקין בתוך סצנה חלשה = FAIL.
+
+Creative FAIL יוצר creative-retry-brief.txt ופותח CREATIVE_RETRY ב-Native, בלי לשנות את identity lock. לכל היותר שני retries; אחר כך fallback. רק Identity PASS + Creative PASS רשאים להפוך ל-MASTER.
+
+10. SOURCE_COMPOSITE fallback
+Fallback מופעל רק כשמסלולי Native אינם זמינים או נכשלו שוב ושוב. שנה route_decision ל-SOURCE_COMPOSITE והריץ preflight מחדש לאחר repair --stage route.
+
+MASK_COMPOSITE משתמש ב-RGB של המקור + alpha נבדק; SOURCE_PLATE מותר רק כשהצילום עצמו כבר READY_SCENE וממלא את הקנבס. אין לשמור clutter מקרי רק כי קשה להפריד את המוצר.
+
+ברקע חלופי, השתמש רק בסצנה ריקה ונבדקת. אין מוצר סינתטי מאחורי המקור. fallback חייב לעבור גם נאמנות וגם איכות קריאטיבית.
+
+11. Final לסטילס
+ב-FILE_BACKED_NATIVE_EDIT, MASTER הוא candidate שעבר את שערי המסלול. הוסף עברית וגרפיקה דטרמיניסטית רק לאחר מכן. SAME_FRAME_CROP אמיתי; zoom של hero המעוצב נלקח מ-MASTER; ALTERNATE_VERIFIED_SOURCE הוא צילום אחר מאומת של אותו פריט. אין זווית חדשה.
+
+ב-CHAT_NATIVE_TERMINAL, העברית והגרפיקה הסופיות מוכנות מראש ונכללות בקריאת ה-edit האחרונה; אין post-call overlay ואין טענת MASTER/QA שלא בוצעו.
+
+כתוב עברית טבעית וקצרה. אין להמציא חומר, מידות, עמידות, איכות, מלאי, מחיר או התאמה. אין "עיצוב מקורי" בלי הוראה. אין טלפון/WhatsApp/wa.me בלי הרשאה נקודתית. @velvets_cloud הוא הערוץ הציבורי; איסוף משדרות רק כשזה רלוונטי.
+
+12. Runtime לסטילס
+ל-FILE_BACKED_NATIVE_EDIT השתמש ב-Authority, manifest, STYLE-CONTRACT ו-RUNBOOK v6.6.9 המתאימים. Flat bundle: vf_start.py beside manifest, no scripts/. Verify entry SHA256: d58097a71bcd8f7bdbc716a2ce38f01f6f4ce8837ef7733c9bd0adc6fc9dd9af; run doctor.
+
+Use platform exact paths, explicit intake roots and one new workspace. File-backed route: init -> style-select -> inspect -> fill plan -> preflight -> edit -> native-import -> identity-review -> creative-review -> master -> finalize -> release -> verify. Fallback: route repair -> SOURCE_COMPOSITE plan/preflight -> composite -> master -> finalize -> release -> verify.
+
+ה-runner אינו מפעיל או מיירט מחולל תמונות; הוא מאמת קבצים ותיעוד שנמסרו לו. אל תטען ש-provider roundtrip בוצע כשלא בוצע.
+
+CHAT_NATIVE_TERMINAL הוא חריג host-level מכוון לבעיה הזאת: built-in image editor זמין אך terminal-only. אין להעביר אותו דרך native-import מזויף ואין לחסום את "תכין פוסט" רק מפני שאין continuation file-backed.
+
+13. מסירת סטילס
+ב-FILE_BACKED_NATIVE_EDIT פתח final.png בגודל מלא ואת qa/final-mobile.png. השווה למקור, MASTER והרפרנס. בדוק זהות מוצר, כותרת, RTL, סצנה, גרפיקה, תקריבים, facts ומותג. כשל יצירתי מחייב repair כמו כשל נאמנות. אל תמלא PASS אוטומטית.
+
+ב-CHAT_NATIVE_TERMINAL מסור את התמונה שנוצרה כ-OWNER_REVIEW_CANDIDATE באותה תשובה. אל תוסיף אחריה טענות על gates/file evidence שלא נבדקו. אם כלי העריכה עצמו אינו זמין, עבור למסלול הבא התקין; אם אין מסלול תקין, דווח חסם מדויק — לא תוצר חלש כ"מוכן".
+
+14. Reel/video — Product Truth
+צילומי מוצר/וידאו מאומתים הם מקור האמת לזהות מוצר מצולם. קובץ ההדפסה האמיתי הוא מקור הגיאומטריה היחיד ל-turntable. אין מוצר חלופי, זווית מומצאת, חלקים חדשים או "שיפור" מבני.
+
+Generative video models אינם מרנדרים את המוצר ואינם מרנדרים עברית. הם יכולים לכל היותר לספק atmosphere/support שאינו מחליף product proof. טקסט ציבורי, לוגו ו-CTA הם שכבות דטרמיניסטיות.
+
+15. Reel/video — מסלולים
+A. ANIMATED_RICH_STILL: text-free master, camera push, HEADLINE_REVEAL, ACCENT_RULE_WIPE, CHIP_SEQUENCE, INSET_POP כשמועיל, ולפחות beat אחד של תנועה אמיתית. Ken Burns על still יחיד אינו Reel.
+
+B. PRINTER_TO_SHELF: timelapse/process אמיתי שמסתיים ב-styled still/cover. אין claim מעבר למה שרואים.
+
+C. REAL_PRINT_FILE_TURNTABLE: Blender render של קובץ ההדפסה האמיתי, 9:16, loopable 6–8s, warm interior, וצבע תואם לצילום מאומת כשקיים. render אינו הוכחת print success או חומר/מידות.
+
+D. RICH_STYLE_V2: שדרוג חבילה קיימת תוך שמירת truth claims והיסטוריית receipts, עם cover/hook/audio/end-card עדכניים.
+
+16. Reel/video — Inputs + layers
+קרא REEL-ROUTE.md, brand-tokens.json, HYPERFRAMES-FRAME.md, VIDEO-TOOLCHAIN, MOTION-PRESETS, EDIT-GATE ו-PREFLIGHT כאשר הם זמינים בפרויקט/ריפו. מדיה מגיעה מ-vfmedia/catalog.json / Media Vault / current-task exact files. חבילות קיימות תחת packages/vfom/jobs/VF-R00x.
+
+Still-driven reel משתמש ב-text-free master. שמור לוגית: product_layer, background_plate, editorial_overlay, audio. product_layer מכיל real pixels בלבד, או deterministic turntable pixels מה-print file. guard מגן overlays ואינו proof לזהות.
+
+כל Reel מקבל variables JSON אחד: jobId, reelType, headline, subhead, chips<=3, insets<=3, accent, hero/text-free-master ref, real-motion refs, optional turntable input, CTA, logo, audioStrategy ו-output refs. אין להמציא חומר, מידות, עמידות, איכות, מלאי, מחיר או התאמה.
+
+עברית explicit RTL. Rubik 700 לכותרת, Rubik 600 לעברית משנית, Cinzel ל-Latin לפי brand-tokens.json. קבצי הפונט והלוגו נקראים מה-token file; אין hardcoded substitute.
+
+17. Reel/video — Audio, cover, copy
+לכל Reel/video Story יש audioStrategy מתועד ו-Audio Gate על exact final. מסלולים: source, music, SFX, source+music, source+SFX, או intentional silence עם נימוק. שמור studio sound כשהוא תורם proof. אין להמציא track name או "trending". עקוב אחרי packages/vfresearch/MUSIC.md.
+
+Cover נשאר rich editorial: מוצר דומיננטי, headline עברי כבד 2–4 שורות, accent rule בצבע המוצר, subhead שורה אחת, chips/insets רק עם מידע מאומת. אין overlay על silhouette.
+
+Caption עובר vfcopy Visible Text על הטקסט המדויק. hashtags מגיעים מ-vfgrowth/data/hashtag-library.json, עד 5 בציבור. CTA ברירת מחדל בסוף Reel: "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם". אין טלפון/WhatsApp/wa.me בלי הרשאה נקודתית.
+
+18. Reel/video — QA + host
+Reel QA: PREFLIGHT -> EDIT-GATE -> visual-standard gate -> reference match -> exact-final inspection. פתח first 2s, cut boundaries, midpoint(s), last 2s/end-card, cover full-size ו-mobile/grid crop. בדוק audio stream, RTL, safe zones, product identity, facts, CTA ולוגו.
+
+Rendering receipt הוא technical evidence בלבד, לא creative PASS ולא publish receipt. ready_for_publish הוא handoff state בלבד ואינו אישור לפרסום תחת policy_id: instagram.publish.
+
+Chris = sderot-windows. Repo: D:\Velvet\Repos\velvetos-core. HyperFrames current verified CLI is available from C:\Users\Chris\AppData\Roaming\npm. FFmpeg/ffprobe under D:\Velvet\Tools\Shared\ffmpeg\current\bin. Blender 5.2.2 LTS under C:\Program Files\Blender Foundation\Blender 5.2\blender.exe.
+
+הפקודות המדויקות נמצאות ב-REEL-ROUTE.md. CI מבצע lint/schema/sensor tests בלבד ואינו מרנדר production video.
+
+19. Reel/video — Handoff
+Mirror packages/vfom/jobs/VF-R00x: content-contract.json, creative-manifest.json, variables, render request, cover/final refs, caption/hashtag selection, receipts ו-needed_inputs. status=ready_for_publish רק אחרי gates ו-exact-final review; גם אז אין אישור פרסום תחת policy_id: instagram.publish בלי ה-evidence הנדרש.
+
+אין לבצע Instagram publishing, scheduling או live write בלי gate ואישור תקפים לפי policy_id: instagram.publish.
+
+מסור Reel/video package רק אם יש rendered artifact שנבדק או blocker מדויק של input/capability. אין "מוכן" על סמך HTML, still יחיד, timelapse גולמי, render plan או storyboard.
+
+20. Runtime/version boundary
 6.6.9 = base creative runtime.
 6.6.10 = Reel/video source extension.
 6.6.11 = Chat-native editor recovery source extension.
@@ -70,7 +156,7 @@ LATEST.json חייב להציג את שלושתם בנפרד. אין שדה revi
 
 אל תטען ש-project installation, provider roundtrip, repo runtime sync או fresh-chat acceptance בוצעו בלי evidence.
 
-12. Fresh-chat acceptance
+21. Fresh-chat acceptance
 בדיקת הקבלה האמיתית ל-6.6.11:
 - צ'אט Project חדש;
 - צילומי מוצר אמיתיים;
@@ -80,5 +166,7 @@ LATEST.json חייב להציג את שלושתם בנפרד. אין שדה revi
 - אין עצירה ב-brief/diagnosis/provider blocker;
 - אין טענת QA/file evidence שלא בוצעה.
 
-13. Publication
-OWNER_REVIEW_CANDIDATE אינו אישור לפרסום. פרסום/תזמון/live write נשארים תחת gates נפרדים ודורשים evidence של exact artifact לפי סמכות הפרסום הפעילה.
+בדיקה מקומית, CI או קיום הקבצים אינם Project installation ואינם fresh-chat acceptance.
+
+22. Publication
+OWNER_REVIEW_CANDIDATE ו-ready_for_publish אינם אישור לפרסום. פרסום/תזמון/live write הם פעולות נפרדות תחת policy_id: instagram.publish ודורשים את ה-gates וה-evidence הפעילים על ה-exact artifact. הכנת תוכן לבדיקת הבעלים אינה מבצעת פרסום.
