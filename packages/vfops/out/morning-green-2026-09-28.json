@@ -1,0 +1,152 @@
+{
+  "email_title": "Velvet Factory - Morning Brief",
+  "preheader": "מה חשוב היום, מה מתקדם ומה באמת מתוזמן לפרסום.",
+  "date_label": "28 בספטמבר 2026",
+  "greeting": "בוקר טוב, כריסטיאן",
+  "daily_summary": "5 העבודות ב-jobs סופקו. 3 יתרות פתוחות: סינקופה 4350, ודים 320, אלה+לוגו 120. סך הגבייה 4790. ביומן היום וגם מחר אין אירועים.",
+  "scheduled_posts": [
+    {
+      "day_label": "ב׳",
+      "date_label": "28.9",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    },
+    {
+      "day_label": "ג׳",
+      "date_label": "29.9",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    },
+    {
+      "day_label": "ד׳",
+      "date_label": "30.9",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    },
+    {
+      "day_label": "ה׳",
+      "date_label": "1.10",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    },
+    {
+      "day_label": "ו׳",
+      "date_label": "2.10",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    },
+    {
+      "day_label": "שבת",
+      "date_label": "3.10",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    },
+    {
+      "day_label": "א׳",
+      "date_label": "4.10",
+      "has_post": false,
+      "time_label": "",
+      "type_label": "",
+      "extra_count": 0
+    }
+  ],
+  "feed_status": {
+    "state": "unavailable",
+    "label": "לוח Cloudflare Instagram Publisher לא נקרא הבוקר · ימים ריקים כאן אינם אומרים שאין פרסום."
+  },
+  "instagram": {
+    "followers": 81,
+    "following": 125,
+    "media_count": 7,
+    "latest": {
+      "likes": 0,
+      "comments": 0,
+      "date_label": "27.9.2026"
+    },
+    "previous": {
+      "likes": 1,
+      "comments": 0,
+      "date_label": "23.9.2026"
+    },
+    "change_text": "פוסט חדש עלה אתמול (תמנון); בפוסט האחרון 0 לייקים ו-0 תגובות",
+    "insights_available": false,
+    "insights_note": "אין ספירה."
+  },
+  "story": {
+    "title": "גבייה פתוחה",
+    "body": "סינקופה 4350, מועד 15.10.2026. ודים 320. אלה+לוגו 120.",
+    "image": {}
+  },
+  "morning_line": {
+    "text": "המידע החשוב קודם. המערכת נשארת מאחור.",
+    "note": "מהדורת הבוקר של Velvet Factory"
+  },
+  "attention": [
+    {
+      "title": "גבייה פתוחה",
+      "detail": "סינקופה, ודים ואלה+לוגו"
+    },
+    {
+      "title": "סינקופה VF-20260908-001",
+      "detail": "4350, מועד 15.10.2026"
+    },
+    {
+      "title": "ודים VF-20260908-003",
+      "detail": "320"
+    },
+    {
+      "title": "אלה+לוגו VF-20260908-004",
+      "detail": "120"
+    }
+  ],
+  "progress": [
+    {
+      "title": "מחקר 28.9 נחתם מוכן לבריף לפני 07:00 (PR #405 פתוח, CI אדום - לא מוזג; תוכן המחקר נלקח מהענף לבריף בלבד)",
+      "detail": ""
+    },
+    {
+      "title": "ביומן של 28.9 ושל 29.9 אין אירועים",
+      "detail": ""
+    },
+    {
+      "title": "גבייה פתוחה: 4790",
+      "detail": ""
+    }
+  ],
+  "radar": {
+    "title": "דברים שכדאי לשים לב אליהם",
+    "text": "לוח תפעול שבועי עם שלושה אופקים (היום / השבוע / 4-12 שבועות) + חישוב safe-start מהבטחת איסוף + ערכות סיכון ליום + ניסוי איכות אחד ביום ד׳ - מיפוי ל-vfops.",
+    "image": {}
+  },
+  "stats": [
+    {
+      "value": "4790",
+      "label": "גבייה פתוחה"
+    },
+    {
+      "value": "0",
+      "label": "אירועי יומן היום"
+    },
+    {
+      "value": "0",
+      "label": "עבודות ייצור פעילות"
+    }
+  ],
+  "footer": {
+    "quote": "Same, brighter tomorrow.",
+    "note": "תודה שאתה חלק מהדרך",
+    "image": {}
+  }
+}
