@@ -18,6 +18,8 @@ Run `scripts/vf_publication_evidence.py --phase production` before production an
 
 לפני `ready_for_publish` חייבת להתקיים נגזרת ברורה ונפרדת מן המקור, עם טיפול קריאייטיבי אמיתי בהתאם לחומר: לפחות שלושה מתחומי `composition`, `cleanup`, `background`, `lighting`, `color_grade`, `subject_separation`, `retouch`, `brand_system`, `typography`, `motion`, `audio`. לא כל תחום נדרש בכל נכס; אבל crop/resize בלבד = FAIL.
 
+**מועמדי Reel מהקטלוג (`candidates_ready`)** הם RAW INPUT לפי החוק הזה: הבריף רק מציע קובץ מקור + מתכון (`scripts/vf_reel_candidates.py`). צפייה, בחירה ואישור אדם באים קודם; אחר כך נגזרת נפרדת בכלי הפעיל (`vf_video_edit.py` → `vf_hyperframes.py`), `preflight/<id>.md` והשער הזה. מועמד אינו טענת מוצר בלי `productLink` בקטלוג.
+
 ## Product Truth — חובה לפני כל תוכן מוצר אמיתי
 
 עיצוב יפה אינו רשאי לשנות את האובייקט שאנו מציגים למכירה או כ־showcase.

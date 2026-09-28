@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +19,8 @@ QUEUE = ROOT / "packages" / "vfgrowth" / "data" / "approval-queue.json"
 ORDERS = ROOT / "packages" / "vfsales" / "data" / "orders.json"
 LOOP = ROOT / "packages" / "vfops" / "LOOP.json"
 LEDGER = ROOT / "packages" / "vfgrowth" / "LEDGER.md"
+REEL_GATES_ALLOWED = {"quality_checked", "candidates_ready", "blocked_no_media"}
+AUTOPOST_MARKERS = ("publish_reel", "publish_video", "auto-publish", "autopost_enabled", "scheduled_publish")
 
 
 def fail(msg: str) -> None:
@@ -70,7 +73,7 @@ def main() -> None:
             fail("ORGANIC_GROWTH.md must forbid bare שלחו DM / auto-dm tooling")
 
     play = PLAY.read_text(encoding="utf-8")
-    for needle in ("CONTROL", "print.done", "GATE.md", "אין ריל כל יום", "blocked_no_media"):
+    for needle in ("CONTROL", "print.done", "GATE.md", "אין ריל כל יום", "blocked_no_media", "candidates_ready"):
         if needle not in play and needle != "CONTROL":
             fail(f"ORGANIC-GROWTH.md missing {needle!r}")
     if "לא מפרסמת" not in play and "לא מפרסם" not in play:
@@ -85,6 +88,8 @@ def main() -> None:
         "approved_for_manual_posting",
         "posted_manually",
         "human_marked",
+        "candidates_ready",
+        "blocked_no_media",
     ):
         if needle not in gate:
             fail(f"GATE.md missing {needle!r}")
@@ -169,8 +174,16 @@ def main() -> None:
     brief_blob = json.dumps(brief, ensure_ascii=False)
     if "אין ספירה" not in brief_blob:
         fail("growth-brief.json must keep אין ספירה when metrics are missing")
-    if brief.get("reel", {}).get("gate") == "posted_manually":
+    reel = brief.get("reel") or {}
+    if reel.get("gate") == "posted_manually":
         fail("brief must not mark reel posted_manually")
+    if reel.get("gate") not in REEL_GATES_ALLOWED:
+        fail(f"brief reel gate {reel.get('gate')!r} not in {sorted(REEL_GATES_ALLOWED)}")
+    if "no-autopost" not in (brief.get("locks") or []):
+        fail("growth brief must keep the no-autopost lock")
+    check_reel_candidates(reel.get("candidates") or [], organic)
+    if reel.get("gate") == "candidates_ready" and not reel.get("candidates"):
+        fail("candidates_ready without candidates")
     if brief.get("slotRecommendation", {}).get("choice") == "G004":
         fail("current stale G004 must not be recommended by growth brief")
     if brief.get("story", {}).get("recommendation", {}).get("choice") == "G004":
@@ -188,7 +201,81 @@ def main() -> None:
     if proc_s.returncode != 0 or "אין ספירה" not in (proc_s.stdout or ""):
         fail("score must print אין ספירה when unverified")
 
+    reel_gate_regression(organic)
+
     print("OK organic growth control plane")
+
+
+def check_reel_candidates(candidates: list[dict], organic) -> None:
+    """Candidates are suggestions: active tool, human gates, no product claim, no autopost."""
+    active = {v["tool"] for v in organic.reel_candidates.active_edit_tools().values()}
+    for cand in candidates:
+        cid = cand.get("id")
+        blob = json.dumps(cand, ensure_ascii=False)
+        if cand.get("gate") in {"posted_manually", "published_verified", "approved_for_manual_posting"}:
+            fail(f"reel candidate {cid} must not claim {cand.get('gate')}")
+        for bad in AUTOPOST_MARKERS:
+            if bad in blob:
+                fail(f"reel candidate {cid} carries autopost marker {bad!r}")
+        recipe = cand.get("recipe") or {}
+        tools = [s.get("tool") for s in recipe.get("steps") or []]
+        if not tools or not set(tools) <= active:
+            fail(f"reel candidate {cid} recipe must name existing active edit tools (got {tools}, active {sorted(active)})")
+        gates = " ".join(recipe.get("gates") or [])
+        if "PREFLIGHT" not in gates or "EDIT-GATE" not in gates or "אישור אדם" not in gates:
+            fail(f"reel candidate {cid} must require human approval + PREFLIGHT + EDIT-GATE")
+        if not cand.get("productLink") and not str(cand.get("productClaim") or "").startswith("אין"):
+            fail(f"reel candidate {cid} claims a product without catalog productLink")
+        if "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם" not in blob:
+            fail(f"reel candidate {cid} recipe missing Instagram-message CTA")
+
+
+def _fixture_item(n: int, name: str, status: str = "source", uploaded: str = "2026-09-01") -> dict:
+    return {
+        "id": f"media-fixture-{n}",
+        "sourceFile": {"id": f"fixture-{n}", "url": f"https://example.invalid/fixture-{n}"},
+        "viewDescription": f"fixture · שם קובץ: {name} · טרם נפתח לצפייה מלאה במשרד · אין קישור מוצר",
+        "uploadedAt": uploaded,
+        "productLink": None,
+        "status": status,
+        "derivativeIds": [],
+        "intake": {"phase": "verified", "lastError": None, "contentFingerprint": f"sha256:fixture{n}"},
+        "visualReview": {"state": "none"},
+    }
+
+
+def reel_gate_regression(organic) -> None:
+    """Fixture catalogs: 0 videos → blocked_no_media; 2 videos → candidates_ready + active-tool recipe."""
+    with tempfile.TemporaryDirectory() as tmp:
+        no_video = Path(tmp) / "catalog-0-videos.json"
+        no_video.write_text(json.dumps({"items": [
+            _fixture_item(1, "IMG_0001.HEIC"),
+            _fixture_item(2, "IMG_0002.JPG"),
+            _fixture_item(3, "published_PLA_1h2m_20260101.mp4", status="published"),
+        ]}, ensure_ascii=False), encoding="utf-8")
+        two_videos = Path(tmp) / "catalog-2-videos.json"
+        two_videos.write_text(json.dumps({"items": [
+            _fixture_item(1, "IMG_0001.HEIC"),
+            _fixture_item(2, "IMG_0100.MOV", uploaded="2026-09-10"),
+            _fixture_item(3, "clip_PLA_2h5m_20260905.mp4", uploaded="2026-09-05"),
+        ]}, ensure_ascii=False), encoding="utf-8")
+
+        zero = organic.reel_section([], catalog=no_video)
+        if zero["gate"] != "blocked_no_media" or zero["candidates"]:
+            fail(f"fixture 0 videos must be blocked_no_media (got {zero['gate']}, {len(zero['candidates'])} candidates)")
+        if zero["line"] != organic.NO_MEDIA_LINE:
+            fail("fixture 0 videos must keep the no-media brief line")
+
+        two = organic.reel_section([], catalog=two_videos)
+        if two["gate"] != "candidates_ready" or len(two["candidates"]) != 2:
+            fail(f"fixture 2 videos must be candidates_ready with 2 candidates (got {two['gate']}, {len(two['candidates'])})")
+        if two["candidates"][0]["fileName"] != "IMG_0100.MOV":
+            fail("fixture candidates must be newest first")
+        check_reel_candidates(two["candidates"], organic)
+
+        media = organic.reel_section([{"mediaPath": "timelapse/fixture.mp4"}], catalog=two_videos)
+        if media["gate"] != "quality_checked":
+            fail("print.done/card media must still win as quality_checked")
 
 
 # Sensors only read: undo writes made by the office CLIs this sensor smoke-tests
