@@ -1,0 +1,75 @@
+VELVET FACTORY / VELVETOS
+Contract 6 | Revision 6.6.11
+Bundle VF-PROJECT-6.6.11-ADOBE-PREMIUM-REEL-ROUTE
+Base creative runtime: Revision 6.6.9 / VF-PROJECT-6.6.9-NATIVE-PRODUCT-EDIT-ROUTING
+Reel extension lineage: 6.6.10 -> 6.6.11
+
+1. המשימה
+בקשת "תכין ריל/וידאו ל<מוצר>" חייבת לקרוא REEL-ROUTE.md ולבנות חבילת Reel מלאה לביקורת, לא רק storyboard, still או caption. הכנה אינה אישור לפרסום.
+פוסט/קרוסלה/סטורי נשארים תחת 6.6.9. מסלול Reel זה הוא Project source extension, לא runtime replacement.
+
+2. Product Truth
+המוצר המצולם נשאר אותו מוצר בדיוק. product pixels מגיעים רק מצילום/וידאו אמיתי של המוצר או deterministic render של real print file במסלול turntable.
+Generative video models אינם מרנדרים, מחליפים, מתקנים, מסובבים או ממציאים את המוצר ואינם מרנדרים עברית.
+ב-edit מותר לשנות environment, light, composition, depth of field, crop ו-placement סביב המוצר. אין שינוי silhouette, proportions, parts/openings, surface identity, color/finish או critical details.
+
+3. Reference
+הרפרנס הראשי הוא ה-rich still שפורסם עבור אותו מוצר. הטקסט שעליו הוא מקור overlay copy, אלא אם Christian נתן copy חדש במפורש.
+STYLE-POST-S01..S07 נשארים references להשוואה חזותית בלבד: scene/light/hierarchy/graphic vocabulary. אין להעתיק product/text/claim/logo/CTA מהם.
+
+4. Input request
+לפני בניית Reel יש לבקש את צילומי המקור של אותו מוצר בכמה זוויות: front, 3/4, side, back, close-up. וידאו טלפון קצר הוא אופציונלי.
+אין להשלים זווית חסרה באמצעות AI. קלט חסר נרשם ב-neededInputs וה-job נשאר needs_input.
+
+5. Scene generation
+לכל זווית מייצרים scene retouched ללא טקסט בגודל 1080x1920 התואם לחדר, לתאורה, לצבעוניות ול-retouch של ה-rich still שפורסם.
+המוצר בתוך scene נשמר source-faithful; הריטוש מותר רק באור/צל/אינטגרציה.
+לכל scene יש EMPTY plate זהה לחלוטין: אותו frame/camera/environment/light, בלי המוצר. אין טקסט, icons, cards, logo או watermark.
+ה-prompt המדויק והאיסורים נמצאים ב-REEL-ROUTE.md.
+
+6. Job package
+כל job נשמר תחת packages/vfom/jobs/VF-R0xx ומכיל variables.json, storyboard.json, manifest.json ו-prep-status.json.
+manifest חייב להכיל source SHA-256s או ערכים ריקים מפורשים עבור sources שטרם סופקו; אין hashes מומצאים.
+Variables כוללים headline, accent, subhead, icon labels, detail labels, CTA, Rubik 700/600, Cinzel, והלוגו המדויק מ-packages/vfbrand.
+לפני scene inputs מלאים status=needs_input. לאחר inputs מלאים ולפני owner review status=needs_review. לעולם אין auto-publish.
+
+7. Adobe pipeline
+Photoshop 2026: Select Subject על scene, edge refinement דטרמיניסטי, export של product-layer PNG עם alpha. אין Firefly/Generative Fill. Content-Aware Fill מותר ידנית בלבד לתיקון קטן בקצה ולא לשחזור מוצר.
+After Effects 2026: 1080x1920, 30fps, 12-15s, 2.5D plate/product separation, slow dolly, parallax, DOF/rack focus, soft sunlight sweep, optional built-in dust, scene cuts/crossfades, masked typography reveal, accent-rule wipe, end card.
+עברית: Rubik 700 לכותרת, Rubik 600 ל-subhead/labels. Cinzel ל-Latin בלבד. RTL מפורש.
+Text safe zones: לא ב-top 150px, לא ב-bottom 20%, ולא באזור כפתורי Instagram בקצה הימני.
+אין bouncy pop-up cards.
+
+8. Brand assets
+קרא packages/vfbrand/brand-tokens.json.
+CTA ברירת המחדל הוא endCardCta מה-token file.
+הלוגו הוא packages/vfbrand/assets/logo/velvet-factory-logo-gold-full-lockup-traced.svg ללא redraw/recolour.
+Rubik ו-Cinzel נטענים מה-TTFs committed תחת packages/vfbrand/assets/fonts/. אין font substitute.
+
+9. Render host
+ה-render production מתבצע על Chris/Windows דרך scripts/vf_ae_reel.py.
+VelvetOS-controlled runtime/artifacts חייבים להישאר תחת D:\Velvet\Runtime\VelvetOS\. repo נמצא תחת D:\Velvet\Repos\velvetos-core.
+ה-script מאתר After Effects 2026 v26.3, aerender.exe, Photoshop 2026 v27.7 ו-ffmpeg/ffprobe תחת D:\Velvet\Tools; חסרון runtime נכשל בהודעה ברורה.
+הפקודה הקנונית:
+py -3.14 scripts\vf_ae_reel.py --job packages\vfom\jobs\VF-R0xx
+
+10. Turntable
+scripts/vf_turntable.py נשאר optional beat. הוא משתמש רק ב-real print file ומחזיר MP4 שנכנס ל-AE כשכבה נוספת.
+Turntable אינו הוכחת print success/material/dimensions/customer use.
+
+11. QA
+Reel QA: PREFLIGHT -> EDIT-GATE -> visual-standard -> reference match -> exact-final inspection.
+בדוק first 2s, cuts, midpoint(s), last 2s/end-card, full-size cover, mobile crop, RTL, safe zones, product identity, facts, CTA, exact logo, audio strategy, ffprobe ו-SHA receipts.
+Receipt טכני אינו Creative PASS ואינו publish authorization.
+
+12. HyperFrames compatibility
+HyperFrames נשאר legacy/deterministic compatibility backend, אבל 6.6.11 קובע Adobe pipeline כמסלול הקנוני לבקשת "תכין ריל/וידאו".
+בכל חמשת templates אסור dir="rtl" על תג html; RTL נשאר על text containers. Asset resolution חייב להתחיל מ-repo-root packages/... ולא מ-../ paths.
+
+13. Publication
+needs_review ו-ready_for_publish הם handoff states בלבד. אין Instagram publishing/scheduling/live write בלי policy/gates והרשאה נפרדת על exact artifact.
+
+14. Runtime boundary
+Revision 6.6.11 היא Project source extension מעל base creative runtime 6.6.9 וממשיכה את Reel extension 6.6.10.
+אל תטען project installation, provider roundtrip, runtime sync, identity PASS, creative PASS או fresh-chat acceptance בלי evidence.
+ה-repoExecutableBundle ב-LATEST.json נשאר state נפרד ולא משתנה על ידי extension זה.

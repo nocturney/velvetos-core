@@ -1,0 +1,100 @@
+{
+  "schema": "velvetos.adobe-reel-job.v1",
+  "jobId": "VF-R006",
+  "status": "needs_input",
+  "reelType": "ANIMATED_RICH_STILL",
+  "reference": {
+    "publishedPostDate": "2026-09-19",
+    "sourcePermalink": "https://www.instagram.com/p/DdeyJiviTjm/",
+    "visualAuthority": "Published owl rich still: on-image copy plus room/light/retouch/hierarchy."
+  },
+  "canvas": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSeconds": 13.5
+  },
+  "copy": {
+    "headlineLines": [
+      "פרטים קטנים,",
+      "נוכחות גדולה."
+    ],
+    "subhead": "שלושה מוקדים קטנים שבונים את כל האופי שלו.",
+    "icons": [
+      "מודפס בתלת־ממד",
+      "פריט דקורטיבי",
+      "מתאים למדף או לשולחן"
+    ],
+    "detailLabels": [
+      "המבט שתופס ראשון",
+      "שכבות הנוצות",
+      "מרקם הבסיס"
+    ],
+    "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+    "accentHex": "#a86838"
+  },
+  "assets": {
+    "brandTokens": "packages/vfbrand/brand-tokens.json",
+    "logo": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-full-lockup-traced.svg",
+    "rubik": "packages/vfbrand/assets/fonts/rubik/Rubik-VariableFont_wght.ttf",
+    "cinzel": "packages/vfbrand/assets/fonts/cinzel/Cinzel-VariableFont_wght.ttf",
+    "headlineWeight": 700,
+    "subheadWeight": 600
+  },
+  "scenes": [
+    {
+      "id": "scene-1",
+      "view": "front",
+      "sourcePhoto": "",
+      "scene": "",
+      "emptyPlate": "",
+      "productLayer": "",
+      "sha256": {"sourcePhoto": "", "scene": "", "emptyPlate": ""}
+    },
+    {
+      "id": "scene-2",
+      "view": "three_quarter",
+      "sourcePhoto": "",
+      "scene": "",
+      "emptyPlate": "",
+      "productLayer": "",
+      "sha256": {"sourcePhoto": "", "scene": "", "emptyPlate": ""}
+    },
+    {
+      "id": "scene-3",
+      "view": "side",
+      "sourcePhoto": "",
+      "scene": "",
+      "emptyPlate": "",
+      "productLayer": "",
+      "sha256": {"sourcePhoto": "", "scene": "", "emptyPlate": ""}
+    },
+    {
+      "id": "scene-4",
+      "view": "back",
+      "sourcePhoto": "",
+      "scene": "",
+      "emptyPlate": "",
+      "productLayer": "",
+      "sha256": {"sourcePhoto": "", "scene": "", "emptyPlate": ""}
+    },
+    {
+      "id": "scene-5",
+      "view": "close_up",
+      "sourcePhoto": "",
+      "scene": "",
+      "emptyPlate": "",
+      "productLayer": "",
+      "sha256": {"sourcePhoto": "", "scene": "", "emptyPlate": ""}
+    }
+  ],
+  "audioStrategy": {
+    "mode": "pending",
+    "file": ""
+  },
+  "neededInputs": [
+    "original_photos_front_three_quarter_side_back_close_up",
+    "approved_audio_or_explicit_intentional_silence"
+  ],
+  "publicationAuthorized": false
+}

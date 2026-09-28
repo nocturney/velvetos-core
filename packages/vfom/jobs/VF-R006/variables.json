@@ -1,21 +1,36 @@
 {
-  "headline": "קשה להתווכח עם המבט הזה.",
-  "subhead": "העיניים הן רק ההתחלה",
-  "heroImage": "",
-  "chip1": "",
-  "chip2": "",
-  "chip3": "",
-  "insetImage": "",
-  "insetLabel": "",
-  "realMotionVideo": "",
-  "audioFile": "",
-  "caption": "קשה להתווכח עם המבט הזה.\nאבל אם נשארים עוד רגע, מגלים שהעיניים הן רק ההתחלה. שכבות הנוצות והמרקם של הבסיס נותנים לעין עוד ועוד מה לגלות.\nזה אחד מאותם פריטים שכיף לחזור אליהם לעוד מבט.\n\nמה תפס אתכם קודם - המבט, הנוצות או הבסיס?\n\n#VelvetFactory #הדפסתתלתממד #3DPrintingIsrael #עיצובלבית #דקורציה",
+  "schema": "velvetos.adobe-reel-variables.v1",
+  "jobId": "VF-R006",
+  "product": "owl",
   "sourcePermalink": "https://www.instagram.com/p/DdeyJiviTjm/",
-  "sourceMediaId": "18048874304812929",
-  "variablesStatus": "needs_input",
-  "neededInputs": "text_free_master;real_motion_beat;approved_audio",
-  "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+  "publishedPostDate": "2026-09-19",
+  "headlineLines": [
+    "פרטים קטנים,",
+    "נוכחות גדולה."
+  ],
+  "subhead": "שלושה מוקדים קטנים שבונים את כל האופי שלו.",
+  "icons": [
+    "מודפס בתלת־ממד",
+    "פריט דקורטיבי",
+    "מתאים למדף או לשולחן"
+  ],
+  "detailLabels": [
+    "המבט שתופס ראשון",
+    "שכבות הנוצות",
+    "מרקם הבסיס"
+  ],
   "accentId": "copper",
   "accentHex": "#a86838",
-  "accentSource": "brand-tokens sampled from published owl post 2026-09-19"
+  "cta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+  "fonts": {
+    "headline": "Rubik 700",
+    "subhead": "Rubik 600",
+    "latin": "Cinzel"
+  },
+  "logo": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-full-lockup-traced.svg",
+  "variablesStatus": "needs_input",
+  "neededInputs": [
+    "original_photos_front_three_quarter_side_back_close_up",
+    "approved_audio_or_explicit_intentional_silence"
+  ]
 }

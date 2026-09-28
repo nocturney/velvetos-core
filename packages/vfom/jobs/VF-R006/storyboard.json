@@ -1,0 +1,23 @@
+{
+  "schema": "velvetos.adobe-reel-storyboard.v1",
+  "jobId": "VF-R006",
+  "durationSeconds": 13.5,
+  "scenes": [
+    {"id": "scene-1", "view": "front", "start": 0.0, "end": 2.4, "motion": "slow_dolly_push"},
+    {"id": "scene-2", "view": "three_quarter", "start": 2.4, "end": 4.8, "motion": "gentle_parallax"},
+    {"id": "scene-3", "view": "side", "start": 4.8, "end": 7.2, "motion": "rack_focus"},
+    {"id": "scene-4", "view": "back", "start": 7.2, "end": 9.6, "motion": "slow_dolly_push"},
+    {"id": "scene-5", "view": "close_up", "start": 9.6, "end": 11.4, "motion": "macro_hold"}
+  ],
+  "details": [
+    {"labelIndex": 0, "start": 2.9, "end": 4.2},
+    {"labelIndex": 1, "start": 5.3, "end": 6.7},
+    {"labelIndex": 2, "start": 9.9, "end": 11.1}
+  ],
+  "endCard": {"start": 11.4, "end": 13.5},
+  "safeZones": {
+    "topPx": 150,
+    "bottomFraction": 0.2,
+    "rightButtonStripPx": 190
+  }
+}

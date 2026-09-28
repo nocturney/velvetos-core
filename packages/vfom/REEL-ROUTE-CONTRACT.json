@@ -1,11 +1,17 @@
 {
   "schema": "velvetos.reel-route-sync.v1",
-  "projectRevision": "6.6.10",
+  "projectRevision": "6.6.11",
   "baseCreativeRevision": "6.6.9",
   "routeDoc": "packages/velvetos/chatgpt-project/REEL-ROUTE.md",
-  "projectInstructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
+  "projectInstructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.11.txt",
   "templateRoot": "packages/vfom/hyperframes/templates",
   "implementationStatus": "implemented",
+  "adobe": {
+    "jobSchema": "packages/vfom/adobe/REEL-JOB.schema.json",
+    "photoshopScript": "packages/vfom/adobe/photoshop-product-layer.jsx",
+    "afterEffectsScript": "packages/vfom/adobe/build-reel.jsx",
+    "orchestrator": "scripts/vf_ae_reel.py"
+  },
   "templates": [
     "hook-card.html",
     "chips.html",

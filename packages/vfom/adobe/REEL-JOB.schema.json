@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.adobe-reel-job.v1",
+  "title": "VelvetOS Adobe Reel Job",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "jobId", "status", "reelType", "reference", "canvas",
+    "copy", "assets", "scenes", "audioStrategy", "neededInputs",
+    "publicationAuthorized"
+  ],
+  "properties": {
+    "schema": {"const": "velvetos.adobe-reel-job.v1"},
+    "jobId": {"type": "string", "pattern": "^VF-R[0-9]{3}$"},
+    "status": {"enum": ["needs_input", "needs_review"]},
+    "reelType": {
+      "enum": [
+        "ANIMATED_RICH_STILL", "PRINTER_TO_SHELF",
+        "REAL_PRINT_FILE_TURNTABLE", "RICH_STYLE_V2"
+      ]
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publishedPostDate", "sourcePermalink", "visualAuthority"],
+      "properties": {
+        "publishedPostDate": {"type": "string"},
+        "sourcePermalink": {"type": "string"},
+        "visualAuthority": {"type": "string", "minLength": 1}
+      }
+    },
+    "canvas": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "fps", "durationSeconds"],
+      "properties": {
+        "width": {"const": 1080},
+        "height": {"const": 1920},
+        "fps": {"const": 30},
+        "durationSeconds": {"type": "number", "minimum": 12, "maximum": 15}
+      }
+    },
+    "copy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "headlineLines", "subhead", "icons", "detailLabels",
+        "cta", "accentHex"
+      ],
+      "properties": {
+        "headlineLines": {
+          "type": "array", "minItems": 2, "maxItems": 4,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "subhead": {"type": "string", "minLength": 1},
+        "icons": {
+          "type": "array", "minItems": 1, "maxItems": 3,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "detailLabels": {
+          "type": "array", "minItems": 1, "maxItems": 3,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "cta": {"type": "string", "minLength": 1},
+        "accentHex": {
+          "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"
+        }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "brandTokens", "logo", "rubik", "cinzel",
+        "headlineWeight", "subheadWeight"
+      ],
+      "properties": {
+        "brandTokens": {"type": "string", "minLength": 1},
+        "logo": {"type": "string", "minLength": 1},
+        "rubik": {"type": "string", "minLength": 1},
+        "cinzel": {"type": "string", "minLength": 1},
+        "headlineWeight": {"const": 700},
+        "subheadWeight": {"const": 600}
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id", "view", "sourcePhoto", "scene", "emptyPlate",
+          "productLayer", "sha256"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^scene-[1-5]$"},
+          "view": {
+            "enum": ["front", "three_quarter", "side", "back", "close_up"]
+          },
+          "sourcePhoto": {"type": "string"},
+          "scene": {"type": "string"},
+          "emptyPlate": {"type": "string"},
+          "productLayer": {"type": "string"},
+          "sha256": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sourcePhoto", "scene", "emptyPlate"],
+            "properties": {
+              "sourcePhoto": {"type": "string"},
+              "scene": {"type": "string"},
+              "emptyPlate": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "audioStrategy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "file"],
+      "properties": {
+        "mode": {
+          "enum": [
+            "pending", "source", "music", "sfx",
+            "source+music", "source+sfx", "intentional_silence"
+          ]
+        },
+        "file": {"type": "string"}
+      }
+    },
+    "neededInputs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "publicationAuthorized": {"const": false}
+  }
+}

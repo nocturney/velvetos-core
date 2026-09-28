@@ -2,29 +2,33 @@
 (function () {
   "use strict";
 
-  const BRAND_TOKENS = "../../vfbrand/brand-tokens.json";
-  // Resolve repo assets against this runtime file (packages/vfom/hyperframes/velvet-reel.js),
-  // not document.baseURI: `hyperframes render <repo> -c <template>` serves the composition
-  // from the project root, so page-relative ../../ paths escape the repo.
-  const RUNTIME_URL = (document.currentScript && document.currentScript.src)
-    || Array.from(document.scripts).map((s) => s.src).find((src) => /\/velvet-reel\.js(?:[?#]|$)/.test(src))
-    || document.baseURI;
+  const BRAND_TOKENS = "packages/vfbrand/brand-tokens.json";
+  const REPO_ROOT = new URL("/", document.baseURI);
 
   function repoAsset(repoPath) {
     if (!repoPath) return "";
     if (/^(?:https?:|data:|blob:)/i.test(repoPath)) return repoPath;
-    if (repoPath.startsWith("packages/")) {
-      return new URL("../../" + repoPath.slice("packages/".length), RUNTIME_URL).href;
-    }
-    return new URL(repoPath, document.baseURI).href;
+    return new URL(String(repoPath).replace(/^\/+/, ""), REPO_ROOT).href;
   }
 
   async function loadTokens() {
-    const response = await fetch(new URL(BRAND_TOKENS, RUNTIME_URL));
+    const response = await fetch(repoAsset(BRAND_TOKENS));
     if (!response.ok) throw new Error("brand-tokens.json unavailable: " + response.status);
     const tokens = await response.json();
     if (tokens?.brand !== "Velvet Factory") throw new Error("brand token identity mismatch");
     return tokens;
+  }
+
+  async function loadFonts(tokens) {
+    const families = tokens?.fonts?.families || [];
+    const loaded = families.map(async (family) => {
+      const face = new FontFace(family.family, "url(" + repoAsset(family.file) + ")");
+      const ready = await face.load();
+      document.fonts.add(ready);
+      return ready;
+    });
+    await Promise.all(loaded);
+    await document.fonts.ready;
   }
 
   function accentFrom(tokens, vars) {
@@ -61,8 +65,6 @@
 
   function media(id, value) {
     const node = document.getElementById(id);
-    // data-var-src elements are bound by HyperFrames itself before media discovery,
-    // so video frames are extracted and audio is mixed; never race it at runtime.
     if (!node || !value || node.hasAttribute("data-var-src")) return;
     node.setAttribute("src", repoAsset(value));
   }
@@ -95,11 +97,12 @@
       if (target) tl.fromTo(target, { opacity: 0, scale: 0.96 }, { opacity: 1, scale: 1, duration: 0.48 }, at);
     },
   };
+
   async function boot(compositionId, setup) {
     const vars = window.__hyperframes?.getVariables?.() || {};
     const tokens = await loadTokens();
+    await loadFonts(tokens);
     const applied = applyTokens(tokens, vars);
-    await document.fonts.ready;
     const tl = gsap.timeline({ paused: true });
     await setup({ vars, tokens, applied, tl, presets, text, media, repoAsset });
     window.__timelines = window.__timelines || {};
