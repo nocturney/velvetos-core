@@ -10,10 +10,12 @@
     "gh-run:36120111134:failure:2026-09-25T09:44:21Z:https://github.com/nocturney/velvetos-core/actions/runs/36120111134",
     "office-loop-1830 triage 2026-09-26: daily-research sensor suite failed; annotation Video privacy regressions require real ffmpeg and ffprobe (check-video-normalization); research body freshness steps passed. Suite failed=9/82 including staleness.",
     "gh-run:36311572712:failure:2026-09-27T10:08:21Z:https://github.com/nocturney/velvetos-core/actions/runs/36311572712",
-    "office-loop-1830 triage 2026-09-27: daily-research run 36311572712 suite failed=3/93 — same CALENDAR-OPS.md / vfgrowth HANDOFF-he Google Calendar contract gaps (research body freshness OK; ffmpeg installed this run). No promote — underlying calendar/handoff contract still flapping on main earlier today."
+    "office-loop-1830 triage 2026-09-27: daily-research run 36311572712 suite failed=3/93 — same CALENDAR-OPS.md / vfgrowth HANDOFF-he Google Calendar contract gaps (research body freshness OK; ffmpeg installed this run). No promote — underlying calendar/handoff contract still flapping on main earlier today.",
+    "gh-run:36413899012:failure:2026-09-28T11:08:57Z:https://github.com/nocturney/velvetos-core/actions/runs/36413899012",
+    "office-loop-1830 triage 2026-09-28: Research Cadence failed again on main (36413899012 @ 11:08Z). Keep accepted; no promote — no new durable contract change in this handoff."
   ],
   "first_seen": "2026-09-25T09:44:21Z",
-  "last_seen": "2026-09-27T18:37:42+03:00",
+  "last_seen": "2026-09-28T18:51:14+03:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,
