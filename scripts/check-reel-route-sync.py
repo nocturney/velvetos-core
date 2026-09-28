@@ -20,12 +20,18 @@ route = ROOT / c["routeDoc"]
 instructions = ROOT / c["projectInstructions"]
 if not route.is_file() or not instructions.is_file() or not PRESETS.is_file():
     fail("route, project instructions or preset document missing")
-if latest.get("revision") != c.get("projectRevision"):
-    fail("LATEST revision differs from reel route contract")
-if (latest.get("baseProject") or {}).get("revision") != c.get("baseCreativeRevision"):
-    fail("base Project revision drift")
-if latest.get("reelRoute") != Path(c["routeDoc"]).name:
-    fail("LATEST reelRoute binding drift")
+
+extensions = latest.get("extensions") or {}
+reel = extensions.get("reel") or {}
+creative_runtime = latest.get("creativeRuntime") or {}
+if reel.get("revision") != c.get("projectRevision"):
+    fail("LATEST reel extension revision differs from reel route contract")
+if creative_runtime.get("revision") != c.get("baseCreativeRevision"):
+    fail("creative runtime revision drift")
+if reel.get("routeDoc") != Path(c["routeDoc"]).name:
+    fail("LATEST reel route binding drift")
+if reel.get("instructions") != Path(c["projectInstructions"]).name:
+    fail("LATEST reel instructions binding drift")
 
 route_text = route.read_text(encoding="utf-8")
 instructions_text = instructions.read_text(encoding="utf-8")
