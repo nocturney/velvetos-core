@@ -32,6 +32,17 @@ These variables are machine-scoped on the office Windows host so boot-time SYSTE
 - retained rollback copies live under `D:\Velvet\Backups`;
 - archives and retained handoffs live under `D:\Velvet\Archive`.
 
+## Default working path and forbidden locations
+
+On the Windows host, every agent (ChatGPT, Codex, Grok Bot, Cursor, Gemini, Perplexity and local scripts) uses `D:\Velvet` (`VELVET_ROOT`) as its default working directory for all VelvetOS work, and places each output in the matching lane of the ownership map above.
+
+- The Windows Desktop folder (`%USERPROFILE%\Desktop`, including a OneDrive-redirected Desktop) must never be used for clones, worktrees, scratch, downloads, exports, artifacts, logs, handoffs or any other output.
+- Do not create new VelvetOS files under C: outside the profile-bound exceptions listed below.
+- If a tool defaults to the Desktop or to C:, override it to the matching `D:\Velvet` path (for example `D:\Velvet\Workspaces`, `D:\Velvet\Artifacts` or `D:\Velvet\Tmp`).
+- If D: is unavailable, stop and report it; never fall back to the Desktop.
+
+The legacy `%USERPROFILE%\.velvetos` fallback is being retired on this host: the Cognee runtime was consolidated to D: on 2026-09-28.
+
 ## Profile-bound state that stays on C:
 
 Do not relocate or globally override `USERPROFILE`, `HOME`, `APPDATA`, `LOCALAPPDATA`, Windows Credential Manager, DPAPI data, browser profiles, certificates, `.ssh`, `.codex`, or `.agents` merely to satisfy this contract.

@@ -52,8 +52,8 @@ Latest verified owner Morning Brief artifact path remains historical evidence. C
 <div dir="rtl"><strong>מה השתנה:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 <div dir="ltr"><strong>What changed:</strong> Office Control Plane מוטמע · followups=1 · dead_letters=0</div>
 
-<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-28 — **Scenario Labs capabilities, without the Scenario product:** grafts the MIT-licensed reusable expert patterns from `scenario-labs/skills` v0.48.0 into existing VelvetOS routes. `vfprod` gains a pr…</div>
-<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-28 — **Scenario Labs capabilities, without the Scenario product:** grafts the MIT-licensed reusable expert patterns from `scenario-labs/skills` v0.48.0 into existing VelvetOS routes. `vfprod` gains a pr…</div>
+<div dir="rtl"><strong>שינוי הטמעה אחרון:</strong> 2026-09-28 — **Windows host: D: is the default working path, never the Desktop (owner request):** `packages/velvetos/WINDOWS-PATH-CONTRACT.md` gains a "Default working path and forbidden locations" section. Eve…</div>
+<div dir="ltr"><strong>Latest implementation change:</strong> 2026-09-28 — **Windows host: D: is the default working path, never the Desktop (owner request):** `packages/velvetos/WINDOWS-PATH-CONTRACT.md` gains a "Default working path and forbidden locations" section. Eve…</div>
 
 <div dir="rtl"><strong>חוזה הפולס:</strong> הבלוק מציג את הראיות האחרונות שנשמרו בריפו. הוא לא מבצע קריאת ספק חיה בזמן טעינת GitHub ולא הופך “מוגדר” ל“מאומת”.</div>
 <div dir="ltr"><strong>Pulse contract:</strong> this block reports the latest evidence committed to the repository. It never performs a live provider call while rendering GitHub, and never turns “configured” into “verified”.</div>
@@ -389,6 +389,10 @@ Realistic schedules: VF Media Auto Intake (`23 */3 * * *`) and Jobs Sheet Write-
 Office Control Plane schedule: `.github/workflows/office-control-plane.yml` runs at `0 2,8,14,20 * * *` UTC (05:00/11:00/17:00/23:00 IDT). That keeps it at least 30 minutes clear of the Office Loop at 10:30/18:30 IDT even with GitHub schedule delays of up to ~40 min. It was `0 */6 * * *`, whose 06:00/18:00 UTC slots delayed into the loop windows.
 
 לוח Office Control Plane: 05:00/11:00/17:00/23:00 שעון ישראל, לא מתנגש ב־Office Loop של 10:30/18:30.
+
+Windows host paths: on `sderot-windows` every agent (ChatGPT, Codex, Grok Bot, Cursor, Gemini, Perplexity, local scripts) works from `D:\Velvet` (`VELVET_ROOT`) and never uses the Windows Desktop (incl. OneDrive Desktop) for clones, scratch or output. If D: is unavailable, agents stop and report. Contract: `packages/velvetos/WINDOWS-PATH-CONTRACT.md`; sensor: `scripts/check-windows-path-contract.py`.
+
+נתיבי Windows: כל הסוכנים עובדים מ־`D:\Velvet` ולעולם לא משולחן העבודה (Desktop). אם D: לא זמין — עוצרים ומדווחים.
 
 Archived one-shots live in `scripts/archive/` (inert, history only; see its README).
 
