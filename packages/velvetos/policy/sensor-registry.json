@@ -3282,6 +3282,38 @@
       },
       "fallback_scope": "FULL_SUITE",
       "mapping_state": "mapped"
+    },
+    {
+      "id": "check-reel-route-sync",
+      "path": "scripts/check-reel-route-sync.py",
+      "owns": [
+        "packages/velvetos/chatgpt-project/REEL-ROUTE.md",
+        "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
+        "packages/velvetos/chatgpt-project/LATEST.json",
+        "packages/vfom/REEL-ROUTE-CONTRACT.json",
+        "packages/vfom/MOTION-PRESETS.md",
+        "packages/vfom/hyperframes/templates/**"
+      ],
+      "triggered_by": [
+        "packages/velvetos/chatgpt-project/REEL-ROUTE.md",
+        "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
+        "packages/velvetos/chatgpt-project/LATEST.json",
+        "packages/vfom/REEL-ROUTE-CONTRACT.json",
+        "packages/vfom/MOTION-PRESETS.md",
+        "packages/vfom/hyperframes/templates/**",
+        "scripts/check-reel-route-sync.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
     }
   ]
 }
