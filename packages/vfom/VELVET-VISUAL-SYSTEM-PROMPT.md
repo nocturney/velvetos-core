@@ -112,7 +112,9 @@ This is a balancing principle, not a quota. Never invent a missing category just
 
 Hebrew first.
 
-Use text only when it clearly improves the visual. Always compare with a `NO_TEXT` version. If the clean image is stronger, choose no text.
+**Owner amendment 2026-09-28:** the default layout is the rich editorial layout of the current feed posts (see `OWNER-APPROVED-GRID-STANDARD-2026-09-14.md`, amendment of 2026-09-28): a heavy Hebrew headline of 2–4 lines and 3–7 words with an accent rule, one subhead line (at most 12 words), up to 3 outline-icon chips, and up to 3 detail insets or one magnifier crop. Text never covers or overpowers the product. Still record a `NO_TEXT` comparison; the clean image may win for a specific frame.
+
+~~Use text only when it clearly improves the visual. Always compare with a `NO_TEXT` version. If the clean image is stronger, choose no text.~~ (superseded 2026-09-28)
 
 When text is used:
 - keep it short;
@@ -122,7 +124,7 @@ When text is used:
 - strong contrast;
 - safe margins;
 - avoid busy image zones;
-- normally one headline plus at most one supporting layer;
+- ~~normally one headline plus at most one supporting layer;~~ (superseded 2026-09-28: headline + accent rule + subhead + up to 3 chips + up to 3 insets);
 - avoid long blocks of text on the image;
 - do not let typography overpower the product;
 - use only verified brand fonts/templates/colors;
@@ -145,7 +147,8 @@ The approved visual mood tends toward:
 - cream / ivory space;
 - charcoal / black / dark stone;
 - natural material surfaces;
-- restrained orange warmth/accent where brand-supported;
+- ~~restrained orange warmth/accent where brand-supported;~~ (superseded 2026-09-28) one accent colour that follows the product; approximate samples in `packages/vfbrand/brand-tokens.json`;
+- a warm real-feeling interior (wood, plants, window side light, design books) as the default scene around the real product;
 - realistic product colors preserved from source.
 
 Never recolor the product merely to make the feed match.

@@ -1,0 +1,140 @@
+{
+  "schema": "velvetos.brand-tokens.v1",
+  "brand": "Velvet Factory",
+  "updated": "2026-09-28",
+  "authority": {
+    "standard": "packages/vfom/OWNER-APPROVED-GRID-STANDARD-2026-09-14.md#owner-amendment--rich-editorial-layout--2026-09-28",
+    "brand": "packages/vfbrand/BRAND-SOURCE-OF-TRUTH.md",
+    "visualDna": "packages/vfom/VISUAL-DNA.json",
+    "precedence": "Product Truth and the canonical docs above win over these tokens; tokens never authorize changing a product."
+  },
+  "consumers": {
+    "now": [
+      "docs"
+    ],
+    "later": [
+      "HyperFrames templates"
+    ]
+  },
+  "accents": {
+    "provenance": "sampled from published posts 2026-09-28, approximate",
+    "method": "approximate colour sampling from 1080px thumbnails of the four published posts; not taken from a master brand file",
+    "rule": "one accent per composition; the accent follows the product. These samples are matching references, not a fixed palette.",
+    "samples": [
+      {
+        "id": "copper",
+        "hex": "#a86838",
+        "post": "owl",
+        "postDate": "2026-09-19",
+        "status": "sampled_approximate"
+      },
+      {
+        "id": "antique_gold",
+        "hex": "#a87838",
+        "post": "dragon",
+        "postDate": "2026-09-20",
+        "status": "sampled_approximate"
+      },
+      {
+        "id": "light_gold",
+        "hex": "#f8c888",
+        "post": "deer",
+        "postDate": "2026-09-23",
+        "status": "sampled_approximate"
+      },
+      {
+        "id": "amber",
+        "hex": "#f8a848",
+        "post": "octopus",
+        "postDate": "2026-09-27",
+        "status": "sampled_approximate"
+      }
+    ]
+  },
+  "brandMark": {
+    "identity": "navy field with warm gold / ivory logo",
+    "scope": "logo and brand mark only; not the default feed background",
+    "hex": null,
+    "hexStatus": "missing: owner to supply (sample from the master logo asset once committed; do not sample from screenshots)"
+  },
+  "scene": {
+    "default": "warm real-feeling interior",
+    "elements": [
+      "wood",
+      "plants",
+      "window side light",
+      "design books"
+    ],
+    "rule": "the scene changes only around the real product; product pixels stay source pixels"
+  },
+  "layout": {
+    "headline": {
+      "language": "he",
+      "direction": "rtl",
+      "weight": "heavy",
+      "linesMin": 2,
+      "linesMax": 4,
+      "wordsMin": 3,
+      "wordsMax": 7
+    },
+    "accentRule": {
+      "required": true,
+      "colour": "product accent",
+      "placement": "attached to the headline block"
+    },
+    "subhead": {
+      "lines": 1,
+      "wordsMax": 12,
+      "weight": "regular"
+    },
+    "chips": {
+      "max": 3,
+      "icon": "outline",
+      "labelWordsMax": 3,
+      "content": "one verified fact about this product per chip"
+    },
+    "insets": {
+      "max": 3,
+      "kinds": [
+        "inset_card",
+        "magnifier_crop"
+      ],
+      "magnifierCountsAs": 1,
+      "provenance": [
+        "SAME_FRAME_CROP",
+        "ALTERNATE_VERIFIED_SOURCE"
+      ]
+    },
+    "mobileReadability": "headline legible on the phone-size preview and in the feed grid crop; subhead and chips legible at full-screen phone size; outside platform UI safe zones",
+    "product": {
+      "textOverProduct": false,
+      "rule": "text, rule, chips and insets never cover or overpower the product; the product stays the largest single element"
+    }
+  },
+  "reel": {
+    "structure": [
+      "hook_card",
+      "chips_in",
+      "detail_inset",
+      "real_footage_beats",
+      "end_card"
+    ],
+    "endCardCta": "לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם",
+    "endCardLogo": "brand logo from logo.files; omitted while logo status is missing"
+  },
+  "fonts": {
+    "status": "missing: owner to supply",
+    "headline": null,
+    "body": null,
+    "files": []
+  },
+  "logo": {
+    "status": "missing: owner to supply",
+    "files": [],
+    "knownOffRepoAssets": [
+      "Velvet-Factory-APPROVED-LOGO-GOLD-LIGHT-v1.jpg",
+      "Velvet-Factory-APPROVED-LOGO-GOLD-DARK-v1.jpg"
+    ],
+    "knownOffRepoAssetsSource": "packages/velvetos/chatgpt-project/ASSET-MANIFEST-v6.6.4.json (listed there; not committed to this repository)"
+  }
+}

@@ -106,6 +106,29 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-brand-tokens",
+      "path": "scripts/check-brand-tokens.py",
+      "owns": [
+        "packages/vfbrand/**"
+      ],
+      "triggered_by": [
+        "packages/vfbrand/**",
+        "packages/vfom/**",
+        "scripts/check-brand-tokens.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 60,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-chat-cold-start-preflight",
       "path": "scripts/check-chat-cold-start-preflight.py",
       "owns": [

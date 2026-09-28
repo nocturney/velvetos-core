@@ -27,7 +27,7 @@ Before approving any feed visual, cover, carousel page, Story still or grid plan
 
 - product-first composition;
 - real photography/source media as the truth anchor for real products;
-- minimal typography, with `NO_TEXT` preferred when text does not clearly improve the asset;
+- rich editorial typography within the owner amendment of 2026-09-28 (headline 2–4 lines / 3–7 words + accent rule, one-line subhead, max 3 chips, max 3 insets, mobile-readable, never covering or overpowering the product); a `NO_TEXT` comparison is still recorded;
 - curated recipe diversity across hero / UGC-human / macro-detail / minimal-studio / bundle-flatlay / service-editorial / proof-process when truthful material exists;
 - warm/refined coherent feed treatment without inventing unverified brand colors;
 - service/brand communication grounded in real Velvet products instead of generic iconography;
