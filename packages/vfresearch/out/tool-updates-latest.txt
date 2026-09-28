@@ -1,42 +1,96 @@
 VelvetOS · עדכוני כלים
 
-נמצאו 4 עדכונים ממתינים. לא בוצע שום שדרוג אוטומטי.
-בדיקת upstream אחרונה: 2026-09-27T18:22:14.893076+00:00
+נמצאו 11 עדכונים ממתינים. לא בוצע שום שדרוג אוטומטי.
+בדיקת upstream אחרונה: 2026-09-27T20:17:36.055403+00:00
 
-1. liustack/modlens
+סטטוס סקירה: 0/11. המייל חסום עד שכל הפריטים יקבלו review שתואם ל־HEAD/release הנוכחי.
+
+1. blender/blender
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: 35a2d9dfd0 → 388952d3b8
+   שינוי: head
+   שימוש אצלנו: Blender host/runtime
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
+   מקור: https://github.com/blender/blender
+
+2. earthtojake/text-to-cad
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: v0.7.0 → v0.7.0
+   שינוי: head
+   שימוש אצלנו: packages/vfprod/TEXT-TO-CAD.md
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
+   מקור: https://github.com/earthtojake/text-to-cad
+
+3. FreeCAD/FreeCAD
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: 1.1.3 → 1.1.3
+   שינוי: head
+   שימוש אצלנו: CAD/3D toolchain upstream
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
+   מקור: https://github.com/FreeCAD/FreeCAD
+
+4. liustack/modlens
    מצב: לבדוק לפני החלטה
    גרסה/מקור: v3.26.5 → v3.26.5
    שינוי: head
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: זהו מקור catalog בלבד; אין סיבה לעדכן runtime. בודקים אם שינויי upstream רלוונטיים למה שהוטמע לפני כל פעולה.
-   ראיות: catalog-source · head changed; release unchanged
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
    מקור: https://github.com/liustack/modlens
 
-2. Q00/ouroboros
+5. nodejs/node
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: v26.10.0 → v26.10.0
+   שינוי: head
+   שימוש אצלנו: scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
+   מקור: https://github.com/nodejs/node
+
+6. openscad/openscad
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: openscad-2021.01 → openscad-2021.01
+   שינוי: head
+   שימוש אצלנו: CAD/3D toolchain upstream
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
+   מקור: https://github.com/openscad/openscad
+
+7. python/cpython
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: baec76438e → a4eb936727
+   שינוי: head
+   שימוש אצלנו: scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-manim-host-windows.ps1
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
+   מקור: https://github.com/python/cpython
+
+8. Q00/ouroboros
    מצב: לבדוק לפני החלטה
    גרסה/מקור: v0.54.6 → v0.54.6
    שינוי: head
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: זהו מקור catalog בלבד; אין סיבה לעדכן runtime. בודקים אם שינויי upstream רלוונטיים למה שהוטמע לפני כל פעולה.
-   ראיות: catalog-source · head changed; release unchanged
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
    מקור: https://github.com/Q00/ouroboros
 
-3. stablyai/orca
+9. remotion-dev/remotion
+   מצב: לבדוק לפני החלטה
+   גרסה/מקור: v4.0.529 → v4.0.529
+   שינוי: head
+   שימוש אצלנו: packages/vfom/VIDEO-TOOLCHAIN.json
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
+   מקור: https://github.com/remotion-dev/remotion
+
+10. stablyai/orca
    מצב: לבדוק לפני החלטה
    גרסה/מקור: v1.4.215 → v1.4.215
    שינוי: head
    שימוש אצלנו: packages/vfe2b/catalog.json
-   למה: זהו מקור catalog בלבד; אין סיבה לעדכן runtime. בודקים אם שינויי upstream רלוונטיים למה שהוטמע לפני כל פעולה.
-   ראיות: catalog-source · head changed; release unchanged
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
    מקור: https://github.com/stablyai/orca
 
-4. topoteretes/cognee
+11. topoteretes/cognee
    מצב: להמתין
-   גרסה/מקור: v1.6.0 → v1.6.1
-   שינוי: head, release
+   גרסה/מקור: v1.6.1 → v1.6.1
+   שינוי: head
    שימוש אצלנו: packages/vfmem/cognee.json · %USERPROFILE%/.velvetos/cognee-venv
-   למה: Cognee מוחזק כרגע ב־staged stability על v1.6.0. v1.6.1 זוהתה, אבל לא מאמצים אותה לפני review של release notes ובדיקת compatibility/smoke.
-   ראיות: adopted v1.6.0 · upstream v1.6.1 · staged-stability-pin
+   למה: ממתין ל־review מפורש של ה־HEAD/release הנוכחי לפני שניתן לשלוח המלצה לבעלים.
    מקור: https://github.com/topoteretes/cognee
 
 כלל פעולה:
