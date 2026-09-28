@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-28",
+  "date_line": "28.9.2026 · Morning Green v3.1 · Asia/Jerusalem",
+  "version": "Morning-Green-v3.1",
+  "timezone": "Asia/Jerusalem",
+  "research_status": "ready_for_brief",
+  "open_collection": 4790,
+  "bottom_line": "כל חמש העבודות בגיליון VF HQ · jobs מסומנות כסופקו. שלוש יתרות פתוחות מאומתות גם ב-VF HQ · books: סינקופה 4350, ודים 320, אלה+לוגו 120. סך הגבייה הפתוחה 4790. ביומן היום וגם מחר אין אירועים. Instagram חי: 81 עוקבים, 7 פריטים, והפיד האחרון הוא התמנון מ-27.9 עם 0 לייקים ו-0 תגובות מאומתים.",
+  "kpis": [
+    {
+      "value": 4790,
+      "label": "גבייה פתוחה"
+    },
+    {
+      "value": 0,
+      "label": "אירועי יומן היום"
+    },
+    {
+      "value": 0,
+      "label": "עבודות ייצור פעילות"
+    }
+  ],
+  "html": "packages/vfops/out/morning-green-2026-09-28.html",
+  "txt": "packages/vfops/out/morning-brief-2026-09-28.txt",
+  "sources": {
+    "jobs": "VF HQ · jobs live Drive read 2026-09-28 (lastMod 2026-09-14T09:05:09.663Z)",
+    "books": "VF HQ · books live Drive read 2026-09-28 (lastMod 2026-09-14T07:37:00.062Z)",
+    "calendar": "Google Calendar nocturney@gmail.com 2026-09-28..2026-09-29 Asia/Jerusalem empty",
+    "instagram": "@velvets_cloud live get_profile+list_media+audit_public_cta 2026-09-28: 81/125/7 latest DdyPXbHDqBp likes=0 comments=0 CTA compliant; previous DdosGbRia0T likes=1; hashtag_over_limit historical AMBER on DdosGbRia0T only",
+    "schedule": "cloudflare_unavailable: missing VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN in GitHub-failover Shell; FEED-SOURCE unavailableLabel; OpenPost frozen not used",
+    "research": "packages/vfops/data/research.md 28.9.2026 ready_for_brief on OPEN PR #405 (branch cursor/research-seat-2026-09-28-c8f4; check-all FAILURE — not merged; content used for brief only)"
+  }
+}
