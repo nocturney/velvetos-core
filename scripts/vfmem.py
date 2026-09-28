@@ -647,8 +647,10 @@ def _cognee_python() -> Path | None:
     if velvet_runtime:
         home = Path(velvet_runtime).expanduser() / "Cognee" / "cognee-venv"
         candidates += [home / "Scripts" / "python.exe", home / "bin" / "python"]
-    legacy = Path.home() / ".velvetos" / "cognee-venv"
-    candidates += [legacy / "Scripts" / "python.exe", legacy / "bin" / "python"]
+    if os.name != "nt":
+        # Windows path contract: the user-profile legacy venv is not a candidate on the Windows host.
+        legacy = Path.home() / ".velvetos" / "cognee-venv"
+        candidates += [legacy / "Scripts" / "python.exe", legacy / "bin" / "python"]
     return next((p for p in candidates if p and p.is_file()), None)
 
 

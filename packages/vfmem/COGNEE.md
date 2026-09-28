@@ -16,14 +16,15 @@ Pinned contract: `packages/vfmem/cognee.json`.
 Windows reference host:
 
 ```powershell
-$CogneeHome = if ($env:VELVETOS_RUNTIME_ROOT) { Join-Path $env:VELVETOS_RUNTIME_ROOT 'Cognee' } else { Join-Path $HOME '.velvetos' }
+if (-not $env:VELVETOS_RUNTIME_ROOT) { throw 'VELVETOS_RUNTIME_ROOT is not set; see packages/velvetos/WINDOWS-PATH-CONTRACT.md' }
+$CogneeHome = Join-Path $env:VELVETOS_RUNTIME_ROOT 'Cognee'
 py -3 -m venv (Join-Path $CogneeHome 'cognee-venv')
 & (Join-Path $CogneeHome 'cognee-venv\Scripts\python.exe') -m pip install "cognee[gliner]==1.6.1"
 $env:VFMEM_COGNEE_PYTHON = Join-Path $CogneeHome 'cognee-venv\Scripts\python.exe'
 ```
 
 The adapter forces local/keyless extraction by default. On migrated Windows hosts it isolates Cognee storage below
-`%VELVETOS_RUNTIME_ROOT%\Cognee\cognee`; without the path contract it retains the legacy `~/.velvetos/cognee` fallback. It ignores ambient provider credentials in its child process.
+`%VELVETOS_RUNTIME_ROOT%\Cognee\cognee`. On Windows the legacy `~/.velvetos` fallback is closed: without `VELVETOS_RUNTIME_ROOT` (and no explicit `VFMEM_COGNEE_*` override) the adapter and runtime updater stop with a clear error, and `scripts/vfmem.py` does not consider `~/.velvetos/cognee-venv`. Non-Windows hosts keep the `~/.velvetos/cognee` default. It ignores ambient provider credentials in its child process.
 The durable index pins local FastEmbed to
 `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` (384 dimensions) so
 Hebrew and English queries share the same local semantic space. Remote providers
@@ -54,7 +55,7 @@ build can resume without moving the active state pointer to a partial dataset.
 Recall uses explicit `CHUNKS` retrieval. Each returned chunk is mapped through the
 active state's `documentMap` to its canonical source path, SHA-256, category,
 authority and freshness. Missing provenance fails closed and `vfmem.py recall` falls
-back to the built-in local graph/search path. The live pointer is `%VELVETOS_RUNTIME_ROOT%\Cognee\cognee\active-state.json` on migrated Windows hosts (legacy fallback: `~/.velvetos/cognee/active-state.json`); the legacy `state.json` is retained as rollback
+back to the built-in local graph/search path. The live pointer is `%VELVETOS_RUNTIME_ROOT%\Cognee\cognee\active-state.json` on the Windows host (non-Windows default: `~/.velvetos/cognee/active-state.json`); the legacy `state.json` is retained as rollback
 evidence because the Windows host can hold that filename open without delete-sharing.
 The active pointer is written with a unique same-directory temp file, `fsync`, bounded
 Windows replace retries and JSON readback verification before the cutover is accepted.

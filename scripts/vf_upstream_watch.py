@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import urllib.error
@@ -141,12 +142,30 @@ def git_head(path: Path) -> str | None:
     return value if proc.returncode == 0 and value else None
 
 
+LOCAL_REF_VARS = ("USERPROFILE", "VELVET_ROOT", "VELVETOS_REPO_ROOT", "VELVETOS_RUNTIME_ROOT", "VELVETOS_STATE_ROOT")
+LOCAL_REF_TOKEN = re.compile(r"%([A-Za-z_][A-Za-z0-9_]*)%")
+
+
+def expand_local_ref(raw: str) -> str | None:
+    """Expand %USERPROFILE% / %VELVET_ROOT% / %VELVETOS_*% host paths; None when not a local ref or unset."""
+    names = [m.group(1).upper() for m in LOCAL_REF_TOKEN.finditer(raw)]
+    if not names or any(name not in LOCAL_REF_VARS for name in names):
+        return None
+    values = {name: os.environ.get(name) for name in names}
+    if any(not value for value in values.values()):
+        return None
+    expanded = LOCAL_REF_TOKEN.sub(lambda m: str(values[m.group(1).upper()]), raw)
+    return expanded.replace("/", os.sep)
+
+
 def local_refs(row: dict[str, Any]) -> list[dict[str, str]]:
     refs: list[dict[str, str]] = []
     for raw in row.get("integration") or []:
-        if not isinstance(raw, str) or "%USERPROFILE%" not in raw.upper():
+        if not isinstance(raw, str):
             continue
-        expanded = os.path.expandvars(raw.replace("/", os.sep))
+        expanded = expand_local_ref(raw)
+        if expanded is None:
+            continue
         head = git_head(Path(expanded))
         if head:
             refs.append({"path": raw, "gitHead": head})

@@ -3,9 +3,12 @@ param()
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
-function Resolve-VelvetPath([string]$Name, [string]$Fallback) {
+function Resolve-VelvetPath([string]$Name) {
+  # Windows path contract: fail closed when a machine variable is missing (no user-profile fallback).
   $value = [Environment]::GetEnvironmentVariable($Name)
-  if ([string]::IsNullOrWhiteSpace($value)) { return $Fallback }
+  if ([string]::IsNullOrWhiteSpace($value)) {
+    throw "FAIL $Name is not set. On the Windows host VelvetOS paths resolve only through the machine variables in packages/velvetos/WINDOWS-PATH-CONTRACT.md (VELVET_ROOT=D:\Velvet, VELVETOS_REPO_ROOT, VELVETOS_RUNTIME_ROOT, VELVETOS_STATE_ROOT). The legacy user-profile fallback is closed; set $Name machine-wide, open a new shell and rerun."
+  }
   return [Environment]::ExpandEnvironmentVariables($value)
 }
 
@@ -13,11 +16,10 @@ $MANIM_MINIMUM_VERSION = '0.21.0'
 $MANIM_RECOVERY_VERSION = '0.21.0'
 $PYTHON_VERSION = '3.12'
 $HOST_ID = 'sderot-windows'
-$LegacyRoot = Join-Path $env:USERPROFILE '.velvetos'
-$RuntimeRoot = Resolve-VelvetPath 'VELVETOS_RUNTIME_ROOT' $LegacyRoot
-$StateDir = Resolve-VelvetPath 'VELVETOS_STATE_ROOT' $LegacyRoot
-$VelvetRoot = Resolve-VelvetPath 'VELVET_ROOT' ''
-$TmpRoot = if ([string]::IsNullOrWhiteSpace($VelvetRoot)) { [IO.Path]::GetTempPath() } else { Join-Path $VelvetRoot 'Tmp' }
+$RuntimeRoot = Resolve-VelvetPath 'VELVETOS_RUNTIME_ROOT'
+$StateDir = Resolve-VelvetPath 'VELVETOS_STATE_ROOT'
+$VelvetRoot = Resolve-VelvetPath 'VELVET_ROOT'
+$TmpRoot = Join-Path $VelvetRoot 'Tmp'
 New-Item -ItemType Directory -Force -Path $TmpRoot | Out-Null
 $Toolchain = Join-Path $RuntimeRoot "Toolchains\manim-py312"
 $StateFile = Join-Path $StateDir 'manim-host.json'
