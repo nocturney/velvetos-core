@@ -18,7 +18,7 @@ Windows reference host:
 ```powershell
 $CogneeHome = if ($env:VELVETOS_RUNTIME_ROOT) { Join-Path $env:VELVETOS_RUNTIME_ROOT 'Cognee' } else { Join-Path $HOME '.velvetos' }
 py -3 -m venv (Join-Path $CogneeHome 'cognee-venv')
-& (Join-Path $CogneeHome 'cognee-venv\Scripts\python.exe') -m pip install "cognee[gliner]==1.6.0"
+& (Join-Path $CogneeHome 'cognee-venv\Scripts\python.exe') -m pip install "cognee[gliner]==1.6.1"
 $env:VFMEM_COGNEE_PYTHON = Join-Path $CogneeHome 'cognee-venv\Scripts\python.exe'
 ```
 

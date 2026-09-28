@@ -358,8 +358,46 @@ def _report_target(path: Path | None) -> Path:
     return target
 
 
-def acknowledge(repo: str, evidence: str, report_path: Path | None = None) -> int:
-    """Advance the watch baseline only after a reviewed adoption with explicit evidence."""
+def _apply_adoption_baseline(
+    row: dict[str, Any],
+    *,
+    adopted_head: str | None,
+    adopted_release: str | None,
+    checked_at: str,
+) -> None:
+    """Record exactly what was adopted and preserve newer unreleased/release drift."""
+    baseline_head = (adopted_head or str(row.get("remoteHead") or "")).strip()
+    baseline_release = (
+        adopted_release.strip() if adopted_release is not None
+        else row.get("latestRelease")
+    )
+    row["baselineHead"] = baseline_head
+    row["baselineRelease"] = baseline_release or None
+    kinds: list[str] = []
+    remote_head = str(row.get("remoteHead") or "").strip()
+    latest_release = row.get("latestRelease")
+    if remote_head and baseline_head and remote_head != baseline_head:
+        kinds.append("head")
+    if latest_release != (baseline_release or None):
+        kinds.append("release")
+    row["pendingUpdate"] = bool(kinds)
+    row["changeKinds"] = kinds
+    row["firstDetectedAt"] = (
+        (row.get("firstDetectedAt") or checked_at) if kinds else None
+    )
+    row["newDetection"] = False
+    row["state"] = "pending_update" if kinds else "no_change"
+
+
+def acknowledge(
+    repo: str,
+    evidence: str,
+    report_path: Path | None = None,
+    *,
+    adopted_head: str | None = None,
+    adopted_release: str | None = None,
+) -> int:
+    """Advance only the reviewed adoption baseline; keep newer drift pending."""
     target = _report_target(report_path)
     data = load_json(target)
     rows = data.get("sources") or []
@@ -371,21 +409,29 @@ def acknowledge(repo: str, evidence: str, report_path: Path | None = None) -> in
         fail(f"repo has no pending update to acknowledge: {repo}")
     if not evidence.strip():
         fail("--evidence is required for adoption acknowledgement")
-    row["baselineHead"] = row.get("remoteHead")
-    row["baselineRelease"] = row.get("latestRelease")
-    row["pendingUpdate"] = False
-    row["changeKinds"] = []
-    row["firstDetectedAt"] = None
-    row["newDetection"] = False
-    row["state"] = "no_change"
-    row["acknowledgedAt"] = datetime.now(timezone.utc).isoformat()
+    if adopted_head is not None:
+        value = adopted_head.strip().lower()
+        if len(value) != 40 or any(ch not in "0123456789abcdef" for ch in value):
+            fail("--adopted-head must be an exact 40-character Git SHA")
+        adopted_head = value
+    if adopted_release is not None and not adopted_release.strip():
+        fail("--adopted-release cannot be empty")
+    checked_at = datetime.now(timezone.utc).isoformat()
+    _apply_adoption_baseline(
+        row,
+        adopted_head=adopted_head,
+        adopted_release=adopted_release,
+        checked_at=checked_at,
+    )
+    row["acknowledgedAt"] = checked_at
     row["adoptionEvidence"] = evidence.strip()
     summary = data.setdefault("summary", {})
     summary["changed"] = sum(bool(item.get("pendingUpdate")) for item in rows if isinstance(item, dict))
     summary["pendingUpdates"] = summary["changed"]
     summary["newDetections"] = sum(bool(item.get("newDetection")) for item in rows if isinstance(item, dict))
     target.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"ACK upstream baseline repo={row.get('repo')} evidence={evidence.strip()}")
+    suffix = f" remaining={','.join(row['changeKinds'])}" if row["pendingUpdate"] else " remaining=none"
+    print(f"ACK upstream baseline repo={row.get('repo')} evidence={evidence.strip()}{suffix}")
     return 0
 
 
@@ -435,7 +481,30 @@ def selftest() -> int:
         checked_at=stamp,
     )
     assert first_release["pendingUpdate"] is True and "release" in first_release["changeKinds"]
-    print("OK upstream watch selftest sticky-pending + first-release + legacy-migration")
+    partial = {
+        "remoteHead": "b" * 40,
+        "latestRelease": "v2.0.0",
+        "pendingUpdate": True,
+        "changeKinds": ["head", "release"],
+        "firstDetectedAt": stamp,
+    }
+    _apply_adoption_baseline(
+        partial,
+        adopted_head="a" * 40,
+        adopted_release="v2.0.0",
+        checked_at=stamp,
+    )
+    assert partial["pendingUpdate"] is True
+    assert partial["changeKinds"] == ["head"]
+    assert partial["baselineRelease"] == "v2.0.0"
+    _apply_adoption_baseline(
+        partial,
+        adopted_head="b" * 40,
+        adopted_release="v2.0.0",
+        checked_at=stamp,
+    )
+    assert partial["pendingUpdate"] is False and partial["changeKinds"] == []
+    print("OK upstream watch selftest sticky-pending + partial-adoption + first-release + legacy-migration")
     return 0
 
 
@@ -457,13 +526,21 @@ def main() -> int:
     ack_parser.add_argument("--repo", required=True)
     ack_parser.add_argument("--evidence", required=True)
     ack_parser.add_argument("--report", type=Path, default=None)
+    ack_parser.add_argument("--adopted-head", default=None)
+    ack_parser.add_argument("--adopted-release", default=None)
     args = parser.parse_args()
     if args.command == "inventory":
         return inventory()
     if args.command == "selftest":
         return selftest()
     if args.command == "ack":
-        return acknowledge(args.repo, args.evidence, args.report)
+        return acknowledge(
+            args.repo,
+            args.evidence,
+            args.report,
+            adopted_head=args.adopted_head,
+            adopted_release=args.adopted_release,
+        )
     return check(args.write, strict=args.strict)
 
 

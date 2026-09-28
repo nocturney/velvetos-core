@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-27 — **Reviewed tool adoptions:** promoted `earthtojake/text-to-cad` to stable `v0.7.0` / `cadgen 0.7.0` after CAD, DfAM and Orca U1 dry-run smokes; promoted local derived-memory Cognee to `v1.6.1` with zero-cost staging, rollback venv and full canonical reindex; reviewed `free-claude-code` through `v6.4.4` as pattern/policy source only, retaining the no-second-office/FCC-runtime lock. Upstream acknowledgement now records the exact adopted release/tag commit, so unreleased `main` commits remain pending instead of being silently swallowed. Printer control, upload/start, remote Cognee providers and FCC runtime remain disabled.
+
 - 2026-09-27 — **Upstream/toolchain release watch + latest-compatible version policy:** added `packages/velvetos/UPSTREAM-WATCH.json`, `scripts/vf_upstream_watch.py` and `check-upstream-watch.py`. The existing 02:00 Research Seat performs a read-only upstream pass and the Office Loop consumes its report; repository-only skills/agents/pattern sources are tracked alongside runtime tools. OpenPost is excluded while frozen, and its live release-watch routine was deleted and provider-readback verified. Normal execution is capability/smoke-gated and latest-compatible; detected changes remain sticky pending until reviewed adoption evidence is acknowledged; update installation remains a separate reviewed action, with decisions delivered by a separate owner email rather than the Morning Brief.
 
 

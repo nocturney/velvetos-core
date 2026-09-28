@@ -94,7 +94,10 @@
         "bambu-labs"
       ],
       "safety": "no printer network control, upload, start_print, pause/cancel, heating or motion; SendCutSend preflight only, no order submission",
-      "print_start": false
+      "print_start": false,
+      "adopted_release": "v0.7.0",
+      "upstream_commit": "fafa7b057d8f2c3347ff422f0515380123a4b1d4",
+      "adoption_evidence": "packages/vfharness/state/text-to-cad-0.7.0-adoption-2026-09-27.json"
     },
     "cli-anything-freecad": {
       "status": "active_scope_limited",
@@ -104,7 +107,11 @@
       "backend": "FreeCAD 1.1.3 portable",
       "host_status": "WINDOWS_HEADLESS_VERIFIED",
       "authority": "adapter only; text-to-cad/vf_cad remain canonical CAD/DfAM/slicer route",
-      "blocked_groups": ["preview", "motion", "repl"],
+      "blocked_groups": [
+        "preview",
+        "motion",
+        "repl"
+      ],
       "safety": "no printer network control, upload, start_print, heating or motion",
       "print_start": false
     },

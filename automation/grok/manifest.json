@@ -94,6 +94,14 @@
       "responsibility": "canonical weekly research accountability workflow"
     }
   ],
+  "retiredRoutines": [
+    {
+      "id": "openpost-release-watch",
+      "desiredEnabled": false,
+      "state": "deleted_verified",
+      "evidence": "automation/grok/openpost-release-watch-removal.json"
+    }
+  ],
   "publisherAuthority": {
     "updatedDate": "2026-09-26",
     "scheduler": "cloudflare-instagram-publisher",

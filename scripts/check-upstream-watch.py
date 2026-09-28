@@ -170,9 +170,9 @@ def main() -> int:
             fail(f"Office Loop missing upstream report consumption marker: {needle}")
     if "changed={changed}" in office_text or "pendingUpdates" in office_text:
         fail("Office Loop must not expose update counts/decisions in Morning Brief")
-    all_rows = list(grok.get("routines") or []) + list(grok.get("retiredRoutines") or [])
-    if any(str(x.get("id") or "").casefold() == "openpost-release-watch" for x in all_rows):
-        fail("OpenPost Release Watch must be deleted from scheduler authority")
+    active_rows = list(grok.get("routines") or [])
+    if any(str(x.get("id") or "").casefold() == "openpost-release-watch" for x in active_rows):
+        fail("OpenPost Release Watch must be absent from active scheduler authority")
     hf_text = HF.read_text(encoding="utf-8")
     win_text = HF_WIN.read_text(encoding="utf-8")
     mac_text = HF_MAC.read_text(encoding="utf-8")

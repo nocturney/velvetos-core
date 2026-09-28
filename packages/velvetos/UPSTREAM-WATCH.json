@@ -84,7 +84,9 @@
       ],
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",
-      "autoUpgrade": false
+      "autoUpgrade": false,
+      "adoptedHead": "37c77262115a02d3ef97763b7e7a4e0dd011183e",
+      "adoptedRelease": "v6.4.4"
     },
     {
       "repo": "alpacachen/dsh-kanban",
@@ -400,7 +402,9 @@
       ],
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",
-      "autoUpgrade": false
+      "autoUpgrade": false,
+      "adoptedHead": "fafa7b057d8f2c3347ff422f0515380123a4b1d4",
+      "adoptedRelease": "v0.7.0"
     },
     {
       "repo": "FFmpeg/FFmpeg",
@@ -909,8 +913,9 @@
       "updatePolicy": "latest-compatible",
       "autoUpgrade": false,
       "adoptionGate": "staging-venv+smoke+vfmem-sensor+rollback",
-      "adoptedRelease": "v1.6.0",
-      "adoptionClass": "staged-stability-pin"
+      "adoptedRelease": "v1.6.1",
+      "adoptionClass": "staged-stability-pin",
+      "adoptedHead": "eb90d03740755f5252b8b12cce91fd09970f2d81"
     },
     {
       "repo": "trailhq/Graft",
@@ -977,6 +982,26 @@
       "kind": "catalog-source",
       "integration": [
         "packages/vfdsh/catalog.json"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "FullControlXYZ/fullcontrol",
+      "kind": "embedded-provenance",
+      "integration": [
+        ".agents/skills/gcode/references/slicer-backends.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Ultimaker/CuraEngine",
+      "kind": "embedded-provenance",
+      "integration": [
+        ".agents/skills/gcode/references/slicer-backends.md"
       ],
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",

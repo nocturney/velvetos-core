@@ -1,11 +1,15 @@
 # Free Claude Code — מה נכנס למשרד
 
-מקור: [Alishahryar1/free-claude-code](https://github.com/Alishahryar1/free-claude-code) (נקרא 2026-08-30).  
+מקור: [Alishahryar1/free-claude-code](https://github.com/Alishahryar1/free-claude-code) (v6.4.4, נבדק 2026-09-27).
 MIT. README מצהיר: ~50 ספקים, BYOK, «ToS friendly», לא משויך ל־Anthropic. כוכבים ביום הקריאה: ראו את הריפו — אנחנו לא ממציאים מכסת טוקנים שנותרה.
 
 פק הקטלוג: [`packages/vffcc/`](../packages/vffcc/).  
 מפה מכונה: [`packages/vffcc/catalog.json`](../packages/vffcc/catalog.json).  
 בדיקה: `python3 scripts/check-vffcc.py`.
+
+## עדכוני v6.4.3–v6.4.4 — 2026-09-27
+
+v6.4.3 מתקנת את מתקין Hermes ב־Windows כך שיועבר רק `-NonInteractive` ולא הפרמטר הלא־נתמך `-SkipSetup`. v6.4.4 מוסיפה שמירה של rate/concurrency/recovery admission state בזמן החלפת provider clients בעקבות שינוי settings. אצלנו Hermes וכל רשימת הלקוחות הנוספת נשארים `skip`, ולכן האימוץ נשאר עדכון מקור/מדיניות בלבד ולא התקנת `fcc-server` או runtime נוסף.
 
 ## מה זה באמת
 

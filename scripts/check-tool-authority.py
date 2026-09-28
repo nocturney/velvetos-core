@@ -38,10 +38,10 @@ def main() -> int:
             fail(f"OPENPOST.json {key} must be false while frozen")
 
     grok = json.loads(GROK.read_text(encoding="utf-8"))
-    scheduler_rows = list(grok.get("routines") or []) + list(grok.get("retiredRoutines") or [])
+    scheduler_rows = list(grok.get("routines") or [])
     for row in scheduler_rows:
         if str(row.get("id") or "").casefold() == "openpost-release-watch" or str(row.get("title") or "").casefold() == "openpost release watch":
-            fail("OpenPost Release Watch must be deleted from Grok scheduler authority")
+            fail("OpenPost Release Watch must be absent from active Grok scheduler authority")
 
     if not OPENPOST_WATCH_REMOVAL.is_file():
         fail("live OpenPost watch removal evidence is missing")

@@ -4,9 +4,13 @@
   "source": {
     "title": "Alishahryar1/free-claude-code",
     "url": "https://github.com/Alishahryar1/free-claude-code",
-    "readAt": "2026-08-30",
+    "readAt": "2026-09-27",
     "license": "MIT",
-    "claim": "50 ToS-friendly providers, BYOK, local proxy on :8082; not affiliated with Anthropic"
+    "claim": "50 ToS-friendly providers, BYOK, local proxy on :8082; not affiliated with Anthropic",
+    "reviewedRelease": "v6.4.4",
+    "reviewedCommit": "37c77262115a02d3ef97763b7e7a4e0dd011183e",
+    "adoptionScope": "pattern-and-policy review only; no FCC runtime/server/client installation in HQ",
+    "reviewNote": "v6.4.3 fixes Windows Hermes installer arguments; v6.4.4 preserves provider admission/rate/concurrency/recovery state across settings-driven client replacement. FCC/Hermes runtime remains skipped in VelvetOS HQ."
   },
   "hqFact": "FCC does not reduce Cursor Cloud Agent usage. This pack is a map + locks, not an install.",
   "locks": [
