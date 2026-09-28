@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="he" dir="rtl" data-composition-variables='[
+  {"id":"headline","type":"string","label":"Headline","default":""},
+  {"id":"subhead","type":"string","label":"Subhead","default":""},
+  {"id":"heroImage","type":"string","label":"Real text-free master","default":""},
+  {"id":"chip1","type":"string","label":"Verified chip 1","default":""},
+  {"id":"chip2","type":"string","label":"Verified chip 2","default":""},
+  {"id":"chip3","type":"string","label":"Verified chip 3","default":""},
+  {"id":"insetImage","type":"string","label":"Verified detail inset","default":""},
+  {"id":"insetLabel","type":"string","label":"Inset label","default":""},
+  {"id":"realMotionVideo","type":"string","label":"Verified real-motion beat","default":""},
+  {"id":"audioFile","type":"string","label":"Approved audio file","default":""},
+  {"id":"caption","type":"string","label":"Exact source caption","default":""},
+  {"id":"sourcePermalink","type":"string","label":"Source post permalink","default":""},
+  {"id":"sourceMediaId","type":"string","label":"Source media id","default":""},
+  {"id":"variablesStatus","type":"string","label":"ready or needs_input","default":"needs_input"},
+  {"id":"neededInputs","type":"string","label":"Semicolon-separated missing inputs","default":""},
+  {"id":"cta","type":"string","label":"Approved CTA","default":"לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם"},
+  {"id":"accentId","type":"string","label":"Token accent id","default":"copper"},
+  {"id":"accentHex","type":"color","label":"Verified product accent","default":"#a86838"},
+  {"id":"accentSource","type":"string","label":"Accent evidence","default":""}
+]'>
+<head>
+  <meta charset="utf-8">
+  <title>Velvet rich-still-reel</title>
+  <link rel="stylesheet" href="../velvet-reel.css">
+</head>
+<body>
+  <main id="rich-still-reel" class="vf-frame" data-composition-id="rich-still-reel"
+        data-width="1080" data-height="1920" data-fps="30" data-start="0" data-duration="10">
+    <img id="hero" class="vf-hero" alt="">
+    <div class="vf-scrim"></div>
+    <section class="vf-copy" dir="rtl">
+      <h1 id="headline" class="vf-headline"></h1>
+      <div id="accent-rule" class="vf-rule"></div>
+      <p id="subhead" class="vf-subhead"></p>
+      <div class="vf-chips" id="chip-row">
+        <span class="vf-chip" id="chip1"></span>
+        <span class="vf-chip" id="chip2"></span>
+        <span class="vf-chip" id="chip3"></span>
+      </div>
+    </section>
+
+    <aside class="vf-inset" id="inset-card" dir="rtl">
+      <img id="inset-image" alt="">
+      <div id="inset-label" class="vf-inset-label"></div>
+    </aside>
+
+    <video id="real-motion" class="vf-motion clip vf-hidden"
+           data-start="5.40" data-duration="2.35" data-has-audio="true"
+           muted playsinline></video>
+
+    <audio id="audio-track" class="clip" data-start="0" data-duration="10"
+           data-has-audio="true"></audio>
+
+    <section id="end" class="vf-end vf-hidden" dir="rtl">
+      <img id="logo" class="vf-logo" alt="Velvet Factory">
+      <p id="cta" class="vf-cta"></p>
+    </section>
+  </main>
+  <script src="../velvet-reel.js"></script>
+  <script>
+    VelvetReel.boot("rich-still-reel", ({vars, applied, tl, presets, text, media}) => {
+      if (!vars.heroImage) throw new Error("rich-still-reel requires a real text-free master");
+      if (!vars.realMotionVideo) throw new Error("rich-still-reel requires at least one verified real-motion beat");
+      if (!vars.audioFile) throw new Error("rich-still-reel requires approved non-silent audio");
+
+      media("hero", vars.heroImage);
+      media("real-motion", vars.realMotionVideo);
+      media("audio-track", vars.audioFile);
+      document.getElementById("logo").src = applied.logo;
+
+      text("headline", vars.headline);
+      text("subhead", vars.subhead);
+      text("cta", vars.cta);
+      ["chip1","chip2","chip3"].forEach((id) => {
+        text(id, vars[id]);
+        if (!vars[id]) document.getElementById(id).remove();
+      });
+
+      if (vars.insetImage) {
+        media("inset-image", vars.insetImage);
+        text("inset-label", vars.insetLabel);
+      } else {
+        document.getElementById("inset-card").remove();
+      }
+
+      tl.fromTo("#hero", {scale:1}, {scale:1.065, duration:5.4}, 0);
+      presets.HEADLINE_REVEAL(tl, "#headline", .18);
+      presets.ACCENT_RULE_WIPE(tl, "#accent-rule", .62);
+      presets.VELVET_MATERIAL_LABEL(tl, "#subhead", .92);
+      presets.CHIP_SEQUENCE(tl, document.querySelectorAll(".vf-chip"), 1.32);
+      if (vars.insetImage) presets.INSET_POP(tl, "#inset-card", 2.30);
+
+      presets.VELVET_HARD_CUT(tl, "#real-motion", 5.40);
+      tl.set("#real-motion", {opacity:0, visibility:"hidden"}, 7.75);
+      tl.set("#end", {opacity:1, visibility:"visible"}, 7.85);
+      presets.VELVET_FINAL_STAMP(tl, "#logo", 8.02);
+      presets.HEADLINE_REVEAL(tl, "#cta", 8.30);
+    });
+  </script>
+</body>
+</html>

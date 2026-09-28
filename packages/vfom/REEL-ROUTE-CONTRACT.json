@@ -5,7 +5,7 @@
   "routeDoc": "packages/velvetos/chatgpt-project/REEL-ROUTE.md",
   "projectInstructions": "packages/velvetos/chatgpt-project/PROJECT-INSTRUCTIONS-v6.6.10.txt",
   "templateRoot": "packages/vfom/hyperframes/templates",
-  "implementationStatus": "pending_pr2",
+  "implementationStatus": "implemented",
   "templates": [
     "hook-card.html",
     "chips.html",

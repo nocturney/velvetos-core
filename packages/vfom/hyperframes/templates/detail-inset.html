@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="he" dir="rtl" data-composition-variables='[
+  {"id":"insetImage","type":"string","label":"Verified inset source","default":""},
+  {"id":"insetLabel","type":"string","label":"Inset label","default":""},
+  {"id":"accentId","type":"string","label":"Token accent id","default":"copper"},
+  {"id":"accentHex","type":"color","label":"Verified product accent","default":"#a86838"},
+  {"id":"accentSource","type":"string","label":"Accent evidence","default":""}
+]'>
+<head>
+  <meta charset="utf-8">
+  <title>Velvet detail-inset</title>
+  <link rel="stylesheet" href="../velvet-reel.css">
+</head>
+<body>
+  <main id="detail-inset" class="vf-frame" data-composition-id="detail-inset"
+        data-width="1080" data-height="1920" data-fps="30" data-start="0" data-duration="3">
+    <aside class="vf-inset" id="inset-card" dir="rtl">
+      <img id="inset-image" alt="">
+      <div id="inset-label" class="vf-inset-label"></div>
+    </aside>
+  </main>
+  <script src="../velvet-reel.js"></script>
+  <script>
+    VelvetReel.boot("detail-inset", ({vars, tl, presets, text, media}) => {
+      if (!vars.insetImage) throw new Error("detail-inset requires SAME_FRAME_CROP or ALTERNATE_VERIFIED_SOURCE");
+      media("inset-image", vars.insetImage);
+      text("inset-label", vars.insetLabel);
+      presets.INSET_POP(tl, "#inset-card", .20);
+    });
+  </script>
+</body>
+</html>

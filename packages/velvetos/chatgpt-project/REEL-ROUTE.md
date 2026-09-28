@@ -118,17 +118,19 @@ py -3.14 scripts\vf_hyperframes.py plan packages\vfom\jobs\<JOB_ID>\render-reque
 py -3.14 scripts\vf_hyperframes.py run packages\vfom\jobs\<JOB_ID>\render-request.json
 ```
 
-After batch support lands:
+Batch variable-row render:
 
 ```bat
-py -3.14 scripts\vf_hyperframes.py run --batch packages\vfom\jobs\<JOB_ID>\render-batch.json
+py -3.14 scripts\vf_hyperframes.py run packages\vfom\jobs\<JOB_ID>\render-request.json --batch packages\vfom\jobs\<JOB_ID>\render-batch.json
 ```
 
-Turntable beat after `scripts/vf_turntable.py` lands:
+Turntable beat:
 
 ```bat
 "C:\Program Files\Blender Foundation\Blender 5.2\blender.exe" --factory-startup --disable-autoexec -b -P scripts\vf_turntable.py -- --input "D:\Downloads\3D Prints\<REAL_PRINT_FILE>" --output "D:\Velvet\Artifacts\<JOB_ID>\turntable.mp4" --duration 7 --fps 30 --width 1080 --height 1920
 ```
+
+The default `--color-mode embedded` preserves print-file material colours. When a verified photo of the printed item is the colour authority, use `--color-mode verified-hex --base-color-hex <#RRGGBB> --color-source <evidence ref>`; never guess a product colour.
 
 Rendering runs on the authorized host; CI lints contracts/templates and never renders production video.
 ## 11. Handoff package

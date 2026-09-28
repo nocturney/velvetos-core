@@ -25,6 +25,7 @@ SUPPORTED_STAGES = {"rough", "review", "final"}
 SUPPORTED_FORMATS = {"mp4", "webm", "mov"}
 SUPPORTED_RESOLUTIONS = {"portrait", "portrait-4k"}
 SUPPORTED_FPS = {24, 30, 60}
+PLACEHOLDER_RE = re.compile(r"\{([A-Za-z0-9_.-]+)\}")
 
 
 def fail(message: str, code: int = 2) -> None:
@@ -49,6 +50,19 @@ def require_text(obj: dict[str, Any], key: str) -> str:
     if not isinstance(value, str) or not value.strip():
         fail(f"request.{key} must be a non-empty string")
     return value.strip()
+
+
+def read_batch_rows(path: Path) -> list[dict[str, Any]]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"invalid batch JSON {path}: {exc}")
+    rows = value if isinstance(value, list) else value.get("rows") if isinstance(value, dict) else None
+    if not isinstance(rows, list) or not rows:
+        fail("batch must be a non-empty JSON array, or an object with a non-empty rows array")
+    if not all(isinstance(row, dict) for row in rows):
+        fail("every batch row must be a JSON object of variable values")
+    return rows
 
 
 def resolve_under(base: Path, raw: str, label: str) -> Path:
@@ -112,6 +126,18 @@ def validate_request(data: dict[str, Any]) -> dict[str, Any]:
             fail(f"variablesFile not found: {variables_file}")
         read_json(variables_file)
 
+    batch_file = None
+    batch_rows = None
+    if data.get("batchFile"):
+        batch_file = resolve_under(project_dir, str(data["batchFile"]), "batchFile")
+        if not batch_file.is_file():
+            fail(f"batchFile not found: {batch_file}")
+        if variables_file:
+            fail("variablesFile and batchFile are mutually exclusive")
+        batch_rows = read_batch_rows(batch_file)
+        if not PLACEHOLDER_RE.search(output.relative_to(project_dir).as_posix()):
+            fail("batch output must contain at least one {placeholder} to avoid collisions")
+
     audio_required = bool(data.get("audioRequired", target in {"reel_master", "story_master", "feed_video"}))
     return {
         "jobId": job_id,
@@ -128,6 +154,9 @@ def validate_request(data: dict[str, Any]) -> dict[str, Any]:
         "outputArg": output.relative_to(project_dir).as_posix(),
         "variablesFile": variables_file,
         "variablesFileArg": variables_file.relative_to(project_dir).as_posix() if variables_file else None,
+        "batchFile": batch_file,
+        "batchFileArg": batch_file.relative_to(project_dir).as_posix() if batch_file else None,
+        "batchRows": batch_rows,
         "audioRequired": audio_required,
         "strictAll": bool(data.get("strictAll", stage == "final")),
     }
@@ -161,6 +190,8 @@ def build_commands(req: dict[str, Any], resolve_binary: bool = False) -> list[li
     ]
     if req["variablesFileArg"]:
         render += ["--variables-file", req["variablesFileArg"], "--strict-variables"]
+    if req["batchFileArg"]:
+        render += ["--batch", req["batchFileArg"], "--batch-fail-fast", "--json", "--strict-variables"]
     return [check, render]
 
 
@@ -286,11 +317,75 @@ def receipt_path(req: dict[str, Any], override: str | None) -> Path:
     return req["output"].with_suffix(req["output"].suffix + ".receipt.json")
 
 
+def batch_output_paths(req: dict[str, Any]) -> list[Path]:
+    rows = req["batchRows"] or []
+    template = req["outputArg"]
+    outputs: list[Path] = []
+    for index, row in enumerate(rows):
+        def repl(match: re.Match[str]) -> str:
+            key = match.group(1)
+            if key == "index":
+                return str(index)
+            if key not in row or not isinstance(row[key], (str, int, float, bool)):
+                fail(f"batch row {index} missing scalar placeholder value {{{key}}}")
+            return str(row[key])
+        rel = PLACEHOLDER_RE.sub(repl, template)
+        output = resolve_under(req["projectDir"], rel, f"batch output row {index}")
+        if output in outputs:
+            fail(f"batch output collision at row {index}: {rel}")
+        outputs.append(output)
+    return outputs
+
+
+def batch_receipt_path(req: dict[str, Any], outputs: list[Path], override: str | None) -> Path:
+    if override:
+        return resolve_under(req["projectDir"], override, "receipt")
+    common = outputs[0].parent
+    while any(common != path.parent and common not in path.parents for path in outputs):
+        common = common.parent
+    return common / f"{req['jobId']}.batch.receipt.json"
+
+
 def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]:
     if doctor() != 0:
         raise SystemExit(1)
-    req["output"].parent.mkdir(parents=True, exist_ok=True)
     commands = build_commands(req, resolve_binary=True)
+    if req["batchFile"]:
+        outputs = batch_output_paths(req)
+        for output in outputs:
+            output.parent.mkdir(parents=True, exist_ok=True)
+        for cmd in commands:
+            run_command(cmd, req["projectDir"])
+        verified_rows = []
+        for index, output in enumerate(outputs):
+            if not output.is_file() or output.stat().st_size <= 0:
+                fail(f"batch render output missing or empty at row {index}: {output}")
+            verified_rows.append({
+                "index": index,
+                "output": output.relative_to(req["projectDir"]).as_posix(),
+                "bytes": output.stat().st_size,
+                "sha256": sha256_file(output),
+                "probe": verify_probe(req, probe_output(output)),
+            })
+        receipt = {
+            "schemaVersion": 1,
+            "jobId": req["jobId"],
+            "backend": "hyperframes",
+            "package": f"{HYPERFRAMES_PACKAGE}@{exact_hyperframes_version(tool_version('hyperframes')) or 'unknown'}",
+            "stage": req["stage"],
+            "target": req["target"],
+            "batchFile": req["batchFileArg"],
+            "rows": verified_rows,
+            "verifiedAt": datetime.now(timezone.utc).isoformat(),
+            "commands": [[Path(cmd[0]).name, *cmd[1:]] for cmd in commands],
+        }
+        target = batch_receipt_path(req, outputs, receipt_override)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"OK batch render verified rows={len(outputs)} receipt={target}")
+        return receipt
+
+    req["output"].parent.mkdir(parents=True, exist_ok=True)
     for cmd in commands:
         run_command(cmd, req["projectDir"])
     if not req["output"].is_file() or req["output"].stat().st_size <= 0:
@@ -318,11 +413,15 @@ def execute(req: dict[str, Any], receipt_override: str | None) -> dict[str, Any]
 
 
 def plan(req: dict[str, Any]) -> None:
+    batch_outputs = [p.relative_to(req["projectDir"]).as_posix() for p in batch_output_paths(req)] if req["batchFile"] else None
     print(json.dumps({
         "package": f"{HYPERFRAMES_PACKAGE}>={MIN_HYPERFRAMES_VERSION_TEXT}",
         "cwd": str(req["projectDir"]),
         "commands": build_commands(req),
         "output": str(req["output"]),
+        "batchOutputs": batch_outputs,
+        "variablesFile": req["variablesFileArg"],
+        "batchFile": req["batchFileArg"],
         "audioRequired": req["audioRequired"],
         "note": "plan does not install or resolve HyperFrames; run doctor on the authorized render host before run",
     }, ensure_ascii=False, indent=2))
@@ -334,13 +433,22 @@ def main() -> int:
     sub.add_parser("doctor", help="check local Node/HyperFrames/FFmpeg prerequisites without network")
     plan_parser = sub.add_parser("plan", help="validate a request and print exact commands; no render/network")
     plan_parser.add_argument("request", type=Path)
+    plan_parser.add_argument("--variables-file", dest="variables_file", help="override variablesFile relative to projectDir")
+    plan_parser.add_argument("--batch", help="HyperFrames variable-row batch JSON relative to projectDir")
     run_parser = sub.add_parser("run", help="execute check+render+ffprobe and write a receipt")
     run_parser.add_argument("request", type=Path)
+    run_parser.add_argument("--variables-file", dest="variables_file", help="override variablesFile relative to projectDir")
+    run_parser.add_argument("--batch", help="HyperFrames variable-row batch JSON relative to projectDir")
     run_parser.add_argument("--receipt", help="receipt path relative to projectDir")
     args = parser.parse_args()
     if args.command == "doctor":
         return doctor()
-    req = validate_request(read_json(args.request))
+    data = read_json(args.request)
+    if args.variables_file:
+        data["variablesFile"] = args.variables_file
+    if args.batch:
+        data["batchFile"] = args.batch
+    req = validate_request(data)
     if args.command == "plan":
         plan(req)
         return 0

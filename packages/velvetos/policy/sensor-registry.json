@@ -3314,6 +3314,39 @@
       },
       "fallback_scope": "FULL_SUITE",
       "mapping_state": "mapped"
+    },
+    {
+      "id": "check-reel-templates",
+      "path": "scripts/check-reel-templates.py",
+      "owns": [
+        "packages/vfom/hyperframes/**",
+        "packages/vfom/MOTION-PRESETS.md",
+        "packages/vfom/HYPERFRAMES-RENDER.schema.json",
+        "scripts/vf_hyperframes.py",
+        "scripts/vf_turntable.py"
+      ],
+      "triggered_by": [
+        "packages/vfom/hyperframes/**",
+        "packages/vfom/MOTION-PRESETS.md",
+        "packages/vfom/HYPERFRAMES-RENDER.schema.json",
+        "packages/vfbrand/brand-tokens.json",
+        "scripts/vf_hyperframes.py",
+        "scripts/vf_turntable.py",
+        "scripts/check-reel-templates.py"
+      ],
+      "depends_on": [
+        "check-reel-route-sync"
+      ],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
     }
   ]
 }

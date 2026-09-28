@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="he" dir="rtl" data-composition-variables='[
+  {"id":"headline","type":"string","label":"Headline","default":""},
+  {"id":"subhead","type":"string","label":"Subhead","default":""},
+  {"id":"heroImage","type":"string","label":"Text-free master","default":""},
+  {"id":"accentId","type":"string","label":"Token accent id","default":"copper"},
+  {"id":"accentHex","type":"color","label":"Verified product accent","default":"#a86838"},
+  {"id":"accentSource","type":"string","label":"Accent evidence","default":""}
+]'>
+<head>
+  <meta charset="utf-8">
+  <title>Velvet hook-card</title>
+  <link rel="stylesheet" href="../velvet-reel.css">
+</head>
+<body>
+  <main id="hook-card" class="vf-frame" data-composition-id="hook-card"
+        data-width="1080" data-height="1920" data-fps="30" data-start="0" data-duration="3">
+    <img id="hero" class="vf-hero" alt="">
+    <div class="vf-scrim"></div>
+    <section class="vf-copy" dir="rtl">
+      <h1 id="headline" class="vf-headline"></h1>
+      <div id="accent-rule" class="vf-rule"></div>
+      <p id="subhead" class="vf-subhead"></p>
+    </section>
+  </main>
+  <script src="../velvet-reel.js"></script>
+  <script>
+    VelvetReel.boot("hook-card", ({vars, tl, presets, text, media}) => {
+      if (!vars.heroImage) throw new Error("hook-card requires real text-free master");
+      media("hero", vars.heroImage);
+      text("headline", vars.headline);
+      text("subhead", vars.subhead);
+      tl.fromTo("#hero", {scale:1}, {scale:1.035, duration:3}, 0);
+      presets.HEADLINE_REVEAL(tl, "#headline", .18);
+      presets.ACCENT_RULE_WIPE(tl, "#accent-rule", .62);
+      presets.VELVET_MATERIAL_LABEL(tl, "#subhead", .90);
+    });
+  </script>
+</body>
+</html>
