@@ -149,7 +149,7 @@
           "Latin"
         ],
         "licenceFile": "packages/vfbrand/assets/fonts/rubik/OFL.txt",
-        "licenceSha256": "adc65fd853d8a24e2ca8aba1f9483198cb436203ad9c9ef27e08c11fe27e25a4",
+        "licenceSha256": "472cbe7c25441df63e9c7864b43eb3c0f4b3df950c66a76224e6cfe1eae843fb",
         "source": "google/fonts ofl/rubik (Google Fonts ships Rubik as a variable font; bytes match upstream on 2026-09-28)"
       },
       {
@@ -161,7 +161,7 @@
           "Latin"
         ],
         "licenceFile": "packages/vfbrand/assets/fonts/cinzel/OFL.txt",
-        "licenceSha256": "7f697b85bfc1926ca58321fde712c31dab831a47376ba2650148348b21e56a4e",
+        "licenceSha256": "f2b3029aba64c378bf0963b62945eee15e564fe4330b934c8f2eb058282b5e83",
         "source": "google/fonts ofl/cinzel (variable font; bytes match upstream on 2026-09-28)",
         "note": "no Hebrew glyphs; Latin only"
       }
@@ -238,7 +238,7 @@
         "provenance": "traced from owner JPG, owner-approved 2026-09-28",
         "tracedFrom": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-white-full-lockup.jpg",
         "tool": "potrace 1.16: grayscale, 3x Lanczos upscale, threshold L<200, turdsize 20, alphamax 1.0, opttolerance 0.2; single fill",
-        "sha256": "40d121c031023751a73ecaeb9e4c82cbdc9fca5ab7a699d38b326003cb7d5d4d"
+        "sha256": "28c5bafb88e617bd6982a235f7424965fbe1027dec729b0eaa72522dc09127f2"
       },
       {
         "path": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-mark-traced.svg",
@@ -251,7 +251,7 @@
         "provenance": "traced from owner JPG, owner-approved 2026-09-28",
         "tracedFrom": "packages/vfbrand/assets/logo/velvet-factory-logo-gold-on-white-full-lockup.jpg (emblem region cropped above the wordmark)",
         "tool": "potrace 1.16: grayscale, 3x Lanczos upscale, threshold L<200, turdsize 20, alphamax 1.0, opttolerance 0.2; single fill",
-        "sha256": "2d132b25dea267b06e68d535aee93a0fc11623b79c1ee744165877e0ea9e558e"
+        "sha256": "7743929a0bb793713cafe2da4ce0d46e91f1b88c6d1770c084c2c9866f4bc31e"
       }
     ],
     "stillWanted": "an original designer vector master, if one exists, would replace the traced SVGs; not blocking",
