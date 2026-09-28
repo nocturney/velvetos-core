@@ -146,8 +146,13 @@
     "musicRole": "support proof, never replace it"
   },
   "typography": {
-    "policy": "use only verified existing brand fonts/templates",
+    "policy": "use only the verified brand fonts (Rubik, Cinzel) and existing templates",
     "maxFonts": 2,
+    "verifiedBrandFonts": [
+      "Rubik",
+      "Cinzel"
+    ],
+    "verifiedBrandFontsDecision": "owner decision 2026-09-28: Rubik (Hebrew headline 700, subhead 600) + Cinzel (Latin 700/400); OFL files and hashes in packages/vfbrand/brand-tokens.json",
     "coverWordsMin": 3,
     "coverWordsMax": 7,
     "inventFont": false,

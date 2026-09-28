@@ -24,7 +24,7 @@ Printer, workbench and process footage stay allowed as **beats inside a Reel** (
 2. **Chips** — up to 3 outline-icon chips animate in, one at a time, each stating a verified fact about this product.
 3. **Detail inset** — a literal crop of the source frame (`SAME_FRAME_CROP`) or another real frame (`ALTERNATE_VERIFIED_SOURCE`), shown as an inset card or magnifier; never a synthesized detail.
 4. **Real footage beats** — printer, process, handling or use footage from verified sources; these beats may be clean (`NO_TEXT`).
-5. **End card** — the CTA `לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם` and the exact owner-supplied logo. The logo comes from the committed files in `packages/vfbrand/assets/logo/` (see `brand-tokens.json`). Until a transparent version exists, use a raster only where its own background fits, for example the gold-on-navy velvet lockup as the full end-card plate; never cut it out, recolour it or redraw it.
+5. **End card** — the CTA `לפרטים והזמנות — שלחו לנו הודעה כאן באינסטגרם` and the exact owner-supplied logo. The logo comes from the committed files in `packages/vfbrand/assets/logo/` (see `brand-tokens.json`): prefer the transparent traced SVG (`velvet-factory-logo-gold-full-lockup-traced.svg`, or the mark-only SVG), or use the gold-on-navy velvet lockup as a full end-card plate. Never recolour beyond the brand gold, redraw or redesign it.
 
 Text is never baked into generated footage; every text layer is a deterministic overlay. Text, chips and insets never cover the product.
 
@@ -41,6 +41,7 @@ Default vocabulary is intentionally narrow: hard cut, motivated macro push-in, p
 - Public Hebrew text comes from the vfcopy pipeline; render only the approved exact string.
 - Use explicit RTL direction for Hebrew layers.
 - Use no more than two verified existing brand fonts/templates.
+- Verified brand fonts (owner decision 2026-09-28): **Rubik** for Hebrew (headline 700, subhead 600) and **Cinzel** for Latin (700 and 400). The OFL font files, SHA-256 hashes and roles are in `packages/vfbrand/brand-tokens.json` (`fonts`); load them from `packages/vfbrand/assets/fonts/`, never from a system fallback.
 - Do not invent font families, weights, hex colors or gradients.
 - ~~Prefer a clean no-text frame when copy does not beat the no-text baseline.~~ SUPERSEDED 2026-09-28: hook and end cards carry the editorial text layout above; footage beats may stay clean when that frame is stronger without text. The `NO_TEXT` comparison is still recorded in the visual-copy decision.
 - Keep overlay hierarchy readable at phone size and outside Instagram UI/safe zones.

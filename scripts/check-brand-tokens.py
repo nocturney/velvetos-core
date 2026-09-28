@@ -110,6 +110,66 @@ def check_asset_block(name: str, block: object, value_keys: tuple[str, ...]) -> 
         problems.append(f"{name}.status must be one of {allowed}, got {status!r}")
 
 
+SVG_FILL = re.compile(r'fill="(#[0-9a-fA-F]{6})"')
+TRACED_PROVENANCE = "traced from owner JPG, owner-approved 2026-09-28"
+
+
+def check_fonts(block: object, ty: dict) -> None:
+    """Fonts are either explicitly missing (nothing guessed) or committed OFL files with roles."""
+    require(isinstance(block, dict), "fonts must be an object")
+    if not isinstance(block, dict):
+        return
+    status = block.get("status")
+    if status == MISSING:
+        require(not block.get("files") and not block.get("families") and not block.get("roles"),
+                "fonts are missing but list files/families/roles (never guess)")
+        for key in ("headline", "body"):
+            require(block.get(key) is None, f"fonts.{key} must be null while fonts are missing")
+        return
+    require(status == "committed", f"fonts.status must be '{MISSING}' or 'committed', got {status!r}")
+    families = block.get("families") or []
+    names = [f.get("family") for f in families if isinstance(f, dict)]
+    max_fonts = ty.get("maxFonts")
+    require(bool(names) and len(set(names)) == len(names), "fonts.families must list unique families")
+    require(isinstance(max_fonts, int) and len(names) <= max_fonts, f"fonts: {len(names)} families exceed VISUAL-DNA maxFonts {max_fonts}")
+    require(sorted(block.get("files") or []) == sorted(f.get("file") for f in families if isinstance(f, dict)), "fonts.files must match families[].file")
+    for fam in families:
+        if not isinstance(fam, dict):
+            continue
+        for key in ("file", "licenceFile"):
+            rel = fam.get(key)
+            require(committed_file(rel), f"font {fam.get('family')}: {key} is not a committed repo file: {rel}")
+            sha_key = "sha256" if key == "file" else "licenceSha256"
+            if committed_file(rel):
+                require(hashlib.sha256((ROOT / rel).read_bytes()).hexdigest() == fam.get(sha_key), f"font {fam.get('family')}: {sha_key} mismatch")
+        if committed_file(fam.get("licenceFile")):
+            require("SIL Open Font License" in (ROOT / fam["licenceFile"]).read_text(encoding="utf-8", errors="replace"), f"font {fam.get('family')}: licence file is not OFL")
+    roles = block.get("roles") or {}
+    for role in ("headline", "subhead"):
+        r = roles.get(role) or {}
+        require(r.get("family") in names and isinstance(r.get("weight"), int), f"fonts.roles.{role} must name a committed family and a numeric weight")
+    for role, r in roles.items():
+        require(isinstance(r, dict) and r.get("family") in names, f"fonts.roles.{role} uses a family that is not committed")
+    dna_fonts = ty.get("verifiedBrandFonts")
+    require(isinstance(dna_fonts, list) and sorted(dna_fonts) == sorted(names), "VISUAL-DNA typography.verifiedBrandFonts must match brand-tokens fonts.families")
+
+
+def check_logo_vectors(block: object, gold_hex: object) -> None:
+    if not isinstance(block, dict):
+        return
+    for v in block.get("variants") or []:
+        if not isinstance(v, dict) or v.get("format") != "svg" or not committed_file(v.get("path")):
+            continue
+        svg = (ROOT / v["path"]).read_text(encoding="utf-8", errors="replace")
+        fills = {f.lower() for f in SVG_FILL.findall(svg)}
+        require(fills == {str(gold_hex).lower()}, f"logo SVG must use a single brand-gold fill {gold_hex}: {v['path']} has {sorted(fills)}")
+        require(v.get("fill", "").lower() == str(gold_hex).lower(), f"logo SVG variant fill must equal brand gold: {v['path']}")
+        require("<image" not in svg and "<text" not in svg, f"logo SVG must be pure vector paths (no embedded raster/text): {v['path']}")
+        if v.get("provenance", "").startswith("traced"):
+            require(v.get("provenance") == TRACED_PROVENANCE, f"traced logo SVG provenance must read '{TRACED_PROVENANCE}': {v['path']}")
+            require(committed_file(str(v.get("tracedFrom", "")).split(" ")[0]), f"traced logo SVG must name its committed source raster: {v['path']}")
+
+
 def check_tokens(tokens: dict, dna: dict) -> None:
     for key in REQUIRED_TOP:
         require(key in tokens, f"brand-tokens missing key {key}")
@@ -150,8 +210,9 @@ def check_tokens(tokens: dict, dna: dict) -> None:
     require(ty.get("textOverProduct") is False, "VISUAL-DNA typography.textOverProduct must be false")
     require(ty.get("inventFont") is False, "VISUAL-DNA typography.inventFont must stay false")
     require((tokens.get("reel") or {}).get("endCardCta") == CTA, "reel.endCardCta drifted from the owner CTA")
-    check_asset_block("fonts", tokens.get("fonts"), ("headline", "body"))
+    check_fonts(tokens.get("fonts"), ty)
     check_asset_block("logo", tokens.get("logo"), ())
+    check_logo_vectors(tokens.get("logo"), ((tokens.get("brandMark") or {}).get("gold") or {}).get("hex"))
     mark = tokens.get("brandMark") or {}
     gold = mark.get("gold") or {}
     require(isinstance(gold.get("hex"), str) and bool(HEX.match(gold.get("hex", ""))), "brandMark.gold.hex malformed")
