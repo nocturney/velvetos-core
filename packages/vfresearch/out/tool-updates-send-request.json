@@ -1,6 +1,6 @@
 {
   "enabled": false,
-  "requestId": "tool-updates-review-required-2026-09-28",
+  "requestId": "tool-updates-reviewed-2026-09-28",
   "to": "nocturney@gmail.com",
   "subject": "VelvetOS · עדכוני כלים · 11 ממתינים",
   "html": "packages/vfresearch/out/tool-updates-latest.html",
@@ -10,19 +10,15 @@
   "remoteImageLimit": 0,
   "notificationDigest": null,
   "pendingCount": 11,
-  "reviewReady": false,
-  "unreviewedCount": 11,
-  "unreviewedRepos": [
-    "blender/blender",
-    "earthtojake/text-to-cad",
-    "FreeCAD/FreeCAD",
-    "liustack/modlens",
-    "nodejs/node",
-    "openscad/openscad",
-    "python/cpython",
-    "Q00/ouroboros",
-    "remotion-dev/remotion",
-    "stablyai/orca",
-    "topoteretes/cognee"
-  ]
+  "reviewReady": true,
+  "unreviewedCount": 0,
+  "unreviewedRepos": [],
+  "reviewSummary": {
+    "pending": 11,
+    "update": 0,
+    "wait": 2,
+    "review": 0,
+    "ignore": 9
+  },
+  "note": "Analysis complete; request intentionally remains disabled until the canonical renderer arms it."
 }
