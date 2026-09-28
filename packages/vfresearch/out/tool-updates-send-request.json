@@ -1,6 +1,6 @@
 {
   "enabled": true,
-  "requestId": "tool-updates-a9941abf2a2310ad",
+  "requestId": "tool-updates-df2fad3a9948a789",
   "to": "nocturney@gmail.com",
   "subject": "VelvetOS · עדכוני כלים · 40 ממתינים",
   "html": "packages/vfresearch/out/tool-updates-latest.html",
@@ -8,7 +8,7 @@
   "images": "",
   "embedRemoteImages": false,
   "remoteImageLimit": 0,
-  "notificationDigest": "a9941abf2a2310ad3944d35660fde384889ab3079ca63a51819227e80457ea5a",
+  "notificationDigest": "df2fad3a9948a789128706daf69b2f8a7b6d267a278373da30cf842892ec787d",
   "pendingCount": 40,
   "reviewReady": true,
   "unreviewedCount": 0,

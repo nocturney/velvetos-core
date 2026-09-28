@@ -15,7 +15,7 @@
       "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
       "evidence": [
         "1 commits since baselineHead",
-        "commit: fix(compat): 适配 DSH 0.2.x——peer 范围补 0.2 带、BlockAssembler.message 必填、client 产物确定性",
+        "commit: fix(compat): 适配 DSH 0.2.x -  - peer 范围补 0.2 带、BlockAssembler.message 必填、client 产物确定性",
         "baselineRelease=v0.5.12 → latestRelease=v0.5.13",
         "changeKinds=['head', 'release']; newDetection=True",
         "compare: https://github.com/00080000/dsh-project-memory/compare/3d171b6d4b78d82d71398fb28c638830b5c28291...0886e2e2b914e971feef646cab08f51b43265fba"
@@ -70,7 +70,7 @@
     },
     "bambulab/BambuStudio": {
       "verdict": "wait",
-      "reasonHe": "HEAD התקדם מעבר ל־baseline בעוד latestRelease נשאר v02.08.02.61. דיווחים ציבוריים על Public Beta 2.8.4 (v02.08.04.57, ~22.9) מציינים אזהרת shrinkage-compensation על מודלים צבועים ותיקון ADMesh STL — רלוונטי לסלייסר ברצפה, אבל אין אימוץ בטא בלי smoke על המכונה; ממתינים ל־stable/אישור ראש צוות.",
+      "reasonHe": "HEAD התקדם מעבר ל־baseline בעוד latestRelease נשאר v02.08.02.61. דיווחים ציבוריים על Public Beta 2.8.4 (v02.08.04.57, ~22.9) מציינים אזהרת shrinkage-compensation על מודלים צבועים ותיקון ADMesh STL - רלוונטי לסלייסר ברצפה, אבל אין אימוץ בטא בלי smoke על המכונה; ממתינים ל־stable/אישור ראש צוות.",
       "evidence": [
         "1 commits since baselineHead",
         "commit: Refactor ParamTooltip to use wxPopupWindow for improved GTK compatibility",
@@ -468,7 +468,7 @@
     },
     "Q00/ouroboros": {
       "verdict": "wait",
-      "reasonHe": "דפוס verifier/replay רלוונטי רעיונית ל־evidence discipline, אבל הקטלוג עדיין later/pattern — לא מתקינים.",
+      "reasonHe": "דפוס verifier/replay רלוונטי רעיונית ל־evidence discipline, אבל הקטלוג עדיין later/pattern - לא מתקינים.",
       "evidence": [
         "23 commits since baselineHead",
         "commit: fix(boundary): recover a run whose replacement version was abandoned (#2479)",
@@ -633,7 +633,7 @@
       "reasonHe": "מקור catalog/pattern/agent/dsh בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג או התקנה מריצת המחקר.",
       "evidence": [
         "5 commits since baselineHead",
-        "commit: fix(phone-lens): adapt to dsh 0.1.7-rc.2 — agent/created event + paste-based composer injection",
+        "commit: fix(phone-lens): adapt to dsh 0.1.7-rc.2  -  agent/created event + paste-based composer injection",
         "commit: fix(app): viewfinder rotation follows physical tilt; photos baked WYSIWYG",
         "commit: chore: release v0.3.6",
         "baselineRelease=v0.3.5 → latestRelease=v0.3.7",
@@ -645,6 +645,6 @@
       "reviewedRelease": "v0.3.7"
     }
   },
-  "notificationPreparedAt": "2026-09-28T23:16:17.575366+00:00",
-  "notificationDigest": "a9941abf2a2310ad3944d35660fde384889ab3079ca63a51819227e80457ea5a"
+  "notificationPreparedAt": "2026-09-28T23:20:51.753165+00:00",
+  "notificationDigest": "df2fad3a9948a789128706daf69b2f8a7b6d267a278373da30cf842892ec787d"
 }
