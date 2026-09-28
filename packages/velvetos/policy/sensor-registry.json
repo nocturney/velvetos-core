@@ -1958,6 +1958,67 @@
       "mapping_state": "mapped"
     },
     {
+      "id": "check-upstream-email",
+      "path": "scripts/check-upstream-email.py",
+      "owns": [
+        ".github/workflows/gmail-tool-updates-send.yml",
+        "packages/vfresearch/out/tool-updates-*",
+        "packages/vfresearch/sources/upstream-review-latest.json",
+        "scripts/vf_upstream_email.py"
+      ],
+      "triggered_by": [
+        ".github/workflows/gmail-tool-updates-send.yml",
+        "packages/velvetos/UPSTREAM-WATCH.json",
+        "packages/vfops/gmail_apps_script_request.py",
+        "packages/vfops/gmail_brief_request.py",
+        "packages/vfresearch/DAILY.md",
+        "packages/vfresearch/out/tool-updates-*",
+        "packages/vfresearch/sources/upstream-review-latest.json",
+        "packages/vfresearch/sources/upstream-watch-latest.json",
+        "scripts/check-upstream-email.py",
+        "scripts/vf_upstream_email.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
+      "id": "check-upstream-watch",
+      "path": "scripts/check-upstream-watch.py",
+      "owns": [
+        "packages/velvetos/UPSTREAM-WATCH.json",
+        "packages/vfresearch/sources/upstream-watch-latest.json",
+        "scripts/vf_upstream_watch.py"
+      ],
+      "triggered_by": [
+        "automation/grok/**",
+        "packages/velvetos/UPSTREAM-WATCH.json",
+        "packages/vfresearch/DAILY.md",
+        "packages/vfresearch/sources/upstream-watch-latest.json",
+        "scripts/check-upstream-watch.py",
+        "scripts/vf_upstream_watch.py"
+      ],
+      "depends_on": [],
+      "enforces": [],
+      "risk": "high",
+      "timeout_seconds": 180,
+      "failure_effect": {
+        "merge": "BLOCK",
+        "release": "BLOCK_IF_RELEVANT",
+        "runtime": "NO_DIRECT_RUNTIME_EFFECT"
+      },
+      "fallback_scope": "FULL_SUITE",
+      "mapping_state": "mapped"
+    },
+    {
       "id": "check-velvet-health",
       "path": "scripts/check-velvet-health.py",
       "owns": [

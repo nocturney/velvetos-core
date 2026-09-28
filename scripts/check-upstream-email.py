@@ -63,6 +63,10 @@ def main() -> int:
     for repo, row in (review.get("items") or {}).items():
         if not isinstance(row, dict) or row.get("verdict") not in valid:
             fail(f"invalid verdict for {repo}")
+        if not str(row.get("reviewedRemoteHead") or "").strip():
+            fail(f"review missing reviewedRemoteHead for {repo}")
+        if "reviewedRelease" not in row:
+            fail(f"review missing reviewedRelease for {repo}")
 
     request = json.loads(REQUEST.read_text(encoding="utf-8"))
     if request.get("enabled") is not False:

@@ -5,8 +5,8 @@
   "pack": "velvetos/vfresearch/vfharness",
   "goal": "Track installed/toolchain and repository-only skill/agent upstream changes without auto-upgrading or exact-version locking normal execution; remove OpenPost release watch authority.",
   "completed_steps": [
-    "Created machine-readable upstream registry covering 93 monitored sources and 2 explicit exclusions.",
-    "Covered 71 embedded skill/agent/pattern provenance repositories in addition to runtime/toolchain sources.",
+    "Created machine-readable upstream registry covering 95 monitored sources and 2 explicit exclusions.",
+    "Covered 74 embedded skill/agent/pattern provenance repositories in addition to runtime/toolchain sources.",
     "Bound the read-only upstream check to the existing Velvet Research Seat and Office Loop; no new scheduler was created.",
     "Deleted OpenPost Release Watch from repository scheduler authority and kept OpenPost frozen.",
     "Converted HyperFrames, VoiceStudio, Manim and Remotion normal execution to latest-compatible capability/smoke policy.",
@@ -15,10 +15,11 @@
     "Added explicit reviewed-adoption acknowledgement; no update is auto-acknowledged or auto-installed.",
     "Detected Cognee upstream v1.6.1 while adopted staged-stability release remains v1.6.0.",
     "Fixed Windows vfmedia PID liveness probing so captured selftests no longer interrupt their parent process.",
-    "Ran targeted sensors and the full 90-sensor suite.",
-    "Deleted the live Grok OpenPost Release Watch routine and verified provider readback: 8 routines remain, OpenPost watcher absent."
+    "Ran targeted sensors and the full 111-sensor suite.",
+    "Deleted the live Grok OpenPost Release Watch routine and verified provider readback: 8 routines remain, OpenPost watcher absent.",
+    "Added a separate owner tool-update email path, excluded update decisions/counts from the Morning Brief, and fail-closed email arming until every pending item has a current HEAD/release review."
   ],
-  "next_step": "None. Routine removal is live-verified; future upstream updates remain pending until reviewed adoption ack.",
+  "next_step": "Merge the replacement PR. After merge, the existing 02:00 Research Seat reviews current pending updates and arms the separate email only when every pending item has a current review; no auto-upgrade.",
   "artifacts": [
     "packages/velvetos/UPSTREAM-WATCH.json",
     "scripts/vf_upstream_watch.py",
@@ -30,26 +31,26 @@
   "unresolved": [],
   "outcome": "worker_done",
   "pulse": "idle",
-  "verification": "Targeted sensors PASS; sticky-pending selftest PASS; strict upstream sweep 93/0; canonical daily brief generated; check-all 90/90; live Grok OpenPost Release Watch deletion verified by provider readback.",
+  "verification": "Targeted sensors PASS; strict upstream sweep 95/0; provider readback PASS with OpenPost watcher absent; tool-update email current-review gate blocks incomplete review; check-all 111/111 PASS.",
   "gate": null,
   "escalation": null,
   "last_updated": "2026-09-27",
   "execution_state": {
-    "branch": "feat/upstream-release-watch",
-    "monitored_sources": 93,
-    "embedded_provenance_sources": 71,
+    "branch": "feat/upstream-release-watch-v2",
+    "monitored_sources": 95,
+    "embedded_provenance_sources": 74,
     "excluded_sources": 2,
     "upstream_failed": 0,
-    "pending_updates": 4,
-    "pending_update_repo": "topoteretes/cognee",
+    "pending_updates": 12,
+    "pending_update_repo": "multiple",
     "adopted_release": "v1.6.0",
     "upstream_release": "v1.6.1",
     "auto_upgrade": false,
     "targeted_sensors": "PASS",
-    "check_all": "90/90 PASS",
+    "check_all": "111/111 PASS",
     "openpost_repo_watch": "deleted",
     "openpost_live_provider_watch": "deleted_verified",
-    "pull_request": "#403",
+    "pull_request": "replacement pending",
     "pending_update_repos": [
       {
         "repo": "liustack/modlens",
@@ -91,5 +92,5 @@
     ],
     "provider_readback_evidence": "automation/grok/openpost-release-watch-removal.json"
   },
-  "latest_observation": "Task complete: repo authority and live Grok provider state agree. OpenPost Release Watch was deleted and read back absent; 8 protected routines remain. check-all PASS 90/90; upstream watch has 4 sticky pending updates and 0 failed checks."
+  "latest_observation": "Rebased onto current main: 95 monitored upstreams, 74 repo-provenance sources, 12 sticky pending updates, 0 failed checks. Separate owner email path is ready and fail-closed; Morning Brief carries no update decisions/counts. Full suite PASS 111/111."
 }

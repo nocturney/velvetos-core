@@ -10,8 +10,8 @@
     "status": "PASS",
     "command": "python scripts/check-all.py",
     "observedExitCode": 0,
-    "sensorCount": 109,
-    "terminalLine": "OK suite passed=109",
+    "sensorCount": 111,
+    "terminalLine": "OK suite passed=111",
     "windowsProcessIsolation": "Each sensor launched with CREATE_NEW_PROCESS_GROUP on Windows to prevent child console-control teardown from terminating the parent suite.",
     "historicalNote": "Final PR head and post-reconciliation local suites completed normally at 109/109; PR #390 was then merged to main after explicit owner approval."
   },

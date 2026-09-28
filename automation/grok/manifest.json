@@ -117,7 +117,7 @@
   "latestProviderReadback": {
     "status": "live_verified",
     "date": "2026-09-27",
-    "artifact": "automation/grok/openpost-release-watch-removal.json",
+    "artifact": "automation/grok/provider-readback-2026-09-27.json",
     "protectedRoutineCount": 8,
     "protectedInventoryClockMatch": true,
     "openpostReleaseWatchAbsent": true,

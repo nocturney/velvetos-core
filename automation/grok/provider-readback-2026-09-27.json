@@ -1,6 +1,6 @@
 {
   "schema": "vf.grok.provider-readback.v1",
-  "observedAt": "2026-09-27T10:12:59.224768+00:00",
+  "observedAt": "2026-09-27T18:40:21.129636+00:00",
   "provider": "grok-bot",
   "providerAppVersion": "0.59.1",
   "signedIn": true,
@@ -10,9 +10,9 @@
     "inspection": "loopback Chrome DevTools Protocol at 127.0.0.1:9222",
     "modelPromptSent": false,
     "writeOperationsPerformed": [
-      "setAgentAutomationEnabled(openpost-release-watch,false)"
+      "deleted OpenPost Release Watch via Grok Bot desktop routine UI"
     ],
-    "writeAuthorization": "canonical owner retirement directive in automation/grok/manifest.json and CONTRACT.md dated 2026-09-26"
+    "writeAuthorization": "owner-explicit instruction to remove the OpenPost update checker"
   },
   "protectedRoutineCount": 8,
   "protectedRoutines": [
@@ -89,26 +89,25 @@
       "matchesCanonicalClock": true
     }
   ],
-  "retiredRoutines": [
-    {
-      "providerRoutineId": "openpost-release-watch",
-      "title": "OpenPost Release Watch",
-      "providerDisplayCadence": "Every day at 7:15 AM",
-      "desiredEnabled": false,
-      "enabled": false,
-      "ariaChecked": false,
-      "repairPerformed": true,
-      "repair": "disabled live provider routine after readback found it enabled",
-      "postRepairReadback": "Resume OpenPost Release Watch"
-    }
-  ],
+  "retiredRoutines": [],
   "verificationScope": {
     "inventoryIds": true,
     "enabledState": true,
     "effectiveScheduleDisplay": true,
     "rendererTimeZone": true,
     "promptBodyParity": false,
-    "note": "This readback verifies live provider inventory, enabled state, effective schedule display, and renderer timezone. It does not claim prompt-body parity for all routines."
+    "note": "This readback verifies live protected inventory, enabled state, effective schedule display, renderer timezone, and absence of the deleted OpenPost Release Watch. It does not claim prompt-body parity for all routines.",
+    "removedRoutineAbsence": true
   },
-  "status": "LIVE_PROVIDER_READBACK_PASS"
+  "status": "LIVE_PROVIDER_READBACK_PASS",
+  "removedRoutines": [
+    {
+      "providerRoutineId": "openpost-release-watch",
+      "title": "OpenPost Release Watch",
+      "previousDisplayCadence": "Every day at 7:15 AM",
+      "present": false,
+      "action": "delete",
+      "verifiedReadback": "absent"
+    }
+  ]
 }

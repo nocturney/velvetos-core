@@ -78,18 +78,19 @@ def main() -> int:
     if len(expected) != 8 or readback.get("protectedRoutineCount") != 8:
         fail("protected routine count must remain eight")
 
-    retired_expected = {
-        row["id"]: bool(row.get("desiredEnabled"))
-        for row in manifest.get("retiredRoutines") or []
+    if any(
+        str(row.get("id") or "").casefold() == "openpost-release-watch"
+        for row in (manifest.get("retiredRoutines") or [])
+    ):
+        fail("OpenPost watch must be deleted from manifest scheduler authority")
+    removed = {
+        str(row.get("providerRoutineId") or ""): row
+        for row in (readback.get("removedRoutines") or [])
+        if isinstance(row, dict)
     }
-    retired_observed = {
-        row.get("providerRoutineId"): bool(row.get("enabled"))
-        for row in readback.get("retiredRoutines") or []
-    }
-    if retired_expected.get("openpost-release-watch") is not False:
-        fail("manifest must keep OpenPost watch retired")
-    if retired_observed.get("openpost-release-watch") is not False:
-        fail("live OpenPost Release Watch is not disabled")
+    openpost = removed.get("openpost-release-watch") or {}
+    if openpost.get("present") is not False or openpost.get("action") != "delete":
+        fail("live OpenPost Release Watch deletion/absence not proven")
 
     runtime = load(RUNTIME)
     if runtime.get("component_id") != "grok-production-scheduler" or runtime.get("state") != "healthy":
@@ -102,7 +103,7 @@ def main() -> int:
 
     print(
         "GROK PROVIDER READBACK PASS "
-        f"protected={len(expected)} openpost=disabled timezone={readback.get('rendererTimeZone')} "
+        f"protected={len(expected)} openpost=absent timezone={readback.get('rendererTimeZone')} "
         "prompt-body-parity=not-claimed"
     )
     return 0

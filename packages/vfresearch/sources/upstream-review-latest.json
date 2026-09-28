@@ -10,7 +10,9 @@
         "catalog-source",
         "head changed; release unchanged"
       ],
-      "notifyOwner": true
+      "notifyOwner": true,
+      "reviewedRemoteHead": "f01354e78a70ed18eab721762f18ea44a92d6e9e",
+      "reviewedRelease": "v3.26.5"
     },
     "Q00/ouroboros": {
       "verdict": "review",
@@ -19,7 +21,9 @@
         "catalog-source",
         "head changed; release unchanged"
       ],
-      "notifyOwner": true
+      "notifyOwner": true,
+      "reviewedRemoteHead": "a2b329d052c4b1a900810cc505742dff0142ebdb",
+      "reviewedRelease": "v0.54.6"
     },
     "stablyai/orca": {
       "verdict": "review",
@@ -28,7 +32,9 @@
         "catalog-source",
         "head changed; release unchanged"
       ],
-      "notifyOwner": true
+      "notifyOwner": true,
+      "reviewedRemoteHead": "9795563695587c3aa86186032b56e8b748074579",
+      "reviewedRelease": "v1.4.215"
     },
     "topoteretes/cognee": {
       "verdict": "wait",
@@ -38,7 +44,9 @@
         "upstream v1.6.1",
         "staged-stability-pin"
       ],
-      "notifyOwner": true
+      "notifyOwner": true,
+      "reviewedRemoteHead": "c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b",
+      "reviewedRelease": "v1.6.1"
     }
   }
 }

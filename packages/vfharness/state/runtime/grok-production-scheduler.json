@@ -1,7 +1,7 @@
 {
   "component_id": "grok-production-scheduler",
   "state": "healthy",
-  "observed_at": "2026-09-27T10:12:59.224768+00:00",
+  "observed_at": "2026-09-27T18:40:21.129636+00:00",
   "evidence": {
     "source": "live Grok Bot provider UI readback",
     "artifact": "automation/grok/provider-readback-2026-09-27.json",
@@ -12,7 +12,8 @@
     "protectedRoutineCount": 8,
     "allProtectedEnabled": true,
     "allProtectedClockMatch": true,
-    "openPostReleaseWatchDisabled": true,
-    "promptBodyParityClaimed": false
+    "openPostReleaseWatchDisabled": false,
+    "promptBodyParityClaimed": false,
+    "openPostReleaseWatchAbsent": true
   }
 }

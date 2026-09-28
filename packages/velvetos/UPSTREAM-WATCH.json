@@ -425,6 +425,16 @@
       "autoUpgrade": false
     },
     {
+      "repo": "FullControlXYZ/fullcontrol",
+      "kind": "fabrication-upstream",
+      "integration": [
+        ".agents/skills/gcode/references/slicer-backends.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
       "repo": "git/git",
       "kind": "runtime-toolchain",
       "integration": [
@@ -917,6 +927,16 @@
       "kind": "embedded-provenance",
       "integration": [
         "packages/vfgraft/ORIGIN.md"
+      ],
+      "tracking": "default-branch-head-and-release-if-present",
+      "updatePolicy": "latest-compatible",
+      "autoUpgrade": false
+    },
+    {
+      "repo": "Ultimaker/CuraEngine",
+      "kind": "slicer-runtime-source",
+      "integration": [
+        ".agents/skills/gcode/references/slicer-backends.md"
       ],
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",
