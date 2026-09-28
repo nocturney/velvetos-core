@@ -736,7 +736,7 @@
       "repo": "OpenMOSS/MOSS-TTS-Nano",
       "kind": "runtime-source",
       "integration": [
-        "%USERPROFILE%/.velvetos/deps/MOSS-TTS-Nano"
+        "%VELVETOS_RUNTIME_ROOT%/deps/MOSS-TTS-Nano"
       ],
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",
@@ -913,7 +913,7 @@
       "kind": "runtime-source",
       "integration": [
         "packages/vfmem/cognee.json",
-        "%USERPROFILE%/.velvetos/cognee-venv"
+        "%VELVETOS_RUNTIME_ROOT%/Cognee/cognee-venv"
       ],
       "tracking": "default-branch-head-and-release-if-present",
       "updatePolicy": "latest-compatible",

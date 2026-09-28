@@ -48,6 +48,13 @@ def index_contract(cfg: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+WINDOWS_RUNTIME_ROOT_MISSING = (
+    "VELVETOS_RUNTIME_ROOT is not set; on the Windows host the Cognee runtime lives only under "
+    "%VELVETOS_RUNTIME_ROOT%\\Cognee (packages/velvetos/WINDOWS-PATH-CONTRACT.md). "
+    "The legacy ~/.velvetos fallback is closed on Windows; set the machine variable or VFMEM_COGNEE_ROOT."
+)
+
+
 def runtime_root(cfg: dict[str, Any]) -> Path:
     override = os.environ.get("VFMEM_COGNEE_ROOT")
     if override:
@@ -55,6 +62,9 @@ def runtime_root(cfg: dict[str, Any]) -> Path:
     velvet_runtime = os.environ.get("VELVETOS_RUNTIME_ROOT")
     if velvet_runtime:
         return Path(velvet_runtime).expanduser() / "Cognee" / "cognee"
+    if os.name == "nt":
+        # Windows path contract: the user-profile fallback is closed on the Windows host.
+        raise RuntimeError(WINDOWS_RUNTIME_ROOT_MISSING)
     return Path(cfg["runtimeRoot"]).expanduser()
 
 
@@ -506,8 +516,8 @@ def parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     cfg = load_config()
-    root = runtime_root(cfg)
     try:
+        root = runtime_root(cfg)
         if args.cmd == "doctor":
             result = doctor(cfg, root)
             return emit(result, 0 if result["status"] == "PASS" else 2)

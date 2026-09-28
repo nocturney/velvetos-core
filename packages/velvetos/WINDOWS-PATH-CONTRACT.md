@@ -25,7 +25,7 @@ These variables are machine-scoped on the office Windows host so boot-time SYSTE
 - generated exports, handoffs and deliverables live under `D:\Velvet\Artifacts`;
 - operational logs live under `D:\Velvet\Logs`;
 - disposable project caches live under `D:\Velvet\Cache`;
-- Velvet-specific temporary files live under `D:\Velvet\Tmp`; Edge/Speech/Manim bootstrap scratch and smoke output must resolve through `VELVET_ROOT\Tmp` after migration, with the Windows temp directory allowed only as a legacy fallback;
+- Velvet-specific temporary files live under `D:\Velvet\Tmp`; Edge/Speech/Manim bootstrap scratch and smoke output resolve through `VELVET_ROOT\Tmp`, and the bootstraps stop when `VELVET_ROOT` is missing instead of falling back to the Windows temp directory;
 - shared portable tooling lives under `D:\Velvet\Tools`;
 - long-lived local services that are not repositories live under `D:\Velvet\Services` (for example OpenPost staging);
 - migration evidence and rollback manifests live under `D:\Velvet\Migration`;
@@ -41,7 +41,7 @@ On the Windows host, every agent (ChatGPT, Codex, Grok Bot, Cursor, Gemini, Perp
 - If a tool defaults to the Desktop or to C:, override it to the matching `D:\Velvet` path (for example `D:\Velvet\Workspaces`, `D:\Velvet\Artifacts` or `D:\Velvet\Tmp`).
 - If D: is unavailable, stop and report it; never fall back to the Desktop.
 
-The legacy `%USERPROFILE%\.velvetos` fallback is being retired on this host: the Cognee runtime was consolidated to D: on 2026-09-28.
+The legacy `%USERPROFILE%\.velvetos` and `%USERPROFILE%\velvetos-core` fallbacks are closed on this host since 2026-09-28 (the Cognee runtime was consolidated to D: the same day); see the compatibility rule below.
 
 ## Profile-bound state that stays on C:
 
@@ -51,9 +51,13 @@ Installed applications remain in their installer-supported locations unless thei
 
 ## Compatibility rule
 
-Windows bootstraps must prefer the `VELVETOS_*` variables. During migration only, they may fall back to the legacy `%USERPROFILE%\velvetos-core` and `%USERPROFILE%\.velvetos` locations when the variables are absent.
+On the Windows host, VelvetOS code resolves repository, runtime, state and scratch locations only through `VELVET_ROOT` and the `VELVETOS_*` machine variables. The legacy `%USERPROFILE%\velvetos-core` and `%USERPROFILE%\.velvetos` fallbacks are closed (fail closed): when a variable is missing, the tool stops with a clear error that names the variable instead of falling back to C:.
 
-The fallback is a rollback/commissioning safety net, not the target architecture. New code must not add Chris-specific absolute paths. New assistant/dev work must not create project clones, worktrees, review folders, patch staging, generated artifacts, or task scratch directly under `%USERPROFILE%`; derive those locations from `VELVET_ROOT` and use the ownership map above.
+This covers the Windows bootstraps (`scripts/bootstrap-*-windows.ps1`), the Cognee adapter and runtime updater (`packages/vfmem/scripts/vf_cognee.py`, `packages/vfmem/scripts/vf_cognee_runtime.py`) and the `scripts/vfmem.py` Cognee interpreter lookup. Explicit process-scoped overrides (`VFMEM_COGNEE_ROOT`, `VFMEM_COGNEE_HOME`, `VFMEM_COGNEE_LIVE_VENV`, `VFMEM_COGNEE_PYTHON`) still take precedence and point at D: on this host. `scripts/check-windows-path-contract.py` guards this rule.
+
+Mac hosts are out of scope: `sderot-mac`, `scripts/bootstrap-hyperframes-host-macos.sh` and the macOS entries in `packages/vfmcp/RENDER-HOSTS.json` keep using `~/.velvetos` unchanged.
+
+New code must not add Chris-specific absolute paths. New assistant/dev work must not create project clones, worktrees, review folders, patch staging, generated artifacts, or task scratch directly under `%USERPROFILE%`; derive those locations from `VELVET_ROOT` and use the ownership map above.
 
 ## Cutover rule
 

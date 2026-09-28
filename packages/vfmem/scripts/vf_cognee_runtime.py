@@ -30,6 +30,13 @@ def cfg() -> dict[str, Any]:
     return json.loads(CFG_PATH.read_text(encoding="utf-8"))
 
 
+WINDOWS_RUNTIME_ROOT_MISSING = (
+    "VELVETOS_RUNTIME_ROOT is not set; on the Windows host the Cognee runtime lives only under "
+    "%VELVETOS_RUNTIME_ROOT%\\Cognee (packages/velvetos/WINDOWS-PATH-CONTRACT.md). "
+    "The legacy ~/.velvetos fallback is closed on Windows; set the machine variable or VFMEM_COGNEE_HOME."
+)
+
+
 def home() -> Path:
     override = os.environ.get("VFMEM_COGNEE_HOME")
     if override:
@@ -37,15 +44,20 @@ def home() -> Path:
     runtime = os.environ.get("VELVETOS_RUNTIME_ROOT")
     if runtime:
         return (Path(runtime).expanduser() / "Cognee").resolve()
+    if os.name == "nt":
+        # Windows path contract: the user-profile fallback is closed on the Windows host.
+        raise RuntimeError(WINDOWS_RUNTIME_ROOT_MISSING)
     return Path("~/.velvetos").expanduser().resolve()
 
 
 def live_venv() -> Path:
-    return Path(os.environ.get("VFMEM_COGNEE_LIVE_VENV", str(home() / "cognee-venv"))).expanduser().resolve()
+    override = os.environ.get("VFMEM_COGNEE_LIVE_VENV")
+    return Path(override if override is not None else str(home() / "cognee-venv")).expanduser().resolve()
 
 
 def runtime_root() -> Path:
-    return Path(os.environ.get("VFMEM_COGNEE_ROOT", str(home() / "cognee"))).expanduser().resolve()
+    override = os.environ.get("VFMEM_COGNEE_ROOT")
+    return Path(override if override is not None else str(home() / "cognee")).expanduser().resolve()
 
 
 def python_in(venv: Path) -> Path:

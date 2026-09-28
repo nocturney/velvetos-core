@@ -1,0 +1,21 @@
+---
+description: 'Windows host paths. Default working path is D:\Velvet (VELVET_ROOT) per the Windows path contract; never the Desktop, never new VelvetOS files on C:.'
+globs: ""
+alwaysApply: true
+---
+
+# Windows host paths · always on
+
+Authority: `packages/velvetos/WINDOWS-PATH-CONTRACT.md` ("Default working path and forbidden locations" + "Compatibility rule").
+
+On the Windows host:
+
+- Work from `D:\Velvet` (`VELVET_ROOT`). Put each output in its lane: clones in `D:\Velvet\Repos`, worktrees/scratch in `D:\Velvet\Workspaces`, exports/handoffs in `D:\Velvet\Artifacts`, temp files in `D:\Velvet\Tmp`, logs in `D:\Velvet\Logs`.
+- Never use the Desktop (`%USERPROFILE%\Desktop`, including a OneDrive Desktop) for clones, scratch, downloads or output.
+- Never create new VelvetOS files on C:. Profile-bound state listed in the contract stays where it is.
+- Resolve paths through `VELVET_ROOT`, `VELVETOS_REPO_ROOT`, `VELVETOS_RUNTIME_ROOT` and `VELVETOS_STATE_ROOT`. The legacy `%USERPROFILE%\.velvetos` and `%USERPROFILE%\velvetos-core` fallbacks are closed: if a variable is missing, stop with a clear error; do not fall back to C:.
+- If D: is unavailable, stop and report it.
+
+Mac hosts (`sderot-mac`) keep `~/.velvetos`; this rule covers the Windows host only.
+
+Sensor: `python3 scripts/check-windows-path-contract.py`.

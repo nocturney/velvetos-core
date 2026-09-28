@@ -1,6 +1,6 @@
 # VelvetOS — Velvet Factory: הגדרה ב-Windows (בלי `gh`)
 
-> נתיבי ה-host הנוכחיים מוגדרים ב-`packages/velvetos/WINDOWS-PATH-CONTRACT.md`. דוגמאות legacy במסמך הזה עשויות עדיין להראות clone תחת פרופיל המשתמש; deployments חדשים משתמשים ב-`VELVETOS_REPO_ROOT` וב-`D:\Velvet`.
+> נתיבי ה-host מוגדרים ב-`packages/velvetos/WINDOWS-PATH-CONTRACT.md`. ב-Windows כל clone יושב תחת `D:\Velvet\Repos` (ל-velvetos-core: `VELVETOS_REPO_ROOT`), לא בפרופיל המשתמש, לא בשולחן העבודה ולא ב-C:. לכן כל דרך למטה מתחילה ב-`cd` לתיקייה הזו.
 
 אם `git push` מחזיר **Repository not found** — זו כמעט תמיד **הרשאה / התחברות**, לא שגיאת כתיב.
 
@@ -33,14 +33,15 @@
 
 ```bash
 # 1. שכפל את ריפו המופע (אם עדיין ריק — העתק scaffold; אם כבר יש תוכן — pull ואז merge)
+cd /d/Velvet/Repos
 git clone https://github.com/nocturney/velvetos-velvet-factory.git
 cd velvetos-velvet-factory
 
 # 2. העתק את כל הקבצים מה-scaffold (לאחר חילוץ ה-ZIP)
-#    לדוגמה אם חילצת ל-C:\Users\YOU\Downloads\velvet-factory:
-cp -r /c/Users/YOU/Downloads/velvet-factory/* .
-cp -r /c/Users/YOU/Downloads/velvet-factory/.cursor .
-cp -r /c/Users/YOU/Downloads/velvet-factory/.gitignore .
+#    לדוגמה אם חילצת ל-D:\Velvet\Tmp\velvet-factory:
+cp -r /d/Velvet/Tmp/velvet-factory/* .
+cp -r /d/Velvet/Tmp/velvet-factory/.cursor .
+cp -r /d/Velvet/Tmp/velvet-factory/.gitignore .
 
 # 3. commit + push
 git add -A
@@ -58,6 +59,7 @@ git push -u origin main
 ## דרך 2 — PowerShell (בלי Bash)
 
 ```powershell
+Set-Location D:\Velvet\Repos
 git clone https://github.com/nocturney/velvetos-velvet-factory.git
 cd velvetos-velvet-factory
 
@@ -78,7 +80,7 @@ git push -u origin main
 **Git Bash בלבד** (הסקריפט bash):
 
 ```bash
-cd velvetos-core
+cd "$VELVETOS_REPO_ROOT"    # D:\Velvet\Repos\velvetos-core
 git checkout main
 git pull
 PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-factory
@@ -89,7 +91,7 @@ PUSH=1 ./scripts/publish-instance.sh velvet-factory nocturney/velvetos-velvet-fa
 ## אחרי שה-push הצליח
 
 ```bash
-cd velvetos-velvet-factory
+cd /d/Velvet/Repos/velvetos-velvet-factory
 ./scripts/attach-core.sh    # Git Bash — מושך את velvetos-core ל-vendor/
 ```
 
@@ -100,7 +102,7 @@ cd velvetos-velvet-factory
 ## עדכון remote ב-core המקומי (אם עדיין שם ישן)
 
 ```bash
-cd velvetos-core
+cd "$VELVETOS_REPO_ROOT"
 git remote set-url origin https://github.com/nocturney/velvetos-core.git
 git remote -v
 ```

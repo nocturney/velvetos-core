@@ -5,18 +5,20 @@ param(
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
-function Resolve-VelvetPath([string]$Name, [string]$Fallback) {
+function Resolve-VelvetPath([string]$Name) {
+    # Windows path contract: fail closed when a machine variable is missing (no user-profile fallback).
     $value = [Environment]::GetEnvironmentVariable($Name)
-    if ([string]::IsNullOrWhiteSpace($value)) { return $Fallback }
+    if ([string]::IsNullOrWhiteSpace($value)) {
+        throw "FAIL $Name is not set. On the Windows host VelvetOS paths resolve only through the machine variables in packages/velvetos/WINDOWS-PATH-CONTRACT.md (VELVET_ROOT=D:\Velvet, VELVETOS_REPO_ROOT, VELVETOS_RUNTIME_ROOT, VELVETOS_STATE_ROOT). The legacy user-profile fallback is closed; set $Name machine-wide, open a new shell and rerun."
+    }
     return [Environment]::ExpandEnvironmentVariables($value)
 }
 
-$LegacyRoot = Join-Path $env:USERPROFILE ".velvetos"
 $HostId = "sderot-windows"
-$Repo = Resolve-VelvetPath "VELVETOS_REPO_ROOT" (Join-Path $env:USERPROFILE "velvetos-core")
-$StateDir = Resolve-VelvetPath "VELVETOS_STATE_ROOT" $LegacyRoot
-$VelvetRoot = Resolve-VelvetPath "VELVET_ROOT" ""
-$TmpRoot = if ([string]::IsNullOrWhiteSpace($VelvetRoot)) { [IO.Path]::GetTempPath() } else { Join-Path $VelvetRoot "Tmp" }
+$Repo = Resolve-VelvetPath "VELVETOS_REPO_ROOT"
+$StateDir = Resolve-VelvetPath "VELVETOS_STATE_ROOT"
+$VelvetRoot = Resolve-VelvetPath "VELVET_ROOT"
+$TmpRoot = Join-Path $VelvetRoot "Tmp"
 New-Item -ItemType Directory -Force -Path $TmpRoot | Out-Null
 $SpeechState = Join-Path $StateDir "speech-host.json"
 $EdgeState = Join-Path $StateDir "edge-host.json"
