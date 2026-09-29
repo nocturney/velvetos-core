@@ -17,7 +17,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v6.4.4 → v6.5.7
    שינוי: head, release
    שימוש אצלנו: .cursor/skills/vf-fcc-offload/SKILL.md
-   למה: קפיצת release (v6.4.4→v6.5.7). דפוסי skill/agent — לבדוק לפני הטמעה; אין npx על Cloud.
+   למה: קפיצת release (v6.4.4→v6.5.7). דפוסי skill/agent - לבדוק לפני הטמעה; אין npx על Cloud.
    ראיות: baseline→remote: 37c77262115a → e40eb4062b4b · baselineRelease→latestRelease: v6.4.4 → v6.5.7 · changeKinds: head, release; kind=skill-pattern; newDetection=True · compare: https://github.com/Alishahryar1/free-claude-code/compare/37c77262115a02d3ef97763b7e7a4e0dd011183e...e40eb4062b4b36e63166888b678f78dd45c4e3f4
    מקור: https://github.com/Alishahryar1/free-claude-code
 
@@ -35,7 +35,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 33375500bc → 8a1541c4a3
    שינוי: head
    שימוש אצלנו: packages/vfharness/playbooks/skill-authoring.md
-   למה: HEAD זז (frontend-design/skill-creator). כבר מכוסה חלקית ב־vfbriefux/vfharness — review לדפוס חדש בלבד.
+   למה: HEAD זז (frontend-design/skill-creator). כבר מכוסה חלקית ב־vfbriefux/vfharness - review לדפוס חדש בלבד.
    ראיות: baseline→remote: 33375500bcea → 8a1541c4a3ff · baselineRelease→latestRelease: None → None · changeKinds: head; kind=skill-pattern; newDetection=True · compare: https://github.com/anthropics/skills/compare/33375500bcea98d610eb30ce10ac4e59b89c390d...8a1541c4a3ffa5a20a5a91de0dcf3f0bab1d1ef4
    מקור: https://github.com/anthropics/skills
 
@@ -44,7 +44,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 4fee2fcc01 → c18ba4a0d4
    שינוי: head
    שימוש אצלנו: packages/vfdsh/ORIGIN.md · packages/vfdsh/catalog.json
-   למה: dsh plugin list — provenance only.
+   למה: dsh plugin list - provenance only.
    ראיות: baseline→remote: 4fee2fcc011f → c18ba4a0d4f7 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=embedded-provenance; newDetection=True · compare: https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/compare/4fee2fcc011f8e2d68e35695d6b411c82c7c9a12...c18ba4a0d4f7bc8334a460b07c08e09a56f6868a
    מקור: https://github.com/awesome-dsh-plugin/awesome-dsh-plugin
 
@@ -53,7 +53,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v02.08.02.61 → v02.08.02.61
    שינוי: head
    שימוש אצלנו: production slicer/studio
-   למה: remoteHead זז; latestRelease נשאר v02.08.02.61. סטודיו מדפסת — לא HQ; המתנה ל־release יציב + רצפה.
+   למה: remoteHead זז; latestRelease נשאר v02.08.02.61. סטודיו מדפסת - לא HQ; המתנה ל־release יציב + רצפה.
    ראיות: baseline→remote: f977235e6d73 → da8b44ee34dd · baselineRelease→latestRelease: v02.08.02.61 → v02.08.02.61 · changeKinds: head; kind=runtime-source; newDetection=True · compare: https://github.com/bambulab/BambuStudio/compare/f977235e6d736c4c0b650520ac5a5b72cbfe9244...da8b44ee34dd349f2ae0df3f1cbae366df482354
    מקור: https://github.com/bambulab/BambuStudio
 
@@ -62,7 +62,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 35a2d9dfd0 → 75e20e7560
    שינוי: head
    שימוש אצלנו: Blender host/runtime
-   למה: 81 commits על main בלי release. Blender host — לא על commit לא־משוחרר; ממתינים לבילד יציב.
+   למה: 81 commits על main בלי release. Blender host - לא על commit לא־משוחרר; ממתינים לבילד יציב.
    ראיות: baseline→remote: 35a2d9dfd0ad → 75e20e7560db · baselineRelease→latestRelease: None → None · changeKinds: head; kind=cad-runtime-source; newDetection=False · compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...75e20e7560db8c6691af1d43f7ff084abb44459a
    מקור: https://github.com/blender/blender
 
@@ -71,7 +71,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v0.5.6 → v0.5.6
    שינוי: head
    שימוש אצלנו: packages/vfom/SPEECH-BACKEND.json · scripts/bootstrap-speech-host-windows.ps1
-   למה: release זהה; HEAD זז — לא במסלול מדיה פעיל.
+   למה: release זהה; HEAD זז - לא במסלול מדיה פעיל.
    ראיות: baseline→remote: 08a1592e3cb9 → 0834c8be2846 · baselineRelease→latestRelease: v0.5.6 → v0.5.6 · changeKinds: head; kind=runtime-source; newDetection=True · compare: https://github.com/debpalash/VoiceStudio/compare/08a1592e3cb9b4c36beef5fa3185ec2313bb1fea...0834c8be28460fc4e0518bdb31eb57c494b253b2
    מקור: https://github.com/debpalash/VoiceStudio
 
@@ -89,7 +89,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v1.66.3 → v1.66.6
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.
+   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.
    ראיות: baseline→remote: 4ceda5d2b7b6 → fc51a401aec6 · baselineRelease→latestRelease: v1.66.3 → v1.66.6 · changeKinds: head, release; kind=catalog-source; newDetection=True · compare: https://github.com/dsh-market/dsh-market/compare/4ceda5d2b7b666a9093e97bc5ae06bcaf383f154...fc51a401aec6bd7d3c9a635f9b58837bde6228e9
    מקור: https://github.com/dsh-market/dsh-market
 
@@ -98,7 +98,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v0.7.0 → v0.7.4
    שינוי: head, release
    שימוש אצלנו: packages/vfprod/TEXT-TO-CAD.md
-   למה: v0.7.4 אחרי v0.7.0 שאומצה; שינויי skills/branding/viewer. נדרש compatibility smoke לפני ack — אין auto-upgrade.
+   למה: v0.7.4 אחרי v0.7.0 שאומצה; שינויי skills/branding/viewer. נדרש compatibility smoke לפני ack - אין auto-upgrade.
    ראיות: baseline→remote: fafa7b057d8f → 567c213788b9 · baselineRelease→latestRelease: v0.7.0 → v0.7.4 · changeKinds: head, release; kind=runtime-source; newDetection=False · compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...567c213788b9eeb3847d58d390b2d001b64bfb70
    מקור: https://github.com/earthtojake/text-to-cad
 
@@ -107,7 +107,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: d62aef2e50 → 18ee27e67b
    שינוי: head
    שימוש אצלנו: scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh · scripts/vf_hyperframes.py
-   למה: main HEAD בלי release pin — toolchain רצפה/מדיה; לא daily bump.
+   למה: main HEAD בלי release pin - toolchain רצפה/מדיה; לא daily bump.
    ראיות: baseline→remote: d62aef2e5043 → 18ee27e67b1d · baselineRelease→latestRelease: None → None · changeKinds: head; kind=runtime-toolchain; newDetection=True · compare: https://github.com/FFmpeg/FFmpeg/compare/d62aef2e50434cc31eccf236ae67d864becb7068...18ee27e67b1dd68d840614fbb97106abda41b3f8
    מקור: https://github.com/FFmpeg/FFmpeg
 
@@ -125,7 +125,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 0f8e75abeb → a018953688
    שינוי: head
    שימוש אצלנו: scripts/bootstrap-edge-host-windows.ps1
-   למה: main HEAD — לא pin יומי.
+   למה: main HEAD - לא pin יומי.
    ראיות: baseline→remote: 0f8e75abebff → a018953688f1 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=runtime-toolchain; newDetection=True · compare: https://github.com/git/git/compare/0f8e75abebff0877cae681a3d5ff31ac47f54220...a018953688f1b10bddf91bff8747068f5f4746a4
    מקור: https://github.com/git/git
 
@@ -134,7 +134,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v1.7.40 → v1.7.45
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.
+   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.
    ראיות: baseline→remote: c520d9bae873 → 5302a33bbf6f · baselineRelease→latestRelease: v1.7.40 → v1.7.45 · changeKinds: head, release; kind=catalog-source; newDetection=True · compare: https://github.com/Han-1413141/dsh-cost-meter/compare/c520d9bae873836bfafb1e672dca5042b50f05f9...5302a33bbf6fb59455e25451112bf2ef03367225
    מקור: https://github.com/Han-1413141/dsh-cost-meter
 
@@ -152,7 +152,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v0.8.80 → v0.8.93
    שינוי: head, release
    שימוש אצלנו: scripts/vf_hyperframes.py
-   למה: v0.8.93 שיפורי preview performance. HyperFrames Mac bootstrap — wait ל־smoke לפני ack.
+   למה: v0.8.93 שיפורי preview performance. HyperFrames Mac bootstrap - wait ל־smoke לפני ack.
    ראיות: baseline→remote: b165b64eda84 → d2851aa304e1 · baselineRelease→latestRelease: v0.8.80 → v0.8.93 · changeKinds: head, release; kind=runtime-source; newDetection=True · compare: https://github.com/heygen-com/hyperframes/compare/b165b64eda845f46f9b622b96e4545bf704d0950...d2851aa304e15b8b4a6cdc8ba6dd0a6ddaf365cf
    מקור: https://github.com/heygen-com/hyperframes
 
@@ -179,7 +179,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: fe7eb0ccdd → a345264898
    שינוי: head
    שימוש אצלנו: .cursor/skills/vf-best-skills/SKILL.md · packages/vfresearch/BEST-SKILLS.md
-   למה: data: 2026-09-29 — נצרך במעבר Best Skills של הריצה; אין אימוץ runtime.
+   למה: data: 2026-09-29 - נצרך במעבר Best Skills של הריצה; אין אימוץ runtime.
    ראיות: baseline→remote: fe7eb0ccddb1 → a3452648988c · baselineRelease→latestRelease: None → None · changeKinds: head; kind=skill-index; newDetection=True · compare: https://github.com/LinklyAI/best-skills/compare/fe7eb0ccddb1c71a3cf2459efe48cbb9ccc0793d...a3452648988c7446a29384998cb967c7e24bc094
    מקור: https://github.com/LinklyAI/best-skills
 
@@ -188,7 +188,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v3.26.5 → v3.26.5
    שינוי: head
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: release נשאר v3.26.5; commits פרסום — catalog בלבד.
+   למה: release נשאר v3.26.5; commits פרסום - catalog בלבד.
    ראיות: baseline→remote: ffeee3e32de1 → 333468c72bf9 · baselineRelease→latestRelease: v3.26.5 → v3.26.5 · changeKinds: head; kind=catalog-source; newDetection=False · compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...333468c72bf9630ec5dd60b169b89e1f48f39b53
    מקור: https://github.com/liustack/modlens
 
@@ -197,7 +197,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v0.21.0 → v0.21.0
    שינוי: head
    שימוש אצלנו: scripts/bootstrap-manim-host-windows.ps1
-   למה: HEAD זז; v0.21.0 — לא במסלול brief הנוכחי.
+   למה: HEAD זז; v0.21.0 - לא במסלול brief הנוכחי.
    ראיות: baseline→remote: 16c4a68b6d15 → 22aa85f47c9d · baselineRelease→latestRelease: v0.21.0 → v0.21.0 · changeKinds: head; kind=runtime-source; newDetection=True · compare: https://github.com/ManimCommunity/manim/compare/16c4a68b6d151e2024d0b1e1b80bfb7725c9f5b2...22aa85f47c9dc1b32a4e27bda2dd68320f9cd69c
    מקור: https://github.com/ManimCommunity/manim
 
@@ -206,7 +206,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v1.2.3 → v1.2.3
    שינוי: head
    שימוש אצלנו: packages/vfharness/playbooks/engineering-delivery-chain.md
-   למה: HEAD זז; v1.2.3 נשאר. grill/handoff/triage כבר מוטמעים — review רק לפער מדיד.
+   למה: HEAD זז; v1.2.3 נשאר. grill/handoff/triage כבר מוטמעים - review רק לפער מדיד.
    ראיות: baseline→remote: c55ee46073ed → d81f3a183412 · baselineRelease→latestRelease: v1.2.3 → v1.2.3 · changeKinds: head; kind=skill-pattern; newDetection=True · compare: https://github.com/mattpocock/skills/compare/c55ee46073ed923f86ce59a5eb3b6d895095d1b7...d81f3a183412e71a5b1e84ca21bc1a35eea03a60
    מקור: https://github.com/mattpocock/skills
 
@@ -224,7 +224,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 053ddbbf39 → 765be42358
    שינוי: head
    שימוש אצלנו: %USERPROFILE%/.agency-agents
-   למה: agency agents repo — no install.
+   למה: agency agents repo - no install.
    ראיות: baseline→remote: 053ddbbf392a → 765be4235810 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=agent-repo; newDetection=True · compare: https://github.com/msitarzewski/agency-agents/compare/053ddbbf392a1688fc7043d81529f47ef2cf86c8...765be42358100bf89d2faa567668a94c602f9a26
    מקור: https://github.com/msitarzewski/agency-agents
 
@@ -233,7 +233,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v3.25.0 → v3.25.0
    שינוי: head
    שימוש אצלנו: .cursor/skills/vf-last30/SKILL.md
-   למה: HEAD זז; v3.25.0 נשאר. vf-last30 כבר מוטמע — review לדפוס חדש בלבד.
+   למה: HEAD זז; v3.25.0 נשאר. vf-last30 כבר מוטמע - review לדפוס חדש בלבד.
    ראיות: baseline→remote: 084662b501fb → 268fb870ffea · baselineRelease→latestRelease: v3.25.0 → v3.25.0 · changeKinds: head; kind=skill-pattern; newDetection=True · compare: https://github.com/mvanhorn/last30days-skill/compare/084662b501fb0dba95bd55eff0c258d35e0dc499...268fb870ffeacf43b6b9d69ee86e5c9515f59a51
    מקור: https://github.com/mvanhorn/last30days-skill
 
@@ -242,7 +242,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 078d6d544e → 6746e4b0a1
    שינוי: head
    שימוש אצלנו: packages/vfagents/playbooks/reflection-before-send.md
-   למה: agent patterns — no second runtime.
+   למה: agent patterns - no second runtime.
    ראיות: baseline→remote: 078d6d544e15 → 6746e4b0a168 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=agent-pattern; newDetection=True · compare: https://github.com/NirDiamant/GenAI_Agents/compare/078d6d544e15c0e758c2533b422fd13ed2d15593...6746e4b0a168908f12c57ce5ab0d5d91c7a06ed8
    מקור: https://github.com/NirDiamant/GenAI_Agents
 
@@ -260,7 +260,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v0.2.0 → v0.2.2
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.
+   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.
    ראיות: baseline→remote: 3016f67c0a67 → 6a649fe930ae · baselineRelease→latestRelease: v0.2.0 → v0.2.2 · changeKinds: head, release; kind=catalog-source; newDetection=True · compare: https://github.com/omdsh-dev/dsh-data-agent/compare/3016f67c0a671c34bb1a7314ac11dfd0e9368546...6a649fe930aeab4247d3e8b936b6bf393aa71e8c
    מקור: https://github.com/omdsh-dev/dsh-data-agent
 
@@ -269,7 +269,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v1.21.0 → v1.21.0
    שינוי: head
    שימוש אצלנו: packages/vfharness/playbooks/oma-patterns.md
-   למה: multi-agent — LOCK.
+   למה: multi-agent - LOCK.
    ראיות: baseline→remote: ab349e7ad039 → 4e293a21a8bc · baselineRelease→latestRelease: v1.21.0 → v1.21.0 · changeKinds: head; kind=agent-pattern; newDetection=True · compare: https://github.com/open-multi-agent/open-multi-agent/compare/ab349e7ad03900455016b798c78464edf98cc94d...4e293a21a8bceac114e395aebc0306b5730ab2d4
    מקור: https://github.com/open-multi-agent/open-multi-agent
 
@@ -278,7 +278,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: openscad-2021.01 → openscad-2021.01
    שינוי: head
    שימוש אצלנו: CAD/3D toolchain upstream
-   למה: release נשאר openscad-2021.01; commits workflow/submodule — אין שינוי מנוע.
+   למה: release נשאר openscad-2021.01; commits workflow/submodule - אין שינוי מנוע.
    ראיות: baseline→remote: eecb92a6b6ef → b6249faed7bd · baselineRelease→latestRelease: openscad-2021.01 → openscad-2021.01 · changeKinds: head; kind=cad-runtime-source; newDetection=False · compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...b6249faed7bd9431c6c569d08784e8ac5be19af9
    מקור: https://github.com/openscad/openscad
 
@@ -287,7 +287,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v2.4.2 → v2.4.2
    שינוי: head
    שימוש אצלנו: production slicer
-   למה: remoteHead זז מעל baseline בעוד latestRelease נשאר v2.4.2. סלייסר רצפה — לא מעדכנים על commit לא־משוחרר; ממתינים ל־release + smoke.
+   למה: remoteHead זז מעל baseline בעוד latestRelease נשאר v2.4.2. סלייסר רצפה - לא מעדכנים על commit לא־משוחרר; ממתינים ל־release + smoke.
    ראיות: baseline→remote: 4964f49765f7 → 789f848694b9 · baselineRelease→latestRelease: v2.4.2 → v2.4.2 · changeKinds: head; kind=runtime-source; newDetection=True · compare: https://github.com/OrcaSlicer/OrcaSlicer/compare/4964f49765f7963b9ee4b016fe5a3bc0581e1911...789f848694b955d293ca6b277d1c8046aa6f7436
    מקור: https://github.com/OrcaSlicer/OrcaSlicer
 
@@ -296,7 +296,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: baec76438e → 596d92387a
    שינוי: head
    שימוש אצלנו: scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-manim-host-windows.ps1
-   למה: main HEAD זז בלי pin release; runtime toolchain — לא מעדכנים יומיים בלי pin/evidence.
+   למה: main HEAD זז בלי pin release; runtime toolchain - לא מעדכנים יומיים בלי pin/evidence.
    ראיות: baseline→remote: baec76438e32 → 596d92387ab0 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=runtime-toolchain; newDetection=False · compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...596d92387ab0930f88cfa9da595135abeb26595e
    מקור: https://github.com/python/cpython
 
@@ -314,7 +314,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v4.0.529 → v4.0.530
    שינוי: head, release
    שימוש אצלנו: packages/vfom/VIDEO-TOOLCHAIN.json
-   למה: v4.0.530 אחרי v4.0.529 — embedded provenance בלבד; המתנה אלא אם vfom/media דורש.
+   למה: v4.0.530 אחרי v4.0.529 - embedded provenance בלבד; המתנה אלא אם vfom/media דורש.
    ראיות: baseline→remote: 1beb32cb9e3e → 2d979da55f02 · baselineRelease→latestRelease: v4.0.529 → v4.0.530 · changeKinds: head, release; kind=embedded-provenance; newDetection=False · compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...2d979da55f02cb89ac28e4b89b07b6eea4d115e6
    מקור: https://github.com/remotion-dev/remotion
 
@@ -332,7 +332,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v2.4.0 → v2.4.0
    שינוי: head
    שימוש אצלנו: Snapmaker slicer upstream
-   למה: מזלג Snapmaker; remoteHead זז בלי release חדש. אין מסלול Snapmaker פעיל אצלנו — המתנה / לא אימוץ.
+   למה: מזלג Snapmaker; remoteHead זז בלי release חדש. אין מסלול Snapmaker פעיל אצלנו - המתנה / לא אימוץ.
    ראיות: baseline→remote: da53bc5ffe47 → 6effafc0d64a · baselineRelease→latestRelease: v2.4.0 → v2.4.0 · changeKinds: head; kind=slicer-runtime-source; newDetection=True · compare: https://github.com/Snapmaker/OrcaSlicer/compare/da53bc5ffe47d7837ccdfde5f59a5ba1e9ec35f1...6effafc0d64a3f25c833390026cf9ca18a6e669c
    מקור: https://github.com/Snapmaker/OrcaSlicer
 
@@ -368,7 +368,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 80692e5ad0 → d34c115155
    שינוי: head
    שימוש אצלנו: packages/vfgraft/ORIGIN.md
-   למה: embedded provenance; HEAD זז — vfgraft כבר על דפוסים; אין שדרוג vendor.
+   למה: embedded provenance; HEAD זז - vfgraft כבר על דפוסים; אין שדרוג vendor.
    ראיות: baseline→remote: 80692e5ad0bc → d34c115155f4 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=embedded-provenance; newDetection=True · compare: https://github.com/trailhq/Graft/compare/80692e5ad0bc8e8f7e1edea648247d90b9f76820...d34c115155f4d3cd0debe3f60a7edb3120981bbb
    מקור: https://github.com/trailhq/Graft
 
@@ -377,7 +377,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v0.4.21 → v0.4.22
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.
+   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.
    ראיות: baseline→remote: a09a9d20a8e0 → b20f192e6139 · baselineRelease→latestRelease: v0.4.21 → v0.4.22 · changeKinds: head, release; kind=catalog-source; newDetection=True · compare: https://github.com/volcengine/OpenViking/compare/a09a9d20a8e07d08973aee177802d00e08df29e6...b20f192e61393e10fc9945306edf69fc25a58abe
    מקור: https://github.com/volcengine/OpenViking
 
@@ -386,7 +386,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v4.29.0 → v4.32.0
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.
+   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.
    ראיות: baseline→remote: b7522c70b470 → 6d97c9c09823 · baselineRelease→latestRelease: v4.29.0 → v4.32.0 · changeKinds: head, release; kind=catalog-source; newDetection=True · compare: https://github.com/xmanrui/dsh-im/compare/b7522c70b4707c6879dc6985c20820da65e95cae...6d97c9c09823050c293eef0e740f24dda1499ba3
    מקור: https://github.com/xmanrui/dsh-im
 
@@ -395,7 +395,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v0.3.5 → v0.3.10
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.
+   למה: מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.
    ראיות: baseline→remote: 1f9eb54f2375 → 79e0b4a5786a · baselineRelease→latestRelease: v0.3.5 → v0.3.10 · changeKinds: head, release; kind=catalog-source; newDetection=True · compare: https://github.com/yxqfg/phone-lens/compare/1f9eb54f2375359a66016a30796936c69d4f8a6e...79e0b4a5786a5e0b02022a2673294026c37f44c0
    מקור: https://github.com/yxqfg/phone-lens
 

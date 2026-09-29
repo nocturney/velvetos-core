@@ -26,7 +26,7 @@
     },
     "Alishahryar1/free-claude-code": {
       "verdict": "review",
-      "reasonHe": "קפיצת release (v6.4.4→v6.5.7). דפוסי skill/agent — לבדוק לפני הטמעה; אין npx על Cloud.",
+      "reasonHe": "קפיצת release (v6.4.4→v6.5.7). דפוסי skill/agent - לבדוק לפני הטמעה; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: 37c77262115a → e40eb4062b4b",
         "baselineRelease→latestRelease: v6.4.4 → v6.5.7",
@@ -54,7 +54,7 @@
     },
     "anthropics/skills": {
       "verdict": "review",
-      "reasonHe": "HEAD זז (frontend-design/skill-creator). כבר מכוסה חלקית ב־vfbriefux/vfharness — review לדפוס חדש בלבד.",
+      "reasonHe": "HEAD זז (frontend-design/skill-creator). כבר מכוסה חלקית ב־vfbriefux/vfharness - review לדפוס חדש בלבד.",
       "evidence": [
         "baseline→remote: 33375500bcea → 8a1541c4a3ff",
         "baselineRelease→latestRelease: None → None",
@@ -67,7 +67,7 @@
     },
     "awesome-dsh-plugin/awesome-dsh-plugin": {
       "verdict": "ignore",
-      "reasonHe": "dsh plugin list — provenance only.",
+      "reasonHe": "dsh plugin list - provenance only.",
       "evidence": [
         "baseline→remote: 4fee2fcc011f → c18ba4a0d4f7",
         "baselineRelease→latestRelease: None → None",
@@ -81,7 +81,7 @@
     },
     "bambulab/BambuStudio": {
       "verdict": "wait",
-      "reasonHe": "remoteHead זז; latestRelease נשאר v02.08.02.61. סטודיו מדפסת — לא HQ; המתנה ל־release יציב + רצפה.",
+      "reasonHe": "remoteHead זז; latestRelease נשאר v02.08.02.61. סטודיו מדפסת - לא HQ; המתנה ל־release יציב + רצפה.",
       "evidence": [
         "baseline→remote: f977235e6d73 → da8b44ee34dd",
         "baselineRelease→latestRelease: v02.08.02.61 → v02.08.02.61",
@@ -95,7 +95,7 @@
     },
     "blender/blender": {
       "verdict": "wait",
-      "reasonHe": "81 commits על main בלי release. Blender host — לא על commit לא־משוחרר; ממתינים לבילד יציב.",
+      "reasonHe": "81 commits על main בלי release. Blender host - לא על commit לא־משוחרר; ממתינים לבילד יציב.",
       "evidence": [
         "baseline→remote: 35a2d9dfd0ad → 75e20e7560db",
         "baselineRelease→latestRelease: None → None",
@@ -109,7 +109,7 @@
     },
     "debpalash/VoiceStudio": {
       "verdict": "ignore",
-      "reasonHe": "release זהה; HEAD זז — לא במסלול מדיה פעיל.",
+      "reasonHe": "release זהה; HEAD זז - לא במסלול מדיה פעיל.",
       "evidence": [
         "baseline→remote: 08a1592e3cb9 → 0834c8be2846",
         "baselineRelease→latestRelease: v0.5.6 → v0.5.6",
@@ -137,7 +137,7 @@
     },
     "dsh-market/dsh-market": {
       "verdict": "ignore",
-      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.",
+      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.",
       "evidence": [
         "baseline→remote: 4ceda5d2b7b6 → fc51a401aec6",
         "baselineRelease→latestRelease: v1.66.3 → v1.66.6",
@@ -151,7 +151,7 @@
     },
     "earthtojake/text-to-cad": {
       "verdict": "wait",
-      "reasonHe": "v0.7.4 אחרי v0.7.0 שאומצה; שינויי skills/branding/viewer. נדרש compatibility smoke לפני ack — אין auto-upgrade.",
+      "reasonHe": "v0.7.4 אחרי v0.7.0 שאומצה; שינויי skills/branding/viewer. נדרש compatibility smoke לפני ack - אין auto-upgrade.",
       "evidence": [
         "baseline→remote: fafa7b057d8f → 567c213788b9",
         "baselineRelease→latestRelease: v0.7.0 → v0.7.4",
@@ -165,7 +165,7 @@
     },
     "FFmpeg/FFmpeg": {
       "verdict": "ignore",
-      "reasonHe": "main HEAD בלי release pin — toolchain רצפה/מדיה; לא daily bump.",
+      "reasonHe": "main HEAD בלי release pin - toolchain רצפה/מדיה; לא daily bump.",
       "evidence": [
         "baseline→remote: d62aef2e5043 → 18ee27e67b1d",
         "baselineRelease→latestRelease: None → None",
@@ -193,7 +193,7 @@
     },
     "git/git": {
       "verdict": "ignore",
-      "reasonHe": "main HEAD — לא pin יומי.",
+      "reasonHe": "main HEAD - לא pin יומי.",
       "evidence": [
         "baseline→remote: 0f8e75abebff → a018953688f1",
         "baselineRelease→latestRelease: None → None",
@@ -207,7 +207,7 @@
     },
     "Han-1413141/dsh-cost-meter": {
       "verdict": "ignore",
-      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.",
+      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.",
       "evidence": [
         "baseline→remote: c520d9bae873 → 5302a33bbf6f",
         "baselineRelease→latestRelease: v1.7.40 → v1.7.45",
@@ -235,7 +235,7 @@
     },
     "heygen-com/hyperframes": {
       "verdict": "wait",
-      "reasonHe": "v0.8.93 שיפורי preview performance. HyperFrames Mac bootstrap — wait ל־smoke לפני ack.",
+      "reasonHe": "v0.8.93 שיפורי preview performance. HyperFrames Mac bootstrap - wait ל־smoke לפני ack.",
       "evidence": [
         "baseline→remote: b165b64eda84 → d2851aa304e1",
         "baselineRelease→latestRelease: v0.8.80 → v0.8.93",
@@ -277,7 +277,7 @@
     },
     "LinklyAI/best-skills": {
       "verdict": "review",
-      "reasonHe": "data: 2026-09-29 — נצרך במעבר Best Skills של הריצה; אין אימוץ runtime.",
+      "reasonHe": "data: 2026-09-29 - נצרך במעבר Best Skills של הריצה; אין אימוץ runtime.",
       "evidence": [
         "baseline→remote: fe7eb0ccddb1 → a3452648988c",
         "baselineRelease→latestRelease: None → None",
@@ -291,7 +291,7 @@
     },
     "liustack/modlens": {
       "verdict": "ignore",
-      "reasonHe": "release נשאר v3.26.5; commits פרסום — catalog בלבד.",
+      "reasonHe": "release נשאר v3.26.5; commits פרסום - catalog בלבד.",
       "evidence": [
         "baseline→remote: ffeee3e32de1 → 333468c72bf9",
         "baselineRelease→latestRelease: v3.26.5 → v3.26.5",
@@ -305,7 +305,7 @@
     },
     "ManimCommunity/manim": {
       "verdict": "ignore",
-      "reasonHe": "HEAD זז; v0.21.0 — לא במסלול brief הנוכחי.",
+      "reasonHe": "HEAD זז; v0.21.0 - לא במסלול brief הנוכחי.",
       "evidence": [
         "baseline→remote: 16c4a68b6d15 → 22aa85f47c9d",
         "baselineRelease→latestRelease: v0.21.0 → v0.21.0",
@@ -318,7 +318,7 @@
     },
     "mattpocock/skills": {
       "verdict": "review",
-      "reasonHe": "HEAD זז; v1.2.3 נשאר. grill/handoff/triage כבר מוטמעים — review רק לפער מדיד.",
+      "reasonHe": "HEAD זז; v1.2.3 נשאר. grill/handoff/triage כבר מוטמעים - review רק לפער מדיד.",
       "evidence": [
         "baseline→remote: c55ee46073ed → d81f3a183412",
         "baselineRelease→latestRelease: v1.2.3 → v1.2.3",
@@ -345,7 +345,7 @@
     },
     "msitarzewski/agency-agents": {
       "verdict": "ignore",
-      "reasonHe": "agency agents repo — no install.",
+      "reasonHe": "agency agents repo - no install.",
       "evidence": [
         "baseline→remote: 053ddbbf392a → 765be4235810",
         "baselineRelease→latestRelease: None → None",
@@ -359,7 +359,7 @@
     },
     "mvanhorn/last30days-skill": {
       "verdict": "review",
-      "reasonHe": "HEAD זז; v3.25.0 נשאר. vf-last30 כבר מוטמע — review לדפוס חדש בלבד.",
+      "reasonHe": "HEAD זז; v3.25.0 נשאר. vf-last30 כבר מוטמע - review לדפוס חדש בלבד.",
       "evidence": [
         "baseline→remote: 084662b501fb → 268fb870ffea",
         "baselineRelease→latestRelease: v3.25.0 → v3.25.0",
@@ -372,7 +372,7 @@
     },
     "NirDiamant/GenAI_Agents": {
       "verdict": "ignore",
-      "reasonHe": "agent patterns — no second runtime.",
+      "reasonHe": "agent patterns - no second runtime.",
       "evidence": [
         "baseline→remote: 078d6d544e15 → 6746e4b0a168",
         "baselineRelease→latestRelease: None → None",
@@ -400,7 +400,7 @@
     },
     "omdsh-dev/dsh-data-agent": {
       "verdict": "ignore",
-      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.",
+      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.",
       "evidence": [
         "baseline→remote: 3016f67c0a67 → 6a649fe930ae",
         "baselineRelease→latestRelease: v0.2.0 → v0.2.2",
@@ -414,7 +414,7 @@
     },
     "open-multi-agent/open-multi-agent": {
       "verdict": "ignore",
-      "reasonHe": "multi-agent — LOCK.",
+      "reasonHe": "multi-agent - LOCK.",
       "evidence": [
         "baseline→remote: ab349e7ad039 → 4e293a21a8bc",
         "baselineRelease→latestRelease: v1.21.0 → v1.21.0",
@@ -428,7 +428,7 @@
     },
     "openscad/openscad": {
       "verdict": "ignore",
-      "reasonHe": "release נשאר openscad-2021.01; commits workflow/submodule — אין שינוי מנוע.",
+      "reasonHe": "release נשאר openscad-2021.01; commits workflow/submodule - אין שינוי מנוע.",
       "evidence": [
         "baseline→remote: eecb92a6b6ef → b6249faed7bd",
         "baselineRelease→latestRelease: openscad-2021.01 → openscad-2021.01",
@@ -442,7 +442,7 @@
     },
     "OrcaSlicer/OrcaSlicer": {
       "verdict": "wait",
-      "reasonHe": "remoteHead זז מעל baseline בעוד latestRelease נשאר v2.4.2. סלייסר רצפה — לא מעדכנים על commit לא־משוחרר; ממתינים ל־release + smoke.",
+      "reasonHe": "remoteHead זז מעל baseline בעוד latestRelease נשאר v2.4.2. סלייסר רצפה - לא מעדכנים על commit לא־משוחרר; ממתינים ל־release + smoke.",
       "evidence": [
         "baseline→remote: 4964f49765f7 → 789f848694b9",
         "baselineRelease→latestRelease: v2.4.2 → v2.4.2",
@@ -456,7 +456,7 @@
     },
     "python/cpython": {
       "verdict": "wait",
-      "reasonHe": "main HEAD זז בלי pin release; runtime toolchain — לא מעדכנים יומיים בלי pin/evidence.",
+      "reasonHe": "main HEAD זז בלי pin release; runtime toolchain - לא מעדכנים יומיים בלי pin/evidence.",
       "evidence": [
         "baseline→remote: baec76438e32 → 596d92387ab0",
         "baselineRelease→latestRelease: None → None",
@@ -484,7 +484,7 @@
     },
     "remotion-dev/remotion": {
       "verdict": "wait",
-      "reasonHe": "v4.0.530 אחרי v4.0.529 — embedded provenance בלבד; המתנה אלא אם vfom/media דורש.",
+      "reasonHe": "v4.0.530 אחרי v4.0.529 - embedded provenance בלבד; המתנה אלא אם vfom/media דורש.",
       "evidence": [
         "baseline→remote: 1beb32cb9e3e → 2d979da55f02",
         "baselineRelease→latestRelease: v4.0.529 → v4.0.530",
@@ -512,7 +512,7 @@
     },
     "Snapmaker/OrcaSlicer": {
       "verdict": "wait",
-      "reasonHe": "מזלג Snapmaker; remoteHead זז בלי release חדש. אין מסלול Snapmaker פעיל אצלנו — המתנה / לא אימוץ.",
+      "reasonHe": "מזלג Snapmaker; remoteHead זז בלי release חדש. אין מסלול Snapmaker פעיל אצלנו - המתנה / לא אימוץ.",
       "evidence": [
         "baseline→remote: da53bc5ffe47 → 6effafc0d64a",
         "baselineRelease→latestRelease: v2.4.0 → v2.4.0",
@@ -568,7 +568,7 @@
     },
     "trailhq/Graft": {
       "verdict": "ignore",
-      "reasonHe": "embedded provenance; HEAD זז — vfgraft כבר על דפוסים; אין שדרוג vendor.",
+      "reasonHe": "embedded provenance; HEAD זז - vfgraft כבר על דפוסים; אין שדרוג vendor.",
       "evidence": [
         "baseline→remote: 80692e5ad0bc → d34c115155f4",
         "baselineRelease→latestRelease: None → None",
@@ -582,7 +582,7 @@
     },
     "volcengine/OpenViking": {
       "verdict": "ignore",
-      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.",
+      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.",
       "evidence": [
         "baseline→remote: a09a9d20a8e0 → b20f192e6139",
         "baselineRelease→latestRelease: v0.4.21 → v0.4.22",
@@ -596,7 +596,7 @@
     },
     "xmanrui/dsh-im": {
       "verdict": "ignore",
-      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.",
+      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.",
       "evidence": [
         "baseline→remote: b7522c70b470 → 6d97c9c09823",
         "baselineRelease→latestRelease: v4.29.0 → v4.32.0",
@@ -610,7 +610,7 @@
     },
     "yxqfg/phone-lens": {
       "verdict": "ignore",
-      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence — אין פעולת אימוץ.",
+      "reasonHe": "מקור קטלוג/אינדקס בלי runtime מאומץ אצלנו. אין compatibility evidence - אין פעולת אימוץ.",
       "evidence": [
         "baseline→remote: 1f9eb54f2375 → 79e0b4a5786a",
         "baselineRelease→latestRelease: v0.3.5 → v0.3.10",
@@ -623,6 +623,6 @@
       "reviewedRelease": "v0.3.10"
     }
   },
-  "notificationPreparedAt": "2026-09-29T23:10:48.026799+00:00",
-  "notificationDigest": "cf70fad476f16fa5e71ab7fd3ca9ef169ef53a9811cf978a414a6a1a0e2c4a0c"
+  "notificationPreparedAt": "2026-09-29T23:12:13.279013+00:00",
+  "notificationDigest": "e73b2f1f31eda283ed3dd3b7d03e8bacf93997641e50590c57b09e6781679373"
 }
