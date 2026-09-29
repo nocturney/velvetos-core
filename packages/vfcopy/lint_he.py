@@ -4,6 +4,7 @@
 Used by scripts/check-vfcopy.py and by agents via:
   python3 scripts/check-vfcopy.py lint --text '…'
   python3 scripts/check-vfcopy.py lint --text '…' --rewrite
+  python3 scripts/check-vfcopy.py detect --text '…'
   python3 scripts/check-vfcopy.py eval
 
 No network. No send. No invented prices.
@@ -96,6 +97,131 @@ TRANSLATED_EN = re.compile(
     r"\b(?:unlock|elevate|game[\s\-]?changer|wow\.?|leverage|seamless)\b",
     re.IGNORECASE,
 )
+
+
+# High-signal AI-slop patterns adapted from petergyang/no-ai-slop.
+# These are checkable writing patterns, never an AI-authorship detector.
+SLOP_PATTERN_SPECS: tuple[tuple[str, re.Pattern, str], ...] = (
+    (
+        "binary_contrast",
+        re.compile(
+            r"(?:\b(?:זה|זו|זאת)\s+לא\s+[^.!?\n]{1,90}[.!?]\s*(?:זה|זו|זאת)\s+[^.!?\n]{1,120}"
+            r"|\bלא\s+רק\s+[^.!?\n]{1,120}\s+אלא\s+[^.!?\n]{1,120})",
+            re.IGNORECASE,
+        ),
+        "אמרו את הנקודה החיובית ישירות; אין צורך במבנה 'לא X, אלא Y'.",
+    ),
+    (
+        "throat_clearing",
+        re.compile(
+            r"^\s*(?:הנה העניין|בואו נהיה כנים|אם להיות כנים|האמת היא|חשוב לציין|"
+            r"חשוב להבין|בואו נתחיל מזה|let me be clear|here(?:'|’)s the thing)[,:;—\-]?",
+            re.IGNORECASE,
+        ),
+        "מחקו את פתיחת החימום והתחילו מהנקודה עצמה.",
+    ),
+    (
+        "faux_insight",
+        re.compile(
+            r"(?:מה\s+(?:שרוב האנשים|שאף אחד|שכולם)\s+(?:מפספסים|לא אומרים|שוכחים)"
+            r"|החלק\s+(?:שרוב האנשים|שכולם)\s+מפספסים)",
+            re.IGNORECASE,
+        ),
+        "מחקו את מסגור ה'סוד' והציגו את הטענה או העובדה ישירות.",
+    ),
+    (
+        "colon_reveal",
+        re.compile(
+            r"(?m)^\s*(?:החלק הכי טוב|הסוד|הפואנטה|הקטע|הדבר החשוב|היתרון הגדול)\s*:\s*\S.+$",
+            re.IGNORECASE,
+        ),
+        "הפכו את ה-reveal למשפט רגיל וקונקרטי.",
+    ),
+    (
+        "superficial_analysis",
+        re.compile(
+            r"(?:מה\s+ש|ובכך\s+)(?:מדגיש|ממחיש|משקף|מוכיח)\s+(?:את\s+)?"
+            r"(?:המחויבות|החשיבות|החדשנות|החזון|המסירות)",
+            re.IGNORECASE,
+        ),
+        "החליפו פרשנות כללית בעובדה, מנגנון או תוצאה קונקרטית.",
+    ),
+    (
+        "importance_puffery",
+        re.compile(
+            r"(?:רגע מכונן|ציון דרך משמעותי|מהווה עדות ל|עדות למחויבות|"
+            r"ממלא(?:ת)? תפקיד (?:מרכזי|חיוני)|מדגיש(?:ה)? את החשיבות)",
+            re.IGNORECASE,
+        ),
+        "ציינו מה קרה בפועל ותנו לקורא להחליט אם זה חשוב.",
+    ),
+    (
+        "interpretive_metadiscourse",
+        re.compile(
+            r"(?:הנקודה המרכזית היא|החלק החשוב הוא|כפי שאפשר לראות|במילים אחרות\s*[:,—]?)",
+            re.IGNORECASE,
+        ),
+        "מחקו את הוראת-הקריאה; אם הנקודה לא ברורה, חזקו אותה בעובדה.",
+    ),
+    (
+        "weasel_attribution",
+        re.compile(
+            r"(?:מומחים|מחקרים|דוחות|גורמים בתעשייה|כולם)\s+"
+            r"(?:מסכימים|מראים|מצביעים|אומרים|מוכיחים)\b",
+            re.IGNORECASE,
+        ),
+        "נקבו במקור מאומת או הסירו את הייחוס.",
+    ),
+    (
+        "negative_listing",
+        re.compile(
+            r"(?ms)^\s*לא\s+[^.!?\n]{1,60}[.!?]\s*\n?\s*לא\s+[^.!?\n]{1,60}[.!?]",
+            re.IGNORECASE,
+        ),
+        "אמרו מה הדבר כן, בלי רצף 'לא X. לא Y.'.",
+    ),
+    (
+        "rhetorical_setup",
+        re.compile(
+            r"(?:מה אם (?:הייתי|נגיד|נספר) לכם|תחשבו על זה\s*:|טוויסט בעלילה\s*:|מוכנים לזה\s*\?)",
+            re.IGNORECASE,
+        ),
+        "דלגו על השאלה הרטורית והתחילו מהמידע עצמו.",
+    ),
+    (
+        "summary_recap",
+        re.compile(r"(?m)^\s*(?:לסיכום|לסיכומו של דבר|בסופו של יום)\s*[:,]?"),
+        "סיימו בנקודה הקונקרטית האחרונה או בצעד הבא, בלי פסקת recap.",
+    ),
+    (
+        "fake_profound_ending",
+        re.compile(
+            r"(?:העתיד כבר כאן|וזה כל הקסם|זה כל הסיפור|כל פרט מספר סיפור|כי בסוף[^.!?\n]{0,100})"
+            r"[.!…]?\s*$",
+            re.IGNORECASE,
+        ),
+        "מחקו את שורת המיקרופון; סיימו בפרט קונקרטי או פעולה.",
+    ),
+)
+
+
+def _slop_quote(body: str, match: re.Match) -> str:
+    raw = " ".join(match.group(0).split())
+    return raw if len(raw) <= 180 else raw[:177] + "..."
+
+
+def detect_ai_slop(body: str) -> list[dict[str, str]]:
+    """Return named, checkable slop patterns without inferring AI authorship."""
+    findings: list[dict[str, str]] = []
+    if not isinstance(body, str) or not body.strip():
+        return findings
+    for pattern, rx, fix in SLOP_PATTERN_SPECS:
+        match = rx.search(body)
+        if match:
+            findings.append(
+                {"pattern": pattern, "quote": _slop_quote(body, match), "fix": fix}
+            )
+    return findings
 
 
 def _fact_verified(ctx: dict[str, Any], key: str) -> bool:
@@ -358,8 +484,11 @@ def lint_hebrew_copy(
         if phrase.lower() in lower or phrase in body:
             problems.append(f"ביטוי AI/שיווק ריק ב-{label}: {phrase!r}")
             kinds.append("style")
-    if NOT_ONLY_BUT.search(body):
-        problems.append(f"דפוס «לא רק X אלא Y» ב-{label}")
+    for finding in detect_ai_slop(body):
+        problems.append(
+            f"AI_SLOP[{finding['pattern']}] ב-{label}: "
+            f"{finding['quote']!r} — {finding['fix']}"
+        )
         kinds.append("style")
     if RULE_OF_THREE_LINES.search(body) or "אנחנו מעצבים. אנחנו מדפיסים. אנחנו משנים" in body:
         problems.append(f"שלשות/סימטריה מלאכותית ב-{label}")
@@ -531,8 +660,11 @@ def run_eval_suite(evals_path: Path) -> tuple[int, int, list[str]]:
         body = case.get("body", "")
         ctx = case.get("context") or {}
         verdict = lint_hebrew_copy(body, label=cid, context=ctx)
-        ok = verdict.status == expect
-        if not ok and expect == "needs_input" and verdict.status in {
+        expected_patterns = set(case.get("expect_patterns") or [])
+        actual_patterns = {row["pattern"] for row in detect_ai_slop(body)}
+        patterns_ok = expected_patterns.issubset(actual_patterns)
+        ok = verdict.status == expect and patterns_ok
+        if not ok and patterns_ok and expect == "needs_input" and verdict.status in {
             "needs_input",
             "fail_fact",
         }:
@@ -542,20 +674,22 @@ def run_eval_suite(evals_path: Path) -> tuple[int, int, list[str]]:
                 for k in ("needs_input", "חסר", "מבצע", "זמן", "לקוח", "גנרי")
             ):
                 ok = True
-        if not ok and expect == "fail_fact" and verdict.status == "needs_input":
+        if not ok and patterns_ok and expect == "fail_fact" and verdict.status == "needs_input":
             if "fact" in verdict.kind or any(
                 k in p for p in verdict.problems for k in ("משלוח", "₪", "וואטסאפ", "מחיר")
             ):
                 ok = True
-        if not ok and expect == "fail_style" and verdict.status == "needs_input":
+        if not ok and patterns_ok and expect == "fail_style" and verdict.status == "needs_input":
             # thin generic copy may escalate to needs_input — still a reject
             if "style" in verdict.kind:
                 ok = True
         if ok:
             passed += 1
         else:
+            missing_patterns = sorted(expected_patterns - actual_patterns)
             failed.append(
-                f"{cid}: expect={expect} got={verdict.status} problems={verdict.problems}"
+                f"{cid}: expect={expect} got={verdict.status} "
+                f"missing_patterns={missing_patterns} problems={verdict.problems}"
             )
     return passed, len(cases), failed
 

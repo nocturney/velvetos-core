@@ -29,6 +29,7 @@ HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE / "packages" / "vfcopy"))
 from lint_he import (  # noqa: E402
     assert_skill_wired,
+    detect_ai_slop,
     lint_hebrew_copy,
     run_eval_suite,
 )
@@ -488,12 +489,31 @@ def cmd_lint_text(text: str, *, rewrite: bool) -> int:
     return 0 if verdict.ok else 1
 
 
+def cmd_detect_text(text: str) -> int:
+    findings = detect_ai_slop(text)
+    payload = {
+        "status": "slop_found" if findings else "clean",
+        "findings": findings,
+        "authorship": "NOT_INFERRED — named writing patterns only",
+    }
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
+    return 1 if findings else 0
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
     if argv and argv[0] in {"test", "--test"}:
         return run_tests()
     if argv and argv[0] == "eval":
         return cmd_eval()
+    if argv and argv[0] == "detect":
+        parser = argparse.ArgumentParser(prog="check-vfcopy detect")
+        source = parser.add_mutually_exclusive_group(required=True)
+        source.add_argument("--text")
+        source.add_argument("--file")
+        ns = parser.parse_args(argv[1:])
+        raw = ns.text if ns.text is not None else Path(ns.file).read_text(encoding="utf-8")
+        return cmd_detect_text(raw)
     if argv and argv[0] == "lint":
         parser = argparse.ArgumentParser(prog="check-vfcopy lint")
         parser.add_argument("--text", required=True)

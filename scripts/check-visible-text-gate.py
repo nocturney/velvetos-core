@@ -8,6 +8,7 @@ Per-candidate execution evidence belongs in the relevant artifact/preflight/dige
 from __future__ import annotations
 
 import sys
+from argparse import Namespace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -88,17 +89,51 @@ def main() -> None:
     )
 
     gate = text("scripts/vf_visible_text.py")
-    for needle in ("public-social", "visual-microcopy", "customer-message", "sales-proposal", "owner-brief", "human-document", "ui-microcopy", "text_sha256", "visible_text_gate", "UNPROVEN", "--gate"):
+    for needle in ("public-social", "visual-microcopy", "customer-message", "sales-proposal", "owner-brief", "human-document", "ui-microcopy", "text_sha256", "visible_text_gate", "UNPROVEN", "--gate", "detect_ai_slop", "anti_slop"):
         if needle not in gate:
             fail(f"scripts/vf_visible_text.py missing {needle!r}")
     if "surface not in PUBLIC_SURFACES" not in gate:
         fail("surface-aware gate must distinguish public-only lint rules")
 
+    # Behavioral proof: the exact visible-text gate must reject named slop patterns,
+    # while a concrete clean owner-brief can still PASS with all stage evidence.
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from vf_visible_text import evaluate  # noqa: PLC0415
+
+    common = dict(
+        file=None,
+        surface="owner-brief",
+        language="he",
+        context_json=None,
+        domain_tool=["vfops"],
+        marketing_aids=None,
+        truth_checked=True,
+        reader_first=True,
+        copy_authority=True,
+        surface_qa=True,
+        no_text_compared=False,
+        rewrite=False,
+        gate=True,
+    )
+    bad = evaluate(Namespace(text="הנה העניין: הכול השתנה. העתיד כבר כאן.", **common))
+    findings = (bad.get("anti_slop") or {}).get("findings") or []
+    if bad.get("visible_text_gate") != "FAIL" or not findings:
+        fail("visible-text gate must FAIL on named anti-slop findings")
+
+    clean = evaluate(
+        Namespace(
+            text="שלושה קבצים נבדקו. שני כשלים עדיין פתוחים ודורשים תיקון.",
+            **common,
+        )
+    )
+    if clean.get("visible_text_gate") != "PASS":
+        fail(f"clean owner-brief should PASS the exact gate, got {clean!r}")
+
     require("packages/vfom/FOUNDRY.json", ("visualCopyPolicy", "noTextBaselineRequired", "vf-hebrew-copy", "ai-tells-he.md"))
     require(".cursor/skills/velvet-creative-director/SKILL.md", ("NO_TEXT", "velvet-hebrew-copy"))
     require(".cursor/skills/velvet-brand-guardian/SKILL.md", ("NO_TEXT", "velvet-hebrew-copy", "ai-tells-he.md"))
 
-    print("OK visible-text-gate global human-facing routes + agent guide + outer harness + surface-aware executable bound")
+    print("OK visible-text-gate routes + surface-aware executable + anti-slop behavioral gate bound")
 
 
 if __name__ == "__main__":

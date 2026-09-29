@@ -64,6 +64,7 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 - עברית ישראלית טבעית — מדוברת, לא מתאמצת.
 - משפטים קצרים כשזה מתאים. לא חובה לספר סיפור על כל דבר.
 - פרט אמיתי עדיף על סלוגן.
+- עריכה היא minimum effective edit: משאירים משפטים אנושיים חזקים, קצב והומור במקום ליישר הכול לפרוזה אחידה.
 - אין התלהבות מלאכותית, corporate filler או “עומק” מומצא.
 - הטון מותאם למשטח: owner brief ≠ Instagram caption ≠ customer quote.
 
@@ -142,6 +143,7 @@ license: MIT (VelvetOS Core; external ideas attributed in ADAPTATION.md)
 
 1. `hq/reader-first-he.md` לפני ניסוח.  
 2. `python3 scripts/check-vfcopy.py lint --text '…'` או `scripts/vf_visible_text.py --surface <surface>` על המועמד בפועל.  
+   לאבחון בלבד אפשר `python3 scripts/check-vfcopy.py detect --text '…'`; הוא מציג pattern/quote/fix, אך ה־final עדיין חייב לעבור `lint`/Visible Text Gate על הטקסט המדויק.  
 3. Pass ידני/agent: `hq/ai-tells-he.md`.  
 4. `vfmskill` copywriting/copy-editing כשסוג הטקסט מצדיק.  
 5. factual/domain validation אחרי style.  

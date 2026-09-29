@@ -28,7 +28,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "packages" / "vfcopy"))
-from lint_he import lint_hebrew_copy  # noqa: E402
+from lint_he import detect_ai_slop, lint_hebrew_copy  # noqa: E402
 
 SURFACES = (
     "public-social",
@@ -124,6 +124,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
     context = _load_context(args.context_json)
     context["visible_text_surface"] = args.surface
 
+    slop_findings = detect_ai_slop(text)
     verdict = lint_hebrew_copy(
         text,
         label=f"visible-text:{args.surface}",
@@ -141,7 +142,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "truth_checked": bool(args.truth_checked),
         "reader_first": bool(args.reader_first),
         "copy_authority": bool(args.copy_authority),
-        "humanizer_ai_tells": lint_pass,
+        "humanizer_ai_tells": lint_pass and not slop_findings,
         "domain_tools_recorded": bool(domain_tools),
         "surface_qa": bool(args.surface_qa),
     }
@@ -168,6 +169,11 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             "status": lint_status,
             "problems": problems,
             "raw_status": verdict.status,
+        },
+        "anti_slop": {
+            "checked": True,
+            "findings": slop_findings,
+            "authorship": "NOT_INFERRED — named writing patterns only",
         },
         "stages": stages,
         "domain_tools": domain_tools,

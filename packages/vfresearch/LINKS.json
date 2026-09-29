@@ -1394,6 +1394,19 @@
         "vfresearch"
       ],
       "note": "MIT capabilities/patterns grafted into existing VelvetOS routes. No Scenario MCP, subscription, credits, asset store, cloud model runtime or second orchestrator. Weekly review may propose diffs; updates are never auto-promoted."
+    },
+    {
+      "id": "no-ai-slop",
+      "kind": "repo",
+      "url": "https://github.com/petergyang/no-ai-slop",
+      "title": "no-ai-slop — named anti-slop editing patterns (MIT)",
+      "firstEmbedded": "2026-09-29",
+      "lastReviewed": "2026-09-29",
+      "sourceNote": "packages/vfresearch/sources/2026-09-29-no-ai-slop.md",
+      "packs": [
+        "vfcopy"
+      ],
+      "note": "Selective pattern embed only: named detector + evals + Visible Text Gate binding. No plugin install, no authorship score, no second writer."
     }
   ],
   "addLink": {

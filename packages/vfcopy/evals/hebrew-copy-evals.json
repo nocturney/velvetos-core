@@ -1,7 +1,7 @@
 {
   "schema": "vfcopy.hebrew-copy-evals/v1",
   "skill": "packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md",
-  "note": "Numeric factual claims PASS only with matching verified context (price / turnaround / customer / print_duration_hours).",
+  "note": "Numeric factual claims PASS only with matching verified context. Anti-slop cases may also declare expect_patterns; these are named writing-pattern checks, not AI-authorship detection.",
   "cases": [
     {
       "id": "simple-product",
@@ -306,6 +306,87 @@
       "context": {"mode": "תהליך-קצר"},
       "body": "18 שעות הדפסה בכמה שניות.\n\nעקבו בשבוע הבא.\n\n#VelvetFactory #תהליךהדפסה",
       "expect": "needs_input"
+    },
+    {
+      "id": "slop-binary-contrast",
+      "title": "binary contrast",
+      "tags": ["style", "anti-slop"],
+      "context": {},
+      "body": "זה לא עוד פריט. זה מה שמשנה את כל החלל.",
+      "expect": "fail_style",
+      "expect_patterns": ["binary_contrast"]
+    },
+    {
+      "id": "slop-throat-clearing",
+      "title": "throat clearing",
+      "tags": ["style", "anti-slop"],
+      "context": {},
+      "body": "הנה העניין: המודל הזה נראה טוב מכל זווית.",
+      "expect": "fail_style",
+      "expect_patterns": ["throat_clearing"]
+    },
+    {
+      "id": "slop-faux-insight",
+      "title": "faux insight",
+      "tags": ["style", "anti-slop"],
+      "context": {},
+      "body": "מה שרוב האנשים מפספסים הוא שהפרטים הקטנים הם כל הסיפור.",
+      "expect": "fail_style",
+      "expect_patterns": ["faux_insight"]
+    },
+    {
+      "id": "slop-colon-reveal",
+      "title": "colon reveal",
+      "tags": ["style", "anti-slop"],
+      "context": {},
+      "body": "החלק הכי טוב: הוא פשוט עובד.",
+      "expect": "fail_style",
+      "expect_patterns": ["colon_reveal"]
+    },
+    {
+      "id": "slop-importance-puffery",
+      "title": "importance puffery",
+      "tags": ["style", "anti-slop"],
+      "context": {},
+      "body": "ההשקה הזו היא רגע מכונן לסטודיו.",
+      "expect": "fail_style",
+      "expect_patterns": ["importance_puffery"]
+    },
+    {
+      "id": "slop-weasel-attribution",
+      "title": "weasel attribution",
+      "tags": ["style", "anti-slop"],
+      "context": {},
+      "body": "מומחים מסכימים שזה הפתרון הנכון.",
+      "expect": "fail_style",
+      "expect_patterns": ["weasel_attribution"]
+    },
+    {
+      "id": "slop-rhetorical-setup",
+      "title": "rhetorical setup",
+      "tags": ["style", "anti-slop"],
+      "context": {},
+      "body": "מה אם נגיד לכם שהדפסה אחת יכולה לשנות את כל החדר?",
+      "expect": "fail_style",
+      "expect_patterns": ["rhetorical_setup"]
+    },
+    {
+      "id": "slop-fake-profound-ending",
+      "title": "fake profound ending",
+      "tags": ["style", "anti-slop"],
+      "context": {},
+      "body": "הפריט יצא מהמדפסת ונבדק על המדף.\n\nהעתיד כבר כאן.",
+      "expect": "fail_style",
+      "expect_patterns": ["fake_profound_ending"]
+    },
+    {
+      "id": "anti-slop-clean-concrete",
+      "title": "clean concrete copy",
+      "tags": ["style", "anti-slop"],
+      "context": {},
+      "body": "שלושה קבצים נבדקו. שני כשלים עדיין פתוחים ודורשים תיקון.",
+      "expect": "pass",
+      "expect_patterns": []
     }
   ]
 }
