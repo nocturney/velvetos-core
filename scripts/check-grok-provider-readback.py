@@ -13,6 +13,12 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "automation/grok/manifest.json"
 RUNTIME = ROOT / "packages/vfharness/state/runtime/grok-production-scheduler.json"
 
+# Current protected set size. 8 -> 9 on 2026-09-29 (Runtime Receipts Refresh,
+# owner-approved). A readback is compared against the routines that were
+# protected at its observedAt (manifest routine protectedFrom), so a real
+# pre-change readback stays valid and no readback is ever back-filled.
+PROTECTED_ROUTINE_COUNT = 9
+
 
 def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8-sig"))
@@ -22,13 +28,13 @@ def fail(message: str) -> None:
     raise SystemExit(f"GROK PROVIDER READBACK FAIL: {message}")
 
 
-def parse_time(value: object) -> datetime:
+def parse_time(value: object, label: str = "runtime receipt observed_at") -> datetime:
     if not isinstance(value, str):
-        fail("runtime receipt observed_at missing")
+        fail(f"{label} missing")
     try:
         parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
     except ValueError:
-        fail("runtime receipt observed_at invalid")
+        fail(f"{label} invalid")
     if parsed.tzinfo is None:
         parsed = parsed.replace(tzinfo=timezone.utc)
     return parsed.astimezone(timezone.utc)
@@ -60,10 +66,33 @@ def main() -> int:
     if (readback.get("verificationScope") or {}).get("promptBodyParity") is not False:
         fail("readback must not overclaim prompt-body parity")
 
-    expected = {
-        row["id"]: (row["title"], row["cadence"], bool(row["enabled"]))
-        for row in manifest.get("routines") or []
-    }
+    readback_at = parse_time(readback.get("observedAt"), "readback observedAt")
+    now = datetime.now(timezone.utc)
+    rows = manifest.get("routines") or []
+    expected_all = {}
+    required = {}
+    pending = []
+    for row in rows:
+        rid = row["id"]
+        spec = (row["title"], row["cadence"], bool(row["enabled"]))
+        expected_all[rid] = spec
+        since = row.get("protectedFrom")
+        if since is None:
+            required[rid] = spec
+            continue
+        since_at = parse_time(since, f"{rid} protectedFrom")
+        if since_at > now:
+            fail(f"{rid} protectedFrom is in the future")
+        if since_at <= readback_at:
+            required[rid] = spec
+        else:
+            pending.append(rid)
+
+    if len(expected_all) != PROTECTED_ROUTINE_COUNT:
+        fail(f"manifest must list {PROTECTED_ROUTINE_COUNT} protected routines, got {len(expected_all)}")
+    if (manifest.get("protectedSet") or {}).get("count") != PROTECTED_ROUTINE_COUNT:
+        fail("manifest protectedSet.count differs from the current protected routine count")
+
     observed = {}
     for row in readback.get("protectedRoutines") or []:
         rid = row.get("providerRoutineId")
@@ -73,14 +102,19 @@ def main() -> int:
             bool(row.get("enabled")),
             bool(row.get("matchesCanonicalClock")),
         )
-    if set(expected) != set(observed):
-        fail(f"protected routine IDs differ: expected={sorted(expected)} observed={sorted(observed)}")
-    for rid, (title, cadence, enabled) in expected.items():
+    if set(required) != set(observed):
+        fail(
+            "protected routine IDs differ from the set protected at readback time: "
+            f"required={sorted(required)} observed={sorted(observed)}"
+        )
+    for rid, (title, cadence, enabled) in required.items():
         actual = observed[rid]
         if actual[:3] != (title, cadence, enabled) or actual[3] is not True:
             fail(f"protected routine drift: {rid}")
-    if len(expected) != 8 or readback.get("protectedRoutineCount") != 8:
-        fail("protected routine count must remain eight")
+    if readback.get("protectedRoutineCount") != len(required):
+        fail("readback protectedRoutineCount differs from its protected routine list")
+    if latest.get("protectedRoutineCount") != len(required):
+        fail("manifest latestProviderReadback.protectedRoutineCount differs from the readback artifact")
 
     retired_expected = {
         row["id"]: bool(row.get("desiredEnabled"))
@@ -100,7 +134,7 @@ def main() -> int:
         fail("runtime Grok scheduler receipt is not healthy")
     if (runtime.get("evidence") or {}).get("artifact") != artifact_rel:
         fail("runtime receipt does not point to provider readback artifact")
-    age_hours = (datetime.now(timezone.utc) - parse_time(runtime.get("observed_at"))).total_seconds() / 3600
+    age_hours = (now - parse_time(runtime.get("observed_at"))).total_seconds() / 3600
     if age_hours < -0.25:
         fail(f"runtime receipt freshness invalid: {age_hours:.1f}h")
     if age_hours > 24:
@@ -111,7 +145,9 @@ def main() -> int:
 
     print(
         "GROK PROVIDER READBACK PASS "
-        f"protected={len(expected)} openpost=disabled timezone={readback.get('rendererTimeZone')} "
+        f"protected={len(expected_all)} readback-verified={len(required)} "
+        f"pending-first-readback={','.join(pending) or 'none'} "
+        f"openpost=disabled timezone={readback.get('rendererTimeZone')} "
         "prompt-body-parity=not-claimed"
     )
     return 0

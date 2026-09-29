@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from pathlib import Path
 import json
+from datetime import datetime
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,10 +56,17 @@ def main() -> int:
     if readback.get("routine_present") is not False or readback.get("remaining_count") != 8:
         fail("OpenPost watch provider readback must prove absence with exactly 8 routines remaining")
     remaining_titles = set(readback.get("remaining_titles") or [])
-    manifest_titles = {str(row.get("title") or "") for row in (grok.get("routines") or [])}
-    if remaining_titles != manifest_titles:
-        fail("live Grok readback titles must match the protected manifest routine set")
     removal_binding = (grok.get("publisherAuthority") or {}).get("openpostReleaseWatchRemoval") or {}
+    # Compare the 2026-09-27 removal readback with the routines that were protected
+    # at that time; routines added later carry protectedFrom and are not back-filled.
+    removal_at = datetime.fromisoformat(str(removal_binding.get("verifiedAt") or "").replace("Z", "+00:00"))
+    manifest_titles = set()
+    for row in grok.get("routines") or []:
+        since = row.get("protectedFrom")
+        if since is None or datetime.fromisoformat(str(since).replace("Z", "+00:00")) <= removal_at:
+            manifest_titles.add(str(row.get("title") or ""))
+    if remaining_titles != manifest_titles:
+        fail("live Grok readback titles must match the protected manifest routine set at removal time")
     if removal_binding.get("state") != "live_verified_deleted" or removal_binding.get("evidence") != "automation/grok/openpost-release-watch-removal.json":
         fail("Grok manifest must bind the live-verified OpenPost watch deletion evidence")
     openpost_tool = tools.get("openpost") or {}

@@ -20,7 +20,7 @@
       "providerRoutineId": "velvetos-integrity-guard",
       "enabled": true,
       "cadence": "daily 01:45",
-      "protectedRoutineCount": 8
+      "protectedRoutineCount": 9
     }
   },
   "productionScheduler": "grok-bot-routines",
@@ -59,6 +59,15 @@
       "responsibility": "refresh and verify the local derived Cognee/vfmem index; silent when current and healthy"
     },
     {
+      "id": "runtime-receipts-refresh",
+      "title": "Runtime Receipts Refresh",
+      "cadence": "daily 07:15 and 19:15",
+      "enabled": true,
+      "providerSchedule": "CRON_TZ=Asia/Jerusalem 15 7,19 * * *",
+      "protectedFrom": "2026-09-29T14:01:00+03:00",
+      "responsibility": "keep the four 24h runtime receipts in packages/vfharness/state/runtime fresh from live observations only; open one PR; merge only on green; never fabricate an observation"
+    },
+    {
       "id": "velvet-morning-brief",
       "title": "Velvet Morning Brief",
       "cadence": "daily 09:00",
@@ -94,6 +103,13 @@
       "responsibility": "canonical weekly research accountability workflow"
     }
   ],
+  "protectedSet": {
+    "count": 9,
+    "changedAt": "2026-09-29T14:01:00+03:00",
+    "change": "added runtime-receipts-refresh as the 9th protected routine",
+    "approvedBy": "Christian Velvet",
+    "readbackRule": "a provider readback must list exactly the manifest routines whose protectedFrom is absent or <= readback observedAt; routines added after the latest real readback stay pending_first_readback until the next live readback, which must include them"
+  },
   "retiredRoutines": [
     {
       "id": "openpost-release-watch",
