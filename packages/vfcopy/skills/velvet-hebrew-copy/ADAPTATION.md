@@ -31,6 +31,20 @@
 
 כבר היה אצלנו קו Humanizer מ־write-better + ai-copywriter (`hq/ai-tells-he.md`). השכבה הזו מחזקת ומחברת ל־skill + evals.
 
+## petergyang/no-ai-slop (MIT · Peter Yang)
+
+מקור: https://github.com/petergyang/no-ai-slop
+
+| רעיון | הטמעה native |
+|---|---|
+| detect-only שמחזיר שם דפוס + quote + fix, בלי לנחש מי כתב | `detect_ai_slop()` ב־`lint_he.py` + `check-vfcopy.py detect` |
+| taxonomy לדפוסים חוזרים: binary contrast, throat-clearing, faux insight, colon reveal, puffery, metadiscourse, weasel attribution, negative listing, rhetorical setup, recap/kicker | מזהי pattern יציבים + evals שמחייבים `expect_patterns` |
+| minimum effective edit ושמירת קול | `velvet-hebrew-copy` + Humanizer; לא משטחים משפטים טובים רק בשביל אחידות |
+| eval אחרי rewrite | `check-vfcopy.py eval`; אותם patterns גם חלק מ־`lint_hebrew_copy()` |
+| skill/plugin חיצוני | **לא** — אין runtime/pack נוסף ואין `npx skills add` |
+
+חיבור פייפליין: `vf_visible_text.py` קורא לאותו detector ומחזיר `anti_slop`; finding גורם ל־lint להיכשל ולכן `humanizer_ai_tells` ו־`visible_text_gate: PASS` לא יכולים לעבור על אותו candidate.
+
 ## עברית — מה ספציפי ל־VF
 
 - ביטויי AI עבריים («אנו גאים להציג», «נרגשים לשתף», «כל פרט מספר סיפור»…).
