@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-29 — **Runtime Receipts Refresh is the 9th protected Grok routine (owner-approved 14:01 IDT):** `runtime-receipts-refresh` (`CRON_TZ=Asia/Jerusalem 15 7,19 * * *`, daily 07:15 and 19:15) added to `automation/grok/manifest.json`, `CONTRACT.md`, `ROUTINE.md` and `LOOPS.md`; it keeps the four 24h runtime receipts fresh from live observations, opens one PR and merges only on green. `check-grok-provider-readback.py` now requires 9 manifest routines and validates each readback against the routines protected at its `observedAt` (manifest `protectedFrom`), so the last real 8-routine readback stays valid with the new routine reported as `pending-first-readback`; any later readback must list all nine. `check-cognee-integration.py` and `check-tool-authority.py` updated the same way; historical dated readbacks and evidence keep their recorded eight, and no readback was back-filled.
+
 - 2026-09-29 - **Policy reform capability pre-integration prep:** adds a Stage-3-safe, non-runtime bundle with pinned upstream provenance/classification plus draft contracts and golden/negative fixtures for Stages 4-9; no policy, routing, AGENTS, selector, ruleset, provider, printer-control, publication, or runtime behavior changes.
 
 - 2026-09-29 — **vfcopy anti-slop gate:** selectively embeds `petergyang/no-ai-slop` patterns into the existing Hebrew copy stack: named pattern detection + detect-only CLI, strict pattern-aware evals, exact-candidate findings in `vf_visible_text.py`, and a behavioral Visible Text Gate check proving slop blocks PASS. No plugin/runtime/pack added; no AI-authorship scoring.

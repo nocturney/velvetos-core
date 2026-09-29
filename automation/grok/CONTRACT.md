@@ -15,13 +15,14 @@ Status: production scheduler as of 2026-09-19.
 - VelvetOS Integrity Guard — 01:45 daily
 - Velvet Research Seat — 02:00 daily; tool-update decisions use the dedicated owner email path and are excluded from the Morning Brief
 - Cognee Memory Sync — 06:30 daily
+- Runtime Receipts Refresh — 07:15 and 19:15 daily (`runtime-receipts-refresh`, `CRON_TZ=Asia/Jerusalem 15 7,19 * * *`); protected since 2026-09-29
 - Velvet Morning Brief — 09:00 daily
 - Morning Delivery Guard — 10:00 daily
 - Cognee Stable Updates — Monday 10:00
 - VelvetOS Office Loop — 10:30 and 18:30 daily
 - Weekly Research Accountability — Friday 12:00
 
-Timezone: Asia/Jerusalem.
+Timezone: Asia/Jerusalem. Current protected count: **nine**.
 
 ## Cognee scheduler cutover — live verified
 
@@ -33,7 +34,7 @@ The live provider IDs are `cognee-memory-sync` and `cognee-stable-updates`. `Vel
 
 The 01:45 Integrity Guard is a **finite single-pass audit**, not a continuous monitor. Each run must inspect the current inventory once, perform any immediate authorized repair, verify the resulting state once, notify only when required, and then terminate. It must not loop, poll, sleep, wait for future drift, or intentionally remain active after the pass is complete.
 
-The protected set is **positive protection**, not deletion authority. The Guard may repair enabled-state, schedule, or prompt drift on the eight protected routines. Known legacy/deleted routines stay disabled, but an unknown or newly added routine that is outside the protected set must not be deleted, disabled, paused, or rewritten merely for being unlisted. Leave it untouched and surface the conflict unless Christian has explicitly authorized its removal or retirement.
+The protected set is **positive protection**, not deletion authority. The Guard may repair enabled-state, schedule, or prompt drift on the nine protected routines (eight until 2026-09-29). Known legacy/deleted routines stay disabled, but an unknown or newly added routine that is outside the protected set must not be deleted, disabled, paused, or rewritten merely for being unlisted. Leave it untouched and surface the conflict unless Christian has explicitly authorized its removal or retirement. Any provider-side routine deletion is governed by `policy_id: external.irreversible.delete`.
 
 ## Owner email
 
@@ -71,3 +72,9 @@ This readback proves current provider inventory, enabled state, effective schedu
 ## Live provider re-read — 2026-09-28
 
 At 2026-09-28T10:15:53Z (13:15:53 Asia/Jerusalem) the owning Grok Bot automations-manager agent read the live provider routine registry (inventory, enabled state, effective cron and last-run status) directly from the agent runtime, without UI scraping, without sending a model prompt and without any provider write. The provider exposed exactly the eight protected routine IDs, all enabled, each with an effective `CRON_TZ=Asia/Jerusalem` schedule matching this contract. `OpenPost Release Watch` was absent from the live registry (deleted; not present). The provider app version is not exposed to the agent runtime and is recorded as `null` rather than guessed. Evidence is `automation/grok/provider-readback-2026-09-28.json`; `latestProviderReadback` in `manifest.json` points to it. Prompt-body parity is **not** claimed. The 2026-09-27 artifact is retained as history.
+
+## Protected set grows to nine — 2026-09-29
+
+On 2026-09-29 at 14:01 Asia/Jerusalem, Christian approved adding `Runtime Receipts Refresh` (provider routine id `runtime-receipts-refresh`, `CRON_TZ=Asia/Jerusalem 15 7,19 * * *`, i.e. daily 07:15 and 19:15, enabled) as the 9th protected routine. Its purpose: keep the four 24h runtime receipts in `packages/vfharness/state/runtime/` (`github`, `google-drive`, `grok-production-scheduler`, `sderot-windows`) fresh from live observations only, open one PR per refresh, and merge only on green. It never fabricates an observation.
+
+Transition rule: the manifest entry carries `protectedFrom: 2026-09-29T14:01:00+03:00`. A provider readback is checked against exactly the routines protected at its `observedAt` (entries without `protectedFrom`, or whose `protectedFrom` is at or before `observedAt`). The latest real readback (`provider-readback-2026-09-29.json`, observed 07:22 Asia/Jerusalem) therefore still validly lists eight routines, and `runtime-receipts-refresh` is reported as `pending-first-readback`. No readback listing nine routines has been back-filled. Any readback observed after the approval time must list all nine, including `runtime-receipts-refresh` with cadence `daily 07:15 and 19:15`, enabled, `matchesCanonicalClock: true`, and `protectedRoutineCount: 9`. Historical dated artifacts (earlier readbacks, the OpenPost removal evidence, the 2026-09-23 Cognee/Integrity Guard readback) keep their recorded eight.
