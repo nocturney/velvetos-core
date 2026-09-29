@@ -1,0 +1,48 @@
+{
+  "task_id": "vfcopy-no-ai-slop-2026-09-29",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "vfcopy",
+  "goal": "Selectively embed useful petergyang/no-ai-slop editing patterns into the existing VelvetOS Hebrew copy stack and prove they are enforced by the normal Visible Text pipeline, without installing a second writer/runtime.",
+  "planned_steps": [
+    "Review upstream no-ai-slop skill and eval behavior",
+    "Map useful patterns onto existing vfcopy authority",
+    "Add named detect-only diagnostics without AI-authorship scoring",
+    "Bind named findings into lint_hebrew_copy and vf_visible_text",
+    "Add strict pattern-aware evals and behavioral Visible Text Gate proof",
+    "Update adaptation/provenance, LINKS, README and CHANGELOG",
+    "Require exact-head GitHub Actions green before merge"
+  ],
+  "completed_steps": [
+    "Added detect_ai_slop taxonomy inside packages/vfcopy/lint_he.py",
+    "Added check-vfcopy.py detect mode with pattern, quote and fix output",
+    "Bound anti-slop findings into lint_hebrew_copy and exact-candidate vf_visible_text evidence",
+    "Added expect_patterns eval assertions; 42/42 evals passed on implementation head",
+    "Added end-to-end Visible Text Gate behavior test: slop FAIL, clean owner brief PASS",
+    "Updated pipeline docs, skill guidance, adaptation report, vfresearch source registry, README and CHANGELOG",
+    "Full VelvetOS sensor suite passed 116/116 on implementation head 9b9788bc2b5576987dc25c1a68e433aeb71a5c67"
+  ],
+  "next_step": "PR #433 may merge only after VelvetOS Core Sensors is green on the exact final head commit that includes this checkpoint.",
+  "artifacts": [
+    "packages/vfcopy/lint_he.py",
+    "scripts/check-vfcopy.py",
+    "scripts/vf_visible_text.py",
+    "scripts/check-visible-text-gate.py",
+    "packages/vfcopy/evals/hebrew-copy-evals.json",
+    "packages/vfcopy/hq/ai-tells-he.md",
+    "packages/vfcopy/skills/velvet-hebrew-copy/SKILL.md",
+    "packages/vfcopy/skills/velvet-hebrew-copy/PIPELINE.md",
+    "packages/vfcopy/skills/velvet-hebrew-copy/ADAPTATION.md",
+    "packages/vfresearch/sources/2026-09-29-no-ai-slop.md",
+    "packages/vfresearch/LINKS.json",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "unresolved": [],
+  "outcome": "worker_done",
+  "verification": "Implementation head 9b9788bc2b5576987dc25c1a68e433aeb71a5c67: VelvetOS Core Sensors SUCCESS; check-vfcopy 42/42 evals; check-visible-text-gate PASS; full suite 116/116. Final checkpoint head must re-run CI before merge.",
+  "gate": "EXACT_HEAD_CI_BEFORE_MERGE",
+  "escalation": null,
+  "last_updated": "2026-09-29",
+  "latest_observation": "Anti-slop capability is pipeline-bound: detect_ai_slop runs inside lint_hebrew_copy; vf_visible_text records exact findings; named findings block humanizer_ai_tells and visible_text_gate PASS."
+}
