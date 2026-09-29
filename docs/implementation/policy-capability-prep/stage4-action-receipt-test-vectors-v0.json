@@ -1,0 +1,207 @@
+{
+  "schema": "velvetos.draft.stage4.action-receipt-test-vectors.v0",
+  "status": "NON_NORMATIVE_STAGE3_PREPARATION",
+  "validator_implemented": false,
+  "patch_semantics": "Apply patch_ops to base_receipt using RFC6902-style remove/replace before evaluating.",
+  "proposed_reason_codes": [
+    "POLICY_DECISION_MISSING",
+    "POLICY_ID_UNREGISTERED",
+    "EXACT_BINDING_REQUIRED",
+    "NAMED_REVIEWER_REQUIRED",
+    "OWNER_BLOCKER_OPEN",
+    "OWNER_OVERRIDE_EXPIRED",
+    "OVERRIDE_CANNOT_RELAX"
+  ],
+  "base_receipt": {
+    "schema_version": "draft.stage4.action-receipt.v0",
+    "non_normative": true,
+    "action_receipt_id": "draft-fixture-base",
+    "policy_id": "instagram.publish",
+    "effect_class": "external_publish",
+    "action": {
+      "action_type": "publish_image",
+      "scope": "exact_artifact",
+      "subject_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "exact_binding": {
+      "artifact_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "payload_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "text_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "media_sha256": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ]
+    },
+    "policy_decision": {
+      "decision_ref": "fixture-policy-decision",
+      "outcome": "ALLOW",
+      "decided_at": "2030-01-01T10:00:00Z"
+    },
+    "owner_gate": {
+      "required": true,
+      "reviewer": "owner",
+      "decision": "APPROVED",
+      "reviewed_at": "2030-01-01T10:01:00Z",
+      "expires_at": "2030-01-01T11:00:00Z",
+      "blocker_ids": []
+    },
+    "override": {
+      "mode": "exact_action_owner",
+      "reason": "fixture exact-action approval",
+      "scope": "this exact artifact/action only",
+      "expires_at": "2030-01-01T11:00:00Z"
+    },
+    "evidence": [
+      {
+        "type": "fixture",
+        "ref": "docs/implementation/policy-capability-prep/stage4-action-receipt-test-vectors-v0.json"
+      }
+    ],
+    "rollback": {
+      "mode": "RETURN_TO_EXISTING_CHANNEL_GATE",
+      "instruction_ref": "packages/velvetos/policy/reports/migration-map.json#stage-4"
+    }
+  },
+  "vectors": [
+    {
+      "id": "exact_owner_gate_valid",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [],
+      "expected": {
+        "gate": "PASS",
+        "reason_codes": []
+      }
+    },
+    {
+      "id": "missing_policy_decision",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "remove",
+          "path": "/policy_decision"
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "POLICY_DECISION_MISSING"
+        ]
+      }
+    },
+    {
+      "id": "missing_exact_binding",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/exact_binding",
+          "value": {
+            "media_sha256": []
+          }
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "EXACT_BINDING_REQUIRED"
+        ]
+      }
+    },
+    {
+      "id": "missing_named_reviewer",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/owner_gate/reviewer",
+          "value": null
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "NAMED_REVIEWER_REQUIRED"
+        ]
+      }
+    },
+    {
+      "id": "open_owner_blocker",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/owner_gate/blocker_ids",
+          "value": [
+            "B-1"
+          ]
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "OWNER_BLOCKER_OPEN"
+        ]
+      }
+    },
+    {
+      "id": "expired_exact_owner_override",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/owner_gate/expires_at",
+          "value": "2030-01-01T10:15:00Z"
+        },
+        {
+          "op": "replace",
+          "path": "/override/expires_at",
+          "value": "2030-01-01T10:15:00Z"
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "OWNER_OVERRIDE_EXPIRED"
+        ]
+      }
+    },
+    {
+      "id": "tighten_only_must_not_relax_deny",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/override/mode",
+          "value": "tighten_only"
+        },
+        {
+          "op": "replace",
+          "path": "/policy_decision/outcome",
+          "value": "DENY"
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "OVERRIDE_CANNOT_RELAX"
+        ]
+      }
+    },
+    {
+      "id": "unregistered_policy_id",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/policy_id",
+          "value": "future.unregistered.effect"
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "POLICY_ID_UNREGISTERED"
+        ]
+      }
+    }
+  ]
+}

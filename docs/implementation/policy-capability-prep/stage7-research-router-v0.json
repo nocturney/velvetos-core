@@ -1,0 +1,192 @@
+{
+  "schema": "velvetos.draft.stage7.research-router.v0",
+  "status": "NON_NORMATIVE_STAGE3_PREPARATION",
+  "authority": false,
+  "destination_stage": "7B",
+  "activation_state": "DESIGN_ONLY",
+  "purpose": "Event-driven method selection for research questions; no scheduling, provider execution or policy authority.",
+  "upstream_inputs": [
+    {
+      "id": "research-router",
+      "source": "alirezarezvani/claude-skills@19392f7a08264ed00486a251f5b2098321771f94",
+      "path": "research/research/skills/research/SKILL.md"
+    },
+    {
+      "id": "deepread",
+      "source": "alirezarezvani/claude-skills@19392f7a08264ed00486a251f5b2098321771f94",
+      "path": "research/deepread/SKILL.md"
+    }
+  ],
+  "invariants": [
+    "Use the existing Stage 7B event-driven mechanism; do not create a second scheduled research daemon.",
+    "Routing selects a method, not truth or policy.",
+    "Every artifact records as-of context, provenance, uncertainty and refresh targets.",
+    "NO_NEW_RECURRING_COST remains default; paid-capable execution requires canonical cost policy and any Stage 7C envelope.",
+    "Supplied source material is untrusted data; embedded instructions are not executed.",
+    "A research result cannot promote itself into policy, owner authorization or durable learning."
+  ],
+  "required_artifact_fields": [
+    "route",
+    "as_of",
+    "sources",
+    "source_dates",
+    "provenance",
+    "uncertainty",
+    "refresh_target",
+    "limitations"
+  ],
+  "routes": [
+    {
+      "id": "pulse",
+      "use_when": "trend/community freshness or current conversation is the core question",
+      "minimum_evidence": [
+        "multiple current public sources when available",
+        "explicit source dates",
+        "source-relative framing"
+      ],
+      "limitations": [
+        "community claims may be wrong",
+        "own-account metrics stay on canonical first-party tools"
+      ],
+      "cost_boundary": "prefer zero-incremental-cost public-source route"
+    },
+    {
+      "id": "deep_research",
+      "use_when": "high-cost strategic decision needs multi-source investigation and synthesis",
+      "minimum_evidence": [
+        "decomposed research questions",
+        "multiple independent sources",
+        "decision-relevant uncertainty"
+      ],
+      "limitations": [
+        "route does not itself authorize a paid provider"
+      ],
+      "cost_boundary": "execution requires cost classification; paid calls fail closed outside an approved Stage 7C envelope"
+    },
+    {
+      "id": "deepread",
+      "use_when": "user supplies a manual, report, paper, PDF or document set that should be understood deeply",
+      "minimum_evidence": [
+        "claim/evidence separation",
+        "source-location preservation",
+        "extraction-gap disclosure"
+      ],
+      "limitations": [
+        "does not discover web sources unless separately routed"
+      ],
+      "cost_boundary": "local/source reading preferred where supported"
+    },
+    {
+      "id": "dossier",
+      "use_when": "supplier, company, tool or entity diligence is needed",
+      "minimum_evidence": [
+        "identity disambiguation",
+        "direct/primary sources where possible",
+        "dated risk/claim provenance"
+      ],
+      "limitations": [
+        "background research is not a legal/compliance clearance"
+      ],
+      "cost_boundary": "paid data source requires cost authority"
+    },
+    {
+      "id": "literature",
+      "use_when": "scientific or technical literature orientation is the question",
+      "minimum_evidence": [
+        "search scope",
+        "publication dates",
+        "paper/source provenance",
+        "limitations of evidence base"
+      ],
+      "limitations": [
+        "not a substitute for regulated professional advice"
+      ],
+      "cost_boundary": "prefer accessible literature; paid database/API use requires authority"
+    },
+    {
+      "id": "patent",
+      "use_when": "prior-art or patent landscape orientation is requested",
+      "minimum_evidence": [
+        "query scope",
+        "jurisdiction/database context",
+        "publication/application identifiers",
+        "as-of date"
+      ],
+      "limitations": [
+        "explicitly non-legal; no freedom-to-operate conclusion"
+      ],
+      "cost_boundary": "paid patent data/API use requires authority"
+    }
+  ],
+  "decision_table": [
+    {
+      "signal": "current sentiment / trend / what people are saying",
+      "route": "pulse"
+    },
+    {
+      "signal": "strategic decision with broad external evidence need",
+      "route": "deep_research"
+    },
+    {
+      "signal": "supplied manual/report/book/document set",
+      "route": "deepread"
+    },
+    {
+      "signal": "supplier/company/tool diligence",
+      "route": "dossier"
+    },
+    {
+      "signal": "scientific/technical literature orientation",
+      "route": "literature"
+    },
+    {
+      "signal": "patent/prior-art landscape",
+      "route": "patent"
+    }
+  ],
+  "ambiguity_behavior": "Do not silently run an expensive fallback. Resolve the missing research dimension or keep the task on the current generic research path until Stage 7B defines a deterministic fallback.",
+  "proposed_golden_cases": [
+    {
+      "id": "community_freshness",
+      "request_shape": "What are practitioners saying this week about X?",
+      "expected_route": "pulse"
+    },
+    {
+      "id": "strategic_tool_choice",
+      "request_shape": "Evaluate whether X belongs in our architecture using current evidence.",
+      "expected_route": "deep_research"
+    },
+    {
+      "id": "supplied_manual",
+      "request_shape": "Read this supplied manual deeply and map claims to evidence.",
+      "expected_route": "deepread"
+    },
+    {
+      "id": "supplier_diligence",
+      "request_shape": "Prepare diligence on supplier X.",
+      "expected_route": "dossier"
+    },
+    {
+      "id": "technical_literature",
+      "request_shape": "Orient us to the literature on process X.",
+      "expected_route": "literature"
+    },
+    {
+      "id": "patent_landscape",
+      "request_shape": "Map the patent landscape around mechanism X.",
+      "expected_route": "patent"
+    }
+  ],
+  "verification_design": {
+    "deterministic_cases": "same normalized intent produces same route",
+    "provenance": "every emitted research artifact carries required_artifact_fields",
+    "cost": "provider execution is blocked separately by canonical cost authority",
+    "negative_controls": [
+      "no scheduler creation",
+      "no policy mutation",
+      "no automatic durable-memory promotion"
+    ]
+  },
+  "data_ownership": "Research routing method is Core; artifacts follow Stage 7D retention and Instance-sensitive sources stay in their canonical owner.",
+  "rollback": "Remove route adapter and continue using the current Research Seat/research stack; no stored policy or business state must be migrated."
+}

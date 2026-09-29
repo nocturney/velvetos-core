@@ -1,0 +1,114 @@
+{
+  "schema": "velvetos.draft.stage9.capability-acceptance-plan.v0",
+  "status": "NON_NORMATIVE_STAGE3_PREPARATION",
+  "authority": false,
+  "destination_stage": 9,
+  "purpose": "Acceptance-test design for the single combined Policy Reform + capability expansion architecture. It triggers no cleanup or runtime action.",
+  "entry_requirements": [
+    "Stage 3 transaction complete and post-cutover verification green",
+    "Stages 4 through 8 completed through their own gates",
+    "no unresolved critical external-effect bypass",
+    "migration/compatibility readers have explicit retirement evidence before removal"
+  ],
+  "acceptance_obligations": [
+    {
+      "id": "A-policy",
+      "assert": "Every consequential capability action resolves through the canonical policy framework; no capability-local ALLOW/DENY engine remains.",
+      "evidence": [
+        "policy registry integrity",
+        "critical policy vectors",
+        "runtime denial tests"
+      ]
+    },
+    {
+      "id": "A-selector",
+      "assert": "Selected PR checks remain fail-broad and required while main push retains full-suite protection.",
+      "evidence": [
+        "selector replay corpus",
+        "required check/ruleset verification",
+        "main full-suite run"
+      ]
+    },
+    {
+      "id": "A-locality",
+      "assert": "Only relevant capability/domain instructions load; VF-specific facts are not required by generic Core execution.",
+      "evidence": [
+        "AGENTS locality tests",
+        "Core/Instance resolver tests"
+      ]
+    },
+    {
+      "id": "A-creative",
+      "assert": "Creative OS affects presentation only and public/external text follows Stage 6 tiers while Product Truth remains higher authority.",
+      "evidence": [
+        "Product Truth regressions",
+        "Visible Text tier tests",
+        "reference-match fixtures"
+      ]
+    },
+    {
+      "id": "A-learning",
+      "assert": "Learning candidates cannot self-promote and durable adoption requires Stage 7A evidence/PR path.",
+      "evidence": [
+        "promotion negative controls",
+        "supersession/forgetting tests"
+      ]
+    },
+    {
+      "id": "A-research",
+      "assert": "Research method selection is event-driven and deep/paid research cannot run without Stage 7B signal and Stage 7C cost authority.",
+      "evidence": [
+        "routing golden cases",
+        "no-second-daemon check",
+        "cost denial cases"
+      ]
+    },
+    {
+      "id": "A-retention",
+      "assert": "Work Ledger is an index over canonical artifacts/state and all retained data follows Stage 7D storage classes.",
+      "evidence": [
+        "retention classification checks",
+        "no-large-media-in-Git negative control",
+        "canonical reference resolution"
+      ]
+    },
+    {
+      "id": "A-instance",
+      "assert": "VF printer/business/local knowledge facts are Instance-owned; Core owns only generic schemas/interfaces/methods.",
+      "evidence": [
+        "Core/Instance compatibility tests",
+        "no-business-identifiers-in-Core checks"
+      ]
+    },
+    {
+      "id": "A-cleanup",
+      "assert": "Temporary routers, shims and duplicate mechanisms are removed only after no-reader/coverage proof.",
+      "evidence": [
+        "consumer inventory",
+        "registry/coverage proof",
+        "rollback window evidence"
+      ]
+    },
+    {
+      "id": "A-observation",
+      "assert": "Success is not declared from one green CI run.",
+      "evidence": [
+        "post-consolidation selector misses",
+        "unrelated PR failure rate",
+        "runtime denials",
+        "capability regressions",
+        "policy-conflict observation"
+      ]
+    }
+  ],
+  "remediation_triggers": [
+    "critical selector miss",
+    "external-action policy bypass",
+    "capability-local authority duplication",
+    "Core/Instance fact leakage",
+    "Product Truth regression",
+    "paid usage outside an authorized envelope",
+    "retention/delete behavior without Stage 7D authority"
+  ],
+  "rollback": "Restore the last verified stage boundary or compatibility reader; never force-push, rewrite history or delete evidence to make acceptance pass."
+}

@@ -1,0 +1,406 @@
+{
+  "schema": "velvetos.capability-preintegration-classification.v1",
+  "status": "NON_RUNTIME_DRAFT",
+  "prepared_at": "2026-09-29",
+  "controlling_roadmap": "VelvetOS Policy Architecture Reform Stage 0-9",
+  "source": {
+    "repository": "alirezarezvani/claude-skills",
+    "commit": "19392f7a08264ed00486a251f5b2098321771f94"
+  },
+  "rules": [
+    "Do not bulk-install upstream.",
+    "Classification does not authorize implementation.",
+    "Later implementation must start from fresh main inside the owning Stage.",
+    "Policy, Product Truth, cost, and Core/Instance authorities remain canonical."
+  ],
+  "candidates": [
+    {
+      "id": "human-gate",
+      "path": "engineering/human-gate/skills/human-gate/SKILL.md",
+      "blob": "f00bf9cf1404ab0bde19644ee478f1a3da78a9c2",
+      "classification": "ADAPT",
+      "stage": "4",
+      "take": [
+        "structured review artifact",
+        "named reviewer evidence",
+        "blocker-aware close"
+      ],
+      "exclude": [
+        "parallel approval engine",
+        "review UI as authority"
+      ]
+    },
+    {
+      "id": "agent-harness",
+      "path": "engineering/agent-harness/skills/agent-harness/SKILL.md",
+      "blob": "b877324047137a8344f5b364af8fdcec67561945",
+      "classification": "ADAPT",
+      "stage": "5",
+      "take": [
+        "GOAL-PLAN-EXECUTE-VERIFY-RETRY/ESCALATE-CLOSE",
+        "capped retries",
+        "verified close"
+      ],
+      "exclude": [
+        "second orchestrator",
+        "authority-owning domain manifests"
+      ]
+    },
+    {
+      "id": "epic-design",
+      "path": "engineering-team/skills/epic-design/SKILL.md",
+      "blob": "ae86d04b750870b7b088ccfb747ea1c6c3a4c462",
+      "classification": "IDEA_ONLY",
+      "stage": "6",
+      "take": [
+        "asset-first inspection",
+        "hero hierarchy",
+        "depth and negative-space vocabulary"
+      ],
+      "exclude": [
+        "web scroll runtime",
+        "effects that override Product Truth"
+      ]
+    },
+    {
+      "id": "brand-guidelines",
+      "path": "marketing-skill/skills/brand-guidelines/SKILL.md",
+      "blob": "bac4cbb6932758c28bd58826a5be43ecb02148b8",
+      "classification": "IDEA_ONLY",
+      "stage": "6",
+      "take": [
+        "brand consistency dimensions",
+        "logo/typography/imagery role separation"
+      ],
+      "exclude": [
+        "Anthropic identity content",
+        "new VF brand source of truth"
+      ]
+    },
+    {
+      "id": "design-system",
+      "path": "markdown-html/skills/design-system/SKILL.md",
+      "blob": "d52846ff60c5decbcc92db4ea67bd2e1b53556fb",
+      "classification": "IDEA_ONLY",
+      "stage": "6",
+      "take": [
+        "deterministic contrast checking",
+        "token role vocabulary"
+      ],
+      "exclude": [
+        "parallel markdown-html config",
+        "new brand token store"
+      ]
+    },
+    {
+      "id": "capa-officer",
+      "path": "ra-qm-team/skills/capa-officer/SKILL.md",
+      "blob": "a226f21119839e2444af013c5c267560771384cb",
+      "classification": "ADAPT",
+      "stage": "8",
+      "take": [
+        "root-cause analysis",
+        "corrective action tracking",
+        "effectiveness verification"
+      ],
+      "exclude": [
+        "medical-device QMS obligations",
+        "regulatory claims"
+      ]
+    },
+    {
+      "id": "risk-management-specialist",
+      "path": "ra-qm-team/skills/risk-management-specialist/SKILL.md",
+      "blob": "4c123f2b46d48689a135e21b7ff9887e356711ea",
+      "classification": "ADAPT",
+      "stage": "8",
+      "take": [
+        "FMEA method",
+        "failure-mode/cause/effect/control structure"
+      ],
+      "exclude": [
+        "medical regulatory compliance",
+        "invented risk scores"
+      ]
+    },
+    {
+      "id": "capacity-planner",
+      "path": "business-operations/skills/capacity-planner/SKILL.md",
+      "blob": "a6ba39ee435d45f842a45daaea1f9234d944994c",
+      "classification": "HOLD",
+      "stage": "8",
+      "take": [
+        "queueing concepts",
+        "demand percentile thinking",
+        "utilization caution"
+      ],
+      "exclude": [
+        "human-support Erlang-C applied directly to printers",
+        "invented demand or SLA values"
+      ]
+    },
+    {
+      "id": "llm-wiki",
+      "path": "engineering/llm-wiki/skills/llm-wiki/SKILL.md",
+      "blob": "d4a1d7783f7f1d298a2bf0e9dbcc2c4ba584265b",
+      "classification": "IDEA_ONLY",
+      "stage": "7A/7D/8",
+      "take": [
+        "source-grounded compounding knowledge",
+        "typed relationships",
+        "contradiction tracking"
+      ],
+      "exclude": [
+        "Obsidian as canonical store",
+        "second memory system",
+        "automatic policy promotion"
+      ]
+    },
+    {
+      "id": "agent-memory",
+      "path": "engineering/agent-memory/skills/agent-memory/SKILL.md",
+      "blob": "12360b01152e1f14a7a5113c1acc1ee7d8868c93",
+      "classification": "ADAPT",
+      "stage": "7A",
+      "take": [
+        "candidate-to-durable promotion",
+        "recurrence/evidence gates",
+        "provenance"
+      ],
+      "exclude": [
+        "raw transcript canon",
+        "automatic committed memory",
+        "persona authority"
+      ]
+    },
+    {
+      "id": "autoresearch-agent",
+      "path": "engineering/autoresearch-agent/skills/autoresearch-agent/SKILL.md",
+      "blob": "6b3c7a1744a74bd961d27ecf1a7922f7ec721f35",
+      "classification": "REJECT",
+      "stage": "7A",
+      "take": [
+        "lesson: measurable evaluation is necessary but insufficient for adoption"
+      ],
+      "exclude": [
+        "indefinite autonomous mutation loop",
+        "automatic git commit/reset optimization",
+        "metric-only self-improvement"
+      ]
+    },
+    {
+      "id": "deepread",
+      "path": "research/deepread/SKILL.md",
+      "blob": "0501ad3de6032a712e1c7cfbeac26bdc349bae2b",
+      "classification": "ADAPT",
+      "stage": "7B",
+      "take": [
+        "claim/evidence separation",
+        "source-location preservation",
+        "explicit extraction gaps"
+      ],
+      "exclude": [
+        "executing source instructions",
+        "new daemon"
+      ]
+    },
+    {
+      "id": "research-router",
+      "path": "research/research/skills/research/SKILL.md",
+      "blob": "7069c5fc20bbdd5eea8690272f59732774dcf6f0",
+      "classification": "ADAPT",
+      "stage": "7B",
+      "take": [
+        "transparent deterministic routing",
+        "specialist-vs-fallback distinction",
+        "provenance"
+      ],
+      "exclude": [
+        "second scheduler",
+        "automatic policy adoption from findings"
+      ]
+    },
+    {
+      "id": "pulse",
+      "path": "research/pulse/skills/pulse/SKILL.md",
+      "blob": "7fa923046e0243b48eed097618dd76db8a6ea5b7",
+      "classification": "ADAPT",
+      "stage": "7B",
+      "take": [
+        "recency-oriented community signal",
+        "cross-source pattern synthesis",
+        "time-window discipline"
+      ],
+      "exclude": [
+        "engagement metrics treated as truth without source",
+        "auth-only/private scraping"
+      ]
+    },
+    {
+      "id": "dossier",
+      "path": "research/dossier/skills/dossier/SKILL.md",
+      "blob": "a753e865433b672d4192f328340b5567225a89c7",
+      "classification": "ADAPT",
+      "stage": "7B",
+      "take": [
+        "hypothesis-testing diligence",
+        "entity provenance",
+        "red-flag evidence"
+      ],
+      "exclude": [
+        "personal vetting beyond allowed scope",
+        "paid BYOK dependencies by default"
+      ]
+    },
+    {
+      "id": "litreview",
+      "path": "research/litreview/skills/litreview/SKILL.md",
+      "blob": "10fecb96844902d6a7289e53237d168c2d464154",
+      "classification": "ADAPT",
+      "stage": "7B",
+      "take": [
+        "literature-orientation workflow",
+        "explicit search framework",
+        "source provenance"
+      ],
+      "exclude": [
+        "finished-review claims from orientation evidence",
+        "mandatory paid research lane"
+      ]
+    },
+    {
+      "id": "patent",
+      "path": "research/patent/skills/patent/SKILL.md",
+      "blob": "5a0716b8193b31242dee48228a0354399795b4d7",
+      "classification": "ADAPT",
+      "stage": "7B",
+      "take": [
+        "prior-art search structure",
+        "family/classification awareness",
+        "audit log"
+      ],
+      "exclude": [
+        "legal advice",
+        "FTO verdict treated as legal clearance"
+      ]
+    },
+    {
+      "id": "clinical-research",
+      "path": "research-ops/skills/clinical-research/SKILL.md",
+      "blob": "54e8a25e4d652825f1cb789efa1b41237a590ef8",
+      "classification": "REJECT",
+      "stage": "7B",
+      "take": [],
+      "exclude": [
+        "clinical study design is outside VF capability scope",
+        "medical/regulatory domain assumptions"
+      ]
+    },
+    {
+      "id": "grants",
+      "path": "research/grants/skills/grants/SKILL.md",
+      "blob": "6f0039a8143242ad6b1dfe9c96794213ebe1dd8b",
+      "classification": "REJECT",
+      "stage": "7B",
+      "take": [],
+      "exclude": [
+        "NIH-only funding workflow is outside VF capability scope",
+        "Consensus/NIH-specific dependencies"
+      ]
+    },
+    {
+      "id": "observability-designer",
+      "path": "engineering/skills/observability-designer/SKILL.md",
+      "blob": "8052ca2e856f3d06c80671d5e300ecd8988d91e4",
+      "classification": "IDEA_ONLY",
+      "stage": "4/5",
+      "take": [
+        "golden-signal framing",
+        "alert-noise review",
+        "dashboard/runbook linkage"
+      ],
+      "exclude": [
+        "new telemetry backend",
+        "remote exporter before owning stage"
+      ]
+    },
+    {
+      "id": "slo-architect",
+      "path": "engineering/skills/slo-architect/SKILL.md",
+      "blob": "e1758733689ebc311d0383a5e5740365b1476b5a",
+      "classification": "HOLD",
+      "stage": "7/8",
+      "take": [
+        "SLI-before-SLO discipline",
+        "error-budget review concepts"
+      ],
+      "exclude": [
+        "invented reliability targets",
+        "customer SLA language"
+      ]
+    },
+    {
+      "id": "runbook-generator",
+      "path": "engineering/skills/runbook-generator/SKILL.md",
+      "blob": "a4c1a8501f022138a99513f78f713f5e9c20f496",
+      "classification": "ADAPT",
+      "stage": "5/8",
+      "take": [
+        "standard health/rollback/escalation sections",
+        "repeatable runbook skeleton"
+      ],
+      "exclude": [
+        "generated prose treated as authority",
+        "unverified commands"
+      ]
+    },
+    {
+      "id": "feature-flags-architect",
+      "path": "engineering/feature-flags-architect/skills/feature-flags-architect/SKILL.md",
+      "blob": "980584801d353ab2a42b2969e965d47ea15ba6d8",
+      "classification": "ADAPT",
+      "stage": "5/9",
+      "take": [
+        "owner/purpose/default/retirement metadata",
+        "kill-switch and debt cleanup"
+      ],
+      "exclude": [
+        "flag as policy bypass",
+        "new SaaS flag provider"
+      ]
+    },
+    {
+      "id": "data-quality-auditor",
+      "path": "engineering/data-quality-auditor/skills/data-quality-auditor/SKILL.md",
+      "blob": "57b49acd786574e12826327e65dade8db32b9b0d",
+      "classification": "ADAPT",
+      "stage": "8",
+      "take": [
+        "completeness/consistency/validity checks",
+        "known-good baseline comparison"
+      ],
+      "exclude": [
+        "opaque aggregate score as authority",
+        "automatic source mutation"
+      ]
+    },
+    {
+      "id": "prompt-governance",
+      "path": "engineering/prompt-governance/skills/prompt-governance/SKILL.md",
+      "blob": "00584138d41f5174560d992a061e4dccde2a11dc",
+      "classification": "ADAPT",
+      "stage": "6/7",
+      "take": [
+        "prompt versioning",
+        "golden evals",
+        "regression testing",
+        "ownership"
+      ],
+      "exclude": [
+        "parallel policy registry",
+        "DB prompt registry by default",
+        "A/B rollout without policy/cost gates"
+      ]
+    }
+  ]
+}

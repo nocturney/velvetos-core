@@ -1,0 +1,145 @@
+{
+  "schema": "velvetos.capability-preintegration-drafts.v1",
+  "status": "NON_RUNTIME_DRAFT",
+  "notice": "Design input only. This file is not policy, authority, runtime routing, an active schema, or a canonical data source.",
+  "guardrails": [
+    "Do not wire these drafts into runtime before the owning reform Stage begins.",
+    "A capability may name required policy IDs but may never authorize a side effect.",
+    "Unknown data stays unknown or null; do not invent business, printer, cost, reliability, or product facts.",
+    "Product Truth remains higher authority than Creative OS presentation choices.",
+    "OWNER_REVIEW_CANDIDATE and ready_for_publish remain non-publication states."
+  ],
+  "drafts": {
+    "stage4_action_review_receipt": {
+      "owner_stage": "4",
+      "purpose": "Candidate audit primitive for exact-action human review; policy decision remains canonical and external-effect-specific.",
+      "fields": ["schema_version", "receipt_id", "policy_id", "action_kind", "subject_ref", "artifact_bindings", "policy_decision_ref", "reviewer_identity_ref", "review_status", "reason_codes", "issued_at", "expires_at", "scope"],
+      "invariants": [
+        "Missing policy decision cannot be replaced by review.",
+        "Receipt must bind the exact subject, action, and artifact set under review.",
+        "Open BLOCKER means not approved.",
+        "Expiry behavior is explicit; review_at alone never disables a safety policy."
+      ],
+      "initial_policy_targets": ["gmail.send", "customer.whatsapp.send", "advertising.boost", "cost.recurring.new"],
+      "verification_vectors": [
+        {"id": "S4-V1", "case": "missing policy_decision_ref", "expected": "REJECT"},
+        {"id": "S4-V2", "case": "reviewer absent or anonymous", "expected": "REJECT"},
+        {"id": "S4-V3", "case": "open BLOCKER exists", "expected": "REJECT"}
+      ]
+    },
+    "stage5_capability_descriptor": {
+      "owner_stage": "5",
+      "purpose": "Inventory and routing metadata only, never policy authority.",
+      "fields": ["capability_id", "owner_package", "instance_scope", "instruction_surface", "inputs", "outputs", "required_policy_ids", "side_effect_classes", "verification", "rollback", "retirement_criteria"],
+      "invariants": [
+        "Root AGENTS stays small; domain instructions live closest to the owning package.",
+        "Capability selection cannot silently load VF-specific context into unrelated Core tasks.",
+        "required_policy_ids are dependencies, not permission."
+      ],
+      "verification_vectors": [
+        {"id": "S5-V1", "case": "descriptor contains its own allow or deny decision semantics", "expected": "REJECT"},
+        {"id": "S5-V2", "case": "VF business facts placed in a generic Core descriptor", "expected": "REJECT"},
+        {"id": "S5-V3", "case": "consequential action omits its required policy_id", "expected": "REJECT"}
+      ]
+    },
+    "stage6_creative_plan": {
+      "owner_stage": "6",
+      "purpose": "Editorial planning contract for presentation only; never physical identity or publication authorization.",
+      "fields": ["product_truth_refs", "aesthetic_reference_refs", "scene", "surface", "lighting", "composition", "hero_hierarchy", "typography_roles", "negative_space", "graphic_vocabulary", "exact_visible_text_ref", "product_protection_zones"],
+      "invariants": [
+        "Product Truth sources are distinct from aesthetic references.",
+        "No plan field can authorize a physical product change.",
+        "Public or external final text remains governed by visible_text.finalization.",
+        "CHAT_NATIVE_TERMINAL decisions must be finalized before the terminal image edit."
+      ],
+      "verification_vectors": [
+        {"id": "S6-V1", "case": "creative plan adds a physical part absent from the product source", "expected": "REJECT"},
+        {"id": "S6-V2", "case": "Product Truth QA board used as a style reference", "expected": "REJECT"},
+        {"id": "S6-V3", "case": "public text changes after its exact-text receipt", "expected": "INVALIDATE_RECEIPT"}
+      ]
+    },
+    "stage7_research_route": {
+      "owner_stage": "7B",
+      "purpose": "Transparent research-method selection without a second scheduled daemon.",
+      "fields": ["question_ref", "route", "route_reason", "as_of", "freshness_target", "source_types", "cost_classification", "provenance_requirements", "uncertainty_requirements"],
+      "route_examples": {
+        "pulse": "trend or community freshness",
+        "deep_research": "high-cost strategic decision",
+        "deepread": "supplied document or report",
+        "dossier": "supplier, company, or tool diligence",
+        "literature": "scientific or technical literature orientation",
+        "patent": "patent landscape with explicit non-legal status"
+      },
+      "invariants": [
+        "No deep review without a signal or explicit high-value request.",
+        "A paid-capable route must satisfy the Stage 7C cost policy or envelope.",
+        "Research findings cannot self-promote into policy."
+      ],
+      "verification_vectors": [
+        {"id": "S7B-V1", "case": "supplied document routed to trend pulse", "expected": "REJECT_ROUTE"},
+        {"id": "S7B-V2", "case": "paid research route without cost authorization", "expected": "BLOCK"},
+        {"id": "S7B-V3", "case": "finding attempts automatic policy change", "expected": "REJECT"}
+      ]
+    },
+    "stage7_cost_envelope": {
+      "owner_stage": "7C",
+      "purpose": "Candidate bounded-cost authorization shape; canonical cost policy remains owner.",
+      "fields": ["provider", "scope", "billing_model", "per_job_cap", "monthly_cap", "currency", "expires_at", "auto_overage_control", "owner_approval_ref"],
+      "invariants": [
+        "NO_NEW_RECURRING_COST remains the default.",
+        "Existing subscription is not proof of zero incremental usage cost.",
+        "Without a hard cap or overage control, per-call approval remains required."
+      ],
+      "verification_vectors": [
+        {"id": "S7C-V1", "case": "monthly cap absent on a metered provider", "expected": "BLOCK"},
+        {"id": "S7C-V2", "case": "envelope expired", "expected": "BLOCK"},
+        {"id": "S7C-V3", "case": "call outside approved scope", "expected": "BLOCK"}
+      ]
+    },
+    "stage7_work_ledger_reference": {
+      "owner_stage": "7D",
+      "purpose": "Continuation and audit index over canonical artifacts and state, not a second artifact store.",
+      "fields": ["work_id", "intent_ref", "source_refs", "decision_refs", "artifact_refs", "hashes", "verification_refs", "approval_refs", "live_action_refs", "blockers", "next_action"],
+      "invariants": [
+        "Storage location follows Stage 7D retention classification.",
+        "Do not duplicate full transcripts or canonical records.",
+        "A ledger entry is context and audit indexing, not policy authority."
+      ],
+      "verification_vectors": [
+        {"id": "S7D-V1", "case": "ledger copies a canonical policy body and claims authority", "expected": "REJECT"},
+        {"id": "S7D-V2", "case": "large media embedded into Git ledger", "expected": "REJECT_STORAGE"},
+        {"id": "S7D-V3", "case": "record references canonical artifact by hash and location", "expected": "ACCEPT"}
+      ]
+    },
+    "stage8_printer_capability_record": {
+      "owner_stage": "8",
+      "purpose": "Field inventory for a future VF printer registry; intentionally non-canonical until Stage 8 placement.",
+      "fields": ["printer_id", "vendor", "model", "process", "build_volume", "materials_verified", "profiles_verified", "capabilities_verified", "constraints_verified", "source_refs", "verified_at"],
+      "invariants": [
+        "VF fleet facts belong to Instance-owned sources.",
+        "Unknown dimensions, materials, or profiles remain null.",
+        "No printer upload, start, or control authority is implied.",
+        "Capacity scheduling starts advisory-only."
+      ],
+      "verification_vectors": [
+        {"id": "S8-V1", "case": "missing build volume filled from model guess", "expected": "REJECT"},
+        {"id": "S8-V2", "case": "verified source ref supports a capability", "expected": "ACCEPT_FACT"},
+        {"id": "S8-V3", "case": "record is used as authority to start a physical print", "expected": "REJECT_AUTHORITY"}
+      ]
+    },
+    "stage8_knowledge_record": {
+      "owner_stage": "8",
+      "purpose": "Source-grounded derived knowledge with Core and Instance separation.",
+      "fields": ["knowledge_id", "scope", "claim", "source_refs", "observed_at", "confidence_basis", "supersedes", "requires_canonical_verification"],
+      "invariants": [
+        "Generic technical knowledge and VF-local observations are separated.",
+        "Derived knowledge cannot grant policy or owner authorization.",
+        "Sensitive or operational live truth follows its existing canonical source."
+      ],
+      "verification_vectors": [
+        {"id": "S8-K1", "case": "derived memory conflicts with a current canonical source", "expected": "CANONICAL_SOURCE_WINS"},
+        {"id": "S8-K2", "case": "VF-local printer fact stored as generic Core truth", "expected": "REJECT_SCOPE"}
+      ]
+    }
+  }
+}
