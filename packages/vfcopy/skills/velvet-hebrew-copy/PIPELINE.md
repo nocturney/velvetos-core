@@ -14,7 +14,7 @@ Authority: `constitution/VISIBLE_TEXT.md`.
 | 5 | Writer לפי surface | templates + domain tools | שלד |
 | 6 | Relevant specialist tools | social→VOICE/vfgrowth; sales→vfsales/vfcost; visual→Creative Director; marketing→vfmskill כשישים | context-aware draft constraints |
 | 7 | **velvet-hebrew-copy** | `skills/velvet-hebrew-copy/SKILL.md` | טיוטה בעברית טבעית |
-| 8 | Style / Humanizer / AI-tells | `hq/ai-tells-he.md` + `python3 scripts/check-vfcopy.py lint` | lint · rewrite אחד · מבחן מאפייה |
+| 8 | Style / Humanizer / AI-tells | `hq/ai-tells-he.md` + `python3 scripts/check-vfcopy.py lint` + named anti-slop detector | lint · named findings · rewrite אחד · מבחן מאפייה |
 | 9 | Factual validation | source/domain truth | pass או `needs_input` |
 | 10 | Surface QA | לפי mode | public/visual/customer/owner/document/UI pass |
 | 11 | Visible Text decision | artifact/preflight קיים | `visible_text_gate: PASS|FAIL|UNPROVEN` |
@@ -22,6 +22,10 @@ Authority: `constitution/VISIBLE_TEXT.md`.
 
 `reader-first-he.md` הוא baseline לכל prose שנכתב ב־AI לעין אנושית.  
 `vfmskill` copywriting/copy-editing מתווסף כאשר הוא רלוונטי, בעיקר marketing/sales/long-form; הוא אינו עוקף `velvet-hebrew-copy`, `ai-tells-he.md` או אמת הדומיין.
+
+### Anti-slop בתוך השער, לא לידו
+
+`detect_ai_slop()` חי בתוך `packages/vfcopy/lint_he.py`. `lint_hebrew_copy()` קורא לו בכל candidate, ולכן finding חוסם את `humanizer_ai_tells` ואת `visible_text_gate: PASS` על אותו digest. `scripts/vf_visible_text.py` גם מחזיר `anti_slop.checked=true` ואת ה-findings המדויקים. מצב `python3 scripts/check-vfcopy.py detect --text '…'` מיועד לאבחון בלבד; הוא אינו עוקף lint, אינו נותן score ואינו טוען מי כתב את הטקסט.
 
 ## Routing לפי mode
 
