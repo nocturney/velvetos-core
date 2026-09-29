@@ -662,8 +662,9 @@ def run_eval_suite(evals_path: Path) -> tuple[int, int, list[str]]:
         verdict = lint_hebrew_copy(body, label=cid, context=ctx)
         expected_patterns = set(case.get("expect_patterns") or [])
         actual_patterns = {row["pattern"] for row in detect_ai_slop(body)}
-        ok = verdict.status == expect and expected_patterns.issubset(actual_patterns)
-        if not ok and expect == "needs_input" and verdict.status in {
+        patterns_ok = expected_patterns.issubset(actual_patterns)
+        ok = verdict.status == expect and patterns_ok
+        if not ok and patterns_ok and expect == "needs_input" and verdict.status in {
             "needs_input",
             "fail_fact",
         }:
@@ -673,12 +674,12 @@ def run_eval_suite(evals_path: Path) -> tuple[int, int, list[str]]:
                 for k in ("needs_input", "חסר", "מבצע", "זמן", "לקוח", "גנרי")
             ):
                 ok = True
-        if not ok and expect == "fail_fact" and verdict.status == "needs_input":
+        if not ok and patterns_ok and expect == "fail_fact" and verdict.status == "needs_input":
             if "fact" in verdict.kind or any(
                 k in p for p in verdict.problems for k in ("משלוח", "₪", "וואטסאפ", "מחיר")
             ):
                 ok = True
-        if not ok and expect == "fail_style" and verdict.status == "needs_input":
+        if not ok and patterns_ok and expect == "fail_style" and verdict.status == "needs_input":
             # thin generic copy may escalate to needs_input — still a reject
             if "style" in verdict.kind:
                 ok = True
