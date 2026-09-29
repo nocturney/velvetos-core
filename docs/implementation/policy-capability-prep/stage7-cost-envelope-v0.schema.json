@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.draft.stage7.cost-envelope.v0",
+  "title": "DRAFT ONLY — Stage 7C bounded cost envelope",
+  "description": "Non-normative preparation. This schema does not approve spend or provider use and is not loaded by runtime.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "non_normative",
+    "provider",
+    "scope",
+    "billing_model",
+    "currency",
+    "per_job_cap",
+    "monthly_cap",
+    "expires_at",
+    "auto_overage_control",
+    "owner_approval_ref",
+    "policy_id"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "draft.stage7.cost-envelope.v0"
+    },
+    "non_normative": {
+      "const": true
+    },
+    "policy_id": {
+      "const": "cost.recurring.new"
+    },
+    "provider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "billing_model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$"
+    },
+    "per_job_cap": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "monthly_cap": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "auto_overage_control": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hard_stop",
+        "evidence_ref"
+      ],
+      "properties": {
+        "hard_stop": {
+          "const": true
+        },
+        "evidence_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "owner_approval_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "usage_evidence_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "x-velvetos-boundaries": [
+    "NO_NEW_RECURRING_COST remains the default until the canonical policy evaluates a real envelope.",
+    "Existing subscription is not proof of zero incremental cost.",
+    "A missing hard stop, cap, expiry or owner approval keeps paid-capable execution fail-closed.",
+    "This draft cannot be cited as spend approval."
+  ]
+}

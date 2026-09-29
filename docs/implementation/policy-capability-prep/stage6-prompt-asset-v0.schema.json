@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.draft.stage6.prompt-asset.v0",
+  "title": "DRAFT ONLY — Prompt production asset shape",
+  "description": "Non-normative Stage 3 preparation. This is not a prompt registry, policy authority, loader or deployment mechanism.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "non_normative",
+    "prompt_id",
+    "version",
+    "domain",
+    "purpose",
+    "owner_surface",
+    "prompt_source_ref",
+    "behavioral_contract_refs",
+    "golden_eval_refs",
+    "downstream_gates",
+    "change"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "draft.stage6.prompt-asset.v0"
+    },
+    "non_normative": {
+      "const": true
+    },
+    "prompt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner_surface": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Future locality owner chosen by Stage 5/6; not policy ownership."
+    },
+    "prompt_source_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "behavioral_contract_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "golden_eval_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "downstream_gates": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "literal_text_is_authority": {
+      "const": false,
+      "description": "Behavior belongs to structured contracts/tests except true protocol literals."
+    },
+    "provider_constraints": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Provider/cost details remain subject to canonical cost authority and Stage 7C."
+    },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "change_reason",
+        "supersedes",
+        "migration_effect",
+        "rollback_ref"
+      ],
+      "properties": {
+        "change_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supersedes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "migration_effect": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rollback_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "x-velvetos-boundaries": [
+    "Prompt assets never authorize external effects.",
+    "Prompt registry, if later implemented, is production-asset governance rather than policy authority.",
+    "A/B or provider execution cannot bypass cost.recurring.new or surface-specific Visible Text gates.",
+    "Stage 5 context locality decides where prompt assets live before Stage 6 activates them."
+  ]
+}

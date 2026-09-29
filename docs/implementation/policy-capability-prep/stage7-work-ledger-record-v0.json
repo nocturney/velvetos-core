@@ -1,0 +1,130 @@
+{
+  "schema": "velvetos.draft.stage7.work-ledger-record.v0",
+  "status": "NON_NORMATIVE_STAGE3_PREPARATION",
+  "authority": false,
+  "destination_stage": "7D",
+  "implementation_state": "FIELD_INVENTORY_ONLY",
+  "purpose": "Continuation/audit index over canonical artifacts and state; never a policy authority or second artifact store.",
+  "storage_decision": "TBD_BY_STAGE_7D",
+  "invariants": [
+    "Do not store full chat transcripts as the ledger.",
+    "Do not duplicate canonical policy/config/schema or large media.",
+    "References point to canonical artifacts/state; the ledger does not replace them.",
+    "Approval/policy fields are evidence references, not authorization decisions.",
+    "Sensitive values are referenced only through approved redacted/private handles.",
+    "Retention and deletion follow Stage 7D classification; this draft authorizes no deletion."
+  ],
+  "candidate_fields": [
+    {
+      "field": "work_id",
+      "type": "string",
+      "required": true,
+      "meaning": "stable work identifier"
+    },
+    {
+      "field": "intent",
+      "type": "string",
+      "required": true,
+      "meaning": "bounded work intent"
+    },
+    {
+      "field": "reform_stage",
+      "type": "string|integer",
+      "required": false,
+      "meaning": "owning reform Stage when applicable"
+    },
+    {
+      "field": "as_of",
+      "type": "date-time",
+      "required": true,
+      "meaning": "record observation time"
+    },
+    {
+      "field": "sources",
+      "type": "array<source_ref>",
+      "required": true,
+      "meaning": "canonical or external source references with provenance"
+    },
+    {
+      "field": "decisions",
+      "type": "array<decision_ref>",
+      "required": false,
+      "meaning": "references to decisions and rationale artifacts"
+    },
+    {
+      "field": "artifacts",
+      "type": "array<artifact_ref>",
+      "required": false,
+      "meaning": "outputs by reference, not embedded large bytes"
+    },
+    {
+      "field": "hashes",
+      "type": "object",
+      "required": false,
+      "meaning": "exact artifact/package/text/media bindings where relevant"
+    },
+    {
+      "field": "verification",
+      "type": "array<verification_ref>",
+      "required": false,
+      "meaning": "sensor/provider/live-readback evidence"
+    },
+    {
+      "field": "approvals",
+      "type": "array<approval_ref>",
+      "required": false,
+      "meaning": "owner/human/policy receipt references only"
+    },
+    {
+      "field": "live_actions",
+      "type": "array<action_ref>",
+      "required": false,
+      "meaning": "external effects with provider/result evidence"
+    },
+    {
+      "field": "blockers",
+      "type": "array<blocker>",
+      "required": false,
+      "meaning": "open blockers with exact impact and closure action"
+    },
+    {
+      "field": "next_action",
+      "type": "string|null",
+      "required": false,
+      "meaning": "single resume point when work is not closed"
+    },
+    {
+      "field": "component_state",
+      "type": "string|null",
+      "required": false,
+      "meaning": "existing VelvetOS state vocabulary when relevant"
+    },
+    {
+      "field": "data_owner",
+      "type": "string|null",
+      "required": false,
+      "meaning": "Core/Instance/domain ownership after Stage 8 resolution"
+    },
+    {
+      "field": "retention_class",
+      "type": "string|null",
+      "required": false,
+      "meaning": "must resolve through Stage 7D retention rules before implementation"
+    }
+  ],
+  "forbidden_fields_or_behaviors": [
+    "policy_allow_or_deny_as_local_authority",
+    "copied_full_transcript",
+    "embedded_large_media",
+    "secret_value",
+    "implicit_owner_approval",
+    "self-promoted_durable_learning"
+  ],
+  "verification_design": {
+    "references": "all referenced canonical artifacts must resolve or be explicitly unavailable",
+    "exact_bindings": "hashes must match the artifact they claim to bind",
+    "no_authority": "ledger state cannot satisfy a policy gate by itself",
+    "retention": "implementation blocked until Stage 7D assigns storage/retention classes"
+  },
+  "rollback": "Delete the ledger index/adapters; canonical artifacts and state remain intact because the ledger never owns them."
+}

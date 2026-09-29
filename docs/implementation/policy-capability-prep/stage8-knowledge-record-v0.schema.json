@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "velvetos.draft.stage8.knowledge-record.v0",
+  "title": "DRAFT ONLY — Stage 8 source-grounded knowledge record",
+  "description": "Non-normative Core/Instance knowledge shape. Derived knowledge is never policy or current operational authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "non_normative",
+    "knowledge_id",
+    "scope",
+    "claim",
+    "source_refs",
+    "observed_at",
+    "confidence_basis",
+    "requires_canonical_verification"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "draft.stage8.knowledge-record.v0"
+    },
+    "non_normative": {
+      "const": true
+    },
+    "knowledge_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "enum": [
+        "core_generic",
+        "instance_local"
+      ]
+    },
+    "instance_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "claim": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ref",
+          "source_type"
+        ],
+        "properties": {
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "as_of": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "confidence_basis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "supersedes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "requires_canonical_verification": {
+      "const": true
+    },
+    "canonical_source_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "refresh_target": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "sensitivity": {
+      "enum": [
+        "public",
+        "internal",
+        "private_reference_only"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "instance_local"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "instance_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scope": {
+            "const": "core_generic"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "instance_id": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ],
+  "x-velvetos-boundaries": [
+    "Generic technical knowledge and Velvet Factory-local observations remain separate.",
+    "Current finance, production, publication, inventory and schedule truth stays in its canonical operational source.",
+    "No record may grant policy permission or owner authorization.",
+    "Stage 7D retention decisions must exist before implementation chooses storage."
+  ]
+}

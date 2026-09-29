@@ -1,0 +1,141 @@
+{
+  "schema": "velvetos.draft.stage6.creative-os-archetypes.v0",
+  "status": "NON_NORMATIVE_STAGE3_PREPARATION",
+  "authority": false,
+  "destination_stage": 6,
+  "purpose": "Presentation vocabulary for future Creative OS; it never owns Product Truth, policy, publication authorization, brand authority or claims.",
+  "inherit_current_contracts": [
+    "Product Truth",
+    "Visible Text",
+    "current brand/public-CTA authority",
+    "publication preflight and exact-final evidence",
+    "current still/reel route contracts"
+  ],
+  "global_boundaries": {
+    "product_identity": "Physical identity is immutable; only presentation may change.",
+    "source_grounding": "Insets, arrows and detail claims require source-backed evidence.",
+    "public_effects": "OWNER_REVIEW_CANDIDATE and ready_for_publish are not publication authorization.",
+    "brand": "Existing owner-approved brand assets and rules remain canonical.",
+    "chat_native_terminal": "When that route applies, final Hebrew/graphics decisions are fixed before the terminal edit; no fabricated post-call QA."
+  },
+  "archetypes": [
+    {
+      "id": "editorial_cover",
+      "intent": "Magazine-cover hierarchy around a dominant real product.",
+      "hero": "single dominant product read",
+      "environment": "continuous credible scene or restrained editorial plate",
+      "depth": "foreground/midground/background only when it strengthens the product",
+      "typography": "clear headline/subhead hierarchy using current brand authority",
+      "negative_space": "reserve a deliberate text zone away from the product",
+      "graphic_vocabulary": [
+        "accent rule",
+        "restrained chips",
+        "source-backed inset when useful"
+      ],
+      "forbidden": [
+        "product regeneration",
+        "logo invention",
+        "unverified claim",
+        "text placed across protected product detail"
+      ]
+    },
+    {
+      "id": "contextual_scene",
+      "intent": "Show the real product as the hero inside a believable warm context.",
+      "hero": "product remains largest semantic object",
+      "environment": "credible surface/contact/shadow and contextual depth",
+      "depth": "context supports scale and atmosphere without obscuring identity",
+      "typography": "short supporting copy only if the scene retains breathing room",
+      "negative_space": "built into composition before text",
+      "graphic_vocabulary": [
+        "subtle accent",
+        "minimal contextual label"
+      ],
+      "forbidden": [
+        "invented structural product parts",
+        "fake scale evidence",
+        "busy decor that competes with hero"
+      ]
+    },
+    {
+      "id": "detail_evidence",
+      "intent": "Explain real details using source-grounded editorial callouts.",
+      "hero": "main product view plus limited verified details",
+      "environment": "simple enough that evidence remains legible",
+      "depth": "insets may isolate existing source detail only",
+      "typography": "labels describe only verified visible facts",
+      "negative_space": "callouts occupy dedicated zones",
+      "graphic_vocabulary": [
+        "inset",
+        "arrow",
+        "detail chip"
+      ],
+      "forbidden": [
+        "invented angle",
+        "invented hidden feature",
+        "material/dimension/durability claim without authority"
+      ]
+    },
+    {
+      "id": "sequence_story",
+      "intent": "Build a source-grounded progression for carousel/reel planning.",
+      "hero": "same verified product identity across the sequence",
+      "environment": "scene/angle changes only when backed by real sources or allowed deterministic render",
+      "depth": "progression may move from context to detail to end frame",
+      "typography": "surface-specific text follows current Visible Text/public-copy authority",
+      "negative_space": "planned per frame rather than overlaid after the fact",
+      "graphic_vocabulary": [
+        "chapter cue",
+        "progress marker",
+        "source-backed detail card"
+      ],
+      "forbidden": [
+        "generative product motion/re-render where current route forbids it",
+        "invented Hebrew by an incompatible generator",
+        "publication CTA outside current authority"
+      ]
+    }
+  ],
+  "critique_roles": [
+    {
+      "id": "art_director",
+      "output": "issues_and_repair_targets",
+      "authority": false,
+      "focus": [
+        "hierarchy",
+        "scene continuity",
+        "depth",
+        "reference alignment"
+      ]
+    },
+    {
+      "id": "minimalist",
+      "output": "issues_and_repair_targets",
+      "authority": false,
+      "focus": [
+        "remove distractions",
+        "protect negative space",
+        "reduce redundant graphics"
+      ]
+    },
+    {
+      "id": "skeptic",
+      "output": "issues_and_repair_targets",
+      "authority": false,
+      "focus": [
+        "unsupported claims",
+        "source mismatch",
+        "identity drift",
+        "fake evidence"
+      ]
+    }
+  ],
+  "promotion_requirements": [
+    "Stage 3 complete",
+    "Stage 5 locality decided",
+    "Stage 6 Visible Text tiers active",
+    "Product Truth remains higher authority",
+    "golden visual/reference fixtures defined before behavior change"
+  ],
+  "rollback": "Delete or revert Creative OS additions; current still/reel contracts remain authoritative."
+}

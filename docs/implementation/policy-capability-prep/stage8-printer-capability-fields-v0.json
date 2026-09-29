@@ -1,0 +1,266 @@
+{
+  "schema": "velvetos.draft.stage8.printer-capability-fields.v0",
+  "status": "NON_NORMATIVE_STAGE3_PREPARATION",
+  "authority": false,
+  "destination_stage": 8,
+  "activation_state": "FIELD_INVENTORY_ONLY",
+  "purpose": "Define candidate field meanings and ownership boundaries before any Velvet Factory printer facts are made canonical.",
+  "principles": [
+    "Core may own generic schemas/interfaces/algorithms; it must not own Velvet Factory fleet facts.",
+    "Instance owns verified local printer/profile/business bindings.",
+    "Secrets/private identifiers stay outside public Instance config.",
+    "Transient telemetry/queue/active-job state belongs to an approved runtime state store, not Git.",
+    "No field in this draft authorizes printer upload, start, control or automatic scheduling.",
+    "Unknown values remain unknown; do not infer model capability from marketing or memory."
+  ],
+  "field_inventory": [
+    {
+      "field": "printer_id",
+      "type": "string",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public_or_internal",
+      "meaning": "stable local logical printer identity"
+    },
+    {
+      "field": "manufacturer",
+      "type": "string",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified manufacturer name"
+    },
+    {
+      "field": "model",
+      "type": "string",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified model designation"
+    },
+    {
+      "field": "process",
+      "type": "enum",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified fabrication process such as FFF/FDM; enum defined by future Core schema"
+    },
+    {
+      "field": "build_volume_mm",
+      "type": "object{x,y,z}",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified usable build volume; never copied from an unverified listing"
+    },
+    {
+      "field": "tool_or_extruder_count",
+      "type": "integer",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified installed tool/extruder count"
+    },
+    {
+      "field": "nozzle_diameters_mm",
+      "type": "array<number>",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified supported/installed nozzle sizes as scoped by evidence"
+    },
+    {
+      "field": "material_classes",
+      "type": "array<string>",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified supported material classes under local profiles; no quality claim"
+    },
+    {
+      "field": "enclosure",
+      "type": "boolean|unknown",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified physical enclosure state/capability"
+    },
+    {
+      "field": "heated_bed",
+      "type": "boolean|unknown",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified heated-bed capability"
+    },
+    {
+      "field": "multi_material_mode",
+      "type": "string|unknown",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified local multi-material/tool-changing mode, if any"
+    },
+    {
+      "field": "slicer_routes",
+      "type": "array<string>",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_public",
+      "meaning": "verified slicer/tool routes allowed by current fabrication authority"
+    },
+    {
+      "field": "profile_refs",
+      "type": "array<string>",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_internal",
+      "meaning": "references to verified local print/slicer profiles"
+    },
+    {
+      "field": "capability_evidence",
+      "type": "array<evidence_ref>",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_internal",
+      "meaning": "source/receipt references supporting each capability claim"
+    },
+    {
+      "field": "verified_at",
+      "type": "date-time",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_internal",
+      "meaning": "last verification time for the scoped fact set"
+    },
+    {
+      "field": "verification_state",
+      "type": "enum{verified,partial,unknown,stale}",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_internal",
+      "meaning": "evidence state; not a marketing-quality score"
+    },
+    {
+      "field": "local_name",
+      "type": "string",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_internal",
+      "meaning": "local operator-friendly identifier"
+    },
+    {
+      "field": "assigned_use",
+      "type": "array<string>",
+      "value_owner": "INSTANCE",
+      "storage_class": "instance_internal",
+      "meaning": "advisory local use tags; not an authorization gate"
+    },
+    {
+      "field": "serial_number",
+      "type": "string",
+      "value_owner": "INSTANCE",
+      "storage_class": "private",
+      "meaning": "device identifier; do not place in public config"
+    },
+    {
+      "field": "network_endpoint",
+      "type": "string",
+      "value_owner": "INSTANCE",
+      "storage_class": "private",
+      "meaning": "local/network addressing; never public by default"
+    },
+    {
+      "field": "credential_ref",
+      "type": "secret_reference",
+      "value_owner": "INSTANCE",
+      "storage_class": "secret",
+      "meaning": "pointer only; credentials never stored in this registry"
+    },
+    {
+      "field": "maintenance_state",
+      "type": "runtime_state",
+      "value_owner": "INSTANCE",
+      "storage_class": "state_store",
+      "meaning": "current maintenance/availability state if a verified provider exists"
+    },
+    {
+      "field": "active_job_ref",
+      "type": "runtime_state",
+      "value_owner": "INSTANCE",
+      "storage_class": "state_store",
+      "meaning": "current job reference only when live evidence exists"
+    },
+    {
+      "field": "queue_state",
+      "type": "runtime_state",
+      "value_owner": "INSTANCE",
+      "storage_class": "state_store",
+      "meaning": "current production queue state from canonical operations source"
+    },
+    {
+      "field": "last_seen",
+      "type": "runtime_state",
+      "value_owner": "INSTANCE",
+      "storage_class": "state_store",
+      "meaning": "provider observation time; absence is not offline proof"
+    }
+  ],
+  "core_responsibilities": [
+    "define generic field schema and validation",
+    "define evidence/provenance shape",
+    "define advisory scheduling algorithms that accept Instance facts as input",
+    "define generic incident/CAPA record shape",
+    "preserve no-printer-control and policy boundaries"
+  ],
+  "instance_responsibilities": [
+    "hold verified fleet values and profile bindings",
+    "hold local supplier/business bindings where applicable",
+    "supply current facts explicitly to Core algorithms",
+    "keep sensitive/private values in the appropriate private/secret source"
+  ],
+  "rollout_sequence": [
+    {
+      "step": 1,
+      "name": "verified_registry",
+      "requirement": "establish evidence-backed fleet facts before optimization"
+    },
+    {
+      "step": 2,
+      "name": "incident_records",
+      "requirement": "record print/process incidents and corrective/effectiveness evidence"
+    },
+    {
+      "step": 3,
+      "name": "advisory_capacity",
+      "requirement": "produce advisory scenarios only from verified capability and demand inputs"
+    },
+    {
+      "step": 4,
+      "name": "automatic_scheduling",
+      "requirement": "out of scope until later explicit authority, evidence and safety gates exist"
+    }
+  ],
+  "advisory_capacity_inputs": [
+    {
+      "field": "eligible_printer_ids",
+      "source": "verified Instance registry"
+    },
+    {
+      "field": "estimated_job_duration",
+      "source": "verified job/slicer evidence or explicit unknown"
+    },
+    {
+      "field": "material_and_profile_requirements",
+      "source": "canonical job/profile sources"
+    },
+    {
+      "field": "queue",
+      "source": "canonical operations source"
+    },
+    {
+      "field": "maintenance_availability",
+      "source": "verified runtime/maintenance state when available"
+    }
+  ],
+  "incident_method_notes": {
+    "capa": "Generic root-cause → corrective action → effectiveness verification may be adapted. Medical/regulatory CAPA obligations are excluded.",
+    "fmea": "Generic failure-mode/probability/severity/control framing may be adapted. ISO 14971 compliance claims and unverified numeric thresholds are excluded."
+  },
+  "verification_design": {
+    "schema": "future Core schema validates type/ownership/sensitivity but never supplies VF values",
+    "instance": "every capability value carries evidence and verification state",
+    "privacy": "public Instance projection excludes private/secret/runtime-state classes",
+    "negative_controls": [
+      "no printer start/upload/control",
+      "no inferred capabilities",
+      "no automatic scheduling",
+      "no business facts in generic Core defaults"
+    ]
+  },
+  "rollback": "Remove the Stage 8 adapter/schema and keep current vfprod/instance sources unchanged; compatibility reads must exist before any future migration removes legacy fields."
+}

@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- 2026-09-29 - **Policy reform capability pre-integration prep:** adds a Stage-3-safe, non-runtime bundle with pinned upstream provenance/classification plus draft contracts and golden/negative fixtures for Stages 4-9; no policy, routing, AGENTS, selector, ruleset, provider, printer-control, publication, or runtime behavior changes.
+
 - 2026-09-29 — **vfcopy anti-slop gate:** selectively embeds `petergyang/no-ai-slop` patterns into the existing Hebrew copy stack: named pattern detection + detect-only CLI, strict pattern-aware evals, exact-candidate findings in `vf_visible_text.py`, and a behavioral Visible Text Gate check proving slop blocks PASS. No plugin/runtime/pack added; no AI-authorship scoring.
 
 - 2026-09-28 — **Adobe premium Reel route v6.6.11:** makes Photoshop 2026 + After Effects 2026 the canonical Project Reel production path, adds five-angle scene/EMPTY-plate job contracts, Select Subject product-layer extraction, 2.5D/RTL/safe-zone AE build and `vf_ae_reel.py` receipt pipeline, updates VF-R006, and fixes HyperFrames html-RTL/repo-root asset regressions; no live writes.
