@@ -17,10 +17,12 @@
     "gh-run:36339115144:failure:2026-09-27T18:01:50Z:https://github.com/nocturney/velvetos-core/actions/runs/36339115144",
     "gh-run:36356424110:failure:2026-09-27T22:46:09Z:https://github.com/nocturney/velvetos-core/actions/runs/36356424110",
     "gh-run:36395659618:failure:2026-09-28T08:09:14Z:https://github.com/nocturney/velvetos-core/actions/runs/36395659618",
-    "office-loop-1830 triage 2026-09-28: Office Control Plane still failing on main (latest 36395659618 @ 08:09Z). Same class as prior Persist/gitignored living-studio signal-room path; no fix PR in this handoff. Keep accepted; no promote."
+    "office-loop-1830 triage 2026-09-28: Office Control Plane still failing on main (latest 36395659618 @ 08:09Z). Same class as prior Persist/gitignored living-studio signal-room path; no fix PR in this handoff. Keep accepted; no promote.",
+    "gh-run:36583649624:failure:2026-09-29T14:34:13Z:https://github.com/nocturney/velvetos-core/actions/runs/36583649624",
+    "office-loop-1830 triage 2026-09-29: Office Control Plane failed on main again (36583649624 @ 14:34Z, also 36538938957 @ 07:49Z). Keep accepted; no promote — no durable Persist/gitignored living-studio fix in this handoff."
   ],
   "first_seen": "2026-09-26T10:43:44Z",
-  "last_seen": "2026-09-28T18:51:14+03:00",
+  "last_seen": "2026-09-29T18:48:19+03:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,

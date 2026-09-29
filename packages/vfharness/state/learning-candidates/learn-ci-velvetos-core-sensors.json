@@ -20,10 +20,11 @@
     "gh-run:36405191990:failure:2026-09-28T09:42:25Z:https://github.com/nocturney/velvetos-core/actions/runs/36405191990",
     "gh-run:36409043710:failure:2026-09-28T10:19:41Z:https://github.com/nocturney/velvetos-core/actions/runs/36409043710",
     "gh-run:36409350357:failure:2026-09-28T10:22:47Z:https://github.com/nocturney/velvetos-core/actions/runs/36409350357",
-    "office-loop-1830 triage 2026-09-28: one main failure 36409350357 @ 10:22Z then later main Core Sensors green (36410072924, 36443486034 after #427). No new durable sensor from this handoff. Keep accepted; no promote."
+    "office-loop-1830 triage 2026-09-28: one main failure 36409350357 @ 10:22Z then later main Core Sensors green (36410072924, 36443486034 after #427). No new durable sensor from this handoff. Keep accepted; no promote.",
+    "office-loop-1830 triage 2026-09-29: Core Sensors green on main today (36529846036, 36535708924, 36547798586, 36559918462). Keep accepted; no promote — no new durable sensor change from this handoff."
   ],
   "first_seen": "2026-09-25T06:11:05Z",
-  "last_seen": "2026-09-28T18:51:14+03:00",
+  "last_seen": "2026-09-29T18:48:19+03:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,
