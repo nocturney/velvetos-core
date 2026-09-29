@@ -2,12 +2,21 @@
 
 מקור רעיונות: [plannotator/write-better](https://github.com/plannotator/write-better) (Humanizer + Wikipedia AI tells).  
 חיזוק דפוסים: [mikiarlo3/ai-copywriter](https://github.com/mikiarlo3/ai-copywriter) (33 דפוסים מ־blader/humanizer; לא מתקינים — מטמיעים כאן).  
+חיזוק ממוקד: [petergyang/no-ai-slop](https://github.com/petergyang/no-ai-slop) (MIT; taxonomy + detect-only + minimum-effective-edit; לא מתקינים — מטמיעים ב־`vfcopy`).  
 שכבת Humanizer נוספת: [thekozugroup/humanizer](https://github.com/thekozugroup/humanizer) (MIT — רעיונות בלבד; ראו `skills/velvet-hebrew-copy/ADAPTATION.md`).  
 כתיבה חברתית: [social-media-skills/skills](https://github.com/social-media-skills/skills) — caption / hook / style ideas, לא vendoring.  
 לפני הלינט: `reader-first-he.md` + `skills/velvet-hebrew-copy/SKILL.md`. כאן: איך מנקים.  
 החוקה ו־`PLAYBOOK.md` + `VOICE.md` מנצחים.
 
 סנסור: `python3 scripts/check-vfcopy.py lint --text '…'` · rewrite אחד: `--rewrite` · evals: `eval`.
+
+אבחון ללא rewrite: `python3 scripts/check-vfcopy.py detect --text '…'` מחזיר `pattern` + ציטוט + כיוון תיקון. הוא **לא** detector של מחבר ולא נותן ציון הסתברות AI. אותו detector רץ גם מתוך `lint_hebrew_copy()` ולכן אינו כלי מדף אופציונלי.
+
+### דפוסים שמיים שחוסמים PASS
+
+`binary_contrast` · `throat_clearing` · `faux_insight` · `colon_reveal` · `superficial_analysis` · `importance_puffery` · `interpretive_metadiscourse` · `weasel_attribution` · `negative_listing` · `rhetorical_setup` · `summary_recap` · `fake_profound_ending`.
+
+הכלל: pattern finding הוא ראיה ניסוחית שניתנת לבדיקה, לא טענה שהטקסט נכתב ב־AI. מתקנים במינימום הנדרש ושומרים את הקול, הפרטים והקצב הטובים שכבר קיימים.
 
 ## מתי
 
