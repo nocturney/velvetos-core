@@ -1,0 +1,89 @@
+{
+  "schema": "velvetos.dcc-adobe.post-reboot-persistence.v1",
+  "date": "2026-09-30",
+  "status": "PASS",
+  "validation": "Real Windows reboot, pre-login gateway validation, interactive Chris login, full staggered desktop-host sequence, and final broker/client snapshot.",
+  "fixes": {
+    "dcc_gateway": {
+      "problem": "Windows PowerShell ErrorActionPreference=Stop promoted native dcc-mcp-server stderr to a terminating error immediately after START during boot.",
+      "fix": "Keep Stop for the wrapper but temporarily use Continue only around the native gateway process, preserve LASTEXITCODE, then restore the previous preference.",
+      "runtime_path": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetDccGateway.ps1",
+      "sha256": "112D930BAF4DDCAE72E0E319B1582943211732610776A2D1BB6948EF351995B3",
+      "task": "VelvetOS DCC Gateway",
+      "trigger": "BootTrigger",
+      "principal": "SYSTEM",
+      "post_reboot_result": 0,
+      "health_http_status": 200
+    },
+    "photoshop_broker": {
+      "problem": "Photoshop UPIA bridge 0.1.1 persisted, but its dedicated AdobePy broker on 127.0.0.1:47393 had no durable AtLogOn task.",
+      "fix": "Add a long-lived loopback-only AdobePy 0.6.2 broker wrapper and a Chris Interactive AtLogOn task; no watcher and no DevTools load are used.",
+      "runtime_path": "D:\\Velvet\\Runtime\\Autostart\\Start-AdobePyBroker-Photoshop.ps1",
+      "sha256": "DDBDFD6E331E380F45E5F3CA06C13760EA22D03613EAD17DF46EFBC5FAA0F8C5",
+      "task": "VelvetOS AdobePy Broker Photoshop",
+      "trigger": "LogonTrigger",
+      "principal": "CHRIS\\Chris",
+      "broker_port": 47393,
+      "post_login_listening": true,
+      "post_login_established_clients": 1,
+      "client_process": "Photoshop",
+      "client_session_id": 1
+    }
+  },
+  "pre_login": {
+    "interactive_user_session_present": false,
+    "gateway_9765_listening": true,
+    "photoshop_broker_47393_listening": false,
+    "photoshop_broker_before_login_expected": false
+  },
+  "post_login": {
+    "desktop_hosts_task_result": 0,
+    "desktop_hosts_done_marker": true,
+    "autostart_validation": {
+      "status": "PASS",
+      "enabled_apps": 15,
+      "disabled_apps": 2,
+      "stagger_seconds": 25
+    },
+    "gateway": {
+      "port": 9765,
+      "health_http_status": 200
+    },
+    "brokers": [
+      {
+        "port": 47391,
+        "listening": true,
+        "established_clients": 1,
+        "clients": ["CEPHtmlEngine"]
+      },
+      {
+        "port": 47392,
+        "listening": true,
+        "established_clients": 2,
+        "clients": ["Adobe Premiere Pro", "CEPHtmlEngine"]
+      },
+      {
+        "port": 47393,
+        "listening": true,
+        "established_clients": 1,
+        "clients": ["Photoshop"]
+      }
+    ],
+    "plugins": {
+      "photoshop_upia_0_1_1_present": true,
+      "premiere_upia_0_1_3_present": true
+    }
+  },
+  "uxp_developer_tool": {
+    "port": 14001,
+    "production_autostart_required": false,
+    "reason": "Production Photoshop and Premiere bridges use installed UPIA routes and do not require UXP Developer Tool or retired watcher processes."
+  },
+  "security_and_integrity": {
+    "global_signature_policy_weakened": false,
+    "adobe_host_binaries_modified": false,
+    "tokens_committed": false,
+    "photoshop_watcher_required": false,
+    "premiere_watcher_required": false
+  }
+}

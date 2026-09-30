@@ -27,7 +27,18 @@
         "path": "D:\\Velvet\\Logs\\AdobeBridge\\photoshop-first-party-0.1.1-restart-persistence-no-watcher-2026-09-30.json",
         "sha256": "2cf40809fd1c2cc6eeb86527667450db7d45e12037228e407871c05a3f719ffc"
       },
-      "persistence": "Installed through Adobe UPIA; normal Photoshop shortcut restart reconnects with no watcher or DevTools load command."
+      "machine_reboot_persistence_evidence": {
+        "path": "docs/evidence/dcc-adobe-post-reboot-persistence-2026-09-30.json",
+        "status": "PASS"
+      },
+      "broker_autostart": {
+        "task": "VelvetOS AdobePy Broker Photoshop",
+        "trigger": "interactive_logon",
+        "principal": "CHRIS\\Chris",
+        "deployment_source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Start-AdobePyBroker-Photoshop.ps1",
+        "installer": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Install-DccAdobeRebootPersistence.ps1"
+      },
+      "persistence": "Installed through Adobe UPIA; real Windows reboot persistence is verified with a dedicated AtLogOn AdobePy broker on 127.0.0.1:47393. No Photoshop watcher or UXP Developer Tool load command is required."
     },
     {
       "id": "premiere",

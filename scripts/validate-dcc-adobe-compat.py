@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEVTOOLS = ROOT / "packages" / "vfharness" / "devtools"
 OVERLAYS = DEVTOOLS / "dcc-mcp-overlays.json"
 BRIDGES = DEVTOOLS / "adobe-first-party-bridges.json"
+PERSISTENCE = DEVTOOLS / "dcc-adobe-runtime-persistence.json"
 
 
 def load_json(path: Path) -> dict:
@@ -34,6 +35,7 @@ def main() -> int:
     errors: list[str] = []
     overlays = load_json(OVERLAYS)
     bridges = load_json(BRIDGES)
+    persistence = load_json(PERSISTENCE)
     overlay_ids: set[str] = set()
     for row in overlays.get("overlays") or []:
         overlay_id = str(row.get("id") or "")
@@ -127,13 +129,63 @@ def main() -> int:
             if data.get("loadEvent") != "startup":
                 errors.append("photoshop: startup loadEvent missing")
 
+    persistence_ids: set[str] = set()
+    persistence_rows = persistence.get("files") or []
+    persistence_text: dict[str, str] = {}
+    for row in persistence_rows:
+        runtime_id = str(row.get("id") or "")
+        source = str(row.get("source") or "")
+        expected = str(row.get("sha256") or "")
+        if not runtime_id or not source or not expected:
+            errors.append("runtime persistence row missing id/source/sha256")
+            continue
+        if runtime_id in persistence_ids:
+            errors.append(f"duplicate runtime persistence id: {runtime_id}")
+        persistence_ids.add(runtime_id)
+        source_path = ROOT / source
+        check_hash(source_path, expected, errors)
+        if source_path.is_file():
+            source_text = source_path.read_text(encoding="utf-8-sig", errors="ignore")
+            persistence_text[runtime_id] = source_text
+            if literal_secret.search(source_text):
+                errors.append(f"{runtime_id}: literal token-like secret found in deployment source")
+
+    gateway_text = persistence_text.get("dcc-gateway-wrapper", "")
+    if gateway_text:
+        if "$ErrorActionPreference = 'Continue'" not in gateway_text:
+            errors.append("dcc-gateway-wrapper: native stderr compatibility guard missing")
+        if "$ErrorActionPreference = $previousErrorActionPreference" not in gateway_text:
+            errors.append("dcc-gateway-wrapper: ErrorActionPreference restore missing")
+        if "--gateway-persist" not in gateway_text or "--port $Port" not in gateway_text:
+            errors.append("dcc-gateway-wrapper: canonical gateway launch contract missing")
+
+    photoshop_text = persistence_text.get("photoshop-broker-wrapper", "")
+    if photoshop_text:
+        if "--bind 127.0.0.1:47393" not in photoshop_text:
+            errors.append("photoshop-broker-wrapper: canonical loopback broker binding missing")
+        if "photoshop\\broker.token" not in photoshop_text:
+            errors.append("photoshop-broker-wrapper: runtime token-file reference missing")
+
+    installer_text = persistence_text.get("reboot-persistence-installer", "")
+    if installer_text:
+        for required in (
+            "VelvetOS DCC Gateway",
+            "New-ScheduledTaskTrigger -AtStartup",
+            "VelvetOS AdobePy Broker Photoshop",
+            "New-ScheduledTaskTrigger -AtLogOn -User $InteractiveUser",
+            "New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount",
+            "New-ScheduledTaskPrincipal -UserId $InteractiveUser -LogonType Interactive",
+        ):
+            if required not in installer_text:
+                errors.append(f"reboot-persistence-installer: missing contract fragment: {required}")
+
     if errors:
         for error in errors:
             print("DCC/ADOBE COMPAT FAIL: " + error, file=sys.stderr)
         return 1
     print(
         f"DCC/ADOBE COMPAT PASS overlays={len(overlay_ids)} "
-        f"records={len(record_ids)} bridges={len(bridge_ids)}"
+        f"records={len(record_ids)} bridges={len(bridge_ids)} runtime_files={len(persistence_ids)}"
     )
     return 0
 

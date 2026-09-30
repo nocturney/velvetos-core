@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "role": "SOURCE_CONTROLLED_DEPLOYMENT_TEMPLATES_NOT_LIVE_RUNTIME_AUTHORITY",
+  "runtime_authority": false,
+  "deployment_source_authority": true,
+  "live_runtime_root": "D:\\Velvet\\Runtime\\Autostart",
+  "security_policy": {
+    "tokens_committed": false,
+    "token_values_allowed_in_source": false,
+    "adobe_host_binary_modification_allowed": false,
+    "global_signature_policy_weakening_allowed": false
+  },
+  "files": [
+    {
+      "id": "dcc-gateway-wrapper",
+      "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Start-VelvetDccGateway.ps1",
+      "sha256": "112d930baf4ddcae72e0e319b1582943211732610776a2d1bb6948ef351995b3",
+      "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetDccGateway.ps1",
+      "task": "VelvetOS DCC Gateway",
+      "trigger": "boot",
+      "principal": "SYSTEM",
+      "required_behavior": "Native dcc-mcp-server stderr must not become a terminating PowerShell error while the gateway is running."
+    },
+    {
+      "id": "photoshop-broker-wrapper",
+      "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Start-AdobePyBroker-Photoshop.ps1",
+      "sha256": "ddbdfd6e331e380f45e5f3ca06c13760ea22d03613ead17df46efbc5faa0f8c5",
+      "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\Start-AdobePyBroker-Photoshop.ps1",
+      "task": "VelvetOS AdobePy Broker Photoshop",
+      "trigger": "interactive_logon",
+      "principal": "CHRIS\\Chris",
+      "broker_port": 47393,
+      "required_behavior": "Loopback broker remains long-lived and retries without a Photoshop watcher or UXP Developer Tool dependency."
+    },
+    {
+      "id": "reboot-persistence-installer",
+      "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Install-DccAdobeRebootPersistence.ps1",
+      "sha256": "1481054e2f51f09409cf18261b8690b1fea68321620a5633f1b58b12c588ee40",
+      "required_behavior": "Idempotently deploy the two wrappers and register the boot/logon tasks; -ValidateOnly performs no mutation."
+    }
+  ],
+  "evidence": "docs/evidence/dcc-adobe-post-reboot-persistence-2026-09-30.json"
+}
