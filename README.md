@@ -15,6 +15,9 @@
 
 ## System Pulse · דופק המערכת
 
+_Research Seat 2026-10-01: Best Skills pass + upstream watch (48 pending); tool-updates email sent._
+
+
 <!-- morning-green-2026-09-23 -->
 Latest verified owner Morning Brief artifact path remains historical evidence. Current scheduled Instagram truth is the Cloudflare Instagram Publisher; OpenPost is frozen and must not be used as schedule authority.
 
