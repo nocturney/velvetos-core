@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "requestId": "tool-updates-e9951615700d27d5",
   "to": "nocturney@gmail.com",
   "subject": "VelvetOS · עדכוני כלים · 48 ממתינים",
@@ -12,5 +12,7 @@
   "pendingCount": 48,
   "reviewReady": true,
   "unreviewedCount": 0,
-  "unreviewedRepos": []
+  "unreviewedRepos": [],
+  "lastSentMessageId": "1a0f492dfb28fa8c",
+  "lastSentAt": "2026-09-30T23:07:42Z"
 }

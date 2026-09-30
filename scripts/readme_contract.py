@@ -37,6 +37,7 @@ ROUTINE_OUTPUT: tuple[tuple[str, str], ...] = (
     (r"^packages/vfresearch/(LINKS|BEST-SKILLS)\.json$", "weekly links review + Best Skills pass freshness"),
     (r"^packages/vfops/BRIEF-\d{4}-\d{2}-\d{2}\.md$", "Morning Brief factual artifact"),
     (r"^packages/vfops/hq/brief-\d{4}-\d{2}-\d{2}[^/]*\.json$", "Morning Brief HQ artifact"),
+    (r"^packages/vfresearch/out/", "Research Seat tool-updates email artifacts"),
     (r"^packages/vfops/out/", "Morning Green / Gmail send request / brief outputs"),
     (r"^packages/vfmedia/catalog\.json$", "Media Vault intake catalog (vfmedia-intake.yml)"),
     (r"^packages/vfbriefux/hq/weekly-deck\.bento-doc\.json$", "weekly deck output (velvetos-weekly-deck.yml)"),

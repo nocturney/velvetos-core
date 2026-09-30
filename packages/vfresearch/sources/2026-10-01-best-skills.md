@@ -50,3 +50,7 @@ best-skills — אין חדש במשרד (`no-embed-existing-coverage`; dataDate
 ## lastResult
 
 `no-embed-existing-coverage`
+
+## Phase 9 continuity
+
+Markers retained for ecosystem radar: agent-browser, ui-taste, gh-cli-readonly-agent — still watch / no new lab (`INSTALL_NOTHING_NEW`).
