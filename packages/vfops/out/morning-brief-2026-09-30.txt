@@ -1,0 +1,70 @@
+VELVET FACTORY · מודיעין יומי
+בריף הבוקר
+30.9.2026 · מקור עובדתי קנוני · Asia/Jerusalem
+
+תמונת מצב עכשיו
+כל חמש העבודות בגיליון VF HQ · jobs מסומנות כסופקו. שלוש יתרות פתוחות מאומתות גם ב-VF HQ · books: סינקופה 4350, ודים 320, אלה+לוגו 120. סך הגבייה הפתוחה 4790. ביומן היום וגם מחר אין אירועים. Instagram חי: 81 עוקבים, 8 פריטים, והפיד האחרון הוא הינשוף מ-29.9 בערב עם 0 לייקים ו-0 תגובות מאומתים.
+
+מה השתנה מאז הבריף הקודם
+• מחקר 30.9 נחתם ready_for_brief לפני cutoff 07:00 (PR #438 פתוח, CI אדום — לא מוזג; תוכן המחקר נלקח מהענף לבריף בלבד)
+• ביומן של 30.9 ושל 1.10 אין אירועים
+• הגבייה הפתוחה נשארה 4790 לפי קריאה חיה של jobs ו-books
+• Instagram: פוסט חדש בערב 29.9 — ינשוף Dd4W5GAlwxN; מדיה עלתה ל-8; בפוסט האחרון 0 לייקים ו-0 תגובות; עוקבים 81
+• לוח Cloudflare Instagram Publisher לא נקרא הבוקר (חסר VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN ב-Shell של GitHub failover) — רצועת בקרוב בפיד מסומנת unavailable, בלי OpenPost ובלי תזמון ממוחזר
+
+צריך ממך
+גבייה פתוחה אצל סינקופה, ודים ואלה+לוגו.
+סינקופה VF-20260908-001: סופק, טרם שולם, 4350, מועד בגיליון 15.10.2026.
+ודים VF-20260908-003: סופק, לגבייה, 320.
+אלה+לוגו VF-20260908-004: סופק, טרם שולם, 120.
+
+מצב הכסף
+גבייה פתוחה לפי VF HQ · jobs ובאימות VF HQ · books: 4350 + 320 + 120 = 4790.
+אלה VF-20260908-002: 35 יחידות, סופק ושולם, 175.
+לינה VF-20260908-005: סופק, מתנה, 0, אין יתרה לגבייה.
+Insights כספיים נוספים: אין ספירה.
+
+עבודות חיות
+אין ייצור פעיל בגיליון jobs. כל חמש העבודות הרשומות מסומנות כסופקו.
+אין כרטיס print.done חדש בבריף של 30.9.
+מדף חוזר: 0/5 כרטיסים מוכנים. אין שם להציע.
+
+היום / בהמשך
+Google Calendar ל-30.9.2026 ול-1.10.2026 Asia/Jerusalem: אין אירועים.
+Cloudflare Instagram Publisher: אין קריאת schedule חיה הבוקר (חסר control token ב-Shell). ימים ריקים ברצועה אינם אומרים שאין פרסום.
+OpenPost קפוא/היסטורי בלבד — לא מקור schedule לבריף.
+גיליון jobs lastMod עדיין 14.9.2026 — אין עדכון מאז הבריף של אתמול.
+
+Instagram · מצב העמוד
+@velvets_cloud חי. עוקבים 81, עוקב 125, מדיה 8.
+Insights: אין ספירה.
+הפיד האחרון: 29.9.2026 21:02 Asia/Jerusalem, ינשוף / owl, Dd4W5GAlwxN, לייקים 0, תגובות 0 לפי list_media.
+הפיד הקודם: 27.9.2026, תמנון / octopus carousel, DdyPXbHDqBp, לייקים 0, תגובות 0 לפי list_media.
+CTA ציבורי: instagram_message_only, compliant. desired-line בביו עדיין חסרה (AMBER אופציונלי). hashtag_over_limit ב-DdosGbRia0T הוא הערת AMBER היסטורית בלבד, לא הפרת CTA אדומה.
+
+רדאר תוכן
+לוח Cloudflare Instagram Publisher לא נקרא הבוקר — אין ראיית scheduled_at חיה.
+הפיד האחרון שאומת חי ב-Instagram הוא הינשוף מ-29.9 בערב.
+אין Publish מהבריף.
+
+שולחן המחקר
+Research Seat 30.9.2026: ready_for_brief, לפני cutoff 07:00 (PR #438 פתוח — לא מוזג בזמן CI אדום).
+1) צ'קליסט QC לפני שחרור מהספסל: כמות / גרסה מאושרת / מידה קריטית / גימור / pack-out — hold אם לא ברור — מיפוי ל-vfprod (לפני איסוף; בלי משלוח).
+2) תבניות הודעת הצעה קצרות לפי מצב (קובץ / תמונה / מידות / חלק טכני / מידול≠הדפסה / דדליין / אישור scope) — vfconvert/vfcopy; CTA = הודעת IG @velvets_cloud; אין אוטו-DM; בלי ₪.
+3) אישור דגימה עם הוכחת התאמה לחלק מזדווג/מד + רשימת טריגרי אישור-מחדש (גיאומטריה/חומר/חומרה/אוריינטציה/גימור/אריזה) — vfprod/vfsales.
+4) קאדנס תוכן מעבודת רצפה אמיתית: לולאת תהליך 15–25ש׳ + ריביל 12–18ש׳ (brief→תהליך→הקשר); בלי מסך סלייסר כגיבור — vfgrowth/vfom/vfcopy.
+5) Best Skills: due/stale (~72ש מ-27.9 על main) — בוצע על דירוג 29.9; no-embed-existing-coverage.
+6) MakerWorld/Printables ד׳: Printables Cloudflare; מועמדי MakerWorld עם Standard Digital File / membership — רישיונות UNPROVEN; אין שם להציע למדף.
+
+פעילות VelvetOS
+מחקר 30.9 מוכן לבריף על PR #438 (ענף cursor/research-seat-2026-09-30-a7e2); לא מוזג ל-main בזמן check-all אדום. PR #430 (29.9) נשאר פתוח גם כן.
+Cloudflare Publisher לא נקרא חי הבוקר (חסר control token) — רצועה unavailable באמת; OpenPost לא בשימוש.
+Jobs, books, Calendar ו-Instagram נקראו מחדש.
+Morning Green v3.1 הוא מסלול התצוגה הקנוני; השליחה רק דרך gmail-brief-send.
+Cursor Cloud Agent חסום (usage) → GitHub failover.
+
+05a · זיכרון
+ההצעה לציבור נשארת מוצרים מוכנים והדפסה או מודל בהתאמה אישית. סוג לקוח וכמות הם מאפייני הזמנה, לא מסלול שירות.
+
+Velvet Factory · Morning Brief
+חסר נשאר חסר. אין סכומים, Insights, תזמונים או סטטוסים מומצאים.
