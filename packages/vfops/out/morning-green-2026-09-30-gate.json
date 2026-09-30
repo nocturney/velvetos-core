@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "surface": "owner-brief",
+  "language": "he",
+  "text_sha256": "8fe1f14ae82f0593fadd9beb93febf1189f839d1425c6a78b55257d5c22843c3",
+  "lint": {
+    "status": "pass",
+    "problems": [],
+    "raw_status": "fail_style"
+  },
+  "anti_slop": {
+    "checked": true,
+    "findings": [],
+    "authorship": "NOT_INFERRED — named writing patterns only"
+  },
+  "stages": {
+    "truth_checked": true,
+    "reader_first": true,
+    "copy_authority": true,
+    "humanizer_ai_tells": true,
+    "domain_tools_recorded": true,
+    "surface_qa": true
+  },
+  "domain_tools": [
+    "vfops"
+  ],
+  "marketing_aids": "copywriting=APPLIED,copy-editing=APPLIED,marketing-psychology=N/A:non-promotional",
+  "no_text_compared": null,
+  "missing_evidence": [],
+  "visible_text_gate": "PASS",
+  "rule": "PASS requires the relevant chain on this exact text; lint/eval existence alone is not execution proof."
+}
