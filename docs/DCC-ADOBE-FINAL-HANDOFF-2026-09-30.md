@@ -234,6 +234,40 @@ Important backups retained:
 
 Do not delete these until the production setup has survived normal use and at least one real machine reboot.
 
+## Real machine reboot persistence closure
+
+A real Windows reboot was completed after the original acceptance run.
+
+Post-reboot result: **PASS**.
+
+Two persistence defects were found and fixed during this gate:
+
+1. **DCC gateway BootTrigger**
+   - Root cause: Windows PowerShell with ErrorActionPreference='Stop' promoted native dcc-mcp-server.exe stderr to a terminating error immediately after the wrapper logged START.
+   - Fix: retain fail-closed Stop behavior for the wrapper, but temporarily use Continue only around the native gateway process, capture LASTEXITCODE, and restore the prior preference.
+   - Boot task: VelvetOS DCC Gateway, SYSTEM, BootTrigger.
+   - Real reboot result: /health returned HTTP 200 before interactive login and the task completed with result 0.
+
+2. **Photoshop first-party broker persistence**
+   - The UPIA Photoshop bridge 0.1.1 persisted correctly, but its dedicated AdobePy broker on 127.0.0.1:47393 had no durable logon task.
+   - Added VelvetOS AdobePy Broker Photoshop, running in the Chris interactive session at logon.
+   - The broker is loopback-only, long-lived and self-retrying.
+   - After the real reboot and login, Photoshop established a live client connection to 47393.
+   - No Photoshop watcher and no UXP Developer Tool load command are required.
+
+Source-controlled deployment templates:
+- packages/vfharness/devtools/dcc-adobe-runtime-persistence/Start-VelvetDccGateway.ps1
+- packages/vfharness/devtools/dcc-adobe-runtime-persistence/Start-AdobePyBroker-Photoshop.ps1
+- packages/vfharness/devtools/dcc-adobe-runtime-persistence/Install-DccAdobeRebootPersistence.ps1
+- packages/vfharness/devtools/dcc-adobe-runtime-persistence.json
+
+Post-reboot evidence:
+- docs/evidence/dcc-adobe-post-reboot-persistence-2026-09-30.json
+
+The compatibility validator hash-checks the deployment templates and asserts the BootTrigger/AtLogOn task contracts so future source drift fails CI.
+
+127.0.0.1:14001 is the Adobe UXP Developer Tool service and is not required for the installed production Photoshop/Premiere UPIA routes. It is intentionally not added as a production autostart dependency.
+
 ## Final clean state
 
 At the end of regression:
