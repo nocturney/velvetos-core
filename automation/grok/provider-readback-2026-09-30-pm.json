@@ -1,0 +1,120 @@
+{
+  "schema": "vf.grok.provider-readback.v1",
+  "observedAt": "2026-09-30T19:19:32+03:00",
+  "provider": "grok-bot",
+  "providerAppVersion": null,
+  "signedIn": true,
+  "rendererTimeZone": "Asia/Jerusalem",
+  "transport": {
+    "surface": "Grok Bot agent runtime (owning automations-manager agent 'מנהל האוטומציות')",
+    "inspection": "provider-injected live routine registry (Current routines list with enabled state and effective cron) plus provider automation_status run snapshot, read by the owning agent at observedAt; no UI scraping",
+    "modelPromptSent": false,
+    "writeOperationsPerformed": [],
+    "writeAuthorization": null,
+    "observer": "מנהל האוטומציות (Grok Bot agent 0ecc0e2e-9c5a-4585-9a4b-f198bde5194c)",
+    "requestedBy": "Christian Velvet via מבקר הריפו, approved 2026-09-28 13:14 IDT"
+  },
+  "protectedRoutineCount": 9,
+  "protectedRoutines": [
+    {
+      "providerRoutineId": "velvetos-integrity-guard",
+      "title": "VelvetOS Integrity Guard",
+      "expectedCadence": "daily 01:45",
+      "providerDisplayCadence": "Every day at 1:45 AM (CRON_TZ=Asia/Jerusalem 45 1 * * *)",
+      "enabled": true,
+      "matchesCanonicalClock": true,
+      "lastRun": "9/30/2026, 1:49:39 AM succeeded"
+    },
+    {
+      "providerRoutineId": "velvet-research-seat",
+      "title": "Velvet Research Seat",
+      "expectedCadence": "daily 02:00",
+      "providerDisplayCadence": "Every day at 2:00 AM (CRON_TZ=Asia/Jerusalem 0 2 * * *)",
+      "enabled": true,
+      "matchesCanonicalClock": true,
+      "lastRun": "9/30/2026, 2:05:02 AM succeeded"
+    },
+    {
+      "providerRoutineId": "cognee-memory-sync",
+      "title": "Cognee Memory Sync",
+      "expectedCadence": "daily 06:30",
+      "providerDisplayCadence": "Every day at 6:30 AM (CRON_TZ=Asia/Jerusalem 30 6 * * *)",
+      "enabled": true,
+      "matchesCanonicalClock": true,
+      "lastRun": "9/30/2026, 6:37:55 AM succeeded"
+    },
+    {
+      "providerRoutineId": "runtime-receipts-refresh",
+      "title": "Runtime Receipts Refresh",
+      "expectedCadence": "daily 07:15 and 19:15",
+      "providerDisplayCadence": "Every day at 7:15 AM and 7:15 PM (CRON_TZ=Asia/Jerusalem 15 7,19 * * *)",
+      "enabled": true,
+      "matchesCanonicalClock": true,
+      "lastRun": "9/30/2026, 7:21:40 AM succeeded"
+    },
+    {
+      "providerRoutineId": "velvet-morning-brief",
+      "title": "Velvet Morning Brief",
+      "expectedCadence": "daily 09:00",
+      "providerDisplayCadence": "Every day at 9:00 AM (CRON_TZ=Asia/Jerusalem 0 9 * * *)",
+      "enabled": true,
+      "matchesCanonicalClock": true,
+      "lastRun": "9/30/2026, 9:05:44 AM succeeded"
+    },
+    {
+      "providerRoutineId": "morning-delivery-guard",
+      "title": "Morning Delivery Guard",
+      "expectedCadence": "daily 10:00",
+      "providerDisplayCadence": "Every day at 10:00 AM (CRON_TZ=Asia/Jerusalem 0 10 * * *)",
+      "enabled": true,
+      "matchesCanonicalClock": true,
+      "lastRun": "9/30/2026, 10:07:44 AM succeeded"
+    },
+    {
+      "providerRoutineId": "cognee-stable-updates",
+      "title": "Cognee Stable Updates",
+      "expectedCadence": "Monday 10:00",
+      "providerDisplayCadence": "Every Monday at 10:00 AM (CRON_TZ=Asia/Jerusalem 0 10 * * 1)",
+      "enabled": true,
+      "matchesCanonicalClock": true,
+      "lastRun": "9/28/2026, 10:09:19 AM succeeded"
+    },
+    {
+      "providerRoutineId": "velvetos-office-loop",
+      "title": "VelvetOS Office Loop",
+      "expectedCadence": "daily 10:30 and 18:30",
+      "providerDisplayCadence": "Every day at 10:30 AM and 6:30 PM (CRON_TZ=Asia/Jerusalem 30 10,18 * * *)",
+      "enabled": true,
+      "matchesCanonicalClock": true,
+      "lastRun": "9/30/2026, 6:38:23 PM succeeded"
+    },
+    {
+      "providerRoutineId": "weekly-research-accountability",
+      "title": "Weekly Research Accountability",
+      "expectedCadence": "Friday 12:00",
+      "providerDisplayCadence": "Every Friday at 12:00 PM (CRON_TZ=Asia/Jerusalem 0 12 * * 5)",
+      "enabled": true,
+      "matchesCanonicalClock": true,
+      "lastRun": "9/25/2026, 12:08:56 PM succeeded"
+    }
+  ],
+  "retiredRoutines": [
+    {
+      "providerRoutineId": "openpost-release-watch",
+      "title": "OpenPost Release Watch",
+      "desiredEnabled": false,
+      "enabled": false,
+      "present": false,
+      "note": "deleted from the live provider on 2026-09-28; absent from the live routine registry at observedAt"
+    }
+  ],
+  "verificationScope": {
+    "inventoryIds": true,
+    "enabledState": true,
+    "effectiveScheduleDisplay": true,
+    "rendererTimeZone": true,
+    "promptBodyParity": false,
+    "note": "Readback of the live provider routine registry (inventory, enabled state, effective cron in Asia/Jerusalem, last-run status). providerAppVersion is not exposed to the agent runtime, so it is null rather than guessed. No prompt-body parity is claimed. PM 2026-09-30 readback for Runtime Receipts Refresh."
+  },
+  "status": "LIVE_PROVIDER_READBACK_PASS"
+}
