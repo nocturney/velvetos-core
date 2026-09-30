@@ -1,0 +1,101 @@
+diff --git a/dcc_mcp_photoshop/install_verification.py b/dcc_mcp_photoshop/install_verification.py
+index 488d2f7..077d611 100644
+--- a/dcc_mcp_photoshop/install_verification.py
++++ b/dcc_mcp_photoshop/install_verification.py
+@@ -188,6 +188,48 @@ def observe_process_identity(pid: int) -> dict[str, Any]:
+     }
+
+
++def _loopback_listener_pid(broker_url: str) -> int | None:
++    """Resolve the PID bound to an exact loopback broker endpoint on Windows."""
++    from urllib.parse import urlparse  # noqa: PLC0415
++
++    try:
++        parsed = urlparse(broker_url)
++        port = parsed.port
++    except (TypeError, ValueError):
++        return None
++    hostname = (parsed.hostname or "").lower()
++    if parsed.scheme != "http" or hostname not in {"127.0.0.1", "localhost", "::1"} or port not in range(1, 65_536):
++        return None
++    if sys.platform != "win32":
++        return None
++    try:
++        result = subprocess.run(
++            ["netstat", "-ano", "-p", "tcp"],
++            capture_output=True,
++            text=True,
++            timeout=3,
++        )
++    except (OSError, subprocess.SubprocessError):
++        return None
++    if result.returncode != 0:
++        return None
++    allowed_hosts = {"127.0.0.1", "::1"} if hostname == "localhost" else {hostname}
++    for line in result.stdout.splitlines():
++        fields = line.split()
++        if len(fields) < 5 or fields[0].upper() != "TCP" or fields[3].upper() != "LISTENING":
++            continue
++        try:
++            local_host, local_port_text = fields[1].rsplit(":", 1)
++            local_port = int(local_port_text)
++            pid = int(fields[4])
++        except (ValueError, IndexError):
++            continue
++        local_host = local_host.strip("[]").lower()
++        if local_port == port and local_host in allowed_hosts and 0 < pid <= 2_147_483_647:
++            return pid
++    return None
++
++
+ def _binary_observation_matches(
+     observation: Mapping[str, Any],
+     expected_path: object,
+@@ -460,11 +502,42 @@ def verify_photoshop_rpc(
+         )
+     broker_identity = broker.get("identity")
+     if not isinstance(broker_identity, dict):
+-        return _failure(
+-            "broker_identity",
+-            "The broker omitted its executable and process identity",
+-            "invalid_identity",
+-        )
++        broker_pid = _loopback_listener_pid(broker_url)
++        if broker_pid is None:
++            return _failure(
++                "broker_identity",
++                "The broker omitted identity and its exact loopback listener PID could not be resolved",
++                "invalid_identity",
++            )
++        observed_broker = process_probe(broker_pid)
++        expected_broker_path = expected_bridge.get("installer") if expected_bridge is not None else None
++        expected_broker_version = expected_bridge.get("installer_version") if expected_bridge is not None else None
++        expected_broker_bytes = expected_bridge.get("installer_bytes") if expected_bridge is not None else None
++        expected_broker_sha256 = expected_bridge.get("installer_sha256") if expected_bridge is not None else None
++        if (
++            expected_bridge is None
++            or not version_tuple(expected_broker_version)
++            or observed_broker.get("ok") is not True
++            or not _binary_observation_matches(
++                observed_broker,
++                expected_broker_path,
++                expected_broker_bytes,
++                expected_broker_sha256,
++            )
++            or not _bounded_text(observed_broker.get("process_start_identity"), 256)
++        ):
++            return _failure(
++                "broker_identity",
++                "The loopback listener does not match the receipt-bound adobepy runtime",
++                "identity_mismatch",
++            )
++        broker_identity = {
++            "pid": broker_pid,
++            "version": expected_broker_version,
++            "executable": observed_broker["executable"],
++            "process_start_identity": observed_broker["process_start_identity"],
++            "instance_id": f"local-listener:{broker_pid}:{observed_broker['process_start_identity']}",
++        }
+     try:
+         broker_pid = int(broker_identity["pid"])
+     except (KeyError, TypeError, ValueError):

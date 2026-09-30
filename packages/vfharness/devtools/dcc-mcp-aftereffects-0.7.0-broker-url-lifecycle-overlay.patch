@@ -1,0 +1,39 @@
+diff --git a/dcc_mcp_aftereffects/install_models.py b/dcc_mcp_aftereffects/install_models.py
+index 3d7aa89..1f31b32 100644
+--- a/dcc_mcp_aftereffects/install_models.py
++++ b/dcc_mcp_aftereffects/install_models.py
+@@ -15,6 +15,7 @@ class InstallRequest:
+     dry_run: bool = False
+     dcc_path: str | None = None
+     python: str | None = None
++    broker_url: str | None = None
+
+
+ @dataclass(frozen=True)
+diff --git a/dcc_mcp_aftereffects/cli.py b/dcc_mcp_aftereffects/cli.py
+index 095eb05..f29e1ee 100644
+--- a/dcc_mcp_aftereffects/cli.py
++++ b/dcc_mcp_aftereffects/cli.py
+@@ -77,6 +77,7 @@ def main(argv: list[str] | None = None) -> int:
+         dry_run=args.dry_run,
+         dcc_path=args.dcc_path,
+         python=args.python,
++        broker_url=args.broker_url,
+     )
+     report, exit_code = run_lifecycle(request)
+     if args.json:
+diff --git a/dcc_mcp_aftereffects/install_discovery.py b/dcc_mcp_aftereffects/install_discovery.py
+index dc4ce42..e527743 100644
+--- a/dcc_mcp_aftereffects/install_discovery.py
++++ b/dcc_mcp_aftereffects/install_discovery.py
+@@ -1062,7 +1062,9 @@ def resolve_install(
+             "authentication",
+             "ADOBEPY_TOKEN must be configured in the installer environment",
+         )
+-    broker_url = active_env.get("ADOBEPY_BROKER_URL", "http://127.0.0.1:47391")
++    broker_url = request.broker_url or active_env.get(
++        "ADOBEPY_BROKER_URL", "http://127.0.0.1:47391"
++    )
+     parsed_broker = urlparse(broker_url)
+     try:
+         broker_port = parsed_broker.port
