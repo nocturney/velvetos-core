@@ -268,6 +268,32 @@ The compatibility validator hash-checks the deployment templates and asserts the
 
 127.0.0.1:14001 is the Adobe UXP Developer Tool service and is not required for the installed production Photoshop/Premiere UPIA routes. It is intentionally not added as a production autostart dependency.
 
+## Desktop cleanliness / hidden on-demand mode
+
+The workstation is a general-purpose daily-use PC, not a dedicated DCC kiosk. GUI hosts therefore no longer start automatically at Windows logon.
+
+Current contract:
+- DCC gateway remains background-only at boot.
+- AdobePy brokers may remain background-only at logon.
+- VelvetOS DCC Desktop Hosts has no trigger and is manual-only.
+- Each enabled GUI host has one manual VelvetOS DCC OnDemand <app-id> task with no trigger.
+- Agent launches pass -HideAfterLaunch; the host window is hidden from the desktop/taskbar after launch.
+- Invoke-VelvetDccHost.ps1 exposes bounded start / stop / status control for one app.
+- Normal vendor/Start Menu shortcuts are unchanged, so owner-launched applications remain normal interactive applications.
+- Seven obsolete acceptance/temp/reconnect tasks were removed after XML backup.
+- No matching Run-key or Startup-folder entry was found.
+
+Live acceptance on 2026-09-30:
+- all previously auto-launched GUI hosts were closed; zero enabled GUI hosts remained running;
+- cold Blender launch through the manual task produced a hidden host with its loopback listeners still alive, then stopped cleanly;
+- hiding Photoshop removed its main window while the 47393 broker retained an established Photoshop client;
+- gateway health remained HTTP 200 and the background brokers remained available.
+
+Canonical evidence:
+- docs/evidence/dcc-adobe-hidden-on-demand-2026-09-30.json
+
+No extra reboot was forced for this ergonomics change. The next-login contract is statically guarded by the absence of GUI logon/run/startup triggers and by CI validation of the source-controlled installer.
+
 ## Final clean state
 
 At the end of regression:

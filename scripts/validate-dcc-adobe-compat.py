@@ -166,6 +166,33 @@ def main() -> int:
         if "photoshop\\broker.token" not in photoshop_text:
             errors.append("photoshop-broker-wrapper: runtime token-file reference missing")
 
+    desktop_text = persistence_text.get("dcc-desktop-host-wrapper", "")
+    if desktop_text:
+        for required in ("[switch]$HideAfterLaunch", "function Hide-App", "ShowWindow($proc.MainWindowHandle, 0)", "$OnlyAppId"):
+            if required not in desktop_text:
+                errors.append(f"dcc-desktop-host-wrapper: missing hidden on-demand contract fragment: {required}")
+
+    manager_text = persistence_text.get("dcc-host-manager", "")
+    if manager_text:
+        for required in ("ValidateSet('start','stop','status')", "VelvetOS DCC OnDemand $AppId", "Stop-Process -Force"):
+            if required not in manager_text:
+                errors.append(f"dcc-host-manager: missing contract fragment: {required}")
+
+    host_manifest_text = persistence_text.get("dcc-desktop-host-manifest", "")
+    if host_manifest_text:
+        try:
+            host_manifest = json.loads(host_manifest_text.lstrip("﻿"))
+        except json.JSONDecodeError as exc:
+            errors.append(f"dcc-desktop-host-manifest: invalid JSON: {exc}")
+        else:
+            policy = host_manifest.get("policy") or {}
+            if policy.get("launch_mode") != "on_demand_hidden":
+                errors.append("dcc-desktop-host-manifest: launch_mode must be on_demand_hidden")
+            if policy.get("launch_at_logon") is not False:
+                errors.append("dcc-desktop-host-manifest: launch_at_logon must be false")
+            if policy.get("agent_hidden_launch") is not True:
+                errors.append("dcc-desktop-host-manifest: agent_hidden_launch must be true")
+
     installer_text = persistence_text.get("reboot-persistence-installer", "")
     if installer_text:
         for required in (
@@ -175,9 +202,16 @@ def main() -> int:
             "New-ScheduledTaskTrigger -AtLogOn -User $InteractiveUser",
             "New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount",
             "New-ScheduledTaskPrincipal -UserId $InteractiveUser -LogonType Interactive",
+            "VelvetOS DCC Desktop Hosts",
+            "Get-OnDemandTaskName",
+            "-HideAfterLaunch",
+            "$ObsoleteTasks",
         ):
             if required not in installer_text:
                 errors.append(f"reboot-persistence-installer: missing contract fragment: {required}")
+
+        if installer_text.count("New-ScheduledTaskTrigger -AtLogOn -User $InteractiveUser") != 1:
+            errors.append("reboot-persistence-installer: AtLogOn trigger must be limited to the background Photoshop broker")
 
     if errors:
         for error in errors:
