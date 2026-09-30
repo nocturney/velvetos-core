@@ -1,157 +1,688 @@
 {
   "schema": "velvetos.upstream-review.v1",
-  "reviewedAt": "2026-09-28T05:30:07.157Z",
+  "reviewedAt": "2026-09-30T23:05:38.853Z",
   "policy": "Owner receives a separate update email; every recommendation is bound to the current remote HEAD/release before mail can arm.",
   "summary": {
-    "pending": 11,
+    "pending": 48,
     "update": 0,
-    "wait": 2,
-    "review": 0,
-    "ignore": 9
+    "wait": 17,
+    "review": 10,
+    "ignore": 21
   },
   "items": {
-    "blender/blender": {
-      "verdict": "wait",
-      "reasonHe": "השינוי רלוונטי פוטנציאלית לביצועי geometry/mesh, אבל הוא קיים כרגע רק ב־main ללא release חדש. לא מעדכנים Blender host על commit לא־משוחרר; ממתינים לבילד/גרסה יציבה ואז מריצים smoke.",
+    "00080000/dsh-project-memory": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
       "evidence": [
-        "2 commits מאז baseline: שיפור בניית faces/corners ו־vertices/edges ב-Mesh Merge",
-        "שינויי ביצועים בלבד במסלול mesh merge; אין release חדש",
-        "integration: Blender host/runtime",
-        "compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...388952d3b867ead24396cefd3cfc7e3b59682e61"
+        "baseline→remote: 3d171b6d4b78 → c5451c6c28e7",
+        "baselineRelease→latestRelease: v0.5.12 → v0.5.13",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/00080000/dsh-project-memory/compare/3d171b6d4b78d82d71398fb28c638830b5c28291...c5451c6c28e739cffa13e5a9def27450d49147fb"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "388952d3b867ead24396cefd3cfc7e3b59682e61",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "c5451c6c28e739cffa13e5a9def27450d49147fb",
+      "reviewedRelease": "v0.5.13"
+    },
+    "ahujasid/blender-mcp": {
+      "verdict": "wait",
+      "reasonHe": "שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.",
+      "evidence": [
+        "baseline→remote: 41a184322db3 → 60d2a31b4632",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=runtime-source; newDetection=True",
+        "integration: %USERPROFILE%/.blender-mcp",
+        "compare: https://github.com/ahujasid/blender-mcp/compare/41a184322db3ccdcb2fdbc1f6994afe71bf9163c...60d2a31b4632a7bc178f3dd636f7e68dfb5c8ae4"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "60d2a31b4632a7bc178f3dd636f7e68dfb5c8ae4",
       "reviewedRelease": null
     },
-    "earthtojake/text-to-cad": {
+    "Alishahryar1/free-claude-code": {
       "verdict": "ignore",
-      "reasonHe": "v0.7.0 כבר אומצה ונבדקה אצלנו. ה־commit היחיד אחרי ה־baseline מוחק סקריפטי E2E ידניים ומחזק כיסוי CI; אין שינוי runtime/CAD שדורש אימוץ נוסף.",
+      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.",
       "evidence": [
-        "adoptedRelease=v0.7.0; latestRelease נשאר v0.7.0",
-        "1 commit: delete manual web E2E scripts + enforce CI collection",
-        "adoption evidence: packages/vfharness/state/text-to-cad-0.7.0-adoption-2026-09-27.json",
-        "compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...da7f7219569541c41a94715bab5e476615ad4177"
+        "baseline→remote: 37c77262115a → 7195cefd5d0c",
+        "baselineRelease→latestRelease: v6.4.4 → v6.5.11",
+        "changeKinds: head, release; kind=skill-pattern; newDetection=True",
+        "integration: .cursor/skills/vf-fcc-offload/SKILL.md",
+        "compare: https://github.com/Alishahryar1/free-claude-code/compare/37c77262115a02d3ef97763b7e7a4e0dd011183e...7195cefd5d0c197a9809e851a65b4a940918cee8"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "da7f7219569541c41a94715bab5e476615ad4177",
-      "reviewedRelease": "v0.7.0"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "7195cefd5d0c197a9809e851a65b4a940918cee8",
+      "reviewedRelease": "v6.5.11"
+    },
+    "andyrewlee/awesome-agent-orchestrators": {
+      "verdict": "ignore",
+      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.",
+      "evidence": [
+        "baseline→remote: e120484e448f → a1278087adb6",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=agent-index; newDetection=True",
+        "integration: packages/vfharness/playbooks/orchestrators.md",
+        "compare: https://github.com/andyrewlee/awesome-agent-orchestrators/compare/e120484e448f6115e69788d148d67accea17a0c6...a1278087adb6023c9021abf81f8d12877cfbf0ef"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "a1278087adb6023c9021abf81f8d12877cfbf0ef",
+      "reviewedRelease": null
+    },
+    "anthropics/skills": {
+      "verdict": "review",
+      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "evidence": [
+        "baseline→remote: 33375500bcea → 8a1541c4a3ff",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=skill-pattern; newDetection=True",
+        "integration: packages/vfharness/playbooks/skill-authoring.md",
+        "compare: https://github.com/anthropics/skills/compare/33375500bcea98d610eb30ce10ac4e59b89c390d...8a1541c4a3ffa5a20a5a91de0dcf3f0bab1d1ef4"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "8a1541c4a3ffa5a20a5a91de0dcf3f0bab1d1ef4",
+      "reviewedRelease": null
+    },
+    "awesome-dsh-plugin/awesome-dsh-plugin": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: 4fee2fcc011f → e483a501cec7",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=embedded-provenance; newDetection=True",
+        "integration: packages/vfdsh/ORIGIN.md, packages/vfdsh/catalog.json",
+        "compare: https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/compare/4fee2fcc011f8e2d68e35695d6b411c82c7c9a12...e483a501cec7d7446e84990e234ae0def7898c3b"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "e483a501cec7d7446e84990e234ae0def7898c3b",
+      "reviewedRelease": null
+    },
+    "bambulab/BambuStudio": {
+      "verdict": "wait",
+      "reasonHe": "שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.",
+      "evidence": [
+        "baseline→remote: f977235e6d73 → da8b44ee34dd",
+        "baselineRelease→latestRelease: v02.08.02.61 → v02.08.02.61",
+        "changeKinds: head; kind=runtime-source; newDetection=True",
+        "integration: production slicer/studio",
+        "compare: https://github.com/bambulab/BambuStudio/compare/f977235e6d736c4c0b650520ac5a5b72cbfe9244...da8b44ee34dd349f2ae0df3f1cbae366df482354"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "da8b44ee34dd349f2ae0df3f1cbae366df482354",
+      "reviewedRelease": "v02.08.02.61"
+    },
+    "blender/blender": {
+      "verdict": "wait",
+      "reasonHe": "81 commits על main בלי release. Blender host - לא על commit לא־משוחרר; ממתינים לבילד יציב.",
+      "evidence": [
+        "baseline→remote: 35a2d9dfd0ad → 7936055a1e57",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=cad-runtime-source; newDetection=False",
+        "integration: Blender host/runtime",
+        "compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...7936055a1e573769d15ed31168cae57717864fe0"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "7936055a1e573769d15ed31168cae57717864fe0",
+      "reviewedRelease": null
+    },
+    "debpalash/VoiceStudio": {
+      "verdict": "wait",
+      "reasonHe": "שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.",
+      "evidence": [
+        "baseline→remote: 08a1592e3cb9 → 0834c8be2846",
+        "baselineRelease→latestRelease: v0.5.6 → v0.5.6",
+        "changeKinds: head; kind=runtime-source; newDetection=True",
+        "integration: packages/vfom/SPEECH-BACKEND.json, scripts/bootstrap-speech-host-windows.ps1",
+        "compare: https://github.com/debpalash/VoiceStudio/compare/08a1592e3cb9b4c36beef5fa3185ec2313bb1fea...0834c8be28460fc4e0518bdb31eb57c494b253b2"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "0834c8be28460fc4e0518bdb31eb57c494b253b2",
+      "reviewedRelease": "v0.5.6"
+    },
+    "DeusData/codebase-memory-mcp": {
+      "verdict": "review",
+      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "evidence": [
+        "baseline→remote: 5df8b0442c48 → 0f52d30c2964",
+        "baselineRelease→latestRelease: v0.11.0 → v0.11.0",
+        "changeKinds: head; kind=pattern-source; newDetection=True",
+        "integration: packages/vfmem/ORIGIN.md",
+        "compare: https://github.com/DeusData/codebase-memory-mcp/compare/5df8b0442c48fed654c6f11d94cb6f64f00fc368...0f52d30c2964a5a538149f8b39846ba52517a020"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "0f52d30c2964a5a538149f8b39846ba52517a020",
+      "reviewedRelease": "v0.11.0"
+    },
+    "dsh-market/dsh-market": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: 4ceda5d2b7b6 → d4f7a7962d11",
+        "baselineRelease→latestRelease: v1.66.3 → v1.66.7",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/dsh-market/dsh-market/compare/4ceda5d2b7b666a9093e97bc5ae06bcaf383f154...d4f7a7962d1160e8d5d09fd9ab7f8669bad3ccd9"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "d4f7a7962d1160e8d5d09fd9ab7f8669bad3ccd9",
+      "reviewedRelease": "v1.66.7"
+    },
+    "earthtojake/text-to-cad": {
+      "verdict": "wait",
+      "reasonHe": "text-to-cad זז ב־release/head מאז אימוץ v0.7.x. לבדוק changelog + smoke לפני ack; אין upgrade מריצת מחקר.",
+      "evidence": [
+        "baseline→remote: fafa7b057d8f → 567c213788b9",
+        "baselineRelease→latestRelease: v0.7.0 → v0.7.4",
+        "changeKinds: head, release; kind=runtime-source; newDetection=False",
+        "integration: packages/vfprod/TEXT-TO-CAD.md",
+        "compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...567c213788b9eeb3847d58d390b2d001b64bfb70"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "567c213788b9eeb3847d58d390b2d001b64bfb70",
+      "reviewedRelease": "v0.7.4"
+    },
+    "FFmpeg/FFmpeg": {
+      "verdict": "wait",
+      "reasonHe": "שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.",
+      "evidence": [
+        "baseline→remote: d62aef2e5043 → 5a54fcf75e02",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=runtime-toolchain; newDetection=True",
+        "integration: scripts/bootstrap-edge-host-windows.ps1, scripts/bootstrap-hyperframes-host-macos.sh, scripts/vf_hyperframes.py",
+        "compare: https://github.com/FFmpeg/FFmpeg/compare/d62aef2e50434cc31eccf236ae67d864becb7068...5a54fcf75e0245111075b1c31593ba1919c25306"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "5a54fcf75e0245111075b1c31593ba1919c25306",
+      "reviewedRelease": null
     },
     "FreeCAD/FreeCAD": {
-      "verdict": "ignore",
-      "reasonHe": "release 1.1.3 לא השתנה. שני ה־commits הם תיקון CAM ל־3+2 Axis וקישור ספריות בחלון About; אין אצלנו מסלול 3+2 CAM פעיל או שינוי שנדרש ל־3D-print/CAD routing הנוכחי.",
+      "verdict": "wait",
+      "reasonHe": "release 1.1.3→1.1.4 על כלי runtime/CAD/slicer/toolchain. ממתינים לבילד יציב + smoke לפני אימוץ; אין auto-upgrade.",
       "evidence": [
-        "latestRelease נשאר 1.1.3",
-        "2 commits: CAM 3+2 transformShape fix + About dialog library links",
+        "baseline→remote: 20b531c4211f → 84ae7a7c8ee9",
+        "baselineRelease→latestRelease: 1.1.3 → 1.1.4",
+        "changeKinds: head, release; kind=cad-runtime-source; newDetection=False",
         "integration: CAD/3D toolchain upstream",
-        "compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...08eb8263a3e6734ca2411f40d6f18a24afdf9044"
+        "compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...84ae7a7c8ee9e9c2c86c739f364ace4822caf950"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "08eb8263a3e6734ca2411f40d6f18a24afdf9044",
-      "reviewedRelease": "1.1.3"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "84ae7a7c8ee9e9c2c86c739f364ace4822caf950",
+      "reviewedRelease": "1.1.4"
+    },
+    "git/git": {
+      "verdict": "wait",
+      "reasonHe": "שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.",
+      "evidence": [
+        "baseline→remote: 0f8e75abebff → a018953688f1",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=runtime-toolchain; newDetection=True",
+        "integration: scripts/bootstrap-edge-host-windows.ps1",
+        "compare: https://github.com/git/git/compare/0f8e75abebff0877cae681a3d5ff31ac47f54220...a018953688f1b10bddf91bff8747068f5f4746a4"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "a018953688f1b10bddf91bff8747068f5f4746a4",
+      "reviewedRelease": null
+    },
+    "Han-1413141/dsh-cost-meter": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: c520d9bae873 → 1746896f27ed",
+        "baselineRelease→latestRelease: v1.7.40 → v1.8.2",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/Han-1413141/dsh-cost-meter/compare/c520d9bae873836bfafb1e672dca5042b50f05f9...1746896f27edb6672b51216c83dce1d5de6a7e51"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "1746896f27edb6672b51216c83dce1d5de6a7e51",
+      "reviewedRelease": "v1.8.2"
+    },
+    "headroomlabs-ai/headroom": {
+      "verdict": "review",
+      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "evidence": [
+        "baseline→remote: d13e1966f820 → 0a2c80d52076",
+        "baselineRelease→latestRelease: v0.39.1 → v0.39.1",
+        "changeKinds: head; kind=pattern-source; newDetection=True",
+        "integration: packages/vfharness/playbooks/context-thrift.md",
+        "compare: https://github.com/headroomlabs-ai/headroom/compare/d13e1966f820220b482a33c30bde1e926743939a...0a2c80d5207642a5e58ba9eb65e19cd004018642"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "0a2c80d5207642a5e58ba9eb65e19cd004018642",
+      "reviewedRelease": "v0.39.1"
+    },
+    "heygen-com/hyperframes": {
+      "verdict": "wait",
+      "reasonHe": "release v0.8.80→v0.8.99 על כלי runtime/CAD/slicer/toolchain. ממתינים לבילד יציב + smoke לפני אימוץ; אין auto-upgrade.",
+      "evidence": [
+        "baseline→remote: b165b64eda84 → 132b9909fa75",
+        "baselineRelease→latestRelease: v0.8.80 → v0.8.99",
+        "changeKinds: head, release; kind=runtime-source; newDetection=True",
+        "integration: scripts/vf_hyperframes.py",
+        "compare: https://github.com/heygen-com/hyperframes/compare/b165b64eda845f46f9b622b96e4545bf704d0950...132b9909fa75617acac6c9c7ddfc63e5573b3a60"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "132b9909fa75617acac6c9c7ddfc63e5573b3a60",
+      "reviewedRelease": "v0.8.99"
+    },
+    "HuanLinOTO/dsh-plugin-mineru": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: d66efc12c89e → b302e2aa5fa5",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/HuanLinOTO/dsh-plugin-mineru/compare/d66efc12c89e821db787478d95e5e89576bf0e36...b302e2aa5fa5badf2ee622f9c179384a196860ab"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "b302e2aa5fa5badf2ee622f9c179384a196860ab",
+      "reviewedRelease": null
+    },
+    "jing-hy/picturereader": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: 4e48fc916fd6 → 619a67e39d0a",
+        "baselineRelease→latestRelease: v3.3.3 → v3.3.3",
+        "changeKinds: head; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/jing-hy/picturereader/compare/4e48fc916fd67b1f9ca668a1175cc5230c7b7f47...619a67e39d0a8c0f9ef9c18e260977a323e99cc7"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "619a67e39d0a8c0f9ef9c18e260977a323e99cc7",
+      "reviewedRelease": "v3.3.3"
+    },
+    "joaomdmoura/crewai": {
+      "verdict": "ignore",
+      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.",
+      "evidence": [
+        "baseline→remote: 4ed2abc7bbf5 → 1b9bbccbed63",
+        "baselineRelease→latestRelease: 1.15.22 → 1.15.23",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfe2b/catalog.json",
+        "compare: https://github.com/joaomdmoura/crewai/compare/4ed2abc7bbf504a634d3b733f2a97e0fbe8d44ec...1b9bbccbed63196eab61ddf5024ce589588faae6"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "1b9bbccbed63196eab61ddf5024ce589588faae6",
+      "reviewedRelease": "1.15.23"
+    },
+    "linkingoscar/dsh-attachment-formats": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: ad61a0413cb0 → 4bcfae40dbd6",
+        "baselineRelease→latestRelease: v0.12.1 → v0.12.4",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/linkingoscar/dsh-attachment-formats/compare/ad61a0413cb07b4622128b4bba4546120bfa66cf...4bcfae40dbd69116125ab13f88efc1b65232110f"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "4bcfae40dbd69116125ab13f88efc1b65232110f",
+      "reviewedRelease": "v0.12.4"
+    },
+    "LinklyAI/best-skills": {
+      "verdict": "review",
+      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "evidence": [
+        "baseline→remote: fe7eb0ccddb1 → b4e6744ca86c",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=skill-index; newDetection=True",
+        "integration: .cursor/skills/vf-best-skills/SKILL.md, packages/vfresearch/BEST-SKILLS.md",
+        "compare: https://github.com/LinklyAI/best-skills/compare/fe7eb0ccddb1c71a3cf2459efe48cbb9ccc0793d...b4e6744ca86cf4a23121f9b6e96551e0feb61e4b"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "b4e6744ca86cf4a23121f9b6e96551e0feb61e4b",
+      "reviewedRelease": null
     },
     "liustack/modlens": {
       "verdict": "ignore",
-      "reasonHe": "ה־release נשאר v3.26.5 וה־commit היחיד מתקן את תהליך הפרסום ל־npm. זהו catalog-source אצלנו, בלי שינוי בתוכן/יכולת שאנחנו מטמיעים.",
+      "reasonHe": "release נשאר v3.26.5; commits פרסום - catalog בלבד.",
       "evidence": [
-        "latestRelease נשאר v3.26.5",
-        "1 commit: release workflow pushes main only after npm has the version",
+        "baseline→remote: ffeee3e32de1 → 333468c72bf9",
+        "baselineRelease→latestRelease: v3.26.5 → v3.26.5",
+        "changeKinds: head; kind=catalog-source; newDetection=False",
         "integration: packages/vfdsh/catalog.json",
-        "compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...f01354e78a70ed18eab721762f18ea44a92d6e9e"
+        "compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...333468c72bf9630ec5dd60b169b89e1f48f39b53"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "f01354e78a70ed18eab721762f18ea44a92d6e9e",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "333468c72bf9630ec5dd60b169b89e1f48f39b53",
       "reviewedRelease": "v3.26.5"
     },
-    "nodejs/node": {
-      "verdict": "ignore",
-      "reasonHe": "v26.10.0 לא השתנתה. שני ה־commits נוגעים לבניית התיעוד בלבד — verbosity ו־doc-kit patch bumps — ולא ל־Node runtime שבו ה־bootstrap שלנו תלוי.",
+    "ManimCommunity/manim": {
+      "verdict": "wait",
+      "reasonHe": "שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.",
       "evidence": [
-        "latestRelease נשאר v26.10.0",
-        "2 commits: doc build verbosity + doc-kit dependency patch bumps",
-        "integrations: Windows edge bootstrap + HyperFrames Mac bootstrap",
-        "compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...df775ec2ea6861053995f923fcf7814c06451e72"
+        "baseline→remote: 16c4a68b6d15 → 22aa85f47c9d",
+        "baselineRelease→latestRelease: v0.21.0 → v0.21.0",
+        "changeKinds: head; kind=runtime-source; newDetection=True",
+        "integration: scripts/bootstrap-manim-host-windows.ps1",
+        "compare: https://github.com/ManimCommunity/manim/compare/16c4a68b6d151e2024d0b1e1b80bfb7725c9f5b2...22aa85f47c9dc1b32a4e27bda2dd68320f9cd69c"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "df775ec2ea6861053995f923fcf7814c06451e72",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "22aa85f47c9dc1b32a4e27bda2dd68320f9cd69c",
+      "reviewedRelease": "v0.21.0"
+    },
+    "mattpocock/skills": {
+      "verdict": "review",
+      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "evidence": [
+        "baseline→remote: c55ee46073ed → d81f3a183412",
+        "baselineRelease→latestRelease: v1.2.3 → v1.2.3",
+        "changeKinds: head; kind=skill-pattern; newDetection=True",
+        "integration: packages/vfharness/playbooks/engineering-delivery-chain.md",
+        "compare: https://github.com/mattpocock/skills/compare/c55ee46073ed923f86ce59a5eb3b6d895095d1b7...d81f3a183412e71a5b1e84ca21bc1a35eea03a60"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "d81f3a183412e71a5b1e84ca21bc1a35eea03a60",
+      "reviewedRelease": "v1.2.3"
+    },
+    "MichengAI/dsh-agency-agents": {
+      "verdict": "review",
+      "reasonHe": "קפיצת release (v1.0.5→v1.0.7). דפוסי skill/agent — לבדוק לפני הטמעה; אין npx על Cloud.",
+      "evidence": [
+        "baseline→remote: a4ef1548da94 → 8a422790cc9d",
+        "baselineRelease→latestRelease: v1.0.5 → v1.0.7",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/MichengAI/dsh-agency-agents/compare/a4ef1548da94c7e57828739feed7f8fa0d332a62...8a422790cc9d7960f5ac89a5606ffb436fb66eee"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "8a422790cc9d7960f5ac89a5606ffb436fb66eee",
+      "reviewedRelease": "v1.0.7"
+    },
+    "msitarzewski/agency-agents": {
+      "verdict": "review",
+      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "evidence": [
+        "baseline→remote: 053ddbbf392a → 765be4235810",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=agent-repo; newDetection=True",
+        "integration: %USERPROFILE%/.agency-agents",
+        "compare: https://github.com/msitarzewski/agency-agents/compare/053ddbbf392a1688fc7043d81529f47ef2cf86c8...765be42358100bf89d2faa567668a94c602f9a26"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "765be42358100bf89d2faa567668a94c602f9a26",
+      "reviewedRelease": null
+    },
+    "mvanhorn/last30days-skill": {
+      "verdict": "review",
+      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "evidence": [
+        "baseline→remote: 084662b501fb → 1fadbe5097c1",
+        "baselineRelease→latestRelease: v3.25.0 → v3.25.0",
+        "changeKinds: head; kind=skill-pattern; newDetection=True",
+        "integration: .cursor/skills/vf-last30/SKILL.md",
+        "compare: https://github.com/mvanhorn/last30days-skill/compare/084662b501fb0dba95bd55eff0c258d35e0dc499...1fadbe5097c155832366ab2b920f205c1f8c2672"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "1fadbe5097c155832366ab2b920f205c1f8c2672",
+      "reviewedRelease": "v3.25.0"
+    },
+    "NirDiamant/GenAI_Agents": {
+      "verdict": "ignore",
+      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.",
+      "evidence": [
+        "baseline→remote: 078d6d544e15 → 6746e4b0a168",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=agent-pattern; newDetection=True",
+        "integration: packages/vfagents/playbooks/reflection-before-send.md",
+        "compare: https://github.com/NirDiamant/GenAI_Agents/compare/078d6d544e15c0e758c2533b422fd13ed2d15593...6746e4b0a168908f12c57ce5ab0d5d91c7a06ed8"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "6746e4b0a168908f12c57ce5ab0d5d91c7a06ed8",
+      "reviewedRelease": null
+    },
+    "nodejs/node": {
+      "verdict": "wait",
+      "reasonHe": "שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.",
+      "evidence": [
+        "baseline→remote: a2a064c76afe → 5e3bbc4ac4e4",
+        "baselineRelease→latestRelease: v26.10.0 → v26.10.0",
+        "changeKinds: head; kind=runtime-toolchain; newDetection=False",
+        "integration: scripts/bootstrap-edge-host-windows.ps1, scripts/bootstrap-hyperframes-host-macos.sh",
+        "compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...5e3bbc4ac4e4f24c41a892948046dbe8de4c2369"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "5e3bbc4ac4e4f24c41a892948046dbe8de4c2369",
       "reviewedRelease": "v26.10.0"
     },
-    "openscad/openscad": {
+    "omdsh-dev/dsh-data-agent": {
       "verdict": "ignore",
-      "reasonHe": "ה־release נשאר openscad-2021.01 ושני ה־commits הם שינויי GitHub workflow בלבד לעדכון submodule. אין שינוי במנוע OpenSCAD או במסלול CAD שלנו.",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
       "evidence": [
-        "latestRelease נשאר openscad-2021.01",
-        "2 commits: workflow debug info + fetch --all",
-        "integration: CAD/3D toolchain upstream",
-        "compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...ac793b2e0cf6ea734b60c3d31601852d0bab2ee4"
+        "baseline→remote: 3016f67c0a67 → 6a649fe930ae",
+        "baselineRelease→latestRelease: v0.2.0 → v0.2.2",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/omdsh-dev/dsh-data-agent/compare/3016f67c0a671c34bb1a7314ac11dfd0e9368546...6a649fe930aeab4247d3e8b936b6bf393aa71e8c"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "ac793b2e0cf6ea734b60c3d31601852d0bab2ee4",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "6a649fe930aeab4247d3e8b936b6bf393aa71e8c",
+      "reviewedRelease": "v0.2.2"
+    },
+    "open-multi-agent/open-multi-agent": {
+      "verdict": "ignore",
+      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.",
+      "evidence": [
+        "baseline→remote: ab349e7ad039 → 4e293a21a8bc",
+        "baselineRelease→latestRelease: v1.21.0 → v1.21.0",
+        "changeKinds: head; kind=agent-pattern; newDetection=True",
+        "integration: packages/vfharness/playbooks/oma-patterns.md",
+        "compare: https://github.com/open-multi-agent/open-multi-agent/compare/ab349e7ad03900455016b798c78464edf98cc94d...4e293a21a8bceac114e395aebc0306b5730ab2d4"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "4e293a21a8bceac114e395aebc0306b5730ab2d4",
+      "reviewedRelease": "v1.21.0"
+    },
+    "openscad/openscad": {
+      "verdict": "wait",
+      "reasonHe": "שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.",
+      "evidence": [
+        "baseline→remote: eecb92a6b6ef → 612e684c2cbb",
+        "baselineRelease→latestRelease: openscad-2021.01 → openscad-2021.01",
+        "changeKinds: head; kind=cad-runtime-source; newDetection=False",
+        "integration: CAD/3D toolchain upstream",
+        "compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...612e684c2cbbcdcb9a7a8307973f33fd910f9c17"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "612e684c2cbbcdcb9a7a8307973f33fd910f9c17",
       "reviewedRelease": "openscad-2021.01"
     },
-    "python/cpython": {
-      "verdict": "ignore",
-      "reasonHe": "אלה שני bugfixes ב־main ללא release: אחד ל־ctypes callback על s390x/libclang ואחד לבדיקת שגיאה פנימית ב־intern_static. אין ראיה שהם משפיעים על Windows/Python toolchain שלנו, ולכן אין פעולה על commit לא־משוחרר.",
+    "OrcaSlicer/OrcaSlicer": {
+      "verdict": "wait",
+      "reasonHe": "שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.",
       "evidence": [
-        "אין release חדש; changeKinds=head בלבד",
-        "ctypes fix מתועד עבור s390x/libclang callbacks",
-        "intern_static fix מתקן unreachable fatal-error path",
-        "compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...a4eb936727e5f949f5dc8c8a38bf6d325518f29b"
+        "baseline→remote: 4964f49765f7 → 865e9963c3fb",
+        "baselineRelease→latestRelease: v2.4.2 → v2.4.2",
+        "changeKinds: head; kind=runtime-source; newDetection=True",
+        "integration: production slicer",
+        "compare: https://github.com/OrcaSlicer/OrcaSlicer/compare/4964f49765f7963b9ee4b016fe5a3bc0581e1911...865e9963c3fb710ecd87624feef5e879dea10882"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "a4eb936727e5f949f5dc8c8a38bf6d325518f29b",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "865e9963c3fb710ecd87624feef5e879dea10882",
+      "reviewedRelease": "v2.4.2"
+    },
+    "python/cpython": {
+      "verdict": "wait",
+      "reasonHe": "main HEAD זז בלי pin release; runtime toolchain - לא מעדכנים יומיים בלי pin/evidence.",
+      "evidence": [
+        "baseline→remote: baec76438e32 → 763b6edb0ec9",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=runtime-toolchain; newDetection=False",
+        "integration: scripts/bootstrap-edge-host-windows.ps1, scripts/bootstrap-manim-host-windows.ps1",
+        "compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...763b6edb0ec959bdfb78f098b76829365de36ca5"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "763b6edb0ec959bdfb78f098b76829365de36ca5",
       "reviewedRelease": null
     },
     "Q00/ouroboros": {
-      "verdict": "wait",
-      "reasonHe": "השינוי החדש — replay מבודד וללא רשת של פקודות שנצפו כדי לאמת claims כמו tests_passed/commands_run — רלוונטי רעיונית ל־evidence discipline שלנו. אבל Ouroboros אצלנו עדיין מסומן `later` והדפוס הקיים הוא spec-first interview, לא runtime מוטמע; לכן שומרים כמועמד להטמעת pattern ממוקדת ולא מתקינים/מעדכנים מוצר.",
+      "verdict": "review",
+      "reasonHe": "קפיצת release (v0.54.6→v0.55.3). דפוסי skill/agent — לבדוק לפני הטמעה; אין npx על Cloud.",
       "evidence": [
-        "1 commit גדול: verifier command replay + replay policy + shell parsing + tests",
-        "replay רץ ב־isolated network-denied workspace copy",
-        "current catalog verdict=later; pattern=spec-first interview then execute",
-        "compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...a2b329d052c4b1a900810cc505742dff0142ebdb"
+        "baseline→remote: c0d584c78aa4 → b08ab59da1e0",
+        "baselineRelease→latestRelease: v0.54.6 → v0.55.3",
+        "changeKinds: head, release; kind=catalog-source; newDetection=False",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...b08ab59da1e063a6e1bb1ca3120ea0219af53fda"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "a2b329d052c4b1a900810cc505742dff0142ebdb",
-      "reviewedRelease": "v0.54.6"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "b08ab59da1e063a6e1bb1ca3120ea0219af53fda",
+      "reviewedRelease": "v0.55.3"
     },
     "remotion-dev/remotion": {
-      "verdict": "ignore",
-      "reasonHe": "v4.0.529 לא השתנתה ושני ה־commits הם תיעוד בלבד: הוספת BrewReel לרשימת resources. אין שינוי renderer/API או ב־Remotion path המוגבל־רישוי אצלנו.",
+      "verdict": "wait",
+      "reasonHe": "release v4.0.529→v4.0.531 על כלי runtime/CAD/slicer/toolchain. ממתינים לבילד יציב + smoke לפני אימוץ; אין auto-upgrade.",
       "evidence": [
-        "latestRelease נשאר v4.0.529",
-        "2 commits, בפועל docs-only resource addition + merge",
+        "baseline→remote: 1beb32cb9e3e → 985ba9f0756d",
+        "baselineRelease→latestRelease: v4.0.529 → v4.0.531",
+        "changeKinds: head, release; kind=embedded-provenance; newDetection=False",
         "integration: packages/vfom/VIDEO-TOOLCHAIN.json",
-        "compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...6f4e0d57d41a22fa60b1a9aa77e2b7d1d2adc210"
+        "compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...985ba9f0756d5109fd92f406e1c5f08b468e5fda"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "6f4e0d57d41a22fa60b1a9aa77e2b7d1d2adc210",
-      "reviewedRelease": "v4.0.529"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "985ba9f0756d5109fd92f406e1c5f08b468e5fda",
+      "reviewedRelease": "v4.0.531"
+    },
+    "scenario-labs/skills": {
+      "verdict": "review",
+      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "evidence": [
+        "baseline→remote: 9624e295fa33 → d87071d22edb",
+        "baselineRelease→latestRelease: skills-v0.48.0 → skills-v0.48.0",
+        "changeKinds: head; kind=skill-pattern; newDetection=True",
+        "integration: packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md, packages/vfom/CREATIVE-REFINE-LOOP.md, packages/vfprod/third_party/scenario-labs/blender/VENDOR-MANIFEST.json",
+        "compare: https://github.com/scenario-labs/skills/compare/9624e295fa33168bc1be22a628c23ba132d1c959...d87071d22edb5eb5871c9034f89cada518657891"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "d87071d22edb5eb5871c9034f89cada518657891",
+      "reviewedRelease": "skills-v0.48.0"
+    },
+    "shengsheng90/DSH-taskboard": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: ddf137d42670 → 4eb26e6e0bf4",
+        "baselineRelease→latestRelease: v0.1.6 → v0.1.7",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/shengsheng90/DSH-taskboard/compare/ddf137d426702679c1e3a27a9dc4d4a98dc275b1...4eb26e6e0bf4c0492a9add7b5ea430616627d4c6"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "4eb26e6e0bf4c0492a9add7b5ea430616627d4c6",
+      "reviewedRelease": "v0.1.7"
+    },
+    "Snapmaker/OrcaSlicer": {
+      "verdict": "wait",
+      "reasonHe": "שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.",
+      "evidence": [
+        "baseline→remote: da53bc5ffe47 → c0e69878c643",
+        "baselineRelease→latestRelease: v2.4.0 → v2.4.0",
+        "changeKinds: head; kind=slicer-runtime-source; newDetection=True",
+        "integration: Snapmaker slicer upstream",
+        "compare: https://github.com/Snapmaker/OrcaSlicer/compare/da53bc5ffe47d7837ccdfde5f59a5ba1e9ec35f1...c0e69878c643e8f6de128da4aa40f8da84327ae7"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "c0e69878c643e8f6de128da4aa40f8da84327ae7",
+      "reviewedRelease": "v2.4.0"
     },
     "stablyai/orca": {
       "verdict": "ignore",
-      "reasonHe": "ה־7 commits משנים runtime/UI של Orca — terminal subscriptions, workspace restore, native chat ו־agent-launch caller selection. אצלנו Orca הוא pattern-only וה־LOCK אוסר התקנת Orca/ADE; דפוס ה־job isolation/handoff/three terminal states שכבר הוטמע אינו דורש שינוי בגלל commits אלה.",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
       "evidence": [
-        "latestRelease נשאר v1.4.215",
-        "7 commits ב־Orca runtime/renderer; אין release חדש",
-        "local contract: Pattern only; do not install Orca or stand up an ADE",
-        "compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...bdaf9a3ed3a21ad81c722f1ba732a5018eaffad4"
+        "baseline→remote: 0a876b2f5a26 → b59489853314",
+        "baselineRelease→latestRelease: v1.4.215 → v1.4.218",
+        "changeKinds: head, release; kind=catalog-source; newDetection=False",
+        "integration: packages/vfe2b/catalog.json",
+        "compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...b59489853314bb30efdd743fae18c4d7852319fb"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "bdaf9a3ed3a21ad81c722f1ba732a5018eaffad4",
-      "reviewedRelease": "v1.4.215"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "b59489853314bb30efdd743fae18c4d7852319fb",
+      "reviewedRelease": "v1.4.218"
+    },
+    "Tencent/WeKnora": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: 9114e4e4f905 → bccb4b151bae",
+        "baselineRelease→latestRelease: v0.8.2 → v0.8.2",
+        "changeKinds: head; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/Tencent/WeKnora/compare/9114e4e4f905be71976a77c684d3f92731e6f9a6...bccb4b151bae403508da77fbb174efc79dc47c1a"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "bccb4b151bae403508da77fbb174efc79dc47c1a",
+      "reviewedRelease": "v0.8.2"
     },
     "topoteretes/cognee": {
-      "verdict": "ignore",
-      "reasonHe": "v1.6.1 כבר אומצה ונבדקה. שני ה־commits החדשים משנים README בלבד ומיישרים את התיעוד למה שכבר קיים ב־1.6.1; ה־commit האחרון מצהיר במפורש שאין שינוי behavior.",
+      "verdict": "wait",
+      "reasonHe": "Cognee runtime על מכונת Chris; יש אות עדכון. ממתינים ל־smoke/compatibility על D:\\Velvet לפני ack; אין auto-upgrade מריצת מחקר.",
       "evidence": [
-        "adoptedRelease=v1.6.1; latestRelease נשאר v1.6.1",
-        "2 README-only commits; no behaviour change",
-        "adoption evidence: packages/vfharness/state/cognee-1.6.1-adoption-2026-09-27.json",
-        "compare: https://github.com/topoteretes/cognee/compare/eb90d03740755f5252b8b12cce91fd09970f2d81...c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b"
+        "baseline→remote: eb90d0374075 → ba3631f2ed36",
+        "baselineRelease→latestRelease: v1.6.1 → v1.6.2",
+        "changeKinds: head, release; kind=runtime-source; newDetection=False",
+        "integration: packages/vfmem/cognee.json, %VELVETOS_RUNTIME_ROOT%/Cognee/cognee-venv",
+        "compare: https://github.com/topoteretes/cognee/compare/eb90d03740755f5252b8b12cce91fd09970f2d81...ba3631f2ed363a6ea50d649c34c56885af6b36fe"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b",
-      "reviewedRelease": "v1.6.1"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "ba3631f2ed363a6ea50d649c34c56885af6b36fe",
+      "reviewedRelease": "v1.6.2"
+    },
+    "trailhq/Graft": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: 80692e5ad0bc → fe30ead39d5e",
+        "baselineRelease→latestRelease: None → None",
+        "changeKinds: head; kind=embedded-provenance; newDetection=True",
+        "integration: packages/vfgraft/ORIGIN.md",
+        "compare: https://github.com/trailhq/Graft/compare/80692e5ad0bc8e8f7e1edea648247d90b9f76820...fe30ead39d5e6f0c921018d364da2bdbc9d4b3ad"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "fe30ead39d5e6f0c921018d364da2bdbc9d4b3ad",
+      "reviewedRelease": null
+    },
+    "volcengine/OpenViking": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: a09a9d20a8e0 → 1394d4769a34",
+        "baselineRelease→latestRelease: v0.4.21 → v0.4.22",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/volcengine/OpenViking/compare/a09a9d20a8e07d08973aee177802d00e08df29e6...1394d4769a34058dcd64bd9afcf917d3cae7ab54"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "1394d4769a34058dcd64bd9afcf917d3cae7ab54",
+      "reviewedRelease": "v0.4.22"
+    },
+    "xmanrui/dsh-im": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: b7522c70b470 → a81f6f3a935f",
+        "baselineRelease→latestRelease: v4.29.0 → v4.32.0",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/xmanrui/dsh-im/compare/b7522c70b4707c6879dc6985c20820da65e95cae...a81f6f3a935f7fa57d4660529708298bb2391113"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "a81f6f3a935f7fa57d4660529708298bb2391113",
+      "reviewedRelease": "v4.32.0"
+    },
+    "yxqfg/phone-lens": {
+      "verdict": "ignore",
+      "reasonHe": "מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.",
+      "evidence": [
+        "baseline→remote: 1f9eb54f2375 → 8df0d0037b9a",
+        "baselineRelease→latestRelease: v0.3.5 → v1.0.2",
+        "changeKinds: head, release; kind=catalog-source; newDetection=True",
+        "integration: packages/vfdsh/catalog.json",
+        "compare: https://github.com/yxqfg/phone-lens/compare/1f9eb54f2375359a66016a30796936c69d4f8a6e...8df0d0037b9a98a28084bb6280560c8d8d9bddb9"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "8df0d0037b9a98a28084bb6280560c8d8d9bddb9",
+      "reviewedRelease": "v1.0.2"
     }
-  }
+  },
+  "notificationPreparedAt": "2026-09-30T23:06:14.305998+00:00",
+  "notificationDigest": "b36e68f0afdd2c5694c4b71f5ef445c832e7a5376e6320b9f57fd0525e8629b2"
 }

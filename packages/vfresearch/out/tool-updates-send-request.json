@@ -1,24 +1,16 @@
 {
-  "enabled": false,
-  "requestId": "tool-updates-reviewed-2026-09-28",
+  "enabled": true,
+  "requestId": "tool-updates-b36e68f0afdd2c56",
   "to": "nocturney@gmail.com",
-  "subject": "VelvetOS · עדכוני כלים · 11 ממתינים",
+  "subject": "VelvetOS · עדכוני כלים · 48 ממתינים",
   "html": "packages/vfresearch/out/tool-updates-latest.html",
   "visibleText": "packages/vfresearch/out/tool-updates-latest.txt",
   "images": "",
   "embedRemoteImages": false,
   "remoteImageLimit": 0,
-  "notificationDigest": null,
-  "pendingCount": 11,
+  "notificationDigest": "b36e68f0afdd2c5694c4b71f5ef445c832e7a5376e6320b9f57fd0525e8629b2",
+  "pendingCount": 48,
   "reviewReady": true,
   "unreviewedCount": 0,
-  "unreviewedRepos": [],
-  "reviewSummary": {
-    "pending": 11,
-    "update": 0,
-    "wait": 2,
-    "review": 0,
-    "ignore": 9
-  },
-  "note": "Analysis complete; request intentionally remains disabled until the canonical renderer arms it."
+  "unreviewedRepos": []
 }
