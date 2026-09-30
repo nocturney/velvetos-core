@@ -17,8 +17,15 @@
       "Photoshop 2026",
       "Premiere Pro 2026"
     ],
-    "excluded": ["Fusion", "Cinema 4D"],
-    "no_official_adapter": ["Substance 3D Sampler", "Substance 3D Modeler", "Substance 3D Stager"]
+    "excluded": [
+      "Fusion",
+      "Cinema 4D"
+    ],
+    "no_official_adapter": [
+      "Substance 3D Sampler",
+      "Substance 3D Modeler",
+      "Substance 3D Stager"
+    ]
   },
   "source_control": {
     "repository": "https://github.com/nocturney/velvetos-core.git",
@@ -76,9 +83,10 @@
       "adapter": "dcc-mcp-3dsmax",
       "version": "0.2.14",
       "status": "PASS",
-      "verification": "Official shortcut launch; registry available/dispatch ready, matching host PID, live heartbeat and healthy gateway guardian.",
-      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\3dsmax-0.2.14-final-regression-2026-09-30.json",
-      "sha256": "B8E865BE91384FC83AE92BCE6762C649737E6B15C611C837A5B16EBA95323076"
+      "verification": "Official shortcut launch; live shadow registry reports available/dispatch ready with matching host PID, sidecar PID and healthy shared gateway.",
+      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\3dsmax-0.2.14-final-runtime-regression-2026-09-30.json",
+      "sha256": "E820A646BA4E176F4D73D7F20EB3C382C0456A7F417A5BDA598A5676ED586BBE",
+      "note": "Canonical CLI receipt lookup resolves the default user profile while the accepted deployment uses the D:\\Velvet shadow state; runtime evidence is authoritative."
     },
     {
       "id": "inventor",
@@ -96,10 +104,10 @@
       "adapter": "dcc-mcp-blender",
       "version": "0.2.12",
       "status": "PASS",
-      "verification": "Official shortcut launch; live streamable-HTTP sidecar health and typed dcc_diagnostics__get_instance_info succeeded.",
-      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\blender-0.2.12-final-runtime-regression-2026-09-30.json",
-      "sha256": "93C1372E5471C8C3AB2691A45BC484940FA2D5B799BD60E482DA1CAE1CA84EE7",
-      "note": "Legacy readiness helper sends an obsolete Accept header and the CLI resolves the default receipt path; direct runtime probe is authoritative for this deployment."
+      "verification": "Official shortcut launch and restart; ephemeral loopback dcc-mcp-http listener healthy; direct typed diagnostics and restart process_status/capability_manifest passed.",
+      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\blender-0.2.12-final-regression-2026-09-30.json",
+      "sha256": "53258BC48210DAB59B9AA797710DF007A0B833A22F21A3441338B4ADA90239C7",
+      "note": "Port 3102 is not a production invariant. Blender binds an ephemeral MCP port (port=0); discover the listener owned by the live Blender PID. Streamable HTTP requires Accept: application/json, text/event-stream. The initial tool surface can be compact; dcc_capability_manifest enumerates unloaded Blender actions/skills."
     },
     {
       "id": "substance-painter",

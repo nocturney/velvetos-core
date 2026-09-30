@@ -36,7 +36,7 @@ Overall status: **PASS_WITH_DOCUMENTED_UPSTREAM_LIMITATION**.
 Canonical final matrix:
 - Local: `D:\Velvet\Logs\DCC-MCP\dcc-adobe-final-regression-matrix-2026-09-30.json`
 - Repo copy: `docs/evidence/dcc-adobe-final-regression-2026-09-30.json`
-- SHA256: `7B28D274709F8C276C5C1498821801D0C3F521523EE6CFA51762E10B21ADA8EC`
+- SHA256: `8061B1B5813C6E6AE6ED48AE489A24D70AA8E31FE2FEE57607F625157FDB1544`
 
 ## Runtime architecture
 
@@ -148,12 +148,47 @@ The branch contains:
 - Illustrator bounded bootstrap source and provenance;
 - `scripts/validate-dcc-adobe-compat.py`.
 
+## Blender 5.2 final clarification
+
+Blender 5.2.2 LTS is **PASS**. The apparent regression observed during the final pass was caused by a stale fixed-port assumption, not a broken startup or adapter.
+
+Verified inside the live Blender interpreter:
+- `dcc_mcp_blender_startup` is loaded in `sys.modules`;
+- the startup file exists and still matches its accepted receipt hash;
+- `dcc_mcp_blender 0.2.12` and `dcc_mcp_core 0.20.37` resolve from the accepted hostenv;
+- `BlenderMcpServer.is_running == true` and the startup module owns the server.
+
+Important runtime behavior:
+- the Blender MCP HTTP listener is **ephemeral/dynamic** (`McpHttpServer(..., port=0)`);
+- do **not** require or hardcode port `3102`;
+- discover the current loopback listener owned by the active Blender PID and verify its `/health` response identifies `dcc-mcp-http`;
+- streamable MCP requests must accept both `application/json` and `text/event-stream`.
+
+Observed dynamic ports during acceptance included `23588`, `58483` and `14279`; changing values are expected.
+
+End-to-end direct MCP validation passed before restart:
+- initialize HTTP 200;
+- initialized HTTP 202;
+- tools/list HTTP 200;
+- typed read-only `dcc_diagnostics__get_instance_info` HTTP 200 with `success=true`, Blender PID matching the live host, Core `0.20.37`, Python `3.13.13`, gateway `9765`.
+
+After normal shortcut restart, the compact initial core surface passed:
+- `dcc_diagnostics__process_status` -> `success=true`, `dcc_alive=true`;
+- `dcc_capability_manifest` -> Blender `5.2.2 LTS`, 374 discoverable actions and 48 skills;
+- `dcc_diagnostics__get_instance_info` is listed by the manifest as an unloaded capability and may not appear in the initial 32-tool surface until loaded.
+
+Canonical final Blender evidence:
+- `D:\Velvet\Logs\DCC-MCP\blender-0.2.12-final-regression-2026-09-30.json`
+- SHA256 `53258BC48210DAB59B9AA797710DF007A0B833A22F21A3441338B4ADA90239C7`
+
+No Blender executable, signature policy, startup script or accepted hostenv was modified to obtain this PASS.
+
 ## Known verifier/tooling mismatches
 
 These are documented deployment/tooling mismatches, not current runtime failures:
 
 1. Maya CLI verification resolves its receipt under the default `%USERPROFILE%\.dcc-mcp` location while the accepted deployment uses the D:\Velvet shadow state. Runtime registry + dispatch are healthy.
-2. Blender CLI verification has the same shadow-receipt location mismatch. The legacy readiness helper also sends only `Accept: application/json`, while the current streamable HTTP sidecar requires both JSON and event-stream. Direct typed diagnostics passed.
+2. Blender CLI verification has the same shadow-receipt location mismatch. Port `3102` is a stale fixed-port assumption: the accepted server binds an ephemeral loopback port. The legacy readiness helper also sends only `Accept: application/json`, while the current streamable HTTP server requires both JSON and event-stream. Direct typed diagnostics and restart persistence passed.
 3. Substance Painter CLI verification resolves the default Documents profile; the accepted profile is redirected to D:\Documents. Direct health + typed diagnostics passed.
 4. Substance Designer CLI verification does not resolve the Velvet state receipt in this deployment. Direct health + typed diagnostics passed.
 5. After Effects exact CEP runtime identity remains unavailable in the supported AdobePy contract. Functional typed RPC is healthy and no bypass is used.
