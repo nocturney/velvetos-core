@@ -14,10 +14,12 @@
     "gh-run:36413899012:failure:2026-09-28T11:08:57Z:https://github.com/nocturney/velvetos-core/actions/runs/36413899012",
     "office-loop-1830 triage 2026-09-28: Research Cadence failed again on main (36413899012 @ 11:08Z). Keep accepted; no promote — no new durable contract change in this handoff.",
     "gh-run:36558075431:failure:2026-09-29T10:50:46Z:https://github.com/nocturney/velvetos-core/actions/runs/36558075431",
-    "office-loop-1830 triage 2026-09-29: Research Cadence failed on main (36558075431 @ 10:50Z). Keep accepted; no promote — no new durable calendar/handoff contract change in this handoff. research.md consumer still dated 27.9.2026."
+    "office-loop-1830 triage 2026-09-29: Research Cadence failed on main (36558075431 @ 10:50Z). Keep accepted; no promote — no new durable calendar/handoff contract change in this handoff. research.md consumer still dated 27.9.2026.",
+    "gh-run:36703784771:failure:2026-09-30T10:39:53Z:https://github.com/nocturney/velvetos-core/actions/runs/36703784771",
+    "office-loop-1830 triage 2026-09-30: Research Cadence failed on main (36703784771 @ 10:39Z). Research Seat PR #438 still open with check-all FAILURE — not merged. research.md on main still dated 27.9.2026. Keep accepted; no promote — no new durable contract change in this handoff."
   ],
   "first_seen": "2026-09-25T09:44:21Z",
-  "last_seen": "2026-09-29T18:48:19+03:00",
+  "last_seen": "2026-09-30T18:40:16+03:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,
