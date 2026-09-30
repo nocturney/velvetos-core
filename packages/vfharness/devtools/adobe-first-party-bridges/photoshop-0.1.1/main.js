@@ -86,7 +86,7 @@ function capabilities() {
   return {
     host: "photoshop",
     bridgeKind: "uxp",
-    bridgeVersion: "0.1.0",
+    bridgeVersion: "0.1.1",
     hostVersion: hostVersion(),
     namespaces: ["app", "document", "action"],
     features: ["reconnect", "batchPlayReadOnly", "controlledTemporaryWrite"],

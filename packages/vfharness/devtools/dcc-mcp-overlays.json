@@ -80,7 +80,7 @@
       "state": "SUPERSEDED_BY_FIRST_PARTY_BRIDGE",
       "accepted_file_sha256": "027d38bd953e6d0c22cc3665c825caddc6fde6b9f65ce790ce2a93813c57ae7e",
       "patch_sha256": "4f857ed1708a1677faf217bd233794d7314b6977232138895622da80de3dc0e5",
-      "superseded_by_evidence_sha256": "c6e71c91730e50bfb2cabc4e4f7af1f0ca2b307092ee0646f8d3babf6e0dfeef"
+      "superseded_by_evidence_sha256": "b622c35e4ea461a0902347f7d1339c106ba98ef9299e983780ef0c854de0b4e4"
     }
   ]
 }

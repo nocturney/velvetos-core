@@ -9,21 +9,25 @@
       "id": "photoshop",
       "host": "Adobe Photoshop 2026",
       "host_version": "27.7.0",
-      "version": "0.1.0",
-      "source_dir": "packages/vfharness/devtools/adobe-first-party-bridges/photoshop-0.1.0",
+      "version": "0.1.1",
+      "source_dir": "packages/vfharness/devtools/adobe-first-party-bridges/photoshop-0.1.1",
       "broker_port": 47393,
       "state": "PRODUCTION_PASS",
       "source_files": {
-        "manifest.json": "a0ae6cd4bae297b238b1a05573bbada5abccb7d787d40ca258ea33150f3f6cc8",
-        "main.js": "91634e912b46c992af4b4ff1676f72c59b3fb9c3b522bb624039ecd5ffa3a526",
+        "manifest.json": "e532e12cd90c051f963857260aa68c6cd836a790f53e17b4037833ba9d4a5ad2",
+        "main.js": "91a14dfe1caa08999302e2a5053576cefe54e471b2016e2638ef676c34691ba5",
         "index.html": "f921172021364d5ef14f1372256c3e4964a3959d6c991b81d7ea4eccdf6db108",
         "icons/bridge.svg": "8c6e36e74b6febb162b2fa119ce2fd6b86f0d3caeae96c4d9d858eb257d64604"
       },
       "acceptance_evidence": {
-        "path": "D:\\Velvet\\Logs\\AdobeBridge\\photoshop-first-party-0.1.0-acceptance-2026-09-30.json",
-        "sha256": "c6e71c91730e50bfb2cabc4e4f7af1f0ca2b307092ee0646f8d3babf6e0dfeef"
+        "path": "D:\\Velvet\\Logs\\AdobeBridge\\photoshop-first-party-0.1.1-acceptance-no-watcher-2026-09-30.json",
+        "sha256": "b622c35e4ea461a0902347f7d1339c106ba98ef9299e983780ef0c854de0b4e4"
       },
-      "persistence": "Normal Photoshop shortcut launch reconnect verified without a special wrapper."
+      "restart_persistence_evidence": {
+        "path": "D:\\Velvet\\Logs\\AdobeBridge\\photoshop-first-party-0.1.1-restart-persistence-no-watcher-2026-09-30.json",
+        "sha256": "2cf40809fd1c2cc6eeb86527667450db7d45e12037228e407871c05a3f719ffc"
+      },
+      "persistence": "Installed through Adobe UPIA; normal Photoshop shortcut restart reconnects with no watcher or DevTools load command."
     },
     {
       "id": "premiere",
