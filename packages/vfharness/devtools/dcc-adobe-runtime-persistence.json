@@ -33,11 +33,36 @@
       "required_behavior": "Loopback broker remains long-lived and retries without a Photoshop watcher or UXP Developer Tool dependency."
     },
     {
+      "id": "dcc-desktop-host-wrapper",
+      "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Start-VelvetDccDesktopHosts.ps1",
+      "sha256": "e4b7d8b3084906b1f30e8c6a6734e430a8e46a3038a1d2c91864b6129c56a51b",
+      "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetDccDesktopHosts.ps1",
+      "task": "VelvetOS DCC Desktop Hosts",
+      "trigger": "none_manual_only",
+      "principal": "CHRIS\\Chris",
+      "required_behavior": "VelvetOS launches DCC GUI hosts only on demand; agent launches use HideAfterLaunch so no host window remains visible or in the taskbar."
+    },
+    {
+      "id": "dcc-host-manager",
+      "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Invoke-VelvetDccHost.ps1",
+      "sha256": "99bdc73ccf1ff87fabd5568bc0db0675589b6e32e89b0a260c2c67cafd1eb32c",
+      "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\Invoke-VelvetDccHost.ps1",
+      "required_behavior": "Expose start/stop/status for one hidden on-demand DCC host without changing the user's normal vendor shortcuts."
+    },
+    {
+      "id": "dcc-desktop-host-manifest",
+      "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/dcc-desktop-hosts.json",
+      "sha256": "2225f39c5bb983234fd5ced48af673cf7e18f435b76f50b8575dc51c36d267ab",
+      "runtime_target": "D:\\Velvet\\Runtime\\Autostart\\dcc-desktop-hosts.json",
+      "required_behavior": "Policy is on_demand_hidden with launch_at_logon=false and agent_hidden_launch=true."
+    },
+    {
       "id": "reboot-persistence-installer",
       "source": "packages/vfharness/devtools/dcc-adobe-runtime-persistence/Install-DccAdobeRebootPersistence.ps1",
-      "sha256": "1481054e2f51f09409cf18261b8690b1fea68321620a5633f1b58b12c588ee40",
-      "required_behavior": "Idempotently deploy the two wrappers and register the boot/logon tasks; -ValidateOnly performs no mutation."
+      "sha256": "925b2d2336eabe579a2d22edc4e1509a40c2f815b28f7ddb22c29983af1acdf9",
+      "required_behavior": "Idempotently deploy background persistence plus manual-only hidden DCC host tasks, remove obsolete acceptance launch tasks, and validate live/source parity without exposing tokens."
     }
   ],
-  "evidence": "docs/evidence/dcc-adobe-post-reboot-persistence-2026-09-30.json"
+  "evidence": "docs/evidence/dcc-adobe-post-reboot-persistence-2026-09-30.json",
+  "hidden_on_demand_evidence": "docs/evidence/dcc-adobe-hidden-on-demand-2026-09-30.json"
 }

@@ -1,0 +1,159 @@
+{
+    "schema":  "velvetos.dcc-adobe.hidden-on-demand.v1",
+    "observed_at":  "2026-09-30T19:09:55.2316370+03:00",
+    "status":  "PASS",
+    "goal":  "Keep VelvetOS DCC/Adobe GUI hosts out of the normal desktop and taskbar unless explicitly requested, while preserving hidden background infrastructure.",
+    "runtime_policy":  {
+                           "launch_mode":  "on_demand_hidden",
+                           "launch_at_logon":  false,
+                           "agent_hidden_launch":  true,
+                           "normal_vendor_shortcuts_unchanged":  true
+                       },
+    "live_state":  {
+                       "gui_hosts_running":  0,
+                       "gui_hosts":  [
+
+                                     ],
+                       "gateway_health_http_status":  200,
+                       "brokers":  [
+                                       {
+                                           "port":  47391,
+                                           "listening":  true,
+                                           "established":  0
+                                       },
+                                       {
+                                           "port":  47392,
+                                           "listening":  true,
+                                           "established":  0
+                                       },
+                                       {
+                                           "port":  47393,
+                                           "listening":  true,
+                                           "established":  0
+                                       }
+                                   ]
+                   },
+    "task_contract":  {
+                          "desktop_hosts_trigger_count":  0,
+                          "desktop_hosts_hidden_action":  true,
+                          "on_demand_count":  15,
+                          "on_demand":  [
+                                            {
+                                                "id":  "substance-painter",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "maya",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "inventor",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "autocad",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "zbrush",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "blender",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "substance-designer",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "substance-sampler",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "substance-modeler",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "substance-stager",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "3dsmax",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "photoshop",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "illustrator",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "aftereffects",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            },
+                                            {
+                                                "id":  "premiere",
+                                                "exists":  true,
+                                                "trigger_count":  0,
+                                                "hidden_action":  true
+                                            }
+                                        ],
+                          "obsolete_tasks_remaining":  [
+
+                                                       ]
+                      },
+    "autostart_audit":  {
+                            "run_key_hits":  0,
+                            "startup_folder_hits":  0,
+                            "obsolete_acceptance_tasks_removed":  7
+                        },
+    "functional_acceptance":  {
+                                  "blender_cold_start":  {
+                                                             "result":  "PASS",
+                                                             "main_window_handle":  0,
+                                                             "hidden":  true,
+                                                             "loopback_listener_count":  2,
+                                                             "stopped_cleanly":  true
+                                                         },
+                                  "photoshop_hide":  {
+                                                         "result":  "PASS",
+                                                         "main_window_handle":  0,
+                                                         "hidden":  true,
+                                                         "broker_port":  47393,
+                                                         "established_clients_during_test":  1
+                                                     }
+                              },
+    "next_login_observation":  "not_forced_in_this_change; task/run/startup contracts are statically clean and no GUI host has an automatic trigger",
+    "backup":  "D:\\Velvet\\State\\DCC-MCP\\backups\\desktop-hosts-on-demand-20260930-185148"
+}
