@@ -1,0 +1,202 @@
+{
+  "schema": "velvetos.dcc-adobe.final-regression.v1",
+  "date": "2026-09-30",
+  "overall_status": "PASS_WITH_DOCUMENTED_UPSTREAM_LIMITATION",
+  "scope": {
+    "included": [
+      "AutoCAD 2027",
+      "Maya 2027",
+      "3ds Max 2027",
+      "Inventor 2027",
+      "Blender 5.2",
+      "ZBrush 2026.2.1",
+      "Substance 3D Painter",
+      "Substance 3D Designer",
+      "Illustrator 2026",
+      "After Effects 2026",
+      "Photoshop 2026",
+      "Premiere Pro 2026"
+    ],
+    "excluded": ["Fusion", "Cinema 4D"],
+    "no_official_adapter": ["Substance 3D Sampler", "Substance 3D Modeler", "Substance 3D Stager"]
+  },
+  "source_control": {
+    "repository": "https://github.com/nocturney/velvetos-core.git",
+    "branch": "chore/dcc-adobe-compat-overlays-20260929",
+    "head": "665e5d99",
+    "head_subject": "chore: persist Illustrator bootstrap transaction",
+    "previous_hardening_commit": "f62610c9",
+    "source_reconciliation_commit": "e6e1e2d3"
+  },
+  "runtime": {
+    "autostart_script": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetDccDesktopHosts.ps1",
+    "autostart_sha256": "4941CBA86A6A1F840C1EAEB8BAEA0BD3AA5BCC8267E0CEA4978A0C9CE35DF55E",
+    "illustrator_bootstrap": "D:\\Velvet\\Runtime\\Autostart\\Bootstrap-VelvetIllustrator.py",
+    "illustrator_bootstrap_sha256": "B9F71AE9E363354F98C1F571929D0F9EB60E023306EF19624F10DFAE3708F5A8",
+    "gateway_port": 9765,
+    "uxp_devtools_port": 14001,
+    "final_clean_state": {
+      "gui_hosts_open": 0,
+      "broker_47391_listening": true,
+      "broker_47392_listening": true,
+      "broker_47393_listening": true,
+      "broker_47391_established_clients": 0,
+      "broker_47392_established_clients": 0,
+      "broker_47393_established_clients": 0,
+      "photoshop_watcher_running": false,
+      "premiere_watcher_running": false,
+      "illustrator_bootstrap_running": false
+    }
+  },
+  "components": [
+    {
+      "id": "autocad",
+      "tier": "A",
+      "adapter": "dwg-mcp",
+      "version": "2.0.1",
+      "status": "PASS",
+      "verification": "Official shortcut launch; authenticated read-only MCP transport returned the expected no-active-document result.",
+      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\autocad-dwg-mcp-2.0.1-final-regression-2026-09-30.json",
+      "sha256": "95FA5236D3E43FF694BC141BC44A4658EC88BAEDA48A407DC7342FD4EEF4437F"
+    },
+    {
+      "id": "maya",
+      "tier": "A",
+      "adapter": "dcc-mcp-maya",
+      "version": "0.9.31",
+      "status": "PASS",
+      "verification": "Official shortcut launch; live shared registry reports available/dispatch ready with matching host PID and healthy gateway guardian.",
+      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\maya-0.9.31-final-runtime-regression-2026-09-30.json",
+      "sha256": "FC831E00D28014E31B501E564C18E47E33E952A797366A488B211D86E0BEBE42",
+      "note": "Canonical CLI receipt lookup is hard-wired to the default user profile while the accepted deployment uses the D:\\Velvet shadow state."
+    },
+    {
+      "id": "3dsmax",
+      "tier": "A",
+      "adapter": "dcc-mcp-3dsmax",
+      "version": "0.2.14",
+      "status": "PASS",
+      "verification": "Official shortcut launch; registry available/dispatch ready, matching host PID, live heartbeat and healthy gateway guardian.",
+      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\3dsmax-0.2.14-final-regression-2026-09-30.json",
+      "sha256": "B8E865BE91384FC83AE92BCE6762C649737E6B15C611C837A5B16EBA95323076"
+    },
+    {
+      "id": "inventor",
+      "tier": "A",
+      "adapter": "ipt-mcp",
+      "version": "0.1.0",
+      "status": "PASS",
+      "verification": "Official shortcut launch; target inventor-2027-70920 discovered and five read-only MCP RPCs completed.",
+      "evidence": "D:\\Velvet\\Logs\\IPT-MCP\\inventor-0.1.0-final-regression-2026-09-30.json",
+      "sha256": "1B8BAC95E57F9B6565851DFF4CD3B9C10DDEEBC02FC9D5F6FF0551D3AD63E2B5"
+    },
+    {
+      "id": "blender",
+      "tier": "A",
+      "adapter": "dcc-mcp-blender",
+      "version": "0.2.12",
+      "status": "PASS",
+      "verification": "Official shortcut launch; live streamable-HTTP sidecar health and typed dcc_diagnostics__get_instance_info succeeded.",
+      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\blender-0.2.12-final-runtime-regression-2026-09-30.json",
+      "sha256": "93C1372E5471C8C3AB2691A45BC484940FA2D5B799BD60E482DA1CAE1CA84EE7",
+      "note": "Legacy readiness helper sends an obsolete Accept header and the CLI resolves the default receipt path; direct runtime probe is authoritative for this deployment."
+    },
+    {
+      "id": "substance-painter",
+      "tier": "A",
+      "adapter": "dcc-mcp-substance-painter",
+      "version": "0.6.0",
+      "status": "PASS",
+      "verification": "Managed shortcut launch; health is healthy and painter_diagnostics__ping reports host_dispatch_ready=true.",
+      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\substance-painter-0.6.0-final-runtime-regression-2026-09-30.json",
+      "sha256": "79443F68BE14ED470341E4D080247E2ABDFD2918B1607783157E4C6422CE0B28"
+    },
+    {
+      "id": "substance-designer",
+      "tier": "A",
+      "adapter": "dcc-mcp-substance-designer",
+      "version": "0.8.1",
+      "status": "PASS",
+      "verification": "Managed shortcut launch; health is healthy and designer_diagnostics__ping reports host_dispatch_ready=true with canonical payload bootstrap.",
+      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\substance-designer-0.8.1-final-runtime-regression-2026-09-30.json",
+      "sha256": "99E0927A3A77D118411914F31B7B264EF592FCC37E10339DD3BC52D0608EF8CC"
+    },
+    {
+      "id": "zbrush",
+      "tier": "A",
+      "adapter": "dcc-mcp-zbrush",
+      "version": "0.2.26",
+      "status": "PASS",
+      "verification": "Managed shortcut launch; host owns bridge 9876, sidecar 13481 healthy, registry available and gateway healthy.",
+      "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\zbrush-0.2.26-final-regression-2026-09-30.json",
+      "sha256": "2DADEDC57B9A6E6CB13B1A4553756F3362FD2FFBCBBEE9AA3A29ED9C56B34C02"
+    },
+    {
+      "id": "illustrator",
+      "tier": "B",
+      "adapter": "dcc-mcp-illustrator",
+      "version": "0.3.1",
+      "status": "PASS",
+      "verification": "Bounded hash-attested AdobePy bootstrap transaction, then official shortcut launch; session=1, typed read-only RPC and canonical verify directly_usable=true.",
+      "evidence": "D:\\Velvet\\Logs\\AdobeBridge\\illustrator-0.3.1-final-autostart-persistence-2026-09-30.json",
+      "sha256": "C8DA428DDFFE739C87F473A120D2CC7C8054A0394ACD3C4D9A7423AB10DCF7D2",
+      "note": "Scoped host-verification exception remains adapter-local; Illustrator.exe was not modified and global signature policy was not weakened."
+    },
+    {
+      "id": "aftereffects",
+      "tier": "B",
+      "adapter": "dcc-mcp-aftereffects",
+      "version": "0.7.0",
+      "status": "FUNCTIONAL_PASS_IDENTITY_BLOCKED_UPSTREAM",
+      "verification": "Official shortcut launch; typed RPC returns 26.3x87 and active project. Official AdobePy 0.6.2 verify reaches readiness then fails closed on exact CEP runtime identity.",
+      "evidence": "D:\\Velvet\\Logs\\AdobeBridge\\aftereffects-0.7.0-final-functional-regression-2026-09-30.json",
+      "sha256": "6798269181DC90AB2F23278E21C7C17C4F068E794F140167C206151CB8C91FEE",
+      "limitation": "runtime_identity_unavailable; no local bypass used"
+    },
+    {
+      "id": "photoshop",
+      "tier": "production-first-party",
+      "bridge_version": "0.1.1",
+      "host_version": "27.7.0",
+      "status": "PRODUCTION_PASS",
+      "verification": "UPIA-installed system UXP plugin; no watcher or DevTools load required; typed read-only and controlled temporary document cycle passed; restart persistence passed.",
+      "acceptance_evidence": "D:\\Velvet\\Logs\\AdobeBridge\\photoshop-first-party-0.1.1-acceptance-no-watcher-2026-09-30.json",
+      "acceptance_sha256": "B622C35E4EA461A0902347F7D1339C106BA98EF9299E983780EF0C854DE0B4E4",
+      "restart_evidence": "D:\\Velvet\\Logs\\AdobeBridge\\photoshop-first-party-0.1.1-restart-persistence-no-watcher-2026-09-30.json",
+      "restart_sha256": "2CF40809FD1C2CC6EEB86527667450DB7D45E12037228E407871C05A3F719FFC",
+      "final_live_probe_sha256": "E3D4680CDBA9699187710D89D8B1C5CD731A73E45F4E56A9C9EAA035B1CA74B1"
+    },
+    {
+      "id": "premiere",
+      "tier": "production-first-party",
+      "bridge_version": "0.1.3",
+      "host_version": "26.3.2",
+      "status": "PRODUCTION_PASS",
+      "verification": "UPIA-installed system UXP panel route; typed RPC and controlled temporary project cycle passed; restart persistence passed; DebugUXPDir disabled and no watcher required.",
+      "acceptance_evidence": "D:\\Velvet\\Logs\\AdobeBridge\\premiere-first-party-0.1.3-acceptance-2026-09-30.json",
+      "acceptance_sha256": "E9FC96B0A1A5759CF31A7146FF92218E59ED3AA8B2E136AD669731264EBEA10B",
+      "restart_evidence": "D:\\Velvet\\Logs\\AdobeBridge\\premiere-first-party-0.1.3-restart-persistence-2026-09-30.json",
+      "restart_sha256": "B5CA335DD08A1F5469907D394EA73CA21D64ED9C08F3D28D8685185FDDABE9D8",
+      "post_debug_cleanup_sha256": "2D735471B68FAC6D78A8460216C6DEC5ED4DA44E0F049D280C8AC99956A4B096",
+      "final_live_probe_sha256": "E9A0FD678673E0A054A5EA7F10FFE9C4D7FDD278B102A8BF2F1DC5B44EA1DB63"
+    }
+  ],
+  "repository_suite": {
+    "sensor_count": 116,
+    "passed": 115,
+    "failed": 1,
+    "failed_sensor": "check-staleness",
+    "failure_is_related_to_dcc_adobe_changes": false,
+    "failure_reason": "No 2026-09-30 daily brief artifact after the configured 09:15 Asia/Jerusalem cutoff.",
+    "evidence": "D:\\Velvet\\Logs\\DCC-MCP\\dcc-adobe-final-check-all-2026-09-30.json",
+    "sha256": "BB3499A9F6EB2604DE5F6E0DA0CE0DD3A427D2BB20F01534ADD03BDB38BBF6F3"
+  },
+  "security_and_integrity": {
+    "global_signature_policy_weakened": false,
+    "adobe_host_binaries_modified": false,
+    "tokens_committed": false,
+    "photoshop_watcher_required": false,
+    "premiere_watcher_required": false,
+    "illustrator_long_running_watcher_required": false
+  }
+}
