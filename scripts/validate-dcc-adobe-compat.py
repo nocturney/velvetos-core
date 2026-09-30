@@ -61,6 +61,13 @@ def main() -> int:
         expected = row.get("record_sha256")
         if record and expected:
             check_hash(ROOT / str(record), str(expected), errors)
+        source_file = row.get("source_file")
+        source_expected = row.get("source_sha256")
+        if source_file or source_expected:
+            if not source_file or not source_expected:
+                errors.append(f"{record_id}: source_file/source_sha256 must be provided together")
+            else:
+                check_hash(ROOT / str(source_file), str(source_expected), errors)
 
     bridge_ids: set[str] = set()
     literal_secret = re.compile(r"""(?i)token\s*[:=]\s*["'][A-Za-z0-9_+/=-]{20,}["']""")

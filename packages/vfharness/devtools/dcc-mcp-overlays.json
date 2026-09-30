@@ -14,6 +14,15 @@
       "state": "ACCEPTED_LOCAL_PROVENANCE",
       "record_sha256": "76403c26ab2c2c467196ba820a3b1ada1f7f1a5f82d3255cdd991188aa14eb84",
       "acceptance_evidence_sha256": "60276992e43427842e7a8d393b307fcda0067d91eaeb39abcdb6f065f9465fdd"
+    },
+    {
+      "id": "illustrator-bounded-bootstrap-provenance",
+      "record": "packages/vfharness/devtools/dcc-mcp-illustrator-0.3.1-bootstrap-provenance.json",
+      "state": "ACCEPTED_LOCAL_PERSISTENCE",
+      "record_sha256": "e058080f9958e874342169499351d8b8d8148260240e9c81cf488071024eda2e",
+      "source_file": "packages/vfharness/devtools/dcc-mcp-illustrator-0.3.1-adobepy-0.9.0-bootstrap.py",
+      "source_sha256": "b9f71ae9e363354f98c1f571929d0f9eb60e023306ef19624f10dfae3708f5a8",
+      "acceptance_evidence_sha256": "c8da428ddffe739c87f473a120d2cc7c8054a0394acd3c4d9a7423ab10dcf7d2"
     }
   ],
   "overlays": [
