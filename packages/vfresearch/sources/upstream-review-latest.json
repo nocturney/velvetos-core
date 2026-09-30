@@ -40,7 +40,7 @@
     },
     "Alishahryar1/free-claude-code": {
       "verdict": "ignore",
-      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.",
+      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.",
       "evidence": [
         "baseline→remote: 37c77262115a → 7195cefd5d0c",
         "baselineRelease→latestRelease: v6.4.4 → v6.5.11",
@@ -54,7 +54,7 @@
     },
     "andyrewlee/awesome-agent-orchestrators": {
       "verdict": "ignore",
-      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.",
+      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.",
       "evidence": [
         "baseline→remote: e120484e448f → a1278087adb6",
         "baselineRelease→latestRelease: None → None",
@@ -68,7 +68,7 @@
     },
     "anthropics/skills": {
       "verdict": "review",
-      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "reasonHe": "דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: 33375500bcea → 8a1541c4a3ff",
         "baselineRelease→latestRelease: None → None",
@@ -138,7 +138,7 @@
     },
     "DeusData/codebase-memory-mcp": {
       "verdict": "review",
-      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "reasonHe": "דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: 5df8b0442c48 → 0f52d30c2964",
         "baselineRelease→latestRelease: v0.11.0 → v0.11.0",
@@ -236,7 +236,7 @@
     },
     "headroomlabs-ai/headroom": {
       "verdict": "review",
-      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "reasonHe": "דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: d13e1966f820 → 0a2c80d52076",
         "baselineRelease→latestRelease: v0.39.1 → v0.39.1",
@@ -292,7 +292,7 @@
     },
     "joaomdmoura/crewai": {
       "verdict": "ignore",
-      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.",
+      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.",
       "evidence": [
         "baseline→remote: 4ed2abc7bbf5 → 1b9bbccbed63",
         "baselineRelease→latestRelease: 1.15.22 → 1.15.23",
@@ -320,7 +320,7 @@
     },
     "LinklyAI/best-skills": {
       "verdict": "review",
-      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "reasonHe": "דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: fe7eb0ccddb1 → b4e6744ca86c",
         "baselineRelease→latestRelease: None → None",
@@ -362,7 +362,7 @@
     },
     "mattpocock/skills": {
       "verdict": "review",
-      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "reasonHe": "דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: c55ee46073ed → d81f3a183412",
         "baselineRelease→latestRelease: v1.2.3 → v1.2.3",
@@ -376,7 +376,7 @@
     },
     "MichengAI/dsh-agency-agents": {
       "verdict": "review",
-      "reasonHe": "קפיצת release (v1.0.5→v1.0.7). דפוסי skill/agent — לבדוק לפני הטמעה; אין npx על Cloud.",
+      "reasonHe": "קפיצת release (v1.0.5→v1.0.7). דפוסי skill/agent - לבדוק לפני הטמעה; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: a4ef1548da94 → 8a422790cc9d",
         "baselineRelease→latestRelease: v1.0.5 → v1.0.7",
@@ -390,7 +390,7 @@
     },
     "msitarzewski/agency-agents": {
       "verdict": "review",
-      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "reasonHe": "דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: 053ddbbf392a → 765be4235810",
         "baselineRelease→latestRelease: None → None",
@@ -404,7 +404,7 @@
     },
     "mvanhorn/last30days-skill": {
       "verdict": "review",
-      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "reasonHe": "דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: 084662b501fb → 1fadbe5097c1",
         "baselineRelease→latestRelease: v3.25.0 → v3.25.0",
@@ -418,7 +418,7 @@
     },
     "NirDiamant/GenAI_Agents": {
       "verdict": "ignore",
-      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.",
+      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.",
       "evidence": [
         "baseline→remote: 078d6d544e15 → 6746e4b0a168",
         "baselineRelease→latestRelease: None → None",
@@ -460,7 +460,7 @@
     },
     "open-multi-agent/open-multi-agent": {
       "verdict": "ignore",
-      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.",
+      "reasonHe": "מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.",
       "evidence": [
         "baseline→remote: ab349e7ad039 → 4e293a21a8bc",
         "baselineRelease→latestRelease: v1.21.0 → v1.21.0",
@@ -516,7 +516,7 @@
     },
     "Q00/ouroboros": {
       "verdict": "review",
-      "reasonHe": "קפיצת release (v0.54.6→v0.55.3). דפוסי skill/agent — לבדוק לפני הטמעה; אין npx על Cloud.",
+      "reasonHe": "קפיצת release (v0.54.6→v0.55.3). דפוסי skill/agent - לבדוק לפני הטמעה; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: c0d584c78aa4 → b08ab59da1e0",
         "baselineRelease→latestRelease: v0.54.6 → v0.55.3",
@@ -544,7 +544,7 @@
     },
     "scenario-labs/skills": {
       "verdict": "review",
-      "reasonHe": "דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
+      "reasonHe": "דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.",
       "evidence": [
         "baseline→remote: 9624e295fa33 → d87071d22edb",
         "baselineRelease→latestRelease: skills-v0.48.0 → skills-v0.48.0",

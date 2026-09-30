@@ -26,7 +26,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v6.4.4 → v6.5.11
    שינוי: head, release
    שימוש אצלנו: .cursor/skills/vf-fcc-offload/SKILL.md
-   למה: מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.
+   למה: מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.
    ראיות: baseline→remote: 37c77262115a → 7195cefd5d0c · baselineRelease→latestRelease: v6.4.4 → v6.5.11 · changeKinds: head, release; kind=skill-pattern; newDetection=True · integration: .cursor/skills/vf-fcc-offload/SKILL.md
    מקור: https://github.com/Alishahryar1/free-claude-code
 
@@ -35,7 +35,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: e120484e44 → a1278087ad
    שינוי: head
    שימוש אצלנו: packages/vfharness/playbooks/orchestrators.md
-   למה: מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.
+   למה: מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.
    ראיות: baseline→remote: e120484e448f → a1278087adb6 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=agent-index; newDetection=True · integration: packages/vfharness/playbooks/orchestrators.md
    מקור: https://github.com/andyrewlee/awesome-agent-orchestrators
 
@@ -44,7 +44,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 33375500bc → 8a1541c4a3
    שינוי: head
    שימוש אצלנו: packages/vfharness/playbooks/skill-authoring.md
-   למה: דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
+   למה: דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
    ראיות: baseline→remote: 33375500bcea → 8a1541c4a3ff · baselineRelease→latestRelease: None → None · changeKinds: head; kind=skill-pattern; newDetection=True · integration: packages/vfharness/playbooks/skill-authoring.md
    מקור: https://github.com/anthropics/skills
 
@@ -89,7 +89,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v0.11.0 → v0.11.0
    שינוי: head
    שימוש אצלנו: packages/vfmem/ORIGIN.md
-   למה: דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
+   למה: דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
    ראיות: baseline→remote: 5df8b0442c48 → 0f52d30c2964 · baselineRelease→latestRelease: v0.11.0 → v0.11.0 · changeKinds: head; kind=pattern-source; newDetection=True · integration: packages/vfmem/ORIGIN.md
    מקור: https://github.com/DeusData/codebase-memory-mcp
 
@@ -152,7 +152,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v0.39.1 → v0.39.1
    שינוי: head
    שימוש אצלנו: packages/vfharness/playbooks/context-thrift.md
-   למה: דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
+   למה: דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
    ראיות: baseline→remote: d13e1966f820 → 0a2c80d52076 · baselineRelease→latestRelease: v0.39.1 → v0.39.1 · changeKinds: head; kind=pattern-source; newDetection=True · integration: packages/vfharness/playbooks/context-thrift.md
    מקור: https://github.com/headroomlabs-ai/headroom
 
@@ -188,7 +188,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 1.15.22 → 1.15.23
    שינוי: head, release
    שימוש אצלנו: packages/vfe2b/catalog.json
-   למה: מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.
+   למה: מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.
    ראיות: baseline→remote: 4ed2abc7bbf5 → 1b9bbccbed63 · baselineRelease→latestRelease: 1.15.22 → 1.15.23 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfe2b/catalog.json
    מקור: https://github.com/joaomdmoura/crewai
 
@@ -206,7 +206,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: fe7eb0ccdd → b4e6744ca8
    שינוי: head
    שימוש אצלנו: .cursor/skills/vf-best-skills/SKILL.md · packages/vfresearch/BEST-SKILLS.md
-   למה: דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
+   למה: דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
    ראיות: baseline→remote: fe7eb0ccddb1 → b4e6744ca86c · baselineRelease→latestRelease: None → None · changeKinds: head; kind=skill-index; newDetection=True · integration: .cursor/skills/vf-best-skills/SKILL.md, packages/vfresearch/BEST-SKILLS.md
    מקור: https://github.com/LinklyAI/best-skills
 
@@ -233,7 +233,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v1.2.3 → v1.2.3
    שינוי: head
    שימוש אצלנו: packages/vfharness/playbooks/engineering-delivery-chain.md
-   למה: דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
+   למה: דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
    ראיות: baseline→remote: c55ee46073ed → d81f3a183412 · baselineRelease→latestRelease: v1.2.3 → v1.2.3 · changeKinds: head; kind=skill-pattern; newDetection=True · integration: packages/vfharness/playbooks/engineering-delivery-chain.md
    מקור: https://github.com/mattpocock/skills
 
@@ -242,7 +242,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v1.0.5 → v1.0.7
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: קפיצת release (v1.0.5→v1.0.7). דפוסי skill/agent — לבדוק לפני הטמעה; אין npx על Cloud.
+   למה: קפיצת release (v1.0.5→v1.0.7). דפוסי skill/agent - לבדוק לפני הטמעה; אין npx על Cloud.
    ראיות: baseline→remote: a4ef1548da94 → 8a422790cc9d · baselineRelease→latestRelease: v1.0.5 → v1.0.7 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json
    מקור: https://github.com/MichengAI/dsh-agency-agents
 
@@ -251,7 +251,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 053ddbbf39 → 765be42358
    שינוי: head
    שימוש אצלנו: %USERPROFILE%/.agency-agents
-   למה: דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
+   למה: דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
    ראיות: baseline→remote: 053ddbbf392a → 765be4235810 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=agent-repo; newDetection=True · integration: %USERPROFILE%/.agency-agents
    מקור: https://github.com/msitarzewski/agency-agents
 
@@ -260,7 +260,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v3.25.0 → v3.25.0
    שינוי: head
    שימוש אצלנו: .cursor/skills/vf-last30/SKILL.md
-   למה: דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
+   למה: דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
    ראיות: baseline→remote: 084662b501fb → 1fadbe5097c1 · baselineRelease→latestRelease: v3.25.0 → v3.25.0 · changeKinds: head; kind=skill-pattern; newDetection=True · integration: .cursor/skills/vf-last30/SKILL.md
    מקור: https://github.com/mvanhorn/last30days-skill
 
@@ -269,7 +269,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: 078d6d544e → 6746e4b0a1
    שינוי: head
    שימוש אצלנו: packages/vfagents/playbooks/reflection-before-send.md
-   למה: מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.
+   למה: מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.
    ראיות: baseline→remote: 078d6d544e15 → 6746e4b0a168 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=agent-pattern; newDetection=True · integration: packages/vfagents/playbooks/reflection-before-send.md
    מקור: https://github.com/NirDiamant/GenAI_Agents
 
@@ -296,7 +296,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v1.21.0 → v1.21.0
    שינוי: head
    שימוש אצלנו: packages/vfharness/playbooks/oma-patterns.md
-   למה: מנדט נעול: runtime שני / swarm / orchestrator — דולג. אין install מריצת Research Seat.
+   למה: מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.
    ראיות: baseline→remote: ab349e7ad039 → 4e293a21a8bc · baselineRelease→latestRelease: v1.21.0 → v1.21.0 · changeKinds: head; kind=agent-pattern; newDetection=True · integration: packages/vfharness/playbooks/oma-patterns.md
    מקור: https://github.com/open-multi-agent/open-multi-agent
 
@@ -332,7 +332,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: v0.54.6 → v0.55.3
    שינוי: head, release
    שימוש אצלנו: packages/vfdsh/catalog.json
-   למה: קפיצת release (v0.54.6→v0.55.3). דפוסי skill/agent — לבדוק לפני הטמעה; אין npx על Cloud.
+   למה: קפיצת release (v0.54.6→v0.55.3). דפוסי skill/agent - לבדוק לפני הטמעה; אין npx על Cloud.
    ראיות: baseline→remote: c0d584c78aa4 → b08ab59da1e0 · baselineRelease→latestRelease: v0.54.6 → v0.55.3 · changeKinds: head, release; kind=catalog-source; newDetection=False · integration: packages/vfdsh/catalog.json
    מקור: https://github.com/Q00/ouroboros
 
@@ -350,7 +350,7 @@ VelvetOS · עדכוני כלים
    גרסה/מקור: skills-v0.48.0 → skills-v0.48.0
    שינוי: head
    שימוש אצלנו: packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md · packages/vfom/CREATIVE-REFINE-LOOP.md · packages/vfprod/third_party/scenario-labs/blender/VENDOR-MANIFEST.json
-   למה: דפוסי skill/agent/index — לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
+   למה: דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.
    ראיות: baseline→remote: 9624e295fa33 → d87071d22edb · baselineRelease→latestRelease: skills-v0.48.0 → skills-v0.48.0 · changeKinds: head; kind=skill-pattern; newDetection=True · integration: packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md, packages/vfom/CREATIVE-REFINE-LOOP.md, packages/vfprod/third_party/scenario-labs/blender/VENDOR-MANIFEST.json
    מקור: https://github.com/scenario-labs/skills
 
