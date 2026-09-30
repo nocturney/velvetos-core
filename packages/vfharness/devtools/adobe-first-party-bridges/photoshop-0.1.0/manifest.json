@@ -1,0 +1,45 @@
+{
+  "manifestVersion": 5,
+  "id": "com.velvetos.photoshop.bridge",
+  "name": "VelvetOS Photoshop Bridge",
+  "version": "0.1.0",
+  "host": {
+    "app": "PS",
+    "minVersion": "25.0.0",
+    "data": {
+      "apiVersion": 2,
+      "loadEvent": "startup"
+    }
+  },
+  "icons": [
+    {
+      "width": 24,
+      "height": 24,
+      "path": "icons/bridge.svg",
+      "species": ["pluginList"]
+    }
+  ],
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "velvetPhotoshopBridge",
+      "label": { "default": "VelvetOS Bridge" },
+      "icons": [
+        {
+          "width": 23,
+          "height": 23,
+          "path": "icons/bridge.svg",
+          "species": ["toolbar"]
+        }
+      ],
+      "minimumSize": { "width": 180, "height": 90 },
+      "maximumSize": { "width": 500, "height": 360 },
+      "preferredDockedSize": { "width": 240, "height": 120 },
+      "preferredFloatingSize": { "width": 280, "height": 140 }
+    }
+  ],
+  "requiredPermissions": {
+    "network": { "domains": "all" }
+  },
+  "main": "index.html"
+}

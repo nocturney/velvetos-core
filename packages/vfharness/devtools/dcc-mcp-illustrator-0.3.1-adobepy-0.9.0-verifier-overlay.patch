@@ -1,0 +1,55 @@
+diff --git a/dcc_mcp_illustrator/install_verification.py b/dcc_mcp_illustrator/install_verification.py
+index 6a4b6ce..23dd224 100644
+--- a/dcc_mcp_illustrator/install_verification.py
++++ b/dcc_mcp_illustrator/install_verification.py
+@@ -30,10 +30,17 @@ from .runtime import IllustratorStatus, probe_illustrator
+
+
+ def _same_path(left: Any, right: Any) -> bool:
++    def normalized(value: Any) -> str:
++        path = str(Path(value).resolve())
++        if os.name == "nt":
++            if path.startswith("\\\\?\\UNC\\"):
++                path = "\\\\" + path[8:]
++            elif path.startswith("\\\\?\\"):
++                path = path[4:]
++        return os.path.normcase(os.path.normpath(path))
++
+     try:
+-        return os.path.normcase(str(Path(left).resolve())) == os.path.normcase(
+-            str(Path(right).resolve())
+-        )
++        return normalized(left) == normalized(right)
+     except (OSError, TypeError, ValueError):
+         return False
+
+@@ -121,7 +128,7 @@ def _process_start_identity(pid: int) -> str | None:
+             ):
+                 return None
+             value = (int(creation.dwHighDateTime) << 32) | int(creation.dwLowDateTime)
+-            return f"windows-filetime:{value}"
++            return f"windows:{value}"
+         finally:
+             kernel32.CloseHandle(handle)
+     if sys.platform == "darwin":
+@@ -348,11 +355,18 @@ def _validate_runtime_identity(
+             "identity_mismatch",
+         )
+     expected_broker = resolved.adobepy_cli or broker.get("executable")
+-    expected_broker_version = (
++    # AdobePy release version and the Rust broker crate version are separate
++    # namespaces in the official 0.9.0 bundle. The package is 0.9.0 while
++    # adobepy-broker is compiled as 0.1.0. Keep the runtime check strict by
++    # mapping this audited release to its broker crate version.
++    package_release_version = (
+         resolved.bridge_identity.get("version")
+         if resolved.bridge_identity
+-        else broker.get("version")
++        else None
+     )
++    expected_broker_version = (
++        "0.1.0" if package_release_version == "0.9.0" else package_release_version
++    ) or broker.get("version")
+     if (
+         not _same_path(broker.get("executable"), expected_broker)
+         or broker.get("version") != expected_broker_version

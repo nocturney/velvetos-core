@@ -1,0 +1,56 @@
+{
+  "schema": 1,
+  "role": "FIRST_PARTY_ADOBE_BRIDGE_SOURCE_PROVENANCE_NOT_RUNTIME_AUTHORITY",
+  "runtime_authority": false,
+  "production_authority": false,
+  "secret_config_policy": "Broker tokens and adobepy.config.js are runtime-only and must never be committed.",
+  "bridges": [
+    {
+      "id": "photoshop",
+      "host": "Adobe Photoshop 2026",
+      "host_version": "27.7.0",
+      "version": "0.1.0",
+      "source_dir": "packages/vfharness/devtools/adobe-first-party-bridges/photoshop-0.1.0",
+      "broker_port": 47393,
+      "state": "PRODUCTION_PASS",
+      "source_files": {
+        "manifest.json": "a0ae6cd4bae297b238b1a05573bbada5abccb7d787d40ca258ea33150f3f6cc8",
+        "main.js": "91634e912b46c992af4b4ff1676f72c59b3fb9c3b522bb624039ecd5ffa3a526",
+        "index.html": "f921172021364d5ef14f1372256c3e4964a3959d6c991b81d7ea4eccdf6db108",
+        "icons/bridge.svg": "8c6e36e74b6febb162b2fa119ce2fd6b86f0d3caeae96c4d9d858eb257d64604"
+      },
+      "acceptance_evidence": {
+        "path": "D:\\Velvet\\Logs\\AdobeBridge\\photoshop-first-party-0.1.0-acceptance-2026-09-30.json",
+        "sha256": "c6e71c91730e50bfb2cabc4e4f7af1f0ca2b307092ee0646f8d3babf6e0dfeef"
+      },
+      "persistence": "Normal Photoshop shortcut launch reconnect verified without a special wrapper."
+    },
+    {
+      "id": "premiere",
+      "host": "Adobe Premiere Pro 2026",
+      "host_version": "26.3.2",
+      "version": "0.1.3",
+      "source_dir": "packages/vfharness/devtools/adobe-first-party-bridges/premiere-0.1.3",
+      "broker_port": 47392,
+      "state": "PRODUCTION_PASS",
+      "source_files": {
+        "manifest.json": "f743cfac10869f72c517fa43c5129bd17866595a0cac7eb1360d1637ca57ac8a",
+        "main.js": "93921094fd4f5ca936017af13d02f84bcb724c9c2e97fb5c17d0c3c4157a8c9e",
+        "index.html": "531690c93e49bd27ea37a6300b060270885f5ffd9fe005b356e0455d905f8b38"
+      },
+      "acceptance_evidence": {
+        "path": "D:\\Velvet\\Logs\\AdobeBridge\\premiere-first-party-0.1.3-acceptance-2026-09-30.json",
+        "sha256": "e9fc96b0a1a5759cf31a7146ff92218e59ed3aa8b2e136ad669731264ebea10b"
+      },
+      "restart_persistence_evidence": {
+        "path": "D:\\Velvet\\Logs\\AdobeBridge\\premiere-first-party-0.1.3-restart-persistence-2026-09-30.json",
+        "sha256": "b5ca335dd08a1f5469907d394ea73ca21d64ed9c08f3d28d8685185fddabe9d8"
+      },
+      "persistence": "Installed through Adobe UPIA and reconnects after a normal Premiere shortcut restart without DevTools load.",
+      "known_limitations": [
+        "Premiere Pro 26.3.2 does not provide a reliable invisible/background UXP route for this bridge.",
+        "The production manifest therefore uses the installed panel route and does not set hostUIContext.hideFromMenu."
+      ]
+    }
+  ]
+}

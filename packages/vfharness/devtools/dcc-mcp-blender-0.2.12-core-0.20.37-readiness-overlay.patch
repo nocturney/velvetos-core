@@ -1,0 +1,45 @@
+diff --git a/dcc_mcp_blender/install.py b/dcc_mcp_blender/install.py
+index 33f2893..f3939d8 100644
+--- a/dcc_mcp_blender/install.py
++++ b/dcc_mcp_blender/install.py
+@@ -943,7 +943,7 @@ def _readiness_next_steps(ctx):
+             "id": "launch_blender",
+             "description": "Launch the selected Blender installation.",
+             "command": [str(ctx.host_path)],
+-            "why": "The typed host.ping probe requires a running Blender instance.",
++            "why": "The typed dcc_diagnostics__get_instance_info probe requires a running Blender instance.",
+         },
+         {
+             "id": "verify_install",
+@@ -1056,19 +1056,19 @@ def _verify(ctx, environ):
+                 "directly_usable": False,
+                 "failure_stage": "readiness",
+                 "failure_reason": reason,
+-                "probe_tool": "host.ping",
++                "probe_tool": "dcc_diagnostics__get_instance_info",
+             },
+             _readiness_next_steps(ctx),
+         )
+     timeout = max(0.1, float(environ.get("DCC_MCP_INSTALL_VERIFY_TIMEOUT", "2.0")))
+-    probe = probe_sidecar_tool(str(entries[0]["mcp_url"]), "host.ping", timeout_secs=timeout)
++    probe = probe_sidecar_tool(str(entries[0]["mcp_url"]), "dcc_diagnostics__get_instance_info", timeout_secs=timeout)
+     if not probe.get("success"):
+         return (
+             {
+                 "directly_usable": False,
+                 "failure_stage": "readiness",
+                 "failure_reason": str(probe.get("reason") or probe.get("status") or "host_ping_failed"),
+-                "probe_tool": "host.ping",
++                "probe_tool": "dcc_diagnostics__get_instance_info",
+             },
+             _readiness_next_steps(ctx),
+         )
+@@ -1077,7 +1077,7 @@ def _verify(ctx, environ):
+             "directly_usable": True,
+             "failure_stage": None,
+             "failure_reason": None,
+-            "probe_tool": "host.ping",
++            "probe_tool": "dcc_diagnostics__get_instance_info",
+         },
+         (),
+     )
