@@ -39,11 +39,11 @@
     "grill-before-plan-on-inquiry",
     "verification-iron-law-before-success-claims"
   ],
-  "lastPass": "2026-09-27",
-  "dataDate": "2026-09-26",
-  "lastArtifact": "packages/vfresearch/sources/2026-09-27-best-skills.md",
+  "lastPass": "2026-09-29",
+  "dataDate": "2026-09-28",
+  "lastArtifact": "packages/vfresearch/sources/2026-09-29-best-skills.md",
   "lastResult": "no-embed-existing-coverage",
-  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due/stale pulse (~72h since 2026-09-24) executed inside 2026-09-27 Research Seat; ranking snapshot dataDate 2026-09-26; no separate automation created",
+  "lastTimerStatus": "PROVEN_BY_RESEARCH_SEAT: due pulse (>=44h since 2026-09-27) executed inside 2026-09-29 Research Seat; ranking snapshot dataDate 2026-09-28; grill-with-docs watch-only; no separate automation created",
   "embedded": [
     {
       "id": "grill-me",
@@ -258,7 +258,8 @@
       "id": "affaan-m-ecc",
       "url": "https://github.com/affaan-m/ECC",
       "note": "2026-09-27: top-repos #3 on 26.9 snapshot. Watch only; no second architecture runtime / no npx."
-    }
+    },
+    "mattpocock-grill-with-docs"
   ],
   "skipped": [
     {
