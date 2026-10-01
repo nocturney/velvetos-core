@@ -1,19 +1,18 @@
-# 05 · משרד · 27.9.2026
+# 05 · משרד · 2.10.2026
 
 מצב Research Seat: `ready_for_brief`.
 הריצה הושלמה לפני cutoff 07:00 Asia/Jerusalem.
 
 ## מה נבנה / יועל
-- טופס קליטה לפני מחיר (8 בלוקים / 6 שאלות קצרות) שמחליט quote / hold / discovery / sample-first לפני שפת ₪ — מיפוי ל־`vfconvert`.
-- חבילת הצעה מינימלית: קובץ שולט אחד + מספר גרסה + כמות/שלב + שימוש + גימור + קריטי למידה — `vfconvert`/`vfsales` (בלי ₪ מומצא).
-- שלוש מדרגות גימור לפני אישור הצעה (פונקציונלי / פונה-ללקוח / דגימת מצגת) + פנים מוגנים — `vfsales`/`vfconvert`/`vfprod`.
-- רשימת automatic-fail ל־QC + אריזת איסוף שמעדיפה מניעת שבירה על מהירות — `vfprod` (דפוס בלבד).
-- מארגנים פונקציונליים ברי־הדפסה באותו G-code + ימי אצווה לפי צבע + סטאק עלות מלא (חומר/חשמל/עבודה/פחת/עמלות) — מיפוי ל־`vfsku`/`vfprod`/`vfconvert` (**EXTRA**; בלי ₪ מומצא; VF = איסוף/IG בלבד).
-- מועדון איסוף מקומי קטן מסוג desk-reset: אביזרי שולחן שחוזרים טבעית, קאדנס ברור, באפר חומר, skip/pause — `vfsku`/`vfsales` + לוח freeze→print→QA→ready ב־`vfops` (**EXTRA**; לא משלוח ארצי / לא Printie outsourcing).
-- Best Skills: due/stale (~72ש מ־24.9) — בוצע על דירוג 26.9; `no-embed-existing-coverage`.
-- MakerWorld/Printables א׳: Cloudflare; רישיונות UNPROVEN; אין שם להציע למדף.
+- שעון איסוף נפתח רק כשהעבודה משוחררת לייצור: קובץ סופי, אישור, ואין תנאי פתוח. הצעה או מקדמה לבד לא מתחילות את הימים. מיפוי ל־`vfsales` / `vfconvert`.
+- אישור שנכנס לתור עם הקשר מלא (מי, חלון איסוף, חומר, כמות, קובץ שולט). «אושר» בשרשור לא מספיק. מיפוי ל־`vfconvert` / `vfsales`.
+- בדיקת התאמה לפני מחיר: חומר, זמן מכונה, גימור, והתנגשות עם התור. אם אין התאמה — השהיה, לא ₪. מיפוי ל־`vfconvert`.
+- לפני אצווה מרובת חלקים: נעילת זהות לאיסוף (יחידה, רוויזיה, כמות בשקית, מה עוד נמסר). אישור גימור אינו אישור אריזה. מיפוי ל־`vfprod`. בלי משלוח ארצי.
+- תוכן מהרצפה: טיימלאפס או תהליך קצר של עבודה אמיתית, לא תמונת מוצר גנרית. מיפוי ל־`vfcovers` / `vfgrowth`. אין ספירת Insights.
+- Best Skills: due/stale (~120ש מ־27.9) — בוצע על דירוג 1.10; `no-embed-existing-coverage`.
+- MakerWorld: יום שישי — דילוג (הסריקה היא א׳–ד׳).
 
-מקור מלא: `packages/vfresearch/sources/2026-09-27-orchestra.md` · `2026-09-27-best-skills.md` · `2026-09-27-makerworld-scan.md`.
+מקור מלא: `packages/vfresearch/sources/2026-10-02-orchestra.md` · `packages/vfresearch/sources/2026-10-02-best-skills.md`.
 
 ## שבועי קישורים · 25.9.2026 (Weekly Research Accountability · gh-failover)
 
@@ -27,7 +26,3 @@
 ```
 
 מקור מלא: `packages/vfresearch/sources/2026-09-25-weekly-links.md`.
-
-## Phase 9 · zero-cost agent stack
-
-בנוסף למחקר הבוקר, בוצע reconciliation מול ecosystem radar של מסלול ה־zero-cost. על snapshot העדכני 26.9 לא נמצא dev lab נוסף עם unique value שמצדיק התקנה: agent-browser/browser-use ו־gh-cli-readonly-agent נשארו watch, ui-taste מכוסה, ולא נוסף runtime/scheduler/authority. תוצאת Phase 9 נשארת `NO_ADDITIONAL_DEV_LAB_JUSTIFIED`; recurring cost = 0.
