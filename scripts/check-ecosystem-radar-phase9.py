@@ -20,8 +20,13 @@ def main() -> None:
     assert state.get("status") == "COMPLETE"
     assert state.get("decision") == "NO_ADDITIONAL_DEV_LAB_JUSTIFIED"
     research = state.get("researchSeat") or {}
-    assert research.get("lastPass") == best.get("lastPass") == "2026-09-27"
-    assert research.get("observedDataDate") == best.get("dataDate") == "2026-09-26"
+    # Phase 9 snapshot stays on the 2026-09-27 close. Live Best Skills cadence advances after that.
+    assert research.get("lastPass") == "2026-09-27"
+    assert research.get("observedDataDate") == "2026-09-26"
+    assert best.get("schedulerAuthority") == "Velvet Research Seat"
+    assert best.get("standingForever") is True
+    assert best.get("lastPass")
+    assert best.get("dataDate")
     assert research.get("newSchedulerCreated") is False
     artifact = ROOT / research.get("artifact", "")
     assert artifact.is_file() and artifact.stat().st_size > 500

@@ -1,157 +1,816 @@
 {
   "schema": "velvetos.upstream-review.v1",
-  "reviewedAt": "2026-09-28T05:30:07.157Z",
-  "policy": "Owner receives a separate update email; every recommendation is bound to the current remote HEAD/release before mail can arm.",
+  "reviewedAt": "2026-10-01T23:08:18.627757+00:00",
+  "policy": "Owner receives a separate update email only when newDetection or a current review sets notifyOwner. No auto-upgrade and no ack without compatibility evidence.",
   "summary": {
-    "pending": 11,
+    "pending": 50,
     "update": 0,
-    "wait": 2,
-    "review": 0,
-    "ignore": 9
+    "wait": 14,
+    "review": 11,
+    "ignore": 25
   },
   "items": {
-    "blender/blender": {
-      "verdict": "wait",
-      "reasonHe": "השינוי רלוונטי פוטנציאלית לביצועי geometry/mesh, אבל הוא קיים כרגע רק ב־main ללא release חדש. לא מעדכנים Blender host על commit לא־משוחרר; ממתינים לבילד/גרסה יציבה ואז מריצים smoke.",
+    "00080000/dsh-project-memory": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
       "evidence": [
-        "2 commits מאז baseline: שיפור בניית faces/corners ו־vertices/edges ב-Mesh Merge",
-        "שינויי ביצועים בלבד במסלול mesh merge; אין release חדש",
-        "integration: Blender host/runtime",
-        "compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...388952d3b867ead24396cefd3cfc7e3b59682e61"
+        "changeKinds=head,release",
+        "baselineRelease=v0.5.12 latestRelease=v0.5.13",
+        "baselineHead=3d171b6d4b78 remoteHead=c5451c6c28e7",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/00080000/dsh-project-memory/compare/3d171b6d4b78d82d71398fb28c638830b5c28291...c5451c6c28e739cffa13e5a9def27450d49147fb"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "388952d3b867ead24396cefd3cfc7e3b59682e61",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "c5451c6c28e739cffa13e5a9def27450d49147fb",
+      "reviewedRelease": "v0.5.13"
+    },
+    "ahujasid/blender-mcp": {
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=41a184322db3 remoteHead=60d2a31b4632",
+        "kind=runtime-source",
+        "integration=%USERPROFILE%/.blender-mcp",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/ahujasid/blender-mcp/compare/41a184322db3ccdcb2fdbc1f6994afe71bf9163c...60d2a31b4632a7bc178f3dd636f7e68dfb5c8ae4"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "60d2a31b4632a7bc178f3dd636f7e68dfb5c8ae4",
       "reviewedRelease": null
     },
-    "earthtojake/text-to-cad": {
+    "Alishahryar1/free-claude-code": {
       "verdict": "ignore",
-      "reasonHe": "v0.7.0 כבר אומצה ונבדקה אצלנו. ה־commit היחיד אחרי ה־baseline מוחק סקריפטי E2E ידניים ומחזק כיסוי CI; אין שינוי runtime/CAD שדורש אימוץ נוסף.",
+      "reasonHe": "ספק וידאו/קול/CLI מחוץ למנדט Cloud. אין התקנה ואין ack.",
       "evidence": [
-        "adoptedRelease=v0.7.0; latestRelease נשאר v0.7.0",
-        "1 commit: delete manual web E2E scripts + enforce CI collection",
-        "adoption evidence: packages/vfharness/state/text-to-cad-0.7.0-adoption-2026-09-27.json",
-        "compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...da7f7219569541c41a94715bab5e476615ad4177"
+        "changeKinds=head,release",
+        "baselineRelease=v6.4.4 latestRelease=v6.7.0",
+        "baselineHead=37c77262115a remoteHead=6b2989d4fbb9",
+        "kind=skill-pattern",
+        "integration=.cursor/skills/vf-fcc-offload/SKILL.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/Alishahryar1/free-claude-code/compare/37c77262115a02d3ef97763b7e7a4e0dd011183e...6b2989d4fbb921bf884d8dedcbeaf4a33e2b5991"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "da7f7219569541c41a94715bab5e476615ad4177",
-      "reviewedRelease": "v0.7.0"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "6b2989d4fbb921bf884d8dedcbeaf4a33e2b5991",
+      "reviewedRelease": "v6.7.0"
+    },
+    "andyrewlee/awesome-agent-orchestrators": {
+      "verdict": "ignore",
+      "reasonHe": "מקור orchestrator/runtime שני. נעול אצלנו. אין התקנה ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=e120484e448f remoteHead=21a752a9b88c",
+        "kind=agent-index",
+        "integration=packages/vfharness/playbooks/orchestrators.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/andyrewlee/awesome-agent-orchestrators/compare/e120484e448f6115e69788d148d67accea17a0c6...21a752a9b88c79ee756e2544f94187ce867ad794"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "21a752a9b88c79ee756e2544f94187ce867ad794",
+      "reviewedRelease": null
+    },
+    "Anionex/dsh-vision-toolkit": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v0.1.44 latestRelease=v0.1.46",
+        "baselineHead=ce64f6e69399 remoteHead=b825d035c908",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/Anionex/dsh-vision-toolkit/compare/ce64f6e693990bc57fd7dc3b633846f1017f810a...b825d035c908a0950e87fe94f7e762e891fa4c88"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "b825d035c908a0950e87fe94f7e762e891fa4c88",
+      "reviewedRelease": "v0.1.46"
+    },
+    "anthropics/skills": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=33375500bcea remoteHead=8a1541c4a3ff",
+        "kind=skill-pattern",
+        "integration=packages/vfharness/playbooks/skill-authoring.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/anthropics/skills/compare/33375500bcea98d610eb30ce10ac4e59b89c390d...8a1541c4a3ffa5a20a5a91de0dcf3f0bab1d1ef4"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "8a1541c4a3ffa5a20a5a91de0dcf3f0bab1d1ef4",
+      "reviewedRelease": null
+    },
+    "awesome-dsh-plugin/awesome-dsh-plugin": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=4fee2fcc011f remoteHead=bb8496ec4cbb",
+        "kind=embedded-provenance",
+        "integration=packages/vfdsh/ORIGIN.md · packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/compare/4fee2fcc011f8e2d68e35695d6b411c82c7c9a12...bb8496ec4cbb9217b33bf081ec4cdf06b51501e8"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "bb8496ec4cbb9217b33bf081ec4cdf06b51501e8",
+      "reviewedRelease": null
+    },
+    "bambulab/BambuStudio": {
+      "verdict": "wait",
+      "reasonHe": "release נשאר v02.08.02.61 וה-head זז. אין release חדש ואין smoke. להמתין. אין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v02.08.02.61 latestRelease=v02.08.02.61",
+        "baselineHead=f977235e6d73 remoteHead=da8b44ee34dd",
+        "kind=runtime-source",
+        "integration=production slicer/studio",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/bambulab/BambuStudio/compare/f977235e6d736c4c0b650520ac5a5b72cbfe9244...da8b44ee34dd349f2ae0df3f1cbae366df482354"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "da8b44ee34dd349f2ae0df3f1cbae366df482354",
+      "reviewedRelease": "v02.08.02.61"
+    },
+    "blender/blender": {
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=35a2d9dfd0ad remoteHead=64d181010e0d",
+        "kind=cad-runtime-source",
+        "integration=Blender host/runtime",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...64d181010e0dbc49d2faaaa057357aef8d9a809c"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "64d181010e0dbc49d2faaaa057357aef8d9a809c",
+      "reviewedRelease": null
+    },
+    "coreyhaines31/marketingskills": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v2.11.1 latestRelease=v2.11.6",
+        "baselineHead=5b2c0007766c remoteHead=c0e35b78ad29",
+        "kind=embedded-provenance",
+        "integration=packages/vfmskill/ORIGIN.md · packages/vfmskill/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/coreyhaines31/marketingskills/compare/5b2c0007766c6a1cf1d53fd8fc73e979e0821022...c0e35b78ad294c4ea8dbe7801c79bfeb6f67f3e9"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "c0e35b78ad294c4ea8dbe7801c79bfeb6f67f3e9",
+      "reviewedRelease": "v2.11.6"
+    },
+    "debpalash/VoiceStudio": {
+      "verdict": "ignore",
+      "reasonHe": "ספק וידאו/קול/CLI מחוץ למנדט Cloud. אין התקנה ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v0.5.6 latestRelease=v0.5.6",
+        "baselineHead=08a1592e3cb9 remoteHead=befc0a6f5b55",
+        "kind=runtime-source",
+        "integration=packages/vfom/SPEECH-BACKEND.json · scripts/bootstrap-speech-host-windows.ps1",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/debpalash/VoiceStudio/compare/08a1592e3cb9b4c36beef5fa3185ec2313bb1fea...befc0a6f5b552b0b99e6eea574bc3c55e3d0519a"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "befc0a6f5b552b0b99e6eea574bc3c55e3d0519a",
+      "reviewedRelease": "v0.5.6"
+    },
+    "DeusData/codebase-memory-mcp": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v0.11.0 latestRelease=v0.11.0",
+        "baselineHead=5df8b0442c48 remoteHead=cb7d937638f7",
+        "kind=pattern-source",
+        "integration=packages/vfmem/ORIGIN.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/DeusData/codebase-memory-mcp/compare/5df8b0442c48fed654c6f11d94cb6f64f00fc368...cb7d937638f77fb67aacc39444f6a6709d217d51"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "cb7d937638f77fb67aacc39444f6a6709d217d51",
+      "reviewedRelease": "v0.11.0"
+    },
+    "dsh-market/dsh-market": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v1.66.3 latestRelease=v1.66.8",
+        "baselineHead=4ceda5d2b7b6 remoteHead=c33e37441e86",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/dsh-market/dsh-market/compare/4ceda5d2b7b666a9093e97bc5ae06bcaf383f154...c33e37441e8616d195f8c29e9781ed1c1172ef5f"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "c33e37441e8616d195f8c29e9781ed1c1172ef5f",
+      "reviewedRelease": "v1.66.8"
+    },
+    "earthtojake/text-to-cad": {
+      "verdict": "wait",
+      "reasonHe": "v0.7.0 אומצה קודם. latestRelease עכשיו v0.7.6 בלי smoke של הגרסה החדשה. להמתין. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v0.7.0 latestRelease=v0.7.6",
+        "baselineHead=fafa7b057d8f remoteHead=f40a5963bf02",
+        "kind=runtime-source",
+        "integration=packages/vfprod/TEXT-TO-CAD.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...f40a5963bf0257c91feaffd8a6c2e537dde3141a"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "f40a5963bf0257c91feaffd8a6c2e537dde3141a",
+      "reviewedRelease": "v0.7.6"
+    },
+    "FFmpeg/FFmpeg": {
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=d62aef2e5043 remoteHead=460cb05218a2",
+        "kind=runtime-toolchain",
+        "integration=scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh · scripts/vf_hyperframes.py",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/FFmpeg/FFmpeg/compare/d62aef2e50434cc31eccf236ae67d864becb7068...460cb05218a236cb587516fe2c8b121403609d95"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "460cb05218a236cb587516fe2c8b121403609d95",
+      "reviewedRelease": null
     },
     "FreeCAD/FreeCAD": {
-      "verdict": "ignore",
-      "reasonHe": "release 1.1.3 לא השתנה. שני ה־commits הם תיקון CAM ל־3+2 Axis וקישור ספריות בחלון About; אין אצלנו מסלול 3+2 CAM פעיל או שינוי שנדרש ל־3D-print/CAD routing הנוכחי.",
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
       "evidence": [
-        "latestRelease נשאר 1.1.3",
-        "2 commits: CAM 3+2 transformShape fix + About dialog library links",
-        "integration: CAD/3D toolchain upstream",
-        "compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...08eb8263a3e6734ca2411f40d6f18a24afdf9044"
+        "changeKinds=head,release",
+        "baselineRelease=1.1.3 latestRelease=1.1.4",
+        "baselineHead=20b531c4211f remoteHead=b9609745048b",
+        "kind=cad-runtime-source",
+        "integration=CAD/3D toolchain upstream",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...b9609745048b3848b923bf25ee44d63c180b2094"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "08eb8263a3e6734ca2411f40d6f18a24afdf9044",
-      "reviewedRelease": "1.1.3"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "b9609745048b3848b923bf25ee44d63c180b2094",
+      "reviewedRelease": "1.1.4"
+    },
+    "git/git": {
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=0f8e75abebff remoteHead=c46c1e37724f",
+        "kind=runtime-toolchain",
+        "integration=scripts/bootstrap-edge-host-windows.ps1",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/git/git/compare/0f8e75abebff0877cae681a3d5ff31ac47f54220...c46c1e37724f0478939de636ab8ea5a89086d532"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "c46c1e37724f0478939de636ab8ea5a89086d532",
+      "reviewedRelease": null
+    },
+    "Han-1413141/dsh-cost-meter": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v1.7.40 latestRelease=v1.8.5",
+        "baselineHead=c520d9bae873 remoteHead=ae9ae9120346",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/Han-1413141/dsh-cost-meter/compare/c520d9bae873836bfafb1e672dca5042b50f05f9...ae9ae9120346d1947673b219251446905458d2e8"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "ae9ae9120346d1947673b219251446905458d2e8",
+      "reviewedRelease": "v1.8.5"
+    },
+    "headroomlabs-ai/headroom": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v0.39.1 latestRelease=v0.39.1",
+        "baselineHead=d13e1966f820 remoteHead=8538a831531b",
+        "kind=pattern-source",
+        "integration=packages/vfharness/playbooks/context-thrift.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/headroomlabs-ai/headroom/compare/d13e1966f820220b482a33c30bde1e926743939a...8538a831531bb277a6083ed2a010312a849c3050"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "8538a831531bb277a6083ed2a010312a849c3050",
+      "reviewedRelease": "v0.39.1"
+    },
+    "heygen-com/hyperframes": {
+      "verdict": "ignore",
+      "reasonHe": "ספק וידאו/קול/CLI מחוץ למנדט Cloud. אין התקנה ואין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v0.8.80 latestRelease=v0.8.106",
+        "baselineHead=b165b64eda84 remoteHead=c3b6e55f7eb6",
+        "kind=runtime-source",
+        "integration=scripts/vf_hyperframes.py",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/heygen-com/hyperframes/compare/b165b64eda845f46f9b622b96e4545bf704d0950...c3b6e55f7eb6eea845dc001889b50fc35b841d4e"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "c3b6e55f7eb6eea845dc001889b50fc35b841d4e",
+      "reviewedRelease": "v0.8.106"
+    },
+    "HuanLinOTO/dsh-plugin-mineru": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=d66efc12c89e remoteHead=b302e2aa5fa5",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/HuanLinOTO/dsh-plugin-mineru/compare/d66efc12c89e821db787478d95e5e89576bf0e36...b302e2aa5fa5badf2ee622f9c179384a196860ab"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "b302e2aa5fa5badf2ee622f9c179384a196860ab",
+      "reviewedRelease": null
+    },
+    "jing-hy/picturereader": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v3.3.3 latestRelease=v3.3.3",
+        "baselineHead=4e48fc916fd6 remoteHead=619a67e39d0a",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/jing-hy/picturereader/compare/4e48fc916fd67b1f9ca668a1175cc5230c7b7f47...619a67e39d0a8c0f9ef9c18e260977a323e99cc7"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "619a67e39d0a8c0f9ef9c18e260977a323e99cc7",
+      "reviewedRelease": "v3.3.3"
+    },
+    "joaomdmoura/crewai": {
+      "verdict": "ignore",
+      "reasonHe": "מקור orchestrator/runtime שני. נעול אצלנו. אין התקנה ואין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=1.15.22 latestRelease=1.15.23",
+        "baselineHead=4ed2abc7bbf5 remoteHead=8078f9130c35",
+        "kind=catalog-source",
+        "integration=packages/vfe2b/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/joaomdmoura/crewai/compare/4ed2abc7bbf504a634d3b733f2a97e0fbe8d44ec...8078f9130c35a47be95d4a55bf1d73b3fd44fc88"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "8078f9130c35a47be95d4a55bf1d73b3fd44fc88",
+      "reviewedRelease": "1.15.23"
+    },
+    "linkingoscar/dsh-attachment-formats": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v0.12.1 latestRelease=v0.12.4",
+        "baselineHead=ad61a0413cb0 remoteHead=4bcfae40dbd6",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/linkingoscar/dsh-attachment-formats/compare/ad61a0413cb07b4622128b4bba4546120bfa66cf...4bcfae40dbd69116125ab13f88efc1b65232110f"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "4bcfae40dbd69116125ab13f88efc1b65232110f",
+      "reviewedRelease": "v0.12.4"
+    },
+    "LinklyAI/best-skills": {
+      "verdict": "ignore",
+      "reasonHe": "הדירוג נקרא מ-data/2026-10-01 במעבר הזה. אין התקנת הריפו ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=fe7eb0ccddb1 remoteHead=5042aaafcea7",
+        "kind=skill-index",
+        "integration=.cursor/skills/vf-best-skills/SKILL.md · packages/vfresearch/BEST-SKILLS.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/LinklyAI/best-skills/compare/fe7eb0ccddb1c71a3cf2459efe48cbb9ccc0793d...5042aaafcea7f558185a78e932af7b9b5c3fb20b"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "5042aaafcea7f558185a78e932af7b9b5c3fb20b",
+      "reviewedRelease": null
     },
     "liustack/modlens": {
       "verdict": "ignore",
-      "reasonHe": "ה־release נשאר v3.26.5 וה־commit היחיד מתקן את תהליך הפרסום ל־npm. זהו catalog-source אצלנו, בלי שינוי בתוכן/יכולת שאנחנו מטמיעים.",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
       "evidence": [
-        "latestRelease נשאר v3.26.5",
-        "1 commit: release workflow pushes main only after npm has the version",
-        "integration: packages/vfdsh/catalog.json",
-        "compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...f01354e78a70ed18eab721762f18ea44a92d6e9e"
+        "changeKinds=head",
+        "baselineRelease=v3.26.5 latestRelease=v3.26.5",
+        "baselineHead=ffeee3e32de1 remoteHead=333468c72bf9",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...333468c72bf9630ec5dd60b169b89e1f48f39b53"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "f01354e78a70ed18eab721762f18ea44a92d6e9e",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "333468c72bf9630ec5dd60b169b89e1f48f39b53",
       "reviewedRelease": "v3.26.5"
     },
-    "nodejs/node": {
-      "verdict": "ignore",
-      "reasonHe": "v26.10.0 לא השתנתה. שני ה־commits נוגעים לבניית התיעוד בלבד — verbosity ו־doc-kit patch bumps — ולא ל־Node runtime שבו ה־bootstrap שלנו תלוי.",
+    "ManimCommunity/manim": {
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
       "evidence": [
-        "latestRelease נשאר v26.10.0",
-        "2 commits: doc build verbosity + doc-kit dependency patch bumps",
-        "integrations: Windows edge bootstrap + HyperFrames Mac bootstrap",
-        "compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...df775ec2ea6861053995f923fcf7814c06451e72"
+        "changeKinds=head",
+        "baselineRelease=v0.21.0 latestRelease=v0.21.0",
+        "baselineHead=16c4a68b6d15 remoteHead=22aa85f47c9d",
+        "kind=runtime-source",
+        "integration=scripts/bootstrap-manim-host-windows.ps1",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/ManimCommunity/manim/compare/16c4a68b6d151e2024d0b1e1b80bfb7725c9f5b2...22aa85f47c9dc1b32a4e27bda2dd68320f9cd69c"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "df775ec2ea6861053995f923fcf7814c06451e72",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "22aa85f47c9dc1b32a4e27bda2dd68320f9cd69c",
+      "reviewedRelease": "v0.21.0"
+    },
+    "mattpocock/skills": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v1.2.3 latestRelease=v1.2.3",
+        "baselineHead=c55ee46073ed remoteHead=d81f3a183412",
+        "kind=skill-pattern",
+        "integration=packages/vfharness/playbooks/engineering-delivery-chain.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/mattpocock/skills/compare/c55ee46073ed923f86ce59a5eb3b6d895095d1b7...d81f3a183412e71a5b1e84ca21bc1a35eea03a60"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "d81f3a183412e71a5b1e84ca21bc1a35eea03a60",
+      "reviewedRelease": "v1.2.3"
+    },
+    "MichengAI/dsh-agency-agents": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v1.0.5 latestRelease=v1.0.7",
+        "baselineHead=a4ef1548da94 remoteHead=8a422790cc9d",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/MichengAI/dsh-agency-agents/compare/a4ef1548da94c7e57828739feed7f8fa0d332a62...8a422790cc9d7960f5ac89a5606ffb436fb66eee"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "8a422790cc9d7960f5ac89a5606ffb436fb66eee",
+      "reviewedRelease": "v1.0.7"
+    },
+    "msitarzewski/agency-agents": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=053ddbbf392a remoteHead=d3f71c4bb892",
+        "kind=agent-repo",
+        "integration=%USERPROFILE%/.agency-agents",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/msitarzewski/agency-agents/compare/053ddbbf392a1688fc7043d81529f47ef2cf86c8...d3f71c4bb8922d3eea7576237a870dd59b3cdd52"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "d3f71c4bb8922d3eea7576237a870dd59b3cdd52",
+      "reviewedRelease": null
+    },
+    "mvanhorn/last30days-skill": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v3.25.0 latestRelease=v3.26.0",
+        "baselineHead=084662b501fb remoteHead=5103ba478b38",
+        "kind=skill-pattern",
+        "integration=.cursor/skills/vf-last30/SKILL.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/mvanhorn/last30days-skill/compare/084662b501fb0dba95bd55eff0c258d35e0dc499...5103ba478b380552207a3754b74c7655d64208cd"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "5103ba478b380552207a3754b74c7655d64208cd",
+      "reviewedRelease": "v3.26.0"
+    },
+    "NirDiamant/GenAI_Agents": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=078d6d544e15 remoteHead=6746e4b0a168",
+        "kind=agent-pattern",
+        "integration=packages/vfagents/playbooks/reflection-before-send.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/NirDiamant/GenAI_Agents/compare/078d6d544e15c0e758c2533b422fd13ed2d15593...6746e4b0a168908f12c57ce5ab0d5d91c7a06ed8"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "6746e4b0a168908f12c57ce5ab0d5d91c7a06ed8",
+      "reviewedRelease": null
+    },
+    "nodejs/node": {
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v26.10.0 latestRelease=v26.10.0",
+        "baselineHead=a2a064c76afe remoteHead=adcd028c0e4f",
+        "kind=runtime-toolchain",
+        "integration=scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...adcd028c0e4fddb9c8c10237ccce50dc58b3abc7"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "adcd028c0e4fddb9c8c10237ccce50dc58b3abc7",
       "reviewedRelease": "v26.10.0"
     },
-    "openscad/openscad": {
+    "omdsh-dev/dsh-data-agent": {
       "verdict": "ignore",
-      "reasonHe": "ה־release נשאר openscad-2021.01 ושני ה־commits הם שינויי GitHub workflow בלבד לעדכון submodule. אין שינוי במנוע OpenSCAD או במסלול CAD שלנו.",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
       "evidence": [
-        "latestRelease נשאר openscad-2021.01",
-        "2 commits: workflow debug info + fetch --all",
-        "integration: CAD/3D toolchain upstream",
-        "compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...ac793b2e0cf6ea734b60c3d31601852d0bab2ee4"
+        "changeKinds=head,release",
+        "baselineRelease=v0.2.0 latestRelease=v0.2.2",
+        "baselineHead=3016f67c0a67 remoteHead=6a649fe930ae",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/omdsh-dev/dsh-data-agent/compare/3016f67c0a671c34bb1a7314ac11dfd0e9368546...6a649fe930aeab4247d3e8b936b6bf393aa71e8c"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "ac793b2e0cf6ea734b60c3d31601852d0bab2ee4",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "6a649fe930aeab4247d3e8b936b6bf393aa71e8c",
+      "reviewedRelease": "v0.2.2"
+    },
+    "open-multi-agent/open-multi-agent": {
+      "verdict": "ignore",
+      "reasonHe": "מקור orchestrator/runtime שני. נעול אצלנו. אין התקנה ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v1.21.0 latestRelease=v1.21.0",
+        "baselineHead=ab349e7ad039 remoteHead=4e293a21a8bc",
+        "kind=agent-pattern",
+        "integration=packages/vfharness/playbooks/oma-patterns.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/open-multi-agent/open-multi-agent/compare/ab349e7ad03900455016b798c78464edf98cc94d...4e293a21a8bceac114e395aebc0306b5730ab2d4"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "4e293a21a8bceac114e395aebc0306b5730ab2d4",
+      "reviewedRelease": "v1.21.0"
+    },
+    "openscad/openscad": {
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=openscad-2021.01 latestRelease=openscad-2021.01",
+        "baselineHead=eecb92a6b6ef remoteHead=03da906b4c43",
+        "kind=cad-runtime-source",
+        "integration=CAD/3D toolchain upstream",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...03da906b4c437e6935ba91d8209cb153d3259a37"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "03da906b4c437e6935ba91d8209cb153d3259a37",
       "reviewedRelease": "openscad-2021.01"
     },
-    "python/cpython": {
-      "verdict": "ignore",
-      "reasonHe": "אלה שני bugfixes ב־main ללא release: אחד ל־ctypes callback על s390x/libclang ואחד לבדיקת שגיאה פנימית ב־intern_static. אין ראיה שהם משפיעים על Windows/Python toolchain שלנו, ולכן אין פעולה על commit לא־משוחרר.",
+    "OrcaSlicer/OrcaSlicer": {
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
       "evidence": [
-        "אין release חדש; changeKinds=head בלבד",
-        "ctypes fix מתועד עבור s390x/libclang callbacks",
-        "intern_static fix מתקן unreachable fatal-error path",
-        "compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...a4eb936727e5f949f5dc8c8a38bf6d325518f29b"
+        "changeKinds=head",
+        "baselineRelease=v2.4.2 latestRelease=v2.4.2",
+        "baselineHead=4964f49765f7 remoteHead=9d7112549515",
+        "kind=runtime-source",
+        "integration=production slicer",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/OrcaSlicer/OrcaSlicer/compare/4964f49765f7963b9ee4b016fe5a3bc0581e1911...9d7112549515a66e5f50708d1aa3db9dcf9cdea0"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "a4eb936727e5f949f5dc8c8a38bf6d325518f29b",
+      "notifyOwner": false,
+      "reviewedRemoteHead": "9d7112549515a66e5f50708d1aa3db9dcf9cdea0",
+      "reviewedRelease": "v2.4.2"
+    },
+    "python/cpython": {
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=baec76438e32 remoteHead=a4f28a52b4b5",
+        "kind=runtime-toolchain",
+        "integration=scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-manim-host-windows.ps1",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...a4f28a52b4b54c34100ee0891b9a15640ed3a7b2"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "a4f28a52b4b54c34100ee0891b9a15640ed3a7b2",
       "reviewedRelease": null
     },
     "Q00/ouroboros": {
-      "verdict": "wait",
-      "reasonHe": "השינוי החדש — replay מבודד וללא רשת של פקודות שנצפו כדי לאמת claims כמו tests_passed/commands_run — רלוונטי רעיונית ל־evidence discipline שלנו. אבל Ouroboros אצלנו עדיין מסומן `later` והדפוס הקיים הוא spec-first interview, לא runtime מוטמע; לכן שומרים כמועמד להטמעת pattern ממוקדת ולא מתקינים/מעדכנים מוצר.",
+      "verdict": "ignore",
+      "reasonHe": "מקור orchestrator/runtime שני. נעול אצלנו. אין התקנה ואין ack.",
       "evidence": [
-        "1 commit גדול: verifier command replay + replay policy + shell parsing + tests",
-        "replay רץ ב־isolated network-denied workspace copy",
-        "current catalog verdict=later; pattern=spec-first interview then execute",
-        "compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...a2b329d052c4b1a900810cc505742dff0142ebdb"
+        "changeKinds=head,release",
+        "baselineRelease=v0.54.6 latestRelease=v0.55.3",
+        "baselineHead=c0d584c78aa4 remoteHead=3fc7abb03a9e",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...3fc7abb03a9e87a3ed2fdde6aa22674b016b6d74"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "a2b329d052c4b1a900810cc505742dff0142ebdb",
-      "reviewedRelease": "v0.54.6"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "3fc7abb03a9e87a3ed2fdde6aa22674b016b6d74",
+      "reviewedRelease": "v0.55.3"
     },
     "remotion-dev/remotion": {
       "verdict": "ignore",
-      "reasonHe": "v4.0.529 לא השתנתה ושני ה־commits הם תיעוד בלבד: הוספת BrewReel לרשימת resources. אין שינוי renderer/API או ב־Remotion path המוגבל־רישוי אצלנו.",
+      "reasonHe": "ספק וידאו/קול/CLI מחוץ למנדט Cloud. אין התקנה ואין ack.",
       "evidence": [
-        "latestRelease נשאר v4.0.529",
-        "2 commits, בפועל docs-only resource addition + merge",
-        "integration: packages/vfom/VIDEO-TOOLCHAIN.json",
-        "compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...6f4e0d57d41a22fa60b1a9aa77e2b7d1d2adc210"
+        "changeKinds=head,release",
+        "baselineRelease=v4.0.529 latestRelease=v4.0.532",
+        "baselineHead=1beb32cb9e3e remoteHead=c320056a9809",
+        "kind=embedded-provenance",
+        "integration=packages/vfom/VIDEO-TOOLCHAIN.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...c320056a980972de109ef27a40bede9660a46931"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "6f4e0d57d41a22fa60b1a9aa77e2b7d1d2adc210",
-      "reviewedRelease": "v4.0.529"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "c320056a980972de109ef27a40bede9660a46931",
+      "reviewedRelease": "v4.0.532"
+    },
+    "scenario-labs/skills": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=skills-v0.48.0 latestRelease=skills-v0.48.0",
+        "baselineHead=9624e295fa33 remoteHead=c8a4bddf2b05",
+        "kind=skill-pattern",
+        "integration=packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md · packages/vfom/CREATIVE-REFINE-LOOP.md · packages/vfprod/third_party/scenario-labs/blender/VENDOR-MANIFEST.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/scenario-labs/skills/compare/9624e295fa33168bc1be22a628c23ba132d1c959...c8a4bddf2b052864f2eaf98d7ce5aa044c72bf42"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "c8a4bddf2b052864f2eaf98d7ce5aa044c72bf42",
+      "reviewedRelease": "skills-v0.48.0"
+    },
+    "shengsheng90/DSH-taskboard": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v0.1.6 latestRelease=v0.1.7",
+        "baselineHead=ddf137d42670 remoteHead=4eb26e6e0bf4",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/shengsheng90/DSH-taskboard/compare/ddf137d426702679c1e3a27a9dc4d4a98dc275b1...4eb26e6e0bf4c0492a9add7b5ea430616627d4c6"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "4eb26e6e0bf4c0492a9add7b5ea430616627d4c6",
+      "reviewedRelease": "v0.1.7"
+    },
+    "Snapmaker/OrcaSlicer": {
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v2.4.0 latestRelease=v2.4.0",
+        "baselineHead=da53bc5ffe47 remoteHead=c0e69878c643",
+        "kind=slicer-runtime-source",
+        "integration=Snapmaker slicer upstream",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/Snapmaker/OrcaSlicer/compare/da53bc5ffe47d7837ccdfde5f59a5ba1e9ec35f1...c0e69878c643e8f6de128da4aa40f8da84327ae7"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "c0e69878c643e8f6de128da4aa40f8da84327ae7",
+      "reviewedRelease": "v2.4.0"
     },
     "stablyai/orca": {
       "verdict": "ignore",
-      "reasonHe": "ה־7 commits משנים runtime/UI של Orca — terminal subscriptions, workspace restore, native chat ו־agent-launch caller selection. אצלנו Orca הוא pattern-only וה־LOCK אוסר התקנת Orca/ADE; דפוס ה־job isolation/handoff/three terminal states שכבר הוטמע אינו דורש שינוי בגלל commits אלה.",
+      "reasonHe": "מקור orchestrator/runtime שני. נעול אצלנו. אין התקנה ואין ack.",
       "evidence": [
-        "latestRelease נשאר v1.4.215",
-        "7 commits ב־Orca runtime/renderer; אין release חדש",
-        "local contract: Pattern only; do not install Orca or stand up an ADE",
-        "compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...bdaf9a3ed3a21ad81c722f1ba732a5018eaffad4"
+        "changeKinds=head,release",
+        "baselineRelease=v1.4.215 latestRelease=v1.4.218",
+        "baselineHead=0a876b2f5a26 remoteHead=38c2d1dcb9dc",
+        "kind=catalog-source",
+        "integration=packages/vfe2b/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...38c2d1dcb9dc079bba6f59bdaa179d6af0584f09"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "bdaf9a3ed3a21ad81c722f1ba732a5018eaffad4",
-      "reviewedRelease": "v1.4.215"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "38c2d1dcb9dc079bba6f59bdaa179d6af0584f09",
+      "reviewedRelease": "v1.4.218"
+    },
+    "Tencent/WeKnora": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=v0.8.2 latestRelease=v0.8.2",
+        "baselineHead=9114e4e4f905 remoteHead=bccb4b151bae",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/Tencent/WeKnora/compare/9114e4e4f905be71976a77c684d3f92731e6f9a6...bccb4b151bae403508da77fbb174efc79dc47c1a"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "bccb4b151bae403508da77fbb174efc79dc47c1a",
+      "reviewedRelease": "v0.8.2"
     },
     "topoteretes/cognee": {
-      "verdict": "ignore",
-      "reasonHe": "v1.6.1 כבר אומצה ונבדקה. שני ה־commits החדשים משנים README בלבד ומיישרים את התיעוד למה שכבר קיים ב־1.6.1; ה־commit האחרון מצהיר במפורש שאין שינוי behavior.",
+      "verdict": "wait",
+      "reasonHe": "שינוי upstream ב-runtime פעיל בלי smoke תאימות במושב הזה. אין שדרוג ואין ack.",
       "evidence": [
-        "adoptedRelease=v1.6.1; latestRelease נשאר v1.6.1",
-        "2 README-only commits; no behaviour change",
-        "adoption evidence: packages/vfharness/state/cognee-1.6.1-adoption-2026-09-27.json",
-        "compare: https://github.com/topoteretes/cognee/compare/eb90d03740755f5252b8b12cce91fd09970f2d81...c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b"
+        "changeKinds=head,release",
+        "baselineRelease=v1.6.1 latestRelease=v1.6.2",
+        "baselineHead=eb90d0374075 remoteHead=b32d8afc59e1",
+        "kind=runtime-source",
+        "integration=packages/vfmem/cognee.json · %VELVETOS_RUNTIME_ROOT%/Cognee/cognee-venv",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/topoteretes/cognee/compare/eb90d03740755f5252b8b12cce91fd09970f2d81...b32d8afc59e1064d9291b9828a8a147be9cc8bab"
       ],
-      "notifyOwner": true,
-      "reviewedRemoteHead": "c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b",
-      "reviewedRelease": "v1.6.1"
+      "notifyOwner": false,
+      "reviewedRemoteHead": "b32d8afc59e1064d9291b9828a8a147be9cc8bab",
+      "reviewedRelease": "v1.6.2"
+    },
+    "trailhq/Graft": {
+      "verdict": "review",
+      "reasonHe": "ה-head או ה-release זזו. לא נקרא diff מלא ואין ראיית אימוץ. לבדוק לפני הטמעת דפוס. אין npx ואין ack.",
+      "evidence": [
+        "changeKinds=head",
+        "baselineRelease=None latestRelease=None",
+        "baselineHead=80692e5ad0bc remoteHead=fe30ead39d5e",
+        "kind=embedded-provenance",
+        "integration=packages/vfgraft/ORIGIN.md",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/trailhq/Graft/compare/80692e5ad0bc8e8f7e1edea648247d90b9f76820...fe30ead39d5e6f0c921018d364da2bdbc9d4b3ad"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "fe30ead39d5e6f0c921018d364da2bdbc9d4b3ad",
+      "reviewedRelease": null
+    },
+    "volcengine/OpenViking": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v0.4.21 latestRelease=v0.4.22",
+        "baselineHead=a09a9d20a8e0 remoteHead=b597acc1b9c4",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/volcengine/OpenViking/compare/a09a9d20a8e07d08973aee177802d00e08df29e6...b597acc1b9c4889d57d376bd2e33fbea7ee7e924"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "b597acc1b9c4889d57d376bd2e33fbea7ee7e924",
+      "reviewedRelease": "v0.4.22"
+    },
+    "xmanrui/dsh-im": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v4.29.0 latestRelease=v4.34.1",
+        "baselineHead=b7522c70b470 remoteHead=d41a5b5eb43d",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/xmanrui/dsh-im/compare/b7522c70b4707c6879dc6985c20820da65e95cae...d41a5b5eb43dd5aa6115da4caf53843f1b14a32f"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "d41a5b5eb43dd5aa6115da4caf53843f1b14a32f",
+      "reviewedRelease": "v4.34.1"
+    },
+    "yxqfg/phone-lens": {
+      "verdict": "ignore",
+      "reasonHe": "שורת קטלוג בלבד. VelvetOS לא מוכר ולא מריץ את הריפו. אין ack.",
+      "evidence": [
+        "changeKinds=head,release",
+        "baselineRelease=v0.3.5 latestRelease=v1.0.2",
+        "baselineHead=1f9eb54f2375 remoteHead=8df0d0037b9a",
+        "kind=catalog-source",
+        "integration=packages/vfdsh/catalog.json",
+        "no compatibility smoke and no ack in the 2026-10-02 Research Seat",
+        "compare: https://github.com/yxqfg/phone-lens/compare/1f9eb54f2375359a66016a30796936c69d4f8a6e...8df0d0037b9a98a28084bb6280560c8d8d9bddb9"
+      ],
+      "notifyOwner": false,
+      "reviewedRemoteHead": "8df0d0037b9a98a28084bb6280560c8d8d9bddb9",
+      "reviewedRelease": "v1.0.2"
     }
-  }
+  },
+  "notificationPreparedAt": "2026-10-01T23:09:18.414538+00:00",
+  "notificationDigest": "ee9444ff9d20cf0848a7c6e781cc9c987538058320c4025f13826443edb499b3"
 }
