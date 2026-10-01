@@ -134,8 +134,8 @@
   },
   "latestProviderReadback": {
     "status": "live_verified",
-    "date": "2026-09-30",
-    "artifact": "automation/grok/provider-readback-2026-09-30-pm.json",
+    "date": "2026-10-01",
+    "artifact": "automation/grok/provider-readback-2026-10-01-am.json",
     "protectedRoutineCount": 9,
     "protectedInventoryClockMatch": true,
     "rendererTimeZone": "Asia/Jerusalem",
