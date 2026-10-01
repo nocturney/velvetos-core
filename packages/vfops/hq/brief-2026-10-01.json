@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-01",
+  "date_line": "1.10.2026 · Morning Green v3.1 · Asia/Jerusalem",
+  "version": "Morning-Green-v3.1",
+  "timezone": "Asia/Jerusalem",
+  "research_status": "ready_for_brief",
+  "open_collection": 4790,
+  "bottom_line": "כל חמש העבודות בגיליון VF HQ · jobs מסומנות כסופקו. שלוש יתרות פתוחות מאומתות גם ב-VF HQ · books: סינקופה 4350, ודים 320, אלה+לוגו 120. סך הגבייה הפתוחה 4790. ביומן היום וגם מחר אין אירועים. Instagram חי: 81 עוקבים, 9 פריטים, והפיד האחרון הוא Dd6ts40CZxN מ-30.9 בערב עם 0 לייקים ו-0 תגובות מאומתים.",
+  "kpis": [
+    {
+      "value": 4790,
+      "label": "גבייה פתוחה"
+    },
+    {
+      "value": 0,
+      "label": "אירועי יומן היום"
+    },
+    {
+      "value": 0,
+      "label": "עבודות ייצור פעילות"
+    }
+  ],
+  "html": "packages/vfops/out/morning-green-2026-10-01.html",
+  "txt": "packages/vfops/out/morning-brief-2026-10-01.txt",
+  "sources": {
+    "jobs": "VF HQ · jobs live Drive read 2026-10-01 (lastMod 2026-09-14T09:05:09.663Z)",
+    "books": "VF HQ · books live Drive read 2026-10-01 (lastMod 2026-09-14T07:37:00.062Z)",
+    "calendar": "Google Calendar nocturney@gmail.com 2026-10-01..2026-10-02 Asia/Jerusalem empty",
+    "instagram": "@velvets_cloud live account_info+list_media+audit_public_cta+audit_profile_cta 2026-10-01: 81/125/9 latest Dd6ts40CZxN likes=0 comments=0 CTA compliant; previous Dd4W5GAlwxN likes=1; desired-line absent AMBER optional; hashtag_over_limit historical AMBER on DdosGbRia0T only",
+    "schedule": "cloudflare_unavailable: missing VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN in GitHub-failover Shell; FEED-SOURCE unavailableLabel; OpenPost frozen not used",
+    "research": "packages/vfops/data/research.md 1.10.2026 ready_for_brief on OPEN PR #446 (branch cursor/research-seat-2026-10-01-9272; check-all SUCCESS — not merged; content used for brief only)"
+  }
+}
