@@ -2,121 +2,543 @@
 <html lang="he" dir="rtl">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;background:#f6f6f4;font-family:Arial,Helvetica,sans-serif;color:#1d1d1f">
-<main style="max-width:720px;margin:0 auto;padding:28px 18px">
-<div style="font-size:13px;color:#777">VelvetOS · Toolchain Release Watch</div>
-<h1 style="margin:8px 0 6px;font-size:28px">עדכוני כלים</h1>
-<p style="margin:0 0 8px">נותחו 11 עדכונים ממתינים. לא בוצע שום שדרוג אוטומטי.</p>
-<p style="margin:0 0 8px"><strong>סיכום:</strong> 0 לעדכון עכשיו · 2 להמתין · 9 ללא פעולה כרגע.</p>
-<p style="margin:0 0 18px;color:#666">בדיקת upstream אחרונה: 2026-09-27T20:17:36.055403+00:00</p>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">blender/blender</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> 35a2d9dfd0 → 388952d3b8</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> Blender host/runtime</div>
-<div style="margin-top:8px"><strong>למה:</strong> השינוי רלוונטי פוטנציאלית לביצועי geometry/mesh, אבל הוא קיים כרגע רק ב־main ללא release חדש. לא מעדכנים Blender host על commit לא־משוחרר; ממתינים לבילד/גרסה יציבה ואז מריצים smoke.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> 2 commits מאז baseline: שיפור בניית faces/corners ו־vertices/edges ב-Mesh Merge · שינויי ביצועים בלבד במסלול mesh merge; אין release חדש · integration: Blender host/runtime · compare: https://github.com/blender/blender/compare/35a2d9dfd0ad5b311e1eb94dcc60ab0cfdc60047...388952d3b867ead24396cefd3cfc7e3b59682e61</div>
-<div style="margin-top:12px"><a href="https://github.com/blender/blender">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">earthtojake/text-to-cad</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.7.0 → v0.7.0</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfprod/TEXT-TO-CAD.md</div>
-<div style="margin-top:8px"><strong>למה:</strong> v0.7.0 כבר אומצה ונבדקה אצלנו. ה־commit היחיד אחרי ה־baseline מוחק סקריפטי E2E ידניים ומחזק כיסוי CI; אין שינוי runtime/CAD שדורש אימוץ נוסף.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> adoptedRelease=v0.7.0; latestRelease נשאר v0.7.0 · 1 commit: delete manual web E2E scripts + enforce CI collection · adoption evidence: packages/vfharness/state/text-to-cad-0.7.0-adoption-2026-09-27.json · compare: https://github.com/earthtojake/text-to-cad/compare/fafa7b057d8f2c3347ff422f0515380123a4b1d4...da7f7219569541c41a94715bab5e476615ad4177</div>
-<div style="margin-top:12px"><a href="https://github.com/earthtojake/text-to-cad">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">FreeCAD/FreeCAD</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> 1.1.3 → 1.1.3</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> CAD/3D toolchain upstream</div>
-<div style="margin-top:8px"><strong>למה:</strong> release 1.1.3 לא השתנה. שני ה־commits הם תיקון CAM ל־3+2 Axis וקישור ספריות בחלון About; אין אצלנו מסלול 3+2 CAM פעיל או שינוי שנדרש ל־3D-print/CAD routing הנוכחי.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר 1.1.3 · 2 commits: CAM 3+2 transformShape fix + About dialog library links · integration: CAD/3D toolchain upstream · compare: https://github.com/FreeCAD/FreeCAD/compare/20b531c4211f0f0b27f86f35ce6e4b00c322706d...08eb8263a3e6734ca2411f40d6f18a24afdf9044</div>
-<div style="margin-top:12px"><a href="https://github.com/FreeCAD/FreeCAD">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">liustack/modlens</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> v3.26.5 → v3.26.5</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
-<div style="margin-top:8px"><strong>למה:</strong> ה־release נשאר v3.26.5 וה־commit היחיד מתקן את תהליך הפרסום ל־npm. זהו catalog-source אצלנו, בלי שינוי בתוכן/יכולת שאנחנו מטמיעים.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר v3.26.5 · 1 commit: release workflow pushes main only after npm has the version · integration: packages/vfdsh/catalog.json · compare: https://github.com/liustack/modlens/compare/ffeee3e32de1c05315e334be97c9f087242fe2f3...f01354e78a70ed18eab721762f18ea44a92d6e9e</div>
-<div style="margin-top:12px"><a href="https://github.com/liustack/modlens">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">nodejs/node</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> v26.10.0 → v26.10.0</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh</div>
-<div style="margin-top:8px"><strong>למה:</strong> v26.10.0 לא השתנתה. שני ה־commits נוגעים לבניית התיעוד בלבד — verbosity ו־doc-kit patch bumps — ולא ל־Node runtime שבו ה־bootstrap שלנו תלוי.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר v26.10.0 · 2 commits: doc build verbosity + doc-kit dependency patch bumps · integrations: Windows edge bootstrap + HyperFrames Mac bootstrap · compare: https://github.com/nodejs/node/compare/a2a064c76afe42fedf061d976de8dff69ef2feaf...df775ec2ea6861053995f923fcf7814c06451e72</div>
-<div style="margin-top:12px"><a href="https://github.com/nodejs/node">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">openscad/openscad</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> openscad-2021.01 → openscad-2021.01</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> CAD/3D toolchain upstream</div>
-<div style="margin-top:8px"><strong>למה:</strong> ה־release נשאר openscad-2021.01 ושני ה־commits הם שינויי GitHub workflow בלבד לעדכון submodule. אין שינוי במנוע OpenSCAD או במסלול CAD שלנו.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר openscad-2021.01 · 2 commits: workflow debug info + fetch --all · integration: CAD/3D toolchain upstream · compare: https://github.com/openscad/openscad/compare/eecb92a6b6ef4e810c205facc5acabc917d42a5e...ac793b2e0cf6ea734b60c3d31601852d0bab2ee4</div>
-<div style="margin-top:12px"><a href="https://github.com/openscad/openscad">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">python/cpython</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> baec76438e → a4eb936727</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-manim-host-windows.ps1</div>
-<div style="margin-top:8px"><strong>למה:</strong> אלה שני bugfixes ב־main ללא release: אחד ל־ctypes callback על s390x/libclang ואחד לבדיקת שגיאה פנימית ב־intern_static. אין ראיה שהם משפיעים על Windows/Python toolchain שלנו, ולכן אין פעולה על commit לא־משוחרר.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> אין release חדש; changeKinds=head בלבד · ctypes fix מתועד עבור s390x/libclang callbacks · intern_static fix מתקן unreachable fatal-error path · compare: https://github.com/python/cpython/compare/baec76438e32f50983f48c1658a55015b036204b...a4eb936727e5f949f5dc8c8a38bf6d325518f29b</div>
-<div style="margin-top:12px"><a href="https://github.com/python/cpython">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">Q00/ouroboros</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.54.6 → v0.54.6</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
-<div style="margin-top:8px"><strong>למה:</strong> השינוי החדש — replay מבודד וללא רשת של פקודות שנצפו כדי לאמת claims כמו tests_passed/commands_run — רלוונטי רעיונית ל־evidence discipline שלנו. אבל Ouroboros אצלנו עדיין מסומן `later` והדפוס הקיים הוא spec-first interview, לא runtime מוטמע; לכן שומרים כמועמד להטמעת pattern ממוקדת ולא מתקינים/מעדכנים מוצר.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> 1 commit גדול: verifier command replay + replay policy + shell parsing + tests · replay רץ ב־isolated network-denied workspace copy · current catalog verdict=later; pattern=spec-first interview then execute · compare: https://github.com/Q00/ouroboros/compare/c0d584c78aa46c8b12bc3a7157f5b7b6681720f3...a2b329d052c4b1a900810cc505742dff0142ebdb</div>
-<div style="margin-top:12px"><a href="https://github.com/Q00/ouroboros">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">remotion-dev/remotion</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> v4.0.529 → v4.0.529</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfom/VIDEO-TOOLCHAIN.json</div>
-<div style="margin-top:8px"><strong>למה:</strong> v4.0.529 לא השתנתה ושני ה־commits הם תיעוד בלבד: הוספת BrewReel לרשימת resources. אין שינוי renderer/API או ב־Remotion path המוגבל־רישוי אצלנו.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר v4.0.529 · 2 commits, בפועל docs-only resource addition + merge · integration: packages/vfom/VIDEO-TOOLCHAIN.json · compare: https://github.com/remotion-dev/remotion/compare/1beb32cb9e3ef074842dedb076af1bfcad17427a...6f4e0d57d41a22fa60b1a9aa77e2b7d1d2adc210</div>
-<div style="margin-top:12px"><a href="https://github.com/remotion-dev/remotion">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">stablyai/orca</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.4.215 → v1.4.215</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfe2b/catalog.json</div>
-<div style="margin-top:8px"><strong>למה:</strong> ה־7 commits משנים runtime/UI של Orca — terminal subscriptions, workspace restore, native chat ו־agent-launch caller selection. אצלנו Orca הוא pattern-only וה־LOCK אוסר התקנת Orca/ADE; דפוס ה־job isolation/handoff/three terminal states שכבר הוטמע אינו דורש שינוי בגלל commits אלה.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> latestRelease נשאר v1.4.215 · 7 commits ב־Orca runtime/renderer; אין release חדש · local contract: Pattern only; do not install Orca or stand up an ADE · compare: https://github.com/stablyai/orca/compare/0a876b2f5a26db1f845ddb26d04da6c5b14601cb...bdaf9a3ed3a21ad81c722f1ba732a5018eaffad4</div>
-<div style="margin-top:12px"><a href="https://github.com/stablyai/orca">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
-<div style="font-size:18px;font-weight:700">topoteretes/cognee</div>
-<div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
-<div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.6.1 → v1.6.1</div>
-<div style="margin-top:6px"><strong>שינוי:</strong> head</div>
-<div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfmem/cognee.json · %USERPROFILE%/.velvetos/cognee-venv</div>
-<div style="margin-top:8px"><strong>למה:</strong> v1.6.1 כבר אומצה ונבדקה. שני ה־commits החדשים משנים README בלבד ומיישרים את התיעוד למה שכבר קיים ב־1.6.1; ה־commit האחרון מצהיר במפורש שאין שינוי behavior.</div>
-<div style="margin-top:8px;color:#555"><strong>ראיות:</strong> adoptedRelease=v1.6.1; latestRelease נשאר v1.6.1 · 2 README-only commits; no behaviour change · adoption evidence: packages/vfharness/state/cognee-1.6.1-adoption-2026-09-27.json · compare: https://github.com/topoteretes/cognee/compare/eb90d03740755f5252b8b12cce91fd09970f2d81...c4cd8ceb9509dff6bddfabdadbeab7cc040bc32b</div>
-<div style="margin-top:12px"><a href="https://github.com/topoteretes/cognee">פתיחת ה־upstream ב־GitHub</a></div>
-</section>
-<div style="margin-top:20px;padding:14px;border-radius:12px;background:#efefec;font-size:13px;line-height:1.55">ה־ack מתבצע רק אחרי אימוץ שנבדק. עצם קבלת המייל אינה משנה שום גרסה.</div>
-</main></body></html>
+  <main style="max-width:720px;margin:0 auto;padding:28px 18px">
+    <div style="font-size:13px;color:#777">VelvetOS · Toolchain Release Watch</div>
+    <h1 style="margin:8px 0 6px;font-size:28px">עדכוני כלים</h1>
+    <p style="margin:0 0 8px">נמצאו 48 עדכונים ממתינים. לא בוצע שום שדרוג אוטומטי.</p>
+    <p style="margin:0 0 18px;color:#666">בדיקת upstream אחרונה: 2026-09-30T23:04:57.574361+00:00</p>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">00080000/dsh-project-memory</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.5.12 → v0.5.13</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 3d171b6d4b78 → c5451c6c28e7 · baselineRelease→latestRelease: v0.5.12 → v0.5.13 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/00080000/dsh-project-memory">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">ahujasid/blender-mcp</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 41a184322d → 60d2a31b46</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> %USERPROFILE%/.blender-mcp</div>
+              <div style="margin-top:8px"><strong>למה:</strong> שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 41a184322db3 → 60d2a31b4632 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=runtime-source; newDetection=True · integration: %USERPROFILE%/.blender-mcp</div>
+              <div style="margin-top:12px"><a href="https://github.com/ahujasid/blender-mcp">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">Alishahryar1/free-claude-code</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v6.4.4 → v6.5.11</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> .cursor/skills/vf-fcc-offload/SKILL.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 37c77262115a → 7195cefd5d0c · baselineRelease→latestRelease: v6.4.4 → v6.5.11 · changeKinds: head, release; kind=skill-pattern; newDetection=True · integration: .cursor/skills/vf-fcc-offload/SKILL.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/Alishahryar1/free-claude-code">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">andyrewlee/awesome-agent-orchestrators</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> e120484e44 → a1278087ad</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfharness/playbooks/orchestrators.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: e120484e448f → a1278087adb6 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=agent-index; newDetection=True · integration: packages/vfharness/playbooks/orchestrators.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/andyrewlee/awesome-agent-orchestrators">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">anthropics/skills</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> לבדוק לפני החלטה</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 33375500bc → 8a1541c4a3</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfharness/playbooks/skill-authoring.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 33375500bcea → 8a1541c4a3ff · baselineRelease→latestRelease: None → None · changeKinds: head; kind=skill-pattern; newDetection=True · integration: packages/vfharness/playbooks/skill-authoring.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/anthropics/skills">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">awesome-dsh-plugin/awesome-dsh-plugin</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 4fee2fcc01 → e483a501ce</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/ORIGIN.md · packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 4fee2fcc011f → e483a501cec7 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=embedded-provenance; newDetection=True · integration: packages/vfdsh/ORIGIN.md, packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/awesome-dsh-plugin/awesome-dsh-plugin">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">bambulab/BambuStudio</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v02.08.02.61 → v02.08.02.61</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> production slicer/studio</div>
+              <div style="margin-top:8px"><strong>למה:</strong> שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: f977235e6d73 → da8b44ee34dd · baselineRelease→latestRelease: v02.08.02.61 → v02.08.02.61 · changeKinds: head; kind=runtime-source; newDetection=True · integration: production slicer/studio</div>
+              <div style="margin-top:12px"><a href="https://github.com/bambulab/BambuStudio">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">blender/blender</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 35a2d9dfd0 → 7936055a1e</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> Blender host/runtime</div>
+              <div style="margin-top:8px"><strong>למה:</strong> 81 commits על main בלי release. Blender host - לא על commit לא־משוחרר; ממתינים לבילד יציב.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 35a2d9dfd0ad → 7936055a1e57 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=cad-runtime-source; newDetection=False · integration: Blender host/runtime</div>
+              <div style="margin-top:12px"><a href="https://github.com/blender/blender">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">debpalash/VoiceStudio</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.5.6 → v0.5.6</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfom/SPEECH-BACKEND.json · scripts/bootstrap-speech-host-windows.ps1</div>
+              <div style="margin-top:8px"><strong>למה:</strong> שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 08a1592e3cb9 → 0834c8be2846 · baselineRelease→latestRelease: v0.5.6 → v0.5.6 · changeKinds: head; kind=runtime-source; newDetection=True · integration: packages/vfom/SPEECH-BACKEND.json, scripts/bootstrap-speech-host-windows.ps1</div>
+              <div style="margin-top:12px"><a href="https://github.com/debpalash/VoiceStudio">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">DeusData/codebase-memory-mcp</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> לבדוק לפני החלטה</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.11.0 → v0.11.0</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfmem/ORIGIN.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 5df8b0442c48 → 0f52d30c2964 · baselineRelease→latestRelease: v0.11.0 → v0.11.0 · changeKinds: head; kind=pattern-source; newDetection=True · integration: packages/vfmem/ORIGIN.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/DeusData/codebase-memory-mcp">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">dsh-market/dsh-market</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.66.3 → v1.66.7</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 4ceda5d2b7b6 → d4f7a7962d11 · baselineRelease→latestRelease: v1.66.3 → v1.66.7 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/dsh-market/dsh-market">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">earthtojake/text-to-cad</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.7.0 → v0.7.4</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfprod/TEXT-TO-CAD.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> text-to-cad זז ב־release/head מאז אימוץ v0.7.x. לבדוק changelog + smoke לפני ack; אין upgrade מריצת מחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: fafa7b057d8f → 567c213788b9 · baselineRelease→latestRelease: v0.7.0 → v0.7.4 · changeKinds: head, release; kind=runtime-source; newDetection=False · integration: packages/vfprod/TEXT-TO-CAD.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/earthtojake/text-to-cad">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">FFmpeg/FFmpeg</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> d62aef2e50 → 5a54fcf75e</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh · scripts/vf_hyperframes.py</div>
+              <div style="margin-top:8px"><strong>למה:</strong> שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: d62aef2e5043 → 5a54fcf75e02 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=runtime-toolchain; newDetection=True · integration: scripts/bootstrap-edge-host-windows.ps1, scripts/bootstrap-hyperframes-host-macos.sh, scripts/vf_hyperframes.py</div>
+              <div style="margin-top:12px"><a href="https://github.com/FFmpeg/FFmpeg">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">FreeCAD/FreeCAD</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 1.1.3 → 1.1.4</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> CAD/3D toolchain upstream</div>
+              <div style="margin-top:8px"><strong>למה:</strong> release 1.1.3→1.1.4 על כלי runtime/CAD/slicer/toolchain. ממתינים לבילד יציב + smoke לפני אימוץ; אין auto-upgrade.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 20b531c4211f → 84ae7a7c8ee9 · baselineRelease→latestRelease: 1.1.3 → 1.1.4 · changeKinds: head, release; kind=cad-runtime-source; newDetection=False · integration: CAD/3D toolchain upstream</div>
+              <div style="margin-top:12px"><a href="https://github.com/FreeCAD/FreeCAD">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">git/git</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 0f8e75abeb → a018953688</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> scripts/bootstrap-edge-host-windows.ps1</div>
+              <div style="margin-top:8px"><strong>למה:</strong> שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 0f8e75abebff → a018953688f1 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=runtime-toolchain; newDetection=True · integration: scripts/bootstrap-edge-host-windows.ps1</div>
+              <div style="margin-top:12px"><a href="https://github.com/git/git">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">Han-1413141/dsh-cost-meter</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.7.40 → v1.8.2</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: c520d9bae873 → 1746896f27ed · baselineRelease→latestRelease: v1.7.40 → v1.8.2 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/Han-1413141/dsh-cost-meter">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">headroomlabs-ai/headroom</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> לבדוק לפני החלטה</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.39.1 → v0.39.1</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfharness/playbooks/context-thrift.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: d13e1966f820 → 0a2c80d52076 · baselineRelease→latestRelease: v0.39.1 → v0.39.1 · changeKinds: head; kind=pattern-source; newDetection=True · integration: packages/vfharness/playbooks/context-thrift.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/headroomlabs-ai/headroom">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">heygen-com/hyperframes</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.8.80 → v0.8.99</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> scripts/vf_hyperframes.py</div>
+              <div style="margin-top:8px"><strong>למה:</strong> release v0.8.80→v0.8.99 על כלי runtime/CAD/slicer/toolchain. ממתינים לבילד יציב + smoke לפני אימוץ; אין auto-upgrade.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: b165b64eda84 → 132b9909fa75 · baselineRelease→latestRelease: v0.8.80 → v0.8.99 · changeKinds: head, release; kind=runtime-source; newDetection=True · integration: scripts/vf_hyperframes.py</div>
+              <div style="margin-top:12px"><a href="https://github.com/heygen-com/hyperframes">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">HuanLinOTO/dsh-plugin-mineru</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> d66efc12c8 → b302e2aa5f</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: d66efc12c89e → b302e2aa5fa5 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/HuanLinOTO/dsh-plugin-mineru">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">jing-hy/picturereader</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v3.3.3 → v3.3.3</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 4e48fc916fd6 → 619a67e39d0a · baselineRelease→latestRelease: v3.3.3 → v3.3.3 · changeKinds: head; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/jing-hy/picturereader">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">joaomdmoura/crewai</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 1.15.22 → 1.15.23</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfe2b/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 4ed2abc7bbf5 → 1b9bbccbed63 · baselineRelease→latestRelease: 1.15.22 → 1.15.23 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfe2b/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/joaomdmoura/crewai">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">linkingoscar/dsh-attachment-formats</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.12.1 → v0.12.4</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: ad61a0413cb0 → 4bcfae40dbd6 · baselineRelease→latestRelease: v0.12.1 → v0.12.4 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/linkingoscar/dsh-attachment-formats">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">LinklyAI/best-skills</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> לבדוק לפני החלטה</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> fe7eb0ccdd → b4e6744ca8</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> .cursor/skills/vf-best-skills/SKILL.md · packages/vfresearch/BEST-SKILLS.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: fe7eb0ccddb1 → b4e6744ca86c · baselineRelease→latestRelease: None → None · changeKinds: head; kind=skill-index; newDetection=True · integration: .cursor/skills/vf-best-skills/SKILL.md, packages/vfresearch/BEST-SKILLS.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/LinklyAI/best-skills">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">liustack/modlens</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v3.26.5 → v3.26.5</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> release נשאר v3.26.5; commits פרסום - catalog בלבד.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: ffeee3e32de1 → 333468c72bf9 · baselineRelease→latestRelease: v3.26.5 → v3.26.5 · changeKinds: head; kind=catalog-source; newDetection=False · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/liustack/modlens">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">ManimCommunity/manim</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.21.0 → v0.21.0</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> scripts/bootstrap-manim-host-windows.ps1</div>
+              <div style="margin-top:8px"><strong>למה:</strong> שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 16c4a68b6d15 → 22aa85f47c9d · baselineRelease→latestRelease: v0.21.0 → v0.21.0 · changeKinds: head; kind=runtime-source; newDetection=True · integration: scripts/bootstrap-manim-host-windows.ps1</div>
+              <div style="margin-top:12px"><a href="https://github.com/ManimCommunity/manim">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">mattpocock/skills</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> לבדוק לפני החלטה</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.2.3 → v1.2.3</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfharness/playbooks/engineering-delivery-chain.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: c55ee46073ed → d81f3a183412 · baselineRelease→latestRelease: v1.2.3 → v1.2.3 · changeKinds: head; kind=skill-pattern; newDetection=True · integration: packages/vfharness/playbooks/engineering-delivery-chain.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/mattpocock/skills">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">MichengAI/dsh-agency-agents</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> לבדוק לפני החלטה</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.0.5 → v1.0.7</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> קפיצת release (v1.0.5→v1.0.7). דפוסי skill/agent - לבדוק לפני הטמעה; אין npx על Cloud.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: a4ef1548da94 → 8a422790cc9d · baselineRelease→latestRelease: v1.0.5 → v1.0.7 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/MichengAI/dsh-agency-agents">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">msitarzewski/agency-agents</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> לבדוק לפני החלטה</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 053ddbbf39 → 765be42358</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> %USERPROFILE%/.agency-agents</div>
+              <div style="margin-top:8px"><strong>למה:</strong> דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 053ddbbf392a → 765be4235810 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=agent-repo; newDetection=True · integration: %USERPROFILE%/.agency-agents</div>
+              <div style="margin-top:12px"><a href="https://github.com/msitarzewski/agency-agents">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">mvanhorn/last30days-skill</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> לבדוק לפני החלטה</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v3.25.0 → v3.25.0</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> .cursor/skills/vf-last30/SKILL.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 084662b501fb → 1fadbe5097c1 · baselineRelease→latestRelease: v3.25.0 → v3.25.0 · changeKinds: head; kind=skill-pattern; newDetection=True · integration: .cursor/skills/vf-last30/SKILL.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/mvanhorn/last30days-skill">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">NirDiamant/GenAI_Agents</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 078d6d544e → 6746e4b0a1</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfagents/playbooks/reflection-before-send.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 078d6d544e15 → 6746e4b0a168 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=agent-pattern; newDetection=True · integration: packages/vfagents/playbooks/reflection-before-send.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/NirDiamant/GenAI_Agents">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">nodejs/node</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v26.10.0 → v26.10.0</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-hyperframes-host-macos.sh</div>
+              <div style="margin-top:8px"><strong>למה:</strong> שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: a2a064c76afe → 5e3bbc4ac4e4 · baselineRelease→latestRelease: v26.10.0 → v26.10.0 · changeKinds: head; kind=runtime-toolchain; newDetection=False · integration: scripts/bootstrap-edge-host-windows.ps1, scripts/bootstrap-hyperframes-host-macos.sh</div>
+              <div style="margin-top:12px"><a href="https://github.com/nodejs/node">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">omdsh-dev/dsh-data-agent</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.2.0 → v0.2.2</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 3016f67c0a67 → 6a649fe930ae · baselineRelease→latestRelease: v0.2.0 → v0.2.2 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/omdsh-dev/dsh-data-agent">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">open-multi-agent/open-multi-agent</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.21.0 → v1.21.0</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfharness/playbooks/oma-patterns.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מנדט נעול: runtime שני / swarm / orchestrator - דולג. אין install מריצת Research Seat.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: ab349e7ad039 → 4e293a21a8bc · baselineRelease→latestRelease: v1.21.0 → v1.21.0 · changeKinds: head; kind=agent-pattern; newDetection=True · integration: packages/vfharness/playbooks/oma-patterns.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/open-multi-agent/open-multi-agent">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">openscad/openscad</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> openscad-2021.01 → openscad-2021.01</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> CAD/3D toolchain upstream</div>
+              <div style="margin-top:8px"><strong>למה:</strong> שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: eecb92a6b6ef → 612e684c2cbb · baselineRelease→latestRelease: openscad-2021.01 → openscad-2021.01 · changeKinds: head; kind=cad-runtime-source; newDetection=False · integration: CAD/3D toolchain upstream</div>
+              <div style="margin-top:12px"><a href="https://github.com/openscad/openscad">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">OrcaSlicer/OrcaSlicer</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v2.4.2 → v2.4.2</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> production slicer</div>
+              <div style="margin-top:8px"><strong>למה:</strong> שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 4964f49765f7 → 865e9963c3fb · baselineRelease→latestRelease: v2.4.2 → v2.4.2 · changeKinds: head; kind=runtime-source; newDetection=True · integration: production slicer</div>
+              <div style="margin-top:12px"><a href="https://github.com/OrcaSlicer/OrcaSlicer">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">python/cpython</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> baec76438e → 763b6edb0e</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> scripts/bootstrap-edge-host-windows.ps1 · scripts/bootstrap-manim-host-windows.ps1</div>
+              <div style="margin-top:8px"><strong>למה:</strong> main HEAD זז בלי pin release; runtime toolchain - לא מעדכנים יומיים בלי pin/evidence.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: baec76438e32 → 763b6edb0ec9 · baselineRelease→latestRelease: None → None · changeKinds: head; kind=runtime-toolchain; newDetection=False · integration: scripts/bootstrap-edge-host-windows.ps1, scripts/bootstrap-manim-host-windows.ps1</div>
+              <div style="margin-top:12px"><a href="https://github.com/python/cpython">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">Q00/ouroboros</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> לבדוק לפני החלטה</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.54.6 → v0.55.3</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> קפיצת release (v0.54.6→v0.55.3). דפוסי skill/agent - לבדוק לפני הטמעה; אין npx על Cloud.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: c0d584c78aa4 → b08ab59da1e0 · baselineRelease→latestRelease: v0.54.6 → v0.55.3 · changeKinds: head, release; kind=catalog-source; newDetection=False · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/Q00/ouroboros">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">remotion-dev/remotion</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v4.0.529 → v4.0.531</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfom/VIDEO-TOOLCHAIN.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> release v4.0.529→v4.0.531 על כלי runtime/CAD/slicer/toolchain. ממתינים לבילד יציב + smoke לפני אימוץ; אין auto-upgrade.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 1beb32cb9e3e → 985ba9f0756d · baselineRelease→latestRelease: v4.0.529 → v4.0.531 · changeKinds: head, release; kind=embedded-provenance; newDetection=False · integration: packages/vfom/VIDEO-TOOLCHAIN.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/remotion-dev/remotion">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">scenario-labs/skills</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> לבדוק לפני החלטה</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> skills-v0.48.0 → skills-v0.48.0</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md · packages/vfom/CREATIVE-REFINE-LOOP.md · packages/vfprod/third_party/scenario-labs/blender/VENDOR-MANIFEST.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> דפוסי skill/agent/index - לבדוק לפני הטמעה לפק קיים; אין npx על Cloud.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 9624e295fa33 → d87071d22edb · baselineRelease→latestRelease: skills-v0.48.0 → skills-v0.48.0 · changeKinds: head; kind=skill-pattern; newDetection=True · integration: packages/vfprod/SCENARIO-EXPERT-CAPABILITIES.md, packages/vfom/CREATIVE-REFINE-LOOP.md, packages/vfprod/third_party/scenario-labs/blender/VENDOR-MANIFEST.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/scenario-labs/skills">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">shengsheng90/DSH-taskboard</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.1.6 → v0.1.7</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: ddf137d42670 → 4eb26e6e0bf4 · baselineRelease→latestRelease: v0.1.6 → v0.1.7 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/shengsheng90/DSH-taskboard">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">Snapmaker/OrcaSlicer</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v2.4.0 → v2.4.0</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> Snapmaker slicer upstream</div>
+              <div style="margin-top:8px"><strong>למה:</strong> שינוי head על runtime/CAD/slicer/toolchain בלי release חדש (או release זהה). ממתינים ל־release/smoke; אין עדכון מ־commit לא־משוחרר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: da53bc5ffe47 → c0e69878c643 · baselineRelease→latestRelease: v2.4.0 → v2.4.0 · changeKinds: head; kind=slicer-runtime-source; newDetection=True · integration: Snapmaker slicer upstream</div>
+              <div style="margin-top:12px"><a href="https://github.com/Snapmaker/OrcaSlicer">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">stablyai/orca</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.4.215 → v1.4.218</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfe2b/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 0a876b2f5a26 → b59489853314 · baselineRelease→latestRelease: v1.4.215 → v1.4.218 · changeKinds: head, release; kind=catalog-source; newDetection=False · integration: packages/vfe2b/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/stablyai/orca">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">Tencent/WeKnora</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.8.2 → v0.8.2</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 9114e4e4f905 → bccb4b151bae · baselineRelease→latestRelease: v0.8.2 → v0.8.2 · changeKinds: head; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/Tencent/WeKnora">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">topoteretes/cognee</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> להמתין</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v1.6.1 → v1.6.2</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfmem/cognee.json · %VELVETOS_RUNTIME_ROOT%/Cognee/cognee-venv</div>
+              <div style="margin-top:8px"><strong>למה:</strong> Cognee runtime על מכונת Chris; יש אות עדכון. ממתינים ל־smoke/compatibility על D:\Velvet לפני ack; אין auto-upgrade מריצת מחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: eb90d0374075 → ba3631f2ed36 · baselineRelease→latestRelease: v1.6.1 → v1.6.2 · changeKinds: head, release; kind=runtime-source; newDetection=False · integration: packages/vfmem/cognee.json, %VELVETOS_RUNTIME_ROOT%/Cognee/cognee-venv</div>
+              <div style="margin-top:12px"><a href="https://github.com/topoteretes/cognee">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">trailhq/Graft</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> 80692e5ad0 → fe30ead39d</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfgraft/ORIGIN.md</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 80692e5ad0bc → fe30ead39d5e · baselineRelease→latestRelease: None → None · changeKinds: head; kind=embedded-provenance; newDetection=True · integration: packages/vfgraft/ORIGIN.md</div>
+              <div style="margin-top:12px"><a href="https://github.com/trailhq/Graft">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">volcengine/OpenViking</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.4.21 → v0.4.22</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: a09a9d20a8e0 → 1394d4769a34 · baselineRelease→latestRelease: v0.4.21 → v0.4.22 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/volcengine/OpenViking">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">xmanrui/dsh-im</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v4.29.0 → v4.32.0</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: b7522c70b470 → a81f6f3a935f · baselineRelease→latestRelease: v4.29.0 → v4.32.0 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/xmanrui/dsh-im">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+            <section style="border:1px solid #e5e5e5;border-radius:14px;padding:18px;margin:14px 0;background:#fff">
+              <div style="font-size:18px;font-weight:700">yxqfg/phone-lens</div>
+              <div style="margin-top:8px"><strong>המלצה:</strong> אין פעולה כרגע</div>
+              <div style="margin-top:6px"><strong>גרסה/מקור:</strong> v0.3.5 → v1.0.2</div>
+              <div style="margin-top:6px"><strong>שינוי:</strong> head, release</div>
+              <div style="margin-top:6px"><strong>שימוש אצלנו:</strong> packages/vfdsh/catalog.json</div>
+              <div style="margin-top:8px"><strong>למה:</strong> מקור catalog/embedded-provenance בלי נתיב אימוץ פעיל ב־HQ; אין שדרוג מריצת המחקר.</div>
+              <div style="margin-top:8px;color:#555"><strong>ראיות:</strong> baseline→remote: 1f9eb54f2375 → 8df0d0037b9a · baselineRelease→latestRelease: v0.3.5 → v1.0.2 · changeKinds: head, release; kind=catalog-source; newDetection=True · integration: packages/vfdsh/catalog.json</div>
+              <div style="margin-top:12px"><a href="https://github.com/yxqfg/phone-lens">פתיחת ה־upstream ב־GitHub</a></div>
+            </section>
+
+    <div style="margin-top:20px;padding:14px;border-radius:12px;background:#efefec;font-size:13px;line-height:1.55">
+      ה־ack מתבצע רק אחרי אימוץ שנבדק. עצם קבלת המייל אינה משנה שום גרסה.
+    </div>
+  </main>
+</body>
+</html>

@@ -7,11 +7,12 @@
   "purpose": "current ecosystem radar plus unique-value gate for additional dev labs",
   "researchSeat": {
     "source": "https://github.com/LinklyAI/best-skills",
-    "observedDataDate": "2026-09-26",
-    "lastPass": "2026-09-27",
-    "artifact": "packages/vfresearch/sources/2026-09-27-best-skills.md",
+    "observedDataDate": "2026-09-30",
+    "lastPass": "2026-10-01",
+    "artifact": "packages/vfresearch/sources/2026-10-01-best-skills.md",
     "cadenceAuthority": "Velvet Research Seat",
-    "newSchedulerCreated": false
+    "newSchedulerCreated": false,
+    "note": "Phase 9 decision still COMPLETE/NO_ADDITIONAL_DEV_LAB; researchSeat freshness follows Research Seat Best Skills passes."
   },
   "costAndAuthority": {
     "incrementalRecurringCostIls": 0,

@@ -1,19 +1,18 @@
-# 05 · משרד · 27.9.2026
+# 05 · משרד · 1.10.2026
 
 מצב Research Seat: `ready_for_brief`.
 הריצה הושלמה לפני cutoff 07:00 Asia/Jerusalem.
 
 ## מה נבנה / יועל
-- טופס קליטה לפני מחיר (8 בלוקים / 6 שאלות קצרות) שמחליט quote / hold / discovery / sample-first לפני שפת ₪ — מיפוי ל־`vfconvert`.
-- חבילת הצעה מינימלית: קובץ שולט אחד + מספר גרסה + כמות/שלב + שימוש + גימור + קריטי למידה — `vfconvert`/`vfsales` (בלי ₪ מומצא).
-- שלוש מדרגות גימור לפני אישור הצעה (פונקציונלי / פונה-ללקוח / דגימת מצגת) + פנים מוגנים — `vfsales`/`vfconvert`/`vfprod`.
-- רשימת automatic-fail ל־QC + אריזת איסוף שמעדיפה מניעת שבירה על מהירות — `vfprod` (דפוס בלבד).
-- מארגנים פונקציונליים ברי־הדפסה באותו G-code + ימי אצווה לפי צבע + סטאק עלות מלא (חומר/חשמל/עבודה/פחת/עמלות) — מיפוי ל־`vfsku`/`vfprod`/`vfconvert` (**EXTRA**; בלי ₪ מומצא; VF = איסוף/IG בלבד).
-- מועדון איסוף מקומי קטן מסוג desk-reset: אביזרי שולחן שחוזרים טבעית, קאדנס ברור, באפר חומר, skip/pause — `vfsku`/`vfsales` + לוח freeze→print→QA→ready ב־`vfops` (**EXTRA**; לא משלוח ארצי / לא Printie outsourcing).
-- Best Skills: due/stale (~72ש מ־24.9) — בוצע על דירוג 26.9; `no-embed-existing-coverage`.
-- MakerWorld/Printables א׳: Cloudflare; רישיונות UNPROVEN; אין שם להציע למדף.
+- מדד FPY (first-pass yield) + פרופילי סלייסר מגרסאים + תור לפי אילוץ חומר/סיכון — מיפוי ל־`vfprod`/`vfops` (סטודיו קטן; לא farm ענק).
+- מסלול הזמנה מותאמת ב־7 שלבים עם deposit לפני ייצור, תפוגת הצעה, ו־scope כתוספת כתובה — `vfconvert`/`vfsales` (בלי ₪ מומצא; בלי auto-DM).
+- רמות QC לפי מק״ט (קוסמטי / +fit / +פונקציה) + תמונת gold-standard + סקירת פגמים שבועית 15ד׳ — `vfprod`.
+- מק״טים פונקציונליים קצרים להדפסה (החלפות/ארגונים מקצועיים/קליפים) ולהימנע מסטנדים/פידג׳טים גנריים — `vfsku` (בלי העתקת מחירי מקור; רישיון בנפרד).
+- הזמנה מחוץ לכאוס DM: לינק/טופס מובנה + לוג הזמנות; IG נשאר שיווק — `vfconvert`/`vfgrowth` (CTA = הודעת IG @velvets_cloud; לא מתקינים כלי חיצוני מ־HQ).
+- Best Skills: due (~96ש מ־27.9) — בוצע על דירוג 30.9; `no-embed-existing-coverage`.
+- MakerWorld/Printables: דולג (יום ה׳; cadence א׳–ד׳).
 
-מקור מלא: `packages/vfresearch/sources/2026-09-27-orchestra.md` · `2026-09-27-best-skills.md` · `2026-09-27-makerworld-scan.md`.
+מקור מלא: `packages/vfresearch/sources/2026-10-01-orchestra.md` · `2026-10-01-best-skills.md`.
 
 ## שבועי קישורים · 25.9.2026 (Weekly Research Accountability · gh-failover)
 
