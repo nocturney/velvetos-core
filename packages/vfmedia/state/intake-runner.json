@@ -1,15 +1,15 @@
 {
   "name": "vfmedia-intake-runner",
   "component_state": "Idle",
-  "updatedAt": "2026-09-30T20:07:25Z",
+  "updatedAt": "2026-10-01T00:36:44Z",
   "pagination": {
     "pageToken": null,
     "pageSize": 50
   },
   "catalogDigest": "1beb0e97b8bef5a48b9a73fc111c26b30b9ecc4740ab9de73cd9e4c3c416869b",
-  "inboxDigest": "a56f3585432dd3765b07cb246f6fe61b7dd4c9e84ccab7a1f69e128bd2a1ce04",
-  "lastRunAt": "2026-09-30T20:07:25Z",
-  "lastSuccessAt": "2026-09-30T20:07:25Z",
+  "inboxDigest": "ed958a1079a928594f83cce5c8672147cb6e0ab2d5a6aaef807f0e1c2a66d268",
+  "lastRunAt": "2026-10-01T00:36:44Z",
+  "lastSuccessAt": "2026-10-01T00:36:44Z",
   "lastError": null,
   "persistError": null,
   "auth": {
@@ -17,7 +17,7 @@
     "detail": "provider=google"
   },
   "stats": {
-    "runs": 127,
+    "runs": 128,
     "registered": 81,
     "verified": 479,
     "skipped": 0,
