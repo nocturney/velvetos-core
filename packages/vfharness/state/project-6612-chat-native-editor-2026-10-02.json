@@ -1,0 +1,31 @@
+{
+  "task_id": "project-6612-chat-native-editor-2026-10-02",
+  "status": "done",
+  "component_state": "Idle",
+  "pack": "velvetos",
+  "goal": "Rework PR #426 chat-native editor recovery onto current main as source extension 6.6.12, leaving Adobe Reel 6.6.11 and repo executable 6.6.4 unchanged.",
+  "supersedes": "https://github.com/nocturney/velvetos-core/pull/426",
+  "pull_request": "https://github.com/nocturney/velvetos-core/pull/455",
+  "version_map": {
+    "creativeRuntime": "6.6.9",
+    "reelPredecessor": "6.6.10",
+    "reelExtension": "6.6.11",
+    "chatNativeEditor": "6.6.12",
+    "repoExecutable": "6.6.4"
+  },
+  "decisions": [
+    "6.6.12 instructions point at the untouched 6.6.11 Adobe Reel extension instead of copying the 6.6.10 Reel procedure.",
+    "The flat-bundle SHA-256 in the 6.6.12 file-backed section is carried from PR #426 and is not the repo executable pin.",
+    "instagram_action authorities were not expanded.",
+    "No Instagram publish, schedule, or live write."
+  ],
+  "verification": {
+    "check-project-request-gate": "PASS",
+    "check-project-bundle": "PASS executable=6.6.4 creative=6.6.9 extensions=6.6.11,6.6.12",
+    "check-reel-route-sync": "PASS revision=6.6.11 adobe=PASS",
+    "check-all": "PASS 116/116",
+    "check-staleness": "PASS brief=2026-10-02",
+    "check-policy-architecture": "PASS"
+  },
+  "next_step": "Review PR #455. Do not merge #426. Do not treat repository CI as fresh-chat acceptance."
+}
