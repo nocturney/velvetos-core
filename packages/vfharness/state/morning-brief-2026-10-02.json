@@ -1,8 +1,8 @@
 {
   "task_id": "morning-brief-2026-10-02",
   "title": "PRODUCTION Velvet Morning Brief 2.10.2026",
-  "status": "armed",
-  "component_state": "Processing",
+  "status": "sent",
+  "component_state": "Idle",
   "date": "2026-10-02",
   "timezone": "Asia/Jerusalem",
   "version": "Morning-Green-v3.1",
@@ -37,5 +37,12 @@
     "no HQ Print",
     "no live IG publish from this brief"
   ],
-  "next": "workflow_dispatch on this branch, then disarm enabled:false after Gmail messageId"
+  "next": "none",
+  "gmail": {
+    "workflow": "https://github.com/nocturney/velvetos-core/actions/runs/36972671800",
+    "messageId": "1a0fb41f2c6628a0",
+    "threadId": "1a0fb41f2c6628a0",
+    "event": "push",
+    "note": "workflow_dispatch returned HTTP 403 for the cursor GitHub app; send used the canonical push trigger after the armed commit reached main"
+  }
 }
