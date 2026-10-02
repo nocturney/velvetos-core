@@ -6,7 +6,12 @@
   "path": "cursor-cloud-agent",
   "date": "2026-10-02",
   "timezone": "Asia/Jerusalem",
-  "last_updated": "2026-10-02T12:13:37+03:00",
+  "last_updated": "2026-10-02T12:20:00+03:00",
+  "sensors": {
+    "check-vfresearch.py": "PASS",
+    "check-staleness.py": "PASS",
+    "check-all.py": "FAIL 8/116 pre-existing missing Pillow and Starlette; weekly sensors inside the suite passed; no repo files rewritten"
+  },
   "artifacts": [
     "packages/vfresearch/sources/2026-10-02-weekly-links.md",
     "packages/vfresearch/sources/2026-10-02-print-demand.md",
