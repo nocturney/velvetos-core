@@ -1,0 +1,50 @@
+{
+  "task_id": "weekly-research-2026-10-02",
+  "routine": "weekly-research-accountability",
+  "status": "done",
+  "component_state": "Idle",
+  "path": "cursor-cloud-agent",
+  "date": "2026-10-02",
+  "timezone": "Asia/Jerusalem",
+  "last_updated": "2026-10-02T12:13:37+03:00",
+  "artifacts": [
+    "packages/vfresearch/sources/2026-10-02-weekly-links.md",
+    "packages/vfresearch/sources/2026-10-02-print-demand.md",
+    "packages/vfresearch/LINKS.json",
+    "packages/vfops/data/research.md"
+  ],
+  "links": {
+    "total": 87,
+    "reviewed": 87,
+    "body_read": 80,
+    "walled": 7,
+    "walled_sourceNote": 4,
+    "walled_cloudflare_this_pass": [
+      "xenforo",
+      "vbulletin",
+      "invisioncommunity"
+    ],
+    "dead": 0,
+    "changed": [
+      "huly-platform:isArchived-false-readme-still-frozen"
+    ]
+  },
+  "print_demand_signals": 2,
+  "embeds": [
+    "huly-platform->LINKS.json note (archived flag correction)"
+  ],
+  "best_skills": {
+    "standingForever": true,
+    "lastPass": "2026-10-02",
+    "dataDate": "2026-10-01",
+    "stale": false,
+    "note": "Repo also has data: 2026-10-02 after today's seat. No second timer."
+  },
+  "not_done": [
+    "calendar/HANDOFF draft line not written (scope limited to weekly artifacts)",
+    "MakerWorld scan not due (sun+wed)",
+    "Best Skills not re-run; Research Seat lastPass is 2026-10-02 and not stale",
+    "HeyOrca Friday 2026-10-02 list not published; article date still 2026-09-25"
+  ],
+  "locks": "no invented ILS/Insights/customers/Origin slugs/LIVE; no auto-DM; no IG writes; no owner email; pickup Sderot only"
+}
