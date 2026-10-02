@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-02",
+  "date_line": "2.10.2026 · Morning Green v3.1 · Asia/Jerusalem",
+  "version": "Morning-Green-v3.1",
+  "timezone": "Asia/Jerusalem",
+  "research_status": "ready_for_brief",
+  "open_collection": 4790,
+  "bottom_line": "כל חמש העבודות בגיליון VF HQ · jobs מסומנות כסופקו. שלוש יתרות פתוחות מאומתות גם ב-VF HQ · books: סינקופה 4350, ודים 320, אלה+לוגו 120. סך הגבייה הפתוחה 4790. ביומן היום וגם מחר אין אירועים. Instagram חי: 81 עוקבים, 12 פריטים, והפיד האחרון הוא Dd9cy8zCfKq מ-1.10 בערב עם לייק 1 ו-0 תגובות מאומתים.",
+  "kpis": [
+    {
+      "value": 4790,
+      "label": "גבייה פתוחה"
+    },
+    {
+      "value": 0,
+      "label": "אירועי יומן היום"
+    },
+    {
+      "value": 0,
+      "label": "עבודות ייצור פעילות"
+    }
+  ],
+  "html": "packages/vfops/out/morning-green-2026-10-02.html",
+  "txt": "packages/vfops/out/morning-brief-2026-10-02.txt",
+  "sources": {
+    "jobs": "VF HQ · jobs id 13jTA9FJLNWMEc2zEpdmXL5kNWYYguQHXeOdOPpDNgao lastMod 2026-09-14; open unpaid 4350+320+120=4790",
+    "books": "VF HQ · books id 11eRkRT78Nzacef8PmPCk0xqtPXy0uw9ivu747bw0FIs lastMod 2026-09-14; matches jobs receivables",
+    "calendar": "Google Calendar nocturney@gmail.com 2026-10-02..2026-10-03 Asia/Jerusalem empty",
+    "instagram": "@velvets_cloud live list_media 2026-10-02: 81/125/12 latest Dd9cy8zCfKq 2026-10-01T17:30:30Z likes=1 comments=0; previous Dd81GJ4Ran6 2026-10-01T11:44:41Z likes=0 comments=0; Dd6ts40CZxN likes=1; Dd4W5GAlwxN likes=2; Insights אין ספירה",
+    "schedule": "cloudflare_unavailable: missing VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN; FEED-SOURCE unavailableLabel; OpenPost frozen not passed",
+    "research": "packages/vfops/data/research.md header 2.10.2026 ready_for_brief on main (PR #451 merged)"
+  }
+}

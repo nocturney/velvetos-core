@@ -1,0 +1,41 @@
+{
+  "task_id": "morning-brief-2026-10-02",
+  "title": "PRODUCTION Velvet Morning Brief 2.10.2026",
+  "status": "armed",
+  "component_state": "Processing",
+  "date": "2026-10-02",
+  "timezone": "Asia/Jerusalem",
+  "version": "Morning-Green-v3.1",
+  "branch": "cursor/morning-brief-2026-10-02-ae49",
+  "research": {
+    "source": "packages/vfops/data/research.md",
+    "state": "ready_for_brief",
+    "landed": true,
+    "pr": 451
+  },
+  "schedule": {
+    "source": "cloudflare-instagram-publisher",
+    "state": "unavailable",
+    "reason": "missing VELVET_INSTAGRAM_PUBLISHER_CONTROL_TOKEN",
+    "openpost": "not_passed"
+  },
+  "visible_text_gate": "PASS",
+  "artifacts": {
+    "loop_json": "packages/vfops/hq/brief-2026-10-02.json",
+    "factual_json": "packages/vfops/out/morning-brief-factual-2026-10-02.json",
+    "html": "packages/vfops/out/morning-green-2026-10-02.html",
+    "visibleText": "packages/vfops/out/morning-green-2026-10-02.txt",
+    "request": "packages/vfops/out/gmail-send-request.json",
+    "requestId": "morning-green-2026-10-02"
+  },
+  "locks": [
+    "no invented sale ILS",
+    "Insights אין ספירה",
+    "schedule strip unavailable, not an empty plan",
+    "no Gmail plugin send",
+    "no auto-DM",
+    "no HQ Print",
+    "no live IG publish from this brief"
+  ],
+  "next": "workflow_dispatch on this branch, then disarm enabled:false after Gmail messageId"
+}
