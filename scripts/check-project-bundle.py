@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Project bundle resolver: one manifest-driven identity, no revision literals in code."""
+"""Project bundle resolver: one manifest-driven executable identity plus explicit source extensions."""
 from __future__ import annotations
 
 import copy
@@ -38,7 +38,7 @@ assets = json.loads((ROOT / b.asset_manifest).read_text(encoding="utf-8"))
 if (assets.get("contract_version"), str(assets.get("revision")), assets.get("bundle_id")) != (b.contract_version, b.revision, b.bundle_id):
     fail("asset manifest identity differs from chatgptProjectBundle")
 
-# 2. Both consumers derive from the resolver.
+# 2. Both executable consumers derive from the resolver.
 expect_pre = {"PROJECT_AUTHORITY": Path(b.authority), "PROJECT_ASSET_MANIFEST": Path(b.asset_manifest),
               "PROJECT_INSTRUCTIONS": Path(b.instructions), "PROJECT_CONTRACT_VERSION": b.contract_version,
               "PROJECT_REVISION": b.revision, "PROJECT_BUNDLE_ID": b.bundle_id,
@@ -51,7 +51,7 @@ for mod, expect in ((pre, expect_pre), (pub, expect_pub)):
         if getattr(mod, name) != value:
             fail(f"{mod.__name__}.{name} is not resolver-derived")
 
-# 3. No hard-coded bundle revision/pins left in the two consumers.
+# 3. No hard-coded bundle revision/pins left in the two executable consumers.
 literal = re.compile(r"-v\d+\.\d+(?:\.\d+)?\.(?:txt|json)|VF-PROJECT-\d|\"\d+\.\d+\.\d+\"")
 for rel in ("scripts/vf_project_preflight.py", "scripts/vf_publication_evidence.py"):
     text = (ROOT / rel).read_text(encoding="utf-8")
@@ -62,7 +62,82 @@ for rel in ("scripts/vf_project_preflight.py", "scripts/vf_publication_evidence.
         if pin in text:
             fail(f"{rel} duplicates a manifest SHA-256 pin")
 
-# 4. Fail-closed resolver behaviour on a broken manifest.
+# 4. LATEST is a projection with explicit states; it must not masquerade an extension as the runtime.
+latest_path = ROOT / "packages/velvetos/chatgpt-project/LATEST.json"
+latest = json.loads(latest_path.read_text(encoding="utf-8"))
+if latest.get("schema") != "velvetos.chatgpt-project.latest.v2":
+    fail("LATEST schema is not v2")
+if "revision" in latest or "bundleId" in latest:
+    fail("LATEST must not expose a single ambiguous top-level revision/bundleId")
+creative = latest.get("creativeRuntime") or {}
+if (creative.get("revision"), creative.get("bundleId")) != (
+    "6.6.9", "VF-PROJECT-6.6.9-NATIVE-PRODUCT-EDIT-ROUTING"
+):
+    fail("LATEST creativeRuntime must identify the 6.6.9 creative runtime")
+if creative.get("repoSynced") is not False:
+    fail("LATEST must not claim the 6.6.9 flat runtime is repo-synced without evidence")
+extensions = latest.get("extensions") or {}
+chat_native = extensions.get("chatNativeEditor") or {}
+reel = extensions.get("reel") or {}
+if (chat_native.get("revision"), chat_native.get("bundleId")) != (
+    "6.6.12", "VF-PROJECT-6.6.12-CHAT-NATIVE-EDITOR-RECOVERY"
+):
+    fail("LATEST chatNativeEditor extension identity drift")
+if (reel.get("revision"), reel.get("bundleId")) != (
+    "6.6.11", "VF-PROJECT-6.6.11-ADOBE-PREMIUM-REEL-ROUTE"
+):
+    fail("LATEST reel extension identity drift")
+predecessor = reel.get("predecessor") or {}
+if (predecessor.get("revision"), predecessor.get("bundleId")) != (
+    "6.6.10", "VF-PROJECT-6.6.10-REEL-VIDEO-ROUTE"
+):
+    fail("LATEST reel predecessor must remain the 6.6.10 Reel extension")
+if predecessor.get("instructions") != "PROJECT-INSTRUCTIONS-v6.6.10.txt":
+    fail("LATEST reel predecessor instructions drift")
+predecessor_path = ROOT / "packages/velvetos/chatgpt-project" / "PROJECT-INSTRUCTIONS-v6.6.10.txt"
+if not predecessor_path.is_file():
+    fail("LATEST reel predecessor instructions file missing")
+for ext_name, ext in (("chatNativeEditor", chat_native), ("reel", reel)):
+    for key in ("instructions", "routeDoc"):
+        rel = ext.get(key)
+        if not isinstance(rel, str) or not rel:
+            fail(f"LATEST {ext_name}.{key} missing")
+        path = ROOT / "packages/velvetos/chatgpt-project" / rel
+        if not path.is_file():
+            fail(f"LATEST {ext_name}.{key} file missing: {rel}")
+repo_exec = latest.get("repoExecutableBundle") or {}
+if (repo_exec.get("revision"), repo_exec.get("bundleId")) != (b.revision, b.bundle_id):
+    fail("LATEST repoExecutableBundle differs from manifest chatgptProjectBundle")
+if repo_exec.get("authority") != Path(b.authority).name:
+    fail("LATEST repoExecutableBundle authority drift")
+if repo_exec.get("assetManifest") != Path(b.asset_manifest).name:
+    fail("LATEST repoExecutableBundle asset manifest drift")
+if repo_exec.get("instructions") != Path(b.instructions).name:
+    fail("LATEST repoExecutableBundle instructions drift")
+
+chat_route = (ROOT / "packages/velvetos/chatgpt-project" / chat_native["routeDoc"]).read_text(encoding="utf-8")
+chat_instructions = (ROOT / "packages/velvetos/chatgpt-project" / chat_native["instructions"]).read_text(encoding="utf-8")
+for needle in (
+    "CHAT_NATIVE_TERMINAL",
+    "FILE_BACKED_NATIVE_EDIT",
+    "OWNER_REVIEW_CANDIDATE",
+    "תכין פוסט",
+    "בדיקת עברית ידנית",
+    "CHAT_NATIVE_TERMINAL decisions must be finalized before the terminal image edit.",
+):
+    if needle not in chat_route or needle not in chat_instructions:
+        fail(f"chat-native recovery contract missing {needle!r}")
+if "Project source extension for Revision 6.6.12" not in chat_route:
+    fail("chat-native route doc is not bound to 6.6.12")
+if "VF-PROJECT-6.6.12-CHAT-NATIVE-EDITOR-RECOVERY" not in chat_instructions:
+    fail("chat-native instructions bundle id drift")
+if "VF-PROJECT-6.6.11-ADOBE-PREMIUM-REEL-ROUTE" not in chat_instructions:
+    fail("chat-native instructions must keep the Adobe 6.6.11 Reel extension named")
+superseded = "VF-PROJECT-6.6.11-CHAT-NATIVE-EDITOR-RECOVERY"
+if superseded in chat_instructions or superseded in chat_route:
+    fail("chat-native recovery must not keep the superseded 6.6.11 bundle id")
+
+# 5. Fail-closed resolver behaviour on a broken executable manifest.
 manifest = json.loads((ROOT / vpb.MANIFEST_REL).read_text(encoding="utf-8"))
 cases = {
     "missing bundle": lambda m: m.pop("chatgptProjectBundle"),
@@ -92,4 +167,7 @@ with tempfile.TemporaryDirectory() as tmp:
             continue
         fail(f"resolver accepted broken manifest ({name})")
 
-print(f"OK project-bundle revision={b.revision} bundle={b.bundle_id} consumers=2 literals=0 negative_cases={len(cases)}")
+print(
+    f"OK project-bundle executable={b.revision} creative=6.6.9 "
+    f"extensions=6.6.11,6.6.12 consumers=2 negative_cases={len(cases)}"
+)

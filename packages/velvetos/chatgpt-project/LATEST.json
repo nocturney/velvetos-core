@@ -1,22 +1,39 @@
 {
+  "schema": "velvetos.chatgpt-project.latest.v2",
   "contractVersion": 6,
-  "revision": "6.6.11",
-  "bundleId": "VF-PROJECT-6.6.11-ADOBE-PREMIUM-REEL-ROUTE",
-  "status": "PROJECT_SOURCE_EXTENSION",
-  "baseProject": {
+  "status": "PROJECT_SOURCE_EXTENSIONS",
+  "creativeRuntime": {
     "revision": "6.6.9",
     "bundleId": "VF-PROJECT-6.6.9-NATIVE-PRODUCT-EDIT-ROUTING",
     "authority": "project-local Velvet-Factory-Project-Authority-v6.txt",
     "styleContract": "STYLE-CONTRACT-v6.6.9.json",
-    "runbook": "RUNBOOK-v6.6.9.md"
+    "runbook": "RUNBOOK-v6.6.9.md",
+    "repoSynced": false
   },
-  "instructions": "PROJECT-INSTRUCTIONS-v6.6.11.txt",
-  "reelRoute": "REEL-ROUTE.md",
+  "extensions": {
+    "chatNativeEditor": {
+      "revision": "6.6.12",
+      "bundleId": "VF-PROJECT-6.6.12-CHAT-NATIVE-EDITOR-RECOVERY",
+      "instructions": "PROJECT-INSTRUCTIONS-v6.6.12.txt",
+      "routeDoc": "CHAT-NATIVE-EDITOR-ROUTE.md"
+    },
+    "reel": {
+      "revision": "6.6.11",
+      "bundleId": "VF-PROJECT-6.6.11-ADOBE-PREMIUM-REEL-ROUTE",
+      "instructions": "PROJECT-INSTRUCTIONS-v6.6.11.txt",
+      "routeDoc": "REEL-ROUTE.md",
+      "predecessor": {
+        "revision": "6.6.10",
+        "bundleId": "VF-PROJECT-6.6.10-REEL-VIDEO-ROUTE",
+        "instructions": "PROJECT-INSTRUCTIONS-v6.6.10.txt"
+      }
+    }
+  },
   "productTruthGuide": "PRODUCT-TRUTH-GUIDE-v1.txt",
   "repoExecutableBundle": {
     "revision": "6.6.4",
     "bundleId": "VF-PROJECT-6.6.4-CHAT-RUNTIME-DEPENDENCY-CLOSURE",
-    "note": "Kept separate until the complete 6.6.9+ flat runtime is repo-synced and re-verified.",
+    "note": "Separate executable repo bundle until the complete 6.6.9+ flat runtime is repo-synced and re-verified.",
     "authority": "PROJECT-AUTHORITY-v6.6.4.txt",
     "assetManifest": "ASSET-MANIFEST-v6.6.4.json",
     "instructions": "PROJECT-INSTRUCTIONS-v6.6.4.txt"
