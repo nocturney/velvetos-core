@@ -98,7 +98,7 @@ Skipped. `lastPass=2026-10-02` is about 24 hours old. `TIMER.md` runs the pass o
 
 Watch checked 95 sources. Pending 52. New detections 2 (`huginn/huginn`, `tong-io/tongflow`, both catalog-source head moves). Failed 0. Reviews bound to the current `remoteHead` / `latestRelease`: update 0, wait 14, review 11, ignore 27. Twenty-seven bindings were stale or missing and were refreshed this run; verdicts stayed conservative (catalog and locked runtimes `ignore`, active runtimes without smoke `wait`, pattern heads without a full diff `review`). No ack. No upgrade.
 
-Toolchain rows stay out of `packages/vfops/data/research.md`. Tool-updates mail is a separate render (`vf_upstream_email.py render --arm --consume-notify`) and is not a brief line.
+Toolchain rows stay out of `packages/vfops/data/research.md`. Tool-updates mail rendered armed (`notify=true`, digest `eb245d9da8ace0f5`) because of the two new detections. `workflow_dispatch` on `.github/workflows/gmail-tool-updates-send.yml` returned HTTP 403 Resource not accessible by integration. No Gmail message id. The send request was then set `enabled:false` so the baseline sensor stays green. No owner research email.
 
 ## מה עושים
 

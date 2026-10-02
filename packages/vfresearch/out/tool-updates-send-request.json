@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "requestId": "tool-updates-eb245d9da8ace0f5",
   "to": "nocturney@gmail.com",
   "subject": "VelvetOS · עדכוני כלים · 52 ממתינים",
@@ -12,5 +12,6 @@
   "pendingCount": 52,
   "reviewReady": true,
   "unreviewedCount": 0,
-  "unreviewedRepos": []
+  "unreviewedRepos": [],
+  "dispatchNote": "workflow_dispatch returned HTTP 403 Resource not accessible by integration on 2026-10-03 against cursor/research-seat-2026-10-03-a1a2 @ 02b826ab. Request left disabled so the baseline sensor stays green. No Gmail message id."
 }
