@@ -3271,6 +3271,7 @@
         "packages/vfharness/state/zero-cost-final-acceptance-2026-09-27.json",
         "packages/vfharness/state/zero-cost-agent-stack-2026-09-27.json",
         "packages/vfharness/runtime/expected-components.json",
+        "packages/vfharness/state/runtime/**",
         "scripts/check-zero-cost-final-acceptance.py"
       ],
       "depends_on": [

@@ -226,6 +226,14 @@ def selftest() -> int:
     if matches("packages/copy/nested/x.md", "packages/*"):
         print("FAIL * glob must not cross path segments", file=sys.stderr)
         return 1
+    production = select_for_paths(
+        ["packages/vfharness/state/runtime/sderot-windows.json"],
+        load_json(DEFAULT_REGISTRY),
+        load_json(DEFAULT_CONFIG),
+    )
+    if "check-zero-cost-final-acceptance" not in production["candidate_sensor_ids"]:
+        print("FAIL runtime receipt changes must select check-zero-cost-final-acceptance", file=sys.stderr)
+        return 1
     print(f"OK sensor-selector selftest cases={len(cases)} deterministic=PASS unknown=FULL_SUITE broad=FULL_SUITE")
     return 0
 
