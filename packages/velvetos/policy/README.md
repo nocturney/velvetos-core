@@ -214,3 +214,13 @@ Stage 5A activates locality without adding a second Agent Harness, capability ro
 - Warehouse loading defaults to `off`; Core/system-engineering negative control loads only `AGENTS.md` + `packages/velvetos/AGENTS.md`, with no Creative Craft, VF creative or fabrication guide preloaded.
 - Domain sensors were migrated from root-content assertions to their local guide / canonical registry. The policy registry SHA remains exactly equal to the Stage 4 acceptance hash, proving Stage 5A changed context loading rather than authorization semantics.
 - `reports/stage5a-context-locality.json` is reproducible byte-for-byte from the pinned snapshot. `check-project-request-gate.py` protects the historical Stage 5A result and continuing root/locality budgets separately so later Stage 5 work may improve locality without rewriting the baseline.
+
+## Stage 5B ? Harness consolidation
+
+Stage 5B keeps the existing `vfharness` and removes duplicate global loop semantics rather than adding an orchestrator. `packages/vfharness/LOOP.md` is the sole global execution-loop contract. Five active secondary surfaces are pointer-only; specialized playbooks and historical state remain intact.
+
+- `packages/vfharness/layers.json#executionContract` pins the canonical loop, SKILLSTATE surface, existing cross-tool handoff artifacts and `secondOrchestrator=FORBIDDEN`.
+- `reports/stage5b-harness-consolidation.json` records duplicate active loop restatements **1 ? 0** and pointer coverage **3/5 ? 5/5**.
+- Cross-tool continuation remains `office/control/HANDOFF.json` + `packages/vfmem/HANDOFF.md`; neither is authorization.
+- The external-effect policy registry remains hash-identical to Stage 5A, so harness consolidation changes no authorization semantics.
+- `check-vfharness.py` enforces the machine contract and regenerates the Stage 5B report byte-for-byte.

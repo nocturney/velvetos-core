@@ -13,8 +13,8 @@
 1. קרא `AGENTS.md` (המדריך מנצח את השיחה).
 2. תכנן צעדים קצרים על **פק קיים** וקשר ל־Spec/אישור קנוני כשיש שינוי מהותי.
 3. בצע. אחרי כל שינוי קטלוג/כלל — `python3 scripts/check-all.py`.
-4. כשל/פער → ladder קנוני: retry → fallback → downgrade scope → **safe ruling רק אם מקומי+הפיך וללא gate** → escalation. Required sensor/receipt/human/constitutional gate לעולם אינם נעקפים ב־ruling.
-5. כתוב נקודת ביקורת ב-`state/<task-id>.json` לפני סגירת סשן ארוך. משימה ארוכה: כל צעד = \(P,\Sigma,O\) — `playbooks/skillstate.md` (לא replay שיחה).
+4. חוזה הביצוע הגלובלי נמצא רק ב־`LOOP.md`; אין לשכפל או לשנות כאן את semantics של retry/fallback/ruling/escalation. במקרה כשל מנתבים ל־playbook המתאים ושומרים required sensors/receipts/human/constitutional gates ללא עקיפה.
+5. מצב משימה ארוכה מנוהל לפי `PLANNING-FILES.md` + `playbooks/skillstate.md`; הקובץ הזה רק מנתב אליהם ולא מגדיר runtime/state contract נוסף.
 6. **Human-visible output:** אם המשימה מייצרת prose/microcopy שנכתב או שוכתב ב־AI ושכריסטיאן/לקוח/קהל/שותף יקראו, `constitution/VISIBLE_TEXT.md` הוא gate חובה לפני `final`/send/publish/render. Route דרך `vfcopy`, surface נכון, reader-first, כלי הדומיין/כתיבה הרלוונטיים, Humanizer/AI-tells, fact/surface QA. אם אין הוכחת ביצוע על התוצר המדויק — `UNPROVEN`; completion אינו `worker_done` כ־final human output. Literal source IDs/hashes/logs/code אינם משוכתבים.
 7. מכסת Grok ריקה + צריך IG חי → `playbooks/grok-failover.md` + `vfigos/LIVE-PACKET.md` לאדם.
 8. הקשר כבד (thread, JSON, Drive dump) → `playbooks/context-thrift.md` — סיכום בשיחה, מקור ב-checkpoint.
@@ -58,10 +58,8 @@
 
 ראה `hq/PLAYBOOK.md`, `EMBED.md`, `constitution/VISIBLE_TEXT.md`.
 
-## סולם הסלמה הדרגתי
+## Graceful escalation routing
 
-`scripts/vf_graceful_escalation.py` — ladder של retry → fallback → downgrade scope → **safe ruling אופציונלי** → escalation. `safe_ruling` הוא fail-closed: ללא `safe_to_rule=True` הוא לא רץ. פירוט מלא: [`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md).
+הסמנטיקה הקנונית של הלולאה וההסלמה נמצאת רק ב־`LOOP.md`; helper ביצועי קיים: `scripts/vf_graceful_escalation.py`, כולל ה־`safe_ruling` המוגבל שכבר מתועד שם. גבולות autonomy/tool מפורטים ב־[`docs/AUTONOMY-TOOLS.md`](../../docs/AUTONOMY-TOOLS.md). זהו pointer בלבד, לא חוזה לולאה שני.
 
-## שימוש בלולאת הסלמה
-
-משימות ארוכות ב־`vfcopy` / `vfconvert` / `vfsales` ממשיכות להשתמש ב־`run_ladder`. callers קיימים נשארים backward-compatible; safe ruling הוא keyword-only opt-in. required sensor/receipt ו־authority gates נשארים מחוץ לסמכות ruling.
+Callers קיימים (`vfcopy` / `vfconvert` / `vfsales`) ממשיכים להשתמש ב־`run_ladder` בלי לשנות API; required sensor/receipt ו־authority gates נשארים מחוץ לסמכות ruling.

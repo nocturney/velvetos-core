@@ -4,13 +4,17 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LAYERS = ROOT / "packages" / "vfharness" / "layers.json"
 MANIFEST = ROOT / "packages" / "manifest.json"
 AGENTS = ROOT / "packages" / "vfharness" / "AGENTS.md"
+STAGE5B_REPORT = ROOT / "packages" / "velvetos" / "policy" / "reports" / "stage5b-harness-consolidation.json"
+STAGE5B_GENERATOR = ROOT / "scripts" / "generate-stage5b-harness-consolidation-report.py"
 ALLOWED_LAYER_NAMES = {
     "guides",
     "sensors",
@@ -63,6 +67,9 @@ def main() -> None:
         fail(f"missing {MANIFEST.relative_to(ROOT)}")
     if not AGENTS.is_file():
         fail("missing AGENTS.md (layer 1 guide)")
+    for path in (STAGE5B_REPORT, STAGE5B_GENERATOR):
+        if not path.is_file():
+            fail(f"missing {path.relative_to(ROOT)}")
 
     spec = json.loads(LAYERS.read_text())
     manifest = json.loads(MANIFEST.read_text())
@@ -129,6 +136,78 @@ def main() -> None:
         fail("loop.maxRetries must be >= 1")
     if loop.get("stoppingCondition") != "best-artifact-plus-unresolved":
         fail("loop must return best artifact plus unresolved")
+
+    execution = spec.get("executionContract") or {}
+    if execution.get("canonical") != "packages/vfharness/LOOP.md":
+        fail("executionContract canonical path must be packages/vfharness/LOOP.md")
+    if execution.get("state") != "packages/vfharness/playbooks/skillstate.md":
+        fail("executionContract state path drift")
+    if execution.get("secondaryMode") != "pointer_only" or execution.get("secondOrchestrator") != "FORBIDDEN":
+        fail("executionContract must stay pointer-only with second orchestrator forbidden")
+    expected_handoff = ["office/control/HANDOFF.json", "packages/vfmem/HANDOFF.md"]
+    if execution.get("crossToolHandoff") != expected_handoff:
+        fail("executionContract cross-tool handoff drift")
+    canonical_path = ROOT / execution["canonical"]
+    if not canonical_path.is_file():
+        fail("canonical LOOP.md missing")
+    canonical_text = canonical_path.read_text(encoding="utf-8")
+    for needle in ("Canonical execution contract", "retry(step, budget=2)", "fallback(step)", "downgrade_scope(step)", "safe ruling", "skillstate.md", "office/control/HANDOFF.json", "packages/vfmem/HANDOFF.md"):
+        if needle not in canonical_text:
+            fail(f"canonical LOOP.md missing {needle!r}")
+    secondary = execution.get("secondarySurfaces") or []
+    if len(secondary) != 5 or len(secondary) != len(set(secondary)):
+        fail("executionContract secondary surfaces must contain five unique active pointers")
+    duplicate_signatures = ("retry → fallback → downgrade", "retry(step, budget=2)", "downgrade_scope(step)")
+    for rel in secondary:
+        path = ROOT / rel
+        if not path.is_file():
+            fail(f"executionContract secondary surface missing {rel}")
+        body = path.read_text(encoding="utf-8")
+        if "LOOP.md" not in body:
+            fail(f"secondary harness surface must point to LOOP.md: {rel}")
+        for signature in duplicate_signatures:
+            if signature in body:
+                fail(f"secondary harness surface restates canonical loop via {signature!r}: {rel}")
+    for rel in expected_handoff:
+        if not (ROOT / rel).is_file():
+            fail(f"cross-tool handoff artifact missing {rel}")
+
+    stage5b = json.loads(STAGE5B_REPORT.read_text(encoding="utf-8"))
+    if stage5b.get("schema") != "velvetos.stage5b-harness-consolidation.v1" or stage5b.get("stage") != "5B":
+        fail("Stage 5B report schema/stage drift")
+    if stage5b.get("prepared_against_main_sha") != "daf5092fbf3a4de9bbaa1623a68efe9b24b8a3b5":
+        fail("Stage 5B base SHA drift")
+    if stage5b.get("repository_acceptance") != "PASS":
+        fail("Stage 5B repository acceptance is not PASS")
+    before5b = stage5b.get("before") or {}
+    after5b = stage5b.get("after") or {}
+    if before5b.get("secondary_restating_count") != 1 or before5b.get("secondary_pointer_count") != 3:
+        fail("Stage 5B before snapshot drift")
+    if after5b.get("secondary_restating_count") != 0 or after5b.get("secondary_pointer_count") != 5:
+        fail("Stage 5B after snapshot drift")
+    if after5b.get("secondary_restating_surfaces") != []:
+        fail("Stage 5B secondary surface still restates global loop")
+    acceptance5b = stage5b.get("acceptance") or {}
+    if not acceptance5b or not all(value is True for value in acceptance5b.values()):
+        fail("Stage 5B acceptance criteria drift")
+    scope5b = stage5b.get("scope") or {}
+    if scope5b.get("historical_state_modified") is not False or scope5b.get("specialized_playbooks_removed") is not False or scope5b.get("second_orchestrator_created") is not False:
+        fail("Stage 5B consolidation scope drift")
+    with tempfile.TemporaryDirectory(prefix="stage5b-harness-") as td:
+        regenerated = Path(td) / "stage5b.json"
+        proc = subprocess.run(
+            [
+                sys.executable, str(STAGE5B_GENERATOR),
+                "--prepared-against", stage5b["prepared_against_main_sha"],
+                "--captured-at", stage5b["captured_at"],
+                "--output", str(regenerated),
+            ],
+            cwd=ROOT, text=True, capture_output=True, encoding="utf-8", errors="replace", timeout=90,
+        )
+        if proc.returncode != 0:
+            fail("Stage 5B report regeneration failed: " + (proc.stderr.strip() or proc.stdout.strip()))
+        if regenerated.read_bytes() != STAGE5B_REPORT.read_bytes():
+            fail("Stage 5B report is not reproducible")
 
     schema_path = ROOT / "packages/vfharness/templates/checkpoint.schema.json"
     schema = json.loads(schema_path.read_text())

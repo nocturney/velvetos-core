@@ -363,5 +363,22 @@
     "trusted-untrusted-split",
     "emergency-stop-no-send",
     "sensor-suite-green"
-  ]
+  ],
+  "executionContract": {
+    "canonical": "packages/vfharness/LOOP.md",
+    "state": "packages/vfharness/playbooks/skillstate.md",
+    "crossToolHandoff": [
+      "office/control/HANDOFF.json",
+      "packages/vfmem/HANDOFF.md"
+    ],
+    "secondarySurfaces": [
+      "packages/vfharness/AGENTS.md",
+      "packages/vfharness/SKILL.md",
+      ".cursor/skills/vf-harness/SKILL.md",
+      ".cursor/rules/vf-harness.mdc",
+      "docs/HARNESS.md"
+    ],
+    "secondaryMode": "pointer_only",
+    "secondOrchestrator": "FORBIDDEN"
+  }
 }

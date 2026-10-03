@@ -8,7 +8,7 @@ This guide applies only to `packages/vfharness/**`. Root `AGENTS.md` owns Core-w
 
 ## RULES
 
-- Use the existing loop: **GOAL → PLAN → EXECUTE → VERIFY → RETRY/FAILOVER → CLOSE**. Do not install or create a second agent runtime.
+- Canonical execution loop: `LOOP.md`. This guide may route to it but must not restate or override its retry/ruling/checkpoint algorithm. Do not install or create a second agent runtime.
 - Harness state is task state, never policy authority. A checkpoint, plan, skillstate or worker self-report cannot mint `ALLOW`, waive a receipt, or authorize send/publish/spend/delete/permission mutation.
 - `SKILLSTATE` / `skillstate` semantics live in `playbooks/skillstate.md`; checkpoints remain under `state/`.
 - Missing sale price stays `X ₪`; harness work never invents money, provider state, Insights or receipts.
