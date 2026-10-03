@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "surface": "owner-brief",
+  "language": "he",
+  "text_sha256": "1ece92d14b4113c0926e2934c1e6be3ab70c192924d2c3d8c0adf31413c96b5e",
+  "lint": {
+    "status": "pass",
+    "problems": [],
+    "raw_status": "fail_style"
+  },
+  "anti_slop": {
+    "checked": true,
+    "findings": [],
+    "authorship": "NOT_INFERRED — named writing patterns only"
+  },
+  "stages": {
+    "truth_checked": true,
+    "reader_first": true,
+    "copy_authority": true,
+    "humanizer_ai_tells": true,
+    "domain_tools_recorded": true,
+    "surface_qa": true
+  },
+  "domain_tools": [
+    "vfops"
+  ],
+  "marketing_aids": null,
+  "no_text_compared": null,
+  "missing_evidence": [],
+  "visible_text_gate": "PASS",
+  "rule": "PASS requires the relevant chain on this exact text; lint/eval existence alone is not execution proof."
+}
