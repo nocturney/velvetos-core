@@ -83,7 +83,7 @@ def main() -> None:
     # First-party authority/public surfaces should not expose the old segmentation shorthand.
     shorthand = "B" + "2" + "B"
     for rel in (
-        "AGENTS.md",
+        "packages/vfbiz/AGENTS.md",
         ".cursor/vf-desk.json",
         "constitution/STUDIO.md",
         "packages/vfbiz/OFFERING.md",

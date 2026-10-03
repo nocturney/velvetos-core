@@ -1285,13 +1285,19 @@
         "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
         "packages/velvetos/PROJECT-REQUEST-GATE.md",
         "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
-        "scripts/**"
+        "scripts/**",
+        "packages/velvetos/policy/reports/stage5a-context-locality-baseline.json",
+        "packages/velvetos/policy/reports/stage5a-context-locality.json"
       ],
       "triggered_by": [
         "packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json",
         "packages/velvetos/PROJECT-REQUEST-GATE.md",
         "packages/vfom/VISUAL-STANDARD-ENFORCEMENT.json",
-        "scripts/**"
+        "scripts/**",
+        "AGENTS.md",
+        "packages/**/AGENTS.md",
+        "packages/velvetos/policy/reports/stage5a-context-locality-baseline.json",
+        "packages/velvetos/policy/reports/stage5a-context-locality.json"
       ],
       "depends_on": [
         "scripts/vf_project_preflight.py",

@@ -197,7 +197,7 @@ def main() -> None:
         fail("TIMER.md must state forever-until-owner-stops standing order")
     if "subscribe_timer" in timer:
         fail("TIMER.md must not depend on external subscribe_timer")
-    for rel in ("AGENTS.md", "constitution/ORCHESTRA.md"):
+    for rel in ("packages/vfresearch/AGENTS.md", "constitution/ORCHESTRA.md"):
         law = (ROOT / rel).read_text(encoding="utf-8")
         if "subscribe_timer" in law or "חידוש טיימר חובה" in law:
             fail(f"{rel} must not instruct external timer renewal (Research Seat is scheduler authority per BEST-SKILLS.json)")

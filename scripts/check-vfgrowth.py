@@ -24,7 +24,7 @@ STORIES = ROOT / "packages" / "vfcopy" / "hq" / "templates" / "ig-stories.md"
 FOLLOWER = ROOT / "packages" / "vfgrowth" / "hq" / "FOLLOWER-GROWTH.md"
 FUNNEL = ROOT / "packages" / "vfgrowth" / "hq" / "PROFILE-TO-WHATSAPP.md"
 TAGS = ROOT / "constitution" / "tags.md"
-AGENTS = ROOT / "AGENTS.md"
+AGENTS = ROOT / "packages" / "vfgrowth" / "AGENTS.md"
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
 
 

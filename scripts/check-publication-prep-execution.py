@@ -7,7 +7,7 @@ POLICY = "packages/vfom/PUBLICATION-PREP-EXECUTION.md"
 FAILURE = "visual_execution_unavailable"
 
 SURFACES = [
-    'AGENTS.md',
+    'packages/vfom/AGENTS.md',
     '.cursor/skills/vf-content-sprint/SKILL.md',
     '.cursor/skills/velvet-creative-director/SKILL.md',
     '.cursor/skills/velvet-brand-guardian/SKILL.md',

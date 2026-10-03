@@ -1,0 +1,218 @@
+{
+  "schema": "velvetos.stage5a-context-locality-baseline.v1",
+  "stage": "5A",
+  "behavior_change": false,
+  "prepared_against_main_sha": "47f518e9b22bccd4b9fa43cc41336ce28ab701b2",
+  "captured_at": "2026-10-03T21:13:31.9512193+03:00",
+  "source_ref": "47f518e9b22bccd4b9fa43cc41336ce28ab701b2",
+  "root_agents": {
+    "lines": 180,
+    "words": 3521,
+    "characters": 28419
+  },
+  "root_domain_leakage_marker_counts": {
+    "reference_studio": 1,
+    "sderot": 1,
+    "business_phone": 3,
+    "public_cta": 1,
+    "publication_route": 1,
+    "creative_transformation": 1,
+    "brand_asset_lock": 1,
+    "publication_prep": 1,
+    "fabrication_router": 1,
+    "grok_quota_failover": 1,
+    "live_packet": 1,
+    "organic_growth": 3,
+    "instagram": 8,
+    "gmail": 7,
+    "whatsapp": 10
+  },
+  "root_domain_leakage_total": 41,
+  "package_local_agents_count": 0,
+  "package_local_agents": [],
+  "instance_agents_count": 1,
+  "instance_agents": [
+    "instances/velvet-factory/AGENTS.md"
+  ],
+  "check_scripts_referencing_agents_count": 25,
+  "check_scripts_referencing_agents": [
+    {
+      "path": "scripts/check-brand-asset-cta-lock.py",
+      "reasons": [
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-control-api.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-creative-transformation-lock.py",
+      "reasons": [
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-living-docs.py",
+      "reasons": [
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-living-studio.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-no-new-recurring-cost.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-office-control-plane.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-organic-growth.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-origin-slugs.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-project-request-gate.py",
+      "reasons": [
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-publication-prep-execution.py",
+      "reasons": [
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-velvetos.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-vf-handoff.py",
+      "reasons": []
+    },
+    {
+      "path": "scripts/check-vf-offering.py",
+      "reasons": [
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-vfagents.py",
+      "reasons": []
+    },
+    {
+      "path": "scripts/check-vfcost.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-vfgrowth.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-vfharness.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-vfmedia.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-vfops-loop.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-vfprod.py",
+      "reasons": [
+        "root_agents_constant",
+        "root_agents_content_assertion",
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-vfresearch.py",
+      "reasons": [
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-visible-text-gate.py",
+      "reasons": [
+        "root_agents_surface_or_path"
+      ]
+    },
+    {
+      "path": "scripts/check-visual-reject-identity.py",
+      "reasons": []
+    },
+    {
+      "path": "scripts/check-visual-surface-enforcement.py",
+      "reasons": [
+        "root_agents_surface_or_path"
+      ]
+    }
+  ],
+  "targets": {
+    "root_max_lines": 80,
+    "root_max_words": 1200,
+    "root_vf_business_fact_markers": 0,
+    "package_local_agents_minimum": 6,
+    "core_system_task_loads_vf_creative_or_printer_context": false,
+    "known_task_loads_only_nearest_local_instructions": true,
+    "authorization_semantics_change": false
+  }
+}

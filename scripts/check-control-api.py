@@ -18,7 +18,7 @@ DEPLOY = PKG / "DEPLOY.md"
 README = PKG / "README.md"
 CONTRIB = PKG / "CONTRIBUTIONS.json"
 DOCKERFILE = PKG / "Dockerfile"
-AGENTS = ROOT / "AGENTS.md"
+AGENTS = PKG / "AGENTS.md"
 
 
 def fail(msg: str) -> None:

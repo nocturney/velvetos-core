@@ -27,7 +27,7 @@ INTAKE_WORKFLOW = ROOT / ".github" / "workflows" / "vfmedia-intake.yml"
 EVENTS_CATALOG = ROOT / "packages" / "velvetos" / "schema" / "events.catalog.json"
 LOOP = ROOT / "packages" / "vfops" / "LOOP.json"
 MANIFEST = ROOT / "packages" / "manifest.json"
-AGENTS = ROOT / "AGENTS.md"
+AGENTS = PACK / "AGENTS.md"
 DESK = ROOT / ".cursor" / "vf-desk.json"
 MEM = ROOT / "packages" / "vfmem" / "catalog.json"
 SLOTS = ROOT / "packages" / "vfops" / "hq" / "BRIEF-SLOTS.md"
@@ -364,7 +364,7 @@ def main() -> None:
             fail(f"parallel media procedure/sensor: {legacy}")
     # The merge can be textually clean while routing tools to a second catalog.
     for relative in (
-        "AGENTS.md", "constitution/CONSTITUTION.md",
+        "packages/vfmedia/AGENTS.md", "constitution/CONSTITUTION.md",
         "packages/vfigos/SKILL.md", "packages/vfigos/SEND.md",
         "packages/vfops/LOOP.json", ".cursor/vf-desk.json",
     ):

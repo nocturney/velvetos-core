@@ -23,7 +23,7 @@ CAL_OPS = ROOT / "packages" / "vfgrowth" / "CALENDAR-OPS.md"
 STORIES = ROOT / "packages" / "vfgrowth" / "STORIES.md"
 STORIES_FIX = ROOT / "packages" / "vfcopy" / "G004-STORIES-FIX.md"
 GAP = ROOT / "packages" / "vfops" / "hq" / "TOOL-USE-GAP-2026-09-07.md"
-AGENTS = ROOT / "AGENTS.md"
+AGENTS = ROOT / "packages" / "vfops" / "AGENTS.md"
 
 # Child Python tools emit UTF-8; decode them explicitly even on cp1252 Windows.
 os.environ["PYTHONUTF8"] = "1"

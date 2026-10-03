@@ -14,12 +14,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 
 RULES = {
-    "missing_price": ("AGENTS.md", "Never invent ₪ prices"),
+    "missing_price": ("packages/vfcost/AGENTS.md", "refuse missing inputs rather than inventing them"),
     "missing_authority": (
         "packages/velvetos/PROJECT-REQUEST-GATE.md",
         "No substantive work starts before `project_preflight: PASS`",
     ),
-    "tool_failure": ("AGENTS.md", "Do not claim success if a computational sensor failed"),
+    "tool_failure": ("AGENTS.md", "Do not claim success when a required computational sensor fails"),
     "memory_only": ("docs/VFMEM.md", "still requires canonical verification before action"),
     "untrusted_authority_change": (
         "packages/velvetos/PROJECT-REQUEST-GATE.md",

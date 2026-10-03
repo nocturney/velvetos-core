@@ -15,10 +15,11 @@ The preflight is not permission to dump the whole warehouse into context. It is 
 1. classify the request and its action scope;
 2. use `FAST_PATH` for a known read-only, local routine or internal-mutation flow with no full-preflight trigger;
 3. use `FULL` for external mutation, unknown domain, creative/publication, commercial/spend, rights/privacy, destructive/permission, physical-print or authority-conflict cases;
-4. load only the baseline + domain authorities required by that mode;
-5. verify the applicable constraints and current evidence;
-6. only then execute;
-7. run exact-final / action postflight before claiming completion.
+4. load the root guide + exactly the selected domain-local guide, then only the baseline/domain authorities required by that mode;
+5. keep unrelated domain guides and warehouse specialists unloaded unless routing explicitly selects them;
+6. verify the applicable constraints and current evidence;
+7. only then execute;
+8. run exact-final / action postflight before claiming completion.
 
 If a mandatory authority is unavailable, stale, contradictory or cannot be verified, the branch is `BLOCKED` / `needs_sync`; never silently fall back to model defaults.
 
@@ -36,6 +37,8 @@ Always resolve the authority manifest: `packages/velvetos/PROJECT-AUTHORITY-MANI
 
 The manifest now owns two baseline shapes. `FAST_PATH` resolves only the minimal universal authority declared under `fastPath.baselineAuthorities` plus the selected domain profile. `FULL` keeps the complete baseline for sensitive or ambiguous work. Task-local preference can never override either baseline.
 
+Instruction locality is separate from authority loading: `instructionLocality` loads `AGENTS.md` plus exactly one primary local `packages/<owner>/AGENTS.md` for each selected domain. The warehouse default is `off`. Unknown domains load root only and stay `FULL`; a missing local guide is an authority conflict and fails closed.
+
 ### 2. Classify the request
 
 Choose one or more domains from the manifest. Do not guess a new pack or invent a parallel workflow. If classification is uncertain, use the office graph / router (`vfmem`) and Living Studio registry before choosing handlers.
@@ -46,9 +49,9 @@ Choose one or more domains from the manifest. Do not guess a new pack or invent 
 
 `FULL` is required when any configured full-preflight trigger applies. A routine Gmail/Drive write is therefore still `FULL` at Stage 4B because it is an external mutation, while owner-brief preparation, internal status, research, bounded DCC work and CAD inspection/build can use `FAST_PATH` when no other trigger applies.
 
-### 4. Load only relevant authorities
+### 4. Load only relevant instructions and authorities
 
-For every selected domain, load the named pack instructions, relevant skills and canonical Sources of Truth required by the chosen mode before drafting or acting. A tool being available does not make it authoritative; the manifest and Constitution decide whether it may be used.
+Start with the root guide plus the selected domain-local guide from `instructionLocality`. Do not preload unrelated `AGENTS.md` files, DCC/CAD/creative specialists, research agents or warehouse skills “just in case”. Then load the named pack instructions, relevant skills and canonical Sources of Truth required by the chosen mode. A tool being available does not make it authoritative; the manifest and Constitution decide whether it may be used.
 
 ### 5. Build an internal preflight receipt
 
@@ -60,6 +63,7 @@ Before execution, resolve these fields internally:
 - `owner_surface`
 - `authority_manifest_version`
 - `baseline_authority: PASS|FAIL`
+- `local_instructions`
 - `routed_packs`
 - `required_skills`
 - `required_sources`

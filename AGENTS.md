@@ -1,180 +1,56 @@
-# AGENTS.md — VelvetOS Core harness (backend kernel)
-
-## VF_PUBLICATION_ROUTE_V1 - current publication scope
-
-Run `scripts/vf_publication_evidence.py --phase production` before production and `--phase delivery` before review delivery, with the exact manifest/content ID. A file-path or static wiring pass is not creative approval. Preserve source pixels, purposeful editorial richness and independent source/reference/copy/brand/final review evidence.
+# AGENTS.md — VelvetOS Core
 
 PRODUCT: VelvetOS Core
-ROLE: core (backend)
-PROJECT: velvet-factory-headquarters-os
-LANGUAGE: Hebrew product copy; Hebrew+English office docs
-REFERENCE_STUDIO: 3D-print · Sderot · pickup only · WhatsApp `050-2517000` · IG `@velvets_cloud`
-FORMULA: Agent = Model + Harness
-
-This file is the **guide**. When it conflicts with a conversation, this file wins.
-
-**VelvetOS Core** is the shared OS kernel (laws, seats, packs, modules, sensors) — the *backend*.  
-Each business is a separate **frontend** instance repo (`VelvetOS — <Business Name>`) that attaches this core and enables modules.  
-VF frontend scaffold: `instances/velvet-factory/` → publish to `nocturney/velvetos-velvet-factory` (`packages/velvetos/REPOS.md`).  
-Until that repo is the daily Cursor workspace, desk/STUDIO here stay as the reference bind so VF work does not break.
-
-BUILD: (no app binary — the catalog is the product)
+ROLE: shared backend kernel
+PROJECT: velvetos-core
 TEST: python3 scripts/check-all.py
-LINT: python3 scripts/check-hq-overlay.py && python3 scripts/check-vf-desk.py && python3 scripts/check-velvetos.py
+LINT: python3 scripts/check-policy-architecture.py
 
-Read next: `packages/velvetos/KERNEL.md`, `packages/velvetos/REPOS.md`, `constitution/CONSTITUTION.md`, `constitution/VISIBLE_TEXT.md`, `constitution/ORGANIC_GROWTH.md`, `.cursor/vf-desk.json`, `packages/vfharness/EMBED.md`, `docs/AUTONOMY-TOOLS.md`, `docs/FAILOVER.md`, `docs/SHARED-WORK-COORDINATION.md`, `docs/MEDIA-VAULT.md`.
+VelvetOS Core is the shared backend kernel for laws, contracts, modules, policies and sensors. Business frontends attach Core through `instances/<id>/` and their own repositories; business identity and operating facts do not belong in this root guide.
 
-## RULES
+## ALWAYS-ON ROUTING
 
-- **NO_NEW_RECURRING_COST is global:** default target is zero new recurring cost. Before install/connect/credentials/first paid-capable call/production, classify cost and run the fail-closed preflight in `constitution/NO_NEW_RECURRING_COST.md` + `packages/vfharness/cost-policy.json`. `PAID_REQUIRED` and `COST_UNKNOWN` require explicit owner approval; existing paid capability must prove no incremental cost; failover may not silently escalate a free/local route to paid.
-- **Fabrication routing is mandatory:** any CAD/STEP/STL/3MF/DXF/engineering-drawing/DfAM/DFM/slicing/G-code/URDF/SRDF/SDF/SendCutSend request first runs/resolves `scripts/vf_fabrication_router.py decide --request ...` under `packages/vfprod/FABRICATION-ROUTER.md`. Load the selected pinned upstream skill from `.agents/skills/<skill>/SKILL.md`; use native reasoning/vision only when the router says it is the better tool. `bambu-labs` and all printer upload/start/control remain excluded.
-- **Visible Text Gate is global:** any prose/microcopy an AI creates or rewrites and Christian, a customer, the public, a partner, or another human will read is not final until the relevant `constitution/VISIBLE_TEXT.md` chain actually ran. Route through `vfcopy`; select the real surface (`public-social`, `visual-microcopy`, `customer-message`, `sales-proposal`, `owner-brief`, `human-document`, `ui-microcopy`, `desk`), use reader-first + relevant domain/writing tools + Humanizer/AI-tells + factual/surface QA, and bind PASS to the exact text/version when the surface has an artifact/digest. Do not humanize verbatim source, IDs, hashes, URLs, code, raw logs or machine payloads. CI/skill existence is not a candidate receipt; unproven execution = `UNPROVEN`, not PASS.
-- HQ **sends Gmail and Instagram via tools** (`constitution/SEND.md`). Do not wait for Christian or Grok Bot to press Send/Publish. Grok Bot is optional backup.
-- Gmail: `send_message` / `reply` / `forward` are **allowed** for office mail and named inquiry threads. No blast list. No invented ₪. Office 07:00 brief is תצוגה 3 `htmlBody` (`vfbriefux/MAIL.html`).
-- Never invent ₪ prices or Insights. Write `X ₪` / «אין ספירה» when the source is missing.
-- **NO_NEW_RECURRING_COST is global:** canonical authority `constitution/NO_NEW_RECURRING_COST.md`. Before installing, connecting, provisioning, upgrading, adding credentials to, or first-calling any new external/cloud-connected component, complete a Cost Preflight and validate it with `python3 scripts/vf_cost_preflight.py validate <preflight.json>`. Default is zero new recurring cost. `PAID_REQUIRED`, `COST_UNKNOWN`, any incremental metered use of an existing paid capability, and any free tier that can auto-overage fail closed unless the owner gave complete explicit cost approval. General instructions such as “install what is needed” are not spend approval.
-- **Engineering-quality add-ons are removable Dev tools, never authority:** canonical registry `packages/vfharness/devtools/components.json`. Ponytail is embedded as minimum-safe-change discipline; gstack is pattern-only with GBrain/ship/deploy disabled; Impeccable is Web/UI-only with no init/product-truth or broad hook; diagram-design is documentation/architecture-only. Validate with `python3 scripts/check-engineering-quality.py` (`--strict` when local sources/profiles must be proven).
-- **Laya is SHADOW evidence only, not a router/authorizer:** canonical Phase 6 assessment `packages/vfharness/state/laya-shadow-assessment-2026-09-27.json`. It may classify domain/action/escalation in evaluation, but it has no execution, authorization or production-routing authority. Current decision is `STAY_SHADOW_NOT_PROMOTED`; validate with `python3 scripts/check-laya-shadow.py`.
-- One pipeline only: פנייה → שיחה → הצעה → הדפסה → איסוף. No national shipping from HQ.
-- CTA is **PUBLIC_CURRENT_CTA** = Instagram message («שלחו לנו הודעה כאן באינסטגרם») / איסוף שדרות. Not bare English «שלחו DM». Not WhatsApp phone in public copy. **BUSINESS_CONTACT_RECORD** WhatsApp `050-2517000` stays in desk/integration only (`constitution/PUBLIC_CTA.md`). Customer WhatsApp **send** stays human. Core may have WhatsApp MCP for search/draft (`packages/vfmcp/CONNECT-WHATSAPP.md`); VF `mcpBind.whatsapp.send=false`.
-- Do not create a new pack for an idea. Map onto an existing pack the same day. New business = **frontend instance repo** that attaches Core modules (`packages/velvetos/REPOS.md` + `scripts/publish-instance.sh`), not a parallel pack tree inside Core.
-- Do not host a second live business frontend inside Core. Use `instances/<id>/` scaffolds + presets only.
-- Tool failover: if a tool has no access or fails, move its task to the backup tool **immediately**. Never end a job with empty hands. Failover ≠ inventing ₪ / Insights / blocked bodies. Playbook: `constitution/ORCHESTRA.md`.
-- **Office-manager failover:** when the primary office manager (ChatGPT) is unavailable, temporary controlled handoff to Perplexity / Gemini / Grok / Cursor per `docs/FAILOVER.md`. Read truth sources first; emit דוח השתלטות; do not rebuild the system. Return handoff via `docs/SHARED-WORK-COORDINATION.md` + `packages/vfharness/templates/handoff.md`. No secrets in handoff docs.
-- Treg is **not relevant**. Do not login, `call`, or route failover through Treg. Live web = `WebSearch` / `WebFetch` / orchestra.
-- Gemini **API** (`GEMINI_API_KEY` + `scripts/vf_gemini.py`) and ChatGPT **API** (`OPENAI_API_KEY` + `scripts/vf_chatgpt.py`) are not the `gemini.google.com` / `chatgpt.com` subscriptions. Cloud Agent and Grok Bot **must not** open those sites (Google/OpenAI security alerts). Do not persist cookies. Do not install `aliargun/mcp-server-gemini` or `RLabs-Inc/gemini-mcp`. Without a key write «חסר מפתח Gemini» / «חסר מפתח ChatGPT» and fail over. Full Plus/Pro without extra API billing lives on the owner Mac (`packages/vfmcp/HOST.md`). Playbook: `packages/vfmcp/SUBSCRIPTIONS.md`.
-- Drive **creates** office docs/sheets when needed (`create_file`). Search-by-job still applies. No personal/medical/legal folders.
-- Grok Bot quota failover: HQ **keeps producing and sending** via HQ tools. Queue tags: `#נשלח-מ-HQ` when a tool sent; `#ממתין-ל-כלי-IG` if the feed itself is still waiting on a publish MCP; `#פרסום-חי-דחוף` + `LIVE-PACKET` for urgent feed work (HQ still sends via tools). Do not sit on `#מוכן-ל-Grok` as the only path. No boost, no auto-DM, no Print from HQ. Playbook: `packages/vfharness/playbooks/grok-failover.md` · `docs/GROK-FAILOVER.md` · `constitution/SEND.md`.
-- Do not invent Origin slugs. Keep `unknown` / `origin-slug-unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`.
-- Public marketing website / price widget from HQ stays locked. An **internal office command surface** (owner/lead view over packs + `vfops/hq/capabilities.json`) is allowed as a view — not a sixth seat, not a second runtime. ADR: `docs/OFFICE-OS-EMBED-he.md`.
-- After every catalog, pack, or rule change, run `python3 scripts/check-all.py`.
-- Do not claim success if a computational sensor failed. Retry once, then escalate.
-- Close a multi-step task with a checkpoint under `packages/vfharness/state/` so the next session can resume. Prefer `component_state` (`Idle`/`Processing`/`Degraded`/`Syncing`/`Blocked`) when the job has an operational mode (ADR: `packages/velvetos/ADR-THREE-LAYERS.md`).
-- **Three layers (SoC):** Edge (optional host/floor) · Kernel (`velvetos-core` catalog + event contracts) · Office/HQ (desk + instance). Do not turn Core into a nervous-system runtime or message broker. Disk events only (`schema/events.catalog.json`). Degraded Mode = named failover (`vfharness/playbooks/degraded-mode.md`). Retro → brief signals via `scripts/vf_retro_signals.py` — not owner shame.
-- **Living office:** lead seat asks every seat to run end-of-day retro (`vfops/hq/DAILY-RETRO.md`). Promote durable facts to `vfops/data/owner-memory.md` per `vfmem/MEMORY-UPDATE.md`. Module `office-learning`; skill `.cursor/skills/vf-daily-learning/SKILL.md`. Specialists learn and improve — not static generic agents. Corrections/failures trigger same-day promote (self-improving pattern, no second runtime).
-- **Best skills pulse:** every ~2 days re-read [LinklyAI/best-skills](https://github.com/LinklyAI/best-skills) via `vfresearch/BEST-SKILLS.md` + `TIMER.md` + skill `vf-best-skills`. **Standing forever** until the owner explicitly stops (`standingForever` in `BEST-SKILLS.json`). Velvet Research Seat is the scheduler authority: it runs the pass when `lastPass` is ≥44h old (stale above 52h) per `freshnessContract`; no external timer renewal. Embed patterns into existing packs; constitution may update when a durable pattern wins. No `npx skills` on Cloud Agent.
-- **Revenue loop:** IG as income source — `expert-revenue-loop` + `expert-insights-ingest` + `expert-instance-onboard` for multi-frontend. Skill `.cursor/skills/vf-revenue-loop/SKILL.md`. Paid boost and ₪ changes stay lead-gated.
-- **Organic Growth Control Plane:** drafts + 07:00 Decision Pack on existing packs (`constitution/ORGANIC_GROWTH.md`). Publication authorization is owned by `policy_id: instagram.publish`: LOW-risk routine organic content may reach tool publish only when the canonical evaluator returns `ALLOW`; otherwise it is denied or requires exact owner approval. The plane never auto-DMs and never marks `posted_manually` without a real manual post. No poll→Print from HQ. WhatsApp ping is not certain conversion. Skill `.cursor/skills/vf-organic-growth/SKILL.md`. CLI `scripts/vf_organic_growth.py`.
-- **Office Control Plane:** unify existing sources of truth (`office/control-plane.json` + `office/control/`). CLI `scripts/vf_control_plane.py`. Sensor `scripts/check-office-control-plane.py`. Don't Bother Christian (`office/control/POLICY.md`). Dead-letter + WIP→finished + manager handoff. Not a second office runtime.
-- **Control API (projection gateway):** `packages/velvetos_control_api` exposes a typed HTTP read-first projection (`velvetos.control.v1`) for the Control Center UI. CLI `scripts/vf_control_api.py`. Sensor `scripts/check-control-api.py`. Not a new SoT/runtime/queue — reuses jobs adapter + capability registries. Actions fail-closed unless a safe canonical route exists. Auth: server-to-server token / Cloud Run IAM. Docs: `packages/velvetos_control_api/README.md` + `DEPLOY.md`.
-- **Living Studio:** connective tissue over Control Plane — `packages/velvetos/living-studio/` · CLI `scripts/vf_living_studio.py` · sensor `scripts/check-living-studio.py`. World Model / Studio Pulse / Universal Intake / Skills registry are projections/routers — never a competing SoT or second catalog.
-- **Shared media vault:** `docs/MEDIA-VAULT.md` · one catalog `packages/vfmedia/catalog.json` · תפעול owns intake (`vfmedia.py intake`). Historical Drive capability evidence is in the same procedure; verify access per tool/session. Upload and folder placement never replace version approval. Sensor: `scripts/check-vfmedia.py`.
-- **Windows host default working path is `D:\Velvet` (`VELVET_ROOT`)** per `packages/velvetos/WINDOWS-PATH-CONTRACT.md`; never use the Desktop folder (`%USERPROFILE%\Desktop`, incl. OneDrive Desktop) for any VelvetOS clone, scratch or output. If D: is unavailable, stop and report.
-- No secrets in git. Do not open personal, medical, or legal Drive folders unless the user names them.
-- Warehouse specialists stay off the desk unless the user asks for that `@slug`.
+Before substantive work, resolve:
+- `packages/velvetos/PROJECT-REQUEST-GATE.md`
+- `packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json`
 
-## ANTI-PATTERNS (dated; each traces to an observed failure)
+No substantive work starts before `project_preflight: PASS`. The manifest decides the domain, authority mode and local instruction guide. Load this root guide plus only the selected domain-local `AGENTS.md`; do not preload unrelated specialist guides or warehouse capabilities.
 
-- 2026-08-31 — Kept other businesses as on/off tenants inside one repo, or treated Core as the VF frontend. Core = backend; each business = frontend instance repo (`instances/` + `REPOS.md`). Sensor: `scripts/check-velvetos.py`.
-- 2026-08-31 — Treated other businesses as on/off tenants inside the VF repo. Use core modules + presets; spin **VelvetOS — \<Business\>** as separate instance repos that pull from core. Sensor: `scripts/check-velvetos.py`.
-- 2026-08-31 — Invented Origin slug or idled because Origin list was HQ-only. Keep `unknown`. HQ overlay is the office. Playbook: `docs/ORIGIN-SLUGS.md`. Sensor: `scripts/check-origin-slugs.py`.
-- 2026-08-31 — Treated «לא אתר מ־HQ» as blocking an **internal** owner console. Public marketing site stays locked; internal command surface is allowed (`docs/OFFICE-OS-EMBED-he.md`). Sensor: `scripts/check-hq-overlay.py` + desk laws.
-- 2026-08-30 — Invented sale ₪ or Insights to fill a gap. Sensor: `scripts/check-hq-overlay.py`.
-- 2026-08-31 — Installed a second orchestrator (amux, Orca ADE, OpenClaw, Ralph unattended, swarm) instead of embedding onto `vfe2b/crews/run.md`. Sensor: `scripts/check-vfe2b.py`.
-- 2026-08-31 — Waited for Christian or Grok Bot to send Gmail/Instagram while tools were available. Sensor: `scripts/check-vf-desk.py` + `constitution/SEND.md`.
-- 2026-08-31 — Left office brief unsent during Grok outage (asked owner to click Send). Failover must send the self-brief like Grok (`htmlBody` תצוגה 3). Sensor: `check-vfharness.py` + `grok-outage-tools.md`.
-- 2026-08-30 — Instagram / Gmail send from HQ **without a tool / claiming Publish**. Superseded 31.8: HQ **does** send via tools. Still forbid auto-DM, boost, invented publish. Sensor: desk rule + `scripts/check-vf-desk.py`.
-- 2026-08-30 — New pack per ChatGPT/Gemini “agent”. Embed in place. Map: `packages/chatgpt-embed-map.json`.
-- 2026-08-30 — Inspiration/share links left stale. Weekly pass: `packages/vfresearch/WEEKLY.md` + `LINKS.json`. Sensor: `scripts/check-vfresearch.py`.
-- 2026-08-30 — Invented Instagram track names or “#1 trending audio” without Treg/owner source. Playbook: `packages/vfresearch/MUSIC.md`. Sensor: `scripts/check-vfresearch.py`.
-- 2026-08-30 — Invented a Perplexity / Cloudflare-blocked body. Write «אין גוף» and skip.
-- 2026-08-30 — Stayed idle when a tool was down (waited for owner / skipped all desks). Failover immediately per `constitution/ORCHESTRA.md`. Sensor: `scripts/check-vfresearch.py`.
-- 2026-08-30 — Went idle or claimed «אין תוצרים» when Grok Bot weekly quota ran out. Produce **and send via HQ tools**. Do not claim the IG feed posted if no publish tool fired. Sensor: `scripts/check-vfharness.py`. Playbook: `docs/GROK-FAILOVER.md` + `constitution/SEND.md`.
-- 2026-08-30 — Second agent runtime (CrewAI, AutoGPT, BabyAGI). Cursor is the office. See `packages/vfe2b/LOCK.md`.
-- 2026-08-30 — National shipping or a seat invented **outside** `constitution/TEAM.md` / `.cursor/vf-desk.json`. Core HQ may list six seats including מחקר/אורקסטרציה; do not invent a seventh or a parallel business seat on an instance.
-- 2026-09-05 — Opened `gemini.google.com` / `chatgpt.com` from Cloud Agent or Grok Bot, triggering Google/OpenAI “unauthorized access” alerts. Use API keys (`vf_gemini.py` / `vf_chatgpt.py`). Plus ≠ API. Do not copy cookies or Antigravity tokens to Cloud. Sensor: `scripts/check-vfmcp.py`. Playbook: `packages/vfmcp/SUBSCRIPTIONS.md`.
-- 2026-09-07 — Surfaced weak Insights / «רמה נמוכה» / post-publish quality autopsy to Christian. Quality is a **preflight** (`vfgrowth/PREFLIGHT.md` + EDIT-GATE + VOICE + 2–3 comps). Fail-closed = block schedule; fix in office. Sensor: `scripts/check-vfgrowth.py` + `scripts/check-vfops-loop.py`.
-- 2026-09-07 — Renamed `velvetos-core` into a nervous-system / event-bus runtime, or promised zero-touch inquiry→close on ₪ / WhatsApp. Core stays **Kernel** (catalog + contracts); Edge is optional host; Office/HQ owns decisions; human gates stay. Embed: `packages/velvetos/ADR-THREE-LAYERS.md` + `LAYERS.md` + `schema/events.catalog.json` + `component_state` + Degraded Mode + `vf_retro_signals.py`. Sensor: `scripts/check-velvetos.py` + `scripts/check-vfharness.py` + `scripts/check-vfops-loop.py`.
-- 2026-09-07 — Treated customer type / quantity as a standalone service category. Owner correction 2026-09-14: public offering is ready products + custom work; quantity and customer type are job attributes. Sensor: `scripts/check-vf-offering.py`.
-- 2026-09-07 — Built an Instagram bot (auto-post / auto-DM / poll→Print / treating WhatsApp as certain conversion). Core is a **content factory + experiments + measurement + 07:00 approval pack**. Human posts; conversion closes on WhatsApp by a human. Embed: `constitution/ORGANIC_GROWTH.md`. Sensor: `scripts/check-organic-growth.py`.
-- 2026-09-11 — Surfaced AI-authored owner/customer/public prose as “final” merely because a skill or lint existed. Human-visible prose must follow `constitution/VISIBLE_TEXT.md`; relevant tools must actually run on the candidate, and exact artifact text must carry/derive a real gate receipt. Literal source values stay literal. Sensor: `scripts/check-visible-text-gate.py`.
+Unknown domain, missing local instructions, contradictory authority or stale critical evidence stays fail-closed. Do not fall back to remembered chat context when current authority is unresolved.
 
-## SENSORS (run after changes)
+## GLOBAL BOUNDARIES
 
-| Script | Catches |
-|---|---|
-| `scripts/check-all.py` | Full suite |
-| `scripts/check-hq-overlay.py` | Invented ₪, missing overlays |
-| `scripts/check-vf-desk.py` | Desk slugs / packs / HQ-send-via-tools |
-| `scripts/check-vfharness.py` | Six layers + Grok-quota failover (HQ sends via tools) |
-| `scripts/check-vfe2b.py` | Awesome-agents desk |
-| `scripts/check-vfmakers.py` | Maker-skills desk |
-| `scripts/check-vfagents.py` | 500-list playbooks |
-| `scripts/check-vfresearch.py` | Weekly inspiration-links + bi-daily best-skills + last30 community research + IG music + orchestra failover law |
-| `scripts/check-no-new-recurring-cost.py` | Zero-new-recurring-cost authority, fail-closed classifications, approval and preflight semantics |
-| `scripts/check-vfcost.py` | Material-only cost CLI (grams × ILS/kg); missing grams refuse; no invented sale ₪ |
-| `scripts/check-no-new-recurring-cost.py` | Canonical NO_NEW_RECURRING_COST law + fail-closed Cost Preflight enforcement |
-| `scripts/check-vf-3d-router.py` | 3D engine routing contract: Text-to-CAD vs hardened local Blender vs hybrid; no paid fallback or physical printer authority |
-| `scripts/check-behavioral-evals.py` | Authority-bound behavioral regression for missing facts, tool failure, memory, connectors, handoff, publish/read-back and prompt injection |
-| `scripts/check-agent-security-conformance.py` | OWASP-mapped agent/MCP/connectors/control-API/memory/approval/ingestion security evidence; PARTIAL stays explicit |
-| `scripts/check-observability.py` | Local OpenTelemetry/OpenInference trace contract; sanitized metadata only, no remote exporter, telemetry never authority |
-| `scripts/check-reliability-pilots.py` | Phase 3 reliability evidence: Healthchecks missed-heartbeat pilot, changedetection local change pilot, GlitchTip blocker remains explicit |
-| `scripts/check-engineering-quality.py` | Phase 4 removable Dev tools: Ponytail/gstack pattern bounds, Impeccable Web/UI-only, diagram-design docs-only; `--strict` verifies local pins/profiles |
-| `scripts/check-cli-anything-pilot.py` | Phase 5 scoped CLI-Anything FreeCAD adapter: zero-cost authority bounds; `--strict` verifies pinned headless tests plus real geometry→DfAM→Orca dry-run |
-| `scripts/check-laya-shadow.py` | Phase 6 Laya shadow evidence: 78-case Hebrew-heavy benchmark, calibration/repeatability receipts, cost=0 and hard no-authority/no-promotion guard |
-| `scripts/check-vfprod.py` | Floor fleet routing (4 beds, no Print from HQ); filament remainder; maintenance snapshot empty=אין ספירה |
-| `scripts/check-vf-fabrication-router.py` | Full text-to-cad skill suite, tool-selection router, pinned skill copies and no-printer-control boundary |
-| `scripts/check-vfsku.py` | Recurring 5-slot shelf + first-print + no invented SKU names/₪ |
-| `scripts/check-vfgrowth.py` | Standing IG calendar + ledger + Studio handoff (instagram.com, no Suite) |
-| `scripts/check-organic-growth.py` | Organic Growth Control Plane — no autopost/auto-DM, gate states, `orders.json` null ILS, 07:00 Decision Pack |
-| `scripts/check-office-control-plane.py` | Office Control Plane — single SoT map, dead-letter, WIP→finished, owner surface, no duplicate authorities |
-| `scripts/check-control-api.py` | Control API projection gateway — schema honesty, auth, fail-closed actions, no second SoT, no secret leakage |
-| `scripts/check-living-studio.py` | Living Studio connective tissue — Skills registry, World Model projection, Pulse, Universal Intake, no duplicate SoTs |
-| `scripts/check-vfops-loop.py` | Office activation loop — every pack consumed into 07:00 brief + HANDOFF |
-| `scripts/check-vfmcp.py` | Instagram/Graph and office MCP verification; tool routing authority is `packages/velvetos/TOOL-STATUS.json` |
-| `scripts/check-origin-slugs.py` | Unknown Origin slugs allowed; invented `tmp-…` slugs forbidden |
-| `scripts/check-velvetos.py` | VelvetOS Core + modules; VF frontend scaffold under instances/; backend≠frontend; offering shape stays ready-products + custom-work |
-| `scripts/check-vf-offering.py` | Velvet Factory offer language — ready products + custom work only; quantity/customer type stay job attributes; retired service-line labels/files fail closed |
-| `scripts/check-vfmedia.py` | Shared media vault — one catalog, locked Drive folder IDs, upload≠approve, approved folder ≠ proof, no invented SKUs/₪, no share-permission changes |
-| `scripts/check-visible-text-gate.py` | Visible Text Gate — global human-facing routes, surface-aware validator, owner/customer/public wiring; static wiring only, not a candidate execution receipt |
+- External effects use the single canonical effect-authority `policy_id` in `packages/velvetos/policy/policy-registry.json`. Routing, evidence, transport, QA and runtime health do not authorize effects by themselves.
+- `NO_NEW_RECURRING_COST` remains global. New or changed paid-capable behavior follows `constitution/NO_NEW_RECURRING_COST.md`; general permission to install or operate is not spend approval.
+- Never invent money, provider state, receipts, permissions, source bodies, metrics or operational facts. Unknown remains unknown.
+- Never commit secrets. Keep personal/private sources outside normal traversal unless the request explicitly names them.
+- Core is not a second office, message broker, nervous-system runtime or live business frontend.
+- Extend existing manifests, registries, policies and harnesses instead of creating parallel routers, catalogs or policy engines.
+- Provider/tool success is not inferred. Claims such as sent, published, synced, deployed or deleted require the canonical postcondition evidence.
+- Irreversible/destructive, permission, rights/privacy and physical-world effects remain protected by their mapped policy boundary.
 
-Computational sensors first. Do not add an LLM-as-judge for ILS, send, or pack names.
+## VISIBLE TEXT
 
-## LOOP BOUNDS
+**Visible Text Gate is global.** Human-visible AI-authored or rewritten text follows `constitution/VISIBLE_TEXT.md` on the actual candidate text.
 
-- Max retries per step: 2 (then escalate)
-- Max tool-call thrash: stop after the same sensor fails three times
-- Stopping condition: return the best artifact + unresolved issues. Do not hide a failed sensor behind fluent Hebrew.
-- Escalation packet: `packages/vfharness/templates/escalation.md`
+Surface selection remains explicit, including `customer-message`, `owner-brief`, `human-document` and `ui-microcopy`. Tool/skill existence is not proof that the gate ran; unproven candidate execution remains `UNPROVEN`.
 
-## PERMISSIONS (harness, not the model)
+Verification: `scripts/check-visible-text-gate.py`.
 
-ALLOW read: `packages/**`, `constitution/**`, `docs/**`, `.cursor/**`, Gmail search/get, Calendar list, Drive search-by-job
-ALLOW write: `packages/**`, `constitution/**`, `docs/**`, `AGENTS.md`, `CHANGELOG.md`
-ALLOW execute: `python3 scripts/check-*.py`
-ASK before: `git push`; Calendar create **מחוץ** לרשת IG הקבועה
-ALLOW calendar: `create_event` לכל פוסט מתוכנן על `vfgrowth/CALENDAR.md` (`CALENDAR-OPS.md`) — לא שואלים משבצת
-ALLOW send: Gmail via connected Gmail tools; Instagram via `packages/vfigos/SEND.md` only.
-ALLOW write: Drive `create_file` for office docs (no personal/medical/legal folders)
-DENY: auto-DM, boost without lead seat, Treg `call`, `rm -rf`, DROP TABLE, inventing ₪ / Insights / Origin slugs, claiming IG posted without a publish tool, Cloud/Grok login to `gemini.google.com` / `chatgpt.com`, persisting browser cookies, installing aliargun or RLabs gemini-mcp, writing VelvetOS files to the Windows Desktop
+## INSTRUCTION LOCALITY
 
-## MEMORY
+The root guide is intentionally small. Domain-specific operating instructions live beside their owning package and are selected by `PROJECT-AUTHORITY-MANIFEST.json#instructionLocality`.
 
-- Guides (`AGENTS.md`, constitution, pack `SKILL.md`) = what should happen (\(P\)).
-- Checkpoints (`packages/vfharness/state/<task-id>.json`) = what happened in this task (\(\Sigma\)). Optional `execution_state` / `latest_observation` for domain slots (SKILLSTATE — `vfharness/playbooks/skillstate.md`).
-- Long-task next turn: prompt = guide + checkpoint + latest observation only — not full chat replay.
-- Office map (`vfgraft`) = how HQ is wired. Office query (`vfmem`) = who handles a job. Neither replaces a task checkpoint.
-- Do not rely on chat memory for a rule that must hold every run. Promote it here.
+Rules:
+- root + selected local guide only by default;
+- specialist/capability loading follows the already-selected route;
+- local guides are instruction/evidence surfaces, never new authorization engines;
+- a task crossing multiple routed domains may load one primary local guide per selected domain;
+- keep unrelated domain context unloaded.
 
-## HARNESS PACK
+## VERIFICATION
 
-Layer map and embed path: `packages/vfharness/`. Activate with `@vfharness`.  
-VelvetOS Core (backend): `packages/velvetos/`. Frontend scaffolds: `instances/`. Multi-repo: `packages/velvetos/REPOS.md`. Docs: `docs/VELVETOS.md`.
+Run the routed sensor set for scoped changes, then `python3 scripts/check-all.py` for repository-wide changes. Do not claim success when a required computational sensor fails.
 
-## Publication-prep execution gate
-
-For Velvet Factory requests that mean prepare/treat/edit content for a potential publication, `packages/vfom/PUBLICATION-PREP-EXECUTION.md` is mandatory. This is an execution task: when usable images and an editing capability exist, selection/caption/planning alone is incomplete. Produce at least one real edited visual artifact, preserve Product Truth, run exact-final visual QA, and only then package copy for owner review. If visual execution is unavailable, fail closed as `visual_execution_unavailable`; never claim ready from raw photos plus copy. Resolve public CTA from current authority; never hardcode the business WhatsApp number into public content from memory.
-
-## Brand asset + public CTA lock
-
-`packages/vfom/BRAND-ASSET-LOCK.md` is mandatory for Velvet Factory public creative. Never ask a generative image model to invent/render a Velvet Factory logo, wordmark or logo-like brand lockup. If an exact owner-approved logo asset is not available to the job, use no logo. If it is available, composite that exact asset deterministically after generation/editing. Base generative prompts must explicitly say `NO LOGO · NO WORDMARK · NO PHONE NUMBER · NO WHATSAPP · NO CONTACT BAR`. Public CTA must resolve from `constitution/PUBLIC_CTA.md`; `050-2517000` is forbidden in public creative/caption unless the owner explicitly requests that exact public use in the current task.
-
-## Creative transformation lock
-
-For Velvet Factory publication-prep, `packages/vfom/CREATIVE-TRANSFORMATION-LOCK.md` is mandatory. Preserve the real product, but do not pass through raw/source photos as the finished creative. At least one review visual — normally the hero/first slide — must show a meaningful approved Velvet treatment around the source-locked product. Default to editing the real source image, not recreating the product from text. Multiple photos do not imply a carousel; if carousel is chosen, slide 1 must be a fully treated hero. `raw_passthrough=true`, an essentially untouched source carousel, or crop/exposure-only work presented as publication-grade is FAIL. Generative edits must explicitly contain NO LOGO, NO WORDMARK, NO PHONE NUMBER, NO WHATSAPP, NO CONTACT BAR, NO GENERATED HEBREW TEXT.
-
-
-
-## UNIVERSAL PROJECT REQUEST GATE — ALWAYS REQUIRED
-
-Before substantive work on **any** VelvetOS / Velvet Factory request, load `packages/velvetos/PROJECT-REQUEST-GATE.md` and resolve `packages/velvetos/PROJECT-AUTHORITY-MANIFEST.json`. Classify the request, load only the routed authorities/skills/Sources of Truth, resolve hard gates, and require `project_preflight: PASS` before execution. Missing/stale/contradictory mandatory authority is fail-closed; do not fall back to model defaults or memory of an older chat. After execution, run the routed domain postflight on the exact final artifact/provider result before claiming completion. Use `scripts/vf_project_preflight.py` as the deterministic authority-path resolver when operating in the repo.
+For Kernel architecture, instance attachment and repository boundaries, use `packages/velvetos/AGENTS.md`, `packages/velvetos/KERNEL.md`, `packages/velvetos/LAYERS.md` and `packages/velvetos/REPOS.md`.
+Policy routing boundary: `policy_id: project.request.preflight` is a router only; destination external effects remain owned by their registry-mapped effect authority.
