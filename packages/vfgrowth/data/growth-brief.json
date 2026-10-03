@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-01",
-  "generatedAt": "2026-10-01T18:42:22+03:00",
+  "date": "2026-10-03",
+  "generatedAt": "2026-10-03T18:42:27+03:00",
   "component_state": "Idle",
   "goal": "פניות מקומיות על מוצרים מוכנים והדפסות בהתאמה אישית.",
   "locks": [
@@ -11,20 +11,16 @@
     "no-invented-ils",
     "no-schedule-from-hq"
   ],
-  "weekdayNote": "2026-10-01 = חמישי (Asia/Jerusalem)",
+  "weekdayNote": "2026-10-03 = שבת (Asia/Jerusalem)",
   "slotRecommendation": {
     "choice": "poll",
-    "when": "2026-10-01T20:30+03:00",
-    "whenHe": "חמישי 2026-10-01 20:30 Asia/Jerusalem",
-    "reasonShort": "G004 מסומן STALE ב־LEDGER · אין reuse אוטומטי · סקר הוא חלופה בלבד",
-    "reason": "G004 אינו מועמד נוכחי: ה־LEDGER מסמן אותו STALE וחוסם reuse אוטומטי עד qualification חדש. סקר organic `petg_vs_nylon` למשבצת חמישי 2026-10-01 20:30 Asia/Jerusalem הוא חלופה שאינה פרסום אוטומטי. בלי Calendar create.",
-    "deferred": {
-      "id": "G004-stories",
-      "to": "qualification חדש מול LEDGER + VF_PUBLICATION_ROUTE_V1"
-    }
+    "when": "2026-10-05T20:30+03:00",
+    "whenHe": "שני 2026-10-05 20:30 Asia/Jerusalem",
+    "reasonShort": "20:30 היום חלף · משבצת הבאה",
+    "reason": "20:30 היום חלף. משבצת סטוריז הבאה: שני 2026-10-05 20:30 Asia/Jerusalem. בלי תזמון מ־HQ."
   },
   "reel": {
-    "slot": "אין משבצת ריל היום (לוח: א׳/ג׳ 16:00 בלבד)",
+    "slot": "אין פיד בשישי–שבת",
     "gate": "candidates_ready",
     "topic": "3 מועמדי וידאו מהקטלוג — לצפייה ובחירה ידנית",
     "asset": "IMG_1285.MOV / IMG_0491.MOV / IMG_0490.MOV (מקור לא ערוך — לא ריל)",
@@ -276,19 +272,15 @@
     ]
   },
   "story": {
-    "slot": "היום 20:30 · סטוריז א׳–ה׳",
-    "gate": "recommended_poll_pending_human_post",
-    "slotStatus": "המלצה יחידה · סקר · חמישי 2026-10-01 20:30 Asia/Jerusalem",
+    "slot": "אין סטוריז בשישי–שבת",
+    "gate": "next_slot_recommendation",
+    "slotStatus": "המלצה · שני 2026-10-05 20:30 Asia/Jerusalem",
     "recommendation": {
       "choice": "poll",
-      "when": "2026-10-01T20:30+03:00",
-      "whenHe": "חמישי 2026-10-01 20:30 Asia/Jerusalem",
-      "reasonShort": "G004 מסומן STALE ב־LEDGER · אין reuse אוטומטי · סקר הוא חלופה בלבד",
-      "reason": "G004 אינו מועמד נוכחי: ה־LEDGER מסמן אותו STALE וחוסם reuse אוטומטי עד qualification חדש. סקר organic `petg_vs_nylon` למשבצת חמישי 2026-10-01 20:30 Asia/Jerusalem הוא חלופה שאינה פרסום אוטומטי. בלי Calendar create.",
-      "deferred": {
-        "id": "G004-stories",
-        "to": "qualification חדש מול LEDGER + VF_PUBLICATION_ROUTE_V1"
-      }
+      "when": "2026-10-05T20:30+03:00",
+      "whenHe": "שני 2026-10-05 20:30 Asia/Jerusalem",
+      "reasonShort": "20:30 היום חלף · משבצת הבאה",
+      "reason": "20:30 היום חלף. משבצת סטוריז הבאה: שני 2026-10-05 20:30 Asia/Jerusalem. בלי תזמון מ־HQ."
     },
     "poll_id": "petg_vs_nylon",
     "question": "מה לבדוק מחר במעבדה?",
@@ -302,7 +294,7 @@
       "עריכה",
       "דחייה"
     ],
-    "note": "בחירה אחת: סקר. G004 נשאר STALE עד qualification חדש ב־LEDGER. אישור ≠ פרסום."
+    "note": "המשבצת להיום חלפה — הצעה למשבצת הבאה בלבד."
   },
   "yesterday": {
     "insights": "אין ספירה",
@@ -312,7 +304,7 @@
   },
   "studio_tasks": [
     "לצפות ב־3 מועמדי הריל מהקטלוג, לבחור 7–15ש או לדחות — בלי זה אין Reel.",
-    "לאשר או לדחות סקר ל־חמישי 2026-10-01 20:30 Asia/Jerusalem (לא מפרסם).",
+    "לתכנן ידנית למשבצת שני 2026-10-05 20:30 Asia/Jerusalem — לא Calendar מ־HQ.",
     "לא להציג חום/חוזק בלי vfprod/CLAIMS.md."
   ],
   "print_events": 1,

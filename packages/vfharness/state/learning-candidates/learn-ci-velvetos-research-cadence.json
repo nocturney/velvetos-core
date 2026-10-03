@@ -18,10 +18,13 @@
     "gh-run:36703784771:failure:2026-09-30T10:39:53Z:https://github.com/nocturney/velvetos-core/actions/runs/36703784771",
     "office-loop-1830 triage 2026-09-30: Research Cadence failed on main (36703784771 @ 10:39Z). Research Seat PR #438 still open with check-all FAILURE — not merged. research.md on main still dated 27.9.2026. Keep accepted; no promote — no new durable contract change in this handoff.",
     "gh-run:36853314125:failure:2026-10-01T11:06:47Z:https://github.com/nocturney/velvetos-core/actions/runs/36853314125",
-    "office-loop-1830 triage 2026-10-01: Research Cadence failed on main (36853314125 @ 11:06Z) at Verify same-day research body freshness — research.md on main still dated 27.9.2026. Research Seat PR #446 (2026-10-01) is open with check-all SUCCESS but not merged (outside authorized evening handoff path). Keep accepted; no promote."
+    "office-loop-1830 triage 2026-10-01: Research Cadence failed on main (36853314125 @ 11:06Z) at Verify same-day research body freshness — research.md on main still dated 27.9.2026. Research Seat PR #446 (2026-10-01) is open with check-all SUCCESS but not merged (outside authorized evening handoff path). Keep accepted; no promote.",
+    "gh-run:36996758437:failure:2026-10-02T10:40:23Z:https://github.com/nocturney/velvetos-core/actions/runs/36996758437",
+    "gh-run:37114895150:failure:2026-10-03T09:59:41Z:https://github.com/nocturney/velvetos-core/actions/runs/37114895150",
+    "office-loop-1830 triage 2026-10-03: Research Cadence failed on main (37114895150 @ 09:59Z) at Verify same-day research body freshness — vfops/data/research.md header is 2.10.2026 and does not reference today's research body. Also 36996758437 @ 10:40Z 2.10 suite failed=2/116 (check-policy-architecture.py: instances/velvet-factory/instance/velvet-factory.json not in that SHA; check-zero-cost-final-acceptance.py traceback). Keep accepted; no promote — no new durable research contract in this handoff."
   ],
   "first_seen": "2026-09-25T09:44:21Z",
-  "last_seen": "2026-10-01T18:42:49+03:00",
+  "last_seen": "2026-10-03T15:43:58+00:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,

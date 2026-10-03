@@ -23,10 +23,15 @@
     "office-loop-1830 triage 2026-09-28: one main failure 36409350357 @ 10:22Z then later main Core Sensors green (36410072924, 36443486034 after #427). No new durable sensor from this handoff. Keep accepted; no promote.",
     "office-loop-1830 triage 2026-09-29: Core Sensors green on main today (36529846036, 36535708924, 36547798586, 36559918462). Keep accepted; no promote — no new durable sensor change from this handoff.",
     "office-loop-1830 triage 2026-09-30: Core Sensors green on main today (36668968295, 36677194032, 36712075435, 36725040403). Keep accepted; no promote — no new durable sensor change from this handoff.",
-    "office-loop-1830 triage 2026-10-01: Core Sensors green on main today (36815220068, 36823460966). Keep accepted; no promote — no new durable sensor change from this handoff."
+    "office-loop-1830 triage 2026-10-01: Core Sensors green on main today (36815220068, 36823460966). Keep accepted; no promote — no new durable sensor change from this handoff.",
+    "gh-run:36385095591:failure:2026-09-28T06:09:52Z:https://github.com/nocturney/velvetos-core/actions/runs/36385095591",
+    "gh-run:36385488669:failure:2026-09-28T06:14:41Z:https://github.com/nocturney/velvetos-core/actions/runs/36385488669",
+    "gh-run:36972671826:failure:2026-10-02T06:15:18Z:https://github.com/nocturney/velvetos-core/actions/runs/36972671826",
+    "gh-run:37096736396:failure:2026-10-03T04:29:58Z:https://github.com/nocturney/velvetos-core/actions/runs/37096736396",
+    "office-loop-1830 triage 2026-10-03: Core Sensors failed early (37096736396 @ 04:29Z, suite failed=2/116: check-grok-provider-readback.py runtime receipt freshness invalid 24.2h; check-zero-cost-final-acceptance.py traceback) and 36972671826 @ 06:15Z 2.10 (check-gmail-brief-send.py bootstrap send request must be disabled on main, suite failed=1/116). Later main runs today are success (37102555000 @ 06:17Z through 37133358203 @ 15:28Z). Keep accepted; no promote — no new durable sensor from this handoff."
   ],
   "first_seen": "2026-09-25T06:11:05Z",
-  "last_seen": "2026-10-01T18:42:49+03:00",
+  "last_seen": "2026-10-03T15:43:58+00:00",
   "owner_correction": false,
   "promote_to": null,
   "supersedes": null,
