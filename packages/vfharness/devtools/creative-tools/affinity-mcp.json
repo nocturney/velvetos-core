@@ -1,0 +1,112 @@
+{
+    "schema":  "velvetos.creative-tools.connector.v1",
+    "id":  "affinity",
+    "display_name":  "Affinity",
+    "observed_version":  "3.3.0.4850",
+    "adapter_version":  "0.1.0",
+    "status":  "FUNCTIONAL_PASS_WITH_LIMITATION",
+    "transport":  {
+                      "kind":  "vendor_native_mcp",
+                      "protocol":  "sse",
+                      "protocol_version":  "2025-11-25",
+                      "host":  "127.0.0.1",
+                      "port":  6767,
+                      "sse_endpoint":  "/sse",
+                      "message_endpoint":  "/message?session_id=\u003csession\u003e",
+                      "server_name":  "Affinity",
+                      "server_version":  "1.0.0"
+                  },
+    "vendor_mcp_tools":  [
+                             "add_sdk_hint",
+                             "execute_script",
+                             "list_library_scripts",
+                             "list_sdk_documentation",
+                             "read_library_script",
+                             "read_sdk_documentation_topic",
+                             "render_selection",
+                             "render_spread",
+                             "report_sdk_issue",
+                             "save_script_to_library",
+                             "search_sdk_hints"
+                         ],
+    "runtime_adapter":  "D:\\Velvet\\Runtime\\CreativeTools\\Affinity\\AffinitySafeAdapter.py",
+    "production_surface":  {
+                               "enabled_operations":  [
+                                                          "probe",
+                                                          "status",
+                                                          "render-current"
+                                                      ],
+                               "acceptance_operation":  "acceptance (gate required)",
+                               "blocked":  [
+                                               "raw_execute_script",
+                                               "library_write",
+                                               "sdk_reporting",
+                                               "sdk_hint_upload",
+                                               "network",
+                                               "filesystem",
+                                               "canva_ai"
+                                           ]
+                           },
+    "permissions":  {
+                        "EnableMCPServer":  true,
+                        "EnableLocalMemory":  false,
+                        "EnableReadScripts":  true,
+                        "EnableWriteScripts":  false,
+                        "EnableCanvaAI":  false,
+                        "EnableFileSystem":  false,
+                        "EnableNetwork":  false,
+                        "EnableReporting":  false
+                    },
+    "lifecycle":  {
+                      "launch_mode":  "on_demand_hidden",
+                      "launch_at_logon":  false,
+                      "task":  "VelvetOS DCC OnDemand affinity",
+                      "task_triggerless":  true,
+                      "managed_shortcut":  "D:\\Velvet\\Runtime\\Autostart\\Affinity - VelvetOS.lnk",
+                      "host_wrapper":  "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetAffinityHost.ps1",
+                      "clean_stop":  true
+                  },
+    "hashes":  {
+                   "adapter_source":  "35ED392AC4DE9472406BD588F14E01F9B97E7111B3C8D62DAD5DB79042A3062B",
+                   "adapter_runtime":  "35ED392AC4DE9472406BD588F14E01F9B97E7111B3C8D62DAD5DB79042A3062B",
+                   "host_source":  "DB75294D6A042B5BA4914E9659E7D4CA6E949F91A08EC88EA8483C4A5EE72B89",
+                   "host_runtime":  "DB75294D6A042B5BA4914E9659E7D4CA6E949F91A08EC88EA8483C4A5EE72B89",
+                   "mcp_preferences":  "C2E8B11D54445664D4FEE52AECCBA86F37F54F46BBF1393A3B9BB10D531E763C",
+                   "libmcp":  "E91F891397BA25CEADD1D243908C02352F7A06D284F8578CD95CE58B46B71745",
+                   "libscripting":  "EE800B278F05EE9D165C19F179E71112B3A2B695E29D4CE69180C2DAB90AEB3D",
+                   "libscriptingjs":  "17D839F5E5E62B86F28D2F16E0A66DB110368A4D5F6663D94FC68986F9FA252A"
+               },
+    "acceptance":  {
+                       "artifact":  "D:\\Velvet\\Tmp\\creative-tools\\affinity\\acceptance-render.jpg",
+                       "artifact_bytes":  1222,
+                       "artifact_sha256":  "2EA86E2955D29A6D03F29C22A2364D8AB9C71622E4CFE56CD0FB18F250E01169",
+                       "image_dimensions":  [
+                                                256,
+                                                256
+                                            ],
+                       "background_pixel":  [
+                                                255,
+                                                255,
+                                                255
+                                            ],
+                       "rectangle_pixel":  [
+                                               32,
+                                               95,
+                                               224
+                                           ],
+                       "shape_added":  true,
+                       "render_spread_image_content":  true,
+                       "cleanup_remaining_documents":  0
+                   },
+    "update_sentinel":  {
+                            "classification":  "PASS_COMPATIBILITY_CHECK",
+                            "receipt":  "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T105539Z-affinity.json",
+                            "receipt_sha256":  "EE1B93C174437D14333E22D8CABB2F903E0D5DF09A91AD9C38290104A4DFFE08",
+                            "routing_status":  "available",
+                            "routing_fingerprint":  "C694AA24C00FBF15842C6A125438E5A241AB23E9CB4EBCD1C128DDD26A95D8B4"
+                        },
+    "limitations":  [
+                        "The vendor MCP exposes execute_script to local MCP clients while Affinity is running. VelvetOS production routing does not expose raw JavaScript and uses only fixed typed operations through AffinitySafeAdapter.py.",
+                        "The accepted permission profile keeps filesystem, network, Canva AI, reporting, local memory, and script-library writes disabled."
+                    ]
+}

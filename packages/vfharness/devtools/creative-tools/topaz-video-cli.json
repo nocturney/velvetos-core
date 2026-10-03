@@ -1,0 +1,66 @@
+{
+  "schema": "velvetos.creative-tools.connector.v1",
+  "id": "topaz-video",
+  "display_name": "Topaz Video",
+  "observed_version": "1.7.1.0",
+  "adapter_version": "0.1.0",
+  "mode": "cli_headless",
+  "vendor_runtime": {
+    "application": "C:\\Program Files\\Topaz Labs LLC\\Topaz Video\\Topaz Video.exe",
+    "ffmpeg": "C:\\Program Files\\Topaz Labs LLC\\Topaz Video\\ffmpeg.exe",
+    "ffprobe": "C:\\Program Files\\Topaz Labs LLC\\Topaz Video\\ffprobe.exe",
+    "ffmpeg_version": "8.1",
+    "engine_filters": ["tvai_up", "tvai_fi", "tvai_pe", "tvai_cpe", "tvai_stb"]
+  },
+  "runtime_adapter": "D:\\Velvet\\Runtime\\CreativeTools\\TopazVideo\\TopazVideoSafeAdapter.py",
+  "model_environment": {
+    "TVAI_MODEL_DIR": "C:\\ProgramData\\Topaz Labs LLC\\Topaz Video\\models",
+    "TVAI_MODEL_DATA_DIR": "C:\\ProgramData\\Topaz Labs LLC\\Topaz Video"
+  },
+  "production_surface": {
+    "enabled_operations": ["probe", "probe-media", "enhance"],
+    "blocked": [
+      "arbitrary_ffmpeg_args",
+      "automatic_model_downloads",
+      "interpolate_pending_acceptance",
+      "stabilize_pending_acceptance",
+      "camera_pose_pending_acceptance"
+    ],
+    "path_sandbox": "D:\\Velvet",
+    "overwrite_allowed": false,
+    "output_container": ".mkv",
+    "automatic_model_downloads": false
+  },
+  "accepted_model": {
+    "id": "ahq-12",
+    "manifest": "C:\\ProgramData\\Topaz Labs LLC\\Topaz Video\\models\\ahq-12.json",
+    "payload": "C:\\ProgramData\\Topaz Labs LLC\\Topaz Video\\ahq-v12-fgnet-fp16-288x288-1x-ox.tz3",
+    "payload_bytes": 23657764,
+    "payload_sha256": "CA1A3DD167F9FB019B5E869BEC19E54A4CCBD84DDF8788788D5235C1937E01B9"
+  },
+  "acceptance": {
+    "input": "D:\\Velvet\\Tmp\\creative-tools\\topaz-video\\acceptance-input.mkv",
+    "output": "D:\\Velvet\\Tmp\\creative-tools\\topaz-video\\acceptance-enhanced.mkv",
+    "output_bytes": 2789063,
+    "output_sha256": "AA1D2EF91EFD16AC2A8077768F6528AA5ED834A032A83BB401195698300ACBA9",
+    "width": 512,
+    "height": 512,
+    "fps": "4/1",
+    "duration_seconds": 1.0,
+    "model": "ahq-12",
+    "scale": 1,
+    "download": false
+  },
+  "update_sentinel": {
+    "classification": "PASS_COMPATIBILITY_CHECK",
+    "receipt": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T084945Z-topaz-video.json",
+    "receipt_sha256": "8B206D1CAAA7803CF80FE70676341C35216DF9BCFC0274CC3FA9F3D55FC160BE"
+  },
+  "lifecycle": {
+    "gui_required": false,
+    "scheduled_task_required": false,
+    "launch_at_logon": false,
+    "persistent_background_process": false
+  },
+  "status": "PASS"
+}

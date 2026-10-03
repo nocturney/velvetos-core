@@ -1,0 +1,1052 @@
+diff --git a/Fusion MCP Addin/Fusion MCP Addin.manifest b/Fusion MCP Addin/Fusion MCP Addin.manifest
+index bfe247d..00dead0 100644
+--- a/Fusion MCP Addin/Fusion MCP Addin.manifest	
++++ b/Fusion MCP Addin/Fusion MCP Addin.manifest	
+@@ -1,13 +1,14 @@
+ {
+   "autodeskProduct": "Fusion",
+   "type": "addin",
+-  "author": "",
++  "id": "183cc1d9-c94d-411f-be15-5a4790658d52",
++  "author": "VelvetOS",
+   "description": {
+-    "": "MCP Server"
++    "": "Authenticated loopback MCP bridge for bounded typed Fusion operations"
+   },
+-  "version": "0.0.1",
++  "version": "0.1.0",
+   "runOnStartup": true,
+-  "supportedOS": "windows|mac",
+-  "editEnabled": true,
++  "supportedOS": "windows",
++  "editEnabled": false,
+   "iconFilename": "AddInIcon.svg"
+-}
+\ No newline at end of file
++}
+diff --git a/Fusion MCP Addin/Fusion MCP Addin.py b/Fusion MCP Addin/Fusion MCP Addin.py
+index 2a04b77..5b93dd9 100644
+--- a/Fusion MCP Addin/Fusion MCP Addin.py	
++++ b/Fusion MCP Addin/Fusion MCP Addin.py	
+@@ -1,77 +1,90 @@
+-"""
+-Fusion Add-in that provides HTTP API for MCP communication
+-Communicates with the Go MCP proxy server
++"""VelvetOS Fusion bootstrap.
++
++Production responsibility is intentionally narrow:
++- enable Autodesk Fusion's built-in localhost MCP server on port 27182
++- keep no custom HTTP listener inside Fusion
++- expose no raw script/API surface from this add-in
+ """
+ 
+ import traceback
+ import adsk.core
+-import adsk.fusion
+-from .server.mcp_server import start_mcp_server, stop_mcp_server#, example_tools, example_resources
+-from .mcp_primitives.registry import get_tools, get_resources
+-from .server.task_manager import TaskManager
+-# Import tools and resources to register them
+-from . import tools
+-from . import resources
+-
+-# Global variables
+-app = adsk.core.Application.get()
+-ui = app.userInterface
+-mcp = None
+-server = None
+-thread = None
+ 
+-HOST = 'localhost'
+-PORT = 9100
++app = adsk.core.Application.get()
++startup_handler = None
+ 
+-# Fusion Add-in Entry Points
+-def run(context):
+-    """Called when add-in starts"""
+ 
++def enable_native_fusion_mcp():
+     try:
+-        global app, mcp, server, thread, ui
+-
+-        TaskManager.start()
+-
+-        # tools = example_tools()
+-        # resources = example_resources()    
+-        tools = get_tools()
+-        resources = get_resources()
+-        mcp, server, thread = start_mcp_server(
+-            host=HOST,
+-            port=PORT,
+-            tools=tools,
+-            resources=resources
++        port_state = app.executeTextCommand("MCP.Port")
++        if "27182" not in str(port_state):
++            app.executeTextCommand("MCP.Port 27182")
++
++        state = app.executeTextCommand("MCP.Server")
++        if "not running" in str(state).lower():
++            app.executeTextCommand("MCP.Server /on")
++
++        final_state = app.executeTextCommand("MCP.Server")
++        final_url = app.executeTextCommand("MCP.ServerURL")
++        ok = "running at" in str(final_state).lower() and "27182" in str(final_url)
++        app.log(
++            "VelvetOS Fusion native bootstrap: "
++            f"ok={ok} state={final_state} url={final_url}"
++        )
++        return ok
++    except Exception:
++        app.log(
++            "VelvetOS Fusion native bootstrap failed:\n"
++            + traceback.format_exc()
+         )
++        return False
++
++
++class StartupCompletedHandler(adsk.core.ApplicationEventHandler):
++    def __init__(self):
++        super().__init__()
+ 
+-        # Start HTTP server with integrated ThreadExecutor
+-        if mcp:
+-            app.log(
+-                f"Fusion MCP Add-in started successfully!\n\n"
+-                f"MCP server running on {HOST}:{PORT}\n"
+-                f"You can now connect to Fusion."
+-            )
++    def notify(self, _args):
++        enable_native_fusion_mcp()
++
++
++def run(_context):
++    global startup_handler
++    try:
++        if app.isStartupComplete:
++            enable_native_fusion_mcp()
+         else:
+-            if ui:
+-                ui.messageBox("Failed to start Fusion MCP Add-in")
+-            if app:
+-                app.log("Failed to start Fusion MCP Add-in")
+-    except Exception:
+-        app.log(f'Failed to start Fusion MCP Add-in:\n{traceback.format_exc()}')
++            startup_handler = StartupCompletedHandler()
++            app.startupCompleted.add(startup_handler)
+ 
++        app.log(
++            "VelvetOS Fusion bootstrap started: "
++            "native Autodesk MCP only; no in-process HTTP bridge."
++        )
++    except Exception:
++        app.log(
++            "Failed to start VelvetOS Fusion bootstrap:\n"
++            + traceback.format_exc()
++        )
+ 
+-def stop(context):
+-    """Called when add-in stops"""
+ 
++def stop(_context):
++    global startup_handler
+     try:
+-        TaskManager.stop()
++        if startup_handler:
++            try:
++                app.startupCompleted.remove(startup_handler)
++            except Exception:
++                pass
++            startup_handler = None
+ 
+-        if stop_mcp_server(server, thread):
+-            if app:
+-                app.log("Fusion MCP Add-in stopped successfully.")
+-        else:
+-            if app:
+-                app.log("Error stopping Fusion MCP Add-in")
++        try:
++            app.executeTextCommand("MCP.Server /off")
++        except Exception:
++            pass
+ 
++        app.log("VelvetOS Fusion bootstrap stopped.")
+     except Exception:
+-        if app:
+-            app.log(f"Error stopping Fusion MCP Add-in:\n{traceback.format_exc()}")
++        app.log(
++            "Error stopping VelvetOS Fusion bootstrap:\n"
++            + traceback.format_exc()
++        )
+diff --git a/Fusion MCP Addin/LICENSE b/Fusion MCP Addin/LICENSE
+new file mode 100644
+index 0000000..31e2e77
+--- /dev/null
++++ b/Fusion MCP Addin/LICENSE	
+@@ -0,0 +1,21 @@
++MIT License
++
++Copyright (c) 2025 Autodesk Fusion 360
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
+diff --git a/Fusion MCP Addin/server/mcp_server.py b/Fusion MCP Addin/server/mcp_server.py
+index 387c4b7..828a65f 100644
+--- a/Fusion MCP Addin/server/mcp_server.py	
++++ b/Fusion MCP Addin/server/mcp_server.py	
+@@ -7,7 +7,9 @@ requiring external dependencies like FastMCP.
+ """
+ 
+ import asyncio
++import hmac
+ import json
++import os
+ import threading
+ import traceback
+ from http.server import BaseHTTPRequestHandler, HTTPServer
+@@ -17,6 +19,8 @@ from ..mcp_primitives.tool import Tool
+ from ..mcp_primitives.resource import Resource
+ from ..mcp_primitives.item import Item
+ from .task_manager import TaskManager
++from ..velvet_config import BRIDGE_VERSION, load_token
++from ..velvet_readiness import mark_ready, snapshot as readiness_snapshot
+ 
+ try:
+     import adsk.core
+@@ -34,13 +38,13 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+ class SimpleMCPServer:
+     """Simple MCP-compatible server that can run in Fusion 360's Python environment."""
+ 
+-    def __init__(self, name: str = "Simple MCP Server"):
++    def __init__(self, name: str = "VelvetOS Fusion Bridge"):
+         self.name = name
+         self.tools: Dict[str, Item] = {}
+         self.resources: Dict[str, Item] = {}
+         self.server_info = {
+             "name": name,
+-            "version": "1.0.0"
++            "version": BRIDGE_VERSION
+         }
+ 
+     def register(self, item: Item):
+@@ -140,6 +144,14 @@ class SimpleMCPServer:
+         if tool_name not in self.tools:
+             return self._create_error_response(request_id, -32601, f"Tool not found: {tool_name}")
+ 
++        ready = readiness_snapshot()
++        if not ready["ready"]:
++            return self._create_error_response(
++                request_id,
++                -32002,
++                f"Fusion is not ready for tool execution: {ready['reason']}",
++            )
++
+         if app:
+             app.log(f"Calling tool: {tool_name}")
+ 
+@@ -215,7 +227,7 @@ class SimpleMCPServer:
+             app.log(f"Posted {operation_type} execution task {task_id} to main thread")
+ 
+         # Wait for the result with timeout
+-        timeout = 30  # 30 second timeout
++        timeout = 120  # Covers bounded workspace-activation waits without orphaning tasks
+         start_time = time.time()
+ 
+         while time.time() - start_time < timeout:
+@@ -228,7 +240,8 @@ class SimpleMCPServer:
+             # Small sleep to avoid busy waiting
+             await asyncio.sleep(0.01)
+ 
+-        raise Exception(f"{operation_type.title()} execution timed out")
++        TaskManager.cancel(task_id)
++        raise Exception(f"{operation_type.title()} execution timed out before main-thread dispatch")
+ 
+     def _handle_resources_list(self, request_id: Any) -> Dict[str, Any]:
+         """Handle resources/list request - returns only concrete resources."""
+@@ -381,17 +394,61 @@ class SimpleMCPServer:
+ class MCPHandler(BaseHTTPRequestHandler):
+     """HTTP request handler for MCP protocol over HTTP."""
+ 
+-    def __init__(self, *args, mcp_server=None, **kwargs):
++    def __init__(self, *args, mcp_server=None, auth_token=None, **kwargs):
+         self.mcp_server = mcp_server
++        self.auth_token = auth_token or ""
+         super().__init__(*args, **kwargs)
+ 
++    def _is_authorized(self):
++        supplied = self.headers.get("Authorization", "")
++        expected = "Bearer " + self.auth_token
++        return bool(self.auth_token) and hmac.compare_digest(supplied, expected)
++
++    def _require_authorized(self):
++        if self._is_authorized():
++            return True
++        self.send_error(401, "Unauthorized")
++        return False
++
+     def do_POST(self):
+         """Handle MCP protocol requests"""
+         try:
++            if not self._require_authorized():
++                return
+             content_length = int(self.headers.get('Content-Length', 0))
++            if content_length <= 0 or content_length > 1048576:
++                self.send_error(413, "Request body must be 1-1048576 bytes")
++                return
+             post_data = self.rfile.read(content_length)
+             request_data = json.loads(post_data.decode('utf-8'))
+ 
++            if self.path == '/internal/mark-ready':
++                supplied_pid = int(request_data.get("fusion_pid", -1))
++                evidence = str(request_data.get("evidence", ""))
++                if supplied_pid != os.getpid():
++                    self.send_error(409, "Fusion PID mismatch")
++                    return
++                allowed_evidence = {
++                    "ModelingReady": "modeling_ready_log_observed",
++                    "ApplicationUIReady+NativeMCP": "application_ui_ready_native_mcp_observed",
++                }
++                if evidence not in allowed_evidence:
++                    self.send_error(400, "Supported Fusion readiness evidence required")
++                    return
++                readiness_reason = allowed_evidence[evidence]
++                mark_ready(readiness_reason)
++                self._send_json_response({
++                    "ok": True,
++                    "ready": True,
++                    "reason": readiness_reason,
++                    "fusion_pid": os.getpid(),
++                })
++                return
++
++            if self.path != '/':
++                self.send_error(404, "Not Found")
++                return
++
+             # Process MCP request through our simple server
+             response = asyncio.run(self.mcp_server.handle_request(request_data))
+ 
+@@ -402,17 +459,33 @@ class MCPHandler(BaseHTTPRequestHandler):
+             self.send_error(500, str(e))
+ 
+     def do_GET(self):
+-        """Handle GET requests for health checks"""
++        """Handle minimal health plus authenticated diagnostics."""
+         if self.path == '/health':
+-            self._send_json_response({"status": "healthy", "server": "MCP"})
+-        elif self.path == '/tools':
+-            # Debug endpoint to see tools list
++            self._send_json_response({
++                "status": "healthy",
++                "server": "VelvetOS Fusion Bridge",
++                "version": BRIDGE_VERSION,
++            })
++            return
++        if self.path == '/ready':
++            state = readiness_snapshot()
++            self._send_json_response({
++                "status": "ready" if state["ready"] else "starting",
++                "ready": state["ready"],
++                "reason": state["reason"],
++                "version": BRIDGE_VERSION,
++            })
++            return
++        if not self._require_authorized():
++            return
++        if self.path == '/tools':
+             response = self.mcp_server._handle_tools_list(1)
+             self._send_json_response(response)
+         elif self.path == '/':
+             self._send_json_response({
+-                "message": "MCP Server",
+-                "endpoints": ["POST / (MCP protocol)", "GET /health", "GET /tools"]
++                "message": "VelvetOS Fusion Bridge",
++                "version": BRIDGE_VERSION,
++                "endpoints": ["POST /", "GET /health", "GET /ready", "GET /tools"],
+             })
+         else:
+             self.send_error(404, "Not Found")
+@@ -421,7 +494,7 @@ class MCPHandler(BaseHTTPRequestHandler):
+         """Send JSON response"""
+         self.send_response(200)
+         self.send_header('Content-type', 'application/json')
+-        self.send_header('Access-Control-Allow-Origin', '*')
++        self.send_header('Cache-Control', 'no-store')
+         self.end_headers()
+ 
+         response_json = json.dumps(data, indent=2)
+@@ -433,8 +506,8 @@ class MCPHandler(BaseHTTPRequestHandler):
+ 
+ 
+ def start_mcp_server(
+-    host: str = 'localhost',
+-    port: int = 9100,
++    host: str = '127.0.0.1',
++    port: int = 49110,
+     tools: Optional[Dict[str, Any]] = None,
+     resources: Optional[Dict[str, Any]] = None
+ ) -> Tuple[Optional[SimpleMCPServer], Optional[ThreadedHTTPServer], Optional[threading.Thread]]:
+@@ -451,8 +524,11 @@ def start_mcp_server(
+         Tuple containing (mcp_server, http_server, server_thread) or (None, None, None) if failed
+     """
+     try:
+-        # Create simple MCP server
+-        mcp = SimpleMCPServer("Fusion MCP Server")
++        # Load the local runtime secret once; never log or return it.
++        auth_token = load_token()
++
++        # Create the bounded production MCP server.
++        mcp = SimpleMCPServer("VelvetOS Fusion Bridge")
+ 
+         # Register tools if provided
+         if tools:
+@@ -470,7 +546,7 @@ def start_mcp_server(
+         # Create handler class with embedded MCP server
+         class HandlerWithMCP(MCPHandler):
+             def __init__(self, *args, **kwargs):
+-                super().__init__(*args, mcp_server=mcp, **kwargs)
++                super().__init__(*args, mcp_server=mcp, auth_token=auth_token, **kwargs)
+ 
+         http_server = ThreadedHTTPServer(server_address, HandlerWithMCP)
+ 
+diff --git a/Fusion MCP Addin/server/task_manager.py b/Fusion MCP Addin/server/task_manager.py
+index 17761bd..427e353 100644
+--- a/Fusion MCP Addin/server/task_manager.py	
++++ b/Fusion MCP Addin/server/task_manager.py	
+@@ -7,8 +7,21 @@ within the Fusion 360 environment.
+ 
+ import json
+ import uuid
++from datetime import datetime
++from pathlib import Path
+ from typing import Dict, Callable, Any, Optional
+ 
++_DIAG_LOG = Path(r"D:\Velvet\Logs\CreativeTools\Fusion\bridge-taskmanager.log")
++
++
++def _diag(message: str):
++    try:
++        _DIAG_LOG.parent.mkdir(parents=True, exist_ok=True)
++        with _DIAG_LOG.open("a", encoding="utf-8") as stream:
++            stream.write(f"{datetime.now().isoformat()} {message}\n")
++    except Exception:
++        pass
++
+ try:
+     import adsk.core
+     app = adsk.core.Application.get()
+@@ -72,6 +85,7 @@ class TaskManager:
+             cls._custom_event.add(cls._event_handler)
+ 
+             cls._is_running = True
++            _diag(f"START event_id={cls._custom_event.eventId}")
+             if app:
+                 app.log("TaskManager: Started successfully")
+             return True
+@@ -155,6 +169,7 @@ class TaskManager:
+ 
+             # Fire the custom event
+             app.fireCustomEvent(cls._custom_event.eventId, json.dumps(event_data))
++            _diag(f"POST task_id={task_id} command={command} pending={len(cls._pending_tasks)}")
+ 
+             app.log(f"TaskManager: Posted task {task_id} with command '{command}'")
+ 
+@@ -185,6 +200,11 @@ class TaskManager:
+         """
+         return len(cls._pending_tasks)
+ 
++    @classmethod
++    def cancel(cls, task_id: str) -> bool:
++        """Cancel a task that has not yet been dispatched on Fusion's main thread."""
++        return cls._pending_tasks.pop(task_id, None) is not None
++
+ 
+ class TaskEventHandler(adsk.core.CustomEventHandler):
+     """
+@@ -216,6 +236,7 @@ class TaskEventHandler(adsk.core.CustomEventHandler):
+             task_id = event_data.get('task_id')
+             command = event_data.get('command')
+             data = event_data.get('data', {})
++            _diag(f"NOTIFY task_id={task_id} command={command} pending={len(self._pending_tasks)}")
+ 
+             if not task_id or task_id not in self._pending_tasks:
+                 if app:
+@@ -229,9 +250,11 @@ class TaskEventHandler(adsk.core.CustomEventHandler):
+             # Execute the callback with the data
+             try:
+                 callback(data)
++                _diag(f"EXECUTED task_id={task_id} command={command}")
+                 if app:
+                     app.log(f"TaskManager: Executed task {task_id} with command '{command}'")
+             except Exception as callback_error:
++                _diag(f"CALLBACK_ERROR task_id={task_id} command={command} type={type(callback_error).__name__}")
+                 print(f"TaskManager: Callback error for task {task_id}: {str(callback_error)}")
+                 if app:
+                     app.log(f"TaskManager: Callback error for task {task_id}: {str(callback_error)}")
+diff --git a/Fusion MCP Addin/tools/__init__.py b/Fusion MCP Addin/tools/__init__.py
+index 63fe83f..8e566d8 100644
+--- a/Fusion MCP Addin/tools/__init__.py	
++++ b/Fusion MCP Addin/tools/__init__.py	
+@@ -4,8 +4,6 @@ Tools package for Fusion MCP Add-in
+ This package provides tools for the Fusion MCP Add-in.
+ """
+ 
+-# Import individual tools
+-from . import execute_api_script
+-from . import get_api_documentation
+-from . import get_best_practices
++# Expose only bounded production tools. Raw API-script execution stays disabled.
+ from . import get_screenshot
++from . import velvet_tools
+diff --git a/Fusion MCP Addin/tools/velvet_tools.py b/Fusion MCP Addin/tools/velvet_tools.py
+new file mode 100644
+index 0000000..23e568f
+--- /dev/null
++++ b/Fusion MCP Addin/tools/velvet_tools.py	
+@@ -0,0 +1,435 @@
++"""Bounded typed Fusion operations for VelvetOS production routing."""
++import json
++import os
++import re
++import time
++
++import adsk.core
++import adsk.fusion
++
++from ..mcp_primitives.item import Item
++from ..mcp_primitives.registry import register
++from ..mcp_primitives.tool import Tool
++from ..velvet_config import BRIDGE_VERSION, UPSTREAM_SHA
++
++app = adsk.core.Application.get()
++ui = app.userInterface
++_TEMP_DOCUMENTS = []
++_PENDING_TEMP_CREATE = None
++_ACCEPTANCE_GATE_PATH = r"D:\Velvet\State\CreativeTools\Fusion\acceptance.enabled"
++
++
++def _reply(payload, is_error=False):
++    return {
++        "content": [{"type": "text", "text": json.dumps(payload, sort_keys=True)}],
++        "isError": bool(is_error),
++        "data": payload,
++    }
++
++
++def _design():
++    design = adsk.fusion.Design.cast(app.activeProduct)
++    if not design:
++        raise RuntimeError("No active Fusion design")
++    return design
++
++
++def _wait_for_design_workspace(timeout_seconds=90):
++    """Pump Fusion events until the Design workspace is fully active and usable."""
++    deadline = time.time() + float(timeout_seconds)
++    last_workspace = None
++    while time.time() < deadline:
++        workspace = ui.activeWorkspace if ui else None
++        last_workspace = workspace.id if workspace else None
++        design = adsk.fusion.Design.cast(app.activeProduct)
++        if last_workspace == "FusionSolidEnvironment" and design and design.rootComponent:
++            return design
++        adsk.doEvents()
++        time.sleep(0.05)
++    raise RuntimeError(
++        f"Fusion Design workspace did not become ready within {timeout_seconds}s "
++        f"(active_workspace={last_workspace!r})"
++    )
++
++
++def _prepare_mutation():
++    """Return an open Fusion document to its idle Select command before writes."""
++    if not app.activeDocument:
++        return
++    if ui and ui.activeCommand != "SelectCommand":
++        select_command = ui.commandDefinitions.itemById("SelectCommand")
++        if select_command:
++            select_command.execute()
++
++
++def _wait_for_idle_design(timeout_seconds=10):
++    """Pump Fusion until the Design workspace is idle on its default Select command."""
++    deadline = time.time() + float(timeout_seconds)
++    last_command = None
++    last_workspace = None
++    while time.time() < deadline:
++        adsk.doEvents()
++        try:
++            last_command = ui.activeCommand if ui else None
++        except Exception:
++            last_command = None
++        try:
++            workspace = ui.activeWorkspace if ui else None
++            last_workspace = workspace.id if workspace else None
++        except Exception:
++            last_workspace = None
++        design = adsk.fusion.Design.cast(app.activeProduct)
++        if (
++            last_command == "SelectCommand"
++            and last_workspace == "FusionSolidEnvironment"
++            and design
++            and design.rootComponent
++        ):
++            return design
++        time.sleep(0.05)
++    raise RuntimeError(
++        f"Fusion did not return to an idle Design state within {timeout_seconds}s "
++        f"(active_command={last_command!r}, active_workspace={last_workspace!r})"
++    )
++
++
++def _safe_output_path(path, fmt):
++    root = os.path.normcase(os.path.abspath(r"D:\Velvet"))
++    output = os.path.normcase(os.path.abspath(path))
++    if os.path.commonpath([root, output]) != root:
++        raise ValueError("Export path must stay under D:\\Velvet")
++    expected_ext = ".step" if fmt == "step" else ".stl"
++    if not output.endswith(expected_ext):
++        raise ValueError(f"{fmt} export must end with {expected_ext}")
++    os.makedirs(os.path.dirname(output), exist_ok=True)
++    return output
++
++
++def status_handler():
++    doc = app.activeDocument
++    design = adsk.fusion.Design.cast(app.activeProduct)
++    try:
++        startup_complete = bool(app.isStartupComplete)
++    except Exception:
++        startup_complete = None
++    try:
++        workspace = ui.activeWorkspace.id if ui and ui.activeWorkspace else None
++    except Exception:
++        workspace = None
++    return _reply({
++        "bridge_version": BRIDGE_VERSION,
++        "upstream_sha": UPSTREAM_SHA,
++        "fusion_version": str(app.version),
++        "startup_complete": startup_complete,
++        "active_workspace": workspace,
++        "active_document": doc.name if doc else None,
++        "design_active": bool(design),
++        "temporary_document_tracked": bool(doc and any(d == doc for d in _TEMP_DOCUMENTS)),
++    })
++
++
++def native_mcp_probe_handler():
++    results = {}
++    for command in ("MCP.Server", "MCP.Port", "MCP.ServerURL"):
++        try:
++            results[command] = app.executeTextCommand(command)
++        except Exception as exc:
++            results[command] = {"error": type(exc).__name__, "message": str(exc)}
++    return _reply({"commands": results})
++
++
++def native_mcp_enable_handler():
++    before = {
++        "server": app.executeTextCommand("MCP.Server"),
++        "port": app.executeTextCommand("MCP.Port"),
++        "url": app.executeTextCommand("MCP.ServerURL"),
++    }
++    if "27182" not in str(before["port"]):
++        app.executeTextCommand("MCP.Port 27182")
++    app.executeTextCommand("MCP.Server /on")
++    after = {
++        "server": app.executeTextCommand("MCP.Server"),
++        "port": app.executeTextCommand("MCP.Port"),
++        "url": app.executeTextCommand("MCP.ServerURL"),
++    }
++    if "running at" not in str(after["server"]).lower():
++        raise RuntimeError(f"Native Fusion MCP did not start: {after['server']}")
++    return _reply({
++        "changed": str(before["server"]) != str(after["server"]),
++        "before": before,
++        "after": after,
++    })
++
++
++def new_design_command_probe_handler():
++    rows = []
++    definitions = ui.commandDefinitions
++    needles = ("new design", "new document", "newdesign", "newdocument", "create design")
++    for i in range(definitions.count):
++        definition = definitions.item(i)
++        text = " ".join([
++            str(getattr(definition, "id", "")),
++            str(getattr(definition, "name", "")),
++            str(getattr(definition, "description", "")),
++        ]).lower()
++        if any(needle in text for needle in needles) or ("new" in text and ("document" in text or "design" in text)):
++            rows.append({
++                "id": getattr(definition, "id", ""),
++                "name": getattr(definition, "name", ""),
++                "description": getattr(definition, "description", ""),
++            })
++    return _reply({"commands": rows})
++
++
++def start_temp_design_handler(label="VelvetOS Acceptance"):
++    global _PENDING_TEMP_CREATE
++    if not isinstance(label, str) or not label.strip() or len(label) > 80:
++        raise ValueError("label must be 1-80 characters")
++    if app.activeDocument:
++        raise RuntimeError("Refusing to create a temporary design while another document is open")
++    if _PENDING_TEMP_CREATE is not None:
++        raise RuntimeError("A temporary design creation is already pending")
++
++    pending = {
++        "before_count": app.documents.count,
++        "started_at": time.time(),
++        "label": label.strip(),
++    }
++    result = app.executeTextCommand("Commands.Start NewSingleDocumentCommand")
++    _PENDING_TEMP_CREATE = pending
++    return _reply({
++        "started": True,
++        "pending": True,
++        "command": "NewSingleDocumentCommand",
++        "requested_label": label.strip(),
++        "text_command_result": result,
++    })
++
++
++def adopt_temp_design_handler():
++    global _PENDING_TEMP_CREATE
++    pending = _PENDING_TEMP_CREATE
++    if pending is None:
++        raise RuntimeError("No temporary design creation is pending")
++
++    doc = app.activeDocument
++    design = adsk.fusion.Design.cast(app.activeProduct)
++    if not doc or not design or not design.rootComponent or app.documents.count <= pending["before_count"]:
++        return _reply({
++            "ready": False,
++            "pending": True,
++            "elapsed_seconds": round(time.time() - pending["started_at"], 3),
++        })
++
++    if not any(existing == doc for existing in _TEMP_DOCUMENTS):
++        _TEMP_DOCUMENTS.append(doc)
++    _PENDING_TEMP_CREATE = None
++    return _reply({
++        "ready": True,
++        "created": True,
++        "document": doc.name,
++        "root_component": design.rootComponent.name,
++        "tracked_temporary": True,
++        "creation_command": "NewPartDocumentCommand",
++        "requested_label": pending["label"],
++    })
++
++
++def design_summary_handler():
++    design = _wait_for_design_workspace(timeout_seconds=20)
++    root = design.rootComponent
++    params = design.userParameters
++    return _reply({
++        "document": app.activeDocument.name if app.activeDocument else None,
++        "root_component": root.name,
++        "bodies": root.bRepBodies.count,
++        "occurrences": root.occurrences.count,
++        "sketches": root.sketches.count,
++        "user_parameters": params.count,
++        "parameter_names": [params.item(i).name for i in range(params.count)],
++    })
++
++
++def create_temp_design_handler(label="VelvetOS Acceptance"):
++    if not isinstance(label, str) or not label.strip() or len(label) > 80:
++        raise ValueError("label must be 1-80 characters")
++    if app.activeDocument:
++        raise RuntimeError("Refusing to create a temporary design while another document is open")
++
++    before_count = app.documents.count
++    doc = app.documents.add(adsk.core.DocumentTypes.FusionDesignDocumentType)
++    if not doc:
++        raise RuntimeError("Fusion documents.add did not return a document")
++    _TEMP_DOCUMENTS.append(doc)
++
++    try:
++        design = _wait_for_design_workspace(timeout_seconds=20)
++        _prepare_mutation()
++        try:
++            design = _wait_for_idle_design(timeout_seconds=10)
++        except Exception:
++            design = _wait_for_design_workspace(timeout_seconds=5)
++        if app.activeDocument != doc:
++            raise RuntimeError("Fusion changed the active document during temporary design creation")
++        if app.documents.count <= before_count:
++            raise RuntimeError("Fusion document count did not increase after documents.add")
++        return _reply({
++            "created": True,
++            "document": doc.name,
++            "root_component": design.rootComponent.name,
++            "tracked_temporary": True,
++            "creation_api": "Documents.add(FusionDesignDocumentType)",
++            "requested_label": label.strip(),
++        })
++    except Exception:
++        if doc in _TEMP_DOCUMENTS:
++            _TEMP_DOCUMENTS.remove(doc)
++        try:
++            doc.close(False)
++        except Exception:
++            pass
++        raise
++
++
++def set_user_parameter_handler(name, expression, units="mm", comment="VelvetOS"):
++    _prepare_mutation()
++    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,63}", str(name)):
++        raise ValueError("parameter name must be a simple identifier")
++    if units not in {"mm", "cm", "m", "in", "deg", "rad"}:
++        raise ValueError("unsupported units")
++    if not isinstance(expression, str) or not expression.strip() or len(expression) > 128:
++        raise ValueError("expression must be 1-128 characters")
++    design = _wait_for_design_workspace(timeout_seconds=20)
++    params = design.userParameters
++    existing = params.itemByName(name)
++    created = existing is None
++    if existing:
++        existing.expression = expression.strip()
++        param = existing
++    else:
++        value = adsk.core.ValueInput.createByString(expression.strip())
++        param = params.add(name, value, units, str(comment)[:128])
++    return _reply({
++        "name": param.name,
++        "expression": param.expression,
++        "unit": param.unit,
++        "created": created,
++    })
++
++
++def create_box_handler(width_mm=20.0, height_mm=20.0, depth_mm=10.0):
++    _prepare_mutation()
++    dims = [float(width_mm), float(height_mm), float(depth_mm)]
++    if any(v <= 0 or v > 100000 for v in dims):
++        raise ValueError("box dimensions must be >0 and <=100000 mm")
++    design = _wait_for_design_workspace(timeout_seconds=20)
++    root = design.rootComponent
++    sketch = root.sketches.add(root.xYConstructionPlane)
++    lines = sketch.sketchCurves.sketchLines
++    lines.addTwoPointRectangle(
++        adsk.core.Point3D.create(0, 0, 0),
++        adsk.core.Point3D.create(dims[0] / 10.0, dims[1] / 10.0, 0),
++    )
++    if sketch.profiles.count < 1:
++        raise RuntimeError("box sketch did not produce a profile")
++    extrudes = root.features.extrudeFeatures
++    feature = extrudes.addSimple(
++        sketch.profiles.item(0),
++        adsk.core.ValueInput.createByString(f"{dims[2]} mm"),
++        adsk.fusion.FeatureOperations.NewBodyFeatureOperation,
++    )
++    return _reply({
++        "created": True,
++        "feature": feature.name,
++        "body_count": feature.bodies.count,
++        "width_mm": dims[0],
++        "height_mm": dims[1],
++        "depth_mm": dims[2],
++    })
++
++
++def export_design_handler(format, output_path):
++    fmt = str(format).lower()
++    if fmt not in {"step", "stl"}:
++        raise ValueError("format must be step or stl")
++    design = _wait_for_design_workspace(timeout_seconds=20)
++    output = _safe_output_path(str(output_path), fmt)
++    manager = design.exportManager
++    if fmt == "step":
++        options = manager.createSTEPExportOptions(output, design.rootComponent)
++    else:
++        options = manager.createSTLExportOptions(design.rootComponent, output)
++    if not options:
++        raise RuntimeError(f"Fusion could not create {fmt} export options")
++    ok = bool(manager.execute(options))
++    exists = os.path.isfile(output)
++    size = os.path.getsize(output) if exists else 0
++    if not ok or not exists or size <= 0:
++        raise RuntimeError(f"{fmt} export failed verification")
++    return _reply({"format": fmt, "path": output, "bytes": size, "verified": True})
++
++
++def close_temp_design_handler():
++    _prepare_mutation()
++    doc = app.activeDocument
++    if not doc:
++        raise RuntimeError("No active document")
++    match = next((d for d in _TEMP_DOCUMENTS if d == doc), None)
++    if not match:
++        raise RuntimeError("Active document was not created by VelvetOS temp-design tool")
++    name = doc.name
++    _TEMP_DOCUMENTS.remove(match)
++    doc.close(False)
++    return _reply({"closed": True, "document": name, "saved": False})
++
++
++def _register(tool, handler):
++    register(Item.create_tool_item(tool=tool.strict_schema(), handler=handler))
++
++
++_register(Tool.create_simple("velvet_fusion_status", "Read Fusion and bridge status."), status_handler)
++_register(Tool.create_simple("velvet_probe_native_mcp", "Read built-in Autodesk Fusion MCP server state without changing it."), native_mcp_probe_handler)
++_register(Tool.create_simple("velvet_enable_native_mcp", "Enable Autodesk Fusion's built-in local MCP server on port 27182 with readback."), native_mcp_enable_handler)
++_register(Tool.create_simple("velvet_design_summary", "Read active design structure and user parameters."), design_summary_handler)
++
++if os.path.isfile(_ACCEPTANCE_GATE_PATH):
++    start_temp = Tool.create_simple(
++        "velvet_acceptance_start_temp_design",
++        "Acceptance-only: start asynchronous creation of one temporary Fusion design while the local acceptance gate exists.",
++    )
++    start_temp.add_input_property("label", {"type": "string", "minLength": 1, "maxLength": 80})
++    _register(start_temp, start_temp_design_handler)
++    _register(
++        Tool.create_simple(
++            "velvet_acceptance_adopt_temp_design",
++            "Acceptance-only: adopt the asynchronously created temporary Fusion design after it becomes active.",
++        ),
++        adopt_temp_design_handler,
++    )
++    _register(
++        Tool.create_simple(
++            "velvet_acceptance_close_temp_design",
++            "Acceptance-only: close the active tracked temporary Fusion design without saving.",
++        ),
++        close_temp_design_handler,
++    )
++
++set_param = Tool.create_simple("velvet_set_user_parameter", "Create or update one user parameter in the active design.")
++set_param.add_input_property("name", {"type": "string"})
++set_param.add_input_property("expression", {"type": "string"})
++set_param.add_input_property("units", {"type": "string", "enum": ["mm", "cm", "m", "in", "deg", "rad"]})
++set_param.add_input_property("comment", {"type": "string", "maxLength": 128})
++set_param.add_required_input("name").add_required_input("expression")
++_register(set_param, set_user_parameter_handler)
++
++box = Tool.create_simple("velvet_create_box", "Create one rectangular box body in the active design.")
++for key in ("width_mm", "height_mm", "depth_mm"):
++    box.add_input_property(key, {"type": "number", "exclusiveMinimum": 0, "maximum": 100000})
++_register(box, create_box_handler)
++
++export = Tool.create_simple("velvet_export_design", "Export the active design to a verified STEP or STL file under D:\\Velvet.")
++export.add_input_property("format", {"type": "string", "enum": ["step", "stl"]})
++export.add_input_property("output_path", {"type": "string"})
++export.add_required_input("format").add_required_input("output_path")
++_register(export, export_design_handler)
++
+diff --git a/Fusion MCP Addin/velvet_config.py b/Fusion MCP Addin/velvet_config.py
+new file mode 100644
+index 0000000..08c7794
+--- /dev/null
++++ b/Fusion MCP Addin/velvet_config.py	
+@@ -0,0 +1,14 @@
++from pathlib import Path
++
++BRIDGE_VERSION = "0.1.0"
++UPSTREAM_SHA = "1d49ee8f7744b2e7aaec91f9c660c65963fccd71"
++TOKEN_PATH = Path(r"D:\Velvet\State\CreativeTools\Fusion\token.txt")
++HOST = "127.0.0.1"
++PORT = 49110
++
++
++def load_token() -> str:
++    token = TOKEN_PATH.read_text(encoding="utf-8").strip()
++    if len(token) < 32:
++        raise RuntimeError("VelvetOS Fusion bridge token is missing or too short")
++    return token
+diff --git a/Fusion MCP Addin/velvet_readiness.py b/Fusion MCP Addin/velvet_readiness.py
+new file mode 100644
+index 0000000..0f41e6a
+--- /dev/null
++++ b/Fusion MCP Addin/velvet_readiness.py	
+@@ -0,0 +1,70 @@
++"""Thread-safe readiness state shared by the Fusion add-in and HTTP bridge."""
++import threading
++import time
++
++_lock = threading.Lock()
++_ready = threading.Event()
++_ready_at = None
++_reason = "fusion_startup_incomplete"
++_ready_timer = None
++
++
++def _cancel_timer_locked():
++    global _ready_timer
++    if _ready_timer is not None:
++        try:
++            _ready_timer.cancel()
++        except Exception:
++            pass
++        _ready_timer = None
++
++
++def mark_ready(reason="startup_completed"):
++    global _ready_at, _reason
++    with _lock:
++        _cancel_timer_locked()
++        _reason = str(reason)
++        _ready_at = time.time()
++        _ready.set()
++
++
++def schedule_ready(delay_seconds=25, reason="ui_settle_grace_elapsed"):
++    """Become ready after a non-blocking post-startup UI settle window."""
++    global _ready_at, _reason, _ready_timer
++    delay = max(0.0, float(delay_seconds))
++
++    def complete():
++        global _ready_at, _reason, _ready_timer
++        with _lock:
++            _ready_timer = None
++            _reason = str(reason)
++            _ready_at = time.time()
++            _ready.set()
++
++    with _lock:
++        _cancel_timer_locked()
++        _ready.clear()
++        _ready_at = None
++        _reason = "fusion_ui_settling"
++        timer = threading.Timer(delay, complete)
++        timer.daemon = True
++        _ready_timer = timer
++        timer.start()
++
++
++def mark_not_ready(reason="fusion_startup_incomplete"):
++    global _ready_at, _reason
++    with _lock:
++        _cancel_timer_locked()
++        _ready_at = None
++        _reason = str(reason)
++        _ready.clear()
++
++
++def snapshot():
++    with _lock:
++        return {
++            "ready": _ready.is_set(),
++            "reason": _reason,
++            "ready_at_unix": _ready_at,
++        }

@@ -1,0 +1,98 @@
+{
+  "schema": "velvetos.creative-tools.connector.v1",
+  "id": "resolve",
+  "display_name": "DaVinci Resolve Studio",
+  "host_observed_version": "21.1.0.17",
+  "official_api": {
+    "kind": "Blackmagic DaVinci Resolve Scripting API",
+    "developer_docs": "C:\\ProgramData\\Blackmagic Design\\DaVinci Resolve\\Support\\Developer\\Scripting\\README.md",
+    "builtin_python": "C:\\Program Files\\Blackmagic Design\\DaVinci Resolve\\ResolvePython\\ResolvePython.exe",
+    "scripting_mode": "Local",
+    "config_value": "System.Scripting.Mode = 1",
+    "port": 1144
+  },
+  "mcp": {
+    "upstream_repository": "https://github.com/samuelgursky/davinci-resolve-mcp.git",
+    "upstream_commit": "f85f1bda0781da4ae7e4cd864bfaca9159e8d352",
+    "upstream_version": "4.8.26",
+    "license": "MIT",
+    "safe_server": "D:\\Velvet\\Runtime\\CreativeTools\\Resolve\\ResolveSafeServer.py",
+    "safe_server_sha256": "9380B15FFD6EA96D55F708707A715437E9D293FCAFF86E8ECF362FCFCB22342E",
+    "tool_groups_exposed": [
+      "knowledge",
+      "lut",
+      "media_pool",
+      "media_pool_item",
+      "media_storage",
+      "project_manager",
+      "project_settings",
+      "render",
+      "timeline",
+      "timeline_item"
+    ],
+    "tool_groups_removed": 27,
+    "action_level_allowlist": true,
+    "generic_or_arbitrary_scripting_exposed": false
+  },
+  "lifecycle": {
+    "mode": "official_headless_hidden_on_demand",
+    "process": "Resolve",
+    "task": "VelvetOS DCC OnDemand resolve",
+    "task_triggerless": true,
+    "managed_shortcut": "D:\\Velvet\\Runtime\\Autostart\\DaVinci Resolve Studio - VelvetOS.lnk",
+    "shortcut_arguments": "-nogui",
+    "host_wrapper": "D:\\Velvet\\Runtime\\Autostart\\Start-VelvetResolveHost.ps1",
+    "host_wrapper_sha256": "E6B733FBA32593E8A2B431B57750FDE06EF3E31700C2933225DDFB6666AF66FB",
+    "launch_at_logon": false,
+    "vendor_shortcut_modified": false
+  },
+  "security": {
+    "external_scripting_mode": "Local",
+    "path_root_for_guarded_file_operations": "D:\\Velvet",
+    "disposable_project_prefix_required": "_mcp_",
+    "acceptance_only_actions": [
+      "project_manager.load",
+      "project_manager.save",
+      "project_manager.safe_project_delete"
+    ],
+    "acceptance_gate": "D:\\Velvet\\State\\CreativeTools\\Resolve\\acceptance.enabled",
+    "acceptance_gate_present": false,
+    "raw_resolve_control_removed": true,
+    "script_plugin_removed": true,
+    "dctl_plugin_removed": true,
+    "fuse_plugin_removed": true,
+    "vendor_binary_modified": false,
+    "signature_or_integrity_checks_weakened": false
+  },
+  "acceptance": {
+    "read_probe": "PASS",
+    "controlled_project": "_mcp_velvet_acceptance_20261001",
+    "setting_write": {
+      "key": "timelineResolutionWidth",
+      "requested": "1280",
+      "readback": "1280",
+      "restored": "1920"
+    },
+    "project_save": true,
+    "project_export": {
+      "path": "D:\\Velvet\\Tmp\\creative-tools\\resolve\\acceptance\\_mcp_velvet_acceptance_20261001.drp",
+      "bytes": 6035,
+      "sha256": "9228EEB026E94ED7F49F7982C24019BD65AFBA5C19CA39C3568B87C300895AD8"
+    },
+    "cleanup_project_list": [],
+    "restart_readback": "Untitled Project",
+    "clean_stop": true
+  },
+  "update_sentinel": {
+    "classification": "PASS_COMPATIBILITY_CHECK",
+    "receipt": "D:\\Velvet\\Logs\\DCC-Adobe-Update-Sentinel\\receipts\\20261001T080623Z-resolve.json",
+    "receipt_sha256": "490668B7FD225DC51F6C3BA1CE1FFDAD876C49ED36F2225E139B7F13277BF532",
+    "routing_status": "available",
+    "readiness_retry_fix_sha256": "E178E7C3259FEA3BF424545B4EFB8B34CE9A3F326A0701DE85B212397D7C4F3A"
+  },
+  "limitations": [
+    "Blackmagic Local scripting mode is enabled, but the vendor fuscript listener is observed bound to 0.0.0.0:1144 rather than a loopback-only socket; access control relies on Resolve's Local scripting mode.",
+    "Advanced/dangerous upstream MCP groups are intentionally removed until separately accepted."
+  ],
+  "acceptance_status": "FUNCTIONAL_PASS_WITH_LIMITATION"
+}
