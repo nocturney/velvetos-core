@@ -1,0 +1,2309 @@
+{
+    "schema":  "velvetos.creative-craft.registry.v1",
+    "version":  "0.4.0",
+    "policy":  {
+                   "fail_closed":  true,
+                   "routing_state":  "D:\\Velvet\\State\\DCC-Adobe-Update-Sentinel\\routing-state.json",
+                   "required_routing_status":  "available",
+                   "host_manager":  "D:\\Velvet\\Runtime\\Autostart\\Invoke-VelvetDccHost.ps1",
+                   "python":  "C:\\Python314\\python.exe",
+                   "preserve_preexisting_user_sessions":  true,
+                   "raw_script_execution":  false,
+                   "overwrite_outputs":  false,
+                   "stop_agent_launched_hosts":  true,
+                   "output_root":  "D:\\Velvet\\Output\\CreativeCraft",
+                   "candidate_matrix":  "D:\\Velvet\\State\\CreativeCraft\\missing-integrations-phase2-candidate-matrix.json",
+                   "authority_roots":  "D:\\Velvet\\State\\CreativeCraft\\authority-roots.json",
+                   "printer_network_control":  false,
+                   "auto_publish":  false,
+                   "unapproved_email_send":  false,
+                   "unapproved_cloud_spend":  false,
+                   "integrity_weakening":  false
+               },
+    "tools":  {
+                  "fusion":  {
+                                 "display_name":  "Autodesk Fusion",
+                                 "lifecycle":  "dcc-host",
+                                 "domains":  [
+                                                 "cad",
+                                                 "parametric-modeling",
+                                                 "3d-print"
+                                             ],
+                                 "production_surface":  "typed-atomic-provider-v0.2",
+                                 "operations":  [
+                                                    "read",
+                                                    "electronics-read",
+                                                    "undo",
+                                                    "redo",
+                                                    "create-export-box-stl",
+                                                    "create-export-box-step"
+                                                ],
+                                 "blocked":  [
+                                                 "general-new-design-write",
+                                                 "general-parameter-write",
+                                                 "general-geometry-write",
+                                                 "arbitrary-python",
+                                                 "raw-fusion-mcp-execute",
+                                                 "modify-existing-user-document"
+                                             ],
+                                 "availability":  {
+                                                      "type":  "dcc_routing",
+                                                      "route_key":  "fusion"
+                                                  },
+                                 "readiness":  "READY_BOUNDED",
+                                 "skills":  [
+                                                "vf-cad-design-craft"
+                                            ],
+                                 "typed_gaps":  [
+
+                                                ]
+                             },
+                  "meshmixer":  {
+                                    "display_name":  "Autodesk Meshmixer",
+                                    "lifecycle":  "dcc-host",
+                                    "domains":  [
+                                                    "mesh",
+                                                    "3d-print",
+                                                    "inspection"
+                                                ],
+                                    "production_surface":  "official-mm-api-typed",
+                                    "operations":  [
+                                                       "probe",
+                                                       "list",
+                                                       "info",
+                                                       "import",
+                                                       "screenshot"
+                                                   ],
+                                    "blocked":  [
+                                                    "generic-command-stream",
+                                                    "arbitrary-api-execution"
+                                                ],
+                                    "availability":  {
+                                                         "type":  "dcc_routing",
+                                                         "route_key":  "meshmixer"
+                                                     },
+                                    "readiness":  "READY_BOUNDED",
+                                    "skills":  [
+                                                   "vf-dcc-modeling-craft"
+                                               ],
+                                    "typed_gaps":  [
+
+                                                   ]
+                                },
+                  "resolve":  {
+                                  "display_name":  "DaVinci Resolve Studio",
+                                  "lifecycle":  "dcc-host",
+                                  "domains":  [
+                                                  "video-edit",
+                                                  "video-finish",
+                                                  "render"
+                                              ],
+                                  "production_surface":  "safe-mcp",
+                                  "operations":  [
+                                                     "media",
+                                                     "timeline",
+                                                     "project-settings",
+                                                     "render",
+                                                     "lut"
+                                                 ],
+                                  "blocked":  [
+                                                  "raw-resolve-control",
+                                                  "script-plugin",
+                                                  "dctl-plugin",
+                                                  "fuse-plugin"
+                                              ],
+                                  "availability":  {
+                                                       "type":  "dcc_routing",
+                                                       "route_key":  "resolve"
+                                                   },
+                                  "readiness":  "READY_BOUNDED",
+                                  "skills":  [
+                                                 "vf-post-production-craft",
+                                                 "vf-vfx-compositing-craft"
+                                             ],
+                                  "typed_gaps":  [
+
+                                                 ]
+                              },
+                  "topaz-video":  {
+                                      "display_name":  "Topaz Video",
+                                      "lifecycle":  "headless-cli",
+                                      "domains":  [
+                                                      "video-enhance",
+                                                      "upscale"
+                                                  ],
+                                      "production_surface":  "typed-cli",
+                                      "operations":  [
+                                                         "probe-media",
+                                                         "enhance"
+                                                     ],
+                                      "blocked":  [
+                                                      "arbitrary-ffmpeg-args",
+                                                      "automatic-model-downloads"
+                                                  ],
+                                      "availability":  {
+                                                           "type":  "dcc_routing",
+                                                           "route_key":  "topaz-video"
+                                                       },
+                                      "readiness":  "READY_BOUNDED",
+                                      "skills":  [
+                                                     "vf-post-production-craft"
+                                                 ],
+                                      "typed_gaps":  [
+
+                                                     ]
+                                  },
+                  "affinity":  {
+                                   "display_name":  "Affinity",
+                                   "lifecycle":  "dcc-host",
+                                   "domains":  [
+                                                   "vector-proof",
+                                                   "render-verification"
+                                               ],
+                                   "production_surface":  "safe-native-mcp",
+                                   "operations":  [
+                                                      "probe",
+                                                      "status",
+                                                      "render-current"
+                                                  ],
+                                   "blocked":  [
+                                                   "raw-execute-script",
+                                                   "library-write",
+                                                   "network",
+                                                   "filesystem",
+                                                   "canva-ai"
+                                               ],
+                                   "availability":  {
+                                                        "type":  "dcc_routing",
+                                                        "route_key":  "affinity"
+                                                    },
+                                   "readiness":  "READY_BOUNDED",
+                                   "skills":  [
+                                                  "vf-image-design-craft"
+                                              ],
+                                   "typed_gaps":  [
+
+                                                  ]
+                               },
+                  "coreldraw":  {
+                                    "display_name":  "CorelDRAW",
+                                    "lifecycle":  "dcc-host",
+                                    "domains":  [
+                                                    "vector-design",
+                                                    "layout",
+                                                    "print"
+                                                ],
+                                    "production_surface":  "typed-craft-v0.2",
+                                    "operations":  [
+                                                       "probe",
+                                                       "status",
+                                                       "craft-vector",
+                                                       "image-import",
+                                                       "pdf-export",
+                                                       "cdr-save"
+                                                   ],
+                                    "blocked":  [
+                                                    "Evaluate",
+                                                    "VBA",
+                                                    "GMS",
+                                                    "generic-com-dispatch",
+                                                    "arbitrary-script"
+                                                ],
+                                    "availability":  {
+                                                         "type":  "dcc_routing",
+                                                         "route_key":  "coreldraw"
+                                                     },
+                                    "readiness":  "READY_BOUNDED",
+                                    "skills":  [
+                                                   "vf-image-design-craft",
+                                                   "vf-prepress-qa"
+                                               ],
+                                    "typed_gaps":  [
+
+                                                   ]
+                                },
+                  "corel-designer":  {
+                                         "display_name":  "Corel DESIGNER",
+                                         "lifecycle":  "dcc-host",
+                                         "domains":  [
+                                                         "technical-illustration",
+                                                         "diagram",
+                                                         "vector-design"
+                                                     ],
+                                         "production_surface":  "typed-craft-v0.2",
+                                         "operations":  [
+                                                            "probe",
+                                                            "status",
+                                                            "craft-vector",
+                                                            "image-import",
+                                                            "pdf-export",
+                                                            "cdr-save"
+                                                        ],
+                                         "blocked":  [
+                                                         "Evaluate",
+                                                         "VBA",
+                                                         "GMS",
+                                                         "generic-com-dispatch",
+                                                         "arbitrary-script"
+                                                     ],
+                                         "availability":  {
+                                                              "type":  "dcc_routing",
+                                                              "route_key":  "corel-designer"
+                                                          },
+                                         "readiness":  "READY_BOUNDED",
+                                         "skills":  [
+                                                        "vf-technical-illustration-craft"
+                                                    ],
+                                         "typed_gaps":  [
+
+                                                        ]
+                                     },
+                  "blender":  {
+                                  "display_name":  "Blender",
+                                  "lifecycle":  "dcc-host",
+                                  "domains":  [
+                                                  "3d",
+                                                  "mesh",
+                                                  "organic-modeling",
+                                                  "render"
+                                              ],
+                                  "production_surface":  "accepted-dcc-adapter",
+                                  "operations":  [
+                                                     "accepted-dcc-operations"
+                                                 ],
+                                  "blocked":  [
+                                                  "arbitrary-agent-scripting"
+                                              ],
+                                  "availability":  {
+                                                       "type":  "dcc_routing",
+                                                       "route_key":  "blender"
+                                                   },
+                                  "readiness":  "PARTIAL_TYPED_AUTOMATION",
+                                  "skills":  [
+                                                 "vf-dcc-modeling-craft",
+                                                 "vf-material-lookdev",
+                                                 "vf-product-visualization-craft"
+                                             ],
+                                  "typed_gaps":  [
+                                                     "standardized-job-owned-turntable-operation"
+                                                 ]
+                              },
+                  "maya":  {
+                               "display_name":  "Autodesk Maya",
+                               "lifecycle":  "dcc-host",
+                               "domains":  [
+                                               "3d",
+                                               "mesh",
+                                               "animation"
+                                           ],
+                               "production_surface":  "accepted-dcc-adapter",
+                               "operations":  [
+                                                  "accepted-dcc-operations"
+                                              ],
+                               "blocked":  [
+                                               "arbitrary-agent-scripting"
+                                           ],
+                               "availability":  {
+                                                    "type":  "dcc_routing",
+                                                    "route_key":  "maya"
+                                                },
+                               "readiness":  "READY_ACCEPTED_SURFACE",
+                               "skills":  [
+                                              "vf-dcc-modeling-craft",
+                                              "vf-material-lookdev"
+                                          ],
+                               "typed_gaps":  [
+
+                                              ]
+                           },
+                  "3dsmax":  {
+                                 "display_name":  "Autodesk 3ds Max",
+                                 "lifecycle":  "dcc-host",
+                                 "domains":  [
+                                                 "3d",
+                                                 "mesh",
+                                                 "render"
+                                             ],
+                                 "production_surface":  "accepted-dcc-adapter",
+                                 "operations":  [
+                                                    "accepted-dcc-operations"
+                                                ],
+                                 "blocked":  [
+                                                 "arbitrary-agent-scripting"
+                                             ],
+                                 "availability":  {
+                                                      "type":  "dcc_routing",
+                                                      "route_key":  "3dsmax"
+                                                  },
+                                 "readiness":  "PARTIAL_TYPED_AUTOMATION",
+                                 "skills":  [
+                                                "vf-dcc-modeling-craft",
+                                                "vf-material-lookdev"
+                                            ],
+                                 "typed_gaps":  [
+                                                    "standardized-job-owned-turntable-operation"
+                                                ]
+                             },
+                  "autocad":  {
+                                  "display_name":  "Autodesk AutoCAD",
+                                  "lifecycle":  "dcc-host",
+                                  "domains":  [
+                                                  "cad",
+                                                  "2d-drafting",
+                                                  "dwg",
+                                                  "dxf"
+                                              ],
+                                  "production_surface":  "accepted-dcc-adapter",
+                                  "operations":  [
+                                                     "accepted-dcc-operations"
+                                                 ],
+                                  "blocked":  [
+                                                  "arbitrary-agent-scripting"
+                                              ],
+                                  "availability":  {
+                                                       "type":  "dcc_routing",
+                                                       "route_key":  "autocad"
+                                                   },
+                                  "readiness":  "READY_ACCEPTED_SURFACE",
+                                  "skills":  [
+                                                 "vf-cad-design-craft"
+                                             ],
+                                  "typed_gaps":  [
+
+                                                 ]
+                              },
+                  "inventor":  {
+                                   "display_name":  "Autodesk Inventor",
+                                   "lifecycle":  "dcc-host",
+                                   "domains":  [
+                                                   "cad",
+                                                   "mechanical",
+                                                   "assembly",
+                                                   "drawing"
+                                               ],
+                                   "production_surface":  "accepted-dcc-adapter",
+                                   "operations":  [
+                                                      "accepted-dcc-operations"
+                                                  ],
+                                   "blocked":  [
+                                                   "arbitrary-agent-scripting"
+                                               ],
+                                   "availability":  {
+                                                        "type":  "dcc_routing",
+                                                        "route_key":  "inventor"
+                                                    },
+                                   "readiness":  "READY_ACCEPTED_SURFACE",
+                                   "skills":  [
+                                                  "vf-cad-design-craft"
+                                              ],
+                                   "typed_gaps":  [
+
+                                                  ]
+                               },
+                  "zbrush":  {
+                                 "display_name":  "ZBrush",
+                                 "lifecycle":  "dcc-host",
+                                 "domains":  [
+                                                 "3d",
+                                                 "sculpt"
+                                             ],
+                                 "production_surface":  "accepted-dcc-adapter",
+                                 "operations":  [
+                                                    "accepted-dcc-operations"
+                                                ],
+                                 "blocked":  [
+                                                 "arbitrary-agent-scripting"
+                                             ],
+                                 "availability":  {
+                                                      "type":  "dcc_routing",
+                                                      "route_key":  "zbrush"
+                                                  },
+                                 "readiness":  "READY_ACCEPTED_SURFACE",
+                                 "skills":  [
+                                                "vf-dcc-modeling-craft"
+                                            ],
+                                 "typed_gaps":  [
+
+                                                ]
+                             },
+                  "substance-painter":  {
+                                            "display_name":  "Adobe Substance 3D Painter",
+                                            "lifecycle":  "dcc-host",
+                                            "domains":  [
+                                                            "pbr",
+                                                            "materials",
+                                                            "texturing"
+                                                        ],
+                                            "production_surface":  "accepted-dcc-adapter",
+                                            "operations":  [
+                                                               "accepted-dcc-operations"
+                                                           ],
+                                            "blocked":  [
+                                                            "arbitrary-agent-scripting"
+                                                        ],
+                                            "availability":  {
+                                                                 "type":  "dcc_routing",
+                                                                 "route_key":  "substance-painter"
+                                                             },
+                                            "readiness":  "READY_ACCEPTED_SURFACE",
+                                            "skills":  [
+                                                           "vf-material-lookdev"
+                                                       ],
+                                            "typed_gaps":  [
+
+                                                           ]
+                                        },
+                  "substance-designer":  {
+                                             "display_name":  "Adobe Substance 3D Designer",
+                                             "lifecycle":  "dcc-host",
+                                             "domains":  [
+                                                             "pbr",
+                                                             "materials",
+                                                             "procedural"
+                                                         ],
+                                             "production_surface":  "accepted-dcc-adapter",
+                                             "operations":  [
+                                                                "accepted-dcc-operations"
+                                                            ],
+                                             "blocked":  [
+                                                             "arbitrary-agent-scripting"
+                                                         ],
+                                             "availability":  {
+                                                                  "type":  "dcc_routing",
+                                                                  "route_key":  "substance-designer"
+                                                              },
+                                             "readiness":  "READY_ACCEPTED_SURFACE",
+                                             "skills":  [
+                                                            "vf-material-lookdev"
+                                                        ],
+                                             "typed_gaps":  [
+
+                                                            ]
+                                         },
+                  "photoshop":  {
+                                    "display_name":  "Adobe Photoshop",
+                                    "lifecycle":  "dcc-host",
+                                    "domains":  [
+                                                    "image",
+                                                    "raster",
+                                                    "finishing"
+                                                ],
+                                    "production_surface":  "accepted-readonly-and-temporary-document-surface",
+                                    "operations":  [
+                                                       "getVersion",
+                                                       "getActive",
+                                                       "batchPlayReadOnly",
+                                                       "createTemporary",
+                                                       "closeTemporary"
+                                                   ],
+                                    "blocked":  [
+                                                    "unbounded-authoring"
+                                                ],
+                                    "availability":  {
+                                                         "type":  "dcc_routing",
+                                                         "route_key":  "photoshop"
+                                                     },
+                                    "readiness":  "PARTIAL_TYPED_AUTOMATION",
+                                    "skills":  [
+                                                   "vf-image-design-craft"
+                                               ],
+                                    "typed_gaps":  [
+                                                       "crop-resize",
+                                                       "adjustments-masks",
+                                                       "exact-placement",
+                                                       "editable-save",
+                                                       "png-jpeg-export"
+                                                   ]
+                                },
+                  "illustrator":  {
+                                      "display_name":  "Adobe Illustrator",
+                                      "lifecycle":  "dcc-host",
+                                      "domains":  [
+                                                      "vector",
+                                                      "illustration"
+                                                  ],
+                                      "production_surface":  "accepted-readonly-surface",
+                                      "operations":  [
+                                                         "version",
+                                                         "active-document-read"
+                                                     ],
+                                      "blocked":  [
+                                                      "unbounded-authoring"
+                                                  ],
+                                      "availability":  {
+                                                           "type":  "dcc_routing",
+                                                           "route_key":  "illustrator"
+                                                       },
+                                      "readiness":  "PARTIAL_TYPED_AUTOMATION",
+                                      "skills":  [
+                                                     "vf-image-design-craft"
+                                                 ],
+                                      "typed_gaps":  [
+                                                         "job-owned-vector-authoring-export"
+                                                     ]
+                                  },
+                  "aftereffects":  {
+                                       "display_name":  "Adobe After Effects",
+                                       "lifecycle":  "dcc-host",
+                                       "domains":  [
+                                                       "motion",
+                                                       "compositing"
+                                                   ],
+                                       "production_surface":  "accepted-read-surface",
+                                       "operations":  [
+                                                          "version",
+                                                          "active-project-read"
+                                                      ],
+                                       "blocked":  [
+                                                       "arbitrary-script-authoring"
+                                                   ],
+                                       "availability":  {
+                                                            "type":  "dcc_routing",
+                                                            "route_key":  "aftereffects"
+                                                        },
+                                       "readiness":  "PARTIAL_TYPED_AUTOMATION",
+                                       "skills":  [
+                                                      "vf-post-production-craft",
+                                                      "vf-vfx-compositing-craft"
+                                                  ],
+                                       "typed_gaps":  [
+                                                          "bounded-comp-layer-authoring",
+                                                          "named-render"
+                                                      ]
+                                   },
+                  "premiere":  {
+                                   "display_name":  "Adobe Premiere Pro",
+                                   "lifecycle":  "dcc-host",
+                                   "domains":  [
+                                                   "video-edit",
+                                                   "editorial"
+                                               ],
+                                   "production_surface":  "accepted-first-party-limited-surface",
+                                   "operations":  [
+                                                      "getVersion",
+                                                      "getWriteSupport",
+                                                      "getActive",
+                                                      "acceptTemporaryCycle"
+                                                  ],
+                                   "blocked":  [
+                                                   "arbitrary-script-authoring"
+                                               ],
+                                   "availability":  {
+                                                        "type":  "dcc_routing",
+                                                        "route_key":  "premiere"
+                                                    },
+                                   "readiness":  "PARTIAL_TYPED_AUTOMATION",
+                                   "skills":  [
+                                                  "vf-post-production-craft"
+                                              ],
+                                   "typed_gaps":  [
+                                                      "job-project",
+                                                      "timeline-authoring",
+                                                      "captions",
+                                                      "named-export"
+                                                  ]
+                               },
+                  "fabrication":  {
+                                      "display_name":  "VelvetOS Fabrication",
+                                      "lifecycle":  "headless-cli",
+                                      "domains":  [
+                                                      "fabrication",
+                                                      "cad",
+                                                      "mesh",
+                                                      "3d-print",
+                                                      "engineering-drawing"
+                                                  ],
+                                      "production_surface":  "canonical-vfprod-adapter-v1",
+                                      "operations":  [
+                                                         "route",
+                                                         "status",
+                                                         "dfam",
+                                                         "slice"
+                                                     ],
+                                      "blocked":  [
+                                                      "raw-engine-selection",
+                                                      "raw-script-execution",
+                                                      "printer-network-control",
+                                                      "upload-to-printer",
+                                                      "start-print",
+                                                      "pause-cancel",
+                                                      "heating",
+                                                      "motion"
+                                                  ],
+                                      "availability":  {
+                                                           "type":  "authority_files",
+                                                           "root_key":  "velvetos_core",
+                                                           "relative_paths":  [
+                                                                                  "scripts/vf_fabrication_router.py",
+                                                                                  "scripts/vf_cad.py",
+                                                                                  "scripts/vf_3d.py",
+                                                                                  "packages/vfprod/FABRICATION-ROUTER.json"
+                                                                              ]
+                                                       },
+                                      "readiness":  "READY_BOUNDED",
+                                      "skills":  [
+                                                     "vf-cad-design-craft",
+                                                     "vf-fabrication-craft",
+                                                     "vf-3d-router"
+                                                 ],
+                                      "typed_gaps":  [
+
+                                                     ]
+                                  },
+                  "indesign":  {
+                                   "display_name":  "Adobe InDesign 2026",
+                                   "lifecycle":  "interactive-token-host",
+                                   "domains":  [
+                                                   "layout",
+                                                   "publication",
+                                                   "technical-publishing"
+                                               ],
+                                   "production_surface":  "accepted-phase2-typed",
+                                   "operations":  [
+                                                      "compose-title-body",
+                                                      "idml-export",
+                                                      "pdf-export"
+                                                  ],
+                                   "blocked":  [
+                                                   "generic-dispatch",
+                                                   "arbitrary-script"
+                                               ],
+                                   "availability":  {
+                                                        "type":  "candidate_matrix",
+                                                        "key":  "indesign",
+                                                        "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\InDesignSafeAdapter.py"
+                                                    },
+                                   "readiness":  "PARTIAL_END_TO_END_AUTOMATION",
+                                   "skills":  [
+                                                  "vf-prepress-qa"
+                                              ],
+                                   "typed_gaps":  [
+                                                      "place-link-styles",
+                                                      "preflight",
+                                                      "package",
+                                                      "named-pdf-presets"
+                                                  ]
+                               },
+                  "photopaint":  {
+                                     "display_name":  "Corel PHOTO-PAINT 2026",
+                                     "lifecycle":  "interactive-token-host",
+                                     "domains":  [
+                                                     "image",
+                                                     "raster"
+                                                 ],
+                                     "production_surface":  "accepted-phase2-typed",
+                                     "operations":  [
+                                                        "typed-raster-transform"
+                                                    ],
+                                     "blocked":  [
+                                                     "generic-dispatch",
+                                                     "arbitrary-script"
+                                                 ],
+                                     "availability":  {
+                                                          "type":  "candidate_matrix",
+                                                          "key":  "photopaint",
+                                                          "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\PhotoPaintSafeAdapter.py"
+                                                      },
+                                     "readiness":  "READY_BOUNDED",
+                                     "skills":  [
+                                                    "vf-image-design-craft"
+                                                ],
+                                     "typed_gaps":  [
+
+                                                    ]
+                                 },
+                  "fusion-studio":  {
+                                        "display_name":  "Blackmagic Fusion Studio 21.1",
+                                        "lifecycle":  "interactive-token-host",
+                                        "domains":  [
+                                                        "compositing",
+                                                        "vfx",
+                                                        "motion"
+                                                    ],
+                                        "production_surface":  "accepted-phase2-typed",
+                                        "operations":  [
+                                                           "probe",
+                                                           "status",
+                                                           "acceptance",
+                                                           "render-solid"
+                                                       ],
+                                        "blocked":  [
+                                                        "generic-dispatch",
+                                                        "arbitrary-script"
+                                                    ],
+                                        "availability":  {
+                                                             "type":  "candidate_matrix",
+                                                             "key":  "fusion_studio",
+                                                             "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\FusionStudioSafeAdapter.py"
+                                                         },
+                                        "readiness":  "PARTIAL_TYPED_AUTOMATION",
+                                        "skills":  [
+                                                       "vf-post-production-craft",
+                                                       "vf-vfx-compositing-craft"
+                                                   ],
+                                        "typed_gaps":  [
+                                                           "job-owned-comp",
+                                                           "media-loader",
+                                                           "bounded-node-template",
+                                                           "frame-range-render"
+                                                       ]
+                                    },
+                  "office":  {
+                                 "display_name":  "Microsoft Office LTSC 2024",
+                                 "lifecycle":  "interactive-token-worker",
+                                 "domains":  [
+                                                 "document",
+                                                 "spreadsheet",
+                                                 "presentation",
+                                                 "bom"
+                                             ],
+                                 "production_surface":  "accepted-phase2-typed",
+                                 "operations":  [
+                                                    "word-compose-export",
+                                                    "excel-compose-export",
+                                                    "powerpoint-compose-export"
+                                                ],
+                                 "blocked":  [
+                                                 "generic-dispatch",
+                                                 "arbitrary-script"
+                                             ],
+                                 "availability":  {
+                                                      "type":  "candidate_matrix",
+                                                      "key":  "office",
+                                                      "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\OfficeSafeAdapter.py"
+                                                  },
+                                 "readiness":  "READY_BOUNDED",
+                                 "skills":  [
+                                                "vf-bom-costing"
+                                            ],
+                                 "typed_gaps":  [
+
+                                                ]
+                             },
+                  "acrobat":  {
+                                  "display_name":  "Adobe Acrobat",
+                                  "lifecycle":  "interactive-token-host",
+                                  "domains":  [
+                                                  "pdf",
+                                                  "inspection",
+                                                  "prepress"
+                                              ],
+                                  "production_surface":  "accepted-phase2-typed",
+                                  "operations":  [
+                                                     "inspect-pdf"
+                                                 ],
+                                  "blocked":  [
+                                                  "generic-dispatch",
+                                                  "arbitrary-script"
+                                              ],
+                                  "availability":  {
+                                                       "type":  "candidate_matrix",
+                                                       "key":  "acrobat",
+                                                       "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\AcrobatSafeAdapter.py"
+                                                   },
+                                  "readiness":  "PARTIAL_TYPED_AUTOMATION",
+                                  "skills":  [
+                                                 "vf-prepress-qa"
+                                             ],
+                                  "typed_gaps":  [
+                                                     "page-box-font-output-intent-separation-inspection"
+                                                 ]
+                              },
+                  "sketchup":  {
+                                   "display_name":  "SketchUp 2026",
+                                   "lifecycle":  "headless-c-api",
+                                   "domains":  [
+                                                   "spatial-planning",
+                                                   "installation",
+                                                   "3d"
+                                               ],
+                                   "production_surface":  "accepted-phase2-typed",
+                                   "operations":  [
+                                                      "create-model",
+                                                      "inspect-model"
+                                                  ],
+                                   "blocked":  [
+                                                   "generic-dispatch",
+                                                   "arbitrary-script"
+                                               ],
+                                   "availability":  {
+                                                        "type":  "candidate_matrix",
+                                                        "key":  "sketchup_capi",
+                                                        "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\SketchUpCapiSafeAdapter.py"
+                                                    },
+                                   "readiness":  "READY_BOUNDED",
+                                   "skills":  [
+                                                  "vf-sketchup-layout-craft"
+                                              ],
+                                   "typed_gaps":  [
+
+                                                  ]
+                               },
+                  "layout":  {
+                                 "display_name":  "SketchUp LayOut 2026",
+                                 "lifecycle":  "headless-c-api",
+                                 "domains":  [
+                                                 "drawing-set",
+                                                 "spatial-documentation",
+                                                 "pdf"
+                                             ],
+                                 "production_surface":  "accepted-phase2-typed",
+                                 "operations":  [
+                                                    "create-layout",
+                                                    "save-layout",
+                                                    "pdf-export"
+                                                ],
+                                 "blocked":  [
+                                                 "generic-dispatch",
+                                                 "arbitrary-script"
+                                             ],
+                                 "availability":  {
+                                                      "type":  "candidate_matrix",
+                                                      "key":  "layout_capi",
+                                                      "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\SketchUpCapiSafeAdapter.py"
+                                                  },
+                                 "readiness":  "READY_BOUNDED",
+                                 "skills":  [
+                                                "vf-sketchup-layout-craft",
+                                                "vf-prepress-qa"
+                                            ],
+                                 "typed_gaps":  [
+
+                                                ]
+                             },
+                  "media-encoder":  {
+                                        "display_name":  "Adobe Media Encoder 2026",
+                                        "lifecycle":  "interactive-token-host",
+                                        "domains":  [
+                                                        "transcode",
+                                                        "derivative",
+                                                        "delivery"
+                                                    ],
+                                        "production_surface":  "accepted-phase2-typed",
+                                        "operations":  [
+                                                           "h264-high",
+                                                           "job-status"
+                                                       ],
+                                        "blocked":  [
+                                                        "generic-dispatch",
+                                                        "arbitrary-script"
+                                                    ],
+                                        "availability":  {
+                                                             "type":  "candidate_matrix",
+                                                             "key":  "media_encoder",
+                                                             "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\MediaEncoderWatchSafeAdapter.py"
+                                                         },
+                                        "readiness":  "READY_BOUNDED_ONE_PRESET",
+                                        "skills":  [
+                                                       "vf-post-production-craft"
+                                                   ],
+                                        "typed_gaps":  [
+                                                           "named-preset-registry-beyond-h264-high"
+                                                       ]
+                                    },
+                  "xvl-studio-corel":  {
+                                           "display_name":  "XVL Studio Corel Edition -\u003e Corel DESIGNER",
+                                           "lifecycle":  "interactive-token-host",
+                                           "domains":  [
+                                                           "technical-illustration",
+                                                           "cad-publication"
+                                                       ],
+                                           "production_surface":  "accepted-phase2-typed",
+                                           "operations":  [
+                                                              "xv2-to-cdr-pdf"
+                                                          ],
+                                           "blocked":  [
+                                                           "generic-dispatch",
+                                                           "arbitrary-script"
+                                                       ],
+                                           "availability":  {
+                                                                "type":  "candidate_matrix",
+                                                                "key":  "xvl_studio_corel",
+                                                                "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\XVLCorelSafeAdapter.py"
+                                                            },
+                                           "readiness":  "READY_BOUNDED",
+                                           "skills":  [
+                                                          "vf-technical-illustration-craft"
+                                                      ],
+                                           "typed_gaps":  [
+
+                                                          ]
+                                       },
+                  "xvl-html5":  {
+                                    "display_name":  "XVL HTML5 Publisher",
+                                    "lifecycle":  "headless-cli",
+                                    "domains":  [
+                                                    "technical-publication",
+                                                    "html5"
+                                                ],
+                                    "production_surface":  "accepted-phase2-typed",
+                                    "operations":  [
+                                                       "xv2-to-html5-package"
+                                                   ],
+                                    "blocked":  [
+                                                    "generic-dispatch",
+                                                    "arbitrary-script"
+                                                ],
+                                    "availability":  {
+                                                         "type":  "candidate_matrix",
+                                                         "key":  "xvl_html5",
+                                                         "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\XvlHtmlSafeAdapter.py"
+                                                     },
+                                    "readiness":  "READY_BOUNDED",
+                                    "skills":  [
+                                                   "vf-technical-illustration-craft"
+                                               ],
+                                    "typed_gaps":  [
+
+                                                   ]
+                                },
+                  "openscad":  {
+                                   "display_name":  "OpenSCAD Nightly",
+                                   "lifecycle":  "headless-cli",
+                                   "domains":  [
+                                                   "cad",
+                                                   "procedural",
+                                                   "3d-print"
+                                               ],
+                                   "production_surface":  "official-cli-typed",
+                                   "operations":  [
+                                                      "probe",
+                                                      "scad-to-stl",
+                                                      "scad-to-3mf"
+                                                  ],
+                                   "blocked":  [
+                                                   "arbitrary-command-arguments",
+                                                   "auto-update"
+                                               ],
+                                   "availability":  {
+                                                        "type":  "all",
+                                                        "gates":  [
+                                                                      {
+                                                                          "type":  "dcc_routing",
+                                                                          "route_key":  "openscad-nightly"
+                                                                      },
+                                                                      {
+                                                                          "type":  "candidate_matrix",
+                                                                          "key":  "openscad",
+                                                                          "runtime_file":  "D:\\Velvet\\Runtime\\CreativeTools\\MissingIntegrationsPhase2\\OpenSCADSafeAdapter.py"
+                                                                      }
+                                                                  ]
+                                                    },
+                                   "readiness":  "READY_BOUNDED",
+                                   "skills":  [
+                                                  "vf-cad-design-craft",
+                                                  "vf-fabrication-craft"
+                                              ],
+                                   "typed_gaps":  [
+
+                                                  ]
+                               },
+                  "hyperframes":  {
+                                      "display_name":  "HyperFrames",
+                                      "lifecycle":  "headless-cli",
+                                      "domains":  [
+                                                      "motion",
+                                                      "social",
+                                                      "compositor"
+                                                  ],
+                                      "production_surface":  "verified-local-runtime",
+                                      "operations":  [
+                                                         "doctor",
+                                                         "render"
+                                                     ],
+                                      "blocked":  [
+                                                      "publish",
+                                                      "inbound-network-service"
+                                                  ],
+                                      "availability":  {
+                                                           "type":  "all",
+                                                           "gates":  [
+                                                                         {
+                                                                             "type":  "file_exists",
+                                                                             "path":  "D:\\Velvet\\Runtime\\VelvetOS\\npm\\hyperframes.cmd"
+                                                                         },
+                                                                         {
+                                                                             "type":  "state_json",
+                                                                             "path":  "D:\\Velvet\\State\\VelvetOS\\edge-host.json",
+                                                                             "conditions":  {
+                                                                                                "doctor":  "pass",
+                                                                                                "renderSmoke":  "pass"
+                                                                                            }
+                                                                         }
+                                                                     ]
+                                                       },
+                                      "readiness":  "READY_BOUNDED",
+                                      "skills":  [
+                                                     "vf-post-production-craft"
+                                                 ],
+                                      "typed_gaps":  [
+
+                                                     ]
+                                  },
+                  "voicestudio":  {
+                                      "display_name":  "VoiceStudio / OmniVoice",
+                                      "lifecycle":  "local-runtime",
+                                      "domains":  [
+                                                      "tts",
+                                                      "asr",
+                                                      "subtitles",
+                                                      "speech-qa"
+                                                  ],
+                                      "production_surface":  "verified-local-speech-runtime",
+                                      "operations":  [
+                                                         "tts",
+                                                         "asr",
+                                                         "back-transcription-qa"
+                                                     ],
+                                      "blocked":  [
+                                                      "voice-cloning-without-consent",
+                                                      "publish-authorization"
+                                                  ],
+                                      "availability":  {
+                                                           "type":  "all",
+                                                           "gates":  [
+                                                                         {
+                                                                             "type":  "file_exists",
+                                                                             "path":  "C:\\Users\\Chris\\AppData\\Local\\VoiceStudio (Current User)\\omnivoice-studio.exe"
+                                                                         },
+                                                                         {
+                                                                             "type":  "state_json",
+                                                                             "path":  "D:\\Velvet\\State\\VelvetOS\\speech-host.json",
+                                                                             "conditions":  {
+                                                                                                "doctor":  "pass",
+                                                                                                "speechSmoke":  "pass",
+                                                                                                "qaStatus":  "PASS"
+                                                                                            }
+                                                                         }
+                                                                     ]
+                                                       },
+                                      "readiness":  "READY_BOUNDED",
+                                      "skills":  [
+                                                     "vf-speech-qa"
+                                                 ],
+                                      "typed_gaps":  [
+                                                         "normalized-subtitle-timing-handoff-wrapper"
+                                                     ]
+                                  },
+                  "manim":  {
+                                "display_name":  "Manim",
+                                "lifecycle":  "headless-cli",
+                                "domains":  [
+                                                "technical-animation",
+                                                "diagram",
+                                                "geometry"
+                                            ],
+                                "production_surface":  "verified-local-toolchain",
+                                "operations":  [
+                                                   "verified-smoke"
+                                               ],
+                                "blocked":  [
+                                                "arbitrary-python-from-agent"
+                                            ],
+                                "availability":  {
+                                                     "type":  "all",
+                                                     "gates":  [
+                                                                   {
+                                                                       "type":  "file_exists",
+                                                                       "path":  "D:\\Velvet\\Runtime\\VelvetOS\\Toolchains\\manim-0.21.0-py312\\Scripts\\manim.exe"
+                                                                   },
+                                                                   {
+                                                                       "type":  "state_json",
+                                                                       "path":  "D:\\Velvet\\State\\VelvetOS\\manim-host.json",
+                                                                       "conditions":  {
+                                                                                          "smoke":  "pass"
+                                                                                      }
+                                                                   }
+                                                               ]
+                                                 },
+                                "readiness":  "READY_WITH_TYPED_WRAPPER_GAP",
+                                "skills":  [
+                                               "vf-post-production-craft",
+                                               "vf-technical-illustration-craft"
+                                           ],
+                                "typed_gaps":  [
+                                                   "declarative-scene-adapter"
+                                               ]
+                            },
+                  "ffmpeg":  {
+                                 "display_name":  "ffmpeg / ffprobe",
+                                 "lifecycle":  "headless-cli",
+                                 "domains":  [
+                                                 "media-probe",
+                                                 "verification",
+                                                 "transcode"
+                                             ],
+                                 "production_surface":  "deterministic-cli",
+                                 "operations":  [
+                                                    "probe",
+                                                    "bounded-verification"
+                                                ],
+                                 "blocked":  [
+                                                 "arbitrary-user-supplied-filtergraph-through-router"
+                                             ],
+                                 "availability":  {
+                                                      "type":  "all",
+                                                      "gates":  [
+                                                                    {
+                                                                        "type":  "command_exists",
+                                                                        "command":  "ffmpeg.exe"
+                                                                    },
+                                                                    {
+                                                                        "type":  "command_exists",
+                                                                        "command":  "ffprobe.exe"
+                                                                    }
+                                                                ]
+                                                  },
+                                 "readiness":  "READY_SUPPORT",
+                                 "skills":  [
+                                                "vf-post-production-craft"
+                                            ],
+                                 "typed_gaps":  [
+
+                                                ]
+                             },
+                  "gcloud":  {
+                                 "display_name":  "Google Cloud SDK",
+                                 "lifecycle":  "support-cli",
+                                 "domains":  [
+                                                 "ops",
+                                                 "deployment",
+                                                 "diagnostics"
+                                             ],
+                                 "production_surface":  "support-layer-cli",
+                                 "operations":  [
+                                                    "read",
+                                                    "describe",
+                                                    "logs",
+                                                    "authorized-deploy"
+                                                ],
+                                 "blocked":  [
+                                                 "silent-project-switch",
+                                                 "iam-broadening",
+                                                 "secret-exposure",
+                                                 "automatic-paid-resource-creation"
+                                             ],
+                                 "availability":  {
+                                                      "type":  "command_exists",
+                                                      "command":  "gcloud.cmd"
+                                                  },
+                                 "readiness":  "READY_SUPPORT",
+                                 "skills":  [
+
+                                            ],
+                                 "typed_gaps":  [
+
+                                                ]
+                             },
+                  "gh":  {
+                             "display_name":  "GitHub CLI",
+                             "lifecycle":  "support-cli",
+                             "domains":  [
+                                             "repo",
+                                             "release",
+                                             "issue",
+                                             "pr"
+                                         ],
+                             "production_surface":  "support-layer-cli",
+                             "operations":  [
+                                                "local-repo-aware-operations"
+                                            ],
+                             "blocked":  [
+                                             "bypass-connected-plugin-authority-when-plugin-is-better"
+                                         ],
+                             "availability":  {
+                                                  "type":  "command_exists",
+                                                  "command":  "gh.exe"
+                                              },
+                             "readiness":  "READY_SUPPORT",
+                             "skills":  [
+
+                                        ],
+                             "typed_gaps":  [
+
+                                            ]
+                         },
+                  "sevenzip":  {
+                                   "display_name":  "7-Zip",
+                                   "lifecycle":  "support-cli",
+                                   "domains":  [
+                                                   "archive",
+                                                   "package",
+                                                   "handoff"
+                                               ],
+                                   "production_surface":  "deterministic-packaging-cli",
+                                   "operations":  [
+                                                      "archive",
+                                                      "test",
+                                                      "extract-proof"
+                                                  ],
+                                   "blocked":  [
+                                                   "delete-source-by-default",
+                                                   "self-extracting-exe-by-default"
+                                               ],
+                                   "availability":  {
+                                                        "type":  "file_exists",
+                                                        "path":  "C:\\Program Files\\7-Zip\\7z.exe"
+                                                    },
+                                   "readiness":  "READY_SUPPORT",
+                                   "skills":  [
+
+                                              ],
+                                   "typed_gaps":  [
+
+                                                  ]
+                               }
+              },
+    "pipelines":  {
+                      "fabrication":  {
+                                          "authority":  "packages/vfprod/FABRICATION-ROUTER.json",
+                                          "skills":  [
+                                                         "vf-cad-design-craft",
+                                                         "vf-fabrication-craft",
+                                                         "vf-3d-router"
+                                                     ],
+                                          "readiness":  "READY_BOUNDED",
+                                          "steps":  [
+                                                        {
+                                                            "tool":  "fabrication",
+                                                            "required":  true,
+                                                            "purpose":  "delegate to canonical Fabrication Router"
+                                                        }
+                                                    ],
+                                          "expected_artifacts":  [
+                                                                     "route receipt",
+                                                                     "geometry/source lineage",
+                                                                     "DfAM/slice receipts when applicable"
+                                                                 ],
+                                          "qa":  "canonical fabrication verification; no physical printer action",
+                                          "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                      },
+                      "cad-inspect":  {
+                                          "authority":  "vfprod/fabrication source authority",
+                                          "skills":  [
+                                                         "vf-cad-design-craft"
+                                                     ],
+                                          "readiness":  "READY_BOUNDED",
+                                          "steps":  [
+                                                        {
+                                                            "tool":  "fusion",
+                                                            "required":  true,
+                                                            "purpose":  "read-only design/electronics inspection"
+                                                        }
+                                                    ],
+                                          "expected_artifacts":  [
+                                                                     "readback receipt"
+                                                                 ],
+                                          "qa":  "source/readback verification",
+                                          "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                      },
+                      "mesh-review":  {
+                                          "authority":  "vfprod/source-owner geometry",
+                                          "skills":  [
+                                                         "vf-dcc-modeling-craft"
+                                                     ],
+                                          "readiness":  "READY_REVIEW_LIMITED",
+                                          "steps":  [
+                                                        {
+                                                            "tool":  "meshmixer",
+                                                            "required":  true,
+                                                            "purpose":  "controlled mesh review"
+                                                        }
+                                                    ],
+                                          "expected_artifacts":  [
+                                                                     "mesh metadata",
+                                                                     "review screenshot"
+                                                                 ],
+                                          "qa":  "hash input and screenshot",
+                                          "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                      },
+                      "mesh-technical-sheet":  {
+                                                   "authority":  "engineering/CAD source authority",
+                                                   "skills":  [
+                                                                  "vf-technical-illustration-craft"
+                                                              ],
+                                                   "readiness":  "READY_BOUNDED",
+                                                   "steps":  [
+                                                                 {
+                                                                     "tool":  "meshmixer",
+                                                                     "required":  true,
+                                                                     "purpose":  "mesh review"
+                                                                 },
+                                                                 {
+                                                                     "tool":  "corel-designer",
+                                                                     "required":  true,
+                                                                     "purpose":  "typed technical sheet"
+                                                                 }
+                                                             ],
+                                                   "expected_artifacts":  [
+                                                                              "review raster",
+                                                                              "editable CDR",
+                                                                              "PDF"
+                                                                          ],
+                                                   "qa":  "exact artifact QA",
+                                                   "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                               },
+                      "product-image-finishing":  {
+                                                      "authority":  "vfom/velvet-creative-director when public; source owner otherwise",
+                                                      "skills":  [
+                                                                     "vf-image-design-craft",
+                                                                     "vf-prepress-qa when print-bound"
+                                                                 ],
+                                                      "readiness":  "PARTIAL_TYPED_AUTOMATION",
+                                                      "steps":  [
+                                                                    {
+                                                                        "tool":  "photoshop",
+                                                                        "required":  true,
+                                                                        "purpose":  "primary raster finishing"
+                                                                    },
+                                                                    {
+                                                                        "tool":  "photopaint",
+                                                                        "required":  false,
+                                                                        "purpose":  "bounded raster alternative"
+                                                                    }
+                                                                ],
+                                                      "expected_artifacts":  [
+                                                                                 "editable master",
+                                                                                 "review raster",
+                                                                                 "export receipt"
+                                                                             ],
+                                                      "qa":  "exact-final QA",
+                                                      "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                                  },
+                      "vector-logo-layout":  {
+                                                 "authority":  "vfom/Brand Guardian for Velvet brand; direct craft otherwise",
+                                                 "skills":  [
+                                                                "vf-image-design-craft",
+                                                                "vf-prepress-qa when print-bound"
+                                                            ],
+                                                 "readiness":  "READY_BOUNDED_WITH_COREL",
+                                                 "steps":  [
+                                                               {
+                                                                   "tool":  "coreldraw",
+                                                                   "required":  true,
+                                                                   "purpose":  "editable vector construction/export"
+                                                               },
+                                                               {
+                                                                   "tool":  "indesign",
+                                                                   "required":  false,
+                                                                   "purpose":  "publication layout"
+                                                               }
+                                                           ],
+                                                 "expected_artifacts":  [
+                                                                            "editable vector master",
+                                                                            "PDF/SVG/raster derivative",
+                                                                            "QA receipt"
+                                                                        ],
+                                                 "qa":  "brand/source lock plus exact export QA",
+                                                 "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                             },
+                      "technical-illustration":  {
+                                                     "authority":  "engineering/CAD source is geometry authority",
+                                                     "skills":  [
+                                                                    "vf-technical-illustration-craft"
+                                                                ],
+                                                     "readiness":  "READY_BOUNDED",
+                                                     "steps":  [
+                                                                   {
+                                                                       "tool":  "xvl-studio-corel",
+                                                                       "required":  true,
+                                                                       "purpose":  "derive editable technical illustration"
+                                                                   },
+                                                                   {
+                                                                       "tool":  "acrobat",
+                                                                       "required":  false,
+                                                                       "purpose":  "inspect exact PDF"
+                                                                   }
+                                                               ],
+                                                     "expected_artifacts":  [
+                                                                                "source hash",
+                                                                                "editable CDR",
+                                                                                "technical PDF",
+                                                                                "inspection receipt"
+                                                                            ],
+                                                     "qa":  "source lineage plus PDF inspection",
+                                                     "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                                 },
+                      "pbr-material-pipeline":  {
+                                                    "authority":  "3D source/engineering authority upstream",
+                                                    "skills":  [
+                                                                   "vf-dcc-modeling-craft",
+                                                                   "vf-material-lookdev"
+                                                               ],
+                                                    "readiness":  "PARTIAL_ORCHESTRATION",
+                                                    "steps":  [
+                                                                  {
+                                                                      "tool":  "substance-painter",
+                                                                      "required":  true,
+                                                                      "purpose":  "material authoring"
+                                                                  },
+                                                                  {
+                                                                      "tool":  "substance-designer",
+                                                                      "required":  false,
+                                                                      "purpose":  "procedural material authoring"
+                                                                  },
+                                                                  {
+                                                                      "tool":  "blender",
+                                                                      "required":  false,
+                                                                      "purpose":  "destination look check"
+                                                                  }
+                                                              ],
+                                                    "expected_artifacts":  [
+                                                                               "mesh hash",
+                                                                               "bake/map hashes",
+                                                                               "texture manifest",
+                                                                               "lookdev render"
+                                                                           ],
+                                                    "qa":  "map and destination QA",
+                                                    "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                                },
+                      "3d-turntable-product-visualization":  {
+                                                                 "authority":  "engineering/Product Truth source first; vfom when public",
+                                                                 "skills":  [
+                                                                                "vf-dcc-modeling-craft",
+                                                                                "vf-material-lookdev",
+                                                                                "vf-product-visualization-craft"
+                                                                            ],
+                                                                 "readiness":  "PARTIAL_ORCHESTRATION",
+                                                                 "steps":  [
+                                                                               {
+                                                                                   "tool":  "blender",
+                                                                                   "required":  true,
+                                                                                   "purpose":  "primary turntable/render route"
+                                                                               },
+                                                                               {
+                                                                                   "tool":  "substance-painter",
+                                                                                   "required":  false,
+                                                                                   "purpose":  "materials"
+                                                                               }
+                                                                           ],
+                                                                 "expected_artifacts":  [
+                                                                                            "scene/source ref",
+                                                                                            "shot plan",
+                                                                                            "neutral diagnostic",
+                                                                                            "render master",
+                                                                                            "frame/probe receipt"
+                                                                                        ],
+                                                                 "qa":  "source lock plus visual/probe QA",
+                                                                 "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                                             },
+                      "short-social-video":  {
+                                                 "authority":  "vf-content-sprint -\u003e velvet-creative-director/vfom",
+                                                 "skills":  [
+                                                                "vf-post-production-craft",
+                                                                "vf-speech-qa when speech is used"
+                                                            ],
+                                                 "readiness":  "READY_WITH_AUTHORITY_AND_BOUNDED_RENDER",
+                                                 "steps":  [
+                                                               {
+                                                                   "tool":  "hyperframes",
+                                                                   "required":  true,
+                                                                   "purpose":  "deterministic social/motion composition"
+                                                               },
+                                                               {
+                                                                   "tool":  "voicestudio",
+                                                                   "required":  false,
+                                                                   "purpose":  "speech/subtitle stage"
+                                                               },
+                                                               {
+                                                                   "tool":  "fusion-studio",
+                                                                   "required":  false,
+                                                                   "purpose":  "custom node compositing"
+                                                               }
+                                                           ],
+                                                 "expected_artifacts":  [
+                                                                            "Creative Manifest refs",
+                                                                            "EDL/timing",
+                                                                            "master video",
+                                                                            "render/QC receipt"
+                                                                        ],
+                                                 "qa":  "existing exact-final review; no auto-publish",
+                                                 "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                             },
+                      "long-edit-heavy-video":  {
+                                                    "authority":  "editorial intent upstream; vfom when public",
+                                                    "skills":  [
+                                                                   "vf-post-production-craft",
+                                                                   "vf-speech-qa when used"
+                                                               ],
+                                                    "readiness":  "READY_BOUNDED_IN_RESOLVE",
+                                                    "steps":  [
+                                                                  {
+                                                                      "tool":  "resolve",
+                                                                      "required":  true,
+                                                                      "purpose":  "edit, color, finish, master render"
+                                                                  },
+                                                                  {
+                                                                      "tool":  "topaz-video",
+                                                                      "required":  false,
+                                                                      "purpose":  "justified enhancement"
+                                                                  },
+                                                                  {
+                                                                      "tool":  "media-encoder",
+                                                                      "required":  false,
+                                                                      "purpose":  "named derivative"
+                                                                  }
+                                                              ],
+                                                    "expected_artifacts":  [
+                                                                               "project/timeline ref",
+                                                                               "locked master",
+                                                                               "QC receipt",
+                                                                               "derivative receipts"
+                                                                           ],
+                                                    "qa":  "render probe plus exact-final review",
+                                                    "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                                },
+                      "color-finish":  {
+                                           "authority":  "post-production craft; source/master truth preserved",
+                                           "skills":  [
+                                                          "vf-post-production-craft"
+                                                      ],
+                                           "readiness":  "READY_BOUNDED_IN_RESOLVE",
+                                           "steps":  [
+                                                         {
+                                                             "tool":  "resolve",
+                                                             "required":  true,
+                                                             "purpose":  "bounded grade/LUT and render"
+                                                         },
+                                                         {
+                                                             "tool":  "ffmpeg",
+                                                             "required":  false,
+                                                             "purpose":  "probe verification"
+                                                         }
+                                                     ],
+                                           "expected_artifacts":  [
+                                                                      "rendered master",
+                                                                      "settings/LUT receipt",
+                                                                      "probe receipt"
+                                                                  ],
+                                           "qa":  "technical and visual QC",
+                                           "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                       },
+                      "video-enhancement":  {
+                                                "authority":  "post-production craft; enhancement is not source truth",
+                                                "skills":  [
+                                                               "vf-post-production-craft"
+                                                           ],
+                                                "readiness":  "READY_BOUNDED",
+                                                "steps":  [
+                                                              {
+                                                                  "tool":  "topaz-video",
+                                                                  "required":  true,
+                                                                  "purpose":  "bounded enhancement"
+                                                              },
+                                                              {
+                                                                  "tool":  "ffmpeg",
+                                                                  "required":  false,
+                                                                  "purpose":  "before/after probe"
+                                                              }
+                                                          ],
+                                                "expected_artifacts":  [
+                                                                           "source hash",
+                                                                           "enhanced master",
+                                                                           "model/scale receipt",
+                                                                           "comparison QA"
+                                                                       ],
+                                                "qa":  "before/after artifact review",
+                                                "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                            },
+                      "hebrew-narration-subtitles":  {
+                                                         "authority":  "approved script/copy authority; cloning requires consent",
+                                                         "skills":  [
+                                                                        "vf-speech-qa",
+                                                                        "vf-post-production-craft"
+                                                                    ],
+                                                         "readiness":  "READY_BOUNDED",
+                                                         "steps":  [
+                                                                       {
+                                                                           "tool":  "voicestudio",
+                                                                           "required":  true,
+                                                                           "purpose":  "TTS/ASR/back-transcription QA"
+                                                                       },
+                                                                       {
+                                                                           "tool":  "resolve",
+                                                                           "required":  false,
+                                                                           "purpose":  "editor placement"
+                                                                       }
+                                                                   ],
+                                                         "expected_artifacts":  [
+                                                                                    "speech receipt",
+                                                                                    "QA receipt",
+                                                                                    "audio",
+                                                                                    "SRT/VTT/timing"
+                                                                                ],
+                                                         "qa":  "pronunciation/back-transcription and editor QC",
+                                                         "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                                     },
+                      "technical-explainer-animation":  {
+                                                            "authority":  "engineering facts/source first; vfom if public",
+                                                            "skills":  [
+                                                                           "vf-post-production-craft",
+                                                                           "vf-technical-illustration-craft",
+                                                                           "vf-speech-qa when narrated"
+                                                                       ],
+                                                            "readiness":  "READY_WITH_TYPED_WRAPPER_GAP",
+                                                            "steps":  [
+                                                                          {
+                                                                              "tool":  "manim",
+                                                                              "required":  true,
+                                                                              "purpose":  "semantic technical animation"
+                                                                          },
+                                                                          {
+                                                                              "tool":  "hyperframes",
+                                                                              "required":  false,
+                                                                              "purpose":  "brand/motion finish"
+                                                                          }
+                                                                      ],
+                                                            "expected_artifacts":  [
+                                                                                       "scene/spec receipt",
+                                                                                       "technical render",
+                                                                                       "final master",
+                                                                                       "probe/QC"
+                                                                                   ],
+                                                            "qa":  "fact lock plus render QA",
+                                                            "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                                        },
+                      "engineering-technical-publication":  {
+                                                                "authority":  "CAD/XVL/engineering source authority",
+                                                                "skills":  [
+                                                                               "vf-technical-illustration-craft",
+                                                                               "vf-prepress-qa",
+                                                                               "vf-bom-costing when evidenced BOM is included"
+                                                                           ],
+                                                                "readiness":  "PARTIAL_END_TO_END_AUTOMATION",
+                                                                "steps":  [
+                                                                              {
+                                                                                  "tool":  "xvl-studio-corel",
+                                                                                  "required":  true,
+                                                                                  "purpose":  "derive illustration"
+                                                                              },
+                                                                              {
+                                                                                  "tool":  "indesign",
+                                                                                  "required":  true,
+                                                                                  "purpose":  "assemble publication"
+                                                                              },
+                                                                              {
+                                                                                  "tool":  "acrobat",
+                                                                                  "required":  true,
+                                                                                  "purpose":  "inspect PDF"
+                                                                              },
+                                                                              {
+                                                                                  "tool":  "xvl-html5",
+                                                                                  "required":  false,
+                                                                                  "purpose":  "optional HTML5 derivative"
+                                                                              }
+                                                                          ],
+                                                                "expected_artifacts":  [
+                                                                                           "source refs",
+                                                                                           "editable CDR",
+                                                                                           "IDML",
+                                                                                           "final PDF",
+                                                                                           "inspection receipt",
+                                                                                           "optional HTML5 manifest"
+                                                                                       ],
+                                                                "qa":  "engineering lineage plus prepress/exact PDF QA",
+                                                                "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                                            },
+                      "reusable-derivative-export-factory":  {
+                                                                 "authority":  "approved file-backed master",
+                                                                 "skills":  [
+                                                                                "vf-post-production-craft",
+                                                                                "vf-prepress-qa when print/PDF"
+                                                                            ],
+                                                                 "readiness":  "READY_BOUNDED_ONE_PRESET",
+                                                                 "steps":  [
+                                                                               {
+                                                                                   "tool":  "media-encoder",
+                                                                                   "required":  true,
+                                                                                   "purpose":  "named accepted derivative recipe"
+                                                                               },
+                                                                               {
+                                                                                   "tool":  "ffmpeg",
+                                                                                   "required":  true,
+                                                                                   "purpose":  "probe exact derivative"
+                                                                               }
+                                                                           ],
+                                                                 "expected_artifacts":  [
+                                                                                            "master hash",
+                                                                                            "recipe id",
+                                                                                            "derivative file",
+                                                                                            "probe/QC receipt"
+                                                                                        ],
+                                                                 "qa":  "master-to-derivative lineage plus probe",
+                                                                 "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                                             },
+                      "spatial-planning":  {
+                                               "authority":  "spatial/design source authority; not manufacturing CAD authority",
+                                               "skills":  [
+                                                              "vf-sketchup-layout-craft"
+                                                          ],
+                                               "readiness":  "READY_BOUNDED",
+                                               "steps":  [
+                                                             {
+                                                                 "tool":  "sketchup",
+                                                                 "required":  true,
+                                                                 "purpose":  "spatial model"
+                                                             },
+                                                             {
+                                                                 "tool":  "layout",
+                                                                 "required":  false,
+                                                                 "purpose":  "drawing set/PDF"
+                                                             }
+                                                         ],
+                                               "expected_artifacts":  [
+                                                                          "SKP model",
+                                                                          "LayOut/PDF when requested",
+                                                                          "dimension receipt"
+                                                                      ],
+                                               "qa":  "spatial readback; manufacturing details hand to fabrication",
+                                               "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                           },
+                      "document-report-bom":  {
+                                                  "authority":  "document/BOM evidence; no ledger authority",
+                                                  "skills":  [
+                                                                 "vf-bom-costing"
+                                                             ],
+                                                  "readiness":  "READY_BOUNDED",
+                                                  "steps":  [
+                                                                {
+                                                                    "tool":  "office",
+                                                                    "required":  true,
+                                                                    "purpose":  "typed Word/Excel/PowerPoint output"
+                                                                },
+                                                                {
+                                                                    "tool":  "acrobat",
+                                                                    "required":  false,
+                                                                    "purpose":  "PDF inspection"
+                                                                }
+                                                            ],
+                                                  "expected_artifacts":  [
+                                                                             "DOCX/XLSX/PPTX",
+                                                                             "PDF derivative",
+                                                                             "calculation/QA receipt"
+                                                                         ],
+                                                  "qa":  "formula/reconciliation plus exact document QA",
+                                                  "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                              },
+                      "ops-package-release":  {
+                                                  "authority":  "existing deployment/repo authority",
+                                                  "skills":  [
+
+                                                             ],
+                                                  "readiness":  "READY_SUPPORT",
+                                                  "steps":  [
+                                                                {
+                                                                    "tool":  "gcloud",
+                                                                    "required":  false,
+                                                                    "purpose":  "authorized cloud diagnostics/deployment"
+                                                                },
+                                                                {
+                                                                    "tool":  "gh",
+                                                                    "required":  false,
+                                                                    "purpose":  "local-repo-aware GitHub operations"
+                                                                },
+                                                                {
+                                                                    "tool":  "sevenzip",
+                                                                    "required":  true,
+                                                                    "purpose":  "deterministic package/test/extraction proof"
+                                                                }
+                                                            ],
+                                                  "expected_artifacts":  [
+                                                                             "manifest",
+                                                                             "archive",
+                                                                             "integrity test",
+                                                                             "hash receipt"
+                                                                         ],
+                                                  "qa":  "least-authority ops plus deterministic package verification",
+                                                  "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                              },
+                      "vector-design":  {
+                                            "authority":  "vfom/Brand Guardian for Velvet brand; direct craft otherwise",
+                                            "skills":  [
+                                                           "vf-image-design-craft",
+                                                           "vf-prepress-qa when print-bound"
+                                                       ],
+                                            "readiness":  "READY_BOUNDED_WITH_COREL",
+                                            "steps":  [
+                                                          {
+                                                              "tool":  "coreldraw",
+                                                              "required":  true,
+                                                              "purpose":  "editable vector construction/export"
+                                                          },
+                                                          {
+                                                              "tool":  "indesign",
+                                                              "required":  false,
+                                                              "purpose":  "publication layout"
+                                                          }
+                                                      ],
+                                            "expected_artifacts":  [
+                                                                       "editable vector master",
+                                                                       "PDF/SVG/raster derivative",
+                                                                       "QA receipt"
+                                                                   ],
+                                            "qa":  "brand/source lock plus exact export QA",
+                                            "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                        },
+                      "video-edit":  {
+                                         "authority":  "editorial intent upstream; vfom when public",
+                                         "skills":  [
+                                                        "vf-post-production-craft",
+                                                        "vf-speech-qa when used"
+                                                    ],
+                                         "readiness":  "READY_BOUNDED_IN_RESOLVE",
+                                         "steps":  [
+                                                       {
+                                                           "tool":  "resolve",
+                                                           "required":  true,
+                                                           "purpose":  "edit, color, finish, master render"
+                                                       },
+                                                       {
+                                                           "tool":  "topaz-video",
+                                                           "required":  false,
+                                                           "purpose":  "justified enhancement"
+                                                       },
+                                                       {
+                                                           "tool":  "media-encoder",
+                                                           "required":  false,
+                                                           "purpose":  "named derivative"
+                                                       }
+                                                   ],
+                                         "expected_artifacts":  [
+                                                                    "project/timeline ref",
+                                                                    "locked master",
+                                                                    "QC receipt",
+                                                                    "derivative receipts"
+                                                                ],
+                                         "qa":  "render probe plus exact-final review",
+                                         "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                     },
+                      "video-finish":  {
+                                           "authority":  "editorial intent upstream; vfom when public",
+                                           "skills":  [
+                                                          "vf-post-production-craft",
+                                                          "vf-speech-qa when used"
+                                                      ],
+                                           "readiness":  "READY_BOUNDED_IN_RESOLVE",
+                                           "steps":  [
+                                                         {
+                                                             "tool":  "resolve",
+                                                             "required":  true,
+                                                             "purpose":  "edit, color, finish, master render"
+                                                         },
+                                                         {
+                                                             "tool":  "topaz-video",
+                                                             "required":  false,
+                                                             "purpose":  "justified enhancement"
+                                                         },
+                                                         {
+                                                             "tool":  "media-encoder",
+                                                             "required":  false,
+                                                             "purpose":  "named derivative"
+                                                         }
+                                                     ],
+                                           "expected_artifacts":  [
+                                                                      "project/timeline ref",
+                                                                      "locked master",
+                                                                      "QC receipt",
+                                                                      "derivative receipts"
+                                                                  ],
+                                           "qa":  "render probe plus exact-final review",
+                                           "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                       },
+                      "vfx-composite":  {
+                                            "authority":  "vf-vfx-compositing-craft; editorial/color remain post-production authority",
+                                            "skills":  [
+                                                           "vf-vfx-compositing-craft",
+                                                           "vf-post-production-craft"
+                                                       ],
+                                            "readiness":  "PARTIAL_TYPED_AUTOMATION",
+                                            "steps":  [
+                                                          {
+                                                              "tool":  "resolve",
+                                                              "required":  true,
+                                                              "purpose":  "accepted primary host for bounded shot integration when exposed"
+                                                          },
+                                                          {
+                                                              "tool":  "aftereffects",
+                                                              "required":  false,
+                                                              "purpose":  "accepted bounded/read surface when requested"
+                                                          },
+                                                          {
+                                                              "tool":  "fusion-studio",
+                                                              "required":  false,
+                                                              "purpose":  "typed candidate/accepted surface when available"
+                                                          },
+                                                          {
+                                                              "tool":  "ffmpeg",
+                                                              "required":  false,
+                                                              "purpose":  "probe/readback support"
+                                                          }
+                                                      ],
+                                            "expected_artifacts":  [
+                                                                       "plate/source lineage",
+                                                                       "lens/matte/track evidence",
+                                                                       "shot output",
+                                                                       "worst-frame QC receipt"
+                                                                   ],
+                                            "qa":  "VFX shot QC plus exact-output readback; no editorial/color/publish authority",
+                                            "cleanup_policy":  "preserve user sessions; stop only agent-owned hosts; no overwrite"
+                                        }
+                  },
+    "intent_rules":  [
+                         {
+                             "pipeline":  "fabrication",
+                             "keywords":  [
+                                              "printable",
+                                              "stl",
+                                              "3mf",
+                                              "g-code",
+                                              "gcode",
+                                              "slice",
+                                              "slicer",
+                                              "threaded",
+                                              "bracket",
+                                              "3d print",
+                                              "engineering drawing",
+                                              "reference reconstruction",
+                                              "reconstruct this reference",
+                                              "mounting holes",
+                                              "Ã—Å“Ã—â€Ã—â€œÃ—Â¤Ã—Â¡Ã—â€",
+                                              "Ã—â€Ã—â€œÃ—Â¤Ã—Â¡Ã—Âª Ã—ÂªÃ—Å“Ã—Âª",
+                                              "Ã—Â¡Ã—ËœÃ—Å“",
+                                              "Ã—â€Ã—â€˜Ã—Â¨Ã—â€™Ã—â€",
+                                              "Ã—Â©Ã—Â¨Ã—ËœÃ—â€¢Ã—Ëœ Ã—â€Ã—Â Ã—â€œÃ—Â¡Ã—â„¢",
+                                              "Ã—Â©Ã—â€”Ã—â€“Ã—â€¢Ã—Â¨ Ã—Â¨Ã—Â¤Ã—Â¨Ã—Â Ã—Â¡",
+                                              "Ã—â€”Ã—â€¢Ã—Â¨Ã—â„¢ Ã—Â¢Ã—â„¢Ã—â€™Ã—â€¢Ã—Å¸",
+                                              "Ã—Â¡Ã—Å“Ã—â„¢Ã—â„¢Ã—Â¡",
+                                              "Ã—â€™Ã—Â§Ã—â€¢Ã—â€œ",
+                                              "הדפסה תלת ממדית",
+                                              "הדפסת תלת מימד",
+                                              "חלק להדפסה",
+                                              "סלייסר",
+                                              "פריסה להדפסה",
+                                              "תבריג מודפס"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "spatial-planning",
+                             "keywords":  [
+                                              "sketchup",
+                                              "layout drawing",
+                                              "room plan",
+                                              "booth",
+                                              "rack layout",
+                                              "workshop layout",
+                                              "Ã—ÂªÃ—â€ºÃ—Â Ã—â€¢Ã—Å¸ Ã—â€”Ã—Å“Ã—Å“",
+                                              "Ã—Â¡Ã—Â§Ã—Â¦Ã—ÂÃ—Â¤",
+                                              "Ã—Å“Ã—â„¢Ã—â„¢Ã—ÂÃ—ÂÃ—â€¢Ã—Ëœ",
+                                              "תכנון חלל",
+                                              "סקצאפ",
+                                              "סקצ\u0027אפ",
+                                              "פריסת חדר",
+                                              "תכנון דוכן",
+                                              "פריסת סדנה"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "engineering-technical-publication",
+                             "keywords":  [
+                                              "technical manual",
+                                              "engineering publication",
+                                              "spec book",
+                                              "technical catalog",
+                                              "Ã—Å¾Ã—â€œÃ—Â¨Ã—â„¢Ã—Å¡ Ã—ËœÃ—â€ºÃ—Â Ã—â„¢",
+                                              "Ã—Â§Ã—ËœÃ—Å“Ã—â€¢Ã—â€™ Ã—ËœÃ—â€ºÃ—Â Ã—â„¢",
+                                              "Ã—Â¤Ã—Â¨Ã—Â¡Ã—â€¢Ã—Â Ã—â€Ã—Â Ã—â€œÃ—Â¡Ã—â„¢",
+                                              "מדריך טכני",
+                                              "קטלוג טכני",
+                                              "ספר מפרט",
+                                              "פרסום הנדסי"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "technical-illustration",
+                             "keywords":  [
+                                              "technical illustration",
+                                              "exploded view",
+                                              "callout",
+                                              "xvl",
+                                              "Ã—ÂÃ—â„¢Ã—â€¢Ã—Â¨ Ã—ËœÃ—â€ºÃ—Â Ã—â„¢",
+                                              "Ã—Å¾Ã—â€˜Ã—Ëœ Ã—Å¾Ã—Â¤Ã—â€¢Ã—Â¦Ã—Â¥",
+                                              "איור טכני",
+                                              "מבט מפוצץ",
+                                              "סימון חלקים",
+                                              "קולאאוט"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "pbr-material-pipeline",
+                             "keywords":  [
+                                              "pbr",
+                                              "material",
+                                              "texture",
+                                              "bake",
+                                              "substance",
+                                              "Ã—â€”Ã—â€¢Ã—Å¾Ã—Â¨",
+                                              "Ã—ËœÃ—Â§Ã—Â¡Ã—ËœÃ—â€¢Ã—Â¨Ã—â€",
+                                              "Ã—â€”Ã—â€¢Ã—Å¾Ã—Â¨Ã—â„¢Ã—â€¢Ã—Âª",
+                                              "חומר pbr",
+                                              "חומרי pbr",
+                                              "טקסטורה",
+                                              "אפיית טקסטורות",
+                                              "סאבסטנס"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "3d-turntable-product-visualization",
+                             "keywords":  [
+                                              "turntable",
+                                              "product visualization",
+                                              "360 render",
+                                              "Ã—Â¨Ã—Â Ã—â€œÃ—Â¨ Ã—Å¾Ã—â€¢Ã—Â¦Ã—Â¨",
+                                              "Ã—Â¡Ã—â„¢Ã—â€˜Ã—â€¢Ã—â€˜ Ã—Å¾Ã—â€¢Ã—Â¦Ã—Â¨",
+                                              "hero render",
+                                              "product render",
+                                              "studio lighting",
+                                              "הדמיית מוצר",
+                                              "רנדר מוצר",
+                                              "רנדר 360",
+                                              "טרן טייבל",
+                                              "תאורת סטודיו"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "product-image-finishing",
+                             "keywords":  [
+                                              "product image",
+                                              "photo finish",
+                                              "retouch",
+                                              "photoshop",
+                                              "Ã—Â¢Ã—Â¨Ã—â„¢Ã—â€ºÃ—Âª Ã—ÂªÃ—Å¾Ã—â€¢Ã—Â Ã—â€",
+                                              "Ã—Â¨Ã—â„¢Ã—ËœÃ—â€¢Ã—Â©",
+                                              "Ã—ÂªÃ—Å¾Ã—â€¢Ã—Â Ã—Âª Ã—Å¾Ã—â€¢Ã—Â¦Ã—Â¨",
+                                              "תמונת מוצר",
+                                              "ריטוש",
+                                              "פוטושופ",
+                                              "גימור תמונה"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "vector-logo-layout",
+                             "keywords":  [
+                                              "logo",
+                                              "vector",
+                                              "coreldraw",
+                                              "illustrator",
+                                              "Ã—Å“Ã—â€¢Ã—â€™Ã—â€¢",
+                                              "Ã—â€¢Ã—Â§Ã—ËœÃ—â€¢Ã—Â¨",
+                                              "לוגו",
+                                              "וקטור",
+                                              "אילוסטרייטור",
+                                              "קורלדרו",
+                                              "קורל"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "hebrew-narration-subtitles",
+                             "keywords":  [
+                                              "narration",
+                                              "subtitle",
+                                              "tts",
+                                              "asr",
+                                              "voiceover",
+                                              "transcription",
+                                              "Ã—Â§Ã—Â¨Ã—â„¢Ã—â„¢Ã—Â Ã—â€¢Ã—Âª",
+                                              "Ã—â€ºÃ—ÂªÃ—â€¢Ã—â€˜Ã—â„¢Ã—â€¢Ã—Âª",
+                                              "Ã—ÂªÃ—Å¾Ã—Å“Ã—â€¢Ã—Å“",
+                                              "קריינות",
+                                              "כתוביות",
+                                              "תמלול",
+                                              "המרת טקסט לדיבור"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "technical-explainer-animation",
+                             "keywords":  [
+                                              "technical explainer",
+                                              "geometry animation",
+                                              "process animation",
+                                              "manim",
+                                              "Ã—ÂÃ—Â Ã—â„¢Ã—Å¾Ã—Â¦Ã—â„¢Ã—â€ Ã—ËœÃ—â€ºÃ—Â Ã—â„¢Ã—Âª",
+                                              "Ã—â€Ã—Â¡Ã—â€˜Ã—Â¨ Ã—ÂÃ—Â Ã—â„¢Ã—Å¾Ã—ËœÃ—â„¢Ã—â€˜Ã—â„¢",
+                                              "אנימציה טכנית",
+                                              "הסבר טכני",
+                                              "אנימציית תהליך"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "video-enhancement",
+                             "keywords":  [
+                                              "upscale",
+                                              "denoise",
+                                              "restore video",
+                                              "topaz video",
+                                              "Ã—Â©Ã—â„¢Ã—Â¤Ã—â€¢Ã—Â¨ Ã—â€¢Ã—â„¢Ã—â€œÃ—ÂÃ—â€¢",
+                                              "Ã—â€Ã—â€™Ã—â€œÃ—Å“Ã—Âª Ã—â€¢Ã—â„¢Ã—â€œÃ—ÂÃ—â€¢",
+                                              "שיפור וידאו",
+                                              "שחזור וידאו",
+                                              "הגדלת רזולוציה",
+                                              "הסרת רעש",
+                                              "טופז וידאו"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "vfx-composite",
+                             "keywords":  [
+                                              "vfx",
+                                              "composite shot",
+                                              "roto",
+                                              "rotoscope",
+                                              "keying",
+                                              "greenscreen",
+                                              "green screen",
+                                              "tracking",
+                                              "matchmove",
+                                              "plate cleanup",
+                                              "cg integration",
+                                              "aov",
+                                              "render pass",
+                                              "lens distortion",
+                                              "stmap",
+                                              "composite",
+                                              "green-screen",
+                                              "camera track",
+                                              "camera tracking",
+                                              "cg into the plate",
+                                              "קומפוזיטינג",
+                                              "קומפוזיט",
+                                              "רוטוסקופ",
+                                              "מסך ירוק",
+                                              "קיינג",
+                                              "טרקינג",
+                                              "מעקב מצלמה",
+                                              "שילוב cg",
+                                              "עיוות עדשה"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "color-finish",
+                             "keywords":  [
+                                              "color grade",
+                                              "grading",
+                                              "color finish",
+                                              "Ã—â€™Ã—Â¨Ã—â„¢Ã—â„¢Ã—â€œÃ—â„¢Ã—Â Ã—â€™",
+                                              "Ã—ÂªÃ—â„¢Ã—Â§Ã—â€¢Ã—Å¸ Ã—Â¦Ã—â€˜Ã—Â¢",
+                                              "shot match",
+                                              "shot-match",
+                                              "match shots",
+                                              "גריידינג",
+                                              "דירוג צבע",
+                                              "התאמת צבע",
+                                              "גימור צבע"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "short-social-video",
+                             "keywords":  [
+                                              "reel",
+                                              "short social",
+                                              "tiktok",
+                                              "instagram video",
+                                              "Ã—Â¨Ã—â„¢Ã—Å“",
+                                              "Ã—Â¡Ã—Â¨Ã—ËœÃ—â€¢Ã—Å¸ Ã—Â§Ã—Â¦Ã—Â¨",
+                                              "Ã—Â¡Ã—â€¢Ã—Â©Ã—â„¢Ã—ÂÃ—Å“",
+                                              "ריל",
+                                              "סרטון קצר",
+                                              "טיקטוק",
+                                              "וידאו לאינסטגרם"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "long-edit-heavy-video",
+                             "keywords":  [
+                                              "long video",
+                                              "edit-heavy",
+                                              "timeline edit",
+                                              "premiere",
+                                              "resolve",
+                                              "Ã—Â¢Ã—Â¨Ã—â„¢Ã—â€ºÃ—Âª Ã—â€¢Ã—â„¢Ã—â€œÃ—ÂÃ—â€¢",
+                                              "Ã—Â¡Ã—Â¨Ã—ËœÃ—â€¢Ã—Å¸ Ã—ÂÃ—Â¨Ã—â€¢Ã—Å¡",
+                                              "עריכת וידאו",
+                                              "עריכה ארוכה",
+                                              "טיימליין",
+                                              "פרמייר",
+                                              "ריזולב"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "reusable-derivative-export-factory",
+                             "keywords":  [
+                                              "derivative",
+                                              "transcode",
+                                              "proxy",
+                                              "media encoder",
+                                              "encode",
+                                              "Ã—â€Ã—Å¾Ã—Â¨Ã—â€",
+                                              "Ã—Â¤Ã—Â¨Ã—â€¢Ã—Â§Ã—Â¡Ã—â„¢",
+                                              "טרנסקוד",
+                                              "פרוקסי",
+                                              "קידוד",
+                                              "מדיה אנקודר"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "document-report-bom",
+                             "keywords":  [
+                                              "bom",
+                                              "report",
+                                              "spreadsheet",
+                                              "word document",
+                                              "powerpoint",
+                                              "excel",
+                                              "Ã—â€œÃ—â€¢Ã—â€”",
+                                              "Ã—Å¾Ã—Â¡Ã—Å¾Ã—Å¡",
+                                              "Ã—Å¾Ã—Â¦Ã—â€™Ã—Âª",
+                                              "Ã—ÂÃ—Â§Ã—Â¡Ã—Å“",
+                                              "דוח",
+                                              "גיליון",
+                                              "אקסל",
+                                              "פאוורפוינט",
+                                              "מסמך וורד"
+                                          ]
+                         },
+                         {
+                             "pipeline":  "ops-package-release",
+                             "keywords":  [
+                                              "package release",
+                                              "archive handoff",
+                                              "7-zip",
+                                              "gcloud",
+                                              "github cli",
+                                              "deployment bundle",
+                                              "Ã—â€”Ã—â€˜Ã—â„¢Ã—Å“Ã—Âª Ã—â€œÃ—â„¢Ã—Â¤Ã—Å“Ã—â€¢Ã—â„¢",
+                                              "Ã—ÂÃ—Â¨Ã—â€ºÃ—â„¢Ã—â€¢Ã—Å¸",
+                                              "Ã—Â¨Ã—â„¢Ã—Å“Ã—â„¢Ã—Â¡",
+                                              "חבילת הפצה",
+                                              "ארכיון handoff",
+                                              "דיפלוי",
+                                              "חבילת דיפלוי"
+                                          ]
+                         }
+                     ],
+    "inventory_only":  {
+                           "substance-sampler":  "6.0.3",
+                           "substance-modeler":  "1.22.7.1239",
+                           "substance-stager":  "3.1.8",
+                           "elegoo-slicer":  "1.5.3.5 vendor-profile/reference only",
+                           "flash-studio":  "1.7.18 vendor-profile/reference only"
+                       },
+    "exclusions":  [
+                       "rainmeter",
+                       "plex-media-server",
+                       "nvidia-broadcast",
+                       "brother-scanner-pc-fax",
+                       "asustor-control-center",
+                       "outlook",
+                       "topaz-gigapixel",
+                       "cinema-4d"
+                   ]
+}

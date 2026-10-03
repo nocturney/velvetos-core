@@ -1,0 +1,3 @@
+interface:
+  display_name: "Velvet BOM + Costing"
+  short_description: "Traceable BOM structure, cost rollups, scenarios and spreadsheet QA"

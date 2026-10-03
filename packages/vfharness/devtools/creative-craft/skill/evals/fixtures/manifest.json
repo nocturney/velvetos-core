@@ -1,0 +1,70 @@
+﻿{
+    "schema":  "velvetos.creative-craft.fixtures.v1",
+    "generated_at":  "2026-10-03",
+    "fixtures":  [
+                     {
+                         "id":  "cad-resilience",
+                         "file":  "cad-resilience.txt",
+                         "source_kind":  "locally-generated",
+                         "license":  "internal-generated-test-fixture",
+                         "sha256":  "51b5f517842c9c13cca545d9657f87e2229ad1ac0751d8c256935e4855095633",
+                         "bytes":  291
+                     },
+                     {
+                         "id":  "grade-shot-match",
+                         "file":  "grade-shot-match.txt",
+                         "source_kind":  "locally-generated",
+                         "license":  "internal-generated-test-fixture",
+                         "sha256":  "6013b58072d88ed89a727866172afca0a8ca3c27632d0e7c83628a2958aab776",
+                         "bytes":  301
+                     },
+                     {
+                         "id":  "hard-surface-model",
+                         "file":  "hard-surface-model.txt",
+                         "source_kind":  "locally-generated",
+                         "license":  "internal-generated-test-fixture",
+                         "sha256":  "f1f7596b03c696dc08586ef9d570f9ed8fd6d7a6e94bd1fa67ba0318e129c981",
+                         "bytes":  288
+                     },
+                     {
+                         "id":  "motion-piece",
+                         "file":  "motion-piece.txt",
+                         "source_kind":  "locally-generated",
+                         "license":  "internal-generated-test-fixture",
+                         "sha256":  "ad2c1bf1755909d7cb089325f244e14cdc0df47a7f02a9e148664b6709b2d749",
+                         "bytes":  223
+                     },
+                     {
+                         "id":  "product-render",
+                         "file":  "product-render.txt",
+                         "source_kind":  "locally-generated",
+                         "license":  "internal-generated-test-fixture",
+                         "sha256":  "553ea7f062c391d6d47302d2489fb517f74bf36635019e41e0f49b5e6a34f4c6",
+                         "bytes":  348
+                     },
+                     {
+                         "id":  "restoration",
+                         "file":  "restoration.txt",
+                         "source_kind":  "locally-generated",
+                         "license":  "internal-generated-test-fixture",
+                         "sha256":  "5beb097497a2c8d4acec589c3dc69e2a39e85d462cde7074866e105e1598922c",
+                         "bytes":  283
+                     },
+                     {
+                         "id":  "technical-illustration",
+                         "file":  "technical-illustration.txt",
+                         "source_kind":  "locally-generated",
+                         "license":  "internal-generated-test-fixture",
+                         "sha256":  "2662af5b79f9a4d46fcacef8945adf452dc7e196cf494c650305ec8e83f11626",
+                         "bytes":  234
+                     },
+                     {
+                         "id":  "vfx-composite",
+                         "file":  "vfx-composite.txt",
+                         "source_kind":  "locally-generated",
+                         "license":  "internal-generated-test-fixture",
+                         "sha256":  "080c382f8d840806b4dff8daa608d87ba40b99c5f6b32994f8d933cd6d4b317a",
+                         "bytes":  304
+                     }
+                 ]
+}

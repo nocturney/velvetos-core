@@ -1,0 +1,229 @@
+{
+  "schema": "velvetos.creative-craft.evals.v1",
+  "baseline_version": "1.4.0",
+  "candidate_version": "2.0.0",
+  "scoring": "0-7 deterministic architecture/craft coverage checks; perceptual artifact review remains manual and is recorded separately",
+  "cases": [
+    {
+      "id": "product-render",
+      "fixture": "product-render",
+      "baseline_specialist": "vf-material-lookdev",
+      "candidate_specialist": "vf-product-visualization-craft",
+      "pipeline": "3d-turntable-product-visualization",
+      "trigger_terms": [
+        "product visualization",
+        "hero",
+        "camera",
+        "lighting"
+      ],
+      "required_references": [
+        "camera-lens-composition.md",
+        "studio-lighting-reflections.md",
+        "surface-readability.md"
+      ],
+      "required_concepts": [
+        "neutral diagnostic",
+        "reflection",
+        "protected",
+        "critique"
+      ],
+      "manual_criteria": [
+        "geometry/material truth preserved",
+        "camera perspective supports product intent",
+        "reflection shape reveals form",
+        "beauty does not hide defects"
+      ]
+    },
+    {
+      "id": "hard-surface-model",
+      "fixture": "hard-surface-model",
+      "baseline_specialist": "vf-dcc-modeling-craft",
+      "candidate_specialist": "vf-dcc-modeling-craft",
+      "pipeline": "mesh-review",
+      "trigger_terms": [
+        "hard-surface",
+        "topology",
+        "bake"
+      ],
+      "required_references": [
+        "bake-diagnostics.md"
+      ],
+      "required_concepts": [
+        "silhouette",
+        "cage",
+        "tangent",
+        "stress"
+      ],
+      "manual_criteria": [
+        "protected silhouette/interfaces preserved",
+        "topology supports downstream task",
+        "bake defects diagnosed at source"
+      ]
+    },
+    {
+      "id": "cad-resilience",
+      "fixture": "cad-resilience",
+      "baseline_specialist": "vf-cad-design-craft",
+      "candidate_specialist": "vf-cad-design-craft",
+      "pipeline": "fabrication",
+      "trigger_terms": [
+        "parametric",
+        "tolerances",
+        "assemblies"
+      ],
+      "required_references": [
+        "dfm-gdt-functional-datums.md",
+        "ergonomics-cmf.md"
+      ],
+      "required_concepts": [
+        "datum",
+        "perturbation",
+        "process",
+        "population"
+      ],
+      "manual_criteria": [
+        "parameter perturbations rebuild",
+        "datum/interface intent survives",
+        "process-specific values stay scoped"
+      ]
+    },
+    {
+      "id": "grade-shot-match",
+      "fixture": "grade-shot-match",
+      "baseline_specialist": "vf-post-production-craft",
+      "candidate_specialist": "vf-post-production-craft",
+      "pipeline": "color-finish",
+      "trigger_terms": [
+        "color",
+        "grading",
+        "delivery"
+      ],
+      "required_references": [
+        "color-management.md"
+      ],
+      "required_concepts": [
+        "scene-referred",
+        "display-referred",
+        "readback",
+        "destination"
+      ],
+      "manual_criteria": [
+        "normalization precedes look",
+        "product color truth preserved",
+        "output transform is explicit"
+      ]
+    },
+    {
+      "id": "vfx-composite",
+      "fixture": "vfx-composite",
+      "baseline_specialist": "vf-post-production-craft",
+      "candidate_specialist": "vf-vfx-compositing-craft",
+      "pipeline": "vfx-composite",
+      "trigger_terms": [
+        "vfx",
+        "roto",
+        "key",
+        "tracking",
+        "compositing"
+      ],
+      "required_references": [
+        "shot-setup-plate-lens.md",
+        "roto-key-mattes.md",
+        "tracking-matchmove.md",
+        "integration-finishing.md",
+        "shot-qc.md"
+      ],
+      "required_concepts": [
+        "lens distortion",
+        "premultiplication",
+        "grain",
+        "worst"
+      ],
+      "manual_criteria": [
+        "lens workflow coherent",
+        "matte/track integrity holds",
+        "CG matches plate image system",
+        "worst frames pass"
+      ]
+    },
+    {
+      "id": "motion-piece",
+      "fixture": "motion-piece",
+      "baseline_specialist": "vf-post-production-craft",
+      "candidate_specialist": "vf-post-production-craft",
+      "pipeline": "short-social-video",
+      "trigger_terms": [
+        "motion",
+        "typography",
+        "delivery"
+      ],
+      "required_references": [
+        "motion-direction.md",
+        "kinetic-typography.md"
+      ],
+      "required_concepts": [
+        "hierarchy",
+        "timing",
+        "readability",
+        "exact"
+      ],
+      "manual_criteria": [
+        "exact copy preserved",
+        "motion hierarchy readable",
+        "timing/easing supports intent"
+      ]
+    },
+    {
+      "id": "technical-illustration",
+      "fixture": "technical-illustration",
+      "baseline_specialist": "vf-technical-illustration-craft",
+      "candidate_specialist": "vf-technical-illustration-craft",
+      "pipeline": "technical-illustration",
+      "trigger_terms": [
+        "technical",
+        "callout",
+        "dimensions"
+      ],
+      "required_references": [
+        "technical-drawing-systems.md"
+      ],
+      "required_concepts": [
+        "datum",
+        "source revision",
+        "callout",
+        "view"
+      ],
+      "manual_criteria": [
+        "part IDs reconcile",
+        "view selection communicates function",
+        "dimensions remain source-linked"
+      ]
+    },
+    {
+      "id": "restoration",
+      "fixture": "restoration",
+      "baseline_specialist": "vf-post-production-craft",
+      "candidate_specialist": "vf-post-production-craft",
+      "pipeline": "video-enhancement",
+      "trigger_terms": [
+        "restoration",
+        "enhancement",
+        "delivery"
+      ],
+      "required_references": [
+        "video-restoration.md"
+      ],
+      "required_concepts": [
+        "cadence",
+        "separable",
+        "stress",
+        "source"
+      ],
+      "manual_criteria": [
+        "cadence/interlace diagnosed first",
+        "enhancement stages are separable",
+        "temporal stress frames preserve identity"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+SYNTHETIC FIXTURE: three-part assembly with authoritative part IDs A01-A03 and one functional datum.
+Task evidence: exploded relationship, callout mapping, view economy, dimension semantics, and source revision must remain traceable.

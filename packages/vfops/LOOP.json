@@ -1,7 +1,7 @@
 {
   "name": "vfops-loop",
   "title": "לולאת משרד — כל פק נצרך",
-  "updatedAt": "2026-09-27",
+  "updatedAt": "2026-10-03",
   "rule": "Every packages/ folder has a consume step. Catalog without consume is a fail. No invented ₪ or Insights. No live IG publish from this loop. Office Control Plane (office/control-plane.json) unifies SoT — not a second scheduler.",
   "cli": "python3 scripts/vfops_loop.py",
   "briefCli": "python3 scripts/vfops_loop.py brief",
@@ -502,6 +502,84 @@
       "path": ".cursor/skills/vf-weekly-links/SKILL.md",
       "cadence": "weekly",
       "consume": ".cursor/skills/vf-weekly-links/SKILL.md"
+    },
+    {
+      "id": "skill-cad-design-craft",
+      "path": ".cursor/skills/vf-cad-design-craft/SKILL.md",
+      "cadence": "on-job",
+      "consume": ".cursor/skills/vf-cad-design-craft/SKILL.md"
+    },
+    {
+      "id": "skill-dcc-modeling-craft",
+      "path": ".cursor/skills/vf-dcc-modeling-craft/SKILL.md",
+      "cadence": "on-job",
+      "consume": ".cursor/skills/vf-dcc-modeling-craft/SKILL.md"
+    },
+    {
+      "id": "skill-material-lookdev",
+      "path": ".cursor/skills/vf-material-lookdev/SKILL.md",
+      "cadence": "on-job",
+      "consume": ".cursor/skills/vf-material-lookdev/SKILL.md"
+    },
+    {
+      "id": "skill-product-visualization-craft",
+      "path": ".cursor/skills/vf-product-visualization-craft/SKILL.md",
+      "cadence": "on-content",
+      "consume": ".cursor/skills/vf-product-visualization-craft/SKILL.md"
+    },
+    {
+      "id": "skill-post-production-craft",
+      "path": ".cursor/skills/vf-post-production-craft/SKILL.md",
+      "cadence": "on-content",
+      "consume": ".cursor/skills/vf-post-production-craft/SKILL.md"
+    },
+    {
+      "id": "skill-vfx-compositing-craft",
+      "path": ".cursor/skills/vf-vfx-compositing-craft/SKILL.md",
+      "cadence": "on-content",
+      "consume": ".cursor/skills/vf-vfx-compositing-craft/SKILL.md"
+    },
+    {
+      "id": "skill-prepress-qa",
+      "path": ".cursor/skills/vf-prepress-qa/SKILL.md",
+      "cadence": "on-demand",
+      "consume": ".cursor/skills/vf-prepress-qa/SKILL.md"
+    },
+    {
+      "id": "skill-fabrication-craft",
+      "path": ".cursor/skills/vf-fabrication-craft/SKILL.md",
+      "cadence": "on-job",
+      "consume": ".cursor/skills/vf-fabrication-craft/SKILL.md"
+    },
+    {
+      "id": "skill-sketchup-layout-craft",
+      "path": ".cursor/skills/vf-sketchup-layout-craft/SKILL.md",
+      "cadence": "on-demand",
+      "consume": ".cursor/skills/vf-sketchup-layout-craft/SKILL.md"
+    },
+    {
+      "id": "skill-technical-illustration-craft",
+      "path": ".cursor/skills/vf-technical-illustration-craft/SKILL.md",
+      "cadence": "on-demand",
+      "consume": ".cursor/skills/vf-technical-illustration-craft/SKILL.md"
+    },
+    {
+      "id": "skill-image-design-craft",
+      "path": ".cursor/skills/vf-image-design-craft/SKILL.md",
+      "cadence": "on-content",
+      "consume": ".cursor/skills/vf-image-design-craft/SKILL.md"
+    },
+    {
+      "id": "skill-speech-qa",
+      "path": ".cursor/skills/vf-speech-qa/SKILL.md",
+      "cadence": "on-content",
+      "consume": ".cursor/skills/vf-speech-qa/SKILL.md"
+    },
+    {
+      "id": "skill-bom-costing",
+      "path": ".cursor/skills/vf-bom-costing/SKILL.md",
+      "cadence": "on-job",
+      "consume": ".cursor/skills/vf-bom-costing/SKILL.md"
     },
     {
       "id": "edit-gate",

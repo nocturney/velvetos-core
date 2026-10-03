@@ -1,0 +1,3 @@
+interface:
+  display_name: "Velvet Prepress QA"
+  short_description: "Print preflight, separations, PDF output and provider-spec verification"

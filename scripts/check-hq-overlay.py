@@ -9,8 +9,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = json.loads((ROOT / "packages/manifest.json").read_text())
-MAP = json.loads((ROOT / "packages/chatgpt-embed-map.json").read_text())
+MANIFEST = json.loads((ROOT / "packages/manifest.json").read_text(encoding="utf-8"))
+MAP = json.loads((ROOT / "packages/chatgpt-embed-map.json").read_text(encoding="utf-8"))
 PACK_NAMES = {p["name"] for p in MANIFEST["packs"]}
 ALLOWED_PACKS = PACK_NAMES | {"constitution"}
 ILS_NUMBER = re.compile(r"(?<!050-251)(?<!050–251)\d[\d.,]*\s*₪|₪\s*\d")
@@ -53,7 +53,7 @@ def main() -> None:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
-    mail_text = (ROOT / "packages/vfbriefux/MAIL.html").read_text()
+    mail_text = (ROOT / "packages/vfbriefux/MAIL.html").read_text(encoding="utf-8")
     for token in (
         'bgcolor="#101828"',
         'dir="rtl"',
@@ -72,7 +72,7 @@ def main() -> None:
         if token not in mail_text:
             fail(f"MAIL.html missing {token}")
 
-    mail_contract = (ROOT / "packages/vfbriefux/MAIL.md").read_text()
+    mail_contract = (ROOT / "packages/vfbriefux/MAIL.md").read_text(encoding="utf-8")
     for token in (
         "htmlBody",
         "עברית",
@@ -86,7 +86,7 @@ def main() -> None:
         if token not in mail_contract:
             fail(f"MAIL.md missing V10.3 contract token {token!r}")
 
-    design = (ROOT / "packages/vfbriefux/hq/DESIGN.md").read_text()
+    design = (ROOT / "packages/vfbriefux/hq/DESIGN.md").read_text(encoding="utf-8")
     for token in ("Ink & Candy", "#101828", "#FF4F91", "#6C7CFF", "#B8F34A", "hero_visual"):
         if token not in design:
             fail(f"DESIGN.md missing V10.3 token {token!r}")
@@ -101,7 +101,7 @@ def main() -> None:
     tags_path = ROOT / "constitution/tags.md"
     if not tags_path.is_file():
         fail("missing tags")
-    tags_text = tags_path.read_text()
+    tags_text = tags_path.read_text(encoding="utf-8")
     for needle in ("#צמיחה-חברתית", "#ריל-תהליך", "#היילייטס", "social-growth"):
         if needle not in tags_text:
             fail(f"constitution/tags.md missing social-growth needle {needle!r}")
@@ -120,11 +120,11 @@ def main() -> None:
     research = ROOT / "packages/vfops/data/research.md"
     if not research.is_file():
         fail("missing vfops/data/research.md")
-    research_text = research.read_text()
+    research_text = research.read_text(encoding="utf-8")
     if "מה נבנה / יועל" not in research_text and "אין חדש במשרד" not in research_text:
         fail("vfops/data/research.md missing office brief state")
 
-    vendor = (ROOT / "scripts/vendor-origin-packs.sh").read_text()
+    vendor = (ROOT / "scripts/vendor-origin-packs.sh").read_text(encoding="utf-8")
     if "HQ overlay wins" not in vendor:
         fail("vendor script must preserve hq overlay")
 
@@ -138,7 +138,7 @@ def main() -> None:
                 continue
             if "packages/vfcopy/evals" in str(path).replace("\\", "/"):
                 continue
-            text = path.read_text()
+            text = path.read_text(encoding="utf-8")
             for m in ILS_NUMBER.finditer(text):
                 snippet = text[max(0, m.start() - 24):m.end() + 8]
                 if "X ₪" in snippet or "X   ₪" in snippet or "050-2517000" in snippet:
