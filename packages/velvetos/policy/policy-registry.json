@@ -78,7 +78,9 @@
       "authority_locations": [
         "constitution/SEND.md"
       ],
-      "machine_policy_locations": [],
+      "machine_policy_locations": [
+        "packages/velvetos/policy/gmail.send.json"
+      ],
       "enforced_by": [
         {
           "kind": "sensor",
@@ -87,6 +89,10 @@
         {
           "kind": "sensor",
           "id": "check-visible-text-gate"
+        },
+        {
+          "kind": "runtime",
+          "path": "scripts/vf_gmail_send_policy.py"
         }
       ],
       "policy_role": "effect_authority"
@@ -376,8 +382,8 @@
         "effect_class": "gmail_external_send",
         "policy_id": "gmail.send",
         "decision_authority": {
-          "kind": "canonical_policy_boundary",
-          "path": "constitution/SEND.md"
+          "kind": "runtime_evaluator",
+          "path": "scripts/vf_gmail_send_policy.py"
         },
         "receipt_mode": "EXACT_ACTION_ON_COMMITMENT",
         "evidence_inputs": [

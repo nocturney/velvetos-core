@@ -1,0 +1,39 @@
+{
+  "schema": "velvetos.gmail-send-policy.v1",
+  "policy_id": "gmail.send",
+  "version": 1,
+  "status": "ACTIVE_STAGE4E",
+  "decision_vocabulary": ["ALLOW", "DENY", "REQUIRE_OWNER_APPROVAL"],
+  "allowed_actions": ["send_message", "reply", "forward"],
+  "routine_scopes": ["owner_brief", "known_thread_reply", "routine_forward"],
+  "owner_gated_scopes": ["new_outbound"],
+  "text_readiness_modes": {
+    "visible_text_gate": {
+      "requires_status": "PASS",
+      "requires_exact_body_sha256": true
+    },
+    "approved_static_copy": {
+      "requires_status": "PASS",
+      "requires_exact_body_sha256": true,
+      "requires_text_unchanged": true,
+      "requires_facts_current": true
+    }
+  },
+  "restricted_triggers": {
+    "new_commercial_commitment": "REQUIRE_OWNER_APPROVAL",
+    "price_or_spend": "REQUIRE_OWNER_APPROVAL",
+    "rights_privacy_ambiguity": "REQUIRE_OWNER_APPROVAL",
+    "unverified_fact": "DENY",
+    "blast": "DENY"
+  },
+  "commitment_receipt_mode": "EXACT_ACTION_ON_COMMITMENT",
+  "rules": [
+    "Transport readiness is evidence, never authorization.",
+    "Facts and reader-appropriate text readiness are mandatory for every external Gmail send.",
+    "Routine owner brief and known-thread reply need no extra owner approval when no restricted trigger is present.",
+    "Approved static copy may skip the rewrite pipeline only when exact text identity and current facts are proven.",
+    "New commercial commitment or price/spend requires exact owner approval bound to the exact body before ALLOW.",
+    "Bulk/blast behavior and unverified facts are denied.",
+    "Provider send receipt remains required before claiming sent."
+  ]
+}

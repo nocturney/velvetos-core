@@ -1,6 +1,6 @@
 {
   "name": "velvetos-living-studio-registry",
-  "updatedAt": "2026-09-14",
+  "updatedAt": "2026-10-03",
   "rule": "Skills are routers over existing packs and SoTs. Do not create a second Control Plane, media catalog, decision journal, or publishing provider.",
   "controlPlane": "office/control-plane.json",
   "cli": "python3 scripts/vf_living_studio.py",
@@ -30,7 +30,7 @@
         "office/control/decisions.jsonl"
       ],
       "risk": "yellow",
-      "approval": "orange when new external reply",
+      "approval": "known-thread routine Gmail reply: no extra approval beyond policy_id gmail.send; orange only for new_outbound, commercial commitment, price/spend, or rights/privacy ambiguity",
       "success": "inquiry classified + job or followup receipt",
       "needs_input": [
         "customer name",

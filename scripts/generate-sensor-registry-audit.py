@@ -141,7 +141,7 @@ def main() -> int:
         )
         return 0
     REPORT.parent.mkdir(parents=True, exist_ok=True)
-    REPORT.write_text(rendered, encoding="utf-8")
+    REPORT.write_bytes(rendered.encode("utf-8"))
     print(f"OK wrote {REPORT.relative_to(ROOT)}")
     return 0
 

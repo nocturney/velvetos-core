@@ -5,6 +5,10 @@ Two different checks live here and must never be confused:
 1. transport readiness — local desk/session/env readiness only;
 2. publication quality approval — exact content approval required before Instagram publish.
 
+For Gmail, `--gate gmail` is transport diagnostics only. It does not authorize a
+body, recipient, commitment, price, spend, or blast. `policy_id: gmail.send` is
+evaluated by `scripts/vf_gmail_send_policy.py` against exact body evidence.
+
 For Instagram publish, the default is fail-closed and requires a machine-readable
 PREFLIGHT v3 (legacy publicationEvidence) or v4 (VF Project 6.6.9) bound to the exact final package. Use --transport-only only for health
 or diagnostics; its success is explicitly NOT publish authorization.
@@ -391,9 +395,12 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
         "gmail": {
             "desk_status": gmail.get("status") or "unknown",
             "ready": (gmail.get("status") or "") in READY,
+            "transport_only": True,
+            "authorization_policy_id": "gmail.send",
+            "authorization_evaluator": "scripts/vf_gmail_send_policy.py",
             "action": "send_message / reply / forward",
             "failover": "Drive create_file + continue; never invent inquiry",
-            "note": "Desk status only — MCP auth is runtime. Failover if tool call fails.",
+            "note": "Transport/desk readiness only — never send authorization. Exact body policy is downstream.",
         },
         "instagram": {
             "desk_status": ig_status or "unknown",
@@ -426,7 +433,7 @@ def channel_report(desk: dict[str, Any]) -> dict[str, Any]:
         "mode": "local-only",
         "send_law": str(SEND.relative_to(ROOT)) if SEND.is_file() else None,
         "channels": channels,
-        "rule": "Transport readiness is not creative approval. Instagram publish requires exact-package PREFLIGHT v3 or VF Project 6.6.9 PREFLIGHT v4.",
+        "rule": "Transport readiness is never action authorization. Gmail uses policy_id gmail.send; Instagram publish requires exact-package PREFLIGHT v3 or VF Project 6.6.9 PREFLIGHT v4.",
     }
 
 
@@ -436,7 +443,10 @@ def gate_channel(report: dict[str, Any], name: str) -> int:
         print(f"FAIL unknown gate channel {name!r}", file=sys.stderr)
         return 1
     if ch.get("ready"):
-        print(f"GATE {name}=ready")
+        if name == "gmail":
+            print("GATE gmail=transport-ready authorization=policy_id:gmail.send-required")
+        else:
+            print(f"GATE {name}=ready")
         return 0
     if ch.get("needs_failover") or not ch.get("ready"):
         print(f"GATE {name}=failover")

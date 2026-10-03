@@ -1,0 +1,118 @@
+{
+  "schema": "velvetos.stage4e-gmail-send-simplification.v1",
+  "stage": "4E",
+  "prepared_against_main_sha": "6d7b48e5c5604673d63363927c3d0c69145282e9",
+  "captured_at": "2026-10-03T20:10:59.8249350+03:00",
+  "policy_id": "gmail.send",
+  "policy_version": 1,
+  "authority": {
+    "canonical_law": "constitution/SEND.md",
+    "runtime_evaluator": "scripts/vf_gmail_send_policy.py",
+    "machine_policy": "packages/velvetos/policy/gmail.send.json",
+    "transport_preflight": "scripts/vf_send_preflight.py --gate gmail",
+    "transport_is_authorization": false
+  },
+  "routine_happy_path": {
+    "scopes": [
+      "owner_brief",
+      "known_thread_reply",
+      "routine_forward"
+    ],
+    "owner_prompt_count": 0,
+    "requires_exact_action_receipt": false,
+    "facts_required": true,
+    "text_readiness_required": true,
+    "target_verified_required": true,
+    "transport_ready_required": true,
+    "routine_vectors_all_allow": true
+  },
+  "approved_static_copy": {
+    "mode": "approved_static_copy",
+    "exact_body_sha256_required": true,
+    "text_unchanged_required": true,
+    "facts_current_required": true,
+    "full_rewrite_pipeline_rerun_required_when_exact_and_current": false
+  },
+  "gated_cases": {
+    "new_outbound": "REQUIRE_OWNER_APPROVAL",
+    "new_commercial_commitment": "REQUIRE_OWNER_APPROVAL",
+    "price_or_spend": "REQUIRE_OWNER_APPROVAL",
+    "rights_privacy_ambiguity": "REQUIRE_OWNER_APPROVAL",
+    "commitment_receipt_mode": "EXACT_ACTION_ON_COMMITMENT",
+    "exact_owner_approval_body_binding_required": true
+  },
+  "hard_denies": {
+    "unverified_fact": "DENY",
+    "blast": "DENY",
+    "target_unverified": "DENY",
+    "transport_not_ready": "DENY",
+    "text_or_body_mismatch": "DENY",
+    "static_copy_changed_or_stale": "DENY"
+  },
+  "action_receipt_contract": {
+    "schema": "velvetos.action-receipt.v1",
+    "gmail_commitment_exact_body_vector": "gmail-commitment-exact-body-valid",
+    "gmail_commitment_missing_body_vector": "gmail-commitment-missing-exact-body-blocked",
+    "gmail_routine_no_exact_binding_vector": "gmail-routine-reply-does-not-require-exact-action-binding"
+  },
+  "vector_summary": {
+    "count": 19,
+    "decision_counts": {
+      "ALLOW": 5,
+      "REQUIRE_OWNER_APPROVAL": 5,
+      "DENY": 9
+    },
+    "routine_no_owner_prompt_proven": true
+  },
+  "tests": [
+    {
+      "command": "C:\\Python314\\python.exe scripts/vf_gmail_send_policy.py --self-test",
+      "return_code": 0,
+      "stdout_tail": [
+        "PASS text-gate-failure-denied DENY FAIL_CLOSED",
+        "PASS text-body-mismatch-denied DENY FAIL_CLOSED",
+        "PASS static-copy-change-denied DENY FAIL_CLOSED",
+        "PASS static-copy-stale-facts-denied DENY FAIL_CLOSED",
+        "PASS transport-down-denied DENY FAIL_CLOSED",
+        "PASS target-unverified-denied DENY FAIL_CLOSED",
+        "PASS unknown-scope-denied DENY FAIL_CLOSED",
+        "OK gmail.send vectors=19 routine_owner_prompt=0 commitment_exact_binding=YES"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "C:\\Python314\\python.exe scripts/vf_action_receipt.py --self-test",
+      "return_code": 0,
+      "stdout_tail": [
+        "OK action-receipt vectors=14 policy_decision_is_canonical=true"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "C:\\Python314\\python.exe scripts/check-visible-text-gate.py",
+      "return_code": 0,
+      "stdout_tail": [
+        "OK visible-text-gate routes + surface-aware executable + anti-slop behavioral gate bound"
+      ],
+      "stderr_tail": []
+    },
+    {
+      "command": "C:\\Python314\\python.exe scripts/vf_send_preflight.py --gate gmail",
+      "return_code": 0,
+      "stdout_tail": [
+        "      \"ready\": false,",
+        "      \"action\": \"python3 scripts/vf_chatgpt.py\",",
+        "      \"failover\": \"חסר מפתח ChatGPT → Gemini API + Perplexity + WebSearch\"",
+        "    }",
+        "  },",
+        "  \"rule\": \"Transport readiness is never action authorization. Gmail uses policy_id gmail.send; Instagram publish requires exact-package PREFLIGHT v3 or VF Project 6.6.9 PREFLIGHT v4.\"",
+        "}",
+        "GATE gmail=transport-ready authorization=policy_id:gmail.send-required"
+      ],
+      "stderr_tail": []
+    }
+  ],
+  "transport_output_proves_non_authority": true,
+  "provider_postcondition": "provider receipt required before claiming sent",
+  "repository_acceptance": "PASS"
+}

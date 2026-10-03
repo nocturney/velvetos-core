@@ -246,6 +246,224 @@
           "POLICY_NATIVE_RECEIPT_REQUIRED"
         ]
       }
+    },
+    {
+      "id": "gmail-commitment-exact-body-valid",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/policy_id",
+          "value": "gmail.send"
+        },
+        {
+          "op": "replace",
+          "path": "/effect_class",
+          "value": "gmail_external_send"
+        },
+        {
+          "op": "replace",
+          "path": "/action",
+          "value": {
+            "action_type": "send_message",
+            "scope": "new_commercial_commitment",
+            "commitment": true,
+            "subject_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/exact_binding",
+          "value": {
+            "artifact_sha256": null,
+            "payload_sha256": null,
+            "text_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "media_sha256": []
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/evidence",
+          "value": [
+            {
+              "class": "facts",
+              "ref": "fixture://gmail/facts",
+              "status": "PASS"
+            },
+            {
+              "class": "visible_text",
+              "ref": "fixture://gmail/body",
+              "status": "PASS"
+            },
+            {
+              "class": "transport",
+              "ref": "fixture://gmail/transport",
+              "status": "PASS"
+            },
+            {
+              "class": "runtime_health",
+              "ref": "fixture://gmail/runtime",
+              "status": "PASS"
+            },
+            {
+              "class": "rights_privacy",
+              "ref": "fixture://gmail/rights",
+              "status": "PASS"
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "gate": "PASS",
+        "reason_codes": []
+      }
+    },
+    {
+      "id": "gmail-commitment-missing-exact-body-blocked",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/policy_id",
+          "value": "gmail.send"
+        },
+        {
+          "op": "replace",
+          "path": "/effect_class",
+          "value": "gmail_external_send"
+        },
+        {
+          "op": "replace",
+          "path": "/action",
+          "value": {
+            "action_type": "send_message",
+            "scope": "new_commercial_commitment",
+            "commitment": true,
+            "subject_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/exact_binding",
+          "value": {}
+        },
+        {
+          "op": "replace",
+          "path": "/evidence",
+          "value": [
+            {
+              "class": "facts",
+              "ref": "fixture://gmail/facts",
+              "status": "PASS"
+            },
+            {
+              "class": "visible_text",
+              "ref": "fixture://gmail/body",
+              "status": "PASS"
+            },
+            {
+              "class": "transport",
+              "ref": "fixture://gmail/transport",
+              "status": "PASS"
+            },
+            {
+              "class": "runtime_health",
+              "ref": "fixture://gmail/runtime",
+              "status": "PASS"
+            },
+            {
+              "class": "rights_privacy",
+              "ref": "fixture://gmail/rights",
+              "status": "PASS"
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "gate": "BLOCKED",
+        "reason_codes": [
+          "EXACT_BINDING_REQUIRED"
+        ]
+      }
+    },
+    {
+      "id": "gmail-routine-reply-does-not-require-exact-action-binding",
+      "evaluation_time": "2030-01-01T10:30:00Z",
+      "patch_ops": [
+        {
+          "op": "replace",
+          "path": "/policy_id",
+          "value": "gmail.send"
+        },
+        {
+          "op": "replace",
+          "path": "/effect_class",
+          "value": "gmail_external_send"
+        },
+        {
+          "op": "replace",
+          "path": "/action",
+          "value": {
+            "action_type": "reply",
+            "scope": "known_thread_reply",
+            "commitment": false,
+            "subject_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/exact_binding",
+          "value": {}
+        },
+        {
+          "op": "replace",
+          "path": "/owner_gate",
+          "value": {
+            "required": false,
+            "reviewer": null,
+            "decision": "NOT_REQUIRED",
+            "reviewed_at": null,
+            "expires_at": null,
+            "blocker_ids": []
+          }
+        },
+        {
+          "op": "replace",
+          "path": "/evidence",
+          "value": [
+            {
+              "class": "facts",
+              "ref": "fixture://gmail/facts",
+              "status": "PASS"
+            },
+            {
+              "class": "visible_text",
+              "ref": "fixture://gmail/body",
+              "status": "PASS"
+            },
+            {
+              "class": "transport",
+              "ref": "fixture://gmail/transport",
+              "status": "PASS"
+            },
+            {
+              "class": "runtime_health",
+              "ref": "fixture://gmail/runtime",
+              "status": "PASS"
+            },
+            {
+              "class": "rights_privacy",
+              "ref": "fixture://gmail/rights",
+              "status": "PASS"
+            }
+          ]
+        }
+      ],
+      "expected": {
+        "gate": "PASS",
+        "reason_codes": []
+      }
     }
   ]
 }

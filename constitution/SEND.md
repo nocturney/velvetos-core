@@ -83,15 +83,39 @@ python3 scripts/vf_send_preflight.py --gate gmail
 
 בדיקות כלי אינן מחליפות Visible Text Gate או `vfgrowth/PREFLIGHT.md`.
 
-## ג׳ימייל — מותר עכשיו, אחרי text gate
+## ג׳ימייל — Routine send בלי ceremony מיותר
 
-מותר:
-- בריף 07:00 ל־`nocturney@gmail.com` — `owner-brief` gate לפני render/send.
-- תשובה בשרשור פנייה שכבר נקרא — `customer-message` gate; בלי ₪ מומצא.
-- הצעה — `sales-proposal` gate + מחיר/עובדות מאומתים.
-- `reply` / `forward` כשזה מקדם את הצינור ואחרי gate מתאים לגוף החדש שנוסף.
+`policy_id: gmail.send` הוא מקור ההחלטה המכונתית ל־Gmail external send. `scripts/vf_send_preflight.py --gate gmail` בודק **transport בלבד**; הוא אינו authorization. החלטת ה־send נעשית ב־`scripts/vf_gmail_send_policy.py` מול `packages/velvetos/policy/gmail.send.json`.
 
-אסור: דיוור המוני, חוב בלי ראש צוות, סודות, אוטו־DM / `send_dm`, או Send של AI body עם `visible_text_gate != PASS`.
+Routine path — **לא דורש owner approval נוסף** כאשר אין trigger רגיש:
+- בריף בעלים (`owner_brief`) ל־`nocturney@gmail.com`: facts + `owner-brief` text readiness + target/transport verified.
+- תשובה לשרשור שכבר נקרא (`known_thread_reply`): facts + `customer-message` readiness + target/transport verified.
+- forward רוטיני ליעד מאומת (`routine_forward`) באותם תנאים.
+
+Text readiness יכול להיות אחד משניים:
+- `visible_text_gate: PASS` קשור ל־`body_sha256` המדויק; או
+- `approved_static_copy` ללא שינוי, עם אותו `body_sha256` ועם הוכחה שהעובדות עדיין עדכניות. אין סיבה להריץ rewrite/Humanizer מלא מחדש על נוסח סטטי זהה.
+
+נשאר gated:
+- יעד חדש (`new_outbound`) שאינו routine מוכר;
+- התחייבות מסחרית חדשה;
+- מחיר / spend;
+- ambiguity של rights/privacy.
+
+במקרים האלה evaluator מחזיר `REQUIRE_OWNER_APPROVAL`; אישור תקף חייב להיות קשור ל־`body_sha256` המדויק, עם reviewer/timestamps/blockers תקינים, ואז ההחלטה ניתנת מחדש כ־`ALLOW`. כאשר יש commitment, `velvetos.action-receipt.v1` נדרש עם exact-body binding (`receipt_mode: EXACT_ACTION_ON_COMMITMENT`).
+
+Fail-closed:
+- עובדה לא מאומתת, יעד לא מאומת, transport לא מוכן, body/text digest mismatch, static copy ששונה/התיישן, או blast → `DENY`.
+- דיוור המוני נשאר אסור; owner approval לא הופך blast למותר.
+- provider receipt נדרש לפני טענה `sent`; transport failure הוא failover/unsynced state, לא הצלחה מדומיינת.
+
+מותר בפועל:
+- בריף 07:00 ל־`nocturney@gmail.com` — routine owner brief.
+- תשובה בשרשור פנייה שכבר נקרא — routine known-thread reply; בלי ₪ מומצא.
+- הצעה/מחיר/התחייבות — רק אחרי gate המתאים + exact-body owner approval כאשר נדרש.
+- `reply` / `forward` כשזה מקדם את הצינור ואחרי body readiness מתאים.
+
+אסור: blast, סודות, אוטו־DM / `send_dm`, או Send של AI body ללא text readiness תקף.
 
 ## בריף 07:00 — לולאה לפני שליחה
 
